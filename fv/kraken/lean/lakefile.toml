@@ -1,0 +1,30 @@
+name = "fvkraken"
+defaultTargets = ["Fk"]
+
+[leanOptions]
+autoImplicit = false
+
+[[require]]
+name = "Kraken"
+git = "https://github.com/AeneasVerif/kraken"
+rev = "6064eecbb730a1152aa6ed891a155d3a92a4f298"
+
+[[require]]
+name = "EthLib"
+git = "https://github.com/ethereum/EthLib.git"
+rev = "862185680cf23ccf54d44eb25b63b26c5020597b"
+
+# Phase-0 Fv.Spec (EthLib only), read in place, not modified.
+[[lean_lib]]
+name = "Fv"
+srcDir = "../../phase0/lean"
+roots = ["Fv.Spec"]
+
+# Phase-1 spec files (EthLib only), read in place, not modified.
+[[lean_lib]]
+name = "Fv1"
+srcDir = "../../phase1/lean"
+roots = ["Fv1.SpecScalars", "Fv1.SpecList", "Fv1.Transfer"]
+
+[[lean_lib]]
+name = "Fk"
