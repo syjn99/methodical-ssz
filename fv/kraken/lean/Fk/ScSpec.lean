@@ -8,8 +8,8 @@ import Fv1.Transfer
 
 `sc_unmarshal_accept_spec_k`: if EthLib accepts `bs` as `v`, the machine code
 returns nil and the receiver holds the Go layout of some `g` with `g.toValue = v`.
-Same form as phase 1a `sc_unmarshal_accept_spec`: the machine precondition is
-given for the `g` with `bs = scEncode g` (EthLib's acceptance picks it).
+The machine precondition is given for the `g` with `bs = scEncode g`
+(EthLib's acceptance picks it).
 
 The Go layout of `Scalars` on amd64: A @0 (1 byte), B @2 (2, LE), C @4 (4, LE),
 D @8 (8, LE), E @16 (1 byte, 0 or 1). `scField g i` is field `i` in that layout;

@@ -14,8 +14,8 @@ name = "EthLib"
 git = "https://github.com/ethereum/EthLib.git"
 rev = "862185680cf23ccf54d44eb25b63b26c5020597b"
 
-# Spec files copied verbatim from phase 0 (Fv/Spec.lean) and phase 1
-# (Fv1/SpecScalars.lean, SpecList.lean, Transfer.lean). EthLib only, no MiniRV.
+# Spec files (EthLib only): Fv/Spec.lean, Fv1/SpecScalars.lean, SpecList.lean,
+# Transfer.lean. Copied unchanged in their Lean code from the earlier FV phases.
 [[lean_lib]]
 name = "Fv"
 roots = ["Fv.Spec"]

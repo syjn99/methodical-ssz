@@ -13,8 +13,7 @@ leaves to `L_275` (directive 167). `lu_loop`: induction on n - i; the output
 block ends equal to the input block `bs`.
 
 Method: block split around element i (`block_split`, Kraken's `At_append_sep`),
-`load_step`/`store_step`, rejoin (`out_step`). Same method as phase 1a
-(`lu_loop_body`, `lu_loop`), on Kraken's semantics.
+`load_step`/`store_step`, rejoin (`out_step`).
 -/
 
 open Fk Fk.Code

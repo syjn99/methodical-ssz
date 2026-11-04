@@ -1,7 +1,8 @@
 import Fk.Step
 
 /-! Branch-condition lemmas stated once, so the kernel does not re-check
-arithmetic on 64-bit literals at every use (phase 1a finding 5). -/
+arithmetic on 64-bit literals at every use (`simp` + `omega` proof terms with
+literals near 2^64 make the kernel report deep recursion; see TOOLS.md). -/
 
 namespace Fk
 

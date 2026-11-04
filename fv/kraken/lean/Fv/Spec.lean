@@ -3,7 +3,8 @@ import EthLib.Serialization.Ssz
 /-!
 # Hand-written statements for `target.Fixed`
 
-External schema (the Go source, fv/phase0/target/fixed.go):
+External schema (Go source of the type `Fixed`; this file is kept in fv/kraken
+because `Fv1.SpecScalars` uses its byte lemmas, e.g. `uintBytes_size`):
 
     type Fixed struct {
         A uint64
@@ -185,17 +186,11 @@ theorem deserialize_fixed_err_matches (bs : Array UInt8) (h : bs.size ≠ 40) :
   refine ⟨_, deserialize_fixed_err_kind bs h, ?_⟩
   split <;> simp [GoErr.matches]
 
-/-! ## Nil-pointer rules (Go level)
+/-! ## Nil-pointer rules
 
-| call | receiver nil | result in Go | in phase 0 |
-| --- | --- | --- | --- |
-| SizeSSZ | yes | 40, no dereference | proved (no load of x10) |
-| MarshalSSZTo | yes | fault at `ld x5, 0(x10)`, Go panics | excluded: precondition `c ≠ 0` |
-| UnmarshalSSZ, len ≠ 40 | yes | ErrSize, no dereference | proved (rejection path has no load of x10) |
-| UnmarshalSSZ, len = 40 | yes | fault at `sd x5, 0(x10)`, Go panics | excluded: precondition `c ≠ 0` |
-
-MiniRV has no faults, so the excluded rows are preconditions. The formal
-versions are in `Valid.lean`: `nil_size`, `nil_reject` (theorems) and the
-`NotNilPage` field of `MarshalPre` / `AcceptPre` (precondition). -/
+The machine-level nil rules are not stated in this file. In fv/kraken each
+theorem names the memory chunks it reads and writes (separation logic over
+Kraken's partial data memory), so a receiver without a chunk is outside its
+precondition. See fv/kraken/REPORT.md. -/
 
 end Fv
