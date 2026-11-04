@@ -4,4 +4,6 @@ import Fk.Bytes
 import Fk.Labels
 import Fk.ScReject
 import Fk.ScAccept
+import Fk.ScSize
+import Fk.ScMarshal
 import Fk.ScSpec

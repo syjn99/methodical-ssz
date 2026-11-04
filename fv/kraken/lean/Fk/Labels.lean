@@ -67,4 +67,38 @@ theorem label_in_fragment {p : Program} {k j : Nat} {l : Label} (hk : p.IsInfixA
       have := hin (i - k) (by omega)
       rwa [List.getElem?_eq_getElem (by omega)] at this
 
+/-- No label of fragment `p` occurs in the host program before index `k`
+(a link-level fact: assembly labels are unique). -/
+def LabelsFresh (p : Program) (k : Nat) : Prop :=
+  ∀ i < k, ∀ l, Host.prog[i]? = some (Kraken.Directive.label l) → Kraken.Directive.label l ∉ p
+
+theorem label_at {p : Program} {k : Nat} (hk : p.IsInfixAt Host.prog k) (hf : LabelsFresh p k)
+    {j : Nat} {l : Label} (hj : p[j]? = some (.label l)) (hin : ∀ i < j, p[i]? ≠ some (.label l)) :
+    label l = Host.addrOf (k + j) :=
+  label_in_fragment hk hj hin (fun i hi h => hf i hi l h (List.mem_of_getElem? hj))
+
+/-- `label_at` with the "first in the fragment" side condition as a list check. -/
+theorem label_at' {p : Program} {k : Nat} (hk : p.IsInfixAt Host.prog k) (hf : LabelsFresh p k)
+    {j : Nat} {l : Label} (hj : p[j]? = some (.label l))
+    (hin : @List.contains _ instBEqOfDecidableEq (p.take j) (Kraken.Directive.label l) = false) :
+    label l = Host.addrOf (k + j) := by
+  refine label_at hk hf hj (fun i hi h => ?_)
+  have hmem : Kraken.Directive.label l ∈ p.take j := by
+    have hlt : i < p.length := by
+      rcases Nat.lt_or_ge i p.length with h' | h'
+      · exact h'
+      · simp [List.getElem?_eq_none h'] at h
+    rw [List.mem_iff_getElem?]
+    exact ⟨i, by rw [List.getElem?_take_of_lt hi, h]⟩
+  have := @List.contains_iff_mem _ instBEqOfDecidableEq _ _ _ |>.mpr hmem
+  rw [hin] at this; exact absurd this (by decide)
+
 end Fk
+
+/-- Rewrite `label l` (the label at directive `j` of fragment `prog`) to `Host.addrOf (k + j)`.
+Side conditions are computed by `simp` (not `decide`/`rfl`, whose proof terms
+exceed the recursion limit for long fragments). -/
+macro "klabel " hk:term:max hf:term:max prog:ident j:num : tactic => `(tactic|
+  rw [Fk.label_at' $hk $hf (j := $j)
+    (by simp only [$prog:ident, List.getElem?_cons_succ, List.getElem?_cons_zero])
+    (by simp only [$prog:ident, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)])

@@ -29,6 +29,12 @@ theorem rip_addr' (u l : Int64) :
   rw [BitVec.ofInt_add, Int64.toInt, BitVec.ofInt_toInt] at this
   rw [← this, Int64.toInt_sub]
 
+/-- `disp(%base,%index,scale)`. -/
+theorem ofInt_sib (x y : BitVec 64) (c : Nat) (d : Int64) :
+    BitVec.ofInt 64 (x.toInt + y.toInt * (c : Int) + d.toInt) = x + y * BitVec.ofNat 64 c + d.toBitVec := by
+  rw [BitVec.ofInt_add, BitVec.ofInt_add, BitVec.ofInt_mul, BitVec.ofInt_toInt, BitVec.ofInt_toInt,
+    Int64.toInt, BitVec.ofInt_toInt, BitVec.ofInt_natCast]
+
 theorem ofInt_int64 (x : Int64) : BitVec.ofInt 64 x.toInt = x.toBitVec := by
   rw [Int64.toInt, BitVec.ofInt_toInt]
 
@@ -71,6 +77,22 @@ theorem store_step (s : MachineData) (addr : BitVec 64) (w : Width) (v : w.type)
   rw [store_sep s addr w v ret bs F H hl, Effects.All_require_write_access]
   exact k _ (Mem.storeInt_sep addr w.bytes bs F s.dmem ⟨H, hl⟩ v.toInt)
 
+/-- `load_step` with the chunk address given up to an equation. -/
+theorem load_step_at (s : MachineData) (addr addr' : BitVec 64) (w : Width) (ret : w.type → MachineData → Effects)
+    (bs : List UInt8) (F : DataMem → Prop) (post : MachineState → Prop) (he : addr = addr')
+    (H : (Eq (bs.At addr') ⋆ F) s.dmem) (hl : bs.length = w.bytes)
+    (k : (ret (.ofInt w.bits (Int.ofBytes bs)) s).All post) :
+    (MachineData.load s addr w ret).All post := by
+  subst he; exact load_step s addr w ret bs F post H hl k
+
+/-- `store_step` with the chunk address given up to an equation. -/
+theorem store_step_at (s : MachineData) (addr addr' : BitVec 64) (w : Width) (v : w.type) (ret : MachineData → Effects)
+    (bs : List UInt8) (F : DataMem → Prop) (post : MachineState → Prop) (he : addr = addr')
+    (H : (Eq (bs.At addr') ⋆ F) s.dmem) (hl : bs.length = w.bytes)
+    (k : ∀ m', (Eq ((Int.toBytes w.bytes v.toInt).At addr') ⋆ F) m' → (ret { s with dmem := m' }).All post) :
+    (MachineData.store s addr v ret).All post := by
+  subst he; exact store_step s addr w v ret bs F post H hl k
+
 theorem isInfixAt_drop {α : Type} {p l : List α} {k : Nat} (h : p.IsInfixAt l k) (j : Nat) :
     (p.drop j).IsInfixAt l (k + j) := by
   rw [List.isInfixAt_iff_getElem?] at *
@@ -95,7 +117,17 @@ end Fk
 /-- Unfold one instruction and normalize addresses; stops at `MachineData.load`/`store`. -/
 macro "kunfold" : tactic => `(tactic| simp only [Directive.interp, Instr.interp, Operation.interp,
   Operand.interp, RegOrMem.interp, RelRegOrMem.interp, Fk.jmp_rel, AddrExpr.interp, ConstExpr.interp, MachineData.set,
-  MachineData.setReg, Effects.All, Width.bits, Width.bytes, Int.add_zero, BitVec.setWidth_eq,
+  MachineData.setReg, Effects.All, Width.bits, Width.bytes, Width.bytesv, Int.add_zero, BitVec.setWidth_eq,
   Reg64s.get, Reg64s.get64, Reg64s.set, Reg64s.set64, Reg.base, Reg.offset, BitVec.toAddressSize,
-  BitVec.take, BitVec.drop, BitVec.signed, Fk.ofInt_toInt_add, Fk.ofInt_int64, Fk.extractLsb'_full,
-  Nat.sub_zero, Int64.toBitVec_ofNat, UInt64.toBitVec_ofNat, BitVec.add_zero, Fk.add_ofNat_zero, Fk.add_lit_zero, Fk.add_ofInt_zero, Fk.add_int64_zero, Fk.rip_addr, Fk.rip_addr'])
+  BitVec.take, BitVec.drop, BitVec.signed, Fk.ofInt_sib, Fk.ofInt_toInt_add, Fk.ofInt_int64, Fk.extractLsb'_full,
+  Nat.sub_zero, Int64.toBitVec_ofNat, Int64.toBitVec_neg, UInt64.toBitVec_ofNat, BitVec.add_zero, Fk.add_ofNat_zero, Fk.add_lit_zero, Fk.add_ofInt_zero, Fk.add_int64_zero, Fk.rip_addr, Fk.rip_addr'])
+
+/-- Step directive `n` of fragment `prog` (at index `k`, fact `hk`): the fragment
+suffix is computed by `simp` (definitional unfolding of `List.drop` on a long
+literal list exceeds the recursion limit near n = 44). -/
+macro "kat " hk:term:max prog:ident n:num : tactic => `(tactic| (
+  have hkat := Fk.isInfixAt_drop $hk $n
+  simp only [$prog:ident, List.drop_succ_cons, List.drop_zero] at hkat
+  apply Fk.estep hkat
+  clear hkat
+  kunfold))
