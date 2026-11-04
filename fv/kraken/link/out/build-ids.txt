@@ -1,0 +1,5 @@
+go: go version go1.26.3 darwin/arm64
+elf sha256: 56f2126f5b5acf89d6f6798c24ce0c2b3343d9b7cb878bc9f0a06ab90b2eade1
+objdump sha256: 69c6959be260834644dfb791161746a564c91d6049e37e67e8353a65b99cdff2
+types.ssz.go sha256: 26eda6b6ed0bfd6a035ca63e38f19aaedf2973787dcad6daebaf2de48b14e096
+ssz tree: f7f8d2d0afba7f78276ec3aeec0092fca0b86a6f
