@@ -5,3 +5,6 @@
 'sc_size_main' depends on axioms: [propext, Classical.choice, Quot.sound]
 'sc_marshal_main' depends on axioms: [propext, Classical.choice, Quot.sound]
 'sc_marshal_spec_k' depends on axioms: [propext, Classical.choice, Quot.sound]
+'lu_iter' depends on axioms: [propext, Classical.choice, Quot.sound]
+'lu_exit' depends on axioms: [propext, Classical.choice, Quot.sound]
+'lu_loop' depends on axioms: [propext, Classical.choice, Quot.sound]

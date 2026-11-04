@@ -93,6 +93,9 @@ theorem store_step_at (s : MachineData) (addr addr' : BitVec 64) (w : Width) (v 
     (MachineData.store s addr v ret).All post := by
   subst he; exact store_step s addr w v ret bs F post H hl k
 
+theorem ofInt_ofBytes_toBytes64 (x : BitVec 64) : BitVec.ofInt 64 (Int.ofBytes (Int.toBytes 8 x.toInt)) = x :=
+  BitVec.ofInt_ofBytes_toBytes 64 8 rfl x
+
 theorem isInfixAt_drop {α : Type} {p l : List α} {k : Nat} (h : p.IsInfixAt l k) (j : Nat) :
     (p.drop j).IsInfixAt l (k + j) := by
   rw [List.isInfixAt_iff_getElem?] at *
@@ -116,10 +119,10 @@ end Fk
 
 /-- Unfold one instruction and normalize addresses; stops at `MachineData.load`/`store`. -/
 macro "kunfold" : tactic => `(tactic| simp only [Directive.interp, Instr.interp, Operation.interp,
-  Operand.interp, RegOrMem.interp, RelRegOrMem.interp, Fk.jmp_rel, AddrExpr.interp, ConstExpr.interp, MachineData.set,
+  Operand.interp, RegOrMem.interp, RelRegOrMem.interp, Fk.jmp_rel, ShiftCountExpr.interpMasked, ShiftCountExpr.interp, AddrExpr.interp, ConstExpr.interp, MachineData.set,
   MachineData.setReg, Effects.All, Width.bits, Width.bytes, Width.bytesv, Int.add_zero, BitVec.setWidth_eq,
   Reg64s.get, Reg64s.get64, Reg64s.set, Reg64s.set64, Reg.base, Reg.offset, BitVec.toAddressSize,
-  BitVec.take, BitVec.drop, BitVec.signed, Fk.ofInt_sib, Fk.ofInt_toInt_add, Fk.ofInt_int64, Fk.extractLsb'_full,
+  BitVec.take, BitVec.drop, BitVec.signed, Fk.ofInt_sib, Fk.ofInt_ofBytes_toBytes64, Fk.ofInt_toInt_add, Fk.ofInt_int64, Fk.extractLsb'_full,
   Nat.sub_zero, Int64.toBitVec_ofNat, Int64.toBitVec_neg, UInt64.toBitVec_ofNat, BitVec.add_zero, Fk.add_ofNat_zero, Fk.add_lit_zero, Fk.add_ofInt_zero, Fk.add_int64_zero, Fk.rip_addr, Fk.rip_addr'])
 
 /-- Step directive `n` of fragment `prog` (at index `k`, fact `hk`): the fragment
@@ -131,3 +134,13 @@ macro "kat " hk:term:max prog:ident n:num : tactic => `(tactic| (
   apply Fk.estep hkat
   clear hkat
   kunfold))
+
+/-- `shl $n` on a 64-bit register after `kunfold`: decide the count, introduce the
+undefined AF and OF flags. -/
+macro "kshl64 " n:num : tactic => `(tactic| (
+  split
+  case isTrue h => exact absurd h (by decide)
+  intro _
+  simp (config := { decide := true }) only
+    [show (BitVec.extractLsb' 0 8 ($n : BitVec 64)).toNat &&& 63 = $n by decide, ↓reduceIte, Effects.All]
+  intro _))

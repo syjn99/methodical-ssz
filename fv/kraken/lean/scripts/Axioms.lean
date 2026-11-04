@@ -6,3 +6,6 @@ import Fk
 #print axioms sc_size_main
 #print axioms sc_marshal_main
 #print axioms sc_marshal_spec_k
+#print axioms lu_iter
+#print axioms lu_exit
+#print axioms lu_loop
