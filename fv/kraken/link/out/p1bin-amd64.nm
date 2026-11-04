@@ -2142,16 +2142,16 @@
   4b5fc0        586 T github.com/prysmaticlabs/gohashtree.init
   4b6220        336 T github.com/OffchainLabs/methodical-ssz/ssz.init
   4b6380        601 T github.com/OffchainLabs/methodical-ssz/ssz.init.0
-  4b65e0          6 T github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*Scalars).SizeSSZ
-  4b6600        478 T github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*Scalars).MarshalSSZTo
-  4b67e0         95 T github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*Scalars).UnmarshalSSZ
-  4b6840          6 T github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*FixedVec).SizeSSZ
-  4b6860        360 T github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*FixedVec).MarshalSSZTo
-  4b69e0        286 T github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*FixedVec).UnmarshalSSZ
-  4b6b00         13 T github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*ListU64).SizeSSZ
-  4b6b20        308 T github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*ListU64).MarshalSSZTo
-  4b6c60        709 T github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*ListU64).UnmarshalSSZ
-  4b6f40         52 T type:.eq.github.com/OffchainLabs/methodical-ssz/fv/phase1/target.Scalars
+  4b65e0          6 T github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*Scalars).SizeSSZ
+  4b6600        478 T github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*Scalars).MarshalSSZTo
+  4b67e0         95 T github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*Scalars).UnmarshalSSZ
+  4b6840          6 T github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*FixedVec).SizeSSZ
+  4b6860        360 T github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*FixedVec).MarshalSSZTo
+  4b69e0        286 T github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*FixedVec).UnmarshalSSZ
+  4b6b00         13 T github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*ListU64).SizeSSZ
+  4b6b20        308 T github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*ListU64).MarshalSSZTo
+  4b6c60        709 T github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*ListU64).UnmarshalSSZ
+  4b6f40         52 T type:.eq.github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars
   4b6f80        756 T main.init
   4b7280        380 T main.errName
   4b7400        105 T main.unhex
@@ -2352,9 +2352,9 @@
   4f9bc0         40 R go:itab.*flag.uintValue,flag.Value
   4f9be8         40 R go:itab.*flag.int64Value,flag.Value
   4f9c10         40 R go:itab.*flag.intValue,flag.Value
-  4f9c38         48 R go:itab.*github.com/OffchainLabs/methodical-ssz/fv/phase1/target.Scalars,main.codec
-  4f9c68         48 R go:itab.*github.com/OffchainLabs/methodical-ssz/fv/phase1/target.FixedVec,main.codec
-  4f9c98         48 R go:itab.*github.com/OffchainLabs/methodical-ssz/fv/phase1/target.ListU64,main.codec
+  4f9c38         48 R go:itab.*github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars,main.codec
+  4f9c68         48 R go:itab.*github.com/OffchainLabs/methodical-ssz/fv/kraken/target.FixedVec,main.codec
+  4f9c98         48 R go:itab.*github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64,main.codec
   4f9ce0         52 R runtime.godebugDefault.str
   4f9d18         56 R go:itab.*fmt.pp,fmt.State
   4f9da0         64 r expandAVX512_2_inShuf0

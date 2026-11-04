@@ -24,7 +24,7 @@ MOD = "github.com/OffchainLabs/methodical-ssz/"
 
 
 def clean(name):
-    name = name.replace(MOD + "fv/phase1/", "").replace(MOD, "")
+    name = name.replace(MOD + "fv/kraken/", "").replace(MOD, "")
     name = re.sub(r"\(\*(\w+)\)", r"\1", name)  # (*Scalars) -> Scalars
     return re.sub(r"[^A-Za-z0-9_.]", "_", name)
 

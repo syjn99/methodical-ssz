@@ -1,8 +1,8 @@
-TEXT github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*Scalars).SizeSSZ(SB) github.com/OffchainLabs/methodical-ssz/fv/phase1/target/types.ssz.go
+TEXT github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*Scalars).SizeSSZ(SB) github.com/OffchainLabs/methodical-ssz/fv/kraken/target/types.ssz.go
   types.ssz.go:12	0x4b65e0		b810000000		MOVL $0x10, AX                       // mov $0x10,%eax	
   types.ssz.go:12	0x4b65e5		c3			RET                                  // retq		
 
-TEXT github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*Scalars).MarshalSSZTo(SB) github.com/OffchainLabs/methodical-ssz/fv/phase1/target/types.ssz.go
+TEXT github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*Scalars).MarshalSSZTo(SB) github.com/OffchainLabs/methodical-ssz/fv/kraken/target/types.ssz.go
   types.ssz.go:20	0x4b6600		493b6610		CMPQ SP, 0x10(R14)                   // cmp 0x10(%r14),%rsp							
   types.ssz.go:20	0x4b6604		0f86a2010000		JBE 0x4b67ac                         // jbe 0x4b67ac								
   types.ssz.go:20	0x4b660a		55			PUSHQ BP                             // push %rbp								
@@ -124,9 +124,9 @@ TEXT github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*Scalars).MarshalS
   types.ssz.go:20	0x4b67ca		488b5c2410		MOVQ 0x10(SP), BX                    // mov 0x10(%rsp),%rbx							
   types.ssz.go:20	0x4b67cf		488b4c2418		MOVQ 0x18(SP), CX                    // mov 0x18(%rsp),%rcx							
   types.ssz.go:20	0x4b67d4		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi							
-  types.ssz.go:20	0x4b67d9		e922feffff		JMP github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*Scalars).MarshalSSZTo(SB) // jmpq 0x4b6600	
+  types.ssz.go:20	0x4b67d9		e922feffff		JMP github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*Scalars).MarshalSSZTo(SB) // jmpq 0x4b6600	
 
-TEXT github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*Scalars).UnmarshalSSZ(SB) github.com/OffchainLabs/methodical-ssz/fv/phase1/target/types.ssz.go
+TEXT github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*Scalars).UnmarshalSSZ(SB) github.com/OffchainLabs/methodical-ssz/fv/kraken/target/types.ssz.go
   types.ssz.go:45	0x4b67e0		48895c2410		MOVQ BX, 0x10(SP)                    // mov %rbx,0x10(%rsp)							
   types.ssz.go:48	0x4b67e5		4883f910		CMPQ CX, $0x10                       // cmp $0x10,%rcx								
   types.ssz.go:48	0x4b67e9		7545			JNE 0x4b6830                         // jne 0x4b6830								
@@ -156,11 +156,11 @@ TEXT github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*Scalars).Unmarsha
   types.ssz.go:49	0x4b6837		488b1d7a051100		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrSize+8(SB), BX // mov 0x11057a(%rip),%rbx			
   types.ssz.go:49	0x4b683e		c3			RET                                  // retq									
 
-TEXT github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*FixedVec).SizeSSZ(SB) github.com/OffchainLabs/methodical-ssz/fv/phase1/target/types.ssz.go
+TEXT github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*FixedVec).SizeSSZ(SB) github.com/OffchainLabs/methodical-ssz/fv/kraken/target/types.ssz.go
   types.ssz.go:112	0x4b6840		b840000000		MOVL $0x40, AX                       // mov $0x40,%eax	
   types.ssz.go:112	0x4b6845		c3			RET                                  // retq		
 
-TEXT github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*FixedVec).MarshalSSZTo(SB) github.com/OffchainLabs/methodical-ssz/fv/phase1/target/types.ssz.go
+TEXT github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*FixedVec).MarshalSSZTo(SB) github.com/OffchainLabs/methodical-ssz/fv/kraken/target/types.ssz.go
   types.ssz.go:120	0x4b6860		493b6610		CMPQ SP, 0x10(R14)                   // cmp 0x10(%r14),%rsp							
   types.ssz.go:120	0x4b6864		0f862c010000		JBE 0x4b6996                         // jbe 0x4b6996								
   types.ssz.go:120	0x4b686a		55			PUSHQ BP                             // push %rbp								
@@ -251,9 +251,9 @@ TEXT github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*FixedVec).Marshal
   types.ssz.go:120	0x4b69b4		488b5c2410		MOVQ 0x10(SP), BX                    // mov 0x10(%rsp),%rbx							
   types.ssz.go:120	0x4b69b9		488b4c2418		MOVQ 0x18(SP), CX                    // mov 0x18(%rsp),%rcx							
   types.ssz.go:120	0x4b69be		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi							
-  types.ssz.go:120	0x4b69c3		e998feffff		JMP github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*FixedVec).MarshalSSZTo(SB) // jmpq 0x4b6860	
+  types.ssz.go:120	0x4b69c3		e998feffff		JMP github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*FixedVec).MarshalSSZTo(SB) // jmpq 0x4b6860	
 
-TEXT github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*FixedVec).UnmarshalSSZ(SB) github.com/OffchainLabs/methodical-ssz/fv/phase1/target/types.ssz.go
+TEXT github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*FixedVec).UnmarshalSSZ(SB) github.com/OffchainLabs/methodical-ssz/fv/kraken/target/types.ssz.go
   types.ssz.go:140	0x4b69e0		493b6610		CMPQ SP, 0x10(R14)                   // cmp 0x10(%r14),%rsp							
   types.ssz.go:140	0x4b69e4		0f86e2000000		JBE 0x4b6acc                         // jbe 0x4b6acc								
   types.ssz.go:140	0x4b69ea		55			PUSHQ BP                             // push %rbp								
@@ -328,15 +328,15 @@ TEXT github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*FixedVec).Unmarsh
   types.ssz.go:140	0x4b6aea		488b5c2410		MOVQ 0x10(SP), BX                    // mov 0x10(%rsp),%rbx							
   types.ssz.go:140	0x4b6aef		488b4c2418		MOVQ 0x18(SP), CX                    // mov 0x18(%rsp),%rcx							
   types.ssz.go:140	0x4b6af4		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi							
-  types.ssz.go:140	0x4b6af9		e9e2feffff		JMP github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*FixedVec).UnmarshalSSZ(SB) // jmpq 0x4b69e0	
+  types.ssz.go:140	0x4b6af9		e9e2feffff		JMP github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*FixedVec).UnmarshalSSZ(SB) // jmpq 0x4b69e0	
 
-TEXT github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*ListU64).SizeSSZ(SB) github.com/OffchainLabs/methodical-ssz/fv/phase1/target/types.ssz.go
+TEXT github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*ListU64).SizeSSZ(SB) github.com/OffchainLabs/methodical-ssz/fv/kraken/target/types.ssz.go
   types.ssz.go:202	0x4b6b00		488b4008		MOVQ 0x8(AX), AX                     // mov 0x8(%rax),%rax	
   types.ssz.go:202	0x4b6b04		48c1e003		SHLQ $0x3, AX                        // shl $0x3,%rax		
   types.ssz.go:202	0x4b6b08		4883c004		ADDQ $0x4, AX                        // add $0x4,%rax		
   types.ssz.go:203	0x4b6b0c		c3			RET                                  // retq			
 
-TEXT github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*ListU64).MarshalSSZTo(SB) github.com/OffchainLabs/methodical-ssz/fv/phase1/target/types.ssz.go
+TEXT github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*ListU64).MarshalSSZTo(SB) github.com/OffchainLabs/methodical-ssz/fv/kraken/target/types.ssz.go
   types.ssz.go:211	0x4b6b20		493b6610		CMPQ SP, 0x10(R14)                   // cmp 0x10(%r14),%rsp							
   types.ssz.go:211	0x4b6b24		0f86f8000000		JBE 0x4b6c22                         // jbe 0x4b6c22								
   types.ssz.go:211	0x4b6b2a		55			PUSHQ BP                             // push %rbp								
@@ -419,9 +419,9 @@ TEXT github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*ListU64).MarshalS
   types.ssz.go:211	0x4b6c40		488b5c2410		MOVQ 0x10(SP), BX                    // mov 0x10(%rsp),%rbx							
   types.ssz.go:211	0x4b6c45		488b4c2418		MOVQ 0x18(SP), CX                    // mov 0x18(%rsp),%rcx							
   types.ssz.go:211	0x4b6c4a		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi							
-  types.ssz.go:211	0x4b6c4f		e9ccfeffff		JMP github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*ListU64).MarshalSSZTo(SB) // jmpq 0x4b6b20	
+  types.ssz.go:211	0x4b6c4f		e9ccfeffff		JMP github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*ListU64).MarshalSSZTo(SB) // jmpq 0x4b6b20	
 
-TEXT github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*ListU64).UnmarshalSSZ(SB) github.com/OffchainLabs/methodical-ssz/fv/phase1/target/types.ssz.go
+TEXT github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*ListU64).UnmarshalSSZ(SB) github.com/OffchainLabs/methodical-ssz/fv/kraken/target/types.ssz.go
   types.ssz.go:229	0x4b6c60		4c8d6424f8		LEAQ -0x8(SP), R12                   // lea -0x8(%rsp),%r12							
   types.ssz.go:229	0x4b6c65		4d3b6610		CMPQ R12, 0x10(R14)                  // cmp 0x10(%r14),%r12							
   types.ssz.go:229	0x4b6c69		0f8681020000		JBE 0x4b6ef0                         // jbe 0x4b6ef0								
@@ -596,4 +596,4 @@ TEXT github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*ListU64).Unmarsha
   types.ssz.go:229	0x4b6f13		488b4c2418		MOVQ 0x18(SP), CX                    // mov 0x18(%rsp),%rcx							
   types.ssz.go:229	0x4b6f18		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi							
   types.ssz.go:229	0x4b6f1d		0f1f00			NOPL 0(AX)                           // nopl (%rax)								
-  types.ssz.go:229	0x4b6f20		e93bfdffff		JMP github.com/OffchainLabs/methodical-ssz/fv/phase1/target.(*ListU64).UnmarshalSSZ(SB) // jmpq 0x4b6c60	
+  types.ssz.go:229	0x4b6f20		e93bfdffff		JMP github.com/OffchainLabs/methodical-ssz/fv/kraken/target.(*ListU64).UnmarshalSSZ(SB) // jmpq 0x4b6c60	
