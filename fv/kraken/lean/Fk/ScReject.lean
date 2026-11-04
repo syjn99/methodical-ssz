@@ -1,4 +1,4 @@
-import Fk.Step
+import Fk.Labels
 
 /-!
 # Scalars.UnmarshalSSZ, length reject path, on Kraken main (6064eec)
@@ -9,7 +9,7 @@ rbx = buf.ptr, rcx = len; error interface in (rax, rbx).
 
 Hypotheses:
 - the function occurs in the `Host` program at index `k`;
-- `hL`: the label of the error block resolves to its directive (see `Fk.Labels`);
+- `hLf`: the error-block label does not occur in the host program before the function (`Fk.Labels`);
 - memory: the return address at rsp, the spill slot at rsp+16, and the two words
   of the `ssz.ErrSize` global, all disjoint.
 -/
@@ -18,7 +18,7 @@ open Fk Fk.Code
 variable [Host]
 
 theorem sc_reject_size_main (k : Nat) (hk : ScalarsUnmarshalSSZ.IsInfixAt Host.prog k)
-    (hL : label "L_target.Scalars.UnmarshalSSZ_50" = Host.addrOf (k + 29))
+    (hLf : ∀ i < k, Host.prog[i]? ≠ some (.label "L_target.Scalars.UnmarshalSSZ_50"))
     (s : MachineData) (ra e0 e1 : UInt64) (slot : List UInt8) (hsl : slot.length = 8)
     (R : DataMem → Prop)
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec) ⋆ Eq (slot.At (s.regs.rsp.toBitVec + 16#64))
@@ -27,6 +27,7 @@ theorem sc_reject_size_main (k : Nat) (hk : ScalarsUnmarshalSSZ.IsInfixAt Host.p
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = e0 ∧ st.data.regs.rbx = e1)
       ⟨s, Host.addrOf k⟩ := by
+  have hL := label_in_fragment hk (j := 29) (by decide) (by decide) hLf
   have h0 := hk
   simp only [ScalarsUnmarshalSSZ] at h0
   -- 0: label

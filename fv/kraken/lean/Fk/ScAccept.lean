@@ -1,4 +1,5 @@
 import Fk.Bytes
+import Fk.Labels
 
 /-!
 # Scalars.UnmarshalSSZ, accept path, on Kraken main (6064eec)
@@ -8,8 +9,8 @@ chunks into the receiver fields (A @0, B @2, C @4, D @8, E @16), returns nil
 (rax = rbx = 0) to the return address. 25 directives on each of the two paths.
 
 The input is given as five chunks at the widths the code reads (1, 2, 4, 8, 1
-bytes); the receiver as five chunks at the widths it writes. Hypotheses `hL37`,
-`hL3b` resolve the two internal labels (see `Fk.Labels`).
+bytes); the receiver as five chunks at the widths it writes. Hypotheses `hL37f`,
+`hL3bf`: the two internal labels do not occur in the host program before the function.
 -/
 
 open Fk Fk.Code
@@ -30,8 +31,8 @@ theorem sc_accept_main (k : Nat) (hk : ScalarsUnmarshalSSZ.IsInfixAt Host.prog k
       ⋆ Eq (c0.At s.regs.rax.toBitVec) ⋆ Eq (c1.At (s.regs.rax.toBitVec + 2))
       ⋆ Eq (c2.At (s.regs.rax.toBitVec + 4)) ⋆ Eq (c3.At (s.regs.rax.toBitVec + 8))
       ⋆ Eq (c4.At (s.regs.rax.toBitVec + 16)) ⋆ R)
-    (hL37 : label "L_target.Scalars.UnmarshalSSZ_37" = Host.addrOf (k + 18))
-    (hL3b : label "L_target.Scalars.UnmarshalSSZ_3b" = Host.addrOf (k + 20))
+    (hL37f : ∀ i < k, Host.prog[i]? ≠ some (.label "L_target.Scalars.UnmarshalSSZ_37"))
+    (hL3bf : ∀ i < k, Host.prog[i]? ≠ some (.label "L_target.Scalars.UnmarshalSSZ_3b"))
     (hlen : s.regs.rcx = 16) (hb4 : b4 = [0] ∨ b4 = [1]) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
@@ -39,6 +40,8 @@ theorem sc_accept_main (k : Nat) (hk : ScalarsUnmarshalSSZ.IsInfixAt Host.prog k
           ⋆ Eq (b2.At (s.regs.rax.toBitVec + 4)) ⋆ Eq (b3.At (s.regs.rax.toBitVec + 8))
           ⋆ Eq (b4.At (s.regs.rax.toBitVec + 16)) ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
+  have hL37 := label_in_fragment hk (j := 18) (by decide) (by decide) hL37f
+  have hL3b := label_in_fragment hk (j := 20) (by decide) (by decide) hL3bf
   have h0 := hk
   simp only [ScalarsUnmarshalSSZ] at h0
   apply estep h0
