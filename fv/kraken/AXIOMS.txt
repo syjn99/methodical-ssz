@@ -8,3 +8,4 @@
 'lu_iter' depends on axioms: [propext, Classical.choice, Quot.sound]
 'lu_exit' depends on axioms: [propext, Classical.choice, Quot.sound]
 'lu_loop' depends on axioms: [propext, Classical.choice, Quot.sound]
+'lu_accept_main' depends on axioms: [propext, Classical.choice, Quot.sound]

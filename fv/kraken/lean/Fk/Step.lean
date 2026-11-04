@@ -144,3 +144,11 @@ macro "kshl64 " n:num : tactic => `(tactic| (
   simp (config := { decide := true }) only
     [show (BitVec.extractLsb' 0 8 ($n : BitVec 64)).toNat &&& 63 = $n by decide, ↓reduceIte, Effects.All]
   intro _))
+
+/-- Address equation by `toNat` and `omega`, looking at the goal only (`bv_omega`
+simplifies every hypothesis and hits the recursion limit on large memory facts). -/
+macro "kaddr" : tactic => `(tactic| (
+  apply BitVec.eq_of_toNat_eq
+  simp only [BitVec.toNat_add, BitVec.toNat_sub, BitVec.toNat_neg, BitVec.toNat_ofNat, BitVec.ofNat_eq_ofNat,
+    UInt64.toNat_toBitVec, UInt64.toBitVec_add, UInt64.toBitVec_ofNat]
+  all_goals omega))
