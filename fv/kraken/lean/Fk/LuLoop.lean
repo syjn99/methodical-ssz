@@ -5,7 +5,7 @@ import Fk.Labels
 # ListU64.UnmarshalSSZ element loop, on Kraken main (6064eec)
 
 Loop head `L_240` (directive 148). Invariant at element `i`: rax = i, rdx = n,
-rcx = 8n (bytes after the offset), rdi = d (elements), rsi = c (receiver), the
+rcx ≥ 8n (capacity of the slice after the offset), rdi = d (elements), rsi = c (receiver), the
 receiver header holds (p, nb) with nb = n, and the output block at p is
 `bs.take (8i) ++ 0^(8(n-i))`. `lu_iter`: one iteration (19 directives, two
 bounds checks shown not to branch to `panicBounds`). `lu_exit`: at i = n the loop
@@ -25,14 +25,14 @@ theorem lu_iter (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k)
     (hf : LabelsFresh ListU64UnmarshalSSZ k)
     (bs : List UInt8) (n i : Nat) (hbs : bs.length = 8 * n) (hn : n ≤ 16) (hi : i < n)
     (d c p nb : BitVec 64) (hnb : nb.toNat = n) (R : DataMem → Prop) (s : MachineData)
-    (hrax : s.regs.rax.toNat = i) (hrdx : s.regs.rdx.toNat = n) (hrcx : s.regs.rcx.toNat = 8 * n)
+    (hrax : s.regs.rax.toNat = i) (hrdx : s.regs.rdx.toNat = n) (hrcx : 8 * n ≤ s.regs.rcx.toNat)
     (hrdi : s.regs.rdi.toBitVec = d) (hrsi : s.regs.rsi.toBitVec = c)
     (sp bp : UInt64) (hrsp : s.regs.rsp = sp) (hrbp : s.regs.rbp = bp)
     (h_mem : s.dmem =⋆ Eq (bs.At d) ⋆ Eq ((Int.toBytes 8 p.toInt).At c) ⋆ Eq ((Int.toBytes 8 nb.toInt).At (c + 8))
       ⋆ Eq ((bs.take (8 * i) ++ List.replicate (8 * (n - i)) 0).At p) ⋆ R) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 148) ∧ st.data.regs.rax.toNat = i + 1 ∧ st.data.regs.rdx.toNat = n
-        ∧ st.data.regs.rcx.toNat = 8 * n ∧ st.data.regs.rdi.toBitVec = d ∧ st.data.regs.rsi.toBitVec = c
+        ∧ 8 * n ≤ st.data.regs.rcx.toNat ∧ st.data.regs.rdi.toBitVec = d ∧ st.data.regs.rsi.toBitVec = c
         ∧ st.data.regs.rsp = sp ∧ st.data.regs.rbp = bp
         ∧ (Eq (bs.At d) ⋆ Eq ((Int.toBytes 8 p.toInt).At c) ⋆ Eq ((Int.toBytes 8 nb.toInt).At (c + 8))
           ⋆ Eq ((bs.take (8 * (i + 1)) ++ List.replicate (8 * (n - (i + 1))) 0).At p) ⋆ R) st.data.dmem)
@@ -156,7 +156,7 @@ theorem lu_loop (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k)
     (bs : List UInt8) (n : Nat) (hbs : bs.length = 8 * n) (hn : n ≤ 16)
     (d c p nb : BitVec 64) (hnb : nb.toNat = n) (R : DataMem → Prop) (sp bp : UInt64) :
     ∀ j i (s : MachineData), i + j = n →
-    s.regs.rax.toNat = i → s.regs.rdx.toNat = n → s.regs.rcx.toNat = 8 * n →
+    s.regs.rax.toNat = i → s.regs.rdx.toNat = n → 8 * n ≤ s.regs.rcx.toNat →
     s.regs.rdi.toBitVec = d → s.regs.rsi.toBitVec = c → s.regs.rsp = sp → s.regs.rbp = bp →
     (s.dmem =⋆ Eq (bs.At d) ⋆ Eq ((Int.toBytes 8 p.toInt).At c) ⋆ Eq ((Int.toBytes 8 nb.toInt).At (c + 8))
       ⋆ Eq ((bs.take (8 * i) ++ List.replicate (8 * (n - i)) 0).At p) ⋆ R) →
