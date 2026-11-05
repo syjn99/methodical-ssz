@@ -14,7 +14,7 @@ CONTRACTS.md).
 - `Heap avail`: the runtime-owned heap with `avail` free bytes (an abstract
   predicate; the allocator's state lives in it);
 - `ty`: the type descriptor address of the element type (rax), `esz` its size;
-- the call is in range: `len = cap = cnt`, `esz * cnt ≤ avail` (so Go's
+- the call is in range: `len ≤ cap = cnt`, `esz * cnt ≤ avail` (so Go's
   `panicmakeslicelen`/`panicmakeslicecap` and the out-of-memory throw are not
   taken; with a separated heap of `avail` bytes, `avail < 2^64`);
 - `S` bytes of stack below the return slot are scratch for the callee;
@@ -39,7 +39,7 @@ variable [Host]
 
 def MakesliceC (Heap : Nat → DataMem → Prop) (ty : BitVec 64) (esz S : Nat) : Prop :=
   ∀ (st : MachineData) (ret : Int64) (cnt avail : Nat) (stk : List UInt8) (F : DataMem → Prop),
-    st.regs.rax.toBitVec = ty → st.regs.rbx.toNat = cnt → st.regs.rcx.toNat = cnt →
+    st.regs.rax.toBitVec = ty → st.regs.rbx.toNat ≤ cnt → st.regs.rcx.toNat = cnt →
     esz * cnt ≤ avail → stk.length = S →
     (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
       ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Heap avail ⋆ F) st.dmem →

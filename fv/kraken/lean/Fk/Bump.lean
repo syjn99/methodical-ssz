@@ -42,13 +42,13 @@ set_option maxHeartbeats 4000000 in
 theorem bump_makeslice (j : Nat) (hj : BumpAlloc.IsInfixAt Host.prog j)
     (hf : ∀ i < j, Host.prog[i]? ≠ some (.label "runtime.makeslice")) (ty : BitVec 64) :
     MakesliceC bumpHeap ty 8 0 := by
-  intro st ret cnt avail stk F _hty hrbx _hrcx hav hstk hm
+  intro st ret cnt avail stk F _hty _hrbx hrcx hav hstk hm
   have hL := label_in_fragment hj (j := 0) (by decide) (by decide) hf
   rw [hL]
   have hstk0 : stk = [] := List.length_eq_zero_iff.mp hstk
   subst hstk0
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := st
-  simp only at hrbx hm ⊢
+  simp only at hrcx hm ⊢
   have hm' : (bumpHeap avail ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec)
       ⋆ Eq (([] : List UInt8).At (rsp.toBitVec - BitVec.ofNat 64 0)) ⋆ F)) mem := by ecancel
   obtain ⟨p, hp⟩ := sep_exists_left (Q := fun (p : BitVec 64) (m : DataMem) => p.toNat + avail < 2 ^ 64 ∧
@@ -71,20 +71,20 @@ theorem bump_makeslice (j : Nat) (hj : BumpAlloc.IsInfixAt Host.prog j)
   apply load_step _ _ _ _ (Int.toBytes 8 ret.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
   apply Eventually.done
-  have hq : (p + rbx.toBitVec * 8#64).toNat = p.toNat + 8 * cnt := by
-    simp only [BitVec.toNat_add, BitVec.toNat_mul, BitVec.toNat_ofNat, UInt64.toNat_toBitVec, hrbx]; omega
-  have hq' : p + BitVec.ofNat 64 (8 * cnt) = p + rbx.toBitVec * 8#64 := by
+  have hq : (p + rcx.toBitVec * 8#64).toNat = p.toNat + 8 * cnt := by
+    simp only [BitVec.toNat_add, BitVec.toNat_mul, BitVec.toNat_ofNat, UInt64.toNat_toBitVec, hrcx]; omega
+  have hq' : p + BitVec.ofNat 64 (8 * cnt) = p + rcx.toBitVec * 8#64 := by
     apply BitVec.eq_of_toNat_eq; rw [hq]; simp only [BitVec.toNat_add, BitVec.toNat_ofNat]; omega
   have hsplit : List.replicate avail (0 : UInt8) = List.replicate (8 * cnt) 0 ++ List.replicate (avail - 8 * cnt) 0 := by
     rw [List.replicate_append_replicate]; congr 1; omega
   rw [hsplit, Mem.At_append_sep _ _ _ (by simp; omega)] at H1
   simp only [List.length_replicate, hq'] at H1
-  have H2 : ((Eq ((Int.toBytes 8 (p + rbx.toBitVec * 8#64).toInt).At (label "runtime.fvBump").toBitVec)
-      ⋆ Eq ((List.replicate (avail - 8 * cnt) 0).At (p + rbx.toBitVec * 8#64)))
+  have H2 : ((Eq ((Int.toBytes 8 (p + rcx.toBitVec * 8#64).toInt).At (label "runtime.fvBump").toBitVec)
+      ⋆ Eq ((List.replicate (avail - 8 * cnt) 0).At (p + rcx.toBitVec * 8#64)))
       ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec) ⋆ Eq (([] : List UInt8).At (rsp.toBitVec - 0#64))
         ⋆ Eq ((List.replicate (8 * cnt) 0).At p) ⋆ F)) m1 := by ecancel
   have H3 := sep_mono_left (P' := bumpHeap (avail - 8 * cnt))
-    (fun m hm => ⟨p + rbx.toBitVec * 8#64, by omega, hm⟩) H2
+    (fun m hm => ⟨p + rcx.toBitVec * 8#64, by omega, hm⟩) H2
   refine ⟨by simp, ?_, [], rfl, ?_⟩
   · apply UInt64.toBitVec_inj.mp; simp
   · dsimp only; ecancel

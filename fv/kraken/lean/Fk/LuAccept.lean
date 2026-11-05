@@ -174,7 +174,7 @@ theorem lu_accept_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k
   -- the call: apply the makeslice contract, continue at the return address
   rw [call_slot] at *
   have hnN : nV.toNat = n := by rw [← hnV]; exact shr3_toNat rcx.toBitVec n hn (by simpa using hlen)
-  refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 35 + 1)) n avail scratch _ rfl hnN hnN hav hsc (by ecancel)) ?_
+  refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 35 + 1)) n avail scratch _ rfl (Nat.le_of_eq hnN) hnN hav hsc (by ecancel)) ?_
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, stk1, hstk1, Hm1⟩
   dsimp only at hpc1 hrsp1 Hm1
   subst hpc1

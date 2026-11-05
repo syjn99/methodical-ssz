@@ -30,4 +30,5 @@ module
   "07eca2c81b4812d12d389e2c80eb60e63b38bd903b7e049587dcddb5d185eb24 target.Scalars.MarshalSSZTo.S",
   "ca716328afeae6a9217d7ca0c7d777f2ddaece031a1d5d2a092a0669be4b3d0d target.Scalars.SizeSSZ.S",
   "1581f52198a2b3f257a2046d7b04a7e2ed835ca20ef1972a80d4f2ed886f63b4 target.Scalars.UnmarshalSSZ.S",
+  "35cd06dc73b6a7dd3bbc0dfdf504f46a75d00cbea1b824fc7dcaa8300cef013e BumpAlloc.S",
   "end"]
