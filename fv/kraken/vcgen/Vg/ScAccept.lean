@@ -4,7 +4,12 @@ import Kraken.FunSpec
 import Kraken.X64.Parser
 import Vg.Specs
 
-/-! B0: `sc_accept_main` (Scalars.UnmarshalSSZ accept path) as a vcgen `funspec`. -/
+/-! B0: `sc_accept_main` (Scalars.UnmarshalSSZ accept path) as a vcgen `funspec`.
+
+1b-fix X8: the 1b postcondition compared 16 SSZ bytes with the first 16 bytes
+of the Go receiver. That is false: the SSZ fields sit at 0, 1, 3, 7, 15 and the
+Go fields at 0, 2, 4, 8, 16 (padding between). The spill slot the code writes
+is rsp + 16, not rsp + 8 (`Fk/ScAccept.lean`). Both are fixed here. -/
 
 open Kraken.X64.Parser
 open Std.WP
@@ -27,14 +32,18 @@ funspec sc_accept_vg "target.Scalars.UnmarshalSSZ" [Host] [FunDecls] [Embeds ScU
     requires s.regs.rcx = 16
       ∧ s.regs.rbx.toNat + 16 < 2 ^ 64 ∧ s.regs.rax.toNat + 17 < 2 ^ 64
       ∧ Mem.Mapped [(s.regs.rbx.toBitVec, 16), (s.regs.rax.toBitVec, 17),
-          (s.regs.rsp.toBitVec - 8#64, 8), (s.regs.rsp.toBitVec + 8#64, 8)] s.dmem
+          (s.regs.rsp.toBitVec - 8#64, 8), (s.regs.rsp.toBitVec + 16#64, 8)] s.dmem
       ∧ Mem.Blocks.Disjoint [(s.regs.rax.toBitVec, 17)]
-          [(s.regs.rbx.toBitVec, 16), (s.regs.rsp.toBitVec - 8#64, 8), (s.regs.rsp.toBitVec + 8#64, 8)]
+          [(s.regs.rbx.toBitVec, 16), (s.regs.rsp.toBitVec - 8#64, 8), (s.regs.rsp.toBitVec + 16#64, 8)]
       ∧ (s.dmem.loadInt (s.regs.rbx.toBitVec + 15#64) 1).get! ≤ 1
     ensures s' => s'.regs.rax = 0 ∧ s'.regs.rbx = 0
-      ∧ s'.dmem.loadBytes s.regs.rax.toBitVec 16 = s.dmem.loadBytes s.regs.rbx.toBitVec 16
+      ∧ s'.dmem.loadBytes s.regs.rax.toBitVec 1 = s.dmem.loadBytes s.regs.rbx.toBitVec 1
+      ∧ s'.dmem.loadBytes (s.regs.rax.toBitVec + 2#64) 2 = s.dmem.loadBytes (s.regs.rbx.toBitVec + 1#64) 2
+      ∧ s'.dmem.loadBytes (s.regs.rax.toBitVec + 4#64) 4 = s.dmem.loadBytes (s.regs.rbx.toBitVec + 3#64) 4
+      ∧ s'.dmem.loadBytes (s.regs.rax.toBitVec + 8#64) 8 = s.dmem.loadBytes (s.regs.rbx.toBitVec + 7#64) 8
+      ∧ s'.dmem.loadBytes (s.regs.rax.toBitVec + 16#64) 1 = s.dmem.loadBytes (s.regs.rbx.toBitVec + 15#64) 1
     autoframes calling_conv GoABI preserves rbp
-      writes s.regs.rax.toBitVec[*...<17], (s.regs.rsp.toBitVec + 8#64)[*...<8] := by
+      writes s.regs.rax.toBitVec[*...<17], (s.regs.rsp.toBitVec + 16#64)[*...<8] := by
   refine Program.Triple.cfg
     (fun s₀ => fun
       | "target.Scalars.UnmarshalSSZ", s' => s' = s₀

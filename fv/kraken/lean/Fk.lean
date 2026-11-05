@@ -19,6 +19,11 @@ import Fk.WitFv
 import Fk.WitCp
 import Fk.WitBv
 import Fk.WitAd
+import Fk.WitCpM
+import Fk.WitAdM
+import Fk.WitNe0
+import Fk.WitNe1
+import Fk.WitNe16
 import Fk.LuSpec
 import Fk.FvSmall
 import Fk.FvAccept
