@@ -1,5 +1,7 @@
 import Fk.ScSpec
 import Fk.Contracts
+import Fk.LuSpec
+import Fk.Frame
 
 /-!
 # Function specifications for composition (C20)
@@ -75,5 +77,66 @@ theorem sc_uacc_holds (k : Nat) (hk : ScalarsUnmarshalSSZ.IsInfixAt Host.prog k)
     (fun i hi h => hf i hi _ h (by simp [ScalarsUnmarshalSSZ])) hlen (by cases g.e <;> simp [scField])
   simp only [Nat.add_zero] at h
   exact h
+
+/-- ListU64.UnmarshalSSZ, accept path, on the Go encoding of `g` (at most 16
+elements): one stack block of `144 + S` bytes below the return slot (its frame
+and the makeslice scratch), 16 bytes of argument spill above it. -/
+def LuUAccC (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
+  ∀ (st : MachineData) (ret : Int64) (g : ListU64) (stk spill cP cL cC : List UInt8) (guard : UInt64)
+    (avail : Nat) (F : DataMem → Prop),
+    g.ok → stk.length = 144 + S → spill.length = 16 → cP.length = 8 → cL.length = 8 → cC.length = 8 →
+    st.regs.rcx.toNat = 4 + 8 * g.l.length → st.regs.rcx.toNat ≤ st.regs.rdi.toNat →
+    st.regs.rdi.toNat < 2 ^ 63 → guard.toNat < st.regs.rsp.toNat - 8 → 8 ≤ st.regs.rsp.toNat → 8 * 16 ≤ avail →
+    (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - 144 - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (st.regs.rsp.toBitVec + 8))
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (st.regs.r14.toBitVec + 16)) ⋆ Heap avail
+      ⋆ Eq ([4, 0, 0, 0].At st.regs.rbx.toBitVec) ⋆ Eq ((u64Bytes g.l).toList.At (st.regs.rbx.toBitVec + 4))
+      ⋆ Eq (cP.At st.regs.rax.toBitVec) ⋆ Eq (cL.At (st.regs.rax.toBitVec + 8)) ⋆ Eq (cC.At (st.regs.rax.toBitVec + 16))
+      ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ F) st.dmem →
+    Eventually (step1 Host.exe)
+      (fun st' => st'.pc = ret ∧ st'.data.regs.rax = 0 ∧ st'.data.regs.rbx = 0
+        ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧
+        ∃ (p : BitVec 64) (stk' spill' : List UInt8), stk'.length = 144 + S ∧ spill'.length = 16 ∧
+        (Eq ((Int.toBytes 8 p.toInt).At st.regs.rax.toBitVec)
+          ⋆ Eq ((Int.toBytes 8 (g.l.length : Int)).At (st.regs.rax.toBitVec + 8))
+          ⋆ Eq ((Int.toBytes 8 (g.l.length : Int)).At (st.regs.rax.toBitVec + 16)) ⋆ Eq ((u64Bytes g.l).toList.At p)
+          ⋆ Heap (avail - 8 * g.l.length)
+          ⋆ Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - 144 - BitVec.ofNat 64 S)) ⋆ Eq (spill'.At (st.regs.rsp.toBitVec + 8))
+          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (st.regs.r14.toBitVec + 16))
+          ⋆ Eq ([4, 0, 0, 0].At st.regs.rbx.toBitVec) ⋆ Eq ((u64Bytes g.l).toList.At (st.regs.rbx.toBitVec + 4))
+          ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ F) st'.data.dmem)
+      ⟨st, label "target.ListU64.UnmarshalSSZ"⟩
+
+theorem spill_sep (x : BitVec 64) (a b : List UInt8) (ha : a.length = 8) (hb : b.length = 8) :
+    Eq ((a ++ b).At (x + 8)) = Eq (a.At (x + 8)) ⋆ Eq (b.At (x + 16)) :=
+  at_app a b (by rw [ha]; bv_omega) (by simp [ha, hb])
+
+set_option maxHeartbeats 8000000 in
+/-- The ListU64 machine code satisfies its specification, given the makeslice contract. -/
+theorem lu_uacc_holds (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh ListU64UnmarshalSSZ k) (Heap : Nat → DataMem → Prop) (S : Nat) (hS : S < 2 ^ 60)
+    (hms : MakesliceC Heap (label "type__" + 49120).toBitVec 8 S) : LuUAccC Heap S := by
+  intro st ret g stk spill cP cL cC guard avail F hg hstk hspill hcP hcL hcC hlen hcap hcap63 hguard hsp hav hm
+  rw [label_at hk hf (j := 0) (l := "target.ListU64.UnmarshalSSZ") (by rfl) (by intro i hi; omega)]
+  obtain ⟨scratch, rslot, g1, s28, s30, s38, g2, fp, rfl, h0, h1, h2, h3, h4, h5, h6, h7⟩ :
+      ∃ a b c d e f g h, stk = luFrame a b c d e f g h ∧ a.length = S ∧ b.length = 8 ∧ c.length = 40 ∧
+        d.length = 8 ∧ e.length = 8 ∧ f.length = 8 ∧ g.length = 64 ∧ h.length = 8 :=
+    ⟨_, _, _, _, _, _, _, _, luFrame_slices stk S, by simp; omega, by simp; omega, by simp; omega,
+      by simp; omega, by simp; omega, by simp; omega, by simp; omega, by simp; omega⟩
+  obtain ⟨s90, s98, rfl, h8, h9⟩ : ∃ a b : List UInt8, spill = a ++ b ∧ a.length = 8 ∧ b.length = 8 :=
+    ⟨_, _, (List.take_append_drop 8 spill).symm, by simp; omega, by simp; omega⟩
+  rw [luFrame_sep _ S hS _ _ _ _ _ _ _ _ h0 h1 h2 h3 h4 h5 h6 h7, spill_sep _ _ _ h8 h9] at hm
+  have hok : g.l.length ≤ 16 := hg
+  refine eventually_trans _ _ _ _ (lu_accept_main k hk hf (u64Bytes g.l).toList g.l.length (by simp [u64Bytes_size]) hok
+    st (UInt64.ofBitVec ret.toBitVec) guard fp s28 s30 s38 s90 s98 rslot cP cL cC h7 h3 h4 h5 h8 h9 h1 hcP hcL hcC
+    (Eq (g1.At (st.regs.rsp.toBitVec - 136)) ⋆ Eq (g2.At (st.regs.rsp.toBitVec - 72)) ⋆ F) S scratch h0 Heap avail
+    (by ecancel) hguard hsp hlen hcap hcap63 (by omega) hms) ?_
+  rintro ⟨d, pc⟩ ⟨hpc, hrax, hrbx, hrsp, p, fp', s28', s30', s38', s90', s98', rslot', scratch',
+    l1, l2, l3, l4, l5, l6, l7, l8, hmem⟩
+  refine Eventually.done _ ⟨hpc, hrax, hrbx, hrsp, p, luFrame scratch' rslot' g1 s28' s30' s38' g2 fp',
+    s90' ++ s98', by simp [luFrame, *]; omega, by simp [*], ?_⟩
+  rw [luFrame_sep _ S hS _ _ _ _ _ _ _ _ l8 l7 h2 l2 l3 l4 h6 l1, spill_sep _ _ _ l5 l6]
+  ecancel
 
 end Fk

@@ -24,5 +24,6 @@ import Fk.RoundTrip
 import Fk.LuGrow
 import Fk.BvAccept
 import Fk.BvSpec
+import Fk.Frame
 import Fk.FunSpecs
 import Fk.LuAccept
