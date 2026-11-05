@@ -51,10 +51,10 @@ Go 값이 EthLib 값으로 가지 못하는 경우(추상화의 정의역 밖):
 | ListU64 | (len − 4) mod 8 ≠ 0 | `fmt.Errorf(… %w, ErrIncorrectListSize)` | `lu_spec_rejects` | `lu_reject_misaligned_main` (rax ≠ 0) |
 | ListU64 | (len − 4) / 8 > 16 | `fmt.Errorf(… %w, ErrListTooBig)` | `lu_spec_rejects` | `lu_reject_toobig_main` (rax ≠ 0) |
 | BitVec | len ≠ 1 | `ErrSize` | `bv_reject_spec` | `bv_reject_size_main` |
-| BitVec | (검사 없음) 패딩 비트 | nil | `bv_spec_rejects_padding` | `bv_padding_counterexample` (F1) |
+| BitVec | 패딩 비트(`ssz.ValidateBitvector`, 재증명 R3) | `fmt.Errorf("J: %w")` | `bv_spec_one`, `bv_spec_accepts_iff` | `bv_reject_padding_main` (rax ≠ 0). 이전 반례 `bv_padding_counterexample`는 생성기 수정 F1로 사라졌다 |
 | Nested | len < 28 | `ErrSize` | `ne_spec_rejects` | `ne_reject_short_spec` |
 | Nested | 오프셋(24..27) ≠ 28 | `ErrInvalidVariableOffset` | `ne_spec_rejects` | `ne_reject_offset_spec` |
-| Nested | 오프셋 > len | `ErrOffset` | 도달 불가(오프셋 = 28 ≤ len) | 코드에 분기가 없다 |
+| Nested | (삭제) 첫 오프셋 > len | `ErrOffset` | 도달 불가(오프셋 = 28 ≤ len) | 생성기 수정 G3가 Go 소스에서 지웠다. 이전 ELF에도 분기가 없었다(재증명 R5) |
 | Nested | S 디코더 실패(bool) | `fmt.Errorf("S: %w")` | `ne_spec_accepts_iff` | 없음 |
 | Nested | L 디코더 실패 | `fmt.Errorf("L: %w")` | `ne_spec_accepts_iff` | 없음 |
 | ListC | len < 4 | `ErrSize` | `lc_spec_rejects` | `lc_reject_short_spec` |
@@ -72,7 +72,18 @@ Go 값이 EthLib 값으로 가지 못하는 경우(추상화의 정의역 밖):
 | BitL | 오프셋 ≠ 4 | `ErrInvalidVariableOffset` | `bl_spec_rejects` | `bl_reject_offset_main` |
 | BitL | `ValidateBitlist` 실패 | `fmt.Errorf("B: %w")` | `bl_spec_rejects` (`blValid` 거짓) | 계약 `ValidateBitlistC` 뒤. 오류 경로는 없음 |
 
-수용 쪽: `*_unmarshal_accept_spec_k`가 "EthLib가 받으면 기계어가 nil을 반환하고 수신자가 그 값을 담는다"를 말한다(Scalars, ListU64, FixedVec, Nested, ListC, Checkpoint, AttestationData, BitL). BitVec의 `bv_unmarshal_accept_spec_k`는 바이트 식(`bs = #[g.b]`)만 말한다. 기계어 실행을 포함하는 정리는 `bv_unmarshal_accept_machine`이다(1b-fix X7). 7절 표가 둘을 구분한다. ListC는 두 정리로 나뉜다: 원소가 1개 이상인 입력(`lc_unmarshal_accept_spec_k`, `len(buf) > 4`)과 빈 리스트(`lc_unmarshal_accept_empty_spec_k`, `len(buf) = 4`, 결과 `c.Items` = (`runtime.noptrbss`, 0, 0), 전제 X15 = 0).
+수용 쪽: `*_unmarshal_accept_spec_k`가 "EthLib가 받으면 기계어가 nil을 반환하고 수신자가 그 값을 담는다"를 말한다(Scalars, ListU64, FixedVec, Nested, ListC, Checkpoint, AttestationData, BitL). BitVec의 `bv_unmarshal_accept_spec_k`는 바이트 식(`bs = #[g.b]`)만 말한다. 기계어 실행을 포함하는 정리는 `bv_unmarshal_accept_machine`이다(1b-fix X7). 7절 표가 둘을 구분한다. ListC는 두 정리로 나뉜다: 원소가 1개 이상인 입력(`lc_unmarshal_accept_spec_k`, `len(buf) > 4`)과 빈 리스트(`lc_unmarshal_accept_empty_spec_k`, `len(buf) = 4`, 결과 `c.Items` = (`runtime.zerobase`, 0, 0), 전제 X15 = 0).
+
+### 3.1 생성기 수정 G3(첫 오프셋 `> size` 삭제)의 영향 (재증명 R5)
+
+생성기 수정 G3는 첫 오프셋 뒤의 `if off > size { return ssz.ErrOffset }` 3줄을 지웠다.
+대상 4곳은 ListU64, Nested, ListC(`Items` 오프셋), BitL이다.
+이 분기는 이전 ELF에서도 기계어에 없었다.
+Go 컴파일러가 `off == fixedSize ≤ size`에서 분기를 지웠다고 본다(추측: 근거는 아래의 명령어 수 비교뿐이다).
+근거: 새 ELF와 이전 ELF에서 네 디코더의 명령어 수와 순서가 같다.
+다른 줄은 문자열 오프셋과 레지스터 배치뿐이다(`git diff 2a97c5c~2 -- link/out/norm/`).
+그래서 지울 기계어 정리가 없다.
+`lc_reject_past_main`은 첫 **원소** 오프셋이 목록 길이를 넘는 경우의 정리다. G3와 관계가 없고 그대로 다시 증명했다.
 
 ## 4. 오프셋 읽기·쓰기의 범위 (B3.4)
 
