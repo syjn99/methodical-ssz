@@ -108,6 +108,13 @@ mutate bvnochk target.BitVec.UnmarshalSSZ.S 34 'jne L_target.BitVec.UnmarshalSSZ
 #    encoding (jne to the error return -> jmp to the append path, a directive
 #    only on the reject path); the F2 rejection theorem must break
 mutate blmnochk target.BitL.MarshalSSZTo.S 49 'jne L_target.BitL.MarshalSSZTo_102' 'jmpq L_target.BitL.MarshalSSZTo_118' Fk/BlMarshal.lean bl_marshal_reject_main FAIL
+# 10. Nested (reprove-fix X9): the decoder compares the offset of L with 29
+#     instead of 28; the accept theorem must break
+mutate neoff target.Nested.UnmarshalSSZ.S 14 'cmp $0x1c,%rdx' 'cmp $0x1d,%rdx' Fk/NeAccept.lean ne_accept_main FAIL
+# 11. Checkpoint (X9): the size check compares with 41 instead of 40
+mutate cplen target_prysm.Checkpoint.UnmarshalSSZ.S 9 'cmp $0x28,%rcx' 'cmp $0x29,%rcx' Fk/CpAccept.lean cp_accept_main FAIL
+# 12. AttestationData (X9): BeaconBlockRoot is copied with 31 bytes instead of 32
+mutate adcopy target_prysm.AttestationData.UnmarshalSSZ.S 35 'mov $0x20,%ecx' 'mov $0x1f,%ecx' Fk/AdAccept.lean ad_accept_main FAIL
 # control: a directive rewritten to itself must still check
 mutate control target.FixedVec.UnmarshalSSZ.S 47 'cmp $0x4,%rax' 'cmp $0x4,%rax' Fk/FvLoop.lean fv_iter PASS
 # 9. link (X6): a padding nop becomes retq; the link check must reject it
