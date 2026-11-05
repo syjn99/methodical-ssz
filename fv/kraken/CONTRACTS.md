@@ -15,8 +15,8 @@
 | `runtime.memmove` | FixedVec.UnmarshalSSZ(수용), FixedVec.MarshalSSZTo(빠른 경로, 거부) | (b) | `MemmoveC S`: 서로소인 원천·목적 조각(n 바이트), 복귀 후 목적 = 원천, 원천과 `F` 보존. 겹치는 범위는 계약 밖(호출자의 `⋆`가 배제) | **모델 있음(1b-fix).** `rt_memmove`: 바이트 복사 루프(`Fk/RtCopy.S`)가 모든 `S`에서 계약을 만족한다. 호출 지점 증인: 아래 1b 표의 memmove 행 |
 | `runtime.growslice` | 모든 MarshalSSZTo(용량 부족 경로) | (b) | `GrowsliceC Heap ty esz S`(1b-fix). 전제: `0 < esz`, `rsi = ty`, `num ≤ newLen`, `oldLen = newLen − num ≤ oldCap < newLen`, `nc = nextSliceCap newLen oldCap`(Go 1.26.3 `nextslicecap`)에 대해 `2·esz·nc + 8192 ≤ avail ≤ maxAlloc = 2^48`, 옛 원소 `old`(esz·oldLen 바이트), scratch `S`, 반환 슬롯 위 spill 40바이트. 사후조건: rsp + 8, rbp·r14 보존, rbx = newLen, `nc ≤ newCap`, `esz·newCap ≤ 2·esz·nc + 8192`, 새 블록 = `old ++ tail`, `avail' + esz·newCap ≤ avail`, 옛 블록과 `F` 보존 | **모델 있음.** `rt_growslice`(범프 할당기 + 복사 루프, esz = 1). `growslice_call_runs`(구체 Host, 빈 값·1·257·ListU64 형태). 1b 형식은 모순이었다(`review/Review1b.lean`) |
 | `runtime.convT64` | ListU64.UnmarshalSSZ(거부 3, 4) | (b) | `ConvT64C Heap S`(1b-fix): 전제 `8 ≤ avail`, spill 8바이트. 사후조건: rsp + 8, r14 보존, **rax ≠ 0**, `avail' ≤ avail ≤ avail' + 8`, `F` 보존. 상자 내용은 말하지 않는다(fmt 계약이 읽지 않는다) | 모델 있음(`rt_convT64`) |
-| `fmt.errorf`(내부 함수, 공개 `fmt.Errorf`가 아님) | ListU64.UnmarshalSSZ(거부 3, 4) | (b) | `FmtErrorfC Heap S`(1b-fix, 인수 ≥ 1): 전제 `1 ≤ len(a) = cap(a)`, 형식 바이트 `fs`(rax, rbx), 인수 배열 `args`(rcx, 16·len 바이트), spill 40. 사후조건: rsp + 8, r14 보존, **rax ≠ 0**, `fs`·`args` 보존, `avail' ≤ avail`, `F` 보존. Go 1.26.3에서 인수가 있으면 항상 nil이 아니다. 신뢰로 남는 것: fmt가 인터페이스 값을 읽고 `%w` 인수의 `Error()`를 부른다(종료, `F`에 쓰지 않음을 가정) | 모델 있음(`rt_errorf`) |
-| `runtime.newobject` | ListU64.UnmarshalSSZ(거부 3, 4, `fmt.errorf`가 nil을 돌려준 경우) | (c) | 인수 2개라 Go의 `errorf`는 nil을 돌려주지 않는다. `FmtErrorfC`의 rax ≠ 0이 이 경로를 막는다 | 해당 없음 |
+| `fmt.errorf`(내부 함수, 공개 `fmt.Errorf`가 아님) | ListU64.UnmarshalSSZ(거부 3, 4) | (b) | 재증명 수정 X5부터 `FmtErrorfWC Heap S`(아래 표). 1b-fix의 `FmtErrorfC`(인수 ≥ 1, 인수 형태 제한 없음)는 지웠다. 인수 2개: `convT64` 상자(`%d`)와 전역 `ssz.ErrListTooBig`·`ssz.ErrIncorrectListSize`(`%w`). 전제: 전역의 첫 워드 e0 = errorString itab, 데이터 e1의 `ErrStr e1 sp msg`, 예산 `msg + 8268 ≤ avail`(convT64 8바이트 + fmt). 결론 rax ≠ 0 | 모델 있음(`rt_errorf_w`). 증인: `WitLuTb`, `WitLuMa`(전역 오류 객체와 메시지 "err"를 블록에 둔다) |
+| `runtime.newobject` | ListU64.UnmarshalSSZ(거부 3, 4, `fmt.errorf`가 nil을 돌려준 경우) | (c) | 인수 2개라 Go의 `errorf`는 nil을 돌려주지 않는다. `FmtErrorfWC`의 rax ≠ 0이 이 경로를 막는다 | 해당 없음 |
 | `runtime.gcWriteBarrier2` | FixedVec·ListU64 UnmarshalSSZ(수용) | (c) | 전제: `runtime.writeBarrier` 4바이트 = 0. 코드가 플래그를 읽고 `je`로 건너뜀을 증명한다 | 해당 없음 |
 | `runtime.morestack_noctxt.abi0` | 프레임이 있는 모든 함수 | (c) | 전제: `g.stackguard0`(r14 + 16) < rsp(또는 rsp − 8). `jbe`가 안 갈림을 증명한다 | 해당 없음 |
 | `runtime.panicBounds` | FixedVec·ListU64 UnmarshalSSZ 루프 | (a) | 경계 검사 분기가 안 갈림을 루프 한 바퀴마다 증명한다(`lu_iter`, `fv_iter`) | 해당 없음 |
@@ -59,7 +59,6 @@ spill은 반환 슬롯 바로 위의 레지스터 인수 칸이다. 피호출자
 | `NewobjectC Heap ty sz S` | rax = ty | `sz ≤ avail` | scratch S, spill 8 | rsp + 8, r14, rbp, `F` | `bump_newobject16/24/32` |
 | `ConvT64C Heap S` | 없음(모든 값) | `8 ≤ avail` | scratch S, spill 8 | rsp + 8, r14, `F` | `rt_convT64` |
 | `FmtErrorfNilC S` | rdi = 0, 형식에 `%` 없음, 형식 바이트 조각 | 없음(할당 없음) | scratch S, spill 40 | rsp + 8, r14, 형식, `F` | `rt_errorf_nil` |
-| `FmtErrorfC Heap S` | `1 ≤ len(a) = cap(a)`, 형식·인수 배열 조각 | `avail' ≤ avail` | scratch S, spill 40 | rsp + 8, r14, 형식, 인수, `F` | `rt_errorf` |
 | `ValidateBitlistC S` | rbx = len(buf), rdi = 2048, buf 조각, `blValid buf` | 할당 없음 | scratch S, spill 32 | rsp + 8, r14, rbp, buf, `F` | `rt_validate_bitlist`(`RtVbl`) |
 | `ValidateBitlistErrC Heap S` | 위와 같음, `¬ blValid buf` | `8192 ≤ avail`. 결론 `avail' + 16 + msg ≤ avail ≤ avail' + 8192`, msg ≤ 128 | scratch S, spill 32 | rsp + 8, r14, rbp, buf, `F`. 오류 객체 `ErrStr rbx sp msg`가 새로 생긴다 | `rt_validate_bitlist_err` |
 | `FmtErrorfWC Heap S` | `1 ≤ len(a) = cap(a)`, 마지막 인수 = (itab + 8의 워드 `ity`, e), `ErrStr e sp msg`, 형식·인수 배열 조각 | `fs + msg + 8192 ≤ avail`, 결론 `avail' ≤ avail` | scratch S, spill 40 | rsp + 8, r14, 형식, 인수, `ity`, 오류 객체, `F` | `rt_errorf_w` |
@@ -93,9 +92,9 @@ spill은 반환 슬롯 바로 위의 레지스터 인수 칸이다. 피호출자
 | ValidateBitvector 오류 객체 | 16바이트 내용 임의 | `VbvPadC` 결론: 객체 = (`go_string._+27706`, 35). 실제 코드에서 증명 |
 | 프레임 보존 | 계약 결론 `F` | 그대로(형식). 다만 GC가 없다는 가정에 기댄다(아래) |
 
-`FmtErrorfC`(제한 없는 형태)는 ListU64 거부 두 경로(`lu_reject_toobig_main`, `lu_reject_misaligned_main`)만 쓴다.
-그 `%w` 인수는 패키지 전역 `ssz.ErrListTooBig`·`ssz.ErrIncorrectListSize`이고, 첫 인수는 `convT64`의 상자다.
-이 두 경로를 `FmtErrorfWC` 형태로 옮기려면 전역 오류의 객체와 메시지를 전제로 더하고 정리와 증인을 다시 써야 한다. 이 세션에서 하지 않았다(보류).
+ListU64 거부 두 경로(`lu_reject_toobig_main`, `lu_reject_misaligned_main`)도 `FmtErrorfWC`로 옮겼다(재증명 수정 X5).
+전제는 전역 오류의 첫 워드 e0 = errorString itab(errors.New의 값), 데이터 e1의 `ErrStr`, 예산이다.
+그래서 제한 없는 `FmtErrorfC`를 쓰는 정리가 없어 지웠다(`rt_errorf`도 지웠다).
 
 계약별로 형식 전제로 옮기지 못한 신뢰 항목:
 
@@ -103,7 +102,7 @@ spill은 반환 슬롯 바로 위의 레지스터 인수 칸이다. 피호출자
 | --- | --- | --- |
 | `FmtErrorfWC` | Go의 실제 할당량이 예산(`fs + msg + 8192`) 안이다(printer 객체, 결과 문자열 `len(fs) − 2 + len(msg)`, `*fmt.wrapError` 32바이트). 호출 중 GC가 없다 | fmt의 할당 경로와 sync.Pool을 모델하지 않았다. 예산 값은 코드를 읽은 결과다 |
 | `ValidateBitlistErrC` | 메시지가 힙 바이트라고 모델한다. Go 1.26.3에서 인수 없는 세 메시지("bitlist empty…", "trailing byte is zero", "too many bits")는 rodata에 있다. 그래서 실제 Go에 적용하려면 호출자 `F`가 그 rodata 바이트를 갖지 않아야 한다. 가장 긴 메시지는 82바이트(고정 43바이트, int 19자리, uint64 20자리)라 msg ≤ 128이다 | 계약은 모든 `F`에 대해 양화한다. "rodata는 `F` 밖"을 표현할 영역 모델이 없다 |
-| `FmtErrorfC` | 인수 배열의 인터페이스 값이 유효한 Go 값이다. `%w` 인수의 `Error()`가 끝나고 `F`에 쓰지 않는다. 실제 할당량은 `avail' ≤ avail` 말고는 말하지 않는다(포매터, 문자열, 오류 객체) | 타입 기술자와 fmt의 동작 모델이 없다. 논리적 `Heap avail`은 물리적 여유 바이트가 아니라 "이 증명이 소비를 추적하는 힙"이다 |
+| `FmtErrorfWC`(`pre`) | ListU64 거부의 첫 인수(`convT64` 상자, `%d`)의 내용과 타입. `%w` 인수(errorString)는 형식 전제다 | `ConvT64C`가 상자 내용을 말하지 않는다(아래 행) |
 | `FmtErrorfNilC` | 형식 바이트에 `%`가 없으면 할당 없이 nil을 돌려준다(Go 1.26.3 `fmt/errors.go`의 분기를 읽은 결과) | fmt 내부 코드를 증명하지 않았다 |
 | `ConvT64C` | 상자의 내용(값 v)과 그 메모리를 말하지 않는다. `avail' ≤ avail ≤ avail' + 8`만 말한다 | 이 세션의 호출자는 그 포인터를 fmt에 넘기기만 한다. 넣으면 호출자 정리와 모델을 함께 바꿔야 한다(이견) |
 | `MakesliceC`, `NewobjectC`, `GrowsliceC` | 타입 기술자를 읽지 않는다. 할당 중 GC가 없다(쓰기 장벽 0이 `F`에 있다). 할당기 실패는 정리 밖이다 | 할당기와 GC 모델이 없다 |
@@ -133,7 +132,7 @@ Kraken에서는 계약이 정리의 **가설**이고, 모든 상태·반환 주�
 - **정정(1b-fix X2).** 1b는 ListC의 인수 없는 호출에도 rax ≠ 0을 가정했다. Go 1.26.3의 내부 `errorf`는 그 경우 nil을 돌려준다(astra 발견 2). 그래서 1b의 ListC 거부 3정리는 실제 실행 경로가 아닌 분기를 증명했다. 지금은 계약을 인수 조건으로 나누고 nil 뒤 `newobject` 분기를 증명한다.
 - 남는 위험은 계약 자체의 모순이다(이전 `hms`). 이것은 증인으로만 검사한다.
 - **철회(1b-fix).** 1b의 이 절은 "힙 조각 형식이면 이전 모순이 생기지 않는다"고 판단했다. 그 판단은 틀렸다. 1b의 `GrowsliceC`는 같은 형식이었지만 입력 범위가 없어 모순이었다(astra 발견 1, `review/Review1b.lean`). 형식에 근거한 판단은 비공허성의 근거가 아니다.
-- 지금 계약 모델(구현이 계약을 만족한다는 Lean 정리)이 있는 계약: `makeslice`(`bump_makeslice` esz = 8, `bump_makeslice1` esz = 1), `memmove`(`rt_memmove`), `growslice`(`rt_growslice`, esz = 1), `newobject`(`bump_newobject16/24/32`), `fmt.errorf`(`rt_errorf_nil`, `rt_errorf`, `rt_errorf_w`), `convT64`(`rt_convT64`), `ValidateBitlist`(`rt_validate_bitlist`, `rt_validate_bitlist_err`). 모든 계약에 모델이 있다(재증명, 재증명 수정 X5). `joint_models`는 열 계약을 한 Host·한 힙에서 함께 만족한다. 모델은 만족 가능성의 근거다. Go 구현의 정교화가 아니다(1d절).
+- 지금 계약 모델(구현이 계약을 만족한다는 Lean 정리)이 있는 계약: `makeslice`(`bump_makeslice` esz = 8, `bump_makeslice1` esz = 1), `memmove`(`rt_memmove`), `growslice`(`rt_growslice`, esz = 1), `newobject`(`bump_newobject16/24/32`), `fmt.errorf`(`rt_errorf_nil`, `rt_errorf_w`), `convT64`(`rt_convT64`), `ValidateBitlist`(`rt_validate_bitlist`, `rt_validate_bitlist_err`). 모든 계약에 모델이 있다(재증명, 재증명 수정 X5). `joint_models`는 아홉 계약을 한 Host·한 힙에서 함께 만족한다. 모델은 만족 가능성의 근거다. Go 구현의 정교화가 아니다(1d절).
 
 ## 4. 정리의 전제가 실제 Go 호출자에서 성립하는가
 

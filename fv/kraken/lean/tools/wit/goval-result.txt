@@ -76,9 +76,9 @@ OK  WitLuM16   dst            ('0x100d0', 0, 132)            ok
 OK  WitLuM16   recv.0         ('0x10050', 16, 16)            ok
 OK  WitLuMR    dst            ('0x10060', 0, 4)              ok
 OK  WitLuMR    recv.0         ('0x10064', 17, 17)            ok
-OK  WitLuMa    buf            ('0x100d0', 5, 5)              ok
+OK  WitLuMa    buf            ('0x100e1', 5, 5)              ok
 OK  WitLuMa    recv           0                              nil
-OK  WitLuTb    buf            ('0x100d0', 140, 140)          ok
+OK  WitLuTb    buf            ('0x100e1', 140, 140)          ok
 OK  WitLuTb    recv           0                              nil
 OK  WitNe0     buf            ('0x101fc', 32, 32)            ok
 OK  WitNe0     recv.8         0                              nil

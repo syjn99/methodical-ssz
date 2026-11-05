@@ -6,7 +6,8 @@ import Fk.Frame
 # ListU64.UnmarshalSSZ reject paths through `fmt.errorf`, on Kraken main
 
 - `lu_reject_toobig_main`: offset 4, len = 4 + 8n with n > 16 → the error from
-  `fmt.errorf` (contract `FmtErrorfC`: non-nil, rax ≠ 0).
+  `fmt.errorf` (contract `FmtErrorfWC`: the `%w` argument is the global errorString,
+  non-nil, rax ≠ 0; re-proof fix X5).
 - `lu_reject_misaligned_main`: offset 4, (len − 4) mod 8 ≠ 0 → same.
 Both call `runtime.convT64` (contract `ConvT64C`) to box the count, read the
 error global (`ssz.ErrListTooBig` / `ssz.ErrIncorrectListSize`, two words, and
@@ -101,11 +102,12 @@ theorem lu_reject_toobig_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host
     (hf : LabelsFresh ListU64UnmarshalSSZ k)
     (n : Nat) (hn : 16 < n)
     (s : MachineData) (ra guard e0 e1 t8 : UInt64) (he0 : e0 ≠ 0)
+    (hei : e0.toBitVec = (label "go_itab._errors.errorString_error").toBitVec) (esp : BitVec 64) (msg : List UInt8)
     (fp s98 a40 a50 rslot : List UInt8) (hfp : fp.length = 8) (h98 : s98.length = 8)
     (ha40 : a40.length = 16) (ha50 : a50.length = 16) (hrs : rslot.length = 8)
     (R : DataMem → Prop) (S : Nat) (scratch spl fs : List UInt8) (hsc : scratch.length = S)
     (hspl : spl.length = 40) (hfs : fs.length = 56)
-    (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : 8 ≤ avail)
+    (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : 8 ≤ avail) (hbud : msg.length + 8268 ≤ avail)
     (h_mem : s.dmem =⋆ Eq (spl.At (s.regs.rsp.toBitVec - 136)) ⋆ Eq (fs.At (label "go_string._" + 40290).toBitVec) ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s98.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq (a40.At (s.regs.rsp.toBitVec - 72)) ⋆ Eq (a50.At (s.regs.rsp.toBitVec - 56))
@@ -115,10 +117,10 @@ theorem lu_reject_toobig_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host
       ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec)
       ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At (label "ssz.ErrListTooBig").toBitVec)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrListTooBig" + 8).toBitVec)
-      ⋆ Eq ((Int.toBytes 8 t8.toBitVec.toInt).At (e0.toBitVec + 8)) ⋆ R)
+      ⋆ Eq ((Int.toBytes 8 t8.toBitVec.toInt).At (e0.toBitVec + 8)) ⋆ ErrStr e1.toBitVec esp msg ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat - 8) (hsp : 144 ≤ s.regs.rsp.toNat)
     (hlen : s.regs.rcx.toNat = 4 + 8 * n)
-    (hcv : ConvT64C Heap S) (hfe : FmtErrorfC Heap S) :
+    (hcv : ConvT64C Heap S) (hfe : FmtErrorfWC Heap S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
@@ -294,10 +296,13 @@ theorem lu_reject_toobig_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host
   rw [lr_c144] at *
   rw [← hA] at H10
   refine eventually_trans _ _ _ _ (hfe _ (Host.addrOf (k + 76 + 1)) av1 fs
-    (Int.toBytes 8 (label "type__" + 49184).toBitVec.toInt ++ (Int.toBytes 8 rax1.toBitVec.toInt
-      ++ (Int.toBytes 8 t8.toBitVec.toInt ++ Int.toBytes 8 e1.toBitVec.toInt)))
-    stk1 (sp1 ++ spl.drop 8) _ (by rw [hfs]; rfl) (by simp only []; decide) rfl (by simp only [List.length_append, Int.toBytes_length]; decide) hstk1 (by simp [hsp1, hspl])
+    (Int.toBytes 8 (label "type__" + 49184).toBitVec.toInt ++ Int.toBytes 8 rax1.toBitVec.toInt)
+    (Int.toBytes 8 t8.toBitVec.toInt) msg stk1 (sp1 ++ spl.drop 8) e1.toBitVec esp _
+    (by rw [hfs]; rfl) (by simp only []; decide) rfl (by simp only [List.length_append, Int.toBytes_length]; decide)
+    (Int.toBytes_length 8 _) hstk1 (by simp [hsp1, hspl]) (by rw [hfs]; omega)
     (by dsimp only
+        rw [← hei]
+        simp only [List.append_assoc]
         try simp only [lr_b144, lr_c64]
         rw [at_app sp1 (spl.drop 8) (b := rsp.toBitVec - 128) (by rw [hsp1]; bv_omega) (by simp [hsp1, hspl]),
           join4 (rsp.toBitVec - 72) (rsp.toBitVec - 64) (rsp.toBitVec - 56) (rsp.toBitVec - 48) _ _ _ _ (Int.toBytes_length 8 _)
@@ -351,11 +356,12 @@ set_option maxRecDepth 100000 in
 theorem lu_reject_misaligned_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k)
     (hf : LabelsFresh ListU64UnmarshalSSZ k)
     (s : MachineData) (ra guard e0 e1 t8 : UInt64) (he0 : e0 ≠ 0)
+    (hei : e0.toBitVec = (label "go_itab._errors.errorString_error").toBitVec) (esp : BitVec 64) (msg : List UInt8)
     (fp s98 a40 a50 rslot : List UInt8) (hfp : fp.length = 8) (h98 : s98.length = 8)
     (ha40 : a40.length = 16) (ha50 : a50.length = 16) (hrs : rslot.length = 8)
     (R : DataMem → Prop) (S : Nat) (scratch spl fs : List UInt8) (hsc : scratch.length = S)
     (hspl : spl.length = 40) (hfs : fs.length = 68)
-    (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : 8 ≤ avail)
+    (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : 8 ≤ avail) (hbud : msg.length + 8268 ≤ avail)
     (h_mem : s.dmem =⋆ Eq (spl.At (s.regs.rsp.toBitVec - 136)) ⋆ Eq (fs.At (label "go_string._" + 42646).toBitVec) ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s98.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq (a40.At (s.regs.rsp.toBitVec - 40)) ⋆ Eq (a50.At (s.regs.rsp.toBitVec - 24))
@@ -365,10 +371,10 @@ theorem lu_reject_misaligned_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt 
       ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec)
       ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At (label "ssz.ErrIncorrectListSize").toBitVec)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrIncorrectListSize" + 8).toBitVec)
-      ⋆ Eq ((Int.toBytes 8 t8.toBitVec.toInt).At (e0.toBitVec + 8)) ⋆ R)
+      ⋆ Eq ((Int.toBytes 8 t8.toBitVec.toInt).At (e0.toBitVec + 8)) ⋆ ErrStr e1.toBitVec esp msg ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat - 8) (hsp : 144 ≤ s.regs.rsp.toNat)
     (hlen : 4 ≤ s.regs.rcx.toNat) (hmis : (s.regs.rcx.toNat - 4) % 8 ≠ 0)
-    (hcv : ConvT64C Heap S) (hfe : FmtErrorfC Heap S) :
+    (hcv : ConvT64C Heap S) (hfe : FmtErrorfWC Heap S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
@@ -536,10 +542,13 @@ theorem lu_reject_misaligned_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt 
   rw [lr_c144] at *
   rw [← hA] at H10
   refine eventually_trans _ _ _ _ (hfe _ (Host.addrOf (k + 115 + 1)) av1 fs
-    (Int.toBytes 8 (label "type__" + 49184).toBitVec.toInt ++ (Int.toBytes 8 rax1.toBitVec.toInt
-      ++ (Int.toBytes 8 t8.toBitVec.toInt ++ Int.toBytes 8 e1.toBitVec.toInt)))
-    stk1 (sp1 ++ spl.drop 8) _ (by rw [hfs]; rfl) (by simp only []; decide) rfl (by simp only [List.length_append, Int.toBytes_length]; decide) hstk1 (by simp [hsp1, hspl])
+    (Int.toBytes 8 (label "type__" + 49184).toBitVec.toInt ++ Int.toBytes 8 rax1.toBitVec.toInt)
+    (Int.toBytes 8 t8.toBitVec.toInt) msg stk1 (sp1 ++ spl.drop 8) e1.toBitVec esp _
+    (by rw [hfs]; rfl) (by simp only []; decide) rfl (by simp only [List.length_append, Int.toBytes_length]; decide)
+    (Int.toBytes_length 8 _) hstk1 (by simp [hsp1, hspl]) (by rw [hfs]; omega)
     (by dsimp only
+        rw [← hei]
+        simp only [List.append_assoc]
         try simp only [lr_b144, lr_g96]
         rw [at_app sp1 (spl.drop 8) (b := rsp.toBitVec - 128) (by rw [hsp1]; bv_omega) (by simp [hsp1, hspl]),
           join4 (rsp.toBitVec - 40) (rsp.toBitVec - 32) (rsp.toBitVec - 24) (rsp.toBitVec - 16) _ _ _ _ (Int.toBytes_length 8 _)

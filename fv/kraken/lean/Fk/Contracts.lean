@@ -134,32 +134,6 @@ def FmtErrorfNilC (S : Nat) : Prop :=
           ⋆ Eq (fs.At st.regs.rax.toBitVec) ⋆ F) st'.data.dmem)
       ⟨st, label "fmt.errorf"⟩
 
-/-- `FmtErrorfC`: the internal `fmt.errorf` with at least one argument
-(`1 ≤ len(a) = cap(a)`). Go then always formats and returns a non-nil error
-(`errors.New`, `*wrapError` or `*wrapErrors`): rax ≠ 0. Premises: the format
-bytes `fs` at rax, the argument array `args` (16 bytes per `any`) at rcx, a
-heap, `S` scratch bytes, the 40-byte spill area. Result: rsp + 8, r14 kept,
-`fs` and `args` unchanged, the heap shrinks (`avail' ≤ avail`), `F` unchanged.
-
-Trusted, not narrowed further: fmt reads the values behind the interface
-words (in `F`) and calls `Error()` on `%w` arguments; the contract assumes
-that this terminates and writes nothing in `F` (CONTRACTS.md). -/
-def FmtErrorfC (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
-  ∀ (st : MachineData) (ret : Int64) (avail : Nat) (fs args stk spill : List UInt8) (F : DataMem → Prop),
-    st.regs.rbx.toNat = fs.length → 1 ≤ st.regs.rdi.toNat → st.regs.rsi = st.regs.rdi →
-    args.length = 16 * st.regs.rdi.toNat → stk.length = S → spill.length = 40 →
-    (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
-      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (st.regs.rsp.toBitVec + 8))
-      ⋆ Eq (fs.At st.regs.rax.toBitVec) ⋆ Eq (args.At st.regs.rcx.toBitVec) ⋆ Heap avail ⋆ F) st.dmem →
-    Eventually (step1 Host.exe)
-      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.r14 = st.regs.r14
-        ∧ st'.data.regs.rax ≠ 0 ∧
-        ∃ (stk' spill' : List UInt8) (avail' : Nat), stk'.length = S ∧ spill'.length = 40 ∧ avail' ≤ avail ∧
-        (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
-          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill'.At (st.regs.rsp.toBitVec + 8))
-          ⋆ Eq (fs.At st.regs.rax.toBitVec) ⋆ Eq (args.At st.regs.rcx.toBitVec) ⋆ Heap avail' ⋆ F) st'.data.dmem)
-      ⟨st, label "fmt.errorf"⟩
-
 /-- A Go `*errors.errorString` at `e` (re-proof fix X5): the 16-byte object
 (string data pointer `sp`, string length) and the message bytes at `sp`. -/
 def ErrStr (e sp : BitVec 64) (msg : List UInt8) : DataMem → Prop :=
@@ -172,11 +146,13 @@ error: its type word `ity` is the word at `itab + 8` of the errorString itab
 (the code reads it there), its data word is `e`, and `ErrStr e sp msg` is in
 the footprint (fmt reads it; `Error()` returns the string). Allocation budget
 (premise): `fs.length + msg.length + 8192 ≤ avail` (the formatted string, the
-`*fmt.wrapError`, the printer). Result as `FmtErrorfC`, and `ity`, the error
-object and the message are unchanged.
+`*fmt.wrapError`, the printer). Result: rsp + 8, r14 kept, rax ≠ 0 (Go then
+always returns a non-nil error), `fs`, the argument array, `ity`, the error
+object and the message unchanged, the heap shrinks (`avail' ≤ avail`), `F`
+unchanged.
 
-Trusted, not narrowed further: the earlier arguments `pre` (none at the
-current call sites with this contract); that Go's allocation stays within
+Trusted, not narrowed further: the earlier arguments `pre` (the ListU64
+rejects pass the `convT64` box for `%d`; its contents are not specified); that Go's allocation stays within
 the budget; no GC during the call (the frame `F` is unchanged). -/
 def FmtErrorfWC (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
   ∀ (st : MachineData) (ret : Int64) (avail : Nat) (fs pre ity msg stk spill : List UInt8) (e sp : BitVec 64)

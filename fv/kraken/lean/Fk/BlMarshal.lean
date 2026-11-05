@@ -357,7 +357,7 @@ set_option maxRecDepth 100000 in
 valid Bitlist[2048] encoding (`¬ blValid`, EthLib's rule), MarshalSSZTo
 returns a nil slice and a non-nil error (rdi ≠ 0): `ValidateBitlistC` gives
 the errorString itab, the code reads its type word and wraps the error with
-`fmt.errorf("B: %w")` (`FmtErrorfC`). The offset 4 was already written after
+`fmt.errorf("B: %w")` (`FmtErrorfWC`). The offset 4 was already written after
 `dst[:len]`; the caller sees a nil slice (G2: `MarshalSSZTo` leaves `dst[:len]`
 as it was). -/
 theorem bl_marshal_reject_main (k : Nat) (hk : BitLMarshalSSZTo.IsInfixAt Host.prog k)

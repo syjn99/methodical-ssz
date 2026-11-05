@@ -11,9 +11,9 @@ The 1b review file `review/Review1b.lean` no longer elaborates against the new
 contract signatures; a type error is not a regression test. This module states
 what the old counterexamples exercised, as theorems in the build:
 
-- `joint_models`: one host and one heap (`bumpHeap`) satisfy ten contracts
+- `joint_models`: one host and one heap (`bumpHeap`) satisfy nine contracts
   together: makeslice (1-byte elements), memmove, growslice, the 16-byte
-  newobject (the errorString of the nil error paths), the three `fmt.errorf`
+  newobject (the errorString of the nil error paths), the two `fmt.errorf`
   contracts (one code), convT64 and both ValidateBitlist contracts (the
   `bsr`-free model; re-proof fix X5).
   `not_joint_false` states that these premises do not prove `False`.
@@ -77,16 +77,16 @@ theorem label_itab : label "go_itab._errors.errorString_error" = 0x10000 + 1 :=
   mk_label P _ 1 _ (by simp [P]) (by decide)
 theorem hit : (label "go_itab._errors.errorString_error").toBitVec ≠ 0 := by rw [label_itab]; decide
 
-/-- The ten contracts used by the theorems, in one host and one heap
-(re-proof fix X5: `FmtErrorfWC` and `ValidateBitlistErrC` added). -/
+/-- The nine contracts used by the theorems, in one host and one heap
+(re-proof fix X5: `FmtErrorfWC` replaced `FmtErrorfC`; `ValidateBitlistErrC` added). -/
 def Joint (S : Nat) (ty : BitVec 64) : Prop :=
   MakesliceC bumpHeap ty 1 S ∧ MemmoveC S ∧ GrowsliceC bumpHeap ty 1 S ∧ NewobjectC bumpHeap ty 16 S
-    ∧ FmtErrorfNilC S ∧ FmtErrorfC bumpHeap S ∧ FmtErrorfWC bumpHeap S ∧ ConvT64C bumpHeap S
+    ∧ FmtErrorfNilC S ∧ FmtErrorfWC bumpHeap S ∧ ConvT64C bumpHeap S
     ∧ ValidateBitlistC S ∧ ValidateBitlistErrC bumpHeap S
 
 theorem joint_models (S : Nat) (ty : BitVec 64) : Joint S ty :=
   ⟨bump_makeslice1 2 hkM hfM ty, rt_memmove 8 hkC hfC S, rt_growslice 8 hkC hfC ty S,
-    bump_newobject16 34 hkN hfN ty, rt_errorf_nil 40 hkE hfE S, rt_errorf 40 hkE hfE bumpHeap S,
+    bump_newobject16 34 hkN hfN ty, rt_errorf_nil 40 hkE hfE S,
     rt_errorf_w 40 hkE hfE bumpHeap S, rt_convT64 40 hkE hfE bumpHeap S, rt_validate_bitlist 51 hkV hfV S,
     rt_validate_bitlist_err 51 hkV hfV S⟩
 
