@@ -1,4 +1,6 @@
 import Fk.BvSpec
+import Fk.LuAccept
+import Fk.LuMarshal
 
 /-!
 # Composition check: decode, then marshal the same receiver (re-proof R7)
@@ -101,3 +103,78 @@ theorem bv_unmarshal_then_marshal (kd : Nat) (hkd : BitVecUnmarshalSSZ.IsInfixAt
   obtain ⟨e1, e2, e3, -, e5, -, -, -, -, f1, f2, f3, f4, f5, f6, f7, f8, -, -, -, -, -, -, -, -, hm'⟩ := hh
   dsimp only at e2 e3 hm'
   exact Eventually.done _ ⟨e1, e2, e3, e5, sep_true (by ecancel)⟩
+
+/-! ## ListU64: decode, then marshal the same receiver (re-proof fix X10)
+
+`lu_unmarshal_then_marshal`: ListU64.UnmarshalSSZ on `[4, 0, 0, 0] ++ bs`
+returns to the caller; the caller then calls ListU64.MarshalSSZTo on the same
+receiver (`hupd`: the call writes `ra2` into the same return slot), and the
+encoder appends `[4, 0, 0, 0] ++ bs` to dst. The receiver header (p, n, n), the
+data `bs` at p, the saved-rbp slot, the spill slot at rsp + 16 and the stack
+guard come from the conclusion of `lu_accept_main`. The encoder's slots at
+rsp − 24 and rsp − 16 are not in the decoder's footprint (its frame gap), so
+the caller passes them, with dst, in `R0`. -/
+
+set_option maxHeartbeats 16000000 in
+set_option maxRecDepth 100000 in
+theorem lu_unmarshal_then_marshal (kd : Nat) (hkd : ListU64UnmarshalSSZ.IsInfixAt Host.prog kd)
+    (hfd : LabelsFresh ListU64UnmarshalSSZ kd)
+    (km : Nat) (hkm : ListU64MarshalSSZTo.IsInfixAt Host.prog km) (hfm : LabelsFresh ListU64MarshalSSZTo km)
+    (bs : List UInt8) (n : Nat) (hbs : bs.length = 8 * n) (hn : n ≤ 16)
+    (s : MachineData) (ra ra2 guard : UInt64)
+    (fp s28 s30 s38 s90 s98 rslot cP cL cC l1 l2 pre o4 d : List UInt8)
+    (hfp : fp.length = 8) (h28 : s28.length = 8) (h30 : s30.length = 8) (h38 : s38.length = 8)
+    (h90 : s90.length = 8) (h98 : s98.length = 8) (hrs : rslot.length = 8)
+    (hcP : cP.length = 8) (hcL : cL.length = 8) (hcC : cC.length = 8)
+    (hl1 : l1.length = 8) (hl2 : l2.length = 8) (ho4 : o4.length = 4) (hd : d.length = 8 * n)
+    (dptr dlen cap : UInt64) (hpre : pre.length = dlen.toNat)
+    (hcap2 : dlen.toNat + 4 + 8 * n ≤ cap.toNat) (hcap2' : cap.toNat < 2 ^ 63)
+    (R0 : DataMem → Prop) (S : Nat) (scratch spm : List UInt8) (hsc : scratch.length = S) (hspm : spm.length = 24)
+    (Heap : Nat → DataMem → Prop) (avail : Nat)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (spm.At (s.regs.rsp.toBitVec - 136))
+      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s28.At (s.regs.rsp.toBitVec - 96))
+      ⋆ Eq (s30.At (s.regs.rsp.toBitVec - 88)) ⋆ Eq (s38.At (s.regs.rsp.toBitVec - 80))
+      ⋆ Eq (s90.At (s.regs.rsp.toBitVec + 8)) ⋆ Eq (s98.At (s.regs.rsp.toBitVec + 16))
+      ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 144)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 144 - BitVec.ofNat 64 S))
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+      ⋆ Heap avail
+      ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec)
+      ⋆ (Eq (bs.At (s.regs.rbx.toBitVec + 4))
+        ⋆ Eq (cP.At s.regs.rax.toBitVec) ⋆ Eq (cL.At (s.regs.rax.toBitVec + 8)) ⋆ Eq (cC.At (s.regs.rax.toBitVec + 16))
+        ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec)
+        ⋆ (Eq (l1.At (s.regs.rsp.toBitVec - 24)) ⋆ Eq (l2.At (s.regs.rsp.toBitVec - 16))
+          ⋆ Eq (pre.At dptr.toBitVec) ⋆ Eq (o4.At (dptr.toBitVec + dlen.toBitVec))
+          ⋆ Eq (d.At (dptr.toBitVec + BitVec.ofNat 64 (dlen.toNat + 4))) ⋆ R0)))
+    (hguard : guard.toNat < s.regs.rsp.toNat - 8) (hsp : 8 ≤ s.regs.rsp.toNat)
+    (hlen : s.regs.rcx.toNat = 4 + 8 * n) (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat)
+    (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hav : 8 * n ≤ avail)
+    (hms : MakesliceC Heap (label "type__" + 49120).toBitVec 8 S) :
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧
+        ∀ (m2 : DataMem) (zm : RegZmms) (fl : StatusFlags),
+          (∀ F : DataMem → Prop, (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec) ⋆ F) st.data.dmem →
+            (Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At s.regs.rsp.toBitVec) ⋆ F) m2) →
+          Eventually (step1 Host.exe)
+            (fun st' => st'.pc = Int64.ofBitVec ra2.toBitVec ∧ st'.data.regs.rax = dptr
+              ∧ st'.data.regs.rbx.toNat = dlen.toNat + 4 + 8 * n ∧
+              (Eq (pre.At dptr.toBitVec) ⋆ Eq ([4, 0, 0, 0].At (dptr.toBitVec + dlen.toBitVec))
+                ⋆ Eq (bs.At (dptr.toBitVec + BitVec.ofNat 64 (dlen.toNat + 4))) ⋆ fun _ => True) st'.data.dmem)
+            ⟨⟨{ st.data.regs with rax := s.regs.rax, rbx := dptr, rcx := dlen, rdi := cap, rsp := s.regs.rsp },
+              zm, fl, m2⟩, Host.addrOf km⟩)
+      ⟨s, Host.addrOf kd⟩ := by
+  refine eventually_trans _ _ _ _ (lu_accept_main kd hkd hfd bs n hbs hn s ra guard fp s28 s30 s38 s90 s98 rslot
+    cP cL cC hfp h28 h30 h38 h90 h98 hrs hcP hcL hcC _ S scratch spm hsc hspm Heap avail h_mem hguard hsp hlen
+    hcap hcap63 hav hms) ?_
+  rintro ⟨d', pc⟩ ⟨hpc, hrax, -, -, hr14, p, fp', s28', s30', s38', s90', s98', rs', sc', spm', hfp', h28', h30',
+    h38', h90', h98', hrs', hsc', hspm', hm⟩
+  refine Eventually.done _ ⟨hpc, hrax, fun m2 zm fl hupd => ?_⟩
+  have hm2 := hupd _ (by ecancel)
+  refine eventually_trans _ _ _ _ (lu_marshal_main km hkm hfm bs pre o4 d n hn hbs hd ho4 p _ ra2 guard
+    (by dsimp only; exact hpre) fp' s98' l1 l2 hfp' h98' hl1 hl2 _
+    (by dsimp only; rw [hr14]; ecancel)
+    (by dsimp only; omega) (by dsimp only; omega) (by dsimp only; omega) (by dsimp only; exact hcap2')) ?_
+  intro st' hh
+  obtain ⟨e1, e2, e3, -, -, -, -, -, hm'⟩ := hh
+  dsimp only at e2 e3 hm'
+  exact Eventually.done _ ⟨e1, e2, e3, sep_true (by ecancel)⟩

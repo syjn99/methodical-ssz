@@ -157,6 +157,7 @@ Fk.Compose	cmp_one	[Classical.choice, Quot.sound, propext]
 Fk.Compose	cmp_one'	[Classical.choice, Quot.sound, propext]
 Fk.Compose	cmp_scr	[Classical.choice, Quot.sound, propext]
 Fk.Compose	cmp_scr'	[Classical.choice, Quot.sound, propext]
+Fk.Compose	lu_unmarshal_then_marshal	[Classical.choice, Quot.sound, propext]
 Fk.Contracts	Fk.growLoop.eq_def	[]
 Fk.Contracts	Fk.growLoop_ge	[Classical.choice, Quot.sound, propext]
 Fk.Contracts	Fk.growLoop_le	[Classical.choice, Quot.sound, propext]
@@ -1409,4 +1410,4 @@ Fv1.SpecScalars	Fv1.sc_toValue_surjective	[Quot.sound, propext]
 Fv1.Transfer	Fv1.accepted_is_enc	[Classical.choice, Quot.sound, propext]
 Fv1.Transfer	Fv1.deserialize_enc	[Classical.choice, Quot.sound, propext]
 Fv1.Transfer	Fv1.rejected_not_enc	[Classical.choice, Quot.sound, propext]
-TOTAL 1411 NONSTANDARD 0
+TOTAL 1412 NONSTANDARD 0
