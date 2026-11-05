@@ -1,0 +1,37 @@
+# re-proof fix X7: label invariants (ScInv) for L_37 and L_3b; date Fri Nov  6 03:16:04 IST 2026
+Vg/ScAccept.lean:81:23: error: `finish` has failed after reaching the threshold `(instances := 1000)`, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:81:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:81:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:81:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:81:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:81:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:81:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:81:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:81:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:81:23: error: `finish` has failed after reaching the threshold `(instances := 1000)`, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:81:23: error: `finish` has failed after reaching the threshold `(instances := 1000)`, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:81:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:81:23: error: `finish` has failed after reaching the threshold `(instances := 1000)`, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:81:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:81:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:81:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:81:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+        7.13 real         5.25 user         1.52 sys
+          1236434944  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              171569  page reclaims
+                 334  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 127  voluntary context switches
+               30781  involuntary context switches
+          4928757309  instructions retired
+          2436770029  cycles elapsed
+           112539512  peak memory footprint
+EXIT 1
