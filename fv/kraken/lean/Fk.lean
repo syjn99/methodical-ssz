@@ -10,4 +10,5 @@ import Fk.ScSpec
 import Fk.LuLoop
 import Fk.Contracts
 import Fk.Bump
+import Fk.Witness
 import Fk.LuAccept
