@@ -28,12 +28,14 @@ Checks (REPORT-1b, B1):
      bytes as a nop (1b-fix X6: a `retq` there used to pass).
  (e) all.S has the same directives as the per-function .S files, in order
      (instructions included, not only labels).
- (f) lean/Fk/SHash.lean lists the sha256 of every .S file that Lean reads
-     (link/out/norm/*.S, lean/Fk/*.S), as link/shash.sh writes it; a stale
+ (f) the value of the definition `Fk.sHash` in lean/Fk/SHash.lean (read with
+     comments removed, so hashes in a comment do not count) lists the sha256
+     of every .S file that Lean reads (link/out/norm/*.S, lean/Fk/*.S); a stale
      SHash means Lake may not rebuild the proofs after a .S change.
- (g) format strings that the proofs fix (FmtErrorfNilC, `%` absent): the ELF
-     bytes at `go_string._+off`, the literal in the Go source line, and the
-     Lean byte list are equal.
+ (g) format strings that the proofs fix (FmtErrorfNilC, `%` absent): for every
+     offset that a Lean statement uses (`<name>.At (label "go_string._" + off)`),
+     the ELF bytes at `go_string._+off` equal the Lean byte list, and the Go
+     source has a `fmt.Errorf` literal with the same bytes.
 The bundle hash (sha256 over RESULT up to and including the last PASS line,
 which covers the ELF, the .S files, Code.lean and AXIOMS.txt hashes) is the
 last line.
@@ -54,10 +56,32 @@ conv = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(conv)
 
 
-# (g): format strings fixed by the ListC reject proofs (Fk/LcReject.lean).
-FMTS = [("go_string._", 39330, "lcFmtZero", "types1b.ssz.go", 243),
-        ("go_string._", 41960, "lcFmtShort", "types1b.ssz.go", 254),
-        ("go_string._", 41960, "lcFmtShort", "types1b.ssz.go", 280)]
+# (g): format strings fixed by the reject proofs: (Lean file that defines the
+# byte list, Lean name, Go source file relative to the repository root). The
+# ELF offset is read from every `<name>.At (label "go_string._" + off)` in the
+# Lean sources, so a proof that names a stale offset fails here.
+FMTS = [("LcReject.lean", "lcFmtZero", "fv/kraken/target/types1b.ssz.go"),
+        ("LcReject.lean", "lcFmtShort", "fv/kraken/target/types1b.ssz.go")]
+
+
+def lean_value(txt, name):
+    """String items of `def <name> : List String := [...]`, comments removed."""
+    out, i, depth = [], 0, 0
+    while i < len(txt):  # drop nested /- -/ block comments and -- line comments
+        if txt.startswith("/-", i):
+            depth, i = depth + 1, i + 2
+        elif depth and txt.startswith("-/", i):
+            depth, i = depth - 1, i + 2
+        elif not depth and txt.startswith("--", i):
+            i = txt.find("\n", i) % (len(txt) + 1)
+        else:
+            if not depth:
+                out.append(txt[i])
+            i += 1
+    code = "".join(out)
+    defs = re.findall(r"\bdef\s+" + re.escape(name) + r"\s*:\s*List String\s*:=\s*\[([^\]]*)\]", code)
+    need(len(defs) == 1, f"(f) expected one definition of {name} outside comments, found {len(defs)}")
+    return re.findall(r'"([^"]*)"', defs[0])
 
 
 class Fail(Exception):
@@ -152,7 +176,7 @@ def parse_S(path):
     return out
 
 
-def run(outdir, log, shash=True):
+def run(outdir, log, shash=True, shash_file=None):
     outdir = pathlib.Path(outdir)
     elf = outdir / "p1bin-amd64"
     b, secs, esyms = read_elf(elf)
@@ -269,27 +293,33 @@ def run(outdir, log, shash=True):
     if not shash:
         log("SKIP (f) (selftest copy)")
     files = sorted((outdir / "norm").glob("*.S")) + sorted((lean / "Fk").glob("*.S"))
-    shtxt = (lean / "Fk" / "SHash.lean").read_text()
-    got = sorted(re.findall(r'"([0-9a-f]{64}) ([^"]+)"', shtxt), key=lambda x: x[1])
+    shtxt = pathlib.Path(shash_file or lean / "Fk" / "SHash.lean").read_text()
+    items = lean_value(shtxt, "Fk.sHash")
+    need(items[-1:] == ["end"], "(f) Fk.sHash does not end with \"end\"")
+    got = sorted((tuple(x.split(" ", 1)) for x in items[:-1]), key=lambda x: x[1])
     exp = sorted([(sha(f), f.name) for f in files], key=lambda x: x[1])
     need(not shash or got == exp, "lean/Fk/SHash.lean is stale; run link/shash.sh" +
          next((f" (first: {x} vs {y})" for x, y in zip(got, exp) if x != y), f" ({len(got)} vs {len(exp)} files)"))
-    log(f"PASS (f) SHash.lean lists the sha256 of all {len(exp)} .S files")
+    log(f"PASS (f) the value of Fk.sHash (comments removed) lists the sha256 of all {len(exp)} .S files")
     # (g) format strings: ELF rodata = Go source literal = Lean byte list
-    for g, off, ldef, gofile, goline in FMTS:
-        txt = (HERE.parent / "lean" / "Fk" / "LcReject.lean").read_text()
+    g = "go_string._"
+    alllean = "\n".join(p.read_text() for p in sorted((lean / "Fk").glob("*.lean")))
+    for lfile, ldef, gofile in FMTS:
+        txt = (lean / "Fk" / lfile).read_text()
         m = re.search(r"def " + ldef + r" : List UInt8 :=\s*\[([0-9, ]+)\]", txt)
         need(m, f"(g) Lean definition {ldef} not found")
         lb = bytes(int(x) for x in m[1].split(","))
-        src = (HERE.parent / "target" / gofile).read_text().splitlines()[goline - 1]
-        mm = re.search(r'fmt\.Errorf\("([^"%\\]*)"\)', src)
-        need(mm, f"(g) {gofile}:{goline} has no plain fmt.Errorf literal")
-        gb = mm[1].encode()
-        sa = esyms[orig(g)][0]
-        eb = elf_bytes(b, secs, sa + off, len(lb))
-        need(lb == gb == eb, f"(g) {ldef}: Lean {lb!r} Go {gb!r} ELF {eb!r}")
+        offs = sorted({int(x) for x in re.findall(re.escape(ldef) + r'\.At \(label "go_string\._" \+ (\d+)\)', alllean)})
+        need(offs, f"(g) no Lean statement places {ldef} at go_string._+off")
+        src = (HERE.parent.parent.parent / gofile).read_text().splitlines()
+        lits = [i + 1 for i, l in enumerate(src) if re.search(r'fmt\.Errorf\("' + re.escape(lb.decode()) + r'"\)', l)]
+        need(lits, f"(g) {gofile} has no fmt.Errorf literal equal to Lean {ldef}")
         need(b"%" not in lb, f"(g) {ldef} has a %")
-        log(f"PASS (g) {g}+{off} ({len(lb)} bytes) = {gofile}:{goline} = Lean {ldef}")
+        sa = esyms[orig(g)][0]
+        for off in offs:
+            eb = elf_bytes(b, secs, sa + off, len(lb))
+            need(lb == eb, f"(g) {ldef}: Lean {lb!r} ELF {g}+{off} {eb!r}")
+            log(f"PASS (g) {g}+{off} ({len(lb)} bytes) = Lean {ldef} = {gofile} lines {lits}")
     # (d) reassembly
     diffs = reassemble(per_fn, {g.split("+")[0]: orig(g.split("+")[0]) for g in externals}, esyms, b, secs, outdir)
     for name, a, kind, orig, new, txt in diffs:
@@ -450,7 +480,13 @@ def selftest(outdir):
         t = copy(); p = t / "norm" / "target.Scalars.SizeSSZ.S"
         p.write_text(p.read_text() + "\n")
         cases.append(("stale SHash.lean", t, False))
-        # 9. unchanged copy passes
+        # 9. hashes only in a comment, Fk.sHash itself empty (astra 1b-fix finding 2)
+        t = copy(); sh = t / "SHash.lean"
+        body = (HERE.parent / "lean" / "Fk" / "SHash.lean").read_text()
+        sh.write_text("module\n/-\n" + body.replace("module\n", "", 1) + "\n-/\n"
+                      "@[expose] public def Fk.sHash : List String := [\"end\"]\n")
+        cases.append(("hashes only in a comment", t, False))
+        # 10. unchanged copy passes
         t = copy()
         cases.append(("unchanged copy", t, True))
         ok = True
@@ -458,7 +494,9 @@ def selftest(outdir):
             why = ""
             try:
                 conv.CLEANED.clear()
-                run(t, lambda s: None, shash=name in ("stale SHash.lean", "unchanged copy"))
+                sh = t / "SHash.lean"
+                run(t, lambda s: None, shash=name in ("stale SHash.lean", "hashes only in a comment", "unchanged copy"),
+                    shash_file=sh if sh.exists() else None)
                 got = True
             except (Fail, SystemExit) as e:
                 got, why = False, str(e).splitlines()[0][:120]

@@ -25,7 +25,7 @@ L_ssz.ValidateBitlist_0:
   nopl (%rax)
   cmp %r8,%rdx
   jae L_ssz.ValidateBitlist_b4
-  lea go_string._+5738(%rip),%rax
+  lea go_string._+5743(%rip),%rax
   mov $0xd,%ebx
   xor %ecx,%ecx
   xor %edi,%edi
@@ -38,7 +38,7 @@ L_ssz.ValidateBitlist_0:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0xd,0x8(%rax)
-  lea go_string._+5738(%rip),%rcx
+  lea go_string._+5743(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -53,7 +53,7 @@ L_ssz.ValidateBitlist_b4:
   pop %rbp
   retq
 L_ssz.ValidateBitlist_be:
-  lea go_string._+13267(%rip),%rax
+  lea go_string._+13272(%rip),%rax
   mov $0x15,%ebx
   xor %ecx,%ecx
   xor %edi,%edi
@@ -65,7 +65,7 @@ L_ssz.ValidateBitlist_be:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x15,0x8(%rax)
-  lea go_string._+13267(%rip),%rcx
+  lea go_string._+13272(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -89,7 +89,7 @@ L_ssz.ValidateBitlist_10a:
   lea type__+49120(%rip),%rcx
   mov %rcx,0x40(%rsp)
   mov %rax,0x48(%rsp)
-  lea go_string._+37075(%rip),%rax
+  lea go_string._+37115(%rip),%rax
   mov $0x2f,%ebx
   lea 0x30(%rsp),%rcx
   mov $0x2,%edi
@@ -101,7 +101,7 @@ L_ssz.ValidateBitlist_10a:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x2f,0x8(%rax)
-  lea go_string._+37075(%rip),%rcx
+  lea go_string._+37115(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -110,7 +110,7 @@ L_ssz.ValidateBitlist_1a2:
   pop %rbp
   retq
 L_ssz.ValidateBitlist_1a8:
-  lea go_string._+33565(%rip),%rax
+  lea go_string._+33605(%rip),%rax
   mov $0x2a,%ebx
   xor %ecx,%ecx
   xor %edi,%edi
@@ -123,7 +123,7 @@ L_ssz.ValidateBitlist_1a8:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x2a,0x8(%rax)
-  lea go_string._+33565(%rip),%rcx
+  lea go_string._+33605(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax

@@ -5,7 +5,7 @@ import Fk.LcReject
 # ListC.UnmarshalSSZ: the empty list (`len(buf) = 4`)
 
 `lc_accept_empty_main`: with `buf = [4, 0, 0, 0]` the decoder sets `c.Items`
-to the empty slice (pointer `runtime.noptrbss`, len 0, cap 0) and returns nil.
+to the empty slice (pointer `runtime.zerobase`, len 0, cap 0) and returns nil.
 `lc_unmarshal_accept_empty_spec_k`: EthLib accepts a 4-byte input only as the
 empty list, and the machine result holds that value.
 
@@ -37,7 +37,7 @@ theorem lc_accept_empty_main (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.pr
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
-        ∧ (Eq ((Int.toBytes 8 (label "runtime.noptrbss").toBitVec.toInt).At s.regs.rax.toBitVec)
+        ∧ (Eq ((Int.toBytes 8 (label "runtime.zerobase").toBitVec.toInt).At s.regs.rax.toBitVec)
           ⋆ Eq ((List.replicate 16 0).At (s.regs.rax.toBitVec + 8))
           ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
@@ -162,7 +162,7 @@ theorem lc_accept_empty_main (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.pr
 set_option maxHeartbeats 4000000 in
 /-- **ListC empty list against EthLib.** If EthLib accepts a 4-byte input
 `bsA` as `v`, then `v` is the empty list (`g.items = []`), `bsA = lcEncode g`,
-and the machine sets `c.Items` to (`runtime.noptrbss`, 0, 0) and returns nil. -/
+and the machine sets `c.Items` to (`runtime.zerobase`, 0, 0) and returns nil. -/
 theorem lc_unmarshal_accept_empty_spec_k (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
     (hf : LabelsFresh ListCUnmarshalSSZ k)
     (bsA : Array UInt8) (v : Value) (hd : deserialize lcDesc bsA = .ok v) (h4 : bsA.size = 4)
@@ -183,7 +183,7 @@ theorem lc_unmarshal_accept_empty_spec_k (k : Nat) (hk : ListCUnmarshalSSZ.IsInf
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
-        ∧ (Eq ((Int.toBytes 8 (label "runtime.noptrbss").toBitVec.toInt).At s.regs.rax.toBitVec)
+        ∧ (Eq ((Int.toBytes 8 (label "runtime.zerobase").toBitVec.toInt).At s.regs.rax.toBitVec)
           ⋆ Eq ((List.replicate 16 0).At (s.regs.rax.toBitVec + 8))
           ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by

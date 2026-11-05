@@ -41,7 +41,7 @@ L_target.ListC.UnmarshalSSZ_0:
   data16 nop
   cmp %rbx,%rcx
   jae L_target.ListC.UnmarshalSSZ_f7
-  lea go_string._+41960(%rip),%rax
+  lea go_string._+42000(%rip),%rax
   mov $0x3f,%ebx
   xor %ecx,%ecx
   xor %edi,%edi
@@ -54,7 +54,7 @@ L_target.ListC.UnmarshalSSZ_0:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x3f,0x8(%rax)
-  lea go_string._+41960(%rip),%rcx
+  lea go_string._+42000(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -68,8 +68,8 @@ L_target.ListC.UnmarshalSSZ_f7:
   mov %r8,0x50(%rsp)
   mov %r9,0x60(%rsp)
   mov %rdx,0x38(%rsp)
-  mov %rbx,0x48(%rsp)
   mov %rdi,0x100(%rsp)
+  mov %rbx,0x48(%rsp)
   lea type__+114368(%rip),%rax
   mov %rdx,%rbx
   mov %rbx,%rcx
@@ -108,7 +108,7 @@ L_target.ListC.UnmarshalSSZ_1b2:
   mov ssz.ErrListTooBig+8(%rip),%rdx
   mov %rcx,0xb8(%rsp)
   mov %rdx,0xc0(%rsp)
-  lea go_string._+40930(%rip),%rax
+  lea go_string._+40970(%rip),%rax
   mov $0x3b,%ebx
   lea 0xa8(%rsp),%rcx
   mov $0x2,%edi
@@ -120,7 +120,7 @@ L_target.ListC.UnmarshalSSZ_1b2:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x3b,0x8(%rax)
-  lea go_string._+40930(%rip),%rcx
+  lea go_string._+40970(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -135,7 +135,7 @@ L_target.ListC.UnmarshalSSZ_221:
   lea type__+49120(%rip),%rcx
   mov %rcx,0xc8(%rsp)
   mov %rax,0xd0(%rsp)
-  lea go_string._+44011(%rip),%rax
+  lea go_string._+44051(%rip),%rax
   mov $0x72,%ebx
   lea 0xc8(%rsp),%rcx
   mov $0x1,%edi
@@ -147,7 +147,7 @@ L_target.ListC.UnmarshalSSZ_221:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x72,0x8(%rax)
-  lea go_string._+44011(%rip),%rcx
+  lea go_string._+44051(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -156,7 +156,7 @@ L_target.ListC.UnmarshalSSZ_298:
   pop %rbp
   retq
 L_target.ListC.UnmarshalSSZ_2a1:
-  lea go_string._+39330(%rip),%rax
+  lea go_string._+39370(%rip),%rax
   mov $0x35,%ebx
   xor %ecx,%ecx
   xor %edi,%edi
@@ -168,7 +168,7 @@ L_target.ListC.UnmarshalSSZ_2a1:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x35,0x8(%rax)
-  lea go_string._+39330(%rip),%rcx
+  lea go_string._+39370(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -186,13 +186,13 @@ L_target.ListC.UnmarshalSSZ_2f0:
   callq runtime.gcWriteBarrier1
   mov %rcx,(%r11)
 L_target.ListC.UnmarshalSSZ_30f:
-  lea runtime.noptrbss(%rip),%rcx
+  lea runtime.zerobase(%rip),%rcx
   mov %rcx,(%rax)
   xor %eax,%eax
   xor %ecx,%ecx
   jmp L_target.ListC.UnmarshalSSZ_39c
 L_target.ListC.UnmarshalSSZ_31f:
-  lea go_string._+41960(%rip),%rax
+  lea go_string._+42000(%rip),%rax
   mov $0x3f,%ebx
   xor %ecx,%ecx
   xor %edi,%edi
@@ -204,7 +204,7 @@ L_target.ListC.UnmarshalSSZ_31f:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x3f,0x8(%rax)
-  lea go_string._+41960(%rip),%rcx
+  lea go_string._+42000(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -320,7 +320,7 @@ L_target.ListC.UnmarshalSSZ_4f9:
   lea type__+49120(%rip),%rcx
   mov %rcx,0x98(%rsp)
   mov %rax,0xa0(%rsp)
-  lea go_string._+41466(%rip),%rax
+  lea go_string._+41506(%rip),%rax
   mov $0x3d,%ebx
   lea 0x98(%rsp),%rcx
   mov $0x1,%edi
@@ -333,7 +333,7 @@ L_target.ListC.UnmarshalSSZ_4f9:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x3d,0x8(%rax)
-  lea go_string._+41466(%rip),%rcx
+  lea go_string._+41506(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -348,7 +348,7 @@ L_target.ListC.UnmarshalSSZ_57c:
 L_target.ListC.UnmarshalSSZ_588:
   mov %rax,0x68(%rsp)
   mov %rbx,0x70(%rsp)
-  lea go_string._+2153(%rip),%rax
+  lea go_string._+2158(%rip),%rax
   mov $0x9,%ebx
   lea 0x68(%rsp),%rcx
   mov $0x1,%edi
@@ -361,7 +361,7 @@ L_target.ListC.UnmarshalSSZ_588:
   nopl (%rax)
   callq runtime.newobject
   movq $0x9,0x8(%rax)
-  lea go_string._+2153(%rip),%rcx
+  lea go_string._+2158(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -385,7 +385,7 @@ L_target.ListC.UnmarshalSSZ_5ea:
   lea type__+49120(%rip),%rcx
   mov %rcx,0x88(%rsp)
   mov %rax,0x90(%rsp)
-  lea go_string._+42539(%rip),%rax
+  lea go_string._+42579(%rip),%rax
   mov $0x43,%ebx
   lea 0x78(%rsp),%rcx
   mov $0x2,%edi
@@ -397,7 +397,7 @@ L_target.ListC.UnmarshalSSZ_5ea:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x43,0x8(%rax)
-  lea go_string._+42539(%rip),%rcx
+  lea go_string._+42579(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax

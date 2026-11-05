@@ -69,7 +69,7 @@ L_target.ListU64.UnmarshalSSZ_109:
   mov ssz.ErrListTooBig+8(%rip),%rdx
   mov %rcx,0x50(%rsp)
   mov %rdx,0x58(%rsp)
-  lea go_string._+40250(%rip),%rax
+  lea go_string._+40290(%rip),%rax
   mov $0x38,%ebx
   lea 0x40(%rsp),%rcx
   mov $0x2,%edi
@@ -81,7 +81,7 @@ L_target.ListU64.UnmarshalSSZ_109:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x38,0x8(%rax)
-  lea go_string._+40250(%rip),%rcx
+  lea go_string._+40290(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -108,7 +108,7 @@ L_target.ListU64.UnmarshalSSZ_1a9:
   mov ssz.ErrIncorrectListSize+8(%rip),%rdx
   mov %rcx,0x70(%rsp)
   mov %rdx,0x78(%rsp)
-  lea go_string._+42606(%rip),%rax
+  lea go_string._+42646(%rip),%rax
   mov $0x44,%ebx
   lea 0x60(%rsp),%rcx
   mov $0x2,%edi
@@ -120,7 +120,7 @@ L_target.ListU64.UnmarshalSSZ_1a9:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x44,0x8(%rax)
-  lea go_string._+42606(%rip),%rcx
+  lea go_string._+42646(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax

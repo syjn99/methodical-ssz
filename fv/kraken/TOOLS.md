@@ -2,6 +2,37 @@
 
 날짜: 2026-11-04. 호스트: macOS arm64, 18코어, 48 GB. 시간은 `/usr/bin/time`의 real 값, 메모리는 최대 RSS다.
 
+## 고정 버전 (재증명, 2026-11-05)
+
+이 표가 재증명 세션의 기준이다. 아래 1b 표와 다르면 이 표를 따른다.
+
+| 항목 | 값 | 어디서 고정하는가 |
+| --- | --- | --- |
+| 생성기 | 브랜치 `syjn99/ssz-fv-reprove` `2d0150b` = 1b-fix `f452384` + `syjn99/ssz-gen-fixes` `698c202` 병합. 생성기 소스(`sszgen/`, `ssz/`)는 `698c202`와 같다 | `git rev-parse HEAD:ssz`, `link/out/build-ids.txt` |
+| 생성 명령 | 아래 "대상 생성" | 이 파일 |
+| Go | 1.26.3, `GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 -tags purego -trimpath` | `link/build.sh`, `link/out/build-ids.txt` |
+| 런타임 | Go 1.26.3 표준 런타임(같은 툴체인) | 위와 같다 |
+| Prysm 타입 배치 | v7.1.8 `51b5a75ebbadf05af22bd2601b5baf7a9e99b66d`의 Checkpoint·AttestationData 스키마를 옮긴 축약 구조체(`target/prysm/types.go`, 바뀌지 않음) | `target/prysm/types.go` |
+| gohashtree | `v0.0.5-beta`(go.mod). 이 세션의 정리는 해시를 다루지 않는다 | `go.mod` |
+| go-bitfield | `v0.0.0-20260504143531-5cbb6d0f5f2e` | `go.mod` |
+| Kraken, Lean, EthLib | 1b와 같다(아래 표) | `lean/lake-manifest.json` |
+| ELF | sha256 `9c850c97…c501` | `link/out/build-ids.txt` |
+
+### 대상 생성
+
+저장소 루트에서 실행한다. `--output`은 파일 경로다.
+
+```sh
+P=github.com/OffchainLabs/methodical-ssz/fv/kraken/target
+go run ./cmd/ssz gen --package $P --output=fv/kraken/target/types.ssz.go --type-names=Scalars,FixedVec,ListU64
+go run ./cmd/ssz gen --package $P --output=fv/kraken/target/types1b.ssz.go --type-names=BitVec,Nested,ListC,BitL
+go run ./cmd/ssz gen --package $P/prysm --output=fv/kraken/target/prysm/types.ssz.go --type-names=Checkpoint,AttestationData
+fv/kraken/link/build.sh
+```
+
+이전 생성 파일과의 차이는 세 종류뿐이다(REPORT-1b-reprove.md R1).
+Prysm 축약 타입의 생성 파일은 바뀌지 않았다.
+
 ## 고정 버전 (1b, B4b)
 
 이 표가 1b의 기준이다. 아래 평가 세션 표와 다르면 이 표를 따른다.

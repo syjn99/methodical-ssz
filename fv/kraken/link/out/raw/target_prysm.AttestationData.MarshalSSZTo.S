@@ -159,7 +159,7 @@ L_target_prysm.AttestationData.MarshalSSZTo_28c:
 L_target_prysm.AttestationData.MarshalSSZTo_2a6:
   mov %r8,0xb8(%rsp)
   mov %r9,0xc0(%rsp)
-  lea go_string._+3146(%rip),%rax
+  lea go_string._+3151(%rip),%rax
   mov $0xa,%ebx
   lea 0xb8(%rsp),%rcx
   mov $0x1,%edi
@@ -171,7 +171,7 @@ L_target_prysm.AttestationData.MarshalSSZTo_2a6:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0xa,0x8(%rax)
-  lea go_string._+3146(%rip),%rcx
+  lea go_string._+3151(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -279,7 +279,7 @@ L_target_prysm.AttestationData.MarshalSSZTo_482:
 L_target_prysm.AttestationData.MarshalSSZTo_49a:
   mov %rdx,0xd0(%rsp)
   mov %r8,0xd8(%rsp)
-  lea go_string._+3156(%rip),%rax
+  lea go_string._+3161(%rip),%rax
   mov $0xa,%ebx
   lea 0xd0(%rsp),%rcx
   mov $0x1,%edi
@@ -291,7 +291,7 @@ L_target_prysm.AttestationData.MarshalSSZTo_49a:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0xa,0x8(%rax)
-  lea go_string._+3156(%rip),%rcx
+  lea go_string._+3161(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax

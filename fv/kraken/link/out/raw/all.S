@@ -1,3 +1,76 @@
+ssz.ValidateBitvector:
+L_ssz.ValidateBitvector_0:
+  cmp 0x10(%r14),%rsp
+  jbe L_ssz.ValidateBitvector_c0
+  push %rbp
+  mov %rsp,%rbp
+  sub $0x28,%rsp
+  mov %rax,0x38(%rsp)
+  mov %rdi,%rcx
+  and $0x7,%ecx
+  shr $0x3,%rdi
+  test %rcx,%rcx
+  setne %dl
+  movzbl %dl,%edx
+  add %rdi,%rdx
+  cmp %rdx,%rbx
+  jne L_ssz.ValidateBitvector_a6
+  test %rcx,%rcx
+  je L_ssz.ValidateBitvector_9c
+  lea -0x1(%rbx),%rdx
+  nopl (%rax,%rax,1)
+  cmp %rdx,%rbx
+  jbe L_ssz.ValidateBitvector_ba
+  movzbl -0x1(%rbx,%rax,1),%edx
+  shr %cl,%dl
+  test %dl,%dl
+  je L_ssz.ValidateBitvector_9c
+  lea go_string._+27706(%rip),%rax
+  mov $0x23,%ebx
+  xor %ecx,%ecx
+  xor %edi,%edi
+  mov %rdi,%rsi
+  callq fmt.errorf
+  test %rax,%rax
+  jne L_ssz.ValidateBitvector_96
+  nop
+  lea type__+82848(%rip),%rax
+  callq runtime.newobject
+  movq $0x23,0x8(%rax)
+  lea go_string._+27706(%rip),%rcx
+  mov %rcx,(%rax)
+  mov %rax,%rbx
+  lea go_itab._errors.errorString_error(%rip),%rax
+L_ssz.ValidateBitvector_96:
+  add $0x28,%rsp
+  pop %rbp
+  retq
+L_ssz.ValidateBitvector_9c:
+  xor %eax,%eax
+  xor %ebx,%ebx
+  add $0x28,%rsp
+  pop %rbp
+  retq
+L_ssz.ValidateBitvector_a6:
+  mov ssz.ErrBytesLength(%rip),%rax
+  mov ssz.ErrBytesLength+8(%rip),%rbx
+  add $0x28,%rsp
+  pop %rbp
+  retq
+L_ssz.ValidateBitvector_ba:
+  callq runtime.panicBounds
+  nop
+L_ssz.ValidateBitvector_c0:
+  mov %rax,0x8(%rsp)
+  mov %rbx,0x10(%rsp)
+  mov %rcx,0x18(%rsp)
+  mov %rdi,0x20(%rsp)
+  callq runtime.morestack_noctxt.abi0
+  mov 0x8(%rsp),%rax
+  mov 0x10(%rsp),%rbx
+  mov 0x18(%rsp),%rcx
+  mov 0x20(%rsp),%rdi
+  jmpq L_ssz.ValidateBitvector_0
 ssz.ValidateBitlist:
 L_ssz.ValidateBitlist_0:
   cmp 0x10(%r14),%rsp
@@ -25,7 +98,7 @@ L_ssz.ValidateBitlist_0:
   nopl (%rax)
   cmp %r8,%rdx
   jae L_ssz.ValidateBitlist_b4
-  lea go_string._+5738(%rip),%rax
+  lea go_string._+5743(%rip),%rax
   mov $0xd,%ebx
   xor %ecx,%ecx
   xor %edi,%edi
@@ -38,7 +111,7 @@ L_ssz.ValidateBitlist_0:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0xd,0x8(%rax)
-  lea go_string._+5738(%rip),%rcx
+  lea go_string._+5743(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -53,7 +126,7 @@ L_ssz.ValidateBitlist_b4:
   pop %rbp
   retq
 L_ssz.ValidateBitlist_be:
-  lea go_string._+13267(%rip),%rax
+  lea go_string._+13272(%rip),%rax
   mov $0x15,%ebx
   xor %ecx,%ecx
   xor %edi,%edi
@@ -65,7 +138,7 @@ L_ssz.ValidateBitlist_be:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x15,0x8(%rax)
-  lea go_string._+13267(%rip),%rcx
+  lea go_string._+13272(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -89,7 +162,7 @@ L_ssz.ValidateBitlist_10a:
   lea type__+49120(%rip),%rcx
   mov %rcx,0x40(%rsp)
   mov %rax,0x48(%rsp)
-  lea go_string._+37075(%rip),%rax
+  lea go_string._+37115(%rip),%rax
   mov $0x2f,%ebx
   lea 0x30(%rsp),%rcx
   mov $0x2,%edi
@@ -101,7 +174,7 @@ L_ssz.ValidateBitlist_10a:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x2f,0x8(%rax)
-  lea go_string._+37075(%rip),%rcx
+  lea go_string._+37115(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -110,7 +183,7 @@ L_ssz.ValidateBitlist_1a2:
   pop %rbp
   retq
 L_ssz.ValidateBitlist_1a8:
-  lea go_string._+33565(%rip),%rax
+  lea go_string._+33605(%rip),%rax
   mov $0x2a,%ebx
   xor %ecx,%ecx
   xor %edi,%edi
@@ -123,7 +196,7 @@ L_ssz.ValidateBitlist_1a8:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x2a,0x8(%rax)
-  lea go_string._+33565(%rip),%rcx
+  lea go_string._+33605(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -666,7 +739,7 @@ L_target.ListU64.UnmarshalSSZ_109:
   mov ssz.ErrListTooBig+8(%rip),%rdx
   mov %rcx,0x50(%rsp)
   mov %rdx,0x58(%rsp)
-  lea go_string._+40250(%rip),%rax
+  lea go_string._+40290(%rip),%rax
   mov $0x38,%ebx
   lea 0x40(%rsp),%rcx
   mov $0x2,%edi
@@ -678,7 +751,7 @@ L_target.ListU64.UnmarshalSSZ_109:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x38,0x8(%rax)
-  lea go_string._+40250(%rip),%rcx
+  lea go_string._+40290(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -705,7 +778,7 @@ L_target.ListU64.UnmarshalSSZ_1a9:
   mov ssz.ErrIncorrectListSize+8(%rip),%rdx
   mov %rcx,0x70(%rsp)
   mov %rdx,0x78(%rsp)
-  lea go_string._+42606(%rip),%rax
+  lea go_string._+42646(%rip),%rax
   mov $0x44,%ebx
   lea 0x60(%rsp),%rcx
   mov $0x2,%edi
@@ -717,7 +790,7 @@ L_target.ListU64.UnmarshalSSZ_1a9:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x44,0x8(%rax)
-  lea go_string._+42606(%rip),%rcx
+  lea go_string._+42646(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -794,52 +867,101 @@ target.BitVec.SizeSSZ:
 target.BitVec.MarshalSSZTo:
 L_target.BitVec.MarshalSSZTo_0:
   cmp 0x10(%r14),%rsp
-  jbe L_target.BitVec.MarshalSSZTo_96
+  jbe L_target.BitVec.MarshalSSZTo_15a
   push %rbp
   mov %rsp,%rbp
-  sub $0x30,%rsp
-  mov %rbx,0x48(%rsp)
+  sub $0x50,%rsp
+  mov %rax,0x60(%rsp)
+  mov %rdi,0x78(%rsp)
+  mov %rcx,0x70(%rsp)
+  mov %rbx,0x68(%rsp)
   mov (%rax),%rdx
-  cmpq $0x1,0x8(%rax)
+  mov 0x8(%rax),%rbx
+  mov 0x10(%rax),%rcx
+  mov %rdx,%rax
+  mov $0x4,%edi
+  callq ssz.ValidateBitvector
+  data16 nop
+  test %rax,%rax
+  je L_target.BitVec.MarshalSSZTo_ba
+  movups %xmm15,0x40(%rsp)
+  je L_target.BitVec.MarshalSSZTo_51
+  mov 0x8(%rax),%rax
+L_target.BitVec.MarshalSSZTo_51:
+  mov %rax,0x40(%rsp)
+  mov %rbx,0x48(%rsp)
+  lea go_string._+511(%rip),%rax
+  mov $0x5,%ebx
+  lea 0x40(%rsp),%rcx
+  mov $0x1,%edi
+  mov %rdi,%rsi
+  callq fmt.errorf
+  test %rax,%rax
+  jne L_target.BitVec.MarshalSSZTo_a7
   nop
-  jne L_target.BitVec.MarshalSSZTo_7b
-  lea 0x1(%rcx),%r8
-  cmp %r8,%rdi
-  jae L_target.BitVec.MarshalSSZTo_62
-  mov %rdx,0x28(%rsp)
-  mov %rcx,0x50(%rsp)
-  mov %rbx,%rax
-  mov %r8,%rbx
-  mov %rdi,%rcx
+  lea type__+82848(%rip),%rax
+  callq runtime.newobject
+  movq $0x5,0x8(%rax)
+  lea go_string._+511(%rip),%rcx
+  mov %rcx,(%rax)
+  mov %rax,%rbx
+  lea go_itab._errors.errorString_error(%rip),%rax
+L_target.BitVec.MarshalSSZTo_a7:
+  xor %ecx,%ecx
+  mov %rax,%rdi
+  mov %rbx,%rsi
+  xor %eax,%eax
+  mov %rcx,%rbx
+  add $0x50,%rsp
+  pop %rbp
+  retq
+L_target.BitVec.MarshalSSZTo_ba:
+  mov 0x60(%rsp),%rdx
+  mov (%rdx),%r8
+  cmpq $0x1,0x8(%rdx)
+  jne L_target.BitVec.MarshalSSZTo_13f
+  mov 0x70(%rsp),%rdx
+  lea 0x1(%rdx),%r9
+  mov 0x78(%rsp),%rcx
+  cmp %r9,%rcx
+  jb L_target.BitVec.MarshalSSZTo_e3
+  mov 0x68(%rsp),%rsi
+  jmp L_target.BitVec.MarshalSSZTo_125
+L_target.BitVec.MarshalSSZTo_e3:
+  mov %r8,0x38(%rsp)
+  mov %rbx,0x30(%rsp)
+  mov %rax,0x28(%rsp)
+  mov 0x68(%rsp),%rax
+  mov %r9,%rbx
   mov $0x1,%edi
   lea type__+48736(%rip),%rsi
   callq runtime.growslice
-  mov 0x28(%rsp),%rdx
-  mov %rcx,%rdi
-  mov %rbx,%r8
-  mov 0x50(%rsp),%rcx
-  mov %rax,%rbx
-L_target.BitVec.MarshalSSZTo_62:
-  movzbl (%rdx),%edx
-  mov %dl,(%rbx,%rcx,1)
-  mov %rbx,%rax
-  mov %r8,%rbx
-  mov %rdi,%rcx
-  xor %edi,%edi
-  xor %esi,%esi
-  add $0x30,%rsp
+  mov 0x70(%rsp),%rdx
+  mov 0x38(%rsp),%r8
+  mov %rax,%rsi
+  mov %rbx,%r9
+  mov 0x28(%rsp),%rax
+  mov 0x30(%rsp),%rbx
+L_target.BitVec.MarshalSSZTo_125:
+  movzbl (%r8),%r8d
+  mov %r8b,(%rsi,%rdx,1)
+  mov %rax,%rdi
+  mov %rsi,%rax
+  mov %rbx,%rsi
+  mov %r9,%rbx
+  add $0x50,%rsp
   pop %rbp
   retq
-L_target.BitVec.MarshalSSZTo_7b:
+L_target.BitVec.MarshalSSZTo_13f:
   mov ssz.ErrBytesLength(%rip),%rdi
   mov ssz.ErrBytesLength+8(%rip),%rsi
   xor %eax,%eax
   xor %ebx,%ebx
   mov %rbx,%rcx
-  add $0x30,%rsp
+  add $0x50,%rsp
   pop %rbp
   retq
-L_target.BitVec.MarshalSSZTo_96:
+L_target.BitVec.MarshalSSZTo_15a:
   mov %rax,0x8(%rsp)
   mov %rbx,0x10(%rsp)
   mov %rcx,0x18(%rsp)
@@ -853,57 +975,93 @@ L_target.BitVec.MarshalSSZTo_96:
 target.BitVec.UnmarshalSSZ:
 L_target.BitVec.UnmarshalSSZ_0:
   cmp 0x10(%r14),%rsp
-  jbe L_target.BitVec.UnmarshalSSZ_cd
+  jbe L_target.BitVec.UnmarshalSSZ_15f
   push %rbp
   mov %rsp,%rbp
-  sub $0x18,%rsp
-  mov %rbx,0x30(%rsp)
+  sub $0x48,%rsp
+  mov %rbx,0x60(%rsp)
   nopw (%rax,%rax,1)
   cmp $0x1,%rcx
-  jne L_target.BitVec.UnmarshalSSZ_b9
-  mov %rax,0x28(%rsp)
+  jne L_target.BitVec.UnmarshalSSZ_14b
+  mov %rax,0x58(%rsp)
+  mov %rbx,0x60(%rsp)
+  mov %rbx,%rax
+  mov $0x1,%ebx
+  mov %rdi,%rcx
+  mov $0x4,%edi
+  callq ssz.ValidateBitvector
+  test %rax,%rax
+  je L_target.BitVec.UnmarshalSSZ_b9
+  movups %xmm15,0x38(%rsp)
+  je L_target.BitVec.UnmarshalSSZ_5a
+  mov 0x8(%rax),%rax
+L_target.BitVec.UnmarshalSSZ_5a:
+  mov %rax,0x38(%rsp)
+  mov %rbx,0x40(%rsp)
+  lea go_string._+511(%rip),%rax
+  mov $0x5,%ebx
+  lea 0x38(%rsp),%rcx
+  mov $0x1,%edi
+  mov %rdi,%rsi
+  nopl (%rax)
+  callq fmt.errorf
+  test %rax,%rax
+  jne L_target.BitVec.UnmarshalSSZ_b3
+  nop
+  lea type__+82848(%rip),%rax
+  callq runtime.newobject
+  movq $0x5,0x8(%rax)
+  lea go_string._+511(%rip),%rcx
+  mov %rcx,(%rax)
+  mov %rax,%rbx
+  lea go_itab._errors.errorString_error(%rip),%rax
+L_target.BitVec.UnmarshalSSZ_b3:
+  add $0x48,%rsp
+  pop %rbp
+  retq
+L_target.BitVec.UnmarshalSSZ_b9:
   mov %rbx,0x30(%rsp)
+  mov %rax,0x28(%rsp)
   lea type__+48736(%rip),%rax
   xor %ebx,%ebx
   mov $0x1,%ecx
   callq runtime.makeslice
-  mov 0x28(%rsp),%rdx
+  mov 0x58(%rsp),%rdx
   movq $0x0,0x8(%rdx)
   movq $0x1,0x10(%rdx)
   cmpl $0x0,runtime.writeBarrier(%rip)
-  je L_target.BitVec.UnmarshalSSZ_74
+  je L_target.BitVec.UnmarshalSSZ_103
   mov (%rdx),%rcx
   callq runtime.gcWriteBarrier2
   mov %rax,(%r11)
   mov %rcx,0x8(%r11)
-L_target.BitVec.UnmarshalSSZ_74:
+L_target.BitVec.UnmarshalSSZ_103:
   mov %rax,(%rdx)
-  mov 0x30(%rsp),%rcx
+  mov 0x60(%rsp),%rcx
   movzbl (%rcx),%ecx
   mov %cl,(%rax)
   movq $0x1,0x8(%rdx)
   movq $0x1,0x10(%rdx)
   cmpl $0x0,runtime.writeBarrier(%rip)
-  je L_target.BitVec.UnmarshalSSZ_ac
+  je L_target.BitVec.UnmarshalSSZ_138
   mov (%rdx),%rcx
-  nopl (%rax)
   callq runtime.gcWriteBarrier2
   mov %rax,(%r11)
   mov %rcx,0x8(%r11)
-L_target.BitVec.UnmarshalSSZ_ac:
+L_target.BitVec.UnmarshalSSZ_138:
   mov %rax,(%rdx)
-  xor %eax,%eax
-  xor %ebx,%ebx
-  add $0x18,%rsp
+  mov 0x28(%rsp),%rax
+  mov 0x30(%rsp),%rbx
+  add $0x48,%rsp
   pop %rbp
   retq
-L_target.BitVec.UnmarshalSSZ_b9:
+L_target.BitVec.UnmarshalSSZ_14b:
   mov ssz.ErrSize(%rip),%rax
   mov ssz.ErrSize+8(%rip),%rbx
-  add $0x18,%rsp
+  add $0x48,%rsp
   pop %rbp
   retq
-L_target.BitVec.UnmarshalSSZ_cd:
+L_target.BitVec.UnmarshalSSZ_15f:
   mov %rax,0x8(%rsp)
   mov %rbx,0x10(%rsp)
   mov %rcx,0x18(%rsp)
@@ -1201,7 +1359,7 @@ L_target.Nested.MarshalSSZTo_3cb:
 L_target.Nested.MarshalSSZTo_3e3:
   mov %rdx,0xb8(%rsp)
   mov %r8,0xc0(%rsp)
-  lea go_string._+516(%rip),%rax
+  lea go_string._+521(%rip),%rax
   mov $0x5,%ebx
   lea 0xb8(%rsp),%rcx
   mov $0x1,%edi
@@ -1213,7 +1371,7 @@ L_target.Nested.MarshalSSZTo_3e3:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x5,0x8(%rax)
-  lea go_string._+516(%rip),%rcx
+  lea go_string._+521(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -1336,7 +1494,7 @@ L_target.Nested.UnmarshalSSZ_a2:
 L_target.Nested.UnmarshalSSZ_d6:
   mov %rax,0x48(%rsp)
   mov %rbx,0x50(%rsp)
-  lea go_string._+511(%rip),%rax
+  lea go_string._+516(%rip),%rax
   mov $0x5,%ebx
   lea 0x48(%rsp),%rcx
   mov $0x1,%edi
@@ -1349,7 +1507,7 @@ L_target.Nested.UnmarshalSSZ_d6:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x5,0x8(%rax)
-  lea go_string._+511(%rip),%rcx
+  lea go_string._+516(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -1387,7 +1545,7 @@ L_target.Nested.UnmarshalSSZ_16c:
 L_target.Nested.UnmarshalSSZ_199:
   mov %rax,0x38(%rsp)
   mov %rbx,0x40(%rsp)
-  lea go_string._+516(%rip),%rax
+  lea go_string._+521(%rip),%rax
   mov $0x5,%ebx
   lea 0x38(%rsp),%rcx
   mov $0x1,%edi
@@ -1400,7 +1558,7 @@ L_target.Nested.UnmarshalSSZ_199:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x5,0x8(%rax)
-  lea go_string._+516(%rip),%rcx
+  lea go_string._+521(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -1652,7 +1810,7 @@ L_target.ListC.MarshalSSZTo_2a8:
 L_target.ListC.MarshalSSZTo_2b7:
   mov %rdx,0x80(%rsp)
   mov %r10,0x88(%rsp)
-  lea go_string._+2153(%rip),%rax
+  lea go_string._+2158(%rip),%rax
   mov $0x9,%ebx
   lea 0x80(%rsp),%rcx
   mov $0x1,%edi
@@ -1664,7 +1822,7 @@ L_target.ListC.MarshalSSZTo_2b7:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x9,0x8(%rax)
-  lea go_string._+2153(%rip),%rcx
+  lea go_string._+2158(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -1731,7 +1889,7 @@ L_target.ListC.UnmarshalSSZ_0:
   data16 nop
   cmp %rbx,%rcx
   jae L_target.ListC.UnmarshalSSZ_f7
-  lea go_string._+41960(%rip),%rax
+  lea go_string._+42000(%rip),%rax
   mov $0x3f,%ebx
   xor %ecx,%ecx
   xor %edi,%edi
@@ -1744,7 +1902,7 @@ L_target.ListC.UnmarshalSSZ_0:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x3f,0x8(%rax)
-  lea go_string._+41960(%rip),%rcx
+  lea go_string._+42000(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -1758,8 +1916,8 @@ L_target.ListC.UnmarshalSSZ_f7:
   mov %r8,0x50(%rsp)
   mov %r9,0x60(%rsp)
   mov %rdx,0x38(%rsp)
-  mov %rbx,0x48(%rsp)
   mov %rdi,0x100(%rsp)
+  mov %rbx,0x48(%rsp)
   lea type__+114368(%rip),%rax
   mov %rdx,%rbx
   mov %rbx,%rcx
@@ -1798,7 +1956,7 @@ L_target.ListC.UnmarshalSSZ_1b2:
   mov ssz.ErrListTooBig+8(%rip),%rdx
   mov %rcx,0xb8(%rsp)
   mov %rdx,0xc0(%rsp)
-  lea go_string._+40930(%rip),%rax
+  lea go_string._+40970(%rip),%rax
   mov $0x3b,%ebx
   lea 0xa8(%rsp),%rcx
   mov $0x2,%edi
@@ -1810,7 +1968,7 @@ L_target.ListC.UnmarshalSSZ_1b2:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x3b,0x8(%rax)
-  lea go_string._+40930(%rip),%rcx
+  lea go_string._+40970(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -1825,7 +1983,7 @@ L_target.ListC.UnmarshalSSZ_221:
   lea type__+49120(%rip),%rcx
   mov %rcx,0xc8(%rsp)
   mov %rax,0xd0(%rsp)
-  lea go_string._+44011(%rip),%rax
+  lea go_string._+44051(%rip),%rax
   mov $0x72,%ebx
   lea 0xc8(%rsp),%rcx
   mov $0x1,%edi
@@ -1837,7 +1995,7 @@ L_target.ListC.UnmarshalSSZ_221:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x72,0x8(%rax)
-  lea go_string._+44011(%rip),%rcx
+  lea go_string._+44051(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -1846,7 +2004,7 @@ L_target.ListC.UnmarshalSSZ_298:
   pop %rbp
   retq
 L_target.ListC.UnmarshalSSZ_2a1:
-  lea go_string._+39330(%rip),%rax
+  lea go_string._+39370(%rip),%rax
   mov $0x35,%ebx
   xor %ecx,%ecx
   xor %edi,%edi
@@ -1858,7 +2016,7 @@ L_target.ListC.UnmarshalSSZ_2a1:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x35,0x8(%rax)
-  lea go_string._+39330(%rip),%rcx
+  lea go_string._+39370(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -1876,13 +2034,13 @@ L_target.ListC.UnmarshalSSZ_2f0:
   callq runtime.gcWriteBarrier1
   mov %rcx,(%r11)
 L_target.ListC.UnmarshalSSZ_30f:
-  lea runtime.noptrbss(%rip),%rcx
+  lea runtime.zerobase(%rip),%rcx
   mov %rcx,(%rax)
   xor %eax,%eax
   xor %ecx,%ecx
   jmp L_target.ListC.UnmarshalSSZ_39c
 L_target.ListC.UnmarshalSSZ_31f:
-  lea go_string._+41960(%rip),%rax
+  lea go_string._+42000(%rip),%rax
   mov $0x3f,%ebx
   xor %ecx,%ecx
   xor %edi,%edi
@@ -1894,7 +2052,7 @@ L_target.ListC.UnmarshalSSZ_31f:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x3f,0x8(%rax)
-  lea go_string._+41960(%rip),%rcx
+  lea go_string._+42000(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -2010,7 +2168,7 @@ L_target.ListC.UnmarshalSSZ_4f9:
   lea type__+49120(%rip),%rcx
   mov %rcx,0x98(%rsp)
   mov %rax,0xa0(%rsp)
-  lea go_string._+41466(%rip),%rax
+  lea go_string._+41506(%rip),%rax
   mov $0x3d,%ebx
   lea 0x98(%rsp),%rcx
   mov $0x1,%edi
@@ -2023,7 +2181,7 @@ L_target.ListC.UnmarshalSSZ_4f9:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x3d,0x8(%rax)
-  lea go_string._+41466(%rip),%rcx
+  lea go_string._+41506(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -2038,7 +2196,7 @@ L_target.ListC.UnmarshalSSZ_57c:
 L_target.ListC.UnmarshalSSZ_588:
   mov %rax,0x68(%rsp)
   mov %rbx,0x70(%rsp)
-  lea go_string._+2153(%rip),%rax
+  lea go_string._+2158(%rip),%rax
   mov $0x9,%ebx
   lea 0x68(%rsp),%rcx
   mov $0x1,%edi
@@ -2051,7 +2209,7 @@ L_target.ListC.UnmarshalSSZ_588:
   nopl (%rax)
   callq runtime.newobject
   movq $0x9,0x8(%rax)
-  lea go_string._+2153(%rip),%rcx
+  lea go_string._+2158(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -2075,7 +2233,7 @@ L_target.ListC.UnmarshalSSZ_5ea:
   lea type__+49120(%rip),%rcx
   mov %rcx,0x88(%rsp)
   mov %rax,0x90(%rsp)
-  lea go_string._+42539(%rip),%rax
+  lea go_string._+42579(%rip),%rax
   mov $0x43,%ebx
   lea 0x78(%rsp),%rcx
   mov $0x2,%edi
@@ -2087,7 +2245,7 @@ L_target.ListC.UnmarshalSSZ_5ea:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x43,0x8(%rax)
-  lea go_string._+42539(%rip),%rcx
+  lea go_string._+42579(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -2126,79 +2284,114 @@ target.BitL.SizeSSZ:
   retq
 target.BitL.MarshalSSZTo:
 L_target.BitL.MarshalSSZTo_0:
-  cmp 0x10(%r14),%rsp
-  jbe L_target.BitL.MarshalSSZTo_105
+  lea -0x18(%rsp),%r12
+  cmp 0x10(%r14),%r12
+  jbe L_target.BitL.MarshalSSZTo_1bf
   push %rbp
   mov %rsp,%rbp
-  sub $0x60,%rsp
-  mov %rbx,0x78(%rsp)
+  sub $0x90,%rsp
+  mov %rbx,0xa8(%rsp)
+  mov %rax,0xa0(%rsp)
   lea 0x4(%rcx),%rdx
   nop
-  nopl (%rax)
   cmp %rdx,%rdi
-  jae L_target.BitL.MarshalSSZTo_53
-  mov %rax,0x70(%rsp)
+  jae L_target.BitL.MarshalSSZTo_5f
   mov %rbx,%rax
   mov %rdx,%rbx
   mov %rdi,%rcx
   mov $0x4,%edi
   lea type__+48736(%rip),%rsi
-  nop
   callq runtime.growslice
   mov %rbx,%rdx
   mov %rax,%rbx
   mov %rcx,%rdi
-  mov 0x70(%rsp),%rax
-L_target.BitL.MarshalSSZTo_53:
-  movl $0x4,-0x4(%rdx,%rbx,1)
-  mov 0x8(%rax),%rcx
-  mov (%rax),%r8
-  cmp $0x800,%rcx
-  jg L_target.BitL.MarshalSSZTo_ea
-  lea (%rdx,%rcx,1),%r9
-  cmp %r9,%rdi
-  jae L_target.BitL.MarshalSSZTo_b6
+  mov 0xa0(%rsp),%rax
+L_target.BitL.MarshalSSZTo_5f:
+  mov %rbx,0x68(%rsp)
   mov %rdx,0x40(%rsp)
-  mov %rcx,0x50(%rsp)
-  mov %r8,0x58(%rsp)
-  mov %rbx,%rax
+  mov %rdi,0x48(%rsp)
+  movl $0x4,-0x4(%rdx,%rbx,1)
+  mov 0x8(%rax),%rbx
+  mov 0x10(%rax),%rcx
+  mov (%rax),%rax
+  mov $0x800,%edi
+  callq ssz.ValidateBitlist
+  test %rax,%rax
+  je L_target.BitL.MarshalSSZTo_118
+  movups %xmm15,0x80(%rsp)
+  je L_target.BitL.MarshalSSZTo_a3
+  mov 0x8(%rax),%rax
+L_target.BitL.MarshalSSZTo_a3:
+  mov %rax,0x80(%rsp)
+  mov %rbx,0x88(%rsp)
+  lea go_string._+526(%rip),%rax
+  mov $0x5,%ebx
+  lea 0x80(%rsp),%rcx
+  mov $0x1,%edi
+  mov %rdi,%rsi
+  callq fmt.errorf
+  test %rax,%rax
+  jne L_target.BitL.MarshalSSZTo_102
+  nop
+  lea type__+82848(%rip),%rax
+  callq runtime.newobject
+  movq $0x5,0x8(%rax)
+  lea go_string._+526(%rip),%rcx
+  mov %rcx,(%rax)
+  mov %rax,%rbx
+  lea go_itab._errors.errorString_error(%rip),%rax
+L_target.BitL.MarshalSSZTo_102:
+  xor %ecx,%ecx
+  mov %rax,%rdi
+  mov %rbx,%rsi
+  xor %eax,%eax
+  mov %rcx,%rbx
+  add $0x90,%rsp
+  pop %rbp
+  retq
+L_target.BitL.MarshalSSZTo_118:
+  mov %rbx,0x70(%rsp)
+  mov %rax,0x50(%rsp)
+  mov 0xa0(%rsp),%rdx
+  mov 0x8(%rdx),%rdi
+  mov 0x40(%rsp),%r8
+  lea (%r8,%rdi,1),%r9
+  mov (%rdx),%rdx
+  mov 0x48(%rsp),%rcx
+  nop
+  cmp %r9,%rcx
+  jb L_target.BitL.MarshalSSZTo_14c
+  mov 0x68(%rsp),%rsi
+  jmp L_target.BitL.MarshalSSZTo_17f
+L_target.BitL.MarshalSSZTo_14c:
+  mov %rdi,0x60(%rsp)
+  mov %rdx,0x78(%rsp)
+  mov 0x68(%rsp),%rax
   mov %r9,%rbx
   lea type__+48736(%rip),%rsi
-  mov %rcx,%rdx
-  mov %rdi,%rcx
-  mov %rdx,%rdi
   callq runtime.growslice
-  mov 0x40(%rsp),%rdx
-  mov 0x58(%rsp),%r8
+  mov 0x78(%rsp),%rdx
+  mov 0x60(%rsp),%rdi
+  mov 0x40(%rsp),%r8
+  mov %rax,%rsi
   mov %rbx,%r9
-  mov %rcx,%rdi
-  mov 0x50(%rsp),%rcx
-  mov %rax,%rbx
-L_target.BitL.MarshalSSZTo_b6:
-  mov %rbx,0x58(%rsp)
-  mov %r9,0x50(%rsp)
-  mov %rdi,0x48(%rsp)
-  lea (%rbx,%rdx,1),%rax
-  mov %r8,%rbx
+L_target.BitL.MarshalSSZTo_17f:
+  mov %rsi,0x78(%rsp)
+  mov %r9,0x60(%rsp)
+  mov %rcx,0x58(%rsp)
+  lea (%rsi,%r8,1),%rax
+  mov %rdx,%rbx
+  mov %rdi,%rcx
   callq runtime.memmove
-  mov 0x58(%rsp),%rax
-  mov 0x50(%rsp),%rbx
-  mov 0x48(%rsp),%rcx
-  xor %edi,%edi
-  xor %esi,%esi
-  add $0x60,%rsp
+  mov 0x78(%rsp),%rax
+  mov 0x60(%rsp),%rbx
+  mov 0x58(%rsp),%rcx
+  mov 0x50(%rsp),%rdi
+  mov 0x70(%rsp),%rsi
+  add $0x90,%rsp
   pop %rbp
   retq
-L_target.BitL.MarshalSSZTo_ea:
-  mov ssz.ErrListTooBig(%rip),%rdi
-  mov ssz.ErrListTooBig+8(%rip),%rsi
-  xor %eax,%eax
-  xor %ebx,%ebx
-  mov %rbx,%rcx
-  add $0x60,%rsp
-  pop %rbp
-  retq
-L_target.BitL.MarshalSSZTo_105:
+L_target.BitL.MarshalSSZTo_1bf:
   mov %rax,0x8(%rsp)
   mov %rbx,0x10(%rsp)
   mov %rcx,0x18(%rsp)
@@ -2250,7 +2443,7 @@ L_target.BitL.UnmarshalSSZ_0:
 L_target.BitL.UnmarshalSSZ_94:
   mov %rax,0x60(%rsp)
   mov %rbx,0x68(%rsp)
-  lea go_string._+521(%rip),%rax
+  lea go_string._+526(%rip),%rax
   mov $0x5,%ebx
   lea 0x60(%rsp),%rcx
   mov $0x1,%edi
@@ -2263,7 +2456,7 @@ L_target.BitL.UnmarshalSSZ_94:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x5,0x8(%rax)
-  lea go_string._+521(%rip),%rcx
+  lea go_string._+526(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -2277,33 +2470,33 @@ L_target.BitL.UnmarshalSSZ_f4:
   mov 0x90(%rsp),%rdx
   add $-0x4,%rdx
   jne L_target.BitL.UnmarshalSSZ_119
-  lea runtime.noptrbss(%rip),%rcx
+  lea runtime.zerobase(%rip),%rcx
   xor %edx,%edx
   xor %esi,%esi
   jmp L_target.BitL.UnmarshalSSZ_13f
 L_target.BitL.UnmarshalSSZ_119:
-  lea runtime.noptrbss(%rip),%rax
+  lea runtime.zerobase(%rip),%rax
   mov 0x28(%rsp),%rbx
   xor %ecx,%ecx
   mov %rbx,%rdi
   lea type__+48736(%rip),%rsi
   callq runtime.growslice
-  mov %rbx,%rdx
-  mov %rcx,%rsi
+  mov %rcx,%rdx
+  mov %rbx,%rsi
   mov %rax,%rcx
 L_target.BitL.UnmarshalSSZ_13f:
-  mov %rcx,0x58(%rsp)
   mov %rdx,0x40(%rsp)
   mov %rsi,0x38(%rsp)
+  mov %rcx,0x58(%rsp)
   mov %rcx,%rax
   mov 0x48(%rsp),%rbx
   mov 0x28(%rsp),%rcx
   nopl (%rax,%rax,1)
   callq runtime.memmove
-  mov 0x40(%rsp),%rdx
+  mov 0x38(%rsp),%rdx
   mov 0x80(%rsp),%rsi
   mov %rdx,0x8(%rsi)
-  mov 0x38(%rsp),%rdx
+  mov 0x40(%rsp),%rdx
   mov %rdx,0x10(%rsi)
   cmpl $0x0,runtime.writeBarrier(%rip)
   jne L_target.BitL.UnmarshalSSZ_18f
@@ -2666,7 +2859,7 @@ L_target_prysm.AttestationData.MarshalSSZTo_28c:
 L_target_prysm.AttestationData.MarshalSSZTo_2a6:
   mov %r8,0xb8(%rsp)
   mov %r9,0xc0(%rsp)
-  lea go_string._+3146(%rip),%rax
+  lea go_string._+3151(%rip),%rax
   mov $0xa,%ebx
   lea 0xb8(%rsp),%rcx
   mov $0x1,%edi
@@ -2678,7 +2871,7 @@ L_target_prysm.AttestationData.MarshalSSZTo_2a6:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0xa,0x8(%rax)
-  lea go_string._+3146(%rip),%rcx
+  lea go_string._+3151(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -2786,7 +2979,7 @@ L_target_prysm.AttestationData.MarshalSSZTo_482:
 L_target_prysm.AttestationData.MarshalSSZTo_49a:
   mov %rdx,0xd0(%rsp)
   mov %r8,0xd8(%rsp)
-  lea go_string._+3156(%rip),%rax
+  lea go_string._+3161(%rip),%rax
   mov $0xa,%ebx
   lea 0xd0(%rsp),%rcx
   mov $0x1,%edi
@@ -2798,7 +2991,7 @@ L_target_prysm.AttestationData.MarshalSSZTo_49a:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0xa,0x8(%rax)
-  lea go_string._+3156(%rip),%rcx
+  lea go_string._+3161(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax

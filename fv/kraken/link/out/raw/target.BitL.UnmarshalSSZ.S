@@ -39,7 +39,7 @@ L_target.BitL.UnmarshalSSZ_0:
 L_target.BitL.UnmarshalSSZ_94:
   mov %rax,0x60(%rsp)
   mov %rbx,0x68(%rsp)
-  lea go_string._+521(%rip),%rax
+  lea go_string._+526(%rip),%rax
   mov $0x5,%ebx
   lea 0x60(%rsp),%rcx
   mov $0x1,%edi
@@ -52,7 +52,7 @@ L_target.BitL.UnmarshalSSZ_94:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x5,0x8(%rax)
-  lea go_string._+521(%rip),%rcx
+  lea go_string._+526(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -66,33 +66,33 @@ L_target.BitL.UnmarshalSSZ_f4:
   mov 0x90(%rsp),%rdx
   add $-0x4,%rdx
   jne L_target.BitL.UnmarshalSSZ_119
-  lea runtime.noptrbss(%rip),%rcx
+  lea runtime.zerobase(%rip),%rcx
   xor %edx,%edx
   xor %esi,%esi
   jmp L_target.BitL.UnmarshalSSZ_13f
 L_target.BitL.UnmarshalSSZ_119:
-  lea runtime.noptrbss(%rip),%rax
+  lea runtime.zerobase(%rip),%rax
   mov 0x28(%rsp),%rbx
   xor %ecx,%ecx
   mov %rbx,%rdi
   lea type__+48736(%rip),%rsi
   callq runtime.growslice
-  mov %rbx,%rdx
-  mov %rcx,%rsi
+  mov %rcx,%rdx
+  mov %rbx,%rsi
   mov %rax,%rcx
 L_target.BitL.UnmarshalSSZ_13f:
-  mov %rcx,0x58(%rsp)
   mov %rdx,0x40(%rsp)
   mov %rsi,0x38(%rsp)
+  mov %rcx,0x58(%rsp)
   mov %rcx,%rax
   mov 0x48(%rsp),%rbx
   mov 0x28(%rsp),%rcx
   nopl (%rax,%rax,1)
   callq runtime.memmove
-  mov 0x40(%rsp),%rdx
+  mov 0x38(%rsp),%rdx
   mov 0x80(%rsp),%rsi
   mov %rdx,0x8(%rsi)
-  mov 0x38(%rsp),%rdx
+  mov 0x40(%rsp),%rdx
   mov %rdx,0x10(%rsi)
   cmpl $0x0,runtime.writeBarrier(%rip)
   jne L_target.BitL.UnmarshalSSZ_18f

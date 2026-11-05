@@ -237,9 +237,6 @@ func (c *ListU64) UnmarshalSSZ(buf []byte) error {
 	if sszVarOffset0 != 4 {
 		return ssz.ErrInvalidVariableOffset
 	}
-	if sszVarOffset0 > size {
-		return ssz.ErrOffset
-	}
 	sszSlice0 := buf[sszVarOffset0:] // c.L
 
 	// Field 0: L

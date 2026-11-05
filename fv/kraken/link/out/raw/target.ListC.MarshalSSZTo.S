@@ -197,7 +197,7 @@ L_target.ListC.MarshalSSZTo_2a8:
 L_target.ListC.MarshalSSZTo_2b7:
   mov %rdx,0x80(%rsp)
   mov %r10,0x88(%rsp)
-  lea go_string._+2153(%rip),%rax
+  lea go_string._+2158(%rip),%rax
   mov $0x9,%ebx
   lea 0x80(%rsp),%rcx
   mov $0x1,%edi
@@ -209,7 +209,7 @@ L_target.ListC.MarshalSSZTo_2b7:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x9,0x8(%rax)
-  lea go_string._+2153(%rip),%rcx
+  lea go_string._+2158(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax

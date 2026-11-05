@@ -141,7 +141,7 @@ theorem lc_reject_tail_spec (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.pro
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (slot.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 232)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 232 - BitVec.ofNat 64 S))
-      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - 224)) ⋆ Eq (lcFmtShort.At (label "go_string._" + 41960).toBitVec)
+      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - 224)) ⋆ Eq (lcFmtShort.At (label "go_string._" + 42000).toBitVec)
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ Heap avail
       ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec) ⋆ R)
     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hsp : 232 ≤ s.regs.rsp.toNat)
@@ -169,7 +169,7 @@ theorem lc_reject_zero_spec (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.pro
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (slot.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 232)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 232 - BitVec.ofNat 64 S))
-      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - 224)) ⋆ Eq (lcFmtZero.At (label "go_string._" + 39330).toBitVec)
+      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - 224)) ⋆ Eq (lcFmtZero.At (label "go_string._" + 39370).toBitVec)
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ Heap avail
       ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec) ⋆ Eq (((bs.toList.drop 4).take 4).At (s.regs.rbx.toBitVec + 4)) ⋆ R)
     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hsp : 232 ≤ s.regs.rsp.toNat)
@@ -200,7 +200,7 @@ theorem lc_reject_past_spec (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.pro
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (slot.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 232)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 232 - BitVec.ofNat 64 S))
-      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - 224)) ⋆ Eq (lcFmtShort.At (label "go_string._" + 41960).toBitVec)
+      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - 224)) ⋆ Eq (lcFmtShort.At (label "go_string._" + 42000).toBitVec)
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ Heap avail
       ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec) ⋆ Eq (((bs.toList.drop 4).take 4).At (s.regs.rbx.toBitVec + 4)) ⋆ R)
     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hsp : 232 ≤ s.regs.rsp.toNat)

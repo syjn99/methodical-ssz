@@ -46,21 +46,25 @@ def read_nm(path):
         p = line.split()
         if len(p) >= 4:
             syms.append((int(p[0], 16), int(p[1]), p[3]))
-    return syms
+    # Sort so that ties at one address (e.g. `runtime.types` and `type:*`) do
+    # not depend on the order go nm prints them in.
+    return sorted(syms)
 
 
 def sym_at(syms, addr):
     """Symbol whose [start, start+size) holds addr, as (name, offset)."""
-    best, near = None, None
+    best, near, exact = None, None, None
     for start, size, name in syms:
         if start == addr:
-            return name, 0
+            exact = (name, 0)  # last of the sorted ties: stable across nm orders
         if start <= addr < start + max(size, 1):
             best = (name, addr - start)
         if start <= addr:
             near = (name, addr - start)
     # ponytail: Go nm lists type descriptors as one size-0 group (`type:*`), so
     # an address inside it is named by the nearest preceding symbol + offset.
+    if exact:
+        return exact
     if best is None and near is None:
         raise SystemExit(f"no symbol at {addr:#x}")
     return best or near

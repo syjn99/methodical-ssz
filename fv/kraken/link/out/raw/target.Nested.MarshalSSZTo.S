@@ -246,7 +246,7 @@ L_target.Nested.MarshalSSZTo_3cb:
 L_target.Nested.MarshalSSZTo_3e3:
   mov %rdx,0xb8(%rsp)
   mov %r8,0xc0(%rsp)
-  lea go_string._+516(%rip),%rax
+  lea go_string._+521(%rip),%rax
   mov $0x5,%ebx
   lea 0xb8(%rsp),%rcx
   mov $0x1,%edi
@@ -258,7 +258,7 @@ L_target.Nested.MarshalSSZTo_3e3:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x5,0x8(%rax)
-  lea go_string._+516(%rip),%rcx
+  lea go_string._+521(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax

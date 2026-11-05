@@ -22,6 +22,9 @@ func (c *BitVec) MarshalSSZTo(dst []byte) ([]byte, error) {
 	var err error
 
 	// Field 0: J
+	if err = ssz.ValidateBitvector(c.J, 4); err != nil {
+		return nil, fmt.Errorf("J: %w", err)
+	}
 	if len([]byte(c.J)) != 1 {
 		return nil, ssz.ErrBytesLength
 	}
@@ -40,6 +43,9 @@ func (c *BitVec) UnmarshalSSZ(buf []byte) error {
 	sszSlice0 := buf[0:1] // c.J
 
 	// Field 0: J
+	if err = ssz.ValidateBitvector(sszSlice0, 4); err != nil {
+		return fmt.Errorf("J: %w", err)
+	}
 	c.J = make([]byte, 0, 1)
 	c.J = append(c.J, go_bitfield.Bitvector4(sszSlice0)...)
 	return err
@@ -123,9 +129,6 @@ func (c *Nested) UnmarshalSSZ(buf []byte) error {
 	sszVarOffset2 := ssz.ReadOffset(buf[24:28]) // c.L
 	if sszVarOffset2 != 28 {
 		return ssz.ErrInvalidVariableOffset
-	}
-	if sszVarOffset2 > size {
-		return ssz.ErrOffset
 	}
 	sszSlice2 := buf[sszVarOffset2:] // c.L
 
@@ -227,9 +230,6 @@ func (c *ListC) UnmarshalSSZ(buf []byte) error {
 	sszVarOffset0 := ssz.ReadOffset(buf[0:4]) // c.Items
 	if sszVarOffset0 != 4 {
 		return ssz.ErrInvalidVariableOffset
-	}
-	if sszVarOffset0 > size {
-		return ssz.ErrOffset
 	}
 	sszSlice0 := buf[sszVarOffset0:] // c.Items
 
@@ -335,8 +335,8 @@ func (c *BitL) MarshalSSZTo(dst []byte) ([]byte, error) {
 	offset += len(c.B)
 
 	// Field 0: B
-	if len(c.B) > 2048 {
-		return nil, ssz.ErrListTooBig
+	if err = ssz.ValidateBitlist(c.B, 2048); err != nil {
+		return nil, fmt.Errorf("B: %w", err)
 	}
 	dst = append(dst, c.B...)
 	return dst, err
@@ -352,9 +352,6 @@ func (c *BitL) UnmarshalSSZ(buf []byte) error {
 	sszVarOffset0 := ssz.ReadOffset(buf[0:4]) // c.B
 	if sszVarOffset0 != 4 {
 		return ssz.ErrInvalidVariableOffset
-	}
-	if sszVarOffset0 > size {
-		return ssz.ErrOffset
 	}
 	sszSlice0 := buf[sszVarOffset0:] // c.B
 

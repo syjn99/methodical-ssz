@@ -218,16 +218,16 @@ theorem lc_accept_main (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
   simp only [Width.bytes, Width.bits] at N5
   kunfold
   kat hk ListCUnmarshalSSZ 70
-  rw [show rsp.toBitVec - 8#64 - 216 + 72 = rsp.toBitVec - 152 by bv_omega]
-  apply store_step _ _ _ _ _ l152 _ _ (by ecancel) (by exact hl152)
-  intro n6 N6
-  simp only [Width.bytes, Width.bits] at N6
-  kunfold
-  kat hk ListCUnmarshalSSZ 71
   rw [show rsp.toBitVec - 8#64 - 216 + 256 = rsp.toBitVec + 32 by bv_omega]
   apply store_step _ _ _ _ _ s32 _ _ (by ecancel) (by exact h32)
   intro n7 N7
   simp only [Width.bytes, Width.bits] at N7
+  kunfold
+  kat hk ListCUnmarshalSSZ 71
+  rw [show rsp.toBitVec - 8#64 - 216 + 72 = rsp.toBitVec - 152 by bv_omega]
+  apply store_step _ _ _ _ _ l152 _ _ (by ecancel) (by exact hl152)
+  intro n6 N6
+  simp only [Width.bytes, Width.bits] at N6
   kunfold
   kat hk ListCUnmarshalSSZ 72
   kat hk ListCUnmarshalSSZ 73

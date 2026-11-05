@@ -55,7 +55,7 @@ L_target.Nested.UnmarshalSSZ_a2:
 L_target.Nested.UnmarshalSSZ_d6:
   mov %rax,0x48(%rsp)
   mov %rbx,0x50(%rsp)
-  lea go_string._+511(%rip),%rax
+  lea go_string._+516(%rip),%rax
   mov $0x5,%ebx
   lea 0x48(%rsp),%rcx
   mov $0x1,%edi
@@ -68,7 +68,7 @@ L_target.Nested.UnmarshalSSZ_d6:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x5,0x8(%rax)
-  lea go_string._+511(%rip),%rcx
+  lea go_string._+516(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -106,7 +106,7 @@ L_target.Nested.UnmarshalSSZ_16c:
 L_target.Nested.UnmarshalSSZ_199:
   mov %rax,0x38(%rsp)
   mov %rbx,0x40(%rsp)
-  lea go_string._+516(%rip),%rax
+  lea go_string._+521(%rip),%rax
   mov $0x5,%ebx
   lea 0x38(%rsp),%rcx
   mov $0x1,%edi
@@ -119,7 +119,7 @@ L_target.Nested.UnmarshalSSZ_199:
   lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x5,0x8(%rax)
-  lea go_string._+516(%rip),%rcx
+  lea go_string._+521(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
