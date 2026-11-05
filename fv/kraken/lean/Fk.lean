@@ -39,3 +39,4 @@ import Fk.AdSpec
 import Fk.BlMarshal
 import Fk.BlAccept
 import Fk.BlSpec
+import Fk.LcSize
