@@ -7,10 +7,10 @@ def addrs(ch):
     return ad
 ch=[("guard",Z,8),("rslot","z 8",8),("gap1","z 88",88),("l144","z 8",8),("l136","z 8",8),("l128","z 8",8),("l120","z 8",8),
     ("gap2","z 32",32),("l80","z 8",8),("l72","z 8",8),("gap3","z 56",56),("fp","z 8",8),("ra",Z,8),("s8","z 8",8),("s16","z 8",8),
-    ("e0","e0",8),("e1","e1",8),("pp","Int.toBytes 8 (PP : BitVec 64).toInt",8),("c32","Int.toBytes 8 32",8),("gap4","z 8",8),
+    ("e0","e0",8),("e1","e1",8),("pp","Int.toBytes 8 (PP : BitVec 64).toInt",8),("c32","Int.toBytes 8 32",8),("gap4","Int.toBytes 8 32",8),
     ("pps","Int.toBytes 8 (PS : BitVec 64).toInt",8),("ppt","Int.toBytes 8 (PT : BitVec 64).toInt",8),
-    ("root","root",32),("se","se",8),("pp1","Int.toBytes 8 (P1 : BitVec 64).toInt",8),("c32s","Int.toBytes 8 32",8),("sroot","sroot",32),
-    ("te","te",8),("pp2","Int.toBytes 8 (P2 : BitVec 64).toInt",8),("c32t","Int.toBytes 8 32",8),("troot","troot",32),
+    ("root","root",32),("se","se",8),("pp1","Int.toBytes 8 (P1 : BitVec 64).toInt",8),("c32s","Int.toBytes 8 32",8),("gap_sc","Int.toBytes 8 32",8),("sroot","sroot",32),
+    ("te","te",8),("pp2","Int.toBytes 8 (P2 : BitVec 64).toInt",8),("c32t","Int.toBytes 8 32",8),("gap_tc","Int.toBytes 8 32",8),("troot","troot",32),
     ("pre","pre",PL),("d0","z 8",8),("d1","z 8",8),("d2","z 32",32),("d3","z 8",8),("d4","z 32",32),("d5","z 8",8),("d6","z 32",32)]
 ad=addrs(ch)
 sub={"PP":hex(ad["root"]),"PS":hex(ad["se"]),"PT":hex(ad["te"]),"P1":hex(ad["sroot"]),"P2":hex(ad["troot"])}

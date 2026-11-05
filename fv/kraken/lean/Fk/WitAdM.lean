@@ -47,12 +47,12 @@ theorem hf_rtcopy : LabelsFresh RtCopy 340 := labelsFresh_of (by rw [prog_eq]; d
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 
 def block (e0 e1 root se sroot te troot pre : List UInt8) : List UInt8 :=
-  (Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 88) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 32) ++ ((z 8) ++ ((z 8) ++ ((z 56) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ (e0 ++ (e1 ++ ((Int.toBytes 8 (0x10148 : BitVec 64).toInt) ++ ((Int.toBytes 8 32) ++ ((z 8) ++ ((Int.toBytes 8 (0x10168 : BitVec 64).toInt) ++ ((Int.toBytes 8 (0x101a0 : BitVec 64).toInt) ++ (root ++ (se ++ ((Int.toBytes 8 (0x10180 : BitVec 64).toInt) ++ ((Int.toBytes 8 32) ++ (sroot ++ (te ++ ((Int.toBytes 8 (0x101b8 : BitVec 64).toInt) ++ ((Int.toBytes 8 32) ++ (troot ++ (pre ++ ((z 8) ++ ((z 8) ++ ((z 32) ++ ((z 8) ++ ((z 32) ++ ((z 8) ++ ((z 32)))))))))))))))))))))))))))))))))))))))
+  (Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 88) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 32) ++ ((z 8) ++ ((z 8) ++ ((z 56) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ (e0 ++ (e1 ++ ((Int.toBytes 8 (0x10148 : BitVec 64).toInt) ++ ((Int.toBytes 8 32) ++ ((Int.toBytes 8 32) ++ ((Int.toBytes 8 (0x10168 : BitVec 64).toInt) ++ ((Int.toBytes 8 (0x101a8 : BitVec 64).toInt) ++ (root ++ (se ++ ((Int.toBytes 8 (0x10188 : BitVec 64).toInt) ++ ((Int.toBytes 8 32) ++ ((Int.toBytes 8 32) ++ (sroot ++ (te ++ ((Int.toBytes 8 (0x101c8 : BitVec 64).toInt) ++ ((Int.toBytes 8 32) ++ ((Int.toBytes 8 32) ++ (troot ++ (pre ++ ((z 8) ++ ((z 8) ++ ((z 32) ++ ((z 8) ++ ((z 32) ++ ((z 8) ++ ((z 32)))))))))))))))))))))))))))))))))))))))))
 
 def mem (e0 e1 root se sroot te troot pre : List UInt8) : DataMem := (block e0 e1 root se sroot te troot pre).At (0x10000 : BitVec 64)
 
 def s0 (e0 e1 root se sroot te troot pre : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
-  ⟨⟨0x10110, 0x101d8, 3, 0, 0, 131, 0x100f8, 0, 0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags, mem e0 e1 root se sroot te troot pre⟩
+  ⟨⟨0x10110, 0x101e8, 3, 0, 0, 131, 0x100f8, 0, 0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags, mem e0 e1 root se sroot te troot pre⟩
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
@@ -70,11 +70,11 @@ theorem s_mem (e0 e1 root se sroot te troot pre : List UInt8) (h0 : e0.length = 
       ⋆ Eq ((Int.toBytes 8 (0x10148 : BitVec 64).toInt).At (s.regs.rax.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 24))
       ⋆ Eq ((Int.toBytes 8 (0x10168 : BitVec 64).toInt).At (s.regs.rax.toBitVec + 40))
-      ⋆ Eq ((Int.toBytes 8 (0x101a0 : BitVec 64).toInt).At (s.regs.rax.toBitVec + 48)) ⋆ Eq (root.At (0x10148 : BitVec 64))
-      ⋆ Eq (se.At (0x10168 : BitVec 64)) ⋆ Eq ((Int.toBytes 8 (0x10180 : BitVec 64).toInt).At ((0x10168 : BitVec 64) + 8)) ⋆ Eq ((Int.toBytes 8 32).At ((0x10168 : BitVec 64) + 16))
-      ⋆ Eq (sroot.At (0x10180 : BitVec 64))
-      ⋆ Eq (te.At (0x101a0 : BitVec 64)) ⋆ Eq ((Int.toBytes 8 (0x101b8 : BitVec 64).toInt).At ((0x101a0 : BitVec 64) + 8)) ⋆ Eq ((Int.toBytes 8 32).At ((0x101a0 : BitVec 64) + 16))
-      ⋆ Eq (troot.At (0x101b8 : BitVec 64))
+      ⋆ Eq ((Int.toBytes 8 (0x101a8 : BitVec 64).toInt).At (s.regs.rax.toBitVec + 48)) ⋆ Eq (root.At (0x10148 : BitVec 64))
+      ⋆ Eq (se.At (0x10168 : BitVec 64)) ⋆ Eq ((Int.toBytes 8 (0x10188 : BitVec 64).toInt).At ((0x10168 : BitVec 64) + 8)) ⋆ Eq ((Int.toBytes 8 32).At ((0x10168 : BitVec 64) + 16))
+      ⋆ Eq (sroot.At (0x10188 : BitVec 64))
+      ⋆ Eq (te.At (0x101a8 : BitVec 64)) ⋆ Eq ((Int.toBytes 8 (0x101c8 : BitVec 64).toInt).At ((0x101a8 : BitVec 64) + 8)) ⋆ Eq ((Int.toBytes 8 32).At ((0x101a8 : BitVec 64) + 16))
+      ⋆ Eq (troot.At (0x101c8 : BitVec 64))
       ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq ((z 8).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
       ⋆ Eq ((z 8).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))
       ⋆ Eq ((z 32).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 16))
@@ -90,12 +90,12 @@ theorem s_mem (e0 e1 root se sroot te troot pre : List UInt8) (h0 : e0.length = 
     BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
-  apply sep_true (F := Eq ((z 88).At 65552#64) ⋆ Eq ((z 32).At 65672#64) ⋆ Eq ((z 56).At 65720#64) ⋆ Eq ((z 8).At 65840#64))
+  apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 88).At 65552#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 32).At 65672#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 56).At 65720#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 32).At 65840#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 32).At 65920#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 32).At 65984#64))
   have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
   have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
   simp only [hu0, huN] at H ⊢
-  refine Eq.mp ?_ H
-  exact congrFun (by ac_rfl) _
+  try simp only [BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H ⊢  -- fold `4#64 + a` after huN (re-proof fix X4)
+  first | (refine Eq.mp ?_ H; exact congrFun (by ac_rfl) _) | ecancel
 
 /-- **Non-vacuity of `ad_marshal_main`.** Every premise holds in this host, the
 memmove contract by `rt_memmove`; the encoder returns length 3 + 128. -/
@@ -107,7 +107,7 @@ theorem ad_marshal_runs (e0 e1 root se sroot te troot pre : List UInt8) (h0 : e0
       ⟨s0 e0 e1 root se sroot te troot pre zmms flags, Host.addrOf 5⟩ :=
   eventually_mono (ad_marshal_main 5 hk_target hf_target e0 e1 root se sroot te troot pre (z 8) (z 8) (z 32) (z 8) (z 32) (z 8) (z 32)
     h0 h1 hroot hse hsroot hte htroot rfl rfl rfl rfl rfl rfl rfl
-    0x10148 0x10168 0x101a0 0x10180 0x101b8
+    0x10148 0x10168 0x101a8 0x10188 0x101c8
     (s0 e0 e1 root se sroot te troot pre zmms flags) 0 0 (by simp [s0, hpl])
     (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl
     (fun _ => True) 0 [] rfl (s_mem e0 e1 root se sroot te troot pre h0 h1 hroot hse hsroot hte htroot hpl zmms flags)

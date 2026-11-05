@@ -1,0 +1,110 @@
+OK  WitAd      buf            ('0x10104', 128, 128)          ok
+OK  WitAd      recv.16        ('0x0', 0, 0)                  ok
+OK  WitAd      recv.40        0                              nil
+OK  WitAd      recv.48        0                              nil
+OK  WitAdM     dst            ('0x101e8', 3, 131)            ok
+OK  WitAdM     recv.16        ('0x10148', 32, 32)            ok
+OK  WitAdM     recv.40.8      ('0x10188', 32, 32)            ok
+OK  WitAdM     recv.48.8      ('0x101c8', 32, 32)            ok
+OK  WitBl1     buf            ('0x120be', 5, 5)              ok
+OK  WitBl1     recv.0         ('0x0', 0, 0)                  ok
+OK  WitBl257   buf            ('0x122be', 261, 261)          ok
+OK  WitBl257   recv.0         ('0x0', 0, 0)                  ok
+OK  WitBlM1    dst            ('0x100e1', 0, 5)              ok
+OK  WitBlM1    recv.0         ('0x100e0', 1, 1)              ok
+OK  WitBlM257  dst            ('0x101e1', 0, 261)            ok
+OK  WitBlM257  recv.0         ('0x100e0', 257, 257)          ok
+OK  WitBlR     dst            ('0x1032d', 0, 4)              ok
+OK  WitBlR     recv.0         ('0x1022c', 257, 257)          ok
+OK  WitBv      buf            ('0x10094', 1, 1)              ok
+OK  WitBv      recv.0         ('0x0', 0, 0)                  ok
+OK  WitBvM     dst            ('0x100b1', 0, 1)              ok
+OK  WitBvM     recv.0         ('0x100b0', 1, 1)              ok
+OK  WitBvR     buf            ('0x100db', 1, 1)              ok
+OK  WitBvR     recv           0                              nil
+OK  WitCp      buf            ('0x1007c', 40, 40)            ok
+OK  WitCp      recv.8         ('0x0', 0, 0)                  ok
+--  WitCpM     -              None                           partial: layout known below 0x100d8 (`pre` has a symbolic length)
+--  WitCpM     dst            (65752, None, None)            symbolic
+OK  WitCpM     recv.8         ('0x100b8', 32, 32)            ok
+OK  WitCpMR    dst            ('0x100e0', 0, 40)             ok
+OK  WitCpMR    recv.8         ('0x100c0', 0, 0)              ok
+OK  WitFv      buf            ('0x10074', 64, 64)            ok
+OK  WitFv      recv.32        ('0x0', 0, 0)                  ok
+OK  WitFvM     dst            ('0x100f0', 0, 64)             ok
+OK  WitFvM     recv.32        ('0x100d0', 4, 4)              ok
+OK  WitFvMR    dst            ('0x100e0', 0, 64)             ok
+OK  WitFvMR    recv.32        ('0x0', 0, 0)                  ok
+OK  WitLcE     buf            ('0x1002c', 4, 4)              ok
+OK  WitLcE     recv.0         ('0x0', 0, 0)                  ok
+OK  WitLcP     buf            ('0x1012c', 8, 8)              ok
+OK  WitLcP     recv           0                              nil
+OK  WitLcT     buf            ('0x1012c', 5, 5)              ok
+OK  WitLcT     recv           0                              nil
+OK  WitLcZ     buf            ('0x1012c', 8, 8)              ok
+OK  WitLcZ     recv           0                              nil
+OK  WitLuM0    dst            ('0x10050', 0, 4)              ok
+OK  WitLuM0    recv.0         ('0x10050', 0, 0)              ok
+OK  WitLuM1    dst            ('0x10058', 0, 12)             ok
+OK  WitLuM1    recv.0         ('0x10050', 1, 1)              ok
+OK  WitLuM16   dst            ('0x100d0', 0, 132)            ok
+OK  WitLuM16   recv.0         ('0x10050', 16, 16)            ok
+OK  WitLuMR    dst            ('0x10060', 0, 4)              ok
+OK  WitLuMR    recv.0         ('0x10064', 17, 17)            ok
+OK  WitLuMa    buf            ('0x100d0', 5, 5)              ok
+OK  WitLuMa    recv           0                              nil
+OK  WitLuTb    buf            ('0x100d0', 140, 140)          ok
+OK  WitLuTb    recv           0                              nil
+OK  WitNe0     buf            ('0x101fc', 32, 32)            ok
+OK  WitNe0     recv.8         0                              nil
+OK  WitNe0     recv.16        0                              nil
+OK  WitNe1     buf            ('0x101fc', 40, 40)            ok
+OK  WitNe1     recv.8         0                              nil
+OK  WitNe1     recv.16        0                              nil
+OK  WitNe16    buf            ('0x101fc', 160, 160)          ok
+OK  WitNe16    recv.8         0                              nil
+OK  WitNe16    recv.16        0                              nil
+OK  WitNeM0    dst            ('0x100a9', 0, 32)             ok
+OK  WitNeM0    recv.16.0      ('0x100a9', 0, 0)              ok
+OK  WitNeM1    dst            ('0x100b1', 0, 40)             ok
+OK  WitNeM1    recv.16.0      ('0x100a9', 1, 1)              ok
+OK  WitNeM16   dst            ('0x10129', 0, 160)            ok
+OK  WitNeM16   recv.16.0      ('0x100a9', 16, 16)            ok
+OK  WitRjAdSz  buf            ('0x0', 0, 0)                  ok
+OK  WitRjAdSz  recv           0                              nil
+OK  WitRjBlOf  buf            ('0x10038', 32, 32)            ok
+OK  WitRjBlOf  recv           0                              nil
+OK  WitRjBlSh  buf            ('0x0', 0, 0)                  ok
+OK  WitRjBlSh  recv           0                              nil
+OK  WitRjBvSz  buf            ('0x0', 0, 0)                  ok
+OK  WitRjBvSz  recv           0                              nil
+OK  WitRjCpSz  buf            ('0x0', 0, 0)                  ok
+OK  WitRjCpSz  recv           0                              nil
+OK  WitRjFvSz  buf            ('0x0', 0, 0)                  ok
+OK  WitRjFvSz  recv           0                              nil
+OK  WitRjLcOf  buf            ('0x10038', 32, 32)            ok
+OK  WitRjLcOf  recv           0                              nil
+OK  WitRjLcSh  buf            ('0x0', 0, 0)                  ok
+OK  WitRjLcSh  recv           0                              nil
+OK  WitRjLuOf  buf            ('0x10038', 32, 32)            ok
+OK  WitRjLuOf  recv           0                              nil
+OK  WitRjLuSh  buf            ('0x0', 0, 0)                  ok
+OK  WitRjLuSh  recv           0                              nil
+OK  WitRjNeOf  buf            ('0x10038', 32, 32)            ok
+OK  WitRjNeOf  recv           0                              nil
+OK  WitRjNeSh  buf            ('0x0', 0, 0)                  ok
+OK  WitRjNeSh  recv           0                              nil
+OK  WitRjScSz  buf            ('0x0', 0, 0)                  ok
+OK  WitRjScSz  recv           0                              nil
+OK  WitScA     buf            ('0x10018', 16, 16)            ok
+OK  WitScM     dst            ('0x10039', 0, 16)             ok
+OK  WitSzAd    recv           0                              nil
+OK  WitSzBl    recv.0         ('0x10020', 3, 3)              ok
+OK  WitSzBv    recv           0                              nil
+OK  WitSzCp    recv           0                              nil
+OK  WitSzFv    recv           0                              nil
+OK  WitSzLu    recv.0         ('0x10020', 3, 3)              ok
+OK  WitSzSc    recv           0                              nil
+OK  WitVbv     buf            ('0x10020', 1, 1)              ok
+--  Witness    -              None                           not checked: no target or registers
+56 witness files, 0 with a violation

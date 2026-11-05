@@ -38,7 +38,7 @@ def block  : List UInt8 :=
 def mem  : DataMem := (block ).At (0x10000 : BitVec 64)
 
 def s0  (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
-  ⟨⟨0x10000, 0, 0, 0, 0, 0, 0x10000, 0, 0, 0, 0, 0, 0, 0, 0, 0⟩, zmms, flags, mem ⟩
+  ⟨⟨0, 0, 0, 0, 0, 0, 0x10000, 0, 0, 0, 0, 0, 0, 0, 0, 0⟩, zmms, flags, mem ⟩
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
@@ -58,6 +58,7 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
   have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
   have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
   simp only [hu0, huN] at H ⊢
+  try simp only [BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H ⊢  -- fold `4#64 + a` after huN (re-proof fix X4)
   first | (refine Eq.mp ?_ H; exact congrFun (by ac_rfl) _) | ecancel
 
 /-- **Non-vacuity of `bv_size_main`.** -/

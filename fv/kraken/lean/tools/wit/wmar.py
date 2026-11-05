@@ -54,7 +54,7 @@ if which=="fv":
         return ad
     ch=[("guard",Z,8),("rslot","z 8",8),("hole","z 72",72),("l4","z 8",8),("l3","z 8",8),("l2","z 8",8),("l1","z 8",8),
         ("fp","z 8",8),("ra",Z,8),("s1","z 8",8),("s2","z 8",8),("r0","z 1",1),("r1","z 31",31),
-        ("wp","Int.toBytes 8 (WW : BitVec 64).toInt",8),("c4","Int.toBytes 8 4",8),("ws","z 32",32),("d0","z 32",32),("d1","z 32",32)]
+        ("wp","Int.toBytes 8 (WW : BitVec 64).toInt",8),("c4","Int.toBytes 8 4",8),("gap_wc","Int.toBytes 8 4",8),("ws","z 32",32),("d0","z 32",32),("d1","z 32",32)]
     ad=addrs(ch); W=hex(ad["ws"])
     ch=[(k,e.replace("WW :",W+" :"),n) for k,e,n in ch]
     R="Eq ((z 72).At (s.regs.rsp.toBitVec - 112))"
@@ -95,7 +95,7 @@ if which.startswith("lu"):
         for k,e,n in ch: ad[k]=a; a+=n
         return ad
     ch=[("guard",Z,8),("l1","z 8",8),("l2","z 8",8),("fp","z 8",8),("ra",Z,8),("hole","z 8",8),("slot","z 8",8),
-        ("pp","Int.toBytes 8 (PP : BitVec 64).toInt",8),("nn",f"Int.toBytes 8 ({N} : Int)",8)]
+        ("pp","Int.toBytes 8 (PP : BitVec 64).toInt",8),("nn",f"Int.toBytes 8 ({N} : Int)",8),("gap_lc",f"Int.toBytes 8 ({N} : Int)",8)]
     if N>0: ch.append(("bs",f"z {8*N}",8*N))
     ch+= [("o4","z 4",4)]
     if N>0: ch.append(("d",f"z {8*N}",8*N))

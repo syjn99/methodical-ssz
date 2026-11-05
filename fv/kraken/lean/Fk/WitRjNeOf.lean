@@ -38,12 +38,12 @@ theorem label_err : label "ssz.ErrInvalidVariableOffset" = 0x10000 :=
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 
 def block  : List UInt8 :=
-  (Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 4))))))))
+  (Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 24) ++ ((z 4) ++ ((z 4))))))))))
 
 def mem  : DataMem := (block ).At (0x10000 : BitVec 64)
 
 def s0  (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
-  ⟨⟨0, 0x10020, 32, 0, 0, 32, 0x10020, 0, 0, 0, 0, 0, 0, 0, 0x10000, 0⟩, zmms, flags, mem ⟩
+  ⟨⟨0, 0x10038, 32, 0, 0, 32, 0x10020, 0, 0, 0, 0, 0, 0, 0, 0x10000, 0⟩, zmms, flags, mem ⟩
 
 set_option maxHeartbeats 32000000 in
 set_option maxRecDepth 100000 in
@@ -66,11 +66,11 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
   simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd]
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
-  apply sep_true (F := Std.ExtHashMap.emp)
-  simp only [Std.ExtHashMap.sep_emp]
+  apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 24).At 65592#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 4).At 65620#64))
   have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
   have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
   simp only [hu0, huN] at H ⊢
+  try simp only [BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H ⊢  -- fold `4#64 + a` after huN (re-proof fix X4)
   refine Eq.mp ?_ H
   exact congrFun (by ac_rfl) _
 

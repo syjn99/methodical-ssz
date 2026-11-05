@@ -44,12 +44,12 @@ theorem hf_rtcopy : LabelsFresh RtCopy 104 := labelsFresh_of (by rw [prog_eq]; d
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 
 def block  : List UInt8 :=
-  (Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 72) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 1) ++ ((z 31) ++ ((Int.toBytes 8 (0x100c8 : BitVec 64).toInt) ++ ((Int.toBytes 8 4) ++ ((z 32) ++ ((z 32) ++ ((z 32))))))))))))))))))
+  (Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 72) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 1) ++ ((z 31) ++ ((Int.toBytes 8 (0x100d0 : BitVec 64).toInt) ++ ((Int.toBytes 8 4) ++ ((Int.toBytes 8 4) ++ ((z 32) ++ ((z 32) ++ ((z 32)))))))))))))))))))
 
 def mem  : DataMem := (block ).At (0x10000 : BitVec 64)
 
 def s0  (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
-  ⟨⟨0x10098, 0x100e8, 0, 0, 0, 64, 0x10080, 0, 0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags, mem ⟩
+  ⟨⟨0x10098, 0x100f0, 0, 0, 0, 64, 0x10080, 0, 0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags, mem ⟩
 
 set_option maxHeartbeats 32000000 in
 set_option maxRecDepth 100000 in
@@ -63,8 +63,8 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 120)) ⋆ Eq (([] : List UInt8).At (s.regs.rsp.toBitVec - 120 - BitVec.ofNat 64 0))
       ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Eq ((z 1).At s.regs.rax.toBitVec) ⋆ Eq ((z 31).At (s.regs.rax.toBitVec + 1))
-      ⋆ Eq ((Int.toBytes 8 (0x100c8 : BitVec 64).toInt).At (s.regs.rax.toBitVec + 32)) ⋆ Eq ((Int.toBytes 8 4).At (s.regs.rax.toBitVec + 40))
-      ⋆ Eq ((z 32).At (0x100c8 : BitVec 64))
+      ⋆ Eq ((Int.toBytes 8 (0x100d0 : BitVec 64).toInt).At (s.regs.rax.toBitVec + 32)) ⋆ Eq ((Int.toBytes 8 4).At (s.regs.rax.toBitVec + 40))
+      ⋆ Eq ((z 32).At (0x100d0 : BitVec 64))
       ⋆ Eq (([] : List UInt8).At s.regs.rbx.toBitVec) ⋆ Eq ((z 32).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
       ⋆ Eq ((z 32).At (s.regs.rbx.toBitVec + BitVec.ofNat 64 (s.regs.rcx.toNat + 32))) ⋆ Eq ((z 72).At (s.regs.rsp.toBitVec - 112)) ⋆ fun _ => True := by
   intro s
@@ -75,11 +75,11 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
     BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
-  apply sep_true (F := Std.ExtHashMap.emp)
-  simp only [Std.ExtHashMap.sep_emp]
+  apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 4).At 65736#64))
   have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
   have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
   simp only [hu0, huN] at H ⊢
+  try simp only [BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H ⊢  -- fold `4#64 + a` after huN (re-proof fix X4)
   refine Eq.mp ?_ H
   exact congrFun (by ac_rfl) _
 
@@ -88,7 +88,7 @@ theorem fv_marshal_runs (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rdi = 0)
       ⟨s0 zmms flags, Host.addrOf 5⟩ :=
-  eventually_mono (fv_marshal_main 5 hk_target hf_target (z 32) (z 32) [] (z 32) (z 32) rfl rfl rfl rfl (0x100c8 : BitVec 64)
+  eventually_mono (fv_marshal_main 5 hk_target hf_target (z 32) (z 32) [] (z 32) (z 32) rfl rfl rfl rfl (0x100d0 : BitVec 64)
     (s0 zmms flags) 0 0 (by simp [s0]) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 1) (z 31)
     rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl (Eq ((z 72).At ((s0 zmms flags).regs.rsp.toBitVec - 112)) ⋆ fun _ => True) 0 [] rfl (by have h := s_mem zmms flags; simp only [Std.ExtHashMap.sep_assoc] at h ⊢; exact h)
     (by simp [s0]) (by simp [s0]) (by simp [s0]) (by simp [s0]) (rt_memmove 104 hk_rtcopy hf_rtcopy 0))

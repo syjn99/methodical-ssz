@@ -25,23 +25,26 @@ MEM="(by have h := s_mem zmms flags; simp only [Std.ExtHashMap.sep_assoc] at h �
 if MODE=="lu":
     lab="ssz.ErrListTooBig"
     ch=[("e0",ZB,8),("e1",ZB,8),("guard",Z,8),("l1","z 8",8),("l2","z 8",8),("fp","z 8",8),("ra",Z,8),("hole","z 8",8),("slot","z 8",8),
-        ("pp",ZB,8),("nn","Int.toBytes 8 (17 : Int)",8),("o4","z 4",4)]
+        ("pp","Int.toBytes 8 (PP : BitVec 64).toInt",8),("nn","Int.toBytes 8 (17 : Int)",8),("gap_lc","Int.toBytes 8 (17 : Int)",8),
+        ("o4","z 4",4),("gap_ld","z 136",136)]
+    ad=addrs(ch); PP=hex(ad["gap_ld"])
+    ch=[(k,e.replace("PP :",PP+" :"),n) for k,e,n in ch]
     R="Eq ((z 8).At (s.regs.rsp.toBitVec + 8))"
     prem=f"""Eq (({Z}).At s.regs.rsp.toBitVec)
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 8)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 24)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 16))
       ⋆ Eq (({Z}).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq (({ZB}).At s.regs.rax.toBitVec) ⋆ Eq ((Int.toBytes 8 (17 : Int)).At (s.regs.rax.toBitVec + 8))
+      ⋆ Eq ((Int.toBytes 8 ({PP} : BitVec 64).toInt).At s.regs.rax.toBitVec) ⋆ Eq ((Int.toBytes 8 (17 : Int)).At (s.regs.rax.toBitVec + 8))
       ⋆ Eq (([] : List UInt8).At s.regs.rbx.toBitVec) ⋆ Eq ((z 4).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
       ⋆ Eq (({ZB}).At (label "{lab}").toBitVec) ⋆ Eq (({ZB}).At (label "{lab}" + 8).toBitVec) ⋆ {R}"""
     tgt,tlen,mods,ns,thm="ListU64MarshalSSZTo",91,[],"WitLuMR","lu_marshal_reject_main"
     regs=lambda a: f"{hex(a['pp'])}, {hex(a['o4'])}, 0, 0, 0, 4, {hex(a['ra'])}, 0, 0, 0, 0, 0, 0, 0, {hex(a['guard']-16)}, 0"
-    args=f"[] (z 4) 17 (by decide) (by decide) rfl 0 0 0 (s0 zmms flags) 0 0 (by simp [s0]) (z 8) (z 8) (z 8) (z 8) rfl rfl rfl rfl ({R.replace('s.regs','(s0 zmms flags).regs')} ⋆ fun _ => True) {MEM} (by simp [s0]) (by simp [s0]) (by simp [s0]) (by simp [s0])"
+    args=f"[] (z 4) 17 (by decide) (by decide) rfl ({PP} : BitVec 64) 0 0 (s0 zmms flags) 0 0 (by simp [s0]) (z 8) (z 8) (z 8) (z 8) rfl rfl rfl rfl ({R.replace('s.regs','(s0 zmms flags).regs')} ⋆ fun _ => True) {MEM} (by simp [s0]) (by simp [s0]) (by simp [s0]) (by simp [s0])"
     imports=["import Fk.LuMarshal"]
 if MODE=="fv":
     lab="ssz.ErrBytesLength"
     ch=[("e0",ZB,8),("e1",ZB,8),("guard",Z,8),("rslot","z 8",8),("hole1","z 72",72),("l4","z 8",8),("l3","z 8",8),("l2","z 8",8),("l1","z 8",8),
-        ("fp","z 8",8),("ra",Z,8),("s1","z 8",8),("s2","z 8",8),("r0","z 1",1),("r1","z 31",31),("wp",ZB,8),("wl",ZB,8),("d0","z 32",32)]
+        ("fp","z 8",8),("ra",Z,8),("s1","z 8",8),("s2","z 8",8),("r0","z 1",1),("r1","z 31",31),("wp",ZB,8),("wl",ZB,8),("gap_wc",ZB,8),("d0","z 32",32),("gap_d1","z 32",32)]
     R="Eq ((z 72).At (s.regs.rsp.toBitVec - 112))"
     prem=f"""Eq (({Z}).At s.regs.rsp.toBitVec)
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 8)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 8))

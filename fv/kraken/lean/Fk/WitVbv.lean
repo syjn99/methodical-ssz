@@ -39,7 +39,7 @@ def block (b : UInt8) : List UInt8 :=
 def mem (b : UInt8) : DataMem := (block b).At (0x10000 : BitVec 64)
 
 def s0 (b : UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
-  ⟨⟨0x10020, 1, 0, 0, 0, 4, 0x10010, 0, 0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags, mem b⟩
+  ⟨⟨0x10020, 1, 1, 0, 0, 4, 0x10010, 0, 0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags, mem b⟩
 
 set_option maxHeartbeats 32000000 in
 set_option maxRecDepth 100000 in

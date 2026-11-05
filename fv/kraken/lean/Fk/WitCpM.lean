@@ -46,12 +46,12 @@ theorem hf_rtcopy : LabelsFresh RtCopy 87 := labelsFresh_of (by rw [prog_eq]; de
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 
 def block (e8 root pre : List UInt8) : List UInt8 :=
-  (Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 72) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ (e8 ++ ((Int.toBytes 8 (0x100b0 : BitVec 64).toInt) ++ ((Int.toBytes 8 32) ++ (root ++ (pre ++ ((z 8) ++ ((z 32))))))))))))))))))
+  (Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 72) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ (e8 ++ ((Int.toBytes 8 (0x100b8 : BitVec 64).toInt) ++ ((Int.toBytes 8 32) ++ ((Int.toBytes 8 32) ++ (root ++ (pre ++ ((z 8) ++ ((z 32)))))))))))))))))))
 
 def mem (e8 root pre : List UInt8) : DataMem := (block e8 root pre).At (0x10000 : BitVec 64)
 
 def s0 (e8 root pre : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
-  ⟨⟨0x10098, 0x100d0, UInt64.ofNat pre.length, 0, 0, UInt64.ofNat (pre.length + 40), 0x10080, 0, 0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags, mem e8 root pre⟩
+  ⟨⟨0x10098, 0x100d8, UInt64.ofNat pre.length, 0, 0, UInt64.ofNat (pre.length + 40), 0x10080, 0, 0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags, mem e8 root pre⟩
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
@@ -63,8 +63,8 @@ theorem s_mem (e8 root pre : List UInt8) (he8 : e8.length = 8) (hroot : root.len
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 40))
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 120)) ⋆ Eq (([] : List UInt8).At (s.regs.rsp.toBitVec - 120 - BitVec.ofNat 64 0))
       ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq (e8.At s.regs.rax.toBitVec) ⋆ Eq ((Int.toBytes 8 (0x100b0 : BitVec 64).toInt).At (s.regs.rax.toBitVec + 8))
-      ⋆ Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 16)) ⋆ Eq (root.At (0x100b0 : BitVec 64))
+      ⋆ Eq (e8.At s.regs.rax.toBitVec) ⋆ Eq ((Int.toBytes 8 (0x100b8 : BitVec 64).toInt).At (s.regs.rax.toBitVec + 8))
+      ⋆ Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 16)) ⋆ Eq (root.At (0x100b8 : BitVec 64))
       ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq ((z 8).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
       ⋆ Eq ((z 32).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8)) ⋆ fun _ => True := by
   intro s
@@ -75,7 +75,8 @@ theorem s_mem (e8 root pre : List UInt8) (he8 : e8.length = 8) (hroot : root.len
     BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
-  apply sep_true (F := Eq ((z 72).At 65552#64) ⋆ Eq ((z 8).At 65640#64) ⋆ Eq ((z 8).At 65672#64))
+  apply sep_true (F := Eq ((z 72).At 65552#64) ⋆ Eq ((z 8).At 65640#64) ⋆ Eq ((z 8).At 65672#64)
+    ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 32).At 65712#64))  -- the cap of c.Root (re-proof fix X4)
   have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
   have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
   simp only [hu0, huN] at H ⊢
@@ -89,7 +90,7 @@ theorem cp_marshal_runs (e8 root pre : List UInt8) (he8 : e8.length = 8) (hroot 
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rbx.toNat = pre.length + 40)
       ⟨s0 e8 root pre zmms flags, Host.addrOf 5⟩ :=
-  eventually_mono (cp_marshal_main 5 hk_target hf_target e8 root pre (z 8) (z 32) he8 hroot rfl rfl 0x100b0
+  eventually_mono (cp_marshal_main 5 hk_target hf_target e8 root pre (z 8) (z 32) he8 hroot rfl rfl 0x100b8
     (s0 e8 root pre zmms flags) 0 0 (by simp [s0]; omega)
     (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) rfl rfl rfl rfl rfl rfl
     (fun _ => True) 0 [] rfl (s_mem e8 root pre he8 hroot hpl zmms flags)

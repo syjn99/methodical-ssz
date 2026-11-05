@@ -13,3 +13,17 @@ Run from `fv/kraken/lean`:
 The other witness files (`WitFv`, `WitCp`, `WitBv`, `WitAd`, `WitCpM`) were
 generated with the same functions from configurations written inline; the
 generated files are the record.
+
+## Go value check (re-proof fix X4)
+
+`goval.py` reads every `Fk/Wit*.lean`, rebuilds the block layout from
+0x10000 and the start registers, and checks the Go values of the call: the
+argument slice, the receiver's slice fields and pointer fields. A slice
+header (p, len, cap) needs len ≤ cap < 2^63 and, if cap > 0, its data
+p .. p + cap·esz in the block. The last run is in `goval-result.txt`.
+
+    python3 tools/wit/goval.py          # exit 1 on a violation
+
+A main theorem may allow more machine states than Go values (it is stronger
+then). The witness must still be a Go value: "premise met" and "Go value"
+are two columns of the completion table.

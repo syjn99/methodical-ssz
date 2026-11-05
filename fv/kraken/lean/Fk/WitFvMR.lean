@@ -48,12 +48,12 @@ theorem label_err : label "ssz.ErrBytesLength" = 0x10000 :=
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 
 def block  : List UInt8 :=
-  (Int.toBytes 8 (0 : BitVec 64).toInt) ++ ((Int.toBytes 8 (0 : BitVec 64).toInt) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 72) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 1) ++ ((z 31) ++ ((Int.toBytes 8 (0 : BitVec 64).toInt) ++ ((Int.toBytes 8 (0 : BitVec 64).toInt) ++ ((z 32))))))))))))))))))
+  (Int.toBytes 8 (0 : BitVec 64).toInt) ++ ((Int.toBytes 8 (0 : BitVec 64).toInt) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 72) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 1) ++ ((z 31) ++ ((Int.toBytes 8 (0 : BitVec 64).toInt) ++ ((Int.toBytes 8 (0 : BitVec 64).toInt) ++ ((Int.toBytes 8 (0 : BitVec 64).toInt) ++ ((z 32) ++ ((z 32))))))))))))))))))))
 
 def mem  : DataMem := (block ).At (0x10000 : BitVec 64)
 
 def s0  (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
-  ⟨⟨0x100a8, 0x100d8, 0, 0, 0, 64, 0x10090, 0, 0, 0, 0, 0, 0, 0, 0x10000, 0⟩, zmms, flags, mem ⟩
+  ⟨⟨0x100a8, 0x100e0, 0, 0, 0, 64, 0x10090, 0, 0, 0, 0, 0, 0, 0, 0x10000, 0⟩, zmms, flags, mem ⟩
 
 set_option maxHeartbeats 32000000 in
 set_option maxRecDepth 100000 in
@@ -80,11 +80,11 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
   simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd]
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
-  apply sep_true (F := Std.ExtHashMap.emp)
-  simp only [Std.ExtHashMap.sep_emp]
+  apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 (0 : BitVec 64).toInt).At 65752#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 32).At 65792#64))
   have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
   have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
   simp only [hu0, huN] at H ⊢
+  try simp only [BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H ⊢  -- fold `4#64 + a` after huN (re-proof fix X4)
   refine Eq.mp ?_ H
   exact congrFun (by ac_rfl) _
 

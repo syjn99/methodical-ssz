@@ -28,7 +28,8 @@ for key,thm,mod,prog,sfile,lab,kind,rcx,ooff,hsp in T:
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 8))"""
     else:
         ch=[("e0",Z,8),("e1",Z,8),("guard",Z,8),("fp","z 8",8),("ra",Z,8),("hole","z 8",8),("slot","z 8",8)]
-        if kind=="off": ch.append(("o4","z 4",4))
+        # Go values (re-proof fix X4): the 32 input bytes are all in the block.
+        if kind=="off": ch+=([("gap_b0",f"z {ooff}",ooff)] if ooff else [])+[("o4","z 4",4),("gap_b1",f"z {32-4-ooff}",32-4-ooff)]
         o4a="" if kind!="off" else (f"\n      ⋆ Eq ((z 4).At s.regs.rbx.toBitVec)" if ooff==0 else f"\n      ⋆ Eq ((z 4).At (s.regs.rbx.toBitVec + {ooff}))")
         prem=f"""Eq (({Z}).At s.regs.rsp.toBitVec)
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 8)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 16))

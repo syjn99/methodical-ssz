@@ -33,12 +33,12 @@ theorem hf_target : LabelsFresh BitLSizeSSZ 5 := labelsFresh_of (by rw [prog_eq]
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 
 def block  : List UInt8 :=
-  (Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((Int.toBytes 8 (BitVec.ofNat 64 3).toInt))
+  (Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((Int.toBytes 8 (0x10020 : BitVec 64).toInt) ++ ((Int.toBytes 8 (BitVec.ofNat 64 3).toInt) ++ ((Int.toBytes 8 (BitVec.ofNat 64 3).toInt) ++ ((z 3)))))
 
 def mem  : DataMem := (block ).At (0x10000 : BitVec 64)
 
 def s0  (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
-  ⟨⟨0x10000, 0, 0, 0, 0, 0, 0x10000, 0, 0, 0, 0, 0, 0, 0, 0, 0⟩, zmms, flags, mem ⟩
+  ⟨⟨0x10008, 0, 0, 0, 0, 0, 0x10000, 0, 0, 0, 0, 0, 0, 0, 0, 0⟩, zmms, flags, mem ⟩
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
@@ -54,11 +54,11 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
     BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
-  apply sep_true (F := Std.ExtHashMap.emp)
-  simp only [Std.ExtHashMap.sep_emp]
+  apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 (0x10020 : BitVec 64).toInt).At 65544#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 (BitVec.ofNat 64 3).toInt).At 65560#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 3).At 65568#64))
   have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
   have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
   simp only [hu0, huN] at H ⊢
+  try simp only [BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H ⊢  -- fold `4#64 + a` after huN (re-proof fix X4)
   first | (refine Eq.mp ?_ H; exact congrFun (by ac_rfl) _) | ecancel
 
 /-- **Non-vacuity of `bl_size_main`.** -/
