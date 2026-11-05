@@ -71,4 +71,37 @@ def MemmoveC (S : Nat) : Prop :=
           ⋆ Eq (src.At st.regs.rbx.toBitVec) ⋆ Eq (src.At st.regs.rax.toBitVec) ⋆ F) st'.data.dmem)
       ⟨st, label "runtime.memmove"⟩
 
+/-- `runtime.convT64(v uint64) unsafe.Pointer`: returns to the return address
+with rsp + 8; the heap may shrink (it allocates for values ≥ 256), the frame
+`F` is unchanged. The result is not used by the callers proved here beyond
+being passed on. -/
+def ConvT64C (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
+  ∀ (st : MachineData) (ret : Int64) (avail : Nat) (stk : List UInt8) (F : DataMem → Prop),
+    stk.length = S →
+    (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Heap avail ⋆ F) st.dmem →
+    Eventually (step1 Host.exe)
+      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧
+        ∃ (stk' : List UInt8) (avail' : Nat), stk'.length = S ∧
+        (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Heap avail' ⋆ F) st'.data.dmem)
+      ⟨st, label "runtime.convT64"⟩
+
+/-- `fmt.Errorf(format string, a ...any) error` (`fmt.errorf` in the binary):
+returns to the return address with rsp + 8 and a non-nil error interface
+(rax ≠ 0, the itab word); the heap may shrink; the frame `F` (which holds the
+argument slice the caller built) is unchanged. Not modeled: which error it
+wraps (`%w`); CONTRACTS.md. -/
+def FmtErrorfC (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
+  ∀ (st : MachineData) (ret : Int64) (avail : Nat) (stk : List UInt8) (F : DataMem → Prop),
+    stk.length = S →
+    (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Heap avail ⋆ F) st.dmem →
+    Eventually (step1 Host.exe)
+      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.rax ≠ 0 ∧
+        ∃ (stk' : List UInt8) (avail' : Nat), stk'.length = S ∧
+        (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Heap avail' ⋆ F) st'.data.dmem)
+      ⟨st, label "fmt.errorf"⟩
+
 end Fk
