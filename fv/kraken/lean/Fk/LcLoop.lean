@@ -188,16 +188,17 @@ theorem lcl_iter (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
   simp only [Width.bytes, Width.bits] at H3
   kunfold
   rw [show rsp.toBitVec - 8#64 = x - 232 by rw [hrsp, lcl_ret]] at *
-  refine eventually_trans _ _ _ _ (hno _ (Host.addrOf (k + 246 + 1)) avail blk _ rfl (by omega) hblk
-    (by dsimp only; rw [lcl_blk]; ecancel)) ?_
-  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, stk1, hstk1, Hm1⟩
+  have hspA : x - 232 + 8 = x - 224 := by bv_omega
+  refine eventually_trans _ _ _ _ (hno _ (Host.addrOf (k + 246 + 1)) avail blk sp1 _ rfl (by omega) hblk hsp1
+    (by dsimp only; rw [lcl_blk, hspA]; ecancel)) ?_
+  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, -, stk1, sn1, hstk1, hsn1, Hm1⟩
   dsimp only at hpc1 hrsp1 hr141 Hm1
   subst hpc1
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
     zmms1, flags1, mem1⟩ := d1
   simp only at hrsp1 hr141 Hm1
   subst hrsp1 hr141
-  rw [lcl_blk, luObj_sep] at Hm1
+  rw [lcl_blk, luObj_sep, hspA] at Hm1
   kat hk ListCUnmarshalSSZ 247
   rw [lcl_g, show x - 224 + 64 = x - 160 by bv_omega]
   apply load_step _ _ _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
@@ -306,8 +307,8 @@ theorem lcl_iter (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
       (by have : g.l.length ≤ 16 := hg; simp [u64Bytes_size]; omega)] at H7
     have hx232 : (x - 232).toNat = x.toNat - 232 := by
       rw [BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simp; omega)]; simp
-    refine eventually_trans _ _ _ _ (hlu _ (Host.addrOf (k + 295 + 1)) g stk1 sp1 sp2
-      (List.replicate 8 0) (List.replicate 8 0) (List.replicate 8 0) guard (avail - 24) _ hg hstk1 hsp1 hsp2
+    refine eventually_trans _ _ _ _ (hlu _ (Host.addrOf (k + 295 + 1)) g stk1 sn1 sp2
+      (List.replicate 8 0) (List.replicate 8 0) (List.replicate 8 0) guard (avail - 24) _ hg hstk1 hsn1 hsp2
       (by simp) (by simp) (by simp)
       (by show (BitVec.ofNat 64 e - rcx.toBitVec).toNat = _; rw [hrcx']; simp [BitVec.toNat_sub]; omega)
       (by show (BitVec.ofNat 64 e - rcx.toBitVec).toNat ≤ (BitVec.ofNat 64 cap0 - rcx.toBitVec + -4).toNat
@@ -541,8 +542,8 @@ theorem lcl_iter (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
       (by have : g.l.length ≤ 16 := hg; simp [u64Bytes_size]; omega)] at H7
     have hx232 : (x - 232).toNat = x.toNat - 232 := by
       rw [BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simp; omega)]; simp
-    refine eventually_trans _ _ _ _ (hlu _ (Host.addrOf (k + 295 + 1)) g stk1 sp1 sp2
-      (List.replicate 8 0) (List.replicate 8 0) (List.replicate 8 0) guard (avail - 24) _ hg hstk1 hsp1 hsp2
+    refine eventually_trans _ _ _ _ (hlu _ (Host.addrOf (k + 295 + 1)) g stk1 sn1 sp2
+      (List.replicate 8 0) (List.replicate 8 0) (List.replicate 8 0) guard (avail - 24) _ hg hstk1 hsn1 hsp2
       (by simp) (by simp) (by simp)
       (by show (BitVec.ofNat 64 e - rcx.toBitVec).toNat = _; rw [hrcx']; simp [BitVec.toNat_sub]; omega)
       (by show (BitVec.ofNat 64 e - rcx.toBitVec).toNat ≤ (BitVec.ofNat 64 cap0 - rcx.toBitVec + -4).toNat

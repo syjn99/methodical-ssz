@@ -36,12 +36,12 @@ theorem lc_accept_main (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
     (hparts : ∀ i (hi : i < gs.length), (tl.drop (lcStart gs i)).take (4 + 8 * gs[i].l.length)
       = [4, 0, 0, 0] ++ (u64Bytes gs[i].l).toList)
     (hnexts : ∀ i, i + 1 < gs.length → (tl.drop (4 * (i + 1))).take 4 = (uintBytes 4 (lcStart gs (i + 1))).toList)
-    (s : MachineData) (ra guard : UInt64) (fp slot s8 s32 l128 l136 l144 l152 l160 l168 l176 l184 l216 l224 rslot blk
+    (s : MachineData) (ra guard : UInt64) (fp slot s8 s32 l128 l136 l144 l152 l160 l168 l176 l184 l208 l216 l224 rslot blk
       cP cL cC : List UInt8)
     (hfp : fp.length = 8) (hsl : slot.length = 8) (h8 : s8.length = 8) (h32 : s32.length = 8)
     (hl128 : l128.length = 8) (hl136 : l136.length = 8) (hl144 : l144.length = 8) (hl152 : l152.length = 8)
     (hl160 : l160.length = 8) (hl168 : l168.length = 8) (hl176 : l176.length = 8) (hl184 : l184.length = 8)
-    (hl216 : l216.length = 8) (hl224 : l224.length = 8) (hrs : rslot.length = 8)
+    (hl208 : l208.length = 8) (hl216 : l216.length = 8) (hl224 : l224.length = 8) (hrs : rslot.length = 8)
     (hcP : cP.length = 8) (hcL : cL.length = 8) (hcC : cC.length = 8)
     (S : Nat) (hS : S < 2 ^ 60) (hblk : blk.length = 144 + S)
     (R : DataMem → Prop) (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : 8 * 4 + 152 * 4 ≤ avail)
@@ -53,6 +53,7 @@ theorem lc_accept_main (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
       ⋆ Eq (l160.At (s.regs.rsp.toBitVec - 160)) ⋆ Eq (l168.At (s.regs.rsp.toBitVec - 168))
       ⋆ Eq (l176.At (s.regs.rsp.toBitVec - 176)) ⋆ Eq (l184.At (s.regs.rsp.toBitVec - 184))
       ⋆ Eq (l224.At (s.regs.rsp.toBitVec - 224)) ⋆ Eq (l216.At (s.regs.rsp.toBitVec - 216))
+      ⋆ Eq (l208.At (s.regs.rsp.toBitVec - 208))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 232)) ⋆ Eq (blk.At (s.regs.rsp.toBitVec - 232 - 144 - BitVec.ofNat 64 S))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ Heap avail
       ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec) ⋆ Eq ((tl.take 4).At (s.regs.rbx.toBitVec + 4))
@@ -239,17 +240,26 @@ theorem lc_accept_main (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
   rw [lcl_ret] at *
   have hn4 : 4 * gs.length / 4 = gs.length := by omega
   rw [hn4]
-  refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 75 + 1)) gs.length avail blk _ rfl
+  have hsp3 : ∀ (a b c : List UInt8), a.length = 8 → b.length = 8 → c.length = 8 →
+      Eq ((a ++ (b ++ c)).At (rsp.toBitVec - 232 + 8)) = Eq (a.At (rsp.toBitVec - 224)) ⋆ Eq (b.At (rsp.toBitVec - 216))
+        ⋆ Eq (c.At (rsp.toBitVec - 208)) := by
+    intro a b c ha hb hc
+    rw [at_app a _ (b := rsp.toBitVec - 216) (by rw [ha]; bv_omega) (by simp [*]),
+      at_app b c (b := rsp.toBitVec - 208) (by rw [hb]; bv_omega) (by simp [*]), show rsp.toBitVec - 232 + 8 = rsp.toBitVec - 224 by bv_omega]
+    simp only [Std.ExtHashMap.sep_assoc]
+  refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 75 + 1)) gs.length avail blk (l224 ++ (l216 ++ l208)) _ rfl
     (by show (BitVec.ofNat 64 gs.length).toNat ≤ _; simp; omega)
-    (by show (BitVec.ofNat 64 gs.length).toNat = _; simp; omega) (by omega) hblk (by dsimp only; rw [lcl_blk]; ecancel)) ?_
-  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, stk1, hstk1, Hm1⟩
+    (by show (BitVec.ofNat 64 gs.length).toNat = _; simp; omega) (by omega) (by unfold maxAlloc; omega) (by omega) hblk
+    (by simp [*]) (by dsimp only; rw [lcl_blk, hsp3 _ _ _ hl224 hl216 hl208]; ecancel)) ?_
+  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, -, stk1, sm1, hstk1, hsm1, Hm1⟩
   dsimp only at hpc1 hrsp1 hr141 Hm1
   subst hpc1
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
     zmms1, flags1, mem1⟩ := d1
   simp only at hrsp1 hr141 Hm1
   subst hrsp1 hr141
-  rw [lcl_blk, hn4] at Hm1
+  rw [lcl_blk, hn4, ← List.take_append_drop 8 sm1, ← List.take_append_drop 8 (sm1.drop 8),
+    hsp3 _ _ _ (by simp [hsm1]) (by simp [hsm1]) (by simp [hsm1])] at Hm1
   kat hk ListCUnmarshalSSZ 76
   rw [lcl_g, show rsp.toBitVec - 224 + 56 = rsp.toBitVec - 168 by bv_omega]
   apply load_step _ _ _ _ (Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
@@ -311,11 +321,12 @@ theorem lc_accept_main (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
   refine eventually_trans _ _ _ _ (lcl_loop k hk hf rsp.toBitVec (rbx.toBitVec + 4) rax.toBitVec rax1.toBitVec tl T gs hgs
     hT hn hT32 hend hparts hnexts rdi.toBitVec.toNat (by simp; omega) (by simpa using hcap63) S hS ra rbp guard Heap
     (Eq ((Int.toBytes 8 rbx.toBitVec.toInt).At (rsp.toBitVec + 16)) ⋆ Eq ([4, 0, 0, 0].At rbx.toBitVec)
-      ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt).At (rax.toBitVec + 16)) ⋆ R)
+      ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt).At (rax.toBitVec + 16))
+      ⋆ Eq (((sm1.drop 8).drop 8).At (rsp.toBitVec - 208)) ⋆ R)
     hguard hsp hno hlu gs.length 0 _ [] stk1
-    (Int.toBytes 8 (Host.addrOf (k + 75 + 1)).toBitVec.toInt) l224 l216 l136
+    (Int.toBytes 8 (Host.addrOf (k + 75 + 1)).toBitVec.toInt) (sm1.take 8) ((sm1.drop 8).take 8) l136
     (Int.toBytes 8 (BitVec.ofNat 64 (4 * gs.length)).toInt) l160 l184 (avail - 8 * gs.length)
-    (by omega) rfl rfl hstk1 (Int.toBytes_length 8 _) hl224 hl216 hl136 (Int.toBytes_length 8 _) hl160 hl184
+    (by omega) rfl rfl hstk1 (Int.toBytes_length 8 _) (by simp [hsm1]) (by simp [hsm1]) hl136 (Int.toBytes_length 8 _) hl160 hl184
     (by omega) (by simp) (by show (BitVec.ofNat 64 gs.length).toNat = _; simp; omega)
     (by show (BitVec.ofNat 64 (4 * gs.length)).toNat = _; rw [hstart]; simp; omega)
     (by apply UInt64.toBitVec_inj.mp; simp) (by apply UInt64.toBitVec_inj.mp; simp)

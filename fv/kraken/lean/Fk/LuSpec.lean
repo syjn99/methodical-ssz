@@ -44,10 +44,11 @@ theorem lu_unmarshal_accept_spec_k (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt
     (hfp : fp.length = 8) (h28 : s28.length = 8) (h30 : s30.length = 8) (h38 : s38.length = 8)
     (h90 : s90.length = 8) (h98 : s98.length = 8) (hrs : rslot.length = 8)
     (hcP : cP.length = 8) (hcL : cL.length = 8) (hcC : cC.length = 8)
-    (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
+    (R : DataMem → Prop) (S : Nat) (scratch spm : List UInt8) (hsc : scratch.length = S) (hspm : spm.length = 24)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (P : ∀ g : ListU64, g.ok → bsA = luEncode g →
       s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (spm.At (s.regs.rsp.toBitVec - 136))
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s28.At (s.regs.rsp.toBitVec - 96))
       ⋆ Eq (s30.At (s.regs.rsp.toBitVec - 88)) ⋆ Eq (s38.At (s.regs.rsp.toBitVec - 80))
       ⋆ Eq (s90.At (s.regs.rsp.toBitVec + 8)) ⋆ Eq (s98.At (s.regs.rsp.toBitVec + 16))
@@ -67,14 +68,14 @@ theorem lu_unmarshal_accept_spec_k (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0 ∧
         st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.r14 = s.regs.r14 ∧
-        ∃ (p : BitVec 64) (fp' s28' s30' s38' s90' s98' rslot' scratch' : List UInt8),
+        ∃ (p : BitVec 64) (fp' s28' s30' s38' s90' s98' rslot' scratch' spm' : List UInt8),
         fp'.length = 8 ∧ s28'.length = 8 ∧ s30'.length = 8 ∧ s38'.length = 8 ∧ s90'.length = 8 ∧
-        s98'.length = 8 ∧ rslot'.length = 8 ∧ scratch'.length = S ∧
+        s98'.length = 8 ∧ rslot'.length = 8 ∧ scratch'.length = S ∧ spm'.length = 24 ∧
         (Eq ((Int.toBytes 8 p.toInt).At s.regs.rax.toBitVec)
           ⋆ Eq ((Int.toBytes 8 (g.l.length : Int)).At (s.regs.rax.toBitVec + 8))
           ⋆ Eq ((Int.toBytes 8 (g.l.length : Int)).At (s.regs.rax.toBitVec + 16)) ⋆ Eq ((u64Bytes g.l).toList.At p)
           ⋆ Heap (avail - 8 * g.l.length)
-          ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+          ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec) ⋆ Eq (spm'.At (s.regs.rsp.toBitVec - 136))
           ⋆ Eq (fp'.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s28'.At (s.regs.rsp.toBitVec - 96))
           ⋆ Eq (s30'.At (s.regs.rsp.toBitVec - 88)) ⋆ Eq (s38'.At (s.regs.rsp.toBitVec - 80))
           ⋆ Eq (s90'.At (s.regs.rsp.toBitVec + 8)) ⋆ Eq (s98'.At (s.regs.rsp.toBitVec + 16))
@@ -89,5 +90,5 @@ theorem lu_unmarshal_accept_spec_k (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt
   refine ⟨g, hg, rfl, ?_⟩
   have hok : g.l.length ≤ 16 := hg
   exact lu_accept_main k hk hf (u64Bytes g.l).toList g.l.length (by simp [u64Bytes_size]) hok s ra guard
-    fp s28 s30 s38 s90 s98 rslot cP cL cC hfp h28 h30 h38 h90 h98 hrs hcP hcL hcC R S scratch hsc Heap avail
+    fp s28 s30 s38 s90 s98 rslot cP cL cC hfp h28 h30 h38 h90 h98 hrs hcP hcL hcC R S scratch spm hsc hspm Heap avail
     (P g hg rfl) hguard hsp (by rw [hlen, lu_encode_size]) hcap hcap63 (by omega) hms

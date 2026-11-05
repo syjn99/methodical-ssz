@@ -14,13 +14,17 @@ CONTRACTS.md).
 - `Heap avail`: the runtime-owned heap with `avail` free bytes (an abstract
   predicate; the allocator's state lives in it);
 - `ty`: the type descriptor address of the element type (rax), `esz` its size;
-- the call is in range: `len ≤ cap = cnt`, `esz * cnt ≤ avail` (so Go's
-  `panicmakeslicelen`/`panicmakeslicecap` and the out-of-memory throw are not
-  taken; with a separated heap of `avail` bytes, `avail < 2^64`);
-- `S` bytes of stack below the return slot are scratch for the callee;
+- the call is in range (Go 1.26.3 runtime/slice.go `makeslice`): `len ≤ cap =
+  cnt`, `cnt < 2^63` (Go `int`, so `len < 0` and `cap < 0` are excluded),
+  `esz * cnt ≤ maxAlloc` (`panicmakeslicecap` excluded), `esz * cnt ≤ avail`
+  (the out-of-memory throw excluded);
+- `S` bytes of stack below the return slot are scratch for the callee, and the
+  24-byte spill area of its three register arguments above the return slot
+  (Go ABIInternal) is the callee's too;
 - result: the callee returns to the return address with rsp + 8 (`Eventually`
-  includes termination), the frame `F` unchanged, a zeroed block of
-  `esz * cnt` bytes at rax carved from the heap, and `Heap (avail - esz * cnt)`.
+  includes termination), r14 (Go's g) and rbp kept, the frame `F` unchanged,
+  a zeroed block of `esz * cnt` bytes at rax carved from the heap, and
+  `Heap (avail - esz * cnt)`.
 
 The earlier form (no heap, every `cnt`, every frame) was contradictory: with
 `cnt = 2^61` the block covers all addresses (review/ReviewKraken.lean,
@@ -35,27 +39,36 @@ contract says they do not change; CONTRACTS.md lists this as a premise.
 -/
 
 namespace Fk
+
+/-- Go's `maxAlloc` on linux/amd64: `1 << heapAddrBits`, heapAddrBits = 48
+(runtime/malloc.go). `growslice` and `makeslice` panic above it. -/
+def maxAlloc : Nat := 2 ^ 48
+
 variable [Host]
 
 def MakesliceC (Heap : Nat → DataMem → Prop) (ty : BitVec 64) (esz S : Nat) : Prop :=
-  ∀ (st : MachineData) (ret : Int64) (cnt avail : Nat) (stk : List UInt8) (F : DataMem → Prop),
+  ∀ (st : MachineData) (ret : Int64) (cnt avail : Nat) (stk spill : List UInt8) (F : DataMem → Prop),
     st.regs.rax.toBitVec = ty → st.regs.rbx.toNat ≤ cnt → st.regs.rcx.toNat = cnt →
-    esz * cnt ≤ avail → stk.length = S →
+    esz * cnt ≤ avail → esz * cnt ≤ maxAlloc → cnt < 2 ^ 63 → stk.length = S → spill.length = 24 →
     (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
-      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Heap avail ⋆ F) st.dmem →
+      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (st.regs.rsp.toBitVec + 8))
+      ⋆ Heap avail ⋆ F) st.dmem →
     Eventually (step1 Host.exe)
-      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.r14 = st.regs.r14 ∧
-        ∃ stk' : List UInt8, stk'.length = S ∧
+      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.r14 = st.regs.r14
+        ∧ st'.data.regs.rbp = st.regs.rbp ∧
+        ∃ stk' spill' : List UInt8, stk'.length = S ∧ spill'.length = 24 ∧
         (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
-          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S))
+          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill'.At (st.regs.rsp.toBitVec + 8))
           ⋆ Eq ((List.replicate (esz * cnt) 0).At st'.data.regs.rax.toBitVec)
           ⋆ Heap (avail - esz * cnt) ⋆ F) st'.data.dmem)
       ⟨st, label "runtime.makeslice"⟩
 
 /-- `runtime.memmove(to, from unsafe.Pointer, n uintptr)` (rax = to, rbx = from,
 rcx = n): on disjoint source and destination chunks of n bytes, it returns with
-rsp + 8 and the destination equal to the source; the source and the frame `F`
-are unchanged. Overlapping ranges (allowed by Go) are outside this contract:
+rsp + 8, r14 (Go's g) and rbp kept, and the destination equal to the source;
+the source and the frame `F` are unchanged. Go's memmove is an assembly
+function with a zero-byte frame (`$0-24`, memmove_amd64.s): it has no spill
+slots and does not write the stack (S = 0 suffices; callers may pass more). Overlapping ranges (allowed by Go) are outside this contract:
 the callers' premises separate them (`⋆`). -/
 def MemmoveC (S : Nat) : Prop :=
   ∀ (st : MachineData) (ret : Int64) (src dst stk : List UInt8) (F : DataMem → Prop),
@@ -64,7 +77,8 @@ def MemmoveC (S : Nat) : Prop :=
       ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S))
       ⋆ Eq (src.At st.regs.rbx.toBitVec) ⋆ Eq (dst.At st.regs.rax.toBitVec) ⋆ F) st.dmem →
     Eventually (step1 Host.exe)
-      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧
+      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8
+        ∧ st'.data.regs.r14 = st.regs.r14 ∧ st'.data.regs.rbp = st.regs.rbp ∧
         ∃ stk' : List UInt8, stk'.length = S ∧
         (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
           ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S))
@@ -145,10 +159,6 @@ def FmtErrorfC (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
           ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill'.At (st.regs.rsp.toBitVec + 8))
           ⋆ Eq (fs.At st.regs.rax.toBitVec) ⋆ Eq (args.At st.regs.rcx.toBitVec) ⋆ Heap avail' ⋆ F) st'.data.dmem)
       ⟨st, label "fmt.errorf"⟩
-
-/-- Go's `maxAlloc` on linux/amd64: `1 << heapAddrBits`, heapAddrBits = 48
-(runtime/malloc.go). `growslice` and `makeslice` panic above it. -/
-def maxAlloc : Nat := 2 ^ 48
 
 /-- The growth loop of Go 1.26.3 `runtime.nextslicecap` (slice.go):
 `newcap += (newcap + 3*256) >> 2` until `newcap ≥ newLen`. The fuel argument

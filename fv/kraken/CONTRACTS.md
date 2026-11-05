@@ -36,6 +36,30 @@
 | `runtime.gcWriteBarrier1/2` | 1b 디코더 전부 | (c) | 쓰기 장벽 0 전제. 플래그를 읽고 건너뜀을 증명한다(AttestationData는 6번) | 해당 없음 |
 | `runtime.convT64` | ListC.UnmarshalSSZ(정렬 오류, 원소 수 초과) | (b) | `ConvT64C` | 그 두 경로는 증명하지 않았다 |
 
+## 1c. 계약별 조건 (1b-fix X3)
+
+모든 계약은 Go 1.26.3 ABIInternal(amd64)의 호출을 가정한다.
+반환 주소는 rsp에 있다.
+`S`는 반환 슬롯 아래의 scratch 바이트 수다.
+spill은 반환 슬롯 바로 위의 레지스터 인수 칸이다. 피호출자가 쓸 수 있다.
+
+| 계약 | 인수 조건 | 자원 예산 | 스택 창 | 보존 | 모델 |
+| --- | --- | --- | --- | --- | --- |
+| `MakesliceC Heap ty esz S` | rax = ty, `len ≤ cap = cnt`, `cnt < 2^63` | `esz·cnt ≤ avail`, `esz·cnt ≤ maxAlloc` | scratch S, spill 24 | rsp + 8, r14, rbp, `F` | `bump_makeslice`(esz = 8) |
+| `MemmoveC S` | rcx = n, 원천·목적 n바이트, 서로소 | 없음 | scratch S(Go 함수는 쓰지 않는다), spill 없음(asm, `$0-24`) | rsp + 8, r14, rbp, 원천, `F` | `rt_memmove` |
+| `GrowsliceC Heap ty esz S` | `0 < esz`, rsi = ty, `num ≤ newLen`, `oldLen ≤ oldCap < newLen` | `2·esz·nc + 8192 ≤ avail ≤ maxAlloc` | scratch S, spill 40 | rsp + 8, r14, rbp, rbx, 옛 블록, `F` | `rt_growslice`(esz = 1) |
+| `NewobjectC Heap ty sz S` | rax = ty | `sz ≤ avail` | scratch S, spill 8 | rsp + 8, r14, rbp, `F` | 없음(X4) |
+| `ConvT64C Heap S` | 없음(모든 값) | `8 ≤ avail` | scratch S, spill 8 | rsp + 8, r14, `F` | `rt_convT64` |
+| `FmtErrorfNilC S` | rdi = 0, 형식에 `%` 없음, 형식 바이트 조각 | 없음(할당 없음) | scratch S, spill 40 | rsp + 8, r14, 형식, `F` | `rt_errorf_nil` |
+| `FmtErrorfC Heap S` | `1 ≤ len(a) = cap(a)`, 형식·인수 배열 조각 | `avail' ≤ avail` | scratch S, spill 40 | rsp + 8, r14, 형식, 인수, `F` | `rt_errorf` |
+| `ValidateBitlistC S` | rbx = len(buf), rdi = 2048, buf 조각 | 성공 경로만(실패 경로의 오류 할당은 말하지 않는다) | scratch S, spill 32 | rsp + 8, r14, rbp, buf, `F` | 없음(`bsr`) |
+
+전역 상태 가정(모든 계약 공통):
+- `runtime.writeBarrier`(4바이트)는 호출자 정리의 전제에서 0이다. 그 조각은 계약의 `F`에 있다. 그래서 계약은 "호출 중 쓰기 장벽이 켜지지 않는다"를 가정한다. GC가 할당 중 표시 단계에 들어가면 이 가정은 거짓이다(조건 C19).
+- 스택 가드(`g.stackguard0`, r14 + 16)는 호출자 정리의 전제다. 피호출자의 스택 증가(`morestack`)는 계약 밖이다. scratch `S`가 충분하다고 가정한다.
+- 타입 기술자(`type__+…`)의 내용은 계약이 읽지 않는다. 모델은 크기를 상수로 둔다. 실제 런타임은 기술자를 읽는다.
+- 호출자 프레임에서 spill 칸이 비어 있음은 정리의 전제가 그 자리를 별도 조각으로 받는다는 것으로 확인했다(ListU64 rsp − 136, FixedVec·BitVec rsp − 32, Checkpoint rsp − 40, AttestationData rsp − 48, ListC rsp − 224, Nested rsp − 96, BitL rsp − 120, ListU64 거부 rsp − 136).
+
 ## 2. 전역과 런타임 상태
 
 | 항목 | 처리 | 근거 |

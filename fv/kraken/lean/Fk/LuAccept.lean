@@ -34,9 +34,10 @@ theorem lu_accept_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k
     (hfp : fp.length = 8) (h28 : s28.length = 8) (h30 : s30.length = 8) (h38 : s38.length = 8)
     (h90 : s90.length = 8) (h98 : s98.length = 8) (hrs : rslot.length = 8)
     (hcP : cP.length = 8) (hcL : cL.length = 8) (hcC : cC.length = 8)
-    (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
+    (R : DataMem → Prop) (S : Nat) (scratch spm : List UInt8) (hsc : scratch.length = S) (hspm : spm.length = 24)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (spm.At (s.regs.rsp.toBitVec - 136))
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s28.At (s.regs.rsp.toBitVec - 96))
       ⋆ Eq (s30.At (s.regs.rsp.toBitVec - 88)) ⋆ Eq (s38.At (s.regs.rsp.toBitVec - 80))
       ⋆ Eq (s90.At (s.regs.rsp.toBitVec + 8)) ⋆ Eq (s98.At (s.regs.rsp.toBitVec + 16))
@@ -57,14 +58,14 @@ theorem lu_accept_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0 ∧
         st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.r14 = s.regs.r14 ∧
-        ∃ (p : BitVec 64) (fp' s28' s30' s38' s90' s98' rslot' scratch' : List UInt8),
+        ∃ (p : BitVec 64) (fp' s28' s30' s38' s90' s98' rslot' scratch' spm' : List UInt8),
         fp'.length = 8 ∧ s28'.length = 8 ∧ s30'.length = 8 ∧ s38'.length = 8 ∧ s90'.length = 8 ∧
-        s98'.length = 8 ∧ rslot'.length = 8 ∧ scratch'.length = S ∧
+        s98'.length = 8 ∧ rslot'.length = 8 ∧ scratch'.length = S ∧ spm'.length = 24 ∧
         (Eq ((Int.toBytes 8 p.toInt).At s.regs.rax.toBitVec)
           ⋆ Eq ((Int.toBytes 8 (n : Int)).At (s.regs.rax.toBitVec + 8))
           ⋆ Eq ((Int.toBytes 8 (n : Int)).At (s.regs.rax.toBitVec + 16)) ⋆ Eq (bs.At p)
           ⋆ Heap (avail - 8 * n)
-          ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+          ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec) ⋆ Eq (spm'.At (s.regs.rsp.toBitVec - 136))
           ⋆ Eq (fp'.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s28'.At (s.regs.rsp.toBitVec - 96))
           ⋆ Eq (s30'.At (s.regs.rsp.toBitVec - 88)) ⋆ Eq (s38'.At (s.regs.rsp.toBitVec - 80))
           ⋆ Eq (s90'.At (s.regs.rsp.toBitVec + 8)) ⋆ Eq (s98'.At (s.regs.rsp.toBitVec + 16))
@@ -186,14 +187,17 @@ theorem lu_accept_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k
   -- the call: apply the makeslice contract, continue at the return address
   rw [call_slot] at *
   have hnN : nV.toNat = n := by rw [← hnV]; exact shr3_toNat rcx.toBitVec n hn (by simpa using hlen)
-  refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 35 + 1)) n avail scratch _ rfl (Nat.le_of_eq hnN) hnN hav hsc (by ecancel)) ?_
-  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, stk1, hstk1, Hm1⟩
+  have hspA : rsp.toBitVec - 144 + 8 = rsp.toBitVec - 136 := by bv_omega
+  refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 35 + 1)) n avail scratch spm _ rfl (Nat.le_of_eq hnN) hnN hav
+    (by unfold maxAlloc; omega) (by omega) hsc hspm (by dsimp only; rw [hspA]; ecancel)) ?_
+  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, -, stk1, spm1, hstk1, hspm1, Hm1⟩
   dsimp only at hpc1 hrsp1 hr141 Hm1
   subst hpc1
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
     zmms1, flags1, mem1⟩ := d1
   simp only at hrsp1 hr141 Hm1
   subst hrsp1 hr141 hQ
+  rw [hspA] at Hm1
   kat hk ListU64UnmarshalSSZ 36
   apply load_step_at _ _ (rsp.toBitVec - 96) _ _ (Int.toBytes 8 nV.toInt) _ _ (by kaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
@@ -270,8 +274,8 @@ theorem lu_accept_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k
   rw [hnI] at Hm2
   refine ⟨rfl, ?_, ?_, ?_, rfl, rax1.toBitVec, Int.toBytes 8 rbp.toBitVec.toInt, Int.toBytes 8 (n : Int),
     Int.toBytes 8 cV.toInt, Int.toBytes 8 dV.toInt, Int.toBytes 8 rax.toBitVec.toInt, Int.toBytes 8 rbx.toBitVec.toInt,
-    Int.toBytes 8 (Host.addrOf (k + 35 + 1)).toBitVec.toInt, stk1,
-    ?l1, ?l2, ?l3, ?l4, ?l5, ?l6, ?l7, ?l8, ?mem⟩
+    Int.toBytes 8 (Host.addrOf (k + 35 + 1)).toBitVec.toInt, stk1, spm1,
+    ?l1, ?l2, ?l3, ?l4, ?l5, ?l6, ?l7, ?l8, hspm1, ?mem⟩
   · apply UInt64.toBitVec_inj.mp; simp
   · apply UInt64.toBitVec_inj.mp; simp
   · apply UInt64.toBitVec_inj.mp; simp

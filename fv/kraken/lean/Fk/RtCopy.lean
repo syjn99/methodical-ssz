@@ -210,8 +210,8 @@ theorem rt_memmove (j : Nat) (hj : RtCopy.IsInfixAt Host.prog j) (hf : LabelsFre
   refine eventually_mono (rc_loop j hj hf src dst hd hs rbx.toBitVec rax.toBitVec ret
     (Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ F) _ 0 _ rfl (Nat.zero_le _) (by simp) (by simpa using hrcx)
     rfl rfl (by simp only [List.take_zero, List.drop_zero, List.nil_append]; ecancel)) ?_
-  rintro st ⟨h1, h2, -, -, -, -, -, h8⟩
-  exact ⟨h1, h2, stk, hstk, by ecancel⟩
+  rintro st ⟨h1, h2, -, -, -, h6, h7, h8⟩
+  exact ⟨h1, h2, h7, h6, stk, hstk, by ecancel⟩
 
 theorem rg_zero3 (a b c : Nat) (hab : a ≤ b) (hbc : b ≤ c) :
     List.replicate c (0 : UInt8) = List.replicate a 0 ++ (List.replicate (b - a) 0 ++ List.replicate (c - b) 0) := by

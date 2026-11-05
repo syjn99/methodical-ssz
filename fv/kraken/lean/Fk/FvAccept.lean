@@ -45,12 +45,13 @@ theorem fv_accept_main (k : Nat) (hk : FixedVecUnmarshalSSZ.IsInfixAt Host.prog 
     (hfp : fp.length = 8) (h1 : s1.length = 8) (h2 : s2.length = 8) (hrs : rslot.length = 8)
     (hr0 : r0.length = 1) (hr1 : r1.length = 31)
     (hcP : cP.length = 8) (hcL : cL.length = 8) (hcC : cC.length = 8)
-    (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
+    (R : DataMem → Prop) (S : Nat) (scratch spm : List UInt8) (hsc : scratch.length = S) (hspm : spm.length = 24)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s1.At (s.regs.rsp.toBitVec + 8))
       ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 40)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 40 - BitVec.ofNat 64 S))
+      ⋆ Eq (spm.At (s.regs.rsp.toBitVec - 32))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Heap avail
       ⋆ Eq (rb.At s.regs.rbx.toBitVec) ⋆ Eq (ws.At (s.regs.rbx.toBitVec + 32))
@@ -145,7 +146,7 @@ theorem fv_accept_main (k : Nat) (hk : FixedVecUnmarshalSSZ.IsInfixAt Host.prog 
   rw [hsl] at *
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (k + 16 + 1)) rb (r0 ++ r1) scratch _
     (by rw [hrb]; rfl) (by simp [hrb, hr0, hr1]) hsc (by dsimp only; rw [hmerge]; ecancel)) ?_
-  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, stk1, hstk1, Hm1⟩
+  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, _hmr141, _hmrbp1, stk1, hstk1, Hm1⟩
   dsimp only at hpc1 hrsp1 Hm1
   subst hpc1
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
@@ -163,9 +164,9 @@ theorem fv_accept_main (k : Nat) (hk : FixedVecUnmarshalSSZ.IsInfixAt Host.prog 
   simp only [Width.bytes, Width.bits] at H6
   kunfold
   rw [slot40'] at *
-  refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 21 + 1)) 4 avail stk1 _ rfl (Nat.le_of_eq rfl) (by rfl) hav hstk1
-    (by dsimp only; ecancel)) ?_
-  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, -, stk2, hstk2, Hm2⟩
+  refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 21 + 1)) 4 avail stk1 spm _ rfl (Nat.le_of_eq rfl) (by rfl) hav (by unfold maxAlloc; omega)
+    (by omega) hstk1 hspm (by dsimp only; rw [show rsp.toBitVec - 40 + 8 = rsp.toBitVec - 32 by bv_omega]; ecancel)) ?_
+  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, -, -, stk2, spm2, hstk2, hspm2, Hm2⟩
   dsimp only at hpc2 hrsp2 Hm2
   subst hpc2
   obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,

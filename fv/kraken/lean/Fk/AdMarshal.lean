@@ -209,7 +209,7 @@ theorem ad_marshal_main (k : Nat) (hk : PrysmAttestationDataMarshalSSZTo.IsInfix
     rw [BitVec.mul_one]; bv_omega] at *
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (k + 74 + 1)) root d2 scratch _
     (by rw [hroot]; rfl) (by rw [hroot, hd2]) hsc (by dsimp only; ecancel)) ?_
-  rintro ⟨e1', pc1⟩ ⟨hpc1, hrsp1, stk1, hstk1, Hm1⟩
+  rintro ⟨e1', pc1⟩ ⟨hpc1, hrsp1, _hmr141, _hmrbp1, stk1, hstk1, Hm1⟩
   dsimp only at hpc1 hrsp1 Hm1
   subst hpc1
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
@@ -325,7 +325,7 @@ theorem ad_marshal_main (k : Nat) (hk : PrysmAttestationDataMarshalSSZTo.IsInfix
   rw [show 8 + v9 + rbx.toBitVec = rbx.toBitVec + rcx.toBitVec + 56 by rw [← hv9]; bv_omega] at *
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (k + 144 + 1)) sroot d4 stk1 _
     (by rw [hsroot]; rfl) (by rw [hsroot, hd4]) hstk1 (by dsimp only; ecancel)) ?_
-  rintro ⟨e2', pc2⟩ ⟨hpc2, hrsp2, stk2, hstk2, Hm2⟩
+  rintro ⟨e2', pc2⟩ ⟨hpc2, hrsp2, _hmr142, _hmrbp2, stk2, hstk2, Hm2⟩
   dsimp only at hpc2 hrsp2 Hm2
   subst hpc2
   obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,
@@ -454,7 +454,7 @@ theorem ad_marshal_main (k : Nat) (hk : PrysmAttestationDataMarshalSSZTo.IsInfix
     rw [BitVec.mul_one]; apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_add]; omega] at *
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (k + 266 + 1)) troot d6 stk2 _
     (by rw [htroot]; rfl) (by rw [htroot, hd6]) hstk2 (by dsimp only; ecancel)) ?_
-  rintro ⟨e3', pc3⟩ ⟨hpc3, hrsp3, stk3, hstk3, Hm3⟩
+  rintro ⟨e3', pc3⟩ ⟨hpc3, hrsp3, _hmr143, _hmrbp3, stk3, hstk3, Hm3⟩
   dsimp only at hpc3 hrsp3 Hm3
   subst hpc3
   obtain ⟨⟨rax3, rbx3, rcx3, rdx3, rsi3, rdi3, rsp3, rbp3, r83, r93, r103, r113, r123, r133, r143, r153⟩,

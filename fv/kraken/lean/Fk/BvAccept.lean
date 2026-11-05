@@ -23,12 +23,13 @@ theorem bv_accept_main (k : Nat) (hk : BitVecUnmarshalSSZ.IsInfixAt Host.prog k)
     (fp s1 s2 rslot cP cL cC : List UInt8)
     (hfp : fp.length = 8) (h1 : s1.length = 8) (h2 : s2.length = 8) (hrs : rslot.length = 8)
     (hcP : cP.length = 8) (hcL : cL.length = 8) (hcC : cC.length = 8)
-    (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
+    (R : DataMem → Prop) (S : Nat) (scratch spm : List UInt8) (hsc : scratch.length = S) (hspm : spm.length = 24)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s1.At (s.regs.rsp.toBitVec + 8))
       ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 40)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 40 - BitVec.ofNat 64 S))
+      ⋆ Eq (spm.At (s.regs.rsp.toBitVec - 32))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Heap avail
       ⋆ Eq ([b].At s.regs.rbx.toBitVec)
@@ -100,10 +101,11 @@ theorem bv_accept_main (k : Nat) (hk : BitVecUnmarshalSSZ.IsInfixAt Host.prog k)
   simp only [Width.bytes, Width.bits] at H5
   kunfold
   rw [slot40] at *
-  refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 16 + 1)) 1 avail scratch _ rfl
+  refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 16 + 1)) 1 avail scratch spm _ rfl
     (by show (BitVec.zeroExtend 64 (BitVec.extractLsb' 0 32 rbx.toBitVec ^^^ BitVec.extractLsb' 0 32 rbx.toBitVec)).toNat ≤ 1; simp)
-    (by rfl) hav hsc (by ecancel)) ?_
-  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, -, stk2, hstk2, Hm2⟩
+    (by rfl) hav (by unfold maxAlloc; omega) (by omega) hsc hspm
+    (by dsimp only; rw [show rsp.toBitVec - 40 + 8 = rsp.toBitVec - 32 by bv_omega]; ecancel)) ?_
+  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, -, -, stk2, spm2, hstk2, hspm2, Hm2⟩
   dsimp only at hpc2 hrsp2 Hm2
   subst hpc2
   obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,

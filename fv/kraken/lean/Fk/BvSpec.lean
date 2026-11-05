@@ -133,13 +133,14 @@ theorem bv_unmarshal_accept_machine (k : Nat) (hk : BitVecUnmarshalSSZ.IsInfixAt
     (fp s1 s2 rslot cP cL cC : List UInt8)
     (hfp : fp.length = 8) (h1 : s1.length = 8) (h2 : s2.length = 8) (hrs : rslot.length = 8)
     (hcP : cP.length = 8) (hcL : cL.length = 8) (hcC : cC.length = 8)
-    (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
+    (R : DataMem → Prop) (S : Nat) (scratch spm : List UInt8) (hsc : scratch.length = S) (hspm : spm.length = 24)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (P : ∀ g : BitVecG, bsA = #[g.b] →
       s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s1.At (s.regs.rsp.toBitVec + 8))
       ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 40)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 40 - BitVec.ofNat 64 S))
+      ⋆ Eq (spm.At (s.regs.rsp.toBitVec - 32))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Heap avail
       ⋆ Eq ([g.b].At s.regs.rbx.toBitVec)
@@ -161,7 +162,7 @@ theorem bv_unmarshal_accept_machine (k : Nat) (hk : BitVecUnmarshalSSZ.IsInfixAt
   refine ⟨g, hv, hb, ?_⟩
   have hrcx : s.regs.rcx = 1 := by
     apply UInt64.toNat_inj.mp; rw [hlen, hb]; rfl
-  exact bv_accept_main k hk hf g.b s ra guard fp s1 s2 rslot cP cL cC hfp h1 h2 hrs hcP hcL hcC R S scratch hsc
+  exact bv_accept_main k hk hf g.b s ra guard fp s1 s2 rslot cP cL cC hfp h1 h2 hrs hcP hcL hcC R S scratch spm hsc hspm
     Heap avail (P g hb) hguard hsp hrcx hav hms
 
 /-- **Finding F1.** EthLib rejects [0x10]; the machine code accepts it. -/
@@ -170,12 +171,13 @@ theorem bv_padding_counterexample (k : Nat) (hk : BitVecUnmarshalSSZ.IsInfixAt H
     (fp s1 s2 rslot cP cL cC : List UInt8)
     (hfp : fp.length = 8) (h1 : s1.length = 8) (h2 : s2.length = 8) (hrs : rslot.length = 8)
     (hcP : cP.length = 8) (hcL : cL.length = 8) (hcC : cC.length = 8)
-    (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
+    (R : DataMem → Prop) (S : Nat) (scratch spm : List UInt8) (hsc : scratch.length = S) (hspm : spm.length = 24)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s1.At (s.regs.rsp.toBitVec + 8))
       ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 40)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 40 - BitVec.ofNat 64 S))
+      ⋆ Eq (spm.At (s.regs.rsp.toBitVec - 32))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Heap avail
       ⋆ Eq ([0x10].At s.regs.rbx.toBitVec)
@@ -189,7 +191,7 @@ theorem bv_padding_counterexample (k : Nat) (hk : BitVecUnmarshalSSZ.IsInfixAt H
       ⟨s, Host.addrOf k⟩ :=
   ⟨bv_spec_rejects_padding,
    eventually_trans _ _ _ _ (bv_accept_main k hk hf 0x10 s ra guard fp s1 s2 rslot cP cL cC hfp h1 h2 hrs hcP hcL hcC
-      R S scratch hsc Heap avail h_mem hguard hsp hlen hav hms) (fun _ h => Eventually.done _ ⟨h.1, h.2.1⟩)⟩
+      R S scratch spm hsc hspm Heap avail h_mem hguard hsp hlen hav hms) (fun _ h => Eventually.done _ ⟨h.1, h.2.1⟩)⟩
 
 theorem bvm_s72 (x : BitVec 64) : x - 8#64 - 48 + 72 = x + 16 := by bv_omega
 theorem bvm_s48 (x : BitVec 64) : 48 + (x - 8#64 - 48) = x - 8 := by bv_omega

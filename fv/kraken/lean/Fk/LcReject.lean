@@ -442,8 +442,11 @@ theorem lc_reject_zero_main (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.pro
   simp only [Width.bytes, Width.bits] at H6
   kunfold
   rw [lc_slot'] at *
-  refine eventually_trans _ _ _ _ (hno _ (Host.addrOf (k + 168 + 1)) avail stk2 _ rfl hav hstk2 (by dsimp only; ecancel)) ?_
-  rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, hr143, stk3, hstk3, Hm3⟩
+  rw [← List.take_append_drop 8 sp2, at_app (sp2.take 8) (sp2.drop 8) (b := rsp.toBitVec - 232 + 16)
+    (by simp [hsp2]; bv_omega) (by simp [hsp2])] at H6
+  refine eventually_trans _ _ _ _ (hno _ (Host.addrOf (k + 168 + 1)) avail stk2 (sp2.take 8) _ rfl hav hstk2
+    (by simp [hsp2]) (by dsimp only; ecancel)) ?_
+  rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, hr143, -, stk3, sn3, hstk3, hsn3, Hm3⟩
   dsimp only at hpc3 hrsp3 Hm3
   subst hpc3
   obtain ⟨⟨rax3, rbx3, rcx3, rdx3, rsi3, rdi3, rsp3, rbp3, r83, r93, r103, r113, r123, r133, r143, r153⟩,
@@ -654,8 +657,11 @@ theorem lc_reject_past_main (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.pro
   simp only [Width.bytes, Width.bits] at H6
   kunfold
   rw [lc_slot'] at *
-  refine eventually_trans _ _ _ _ (hno _ (Host.addrOf (k + 54 + 1)) avail stk2 _ rfl hav hstk2 (by dsimp only; ecancel)) ?_
-  rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, hr143, stk3, hstk3, Hm3⟩
+  rw [← List.take_append_drop 8 sp2, at_app (sp2.take 8) (sp2.drop 8) (b := rsp.toBitVec - 232 + 16)
+    (by simp [hsp2]; bv_omega) (by simp [hsp2])] at H6
+  refine eventually_trans _ _ _ _ (hno _ (Host.addrOf (k + 54 + 1)) avail stk2 (sp2.take 8) _ rfl hav hstk2
+    (by simp [hsp2]) (by dsimp only; ecancel)) ?_
+  rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, hr143, -, stk3, sn3, hstk3, hsn3, Hm3⟩
   dsimp only at hpc3 hrsp3 Hm3
   subst hpc3
   obtain ⟨⟨rax3, rbx3, rcx3, rdx3, rsi3, rdi3, rsp3, rbp3, r83, r93, r103, r113, r123, r133, r143, r153⟩,
@@ -834,8 +840,11 @@ theorem lc_reject_tail_main (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.pro
   simp only [Width.bytes, Width.bits] at H6
   kunfold
   rw [lc_slot'] at *
-  refine eventually_trans _ _ _ _ (hno _ (Host.addrOf (k + 204 + 1)) avail stk2 _ rfl hav hstk2 (by dsimp only; ecancel)) ?_
-  rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, hr143, stk3, hstk3, Hm3⟩
+  rw [← List.take_append_drop 8 sp2, at_app (sp2.take 8) (sp2.drop 8) (b := rsp.toBitVec - 232 + 16)
+    (by simp [hsp2]; bv_omega) (by simp [hsp2])] at H6
+  refine eventually_trans _ _ _ _ (hno _ (Host.addrOf (k + 204 + 1)) avail stk2 (sp2.take 8) _ rfl hav hstk2
+    (by simp [hsp2]) (by dsimp only; ecancel)) ?_
+  rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, hr143, -, stk3, sn3, hstk3, hsn3, Hm3⟩
   dsimp only at hpc3 hrsp3 Hm3
   subst hpc3
   obtain ⟨⟨rax3, rbx3, rcx3, rdx3, rsi3, rdi3, rsp3, rbp3, r83, r93, r103, r113, r123, r133, r143, r153⟩,

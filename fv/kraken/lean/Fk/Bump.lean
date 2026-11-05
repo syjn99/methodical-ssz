@@ -42,7 +42,7 @@ set_option maxHeartbeats 4000000 in
 theorem bump_makeslice (j : Nat) (hj : BumpAlloc.IsInfixAt Host.prog j)
     (hf : ∀ i < j, Host.prog[i]? ≠ some (.label "runtime.makeslice")) (ty : BitVec 64) :
     MakesliceC bumpHeap ty 8 0 := by
-  intro st ret cnt avail stk F _hty _hrbx hrcx hav hstk hm
+  intro st ret cnt avail stk spill F _hty _hrbx hrcx hav _hmax _hcnt hstk hsp hm
   have hL := label_in_fragment hj (j := 0) (by decide) (by decide) hf
   rw [hL]
   have hstk0 : stk = [] := List.length_eq_zero_iff.mp hstk
@@ -50,7 +50,7 @@ theorem bump_makeslice (j : Nat) (hj : BumpAlloc.IsInfixAt Host.prog j)
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := st
   simp only at hrcx hm ⊢
   have hm' : (bumpHeap avail ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec)
-      ⋆ Eq (([] : List UInt8).At (rsp.toBitVec - BitVec.ofNat 64 0)) ⋆ F)) mem := by ecancel
+      ⋆ Eq (([] : List UInt8).At (rsp.toBitVec - BitVec.ofNat 64 0)) ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ F)) mem := by ecancel
   obtain ⟨p, hp⟩ := sep_exists_left (Q := fun (p : BitVec 64) (m : DataMem) => p.toNat + avail < 2 ^ 64 ∧
     (Eq ((Int.toBytes 8 p.toInt).At (label "runtime.fvBump").toBitVec) ⋆ Eq ((List.replicate avail 0).At p)) m) hm'
   obtain ⟨hpa, hp⟩ := sep_pure_left hp
@@ -82,10 +82,10 @@ theorem bump_makeslice (j : Nat) (hj : BumpAlloc.IsInfixAt Host.prog j)
   have H2 : ((Eq ((Int.toBytes 8 (p + rcx.toBitVec * 8#64).toInt).At (label "runtime.fvBump").toBitVec)
       ⋆ Eq ((List.replicate (avail - 8 * cnt) 0).At (p + rcx.toBitVec * 8#64)))
       ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec) ⋆ Eq (([] : List UInt8).At (rsp.toBitVec - 0#64))
-        ⋆ Eq ((List.replicate (8 * cnt) 0).At p) ⋆ F)) m1 := by ecancel
+        ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq ((List.replicate (8 * cnt) 0).At p) ⋆ F)) m1 := by ecancel
   have H3 := sep_mono_left (P' := bumpHeap (avail - 8 * cnt))
     (fun m hm => ⟨p + rcx.toBitVec * 8#64, by omega, hm⟩) H2
-  refine ⟨by simp, ?_, rfl, [], rfl, ?_⟩
+  refine ⟨by simp, ?_, rfl, rfl, [], spill, rfl, hsp, ?_⟩
   · apply UInt64.toBitVec_inj.mp; simp
   · dsimp only; ecancel
 end Fk

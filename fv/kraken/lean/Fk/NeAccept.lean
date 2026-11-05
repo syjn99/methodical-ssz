@@ -225,16 +225,17 @@ theorem ne_accept_main (k : Nat) (hk : NestedUnmarshalSSZ.IsInfixAt Host.prog k)
   simp only [Width.bytes, Width.bits] at H10
   kunfold
   rw [ne_slot] at *
-  refine eventually_trans _ _ _ _ (hnoS _ (Host.addrOf (k + 30 + 1)) avail blk _ rfl (by omega) hblk
-    (by dsimp only; rw [ne_blk]; ecancel)) ?_
-  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, stk1, hstk1, Hm1⟩
+  rw [spill2 _ _ hcs] at H10
+  refine eventually_trans _ _ _ _ (hnoS _ (Host.addrOf (k + 30 + 1)) avail blk (cspill.take 8) _ rfl (by omega) hblk
+    (by simp [hcs]) (by dsimp only; rw [ne_blk, ne_96]; ecancel)) ?_
+  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, -, stk1, sn1, hstk1, hsn1, Hm1⟩
   dsimp only at hpc1 hrsp1 hr141 Hm1
   subst hpc1
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
     zmms1, flags1, mem1⟩ := d1
   simp only at hrsp1 hr141 Hm1
   subst hrsp1 hr141
-  rw [ne_blk, scObj_sep, spill2 _ _ hcs] at Hm1
+  rw [ne_blk, scObj_sep, ne_96] at Hm1
   have hrsp1 : ({ toBitVec := rsp.toBitVec - 104 } + 8 : UInt64) = { toBitVec := rsp.toBitVec - 96 } := by
     apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega
   simp only [hrsp1]
@@ -306,20 +307,20 @@ theorem ne_accept_main (k : Nat) (hk : NestedUnmarshalSSZ.IsInfixAt Host.prog k)
   simp only [Width.bytes, Width.bits] at H13
   kunfold
   rw [ne_s104] at *
-  refine eventually_trans _ _ _ _ (hnoL _ (Host.addrOf (k + 81 + 1)) (avail - 24) stk1 _ rfl (by omega) hstk1
-    (by dsimp only; rw [ne_blk]; simp only [Std.ExtHashMap.sep_emp, Width.bits, Width.bytes] at H13
+  refine eventually_trans _ _ _ _ (hnoL _ (Host.addrOf (k + 81 + 1)) (avail - 24) stk1 sn1 _ rfl (by omega) hstk1 hsn1
+    (by dsimp only; rw [ne_blk, ne_96]; simp only [Std.ExtHashMap.sep_emp, Width.bits, Width.bytes] at H13
         generalize scField sg 0 = f0 at H13 ⊢; generalize scField sg 1 = f1 at H13 ⊢
         generalize scField sg 2 = f2 at H13 ⊢; generalize scField sg 3 = f3 at H13 ⊢
         generalize scField sg 4 = f4 at H13 ⊢
         ecancel)) ?_
-  rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, hr143, stk3, hstk3, Hm3⟩
+  rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, hr143, -, stk3, sn3, hstk3, hsn3, Hm3⟩
   dsimp only at hpc3 hrsp3 hr143 Hm3
   subst hpc3
   obtain ⟨⟨rax3, rbx3, rcx3, rdx3, rsi3, rdi3, rsp3, rbp3, r83, r93, r103, r113, r123, r133, r143, r153⟩,
     zmms3, flags3, mem3⟩ := d3
   simp only at hrsp3 hr143 Hm3
   subst hrsp3 hr143
-  rw [ne_blk, luObj_sep] at Hm3
+  rw [ne_blk, luObj_sep, ne_96] at Hm3
   try simp only [hrsp1]
   kat hk NestedUnmarshalSSZ 82
   apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
@@ -366,8 +367,8 @@ theorem ne_accept_main (k : Nat) (hk : NestedUnmarshalSSZ.IsInfixAt Host.prog k)
   generalize scField sg 2 = f2 at H15; generalize scField sg 3 = f3 at H15; generalize scField sg 4 = f4 at H15
   generalize hr8 : (8 : BitVec 64) + rbx.toBitVec = r8b at H15
   refine eventually_trans _ _ _ _ (hlu _ (Host.addrOf (k + 99 + 1)) lg stk3
-    (cspill.take 8) (Int.toBytes 8 r8b.toInt) (List.replicate 8 0) (List.replicate 8 0)
-    (List.replicate 8 0) guard (avail - 24 - 24) _ hlg hstk3 (by simp [hcs]) (Int.toBytes_length 8 _) (by simp) (by simp) (by simp)
+    sn3 (Int.toBytes 8 r8b.toInt) (List.replicate 8 0) (List.replicate 8 0)
+    (List.replicate 8 0) guard (avail - 24 - 24) _ hlg hstk3 hsn3 (Int.toBytes_length 8 _) (by simp) (by simp) (by simp)
     (by show (-28 + rcx.toBitVec).toNat = _; rw [ne_m28 _ (by simp; omega)]; simp; omega)
     (by show (-28 + rcx.toBitVec).toNat ≤ cV.toNat; rw [ne_m28 _ (by simp; omega), hcVn]; simp; omega)
     (by show cV.toNat < 2 ^ 63; rw [hcVn]; omega)

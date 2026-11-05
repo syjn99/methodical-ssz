@@ -46,13 +46,14 @@ theorem fv_unmarshal_accept_spec_k (k : Nat) (hk : FixedVecUnmarshalSSZ.IsInfixA
     (hfp : fp.length = 8) (h1 : s1.length = 8) (h2 : s2.length = 8) (hrs : rslot.length = 8)
     (hr0 : r0.length = 1) (hr1 : r1.length = 31)
     (hcP : cP.length = 8) (hcL : cL.length = 8) (hcC : cC.length = 8)
-    (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
+    (R : DataMem → Prop) (S : Nat) (scratch spm : List UInt8) (hsc : scratch.length = S) (hspm : spm.length = 24)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (P : ∀ g : FixedVecG, bsA = fvEncode g →
       s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s1.At (s.regs.rsp.toBitVec + 8))
       ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 40)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 40 - BitVec.ofNat 64 S))
+      ⋆ Eq (spm.At (s.regs.rsp.toBitVec - 32))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Heap avail
       ⋆ Eq (g.r.toList.At s.regs.rbx.toBitVec) ⋆ Eq ((u64Bytes g.w.toList).toList.At (s.regs.rbx.toBitVec + 32))
@@ -79,7 +80,7 @@ theorem fv_unmarshal_accept_spec_k (k : Nat) (hk : FixedVecUnmarshalSSZ.IsInfixA
     fv_serialize fv_toValue_surjective hd
   refine ⟨g, rfl, ?_⟩
   exact fv_accept_main k hk hf g.r.toList (u64Bytes g.w.toList).toList (by simp) (by simp [u64Bytes_size])
-    s ra guard fp s1 s2 rslot r0 r1 cP cL cC hfp h1 h2 hrs hr0 hr1 hcP hcL hcC R S scratch hsc Heap avail
+    s ra guard fp s1 s2 rslot r0 r1 cP cL cC hfp h1 h2 hrs hr0 hr1 hcP hcL hcC R S scratch spm hsc hspm Heap avail
     (P g rfl) hguard hsp (UInt64.toNat_inj.mp (by rw [hlen, fv_encode_size]; rfl)) hav hmm hms
 
 /-- **Marshal fast path against EthLib**: the bytes written at `dst[len:]` are the

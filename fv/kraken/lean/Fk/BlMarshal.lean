@@ -176,7 +176,7 @@ theorem bl_marshal_main (k : Nat) (hk : BitLMarshalSSZTo.IsInfixAt Host.prog k)
   rw [blm_dst] at *
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (k + 56 + 1)) bl d1 scratch _
     (by show (BitVec.ofNat 64 bl.length).toNat = _; simp; omega) hd1 hsc (by dsimp only; ecancel)) ?_
-  rintro ⟨e1, pc1⟩ ⟨hpc1, hrsp1, stk1, hstk1, Hm1⟩
+  rintro ⟨e1, pc1⟩ ⟨hpc1, hrsp1, _hmr141, _hmrbp1, stk1, hstk1, Hm1⟩
   dsimp only at hpc1 hrsp1 Hm1
   subst hpc1
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,

@@ -147,3 +147,36 @@ X1·X2에서 더한 `Fk/RtCopy.S`, `Fk/RtErr.S`가 SHash에 없었다.
 - 링크 변이 `nopret`: 함수 파일과 all.S를 함께 바꾸고 SHash를 다시 만든 뒤 `check.py`가 (d)에서 실패해야 한다.
 
 결과(`negative/RESULT`): 변이 5개 모두 지정 정리 안에서 실패, 대조군 통과, `nopret`는 (d) FAIL. 종료 코드 0.
+
+## 6. X7. BitVec 기계어 연결 (astra 필수 8)
+
+시간: 15:28–15:30, 2분.
+
+- `bv_unmarshal_accept_machine`: EthLib 수용 → `g`, `bs = #[g.b]`, `bv_accept_main`의 기계 실행.
+- SPEC.md 7절: 기계어 실행 정리와 바이트 식 정리(`fv_marshal_spec_k`, `lc_marshal_spec_k`, `bv_unmarshal_accept_spec_k`, 왕복 정리)를 나눈 표.
+- SPEC.md 2절의 "ListC 단사는 하지 않았다"를 `lc_toValue_injective`로 고쳤다.
+
+## 7. X3. 런타임 계약 보강 (astra 필수 3)
+
+시간: 15:30–15:44, 측정.
+
+| 계약 | 더한 것 |
+| --- | --- |
+| `MemmoveC` | r14, rbp 보존. Go memmove는 프레임 0인 asm이라 spill이 없다 |
+| `MakesliceC` | `cnt < 2^63`(Go int), `esz·cnt ≤ maxAlloc`, spill 24, rbp 보존 |
+| `NewobjectC` | spill 8, rbp 보존 |
+| `ValidateBitlistC` | spill 32, r14·rbp 보존 |
+| `GrowsliceC`, `ConvT64C`, `FmtErrorf*C` | X1·X2에서 이미 함 |
+
+호출 지점 21곳을 고쳤다.
+호출자 프레임마다 spill 칸이 비어 있는지 확인했다(CONTRACTS.md 1c절).
+새 전제 조각: ListU64 수용 `spm`(rsp − 136, 24), FixedVec·BitVec(rsp − 32), Checkpoint(rsp − 40), AttestationData `spa`·`spb`(rsp − 48, 8 + 16), ListC 수용 `l208`.
+함수 명세 `lu_uacc_holds`는 프레임 블록의 40바이트 틈을 24 + 16으로 나눠 새 조각을 준다.
+`lu_accept_runs` 증인도 같은 배치로 고쳤다.
+
+AttestationData 경로에서 memmove 뒤 r14를 쓰는지 확인했다(Claude 리뷰 3항).
+memmove 뒤 코드는 r14를 직접 읽지 않는다.
+그러나 정리의 결론에 r14를 남기려면 계약이 r14 보존을 말해야 한다(X5).
+그래서 넣었다.
+
+전역 상태 가정(쓰기 장벽, 스택 가드, 타입 기술자)은 CONTRACTS.md 1c절에 계약 공통으로 적었다.

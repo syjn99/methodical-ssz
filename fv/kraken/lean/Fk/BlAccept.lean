@@ -30,18 +30,23 @@ def blValid (tl : List UInt8) : Prop := ∃ bits, unpackDelimited (some 2048) tl
 
 /-- `ssz.ValidateBitlist(buf []byte, bitLimit uint64) error` (rax = ptr,
 rbx = len, rcx = cap, rdi = limit): returns to the return address with
-rsp + 8, the frame `F` and the bytes unchanged, and rax = 0 (nil error) exactly
-when `blValid` holds. The error's second word (rbx) is not specified. -/
+rsp + 8, r14 and rbp kept, the frame `F` and the bytes unchanged, and rax = 0
+(nil error) exactly when `blValid` holds. The 32-byte spill area of its four
+register arguments is the callee's. The error's second word (rbx) is not
+specified. -/
 def ValidateBitlistC (S : Nat) : Prop :=
-  ∀ (st : MachineData) (ret : Int64) (buf stk : List UInt8) (F : DataMem → Prop),
-    st.regs.rbx.toNat = buf.length → st.regs.rdi = 2048 → stk.length = S →
+  ∀ (st : MachineData) (ret : Int64) (buf stk spill : List UInt8) (F : DataMem → Prop),
+    st.regs.rbx.toNat = buf.length → st.regs.rdi = 2048 → stk.length = S → spill.length = 32 →
     (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
-      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (buf.At st.regs.rax.toBitVec) ⋆ F) st.dmem →
+      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (st.regs.rsp.toBitVec + 8))
+      ⋆ Eq (buf.At st.regs.rax.toBitVec) ⋆ F) st.dmem →
     Eventually (step1 Host.exe)
-      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ (st'.data.regs.rax = 0 ↔ blValid buf) ∧
-        ∃ stk' : List UInt8, stk'.length = S ∧
+      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.r14 = st.regs.r14
+        ∧ st'.data.regs.rbp = st.regs.rbp ∧ (st'.data.regs.rax = 0 ↔ blValid buf) ∧
+        ∃ stk' spill' : List UInt8, stk'.length = S ∧ spill'.length = 32 ∧
         (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
-          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (buf.At st.regs.rax.toBitVec) ⋆ F) st'.data.dmem)
+          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill'.At (st.regs.rsp.toBitVec + 8))
+          ⋆ Eq (buf.At st.regs.rax.toBitVec) ⋆ F) st'.data.dmem)
       ⟨st, label "ssz.ValidateBitlist"⟩
 
 theorem bla_rbx4 (x : BitVec 64) : x + 4 * 1#64 = x + 4 := by rw [BitVec.mul_one]
@@ -184,15 +189,20 @@ theorem bl_accept_main (k : Nat) (hk : BitLUnmarshalSSZ.IsInfixAt Host.prog k)
   have hn4 : (-4 + rcx.toBitVec).toNat = tl.length := by
     rw [BitVec.add_comm, ← BitVec.sub_eq_add_neg, BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simp; omega)]
     simp; omega
-  refine eventually_trans _ _ _ _ (hvb _ (Host.addrOf (k + 30 + 1)) tl scratch _ hn4
-    (by apply UInt64.toBitVec_inj.mp; apply BitVec.eq_of_toNat_eq; simp) hsc (by dsimp only; ecancel)) ?_
-  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrax1, stk1, hstk1, Hm1⟩
+  have hsv : rsp.toBitVec - 128 + 8 = rsp.toBitVec - 120 := by bv_omega
+  rw [← List.take_append_drop 32 spl, at_app (spl.take 32) (spl.drop 32) (b := rsp.toBitVec - 88)
+    (by simp [hspl]; bv_omega) (by simp [hspl])] at H7
+  refine eventually_trans _ _ _ _ (hvb _ (Host.addrOf (k + 30 + 1)) tl scratch (spl.take 32) _ hn4
+    (by apply UInt64.toBitVec_inj.mp; apply BitVec.eq_of_toNat_eq; simp) hsc (by simp [hspl])
+    (by dsimp only; rw [hsv]; ecancel)) ?_
+  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, -, -, hrax1, stk1, sv1, hstk1, hsv1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrax1 Hm1
   subst hpc1
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
     zmms1, flags1, mem1⟩ := d1
   simp only at hrsp1 hrax1 Hm1
   subst hrsp1
+  rw [hsv] at Hm1
   have hr0 : rax1 = 0 := hrax1.mpr hval
   subst hr0
   kat hk BitLUnmarshalSSZ 31
@@ -250,9 +260,12 @@ theorem bl_accept_main (k : Nat) (hk : BitLUnmarshalSSZ.IsInfixAt Host.prog k)
   have hnv : nV.toNat = tl.length := hn4
   have hspA : rsp.toBitVec - 128 + 8 = rsp.toBitVec - 120 := by bv_omega
   have hncN : nextSliceCap tl.length 0 = tl.length := nextSliceCap_zero _ (by omega)
-  refine eventually_trans _ _ _ _ (hgs _ (Host.addrOf (k + 78 + 1)) [] stk1 spl avail _ (by decide) rfl (Nat.le_refl _)
-    (by simp) (by simp [hnv]; omega) (by simp [hnv, hncN]; omega) hmax
-    (by simp) hstk1 hspl (by dsimp only; rw [Fk.Witness.nil_At_emp, hspA]; simp only [Std.ExtHashMap.sep_emp]; ecancel)) ?_
+  refine eventually_trans _ _ _ _ (hgs _ (Host.addrOf (k + 78 + 1)) [] stk1 (sv1 ++ spl.drop 32) avail _ (by decide) rfl
+    (Nat.le_refl _) (by simp) (by simp [hnv]; omega) (by simp [hnv, hncN]; omega) hmax
+    (by simp) hstk1 (by simp [hsv1, hspl])
+    (by dsimp only; rw [Fk.Witness.nil_At_emp, hspA, at_app sv1 (spl.drop 32) (b := rsp.toBitVec - 88)
+          (by rw [hsv1]; bv_omega) (by simp [hsv1, hspl])]
+        simp only [Std.ExtHashMap.sep_emp]; ecancel)) ?_
   rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hrbp2, hr142, hrbx2, hnc2, hub2, stk2, spl2, tail, av2, hstk2, hspl2, htl, hav2, Hm2⟩
   dsimp only at hpc2 hrsp2 hrbp2 hr142 hrbx2 hnc2 hub2 htl Hm2
   subst hpc2
@@ -319,7 +332,7 @@ theorem bl_accept_main (k : Nat) (hk : BitLUnmarshalSSZ.IsInfixAt Host.prog k)
   rw [bla_slot'] at *
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (k + 90 + 1)) tl (tail.take tl.length) stk2 _
     (by simpa using hnv) htk hstk2 (by dsimp only; ecancel)) ?_
-  rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, stk3, hstk3, Hm3⟩
+  rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, _hmr143, _hmrbp3, stk3, hstk3, Hm3⟩
   dsimp only at hpc3 hrsp3 Hm3
   subst hpc3
   obtain ⟨⟨rax3, rbx3, rcx3, rdx3, rsi3, rdi3, rsp3, rbp3, r83, r93, r103, r113, r123, r133, r143, r153⟩,

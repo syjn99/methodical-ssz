@@ -125,8 +125,8 @@ abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 (128 bytes), stack guard, stack frame (with gaps), receiver, input. -/
 def block (bs : List UInt8) : List UInt8 :=
   [0, 0, 0, 0] ++ (Int.toBytes 8 (0x1000c : BitVec 64).toInt ++ (z 128 ++ (Int.toBytes 8 (0 : UInt64).toBitVec.toInt
-    ++ (z 8 ++ (z 40 ++ (z 8 ++ (z 8 ++ (z 8 ++ (z 64 ++ (z 8 ++ (Int.toBytes 8 (0 : UInt64).toBitVec.toInt
-    ++ (z 8 ++ (z 8 ++ (z 8 ++ (z 8 ++ (z 8 ++ ([4, 0, 0, 0] ++ bs)))))))))))))))))
+    ++ (z 8 ++ (z 24 ++ (z 16 ++ (z 8 ++ (z 8 ++ (z 8 ++ (z 64 ++ (z 8 ++ (Int.toBytes 8 (0 : UInt64).toBitVec.toInt
+    ++ (z 8 ++ (z 8 ++ (z 8 ++ (z 8 ++ (z 8 ++ ([4, 0, 0, 0] ++ bs))))))))))))))))))
 
 def blockMem (bs : List UInt8) : DataMem := (block bs).At (0x10000 : BitVec 64)
 
@@ -144,6 +144,7 @@ theorem witness_mem (n : Nat) (bs : List UInt8) (hbs : bs.length = 8 * n) (hn : 
     (zmms : RegZmms) (flags : StatusFlags) :
     let s := s0 n bs zmms flags
     s.dmem =⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq ((z 24).At (s.regs.rsp.toBitVec - 136))
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 8)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 96))
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 88)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 80))
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 8)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 16))
@@ -163,17 +164,17 @@ theorem witness_mem (n : Nat) (bs : List UInt8) (hbs : bs.length = 8 * n) (hn : 
   have H2 : ((Eq ((Int.toBytes 8 (65548#64).toInt).At 65540#64) ⋆ Eq ((z 128).At 65548#64))
       ⋆ (Eq ([0, 0, 0, 0].At 65536#64)
         ⋆ Eq ((Int.toBytes 8 (UInt64.toBitVec 0).toInt).At 65676#64) ⋆ Eq ((z 8).At 65684#64)
-        ⋆ Eq ((z 40).At 65692#64) ⋆ Eq ((z 8).At 65732#64) ⋆ Eq ((z 8).At 65740#64) ⋆ Eq ((z 8).At 65748#64)
+        ⋆ Eq ((z 24).At 65692#64) ⋆ Eq ((z 16).At 65716#64) ⋆ Eq ((z 8).At 65732#64) ⋆ Eq ((z 8).At 65740#64) ⋆ Eq ((z 8).At 65748#64)
         ⋆ Eq ((z 64).At 65756#64) ⋆ Eq ((z 8).At 65820#64) ⋆ Eq ((Int.toBytes 8 (UInt64.toBitVec 0).toInt).At 65828#64)
         ⋆ Eq ((z 8).At 65836#64) ⋆ Eq ((z 8).At 65844#64) ⋆ Eq ((z 8).At 65852#64) ⋆ Eq ((z 8).At 65860#64)
         ⋆ Eq ((z 8).At 65868#64) ⋆ Eq ([4, 0, 0, 0].At 65876#64) ⋆ Eq (bs.At 65880#64)))
       (blockMem bs) := by
     ecancel
   have H3 := sep_mono_left (P' := bumpHeap 128) (fun m hm => ⟨65548#64, by decide, by rw [label_bump]; exact hm⟩) H2
-  have H4 : (Eq ((z 40).At 65692#64) ⋆ Eq ((z 64).At 65756#64)
+  have H4 : (Eq ((z 16).At 65716#64) ⋆ Eq ((z 64).At 65756#64)
       ⋆ (bumpHeap 128 ⋆ Eq ([0, 0, 0, 0].At 65536#64)
         ⋆ Eq ((Int.toBytes 8 (UInt64.toBitVec 0).toInt).At 65676#64) ⋆ Eq ((z 8).At 65684#64)
-        ⋆ Eq ((z 8).At 65732#64) ⋆ Eq ((z 8).At 65740#64) ⋆ Eq ((z 8).At 65748#64)
+        ⋆ Eq ((z 24).At 65692#64) ⋆ Eq ((z 8).At 65732#64) ⋆ Eq ((z 8).At 65740#64) ⋆ Eq ((z 8).At 65748#64)
         ⋆ Eq ((z 8).At 65820#64) ⋆ Eq ((Int.toBytes 8 (UInt64.toBitVec 0).toInt).At 65828#64)
         ⋆ Eq ((z 8).At 65836#64) ⋆ Eq ((z 8).At 65844#64) ⋆ Eq ((z 8).At 65852#64) ⋆ Eq ((z 8).At 65860#64)
         ⋆ Eq ((z 8).At 65868#64) ⋆ Eq ([4, 0, 0, 0].At 65876#64) ⋆ Eq (bs.At 65880#64)))
@@ -183,7 +184,7 @@ theorem witness_mem (n : Nat) (bs : List UInt8) (hbs : bs.length = 8 * n) (hn : 
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
   generalize (fun _ : DataMem => True) = T at H5 ⊢
-  have H6 : (Eq ((Int.toBytes 8 (UInt64.toBitVec 0).toInt).At 65828#64) ⋆ Eq ((z 8).At 65820#64) ⋆ Eq ((z 8).At 65732#64)
+  have H6 : (Eq ((Int.toBytes 8 (UInt64.toBitVec 0).toInt).At 65828#64) ⋆ Eq ((z 24).At 65692#64) ⋆ Eq ((z 8).At 65820#64) ⋆ Eq ((z 8).At 65732#64)
       ⋆ Eq ((z 8).At 65740#64) ⋆ Eq ((z 8).At 65748#64) ⋆ Eq ((z 8).At 65836#64) ⋆ Eq ((z 8).At 65844#64)
       ⋆ Eq ((z 8).At 65684#64) ⋆ Eq ((Int.toBytes 8 (UInt64.toBitVec 0).toInt).At 65676#64)
       ⋆ bumpHeap 128 ⋆ Eq ([4, 0, 0, 0].At 65876#64)
@@ -202,7 +203,7 @@ theorem lu_accept_runs (n : Nat) (hn : n ≤ 16) (bs : List UInt8) (hbs : bs.len
       ⟨s0 n bs zmms flags, Host.addrOf 5⟩ :=
   eventually_trans _ _ _ _ (lu_accept_main 5 hk5 hf5 bs n hbs hn (s0 n bs zmms flags) 0 0
     (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl
-    (fun _ => True) 0 [] rfl bumpHeap 128 (witness_mem n bs hbs hn zmms flags)
+    (fun _ => True) 0 [] (z 24) rfl rfl bumpHeap 128 (witness_mem n bs hbs hn zmms flags)
     (by simp [s0]) (by simp [s0]) (by simp [s0]; omega) (by simp [s0]) (by simp [s0]; omega) (by omega)
     (bump_makeslice 198 hk198 hf198 _))
     (fun _ h => Eventually.done _ ⟨h.1, h.2.1, h.2.2.1⟩)

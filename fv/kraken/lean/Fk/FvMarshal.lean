@@ -296,7 +296,7 @@ theorem fv_marshal_main (k : Nat) (hk : FixedVecMarshalSSZTo.IsInfixAt Host.prog
   rw [show rbx.toBitVec + rcx.toBitVec * 1#64 = rbx.toBitVec + rcx.toBitVec by rw [BitVec.mul_one]] at *
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (k + 33 + 1)) rb d0 scratch _
     (by rw [hrb]; rfl) (by rw [hrb, hd0]) hsc (by dsimp only; rw [hmerge]; ecancel)) ?_
-  rintro ⟨e1, pc1⟩ ⟨hpc1, hrsp1, stk1, hstk1, Hm1⟩
+  rintro ⟨e1, pc1⟩ ⟨hpc1, hrsp1, _hmr141, _hmrbp1, stk1, hstk1, Hm1⟩
   dsimp only at hpc1 hrsp1 Hm1
   subst hpc1
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
@@ -488,7 +488,7 @@ theorem fv_marshal_reject_main (k : Nat) (hk : FixedVecMarshalSSZTo.IsInfixAt Ho
   rw [show rbx.toBitVec + rcx.toBitVec * 1#64 = rbx.toBitVec + rcx.toBitVec by rw [BitVec.mul_one]] at *
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (k + 33 + 1)) rb d0 scratch _
     (by rw [hrb]; rfl) (by rw [hrb, hd0]) hsc (by dsimp only; rw [hmerge]; ecancel)) ?_
-  rintro ⟨e1, pc1⟩ ⟨hpc1, hrsp1, stk1, hstk1, Hm1⟩
+  rintro ⟨e1, pc1⟩ ⟨hpc1, hrsp1, _hmr141, _hmrbp1, stk1, hstk1, Hm1⟩
   dsimp only at hpc1 hrsp1 Hm1
   subst hpc1
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,

@@ -22,7 +22,8 @@ theorem ad_unmarshal_accept_spec_k (k : Nat) (hk : PrysmAttestationDataUnmarshal
     (hfp : fp.length = 8) (hs8 : s8.length = 8) (hs16 : s16.length = 8) (hl16 : l16.length = 8) (hl24 : l24.length = 8)
     (hrs : rslot.length = 8) (hc0 : c0.length = 8) (hc8 : c8.length = 8) (hcP : cP.length = 8) (hcL : cL.length = 8)
     (hcC : cC.length = 8) (hcS : cS.length = 8) (hcT : cT.length = 8)
-    (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
+    (R : DataMem → Prop) (S : Nat) (scratch spa spb : List UInt8) (hsc : scratch.length = S)
+    (hspa : spa.length = 8) (hspb : spb.length = 16)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (P : ∀ g : AttestationDataG, bsA = adEncode g →
       s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
@@ -30,6 +31,7 @@ theorem ad_unmarshal_accept_spec_k (k : Nat) (hk : PrysmAttestationDataUnmarshal
       ⋆ Eq (s16.At (s.regs.rsp.toBitVec + 16)) ⋆ Eq (l16.At (s.regs.rsp.toBitVec - 16))
       ⋆ Eq (l24.At (s.regs.rsp.toBitVec - 24))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 56)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 56 - BitVec.ofNat 64 S))
+      ⋆ Eq (spa.At (s.regs.rsp.toBitVec - 48)) ⋆ Eq (spb.At (s.regs.rsp.toBitVec - 40))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ Heap avail
       ⋆ Eq ((uintBytes 8 g.slot.toNat).toList.At s.regs.rbx.toBitVec)
       ⋆ Eq ((uintBytes 8 g.index.toNat).toList.At (s.regs.rbx.toBitVec + 8))
@@ -73,4 +75,4 @@ theorem ad_unmarshal_accept_spec_k (k : Nat) (hk : PrysmAttestationDataUnmarshal
   exact ad_accept_main k hk hf _ _ _ _ _ _ _ (by simp [Fv.uintBytes_size]) (by simp [Fv.uintBytes_size]) (by simp)
     (by simp [Fv.uintBytes_size]) (by simp) (by simp [Fv.uintBytes_size]) (by simp) s ra guard
     fp s8 s16 l16 l24 rslot c0 c8 cP cL cC cS cT hfp hs8 hs16 hl16 hl24 hrs hc0 hc8 hcP hcL hcC hcS hcT
-    R S scratch hsc Heap avail (P g rfl) hguard hsp h128 hav hms hmm hno
+    R S scratch spa spb hsc hspa hspb Heap avail (P g rfl) hguard hsp h128 hav hms hmm hno

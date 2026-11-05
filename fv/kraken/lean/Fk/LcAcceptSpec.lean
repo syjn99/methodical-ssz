@@ -119,12 +119,12 @@ and the objects (`lcObjs acc`) hold `g.items` in order. -/
 theorem lc_unmarshal_accept_spec_k (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
     (hf : LabelsFresh ListCUnmarshalSSZ k)
     (bsA : Array UInt8) (v : Value) (hd : deserialize lcDesc bsA = .ok v) (hne : 4 < bsA.size)
-    (s : MachineData) (ra guard : UInt64) (fp slot s8 s32 l128 l136 l144 l152 l160 l168 l176 l184 l216 l224 rslot blk
+    (s : MachineData) (ra guard : UInt64) (fp slot s8 s32 l128 l136 l144 l152 l160 l168 l176 l184 l208 l216 l224 rslot blk
       cP cL cC : List UInt8)
     (hfp : fp.length = 8) (hsl : slot.length = 8) (h8 : s8.length = 8) (h32 : s32.length = 8)
     (hl128 : l128.length = 8) (hl136 : l136.length = 8) (hl144 : l144.length = 8) (hl152 : l152.length = 8)
     (hl160 : l160.length = 8) (hl168 : l168.length = 8) (hl176 : l176.length = 8) (hl184 : l184.length = 8)
-    (hl216 : l216.length = 8) (hl224 : l224.length = 8) (hrs : rslot.length = 8)
+    (hl208 : l208.length = 8) (hl216 : l216.length = 8) (hl224 : l224.length = 8) (hrs : rslot.length = 8)
     (hcP : cP.length = 8) (hcL : cL.length = 8) (hcC : cC.length = 8)
     (S : Nat) (hS : S < 2 ^ 60) (hblk : blk.length = 144 + S)
     (R : DataMem → Prop) (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : 8 * 4 + 152 * 4 ≤ avail)
@@ -137,6 +137,7 @@ theorem lc_unmarshal_accept_spec_k (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt H
       ⋆ Eq (l160.At (s.regs.rsp.toBitVec - 160)) ⋆ Eq (l168.At (s.regs.rsp.toBitVec - 168))
       ⋆ Eq (l176.At (s.regs.rsp.toBitVec - 176)) ⋆ Eq (l184.At (s.regs.rsp.toBitVec - 184))
       ⋆ Eq (l224.At (s.regs.rsp.toBitVec - 224)) ⋆ Eq (l216.At (s.regs.rsp.toBitVec - 216))
+      ⋆ Eq (l208.At (s.regs.rsp.toBitVec - 208))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 232)) ⋆ Eq (blk.At (s.regs.rsp.toBitVec - 232 - 144 - BitVec.ofNat 64 S))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ Heap avail
       ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec) ⋆ Eq (((lcBody g).toList.take 4).At (s.regs.rbx.toBitVec + 4))
@@ -170,6 +171,6 @@ theorem lc_unmarshal_accept_spec_k (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt H
       have := (lc_shape g hg).2.2.1 h; omega
     · exact h
   exact lc_accept_main k hk hf (lcBody g).toList (lcBody g).size g.items hg.2 hT hn1 hg.1 hT32 hend (hfirst hn1)
-    hparts hnexts s ra guard fp slot s8 s32 l128 l136 l144 l152 l160 l168 l176 l184 l216 l224 rslot blk cP cL cC
-    hfp hsl h8 h32 hl128 hl136 hl144 hl152 hl160 hl168 hl176 hl184 hl216 hl224 hrs hcP hcL hcC S hS hblk
+    hparts hnexts s ra guard fp slot s8 s32 l128 l136 l144 l152 l160 l168 l176 l184 l208 l216 l224 rslot blk cP cL cC
+    hfp hsl h8 h32 hl128 hl136 hl144 hl152 hl160 hl168 hl176 hl184 hl208 hl216 hl224 hrs hcP hcL hcC S hS hblk
     R Heap avail hav (P g rfl) hguard hsp (by rw [hlen, hsz]) hcap hcap63 hms hno hlu

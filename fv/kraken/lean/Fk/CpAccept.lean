@@ -36,12 +36,13 @@ theorem cp_accept_main (k : Nat) (hk : PrysmCheckpointUnmarshalSSZ.IsInfixAt Hos
     (fp s1 s2 l16 rslot c0 cP cL cC : List UInt8)
     (hfp : fp.length = 8) (h1 : s1.length = 8) (h2 : s2.length = 8) (hl16 : l16.length = 8) (hrs : rslot.length = 8)
     (hc0 : c0.length = 8) (hcP : cP.length = 8) (hcL : cL.length = 8) (hcC : cC.length = 8)
-    (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
+    (R : DataMem → Prop) (S : Nat) (scratch spm : List UInt8) (hsc : scratch.length = S) (hspm : spm.length = 24)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s1.At (s.regs.rsp.toBitVec + 8))
       ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16)) ⋆ Eq (l16.At (s.regs.rsp.toBitVec - 16))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 48)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 48 - BitVec.ofNat 64 S))
+      ⋆ Eq (spm.At (s.regs.rsp.toBitVec - 40))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Heap avail
       ⋆ Eq (e8.At s.regs.rbx.toBitVec) ⋆ Eq (root.At (s.regs.rbx.toBitVec + 8))
@@ -126,9 +127,9 @@ theorem cp_accept_main (k : Nat) (hk : PrysmCheckpointUnmarshalSSZ.IsInfixAt Hos
   simp only [Width.bytes, Width.bits] at H6
   kunfold
   rw [cp_slot] at *
-  refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 18 + 1)) 32 avail scratch _ rfl (by simp) (by rfl) (by omega) hsc
-    (by dsimp only; ecancel)) ?_
-  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, -, stk2, hstk2, Hm2⟩
+  refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 18 + 1)) 32 avail scratch spm _ rfl (by simp) (by rfl) (by omega) (by unfold maxAlloc; omega)
+    (by omega) hsc hspm (by dsimp only; rw [show rsp.toBitVec - 48 + 8 = rsp.toBitVec - 40 by bv_omega]; ecancel)) ?_
+  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, -, -, stk2, spm2, hstk2, hspm2, Hm2⟩
   dsimp only at hpc2 hrsp2 Hm2
   subst hpc2
   obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,
@@ -183,7 +184,7 @@ theorem cp_accept_main (k : Nat) (hk : PrysmCheckpointUnmarshalSSZ.IsInfixAt Hos
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (k + 34 + 1)) root (List.replicate (1 * 32) 0) stk2 _
     (by rw [hroot]; rfl) (by simp [hroot]) hstk2
     (by dsimp only; rw [show (8 : BitVec 64) + rbx.toBitVec = rbx.toBitVec + 8 from BitVec.add_comm _ _]; ecancel)) ?_
-  rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, stk3, hstk3, Hm3⟩
+  rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, _hmr143, _hmrbp3, stk3, hstk3, Hm3⟩
   dsimp only at hpc3 hrsp3 Hm3
   subst hpc3
   obtain ⟨⟨rax3, rbx3, rcx3, rdx3, rsi3, rdi3, rsp3, rbp3, r83, r93, r103, r113, r123, r133, r143, r153⟩,

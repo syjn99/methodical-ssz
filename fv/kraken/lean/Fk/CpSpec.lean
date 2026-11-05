@@ -146,13 +146,14 @@ theorem cp_unmarshal_accept_spec_k (k : Nat) (hk : PrysmCheckpointUnmarshalSSZ.I
     (fp s1 s2 l16 rslot c0 cP cL cC : List UInt8)
     (hfp : fp.length = 8) (h1 : s1.length = 8) (h2 : s2.length = 8) (hl16 : l16.length = 8) (hrs : rslot.length = 8)
     (hc0 : c0.length = 8) (hcP : cP.length = 8) (hcL : cL.length = 8) (hcC : cC.length = 8)
-    (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
+    (R : DataMem → Prop) (S : Nat) (scratch spm : List UInt8) (hsc : scratch.length = S) (hspm : spm.length = 24)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (P : ∀ g : CheckpointG, bsA = cpEncode g →
       s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s1.At (s.regs.rsp.toBitVec + 8))
       ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16)) ⋆ Eq (l16.At (s.regs.rsp.toBitVec - 16))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 48)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 48 - BitVec.ofNat 64 S))
+      ⋆ Eq (spm.At (s.regs.rsp.toBitVec - 40))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Heap avail
       ⋆ Eq ((uintBytes 8 g.epoch.toNat).toList.At s.regs.rbx.toBitVec) ⋆ Eq (g.root.toList.At (s.regs.rbx.toBitVec + 8))
@@ -180,7 +181,7 @@ theorem cp_unmarshal_accept_spec_k (k : Nat) (hk : PrysmCheckpointUnmarshalSSZ.I
   have h40 : s.regs.rcx = 40 := by
     apply UInt64.toNat_inj.mp; rw [hlen, cp_encode_size]; rfl
   exact cp_accept_main k hk hf _ _ (by simp [Fv.uintBytes_size]) (by simp) s ra guard fp s1 s2 l16 rslot c0 cP cL cC
-    hfp h1 h2 hl16 hrs hc0 hcP hcL hcC R S scratch hsc Heap avail (P g rfl) hguard hsp h40 hav hms hmm
+    hfp h1 h2 hl16 hrs hc0 hcP hcL hcC R S scratch spm hsc hspm Heap avail (P g rfl) hguard hsp h40 hav hms hmm
 
 /-- `len(buf) ≠ 40`: EthLib rejects; the machine returns `ssz.ErrSize`. -/
 theorem cp_reject_size_spec (bs : Array UInt8) (h : bs.size ≠ 40) : ∃ e, deserialize cpDesc bs = .error e := by

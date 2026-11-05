@@ -24,17 +24,20 @@ variable [Host]
 namespace Fk
 
 /-- `runtime.newobject(typ *_type) unsafe.Pointer`: like `MakesliceC` for one
-object of `sz` bytes (zeroed, carved from the heap). -/
+object of `sz` bytes (zeroed, carved from the heap); the spill area is the
+8-byte slot of its one register argument; r14 and rbp are kept. -/
 def NewobjectC (Heap : Nat → DataMem → Prop) (ty : BitVec 64) (sz S : Nat) : Prop :=
-  ∀ (st : MachineData) (ret : Int64) (avail : Nat) (stk : List UInt8) (F : DataMem → Prop),
-    st.regs.rax.toBitVec = ty → sz ≤ avail → stk.length = S →
+  ∀ (st : MachineData) (ret : Int64) (avail : Nat) (stk spill : List UInt8) (F : DataMem → Prop),
+    st.regs.rax.toBitVec = ty → sz ≤ avail → stk.length = S → spill.length = 8 →
     (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
-      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Heap avail ⋆ F) st.dmem →
+      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (st.regs.rsp.toBitVec + 8))
+      ⋆ Heap avail ⋆ F) st.dmem →
     Eventually (step1 Host.exe)
-      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.r14 = st.regs.r14 ∧
-        ∃ stk' : List UInt8, stk'.length = S ∧
+      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.r14 = st.regs.r14
+        ∧ st'.data.regs.rbp = st.regs.rbp ∧
+        ∃ stk' spill' : List UInt8, stk'.length = S ∧ spill'.length = 8 ∧
         (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
-          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S))
+          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill'.At (st.regs.rsp.toBitVec + 8))
           ⋆ Eq ((List.replicate sz 0).At st'.data.regs.rax.toBitVec)
           ⋆ Heap (avail - sz) ⋆ F) st'.data.dmem)
       ⟨st, label "runtime.newobject"⟩
@@ -128,15 +131,22 @@ theorem lu_uacc_holds (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k)
       by simp; omega, by simp; omega, by simp; omega, by simp; omega, by simp; omega⟩
   rw [luFrame_sep _ S hS _ _ _ _ _ _ _ _ h0 h1 h2 h3 h4 h5 h6 h7] at hm
   have hok : g.l.length ≤ 16 := hg
+  have hg1 : Eq (g1.At (st.regs.rsp.toBitVec - 136)) = Eq ((g1.take 24).At (st.regs.rsp.toBitVec - 136))
+      ⋆ Eq ((g1.drop 24).At (st.regs.rsp.toBitVec - 112)) := by
+    conv => lhs; rw [← List.take_append_drop 24 g1]
+    exact at_app _ _ (by simp [h2]; bv_omega) (by simp [h2])
+  rw [hg1] at hm
   refine eventually_trans _ _ _ _ (lu_accept_main k hk hf (u64Bytes g.l).toList g.l.length (by simp [u64Bytes_size]) hok
     st (UInt64.ofBitVec ret.toBitVec) guard fp s28 s30 s38 s90 s98 rslot cP cL cC h7 h3 h4 h5 h8 h9 h1 hcP hcL hcC
-    (Eq (g1.At (st.regs.rsp.toBitVec - 136)) ⋆ Eq (g2.At (st.regs.rsp.toBitVec - 72)) ⋆ F) S scratch h0 Heap avail
+    (Eq ((g1.drop 24).At (st.regs.rsp.toBitVec - 112)) ⋆ Eq (g2.At (st.regs.rsp.toBitVec - 72)) ⋆ F) S scratch (g1.take 24)
+    h0 (by simp [h2]) Heap avail
     (by ecancel) hguard hsp hlen hcap hcap63 (by omega) hms) ?_
-  rintro ⟨d, pc⟩ ⟨hpc, hrax, hrbx, hrsp, hr14, p, fp', s28', s30', s38', s90', s98', rslot', scratch',
-    l1, l2, l3, l4, l5, l6, l7, l8, hmem⟩
-  refine Eventually.done _ ⟨hpc, hrax, hrbx, hrsp, hr14, p, luFrame scratch' rslot' g1 s28' s30' s38' g2 fp',
+  rintro ⟨d, pc⟩ ⟨hpc, hrax, hrbx, hrsp, hr14, p, fp', s28', s30', s38', s90', s98', rslot', scratch', spm',
+    l1, l2, l3, l4, l5, l6, l7, l8, l9, hmem⟩
+  refine Eventually.done _ ⟨hpc, hrax, hrbx, hrsp, hr14, p, luFrame scratch' rslot' (spm' ++ g1.drop 24) s28' s30' s38' g2 fp',
     s90', s98', by simp [luFrame, *]; omega, l5, l6, ?_⟩
-  rw [luFrame_sep _ S hS _ _ _ _ _ _ _ _ l8 l7 h2 l2 l3 l4 h6 l1]
+  rw [luFrame_sep _ S hS _ _ _ _ _ _ _ _ l8 l7 (by simp [l9, h2]) l2 l3 l4 h6 l1,
+    at_app spm' (g1.drop 24) (b := st.regs.rsp.toBitVec - 112) (by rw [l9]; bv_omega) (by simp [l9, h2])]
   ecancel
 
 end Fk
