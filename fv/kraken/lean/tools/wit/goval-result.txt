@@ -137,5 +137,6 @@ OK  WitSzFv    recv           0                              nil
 OK  WitSzLu    recv.0         ('0x10020', 3, 3)              ok
 OK  WitSzSc    recv           0                              nil
 OK  WitVbv     buf            ('0x10020', 1, 1)              ok
+OK  WitVbvR    buf            ('0x1006c', 1, 1)              ok
 --  Witness    -              None                           not checked: no target or registers
-68 witness files, 0 with a violation
+69 witness files, 0 with a violation

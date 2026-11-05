@@ -11,3 +11,4 @@ cplen | target_prysm.Checkpoint.UnmarshalSSZ.S:9 'cmp $0x28,%rcx' -> 'cmp $0x29,
 adcopy | target_prysm.AttestationData.UnmarshalSSZ.S:35 'mov $0x20,%ecx' -> 'mov $0x1f,%ecx' | ad_accept_main (Fk/AdAccept.lean:56-673) | exit 1 | FAIL | ok | error: Fk/AdAccept.lean:251:20: Tactic `rfl` failed: The left-hand side
 control | target.FixedVec.UnmarshalSSZ.S:47 'cmp $0x4,%rax' -> 'cmp $0x4,%rax' | fv_iter (Fk/FvLoop.lean:19-107) | exit 0 | PASS | ok | 
 nopret | target.BitVec.UnmarshalSSZ.S:8 'nop' -> 'retq' (also all.S, SHash regenerated) | link/check.py (d) | exit 1 | FAIL | ok | DIFF (d) target.BitVec.UnmarshalSSZ 0x4b7457 FAIL: elf 660f1f840000000000 asm c3 nopw (%rax,%rax,1) -> retq | (9, 'nopw (%rax,%rax)')
+scbool | target.Scalars.UnmarshalSSZ.S:13 'cmp $0x1,%cl' -> 'cmp $0x2,%cl' | sc_accept_main (Fk/ScAccept.lean:20-203) | exit 1 | FAIL | ok | error: Fk/ScAccept.lean:167:37: Tactic `decide` proved that the proposition

@@ -115,6 +115,8 @@ mutate neoff target.Nested.UnmarshalSSZ.S 14 'cmp $0x1c,%rdx' 'cmp $0x1d,%rdx' F
 mutate cplen target_prysm.Checkpoint.UnmarshalSSZ.S 9 'cmp $0x28,%rcx' 'cmp $0x29,%rcx' Fk/CpAccept.lean cp_accept_main FAIL
 # 12. AttestationData (X9): BeaconBlockRoot is copied with 31 bytes instead of 32
 mutate adcopy target_prysm.AttestationData.UnmarshalSSZ.S 35 'mov $0x20,%ecx' 'mov $0x1f,%ecx' Fk/AdAccept.lean ad_accept_main FAIL
+# 13. Scalars (X9): the bool byte is compared with 2 instead of 1, so 1 decodes as false
+mutate scbool target.Scalars.UnmarshalSSZ.S 13 'cmp $0x1,%cl' 'cmp $0x2,%cl' Fk/ScAccept.lean sc_accept_main FAIL
 # control: a directive rewritten to itself must still check
 mutate control target.FixedVec.UnmarshalSSZ.S 47 'cmp $0x4,%rax' 'cmp $0x4,%rax' Fk/FvLoop.lean fv_iter PASS
 # 9. link (X6): a padding nop becomes retq; the link check must reject it
