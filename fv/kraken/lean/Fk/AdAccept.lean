@@ -89,7 +89,10 @@ theorem ad_accept_main (k : Nat) (hk : PrysmAttestationDataUnmarshalSSZ.IsInfixA
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
-        ∃ p ps pt p1 p2 : BitVec 64, (Eq (in0.At s.regs.rax.toBitVec) ⋆ Eq (in1.At (s.regs.rax.toBitVec + 8))
+        ∃ (p ps pt p1 p2 : BitVec 64) (fp' s8' s16' l16' l24' rs' sc' spa' spb' : List UInt8),
+          fp'.length = 8 ∧ s8'.length = 8 ∧ s16'.length = 8 ∧ l16'.length = 8 ∧ l24'.length = 8 ∧ rs'.length = 8
+          ∧ sc'.length = S ∧ spa'.length = 8 ∧ spb'.length = 16 ∧
+          (Eq (in0.At s.regs.rax.toBitVec) ⋆ Eq (in1.At (s.regs.rax.toBitVec + 8))
           ⋆ Eq ((Int.toBytes 8 p.toInt).At (s.regs.rax.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 24)) ⋆ Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 32))
           ⋆ Eq ((Int.toBytes 8 ps.toInt).At (s.regs.rax.toBitVec + 40))
@@ -98,7 +101,19 @@ theorem ad_accept_main (k : Nat) (hk : PrysmAttestationDataUnmarshalSSZ.IsInfixA
           ⋆ Eq ((Int.toBytes 8 32).At (ps + 24)) ⋆ Eq (sroot.At p1)
           ⋆ Eq (te.At pt) ⋆ Eq ((Int.toBytes 8 p2.toInt).At (pt + 8)) ⋆ Eq ((Int.toBytes 8 32).At (pt + 16))
           ⋆ Eq ((Int.toBytes 8 32).At (pt + 24)) ⋆ Eq (troot.At p2)
-          ⋆ Heap (avail - 160) ⋆ R ⋆ fun _ => True) st.data.dmem)
+          ⋆ Heap (avail - 160)
+          ⋆ Eq (in0.At s.regs.rbx.toBitVec) ⋆ Eq (in1.At (s.regs.rbx.toBitVec + 8))
+          ⋆ Eq (root.At (s.regs.rbx.toBitVec + 16)) ⋆ Eq (se.At (s.regs.rbx.toBitVec + 48))
+          ⋆ Eq (sroot.At (s.regs.rbx.toBitVec + 56)) ⋆ Eq (te.At (s.regs.rbx.toBitVec + 88))
+          ⋆ Eq (troot.At (s.regs.rbx.toBitVec + 96))
+          ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+          ⋆ Eq (fp'.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s8'.At (s.regs.rsp.toBitVec + 8))
+          ⋆ Eq (s16'.At (s.regs.rsp.toBitVec + 16)) ⋆ Eq (l16'.At (s.regs.rsp.toBitVec - 16))
+          ⋆ Eq (l24'.At (s.regs.rsp.toBitVec - 24))
+          ⋆ Eq (rs'.At (s.regs.rsp.toBitVec - 56)) ⋆ Eq (sc'.At (s.regs.rsp.toBitVec - 56 - BitVec.ofNat 64 S))
+          ⋆ Eq (spa'.At (s.regs.rsp.toBitVec - 48)) ⋆ Eq (spb'.At (s.regs.rsp.toBitVec - 40))
+          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+          ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hsp hlen ⊢
@@ -645,7 +660,12 @@ theorem ad_accept_main (k : Nat) (hk : PrysmAttestationDataUnmarshalSSZ.IsInfixA
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
   simp only [show Int.toBytes 8 (BitVec.toInt (32 : BitVec 64)) = Int.toBytes 8 32 by decide,
     show avail - 32 - 32 - 32 - 32 - 32 = avail - 160 by omega] at H41
-  refine ⟨trivial, ?_, ?_, ?_, ?_, ?_, rax2.toBitVec, rax4.toBitVec, rax7.toBitVec, rax5.toBitVec, rax8.toBitVec, ?_⟩
+  refine ⟨trivial, ?_, ?_, ?_, ?_, ?_, rax2.toBitVec, rax4.toBitVec, rax7.toBitVec, rax5.toBitVec, rax8.toBitVec,
+    Int.toBytes 8 rbp.toBitVec.toInt, Int.toBytes 8 rax.toBitVec.toInt, Int.toBytes 8 rbx.toBitVec.toInt,
+    Int.toBytes 8 rax8.toBitVec.toInt, Int.toBytes 8 rax7.toBitVec.toInt,
+    Int.toBytes 8 (Host.addrOf (k + 147 + 1)).toBitVec.toInt, stk9, sm8.take 8, sm8.drop 8,
+    Int.toBytes_length 8 _, Int.toBytes_length 8 _, Int.toBytes_length 8 _, Int.toBytes_length 8 _,
+    Int.toBytes_length 8 _, Int.toBytes_length 8 _, by assumption, by simp [*], by simp [*], ?_⟩
   all_goals first
     | trivial | rfl
     | (apply UInt64.toBitVec_inj.mp; simp; done)

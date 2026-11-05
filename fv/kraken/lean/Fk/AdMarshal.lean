@@ -87,7 +87,16 @@ theorem ad_marshal_main (k : Nat) (hk : PrysmAttestationDataMarshalSSZTo.IsInfix
           ⋆ Eq (se.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))
           ⋆ Eq (sroot.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 56))
           ⋆ Eq (te.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 88))
-          ⋆ Eq (troot.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 96)) ⋆ R ⋆ fun _ => True) st.data.dmem)
+          ⋆ Eq (troot.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 96))
+          ⋆ Eq (e0.At s.regs.rax.toBitVec) ⋆ Eq (e1.At (s.regs.rax.toBitVec + 8))
+          ⋆ Eq ((Int.toBytes 8 p.toInt).At (s.regs.rax.toBitVec + 16))
+          ⋆ Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 24))
+          ⋆ Eq ((Int.toBytes 8 ps.toInt).At (s.regs.rax.toBitVec + 40))
+          ⋆ Eq ((Int.toBytes 8 pt.toInt).At (s.regs.rax.toBitVec + 48)) ⋆ Eq (root.At p)
+          ⋆ Eq (se.At ps) ⋆ Eq ((Int.toBytes 8 p1.toInt).At (ps + 8)) ⋆ Eq ((Int.toBytes 8 32).At (ps + 16))
+          ⋆ Eq (sroot.At p1)
+          ⋆ Eq (te.At pt) ⋆ Eq ((Int.toBytes 8 p2.toInt).At (pt + 8)) ⋆ Eq ((Int.toBytes 8 32).At (pt + 16))
+          ⋆ Eq (troot.At p2) ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hsp hcap hcap63 hpre ⊢
@@ -512,7 +521,16 @@ theorem ad_marshal_main (k : Nat) (hk : PrysmAttestationDataMarshalSSZTo.IsInfix
   · exact sep_true (P := Eq (pre.At rbx.toBitVec) ⋆ Eq (e0.At (rbx.toBitVec + rcx.toBitVec))
       ⋆ Eq (e1.At (rbx.toBitVec + rcx.toBitVec + 8)) ⋆ Eq (root.At (rbx.toBitVec + rcx.toBitVec + 16))
       ⋆ Eq (se.At (rbx.toBitVec + rcx.toBitVec + 48)) ⋆ Eq (sroot.At (rbx.toBitVec + rcx.toBitVec + 56))
-      ⋆ Eq (te.At (rbx.toBitVec + rcx.toBitVec + 88)) ⋆ Eq (troot.At (rbx.toBitVec + rcx.toBitVec + 96)) ⋆ R) (by ecancel)
+      ⋆ Eq (te.At (rbx.toBitVec + rcx.toBitVec + 88)) ⋆ Eq (troot.At (rbx.toBitVec + rcx.toBitVec + 96))
+      ⋆ Eq (e0.At rax.toBitVec) ⋆ Eq (e1.At (rax.toBitVec + 8))
+      ⋆ Eq ((Int.toBytes 8 p.toInt).At (rax.toBitVec + 16))
+      ⋆ Eq ((Int.toBytes 8 32).At (rax.toBitVec + 24))
+      ⋆ Eq ((Int.toBytes 8 ps.toInt).At (rax.toBitVec + 40))
+      ⋆ Eq ((Int.toBytes 8 pt.toInt).At (rax.toBitVec + 48)) ⋆ Eq (root.At p)
+      ⋆ Eq (se.At ps) ⋆ Eq ((Int.toBytes 8 p1.toInt).At (ps + 8)) ⋆ Eq ((Int.toBytes 8 32).At (ps + 16))
+      ⋆ Eq (sroot.At p1)
+      ⋆ Eq (te.At pt) ⋆ Eq ((Int.toBytes 8 p2.toInt).At (pt + 8)) ⋆ Eq ((Int.toBytes 8 32).At (pt + 16))
+      ⋆ Eq (troot.At p2) ⋆ R) (by ecancel)
   all_goals first
     | exact True.intro
     | (apply UInt64.toBitVec_inj.mp; simp; done)

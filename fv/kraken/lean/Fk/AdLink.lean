@@ -72,7 +72,10 @@ theorem ad_unmarshal_accept_spec_k (k : Nat) (hk : PrysmAttestationDataUnmarshal
   refine ⟨g, rfl, rfl, ?_⟩
   have h128 : s.regs.rcx = 128 := by
     apply UInt64.toNat_inj.mp; rw [hlen, ad_encode_size]; rfl
-  exact ad_accept_main k hk hf _ _ _ _ _ _ _ (by simp [Fv.uintBytes_size]) (by simp [Fv.uintBytes_size]) (by simp)
+  refine eventually_trans _ _ _ _ (ad_accept_main k hk hf _ _ _ _ _ _ _ (by simp [Fv.uintBytes_size])
+    (by simp [Fv.uintBytes_size]) (by simp)
     (by simp [Fv.uintBytes_size]) (by simp) (by simp [Fv.uintBytes_size]) (by simp) s ra guard
     fp s8 s16 l16 l24 rslot c0 c8 cP cL cC cS cT hfp hs8 hs16 hl16 hl24 hrs hc0 hc8 hcP hcL hcC hcS hcT
-    R S scratch spa spb hsc hspa hspb Heap avail (P g rfl) hguard hsp h128 hav hms hmm hno
+    R S scratch spa spb hsc hspa hspb Heap avail (P g rfl) hguard hsp h128 hav hms hmm hno) ?_
+  rintro st ⟨e1, e2, e3, e4, e5, e6, p, ps, pt, p1, p2, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hm⟩
+  exact Eventually.done _ ⟨e1, e2, e3, e4, e5, e6, p, ps, pt, p1, p2, sep_true (by ecancel)⟩
