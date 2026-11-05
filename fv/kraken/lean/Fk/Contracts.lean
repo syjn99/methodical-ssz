@@ -104,4 +104,29 @@ def FmtErrorfC (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
           ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Heap avail' ⋆ F) st'.data.dmem)
       ⟨st, label "fmt.errorf"⟩
 
+/-- `runtime.growslice(oldPtr, newLen, oldCap, num, et) slice` (rax, rbx, rcx,
+rdi, rsi; result rax = new ptr, rbx = newLen, rcx = newCap): for an element
+type of `esz` bytes at `ty`, it returns to the return address with rsp + 8, a
+new capacity `newCap ≥ newLen` (below 2^63), and a block of `esz * newCap`
+bytes at the new pointer whose first bytes are the old elements `old`
+(rbp is preserved: Go's frame-pointer convention)
+(`esz * (newLen - num)` bytes); the old block, the frame `F` stay; the heap
+may shrink. The tail's contents are not specified. -/
+def GrowsliceC (Heap : Nat → DataMem → Prop) (ty : BitVec 64) (esz S : Nat) : Prop :=
+  ∀ (st : MachineData) (ret : Int64) (old stk : List UInt8) (avail : Nat) (F : DataMem → Prop),
+    st.regs.rsi.toBitVec = ty → st.regs.rdi.toNat ≤ st.regs.rbx.toNat →
+    old.length = esz * (st.regs.rbx.toNat - st.regs.rdi.toNat) → stk.length = S →
+    (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (old.At st.regs.rax.toBitVec)
+      ⋆ Heap avail ⋆ F) st.dmem →
+    Eventually (step1 Host.exe)
+      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.rbp = st.regs.rbp
+        ∧ st'.data.regs.rbx = st.regs.rbx ∧ st.regs.rbx.toNat ≤ st'.data.regs.rcx.toNat ∧ st'.data.regs.rcx.toNat < 2 ^ 63 ∧
+        ∃ (stk' tail : List UInt8) (avail' : Nat), stk'.length = S
+          ∧ old.length + tail.length = esz * st'.data.regs.rcx.toNat ∧
+        (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (old.At st.regs.rax.toBitVec)
+          ⋆ Eq ((old ++ tail).At st'.data.regs.rax.toBitVec) ⋆ Heap avail' ⋆ F) st'.data.dmem)
+      ⟨st, label "runtime.growslice"⟩
+
 end Fk
