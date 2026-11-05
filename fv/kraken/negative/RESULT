@@ -1,5 +1,5 @@
 offset | target.ListU64.UnmarshalSSZ.S:15 'cmp $0x4,%rdx' -> 'cmp $0x8,%rdx' | lu_accept_main (Fk/LuAccept.lean:29-287) | exit 1 | FAIL | ok | error: Fk/LuAccept.lean:127:16: unsolved goals
-maxlen | target.ListU64.UnmarshalSSZ.S:28 'jg L_target.ListU64.UnmarshalSSZ_ce' -> 'nop' | lu_reject_toobig_main (Fk/LuRejectCall.lean:100-339) | exit 1 | FAIL | ok | error: Fk/LuRejectCall.lean:197:6: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+maxlen | target.ListU64.UnmarshalSSZ.S:28 'jg L_target.ListU64.UnmarshalSSZ_ce' -> 'nop' | lu_reject_toobig_main (Fk/LuRejectCall.lean:101-344) | exit 1 | FAIL | ok | error: Fk/LuRejectCall.lean:199:6: Tactic `rewrite` failed: Did not find an occurrence of the pattern
 loop | target.FixedVec.UnmarshalSSZ.S:47 'cmp $0x4,%rax' -> 'cmp $0x3,%rax' | fv_iter (Fk/FvLoop.lean:19-107) | exit 1 | FAIL | ok | error: Fk/FvLoop.lean:50:66: Type mismatch: After simplification, term
 gsnum | target.BitL.UnmarshalSSZ.S:76 'mov %rbx,%rdi' -> 'mov %rcx,%rdi' | bl_accept_main (Fk/BlAccept.lean:41-395) | exit 1 | FAIL | ok | error: Fk/BlAccept.lean:241:21: unsolved goals
 nilerr | target.ListC.UnmarshalSSZ.S:165 'jne L_target.ListC.UnmarshalSSZ_2e7' -> 'je L_target.ListC.UnmarshalSSZ_2e7' | lc_reject_zero_main (Fk/LcReject.lean:307-489) | exit 1 | FAIL | ok | error: Fk/LcReject.lean:434:16: unsolved goals
@@ -9,6 +9,6 @@ blmnochk | target.BitL.MarshalSSZTo.S:49 'jne L_target.BitL.MarshalSSZTo_102' ->
 neoff | target.Nested.UnmarshalSSZ.S:14 'cmp $0x1c,%rdx' -> 'cmp $0x1d,%rdx' | ne_accept_main (Fk/NeAccept.lean:82-415) | exit 1 | FAIL | ok | error: Fk/NeAccept.lean:171:16: unsolved goals
 cplen | target_prysm.Checkpoint.UnmarshalSSZ.S:9 'cmp $0x28,%rcx' -> 'cmp $0x29,%rcx' | cp_accept_main (Fk/CpAccept.lean:32-248) | exit 1 | FAIL | ok | error: Fk/CpAccept.lean:100:38: Tactic `decide` proved that the proposition
 adcopy | target_prysm.AttestationData.UnmarshalSSZ.S:35 'mov $0x20,%ecx' -> 'mov $0x1f,%ecx' | ad_accept_main (Fk/AdAccept.lean:56-673) | exit 1 | FAIL | ok | error: Fk/AdAccept.lean:251:20: Tactic `rfl` failed: The left-hand side
+scbool | target.Scalars.UnmarshalSSZ.S:13 'cmp $0x1,%cl' -> 'cmp $0x2,%cl' | sc_accept_main (Fk/ScAccept.lean:20-203) | exit 1 | FAIL | ok | error: Fk/ScAccept.lean:167:37: Tactic `decide` proved that the proposition
 control | target.FixedVec.UnmarshalSSZ.S:47 'cmp $0x4,%rax' -> 'cmp $0x4,%rax' | fv_iter (Fk/FvLoop.lean:19-107) | exit 0 | PASS | ok | 
 nopret | target.BitVec.UnmarshalSSZ.S:8 'nop' -> 'retq' (also all.S, SHash regenerated) | link/check.py (d) | exit 1 | FAIL | ok | DIFF (d) target.BitVec.UnmarshalSSZ 0x4b7457 FAIL: elf 660f1f840000000000 asm c3 nopw (%rax,%rax,1) -> retq | (9, 'nopw (%rax,%rax)')
-scbool | target.Scalars.UnmarshalSSZ.S:13 'cmp $0x1,%cl' -> 'cmp $0x2,%cl' | sc_accept_main (Fk/ScAccept.lean:20-203) | exit 1 | FAIL | ok | error: Fk/ScAccept.lean:167:37: Tactic `decide` proved that the proposition
