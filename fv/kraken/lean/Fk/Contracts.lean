@@ -52,4 +52,23 @@ def MakesliceC (Heap : Nat → DataMem → Prop) (ty : BitVec 64) (esz S : Nat) 
           ⋆ Heap (avail - esz * cnt) ⋆ F) st'.data.dmem)
       ⟨st, label "runtime.makeslice"⟩
 
+/-- `runtime.memmove(to, from unsafe.Pointer, n uintptr)` (rax = to, rbx = from,
+rcx = n): on disjoint source and destination chunks of n bytes, it returns with
+rsp + 8 and the destination equal to the source; the source and the frame `F`
+are unchanged. Overlapping ranges (allowed by Go) are outside this contract:
+the callers' premises separate them (`⋆`). -/
+def MemmoveC (S : Nat) : Prop :=
+  ∀ (st : MachineData) (ret : Int64) (src dst stk : List UInt8) (F : DataMem → Prop),
+    st.regs.rcx.toNat = src.length → dst.length = src.length → stk.length = S →
+    (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S))
+      ⋆ Eq (src.At st.regs.rbx.toBitVec) ⋆ Eq (dst.At st.regs.rax.toBitVec) ⋆ F) st.dmem →
+    Eventually (step1 Host.exe)
+      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧
+        ∃ stk' : List UInt8, stk'.length = S ∧
+        (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S))
+          ⋆ Eq (src.At st.regs.rbx.toBitVec) ⋆ Eq (src.At st.regs.rax.toBitVec) ⋆ F) st'.data.dmem)
+      ⟨st, label "runtime.memmove"⟩
+
 end Fk
