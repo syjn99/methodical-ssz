@@ -28,3 +28,6 @@ import Fk.Frame
 import Fk.FunSpecs
 import Fk.NeAccept
 import Fk.LuAccept
+import Fk.NeReject
+import Fk.NeSize
+import Fk.NeSpec
