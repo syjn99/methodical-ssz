@@ -36,7 +36,7 @@ theorem sc_accept_main (k : Nat) (hk : ScalarsUnmarshalSSZ.IsInfixAt Host.prog k
     (hlen : s.regs.rcx = 16) (hb4 : b4 = [0] ∨ b4 = [1]) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
-        ∧ st.data.regs.rsp = s.regs.rsp + 8
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.r14 = s.regs.r14
         ∧ (Eq (b0.At s.regs.rax.toBitVec) ⋆ Eq (b1.At (s.regs.rax.toBitVec + 2))
           ⋆ Eq (b2.At (s.regs.rax.toBitVec + 4)) ⋆ Eq (b3.At (s.regs.rax.toBitVec + 8))
           ⋆ Eq (b4.At (s.regs.rax.toBitVec + 16))
@@ -152,7 +152,7 @@ theorem sc_accept_main (k : Nat) (hk : ScalarsUnmarshalSSZ.IsInfixAt Host.prog k
       toBytes_ofInt_ofBytes 64 8 rfl b3 h3l,
       show Int.toBytes 1 (BitVec.truncate 8 (0 : BitVec 64)).toInt = [0] by decide,
       show Int.toBytes 1 (BitVec.truncate 8 (1 : BitVec 64)).toInt = [1] by decide] at H6
-    refine ⟨?_, ?_, ?_, ?_, ?_⟩
+    refine ⟨?_, ?_, ?_, ?_, rfl, ?_⟩
     · simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]; rfl
     · simp
     · simp
@@ -194,7 +194,7 @@ theorem sc_accept_main (k : Nat) (hk : ScalarsUnmarshalSSZ.IsInfixAt Host.prog k
       toBytes_ofInt_ofBytes 64 8 rfl b3 h3l,
       show Int.toBytes 1 (BitVec.truncate 8 (0 : BitVec 64)).toInt = [0] by decide,
       show Int.toBytes 1 (BitVec.truncate 8 (1 : BitVec 64)).toInt = [1] by decide] at H6
-    refine ⟨?_, ?_, ?_, ?_, ?_⟩
+    refine ⟨?_, ?_, ?_, ?_, rfl, ?_⟩
     · simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]; rfl
     · simp
     · simp

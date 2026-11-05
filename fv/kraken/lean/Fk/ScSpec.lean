@@ -45,7 +45,7 @@ theorem sc_unmarshal_accept_spec_k (k : Nat) (hk : ScalarsUnmarshalSSZ.IsInfixAt
     ∃ g : Scalars, g.toValue = v ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
-        ∧ st.data.regs.rsp = s.regs.rsp + 8
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.r14 = s.regs.r14
         ∧ (Eq ((scField g 0).At s.regs.rax.toBitVec) ⋆ Eq ((scField g 1).At (s.regs.rax.toBitVec + 2))
           ⋆ Eq ((scField g 2).At (s.regs.rax.toBitVec + 4)) ⋆ Eq ((scField g 3).At (s.regs.rax.toBitVec + 8))
           ⋆ Eq ((scField g 4).At (s.regs.rax.toBitVec + 16))

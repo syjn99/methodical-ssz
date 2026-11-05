@@ -56,7 +56,7 @@ theorem lu_accept_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k
     (hms : MakesliceC Heap (label "type__" + 49120).toBitVec 8 S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0 ∧
-        st.data.regs.rsp = s.regs.rsp + 8 ∧
+        st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.r14 = s.regs.r14 ∧
         ∃ (p : BitVec 64) (fp' s28' s30' s38' s90' s98' rslot' scratch' : List UInt8),
         fp'.length = 8 ∧ s28'.length = 8 ∧ s30'.length = 8 ∧ s38'.length = 8 ∧ s90'.length = 8 ∧
         s98'.length = 8 ∧ rslot'.length = 8 ∧ scratch'.length = S ∧
@@ -187,13 +187,13 @@ theorem lu_accept_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k
   rw [call_slot] at *
   have hnN : nV.toNat = n := by rw [← hnV]; exact shr3_toNat rcx.toBitVec n hn (by simpa using hlen)
   refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 35 + 1)) n avail scratch _ rfl (Nat.le_of_eq hnN) hnN hav hsc (by ecancel)) ?_
-  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, stk1, hstk1, Hm1⟩
-  dsimp only at hpc1 hrsp1 Hm1
+  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, stk1, hstk1, Hm1⟩
+  dsimp only at hpc1 hrsp1 hr141 Hm1
   subst hpc1
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
     zmms1, flags1, mem1⟩ := d1
-  simp only at hrsp1 Hm1
-  subst hrsp1 hQ
+  simp only at hrsp1 hr141 Hm1
+  subst hrsp1 hr141 hQ
   kat hk ListU64UnmarshalSSZ 36
   apply load_step_at _ _ (rsp.toBitVec - 96) _ _ (Int.toBytes 8 nV.toInt) _ _ (by kaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
@@ -243,15 +243,15 @@ theorem lu_accept_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k
     · rw [← hdV, dptr_buf rbx rdi n h0 (by simpa using hlen ▸ hcap) hcap63]
   rw [hbsd] at H10
   have hcN : 8 * n ≤ cV.toNat := by rw [← hcV]; exact cap_sub4 rdi n (by rw [← hlen]; exact hcap)
-  refine eventually_trans _ _ _ _ (lu_loop k hk hf bs n hbs hn dV rax.toBitVec rax1.toBitVec nV hnN _ _ _ n 0 _
-    (by omega) (by simp) hnN hcN rfl rfl rfl rfl (by simp only [Nat.mul_zero, List.take_zero, List.nil_append, Nat.sub_zero]; ecancel)) ?_
-  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, -, Hm2⟩
+  refine eventually_trans _ _ _ _ (lu_loop k hk hf bs n hbs hn dV rax.toBitVec rax1.toBitVec nV hnN _ _ _ _ n 0 _
+    (by omega) (by simp) hnN hcN rfl rfl rfl rfl rfl (by simp only [Nat.mul_zero, List.take_zero, List.nil_append, Nat.sub_zero]; ecancel)) ?_
+  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, -, hr142, Hm2⟩
   dsimp only at hpc2 hrsp2 Hm2
   subst hpc2
   obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,
     zmms2, flags2, mem2⟩ := d2
-  simp only at hrsp2 Hm2
-  subst hrsp2
+  simp only at hrsp2 hr142 Hm2
+  subst hrsp2 hr142
   kat hk ListU64UnmarshalSSZ 167
   kat hk ListU64UnmarshalSSZ 168
   intro _
@@ -268,7 +268,7 @@ theorem lu_accept_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k
   apply Eventually.done
   have hnI : nV.toInt = (n : Int) := by rw [BitVec.toInt_eq_toNat_of_lt (by omega), hnN]
   rw [hnI] at Hm2
-  refine ⟨rfl, ?_, ?_, ?_, rax1.toBitVec, Int.toBytes 8 rbp.toBitVec.toInt, Int.toBytes 8 (n : Int),
+  refine ⟨rfl, ?_, ?_, ?_, rfl, rax1.toBitVec, Int.toBytes 8 rbp.toBitVec.toInt, Int.toBytes 8 (n : Int),
     Int.toBytes 8 cV.toInt, Int.toBytes 8 dV.toInt, Int.toBytes 8 rax.toBitVec.toInt, Int.toBytes 8 rbx.toBitVec.toInt,
     Int.toBytes 8 (Host.addrOf (k + 35 + 1)).toBitVec.toInt, stk1,
     ?l1, ?l2, ?l3, ?l4, ?l5, ?l6, ?l7, ?l8, ?mem⟩

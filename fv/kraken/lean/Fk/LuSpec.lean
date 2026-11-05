@@ -66,7 +66,7 @@ theorem lu_unmarshal_accept_spec_k (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt
     ∃ g : ListU64, g.ok ∧ g.toValue = v ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0 ∧
-        st.data.regs.rsp = s.regs.rsp + 8 ∧
+        st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.r14 = s.regs.r14 ∧
         ∃ (p : BitVec 64) (fp' s28' s30' s38' s90' s98' rslot' scratch' : List UInt8),
         fp'.length = 8 ∧ s28'.length = 8 ∧ s30'.length = 8 ∧ s38'.length = 8 ∧ s90'.length = 8 ∧
         s98'.length = 8 ∧ rslot'.length = 8 ∧ scratch'.length = S ∧

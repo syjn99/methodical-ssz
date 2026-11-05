@@ -165,7 +165,7 @@ theorem fv_accept_main (k : Nat) (hk : FixedVecUnmarshalSSZ.IsInfixAt Host.prog 
   rw [slot40'] at *
   refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 21 + 1)) 4 avail stk1 _ rfl (Nat.le_of_eq rfl) (by rfl) hav hstk1
     (by dsimp only; ecancel)) ?_
-  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, stk2, hstk2, Hm2⟩
+  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, -, stk2, hstk2, Hm2⟩
   dsimp only at hpc2 hrsp2 Hm2
   subst hpc2
   obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,

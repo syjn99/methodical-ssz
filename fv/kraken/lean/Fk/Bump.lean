@@ -85,7 +85,7 @@ theorem bump_makeslice (j : Nat) (hj : BumpAlloc.IsInfixAt Host.prog j)
         ⋆ Eq ((List.replicate (8 * cnt) 0).At p) ⋆ F)) m1 := by ecancel
   have H3 := sep_mono_left (P' := bumpHeap (avail - 8 * cnt))
     (fun m hm => ⟨p + rcx.toBitVec * 8#64, by omega, hm⟩) H2
-  refine ⟨by simp, ?_, [], rfl, ?_⟩
+  refine ⟨by simp, ?_, rfl, [], rfl, ?_⟩
   · apply UInt64.toBitVec_inj.mp; simp
   · dsimp only; ecancel
 end Fk
