@@ -14,4 +14,5 @@ import Fk.Witness
 import Fk.LuSpec
 import Fk.FvSmall
 import Fk.FvAccept
+import Fk.FvMarshal
 import Fk.LuAccept
