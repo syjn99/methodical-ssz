@@ -101,3 +101,4 @@ import Fk.WitLuTb
 import Fk.WitLuMR
 import Fk.WitFvMR
 import Fk.WitCpMR
+import Fk.Compose
