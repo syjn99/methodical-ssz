@@ -64,7 +64,7 @@ error object `ErrStr e sp msg` (16 bytes and the message, at most 128 bytes)
 comes from the heap: `avail' + 16 + msg.length ≤ avail ≤ avail' + 8192`.
 Every error of Go 1.26.3 `ValidateBitlist` is `fmt.Errorf` without `%w`, so
 `errors.New(s)` (trusted, CONTRACTS.md 1d: Go's constant messages are in
-rodata, not the heap; the longest message has 81 bytes). -/
+rodata, not the heap; the longest message has 82 bytes). -/
 def ValidateBitlistErrC (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
   ∀ (st : MachineData) (ret : Int64) (avail : Nat) (buf stk spill : List UInt8) (F : DataMem → Prop),
     st.regs.rbx.toNat = buf.length → st.regs.rdi = 2048 → stk.length = S → spill.length = 32 → ¬ blValid buf →

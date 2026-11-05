@@ -132,6 +132,7 @@ class Mem:
     def __init__(self, txt):
         m = re.search(r"^def block[^\n]*:= *\n?(.*?)\n\n", txt, re.S | re.M)
         lens = {k: int(v) for k, v in re.findall(r"\(\w+ : (\w+)\.length = (\d+)\)", txt)}
+        lens.update({k: int(v) for k, v in re.findall(r"theorem \w+ : \((.+?)\)\.length = (\d+) :=", txt)})
         self.bytes, self.end, self.note, self.partial = {}, BASE, "", ""
         if not m:
             self.note = "no block"; return

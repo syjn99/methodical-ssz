@@ -27,3 +27,14 @@ p .. p + cap·esz in the block. The last run is in `goval-result.txt`.
 A main theorem may allow more machine states than Go values (it is stronger
 then). The witness must still be a Go value: "premise met" and "Go value"
 are two columns of the completion table.
+
+## Re-proof fix X8 generators
+
+    python3 tools/wit/wlca.py tools/wit 1    # Fk/WitLcA1.lean (also 4): lc_accept_main
+    python3 tools/wit/wlcm.py tools/wit 0    # Fk/WitLcM0.lean (also 1, 4): lc_marshal_main
+    python3 tools/wit/wlcs.py tools/wit 0    # Fk/WitLcS0.lean (also 1, 4): lc_size_main
+    python3 tools/wit/wnes.py tools/wit 0    # Fk/WitNeS0.lean (also 1, 16): ne_size_main
+    python3 tools/wit/wlug.py tools/wit      # Fk/WitLuG.lean: lum_grow_site
+
+`wgen.gen` takes `heap_end=True` to put the heap after the other chunks (when
+a label offset such as `go_string._+526` would fall into the heap).
