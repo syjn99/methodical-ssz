@@ -166,14 +166,14 @@ theorem cp_unmarshal_accept_spec_k (k : Nat) (hk : PrysmCheckpointUnmarshalSSZ.I
     ∃ g : CheckpointG, g.toValue = v ∧ bsA = cpEncode g ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
-        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
         ∃ p : BitVec 64, (Eq ((uintBytes 8 g.epoch.toNat).toList.At s.regs.rax.toBitVec)
           ⋆ Eq ((Int.toBytes 8 p.toInt).At (s.regs.rax.toBitVec + 8))
           ⋆ Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 24)) ⋆ Eq (g.root.toList.At p)
           ⋆ Eq ((uintBytes 8 g.epoch.toNat).toList.At s.regs.rbx.toBitVec)
           ⋆ Eq (g.root.toList.At (s.regs.rbx.toBitVec + 8))
-          ⋆ Heap (avail - 32) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Heap (avail - 32) ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨g, rfl, rfl⟩ := accepted_is_enc (G := CheckpointG) (toV := CheckpointG.toValue) (enc := cpEncode)
     cpDesc_wellFormed cp_serialize cp_toValue_surjective' hd

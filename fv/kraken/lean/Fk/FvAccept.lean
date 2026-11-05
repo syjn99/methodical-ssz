@@ -66,13 +66,13 @@ theorem fv_accept_main (k : Nat) (hk : FixedVecUnmarshalSSZ.IsInfixAt Host.prog 
     (hms : MakesliceC Heap (label "type__" + 49120).toBitVec 8 S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
-        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
         ∃ p : BitVec 64, (Eq (rb.At s.regs.rax.toBitVec)
           ⋆ Eq ((Int.toBytes 8 p.toInt).At (s.regs.rax.toBitVec + 32))
           ⋆ Eq ((Int.toBytes 8 4).At (s.regs.rax.toBitVec + 40))
           ⋆ Eq ((Int.toBytes 8 4).At (s.regs.rax.toBitVec + 48)) ⋆ Eq (ws.At p)
           ⋆ Eq (rb.At s.regs.rbx.toBitVec) ⋆ Eq (ws.At (s.regs.rbx.toBitVec + 32))
-          ⋆ Heap (avail - 8 * 4) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Heap (avail - 8 * 4) ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hsp hlen ⊢
@@ -151,8 +151,8 @@ theorem fv_accept_main (k : Nat) (hk : FixedVecUnmarshalSSZ.IsInfixAt Host.prog 
   subst hpc1
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
     zmms1, flags1, mem1⟩ := d1
-  simp only at hrsp1 Hm1
-  subst hrsp1
+  simp only at hrsp1 _hmr141 Hm1
+  subst hrsp1 _hmr141
   kat hk FixedVecUnmarshalSSZ 17
   kat hk FixedVecUnmarshalSSZ 18
   kat hk FixedVecUnmarshalSSZ 19
@@ -166,13 +166,13 @@ theorem fv_accept_main (k : Nat) (hk : FixedVecUnmarshalSSZ.IsInfixAt Host.prog 
   rw [slot40'] at *
   refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 21 + 1)) 4 avail stk1 spm _ rfl (Nat.le_of_eq rfl) (by rfl) hav (by unfold maxAlloc; omega)
     (by omega) hstk1 hspm (by dsimp only; rw [show rsp.toBitVec - 40 + 8 = rsp.toBitVec - 32 by bv_omega]; ecancel)) ?_
-  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, -, -, stk2, spm2, hstk2, hspm2, Hm2⟩
+  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hr14c2, -, stk2, spm2, hstk2, hspm2, Hm2⟩
   dsimp only at hpc2 hrsp2 Hm2
   subst hpc2
   obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,
     zmms2, flags2, mem2⟩ := d2
-  simp only at hrsp2 Hm2
-  subst hrsp2
+  simp only at hrsp2 hr14c2 Hm2
+  subst hrsp2 hr14c2
   kat hk FixedVecUnmarshalSSZ 22
   apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by kaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
@@ -209,16 +209,16 @@ theorem fv_accept_main (k : Nat) (hk : FixedVecUnmarshalSSZ.IsInfixAt Host.prog 
   kat hk FixedVecUnmarshalSSZ 35
   klabel hk hf FixedVecUnmarshalSSZ 46
   simp only [show Int.toBytes 8 (BitVec.toInt (4 : BitVec 64)) = Int.toBytes 8 4 by decide] at H9
-  refine eventually_trans _ _ _ _ (fv_loop k hk hf ws hws rbx.toBitVec rax.toBitVec rax2.toBitVec _ _ _ 4 0 _
-    (by omega) (by simp) rfl rfl rfl rfl
+  refine eventually_trans _ _ _ _ (fv_loop k hk hf ws hws rbx.toBitVec rax.toBitVec rax2.toBitVec _ _ _ _ 4 0 _
+    (by omega) (by simp) rfl rfl rfl rfl rfl
     (by simp only [Nat.mul_zero, List.take_zero, List.nil_append, Nat.sub_zero]; ecancel)) ?_
-  rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, hrbp3, Hm3⟩
-  dsimp only at hpc3 hrsp3 hrbp3 Hm3
+  rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, hrbp3, hr14c3, Hm3⟩
+  dsimp only at hpc3 hrsp3 hrbp3 hr14c3 Hm3
   subst hpc3
   obtain ⟨⟨rax3, rbx3, rcx3, rdx3, rsi3, rdi3, rsp3, rbp3, r83, r93, r103, r113, r123, r133, r143, r153⟩,
     zmms3, flags3, mem3⟩ := d3
-  simp only at hrsp3 hrbp3 Hm3
-  subst hrsp3 hrbp3
+  simp only at hrsp3 hrbp3 hr14c3 Hm3
+  subst hrsp3 hrbp3 hr14c3
   kat hk FixedVecUnmarshalSSZ 63
   kat hk FixedVecUnmarshalSSZ 64
   intro _
@@ -236,7 +236,7 @@ theorem fv_accept_main (k : Nat) (hk : FixedVecUnmarshalSSZ.IsInfixAt Host.prog 
   kunfold
   apply Eventually.done
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
-  refine ⟨trivial, ?_, ?_, ?_, ?_, rax2.toBitVec, ?_⟩
+  refine ⟨trivial, ?_, ?_, ?_, ?_, ?_, rax2.toBitVec, ?_⟩
   all_goals first
     | trivial | rfl
     | (apply UInt64.toBitVec_inj.mp; simp; done)

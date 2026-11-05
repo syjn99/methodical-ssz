@@ -56,13 +56,13 @@ theorem cp_accept_main (k : Nat) (hk : PrysmCheckpointUnmarshalSSZ.IsInfixAt Hos
     (hmm : MemmoveC S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
-        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
         ∃ p : BitVec 64, (Eq (e8.At s.regs.rax.toBitVec)
           ⋆ Eq ((Int.toBytes 8 p.toInt).At (s.regs.rax.toBitVec + 8))
           ⋆ Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 24)) ⋆ Eq (root.At p)
           ⋆ Eq (e8.At s.regs.rbx.toBitVec) ⋆ Eq (root.At (s.regs.rbx.toBitVec + 8))
-          ⋆ Heap (avail - 32) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Heap (avail - 32) ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hsp hlen ⊢
@@ -129,13 +129,13 @@ theorem cp_accept_main (k : Nat) (hk : PrysmCheckpointUnmarshalSSZ.IsInfixAt Hos
   rw [cp_slot] at *
   refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 18 + 1)) 32 avail scratch spm _ rfl (by simp) (by rfl) (by omega) (by unfold maxAlloc; omega)
     (by omega) hsc hspm (by dsimp only; rw [show rsp.toBitVec - 48 + 8 = rsp.toBitVec - 40 by bv_omega]; ecancel)) ?_
-  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, -, -, stk2, spm2, hstk2, hspm2, Hm2⟩
+  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hr14c2, -, stk2, spm2, hstk2, hspm2, Hm2⟩
   dsimp only at hpc2 hrsp2 Hm2
   subst hpc2
   obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,
     zmms2, flags2, mem2⟩ := d2
-  simp only at hrsp2 Hm2
-  subst hrsp2
+  simp only at hrsp2 hr14c2 Hm2
+  subst hrsp2 hr14c2
   kat hk PrysmCheckpointUnmarshalSSZ 19
   apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by kaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
@@ -189,8 +189,8 @@ theorem cp_accept_main (k : Nat) (hk : PrysmCheckpointUnmarshalSSZ.IsInfixAt Hos
   subst hpc3
   obtain ⟨⟨rax3, rbx3, rcx3, rdx3, rsi3, rdi3, rsp3, rbp3, r83, r93, r103, r113, r123, r133, r143, r153⟩,
     zmms3, flags3, mem3⟩ := d3
-  simp only at hrsp3 Hm3
-  subst hrsp3
+  simp only at hrsp3 _hmr143 Hm3
+  subst hrsp3 _hmr143
   kat hk PrysmCheckpointUnmarshalSSZ 35
   apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by kaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
@@ -240,7 +240,7 @@ theorem cp_accept_main (k : Nat) (hk : PrysmCheckpointUnmarshalSSZ.IsInfixAt Hos
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
   rw [show (8 : BitVec 64) + rbx.toBitVec = rbx.toBitVec + 8 from BitVec.add_comm _ _] at H14
   simp only [show Int.toBytes 8 (BitVec.toInt (32 : BitVec 64)) = Int.toBytes 8 32 by decide, Nat.one_mul] at H14
-  refine ⟨trivial, ?_, ?_, ?_, ?_, rax2.toBitVec, ?_⟩
+  refine ⟨trivial, ?_, ?_, ?_, ?_, ?_, rax2.toBitVec, ?_⟩
   all_goals first
     | trivial | rfl
     | (apply UInt64.toBitVec_inj.mp; simp; done)

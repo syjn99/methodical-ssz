@@ -40,11 +40,11 @@ theorem bv_accept_main (k : Nat) (hk : BitVecUnmarshalSSZ.IsInfixAt Host.prog k)
     (hms : MakesliceC Heap (label "type__" + 48736).toBitVec 1 S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
-        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
         ∃ p : BitVec 64, (Eq ((Int.toBytes 8 p.toInt).At s.regs.rax.toBitVec)
           ⋆ Eq ((Int.toBytes 8 1).At (s.regs.rax.toBitVec + 8))
           ⋆ Eq ((Int.toBytes 8 1).At (s.regs.rax.toBitVec + 16)) ⋆ Eq ([b].At p)
-          ⋆ Eq ([b].At s.regs.rbx.toBitVec) ⋆ Heap (avail - 1 * 1) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Eq ([b].At s.regs.rbx.toBitVec) ⋆ Heap (avail - 1 * 1) ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hsp hlen ⊢
@@ -105,13 +105,13 @@ theorem bv_accept_main (k : Nat) (hk : BitVecUnmarshalSSZ.IsInfixAt Host.prog k)
     (by show (BitVec.zeroExtend 64 (BitVec.extractLsb' 0 32 rbx.toBitVec ^^^ BitVec.extractLsb' 0 32 rbx.toBitVec)).toNat ≤ 1; simp)
     (by rfl) hav (by unfold maxAlloc; omega) (by omega) hsc hspm
     (by dsimp only; rw [show rsp.toBitVec - 40 + 8 = rsp.toBitVec - 32 by bv_omega]; ecancel)) ?_
-  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, -, -, stk2, spm2, hstk2, hspm2, Hm2⟩
+  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hr14c2, -, stk2, spm2, hstk2, hspm2, Hm2⟩
   dsimp only at hpc2 hrsp2 Hm2
   subst hpc2
   obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,
     zmms2, flags2, mem2⟩ := d2
-  simp only at hrsp2 Hm2
-  subst hrsp2
+  simp only at hrsp2 hr14c2 Hm2
+  subst hrsp2 hr14c2
   kat hk BitVecUnmarshalSSZ 17
   apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by kaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
@@ -192,7 +192,7 @@ theorem bv_accept_main (k : Nat) (hk : BitVecUnmarshalSSZ.IsInfixAt Host.prog k)
   apply Eventually.done
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl, Fk.ofInt_ofBytes_toBytes64] at *
   simp only [show Int.toBytes 8 (BitVec.toInt (1 : BitVec 64)) = Int.toBytes 8 1 by decide] at H12
-  refine ⟨trivial, ?_, ?_, ?_, ?_, rax2.toBitVec, ?_⟩
+  refine ⟨trivial, ?_, ?_, ?_, ?_, ?_, rax2.toBitVec, ?_⟩
   all_goals first
     | trivial | rfl
     | (apply UInt64.toBitVec_inj.mp; simp; done)

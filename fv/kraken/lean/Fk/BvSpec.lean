@@ -152,11 +152,11 @@ theorem bv_unmarshal_accept_machine (k : Nat) (hk : BitVecUnmarshalSSZ.IsInfixAt
     ∃ g : BitVecG, g.toValue = v ∧ bsA = #[g.b] ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
-        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
         ∃ p : BitVec 64, (Eq ((Int.toBytes 8 p.toInt).At s.regs.rax.toBitVec)
           ⋆ Eq ((Int.toBytes 8 1).At (s.regs.rax.toBitVec + 8))
           ⋆ Eq ((Int.toBytes 8 1).At (s.regs.rax.toBitVec + 16)) ⋆ Eq ([g.b].At p)
-          ⋆ Eq ([g.b].At s.regs.rbx.toBitVec) ⋆ Heap (avail - 1 * 1) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Eq ([g.b].At s.regs.rbx.toBitVec) ⋆ Heap (avail - 1 * 1) ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨g, hv, hb⟩ := bv_unmarshal_accept_spec_k bsA v hd
   refine ⟨g, hv, hb, ?_⟩
@@ -221,7 +221,7 @@ theorem bv_marshal_main (k : Nat) (hk : BitVecMarshalSSZTo.IsInfixAt Host.prog k
         ∧ st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
         ∧ (Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq ([b].At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
-          ⋆ Eq ([b].At p) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Eq ([b].At p) ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hsp hcap hcap63 ⊢

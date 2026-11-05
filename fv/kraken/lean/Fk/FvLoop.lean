@@ -21,20 +21,20 @@ theorem fv_iter (k : Nat) (hk : FixedVecUnmarshalSSZ.IsInfixAt Host.prog k)
     (ws : List UInt8) (hws : ws.length = 8 * 4) (i : Nat) (hi : i < 4)
     (b c p : BitVec 64) (R : DataMem → Prop) (s : MachineData)
     (hrax : s.regs.rax.toNat = i) (hrcx : s.regs.rcx.toBitVec = b) (hrdx : s.regs.rdx.toBitVec = c)
-    (sp bp : UInt64) (hrsp : s.regs.rsp = sp) (hrbp : s.regs.rbp = bp)
+    (sp bp rr : UInt64) (hrsp : s.regs.rsp = sp) (hrbp : s.regs.rbp = bp) (hr14 : s.regs.r14 = rr)
     (h_mem : s.dmem =⋆ Eq (ws.At (b + 32)) ⋆ Eq ((Int.toBytes 8 p.toInt).At (c + 32))
       ⋆ Eq ((Int.toBytes 8 4).At (c + 40))
       ⋆ Eq ((ws.take (8 * i) ++ List.replicate (8 * (4 - i)) 0).At p) ⋆ R) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 46) ∧ st.data.regs.rax.toNat = i + 1
         ∧ st.data.regs.rcx.toBitVec = b ∧ st.data.regs.rdx.toBitVec = c
-        ∧ st.data.regs.rsp = sp ∧ st.data.regs.rbp = bp
+        ∧ st.data.regs.rsp = sp ∧ st.data.regs.rbp = bp ∧ st.data.regs.r14 = rr
         ∧ (Eq (ws.At (b + 32)) ⋆ Eq ((Int.toBytes 8 p.toInt).At (c + 32)) ⋆ Eq ((Int.toBytes 8 4).At (c + 40))
           ⋆ Eq ((ws.take (8 * (i + 1)) ++ List.replicate (8 * (4 - (i + 1))) 0).At p) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 46)⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
-  simp only at h_mem hrax hrcx hrdx hrsp hrbp ⊢
-  subst hrcx hrdx hrsp hrbp
+  simp only at h_mem hrax hrcx hrdx hrsp hrbp hr14 ⊢
+  subst hrcx hrdx hrsp hrbp hr14
   have := rax.toNat_lt_size
   simp only [UInt64.size] at *
   have hlen : ws.length < 2 ^ 64 := by omega
@@ -95,7 +95,7 @@ theorem fv_iter (k : Nat) (hk : FixedVecUnmarshalSSZ.IsInfixAt Host.prog k)
   kunfold
   kat hk FixedVecUnmarshalSSZ 45
   apply Eventually.done
-  refine ⟨rfl, ?_, rfl, rfl, rfl, rfl, ?_⟩
+  refine ⟨rfl, ?_, rfl, rfl, rfl, rfl, rfl, ?_⟩
   · show (rax.toBitVec + 1).toNat = i + 1; simp [BitVec.toNat_add]; omega
   · dsimp only
     rw [← out_step ws 4 i hws hi, Mem.At_append_sep _ _ _ (by simp; omega), Mem.At_append_sep _ _ _ (by simp; omega),
@@ -112,18 +112,18 @@ theorem fv_exit (k : Nat) (hk : FixedVecUnmarshalSSZ.IsInfixAt Host.prog k)
     (ws : List UInt8) (hws : ws.length = 8 * 4)
     (b c p : BitVec 64) (R : DataMem → Prop) (s : MachineData)
     (hrax : s.regs.rax.toNat = 4)
-    (sp bp : UInt64) (hrsp : s.regs.rsp = sp) (hrbp : s.regs.rbp = bp)
+    (sp bp rr : UInt64) (hrsp : s.regs.rsp = sp) (hrbp : s.regs.rbp = bp) (hr14 : s.regs.r14 = rr)
     (h_mem : s.dmem =⋆ Eq (ws.At (b + 32)) ⋆ Eq ((Int.toBytes 8 p.toInt).At (c + 32))
       ⋆ Eq ((Int.toBytes 8 4).At (c + 40))
       ⋆ Eq ((ws.take (8 * 4) ++ List.replicate (8 * (4 - 4)) 0).At p) ⋆ R) :
     Eventually (step1 Host.exe)
-      (fun st => st.pc = Host.addrOf (k + 63) ∧ st.data.regs.rsp = sp ∧ st.data.regs.rbp = bp
+      (fun st => st.pc = Host.addrOf (k + 63) ∧ st.data.regs.rsp = sp ∧ st.data.regs.rbp = bp ∧ st.data.regs.r14 = rr
         ∧ (Eq (ws.At (b + 32)) ⋆ Eq ((Int.toBytes 8 p.toInt).At (c + 32)) ⋆ Eq ((Int.toBytes 8 4).At (c + 40))
           ⋆ Eq (ws.At p) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 46)⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
-  simp only at h_mem hrax hrsp hrbp ⊢
-  subst hrsp hrbp
+  simp only at h_mem hrax hrsp hrbp hr14 ⊢
+  subst hrsp hrbp hr14
   have hr : rax = 4 := UInt64.toNat_inj.mp (by simpa using hrax)
   subst hr
   kat hk FixedVecUnmarshalSSZ 46
@@ -134,30 +134,30 @@ theorem fv_exit (k : Nat) (hk : FixedVecUnmarshalSSZ.IsInfixAt Host.prog k)
   simp only [Effects.All]
   klabel hk hf FixedVecUnmarshalSSZ 63
   apply Eventually.done
-  refine ⟨rfl, rfl, rfl, ?_⟩
+  refine ⟨rfl, rfl, rfl, rfl, ?_⟩
   rw [Nat.sub_self, Nat.mul_zero, List.replicate_zero, List.append_nil, List.take_of_length_le (by omega)] at h_mem
   exact h_mem
 
 theorem fv_loop (k : Nat) (hk : FixedVecUnmarshalSSZ.IsInfixAt Host.prog k)
     (hf : LabelsFresh FixedVecUnmarshalSSZ k)
     (ws : List UInt8) (hws : ws.length = 8 * 4)
-    (b c p : BitVec 64) (R : DataMem → Prop) (sp bp : UInt64) :
+    (b c p : BitVec 64) (R : DataMem → Prop) (sp bp rr : UInt64) :
     ∀ j i (s : MachineData), i + j = 4 →
-    s.regs.rax.toNat = i → s.regs.rcx.toBitVec = b → s.regs.rdx.toBitVec = c → s.regs.rsp = sp → s.regs.rbp = bp →
+    s.regs.rax.toNat = i → s.regs.rcx.toBitVec = b → s.regs.rdx.toBitVec = c → s.regs.rsp = sp → s.regs.rbp = bp → s.regs.r14 = rr →
     (s.dmem =⋆ Eq (ws.At (b + 32)) ⋆ Eq ((Int.toBytes 8 p.toInt).At (c + 32)) ⋆ Eq ((Int.toBytes 8 4).At (c + 40))
       ⋆ Eq ((ws.take (8 * i) ++ List.replicate (8 * (4 - i)) 0).At p) ⋆ R) →
     Eventually (step1 Host.exe)
-      (fun st => st.pc = Host.addrOf (k + 63) ∧ st.data.regs.rsp = sp ∧ st.data.regs.rbp = bp
+      (fun st => st.pc = Host.addrOf (k + 63) ∧ st.data.regs.rsp = sp ∧ st.data.regs.rbp = bp ∧ st.data.regs.r14 = rr
         ∧ (Eq (ws.At (b + 32)) ⋆ Eq ((Int.toBytes 8 p.toInt).At (c + 32)) ⋆ Eq ((Int.toBytes 8 4).At (c + 40))
           ⋆ Eq (ws.At p) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 46)⟩
-  | 0, i, s, hij, hrax, _, _, hrsp, hrbp, h_mem => by
+  | 0, i, s, hij, hrax, _, _, hrsp, hrbp, hr14, h_mem => by
     have hin : i = 4 := by omega
     subst hin
-    exact fv_exit k hk hf ws hws b c p R s hrax sp bp hrsp hrbp h_mem
-  | j + 1, i, s, hij, hrax, hrcx, hrdx, hrsp, hrbp, h_mem => by
+    exact fv_exit k hk hf ws hws b c p R s hrax sp bp rr hrsp hrbp hr14 h_mem
+  | j + 1, i, s, hij, hrax, hrcx, hrdx, hrsp, hrbp, hr14, h_mem => by
     refine eventually_trans _ _ _ _
-      (fv_iter k hk hf ws hws i (by omega) b c p R s hrax hrcx hrdx sp bp hrsp hrbp h_mem) ?_
-    rintro ⟨s', pc⟩ ⟨hpc, h1, h2, h3, h4, h5, h6⟩
+      (fv_iter k hk hf ws hws i (by omega) b c p R s hrax hrcx hrdx sp bp rr hrsp hrbp hr14 h_mem) ?_
+    rintro ⟨s', pc⟩ ⟨hpc, h1, h2, h3, h4, h5, h7, h6⟩
     dsimp only at hpc; subst hpc
-    exact fv_loop k hk hf ws hws b c p R sp bp j (i + 1) s' (by omega) h1 h2 h3 h4 h5 h6
+    exact fv_loop k hk hf ws hws b c p R sp bp rr j (i + 1) s' (by omega) h1 h2 h3 h4 h5 h7 h6

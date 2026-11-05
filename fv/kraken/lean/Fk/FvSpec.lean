@@ -68,13 +68,13 @@ theorem fv_unmarshal_accept_spec_k (k : Nat) (hk : FixedVecUnmarshalSSZ.IsInfixA
     ∃ g : FixedVecG, g.toValue = v ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
-        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
         ∃ p : BitVec 64, (Eq (g.r.toList.At s.regs.rax.toBitVec)
           ⋆ Eq ((Int.toBytes 8 p.toInt).At (s.regs.rax.toBitVec + 32))
           ⋆ Eq ((Int.toBytes 8 4).At (s.regs.rax.toBitVec + 40))
           ⋆ Eq ((Int.toBytes 8 4).At (s.regs.rax.toBitVec + 48)) ⋆ Eq ((u64Bytes g.w.toList).toList.At p)
           ⋆ Eq (g.r.toList.At s.regs.rbx.toBitVec) ⋆ Eq ((u64Bytes g.w.toList).toList.At (s.regs.rbx.toBitVec + 32))
-          ⋆ Heap (avail - 8 * 4) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Heap (avail - 8 * 4) ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨g, rfl, rfl⟩ := accepted_is_enc (toV := FixedVecG.toValue) (enc := fvEncode) fvDesc_wellFormed
     fv_serialize fv_toValue_surjective hd

@@ -52,7 +52,7 @@ theorem ad_unmarshal_accept_spec_k (k : Nat) (hk : PrysmAttestationDataUnmarshal
     ∃ g : AttestationDataG, g.toValue = v ∧ bsA = adEncode g ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
-        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
         ∃ p ps pt p1 p2 : BitVec 64, (Eq ((uintBytes 8 g.slot.toNat).toList.At s.regs.rax.toBitVec)
           ⋆ Eq ((uintBytes 8 g.index.toNat).toList.At (s.regs.rax.toBitVec + 8))
           ⋆ Eq ((Int.toBytes 8 p.toInt).At (s.regs.rax.toBitVec + 16))
@@ -65,7 +65,7 @@ theorem ad_unmarshal_accept_spec_k (k : Nat) (hk : PrysmAttestationDataUnmarshal
           ⋆ Eq ((uintBytes 8 g.target.epoch.toNat).toList.At pt) ⋆ Eq ((Int.toBytes 8 p2.toInt).At (pt + 8))
           ⋆ Eq ((Int.toBytes 8 32).At (pt + 16)) ⋆ Eq ((Int.toBytes 8 32).At (pt + 24))
           ⋆ Eq (g.target.root.toList.At p2)
-          ⋆ Heap (avail - 160) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Heap (avail - 160) ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨g, rfl, rfl⟩ := accepted_is_enc (G := AttestationDataG) (toV := AttestationDataG.toValue)
     (enc := adEncode) adDesc_wellFormed ad_serialize ad_toValue_surjective' hd

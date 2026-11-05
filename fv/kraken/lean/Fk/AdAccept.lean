@@ -88,7 +88,7 @@ theorem ad_accept_main (k : Nat) (hk : PrysmAttestationDataUnmarshalSSZ.IsInfixA
     (hno : NewobjectC Heap (label "type__" + 100288).toBitVec 32 S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
-        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
         ∃ p ps pt p1 p2 : BitVec 64, (Eq (in0.At s.regs.rax.toBitVec) ⋆ Eq (in1.At (s.regs.rax.toBitVec + 8))
           ⋆ Eq ((Int.toBytes 8 p.toInt).At (s.regs.rax.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 24)) ⋆ Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 32))
@@ -98,7 +98,7 @@ theorem ad_accept_main (k : Nat) (hk : PrysmAttestationDataUnmarshalSSZ.IsInfixA
           ⋆ Eq ((Int.toBytes 8 32).At (ps + 24)) ⋆ Eq (sroot.At p1)
           ⋆ Eq (te.At pt) ⋆ Eq ((Int.toBytes 8 p2.toInt).At (pt + 8)) ⋆ Eq ((Int.toBytes 8 32).At (pt + 16))
           ⋆ Eq ((Int.toBytes 8 32).At (pt + 24)) ⋆ Eq (troot.At p2)
-          ⋆ Heap (avail - 160) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Heap (avail - 160) ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hsp hlen ⊢
@@ -174,14 +174,14 @@ theorem ad_accept_main (k : Nat) (hk : PrysmAttestationDataUnmarshalSSZ.IsInfixA
   refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 20 + 1)) 32 avail scratch (spa ++ spb) _ rfl (by simp) (by rfl) (by omega)
     (by unfold maxAlloc; omega) (by omega) hsc (by simp [hspa, hspb])
     (by dsimp only; rw [ad_sp, ad_sp8 _ _ _ hspa hspb]; ecancel)) ?_
-  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, -, -, stk2, sm2, hstk2, hsm2, Hm2⟩
+  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hr14c2, -, stk2, sm2, hstk2, hsm2, Hm2⟩
   rw [ad_sp, ad_sp24 _ _ hsm2] at Hm2
   dsimp only at hpc2 hrsp2 Hm2
   subst hpc2
   obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,
     zmms2, flags2, mem2⟩ := d2
-  simp only at hrsp2 Hm2
-  subst hrsp2
+  simp only at hrsp2 hr14c2 Hm2
+  subst hrsp2 hr14c2
   simp only [Nat.one_mul] at Hm2
   kat hk PrysmAttestationDataUnmarshalSSZ 21
   rw [ad_g, ad_8]
@@ -240,8 +240,8 @@ theorem ad_accept_main (k : Nat) (hk : PrysmAttestationDataUnmarshalSSZ.IsInfixA
   subst hpc3
   obtain ⟨⟨rax3, rbx3, rcx3, rdx3, rsi3, rdi3, rsp3, rbp3, r83, r93, r103, r113, r123, r133, r143, r153⟩,
     zmms3, flags3, mem3⟩ := d3
-  simp only at hrsp3 Hm3
-  subst hrsp3
+  simp only at hrsp3 _hmr143 Hm3
+  subst hrsp3 _hmr143
   rw [show (16 : BitVec 64) + rbx.toBitVec = rbx.toBitVec + 16 from BitVec.add_comm _ _] at Hm3
   kat hk PrysmAttestationDataUnmarshalSSZ 38
   rw [ad_g, ad_8]
@@ -287,14 +287,14 @@ theorem ad_accept_main (k : Nat) (hk : PrysmAttestationDataUnmarshalSSZ.IsInfixA
   rw [ad_slot'] at *
   refine eventually_trans _ _ _ _ (hno _ (Host.addrOf (k + 54 + 1)) (avail - 32) stk3 (sm2.take 8) _ rfl (by omega) hstk3
     (by simp [hsm2]) (by dsimp only; rw [ad_sp]; ecancel)) ?_
-  rintro ⟨d4, pc4⟩ ⟨hpc4, hrsp4, -, -, stk4, sn4, hstk4, hsn4, Hm4⟩
+  rintro ⟨d4, pc4⟩ ⟨hpc4, hrsp4, hr14c4, -, stk4, sn4, hstk4, hsn4, Hm4⟩
   rw [ad_sp] at Hm4
   dsimp only at hpc4 hrsp4 Hm4
   subst hpc4
   obtain ⟨⟨rax4, rbx4, rcx4, rdx4, rsi4, rdi4, rsp4, rbp4, r84, r94, r104, r114, r124, r134, r144, r154⟩,
     zmms4, flags4, mem4⟩ := d4
-  simp only at hrsp4 Hm4
-  subst hrsp4
+  simp only at hrsp4 hr14c4 Hm4
+  subst hrsp4 hr14c4
   rw [cpObj_sep] at Hm4
   kat hk PrysmAttestationDataUnmarshalSSZ 55
   apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
@@ -350,14 +350,14 @@ theorem ad_accept_main (k : Nat) (hk : PrysmAttestationDataUnmarshalSSZ.IsInfixA
     (by omega)
     (by unfold maxAlloc; omega) (by omega) hstk4 (by simp [hsn4, hsm2])
     (by dsimp only; rw [ad_sp, ad_sp8 _ _ _ hsn4 (by simp [hsm2])]; ecancel)) ?_
-  rintro ⟨d5, pc5⟩ ⟨hpc5, hrsp5, -, -, stk5, sm5, hstk5, hsm5, Hm5⟩
+  rintro ⟨d5, pc5⟩ ⟨hpc5, hrsp5, hr14c5, -, stk5, sm5, hstk5, hsm5, Hm5⟩
   rw [ad_sp, ad_sp24 _ _ hsm5] at Hm5
   dsimp only at hpc5 hrsp5 Hm5
   subst hpc5
   obtain ⟨⟨rax5, rbx5, rcx5, rdx5, rsi5, rdi5, rsp5, rbp5, r85, r95, r105, r115, r125, r135, r145, r155⟩,
     zmms5, flags5, mem5⟩ := d5
-  simp only at hrsp5 Hm5
-  subst hrsp5
+  simp only at hrsp5 hr14c5 Hm5
+  subst hrsp5 hr14c5
   simp only [Nat.one_mul] at Hm5
   kat hk PrysmAttestationDataUnmarshalSSZ 76
   rw [ad_g, ad_m24]
@@ -415,8 +415,8 @@ theorem ad_accept_main (k : Nat) (hk : PrysmAttestationDataUnmarshalSSZ.IsInfixA
   subst hpc6
   obtain ⟨⟨rax6, rbx6, rcx6, rdx6, rsi6, rdi6, rsp6, rbp6, r86, r96, r106, r116, r126, r136, r146, r156⟩,
     zmms6, flags6, mem6⟩ := d6
-  simp only at hrsp6 Hm6
-  subst hrsp6
+  simp only at hrsp6 _hmr146 Hm6
+  subst hrsp6 _hmr146
   rw [show (56 : BitVec 64) + rbx.toBitVec = rbx.toBitVec + 56 from BitVec.add_comm _ _] at Hm6
   kat hk PrysmAttestationDataUnmarshalSSZ 93
   rw [ad_g, ad_m24]
@@ -462,14 +462,14 @@ theorem ad_accept_main (k : Nat) (hk : PrysmAttestationDataUnmarshalSSZ.IsInfixA
   rw [ad_slot'] at *
   refine eventually_trans _ _ _ _ (hno _ (Host.addrOf (k + 109 + 1)) (avail - 32 - 32 - 32) stk6 (sm5.take 8) _ rfl (by omega) hstk6
     (by simp [hsm5]) (by dsimp only; rw [ad_sp]; ecancel)) ?_
-  rintro ⟨d7, pc7⟩ ⟨hpc7, hrsp7, -, -, stk7, sn7, hstk7, hsn7, Hm7⟩
+  rintro ⟨d7, pc7⟩ ⟨hpc7, hrsp7, hr14c7, -, stk7, sn7, hstk7, hsn7, Hm7⟩
   rw [ad_sp] at Hm7
   dsimp only at hpc7 hrsp7 Hm7
   subst hpc7
   obtain ⟨⟨rax7, rbx7, rcx7, rdx7, rsi7, rdi7, rsp7, rbp7, r87, r97, r107, r117, r127, r137, r147, r157⟩,
     zmms7, flags7, mem7⟩ := d7
-  simp only at hrsp7 Hm7
-  subst hrsp7
+  simp only at hrsp7 hr14c7 Hm7
+  subst hrsp7 hr14c7
   rw [cpObj_sep] at Hm7
   kat hk PrysmAttestationDataUnmarshalSSZ 110
   apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
@@ -526,14 +526,14 @@ theorem ad_accept_main (k : Nat) (hk : PrysmAttestationDataUnmarshalSSZ.IsInfixA
     (by rfl) (by omega)
     (by unfold maxAlloc; omega) (by omega) hstk7 (by simp [hsn7, hsm5])
     (by dsimp only; rw [ad_sp, ad_sp8 _ _ _ hsn7 (by simp [hsm5])]; ecancel)) ?_
-  rintro ⟨d8, pc8⟩ ⟨hpc8, hrsp8, -, -, stk8, sm8, hstk8, hsm8, Hm8⟩
+  rintro ⟨d8, pc8⟩ ⟨hpc8, hrsp8, hr14c8, -, stk8, sm8, hstk8, hsm8, Hm8⟩
   rw [ad_sp, ad_sp24 _ _ hsm8] at Hm8
   dsimp only at hpc8 hrsp8 Hm8
   subst hpc8
   obtain ⟨⟨rax8, rbx8, rcx8, rdx8, rsi8, rdi8, rsp8, rbp8, r88, r98, r108, r118, r128, r138, r148, r158⟩,
     zmms8, flags8, mem8⟩ := d8
-  simp only at hrsp8 Hm8
-  subst hrsp8
+  simp only at hrsp8 hr14c8 Hm8
+  subst hrsp8 hr14c8
   simp only [Nat.one_mul] at Hm8
   kat hk PrysmAttestationDataUnmarshalSSZ 132
   rw [ad_g, ad_m24]
@@ -591,8 +591,8 @@ theorem ad_accept_main (k : Nat) (hk : PrysmAttestationDataUnmarshalSSZ.IsInfixA
   subst hpc9
   obtain ⟨⟨rax9, rbx9, rcx9, rdx9, rsi9, rdi9, rsp9, rbp9, r89, r99, r109, r119, r129, r139, r149, r159⟩,
     zmms9, flags9, mem9⟩ := d9
-  simp only at hrsp9 Hm9
-  subst hrsp9
+  simp only at hrsp9 _hmr149 Hm9
+  subst hrsp9 _hmr149
   rw [show (96 : BitVec 64) + rbx.toBitVec = rbx.toBitVec + 96 from BitVec.add_comm _ _] at Hm9
   kat hk PrysmAttestationDataUnmarshalSSZ 148
   rw [ad_g, ad_m24]
@@ -645,7 +645,7 @@ theorem ad_accept_main (k : Nat) (hk : PrysmAttestationDataUnmarshalSSZ.IsInfixA
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
   simp only [show Int.toBytes 8 (BitVec.toInt (32 : BitVec 64)) = Int.toBytes 8 32 by decide,
     show avail - 32 - 32 - 32 - 32 - 32 = avail - 160 by omega] at H41
-  refine ⟨trivial, ?_, ?_, ?_, ?_, rax2.toBitVec, rax4.toBitVec, rax7.toBitVec, rax5.toBitVec, rax8.toBitVec, ?_⟩
+  refine ⟨trivial, ?_, ?_, ?_, ?_, ?_, rax2.toBitVec, rax4.toBitVec, rax7.toBitVec, rax5.toBitVec, rax8.toBitVec, ?_⟩
   all_goals first
     | trivial | rfl
     | (apply UInt64.toBitVec_inj.mp; simp; done)
