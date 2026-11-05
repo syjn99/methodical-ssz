@@ -120,7 +120,7 @@ Go 1.26.3 `runtime/slice.go`의 `growslice`와 `nextslicecap`을 읽고 만들�
 
 ## 5. X6. 링크 검사와 부정 시험 도구 (astra 필수 6·7)
 
-시간: 15:20–15:40, 20분.
+시간: 15:20–15:28, 8분.
 
 ### 5.1 `link/check.py`
 
