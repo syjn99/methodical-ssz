@@ -1,0 +1,50 @@
+start 01:29:09 tip 440e079
+         23654676520  instructions retired
+         18291753466  cycles elapsed
+           253667808  peak memory footprint
+build end 01:32:43
+axioms.sh exit 0
+AXIOMS identical (    1297 lines)
+AXIOMS-ALL identical (       1 lines)
+../AXIOMS.txt:TOTAL 1296 NONSTANDARD 0
+../AXIOMS-ALL.txt:ALL-DECLARATIONS TOTAL 6648 NONSTANDARD 0
+--- forbidden tactics
+./tools/AxiomsAll.lean:18:1b-fix 7). It prints the declarations with a nonstandard axiom and the totals.
+./tools/Axioms.lean:17:an axiom other than `propext`, `Classical.choice`, `Quot.sound`.
+file sha256 c4d64cb9c7857dc3f055d669ba2da5c406572f40ddf0fbb22aabdd8cda7926de lean/Fk/Code.lean
+file sha256 301fde13bbe400a4bea2d241da13dfebf393cc113498ce40fbb6bb6b970a9afd AXIOMS.txt
+PASS all
+BUNDLE sha256 3b9e61bf4f515c224e9de9d1ae972a9fd295a7310330fcf7ffb614d9f415e756
+selftest drop an instruction: fail (expected fail) target.Scalars.UnmarshalSSZ: label L_target.Scalars.UnmarshalSSZ_37 not before the instruction at its address
+selftest change an immediate: fail (expected fail) all.S directives differ from the per-function .S files (first at directive 355: ('ins', 'cmp $0x10,%rcx') vs ('ins', 'cm
+selftest move a label: fail (expected fail) target.Scalars.UnmarshalSSZ: label L_target.Scalars.UnmarshalSSZ_37 not before the instruction at its address
+selftest objdump line without //: fail (expected fail) unrecognized objdump line (no GNU form?): '  types.ssz.go:12\t0x4b6920\t\tb810000000\t\tMOVL $0x10, AX'
+selftest wrong global offset: fail (expected fail) target.Scalars.UnmarshalSSZ: ssz.ErrSize+0 = 0x5cce30, instruction refers to 0x5cce38
+selftest padding nop -> retq: fail (expected fail) reassembly mismatch (see DIFF FAIL lines)
+selftest all.S instruction changed: fail (expected fail) all.S directives differ from the per-function .S files (first at directive 355: ('ins', 'cmp $0x11,%rcx') vs ('ins', 'cm
+selftest stale SHash.lean: fail (expected fail) lean/Fk/SHash.lean is stale; run link/shash.sh (first: ('ca716328afeae6a9217d7ca0c7d777f2ddaece031a1d5d2a092a0669be4b3d0
+selftest hashes only in a comment: fail (expected fail) lean/Fk/SHash.lean is stale; run link/shash.sh (0 vs 38 files)
+selftest unchanged copy: pass (expected pass) 
+--- ELF sha
+go: go version go1.26.3 darwin/arm64, GOAMD64=v1
+elf sha256: 9c850c97066b9d33d6e4c5ef0a385dcbe2c984ae774a527cdedd18d2b72ac501
+objdump sha256: aa08e280dfda0e46b4675b91b01ef793849fb2ec86a19ce676a60a89c0597fa7
+offset | target.ListU64.UnmarshalSSZ.S:15 'cmp $0x4,%rdx' -> 'cmp $0x8,%rdx' | lu_accept_main (Fk/LuAccept.lean:29-287) | exit 1 | FAIL | ok | error: Fk/LuAccept.lean:127:16: unsolved goals
+maxlen | target.ListU64.UnmarshalSSZ.S:28 'jg L_target.ListU64.UnmarshalSSZ_ce' -> 'nop' | lu_reject_toobig_main (Fk/LuRejectCall.lean:100-339) | exit 1 | FAIL | ok | error: Fk/LuRejectCall.lean:197:6: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+loop | target.FixedVec.UnmarshalSSZ.S:47 'cmp $0x4,%rax' -> 'cmp $0x3,%rax' | fv_iter (Fk/FvLoop.lean:19-107) | exit 1 | FAIL | ok | error: Fk/FvLoop.lean:50:66: Type mismatch: After simplification, term
+gsnum | target.BitL.UnmarshalSSZ.S:76 'mov %rbx,%rdi' -> 'mov %rcx,%rdi' | bl_accept_main (Fk/BlAccept.lean:41-395) | exit 1 | FAIL | ok | error: Fk/BlAccept.lean:241:21: unsolved goals
+nilerr | target.ListC.UnmarshalSSZ.S:165 'jne L_target.ListC.UnmarshalSSZ_2e7' -> 'je L_target.ListC.UnmarshalSSZ_2e7' | lc_reject_zero_main (Fk/LcReject.lean:307-489) | exit 1 | FAIL | ok | error: Fk/LcReject.lean:434:16: unsolved goals
+vbvje | ssz.ValidateBitvector.S:26 'je L_ssz.ValidateBitvector_9c' -> 'jne L_ssz.ValidateBitvector_9c' | vbv_accept_main (Fk/Vbv.lean:110-233) | exit 1 | FAIL | ok | error: Fk/Vbv.lean:208:8: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+bvnochk | target.BitVec.UnmarshalSSZ.S:34 'jne L_target.BitVec.UnmarshalSSZ_b3' -> 'jmpq L_target.BitVec.UnmarshalSSZ_b9' | bv_reject_padding_main (Fk/BvSpec.lean:470-675) | exit 1 | FAIL | ok | error: Fk/BvSpec.lean:655:2: Tactic `split` failed: Could not split an `if` or `match` expression in the goal
+blmnochk | target.BitL.MarshalSSZTo.S:49 'jne L_target.BitL.MarshalSSZTo_102' -> 'jmpq L_target.BitL.MarshalSSZTo_118' | bl_marshal_reject_main (Fk/BlMarshal.lean:364-603) | exit 1 | FAIL | ok | error: Fk/BlMarshal.lean:574:2: Tactic `split` failed: Could not split an `if` or `match` expression in the goal
+control | target.FixedVec.UnmarshalSSZ.S:47 'cmp $0x4,%rax' -> 'cmp $0x4,%rax' | fv_iter (Fk/FvLoop.lean:19-107) | exit 0 | PASS | ok | 
+nopret | target.BitVec.UnmarshalSSZ.S:8 'nop' -> 'retq' (also all.S, SHash regenerated) | link/check.py (d) | exit 1 | FAIL | ok | DIFF (d) target.BitVec.UnmarshalSSZ 0x4b7457 FAIL: elf 660f1f840000000000 asm c3 nopw (%rax,%rax,1) -> retq | (9, 'nopw (%rax,%rax)')
+FAIL
+FAIL	github.com/OffchainLabs/methodical-ssz/fv/kraken/semtest	0.559s
+FAIL
+end 01:39:08
+--- main theorems
+      53
+--- runs witnesses
+      49
+end2 01:39:08

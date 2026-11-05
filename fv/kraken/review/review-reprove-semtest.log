@@ -1,0 +1,7 @@
+--- FAIL: TestF1BitvectorPadding (0.00s)
+    f12_test.go:17: F1 not reproduced: decoder rejects 0x10: J: bitvector padding bits are not zero
+--- FAIL: TestF2BitlistByteLimit (0.00s)
+    f12_test.go:28: F2 not reproduced: encoder rejects: B: unexpected number of bytes, got 258 but found 257
+FAIL
+FAIL	github.com/OffchainLabs/methodical-ssz/fv/kraken/semtest	0.441s
+FAIL
