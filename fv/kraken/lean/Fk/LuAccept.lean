@@ -56,10 +56,22 @@ theorem lu_accept_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k
     (hms : MakesliceC Heap (label "type__" + 49120).toBitVec 8 S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0 ∧
-        ∃ p : BitVec 64, (Eq ((Int.toBytes 8 p.toInt).At s.regs.rax.toBitVec)
+        st.data.regs.rsp = s.regs.rsp + 8 ∧
+        ∃ (p : BitVec 64) (fp' s28' s30' s38' s90' s98' rslot' scratch' : List UInt8),
+        fp'.length = 8 ∧ s28'.length = 8 ∧ s30'.length = 8 ∧ s38'.length = 8 ∧ s90'.length = 8 ∧
+        s98'.length = 8 ∧ rslot'.length = 8 ∧ scratch'.length = S ∧
+        (Eq ((Int.toBytes 8 p.toInt).At s.regs.rax.toBitVec)
           ⋆ Eq ((Int.toBytes 8 (n : Int)).At (s.regs.rax.toBitVec + 8))
           ⋆ Eq ((Int.toBytes 8 (n : Int)).At (s.regs.rax.toBitVec + 16)) ⋆ Eq (bs.At p)
-          ⋆ Heap (avail - 8 * n) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Heap (avail - 8 * n)
+          ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+          ⋆ Eq (fp'.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s28'.At (s.regs.rsp.toBitVec - 96))
+          ⋆ Eq (s30'.At (s.regs.rsp.toBitVec - 88)) ⋆ Eq (s38'.At (s.regs.rsp.toBitVec - 80))
+          ⋆ Eq (s90'.At (s.regs.rsp.toBitVec + 8)) ⋆ Eq (s98'.At (s.regs.rsp.toBitVec + 16))
+          ⋆ Eq (rslot'.At (s.regs.rsp.toBitVec - 144)) ⋆ Eq (scratch'.At (s.regs.rsp.toBitVec - 144 - BitVec.ofNat 64 S))
+          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+          ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec) ⋆ Eq (bs.At (s.regs.rbx.toBitVec + 4))
+          ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hsp hlen hcap hcap63 ⊢
@@ -256,7 +268,16 @@ theorem lu_accept_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k
   apply Eventually.done
   have hnI : nV.toInt = (n : Int) := by rw [BitVec.toInt_eq_toNat_of_lt (by omega), hnN]
   rw [hnI] at Hm2
-  refine ⟨rfl, ?_, ?_, rax1.toBitVec, ?_⟩
+  refine ⟨rfl, ?_, ?_, ?_, rax1.toBitVec, Int.toBytes 8 rbp.toBitVec.toInt, Int.toBytes 8 (n : Int),
+    Int.toBytes 8 cV.toInt, Int.toBytes 8 dV.toInt, Int.toBytes 8 rax.toBitVec.toInt, Int.toBytes 8 rbx.toBitVec.toInt,
+    Int.toBytes 8 (Host.addrOf (k + 35 + 1)).toBitVec.toInt, stk1,
+    ?l1, ?l2, ?l3, ?l4, ?l5, ?l6, ?l7, ?l8, ?mem⟩
   · apply UInt64.toBitVec_inj.mp; simp
   · apply UInt64.toBitVec_inj.mp; simp
-  · dsimp only; exact sep_true (by ecancel)
+  · apply UInt64.toBitVec_inj.mp; simp
+  case mem =>
+    dsimp only
+    simp only [Std.ExtHashMap.sep_emp, Width.bits, Width.bytes] at Hm2
+    rw [hbsd]
+    ecancel
+  all_goals first | exact hstk1 | simp [Int.toBytes_length]

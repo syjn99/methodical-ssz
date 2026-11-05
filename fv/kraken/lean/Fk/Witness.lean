@@ -166,23 +166,20 @@ theorem witness_mem (n : Nat) (bs : List UInt8) (hbs : bs.length = 8 * n) (hn : 
   exact H6
 
 /-- **Non-vacuity.** In `witnessHost`, from the state `s0 n bs`, the real
-ListU64.UnmarshalSSZ code (index 5) returns nil with the receiver set to the
-n input elements. Every premise of `lu_accept_main` is proved here, the
+ListU64.UnmarshalSSZ code (index 5) runs to its return address and returns nil
+(`lu_accept_main` gives the receiver and memory). Every premise of `lu_accept_main` is proved here, the
 makeslice contract by `bump_makeslice`. -/
 theorem lu_accept_runs (n : Nat) (hn : n ≤ 16) (bs : List UInt8) (hbs : bs.length = 8 * n)
     (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0 ∧
-        ∃ p : BitVec 64, (Eq ((Int.toBytes 8 p.toInt).At (s0 n bs zmms flags).regs.rax.toBitVec)
-          ⋆ Eq ((Int.toBytes 8 (n : Int)).At ((s0 n bs zmms flags).regs.rax.toBitVec + 8))
-          ⋆ Eq ((Int.toBytes 8 (n : Int)).At ((s0 n bs zmms flags).regs.rax.toBitVec + 16)) ⋆ Eq (bs.At p)
-          ⋆ bumpHeap (128 - 8 * n) ⋆ fun _ => True) st.data.dmem)
+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0)
       ⟨s0 n bs zmms flags, Host.addrOf 5⟩ :=
-  lu_accept_main 5 hk5 hf5 bs n hbs hn (s0 n bs zmms flags) 0 0
+  eventually_trans _ _ _ _ (lu_accept_main 5 hk5 hf5 bs n hbs hn (s0 n bs zmms flags) 0 0
     (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl
     (fun _ => True) 0 [] rfl bumpHeap 128 (witness_mem n bs hbs hn zmms flags)
     (by simp [s0]) (by simp [s0]) (by simp [s0]; omega) (by simp [s0]) (by simp [s0]; omega) (by omega)
-    (bump_makeslice 198 hk198 hf198 _)
+    (bump_makeslice 198 hk198 hf198 _))
+    (fun _ h => Eventually.done _ ⟨h.1, h.2.1, h.2.2.1⟩)
 
 /-- The three sizes the brief names: empty, one element, sixteen (the maximum). -/
 example (z : RegZmms) (f : StatusFlags) := lu_accept_runs 0 (by omega) [] rfl z f

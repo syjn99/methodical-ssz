@@ -36,9 +36,15 @@ theorem sc_accept_main (k : Nat) (hk : ScalarsUnmarshalSSZ.IsInfixAt Host.prog k
     (hlen : s.regs.rcx = 16) (hb4 : b4 = [0] ∨ b4 = [1]) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
+        ∧ st.data.regs.rsp = s.regs.rsp + 8
         ∧ (Eq (b0.At s.regs.rax.toBitVec) ⋆ Eq (b1.At (s.regs.rax.toBitVec + 2))
           ⋆ Eq (b2.At (s.regs.rax.toBitVec + 4)) ⋆ Eq (b3.At (s.regs.rax.toBitVec + 8))
-          ⋆ Eq (b4.At (s.regs.rax.toBitVec + 16)) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Eq (b4.At (s.regs.rax.toBitVec + 16))
+          ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+          ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
+          ⋆ Eq (b0.At s.regs.rbx.toBitVec) ⋆ Eq (b1.At (s.regs.rbx.toBitVec + 1))
+          ⋆ Eq (b2.At (s.regs.rbx.toBitVec + 3)) ⋆ Eq (b3.At (s.regs.rbx.toBitVec + 7))
+          ⋆ Eq (b4.At (s.regs.rbx.toBitVec + 15)) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   have hL37 := label_in_fragment hk (j := 18) (by decide) (by decide) hL37f
   have hL3b := label_in_fragment hk (j := 20) (by decide) (by decide) hL3bf
@@ -146,11 +152,13 @@ theorem sc_accept_main (k : Nat) (hk : ScalarsUnmarshalSSZ.IsInfixAt Host.prog k
       toBytes_ofInt_ofBytes 64 8 rfl b3 h3l,
       show Int.toBytes 1 (BitVec.truncate 8 (0 : BitVec 64)).toInt = [0] by decide,
       show Int.toBytes 1 (BitVec.truncate 8 (1 : BitVec 64)).toInt = [1] by decide] at H6
-    refine ⟨?_, ?_, ?_, ?_⟩
+    refine ⟨?_, ?_, ?_, ?_, ?_⟩
     · simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]; rfl
     · simp
     · simp
-    · dsimp only; (try simp only [BitVec.ofNat_eq_ofNat] at H6 ⊢); exact sep_true (by ecancel)
+    · apply UInt64.toBitVec_inj.mp; simp
+    · dsimp only; (try simp only [BitVec.ofNat_eq_ofNat] at H6 ⊢); simp only [Std.ExtHashMap.sep_emp, Width.bits, Width.bytes] at H6
+      ecancel
 
   · -- E = true: jne not taken
     apply estep (isInfixAt_drop hk 15)
@@ -186,8 +194,10 @@ theorem sc_accept_main (k : Nat) (hk : ScalarsUnmarshalSSZ.IsInfixAt Host.prog k
       toBytes_ofInt_ofBytes 64 8 rfl b3 h3l,
       show Int.toBytes 1 (BitVec.truncate 8 (0 : BitVec 64)).toInt = [0] by decide,
       show Int.toBytes 1 (BitVec.truncate 8 (1 : BitVec 64)).toInt = [1] by decide] at H6
-    refine ⟨?_, ?_, ?_, ?_⟩
+    refine ⟨?_, ?_, ?_, ?_, ?_⟩
     · simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]; rfl
     · simp
     · simp
-    · dsimp only; (try simp only [BitVec.ofNat_eq_ofNat] at H6 ⊢); exact sep_true (by ecancel)
+    · apply UInt64.toBitVec_inj.mp; simp
+    · dsimp only; (try simp only [BitVec.ofNat_eq_ofNat] at H6 ⊢); simp only [Std.ExtHashMap.sep_emp, Width.bits, Width.bytes] at H6
+      ecancel

@@ -23,4 +23,11 @@ theorem sep_true {P F : DataMem → Prop} {m : DataMem} (h : (P ⋆ F) m) : (P �
   obtain ⟨m1, m2, h1, h2, hp, -⟩ := h
   exact ⟨m1, m2, h1, h2, hp, trivial⟩
 
+/-- Drop the last atom of a left-nested chain into the `True` frame. -/
+theorem sep_drop {Q X : DataMem → Prop} {m : DataMem} (h : ((Q ⋆ X) ⋆ fun _ => True) m) :
+    (Q ⋆ fun _ => True) m := by
+  rw [Std.ExtHashMap.sep_assoc] at h
+  obtain ⟨a, b, hu, hi, hq, -⟩ := h
+  exact ⟨a, b, hu, hi, hq, trivial⟩
+
 end Fk

@@ -66,10 +66,22 @@ theorem lu_unmarshal_accept_spec_k (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt
     ∃ g : ListU64, g.ok ∧ g.toValue = v ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0 ∧
-        ∃ p : BitVec 64, (Eq ((Int.toBytes 8 p.toInt).At s.regs.rax.toBitVec)
+        st.data.regs.rsp = s.regs.rsp + 8 ∧
+        ∃ (p : BitVec 64) (fp' s28' s30' s38' s90' s98' rslot' scratch' : List UInt8),
+        fp'.length = 8 ∧ s28'.length = 8 ∧ s30'.length = 8 ∧ s38'.length = 8 ∧ s90'.length = 8 ∧
+        s98'.length = 8 ∧ rslot'.length = 8 ∧ scratch'.length = S ∧
+        (Eq ((Int.toBytes 8 p.toInt).At s.regs.rax.toBitVec)
           ⋆ Eq ((Int.toBytes 8 (g.l.length : Int)).At (s.regs.rax.toBitVec + 8))
           ⋆ Eq ((Int.toBytes 8 (g.l.length : Int)).At (s.regs.rax.toBitVec + 16)) ⋆ Eq ((u64Bytes g.l).toList.At p)
-          ⋆ Heap (avail - 8 * g.l.length) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Heap (avail - 8 * g.l.length)
+          ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+          ⋆ Eq (fp'.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s28'.At (s.regs.rsp.toBitVec - 96))
+          ⋆ Eq (s30'.At (s.regs.rsp.toBitVec - 88)) ⋆ Eq (s38'.At (s.regs.rsp.toBitVec - 80))
+          ⋆ Eq (s90'.At (s.regs.rsp.toBitVec + 8)) ⋆ Eq (s98'.At (s.regs.rsp.toBitVec + 16))
+          ⋆ Eq (rslot'.At (s.regs.rsp.toBitVec - 144)) ⋆ Eq (scratch'.At (s.regs.rsp.toBitVec - 144 - BitVec.ofNat 64 S))
+          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+          ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec) ⋆ Eq ((u64Bytes g.l).toList.At (s.regs.rbx.toBitVec + 4))
+          ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨g, hg⟩, rfl, rfl⟩ := accepted_is_enc (G := LuG) (toV := fun g => g.1.toValue)
     (enc := fun g => luEncode g.1) luDesc_wellFormed (fun g => lu_serialize g.1 g.2)

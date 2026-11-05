@@ -45,9 +45,15 @@ theorem sc_unmarshal_accept_spec_k (k : Nat) (hk : ScalarsUnmarshalSSZ.IsInfixAt
     ∃ g : Scalars, g.toValue = v ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
+        ∧ st.data.regs.rsp = s.regs.rsp + 8
         ∧ (Eq ((scField g 0).At s.regs.rax.toBitVec) ⋆ Eq ((scField g 1).At (s.regs.rax.toBitVec + 2))
           ⋆ Eq ((scField g 2).At (s.regs.rax.toBitVec + 4)) ⋆ Eq ((scField g 3).At (s.regs.rax.toBitVec + 8))
-          ⋆ Eq ((scField g 4).At (s.regs.rax.toBitVec + 16)) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Eq ((scField g 4).At (s.regs.rax.toBitVec + 16))
+          ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+          ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
+          ⋆ Eq ((scField g 0).At s.regs.rbx.toBitVec) ⋆ Eq ((scField g 1).At (s.regs.rbx.toBitVec + 1))
+          ⋆ Eq ((scField g 2).At (s.regs.rbx.toBitVec + 3)) ⋆ Eq ((scField g 3).At (s.regs.rbx.toBitVec + 7))
+          ⋆ Eq ((scField g 4).At (s.regs.rbx.toBitVec + 15)) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨g, rfl, rfl⟩ := accepted_is_enc (toV := Scalars.toValue) (enc := scEncode) scDesc_wellFormed
     sc_serialize (fun v h => sc_toValue_surjective v h) hd
