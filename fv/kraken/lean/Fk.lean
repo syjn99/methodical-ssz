@@ -102,3 +102,4 @@ import Fk.WitLuMR
 import Fk.WitFvMR
 import Fk.WitCpMR
 import Fk.Compose
+import Fk.Regress

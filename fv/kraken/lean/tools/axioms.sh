@@ -10,3 +10,7 @@ grep -q '^TOTAL ' "$out.tmp"
 mv "$out.tmp" "$out"
 tail -1 "$out"
 grep -q 'NONSTANDARD 0$' "$out"
+# All-declarations scope (defs, instances, internal auxiliary declarations too).
+lake env lean tools/AxiomsAll.lean > ../AXIOMS-ALL.txt
+tail -1 ../AXIOMS-ALL.txt
+grep -q 'NONSTANDARD 0$' ../AXIOMS-ALL.txt
