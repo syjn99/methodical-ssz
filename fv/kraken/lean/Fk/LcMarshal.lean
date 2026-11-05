@@ -763,3 +763,304 @@ theorem lcm4_loop (k : Nat) (hk : ListCMarshalSSZTo.IsInfixAt Host.prog k)
         (by rw [hk4.rbx]; exact hrbx) (by rw [hk4.rdi]; exact hrdi) (by rw [hk4.rsp]; exact hrsp) h5 h6 h9) ?_
     rintro st ⟨q1, q2, q3, q4, hk4', q5⟩
     exact Eventually.done _ ⟨q1, q2, q3, q4, hk4.trans hk4', q5⟩
+
+/-- The element pointer and the first byte of the element's slice pointer
+(loop 1 reads them) from the equation form of the objects. -/
+theorem lc_acc1 (A : BitVec 64) (ps qs : List (BitVec 64)) (gs : List ListU64)
+    (hps : ps.length = gs.length) (hqs : qs.length = gs.length) (Objs : DataMem → Prop)
+    (hObjs : ∀ j (hj : j < gs.length), ∃ Rest,
+      Objs = lcElem A j (ps[j]'(by omega)) (qs[j]'(by omega)) gs[j] ⋆ Rest)
+    (m : DataMem) (hm : Objs m) (i : Nat) (hi : i < gs.length) :
+    (Eq ((Int.toBytes 8 (ps[i]'(by omega)).toInt).At (A + BitVec.ofNat 64 (8 * i)))
+      ⋆ Eq (((Int.toBytes 8 (qs[i]'(by omega)).toInt).take 1).At (ps[i]'(by omega))) ⋆ fun _ => True) m := by
+  obtain ⟨Rest, hRest⟩ := hObjs i hi
+  rw [hRest] at hm
+  simp only [lcElem] at hm
+  generalize ps[i]'(by omega) = p at hm ⊢
+  have hl : (Int.toBytes 8 (qs[i]'(by omega)).toInt).length = 8 := Int.toBytes_length 8 _
+  generalize Int.toBytes 8 (qs[i]'(by omega)).toInt = qb at hm hl ⊢
+  rw [← List.take_append_drop 1 qb, Mem.At_append_sep _ _ _ (by simp; omega)] at hm
+  exact sep_mono_right' (fun _ _ => trivial) ((congrFun (by ecancel) m).mp hm)
+
+/-- The element pointer and the element's length (loop 2 reads them). -/
+theorem lc_acc2 (A : BitVec 64) (ps qs : List (BitVec 64)) (gs : List ListU64)
+    (hps : ps.length = gs.length) (hqs : qs.length = gs.length) (Objs : DataMem → Prop)
+    (hObjs : ∀ j (hj : j < gs.length), ∃ Rest,
+      Objs = lcElem A j (ps[j]'(by omega)) (qs[j]'(by omega)) gs[j] ⋆ Rest)
+    (m : DataMem) (hm : Objs m) (i : Nat) (hi : i < gs.length) :
+    (Eq ((Int.toBytes 8 (ps[i]'(by omega)).toInt).At (A + BitVec.ofNat 64 (8 * i)))
+      ⋆ Eq ((Int.toBytes 8 (gs[i].l.length : Int)).At ((ps[i]'(by omega)) + 8)) ⋆ fun _ => True) m := by
+  obtain ⟨Rest, hRest⟩ := hObjs i hi
+  rw [hRest] at hm
+  simp only [lcElem] at hm
+  generalize ps[i]'(by omega) = p at hm ⊢
+  exact sep_mono_right' (fun _ _ => trivial) ((congrFun (by ecancel) m).mp hm)
+
+theorem jg4_false (a : BitVec 64) (af : Bool) (h : a.toNat ≤ 4) :
+    CondCode.g.interp (StatusFlags.from_result (a - 4)
+      { cf := BitVec.unsigned (a - 4) != a.unsigned - BitVec.unsigned (4 : BitVec 64), af := af,
+        of := BitVec.toInt (a - 4) != a.toInt - BitVec.toInt (4 : BitVec 64) }) = false := by
+  have ta : a.toInt = a.toNat := BitVec.toInt_eq_toNat_of_lt (by omega)
+  have t4 : BitVec.toInt (4 : BitVec 64) = 4 := by decide
+  have hs : (a - 4).toInt = (a.toNat : Int) - 4 := by
+    rw [BitVec.toInt_sub, ta, t4]; apply Int.bmod_eq_of_le <;> omega
+  by_cases h4 : a.toNat = 4
+  · have : a - 4 = 0#64 := by apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_sub]; omega
+    simp [CondCode.interp, StatusFlags.from_result]
+    intro h1; exact absurd this h1
+  · have hm : (a - 4).msb = true := by
+      rw [BitVec.msb_eq_decide]; simp [BitVec.toNat_sub]; omega
+    simp [CondCode.interp, StatusFlags.from_result, ta]
+    intro _
+    rw [show (a - 4#64).msb = true from hm, Int.bmod_eq_of_le (by omega) (by omega)]; simp
+
+theorem lcm_y96 (x : BitVec 64) : x - 72 = x - 8#64 - 160 + 96 := by bv_omega
+theorem lcm_y88 (x : BitVec 64) : x - 80 = x - 8#64 - 160 + 88 := by bv_omega
+theorem lcm_y144 (x : BitVec 64) : x - 24 = x - 8#64 - 160 + 144 := by bv_omega
+
+theorem lcm_pop (x : BitVec 64) : (160 : BitVec 64) + (x - 8#64 - 160) = x - 8 := by bv_omega
+theorem lcm_ret (x : BitVec 64) : x - 8 + 8#64 = x := by bv_omega
+
+theorem toNat_add_neg40 (x : BitVec 64) (h : 40 ≤ x.toNat) : (x + -40).toNat = x.toNat - 40 := by
+  rw [← BitVec.sub_eq_add_neg, BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simpa using h)]; rfl
+
+set_option maxHeartbeats 16000000 in
+set_option maxRecDepth 200000 in
+/-- `ListC.MarshalSSZTo`, fast path (cap ≥ the encoded length, n ≤ 4): it
+returns (buf ++ lcEncode, nil). The items array at A holds the element
+pointers `ps`; element j is a ListU64 object at `ps[j]` with slice pointer
+`qs[j]` (`lcElem`). Premises the Go caller guarantees: receiver ≠ nil and
+mapped, non-nil element pointers (the Go code dereferences each one, loop 1),
+`len(dst) ≤ cap(dst) < 2^63`. Premises that are fast-path only: the stack
+guard (lea -40), cap ≥ len(dst) + 4 + 4n + Σ(4 + 8 len). -/
+theorem lc_marshal_main (k : Nat) (hk : ListCMarshalSSZTo.IsInfixAt Host.prog k)
+    (hf : LabelsFresh ListCMarshalSSZTo k) (A : BitVec 64) (ps qs : List (BitVec 64)) (gs : List ListU64)
+    (hn : gs.length ≤ 4) (hps : ps.length = gs.length) (hqs : qs.length = gs.length) (hgs : ∀ g ∈ gs, g.ok)
+    (Objs : DataMem → Prop)
+    (hObjs : ∀ j (hj : j < gs.length), ∃ Rest,
+      Objs = lcElem A j (ps[j]'(by omega)) (qs[j]'(by omega)) gs[j] ⋆ Rest)
+    (pre o4 d1 dB : List UInt8) (ho4 : o4.length = 4) (hd1 : d1.length = 4 * gs.length)
+    (hdB : dB.length = lcS gs gs.length)
+    (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)
+    (fp s8 s16 s98 s68 s60 s58 s90 : List UInt8)
+    (hfp : fp.length = 8) (hs8 : s8.length = 8) (hs16 : s16.length = 8) (hs98 : s98.length = 8)
+    (hs68 : s68.length = 8) (hs60 : s60.length = 8) (hs58 : s58.length = 8) (hs90 : s90.length = 8)
+    (R : DataMem → Prop)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s8.At (s.regs.rsp.toBitVec + 8))
+      ⋆ Eq (s16.At (s.regs.rsp.toBitVec + 16)) ⋆ Eq (s98.At (s.regs.rsp.toBitVec - 16))
+      ⋆ Eq (s68.At (s.regs.rsp.toBitVec - 64)) ⋆ Eq (s60.At (s.regs.rsp.toBitVec - 72))
+      ⋆ Eq (s58.At (s.regs.rsp.toBitVec - 80)) ⋆ Eq (s90.At (s.regs.rsp.toBitVec - 24))
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+      ⋆ Eq ((Int.toBytes 8 A.toInt).At s.regs.rax.toBitVec)
+      ⋆ Eq ((Int.toBytes 8 (gs.length : Int)).At (s.regs.rax.toBitVec + 8)) ⋆ Objs
+      ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (o4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
+      ⋆ Eq (d1.At (s.regs.rbx.toBitVec + BitVec.ofNat 64 (s.regs.rcx.toNat + 4)))
+      ⋆ Eq (dB.At (s.regs.rbx.toBitVec + BitVec.ofNat 64 (s.regs.rcx.toNat + 4 + 4 * gs.length))) ⋆ R)
+    (hguard : guard.toNat + 40 < s.regs.rsp.toNat) (hsp : 208 ≤ s.regs.rsp.toNat)
+    (hcap : s.regs.rcx.toNat + 4 + 4 * gs.length + lcS gs gs.length ≤ s.regs.rdi.toNat)
+    (hcap63 : s.regs.rdi.toNat < 2 ^ 63) :
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = s.regs.rbx
+        ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 4 + 4 * gs.length + lcS gs gs.length
+        ∧ st.data.regs.rcx = s.regs.rdi ∧ st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
+        ∧ (Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq ([4, 0, 0, 0].At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
+          ⋆ Eq ((offTab (4 * gs.length) (gs.map luEncode)).At
+              (s.regs.rbx.toBitVec + BitVec.ofNat 64 (s.regs.rcx.toNat + 4)))
+          ⋆ Eq ((lcBodyL gs).At (s.regs.rbx.toBitVec + BitVec.ofNat 64 (s.regs.rcx.toNat + 4 + 4 * gs.length)))
+          ⋆ Objs ⋆ fun _ => True) st.data.dmem)
+      ⟨s, Host.addrOf k⟩ := by
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
+  simp only at h_mem hguard hsp hcap hcap63 hpre ⊢
+  have := rsp.toNat_lt_size; have := guard.toNat_lt_size; have := rcx.toNat_lt_size; have := rdi.toNat_lt_size
+  simp only [UInt64.size] at *
+  have hnI : (gs.length : Int) = (BitVec.ofNat 64 gs.length).toInt := (lcm_len _ (by omega)).symm
+  rw [hnI] at h_mem
+  kat hk ListCMarshalSSZTo 0
+  kat hk ListCMarshalSSZTo 1
+  kat hk ListCMarshalSSZTo 2
+  kat hk ListCMarshalSSZTo 3
+  apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk ListCMarshalSSZTo 4
+  split
+  case isTrue h =>
+    exfalso
+    rw [cmp_be_false _ _ _ _ (by rw [toNat_add_neg40 _ (by simp; omega)]; simp; omega)] at h
+    exact absurd h (by simp)
+  simp only [Effects.All]
+  kat hk ListCMarshalSSZTo 5
+  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)
+  intro m1 H1
+  simp only [Width.bytes, Width.bits] at H1
+  kunfold
+  kat hk ListCMarshalSSZTo 6
+  kat hk ListCMarshalSSZTo 7
+  kat hk ListCMarshalSSZTo 8
+  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s16 _ _ (by bv_omega) (by ecancel) (by exact hs16)
+  intro m2 H2
+  simp only [Width.bytes, Width.bits] at H2
+  kunfold
+  kat hk ListCMarshalSSZTo 9
+  apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s8 _ _ (by bv_omega) (by ecancel) (by exact hs8)
+  intro m3 H3
+  simp only [Width.bytes, Width.bits] at H3
+  kunfold
+  kat hk ListCMarshalSSZTo 10
+  kat hk ListCMarshalSSZTo 11
+  kat hk ListCMarshalSSZTo 12
+  kat hk ListCMarshalSSZTo 13
+  split
+  case isFalse h =>
+    exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.toNat_add] at h; omega
+  simp only [Effects.All]
+  klabel hk hf ListCMarshalSSZTo 24
+  kat hk ListCMarshalSSZTo 24
+  kat hk ListCMarshalSSZTo 25
+  rw [lum_off]
+  apply store_step _ _ _ _ _ o4 _ _ (by ecancel) (by exact ho4)
+  intro m4 H4
+  simp only [Width.bytes, Width.bits,
+    show Int.toBytes 4 (BitVec.truncate 32 (4 : BitVec 64)).toInt = [4, 0, 0, 0] by decide] at H4
+  kunfold
+  kat hk ListCMarshalSSZTo 26
+  apply load_step_at _ _ (rax.toBitVec + 8) _ _ (Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt) _ _ (by kaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+  kunfold
+  kat hk ListCMarshalSSZTo 27
+  apply load_step _ _ _ _ (Int.toBytes 8 A.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+  kunfold
+  kat hk ListCMarshalSSZTo 28
+  intro _
+  kat hk ListCMarshalSSZTo 29
+  klabel hk hf ListCMarshalSSZTo 36
+  have hO4 : (Objs ⋆ fun _ => True) m4 := by
+    refine sep_mono_right' (Q := ?Q) (fun _ _ => trivial) ?h
+    case h => ecancel
+  refine eventually_trans _ _ _ _ (lcm1_loop k hk hf A ps qs gs.length hn hps hqs gs.length 0 _ (by omega)
+    (by simp) (by show (BitVec.ofNat 64 gs.length).toNat = _; simp; omega) rfl
+    (fun i' hi' => sep_true_of_part hO4 (fun m' hm' => lc_acc1 A ps qs gs hps hqs Objs hObjs m' hm' i' hi'))) ?_
+  rintro ⟨e1, pc1⟩ ⟨hpc1, hk1, hm1⟩
+  dsimp only at hpc1 hk1 hm1
+  subst hpc1
+  obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
+    zmms1, flags1, mem1⟩ := e1
+  obtain ⟨k1a, k1b, k1d, k1di, k1sp, k1bp, k18, k19, k114⟩ := hk1
+  simp only at k1a k1b k1d k1di k1sp k1bp k18 k19 k114 hm1
+  subst k1a k1b k1d k1di k1sp k1bp k18 k19 k114 hm1
+  kat hk ListCMarshalSSZTo 39
+  kat hk ListCMarshalSSZTo 40
+  split
+  case isTrue h =>
+    exfalso; rw [jg4_false _ _ (by simp; omega)] at h; simp at h
+  simp only [Effects.All]
+  kat hk ListCMarshalSSZTo 41
+  apply store_step_at _ _ (rsp.toBitVec - 16) _ _ _ s98 _ _ (by bv_omega) (by ecancel) (by exact hs98)
+  intro m5 H5
+  simp only [Width.bytes, Width.bits] at H5
+  kunfold
+  kat hk ListCMarshalSSZTo 42
+  apply store_step_at _ _ (rsp.toBitVec - 64) _ _ _ s68 _ _ (by bv_omega) (by ecancel) (by exact hs68)
+  intro m6 H6
+  simp only [Width.bytes, Width.bits] at H6
+  kunfold
+  kat hk ListCMarshalSSZTo 43
+  kat hk ListCMarshalSSZTo 44
+  kshl64 2
+  kat hk ListCMarshalSSZTo 45
+  intro _
+  kat hk ListCMarshalSSZTo 46
+  klabel hk hf ListCMarshalSSZTo 62
+  refine eventually_trans _ _ _ _ (lcm2_loop k hk hf A rbx1.toBitVec ps gs hn hps hgs d1 hd1 rcx.toNat rdi1.toNat
+    (by omega) hcap63 Objs _ (fun m hm j hj => lc_acc2 A ps qs gs hps hqs Objs hObjs m hm j hj) gs.length 0 _ (by omega)
+    (by simp) (by show (BitVec.ofNat 64 gs.length).toNat = _; simp; omega) rfl
+    (by apply BitVec.eq_of_toNat_eq; simp [lcStart, BitVec.toNat_shiftLeft]; omega)
+    (by show (rcx.toBitVec + 4).toNat = _; simp [BitVec.toNat_add]; omega) rfl rfl
+    (by simp only [Nat.mul_zero, List.take_zero, List.nil_append, List.drop_zero]; ecancel)) ?_
+  rintro ⟨e2, pc2⟩ ⟨hpc2, hrdx2, hk2, Hm2⟩
+  dsimp only at hpc2 hrdx2 hk2 Hm2
+  subst hpc2
+  obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,
+    zmms2, flags2, mem2⟩ := e2
+  obtain ⟨k2a, k2b, k2di, k2sp, k2bp, k214⟩ := hk2
+  simp only at k2a k2b k2di k2sp k2bp k214 hrdx2 Hm2
+  subst k2a k2b k2di k2sp k2bp k214
+  kat hk ListCMarshalSSZTo 90
+  kat hk ListCMarshalSSZTo 91
+  apply load_step _ _ _ _ (Int.toBytes 8 A.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+  kunfold
+  kat hk ListCMarshalSSZTo 92
+  apply store_step_at _ _ (rsp.toBitVec - 16) _ _ _ (Int.toBytes 8 A.toInt) _ _ (by bv_omega) (by ecancel)
+    (by exact Int.toBytes_length 8 _)
+  intro m7 H7
+  simp only [Width.bytes, Width.bits] at H7
+  kunfold
+  kat hk ListCMarshalSSZTo 93
+  apply load_step_at _ _ (rax2.toBitVec + 8) _ _ (Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt) _ _ (by kaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+  kunfold
+  kat hk ListCMarshalSSZTo 94
+  apply store_step_at _ _ (rsp.toBitVec - 64) _ _ _ (Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt) _ _
+    (by bv_omega) (by ecancel) (by exact Int.toBytes_length 8 _)
+  intro m8 H8
+  simp only [Width.bytes, Width.bits] at H8
+  kunfold
+  kat hk ListCMarshalSSZTo 95
+  intro _
+  kat hk ListCMarshalSSZTo 96
+  intro _
+  kat hk ListCMarshalSSZTo 97
+  intro _
+  kat hk ListCMarshalSSZTo 98
+  kat hk ListCMarshalSSZTo 99
+  klabel hk hf ListCMarshalSSZTo 106
+  rw [lcm_y96, lcm_y88, lcm_y144] at H8
+  refine eventually_trans _ _ _ _ (lcm4_loop k hk hf A _ (rsp.toBitVec - 8#64 - 160) ps qs gs hn hps hqs hgs dB hdB
+    rcx.toNat _ (by omega)
+    hcap63 Objs _ hObjs gs.length 0 _ s60 s58 s90 (by omega) hs60 hs58 hs90 (by simp) rfl
+    (by show (BitVec.ofNat 64 gs.length).toNat = _; simp; omega) (by simp only [lcS, List.take_zero]; simp; omega)
+    rfl rfl (by kaddr) (by apply UInt64.toBitVec_inj.mp; simp) (by apply UInt64.toBitVec_inj.mp; simp)
+    (by simp only [lcS, List.take_zero, List.map_nil, List.sum_nil, List.nil_append, List.drop_zero]; ecancel)) ?_
+  rintro ⟨e3, pc3⟩ ⟨hpc3, hrdx3, hrcx3, hrsi3, hk4, s60', s58', s90', l60, l58, l90, Hm3⟩
+  dsimp only at hpc3 hrdx3 hrcx3 hrsi3 hk4 Hm3
+  subst hpc3
+  obtain ⟨⟨rax3, rbx3, rcx3, rdx3, rsi3, rdi3, rsp3, rbp3, r83, r93, r103, r113, r123, r133, r143, r153⟩,
+    zmms3, flags3, mem3⟩ := e3
+  obtain ⟨k4b, k4di, k4sp, k4bp, k414⟩ := hk4
+  simp only at k4b k4di k4sp k4bp k414 hrdx3 hrcx3 hrsi3 Hm3
+  subst k4b k4di k4sp k4bp k414 hrcx3 hrsi3
+  kat hk ListCMarshalSSZTo 183
+  kat hk ListCMarshalSSZTo 184
+  kat hk ListCMarshalSSZTo 185
+  kat hk ListCMarshalSSZTo 186
+  kat hk ListCMarshalSSZTo 187
+  kat hk ListCMarshalSSZTo 188
+  kat hk ListCMarshalSSZTo 189
+  kat hk ListCMarshalSSZTo 190
+  rw [lcm_pop]
+  apply load_step _ _ _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk ListCMarshalSSZTo 191
+  rw [lcm_ret]
+  apply load_step _ _ _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  apply Eventually.done
+  simp only
+  refine ⟨trivial, trivial, ?_, trivial, UInt64.toBitVec_inj.mp (by simp), trivial,
+    UInt64.toBitVec_inj.mp (by simp), trivial, ?_⟩
+  · show rdx3.toNat = _; omega
+  refine sep_mono_right' (Q := ?Q2) (fun _ _ => trivial) ?h2
+  case h2 => ecancel
+
+/-- **Marshal fast path against EthLib**: the bytes `lc_marshal_main` writes at
+`dst[len:]` (`[4, 0, 0, 0]`, the offset table, the element encodings) are the
+EthLib serialization of `g.toValue`. -/
+theorem lc_marshal_spec_k (g : ListCG) (hg : g.ok) :
+    serialize lcDesc g.toValue = .ok (lcEncode g) ∧
+    (lcEncode g).toList = [4, 0, 0, 0] ++ offTab (4 * g.items.length) (g.items.map luEncode) ++ lcBodyL g.items := by
+  refine ⟨lc_serialize g hg, ?_⟩
+  simp only [lcEncode, Array.toList_append, lcBody_toList, lcBodyL, List.append_assoc]
+  rfl
