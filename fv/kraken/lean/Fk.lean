@@ -95,3 +95,6 @@ import Fk.WitRjNeSh
 import Fk.WitRjNeOf
 import Fk.WitRjLcSh
 import Fk.WitRjLcOf
+import Fk.WitLcP
+import Fk.WitLcT
+import Fk.WitLuTb
