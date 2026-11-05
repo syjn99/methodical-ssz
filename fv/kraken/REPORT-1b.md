@@ -31,6 +31,8 @@ REPORT.md 1절은 `lu_accept_main`을 "수용 경로 전체"로 표시했다. �
 
 ## 2. B0: vcgen 브랜치 평가
 
+> **정정(재증명 R9, 2026-11-06).** B0 평가 명세의 spill 좌표가 틀렸다. `funspec … at s`의 `s`는 호출 전 상태이므로 spill 칸은 호출 전 `rsp + 8`이다(1b는 `rsp + 8`이 아니라 다른 오류가 있었고, 1b-fix는 `rsp + 16`으로 고쳤으나 그것도 틀렸다). 고친 명세에서 VC 16개 중 13개가 열린다. 도달 가능한 레이블 둘의 불변식이 `False`라 그 분기 VC는 명세 결함이다. 수치는 vcgen의 한계로 읽지 않는다. `vcgen/B0.md` 끝 절.
+
 **main에 남는다.** 상세는 `vcgen/B0.md`.
 - vcgen(sgraf812/kraken `a4cce2e`, `nightly-2026-10-29`)은 EthLib SSZ 폐포와 함께 빌드된다(262 s, 1.78 GB).
 - Go ABIInternal은 `CallingConvention` `⟨[.rsp, .r14], …⟩`로 표현된다.

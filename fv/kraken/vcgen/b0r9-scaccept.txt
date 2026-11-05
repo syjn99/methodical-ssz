@@ -1,0 +1,33 @@
+Vg/ScAccept.lean:62:23: error: `finish` has failed after reaching the threshold `(instances := 1000)`, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:62:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:62:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:62:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:62:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:62:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:62:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:62:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:62:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:62:23: error: `finish` has failed after reaching the threshold `(instances := 1000)`, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:62:23: error: `finish` has failed after reaching the threshold `(instances := 1000)`, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:62:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+Vg/ScAccept.lean:62:23: error: `finish` has failed after reaching the threshold `(instances := 1000)`, use `+verbose` to obtain diagnostic information
+       11.71 real         5.72 user         3.02 sys
+          1233059840  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              198115  page reclaims
+               17087  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+               14757  voluntary context switches
+               70921  involuntary context switches
+          5759145470  instructions retired
+          2991759970  cycles elapsed
+           112588712  peak memory footprint
+EXIT 1
+Fri Nov  6 01:05:20 IST 2026
