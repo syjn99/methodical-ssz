@@ -21,6 +21,8 @@
 | `lu_iter`, `lu_exit`, `lu_loop` | ListU64.UnmarshalSSZ 원소 루프 | 불변식과 귀납. 경계 검사 2개가 `panicBounds`로 가지 않음 | `lu_loop_body`, `lu_loop` |
 | `lu_accept_main` | ListU64.UnmarshalSSZ | 수용 경로 전체: 스택 검사, 입력 검사 4개, `makeslice` 호출(계약 가설), 쓰기 장벽 전역 읽기, 루프, 반환. 수신자 = (p, n, n), p의 배열 = 입력 원소 | `lu_accept` |
 
+> **정정 (1b, 2026-11-05).** 위 표의 `lu_accept_main`은 "수용 경로 전체"로 표시했지만 그 판은 공허했다. 계약 가설 `hms`가 모든 `cnt`와 모든 프레임 `F`에 양화되어 전제를 동시에 만족하는 상태가 없다(astra, `review/ReviewKraken.lean`의 `lu_accept_preconditions_false`). 이 완료 표시를 철회한다. 1b에서 계약을 런타임 힙 조각 형식으로 고치고(`Fk/Contracts.lean` `MakesliceC`) 다시 증명했다(b6da965). 전제 만족 증인은 `Fk/Witness.lean`의 `lu_accept_runs`(n = 0, 1, 16)다. REPORT-1b 1절.
+
 증명하지 않은 것: ListU64 수용의 EthLib 연결 정리(`lu_accept_main`에서 1a의 `Transfer` 틀로 바로 만들 수 있다. 시간 관계로 하지 않았다), FixedVec 전체, ListU64 인코더와 거부 경로, 모든 `growslice` 경로, K5 대조(3.5절).
 
 판정의 주된 근거:
@@ -45,7 +47,7 @@
 | C9 | 분기 조건과 주소 산술을 독립 보조정리로 두기 | 래퍼 | 완료 `Fk/Flags.lean`. 맥락 안에서 `simp; omega`로 닫으면 커널이 깊은 재귀를 보고한다(64비트 큰 리터럴). 1a 발견 5와 같은 현상이다 |
 | C10 | `ecancel`의 원자 비교가 복잡한 값 항을 펼치지 않게 하기 | 기여 (지금은 래퍼) | 지금은 계산 값을 `generalize`로 변수로 바꾼다. Kraken 쪽 수정 후보: 원자 비교를 reducible 투명도로 |
 | C11 | `kstep`이 부가 목표의 `grind` 시간 초과를 잡기 | 기여 | 시간 초과는 런타임 예외라서 `try … catch`가 잡지 못한다. `tryCatchRuntimeEx` 또는 `grind` 설정 상한 |
-| C12 | 1b 코드의 새 명령어 | 기여 또는 우회 | 런타임 파서에 없음: `bsr`, `lzcnt`, `tzcnt`, `popcnt`, `bt`, `xchg`, `cqo`, `div`, `rep movs`, `pxor`, `xorps`, `movq xmm↔gpr`. 있음: `movsx`, `cmov`, `setcc`, `imul`, `or`, `movups`. bitlist 검증의 `bits.Len8`은 표(rodata) 조회라서 C5 방식으로 된다. `bits.Len64`는 GOAMD64=v1에서 `bsr`, v3에서 `lzcnt`다. 1b 대상을 빌드해서 확인해야 한다(미확인) |
+| C12 | 1b 코드의 새 명령어 | 기여 또는 우회 | 런타임 파서에 없음: `bsr`, `lzcnt`, `tzcnt`, `popcnt`, `bt`, `xchg`, `cqo`, `div`, `rep movs`, `pxor`, `xorps`, `movq xmm↔gpr`. 있음: `movsx`, `cmov`, `setcc`, `imul`, `or`, `movups`. ~~bitlist 검증의 `bits.Len8`은 표(rodata) 조회라서 C5 방식으로 된다.~~ 정정(1b): amd64 빌드에서 `bits.Len8`은 `bsr`(v1), `lzcnt`(v3)로 컴파일된다(astra, `review/kraken-bitlist-v1.objdump:21`). 표 조회가 아니다. bitlist의 차단 항목이다. REPORT-1b Kraken 요청 목록 |
 | C13 | `growslice` 경로(인코더의 용량 부족) | 전제 + 래퍼 | 1a와 같은 조합 문제다. append 지점별 보조정리 + 계약. 이 세션은 하지 않았다 |
 | C14 | vcgen 브랜치(sgraf812/kraken `vcgen`, a4cce2e, nightly-2026-10-29) 평가 | 결정 사항 | Hoare 삼중항, `FunSpec`(함수 명세), 점프·루프·호출 예제가 있다. C1, C2, C6의 래퍼를 대신할 수 있다. 툴체인이 다르다. 1b 전에 반나절 평가를 권한다 |
 | C15 | 하드웨어 대조 | 전제(신뢰) | 이 호스트(arm64)에서 실행하지 못했다(3.5절). x86-64 Linux 기계 또는 CI가 필요하다 |
@@ -133,6 +135,8 @@ Kraken main에는 루프 예제가 없다(`p3_correct`는 `sorry`). 그러나 `E
 | 커널 | 큰 리터럴 산술의 깊은 재귀(C9) | Lean 쪽. 래퍼로 우회 |
 
 ## 7. 신뢰 기반 문구 제안
+
+1b에서 갱신했다. 새 문구는 REPORT-1b 8절이다. 아래는 평가 세션의 원래 문구다.
 
 > 기계어 정리는 Kraken x64 의미론(Kraken `6064eec`) 위의 정리다. Kraken의 x64 의미론은 Intel SDM을 참조해 손으로 쓴 것이다. Kraken 팀은 이 의미론을 실제 x86-64 하드웨어와 비교하는 대조 테스트로 검증한다. 이 프로젝트는 그 대조를 우리 함수에 대해 아직 실행하지 않았다. MiniRV 때의 "명령어 단위 Sail 일치 증명"에 해당하는 것은 Kraken에 아직 없다. Sail x86 모델과의 연결은 Kraken 쪽 계획이다. 외부 함수(Go 런타임)는 정리의 가설(계약)이고, 전역 변수의 값과 스택 가드는 정리의 전제다.
 

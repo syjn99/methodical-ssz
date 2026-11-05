@@ -2,7 +2,23 @@
 
 날짜: 2026-11-04. 호스트: macOS arm64, 18코어, 48 GB. 시간은 `/usr/bin/time`의 real 값, 메모리는 최대 RSS다.
 
-## 버전
+## 고정 버전 (1b, B4b)
+
+이 표가 1b의 기준이다. 아래 평가 세션 표와 다르면 이 표를 따른다.
+
+| 항목 | 값 | 어디서 고정하는가 |
+| --- | --- | --- |
+| Kraken | `6064eecbb730a1152aa6ed891a155d3a92a4f298` (AeneasVerif/kraken main) | `lean/lakefile.toml` `rev`, `lean/lake-manifest.json` |
+| Lean | `leanprover/lean4:nightly-2026-09-21` | `lean/lean-toolchain` |
+| EthLib | `862185680cf23ccf54d44eb25b63b26c5020597b` | `lean/lakefile.toml` `rev` |
+| Go | 1.26.3 | `link/out/build-ids.txt` 첫 줄 |
+| 빌드 | `GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 go build -tags purego -trimpath` | `link/build.sh`, `semtest/run.sh` |
+| objdump, LLVM, clang | GNU objdump(`-gnu` AT&T 열), `llvm-objdump`(독립 디코딩), `clang --target=x86_64-linux-gnu`(재조립). `link/check.py`의 `tool()`이 찾는다 | `link/out/RESULT` |
+| ELF | sha256 `84f0b8e5…797f` | `link/out/build-ids.txt` |
+| Prysm(대상 2타입의 출처) | v7.1.8, `51b5a75ebbadf05af22bd2601b5baf7a9e99b66d` | `target/prysm/types.go`, SPEC.md |
+| vcgen 평가(채택 안 함) | sgraf812/kraken `a4cce2ec6d840376e4dbbf4a11a777ebdf42a3cb`, `nightly-2026-10-29` | `vcgen/` |
+
+## 버전 (평가 세션, 2026-11-04)
 
 | 항목 | 값 |
 | --- | --- |
