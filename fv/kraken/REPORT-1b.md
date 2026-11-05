@@ -35,6 +35,7 @@ REPORT.md 1절은 `lu_accept_main`을 "수용 경로 전체"로 표시했다. �
 - vcgen(sgraf812/kraken `a4cce2e`, `nightly-2026-10-29`)은 EthLib SSZ 폐포와 함께 빌드된다(262 s, 1.78 GB).
 - Go ABIInternal은 `CallingConvention` `⟨[.rsp, .r14], …⟩`로 표현된다.
 - `sc_accept_main`을 `funspec`으로 다시 증명해 보았다. 명령어 명세 5개를 우리 쪽에서 더했다. 그 뒤 검증 조건 16개 중 12개가 `kfinish`로 닫히지 않았다(저장 뒤 적재의 `isSome`, 분기 대상 불변식).
+- **정정(1b-fix X8).** 그 평가 명세의 사후조건은 거짓이었다(필드 오프셋, spill 칸 rsp + 16). 고친 명세에서는 16개 중 14개가 열린다. 결론(main 유지)은 같다. `vcgen/B0.md` 끝 절.
 - 채택하면 메모리 모델(`Mem.Mapped`/`loadInt`)이 달라져 기존 증명을 다시 써야 한다. vcgen은 main에 합쳐지지 않았고 의미론 파일이 main과 159줄 다르다.
 
 ## 3. B1: 링크 수준 검사

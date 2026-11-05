@@ -201,3 +201,83 @@ Prysm 범위의 정확한 문구(astra):
 > Prysm v7.1.8의 두 SSZ 스키마를 옮긴 축약 Go 구조체의 생성 코드를 검토했다.
 > 정리는 고정 시험 ELF의 일부 경로를 다룬다.
 > 실제 Prysm 구조체 배치와 Prysm 바이너리는 증명 대상이 아니다.
+
+## 9. X4. 전제 증인 (astra 필수 4)
+
+시간: 15:44–17:55, 2시간 11분(증인 틀, 모델 3개, 증인 10개, 실패한 시도 포함).
+
+### 9.1 틀
+
+- `Fk/WHost.lean`: `mkHost P`(지시어 i를 주소 0x10000 + i에 둔다), `labelsFresh_of`(레이블 검사를 `decide`로), `mk_label`.
+- 증인마다 Host가 하나다: 데이터 레이블, 실제 대상 함수(링크 검사가 ELF와 대조한 `.S`), 피호출자 코드, 런타임 모델.
+- 메모리는 0x10000부터 한 블록이다. 전제의 모든 조각을 겹치지 않게 놓는다.
+- 모델: `bump_makeslice`(8바이트), `bump_makeslice1`(1바이트), `bump_newobject24`, `bump_newobject32`, `rt_memmove`, `rt_growslice`, `rt_errorf_nil`, `rt_errorf`, `rt_convT64`. 모든 scratch 크기 `S`에서 성립한다.
+
+### 9.2 증인
+
+| 주 정리 | 증인 | 계약을 얻는 방법 | 가변 길이 |
+| --- | --- | --- | --- |
+| `lu_accept_main` | `lu_accept_runs`(1b) | `bump_makeslice` | n = 0, 1, 16 |
+| `fv_accept_main` | `fv_accept_runs` | `bump_makeslice`, `rt_memmove` | 고정 크기 |
+| `cp_accept_main` | `cp_accept_runs` | `bump_makeslice1`, `rt_memmove` | 고정 크기 |
+| `bv_accept_main` | `bv_accept_runs`(b = 0, 0x10) | `bump_makeslice1` | 고정 크기 |
+| `ad_accept_main` | `ad_accept_runs` | 세 모델이 한 힙(160바이트)에서 함께 | 고정 크기 |
+| `ne_accept_main` | `WitNe0/1/16.ne_accept_runs` | `sc_uacc_holds`, `lu_uacc_holds`(같은 Host의 Scalars·ListU64 코드), `bump_newobject24` | L 원소 0, 1, 16 |
+| `cp_marshal_main` | `cp_marshal_runs` | `rt_memmove` | 접두사 길이 ≤ 1000 임의 |
+| `ad_marshal_main` | `ad_marshal_runs` | `rt_memmove` | 접두사 3바이트 |
+| `GrowsliceC` 호출 | `growslice_call_runs`(X1) | `rt_growslice` | n = 1, 257, ListU64 형태 |
+
+모두 표준 공리 3개만 쓴다(`AXIOMS.txt`).
+
+### 9.3 증인이 없는 주 정리
+
+| 주 정리 | 이유 |
+| --- | --- |
+| `bl_accept_main`, `bl_unmarshal_accept_spec_k` | `ValidateBitlistC`의 모델이 없다. `bsr` 없이 bitlist 규칙을 계산하는 asm과 EthLib `unpackDelimited`의 동치 증명이 필요하다 |
+| `lc_accept_main`, `lc_accept_empty_main` | 시간 안에 하지 못했다. ListC 코드 432 지시어와 오프셋 구조 전제의 배치가 크다 |
+| `fv_marshal_main`, `bl_marshal_main`, `lu_marshal_main`, `ne_marshal_main`, `lc_marshal_main`, `sc_marshal_main` | 시간 안에 하지 못했다. 같은 틀(`wgen.py` 방식)로 만들 수 있다 |
+| 크기·거부 정리 전부, `lum_grow_site`, ListC·ListU64 오류 경로 | 시간 안에 하지 못했다 |
+
+### 9.4 측정에서 배운 것
+
+- 길이가 기호인 리스트가 블록에 있으면 메모리 보조정리가 매우 느리다.
+  Nested(기호 n)는 16분 뒤 시간 초과, AttestationData 마샬(기호 접두사)은 10분 넘게 끝나지 않았다.
+  같은 증인을 고정 길이로 바꾸면 각각 6초, 5초였다.
+  원인은 확인하지 않았다(추측: `rw` 반복과 `omega`의 부가조건).
+- `ecancel`은 `bumpHeap` 원자가 있는 목표에서 Kraken 내부 PANIC과 함께 실패했다.
+  `Eq.mp` + `congrFun (by ac_rfl)`로 우회했다.
+
+## 10. 다음 세션에 넘길 것
+
+### 10.1 생성기 수정 뒤 재증명 (F1·F2)
+
+- F1(BitVec 패딩 비트), F2(BitL 길이 단위)는 생성기 세션의 일이다. 이 세션은 `sszgen/`, `ssz/`를 고치지 않았다.
+- 생성기를 고치면 ELF, objdump, `.S`, `SHash.lean`, 정리, `AXIOMS.txt`, 기대값을 함께 갱신한다. `link/check.py` (f)가 SHash 누락을 잡는다.
+- F2 시험 입력(astra): 빈 배열, 끝 바이트 0, 2048비트, 2049비트, 258바이트.
+
+### 10.2 1c 증명 생성기의 설계 입력
+
+이 세션의 증인 생성기(`lean/tools/wit/wgen.py`)에서 배운 것이다.
+
+1. **계약 가설과 증인을 함께 출력한다.**
+   주 정리를 만들 때 같은 입력에서 증인 파일도 만든다: Host(대상 + 피호출자 + 모델), 메모리 블록, `s_mem`, `*_runs`.
+   계약마다 모델 정리(`rt_*`, `bump_*`)를 하나 둔다. 모든 `S`에서 성립하게 쓴다.
+2. **함수별 배치 명세를 입력으로 받는다.**
+   (반환 슬롯 오프셋, 프레임 슬롯 목록, spill 칸, 수신자 필드 오프셋, 입력 조각)이 정리 문장과 증인 블록을 함께 정한다.
+   이 세션은 이 표를 손으로 만들었다(CONTRACTS.md 1c절의 spill 위치).
+3. **보존 프레임을 입력으로 받는다.**
+   결론에 남길 조각(입력, 수신자, 프레임 `R`, 스택 창, r14, rbp)을 배치 명세에서 정한다. `⋆ True`로 버리지 않는다.
+4. **길이는 고정값으로 증인을 만든다.**
+   기호 길이는 메모리 보조정리를 매우 느리게 한다(9.4절). 가변 길이 타입은 빈 값·1개·최대를 각각 고정 길이로 낸다.
+5. **`ecancel` 대신 `ac_rfl`로 마무리한다.**
+   큰 분리곱의 재배열은 `Eq.mp ?_ H; exact congrFun (by ac_rfl) _`가 안정적이었다.
+
+## 11. X8. B0 재측정 (astra 필수 11)
+
+시간: 17:39–17:50, 11분(빌드 3분 9초 포함). 상한 반나절 안이다.
+
+- 평가 명세를 고쳤다: 필드별 사후조건(Go 오프셋 0, 2, 4, 8, 16), spill 칸 rsp + 16.
+- 1b 명세는 같은 환경에서 16개 중 12개가 열렸다. 1b 수치를 재현했다.
+- 고친 명세는 16개 중 14개가 열렸다.
+- 결론은 바뀌지 않는다: main에 남는다. REPORT-1b 2절에 정정을 적었다.
+- 상세: `vcgen/B0.md` 끝 절, 로그 `vcgen/b0fix-*.txt`.

@@ -1,0 +1,12 @@
+ScOldRun.lean:44:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+ScOldRun.lean:44:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+ScOldRun.lean:44:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+ScOldRun.lean:44:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+ScOldRun.lean:44:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+ScOldRun.lean:44:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+ScOldRun.lean:44:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+ScOldRun.lean:44:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+ScOldRun.lean:44:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+ScOldRun.lean:44:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+ScOldRun.lean:44:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
+ScOldRun.lean:44:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
