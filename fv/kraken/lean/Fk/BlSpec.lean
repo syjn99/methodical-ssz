@@ -262,8 +262,8 @@ theorem bl_unmarshal_accept_spec_k (k : Nat) (hk : BitLUnmarshalSSZ.IsInfixAt Ho
     (hl32 : l32.length = 8) (hl40 : l40.length = 8) (hl48 : l48.length = 8) (hl56 : l56.length = 8)
     (hl64 : l64.length = 8) (hl72 : l72.length = 8) (hl80 : l80.length = 8) (hrs : rslot.length = 8)
     (hcP : cP.length = 8) (hcL : cL.length = 8) (hcC : cC.length = 8)
-    (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
-    (Heap : Nat → DataMem → Prop) (avail : Nat)
+    (R : DataMem → Prop) (S : Nat) (scratch spl : List UInt8) (hsc : scratch.length = S) (hspl : spl.length = 40)
+    (Heap : Nat → DataMem → Prop) (avail : Nat) (hbud : 2 * 257 + 8192 ≤ avail) (hmax : avail ≤ maxAlloc)
     (P : ∀ g : BitLG, bsA = blEncode g →
       s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s8.At (s.regs.rsp.toBitVec + 8))
@@ -273,6 +273,7 @@ theorem bl_unmarshal_accept_spec_k (k : Nat) (hk : BitLUnmarshalSSZ.IsInfixAt Ho
       ⋆ Eq (l64.At (s.regs.rsp.toBitVec - 64)) ⋆ Eq (l72.At (s.regs.rsp.toBitVec - 72))
       ⋆ Eq (l80.At (s.regs.rsp.toBitVec - 80))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 128)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 128 - BitVec.ofNat 64 S))
+      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - 120))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ Heap avail
       ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec) ⋆ Eq ((packBitsDelimited g.1).toList.At (s.regs.rbx.toBitVec + 4))
       ⋆ Eq (cP.At s.regs.rax.toBitVec) ⋆ Eq (cL.At (s.regs.rax.toBitVec + 8)) ⋆ Eq (cC.At (s.regs.rax.toBitVec + 16))
@@ -293,8 +294,11 @@ theorem bl_unmarshal_accept_spec_k (k : Nat) (hk : BitLUnmarshalSSZ.IsInfixAt Ho
           ⋆ Eq (rest.At (p + BitVec.ofNat 64 (packBitsDelimited g.1).toList.length))
           ⋆ Eq ((packBitsDelimited g.1).toList.At (s.regs.rbx.toBitVec + 4)) ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
+  have hsz := bl_accepted_size bsA v hd
   obtain ⟨g, rfl, rfl, hne, hv⟩ := bl_accepted_valid bsA v hd
   refine ⟨g, rfl, rfl, ?_⟩
+  have htl : (packBitsDelimited g.1).toList.length ≤ 257 := by
+    rw [bl_encode_size] at hsz; simp [packBitsDelimited, packBits]; omega
   exact bl_accept_main k hk hf _ (by simpa using hne) hv s ra guard fp s8 s16 s24 l32 l40 l48 l56 l64 l72 l80 rslot
-    cP cL cC hfp h8 h16 h24 hl32 hl40 hl48 hl56 hl64 hl72 hl80 hrs hcP hcL hcC R S scratch hsc Heap avail
-    (P g rfl) hguard hsp (by rw [hlen, bl_encode_size]; simp [packBitsDelimited, packBits]) hcap hcap63 hvb hgs hmm
+    cP cL cC hfp h8 h16 h24 hl32 hl40 hl48 hl56 hl64 hl72 hl80 hrs hcP hcL hcC R S scratch spl hsc hspl Heap avail
+    (by omega) hmax (P g rfl) hguard hsp (by rw [hlen, bl_encode_size]; simp [packBitsDelimited, packBits]) hcap hcap63 hvb hgs hmm

@@ -65,8 +65,8 @@ theorem bl_accept_main (k : Nat) (hk : BitLUnmarshalSSZ.IsInfixAt Host.prog k)
     (hl32 : l32.length = 8) (hl40 : l40.length = 8) (hl48 : l48.length = 8) (hl56 : l56.length = 8)
     (hl64 : l64.length = 8) (hl72 : l72.length = 8) (hl80 : l80.length = 8) (hrs : rslot.length = 8)
     (hcP : cP.length = 8) (hcL : cL.length = 8) (hcC : cC.length = 8)
-    (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
-    (Heap : Nat → DataMem → Prop) (avail : Nat)
+    (R : DataMem → Prop) (S : Nat) (scratch spl : List UInt8) (hsc : scratch.length = S) (hspl : spl.length = 40)
+    (Heap : Nat → DataMem → Prop) (avail : Nat) (hbud : 2 * tl.length + 8192 ≤ avail) (hmax : avail ≤ maxAlloc)
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s8.At (s.regs.rsp.toBitVec + 8))
       ⋆ Eq (s16.At (s.regs.rsp.toBitVec + 16)) ⋆ Eq (s24.At (s.regs.rsp.toBitVec + 24))
@@ -75,6 +75,7 @@ theorem bl_accept_main (k : Nat) (hk : BitLUnmarshalSSZ.IsInfixAt Host.prog k)
       ⋆ Eq (l64.At (s.regs.rsp.toBitVec - 64)) ⋆ Eq (l72.At (s.regs.rsp.toBitVec - 72))
       ⋆ Eq (l80.At (s.regs.rsp.toBitVec - 80))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 128)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 128 - BitVec.ofNat 64 S))
+      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - 120))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ Heap avail
       ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec) ⋆ Eq (tl.At (s.regs.rbx.toBitVec + 4))
       ⋆ Eq (cP.At s.regs.rax.toBitVec) ⋆ Eq (cL.At (s.regs.rax.toBitVec + 8)) ⋆ Eq (cC.At (s.regs.rax.toBitVec + 16))
@@ -246,20 +247,29 @@ theorem bl_accept_main (k : Nat) (hk : BitLUnmarshalSSZ.IsInfixAt Host.prog k)
   simp only [Width.bytes, Width.bits] at H10
   kunfold
   rw [bla_slot'] at *
-  refine eventually_trans _ _ _ _ (hgs _ (Host.addrOf (k + 78 + 1)) [] stk1 avail _ rfl (Nat.le_refl _)
-    (by simp) hstk1 (by dsimp only; rw [Fk.Witness.nil_At_emp]; simp only [Std.ExtHashMap.sep_emp]; ecancel)) ?_
-  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hrbp2, hrbx2, hcap2, hcap63', stk2, tail, av2, hstk2, htl, Hm2⟩
-  dsimp only at hpc2 hrsp2 hrbp2 hrbx2 hcap2 hcap63' htl Hm2
+  have hnv : nV.toNat = tl.length := hn4
+  have hspA : rsp.toBitVec - 128 + 8 = rsp.toBitVec - 120 := by bv_omega
+  have hncN : nextSliceCap tl.length 0 = tl.length := nextSliceCap_zero _ (by omega)
+  refine eventually_trans _ _ _ _ (hgs _ (Host.addrOf (k + 78 + 1)) [] stk1 spl avail _ (by decide) rfl (Nat.le_refl _)
+    (by simp) (by simp [hnv]; omega) (by simp [hnv, hncN]; omega) hmax
+    (by simp) hstk1 hspl (by dsimp only; rw [Fk.Witness.nil_At_emp, hspA]; simp only [Std.ExtHashMap.sep_emp]; ecancel)) ?_
+  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hrbp2, hr142, hrbx2, hnc2, hub2, stk2, spl2, tail, av2, hstk2, hspl2, htl, hav2, Hm2⟩
+  dsimp only at hpc2 hrsp2 hrbp2 hr142 hrbx2 hnc2 hub2 htl Hm2
   subst hpc2
   obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,
     zmms2, flags2, mem2⟩ := d2
-  simp only at hrsp2 hrbp2 hrbx2 hcap2 hcap63' Hm2
+  simp only at hrsp2 hrbp2 hrbx2 Hm2 htl hub2 hav2 hnc2
   subst hrsp2 hrbp2 hrbx2
   rw [Fk.Witness.nil_At_emp, List.nil_append] at Hm2
   simp only [Std.ExtHashMap.sep_emp, List.length_nil, Nat.zero_add, Nat.one_mul] at Hm2 htl
-  have hnv : nV.toNat = tl.length := hn4
   have hc2 : tl.length ≤ rcx2.toNat := by
-    have := hcap2; simp only [UInt64.toNat, ← UInt64.toNat_toBitVec] at this ⊢; omega
+    have h0 : (BitVec.zeroExtend 64 (BitVec.extractLsb' 0 32 rcx1.toBitVec ^^^ BitVec.extractLsb' 0 32 rcx1.toBitVec)).toNat = 0 := by
+      simp
+    have := hnc2
+    change nextSliceCap nV.toNat (BitVec.zeroExtend 64 (BitVec.extractLsb' 0 32 rcx1.toBitVec
+      ^^^ BitVec.extractLsb' 0 32 rcx1.toBitVec)).toNat ≤ rcx2.toNat at this
+    rw [h0, hnv, hncN] at this; exact this
+  unfold maxAlloc at hmax
   have htk : (tail.take tl.length).length = tl.length := by simp; omega
   have hsplit : Eq (tail.At rax2.toBitVec) = Eq ((tail.take tl.length).At rax2.toBitVec)
       ⋆ Eq ((tail.drop tl.length).At (rax2.toBitVec + BitVec.ofNat 64 tl.length)) := by

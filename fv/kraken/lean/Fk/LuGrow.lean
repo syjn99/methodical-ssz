@@ -28,10 +28,12 @@ theorem lum_grow_site (k : Nat) (hk : ListU64MarshalSSZTo.IsInfixAt Host.prog k)
     (pre : List UInt8) (s : MachineData) (hpre : pre.length = s.regs.rcx.toNat)
     (hrdx : s.regs.rdx.toNat = s.regs.rcx.toNat + 4)
     (sl rslot : List UInt8) (hsl : sl.length = 8) (hrs : rslot.length = 8)
-    (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
+    (hlc : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hcg : s.regs.rdi.toNat < s.regs.rdx.toNat)
+    (R : DataMem → Prop) (S : Nat) (scratch spl : List UInt8) (hsc : scratch.length = S) (hspl : spl.length = 40)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
+    (hbud : 2 * nextSliceCap s.regs.rdx.toNat s.regs.rdi.toNat + 8192 ≤ avail) (hmax : avail ≤ maxAlloc)
     (h_mem : s.dmem =⋆ Eq (sl.At (s.regs.rsp.toBitVec + 112)) ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 8#64))
-      ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 8#64 - BitVec.ofNat 64 S))
+      ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 8#64 - BitVec.ofNat 64 S)) ⋆ Eq (spl.At s.regs.rsp.toBitVec)
       ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Heap avail ⋆ R)
     (hgs : GrowsliceC Heap (label "type__" + 48736).toBitVec 1 S) :
     Eventually (step1 Host.exe)
@@ -43,7 +45,7 @@ theorem lum_grow_site (k : Nat) (hk : ListU64MarshalSSZTo.IsInfixAt Host.prog k)
           st.data.dmem)
       ⟨s, Host.addrOf (k + 13)⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
-  simp only at h_mem hpre hrdx ⊢
+  simp only at h_mem hpre hrdx hlc hcg hbud ⊢
   kat hk ListU64MarshalSSZTo 13
   apply store_step _ _ _ _ _ sl _ _ (by ecancel) (by exact hsl)
   intro m1 H1
@@ -61,20 +63,26 @@ theorem lum_grow_site (k : Nat) (hk : ListU64MarshalSSZTo.IsInfixAt Host.prog k)
   simp only [Width.bytes, Width.bits] at H2
   kunfold
   have := rcx.toNat_lt_size; have := rdx.toNat_lt_size; simp only [UInt64.size] at *
+  have hspA : rsp.toBitVec - 8#64 + 8 = rsp.toBitVec := by bv_omega
   have hpreC : (Eq ((Int.toBytes 8 (Host.addrOf (k + 20 + 1)).toBitVec.toInt).At (rsp.toBitVec - 8#64))
-      ⋆ Eq (scratch.At (rsp.toBitVec - 8#64 - BitVec.ofNat 64 S)) ⋆ Eq (pre.At rbx.toBitVec) ⋆ Heap avail
-      ⋆ (Eq ((Int.toBytes 8 rax.toBitVec.toInt).At (rsp.toBitVec + 112)) ⋆ R)) m2 := by ecancel
-  refine eventually_trans _ _ _ _ (hgs _ (Host.addrOf (k + 20 + 1)) pre scratch avail
-    (Eq ((Int.toBytes 8 rax.toBitVec.toInt).At (rsp.toBitVec + 112)) ⋆ R) rfl
+      ⋆ Eq (scratch.At (rsp.toBitVec - 8#64 - BitVec.ofNat 64 S)) ⋆ Eq (spl.At (rsp.toBitVec - 8#64 + 8))
+      ⋆ Eq (pre.At rbx.toBitVec) ⋆ Heap avail
+      ⋆ (Eq ((Int.toBytes 8 rax.toBitVec.toInt).At (rsp.toBitVec + 112)) ⋆ R)) m2 := by rw [hspA]; ecancel
+  refine eventually_trans _ _ _ _ (hgs _ (Host.addrOf (k + 20 + 1)) pre scratch spl avail
+    (Eq ((Int.toBytes 8 rax.toBitVec.toInt).At (rsp.toBitVec + 112)) ⋆ R) (by decide) rfl
     (by show (BitVec.zeroExtend 64 (BitVec.truncate 32 (4 : BitVec 64))).toNat ≤ rdx.toNat; simp; omega)
+    (by show rdx.toNat - (BitVec.zeroExtend 64 (BitVec.truncate 32 (4 : BitVec 64))).toNat ≤ rdi.toNat; simp; omega)
+    hcg (by simpa using hbud) hmax
     (by show pre.length = 1 * (rdx.toNat - (BitVec.zeroExtend 64 (BitVec.truncate 32 (4 : BitVec 64))).toNat); simp; omega)
-    hsc hpreC) ?_
-  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hrbx1, hcap1, hcap63, stk1, tail, av1, hstk1, htail, Hm1⟩
-  dsimp only at hpc1 hrsp1 hrbp1 hrbx1 hcap1 hcap63 Hm1 htail
+    hsc hspl hpreC) ?_
+  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, hrbx1, hnc1, hub1, stk1, spl1, tail, av1, hstk1, hspl1, htail, hav1, Hm1⟩
+  dsimp only at hpc1 hrsp1 hrbp1 hrbx1 hnc1 hub1 Hm1 htail
+  obtain ⟨hcap1, hcap63⟩ := growslice_cap_bounds (by decide) (Nat.le_trans (by simpa using hbud) hmax) hnc1 hub1
   subst hpc1
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
     zmms1, flags1, mem1⟩ := d1
   simp only at hrsp1 hrbp1 hrbx1 hcap1 hcap63 Hm1 htail
+  replace hcap63 : rcx1.toNat < 2 ^ 63 := by omega
   subst hrsp1 hrbp1 hrbx1
   kat hk ListU64MarshalSSZTo 21
   kat hk ListU64MarshalSSZTo 22

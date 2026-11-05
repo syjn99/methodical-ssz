@@ -1,5 +1,10 @@
 # REPORT-1b: 1단계 이정표 1b (Kraken x64)
 
+> **정정(1b-fix, 2026-11-05).** 이 보고서의 일부 완료 표시를 철회한다. 근거는 `review/gpt6-astra-1b.md`와 `REPORT-1b-fix.md`다.
+> - 0절 "게이트 1: 조건부 통과"를 철회한다. 게이트 1은 미통과였다.
+> - B2.5(growslice)와 BitL 수용(`bl_accept_main`, `bl_unmarshal_accept_spec_k`)의 완료 표시를 철회한다. 1b의 `GrowsliceC`는 모순이었다. 세 정리는 전제에서 False가 증명됐다(`review/Review1b.lean`).
+> - 1b-fix X1이 계약을 고치고 세 정리를 다시 증명했다. 결과와 남은 것은 `REPORT-1b-fix.md`에 있다.
+
 기준: 브랜치 `syjn99/ssz-fv-phase1b`, 시작 `syjn99/ssz-fv-kraken`. Kraken `6064eec`(main), Lean `nightly-2026-09-21`, EthLib `8621856`, Go 1.26.3, `GOAMD64=v1`(TOOLS.md "고정 버전"). 작성 2026-11-05. 시각은 IST 에이전트 시간이다. 사람 시간이 아니다.
 
 ## 0. 판정

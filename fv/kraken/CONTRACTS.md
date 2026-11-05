@@ -12,8 +12,8 @@
 | 피호출자 | 호출하는 함수(경로) | 분류 | Kraken 형식 | 비공허성 |
 | --- | --- | --- | --- | --- |
 | `runtime.makeslice` | ListU64.UnmarshalSSZ(수용), FixedVec.UnmarshalSSZ(수용) | (b) | `MakesliceC Heap ty esz S`: 사전조건에 런타임 힙 조각 `Heap avail`, 타입 인수 `rax = ty`, `len = cap = cnt`, `esz·cnt ≤ avail`. 사후조건: 반환 주소로 복귀, rsp + 8, 0으로 채운 `esz·cnt` 바이트 블록을 `Heap`에서 떼어냄, `Heap (avail − esz·cnt)`, `F` 보존 | **있음.** `bump_makeslice`(범프 할당기가 계약을 만족, Kraken 의미론 위 증명). `lu_accept_runs`(구체 Host에서 `lu_accept_main`의 모든 전제를 증명, n ≤ 16) |
-| `runtime.memmove` | FixedVec.UnmarshalSSZ(수용), FixedVec.MarshalSSZTo(빠른 경로, 거부) | (b) | `MemmoveC S`: 서로소인 원천·목적 조각(n 바이트), 복귀 후 목적 = 원천, 원천과 `F` 보존. 겹치는 범위는 계약 밖(호출자의 `⋆`가 배제) | 없음(남은 일). 바이트 복사 루프 구현으로 같은 방식의 증인을 만들 수 있다 |
-| `runtime.growslice` | 모든 MarshalSSZTo(용량 부족 경로) | (b) | `GrowsliceC Heap ty esz S`: `rsi = ty`, `num ≤ newLen`, 옛 원소 `old`(esz·(newLen − num) 바이트). 사후조건: rsp + 8, rbp 보존, rbx = newLen, newLen ≤ newCap < 2^63, 새 블록 = `old ++ tail`(길이 esz·newCap), 옛 블록과 `F` 보존, 힙은 `∃ avail'` | 없음. 한 지점만 증명에 썼다(`lum_grow_site`) |
+| `runtime.memmove` | FixedVec.UnmarshalSSZ(수용), FixedVec.MarshalSSZTo(빠른 경로, 거부) | (b) | `MemmoveC S`: 서로소인 원천·목적 조각(n 바이트), 복귀 후 목적 = 원천, 원천과 `F` 보존. 겹치는 범위는 계약 밖(호출자의 `⋆`가 배제) | **모델 있음(1b-fix).** `rt_memmove`: 바이트 복사 루프(`Fk/RtCopy.S`)가 모든 `S`에서 계약을 만족한다. 호출 지점별 공동 증인은 X4 |
+| `runtime.growslice` | 모든 MarshalSSZTo(용량 부족 경로) | (b) | `GrowsliceC Heap ty esz S`(1b-fix). 전제: `0 < esz`, `rsi = ty`, `num ≤ newLen`, `oldLen = newLen − num ≤ oldCap < newLen`, `nc = nextSliceCap newLen oldCap`(Go 1.26.3 `nextslicecap`)에 대해 `2·esz·nc + 8192 ≤ avail ≤ maxAlloc = 2^48`, 옛 원소 `old`(esz·oldLen 바이트), scratch `S`, 반환 슬롯 위 spill 40바이트. 사후조건: rsp + 8, rbp·r14 보존, rbx = newLen, `nc ≤ newCap`, `esz·newCap ≤ 2·esz·nc + 8192`, 새 블록 = `old ++ tail`, `avail' + esz·newCap ≤ avail`, 옛 블록과 `F` 보존 | **모델 있음.** `rt_growslice`(범프 할당기 + 복사 루프, esz = 1). `growslice_call_runs`(구체 Host, 빈 값·1·257·ListU64 형태). 1b 형식은 모순이었다(`review/Review1b.lean`) |
 | `runtime.convT64` | ListU64.UnmarshalSSZ(거부 3, 4) | (b) | `ConvT64C Heap S`: 복귀, rsp + 8, `F` 보존, 힙은 `∃ avail'`. 결과 값은 쓰지 않는다(인수 배열에 넘길 뿐) | 없음 |
 | `fmt.errorf` (`fmt.Errorf`) | ListU64.UnmarshalSSZ(거부 3, 4) | (b) | `FmtErrorfC Heap S`: 복귀, rsp + 8, **rax ≠ 0**(nil이 아닌 오류), `F` 보존. 어떤 오류를 감싸는지(`%w`)는 모델하지 않는다 | 없음 |
 | `runtime.newobject` | ListU64.UnmarshalSSZ(거부 3, 4, `fmt.errorf`가 nil을 돌려준 경우) | (c) | `FmtErrorfC`의 rax ≠ 0이 이 경로를 막는다(`jne` 분기 정리) | 해당 없음 |
@@ -28,7 +28,7 @@
 | `runtime.newobject` | Nested.UnmarshalSSZ(S, L 할당), AttestationData.UnmarshalSSZ(Source, Target), ListC.UnmarshalSSZ(원소마다) | (b) | `NewobjectC Heap ty sz S`: 사전조건 `rax = ty`, `sz ≤ avail`. 사후조건: 복귀, rsp + 8, r14 보존, 0으로 채운 `sz`바이트 블록을 `Heap`에서 떼어냄, `F` 보존 | 없음. `makeslice`와 같은 범프 할당기로 증인을 만들 수 있다(남은 일) |
 | `runtime.makeslice`(byte, 0, 32), (*ListU64, n, n) | Checkpoint·AttestationData UnmarshalSSZ, ListC.UnmarshalSSZ(원소 포인터 배열) | (b) | `MakesliceC`(len ≤ cap로 넓힘, c0f3396) | 1a와 같다(`bump_makeslice`). 이 호출 지점의 구체 Host 증인은 없다 |
 | `runtime.memmove` | Checkpoint·AttestationData·BitL의 Unmarshal·Marshal | (b) | `MemmoveC S` | 없음 |
-| `runtime.growslice` | BitL.UnmarshalSSZ(`append([]byte{}, buf[4:]...)`) | (b) | `GrowsliceC`, 옛 원소 `[]`(빈 슬라이스, 주소 `runtime.noptrbss`) | 없음 |
+| `runtime.growslice` | BitL.UnmarshalSSZ(`append([]byte{}, buf[4:]...)`) | (b) | `GrowsliceC`, 옛 원소 `[]`(빈 슬라이스, 주소 `runtime.noptrbss`), oldCap = 0, newLen = num = n. `nextSliceCap n 0 = n`이라 예산은 `2n + 8192` | 계약 모델 있음(`rt_growslice`). `bl_accept_main` 전체 전제의 공동 증인은 없다(`ValidateBitlistC` 모델 필요) |
 | `fmt.errorf` | ListC.UnmarshalSSZ(오프셋 오류 3경로) | (b) | `FmtErrorfC` | 없음 |
 | `ssz.ValidateBitlist` | BitL.UnmarshalSSZ | (b) | `ValidateBitlistC S`: 복귀, rsp + 8, `F`와 바이트 보존, **rax = 0 ⟺ EthLib `unpackDelimited (some 2048)`이 받음**. 이 함수는 `bsr`이 있어 Kraken이 파싱하지 못한다. **bitlist의 핵심 검사가 이 계약 뒤에 있다** | 없음 |
 | `target.Scalars.UnmarshalSSZ` | Nested.UnmarshalSSZ | (a) 함수 명세 | `ScUAccC`: 우리 쪽 정리 `sc_accept_main`에서 유도(`sc_uacc_holds`) | 증명됨(가설이 아니라 정리에서 나온다) |
@@ -54,7 +54,9 @@
 Kraken에서는 계약이 정리의 **가설**이고, 모든 상태·반환 주소·프레임에 대해 양화한다. 호출 지점에서 `eventually_trans`로 계약의 사후조건을 받고, 사후조건을 만족하는 **임의의** 상태에서 증명을 이어 간다. 그래서:
 - 색인이 없다. 같은 계약을 두 번 부르면 두 번 다 같은 가설을 다른 상태에 적용한다(ListU64 거부 3, 4: `convT64` 뒤 `fmt.errorf`, 같은 반환 슬롯).
 - 결과가 경로를 고르는 경우는 사후조건의 사실로 분기를 정한다. `fmt.errorf`의 rax ≠ 0이 `test %rax,%rax; jne`의 방향을 정한다(`lu_reject_toobig_main`, `lu_reject_misaligned_main`의 `split` 단계). 사후조건이 그 사실을 주지 않으면 두 경로를 모두 증명해야 한다.
-- 남는 위험은 계약 자체의 모순이다(이전 `hms`). 이것은 증인(`bump_makeslice`, `lu_accept_runs`)으로 검사한다. 증인이 없는 계약(memmove, growslice, convT64, fmt.errorf, newobject, ValidateBitlist)은 1절 표에 "없음"으로 적었다. 모두 `makeslice`와 같은 형식(힙 조각, 길이가 명시된 조각, 임의의 `F`)이다. 이전 `hms`의 모순(블록이 모든 주소를 덮음, `F`가 나머지 전부)은 이 형식에서 생기지 않는다. 블록이 `Heap` 조각에서 나오기 때문이다. 증인이 없으므로 "모순이 없다"는 증명이 아니라 형식에 근거한 판단이다(REPORT-1b C18).
+- 남는 위험은 계약 자체의 모순이다(이전 `hms`). 이것은 증인으로만 검사한다.
+- **철회(1b-fix).** 1b의 이 절은 "힙 조각 형식이면 이전 모순이 생기지 않는다"고 판단했다. 그 판단은 틀렸다. 1b의 `GrowsliceC`는 같은 형식이었지만 입력 범위가 없어 모순이었다(astra 발견 1, `review/Review1b.lean`). 형식에 근거한 판단은 비공허성의 근거가 아니다.
+- 지금 계약 모델(구현이 계약을 만족한다는 Lean 정리)이 있는 계약: `makeslice`(`bump_makeslice`, esz = 8), `memmove`(`rt_memmove`), `growslice`(`rt_growslice`, esz = 1). 나머지(convT64, fmt.errorf, newobject, ValidateBitlist)는 모델이 없다.
 
 ## 4. 정리의 전제가 실제 Go 호출자에서 성립하는가
 

@@ -1,0 +1,99 @@
+../review/Review1b.lean:40:31: error: Application type mismatch: The argument
+  avail
+has type
+  Nat
+but is expected to have type
+  List UInt8
+in the application
+  hg st0 ret [] stk avail
+../review/Review1b.lean:40:43: error: `simp` made no progress
+../review/Review1b.lean:40:59: error: Type mismatch
+  Nat.le_refl ?m.125
+has type
+  ?m.125 ≤ ?m.125
+but is expected to have type
+  0 < esz
+../review/Review1b.lean:42:14: error: Invalid projection: Type of
+  ho
+is not known; cannot resolve projection `2`
+../review/Review1b.lean:35:99: error: unsolved goals
+inst✝ : Host
+Heap : Nat → DataMem → Prop
+ty : BitVec 64
+esz S : Nat
+hg : GrowsliceC Heap ty esz S
+st : MachineData
+ret : Int64
+stk : List UInt8
+avail : Nat
+F : DataMem → Prop
+hlen : stk.length = S
+hm :
+  (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec) ⋆
+          Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆
+        Heap avail ⋆
+      F)
+    st.dmem
+st0 : MachineData :=
+  {
+    regs :=
+      let __src := st.regs;
+      { rax := __src.rax, rbx := UInt64.ofNat (2 ^ 63), rcx := __src.rcx, rdx := __src.rdx, rsi := { toBitVec := ty },
+        rdi := UInt64.ofNat (2 ^ 63), rsp := __src.rsp, rbp := __src.rbp, r8 := __src.r8, r9 := __src.r9,
+        r10 := __src.r10, r11 := __src.r11, r12 := __src.r12, r13 := __src.r13, r14 := __src.r14, r15 := __src.r15 },
+    zmms := st.zmms, status := st.status, dmem := st.dmem }
+hmem :
+  (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st0.regs.rsp.toBitVec) ⋆
+            Eq (stk.At (st0.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆
+          Eq ([].At st0.regs.rax.toBitVec) ⋆
+        Heap avail ⋆
+      F)
+    st0.dmem
+hr :
+  st0.regs.rcx.toNat < st0.regs.rbx.toNat →
+    2 * (esz * nextSliceCap st0.regs.rbx.toNat st0.regs.rcx.toNat) + 8192 ≤ sorry →
+      sorry ≤ maxAlloc →
+        [].length = esz * (st0.regs.rbx.toNat - st0.regs.rdi.toNat) →
+          stk.length = S →
+            sorry.length = 40 →
+              (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st0.regs.rsp.toBitVec) ⋆
+                            Eq (stk.At (st0.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆
+                          Eq (sorry.At (st0.regs.rsp.toBitVec + 8)) ⋆
+                        Eq ([].At st0.regs.rax.toBitVec) ⋆
+                      Heap sorry ⋆
+                    sorry)
+                  st0.dmem →
+                Eventually (step1 Host.exe)
+                  (fun st' =>
+                    st'.pc = ret ∧
+                      st'.data.regs.rsp = st0.regs.rsp + 8 ∧
+                        st'.data.regs.rbp = st0.regs.rbp ∧
+                          st'.data.regs.r14 = st0.regs.r14 ∧
+                            st'.data.regs.rbx = st0.regs.rbx ∧
+                              nextSliceCap st0.regs.rbx.toNat st0.regs.rcx.toNat ≤ st'.data.regs.rcx.toNat ∧
+                                esz * st'.data.regs.rcx.toNat ≤
+                                    2 * (esz * nextSliceCap st0.regs.rbx.toNat st0.regs.rcx.toNat) + 8192 ∧
+                                  ∃ stk' spill' tail avail',
+                                    stk'.length = S ∧
+                                      spill'.length = 40 ∧
+                                        [].length + tail.length = esz * st'.data.regs.rcx.toNat ∧
+                                          avail' + esz * st'.data.regs.rcx.toNat ≤ sorry ∧
+                                            (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st0.regs.rsp.toBitVec) ⋆
+                                                          Eq (stk'.At (st0.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆
+                                                        Eq (spill'.At (st0.regs.rsp.toBitVec + 8)) ⋆
+                                                      Eq ([].At st0.regs.rax.toBitVec) ⋆
+                                                    Eq (([] ++ tail).At st'.data.regs.rax.toBitVec) ⋆
+                                                  Heap avail' ⋆
+                                                sorry)
+                                              st'.data.dmem)
+                  { data := st0, pc := label "runtime.growslice" }
+out : MachineState
+ho : ?m.128 out
+⊢ False
+'Review1b.growslice_false' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
+'Review1b.bl_accept_main_preconditions_false' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
+'Review1b.bl_unmarshal_accept_spec_k_preconditions_false' depends on axioms: [propext,
+ sorryAx,
+ Classical.choice,
+ Quot.sound]
+'Review1b.lum_grow_site_preconditions_false' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
