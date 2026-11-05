@@ -31,7 +31,7 @@ L_target.ListU64.UnmarshalSSZ_0:
   mov %rsi,0x30(%rsp)
   mov %rdx,0x38(%rsp)
   mov %rcx,0x28(%rsp)
-  lea type__+48128(%rip),%rax
+  lea type__+49120(%rip),%rax
   mov %rcx,%rbx
   callq runtime.makeslice
   mov 0x28(%rsp),%rdx
@@ -57,7 +57,7 @@ L_target.ListU64.UnmarshalSSZ_ce:
   mov %rcx,%rax
   nop
   callq runtime.convT64
-  lea type__+48192(%rip),%rcx
+  lea type__+49184(%rip),%rcx
   mov %rcx,0x40(%rsp)
   mov %rax,0x48(%rsp)
   mov ssz.ErrListTooBig(%rip),%rcx
@@ -69,7 +69,7 @@ L_target.ListU64.UnmarshalSSZ_109:
   mov ssz.ErrListTooBig+8(%rip),%rdx
   mov %rcx,0x50(%rsp)
   mov %rdx,0x58(%rsp)
-  lea go_string._+40018(%rip),%rax
+  lea go_string._+40250(%rip),%rax
   mov $0x38,%ebx
   lea 0x40(%rsp),%rcx
   mov $0x2,%edi
@@ -78,10 +78,10 @@ L_target.ListU64.UnmarshalSSZ_109:
   test %rax,%rax
   jne L_target.ListU64.UnmarshalSSZ_166
   nop
-  lea type__+81728(%rip),%rax
+  lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x38,0x8(%rax)
-  lea go_string._+40018(%rip),%rcx
+  lea go_string._+40250(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax
@@ -96,7 +96,7 @@ L_target.ListU64.UnmarshalSSZ_16c:
   mov %rcx,%rax
   nop
   callq runtime.convT64
-  lea type__+48192(%rip),%rcx
+  lea type__+49184(%rip),%rcx
   mov %rcx,0x60(%rsp)
   mov %rax,0x68(%rsp)
   mov ssz.ErrIncorrectListSize(%rip),%rcx
@@ -108,7 +108,7 @@ L_target.ListU64.UnmarshalSSZ_1a9:
   mov ssz.ErrIncorrectListSize+8(%rip),%rdx
   mov %rcx,0x70(%rsp)
   mov %rdx,0x78(%rsp)
-  lea go_string._+42124(%rip),%rax
+  lea go_string._+42606(%rip),%rax
   mov $0x44,%ebx
   lea 0x60(%rsp),%rcx
   mov $0x2,%edi
@@ -117,10 +117,10 @@ L_target.ListU64.UnmarshalSSZ_1a9:
   test %rax,%rax
   jne L_target.ListU64.UnmarshalSSZ_206
   nop
-  lea type__+81728(%rip),%rax
+  lea type__+82848(%rip),%rax
   callq runtime.newobject
   movq $0x44,0x8(%rax)
-  lea go_string._+42124(%rip),%rcx
+  lea go_string._+42606(%rip),%rcx
   mov %rcx,(%rax)
   mov %rax,%rbx
   lea go_itab._errors.errorString_error(%rip),%rax

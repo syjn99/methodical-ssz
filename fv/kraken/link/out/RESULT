@@ -1,3 +1,4 @@
+PASS (a) ssz.ValidateBitlist: 133 instructions, 555 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
 PASS (a) target.Scalars.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
 PASS (a) target.Scalars.MarshalSSZTo: 122 instructions, 478 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
 PASS (a) target.Scalars.UnmarshalSSZ: 28 instructions, 95 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
@@ -7,57 +8,160 @@ PASS (a) target.FixedVec.UnmarshalSSZ: 75 instructions, 286 bytes, symtab/objdum
 PASS (a) target.ListU64.SizeSSZ: 4 instructions, 13 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
 PASS (a) target.ListU64.MarshalSSZTo: 83 instructions, 308 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
 PASS (a) target.ListU64.UnmarshalSSZ: 175 instructions, 709 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.BitVec.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.BitVec.MarshalSSZTo: 54 instructions, 200 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.BitVec.UnmarshalSSZ: 58 instructions, 255 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.Nested.SizeSSZ: 33 instructions, 122 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.Nested.MarshalSSZTo: 298 instructions, 1310 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.Nested.UnmarshalSSZ: 142 instructions, 606 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.ListC.SizeSSZ: 14 instructions, 44 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.ListC.MarshalSSZTo: 213 instructions, 862 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.ListC.UnmarshalSSZ: 395 instructions, 1767 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.BitL.SizeSSZ: 3 instructions, 9 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.BitL.MarshalSSZTo: 79 instructions, 311 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.BitL.UnmarshalSSZ: 124 instructions, 528 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target_prysm.Checkpoint.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target_prysm.Checkpoint.MarshalSSZTo: 76 instructions, 307 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target_prysm.Checkpoint.UnmarshalSSZ: 65 instructions, 293 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target_prysm.AttestationData.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target_prysm.AttestationData.MarshalSSZTo: 307 instructions, 1399 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target_prysm.AttestationData.UnmarshalSSZ: 169 instructions, 766 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
 PASS (b) runtime.newobject = 0x41e4a0 .text code
 PASS (b) runtime.convT64 = 0x479320 .text code
 PASS (b) runtime.makeslice = 0x47c540 .text code
 PASS (b) runtime.growslice = 0x47c620 .text code
 PASS (b) runtime.morestack_noctxt.abi0 = 0x47f480 .text code
+PASS (b) runtime.gcWriteBarrier1 = 0x480de0 .text code
 PASS (b) runtime.gcWriteBarrier2 = 0x480e00 .text code
 PASS (b) runtime.panicBounds = 0x4811a0 .text code
 PASS (b) runtime.memmove = 0x481540 .text code
 PASS (b) fmt.errorf = 0x49f360 .text code
-PASS (b) type__+47744 = 0x4cda80 .rodata group(nearest preceding symbol)
-PASS (b) type__+48128 = 0x4cdc00 .rodata group(nearest preceding symbol)
-PASS (b) type__+48192 = 0x4cdc40 .rodata group(nearest preceding symbol)
-PASS (b) type__+81728 = 0x4d5f40 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+40018 = 0x4f6c62 .rodata group(nearest preceding symbol)
-PASS (b) go_string._+42124 = 0x4f749c .rodata group(nearest preceding symbol)
-PASS (b) go_itab._errors.errorString_error = 0x4f97f8 .rodata in-symbol
-PASS (b) ssz.ErrBytesLength = 0x5c6d60 .data in-symbol
-PASS (b) ssz.ErrBytesLength+8 = 0x5c6d68 .data in-symbol
-PASS (b) ssz.ErrInvalidSerialization = 0x5c6d70 .data in-symbol
-PASS (b) ssz.ErrInvalidSerialization+8 = 0x5c6d78 .data in-symbol
-PASS (b) ssz.ErrInvalidVariableOffset = 0x5c6d80 .data in-symbol
-PASS (b) ssz.ErrInvalidVariableOffset+8 = 0x5c6d88 .data in-symbol
-PASS (b) ssz.ErrListTooBig = 0x5c6d90 .data in-symbol
-PASS (b) ssz.ErrListTooBig+8 = 0x5c6d98 .data in-symbol
-PASS (b) ssz.ErrSize = 0x5c6db0 .data in-symbol
-PASS (b) ssz.ErrSize+8 = 0x5c6db8 .data in-symbol
-PASS (b) ssz.ErrIncorrectListSize = 0x5cc9d0 .bss in-symbol
-PASS (b) ssz.ErrIncorrectListSize+8 = 0x5cc9d8 .bss in-symbol
-PASS (b) runtime.writeBarrier = 0x5ed2c0 .noptrbss in-symbol
-PASS (c) all.S: 64 labels, each defined once; 29 external references not defined in all.S
-DIFF (d) target.FixedVec.MarshalSSZTo 0x4b693e padding: elf 6690 asm 90 data16 nop -> nop
-DIFF (d) target.FixedVec.UnmarshalSSZ 0x4b6a9e padding: elf 6690 asm 90 data16 nop -> nop
-DIFF (d) target.ListU64.MarshalSSZTo 0x4b6b3c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop
-DIFF (d) target.ListU64.UnmarshalSSZ 0x4b6d5d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
-DIFF (d) target.ListU64.UnmarshalSSZ 0x4b6ddd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
-DIFF (d) target.ListU64.UnmarshalSSZ 0x4b6dfd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
-DIFF (d) target.ListU64.UnmarshalSSZ 0x4b6ebc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop
-DIFF (d) target.ListU64.UnmarshalSSZ 0x4b6f1d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
-PASS (d) 582 instructions reassembled by clang x86_64-linux-gnu: 574 byte-identical, 0 encoding, 8 padding
-elf sha256 bd3cb69823aab5f1056a4d009ca9b007cdb91f073032385c611863c58fbd2a7a
-S sha256 5da30b8537aa6142fb1891fc0721dc3e7aab857962aa4903938550df0f633252 all.S
-S sha256 67daeb30b10167d1d11fa4ac699e955174777543046a06f17b1b00f717086cc2 target.FixedVec.MarshalSSZTo.S
+PASS (b) ssz.ValidateBitlist = 0x4b65e0 .text code
+PASS (b) target.Scalars.UnmarshalSSZ = 0x4b6a20 .text code
+PASS (b) target.ListU64.UnmarshalSSZ = 0x4b6ea0 .text code
+PASS (b) type__+48736 = 0x4cfe60 .rodata group(nearest preceding symbol)
+PASS (b) type__+49120 = 0x4cffe0 .rodata group(nearest preceding symbol)
+PASS (b) type__+49184 = 0x4d0020 .rodata group(nearest preceding symbol)
+PASS (b) type__+82848 = 0x4d83a0 .rodata group(nearest preceding symbol)
+PASS (b) type__+83104 = 0x4d84a0 .rodata group(nearest preceding symbol)
+PASS (b) type__+100288 = 0x4dc7c0 .rodata group(nearest preceding symbol)
+PASS (b) type__+114368 = 0x4dfec0 .rodata group(nearest preceding symbol)
+PASS (b) type__+135104 = 0x4e4fc0 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+511 = 0x4f02af .rodata group(nearest preceding symbol)
+PASS (b) go_string._+516 = 0x4f02b4 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+521 = 0x4f02b9 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+2153 = 0x4f0919 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+3146 = 0x4f0cfa .rodata group(nearest preceding symbol)
+PASS (b) go_string._+3156 = 0x4f0d04 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+5738 = 0x4f171a .rodata group(nearest preceding symbol)
+PASS (b) go_string._+13267 = 0x4f3483 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+33565 = 0x4f83cd .rodata group(nearest preceding symbol)
+PASS (b) go_string._+37075 = 0x4f9183 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+39330 = 0x4f9a52 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+40250 = 0x4f9dea .rodata group(nearest preceding symbol)
+PASS (b) go_string._+40930 = 0x4fa092 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+41466 = 0x4fa2aa .rodata group(nearest preceding symbol)
+PASS (b) go_string._+41960 = 0x4fa498 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+42539 = 0x4fa6db .rodata group(nearest preceding symbol)
+PASS (b) go_string._+42606 = 0x4fa71e .rodata group(nearest preceding symbol)
+PASS (b) go_string._+44011 = 0x4fac9b .rodata group(nearest preceding symbol)
+PASS (b) go_itab._errors.errorString_error = 0x4fcaf8 .rodata in-symbol
+PASS (b) ssz.ErrBytesLength = 0x5ccde0 .data in-symbol
+PASS (b) ssz.ErrBytesLength+8 = 0x5ccde8 .data in-symbol
+PASS (b) ssz.ErrInvalidSerialization = 0x5ccdf0 .data in-symbol
+PASS (b) ssz.ErrInvalidSerialization+8 = 0x5ccdf8 .data in-symbol
+PASS (b) ssz.ErrInvalidVariableOffset = 0x5cce00 .data in-symbol
+PASS (b) ssz.ErrInvalidVariableOffset+8 = 0x5cce08 .data in-symbol
+PASS (b) ssz.ErrListTooBig = 0x5cce10 .data in-symbol
+PASS (b) ssz.ErrListTooBig+8 = 0x5cce18 .data in-symbol
+PASS (b) ssz.ErrSize = 0x5cce30 .data in-symbol
+PASS (b) ssz.ErrSize+8 = 0x5cce38 .data in-symbol
+PASS (b) ssz.ErrIncorrectListSize = 0x5d2a50 .bss in-symbol
+PASS (b) ssz.ErrIncorrectListSize+8 = 0x5d2a58 .bss in-symbol
+PASS (b) runtime.noptrbss = 0x5f3040 .noptrbss in-symbol
+PASS (b) runtime.writeBarrier = 0x5f3340 .noptrbss in-symbol
+PASS (c) all.S: 277 labels, each defined once; 51 external references not defined in all.S; 3 calls to target functions at their entry: ['ssz.ValidateBitlist', 'target.ListU64.UnmarshalSSZ', 'target.Scalars.UnmarshalSSZ']
+DIFF (d) ssz.ValidateBitlist 0x4b65f7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop
+DIFF (d) ssz.ValidateBitlist 0x4b663c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop
+DIFF (d) ssz.ValidateBitlist 0x4b665d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
+DIFF (d) ssz.ValidateBitlist 0x4b671b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop
+DIFF (d) ssz.ValidateBitlist 0x4b679b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop
+DIFF (d) target.FixedVec.MarshalSSZTo 0x4b6b7e padding: elf 6690 asm 90 data16 nop -> nop
+DIFF (d) target.FixedVec.UnmarshalSSZ 0x4b6cde padding: elf 6690 asm 90 data16 nop -> nop
+DIFF (d) target.ListU64.MarshalSSZTo 0x4b6d7c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop
+DIFF (d) target.ListU64.UnmarshalSSZ 0x4b6f9d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
+DIFF (d) target.ListU64.UnmarshalSSZ 0x4b701d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
+DIFF (d) target.ListU64.UnmarshalSSZ 0x4b703d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
+DIFF (d) target.ListU64.UnmarshalSSZ 0x4b70fc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop
+DIFF (d) target.ListU64.UnmarshalSSZ 0x4b715d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
+DIFF (d) target.BitVec.UnmarshalSSZ 0x4b7297 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop
+DIFF (d) target.BitVec.UnmarshalSSZ 0x4b731d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
+DIFF (d) target.Nested.MarshalSSZTo 0x4b753d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
+DIFF (d) target.Nested.MarshalSSZTo 0x4b78fd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
+DIFF (d) target.Nested.UnmarshalSSZ 0x4b7937 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop
+DIFF (d) target.Nested.UnmarshalSSZ 0x4b7a1e padding: elf 6690 asm 90 data16 nop -> nop
+DIFF (d) target.Nested.UnmarshalSSZ 0x4b7a5b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop
+DIFF (d) target.Nested.UnmarshalSSZ 0x4b7a7e padding: elf 6690 asm 90 data16 nop -> nop
+DIFF (d) target.Nested.UnmarshalSSZ 0x4b7adc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop
+DIFF (d) target.Nested.UnmarshalSSZ 0x4b7b5b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop
+DIFF (d) target.ListC.MarshalSSZTo 0x4b7c3d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
+DIFF (d) target.ListC.MarshalSSZTo 0x4b7cfe padding: elf 6690 asm 90 data16 nop -> nop
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b7f76 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b7f98 padding: elf 0f1f840000000000 asm 90 nopl (%rax,%rax,1) -> nop
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b7fbe padding: elf 6690 asm 90 data16 nop -> nop
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b7fdd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b82fe padding: elf 6690 asm 90 data16 nop -> nop
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b837a padding: elf 660f1f440000 asm 90 nopw (%rax,%rax,1) -> nop
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b845d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b84dd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b851b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b853e padding: elf 6690 asm 90 data16 nop -> nop
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b85bc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop
+DIFF (d) target.BitL.MarshalSSZTo 0x4b865c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop
+DIFF (d) target.BitL.UnmarshalSSZ 0x4b879a padding: elf 660f1f440000 asm 90 nopw (%rax,%rax,1) -> nop
+DIFF (d) target.BitL.UnmarshalSSZ 0x4b87fb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop
+DIFF (d) target.BitL.UnmarshalSSZ 0x4b883c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop
+DIFF (d) target.BitL.UnmarshalSSZ 0x4b88db padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop
+DIFF (d) target_prysm.Checkpoint.UnmarshalSSZ 0x4b8b57 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop
+DIFF (d) target_prysm.AttestationData.MarshalSSZTo 0x4b8d1e padding: elf 6690 asm 90 data16 nop -> nop
+DIFF (d) target_prysm.AttestationData.MarshalSSZTo 0x4b8e3d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
+DIFF (d) target_prysm.AttestationData.MarshalSSZTo 0x4b8f3e padding: elf 6690 asm 90 data16 nop -> nop
+DIFF (d) target_prysm.AttestationData.MarshalSSZTo 0x4b8fdb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop
+DIFF (d) target_prysm.AttestationData.UnmarshalSSZ 0x4b9237 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop
+DIFF (d) target_prysm.AttestationData.UnmarshalSSZ 0x4b92bd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
+DIFF (d) target_prysm.AttestationData.UnmarshalSSZ 0x4b943b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop
+PASS (d) 2751 instructions reassembled by clang x86_64-linux-gnu: 2702 byte-identical, 0 encoding, 49 padding
+elf sha256 84f0b8e535cb56c5c79d0df4cf40962978feb68a9c4fa7f899ec15edeee4797f
+S sha256 23aec47ad720a7a4c2c585e527d9254f6f9ec53ff45b85ab0632f6c73724e2d5 all.S
+S sha256 f69174879ef82515e70dff38b1867644392322e8a5fcf4a4717156dd60931ce9 ssz.ValidateBitlist.S
+S sha256 ce39525ace2af8f57016483d3b6150bd070fc30739b02fb7e8f33aa0eb028bd9 target.BitL.MarshalSSZTo.S
+S sha256 c107437c18e34e4775dc460ba9804bccc47b21b2b85a06857c8079e212b34d6d target.BitL.SizeSSZ.S
+S sha256 8c8b3928a59f3cc2268f5acde97bf69f2eb24c39ed5fe7ec946ed85a92e09e46 target.BitL.UnmarshalSSZ.S
+S sha256 c940ae683fa484d387236849a259e2c6a0de287687586a1445b3b7e0f35af3c7 target.BitVec.MarshalSSZTo.S
+S sha256 651af4822b254ec886c3adeb0d4b2bfd3dff6c84b592ae77b8bd881ccbf493e9 target.BitVec.SizeSSZ.S
+S sha256 19a4bf311519e7f48b6a77aa8aa1f87fabf54e12cf9401bf0cce129e630530cd target.BitVec.UnmarshalSSZ.S
+S sha256 616586aac491968702fb179e2193b3fb8b28748f3db7a85204ed5c8bd94a7e95 target.FixedVec.MarshalSSZTo.S
 S sha256 fb8af51689f1cfe4015f6d32befdff24eb753eb96bb20f18a6248dc1cb837ade target.FixedVec.SizeSSZ.S
-S sha256 a8f04b7122f6b3ec62b2a100a212b6c1bbbf8c77beb5e1a3a381f4a9baf5a00e target.FixedVec.UnmarshalSSZ.S
-S sha256 c4c3f331f07870aa980158c9434021b293c58433c9e299f0d93aae2af3358b05 target.ListU64.MarshalSSZTo.S
+S sha256 6bae500d7a848bfb88c6fcffd9ad40eec2914bf71a0fadfa5ee8f2a513fe149e target.FixedVec.UnmarshalSSZ.S
+S sha256 9704397cb99dc21bac2019b8743c10a326f8d864f39d18723866e2e10661eeea target.ListC.MarshalSSZTo.S
+S sha256 7a1d6fb50365c65cbb85d12e0edfa277c4549a93d21b0d42f8f1830a689a94f8 target.ListC.SizeSSZ.S
+S sha256 f6d77e0b7816445982d6827e2d83316fd7a77a89b161fd4279f356f9c2351966 target.ListC.UnmarshalSSZ.S
+S sha256 b8729ca7e7e8516961389d20c6915825a895ed7ebce2287f1e1fd1cc33e9a829 target.ListU64.MarshalSSZTo.S
 S sha256 7b727070a534b1bf1b33fcbe20867d47e6c73318fe7ea5e7b12674d6cb0aa6b7 target.ListU64.SizeSSZ.S
-S sha256 a70e9f56def5060eaa8ab4a4b3b704211d94a1afd31b752ee8e489f5cfaecb1c target.ListU64.UnmarshalSSZ.S
-S sha256 498b355093d5ac5e4a40d0f49cd24127ab5474b6ddfa497c1b3af642bc7e960b target.Scalars.MarshalSSZTo.S
+S sha256 21a5dcbc77f0f0afdcabbf43ceea937f8f2493428701d8d7c6025a69652fd251 target.ListU64.UnmarshalSSZ.S
+S sha256 a8be799ad67b5bc776acfbbb71a905c831f30b44f87d496c2a7a38aed3789869 target.Nested.MarshalSSZTo.S
+S sha256 64a4dcafccfda4095650153657a5339579c516a67cc594789146603d00b6a0e2 target.Nested.SizeSSZ.S
+S sha256 2c97e32723d76e552c0038ecc0bc03587e4c49cc81dd6379750f86485020dd1e target.Nested.UnmarshalSSZ.S
+S sha256 07eca2c81b4812d12d389e2c80eb60e63b38bd903b7e049587dcddb5d185eb24 target.Scalars.MarshalSSZTo.S
 S sha256 ca716328afeae6a9217d7ca0c7d777f2ddaece031a1d5d2a092a0669be4b3d0d target.Scalars.SizeSSZ.S
 S sha256 1581f52198a2b3f257a2046d7b04a7e2ed835ca20ef1972a80d4f2ed886f63b4 target.Scalars.UnmarshalSSZ.S
-file sha256 7c84365f903dc4bcb87b7bf0f308f76c88ae618e88de791c4019c76d3851c900 lean/Fk/Code.lean
+S sha256 622ca9eff780c9876c779da6c33b1f699783c240ba8a12d7caf5dd9feed2e4cb target_prysm.AttestationData.MarshalSSZTo.S
+S sha256 ce572e72cfa9ac4421267bdbced2a12af9f31c259e51e42b2d6c92b44ddf0616 target_prysm.AttestationData.SizeSSZ.S
+S sha256 67b0f2900b842ae65c8c8a64b0db302c576de4cb6eca43d4b09cde70713a18b3 target_prysm.AttestationData.UnmarshalSSZ.S
+S sha256 3990b8f2369006c41c8475a817a075ada18b32ffd4de36397b5f3e079a39109a target_prysm.Checkpoint.MarshalSSZTo.S
+S sha256 a77ac17b8695d617c2f3bd5a731d3572d7fb69c2e8827190d3a5dd3e36a83cb1 target_prysm.Checkpoint.SizeSSZ.S
+S sha256 bee62ab7dfa3da589159bdb47d767ba65cb09f7e8f64cec649e60aa3c026c78c target_prysm.Checkpoint.UnmarshalSSZ.S
+file sha256 e06c839a82ba6c1d3e1735a6db3323284828e019d443db214a79a19b9c9f60ba lean/Fk/Code.lean
 file sha256 a2a8c15a0b66b168df324ba658e9f87d4a46bd90235af9ce4b6bab7ea31b52a4 AXIOMS.txt
 PASS all
-BUNDLE sha256 5db2331faad56bc97b13995bdad184c6c3407841aa2bc07b9042c0468a6ac7ac
+BUNDLE sha256 bba0ccb06d6f99d38e74a9527ad4aa7aabfed6f403870588649249f376ddcf69

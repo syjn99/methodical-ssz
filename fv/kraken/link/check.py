@@ -232,9 +232,14 @@ def run(outdir, log):
     need(labs == hostlabels, "all.S labels are not the concatenation of the functions' labels")
     dup = {l for l in labs if labs.count(l) > 1}
     need(not dup, f"duplicate labels in all.S: {sorted(dup)}")
-    clash = {g.split("+")[0] for g in externals} & set(labs)
+    fnames = {x[0] for x in per_fn}
+    clash = ({g.split("+")[0] for g in externals} & set(labs)) - fnames
     need(not clash, f"external labels defined in all.S: {sorted(clash)}")
-    log(f"PASS (c) all.S: {len(labs)} labels, each defined once; {len(externals)} external references not defined in all.S")
+    internal = sorted({g for g in externals} & fnames)
+    for g in internal:
+        need(externals[g][0] == next(lo for n, lo, *_ in per_fn if n == g), f"call to {g} not at its entry")
+    log(f"PASS (c) all.S: {len(labs)} labels, each defined once; {len(externals) - len(internal)} external "
+        f"references not defined in all.S; {len(internal)} calls to target functions at their entry: {internal}")
     # (d) reassembly
     diffs = reassemble(per_fn, {g.split("+")[0]: orig(g.split("+")[0]) for g in externals}, esyms, b, secs, outdir)
     for name, a, kind, orig, new, txt in diffs:
@@ -252,8 +257,10 @@ def reassemble(per_fn, externals, esyms, b, secs, outdir):
     anchors = []
     for name, lo, hi, ins, sins in per_fn:
         anchors.append((lo, name, ins, sins))
+    fnames = {x[0] for x in per_fn}
     for g in externals:
-        anchors.append((esyms[externals[g]][0], g, None, None))
+        if g not in fnames:
+            anchors.append((esyms[externals[g]][0], g, None, None))
     anchors.sort(key=lambda x: (x[0], x[2] is not None))
     base = anchors[0][0]
     lines = [".text", ".att_syntax", ".code64"]

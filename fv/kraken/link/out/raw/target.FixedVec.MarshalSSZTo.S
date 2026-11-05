@@ -16,7 +16,7 @@ L_target.FixedVec.MarshalSSZTo_0:
   mov %rdx,%rbx
   mov %rdi,%rcx
   mov $0x20,%edi
-  lea type__+47744(%rip),%rsi
+  lea type__+48736(%rip),%rsi
   callq runtime.growslice
   mov %rbx,%rdx
   mov %rcx,%rdi
@@ -68,7 +68,7 @@ L_target.FixedVec.MarshalSSZTo_d0:
   mov %rdx,%rbx
   mov %rdi,%rcx
   mov $0x8,%edi
-  lea type__+47744(%rip),%rsi
+  lea type__+48736(%rip),%rsi
   callq runtime.growslice
   mov 0x58(%rsp),%r8
   mov 0x40(%rsp),%r9

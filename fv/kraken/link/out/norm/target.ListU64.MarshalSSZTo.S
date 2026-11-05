@@ -16,7 +16,7 @@ L_target.ListU64.MarshalSSZTo_0:
   mov %rdx,%rbx
   mov %rdi,%rcx
   mov $0x4,%edi
-  lea type__+47744(%rip),%rsi
+  lea type__+48736(%rip),%rsi
   nop
   callq runtime.growslice
   mov %rbx,%rdx
@@ -59,7 +59,7 @@ L_target.ListU64.MarshalSSZTo_9a:
   mov %rdx,%rbx
   mov %rdi,%rcx
   mov $0x8,%edi
-  lea type__+47744(%rip),%rsi
+  lea type__+48736(%rip),%rsi
   callq runtime.growslice
   mov 0x50(%rsp),%r8
   mov 0x58(%rsp),%r9

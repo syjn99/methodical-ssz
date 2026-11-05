@@ -53,7 +53,7 @@ theorem lu_accept_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k
     -- Contract of runtime.makeslice (Fk/Contracts.lean): uint64 elements (8 bytes),
     -- type descriptor at type:*+48128 (link/out/RESULT), heap with avail ≥ 8n bytes.
     (hav : 8 * n ≤ avail)
-    (hms : MakesliceC Heap (label "type__" + 48128).toBitVec 8 S) :
+    (hms : MakesliceC Heap (label "type__" + 49120).toBitVec 8 S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0 ∧
         ∃ p : BitVec 64, (Eq ((Int.toBytes 8 p.toInt).At s.regs.rax.toBitVec)

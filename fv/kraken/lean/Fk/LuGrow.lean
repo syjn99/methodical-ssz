@@ -33,7 +33,7 @@ theorem lum_grow_site (k : Nat) (hk : ListU64MarshalSSZTo.IsInfixAt Host.prog k)
     (h_mem : s.dmem =⋆ Eq (sl.At (s.regs.rsp.toBitVec + 112)) ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 8#64))
       ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 8#64 - BitVec.ofNat 64 S))
       ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Heap avail ⋆ R)
-    (hgs : GrowsliceC Heap (label "type__" + 47744).toBitVec 1 S) :
+    (hgs : GrowsliceC Heap (label "type__" + 48736).toBitVec 1 S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 25) ∧ st.data.regs.rax = s.regs.rax
         ∧ st.data.regs.rdx = s.regs.rdx ∧ s.regs.rdx.toNat ≤ st.data.regs.rdi.toNat

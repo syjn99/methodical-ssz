@@ -16,7 +16,7 @@ L_target.Scalars.MarshalSSZTo_0:
   mov %rdx,%rbx
   mov %rdi,%rcx
   mov $0x1,%edi
-  lea type__+47744(%rip),%rsi
+  lea type__+48736(%rip),%rsi
   callq runtime.growslice
   movzbl 0x41(%rsp),%r8d
   mov %rcx,%rdi
@@ -34,7 +34,7 @@ L_target.Scalars.MarshalSSZTo_5c:
   mov %rdx,%rbx
   mov %rdi,%rcx
   mov $0x2,%edi
-  lea type__+47744(%rip),%rsi
+  lea type__+48736(%rip),%rsi
   callq runtime.growslice
   movzwl 0x42(%rsp),%r8d
   mov %rcx,%rdi
@@ -52,7 +52,7 @@ L_target.Scalars.MarshalSSZTo_a3:
   mov %rdx,%rbx
   mov %rdi,%rcx
   mov $0x4,%edi
-  lea type__+47744(%rip),%rsi
+  lea type__+48736(%rip),%rsi
   callq runtime.growslice
   mov 0x44(%rsp),%r8d
   mov %rcx,%rdi
@@ -70,7 +70,7 @@ L_target.Scalars.MarshalSSZTo_e8:
   mov %rdx,%rbx
   mov %rdi,%rcx
   mov $0x8,%edi
-  lea type__+47744(%rip),%rsi
+  lea type__+48736(%rip),%rsi
   callq runtime.growslice
   mov 0x48(%rsp),%r8
   mov %rbx,%rdx
@@ -88,7 +88,7 @@ L_target.Scalars.MarshalSSZTo_12c:
   mov %rdx,%rbx
   mov %rdi,%rcx
   mov $0x1,%edi
-  lea type__+47744(%rip),%rsi
+  lea type__+48736(%rip),%rsi
   callq runtime.growslice
   mov %rbx,%rdx
   mov %rax,%rbx
@@ -104,7 +104,7 @@ L_target.Scalars.MarshalSSZTo_169:
   mov %rdx,%rbx
   mov %rdi,%rcx
   mov $0x1,%edi
-  lea type__+47744(%rip),%rsi
+  lea type__+48736(%rip),%rsi
   callq runtime.growslice
   mov %rbx,%rdx
   mov %rax,%rbx

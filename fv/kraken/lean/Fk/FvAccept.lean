@@ -62,7 +62,7 @@ theorem fv_accept_main (k : Nat) (hk : FixedVecUnmarshalSSZ.IsInfixAt Host.prog 
     (hlen : s.regs.rcx = 64)
     (hav : 8 * 4 ≤ avail)
     (hmm : MemmoveC S)
-    (hms : MakesliceC Heap (label "type__" + 48128).toBitVec 8 S) :
+    (hms : MakesliceC Heap (label "type__" + 49120).toBitVec 8 S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧

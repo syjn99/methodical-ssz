@@ -16,7 +16,7 @@ L_target.FixedVec.UnmarshalSSZ_0:
   mov $0x20,%ecx
   callq runtime.memmove
 L_target.FixedVec.UnmarshalSSZ_38:
-  lea type__+48128(%rip),%rax
+  lea type__+49120(%rip),%rax
   mov $0x4,%ebx
   mov %rbx,%rcx
   callq runtime.makeslice

@@ -25,6 +25,7 @@ import (
 	"strings"
 
 	"github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+	"github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
 	"github.com/OffchainLabs/methodical-ssz/ssz"
 )
 
@@ -39,7 +40,11 @@ var (
 	sc       = &target.Scalars{}
 	fv       = &target.FixedVec{}
 	lu       = &target.ListU64{}
-	codecs   = map[string]codec{"SC": sc, "FV": fv, "LU": lu}
+	codecs   = map[string]codec{"SC": sc, "FV": fv, "LU": lu,
+		// 1b targets. -test sets their values by UnmarshalSSZ of the given SSZ
+		// bytes (not independent of the code under test; semtest/README).
+		"BV": &target.BitVec{}, "NE": &target.Nested{}, "LC": &target.ListC{}, "BL": &target.BitL{},
+		"CP": &prysm.Checkpoint{}, "AD": &prysm.AttestationData{}}
 	errNames = []struct {
 		e error
 		n string
@@ -98,6 +103,8 @@ func setValue(t string, b []byte) {
 		for i := range lu.L {
 			lu.L[i] = le.Uint64(b[8*i:])
 		}
+	default:
+		_ = codecs[t].UnmarshalSSZ(b)
 	}
 }
 
@@ -124,6 +131,8 @@ func value(t string) []byte {
 		for _, w := range lu.L {
 			b = le.AppendUint64(b, w)
 		}
+	default:
+		b, _ = codecs[t].MarshalSSZTo(nil)
 	}
 	return b
 }

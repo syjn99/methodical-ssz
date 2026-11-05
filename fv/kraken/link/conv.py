@@ -89,7 +89,7 @@ def read_objdump(path):
 BRANCH = re.compile(r"^(j[a-z]+|callq?|jmpq?) 0x([0-9a-f]+)$")
 RIP = re.compile(r"(-?0x[0-9a-f]+|-?\d+)\(%rip\)")
 NORM = {"nopl (%rax)": "nop", "data16 nop": "nop", "nopw 0x0(%rax,%rax,1)": "nop",
-        "nopw (%rax,%rax,1)": "nop", "nopl 0x0(%rax)": "nop", "nopl 0x0(%rax,%rax,1)": "nop",
+        "nopw (%rax,%rax,1)": "nop", "nopl 0x0(%rax)": "nop", "nopl 0x0(%rax,%rax,1)": "nop", "nopl (%rax,%rax,1)": "nop",
         "nopw %cs:0x0(%rax,%rax,1)": "nop", "data16 nopw %cs:0x0(%rax,%rax,1)": "nop", "xchg %ax,%ax": "nop"}
 
 

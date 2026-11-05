@@ -63,7 +63,7 @@ theorem fv_unmarshal_accept_spec_k (k : Nat) (hk : FixedVecUnmarshalSSZ.IsInfixA
     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 40 ≤ s.regs.rsp.toNat)
     (hlen : s.regs.rcx.toNat = bsA.size)
     (hav : 8 * 4 ≤ avail) (hmm : MemmoveC S)
-    (hms : MakesliceC Heap (label "type__" + 48128).toBitVec 8 S) :
+    (hms : MakesliceC Heap (label "type__" + 49120).toBitVec 8 S) :
     ∃ g : FixedVecG, g.toValue = v ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0

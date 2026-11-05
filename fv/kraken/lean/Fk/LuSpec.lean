@@ -62,7 +62,7 @@ theorem lu_unmarshal_accept_spec_k (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt
     (hlen : s.regs.rcx.toNat = bsA.size) (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat)
     (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
     (hav : 8 * 16 ≤ avail)
-    (hms : MakesliceC Heap (label "type__" + 48128).toBitVec 8 S) :
+    (hms : MakesliceC Heap (label "type__" + 49120).toBitVec 8 S) :
     ∃ g : ListU64, g.ok ∧ g.toValue = v ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0 ∧
