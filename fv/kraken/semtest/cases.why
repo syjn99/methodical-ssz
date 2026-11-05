@@ -1,7 +1,7 @@
 BV U #1: empty: bv_reject_size_main
 BV U #2: min: bv_accept_main
 BV U #3: max: bv_accept_main
-BV U #4: padding bit (F1): Go accepts, EthLib rejects (bv_padding_counterexample)
+BV U #4: padding bit (F1): bv_reject_padding_main + bv_spec_accepts_iff (before 698c202: accepted, commit 37efd44)
 BV U #5: over: bv_reject_size_main
 NE U #6: short: ne_reject_short_spec
 NE U #7: offset 29: ne_reject_offset_spec

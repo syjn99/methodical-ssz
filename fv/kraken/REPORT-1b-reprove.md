@@ -282,6 +282,7 @@ cd ../../.. && python3 fv/kraken/link/check.py fv/kraken/link/out            # P
 python3 fv/kraken/link/check.py --selftest fv/kraken/link/out                  # 10 cases
 fv/kraken/negative/run.sh <scratch-dir>                                         # negative/RESULT
 cd fv/kraken/vcgen && lake env lean Vg/ScAccept.lean   # 13 `finish` failures (B0, 기록용)
+GOROOT=$(go env GOROOT) go test ./fv/kraken/semtest/   # 저장소 루트. F1·F2 거부 회귀 시험(재증명 수정 X3에서 추가)
 # 대상 재생성: TOOLS.md "대상 생성"
 # 증인 재생성: cd fv/kraken/lean && python3 tools/wit/<w*.py> tools/wit [인수]
 ```
