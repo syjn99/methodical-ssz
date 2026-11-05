@@ -1,0 +1,32 @@
+case vc1
+⊢ match "target.Scalars.UnmarshalSSZ", t✝ with
+case vc1
+⊢ (Mem.loadInt t✝.dmem (t✝.regs.rsp.toBitVec + BitVec.ofInt 64 (Int64.toInt 16)) 8).isSome = true
+case vc2
+⊢ Program.Intercept
+case vc3
+⊢ ((Mem.storeInt t✝.dmem (t✝.regs.rsp.toBitVec + BitVec.ofInt 64 (Int64.toInt 16)) 8 t✝.regs.rbx.toBitVec.toInt).loadInt
+case vc4
+⊢ (Mem.loadInt
+case vc5
+⊢ ((Mem.storeInt
+case vc6
+⊢ (Mem.loadInt
+case vc7
+⊢ ((Mem.storeInt
+case vc8
+⊢ ((Mem.storeInt
+case vc9
+⊢ (((Mem.storeInt
+case vc10
+⊢ (Mem.loadInt
+case vc11
+⊢ ((Mem.storeInt
+case vc12
+⊢ Program.Intercept
+case vc13
+⊢ Program.Intercept
+case vc14
+⊢ (Mem.loadInt
+case vc15
+⊢ Program.Intercept
