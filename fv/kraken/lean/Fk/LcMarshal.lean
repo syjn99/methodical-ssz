@@ -320,3 +320,133 @@ theorem lcm2_loop (k : Nat) (hk : ListCMarshalSSZTo.IsInfixAt Host.prog k)
     refine eventually_trans _ _ _ _ this ?_
     rintro st ⟨g1, g2, g3, g4⟩
     exact Eventually.done _ ⟨g1, g2, hk2.trans g3, g4⟩
+
+/-! Loop 3, inner: the inlined ListU64 element loop (head `L_213`, directive 149): rcx = index, r11 = len, r10 = element pointer. -/
+
+/-- Registers the inner loop keeps (the outer loop's state). -/
+structure Keep3 (a b : Reg64s) : Prop where
+  rax : b.rax = a.rax
+  r8 : b.r8 = a.r8
+  r9 : b.r9 = a.r9
+  r14 : b.r14 = a.r14
+
+theorem Keep3.trans {a b c : Reg64s} (h1 : Keep3 a b) (h2 : Keep3 b c) : Keep3 a c :=
+  ⟨h2.rax.trans h1.rax, h2.r8.trans h1.r8, h2.r9.trans h1.r9, h2.r14.trans h1.r14⟩
+
+set_option maxHeartbeats 4000000 in
+set_option maxRecDepth 20000 in
+theorem lcm3_iter (k : Nat) (hk : ListCMarshalSSZTo.IsInfixAt Host.prog k)
+    (hf : LabelsFresh ListCMarshalSSZTo k)
+    (bs d : List UInt8) (n : Nat) (hn : n ≤ 16) (hbs : bs.length = 8 * n) (hd : d.length = 8 * n) (i : Nat) (hi : i < n)
+    (b p : BitVec 64) (L cap : Nat) (hcap : L + 4 + 8 * n ≤ cap) (hcap63 : cap < 2 ^ 63)
+    (R : DataMem → Prop) (s : MachineData)
+    (hrax : s.regs.rcx.toNat = i) (hrbx : s.regs.rbx.toBitVec = b) (hrdx : s.regs.rdx.toNat = L + 4 + 8 * i)
+    (hrdi : s.regs.rdi.toNat = cap) (hr8 : s.regs.r11.toNat = n) (hr9 : s.regs.r10.toBitVec = p)
+    (sp bp : UInt64) (hrsp : s.regs.rsp = sp) (hrbp : s.regs.rbp = bp)
+    (h_mem : s.dmem =⋆ Eq (bs.At p) ⋆ Eq ((bs.take (8 * i) ++ d.drop (8 * i)).At (b + BitVec.ofNat 64 (L + 4))) ⋆ R) :
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + 149) ∧ st.data.regs.rcx.toNat = i + 1 ∧ st.data.regs.rbx.toBitVec = b
+        ∧ st.data.regs.rdx.toNat = L + 4 + 8 * (i + 1) ∧ st.data.regs.rdi.toNat = cap ∧ st.data.regs.r11.toNat = n
+        ∧ st.data.regs.r10.toBitVec = p ∧ st.data.regs.rsp = sp ∧ st.data.regs.rbp = bp ∧ Keep3 s.regs st.data.regs
+        ∧ (Eq (bs.At p) ⋆ Eq ((bs.take (8 * (i + 1)) ++ d.drop (8 * (i + 1))).At (b + BitVec.ofNat 64 (L + 4))) ⋆ R)
+          st.data.dmem)
+      ⟨s, Host.addrOf (k + 149)⟩ := by
+  obtain ⟨⟨xrax, rbx, rax, rdx, rsi, rdi, rsp, rbp, xr8, xr9, r9, r8, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
+  simp only at h_mem hrax hrbx hrdx hrdi hr8 hr9 hrsp hrbp ⊢
+  subst hrbx hr9 hrsp hrbp
+  have := rax.toNat_lt_size; have := rdx.toNat_lt_size; have := rdi.toNat_lt_size; have := r8.toNat_lt_size
+  simp only [UInt64.size] at *
+  have hlen : bs.length < 2 ^ 64 := by omega
+  rw [block_split bs r9.toBitVec (8 * i) (by omega) hlen, mix_split bs d i,
+    Mem.At_append_sep _ _ _ (by simp; omega), Mem.At_append_sep _ _ _ (by simp; omega)] at h_mem
+  simp only [List.length_take, List.length_drop, hbs, hd, Nat.min_eq_left (show 8 * i ≤ 8 * n by omega),
+    Nat.min_eq_left (show 8 ≤ 8 * n - 8 * i by omega)] at h_mem
+  kat hk ListCMarshalSSZTo 149
+  kat hk ListCMarshalSSZTo 150
+  kat hk ListCMarshalSSZTo 151
+  split
+  case isTrue h =>
+    exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.signed] at h
+    exact jge_false rax.toBitVec r8.toBitVec (by simp; omega) (by simp; omega) (by simpa using h)
+  simp only [Effects.All]
+  kat hk ListCMarshalSSZTo 152
+  kat hk ListCMarshalSSZTo 153
+  rw [idx8' _ _ i (by simpa using hrax) (by omega)]
+  apply load_step _ _ _ _ ((bs.drop (8 * i)).take 8) _ _ (by ecancel) (by simp; omega)
+  kunfold
+  kat hk ListCMarshalSSZTo 154
+  kat hk ListCMarshalSSZTo 155
+  split
+  case isFalse h =>
+    exfalso; simp only [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
+    have := lum_room rdx.toBitVec rdi.toBitVec L n i cap (by simpa using hrdx) hi (by simpa using hrdi) hcap hcap63
+    simp at h; omega
+  simp only [Effects.All]
+  klabel hk hf ListCMarshalSSZTo 146
+  kat hk ListCMarshalSSZTo 146
+  kat hk ListCMarshalSSZTo 147
+  rw [lum_addr _ _ L i (by simpa using hrdx) (by omega)]
+  apply store_step _ _ _ _ _ ((d.drop (8 * i)).take 8) _ _ (by ecancel) (by simp; omega)
+  intro m1 H1
+  simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl _ (show ((bs.drop (8 * i)).take 8).length = 8 by simp; omega)] at H1
+  kunfold
+  kat hk ListCMarshalSSZTo 148
+  apply Eventually.done
+  refine ⟨rfl, ?_, rfl, ?_, hrdi, hr8, rfl, rfl, rfl, ⟨rfl, rfl, rfl, rfl⟩, ?_⟩
+  · exact inc_toNat16 _ i (by simpa using hrax) (by omega)
+  · exact lum_rdx _ L i (by simpa using hrdx) (by omega)
+  · dsimp only
+    rw [← mix_step bs d i, Mem.At_append_sep _ _ _ (by simp; omega), Mem.At_append_sep _ _ _ (by simp; omega),
+      block_split bs r9.toBitVec (8 * i) (by omega) hlen]
+    simp only [List.length_take, List.length_drop, hbs, hd, Nat.min_eq_left (show 8 * i ≤ 8 * n by omega),
+      Nat.min_eq_left (show 8 ≤ 8 * n - 8 * i by omega)]
+    (try simp only [BitVec.ofNat_eq_ofNat] at H1 ⊢)
+    ecancel
+
+set_option maxHeartbeats 4000000 in
+set_option maxRecDepth 20000 in
+theorem lcm3_exit (k : Nat) (hk : ListCMarshalSSZTo.IsInfixAt Host.prog k)
+    (hf : LabelsFresh ListCMarshalSSZTo k) (P : MachineState → Prop) (s : MachineData)
+    (hrr : s.regs.rcx = s.regs.r11)
+    (hP : ∀ f : StatusFlags, P ⟨⟨s.regs, s.zmms, f, s.dmem⟩, Host.addrOf (k + 175)⟩) :
+    Eventually (step1 Host.exe) P ⟨s, Host.addrOf (k + 149)⟩ := by
+  obtain ⟨⟨xrax, rbx, rax, rdx, rsi, rdi, rsp, rbp, xr8, xr9, r9, r8, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
+  simp only at hrr hP ⊢
+  subst hrr
+  kat hk ListCMarshalSSZTo 149
+  kat hk ListCMarshalSSZTo 150
+  kat hk ListCMarshalSSZTo 151
+  split
+  case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
+  simp only [Effects.All]
+  klabel hk hf ListCMarshalSSZTo 175
+  exact Eventually.done _ (hP _)
+
+theorem lcm3_loop (k : Nat) (hk : ListCMarshalSSZTo.IsInfixAt Host.prog k)
+    (hf : LabelsFresh ListCMarshalSSZTo k)
+    (bs d : List UInt8) (n : Nat) (hn : n ≤ 16) (hbs : bs.length = 8 * n) (hd : d.length = 8 * n)
+    (b p : BitVec 64) (L cap : Nat) (hcap : L + 4 + 8 * n ≤ cap) (hcap63 : cap < 2 ^ 63)
+    (R : DataMem → Prop) (sp bp : UInt64) (r0 : Reg64s) :
+    ∀ j i (s : MachineData), i + j = n →
+    s.regs.rcx.toNat = i → s.regs.rbx.toBitVec = b → s.regs.rdx.toNat = L + 4 + 8 * i →
+    s.regs.rdi.toNat = cap → s.regs.r11.toNat = n → s.regs.r10.toBitVec = p → s.regs.rsp = sp → s.regs.rbp = bp → Keep3 r0 s.regs →
+    (s.dmem =⋆ Eq (bs.At p) ⋆ Eq ((bs.take (8 * i) ++ d.drop (8 * i)).At (b + BitVec.ofNat 64 (L + 4))) ⋆ R) →
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + 175) ∧ st.data.regs.rbx.toBitVec = b
+        ∧ st.data.regs.rdx.toNat = L + 4 + 8 * n ∧ st.data.regs.rdi.toNat = cap
+        ∧ st.data.regs.rsp = sp ∧ st.data.regs.rbp = bp ∧ Keep3 r0 st.data.regs
+        ∧ (Eq (bs.At p) ⋆ Eq (bs.At (b + BitVec.ofNat 64 (L + 4))) ⋆ R) st.data.dmem)
+      ⟨s, Host.addrOf (k + 149)⟩
+  | 0, i, s, hij, hrax, hrbx, hrdx, hrdi, hr8, _, hrsp, hrbp, hkp, h_mem => by
+    have hin : i = n := by omega
+    subst hin
+    refine lcm3_exit k hk hf _ s (UInt64.toNat_inj.mp (by omega)) fun _ => ⟨rfl, hrbx, hrdx, hrdi, hrsp, hrbp, hkp, ?_⟩
+    rw [List.take_of_length_le (by omega), List.drop_of_length_le (by omega), List.append_nil] at h_mem
+    exact h_mem
+  | j + 1, i, s, hij, hrax, hrbx, hrdx, hrdi, hr8, hr9, hrsp, hrbp, hkp, h_mem => by
+    refine eventually_trans _ _ _ _
+      (lcm3_iter k hk hf bs d n hn hbs hd i (by omega) b p L cap hcap hcap63 R s hrax hrbx hrdx hrdi hr8 hr9 sp bp hrsp hrbp h_mem) ?_
+    rintro ⟨s', pc⟩ ⟨hpc, h1, h2, h3, h4, h5, h6, h7, h8, hk3, h9⟩
+    dsimp only at hpc; subst hpc
+    exact lcm3_loop k hk hf bs d n hn hbs hd b p L cap hcap hcap63 R sp bp r0 j (i + 1) s' (by omega) h1 h2 h3 h4 h5 h6 h7 h8 (hkp.trans hk3) h9
+
