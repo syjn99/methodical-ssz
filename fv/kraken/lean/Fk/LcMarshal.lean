@@ -692,3 +692,74 @@ theorem lcm4_iter (k : Nat) (hk : ListCMarshalSSZTo.IsInfixAt Host.prog k)
   generalize Rest ⋆ R = RR at Hm3 ⊢
   refine (congrFun ?_ mem3).mp Hm3
   ecancel
+
+set_option maxHeartbeats 4000000 in
+set_option maxRecDepth 200000 in
+/-- Loop 3 exit: at head 106 with rax = r9 (every element written), `jge` goes
+to the epilogue label at 183. -/
+theorem lcm4_exit (k : Nat) (hk : ListCMarshalSSZTo.IsInfixAt Host.prog k)
+    (hf : LabelsFresh ListCMarshalSSZTo k) (P : MachineState → Prop) (s0 : MachineData)
+    (hrr : s0.regs.rax = s0.regs.r9)
+    (hP : ∀ f : StatusFlags, P ⟨⟨s0.regs, s0.zmms, f, s0.dmem⟩, Host.addrOf (k + 183)⟩) :
+    Eventually (step1 Host.exe) P ⟨s0, Host.addrOf (k + 106)⟩ := by
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s0
+  dsimp only at hrr
+  subst hrr
+  kat hk ListCMarshalSSZTo 106
+  kat hk ListCMarshalSSZTo 107
+  kat hk ListCMarshalSSZTo 108
+  split
+  case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
+  simp only [Effects.All]
+  klabel hk hf ListCMarshalSSZTo 183
+  exact Eventually.done _ (hP _)
+
+set_option maxHeartbeats 16000000 in
+set_option maxRecDepth 200000 in
+/-- Loop 3 (element bodies): from head 106 with i elements written, it reaches
+the epilogue label 183 with all of `lcBodyL gs` written after the offsets,
+rdx = L0 + 4 + 4n + (body length), and a nil error (rcx = rsi = 0). -/
+theorem lcm4_loop (k : Nat) (hk : ListCMarshalSSZTo.IsInfixAt Host.prog k)
+    (hf : LabelsFresh ListCMarshalSSZTo k) (A b y : BitVec 64) (ps qs : List (BitVec 64)) (gs : List ListU64)
+    (hn : gs.length ≤ 4) (hps : ps.length = gs.length) (hqs : qs.length = gs.length) (hgs : ∀ g ∈ gs, g.ok)
+    (dB : List UInt8) (hdB : dB.length = lcS gs gs.length) (L0 cap : Nat)
+    (hcap : L0 + 4 + 4 * gs.length + lcS gs gs.length ≤ cap) (hcap63 : cap < 2 ^ 63)
+    (Objs R : DataMem → Prop)
+    (hObjs : ∀ j (hj : j < gs.length), ∃ Rest,
+      Objs = lcElem A j (ps[j]'(by omega)) (qs[j]'(by omega)) gs[j] ⋆ Rest) :
+    ∀ j i (s0 : MachineData) (s72 s80 s24 : List UInt8), i + j = gs.length →
+    s72.length = 8 → s80.length = 8 → s24.length = 8 →
+    s0.regs.rax.toNat = i → s0.regs.r8.toBitVec = A → s0.regs.r9.toNat = gs.length →
+    s0.regs.rdx.toNat = L0 + 4 + 4 * gs.length + lcS gs i → s0.regs.rbx.toBitVec = b →
+    s0.regs.rdi.toNat = cap → s0.regs.rsp.toBitVec = y → s0.regs.rcx = 0 → s0.regs.rsi = 0 →
+    (s0.dmem =⋆ Eq (((lcBodyL gs).take (lcS gs i) ++ dB.drop (lcS gs i)).At
+      (b + BitVec.ofNat 64 (L0 + 4 + 4 * gs.length))) ⋆ Eq (s72.At (y + 96)) ⋆ Eq (s80.At (y + 88))
+      ⋆ Eq (s24.At (y + 144)) ⋆ Objs ⋆ R) →
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + 183)
+        ∧ st.data.regs.rdx.toNat = L0 + 4 + 4 * gs.length + lcS gs gs.length ∧ st.data.regs.rcx = 0
+        ∧ st.data.regs.rsi = 0 ∧ Keep4 s0.regs st.data.regs ∧
+        ∃ s72' s80' s24' : List UInt8, s72'.length = 8 ∧ s80'.length = 8 ∧ s24'.length = 8 ∧
+        (Eq ((lcBodyL gs).At (b + BitVec.ofNat 64 (L0 + 4 + 4 * gs.length))) ⋆ Eq (s72'.At (y + 96))
+          ⋆ Eq (s80'.At (y + 88)) ⋆ Eq (s24'.At (y + 144)) ⋆ Objs ⋆ R) st.data.dmem)
+      ⟨s0, Host.addrOf (k + 106)⟩
+  | 0, i, s0, s72, s80, s24, hij, h72, h80, h24, hrax, _, hr9, hrdx, _, _, _, hrcx, hrsi, h_mem => by
+    have hin : i = gs.length := by omega
+    subst hin
+    have hBL := lcBodyL_length gs
+    refine lcm4_exit k hk hf _ s0 (UInt64.toNat_inj.mp (by omega)) fun _ =>
+      ⟨rfl, hrdx, hrcx, hrsi, ⟨rfl, rfl, rfl, rfl, rfl⟩, s72, s80, s24, h72, h80, h24, ?_⟩
+    rw [List.take_of_length_le (by omega), List.drop_of_length_le (by omega), List.append_nil] at h_mem
+    exact h_mem
+  | j + 1, i, s0, s72, s80, s24, hij, h72, h80, h24, hrax, hr8, hr9, hrdx, hrbx, hrdi, hrsp, _, _, h_mem => by
+    refine eventually_trans _ _ _ _
+      (lcm4_iter k hk hf A b y ps qs gs hn hps hqs hgs dB hdB L0 cap hcap hcap63 i (by omega) Objs R hObjs
+        s72 s80 s24 h72 h80 h24 s0 hrax hr8 hr9 hrdx hrbx hrdi hrsp h_mem) ?_
+    rintro ⟨s', pc⟩ ⟨hpc, h1, h2, h3, h4, h5, h6, hk4, s72', s80', s24', l1, l2, l3, h9⟩
+    dsimp only at hpc; subst hpc
+    refine eventually_trans _ _ _ _
+      (lcm4_loop k hk hf A b y ps qs gs hn hps hqs hgs dB hdB L0 cap hcap hcap63 Objs R hObjs j (i + 1) s'
+        s72' s80' s24' (by omega) l1 l2 l3 h1 (by rw [h2]; exact hr8) (by rw [h3]; exact hr9) h4
+        (by rw [hk4.rbx]; exact hrbx) (by rw [hk4.rdi]; exact hrdi) (by rw [hk4.rsp]; exact hrsp) h5 h6 h9) ?_
+    rintro st ⟨q1, q2, q3, q4, hk4', q5⟩
+    exact Eventually.done _ ⟨q1, q2, q3, q4, hk4.trans hk4', q5⟩
