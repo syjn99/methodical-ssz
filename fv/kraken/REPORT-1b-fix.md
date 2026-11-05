@@ -7,7 +7,23 @@ Kraken `6064eec`(main), Lean `nightly-2026-09-21`, EthLib `8621856`, Go 1.26.3, 
 
 ## 0. 판정
 
-(작성 중)
+**조건부. 게이트 1은 미통과다.**
+리뷰가 찾은 P0·P1 결함(공허한 GrowsliceC, 틀린 fmt.errorf 계약, 링크 검사 구멍)은 고쳤다.
+그러나 완료 단위의 정의(계약 + 증인 + 기계어 정리 + 링크 + 부정 시험)를 모든 주 정리가 만족하지 않는다.
+
+조건(게이트 1 통과에 남은 것):
+1. BitL 수용(`bl_accept_main`)의 전제 증인. `ValidateBitlistC` 모델이 필요하다.
+2. ListC 수용(`lc_accept_main`, `lc_accept_empty_main`)과 나머지 마샬·크기·거부 정리의 증인(9.3절).
+3. 결론의 스택 조각 소유(X5). 지금은 r14와 프레임 `R`만 남긴다. Nested·ListC 결론은 바꾸지 않았다.
+4. F1·F2 생성기 수정과 재증명(다른 세션).
+5. x86-64 하드웨어 대조(이 호스트는 arm64). 실행하지 않았다.
+
+수치:
+- `lake build` 704 jobs 성공. `AXIOMS.txt`: `TOTAL 754 NONSTANDARD 0`.
+- 링크 검사 PASS(검사 (a)–(g)). 번들 sha256 `b71c1c11…b7c3`(`link/out/RESULT`). 자기 시험 9개 기대대로.
+- 부정 시험 7개(변이 5, 대조군 1, 링크 변이 1) 기대대로. 종료 코드 0.
+- 전제 증인: 10개 주 정리와 계약 호출 1개(9.2절). 모두 표준 공리만 쓴다.
+- 세션 시간: 14:42–17:59(3시간 17분, `date` 기준).
 
 ## 1. 완료 단위의 정의
 
@@ -175,7 +191,7 @@ X1·X2에서 더한 `Fk/RtCopy.S`, `Fk/RtErr.S`가 SHash에 없었다.
 `lu_accept_runs` 증인도 같은 배치로 고쳤다.
 
 AttestationData 경로에서 memmove 뒤 r14를 쓰는지 확인했다(Claude 리뷰 3항).
-memmove 뒤 코드는 r14를 직접 읽지 않는다.
+memmove 뒤 코드는 r14를 읽지 않는다. r14는 진입의 스택 검사(`target_prysm.AttestationData.UnmarshalSSZ.S` 3행)에서만 읽는다.
 그러나 정리의 결론에 r14를 남기려면 계약이 r14 보존을 말해야 한다(X5).
 그래서 넣었다.
 
@@ -234,7 +250,8 @@ Prysm 범위의 정확한 문구(astra):
 | 주 정리 | 이유 |
 | --- | --- |
 | `bl_accept_main`, `bl_unmarshal_accept_spec_k` | `ValidateBitlistC`의 모델이 없다. `bsr` 없이 bitlist 규칙을 계산하는 asm과 EthLib `unpackDelimited`의 동치 증명이 필요하다 |
-| `lc_accept_main`, `lc_accept_empty_main` | 시간 안에 하지 못했다. ListC 코드 432 지시어와 오프셋 구조 전제의 배치가 크다 |
+| `lc_accept_main` | 시간 안에 하지 못했다. ListC 코드 432 지시어와 오프셋 구조 전제의 배치가 크다 |
+| `lc_accept_empty_main` | 시도했다. X15 = 0 전제는 기본 벡터 레지스터로 만족한다(증명함). 메모리 재배열의 마지막 단계에서 두 원자의 표기가 맞지 않아 닫지 못했다. 원인은 확인하지 않았다(추측: 단순화기가 만든 리터럴과 글로 쓴 리터럴의 내부 표현 차이). 파일은 지웠다 |
 | `fv_marshal_main`, `bl_marshal_main`, `lu_marshal_main`, `ne_marshal_main`, `lc_marshal_main`, `sc_marshal_main` | 시간 안에 하지 못했다. 같은 틀(`wgen.py` 방식)로 만들 수 있다 |
 | 크기·거부 정리 전부, `lum_grow_site`, ListC·ListU64 오류 경로 | 시간 안에 하지 못했다 |
 
@@ -281,3 +298,67 @@ Prysm 범위의 정확한 문구(astra):
 - 고친 명세는 16개 중 14개가 열렸다.
 - 결론은 바뀌지 않는다: main에 남는다. REPORT-1b 2절에 정정을 적었다.
 - 상세: `vcgen/B0.md` 끝 절, 로그 `vcgen/b0fix-*.txt`.
+
+## 12. X5. 조합 가능한 결론 (astra 필수 5)
+
+시간: 17:44–17:50, 6분(커밋 시각 기준).
+
+| 정리 | 더한 것 | 남은 것 |
+| --- | --- | --- |
+| `fv_accept_main`(+ `fv_unmarshal_accept_spec_k`) | r14, 프레임 `R` | 스택 조각 |
+| `bv_accept_main`(+ `bv_unmarshal_accept_machine`) | r14, `R` | 스택 조각 |
+| `cp_accept_main`(+ `cp_unmarshal_accept_spec_k`) | r14, `R` | 스택 조각 |
+| `ad_accept_main`(+ `ad_unmarshal_accept_spec_k`) | r14, `R` | 스택 조각 |
+| `cp_marshal_main`(+ `cp_marshal_spec_k`) | r14, `R` | 스택 조각 |
+| `ad_marshal_main` | r14, `R` | 수신자 그래프의 일부, 스택 조각 |
+| `ne_accept_main`, `ne_marshal_main` | 없음 | 입력, `R`, Heap, r14, rbp, 스택 |
+| `lc_accept_main`, `lc_accept_empty_main`, `lc_marshal_main` | 없음 | 외부 오프셋·수신자, `R`, 스택, r14, rbp |
+
+- 계약 사후조건의 r14 등식을 정리 안에서 이어 받았다. 그래서 X3에서 MemmoveC에 r14 보존을 넣은 것이 필요했다.
+- FixedVec 루프 보조정리(`fv_iter`, `fv_exit`, `fv_loop`)도 r14를 돌려준다.
+- 스택 조각은 정리마다 내용이 달라 존재 양화로 다시 써야 한다. 이 세션에서 하지 않았다.
+- C20의 범위: Scalars와 ListU64를 Nested·ListC에서 함수 명세로 쓰는 예에 한정한다. 그 예는 이제 같은 Host의 최종 증인(`WitNe0/1/16`)이 있다.
+
+## 13. 게이트 1 표 (완료 단위 기준)
+
+"증인"은 같은 Host에서 전제 전체를 만족하는 구체 상태와 실행 정리다.
+"계약 모델"은 그 정리가 쓰는 계약 모두에 모델이 있다는 뜻이다.
+링크 검사는 모든 대상 함수에 PASS다.
+부정 시험은 표에 적은 정리에만 있다.
+
+| 종류 | 디코더 수용 | 증인 | 인코더 | 증인 | 거부·크기 | 증인 | 부정 시험 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| ListU64(1a) | `lu_accept_main` | 있음(0·1·16) | `lu_marshal_main` | 없음 | 4경로 | 없음 | offset, maxlen |
+| FixedVec(1a) | `fv_accept_main` | 있음 | `fv_marshal_main` | 없음 | 크기 | 없음 | loop, control |
+| bitvector | `bv_accept_main`, `bv_unmarshal_accept_machine` | 있음(b = 0, 0x10) | `bv_marshal_main` | 없음 | 크기 | 없음 | 없음 |
+| bitlist | `bl_accept_main` | **없음**(`ValidateBitlistC` 모델 없음) | `bl_marshal_main` | 없음 | 짧음·오프셋 | 없음 | gsnum |
+| 중첩 container | `ne_accept_main` | 있음(L 0·1·16, 함수 명세 조합) | `ne_marshal_main` | 없음 | 짧음·오프셋 | 없음 | 없음 |
+| List[container] | `lc_accept_main`, `lc_accept_empty_main` | **없음** | `lc_marshal_main` | 없음 | 5경로(zero·past·tail은 X2에서 실제 분기) | 없음 | nilerr |
+| Prysm 축약 Checkpoint | `cp_accept_main` | 있음 | `cp_marshal_main` | 있음(접두사 ≤ 1000) | 크기 | 없음 | 없음 |
+| Prysm 축약 AttestationData | `ad_accept_main` | 있음(계약 3종 공동) | `ad_marshal_main` | 있음(접두사 3) | 크기 | 없음 | 없음 |
+
+게이트 1 판정: **미통과.**
+bitlist·List[container] 수용에 증인이 없고, 인코더·거부 정리 대부분에 증인이 없다.
+
+## 14. 이견
+
+1. **증인 Host의 위치(X1).** 브리프는 새 "만족 가능" 정리를 `Fk/Witness.lean`에 두라고 했다. growslice 증인은 그 파일에 두었다(기존 Host에 `RtCopy`를 붙임). 나머지 증인은 Host가 서로 달라 파일을 나눴다(`Fk/Wit*.lean`). 한 파일에 전역 `Host` 인스턴스 여럿을 두지 않기 위해서다.
+2. **`Review1b.lean` 회귀(X1).** 새 계약에서 그 파일은 정교화되지 않는다(서명이 바뀌어서). 그래서 "False를 증명하지 못함"은 타입 오류로 확인된다. 의미상의 배제는 `review1b_input_excluded`가 증명한다.
+3. **`FmtErrorfC`의 인수 유효성(X2).** 인터페이스 값과 `%w`의 `Error()` 호출은 좁히지 않았다. 신뢰 항목으로 CONTRACTS.md에 적었다. 좁히려면 fmt의 동작 모델이 필요하다.
+4. **`ConvT64C`의 반환 포인터(X2).** "올바른 boxed uint64를 가리킨다"는 넣지 않았다. rax ≠ 0과 힙 예산만 넣었다. 그 포인터를 읽는 계약이 없기 때문이다.
+5. **X5 범위.** 브리프는 astra 표의 정리 전부를 요구했다. 6개 정리에 r14와 `R`만 더했다. 스택 조각과 Nested·ListC는 하지 않았다(12절).
+6. **X4 범위.** 브리프의 `lc_accept_main`과 마샬 정리 일부(`fv`, `bl`)의 증인은 하지 못했다. `lc_accept_empty_main`은 시도했고 실패했다(9.3절).
+7. **가변 길이의 고정 길이 증인(X4).** Nested와 AttestationData 마샬은 기호 길이 판이 시간 초과했다. 그래서 고정 길이(0·1·16, 접두사 3)로 냈다. "빈 값·1개·최대"는 Nested에서 지켰다.
+8. **AXIOMS의 수.** 754는 증인 파일의 보조정리(`hk_*`, `hf_*` 등)를 포함한다. 1b의 597과 바로 비교하지 않는다.
+
+## 15. 재현
+
+```sh
+cd fv/kraken/lean && lake build                 # 704 jobs
+tools/axioms.sh                                  # TOTAL 754 NONSTANDARD 0
+cd ../../.. && python3 fv/kraken/link/check.py fv/kraken/link/out              # PASS all, BUNDLE
+python3 fv/kraken/link/check.py --selftest fv/kraken/link/out                    # 9 cases
+fv/kraken/negative/run.sh <scratch-dir>          # 7 results, exit 0
+cd fv/kraken/lean && lake env lean ../review/Review1b.lean   # fails to elaborate (regression record)
+cd ../vcgen && lake build Vg && lake env lean Vg/ScAccept.lean   # 14 `finish` failures (B0)
+```

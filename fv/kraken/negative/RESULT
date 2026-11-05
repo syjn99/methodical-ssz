@@ -1,7 +1,7 @@
-offset | target.ListU64.UnmarshalSSZ.S:15 'cmp $0x4,%rdx' -> 'cmp $0x8,%rdx' | lu_accept_main (Fk/LuAccept.lean:29-283) | exit 1 | FAIL | ok | error: Fk/LuAccept.lean:126:16: unsolved goals
+offset | target.ListU64.UnmarshalSSZ.S:15 'cmp $0x4,%rdx' -> 'cmp $0x8,%rdx' | lu_accept_main (Fk/LuAccept.lean:29-287) | exit 1 | FAIL | ok | error: Fk/LuAccept.lean:127:16: unsolved goals
 maxlen | target.ListU64.UnmarshalSSZ.S:28 'jg L_target.ListU64.UnmarshalSSZ_ce' -> 'nop' | lu_reject_toobig_main (Fk/LuRejectCall.lean:100-339) | exit 1 | FAIL | ok | error: Fk/LuRejectCall.lean:197:6: Tactic `rewrite` failed: Did not find an occurrence of the pattern
 loop | target.FixedVec.UnmarshalSSZ.S:47 'cmp $0x4,%rax' -> 'cmp $0x3,%rax' | fv_iter (Fk/FvLoop.lean:19-107) | exit 1 | FAIL | ok | error: Fk/FvLoop.lean:50:66: Type mismatch: After simplification, term
-gsnum | target.BitL.UnmarshalSSZ.S:76 'mov %rbx,%rdi' -> 'mov %rcx,%rdi' | bl_accept_main (Fk/BlAccept.lean:59-405) | exit 1 | FAIL | ok | error: Fk/BlAccept.lean:254:5: unsolved goals
-nilerr | target.ListC.UnmarshalSSZ.S:165 'jne L_target.ListC.UnmarshalSSZ_2e7' -> 'je L_target.ListC.UnmarshalSSZ_2e7' | lc_reject_zero_main (Fk/LcReject.lean:307-486) | exit 1 | FAIL | ok | error: Fk/LcReject.lean:434:16: unsolved goals
+gsnum | target.BitL.UnmarshalSSZ.S:76 'mov %rbx,%rdi' -> 'mov %rcx,%rdi' | bl_accept_main (Fk/BlAccept.lean:64-418) | exit 1 | FAIL | ok | error: Fk/BlAccept.lean:264:21: unsolved goals
+nilerr | target.ListC.UnmarshalSSZ.S:165 'jne L_target.ListC.UnmarshalSSZ_2e7' -> 'je L_target.ListC.UnmarshalSSZ_2e7' | lc_reject_zero_main (Fk/LcReject.lean:307-489) | exit 1 | FAIL | ok | error: Fk/LcReject.lean:434:16: unsolved goals
 control | target.FixedVec.UnmarshalSSZ.S:47 'cmp $0x4,%rax' -> 'cmp $0x4,%rax' | fv_iter (Fk/FvLoop.lean:19-107) | exit 0 | PASS | ok | 
 nopret | target.BitVec.UnmarshalSSZ.S:8 'nop' -> 'retq' (also all.S, SHash regenerated) | link/check.py (d) | exit 1 | FAIL | ok | DIFF (d) target.BitVec.UnmarshalSSZ 0x4b7297 FAIL: elf 660f1f840000000000 asm c3 nopw (%rax,%rax,1) -> retq | (9, 'nopw (%rax,%rax)')

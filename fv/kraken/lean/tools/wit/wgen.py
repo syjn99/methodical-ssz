@@ -137,6 +137,11 @@ def gen2(c):
             L.append(f"set_option maxRecDepth 100000 in\ntheorem hk_{k} : {d}.IsInfixAt Host.prog {s0} := by\n  rw [prog_eq]\n  have h : {prel}.length = {s0} := by\n    simp only [List.length_append, {lens.rstrip(',')}]; rfl\n"
                      f"  exact ⟨{sufs}, by rw [show P = {prel} ++ ({d} ++ {sufs}) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩\n")
         L.append(f"set_option maxRecDepth 100000 in\ntheorem hf_{k} : LabelsFresh {d} {s0} := labelsFresh_of (by rw [prog_eq]; decide)\n")
+    if c.get("wb"):
+        L.append('''set_option maxRecDepth 100000 in
+theorem label_wb : label "runtime.writeBarrier" = 0x10000 :=
+  mk_label P _ 0 _ (by simp [P, dataLabels]) (by simp [labs])
+''')
     L.append("abbrev z (k : Nat) : List UInt8 := List.replicate k 0\n")
     pn=c["pnames"]; pb=c["pbinders"]
     es=[f"({e})" if (" " in e and not e.startswith("[")) else e for _,e,_,_ in out]
@@ -164,14 +169,13 @@ theorem s_mem {pb} {lh} (zmms : RegZmms) (flags : StatusFlags) :
   repeat rw [Mem.At_append_sep _ _ _ (by simp only [List.length_append, List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil{', ' + simpl if simpl else ''}]; omega)] at H
   simp only [List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, Nat.reduceAdd{', ' + simpl if simpl else ''},
     BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
-  simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
+{"  rw [label_wb]" + chr(10) if c.get("wb") else ""}  simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
   apply sep_true (F := {' ⋆ '.join(gaps)})
   have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
   have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
   simp only [hu0, huN] at H ⊢
-  refine Eq.mp ?_ H
-  exact congrFun (by ac_rfl) _
+  first | (refine Eq.mp ?_ H; exact congrFun (by ac_rfl) _) | ecancel
 ''')
     L.append(c["main"](starts))
     L.append(f"end Fk.{c['ns']}\n")
