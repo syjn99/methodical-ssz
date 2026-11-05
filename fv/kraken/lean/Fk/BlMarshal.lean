@@ -350,6 +350,7 @@ theorem bl_marshal_main (k : Nat) (hk : BitLMarshalSSZTo.IsInfixAt Host.prog k)
 
 -- "B: %w" (types1b.ssz.go, the wrap of the ValidateBitlist error)
 def blFmtB : List UInt8 := [66, 58, 32, 37, 119]
+theorem blFmtB_len : blFmtB.length = 5 := by rfl
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
@@ -604,6 +605,9 @@ theorem bl_marshal_reject_main (k : Nat) (hk : BitLMarshalSSZTo.IsInfixAt Host.p
 def bl2049 : List UInt8 := List.replicate 256 0 ++ [2]
 /-- 2048 bits: 257 bytes, the last one 0x01 (delimiter at bit 2048). -/
 def bl2048 : List UInt8 := List.replicate 256 0 ++ [1]
+
+theorem bl2049_len : bl2049.length = 257 := by
+  simp only [bl2049, List.length_append, List.length_replicate, List.length_singleton]
 
 theorem bl2048_len : bl2048.length = 257 := by
   simp only [bl2048, List.length_append, List.length_replicate, List.length_singleton]

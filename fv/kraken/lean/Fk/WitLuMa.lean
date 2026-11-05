@@ -56,7 +56,7 @@ theorem label_gs : label "go_string._" = 0x10001 :=
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 
 def block  : List UInt8 :=
-  (Int.toBytes 8 (65544 : BitVec 64).toInt) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 40) ++ ((z 24) ++ ((z 16) ++ ((z 16) ++ ((z 32) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ([4, 0, 0, 0] ++ ((z 42435) ++ ((z 68))))))))))))))))))
+  (Int.toBytes 8 (65544 : BitVec 64).toInt) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 40) ++ ((z 56) ++ ((z 16) ++ ((z 16) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ([4, 0, 0, 0] ++ ((z 42435) ++ ((z 68)))))))))))))))))
 
 def mem  : DataMem := (block ).At (0x10000 : BitVec 64)
 
@@ -69,14 +69,14 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
     let s := s0  zmms flags
     s.dmem =⋆ Eq ((z 40).At (s.regs.rsp.toBitVec - 136)) ⋆ Eq ((z 68).At (label "go_string._" + 42646).toBitVec) ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 8)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 16))
-      ⋆ Eq ((z 16).At (s.regs.rsp.toBitVec - 72)) ⋆ Eq ((z 16).At (s.regs.rsp.toBitVec - 56))
+      ⋆ Eq ((z 16).At (s.regs.rsp.toBitVec - 40)) ⋆ Eq ((z 16).At (s.regs.rsp.toBitVec - 24))
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 144)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 144 - BitVec.ofNat 64 8))
       ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Std.ExtHashMap.emp
       ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec)
       ⋆ Eq ((Int.toBytes 8 (65544 : UInt64).toBitVec.toInt).At (label "ssz.ErrIncorrectListSize").toBitVec)
       ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At (label "ssz.ErrIncorrectListSize" + 8).toBitVec)
-      ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At ((65544 : UInt64).toBitVec + 8)) ⋆ Eq ((z 24).At (s.regs.rsp.toBitVec - 96)) ⋆ Eq ((z 32).At (s.regs.rsp.toBitVec - 40))
+      ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At ((65544 : UInt64).toBitVec + 8)) ⋆ Eq ((z 56).At (s.regs.rsp.toBitVec - 96))
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 8)) ⋆ Eq ((z 42435).At (label "go_string._" + 211).toBitVec) ⋆ fun _ => True := by
   intro s
   have H : Eq ((block ).At (0x10000 : BitVec 64)) (mem ) := rfl
@@ -104,7 +104,7 @@ theorem lu_reject_misaligned_runs (zmms : RegZmms) (flags : StatusFlags) :
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax ≠ 0)
       ⟨s0 zmms flags, Host.addrOf 5⟩ :=
   eventually_mono (lu_reject_misaligned_main 5 hk_target hf_target (s0 zmms flags) 0 0 65544 0 0 (by decide)
-    (z 8) (z 8) (z 16) (z 16) (z 8) rfl rfl rfl rfl rfl (Eq ((z 24).At ((s0 zmms flags).regs.rsp.toBitVec - 96)) ⋆ Eq ((z 32).At ((s0 zmms flags).regs.rsp.toBitVec - 40))
+    (z 8) (z 8) (z 16) (z 16) (z 8) rfl rfl rfl rfl rfl (Eq ((z 56).At ((s0 zmms flags).regs.rsp.toBitVec - 96))
       ⋆ Eq ((z 8).At ((s0 zmms flags).regs.rsp.toBitVec + 8)) ⋆ Eq ((z 42435).At (label "go_string._" + 211).toBitVec) ⋆ fun _ => True) 8 (z 8) (z 40) (z 68) rfl rfl rfl
     (fun _ => Std.ExtHashMap.emp) 8 (by decide)
     (by have h := s_mem zmms flags; simp only [Std.ExtHashMap.sep_assoc] at h ⊢; exact h)

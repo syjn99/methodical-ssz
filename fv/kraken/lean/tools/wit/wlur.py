@@ -10,18 +10,24 @@ FL={"toobig":56,"misaligned":68}[MODE]
 RCX={"toobig":4+8*17,"misaligned":5}[MODE]
 GS=0x10001
 E0=65544   # e0 value: e0 + 8 = 65552 holds t8
+A40={"toobig":72,"misaligned":40}[MODE]
+if MODE=="toobig":
+    STK=[("hole1","z 24",24),("a40","z 16",16),("a50","z 16",16),("hole2","z 32",32)]
+    RH=f"""Eq ((z 24).At (s.regs.rsp.toBitVec - 96)) ⋆ Eq ((z 32).At (s.regs.rsp.toBitVec - 40))"""
+else:
+    STK=[("hole1","z 56",56),("a40","z 16",16),("a50","z 16",16)]
+    RH=f"""Eq ((z 56).At (s.regs.rsp.toBitVec - 96))"""
 ch=[("e0",f"Int.toBytes 8 ({E0} : BitVec 64).toInt",8),("e1",Z,8),("t8",Z,8),("guard",Z,8),
-    ("scratch","z 8",8),("rslot","z 8",8),("spl","z 40",40),("hole1","z 24",24),("a40","z 16",16),("a50","z 16",16),
-    ("hole2","z 32",32),("fp","z 8",8),("ra",Z,8),("hole3","z 8",8),("s98","z 8",8),("b4","[4, 0, 0, 0]",4)]
+    ("scratch","z 8",8),("rslot","z 8",8),("spl","z 40",40)]+STK+[("fp","z 8",8),("ra",Z,8),("hole3","z 8",8),("s98","z 8",8),("b4","[4, 0, 0, 0]",4)]
 a=65536
 for k,e,n in ch: a+=n
 G=GS+OFF-a
 ch+=[("holeG",f"z {G}",G),("fs",f"z {FL}",FL)]
-R=f"""Eq ((z 24).At (s.regs.rsp.toBitVec - 96)) ⋆ Eq ((z 32).At (s.regs.rsp.toBitVec - 40))
+R=RH+f"""
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 8)) ⋆ Eq ((z {G}).At (label "go_string._" + {OFF-G}).toBitVec)"""
 prem=f"""Eq ((z 40).At (s.regs.rsp.toBitVec - 136)) ⋆ Eq ((z {FL}).At (label "go_string._" + {OFF}).toBitVec) ⋆ Eq (({Z}).At s.regs.rsp.toBitVec)
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 8)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 16))
-      ⋆ Eq ((z 16).At (s.regs.rsp.toBitVec - 72)) ⋆ Eq ((z 16).At (s.regs.rsp.toBitVec - 56))
+      ⋆ Eq ((z 16).At (s.regs.rsp.toBitVec - {A40})) ⋆ Eq ((z 16).At (s.regs.rsp.toBitVec - {A40-16}))
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 144)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 144 - BitVec.ofNat 64 8))
       ⋆ Eq (({Z}).At (s.regs.r14.toBitVec + 16))
       ⋆ Std.ExtHashMap.emp

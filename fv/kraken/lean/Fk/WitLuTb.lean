@@ -96,6 +96,7 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
   refine Eq.mp ?_ H
   exact congrFun (by ac_rfl) _
 
+set_option maxHeartbeats 4000000 in
 /-- **Non-vacuity of `lu_reject_toobig_main`.** convT64 by `rt_convT64`, the one-argument
 `fmt.errorf` by `rt_errorf`, in one host. The decoder returns a non-nil error. -/
 theorem lu_reject_toobig_runs (zmms : RegZmms) (flags : StatusFlags) :

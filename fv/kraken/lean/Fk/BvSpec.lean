@@ -429,6 +429,7 @@ theorem bv_spec_one (b : UInt8) : deserialize bvDesc #[b] =
 
 -- "J: %w" (types1b.ssz.go, the wrap of the ValidateBitvector error)
 def bvFmtJ : List UInt8 := [74, 58, 32, 37, 119]
+theorem bvFmtJ_len : bvFmtJ.length = 5 := by rfl
 
 theorem bvr_a (x c : BitVec 64) : x - 8#64 - 72 + c = x - 80 + c := by bv_omega
 theorem bvr_56 (x : BitVec 64) : x - 80 + 56 = x - 24 := by bv_omega

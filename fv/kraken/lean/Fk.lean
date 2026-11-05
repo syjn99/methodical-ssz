@@ -103,3 +103,8 @@ import Fk.WitFvMR
 import Fk.WitCpMR
 import Fk.Compose
 import Fk.Regress
+import Fk.WitScA
+import Fk.WitVbv
+import Fk.WitBvR
+import Fk.WitBlR
+import Fk.WitLuMa
