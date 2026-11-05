@@ -1,0 +1,6 @@
+package main
+import("fmt";"unsafe";t "github.com/OffchainLabs/methodical-ssz/fv/kraken/target")
+func main(){fmt.Printf("Scalars size=%d align=%d Eoffset=%d\n",unsafe.Sizeof(t.Scalars{}),unsafe.Alignof(t.Scalars{}),unsafe.Offsetof(t.Scalars{}.E))}
+
+var _ [24 - unsafe.Sizeof(t.Scalars{})]byte
+var _ [unsafe.Sizeof(t.Scalars{}) - 24]byte

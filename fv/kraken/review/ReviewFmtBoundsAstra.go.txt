@@ -1,0 +1,12 @@
+package main
+import("fmt";"errors")
+var changes int
+type changing struct{}
+func(changing) String()string{ changes++;return "x" }
+func main(){
+ e:=errors.New("e")
+ wide:=fmt.Errorf("%100000w",e)
+ fmt.Printf("formatBytes=%d messageBytes=%d claimedBudget=%d actualResultBytes=%d\n",len("%100000w"),1,len("%100000w")+1+8192,len(wide.Error()))
+ _=fmt.Errorf("%v: %w",changing{},e)
+ fmt.Printf("valid arguments changed framed global=%d\n",changes)
+}
