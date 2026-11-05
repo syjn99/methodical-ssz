@@ -19,13 +19,13 @@ LC U #18: first offset 0: lc_reject_zero_spec
 LC U #19: first offset 8 past end: lc_reject_past_spec
 LC U #20: first offset 6 unaligned: lc_spec_rejects shape; Go path (convT64) not proved
 LC U #21: first offset 20 (5 > 4): Go path (convT64) not proved
-LC U #22: one empty element: accept path not proved
-LC U #23: max (4 elements): accept path not proved
+LC U #22: one empty element: lc_unmarshal_accept_spec_k
+LC U #23: max (4 elements): lc_unmarshal_accept_spec_k
 CP U #24: short: cp_reject_size_main + cp_reject_size_spec
 CP U #25: exact: cp_unmarshal_accept_spec_k
 CP U #26: long: cp_reject_size_main + cp_reject_size_spec
 AD U #27: short: ad_reject_size_main + ad_reject_size_spec
-AD U #28: exact: accept path not proved
+AD U #28: exact: ad_unmarshal_accept_spec_k
 AD U #29: long: ad_reject_size_main + ad_reject_size_spec
 BL U #30: empty: bl_reject_short_main
 BL U #31: offset 5: bl_reject_offset_main

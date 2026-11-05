@@ -72,7 +72,7 @@ Go 값이 EthLib 값으로 가지 못하는 경우(추상화의 정의역 밖):
 | BitL | 오프셋 ≠ 4 | `ErrInvalidVariableOffset` | `bl_spec_rejects` | `bl_reject_offset_main` |
 | BitL | `ValidateBitlist` 실패 | `fmt.Errorf("B: %w")` | `bl_spec_rejects` (`blValid` 거짓) | 계약 `ValidateBitlistC` 뒤. 오류 경로는 없음 |
 
-수용 쪽: `*_unmarshal_accept_spec_k`가 "EthLib가 받으면 기계어가 nil을 반환하고 수신자가 그 값을 담는다"를 말한다(Scalars, ListU64, FixedVec, BitVec, Nested, Checkpoint, BitL). ListC와 AttestationData의 수용 경로는 증명하지 않았다.
+수용 쪽: `*_unmarshal_accept_spec_k`가 "EthLib가 받으면 기계어가 nil을 반환하고 수신자가 그 값을 담는다"를 말한다(Scalars, ListU64, FixedVec, BitVec, Nested, ListC, Checkpoint, AttestationData, BitL). ListC는 원소가 1개 이상인 입력(`len(buf) > 4`)만 다룬다. 빈 리스트(`len(buf) = 4`)의 수용 경로는 증명하지 않았다.
 
 ## 4. 오프셋 읽기·쓰기의 범위 (B3.4)
 
@@ -83,12 +83,12 @@ Go 값이 EthLib 값으로 가지 못하는 경우(추상화의 정의역 밖):
 | ListU64 디코더 `ReadOffset(buf[0:4])` | `mov (%rbx),%edx` (32비트 적재, 0 확장) | 값 < 2^32. `lu_off4`가 `Int.ofBytes` 값과 같음을 보인다 |
 | Nested 디코더 `ReadOffset(buf[24:28])` | `mov 0x18(%rbx),%edx` | 같음. `ne_off28` |
 | ListC 디코더 `ReadOffset(buf[0:4])`, 첫 원소 오프셋 | `mov (%rbx),%edx`, `mov (%rbx,%rdx,1),%ebx` | 같음. `lu_off4`, `zx_o` |
-| ListC 디코더 다음 원소 오프셋 | 루프 안 32비트 적재 | 루프 미증명. 적재 형태는 같다 |
+| ListC 디코더 다음 원소 오프셋 | 루프 안 32비트 적재 | 같음. `lcl_iter` |
 | BitL 디코더 `ReadOffset(buf[0:4])` | `mov (%rbx),%edx` | 같음. `lu_off4` |
 | ListU64 인코더 `WriteOffset(dst, 4)` | `movl $0x4,…` | 상수. `lu_marshal_main` |
 | BitL 인코더 `WriteOffset(dst, 4)` | `movl $0x4,-0x4(%rdx,%rbx,1)` | 상수. `bl_marshal_main` |
-| Nested 인코더 `WriteOffset(dst, 28)` | 상수 | 인코더 미증명 |
-| ListC 인코더 `WriteOffset(dst, 4)`, 원소 오프셋 `4n + Σ size` | `int` → `uint32` 자르기 | 인코더 미증명. Go 수준 근거: 성공 경로에서는 원소마다 길이 ≤ 16이므로 오프셋 ≤ 16 + 4·132 = 544 < 2^32. 길이가 2^29를 넘는 원소가 있으면 자른 값을 쓴 뒤 그 원소의 인코더가 `ErrListTooBig`를 반환하고 함수는 `nil, err`를 반환한다(쓴 바이트는 버려진다). EthLib `offsetOverflow`(전체 ≥ 2^32)는 이 성공 경로에서 일어나지 않는다 |
+| Nested 인코더 `WriteOffset(dst, 28)` | 상수 | 상수. `ne_marshal_main` |
+| ListC 인코더 `WriteOffset(dst, 4)`, 원소 오프셋 `4n + Σ size` | `movl $0x4`, `mov %r8d,-0x4(%rdx,%rbx,1)` (`int` → `uint32` 자르기) | 빠른 경로 증명: `lcm2_loop`가 쓴 4바이트가 `offTab`(EthLib `uintBytes 4`)과 같음을 보인다. 원소마다 길이 ≤ 16(`g.ok`)이므로 값 ≤ 544 < 2^32이고 자르기가 값을 바꾸지 않는다(`lc_marshal_main`). Go 수준 근거(빠른 경로 밖): 성공 경로에서는 원소마다 길이 ≤ 16이므로 오프셋 ≤ 16 + 4·132 = 544 < 2^32. 길이가 2^29를 넘는 원소가 있으면 자른 값을 쓴 뒤 그 원소의 인코더가 `ErrListTooBig`를 반환하고 함수는 `nil, err`를 반환한다(쓴 바이트는 버려진다). EthLib `offsetOverflow`(전체 ≥ 2^32)는 이 성공 경로에서 일어나지 않는다 |
 
 디코더 쪽 읽기는 4바이트 적재라서 int→uint32 변환이 없다. 쓰기 쪽 자르기는 ListC 인코더 한 곳이다.
 

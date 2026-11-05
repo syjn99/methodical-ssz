@@ -25,14 +25,14 @@
 
 | 피호출자 | 호출하는 함수(경로) | 분류 | Kraken 형식 | 비공허성 |
 | --- | --- | --- | --- | --- |
-| `runtime.newobject` | Nested.UnmarshalSSZ(S, L 할당), AttestationData.UnmarshalSSZ(Source, Target) | (b) | `NewobjectC Heap ty sz S`: 사전조건 `rax = ty`, `sz ≤ avail`. 사후조건: 복귀, rsp + 8, r14 보존, 0으로 채운 `sz`바이트 블록을 `Heap`에서 떼어냄, `F` 보존 | 없음. `makeslice`와 같은 범프 할당기로 증인을 만들 수 있다(남은 일) |
-| `runtime.makeslice`(byte, 0, 32) | Checkpoint·AttestationData UnmarshalSSZ | (b) | `MakesliceC`(len ≤ cap로 넓힘, c0f3396) | 1a와 같다(`bump_makeslice`). 이 호출 지점의 구체 Host 증인은 없다 |
+| `runtime.newobject` | Nested.UnmarshalSSZ(S, L 할당), AttestationData.UnmarshalSSZ(Source, Target), ListC.UnmarshalSSZ(원소마다) | (b) | `NewobjectC Heap ty sz S`: 사전조건 `rax = ty`, `sz ≤ avail`. 사후조건: 복귀, rsp + 8, r14 보존, 0으로 채운 `sz`바이트 블록을 `Heap`에서 떼어냄, `F` 보존 | 없음. `makeslice`와 같은 범프 할당기로 증인을 만들 수 있다(남은 일) |
+| `runtime.makeslice`(byte, 0, 32), (*ListU64, n, n) | Checkpoint·AttestationData UnmarshalSSZ, ListC.UnmarshalSSZ(원소 포인터 배열) | (b) | `MakesliceC`(len ≤ cap로 넓힘, c0f3396) | 1a와 같다(`bump_makeslice`). 이 호출 지점의 구체 Host 증인은 없다 |
 | `runtime.memmove` | Checkpoint·AttestationData·BitL의 Unmarshal·Marshal | (b) | `MemmoveC S` | 없음 |
 | `runtime.growslice` | BitL.UnmarshalSSZ(`append([]byte{}, buf[4:]...)`) | (b) | `GrowsliceC`, 옛 원소 `[]`(빈 슬라이스, 주소 `runtime.noptrbss`) | 없음 |
 | `fmt.errorf` | ListC.UnmarshalSSZ(오프셋 오류 3경로) | (b) | `FmtErrorfC` | 없음 |
 | `ssz.ValidateBitlist` | BitL.UnmarshalSSZ | (b) | `ValidateBitlistC S`: 복귀, rsp + 8, `F`와 바이트 보존, **rax = 0 ⟺ EthLib `unpackDelimited (some 2048)`이 받음**. 이 함수는 `bsr`이 있어 Kraken이 파싱하지 못한다. **bitlist의 핵심 검사가 이 계약 뒤에 있다** | 없음 |
 | `target.Scalars.UnmarshalSSZ` | Nested.UnmarshalSSZ | (a) 함수 명세 | `ScUAccC`: 우리 쪽 정리 `sc_accept_main`에서 유도(`sc_uacc_holds`) | 증명됨(가설이 아니라 정리에서 나온다) |
-| `target.ListU64.UnmarshalSSZ` | Nested.UnmarshalSSZ | (a) 함수 명세 | `LuUAccC Heap S`: `lu_accept_main`에서 유도(`lu_uacc_holds`, `MakesliceC` 필요) | 증명됨 |
+| `target.ListU64.UnmarshalSSZ` | Nested.UnmarshalSSZ, ListC.UnmarshalSSZ(원소마다) | (a) 함수 명세 | `LuUAccC Heap S`: `lu_accept_main`에서 유도(`lu_uacc_holds`, `MakesliceC` 필요) | 증명됨 |
 | `runtime.gcWriteBarrier1/2` | 1b 디코더 전부 | (c) | 쓰기 장벽 0 전제. 플래그를 읽고 건너뜀을 증명한다(AttestationData는 6번) | 해당 없음 |
 | `runtime.convT64` | ListC.UnmarshalSSZ(정렬 오류, 원소 수 초과) | (b) | `ConvT64C` | 그 두 경로는 증명하지 않았다 |
 
