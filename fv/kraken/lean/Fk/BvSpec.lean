@@ -4,12 +4,12 @@ import Fv1.SpecBitVec
 import Fv1.Transfer
 
 /-!
-# BitVec: size, length reject, EthLib links, and the padding-bit counterexample
+# BitVec: size, length reject, EthLib links, padding reject, and the encoder
 
-`bv_padding_counterexample`: on the input byte 0x10 (a padding bit set) EthLib
-rejects (`paddingBits`), and the machine code of BitVec.UnmarshalSSZ returns
-nil with J = [0x10]. So the generated decoder accepts a non-canonical
-encoding: its accepted set is larger than EthLib's (REPORT-1b, finding F1).
+The generator fix F1 makes the decoder call `ssz.ValidateBitvector`. On a byte
+with a padding bit set (`16 ≤ b`) `bv_reject_padding_main` returns an error,
+and `bv_spec_accepts_iff` shows EthLib accepts `#[b]` exactly when `b < 16`.
+The 1b counterexample `bv_padding_counterexample` is gone (REPORT-1b-reprove R3).
 -/
 
 open Fk Fk.Code Fv1 EthLib.Serialization.Ssz
