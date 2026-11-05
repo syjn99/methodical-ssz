@@ -377,3 +377,164 @@ theorem fv_marshal_main (k : Nat) (hk : FixedVecMarshalSSZTo.IsInfixAt Host.prog
   · apply UInt64.toBitVec_inj.mp; simp
   · apply UInt64.toBitVec_inj.mp; simp
   · exact sep_true (by ecancel)
+
+set_option maxHeartbeats 8000000 in
+set_option maxRecDepth 100000 in
+theorem fv_marshal_reject_main (k : Nat) (hk : FixedVecMarshalSSZTo.IsInfixAt Host.prog k)
+    (hf : LabelsFresh FixedVecMarshalSSZTo k)
+    (rb pre d0 : List UInt8) (hrb : rb.length = 32)
+    (hd0 : d0.length = 32) (w wl e0 e1 : BitVec 64) (hwl : wl ≠ 4)
+    (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)
+    (fp s1 s2 l1 l2 l3 l4 rslot r0 r1 : List UInt8)
+    (hfp : fp.length = 8) (h1 : s1.length = 8) (h2 : s2.length = 8) (hl1 : l1.length = 8) (hl2 : l2.length = 8)
+    (hl3 : l3.length = 8) (hl4 : l4.length = 8) (hrs : rslot.length = 8)
+    (hr0 : r0 ++ r1 = rb) (hr0l : r0.length = 1)
+    (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s1.At (s.regs.rsp.toBitVec + 8))
+      ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16)) ⋆ Eq (l1.At (s.regs.rsp.toBitVec - 16))
+      ⋆ Eq (l2.At (s.regs.rsp.toBitVec - 24)) ⋆ Eq (l3.At (s.regs.rsp.toBitVec - 32))
+      ⋆ Eq (l4.At (s.regs.rsp.toBitVec - 40))
+      ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 120)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 120 - BitVec.ofNat 64 S))
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+      ⋆ Eq (r0.At s.regs.rax.toBitVec) ⋆ Eq (r1.At (s.regs.rax.toBitVec + 1))
+      ⋆ Eq ((Int.toBytes 8 w.toInt).At (s.regs.rax.toBitVec + 32)) ⋆ Eq ((Int.toBytes 8 wl.toInt).At (s.regs.rax.toBitVec + 40))
+      ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
+      ⋆ Eq ((Int.toBytes 8 e0.toInt).At (label "ssz.ErrBytesLength").toBitVec)
+      ⋆ Eq ((Int.toBytes 8 e1.toInt).At (label "ssz.ErrBytesLength" + 8).toBitVec) ⋆ R)
+    (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 ≤ s.regs.rsp.toNat)
+    (hcap : s.regs.rcx.toNat + 64 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
+    (hmm : MemmoveC S) :
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
+        ∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi.toBitVec = e0 ∧ st.data.regs.rsi.toBitVec = e1
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
+        ∧ (Eq (pre.At s.regs.rbx.toBitVec) ⋆ R ⋆ fun _ => True) st.data.dmem)
+      ⟨s, Host.addrOf k⟩ := by
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
+  simp only at h_mem hguard hsp hcap hcap63 hpre ⊢
+  have := rsp.toNat_lt_size; have := guard.toNat_lt_size; have := rcx.toNat_lt_size; have := rdi.toNat_lt_size
+  simp only [UInt64.size] at *
+  kat hk FixedVecMarshalSSZTo 0
+  kat hk FixedVecMarshalSSZTo 1
+  kat hk FixedVecMarshalSSZTo 2
+  apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk FixedVecMarshalSSZTo 3
+  split
+  · rename_i h; exfalso
+    simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl, CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
+    rcases h with h | h
+    · apply h; omega
+    · have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this; omega
+  simp only [Effects.All]
+  kat hk FixedVecMarshalSSZTo 4
+  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)
+  intro m1 H1
+  simp only [Width.bytes, Width.bits] at H1
+  kunfold
+  kat hk FixedVecMarshalSSZTo 5
+  kat hk FixedVecMarshalSSZTo 6
+  kat hk FixedVecMarshalSSZTo 7
+  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by bv_omega) (by ecancel) (by exact h2)
+  intro m2 H2
+  simp only [Width.bytes, Width.bits] at H2
+  kunfold
+  kat hk FixedVecMarshalSSZTo 8
+  apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s1 _ _ (by bv_omega) (by ecancel) (by exact h1)
+  intro m3 H3
+  simp only [Width.bytes, Width.bits] at H3
+  kunfold
+  kat hk FixedVecMarshalSSZTo 9
+  apply load_step _ _ _ _ r0 _ _ (by ecancel) (by exact hr0l)
+  kunfold
+  intro _
+  kat hk FixedVecMarshalSSZTo 10
+  kat hk FixedVecMarshalSSZTo 11
+  kat hk FixedVecMarshalSSZTo 12
+  split
+  case isFalse h =>
+    exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.toNat_add] at h; omega
+  simp only [Effects.All]
+  klabel hk hf FixedVecMarshalSSZTo 25
+  kat hk FixedVecMarshalSSZTo 25
+  kat hk FixedVecMarshalSSZTo 26
+  apply store_step_at _ _ (rsp.toBitVec - 16) _ _ _ l1 _ _ (f96 _) (by ecancel) (by exact hl1)
+  intro m4 H4
+  simp only [Width.bytes, Width.bits] at H4
+  kunfold
+  kat hk FixedVecMarshalSSZTo 27
+  apply store_step_at _ _ (rsp.toBitVec - 32) _ _ _ l3 _ _ (f80 _) (by ecancel) (by exact hl3)
+  intro m5 H5
+  simp only [Width.bytes, Width.bits] at H5
+  kunfold
+  kat hk FixedVecMarshalSSZTo 28
+  apply store_step_at _ _ (rsp.toBitVec - 40) _ _ _ l4 _ _ (f72 _) (by ecancel) (by exact hl4)
+  intro m6 H6
+  simp only [Width.bytes, Width.bits] at H6
+  kunfold
+  kat hk FixedVecMarshalSSZTo 29
+  kat hk FixedVecMarshalSSZTo 30
+  kat hk FixedVecMarshalSSZTo 31
+  kat hk FixedVecMarshalSSZTo 32
+  kat hk FixedVecMarshalSSZTo 33
+  apply store_step_at _ _ (rsp.toBitVec - 120) _ _ _ rslot _ _ (slot120 _) (by ecancel) (by exact hrs)
+  intro m7 H7
+  simp only [Width.bytes, Width.bits] at H7
+  kunfold
+  have hmerge : Eq (rb.At rax.toBitVec) = Eq (r0.At rax.toBitVec) ⋆ Eq (r1.At (rax.toBitVec + 1)) := by
+    rw [← hr0, Mem.At_append_sep _ _ _ (by rw [← List.length_append, hr0, hrb]; decide), hr0l]; rfl
+  rw [slot120] at *
+  rw [show rbx.toBitVec + rcx.toBitVec * 1#64 = rbx.toBitVec + rcx.toBitVec by rw [BitVec.mul_one]] at *
+  refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (k + 33 + 1)) rb d0 scratch _
+    (by rw [hrb]; rfl) (by rw [hrb, hd0]) hsc (by dsimp only; rw [hmerge]; ecancel)) ?_
+  rintro ⟨e1, pc1⟩ ⟨hpc1, hrsp1, stk1, hstk1, Hm1⟩
+  dsimp only at hpc1 hrsp1 Hm1
+  subst hpc1
+  obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
+    zmms1, flags1, mem1⟩ := e1
+  simp only at hrsp1 Hm1
+  subst hrsp1
+  kat hk FixedVecMarshalSSZTo 34
+  rw [g120, h120]
+  apply load_step _ _ _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk FixedVecMarshalSSZTo 35
+  apply load_step_at _ _ (rax.toBitVec + 40) _ _ (Int.toBytes 8 wl.toInt) _ _ (by kaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk FixedVecMarshalSSZTo 36
+  split
+  case isFalse h =>
+    exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+    apply hwl; rw [← BitVec.sub_add_cancel wl 4, show wl - 4 = 0#64 from h]; rfl
+  simp only [Effects.All]
+  klabel hk hf FixedVecMarshalSSZTo 44
+  kat hk FixedVecMarshalSSZTo 44
+  kat hk FixedVecMarshalSSZTo 45
+  apply load_step _ _ _ _ (Int.toBytes 8 e0.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk FixedVecMarshalSSZTo 46
+  apply load_step _ _ _ _ (Int.toBytes 8 e1.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk FixedVecMarshalSSZTo 47
+  intro _
+  kat hk FixedVecMarshalSSZTo 48
+  intro _
+  kat hk FixedVecMarshalSSZTo 49
+  kat hk FixedVecMarshalSSZTo 50
+  kat hk FixedVecMarshalSSZTo 51
+  rw [k104]
+  apply load_step _ _ _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk FixedVecMarshalSSZTo 52
+  rw [show rsp.toBitVec - 8 + 8#64 = rsp.toBitVec by bv_omega]
+  apply load_step _ _ _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  apply Eventually.done
+  simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+  refine ⟨trivial, ?_, ?_, ?_, ?_, ?_, ?_, trivial, ?_⟩
+  all_goals first
+    | rfl
+    | (simp [Fk.ofInt_ofBytes_toBytes64]; done)
+    | (apply UInt64.toBitVec_inj.mp; simp; done)
+    | exact sep_true (P := Eq (pre.At rbx.toBitVec) ⋆ R) (by ecancel)
