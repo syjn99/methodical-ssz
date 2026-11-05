@@ -8,4 +8,6 @@ import Fk.ScSize
 import Fk.ScMarshal
 import Fk.ScSpec
 import Fk.LuLoop
+import Fk.Contracts
+import Fk.Bump
 import Fk.LuAccept

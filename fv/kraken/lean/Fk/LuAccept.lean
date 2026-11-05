@@ -1,5 +1,6 @@
 import Fk.LuLoop
 import Fk.Flags
+import Fk.Contracts
 
 /-!
 # ListU64.UnmarshalSSZ, accept path, on Kraken main (6064eec)
@@ -34,12 +35,14 @@ theorem lu_accept_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k
     (h90 : s90.length = 8) (h98 : s98.length = 8) (hrs : rslot.length = 8)
     (hcP : cP.length = 8) (hcL : cL.length = 8) (hcC : cC.length = 8)
     (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
+    (Heap : Nat → DataMem → Prop) (avail : Nat)
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s28.At (s.regs.rsp.toBitVec - 96))
       ⋆ Eq (s30.At (s.regs.rsp.toBitVec - 88)) ⋆ Eq (s38.At (s.regs.rsp.toBitVec - 80))
       ⋆ Eq (s90.At (s.regs.rsp.toBitVec + 8)) ⋆ Eq (s98.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 144)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 144 - BitVec.ofNat 64 S))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+      ⋆ Heap avail
       ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec)
       ⋆ (Eq (bs.At (s.regs.rbx.toBitVec + 4))
         ⋆ Eq (cP.At s.regs.rax.toBitVec) ⋆ Eq (cL.At (s.regs.rax.toBitVec + 8)) ⋆ Eq (cC.At (s.regs.rax.toBitVec + 16))
@@ -47,23 +50,16 @@ theorem lu_accept_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k
     (hguard : guard.toNat < s.regs.rsp.toNat - 8) (hsp : 8 ≤ s.regs.rsp.toNat)
     (hlen : s.regs.rcx.toNat = 4 + 8 * n) (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat)
     (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
-    -- Contract of runtime.makeslice (Go ABIInternal: rax = type, rbx = len, rcx = cap; result rax):
-    -- given the return address at rsp and S bytes of stack below it, it returns to that address
-    -- with rsp + 8, leaves every other chunk F unchanged, and gives a fresh zeroed block.
-    (hms : ∀ (st : MachineData) (ret : Int64) (cnt : Nat) (stk : List UInt8) (F : DataMem → Prop),
-      st.regs.rbx.toNat = cnt → st.regs.rcx.toNat = cnt → stk.length = S →
-      (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec) ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ F) st.dmem →
-      Eventually (step1 Host.exe)
-        (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧
-          ∃ stk' : List UInt8, stk'.length = S ∧
-          (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec) ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S))
-            ⋆ Eq ((List.replicate (8 * cnt) 0).At st'.data.regs.rax.toBitVec) ⋆ F) st'.data.dmem)
-        ⟨st, label "runtime.makeslice"⟩) :
+    -- Contract of runtime.makeslice (Fk/Contracts.lean): uint64 elements (8 bytes),
+    -- type descriptor at type:*+48128 (link/out/RESULT), heap with avail ≥ 8n bytes.
+    (hav : 8 * n ≤ avail)
+    (hms : MakesliceC Heap (label "type__" + 48128).toBitVec 8 S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0 ∧
         ∃ p : BitVec 64, (Eq ((Int.toBytes 8 p.toInt).At s.regs.rax.toBitVec)
           ⋆ Eq ((Int.toBytes 8 (n : Int)).At (s.regs.rax.toBitVec + 8))
-          ⋆ Eq ((Int.toBytes 8 (n : Int)).At (s.regs.rax.toBitVec + 16)) ⋆ Eq (bs.At p) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Eq ((Int.toBytes 8 (n : Int)).At (s.regs.rax.toBitVec + 16)) ⋆ Eq (bs.At p)
+          ⋆ Heap (avail - 8 * n) ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hsp hlen hcap hcap63 ⊢
@@ -178,7 +174,7 @@ theorem lu_accept_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k
   -- the call: apply the makeslice contract, continue at the return address
   rw [call_slot] at *
   have hnN : nV.toNat = n := by rw [← hnV]; exact shr3_toNat rcx.toBitVec n hn (by simpa using hlen)
-  refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 35 + 1)) n scratch _ hnN hnN hsc (by ecancel)) ?_
+  refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 35 + 1)) n avail scratch _ rfl hnN hnN hav hsc (by ecancel)) ?_
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, stk1, hstk1, Hm1⟩
   dsimp only at hpc1 hrsp1 Hm1
   subst hpc1
