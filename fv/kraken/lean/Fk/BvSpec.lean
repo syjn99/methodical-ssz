@@ -120,6 +120,50 @@ theorem bv_unmarshal_accept_spec_k (bs : Array UInt8) (v : Value) (hd : deserial
     bv_serialize bv_toValue_surjective hd
   exact ⟨g, rfl, rfl⟩
 
+set_option maxHeartbeats 2000000 in
+/-- **Accept path against EthLib, with the machine run** (1b-fix X7). If EthLib
+accepts `bsA` as `v`, there is a canonical `g` (`g.b < 16`) with
+`g.toValue = v`, `bsA = #[g.b]`, and BitVec.UnmarshalSSZ on that input byte
+returns nil with J = (p, 1, 1) and `g.b` at p (`bv_accept_main`).
+`bv_unmarshal_accept_spec_k` alone states only the byte equation. -/
+theorem bv_unmarshal_accept_machine (k : Nat) (hk : BitVecUnmarshalSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh BitVecUnmarshalSSZ k)
+    (bsA : Array UInt8) (v : Value) (hd : deserialize bvDesc bsA = .ok v)
+    (s : MachineData) (ra guard : UInt64)
+    (fp s1 s2 rslot cP cL cC : List UInt8)
+    (hfp : fp.length = 8) (h1 : s1.length = 8) (h2 : s2.length = 8) (hrs : rslot.length = 8)
+    (hcP : cP.length = 8) (hcL : cL.length = 8) (hcC : cC.length = 8)
+    (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
+    (Heap : Nat → DataMem → Prop) (avail : Nat)
+    (P : ∀ g : BitVecG, bsA = #[g.b] →
+      s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s1.At (s.regs.rsp.toBitVec + 8))
+      ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
+      ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 40)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 40 - BitVec.ofNat 64 S))
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+      ⋆ Heap avail
+      ⋆ Eq ([g.b].At s.regs.rbx.toBitVec)
+      ⋆ Eq (cP.At s.regs.rax.toBitVec) ⋆ Eq (cL.At (s.regs.rax.toBitVec + 8)) ⋆ Eq (cC.At (s.regs.rax.toBitVec + 16))
+      ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
+    (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 40 ≤ s.regs.rsp.toNat)
+    (hlen : s.regs.rcx.toNat = bsA.size) (hav : 1 * 1 ≤ avail)
+    (hms : MakesliceC Heap (label "type__" + 48736).toBitVec 1 S) :
+    ∃ g : BitVecG, g.toValue = v ∧ bsA = #[g.b] ∧
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧
+        ∃ p : BitVec 64, (Eq ((Int.toBytes 8 p.toInt).At s.regs.rax.toBitVec)
+          ⋆ Eq ((Int.toBytes 8 1).At (s.regs.rax.toBitVec + 8))
+          ⋆ Eq ((Int.toBytes 8 1).At (s.regs.rax.toBitVec + 16)) ⋆ Eq ([g.b].At p)
+          ⋆ Eq ([g.b].At s.regs.rbx.toBitVec) ⋆ Heap (avail - 1 * 1) ⋆ fun _ => True) st.data.dmem)
+      ⟨s, Host.addrOf k⟩ := by
+  obtain ⟨g, hv, hb⟩ := bv_unmarshal_accept_spec_k bsA v hd
+  refine ⟨g, hv, hb, ?_⟩
+  have hrcx : s.regs.rcx = 1 := by
+    apply UInt64.toNat_inj.mp; rw [hlen, hb]; rfl
+  exact bv_accept_main k hk hf g.b s ra guard fp s1 s2 rslot cP cL cC hfp h1 h2 hrs hcP hcL hcC R S scratch hsc
+    Heap avail (P g hb) hguard hsp hrcx hav hms
+
 /-- **Finding F1.** EthLib rejects [0x10]; the machine code accepts it. -/
 theorem bv_padding_counterexample (k : Nat) (hk : BitVecUnmarshalSSZ.IsInfixAt Host.prog k)
     (hf : LabelsFresh BitVecUnmarshalSSZ k) (s : MachineData) (ra guard : UInt64)

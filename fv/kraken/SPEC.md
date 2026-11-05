@@ -26,10 +26,10 @@
 | ListU64 | `luDesc = container [list (uint 8) 16]` | `ListU64` (List UInt64), `ok` = 길이 ≤ 16 | `luEncode` = 오프셋 4 ‖ 원소 | `lu_toValue_injective`, `lu_toValue_surjective`, `lu_serialize` |
 | BitVec | `bvDesc = container [bitVector 4]` | `BitVecG` (바이트 b, b < 16) | `#[b]` | `bv_toValue_injective`, `bv_toValue_surjective`, `bv_serialize` |
 | Nested | `neDesc = container [uint 8, scDesc, luDesc]` | `NestedG` (UInt64, Scalars, ListU64), `ok` = `l.ok` | `neEncode` = A ‖ S ‖ 오프셋 28 ‖ `luEncode l` | `ne_toValue_injective`, `ne_toValue_surjective`, `ne_serialize` |
-| ListC | `lcDesc = container [list luDesc 4]` | `ListCG` (List ListU64), `ok` = 길이 ≤ 4이고 원소마다 `ok` | `lcEncode` = 오프셋 4 ‖ 오프셋 표(첫 값 4n) ‖ 원소 인코딩 | `lc_toValue_surjective`, `lc_serialize` (단사는 하지 않았다: 왕복 정리에 필요하다) |
+| ListC | `lcDesc = container [list luDesc 4]` | `ListCG` (List ListU64), `ok` = 길이 ≤ 4이고 원소마다 `ok` | `lcEncode` = 오프셋 4 ‖ 오프셋 표(첫 값 4n) ‖ 원소 인코딩 | `lc_toValue_injective`(`Fk/RoundTrip1b.lean`), `lc_toValue_surjective`, `lc_serialize` |
 | Checkpoint | `cpDesc = container [uint 8, byteVector 32]` | `CheckpointG` (UInt64, Vector UInt8 32) | `cpEncode` (40) | `cp_toValue_injective`, `cp_toValue_surjective`, `cp_serialize` |
 | AttestationData | `adDesc = container [uint 8, uint 8, byteVector 32, cpDesc, cpDesc]` | `AttestationDataG` | `adEncode` (128) | `ad_toValue_injective`, `ad_toValue_surjective`, `ad_serialize` |
-| BitL | `blDesc = container [bitList 2048]` | `BitLG` (Array Bool, 크기 ≤ 2048) | `blEncode` = 오프셋 4 ‖ `packBitsDelimited` | `bl_toValue_surjective`, `bl_serialize` |
+| BitL | `blDesc = container [bitList 2048]` | `BitLG` (Array Bool, 크기 ≤ 2048) | `blEncode` = 오프셋 4 ‖ `packBitsDelimited` | `bl_toValue_surjective`, `bl_serialize`, 단사는 `bl_roundtrip` 안에서 증명 |
 
 Go 값이 EthLib 값으로 가지 못하는 경우(추상화의 정의역 밖):
 - FixedVec `len(W) ≠ 4`, Checkpoint·AttestationData `len(Root) ≠ 32`: 인코더가 `ssz.ErrBytesLength`를 반환한다.
@@ -72,7 +72,7 @@ Go 값이 EthLib 값으로 가지 못하는 경우(추상화의 정의역 밖):
 | BitL | 오프셋 ≠ 4 | `ErrInvalidVariableOffset` | `bl_spec_rejects` | `bl_reject_offset_main` |
 | BitL | `ValidateBitlist` 실패 | `fmt.Errorf("B: %w")` | `bl_spec_rejects` (`blValid` 거짓) | 계약 `ValidateBitlistC` 뒤. 오류 경로는 없음 |
 
-수용 쪽: `*_unmarshal_accept_spec_k`가 "EthLib가 받으면 기계어가 nil을 반환하고 수신자가 그 값을 담는다"를 말한다(Scalars, ListU64, FixedVec, BitVec, Nested, ListC, Checkpoint, AttestationData, BitL). ListC는 두 정리로 나뉜다: 원소가 1개 이상인 입력(`lc_unmarshal_accept_spec_k`, `len(buf) > 4`)과 빈 리스트(`lc_unmarshal_accept_empty_spec_k`, `len(buf) = 4`, 결과 `c.Items` = (`runtime.noptrbss`, 0, 0), 전제 X15 = 0).
+수용 쪽: `*_unmarshal_accept_spec_k`가 "EthLib가 받으면 기계어가 nil을 반환하고 수신자가 그 값을 담는다"를 말한다(Scalars, ListU64, FixedVec, Nested, ListC, Checkpoint, AttestationData, BitL). BitVec의 `bv_unmarshal_accept_spec_k`는 바이트 식(`bs = #[g.b]`)만 말한다. 기계어 실행을 포함하는 정리는 `bv_unmarshal_accept_machine`이다(1b-fix X7). 7절 표가 둘을 구분한다. ListC는 두 정리로 나뉜다: 원소가 1개 이상인 입력(`lc_unmarshal_accept_spec_k`, `len(buf) > 4`)과 빈 리스트(`lc_unmarshal_accept_empty_spec_k`, `len(buf) = 4`, 결과 `c.Items` = (`runtime.noptrbss`, 0, 0), 전제 X15 = 0).
 
 ## 4. 오프셋 읽기·쓰기의 범위 (B3.4)
 
@@ -99,3 +99,26 @@ Go 값이 EthLib 값으로 가지 못하는 경우(추상화의 정의역 밖):
 ## 6. bitlist 검증과 rodata 표 (B3.3)
 
 브리프는 `bits.Len8`의 표 조회(rodata)를 C5 방식으로 두라고 했다. `GOAMD64=v1` 빌드에서 `ssz.ValidateBitlist`는 표를 읽지 않는다. `bits.Len8`은 `bsr %r8d,%r8d`로 컴파일된다(`link/out/FUNCS.md`: 이 함수의 전역 참조는 없다). 그래서 표 상수는 만들지 않았다. 함수 전체를 계약 `ValidateBitlistC`로 두었다. **bitlist의 핵심 검사(빈 입력, 끝 바이트 0, 2048비트 초과)는 계약 뒤에 있다.** 계약은 "rax = 0 ⟺ EthLib `unpackDelimited (some 2048)`가 받는다"이다. Kraken에 `bsr`이 들어오면 이 계약을 증명으로 바꿀 수 있다(REPORT-1b Kraken 요청 목록).
+
+## 7. 완료표: 기계어 실행을 포함하는 정리와 바이트 식 정리 (1b-fix X7)
+
+"기계어"는 `Eventually (step1 Host.exe) …`를 결론에 가진 정리다.
+"바이트 식"은 EthLib `serialize`/`deserialize`와 Go 값의 식만 말하는 정리다.
+바이트 식 정리는 기계어 실행을 말하지 않는다.
+왕복 정리(`*_roundtrip`)는 EthLib에서 `enc g`를 다시 읽는 바이트 식 정리다.
+인코더 실행 뒤 디코더를 실행하는 연속 기계 실행 정리는 없다.
+
+| 타입 | 인코더: 기계어 | 인코더: 바이트 식 | 디코더 수용: 기계어 + EthLib | 디코더 수용: 바이트 식만 |
+| --- | --- | --- | --- | --- |
+| Scalars | `sc_marshal_main`, `sc_marshal_spec_k` | `sc_serialize` | `sc_unmarshal_accept_spec_k` | |
+| FixedVec | `fv_marshal_main` | `fv_marshal_spec_k`, `fv_serialize` | `fv_unmarshal_accept_spec_k` | |
+| ListU64 | `lu_marshal_main` | `lu_serialize` | `lu_unmarshal_accept_spec_k` | |
+| BitVec | `bv_marshal_main` | `bv_serialize` | `bv_unmarshal_accept_machine` | `bv_unmarshal_accept_spec_k` |
+| Nested | `ne_marshal_main` | `ne_marshal_bytes`, `ne_serialize` | `ne_unmarshal_accept_spec_k` | |
+| ListC | `lc_marshal_main` | `lc_marshal_spec_k`, `lc_serialize` | `lc_unmarshal_accept_spec_k`, `lc_unmarshal_accept_empty_spec_k` | |
+| Checkpoint | `cp_marshal_main`, `cp_marshal_spec_k` | `cp_serialize` | `cp_unmarshal_accept_spec_k` | |
+| AttestationData | `ad_marshal_main` | `ad_marshal_bytes`, `ad_serialize` | `ad_unmarshal_accept_spec_k` | |
+| BitL | `bl_marshal_main` | `bl_serialize` | `bl_unmarshal_accept_spec_k`(`ValidateBitlistC` 뒤) | |
+
+이 표는 정리의 형태만 말한다.
+전제 증인의 유무는 `REPORT-1b-fix.md`의 게이트 1 표가 말한다.

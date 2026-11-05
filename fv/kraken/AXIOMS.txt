@@ -60,6 +60,7 @@ Fk.BvSpec	bv_padding_counterexample	[Classical.choice, Quot.sound, propext]
 Fk.BvSpec	bv_reject_size_main	[Classical.choice, Quot.sound, propext]
 Fk.BvSpec	bv_reject_spec	[Classical.choice, Quot.sound, propext]
 Fk.BvSpec	bv_size_main	[Classical.choice, Quot.sound, propext]
+Fk.BvSpec	bv_unmarshal_accept_machine	[Classical.choice, Quot.sound, propext]
 Fk.BvSpec	bv_unmarshal_accept_spec_k	[Classical.choice, Quot.sound, propext]
 Fk.BvSpec	bvm_dst	[Classical.choice, Quot.sound, propext]
 Fk.BvSpec	bvm_s48	[Classical.choice, Quot.sound, propext]
@@ -627,4 +628,4 @@ Fv1.SpecScalars	Fv1.sc_toValue_surjective	[Quot.sound, propext]
 Fv1.Transfer	Fv1.accepted_is_enc	[Classical.choice, Quot.sound, propext]
 Fv1.Transfer	Fv1.deserialize_enc	[Classical.choice, Quot.sound, propext]
 Fv1.Transfer	Fv1.rejected_not_enc	[Classical.choice, Quot.sound, propext]
-TOTAL 629 NONSTANDARD 0
+TOTAL 630 NONSTANDARD 0
