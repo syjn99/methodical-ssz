@@ -9,6 +9,7 @@ go tool objdump -gnu -s 'target\.\(\*(Scalars|FixedVec|ListU64)\)\.(SizeSSZ|Mars
 go tool nm -size -sort address "$O/p1bin-amd64" > "$O/p1bin-amd64.nm"
 python3 fv/kraken/link/conv.py "$O/target.objdump" "$O/p1bin-amd64.nm" "$O/raw"
 python3 fv/kraken/link/conv.py "$O/target.objdump" "$O/p1bin-amd64.nm" "$O/norm" --norm
+(cd fv/kraken && link/shash.sh)
 {
   echo "go: $(go version), GOAMD64=v1"
   echo "elf sha256: $(shasum -a 256 "$O/p1bin-amd64" | cut -d' ' -f1)"
