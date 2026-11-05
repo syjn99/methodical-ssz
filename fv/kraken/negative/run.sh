@@ -25,6 +25,7 @@ clone() { # name
   mkdir -p "$d/fv/kraken"
   cp -Rc "$K/lean" "$d/fv/kraken/lean"
   cp -R "$K/link" "$d/fv/kraken/link"
+  cp -R "$K/target" "$d/fv/kraken/target"
 }
 
 edit() { # file index old new
@@ -65,15 +66,21 @@ mutate() { # name file directive-index old new theorem-file theorem expect(FAIL|
   echo "$name | $file:$idx '$old' -> '$new' | $thm ($tf:$s-$e) | exit $rc | $res | $ok | $first" | tee -a "$OUT"
 }
 
-linkmut() { # name file directive-index old new: mutate the .S and expect check.py to fail
+linkmut() { # name file directive-index old new: mutate the function .S and all.S
+  # consistently, regenerate SHash.lean, and expect check.py to fail in (d)
   name=$1; file=$2; idx=$3; old=$4; new=$5
   want "$name" || return 0
   clone "$name"; d="$SCR/neg-$name"
   edit "$d/fv/kraken/link/out/norm/$file" "$idx" "$old" "$new"
+  fn=$(head -1 "$K/link/out/norm/$file" | sed 's/:$//')
+  aidx=$(awk -v f="$fn:" '$0 == f { print NR - 1; exit }' "$K/link/out/norm/all.S")
+  edit "$d/fv/kraken/link/out/norm/all.S" $((aidx + idx)) "$old" "$new"
+  (cd "$d/fv/kraken" && link/shash.sh)
   rc=0; python3 "$d/fv/kraken/link/check.py" "$d/fv/kraken/link/out" > "$d/check.log" 2>&1 || rc=$?
-  first=$(grep -m1 'FAIL' "$d/check.log" | cut -c1-200 || true)
-  if [ "$rc" -ne 0 ]; then res=FAIL; ok=ok; else res=PASS; ok=UNEXPECTED; bad=1; fi
-  echo "$name | $file:$idx '$old' -> '$new' | link/check.py | exit $rc | $res | $ok | $first" | tee -a "$OUT"
+  first=$(grep -m1 'DIFF (d).* FAIL\|^FAIL' "$d/check.log" | cut -c1-200 || true)
+  if [ "$rc" -ne 0 ] && grep -q 'DIFF (d).* FAIL' "$d/check.log"; then res=FAIL; ok=ok
+  else res="exit $rc"; ok=UNEXPECTED; bad=1; fi
+  echo "$name | $file:$idx '$old' -> '$new' (also all.S, SHash regenerated) | link/check.py (d) | exit $rc | $res | $ok | $first" | tee -a "$OUT"
 }
 
 # 1. offset constant: the decoder compares the offset with 8 instead of 4

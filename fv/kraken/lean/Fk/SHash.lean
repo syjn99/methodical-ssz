@@ -31,4 +31,6 @@ module
   "ca716328afeae6a9217d7ca0c7d777f2ddaece031a1d5d2a092a0669be4b3d0d target.Scalars.SizeSSZ.S",
   "1581f52198a2b3f257a2046d7b04a7e2ed835ca20ef1972a80d4f2ed886f63b4 target.Scalars.UnmarshalSSZ.S",
   "35cd06dc73b6a7dd3bbc0dfdf504f46a75d00cbea1b824fc7dcaa8300cef013e BumpAlloc.S",
+  "a285a00d9075ca7b72b8eb251b0a95012450eda74245e03c90a1d476c1e4d7df RtCopy.S",
+  "18ab464a3acc7fbee5b367bc81eadee6ac5d88815d812a0a1976f0544db3fb24 RtErr.S",
   "end"]

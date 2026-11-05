@@ -82,7 +82,7 @@ Go 1.26.3 `runtime/slice.go`의 `growslice`와 `nextslicecap`을 읽고 만들�
 
 ## 4. X2. fmt.errorf 계약 (astra 발견 2, P1)
 
-시간: 15:07–15:22, 15분.
+시간: 15:07–15:20, 13분.
 
 ### 4.1 Go 1.26.3의 두 함수
 
@@ -117,3 +117,33 @@ Go 1.26.3 `runtime/slice.go`의 `growslice`와 `nextslicecap`을 읽고 만들�
 - 세 계약: 계약 모델이 있다. 호출 지점의 구체 Host 증인은 없다.
 - ListC 거부 3정리, ListU64 거부 2정리: 실제 분기를 증명한다. 정리별 증인 없음.
 - 형식 바이트와 ELF의 대조는 X6에서 링크 검사에 넣는다.
+
+## 5. X6. 링크 검사와 부정 시험 도구 (astra 필수 6·7)
+
+시간: 15:20–15:40, 20분.
+
+### 5.1 `link/check.py`
+
+| 검사 | 바뀐 것 |
+| --- | --- |
+| (d) 패딩 | nop 정규화 자리에서도 새 명령어를 본다. `.S` 명령어가 `nop`, 새 바이트가 0x90, LLVM이 원래 바이트를 nop 계열로 디코딩해야 한다. 아니면 FAIL |
+| (e) 신규 | `all.S`의 지시어 전체(명령어 포함)가 함수별 `.S`를 순서대로 이은 것과 같다. 1b는 레이블만 비교했다 |
+| (f) 신규 | `lean/Fk/SHash.lean`이 Lean이 읽는 모든 `.S`(`link/out/norm/*.S`, `lean/Fk/*.S`)의 sha256을 담는다. 아니면 FAIL |
+| (g) 신규 | X2가 고정한 형식 문자열: ELF `go_string._+off`의 바이트 = Go 소스 리터럴(`types1b.ssz.go:243, 254, 280`) = Lean 바이트 목록 |
+
+(f)는 이 세션의 실제 결함을 잡았다.
+X1·X2에서 더한 `Fk/RtCopy.S`, `Fk/RtErr.S`가 SHash에 없었다.
+`link/shash.sh`를 다시 돌리고 전체를 다시 빌드했다(682 jobs).
+
+자기 시험(`link/out/SELFTEST`) 9사례가 모두 기대대로다.
+새 사례: 패딩 nop → `retq`(함수 파일과 all.S 둘 다, (d)에서 실패), all.S 명령어 변경((e)), 빈 줄 하나로 sha만 바뀜((f)).
+
+### 5.2 `negative/run.sh`
+
+- `lake build`의 종료 코드를 본다.
+- 첫 오류가 지정 정리의 줄 범위 안에 있어야 FAIL로 센다. 다른 곳의 오류는 `FAIL-ELSEWHERE`다.
+- 대조군은 종료 코드 0이어야 한다.
+- 기대와 다른 결과가 하나라도 있으면 종료 코드 1이다.
+- 링크 변이 `nopret`: 함수 파일과 all.S를 함께 바꾸고 SHash를 다시 만든 뒤 `check.py`가 (d)에서 실패해야 한다.
+
+결과(`negative/RESULT`): 변이 5개 모두 지정 정리 안에서 실패, 대조군 통과, `nopret`는 (d) FAIL. 종료 코드 0.

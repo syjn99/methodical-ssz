@@ -23,7 +23,17 @@ Checks (REPORT-1b, B1):
      the original addresses, give the ELF bytes (spelling map for clang only:
      direct `jmpq L` -> `jmp L`). A difference is "encoding" if
      LLVM decodes both byte strings to the same text, "padding" if it is a
-     normalized nop, else FAIL.
+     normalized nop, else FAIL. At a padding position the .S instruction must
+     be `nop`, its new byte must be 0x90, and LLVM must decode the original
+     bytes as a nop (1b-fix X6: a `retq` there used to pass).
+ (e) all.S has the same directives as the per-function .S files, in order
+     (instructions included, not only labels).
+ (f) lean/Fk/SHash.lean lists the sha256 of every .S file that Lean reads
+     (link/out/norm/*.S, lean/Fk/*.S), as link/shash.sh writes it; a stale
+     SHash means Lake may not rebuild the proofs after a .S change.
+ (g) format strings that the proofs fix (FmtErrorfNilC, `%` absent): the ELF
+     bytes at `go_string._+off`, the literal in the Go source line, and the
+     Lean byte list are equal.
 The bundle hash (sha256 over RESULT up to and including the last PASS line,
 which covers the ELF, the .S files, Code.lean and AXIOMS.txt hashes) is the
 last line.
@@ -42,6 +52,12 @@ HERE = pathlib.Path(__file__).resolve().parent
 spec = importlib.util.spec_from_file_location("conv", HERE / "conv.py")
 conv = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(conv)
+
+
+# (g): format strings fixed by the ListC reject proofs (Fk/LcReject.lean).
+FMTS = [("go_string._", 39330, "lcFmtZero", "types1b.ssz.go", 243),
+        ("go_string._", 41960, "lcFmtShort", "types1b.ssz.go", 254),
+        ("go_string._", 41960, "lcFmtShort", "types1b.ssz.go", 280)]
 
 
 class Fail(Exception):
@@ -136,7 +152,7 @@ def parse_S(path):
     return out
 
 
-def run(outdir, log):
+def run(outdir, log, shash=True):
     outdir = pathlib.Path(outdir)
     elf = outdir / "p1bin-amd64"
     b, secs, esyms = read_elf(elf)
@@ -240,6 +256,40 @@ def run(outdir, log):
         need(externals[g][0] == next(lo for n, lo, *_ in per_fn if n == g), f"call to {g} not at its entry")
     log(f"PASS (c) all.S: {len(labs)} labels, each defined once; {len(externals) - len(internal)} external "
         f"references not defined in all.S; {len(internal)} calls to target functions at their entry: {internal}")
+    # (e) all.S directives = per-function directives
+    want = []
+    for name, *_ in per_fn:
+        want += parse_S(outdir / "norm" / f"{name}.S")
+    need(allS == want, "all.S directives differ from the per-function .S files" +
+         next((f" (first at directive {i}: {x} vs {y})" for i, (x, y) in enumerate(zip(allS, want)) if x != y),
+              f" (lengths {len(allS)} vs {len(want)})"))
+    log(f"PASS (e) all.S: {len(allS)} directives equal the {len(per_fn)} function files in order")
+    # (f) SHash.lean is current
+    lean = HERE.parent / "lean"
+    if not shash:
+        log("SKIP (f) (selftest copy)")
+    files = sorted((outdir / "norm").glob("*.S")) + sorted((lean / "Fk").glob("*.S"))
+    shtxt = (lean / "Fk" / "SHash.lean").read_text()
+    got = sorted(re.findall(r'"([0-9a-f]{64}) ([^"]+)"', shtxt), key=lambda x: x[1])
+    exp = sorted([(sha(f), f.name) for f in files], key=lambda x: x[1])
+    need(not shash or got == exp, "lean/Fk/SHash.lean is stale; run link/shash.sh" +
+         next((f" (first: {x} vs {y})" for x, y in zip(got, exp) if x != y), f" ({len(got)} vs {len(exp)} files)"))
+    log(f"PASS (f) SHash.lean lists the sha256 of all {len(exp)} .S files")
+    # (g) format strings: ELF rodata = Go source literal = Lean byte list
+    for g, off, ldef, gofile, goline in FMTS:
+        txt = (HERE.parent / "lean" / "Fk" / "LcReject.lean").read_text()
+        m = re.search(r"def " + ldef + r" : List UInt8 :=\s*\[([0-9, ]+)\]", txt)
+        need(m, f"(g) Lean definition {ldef} not found")
+        lb = bytes(int(x) for x in m[1].split(","))
+        src = (HERE.parent / "target" / gofile).read_text().splitlines()[goline - 1]
+        mm = re.search(r'fmt\.Errorf\("([^"%\\]*)"\)', src)
+        need(mm, f"(g) {gofile}:{goline} has no plain fmt.Errorf literal")
+        gb = mm[1].encode()
+        sa = esyms[orig(g)][0]
+        eb = elf_bytes(b, secs, sa + off, len(lb))
+        need(lb == gb == eb, f"(g) {ldef}: Lean {lb!r} Go {gb!r} ELF {eb!r}")
+        need(b"%" not in lb, f"(g) {ldef} has a %")
+        log(f"PASS (g) {g}+{off} ({len(lb)} bytes) = {gofile}:{goline} = Lean {ldef}")
     # (d) reassembly
     diffs = reassemble(per_fn, {g.split("+")[0]: orig(g.split("+")[0]) for g in externals}, esyms, b, secs, outdir)
     for name, a, kind, orig, new, txt in diffs:
@@ -297,7 +347,12 @@ def reassemble(per_fn, externals, esyms, b, secs, outdir):
             if orig == new:
                 continue
             if att in conv.NORM:
-                diffs.append((name, a, "padding", orig, new.rstrip(b"\0"), f"{att} -> nop"))
+                t0 = decode_bytes(orig, a, outdir)
+                okpad = (st == "nop" and new[:1] == b"\x90" and not any(new[1:])
+                         and t0 is not None and t0[0] == n
+                         and re.match(r"^(data16 )*(nop[lwq]?|xchg %ax, ?%ax)( |$)", t0[1]))
+                diffs.append((name, a, "padding" if okpad else "FAIL", orig, new.rstrip(b"\0"),
+                              f"{att} -> {st} | {t0}"))
                 continue
             t1, t2 = decode_bytes(orig, a, outdir), decode_bytes(new, a, outdir)
             diffs.append((name, a, "encoding" if t1 == t2 and t1 else "FAIL", orig, new, f"{att} | {t1} | {t2}"))
@@ -380,7 +435,22 @@ def selftest(outdir):
         t = copy(); p = t / "norm" / "target.Scalars.UnmarshalSSZ.S"
         p.write_text(p.read_text().replace("ssz.ErrSize+8(%rip)", "ssz.ErrSize(%rip)", 1))
         cases.append(("wrong global offset", t, False))
-        # 6. unchanged copy passes
+        # 6. a padding nop becomes retq in the function file and in all.S (1b-fix X6)
+        t = copy(); p = t / "norm" / "target.BitVec.UnmarshalSSZ.S"
+        ls = p.read_text().split("\n"); assert ls[8] == "  nop"; ls[8] = "  retq"; p.write_text("\n".join(ls))
+        p = t / "norm" / "all.S"
+        ls = p.read_text().split("\n"); i = ls.index("target.BitVec.UnmarshalSSZ:") + 8
+        assert ls[i] == "  nop"; ls[i] = "  retq"; p.write_text("\n".join(ls))
+        cases.append(("padding nop -> retq", t, False))
+        # 7. all.S instruction differs from the function file (labels unchanged)
+        t = copy(); p = t / "norm" / "all.S"
+        p.write_text(p.read_text().replace("cmp $0x10,%rcx", "cmp $0x11,%rcx", 1))
+        cases.append(("all.S instruction changed", t, False))
+        # 8. a .S changes (one blank line, same directives) but SHash.lean is not regenerated
+        t = copy(); p = t / "norm" / "target.Scalars.SizeSSZ.S"
+        p.write_text(p.read_text() + "\n")
+        cases.append(("stale SHash.lean", t, False))
+        # 9. unchanged copy passes
         t = copy()
         cases.append(("unchanged copy", t, True))
         ok = True
@@ -388,7 +458,7 @@ def selftest(outdir):
             why = ""
             try:
                 conv.CLEANED.clear()
-                run(t, lambda s: None)
+                run(t, lambda s: None, shash=name in ("stale SHash.lean", "unchanged copy"))
                 got = True
             except (Fail, SystemExit) as e:
                 got, why = False, str(e).splitlines()[0][:120]

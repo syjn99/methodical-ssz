@@ -81,55 +81,60 @@ PASS (b) ssz.ErrIncorrectListSize+8 = 0x5d2a58 .bss in-symbol
 PASS (b) runtime.noptrbss = 0x5f3040 .noptrbss in-symbol
 PASS (b) runtime.writeBarrier = 0x5f3340 .noptrbss in-symbol
 PASS (c) all.S: 277 labels, each defined once; 51 external references not defined in all.S; 3 calls to target functions at their entry: ['ssz.ValidateBitlist', 'target.ListU64.UnmarshalSSZ', 'target.Scalars.UnmarshalSSZ']
-DIFF (d) ssz.ValidateBitlist 0x4b65f7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop
-DIFF (d) ssz.ValidateBitlist 0x4b663c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop
-DIFF (d) ssz.ValidateBitlist 0x4b665d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
-DIFF (d) ssz.ValidateBitlist 0x4b671b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop
-DIFF (d) ssz.ValidateBitlist 0x4b679b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop
-DIFF (d) target.FixedVec.MarshalSSZTo 0x4b6b7e padding: elf 6690 asm 90 data16 nop -> nop
-DIFF (d) target.FixedVec.UnmarshalSSZ 0x4b6cde padding: elf 6690 asm 90 data16 nop -> nop
-DIFF (d) target.ListU64.MarshalSSZTo 0x4b6d7c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop
-DIFF (d) target.ListU64.UnmarshalSSZ 0x4b6f9d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
-DIFF (d) target.ListU64.UnmarshalSSZ 0x4b701d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
-DIFF (d) target.ListU64.UnmarshalSSZ 0x4b703d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
-DIFF (d) target.ListU64.UnmarshalSSZ 0x4b70fc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop
-DIFF (d) target.ListU64.UnmarshalSSZ 0x4b715d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
-DIFF (d) target.BitVec.UnmarshalSSZ 0x4b7297 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop
-DIFF (d) target.BitVec.UnmarshalSSZ 0x4b731d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
-DIFF (d) target.Nested.MarshalSSZTo 0x4b753d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
-DIFF (d) target.Nested.MarshalSSZTo 0x4b78fd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
-DIFF (d) target.Nested.UnmarshalSSZ 0x4b7937 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop
-DIFF (d) target.Nested.UnmarshalSSZ 0x4b7a1e padding: elf 6690 asm 90 data16 nop -> nop
-DIFF (d) target.Nested.UnmarshalSSZ 0x4b7a5b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop
-DIFF (d) target.Nested.UnmarshalSSZ 0x4b7a7e padding: elf 6690 asm 90 data16 nop -> nop
-DIFF (d) target.Nested.UnmarshalSSZ 0x4b7adc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop
-DIFF (d) target.Nested.UnmarshalSSZ 0x4b7b5b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop
-DIFF (d) target.ListC.MarshalSSZTo 0x4b7c3d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
-DIFF (d) target.ListC.MarshalSSZTo 0x4b7cfe padding: elf 6690 asm 90 data16 nop -> nop
-DIFF (d) target.ListC.UnmarshalSSZ 0x4b7f76 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop
-DIFF (d) target.ListC.UnmarshalSSZ 0x4b7f98 padding: elf 0f1f840000000000 asm 90 nopl (%rax,%rax,1) -> nop
-DIFF (d) target.ListC.UnmarshalSSZ 0x4b7fbe padding: elf 6690 asm 90 data16 nop -> nop
-DIFF (d) target.ListC.UnmarshalSSZ 0x4b7fdd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
-DIFF (d) target.ListC.UnmarshalSSZ 0x4b82fe padding: elf 6690 asm 90 data16 nop -> nop
-DIFF (d) target.ListC.UnmarshalSSZ 0x4b837a padding: elf 660f1f440000 asm 90 nopw (%rax,%rax,1) -> nop
-DIFF (d) target.ListC.UnmarshalSSZ 0x4b845d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
-DIFF (d) target.ListC.UnmarshalSSZ 0x4b84dd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
-DIFF (d) target.ListC.UnmarshalSSZ 0x4b851b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop
-DIFF (d) target.ListC.UnmarshalSSZ 0x4b853e padding: elf 6690 asm 90 data16 nop -> nop
-DIFF (d) target.ListC.UnmarshalSSZ 0x4b85bc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop
-DIFF (d) target.BitL.MarshalSSZTo 0x4b865c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop
-DIFF (d) target.BitL.UnmarshalSSZ 0x4b879a padding: elf 660f1f440000 asm 90 nopw (%rax,%rax,1) -> nop
-DIFF (d) target.BitL.UnmarshalSSZ 0x4b87fb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop
-DIFF (d) target.BitL.UnmarshalSSZ 0x4b883c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop
-DIFF (d) target.BitL.UnmarshalSSZ 0x4b88db padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop
-DIFF (d) target_prysm.Checkpoint.UnmarshalSSZ 0x4b8b57 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop
-DIFF (d) target_prysm.AttestationData.MarshalSSZTo 0x4b8d1e padding: elf 6690 asm 90 data16 nop -> nop
-DIFF (d) target_prysm.AttestationData.MarshalSSZTo 0x4b8e3d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
-DIFF (d) target_prysm.AttestationData.MarshalSSZTo 0x4b8f3e padding: elf 6690 asm 90 data16 nop -> nop
-DIFF (d) target_prysm.AttestationData.MarshalSSZTo 0x4b8fdb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop
-DIFF (d) target_prysm.AttestationData.UnmarshalSSZ 0x4b9237 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop
-DIFF (d) target_prysm.AttestationData.UnmarshalSSZ 0x4b92bd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop
-DIFF (d) target_prysm.AttestationData.UnmarshalSSZ 0x4b943b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop
+PASS (e) all.S: 3028 directives equal the 28 function files in order
+PASS (f) SHash.lean lists the sha256 of all 32 .S files
+PASS (g) go_string._+39330 (53 bytes) = types1b.ssz.go:243 = Lean lcFmtZero
+PASS (g) go_string._+41960 (63 bytes) = types1b.ssz.go:254 = Lean lcFmtShort
+PASS (g) go_string._+41960 (63 bytes) = types1b.ssz.go:280 = Lean lcFmtShort
+DIFF (d) ssz.ValidateBitlist 0x4b65f7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) ssz.ValidateBitlist 0x4b663c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) ssz.ValidateBitlist 0x4b665d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) ssz.ValidateBitlist 0x4b671b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) ssz.ValidateBitlist 0x4b679b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) target.FixedVec.MarshalSSZTo 0x4b6b7e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) target.FixedVec.UnmarshalSSZ 0x4b6cde padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) target.ListU64.MarshalSSZTo 0x4b6d7c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) target.ListU64.UnmarshalSSZ 0x4b6f9d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) target.ListU64.UnmarshalSSZ 0x4b701d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) target.ListU64.UnmarshalSSZ 0x4b703d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) target.ListU64.UnmarshalSSZ 0x4b70fc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) target.ListU64.UnmarshalSSZ 0x4b715d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) target.BitVec.UnmarshalSSZ 0x4b7297 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) target.BitVec.UnmarshalSSZ 0x4b731d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) target.Nested.MarshalSSZTo 0x4b753d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) target.Nested.MarshalSSZTo 0x4b78fd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) target.Nested.UnmarshalSSZ 0x4b7937 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) target.Nested.UnmarshalSSZ 0x4b7a1e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) target.Nested.UnmarshalSSZ 0x4b7a5b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) target.Nested.UnmarshalSSZ 0x4b7a7e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) target.Nested.UnmarshalSSZ 0x4b7adc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) target.Nested.UnmarshalSSZ 0x4b7b5b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) target.ListC.MarshalSSZTo 0x4b7c3d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) target.ListC.MarshalSSZTo 0x4b7cfe padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b7f76 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b7f98 padding: elf 0f1f840000000000 asm 90 nopl (%rax,%rax,1) -> nop | (8, 'nopl (%rax,%rax)')
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b7fbe padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b7fdd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b82fe padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b837a padding: elf 660f1f440000 asm 90 nopw (%rax,%rax,1) -> nop | (6, 'nopw (%rax,%rax)')
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b845d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b84dd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b851b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b853e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) target.ListC.UnmarshalSSZ 0x4b85bc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) target.BitL.MarshalSSZTo 0x4b865c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) target.BitL.UnmarshalSSZ 0x4b879a padding: elf 660f1f440000 asm 90 nopw (%rax,%rax,1) -> nop | (6, 'nopw (%rax,%rax)')
+DIFF (d) target.BitL.UnmarshalSSZ 0x4b87fb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) target.BitL.UnmarshalSSZ 0x4b883c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) target.BitL.UnmarshalSSZ 0x4b88db padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) target_prysm.Checkpoint.UnmarshalSSZ 0x4b8b57 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) target_prysm.AttestationData.MarshalSSZTo 0x4b8d1e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) target_prysm.AttestationData.MarshalSSZTo 0x4b8e3d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) target_prysm.AttestationData.MarshalSSZTo 0x4b8f3e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) target_prysm.AttestationData.MarshalSSZTo 0x4b8fdb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) target_prysm.AttestationData.UnmarshalSSZ 0x4b9237 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) target_prysm.AttestationData.UnmarshalSSZ 0x4b92bd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) target_prysm.AttestationData.UnmarshalSSZ 0x4b943b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
 PASS (d) 2751 instructions reassembled by clang x86_64-linux-gnu: 2702 byte-identical, 0 encoding, 49 padding
 elf sha256 84f0b8e535cb56c5c79d0df4cf40962978feb68a9c4fa7f899ec15edeee4797f
 S sha256 23aec47ad720a7a4c2c585e527d9254f6f9ec53ff45b85ab0632f6c73724e2d5 all.S
@@ -162,6 +167,6 @@ S sha256 3990b8f2369006c41c8475a817a075ada18b32ffd4de36397b5f3e079a39109a target
 S sha256 a77ac17b8695d617c2f3bd5a731d3572d7fb69c2e8827190d3a5dd3e36a83cb1 target_prysm.Checkpoint.SizeSSZ.S
 S sha256 bee62ab7dfa3da589159bdb47d767ba65cb09f7e8f64cec649e60aa3c026c78c target_prysm.Checkpoint.UnmarshalSSZ.S
 file sha256 5f94f6b93b7ab3631ad5fa1180b63711a9e043b22787f4b4737708429eac0e47 lean/Fk/Code.lean
-file sha256 62425c53beb07e4ade6e1484d690dcb62573df953b24604c7585ec32d9a79207 AXIOMS.txt
+file sha256 45dba7e772257edd142532e6167a7a650f7be3d936620b6aa7b63292b95e590c AXIOMS.txt
 PASS all
-BUNDLE sha256 09feabc8dcce61d64685df96fd1ca8e1de41462494cb8412f7edd96fcd1221c8
+BUNDLE sha256 496dbc14475974e36ae74384851597b545d976c6115557fafdc216b0f1a69c26
