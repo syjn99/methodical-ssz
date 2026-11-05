@@ -1,0 +1,9 @@
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-kraken/fv/kraken/lean/../link/out/norm/target.FixedVec.MarshalSSZTo.S: 99 lines, 0 rejected
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-kraken/fv/kraken/lean/../link/out/norm/target.FixedVec.SizeSSZ.S: 3 lines, 0 rejected
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-kraken/fv/kraken/lean/../link/out/norm/target.FixedVec.UnmarshalSSZ.S: 86 lines, 0 rejected
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-kraken/fv/kraken/lean/../link/out/norm/target.ListU64.MarshalSSZTo.S: 91 lines, 0 rejected
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-kraken/fv/kraken/lean/../link/out/norm/target.ListU64.SizeSSZ.S: 5 lines, 0 rejected
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-kraken/fv/kraken/lean/../link/out/norm/target.ListU64.UnmarshalSSZ.S: 193 lines, 0 rejected
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-kraken/fv/kraken/lean/../link/out/norm/target.Scalars.MarshalSSZTo.S: 133 lines, 0 rejected
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-kraken/fv/kraken/lean/../link/out/norm/target.Scalars.SizeSSZ.S: 3 lines, 0 rejected
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-kraken/fv/kraken/lean/../link/out/norm/target.Scalars.UnmarshalSSZ.S: 33 lines, 0 rejected

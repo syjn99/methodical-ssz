@@ -1,0 +1,1 @@
+Lean.mkMarkdownDocComment (text : String) : TSyntax `Lean.Parser.Command.docComment

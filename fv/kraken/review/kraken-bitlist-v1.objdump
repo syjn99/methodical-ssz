@@ -1,0 +1,134 @@
+TEXT github.com/OffchainLabs/methodical-ssz/ssz.ValidateBitlist(SB) github.com/OffchainLabs/methodical-ssz/ssz/unmarshal.go
+  unmarshal.go:30	0x4b3d80		493b6610		CMPQ SP, 0x10(R14)                   // cmp 0x10(%r14),%rsp				
+  unmarshal.go:30	0x4b3d84		0f86ef010000		JBE 0x4b3f79                         // jbe 0x4b3f79					
+  unmarshal.go:30	0x4b3d8a		55			PUSHQ BP                             // push %rbp					
+  unmarshal.go:30	0x4b3d8b		4889e5			MOVQ SP, BP                          // mov %rsp,%rbp					
+  unmarshal.go:30	0x4b3d8e		4883ec50		SUBQ $0x50, SP                       // sub $0x50,%rsp					
+  unmarshal.go:30	0x4b3d92		4889442460		MOVQ AX, 0x60(SP)                    // mov %rax,0x60(%rsp)				
+  unmarshal.go:30	0x4b3d97		660f1f840000000000	NOPW 0(AX)(AX*1)                     // nopw (%rax,%rax,1)				
+  unmarshal.go:32	0x4b3da0		4885db			TESTQ BX, BX                         // test %rbx,%rbx					
+  unmarshal.go:32	0x4b3da3		0f847f010000		JE 0x4b3f28                          // je 0x4b3f28					
+  unmarshal.go:36	0x4b3da9		4889fa			MOVQ DI, DX                          // mov %rdi,%rdx					
+  unmarshal.go:36	0x4b3dac		48c1ef03		SHRQ $0x3, DI                        // shr $0x3,%rdi					
+  unmarshal.go:36	0x4b3db0		4c8d4701		LEAQ 0x1(DI), R8                     // lea 0x1(%rdi),%r8				
+  unmarshal.go:37	0x4b3db4		4c39c3			CMPQ BX, R8                          // cmp %r8,%rbx					
+  unmarshal.go:37	0x4b3db7		0f8fcd000000		JG 0x4b3e8a                          // jg 0x4b3e8a					
+  unmarshal.go:42	0x4b3dbd		440fb64403ff		MOVZX -0x1(BX)(AX*1), R8             // movzbl -0x1(%rbx,%rax,1),%r8d			
+  unmarshal.go:43	0x4b3dc3		4584c0			TESTL R8, R8                         // test %r8b,%r8b					
+  unmarshal.go:43	0x4b3dc6		7476			JE 0x4b3e3e                          // je 0x4b3e3e					
+  unmarshal.go:48	0x4b3dc8		478d0400		LEAL 0(R8)(R8*1), R8                 // lea (%r8,%r8,1),%r8d				
+  unmarshal.go:48	0x4b3dcc		458d4001		LEAL 0x1(R8), R8                     // lea 0x1(%r8),%r8d				
+  unmarshal.go:48	0x4b3dd0		450fbdc0		BSRL R8, R8                          // bsr %r8d,%r8d					
+  unmarshal.go:53	0x4b3dd4		4d8d04d8		LEAQ 0(R8)(BX*8), R8                 // lea (%r8,%rbx,8),%r8				
+  unmarshal.go:53	0x4b3dd8		4d8d40f7		LEAQ -0x9(R8), R8                    // lea -0x9(%r8),%r8				
+  unmarshal.go:53	0x4b3ddc		0f1f4000		NOPL 0(AX)                           // nopl (%rax)					
+  unmarshal.go:55	0x4b3de0		4c39c2			CMPQ DX, R8                          // cmp %r8,%rdx					
+  unmarshal.go:55	0x4b3de3		734f			JAE 0x4b3e34                         // jae 0x4b3e34					
+  errors.go:26		0x4b3de5		488d0506480300		LEAQ 0x34806(IP), AX                 // lea 0x34806(%rip),%rax				
+  errors.go:26		0x4b3dec		bb0d000000		MOVL $0xd, BX                        // mov $0xd,%ebx					
+  errors.go:26		0x4b3df1		31c9			XORL CX, CX                          // xor %ecx,%ecx					
+  errors.go:26		0x4b3df3		31ff			XORL DI, DI                          // xor %edi,%edi					
+  errors.go:26		0x4b3df5		4889fe			MOVQ DI, SI                          // mov %rdi,%rsi					
+  errors.go:26		0x4b3df8		e8c35ffeff		CALL fmt.errorf(SB)                  // callq 0x499dc0					
+  errors.go:26		0x4b3dfd		0f1f00			NOPL 0(AX)                           // nopl (%rax)					
+  errors.go:26		0x4b3e00		4885c0			TESTQ AX, AX                         // test %rax,%rax					
+  errors.go:26		0x4b3e03		7529			JNE 0x4b3e2e                         // jne 0x4b3e2e					
+  errors.go:31		0x4b3e05		90			NOPL                                 // nop						
+  errors.go:65		0x4b3e06		488d0533ca0100		LEAQ 0x1ca33(IP), AX                 // lea 0x1ca33(%rip),%rax				
+  errors.go:65		0x4b3e0d		e82ea6f6ff		CALL runtime.newobject(SB)           // callq 0x41e440					
+  errors.go:65		0x4b3e12		48c740080d000000	MOVQ $0xd, 0x8(AX)                   // movq $0xd,0x8(%rax)				
+  errors.go:65		0x4b3e1a		488d0dd1470300		LEAQ 0x347d1(IP), CX                 // lea 0x347d1(%rip),%rcx				
+  errors.go:65		0x4b3e21		488908			MOVQ CX, 0(AX)                       // mov %rcx,(%rax)					
+  unmarshal.go:56	0x4b3e24		4889c3			MOVQ AX, BX                          // mov %rax,%rbx					
+  unmarshal.go:56	0x4b3e27		488d055af50300		LEAQ go:itab.*errors.errorString,error(SB), AX // lea 0x3f55a(%rip),%rax		
+  unmarshal.go:56	0x4b3e2e		4883c450		ADDQ $0x50, SP                       // add $0x50,%rsp					
+  unmarshal.go:56	0x4b3e32		5d			POPQ BP                              // pop %rbp					
+  unmarshal.go:56	0x4b3e33		c3			RET                                  // retq						
+  unmarshal.go:58	0x4b3e34		31c0			XORL AX, AX                          // xor %eax,%eax					
+  unmarshal.go:58	0x4b3e36		31db			XORL BX, BX                          // xor %ebx,%ebx					
+  unmarshal.go:58	0x4b3e38		4883c450		ADDQ $0x50, SP                       // add $0x50,%rsp					
+  unmarshal.go:58	0x4b3e3c		5d			POPQ BP                              // pop %rbp					
+  unmarshal.go:58	0x4b3e3d		c3			RET                                  // retq						
+  errors.go:26		0x4b3e3e		488d05a2640300		LEAQ 0x364a2(IP), AX                 // lea 0x364a2(%rip),%rax				
+  errors.go:26		0x4b3e45		bb15000000		MOVL $0x15, BX                       // mov $0x15,%ebx					
+  errors.go:26		0x4b3e4a		31c9			XORL CX, CX                          // xor %ecx,%ecx					
+  errors.go:26		0x4b3e4c		31ff			XORL DI, DI                          // xor %edi,%edi					
+  errors.go:26		0x4b3e4e		4889fe			MOVQ DI, SI                          // mov %rdi,%rsi					
+  errors.go:26		0x4b3e51		e86a5ffeff		CALL fmt.errorf(SB)                  // callq 0x499dc0					
+  errors.go:26		0x4b3e56		4885c0			TESTQ AX, AX                         // test %rax,%rax					
+  errors.go:26		0x4b3e59		7529			JNE 0x4b3e84                         // jne 0x4b3e84					
+  errors.go:31		0x4b3e5b		90			NOPL                                 // nop						
+  errors.go:65		0x4b3e5c		488d05ddc90100		LEAQ 0x1c9dd(IP), AX                 // lea 0x1c9dd(%rip),%rax				
+  errors.go:65		0x4b3e63		e8d8a5f6ff		CALL runtime.newobject(SB)           // callq 0x41e440					
+  errors.go:65		0x4b3e68		48c7400815000000	MOVQ $0x15, 0x8(AX)                  // movq $0x15,0x8(%rax)				
+  errors.go:65		0x4b3e70		488d0d70640300		LEAQ 0x36470(IP), CX                 // lea 0x36470(%rip),%rcx				
+  errors.go:65		0x4b3e77		488908			MOVQ CX, 0(AX)                       // mov %rcx,(%rax)					
+  unmarshal.go:44	0x4b3e7a		4889c3			MOVQ AX, BX                          // mov %rax,%rbx					
+  unmarshal.go:44	0x4b3e7d		488d0504f50300		LEAQ go:itab.*errors.errorString,error(SB), AX // lea 0x3f504(%rip),%rax		
+  unmarshal.go:44	0x4b3e84		4883c450		ADDQ $0x50, SP                       // add $0x50,%rsp					
+  unmarshal.go:44	0x4b3e88		5d			POPQ BP                              // pop %rbp					
+  unmarshal.go:44	0x4b3e89		c3			RET                                  // retq						
+  unmarshal.go:36	0x4b3e8a		4c89442428		MOVQ R8, 0x28(SP)                    // mov %r8,0x28(%rsp)				
+  unmarshal.go:38	0x4b3e8f		488d4c2430		LEAQ 0x30(SP), CX                    // lea 0x30(%rsp),%rcx				
+  unmarshal.go:38	0x4b3e94		440f1139		MOVUPS X15, 0(CX)                    // movups %xmm15,(%rcx)				
+  unmarshal.go:38	0x4b3e98		440f117910		MOVUPS X15, 0x10(CX)                 // movups %xmm15,0x10(%rcx)			
+  unmarshal.go:38	0x4b3e9d		4889d8			MOVQ BX, AX                          // mov %rbx,%rax					
+  unmarshal.go:38	0x4b3ea0		e81b54fcff		CALL runtime.convT64(SB)             // callq 0x4792c0					
+  unmarshal.go:38	0x4b3ea5		488d0df4490100		LEAQ 0x149f4(IP), CX                 // lea 0x149f4(%rip),%rcx				
+  unmarshal.go:38	0x4b3eac		48894c2430		MOVQ CX, 0x30(SP)                    // mov %rcx,0x30(%rsp)				
+  unmarshal.go:38	0x4b3eb1		4889442438		MOVQ AX, 0x38(SP)                    // mov %rax,0x38(%rsp)				
+  unmarshal.go:38	0x4b3eb6		488b442428		MOVQ 0x28(SP), AX                    // mov 0x28(%rsp),%rax				
+  unmarshal.go:38	0x4b3ebb		0f1f440000		NOPL 0(AX)(AX*1)                     // nopl (%rax,%rax,1)				
+  unmarshal.go:38	0x4b3ec0		e8fb53fcff		CALL runtime.convT64(SB)             // callq 0x4792c0					
+  unmarshal.go:38	0x4b3ec5		488d0d94490100		LEAQ 0x14994(IP), CX                 // lea 0x14994(%rip),%rcx				
+  unmarshal.go:38	0x4b3ecc		48894c2440		MOVQ CX, 0x40(SP)                    // mov %rcx,0x40(%rsp)				
+  unmarshal.go:38	0x4b3ed1		4889442448		MOVQ AX, 0x48(SP)                    // mov %rax,0x48(%rsp)				
+  errors.go:26		0x4b3ed6		488d05a2bf0300		LEAQ 0x3bfa2(IP), AX                 // lea 0x3bfa2(%rip),%rax				
+  errors.go:26		0x4b3edd		bb2f000000		MOVL $0x2f, BX                       // mov $0x2f,%ebx					
+  errors.go:26		0x4b3ee2		488d4c2430		LEAQ 0x30(SP), CX                    // lea 0x30(%rsp),%rcx				
+  errors.go:26		0x4b3ee7		bf02000000		MOVL $0x2, DI                        // mov $0x2,%edi					
+  errors.go:26		0x4b3eec		4889fe			MOVQ DI, SI                          // mov %rdi,%rsi					
+  errors.go:26		0x4b3eef		e8cc5efeff		CALL fmt.errorf(SB)                  // callq 0x499dc0					
+  errors.go:26		0x4b3ef4		4885c0			TESTQ AX, AX                         // test %rax,%rax					
+  errors.go:26		0x4b3ef7		7529			JNE 0x4b3f22                         // jne 0x4b3f22					
+  errors.go:31		0x4b3ef9		90			NOPL                                 // nop						
+  errors.go:65		0x4b3efa		488d053fc90100		LEAQ 0x1c93f(IP), AX                 // lea 0x1c93f(%rip),%rax				
+  errors.go:65		0x4b3f01		e83aa5f6ff		CALL runtime.newobject(SB)           // callq 0x41e440					
+  errors.go:65		0x4b3f06		48c740082f000000	MOVQ $0x2f, 0x8(AX)                  // movq $0x2f,0x8(%rax)				
+  errors.go:65		0x4b3f0e		488d0d6abf0300		LEAQ 0x3bf6a(IP), CX                 // lea 0x3bf6a(%rip),%rcx				
+  errors.go:65		0x4b3f15		488908			MOVQ CX, 0(AX)                       // mov %rcx,(%rax)					
+  unmarshal.go:38	0x4b3f18		4889c3			MOVQ AX, BX                          // mov %rax,%rbx					
+  unmarshal.go:38	0x4b3f1b		488d0566f40300		LEAQ go:itab.*errors.errorString,error(SB), AX // lea 0x3f466(%rip),%rax		
+  unmarshal.go:38	0x4b3f22		4883c450		ADDQ $0x50, SP                       // add $0x50,%rsp					
+  unmarshal.go:38	0x4b3f26		5d			POPQ BP                              // pop %rbp					
+  unmarshal.go:38	0x4b3f27		c3			RET                                  // retq						
+  errors.go:26		0x4b3f28		488d054db20300		LEAQ 0x3b24d(IP), AX                 // lea 0x3b24d(%rip),%rax				
+  errors.go:26		0x4b3f2f		bb2a000000		MOVL $0x2a, BX                       // mov $0x2a,%ebx					
+  errors.go:26		0x4b3f34		31c9			XORL CX, CX                          // xor %ecx,%ecx					
+  errors.go:26		0x4b3f36		31ff			XORL DI, DI                          // xor %edi,%edi					
+  errors.go:26		0x4b3f38		4889fe			MOVQ DI, SI                          // mov %rdi,%rsi					
+  errors.go:26		0x4b3f3b		0f1f440000		NOPL 0(AX)(AX*1)                     // nopl (%rax,%rax,1)				
+  errors.go:26		0x4b3f40		e87b5efeff		CALL fmt.errorf(SB)                  // callq 0x499dc0					
+  errors.go:26		0x4b3f45		4885c0			TESTQ AX, AX                         // test %rax,%rax					
+  errors.go:26		0x4b3f48		7529			JNE 0x4b3f73                         // jne 0x4b3f73					
+  errors.go:31		0x4b3f4a		90			NOPL                                 // nop						
+  errors.go:65		0x4b3f4b		488d05eec80100		LEAQ 0x1c8ee(IP), AX                 // lea 0x1c8ee(%rip),%rax				
+  errors.go:65		0x4b3f52		e8e9a4f6ff		CALL runtime.newobject(SB)           // callq 0x41e440					
+  errors.go:65		0x4b3f57		48c740082a000000	MOVQ $0x2a, 0x8(AX)                  // movq $0x2a,0x8(%rax)				
+  errors.go:65		0x4b3f5f		488d0d16b20300		LEAQ 0x3b216(IP), CX                 // lea 0x3b216(%rip),%rcx				
+  errors.go:65		0x4b3f66		488908			MOVQ CX, 0(AX)                       // mov %rcx,(%rax)					
+  unmarshal.go:33	0x4b3f69		4889c3			MOVQ AX, BX                          // mov %rax,%rbx					
+  unmarshal.go:33	0x4b3f6c		488d0515f40300		LEAQ go:itab.*errors.errorString,error(SB), AX // lea 0x3f415(%rip),%rax		
+  unmarshal.go:33	0x4b3f73		4883c450		ADDQ $0x50, SP                       // add $0x50,%rsp					
+  unmarshal.go:33	0x4b3f77		5d			POPQ BP                              // pop %rbp					
+  unmarshal.go:33	0x4b3f78		c3			RET                                  // retq						
+  unmarshal.go:30	0x4b3f79		4889442408		MOVQ AX, 0x8(SP)                     // mov %rax,0x8(%rsp)				
+  unmarshal.go:30	0x4b3f7e		48895c2410		MOVQ BX, 0x10(SP)                    // mov %rbx,0x10(%rsp)				
+  unmarshal.go:30	0x4b3f83		48894c2418		MOVQ CX, 0x18(SP)                    // mov %rcx,0x18(%rsp)				
+  unmarshal.go:30	0x4b3f88		48897c2420		MOVQ DI, 0x20(SP)                    // mov %rdi,0x20(%rsp)				
+  unmarshal.go:30	0x4b3f8d		e88eb4fcff		CALL runtime.morestack_noctxt.abi0(SB) // callq 0x47f420				
+  unmarshal.go:30	0x4b3f92		488b442408		MOVQ 0x8(SP), AX                     // mov 0x8(%rsp),%rax				
+  unmarshal.go:30	0x4b3f97		488b5c2410		MOVQ 0x10(SP), BX                    // mov 0x10(%rsp),%rbx				
+  unmarshal.go:30	0x4b3f9c		488b4c2418		MOVQ 0x18(SP), CX                    // mov 0x18(%rsp),%rcx				
+  unmarshal.go:30	0x4b3fa1		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi				
+  unmarshal.go:30	0x4b3fa6		e9d5fdffff		JMP github.com/OffchainLabs/methodical-ssz/ssz.ValidateBitlist(SB) // jmpq 0x4b3d80	
