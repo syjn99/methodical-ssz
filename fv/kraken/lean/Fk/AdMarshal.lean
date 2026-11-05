@@ -80,14 +80,14 @@ theorem ad_marshal_main (k : Nat) (hk : PrysmAttestationDataMarshalSSZTo.IsInfix
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = s.regs.rbx
         ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 128 ∧ st.data.regs.rcx = s.regs.rdi
         ∧ st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0
-        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14
         ∧ (Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
           ⋆ Eq (e1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))
           ⋆ Eq (root.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 16))
           ⋆ Eq (se.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))
           ⋆ Eq (sroot.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 56))
           ⋆ Eq (te.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 88))
-          ⋆ Eq (troot.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 96)) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Eq (troot.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 96)) ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hsp hcap hcap63 hpre ⊢
@@ -214,8 +214,8 @@ theorem ad_marshal_main (k : Nat) (hk : PrysmAttestationDataMarshalSSZTo.IsInfix
   subst hpc1
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
     zmms1, flags1, mem1⟩ := e1'
-  simp only at hrsp1 Hm1
-  subst hrsp1
+  simp only at hrsp1 _hmr141 Hm1
+  subst hrsp1 _hmr141
   kat hk PrysmAttestationDataMarshalSSZTo 75
   rw [adm_g, show rsp.toBitVec - 232 + 240 = rsp.toBitVec + 8 by bv_omega]
   apply load_step _ _ _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
@@ -330,8 +330,8 @@ theorem ad_marshal_main (k : Nat) (hk : PrysmAttestationDataMarshalSSZTo.IsInfix
   subst hpc2
   obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,
     zmms2, flags2, mem2⟩ := e2'
-  simp only at hrsp2 Hm2
-  subst hrsp2
+  simp only at hrsp2 _hmr142 Hm2
+  subst hrsp2 _hmr142
   kat hk PrysmAttestationDataMarshalSSZTo 145
   rw [adm_g, show rsp.toBitVec - 232 + 240 = rsp.toBitVec + 8 by bv_omega]
   apply load_step _ _ _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
@@ -459,8 +459,8 @@ theorem ad_marshal_main (k : Nat) (hk : PrysmAttestationDataMarshalSSZTo.IsInfix
   subst hpc3
   obtain ⟨⟨rax3, rbx3, rcx3, rdx3, rsi3, rdi3, rsp3, rbp3, r83, r93, r103, r113, r123, r133, r143, r153⟩,
     zmms3, flags3, mem3⟩ := e3'
-  simp only at hrsp3 Hm3
-  subst hrsp3
+  simp only at hrsp3 _hmr143 Hm3
+  subst hrsp3 _hmr143
   kat hk PrysmAttestationDataMarshalSSZTo 267
   intro _
   kat hk PrysmAttestationDataMarshalSSZTo 268
@@ -507,12 +507,12 @@ theorem ad_marshal_main (k : Nat) (hk : PrysmAttestationDataMarshalSSZTo.IsInfix
   kunfold
   apply Eventually.done
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
-  refine ⟨trivial, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  rotate_left 7
+  refine ⟨trivial, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  rotate_left 8
   · exact sep_true (P := Eq (pre.At rbx.toBitVec) ⋆ Eq (e0.At (rbx.toBitVec + rcx.toBitVec))
       ⋆ Eq (e1.At (rbx.toBitVec + rcx.toBitVec + 8)) ⋆ Eq (root.At (rbx.toBitVec + rcx.toBitVec + 16))
       ⋆ Eq (se.At (rbx.toBitVec + rcx.toBitVec + 48)) ⋆ Eq (sroot.At (rbx.toBitVec + rcx.toBitVec + 56))
-      ⋆ Eq (te.At (rbx.toBitVec + rcx.toBitVec + 88)) ⋆ Eq (troot.At (rbx.toBitVec + rcx.toBitVec + 96))) (by ecancel)
+      ⋆ Eq (te.At (rbx.toBitVec + rcx.toBitVec + 88)) ⋆ Eq (troot.At (rbx.toBitVec + rcx.toBitVec + 96)) ⋆ R) (by ecancel)
   all_goals first
     | exact True.intro
     | (apply UInt64.toBitVec_inj.mp; simp; done)
