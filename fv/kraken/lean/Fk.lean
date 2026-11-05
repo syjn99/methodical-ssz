@@ -82,3 +82,16 @@ import Fk.WitSzCp
 import Fk.WitSzAd
 import Fk.WitSzLu
 import Fk.WitSzBl
+import Fk.WitRjScSz
+import Fk.WitRjFvSz
+import Fk.WitRjBvSz
+import Fk.WitRjCpSz
+import Fk.WitRjAdSz
+import Fk.WitRjLuSh
+import Fk.WitRjLuOf
+import Fk.WitRjBlSh
+import Fk.WitRjBlOf
+import Fk.WitRjNeSh
+import Fk.WitRjNeOf
+import Fk.WitRjLcSh
+import Fk.WitRjLcOf
