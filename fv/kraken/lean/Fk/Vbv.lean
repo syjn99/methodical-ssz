@@ -257,7 +257,7 @@ theorem vbv_reject_pad_main (k : Nat) (hk : ValidateBitvector.IsInfixAt Host.pro
         ∧ st.data.regs.rax.toBitVec = (label "go_itab._errors.errorString_error").toBitVec
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
         ∃ fp' sp' fr' rs' sc' obj : List UInt8, fp'.length = 8 ∧ sp'.length = 8 ∧ fr'.length = 40 ∧ rs'.length = 8
-          ∧ sc'.length = S ∧ obj.length = 16 ∧
+          ∧ sc'.length = S ∧ obj.length = 16 ∧ obj = Int.toBytes 8 (label "go_string._" + 27706).toBitVec.toInt ++ Int.toBytes 8 (35 : BitVec 64).toInt ∧
         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
           ⋆ Eq (fp'.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (sp'.At (s.regs.rsp.toBitVec + 8))
           ⋆ Eq (fr'.At (s.regs.rsp.toBitVec - 48)) ⋆ Eq (rs'.At (s.regs.rsp.toBitVec - 56))
@@ -426,7 +426,7 @@ theorem vbv_reject_pad_main (k : Nat) (hk : ValidateBitvector.IsInfixAt Host.pro
     refine ⟨trivial, ?_, ?_, ?_, ?_, _, _, sn3 ++ List.drop 8 sp2, _, stk3,
       Int.toBytes 8 (label "go_string._" + 27706).toBitVec.toInt ++ Int.toBytes 8 (BitVec.toInt (35 : BitVec 64)),
       Int.toBytes_length 8 rbp.toBitVec.toInt, Int.toBytes_length 8 rax.toBitVec.toInt,
-      by simp [hsn3, hsp2], Int.toBytes_length 8 (Host.addrOf (k + 37 + 1)).toBitVec.toInt, hstk3, by simp [Int.toBytes_length], ?mem⟩
+      by simp [hsn3, hsp2], Int.toBytes_length 8 (Host.addrOf (k + 37 + 1)).toBitVec.toInt, hstk3, by simp [Int.toBytes_length], rfl, ?mem⟩
     case mem =>
       have hb := vbv_split init last rbx.toBitVec hbuf
       rw [vbv_a48, Mem.At_append_sep sn3 (List.drop 8 sp2) _ (by simp [hsn3, hsp2]),
@@ -492,7 +492,7 @@ def VbvPadC (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
         ∧ st'.data.regs.rax.toBitVec = (label "go_itab._errors.errorString_error").toBitVec
         ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.rbp = st.regs.rbp ∧ st'.data.regs.r14 = st.regs.r14 ∧
         ∃ fp' sp' fr' rs' sc' obj : List UInt8, fp'.length = 8 ∧ sp'.length = 8 ∧ fr'.length = 40 ∧ rs'.length = 8
-          ∧ sc'.length = S ∧ obj.length = 16 ∧
+          ∧ sc'.length = S ∧ obj.length = 16 ∧ obj = Int.toBytes 8 (label "go_string._" + 27706).toBitVec.toInt ++ Int.toBytes 8 (35 : BitVec 64).toInt ∧
         (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
           ⋆ Eq (fp'.At (st.regs.rsp.toBitVec - 8)) ⋆ Eq (sp'.At (st.regs.rsp.toBitVec + 8))
           ⋆ Eq (fr'.At (st.regs.rsp.toBitVec - 48)) ⋆ Eq (rs'.At (st.regs.rsp.toBitVec - 56))

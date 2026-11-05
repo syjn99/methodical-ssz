@@ -30,7 +30,7 @@ def P : Program :=
     ++ BumpAlloc1 ++ RtCopy ++ BumpNew16 ++ RtErr ++ RtVbl
 
 set_option maxRecDepth 100000 in
-theorem P_len : P.length = 69 := by rfl
+theorem P_len : P.length = 72 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
 theorem prog_eq : Host.prog = P := rfl
@@ -76,15 +76,18 @@ theorem label_itab : label "go_itab._errors.errorString_error" = 0x10000 + 1 :=
   mk_label P _ 1 _ (by simp [P]) (by decide)
 theorem hit : (label "go_itab._errors.errorString_error").toBitVec ≠ 0 := by rw [label_itab]; decide
 
-/-- The eight contracts used by the theorems, in one host and one heap. -/
+/-- The ten contracts used by the theorems, in one host and one heap
+(re-proof fix X5: `FmtErrorfWC` and `ValidateBitlistErrC` added). -/
 def Joint (S : Nat) (ty : BitVec 64) : Prop :=
   MakesliceC bumpHeap ty 1 S ∧ MemmoveC S ∧ GrowsliceC bumpHeap ty 1 S ∧ NewobjectC bumpHeap ty 16 S
-    ∧ FmtErrorfNilC S ∧ FmtErrorfC bumpHeap S ∧ ConvT64C bumpHeap S ∧ ValidateBitlistC S
+    ∧ FmtErrorfNilC S ∧ FmtErrorfC bumpHeap S ∧ FmtErrorfWC bumpHeap S ∧ ConvT64C bumpHeap S
+    ∧ ValidateBitlistC S ∧ ValidateBitlistErrC bumpHeap S
 
 theorem joint_models (S : Nat) (ty : BitVec 64) : Joint S ty :=
   ⟨bump_makeslice1 2 hkM hfM ty, rt_memmove 8 hkC hfC S, rt_growslice 8 hkC hfC ty S,
     bump_newobject16 34 hkN hfN ty, rt_errorf_nil 40 hkE hfE S, rt_errorf 40 hkE hfE bumpHeap S,
-    rt_convT64 40 hkE hfE bumpHeap S, rt_validate_bitlist 51 hkV hfV S hit⟩
+    rt_errorf_w 40 hkE hfE bumpHeap S, rt_convT64 40 hkE hfE bumpHeap S, rt_validate_bitlist 51 hkV hfV S,
+    rt_validate_bitlist_err 51 hkV hfV S⟩
 
 theorem not_joint_false (S : Nat) (ty : BitVec 64) : ¬ (Joint S ty → False) :=
   fun h => h (joint_models S ty)

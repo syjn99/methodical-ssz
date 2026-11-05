@@ -1,8 +1,14 @@
 """Witness generator: block layout from 0x10000 and the matching Lean pieces."""
-def layout(chunks, heap):
-    # chunks: list of (key, lean_expr, length); first three fixed: wb, ptr, heap
+def layout(chunks, heap, heap_end=False):
+    # chunks: list of (key, lean_expr, length); first three fixed: wb, ptr, heap.
+    # heap_end: the heap goes after the chunks (when a label offset such as
+    # go_string._+526 must not fall into the heap); ptr then holds its address.
     base=65536
-    items=[("wb","[0, 0, 0, 0]",4),("ptr","Int.toBytes 8 (0x1000c : BitVec 64).toInt",8),("heap",f"z {heap}",heap)]+chunks
+    if heap_end:
+        hp=base+12+sum(n for _,_,n in chunks)
+        items=[("wb","[0, 0, 0, 0]",4),("ptr",f"Int.toBytes 8 ({hex(hp)} : BitVec 64).toInt",8)]+chunks+[("heap",f"z {heap}",heap)]
+    else:
+        items=[("wb","[0, 0, 0, 0]",4),("ptr","Int.toBytes 8 (0x1000c : BitVec 64).toInt",8),("heap",f"z {heap}",heap)]+chunks
     addr={}; a=base; out=[]
     for k,e,n in items:
         addr[k]=a; out.append((k,e,n,a)); a = a + n if isinstance(n,int) else a
@@ -20,7 +26,8 @@ def h2(out, memname):
     return s
 
 def gen(c):
-    out,addr,end=layout(c["chunks"],c["heap"])
+    out,addr,end=layout(c["chunks"],c["heap"],c.get("heap_end",False))
+    HA=addr["heap"]
     tl=c["tlen"]; idx=5; pieces=[("target",c["target"],tl)]+c["models"]
     starts={}; a=5
     for k,d,n in pieces: starts[k]=a; a+=n
@@ -75,9 +82,11 @@ abbrev z (k : Nat) : List UInt8 := List.replicate k 0
     regs=c["regs"](addr)
     L.append(f"def s0 {pb} (zmms : RegZmms) (flags : StatusFlags) : MachineData :=\n  ⟨⟨{regs}⟩, zmms, flags, mem {pn}⟩\n")
     lh=c["lenhyps"]; lhn=c["lenhypnames"]
-    gaps=[f"Eq (({e}).At {a}#64)" for k,e,n,a in out if k.startswith("gap")]
+    # The gap atoms are typed like the block's atoms (`@Eq (ExtHashMap ..)`, not
+    # `@Eq DataMem`); otherwise ac_rfl sees two atoms (re-proof fix X4).
+    gaps=[f"Eq (α := Std.ExtHashMap (BitVec 64) UInt8) (({e}).At {a}#64)" for k,e,n,a in out if k.startswith("gap")]
     parts=[f"Eq (({e}).At {a}#64)" if " " in e and not e.startswith("[") else f"Eq ({e}.At {a}#64)" for k,e,n,a in out if k not in ("ptr","heap")]+c.get("extra_h2",[])
-    H2=f"((Eq ((Int.toBytes 8 (65548#64).toInt).At 65540#64) ⋆ Eq ((z {c['heap']}).At 65548#64))\n      ⋆ ("+"\n        ⋆ ".join(parts)+f")) (mem {pn})"
+    H2=f"((Eq ((Int.toBytes 8 ({HA}#64).toInt).At 65540#64) ⋆ Eq ((z {c['heap']}).At {HA}#64))\n      ⋆ ("+"\n        ⋆ ".join(parts)+f")) (mem {pn})"
     gapline=f"  apply sep_true (F := {' ⋆ '.join(gaps)})\n" if gaps else "  apply sep_true (F := Std.ExtHashMap.emp)\n  simp only [Std.ExtHashMap.sep_emp]\n"
     simpl=', '.join(lhn)
     L.append(f'''set_option maxHeartbeats 8000000 in
@@ -93,7 +102,7 @@ theorem s_mem {pb} {lh} (zmms : RegZmms) (flags : StatusFlags) :
     BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
   have H2 : {H2} := by
     ecancel
-  have H3 := sep_mono_left (P' := bumpHeap {c["heap"]}) (fun m hm => ⟨65548#64, by decide, by rw [label_bump]; exact hm⟩) H2
+  have H3 := sep_mono_left (P' := bumpHeap {c["heap"]}) (fun m hm => ⟨{HA}#64, by decide, by rw [label_bump]; exact hm⟩) H2
   rw [label_wb]
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
@@ -154,7 +163,7 @@ theorem label_wb : label "runtime.writeBarrier" = 0x10000 :=
         ee=f"({e})" if " " in e and not e.startswith("[") else e
         return f"Eq ({ee}.At {a})"
     fixed=[(k,e,a) for k,e,n,a in out if isinstance(n,int)]
-    gaps=[at(k,e,f"{a}#64") for k,e,a in fixed if k.startswith("gap")]
+    gaps=[at(k,e,f"{a}#64").replace("Eq (","Eq (α := Std.ExtHashMap (BitVec 64) UInt8) (",1) for k,e,a in fixed if k.startswith("gap")]
     rest=[at(k,e,f"{a}#64") for k,e,a in fixed if not k.startswith("gap")]+c.get("extra_h2",[])
     lh=c["lenhyps"]; lhn=c["lenhypnames"]
     simpl=', '.join(lhn)
@@ -175,6 +184,7 @@ theorem s_mem {pb} {lh} (zmms : RegZmms) (flags : StatusFlags) :
   have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
   have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
   simp only [hu0, huN] at H ⊢
+  try simp only [BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H ⊢  -- fold `4#64 + a` after huN (re-proof fix X4)
   first | (refine Eq.mp ?_ H; exact congrFun (by ac_rfl) _) | ecancel
 ''')
     L.append(c["main"](starts))

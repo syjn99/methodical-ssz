@@ -22,7 +22,7 @@ def dataLabels : Program :=
 def P : Program := dataLabels ++ BitLMarshalSSZTo ++ RtVbl ++ RtCopy ++ [Kraken.Directive.label "go_itab._errors.errorString_error"]
 
 set_option maxRecDepth 100000 in
-theorem P_len : P.length = 170 := by rfl
+theorem P_len : P.length = 173 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
 
@@ -45,24 +45,24 @@ set_option maxRecDepth 100000 in
 theorem hf_fnVbl : LabelsFresh RtVbl 125 := labelsFresh_of (by rw [prog_eq]; decide)
 
 set_option maxRecDepth 100000 in
-theorem hk_rtcopy : RtCopy.IsInfixAt Host.prog 143 := by
+theorem hk_rtcopy : RtCopy.IsInfixAt Host.prog 146 := by
   rw [prog_eq]
-  have h : (dataLabels ++ BitLMarshalSSZTo ++ RtVbl).length = 143 := by
-    simp only [List.length_append, show BitLMarshalSSZTo.length = 120 from by rfl, show RtVbl.length = 18 from by rfl]; rfl
+  have h : (dataLabels ++ BitLMarshalSSZTo ++ RtVbl).length = 146 := by
+    simp only [List.length_append, show BitLMarshalSSZTo.length = 120 from by rfl, show RtVbl.length = 21 from by rfl]; rfl
   exact ⟨[Kraken.Directive.label "go_itab._errors.errorString_error"], by rw [show P = (dataLabels ++ BitLMarshalSSZTo ++ RtVbl) ++ (RtCopy ++ [Kraken.Directive.label "go_itab._errors.errorString_error"]) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩
 
 set_option maxRecDepth 100000 in
-theorem hf_rtcopy : LabelsFresh RtCopy 143 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf_rtcopy : LabelsFresh RtCopy 146 := labelsFresh_of (by rw [prog_eq]; decide)
 
 set_option maxRecDepth 100000 in
-theorem hk_fnItab : [Kraken.Directive.label "go_itab._errors.errorString_error"].IsInfixAt Host.prog 169 := by
+theorem hk_fnItab : [Kraken.Directive.label "go_itab._errors.errorString_error"].IsInfixAt Host.prog 172 := by
   rw [prog_eq]
-  have h : (dataLabels ++ BitLMarshalSSZTo ++ RtVbl ++ RtCopy).length = 169 := by
-    simp only [List.length_append, show BitLMarshalSSZTo.length = 120 from by rfl, show RtVbl.length = 18 from by rfl, show RtCopy.length = 26 from by rfl]; rfl
+  have h : (dataLabels ++ BitLMarshalSSZTo ++ RtVbl ++ RtCopy).length = 172 := by
+    simp only [List.length_append, show BitLMarshalSSZTo.length = 120 from by rfl, show RtVbl.length = 21 from by rfl, show RtCopy.length = 26 from by rfl]; rfl
   exact ⟨[], by rw [show P = (dataLabels ++ BitLMarshalSSZTo ++ RtVbl ++ RtCopy) ++ ([Kraken.Directive.label "go_itab._errors.errorString_error"] ++ []) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩
 
 set_option maxRecDepth 100000 in
-theorem hf_fnItab : LabelsFresh [Kraken.Directive.label "go_itab._errors.errorString_error"] 169 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf_fnItab : LabelsFresh [Kraken.Directive.label "go_itab._errors.errorString_error"] 172 := labelsFresh_of (by rw [prog_eq]; decide)
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 
@@ -111,8 +111,8 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
   exact congrFun (by ac_rfl) _
 
 set_option maxRecDepth 100000 in
-theorem label_itab : label "go_itab._errors.errorString_error" = 0x10000 + Int64.ofNat 169 :=
-  mk_label P _ 169 _ (by simp [P, dataLabels]; rfl) (by decide)
+theorem label_itab : label "go_itab._errors.errorString_error" = 0x10000 + Int64.ofNat 172 :=
+  mk_label P _ 172 _ (by simp [P, dataLabels]; rfl) (by decide)
 
 theorem hit : (label "go_itab._errors.errorString_error").toBitVec ≠ 0 := by rw [label_itab]; decide
 
@@ -131,7 +131,7 @@ theorem bl_marshal_runs (zmms : RegZmms) (flags : StatusFlags) :
       ⋆ fun _ => True) 8 (z 8) rfl
     (by have h := s_mem  zmms flags; simp only [Std.ExtHashMap.sep_assoc] at h ⊢; exact h)
     (by simp [s0]) (by simp [s0]) (by simp [s0, bl2048_len]) (by simp [s0])
-    (rt_validate_bitlist 125 hk_fnVbl hf_fnVbl 8 hit) (rt_memmove 143 hk_rtcopy hf_rtcopy 8))
+    (rt_validate_bitlist 125 hk_fnVbl hf_fnVbl 8) (rt_memmove 146 hk_rtcopy hf_rtcopy 8))
     (fun _ h => ⟨h.1, h.2.2.2.2.1⟩)
 
 end Fk.WitBlM257

@@ -192,19 +192,18 @@ theorem bl_marshal_main (k : Nat) (hk : BitLMarshalSSZTo.IsInfixAt Host.prog k)
   simp only [Width.bytes, Width.bits] at H8
   kunfold
   try simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl, Fk.ofInt_ofBytes_toBytes64] at *  -- ponytail: values already normalized
-  refine eventually_trans _ _ _ _ (hvbl _ (Host.addrOf (k + 33 + 1)) bl scratch spl _ ?_ ?_ hsc hspl
+  refine eventually_trans _ _ _ _ (hvbl _ (Host.addrOf (k + 33 + 1)) bl scratch spl _ ?_ ?_ hsc hspl hv
     (by dsimp only; rw [blk_sp]; ecancel)) ?_
   · dsimp only; simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
     first | (rw [UInt64.toNat_ofNat]; omega) | (simp [UInt64.toNat_ofNat]; omega) | (show (UInt64.ofNat bl.length).toNat = bl.length; simp; omega)
   · dsimp only; rfl
-  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hr142, hrbp2, hiff, -, stk2, spl2, hstk2, hspl2, Hm2⟩
-  dsimp only at hpc2 hrsp2 hr142 hrbp2 hiff Hm2
+  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hr142, hrbp2, hz, stk2, spl2, hstk2, hspl2, Hm2⟩
+  dsimp only at hpc2 hrsp2 hr142 hrbp2 hz Hm2
   subst hpc2
   obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,
     zmms2, flags2, mem2⟩ := d2
-  simp only at hrsp2 hr142 hrbp2 hiff Hm2
+  simp only at hrsp2 hr142 hrbp2 hz Hm2
   subst hrsp2 hr142 hrbp2
-  have hz := hiff.mpr hv
   subst hz
   rw [blk_sp] at Hm2
   kat hk BitLMarshalSSZTo 34
@@ -388,7 +387,7 @@ theorem bl_marshal_reject_main (k : Nat) (hk : BitLMarshalSSZTo.IsInfixAt Host.p
     (hguard : guard.toNat + 24 < s.regs.rsp.toNat) (hsp : 160 + S ≤ s.regs.rsp.toNat)
     (hcap : s.regs.rcx.toNat + 4 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
     (hbl : bl.length < 2 ^ 63) (hit : (label "go_itab._errors.errorString_error").toBitVec ≠ 0)
-    (hvbl : ValidateBitlistC S) (hfe : FmtErrorfC Heap S) :
+    (hav : 16640 ≤ avail) (hvbl : ValidateBitlistErrC Heap S) (hfe : FmtErrorfWC Heap S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rdi ≠ 0
@@ -482,19 +481,18 @@ theorem bl_marshal_reject_main (k : Nat) (hk : BitLMarshalSSZTo.IsInfixAt Host.p
   simp only [Width.bytes, Width.bits] at H8
   kunfold
   try simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl, Fk.ofInt_ofBytes_toBytes64] at *  -- ponytail: values already normalized
-  refine eventually_trans _ _ _ _ (hvbl _ (Host.addrOf (k + 33 + 1)) bl scratch spl _ ?_ ?_ hsc hspl
+  refine eventually_trans _ _ _ _ (hvbl _ (Host.addrOf (k + 33 + 1)) avail bl scratch spl _ ?_ ?_ hsc hspl hv (by omega)
     (by dsimp only; rw [blk_sp]; ecancel)) ?_
   · dsimp only; simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
     first | (rw [UInt64.toNat_ofNat]; omega) | (simp [UInt64.toNat_ofNat]; omega) | (show (UInt64.ofNat bl.length).toNat = bl.length; simp; omega)
   · dsimp only; rfl
-  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hr142, hrbp2, -, hinv, stk2, spl2, hstk2, hspl2, Hm2⟩
-  dsimp only at hpc2 hrsp2 hr142 hrbp2 hinv Hm2
+  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hr142, hrbp2, hrax2, stk2, spl2, msg, esp, av2, hstk2, hspl2, hmsg, -, hav2, Hm2⟩
+  dsimp only at hpc2 hrsp2 hr142 hrbp2 hrax2 Hm2
   subst hpc2
   obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,
     zmms2, flags2, mem2⟩ := d2
-  simp only at hrsp2 hr142 hrbp2 hinv Hm2
+  simp only at hrsp2 hr142 hrbp2 hrax2 Hm2
   subst hrsp2 hr142 hrbp2
-  have hrax2 := hinv hv
   rw [blk_sp] at Hm2
   kat hk BitLMarshalSSZTo 34
   intro _
@@ -546,21 +544,21 @@ theorem bl_marshal_reject_main (k : Nat) (hk : BitLMarshalSSZTo.IsInfixAt Host.p
   intro m12 H12
   simp only [Width.bytes, Width.bits] at H12
   kunfold
-  have hA : Eq ((Int.toBytes 8 (BitVec.ofInt 64 (Int.ofBytes ity)).toInt ++ Int.toBytes 8 rbx2.toBitVec.toInt).At
-      (rsp.toBitVec - 24)) = Eq ((Int.toBytes 8 (BitVec.ofInt 64 (Int.ofBytes ity)).toInt).At (rsp.toBitVec - 24))
-      ⋆ Eq ((Int.toBytes 8 rbx2.toBitVec.toInt).At (rsp.toBitVec - 16)) :=
-    at_app _ _ (by rw [Int.toBytes_length]; bv_omega) (by simp [Int.toBytes_length])
+  simp only [toBytes_ofInt_ofBytes 64 8 rfl ity hity] at H12
+  have hA : Eq ((ity ++ Int.toBytes 8 rbx2.toBitVec.toInt).At (rsp.toBitVec - 24))
+      = Eq (ity.At (rsp.toBitVec - 24)) ⋆ Eq ((Int.toBytes 8 rbx2.toBitVec.toInt).At (rsp.toBitVec - 16)) :=
+    at_app _ _ (by rw [hity]; bv_omega) (by simp [hity, Int.toBytes_length])
   have hC : Eq ((spl2 ++ sp8).At (rsp.toBitVec - 160 + 8))
       = Eq (spl2.At (rsp.toBitVec - 152)) ⋆ Eq (sp8.At (rsp.toBitVec - 120)) := by
     rw [blk_sp]; exact at_app _ _ (by rw [hspl2]; bv_omega) (by simp [hspl2, hsp8])
-  refine eventually_trans _ _ _ _ (hfe _ (Host.addrOf (k + 47 + 1)) avail blFmtB
-    (Int.toBytes 8 (BitVec.ofInt 64 (Int.ofBytes ity)).toInt ++ Int.toBytes 8 rbx2.toBitVec.toInt)
-    stk2 (spl2 ++ sp8) _ ?f1 ?f2 ?f3 ?f4 hstk2 (by simp [hspl2, hsp8])
-    (by dsimp only; rw [hA, hC]; ecancel)) ?_
+  refine eventually_trans _ _ _ _ (hfe _ (Host.addrOf (k + 47 + 1)) av2 blFmtB [] ity msg
+    stk2 (spl2 ++ sp8) rbx2.toBitVec esp _ ?f1 ?f2 ?f3 ?f4 hity hstk2 (by simp [hspl2, hsp8])
+    (by rw [blFmtB_len]; omega)
+    (by dsimp only; simp only [List.nil_append]; rw [hA, hC]; ecancel)) ?_
   case f1 => dsimp only; rfl
   case f2 => dsimp only; decide
   case f3 => dsimp only
-  case f4 => dsimp only; simp [Int.toBytes_length]; decide
+  case f4 => dsimp only; simp; decide
   rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, -, hrax3, stk3, sp3, av3, hstk3, hsp3, hav3, Hm3⟩
   dsimp only at hpc3 hrsp3 hrax3 Hm3
   subst hpc3
@@ -659,7 +657,7 @@ theorem bl_marshal_overlong_rejected (k : Nat) (hk : BitLMarshalSSZTo.IsInfixAt 
     (hguard : guard.toNat + 24 < s.regs.rsp.toNat) (hsp : 160 + S ≤ s.regs.rsp.toNat)
     (hcap : s.regs.rcx.toNat + 4 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
     (hit : (label "go_itab._errors.errorString_error").toBitVec ≠ 0)
-    (hvbl : ValidateBitlistC S) (hfe : FmtErrorfC Heap S) :
+    (hav : 16640 ≤ avail) (hvbl : ValidateBitlistErrC Heap S) (hfe : FmtErrorfWC Heap S) :
     (∃ e, EthLib.Serialization.Ssz.deserialize Fv1.blDesc (#[4, 0, 0, 0] ++ Fv1.blOverlong) = .error e) ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
@@ -671,4 +669,4 @@ theorem bl_marshal_overlong_rejected (k : Nat) (hk : BitLMarshalSSZTo.IsInfixAt 
     fp s1 s2 l48 l80 l88 a16 spl sp8 rslot ity hfp h1 h2 hl48 hl80 hl88 ha16 hspl hsp8 hrs hity R S scratch hsc
     Heap avail h_mem hguard hsp hcap hcap63
     (by rw [Array.length_toList]; simp only [Fv1.blOverlong, Array.size_append, Array.size_replicate]; decide)
-    hit hvbl hfe⟩
+    hit hav hvbl hfe⟩

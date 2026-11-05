@@ -14,5 +14,8 @@ L_fvbl_ok:
   xor %eax,%eax
   retq
 L_fvbl_err:
+  mov runtime.fvBump(%rip),%rbx
+  lea 0x10(%rbx),%rcx
+  mov %rcx,runtime.fvBump(%rip)
   lea go_itab._errors.errorString_error(%rip),%rax
   retq

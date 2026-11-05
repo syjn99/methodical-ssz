@@ -170,9 +170,9 @@ theorem bl_accept_main (k : Nat) (hk : BitLUnmarshalSSZ.IsInfixAt Host.prog k)
   rw [← List.take_append_drop 32 spl, at_app (spl.take 32) (spl.drop 32) (b := rsp.toBitVec - 88)
     (by simp [hspl]; bv_omega) (by simp [hspl])] at H7
   refine eventually_trans _ _ _ _ (hvb _ (Host.addrOf (k + 30 + 1)) tl scratch (spl.take 32) _ hn4
-    (by apply UInt64.toBitVec_inj.mp; apply BitVec.eq_of_toNat_eq; simp) hsc (by simp [hspl])
+    (by apply UInt64.toBitVec_inj.mp; apply BitVec.eq_of_toNat_eq; simp) hsc (by simp [hspl]) hval
     (by dsimp only; rw [hsv]; ecancel)) ?_
-  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, -, -, hrax1, -, stk1, sv1, hstk1, hsv1, Hm1⟩
+  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, -, -, hrax1, stk1, sv1, hstk1, hsv1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrax1 Hm1
   subst hpc1
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
@@ -180,7 +180,7 @@ theorem bl_accept_main (k : Nat) (hk : BitLUnmarshalSSZ.IsInfixAt Host.prog k)
   simp only at hrsp1 hrax1 Hm1
   subst hrsp1
   rw [hsv] at Hm1
-  have hr0 : rax1 = 0 := hrax1.mpr hval
+  have hr0 : rax1 = 0 := hrax1
   subst hr0
   kat hk BitLUnmarshalSSZ 31
   kat hk BitLUnmarshalSSZ 32

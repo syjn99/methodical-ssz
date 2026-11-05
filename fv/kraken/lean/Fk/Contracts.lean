@@ -160,6 +160,46 @@ def FmtErrorfC (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
           ⋆ Eq (fs.At st.regs.rax.toBitVec) ⋆ Eq (args.At st.regs.rcx.toBitVec) ⋆ Heap avail' ⋆ F) st'.data.dmem)
       ⟨st, label "fmt.errorf"⟩
 
+/-- A Go `*errors.errorString` at `e` (re-proof fix X5): the 16-byte object
+(string data pointer `sp`, string length) and the message bytes at `sp`. -/
+def ErrStr (e sp : BitVec 64) (msg : List UInt8) : DataMem → Prop :=
+  Eq ((Int.toBytes 8 sp.toInt ++ Int.toBytes 8 (BitVec.ofNat 64 msg.length).toInt).At e) ⋆ Eq (msg.At sp)
+
+/-- `FmtErrorfWC` (re-proof fix X5): the internal `fmt.errorf` in the shape
+that the generated code uses for `"<field>: %w"`. The last argument (16
+bytes of the `any` array `pre ++ ity ++ e`) is an `*errors.errorString`
+error: its type word `ity` is the word at `itab + 8` of the errorString itab
+(the code reads it there), its data word is `e`, and `ErrStr e sp msg` is in
+the footprint (fmt reads it; `Error()` returns the string). Allocation budget
+(premise): `fs.length + msg.length + 8192 ≤ avail` (the formatted string, the
+`*fmt.wrapError`, the printer). Result as `FmtErrorfC`, and `ity`, the error
+object and the message are unchanged.
+
+Trusted, not narrowed further: the earlier arguments `pre` (none at the
+current call sites with this contract); that Go's allocation stays within
+the budget; no GC during the call (the frame `F` is unchanged). -/
+def FmtErrorfWC (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
+  ∀ (st : MachineData) (ret : Int64) (avail : Nat) (fs pre ity msg stk spill : List UInt8) (e sp : BitVec 64)
+    (F : DataMem → Prop),
+    st.regs.rbx.toNat = fs.length → 1 ≤ st.regs.rdi.toNat → st.regs.rsi = st.regs.rdi →
+    pre.length + 16 = 16 * st.regs.rdi.toNat → ity.length = 8 → stk.length = S → spill.length = 40 →
+    fs.length + msg.length + 8192 ≤ avail →
+    (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (st.regs.rsp.toBitVec + 8))
+      ⋆ Eq (fs.At st.regs.rax.toBitVec) ⋆ Eq ((pre ++ ity ++ Int.toBytes 8 e.toInt).At st.regs.rcx.toBitVec)
+      ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8)) ⋆ ErrStr e sp msg
+      ⋆ Heap avail ⋆ F) st.dmem →
+    Eventually (step1 Host.exe)
+      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.r14 = st.regs.r14
+        ∧ st'.data.regs.rax ≠ 0 ∧
+        ∃ (stk' spill' : List UInt8) (avail' : Nat), stk'.length = S ∧ spill'.length = 40 ∧ avail' ≤ avail ∧
+        (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill'.At (st.regs.rsp.toBitVec + 8))
+          ⋆ Eq (fs.At st.regs.rax.toBitVec) ⋆ Eq ((pre ++ ity ++ Int.toBytes 8 e.toInt).At st.regs.rcx.toBitVec)
+          ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8)) ⋆ ErrStr e sp msg
+          ⋆ Heap avail' ⋆ F) st'.data.dmem)
+      ⟨st, label "fmt.errorf"⟩
+
 /-- The growth loop of Go 1.26.3 `runtime.nextslicecap` (slice.go):
 `newcap += (newcap + 3*256) >> 2` until `newcap ≥ newLen`. The fuel argument
 only makes the recursion structural; `growLoop_ge` shows that fuel `newLen`

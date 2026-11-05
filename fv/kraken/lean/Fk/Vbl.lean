@@ -2,6 +2,7 @@ import Fk.Step
 import Fk.Labels
 import Fk.Flags
 import Fk.Vbv
+import Fk.Bump
 import Fv1.SpecBitList
 
 /-!
@@ -15,11 +16,13 @@ decoder since 1b, the encoder since the generator fix F2).
 exactly when `1 ≤ n ≤ 257`, the last byte is non-zero, and for n = 257 the
 last byte is 1 (`blArith`).
 
-`RtVbl` (Fk/RtVbl.S) computes `blArith` without `bsr` and returns rax = 1 on
-an invalid input. `rt_validate_bitlist` proves that this code meets
-`ValidateBitlistC S` for every `S`. This shows that the contract is
-satisfiable and gives a host for the BitL witnesses; it is not a proof about
-Go's code.
+`RtVbl` (Fk/RtVbl.S) computes `blArith` without `bsr`. On an invalid input it
+takes 16 zero bytes from the bump heap (an `*errors.errorString` with the
+empty message) and returns the errorString itab in rax and the object in rbx.
+`rt_validate_bitlist` and `rt_validate_bitlist_err` prove that this code meets
+`ValidateBitlistC S` and `ValidateBitlistErrC bumpHeap S` for every `S`. This
+shows that the contracts are satisfiable together and gives a host for the
+BitL witnesses; it is not a proof about Go's code.
 -/
 
 open Fk Fv1 EthLib.Serialization.Ssz
@@ -34,27 +37,51 @@ variable [Host]
 def blValid (tl : List UInt8) : Prop := ∃ bits, unpackDelimited (some 2048) tl.toArray = .ok bits
 
 /-- `ssz.ValidateBitlist(buf []byte, bitLimit uint64) error` (rax = ptr,
-rbx = len, rcx = cap, rdi = limit): returns to the return address with
-rsp + 8, r14 and rbp kept, the frame `F` and the bytes unchanged, and rax = 0
-(nil error) exactly when `blValid` holds. The 32-byte spill area of its four
-register arguments is the callee's. The error's second word (rbx) is not
-specified. On an invalid input rax is the `*errors.errorString` itab: every
-error of Go 1.26.3 `ValidateBitlist` comes from `fmt.Errorf` without `%w`,
-which returns `errors.New(s)` (trusted, CONTRACTS.md). -/
+rbx = len, rcx = cap, rdi = limit), valid input (re-proof fix X5: split by
+the input). If `blValid buf`, it returns to the return address with rsp + 8,
+r14 and rbp kept, rax = 0 (nil error), the frame `F` and the bytes unchanged.
+It allocates nothing on this path. The 32-byte spill area of its four
+register arguments is the callee's. -/
 def ValidateBitlistC (S : Nat) : Prop :=
   ∀ (st : MachineData) (ret : Int64) (buf stk spill : List UInt8) (F : DataMem → Prop),
-    st.regs.rbx.toNat = buf.length → st.regs.rdi = 2048 → stk.length = S → spill.length = 32 →
+    st.regs.rbx.toNat = buf.length → st.regs.rdi = 2048 → stk.length = S → spill.length = 32 → blValid buf →
     (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
       ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (st.regs.rsp.toBitVec + 8))
       ⋆ Eq (buf.At st.regs.rax.toBitVec) ⋆ F) st.dmem →
     Eventually (step1 Host.exe)
       (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.r14 = st.regs.r14
-        ∧ st'.data.regs.rbp = st.regs.rbp ∧ (st'.data.regs.rax = 0 ↔ blValid buf)
-        ∧ (¬ blValid buf → st'.data.regs.rax.toBitVec = (label "go_itab._errors.errorString_error").toBitVec) ∧
+        ∧ st'.data.regs.rbp = st.regs.rbp ∧ st'.data.regs.rax = 0 ∧
         ∃ stk' spill' : List UInt8, stk'.length = S ∧ spill'.length = 32 ∧
         (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
           ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill'.At (st.regs.rsp.toBitVec + 8))
           ⋆ Eq (buf.At st.regs.rax.toBitVec) ⋆ F) st'.data.dmem)
+      ⟨st, label "ssz.ValidateBitlist"⟩
+
+/-- `ssz.ValidateBitlist`, invalid input (re-proof fix X5). If `¬ blValid buf`
+and the heap has the budget (`8192 ≤ avail`), it returns a non-nil error:
+rax is the `*errors.errorString` itab, rbx is the data pointer `e`, and the
+error object `ErrStr e sp msg` (16 bytes and the message, at most 128 bytes)
+comes from the heap: `avail' + 16 + msg.length ≤ avail ≤ avail' + 8192`.
+Every error of Go 1.26.3 `ValidateBitlist` is `fmt.Errorf` without `%w`, so
+`errors.New(s)` (trusted, CONTRACTS.md 1d: Go's constant messages are in
+rodata, not the heap; the longest message has 81 bytes). -/
+def ValidateBitlistErrC (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
+  ∀ (st : MachineData) (ret : Int64) (avail : Nat) (buf stk spill : List UInt8) (F : DataMem → Prop),
+    st.regs.rbx.toNat = buf.length → st.regs.rdi = 2048 → stk.length = S → spill.length = 32 → ¬ blValid buf →
+    8192 ≤ avail →
+    (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (st.regs.rsp.toBitVec + 8))
+      ⋆ Eq (buf.At st.regs.rax.toBitVec) ⋆ Heap avail ⋆ F) st.dmem →
+    Eventually (step1 Host.exe)
+      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.r14 = st.regs.r14
+        ∧ st'.data.regs.rbp = st.regs.rbp
+        ∧ st'.data.regs.rax.toBitVec = (label "go_itab._errors.errorString_error").toBitVec ∧
+        ∃ (stk' spill' msg : List UInt8) (sp : BitVec 64) (avail' : Nat), stk'.length = S ∧ spill'.length = 32
+          ∧ msg.length ≤ 128 ∧ avail' + 16 + msg.length ≤ avail ∧ avail ≤ avail' + 8192 ∧
+        (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill'.At (st.regs.rsp.toBitVec + 8))
+          ⋆ Eq (buf.At st.regs.rax.toBitVec) ⋆ ErrStr st'.data.regs.rbx.toBitVec sp msg ⋆ Heap avail' ⋆ F)
+          st'.data.dmem)
       ⟨st, label "ssz.ValidateBitlist"⟩
 
 
@@ -165,18 +192,119 @@ theorem blArith_cons_len (init : List UInt8) (last : UInt8) :
     blArith (init ++ [last]) ↔ init.length + 1 ≤ 257 ∧ last ≠ 0 ∧ (init.length + 1 = 257 → last = 1) := by
   simp [blArith]
 
-/-- The error tail of `RtVbl` (from `L_fvbl_err`): rax = 1. -/
-theorem rtvbl_err_ne : ¬ ((1 : UInt64) = 0) := by decide
-
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-theorem rt_validate_bitlist (j : Nat) (hj : RtVbl.IsInfixAt Host.prog j) (hf : LabelsFresh RtVbl j) (S : Nat)
-    (hit : (label "go_itab._errors.errorString_error").toBitVec ≠ 0) :
+/-- `RtVbl` meets the valid-input contract (re-proof fix X5). The error
+branches contradict `blValid`. -/
+theorem rt_validate_bitlist (j : Nat) (hj : RtVbl.IsInfixAt Host.prog j) (hf : LabelsFresh RtVbl j) (S : Nat) :
     ValidateBitlistC S := by
-  intro st ret buf stk spill F hrbx hrdi hstk hsp hm
+  intro st ret buf stk spill F hrbx hrdi hstk hsp hval hm
+  have ha := (blValid_iff buf).mp hval
   rw [label_at' hj hf (j := 0) (l := "ssz.ValidateBitlist") (by rfl) (by rfl)]
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := st
   simp only at hrbx hrdi hm ⊢
+  kat hj RtVbl 0
+  kat hj RtVbl 1
+  intro _
+  kat hj RtVbl 2
+  rw [vbv_zand]
+  obtain ⟨init, last, rfl⟩ := List.eq_nil_or_concat buf |>.resolve_left ha.1
+  rw [List.concat_eq_append] at hm hrbx ha ⊢
+  rw [blArith_cons_len] at ha
+  obtain ⟨hlen, hz, h1⟩ := ha
+  simp only [List.length_append, List.length_singleton] at hrbx
+  have hne : (rbx.toBitVec == 0) = false := by
+    simp only [beq_eq_false_iff_ne, ne_eq]; intro h; have := congrArg BitVec.toNat h; simp at this; omega
+  rw [hne]
+  simp only [Bool.false_eq_true, ↓reduceIte, Effects.All]
+  kat hj RtVbl 3
+  kat hj RtVbl 4
+  rw [cmp_a_iff]
+  have : decide ((257 : BitVec 64).toNat < rbx.toBitVec.toNat) = false := by simp; omega
+  rw [this]
+  simp only [Bool.false_eq_true, ↓reduceIte, Effects.All]
+  kat hj RtVbl 5
+  rw [Mem.At_append_sep _ _ _ (vbv_split init last rbx.toBitVec (by simpa using hrbx.symm))] at hm
+  rw [vbv_last_addr _ _ _ (by simpa using hrbx.symm)]
+  apply load_step _ _ _ _ [last] _ _ (by ecancel) (by rfl)
+  kunfold
+  kat hj RtVbl 6
+  intro _
+  kat hj RtVbl 7
+  rw [vbl_ecx, vbv_zand, vbl_z]
+  simp only [show (last == 0) = false by simpa using hz, Bool.false_eq_true, ↓reduceIte, Effects.All]
+  kat hj RtVbl 8
+  kat hj RtVbl 9
+  rw [cmp_nz_iff]
+  by_cases h257 : init.length + 1 = 257
+  · have : decide (rbx.toBitVec ≠ 257) = false := by
+      simp only [decide_eq_false_iff_not]; intro h; apply h; apply BitVec.eq_of_toNat_eq; simp; omega
+    rw [this]
+    simp only [Bool.false_eq_true, ↓reduceIte, Effects.All]
+    kat hj RtVbl 10
+    kat hj RtVbl 11
+    rw [vbl_ecx, cmp_nz_iff32]
+    have hl1 := h1 h257
+    simp only [show decide (BitVec.ofNat 32 last.toNat ≠ BitVec.truncate 32 (1 : BitVec 64)) = false by rw [hl1]; decide,
+      Bool.false_eq_true, ↓reduceIte, Effects.All]
+    kat hj RtVbl 12
+    kat hj RtVbl 13
+    intro _
+    kat hj RtVbl 14
+    apply load_step _ _ _ _ (Int.toBytes 8 ret.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    kunfold
+    apply Eventually.done
+    refine ⟨by simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl], rfl, rfl, rfl, ?_, stk, spill, hstk, hsp,
+      by rw [Mem.At_append_sep _ _ _ (vbv_split init last rbx.toBitVec (by simpa using hrbx.symm))]; ecancel⟩
+    apply UInt64.toBitVec_inj.mp; simp
+  · have : decide (rbx.toBitVec ≠ 257) = true := by
+      simp only [decide_eq_true_iff]; intro h; have := congrArg BitVec.toNat h; simp at this; omega
+    rw [this]
+    simp only [↓reduceIte, Effects.All]
+    klabel hj hf RtVbl 12
+    kat hj RtVbl 12
+    kat hj RtVbl 13
+    intro _
+    kat hj RtVbl 14
+    apply load_step _ _ _ _ (Int.toBytes 8 ret.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    kunfold
+    apply Eventually.done
+    refine ⟨by simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl], rfl, rfl, rfl, ?_, stk, spill, hstk, hsp,
+      by rw [Mem.At_append_sep _ _ _ (vbv_split init last rbx.toBitVec (by simpa using hrbx.symm))]; ecancel⟩
+    apply UInt64.toBitVec_inj.mp; simp
+
+theorem rtvbl_heap_split (avail : Nat) (h : 8192 ≤ avail) :
+    List.replicate avail (0 : UInt8) = List.replicate 16 0 ++ List.replicate (avail - 16) 0 := by
+  rw [List.replicate_append_replicate]; congr 1; omega
+
+theorem vbl_nil_At_emp (a : BitVec 64) : Eq (([] : List UInt8).At a) = Std.ExtHashMap.emp := by
+  funext m; apply propext; simp only [List.At, List.mapIdx_nil, Std.ExtHashMap.ofList_nil, Std.ExtHashMap.emp]
+  exact ⟨Eq.symm, Eq.symm⟩
+
+theorem rtvbl_16 (p : BitVec 64) : p + BitVec.ofNat 64 16 = p + (16 : BitVec 64) := rfl
+
+theorem rtvbl_obj0 : Int.toBytes 8 (0 : BitVec 64).toInt ++ Int.toBytes 8 (BitVec.ofNat 64 0).toInt
+    = List.replicate 16 (0 : UInt8) := by rfl
+
+set_option maxHeartbeats 8000000 in
+set_option maxRecDepth 100000 in
+/-- `RtVbl` meets the invalid-input contract with the bump heap (re-proof fix
+X5): every error branch takes 16 zero bytes (an errorString with the empty
+message) from the heap; the valid branches contradict `¬ blValid`. -/
+theorem rt_validate_bitlist_err (j : Nat) (hj : RtVbl.IsInfixAt Host.prog j) (hf : LabelsFresh RtVbl j) (S : Nat) :
+    ValidateBitlistErrC bumpHeap S := by
+  intro st ret avail buf stk spill F hrbx hrdi hstk hsp hinv hav hm
+  rw [blValid, blValid_iff] at hinv
+  rw [label_at' hj hf (j := 0) (l := "ssz.ValidateBitlist") (by rfl) (by rfl)]
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := st
+  simp only at hrbx hrdi hm ⊢
+  have hm' : (bumpHeap avail ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec)
+      ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (rsp.toBitVec + 8))
+      ⋆ Eq (buf.At rax.toBitVec) ⋆ F)) mem := by ecancel
+  obtain ⟨p, hp⟩ := sep_exists_left (Q := fun (p : BitVec 64) (m : DataMem) => p.toNat + avail < 2 ^ 64 ∧
+    (Eq ((Int.toBytes 8 p.toInt).At (label "runtime.fvBump").toBitVec) ⋆ Eq ((List.replicate avail 0).At p)) m) hm'
+  obtain ⟨hpa, hp⟩ := sep_pure_left hp
+  clear hm hm'
   kat hj RtVbl 0
   kat hj RtVbl 1
   intro _
@@ -191,20 +319,37 @@ theorem rt_validate_bitlist (j : Nat) (hj : RtVbl.IsInfixAt Host.prog j) (hf : L
     klabel hj hf RtVbl 15
     kat hj RtVbl 15
     kat hj RtVbl 16
+    apply load_step _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    kunfold
     kat hj RtVbl 17
+    kat hj RtVbl 18
+    apply store_step _ _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    intro m1 H1
+    simp only [Width.bytes, Width.bits] at H1
+    kunfold
+    kat hj RtVbl 19
+    kat hj RtVbl 20
     apply load_step _ _ _ _ (Int.toBytes 8 ret.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
     kunfold
     apply Eventually.done
-    refine ⟨by simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl], rfl, rfl, rfl, ?_, fun _ => rfl, stk, spill, hstk, hsp,
-      by ecancel⟩
-    rw [blValid, blValid_iff]
-    constructor
-    · intro h; dsimp only at h; exact absurd (congrArg UInt64.toBitVec h) hit
-    · intro h'
-      exfalso
-      exact h'.1 rfl
+    rw [rtvbl_heap_split avail hav, Mem.At_append_sep _ _ _ (by simp; omega)] at H1
+    simp only [List.length_replicate, rtvbl_16, Std.ExtHashMap.sep_emp] at H1
+    have hq : (p + (16 : BitVec 64)).toNat = p.toNat + 16 := by
+      simp only [BitVec.toNat_add, show (16 : BitVec 64).toNat = 16 from rfl]; omega
+    have H2 : ((Eq ((Int.toBytes 8 (p + (16 : BitVec 64)).toInt).At (label "runtime.fvBump").toBitVec)
+        ⋆ Eq ((List.replicate (avail - 16) 0).At (p + (16 : BitVec 64))))
+        ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec) ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S))
+          ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq (([] : List UInt8).At rax.toBitVec) ⋆ Eq ((List.replicate 16 0).At p) ⋆ F)) m1 := by
+      ecancel
+    have H3 := sep_mono_left (P' := bumpHeap (avail - 16)) (fun m hm => ⟨p + (16 : BitVec 64), by omega, hm⟩) H2
+    refine ⟨by simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl], rfl, rfl, rfl, by simp, stk, spill, [], 0, avail - 16,
+      hstk, hsp, by simp, by simp; omega, by omega, ?_⟩
+    simp only [ErrStr, List.length_nil, rtvbl_obj0, vbl_nil_At_emp, Std.ExtHashMap.sep_emp,
+      BitVec.ofInt_ofBytes_toBytes 64 8 rfl, Fk.ofInt_ofBytes_toBytes64] at H3 ⊢
+    ecancel
   obtain ⟨init, last, rfl⟩ := List.eq_nil_or_concat buf |>.resolve_left hn
-  rw [List.concat_eq_append] at hm hrbx ⊢
+  rw [List.concat_eq_append] at hp hrbx hinv ⊢
+  rw [blArith_cons_len] at hinv
   simp only [List.length_append, List.length_singleton] at hrbx
   have hne : (rbx.toBitVec == 0) = false := by
     simp only [beq_eq_false_iff_ne, ne_eq]; intro h; have := congrArg BitVec.toNat h; simp at this; omega
@@ -220,23 +365,39 @@ theorem rt_validate_bitlist (j : Nat) (hj : RtVbl.IsInfixAt Host.prog j) (hf : L
     klabel hj hf RtVbl 15
     kat hj RtVbl 15
     kat hj RtVbl 16
+    apply load_step _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    kunfold
     kat hj RtVbl 17
+    kat hj RtVbl 18
+    apply store_step _ _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    intro m1 H1
+    simp only [Width.bytes, Width.bits] at H1
+    kunfold
+    kat hj RtVbl 19
+    kat hj RtVbl 20
     apply load_step _ _ _ _ (Int.toBytes 8 ret.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
     kunfold
     apply Eventually.done
-    refine ⟨by simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl], rfl, rfl, rfl, ?_, fun _ => rfl, stk, spill, hstk, hsp,
-      by ecancel⟩
-    rw [blValid, blValid_iff]
-    constructor
-    · intro h; dsimp only at h; exact absurd (congrArg UInt64.toBitVec h) hit
-    · intro h'
-      exfalso
-      exact absurd ((blArith_cons_len init last).mp h').1 (by omega)
+    rw [rtvbl_heap_split avail hav, Mem.At_append_sep _ _ _ (by simp; omega)] at H1
+    simp only [List.length_replicate, rtvbl_16, Std.ExtHashMap.sep_emp] at H1
+    have hq : (p + (16 : BitVec 64)).toNat = p.toNat + 16 := by
+      simp only [BitVec.toNat_add, show (16 : BitVec 64).toNat = 16 from rfl]; omega
+    have H2 : ((Eq ((Int.toBytes 8 (p + (16 : BitVec 64)).toInt).At (label "runtime.fvBump").toBitVec)
+        ⋆ Eq ((List.replicate (avail - 16) 0).At (p + (16 : BitVec 64))))
+        ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec) ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S))
+          ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq ((init ++ [last]).At rax.toBitVec) ⋆ Eq ((List.replicate 16 0).At p) ⋆ F)) m1 := by
+      ecancel
+    have H3 := sep_mono_left (P' := bumpHeap (avail - 16)) (fun m hm => ⟨p + (16 : BitVec 64), by omega, hm⟩) H2
+    refine ⟨by simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl], rfl, rfl, rfl, by simp, stk, spill, [], 0, avail - 16,
+      hstk, hsp, by simp, by simp; omega, by omega, ?_⟩
+    simp only [ErrStr, List.length_nil, rtvbl_obj0, vbl_nil_At_emp, Std.ExtHashMap.sep_emp,
+      BitVec.ofInt_ofBytes_toBytes 64 8 rfl, Fk.ofInt_ofBytes_toBytes64] at H3 ⊢
+    ecancel
   have : decide ((257 : BitVec 64).toNat < rbx.toBitVec.toNat) = false := by simp; omega
   rw [this]
   simp only [Bool.false_eq_true, ↓reduceIte, Effects.All]
   kat hj RtVbl 5
-  rw [Mem.At_append_sep _ _ _ (vbv_split init last rbx.toBitVec (by simpa using hrbx.symm))] at hm
+  rw [Mem.At_append_sep _ _ _ (vbv_split init last rbx.toBitVec (by simpa using hrbx.symm))] at hp
   rw [vbv_last_addr _ _ _ (by simpa using hrbx.symm)]
   apply load_step _ _ _ _ [last] _ _ (by ecancel) (by rfl)
   kunfold
@@ -246,21 +407,38 @@ theorem rt_validate_bitlist (j : Nat) (hj : RtVbl.IsInfixAt Host.prog j) (hf : L
   rw [vbl_ecx, vbv_zand, vbl_z]
   by_cases hz : last = 0
   · simp only [show (last == 0) = true by simpa using hz, ↓reduceIte, Effects.All]
+    rw [← Mem.At_append_sep _ _ _ (vbv_split init last rbx.toBitVec (by simpa using hrbx.symm))] at hp
     klabel hj hf RtVbl 15
     kat hj RtVbl 15
     kat hj RtVbl 16
+    apply load_step _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    kunfold
     kat hj RtVbl 17
+    kat hj RtVbl 18
+    apply store_step _ _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    intro m1 H1
+    simp only [Width.bytes, Width.bits] at H1
+    kunfold
+    kat hj RtVbl 19
+    kat hj RtVbl 20
     apply load_step _ _ _ _ (Int.toBytes 8 ret.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
     kunfold
     apply Eventually.done
-    refine ⟨by simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl], rfl, rfl, rfl, ?_, fun _ => rfl, stk, spill, hstk, hsp,
-      by rw [Mem.At_append_sep _ _ _ (vbv_split init last rbx.toBitVec (by simpa using hrbx.symm))]; ecancel⟩
-    rw [blValid, blValid_iff, blArith_cons_len]
-    constructor
-    · intro h; dsimp only at h; exact absurd (congrArg UInt64.toBitVec h) hit
-    · intro h'
-      exfalso
-      exact h'.2.1 hz
+    rw [rtvbl_heap_split avail hav, Mem.At_append_sep _ _ _ (by simp; omega)] at H1
+    simp only [List.length_replicate, rtvbl_16, Std.ExtHashMap.sep_emp] at H1
+    have hq : (p + (16 : BitVec 64)).toNat = p.toNat + 16 := by
+      simp only [BitVec.toNat_add, show (16 : BitVec 64).toNat = 16 from rfl]; omega
+    have H2 : ((Eq ((Int.toBytes 8 (p + (16 : BitVec 64)).toInt).At (label "runtime.fvBump").toBitVec)
+        ⋆ Eq ((List.replicate (avail - 16) 0).At (p + (16 : BitVec 64))))
+        ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec) ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S))
+          ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq ((init ++ [last]).At rax.toBitVec) ⋆ Eq ((List.replicate 16 0).At p) ⋆ F)) m1 := by
+      ecancel
+    have H3 := sep_mono_left (P' := bumpHeap (avail - 16)) (fun m hm => ⟨p + (16 : BitVec 64), by omega, hm⟩) H2
+    refine ⟨by simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl], rfl, rfl, rfl, by simp, stk, spill, [], 0, avail - 16,
+      hstk, hsp, by simp, by simp; omega, by omega, ?_⟩
+    simp only [ErrStr, List.length_nil, rtvbl_obj0, vbl_nil_At_emp, Std.ExtHashMap.sep_emp,
+      BitVec.ofInt_ofBytes_toBytes 64 8 rfl, Fk.ofInt_ofBytes_toBytes64] at H3 ⊢
+    ecancel
   simp only [show (last == 0) = false by simpa using hz, Bool.false_eq_true, ↓reduceIte, Effects.All]
   kat hj RtVbl 8
   kat hj RtVbl 9
@@ -274,58 +452,40 @@ theorem rt_validate_bitlist (j : Nat) (hj : RtVbl.IsInfixAt Host.prog j) (hf : L
     kat hj RtVbl 11
     rw [vbl_ecx, cmp_nz_iff32]
     by_cases h1 : last = 1
-    · simp only [show decide (BitVec.ofNat 32 last.toNat ≠ BitVec.truncate 32 (1 : BitVec 64)) = false by rw [h1]; decide,
-        Bool.false_eq_true, ↓reduceIte, Effects.All]
-      kat hj RtVbl 12
-      kat hj RtVbl 13
-      intro _
-      kat hj RtVbl 14
-      apply load_step _ _ _ _ (Int.toBytes 8 ret.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-      kunfold
-      apply Eventually.done
-      refine ⟨by simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl], rfl, rfl, rfl, ?_, ?nv, stk, spill, hstk, hsp,
-        by rw [Mem.At_append_sep _ _ _ (vbv_split init last rbx.toBitVec (by simpa using hrbx.symm))]; ecancel⟩
-      case nv => intro h; exfalso; apply h; rw [blValid, blValid_iff, blArith_cons_len]; exact ⟨by omega, by rw [h1]; decide, fun _ => h1⟩
-      rw [blValid, blValid_iff, blArith_cons_len]
-      refine ⟨fun _ => ⟨by omega, ?_, ?_⟩, fun _ => ?_⟩
-      · rw [h1]; decide
-      · intro _; exact h1
-      · dsimp only; apply UInt64.toBitVec_inj.mp; simp
-    · simp only [show decide (BitVec.ofNat 32 last.toNat ≠ BitVec.truncate 32 (1 : BitVec 64)) = true by
-          simpa using (vbl_one last).mpr h1,
-        ↓reduceIte, Effects.All]
-      klabel hj hf RtVbl 15
-      kat hj RtVbl 15
-      kat hj RtVbl 16
-      kat hj RtVbl 17
-      apply load_step _ _ _ _ (Int.toBytes 8 ret.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
-      kunfold
-      apply Eventually.done
-      refine ⟨by simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl], rfl, rfl, rfl, ?_, fun _ => rfl, stk, spill, hstk, hsp,
-        by rw [Mem.At_append_sep _ _ _ (vbv_split init last rbx.toBitVec (by simpa using hrbx.symm))]; ecancel⟩
-      rw [blValid, blValid_iff, blArith_cons_len]
-      constructor
-      · intro h; dsimp only at h; exact absurd (congrArg UInt64.toBitVec h) hit
-      · intro h'
-        exfalso
-        exact h1 (h'.2.2 h257)
-  · have : decide (rbx.toBitVec ≠ 257) = true := by
-      simp only [decide_eq_true_iff]; intro h; have := congrArg BitVec.toNat h; simp at this; omega
-    rw [this]
-    simp only [↓reduceIte, Effects.All]
-    klabel hj hf RtVbl 12
-    kat hj RtVbl 12
-    kat hj RtVbl 13
-    intro _
-    kat hj RtVbl 14
+    · exfalso; exact hinv ⟨by omega, hz, fun _ => h1⟩
+    simp only [show decide (BitVec.ofNat 32 last.toNat ≠ BitVec.truncate 32 (1 : BitVec 64)) = true by
+        simpa using (vbl_one last).mpr h1,
+      ↓reduceIte, Effects.All]
+    rw [← Mem.At_append_sep _ _ _ (vbv_split init last rbx.toBitVec (by simpa using hrbx.symm))] at hp
+    klabel hj hf RtVbl 15
+    kat hj RtVbl 15
+    kat hj RtVbl 16
+    apply load_step _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    kunfold
+    kat hj RtVbl 17
+    kat hj RtVbl 18
+    apply store_step _ _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    intro m1 H1
+    simp only [Width.bytes, Width.bits] at H1
+    kunfold
+    kat hj RtVbl 19
+    kat hj RtVbl 20
     apply load_step _ _ _ _ (Int.toBytes 8 ret.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
     kunfold
     apply Eventually.done
-    refine ⟨by simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl], rfl, rfl, rfl, ?_, ?nv, stk, spill, hstk, hsp,
-      by rw [Mem.At_append_sep _ _ _ (vbv_split init last rbx.toBitVec (by simpa using hrbx.symm))]; ecancel⟩
-    case nv => intro h; exfalso; apply h; rw [blValid, blValid_iff, blArith_cons_len]; exact ⟨by omega, hz, fun e => absurd e h257⟩
-    rw [blValid, blValid_iff, blArith_cons_len]
-    refine ⟨fun _ => ⟨by omega, ?_, ?_⟩, fun _ => ?_⟩
-    · exact hz
-    · intro h; exact absurd h h257
-    · dsimp only; apply UInt64.toBitVec_inj.mp; simp
+    rw [rtvbl_heap_split avail hav, Mem.At_append_sep _ _ _ (by simp; omega)] at H1
+    simp only [List.length_replicate, rtvbl_16, Std.ExtHashMap.sep_emp] at H1
+    have hq : (p + (16 : BitVec 64)).toNat = p.toNat + 16 := by
+      simp only [BitVec.toNat_add, show (16 : BitVec 64).toNat = 16 from rfl]; omega
+    have H2 : ((Eq ((Int.toBytes 8 (p + (16 : BitVec 64)).toInt).At (label "runtime.fvBump").toBitVec)
+        ⋆ Eq ((List.replicate (avail - 16) 0).At (p + (16 : BitVec 64))))
+        ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec) ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S))
+          ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq ((init ++ [last]).At rax.toBitVec) ⋆ Eq ((List.replicate 16 0).At p) ⋆ F)) m1 := by
+      ecancel
+    have H3 := sep_mono_left (P' := bumpHeap (avail - 16)) (fun m hm => ⟨p + (16 : BitVec 64), by omega, hm⟩) H2
+    refine ⟨by simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl], rfl, rfl, rfl, by simp, stk, spill, [], 0, avail - 16,
+      hstk, hsp, by simp, by simp; omega, by omega, ?_⟩
+    simp only [ErrStr, List.length_nil, rtvbl_obj0, vbl_nil_At_emp, Std.ExtHashMap.sep_emp,
+      BitVec.ofInt_ofBytes_toBytes 64 8 rfl, Fk.ofInt_ofBytes_toBytes64] at H3 ⊢
+    ecancel
+  · exfalso; exact hinv ⟨by omega, hz, fun e => absurd e h257⟩

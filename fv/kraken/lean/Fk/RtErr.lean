@@ -72,6 +72,35 @@ theorem rt_errorf (j : Nat) (hj : RtErr.IsInfixAt Host.prog j) (hf : LabelsFresh
   · intro h; have := congrArg UInt64.toNat h; simp only [] at this; revert this; decide
 
 set_option maxHeartbeats 4000000 in
+/-- The same code meets `FmtErrorfWC` (re-proof fix X5): one `fmt.errorf`
+satisfies its three contracts. -/
+theorem rt_errorf_w (j : Nat) (hj : RtErr.IsInfixAt Host.prog j) (hf : LabelsFresh RtErr j)
+    (Heap : Nat → DataMem → Prop) (S : Nat) : FmtErrorfWC Heap S := by
+  intro st ret avail fs pre ity msg stk spill e sp F _hrbx hrdi _hrsi _hargs _hity hstk hsp _hav hm
+  rw [label_at' hj hf (j := 0) (l := "fmt.errorf") (by rfl) (by rfl)]
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := st
+  simp only at hrdi hm ⊢
+  kat hj RtErr 0
+  kat hj RtErr 1
+  intro _
+  kat hj RtErr 2
+  split
+  case isFalse h =>
+    exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+    have := congrArg BitVec.toNat h; simp at this; omega
+  simp only [Effects.All]
+  klabel hj hf RtErr 5
+  kat hj RtErr 5
+  kat hj RtErr 6
+  kat hj RtErr 7
+  apply load_step _ _ _ _ (Int.toBytes 8 ret.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  apply Eventually.done
+  refine ⟨by simp, ?_, rfl, ?_, stk, spill, avail, hstk, hsp, Nat.le_refl _, by ecancel⟩
+  · apply UInt64.toBitVec_inj.mp; simp
+  · intro h; have := congrArg UInt64.toNat h; simp only [] at this; revert this; decide
+
+set_option maxHeartbeats 4000000 in
 theorem rt_convT64 (j : Nat) (hj : RtErr.IsInfixAt Host.prog j) (hf : LabelsFresh RtErr j)
     (Heap : Nat → DataMem → Prop) (S : Nat) : ConvT64C Heap S := by
   intro st ret avail stk spill F _hav hstk hsp hm
