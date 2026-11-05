@@ -11,10 +11,11 @@ The 1b review file `review/Review1b.lean` no longer elaborates against the new
 contract signatures; a type error is not a regression test. This module states
 what the old counterexamples exercised, as theorems in the build:
 
-- `joint_models`: one host and one heap (`bumpHeap`) satisfy eight contracts
+- `joint_models`: one host and one heap (`bumpHeap`) satisfy ten contracts
   together: makeslice (1-byte elements), memmove, growslice, the 16-byte
-  newobject (the errorString of the nil error paths), both `fmt.errorf`
-  contracts (one code), convT64 and ValidateBitlist (the `bsr`-free model).
+  newobject (the errorString of the nil error paths), the three `fmt.errorf`
+  contracts (one code), convT64 and both ValidateBitlist contracts (the
+  `bsr`-free model; re-proof fix X5).
   `not_joint_false` states that these premises do not prove `False`.
 - `old_input_excluded`: the 1b growslice counterexample input (`newLen = 2^63`)
   violates the new budget premise.

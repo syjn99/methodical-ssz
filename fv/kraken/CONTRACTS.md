@@ -1,6 +1,6 @@
 # CONTRACTS: 피호출자와 전역의 처리 (Kraken 가설 형식)
 
-대상: 1a 9개 함수(Scalars, FixedVec, ListU64의 SizeSSZ, MarshalSSZTo, UnmarshalSSZ)와 1b 18개 함수(BitVec, Nested, ListC, BitL, Checkpoint, AttestationData), 재증명에서 더한 `ssz.ValidateBitvector`. 정의는 `lean/Fk/Contracts.lean`, `lean/Fk/FunSpecs.lean`, `lean/Fk/Vbl.lean`(ValidateBitlist), `lean/Fk/Vbv.lean`(ValidateBitvector 명세). 작성 2026-11-05, 재증명 갱신 2026-11-06.
+대상: 1a 9개 함수(Scalars, FixedVec, ListU64의 SizeSSZ, MarshalSSZTo, UnmarshalSSZ)와 1b 18개 함수(BitVec, Nested, ListC, BitL, Checkpoint, AttestationData), 재증명에서 더한 `ssz.ValidateBitvector`. 정의는 `lean/Fk/Contracts.lean`, `lean/Fk/FunSpecs.lean`, `lean/Fk/Vbl.lean`(ValidateBitlist), `lean/Fk/Vbv.lean`(ValidateBitvector 명세). 작성 2026-11-05, 재증명 갱신 2026-11-06, 재증명 수정(X5, X6) 갱신 2026-11-06.
 
 분류:
 - **(a) 증명 대상**: 기계어를 Kraken 의미론으로 실행해서 증명한다.
@@ -12,7 +12,7 @@
 | 피호출자 | 호출하는 함수(경로) | 분류 | Kraken 형식 | 비공허성 |
 | --- | --- | --- | --- | --- |
 | `runtime.makeslice` | ListU64.UnmarshalSSZ(수용), FixedVec.UnmarshalSSZ(수용) | (b) | `MakesliceC Heap ty esz S`: 사전조건에 런타임 힙 조각 `Heap avail`, 타입 인수 `rax = ty`, `len ≤ cap = cnt`, `esz·cnt ≤ avail`. 사후조건: 반환 주소로 복귀, rsp + 8, 0으로 채운 `esz·cnt` 바이트 블록을 `Heap`에서 떼어냄, `Heap (avail − esz·cnt)`, `F` 보존 | **있음.** `bump_makeslice`(범프 할당기가 계약을 만족, Kraken 의미론 위 증명). `lu_accept_runs`(구체 Host에서 `lu_accept_main`의 모든 전제를 증명, n ≤ 16) |
-| `runtime.memmove` | FixedVec.UnmarshalSSZ(수용), FixedVec.MarshalSSZTo(빠른 경로, 거부) | (b) | `MemmoveC S`: 서로소인 원천·목적 조각(n 바이트), 복귀 후 목적 = 원천, 원천과 `F` 보존. 겹치는 범위는 계약 밖(호출자의 `⋆`가 배제) | **모델 있음(1b-fix).** `rt_memmove`: 바이트 복사 루프(`Fk/RtCopy.S`)가 모든 `S`에서 계약을 만족한다. 호출 지점별 공동 증인은 X4 |
+| `runtime.memmove` | FixedVec.UnmarshalSSZ(수용), FixedVec.MarshalSSZTo(빠른 경로, 거부) | (b) | `MemmoveC S`: 서로소인 원천·목적 조각(n 바이트), 복귀 후 목적 = 원천, 원천과 `F` 보존. 겹치는 범위는 계약 밖(호출자의 `⋆`가 배제) | **모델 있음(1b-fix).** `rt_memmove`: 바이트 복사 루프(`Fk/RtCopy.S`)가 모든 `S`에서 계약을 만족한다. 호출 지점 증인: 아래 1b 표의 memmove 행 |
 | `runtime.growslice` | 모든 MarshalSSZTo(용량 부족 경로) | (b) | `GrowsliceC Heap ty esz S`(1b-fix). 전제: `0 < esz`, `rsi = ty`, `num ≤ newLen`, `oldLen = newLen − num ≤ oldCap < newLen`, `nc = nextSliceCap newLen oldCap`(Go 1.26.3 `nextslicecap`)에 대해 `2·esz·nc + 8192 ≤ avail ≤ maxAlloc = 2^48`, 옛 원소 `old`(esz·oldLen 바이트), scratch `S`, 반환 슬롯 위 spill 40바이트. 사후조건: rsp + 8, rbp·r14 보존, rbx = newLen, `nc ≤ newCap`, `esz·newCap ≤ 2·esz·nc + 8192`, 새 블록 = `old ++ tail`, `avail' + esz·newCap ≤ avail`, 옛 블록과 `F` 보존 | **모델 있음.** `rt_growslice`(범프 할당기 + 복사 루프, esz = 1). `growslice_call_runs`(구체 Host, 빈 값·1·257·ListU64 형태). 1b 형식은 모순이었다(`review/Review1b.lean`) |
 | `runtime.convT64` | ListU64.UnmarshalSSZ(거부 3, 4) | (b) | `ConvT64C Heap S`(1b-fix): 전제 `8 ≤ avail`, spill 8바이트. 사후조건: rsp + 8, r14 보존, **rax ≠ 0**, `avail' ≤ avail ≤ avail' + 8`, `F` 보존. 상자 내용은 말하지 않는다(fmt 계약이 읽지 않는다) | 모델 있음(`rt_convT64`) |
 | `fmt.errorf`(내부 함수, 공개 `fmt.Errorf`가 아님) | ListU64.UnmarshalSSZ(거부 3, 4) | (b) | `FmtErrorfC Heap S`(1b-fix, 인수 ≥ 1): 전제 `1 ≤ len(a) = cap(a)`, 형식 바이트 `fs`(rax, rbx), 인수 배열 `args`(rcx, 16·len 바이트), spill 40. 사후조건: rsp + 8, r14 보존, **rax ≠ 0**, `fs`·`args` 보존, `avail' ≤ avail`, `F` 보존. Go 1.26.3에서 인수가 있으면 항상 nil이 아니다. 신뢰로 남는 것: fmt가 인터페이스 값을 읽고 `%w` 인수의 `Error()`를 부른다(종료, `F`에 쓰지 않음을 가정) | 모델 있음(`rt_errorf`) |
@@ -25,12 +25,12 @@
 
 | 피호출자 | 호출하는 함수(경로) | 분류 | Kraken 형식 | 비공허성 |
 | --- | --- | --- | --- | --- |
-| `runtime.newobject` | Nested.UnmarshalSSZ(S, L 할당), AttestationData.UnmarshalSSZ(Source, Target), ListC.UnmarshalSSZ(원소마다, 오류 객체 3경로), ssz.ValidateBitvector(오류 객체) | (b) | `NewobjectC Heap ty sz S`: 사전조건 `rax = ty`, `sz ≤ avail`. 사후조건: 복귀, rsp + 8, r14 보존, 0으로 채운 `sz`바이트 블록을 `Heap`에서 떼어냄, `F` 보존 | **모델 있음.** `bump_newobject16`(재증명, errorString), `bump_newobject24`, `bump_newobject32`(1b-fix). 증인: `WitNe0/1/16`(24), `WitAd`(32), `WitLcZ/P/T`(16) |
-| `runtime.makeslice`(byte, 0, 32), (*ListU64, n, n) | Checkpoint·AttestationData UnmarshalSSZ, ListC.UnmarshalSSZ(원소 포인터 배열) | (b) | `MakesliceC`(len ≤ cap로 넓힘, c0f3396) | `bump_makeslice1`. 증인: `WitCp`, `WitAd`. ListC 호출 지점의 증인은 없다(ListC 수용 증인 없음) |
+| `runtime.newobject` | Nested.UnmarshalSSZ(S, L 할당), AttestationData.UnmarshalSSZ(Source, Target), ListC.UnmarshalSSZ(원소마다, 오류 객체 3경로), ssz.ValidateBitvector(오류 객체) | (b) | `NewobjectC Heap ty sz S`: 사전조건 `rax = ty`, `sz ≤ avail`. 사후조건: 복귀, rsp + 8, r14 보존, 0으로 채운 `sz`바이트 블록을 `Heap`에서 떼어냄, `F` 보존 | **모델 있음.** `bump_newobject16`(재증명, errorString), `bump_newobject24`, `bump_newobject32`(1b-fix). 증인: `WitNe0/1/16`(24), `WitLcA1/4`(24, ListC 원소, 재증명 수정 X8), `WitAd`(32), `WitLcZ/P/T`(16), `WitBvR`(16, ValidateBitvector 안) |
+| `runtime.makeslice`(byte, 0, 32), (*ListU64, n, n) | Checkpoint·AttestationData UnmarshalSSZ, ListC.UnmarshalSSZ(원소 포인터 배열) | (b) | `MakesliceC`(len ≤ cap로 넓힘, c0f3396) | `bump_makeslice1`, `bump_makeslice`. 증인: `WitCp`, `WitAd`, ListC 포인터 배열 호출 지점 `WitLcA1/4`(재증명 수정 X8) |
 | `runtime.memmove` | Checkpoint·AttestationData·BitL의 Unmarshal·Marshal | (b) | `MemmoveC S` | `rt_memmove`. 증인: `WitCp`, `WitAd`, `WitCpM`, `WitAdM`, `WitBl1/257`, `WitBlM1/257`, `WitFvM`, `WitFvMR`, `WitCpMR` |
-| `runtime.growslice` | BitL.UnmarshalSSZ(`append([]byte{}, buf[4:]...)`) | (b) | `GrowsliceC`, 옛 원소 `[]`(빈 슬라이스, 주소 `runtime.noptrbss`), oldCap = 0, newLen = num = n. `nextSliceCap n 0 = n`이라 예산은 `2n + 8192` | 계약 모델 있음(`rt_growslice`). `bl_accept_main` 전체 전제의 공동 증인은 없다(`ValidateBitlistC` 모델 필요) |
+| `runtime.growslice` | BitL.UnmarshalSSZ(`append([]byte{}, buf[4:]...)`) | (b) | `GrowsliceC`, 옛 원소 `[]`(빈 슬라이스, 주소 `runtime.noptrbss`), oldCap = 0, newLen = num = n. `nextSliceCap n 0 = n`이라 예산은 `2n + 8192` | 계약 모델 있음(`rt_growslice`). `bl_accept_main` 공동 증인: `WitBl1`, `WitBl257`(ValidateBitlist·growslice·memmove 한 힙). ListU64 마샬 호출 지점: `WitLuG`(재증명 수정 X8) |
 | `fmt.errorf` | ListC.UnmarshalSSZ(오프셋 오류 3경로: zero, past, tail) | (b) | `FmtErrorfNilC S`(1b-fix): 인수 0개(rdi = 0), 형식 바이트에 `%`(0x25) 없음 → **rax = 0**, 할당 없음. 그 뒤 코드가 `runtime.newobject`(`NewobjectC`, 16바이트)로 `errors.errorString`을 만든다. 정리가 이 분기를 증명한다. 형식 바이트는 Go 소스의 문자열(`lcFmtZero`, `lcFmtShort`)이고 ELF 대조는 `link/check.py`가 한다(X6) | 모델 있음(`rt_errorf_nil`) |
-| `ssz.ValidateBitlist` | BitL.UnmarshalSSZ, BitL.MarshalSSZTo(재증명, F2 수정) | (b) | `ValidateBitlistC S`: 복귀, rsp + 8, `F`와 바이트 보존, **rax = 0 ⟺ EthLib `unpackDelimited (some 2048)`이 받음**, 무효면 rax = errorString itab(재증명). 이 함수는 `bsr`이 있어 Kraken이 파싱하지 못한다. **bitlist의 핵심 검사가 이 계약 뒤에 있다** | **모델 있음(재증명).** `rt_validate_bitlist`(`Fk/RtVbl.S`, bsr 없이 `blArith` 계산, `blValid_iff`로 EthLib와 동치). 증인: `WitBl1/257`, `WitBlM1/257` |
+| `ssz.ValidateBitlist` | BitL.UnmarshalSSZ, BitL.MarshalSSZTo(재증명, F2 수정) | (b) | 재증명 수정 X5에서 입력으로 나눴다. `ValidateBitlistC S`(유효 입력): 전제 `blValid buf`(EthLib `unpackDelimited (some 2048)`이 받음), 결론 rax = 0, 할당 없음, `F`와 바이트 보존. `ValidateBitlistErrC Heap S`(무효 입력): 전제 `¬ blValid buf`, 예산 `8192 ≤ avail`, 결론 rax = errorString itab, rbx = e, `ErrStr e sp msg`(16바이트 객체 + 문자열, msg ≤ 128)를 힙에서 받음(`avail' + 16 + msg ≤ avail ≤ avail' + 8192`). 이 함수는 `bsr`이 있어 Kraken이 파싱하지 못한다. **bitlist의 핵심 검사가 이 계약 뒤에 있다** | **모델 있음.** `rt_validate_bitlist`, `rt_validate_bitlist_err`(`Fk/RtVbl.S`, bsr 없이 `blArith` 계산, 무효면 bump 힙 16바이트 = 빈 메시지 errorString). 증인: `WitBl1/257`, `WitBlM1/257`(유효), `WitBlR`(무효) |
 | `target.Scalars.UnmarshalSSZ` | Nested.UnmarshalSSZ | (a) 함수 명세 | `ScUAccC`: 우리 쪽 정리 `sc_accept_main`에서 유도(`sc_uacc_holds`) | 증명됨(가설이 아니라 정리에서 나온다) |
 | `target.ListU64.UnmarshalSSZ` | Nested.UnmarshalSSZ, ListC.UnmarshalSSZ(원소마다) | (a) 함수 명세 | `LuUAccC Heap S`: `lu_accept_main`에서 유도(`lu_uacc_holds`, `MakesliceC` 필요) | 증명됨 |
 | `runtime.gcWriteBarrier1/2` | 1b 디코더 전부 | (c) | 쓰기 장벽 0 전제. 플래그를 읽고 건너뜀을 증명한다(AttestationData는 6번) | 해당 없음 |
@@ -41,8 +41,8 @@
 | 피호출자 | 호출하는 함수(경로) | 분류 | Kraken 형식 | 비공허성 |
 | --- | --- | --- | --- | --- |
 | `ssz.ValidateBitvector` | BitVec.UnmarshalSSZ, BitVec.MarshalSSZTo | (a) 함수 명세 | `VbvAccC`(수용), `VbvPadC Heap S`(패딩 거부). `vbv_accept_main`, `vbv_reject_pad_main`에서 유도한다(가정이 아니다). 패딩 거부 경로 안의 `fmt.errorf`(인수 0개)와 `newobject`(16바이트)는 `FmtErrorfNilC`, `NewobjectC` 계약이다 | 증명됨. `WitBv`, `WitBvM`가 실제 코드로 수용 명세를 쓴다 |
-| `ssz.ValidateBitlist` | BitL.MarshalSSZTo | (b) | `ValidateBitlistC S`(위 표) | `rt_validate_bitlist` |
-| `fmt.errorf`(인수 1개, `%w`) | BitVec 디코더·인코더의 `"J: %w"`, BitL 인코더의 `"B: %w"` | (b) | `FmtErrorfC Heap S`. 형식 바이트는 `link/check.py` (g)가 ELF·Go 소스와 대조한다 | `rt_errorf`. 이 호출 지점의 증인은 없다(`bv_reject_padding_main`, `bl_marshal_reject_main` 증인 없음) |
+| `ssz.ValidateBitlist` | BitL.MarshalSSZTo | (b) | `ValidateBitlistC S`, `ValidateBitlistErrC Heap S`(위 표) | `rt_validate_bitlist`, `rt_validate_bitlist_err` |
+| `fmt.errorf`(인수 1개, `%w`) | BitVec 디코더의 `"J: %w"`, BitL 인코더의 `"B: %w"` | (b) | `FmtErrorfWC Heap S`(재증명 수정 X5): 인수는 `%w` 하나이고 그 값은 errorString 오류다. 인터페이스 타입 워드 = itab + 8의 워드, 데이터 워드 e, `ErrStr e sp msg`가 발자국에 있고 보존된다. 예산 `fs + msg + 8192 ≤ avail`. 형식 바이트는 `link/check.py` (g)가 ELF·Go 소스와 대조한다(`bvFmtJ`, `blFmtB` 포함, 오프셋 목록 대조) | `rt_errorf_w`. 증인: `WitBvR`(BitVec, 실제 ValidateBitvector가 만든 오류), `WitBlR`(BitL, `rt_validate_bitlist_err`가 만든 오류) |
 
 ## 1c. 계약별 조건 (1b-fix X3)
 
@@ -60,7 +60,9 @@ spill은 반환 슬롯 바로 위의 레지스터 인수 칸이다. 피호출자
 | `ConvT64C Heap S` | 없음(모든 값) | `8 ≤ avail` | scratch S, spill 8 | rsp + 8, r14, `F` | `rt_convT64` |
 | `FmtErrorfNilC S` | rdi = 0, 형식에 `%` 없음, 형식 바이트 조각 | 없음(할당 없음) | scratch S, spill 40 | rsp + 8, r14, 형식, `F` | `rt_errorf_nil` |
 | `FmtErrorfC Heap S` | `1 ≤ len(a) = cap(a)`, 형식·인수 배열 조각 | `avail' ≤ avail` | scratch S, spill 40 | rsp + 8, r14, 형식, 인수, `F` | `rt_errorf` |
-| `ValidateBitlistC S` | rbx = len(buf), rdi = 2048, buf 조각 | 할당을 말하지 않는다(실패 경로의 오류 할당은 `F` 밖에서 일어난다고 가정한다) | scratch S, spill 32 | rsp + 8, r14, rbp, buf, `F` | `rt_validate_bitlist`(`RtVbl`) |
+| `ValidateBitlistC S` | rbx = len(buf), rdi = 2048, buf 조각, `blValid buf` | 할당 없음 | scratch S, spill 32 | rsp + 8, r14, rbp, buf, `F` | `rt_validate_bitlist`(`RtVbl`) |
+| `ValidateBitlistErrC Heap S` | 위와 같음, `¬ blValid buf` | `8192 ≤ avail`. 결론 `avail' + 16 + msg ≤ avail ≤ avail' + 8192`, msg ≤ 128 | scratch S, spill 32 | rsp + 8, r14, rbp, buf, `F`. 오류 객체 `ErrStr rbx sp msg`가 새로 생긴다 | `rt_validate_bitlist_err` |
+| `FmtErrorfWC Heap S` | `1 ≤ len(a) = cap(a)`, 마지막 인수 = (itab + 8의 워드 `ity`, e), `ErrStr e sp msg`, 형식·인수 배열 조각 | `fs + msg + 8192 ≤ avail`, 결론 `avail' ≤ avail` | scratch S, spill 40 | rsp + 8, r14, 형식, 인수, `ity`, 오류 객체, `F` | `rt_errorf_w` |
 
 전역 상태 가정(모든 계약 공통):
 - `runtime.writeBarrier`(4바이트)는 호출자 정리의 전제에서 0이다. 그 조각은 계약의 `F`에 있다. 그래서 계약은 "호출 중 쓰기 장벽이 켜지지 않는다"를 가정한다. GC가 할당 중 표시 단계에 들어가면 이 가정은 거짓이다(조건 C19).
@@ -78,16 +80,35 @@ spill은 반환 슬롯 바로 위의 레지스터 인수 칸이다. 피호출자
 - **Go 정교화.** Go 1.26.3 런타임의 실제 기계어가 계약을 만족한다는 증명이다.
   이 세션에는 없다. 모든 계약 호출은 실제 Go 실행에 대해서는 신뢰 항목이다.
 
+재증명 수정 X5에서 형식 전제로 옮긴 것(astra 재증명 발견 3):
+
+| 항목 | 이전 | 지금 |
+| --- | --- | --- |
+| ValidateBitlist 오류의 데이터 포인터 | 규정 없음(rbx 임의) | `ValidateBitlistErrC` 결론: rbx = e, `ErrStr e sp msg` |
+| 오류 객체 자원(16바이트 errorString, 문자열 바이트) | 없음 | `ErrStr`: 객체 (sp, len)와 메시지 바이트. 힙에서 받는다 |
+| ValidateBitlist의 할당 예산 | 없음(`F` 밖 할당을 가정) | 전제 `8192 ≤ avail`, 결론 `16 + msg ≤ 소비 ≤ 8192` |
+| `%w` 인수의 형태 | 임의의 16바이트 | `FmtErrorfWC`: 타입 워드 = errorString itab + 8의 워드, 데이터 = e, `ErrStr e sp msg`가 발자국에 있다 |
+| `Error()`가 읽는 것 | 신뢰(주석) | `ErrStr`가 계약의 발자국에 있고 보존된다. `*errorString.Error`는 `e.s`를 돌려줄 뿐이다 |
+| fmt의 할당 예산 | `avail' ≤ avail`만 | 전제 `fs + msg + 8192 ≤ avail` |
+| ValidateBitvector 오류 객체 | 16바이트 내용 임의 | `VbvPadC` 결론: 객체 = (`go_string._+27706`, 35). 실제 코드에서 증명 |
+| 프레임 보존 | 계약 결론 `F` | 그대로(형식). 다만 GC가 없다는 가정에 기댄다(아래) |
+
+`FmtErrorfC`(제한 없는 형태)는 ListU64 거부 두 경로(`lu_reject_toobig_main`, `lu_reject_misaligned_main`)만 쓴다.
+그 `%w` 인수는 패키지 전역 `ssz.ErrListTooBig`·`ssz.ErrIncorrectListSize`이고, 첫 인수는 `convT64`의 상자다.
+이 두 경로를 `FmtErrorfWC` 형태로 옮기려면 전역 오류의 객체와 메시지를 전제로 더하고 정리와 증인을 다시 써야 한다. 이 세션에서 하지 않았다(보류).
+
 계약별로 형식 전제로 옮기지 못한 신뢰 항목:
 
 | 계약 | 신뢰 항목(형식 전제 밖) | 옮기지 못한 이유 |
 | --- | --- | --- |
+| `FmtErrorfWC` | Go의 실제 할당량이 예산(`fs + msg + 8192`) 안이다(printer 객체, 결과 문자열 `len(fs) − 2 + len(msg)`, `*fmt.wrapError` 32바이트). 호출 중 GC가 없다 | fmt의 할당 경로와 sync.Pool을 모델하지 않았다. 예산 값은 코드를 읽은 결과다 |
+| `ValidateBitlistErrC` | 메시지가 힙 바이트라고 모델한다. Go 1.26.3에서 인수 없는 세 메시지("bitlist empty…", "trailing byte is zero", "too many bits")는 rodata에 있다. 그래서 실제 Go에 적용하려면 호출자 `F`가 그 rodata 바이트를 갖지 않아야 한다. 가장 긴 메시지는 82바이트(고정 43바이트, int 19자리, uint64 20자리)라 msg ≤ 128이다 | 계약은 모든 `F`에 대해 양화한다. "rodata는 `F` 밖"을 표현할 영역 모델이 없다 |
 | `FmtErrorfC` | 인수 배열의 인터페이스 값이 유효한 Go 값이다. `%w` 인수의 `Error()`가 끝나고 `F`에 쓰지 않는다. 실제 할당량은 `avail' ≤ avail` 말고는 말하지 않는다(포매터, 문자열, 오류 객체) | 타입 기술자와 fmt의 동작 모델이 없다. 논리적 `Heap avail`은 물리적 여유 바이트가 아니라 "이 증명이 소비를 추적하는 힙"이다 |
 | `FmtErrorfNilC` | 형식 바이트에 `%`가 없으면 할당 없이 nil을 돌려준다(Go 1.26.3 `fmt/errors.go`의 분기를 읽은 결과) | fmt 내부 코드를 증명하지 않았다 |
 | `ConvT64C` | 상자의 내용(값 v)과 그 메모리를 말하지 않는다. `avail' ≤ avail ≤ avail' + 8`만 말한다 | 이 세션의 호출자는 그 포인터를 fmt에 넘기기만 한다. 넣으면 호출자 정리와 모델을 함께 바꿔야 한다(이견) |
 | `MakesliceC`, `NewobjectC`, `GrowsliceC` | 타입 기술자를 읽지 않는다. 할당 중 GC가 없다(쓰기 장벽 0이 `F`에 있다). 할당기 실패는 정리 밖이다 | 할당기와 GC 모델이 없다 |
 | `MemmoveC` | 겹치지 않는 범위만 다룬다 | 호출자의 `⋆`가 겹침을 배제한다. Go memmove는 겹침도 허용하므로 이것은 좁은 적용이다 |
-| `ValidateBitlistC` | 수용 집합 = EthLib 규칙(`bsr` 포함 Go 코드는 증명하지 않았다). 무효 입력에서 rax = errorString itab(Go 1.26.3에서 모든 오류가 `%w` 없는 `fmt.Errorf`라 `errors.New`를 거친다) | Kraken이 `bsr`를 파싱하지 못한다 |
+| `ValidateBitlistC`, `ValidateBitlistErrC` | 수용 집합 = EthLib 규칙(`bsr` 포함 Go 코드는 증명하지 않았다). 무효 입력에서 rax = errorString itab(Go 1.26.3에서 모든 오류가 `%w` 없는 `fmt.Errorf`라 `errors.New`를 거친다) | Kraken이 `bsr`를 파싱하지 못한다 |
 
 계약이 아닌 것(가정이 아니라 정리에서 유도): `VbvAccC`, `VbvPadC`(`vbv_acc_holds`, `vbv_pad_holds`), `ScUAccC`, `LuUAccC`(`sc_uacc_holds`, `lu_uacc_holds`).
 
@@ -112,7 +133,7 @@ Kraken에서는 계약이 정리의 **가설**이고, 모든 상태·반환 주�
 - **정정(1b-fix X2).** 1b는 ListC의 인수 없는 호출에도 rax ≠ 0을 가정했다. Go 1.26.3의 내부 `errorf`는 그 경우 nil을 돌려준다(astra 발견 2). 그래서 1b의 ListC 거부 3정리는 실제 실행 경로가 아닌 분기를 증명했다. 지금은 계약을 인수 조건으로 나누고 nil 뒤 `newobject` 분기를 증명한다.
 - 남는 위험은 계약 자체의 모순이다(이전 `hms`). 이것은 증인으로만 검사한다.
 - **철회(1b-fix).** 1b의 이 절은 "힙 조각 형식이면 이전 모순이 생기지 않는다"고 판단했다. 그 판단은 틀렸다. 1b의 `GrowsliceC`는 같은 형식이었지만 입력 범위가 없어 모순이었다(astra 발견 1, `review/Review1b.lean`). 형식에 근거한 판단은 비공허성의 근거가 아니다.
-- 지금 계약 모델(구현이 계약을 만족한다는 Lean 정리)이 있는 계약: `makeslice`(`bump_makeslice` esz = 8, `bump_makeslice1` esz = 1), `memmove`(`rt_memmove`), `growslice`(`rt_growslice`, esz = 1), `newobject`(`bump_newobject16/24/32`), `fmt.errorf`(`rt_errorf_nil`, `rt_errorf`), `convT64`(`rt_convT64`), `ValidateBitlist`(`rt_validate_bitlist`). 모든 계약에 모델이 있다(재증명). 모델은 만족 가능성의 근거다. Go 구현의 정교화가 아니다(1d절).
+- 지금 계약 모델(구현이 계약을 만족한다는 Lean 정리)이 있는 계약: `makeslice`(`bump_makeslice` esz = 8, `bump_makeslice1` esz = 1), `memmove`(`rt_memmove`), `growslice`(`rt_growslice`, esz = 1), `newobject`(`bump_newobject16/24/32`), `fmt.errorf`(`rt_errorf_nil`, `rt_errorf`, `rt_errorf_w`), `convT64`(`rt_convT64`), `ValidateBitlist`(`rt_validate_bitlist`, `rt_validate_bitlist_err`). 모든 계약에 모델이 있다(재증명, 재증명 수정 X5). `joint_models`는 열 계약을 한 Host·한 힙에서 함께 만족한다. 모델은 만족 가능성의 근거다. Go 구현의 정교화가 아니다(1d절).
 
 ## 4. 정리의 전제가 실제 Go 호출자에서 성립하는가
 
@@ -122,5 +143,5 @@ Kraken에서는 계약이 정리의 **가설**이고, 모든 상태·반환 주�
 | 수신자 ≠ nil, 주소 0 아님 | 보장하지 않는다. nil 수신자는 Go에서 패닉(`test %al,(%rax)`). 분리 조각이 있으면 그 주소는 매핑된 것으로 본다(접근 권한은 Kraken `Effects.All`이 검사하지 않음, C19) |
 | 입력·수신자·스택·출력의 서로소(`⋆`) | 보통의 Go 값에서 성립. 별칭(수신자 안의 바이트를 입력으로)은 배제한다 |
 | 스택 가드, 쓰기 장벽 0 | 빠른 경로 전제. 일반 호출의 보장이 아니다 |
-| `bool` 바이트 ∈ {0, 1}, 슬라이스 len ≤ cap < 2^63 | Go 값의 불변식 |
+| `bool` 바이트 ∈ {0, 1}, 슬라이스 len ≤ cap < 2^63 | Go 값의 불변식. 주 정리는 이 불변식을 전제로 두지 않을 수 있다(더 넓은 상태를 허용). 증인은 Go 값이어야 한다: `lean/tools/wit/goval.py`가 모든 증인의 인수 슬라이스, 수신자 슬라이스·포인터 필드를 검사한다(len ≤ cap < 2^63, 데이터가 블록 안). 68개 증인 위반 0(재증명 수정 X4) |
 | 힙 여유(`avail`) | 런타임 할당기가 실패하면 Go는 정상 복귀하지 않는다. 정리는 성공 경우만 말한다 |
