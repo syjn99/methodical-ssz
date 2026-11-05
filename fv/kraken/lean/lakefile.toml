@@ -22,7 +22,7 @@ roots = ["Fv.Spec"]
 
 [[lean_lib]]
 name = "Fv1"
-roots = ["Fv1.SpecScalars", "Fv1.SpecList", "Fv1.SpecFixedVec", "Fv1.SpecBitVec", "Fv1.SpecNested", "Fv1.Transfer"]
+roots = ["Fv1.SpecScalars", "Fv1.SpecList", "Fv1.SpecFixedVec", "Fv1.SpecBitVec", "Fv1.SpecNested", "Fv1.SpecListC", "Fv1.Transfer"]
 
 [[lean_lib]]
 name = "Fk"
