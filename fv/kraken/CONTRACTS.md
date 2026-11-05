@@ -44,7 +44,7 @@
 | `ssz.ErrX`의 itab + 8 | 거부 3, 4가 `*(e0 + 8)`을 읽는다. 전제: e0 ≠ 0, 그 8바이트 조각 | 패키지 초기화 뒤 사실(전제) |
 | `runtime.writeBarrier` | 4바이트 = 0 전제. 계약 호출(`makeslice`) 동안 `F`에 있으므로 바뀌지 않는다고 가정한다 | GC가 할당 중 표시 단계에 들어가면 바뀔 수 있다(astra 지적). 조건 C19의 남은 항목 |
 | 스택 가드 | 위 (c) | |
-| X15 = 0 (Go ABI) | 가정하지 않는다. `movups %xmm15` 저장은 임의 값 저장으로 증명한다 | 거부 3, 4 |
+| X15 = 0 (Go ABI) | 거부 경로는 가정하지 않는다. `movups %xmm15` 저장은 임의 값 저장으로 증명한다. ListC 빈 리스트 수용만 전제로 둔다(값이 `c.Items`의 len, cap이 된다) | 거부 3, 4. 전제는 Go ABIInternal(amd64)이 보장한다 |
 | 레이블 신선성 | 정리의 전제 `LabelsFresh`. 실제 배치(`all.S`)에서 성립함은 `link/check.py` (c)가 검사한다. 구체 Host 하나에서는 Lean 정리(`Fk.Witness.hf5`, `hf198`) | |
 
 ## 3. 1a 발견 7(havoc 색인)의 확인

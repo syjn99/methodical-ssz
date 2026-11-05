@@ -4,14 +4,13 @@
 
 ## 0. 판정
 
-**게이트 1: 조건부 통과.** 6개 타입 종류(bitvector, bitlist, 중첩 container, List[container], Prysm 2타입) 모두에 크기, 인코더(빠른 경로), 디코더 수용, 디코더 거부, EthLib 왕복 정리가 있다. 조건 4개:
+**게이트 1: 조건부 통과.** 6개 타입 종류(bitvector, bitlist, 중첩 container, List[container], Prysm 2타입) 모두에 크기, 인코더(빠른 경로), 디코더 수용, 디코더 거부, EthLib 왕복 정리가 있다. 조건 3개:
 1. bitlist의 핵심 검사가 계약(`ValidateBitlistC`) 뒤에 있다.
-2. List[container] 디코더 수용은 원소가 1개 이상인 입력만 다룬다. 빈 리스트(`len(buf) = 4`) 경로는 증명하지 않았다.
-3. 디코더 거부 경로 중 일부(피호출자 오류를 감싸는 경로, ListC 정렬 오류·원소 수 초과·루프 안 오프셋 검사)는 증명하지 않았다(12절).
-4. 모든 기계어 정리는 빠른 경로(용량 충분, 포인터 필드가 nil이 아님, 쓰기 장벽 0)를 다룬다.
+2. 디코더 거부 경로 중 일부(피호출자 오류를 감싸는 경로, ListC 정렬 오류·원소 수 초과·루프 안 오프셋 검사)는 증명하지 않았다(12절).
+3. 모든 기계어 정리는 빠른 경로(용량 충분, 포인터 필드가 nil이 아님, 쓰기 장벽 0)를 다룬다.
 
-- 정리 595개. `sorry` 0개. 모든 정리가 `propext`, `Classical.choice`, `Quot.sound`만 쓴다(`AXIOMS.txt`, `lean/tools/axioms.sh`).
-- 링크 검사(`link/check.py`): 27개 함수 + `ssz.ValidateBitlist`, 2751개 명령어. 바이트 대응, 경계, 전역 주소, 레이블 신선성, 재조립 모두 PASS. 번들 sha256 `eac6b517…b68c`(`link/out/RESULT`).
+- 정리 597개. `sorry` 0개. 모든 정리가 `propext`, `Classical.choice`, `Quot.sound`만 쓴다(`AXIOMS.txt`, `lean/tools/axioms.sh`).
+- 링크 검사(`link/check.py`): 27개 함수 + `ssz.ValidateBitlist`, 2751개 명령어. 바이트 대응, 경계, 전역 주소, 레이블 신선성, 재조립 모두 PASS. 번들 sha256 `1e921671…906c`(`link/out/RESULT`).
 - 발견 2개. **F1**: BitVec 디코더가 패딩 비트가 선 바이트를 받는다. **F2**: BitL 인코더의 길이 검사가 비트가 아니라 바이트를 센다. 둘 다 Lean 정리이고 Go 시험(`semtest/f12_test.go`)으로 재현된다(5.2절).
 - 하드웨어 대조는 실행하지 않았다(이 호스트는 arm64). 스크립트만 있다(`semtest/run.sh`).
 
@@ -43,7 +42,7 @@ REPORT.md 1절은 `lu_accept_main`을 "수용 경로 전체"로 표시했다. �
 | (b) | 전역·외부 기호(`ssz.Err*`, `runtime.writeBarrier`, `type__+…`, 런타임 함수)의 주소와 섹션 | PASS |
 | (c) | `LabelsFresh`: `all.S`(실제 Host 배치)에서 함수 레이블이 유일 | PASS |
 | (d) | `.S`를 `clang --target=x86_64-linux-gnu`로 원래 주소에 다시 조립한 바이트 = ELF 바이트 | 2751개 중 2702개 같음, 49개는 패딩 nop(표: RESULT의 `DIFF (d) … padding` 줄) |
-| 번들 | ELF sha256 하나로 `.S` 28개, `Code.lean`, `AXIOMS.txt`, RESULT를 묶는다. 해시는 마지막 PASS 줄 뒤에 찍는다 | `eac6b517…b68c` |
+| 번들 | ELF sha256 하나로 `.S` 28개, `Code.lean`, `AXIOMS.txt`, RESULT를 묶는다. 해시는 마지막 PASS 줄 뒤에 찍는다 | `1e921671…906c` |
 
 `conv.py`는 이제 다음에서 실패한다: `//`가 없는 objdump 행, 주소 틈, 명령어 중간을 가리키는 분기, 이름 정리 충돌. 자기 시험 6개(명령어 하나 삭제, 즉치값 변경, 레이블 이동, `//` 없는 행, 전역 오프셋 변경, 변경 없는 사본)가 모두 기대대로 실패·통과한다.
 
@@ -79,7 +78,7 @@ REPORT.md 1절은 `lu_accept_main`을 "수용 경로 전체"로 표시했다. �
 | bitvector | BitVec (Bitvector4) | `bv_size_main` | `bv_marshal_main` | `bv_unmarshal_accept_spec_k` | `bv_reject_size_main` + `bv_reject_spec` | `bv_roundtrip` | 빈 값·초과 거부 증명. 패딩 비트는 Go가 받음(F1) |
 | bitlist | BitL (Bitlist[2048]) | `bl_size_main` | `bl_marshal_main` | `bl_unmarshal_accept_spec_k` (**`ValidateBitlistC` 뒤**) | 짧음·오프셋: `bl_reject_*_main`. 검증 실패: 계약 뒤, 오류 경로 미증명 | `bl_roundtrip` | 빈 값·최대 수용 증명. 초과는 EthLib 거부만(`bl_spec_rejects`) |
 | 중첩 container | Nested | `ne_size_main` (L ≠ nil) | `ne_marshal_main` | `ne_unmarshal_accept_spec_k` | 짧음·오프셋: `ne_reject_*_spec`. 피호출자 오류 감싸기 경로 미증명 | `ne_roundtrip` | `ne_spec_accepts_iff`로 EthLib 쪽 전부 |
-| List[container] | ListC (List[ListU64, 4]) | `lc_size_main` + `lc_size_eq` | `lc_marshal_main` + `lc_marshal_spec_k` | `lc_unmarshal_accept_spec_k` (원소 ≥ 1. 빈 리스트 미증명) | 5경로: `lc_reject_{short,offset,tail,zero,past}_spec`. 정렬 오류·원소 수 초과(convT64)와 루프 안 오프셋 검사 미증명 | `lc_roundtrip`(EthLib만) | 빈 값, 오프셋 0·작음·큼 증명. 정렬 안 됨은 EthLib 쪽만 |
+| List[container] | ListC (List[ListU64, 4]) | `lc_size_main` + `lc_size_eq` | `lc_marshal_main` + `lc_marshal_spec_k` | `lc_unmarshal_accept_spec_k` (원소 ≥ 1), `lc_unmarshal_accept_empty_spec_k` (빈 리스트, 전제 X15 = 0) | 5경로: `lc_reject_{short,offset,tail,zero,past}_spec`. 정렬 오류·원소 수 초과(convT64)와 루프 안 오프셋 검사 미증명 | `lc_roundtrip`(EthLib만) | 빈 값, 오프셋 0·작음·큼 증명. 정렬 안 됨은 EthLib 쪽만 |
 | Prysm | Checkpoint | `cp_size_main` | `cp_marshal_spec_k` | `cp_unmarshal_accept_spec_k` | `cp_reject_size_main` + `cp_reject_size_spec` | `cp_roundtrip` | 길이 ≠ 40 전부 |
 | Prysm | AttestationData | `ad_size_main` | `ad_marshal_main` + `ad_marshal_bytes` | `ad_unmarshal_accept_spec_k` | `ad_reject_size_main` + `ad_reject_size_spec` | `ad_roundtrip` | 길이 ≠ 128 전부 |
 
@@ -130,7 +129,7 @@ C1–C16은 REPORT.md 2절. 1b에서 바뀐 것만 적는다.
 | # | 상태 (1b) |
 | --- | --- |
 | C6 | 완료. 계약 8종(`MakesliceC`, `MemmoveC`, `GrowsliceC`, `ConvT64C`, `FmtErrorfC`, `NewobjectC`, `ValidateBitlistC`, 함수 명세 2개). CONTRACTS.md |
-| C7 | X15 = 0은 가정하지 않는다. `movups %xmm15` 저장을 임의 값 저장으로 증명했다(`lu_reject_*`) |
+| C7 | 거부 경로는 X15 = 0을 가정하지 않는다. `movups %xmm15` 저장을 임의 값 저장으로 증명했다(`lu_reject_*`). 한 곳만 X15 = 0을 전제로 둔다: ListC 빈 리스트 수용(`lc_accept_empty_main`). 이 경로는 `movups %xmm15`로 `c.Items`의 len과 cap을 쓰므로 값이 결과에 들어간다. Go ABIInternal(amd64)이 함수 진입 때 X15 = 0을 보장한다 |
 | C12 | 차단 항목 확정: `bsr`(`ssz.ValidateBitlist`). 계약으로 우회. 9절 |
 | C13 | 한 지점 증명. 나머지 추정 11절 |
 | C14 | B0: 채택 안 함 |
@@ -144,7 +143,7 @@ astra가 더한 조건(브리프 B4b):
 | C18 | 계약 비공허성 | 계약마다 크기 범위와 런타임 자원을 명시하고, 계약을 만족하는 실행 증인과 전제 전체를 동시에 만족하는 구체 상태를 Lean 정리로 둔다 | **부분.** `makeslice`만 증인 2개(`bump_makeslice`, `lu_accept_runs`). 나머지 7개 계약은 같은 형식이지만 증인이 없다 |
 | C19 | 실제 호출 조건 | 정리마다 유효 주소, 접근 권한, 별칭 정책, 스택 가드, GC(쓰기 장벽) 조건을 적고, 실제 Go 호출자가 보장하는지 한 줄로 판단한다 | **부분.** 각 파일 머리말과 CONTRACTS.md 4절에 적었다. 접근 권한은 Kraken `Effects.All`이 검사하지 않는다. 쓰기 장벽 0은 일반 호출의 보장이 아니다(빠른 경로 전제) |
 | C20 | 함수 조합 | 사후조건이 입력·접두사·프레임·rsp·r14를 돌려주고, 한 함수 정리를 다른 함수 증명에서 호출 명세로 쓴 예가 있다 | **완료**(5.4절, Nested 디코더) |
-| C21 | 명세와 범위 | 타입마다 Desc·추상화·오류 대응, 크기·인코더·디코더 완료표, EthLib 연결 | **부분.** 5.1절 표. ListC 빈 리스트 수용, 감싼 오류 경로, ListC 거부 2경로가 남는다 |
+| C21 | 명세와 범위 | 타입마다 Desc·추상화·오류 대응, 크기·인코더·디코더 완료표, EthLib 연결 | **부분.** 5.1절 표. 감싼 오류 경로와 ListC 거부 2경로가 남는다 |
 | C22 | 검사 민감도 | 입력 누락을 실패로 처리하고, 의미 변이가 지정 정리에서 실패하고, 주소만 바뀐 사례가 통과한다 | **완료.** `conv.py` 실패 조건, `check.py --selftest`, `negative/` |
 
 ## 8. 신뢰 기반 문구 (REPORT.md 7절 갱신)
@@ -169,7 +168,7 @@ astra가 더한 조건(브리프 B4b):
 ## 10. sorry 목록과 공리
 
 - `sorry`, `admit`, `native_decide`, `bv_decide`, `axiom` 선언: 없음. `Fk/Bytes.lean`의 `zx8`/`zx16`/`zx32`는 `bv_decide`(공리 `Lean.ofReduceBool`)를 썼다. 1b에서 `omega` 증명으로 바꿨다(a813744).
-- `AXIOMS.txt`: Fk, Fv1, Fv 모듈의 정리 595개 전수(Lean 환경을 열거한다, `lean/tools/Axioms.lean`). 마지막 줄 `TOTAL 595 NONSTANDARD 0`. 스크립트는 표준 공리 밖의 공리가 하나라도 있으면 실패한다.
+- `AXIOMS.txt`: Fk, Fv1, Fv 모듈의 정리 597개 전수(Lean 환경을 열거한다, `lean/tools/Axioms.lean`). 마지막 줄 `TOTAL 597 NONSTANDARD 0`. 스크립트는 표준 공리 밖의 공리가 하나라도 있으면 실패한다.
 
 ## 11. 비용
 
@@ -193,6 +192,7 @@ astra가 더한 조건(브리프 B4b):
 | 10:05–10:55 | 50분 | Nested 마샬(bool 두 갈래, 인라인 루프. 정의 동치 시간 초과 진단 약 25분) |
 | 10:55–11:30 | 35분 | ListC 디코더 수용(원소 루프 한 바퀴: `newobject` + ListU64 함수 명세, 귀납, 주 정리, EthLib 연결) |
 | 11:30–13:37 | 2시간 7분 | ListC 인코더(nil 검사 루프, 오프셋 표 루프, 원소 루프 안의 ListU64 복사 루프, 주 정리, EthLib 연결). 문맥 요약 1회 포함 |
+| 13:37–14:00 | 약 20분 | 문서 갱신, ListC 빈 리스트 수용(거부 경로 틀 복사 + `movups`, 쓰기 장벽, EthLib) |
 
 정리 하나의 비용(커밋 간격 기준, 대략): 짧은 거부 경로 2–5분, 호출 1–3개의 수용 경로 10–15분, 호출 8개의 직선 경로 5–10분(틀 복사), 인라인 루프가 있는 인코더 15–50분.
 
@@ -204,7 +204,6 @@ growslice 경로는 마샬 함수마다 append 지점 수만큼 있다(Scalars 5
 
 | 항목 | 추정 |
 | --- | --- |
-| ListC 디코더 빈 리스트 수용(`len(buf) = 4`, 루프 없음, `makeslice` 0개) | 20–30분 |
 | ListC 디코더 정렬 오류·원소 초과(convT64 + fmt.errorf, ListU64 틀 복사) | 30분 |
 | 감싼 오류 경로(Nested S·L, ListC 원소, BitL 검증 실패): 피호출자의 거부 함수 명세 + `fmt.errorf` 계약 | 경로당 20–40분 |
 | nil 포인터 필드 경로(`newobject`로 새 객체를 만드는 인코더·크기 경로) | 경로당 15–30분 |
@@ -229,7 +228,7 @@ growslice 경로는 마샬 함수마다 append 지점 수만큼 있다(Scalars 5
 11. **부정 사례 방식.** 브리프는 "주소를 다시 생성하는 템플릿"을 말했다. Kraken 배치는 지시어 크기를 추상으로 두므로 주소 재생성이 필요 없다. 변이를 `.S` 지시어 한 줄 교체로 했고 지시어 수를 유지했다. 대조군(같은 줄로 교체)이 통과함으로 확인했다.
 12. **vcgen 미채택.** B0에서 시도했다(2절). 실패 내용과 시간은 `vcgen/B0.md`. 대안은 main 유지다.
 13. **`bv_decide` 사용 철회.** 평가 세션의 `Fk/Bytes.lean`이 `bv_decide`를 썼다. astra는 그 정리들의 공리를 조회하지 않았다. 1b에서 표준 공리만 쓰도록 바꿨다.
-14. **ListC 인코더·디코더 수용을 마지막에 함.** 브리프 순서(bitvector → 중첩 → List[container] → Prysm → bitlist)를 지켰지만 List[container]의 루프를 먼저 끝내지 않고 Prysm과 bitlist로 넘어갔다. 이유: 종류별로 최소 하나의 정리를 먼저 두어 게이트 1 표를 빈칸 없이 만들기 위해서다. ListC 수용(원소 ≥ 1)과 인코더는 10:55–13:37에 끝냈다. 빈 리스트 수용은 12절에 남겼다.
+14. **ListC 인코더·디코더 수용을 마지막에 함.** 브리프 순서(bitvector → 중첩 → List[container] → Prysm → bitlist)를 지켰지만 List[container]의 루프를 먼저 끝내지 않고 Prysm과 bitlist로 넘어갔다. 이유: 종류별로 최소 하나의 정리를 먼저 두어 게이트 1 표를 빈칸 없이 만들기 위해서다. ListC 수용(원소 ≥ 1)과 인코더는 10:55–13:37에, 빈 리스트 수용은 그 뒤에 끝냈다.
 
 ## 14. 재현
 

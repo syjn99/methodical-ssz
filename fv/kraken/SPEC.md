@@ -72,7 +72,7 @@ Go 값이 EthLib 값으로 가지 못하는 경우(추상화의 정의역 밖):
 | BitL | 오프셋 ≠ 4 | `ErrInvalidVariableOffset` | `bl_spec_rejects` | `bl_reject_offset_main` |
 | BitL | `ValidateBitlist` 실패 | `fmt.Errorf("B: %w")` | `bl_spec_rejects` (`blValid` 거짓) | 계약 `ValidateBitlistC` 뒤. 오류 경로는 없음 |
 
-수용 쪽: `*_unmarshal_accept_spec_k`가 "EthLib가 받으면 기계어가 nil을 반환하고 수신자가 그 값을 담는다"를 말한다(Scalars, ListU64, FixedVec, BitVec, Nested, ListC, Checkpoint, AttestationData, BitL). ListC는 원소가 1개 이상인 입력(`len(buf) > 4`)만 다룬다. 빈 리스트(`len(buf) = 4`)의 수용 경로는 증명하지 않았다.
+수용 쪽: `*_unmarshal_accept_spec_k`가 "EthLib가 받으면 기계어가 nil을 반환하고 수신자가 그 값을 담는다"를 말한다(Scalars, ListU64, FixedVec, BitVec, Nested, ListC, Checkpoint, AttestationData, BitL). ListC는 두 정리로 나뉜다: 원소가 1개 이상인 입력(`lc_unmarshal_accept_spec_k`, `len(buf) > 4`)과 빈 리스트(`lc_unmarshal_accept_empty_spec_k`, `len(buf) = 4`, 결과 `c.Items` = (`runtime.noptrbss`, 0, 0), 전제 X15 = 0).
 
 ## 4. 오프셋 읽기·쓰기의 범위 (B3.4)
 

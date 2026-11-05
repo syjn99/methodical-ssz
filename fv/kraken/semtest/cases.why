@@ -13,7 +13,7 @@ NE U #12: bool byte 2: ne_spec_accepts_iff; Go wrap path not proved
 NE U #13: tail 3 bytes: ne_spec_accepts_iff; Go wrap path not proved
 LC U #14: empty: lc_reject_short_spec
 LC U #15: offset 5: lc_reject_offset_spec
-LC U #16: empty list (min): accept path not proved
+LC U #16: empty list (min): lc_unmarshal_accept_empty_spec_k
 LC U #17: list bytes 1: lc_reject_tail_spec
 LC U #18: first offset 0: lc_reject_zero_spec
 LC U #19: first offset 8 past end: lc_reject_past_spec
