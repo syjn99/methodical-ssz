@@ -34,3 +34,4 @@ import Fk.NeSpec
 import Fk.LcReject
 import Fk.LcSpec
 import Fk.CpSpec
+import Fk.CpMarshal
