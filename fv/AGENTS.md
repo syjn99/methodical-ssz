@@ -9,7 +9,7 @@
 
 ## 기본 규칙
 
-[EthLib의 AGENTS.md](https://github.com/ethereum/ethlib/blob/8621856/AGENTS.md)를 기본 규칙으로 채택한다.
+[EthLib의 AGENTS.md](https://github.com/ethereum/EthLib/blob/8621856/AGENTS.md)를 기본 규칙으로 채택한다.
 기준, 출처, Lean 코드와 증명, 알려진 답, 문서, 커밋과 PR 절이 그대로 적용된다.
 이 파일은 그 규칙과 다른 점과 더하는 점만 적는다.
 두 문서가 충돌하면 이 파일이 우선한다.
