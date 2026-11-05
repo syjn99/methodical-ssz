@@ -82,7 +82,7 @@ PASS (b) runtime.noptrbss = 0x5f3040 .noptrbss in-symbol
 PASS (b) runtime.writeBarrier = 0x5f3340 .noptrbss in-symbol
 PASS (c) all.S: 277 labels, each defined once; 51 external references not defined in all.S; 3 calls to target functions at their entry: ['ssz.ValidateBitlist', 'target.ListU64.UnmarshalSSZ', 'target.Scalars.UnmarshalSSZ']
 PASS (e) all.S: 3028 directives equal the 28 function files in order
-PASS (f) SHash.lean lists the sha256 of all 32 .S files
+PASS (f) SHash.lean lists the sha256 of all 35 .S files
 PASS (g) go_string._+39330 (53 bytes) = types1b.ssz.go:243 = Lean lcFmtZero
 PASS (g) go_string._+41960 (63 bytes) = types1b.ssz.go:254 = Lean lcFmtShort
 PASS (g) go_string._+41960 (63 bytes) = types1b.ssz.go:280 = Lean lcFmtShort
@@ -167,6 +167,6 @@ S sha256 3990b8f2369006c41c8475a817a075ada18b32ffd4de36397b5f3e079a39109a target
 S sha256 a77ac17b8695d617c2f3bd5a731d3572d7fb69c2e8827190d3a5dd3e36a83cb1 target_prysm.Checkpoint.SizeSSZ.S
 S sha256 bee62ab7dfa3da589159bdb47d767ba65cb09f7e8f64cec649e60aa3c026c78c target_prysm.Checkpoint.UnmarshalSSZ.S
 file sha256 5f94f6b93b7ab3631ad5fa1180b63711a9e043b22787f4b4737708429eac0e47 lean/Fk/Code.lean
-file sha256 45dba7e772257edd142532e6167a7a650f7be3d936620b6aa7b63292b95e590c AXIOMS.txt
+file sha256 90b65e4b4f7f6d267b32ee9cbcb5e0c603a97ce16ee7b2c2f9314a6089304245 AXIOMS.txt
 PASS all
-BUNDLE sha256 496dbc14475974e36ae74384851597b545d976c6115557fafdc216b0f1a69c26
+BUNDLE sha256 8a9c562197e485604457c7dc4624655366e055352a8c3e70c6cdeb9dc59fd0bc
