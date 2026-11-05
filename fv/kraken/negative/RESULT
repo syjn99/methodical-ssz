@@ -4,3 +4,4 @@ loop | target.FixedVec.UnmarshalSSZ.S:47 'cmp $0x4,%rax' -> 'cmp $0x3,%rax' | fv
 control | target.FixedVec.UnmarshalSSZ.S:47 'cmp $0x4,%rax' -> 'cmp $0x4,%rax' | fv_iter (Fk/FvLoop.lean) | PASS | 
 gsnum | target.BitL.UnmarshalSSZ.S:76 'mov %rbx,%rdi' -> 'mov %rcx,%rdi' | bl_accept_main (Fk/BlAccept.lean:59-405) | exit 1 | FAIL | ok | error: Fk/BlAccept.lean:254:5: unsolved goals
 control | target.FixedVec.UnmarshalSSZ.S:47 'cmp $0x4,%rax' -> 'cmp $0x4,%rax' | fv_iter (Fk/FvLoop.lean:19-107) | exit 0 | PASS | ok | 
+nilerr | target.ListC.UnmarshalSSZ.S:165 'jne L_target.ListC.UnmarshalSSZ_2e7' -> 'je L_target.ListC.UnmarshalSSZ_2e7' | lc_reject_zero_main (Fk/LcReject.lean:307-486) | exit 1 | FAIL | ok | error: Fk/LcReject.lean:434:16: unsolved goals

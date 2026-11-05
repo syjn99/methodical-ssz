@@ -1,5 +1,6 @@
 import Fk.LuReject
 import Fk.Contracts
+import Fk.Frame
 
 /-!
 # ListU64.UnmarshalSSZ reject paths through `fmt.errorf`, on Kraken main
@@ -86,6 +87,14 @@ theorem lr_p128 (x : BitVec 64) : ({ toBitVec := x - 144 } + 8 : UInt64).toBitVe
 theorem lr_c144 (x : BitVec 64) : ({ toBitVec := x - 144 } + 8 : UInt64).toBitVec - 8#64 = x - 144 := by
   simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega
 
+/-- Four 8-byte words as one argument array (two `any` values). -/
+theorem join4 (a b c d : BitVec 64) (A0 A1 A2 A3 : List UInt8) (h0 : A0.length = 8) (h1 : A1.length = 8)
+    (h2 : A2.length = 8) (h3 : A3.length = 8) (hb : b = a + 8) (hc : c = a + 16) (hd : d = a + 24) :
+    Eq ((A0 ++ (A1 ++ (A2 ++ A3))).At a) = Eq (A0.At a) ⋆ Eq (A1.At b) ⋆ Eq (A2.At c) ⋆ Eq (A3.At d) := by
+  rw [at_app A0 _ (b := b) (by rw [h0, hb]; rfl) (by simp [*]), at_app A1 _ (b := c) (by rw [h1, hb, hc]; bv_omega) (by simp [*]),
+    at_app A2 A3 (b := d) (by rw [h2, hc, hd]; bv_omega) (by simp [*])]
+  simp only [Std.ExtHashMap.sep_assoc]
+
 set_option maxHeartbeats 8000000 in
 set_option maxRecDepth 100000 in
 theorem lu_reject_toobig_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k)
@@ -94,9 +103,10 @@ theorem lu_reject_toobig_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host
     (s : MachineData) (ra guard e0 e1 t8 : UInt64) (he0 : e0 ≠ 0)
     (fp s98 a40 a50 rslot : List UInt8) (hfp : fp.length = 8) (h98 : s98.length = 8)
     (ha40 : a40.length = 16) (ha50 : a50.length = 16) (hrs : rslot.length = 8)
-    (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
-    (Heap : Nat → DataMem → Prop) (avail : Nat)
-    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+    (R : DataMem → Prop) (S : Nat) (scratch spl fs : List UInt8) (hsc : scratch.length = S)
+    (hspl : spl.length = 40) (hfs : fs.length = 56)
+    (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : 8 ≤ avail)
+    (h_mem : s.dmem =⋆ Eq (spl.At (s.regs.rsp.toBitVec - 136)) ⋆ Eq (fs.At (label "go_string._" + 40250).toBitVec) ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s98.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq (a40.At (s.regs.rsp.toBitVec - 72)) ⋆ Eq (a50.At (s.regs.rsp.toBitVec - 56))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 144)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 144 - BitVec.ofNat 64 S))
@@ -211,13 +221,18 @@ theorem lu_reject_toobig_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host
   simp only [Width.bytes, Width.bits] at H5
   kunfold
   rw [call_slot] at *
-  refine eventually_trans _ _ _ _ (hcv _ (Host.addrOf (k + 58 + 1)) avail scratch _ hsc (by ecancel)) ?_
-  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, stk1, av1, hstk1, Hm1⟩
+  have hA : rsp.toBitVec - 144 + 8 = rsp.toBitVec - 136 := by bv_omega
+  rw [← List.take_append_drop 8 spl, at_app (spl.take 8) (spl.drop 8) (a := rsp.toBitVec - 136)
+    (b := rsp.toBitVec - 128) (by simp [hspl]; bv_omega) (by simp [hspl])] at H5
+  refine eventually_trans _ _ _ _ (hcv _ (Host.addrOf (k + 58 + 1)) avail scratch (spl.take 8) _ hav hsc
+    (by simp [hspl]) (by dsimp only; rw [hA]; ecancel)) ?_
+  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, hrax1, stk1, sp1, av1, hstk1, hsp1, hav1, hav1', Hm1⟩
   dsimp only at hpc1 hrsp1 Hm1
   subst hpc1
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
     zmms1, flags1, mem1⟩ := d1
   simp only at hrsp1 Hm1
+  rw [hA] at Hm1
   subst hrsp1
   rw [lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 72), lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 56)] at Hm1
   rw [lr_d72, lr_d56] at Hm1
@@ -277,8 +292,18 @@ theorem lu_reject_toobig_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host
   simp only [Width.bytes, Width.bits] at H10
   kunfold
   rw [lr_c144] at *
-  refine eventually_trans _ _ _ _ (hfe _ (Host.addrOf (k + 76 + 1)) av1 stk1 _ hstk1 (by ecancel)) ?_
-  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hrax2, stk2, av2, hstk2, Hm2⟩
+  rw [← hA] at H10
+  refine eventually_trans _ _ _ _ (hfe _ (Host.addrOf (k + 76 + 1)) av1 fs
+    (Int.toBytes 8 (label "type__" + 49184).toBitVec.toInt ++ (Int.toBytes 8 rax1.toBitVec.toInt
+      ++ (Int.toBytes 8 t8.toBitVec.toInt ++ Int.toBytes 8 e1.toBitVec.toInt)))
+    stk1 (sp1 ++ spl.drop 8) _ (by rw [hfs]; rfl) (by simp only []; decide) rfl (by simp only [List.length_append, Int.toBytes_length]; decide) hstk1 (by simp [hsp1, hspl])
+    (by dsimp only
+        try simp only [lr_b144, lr_c64]
+        rw [at_app sp1 (spl.drop 8) (b := rsp.toBitVec - 128) (by rw [hsp1]; bv_omega) (by simp [hsp1, hspl]),
+          join4 (rsp.toBitVec - 72) (rsp.toBitVec - 64) (rsp.toBitVec - 56) (rsp.toBitVec - 48) _ _ _ _ (Int.toBytes_length 8 _)
+            (Int.toBytes_length 8 _) (Int.toBytes_length 8 _) (Int.toBytes_length 8 _) (by bv_omega) (by bv_omega) (by bv_omega)]
+        ecancel)) ?_
+  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hr142, hrax2, stk2, sp2, av2, hstk2, hsp2, hav2, Hm2⟩
   dsimp only at hpc2 hrsp2 hrax2 Hm2
   subst hpc2
   obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,
@@ -328,9 +353,10 @@ theorem lu_reject_misaligned_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt 
     (s : MachineData) (ra guard e0 e1 t8 : UInt64) (he0 : e0 ≠ 0)
     (fp s98 a40 a50 rslot : List UInt8) (hfp : fp.length = 8) (h98 : s98.length = 8)
     (ha40 : a40.length = 16) (ha50 : a50.length = 16) (hrs : rslot.length = 8)
-    (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
-    (Heap : Nat → DataMem → Prop) (avail : Nat)
-    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+    (R : DataMem → Prop) (S : Nat) (scratch spl fs : List UInt8) (hsc : scratch.length = S)
+    (hspl : spl.length = 40) (hfs : fs.length = 68)
+    (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : 8 ≤ avail)
+    (h_mem : s.dmem =⋆ Eq (spl.At (s.regs.rsp.toBitVec - 136)) ⋆ Eq (fs.At (label "go_string._" + 42606).toBitVec) ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s98.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq (a40.At (s.regs.rsp.toBitVec - 40)) ⋆ Eq (a50.At (s.regs.rsp.toBitVec - 24))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 144)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 144 - BitVec.ofNat 64 S))
@@ -437,13 +463,18 @@ theorem lu_reject_misaligned_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt 
   simp only [Width.bytes, Width.bits] at H5
   kunfold
   rw [call_slot] at *
-  refine eventually_trans _ _ _ _ (hcv _ (Host.addrOf (k + 97 + 1)) avail scratch _ hsc (by ecancel)) ?_
-  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, stk1, av1, hstk1, Hm1⟩
+  have hA : rsp.toBitVec - 144 + 8 = rsp.toBitVec - 136 := by bv_omega
+  rw [← List.take_append_drop 8 spl, at_app (spl.take 8) (spl.drop 8) (a := rsp.toBitVec - 136)
+    (b := rsp.toBitVec - 128) (by simp [hspl]; bv_omega) (by simp [hspl])] at H5
+  refine eventually_trans _ _ _ _ (hcv _ (Host.addrOf (k + 97 + 1)) avail scratch (spl.take 8) _ hav hsc
+    (by simp [hspl]) (by dsimp only; rw [hA]; ecancel)) ?_
+  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, hrax1, stk1, sp1, av1, hstk1, hsp1, hav1, hav1', Hm1⟩
   dsimp only at hpc1 hrsp1 Hm1
   subst hpc1
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
     zmms1, flags1, mem1⟩ := d1
   simp only at hrsp1 Hm1
+  rw [hA] at Hm1
   subst hrsp1
   rw [lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 40), lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 24)] at Hm1
   rw [lr_f40, lr_f24] at Hm1
@@ -503,8 +534,18 @@ theorem lu_reject_misaligned_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt 
   simp only [Width.bytes, Width.bits] at H10
   kunfold
   rw [lr_c144] at *
-  refine eventually_trans _ _ _ _ (hfe _ (Host.addrOf (k + 115 + 1)) av1 stk1 _ hstk1 (by ecancel)) ?_
-  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hrax2, stk2, av2, hstk2, Hm2⟩
+  rw [← hA] at H10
+  refine eventually_trans _ _ _ _ (hfe _ (Host.addrOf (k + 115 + 1)) av1 fs
+    (Int.toBytes 8 (label "type__" + 49184).toBitVec.toInt ++ (Int.toBytes 8 rax1.toBitVec.toInt
+      ++ (Int.toBytes 8 t8.toBitVec.toInt ++ Int.toBytes 8 e1.toBitVec.toInt)))
+    stk1 (sp1 ++ spl.drop 8) _ (by rw [hfs]; rfl) (by simp only []; decide) rfl (by simp only [List.length_append, Int.toBytes_length]; decide) hstk1 (by simp [hsp1, hspl])
+    (by dsimp only
+        try simp only [lr_b144, lr_g96]
+        rw [at_app sp1 (spl.drop 8) (b := rsp.toBitVec - 128) (by rw [hsp1]; bv_omega) (by simp [hsp1, hspl]),
+          join4 (rsp.toBitVec - 40) (rsp.toBitVec - 32) (rsp.toBitVec - 24) (rsp.toBitVec - 16) _ _ _ _ (Int.toBytes_length 8 _)
+            (Int.toBytes_length 8 _) (Int.toBytes_length 8 _) (Int.toBytes_length 8 _) (by bv_omega) (by bv_omega) (by bv_omega)]
+        ecancel)) ?_
+  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hr142, hrax2, stk2, sp2, av2, hstk2, hsp2, hav2, Hm2⟩
   dsimp only at hpc2 hrsp2 hrax2 Hm2
   subst hpc2
   obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,

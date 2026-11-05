@@ -79,3 +79,41 @@ Go 1.26.3 `runtime/slice.go`의 `growslice`와 `nextslicecap`을 읽고 만들�
 - `GrowsliceC`: 완료. 계약 수정, 모델, 구체 호출 증인, 부정 시험이 있다.
 - `lum_grow_site`: 증인 부분. 계약은 만족 가능하다. ListU64 마샬 Host의 전체 증인은 없다.
 - `bl_accept_main`, `bl_unmarshal_accept_spec_k`: 증인 없음. 같은 Host에서 `ValidateBitlistC`의 모델이 필요하다(X4).
+
+## 4. X2. fmt.errorf 계약 (astra 발견 2, P1)
+
+시간: 15:07–15:22, 15분.
+
+### 4.1 Go 1.26.3의 두 함수
+
+- 공개 `fmt.Errorf`는 내부 `fmt.errorf`를 부른다. 결과가 nil이면 `errors.New(format)`을 돌려준다.
+- 내부 `errorf`는 `len(a) = 0`이고 형식에 `%`가 없으면 nil을 돌려준다. 그 외에는 항상 nil이 아닌 오류를 돌려준다.
+- 생성 코드는 `errors.New`를 인라인한다: `runtime.newobject`로 16바이트 `errors.errorString`을 만든다.
+
+### 4.2 계약을 인수 조건으로 나눔
+
+| 계약 | 전제 | 결과 |
+| --- | --- | --- |
+| `FmtErrorfNilC S` | rdi = 0, 형식 바이트 `fs`에 0x25 없음, spill 40 | rax = 0, 할당 없음, r14 보존 |
+| `FmtErrorfC Heap S` | `1 ≤ len(a) = cap(a)`, `fs`, 인수 배열(16·len 바이트), spill 40 | rax ≠ 0, `fs`·인수 보존, `avail' ≤ avail`, r14 보존 |
+| `ConvT64C Heap S` | `8 ≤ avail`, spill 8 | rax ≠ 0, `avail' ≤ avail ≤ avail' + 8`, r14 보존 |
+
+`FmtErrorfC`에 남는 신뢰: fmt는 인터페이스 값을 읽고 `%w` 인수의 `Error()`를 부른다. 계약은 그것이 끝나고 `F`에 쓰지 않는다고 가정한다.
+
+### 4.3 다시 증명한 정리
+
+- ListC `lc_reject_zero_main`, `lc_reject_past_main`, `lc_reject_tail_main`: nil 반환 → `test; jne` 안 감 → `newobject`(16바이트) → 문자열 헤더 저장 → itab 반환. 새 전제: spill 40(rsp − 224), Go 소스의 형식 바이트(`lcFmtZero` 53바이트, `lcFmtShort` 63바이트) 조각, `16 ≤ avail`, `NewobjectC`, itab 주소 ≠ 0.
+- 세 `*_spec` 감싸개(`Fk/LcSpec.lean`)도 같은 전제로 바꿨다.
+- ListU64 `lu_reject_toobig_main`, `lu_reject_misaligned_main`: 좁힌 `FmtErrorfC`(인수 2개)와 새 `ConvT64C`로 다시 증명했다. 인수 배열 32바이트를 한 조각으로 넘긴다(`join4`). 새 전제: spill 40(rsp − 136), 형식 바이트 조각(56, 68바이트), `8 ≤ avail`.
+
+### 4.4 모델과 검사
+
+- `Fk/RtErr.lean`: `rt_errorf_nil`, `rt_errorf`, `rt_convT64`. 한 `fmt.errorf` 코드가 두 계약을 함께 만족한다.
+- `lake build` 682 jobs. `TOTAL 629 NONSTANDARD 0`.
+- 부정 시험 `nilerr`: ListC zero 경로의 `jne`를 `je`로 바꾸면 `lc_reject_zero_main` 안(`LcReject.lean:434`)에서 실패한다.
+
+### 4.5 완료 단위 판정
+
+- 세 계약: 계약 모델이 있다. 호출 지점의 구체 Host 증인은 없다.
+- ListC 거부 3정리, ListU64 거부 2정리: 실제 분기를 증명한다. 정리별 증인 없음.
+- 형식 바이트와 ELF의 대조는 X6에서 링크 검사에 넣는다.

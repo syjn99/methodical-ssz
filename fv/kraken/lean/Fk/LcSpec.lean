@@ -131,21 +131,23 @@ theorem lc_reject_offset_spec (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.p
     lc_reject_offset_main k hk hf s ra guard e0 e1 fp slot hfp hsl _ (by simp; omega)
       (by rw [ofBytes_readUint bs 4 0 (by omega)]; exact_mod_cast hoff) R h_mem hguard (by omega)⟩
 
-/-- `5 ≤ len ≤ 7`: EthLib rejects; the machine returns a non-nil error. -/
+/-- `5 ≤ len ≤ 7`: EthLib rejects; the machine returns a non-nil error (the `errors.errorString` built after the nil `fmt.errorf`). -/
 theorem lc_reject_tail_spec (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
     (hf : LabelsFresh ListCUnmarshalSSZ k) (bs : Array UInt8) (h5 : 5 ≤ bs.size) (h7 : bs.size ≤ 7)
     (s : MachineData) (ra guard : UInt64) (fp slot rslot : List UInt8) (hfp : fp.length = 8) (hsl : slot.length = 8)
     (hrs : rslot.length = 8)
-    (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
-    (Heap : Nat → DataMem → Prop) (avail : Nat)
+    (R : DataMem → Prop) (S : Nat) (scratch spl : List UInt8) (hsc : scratch.length = S) (hspl : spl.length = 40)
+    (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : 16 ≤ avail)
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (slot.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 232)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 232 - BitVec.ofNat 64 S))
+      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - 224)) ⋆ Eq (lcFmtShort.At (label "go_string._" + 41960).toBitVec)
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ Heap avail
       ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec) ⋆ R)
     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hsp : 232 ≤ s.regs.rsp.toNat)
     (hlen : s.regs.rcx.toNat = bs.size) (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
-    (hfe : FmtErrorfC Heap S) :
+    (hfe : FmtErrorfNilC S) (hno : NewobjectC Heap (label "type__" + 82848).toBitVec 16 S)
+    (hit : (label "go_itab._errors.errorString_error").toBitVec ≠ 0) :
     (∃ e, deserialize lcDesc bs = .error e) ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
@@ -153,25 +155,27 @@ theorem lc_reject_tail_spec (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.pro
         ∧ (R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ :=
   ⟨lc_spec_rejects bs (.inr (.inr (.inl ⟨h5, h7⟩))),
-    lc_reject_tail_main k hk hf s ra guard fp slot rslot hfp hsl hrs R S scratch hsc Heap avail h_mem hguard hsp
-      (by omega) (by omega) hcap hcap63 hfe⟩
+    lc_reject_tail_main k hk hf s ra guard fp slot rslot hfp hsl hrs R S scratch spl hsc hspl Heap avail hav h_mem hguard hsp
+      (by omega) (by omega) hcap hcap63 hfe hno hit⟩
 
 /-- `len ≥ 8`, first element offset 0: EthLib rejects; the machine returns a
-non-nil error. The chunk the code loads is `bs[4:8]`. -/
+non-nil error (the `errors.errorString` built after the nil `fmt.errorf`). The chunk the code loads is `bs[4:8]`. -/
 theorem lc_reject_zero_spec (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
     (hf : LabelsFresh ListCUnmarshalSSZ k) (bs : Array UInt8) (h8 : 8 ≤ bs.size) (h0 : readUint bs 4 4 = 0)
     (s : MachineData) (ra guard : UInt64) (fp slot rslot : List UInt8) (hfp : fp.length = 8) (hsl : slot.length = 8)
     (hrs : rslot.length = 8)
-    (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
-    (Heap : Nat → DataMem → Prop) (avail : Nat)
+    (R : DataMem → Prop) (S : Nat) (scratch spl : List UInt8) (hsc : scratch.length = S) (hspl : spl.length = 40)
+    (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : 16 ≤ avail)
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (slot.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 232)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 232 - BitVec.ofNat 64 S))
+      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - 224)) ⋆ Eq (lcFmtZero.At (label "go_string._" + 39330).toBitVec)
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ Heap avail
       ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec) ⋆ Eq (((bs.toList.drop 4).take 4).At (s.regs.rbx.toBitVec + 4)) ⋆ R)
     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hsp : 232 ≤ s.regs.rsp.toNat)
     (hlen : s.regs.rcx.toNat = bs.size) (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
-    (hfe : FmtErrorfC Heap S) :
+    (hfe : FmtErrorfNilC S) (hno : NewobjectC Heap (label "type__" + 82848).toBitVec 16 S)
+    (hit : (label "go_itab._errors.errorString_error").toBitVec ≠ 0) :
     (∃ e, deserialize lcDesc bs = .error e) ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
@@ -180,27 +184,29 @@ theorem lc_reject_zero_spec (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.pro
       ⟨s, Host.addrOf k⟩ :=
   ⟨lc_spec_rejects bs (.inr (.inr (.inr (.inl ⟨h8, h0⟩)))),
     lc_reject_zero_main k hk hf s ra guard fp slot rslot hfp hsl hrs _ (by simp; omega)
-      (by rw [ofBytes_readUint bs 4 4 (by omega), h0]; rfl) R S scratch hsc Heap avail h_mem hguard hsp
-      (by omega) hcap hcap63 hfe⟩
+      (by rw [ofBytes_readUint bs 4 4 (by omega), h0]; rfl) R S scratch spl hsc hspl Heap avail hav h_mem hguard hsp
+      (by omega) hcap hcap63 hfe hno hit⟩
 
 /-- `len ≥ 8`, first element offset `o` (≠ 0, multiple of 4, ≤ 16) past the
-end of the list bytes: EthLib rejects; the machine returns a non-nil error. -/
+end of the list bytes: EthLib rejects; the machine returns a non-nil error (the `errors.errorString` built after the nil `fmt.errorf`). -/
 theorem lc_reject_past_spec (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
     (hf : LabelsFresh ListCUnmarshalSSZ k) (bs : Array UInt8) (h8 : 8 ≤ bs.size)
     (ho0 : readUint bs 4 4 ≠ 0) (ho4 : readUint bs 4 4 % 4 = 0) (ho16 : readUint bs 4 4 ≤ 16)
     (hpast : bs.size - 4 < readUint bs 4 4)
     (s : MachineData) (ra guard : UInt64) (fp slot rslot : List UInt8) (hfp : fp.length = 8) (hsl : slot.length = 8)
     (hrs : rslot.length = 8)
-    (R : DataMem → Prop) (S : Nat) (scratch : List UInt8) (hsc : scratch.length = S)
-    (Heap : Nat → DataMem → Prop) (avail : Nat)
+    (R : DataMem → Prop) (S : Nat) (scratch spl : List UInt8) (hsc : scratch.length = S) (hspl : spl.length = 40)
+    (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : 16 ≤ avail)
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (slot.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 232)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 232 - BitVec.ofNat 64 S))
+      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - 224)) ⋆ Eq (lcFmtShort.At (label "go_string._" + 41960).toBitVec)
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ Heap avail
       ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec) ⋆ Eq (((bs.toList.drop 4).take 4).At (s.regs.rbx.toBitVec + 4)) ⋆ R)
     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hsp : 232 ≤ s.regs.rsp.toNat)
     (hlen : s.regs.rcx.toNat = bs.size) (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
-    (hfe : FmtErrorfC Heap S) :
+    (hfe : FmtErrorfNilC S) (hno : NewobjectC Heap (label "type__" + 82848).toBitVec 16 S)
+    (hit : (label "go_itab._errors.errorString_error").toBitVec ≠ 0) :
     (∃ e, deserialize lcDesc bs = .error e) ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
@@ -209,5 +215,5 @@ theorem lc_reject_past_spec (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.pro
       ⟨s, Host.addrOf k⟩ :=
   ⟨lc_spec_rejects bs (.inr (.inr (.inr (.inr ⟨h8, hpast⟩)))),
     lc_reject_past_main k hk hf s ra guard fp slot rslot hfp hsl hrs _ (by simp; omega)
-      (readUint bs 4 4) (ofBytes_readUint bs 4 4 (by omega)) ho0 ho4 ho16 R S scratch hsc Heap avail h_mem hguard hsp
-      (by omega) (by omega) hcap hcap63 hfe⟩
+      (readUint bs 4 4) (ofBytes_readUint bs 4 4 (by omega)) ho0 ho4 ho16 R S scratch spl hsc hspl Heap avail hav h_mem hguard hsp
+      (by omega) (by omega) hcap hcap63 hfe hno hit⟩

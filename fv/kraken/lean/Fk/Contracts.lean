@@ -71,37 +71,79 @@ def MemmoveC (S : Nat) : Prop :=
           ⋆ Eq (src.At st.regs.rbx.toBitVec) ⋆ Eq (src.At st.regs.rax.toBitVec) ⋆ F) st'.data.dmem)
       ⟨st, label "runtime.memmove"⟩
 
-/-- `runtime.convT64(v uint64) unsafe.Pointer`: returns to the return address
-with rsp + 8; the heap may shrink (it allocates for values ≥ 256), the frame
-`F` is unchanged. The result is not used by the callers proved here beyond
-being passed on. -/
+/-- `runtime.convT64(v uint64) unsafe.Pointer` (rax = v; Go 1.26.3
+runtime/iface.go): returns a non-nil pointer to a boxed copy of v (into the
+read-only `staticuint64s` table for v < 256, otherwise an 8-byte allocation).
+Premises: an 8-byte budget (`8 ≤ avail`), `S` scratch bytes, the 8-byte
+argument spill slot above the return slot. Result: rsp + 8, r14 kept,
+rax ≠ 0, the heap shrinks by at most 8 bytes (`avail' ≤ avail ≤ avail' + 8`),
+the frame `F` unchanged. Not stated: the box's contents (the callers here
+only pass the pointer to `fmt.errorf`, whose contract does not read it). -/
 def ConvT64C (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
-  ∀ (st : MachineData) (ret : Int64) (avail : Nat) (stk : List UInt8) (F : DataMem → Prop),
-    stk.length = S →
+  ∀ (st : MachineData) (ret : Int64) (avail : Nat) (stk spill : List UInt8) (F : DataMem → Prop),
+    8 ≤ avail → stk.length = S → spill.length = 8 →
     (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
-      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Heap avail ⋆ F) st.dmem →
+      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (st.regs.rsp.toBitVec + 8))
+      ⋆ Heap avail ⋆ F) st.dmem →
     Eventually (step1 Host.exe)
-      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧
-        ∃ (stk' : List UInt8) (avail' : Nat), stk'.length = S ∧
+      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.r14 = st.regs.r14
+        ∧ st'.data.regs.rax ≠ 0 ∧
+        ∃ (stk' spill' : List UInt8) (avail' : Nat), stk'.length = S ∧ spill'.length = 8
+          ∧ avail' ≤ avail ∧ avail ≤ avail' + 8 ∧
         (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
-          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Heap avail' ⋆ F) st'.data.dmem)
+          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill'.At (st.regs.rsp.toBitVec + 8))
+          ⋆ Heap avail' ⋆ F) st'.data.dmem)
       ⟨st, label "runtime.convT64"⟩
 
-/-- `fmt.Errorf(format string, a ...any) error` (`fmt.errorf` in the binary):
-returns to the return address with rsp + 8 and a non-nil error interface
-(rax ≠ 0, the itab word); the heap may shrink; the frame `F` (which holds the
-argument slice the caller built) is unchanged. Not modeled: which error it
-wraps (`%w`); CONTRACTS.md. -/
-def FmtErrorfC (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
-  ∀ (st : MachineData) (ret : Int64) (avail : Nat) (stk : List UInt8) (F : DataMem → Prop),
-    stk.length = S →
+/-- The internal `fmt.errorf(format string, a ...any) error` of Go 1.26.3
+(fmt/errors.go), not the public `fmt.Errorf`. Arguments: format = (rax, rbx),
+a = (rcx, rdi, rsi).
+
+`FmtErrorfNilC`: with no arguments (`len(a) = 0`) and no `%` (byte 0x25) in
+the format, `errorf` returns nil without allocating (rax = 0). The public
+`fmt.Errorf` then calls `errors.New`; the generated code inlines that part
+(`runtime.newobject` + an `errors.errorString`), so the machine theorems
+prove that path. Premises: the format bytes `fs` at rax (rbx = their length),
+`S` scratch bytes, the 40-byte spill area of the five register arguments. -/
+def FmtErrorfNilC (S : Nat) : Prop :=
+  ∀ (st : MachineData) (ret : Int64) (fs stk spill : List UInt8) (F : DataMem → Prop),
+    st.regs.rbx.toNat = fs.length → st.regs.rdi = 0 → (0x25 : UInt8) ∉ fs → stk.length = S → spill.length = 40 →
     (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
-      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Heap avail ⋆ F) st.dmem →
+      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (st.regs.rsp.toBitVec + 8))
+      ⋆ Eq (fs.At st.regs.rax.toBitVec) ⋆ F) st.dmem →
     Eventually (step1 Host.exe)
-      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.rax ≠ 0 ∧
-        ∃ (stk' : List UInt8) (avail' : Nat), stk'.length = S ∧
+      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.r14 = st.regs.r14
+        ∧ st'.data.regs.rax = 0 ∧
+        ∃ stk' spill' : List UInt8, stk'.length = S ∧ spill'.length = 40 ∧
         (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
-          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Heap avail' ⋆ F) st'.data.dmem)
+          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill'.At (st.regs.rsp.toBitVec + 8))
+          ⋆ Eq (fs.At st.regs.rax.toBitVec) ⋆ F) st'.data.dmem)
+      ⟨st, label "fmt.errorf"⟩
+
+/-- `FmtErrorfC`: the internal `fmt.errorf` with at least one argument
+(`1 ≤ len(a) = cap(a)`). Go then always formats and returns a non-nil error
+(`errors.New`, `*wrapError` or `*wrapErrors`): rax ≠ 0. Premises: the format
+bytes `fs` at rax, the argument array `args` (16 bytes per `any`) at rcx, a
+heap, `S` scratch bytes, the 40-byte spill area. Result: rsp + 8, r14 kept,
+`fs` and `args` unchanged, the heap shrinks (`avail' ≤ avail`), `F` unchanged.
+
+Trusted, not narrowed further: fmt reads the values behind the interface
+words (in `F`) and calls `Error()` on `%w` arguments; the contract assumes
+that this terminates and writes nothing in `F` (CONTRACTS.md). -/
+def FmtErrorfC (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
+  ∀ (st : MachineData) (ret : Int64) (avail : Nat) (fs args stk spill : List UInt8) (F : DataMem → Prop),
+    st.regs.rbx.toNat = fs.length → 1 ≤ st.regs.rdi.toNat → st.regs.rsi = st.regs.rdi →
+    args.length = 16 * st.regs.rdi.toNat → stk.length = S → spill.length = 40 →
+    (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (st.regs.rsp.toBitVec + 8))
+      ⋆ Eq (fs.At st.regs.rax.toBitVec) ⋆ Eq (args.At st.regs.rcx.toBitVec) ⋆ Heap avail ⋆ F) st.dmem →
+    Eventually (step1 Host.exe)
+      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.r14 = st.regs.r14
+        ∧ st'.data.regs.rax ≠ 0 ∧
+        ∃ (stk' spill' : List UInt8) (avail' : Nat), stk'.length = S ∧ spill'.length = 40 ∧ avail' ≤ avail ∧
+        (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill'.At (st.regs.rsp.toBitVec + 8))
+          ⋆ Eq (fs.At st.regs.rax.toBitVec) ⋆ Eq (args.At st.regs.rcx.toBitVec) ⋆ Heap avail' ⋆ F) st'.data.dmem)
       ⟨st, label "fmt.errorf"⟩
 
 /-- Go's `maxAlloc` on linux/amd64: `1 << heapAddrBits`, heapAddrBits = 48

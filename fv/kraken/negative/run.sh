@@ -85,9 +85,12 @@ mutate loop target.FixedVec.UnmarshalSSZ.S 47 'cmp $0x4,%rax' 'cmp $0x3,%rax' Fk
 # 4. growslice num (X1): BitL passes num = 0 (rcx was cleared) instead of n,
 #    so the old slice would have n bytes; GrowsliceC's premise fails at the call
 mutate gsnum target.BitL.UnmarshalSSZ.S 76 'mov %rbx,%rdi' 'mov %rcx,%rdi' Fk/BlAccept.lean bl_accept_main FAIL
+# 5. nil errorf (X2): ListC zero path returns the nil from fmt.errorf instead of
+#    building the errors.errorString (jne -> je); the error result must break
+mutate nilerr target.ListC.UnmarshalSSZ.S 165 'jne L_target.ListC.UnmarshalSSZ_2e7' 'je L_target.ListC.UnmarshalSSZ_2e7' Fk/LcReject.lean lc_reject_zero_main FAIL
 # control: a directive rewritten to itself must still check
 mutate control target.FixedVec.UnmarshalSSZ.S 47 'cmp $0x4,%rax' 'cmp $0x4,%rax' Fk/FvLoop.lean fv_iter PASS
-# 5. link (X6): a padding nop becomes retq; the link check must reject it
+# 6. link (X6): a padding nop becomes retq; the link check must reject it
 linkmut nopret target.BitVec.UnmarshalSSZ.S 8 'nop' 'retq'
 
 exit $bad
