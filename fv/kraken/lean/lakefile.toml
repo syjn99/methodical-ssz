@@ -1,5 +1,5 @@
 name = "fvkraken"
-defaultTargets = ["Fk"]
+defaultTargets = ["Fv", "Fv1", "Fk"]
 
 [leanOptions]
 autoImplicit = false
