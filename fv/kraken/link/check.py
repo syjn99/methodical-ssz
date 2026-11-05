@@ -60,8 +60,12 @@ spec.loader.exec_module(conv)
 # byte list, Lean name, Go source file relative to the repository root). The
 # ELF offset is read from every `<name>.At (label "go_string._" + off)` in the
 # Lean sources, so a proof that names a stale offset fails here.
-FMTS = [("LcReject.lean", "lcFmtZero", "fv/kraken/target/types1b.ssz.go"),
-        ("LcReject.lean", "lcFmtShort", "fv/kraken/target/types1b.ssz.go")]
+# The last field says whether the proofs use the string with FmtErrorfNilC
+# (no arguments), which needs the format to have no `%`.
+FMTS = [("LcReject.lean", "lcFmtZero", "fv/kraken/target/types1b.ssz.go", True),
+        ("LcReject.lean", "lcFmtShort", "fv/kraken/target/types1b.ssz.go", True),
+        ("Vbv.lean", "vbvFmt", "ssz/unmarshal.go", True),
+        ("BvSpec.lean", "bvFmtJ", "fv/kraken/target/types1b.ssz.go", False)]
 
 
 def lean_value(txt, name):
@@ -304,7 +308,7 @@ def run(outdir, log, shash=True, shash_file=None):
     # (g) format strings: ELF rodata = Go source literal = Lean byte list
     g = "go_string._"
     alllean = "\n".join(p.read_text() for p in sorted((lean / "Fk").glob("*.lean")))
-    for lfile, ldef, gofile in FMTS:
+    for lfile, ldef, gofile, nopct in FMTS:
         txt = (lean / "Fk" / lfile).read_text()
         m = re.search(r"def " + ldef + r" : List UInt8 :=\s*\[([0-9, ]+)\]", txt)
         need(m, f"(g) Lean definition {ldef} not found")
@@ -312,9 +316,9 @@ def run(outdir, log, shash=True, shash_file=None):
         offs = sorted({int(x) for x in re.findall(re.escape(ldef) + r'\.At \(label "go_string\._" \+ (\d+)\)', alllean)})
         need(offs, f"(g) no Lean statement places {ldef} at go_string._+off")
         src = (HERE.parent.parent.parent / gofile).read_text().splitlines()
-        lits = [i + 1 for i, l in enumerate(src) if re.search(r'fmt\.Errorf\("' + re.escape(lb.decode()) + r'"\)', l)]
+        lits = [i + 1 for i, l in enumerate(src) if re.search(r'fmt\.Errorf\("' + re.escape(lb.decode()) + r'"[,)]', l)]
         need(lits, f"(g) {gofile} has no fmt.Errorf literal equal to Lean {ldef}")
-        need(b"%" not in lb, f"(g) {ldef} has a %")
+        need(not nopct or b"%" not in lb, f"(g) {ldef} has a %")
         sa = esyms[orig(g)][0]
         for off in offs:
             eb = elf_bytes(b, secs, sa + off, len(lb))

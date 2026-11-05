@@ -35,6 +35,7 @@ import Fk.LuMarshal
 import Fk.FvSpec
 import Fk.RoundTrip
 import Fk.LuGrow
+import Fk.Vbv
 import Fk.BvAccept
 import Fk.BvSpec
 import Fk.Frame

@@ -32,6 +32,7 @@ def PrysmAttestationDataUnmarshalSSZ : Program := include_x64_rt "../link/out/no
 def PrysmCheckpointMarshalSSZTo : Program := include_x64_rt "../link/out/norm/target_prysm.Checkpoint.MarshalSSZTo.S"
 def PrysmCheckpointSizeSSZ : Program := include_x64_rt "../link/out/norm/target_prysm.Checkpoint.SizeSSZ.S"
 def PrysmCheckpointUnmarshalSSZ : Program := include_x64_rt "../link/out/norm/target_prysm.Checkpoint.UnmarshalSSZ.S"
+def ValidateBitvector : Program := include_x64_rt "../link/out/norm/ssz.ValidateBitvector.S"
 -- ssz.ValidateBitlist is not included: Kraken does not parse `bsr` (REPORT-1b, Kraken requests).
 
 /-! Both Kraken parsers agree where the elaborator accepts the file. -/

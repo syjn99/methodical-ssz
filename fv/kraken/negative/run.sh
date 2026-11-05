@@ -95,9 +95,16 @@ mutate gsnum target.BitL.UnmarshalSSZ.S 76 'mov %rbx,%rdi' 'mov %rcx,%rdi' Fk/Bl
 # 5. nil errorf (X2): ListC zero path returns the nil from fmt.errorf instead of
 #    building the errors.errorString (jne -> je); the error result must break
 mutate nilerr target.ListC.UnmarshalSSZ.S 165 'jne L_target.ListC.UnmarshalSSZ_2e7' 'je L_target.ListC.UnmarshalSSZ_2e7' Fk/LcReject.lean lc_reject_zero_main FAIL
+# 6. R3: ValidateBitvector accepts on a set padding bit and rejects on a clear
+#    one (je -> jne after `test %dl,%dl`); its accept theorem must break
+mutate vbvje ssz.ValidateBitvector.S 26 'je L_ssz.ValidateBitvector_9c' 'jne L_ssz.ValidateBitvector_9c' Fk/Vbv.lean vbv_accept_main FAIL
+# 7. R3: BitVec.UnmarshalSSZ drops the wrapped ValidateBitvector error and goes
+#    on decoding (jne to the return -> jmp to the accept path, a directive only
+#    on the reject path); the F1 rejection theorem must break
+mutate bvnochk target.BitVec.UnmarshalSSZ.S 34 'jne L_target.BitVec.UnmarshalSSZ_b3' 'jmpq L_target.BitVec.UnmarshalSSZ_b9' Fk/BvSpec.lean bv_reject_padding_main FAIL
 # control: a directive rewritten to itself must still check
 mutate control target.FixedVec.UnmarshalSSZ.S 47 'cmp $0x4,%rax' 'cmp $0x4,%rax' Fk/FvLoop.lean fv_iter PASS
-# 6. link (X6): a padding nop becomes retq; the link check must reject it
+# 8. link (X6): a padding nop becomes retq; the link check must reject it
 linkmut nopret target.BitVec.UnmarshalSSZ.S 8 'nop' 'retq'
 
 exit $bad
