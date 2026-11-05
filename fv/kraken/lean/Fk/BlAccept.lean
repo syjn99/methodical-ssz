@@ -1,4 +1,5 @@
 import Fk.BlMarshal
+import Fk.Vbl
 import Fk.LcReject
 import Fk.Witness
 
@@ -24,30 +25,6 @@ the stack guard below rsp − 120, the write barrier off, the three contracts.
 
 open Fk Fk.Code Fv1 EthLib.Serialization.Ssz
 variable [Host]
-
-/-- The bitlist rule (EthLib): `unpackDelimited` with the limit 2048 accepts. -/
-def blValid (tl : List UInt8) : Prop := ∃ bits, unpackDelimited (some 2048) tl.toArray = .ok bits
-
-/-- `ssz.ValidateBitlist(buf []byte, bitLimit uint64) error` (rax = ptr,
-rbx = len, rcx = cap, rdi = limit): returns to the return address with
-rsp + 8, r14 and rbp kept, the frame `F` and the bytes unchanged, and rax = 0
-(nil error) exactly when `blValid` holds. The 32-byte spill area of its four
-register arguments is the callee's. The error's second word (rbx) is not
-specified. -/
-def ValidateBitlistC (S : Nat) : Prop :=
-  ∀ (st : MachineData) (ret : Int64) (buf stk spill : List UInt8) (F : DataMem → Prop),
-    st.regs.rbx.toNat = buf.length → st.regs.rdi = 2048 → stk.length = S → spill.length = 32 →
-    (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
-      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (st.regs.rsp.toBitVec + 8))
-      ⋆ Eq (buf.At st.regs.rax.toBitVec) ⋆ F) st.dmem →
-    Eventually (step1 Host.exe)
-      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.r14 = st.regs.r14
-        ∧ st'.data.regs.rbp = st.regs.rbp ∧ (st'.data.regs.rax = 0 ↔ blValid buf) ∧
-        ∃ stk' spill' : List UInt8, stk'.length = S ∧ spill'.length = 32 ∧
-        (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
-          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill'.At (st.regs.rsp.toBitVec + 8))
-          ⋆ Eq (buf.At st.regs.rax.toBitVec) ⋆ F) st'.data.dmem)
-      ⟨st, label "ssz.ValidateBitlist"⟩
 
 theorem bla_rbx4 (x : BitVec 64) : x + 4 * 1#64 = x + 4 := by rw [BitVec.mul_one]
 
@@ -195,7 +172,7 @@ theorem bl_accept_main (k : Nat) (hk : BitLUnmarshalSSZ.IsInfixAt Host.prog k)
   refine eventually_trans _ _ _ _ (hvb _ (Host.addrOf (k + 30 + 1)) tl scratch (spl.take 32) _ hn4
     (by apply UInt64.toBitVec_inj.mp; apply BitVec.eq_of_toNat_eq; simp) hsc (by simp [hspl])
     (by dsimp only; rw [hsv]; ecancel)) ?_
-  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, -, -, hrax1, stk1, sv1, hstk1, hsv1, Hm1⟩
+  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, -, -, hrax1, -, stk1, sv1, hstk1, hsv1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrax1 Hm1
   subst hpc1
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
@@ -294,22 +271,22 @@ theorem bl_accept_main (k : Nat) (hk : BitLUnmarshalSSZ.IsInfixAt Host.prog k)
   kat hk BitLUnmarshalSSZ 81
   kat hk BitLUnmarshalSSZ 82
   kat hk BitLUnmarshalSSZ 83
-  rw [bla_g, show rsp.toBitVec - 120 + 88 = rsp.toBitVec - 32 by bv_omega]
-  apply store_step _ _ _ _ _ l32 _ _ (by ecancel) (by exact hl32)
-  intro m11 H11
-  simp only [Width.bytes, Width.bits] at H11
-  kunfold
-  kat hk BitLUnmarshalSSZ 84
   rw [bla_g, show rsp.toBitVec - 120 + 64 = rsp.toBitVec - 56 by bv_omega]
   apply store_step _ _ _ _ _ l56 _ _ (by ecancel) (by exact hl56)
   intro m12 H12
   simp only [Width.bytes, Width.bits] at H12
   kunfold
-  kat hk BitLUnmarshalSSZ 85
+  kat hk BitLUnmarshalSSZ 84
   rw [bla_g, show rsp.toBitVec - 120 + 56 = rsp.toBitVec - 64 by bv_omega]
   apply store_step _ _ _ _ _ l64 _ _ (by ecancel) (by exact hl64)
   intro m13 H13
   simp only [Width.bytes, Width.bits] at H13
+  kunfold
+  kat hk BitLUnmarshalSSZ 85
+  rw [bla_g, show rsp.toBitVec - 120 + 88 = rsp.toBitVec - 32 by bv_omega]
+  apply store_step _ _ _ _ _ l32 _ _ (by ecancel) (by exact hl32)
+  intro m11 H11
+  simp only [Width.bytes, Width.bits] at H11
   kunfold
   kat hk BitLUnmarshalSSZ 86
   kat hk BitLUnmarshalSSZ 87
@@ -340,7 +317,7 @@ theorem bl_accept_main (k : Nat) (hk : BitLUnmarshalSSZ.IsInfixAt Host.prog k)
   simp only at hrsp3 Hm3
   subst hrsp3
   kat hk BitLUnmarshalSSZ 91
-  rw [bla_g, show rsp.toBitVec - 120 + 64 = rsp.toBitVec - 56 by bv_omega]
+  rw [bla_g, show rsp.toBitVec - 120 + 56 = rsp.toBitVec - 64 by bv_omega]
   apply load_step _ _ _ _ (Int.toBytes 8 nV.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
   kunfold
@@ -355,7 +332,7 @@ theorem bl_accept_main (k : Nat) (hk : BitLUnmarshalSSZ.IsInfixAt Host.prog k)
   simp only [Width.bytes, Width.bits] at H15
   kunfold
   kat hk BitLUnmarshalSSZ 94
-  rw [bla_g, show rsp.toBitVec - 120 + 56 = rsp.toBitVec - 64 by bv_omega]
+  rw [bla_g, show rsp.toBitVec - 120 + 64 = rsp.toBitVec - 56 by bv_omega]
   apply load_step _ _ _ _ (Int.toBytes 8 rcx2.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
   kunfold

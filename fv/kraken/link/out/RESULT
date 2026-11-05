@@ -86,7 +86,7 @@ PASS (b) runtime.zerobase = 0x5f3040 .noptrbss in-symbol
 PASS (b) runtime.writeBarrier = 0x5f3340 .noptrbss in-symbol
 PASS (c) all.S: 294 labels, each defined once; 53 external references not defined in all.S; 4 calls to target functions at their entry: ['ssz.ValidateBitlist', 'ssz.ValidateBitvector', 'target.ListU64.UnmarshalSSZ', 'target.Scalars.UnmarshalSSZ']
 PASS (e) all.S: 3221 directives equal the 29 function files in order
-PASS (f) the value of Fk.sHash (comments removed) lists the sha256 of all 36 .S files
+PASS (f) the value of Fk.sHash (comments removed) lists the sha256 of all 37 .S files
 PASS (g) go_string._+39370 (53 bytes) = Lean lcFmtZero = fv/kraken/target/types1b.ssz.go lines [243]
 PASS (g) go_string._+42000 (63 bytes) = Lean lcFmtShort = fv/kraken/target/types1b.ssz.go lines [254, 280]
 PASS (g) go_string._+27706 (35 bytes) = Lean vbvFmt = ssz/unmarshal.go lines [45]
@@ -176,4 +176,4 @@ S sha256 bee62ab7dfa3da589159bdb47d767ba65cb09f7e8f64cec649e60aa3c026c78c target
 file sha256 c4d64cb9c7857dc3f055d669ba2da5c406572f40ddf0fbb22aabdd8cda7926de lean/Fk/Code.lean
 file sha256 7397b8bb04bbbe307edf9749cfec8f42cb720d2470ed7ea74e5e20faf0ffc153 AXIOMS.txt
 PASS all
-BUNDLE sha256 d301eb8913fb8e3ebd3bc4b27dda7e1798b9f4e4b93531181450b8faa0f98cde
+BUNDLE sha256 1711d8ba6ef82941c60ddb48c6cf30852f5d54e9c444b46d33cde7022ffeab96

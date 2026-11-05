@@ -102,9 +102,13 @@ mutate vbvje ssz.ValidateBitvector.S 26 'je L_ssz.ValidateBitvector_9c' 'jne L_s
 #    on decoding (jne to the return -> jmp to the accept path, a directive only
 #    on the reject path); the F1 rejection theorem must break
 mutate bvnochk target.BitVec.UnmarshalSSZ.S 34 'jne L_target.BitVec.UnmarshalSSZ_b3' 'jmpq L_target.BitVec.UnmarshalSSZ_b9' Fk/BvSpec.lean bv_reject_padding_main FAIL
+# 8. R4: BitL.MarshalSSZTo drops the wrapped ValidateBitlist error and goes on
+#    encoding (jne to the error return -> jmp to the append path, a directive
+#    only on the reject path); the F2 rejection theorem must break
+mutate blmnochk target.BitL.MarshalSSZTo.S 49 'jne L_target.BitL.MarshalSSZTo_102' 'jmpq L_target.BitL.MarshalSSZTo_118' Fk/BlMarshal.lean bl_marshal_reject_main FAIL
 # control: a directive rewritten to itself must still check
 mutate control target.FixedVec.UnmarshalSSZ.S 47 'cmp $0x4,%rax' 'cmp $0x4,%rax' Fk/FvLoop.lean fv_iter PASS
-# 8. link (X6): a padding nop becomes retq; the link check must reject it
+# 9. link (X6): a padding nop becomes retq; the link check must reject it
 linkmut nopret target.BitVec.UnmarshalSSZ.S 8 'nop' 'retq'
 
 exit $bad
