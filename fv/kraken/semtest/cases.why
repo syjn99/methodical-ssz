@@ -1,0 +1,40 @@
+BV U #1: empty: bv_reject_size_main
+BV U #2: min: bv_accept_main
+BV U #3: max: bv_accept_main
+BV U #4: padding bit (F1): Go accepts, EthLib rejects (bv_padding_counterexample)
+BV U #5: over: bv_reject_size_main
+NE U #6: short: ne_reject_short_spec
+NE U #7: offset 29: ne_reject_offset_spec
+NE U #8: offset 0: ne_reject_offset_spec
+NE U #9: min: ne_unmarshal_accept_spec_k
+NE U #10: max (16 words): ne_unmarshal_accept_spec_k
+NE U #11: over (17 words): ne_spec_accepts_iff; Go wrap path not proved
+NE U #12: bool byte 2: ne_spec_accepts_iff; Go wrap path not proved
+NE U #13: tail 3 bytes: ne_spec_accepts_iff; Go wrap path not proved
+LC U #14: empty: lc_reject_short_spec
+LC U #15: offset 5: lc_reject_offset_spec
+LC U #16: empty list (min): accept path not proved
+LC U #17: list bytes 1: lc_reject_tail_spec
+LC U #18: first offset 0: lc_reject_zero_spec
+LC U #19: first offset 8 past end: lc_reject_past_spec
+LC U #20: first offset 6 unaligned: lc_spec_rejects shape; Go path (convT64) not proved
+LC U #21: first offset 20 (5 > 4): Go path (convT64) not proved
+LC U #22: one empty element: accept path not proved
+LC U #23: max (4 elements): accept path not proved
+CP U #24: short: cp_reject_size_main + cp_reject_size_spec
+CP U #25: exact: cp_unmarshal_accept_spec_k
+CP U #26: long: cp_reject_size_main + cp_reject_size_spec
+AD U #27: short: ad_reject_size_main + ad_reject_size_spec
+AD U #28: exact: accept path not proved
+AD U #29: long: ad_reject_size_main + ad_reject_size_spec
+BL U #30: empty: bl_reject_short_main
+BL U #31: offset 5: bl_reject_offset_main
+BL U #32: no bitlist bytes: bl_spec_rejects (contract); Go error path not proved
+BL U #33: empty bitlist (min): bl_unmarshal_accept_spec_k
+BL U #34: trailing zero: bl_spec_rejects (contract)
+BL U #35: 2048 bits (max): bl_unmarshal_accept_spec_k
+BL U #36: 2056 bits (over, F2 bytes): bl_spec_rejects (contract)
+LU U #37: empty: lu_reject_short_main
+LU U #38: min: lu_unmarshal_accept_spec_k
+LU U #39: over: lu_reject_toobig_main
+LU U #40: misaligned: lu_reject_misaligned_main
