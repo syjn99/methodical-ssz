@@ -23,7 +23,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 theorem sc_marshal_main (k : Nat) (hk : ScalarsMarshalSSZTo.IsInfixAt Host.prog k)
     (hf : LabelsFresh ScalarsMarshalSSZTo k)
-    (s : MachineData) (ra guard : UInt64) (fp sp1 sp2 cA cB cC cD cE d0 d1 d2 d3 d4 : List UInt8)
+    (s : MachineData) (ra guard : UInt64) (fp sp1 sp2 cA cB cC cD cE d0 d1 d2 d3 d4 pre : List UInt8)
     (hfp : fp.length = 8) (hs1 : sp1.length = 8) (hs2 : sp2.length = 8)
     (hA : cA.length = 1) (hB : cB.length = 2) (hC : cC.length = 4) (hD : cD.length = 8)
     (hd0 : d0.length = 1) (hd1 : d1.length = 2) (hd2 : d2.length = 4) (hd3 : d3.length = 8) (hd4 : d4.length = 1)
@@ -36,7 +36,8 @@ theorem sc_marshal_main (k : Nat) (hk : ScalarsMarshalSSZTo.IsInfixAt Host.prog 
       ⋆ Eq (cE.At (s.regs.rax.toBitVec + 16))
       ⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) ⋆ Eq (d1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))
       ⋆ Eq (d2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 3)) ⋆ Eq (d3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 7))
-      ⋆ Eq (d4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 15)) ⋆ R)
+      ⋆ Eq (d4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 15))
+      ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat)
     (hcap : s.regs.rcx.toNat + 16 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
     (hE : cE = [0] ∨ cE = [1]) :
@@ -49,7 +50,8 @@ theorem sc_marshal_main (k : Nat) (hk : ScalarsMarshalSSZTo.IsInfixAt Host.prog 
           ⋆ Eq (cB.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))
           ⋆ Eq (cC.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 3))
           ⋆ Eq (cD.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 7))
-          ⋆ Eq (cE.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 15)) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Eq (cE.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 15))
+          ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hcap hcap63 ⊢

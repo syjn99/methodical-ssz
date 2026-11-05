@@ -68,7 +68,7 @@ theorem scEncode_toList (g : Scalars) :
 concatenation is the EthLib serialization of `g.toValue`. -/
 theorem sc_marshal_spec_k (k : Nat) (hk : ScalarsMarshalSSZTo.IsInfixAt Host.prog k)
     (hf : LabelsFresh ScalarsMarshalSSZTo k) (g : Scalars)
-    (s : MachineData) (ra guard : UInt64) (fp sp1 sp2 d0 d1 d2 d3 d4 : List UInt8)
+    (s : MachineData) (ra guard : UInt64) (fp sp1 sp2 d0 d1 d2 d3 d4 pre : List UInt8)
     (hfp : fp.length = 8) (hs1 : sp1.length = 8) (hs2 : sp2.length = 8)
     (hd0 : d0.length = 1) (hd1 : d1.length = 2) (hd2 : d2.length = 4) (hd3 : d3.length = 8) (hd4 : d4.length = 1)
     (R : DataMem → Prop)
@@ -80,7 +80,8 @@ theorem sc_marshal_spec_k (k : Nat) (hk : ScalarsMarshalSSZTo.IsInfixAt Host.pro
       ⋆ Eq ((scField g 4).At (s.regs.rax.toBitVec + 16))
       ⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) ⋆ Eq (d1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))
       ⋆ Eq (d2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 3)) ⋆ Eq (d3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 7))
-      ⋆ Eq (d4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 15)) ⋆ R)
+      ⋆ Eq (d4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 15))
+      ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat)
     (hcap : s.regs.rcx.toNat + 16 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) :
     serialize scDesc g.toValue = .ok (scEncode g) ∧
@@ -94,11 +95,12 @@ theorem sc_marshal_spec_k (k : Nat) (hk : ScalarsMarshalSSZTo.IsInfixAt Host.pro
           ⋆ Eq ((scField g 1).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))
           ⋆ Eq ((scField g 2).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 3))
           ⋆ Eq ((scField g 3).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 7))
-          ⋆ Eq ((scField g 4).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 15)) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Eq ((scField g 4).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 15))
+          ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ :=
   ⟨sc_serialize g, scEncode_toList g,
     sc_marshal_main k hk hf s ra guard fp sp1 sp2 (scField g 0) (scField g 1) (scField g 2) (scField g 3)
-      (scField g 4) d0 d1 d2 d3 d4 hfp hs1 hs2 (by simp [scField, Fv.uintBytes_size])
+      (scField g 4) d0 d1 d2 d3 d4 pre hfp hs1 hs2 (by simp [scField, Fv.uintBytes_size])
       (by simp [scField, Fv.uintBytes_size]) (by simp [scField, Fv.uintBytes_size])
       (by simp [scField, Fv.uintBytes_size]) hd0 hd1 hd2 hd3 hd4 R h_mem hguard hcap hcap63
       (by cases g.e <;> simp [scField])⟩
