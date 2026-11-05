@@ -1,0 +1,6 @@
+selftest drop an instruction: fail (expected fail) target.Scalars.UnmarshalSSZ: label L_target.Scalars.UnmarshalSSZ_37 not before the instruction at its address
+selftest change an immediate: fail (expected fail) reassembly mismatch (see DIFF FAIL lines)
+selftest move a label: fail (expected fail) target.Scalars.UnmarshalSSZ: label L_target.Scalars.UnmarshalSSZ_37 not before the instruction at its address
+selftest objdump line without //: fail (expected fail) unrecognized objdump line (no GNU form?): '  types.ssz.go:12\t0x4b65e0\t\tb810000000\t\tMOVL $0x10, AX'
+selftest wrong global offset: fail (expected fail) target.Scalars.UnmarshalSSZ: ssz.ErrSize+0 = 0x5c6db0, instruction refers to 0x5c6db8
+selftest unchanged copy: pass (expected pass) 

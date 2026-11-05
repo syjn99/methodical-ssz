@@ -13,9 +13,13 @@ The converter changes only what Kraken cannot take from objdump directly:
 - `disp(%rip)` becomes `sym+off(%rip)` for the symbol that holds the target;
 - symbol names are shortened (module path dropped) and characters outside
   `[A-Za-z0-9_.]` become `_` (Kraken identifier token).
-With --norm it also rewrites padding forms (`nopl (%rax)`, `data16 nop`) to
-`nop` (listed in REPORT/K1, a gap in the Kraken parser, not a semantic change:
-Kraken layouts are abstract, so the byte length of a nop is not used).
+With --norm it also rewrites padding forms (table NORM) to `nop` (a gap in the
+Kraken parser, not a semantic change: Kraken layouts are abstract, so the byte
+length of a nop is not used; check.py compares the original bytes).
+
+The converter fails (exit status 1) on: an instruction line without the GNU
+form (`// ...`), an address gap between instructions, a branch into the middle
+of an instruction, and two symbol names that sanitize to the same name.
 """
 import re
 import sys
@@ -23,10 +27,17 @@ import sys
 MOD = "github.com/OffchainLabs/methodical-ssz/"
 
 
+CLEANED = {}
+
+
 def clean(name):
-    name = name.replace(MOD + "fv/kraken/", "").replace(MOD, "")
-    name = re.sub(r"\(\*(\w+)\)", r"\1", name)  # (*Scalars) -> Scalars
-    return re.sub(r"[^A-Za-z0-9_.]", "_", name)
+    """Shorten and sanitize a symbol name; fail if two names map to one."""
+    out = name.replace(MOD + "fv/kraken/", "").replace(MOD, "")
+    out = re.sub(r"\(\*(\w+)\)", r"\1", out)  # (*Scalars) -> Scalars
+    out = re.sub(r"[^A-Za-z0-9_.]", "_", out)
+    if CLEANED.setdefault(out, name) != name:
+        raise SystemExit(f"name collision: {name!r} and {CLEANED[out]!r} both become {out!r}")
+    return out
 
 
 def read_nm(path):
@@ -62,16 +73,24 @@ def read_objdump(path):
             cur = {"name": line.split()[1].removesuffix("(SB)"), "ins": []}
             fns.append(cur)
             continue
+        if not line.strip():
+            continue
         m = re.match(r"\s+\S+\s+0x([0-9a-f]+)\s+([0-9a-f]+)\s+.*?// (.*)$", line)
-        if m and cur is not None:
-            att = re.sub(r"\s+", " ", m.group(3)).strip()
-            cur["ins"].append((int(m.group(1), 16), len(m.group(2)) // 2, att))
+        if not m or cur is None:
+            raise SystemExit(f"unrecognized objdump line (no GNU form?): {line.rstrip()!r}")
+        att = re.sub(r"\s+", " ", m.group(3)).strip()
+        a, n = int(m.group(1), 16), len(m.group(2)) // 2
+        if cur["ins"] and cur["ins"][-1][0] + cur["ins"][-1][1] != a:
+            raise SystemExit(f"address gap before {a:#x} in {cur['name']}")
+        cur["ins"].append((a, n, att))
     return fns
 
 
 BRANCH = re.compile(r"^(j[a-z]+|callq?|jmpq?) 0x([0-9a-f]+)$")
 RIP = re.compile(r"(-?0x[0-9a-f]+|-?\d+)\(%rip\)")
-NORM = {"nopl (%rax)": "nop", "data16 nop": "nop", "nopw 0x0(%rax,%rax,1)": "nop"}
+NORM = {"nopl (%rax)": "nop", "data16 nop": "nop", "nopw 0x0(%rax,%rax,1)": "nop",
+        "nopw (%rax,%rax,1)": "nop", "nopl 0x0(%rax)": "nop", "nopl 0x0(%rax,%rax,1)": "nop",
+        "nopw %cs:0x0(%rax,%rax,1)": "nop", "data16 nopw %cs:0x0(%rax,%rax,1)": "nop", "xchg %ax,%ax": "nop"}
 
 
 def convert(fn, syms, norm):
@@ -79,12 +98,15 @@ def convert(fn, syms, norm):
     lo = fn["ins"][0][0]
     hi = fn["ins"][-1][0] + fn["ins"][-1][1]
     lab = lambda a: f"L_{name}_{a - lo:x}"
+    starts = {a for a, _, _ in fn["ins"]}
     targets, body = set(), []
     for addr, ln, att in fn["ins"]:
         m = BRANCH.match(att)
         if m:
             t = int(m.group(2), 16)
             if lo <= t < hi:
+                if t not in starts:
+                    raise SystemExit(f"branch into the middle of an instruction: {t:#x} in {name}")
                 targets.add(t)
                 att = f"{m.group(1)} {lab(t)}"
             else:
@@ -129,6 +151,19 @@ def selftest():
     _, text = convert(fn, syms, False)
     assert "jae L_pkg.f_4" in text and "L_pkg.f_4:\n  retq" in text, text
     assert "mov ssz.ErrSize(%rip),%rax" in text, text
+    for bad in ({"name": "pkg.g", "ins": [(0x100, 2, "jmp 0x101"), (0x102, 1, "retq")]},):
+        try:
+            convert(bad, syms, False)
+            raise AssertionError("mid-instruction branch accepted")
+        except SystemExit:
+            pass
+    clean("pkg.h[uint8]")
+    try:
+        clean("pkg.h_uint8_")
+        raise AssertionError("name collision accepted")
+    except SystemExit:
+        pass
+    CLEANED.clear()
 
 
 if __name__ == "__main__":
