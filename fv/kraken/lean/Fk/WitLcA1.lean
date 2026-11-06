@@ -4,7 +4,7 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Premise witness of `lc_accept_main` (re-proof fix X8), 1 elements
+# Premise witness of `lc_accept_main`, 1 elements
 
 ListC.UnmarshalSSZ on 1 ListU64 elements of lengths [0] (8 list bytes
 after the container offset; element j holds 1..m). Host: data labels, the real ListC.UnmarshalSSZ (index 5),
@@ -19,67 +19,44 @@ open Fk Fk.Code Fk.W Fv1 EthLib.Serialization.Ssz
 
 namespace Fk.WitLcA1
 
+set_option maxRecDepth 100000
+
 def dataLabels : Program :=
   [.label "runtime.writeBarrier", .label "pad1", .label "pad2", .label "pad3", .label "runtime.fvBump"]
 
 def P : Program := dataLabels ++ ListCUnmarshalSSZ ++ ListU64UnmarshalSSZ ++ BumpAlloc ++ BumpNew24
 
-set_option maxRecDepth 100000 in
 theorem P_len : P.length = 642 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
 
 theorem prog_eq : Host.prog = P := rfl
 
-theorem hk_target : ListCUnmarshalSSZ.IsInfixAt Host.prog 5 := by
-  rw [prog_eq]; exact ⟨ListU64UnmarshalSSZ ++ BumpAlloc ++ BumpNew24, by simp [P, dataLabels]⟩
+theorem hk_target : ListCUnmarshalSSZ.IsInfixAt Host.prog 5 :=
+  infixAt_of dataLabels (ListU64UnmarshalSSZ ++ BumpAlloc ++ BumpNew24) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (rfl)
 
-set_option maxRecDepth 100000 in
-theorem hk_fnLu : ListU64UnmarshalSSZ.IsInfixAt Host.prog 437 := by
-  rw [prog_eq]
-  have h : (dataLabels ++ ListCUnmarshalSSZ).length = 437 := by
-    simp only [List.length_append, show ListCUnmarshalSSZ.length = 432 from by rfl]; rfl
-  exact ⟨BumpAlloc ++ BumpNew24, by rw [show P = (dataLabels ++ ListCUnmarshalSSZ) ++ (ListU64UnmarshalSSZ ++ BumpAlloc ++ BumpNew24) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩
+theorem hk_fnLu : ListU64UnmarshalSSZ.IsInfixAt Host.prog 437 :=
+  infixAt_of (dataLabels ++ ListCUnmarshalSSZ) (BumpAlloc ++ BumpNew24) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (by simp only [List.length_append, show ListCUnmarshalSSZ.length = 432 from by rfl]; rfl)
 
-set_option maxRecDepth 100000 in
-theorem hk_makeslice : BumpAlloc.IsInfixAt Host.prog 630 := by
-  rw [prog_eq]
-  have h : (dataLabels ++ ListCUnmarshalSSZ ++ ListU64UnmarshalSSZ).length = 630 := by
-    simp only [List.length_append, show ListCUnmarshalSSZ.length = 432 from by rfl, show ListU64UnmarshalSSZ.length = 193 from by rfl]; rfl
-  exact ⟨BumpNew24, by rw [show P = (dataLabels ++ ListCUnmarshalSSZ ++ ListU64UnmarshalSSZ) ++ (BumpAlloc ++ BumpNew24) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩
+theorem hk_makeslice : BumpAlloc.IsInfixAt Host.prog 630 :=
+  infixAt_of (dataLabels ++ ListCUnmarshalSSZ ++ ListU64UnmarshalSSZ) (BumpNew24) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (by simp only [List.length_append, show ListCUnmarshalSSZ.length = 432 from by rfl, show ListU64UnmarshalSSZ.length = 193 from by rfl]; rfl)
 
-set_option maxRecDepth 100000 in
-theorem hk_newobject : BumpNew24.IsInfixAt Host.prog 636 := by
-  rw [prog_eq]
-  have h : (dataLabels ++ ListCUnmarshalSSZ ++ ListU64UnmarshalSSZ ++ BumpAlloc).length = 636 := by
-    simp only [List.length_append, show ListCUnmarshalSSZ.length = 432 from by rfl, show ListU64UnmarshalSSZ.length = 193 from by rfl, show BumpAlloc.length = 6 from by rfl]; rfl
-  exact ⟨[], by rw [show P = (dataLabels ++ ListCUnmarshalSSZ ++ ListU64UnmarshalSSZ ++ BumpAlloc) ++ (BumpNew24 ++ []) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩
+theorem hk_newobject : BumpNew24.IsInfixAt Host.prog 636 :=
+  infixAt_of (dataLabels ++ ListCUnmarshalSSZ ++ ListU64UnmarshalSSZ ++ BumpAlloc) ([]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (by simp only [List.length_append, show ListCUnmarshalSSZ.length = 432 from by rfl, show ListU64UnmarshalSSZ.length = 193 from by rfl, show BumpAlloc.length = 6 from by rfl]; rfl)
 
-set_option maxRecDepth 100000 in
 theorem hf_target : LabelsFresh ListCUnmarshalSSZ 5 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
 theorem hf_fnLu : LabelsFresh ListU64UnmarshalSSZ 437 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
-theorem hf_makeslice : ∀ i < 630, Host.prog[i]? ≠ some (.label "runtime.makeslice") := by
-  have hl : "runtime.makeslice" ∉ labs (P.take 630) := by decide
-  intro i hi hp
-  apply hl; apply mem_labs; rw [List.mem_iff_getElem?]
-  exact ⟨i, by rw [List.getElem?_take, ite_eq_left_iff.mpr (fun h => absurd hi h)]; exact hp⟩
+theorem hf_makeslice : ∀ i < 630, Host.prog[i]? ≠ some (.label "runtime.makeslice") :=
+  notLabel_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
-theorem hf_newobject : ∀ i < 636, Host.prog[i]? ≠ some (.label "runtime.newobject") := by
-  have hl : "runtime.newobject" ∉ labs (P.take 636) := by decide
-  intro i hi hp
-  apply hl; apply mem_labs; rw [List.mem_iff_getElem?]
-  exact ⟨i, by rw [List.getElem?_take, ite_eq_left_iff.mpr (fun h => absurd hi h)]; exact hp⟩
+theorem hf_newobject : ∀ i < 636, Host.prog[i]? ≠ some (.label "runtime.newobject") :=
+  notLabel_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
 theorem label_wb : label "runtime.writeBarrier" = 0x10000 :=
   mk_label P _ 0 _ (by simp [P, dataLabels]) (by simp [labs])
 
-set_option maxRecDepth 100000 in
 theorem label_bump : label "runtime.fvBump" = 0x10004 :=
   mk_label P _ 4 _ (by simp [P, dataLabels]) (by decide)
 
@@ -87,19 +64,15 @@ abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 
 /-- The list bytes: 1 offsets, then 1 ListU64 encodings (lengths [0]). -/
 def lcTl : List UInt8 := [4, 0, 0, 0, 4, 0, 0, 0]
-set_option maxRecDepth 100000 in
 set_option maxHeartbeats 16000000 in
 theorem lcTl_t0 : (lcTl.take 4).length = 4 := by decide
-set_option maxRecDepth 100000 in
 set_option maxHeartbeats 16000000 in
 theorem lcTl_t1 : (lcTl.drop 4).length = 4 := by decide
-set_option maxRecDepth 100000 in
 set_option maxHeartbeats 16000000 in
 theorem lcTl_parts : ∀ i (hi : i < ([(⟨[]⟩ : ListU64)]).length), (lcTl.drop (lcStart ([(⟨[]⟩ : ListU64)]) i)).take (4 + 8 * ([(⟨[]⟩ : ListU64)])[i].l.length)
     = [4, 0, 0, 0] ++ (u64Bytes ([(⟨[]⟩ : ListU64)])[i].l).toList := by
   intro i hi; simp only [List.length_cons, List.length_nil] at hi
   match i, hi with | 0, _ => rfl | _ + 1, h => omega
-set_option maxRecDepth 100000 in
 set_option maxHeartbeats 16000000 in
 theorem lcTl_nexts : ∀ i, i + 1 < ([(⟨[]⟩ : ListU64)]).length → (lcTl.drop (4 * (i + 1))).take 4
     = (uintBytes 4 (lcStart ([(⟨[]⟩ : ListU64)]) (i + 1))).toList := by
@@ -115,7 +88,6 @@ def s0  (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0x10438, 0x10450, 12, 0, 0, 12, 0x10410, 0, 0, 0, 0, 0, 0, 0, 0x10280, 0⟩, zmms, flags, mem ⟩
 
 set_option maxHeartbeats 8000000 in
-set_option maxRecDepth 100000 in
 theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
     let s := s0  zmms flags
     s.dmem =⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At s.regs.rsp.toBitVec)
@@ -135,10 +107,7 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ fun _ => True := by
   intro s
   have H : Eq ((block ).At (0x10000 : BitVec 64)) (mem ) := rfl
-  conv at H => lhs; unfold block
-  repeat rw [Mem.At_append_sep _ _ _ (by simp only [List.length_append, List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, lcTl_t0, lcTl_t1]; omega)] at H
-  simp only [List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, Nat.reduceAdd, lcTl_t0, lcTl_t1,
-    BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
+  wit_split [lcTl_t0, lcTl_t1]
   have H2 : ((Eq ((Int.toBytes 8 (65552#64).toInt).At 65540#64) ⋆ Eq ((z 640).At 65552#64))
       ⋆ (Eq ([0, 0, 0, 0].At 65536#64)
         ⋆ Eq ((z 4).At 65548#64)
@@ -176,14 +145,11 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
   apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 4).At 65548#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 16).At 66376#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 112).At 66456#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 8).At 66600#64))
-  have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
-  have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
-  simp only [hu0, huN] at H3 ⊢
+  simp only [u64_toBitVec_zero, u64_toBitVec_ofNat] at H3 ⊢
   refine Eq.mp ?_ H3
   exact congrFun (by ac_rfl) _
 
 set_option maxHeartbeats 16000000 in
-set_option maxRecDepth 100000 in
 /-- **Non-vacuity of `lc_accept_main`** (1 elements). Every premise holds in
 this host: makeslice by `bump_makeslice`, newobject by `bump_newobject24`,
 `LuUAccC` by `lu_uacc_holds` on the callee code. The decoder returns nil. -/

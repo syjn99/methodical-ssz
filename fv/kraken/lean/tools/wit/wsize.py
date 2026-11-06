@@ -35,5 +35,5 @@ theorem {k}_size_runs (zmms : RegZmms) (flags : StatusFlags) :
 """)
     src,addr,starts=wgen.gen2(cfg)
     src=src.replace("  apply sep_true (F := )\n","  apply sep_true (F := Std.ExtHashMap.emp)\n  simp only [Std.ExtHashMap.sep_emp]\n",1)
-    open(f"Fk/WitSz{key.capitalize()}.lean","w").write(src)
+    wgen.write(f"Fk/WitSz{key.capitalize()}.lean", src)
     print(key, tlen)

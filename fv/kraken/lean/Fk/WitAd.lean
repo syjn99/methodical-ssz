@@ -4,7 +4,7 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Premise witness of `ad_accept_main` (1b-fix X4)
+# Premise witness of `ad_accept_main`
 
 Host: data labels, the real AttestationData.UnmarshalSSZ (index 5), the 1-byte
 bump `runtime.makeslice` (`bump_makeslice1`), `RtCopy` (`rt_memmove`) and the
@@ -18,12 +18,15 @@ open Fk Fk.Code Fk.W
 
 namespace Fk.WitAd
 
+set_option maxRecDepth 100000
+
+set_option maxRecDepth 100000
+
 def dataLabels : Program :=
   [.label "runtime.writeBarrier", .label "pad1", .label "pad2", .label "pad3", .label "runtime.fvBump"]
 
 def P : Program := dataLabels ++ PrysmAttestationDataUnmarshalSSZ ++ BumpAlloc1 ++ RtCopy ++ BumpNew32
 
-set_option maxRecDepth 100000 in
 theorem P_len : P.length = 229 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
@@ -33,52 +36,43 @@ theorem prog_eq : Host.prog = P := rfl
 theorem hk_target : PrysmAttestationDataUnmarshalSSZ.IsInfixAt Host.prog 5 := by
   rw [prog_eq]; exact ⟨BumpAlloc1 ++ RtCopy ++ BumpNew32, by simp [P, dataLabels]⟩
 
-set_option maxRecDepth 100000 in
 theorem hk_makeslice : BumpAlloc1.IsInfixAt Host.prog 191 := by
   rw [prog_eq]
   have h : (dataLabels ++ PrysmAttestationDataUnmarshalSSZ).length = 191 := by
     simp only [List.length_append, show PrysmAttestationDataUnmarshalSSZ.length = 186 from by rfl]; rfl
   exact ⟨RtCopy ++ BumpNew32, by rw [P, List.append_assoc, List.append_assoc, ← h, List.drop_left]⟩
 
-set_option maxRecDepth 100000 in
 theorem hk_rtcopy : RtCopy.IsInfixAt Host.prog 197 := by
   rw [prog_eq]
   have h : (dataLabels ++ PrysmAttestationDataUnmarshalSSZ ++ BumpAlloc1).length = 197 := by
     simp only [List.length_append, show PrysmAttestationDataUnmarshalSSZ.length = 186 from by rfl, show BumpAlloc1.length = 6 from by rfl]; rfl
   exact ⟨BumpNew32, by rw [P, List.append_assoc, ← h, List.drop_left]⟩
 
-set_option maxRecDepth 100000 in
 theorem hk_newobject : BumpNew32.IsInfixAt Host.prog 223 := by
   rw [prog_eq]
   have h : (dataLabels ++ PrysmAttestationDataUnmarshalSSZ ++ BumpAlloc1 ++ RtCopy).length = 223 := by
     simp only [List.length_append, show PrysmAttestationDataUnmarshalSSZ.length = 186 from by rfl, show BumpAlloc1.length = 6 from by rfl, show RtCopy.length = 26 from by rfl]; rfl
   exact ⟨[], by rw [P, ← h, List.drop_left]; simp⟩
 
-set_option maxRecDepth 100000 in
 theorem hf_target : LabelsFresh PrysmAttestationDataUnmarshalSSZ 5 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
 theorem hf_makeslice : ∀ i < 191, Host.prog[i]? ≠ some (.label "runtime.makeslice") := by
   have hl : "runtime.makeslice" ∉ labs (P.take 191) := by decide
   intro i hi hp
   apply hl; apply mem_labs; rw [List.mem_iff_getElem?]
   exact ⟨i, by rw [List.getElem?_take, ite_eq_left_iff.mpr (fun h => absurd hi h)]; exact hp⟩
 
-set_option maxRecDepth 100000 in
 theorem hf_rtcopy : LabelsFresh RtCopy 197 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
 theorem hf_newobject : ∀ i < 223, Host.prog[i]? ≠ some (.label "runtime.newobject") := by
   have hl : "runtime.newobject" ∉ labs (P.take 223) := by decide
   intro i hi hp
   apply hl; apply mem_labs; rw [List.mem_iff_getElem?]
   exact ⟨i, by rw [List.getElem?_take, ite_eq_left_iff.mpr (fun h => absurd hi h)]; exact hp⟩
 
-set_option maxRecDepth 100000 in
 theorem label_wb : label "runtime.writeBarrier" = 0x10000 :=
   mk_label P _ 0 _ (by simp [P, dataLabels]) (by simp [labs])
 
-set_option maxRecDepth 100000 in
 theorem label_bump : label "runtime.fvBump" = 0x10004 :=
   mk_label P _ 4 _ (by simp [P, dataLabels]) (by decide)
 
@@ -93,7 +87,6 @@ def s0 (in0 in1 root se sroot te troot : List UInt8) (zmms : RegZmms) (flags : S
   ⟨⟨0x10188, 0x10108, 128, 0, 0, 128, 0x100f0, 0, 0, 0, 0, 0, 0, 0, 0x100a0, 0⟩, zmms, flags, mem in0 in1 root se sroot te troot⟩
 
 set_option maxHeartbeats 4000000 in
-set_option maxRecDepth 100000 in
 theorem s_mem (in0 in1 root se sroot te troot : List UInt8) (h0 : in0.length = 8) (h1 : in1.length = 8) (hroot : root.length = 32) (hse : se.length = 8) (hsroot : sroot.length = 32) (hte : te.length = 8) (htroot : troot.length = 32) (zmms : RegZmms) (flags : StatusFlags) :
     let s := s0 in0 in1 root se sroot te troot zmms flags
     s.dmem =⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At s.regs.rsp.toBitVec)

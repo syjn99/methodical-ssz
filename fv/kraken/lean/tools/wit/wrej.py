@@ -71,5 +71,5 @@ theorem label_err : label "{lab}" = 0x10000 :=
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0""",1)
     src=wgen.sub(src,"  simp only [s, s0, UInt64.toBitVec_ofNat,","  rw [label_err]\n  simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd]\n  simp only [s, s0, UInt64.toBitVec_ofNat,",1)
     src=wgen.post_ac(src)
-    open(f"Fk/WitRj{key}.lean","w").write(src)
+    wgen.write(f"Fk/WitRj{key}.lean", src)
     print(key, tlen)

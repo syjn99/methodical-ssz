@@ -3,7 +3,7 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Premise witness of `cp_marshal_main` (1b-fix X4)
+# Premise witness of `cp_marshal_main`
 
 Host: data labels, the real Checkpoint.MarshalSSZTo (index 5) and `RtCopy`
 (`rt_memmove`). For every epoch word, root and destination prefix `pre`
@@ -15,12 +15,15 @@ open Fk Fk.Code Fk.W
 
 namespace Fk.WitCpM
 
+set_option maxRecDepth 100000
+
+set_option maxRecDepth 100000
+
 def dataLabels : Program :=
   [.label "runtime.writeBarrier", .label "pad1", .label "pad2", .label "pad3", .label "runtime.fvBump"]
 
 def P : Program := dataLabels ++ PrysmCheckpointMarshalSSZTo ++ RtCopy
 
-set_option maxRecDepth 100000 in
 theorem P_len : P.length = 113 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
@@ -30,17 +33,14 @@ theorem prog_eq : Host.prog = P := rfl
 theorem hk_target : PrysmCheckpointMarshalSSZTo.IsInfixAt Host.prog 5 := by
   rw [prog_eq]; exact ⟨RtCopy, by simp [P, dataLabels]⟩
 
-set_option maxRecDepth 100000 in
 theorem hf_target : LabelsFresh PrysmCheckpointMarshalSSZTo 5 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
 theorem hk_rtcopy : RtCopy.IsInfixAt Host.prog 87 := by
   rw [prog_eq]
   have h : (dataLabels ++ PrysmCheckpointMarshalSSZTo).length = 87 := by
     simp only [List.length_append, show PrysmCheckpointMarshalSSZTo.length = 82 from by rfl]; rfl
   exact ⟨[], by rw [P, ← h, List.drop_left]; simp⟩
 
-set_option maxRecDepth 100000 in
 theorem hf_rtcopy : LabelsFresh RtCopy 87 := labelsFresh_of (by rw [prog_eq]; decide)
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
@@ -54,7 +54,6 @@ def s0 (e8 root pre : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : Machi
   ⟨⟨0x10098, 0x100d8, UInt64.ofNat pre.length, 0, 0, UInt64.ofNat (pre.length + 40), 0x10080, 0, 0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags, mem e8 root pre⟩
 
 set_option maxHeartbeats 4000000 in
-set_option maxRecDepth 100000 in
 theorem s_mem (e8 root pre : List UInt8) (he8 : e8.length = 8) (hroot : root.length = 32) (hpl : pre.length ≤ 1000) (zmms : RegZmms) (flags : StatusFlags) :
     let s := s0 e8 root pre zmms flags
     s.dmem =⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At s.regs.rsp.toBitVec)
@@ -76,10 +75,8 @@ theorem s_mem (e8 root pre : List UInt8) (he8 : e8.length = 8) (hroot : root.len
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
   apply sep_true (F := Eq ((z 72).At 65552#64) ⋆ Eq ((z 8).At 65640#64) ⋆ Eq ((z 8).At 65672#64)
-    ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 32).At 65712#64))  -- the cap of c.Root (re-proof fix X4)
-  have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
-  have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
-  simp only [hu0, huN] at H ⊢
+    ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 32).At 65712#64))  -- the cap of c.Root
+  simp only [u64_toBitVec_zero, u64_toBitVec_ofNat] at H ⊢
   refine Eq.mp ?_ H
   exact congrFun (by ac_rfl) _
 

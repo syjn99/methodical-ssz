@@ -4,7 +4,7 @@ import Fk.BumpMore
 import Fk.WHost
 
 /-!
-# Premise witness of `cp_accept_main` (1b-fix X4)
+# Premise witness of `cp_accept_main`
 
 Host: data labels, the real Checkpoint.UnmarshalSSZ (index 5), the 1-byte bump
 `runtime.makeslice` (index 77, `bump_makeslice1`) and `RtCopy` (index 83,
@@ -17,12 +17,15 @@ open Fk Fk.Code Fk.W
 
 namespace Fk.WitCp
 
+set_option maxRecDepth 100000
+
+set_option maxRecDepth 100000
+
 def dataLabels : Program :=
   [.label "runtime.writeBarrier", .label "pad1", .label "pad2", .label "pad3", .label "runtime.fvBump"]
 
 def P : Program := dataLabels ++ PrysmCheckpointUnmarshalSSZ ++ BumpAlloc1 ++ RtCopy
 
-set_option maxRecDepth 100000 in
 theorem P_len : P.length = 109 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
@@ -44,24 +47,19 @@ theorem hk83 : RtCopy.IsInfixAt Host.prog 83 := by
     rw [List.length_append, List.length_append, show PrysmCheckpointUnmarshalSSZ.length = 72 from by rfl]; rfl
   exact ⟨[], by rw [P, ← h, List.drop_left]; simp⟩
 
-set_option maxRecDepth 100000 in
 theorem hf5 : LabelsFresh PrysmCheckpointUnmarshalSSZ 5 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
 theorem hf83 : LabelsFresh RtCopy 83 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
 theorem hf77 : ∀ i < 77, Host.prog[i]? ≠ some (.label "runtime.makeslice") := by
   have hl : "runtime.makeslice" ∉ labs (P.take 77) := by decide
   intro i hi hp
   apply hl; apply mem_labs; rw [List.mem_iff_getElem?]
   exact ⟨i, by rw [List.getElem?_take, ite_eq_left_iff.mpr (fun h => absurd hi h)]; exact hp⟩
 
-set_option maxRecDepth 100000 in
 theorem label_wb : label "runtime.writeBarrier" = 0x10000 :=
   mk_label P _ 0 _ (by simp [P, dataLabels]) (by simp [labs])
 
-set_option maxRecDepth 100000 in
 theorem label_bump : label "runtime.fvBump" = 0x10004 :=
   mk_label P _ 4 _ (by simp [P, dataLabels]) (by decide)
 
@@ -76,7 +74,6 @@ def cs0 (e8 root : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineD
   ⟨⟨0x100a8, 0x10080, 40, 0, 0, 40, 0x10068, 0, 0, 0, 0, 0, 0, 0, 0x10020, 0⟩, zmms, flags, mem e8 root⟩
 
 set_option maxHeartbeats 4000000 in
-set_option maxRecDepth 100000 in
 theorem cs_mem (e8 root : List UInt8) (he8 : e8.length = 8) (hroot : root.length = 32) (zmms : RegZmms) (flags : StatusFlags) :
     let s := cs0 e8 root zmms flags
     s.dmem =⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At s.regs.rsp.toBitVec)

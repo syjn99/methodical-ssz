@@ -69,5 +69,5 @@ theorem ne_accept_runs (a8 : List UInt8) (sg : Scalars) (lg : ListU64) (ha8 : a8
     (fun _ h => ⟨h.1, h.2.1⟩)
 """)
 src,addr,st=wgen.gen(cfg)
-open(f'Fk/WitNe{N}.lean','w').write(src)
+wgen.write(f'Fk/WitNe{N}.lean', src)
 print(st)

@@ -4,7 +4,7 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Premise witness of `lum_grow_site` (re-proof fix X8)
+# Premise witness of `lum_grow_site`
 
 ListU64.MarshalSSZTo at directive 13 (after the capacity check of the first
 append): dst = (p, 2, 3) with its bytes, rdx = len + 4 = 6 > cap 3, so the
@@ -18,39 +18,32 @@ open Fk Fk.Code Fk.W
 
 namespace Fk.WitLuG
 
+set_option maxRecDepth 100000
+
 def dataLabels : Program :=
   [.label "runtime.writeBarrier", .label "pad1", .label "pad2", .label "pad3", .label "runtime.fvBump"]
 
 def P : Program := dataLabels ++ ListU64MarshalSSZTo ++ RtCopy
 
-set_option maxRecDepth 100000 in
 theorem P_len : P.length = 122 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
 
 theorem prog_eq : Host.prog = P := rfl
 
-theorem hk_target : ListU64MarshalSSZTo.IsInfixAt Host.prog 5 := by
-  rw [prog_eq]; exact ⟨RtCopy, by simp [P, dataLabels]⟩
+theorem hk_target : ListU64MarshalSSZTo.IsInfixAt Host.prog 5 :=
+  infixAt_of dataLabels (RtCopy) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (rfl)
 
-set_option maxRecDepth 100000 in
-theorem hk_rtcopy : RtCopy.IsInfixAt Host.prog 96 := by
-  rw [prog_eq]
-  have h : (dataLabels ++ ListU64MarshalSSZTo).length = 96 := by
-    simp only [List.length_append, show ListU64MarshalSSZTo.length = 91 from by rfl]; rfl
-  exact ⟨[], by rw [show P = (dataLabels ++ ListU64MarshalSSZTo) ++ (RtCopy ++ []) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩
+theorem hk_rtcopy : RtCopy.IsInfixAt Host.prog 96 :=
+  infixAt_of (dataLabels ++ ListU64MarshalSSZTo) ([]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (by simp only [List.length_append, show ListU64MarshalSSZTo.length = 91 from by rfl]; rfl)
 
-set_option maxRecDepth 100000 in
 theorem hf_target : LabelsFresh ListU64MarshalSSZTo 5 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
 theorem hf_rtcopy : LabelsFresh RtCopy 96 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
 theorem label_wb : label "runtime.writeBarrier" = 0x10000 :=
   mk_label P _ 0 _ (by simp [P, dataLabels]) (by simp [labs])
 
-set_option maxRecDepth 100000 in
 theorem label_bump : label "runtime.fvBump" = 0x10004 :=
   mk_label P _ 4 _ (by simp [P, dataLabels]) (by decide)
 
@@ -65,7 +58,6 @@ def s0  (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0x120a8, 0x120c0, 2, 6, 0, 3, 0x12030, 0, 0, 0, 0, 0, 0, 0, 0, 0⟩, zmms, flags, mem ⟩
 
 set_option maxHeartbeats 8000000 in
-set_option maxRecDepth 100000 in
 theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
     let s := s0  zmms flags
     s.dmem =⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 112)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 8#64))
@@ -73,10 +65,7 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
       ⋆ Eq ([7, 7].At s.regs.rbx.toBitVec) ⋆ bumpHeap 8216 ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ fun _ => True := by
   intro s
   have H : Eq ((block ).At (0x10000 : BitVec 64)) (mem ) := rfl
-  conv at H => lhs; unfold block
-  repeat rw [Mem.At_append_sep _ _ _ (by simp only [List.length_append, List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil]; omega)] at H
-  simp only [List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, Nat.reduceAdd,
-    BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
+  wit_split
   have H2 : ((Eq ((Int.toBytes 8 (65552#64).toInt).At 65540#64) ⋆ Eq ((z 8216).At 65552#64))
       ⋆ (Eq ([0, 0, 0, 0].At 65536#64)
         ⋆ Eq ((z 4).At 65548#64)
@@ -93,9 +82,7 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
   apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 4).At 65548#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 72).At 73816#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 24).At 73896#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 1).At 73922#64))
-  have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
-  have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
-  try simp only [hu0, huN] at H3 ⊢
+  try simp only [u64_toBitVec_zero, u64_toBitVec_ofNat] at H3 ⊢
   refine Eq.mp ?_ H3
   exact congrFun (by ac_rfl) _
 

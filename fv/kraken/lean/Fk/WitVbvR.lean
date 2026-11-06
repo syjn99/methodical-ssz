@@ -5,7 +5,7 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Direct premise witness of `vbv_reject_pad_main` (re-proof fix X8)
+# Direct premise witness of `vbv_reject_pad_main`
 
 Host: data labels (`go_string._` at 0x10001), the real ssz.ValidateBitvector
 (index 5), `RtErr` (`rt_errorf_nil`) and `BumpNew16` (`bump_newobject16`),
@@ -18,57 +18,41 @@ open Fk Fk.Code Fk.W
 
 namespace Fk.WitVbvR
 
+set_option maxRecDepth 100000
+
 def dataLabels : Program :=
   [.label "runtime.writeBarrier", .label "go_string._", .label "pad2", .label "pad3", .label "runtime.fvBump"]
 
 def P : Program := dataLabels ++ ValidateBitvector ++ RtErr ++ BumpNew16
 
-set_option maxRecDepth 100000 in
 theorem P_len : P.length = 99 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
 
 theorem prog_eq : Host.prog = P := rfl
 
-theorem hk_target : ValidateBitvector.IsInfixAt Host.prog 5 := by
-  rw [prog_eq]; exact ⟨RtErr ++ BumpNew16, by simp [P, dataLabels]⟩
+theorem hk_target : ValidateBitvector.IsInfixAt Host.prog 5 :=
+  infixAt_of dataLabels (RtErr ++ BumpNew16) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (rfl)
 
-set_option maxRecDepth 100000 in
-theorem hk_rterr : RtErr.IsInfixAt Host.prog 78 := by
-  rw [prog_eq]
-  have h : (dataLabels ++ ValidateBitvector).length = 78 := by
-    simp only [List.length_append, show ValidateBitvector.length = 73 from by rfl]; rfl
-  exact ⟨BumpNew16, by rw [show P = (dataLabels ++ ValidateBitvector) ++ (RtErr ++ BumpNew16) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩
+theorem hk_rterr : RtErr.IsInfixAt Host.prog 78 :=
+  infixAt_of (dataLabels ++ ValidateBitvector) (BumpNew16) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (by simp only [List.length_append, show ValidateBitvector.length = 73 from by rfl]; rfl)
 
-set_option maxRecDepth 100000 in
-theorem hk_newobject : BumpNew16.IsInfixAt Host.prog 93 := by
-  rw [prog_eq]
-  have h : (dataLabels ++ ValidateBitvector ++ RtErr).length = 93 := by
-    simp only [List.length_append, show ValidateBitvector.length = 73 from by rfl, show RtErr.length = 15 from by rfl]; rfl
-  exact ⟨[], by rw [show P = (dataLabels ++ ValidateBitvector ++ RtErr) ++ (BumpNew16 ++ []) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩
+theorem hk_newobject : BumpNew16.IsInfixAt Host.prog 93 :=
+  infixAt_of (dataLabels ++ ValidateBitvector ++ RtErr) ([]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (by simp only [List.length_append, show ValidateBitvector.length = 73 from by rfl, show RtErr.length = 15 from by rfl]; rfl)
 
-set_option maxRecDepth 100000 in
 theorem hf_target : LabelsFresh ValidateBitvector 5 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
 theorem hf_rterr : LabelsFresh RtErr 78 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
-theorem hf_newobject : ∀ i < 93, Host.prog[i]? ≠ some (.label "runtime.newobject") := by
-  have hl : "runtime.newobject" ∉ labs (P.take 93) := by decide
-  intro i hi hp
-  apply hl; apply mem_labs; rw [List.mem_iff_getElem?]
-  exact ⟨i, by rw [List.getElem?_take, ite_eq_left_iff.mpr (fun h => absurd hi h)]; exact hp⟩
+theorem hf_newobject : ∀ i < 93, Host.prog[i]? ≠ some (.label "runtime.newobject") :=
+  notLabel_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
 theorem label_wb : label "runtime.writeBarrier" = 0x10000 :=
   mk_label P _ 0 _ (by simp [P, dataLabels]) (by simp [labs])
 
-set_option maxRecDepth 100000 in
 theorem label_bump : label "runtime.fvBump" = 0x10004 :=
   mk_label P _ 4 _ (by simp [P, dataLabels]) (by decide)
 
-set_option maxRecDepth 100000 in
 theorem label_gs : label "go_string._" = 0x10001 :=
   mk_label P _ 1 _ (by simp [P, dataLabels]) (by decide)
 
@@ -83,7 +67,6 @@ def s0 (b : UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0x10070, 1, 1, 0, 0, 4, 0x10060, 0, 0, 0, 0, 0, 0, 0, 0x10010, 0⟩, zmms, flags, mem b⟩
 
 set_option maxHeartbeats 8000000 in
-set_option maxRecDepth 100000 in
 theorem s_mem (b : UInt8)  (zmms : RegZmms) (flags : StatusFlags) :
     let s := s0 b zmms flags
     s.dmem =⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At s.regs.rsp.toBitVec)
@@ -95,10 +78,7 @@ theorem s_mem (b : UInt8)  (zmms : RegZmms) (flags : StatusFlags) :
       ⋆ Eq (vbvFmt.At (label "go_string._" + 27706).toBitVec) ⋆ bumpHeap 16 ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ fun _ => True := by
   intro s
   have H : Eq ((block b).At (0x10000 : BitVec 64)) (mem b) := rfl
-  conv at H => lhs; unfold block
-  repeat rw [Mem.At_append_sep _ _ _ (by simp only [List.length_append, List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, vbvFmt_len]; omega)] at H
-  simp only [List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, Nat.reduceAdd, vbvFmt_len,
-    BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
+  wit_split [vbvFmt_len]
   have H2 : ((Eq ((Int.toBytes 8 (65552#64).toInt).At 65540#64) ⋆ Eq ((z 16).At 65552#64))
       ⋆ (Eq ([0, 0, 0, 0].At 65536#64)
         ⋆ Eq ((z 4).At 65548#64)
@@ -118,9 +98,7 @@ theorem s_mem (b : UInt8)  (zmms : RegZmms) (flags : StatusFlags) :
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
   apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 4).At 65548#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 27594).At 65649#64))
-  have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
-  have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
-  simp only [hu0, huN] at H3 ⊢
+  simp only [u64_toBitVec_zero, u64_toBitVec_ofNat] at H3 ⊢
   refine Eq.mp ?_ H3
   exact congrFun (by ac_rfl) _
 

@@ -2,7 +2,7 @@
 
 `python3 tools/wit/wgen.py` (from fv/kraken/lean) runs every generator in ALL.
 """
-import subprocess, sys
+import re, subprocess, sys
 
 CH0 = 0x10010  # gen: first address after write barrier, bump pointer and gap
 
@@ -68,6 +68,26 @@ def sub(src, old, new, count=-1):
     """str.replace that fails when `old` does not occur (a template change)."""
     assert old in src, f"template text not found: {old[:80]!r}"
     return src.replace(old, new, count)
+
+def compact(src):
+    """Final text pass over every generated file: one file-level maxRecDepth,
+    the UInt64 rewrite lemmas of Fk.WHost in place of local `hu0`/`huN`."""
+    src = re.sub(r" \((?:REPORT-)?(?:re-proof|1b-fix)[^()]*\)", "", src)  # session tags: HISTORY.md
+    src = src.replace("set_option maxRecDepth 100000 in\n", "")
+    ns = re.search(r"^namespace Fk\.\w+\n", src, re.M)
+    src = src[:ns.end()] + "\nset_option maxRecDepth 100000\n" + src[ns.end():]
+    src = re.sub(r"  have hu0 : \(UInt64\.toBitVec 0\) = 0#64 := rfl\n  have huN : .* := fun _ => rfl\n(  (?:try )?simp only )\[hu0, huN\]",
+                 r"\1[u64_toBitVec_zero, u64_toBitVec_ofNat]", src)
+    assert "hu0" not in src and "huN" not in src
+    def split(m):
+        assert m["a"] == m["b"], (m["a"], m["b"])
+        return f"  wit_split [{m['a'][2:]}]\n" if m["a"] else "  wit_split\n"
+    src = re.sub(r"  conv at H => lhs; unfold block\n  repeat rw \[Mem\.At_append_sep _ _ _ \(by simp only \[List\.length_append, List\.length_replicate, Int\.toBytes_length, List\.length_cons, List\.length_nil(?P<a>[^\]]*)\]; omega\)\] at H\n"
+                 r"  simp only \[List\.length_replicate, Int\.toBytes_length, List\.length_cons, List\.length_nil, Nat\.reduceAdd(?P<b>[^\]]*),\n    BitVec\.ofNat_eq_ofNat, BitVec\.reduceAdd\] at H\n", split, src)
+    return src
+
+def write(path, src):
+    open(path, "w").write(compact(src))
 
 def addrs(ch, a=65536):
     """Start address of every chunk (gen2 layout: the block starts at 0x10000)."""
@@ -138,13 +158,10 @@ def host(c, hf_inline):
         suf=[sd for _,sd,_ in pieces[i+1:]]
         sufs=" ++ ".join(suf) if suf else "[]"
         s0=starts[k]
-        if i==0:
-            L.append(f"theorem hk_{k} : {d}.IsInfixAt Host.prog {s0} := by\n  rw [prog_eq]; exact ⟨{sufs}, by simp [P, dataLabels]⟩\n")
-        else:
-            prel="(" + " ++ ".join(pre) + ")"
-            lens=" ".join(f"show {pd}.length = {pn} from by rfl," for _,pd,pn in pieces[:i])
-            L.append(f"set_option maxRecDepth 100000 in\ntheorem hk_{k} : {d}.IsInfixAt Host.prog {s0} := by\n  rw [prog_eq]\n  have h : {prel}.length = {s0} := by\n    simp only [List.length_append, {lens.rstrip(',')}]; rfl\n"
-                     f"  exact ⟨{sufs}, by rw [show P = {prel} ++ ({d} ++ {sufs}) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩\n")
+        prel=" ++ ".join(pre)
+        prel=f"({prel})" if i else prel
+        hn="rfl" if i==0 else "by simp only [List.length_append, " + ", ".join(f"show {pd}.length = {pn} from by rfl" for _,pd,pn in pieces[:i]) + "]; rfl"
+        L.append(f"theorem hk_{k} : {d}.IsInfixAt Host.prog {s0} :=\n  infixAt_of {prel} ({sufs}) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) ({hn})\n")
         if hf_inline:
             L.append(f"set_option maxRecDepth 100000 in\ntheorem hf_{k} : LabelsFresh {d} {s0} := labelsFresh_of (by rw [prog_eq]; decide)\n")
     return L, pieces, starts
@@ -165,13 +182,7 @@ def gen(c):
             L.append(f"set_option maxRecDepth 100000 in\ntheorem hf_{k} : LabelsFresh {d} {s0} := labelsFresh_of (by rw [prog_eq]; decide)\n")
         else:
             lab={"makeslice":"runtime.makeslice","newobject":"runtime.newobject"}[k]
-            L.append(f'''set_option maxRecDepth 100000 in
-theorem hf_{k} : ∀ i < {s0}, Host.prog[i]? ≠ some (.label "{lab}") := by
-  have hl : "{lab}" ∉ labs (P.take {s0}) := by decide
-  intro i hi hp
-  apply hl; apply mem_labs; rw [List.mem_iff_getElem?]
-  exact ⟨i, by rw [List.getElem?_take, ite_eq_left_iff.mpr (fun h => absurd hi h)]; exact hp⟩
-''')
+            L.append(f'theorem hf_{k} : ∀ i < {s0}, Host.prog[i]? ≠ some (.label "{lab}") :=\n  notLabel_of (by rw [prog_eq]; decide)\n')
     L.append('''set_option maxRecDepth 100000 in
 theorem label_wb : label "runtime.writeBarrier" = 0x10000 :=
   mk_label P _ 0 _ (by simp [P, dataLabels]) (by simp [labs])
@@ -257,7 +268,7 @@ theorem s_mem {pb} {lh} (zmms : RegZmms) (flags : StatusFlags) :
   have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
   have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
   simp only [hu0, huN] at H ⊢
-  try simp only [BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H ⊢  -- fold `4#64 + a` after huN (re-proof fix X4)
+  try simp only [BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H ⊢
   first | (refine Eq.mp ?_ H; exact congrFun (by ac_rfl) _) | ecancel
 ''')
     L.append(c["main"](starts))

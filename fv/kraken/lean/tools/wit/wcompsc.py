@@ -70,5 +70,5 @@ theorem sc_compose_runs (zmms : RegZmms) (flags : StatusFlags) :
 src,addr,starts=wgen.gen2(cfg)
 src=wgen.sub(src,"  first | (refine Eq.mp ?_ H; exact congrFun (by ac_rfl) _) | ecancel","  refine Eq.mp ?_ H\n  exact congrFun (by ac_rfl) _",1)
 src=wgen.sub(src,"set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem","set_option maxHeartbeats 32000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem",1)
-open("Fk/WitScComp.lean","w").write(src)
+wgen.write("Fk/WitScComp.lean", src)
 print(addr["ra"], addr["c0"], DP, starts)

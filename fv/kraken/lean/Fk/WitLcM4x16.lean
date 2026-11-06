@@ -3,7 +3,7 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Premise witness of `lc_marshal_main` (re-proof fix X8), 4 elements
+# Premise witness of `lc_marshal_main`, 4 elements
 
 ListC.MarshalSSZTo (fast path) on 4 ListU64 elements of lengths [16, 16, 16, 16]. The
 receiver header is (A, 4, 4); every element is a full Go ListU64 object
@@ -16,22 +16,22 @@ open Fk Fk.Code Fk.W Fv1
 
 namespace Fk.WitLcM4x16
 
+set_option maxRecDepth 100000
+
 def dataLabels : Program :=
   [.label "runtime.writeBarrier", .label "pad1", .label "pad2", .label "pad3", .label "runtime.fvBump"]
 
 def P : Program := dataLabels ++ ListCMarshalSSZTo
 
-set_option maxRecDepth 100000 in
 theorem P_len : P.length = 240 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
 
 theorem prog_eq : Host.prog = P := rfl
 
-theorem hk_target : ListCMarshalSSZTo.IsInfixAt Host.prog 5 := by
-  rw [prog_eq]; exact ⟨[], by simp [P, dataLabels]⟩
+theorem hk_target : ListCMarshalSSZTo.IsInfixAt Host.prog 5 :=
+  infixAt_of dataLabels ([]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (rfl)
 
-set_option maxRecDepth 100000 in
 theorem hf_target : LabelsFresh ListCMarshalSSZTo 5 := labelsFresh_of (by rw [prog_eq]; decide)
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
@@ -42,19 +42,15 @@ def objs : DataMem → Prop := lcElem (0x10088 : BitVec 64) 0 (0x100a8 : BitVec 
 theorem u64nil : (u64Bytes ([] : List UInt64)).toList = [] := by decide
 
 set_option maxHeartbeats 4000000 in
-set_option maxRecDepth 100000 in
 theorem u64v0 : (u64Bytes [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]).toList = [1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0] := by decide
 
 set_option maxHeartbeats 4000000 in
-set_option maxRecDepth 100000 in
 theorem u64v1 : (u64Bytes [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]).toList = [1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0] := by decide
 
 set_option maxHeartbeats 4000000 in
-set_option maxRecDepth 100000 in
 theorem u64v2 : (u64Bytes [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]).toList = [1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0] := by decide
 
 set_option maxHeartbeats 4000000 in
-set_option maxRecDepth 100000 in
 theorem u64v3 : (u64Bytes [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]).toList = [1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0] := by decide
 
 def block  : List UInt8 :=
@@ -66,7 +62,6 @@ def s0  (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0x10070, 0x10308, 0, 0, 0, 548, 0x10058, 0, 0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags, mem ⟩
 
 set_option maxHeartbeats 4000000 in
-set_option maxRecDepth 100000 in
 theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
     let s := s0  zmms flags
     s.dmem =⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At s.regs.rsp.toBitVec)
@@ -82,23 +77,17 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
       ⋆ Eq ((z 528).At (s.regs.rbx.toBitVec + BitVec.ofNat 64 (s.regs.rcx.toNat + 4 + 4 * ([(⟨[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]⟩ : ListU64), (⟨[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]⟩ : ListU64), (⟨[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]⟩ : ListU64), (⟨[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]⟩ : ListU64)]).length))) ⋆ fun _ => True := by
   intro s
   have H : Eq ((block ).At (0x10000 : BitVec 64)) (mem ) := rfl
-  conv at H => lhs; unfold block
-  repeat rw [Mem.At_append_sep _ _ _ (by simp only [List.length_append, List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil]; omega)] at H
-  simp only [List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, Nat.reduceAdd,
-    BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
+  wit_split
   simp only [objs, lcElem, List.length_nil, List.length_cons, List.length_replicate, Int.natCast_zero, Int.cast_ofNat_Int, u64nil, u64v0, u64v1, u64v2, u64v3,
     Nat.reduceMul, Nat.reduceAdd, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd]
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
   apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 32).At 65568#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 4).At 65664#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 16).At 65720#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 16).At 65744#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 16).At 65768#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 16).At 65792#64))
-  have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
-  have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
-  simp only [hu0, huN] at H ⊢
-  try simp only [BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H ⊢  -- fold `4#64 + a` after huN (re-proof fix X4)
+  simp only [u64_toBitVec_zero, u64_toBitVec_ofNat] at H ⊢
+  try simp only [BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H ⊢
   first | (refine Eq.mp ?_ H; exact congrFun (by ac_rfl) _) | ecancel
 
 set_option maxHeartbeats 8000000 in
-set_option maxRecDepth 100000 in
 /-- **Non-vacuity of `lc_marshal_main`** (4 elements, lengths [16, 16, 16, 16]). The
 encoder returns (dst, 548, cap, nil). -/
 theorem lc_marshal_runs (zmms : RegZmms) (flags : StatusFlags) :

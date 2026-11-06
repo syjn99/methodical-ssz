@@ -65,4 +65,4 @@ theorem ne_marshal_runs (zmms : RegZmms) (flags : StatusFlags) :
 """)
 src,addr,starts=wgen.gen2(cfg)
 src=wgen.post_ac(src)
-open(f"Fk/WitNeM{N}.lean","w").write(src); print(N)
+wgen.write(f"Fk/WitNeM{N}.lean", src); print(N)

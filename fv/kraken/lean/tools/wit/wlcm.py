@@ -95,5 +95,5 @@ def objs : DataMem → Prop := {OBJS}
 
 theorem u64nil : (u64Bytes ([] : List UInt64)).toList = [] := by decide"""+U,1)
 src=wgen.sub(src,"  simp only [s, s0, UInt64.toBitVec_ofNat,","  simp only [objs, lcElem, List.length_nil, List.length_cons, List.length_replicate, Int.natCast_zero, Int.cast_ofNat_Int, u64nil"+UL+",\n    Nat.reduceMul, Nat.reduceAdd, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd]\n  simp only [s, s0, UInt64.toBitVec_ofNat,",1)
-open(f"Fk/WitLcM{SUF}.lean","w").write(src)
+wgen.write(f"Fk/WitLcM{SUF}.lean", src)
 print(addr)

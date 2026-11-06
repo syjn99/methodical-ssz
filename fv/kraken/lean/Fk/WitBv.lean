@@ -4,7 +4,7 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Premise witness of `bv_accept_main` (re-proof R3)
+# Premise witness of `bv_accept_main`
 
 Host: data labels, the real BitVec.UnmarshalSSZ (index 5), the real
 ssz.ValidateBitvector (its accept specification `VbvAccC` comes from
@@ -18,53 +18,38 @@ open Fk Fk.Code Fk.W
 
 namespace Fk.WitBv
 
+set_option maxRecDepth 100000
+
 def dataLabels : Program :=
   [.label "runtime.writeBarrier", .label "pad1", .label "pad2", .label "pad3", .label "runtime.fvBump"]
 
 def P : Program := dataLabels ++ BitVecUnmarshalSSZ ++ ValidateBitvector ++ BumpAlloc1
 
-set_option maxRecDepth 100000 in
 theorem P_len : P.length = 184 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
 
 theorem prog_eq : Host.prog = P := rfl
 
-theorem hk_target : BitVecUnmarshalSSZ.IsInfixAt Host.prog 5 := by
-  rw [prog_eq]; exact ⟨ValidateBitvector ++ BumpAlloc1, by simp [P, dataLabels]⟩
+theorem hk_target : BitVecUnmarshalSSZ.IsInfixAt Host.prog 5 :=
+  infixAt_of dataLabels (ValidateBitvector ++ BumpAlloc1) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (rfl)
 
-set_option maxRecDepth 100000 in
-theorem hk_fnVbv : ValidateBitvector.IsInfixAt Host.prog 105 := by
-  rw [prog_eq]
-  have h : (dataLabels ++ BitVecUnmarshalSSZ).length = 105 := by
-    simp only [List.length_append, show BitVecUnmarshalSSZ.length = 100 from by rfl]; rfl
-  exact ⟨BumpAlloc1, by rw [show P = (dataLabels ++ BitVecUnmarshalSSZ) ++ (ValidateBitvector ++ BumpAlloc1) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩
+theorem hk_fnVbv : ValidateBitvector.IsInfixAt Host.prog 105 :=
+  infixAt_of (dataLabels ++ BitVecUnmarshalSSZ) (BumpAlloc1) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (by simp only [List.length_append, show BitVecUnmarshalSSZ.length = 100 from by rfl]; rfl)
 
-set_option maxRecDepth 100000 in
-theorem hk_makeslice : BumpAlloc1.IsInfixAt Host.prog 178 := by
-  rw [prog_eq]
-  have h : (dataLabels ++ BitVecUnmarshalSSZ ++ ValidateBitvector).length = 178 := by
-    simp only [List.length_append, show BitVecUnmarshalSSZ.length = 100 from by rfl, show ValidateBitvector.length = 73 from by rfl]; rfl
-  exact ⟨[], by rw [show P = (dataLabels ++ BitVecUnmarshalSSZ ++ ValidateBitvector) ++ (BumpAlloc1 ++ []) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩
+theorem hk_makeslice : BumpAlloc1.IsInfixAt Host.prog 178 :=
+  infixAt_of (dataLabels ++ BitVecUnmarshalSSZ ++ ValidateBitvector) ([]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (by simp only [List.length_append, show BitVecUnmarshalSSZ.length = 100 from by rfl, show ValidateBitvector.length = 73 from by rfl]; rfl)
 
-set_option maxRecDepth 100000 in
 theorem hf_target : LabelsFresh BitVecUnmarshalSSZ 5 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
 theorem hf_fnVbv : LabelsFresh ValidateBitvector 105 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
-theorem hf_makeslice : ∀ i < 178, Host.prog[i]? ≠ some (.label "runtime.makeslice") := by
-  have hl : "runtime.makeslice" ∉ labs (P.take 178) := by decide
-  intro i hi hp
-  apply hl; apply mem_labs; rw [List.mem_iff_getElem?]
-  exact ⟨i, by rw [List.getElem?_take, ite_eq_left_iff.mpr (fun h => absurd hi h)]; exact hp⟩
+theorem hf_makeslice : ∀ i < 178, Host.prog[i]? ≠ some (.label "runtime.makeslice") :=
+  notLabel_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
 theorem label_wb : label "runtime.writeBarrier" = 0x10000 :=
   mk_label P _ 0 _ (by simp [P, dataLabels]) (by simp [labs])
 
-set_option maxRecDepth 100000 in
 theorem label_bump : label "runtime.fvBump" = 0x10004 :=
   mk_label P _ 4 _ (by simp [P, dataLabels]) (by decide)
 
@@ -79,7 +64,6 @@ def s0 (b : UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0x100a0, 0x10098, 1, 0, 0, 1, 0x10080, 0, 0, 0, 0, 0, 0, 0, 0x10008, 0⟩, zmms, flags, mem b⟩
 
 set_option maxHeartbeats 8000000 in
-set_option maxRecDepth 100000 in
 theorem s_mem (b : UInt8)  (zmms : RegZmms) (flags : StatusFlags) :
     let s := s0 b zmms flags
     s.dmem =⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At s.regs.rsp.toBitVec)
@@ -95,10 +79,7 @@ theorem s_mem (b : UInt8)  (zmms : RegZmms) (flags : StatusFlags) :
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ fun _ => True := by
   intro s
   have H : Eq ((block b).At (0x10000 : BitVec 64)) (mem b) := rfl
-  conv at H => lhs; unfold block
-  repeat rw [Mem.At_append_sep _ _ _ (by simp only [List.length_append, List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil]; omega)] at H
-  simp only [List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, Nat.reduceAdd,
-    BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
+  wit_split
   have H2 : ((Eq ((Int.toBytes 8 (65552#64).toInt).At 65540#64) ⋆ Eq ((z 8).At 65552#64))
       ⋆ (Eq ([0, 0, 0, 0].At 65536#64)
         ⋆ Eq ((z 4).At 65548#64)
@@ -125,9 +106,7 @@ theorem s_mem (b : UInt8)  (zmms : RegZmms) (flags : StatusFlags) :
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
   apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 4).At 65548#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 16).At 65608#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 16).At 65640#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 7).At 65689#64))
-  have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
-  have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
-  simp only [hu0, huN] at H3 ⊢
+  simp only [u64_toBitVec_zero, u64_toBitVec_ofNat] at H3 ⊢
   refine Eq.mp ?_ H3
   exact congrFun (by ac_rfl) _
 

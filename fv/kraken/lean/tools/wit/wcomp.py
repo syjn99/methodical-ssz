@@ -75,5 +75,5 @@ theorem lu_compose_runs (zmms : RegZmms) (flags : StatusFlags) :
       (fun _ h' => ⟨h'.1, h'.2.2.1⟩)⟩)
 """)
 src,addr,starts=wgen.gen(cfg)
-open("Fk/WitLuComp.lean","w").write(src)
+wgen.write("Fk/WitLuComp.lean", src)
 print(addr["ra"], addr["cP"], DP, starts)

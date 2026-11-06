@@ -3,7 +3,7 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Premise witness of `lc_size_main` (re-proof fix X8), 1 elements
+# Premise witness of `lc_size_main`, 1 elements
 
 ListC.SizeSSZ on 1 elements of lengths [1]. Every element is a full Go
 ListU64 object (data pointer, len, cap) with its data; the receiver header is
@@ -14,22 +14,22 @@ open Fk Fk.Code Fk.W
 
 namespace Fk.WitLcS1
 
+set_option maxRecDepth 100000
+
 def dataLabels : Program :=
   [.label "runtime.writeBarrier", .label "pad1", .label "pad2", .label "pad3", .label "runtime.fvBump"]
 
 def P : Program := dataLabels ++ ListCSizeSSZ
 
-set_option maxRecDepth 100000 in
 theorem P_len : P.length = 22 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
 
 theorem prog_eq : Host.prog = P := rfl
 
-theorem hk_target : ListCSizeSSZ.IsInfixAt Host.prog 5 := by
-  rw [prog_eq]; exact ⟨[], by simp [P, dataLabels]⟩
+theorem hk_target : ListCSizeSSZ.IsInfixAt Host.prog 5 :=
+  infixAt_of dataLabels ([]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (rfl)
 
-set_option maxRecDepth 100000 in
 theorem hf_target : LabelsFresh ListCSizeSSZ 5 := labelsFresh_of (by rw [prog_eq]; decide)
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
@@ -43,7 +43,6 @@ def s0  (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0x10008, 0, 0, 0, 0, 0, 0x10000, 0, 0, 0, 0, 0, 0, 0, 0, 0⟩, zmms, flags, mem ⟩
 
 set_option maxHeartbeats 4000000 in
-set_option maxRecDepth 100000 in
 theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
     let s := s0  zmms flags
     s.dmem =⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At s.regs.rsp.toBitVec)
@@ -51,30 +50,21 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
       ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 1).toInt).At (s.regs.rax.toBitVec + 8)) ⋆ fun _ => True := by
   intro s
   have H : Eq ((block ).At (0x10000 : BitVec 64)) (mem ) := rfl
-  conv at H => lhs; unfold block
-  repeat rw [Mem.At_append_sep _ _ _ (by simp only [List.length_append, List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil]; omega)] at H
-  simp only [List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, Nat.reduceAdd,
-    BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
+  wit_split
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
   apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 (BitVec.ofNat 64 1).toInt).At 65560#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 (0x10028 : BitVec 64).toInt).At 65568#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 (0x10040 : BitVec 64).toInt).At 65576#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 (BitVec.ofNat 64 1).toInt).At 65584#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 (BitVec.ofNat 64 1).toInt).At 65592#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 8).At 65600#64))
-  have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
-  have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
-  simp only [hu0, huN] at H ⊢
-  try simp only [BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H ⊢  -- fold `4#64 + a` after huN (re-proof fix X4)
+  simp only [u64_toBitVec_zero, u64_toBitVec_ofNat] at H ⊢
+  try simp only [BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H ⊢
   first | (refine Eq.mp ?_ H; exact congrFun (by ac_rfl) _) | ecancel
 
 set_option maxHeartbeats 8000000 in
-set_option maxRecDepth 100000 in
 theorem hall_0 (zmms : RegZmms) (flags : StatusFlags) :
     (Eq ((Int.toBytes 8 (0x10028 : BitVec 64).toInt).At ((0x10020 : BitVec 64) + BitVec.ofNat 64 (8 * 0)))
       ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 1).toInt).At ((0x10028 : BitVec 64) + 8)) ⋆ fun _ => True)
       (s0 zmms flags).dmem := by
   have H : Eq ((block ).At (0x10000 : BitVec 64)) (mem ) := rfl
-  conv at H => lhs; unfold block
-  repeat rw [Mem.At_append_sep _ _ _ (by simp only [List.length_append, List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil]; omega)] at H
-  simp only [List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, Nat.reduceAdd,
-    BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
+  wit_split
   simp only [s0, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceMul, Nat.reduceMul]
   apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At 65536#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 (0x10020 : BitVec 64).toInt).At 65544#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 (BitVec.ofNat 64 1).toInt).At 65552#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 (BitVec.ofNat 64 1).toInt).At 65560#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 (0x10040 : BitVec 64).toInt).At 65576#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 (BitVec.ofNat 64 1).toInt).At 65592#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 8).At 65600#64))
   try simp only [BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H ⊢

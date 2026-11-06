@@ -3,7 +3,7 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Premise witness of `bv_marshal_main` (re-proof R6)
+# Premise witness of `bv_marshal_main`
 
 Host: data labels, the real BitVec.MarshalSSZTo (index 5) and the real
 ssz.ValidateBitvector (its accept specification from `vbv_acc_holds`). J =
@@ -15,32 +15,27 @@ open Fk Fk.Code Fk.W
 
 namespace Fk.WitBvM
 
+set_option maxRecDepth 100000
+
 def dataLabels : Program :=
   [.label "runtime.writeBarrier", .label "pad1", .label "pad2", .label "pad3", .label "runtime.fvBump"]
 
 def P : Program := dataLabels ++ BitVecMarshalSSZTo ++ ValidateBitvector
 
-set_option maxRecDepth 100000 in
 theorem P_len : P.length = 186 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
 
 theorem prog_eq : Host.prog = P := rfl
 
-theorem hk_target : BitVecMarshalSSZTo.IsInfixAt Host.prog 5 := by
-  rw [prog_eq]; exact ⟨ValidateBitvector, by simp [P, dataLabels]⟩
+theorem hk_target : BitVecMarshalSSZTo.IsInfixAt Host.prog 5 :=
+  infixAt_of dataLabels (ValidateBitvector) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (rfl)
 
-set_option maxRecDepth 100000 in
 theorem hf_target : LabelsFresh BitVecMarshalSSZTo 5 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
-theorem hk_fnVbv : ValidateBitvector.IsInfixAt Host.prog 113 := by
-  rw [prog_eq]
-  have h : (dataLabels ++ BitVecMarshalSSZTo).length = 113 := by
-    simp only [List.length_append, show BitVecMarshalSSZTo.length = 108 from by rfl]; rfl
-  exact ⟨[], by rw [show P = (dataLabels ++ BitVecMarshalSSZTo) ++ (ValidateBitvector ++ []) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩
+theorem hk_fnVbv : ValidateBitvector.IsInfixAt Host.prog 113 :=
+  infixAt_of (dataLabels ++ BitVecMarshalSSZTo) ([]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (by simp only [List.length_append, show BitVecMarshalSSZTo.length = 108 from by rfl]; rfl)
 
-set_option maxRecDepth 100000 in
 theorem hf_fnVbv : LabelsFresh ValidateBitvector 113 := labelsFresh_of (by rw [prog_eq]; decide)
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
@@ -54,7 +49,6 @@ def s0 (b : UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0x10098, 0x100b1, 0, 0, 0, 1, 0x10070, 0, 0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags, mem b⟩
 
 set_option maxHeartbeats 32000000 in
-set_option maxRecDepth 100000 in
 theorem s_mem (b : UInt8)  (zmms : RegZmms) (flags : StatusFlags) :
     let s := s0 b zmms flags
     s.dmem =⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At s.regs.rsp.toBitVec)
@@ -70,17 +64,13 @@ theorem s_mem (b : UInt8)  (zmms : RegZmms) (flags : StatusFlags) :
       ⋆ Eq (([] : List UInt8).At s.regs.rbx.toBitVec) ⋆ Eq ((z 1).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) ⋆ Eq ((z 72).At (s.regs.rsp.toBitVec - 80)) ⋆ fun _ => True := by
   intro s
   have H : Eq ((block b).At (0x10000 : BitVec 64)) (mem b) := rfl
-  conv at H => lhs; unfold block
-  repeat rw [Mem.At_append_sep _ _ _ (by simp only [List.length_append, List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil]; omega)] at H
-  simp only [List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, Nat.reduceAdd,
-    BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
+  wit_split
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
   apply sep_true (F := Std.ExtHashMap.emp)
   simp only [Std.ExtHashMap.sep_emp]
-  have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
-  have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
-  simp only [hu0, huN] at H ⊢
+  simp only [u64_toBitVec_zero, u64_toBitVec_ofNat] at H ⊢
+  try simp only [BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H ⊢
   refine Eq.mp ?_ H
   exact congrFun (by ac_rfl) _
 

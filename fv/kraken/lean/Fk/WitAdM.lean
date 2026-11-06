@@ -3,45 +3,40 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Premise witness of `ad_marshal_main` (1b-fix X4)
+# Premise witness of `ad_marshal_main`
 
 Host: data labels, the real AttestationData.MarshalSSZTo (index 5) and
 `RtCopy` (`rt_memmove`). For every 128 bytes of field values and every
 3-byte destination prefix, `s0` meets every premise of `ad_marshal_main`
 (three memmove calls) and the encoder returns length 3 + 128.
-A symbolic prefix length made the memory lemma time out (REPORT-1b-fix X4).
+A symbolic prefix length made the memory lemma time out.
 -/
 
 open Fk Fk.Code Fk.W
 
 namespace Fk.WitAdM
 
+set_option maxRecDepth 100000
+
 def dataLabels : Program :=
   [.label "runtime.writeBarrier", .label "pad1", .label "pad2", .label "pad3", .label "runtime.fvBump"]
 
 def P : Program := dataLabels ++ PrysmAttestationDataMarshalSSZTo ++ RtCopy
 
-set_option maxRecDepth 100000 in
 theorem P_len : P.length = 366 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
 
 theorem prog_eq : Host.prog = P := rfl
 
-theorem hk_target : PrysmAttestationDataMarshalSSZTo.IsInfixAt Host.prog 5 := by
-  rw [prog_eq]; exact ⟨RtCopy, by simp [P, dataLabels]⟩
+theorem hk_target : PrysmAttestationDataMarshalSSZTo.IsInfixAt Host.prog 5 :=
+  infixAt_of dataLabels (RtCopy) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (rfl)
 
-set_option maxRecDepth 100000 in
 theorem hf_target : LabelsFresh PrysmAttestationDataMarshalSSZTo 5 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
-theorem hk_rtcopy : RtCopy.IsInfixAt Host.prog 340 := by
-  rw [prog_eq]
-  have h : (dataLabels ++ PrysmAttestationDataMarshalSSZTo).length = 340 := by
-    simp only [List.length_append, show PrysmAttestationDataMarshalSSZTo.length = 335 from by rfl]; rfl
-  exact ⟨[], by rw [show P = (dataLabels ++ PrysmAttestationDataMarshalSSZTo) ++ (RtCopy ++ []) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩
+theorem hk_rtcopy : RtCopy.IsInfixAt Host.prog 340 :=
+  infixAt_of (dataLabels ++ PrysmAttestationDataMarshalSSZTo) ([]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (by simp only [List.length_append, show PrysmAttestationDataMarshalSSZTo.length = 335 from by rfl]; rfl)
 
-set_option maxRecDepth 100000 in
 theorem hf_rtcopy : LabelsFresh RtCopy 340 := labelsFresh_of (by rw [prog_eq]; decide)
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
@@ -55,7 +50,6 @@ def s0 (e0 e1 root se sroot te troot pre : List UInt8) (zmms : RegZmms) (flags :
   ⟨⟨0x10110, 0x101e8, 3, 0, 0, 131, 0x100f8, 0, 0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags, mem e0 e1 root se sroot te troot pre⟩
 
 set_option maxHeartbeats 4000000 in
-set_option maxRecDepth 100000 in
 theorem s_mem (e0 e1 root se sroot te troot pre : List UInt8) (h0 : e0.length = 8) (h1 : e1.length = 8) (hroot : root.length = 32) (hse : se.length = 8) (hsroot : sroot.length = 32) (hte : te.length = 8) (htroot : troot.length = 32) (hpl : pre.length = 3) (zmms : RegZmms) (flags : StatusFlags) :
     let s := s0 e0 e1 root se sroot te troot pre zmms flags
     s.dmem =⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At s.regs.rsp.toBitVec)
@@ -84,17 +78,12 @@ theorem s_mem (e0 e1 root se sroot te troot pre : List UInt8) (h0 : e0.length = 
       ⋆ Eq ((z 32).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 96)) ⋆ fun _ => True := by
   intro s
   have H : Eq ((block e0 e1 root se sroot te troot pre).At (0x10000 : BitVec 64)) (mem e0 e1 root se sroot te troot pre) := rfl
-  conv at H => lhs; unfold block
-  repeat rw [Mem.At_append_sep _ _ _ (by simp only [List.length_append, List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, h0, h1, hroot, hse, hsroot, hte, htroot, hpl]; omega)] at H
-  simp only [List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, Nat.reduceAdd, h0, h1, hroot, hse, hsroot, hte, htroot, hpl,
-    BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
+  wit_split [h0, h1, hroot, hse, hsroot, hte, htroot, hpl]
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
   apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 88).At 65552#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 32).At 65672#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 56).At 65720#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 32).At 65840#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 32).At 65920#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 32).At 65984#64))
-  have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
-  have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
-  simp only [hu0, huN] at H ⊢
-  try simp only [BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H ⊢  -- fold `4#64 + a` after huN (re-proof fix X4)
+  simp only [u64_toBitVec_zero, u64_toBitVec_ofNat] at H ⊢
+  try simp only [BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H ⊢
   first | (refine Eq.mp ?_ H; exact congrFun (by ac_rfl) _) | ecancel
 
 /-- **Non-vacuity of `ad_marshal_main`.** Every premise holds in this host, the

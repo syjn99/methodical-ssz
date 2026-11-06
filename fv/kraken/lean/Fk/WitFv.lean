@@ -3,7 +3,7 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Premise witness of `fv_accept_main` (1b-fix X4)
+# Premise witness of `fv_accept_main`
 
 Host: data labels (write barrier, three pads, bump pointer), then the real
 FixedVec.UnmarshalSSZ (index 5), the bump `runtime.makeslice` (index 91,
@@ -17,12 +17,15 @@ open Fk Fk.Code Fk.W
 
 namespace Fk.WitFv
 
+set_option maxRecDepth 100000
+
+set_option maxRecDepth 100000
+
 def dataLabels : Program :=
   [.label "runtime.writeBarrier", .label "pad1", .label "pad2", .label "pad3", .label "runtime.fvBump"]
 
 def P : Program := dataLabels ++ FixedVecUnmarshalSSZ ++ BumpAlloc ++ RtCopy
 
-set_option maxRecDepth 100000 in
 theorem P_len : P.length = 123 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
@@ -44,24 +47,19 @@ theorem hk97 : RtCopy.IsInfixAt Host.prog 97 := by
     rw [List.length_append, List.length_append, show FixedVecUnmarshalSSZ.length = 86 from by rfl]; rfl
   exact ⟨[], by rw [P, ← h, List.drop_left]; simp⟩
 
-set_option maxRecDepth 100000 in
 theorem hf5 : LabelsFresh FixedVecUnmarshalSSZ 5 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
 theorem hf97 : LabelsFresh RtCopy 97 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
 theorem hf91 : ∀ i < 91, Host.prog[i]? ≠ some (.label "runtime.makeslice") := by
   have hl : "runtime.makeslice" ∉ labs (P.take 91) := by decide
   intro i hi hp
   apply hl; apply mem_labs; rw [List.mem_iff_getElem?]
   exact ⟨i, by rw [List.getElem?_take, ite_eq_left_iff.mpr (fun h => absurd hi h)]; exact hp⟩
 
-set_option maxRecDepth 100000 in
 theorem label_wb : label "runtime.writeBarrier" = 0x10000 :=
   mk_label P _ 0 _ (by simp [P, dataLabels]) (by simp [labs])
 
-set_option maxRecDepth 100000 in
 theorem label_bump : label "runtime.fvBump" = 0x10004 :=
   mk_label P _ 4 _ (by simp [P, dataLabels]) (by decide)
 
@@ -81,7 +79,6 @@ def fs0 (rb ws : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineDat
   ⟨⟨0x100b8, 0x10078, 64, 0, 0, 64, 0x10060, 0, 0, 0, 0, 0, 0, 0, 0x10020, 0⟩, zmms, flags, mem rb ws⟩
 
 set_option maxHeartbeats 4000000 in
-set_option maxRecDepth 100000 in
 theorem fs_mem (rb ws : List UInt8) (hrb : rb.length = 32) (hws : ws.length = 32) (zmms : RegZmms) (flags : StatusFlags) :
     let s := fs0 rb ws zmms flags
     s.dmem =⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At s.regs.rsp.toBitVec)

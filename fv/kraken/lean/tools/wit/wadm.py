@@ -73,4 +73,4 @@ theorem ad_marshal_runs ({ins} pre : List UInt8) (h0 : e0.length = 8) (h1 : e1.l
     (fun _ h => ⟨h.1, by rw [h.2.2.1]; simp [s0]⟩)
 """)
 src,addr,st=wgen.gen2(cfg)
-open('Fk/WitAdM.lean','w').write(src)
+wgen.write('Fk/WitAdM.lean', src)

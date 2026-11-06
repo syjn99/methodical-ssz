@@ -47,5 +47,5 @@ example (z : RegZmms) (f : StatusFlags) := bv_accept_runs 0 (by decide) z f
 example (z : RegZmms) (f : StatusFlags) := bv_accept_runs 15 (by decide) z f
 """)
 src,addr,starts=wgen.gen(cfg)
-open("Fk/WitBv.lean","w").write(src)
+wgen.write("Fk/WitBv.lean", src)
 print(addr, starts)

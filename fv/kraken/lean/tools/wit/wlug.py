@@ -41,5 +41,5 @@ theorem lum_grow_runs (zmms : RegZmms) (flags : StatusFlags) :
 """)
 src,addr,starts=wgen.gen(cfg)
 src=wgen.sub(src,"  simp only [hu0, huN] at H3 ⊢\n","  try simp only [hu0, huN] at H3 ⊢\n",1)
-open("Fk/WitLuG.lean","w").write(src)
+wgen.write("Fk/WitLuG.lean", src)
 print(addr, starts)

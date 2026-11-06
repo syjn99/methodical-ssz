@@ -3,7 +3,7 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Premise witness of `sc_reject_bool_main` (re-proof fix 2, X8a)
+# Premise witness of `sc_reject_bool_main`
 
 Host: data label 0 renamed to `ssz.ErrInvalidSerialization` (the error global
 at 0x10000), the real Scalars.UnmarshalSSZ (index 5). Fields zero, the bool
@@ -15,25 +15,24 @@ open Fk Fk.Code Fk.W
 
 namespace Fk.WitScRB
 
+set_option maxRecDepth 100000
+
 def dataLabels : Program :=
   [.label "ssz.ErrInvalidSerialization", .label "pad1", .label "pad2", .label "pad3", .label "runtime.fvBump"]
 
 def P : Program := dataLabels ++ ScalarsUnmarshalSSZ
 
-set_option maxRecDepth 100000 in
 theorem P_len : P.length = 38 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
 
 theorem prog_eq : Host.prog = P := rfl
 
-theorem hk_target : ScalarsUnmarshalSSZ.IsInfixAt Host.prog 5 := by
-  rw [prog_eq]; exact ⟨[], by simp [P, dataLabels]⟩
+theorem hk_target : ScalarsUnmarshalSSZ.IsInfixAt Host.prog 5 :=
+  infixAt_of dataLabels ([]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (rfl)
 
-set_option maxRecDepth 100000 in
 theorem hf_target : LabelsFresh ScalarsUnmarshalSSZ 5 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
 theorem label_err : label "ssz.ErrInvalidSerialization" = 0x10000 :=
   mk_label P _ 0 _ (by simp [P, dataLabels]) (by simp [labs])
 
@@ -48,7 +47,6 @@ def s0 (e : UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0x10038, 0x10028, 16, 0, 0, 16, 0x10010, 0, 0, 0, 0, 0, 0, 0, 0, 0⟩, zmms, flags, mem e⟩
 
 set_option maxHeartbeats 32000000 in
-set_option maxRecDepth 100000 in
 theorem s_mem (e : UInt8)  (zmms : RegZmms) (flags : StatusFlags) :
     let s := s0 e zmms flags
     s.dmem =⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At s.regs.rsp.toBitVec)
@@ -63,19 +61,14 @@ theorem s_mem (e : UInt8)  (zmms : RegZmms) (flags : StatusFlags) :
       ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At (label "ssz.ErrInvalidSerialization" + 8).toBitVec) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 8)) ⋆ Eq ((z 1).At (s.regs.rax.toBitVec + 1)) ⋆ fun _ => True := by
   intro s
   have H : Eq ((block e).At (0x10000 : BitVec 64)) (mem e) := rfl
-  conv at H => lhs; unfold block
-  repeat rw [Mem.At_append_sep _ _ _ (by simp only [List.length_append, List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil]; omega)] at H
-  simp only [List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, Nat.reduceAdd,
-    BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
+  wit_split
   rw [label_err]
   simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd]
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
   apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 7).At 65609#64))
-  have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
-  have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
-  simp only [hu0, huN] at H ⊢
-  try simp only [BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H ⊢  -- fold `4#64 + a` after huN (re-proof fix X4)
+  simp only [u64_toBitVec_zero, u64_toBitVec_ofNat] at H ⊢
+  try simp only [BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H ⊢
   refine Eq.mp ?_ H
   exact congrFun (by ac_rfl) _
 

@@ -144,5 +144,5 @@ theorem staticBox_small (v : BitVec 64) (h : v.toNat < 256) :
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0""",1)
 src=wgen.sub(src,"  rw [label_wb]\n","  rw [label_wb, label_gs, label_err, label_st]\n  simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd, BitVec.reduceMul]\n",1)
 src=wgen.sub(src,"set_option maxHeartbeats 8000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem","set_option maxHeartbeats 32000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem",1)
-open(f"Fk/{NS}.lean","w").write(src)
+wgen.write(f"Fk/{NS}.lean", src)
 print(NS, addr["ra"], OBJ, SB, TD, starts)

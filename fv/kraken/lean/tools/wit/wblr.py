@@ -108,5 +108,5 @@ theorem hit : (label "go_itab._errors.errorString_error").toBitVec ≠ 0 := by r
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0""",1)
 src=wgen.sub(src,"  rw [label_wb]\n  simp only [s, s0, UInt64.toBitVec_ofNat,","  rw [label_wb, label_gs, label_itab]\n  simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd, bl2049_len, BitVec.ofNat_eq_ofNat]\n  simp only [s, s0, UInt64.toBitVec_ofNat,",1)
 src=wgen.sub(src,"set_option maxHeartbeats 8000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem","set_option maxHeartbeats 32000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem",1)
-open("Fk/WitBlR.lean","w").write(src)
+wgen.write("Fk/WitBlR.lean", src)
 print(addr["ra"], addr["ity"], ITAB+8, QQ, addr["heap"], starts)

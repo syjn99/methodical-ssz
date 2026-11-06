@@ -2,7 +2,7 @@ import Fk.Labels
 import Fk.Bytes
 
 /-!
-# Witness hosts (1b-fix X4)
+# Witness hosts
 
 `mkHost P`: a `Host` whose program is `P` and whose directive `i` sits at
 address `0x10000 + i` (every directive has size 1). Witness files build one
@@ -75,5 +75,42 @@ theorem mk_label (P : Program) (hP : P.length < 2 ^ 32) (j : Nat) (l : Label)
 theorem nil_At_emp (a : BitVec 64) : Eq (([] : List UInt8).At a) = Std.ExtHashMap.emp := by
   funext m; apply propext; simp only [List.At, List.mapIdx_nil, Std.ExtHashMap.ofList_nil, Std.ExtHashMap.emp]
   exact ⟨Eq.symm, Eq.symm⟩
+
+/-- `X` sits at index `A.length` of `A ++ (X ++ B)`. -/
+theorem infixAt_of {P : Program} (A : Program) {X : Program} (B : Program) {n : Nat}
+    (hP : P = A ++ (X ++ B)) (hn : A.length = n) : X.IsInfixAt P n := by
+  subst hP hn
+  exact ⟨B, by rw [List.drop_left]⟩
+
+/-- A label that does not occur in the first `k` directives sits at no index below `k`. -/
+theorem notLabel_of [Host] {k : Nat} {l : Label} (h : l ∉ labs (Host.prog.take k)) :
+    ∀ i < k, Host.prog[i]? ≠ some (.label l) := by
+  intro i hi hp
+  apply h; apply mem_labs; rw [List.mem_iff_getElem?]
+  exact ⟨i, by rw [List.getElem?_take, ite_eq_left_iff.mpr (fun h => absurd hi h)]; exact hp⟩
+
+theorem u64_toBitVec_zero : (UInt64.toBitVec 0) = 0#64 := rfl
+theorem u64_toBitVec_ofNat (n : Nat) : (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := rfl
+
+/-- Split `H : Eq ((block ..).At a) m` into one `Eq (chunk.At addr)` per chunk and
+normalize the addresses; the terms are the length hypotheses of the chunks.
+Hygiene is off: `H` and `block` are the witness file's names. -/
+syntax "wit_split" (" [" term,* "]")? : tactic
+set_option hygiene false in
+macro_rules
+  | `(tactic| wit_split $[[$hs,*]]?) => do
+    let hs := (hs.map (·.getElems)).getD #[]
+    let ls ← hs.mapM fun h => `(Lean.Parser.Tactic.simpLemma| $h:term)
+    let l1 := #[← `(Lean.Parser.Tactic.simpLemma| List.length_append), ← `(Lean.Parser.Tactic.simpLemma| List.length_replicate),
+      ← `(Lean.Parser.Tactic.simpLemma| Int.toBytes_length), ← `(Lean.Parser.Tactic.simpLemma| List.length_cons),
+      ← `(Lean.Parser.Tactic.simpLemma| List.length_nil)] ++ ls
+    let l2 := #[← `(Lean.Parser.Tactic.simpLemma| List.length_replicate), ← `(Lean.Parser.Tactic.simpLemma| Int.toBytes_length),
+      ← `(Lean.Parser.Tactic.simpLemma| List.length_cons), ← `(Lean.Parser.Tactic.simpLemma| List.length_nil),
+      ← `(Lean.Parser.Tactic.simpLemma| Nat.reduceAdd)] ++ ls ++
+      #[← `(Lean.Parser.Tactic.simpLemma| BitVec.ofNat_eq_ofNat), ← `(Lean.Parser.Tactic.simpLemma| BitVec.reduceAdd)]
+    `(tactic| (
+      conv at H => lhs; unfold block
+      repeat rw [Mem.At_append_sep _ _ _ (by simp only [$l1,*]; omega)] at H
+      simp only [$l2,*] at H))
 
 end Fk.W

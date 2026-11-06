@@ -94,4 +94,4 @@ theorem {thm.replace('_main','_runs')} (zmms : RegZmms) (flags : StatusFlags) :
     (fun _ h => ⟨h.1, h.2.1⟩)
 """)
 src,addr,starts=wgen.gen2(cfg)
-open(f"Fk/{ns}.lean","w").write(post(src,lab)); print(ns)
+wgen.write(f"Fk/{ns}.lean", post(src,lab)); print(ns)

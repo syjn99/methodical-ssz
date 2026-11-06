@@ -67,5 +67,5 @@ theorem bl_accept_runs {hyp}(zmms : RegZmms) (flags : StatusFlags) :
     (fun _ h => ⟨h.1, h.2.1⟩)
 """)
 src,addr,starts=wgen.gen(cfg)
-open(f"Fk/WitBl{N}.lean","w").write(src)
+wgen.write(f"Fk/WitBl{N}.lean", src)
 print(addr, starts)

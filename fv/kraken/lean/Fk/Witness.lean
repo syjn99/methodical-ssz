@@ -213,7 +213,7 @@ example (z : RegZmms) (f : StatusFlags) := lu_accept_runs 0 (by omega) [] rfl z 
 example (z : RegZmms) (f : StatusFlags) := lu_accept_runs 1 (by omega) (List.replicate 8 7) rfl z f
 example (z : RegZmms) (f : StatusFlags) := lu_accept_runs 16 (by omega) (List.replicate 128 255) rfl z f
 
-/-! ## `GrowsliceC` (REPORT-1b-fix X1)
+/-! ## `GrowsliceC`
 
 In the same Host, `rt_growslice 204` proves `GrowsliceC bumpHeap ty 1 0`.
 `growslice_call_runs` gives a concrete state that satisfies every premise of

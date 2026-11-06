@@ -70,5 +70,5 @@ theorem lc_size_runs (zmms : RegZmms) (flags : StatusFlags) :
     (fun _ h => ⟨h.1, h.2.1⟩)
 """)
 src,addr,starts=wgen.gen2(cfg)
-open(f"Fk/WitLcS{N}.lean","w").write(src)
+wgen.write(f"Fk/WitLcS{N}.lean", src)
 print(addr)

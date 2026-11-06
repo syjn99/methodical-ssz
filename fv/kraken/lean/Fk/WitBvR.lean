@@ -5,7 +5,7 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Premise witness of `bv_reject_padding_main` (re-proof R6)
+# Premise witness of `bv_reject_padding_main`
 
 BitVec.UnmarshalSSZ on a byte with a padding bit set (F1, fixed). Host: data
 labels (`go_string._` at 0x10001), the real BitVec.UnmarshalSSZ (index 5), the
@@ -20,81 +20,54 @@ open Fk Fk.Code Fk.W
 
 namespace Fk.WitBvR
 
+set_option maxRecDepth 100000
+
 def dataLabels : Program :=
   [.label "runtime.writeBarrier", .label "go_string._", .label "pad2", .label "pad3", .label "runtime.fvBump"]
 
 def P : Program := dataLabels ++ BitVecUnmarshalSSZ ++ ValidateBitvector ++ RtErr ++ BumpNew16 ++ [Kraken.Directive.label "go_itab._errors.errorString_error"]
 
-set_option maxRecDepth 100000 in
 theorem P_len : P.length = 200 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
 
 theorem prog_eq : Host.prog = P := rfl
 
-theorem hk_target : BitVecUnmarshalSSZ.IsInfixAt Host.prog 5 := by
-  rw [prog_eq]; exact ⟨ValidateBitvector ++ RtErr ++ BumpNew16 ++ [Kraken.Directive.label "go_itab._errors.errorString_error"], by simp [P, dataLabels]⟩
+theorem hk_target : BitVecUnmarshalSSZ.IsInfixAt Host.prog 5 :=
+  infixAt_of dataLabels (ValidateBitvector ++ RtErr ++ BumpNew16 ++ [Kraken.Directive.label "go_itab._errors.errorString_error"]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (rfl)
 
-set_option maxRecDepth 100000 in
-theorem hk_fnVbv : ValidateBitvector.IsInfixAt Host.prog 105 := by
-  rw [prog_eq]
-  have h : (dataLabels ++ BitVecUnmarshalSSZ).length = 105 := by
-    simp only [List.length_append, show BitVecUnmarshalSSZ.length = 100 from by rfl]; rfl
-  exact ⟨RtErr ++ BumpNew16 ++ [Kraken.Directive.label "go_itab._errors.errorString_error"], by rw [show P = (dataLabels ++ BitVecUnmarshalSSZ) ++ (ValidateBitvector ++ RtErr ++ BumpNew16 ++ [Kraken.Directive.label "go_itab._errors.errorString_error"]) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩
+theorem hk_fnVbv : ValidateBitvector.IsInfixAt Host.prog 105 :=
+  infixAt_of (dataLabels ++ BitVecUnmarshalSSZ) (RtErr ++ BumpNew16 ++ [Kraken.Directive.label "go_itab._errors.errorString_error"]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (by simp only [List.length_append, show BitVecUnmarshalSSZ.length = 100 from by rfl]; rfl)
 
-set_option maxRecDepth 100000 in
-theorem hk_rterr : RtErr.IsInfixAt Host.prog 178 := by
-  rw [prog_eq]
-  have h : (dataLabels ++ BitVecUnmarshalSSZ ++ ValidateBitvector).length = 178 := by
-    simp only [List.length_append, show BitVecUnmarshalSSZ.length = 100 from by rfl, show ValidateBitvector.length = 73 from by rfl]; rfl
-  exact ⟨BumpNew16 ++ [Kraken.Directive.label "go_itab._errors.errorString_error"], by rw [show P = (dataLabels ++ BitVecUnmarshalSSZ ++ ValidateBitvector) ++ (RtErr ++ BumpNew16 ++ [Kraken.Directive.label "go_itab._errors.errorString_error"]) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩
+theorem hk_rterr : RtErr.IsInfixAt Host.prog 178 :=
+  infixAt_of (dataLabels ++ BitVecUnmarshalSSZ ++ ValidateBitvector) (BumpNew16 ++ [Kraken.Directive.label "go_itab._errors.errorString_error"]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (by simp only [List.length_append, show BitVecUnmarshalSSZ.length = 100 from by rfl, show ValidateBitvector.length = 73 from by rfl]; rfl)
 
-set_option maxRecDepth 100000 in
-theorem hk_newobject : BumpNew16.IsInfixAt Host.prog 193 := by
-  rw [prog_eq]
-  have h : (dataLabels ++ BitVecUnmarshalSSZ ++ ValidateBitvector ++ RtErr).length = 193 := by
-    simp only [List.length_append, show BitVecUnmarshalSSZ.length = 100 from by rfl, show ValidateBitvector.length = 73 from by rfl, show RtErr.length = 15 from by rfl]; rfl
-  exact ⟨[Kraken.Directive.label "go_itab._errors.errorString_error"], by rw [show P = (dataLabels ++ BitVecUnmarshalSSZ ++ ValidateBitvector ++ RtErr) ++ (BumpNew16 ++ [Kraken.Directive.label "go_itab._errors.errorString_error"]) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩
+theorem hk_newobject : BumpNew16.IsInfixAt Host.prog 193 :=
+  infixAt_of (dataLabels ++ BitVecUnmarshalSSZ ++ ValidateBitvector ++ RtErr) ([Kraken.Directive.label "go_itab._errors.errorString_error"]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (by simp only [List.length_append, show BitVecUnmarshalSSZ.length = 100 from by rfl, show ValidateBitvector.length = 73 from by rfl, show RtErr.length = 15 from by rfl]; rfl)
 
-set_option maxRecDepth 100000 in
-theorem hk_fnItab : [Kraken.Directive.label "go_itab._errors.errorString_error"].IsInfixAt Host.prog 199 := by
-  rw [prog_eq]
-  have h : (dataLabels ++ BitVecUnmarshalSSZ ++ ValidateBitvector ++ RtErr ++ BumpNew16).length = 199 := by
-    simp only [List.length_append, show BitVecUnmarshalSSZ.length = 100 from by rfl, show ValidateBitvector.length = 73 from by rfl, show RtErr.length = 15 from by rfl, show BumpNew16.length = 6 from by rfl]; rfl
-  exact ⟨[], by rw [show P = (dataLabels ++ BitVecUnmarshalSSZ ++ ValidateBitvector ++ RtErr ++ BumpNew16) ++ ([Kraken.Directive.label "go_itab._errors.errorString_error"] ++ []) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩
+theorem hk_fnItab : [Kraken.Directive.label "go_itab._errors.errorString_error"].IsInfixAt Host.prog 199 :=
+  infixAt_of (dataLabels ++ BitVecUnmarshalSSZ ++ ValidateBitvector ++ RtErr ++ BumpNew16) ([]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (by simp only [List.length_append, show BitVecUnmarshalSSZ.length = 100 from by rfl, show ValidateBitvector.length = 73 from by rfl, show RtErr.length = 15 from by rfl, show BumpNew16.length = 6 from by rfl]; rfl)
 
-set_option maxRecDepth 100000 in
 theorem hf_target : LabelsFresh BitVecUnmarshalSSZ 5 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
 theorem hf_fnVbv : LabelsFresh ValidateBitvector 105 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
 theorem hf_rterr : LabelsFresh RtErr 178 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
-theorem hf_newobject : ∀ i < 193, Host.prog[i]? ≠ some (.label "runtime.newobject") := by
-  have hl : "runtime.newobject" ∉ labs (P.take 193) := by decide
-  intro i hi hp
-  apply hl; apply mem_labs; rw [List.mem_iff_getElem?]
-  exact ⟨i, by rw [List.getElem?_take, ite_eq_left_iff.mpr (fun h => absurd hi h)]; exact hp⟩
+theorem hf_newobject : ∀ i < 193, Host.prog[i]? ≠ some (.label "runtime.newobject") :=
+  notLabel_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
 theorem hf_fnItab : LabelsFresh [Kraken.Directive.label "go_itab._errors.errorString_error"] 199 := labelsFresh_of (by rw [prog_eq]; decide)
 
-set_option maxRecDepth 100000 in
 theorem label_wb : label "runtime.writeBarrier" = 0x10000 :=
   mk_label P _ 0 _ (by simp [P, dataLabels]) (by simp [labs])
 
-set_option maxRecDepth 100000 in
 theorem label_bump : label "runtime.fvBump" = 0x10004 :=
   mk_label P _ 4 _ (by simp [P, dataLabels]) (by decide)
 
-set_option maxRecDepth 100000 in
 theorem label_gs : label "go_string._" = 0x10001 :=
   mk_label P _ 1 _ (by simp [P, dataLabels]) (by decide)
 
-set_option maxRecDepth 100000 in
 theorem label_itab : label "go_itab._errors.errorString_error" = 0x10000 + Int64.ofNat 199 :=
   mk_label P _ 199 _ (by simp [P, dataLabels]; rfl) (by decide)
 
@@ -111,7 +84,6 @@ def s0 (b : UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0, 0x100df, 1, 0, 0, 1, 0x100a0, 0, 0, 0, 0, 0, 0, 0, 0x100c7, 0⟩, zmms, flags, mem b⟩
 
 set_option maxHeartbeats 8000000 in
-set_option maxRecDepth 100000 in
 theorem s_mem (b : UInt8)  (zmms : RegZmms) (flags : StatusFlags) :
     let s := s0 b zmms flags
     s.dmem =⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At s.regs.rsp.toBitVec)
@@ -130,10 +102,7 @@ theorem s_mem (b : UInt8)  (zmms : RegZmms) (flags : StatusFlags) :
       ⋆ Eq ((z 27190).At (label "go_string._" + 516).toBitVec) ⋆ fun _ => True := by
   intro s
   have H : Eq ((block b).At (0x10000 : BitVec 64)) (mem b) := rfl
-  conv at H => lhs; unfold block
-  repeat rw [Mem.At_append_sep _ _ _ (by simp only [List.length_append, List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, bvFmtJ_len, vbvFmt_len]; omega)] at H
-  simp only [List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, Nat.reduceAdd, bvFmtJ_len, vbvFmt_len,
-    BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
+  wit_split [bvFmtJ_len, vbvFmt_len]
   have H2 : ((Eq ((Int.toBytes 8 (93328#64).toInt).At 65540#64) ⋆ Eq ((z 8248).At 93328#64))
       ⋆ (Eq ([0, 0, 0, 0].At 65536#64)
         ⋆ Eq ((z 4).At 65548#64)
@@ -165,9 +134,7 @@ theorem s_mem (b : UInt8)  (zmms : RegZmms) (flags : StatusFlags) :
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
   apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 4).At 65548#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 2).At 93278#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 48).At 93280#64))
-  have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
-  have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
-  simp only [hu0, huN] at H3 ⊢
+  simp only [u64_toBitVec_zero, u64_toBitVec_ofNat] at H3 ⊢
   refine Eq.mp ?_ H3
   exact congrFun (by ac_rfl) _
 

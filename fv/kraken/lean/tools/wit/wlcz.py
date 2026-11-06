@@ -75,5 +75,5 @@ theorem label_gs : label "go_string._" = 0x10001 :=
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0''',1)
 src=wgen.sub(src,"  rw [label_wb]\n","  rw [label_wb, label_gs]\n  simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd]\n",1)
-open(f"Fk/{NS}.lean","w").write(src)
+wgen.write(f"Fk/{NS}.lean", src)
 print(addr, starts, G)

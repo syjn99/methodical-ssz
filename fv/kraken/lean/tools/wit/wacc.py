@@ -61,4 +61,4 @@ theorem vbv_accept_runs (b : UInt8) (hb : b.toNat >>> 4 = 0) (zmms : RegZmms) (f
     (fun _ h => ⟨h.1, h.2.1⟩)
 """)
 src,addr,starts=wgen.gen2(cfg)
-open(f"Fk/{cfg['ns']}.lean","w").write(post(src)); print(cfg['ns'])
+wgen.write(f"Fk/{cfg['ns']}.lean", post(src)); print(cfg['ns'])

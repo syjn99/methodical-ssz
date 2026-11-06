@@ -104,5 +104,5 @@ theorem lcTl_nexts : ∀ i, i + 1 < ({GS}).length → (lcTl.drop (4 * (i + 1))).
     = (uintBytes 4 (lcStart ({GS}) (i + 1))).toList := by
   intro i hi; simp only [List.length_cons, List.length_nil] at hi
   match i, hi with {ARMS1} | _ + {N-1}, h => omega""",1)
-open(f"Fk/WitLcA{SUF}.lean","w").write(src)
+wgen.write(f"Fk/WitLcA{SUF}.lean", src)
 print(addr, st)

@@ -10,7 +10,7 @@ def emit(cfg, R, ns):
     cfg["ns"]=ns
     src,addr,starts=wgen.gen2(cfg)
     src=wgen.post_ac(src)
-    open(f"Fk/{ns}.lean","w").write(src); print(ns, addr, starts)
+    wgen.write(f"Fk/{ns}.lean", src); print(ns, addr, starts)
 MEM="(by have h := s_mem zmms flags; simp only [Std.ExtHashMap.sep_assoc] at h ⊢; exact h)"
 if which=="sc":
     ch=[("guard",Z,8),("fp","z 8",8),("ra",Z,8),("sp1","z 8",8),("sp2","z 8",8),
