@@ -77,8 +77,8 @@ theorem bv_reject_padding_runs (b : UInt8) (hb : 16 ≤ b.toNat) (zmms : RegZmms
 """)
 src,addr,starts=wgen.gen(cfg)
 assert starts["fnItab"]==ITAB_IDX, starts
-src=src.replace('.label "pad1"','.label "go_string._"',1)
-src=src.replace("abbrev z (k : Nat) : List UInt8 := List.replicate k 0",f"""set_option maxRecDepth 100000 in
+src=wgen.sub(src,'.label "pad1"','.label "go_string._"',1)
+src=wgen.sub(src,"abbrev z (k : Nat) : List UInt8 := List.replicate k 0",f"""set_option maxRecDepth 100000 in
 theorem label_gs : label "go_string._" = 0x10001 :=
   mk_label P _ 1 _ (by simp [P, dataLabels]) (by decide)
 
@@ -89,6 +89,6 @@ theorem label_itab : label "go_itab._errors.errorString_error" = 0x10000 + Int64
 theorem hit : (label "go_itab._errors.errorString_error").toBitVec ≠ 0 := by rw [label_itab]; decide
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0""",1)
-src=src.replace("  rw [label_wb]\n","  rw [label_wb, label_gs, label_itab]\n  simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd]\n",1)
+src=wgen.sub(src,"  rw [label_wb]\n","  rw [label_wb, label_gs, label_itab]\n  simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd]\n",1)
 open("Fk/WitBvR.lean","w").write(src)
 print(addr["ra"], addr["ity"], ITAB+8, starts)

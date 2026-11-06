@@ -84,8 +84,8 @@ theorem bl_reject_invalid_runs (zmms : RegZmms) (flags : StatusFlags) :
 """)
 src,addr,starts=wgen.gen(cfg)
 assert starts["fnItab"]==ITAB_IDX, starts
-src=src.replace('[.label "runtime.writeBarrier", .label "pad1",','[.label "runtime.writeBarrier", .label "go_string._",',1)
-src=src.replace("abbrev z (k : Nat) : List UInt8 := List.replicate k 0",f"""set_option maxRecDepth 100000 in
+src=wgen.sub(src,'[.label "runtime.writeBarrier", .label "pad1",','[.label "runtime.writeBarrier", .label "go_string._",',1)
+src=wgen.sub(src,"abbrev z (k : Nat) : List UInt8 := List.replicate k 0",f"""set_option maxRecDepth 100000 in
 theorem label_gs : label "go_string._" = 0x10001 :=
   mk_label P _ 1 _ (by simp [P, dataLabels]) (by decide)
 
@@ -98,7 +98,7 @@ theorem label_itab : label "go_itab._errors.errorString_error" = {ITAB} := by rw
 theorem hit : (label "go_itab._errors.errorString_error").toBitVec ≠ 0 := by rw [label_itab]; decide
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0""",1)
-src=src.replace("  rw [label_wb]\n  simp only [s, s0, UInt64.toBitVec_ofNat,","  rw [label_wb, label_gs, label_itab]\n  simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd, BitVec.ofNat_eq_ofNat]\n  simp only [s, s0, UInt64.toBitVec_ofNat,",1)
-src=src.replace("set_option maxHeartbeats 8000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem","set_option maxHeartbeats 32000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem",1)
+src=wgen.sub(src,"  rw [label_wb]\n  simp only [s, s0, UInt64.toBitVec_ofNat,","  rw [label_wb, label_gs, label_itab]\n  simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd, BitVec.ofNat_eq_ofNat]\n  simp only [s, s0, UInt64.toBitVec_ofNat,",1)
+src=wgen.sub(src,"set_option maxHeartbeats 8000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem","set_option maxHeartbeats 32000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem",1)
 open("Fk/WitBlRI.lean","w").write(src)
 print(addr["ra"], addr["ity"], ITAB+8, addr["gap_recv"], addr["heap"], starts)

@@ -63,15 +63,13 @@ theorem {thm.replace('_main','_runs')} (zmms : RegZmms) (flags : StatusFlags) :
     (fun _ h => ⟨h.1, h.2.1⟩)
 """)
     src,addr,starts=wgen.gen2(cfg)
-    src=src.replace('[.label "runtime.writeBarrier",',f'[.label "{lab}",',1)
-    src=src.replace("abbrev z (k : Nat) : List UInt8 := List.replicate k 0",f"""set_option maxRecDepth 100000 in
+    src=wgen.sub(src,'[.label "runtime.writeBarrier",',f'[.label "{lab}",',1)
+    src=wgen.sub(src,"abbrev z (k : Nat) : List UInt8 := List.replicate k 0",f"""set_option maxRecDepth 100000 in
 theorem label_err : label "{lab}" = 0x10000 :=
   mk_label P _ 0 _ (by simp [P, dataLabels]) (by simp [labs])
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0""",1)
-    src=src.replace("  simp only [s, s0, UInt64.toBitVec_ofNat,","  rw [label_err]\n  simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd]\n  simp only [s, s0, UInt64.toBitVec_ofNat,",1)
-    src=src.replace("  apply sep_true (F := )\n","  apply sep_true (F := Std.ExtHashMap.emp)\n  simp only [Std.ExtHashMap.sep_emp]\n",1)
-    src=src.replace("  first | (refine Eq.mp ?_ H; exact congrFun (by ac_rfl) _) | ecancel","  refine Eq.mp ?_ H\n  exact congrFun (by ac_rfl) _",1)
-    src=src.replace("set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem","set_option maxHeartbeats 32000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem",1)
+    src=wgen.sub(src,"  simp only [s, s0, UInt64.toBitVec_ofNat,","  rw [label_err]\n  simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd]\n  simp only [s, s0, UInt64.toBitVec_ofNat,",1)
+    src=wgen.post_ac(src)
     open(f"Fk/WitRj{key}.lean","w").write(src)
     print(key, tlen)

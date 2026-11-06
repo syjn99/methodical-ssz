@@ -40,7 +40,5 @@ theorem zmms0_x15 : zmms0.get (AvxReg.xmm RegMm.mm15) = 0 := by
 example (f : StatusFlags) := lc_accept_empty_runs zmms0 f zmms0_x15
 """)
 src,addr,starts=wgen.gen2(cfg)
-src=src.replace("  apply sep_true (F := )\n","  apply sep_true (F := Std.ExtHashMap.emp)\n  simp only [Std.ExtHashMap.sep_emp]\n",1)
-src=src.replace("  first | (refine Eq.mp ?_ H; exact congrFun (by ac_rfl) _) | ecancel","  refine Eq.mp ?_ H\n  exact congrFun (by ac_rfl) _",1)
-src=src.replace("set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem","set_option maxHeartbeats 32000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem",1)
+src=wgen.post_ac(src)
 open("Fk/WitLcE.lean","w").write(src); print(addr)

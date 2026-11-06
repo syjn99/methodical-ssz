@@ -1,10 +1,7 @@
 import sys; sys.path.insert(0,sys.argv[1]); import wgen
 Z="Int.toBytes 8 (0 : UInt64).toBitVec.toInt"
 PL=int(sys.argv[2]) if len(sys.argv)>2 else 3
-def addrs(ch):
-    a=65536; ad={}
-    for k,e,n in ch: ad[k]=a; a+=n
-    return ad
+addrs=wgen.addrs
 ch=[("guard",Z,8),("rslot","z 8",8),("gap1","z 88",88),("l144","z 8",8),("l136","z 8",8),("l128","z 8",8),("l120","z 8",8),
     ("gap2","z 32",32),("l80","z 8",8),("l72","z 8",8),("gap3","z 56",56),("fp","z 8",8),("ra",Z,8),("s8","z 8",8),("s16","z 8",8),
     ("e0","e0",8),("e1","e1",8),("pp","Int.toBytes 8 (PP : BitVec 64).toInt",8),("c32","Int.toBytes 8 32",8),("gap4","Int.toBytes 8 32",8),

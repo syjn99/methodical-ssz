@@ -88,12 +88,12 @@ theorem lc_marshal_runs (zmms : RegZmms) (flags : StatusFlags) :
     (fun _ h => ⟨h.1, by rw [h.2.2.1]; simp [s0, lcS]⟩)
 """)
 src,addr,starts=wgen.gen2(cfg)
-src=src.replace("abbrev z (k : Nat) : List UInt8 := List.replicate k 0",f"""abbrev z (k : Nat) : List UInt8 := List.replicate k 0
+src=wgen.sub(src,"abbrev z (k : Nat) : List UInt8 := List.replicate k 0",f"""abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 
 /-- The element objects: the ⋆ of the `lcElem` pieces. -/
 def objs : DataMem → Prop := {OBJS}
 
 theorem u64nil : (u64Bytes ([] : List UInt64)).toList = [] := by decide"""+U,1)
-src=src.replace("  simp only [s, s0, UInt64.toBitVec_ofNat,","  simp only [objs, lcElem, List.length_nil, List.length_cons, List.length_replicate, Int.natCast_zero, Int.cast_ofNat_Int, u64nil"+UL+",\n    Nat.reduceMul, Nat.reduceAdd, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd]\n  simp only [s, s0, UInt64.toBitVec_ofNat,",1)
+src=wgen.sub(src,"  simp only [s, s0, UInt64.toBitVec_ofNat,","  simp only [objs, lcElem, List.length_nil, List.length_cons, List.length_replicate, Int.natCast_zero, Int.cast_ofNat_Int, u64nil"+UL+",\n    Nat.reduceMul, Nat.reduceAdd, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd]\n  simp only [s, s0, UInt64.toBitVec_ofNat,",1)
 open(f"Fk/WitLcM{SUF}.lean","w").write(src)
 print(addr)

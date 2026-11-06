@@ -82,7 +82,7 @@ theorem lc_accept_runs (zmms : RegZmms) (flags : StatusFlags) :
 ARMS=" ".join(f"| {i}, _ => rfl" for i in range(N))
 ARMS1=" ".join(f"| {i}, _ => rfl" for i in range(N-1))
 src,addr,st=wgen.gen(cfg)
-src=src.replace("abbrev z (k : Nat) : List UInt8 := List.replicate k 0",f"""abbrev z (k : Nat) : List UInt8 := List.replicate k 0
+src=wgen.sub(src,"abbrev z (k : Nat) : List UInt8 := List.replicate k 0",f"""abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 
 /-- The list bytes: {N} offsets, then {N} ListU64 encodings (lengths {LENS}). -/
 def lcTl : List UInt8 := {TLS}

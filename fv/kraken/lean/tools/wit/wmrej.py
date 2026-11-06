@@ -5,21 +5,16 @@ import sys,subprocess; sys.path.insert(0,sys.argv[1]); import wgen
 Z="Int.toBytes 8 (0 : UInt64).toBitVec.toInt"
 ZB="Int.toBytes 8 (0 : BitVec 64).toInt"
 MODE=sys.argv[2]
-def addrs(ch):
-    a=65536; ad={}
-    for k,e,n in ch: ad[k]=a; a+=n
-    return ad
+addrs=wgen.addrs
 def post(src, lab):
-    src=src.replace('[.label "runtime.writeBarrier",',f'[.label "{lab}",',1)
-    src=src.replace("abbrev z (k : Nat) : List UInt8 := List.replicate k 0",f"""set_option maxRecDepth 100000 in
+    src=wgen.sub(src,'[.label "runtime.writeBarrier",',f'[.label "{lab}",',1)
+    src=wgen.sub(src,"abbrev z (k : Nat) : List UInt8 := List.replicate k 0",f"""set_option maxRecDepth 100000 in
 theorem label_err : label "{lab}" = 0x10000 :=
   mk_label P _ 0 _ (by simp [P, dataLabels]) (by simp [labs])
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0""",1)
-    src=src.replace("  simp only [s, s0, UInt64.toBitVec_ofNat,","  rw [label_err]\n  simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd]\n  simp only [s, s0, UInt64.toBitVec_ofNat,",1)
-    src=src.replace("  apply sep_true (F := )\n","  apply sep_true (F := Std.ExtHashMap.emp)\n  simp only [Std.ExtHashMap.sep_emp]\n",1)
-    src=src.replace("  first | (refine Eq.mp ?_ H; exact congrFun (by ac_rfl) _) | ecancel","  refine Eq.mp ?_ H\n  exact congrFun (by ac_rfl) _",1)
-    src=src.replace("set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem","set_option maxHeartbeats 32000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem",1)
+    src=wgen.sub(src,"  simp only [s, s0, UInt64.toBitVec_ofNat,","  rw [label_err]\n  simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd]\n  simp only [s, s0, UInt64.toBitVec_ofNat,",1)
+    src=wgen.post_ac(src)
     return src
 MEM="(by have h := s_mem zmms flags; simp only [Std.ExtHashMap.sep_assoc] at h ⊢; exact h)"
 if MODE=="lu":

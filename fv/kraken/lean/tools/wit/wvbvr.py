@@ -46,12 +46,12 @@ theorem vbv_reject_pad_runs (b : UInt8) (hb : 16 ≤ b.toNat) (zmms : RegZmms) (
     (fun _ h => ⟨h.1, h.2.1⟩)
 """)
 src,addr,starts=wgen.gen(cfg)
-src=src.replace('.label "pad1"','.label "go_string._"',1)
-src=src.replace("abbrev z (k : Nat) : List UInt8 := List.replicate k 0","""set_option maxRecDepth 100000 in
+src=wgen.sub(src,'.label "pad1"','.label "go_string._"',1)
+src=wgen.sub(src,"abbrev z (k : Nat) : List UInt8 := List.replicate k 0","""set_option maxRecDepth 100000 in
 theorem label_gs : label "go_string._" = 0x10001 :=
   mk_label P _ 1 _ (by simp [P, dataLabels]) (by decide)
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0""",1)
-src=src.replace("  rw [label_wb]\n","  rw [label_wb, label_gs]\n  simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd]\n",1)
+src=wgen.sub(src,"  rw [label_wb]\n","  rw [label_wb, label_gs]\n  simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd]\n",1)
 open("Fk/WitVbvR.lean","w").write(src)
 print(addr, starts)

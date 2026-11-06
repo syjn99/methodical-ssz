@@ -9,9 +9,7 @@ def S(x): return x.replace("s.regs","(s0 zmms flags).regs")
 def emit(cfg, R, ns):
     cfg["ns"]=ns
     src,addr,starts=wgen.gen2(cfg)
-    src=src.replace("  apply sep_true (F := )\n","  apply sep_true (F := Std.ExtHashMap.emp)\n  simp only [Std.ExtHashMap.sep_emp]\n",1)
-    src=src.replace("  first | (refine Eq.mp ?_ H; exact congrFun (by ac_rfl) _) | ecancel","  refine Eq.mp ?_ H\n  exact congrFun (by ac_rfl) _",1)
-    src=src.replace("set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem","set_option maxHeartbeats 32000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem",1)
+    src=wgen.post_ac(src)
     open(f"Fk/{ns}.lean","w").write(src); print(ns, addr, starts)
 MEM="(by have h := s_mem zmms flags; simp only [Std.ExtHashMap.sep_assoc] at h ⊢; exact h)"
 if which=="sc":
@@ -49,10 +47,7 @@ theorem sc_marshal_runs (zmms : RegZmms) (flags : StatusFlags) :
 """)
     emit(cfg,R,"WitScM")
 if which=="fv":
-    def addrs(ch):
-        a=65536; ad={}
-        for k,e,n in ch: ad[k]=a; a+=n
-        return ad
+    addrs=wgen.addrs
     ch=[("guard",Z,8),("rslot","z 8",8),("hole","z 72",72),("l4","z 8",8),("l3","z 8",8),("l2","z 8",8),("l1","z 8",8),
         ("fp","z 8",8),("ra",Z,8),("s1","z 8",8),("s2","z 8",8),("r0","z 1",1),("r1","z 31",31),
         ("wp","Int.toBytes 8 (WW : BitVec 64).toInt",8),("c4","Int.toBytes 8 4",8),("gap_wc","Int.toBytes 8 4",8),("ws","z 32",32),("d0","z 32",32),("d1","z 32",32)]
@@ -91,10 +86,7 @@ theorem fv_marshal_runs (zmms : RegZmms) (flags : StatusFlags) :
     emit(cfg,R,"WitFvM")
 if which.startswith("lu"):
     N=int(which[2:])
-    def addrs(ch):
-        a=65536; ad={}
-        for k,e,n in ch: ad[k]=a; a+=n
-        return ad
+    addrs=wgen.addrs
     ch=[("guard",Z,8),("l1","z 8",8),("l2","z 8",8),("fp","z 8",8),("ra",Z,8),("hole","z 8",8),("slot","z 8",8),
         ("pp","Int.toBytes 8 (PP : BitVec 64).toInt",8),("nn",f"Int.toBytes 8 ({N} : Int)",8),("gap_lc",f"Int.toBytes 8 ({N} : Int)",8)]
     if N>0: ch.append(("bs",f"z {8*N}",8*N))
@@ -134,10 +126,7 @@ theorem lu_marshal_runs (zmms : RegZmms) (flags : StatusFlags) :
 """)
     emit(cfg,R,f"WitLuM{N}")
 if which=="bv":
-    def addrs(ch):
-        a=65536; ad={}
-        for k,e,n in ch: ad[k]=a; a+=n
-        return ad
+    addrs=wgen.addrs
     ch=[("guard",Z,8),("scratch","z 8",8),("rslot","z 8",8),("vsp","z 8",8),("hole","z 72",72),("fp","z 8",8),("ra",Z,8),
         ("sl1","z 8",8),("sl2","z 8",8),("sl3","z 8",8),("sl4","z 8",8),
         ("jp","Int.toBytes 8 (PP : BitVec 64).toInt",8),("jl","Int.toBytes 8 (1 : BitVec 64).toInt",8),

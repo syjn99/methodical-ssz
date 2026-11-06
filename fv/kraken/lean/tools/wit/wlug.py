@@ -40,6 +40,6 @@ theorem lum_grow_runs (zmms : RegZmms) (flags : StatusFlags) :
     (fun _ h => ⟨h.1, by have := h.2.2.2.1; simpa [s0] using this⟩)
 """)
 src,addr,starts=wgen.gen(cfg)
-src=src.replace("  simp only [hu0, huN] at H3 ⊢\n","  try simp only [hu0, huN] at H3 ⊢\n",1)
+src=wgen.sub(src,"  simp only [hu0, huN] at H3 ⊢\n","  try simp only [hu0, huN] at H3 ⊢\n",1)
 open("Fk/WitLuG.lean","w").write(src)
 print(addr, starts)

@@ -113,8 +113,8 @@ theorem {THM.replace('_main','_runs')} (zmms : RegZmms) (flags : StatusFlags) :
 """)
 src,addr,starts=wgen.gen(cfg)
 assert starts["fnItab"]==ITAB_IDX, starts
-src=src.replace('.label "pad1"','.label "go_string._"',1)
-src=src.replace("abbrev z (k : Nat) : List UInt8 := List.replicate k 0",f"""set_option maxRecDepth 100000 in
+src=wgen.sub(src,'.label "pad1"','.label "go_string._"',1)
+src=wgen.sub(src,"abbrev z (k : Nat) : List UInt8 := List.replicate k 0",f"""set_option maxRecDepth 100000 in
 theorem label_err : label "{LAB}" = {LABA} :=
   mk_label P _ {LAB_IDX} _ (by simp [P, dataLabels]; rfl) (by decide)
 
@@ -142,7 +142,7 @@ theorem staticBox_small (v : BitVec 64) (h : v.toNat < 256) :
     StaticBox v = Eq ((Int.toBytes 8 v.toInt).At ((label "runtime.staticuint64s").toBitVec + 8 * v)) := if_pos h
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0""",1)
-src=src.replace("  rw [label_wb]\n","  rw [label_wb, label_gs, label_err, label_st]\n  simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd, BitVec.reduceMul]\n",1)
-src=src.replace("set_option maxHeartbeats 8000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem","set_option maxHeartbeats 32000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem",1)
+src=wgen.sub(src,"  rw [label_wb]\n","  rw [label_wb, label_gs, label_err, label_st]\n  simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd, BitVec.reduceMul]\n",1)
+src=wgen.sub(src,"set_option maxHeartbeats 8000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem","set_option maxHeartbeats 32000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem",1)
 open(f"Fk/{NS}.lean","w").write(src)
 print(NS, addr["ra"], OBJ, SB, TD, starts)

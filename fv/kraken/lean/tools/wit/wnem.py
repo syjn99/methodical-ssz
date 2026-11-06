@@ -2,10 +2,7 @@ import sys; sys.path.insert(0,sys.argv[1]); import wgen
 # Witnesses of ne_marshal_main (Nested encoder) with N = 0, 1, 16 list elements (re-proof R6).
 Z="Int.toBytes 8 (0 : UInt64).toBitVec.toInt"
 N=int(sys.argv[2])
-def addrs(ch):
-    a=65536; ad={}
-    for k,e,n in ch: ad[k]=a; a+=n
-    return ad
+addrs=wgen.addrs
 ch=[("guard",Z,8),("l72","z 8",8),("hole1","z 24",24),("l40","z 8",8),("l32","z 8",8),("hole2","z 16",16),
     ("fp","z 8",8),("ra",Z,8),("s8","z 8",8),("s16","z 8",8),
     ("a8","z 8",8),("pps","Int.toBytes 8 (PS : BitVec 64).toInt",8),("ppl","Int.toBytes 8 (PL : BitVec 64).toInt",8),
@@ -67,7 +64,5 @@ theorem ne_marshal_runs (zmms : RegZmms) (flags : StatusFlags) :
     (fun _ h => ⟨h.1, h.2.2.2.2.1⟩)
 """)
 src,addr,starts=wgen.gen2(cfg)
-src=src.replace("  apply sep_true (F := )\n","  apply sep_true (F := Std.ExtHashMap.emp)\n  simp only [Std.ExtHashMap.sep_emp]\n",1)
-src=src.replace("  first | (refine Eq.mp ?_ H; exact congrFun (by ac_rfl) _) | ecancel","  refine Eq.mp ?_ H\n  exact congrFun (by ac_rfl) _",1)
-src=src.replace("set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem","set_option maxHeartbeats 32000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem",1)
+src=wgen.post_ac(src)
 open(f"Fk/WitNeM{N}.lean","w").write(src); print(N)

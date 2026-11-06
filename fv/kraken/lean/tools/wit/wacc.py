@@ -5,9 +5,7 @@ Z="Int.toBytes 8 (0 : UInt64).toBitVec.toInt"
 MODE=sys.argv[2]
 MEM="(by have h := s_mem{P} zmms flags; simp only [Std.ExtHashMap.sep_assoc] at h ⊢; exact h)"
 def post(src):
-    src=src.replace("  apply sep_true (F := )\n","  apply sep_true (F := Std.ExtHashMap.emp)\n  simp only [Std.ExtHashMap.sep_emp]\n",1)
-    src=src.replace("  first | (refine Eq.mp ?_ H; exact congrFun (by ac_rfl) _) | ecancel","  refine Eq.mp ?_ H\n  exact congrFun (by ac_rfl) _",1)
-    src=src.replace("set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem","set_option maxHeartbeats 32000000 in\nset_option maxRecDepth 100000 in\ntheorem s_mem",1)
+    src=wgen.post_ac(src)
     return src
 if MODE=="sc":
     ch=[("ra",Z,8),("hole","z 8",8),("slot","z 8",8),("b0","z 1",1),("b1","z 2",2),("b2","z 4",4),("b3","z 8",8),("b4","[1]",1),
