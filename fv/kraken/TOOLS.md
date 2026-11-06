@@ -143,3 +143,13 @@ Kraken main의 증명 자동화(`kprologue`, `sym => kstep`)는 처음부터 직
 | 함수 전체 대조 | 하지 않았다(위의 이유) |
 
 에뮬레이션으로 돌린다 해도 비교 대상은 하드웨어가 아니라 qemu다. 보고할 때 구별해야 한다.
+
+## 재증명 수정 2의 도구 (2026-11-06)
+
+| 도구 | 역할 | 실행 |
+| --- | --- | --- |
+| `link/golits.go` | Go 소스의 `fmt.Errorf` 첫 인수 리터럴을 go/parser로 모은다(링크 검사 (g)) | `go run fv/kraken/link/golits.go -- <file.go> ...` |
+| `lean/tools/wit/layout.go` | target 구조체의 `unsafe.Sizeof`·`Alignof`·`Offsetof`를 gc amd64 크기 규칙(go/types)으로 계산해 `layout.json`을 쓴다 | `go run fv/kraken/lean/tools/wit/layout.go > fv/kraken/lean/tools/wit/layout.json` |
+| `lean/tools/RegressFix2.lean` | 리뷰 회귀 항목을 바뀐 계약으로 다시 적은 파일 | `cd fv/kraken/lean && lake env lean tools/RegressFix2.lean` |
+
+`go run`은 `GOROOT=$(go env GOROOT)`로 돌렸다(semtest와 같다).

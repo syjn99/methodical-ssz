@@ -1,0 +1,37 @@
+== review/ReviewReproveFix.lean (unchanged; run on the fix 2 tree)
+../review/ReviewReproveFix.lean:17:18: error: type expected, got
+            st.data.regs.rax.toBitVec = (label "go_itab._errors.errorString_error").toBitVec)
+../review/ReviewReproveFix.lean:52:14: error(lean.unknownIdentifier): Unknown constant `bv_errstr`
+-- errors above (grep found "error")
+== review/ReviewReproveFixAstra.lean (unchanged; run on the fix 2 tree)
+../review/ReviewReproveFixAstra.lean:8:7: error: type expected, got
+../review/ReviewReproveFixAstra.lean:17:25: error: Application type mismatch: The argument
+../review/ReviewReproveFixAstra.lean:43:60: error: Tactic `decide` proved that the proposition
+../review/ReviewReproveFixAstra.lean:48:2: error: Tactic `decide` proved that the proposition
+-- errors above (grep found "error")
+== review/ReviewSHashFixAstra.lean (unchanged; run on the fix 2 tree)
+-- no error
+== tools/RegressFix2.lean
+WitLcA4x16.lc_accept_runs : ∀ (zmms : RegZmms) (flags : StatusFlags),
+WitLcM4x16.lc_marshal_runs : ∀ (zmms : RegZmms) (flags : StatusFlags),
+WitLuComp.lu_compose_runs : ∀ (zmms : RegZmms) (flags : StatusFlags),
+WitScComp.sc_compose_runs : ∀ (zmms : RegZmms) (flags : StatusFlags),
+'RegressFix2.ten_not_false_bl' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RegressFix2.pad_derived' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RegressFix2.sc_object_whole' does not depend on any axioms
+'RegressFix2.sc_output_after_object' depends on axioms: [propext, Classical.choice, Quot.sound]
+'sc_reject_bool_main' depends on axioms: [propext, Classical.choice, Quot.sound]
+'sc_spec_rejects_bool' depends on axioms: [propext, Classical.choice, Quot.sound]
+'bl_reject_invalid_main' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitScRB.sc_reject_bool_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitBlRI.bl_reject_invalid_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitLcA4x16.lc_accept_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitLcAMix.lc_accept_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitLcM4x16.lc_marshal_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitLcMMix.lc_marshal_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitLuComp.lu_compose_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitScComp.sc_compose_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitLuTb.lu_reject_toobig_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitLuMa.lu_reject_misaligned_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitBlR.bl_marshal_reject_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitBvR.bv_reject_padding_runs' depends on axioms: [propext, Classical.choice, Quot.sound]

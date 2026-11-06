@@ -1,6 +1,6 @@
 # CONTRACTS: 피호출자와 전역의 처리 (Kraken 가설 형식)
 
-대상: 1a 9개 함수(Scalars, FixedVec, ListU64의 SizeSSZ, MarshalSSZTo, UnmarshalSSZ)와 1b 18개 함수(BitVec, Nested, ListC, BitL, Checkpoint, AttestationData), 재증명에서 더한 `ssz.ValidateBitvector`. 정의는 `lean/Fk/Contracts.lean`, `lean/Fk/FunSpecs.lean`, `lean/Fk/Vbl.lean`(ValidateBitlist), `lean/Fk/Vbv.lean`(ValidateBitvector 명세). 작성 2026-11-05, 재증명 갱신 2026-11-06, 재증명 수정(X5, X6) 갱신 2026-11-06.
+대상: 1a 9개 함수(Scalars, FixedVec, ListU64의 SizeSSZ, MarshalSSZTo, UnmarshalSSZ)와 1b 18개 함수(BitVec, Nested, ListC, BitL, Checkpoint, AttestationData), 재증명에서 더한 `ssz.ValidateBitvector`. 정의는 `lean/Fk/Contracts.lean`, `lean/Fk/FunSpecs.lean`, `lean/Fk/Vbl.lean`(ValidateBitlist), `lean/Fk/Vbv.lean`(ValidateBitvector 명세). 작성 2026-11-05, 재증명 갱신 2026-11-06, 재증명 수정(X5, X6) 갱신 2026-11-06, 재증명 수정 2(X4, X5) 갱신 2026-11-06. 재증명 수정 2의 변경은 1e절에 모았다. 1–1d절의 해당 행은 1e절이 대신한다.
 
 분류:
 - **(a) 증명 대상**: 기계어를 Kraken 의미론으로 실행해서 증명한다.
@@ -57,11 +57,12 @@ spill은 반환 슬롯 바로 위의 레지스터 인수 칸이다. 피호출자
 | `MemmoveC S` | rcx = n, 원천·목적 n바이트, 서로소 | 없음 | scratch S(Go 함수는 쓰지 않는다), spill 없음(asm, `$0-24`) | rsp + 8, r14, rbp, 원천, `F` | `rt_memmove` |
 | `GrowsliceC Heap ty esz S` | `0 < esz`, rsi = ty, `num ≤ newLen`, `oldLen ≤ oldCap < newLen` | `2·esz·nc + 8192 ≤ avail ≤ maxAlloc` | scratch S, spill 40 | rsp + 8, r14, rbp, rbx, 옛 블록, `F` | `rt_growslice`(esz = 1) |
 | `NewobjectC Heap ty sz S` | rax = ty | `sz ≤ avail` | scratch S, spill 8 | rsp + 8, r14, rbp, `F` | `bump_newobject16/24/32` |
-| `ConvT64C Heap S` | 없음(모든 값) | `8 ≤ avail` | scratch S, spill 8 | rsp + 8, r14, `F` | `rt_convT64` |
+| `ConvT64C Heap S` (수정 2) | 없음(모든 값). 사전조건에 `StaticBox v`(v < 256이면 `staticuint64s + 8v`의 8바이트, 읽기 전용) | `8 ≤ avail`. 결론 `avail' + hb.length ≤ avail ≤ avail' + 8` | scratch S, spill 8 | rsp + 8, r14, `StaticBox v`, `F`. 결론 `BoxIn rax v hb`(정적 표 또는 힙 8바이트 = v)와 `Eq (hb.At rax)` | `rt_convT64`(bump 힙에 v 저장, `ConvT64C bumpHeap S`) |
 | `FmtErrorfNilC S` | rdi = 0, 형식에 `%` 없음, 형식 바이트 조각 | 없음(할당 없음) | scratch S, spill 40 | rsp + 8, r14, 형식, `F` | `rt_errorf_nil` |
 | `ValidateBitlistC S` | rbx = len(buf), rdi = 2048, buf 조각, `blValid buf` | 할당 없음 | scratch S, spill 32 | rsp + 8, r14, rbp, buf, `F` | `rt_validate_bitlist`(`RtVbl`) |
-| `ValidateBitlistErrC Heap S` | 위와 같음, `¬ blValid buf` | `8192 ≤ avail`. 결론 `avail' + 16 + msg ≤ avail ≤ avail' + 8192`, msg ≤ 128 | scratch S, spill 32 | rsp + 8, r14, rbp, buf, `F`. 오류 객체 `ErrStr rbx sp msg`가 새로 생긴다 | `rt_validate_bitlist_err` |
-| `FmtErrorfWC Heap S` | `1 ≤ len(a) = cap(a)`, 마지막 인수 = (itab + 8의 워드 `ity`, e), `ErrStr e sp msg`, 형식·인수 배열 조각 | `fs + msg + 8192 ≤ avail`, 결론 `avail' ≤ avail` | scratch S, spill 40 | rsp + 8, r14, 형식, 인수, `ity`, 오류 객체, `F` | `rt_errorf_w` |
+| `ValidateBitlistErrC Heap S` (수정 2) | 위와 같음, `¬ blValid buf`. 사전조건에 rodata 메시지 셋 `vblRO` | `8192 ≤ avail`. 결론 `avail' + 16 + hm.length ≤ avail ≤ avail' + 8192` | scratch S, spill 32 | rsp + 8, r14, rbp, buf, `vblRO`, `F`. 새 `ErrObj rbx sp msg`(16바이트)와 `Eq (hm.At sp)`, `VblMsg sp msg hm`(rodata 셋 중 하나이고 hm = [], 또는 `%d` 힙 메시지 hm = msg ≤ 128) | `rt_validate_bitlist_err`(힙 경우, 빈 메시지) |
+| `FmtErrorfWC Heap fs RO MsgIn S` (수정 2) | 형식 `fs` 고정(정리가 상수 `bvFmtJ`·`blFmtB`로 정한다), rdi = rsi = 1, 인수 배열 `ity ++ e`, `ErrObj e sp msg`, `Eq (hm.At sp)`, 읽기 전용 `RO`, `MsgIn sp msg hm` | `fs + msg + 8192 ≤ avail`, 결론 `avail' ≤ avail` | scratch S, spill 40 | rsp + 8, r14, 형식, 인수, `ity`, 오류 객체, `hm`, `RO`, `F` | `rt_errorf_w`(모든 fs, RO, MsgIn) |
+| `FmtErrorfDWC Heap fs tw S` (수정 2) | 형식 `fs` 고정(`luFmtTooBig`·`luFmtMis`), rdi = rsi = 2, 인수 배열 `tw ++ bx ++ ity ++ e`(tw = `type:int`, `luTW`), `BoxIn bx v hb`, `StaticBox v`, `Eq (hb.At bx)`, `ErrStr e sp msg` | `fs + 20 + msg + 8192 ≤ avail` | scratch S, spill 40 | 위와 같음, 상자 자원 포함 | `rt_errorf_dw` |
 
 전역 상태 가정(모든 계약 공통):
 - `runtime.writeBarrier`(4바이트)는 호출자 정리의 전제에서 0이다. 그 조각은 계약의 `F`에 있다. 그래서 계약은 "호출 중 쓰기 장벽이 켜지지 않는다"를 가정한다. GC가 할당 중 표시 단계에 들어가면 이 가정은 거짓이다(조건 C19).
@@ -144,3 +145,27 @@ Kraken에서는 계약이 정리의 **가설**이고, 모든 상태·반환 주�
 | 스택 가드, 쓰기 장벽 0 | 빠른 경로 전제. 일반 호출의 보장이 아니다 |
 | `bool` 바이트 ∈ {0, 1}, 슬라이스 len ≤ cap < 2^63 | Go 값의 불변식. 주 정리는 이 불변식을 전제로 두지 않을 수 있다(더 넓은 상태를 허용). 증인은 Go 값이어야 한다: `lean/tools/wit/goval.py`가 모든 증인의 인수 슬라이스, 수신자 슬라이스·포인터 필드를 검사한다(len ≤ cap < 2^63, 데이터가 블록 안). 68개 증인 위반 0(재증명 수정 X4) |
 | 힙 여유(`avail`) | 런타임 할당기가 실패하면 Go는 정상 복귀하지 않는다. 정리는 성공 경우만 말한다 |
+
+## 1e. 재증명 수정 2의 계약 변경 (astra 재증명 수정 발견 4, 5)
+
+| 계약 | 이전 | 지금 | 모델 | 쓰는 정리 |
+| --- | --- | --- | --- | --- |
+| `FmtErrorfWC` | 임의 `fs`, 임의 앞 인수 `pre`, `1 ≤ rdi` | 정의 인수 `fs`(정리가 상수로 고정), `RO`, `MsgIn`. 인수 하나(rdi = 1), `pre` 없음. 메시지는 `ErrObj ⋆ Eq (hm.At sp) ⋆ RO`에 있다 | `rt_errorf_w` | `bv_reject_padding_main`(`bvFmtJ`, `bvRO`, `BvMsg`), `bl_marshal_reject_main`·`bl_reject_invalid_main`(`blFmtB`, `vblRO`, `VblMsg`) |
+| `FmtErrorfDWC` | 없음(ListU64는 `FmtErrorfWC`의 `pre`) | 새 계약. `%d`(int 상자, `tw` = `type:int`) + `%w`(errorString). 예산 `fs + 20 + msg + 8192` | `rt_errorf_dw` | `lu_reject_toobig_main`(`luFmtTooBig`), `lu_reject_misaligned_main`(`luFmtMis`) |
+| `ConvT64C` | rax ≠ 0, 상자 내용 없음 | `BoxIn`(정적 표 `staticuint64s + 8v` 또는 힙 8바이트 = v), `StaticBox v`(읽기 전용) 보존, 힙 소비 `hb.length` | `rt_convT64`: bump 힙 8바이트에 v를 저장(이전 모델은 rax = 1만) | ListU64 거부 둘 |
+| `ValidateBitlistErrC` | 메시지를 힙 `ErrStr`로 새로 꺼냄. 모든 `F` | 사전조건에 rodata 메시지 셋 `vblRO`(`go_string._+33605/13272/5743`), 결론에서 보존. 힙에서는 16바이트 `ErrObj`와 `%d` 메시지 `hm`만. `F`는 `⋆`로 `vblRO`와 분리 | `rt_validate_bitlist_err`(힙 경우, `hm = msg = []`) | `bl_marshal_reject_main`, `bl_reject_invalid_main` |
+
+정리 전제의 변화(강화, 보고서 5절):
+- ListU64 거부 둘: 전제 `StaticBox v` 조각 추가, 예산 `msg + 8268` → `msg + 8276`(toobig)·`msg + 8288`(misaligned), `fs` 인수 대신 상수.
+- BitL 인코더 거부: 전제 `vblRO` 조각 추가.
+- BitVec 디코더 거부: 결론·전제 변화 없음(메시지는 이미 전제의 rodata `vbvFmt`였다).
+
+링크 검사로 고정한 상수(`link/check.py`):
+- (g) `vblMsgE`·`vblMsgZ`·`vblMsgB`, `luFmtTooBig`·`luFmtMis`(FMTLEN은 비었다).
+- (h) `luTW` = `type__+49184`의 abi.Type이 Size_ 8, Kind_ 2(int). itab+8이 가리키는 abi.Type이 Kind_ 22(포인터). `runtime.staticuint64s`가 uint64 0..255의 2048바이트.
+
+여전히 신뢰 항목(형식 전제 밖):
+- Go의 실제 할당량이 예산 안이다. 호출 중 GC가 없다.
+- `VblMsg`는 어느 입력이 어느 메시지인지 말하지 않는다(셋 중 하나 또는 `%d`).
+- 오류 결과 객체(fmt가 만든 `*wrapError` 등)는 결론에 없다(rax ≠ 0만).
+- 증인의 전역 오류 값(`ssz.Err*`)은 Go 값 검사(goval) 밖이다.
