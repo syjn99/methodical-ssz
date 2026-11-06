@@ -869,7 +869,7 @@ theorem lc_marshal_main (k : Nat) (hk : ListCMarshalSSZTo.IsInfixAt Host.prog k)
           ⋆ Eq ((offTab (4 * gs.length) (gs.map luEncode)).At
               (s.regs.rbx.toBitVec + BitVec.ofNat 64 (s.regs.rcx.toNat + 4)))
           ⋆ Eq ((lcBodyL gs).At (s.regs.rbx.toBitVec + BitVec.ofNat 64 (s.regs.rcx.toNat + 4 + 4 * gs.length)))
-          ⋆ Objs ⋆ fun _ => True) st.data.dmem)
+          ⋆ Objs ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hsp hcap hcap63 hpre ⊢

@@ -120,7 +120,7 @@ theorem ne_accept_main (k : Nat) (hk : NestedUnmarshalSSZ.IsInfixAt Host.prog k)
           ⋆ Eq ((scField sg 3).At (ps + 8)) ⋆ Eq ((scField sg 4).At (ps + 16))
           ⋆ Eq ((Int.toBytes 8 p.toInt).At pl) ⋆ Eq ((Int.toBytes 8 (lg.l.length : Int)).At (pl + 8))
           ⋆ Eq ((Int.toBytes 8 (lg.l.length : Int)).At (pl + 16)) ⋆ Eq ((u64Bytes lg.l).toList.At p)
-          ⋆ fun _ => True) st.data.dmem)
+          ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hsp hlen hcap hcap63 ⊢

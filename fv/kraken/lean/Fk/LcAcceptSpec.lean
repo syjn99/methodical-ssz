@@ -158,7 +158,9 @@ theorem lc_unmarshal_accept_spec_k (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt H
             ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 g.items.length).toInt).At (s.regs.rax.toBitVec + 8))
             ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 g.items.length).toInt).At (s.regs.rax.toBitVec + 16))
             ⋆ Eq ((ptrBytes (acc.reverse.map (fun t : BitVec 64 × BitVec 64 × ListU64 => t.1))).At A)
-            ⋆ lcObjs acc ⋆ Eq ((lcBody g).toList.At (s.regs.rbx.toBitVec + 4)) ⋆ Heap avail' ⋆ fun _ => True)
+            ⋆ lcObjs acc ⋆ Eq ((lcBody g).toList.At (s.regs.rbx.toBitVec + 4)) ⋆ Heap avail'
+            ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec) ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+            ⋆ R ⋆ fun _ => True)
             st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨g, hg, rfl, rfl⟩ := lc_accepted bsA v hd

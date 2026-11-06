@@ -102,7 +102,15 @@ theorem sc_marshal_spec_k (k : Nat) (hk : ScalarsMarshalSSZTo.IsInfixAt Host.pro
           ⋆ Eq ((scField g 2).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 3))
           ⋆ Eq ((scField g 3).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 7))
           ⋆ Eq ((scField g 4).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 15))
-          ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Eq (pre.At s.regs.rbx.toBitVec)
+          ⋆ Eq ((scField g 0).At s.regs.rax.toBitVec) ⋆ Eq ((scField g 1).At (s.regs.rax.toBitVec + 2))
+          ⋆ Eq ((scField g 2).At (s.regs.rax.toBitVec + 4)) ⋆ Eq ((scField g 3).At (s.regs.rax.toBitVec + 8))
+          ⋆ Eq ((scField g 4).At (s.regs.rax.toBitVec + 16))
+          ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+          ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
+          ⋆ Eq ((Int.toBytes 8 s.regs.rax.toBitVec.toInt).At (s.regs.rsp.toBitVec + 8))
+          ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
+          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ :=
   ⟨sc_serialize g, scEncode_toList g,
     sc_marshal_main k hk hf s ra guard fp sp1 sp2 (scField g 0) (scField g 1) (scField g 2) (scField g 3)

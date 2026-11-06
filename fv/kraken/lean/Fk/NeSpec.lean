@@ -191,7 +191,7 @@ theorem ne_unmarshal_accept_spec_k (k : Nat) (hk : NestedUnmarshalSSZ.IsInfixAt 
           ⋆ Eq ((scField g.s 3).At (ps + 8)) ⋆ Eq ((scField g.s 4).At (ps + 16))
           ⋆ Eq ((Int.toBytes 8 p.toInt).At pl) ⋆ Eq ((Int.toBytes 8 (g.l.l.length : Int)).At (pl + 8))
           ⋆ Eq ((Int.toBytes 8 (g.l.l.length : Int)).At (pl + 16)) ⋆ Eq ((u64Bytes g.l.l).toList.At p)
-          ⋆ fun _ => True) st.data.dmem)
+          ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨g, hg, rfl, rfl⟩ := ne_accepted bsA v hd
   refine ⟨g, hg, rfl, rfl, ?_⟩

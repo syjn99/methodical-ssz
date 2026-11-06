@@ -73,7 +73,9 @@ theorem lc_accept_main (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
             ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt).At (s.regs.rax.toBitVec + 8))
             ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt).At (s.regs.rax.toBitVec + 16))
             ⋆ Eq ((ptrBytes (acc.reverse.map (fun t : BitVec 64 × BitVec 64 × ListU64 => t.1))).At A)
-            ⋆ lcObjs acc ⋆ Eq (tl.At (s.regs.rbx.toBitVec + 4)) ⋆ Heap avail' ⋆ fun _ => True) st.data.dmem)
+            ⋆ lcObjs acc ⋆ Eq (tl.At (s.regs.rbx.toBitVec + 4)) ⋆ Heap avail'
+            ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec) ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+            ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   have hT4 : 4 ≤ T := by have := congrArg List.length hfirst; simp [Fv.uintBytes_size] at this; omega
   have ho4 : (tl.take 4).length = 4 := by simp; omega
@@ -369,4 +371,5 @@ theorem lc_accept_main (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
       ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt).At (rax.toBitVec + 8))
       ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt).At (rax.toBitVec + 16))
       ⋆ Eq ((ptrBytes (acc'.reverse.map (fun t : BitVec 64 × BitVec 64 × ListU64 => t.1))).At rax1.toBitVec)
-      ⋆ lcObjs acc' ⋆ Eq (tl.At (rbx.toBitVec + 4)) ⋆ Heap av') (by ecancel)
+      ⋆ lcObjs acc' ⋆ Eq (tl.At (rbx.toBitVec + 4)) ⋆ Heap av'
+      ⋆ Eq ([4, 0, 0, 0].At rbx.toBitVec) ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At rsp.toBitVec) ⋆ R) (by ecancel)

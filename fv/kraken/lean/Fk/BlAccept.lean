@@ -74,7 +74,7 @@ theorem bl_accept_main (k : Nat) (hk : BitLUnmarshalSSZ.IsInfixAt Host.prog k)
           ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 tl.length).toInt).At (s.regs.rax.toBitVec + 8))
           ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 c).toInt).At (s.regs.rax.toBitVec + 16))
           ⋆ Eq (tl.At p) ⋆ Eq (rest.At (p + BitVec.ofNat 64 tl.length))
-          ⋆ Eq (tl.At (s.regs.rbx.toBitVec + 4)) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Eq (tl.At (s.regs.rbx.toBitVec + 4)) ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hsp hlen hcap hcap63 ⊢
@@ -392,4 +392,4 @@ theorem bl_accept_main (k : Nat) (hk : BitLUnmarshalSSZ.IsInfixAt Host.prog k)
       ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 tl.length).toInt).At (rax.toBitVec + 8))
       ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 rcx2.toNat).toInt).At (rax.toBitVec + 16))
       ⋆ Eq (tl.At rax2.toBitVec) ⋆ Eq ((tail.drop tl.length).At (rax2.toBitVec + BitVec.ofNat 64 tl.length))
-      ⋆ Eq (tl.At (rbx.toBitVec + 4))) (by ecancel)
+      ⋆ Eq (tl.At (rbx.toBitVec + 4)) ⋆ R) (by ecancel)

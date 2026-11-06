@@ -51,7 +51,15 @@ theorem sc_marshal_main (k : Nat) (hk : ScalarsMarshalSSZTo.IsInfixAt Host.prog 
           ⋆ Eq (cC.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 3))
           ⋆ Eq (cD.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 7))
           ⋆ Eq (cE.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 15))
-          ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Eq (pre.At s.regs.rbx.toBitVec)
+          ⋆ Eq (cA.At s.regs.rax.toBitVec) ⋆ Eq (cB.At (s.regs.rax.toBitVec + 2))
+          ⋆ Eq (cC.At (s.regs.rax.toBitVec + 4)) ⋆ Eq (cD.At (s.regs.rax.toBitVec + 8))
+          ⋆ Eq (cE.At (s.regs.rax.toBitVec + 16))
+          ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+          ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
+          ⋆ Eq ((Int.toBytes 8 s.regs.rax.toBitVec.toInt).At (s.regs.rsp.toBitVec + 8))
+          ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
+          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hcap hcap63 ⊢
@@ -224,7 +232,7 @@ theorem sc_marshal_main (k : Nat) (hk : ScalarsMarshalSSZTo.IsInfixAt Host.prog 
       · apply UInt64.toBitVec_inj.mp; simp
       · apply UInt64.toBitVec_inj.mp; simp
       · apply UInt64.toBitVec_inj.mp; simp
-      · (try simp only [BitVec.ofNat_eq_ofNat] at H8 ⊢); exact sep_true (by ecancel)
+      · (try simp only [BitVec.ofNat_eq_ofNat] at H8 ⊢); ecancel
 
   · -- E = true
       kat hk ScalarsMarshalSSZTo 82
@@ -278,4 +286,4 @@ theorem sc_marshal_main (k : Nat) (hk : ScalarsMarshalSSZTo.IsInfixAt Host.prog 
       · apply UInt64.toBitVec_inj.mp; simp
       · apply UInt64.toBitVec_inj.mp; simp
       · apply UInt64.toBitVec_inj.mp; simp
-      · (try simp only [BitVec.ofNat_eq_ofNat] at H8 ⊢); exact sep_true (by ecancel)
+      · (try simp only [BitVec.ofNat_eq_ofNat] at H8 ⊢); ecancel

@@ -292,7 +292,7 @@ theorem bl_unmarshal_accept_spec_k (k : Nat) (hk : BitLUnmarshalSSZ.IsInfixAt Ho
           ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 c).toInt).At (s.regs.rax.toBitVec + 16))
           ⋆ Eq ((packBitsDelimited g.1).toList.At p)
           ⋆ Eq (rest.At (p + BitVec.ofNat 64 (packBitsDelimited g.1).toList.length))
-          ⋆ Eq ((packBitsDelimited g.1).toList.At (s.regs.rbx.toBitVec + 4)) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Eq ((packBitsDelimited g.1).toList.At (s.regs.rbx.toBitVec + 4)) ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   have hsz := bl_accepted_size bsA v hd
   obtain ⟨g, rfl, rfl, hne, hv⟩ := bl_accepted_valid bsA v hd

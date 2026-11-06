@@ -69,3 +69,12 @@ they were shifted once by the same 4-byte gap (the files are the record).
 
 Element j of length m holds the uint64 values 1..m. `wlca.py n` and
 `wlcm.py n` still write the n-empty-element files.
+
+## Composition witnesses (re-proof fix 2, X7)
+
+    python3 tools/wit/wcomp.py tools/wit     # Fk/WitLuComp.lean: lu_unmarshal_then_marshal
+    python3 tools/wit/wcompsc.py tools/wit   # Fk/WitScComp.lean: sc_unmarshal_then_marshal
+
+One host holds the decoder and the encoder. The middle memory is the
+decoder's final memory with `ra2` stored into the return slot
+(`Mem.storeInt`), so the `hupd` premise holds by `Mem.storeInt_sep`.

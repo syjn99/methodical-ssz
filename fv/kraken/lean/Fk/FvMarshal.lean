@@ -217,7 +217,7 @@ theorem fv_marshal_main (k : Nat) (hk : FixedVecMarshalSSZTo.IsInfixAt Host.prog
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
         ∧ (Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (rb.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
           ⋆ Eq (ws.At (s.regs.rbx.toBitVec + BitVec.ofNat 64 (s.regs.rcx.toNat + 32)))
-          ⋆ Eq (rb.At s.regs.rax.toBitVec) ⋆ Eq (ws.At w) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Eq (rb.At s.regs.rax.toBitVec) ⋆ Eq (ws.At w) ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hsp hcap hcap63 hpre ⊢

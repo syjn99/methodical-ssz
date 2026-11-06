@@ -279,7 +279,7 @@ theorem cp_marshal_reject_main (k : Nat) (hk : PrysmCheckpointMarshalSSZTo.IsInf
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi = e0 ∧ st.data.regs.rsi = e1
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
-        ∧ (Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) ⋆ fun _ => True)
+        ∧ (Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) ⋆ R ⋆ fun _ => True)
           st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
@@ -371,4 +371,4 @@ theorem cp_marshal_reject_main (k : Nat) (hk : PrysmCheckpointMarshalSSZTo.IsInf
   all_goals first
     | trivial | rfl
     | (apply UInt64.toBitVec_inj.mp; simp; done)
-    | exact sep_true (P := Eq (pre.At rbx.toBitVec) ⋆ Eq (e8.At (rbx.toBitVec + rcx.toBitVec))) (by ecancel)
+    | exact sep_true (P := Eq (pre.At rbx.toBitVec) ⋆ Eq (e8.At (rbx.toBitVec + rcx.toBitVec)) ⋆ R) (by ecancel)

@@ -135,3 +135,6 @@ import Fk.WitLcAMix
 import Fk.WitLcM1x1
 import Fk.WitLcM4x16
 import Fk.WitLcMMix
+import Fk.ComposeSc
+import Fk.WitLuComp
+import Fk.WitScComp
