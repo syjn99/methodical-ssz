@@ -7,7 +7,7 @@
 # 2. Run it with -test on cases.txt and compare with expected.txt (the Go
 #    reference, made by gen-expected.sh; cases.why names the theorem behind
 #    each line).
-# Not run on the development host (macOS arm64): REPORT-1b, B4.
+# Not run on the development host (macOS arm64).
 set -eu
 K=fv/kraken
 [ "$(uname -s)-$(uname -m)" = "Linux-x86_64" ] || { echo "run.sh needs Linux x86-64 (this host: $(uname -s)-$(uname -m))"; exit 2; }

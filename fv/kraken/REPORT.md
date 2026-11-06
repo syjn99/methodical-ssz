@@ -1,174 +1,172 @@
-# REPORT: Kraken x64 평가
+# REPORT: Kraken x64 코덱 검증의 현재 상태
 
-기준: 브랜치 `syjn99/ssz-fv-kraken`, 시작 c60e0d2. Kraken `6064eecbb730a1152aa6ed891a155d3a92a4f298`(main, 2026-11-02). Lean `nightly-2026-09-21`. EthLib 8621856. Go 1.26.3, `GOOS=linux GOARCH=amd64 CGO_ENABLED=0 -tags purego -trimpath`. ELF 식별자는 `link/out/build-ids.txt`. 작성 2026-11-05.
+기준 커밋: `0ef30e3`(재증명 수정 2와 그 리뷰). 정리 세션은 뜻을 바꾸지 않았다.
+방향은 `DIRECTION.md`, 세션 이력은 `HISTORY.md`, 고정 버전은 `TOOLS.md`에 있다.
 
-이 문서의 시각은 IST, 에이전트(Claude Opus 5.5) 시간이다. 사람 시간이 아니다.
+## 0. 판정
 
-## 1. 판정
+**조건부. 게이트 1 미통과.**
 
-**조건부 가능.** 1b 이후를 MiniRV 없이 Kraken x64(main) 위에서 할 수 있다. 조건은 2절이다.
+gpt-6-astra 수정 2 리뷰(`review/gpt6-astra-reprove-fix2.md` 8절)의 판정과 같다.
+게이트 1을 막는 조건:
 
-근거: 이 세션은 Kraken main의 x64 의미론과 프로그램 논리(`Eventually`, `step1`, `Host`, 분리 논리 `⋆`, `ecancel`) 위에서 다음을 증명했다. 모든 정리는 `propext`, `Classical.choice`, `Quot.sound`만 쓴다(`AXIOMS.txt`). `sorry`는 없다.
+1. ListC 원소 오프셋 순서 거부와 비어 있지 않은 원소의 오류 전달이 없다.
+2. 사후조건 잔여: `ne_marshal_main`은 프레임 `R`을 잃는다. `lc_accept_main`의 죽은 피호출자 스택은 `True`다. `sc_size_main`은 반환 값만 말한다. `sc_marshal_main`에 r14 보존이 없다.
+3. 오류 증인은 유효한 Go 오류 인터페이스가 아니다. 타입 기술자 내용과 오류 전역의 초기화를 증인에 연결하지 않았다. Scalars에 비nil 오류 거부 정리가 없다.
+4. 링크 검사 (g)(h)와 역할 분류가 Lean·Go 소스의 철자를 읽는다. 리뷰가 우회 셋을 재현했다(4절 1–3).
+5. 런타임 계약은 추상 모델로만 만족 가능성을 보였다. Go 런타임 정교화는 없다(3절).
+6. 디코더의 EthLib 양방향 수용 정리는 BitVec(1바이트)뿐이다.
+7. x86-64 하드웨어 대조를 하지 않았다. 이 호스트는 arm64다.
 
-| 정리 | 대상(amd64 기계어) | 내용 | 1a 대응 |
+수치(`0ef30e3`, 정리 세션 끝에 다시 실행한 값은 `HISTORY.md` 끝 절):
+
+- `lake build`: 856 jobs, 성공.
+- 공리: 정리 `TOTAL 1583 NONSTANDARD 0`(`AXIOMS.txt`), 모든 선언 `TOTAL 8028 NONSTANDARD 0`(`AXIOMS-ALL.txt`).
+- 시험 타입 9개. 디코더·인코더·크기 주 정리 55개. 증인 파일 79개, `*_runs` 선언 80개.
+- 링크 검사 PASS(검사 (a)–(h)). 자기 시험 24개 기대대로.
+- 부정 시험 16개 기대대로(`negative/RESULT`).
+- goval: 79 파일, 위반 0, 미검사 2(`WitCpM` 기호 길이 dst, 1a `Witness.lean` 기호 n).
+- `go test ./fv/kraken/semtest/`: PASS(F1, F2).
+
+## 1. 완료 단위
+
+주 정리 하나의 완료는 여섯 요소를 모두 가진다.
+
+1. 계약 또는 정리.
+2. 구체 Host에서 전제 전체의 증인. 가변 길이는 빈 값, 1개, 최대.
+3. 기계어 정리.
+4. 링크 검사 PASS.
+5. 부정 시험: 변이가 지정 정리 안에서 실패하고 대조군이 통과한다.
+6. Go 값: `lean/tools/wit/goval.py`가 `layout.json`(gc amd64 배치)으로 검사한다. 읽지 못한 값은 미검사로 센다.
+
+추상 증인(요소 2)과 Go 값 완료(요소 6)는 다른 주장이다.
+요소 6은 크기·정렬·패딩·bool·슬라이스·겹침을 본다.
+타입 기술자 내용, 오류 전역, 중간 상태의 Go 값은 보지 않는다.
+
+## 2. 게이트 1 표
+
+열의 뜻:
+
+- "거부 경로": 디코더 오류 분기 중 기계어 정리로 닫힌 것 / 전체(Go 소스 기준).
+- "증인": 빈·1·최대와 안쪽 길이.
+- "Go 값": goval 결과. 1절의 범위만 본다.
+- "추상 모델": 그 타입의 정리가 기대는 계약. 모든 계약은 추상 모델만 있다.
+- "조합": 두 호출 조합 정리와 전체 전제 증인.
+- "사후": 주 정리 결론의 자원. "동일"은 메모리 전체가 같다는 결론이다. 이것은 프레임 보존보다 강하다.
+
+| 타입 | 수용 방향 | 거부 경로 (닫힘 / 남음) | 증인 | Go 값 | 추상 모델 | 부정 시험 | 조합 | 사후 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Scalars | EthLib→기계어 + bool 거부(EthLib 거부 정리 포함) | 2/2: 크기, bool > 1. 비nil 오류 연결 없음 | 고정(수용, 거부, 마샬, 조합) | 위반 0. 전역 오류 값 미검사 | 없음 | scbool, scrbword | `sc_unmarshal_then_marshal` + WitScComp | 수용·마샬·bool 거부 정확(마샬 r14 없음). 크기는 반환 값만 |
+| FixedVec | EthLib→기계어 | 1/1: 크기 | 고정 | 위반 0 | makeslice, memmove | loop, control | 없음 | `R` + True. 크기 동일 |
+| ListU64 | EthLib→기계어 | 4/4: 짧음, 오프셋, 정렬, 초과 | 0·1·16, 거부 둘 | 위반 0. 오류 증인의 타입 자료·전역 미검사 | makeslice, growslice, convT64(상자), fmt `%d %w` | offset, maxlen | `lu_unmarshal_then_marshal` + WitLuComp | 수용 정확, 나머지 `R` + True. 크기 동일 |
+| BitVec | 양방향(1바이트) | 2/2: 크기, 패딩 | b < 16, 16 ≤ b | 위반 0 | fmt nil·`%w`, newobject 16 | vbvje, bvnochk | `bv_unmarshal_then_marshal`(증인 없음) | 수용·마샬 정확. 크기 동일 |
+| BitL | EthLib→기계어(규칙 동치) | 3/3: 짧음, 오프셋, ValidateBitlist 오류 | 1, 257바이트 / 2049비트, 꼬리 [0] | 위반 0 | ValidateBitlist 두 계약(rodata), growslice, memmove, fmt `%w` | gsnum, blmnochk, blrity | 없음 | `R` 보존. 크기 동일 |
+| Nested | EthLib→기계어 | 2/4. 남음: S 오류, L 오류(래핑) | 0·1·16 | 위반 0 | newobject 24, Scalars·ListU64 함수 명세 | neoff | 없음 | 수용 `R` 보존, 마샬 `R` 없음, 크기 `R` 보존 |
+| List[container] | EthLib→기계어 | 5/9. 남음: 정렬, 원소 수(convT64), 원소 오프셋 순서, 원소 디코드 오류 | 바깥 0·1·4, 안쪽 1×1, 4×16, 0·1·16 | 위반 0 | makeslice 두 지점, newobject 16·24, fmt nil, ListU64 함수 명세 | nilerr | 없음 | `R` 보존, 죽은 스택 True. 크기 동일 |
+| Prysm 축약 Checkpoint | EthLib→기계어 | 1/1: 크기 | 고정 | 위반 0. `WitCpM` dst 기호 길이 미검사 | makeslice, memmove | cplen | 없음 | `R` 보존. 크기 동일 |
+| Prysm 축약 AttestationData | EthLib→기계어 | 1/1: 크기. 하위 Checkpoint 오류 미도달은 정리가 없다 | 고정 | 위반 0 | makeslice, memmove, newobject 32 | adcopy | 없음 | `R` 보존. 크기 동일 |
+
+"크기 동일" 정리 일곱: `ad_size_main`, `bl_size_main`, `bv_size_main`, `cp_size_main`, `fv_size_main`, `lc_size_main`, `lu_size_main`.
+
+타입 전체 완료로 표시할 수 있는 타입은 없다.
+Scalars와 ListU64는 수용·마샬 조합 증인이 완료다.
+Scalars는 비nil 오류 연결과 Size 사후조건이 남는다.
+ListU64는 오류 증인의 Go 타입 자료와 전역 조건이 남는다.
+나머지 타입은 조합이 없거나 거부 경로가 남는다.
+
+Prysm 두 타입은 v7.1.8 `51b5a75` 스키마를 옮긴 축약 구조체다.
+protobuf 필드가 있는 실제 Prysm 바이너리의 증명이 아니다.
+
+## 3. 신뢰 항목
+
+| 항목 | 신뢰 내용 | 지금의 검사 | 다음 조치 |
 | --- | --- | --- | --- |
-| `sc_reject_size_main` | Scalars.UnmarshalSSZ | len ≠ 16이면 `ssz.ErrSize`의 두 단어(전역)를 반환 | `sc_reject_size` |
-| `sc_accept_main` | Scalars.UnmarshalSSZ | len = 16, bool 바이트 ∈ {0,1}이면 수신자 필드 5개 = 입력 조각, nil 반환 | `sc_accept` |
-| `sc_unmarshal_accept_spec_k` | 위 | EthLib `deserialize scDesc bs = .ok v`이면 수신자 = `g`의 Go 배치, `g.toValue = v` | `sc_unmarshal_accept_spec` |
-| `sc_size_main` | Scalars.SizeSSZ | 16 반환 | `sc_size` |
-| `sc_marshal_main` | Scalars.MarshalSSZTo | `len + 16 ≤ cap`이면 dst에 16바이트를 붙이고 `(ptr, len+16, cap, nil)` 반환. 스택 검사, `push`/`pop` 포함 | `sc_marshal` |
-| `sc_marshal_spec_k` | 위 | 쓴 바이트 = EthLib `serialize scDesc g.toValue` | `sc_marshal_spec` |
-| `lu_iter`, `lu_exit`, `lu_loop` | ListU64.UnmarshalSSZ 원소 루프 | 불변식과 귀납. 경계 검사 2개가 `panicBounds`로 가지 않음 | `lu_loop_body`, `lu_loop` |
-| `lu_accept_main` | ListU64.UnmarshalSSZ | 수용 경로 전체: 스택 검사, 입력 검사 4개, `makeslice` 호출(계약 가설), 쓰기 장벽 전역 읽기, 루프, 반환. 수신자 = (p, n, n), p의 배열 = 입력 원소 | `lu_accept` |
+| Lean 커널, Kraken x64 의미론, EthLib 명세 | 공유 기반 | 없음 | 유지 |
+| Kraken = 실제 CPU | 하드웨어 대조를 하지 않았다 | 없음(arm64 호스트) | x86-64 Linux 기계 또는 CI |
+| ELF → Lean 프로그램 | objdump, `link/conv.py`, include | 링크 검사 (a)–(e): 독립 디코더 셋, 심볼·변위 | 유지 |
+| 재빌드 추적 (f) | `SHash.lean` = `.S` 해시 | 해시 파일 + 원문 비교 | 수정 3: Lake `input_file`로 바꾸고 삭제 |
+| 손으로 쓴 상수 (g)(h), 역할 분류, `golits.go` | Lean 상수 = ELF 바이트 | Lean·Go 소스 정규식. 리뷰 우회 셋 | 수정 3: ELF 데이터 include로 바꾸고 삭제 |
+| Go 값 | 증인이 실제 Go 값이다 | goval(크기·정렬·패딩·bool·겹침). 타입 내용·오류 전역·중간 상태 미검사 | 1c X2: Lean 술어로 |
+| 런타임 계약 | Go 1.26.3 런타임이 계약을 만족한다 | 추상 모델(`rt_*`, `bump_*`)과 `joint_models`(한 Host·한 힙) | 2단계(HTR) 뒤 |
+| fmt 할당량, GC | 할당이 예산 안이다. 호출 중 GC가 없다(`runtime.writeBarrier` = 0이 `F`에 있다) | 없음 | 런타임 정교화 |
+| fmt 결과 객체 | 결론은 rax ≠ 0만 말한다 | 없음 | 하위 오류 전달 전에 결과 객체 계약을 정한다 |
+| `VblMsg` | 어느 입력이 어느 메시지인지 말하지 않는다 | rodata 셋 소유는 형식 전제 | 유지(거부 명세에 충분) |
+| ValidateBitlist | 수용 집합 = EthLib 규칙. `bsr`가 있는 Go 코드는 증명하지 않았다 | 계약 + 모델 `rt_validate_bitlist` | Kraken `bsr` 지원 |
+| memmove | 겹치지 않는 범위만 | 호출자의 `⋆` | 유지 |
+| 스택 가드, X15 = 0 | 빠른 경로 전제 | 정리 전제 | 유지 |
+| Go 배치 | `layout.json`은 go/types의 gc amd64 크기 규칙이다. amd64 실행으로 확인하지 않았다 | `layout.go` | x86-64 기계 |
 
-> **정정 (1b, 2026-11-05).** 위 표의 `lu_accept_main`은 "수용 경로 전체"로 표시했지만 그 판은 공허했다. 계약 가설 `hms`가 모든 `cnt`와 모든 프레임 `F`에 양화되어 전제를 동시에 만족하는 상태가 없다(astra, `review/ReviewKraken.lean`의 `lu_accept_preconditions_false`). 이 완료 표시를 철회한다. 1b에서 계약을 런타임 힙 조각 형식으로 고치고(`Fk/Contracts.lean` `MakesliceC`) 다시 증명했다(b6da965). 전제 만족 증인은 `Fk/Witness.lean`의 `lu_accept_runs`(n = 0, 1, 16)다. REPORT-1b 1절.
+계약의 형식, 모델, 증인은 `CONTRACTS.md`에 있다.
 
-증명하지 않은 것: ListU64 수용의 EthLib 연결 정리(`lu_accept_main`에서 1a의 `Transfer` 틀로 바로 만들 수 있다. 시간 관계로 하지 않았다), FixedVec 전체, ListU64 인코더와 거부 경로, 모든 `growslice` 경로, K5 대조(3.5절).
+## 4. 남은 항목 (astra 수정 2 필수 8)
 
-판정의 주된 근거:
-- 운영 아키텍처(x86-64)의 실제 Go 컴파일러 산출물을 그대로 다뤘다. 9개 함수 모두 파싱되고 의미론에 없는 명령어가 없었다(K1).
-- 1a에서 MiniRV로 한 일의 핵심 세 가지(직선 경로, 데이터 의존 루프, 외부 호출 계약)를 모두 Kraken 위에서 재현했다. 비용은 1a보다 작거나 비슷했다(4절).
-- 조건부인 이유: Kraken main의 증명 자동화(`kstep`)는 우리 함수 크기에서 쓸 수 없었다. 단계 보조정리와 매크로 439줄을 우리 쪽에서 만들었다. 하드웨어 대조를 이 호스트에서 돌리지 못했다. Sail 연결이 없다.
-
-## 2. 조건 목록: MiniRV 없이 1b(bitvector, bitlist, 중첩 container, List[container], Prysm 타입)를 Kraken x64에서 하려면 무엇이 필요한가
-
-분류: **래퍼** = 우리 쪽 Lean 코드로 된다. **기여** = Kraken에 고치거나 더하는 것이 맞다(이 세션은 PR을 만들지 않는다). **전제** = 계약 또는 정리의 전제로 둔다.
-
-| # | 필요한 것 | 분류 | 상태와 근거 |
+| # | 필수 수정 | 상태 | 처리 계획(DIRECTION 4절) |
 | --- | --- | --- | --- |
-| C1 | Host 안 조각의 한 지시어 단계, 적재·저장 단계, 주소 정규화(`estep`, `load_step`, `store_step`, `kunfold`, `kat`) | 래퍼 (기여 후보) | 완료 `Fk/Step.lean`. main의 `kstep`은 `straightlineStep` 목표용이고, 맥락이 커지면 안의 `grind`가 시간 초과로 끝난다(TOOLS.md). vcgen 브랜치가 이것을 대신할 수 있다(C14) |
-| C2 | 레이블 해석: `label l = Host.addrOf (k + j)` | 래퍼 (기여 후보) | 완료 `Fk/Labels.lean`. 전제는 "함수의 레이블이 Host에서 함수 앞에 나오지 않는다"(`LabelsFresh`). 링크 수준 사실이다 |
-| C3 | 정교화기 `include_x64`의 조건 코드 `g, ge, nl, nle, s, ns, o, no, p, np` | 기여 (지금은 래퍼) | `Parser/Syntax.lean`의 `declare_affixes cc`와 `Elab.lean`의 `evalCondCodeSuffix`에 줄 추가. 지금은 `include_x64_rt`(런타임 파서 + `ToExpr`) |
-| C4 | 다바이트 nop(`nopl (%rax)`, `data16 nop`) 파싱 | 기여 (지금은 래퍼) | 변환기 `--norm`이 `nop`으로 바꾼다. Kraken 레이아웃이 추상이라 의미 차이는 없다 |
-| C5 | mutable 전역 읽기(`ssz.Err*`, `runtime.writeBarrier`) | 전제 | 완료(3.2절). 전역을 레이블 주소의 메모리 조각으로 두고 값을 전제로 둔다. 쓰기는 1a·1b SSZ 코드에 없다 |
-| C6 | 외부 호출 계약(`makeslice`, `growslice`, `memmove`, `convT64`, `newobject`, `fmt.errorf`, `gcWriteBarrier2`) | 전제 (계약 형식은 래퍼) | `makeslice` 하나로 형식을 시험했다(3.3절). 나머지는 같은 틀이다. 1a `CONTRACTS.md`의 표를 그대로 옮길 수 있다 |
-| C7 | Go 런타임 전제: 스택 가드(`r14+16`의 `stackguard0` < rsp), 쓰기 장벽 꺼짐, X15 = 0, `panicBounds` 도달 불가 | 전제 | 스택 가드와 쓰기 장벽은 완료. X15(`movups %xmm15` 오류 경로)는 실행하지 않았다. `panicBounds`는 분기 정리로 도달 불가를 보였다 |
-| C8 | 데이터 의존 루프 | 래퍼 | 완료(`Fk/LuLoop.lean`, `Fk/Block.lean`). 블록 분할 + 한 바퀴 + 귀납 |
-| C9 | 분기 조건과 주소 산술을 독립 보조정리로 두기 | 래퍼 | 완료 `Fk/Flags.lean`. 맥락 안에서 `simp; omega`로 닫으면 커널이 깊은 재귀를 보고한다(64비트 큰 리터럴). 1a 발견 5와 같은 현상이다 |
-| C10 | `ecancel`의 원자 비교가 복잡한 값 항을 펼치지 않게 하기 | 기여 (지금은 래퍼) | 지금은 계산 값을 `generalize`로 변수로 바꾼다. Kraken 쪽 수정 후보: 원자 비교를 reducible 투명도로 |
-| C11 | `kstep`이 부가 목표의 `grind` 시간 초과를 잡기 | 기여 | 시간 초과는 런타임 예외라서 `try … catch`가 잡지 못한다. `tryCatchRuntimeEx` 또는 `grind` 설정 상한 |
-| C12 | 1b 코드의 새 명령어 | 기여 또는 우회 | 런타임 파서에 없음: `bsr`, `lzcnt`, `tzcnt`, `popcnt`, `bt`, `xchg`, `cqo`, `div`, `rep movs`, `pxor`, `xorps`, `movq xmm↔gpr`. 있음: `movsx`, `cmov`, `setcc`, `imul`, `or`, `movups`. ~~bitlist 검증의 `bits.Len8`은 표(rodata) 조회라서 C5 방식으로 된다.~~ 정정(1b): amd64 빌드에서 `bits.Len8`은 `bsr`(v1), `lzcnt`(v3)로 컴파일된다(astra, `review/kraken-bitlist-v1.objdump:21`). 표 조회가 아니다. bitlist의 차단 항목이다. REPORT-1b Kraken 요청 목록 |
-| C13 | `growslice` 경로(인코더의 용량 부족) | 전제 + 래퍼 | 1a와 같은 조합 문제다. append 지점별 보조정리 + 계약. 이 세션은 하지 않았다 |
-| C14 | vcgen 브랜치(sgraf812/kraken `vcgen`, a4cce2e, nightly-2026-10-29) 평가 | 결정 사항 | Hoare 삼중항, `FunSpec`(함수 명세), 점프·루프·호출 예제가 있다. C1, C2, C6의 래퍼를 대신할 수 있다. 툴체인이 다르다. 1b 전에 반나절 평가를 권한다 |
-| C15 | 하드웨어 대조 | 전제(신뢰) | 이 호스트(arm64)에서 실행하지 못했다(3.5절). x86-64 Linux 기계 또는 CI가 필요하다 |
-| C16 | 툴체인 | 결정 사항 | Kraken은 nightly를 따른다. v4.35.0에서는 파서가 빌드되지 않는다(K0). 1b는 Kraken의 nightly에 맞춰 올린다. EthLib SSZ 폐포는 nightly에서 빌드된다 |
+| 1 | Lean 참조 검사의 역할과 이름 해석. 이름 가림 변이를 자기 시험에 | 열림 | 수정 3: 역할 분류를 지운다 |
+| 2 | (h)의 전체 식과 타입 동일성. 접미사와 다른 포인터 기술자를 거부 | 열림 | 수정 3: 데이터 include로 바꾼다 |
+| 3 | Go 형식 호출의 실제 대상. 지역 `fmt`와 지원 밖 호출 모양 | 열림 | 수정 3: `golits.go`를 지운다 |
+| 4 | 오류 타입 자료와 전역 불변식을 증인에. Scalars 비nil 거부 정리와 증인 | 열림 | 수정 3 |
+| 5 | 배치 재생성 뒤 goval. 값·타입·조각 미검사를 따로 집계 | 열림 | 1c X2 |
+| 6 | 사후조건: NeMarshal, ListC 스택, Scalars Size, r14 보존 | 열림 | 수정 3 |
+| 7 | ListC 원소 오프셋 순서와 원소 오류 전달을 수작업 기준 사례로 | 열림 | 수정 3 |
+| 8 | 게이트 표 정정: 메모리 동일성 인정, 추상 증인과 Go 값 구분 | 완료(2절) | 정리 세션 |
 
-## 3. 항목별 결과
+1–5는 1c 생성 결과를 검사기로 믿기 전에 필요하다.
+6–7은 게이트 완료와 일반 조합을 주장하기 전에 필요하다.
 
-### 3.1 K0 툴체인
+## 5. 발견
 
-(a) v4.35.0 + Kraken: 의미론, WP, 전술은 빌드된다. 파서만 실패한다(`SyntaxAffixed.lean:86: Unknown identifier mkMarkdownDocComment`). (b) nightly-2026-09-21 + EthLib SSZ 폐포: 성공(332 s, 1.38 GB). 1단계 명세 파일 4개가 수정 없이 빌드된다. (c)는 필요 없었다. TOOLS.md K0.
+생성기 결함(F1, F2, G1–G3, H1)은 `syjn99/ssz-gen-fixes` `698c202`가 고쳤다.
+지금 ELF는 그 생성기의 출력이다.
 
-### 3.2 K1 대상, 변환기, mutable 전역
+- **F1**: BitVec 디코더가 패딩 비트가 선 바이트를 받았다. 지금은 `bv_reject_padding_main`이 거부를 증명한다.
+- **F2**: BitL 인코더의 길이 검사가 비트가 아니라 바이트를 셌다. 지금은 `bl_marshal_reject_main`이 거부를 증명한다.
+- `semtest/f12_test.go`가 두 결함의 Go 회귀 시험이다.
 
-- `link/conv.py`가 objdump `-gnu`의 AT&T 열을 레이블 어셈블리로 바꾼다. 9개 함수 모두 런타임 파서를 통과한다(패딩 정규화 뒤). 정교화기는 `jg`/`jge`가 있는 4개 함수를 거부한다(C3). 함수별 표는 TOOLS.md K1.
-- **mutable 전역.** Kraken README는 "Mutable globals (bss and data)"를 제외 범위로 적었다. 실제 의미론에서 `sym(%rip)` 적재는 `label "sym"` 주소의 데이터 메모리(부분 맵) 적재다. `label`은 Host 프로그램에서 그 레이블 지시어를 찾고, 없으면 −1이다. 그래서 다음과 같이 다룬다.
-  - 정리를 Host에 대해 일반적으로 진술하고, 전제에 `label "ssz.ErrSize"` 주소의 분리 조각(두 단어)을 둔다. 값은 전제(1a의 `hinit`와 같은 역할)다.
-  - `runtime.writeBarrier`도 같다. 전제: 그 4바이트 = 0(쓰기 장벽 꺼짐).
-  - 분리 논리가 전역과 다른 영역(입력, 수신자, 스택)의 겹침을 배제한다.
-  - 한계: 실제 바이너리의 전역 주소와 Host 레이블 주소가 같다는 것은 링크 수준 사실이다. 정리 안에서 증명하지 않는다. 쓰기(전역 갱신)는 다루지 않았다. SSZ 코드에는 없다.
-- 결론: 읽기 전용으로 쓰는 전역은 "분리된 기호 메모리 + 전제"로 충분하다. Kraken 수정은 필요 없다.
+관찰(결함 아님): ListC 원소 오프셋 순서 오류는 `%d` 두 개의 `fmt.Errorf`라 `convT64` 두 번과 할당이 있다.
 
-### 3.3 K2–K3 Scalars, 런타임 호출, 쓰기 장벽, 스택 검사
+## 6. Kraken 요청 목록
 
-| 항목 | Kraken에서 둔 방식 | 1a(`CONTRACTS.md`) |
-| --- | --- | --- |
-| 스택 검사 `cmp 0x10(%r14),%rsp; jbe morestack` | 전제: `r14+16`의 조각 값 `guard` < rsp(또는 rsp − 8). 분기 정리로 `morestack` 쪽이 불가능함을 보인다 | 전제 P1, 같은 내용 |
-| `runtime.growslice` | 빠른 경로 전제 `len + 16 ≤ cap`로 호출 분기를 타지 않음을 보인다 | 같다 |
-| `runtime.makeslice` | 정리의 가설 `hms`: 반환 주소 칸과 S바이트 스택 여유를 받으면 반환 주소로 돌아오고, rsp + 8, 프레임 F 보존, 반환 rax에 0 블록. 모든 Host에 대해 진술한다 | `makesliceC H 8` (havoc 기반 계약 실행) |
-| 쓰기 장벽 | 전역 조각 = 0 전제. 코드가 플래그를 실제로 읽고 분기한다 | `noBarrier` 전제, 같다 |
-| 오류 전역 | 레이블 조각 + 값 전제 | `hinit`, 같다 |
+- `bsr` 파싱. ValidateBitlist가 계약으로 남는 이유다.
+- 정교화기 `include_x64`의 조건 코드 `g, ge, nl, nle, s, ns, o, no, p, np`. 지금은 `Fk/Include.lean`의 `include_x64_rt`로 우회한다.
+- 다바이트 nop(`nopl (%rax)`, `data16 nop`) 파싱. 지금은 `link/conv.py --norm`이 `nop`으로 바꾼다.
+- `kstep` 안 `grind` 시간 초과를 잡는 방법. 지금은 `Fk/Step.lean`의 `load_step`/`store_step`을 쓴다.
+- `ecancel`의 원자 비교: `StaticBox (-4 + rcx)` 같은 원자에서 재귀 한도에 걸린다. `@Eq DataMem`과 `@Eq (Std.ExtHashMap …)` 원자를 구분하지 못한다. 지금은 `generalize`로 피한다.
+- vcgen 갈래의 `@[spec]` 형태(`vcgen/B0.md`).
 
-차이: 1a는 계약을 기계 모델 안의 표(`rtOf H`)로 실행했다. Kraken에서는 계약이 정리의 가설이다. 호출 지점에서 `eventually_trans`로 잇는다. havoc 색인 문제(1a 발견 7)가 없다. 계약 결과가 경로를 고르면 결과에 대한 사례 분석으로 다룬다.
+## 7. 1c 설계 입력
 
-### 3.4 K4 루프
+1. 스택 좌표 셋을 작은 정리로 고정한다: 함수 진입 rsp, 호출 직전 rsp, 피호출자 진입 rsp(= 호출 직전 − 8).
+2. 계약 조합을 한 Host·한 힙에서 검사한다. `emp` 힙의 숫자 예산을 물리 공간으로 세지 않는다.
+3. 기호 길이 제한은 구체 배치 생성기에만 둔다.
+4. 선언 의존성과 전체 적용으로 완료표를 만든다. 함수 명세 아래의 외부 계약도 전파한다.
+5. 주소 겹침과 타입 별칭을 생성 단계에서 진단한다. goval의 경계 검사를 생성기 안으로 옮긴다.
+6. 증인 값은 `n#64` 꼴로 쓴다. `StaticBox (-4 + x)` 같은 원자는 `generalize`로 불투명하게 둔다.
+7. 배치는 해석된 Lean 식에서 뽑는다. 소스 철자에서 선언 역할을 추정하지 않는다.
+8. 함수 명세는 정리에서 유도한다(`*_holds`). 하위 계약 의존성도 완료표에 남긴다.
+9. 조합은 셋을 따로 완료 항목으로 둔다: `hupd` 존재, 전체 조합 증인, 실제 호출자 명령 실행. 지금은 앞의 둘만 있다.
+10. Go 값 미검사를 값, 자원 조각, 타입 내용, 런타임 전역으로 나눈다. 중간 상태와 두 번째 호출의 Go 값도 본다.
+11. 오류 값을 자원으로 둔다: rodata, 상자 값, fmt 형식과 인수 타입, 전역 오류 객체. 오류 전역의 초기화와 비nil 조건을 명세 그래프에 넣는다.
+12. 타입 자료는 크기와 종류만으로 식별하지 않는다. pointee와 메서드 연결을 넣는다.
+13. 사후조건을 셋으로 분류한다: 메모리 동일성, 명시적 자원 보존, `True`로 버린 자원.
+14. 링크 변이와 Lean 빌드를 한 기록에 묶는다. 검사기 단독 PASS를 증명 성공으로 쓰지 않는다.
+15. 생성기를 고치면 Go 회귀 시험과 Lean 거부 정리를 함께 갱신한다.
 
-Kraken main에는 루프 예제가 없다(`p3_correct`는 `sorry`). 그러나 `Eventually`와 `eventually_trans`만으로 1a와 같은 방법(한 바퀴 보조정리 + 귀납)이 그대로 된다. `lu_iter`(19개 명령어, 약 9분과 함께 `lu_loop`)가 그 근거다. 불변식의 메모리는 Kraken의 `At_append_sep`로 블록을 나누고 합쳐 표현했다.
+## 8. 재현
 
-발견: 루프 경계 검사가 비교하는 `rcx`는 `cap(buf) − 4`(슬라이스 용량)이다. 처음 불변식의 `rcx = 8n`은 틀렸다. 앞부분 코드를 읽고 `8n ≤ rcx`로 고쳤다(70451e6).
-
-### 3.5 K5 대조
-
-실행하지 못했다. Kraken 하드웨어 대조는 x86-64에서 정적 ELF를 직접 실행한다. 이 호스트는 arm64 macOS다. Docker amd64 에뮬레이션은 Docker 데몬이 응답하지 않아 시험하지 못했다. qemu 사용자 모드는 macOS에 없다. 에뮬레이션으로 돌린다 해도 비교 대상은 qemu다. 하드웨어가 아니다. TOOLS.md K5.
-
-## 4. 비용 비교 (1a MiniRV 대 Kraken main)
-
-| | 1a MiniRV | Kraken main |
-| --- | --- | --- |
-| 첫 함수(도구 학습 포함) | ListU64 디코더 수용 약 4시간 | Scalars 거부 24분 |
-| Scalars 디코더(수용 + 거부) | 약 7분(틀 복사 뒤) | 36분 |
-| Scalars 인코더 빠른 경로 | 약 25분 | 약 17분 |
-| ListU64 루프 | 약 30분 | 약 9분 |
-| ListU64 디코더 수용 전체 | 약 4시간 | 약 61분 |
-| 자동화 | 명령어마다 생성한 `rw [run_at …]; rv_norm` | `kat`(한 지시어 + 정규화), `load_step`/`store_step`, `ecancel`. `kstep`은 작은 맥락에서만 |
-| 자체 기반 코드 | 의미론(MiniRV), 디코더, 계약 실행기, Sail 대응 | 단계 보조정리와 매크로 439줄. 의미론은 Kraken |
-| 증명 빌드 | 62 s | 19.7 s, 1.7 GB |
-| `lu_accept` 전제 | 레지스터, 입력 바이트, cap, P1, ra 짝수, 쓰기 장벽, 힙 크기, 5개 영역 `Sep` | 분리 조각 17개(`⋆`로 서로소), 스택 가드, len·cap, `makeslice` 계약, 레이블 신선성, 쓰기 장벽 칸 = 0 |
-
-한계: 이 세션은 1a의 방법을 알고 시작했다. 시간 차이의 일부는 학습 효과다. COST.md.
-
-## 5. 1a에서 옮길 것과 버릴 것
-
-| 1a 산출물 | 처리 | 이유 |
-| --- | --- | --- |
-| EthLib 명세(`SpecScalars`, `SpecList`, `Transfer`, Desc 표, 오류 대응 표) | **옮김** (이미 `fv/kraken/lean/Fv1`) | 아키텍처와 무관하다 |
-| 0단계 `Fv/Spec.lean`의 바이트 보조정리 | **옮김** (이미) | `SpecScalars`가 쓴다 |
-| `SpecFixed`, `SizeSpec` | EthLib 부분만 옮김 | 크기 정리가 MiniRV를 끌어온다 |
-| 계약 표(`CONTRACTS.md`)와 분류 (a)(b)(c) | **옮김** | 내용은 같다. 형식만 Kraken 가설로 |
-| 루프 방법(구간, 한 바퀴, 귀납, 분리) | **옮김** | K4에서 그대로 재현했다 |
-| 링크 검사, qemu 대조, 부정 사례 절차 | **옮김** (amd64용으로 다시 만들어야 함) | 절차는 같다. 링크 검사는 `conv.py` 출력과 ELF 대조로, 대조는 x86-64 기계에서 |
-| 대상 타입, 드라이버 | **옮김** (이미 `fv/kraken/target`, `cmd/p1bin`) | |
-| MiniRV 의미론과 모든 MiniRV 증명(`fv/phase1/lean/Fv1`의 기계어 정리, `fv/phase0/lean/Fv`) | **버림** | Kraken 의미론으로 대체 |
-| 0.5단계 Sail 작업(`stepD_refines`, Sail 명령어 정리, Sail C 대조) | **버림** | riscv64 전용. x86 Sail 연결은 Kraken 쪽 계획이다 |
-| riscv64 빌드 설정(`rva20u64`) | **버림** | |
-
-## 6. Kraken에 없어서 필요한 것 (요약)
-
-| 범주 | 항목 | 기여 / 래퍼 |
-| --- | --- | --- |
-| 명령어·파서 | 정교화기 조건 코드(C3), 다바이트 nop(C4), 1b 후보 명령어(C12) | 기여 |
-| mutable 전역 | 읽기 전용 전역 = 레이블 조각 + 전제(C5) | 래퍼(필요 없음) |
-| 외부 호출 계약 | 계약 가설 형식(C6). main에 함수 명세 장치가 없다. vcgen 브랜치에 `FunSpec`이 있다 | 지금 래퍼, vcgen 채택 시 Kraken |
-| 루프 | main에 예제·보조정리 없음(C8). `Eventually`로 된다 | 래퍼 |
-| 분기 가지 타기 | main 예제에 없음. 레이블 해석(C2), 한 지시어 단계(C1) | 래퍼, 기여 후보 |
-| 자동화 규모 | `kstep` 안 `grind` 시간 초과 미포착(C11), `ecancel` 원자 펼침(C10) | 기여 |
-| 커널 | 큰 리터럴 산술의 깊은 재귀(C9) | Lean 쪽. 래퍼로 우회 |
-
-## 7. 신뢰 기반 문구 제안
-
-1b에서 갱신했다. 새 문구는 REPORT-1b 8절이다. 아래는 평가 세션의 원래 문구다.
-
-> 기계어 정리는 Kraken x64 의미론(Kraken `6064eec`) 위의 정리다. Kraken의 x64 의미론은 Intel SDM을 참조해 손으로 쓴 것이다. Kraken 팀은 이 의미론을 실제 x86-64 하드웨어와 비교하는 대조 테스트로 검증한다. 이 프로젝트는 그 대조를 우리 함수에 대해 아직 실행하지 않았다. MiniRV 때의 "명령어 단위 Sail 일치 증명"에 해당하는 것은 Kraken에 아직 없다. Sail x86 모델과의 연결은 Kraken 쪽 계획이다. 외부 함수(Go 런타임)는 정리의 가설(계약)이고, 전역 변수의 값과 스택 가드는 정리의 전제다.
-
-## 8. Kraken 관리자(Nic)에게 물을 질문
-
-1. 1b(수천 명령어 규모)를 하려면 main과 sgraf812의 `vcgen` 브랜치 중 어느 쪽에서 시작해야 하는가? `vcgen`이 main에 합쳐질 예정과 툴체인 계획은?
-2. `vcgen` 브랜치의 `FunSpec`은 Go ABIInternal(레지스터 인수, 대부분 호출자 저장, r14 = g, X15 = 0) 같은 비표준 호출 규약을 받는가? `CallingConvention`에 SysV, Win64만 있다.
-3. README의 "Mutable globals 제외"는 의미론에서 무엇을 뜻하는가? 우리는 전역을 레이블 주소의 분리 조각으로 두었다. 이 방식이 의도와 맞는가? 데이터 섹션 레이블을 Host에 두는 권장 방법이 있는가?
-4. 정교화기 `include_x64`의 조건 코드에 `g/ge/s/o/p` 계열이 빠진 것은 의도인가? 런타임 파서에는 있다.
-5. `kstep`이 부가 목표의 `grind` 시간 초과를 잡지 못한다. 알려진 문제인가? 큰 분리 맥락에서 권장하는 방식은?
-6. `ecancel`이 원자를 `isDefEq`로 비교하다가 복잡한 값에서 재귀 한도에 닿는다. reducible 투명도로 바꿀 계획이 있는가?
-7. 하드웨어 대조를 외부 사용자가 자기 함수에 대해 돌리는 권장 방법이 있는가(메모리 상태 비교 포함)? `StateSummary`는 지금 레지스터와 플래그만 비교한다.
-8. `bsr`, `lzcnt`, `popcnt`, `bt`, `div`, `rep movs`, `xorps`/`pxor`를 추가할 계획이 있는가? 기여를 받는다면 CONTRIBUTING의 AI 공개 규칙 외에 필요한 절차는?
-9. Sail x86 연결의 일정과 범위는?
-
-## 9. 이견
-
-1. **`kstep` 대신 자체 단계 보조정리.** 브리프는 `kstep`, `grind`, `vcgen`의 자동화 정도를 재라고 했다. `kstep`을 먼저 썼다(거부 경로의 저장, 비교, 분기). 두 번째 rip 적재에서 `kstep` 안 `grind`가 시간 초과로 끝났고, 수용 경로에서는 저장 하나에서도 끝났다(TOOLS.md). 그 뒤 `kunfold` + `load_step`/`store_step`으로 바꿨다. `vcgen`은 main에 없다.
-2. **main만 평가했다.** README는 1만 명령어 증명이 `vcgen` 브랜치에 있다고 적었다. 브리프가 지정한 6064eec(main)로 했다. `vcgen` 브랜치는 구조만 읽었다(C14).
-3. **`include_x64` 대신 `include_x64_rt`.** 정교화기를 먼저 시도했고 4개 함수에서 `jg`/`jge`로 실패했다. 두 파서가 모두 받는 5개 함수에서 결과가 같음을 확인했다.
-4. **패딩 nop 정규화.** 런타임 파서가 `nopl (%rax)`, `data16 nop`을 거부한다. `nop`으로 바꿨다. Kraken은 지시어 크기를 추상으로 두므로 의미가 같다.
-5. **K5 미실행.** Docker 데몬 무응답. Docker Desktop을 재시작하지 않았다(다른 세션 영향).
-6. **레이블 신선성 전제.** 레이블 주소를 실제 바이너리에서 증명하지 않고 "Host에서 함수 앞에 같은 레이블이 없다"를 전제로 두었다.
-7. **사후조건의 프레임.** 수용·인코더 정리의 메모리 사후조건은 이름 붙인 조각과 `⋆ True`다. 나머지 메모리가 그대로라는 것은 말하지 않는다. 1a도 이름 붙인 객체만 말했다.
-8. **EthLib 연결의 형태.** 1a와 같이 기계 전제를 `bs = enc g`인 `g`에 대해 받는다(`P : ∀ g, bs = scEncode g → …`).
-9. **자기 완결 재배치.** 사용자 지시로 명세 파일, 대상 타입, 드라이버를 `fv/kraken` 아래로 복사했다. Lean 코드는 그대로이고 주석만 고쳤다. c60e0d2 이후 커밋은 `fv/kraken` 밖을 건드리지 않는다.
-
-## 10. 재현
+저장소 루트에서 시작한다.
 
 ```sh
-fv/kraken/link/build.sh                                  # ELF, objdump, 변환 (저장소 루트에서)
-cd fv/kraken/lean && lake build                          # 모든 정리 (nightly-2026-09-21)
-lake env lean --run scripts/ParseCheck.lean ../link/out/norm/target.*.S
-lake env lean scripts/Axioms.lean                        # = ../AXIOMS.txt
+cd fv/kraken/lean && lake build                                 # 856 jobs
+sh tools/axioms.sh                                               # NONSTANDARD 0 (두 범위)
+lake env lean tools/RegressFix2.lean                             # 오류 없음
+for f in ../review/*.lean; do lake env lean $f; done             # Review1bFixB0.lean은 vcgen/에서
+cd ../../.. && go run fv/kraken/lean/tools/wit/layout.go > fv/kraken/lean/tools/wit/layout.json
+python3 fv/kraken/lean/tools/wit/goval.py                        # 위반 0
+python3 fv/kraken/link/check.py fv/kraken/link/out               # PASS all, BUNDLE
+python3 fv/kraken/link/check.py --selftest fv/kraken/link/out    # 24 cases
+fv/kraken/negative/run.sh <워크트리 밖 scratch 디렉터리>            # negative/RESULT, 16 cases
+GOROOT=$(go env GOROOT) go test ./fv/kraken/semtest/             # F1, F2 PASS
 ```
+
+대상 재생성과 증인 재생성 명령은 `TOOLS.md`와 `lean/tools/wit/README.md`에 있다.

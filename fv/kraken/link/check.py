@@ -7,7 +7,7 @@ Usage: check.py <outdir>      (outdir = fv/kraken/link/out, after build.sh)
 Inputs in <outdir>: p1bin-amd64 (ELF), target.objdump, p1bin-amd64.nm, norm/*.S.
 Writes <outdir>/RESULT. Exit status 1 on any failure.
 
-Checks (REPORT-1b, B1):
+Checks:
  (a) every function: ELF .symtab address and size; objdump instructions cover
      exactly [addr, addr+size) without gaps; objdump bytes = ELF file bytes;
      LLVM (llvm-objdump, an independent decoder) has the same instruction

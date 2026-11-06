@@ -1,6 +1,6 @@
 # SPEC: 1a·1b 대상 타입의 EthLib 명세, Go 값 추상화, 오류 대응
 
-작성 2026-11-05. 명세는 `lean/Fv1/Spec*.lean`(EthLib `Desc`만 쓴다), 연결 정리는 `lean/Fk/*Spec.lean`, `*Err.lean`이다.
+명세는 `lean/Fv1/Spec*.lean`(EthLib `Desc`만 쓴다), 연결 정리는 `lean/Fk/*Spec.lean`, `*Err.lean`이다.
 
 용어:
 - **Desc**: EthLib의 SSZ 타입 기술자.
@@ -13,7 +13,7 @@
 | --- | --- | --- | --- |
 | Scalars, FixedVec, ListU64 | `target/types.go` | `target/types.ssz.go` | 1a 대상 |
 | BitVec, Nested, ListC, BitL | `target/types1b.go` | `target/types1b.ssz.go` (`go run ./cmd/ssz gen --type-names BitVec,Nested,ListC,BitL`) | 1b 대상 |
-| Checkpoint, AttestationData | `target/prysm/types.go` | `target/prysm/types.ssz.go` | Prysm v7.1.8, 커밋 `51b5a75ebbadf05af22bd2601b5baf7a9e99b66d`, `proto/prysm/v1alpha1/attestation.pb.go`. 필드 이름, Go 종류, ssz 태그를 그대로 옮겼다. protobuf 필드(`state`, `unknownFields`, `sizeCache`)는 옮기지 않았다. 그래서 Go 구조체 배치는 Prysm과 다르다(REPORT-1b 이견). SSZ 스키마는 같다. |
+| Checkpoint, AttestationData | `target/prysm/types.go` | `target/prysm/types.ssz.go` | Prysm v7.1.8, 커밋 `51b5a75ebbadf05af22bd2601b5baf7a9e99b66d`, `proto/prysm/v1alpha1/attestation.pb.go`. 필드 이름, Go 종류, ssz 태그를 그대로 옮겼다. protobuf 필드(`state`, `unknownFields`, `sizeCache`)는 옮기지 않았다. 그래서 Go 구조체 배치는 Prysm과 다르다. SSZ 스키마는 같다. |
 
 생성 파일 해시는 `link/out/build-ids.txt`에 있다.
 
@@ -44,17 +44,16 @@ Go 값이 EthLib 값으로 가지 못하는 경우(추상화의 정의역 밖):
 | 타입 | Go 검사 | Go 오류 | EthLib | 기계어 |
 | --- | --- | --- | --- | --- |
 | Scalars | len ≠ 16 | `ErrSize` | `sc_serialize` + 고정 크기 | `sc_reject_size_main` |
-| Scalars | bool 바이트 > 1 | `ErrInvalidSerialization` | `ne_spec_accepts_iff`(Nested 안에서) | 없음 |
+| Scalars | bool 바이트 > 1 | `ErrInvalidSerialization` | `sc_spec_rejects_bool` | `sc_reject_bool_main` |
 | FixedVec | len ≠ 64 | `ErrSize` | `fv_reject_spec` | `fv_reject_size_main` |
 | ListU64 | len < 4 | `ErrSize` | `lu_spec_rejects` | `lu_reject_short_main` |
 | ListU64 | 오프셋 ≠ 4 | `ErrInvalidVariableOffset` | `lu_spec_rejects` | `lu_reject_offset_main` |
 | ListU64 | (len − 4) mod 8 ≠ 0 | `fmt.Errorf(… %w, ErrIncorrectListSize)` | `lu_spec_rejects` | `lu_reject_misaligned_main` (rax ≠ 0) |
 | ListU64 | (len − 4) / 8 > 16 | `fmt.Errorf(… %w, ErrListTooBig)` | `lu_spec_rejects` | `lu_reject_toobig_main` (rax ≠ 0) |
 | BitVec | len ≠ 1 | `ErrSize` | `bv_reject_spec` | `bv_reject_size_main` |
-| BitVec | 패딩 비트(`ssz.ValidateBitvector`, 재증명 R3) | `fmt.Errorf("J: %w")` | `bv_spec_one`, `bv_spec_accepts_iff` | `bv_reject_padding_main` (rax ≠ 0). 이전 반례 `bv_padding_counterexample`는 생성기 수정 F1로 사라졌다 |
+| BitVec | 패딩 비트(`ssz.ValidateBitvector`) | `fmt.Errorf("J: %w")` | `bv_spec_one`, `bv_spec_accepts_iff` | `bv_reject_padding_main` (rax ≠ 0) |
 | Nested | len < 28 | `ErrSize` | `ne_spec_rejects` | `ne_reject_short_spec` |
 | Nested | 오프셋(24..27) ≠ 28 | `ErrInvalidVariableOffset` | `ne_spec_rejects` | `ne_reject_offset_spec` |
-| Nested | (삭제) 첫 오프셋 > len | `ErrOffset` | 도달 불가(오프셋 = 28 ≤ len) | 생성기 수정 G3가 Go 소스에서 지웠다. 이전 ELF에도 분기가 없었다(재증명 R5) |
 | Nested | S 디코더 실패(bool) | `fmt.Errorf("S: %w")` | `ne_spec_accepts_iff` | 없음 |
 | Nested | L 디코더 실패 | `fmt.Errorf("L: %w")` | `ne_spec_accepts_iff` | 없음 |
 | ListC | len < 4 | `ErrSize` | `lc_spec_rejects` | `lc_reject_short_spec` |
@@ -70,22 +69,17 @@ Go 값이 EthLib 값으로 가지 못하는 경우(추상화의 정의역 밖):
 | AttestationData | len ≠ 128 | `ErrSize` | `ad_reject_size_spec` (`ad_spec_accepts_iff`) | `ad_reject_size_main` |
 | BitL | len < 4 | `ErrSize` | `bl_spec_rejects` | `bl_reject_short_main` |
 | BitL | 오프셋 ≠ 4 | `ErrInvalidVariableOffset` | `bl_spec_rejects` | `bl_reject_offset_main` |
-| BitL | `ValidateBitlist` 실패 | `fmt.Errorf("B: %w")` | `bl_spec_rejects` (`blValid` 거짓) | 계약 `ValidateBitlistC` 뒤. 오류 경로는 없음 |
+| BitL | `ValidateBitlist` 실패 | `fmt.Errorf("B: %w")` | `bl_spec_rejects` (`blValid` 거짓) | `bl_reject_invalid_main` (rax ≠ 0, 계약 `ValidateBitlistErrC` 뒤) |
 
-수용 쪽: `*_unmarshal_accept_spec_k`가 "EthLib가 받으면 기계어가 nil을 반환하고 수신자가 그 값을 담는다"를 말한다(Scalars, ListU64, FixedVec, Nested, ListC, Checkpoint, AttestationData, BitL). BitVec의 `bv_unmarshal_accept_spec_k`는 바이트 식(`bs = #[g.b]`)만 말한다. 기계어 실행을 포함하는 정리는 `bv_unmarshal_accept_machine`이다(1b-fix X7). 7절 표가 둘을 구분한다. ListC는 두 정리로 나뉜다: 원소가 1개 이상인 입력(`lc_unmarshal_accept_spec_k`, `len(buf) > 4`)과 빈 리스트(`lc_unmarshal_accept_empty_spec_k`, `len(buf) = 4`, 결과 `c.Items` = (`runtime.zerobase`, 0, 0), 전제 X15 = 0).
+수용 쪽: `*_unmarshal_accept_spec_k`가 "EthLib가 받으면 기계어가 nil을 반환하고 수신자가 그 값을 담는다"를 말한다(Scalars, ListU64, FixedVec, Nested, ListC, Checkpoint, AttestationData, BitL). BitVec의 `bv_unmarshal_accept_spec_k`는 바이트 식(`bs = #[g.b]`)만 말한다. 기계어 실행을 포함하는 정리는 `bv_unmarshal_accept_machine`이다. 7절 표가 둘을 구분한다. ListC는 두 정리로 나뉜다: 원소가 1개 이상인 입력(`lc_unmarshal_accept_spec_k`, `len(buf) > 4`)과 빈 리스트(`lc_unmarshal_accept_empty_spec_k`, `len(buf) = 4`, 결과 `c.Items` = (`runtime.zerobase`, 0, 0), 전제 X15 = 0).
 
-### 3.1 생성기 수정 G3(첫 오프셋 `> size` 삭제)의 영향 (재증명 R5)
+### 3.1 첫 오프셋 `> size` 검사
 
-생성기 수정 G3는 첫 오프셋 뒤의 `if off > size { return ssz.ErrOffset }` 3줄을 지웠다.
-대상 4곳은 ListU64, Nested, ListC(`Items` 오프셋), BitL이다.
-이 분기는 이전 ELF에서도 기계어에 없었다.
-Go 컴파일러가 `off == fixedSize ≤ size`에서 분기를 지웠다고 본다(추측: 근거는 아래의 명령어 수 비교뿐이다).
-근거: 새 ELF와 이전 ELF에서 네 디코더의 명령어 수와 순서가 같다.
-다른 줄은 문자열 오프셋과 레지스터 배치뿐이다(`git diff 2a97c5c~2 -- link/out/norm/`).
-그래서 지울 기계어 정리가 없다.
-`lc_reject_past_main`은 첫 **원소** 오프셋이 목록 길이를 넘는 경우의 정리다. G3와 관계가 없고 그대로 다시 증명했다.
+생성기는 ListU64, Nested, ListC, BitL의 첫 오프셋 뒤에 `off > size` 검사를 내지 않는다(생성기 수정 G3).
+첫 오프셋이 고정 크기와 같고 고정 크기 ≤ len이므로 그 검사는 도달하지 않는다.
+`lc_reject_past_main`은 첫 **원소** 오프셋이 목록 길이를 넘는 경우의 정리다. G3와 관계가 없다.
 
-## 4. 오프셋 읽기·쓰기의 범위 (B3.4)
+## 4. 오프셋 읽기·쓰기의 범위
 
 `ssz.ReadOffset(buf) = uint64(binary.LittleEndian.Uint32(buf))`, `ssz.WriteOffset(dst, i int) = AppendUint32(dst, uint32(i))`.
 
@@ -107,11 +101,16 @@ Go 컴파일러가 `off == fixedSize ≤ size`에서 분기를 지웠다고 본�
 
 타입마다 빈 값, 최소, 최대, 초과, 잘못된 오프셋(0, 작음, 큼, 정렬 안 됨)의 입력과 그 결과를 보장하는 정리는 `semtest/cases.why`에 있다. Go 기준 결과는 `semtest/expected.txt`다(x86-64 하드웨어에서는 `semtest/run.sh`가 비교한다). 증명이 없는 줄은 "not proved"로 표시했다.
 
-## 6. bitlist 검증과 rodata 표 (B3.3)
+## 6. bitlist 검증
 
-브리프는 `bits.Len8`의 표 조회(rodata)를 C5 방식으로 두라고 했다. `GOAMD64=v1` 빌드에서 `ssz.ValidateBitlist`는 표를 읽지 않는다. `bits.Len8`은 `bsr %r8d,%r8d`로 컴파일된다(`link/out/FUNCS.md`: 이 함수의 전역 참조는 없다). 그래서 표 상수는 만들지 않았다. 함수 전체를 계약 `ValidateBitlistC`로 두었다. **bitlist의 핵심 검사(빈 입력, 끝 바이트 0, 2048비트 초과)는 계약 뒤에 있다.** 계약은 "rax = 0 ⟺ EthLib `unpackDelimited (some 2048)`가 받는다"이다. Kraken에 `bsr`이 들어오면 이 계약을 증명으로 바꿀 수 있다(REPORT-1b Kraken 요청 목록).
+`GOAMD64=v1` 빌드에서 `ssz.ValidateBitlist`는 rodata 표를 읽지 않는다.
+`bits.Len8`은 `bsr %r8d,%r8d`로 컴파일된다.
+Kraken이 `bsr`를 파싱하지 못하므로 함수 전체를 계약 `ValidateBitlistC`·`ValidateBitlistErrC`로 둔다.
+**bitlist의 핵심 검사(빈 입력, 끝 바이트 0, 2048비트 초과)는 계약 뒤에 있다.**
+계약은 "rax = 0 ⟺ EthLib `unpackDelimited (some 2048)`가 받는다"이다.
+Kraken에 `bsr`이 들어오면 이 계약을 증명으로 바꿀 수 있다.
 
-## 7. 완료표: 기계어 실행을 포함하는 정리와 바이트 식 정리 (1b-fix X7)
+## 7. 완료표: 기계어 실행을 포함하는 정리와 바이트 식 정리
 
 "기계어"는 `Eventually (step1 Host.exe) …`를 결론에 가진 정리다.
 "바이트 식"은 EthLib `serialize`/`deserialize`와 Go 값의 식만 말하는 정리다.
@@ -132,4 +131,4 @@ Go 컴파일러가 `off == fixedSize ≤ size`에서 분기를 지웠다고 본�
 | BitL | `bl_marshal_main` | `bl_serialize` | `bl_unmarshal_accept_spec_k`(`ValidateBitlistC` 뒤) | |
 
 이 표는 정리의 형태만 말한다.
-전제 증인의 유무는 `REPORT-1b-fix.md`의 게이트 1 표가 말한다.
+전제 증인의 유무는 `REPORT.md` 2절의 게이트 1 표가 말한다.
