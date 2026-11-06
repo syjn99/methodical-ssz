@@ -1,3 +1,0 @@
-Vg/ScAccept.lean:44:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
-Vg/ScAccept.lean:44:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information
-Vg/ScAccept.lean:44:23: error: `finish` has failed, use `+verbose` to obtain diagnostic information

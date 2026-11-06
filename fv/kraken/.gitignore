@@ -1,3 +1,7 @@
 /upstream/
 **/.lake/
 /vcgen-src/
+/link/out/raw/
+/link/out/SELFTEST
+/lean/tools/wit/goval-result.txt
+*.log
