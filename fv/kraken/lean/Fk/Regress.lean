@@ -5,21 +5,10 @@ import Fk.Vbl
 import Fk.Witness
 
 /-!
-# Regression checks that keep their meaning (re-proof R10, astra 1b-fix 7)
+# Regression checks that keep their meaning
 
-The 1b review file `review/Review1b.lean` no longer elaborates against the new
-contract signatures; a type error is not a regression test. This module states
-what the old counterexamples exercised, as theorems in the build:
-
-- `joint_models`: one host and one heap (`bumpHeap`) satisfy nine contracts
-  together: makeslice (1-byte elements), memmove, growslice, the 16-byte
-  newobject (the errorString of the nil error paths), the two `fmt.errorf`
-  contracts (one code), convT64 and both ValidateBitlist contracts (the
-  `bsr`-free model; re-proof fix X5).
-  `not_joint_false` states that these premises do not prove `False`.
-- `old_input_excluded`: the 1b growslice counterexample input (`newLen = 2^63`)
-  violates the new budget premise.
-Call witnesses (`*_runs` in `Fk/Wit*.lean`) are the third kind of check.
+This module states what the old counterexamples exercised, as theorems in the
+build:
 -/
 
 open Fk Fk.Code Fk.W
@@ -77,11 +66,8 @@ theorem label_itab : label "go_itab._errors.errorString_error" = 0x10000 + 1 :=
   mk_label P _ 1 _ (by simp [P]) (by decide)
 theorem hit : (label "go_itab._errors.errorString_error").toBitVec ≠ 0 := by rw [label_itab]; decide
 
-/-- The ten contracts used by the theorems, in one host and one heap
-(re-proof fix X5; fix 2 X4/X5: the fmt contracts take their fixed format,
-read-only resource and message source as arguments, `FmtErrorfDWC` added,
-`ConvT64C` returns a box on the bump heap, `ValidateBitlistErrC` keeps the
-rodata messages `vblRO`). Every format and resource argument at once. -/
+/-- The ten contracts used by the theorems, in one host and one heap. Every format
+and resource argument at once. -/
 def Joint (S : Nat) (ty : BitVec 64) (fs : List UInt8) (RO : DataMem → Prop)
     (MsgIn : BitVec 64 → List UInt8 → List UInt8 → Prop) (fs2 : List UInt8) (tw : BitVec 64) : Prop :=
   MakesliceC bumpHeap ty 1 S ∧ MemmoveC S ∧ GrowsliceC bumpHeap ty 1 S ∧ NewobjectC bumpHeap ty 16 S

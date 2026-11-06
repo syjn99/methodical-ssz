@@ -7,13 +7,6 @@ import Fk.NeAccept
 - `ne_reject_short_main`: `len(buf) < 28` → returns `ssz.ErrSize`.
 - `ne_reject_offset_main`: `len(buf) ≥ 28` and the offset at bytes 24..27
   ≠ 28 → returns `ssz.ErrInvalidVariableOffset`.
-The `sszVarOffset2 > size` branch (`ssz.ErrOffset`) is dead: the offset is 28
-there and `size ≥ 28` (the code has no such branch after inlining).
-Both return with rsp + 8 and rbp restored; the receiver is not written (it is
-in `R`, which the post keeps).
-Premises the Go caller provides: return address at rsp, saved-rbp slot below,
-the spill slot at rsp+16, the stack guard below rsp - 8 - 88, the error
-global's two words (package initialization).
 -/
 
 open Fk Fk.Code

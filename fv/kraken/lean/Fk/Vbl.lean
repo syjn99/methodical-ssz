@@ -6,23 +6,11 @@ import Fk.Bump
 import Fv1.SpecBitList
 
 /-!
-# `ssz.ValidateBitlist`: contract, EthLib rule, and a model (re-proof R4)
+# `ssz.ValidateBitlist`: contract, EthLib rule, and a model
 
 Go's `ssz.ValidateBitlist` uses `bsr` (`bits.Len8`), which Kraken does not
 parse, so `ValidateBitlistC` stays a hypothesis of the BitL theorems (the
 decoder since 1b, the encoder since the generator fix F2).
-
-`blValid_iff`: with the limit 2048, EthLib's `unpackDelimited` accepts n bytes
-exactly when `1 ≤ n ≤ 257`, the last byte is non-zero, and for n = 257 the
-last byte is 1 (`blArith`).
-
-`RtVbl` (Fk/RtVbl.S) computes `blArith` without `bsr`. On an invalid input it
-takes 16 zero bytes from the bump heap (an `*errors.errorString` with the
-empty message) and returns the errorString itab in rax and the object in rbx.
-`rt_validate_bitlist` and `rt_validate_bitlist_err` prove that this code meets
-`ValidateBitlistC S` and `ValidateBitlistErrC bumpHeap S` for every `S`. This
-shows that the contracts are satisfiable together and gives a host for the
-BitL witnesses; it is not a proof about Go's code.
 -/
 
 open Fk Fv1 EthLib.Serialization.Ssz
@@ -36,12 +24,11 @@ variable [Host]
 /-- The bitlist rule (EthLib): `unpackDelimited` with the limit 2048 accepts. -/
 def blValid (tl : List UInt8) : Prop := ∃ bits, unpackDelimited (some 2048) tl.toArray = .ok bits
 
-/-- `ssz.ValidateBitlist(buf []byte, bitLimit uint64) error` (rax = ptr,
-rbx = len, rcx = cap, rdi = limit), valid input (re-proof fix X5: split by
-the input). If `blValid buf`, it returns to the return address with rsp + 8,
-r14 and rbp kept, rax = 0 (nil error), the frame `F` and the bytes unchanged.
-It allocates nothing on this path. The 32-byte spill area of its four
-register arguments is the callee's. -/
+/-- `ssz.ValidateBitlist(buf []byte, bitLimit uint64) error` (rax = ptr, rbx = len,
+rcx = cap, rdi = limit), valid input. If `blValid buf`, it returns to the return
+address with rsp + 8, r14 and rbp kept, rax = 0 (nil error), the frame `F` and
+the bytes unchanged. It allocates nothing on this path. The 32-byte spill area
+of its four register arguments is the callee's. -/
 def ValidateBitlistC (S : Nat) : Prop :=
   ∀ (st : MachineData) (ret : Int64) (buf stk spill : List UInt8) (F : DataMem → Prop),
     st.regs.rbx.toNat = buf.length → st.regs.rdi = 2048 → stk.length = S → spill.length = 32 → blValid buf →
@@ -69,18 +56,18 @@ theorem vblMsgE_len : vblMsgE.length = 42 := by rfl
 theorem vblMsgZ_len : vblMsgZ.length = 21 := by rfl
 theorem vblMsgB_len : vblMsgB.length = 13 := by rfl
 
-/-- The three constant messages of `ssz.ValidateBitlist` in rodata (fix 2 X5):
-`go_string._ + 33605`, `+ 13272`, `+ 5743` (the `lea` operands of the real
-code; `link/check.py` (g) compares the bytes with the ELF and the Go source).
+/-- The three constant messages of `ssz.ValidateBitlist` in rodata: `go_string._ +
+33605`, `+ 13272`, `+ 5743` (the `lea` operands of the real code;
+`link/check.py` (g) compares the bytes with the ELF and the Go source).
 Read-only: the contract keeps it and its frame `F` is separate from it. -/
 def vblRO : DataMem → Prop :=
   Eq (vblMsgE.At (label "go_string._" + 33605).toBitVec) ⋆ Eq (vblMsgZ.At (label "go_string._" + 13272).toBitVec)
     ⋆ Eq (vblMsgB.At (label "go_string._" + 5743).toBitVec)
 
-/-- Where the message of a `ValidateBitlist` error is (fix 2 X5): one of the
-three rodata messages (`sp` is its address; no heap bytes, `hm = []`), or the
-`%d` message `"unexpected number of bytes, got %d but found %d"`, formatted on
-the heap (`hm = msg`, at most 128 bytes). -/
+/-- Where the message of a `ValidateBitlist` error is: one of the three rodata
+messages (`sp` is its address; no heap bytes, `hm = []`), or the `%d` message
+`"unexpected number of bytes, got %d but found %d"`, formatted on the heap (`hm
+= msg`, at most 128 bytes). -/
 def VblMsg (sp : BitVec 64) (msg hm : List UInt8) : Prop :=
   (hm = [] ∧ ((sp = (label "go_string._" + 33605).toBitVec ∧ msg = vblMsgE)
     ∨ (sp = (label "go_string._" + 13272).toBitVec ∧ msg = vblMsgZ)
@@ -94,15 +81,14 @@ theorem VblMsg.len {sp : BitVec 64} {msg hm : List UInt8} (h : VblMsg sp msg hm)
   · decide
   · exact h
 
-/-- `ssz.ValidateBitlist`, invalid input (re-proof fix X5, fix 2 X5). If
-`¬ blValid buf` and the heap has the budget (`8192 ≤ avail`), it returns a
-non-nil error: rax is the `*errors.errorString` itab, rbx the object `e`.
-The heap gives the 16-byte object `ErrObj e sp msg` and, for the `%d`
-message only, the message bytes `hm`: `avail' + 16 + hm.length ≤ avail ≤
-avail' + 8192`. For the three constant messages the object points into the
-read-only `vblRO` of the premise (`VblMsg`); no message byte is taken from
-the heap. `F` is quantified apart from `vblRO` (the `⋆`). Which message
-belongs to which input is not stated. -/
+/-- `ssz.ValidateBitlist`, invalid input. If `¬ blValid buf` and the heap has the
+budget (`8192 ≤ avail`), it returns a non-nil error: rax is the
+`*errors.errorString` itab, rbx the object `e`. The heap gives the 16-byte
+object `ErrObj e sp msg` and, for the `%d` message only, the message bytes `hm`:
+`avail' + 16 + hm.length ≤ avail ≤ avail' + 8192`. For the three constant
+messages the object points into the read-only `vblRO` of the premise (`VblMsg`);
+no message byte is taken from the heap. `F` is quantified apart from `vblRO`
+(the `⋆`). Which message belongs to which input is not stated. -/
 def ValidateBitlistErrC (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
   ∀ (st : MachineData) (ret : Int64) (avail : Nat) (buf stk spill : List UInt8) (F : DataMem → Prop),
     st.regs.rbx.toNat = buf.length → st.regs.rdi = 2048 → stk.length = S → spill.length = 32 → ¬ blValid buf →
@@ -233,8 +219,7 @@ theorem blArith_cons_len (init : List UInt8) (last : UInt8) :
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- `RtVbl` meets the valid-input contract (re-proof fix X5). The error
-branches contradict `blValid`. -/
+/-- `RtVbl` meets the valid-input contract. The error branches contradict `blValid`. -/
 theorem rt_validate_bitlist (j : Nat) (hj : RtVbl.IsInfixAt Host.prog j) (hf : LabelsFresh RtVbl j) (S : Nat) :
     ValidateBitlistC S := by
   intro st ret buf stk spill F hrbx hrdi hstk hsp hval hm
@@ -327,9 +312,9 @@ theorem rtvbl_obj0 : Int.toBytes 8 (0 : BitVec 64).toInt ++ Int.toBytes 8 (BitVe
 
 set_option maxHeartbeats 8000000 in
 set_option maxRecDepth 100000 in
-/-- `RtVbl` meets the invalid-input contract with the bump heap (re-proof fix
-X5): every error branch takes 16 zero bytes (an errorString with the empty
-message) from the heap; the valid branches contradict `¬ blValid`. -/
+/-- `RtVbl` meets the invalid-input contract with the bump heap: every error branch
+takes 16 zero bytes (an errorString with the empty message) from the heap; the
+valid branches contradict `¬ blValid`. -/
 theorem rt_validate_bitlist_err (j : Nat) (hj : RtVbl.IsInfixAt Host.prog j) (hf : LabelsFresh RtVbl j) (S : Nat) :
     ValidateBitlistErrC bumpHeap S := by
   intro st ret avail buf stk spill F hrbx hrdi hstk hsp hinv hav hm

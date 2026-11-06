@@ -9,20 +9,6 @@ import Fv1.SpecBitList
     type BitL struct { B bitfield.Bitlist `ssz-max:"2048"` }
 
 The fixed generator replaces the byte-count check `len(c.B) > 2048` with
-`ssz.ValidateBitlist(c.B, 2048)` (contract `ValidateBitlistC`, behind `bsr`).
-The code first appends the offset 4 to dst, then validates, then appends the
-bytes of `c.B`.
-
-`bl_marshal_main`: if `c.B` is a valid bitlist (`blValid`, EthLib's rule) and
-dst has room, the function writes `4 ‖ c.B` after `dst[:len]` and returns
-`(dst[:len+4+n], nil)`. Every stack chunk comes back (existentially).
-
-`bl_marshal_reject_main`: if `c.B` is not valid, the function wraps the
-ValidateBitlist error with `fmt.errorf("B: %w")` and returns a non-nil error
-with a nil slice. `bl_marshal_rejects_overlong` instantiates it with the
-finding-F2 input (258 bytes) and with 2049 bits (257 bytes ending in 0x02);
-`bl_marshal_accepts_2048` checks that 2048 bits (257 bytes ending in 0x01)
-are valid.
 -/
 
 open Fk Fk.Code
@@ -610,10 +596,8 @@ theorem bl2049_len : bl2049.length = 257 := by
 theorem bl2048_len : bl2048.length = 257 := by
   simp only [bl2048, List.length_append, List.length_replicate, List.length_singleton]
 
-/-- **F2 boundary, EthLib side.** 258 bytes (`blOverlong`) and 2049 bits are
-not valid Bitlist[2048] encodings; 2048 bits is. With `bl_marshal_reject_main`
-and `bl_marshal_main` the encoder rejects the first two and accepts the third
-(the old code accepted all three: it counted bytes). -/
+/-- **F2 boundary, EthLib side.** 258 bytes (`blOverlong`) and 2049 bits are not
+valid Bitlist[2048] encodings; 2048 bits is. -/
 theorem bl_marshal_rejects_overlong :
     ¬ blValid Fv1.blOverlong.toList ∧ ¬ blValid bl2049 ∧ blValid bl2048 := by
   have hl : ∀ (l : List UInt8) (x : UInt8), (l ++ [x]).getLastD 0 = x := by intro l x; simp

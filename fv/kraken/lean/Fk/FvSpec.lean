@@ -4,16 +4,11 @@ import Fv1.Transfer
 import Fk.LuErr
 
 /-!
-# FixedVec against EthLib (B2.2)
+# FixedVec against EthLib
 
 `fv_unmarshal_accept_spec_k`: if EthLib accepts `bs` (64 bytes) as `v`, the
 machine code returns nil and the receiver holds the Go layout of a `g` with
 `g.toValue = v`: R = `g.r`, W = (p, 4, 4) with the four elements at p.
-`fv_marshal_spec_k`: the marshal fast path writes `fvEncode g` (= EthLib
-`serialize fvDesc g.toValue`) at `dst[len:]`, `dst[:len]` unchanged.
-`fv_reject_spec`: EthLib rejects every input of another length; the machine
-rejects it too (`fv_reject_size_main`). For 64-byte inputs EthLib always
-accepts (`fv_accepts_64`), as the Go code does (no other check).
 -/
 
 open Fk Fk.Code Fv1 EthLib.Serialization.Ssz

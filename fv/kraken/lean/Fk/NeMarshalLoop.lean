@@ -4,9 +4,7 @@ import Fk.LuMarshal
 # Nested.MarshalSSZTo: the inlined ListU64 element loop
 
 Head `L_478` (directive 285): rax = i, rbx = dst ptr, rdx = base + 8i,
-rdi = cap, r9 = n, r8 = element pointer p. The same loop as ListU64's
-(`lum_iter`, `lum_loop`), with r8 and r9 swapped; copied with the directive
-indices of this function.
+rdi = cap, r9 = n, r8 = element pointer p.
 -/
 
 open Fk Fk.Code

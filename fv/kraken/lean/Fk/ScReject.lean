@@ -6,12 +6,6 @@ import Fk.Labels
 If `len(buf) != 16`, the function returns `ssz.ErrSize` (the two words at the
 global) to the return address. Machine words, Go ABIInternal amd64: rax = c,
 rbx = buf.ptr, rcx = len; error interface in (rax, rbx).
-
-Hypotheses:
-- the function occurs in the `Host` program at index `k`;
-- `hLf`: the error-block label does not occur in the host program before the function (`Fk.Labels`);
-- memory: the return address at rsp, the spill slot at rsp+16, and the two words
-  of the `ssz.ErrSize` global, all disjoint.
 -/
 
 open Fk Fk.Code

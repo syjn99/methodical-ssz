@@ -7,7 +7,6 @@ import Fk.AdSpec
 `ad_unmarshal_accept_spec_k`: if EthLib accepts `bsA` as `v`, there is `g`
 with `g.toValue = v` and `bsA = adEncode g`; with the input chunks of that `g`
 the machine returns nil and the receiver holds `g` (Slot, CommitteeIndex,
-BeaconBlockRoot = (p, 32, 32), Source and Target as new objects).
 -/
 
 open Fk Fk.Code Fv1 EthLib.Serialization.Ssz

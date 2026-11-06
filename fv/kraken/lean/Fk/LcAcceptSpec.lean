@@ -7,8 +7,7 @@ import Fk.LcSize
 
 From `deserialize lcDesc bs = .ok v`: `bs = lcEncode g` (`lc_accepted`), so
 the list bytes `tl = lcBody g` are the offset table (offset of element j =
-4n + the sizes before j) and then the element encodings. `lc_tl_shape` gives
-the premises of `lc_accept_main` in that form.
+4n + the sizes before j) and then the element encodings.
 -/
 
 open Fk Fk.Code Fv1 EthLib.Serialization.Ssz

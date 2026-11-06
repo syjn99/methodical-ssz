@@ -4,22 +4,11 @@ import Fk.LuErr
 import Fv1.SpecNested
 
 /-!
-# Nested.UnmarshalSSZ against EthLib (B3)
+# Nested.UnmarshalSSZ against EthLib
 
 - `ne_unmarshal_accept_spec_k`: if EthLib accepts `bs` as `v`, there is a Go
   value `g` (`g.l` has at most 16 elements) with `g.toValue = v`, and the
   machine code returns nil with A, the new S object and the new L object
-  holding `g` in Go layout.
-- `ne_spec_accepts_iff`: EthLib accepts exactly when every Go check passes:
-  Nested's own (`len ≥ 28`, offset = 28), the Scalars bool byte (byte 23
-  ≤ 1, checked inside Scalars.UnmarshalSSZ) and the four ListU64 checks on
-  `buf[28:]` (inside ListU64.UnmarshalSSZ).
-- `ne_reject_short_spec`, `ne_reject_offset_spec`: the two Nested checks,
-  EthLib's rejection and the machine's error together. The callee checks
-  return through `fmt.Errorf("S: %w")` / `("L: %w")`; those wrap paths are
-  not proved (REPORT-1b).
-
-Premises the Go caller provides: see `ne_accept_main` (in `Fk/NeAccept.lean`).
 -/
 
 open Fk Fk.Code Fv1 EthLib.Serialization.Ssz

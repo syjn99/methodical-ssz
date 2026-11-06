@@ -7,10 +7,6 @@ import Fk.Labels
 If `len(buf) = 16` and the bool byte is 0 or 1, the function copies the input
 chunks into the receiver fields (A @0, B @2, C @4, D @8, E @16), returns nil
 (rax = rbx = 0) to the return address. 25 directives on each of the two paths.
-
-The input is given as five chunks at the widths the code reads (1, 2, 4, 8, 1
-bytes); the receiver as five chunks at the widths it writes. Hypotheses `hL37f`,
-`hL3bf`: the two internal labels do not occur in the host program before the function.
 -/
 
 open Fk Fk.Code

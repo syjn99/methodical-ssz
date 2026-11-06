@@ -6,21 +6,9 @@ import Fk.Witness
 /-!
 # BitL.UnmarshalSSZ, accept path, on Kraken main
 
-The key check is behind a contract. `ssz.ValidateBitlist` uses `bsr`
-(`bits.Len8`), which Kraken does not parse (REPORT-1b, Kraken request list).
-`ValidateBitlistC`: the call returns rax = 0 exactly when EthLib's
-`unpackDelimited (some 2048)` accepts the bytes (non-empty, last byte
-non-zero, at most 2048 bits before the delimiter). This contract is the
-whole bitlist rule. The machine proof covers only what the decoder does
-around it: length and offset checks, the call, `append([]byte{}, buf[4:]...)`
-(`runtime.growslice` + `runtime.memmove` contracts), the receiver header.
-
-`bl_accept_main`: with `len(buf) = 4 + n` (n ≥ 1), offset 4, and
-`unpackDelimited (some 2048) tl` = ok (tl the n bytes after the offset), the
-function returns a nil error (rax = 0) with `c.B = (p, n, c)`, the n bytes
-at p.
-Premises the Go caller provides: separated receiver, input and stack chunks,
-the stack guard below rsp − 120, the write barrier off, the three contracts.
+The key check is behind a contract. `ValidateBitlistC`: the call returns rax = 0
+exactly when EthLib's `unpackDelimited (some 2048)` accepts the bytes
+(non-empty, last byte non-zero, at most 2048 bits before the delimiter).
 -/
 
 open Fk Fk.Code Fv1 EthLib.Serialization.Ssz

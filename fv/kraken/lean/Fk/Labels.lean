@@ -6,8 +6,6 @@ import Fk.Step
 Kraken resolves `label l` to the address of the *first* `.label l` directive of
 the laid-out host program (`Executable.labels`, `findSome?`), or `-1`.
 `label_eq_addrOf` turns that into `Host.addrOf j` for the first occurrence `j`.
-`label_in_fragment` states it for a label inside our function at index `k`,
-given that the label does not occur in the host program before the function.
 -/
 
 namespace Fk

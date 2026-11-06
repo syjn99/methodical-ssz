@@ -2,12 +2,11 @@ import Fk.Bump
 import Fk.FunSpecs
 
 /-!
-# More bump-allocator models (1b-fix X4)
+# More bump-allocator models
 
 `bump_makeslice1`: `runtime.makeslice` for 1-byte elements (`BumpAlloc1`).
 `bump_newobject24`, `bump_newobject32`: `runtime.newobject` for one object of
 24 or 32 bytes (`BumpNew24`, `BumpNew32`). All on `bumpHeap` (Fk/Bump.lean).
-They satisfy `MakesliceC bumpHeap ty 1 S` and `NewobjectC bumpHeap ty n S` for every `S`.
 -/
 
 open Fk
@@ -117,7 +116,7 @@ theorem bump_newobject24 (j : Nat) (hj : BumpNew24.IsInfixAt Host.prog j)
   · apply UInt64.toBitVec_inj.mp; simp
   · dsimp only; ecancel
 set_option maxHeartbeats 4000000 in
-/-- The 16-byte bump `runtime.newobject` (an `errors.errorString`; re-proof R6). -/
+/-- The 16-byte bump `runtime.newobject`. -/
 theorem bump_newobject16 (j : Nat) (hj : BumpNew16.IsInfixAt Host.prog j)
     (hf : ∀ i < j, Host.prog[i]? ≠ some (.label "runtime.newobject")) (ty : BitVec 64) {S : Nat} :
     NewobjectC bumpHeap ty 16 S := by

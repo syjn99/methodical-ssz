@@ -6,15 +6,7 @@ import Fk.LuErr
 /-!
 # ListC.UnmarshalSSZ element loop, on Kraken main
 
-Loop head `L_3c4` (directive 239). One iteration for element i (start offset
-s, end offset e): `newobject` (a ListU64, 24 bytes), the next offset (or
-`len` for the last element) and its checks, the sub-slice `buf[4:][s:e]`,
-`ListU64.UnmarshalSSZ` (function specification `LuUAccC`), `c.Items[i] = p`.
-
-Frame: x is the caller's rsp. Slots (from x): +8 receiver, +32 cap, −128 base
-(`buf[4:]`), −136 p, −144 C (= cap − 4), −152 i+1, −160 i, −168 n, −176 T
-(= len − 4), −184 s / e, −224 and −216 the callee's spill slots, −232 the
-return slot; `blk` (144 + S bytes) below is the callees' stack.
+Loop head `L_3c4` (directive 239).
 -/
 
 open Fk Fk.Code Fv1 EthLib.Serialization.Ssz

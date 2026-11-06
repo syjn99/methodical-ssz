@@ -3,19 +3,11 @@ import Fk.LuAccept
 import Fk.LuMarshal
 
 /-!
-# Composition check: decode, then marshal the same receiver (re-proof R7)
+# Composition check: decode, then marshal the same receiver
 
 `bv_unmarshal_then_marshal`: BitVec.UnmarshalSSZ on a canonical byte `b`
 returns to the caller; the caller then calls BitVec.MarshalSSZTo on the same
 receiver (`call` writes a new return address `ra2` into the same return slot,
-`hupd`), and the encoder appends `b` to dst.
-
-No premise of the second call is assumed: the receiver graph J = (p, 1, 1),
-`[b]` at p, the saved-rbp slot, the spill slots, the return slot, the scratch
-and the stack guard all come from the conclusion of `bv_accept_main`. The
-decoder's scratch (`S ≥ 16` bytes) is reused: its top 8 bytes become the
-encoder's call slot, the rest the encoder's scratch. Only the caller's own
-slots (rsp + 24, rsp + 32) and the destination are in the frame `R0`.
 -/
 
 open Fk Fk.Code
@@ -104,7 +96,8 @@ theorem bv_unmarshal_then_marshal (kd : Nat) (hkd : BitVecUnmarshalSSZ.IsInfixAt
   dsimp only at e2 e3 hm'
   exact Eventually.done _ ⟨e1, e2, e3, e5, sep_true (by ecancel)⟩
 
-/-! ## ListU64: decode, then marshal the same receiver (re-proof fix X10)
+/-!
+ ## ListU64: decode, then marshal the same receiver
 
 `lu_unmarshal_then_marshal`: ListU64.UnmarshalSSZ on `[4, 0, 0, 0] ++ bs`
 returns to the caller; the caller then calls ListU64.MarshalSSZTo on the same
@@ -113,7 +106,8 @@ encoder appends `[4, 0, 0, 0] ++ bs` to dst. The receiver header (p, n, n), the
 data `bs` at p, the saved-rbp slot, the spill slot at rsp + 16 and the stack
 guard come from the conclusion of `lu_accept_main`. The encoder's slots at
 rsp − 24 and rsp − 16 are not in the decoder's footprint (its frame gap), so
-the caller passes them, with dst, in `R0`. -/
+the caller passes them, with dst, in `R0`.
+-/
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in

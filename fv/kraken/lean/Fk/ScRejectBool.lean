@@ -1,13 +1,11 @@
 import Fk.ScSpec
 
 /-!
-# Scalars.UnmarshalSSZ, bool reject path (re-proof fix 2, X8a)
+# Scalars.UnmarshalSSZ, bool reject path
 
 If `len(buf) = 16` and the bool byte `e` is above 1, the function writes the
 fields A, B, C, D (Go writes them before the bool test) and returns
 `ssz.ErrInvalidSerialization` (the two words of the global) to the return
-address. The bool field (E @16) is not written. EthLib rejects the same
-16 bytes (`sc_spec_rejects_bool`): the canonical encoding of a bool is 0 or 1.
 -/
 
 open Fk Fk.Code Fv1 EthLib.Serialization.Ssz

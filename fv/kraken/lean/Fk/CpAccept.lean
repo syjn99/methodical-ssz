@@ -6,16 +6,7 @@ import Fk.Bytes
 
     type Checkpoint struct { Epoch Epoch; Root []byte `ssz-size:"32"` }
 
-Input `buf` of 40 bytes: `e8` (Epoch, 8 LE bytes) then `root` (32). The code
-checks len = 40, copies Epoch, allocates Root with `runtime.makeslice(byte,
-0, 32)` (contract `MakesliceC`), writes the header (p, 0, 32), copies the 32
-bytes with `runtime.memmove` (contract `MemmoveC`), sets len = 32 and returns
-nil (`append(c.Root[:0], buf[8:40]...)` without growslice: the capacity is 32).
-Receiver layout (this module's struct, no protobuf fields): Epoch @0, Root
-@8 (ptr), @16 (len), @24 (cap).
-Premises the Go caller provides: separated receiver, input and stack chunks,
-the stack guard below rsp − 40, the write barrier off, heap room for 32 bytes,
-the two runtime contracts.
+Input `buf` of 40 bytes: `e8` (Epoch, 8 LE bytes) then `root` (32).
 -/
 
 open Fk Fk.Code

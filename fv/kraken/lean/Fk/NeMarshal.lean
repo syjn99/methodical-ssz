@@ -9,14 +9,6 @@ import Fk.CpMarshal
 With S and L non-nil, `len(c.L.L) = n ≤ 16`, and `cap(dst) ≥ len(dst) + 32 + 8n`,
 the function appends A (8), the five Scalars fields (1, 2, 4, 8, bool), the
 offset 28 (`ssz.WriteOffset`), the ListU64 offset 4 and the n elements, and
-returns `(dst[:len+32+8n], nil)`. The Scalars and ListU64 encoders are
-inlined; no call is taken. `dst[:len]` (`pre`) is kept.
-
-`ne_marshal_tail`: from the join point after the bool byte (directive 165) to
-the return. `ne_marshal_main`: the prefix, with the two bool cases.
-Premises the Go caller provides: receiver, S and L objects, the element array,
-`dst` and stack chunks separated; S, L non-nil (a nil one takes the
-`newobject` path, not proved); the stack guard below rsp − 80; `cap < 2^63`.
 -/
 
 open Fk Fk.Code

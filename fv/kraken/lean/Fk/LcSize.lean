@@ -8,17 +8,7 @@ import Fv1.SpecListC
 
     size := 4; for _, o := range c.Items { size += 4; size += o.SizeSSZ() }
 
-`ListU64.SizeSSZ` (4 + 8·len) is inlined. The loop reads `c.Items[i]` (a
-pointer `p_i` in the array at q) and `len(p_i.L)` at `p_i + 8`. It writes no
-memory, so the loop invariant keeps `dmem` equal to the start.
-
-`lc_size_main`: returns `4 + Σ (8 + 8·len_i)` = `4 + Σ (4 + (4 + 8·len_i))`,
-the EthLib size of the encoding (`lcEncode`: one offset per element, then
-`luEncode` of each).
-Premises the Go caller provides: the receiver's slice header (q, n) at rax,
-for each i < n the pointer bytes at q + 8i and the length at p_i + 8
-(non-nil elements: a nil element makes Go panic at `mov 0x8(%rsi)`), and the
-sum below 2^63 (Go `int`).
+`ListU64.SizeSSZ` (4 + 8·len) is inlined.
 -/
 
 open Fk Fk.Code

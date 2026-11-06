@@ -8,12 +8,6 @@ import Fk.LcAcceptSpec
 # ListC.MarshalSSZTo, fast path, on Kraken main
 
 `len(c.Items) = n ≤ 4`, every item non-nil with `len ≤ 16`, `cap(dst)` enough:
-the code writes the offset 4, then (loop 2) the n element offsets
-`4n + Σ_{j<i} (4 + 8 len_j)`, then (loop 3) for each element the offset 4 and
-its words (inner loop). Loop 1 only touches each item (Go nil check).
-The items array and the item objects are read-only here; the premise gives
-them as one predicate `Objs` with an accessor `hObjs` (per element: the
-pointer in the array, the element header, the words).
 -/
 
 open Fk Fk.Code Fv1 EthLib.Serialization.Ssz

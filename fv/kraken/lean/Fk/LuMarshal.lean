@@ -6,12 +6,7 @@ import Fk.LuRejectCall
 
 When `dst` has room (`len + 4 + 8n ≤ cap`, n = len(c.L) ≤ 16), the function
 appends the offset 4 (`ssz.WriteOffset`, 4 bytes) and the n elements (8 bytes
-each, LE), and returns `(ptr, len + 4 + 8n, cap, nil)`. `dst[:len]` (`pre`) is
-unchanged. No `growslice` call is taken.
-
-Loop (`lum_iter`, head `L_9a` = directive 48): rax = i, rbx = dst ptr,
-rdx = len + 4 + 8i, rdi = cap, r8 = n, r9 = element pointer p. Output at
-dst + len + 4: `bs.take (8i) ++ d.drop (8i)`.
+each, LE), and returns `(ptr, len + 4 + 8n, cap, nil)`.
 -/
 
 open Fk Fk.Code

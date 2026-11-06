@@ -10,9 +10,6 @@ import Fk.BvSpec
 
 As in `Fk/RoundTrip.lean`: EthLib decodes `enc g` to `g.toValue`, and the
 abstraction is injective, so with the marshal theorem (bytes = `enc g`) and the
-unmarshal accept theorem (receiver holds a `g'` with `g'.toValue = v`) the
-decoded Go value is `g`. ListC has no machine encoder or decoder-accept
-theorem (REPORT-1b); its line here is the EthLib part only.
 -/
 
 open Fv1 EthLib.Serialization.Ssz

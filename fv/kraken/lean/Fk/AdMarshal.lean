@@ -8,12 +8,6 @@ import Fk.AdSpec
 With Source and Target non-nil, `len(BeaconBlockRoot) = len(Source.Root) =
 len(Target.Root) = 32`, and `cap(dst) ≥ len(dst) + 128`, the code appends
 Slot, CommitteeIndex, BeaconBlockRoot (`memmove`), then the inlined
-`Checkpoint.MarshalSSZTo` for Source and Target (Epoch, Root by `memmove`), and
-returns `(dst[:len+128], nil)`; `dst[:len]` (`pre`) is kept.
-Premises the Go caller provides: receiver, objects, roots, `dst` and stack
-chunks separated; non-nil Source and Target (a nil one takes the
-`new(Checkpoint)` path, not proved); the stack guard below rsp − 104;
-`cap < 2^63`; the memmove contract.
 -/
 
 open Fk Fk.Code

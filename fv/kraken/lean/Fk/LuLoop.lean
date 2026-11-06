@@ -4,16 +4,7 @@ import Fk.Labels
 /-!
 # ListU64.UnmarshalSSZ element loop, on Kraken main (6064eec)
 
-Loop head `L_240` (directive 148). Invariant at element `i`: rax = i, rdx = n,
-rcx ≥ 8n (capacity of the slice after the offset), rdi = d (elements), rsi = c (receiver), the
-receiver header holds (p, nb) with nb = n, and the output block at p is
-`bs.take (8i) ++ 0^(8(n-i))`. `lu_iter`: one iteration (19 directives, two
-bounds checks shown not to branch to `panicBounds`). `lu_exit`: at i = n the loop
-leaves to `L_275` (directive 167). `lu_loop`: induction on n - i; the output
-block ends equal to the input block `bs`.
-
-Method: block split around element i (`block_split`, Kraken's `At_append_sep`),
-`load_step`/`store_step`, rejoin (`out_step`).
+Loop head `L_240` (directive 148).
 -/
 
 open Fk Fk.Code

@@ -4,10 +4,7 @@ import Fk.Bytes
 # Stack frames as one block (for function specifications)
 
 A caller gives a callee one block of stack bytes below the return slot. The
-callee's theorem names its slots. `luFrame` lays out ListU64.UnmarshalSSZ's
-frame (with the makeslice scratch below it) as one block; `luFrame_sep` splits
-it into the slots, and `luFrame_slices` shows that every block of the right
-length is such a layout.
+callee's theorem names its slots.
 -/
 
 namespace Fk

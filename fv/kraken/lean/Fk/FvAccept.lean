@@ -6,16 +6,6 @@ import Fk.Contracts
 # FixedVec.UnmarshalSSZ, accept path, on Kraken main
 
 Input `buf` of 64 bytes: `rb` (32, field R) then `ws` (32, field W = 4 uint64).
-The function checks len = 64, copies R with `runtime.memmove` (contract
-`MemmoveC`), allocates W with `runtime.makeslice` (contract `MakesliceC`),
-writes the W header (p, 4, 4), reads the write-barrier flag (0), copies the four
-elements (`fv_loop`) and returns nil, with rsp + 8 and rbp restored.
-
-Receiver layout (amd64): R @0 (32 bytes, given as r0 (1) and r1 (31) because the
-code reads byte 0 for the nil check), W @0x20 (ptr), @0x28 (len), @0x30 (cap).
-Premises the Go caller provides: separated receiver, input and stack chunks
-(so `c ≠ buf` and `memmove` is called), the stack guard below rsp - 0x28,
-the write barrier off, heap room for 32 bytes, the two runtime contracts.
 -/
 
 open Fk Fk.Code

@@ -6,18 +6,6 @@ import Fk.Bytes
 # `runtime.memmove` and `runtime.growslice` models that satisfy their contracts
 
 `RtCopy` (Fk/RtCopy.S) has three parts:
-- `runtime.memmove`: moves its arguments (rax = to, rbx = from, rcx = n) to
-  rdi, rsi, rdx and jumps to the copy loop;
-- `runtime.growslice` (1-byte elements): takes `2·newLen + 192` bytes from the
-  bump heap of `Fk/Bump.lean` (pointer at `runtime.fvBump`), sets rax = new
-  pointer, rcx = new capacity, keeps rbx = newLen, and copies the
-  `newLen − num` old bytes with the copy loop;
-- `L_fvcopy`: a byte copy loop (`r10` counts, `r11` holds the byte), then `retq`.
-
-`rt_memmove` proves `MemmoveC S` and `rt_growslice` proves
-`GrowsliceC bumpHeap ty 1 S` on Kraken's semantics, for every `S` and `ty`.
-They are models of the contracts, not Go's runtime: they show that the
-contracts are satisfiable (AGENTS.md, premise witnesses).
 -/
 
 open Fk

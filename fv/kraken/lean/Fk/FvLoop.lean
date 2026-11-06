@@ -4,11 +4,7 @@ import Fk.Labels
 /-!
 # FixedVec.UnmarshalSSZ element loop (W [4]uint64), on Kraken main
 
-Loop head `L_a6` (directive 46). Invariant at element `i`: rax = i, rcx = b
-(input), rdx = c (receiver), the receiver's W header holds (p, 4), and the
-block at p is `ws.take (8i) ++ 0^(8(4-i))`; `ws` (32 bytes) is the input at
-b + 32. `fv_iter`: one iteration (both bounds checks shown not to branch to
-`panicBounds`). `fv_loop`: induction; the block at p ends equal to `ws`.
+Loop head `L_a6` (directive 46).
 -/
 
 open Fk Fk.Code

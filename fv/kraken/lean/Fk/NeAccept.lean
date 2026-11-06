@@ -7,15 +7,6 @@ import Fk.FvAccept
     type Nested struct { A uint64; S *Scalars; L *ListU64 }
 
 Input: A (8 bytes), S's encoding (16), the offset 28 (4), L's encoding
-(offset 4 then 8n bytes). The function checks len ≥ 28 and offset = 28, stores
-A, allocates S (`runtime.newobject`), calls Scalars.UnmarshalSSZ on buf[8:24]
-(specification `ScUAccC`, derived from its machine theorem), allocates L,
-calls ListU64.UnmarshalSSZ on buf[28:] (`LuUAccC`, derived from its machine
-theorem under the makeslice contract), and returns nil.
-
-Stack: Nested's frame is 0x58 bytes below the saved rbp; every call uses the
-return slot at rsp − 104 and the block of 144 + S bytes below it; callees spill
-their arguments into the 16 bytes at rsp − 96.
 -/
 
 open Fk Fk.Code Fv1

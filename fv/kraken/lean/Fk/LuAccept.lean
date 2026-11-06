@@ -5,20 +5,7 @@ import Fk.Contracts
 /-!
 # ListU64.UnmarshalSSZ, accept path, on Kraken main (6064eec)
 
-Input `buf = [4,0,0,0] ++ bs` with `bs` of 8n bytes, n ≤ 16. The function checks
-len ≥ 4, offset = 4, (len-4) % 8 = 0, n ≤ 16 (all four shown not to reject),
-calls `runtime.makeslice`, writes the receiver header (ptr, n, n), reads the
-write-barrier flag (a mutable global, as a chunk at its label: 0), copies the
-elements in the loop (`lu_loop`), and returns nil.
-
-Hypotheses (beyond memory chunks, all disjoint by `⋆`):
-- `hguard`: stack guard below rsp - 8 (no `morestack`);
-- `hlen`, `hcap`, `hcap63`: len = 4 + 8n ≤ cap < 2^63;
-- `hms`: contract of `runtime.makeslice` (callee code is outside the fragment):
-  return to the pushed address with rsp + 8, frame F unchanged, a zeroed block
-  of 8n bytes at the returned rax, S bytes of scratch stack below the return slot;
-- `hf`: no label of the function occurs earlier in the host program.
-The write barrier is off: the chunk at `label "runtime.writeBarrier"` is 0.
+Input `buf = [4,0,0,0] ++ bs` with `bs` of 8n bytes, n ≤ 16.
 -/
 
 open Fk Fk.Code

@@ -3,14 +3,10 @@ import Fk.LuErr
 import Fv1.SpecListC
 
 /-!
-# ListC.UnmarshalSSZ rejections against EthLib (B3)
+# ListC.UnmarshalSSZ rejections against EthLib
 
 `lc_accepted`: every input EthLib accepts is `lcEncode g` for a `g` with at
 most 4 elements, each with at most 16 words. From the shape of `lcEncode`:
-the container offset is 4; the list bytes are empty (no element) or at least
-8 bytes; the first element offset is `4n ≠ 0`, at most the list length.
-`lc_spec_rejects`: each Go check that fails makes EthLib reject.
-`lc_reject_*_spec`: the machine theorem and EthLib's rejection together.
 -/
 
 open Fk Fk.Code Fv1 EthLib.Serialization.Ssz

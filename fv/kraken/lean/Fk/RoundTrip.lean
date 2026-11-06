@@ -3,18 +3,10 @@ import Fk.LuSpec
 import Fk.ScSpec
 
 /-!
-# Go-level round trips (B2.4): Scalars, ListU64, FixedVec
+# Go-level round trips: Scalars, ListU64, FixedVec
 
 For each type, with `enc` the Go encoder's output as a function of the Go value:
-1. the marshal fast path writes `enc g` at `dst[len:]` and leaves `dst[:len]`
-   (`sc_marshal_spec_k`, `lu_marshal_main` + `luEncode_toList`,
-   `fv_marshal_main` + `fv_marshal_spec_k`);
-2. EthLib decodes `enc g` to `g.toValue` (below, `deserialize_enc`);
-3. the unmarshal accept theorem on input `enc g` gives a receiver holding the
-   Go layout of some `g'` with `g'.toValue = g.toValue` (`*_unmarshal_accept_spec_k`),
-   and the abstraction is injective, so `g' = g` (below).
-So unmarshalling what marshal wrote restores the same Go value. The two
-machine runs are separate theorems (two calls); this file states the link.
+1.
 -/
 
 open Fv1 EthLib.Serialization.Ssz

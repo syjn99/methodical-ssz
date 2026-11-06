@@ -5,19 +5,11 @@ import EthLib.Serialization.Proofs.Ssz.Codec.Table
 import Fk.LuSpec
 
 /-!
-# ListU64: reject correspondence with EthLib (B2.3)
+# ListU64: reject correspondence with EthLib
 
 The Go decoder checks four things, in this order (`types.ssz.go`):
 1. `len(buf) ≥ 4`, else `ssz.ErrSize`;
-2. the offset (first 4 bytes, LE) = 4, else `ssz.ErrInvalidVariableOffset`;
-3. `(len − 4) mod 8 = 0`, else an error wrapping `ssz.ErrIncorrectListSize`;
-4. `(len − 4) / 8 ≤ 16`, else an error wrapping `ssz.ErrListTooBig`.
-
-`lu_checks_enc`: if all four hold, the input is `luEncode g` for a `g` with
-at most 16 elements, so EthLib accepts it (`deserialize_enc`).
-`lu_spec_reject_cases`: if EthLib rejects, one of the four checks fails, so
-the machine code rejects (Fk/LuReject.lean, Fk/LuRejectCall.lean).
-`lu_spec_rejects`: each failing check makes EthLib reject.
+2.
 -/
 
 namespace Fv1

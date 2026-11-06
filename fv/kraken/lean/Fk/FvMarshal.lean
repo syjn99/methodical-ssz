@@ -6,11 +6,6 @@ import Fk.FvAccept
 When `dst` has room (`len + 64 ≤ cap`) and `len(c.W) = 4`, the function appends
 R (32 bytes, by `runtime.memmove`) and the four W elements (8 bytes each, LE) to
 `dst` and returns `(ptr, len + 64, cap, nil)`. `dst[:len]` (`pre`) is unchanged.
-No `growslice` call is taken.
-
-Loop (`fvm_iter`, head `L_d0` = directive 56): rax = i, rbx = dst ptr,
-rdx = len + 32 + 8i, rdi = cap, r8 = W ptr. Output at dst + len + 32:
-`ws.take (8i) ++ d.drop (8i)` (old bytes `d` past the written part).
 -/
 
 open Fk Fk.Code

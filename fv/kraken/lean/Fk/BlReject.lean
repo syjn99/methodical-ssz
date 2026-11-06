@@ -1,16 +1,11 @@
 import Fk.BlAccept
 
 /-!
-# BitL.UnmarshalSSZ, ValidateBitlist error path (re-proof fix 2, X8b)
+# BitL.UnmarshalSSZ, ValidateBitlist error path
 
-`bl_reject_invalid_main`: with `len(buf) = 4 + n` (n ≥ 1), offset 4 and a
-tail `tl` that EthLib's bitlist rule rejects (`¬ blValid tl`), the decoder
-calls `ssz.ValidateBitlist` (contract `ValidateBitlistErrC`, fix 2 X5: the
-error object, its message in the rodata `vblRO` or on the heap), reads the
-errorString itab's type word, wraps the error with `fmt.errorf("B: %w")`
-(contract `FmtErrorfWC Heap blFmtB vblRO VblMsg`, fix 2 X4) and returns the
-non-nil result. The receiver is not written (it is in `R`); the input bytes
-and `vblRO` are kept.
+`bl_reject_invalid_main`: with `len(buf) = 4 + n` (n ≥ 1), offset 4 and a tail
+`tl` that EthLib's bitlist rule rejects (`¬ blValid tl`), the decoder calls
+`ssz.ValidateBitlist`, reads the errorString itab's type word, wraps the error
 -/
 
 open Fk Fk.Code Fv1 EthLib.Serialization.Ssz

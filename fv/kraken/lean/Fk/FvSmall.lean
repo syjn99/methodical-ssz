@@ -6,9 +6,6 @@ import Fk.Flags
 
 `fv_size_main`: returns 64. `fv_reject_size_main`: if `len(buf) ≠ 64`, returns
 `ssz.ErrSize` (two words of the global) with rsp + 8 and rbp restored.
-Premises the Go caller provides: the return address at rsp, the spill slot at
-rsp+16 (arg area of the caller's frame), 8 bytes below rsp for the saved rbp,
-the stack guard below rsp (no `morestack`), the ErrSize global.
 -/
 
 open Fk Fk.Code

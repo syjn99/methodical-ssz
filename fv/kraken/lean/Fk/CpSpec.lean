@@ -4,15 +4,10 @@ import Fk.LuErr
 import Fv1.SpecPrysm
 
 /-!
-# Prysm Checkpoint: size, length reject, accept path against EthLib (B3)
+# Prysm Checkpoint: size, length reject, accept path against EthLib
 
 - `cp_size_main`: SizeSSZ returns 40.
 - `cp_reject_size_main`: `len(buf) ≠ 40` → `ssz.ErrSize`.
-- `cp_spec_accepts_iff`: EthLib accepts exactly the 40-byte inputs (every
-  40-byte input is `cpEncode g` of one `g`), which is the one Go check.
-- `cp_unmarshal_accept_spec_k`: on an input EthLib accepts as `v`, the
-  machine code returns nil with the receiver holding the `g` with
-  `g.toValue = v` (Epoch, and Root = (p, 32, 32) with the 32 bytes at p).
 -/
 
 open Fk Fk.Code Fv1 EthLib.Serialization.Ssz

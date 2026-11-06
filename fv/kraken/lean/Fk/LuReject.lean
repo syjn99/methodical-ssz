@@ -8,10 +8,6 @@ import Fk.Bytes
 - `lu_reject_short_main`: `len(buf) < 4` → returns `ssz.ErrSize`.
 - `lu_reject_offset_main`: `len(buf) ≥ 4` and the first 4 bytes ≠ 4 →
   returns `ssz.ErrInvalidVariableOffset`.
-Both return with rsp + 8 and rbp restored; the receiver is not written
-(it is in the frame `R`, which the post keeps).
-Premises the Go caller provides: return address at rsp, saved-rbp slot below,
-spill slot at rsp+16, stack guard below rsp - 8, the error global's two words.
 -/
 
 open Fk Fk.Code

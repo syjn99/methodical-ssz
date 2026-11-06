@@ -3,16 +3,11 @@ import Fk.Bump
 import Fk.RtCopy
 
 /-!
-# Non-vacuity of `lu_accept_main` (B2.0)
+# Non-vacuity of `lu_accept_main`
 
 A concrete `Host`: five data labels (`runtime.writeBarrier`, padding,
 `runtime.fvBump`), then ListU64.UnmarshalSSZ at index 5, then the bump
-allocator `BumpAlloc` (Fk/Bump.lean). Every directive has size 1, from address
-0x10000. In this Host, for every n ≤ 16 and every input `bs` of 8n bytes,
-`lu_accept_runs` gives a concrete machine state from which the real
-ListU64.UnmarshalSSZ code returns with the receiver set: all premises of
-`lu_accept_main`, including the makeslice contract (`bump_makeslice`), are
-discharged by proofs. The three `example`s at the end instantiate n = 0, 1, 16.
+allocator `BumpAlloc` (Fk/Bump.lean).
 -/
 
 open Fk Fk.Code
@@ -283,8 +278,6 @@ example (r : Int64) (ty : BitVec 64) (z : RegZmms) (f : StatusFlags) := growslic
 example (r : Int64) (ty : BitVec 64) (z : RegZmms) (f : StatusFlags) := growslice_call_runs r [] 0 257 (by simp) (by omega) (by omega) ty z f
 example (r : Int64) (ty : BitVec 64) (z : RegZmms) (f : StatusFlags) := growslice_call_runs r [1, 2, 3] 3 7 (by simp) (by omega) (by omega) ty z f
 
-/-- The input of review/Review1b.lean (`newLen = 2^63`) violates the budget
-premise of the new `GrowsliceC` for every element size and heap. -/
 theorem review1b_input_excluded (esz oc avail : Nat) (he : 0 < esz) :
     ¬ (2 * (esz * nextSliceCap (2 ^ 63) oc) + 8192 ≤ avail ∧ avail ≤ maxAlloc) := by
   rintro ⟨h1, h2⟩

@@ -3,21 +3,11 @@ import Fv1.SpecList
 import Fv1.Transfer
 
 /-!
-# ListU64.UnmarshalSSZ accept path against EthLib (B2.1)
+# ListU64.UnmarshalSSZ accept path against EthLib
 
 `lu_unmarshal_accept_spec_k`: if EthLib accepts `bs` as `v` (`deserialize
 luDesc bs = .ok v`), then there is a Go value `g` with at most 16 elements and
 `g.toValue = v`, and the machine code returns nil with the receiver slice
-header `(p, n, n)`, `n = len g.l`, and the n elements at `p` in Go layout
-(8 bytes each, little-endian: `u64Bytes g.l`).
-
-EthLib's `serialize luDesc` succeeds only on values with at most 16 elements
-(`lu_serialize` needs `g.ok`), so the transfer lemma is used on the subtype
-`{g // g.ok}`. The machine premise is given for the `g` with `bs = luEncode g`
-(EthLib's acceptance picks it), as in `sc_unmarshal_accept_spec_k`.
-
-Premises the Go caller provides: see `lu_accept_main`. `hav`: the heap has
-room for the largest list (16 elements).
 -/
 
 open Fk Fk.Code Fv1 EthLib.Serialization.Ssz

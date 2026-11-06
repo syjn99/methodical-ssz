@@ -8,23 +8,6 @@ import Fk.FunSpecs
 - `lc_reject_short_main`: `len(buf) < 4` → returns `ssz.ErrSize`.
 - `lc_reject_offset_main`: `len(buf) ≥ 4` and the container offset (bytes
   0..3) ≠ 4 → returns `ssz.ErrInvalidVariableOffset`.
-- `lc_reject_tail_main`: `5 ≤ len ≤ 7` (list bytes too short for an offset),
-- `lc_reject_zero_main`: first element offset 0,
-- `lc_reject_past_main`: first element offset `o` (≠ 0, `o mod 4 = 0`,
-  `o ≤ 16`) past the end of `buf[4:]`:
-  these three call the internal `fmt.errorf` with no arguments and a format
-  without `%`, which returns nil (contract `FmtErrorfNilC`); the code then
-  allocates an `errors.errorString` (`runtime.newobject`, 16 bytes), stores
-  the string header and returns the itab `go_itab._errors.errorString_error`
-  (rax ≠ 0). This is the real branch of the binary (1b-fix X2; the 1b
-  contract excluded it by assuming rax ≠ 0 from `fmt.errorf`).
-Not proved here: the misaligned (`o mod 4 ≠ 0`) and too-many (`o / 4 > 4`)
-paths (they box the value with `runtime.convT64` as in ListU64), the
-per-element offset checks inside the loop, and the accept paths.
-All return with rsp + 8 and rbp restored; the receiver is in `R` (not written).
-Premises the Go caller provides: return address at rsp, saved-rbp slot, the
-spill slot at rsp+16, the stack guard below rsp − 96 (the frame is 0xd8
-bytes plus 0x60 below for callees: `lea -0x60(%rsp),%r12`), the error global.
 -/
 
 open Fk Fk.Code

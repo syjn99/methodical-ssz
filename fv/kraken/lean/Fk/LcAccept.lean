@@ -6,14 +6,6 @@ import Fk.LcLoop
 `lc_accept_main`: input `buf = offset 4 ‖ tl` with n ≥ 1 elements (an empty
 list takes another path, not proved here): the code checks the container
 offset, the first element offset (4n: non-zero, multiple of 4, n ≤ 4, within
-`tl`), allocates the items array (`makeslice`, n pointers), writes the
-receiver header (A, n, n), and runs the element loop (`lcl_loop`). It returns
-nil; the items array holds n pointers to new ListU64 objects that hold `gs`.
-The structure of `tl` (offset table, element encodings) is a premise here;
-`Fk/LcAcceptSpec.lean` derives it from EthLib acceptance.
-Premises the Go caller provides: separated receiver, input and stack chunks
-(the frame is 0xd8 bytes; the callees' stack block `blk` below), the stack
-guard, the write barrier off, heap room, the three contracts.
 -/
 
 open Fk Fk.Code Fv1 EthLib.Serialization.Ssz

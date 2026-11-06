@@ -5,17 +5,7 @@ import Fk.NeAccept
 # Prysm AttestationData.UnmarshalSSZ, accept path, on Kraken main
 
 Input `buf` of 128 bytes: Slot (8), CommitteeIndex (8), BeaconBlockRoot (32),
-Source = Epoch (8) ‖ Root (32), Target = Epoch (8) ‖ Root (32). The code checks
-len = 128, copies Slot and CommitteeIndex, then three times (BeaconBlockRoot,
-Source.Root, Target.Root): `makeslice(byte, 0, 32)`, header (p, 0, 32), the
-write-barrier flag, `memmove` of 32 bytes, len = 32. Source and Target are new
-objects (`runtime.newobject`, 32 bytes: Epoch, Root ptr, len, cap). Checkpoint
-decoding is inlined.
-Receiver layout (this module's struct): Slot @0, CommitteeIndex @8,
-BeaconBlockRoot @16 (ptr), @24 (len), @32 (cap), Source @40, Target @48.
-Premises the Go caller provides: separated receiver, input and stack chunks,
-the stack guard below rsp − 48, the write barrier off (read 6 times), heap room
-for 160 bytes, the three runtime contracts.
+Source = Epoch (8) ‖ Root (32), Target = Epoch (8) ‖ Root (32).
 -/
 
 open Fk Fk.Code

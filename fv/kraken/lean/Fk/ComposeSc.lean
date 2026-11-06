@@ -2,16 +2,11 @@ import Fk.ScAccept
 import Fk.ScMarshal
 
 /-!
-# Scalars: decode, then marshal the same receiver (re-proof fix 2, X7)
+# Scalars: decode, then marshal the same receiver
 
 `sc_unmarshal_then_marshal`: Scalars.UnmarshalSSZ on 16 bytes `b0..b4`
 (bool byte 0 or 1) returns nil; the caller then calls Scalars.MarshalSSZTo on
 the same receiver (`hupd`: the call writes `ra2` into the same return slot) and
-the encoder appends the same 16 bytes to dst. The receiver fields, the return
-slot and the spill slot at rsp + 16 come from the conclusion of
-`sc_accept_main`; the encoder's slots at rsp − 8 and rsp + 8, the stack guard
-and dst come from the caller's frame `R0`. As for ListU64, the caller's CALL
-is the relation `hupd`, not an executed caller instruction.
 -/
 
 open Fk Fk.Code

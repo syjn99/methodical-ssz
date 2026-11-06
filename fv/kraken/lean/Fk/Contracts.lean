@@ -4,38 +4,7 @@ import Fk.Step
 # Contracts of Go runtime functions (Kraken hypotheses)
 
 A contract is a hypothesis about the code at a runtime label in the `Host`
-program. It is quantified over every machine state, so the caller gets its
-result at any call site (no havoc index, no result that picks a path;
-CONTRACTS.md).
-
-## `runtime.makeslice(et *_type, len, cap int) unsafe.Pointer`
-
-`MakesliceC Heap ty esz S`:
-- `Heap avail`: the runtime-owned heap with `avail` free bytes (an abstract
-  predicate; the allocator's state lives in it);
-- `ty`: the type descriptor address of the element type (rax), `esz` its size;
-- the call is in range (Go 1.26.3 runtime/slice.go `makeslice`): `len ≤ cap =
-  cnt`, `cnt < 2^63` (Go `int`, so `len < 0` and `cap < 0` are excluded),
-  `esz * cnt ≤ maxAlloc` (`panicmakeslicecap` excluded), `esz * cnt ≤ avail`
-  (the out-of-memory throw excluded);
-- `S` bytes of stack below the return slot are scratch for the callee, and the
-  24-byte spill area of its three register arguments above the return slot
-  (Go ABIInternal) is the callee's too;
-- result: the callee returns to the return address with rsp + 8 (`Eventually`
-  includes termination), r14 (Go's g) and rbp kept, the frame `F` unchanged,
-  a zeroed block of `esz * cnt` bytes at rax carved from the heap, and
-  `Heap (avail - esz * cnt)`.
-
-The earlier form (no heap, every `cnt`, every frame) was contradictory: with
-`cnt = 2^61` the block covers all addresses (review/ReviewKraken.lean,
-`lu_accept_preconditions_false`). Here the block comes out of `Heap avail`,
-so it is disjoint from `F` and from the return slot by `⋆`.
-`Fk/Witness.lean` proves that an allocator satisfies this contract and that
-the premises of `lu_accept_main` hold together (n = 0, 1, 16).
-
-Not modeled: the write-barrier flag and other runtime globals the callee may
-change (a garbage collection inside `makeslice`). They are in `F`, so the
-contract says they do not change; CONTRACTS.md lists this as a premise.
+program.
 -/
 
 namespace Fk
@@ -46,6 +15,13 @@ def maxAlloc : Nat := 2 ^ 48
 
 variable [Host]
 
+/-- `runtime.makeslice(et *_type, len, cap int)` (Go 1.26.3 runtime/slice.go).
+`Heap avail` is the runtime heap with `avail` free bytes; `ty` (rax) is the
+element type descriptor, `esz` its size. In range: `len ≤ cap = cnt < 2^63`,
+`esz * cnt ≤ maxAlloc`, `esz * cnt ≤ avail`. `S` stack bytes below the return
+slot and the 24-byte spill area above it are the callee's. Result: return with
+rsp + 8, r14 and rbp kept, `F` unchanged, a zeroed `esz * cnt`-byte block at rax
+carved from the heap, and `Heap (avail - esz * cnt)`. -/
 def MakesliceC (Heap : Nat → DataMem → Prop) (ty : BitVec 64) (esz S : Nat) : Prop :=
   ∀ (st : MachineData) (ret : Int64) (cnt avail : Nat) (stk spill : List UInt8) (F : DataMem → Prop),
     st.regs.rax.toBitVec = ty → st.regs.rbx.toNat ≤ cnt → st.regs.rcx.toNat = cnt →
@@ -86,25 +62,24 @@ def MemmoveC (S : Nat) : Prop :=
       ⟨st, label "runtime.memmove"⟩
 
 /-- The 8-byte entry `v` of Go's read-only `runtime.staticuint64s` table
-(`staticuint64s[v] = v`), for v < 256; nothing otherwise (fix 2 X4). The
-table bytes in the ELF are checked by `link/check.py` (h). -/
+(`staticuint64s[v] = v`), for v < 256; nothing otherwise. The table bytes in the
+ELF are checked by `link/check.py` (h). -/
 def StaticBox (v : BitVec 64) : DataMem → Prop :=
   if v.toNat < 256 then Eq ((Int.toBytes 8 v.toInt).At ((label "runtime.staticuint64s").toBitVec + 8 * v))
   else Eq (([] : List UInt8).At 0)
 
-/-- Where `convT64`'s box `bx` of the value `v` is (fix 2 X4): in the static
-table (`hb = []`, v < 256, bx = staticuint64s + 8v; the bytes are in
-`StaticBox v`) or in 8 heap bytes `hb = v` at bx. -/
+/-- Where `convT64`'s box `bx` of the value `v` is: in the static table (`hb = []`,
+v < 256, bx = staticuint64s + 8v; the bytes are in `StaticBox v`) or in 8 heap
+bytes `hb = v` at bx. -/
 def BoxIn (bx v : BitVec 64) (hb : List UInt8) : Prop :=
   (hb = [] ∧ v.toNat < 256 ∧ bx = (label "runtime.staticuint64s").toBitVec + 8 * v) ∨ hb = Int.toBytes 8 v.toInt
 
 /-- `runtime.convT64(v uint64) unsafe.Pointer` (rax = v; Go 1.26.3
-runtime/iface.go): returns a pointer to a box of v (fix 2 X4: the box is
-stated). For v < 256 Go returns `&staticuint64s[v]` (read-only, no
-allocation); otherwise an 8-byte allocation holding v. Premises: an 8-byte
-budget, `S` scratch bytes, the 8-byte argument spill slot, the static entry
-`StaticBox v` (read-only, kept). Result: rsp + 8, r14 kept, rax = bx with
-`BoxIn bx v hb`, the heap bytes `hb` at bx are new
+runtime/iface.go): returns a pointer to a box of v. For v < 256 Go returns
+`&staticuint64s[v]` (read-only, no allocation); otherwise an 8-byte allocation
+holding v. Premises: an 8-byte budget, `S` scratch bytes, the 8-byte argument
+spill slot, the static entry `StaticBox v` (read-only, kept). Result: rsp + 8,
+r14 kept, rax = bx with `BoxIn bx v hb`, the heap bytes `hb` at bx are new
 (`avail' + hb.length ≤ avail ≤ avail' + 8`), the frame `F` unchanged. -/
 def ConvT64C (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
   ∀ (st : MachineData) (ret : Int64) (avail : Nat) (stk spill : List UInt8) (F : DataMem → Prop),
@@ -147,36 +122,33 @@ def FmtErrorfNilC (S : Nat) : Prop :=
           ⋆ Eq (fs.At st.regs.rax.toBitVec) ⋆ F) st'.data.dmem)
       ⟨st, label "fmt.errorf"⟩
 
-/-- No bytes: the empty heap (the rodata case of a message, fix 2 X5). -/
+/-- No bytes: the empty heap. -/
 theorem errNil_At_emp (a : BitVec 64) : Eq (([] : List UInt8).At a) = Std.ExtHashMap.emp := by
   funext m; apply propext; simp only [List.At, List.mapIdx_nil, Std.ExtHashMap.ofList_nil, Std.ExtHashMap.emp]
   exact ⟨Eq.symm, Eq.symm⟩
 
-/-- The 16-byte `*errors.errorString` object at `e`: string data pointer `sp`
-and the length of `msg` (fix 2 X5: the object alone; the message bytes are a
-separate resource, in rodata or on the heap). -/
+/-- The 16-byte `*errors.errorString` object at `e`: string data pointer `sp` and
+the length of `msg`. -/
 def ErrObj (e sp : BitVec 64) (msg : List UInt8) : DataMem → Prop :=
   Eq ((Int.toBytes 8 sp.toInt ++ Int.toBytes 8 (BitVec.ofNat 64 msg.length).toInt).At e)
 
-/-- A Go `*errors.errorString` at `e` with its message bytes at `sp`
-(re-proof fix X5). -/
+/-- A Go `*errors.errorString` at `e` with its message bytes at `sp`. -/
 def ErrStr (e sp : BitVec 64) (msg : List UInt8) : DataMem → Prop :=
   ErrObj e sp msg ⋆ Eq (msg.At sp)
 
-/-- `FmtErrorfWC Heap fs RO MsgIn S` (fix 2 X4): the internal `fmt.errorf`
-for one fixed format `fs` with one `%w` verb (the generated `"J: %w"`,
-`"B: %w"`; the theorems name the constant, `link/check.py` (g) compares it
-with the ELF and the Go source) and one argument: an `*errors.errorString`
-error, type word `ity` (the word at `itab + 8` of the errorString itab, read
-there by the code), data word `e`. The object `ErrObj e sp msg` and the
-message are in the footprint: `MsgIn sp msg hm` says where the message
-bytes are, in `hm` at `sp` or in the read-only resource `RO` (rodata strings
-of the caller; fixed by the caller with `MsgIn`). Allocation budget,
-computed from the format and the argument: `fs.length + msg.length + 8192 ≤
-avail` (the formatted string `len(fs) - 2 + len(msg)`, the 32-byte
-`*fmt.wrapError`, the printer). Result: rsp + 8, r14 kept, rax ≠ 0, every
-read resource unchanged, the heap shrinks, `F` unchanged.
-Trusted: Go's allocation stays within the budget; no GC during the call. -/
+/-- `FmtErrorfWC Heap fs RO MsgIn S`: the internal `fmt.errorf` for one fixed format
+`fs` with one `%w` verb (the generated `"J: %w"`, `"B: %w"`; the theorems name
+the constant, `link/check.py` (g) compares it with the ELF and the Go source)
+and one argument: an `*errors.errorString` error, type word `ity` (the word at
+`itab + 8` of the errorString itab, read there by the code), data word `e`. The
+object `ErrObj e sp msg` and the message are in the footprint: `MsgIn sp msg hm`
+says where the message bytes are, in `hm` at `sp` or in the read-only resource
+`RO` (rodata strings of the caller; fixed by the caller with `MsgIn`).
+Allocation budget, computed from the format and the argument: `fs.length +
+msg.length + 8192 ≤ avail` (the formatted string `len(fs) - 2 + len(msg)`, the
+32-byte `*fmt.wrapError`, the printer). Result: rsp + 8, r14 kept, rax ≠ 0,
+every read resource unchanged, the heap shrinks, `F` unchanged. Trusted: Go's
+allocation stays within the budget; no GC during the call. -/
 def FmtErrorfWC (Heap : Nat → DataMem → Prop) (fs : List UInt8) (RO : DataMem → Prop)
     (MsgIn : BitVec 64 → List UInt8 → List UInt8 → Prop) (S : Nat) : Prop :=
   ∀ (st : MachineData) (ret : Int64) (avail : Nat) (ity msg hm stk spill : List UInt8) (e sp : BitVec 64)
@@ -200,15 +172,14 @@ def FmtErrorfWC (Heap : Nat → DataMem → Prop) (fs : List UInt8) (RO : DataMe
           ⋆ ErrObj e sp msg ⋆ Eq (hm.At sp) ⋆ RO ⋆ Heap avail' ⋆ F) st'.data.dmem)
       ⟨st, label "fmt.errorf"⟩
 
-/-- `FmtErrorfDWC Heap fs tw S` (fix 2 X4): the internal `fmt.errorf` for one
-fixed format `fs` with `%d` then `%w` (the two ListU64 formats) and two
-arguments: an `int` box (type word `tw`, the theorems fix it to the ELF's
-`type:int` descriptor, checked by `link/check.py` (h); data word `bx`, the
-`convT64` box of `v`, its bytes in `StaticBox v` or `hb`: `BoxIn bx v hb`) and
-an `*errors.errorString` error (type word `ity` at `itab + 8`, data word
-`e`, `ErrStr e sp msg`). Budget from the format and the arguments:
-`fs.length + 20 + msg.length + 8192 ≤ avail` (at most 20 digits). Result as
-`FmtErrorfWC`. -/
+/-- `FmtErrorfDWC Heap fs tw S`: the internal `fmt.errorf` for one fixed format `fs`
+with `%d` then `%w` (the two ListU64 formats) and two arguments: an `int` box
+(type word `tw`, the theorems fix it to the ELF's `type:int` descriptor, checked
+by `link/check.py` (h); data word `bx`, the `convT64` box of `v`, its bytes in
+`StaticBox v` or `hb`: `BoxIn bx v hb`) and an `*errors.errorString` error (type
+word `ity` at `itab + 8`, data word `e`, `ErrStr e sp msg`). Budget from the
+format and the arguments: `fs.length + 20 + msg.length + 8192 ≤ avail` (at most
+20 digits). Result as `FmtErrorfWC`. -/
 def FmtErrorfDWC (Heap : Nat → DataMem → Prop) (fs : List UInt8) (tw : BitVec 64) (S : Nat) : Prop :=
   ∀ (st : MachineData) (ret : Int64) (avail : Nat) (ity msg hb stk spill : List UInt8) (bx v e sp : BitVec 64)
     (F : DataMem → Prop),
@@ -285,7 +256,7 @@ theorem nextSliceCap_le (n o : Nat) (h : o < n) : nextSliceCap n o ≤ 2 * n + 1
 theorem nextSliceCap_zero (n : Nat) (h : 0 < n) : nextSliceCap n 0 = n := by
   simp [nextSliceCap, h]
 
-/-- `runtime.growslice(oldPtr, newLen, oldCap, num, et) slice` (rax, rbx, rcx,
+/--  `runtime.growslice(oldPtr, newLen, oldCap, num, et) slice` (rax, rbx, rcx,
 rdi, rsi; result rax = new ptr, rbx = newLen, rcx = newCap), Go 1.26.3
 (runtime/slice.go), for an element type of `esz` bytes at `ty`.
 
@@ -293,11 +264,11 @@ Premises (the in-range call; Go's compiler emits the call only when
 `newLen > oldCap`):
 - `0 < esz` (Go returns `zerobase` with cap = newLen for `esz = 0`);
 - `num ≤ newLen`, `oldLen = newLen − num ≤ oldCap < newLen`;
-- growth policy and budget: with `nc = nextSliceCap newLen oldCap`, the heap
-  has `2·esz·nc + 8192 ≤ avail` free bytes, and this is at most `maxAlloc`
-  (Go's `roundupsize(n) ≤ 2n + 8192` for its size classes and page rounding;
-  REPORT-1b-fix X1). So `newLen < 2^48`: the signed range and the
-  `growslice: len out of range` panics are excluded;
+- growth policy and budget: with `nc = nextSliceCap newLen oldCap`, the heap has
+  `2·esz·nc + 8192 ≤ avail` free bytes, and this is at most `maxAlloc` (Go's
+  `roundupsize(n) ≤ 2n + 8192` for its size classes and page rounding; So
+  `newLen < 2^48`: the signed range and the `growslice: len out of range` panics
+  are excluded;
 - `old`: the `esz·oldLen` old bytes at oldPtr; `stk`: `S` scratch bytes below
   the return slot; `spill`: the 40-byte argument spill area above it (Go
   ABIInternal: the callee owns the spill slots of its five register arguments);
@@ -309,9 +280,8 @@ rbx = newLen, `nc ≤ newCap` and `esz·newCap ≤ 2·esz·nc + 8192`; a block o
 unspecified), carved from the heap (`avail' + esz·newCap ≤ avail`); the old
 block and `F` unchanged; the scratch and spill bytes changed.
 
-The 1b form had no range and no budget; with `newLen = 2^63` its result was
-contradictory (review/Review1b.lean). `Fk/RtCopy.lean` proves that a bump
-allocator satisfies this form (`rt_growslice`). -/
+`Fk/RtCopy.lean` proves that a bump allocator satisfies this form
+(`rt_growslice`). -/
 def GrowsliceC (Heap : Nat → DataMem → Prop) (ty : BitVec 64) (esz S : Nat) : Prop :=
   ∀ (st : MachineData) (ret : Int64) (old stk spill : List UInt8) (avail : Nat) (F : DataMem → Prop),
     0 < esz → st.regs.rsi.toBitVec = ty → st.regs.rdi.toNat ≤ st.regs.rbx.toNat →

@@ -7,9 +7,7 @@ import Fk.Include
 
 `BumpAlloc` (Fk/BumpAlloc.S) is a bump allocator over a zeroed region. Its heap
 predicate `bumpHeap avail`: the 8-byte pointer at label `runtime.fvBump` holds
-`p`, and the `avail` bytes at `p` are 0. `bump_makeslice` proves, on Kraken's
-semantics, that this code satisfies `MakesliceC bumpHeap ty 8 S` for every
-`ty` and every `S`. It is a model of the contract, not Go's allocator.
+`p`, and the `avail` bytes at `p` are 0.
 -/
 
 open Fk

@@ -3,13 +3,9 @@ import Fk.NeReject
 /-!
 # Nested.SizeSSZ on Kraken main
 
-`ne_size_main`: with `c.L ≠ nil`, returns 28 + (4 + 8 len(c.L.L)) = 32 + 8n.
-The `c.L == nil` path allocates a ListU64 (`runtime.newobject`) and is not
-proved here. Every value the decoder produces has L ≠ nil
-(`ne_accept_main`), and `MarshalSSZ` callers that build a Nested by hand may
-leave it nil (REPORT-1b, remaining work).
-Premises the Go caller provides: return address at rsp, saved-rbp slot,
-the stack guard, the receiver's L pointer (≠ 0) and the L slice length.
+`ne_size_main`: with `c.L ≠ nil`, returns 28 + (4 + 8 len(c.L.L)) = 32 + 8n. The
+`c.L == nil` path allocates a ListU64 (`runtime.newobject`) and is not proved
+here.
 -/
 
 open Fk Fk.Code

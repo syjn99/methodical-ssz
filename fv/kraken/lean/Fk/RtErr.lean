@@ -2,16 +2,11 @@ import Fk.RtCopy
 import Fk.Bump
 
 /-!
-# Models of the `fmt.errorf` and `runtime.convT64` contracts (1b-fix X2)
+# Models of the `fmt.errorf` and `runtime.convT64` contracts
 
-`RtErr` (Fk/RtErr.S): `fmt.errorf` returns rax = 0 when `len(a)` (rdi) is 0
-and rax = 1 otherwise; it allocates nothing. `runtime.convT64` (fix 2 X4)
-takes 8 bytes from the bump heap, stores v there and returns the box (the
-heap case of `BoxIn`). `rt_errorf_nil`, `rt_errorf_w`, `rt_errorf_dw`,
-`rt_convT64` prove that this code satisfies `FmtErrorfNilC S`,
-`FmtErrorfWC Heap fs RO MsgIn S`, `FmtErrorfDWC Heap fs tw S` (every heap
-predicate, format, resource) and `ConvT64C bumpHeap S`. They show that the
-contracts are satisfiable together; they are not models of Go's formatting.
+`RtErr` (Fk/RtErr.S): `fmt.errorf` returns rax = 0 when `len(a)` (rdi) is 0 and
+rax = 1 otherwise; it allocates nothing. `runtime.convT64` takes 8 bytes from
+the bump heap, stores v there and returns the box (the heap case of `BoxIn`).
 -/
 
 open Fk
@@ -47,8 +42,7 @@ theorem rt_errorf_nil (j : Nat) (hj : RtErr.IsInfixAt Host.prog j) (hf : LabelsF
   · apply UInt64.toBitVec_inj.mp; simp
 
 set_option maxHeartbeats 4000000 in
-/-- The same code meets `FmtErrorfWC` (fix 2 X4: one fixed format, one `%w`
-argument). -/
+/-- The same code meets `FmtErrorfWC`. -/
 theorem rt_errorf_w (j : Nat) (hj : RtErr.IsInfixAt Host.prog j) (hf : LabelsFresh RtErr j)
     (Heap : Nat → DataMem → Prop) (fs : List UInt8) (RO : DataMem → Prop)
     (MsgIn : BitVec 64 → List UInt8 → List UInt8 → Prop) (S : Nat) : FmtErrorfWC Heap fs RO MsgIn S := by
@@ -76,7 +70,7 @@ theorem rt_errorf_w (j : Nat) (hj : RtErr.IsInfixAt Host.prog j) (hf : LabelsFre
   · intro h; have := congrArg UInt64.toNat h; simp only [] at this; revert this; decide
 
 set_option maxHeartbeats 4000000 in
-/-- The same code meets `FmtErrorfDWC` (fix 2 X4: `%d` then `%w`). -/
+/-- The same code meets `FmtErrorfDWC`. -/
 theorem rt_errorf_dw (j : Nat) (hj : RtErr.IsInfixAt Host.prog j) (hf : LabelsFresh RtErr j)
     (Heap : Nat → DataMem → Prop) (fs : List UInt8) (tw : BitVec 64) (S : Nat) : FmtErrorfDWC Heap fs tw S := by
   intro st ret avail ity msg hb stk spill bx v e sp F _hrbx hrdi _hrsi _hity _hbox hstk hsp _hav hmem
@@ -103,8 +97,8 @@ theorem rt_errorf_dw (j : Nat) (hj : RtErr.IsInfixAt Host.prog j) (hf : LabelsFr
   · intro h; have := congrArg UInt64.toNat h; simp only [] at this; revert this; decide
 
 set_option maxHeartbeats 4000000 in
-/-- The bump-heap `convT64` meets `ConvT64C` (fix 2 X4): 8 bytes from the
-heap hold v; the box is the heap case of `BoxIn`. -/
+/-- The bump-heap `convT64` meets `ConvT64C`: 8 bytes from the heap hold v; the box
+is the heap case of `BoxIn`. -/
 theorem rt_convT64 (j : Nat) (hj : RtErr.IsInfixAt Host.prog j) (hf : LabelsFresh RtErr j)
     (S : Nat) : ConvT64C bumpHeap S := by
   intro st ret avail stk spill F hav hstk hsp hm

@@ -1,14 +1,10 @@
 import Fk.CpSpec
 
 /-!
-# Prysm AttestationData: size, length reject, EthLib acceptance (B3)
+# Prysm AttestationData: size, length reject, EthLib acceptance
 
 - `ad_size_main`: SizeSSZ returns 128.
 - `ad_reject_size_main`: `len(buf) ≠ 128` → `ssz.ErrSize`.
-- `ad_spec_accepts_iff`: EthLib accepts exactly the 128-byte inputs (every
-  128-byte input is `adEncode g` of one `g`), the one Go check.
-The accept path (two `newobject`, three `makeslice` + `memmove` pairs, 169
-directives) is not proved (REPORT-1b, remaining work).
 -/
 
 open Fk Fk.Code Fv1 EthLib.Serialization.Ssz

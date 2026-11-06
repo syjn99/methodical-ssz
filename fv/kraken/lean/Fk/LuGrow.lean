@@ -1,16 +1,11 @@
 import Fk.LuMarshal
 
 /-!
-# A `growslice` site under its contract (B2.5, C13)
+# A `growslice` site under its contract
 
-ListU64.MarshalSSZTo, first append (`ssz.WriteOffset`, 4 bytes), slow path:
-when `cap < len + 4` the code calls `runtime.growslice` (contract `GrowsliceC`,
-1-byte elements) and continues at `L_53` (directive 25) with the new slice:
-rbx = new ptr, rdx = len + 4, rdi = new cap ≥ len + 4, rax = receiver
-(reloaded from its spill slot), and `dst[:len]` copied to the new block.
-`lum_grow_site` runs directives 13–25 from the state after the capacity check.
-Composing it with the rest of the function needs the fast-path loop under the
-new capacity, or another growth per element; REPORT-1b (B2.5) gives the cost.
+ListU64.MarshalSSZTo, first append (`ssz.WriteOffset`, 4 bytes), slow path: when
+`cap < len + 4` the code calls `runtime.growslice` (contract `GrowsliceC`,
+1-byte elements) and continues at `L_53` (directive 25) with the new slice: rbx
 -/
 
 open Fk Fk.Code

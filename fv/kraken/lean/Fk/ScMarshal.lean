@@ -7,13 +7,6 @@ import Fk.Labels
 When `dst` has room (`len + 16 ≤ cap`), the function appends the 16 receiver
 bytes to `dst` and returns `(ptr, len + 16, cap, nil)`. No `growslice` call is
 taken. Go ABIInternal amd64: rax = c, (rbx, rcx, rdi) = dst, r14 = g.
-
-Hypotheses beyond the memory chunks:
-- `hguard`: the stack guard word `g.stackguard0` (at r14+16) is below rsp, so the
-  prologue does not call `runtime.morestack_noctxt`;
-- `hcap`, `hcap63`: room in `dst`, Go slice capacity below 2^63;
-- `hE`: the receiver's bool byte is 0 or 1 (Go bool invariant);
-- `hf`: no label of the function occurs earlier in the host program.
 -/
 
 open Fk Fk.Code

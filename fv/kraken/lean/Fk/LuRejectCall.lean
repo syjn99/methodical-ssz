@@ -6,21 +6,14 @@ import Fk.Frame
 # ListU64.UnmarshalSSZ reject paths through `fmt.errorf`, on Kraken main
 
 - `lu_reject_toobig_main`: offset 4, len = 4 + 8n with n > 16 → the error from
-  `fmt.errorf` (contract `FmtErrorfDWC` for the constant format `luFmtTooBig`:
-  the `%d` argument is the `convT64` box of n with the `type:int` word, the
-  `%w` argument the global errorString; rax ≠ 0; fix 2 X4).
+  `fmt.errorf`.
 - `lu_reject_misaligned_main`: offset 4, (len − 4) mod 8 ≠ 0 → same.
-Both call `runtime.convT64` (contract `ConvT64C`, the box and its bytes) to box the count, read the
-error global (`ssz.ErrListTooBig` / `ssz.ErrIncorrectListSize`, two words, and
-the word at itab + 8 when the itab word is non-zero), store X15 (Go ABI: zero)
-into the argument array, and return with rsp + 8 and rbp restored; the
-receiver is in the frame `R`, kept by the post (not written).
 -/
 
 open Fk Fk.Code
 variable [Host]
 
--- "ssz-max exceeded: c.L has %d elements, ssz-max is 16: %w" (types.ssz.go, fix 2 X4: the format is a constant)
+-- "ssz-max exceeded: c.L has %d elements, ssz-max is 16: %w"
 def luFmtTooBig : List UInt8 :=
   [115, 115, 122, 45, 109, 97, 120, 32, 101, 120, 99, 101, 101, 100, 101, 100, 58, 32, 99, 46, 76, 32, 104, 97, 115, 32, 37, 100, 32, 101, 108, 101, 109, 101, 110, 116, 115, 44, 32, 115, 115, 122, 45, 109, 97, 120, 32, 105, 115, 32, 49, 54, 58, 32, 37, 119]
 theorem luFmtTooBig_len : luFmtTooBig.length = 56 := by rfl

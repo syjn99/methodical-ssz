@@ -6,12 +6,6 @@ import Fk.LcReject
 
 `lc_accept_empty_main`: with `buf = [4, 0, 0, 0]` the decoder sets `c.Items`
 to the empty slice (pointer `runtime.zerobase`, len 0, cap 0) and returns nil.
-`lc_unmarshal_accept_empty_spec_k`: EthLib accepts a 4-byte input only as the
-empty list, and the machine result holds that value.
-
-Premises the Go caller guarantees: receiver ≠ nil (24 mapped bytes), X15 = 0
-(Go ABIInternal on amd64 keeps X15 zero; the `movups %xmm15` store writes
-len = cap = 0). Fast-path premises: the stack guard, the write barrier flag 0.
 -/
 
 namespace Fk

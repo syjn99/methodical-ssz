@@ -7,10 +7,6 @@ import Fk.FvMarshal
 With `cap(dst) ≥ len(dst) + 40` and `len(c.Root) = 32`, MarshalSSZTo writes
 Epoch (8 LE bytes) at `dst[len:]`, copies Root with `runtime.memmove`
 (contract `MemmoveC`) at `dst[len+8:]`, and returns `(dst[:len+40], nil)`;
-`dst[:len]` (`pre`) is kept. `cp_marshal_reject_main`: `len(c.Root) ≠ 32` →
-`ssz.ErrBytesLength` (after Epoch is written).
-Premises the Go caller provides: receiver, Root bytes, `dst` and stack chunks
-separated; the stack guard; `cap < 2^63` (Go slice bound).
 -/
 
 open Fk Fk.Code

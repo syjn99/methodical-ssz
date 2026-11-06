@@ -8,14 +8,7 @@ import Fk.Frame
 
 A caller (Nested, ListC) uses each callee through a specification of the same
 shape as a runtime contract: a hypothesis about the code at the callee's label,
-for every machine state, return address and frame `F`. For our own callees the
-specification is not assumed: it is derived from the machine theorem
-(`sc_uacc_holds`). For runtime callees it is a contract (`NewobjectC`).
-
-`ScUAccC`: Scalars.UnmarshalSSZ, accept path, on the Go encoding of `g`
-(`scField g i` at the input), receiver chunks `c_i` of the widths it writes.
-It returns nil with rsp + 8, the receiver = `scField g i`, the input, the
-return slot and `F` kept, and the argument spill slot (rsp + 16) = rbx.
+for every machine state, return address and frame `F`.
 -/
 
 open Fk Fk.Code Fv1

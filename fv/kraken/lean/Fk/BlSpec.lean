@@ -2,17 +2,11 @@ import Fk.BlAccept
 import Fk.LuReject
 
 /-!
-# BitL: decoder rejects without calls, SizeSSZ, and the EthLib link (B3)
+# BitL: decoder rejects without calls, SizeSSZ, and the EthLib link
 
 - `bl_reject_short_main`: `len(buf) < 4` → `ssz.ErrSize`.
 - `bl_reject_offset_main`: offset (bytes 0..3) ≠ 4 → `ssz.ErrInvalidVariableOffset`.
 - `bl_size_main`: SizeSSZ returns 4 + len(c.B).
-- `bl_accepted_valid`: every input EthLib accepts is `offset 4 ‖ tl` with
-  `tl` non-empty and `blValid tl`, so the contract gives rax = 0 and
-  `bl_accept_main` applies (`bl_unmarshal_accept_spec_k`).
-- `bl_spec_rejects`: `len < 4`, offset ≠ 4, or `¬ blValid buf[4:]` make EthLib
-  reject. The last one is the check behind `ValidateBitlistC`; its Go error
-  path (`fmt.Errorf("B: %w")`) is not proved here.
 -/
 
 open Fk Fk.Code Fv1 EthLib.Serialization.Ssz

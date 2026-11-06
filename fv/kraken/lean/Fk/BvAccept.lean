@@ -7,17 +7,6 @@ import Fk.Vbv
 The generator fix F1 makes the decoder call `ssz.ValidateBitvector(buf[0:1], 4)`
 before it allocates J. The callee is our own machine code: its accept path is
 the specification `VbvAccC`, derived from `vbv_accept_main` (Fk/Vbv.lean).
-
-`bv_accept_main`: if `len(buf) = 1` and the byte `b` has no padding bit
-(`b < 16`), the function calls ValidateBitvector (nil), allocates J with
-`runtime.makeslice(byte, 0, 1)`, sets J = (p, 1, 1) with `b` at p, and
-returns nil. The conclusion gives back every stack chunk it was given
-(existentially), so a caller can make the next call (fv/AGENTS.md).
-
-Frame: entry rsp = x; `sub $0x48` gives x − 80. Slots: x − 40 and x − 32
-(the callee's error words), x + 8 and x + 16 (spill of rax and rbx). Call
-slot x − 88; scratch `S ≥ 8` bytes below it (its top 8 bytes are the
-callee's saved rbp); the makeslice spill area is the 24 bytes at x − 80.
 -/
 
 open Fk Fk.Code

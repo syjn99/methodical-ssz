@@ -7,9 +7,8 @@ import Fv1.Transfer
 # BitVec: size, length reject, EthLib links, padding reject, and the encoder
 
 The generator fix F1 makes the decoder call `ssz.ValidateBitvector`. On a byte
-with a padding bit set (`16 ≤ b`) `bv_reject_padding_main` returns an error,
-and `bv_spec_accepts_iff` shows EthLib accepts `#[b]` exactly when `b < 16`.
-The 1b counterexample `bv_padding_counterexample` is gone (REPORT-1b-reprove R3).
+with a padding bit set (`16 ≤ b`) `bv_reject_padding_main` returns an error, and
+`bv_spec_accepts_iff` shows EthLib accepts `#[b]` exactly when `b < 16`.
 -/
 
 open Fk Fk.Code Fv1 EthLib.Serialization.Ssz
@@ -122,10 +121,10 @@ theorem bv_unmarshal_accept_spec_k (bs : Array UInt8) (v : Value) (hd : deserial
   exact ⟨g, rfl, rfl⟩
 
 set_option maxHeartbeats 2000000 in
-/-- **Accept path against EthLib, with the machine run** (1b-fix X7, regenerated
-code). If EthLib accepts `bsA` as `v`, there is a canonical `g` (`g.b < 16`)
-with `g.toValue = v`, `bsA = #[g.b]`, and BitVec.UnmarshalSSZ on that input
-byte returns nil with J = (p, 1, 1) and `g.b` at p (`bv_accept_main`). -/
+/-- **Accept path against EthLib, with the machine run**. If EthLib accepts `bsA` as
+`v`, there is a canonical `g` (`g.b < 16`) with `g.toValue = v`, `bsA = #[g.b]`,
+and BitVec.UnmarshalSSZ on that input byte returns nil with J = (p, 1, 1) and
+`g.b` at p (`bv_accept_main`). -/
 theorem bv_unmarshal_accept_machine (k : Nat) (hk : BitVecUnmarshalSSZ.IsInfixAt Host.prog k)
     (hf : LabelsFresh BitVecUnmarshalSSZ k)
     (bsA : Array UInt8) (v : Value) (hd : deserialize bvDesc bsA = .ok v)
@@ -434,7 +433,7 @@ theorem bv_errobj (e : BitVec 64) : ErrObj e (label "go_string._" + 27706).toBit
   simp only [ErrObj, vbvFmt_len]; rfl
 
 /-- The read-only message of the ValidateBitvector padding error (rodata,
-`go_string._ + 27706`): the resource that `"J: %w"` reads (fix 2 X4/X5). -/
+`go_string._ + 27706`): the resource that `"J: %w"` reads. -/
 def bvRO : DataMem → Prop := Eq (vbvFmt.At (label "go_string._" + 27706).toBitVec)
 /-- The message of the padding error is `bvRO` (no heap bytes). -/
 def BvMsg (sp : BitVec 64) (msg hm : List UInt8) : Prop :=
