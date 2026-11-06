@@ -1,0 +1,2 @@
+initialized global: error != nil: true
+nil global: error == nil: true

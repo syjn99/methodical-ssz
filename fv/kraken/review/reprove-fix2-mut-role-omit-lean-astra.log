@@ -1,0 +1,15 @@
+/private/tmp/claude-501/-Users-jsong-offchainlabs-com-projects-offchainlabs-methodical-ssz/799c21e7-16fd-45c6-ab6e-9793671e754e/scratchpad/reprove-fix2-mut-role-omit-valid.lean:65:4: warning: This simp argument is unused:
+  Int64.toBitVec_ofNat
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
+    nil_At_emp, Std.ExtHashMap.sep_emp]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/private/tmp/claude-501/-Users-jsong-offchainlabs-com-projects-offchainlabs-methodical-ssz/799c21e7-16fd-45c6-ab6e-9793671e754e/scratchpad/reprove-fix2-mut-role-omit-valid.lean:69:18: warning: This simp argument is unused:
+  huN
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [hu0] at H ⊢
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

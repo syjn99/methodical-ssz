@@ -1,0 +1,111 @@
+start 08:34:57 tip 7152188
+         25068027563  instructions retired
+         19743782601  cycles elapsed
+           228731456  peak memory footprint
+build end 08:38:53
+axioms.sh exit 0
+AXIOMS identical (    1584 lines)
+AXIOMS-ALL identical (       1 lines)
+../AXIOMS.txt:TOTAL 1583 NONSTANDARD 0
+../AXIOMS-ALL.txt:ALL-DECLARATIONS TOTAL 8028 NONSTANDARD 0
+--- forbidden tactics
+./tools/AxiomsAll.lean:18:1b-fix 7). It prints the declarations with a nonstandard axiom and the totals.
+./tools/Axioms.lean:17:an axiom other than `propext`, `Classical.choice`, `Quot.sound`.
+--- goval
+OK  WitVbvR    chunks                 8 read, 1 not read                 ok
+--  Witness    -                      None                               not checked: no target or registers
+79 witness files, 0 with a violation, 2 with a value not checked
+file sha256 c4d64cb9c7857dc3f055d669ba2da5c406572f40ddf0fbb22aabdd8cda7926de lean/Fk/Code.lean
+file sha256 ec463bef5e01d8cc13ecb620490b7154c627ad4806fa9c3524595dc8420dcf13 AXIOMS.txt
+PASS all
+BUNDLE sha256 dbee1642e0fb37a42d13bcaeaddb4cbf415303a4042315de83390137cc8ef246
+selftest drop an instruction: fail (expected fail) target.Scalars.UnmarshalSSZ: label L_target.Scalars.UnmarshalSSZ_37 not before the instruction at its address
+selftest change an immediate: fail (expected fail) all.S directives differ from the per-function .S files (first at directive 355: ('ins', 'cmp $0x10,%rcx') vs ('ins', 'cm
+selftest move a label: fail (expected fail) target.Scalars.UnmarshalSSZ: label L_target.Scalars.UnmarshalSSZ_37 not before the instruction at its address
+selftest objdump line without //: fail (expected fail) unrecognized objdump line (no GNU form?): '  types.ssz.go:12\t0x4b6920\t\tb810000000\t\tMOVL $0x10, AX'
+selftest wrong global offset: fail (expected fail) target.Scalars.UnmarshalSSZ: ssz.ErrSize+0 = 0x5cce30, instruction refers to 0x5cce38
+selftest padding nop -> retq: fail (expected fail) reassembly mismatch (see DIFF FAIL lines)
+selftest all.S instruction changed: fail (expected fail) all.S directives differ from the per-function .S files (first at directive 355: ('ins', 'cmp $0x11,%rcx') vs ('ins', 'cm
+selftest stale SHash.lean: fail (expected fail) (f) lean/Fk/SHash.lean is not the text link/shash.sh writes; run link/shash.sh (first difference at line 26: '  "ca71632
+selftest hashes only in a comment: fail (expected fail) (f) lean/Fk/SHash.lean is not the text link/shash.sh writes; run link/shash.sh (first difference at line 2: '/-' vs '/-!
+selftest SHash suffix .take 0: fail (expected fail) (f) lean/Fk/SHash.lean is not the text link/shash.sh writes; run link/shash.sh (first difference at line 42: '  "end"] |
+selftest blFmtB value 66 -> 67: fail (expected fail) (g) fv/kraken/target/types1b.ssz.go has no fmt.Errorf literal (go/parser) equal to Lean blFmtB
+selftest blFmtB offset 526 -> 527: fail (expected fail) (g) blFmtB: Lean b'B: %w' ELF go_string._+527 b': %wi'
+selftest blFmtB not registered: fail (expected fail) (g) go_string._ references not checked: ['BlMarshal.lean:386 bl_marshal_reject_main (theorem) place blFmtB 526', 'BlMars
+selftest SHash comment inside a string: fail (expected fail) (f) lean/Fk/SHash.lean is not the text link/shash.sh writes; run link/shash.sh (first difference at line 4: '  "4589b056
+selftest blFmtB suffix .map: fail (expected fail) (g) blFmtB: the definition is not exactly `def blFmtB : List UInt8 := [n, ...]` up to the next command
+selftest blFmtB suffix on the next line: fail (expected fail) (g) blFmtB: the line after the definition does not start a new command: '|>.map (fun b => b + 1)'
+selftest blFmtB offset with two spaces: fail (expected fail) (g) blFmtB: Lean b'B: %w' ELF go_string._+527 b': %wi'
+selftest Go literal only in a comment: fail (expected fail) (g) fv/kraken/target/types.ssz.go has no fmt.Errorf literal (go/parser) equal to Lean luFmtTooBig
+selftest Wit file, theorem over every Host: fail (expected fail) (g) go_string._ references not checked: ['WitBlR.lean:205 astra_gen (theorem) fill  99999', 'WitBlR.lean:206 astra_gen (
+selftest Wit file, unknown placement: fail (expected fail) (g) go_string._ references not checked: ['WitBlR.lean:205 junk (witness) place-unknown  99999']
+selftest unparsed bytes at a checked offset: fail (expected fail) (g) go_string._ references not checked: ['BlMarshal.lean:386 bl_marshal_reject_main (theorem) place-unknown  526']
+selftest offset written as a sum: fail (expected fail) (g) go_string._ references not checked: ['BlMarshal.lean:386 ? (?) unparsed']
+selftest luTW names another type: fail (expected fail) (h) type__+49120: abi.Type size 8 kind 11, want 8 and 2 (Int)
+selftest unchanged copy: pass (expected pass) 
+--- ELF sha
+go: go version go1.26.3 darwin/arm64, GOAMD64=v1
+elf sha256: 9c850c97066b9d33d6e4c5ef0a385dcbe2c984ae774a527cdedd18d2b72ac501
+objdump sha256: aa08e280dfda0e46b4675b91b01ef793849fb2ec86a19ce676a60a89c0597fa7
+--- negative start 08:39:38
+offset | target.ListU64.UnmarshalSSZ.S:15 'cmp $0x4,%rdx' -> 'cmp $0x8,%rdx' | lu_accept_main (Fk/LuAccept.lean:29-287) | exit 1 | FAIL | ok | error: Fk/LuAccept.lean:127:16: unsolved goals
+maxlen | target.ListU64.UnmarshalSSZ.S:28 'jg L_target.ListU64.UnmarshalSSZ_ce' -> 'nop' | lu_reject_toobig_main (Fk/LuRejectCall.lean:117-364) | exit 1 | FAIL | ok | error: Fk/LuRejectCall.lean:215:6: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+loop | target.FixedVec.UnmarshalSSZ.S:47 'cmp $0x4,%rax' -> 'cmp $0x3,%rax' | fv_iter (Fk/FvLoop.lean:19-107) | exit 1 | FAIL | ok | error: Fk/FvLoop.lean:50:66: Type mismatch: After simplification, term
+gsnum | target.BitL.UnmarshalSSZ.S:76 'mov %rbx,%rdi' -> 'mov %rcx,%rdi' | bl_accept_main (Fk/BlAccept.lean:41-395) | exit 1 | FAIL | ok | error: Fk/BlAccept.lean:241:21: unsolved goals
+nilerr | target.ListC.UnmarshalSSZ.S:165 'jne L_target.ListC.UnmarshalSSZ_2e7' -> 'je L_target.ListC.UnmarshalSSZ_2e7' | lc_reject_zero_main (Fk/LcReject.lean:307-489) | exit 1 | FAIL | ok | error: Fk/LcReject.lean:434:16: unsolved goals
+vbvje | ssz.ValidateBitvector.S:26 'je L_ssz.ValidateBitvector_9c' -> 'jne L_ssz.ValidateBitvector_9c' | vbv_accept_main (Fk/Vbv.lean:110-233) | exit 1 | FAIL | ok | error: Fk/Vbv.lean:208:8: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+bvnochk | target.BitVec.UnmarshalSSZ.S:34 'jne L_target.BitVec.UnmarshalSSZ_b3' -> 'jmpq L_target.BitVec.UnmarshalSSZ_b9' | bv_reject_padding_main (Fk/BvSpec.lean:481-686) | exit 1 | FAIL | ok | error: Fk/BvSpec.lean:666:2: Tactic `split` failed: Could not split an `if` or `match` expression in the goal
+blmnochk | target.BitL.MarshalSSZTo.S:49 'jne L_target.BitL.MarshalSSZTo_102' -> 'jmpq L_target.BitL.MarshalSSZTo_118' | bl_marshal_reject_main (Fk/BlMarshal.lean:363-601) | exit 1 | FAIL | ok | error: Fk/BlMarshal.lean:572:2: Tactic `split` failed: Could not split an `if` or `match` expression in the goal
+neoff | target.Nested.UnmarshalSSZ.S:14 'cmp $0x1c,%rdx' -> 'cmp $0x1d,%rdx' | ne_accept_main (Fk/NeAccept.lean:82-415) | exit 1 | FAIL | ok | error: Fk/NeAccept.lean:171:16: unsolved goals
+cplen | target_prysm.Checkpoint.UnmarshalSSZ.S:9 'cmp $0x28,%rcx' -> 'cmp $0x29,%rcx' | cp_accept_main (Fk/CpAccept.lean:32-248) | exit 1 | FAIL | ok | error: Fk/CpAccept.lean:100:38: Tactic `decide` proved that the proposition
+adcopy | target_prysm.AttestationData.UnmarshalSSZ.S:35 'mov $0x20,%ecx' -> 'mov $0x1f,%ecx' | ad_accept_main (Fk/AdAccept.lean:56-673) | exit 1 | FAIL | ok | error: Fk/AdAccept.lean:251:20: Tactic `rfl` failed: The left-hand side
+scbool | target.Scalars.UnmarshalSSZ.S:13 'cmp $0x1,%cl' -> 'cmp $0x2,%cl' | sc_accept_main (Fk/ScAccept.lean:20-203) | exit 1 | FAIL | ok | error: Fk/ScAccept.lean:167:37: Tactic `decide` proved that the proposition
+scrbword | target.Scalars.UnmarshalSSZ.S:26 'mov ssz.ErrInvalidSerialization(%rip),%rax' -> 'mov ssz.ErrInvalidSerialization+8(%rip),%rax' | sc_reject_bool_main (Fk/ScRejectBool.lean:22-160) | exit 1 | FAIL | ok | error: Fk/ScRejectBool.lean:137:68: ecancel: could not automatically solve goal (Eq
+blrity | target.BitL.UnmarshalSSZ.S:37 'mov 0x8(%rax),%rax' -> 'mov 0x10(%rax),%rax' | bl_reject_invalid_main (Fk/BlReject.lean:24-261) | exit 1 | FAIL | ok | error: Fk/BlReject.lean:182:97: unsolved goals
+control | target.FixedVec.UnmarshalSSZ.S:47 'cmp $0x4,%rax' -> 'cmp $0x4,%rax' | fv_iter (Fk/FvLoop.lean:19-107) | exit 0 | PASS | ok | 
+nopret | target.BitVec.UnmarshalSSZ.S:8 'nop' -> 'retq' (also all.S, SHash regenerated) | link/check.py (d) | exit 1 | FAIL | ok | DIFF (d) target.BitVec.UnmarshalSSZ 0x4b7457 FAIL: elf 660f1f840000000000 asm c3 nopw (%rax,%rax,1) -> retq | (9, 'nopw (%rax,%rax)')
+ok  	github.com/OffchainLabs/methodical-ssz/fv/kraken/semtest	(cached)
+end 08:49:53
+--- RegressFix2 08:49:53
+0
+'RegressFix2.ten_not_false_bl' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RegressFix2.pad_derived' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RegressFix2.sc_object_whole' does not depend on any axioms
+'RegressFix2.sc_output_after_object' depends on axioms: [propext, Classical.choice, Quot.sound]
+'sc_reject_bool_main' depends on axioms: [propext, Classical.choice, Quot.sound]
+'sc_spec_rejects_bool' depends on axioms: [propext, Classical.choice, Quot.sound]
+'bl_reject_invalid_main' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitScRB.sc_reject_bool_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitBlRI.bl_reject_invalid_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitLcA4x16.lc_accept_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitLcAMix.lc_accept_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitLcM4x16.lc_marshal_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitLcMMix.lc_marshal_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitLuComp.lu_compose_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitScComp.sc_compose_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitLuTb.lu_reject_toobig_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitLuMa.lu_reject_misaligned_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitBlR.bl_marshal_reject_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitBvR.bv_reject_padding_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+--- review files on new tree
+../review/ReviewReproveFix.lean: 3
+../review/ReviewReproveFixAstra.lean: 4
+../review/ReviewSHashFixAstra.lean: 0
+--- layout regen
+layout.json DIFFER
+1,8c1,199
+< panic: cannot find package "github.com/OffchainLabs/methodical-ssz/fv/kraken/target" in any of:
+< 		($GOROOT not set)
+< 		/Users/jsong@offchainlabs.com/go/src/github.com/OffchainLabs/methodical-ssz/fv/kraken/target (from $GOPATH)
+< 
+Scalars layout: []
+--- main theorems
+      55
+--- runs witnesses
+      59
+--- Wit files
+      79
+--- B0 08:50:07
+1
+end2 08:51:23
+go test -count=1: ok  	github.com/OffchainLabs/methodical-ssz/fv/kraken/semtest	0.458s

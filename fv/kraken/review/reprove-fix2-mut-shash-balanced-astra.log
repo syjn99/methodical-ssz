@@ -1,0 +1,89 @@
+PASS (a) ssz.ValidateBitvector: 66 instructions, 242 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) ssz.ValidateBitlist: 133 instructions, 555 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.Scalars.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.Scalars.MarshalSSZTo: 122 instructions, 478 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.Scalars.UnmarshalSSZ: 28 instructions, 95 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.FixedVec.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.FixedVec.MarshalSSZTo: 91 instructions, 360 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.FixedVec.UnmarshalSSZ: 75 instructions, 286 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.ListU64.SizeSSZ: 4 instructions, 13 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.ListU64.MarshalSSZTo: 83 instructions, 308 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.ListU64.UnmarshalSSZ: 175 instructions, 709 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.BitVec.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.BitVec.MarshalSSZTo: 99 instructions, 396 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.BitVec.UnmarshalSSZ: 91 instructions, 401 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.Nested.SizeSSZ: 33 instructions, 122 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.Nested.MarshalSSZTo: 298 instructions, 1310 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.Nested.UnmarshalSSZ: 142 instructions, 606 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.ListC.SizeSSZ: 14 instructions, 44 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.ListC.MarshalSSZTo: 213 instructions, 862 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.ListC.UnmarshalSSZ: 395 instructions, 1767 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.BitL.SizeSSZ: 3 instructions, 9 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.BitL.MarshalSSZTo: 111 instructions, 497 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target.BitL.UnmarshalSSZ: 124 instructions, 528 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target_prysm.Checkpoint.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target_prysm.Checkpoint.MarshalSSZTo: 76 instructions, 307 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target_prysm.Checkpoint.UnmarshalSSZ: 65 instructions, 293 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target_prysm.AttestationData.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target_prysm.AttestationData.MarshalSSZTo: 307 instructions, 1399 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) target_prysm.AttestationData.UnmarshalSSZ: 169 instructions, 766 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (b) runtime.newobject = 0x41e4a0 .text code
+PASS (b) runtime.convT64 = 0x479320 .text code
+PASS (b) runtime.makeslice = 0x47c540 .text code
+PASS (b) runtime.growslice = 0x47c620 .text code
+PASS (b) runtime.morestack_noctxt.abi0 = 0x47f480 .text code
+PASS (b) runtime.gcWriteBarrier1 = 0x480de0 .text code
+PASS (b) runtime.gcWriteBarrier2 = 0x480e00 .text code
+PASS (b) runtime.panicBounds = 0x4811a0 .text code
+PASS (b) runtime.memmove = 0x481540 .text code
+PASS (b) fmt.errorf = 0x49f360 .text code
+PASS (b) ssz.ValidateBitvector = 0x4b65e0 .text code
+PASS (b) ssz.ValidateBitlist = 0x4b66e0 .text code
+PASS (b) target.Scalars.UnmarshalSSZ = 0x4b6b20 .text code
+PASS (b) target.ListU64.UnmarshalSSZ = 0x4b6fa0 .text code
+PASS (b) type__+48736 = 0x4cfe60 .rodata group(nearest preceding symbol)
+PASS (b) type__+49120 = 0x4cffe0 .rodata group(nearest preceding symbol)
+PASS (b) type__+49184 = 0x4d0020 .rodata group(nearest preceding symbol)
+PASS (b) type__+82848 = 0x4d83a0 .rodata group(nearest preceding symbol)
+PASS (b) type__+83104 = 0x4d84a0 .rodata group(nearest preceding symbol)
+PASS (b) type__+100288 = 0x4dc7c0 .rodata group(nearest preceding symbol)
+PASS (b) type__+114368 = 0x4dfec0 .rodata group(nearest preceding symbol)
+PASS (b) type__+135104 = 0x4e4fc0 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+511 = 0x4f02af .rodata group(nearest preceding symbol)
+PASS (b) go_string._+516 = 0x4f02b4 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+521 = 0x4f02b9 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+526 = 0x4f02be .rodata group(nearest preceding symbol)
+PASS (b) go_string._+2158 = 0x4f091e .rodata group(nearest preceding symbol)
+PASS (b) go_string._+3151 = 0x4f0cff .rodata group(nearest preceding symbol)
+PASS (b) go_string._+3161 = 0x4f0d09 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+5743 = 0x4f171f .rodata group(nearest preceding symbol)
+PASS (b) go_string._+13272 = 0x4f3488 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+27706 = 0x4f6cea .rodata group(nearest preceding symbol)
+PASS (b) go_string._+33605 = 0x4f83f5 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+37115 = 0x4f91ab .rodata group(nearest preceding symbol)
+PASS (b) go_string._+39370 = 0x4f9a7a .rodata group(nearest preceding symbol)
+PASS (b) go_string._+40290 = 0x4f9e12 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+40970 = 0x4fa0ba .rodata group(nearest preceding symbol)
+PASS (b) go_string._+41506 = 0x4fa2d2 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+42000 = 0x4fa4c0 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+42579 = 0x4fa703 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+42646 = 0x4fa746 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+44051 = 0x4facc3 .rodata group(nearest preceding symbol)
+PASS (b) go_itab._errors.errorString_error = 0x4fcb18 .rodata in-symbol
+PASS (b) ssz.ErrBytesLength = 0x5ccde0 .data in-symbol
+PASS (b) ssz.ErrBytesLength+8 = 0x5ccde8 .data in-symbol
+PASS (b) ssz.ErrInvalidSerialization = 0x5ccdf0 .data in-symbol
+PASS (b) ssz.ErrInvalidSerialization+8 = 0x5ccdf8 .data in-symbol
+PASS (b) ssz.ErrInvalidVariableOffset = 0x5cce00 .data in-symbol
+PASS (b) ssz.ErrInvalidVariableOffset+8 = 0x5cce08 .data in-symbol
+PASS (b) ssz.ErrListTooBig = 0x5cce10 .data in-symbol
+PASS (b) ssz.ErrListTooBig+8 = 0x5cce18 .data in-symbol
+PASS (b) ssz.ErrSize = 0x5cce30 .data in-symbol
+PASS (b) ssz.ErrSize+8 = 0x5cce38 .data in-symbol
+PASS (b) ssz.ErrIncorrectListSize = 0x5d2a50 .bss in-symbol
+PASS (b) ssz.ErrIncorrectListSize+8 = 0x5d2a58 .bss in-symbol
+PASS (b) runtime.zerobase = 0x5f3040 .noptrbss in-symbol
+PASS (b) runtime.writeBarrier = 0x5f3340 .noptrbss in-symbol
+PASS (c) all.S: 294 labels, each defined once; 53 external references not defined in all.S; 4 calls to target functions at their entry: ['ssz.ValidateBitlist', 'ssz.ValidateBitvector', 'target.ListU64.UnmarshalSSZ', 'target.Scalars.UnmarshalSSZ']
+PASS (e) all.S: 3221 directives equal the 29 function files in order
+FAIL (f) lean/Fk/SHash.lean is not the text link/shash.sh writes; run link/shash.sh (first difference at line 4: '  "/-x-/4589b056f918bce27f4c3485cd7b9ed153f9b0bac995ca9a8074c60754490ead all.S",' vs '  "4589b056f918bce27f4c3485cd7b9ed153f9b0bac995ca9a8074c60754490ead all.S",')

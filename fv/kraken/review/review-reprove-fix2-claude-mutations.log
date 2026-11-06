@@ -1,0 +1,33 @@
+Claude copy linkmut3 (fix2 tip 7152188, fv/kraken/{lean,link,target} + ssz/, no .lake), python3 -I link/check.py, 2026-11-06 08:38
+  unchanged -> PASS all
+  A1 SHash first hash string with /-x-/ inside                   -> FAIL: FAIL (f) lean/Fk/SHash.lean is not the text link/shash.sh writes; run link/shash.sh (first difference at line 4: '  "4589b056/-x-/f918bce27f
+  A2a blFmtB |>.map suffix same line                             -> FAIL: FAIL (g) blFmtB: the definition is not exactly `def blFmtB : List UInt8 := [n, ...]` up to the next command
+  A2b blFmtB |>.map suffix next line                             -> FAIL: FAIL (g) blFmtB: the definition is not exactly `def blFmtB : List UInt8 := [n, ...]` up to the next command
+  A3 BlMarshal:386 'label  "go_string._" + 527' (two spaces)     -> FAIL: FAIL (g) blFmtB: Lean b'B: %w' ELF go_string._+527 b': %wi'
+  A4 Go: both 'B: %w' calls -> 'C: %w', originals in comments    -> FAIL: FAIL (g) fv/kraken/target/types1b.ssz.go has no fmt.Errorf literal (go/parser) equal to Lean blFmtB
+  A5a WitBlR: theorem taking [Host] uses go_string._+99999       -> FAIL: FAIL (g) go_string._ references not checked: ['WitBlR.lean:207 zz_hostfree (theorem) ptr  99999', 'WitBlR.lean:207 zz_hostfree (theorem) ptr
+  A5b WitBlR: plain def (no [Host]) uses go_string._+99999       -> FAIL: FAIL (g) go_string._ references not checked: ['WitBlR.lean:207 zz_plain (witness) ptr  99999']
+  N1 SHash.lean trailing '-- x' line                             -> FAIL: FAIL (f) lean/Fk/SHash.lean is not the text link/shash.sh writes; run link/shash.sh (43 vs 42 lines)
+  N2 '-- "' comment line above a use site changed to 527         -> FAIL: FAIL (g) blFmtB: Lean b'B: %w' ELF go_string._+527 b': %wi'
+  N3 char literal '"' def + use site changed to 527              -> FAIL: FAIL (g) blFmtB: Lean b'B: %w' ELF go_string._+527 b': %wi'
+  N4 Go: one of two calls written as "B: " + "%w" (other call intact) -> PASS all
+  N5 use site offset written '+ (526 : Nat)'                     -> FAIL: FAIL (g) go_string._ references not checked: ['BlMarshal.lean:386 ? (?) unparsed']
+  N6 '/- -- -/' block comment then live use of 999 on same line  -> FAIL: FAIL (g) blFmtB: Lean b'B: %w' ELF go_string._+999 b'CHED '
+  N7 nested '/- /- -/ ... 999 -/' (all comment in Lean; PASS is correct) -> PASS all
+  N8 string "\"" then '-- "' then [Host] theorem using 999       -> FAIL: FAIL (g) go_string._ references not checked: ['BlMarshal.lean:352 zz9 (theorem) ptr  999', 'BlMarshal.lean:352 zz9 (theorem) ptr  999']
+  unchanged (after restores) -> PASS all
+--- goval mutations on Fk/WitScA.lean (python3 -I tools/wit/goval.py Fk/WitScA.lean)
+  unchanged -> 0 with a violation, 0 with a value not checked
+  G1 receiver bool byte E = 2                                    -> 1 with a violation, 0 with a value not checked | BAD WitScA recv.E 2 bool byte > 1
+  G2 receiver padding removed (object past the block end)        -> 1 with a violation, 0 with a value not checked | BAD WitScA recv 0x10028 Scalars object [0x10028, 0x10040) outside the block
+  G3 receiver address 0x1002c (not 8-aligned)                    -> 1 with a violation, 0 with a value not checked | BAD WitScA recv 0x1002c Scalars object [0x1002c, 0x10044) outside the block
+  G4 slice cap 15 < len 16                                       -> 1 with a violation, 0 with a value not checked | BAD WitScA buf ('0x10018', 16, 15) len > cap
+  G5 receiver at 0x10020 (overlaps the input slice data)         -> 1 with a violation, 0 with a value not checked | BAD WitScA buf.data/recv [0x10018,0x10028) [0x10020,0x10038) Go objects overlap
+  G6 layout.json Scalars size 16 + padding removed (table tamper; verify regenerates layout.json) -> 0 with a violation, 0 with a value not checked | 
+  unchanged (after restores) -> 0 with a violation, 0 with a value not checked
+--- astra fix2 findings reproduced 09:13
+  R1 WitScM: theorem with named binder [h : Host] uses 99999 (astra 1) -> FAIL: FAIL (g) go_string._ references not checked: ['WitScM.lean:87 zz_named (witness) ptr  99999', 'WitScM.lean:87 zz_named (
+  R2 BlMarshal: binder named blFmtB shadows the constant at 526 (astra 1) -> FAIL: FAIL (g) go_string._ references not checked: ['BlMarshal.lean:674 review_bad (theorem) place-unknown  526']
+1
+  R3 luTW := (label type__+49184).toBitVec + 8 (astra 2)         -> PASS all
+  R1' astra exact named-host file -> PASS all
