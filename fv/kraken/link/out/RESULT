@@ -86,7 +86,7 @@ PASS (b) runtime.zerobase = 0x5f3040 .noptrbss in-symbol
 PASS (b) runtime.writeBarrier = 0x5f3340 .noptrbss in-symbol
 PASS (c) all.S: 294 labels, each defined once; 53 external references not defined in all.S; 4 calls to target functions at their entry: ['ssz.ValidateBitlist', 'ssz.ValidateBitvector', 'target.ListU64.UnmarshalSSZ', 'target.Scalars.UnmarshalSSZ']
 PASS (e) all.S: 3221 directives equal the 29 function files in order
-PASS (f) the value of Fk.sHash (comments removed) lists the sha256 of all 38 .S files
+PASS (f) lean/Fk/SHash.lean is the exact shash.sh text for all 38 .S files
 PASS (g) go_string._+39370 (53 bytes) = Lean lcFmtZero = fv/kraken/target/types1b.ssz.go lines [243]
 PASS (g) go_string._+42000 (63 bytes) = Lean lcFmtShort = fv/kraken/target/types1b.ssz.go lines [254, 280]
 PASS (g) go_string._+27706 (35 bytes) = Lean vbvFmt = ssz/unmarshal.go lines [45]
@@ -94,7 +94,7 @@ PASS (g) go_string._+511 (5 bytes) = Lean bvFmtJ = fv/kraken/target/types1b.ssz.
 PASS (g) go_string._+526 (5 bytes) = Lean blFmtB = fv/kraken/target/types1b.ssz.go lines [339, 360]
 PASS (g) go_string._+40290 (56 bytes, length only in LuRejectCall.lean) = fv/kraken/target/types.ssz.go lines [249]
 PASS (g) go_string._+42646 (68 bytes, length only in LuRejectCall.lean) = fv/kraken/target/types.ssz.go lines [245]
-PASS (g) inventory: all 7 go_string._ offsets in theorem files are checked: [511, 526, 27706, 39370, 40290, 42000, 42646]
+PASS (g) inventory: 64 go_string._ references in 14 files, checked offsets [511, 526, 27706, 39370, 40290, 42000, 42646]; witness fill and label references: 34
 DIFF (d) ssz.ValidateBitvector 0x4b661b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
 DIFF (d) ssz.ValidateBitlist 0x4b66f7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
 DIFF (d) ssz.ValidateBitlist 0x4b673c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
@@ -180,4 +180,4 @@ S sha256 bee62ab7dfa3da589159bdb47d767ba65cb09f7e8f64cec649e60aa3c026c78c target
 file sha256 c4d64cb9c7857dc3f055d669ba2da5c406572f40ddf0fbb22aabdd8cda7926de lean/Fk/Code.lean
 file sha256 d33110925d47e9ecd814808e0c5c99e280d799dcaad62ffa6873187e2679a18e AXIOMS.txt
 PASS all
-BUNDLE sha256 1e118b6cf44cc10cd86cefb3f8a24b20e6f29e084242c5b019335e1d27f39ac6
+BUNDLE sha256 d4b5863602f1a2a8f33727ed9368def204cbebf7565f69295506fe3e87908261
