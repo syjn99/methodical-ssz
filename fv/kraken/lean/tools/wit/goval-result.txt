@@ -40,6 +40,12 @@ OK  WitBlR     recv                   0x10218                            ok: Bit
 OK  WitBlR     recv.B                 ('0x10230', 257, 257)              ok
 OK  WitBlR     itab+8                 0x18370                            type word ok
 OK  WitBlR     chunks                 32 read, 0 not read                ok
+OK  WitBlRI    rsp                    0x10158                            ok
+OK  WitBlRI    buf                    ('0x10214', 5, 5)                  ok
+OK  WitBlRI    recv                   0x10220                            ok: BitL size 24 align 8
+OK  WitBlRI    recv.B                 ('0x0', 0, 0)                      ok
+OK  WitBlRI    itab+8                 0x18370                            type word ok
+OK  WitBlRI    chunks                 27 read, 0 not read                ok
 OK  WitBv      rsp                    0x10080                            ok
 OK  WitBv      buf                    ('0x10098', 1, 1)                  ok
 OK  WitBv      recv                   0x100a0                            ok: BitVec size 24 align 8
@@ -315,6 +321,11 @@ OK  WitScM     dst                    ('0x10040', 0, 16)                 ok
 OK  WitScM     recv                   0x10028                            ok: Scalars size 24 align 8
 OK  WitScM     recv.E                 0                                  ok
 OK  WitScM     chunks                 16 read, 0 not read                ok
+OK  WitScRB    rsp                    0x10010                            ok
+OK  WitScRB    buf                    ('0x10028', 16, 16)                ok
+OK  WitScRB    recv                   0x10038                            ok: Scalars size 24 align 8
+OK  WitScRB    recv.E                 0                                  ok
+OK  WitScRB    chunks                 16 read, 0 not read                ok
 OK  WitSzAd    rsp                    0x10000                            ok
 OK  WitSzAd    recv                   0                                  nil
 OK  WitSzAd    chunks                 1 read, 0 not read                 ok
@@ -345,4 +356,4 @@ OK  WitVbvR    rsp                    0x10060                            ok
 OK  WitVbvR    buf                    ('0x10070', 1, 1)                  ok
 OK  WitVbvR    chunks                 8 read, 1 not read                 ok
 --  Witness    -                      None                               not checked: no target or registers
-69 witness files, 0 with a violation, 2 with a value not checked
+71 witness files, 0 with a violation, 2 with a value not checked

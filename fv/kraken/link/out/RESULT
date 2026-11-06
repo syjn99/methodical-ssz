@@ -97,7 +97,7 @@ PASS (g) go_string._+13272 (21 bytes) = Lean vblMsgZ = ssz/unmarshal.go lines [2
 PASS (g) go_string._+5743 (13 bytes) = Lean vblMsgB = ssz/unmarshal.go lines [77]
 PASS (g) go_string._+40290 (56 bytes) = Lean luFmtTooBig = fv/kraken/target/types.ssz.go lines [249]
 PASS (g) go_string._+42646 (68 bytes) = Lean luFmtMis = fv/kraken/target/types.ssz.go lines [245]
-PASS (g) inventory: 80 go_string._ references in 15 files, checked offsets [511, 526, 5743, 13272, 27706, 33605, 39370, 40290, 42000, 42646]; witness fill and label references: 38
+PASS (g) inventory: 95 go_string._ references in 17 files, checked offsets [511, 526, 5743, 13272, 27706, 33605, 39370, 40290, 42000, 42646]; witness fill and label references: 48
 PASS (h) luTW = type__+49184 = 0x4d0020: abi.Type Size_ 8, Kind_ 2 (int)
 PASS (h) go_itab._errors.errorString_error+8 = 0x4d4a00: abi.Type Size_ 8, Kind_ 22 (pointer, *errors.errorString)
 PASS (h) runtime.staticuint64s = 0x502740: 2048 bytes = uint64 0..255 (StaticBox v at + 8 v)
@@ -186,4 +186,4 @@ S sha256 bee62ab7dfa3da589159bdb47d767ba65cb09f7e8f64cec649e60aa3c026c78c target
 file sha256 c4d64cb9c7857dc3f055d669ba2da5c406572f40ddf0fbb22aabdd8cda7926de lean/Fk/Code.lean
 file sha256 5bbb84cdf83f167cea196acde66a17713b0be78d08da502d0fdcf36664662eeb AXIOMS.txt
 PASS all
-BUNDLE sha256 a381854a663306e2e93e94db9f11fc5e676bcc42566a1b50951d49b068812012
+BUNDLE sha256 b8fd380d66f4ca941b0baab30d8843dd58272523f8fd031692f7d3e47afd1eb6

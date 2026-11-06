@@ -117,6 +117,10 @@ mutate cplen target_prysm.Checkpoint.UnmarshalSSZ.S 9 'cmp $0x28,%rcx' 'cmp $0x2
 mutate adcopy target_prysm.AttestationData.UnmarshalSSZ.S 35 'mov $0x20,%ecx' 'mov $0x1f,%ecx' Fk/AdAccept.lean ad_accept_main FAIL
 # 13. Scalars (X9): the bool byte is compared with 2 instead of 1, so 1 decodes as false
 mutate scbool target.Scalars.UnmarshalSSZ.S 13 'cmp $0x1,%cl' 'cmp $0x2,%cl' Fk/ScAccept.lean sc_accept_main FAIL
+# fix 2 X8a: the bool reject path returns the second word of the error global as the first
+mutate scrbword target.Scalars.UnmarshalSSZ.S 26 'mov ssz.ErrInvalidSerialization(%rip),%rax' 'mov ssz.ErrInvalidSerialization+8(%rip),%rax' Fk/ScRejectBool.lean sc_reject_bool_main FAIL
+# fix 2 X8b: the ValidateBitlist error path reads the type word at itab+16 instead of itab+8
+mutate blrity target.BitL.UnmarshalSSZ.S 37 'mov 0x8(%rax),%rax' 'mov 0x10(%rax),%rax' Fk/BlReject.lean bl_reject_invalid_main FAIL
 # control: a directive rewritten to itself must still check
 mutate control target.FixedVec.UnmarshalSSZ.S 47 'cmp $0x4,%rax' 'cmp $0x4,%rax' Fk/FvLoop.lean fv_iter PASS
 # 9. link (X6): a padding nop becomes retq; the link check must reject it
