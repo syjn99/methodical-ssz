@@ -85,28 +85,41 @@ def MemmoveC (S : Nat) : Prop :=
           ⋆ Eq (src.At st.regs.rbx.toBitVec) ⋆ Eq (src.At st.regs.rax.toBitVec) ⋆ F) st'.data.dmem)
       ⟨st, label "runtime.memmove"⟩
 
+/-- The 8-byte entry `v` of Go's read-only `runtime.staticuint64s` table
+(`staticuint64s[v] = v`), for v < 256; nothing otherwise (fix 2 X4). The
+table bytes in the ELF are checked by `link/check.py` (h). -/
+def StaticBox (v : BitVec 64) : DataMem → Prop :=
+  if v.toNat < 256 then Eq ((Int.toBytes 8 v.toInt).At ((label "runtime.staticuint64s").toBitVec + 8 * v))
+  else Eq (([] : List UInt8).At 0)
+
+/-- Where `convT64`'s box `bx` of the value `v` is (fix 2 X4): in the static
+table (`hb = []`, v < 256, bx = staticuint64s + 8v; the bytes are in
+`StaticBox v`) or in 8 heap bytes `hb = v` at bx. -/
+def BoxIn (bx v : BitVec 64) (hb : List UInt8) : Prop :=
+  (hb = [] ∧ v.toNat < 256 ∧ bx = (label "runtime.staticuint64s").toBitVec + 8 * v) ∨ hb = Int.toBytes 8 v.toInt
+
 /-- `runtime.convT64(v uint64) unsafe.Pointer` (rax = v; Go 1.26.3
-runtime/iface.go): returns a non-nil pointer to a boxed copy of v (into the
-read-only `staticuint64s` table for v < 256, otherwise an 8-byte allocation).
-Premises: an 8-byte budget (`8 ≤ avail`), `S` scratch bytes, the 8-byte
-argument spill slot above the return slot. Result: rsp + 8, r14 kept,
-rax ≠ 0, the heap shrinks by at most 8 bytes (`avail' ≤ avail ≤ avail' + 8`),
-the frame `F` unchanged. Not stated: the box's contents (the callers here
-only pass the pointer to `fmt.errorf`, whose contract does not read it). -/
+runtime/iface.go): returns a pointer to a box of v (fix 2 X4: the box is
+stated). For v < 256 Go returns `&staticuint64s[v]` (read-only, no
+allocation); otherwise an 8-byte allocation holding v. Premises: an 8-byte
+budget, `S` scratch bytes, the 8-byte argument spill slot, the static entry
+`StaticBox v` (read-only, kept). Result: rsp + 8, r14 kept, rax = bx with
+`BoxIn bx v hb`, the heap bytes `hb` at bx are new
+(`avail' + hb.length ≤ avail ≤ avail' + 8`), the frame `F` unchanged. -/
 def ConvT64C (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
   ∀ (st : MachineData) (ret : Int64) (avail : Nat) (stk spill : List UInt8) (F : DataMem → Prop),
     8 ≤ avail → stk.length = S → spill.length = 8 →
     (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
       ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (st.regs.rsp.toBitVec + 8))
-      ⋆ Heap avail ⋆ F) st.dmem →
+      ⋆ StaticBox st.regs.rax.toBitVec ⋆ Heap avail ⋆ F) st.dmem →
     Eventually (step1 Host.exe)
-      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.r14 = st.regs.r14
-        ∧ st'.data.regs.rax ≠ 0 ∧
-        ∃ (stk' spill' : List UInt8) (avail' : Nat), stk'.length = S ∧ spill'.length = 8
-          ∧ avail' ≤ avail ∧ avail ≤ avail' + 8 ∧
+      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.r14 = st.regs.r14 ∧
+        ∃ (stk' spill' hb : List UInt8) (avail' : Nat), stk'.length = S ∧ spill'.length = 8
+          ∧ BoxIn st'.data.regs.rax.toBitVec st.regs.rax.toBitVec hb
+          ∧ avail' + hb.length ≤ avail ∧ avail ≤ avail' + 8 ∧
         (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
           ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill'.At (st.regs.rsp.toBitVec + 8))
-          ⋆ Heap avail' ⋆ F) st'.data.dmem)
+          ⋆ StaticBox st.regs.rax.toBitVec ⋆ Eq (hb.At st'.data.regs.rax.toBitVec) ⋆ Heap avail' ⋆ F) st'.data.dmem)
       ⟨st, label "runtime.convT64"⟩
 
 /-- The internal `fmt.errorf(format string, a ...any) error` of Go 1.26.3
@@ -134,35 +147,79 @@ def FmtErrorfNilC (S : Nat) : Prop :=
           ⋆ Eq (fs.At st.regs.rax.toBitVec) ⋆ F) st'.data.dmem)
       ⟨st, label "fmt.errorf"⟩
 
-/-- A Go `*errors.errorString` at `e` (re-proof fix X5): the 16-byte object
-(string data pointer `sp`, string length) and the message bytes at `sp`. -/
+/-- No bytes: the empty heap (the rodata case of a message, fix 2 X5). -/
+theorem errNil_At_emp (a : BitVec 64) : Eq (([] : List UInt8).At a) = Std.ExtHashMap.emp := by
+  funext m; apply propext; simp only [List.At, List.mapIdx_nil, Std.ExtHashMap.ofList_nil, Std.ExtHashMap.emp]
+  exact ⟨Eq.symm, Eq.symm⟩
+
+/-- The 16-byte `*errors.errorString` object at `e`: string data pointer `sp`
+and the length of `msg` (fix 2 X5: the object alone; the message bytes are a
+separate resource, in rodata or on the heap). -/
+def ErrObj (e sp : BitVec 64) (msg : List UInt8) : DataMem → Prop :=
+  Eq ((Int.toBytes 8 sp.toInt ++ Int.toBytes 8 (BitVec.ofNat 64 msg.length).toInt).At e)
+
+/-- A Go `*errors.errorString` at `e` with its message bytes at `sp`
+(re-proof fix X5). -/
 def ErrStr (e sp : BitVec 64) (msg : List UInt8) : DataMem → Prop :=
-  Eq ((Int.toBytes 8 sp.toInt ++ Int.toBytes 8 (BitVec.ofNat 64 msg.length).toInt).At e) ⋆ Eq (msg.At sp)
+  ErrObj e sp msg ⋆ Eq (msg.At sp)
 
-/-- `FmtErrorfWC` (re-proof fix X5): the internal `fmt.errorf` in the shape
-that the generated code uses for `"<field>: %w"`. The last argument (16
-bytes of the `any` array `pre ++ ity ++ e`) is an `*errors.errorString`
-error: its type word `ity` is the word at `itab + 8` of the errorString itab
-(the code reads it there), its data word is `e`, and `ErrStr e sp msg` is in
-the footprint (fmt reads it; `Error()` returns the string). Allocation budget
-(premise): `fs.length + msg.length + 8192 ≤ avail` (the formatted string, the
-`*fmt.wrapError`, the printer). Result: rsp + 8, r14 kept, rax ≠ 0 (Go then
-always returns a non-nil error), `fs`, the argument array, `ity`, the error
-object and the message unchanged, the heap shrinks (`avail' ≤ avail`), `F`
-unchanged.
-
-Trusted, not narrowed further: the earlier arguments `pre` (the ListU64
-rejects pass the `convT64` box for `%d`; its contents are not specified); that Go's allocation stays within
-the budget; no GC during the call (the frame `F` is unchanged). -/
-def FmtErrorfWC (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
-  ∀ (st : MachineData) (ret : Int64) (avail : Nat) (fs pre ity msg stk spill : List UInt8) (e sp : BitVec 64)
+/-- `FmtErrorfWC Heap fs RO MsgIn S` (fix 2 X4): the internal `fmt.errorf`
+for one fixed format `fs` with one `%w` verb (the generated `"J: %w"`,
+`"B: %w"`; the theorems name the constant, `link/check.py` (g) compares it
+with the ELF and the Go source) and one argument: an `*errors.errorString`
+error, type word `ity` (the word at `itab + 8` of the errorString itab, read
+there by the code), data word `e`. The object `ErrObj e sp msg` and the
+message are in the footprint: `MsgIn sp msg hm` says where the message
+bytes are, in `hm` at `sp` or in the read-only resource `RO` (rodata strings
+of the caller; fixed by the caller with `MsgIn`). Allocation budget,
+computed from the format and the argument: `fs.length + msg.length + 8192 ≤
+avail` (the formatted string `len(fs) - 2 + len(msg)`, the 32-byte
+`*fmt.wrapError`, the printer). Result: rsp + 8, r14 kept, rax ≠ 0, every
+read resource unchanged, the heap shrinks, `F` unchanged.
+Trusted: Go's allocation stays within the budget; no GC during the call. -/
+def FmtErrorfWC (Heap : Nat → DataMem → Prop) (fs : List UInt8) (RO : DataMem → Prop)
+    (MsgIn : BitVec 64 → List UInt8 → List UInt8 → Prop) (S : Nat) : Prop :=
+  ∀ (st : MachineData) (ret : Int64) (avail : Nat) (ity msg hm stk spill : List UInt8) (e sp : BitVec 64)
     (F : DataMem → Prop),
-    st.regs.rbx.toNat = fs.length → 1 ≤ st.regs.rdi.toNat → st.regs.rsi = st.regs.rdi →
-    pre.length + 16 = 16 * st.regs.rdi.toNat → ity.length = 8 → stk.length = S → spill.length = 40 →
+    st.regs.rbx.toNat = fs.length → st.regs.rdi = 1 → st.regs.rsi = 1 →
+    ity.length = 8 → MsgIn sp msg hm → stk.length = S → spill.length = 40 →
     fs.length + msg.length + 8192 ≤ avail →
     (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
       ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (st.regs.rsp.toBitVec + 8))
-      ⋆ Eq (fs.At st.regs.rax.toBitVec) ⋆ Eq ((pre ++ ity ++ Int.toBytes 8 e.toInt).At st.regs.rcx.toBitVec)
+      ⋆ Eq (fs.At st.regs.rax.toBitVec) ⋆ Eq ((ity ++ Int.toBytes 8 e.toInt).At st.regs.rcx.toBitVec)
+      ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
+      ⋆ ErrObj e sp msg ⋆ Eq (hm.At sp) ⋆ RO ⋆ Heap avail ⋆ F) st.dmem →
+    Eventually (step1 Host.exe)
+      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.r14 = st.regs.r14
+        ∧ st'.data.regs.rax ≠ 0 ∧
+        ∃ (stk' spill' : List UInt8) (avail' : Nat), stk'.length = S ∧ spill'.length = 40 ∧ avail' ≤ avail ∧
+        (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill'.At (st.regs.rsp.toBitVec + 8))
+          ⋆ Eq (fs.At st.regs.rax.toBitVec) ⋆ Eq ((ity ++ Int.toBytes 8 e.toInt).At st.regs.rcx.toBitVec)
+          ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
+          ⋆ ErrObj e sp msg ⋆ Eq (hm.At sp) ⋆ RO ⋆ Heap avail' ⋆ F) st'.data.dmem)
+      ⟨st, label "fmt.errorf"⟩
+
+/-- `FmtErrorfDWC Heap fs tw S` (fix 2 X4): the internal `fmt.errorf` for one
+fixed format `fs` with `%d` then `%w` (the two ListU64 formats) and two
+arguments: an `int` box (type word `tw`, the theorems fix it to the ELF's
+`type:int` descriptor, checked by `link/check.py` (h); data word `bx`, the
+`convT64` box of `v`, its bytes in `StaticBox v` or `hb`: `BoxIn bx v hb`) and
+an `*errors.errorString` error (type word `ity` at `itab + 8`, data word
+`e`, `ErrStr e sp msg`). Budget from the format and the arguments:
+`fs.length + 20 + msg.length + 8192 ≤ avail` (at most 20 digits). Result as
+`FmtErrorfWC`. -/
+def FmtErrorfDWC (Heap : Nat → DataMem → Prop) (fs : List UInt8) (tw : BitVec 64) (S : Nat) : Prop :=
+  ∀ (st : MachineData) (ret : Int64) (avail : Nat) (ity msg hb stk spill : List UInt8) (bx v e sp : BitVec 64)
+    (F : DataMem → Prop),
+    st.regs.rbx.toNat = fs.length → st.regs.rdi = 2 → st.regs.rsi = 2 →
+    ity.length = 8 → BoxIn bx v hb → stk.length = S → spill.length = 40 →
+    fs.length + 20 + msg.length + 8192 ≤ avail →
+    (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (st.regs.rsp.toBitVec + 8))
+      ⋆ Eq (fs.At st.regs.rax.toBitVec)
+      ⋆ Eq ((Int.toBytes 8 tw.toInt ++ Int.toBytes 8 bx.toInt ++ ity ++ Int.toBytes 8 e.toInt).At st.regs.rcx.toBitVec)
+      ⋆ StaticBox v ⋆ Eq (hb.At bx)
       ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8)) ⋆ ErrStr e sp msg
       ⋆ Heap avail ⋆ F) st.dmem →
     Eventually (step1 Host.exe)
@@ -171,7 +228,9 @@ def FmtErrorfWC (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
         ∃ (stk' spill' : List UInt8) (avail' : Nat), stk'.length = S ∧ spill'.length = 40 ∧ avail' ≤ avail ∧
         (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
           ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill'.At (st.regs.rsp.toBitVec + 8))
-          ⋆ Eq (fs.At st.regs.rax.toBitVec) ⋆ Eq ((pre ++ ity ++ Int.toBytes 8 e.toInt).At st.regs.rcx.toBitVec)
+          ⋆ Eq (fs.At st.regs.rax.toBitVec)
+          ⋆ Eq ((Int.toBytes 8 tw.toInt ++ Int.toBytes 8 bx.toInt ++ ity ++ Int.toBytes 8 e.toInt).At st.regs.rcx.toBitVec)
+          ⋆ StaticBox v ⋆ Eq (hb.At bx)
           ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8)) ⋆ ErrStr e sp msg
           ⋆ Heap avail' ⋆ F) st'.data.dmem)
       ⟨st, label "fmt.errorf"⟩

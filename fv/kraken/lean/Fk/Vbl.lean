@@ -57,30 +57,69 @@ def ValidateBitlistC (S : Nat) : Prop :=
           ⋆ Eq (buf.At st.regs.rax.toBitVec) ⋆ F) st'.data.dmem)
       ⟨st, label "ssz.ValidateBitlist"⟩
 
-/-- `ssz.ValidateBitlist`, invalid input (re-proof fix X5). If `¬ blValid buf`
-and the heap has the budget (`8192 ≤ avail`), it returns a non-nil error:
-rax is the `*errors.errorString` itab, rbx is the data pointer `e`, and the
-error object `ErrStr e sp msg` (16 bytes and the message, at most 128 bytes)
-comes from the heap: `avail' + 16 + msg.length ≤ avail ≤ avail' + 8192`.
-Every error of Go 1.26.3 `ValidateBitlist` is `fmt.Errorf` without `%w`, so
-`errors.New(s)` (trusted, CONTRACTS.md 1d: Go's constant messages are in
-rodata, not the heap; the longest message has 82 bytes). -/
+-- "bitlist empty, it does not have length bit" (ssz/unmarshal.go:54)
+def vblMsgE : List UInt8 :=
+  [98, 105, 116, 108, 105, 115, 116, 32, 101, 109, 112, 116, 121, 44, 32, 105, 116, 32, 100, 111, 101, 115, 32, 110, 111, 116, 32, 104, 97, 118, 101, 32, 108, 101, 110, 103, 116, 104, 32, 98, 105, 116]
+-- "trailing byte is zero" (ssz/unmarshal.go:65)
+def vblMsgZ : List UInt8 := [116, 114, 97, 105, 108, 105, 110, 103, 32, 98, 121, 116, 101, 32, 105, 115, 32, 122, 101, 114, 111]
+-- "too many bits" (ssz/unmarshal.go:77)
+def vblMsgB : List UInt8 := [116, 111, 111, 32, 109, 97, 110, 121, 32, 98, 105, 116, 115]
+
+theorem vblMsgE_len : vblMsgE.length = 42 := by rfl
+theorem vblMsgZ_len : vblMsgZ.length = 21 := by rfl
+theorem vblMsgB_len : vblMsgB.length = 13 := by rfl
+
+/-- The three constant messages of `ssz.ValidateBitlist` in rodata (fix 2 X5):
+`go_string._ + 33605`, `+ 13272`, `+ 5743` (the `lea` operands of the real
+code; `link/check.py` (g) compares the bytes with the ELF and the Go source).
+Read-only: the contract keeps it and its frame `F` is separate from it. -/
+def vblRO : DataMem → Prop :=
+  Eq (vblMsgE.At (label "go_string._" + 33605).toBitVec) ⋆ Eq (vblMsgZ.At (label "go_string._" + 13272).toBitVec)
+    ⋆ Eq (vblMsgB.At (label "go_string._" + 5743).toBitVec)
+
+/-- Where the message of a `ValidateBitlist` error is (fix 2 X5): one of the
+three rodata messages (`sp` is its address; no heap bytes, `hm = []`), or the
+`%d` message `"unexpected number of bytes, got %d but found %d"`, formatted on
+the heap (`hm = msg`, at most 128 bytes). -/
+def VblMsg (sp : BitVec 64) (msg hm : List UInt8) : Prop :=
+  (hm = [] ∧ ((sp = (label "go_string._" + 33605).toBitVec ∧ msg = vblMsgE)
+    ∨ (sp = (label "go_string._" + 13272).toBitVec ∧ msg = vblMsgZ)
+    ∨ (sp = (label "go_string._" + 5743).toBitVec ∧ msg = vblMsgB)))
+  ∨ (hm = msg ∧ msg.length ≤ 128)
+
+theorem VblMsg.len {sp : BitVec 64} {msg hm : List UInt8} (h : VblMsg sp msg hm) : msg.length ≤ 128 := by
+  rcases h with ⟨-, ⟨-, rfl⟩ | ⟨-, rfl⟩ | ⟨-, rfl⟩⟩ | ⟨-, h⟩
+  · decide
+  · decide
+  · decide
+  · exact h
+
+/-- `ssz.ValidateBitlist`, invalid input (re-proof fix X5, fix 2 X5). If
+`¬ blValid buf` and the heap has the budget (`8192 ≤ avail`), it returns a
+non-nil error: rax is the `*errors.errorString` itab, rbx the object `e`.
+The heap gives the 16-byte object `ErrObj e sp msg` and, for the `%d`
+message only, the message bytes `hm`: `avail' + 16 + hm.length ≤ avail ≤
+avail' + 8192`. For the three constant messages the object points into the
+read-only `vblRO` of the premise (`VblMsg`); no message byte is taken from
+the heap. `F` is quantified apart from `vblRO` (the `⋆`). Which message
+belongs to which input is not stated. -/
 def ValidateBitlistErrC (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
   ∀ (st : MachineData) (ret : Int64) (avail : Nat) (buf stk spill : List UInt8) (F : DataMem → Prop),
     st.regs.rbx.toNat = buf.length → st.regs.rdi = 2048 → stk.length = S → spill.length = 32 → ¬ blValid buf →
     8192 ≤ avail →
     (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
       ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (st.regs.rsp.toBitVec + 8))
-      ⋆ Eq (buf.At st.regs.rax.toBitVec) ⋆ Heap avail ⋆ F) st.dmem →
+      ⋆ Eq (buf.At st.regs.rax.toBitVec) ⋆ vblRO ⋆ Heap avail ⋆ F) st.dmem →
     Eventually (step1 Host.exe)
       (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.r14 = st.regs.r14
         ∧ st'.data.regs.rbp = st.regs.rbp
         ∧ st'.data.regs.rax.toBitVec = (label "go_itab._errors.errorString_error").toBitVec ∧
-        ∃ (stk' spill' msg : List UInt8) (sp : BitVec 64) (avail' : Nat), stk'.length = S ∧ spill'.length = 32
-          ∧ msg.length ≤ 128 ∧ avail' + 16 + msg.length ≤ avail ∧ avail ≤ avail' + 8192 ∧
+        ∃ (stk' spill' msg hm : List UInt8) (sp : BitVec 64) (avail' : Nat), stk'.length = S ∧ spill'.length = 32
+          ∧ VblMsg sp msg hm ∧ avail' + 16 + hm.length ≤ avail ∧ avail ≤ avail' + 8192 ∧
         (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
           ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill'.At (st.regs.rsp.toBitVec + 8))
-          ⋆ Eq (buf.At st.regs.rax.toBitVec) ⋆ ErrStr st'.data.regs.rbx.toBitVec sp msg ⋆ Heap avail' ⋆ F)
+          ⋆ Eq (buf.At st.regs.rax.toBitVec) ⋆ vblRO ⋆ ErrObj st'.data.regs.rbx.toBitVec sp msg ⋆ Eq (hm.At sp)
+          ⋆ Heap avail' ⋆ F)
           st'.data.dmem)
       ⟨st, label "ssz.ValidateBitlist"⟩
 
@@ -300,7 +339,7 @@ theorem rt_validate_bitlist_err (j : Nat) (hj : RtVbl.IsInfixAt Host.prog j) (hf
   simp only at hrbx hrdi hm ⊢
   have hm' : (bumpHeap avail ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec)
       ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (rsp.toBitVec + 8))
-      ⋆ Eq (buf.At rax.toBitVec) ⋆ F)) mem := by ecancel
+      ⋆ Eq (buf.At rax.toBitVec) ⋆ vblRO ⋆ F)) mem := by ecancel
   obtain ⟨p, hp⟩ := sep_exists_left (Q := fun (p : BitVec 64) (m : DataMem) => p.toNat + avail < 2 ^ 64 ∧
     (Eq ((Int.toBytes 8 p.toInt).At (label "runtime.fvBump").toBitVec) ⋆ Eq ((List.replicate avail 0).At p)) m) hm'
   obtain ⟨hpa, hp⟩ := sep_pure_left hp
@@ -339,12 +378,12 @@ theorem rt_validate_bitlist_err (j : Nat) (hj : RtVbl.IsInfixAt Host.prog j) (hf
     have H2 : ((Eq ((Int.toBytes 8 (p + (16 : BitVec 64)).toInt).At (label "runtime.fvBump").toBitVec)
         ⋆ Eq ((List.replicate (avail - 16) 0).At (p + (16 : BitVec 64))))
         ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec) ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S))
-          ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq (([] : List UInt8).At rax.toBitVec) ⋆ Eq ((List.replicate 16 0).At p) ⋆ F)) m1 := by
+          ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq (([] : List UInt8).At rax.toBitVec) ⋆ Eq ((List.replicate 16 0).At p) ⋆ vblRO ⋆ F)) m1 := by
       ecancel
     have H3 := sep_mono_left (P' := bumpHeap (avail - 16)) (fun m hm => ⟨p + (16 : BitVec 64), by omega, hm⟩) H2
-    refine ⟨by simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl], rfl, rfl, rfl, by simp, stk, spill, [], 0, avail - 16,
-      hstk, hsp, by simp, by simp; omega, by omega, ?_⟩
-    simp only [ErrStr, List.length_nil, rtvbl_obj0, vbl_nil_At_emp, Std.ExtHashMap.sep_emp,
+    refine ⟨by simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl], rfl, rfl, rfl, by simp, stk, spill, [], [], 0, avail - 16,
+      hstk, hsp, Or.inr ⟨rfl, by simp⟩, by simp; omega, by omega, ?_⟩
+    simp only [ErrObj, List.length_nil, rtvbl_obj0, vbl_nil_At_emp, Std.ExtHashMap.sep_emp,
       BitVec.ofInt_ofBytes_toBytes 64 8 rfl, Fk.ofInt_ofBytes_toBytes64] at H3 ⊢
     ecancel
   obtain ⟨init, last, rfl⟩ := List.eq_nil_or_concat buf |>.resolve_left hn
@@ -385,12 +424,12 @@ theorem rt_validate_bitlist_err (j : Nat) (hj : RtVbl.IsInfixAt Host.prog j) (hf
     have H2 : ((Eq ((Int.toBytes 8 (p + (16 : BitVec 64)).toInt).At (label "runtime.fvBump").toBitVec)
         ⋆ Eq ((List.replicate (avail - 16) 0).At (p + (16 : BitVec 64))))
         ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec) ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S))
-          ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq ((init ++ [last]).At rax.toBitVec) ⋆ Eq ((List.replicate 16 0).At p) ⋆ F)) m1 := by
+          ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq ((init ++ [last]).At rax.toBitVec) ⋆ Eq ((List.replicate 16 0).At p) ⋆ vblRO ⋆ F)) m1 := by
       ecancel
     have H3 := sep_mono_left (P' := bumpHeap (avail - 16)) (fun m hm => ⟨p + (16 : BitVec 64), by omega, hm⟩) H2
-    refine ⟨by simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl], rfl, rfl, rfl, by simp, stk, spill, [], 0, avail - 16,
-      hstk, hsp, by simp, by simp; omega, by omega, ?_⟩
-    simp only [ErrStr, List.length_nil, rtvbl_obj0, vbl_nil_At_emp, Std.ExtHashMap.sep_emp,
+    refine ⟨by simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl], rfl, rfl, rfl, by simp, stk, spill, [], [], 0, avail - 16,
+      hstk, hsp, Or.inr ⟨rfl, by simp⟩, by simp; omega, by omega, ?_⟩
+    simp only [ErrObj, List.length_nil, rtvbl_obj0, vbl_nil_At_emp, Std.ExtHashMap.sep_emp,
       BitVec.ofInt_ofBytes_toBytes 64 8 rfl, Fk.ofInt_ofBytes_toBytes64] at H3 ⊢
     ecancel
   have : decide ((257 : BitVec 64).toNat < rbx.toBitVec.toNat) = false := by simp; omega
@@ -431,12 +470,12 @@ theorem rt_validate_bitlist_err (j : Nat) (hj : RtVbl.IsInfixAt Host.prog j) (hf
     have H2 : ((Eq ((Int.toBytes 8 (p + (16 : BitVec 64)).toInt).At (label "runtime.fvBump").toBitVec)
         ⋆ Eq ((List.replicate (avail - 16) 0).At (p + (16 : BitVec 64))))
         ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec) ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S))
-          ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq ((init ++ [last]).At rax.toBitVec) ⋆ Eq ((List.replicate 16 0).At p) ⋆ F)) m1 := by
+          ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq ((init ++ [last]).At rax.toBitVec) ⋆ Eq ((List.replicate 16 0).At p) ⋆ vblRO ⋆ F)) m1 := by
       ecancel
     have H3 := sep_mono_left (P' := bumpHeap (avail - 16)) (fun m hm => ⟨p + (16 : BitVec 64), by omega, hm⟩) H2
-    refine ⟨by simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl], rfl, rfl, rfl, by simp, stk, spill, [], 0, avail - 16,
-      hstk, hsp, by simp, by simp; omega, by omega, ?_⟩
-    simp only [ErrStr, List.length_nil, rtvbl_obj0, vbl_nil_At_emp, Std.ExtHashMap.sep_emp,
+    refine ⟨by simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl], rfl, rfl, rfl, by simp, stk, spill, [], [], 0, avail - 16,
+      hstk, hsp, Or.inr ⟨rfl, by simp⟩, by simp; omega, by omega, ?_⟩
+    simp only [ErrObj, List.length_nil, rtvbl_obj0, vbl_nil_At_emp, Std.ExtHashMap.sep_emp,
       BitVec.ofInt_ofBytes_toBytes 64 8 rfl, Fk.ofInt_ofBytes_toBytes64] at H3 ⊢
     ecancel
   simp only [show (last == 0) = false by simpa using hz, Bool.false_eq_true, ↓reduceIte, Effects.All]
@@ -480,12 +519,12 @@ theorem rt_validate_bitlist_err (j : Nat) (hj : RtVbl.IsInfixAt Host.prog j) (hf
     have H2 : ((Eq ((Int.toBytes 8 (p + (16 : BitVec 64)).toInt).At (label "runtime.fvBump").toBitVec)
         ⋆ Eq ((List.replicate (avail - 16) 0).At (p + (16 : BitVec 64))))
         ⋆ (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At rsp.toBitVec) ⋆ Eq (stk.At (rsp.toBitVec - BitVec.ofNat 64 S))
-          ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq ((init ++ [last]).At rax.toBitVec) ⋆ Eq ((List.replicate 16 0).At p) ⋆ F)) m1 := by
+          ⋆ Eq (spill.At (rsp.toBitVec + 8)) ⋆ Eq ((init ++ [last]).At rax.toBitVec) ⋆ Eq ((List.replicate 16 0).At p) ⋆ vblRO ⋆ F)) m1 := by
       ecancel
     have H3 := sep_mono_left (P' := bumpHeap (avail - 16)) (fun m hm => ⟨p + (16 : BitVec 64), by omega, hm⟩) H2
-    refine ⟨by simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl], rfl, rfl, rfl, by simp, stk, spill, [], 0, avail - 16,
-      hstk, hsp, by simp, by simp; omega, by omega, ?_⟩
-    simp only [ErrStr, List.length_nil, rtvbl_obj0, vbl_nil_At_emp, Std.ExtHashMap.sep_emp,
+    refine ⟨by simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl], rfl, rfl, rfl, by simp, stk, spill, [], [], 0, avail - 16,
+      hstk, hsp, Or.inr ⟨rfl, by simp⟩, by simp; omega, by omega, ?_⟩
+    simp only [ErrObj, List.length_nil, rtvbl_obj0, vbl_nil_At_emp, Std.ExtHashMap.sep_emp,
       BitVec.ofInt_ofBytes_toBytes 64 8 rfl, Fk.ofInt_ofBytes_toBytes64] at H3 ⊢
     ecancel
   · exfalso; exact hinv ⟨by omega, hz, fun e => absurd e h257⟩

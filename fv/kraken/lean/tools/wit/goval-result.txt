@@ -34,12 +34,12 @@ OK  WitBlM257  dst                    ('0x101e1', 0, 261)                ok
 OK  WitBlM257  recv                   0x100c8                            ok: BitL size 24 align 8
 OK  WitBlM257  recv.B                 ('0x100e0', 257, 257)              ok
 OK  WitBlM257  chunks                 24 read, 0 not read                ok
-BAD WitBlR     rsp                    0x1015d                            rsp not 8-aligned
-OK  WitBlR     dst                    ('0x1032d', 0, 4)                  ok
-BAD WitBlR     recv                   0x10214                            BitL at 0x10214 not aligned to 8
-OK  WitBlR     recv.B                 ('0x1022c', 257, 257)              ok
-BAD WitBlR     itab+8                 0x0                                type word is not a pointer to a type descriptor in the block
-OK  WitBlR     chunks                 26 read, 0 not read                ok
+OK  WitBlR     rsp                    0x10168                            ok
+OK  WitBlR     dst                    ('0x10331', 0, 4)                  ok
+OK  WitBlR     recv                   0x10218                            ok: BitL size 24 align 8
+OK  WitBlR     recv.B                 ('0x10230', 257, 257)              ok
+OK  WitBlR     itab+8                 0x18370                            type word ok
+OK  WitBlR     chunks                 32 read, 0 not read                ok
 OK  WitBv      rsp                    0x10080                            ok
 OK  WitBv      buf                    ('0x10098', 1, 1)                  ok
 OK  WitBv      recv                   0x100a0                            ok: BitVec size 24 align 8
@@ -51,9 +51,9 @@ OK  WitBvM     recv                   0x10098                            ok: Bit
 OK  WitBvM     recv.J                 ('0x100b0', 1, 1)                  ok
 OK  WitBvM     chunks                 16 read, 0 not read                ok
 OK  WitBvR     rsp                    0x100a0                            ok
-OK  WitBvR     buf                    ('0x100db', 1, 1)                  ok
+OK  WitBvR     buf                    ('0x100df', 1, 1)                  ok
 OK  WitBvR     recv                   0                                  nil
-BAD WitBvR     itab+8                 0x0                                type word is not a pointer to a type descriptor in the block
+OK  WitBvR     itab+8                 0x16c60                            type word ok
 OK  WitBvR     chunks                 20 read, 0 not read                ok
 OK  WitCp      rsp                    0x10068                            ok
 OK  WitCp      buf                    ('0x10080', 40, 40)                ok
@@ -186,13 +186,13 @@ OK  WitLuMR    recv                   0x10048                            ok: Lis
 OK  WitLuMR    recv.L                 ('0x10068', 17, 17)                ok
 OK  WitLuMR    chunks                 12 read, 0 not read                ok
 OK  WitLuMa    rsp                    0x100b0                            ok
-OK  WitLuMa    buf                    ('0x100e1', 5, 5)                  ok
+OK  WitLuMa    buf                    ('0x100f5', 5, 5)                  ok
 OK  WitLuMa    recv                   0                                  nil
-OK  WitLuMa    chunks                 16 read, 1 not read                ok
+OK  WitLuMa    chunks                 17 read, 2 not read                ok
 OK  WitLuTb    rsp                    0x100b0                            ok
-OK  WitLuTb    buf                    ('0x100e1', 140, 140)              ok
+OK  WitLuTb    buf                    ('0x100f5', 140, 140)              ok
 OK  WitLuTb    recv                   0                                  nil
-OK  WitLuTb    chunks                 17 read, 1 not read                ok
+OK  WitLuTb    chunks                 18 read, 2 not read                ok
 OK  WitNe0     rsp                    0x101c0                            ok
 OK  WitNe0     buf                    ('0x10200', 32, 32)                ok
 OK  WitNe0     recv                   0x101e8                            ok: Nested size 24 align 8
@@ -345,4 +345,4 @@ OK  WitVbvR    rsp                    0x10060                            ok
 OK  WitVbvR    buf                    ('0x10070', 1, 1)                  ok
 OK  WitVbvR    chunks                 8 read, 1 not read                 ok
 --  Witness    -                      None                               not checked: no target or registers
-69 witness files, 2 with a violation, 2 with a value not checked
+69 witness files, 0 with a violation, 2 with a value not checked

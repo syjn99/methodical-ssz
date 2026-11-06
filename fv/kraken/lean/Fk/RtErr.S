@@ -7,5 +7,9 @@ L_fverr_args:
   mov $0x1,%eax
   retq
 runtime.convT64:
-  mov $0x1,%eax
+  mov runtime.fvBump(%rip),%rcx
+  lea 0x8(%rcx),%rdx
+  mov %rdx,runtime.fvBump(%rip)
+  mov %rax,(%rcx)
+  mov %rcx,%rax
   retq

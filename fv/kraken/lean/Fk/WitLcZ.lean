@@ -25,7 +25,7 @@ def dataLabels : Program :=
 def P : Program := dataLabels ++ ListCUnmarshalSSZ ++ RtErr ++ BumpNew16 ++ [Kraken.Directive.label "go_itab._errors.errorString_error"]
 
 set_option maxRecDepth 100000 in
-theorem P_len : P.length = 455 := by rfl
+theorem P_len : P.length = 459 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
 
@@ -42,17 +42,17 @@ theorem hk_rterr : RtErr.IsInfixAt Host.prog 437 := by
   exact ⟨BumpNew16 ++ [Kraken.Directive.label "go_itab._errors.errorString_error"], by rw [show P = (dataLabels ++ ListCUnmarshalSSZ) ++ (RtErr ++ BumpNew16 ++ [Kraken.Directive.label "go_itab._errors.errorString_error"]) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩
 
 set_option maxRecDepth 100000 in
-theorem hk_newobject : BumpNew16.IsInfixAt Host.prog 448 := by
+theorem hk_newobject : BumpNew16.IsInfixAt Host.prog 452 := by
   rw [prog_eq]
-  have h : (dataLabels ++ ListCUnmarshalSSZ ++ RtErr).length = 448 := by
-    simp only [List.length_append, show ListCUnmarshalSSZ.length = 432 from by rfl, show RtErr.length = 11 from by rfl]; rfl
+  have h : (dataLabels ++ ListCUnmarshalSSZ ++ RtErr).length = 452 := by
+    simp only [List.length_append, show ListCUnmarshalSSZ.length = 432 from by rfl, show RtErr.length = 15 from by rfl]; rfl
   exact ⟨[Kraken.Directive.label "go_itab._errors.errorString_error"], by rw [show P = (dataLabels ++ ListCUnmarshalSSZ ++ RtErr) ++ (BumpNew16 ++ [Kraken.Directive.label "go_itab._errors.errorString_error"]) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩
 
 set_option maxRecDepth 100000 in
-theorem hk_fnItab : [Kraken.Directive.label "go_itab._errors.errorString_error"].IsInfixAt Host.prog 454 := by
+theorem hk_fnItab : [Kraken.Directive.label "go_itab._errors.errorString_error"].IsInfixAt Host.prog 458 := by
   rw [prog_eq]
-  have h : (dataLabels ++ ListCUnmarshalSSZ ++ RtErr ++ BumpNew16).length = 454 := by
-    simp only [List.length_append, show ListCUnmarshalSSZ.length = 432 from by rfl, show RtErr.length = 11 from by rfl, show BumpNew16.length = 6 from by rfl]; rfl
+  have h : (dataLabels ++ ListCUnmarshalSSZ ++ RtErr ++ BumpNew16).length = 458 := by
+    simp only [List.length_append, show ListCUnmarshalSSZ.length = 432 from by rfl, show RtErr.length = 15 from by rfl, show BumpNew16.length = 6 from by rfl]; rfl
   exact ⟨[], by rw [show P = (dataLabels ++ ListCUnmarshalSSZ ++ RtErr ++ BumpNew16) ++ ([Kraken.Directive.label "go_itab._errors.errorString_error"] ++ []) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩
 
 set_option maxRecDepth 100000 in
@@ -62,14 +62,14 @@ set_option maxRecDepth 100000 in
 theorem hf_rterr : LabelsFresh RtErr 437 := labelsFresh_of (by rw [prog_eq]; decide)
 
 set_option maxRecDepth 100000 in
-theorem hf_newobject : ∀ i < 448, Host.prog[i]? ≠ some (.label "runtime.newobject") := by
-  have hl : "runtime.newobject" ∉ labs (P.take 448) := by decide
+theorem hf_newobject : ∀ i < 452, Host.prog[i]? ≠ some (.label "runtime.newobject") := by
+  have hl : "runtime.newobject" ∉ labs (P.take 452) := by decide
   intro i hi hp
   apply hl; apply mem_labs; rw [List.mem_iff_getElem?]
   exact ⟨i, by rw [List.getElem?_take, ite_eq_left_iff.mpr (fun h => absurd hi h)]; exact hp⟩
 
 set_option maxRecDepth 100000 in
-theorem hf_fnItab : LabelsFresh [Kraken.Directive.label "go_itab._errors.errorString_error"] 454 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf_fnItab : LabelsFresh [Kraken.Directive.label "go_itab._errors.errorString_error"] 458 := labelsFresh_of (by rw [prog_eq]; decide)
 
 set_option maxRecDepth 100000 in
 theorem label_wb : label "runtime.writeBarrier" = 0x10000 :=
@@ -141,8 +141,8 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
   exact congrFun (by ac_rfl) _
 
 set_option maxRecDepth 100000 in
-theorem label_itab : label "go_itab._errors.errorString_error" = 0x10000 + Int64.ofNat 454 :=
-  mk_label P _ 454 _ (by simp [P, dataLabels]; rfl) (by decide)
+theorem label_itab : label "go_itab._errors.errorString_error" = 0x10000 + Int64.ofNat 458 :=
+  mk_label P _ 458 _ (by simp [P, dataLabels]; rfl) (by decide)
 
 theorem hit : (label "go_itab._errors.errorString_error").toBitVec ≠ 0 := by rw [label_itab]; decide
 
@@ -158,7 +158,7 @@ theorem lc_reject_zero_runs (zmms : RegZmms) (flags : StatusFlags) :
       ⋆ Eq ((z 39059).At (label "go_string._" + 311).toBitVec) ⋆ fun _ => True) 8 (z 8) (z 40) rfl rfl bumpHeap 16 (Nat.le_refl _)
     (by have h := s_mem zmms flags; simp only [Std.ExtHashMap.sep_assoc] at h ⊢; exact h)
     (by simp [s0]) (by simp [s0]) (by simp [s0]) (by simp [s0]) (by simp [s0])
-    (rt_errorf_nil 437 hk_rterr hf_rterr 8) (bump_newobject16 448 hk_newobject hf_newobject _) hit)
+    (rt_errorf_nil 437 hk_rterr hf_rterr 8) (bump_newobject16 452 hk_newobject hf_newobject _) hit)
     (fun _ h => ⟨h.1, h.2.1⟩)
 
 end Fk.WitLcZ

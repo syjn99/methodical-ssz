@@ -24,7 +24,7 @@ def dataLabels : Program :=
 def P : Program := dataLabels ++ ValidateBitvector ++ RtErr ++ BumpNew16
 
 set_option maxRecDepth 100000 in
-theorem P_len : P.length = 95 := by rfl
+theorem P_len : P.length = 99 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
 
@@ -41,10 +41,10 @@ theorem hk_rterr : RtErr.IsInfixAt Host.prog 78 := by
   exact ⟨BumpNew16, by rw [show P = (dataLabels ++ ValidateBitvector) ++ (RtErr ++ BumpNew16) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩
 
 set_option maxRecDepth 100000 in
-theorem hk_newobject : BumpNew16.IsInfixAt Host.prog 89 := by
+theorem hk_newobject : BumpNew16.IsInfixAt Host.prog 93 := by
   rw [prog_eq]
-  have h : (dataLabels ++ ValidateBitvector ++ RtErr).length = 89 := by
-    simp only [List.length_append, show ValidateBitvector.length = 73 from by rfl, show RtErr.length = 11 from by rfl]; rfl
+  have h : (dataLabels ++ ValidateBitvector ++ RtErr).length = 93 := by
+    simp only [List.length_append, show ValidateBitvector.length = 73 from by rfl, show RtErr.length = 15 from by rfl]; rfl
   exact ⟨[], by rw [show P = (dataLabels ++ ValidateBitvector ++ RtErr) ++ (BumpNew16 ++ []) by simp only [P, List.append_assoc, List.append_nil], List.drop_left' h]; try simp only [List.append_assoc]⟩
 
 set_option maxRecDepth 100000 in
@@ -54,8 +54,8 @@ set_option maxRecDepth 100000 in
 theorem hf_rterr : LabelsFresh RtErr 78 := labelsFresh_of (by rw [prog_eq]; decide)
 
 set_option maxRecDepth 100000 in
-theorem hf_newobject : ∀ i < 89, Host.prog[i]? ≠ some (.label "runtime.newobject") := by
-  have hl : "runtime.newobject" ∉ labs (P.take 89) := by decide
+theorem hf_newobject : ∀ i < 93, Host.prog[i]? ≠ some (.label "runtime.newobject") := by
+  have hl : "runtime.newobject" ∉ labs (P.take 93) := by decide
   intro i hi hp
   apply hl; apply mem_labs; rw [List.mem_iff_getElem?]
   exact ⟨i, by rw [List.getElem?_take, ite_eq_left_iff.mpr (fun h => absurd hi h)]; exact hp⟩
@@ -137,7 +137,7 @@ theorem vbv_reject_pad_runs (b : UInt8) (hb : 16 ≤ b.toNat) (zmms : RegZmms) (
     (by have h := s_mem b zmms flags; simp only [Std.ExtHashMap.sep_assoc] at h ⊢; exact h)
     (by simp [s0]) (by simp [s0]) (by simp [s0]) (by simp [s0]) (by simp [s0])
     (by simp only [s0]; rw [Nat.shiftRight_eq_div_pow]; simp; omega)
-    (rt_errorf_nil 78 hk_rterr hf_rterr 0) (bump_newobject16 89 hk_newobject hf_newobject _))
+    (rt_errorf_nil 78 hk_rterr hf_rterr 0) (bump_newobject16 93 hk_newobject hf_newobject _))
     (fun _ h => ⟨h.1, h.2.1⟩)
 
 end Fk.WitVbvR

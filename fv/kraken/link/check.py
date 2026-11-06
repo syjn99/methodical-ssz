@@ -44,6 +44,10 @@ Checks (REPORT-1b, B1):
      Fk/*.lean is classified by declaration role (theorem over every Host or
      witness on one concrete host); a reference that is not a checked
      placement, a checked pointer, or witness fill/label fails.
+ (h) runtime data that the contracts fix (fix 2 X4): `luTW` (the `%d` type
+     word) is an abi.Type of size 8 and kind Int; the errorString itab's type
+     word points to an abi.Type of kind Pointer; `runtime.staticuint64s` is
+     the 2048-byte table of uint64 0..255 that `StaticBox` reads.
 The bundle hash (sha256 over RESULT up to and including the last PASS line,
 which covers the ELF, the .S files, Code.lean and AXIOMS.txt hashes) is the
 last line.
@@ -74,12 +78,18 @@ FMTS = [("LcReject.lean", "lcFmtZero", "fv/kraken/target/types1b.ssz.go", True),
         ("LcReject.lean", "lcFmtShort", "fv/kraken/target/types1b.ssz.go", True),
         ("Vbv.lean", "vbvFmt", "ssz/unmarshal.go", True),
         ("BvSpec.lean", "bvFmtJ", "fv/kraken/target/types1b.ssz.go", False),
-        ("BlMarshal.lean", "blFmtB", "fv/kraken/target/types1b.ssz.go", False)]
+        ("BlMarshal.lean", "blFmtB", "fv/kraken/target/types1b.ssz.go", False),
+        # fix 2 X5: the rodata messages of ssz.ValidateBitlist (vblRO)
+        ("Vbl.lean", "vblMsgE", "ssz/unmarshal.go", True),
+        ("Vbl.lean", "vblMsgZ", "ssz/unmarshal.go", True),
+        ("Vbl.lean", "vblMsgB", "ssz/unmarshal.go", True),
+        # fix 2 X4: the ListU64 formats are constants (no longer length only)
+        ("LuRejectCall.lean", "luFmtTooBig", "fv/kraken/target/types.ssz.go", False),
+        ("LuRejectCall.lean", "luFmtMis", "fv/kraken/target/types.ssz.go", False)]
 # (g): format strings that a statement places by length only (any bytes `fs`
 # with `fs.length = n`): (Lean file, go_string._ offset, n, Go source file).
 # The ELF bytes there must be a whole fmt.Errorf literal of the Go source.
-FMTLEN = [("LuRejectCall.lean", 40290, 56, "fv/kraken/target/types.ssz.go"),
-          ("LuRejectCall.lean", 42646, 68, "fv/kraken/target/types.ssz.go")]
+FMTLEN = []  # fix 2 X4: every format string the proofs use is a constant in FMTS
 
 
 def strip_lean_comments(txt):
@@ -463,6 +473,27 @@ def run(outdir, log, shash=True, shash_file=None, lean=None, fmts=None, goroot=N
     log(f"PASS (g) inventory: {len(refs)} go_string._ references in {len({r['file'] for r in refs})} files, "
         f"checked offsets {sorted(checked)}; witness fill and label references: "
         f"{sum(r['kind'] in ('fill', 'label') for r in refs)}")
+    # (h) runtime data the contracts fix (fix 2 X4): the int type word of the
+    # `%d` argument, the errorString itab's type word, the static box table.
+    luTW = re.search(r'def luTW : BitVec 64 := \(label "type__" \+ (\d+)\)\.toBitVec', src["LuRejectCall.lean"])
+    need(luTW, "(h) Lean luTW is not `(label \"type__\" + n).toBitVec`")
+    ta = esyms[orig("type__")][0] + int(luTW[1])
+    tsize, = struct.unpack("<Q", elf_bytes(b, secs, ta, 8))
+    tkind = elf_bytes(b, secs, ta + 23, 1)[0] & 0x1f
+    need((tsize, tkind) == (8, 2), f"(h) type__+{luTW[1]}: abi.Type size {tsize} kind {tkind}, want 8 and 2 (Int)")
+    log(f"PASS (h) luTW = type__+{luTW[1]} = {ta:#x}: abi.Type Size_ 8, Kind_ 2 (int)")
+    it = esyms[orig("go_itab._errors.errorString_error")][0]
+    tw, = struct.unpack("<Q", elf_bytes(b, secs, it + 8, 8))
+    pk = elf_bytes(b, secs, tw + 23, 1)[0] & 0x1f
+    need(pk == 22 and struct.unpack("<Q", elf_bytes(b, secs, tw, 8))[0] == 8,
+         f"(h) errorString itab+8 -> {tw:#x}: kind {pk}, want 22 (Pointer)")
+    log(f"PASS (h) go_itab._errors.errorString_error+8 = {tw:#x}: abi.Type Size_ 8, Kind_ 22 (pointer, *errors.errorString)")
+    need("runtime.staticuint64s" in esyms and esyms["runtime.staticuint64s"][1] == 2048, "(h) runtime.staticuint64s: no 2048-byte symbol")
+    sa = esyms["runtime.staticuint64s"][0]
+    need(elf_bytes(b, secs, sa, 2048) == b"".join(struct.pack("<Q", i) for i in range(256)),
+         "(h) runtime.staticuint64s is not [0, 1, ..., 255] as uint64")
+    need('(label "runtime.staticuint64s").toBitVec + 8 * v' in src["Contracts.lean"], "(h) StaticBox does not use staticuint64s + 8 v")
+    log(f"PASS (h) runtime.staticuint64s = {sa:#x}: 2048 bytes = uint64 0..255 (StaticBox v at + 8 v)")
     # (d) reassembly
     diffs = reassemble(per_fn, {g.split("+")[0]: orig(g.split("+")[0]) for g in externals}, esyms, b, secs, outdir)
     for name, a, kind, orig, new, txt in diffs:
@@ -695,7 +726,12 @@ def selftest(outdir):
         t = copy(); fk = leancopy(t); f = fk / "BlMarshal.lean"
         f.write_text(f.read_text().replace('blFmtB.At (label "go_string._" + 526)', 'blFmtB.At (label "go_string._" + 500 + 26)', 1))
         cases.append(("offset written as a sum", t, False))
-        # 24. unchanged copy passes (also the Lean copy)
+        # 24. (h) the %d type word names the uint64 descriptor (type__+49120, kind Uint64), not int
+        t = copy(); fk = leancopy(t); f = fk / "LuRejectCall.lean"
+        f.write_text(f.read_text().replace('def luTW : BitVec 64 := (label "type__" + 49184).toBitVec',
+                                           'def luTW : BitVec 64 := (label "type__" + 49120).toBitVec'))
+        cases.append(("luTW names another type", t, False))
+        # 25. unchanged copy passes (also the Lean copy)
         t = copy(); leancopy(t)
         cases.append(("unchanged copy", t, True))
         ok = True

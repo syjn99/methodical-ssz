@@ -92,9 +92,15 @@ PASS (g) go_string._+42000 (63 bytes) = Lean lcFmtShort = fv/kraken/target/types
 PASS (g) go_string._+27706 (35 bytes) = Lean vbvFmt = ssz/unmarshal.go lines [45]
 PASS (g) go_string._+511 (5 bytes) = Lean bvFmtJ = fv/kraken/target/types1b.ssz.go lines [26, 47]
 PASS (g) go_string._+526 (5 bytes) = Lean blFmtB = fv/kraken/target/types1b.ssz.go lines [339, 360]
-PASS (g) go_string._+40290 (56 bytes, length only in LuRejectCall.lean) = fv/kraken/target/types.ssz.go lines [249]
-PASS (g) go_string._+42646 (68 bytes, length only in LuRejectCall.lean) = fv/kraken/target/types.ssz.go lines [245]
-PASS (g) inventory: 64 go_string._ references in 14 files, checked offsets [511, 526, 27706, 39370, 40290, 42000, 42646]; witness fill and label references: 34
+PASS (g) go_string._+33605 (42 bytes) = Lean vblMsgE = ssz/unmarshal.go lines [21, 54]
+PASS (g) go_string._+13272 (21 bytes) = Lean vblMsgZ = ssz/unmarshal.go lines [24, 65]
+PASS (g) go_string._+5743 (13 bytes) = Lean vblMsgB = ssz/unmarshal.go lines [77]
+PASS (g) go_string._+40290 (56 bytes) = Lean luFmtTooBig = fv/kraken/target/types.ssz.go lines [249]
+PASS (g) go_string._+42646 (68 bytes) = Lean luFmtMis = fv/kraken/target/types.ssz.go lines [245]
+PASS (g) inventory: 80 go_string._ references in 15 files, checked offsets [511, 526, 5743, 13272, 27706, 33605, 39370, 40290, 42000, 42646]; witness fill and label references: 38
+PASS (h) luTW = type__+49184 = 0x4d0020: abi.Type Size_ 8, Kind_ 2 (int)
+PASS (h) go_itab._errors.errorString_error+8 = 0x4d4a00: abi.Type Size_ 8, Kind_ 22 (pointer, *errors.errorString)
+PASS (h) runtime.staticuint64s = 0x502740: 2048 bytes = uint64 0..255 (StaticBox v at + 8 v)
 DIFF (d) ssz.ValidateBitvector 0x4b661b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
 DIFF (d) ssz.ValidateBitlist 0x4b66f7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
 DIFF (d) ssz.ValidateBitlist 0x4b673c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
@@ -178,6 +184,6 @@ S sha256 3990b8f2369006c41c8475a817a075ada18b32ffd4de36397b5f3e079a39109a target
 S sha256 a77ac17b8695d617c2f3bd5a731d3572d7fb69c2e8827190d3a5dd3e36a83cb1 target_prysm.Checkpoint.SizeSSZ.S
 S sha256 bee62ab7dfa3da589159bdb47d767ba65cb09f7e8f64cec649e60aa3c026c78c target_prysm.Checkpoint.UnmarshalSSZ.S
 file sha256 c4d64cb9c7857dc3f055d669ba2da5c406572f40ddf0fbb22aabdd8cda7926de lean/Fk/Code.lean
-file sha256 d33110925d47e9ecd814808e0c5c99e280d799dcaad62ffa6873187e2679a18e AXIOMS.txt
+file sha256 5bbb84cdf83f167cea196acde66a17713b0be78d08da502d0fdcf36664662eeb AXIOMS.txt
 PASS all
-BUNDLE sha256 d4b5863602f1a2a8f33727ed9368def204cbebf7565f69295506fe3e87908261
+BUNDLE sha256 a381854a663306e2e93e94db9f11fc5e676bcc42566a1b50951d49b068812012

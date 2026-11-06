@@ -31,7 +31,7 @@ def P : Program :=
     ++ BumpAlloc1 ++ RtCopy ++ BumpNew16 ++ RtErr ++ RtVbl
 
 set_option maxRecDepth 100000 in
-theorem P_len : P.length = 72 := by rfl
+theorem P_len : P.length = 76 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
 theorem prog_eq : Host.prog = P := rfl
@@ -49,7 +49,7 @@ set_option maxRecDepth 100000 in
 theorem hkE : RtErr.IsInfixAt Host.prog 40 := by
   rw [prog_eq]; exact ⟨RtVbl, by rfl⟩
 set_option maxRecDepth 100000 in
-theorem hkV : RtVbl.IsInfixAt Host.prog 51 := by
+theorem hkV : RtVbl.IsInfixAt Host.prog 55 := by
   rw [prog_eq]; exact ⟨[], by rfl⟩
 
 set_option maxRecDepth 100000 in
@@ -57,7 +57,7 @@ theorem hfC : LabelsFresh RtCopy 8 := labelsFresh_of (by rw [prog_eq]; decide)
 set_option maxRecDepth 100000 in
 theorem hfE : LabelsFresh RtErr 40 := labelsFresh_of (by rw [prog_eq]; decide)
 set_option maxRecDepth 100000 in
-theorem hfV : LabelsFresh RtVbl 51 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hfV : LabelsFresh RtVbl 55 := labelsFresh_of (by rw [prog_eq]; decide)
 
 set_option maxRecDepth 100000 in
 theorem hfM : ∀ i < 2, Host.prog[i]? ≠ some (.label "runtime.makeslice") := by
@@ -77,21 +77,29 @@ theorem label_itab : label "go_itab._errors.errorString_error" = 0x10000 + 1 :=
   mk_label P _ 1 _ (by simp [P]) (by decide)
 theorem hit : (label "go_itab._errors.errorString_error").toBitVec ≠ 0 := by rw [label_itab]; decide
 
-/-- The nine contracts used by the theorems, in one host and one heap
-(re-proof fix X5: `FmtErrorfWC` replaced `FmtErrorfC`; `ValidateBitlistErrC` added). -/
-def Joint (S : Nat) (ty : BitVec 64) : Prop :=
+/-- The ten contracts used by the theorems, in one host and one heap
+(re-proof fix X5; fix 2 X4/X5: the fmt contracts take their fixed format,
+read-only resource and message source as arguments, `FmtErrorfDWC` added,
+`ConvT64C` returns a box on the bump heap, `ValidateBitlistErrC` keeps the
+rodata messages `vblRO`). Every format and resource argument at once. -/
+def Joint (S : Nat) (ty : BitVec 64) (fs : List UInt8) (RO : DataMem → Prop)
+    (MsgIn : BitVec 64 → List UInt8 → List UInt8 → Prop) (fs2 : List UInt8) (tw : BitVec 64) : Prop :=
   MakesliceC bumpHeap ty 1 S ∧ MemmoveC S ∧ GrowsliceC bumpHeap ty 1 S ∧ NewobjectC bumpHeap ty 16 S
-    ∧ FmtErrorfNilC S ∧ FmtErrorfWC bumpHeap S ∧ ConvT64C bumpHeap S
+    ∧ FmtErrorfNilC S ∧ FmtErrorfWC bumpHeap fs RO MsgIn S ∧ FmtErrorfDWC bumpHeap fs2 tw S ∧ ConvT64C bumpHeap S
     ∧ ValidateBitlistC S ∧ ValidateBitlistErrC bumpHeap S
 
-theorem joint_models (S : Nat) (ty : BitVec 64) : Joint S ty :=
+theorem joint_models (S : Nat) (ty : BitVec 64) (fs : List UInt8) (RO : DataMem → Prop)
+    (MsgIn : BitVec 64 → List UInt8 → List UInt8 → Prop) (fs2 : List UInt8) (tw : BitVec 64) :
+    Joint S ty fs RO MsgIn fs2 tw :=
   ⟨bump_makeslice1 2 hkM hfM ty, rt_memmove 8 hkC hfC S, rt_growslice 8 hkC hfC ty S,
     bump_newobject16 34 hkN hfN ty, rt_errorf_nil 40 hkE hfE S,
-    rt_errorf_w 40 hkE hfE bumpHeap S, rt_convT64 40 hkE hfE bumpHeap S, rt_validate_bitlist 51 hkV hfV S,
-    rt_validate_bitlist_err 51 hkV hfV S⟩
+    rt_errorf_w 40 hkE hfE bumpHeap fs RO MsgIn S, rt_errorf_dw 40 hkE hfE bumpHeap fs2 tw S,
+    rt_convT64 40 hkE hfE S, rt_validate_bitlist 55 hkV hfV S, rt_validate_bitlist_err 55 hkV hfV S⟩
 
-theorem not_joint_false (S : Nat) (ty : BitVec 64) : ¬ (Joint S ty → False) :=
-  fun h => h (joint_models S ty)
+theorem not_joint_false (S : Nat) (ty : BitVec 64) (fs : List UInt8) (RO : DataMem → Prop)
+    (MsgIn : BitVec 64 → List UInt8 → List UInt8 → Prop) (fs2 : List UInt8) (tw : BitVec 64) :
+    ¬ (Joint S ty fs RO MsgIn fs2 tw → False) :=
+  fun h => h (joint_models S ty fs RO MsgIn fs2 tw)
 
 end Fk.Regress
 

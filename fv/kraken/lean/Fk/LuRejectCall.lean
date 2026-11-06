@@ -6,10 +6,11 @@ import Fk.Frame
 # ListU64.UnmarshalSSZ reject paths through `fmt.errorf`, on Kraken main
 
 - `lu_reject_toobig_main`: offset 4, len = 4 + 8n with n > 16 → the error from
-  `fmt.errorf` (contract `FmtErrorfWC`: the `%w` argument is the global errorString,
-  non-nil, rax ≠ 0; re-proof fix X5).
+  `fmt.errorf` (contract `FmtErrorfDWC` for the constant format `luFmtTooBig`:
+  the `%d` argument is the `convT64` box of n with the `type:int` word, the
+  `%w` argument the global errorString; rax ≠ 0; fix 2 X4).
 - `lu_reject_misaligned_main`: offset 4, (len − 4) mod 8 ≠ 0 → same.
-Both call `runtime.convT64` (contract `ConvT64C`) to box the count, read the
+Both call `runtime.convT64` (contract `ConvT64C`, the box and its bytes) to box the count, read the
 error global (`ssz.ErrListTooBig` / `ssz.ErrIncorrectListSize`, two words, and
 the word at itab + 8 when the itab word is non-zero), store X15 (Go ABI: zero)
 into the argument array, and return with rsp + 8 and rbp restored; the
@@ -18,6 +19,21 @@ receiver is in the frame `R`, kept by the post (not written).
 
 open Fk Fk.Code
 variable [Host]
+
+-- "ssz-max exceeded: c.L has %d elements, ssz-max is 16: %w" (types.ssz.go, fix 2 X4: the format is a constant)
+def luFmtTooBig : List UInt8 :=
+  [115, 115, 122, 45, 109, 97, 120, 32, 101, 120, 99, 101, 101, 100, 101, 100, 58, 32, 99, 46, 76, 32, 104, 97, 115, 32, 37, 100, 32, 101, 108, 101, 109, 101, 110, 116, 115, 44, 32, 115, 115, 122, 45, 109, 97, 120, 32, 105, 115, 32, 49, 54, 58, 32, 37, 119]
+theorem luFmtTooBig_len : luFmtTooBig.length = 56 := by rfl
+-- "misaligned bytes: c.L length is %d, which is not a multiple of 8: %w"
+def luFmtMis : List UInt8 :=
+  [109, 105, 115, 97, 108, 105, 103, 110, 101, 100, 32, 98, 121, 116, 101, 115, 58, 32, 99, 46, 76, 32, 108, 101, 110, 103, 116, 104, 32, 105, 115, 32, 37, 100, 44, 32, 119, 104, 105, 99, 104, 32, 105, 115, 32, 110, 111, 116, 32, 97, 32, 109, 117, 108, 116, 105, 112, 108, 101, 32, 111, 102, 32, 56, 58, 32, 37, 119]
+theorem luFmtMis_len : luFmtMis.length = 68 := by rfl
+
+/-- The type word of the `%d` argument: Go's `type:int` descriptor
+(`lea type__+49184`; `link/check.py` (h) checks its kind and size in the ELF). -/
+def luTW : BitVec 64 := (label "type__" + 49184).toBitVec
+
+theorem staticBox_congr {x y : BitVec 64} (h : x = y) : StaticBox x = StaticBox y := h ▸ rfl
 
 theorem and7_ne (x : BitVec 64) (h4 : 4 ≤ x.toNat) (h : (x.toNat - 4) % 8 ≠ 0) : (-4 + x) &&& 7 ≠ 0#64 := by
   intro h0
@@ -105,10 +121,10 @@ theorem lu_reject_toobig_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host
     (hei : e0.toBitVec = (label "go_itab._errors.errorString_error").toBitVec) (esp : BitVec 64) (msg : List UInt8)
     (fp s98 a40 a50 rslot : List UInt8) (hfp : fp.length = 8) (h98 : s98.length = 8)
     (ha40 : a40.length = 16) (ha50 : a50.length = 16) (hrs : rslot.length = 8)
-    (R : DataMem → Prop) (S : Nat) (scratch spl fs : List UInt8) (hsc : scratch.length = S)
-    (hspl : spl.length = 40) (hfs : fs.length = 56)
-    (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : 8 ≤ avail) (hbud : msg.length + 8268 ≤ avail)
-    (h_mem : s.dmem =⋆ Eq (spl.At (s.regs.rsp.toBitVec - 136)) ⋆ Eq (fs.At (label "go_string._" + 40290).toBitVec) ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+    (R : DataMem → Prop) (S : Nat) (scratch spl : List UInt8) (hsc : scratch.length = S)
+    (hspl : spl.length = 40)
+    (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : 8 ≤ avail) (hbud : msg.length + 8276 ≤ avail)
+    (h_mem : s.dmem =⋆ Eq (spl.At (s.regs.rsp.toBitVec - 136)) ⋆ Eq (luFmtTooBig.At (label "go_string._" + 40290).toBitVec) ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s98.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq (a40.At (s.regs.rsp.toBitVec - 72)) ⋆ Eq (a50.At (s.regs.rsp.toBitVec - 56))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 144)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 144 - BitVec.ofNat 64 S))
@@ -117,10 +133,10 @@ theorem lu_reject_toobig_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host
       ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec)
       ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At (label "ssz.ErrListTooBig").toBitVec)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrListTooBig" + 8).toBitVec)
-      ⋆ Eq ((Int.toBytes 8 t8.toBitVec.toInt).At (e0.toBitVec + 8)) ⋆ ErrStr e1.toBitVec esp msg ⋆ R)
+      ⋆ Eq ((Int.toBytes 8 t8.toBitVec.toInt).At (e0.toBitVec + 8)) ⋆ ErrStr e1.toBitVec esp msg ⋆ StaticBox (BitVec.ofNat 64 n) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat - 8) (hsp : 144 ≤ s.regs.rsp.toNat)
     (hlen : s.regs.rcx.toNat = 4 + 8 * n)
-    (hcv : ConvT64C Heap S) (hfe : FmtErrorfWC Heap S) :
+    (hcv : ConvT64C Heap S) (hfe : FmtErrorfDWC Heap luFmtTooBig luTW S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
@@ -227,8 +243,12 @@ theorem lu_reject_toobig_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host
   rw [← List.take_append_drop 8 spl, at_app (spl.take 8) (spl.drop 8) (a := rsp.toBitVec - 136)
     (b := rsp.toBitVec - 128) (by simp [hspl]; bv_omega) (by simp [hspl])] at H5
   refine eventually_trans _ _ _ _ (hcv _ (Host.addrOf (k + 58 + 1)) avail scratch (spl.take 8) _ hav hsc
-    (by simp [hspl]) (by dsimp only; rw [hA]; ecancel)) ?_
-  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, hrax1, stk1, sp1, av1, hstk1, hsp1, hav1, hav1', Hm1⟩
+    (by simp [hspl]) (by
+      try dsimp only
+      rw [hA, staticBox_congr (y := BitVec.ofNat 64 n) ?hv]
+      · ecancel
+      · first | bv_omega | (apply BitVec.eq_of_toNat_eq; rw [shr3_toNat' _ _ hlen]; simp; omega))) ?_
+  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, stk1, sp1, hb1, av1, hstk1, hsp1, hbox1, hav1, hav1', Hm1⟩
   dsimp only at hpc1 hrsp1 Hm1
   subst hpc1
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
@@ -295,13 +315,13 @@ theorem lu_reject_toobig_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host
   kunfold
   rw [lr_c144] at *
   rw [← hA] at H10
-  refine eventually_trans _ _ _ _ (hfe _ (Host.addrOf (k + 76 + 1)) av1 fs
-    (Int.toBytes 8 (label "type__" + 49184).toBitVec.toInt ++ Int.toBytes 8 rax1.toBitVec.toInt)
-    (Int.toBytes 8 t8.toBitVec.toInt) msg stk1 (sp1 ++ spl.drop 8) e1.toBitVec esp _
-    (by rw [hfs]; rfl) (by simp only []; decide) rfl (by simp only [List.length_append, Int.toBytes_length]; decide)
-    (Int.toBytes_length 8 _) hstk1 (by simp [hsp1, hspl]) (by rw [hfs]; omega)
+  refine eventually_trans _ _ _ _ (hfe _ (Host.addrOf (k + 76 + 1)) av1
+    (Int.toBytes 8 t8.toBitVec.toInt) msg hb1 stk1 (sp1 ++ spl.drop 8) rax1.toBitVec _ e1.toBitVec esp _
+    (by rw [luFmtTooBig_len]; rfl) (by first | rfl | decide) (by first | rfl | decide)
+    (Int.toBytes_length 8 _) hbox1 hstk1 (by simp [hsp1, hspl]) (by rw [luFmtTooBig_len]; omega)
     (by dsimp only
         rw [← hei]
+        simp only [luTW]
         simp only [List.append_assoc]
         try simp only [lr_b144, lr_c64]
         rw [at_app sp1 (spl.drop 8) (b := rsp.toBitVec - 128) (by rw [hsp1]; bv_omega) (by simp [hsp1, hspl]),
@@ -359,10 +379,10 @@ theorem lu_reject_misaligned_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt 
     (hei : e0.toBitVec = (label "go_itab._errors.errorString_error").toBitVec) (esp : BitVec 64) (msg : List UInt8)
     (fp s98 a40 a50 rslot : List UInt8) (hfp : fp.length = 8) (h98 : s98.length = 8)
     (ha40 : a40.length = 16) (ha50 : a50.length = 16) (hrs : rslot.length = 8)
-    (R : DataMem → Prop) (S : Nat) (scratch spl fs : List UInt8) (hsc : scratch.length = S)
-    (hspl : spl.length = 40) (hfs : fs.length = 68)
-    (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : 8 ≤ avail) (hbud : msg.length + 8268 ≤ avail)
-    (h_mem : s.dmem =⋆ Eq (spl.At (s.regs.rsp.toBitVec - 136)) ⋆ Eq (fs.At (label "go_string._" + 42646).toBitVec) ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+    (R : DataMem → Prop) (S : Nat) (scratch spl : List UInt8) (hsc : scratch.length = S)
+    (hspl : spl.length = 40)
+    (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : 8 ≤ avail) (hbud : msg.length + 8288 ≤ avail)
+    (h_mem : s.dmem =⋆ Eq (spl.At (s.regs.rsp.toBitVec - 136)) ⋆ Eq (luFmtMis.At (label "go_string._" + 42646).toBitVec) ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s98.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq (a40.At (s.regs.rsp.toBitVec - 40)) ⋆ Eq (a50.At (s.regs.rsp.toBitVec - 24))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 144)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 144 - BitVec.ofNat 64 S))
@@ -371,10 +391,10 @@ theorem lu_reject_misaligned_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt 
       ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec)
       ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At (label "ssz.ErrIncorrectListSize").toBitVec)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrIncorrectListSize" + 8).toBitVec)
-      ⋆ Eq ((Int.toBytes 8 t8.toBitVec.toInt).At (e0.toBitVec + 8)) ⋆ ErrStr e1.toBitVec esp msg ⋆ R)
+      ⋆ Eq ((Int.toBytes 8 t8.toBitVec.toInt).At (e0.toBitVec + 8)) ⋆ ErrStr e1.toBitVec esp msg ⋆ StaticBox (s.regs.rcx.toBitVec - 4) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat - 8) (hsp : 144 ≤ s.regs.rsp.toNat)
     (hlen : 4 ≤ s.regs.rcx.toNat) (hmis : (s.regs.rcx.toNat - 4) % 8 ≠ 0)
-    (hcv : ConvT64C Heap S) (hfe : FmtErrorfWC Heap S) :
+    (hcv : ConvT64C Heap S) (hfe : FmtErrorfDWC Heap luFmtMis luTW S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
@@ -382,6 +402,8 @@ theorem lu_reject_misaligned_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt 
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hsp hlen hmis ⊢
+  -- the static box is an opaque atom for ecancel (its argument `-4 + rcx` made ecancel loop)
+  generalize hSB : StaticBox (rcx.toBitVec - 4) = SB at h_mem
   have := rsp.toNat_lt_size; have := guard.toNat_lt_size; have := rcx.toNat_lt_size
   simp only [UInt64.size] at *
   kat hk ListU64UnmarshalSSZ 0
@@ -473,9 +495,16 @@ theorem lu_reject_misaligned_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt 
   rw [← List.take_append_drop 8 spl, at_app (spl.take 8) (spl.drop 8) (a := rsp.toBitVec - 136)
     (b := rsp.toBitVec - 128) (by simp [hspl]; bv_omega) (by simp [hspl])] at H5
   refine eventually_trans _ _ _ _ (hcv _ (Host.addrOf (k + 97 + 1)) avail scratch (spl.take 8) _ hav hsc
-    (by simp [hspl]) (by dsimp only; rw [hA]; ecancel)) ?_
-  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, hrax1, stk1, sp1, av1, hstk1, hsp1, hav1, hav1', Hm1⟩
+    (by simp [hspl]) (by
+      try dsimp only
+      rw [hA, staticBox_congr (y := rcx.toBitVec - 4) ?hv, hSB]
+      · ecancel
+      · rw [BitVec.add_comm, ← BitVec.sub_eq_add_neg])) ?_
+  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, stk1, sp1, hb1, av1, hstk1, hsp1, hbox1, hav1, hav1', Hm1⟩
   dsimp only at hpc1 hrsp1 Hm1
+  have hv4 : -4 + rcx.toBitVec = rcx.toBitVec - 4 := by rw [BitVec.add_comm, ← BitVec.sub_eq_add_neg]
+  rw [hv4] at hbox1
+  rw [staticBox_congr hv4, hSB] at Hm1
   subst hpc1
   obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
     zmms1, flags1, mem1⟩ := d1
@@ -487,7 +516,7 @@ theorem lu_reject_misaligned_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt 
   kat hk ListU64UnmarshalSSZ 98
   kat hk ListU64UnmarshalSSZ 99
   rw [lr_b144, lr_g96]
-  apply store_step _ _ _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) _ _ (by ecancel) (by simp [Int.toBytes_length])
+  apply store_step _ _ _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) _ _ (by ecancel) (by rw [List.length_take, Int.toBytes_length]; rfl)
   intro m6 H6
   simp only [Width.bytes, Width.bits] at H6
   kunfold
@@ -541,13 +570,13 @@ theorem lu_reject_misaligned_main (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt 
   kunfold
   rw [lr_c144] at *
   rw [← hA] at H10
-  refine eventually_trans _ _ _ _ (hfe _ (Host.addrOf (k + 115 + 1)) av1 fs
-    (Int.toBytes 8 (label "type__" + 49184).toBitVec.toInt ++ Int.toBytes 8 rax1.toBitVec.toInt)
-    (Int.toBytes 8 t8.toBitVec.toInt) msg stk1 (sp1 ++ spl.drop 8) e1.toBitVec esp _
-    (by rw [hfs]; rfl) (by simp only []; decide) rfl (by simp only [List.length_append, Int.toBytes_length]; decide)
-    (Int.toBytes_length 8 _) hstk1 (by simp [hsp1, hspl]) (by rw [hfs]; omega)
+  refine eventually_trans _ _ _ _ (hfe _ (Host.addrOf (k + 115 + 1)) av1
+    (Int.toBytes 8 t8.toBitVec.toInt) msg hb1 stk1 (sp1 ++ spl.drop 8) rax1.toBitVec _ e1.toBitVec esp _
+    (by rw [luFmtMis_len]; rfl) (by first | rfl | decide) (by first | rfl | decide)
+    (Int.toBytes_length 8 _) hbox1 hstk1 (by simp [hsp1, hspl]) (by rw [luFmtMis_len]; omega)
     (by dsimp only
-        rw [← hei]
+        rw [← hei, hSB]
+        simp only [luTW]
         simp only [List.append_assoc]
         try simp only [lr_b144, lr_g96]
         rw [at_app sp1 (spl.drop 8) (b := rsp.toBitVec - 128) (by rw [hsp1]; bv_omega) (by simp [hsp1, hspl]),

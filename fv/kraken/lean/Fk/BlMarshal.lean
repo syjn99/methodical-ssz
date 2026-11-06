@@ -383,11 +383,11 @@ theorem bl_marshal_reject_main (k : Nat) (hk : BitLMarshalSSZTo.IsInfixAt Host.p
       ⋆ Eq ((Int.toBytes 8 c.toInt).At (s.regs.rax.toBitVec + 16)) ⋆ Eq (bl.At q)
       ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
       ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
-      ⋆ Eq (blFmtB.At (label "go_string._" + 526).toBitVec) ⋆ Heap avail ⋆ R)
+      ⋆ Eq (blFmtB.At (label "go_string._" + 526).toBitVec) ⋆ vblRO ⋆ Heap avail ⋆ R)
     (hguard : guard.toNat + 24 < s.regs.rsp.toNat) (hsp : 160 + S ≤ s.regs.rsp.toNat)
     (hcap : s.regs.rcx.toNat + 4 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
     (hbl : bl.length < 2 ^ 63) (hit : (label "go_itab._errors.errorString_error").toBitVec ≠ 0)
-    (hav : 16640 ≤ avail) (hvbl : ValidateBitlistErrC Heap S) (hfe : FmtErrorfWC Heap S) :
+    (hav : 16640 ≤ avail) (hvbl : ValidateBitlistErrC Heap S) (hfe : FmtErrorfWC Heap blFmtB vblRO VblMsg S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rdi ≠ 0
@@ -486,7 +486,7 @@ theorem bl_marshal_reject_main (k : Nat) (hk : BitLMarshalSSZTo.IsInfixAt Host.p
   · dsimp only; simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
     first | (rw [UInt64.toNat_ofNat]; omega) | (simp [UInt64.toNat_ofNat]; omega) | (show (UInt64.ofNat bl.length).toNat = bl.length; simp; omega)
   · dsimp only; rfl
-  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hr142, hrbp2, hrax2, stk2, spl2, msg, esp, av2, hstk2, hspl2, hmsg, -, hav2, Hm2⟩
+  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hr142, hrbp2, hrax2, stk2, spl2, msg, hm, esp, av2, hstk2, hspl2, hmsg, -, hav2, Hm2⟩
   dsimp only at hpc2 hrsp2 hr142 hrbp2 hrax2 Hm2
   subst hpc2
   obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,
@@ -551,14 +551,14 @@ theorem bl_marshal_reject_main (k : Nat) (hk : BitLMarshalSSZTo.IsInfixAt Host.p
   have hC : Eq ((spl2 ++ sp8).At (rsp.toBitVec - 160 + 8))
       = Eq (spl2.At (rsp.toBitVec - 152)) ⋆ Eq (sp8.At (rsp.toBitVec - 120)) := by
     rw [blk_sp]; exact at_app _ _ (by rw [hspl2]; bv_omega) (by simp [hspl2, hsp8])
-  refine eventually_trans _ _ _ _ (hfe _ (Host.addrOf (k + 47 + 1)) av2 blFmtB [] ity msg
-    stk2 (spl2 ++ sp8) rbx2.toBitVec esp _ ?f1 ?f2 ?f3 ?f4 hity hstk2 (by simp [hspl2, hsp8])
+  have hml := hmsg.len
+  refine eventually_trans _ _ _ _ (hfe _ (Host.addrOf (k + 47 + 1)) av2 ity msg hm
+    stk2 (spl2 ++ sp8) rbx2.toBitVec esp _ ?f1 ?f2 ?f3 hity hmsg hstk2 (by simp [hspl2, hsp8])
     (by rw [blFmtB_len]; omega)
-    (by dsimp only; simp only [List.nil_append]; rw [hA, hC]; ecancel)) ?_
+    (by dsimp only; rw [hA, hC]; ecancel)) ?_
   case f1 => dsimp only; rfl
-  case f2 => dsimp only; decide
-  case f3 => dsimp only
-  case f4 => dsimp only; simp; decide
+  case f2 => dsimp only; first | rfl | decide
+  case f3 => dsimp only; first | rfl | decide
   rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, -, hrax3, stk3, sp3, av3, hstk3, hsp3, hav3, Hm3⟩
   dsimp only at hpc3 hrsp3 hrax3 Hm3
   subst hpc3
@@ -653,11 +653,11 @@ theorem bl_marshal_overlong_rejected (k : Nat) (hk : BitLMarshalSSZTo.IsInfixAt 
       ⋆ Eq ((Int.toBytes 8 c.toInt).At (s.regs.rax.toBitVec + 16)) ⋆ Eq (Fv1.blOverlong.toList.At q)
       ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
       ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
-      ⋆ Eq (blFmtB.At (label "go_string._" + 526).toBitVec) ⋆ Heap avail ⋆ R)
+      ⋆ Eq (blFmtB.At (label "go_string._" + 526).toBitVec) ⋆ vblRO ⋆ Heap avail ⋆ R)
     (hguard : guard.toNat + 24 < s.regs.rsp.toNat) (hsp : 160 + S ≤ s.regs.rsp.toNat)
     (hcap : s.regs.rcx.toNat + 4 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
     (hit : (label "go_itab._errors.errorString_error").toBitVec ≠ 0)
-    (hav : 16640 ≤ avail) (hvbl : ValidateBitlistErrC Heap S) (hfe : FmtErrorfWC Heap S) :
+    (hav : 16640 ≤ avail) (hvbl : ValidateBitlistErrC Heap S) (hfe : FmtErrorfWC Heap blFmtB vblRO VblMsg S) :
     (∃ e, EthLib.Serialization.Ssz.deserialize Fv1.blDesc (#[4, 0, 0, 0] ++ Fv1.blOverlong) = .error e) ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
