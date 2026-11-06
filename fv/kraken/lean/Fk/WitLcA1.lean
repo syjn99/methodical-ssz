@@ -6,8 +6,8 @@ import Fk.WHost
 /-!
 # Premise witness of `lc_accept_main` (re-proof fix X8), 1 elements
 
-ListC.UnmarshalSSZ on 1 empty ListU64 elements (8 list bytes after the
-container offset). Host: data labels, the real ListC.UnmarshalSSZ (index 5),
+ListC.UnmarshalSSZ on 1 ListU64 elements of lengths [0] (8 list bytes
+after the container offset; element j holds 1..m). Host: data labels, the real ListC.UnmarshalSSZ (index 5),
 the real ListU64.UnmarshalSSZ (`LuUAccC` by `lu_uacc_holds`, not assumed), the
 bump `runtime.makeslice` (8-byte elements; the pointer array and the element
 lists) and the 24-byte bump `runtime.newobject` (the elements), on one heap
@@ -85,17 +85,25 @@ theorem label_bump : label "runtime.fvBump" = 0x10004 :=
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 
-/-- The list bytes: 1 offsets, then 1 empty ListU64 encodings. -/
+/-- The list bytes: 1 offsets, then 1 ListU64 encodings (lengths [0]). -/
 def lcTl : List UInt8 := [4, 0, 0, 0, 4, 0, 0, 0]
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 16000000 in
 theorem lcTl_t0 : (lcTl.take 4).length = 4 := by decide
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 16000000 in
 theorem lcTl_t1 : (lcTl.drop 4).length = 4 := by decide
-theorem lcTl_parts : ∀ i (hi : i < (List.replicate 1 (⟨[]⟩ : ListU64)).length), (lcTl.drop (lcStart (List.replicate 1 (⟨[]⟩ : ListU64)) i)).take (4 + 8 * (List.replicate 1 (⟨[]⟩ : ListU64))[i].l.length)
-    = [4, 0, 0, 0] ++ (u64Bytes (List.replicate 1 (⟨[]⟩ : ListU64))[i].l).toList := by
-  intro i hi; simp only [List.length_replicate] at hi
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 16000000 in
+theorem lcTl_parts : ∀ i (hi : i < ([(⟨[]⟩ : ListU64)]).length), (lcTl.drop (lcStart ([(⟨[]⟩ : ListU64)]) i)).take (4 + 8 * ([(⟨[]⟩ : ListU64)])[i].l.length)
+    = [4, 0, 0, 0] ++ (u64Bytes ([(⟨[]⟩ : ListU64)])[i].l).toList := by
+  intro i hi; simp only [List.length_cons, List.length_nil] at hi
   match i, hi with | 0, _ => rfl | _ + 1, h => omega
-theorem lcTl_nexts : ∀ i, i + 1 < (List.replicate 1 (⟨[]⟩ : ListU64)).length → (lcTl.drop (4 * (i + 1))).take 4
-    = (uintBytes 4 (lcStart (List.replicate 1 (⟨[]⟩ : ListU64)) (i + 1))).toList := by
-  intro i hi; simp only [List.length_replicate] at hi
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 16000000 in
+theorem lcTl_nexts : ∀ i, i + 1 < ([(⟨[]⟩ : ListU64)]).length → (lcTl.drop (4 * (i + 1))).take 4
+    = (uintBytes 4 (lcStart ([(⟨[]⟩ : ListU64)]) (i + 1))).toList := by
+  intro i hi; simp only [List.length_cons, List.length_nil] at hi
   match i, hi with  | _ + 0, h => omega
 
 def block  : List UInt8 :=
@@ -175,6 +183,7 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
   exact congrFun (by ac_rfl) _
 
 set_option maxHeartbeats 16000000 in
+set_option maxRecDepth 100000 in
 /-- **Non-vacuity of `lc_accept_main`** (1 elements). Every premise holds in
 this host: makeslice by `bump_makeslice`, newobject by `bump_newobject24`,
 `LuUAccC` by `lu_uacc_holds` on the callee code. The decoder returns nil. -/
@@ -182,7 +191,7 @@ theorem lc_accept_runs (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0)
       ⟨s0 zmms flags, Host.addrOf 5⟩ :=
-  eventually_mono (lc_accept_main 5 hk_target hf_target lcTl 8 (List.replicate 1 (⟨[]⟩ : ListU64)) (by simp [ListU64.ok]) (by decide) (by decide) (by decide)
+  eventually_mono (lc_accept_main 5 hk_target hf_target lcTl 8 ([(⟨[]⟩ : ListU64)]) (by simp [ListU64.ok]) (by decide) (by decide) (by decide)
     (by decide) (by decide) (by decide) lcTl_parts lcTl_nexts
     (s0 zmms flags) 0 0
     (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 144) (z 8) (z 8) (z 8)

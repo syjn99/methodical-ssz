@@ -59,3 +59,13 @@ all of them. A value the script cannot read is "not checked" (counted).
 chunk start at `wgen.CH0` = 0x10010 (8-aligned). `wgen.aligned` inserts gap
 chunks before the named chunks. `WitCp`, `WitFv`, `WitAd` have no generator;
 they were shifted once by the same 4-byte gap (the files are the record).
+
+## ListC with non-empty elements (re-proof fix 2, X6)
+
+    python3 tools/wit/wlca.py tools/wit 1 1x1             # Fk/WitLcA1x1.lean: 1 element of length 1
+    python3 tools/wit/wlca.py tools/wit 16,16,16,16 4x16  # Fk/WitLcA4x16.lean: 4 elements of length 16 (max)
+    python3 tools/wit/wlca.py tools/wit 0,1,16 Mix        # Fk/WitLcAMix.lean: lengths 0, 1, 16
+    python3 tools/wit/wlcm.py tools/wit 1 1x1             # the same three for lc_marshal_main (WitLcM*)
+
+Element j of length m holds the uint64 values 1..m. `wlca.py n` and
+`wlcm.py n` still write the n-empty-element files.

@@ -97,11 +97,26 @@ OK  WitLcA1    buf                    ('0x10450', 12, 12)                ok
 OK  WitLcA1    recv                   0x10438                            ok: ListC size 24 align 8
 OK  WitLcA1    recv.Items             ('0x0', 0, 0)                      ok
 OK  WitLcA1    chunks                 26 read, 0 not read                ok
+OK  WitLcA1x1  rsp                    0x10410                            ok
+OK  WitLcA1x1  buf                    ('0x10450', 20, 20)                ok
+OK  WitLcA1x1  recv                   0x10438                            ok: ListC size 24 align 8
+OK  WitLcA1x1  recv.Items             ('0x0', 0, 0)                      ok
+OK  WitLcA1x1  chunks                 26 read, 0 not read                ok
 OK  WitLcA4    rsp                    0x10410                            ok
 OK  WitLcA4    buf                    ('0x10450', 36, 36)                ok
 OK  WitLcA4    recv                   0x10438                            ok: ListC size 24 align 8
 OK  WitLcA4    recv.Items             ('0x0', 0, 0)                      ok
 OK  WitLcA4    chunks                 26 read, 0 not read                ok
+OK  WitLcA4x16 rsp                    0x10410                            ok
+OK  WitLcA4x16 buf                    ('0x10450', 548, 548)              ok
+OK  WitLcA4x16 recv                   0x10438                            ok: ListC size 24 align 8
+OK  WitLcA4x16 recv.Items             ('0x0', 0, 0)                      ok
+OK  WitLcA4x16 chunks                 26 read, 0 not read                ok
+OK  WitLcAMix  rsp                    0x10410                            ok
+OK  WitLcAMix  buf                    ('0x10450', 164, 164)              ok
+OK  WitLcAMix  recv                   0x10438                            ok: ListC size 24 align 8
+OK  WitLcAMix  recv.Items             ('0x0', 0, 0)                      ok
+OK  WitLcAMix  chunks                 26 read, 0 not read                ok
 OK  WitLcE     rsp                    0x10018                            ok
 OK  WitLcE     buf                    ('0x10030', 4, 4)                  ok
 OK  WitLcE     recv                   0x10038                            ok: ListC size 24 align 8
@@ -119,6 +134,13 @@ OK  WitLcM1    recv.Items             ('0x10088', 1, 1)                  ok
 OK  WitLcM1    recv[0]                0x10090                            ok: ListU64 size 24 align 8
 OK  WitLcM1    recv[0].L              ('0x0', 0, 0)                      ok
 OK  WitLcM1    chunks                 12 read, 3 not read                ok
+OK  WitLcM1x1  rsp                    0x10058                            ok
+OK  WitLcM1x1  dst                    ('0x100b0', 0, 20)                 ok
+OK  WitLcM1x1  recv                   0x10070                            ok: ListC size 24 align 8
+OK  WitLcM1x1  recv.Items             ('0x10088', 1, 1)                  ok
+OK  WitLcM1x1  recv[0]                0x10090                            ok: ListU64 size 24 align 8
+OK  WitLcM1x1  recv[0].L              ('0x100a8', 1, 1)                  ok
+OK  WitLcM1x1  chunks                 12 read, 3 not read                ok
 OK  WitLcM4    rsp                    0x10058                            ok
 OK  WitLcM4    dst                    ('0x10108', 0, 36)                 ok
 OK  WitLcM4    recv                   0x10070                            ok: ListC size 24 align 8
@@ -132,6 +154,30 @@ OK  WitLcM4    recv[2].L              ('0x0', 0, 0)                      ok
 OK  WitLcM4    recv[3]                0x100f0                            ok: ListU64 size 24 align 8
 OK  WitLcM4    recv[3].L              ('0x0', 0, 0)                      ok
 OK  WitLcM4    chunks                 12 read, 3 not read                ok
+OK  WitLcM4x16 rsp                    0x10058                            ok
+OK  WitLcM4x16 dst                    ('0x10308', 0, 548)                ok
+OK  WitLcM4x16 recv                   0x10070                            ok: ListC size 24 align 8
+OK  WitLcM4x16 recv.Items             ('0x10088', 4, 4)                  ok
+OK  WitLcM4x16 recv[0]                0x100a8                            ok: ListU64 size 24 align 8
+OK  WitLcM4x16 recv[0].L              ('0x10108', 16, 16)                ok
+OK  WitLcM4x16 recv[1]                0x100c0                            ok: ListU64 size 24 align 8
+OK  WitLcM4x16 recv[1].L              ('0x10188', 16, 16)                ok
+OK  WitLcM4x16 recv[2]                0x100d8                            ok: ListU64 size 24 align 8
+OK  WitLcM4x16 recv[2].L              ('0x10208', 16, 16)                ok
+OK  WitLcM4x16 recv[3]                0x100f0                            ok: ListU64 size 24 align 8
+OK  WitLcM4x16 recv[3].L              ('0x10288', 16, 16)                ok
+OK  WitLcM4x16 chunks                 12 read, 3 not read                ok
+OK  WitLcMMix  rsp                    0x10058                            ok
+OK  WitLcMMix  dst                    ('0x10170', 0, 164)                ok
+OK  WitLcMMix  recv                   0x10070                            ok: ListC size 24 align 8
+OK  WitLcMMix  recv.Items             ('0x10088', 3, 3)                  ok
+OK  WitLcMMix  recv[0]                0x100a0                            ok: ListU64 size 24 align 8
+OK  WitLcMMix  recv[0].L              ('0x0', 0, 0)                      ok
+OK  WitLcMMix  recv[1]                0x100b8                            ok: ListU64 size 24 align 8
+OK  WitLcMMix  recv[1].L              ('0x100e8', 1, 1)                  ok
+OK  WitLcMMix  recv[2]                0x100d0                            ok: ListU64 size 24 align 8
+OK  WitLcMMix  recv[2].L              ('0x100f0', 16, 16)                ok
+OK  WitLcMMix  chunks                 12 read, 3 not read                ok
 OK  WitLcP     rsp                    0x10118                            ok
 OK  WitLcP     buf                    ('0x10130', 8, 8)                  ok
 OK  WitLcP     recv                   0                                  nil
@@ -356,4 +402,4 @@ OK  WitVbvR    rsp                    0x10060                            ok
 OK  WitVbvR    buf                    ('0x10070', 1, 1)                  ok
 OK  WitVbvR    chunks                 8 read, 1 not read                 ok
 --  Witness    -                      None                               not checked: no target or registers
-71 witness files, 0 with a violation, 2 with a value not checked
+77 witness files, 0 with a violation, 2 with a value not checked

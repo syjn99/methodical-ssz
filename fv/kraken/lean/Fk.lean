@@ -129,3 +129,9 @@ import Fk.ScRejectBool
 import Fk.WitScRB
 import Fk.BlReject
 import Fk.WitBlRI
+import Fk.WitLcA1x1
+import Fk.WitLcA4x16
+import Fk.WitLcAMix
+import Fk.WitLcM1x1
+import Fk.WitLcM4x16
+import Fk.WitLcMMix
