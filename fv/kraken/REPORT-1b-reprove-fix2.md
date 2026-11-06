@@ -54,7 +54,7 @@ ELF sha256 `9c850c97…c501`(바뀌지 않았다. 대상 Go 코드와 생성기�
 | X6 | `a27b103` | 08:02 | ListC 수용·마샬 증인 6개(1×1, 4×16, 0·1·16) |
 | X7 | `b147e55` | 08:21 | 사후조건 7개 정리 강화, 조합 정리 `sc_unmarshal_then_marshal`, 조합 증인 둘 |
 | X8c | — | — | 미수행(5절) |
-| X10, X11 | 이 커밋 | 08:22–08:40 | `tools/RegressFix2.lean`, 부정 시험 전체, 공리, 보고서, CONTRACTS 1e |
+| X10, X11 | `49d730b` | 08:33 | `tools/RegressFix2.lean`, 부정 시험 전체, 공리, 보고서, CONTRACTS 1e |
 
 ### X1. 링크 검사 (f) (astra 1)
 
