@@ -26,8 +26,6 @@ variable [Host]
 theorem bva_call (x : BitVec 64) : x - 8#64 - 72 - 8#64 = x - 88 := by bv_omega
 theorem bva_s88 (x : BitVec 64) : x - 8#64 - 72 + 88 = x + 8 := by bv_omega
 theorem bva_s96 (x : BitVec 64) : x - 8#64 - 72 + 96 = x + 16 := by bv_omega
-theorem bva_s40 (x : BitVec 64) : x - 8#64 - 72 + 40 = x - 40 := by bv_omega
-theorem bva_s48 (x : BitVec 64) : x - 8#64 - 72 + 48 = x - 32 := by bv_omega
 theorem bva_fp (x : BitVec 64) : x - 88 - 8 = x - 96 := by bv_omega
 theorem bva_sp (x : BitVec 64) : x - 88 + 8 = x - 80 := by bv_omega
 theorem bva_scr (x : BitVec 64) (S : Nat) (h : 8 ≤ S) (h2 : S < 2 ^ 64) :
@@ -35,13 +33,9 @@ theorem bva_scr (x : BitVec 64) (S : Nat) (h : 8 ≤ S) (h2 : S < 2 ^ 64) :
   have : BitVec.ofNat 64 (S - 8) = BitVec.ofNat 64 S - 8 := by
     apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_sub]; omega
   rw [this]; bv_omega
-theorem bva_slot' (x : BitVec 64) : ({ toBitVec := x - 88 } + 8 : UInt64).toBitVec - 8#64 = x - 88 := by
-  simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega
 theorem bva_pop (x : BitVec 64) : (72 : BitVec 64) + ({ toBitVec := x - 88 } + 8 : UInt64).toBitVec = x - 8 := by
   simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega
 theorem bva_spm (x : BitVec 64) : x - 80 + BitVec.ofNat 64 8 = x - 72 := by bv_omega
-theorem bva_nat (x : UInt64) (h : 88 ≤ x.toNat) : (x.toBitVec - 8#64 - 72 - 8#64).toNat = x.toNat - 88 := by
-  rw [bva_call, BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simp; omega)]; simp
 theorem bva_cnt0 (x : BitVec 64) :
     (BitVec.zeroExtend 64 (BitVec.extractLsb' 0 32 x ^^^ BitVec.extractLsb' 0 32 x)).toNat ≤ 1 := by simp
 theorem bva_spill (x : BitVec 64) : x - 88 + 8 = x - 80 := by bv_omega
@@ -57,8 +51,6 @@ theorem bva_nat' (x : UInt64) (h : 88 ≤ x.toNat) : (x.toBitVec - 88).toNat = x
   rw [BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simp; omega)]; simp
 theorem bva_shr4 (b : UInt8) (h : b.toNat < 16) : b.toNat >>> 4 = 0 := by
   rw [Nat.shiftRight_eq_div_pow]; omega
-theorem bva_rbx (x : UInt64) (h : x = 1) : x.toNat = (4 : UInt64).toNat / 8 + (if (4 : UInt64).toNat % 8 = 0 then 0 else 1) := by
-  subst h; decide
 
 set_option maxHeartbeats 8000000 in
 set_option maxRecDepth 100000 in

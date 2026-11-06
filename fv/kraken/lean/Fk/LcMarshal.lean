@@ -86,7 +86,6 @@ theorem Keep1.trans {a b c : Reg64s} (h1 : Keep1 a b) (h2 : Keep1 b c) : Keep1 a
   ⟨h2.rax.trans h1.rax, h2.rbx.trans h1.rbx, h2.rdx.trans h1.rdx, h2.rdi.trans h1.rdi, h2.rsp.trans h1.rsp,
    h2.rbp.trans h1.rbp, h2.r8.trans h1.r8, h2.r9.trans h1.r9, h2.r14.trans h1.r14⟩
 
-theorem Keep1.refl (a : Reg64s) : Keep1 a a := ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 200000 in

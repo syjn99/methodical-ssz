@@ -113,9 +113,6 @@ def LuUAccC (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ F) st'.data.dmem)
       ⟨st, label "target.ListU64.UnmarshalSSZ"⟩
 
-theorem spill_sep (x : BitVec 64) (a b : List UInt8) (ha : a.length = 8) (hb : b.length = 8) :
-    Eq ((a ++ b).At (x + 8)) = Eq (a.At (x + 8)) ⋆ Eq (b.At (x + 16)) :=
-  at_app a b (by rw [ha]; bv_omega) (by simp [ha, hb])
 
 set_option maxHeartbeats 8000000 in
 /-- The ListU64 machine code satisfies its specification, given the makeslice contract. -/

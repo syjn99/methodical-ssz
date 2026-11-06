@@ -171,7 +171,6 @@ theorem bv_unmarshal_accept_machine (k : Nat) (hk : BitVecUnmarshalSSZ.IsInfixAt
 
 theorem bvm_dst (x y : BitVec 64) : x + y * 1#64 = x + y := by rw [BitVec.mul_one]
 theorem bvm_call (x : BitVec 64) : x - 8#64 - 80 - 8#64 = x - 96 := by bv_omega
-theorem bvm_o (x : BitVec 64) (c : Nat) : x - 8#64 - 80 + BitVec.ofNat 64 c = x - 88 + BitVec.ofNat 64 c := by bv_omega
 theorem bvm_b (x : BitVec 64) : ({ toBitVec := x - 96 } + 8 : UInt64).toBitVec = x - 88 := by
   simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega
 theorem bvm_a (x c : BitVec 64) : x - 8#64 - 80 + c = x - 88 + c := by bv_omega
@@ -189,7 +188,6 @@ theorem bvm_scr (x : BitVec 64) (S : Nat) (h : 8 ≤ S) :
   rw [this]; bv_omega
 theorem bvm_nat (x : UInt64) (h : 96 ≤ x.toNat) : (x.toBitVec - 96).toNat = x.toNat - 96 := by
   rw [BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simp; omega)]; simp
-theorem bvm_one : BitVec.ofInt 64 (Int.ofBytes (Int.toBytes 8 (1 : BitVec 64).toInt)) = 1 := by decide
 
 set_option maxHeartbeats 8000000 in
 set_option maxRecDepth 100000 in
@@ -305,7 +303,7 @@ theorem bv_marshal_main (k : Nat) (hk : BitVecMarshalSSZTo.IsInfixAt Host.prog k
   kunfold
   rw [← List.take_append_drop (S - 8) scratch, Mem.At_append_sep _ _ _ (by simp [hsc]; omega)] at H6
   simp only [List.length_take, hsc, show min (S - 8) S = S - 8 by omega, bvm_scr _ S h8S] at H6
-  try simp only [bvm_one, Fk.ofInt_ofBytes_toBytes64]
+  try simp only [Fk.ofInt_ofBytes_toBytes64]
   refine eventually_trans _ _ _ _ (hvbv _ (Host.addrOf (k + 16 + 1)) guard (scratch.drop (S - 8)) vsp [] b _
     (by simp [hsc]; omega) hvs ?g1 ?g2 ?g3 ?g4 ?g5 ?g6
     (by dsimp only; rw [bvm_fp, bvm_sp, List.nil_append]; ecancel)) ?_
@@ -442,21 +440,14 @@ def bvRO : DataMem → Prop := Eq (vbvFmt.At (label "go_string._" + 27706).toBit
 def BvMsg (sp : BitVec 64) (msg hm : List UInt8) : Prop :=
   hm = [] ∧ sp = (label "go_string._" + 27706).toBitVec ∧ msg = vbvFmt
 
-theorem bvr_a (x c : BitVec 64) : x - 8#64 - 72 + c = x - 80 + c := by bv_omega
 theorem bvr_56 (x : BitVec 64) : x - 80 + 56 = x - 24 := by bv_omega
 theorem bvr_64 (x : BitVec 64) : x - 80 + 64 = x - 16 := by bv_omega
 theorem bvr_fp (x : BitVec 64) : x - 88 - 8 = x - 96 := by bv_omega
 theorem bvr_sp (x : BitVec 64) : x - 88 + 8 = x - 80 := by bv_omega
 theorem bvr_fr (x : BitVec 64) : x - 88 - 48 = x - 136 := by bv_omega
 theorem bvr_rs (x : BitVec 64) : x - 88 - 56 = x - 144 := by bv_omega
-theorem bvr_sc (x : BitVec 64) (S : Nat) : x - 88 - 56 - BitVec.ofNat 64 S = x - 144 - BitVec.ofNat 64 S := by bv_omega
 theorem bvr_c (x : BitVec 64) : ({ toBitVec := x - 88 } + 8 : UInt64).toBitVec - 8#64 = x - 88 := by
   simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega
-theorem bvr_sc' (x : BitVec 64) (S : Nat) :
-    x - 88 - BitVec.ofNat 64 (S + 56) + BitVec.ofNat 64 S = x - 144 := by
-  have : BitVec.ofNat 64 (S + 56) = BitVec.ofNat 64 S + 56 := by
-    apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_add]
-  rw [this]; bv_omega
 theorem bvr_join (x : BitVec 64) (S : Nat) (sc rs fr fp : List UInt8) (hsc : sc.length = S) (hrs : rs.length = 8)
     (hfr : fr.length = 40) (hfp : fp.length = 8) (hS : S + 56 < 2 ^ 64) :
     Eq ((sc ++ (rs ++ (fr ++ fp))).At (x - 88 - BitVec.ofNat 64 (S + 56)))

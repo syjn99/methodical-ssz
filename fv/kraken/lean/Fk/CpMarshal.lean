@@ -22,7 +22,6 @@ theorem cpm_addr (x y : BitVec 64) : y + 8 + x * 1#64 + -8 = x + y := by
 theorem cpm_dst (x y : BitVec 64) : x + (y + 8) * 1#64 = x + y + 8 := by
   rw [BitVec.mul_one, BitVec.add_assoc]
 
-theorem cpm_slot (x : BitVec 64) : x - 8#64 - 104 - 8#64 = x - 120 := by bv_omega
 
 set_option maxHeartbeats 8000000 in
 set_option maxRecDepth 100000 in

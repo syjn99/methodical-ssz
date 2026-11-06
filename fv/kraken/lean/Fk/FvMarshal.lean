@@ -168,10 +168,8 @@ theorem fvm_loop (k : Nat) (hk : FixedVecMarshalSSZTo.IsInfixAt Host.prog k)
 
 theorem slot120 (x : BitVec 64) : x - 8#64 - 104 - 8#64 = x - 120 := by bv_omega
 theorem f96 (x : BitVec 64) : x - 8#64 - 104 + 96 = x - 16 := by bv_omega
-theorem f88 (x : BitVec 64) : x - 8#64 - 104 + 88 = x - 24 := by bv_omega
 theorem f80 (x : BitVec 64) : x - 8#64 - 104 + 80 = x - 32 := by bv_omega
 theorem f72 (x : BitVec 64) : x - 8#64 - 104 + 72 = x - 40 := by bv_omega
-theorem f120 (x : BitVec 64) : x - 8#64 - 104 + 120 = x + 8 := by bv_omega
 theorem g120 (x : BitVec 64) (o : BitVec 64) :
     ({ toBitVec := x - 120 } + 8 : UInt64).toBitVec + o = x - 112 + o := by
   simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega
