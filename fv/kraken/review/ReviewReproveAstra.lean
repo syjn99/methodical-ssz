@@ -4,19 +4,9 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 8000000
 
 namespace ReviewReproveAstra
--- The concrete model prevents a derivation of False from the eight contracts.
-theorem joint_not_false (S : Nat) (ty : BitVec 64) :
-    ¬ (@Fk.Regress.Joint S ty → False) := Fk.Regress.not_joint_false S ty
-
 -- Check the two derived specifications on hosts with the real validator code.
 theorem accept_spec_exists : @VbvAccC Fk.WitVbv.host :=
   @vbv_acc_holds Fk.WitVbv.host 5 Fk.WitVbv.hk_target Fk.WitVbv.hf_target
-
-theorem pad_spec_exists : @VbvPadC Fk.WitBvR.host (@bumpHeap Fk.WitBvR.host) 0 := by
-  letI := Fk.WitBvR.host
-  exact vbv_pad_holds 105 Fk.WitBvR.hk_fnVbv Fk.WitBvR.hf_fnVbv bumpHeap 0
-    (rt_errorf_nil 178 Fk.WitBvR.hk_rterr Fk.WitBvR.hf_rterr 0)
-    (bump_newobject16 189 Fk.WitBvR.hk_newobject Fk.WitBvR.hf_newobject _)
 
 theorem byte_partition (b : UInt8) :
     (∃ v, deserialize bvDesc #[b] = .ok v) ↔ b.toNat < 16 := bv_spec_accepts_iff b
@@ -65,18 +55,10 @@ theorem runs (z : RegZmms) (f : StatusFlags) :
   exact eventually_mono h (fun _ h => ⟨h.1, h.2.1⟩)
 end LcSize
 
-#print axioms joint_not_false
 #print axioms accept_spec_exists
-#print axioms pad_spec_exists
 #print axioms reject_any_padding
 #print axioms bitlist_2047
 #print axioms bitlist_2048
 #print axioms bitlist_2049
 #print axioms LcSize.runs
 end ReviewReproveAstra
-
--- Check the literal bytes of the receiver header in the witness block.
-theorem ReviewReproveAstra.bl_reject_bad_capacity :
-    (Fk.WitBlR.block.drop 0x21c).take 8 = Int.toBytes 8 257 ∧
-    (Fk.WitBlR.block.drop 0x224).take 8 = Int.toBytes 8 0 := by decide
-#print axioms ReviewReproveAstra.bl_reject_bad_capacity

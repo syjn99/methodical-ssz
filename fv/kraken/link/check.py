@@ -679,7 +679,7 @@ def selftest(outdir):
         # 13. blFmtB not registered in FMTS: the inventory finds go_string._+526
         t = copy()
         cases.append(("blFmtB not registered", t, False))
-        # astra reprove-fix mutations (review/review-reprove-fix-mut-*-astra.log).
+        # astra reprove-fix mutations (logs in commit 28ea489).
         # 15. a balanced comment inside the first hash string (finding 1)
         t = copy(); fk = leancopy(t); sh = fk / "SHash.lean"
         tx = sh.read_text(); i = tx.index('  "') + 3 + 8

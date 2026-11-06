@@ -1,3 +1,0 @@
-'ReviewKraken.hms_contradiction' depends on axioms: [propext, Classical.choice, Quot.sound]
-'ReviewKraken.lu_accept_preconditions_false' depends on axioms: [propext, Classical.choice, Quot.sound]
-'ReviewKraken.nil_chunk_is_separable' depends on axioms: [propext, Classical.choice, Quot.sound]

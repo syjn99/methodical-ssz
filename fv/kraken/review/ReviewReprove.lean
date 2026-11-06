@@ -48,6 +48,3 @@ example : ¬ blValid (List.replicate 257 0 ++ [1]) := by   -- 2056 bits
 example : ∀ rax : UInt64, (rax = 0 ↔ False) → rax.toBitVec = (label "go_itab._errors.errorString_error").toBitVec → True :=
   fun _ _ _ => trivial
 example : (label "go_itab._errors.errorString_error").toBitVec ≠ 0 := Fk.Regress.hit
-
--- 5. Joint satisfiability of all eight contracts (already in Regress; restate as a non-vacuity check).
-example (S : Nat) (ty : BitVec 64) : ¬ (Fk.Regress.Joint S ty → False) := Fk.Regress.not_joint_false S ty

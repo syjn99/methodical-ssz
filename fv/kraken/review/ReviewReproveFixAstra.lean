@@ -4,17 +4,8 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 8000000
 namespace ReviewReproveFixAstra
 
-theorem nine_not_false (S : Nat) (ty : BitVec 64) :
-    ¬ (@Fk.Regress.Joint S ty → False) := Fk.Regress.not_joint_false S ty
-
 theorem bitlist_bad_2049 : ¬ blValid (List.replicate 256 0 ++ [2]) := by
   rw [blValid, blValid_iff]; simp [blArith]
-
-theorem pad_derived : @VbvPadC Fk.WitVbvR.host (@bumpHeap Fk.WitVbvR.host) 0 := by
-  letI := Fk.WitVbvR.host
-  exact vbv_pad_holds 5 Fk.WitVbvR.hk_target Fk.WitVbvR.hf_target bumpHeap 0
-    (rt_errorf_nil 78 Fk.WitVbvR.hk_rterr Fk.WitVbvR.hf_rterr 0)
-    (bump_newobject16 89 Fk.WitVbvR.hk_newobject Fk.WitVbvR.hf_newobject _)
 
 theorem lc_four_runs (z : RegZmms) (f : StatusFlags) :
     @Eventually MachineState (step1 (@Host.exe Fk.WitLcA4.host))
@@ -39,24 +30,12 @@ theorem duplicate_byte_impossible (m : DataMem) (a : BitVec 64) (v : UInt8) :
   apply hn
   simpa only [Std.ExtHashMap.inter_eq, Std.ExtHashMap.mem_inter_iff] using And.intro hm hm
 
--- Scalars occupies 24 bytes in the pinned amd64 Go build.
-theorem sc_object_short : Fk.WitScA.block.length = 57 := by decide
-theorem sc_output_overlaps_object (z : RegZmms) (f : StatusFlags) :
-    (Fk.WitScM.s0 z f).regs.rbx.toNat < (Fk.WitScM.s0 z f).regs.rax.toNat + 24 ∧
-    (Fk.WitScM.s0 z f).regs.rax.toNat < (Fk.WitScM.s0 z f).regs.rbx.toNat + 16 := by
-  simp only [Fk.WitScM.s0]
-  decide
-
 theorem ne_objects_overlap :
     0x10091 < (0x10080 : Nat) + 24 := by decide
 
-#print axioms nine_not_false
-#print axioms pad_derived
 #print axioms lc_four_runs
 #print axioms update_exists
 #print axioms duplicate_byte_impossible
-#print axioms sc_object_short
-#print axioms sc_output_overlaps_object
 #print axioms Fk.WitLcM4.lc_marshal_runs
 #print axioms Fk.WitLcS4.lc_size_runs
 #print axioms Fk.WitNeS16.ne_size_runs

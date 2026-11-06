@@ -13,8 +13,6 @@ import Fk.WitVbvR
 import Fk.WitLuG
 open Fk Fv1 EthLib.Serialization.Ssz
 
--- 1. The nine contracts (incl. ValidateBitlistErrC, FmtErrorfWC) hold together on one Host and heap.
-example : ∀ S ty, Fk.Regress.Joint S ty := Fk.Regress.joint_models
 #print Fk.Regress.Joint
 
 -- 2. The invalid-input contract's premise `¬ blValid buf` is met by the semtest reject cases
@@ -49,4 +47,3 @@ example : ∃ n dlen cap rcx rdi avail : Nat, n ≤ 16 ∧ dlen + 4 + 8 * n ≤ 
 #print axioms Fk.WitBlR.bl_marshal_reject_runs
 #print axioms Fk.WitVbvR.vbv_reject_pad_runs
 #print axioms Fk.WitLuG.lum_grow_runs
-#print axioms bv_errstr

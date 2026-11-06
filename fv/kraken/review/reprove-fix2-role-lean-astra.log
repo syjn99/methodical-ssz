@@ -1,6 +1,0 @@
-def ReviewRole.named : [h : Host] → DataMem → Prop :=
-fun [Host] => Eq ((z 1).At (label "go_string._" + 99999).toBitVec)
-def ReviewRole.implicit : {h : Host} → DataMem → Prop :=
-fun {h} => Eq ((z 1).At (label "go_string._" + 99999).toBitVec)
-def ReviewRole.shadow : [Host] → List UInt8 → DataMem → Prop :=
-fun [Host] blFmtB => Eq (blFmtB.At (label "go_string._" + 526).toBitVec)

@@ -1,9 +1,0 @@
-target.Scalars.SizeSSZ LLVM/Go Kraken AST equal
-target.Scalars.MarshalSSZTo LLVM/Go Kraken AST equal
-target.Scalars.UnmarshalSSZ LLVM/Go Kraken AST equal
-target.FixedVec.SizeSSZ LLVM/Go Kraken AST equal
-target.FixedVec.MarshalSSZTo LLVM/Go Kraken AST equal
-target.FixedVec.UnmarshalSSZ LLVM/Go Kraken AST equal
-target.ListU64.SizeSSZ LLVM/Go Kraken AST equal
-target.ListU64.MarshalSSZTo LLVM/Go Kraken AST equal
-target.ListU64.UnmarshalSSZ LLVM/Go Kraken AST equal

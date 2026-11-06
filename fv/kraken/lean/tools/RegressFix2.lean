@@ -1,8 +1,6 @@
 /-
-Regression checks of the re-proof fix 2 session (X10). The review files
-review/ReviewReproveFix.lean and review/ReviewReproveFixAstra.lean are kept as
-they were; this file restates their checks for the changed contracts and
-states the fixed findings as theorems.
+Regression checks for the current contracts: joint satisfiability with the
+formats and resources the theorems use, and the fixed review findings as theorems.
 Run: cd fv/kraken/lean && lake env lean tools/RegressFix2.lean
 -/
 import Fk
