@@ -34,12 +34,12 @@ theorem hf_target : LabelsFresh NestedMarshalSSZTo 5 := labelsFresh_of (by rw [p
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 
 def block  : List UInt8 :=
-  (Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 24) ++ ((z 8) ++ ((z 8) ++ ((z 16) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((Int.toBytes 8 (0x10080 : BitVec 64).toInt) ++ ((Int.toBytes 8 (0x10091 : BitVec 64).toInt) ++ ((z 1) ++ ((z 1) ++ ((z 2) ++ ((z 4) ++ ((z 8) ++ ([0] ++ ((Int.toBytes 8 (0x100a9 : BitVec 64).toInt) ++ ((Int.toBytes 8 (BitVec.ofNat 64 16).toInt) ++ ((Int.toBytes 8 (BitVec.ofNat 64 16).toInt) ++ ((z 128) ++ ((z 8) ++ ((z 1) ++ ((z 2) ++ ((z 4) ++ ((z 8) ++ ((z 1) ++ ((z 4) ++ ((z 4) ++ ((z 128))))))))))))))))))))))))))))))))
+  (Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 24) ++ ((z 8) ++ ((z 8) ++ ((z 16) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((Int.toBytes 8 (0x10080 : BitVec 64).toInt) ++ ((Int.toBytes 8 (0x10098 : BitVec 64).toInt) ++ ((z 1) ++ ((z 1) ++ ((z 2) ++ ((z 4) ++ ((z 8) ++ ([0] ++ ((z 7) ++ ((Int.toBytes 8 (0x100b0 : BitVec 64).toInt) ++ ((Int.toBytes 8 (BitVec.ofNat 64 16).toInt) ++ ((Int.toBytes 8 (BitVec.ofNat 64 16).toInt) ++ ((z 128) ++ ((z 8) ++ ((z 1) ++ ((z 2) ++ ((z 4) ++ ((z 8) ++ ((z 1) ++ ((z 4) ++ ((z 4) ++ ((z 128)))))))))))))))))))))))))))))))))
 
 def mem  : DataMem := (block ).At (0x10000 : BitVec 64)
 
 def s0  (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
-  ⟨⟨0x10068, 0x10129, 0, 0, 0, 160, 0x10050, 0, 0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags, mem ⟩
+  ⟨⟨0x10068, 0x10130, 0, 0, 0, 160, 0x10050, 0, 0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags, mem ⟩
 
 set_option maxHeartbeats 32000000 in
 set_option maxRecDepth 100000 in
@@ -51,11 +51,11 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 72)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 32))
       ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Eq ((z 8).At s.regs.rax.toBitVec) ⋆ Eq ((Int.toBytes 8 (0x10080 : BitVec 64).toInt).At (s.regs.rax.toBitVec + 8))
-      ⋆ Eq ((Int.toBytes 8 (0x10091 : BitVec 64).toInt).At (s.regs.rax.toBitVec + 16))
+      ⋆ Eq ((Int.toBytes 8 (0x10098 : BitVec 64).toInt).At (s.regs.rax.toBitVec + 16))
       ⋆ Eq ((z 1).At (0x10080 : BitVec 64)) ⋆ Eq ((z 2).At ((0x10080 : BitVec 64) + 2)) ⋆ Eq ((z 4).At ((0x10080 : BitVec 64) + 4))
       ⋆ Eq ((z 8).At ((0x10080 : BitVec 64) + 8)) ⋆ Eq ([0].At ((0x10080 : BitVec 64) + 16))
-      ⋆ Eq ((Int.toBytes 8 (0x100a9 : BitVec 64).toInt).At (0x10091 : BitVec 64)) ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 16).toInt).At ((0x10091 : BitVec 64) + 8))
-      ⋆ Eq ((z 128).At (0x100a9 : BitVec 64))
+      ⋆ Eq ((Int.toBytes 8 (0x100b0 : BitVec 64).toInt).At (0x10098 : BitVec 64)) ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 16).toInt).At ((0x10098 : BitVec 64) + 8))
+      ⋆ Eq ((z 128).At (0x100b0 : BitVec 64))
       ⋆ Eq (([] : List UInt8).At s.regs.rbx.toBitVec) ⋆ Eq ((z 8).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
       ⋆ Eq ((z 1).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))
       ⋆ Eq ((z 2).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 9))
@@ -74,7 +74,7 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
     BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
-  apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 (BitVec.ofNat 64 16).toInt).At 65697#64))
+  apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 7).At 65681#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 (BitVec.ofNat 64 16).toInt).At 65704#64))
   have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
   have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
   simp only [hu0, huN] at H ⊢
@@ -90,7 +90,7 @@ theorem ne_marshal_runs (zmms : RegZmms) (flags : StatusFlags) :
       ⟨s0 zmms flags, Host.addrOf 5⟩ :=
   eventually_mono (ne_marshal_main 5 hk_target hf_target (z 8) (z 1) (z 2) (z 4) (z 8) [0] (z 128) [] (z 8) (z 1) (z 2) (z 4) (z 8) (z 1)
     (z 4) (z 4) (z 128) 16 (by decide) rfl rfl rfl rfl rfl (.inl rfl) (by simp) (by simp) rfl rfl rfl rfl rfl rfl rfl rfl
-    (0x10080 : BitVec 64) (0x10091 : BitVec 64) (0x100a9 : BitVec 64) (by decide) (by decide) (s0 zmms flags) 0 0 (by simp [s0])
+    (0x10080 : BitVec 64) (0x10098 : BitVec 64) (0x100b0 : BitVec 64) (by decide) (by decide) (s0 zmms flags) 0 0 (by simp [s0])
     (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) rfl rfl rfl rfl rfl rfl
     (Eq ((z 24).At ((s0 zmms flags).regs.rsp.toBitVec - 64)) ⋆ Eq ((z 16).At ((s0 zmms flags).regs.rsp.toBitVec - 24))
       ⋆ Eq ((z 1).At ((0x10080 : BitVec 64) + 1)) ⋆ fun _ => True)

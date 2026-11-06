@@ -9,8 +9,8 @@ FDEF={"zero":"lcFmtZero","past":"lcFmtShort","tail":"lcFmtShort"}[MODE]
 FLEN={"zero":53,"past":63,"tail":63}[MODE]
 FMT=GS+OFF
 ch=[("guard",Z,8),("scratch","z 8",8),("rslot","z 8",8),("spl","z 40",40),("holeS","z 176",176),
-    ("fp","z 8",8),("ra",Z,8),("holeT","z 8",8),("slot","z 8",8),("b4","[4, 0, 0, 0]",4)]+([("o4","z 4" if MODE=="zero" else "[8, 0, 0, 0]",4)] if MODE!="tail" else [])
-a=65548+16
+    ("fp","z 8",8),("ra",Z,8),("holeT","z 8",8),("slot","z 8",8),("b4","[4, 0, 0, 0]",4)]+([("o4","z 4" if MODE=="zero" else "[8, 0, 0, 0]",4)] if MODE!="tail" else [("gap_b5","z 1",1)])  # tail: the 5th input byte (len 5), frame (fix 2 X3)
+a=wgen.CH0+16
 for k,e,n in ch: a+=n
 G=FMT-a
 ch.append(("holeG",f"z {G}",G)); ch.append(("fmt",FDEF,FLEN))

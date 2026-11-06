@@ -4,6 +4,7 @@ Z="Int.toBytes 8 (0 : UInt64).toBitVec.toInt"
 ch=[("guard",Z,8),("scratch","z 8",8),("rslot","z 8",8),("spm","z 24",24),("gap1","z 16",16),
     ("f40","z 8",8),("f32","z 8",8),("gap2","z 16",16),("fp","z 8",8),("ra",Z,8),("s1","z 8",8),("s2","z 8",8),
     ("b","[b]",1),("cP","z 8",8),("cL","z 8",8),("cC","z 8",8)]
+ch=wgen.aligned(ch,{"guard","cP"},base=wgen.CH0+8)  # the receiver 8-aligned (fix 2 X3)
 prem=f"""Eq (({Z}).At s.regs.rsp.toBitVec)
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 8)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 8))
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 16))

@@ -38,7 +38,7 @@ theorem label_err : label "ssz.ErrListTooBig" = 0x10000 :=
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 
 def block  : List UInt8 :=
-  (Int.toBytes 8 (0 : BitVec 64).toInt) ++ ((Int.toBytes 8 (0 : BitVec 64).toInt) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((Int.toBytes 8 (0x10064 : BitVec 64).toInt) ++ ((Int.toBytes 8 (17 : Int)) ++ ((Int.toBytes 8 (17 : Int)) ++ ((z 4) ++ ((z 136))))))))))))))
+  (Int.toBytes 8 (0 : BitVec 64).toInt) ++ ((Int.toBytes 8 (0 : BitVec 64).toInt) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((Int.toBytes 8 (0x10068 : BitVec 64).toInt) ++ ((Int.toBytes 8 (17 : Int)) ++ ((Int.toBytes 8 (17 : Int)) ++ ((z 4) ++ ((z 4) ++ ((z 136)))))))))))))))
 
 def mem  : DataMem := (block ).At (0x10000 : BitVec 64)
 
@@ -53,7 +53,7 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 8)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 24)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 16))
       ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq ((Int.toBytes 8 (0x10064 : BitVec 64).toInt).At s.regs.rax.toBitVec) ⋆ Eq ((Int.toBytes 8 (17 : Int)).At (s.regs.rax.toBitVec + 8))
+      ⋆ Eq ((Int.toBytes 8 (0x10068 : BitVec 64).toInt).At s.regs.rax.toBitVec) ⋆ Eq ((Int.toBytes 8 (17 : Int)).At (s.regs.rax.toBitVec + 8))
       ⋆ Eq (([] : List UInt8).At s.regs.rbx.toBitVec) ⋆ Eq ((z 4).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
       ⋆ Eq ((Int.toBytes 8 (0 : BitVec 64).toInt).At (label "ssz.ErrListTooBig").toBitVec) ⋆ Eq ((Int.toBytes 8 (0 : BitVec 64).toInt).At (label "ssz.ErrListTooBig" + 8).toBitVec) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 8)) ⋆ fun _ => True := by
   intro s
@@ -66,7 +66,7 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
   simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd]
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
-  apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 (17 : Int)).At 65624#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 136).At 65636#64))
+  apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((Int.toBytes 8 (17 : Int)).At 65624#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 4).At 65636#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 136).At 65640#64))
   have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
   have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
   simp only [hu0, huN] at H ⊢
@@ -79,7 +79,7 @@ theorem lu_marshal_reject_runs (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0)
       ⟨s0 zmms flags, Host.addrOf 5⟩ :=
-  eventually_mono (lu_marshal_reject_main 5 hk_target hf_target [] (z 4) 17 (by decide) (by decide) rfl (0x10064 : BitVec 64) 0 0 (s0 zmms flags) 0 0 (by simp [s0]) (z 8) (z 8) (z 8) (z 8) rfl rfl rfl rfl (Eq ((z 8).At ((s0 zmms flags).regs.rsp.toBitVec + 8)) ⋆ fun _ => True) (by have h := s_mem zmms flags; simp only [Std.ExtHashMap.sep_assoc] at h ⊢; exact h) (by simp [s0]) (by simp [s0]) (by simp [s0]) (by simp [s0]))
+  eventually_mono (lu_marshal_reject_main 5 hk_target hf_target [] (z 4) 17 (by decide) (by decide) rfl (0x10068 : BitVec 64) 0 0 (s0 zmms flags) 0 0 (by simp [s0]) (z 8) (z 8) (z 8) (z 8) rfl rfl rfl rfl (Eq ((z 8).At ((s0 zmms flags).regs.rsp.toBitVec + 8)) ⋆ fun _ => True) (by have h := s_mem zmms flags; simp only [Std.ExtHashMap.sep_assoc] at h ⊢; exact h) (by simp [s0]) (by simp [s0]) (by simp [s0]) (by simp [s0]))
     (fun _ h => ⟨h.1, h.2.1⟩)
 
 end Fk.WitLuMR

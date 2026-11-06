@@ -10,6 +10,7 @@ ch=[("guard",Z,8),("l72","z 8",8),("hole1","z 24",24),("l40","z 8",8),("l32","z 
     ("fp","z 8",8),("ra",Z,8),("s8","z 8",8),("s16","z 8",8),
     ("a8","z 8",8),("pps","Int.toBytes 8 (PS : BitVec 64).toInt",8),("ppl","Int.toBytes 8 (PL : BitVec 64).toInt",8),
     ("cA","z 1",1),("hA","z 1",1),("cB","z 2",2),("cC","z 4",4),("cD","z 8",8),("cE","[0]",1),
+    ("gap_pad","z 7",7),  # Scalars is 24 bytes in Go (layout.json): padding 17..23 (fix 2 X3)
     ("pq","Int.toBytes 8 (QQ : BitVec 64).toInt",8),("pn",f"Int.toBytes 8 (BitVec.ofNat 64 {N}).toInt",8),("gap_lc",f"Int.toBytes 8 (BitVec.ofNat 64 {N}).toInt",8)]
 if N>0: ch.append(("bs",f"z {8*N}",8*N))
 ch+=[("d0","z 8",8),("d1","z 1",1),("d2","z 2",2),("d3","z 4",4),("d4","z 8",8),("d5","z 1",1),("o28","z 4",4),("o4","z 4",4)]

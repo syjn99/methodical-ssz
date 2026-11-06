@@ -38,3 +38,24 @@ are two columns of the completion table.
 
 `wgen.gen` takes `heap_end=True` to put the heap after the other chunks (when
 a label offset such as `go_string._+526` would fall into the heap).
+
+## Go layout and the fix 2 checks (re-proof fix 2, X3)
+
+`goval.py` reads the Go object layout from `layout.json`, not from a table
+by hand. `layout.go` writes it: the constant values of `unsafe.Sizeof`,
+`unsafe.Alignof` and `unsafe.Offsetof` for every struct of
+`fv/kraken/target` and `fv/kraken/target/prysm`, type-checked with the gc
+amd64 sizes (GOOS=linux, GOARCH=amd64; no amd64 binary runs on the host).
+
+    cd ../../../.. && go run fv/kraken/lean/tools/wit/layout.go > fv/kraken/lean/tools/wit/layout.json
+
+The checks: slice headers, object size and alignment (Scalars is 24 bytes in
+Go, 16 in SSZ), rsp 8-aligned, bool bytes 0 or 1, the errorString itab type
+word (itab+8) where the premise places it, and overlap: the Go objects are
+pairwise disjoint and every `s_mem` chunk is inside one Go object or outside
+all of them. A value the script cannot read is "not checked" (counted).
+
+`wgen.gen` puts a 4-byte gap after the bump pointer: the heap and the first
+chunk start at `wgen.CH0` = 0x10010 (8-aligned). `wgen.aligned` inserts gap
+chunks before the named chunks. `WitCp`, `WitFv`, `WitAd` have no generator;
+they were shifted once by the same 4-byte gap (the files are the record).

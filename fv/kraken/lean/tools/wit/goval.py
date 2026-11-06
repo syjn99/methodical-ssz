@@ -1,20 +1,31 @@
 #!/usr/bin/env python3
-"""Go value invariants of the witness states (re-proof fix X4).
+"""Go value invariants of the witness states (re-proof fix X4, fix 2 X3).
 
 The main theorems may allow machine states that are not Go values (astra
-reprove finding 4: WitBlR had a slice header with len 257, cap 0). This
-script reads every Fk/Wit*.lean, rebuilds the byte layout of `block` from
-0x10000 and the registers of the start state, and checks the Go values of
-the call: the argument slice in (rbx, rcx, rdi) or (rax, rbx, rcx), the slice
-fields of the receiver at rax, and the pointer fields (Nested.S, Nested.L,
-AttestationData.Source/Target, ListC items). For a slice header (p, len, cap):
-len <= cap < 2^63, and if cap > 0 the data p .. p + cap*esz is in the block.
-A non-nil pointer and its object are in the block.
+reprove finding 4; astra reprove-fix finding 3: the Scalars object is 24
+bytes in Go, 16 bytes in SSZ). This script reads every Fk/Wit*.lean, rebuilds
+the byte layout of `block` from 0x10000, the registers of the start state
+and the chunks of `s_mem`, and checks the Go values of the call against the
+amd64 layout in layout.json (written by layout.go from unsafe.Sizeof,
+unsafe.Alignof, unsafe.Offsetof with the gc amd64 sizes; no table by hand):
+
+- slice header (p, len, cap): len <= cap < 2^63; if cap > 0 the data
+  p .. p + cap*esz is in the block and p is aligned to the element;
+- object (receiver, pointer field, list element): in the block, address
+  aligned to the type's alignment, whole Go size (padding included);
+- bool field: the byte is 0 or 1;
+- interface type word: for a witness whose premise places the errorString
+  itab's type word (itab+8, read into the `%w` argument), the word is a non-nil, 8-aligned pointer to a 48-byte type
+  descriptor (abi.Type) in the block (its contents are not read);
+- overlap: the Go objects (objects, slice data up to cap, type descriptor)
+  are pairwise disjoint, and every `s_mem` chunk lies inside one Go object or
+  outside all of them (a chunk across an object boundary fails).
 
 Usage (from fv/kraken/lean): python3 tools/wit/goval.py [Fk/WitX.lean ...]
 Exit status 1 if a known value violates an invariant. Symbolic values (a
-parameter such as `b` or `e8`) are reported, not checked.
+parameter such as `b` or `e8`) are reported as "not checked", not passed.
 """
+import json
 import pathlib
 import re
 import sys
@@ -23,20 +34,10 @@ BASE = 0x10000
 # Lengths of named byte lists used in blocks.
 NAMED = {"bl2049": 257, "bl2048": 257, "blFmtB": 5, "bvFmtJ": 5, "vbvFmt": 35,
          "lcFmtZero": 53, "lcFmtShort": 63}
-# Receiver layouts: field offset -> ("slice", esz, elem) or ("ptr", struct).
-TYPES = {
-    "ListU64": {0: ("slice", 8, None)},
-    "FixedVec": {32: ("slice", 8, None)},
-    "BitVec": {0: ("slice", 1, None)},
-    "BitL": {0: ("slice", 1, None)},
-    "ListC": {0: ("slice", 8, "ListU64")},
-    "Nested": {8: ("ptr", "Scalars"), 16: ("ptr", "ListU64")},
-    "PrysmCheckpoint": {8: ("slice", 1, None)},
-    "PrysmAttestationData": {16: ("slice", 1, None), 40: ("ptr", "PrysmCheckpoint"), 48: ("ptr", "PrysmCheckpoint")},
-    "Scalars": {},
-}
-SIZE = {"ListU64": 24, "FixedVec": 56, "BitVec": 24, "BitL": 24, "ListC": 24, "Nested": 24,
-        "PrysmCheckpoint": 32, "PrysmAttestationData": 56, "Scalars": 16}
+LAYOUT = json.loads((pathlib.Path(__file__).parent / "layout.json").read_text())
+assert (LAYOUT["goos"], LAYOUT["goarch"]) == ("linux", "amd64")
+TY = LAYOUT["types"]
+TYPEDESC = 48  # sizeof(abi.Type), Go 1.26.3 amd64
 
 
 def split_top(s, sep):
@@ -155,38 +156,115 @@ class Mem:
         return BASE <= a and a + n <= self.end
 
 
-def check_slice(mem, name, p, l, c, esz, out):
+REG = ["rax", "rbx", "rcx", "rdx", "rsi", "rdi", "rsp", "rbp", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15"]
+
+
+def labels_of(txt):
+    out = {}
+    for name, v in re.findall(r'theorem label_\w+\'? : label "([^"]+)" = ([^:\n]+?) :=', txt):
+        v = v.strip()
+        m = re.fullmatch(r"0x10000 \+ Int64\.ofNat (\d+)", v)
+        out[name] = 0x10000 + int(m[1]) if m else int(v, 0)
+    return out
+
+
+def addr_of(e, regs, labs):
+    """Value of an address expression of s_mem, or None."""
+    e = re.sub(r"s\.regs\.(\w+)\.toBitVec", lambda m: str(regs[REG.index(m[1])]) if regs[REG.index(m[1])] is not None else "None", e)
+    e = re.sub(r'\(label "([^"]+)"\)\.toBitVec|label "([^"]+)"', lambda m: str(labs.get(m[1] or m[2], "None")), e)
+    e = re.sub(r"BitVec\.ofNat 64 (\w+)", r"\1", e)
+    e = re.sub(r"\((0x[0-9a-fA-F]+|\d+) : BitVec 64\)", r"\1", e)
+    e = re.sub(r"(0x[0-9a-fA-F]+|\d+)#64", r"\1", e)
+    e = e.replace(".toBitVec", "")
+    if "None" in e or not re.fullmatch(r"[\s()+\-0-9a-fx]*", e):
+        return None
+    return eval(e) % 2 ** 64
+
+
+def chunks_of(txt, regs, labs, lens):
+    """(lo, hi, text) of every `Eq (X.At addr)` chunk of s_mem with a known
+    length and address; and the number of chunks not read."""
+    m = re.search(r"theorem s_mem.*?=⋆(.*?):= by", txt, re.S)
+    if not m:
+        return [], 0
+    out, unread = [], 0
+    for c in split_top(" ".join(m[1].split()), "⋆"):
+        mm = re.fullmatch(r"Eq \((.*)\.At (.*)\)", c)
+        if not mm:
+            continue  # heap predicates, frame `fun _ => True`
+        x, a = mm[1], mm[2]
+        mt = re.fullmatch(r"\(?(\w+)\.(take|drop) (\d+)\)?", x)
+        n = None
+        if mt and mt[1] in lens:
+            n = int(mt[3]) if mt[2] == "take" else lens[mt[1]] - int(mt[3])
+        elif x.strip() in ("(([] : List UInt8))", "([] : List UInt8)"):
+            n = 0
+        else:
+            n, _ = piece(x, lens)
+        lo = addr_of(a, regs, labs)
+        if n is None or lo is None:
+            unread += 1
+            continue
+        if n:
+            out.append((lo, lo + n, c[:60]))
+    return out, unread
+
+
+class Objs:
+    """The Go objects of a witness: (lo, hi, name)."""
+    def __init__(self):
+        self.l = []
+
+    def add(self, lo, hi, name):
+        if hi > lo:
+            self.l.append((lo, hi, name))
+
+
+def check_slice(mem, objs, name, p, l, c, esz, out):
     if None in (p, l, c) or (mem.partial and c and p + c * esz > mem.end and p >= mem.end):
-        out.append((name, (p, l, c), "symbolic"))
+        out.append((name, (p, l, c), "not checked: symbolic"))
         return True
-    ok = l <= c < 2 ** 63 and (c == 0 or mem.inblock(p, c * esz))
-    why = "ok" if ok else ("len > cap" if l > c else "cap >= 2^63" if c >= 2 ** 63 else "data outside the block")
+    ok = l <= c < 2 ** 63 and (c == 0 or mem.inblock(p, c * esz)) and (c == 0 or p % min(esz, 8) == 0)
+    why = "ok" if ok else ("len > cap" if l > c else "cap >= 2^63" if c >= 2 ** 63 else
+                           "data outside the block" if not mem.inblock(p, c * esz) else "data not aligned")
     out.append((name, (hex(p), l, c), why))
+    objs.add(p, p + c * esz, name + ".data")
     return ok
 
 
-def check_obj(mem, ty, a, name, out, depth=0):
-    ok = True
-    if not mem.inblock(a, SIZE[ty]):
-        out.append((name, hex(a), f"{ty} object outside the block"))
+def check_obj(mem, objs, ty, a, name, out, depth=0):
+    t = TY[ty]
+    if not mem.inblock(a, t["size"]):
+        out.append((name, hex(a), f"{ty} object [{a:#x}, {a + t['size']:#x}) outside the block"))
         return False
-    for off, f in TYPES[ty].items():
-        if f[0] == "slice":
+    ok = a % t["align"] == 0
+    out.append((name, hex(a), f"ok: {ty} size {t['size']} align {t['align']}" if ok else f"{ty} at {a:#x} not aligned to {t['align']}"))
+    objs.add(a, a + t["size"], name)
+    for f in t["fields"]:
+        off, fn = f["offset"], f"{name}.{f['name']}"
+        if f["kind"] == "slice":
             p, l, c = mem.word(a + off), mem.word(a + off + 8), mem.word(a + off + 16)
-            ok &= check_slice(mem, f"{name}.{off}", p, l, c, f[1], out)
-            if f[2] and None not in (p, l) and depth < 2:
+            ok &= check_slice(mem, objs, fn, p, l, c, f["esz"], out)
+            if f.get("elem") and None not in (p, l) and depth < 2:
                 for i in range(l):
                     q = mem.word(p + 8 * i)
                     if q:
-                        ok &= check_obj(mem, f[2], q, f"{name}[{i}]", out, depth + 1)
-        else:
+                        ok &= check_obj(mem, objs, f["elem"], q, f"{name}[{i}]", out, depth + 1)
+        elif f["kind"] == "ptr":
             q = mem.word(a + off)
             if q is None:
-                out.append((f"{name}.{off}", None, "symbolic"))
+                out.append((fn, None, "not checked: symbolic"))
             elif q:
-                ok &= check_obj(mem, f[1], q, f"{name}.{off}", out, depth + 1)
+                ok &= check_obj(mem, objs, f["elem"], q, fn, out, depth + 1)
             else:
-                out.append((f"{name}.{off}", 0, "nil"))
+                out.append((fn, 0, "nil"))
+        elif f["kind"] == "bool":
+            v = mem.bytes.get(a + off)
+            if v is None:
+                out.append((fn, None, "not checked: symbolic"))
+            else:
+                out.append((fn, v, "ok" if v <= 1 else "bool byte > 1"))
+                ok &= v <= 1
     return ok
 
 
@@ -200,35 +278,74 @@ def check(path):
         return True, [("-", None, f"not checked: {mem.note or 'no target or registers'}")]
     tgt = m[1]
     ok = True
+    objs = Objs()
     if mem.partial:
         out.append(("-", None, "partial: " + mem.partial))
     rax, rbx, rcx, rdi = regs[0], regs[1], regs[2], regs[5]
+    rsp = regs[6]
+    if rsp is not None:  # Go stack slots are 8-byte words: rsp (the return address slot) is 8-aligned
+        out.append(("rsp", hex(rsp), "ok" if rsp % 8 == 0 else "rsp not 8-aligned"))
+        ok &= rsp % 8 == 0
     if tgt == "ValidateBitvector":
-        ok &= check_slice(mem, "buf", rax, rbx, rcx, 1, out)
-        return ok, out
-    mm = re.fullmatch(r"(\w+?)(UnmarshalSSZ|MarshalSSZTo|SizeSSZ)", tgt)
-    ty, meth = mm[1], mm[2]
-    if meth != "SizeSSZ":
-        ok &= check_slice(mem, "buf" if meth == "UnmarshalSSZ" else "dst", rbx, rcx, rdi, 1, out)
-    if rax is None:
-        out.append(("recv", None, "symbolic"))
-    elif rax == 0:
-        out.append(("recv", 0, "nil"))  # a nil receiver is a Go value; the path must not use it
+        ok &= check_slice(mem, objs, "buf", rax, rbx, rcx, 1, out)
     else:
-        ok &= check_obj(mem, ty, rax, "recv", out)
+        mm = re.fullmatch(r"(\w+?)(UnmarshalSSZ|MarshalSSZTo|SizeSSZ)", tgt)
+        ty, meth = mm[1], mm[2]
+        if meth != "SizeSSZ":
+            ok &= check_slice(mem, objs, "buf" if meth == "UnmarshalSSZ" else "dst", rbx, rcx, rdi, 1, out)
+        if rax is None:
+            out.append(("recv", None, "not checked: symbolic"))
+        elif rax == 0:
+            out.append(("recv", 0, "nil"))  # a nil receiver is a Go value; the path must not use it
+        else:
+            ok &= check_obj(mem, objs, ty, rax, "recv", out)
+    labs = labels_of(txt)
+    it = labs.get("go_itab._errors.errorString_error")
+    # The type word matters where the code reads it into an interface value
+    # (the `%w` argument): the premise places itab+8.
+    if it is not None and 'go_itab._errors.errorString_error").toBitVec + 8)' in txt:
+        w = mem.word(it + 8)
+        if w is None:
+            out.append(("itab+8", None, "not checked: symbolic"))
+        else:
+            good = w != 0 and w % 8 == 0 and mem.inblock(w, TYPEDESC)
+            out.append(("itab+8", hex(w), "type word ok" if good else "type word is not a pointer to a type descriptor in the block"))
+            ok &= good
+            if good:
+                objs.add(w, w + TYPEDESC, "typedesc")
+    # overlap: Go objects pairwise disjoint; each s_mem chunk inside one object or outside all
+    L = sorted(objs.l)
+    for i in range(len(L)):
+        for j in range(i + 1, len(L)):
+            a, b = L[i], L[j]
+            if a[0] < b[1] and b[0] < a[1]:
+                out.append((f"{a[2]}/{b[2]}", f"[{a[0]:#x},{a[1]:#x}) [{b[0]:#x},{b[1]:#x})", "Go objects overlap"))
+                ok = False
+    lens = {k: int(v) for k, v in re.findall(r"\(\w+ : (\w+)\.length = (\d+)\)", txt)}
+    lens.update({k: int(v) for k, v in re.findall(r"theorem \w+ : \((.+?)\)\.length = (\d+) :=", txt)})
+    lens.update({k: int(v) for k, v in re.findall(r"theorem \w+ : (\w+)\.length = (\d+) :=", txt)})
+    ch, unread = chunks_of(txt, regs, labs, lens)
+    for lo, hi, c in ch:
+        for a in L:
+            if lo < a[1] and a[0] < hi and not (a[0] <= lo and hi <= a[1]):
+                out.append((a[2], f"chunk [{lo:#x},{hi:#x}) object [{a[0]:#x},{a[1]:#x})", "s_mem chunk crosses a Go object boundary"))
+                ok = False
+    out.append(("chunks", f"{len(ch)} read, {unread} not read", "ok"))
     return ok, out
 
 
 def main(paths):
     paths = paths or sorted(str(p) for p in pathlib.Path("Fk").glob("Wit*.lean"))
-    bad = 0
+    bad = unchecked = 0
     for p in paths:
         ok, out = check(p)
         bad += not ok
+        unchecked += any(why.startswith("not checked") for _, _, why in out)
         for name, val, why in out:
-            print(f"{'OK ' if why in ('ok', 'nil') else 'BAD' if why not in ('symbolic',) and not why.startswith(('not checked', 'partial')) else '-- '} "
-                  f"{pathlib.Path(p).stem:10} {name:14} {str(val):30} {why}")
-    print(f"{len(paths)} witness files, {bad} with a violation")
+            tag = "-- " if why.startswith(("not checked", "partial")) else "OK " if (
+                why in ("ok", "nil", "type word ok") or why.startswith("ok: ")) else "BAD"
+            print(f"{tag} {pathlib.Path(p).stem:10} {name:22} {str(val):34} {why}")
+    print(f"{len(paths)} witness files, {bad} with a violation, {unchecked} with a value not checked")
     return 1 if bad else 0
 
 

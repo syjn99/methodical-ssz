@@ -6,7 +6,7 @@ import sys; sys.path.insert(0,sys.argv[1]); import wgen
 Z="Int.toBytes 8 (0 : UInt64).toBitVec.toInt"
 GS=0x10001
 ch=[("guard",Z,8),("rslot","z 8",8),("fr","z 40",40),("fp","z 8",8),("ra",Z,8),("sp","z 8",8),("last","[b]",1)]
-a=0x1000c+16
+a=wgen.CH0+16
 for k,e,n in ch: a+=n
 hC=GS+27706-a
 ch+=[("gap_h",f"z {hC}",hC),("fmtv","vbvFmt",35)]

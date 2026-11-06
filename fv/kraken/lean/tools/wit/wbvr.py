@@ -10,7 +10,7 @@ ITAB_IDX=5+100+73+11+6          # program index of the itab label piece
 ITAB=0x10000+ITAB_IDX
 ch=[("vrs","z 8",8),("vfr","z 40",40),("vfp","z 8",8),("rslot","z 8",8),("spl","z 40",40),("hole1","z 16",16),
     ("a16","z 16",16),("fp","z 8",8),("ra",Z,8),("s1","z 8",8),("s2","z 8",8)]
-a=65548  # heap_end: the chunks start after wb and ptr
+a=wgen.CH0  # heap_end: the chunks start after wb, ptr and the gap
 for k,e,n in ch: a+=n
 h7=ITAB+8-a
 ch+=[("hole2",f"z {h7}",h7),("ity","z 8",8),("guard",Z,8),("b","[b]",1)]

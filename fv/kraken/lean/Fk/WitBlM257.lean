@@ -107,6 +107,7 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
   have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
   have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
   simp only [hu0, huN] at H ⊢
+  try simp only [BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H ⊢  -- fold `4#64 + a` after huN (re-proof fix X4)
   refine Eq.mp ?_ H
   exact congrFun (by ac_rfl) _
 

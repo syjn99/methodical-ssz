@@ -71,14 +71,14 @@ abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 stack guard (8), stack (rslot, spill 24, saved rbp, return address, two spill
 slots), input (64), receiver (56). -/
 def block (rb ws : List UInt8) : List UInt8 :=
-  [0, 0, 0, 0] ++ (Int.toBytes 8 (0x1000c : BitVec 64).toInt ++ (z 32 ++ (Int.toBytes 8 (0 : UInt64).toBitVec.toInt
+  [0, 0, 0, 0] ++ (Int.toBytes 8 (0x10010 : BitVec 64).toInt ++ ((z 4) ++ (z 32) ++ (Int.toBytes 8 (0 : UInt64).toBitVec.toInt
     ++ (z 8 ++ (z 24 ++ (z 8 ++ (Int.toBytes 8 (0 : UInt64).toBitVec.toInt ++ (z 8 ++ (z 8
     ++ (rb ++ (ws ++ (z 1 ++ (z 31 ++ (z 8 ++ (z 8 ++ z 8)))))))))))))))
 
 def mem (rb ws : List UInt8) : DataMem := (block rb ws).At (0x10000 : BitVec 64)
 
 def fs0 (rb ws : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
-  ⟨⟨0x100b4, 0x10074, 64, 0, 0, 64, 0x1005c, 0, 0, 0, 0, 0, 0, 0, 0x1001c, 0⟩, zmms, flags, mem rb ws⟩
+  ⟨⟨0x100b8, 0x10078, 64, 0, 0, 64, 0x10060, 0, 0, 0, 0, 0, 0, 0, 0x10020, 0⟩, zmms, flags, mem rb ws⟩
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
@@ -100,17 +100,16 @@ theorem fs_mem (rb ws : List UInt8) (hrb : rb.length = 32) (hws : ws.length = 32
   have H : Eq ((block rb ws).At (0x10000 : BitVec 64)) (mem rb ws) := rfl
   conv at H => lhs; unfold block
   repeat rw [Mem.At_append_sep _ _ _ (by simp [Int.toBytes_length, hrb, hws])] at H
-  simp only [List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, Nat.reduceAdd, hrb, hws,
+  simp only [List.length_append, List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, Nat.reduceAdd, hrb, hws,
     BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
-  have H2 : ((Eq ((Int.toBytes 8 (65548#64).toInt).At 65540#64) ⋆ Eq ((z 32).At 65548#64))
-      ⋆ (Eq ([0, 0, 0, 0].At 65536#64) ⋆ Eq ((Int.toBytes 8 (UInt64.toBitVec 0).toInt).At 65580#64)
-        ⋆ Eq ((z 8).At 65588#64) ⋆ Eq ((z 24).At 65596#64) ⋆ Eq ((z 8).At 65620#64)
-        ⋆ Eq ((Int.toBytes 8 (UInt64.toBitVec 0).toInt).At 65628#64) ⋆ Eq ((z 8).At 65636#64) ⋆ Eq ((z 8).At 65644#64)
-        ⋆ Eq (rb.At 65652#64) ⋆ Eq (ws.At 65684#64) ⋆ Eq ((z 1).At 65716#64) ⋆ Eq ((z 31).At 65717#64)
-        ⋆ Eq ((z 8).At 65748#64) ⋆ Eq ((z 8).At 65756#64) ⋆ Eq ((z 8).At 65764#64))) (mem rb ws) := by
+  have H2 : (((Eq ((Int.toBytes 8 (65552#64).toInt).At 65540#64) ⋆ Eq ((z 32).At 65552#64))
+      ⋆ (Eq ([0, 0, 0, 0].At 65536#64) ⋆ Eq ((Int.toBytes 8 (UInt64.toBitVec 0).toInt).At 65584#64)
+        ⋆ Eq ((z 8).At 65592#64) ⋆ Eq ((z 24).At 65600#64) ⋆ Eq ((z 8).At 65624#64)
+        ⋆ Eq ((Int.toBytes 8 (UInt64.toBitVec 0).toInt).At 65632#64) ⋆ Eq ((z 8).At 65640#64) ⋆ Eq ((z 8).At 65648#64)
+        ⋆ Eq (rb.At 65656#64) ⋆ Eq (ws.At 65688#64) ⋆ Eq ((z 1).At 65720#64) ⋆ Eq ((z 31).At 65721#64)
+        ⋆ Eq ((z 8).At 65752#64) ⋆ Eq ((z 8).At 65760#64) ⋆ Eq ((z 8).At 65768#64))) ⋆ Eq ((z 4).At 65548#64)) (mem rb ws) := by
     ecancel
-  have H3 := sep_mono_left (P' := bumpHeap 32) (fun m hm => ⟨65548#64, by decide, by rw [label_bump]; exact hm⟩) H2
-  have H4 := sep_true (F := Std.ExtHashMap.emp) (by simpa only [Std.ExtHashMap.sep_emp] using H3)
+  have H4 : ((bumpHeap 32 ⋆ _) ⋆ fun _ : DataMem => True) _ := sep_mono_left (fun _ => sep_mono_left (P' := bumpHeap 32) (fun m hm => ⟨65552#64, by decide, by rw [label_bump]; exact hm⟩)) (sep_true H2)
   rw [label_wb]
   simp only [s, fs0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]

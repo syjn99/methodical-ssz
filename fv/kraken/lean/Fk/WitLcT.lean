@@ -86,12 +86,12 @@ theorem label_gs : label "go_string._" = 0x10001 :=
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 
 def block  : List UInt8 :=
-  [0, 0, 0, 0] ++ ((Int.toBytes 8 (0x1000c : BitVec 64).toInt) ++ ((z 16) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 40) ++ ((z 176) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ([4, 0, 0, 0] ++ ((z 41697) ++ (lcFmtShort))))))))))))))
+  [0, 0, 0, 0] ++ ((Int.toBytes 8 (0x10010 : BitVec 64).toInt) ++ ((z 4) ++ ((z 16) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 40) ++ ((z 176) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ([4, 0, 0, 0] ++ ((z 1) ++ ((z 41692) ++ (lcFmtShort))))))))))))))))
 
 def mem  : DataMem := (block ).At (0x10000 : BitVec 64)
 
 def s0  (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
-  ⟨⟨0, 0x1012c, 5, 0, 0, 5, 0x10114, 0, 0, 0, 0, 0, 0, 0, 0x1000c, 0⟩, zmms, flags, mem ⟩
+  ⟨⟨0, 0x10130, 5, 0, 0, 5, 0x10118, 0, 0, 0, 0, 0, 0, 0, 0x10010, 0⟩, zmms, flags, mem ⟩
 
 set_option maxHeartbeats 8000000 in
 set_option maxRecDepth 100000 in
@@ -104,35 +104,36 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
       ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ bumpHeap 16
       ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ Eq ((z 176).At (s.regs.rsp.toBitVec - 184)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 8))
-      ⋆ Eq ((z 41697).At (label "go_string._" + 303).toBitVec) ⋆ fun _ => True := by
+      ⋆ Eq ((z 41692).At (label "go_string._" + 308).toBitVec) ⋆ fun _ => True := by
   intro s
   have H : Eq ((block ).At (0x10000 : BitVec 64)) (mem ) := rfl
   conv at H => lhs; unfold block
   repeat rw [Mem.At_append_sep _ _ _ (by simp only [List.length_append, List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, lcFmtShort_len]; omega)] at H
   simp only [List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, Nat.reduceAdd, lcFmtShort_len,
     BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
-  have H2 : ((Eq ((Int.toBytes 8 (65548#64).toInt).At 65540#64) ⋆ Eq ((z 16).At 65548#64))
+  have H2 : ((Eq ((Int.toBytes 8 (65552#64).toInt).At 65540#64) ⋆ Eq ((z 16).At 65552#64))
       ⋆ (Eq ([0, 0, 0, 0].At 65536#64)
-        ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At 65564#64)
-        ⋆ Eq ((z 8).At 65572#64)
-        ⋆ Eq ((z 8).At 65580#64)
-        ⋆ Eq ((z 40).At 65588#64)
-        ⋆ Eq ((z 176).At 65628#64)
-        ⋆ Eq ((z 8).At 65804#64)
-        ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At 65812#64)
-        ⋆ Eq ((z 8).At 65820#64)
-        ⋆ Eq ((z 8).At 65828#64)
-        ⋆ Eq ([4, 0, 0, 0].At 65836#64)
-        ⋆ Eq ((z 41697).At 65840#64)
+        ⋆ Eq ((z 4).At 65548#64)
+        ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At 65568#64)
+        ⋆ Eq ((z 8).At 65576#64)
+        ⋆ Eq ((z 8).At 65584#64)
+        ⋆ Eq ((z 40).At 65592#64)
+        ⋆ Eq ((z 176).At 65632#64)
+        ⋆ Eq ((z 8).At 65808#64)
+        ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At 65816#64)
+        ⋆ Eq ((z 8).At 65824#64)
+        ⋆ Eq ((z 8).At 65832#64)
+        ⋆ Eq ([4, 0, 0, 0].At 65840#64)
+        ⋆ Eq ((z 1).At 65844#64)
+        ⋆ Eq ((z 41692).At 65845#64)
         ⋆ Eq (lcFmtShort.At 107537#64))) (mem ) := by
     ecancel
-  have H3 := sep_mono_left (P' := bumpHeap 16) (fun m hm => ⟨65548#64, by decide, by rw [label_bump]; exact hm⟩) H2
+  have H3 := sep_mono_left (P' := bumpHeap 16) (fun m hm => ⟨65552#64, by decide, by rw [label_bump]; exact hm⟩) H2
   rw [label_wb, label_gs]
   simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd]
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
-  apply sep_true (F := Std.ExtHashMap.emp)
-  simp only [Std.ExtHashMap.sep_emp]
+  apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 4).At 65548#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 1).At 65844#64))
   have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
   have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
   simp only [hu0, huN] at H3 ⊢
@@ -154,7 +155,7 @@ theorem lc_reject_tail_runs (zmms : RegZmms) (flags : StatusFlags) :
       ⟨s0 zmms flags, Host.addrOf 5⟩ :=
   eventually_mono (lc_reject_tail_main 5 hk_target hf_target (s0 zmms flags) 0 0 (z 8) (z 8) (z 8) rfl rfl rfl
     (Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ Eq ((z 176).At ((s0 zmms flags).regs.rsp.toBitVec - 184)) ⋆ Eq ((z 8).At ((s0 zmms flags).regs.rsp.toBitVec + 8))
-      ⋆ Eq ((z 41697).At (label "go_string._" + 303).toBitVec) ⋆ fun _ => True) 8 (z 8) (z 40) rfl rfl bumpHeap 16 (Nat.le_refl _)
+      ⋆ Eq ((z 41692).At (label "go_string._" + 308).toBitVec) ⋆ fun _ => True) 8 (z 8) (z 40) rfl rfl bumpHeap 16 (Nat.le_refl _)
     (by have h := s_mem zmms flags; simp only [Std.ExtHashMap.sep_assoc] at h ⊢; exact h)
     (by simp [s0]) (by simp [s0]) (by simp [s0]) (by simp [s0]) (by simp [s0]) (by simp [s0])
     (rt_errorf_nil 437 hk_rterr hf_rterr 8) (bump_newobject16 448 hk_newobject hf_newobject _) hit)

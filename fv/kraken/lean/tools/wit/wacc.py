@@ -11,7 +11,8 @@ def post(src):
     return src
 if MODE=="sc":
     ch=[("ra",Z,8),("hole","z 8",8),("slot","z 8",8),("b0","z 1",1),("b1","z 2",2),("b2","z 4",4),("b3","z 8",8),("b4","[1]",1),
-        ("c0","z 1",1),("h1","z 1",1),("c1","z 2",2),("c2","z 4",4),("c3","z 8",8),("c4","z 1",1)]
+        ("c0","z 1",1),("h1","z 1",1),("c1","z 2",2),("c2","z 4",4),("c3","z 8",8),("c4","z 1",1),
+        ("gap_pad","z 7",7)]  # Scalars is 24 bytes in Go (layout.json): padding 17..23 (fix 2 X3)
     R="Eq ((z 8).At (s.regs.rsp.toBitVec + 8)) ⋆ Eq ((z 1).At (s.regs.rax.toBitVec + 1))"
     prem=f"""Eq (({Z}).At s.regs.rsp.toBitVec)
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 16))

@@ -34,12 +34,12 @@ theorem hf_target : LabelsFresh ScalarsMarshalSSZTo 5 := labelsFresh_of (by rw [
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 
 def block  : List UInt8 :=
-  (Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 1) ++ ((z 1) ++ ((z 2) ++ ((z 4) ++ ((z 8) ++ ([0] ++ ((z 1) ++ ((z 2) ++ ((z 4) ++ ((z 8) ++ ((z 1))))))))))))))))
+  (Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 1) ++ ((z 1) ++ ((z 2) ++ ((z 4) ++ ((z 8) ++ ([0] ++ ((z 7) ++ ((z 1) ++ ((z 2) ++ ((z 4) ++ ((z 8) ++ ((z 1)))))))))))))))))
 
 def mem  : DataMem := (block ).At (0x10000 : BitVec 64)
 
 def s0  (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
-  ⟨⟨0x10028, 0x10039, 0, 0, 0, 16, 0x10010, 0, 0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags, mem ⟩
+  ⟨⟨0x10028, 0x10040, 0, 0, 0, 16, 0x10010, 0, 0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags, mem ⟩
 
 set_option maxHeartbeats 32000000 in
 set_option maxRecDepth 100000 in
@@ -63,11 +63,11 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
     BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
-  apply sep_true (F := Std.ExtHashMap.emp)
-  simp only [Std.ExtHashMap.sep_emp]
+  apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 7).At 65593#64))
   have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
   have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
   simp only [hu0, huN] at H ⊢
+  try simp only [BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H ⊢  -- fold `4#64 + a` after huN (re-proof fix X4)
   refine Eq.mp ?_ H
   exact congrFun (by ac_rfl) _
 

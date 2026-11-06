@@ -9,12 +9,12 @@ HEAP=16640
 GS=0x10001
 ITAB_IDX=5+120+21+11
 ITAB=0x10000+ITAB_IDX
-H0=ITAB+8-65536-12
+H0=ITAB+8-wgen.CH0
 ch=[("hole0",f"z {H0}",H0),("ity","z 8",8),("guard",Z,8),
     ("scratch","z 8",8),("rslot","z 8",8),("spl","z 32",32),("sp8","z 8",8),("hole1","z 24",24),
     ("l88","z 8",8),("l80","z 8",8),("hole2","z 24",24),("l48","z 8",8),("hole3","z 16",16),("a16","z 16",16),
     ("fp","z 8",8),("ra",Z,8),("s1","z 8",8),("s2","z 8",8)]
-a=65536+12
+a=wgen.CH0
 for k,e,n in ch: a+=n
 hB=GS+526-a
 assert hB>=0, hB
@@ -22,12 +22,12 @@ ch+=[("hole5",f"z {hB}",hB),("fmtb","blFmtB",5),
     ("rq","Int.toBytes 8 (QQ#64).toInt",8),
     ("rl","Int.toBytes 8 (257#64).toInt",8),("rc","Int.toBytes 8 (257#64).toInt",8),
     ("bl","bl2049",257),("d0","z 4",4)]
-a=65536+12; ad={}
+a=wgen.CH0; ad={}
 for k,e,n in ch: ad[k]=a; a+=n
 QQ=ad["bl"]
 ch=[(k,e.replace("QQ#64",f"{QQ}#64"),n) for k,e,n in ch]
 R=f"""Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec)
-      ⋆ Eq ((z {H0}).At ((label "runtime.writeBarrier").toBitVec + 12))
+      ⋆ Eq ((z {H0}).At ((label "runtime.writeBarrier").toBitVec + {wgen.CH0-65536}))
       ⋆ Eq ((z 24).At (s.regs.rsp.toBitVec - 112)) ⋆ Eq ((z 24).At (s.regs.rsp.toBitVec - 72))
       ⋆ Eq ((z 16).At (s.regs.rsp.toBitVec - 40))
       ⋆ Eq ((z {hB}).At (label "go_string._" + {526-hB}).toBitVec)"""

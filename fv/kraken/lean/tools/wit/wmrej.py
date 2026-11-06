@@ -27,6 +27,7 @@ if MODE=="lu":
     ch=[("e0",ZB,8),("e1",ZB,8),("guard",Z,8),("l1","z 8",8),("l2","z 8",8),("fp","z 8",8),("ra",Z,8),("hole","z 8",8),("slot","z 8",8),
         ("pp","Int.toBytes 8 (PP : BitVec 64).toInt",8),("nn","Int.toBytes 8 (17 : Int)",8),("gap_lc","Int.toBytes 8 (17 : Int)",8),
         ("o4","z 4",4),("gap_ld","z 136",136)]
+    ch=wgen.aligned(ch,{"gap_ld"})  # the []uint64 data 8-aligned (fix 2 X3)
     ad=addrs(ch); PP=hex(ad["gap_ld"])
     ch=[(k,e.replace("PP :",PP+" :"),n) for k,e,n in ch]
     R="Eq ((z 8).At (s.regs.rsp.toBitVec + 8))"
@@ -64,7 +65,7 @@ if MODE=="fv":
 if MODE=="cp":
     lab="ssz.ErrBytesLength"
     ch=[("e0",Z,8),("e1",Z,8),("guard",Z,8),("rslot","z 8",8),("hole1","z 72",72),("l40","z 8",8),("l32","z 8",8),("hole2","z 8",8),("l16","z 8",8),
-        ("fp","z 8",8),("ra",Z,8),("hole3","z 8",8),("s2","z 8",8),("e8","z 8",8),("pp",ZB,8),("nn",ZB,8),("root","z 32",32),("d0","z 8",8),("d1","z 32",32)]
+        ("fp","z 8",8),("ra",Z,8),("hole3","z 8",8),("s2","z 8",8),("e8","z 8",8),("pp",ZB,8),("nn",ZB,8),("gap_rc",ZB,8),("root","z 32",32),("d0","z 8",8),("d1","z 32",32)]
     ad=addrs(ch); P=hex(ad["root"])
     ch=[(k,(f"Int.toBytes 8 ({P} : BitVec 64).toInt" if k=="pp" else e),n) for k,e,n in ch]
     R="Eq ((z 72).At (s.regs.rsp.toBitVec - 112)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 24)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 8))"

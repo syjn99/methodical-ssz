@@ -1,14 +1,35 @@
 """Witness generator: block layout from 0x10000 and the matching Lean pieces."""
+CH0 = 0x10010  # gen: first address after write barrier, bump pointer and gap
+def aligned(ch, keys, base=65536, al=8):
+    """Insert zero gap chunks so that every chunk whose key is in `keys` starts
+    at a multiple of `al` (Go objects and uint64/pointer slice data, fix 2 X3).
+    base: address of the first chunk (gen with a heap at the start: CH0 + heap)."""
+    out, a = [], base
+    for k, e, n in ch:
+        if k in keys and a % al:
+            pad = al - a % al
+            out.append((f"gap_al_{k}", f"z {pad}", pad)); a += pad
+        out.append((k, e, n)); a += n
+    return out
+def tail_pad(ch, base, al=8):
+    """A zero gap chunk at the end so that the block ends at a multiple of al."""
+    a = base + sum(n for _, _, n in ch)
+    return ch + ([("gap_al_end", f"z {al - a % al}", al - a % al)] if a % al else [])
 def layout(chunks, heap, heap_end=False):
     # chunks: list of (key, lean_expr, length); first three fixed: wb, ptr, heap.
     # heap_end: the heap goes after the chunks (when a label offset such as
     # go_string._+526 must not fall into the heap); ptr then holds its address.
+    # A 4-byte gap after the bump pointer (label index 4, 0x10004) puts the heap
+    # and the first chunk at 0x10010: Go objects, rsp and heap blocks 8-aligned
+    # (fix 2 X3). The chunks then start at CH0 (heap_end) or CH0 + heap.
     base=65536
     if heap_end:
-        hp=base+12+sum(n for _,_,n in chunks)
-        items=[("wb","[0, 0, 0, 0]",4),("ptr",f"Int.toBytes 8 ({hex(hp)} : BitVec 64).toInt",8)]+chunks+[("heap",f"z {heap}",heap)]
+        hp=CH0+sum(n for _,_,n in chunks)
+        hpad=(-hp)%8
+        tail=[("gap_al_heap",f"z {hpad}",hpad)] if hpad else []
+        items=[("wb","[0, 0, 0, 0]",4),("ptr",f"Int.toBytes 8 ({hex(hp+hpad)} : BitVec 64).toInt",8),("gap_hp","z 4",4)]+chunks+tail+[("heap",f"z {heap}",heap)]
     else:
-        items=[("wb","[0, 0, 0, 0]",4),("ptr","Int.toBytes 8 (0x1000c : BitVec 64).toInt",8),("heap",f"z {heap}",heap)]+chunks
+        items=[("wb","[0, 0, 0, 0]",4),("ptr",f"Int.toBytes 8 ({hex(CH0)} : BitVec 64).toInt",8),("gap_hp","z 4",4),("heap",f"z {heap}",heap)]+chunks
     addr={}; a=base; out=[]
     for k,e,n in items:
         addr[k]=a; out.append((k,e,n,a)); a = a + n if isinstance(n,int) else a

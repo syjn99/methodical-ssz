@@ -71,12 +71,12 @@ theorem label_bump : label "runtime.fvBump" = 0x10004 :=
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 
 def block (b : UInt8) : List UInt8 :=
-  [0, 0, 0, 0] ++ ((Int.toBytes 8 (0x1000c : BitVec 64).toInt) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 24) ++ ((z 16) ++ ((z 8) ++ ((z 8) ++ ((z 16) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ([b] ++ ((z 8) ++ ((z 8) ++ ((z 8)))))))))))))))))))
+  [0, 0, 0, 0] ++ ((Int.toBytes 8 (0x10010 : BitVec 64).toInt) ++ ((z 4) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 24) ++ ((z 16) ++ ((z 8) ++ ((z 8) ++ ((z 16) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ([b] ++ ((z 7) ++ ((z 8) ++ ((z 8) ++ ((z 8)))))))))))))))))))))
 
 def mem (b : UInt8) : DataMem := (block b).At (0x10000 : BitVec 64)
 
 def s0 (b : UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
-  ⟨⟨0x10095, 0x10094, 1, 0, 0, 1, 0x1007c, 0, 0, 0, 0, 0, 0, 0, 0x10004, 0⟩, zmms, flags, mem b⟩
+  ⟨⟨0x100a0, 0x10098, 1, 0, 0, 1, 0x10080, 0, 0, 0, 0, 0, 0, 0, 0x10008, 0⟩, zmms, flags, mem b⟩
 
 set_option maxHeartbeats 8000000 in
 set_option maxRecDepth 100000 in
@@ -99,30 +99,32 @@ theorem s_mem (b : UInt8)  (zmms : RegZmms) (flags : StatusFlags) :
   repeat rw [Mem.At_append_sep _ _ _ (by simp only [List.length_append, List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil]; omega)] at H
   simp only [List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, Nat.reduceAdd,
     BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
-  have H2 : ((Eq ((Int.toBytes 8 (65548#64).toInt).At 65540#64) ⋆ Eq ((z 8).At 65548#64))
+  have H2 : ((Eq ((Int.toBytes 8 (65552#64).toInt).At 65540#64) ⋆ Eq ((z 8).At 65552#64))
       ⋆ (Eq ([0, 0, 0, 0].At 65536#64)
-        ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At 65556#64)
-        ⋆ Eq ((z 8).At 65564#64)
-        ⋆ Eq ((z 8).At 65572#64)
-        ⋆ Eq ((z 24).At 65580#64)
-        ⋆ Eq ((z 16).At 65604#64)
-        ⋆ Eq ((z 8).At 65620#64)
-        ⋆ Eq ((z 8).At 65628#64)
-        ⋆ Eq ((z 16).At 65636#64)
-        ⋆ Eq ((z 8).At 65652#64)
-        ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At 65660#64)
-        ⋆ Eq ((z 8).At 65668#64)
-        ⋆ Eq ((z 8).At 65676#64)
-        ⋆ Eq ([b].At 65684#64)
-        ⋆ Eq ((z 8).At 65685#64)
-        ⋆ Eq ((z 8).At 65693#64)
-        ⋆ Eq ((z 8).At 65701#64))) (mem b) := by
+        ⋆ Eq ((z 4).At 65548#64)
+        ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At 65560#64)
+        ⋆ Eq ((z 8).At 65568#64)
+        ⋆ Eq ((z 8).At 65576#64)
+        ⋆ Eq ((z 24).At 65584#64)
+        ⋆ Eq ((z 16).At 65608#64)
+        ⋆ Eq ((z 8).At 65624#64)
+        ⋆ Eq ((z 8).At 65632#64)
+        ⋆ Eq ((z 16).At 65640#64)
+        ⋆ Eq ((z 8).At 65656#64)
+        ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At 65664#64)
+        ⋆ Eq ((z 8).At 65672#64)
+        ⋆ Eq ((z 8).At 65680#64)
+        ⋆ Eq ([b].At 65688#64)
+        ⋆ Eq ((z 7).At 65689#64)
+        ⋆ Eq ((z 8).At 65696#64)
+        ⋆ Eq ((z 8).At 65704#64)
+        ⋆ Eq ((z 8).At 65712#64))) (mem b) := by
     ecancel
-  have H3 := sep_mono_left (P' := bumpHeap 8) (fun m hm => ⟨65548#64, by decide, by rw [label_bump]; exact hm⟩) H2
+  have H3 := sep_mono_left (P' := bumpHeap 8) (fun m hm => ⟨65552#64, by decide, by rw [label_bump]; exact hm⟩) H2
   rw [label_wb]
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
-  apply sep_true (F := Eq ((z 16).At 65604#64) ⋆ Eq ((z 16).At 65636#64))
+  apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 4).At 65548#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 16).At 65608#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 16).At 65640#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 7).At 65689#64))
   have hu0 : (UInt64.toBitVec 0) = 0#64 := rfl
   have huN : ∀ n : Nat, (UInt64.ofNat n).toBitVec = BitVec.ofNat 64 n := fun _ => rfl
   simp only [hu0, huN] at H3 ⊢

@@ -3,6 +3,7 @@ import sys; sys.path.insert(0,sys.argv[1]); import wgen
 Z="Int.toBytes 8 (0 : UInt64).toBitVec.toInt"
 ch=[("wb","[0, 0, 0, 0]",4),("guard",Z,8),("fp","z 8",8),("ra",Z,8),("hole","z 8",8),("slot","z 8",8),
     ("b4","[4, 0, 0, 0]",4),("cP","z 8",8),("cLC","z 16",16)]
+ch=wgen.aligned(ch,{"guard","cP"})  # rsp and the receiver 8-aligned (fix 2 X3)
 R="Eq ((z 8).At (s.regs.rsp.toBitVec + 8))"
 prem=f"""Eq (({Z}).At s.regs.rsp.toBitVec)
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 8)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 16))

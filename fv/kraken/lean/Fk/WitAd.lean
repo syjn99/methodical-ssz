@@ -85,12 +85,12 @@ theorem label_bump : label "runtime.fvBump" = 0x10004 :=
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 
 def block (in0 in1 root se sroot te troot : List UInt8) : List UInt8 :=
-  [0, 0, 0, 0] ++ ((Int.toBytes 8 (0x1000c : BitVec 64).toInt) ++ ((z 160) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 16) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ (in0 ++ (in1 ++ (root ++ (se ++ (sroot ++ (te ++ (troot ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8)))))))))))))))))))))))))))
+  [0, 0, 0, 0] ++ ((Int.toBytes 8 (0x10010 : BitVec 64).toInt) ++ (((z 4) ++ (z 160)) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 16) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ (in0 ++ (in1 ++ (root ++ (se ++ (sroot ++ (te ++ (troot ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8)))))))))))))))))))))))))))
 
 def mem (in0 in1 root se sroot te troot : List UInt8) : DataMem := (block in0 in1 root se sroot te troot).At (0x10000 : BitVec 64)
 
 def s0 (in0 in1 root se sroot te troot : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
-  ⟨⟨0x10184, 0x10104, 128, 0, 0, 128, 0x100ec, 0, 0, 0, 0, 0, 0, 0, 0x1009c, 0⟩, zmms, flags, mem in0 in1 root se sroot te troot⟩
+  ⟨⟨0x10188, 0x10108, 128, 0, 0, 128, 0x100f0, 0, 0, 0, 0, 0, 0, 0, 0x100a0, 0⟩, zmms, flags, mem in0 in1 root se sroot te troot⟩
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
@@ -116,37 +116,36 @@ theorem s_mem (in0 in1 root se sroot te troot : List UInt8) (h0 : in0.length = 8
   have H : Eq ((block in0 in1 root se sroot te troot).At (0x10000 : BitVec 64)) (mem in0 in1 root se sroot te troot) := rfl
   conv at H => lhs; unfold block
   repeat rw [Mem.At_append_sep _ _ _ (by simp [Int.toBytes_length, h0, h1, hroot, hse, hsroot, hte, htroot])] at H
-  simp only [List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, Nat.reduceAdd, h0, h1, hroot, hse, hsroot, hte, htroot,
+  simp only [List.length_append, List.length_replicate, Int.toBytes_length, List.length_cons, List.length_nil, Nat.reduceAdd, h0, h1, hroot, hse, hsroot, hte, htroot,
     BitVec.ofNat_eq_ofNat, BitVec.reduceAdd] at H
-  have H2 : ((Eq ((Int.toBytes 8 (65548#64).toInt).At 65540#64) ⋆ Eq ((z 160).At 65548#64))
+  have H2 : (((Eq ((Int.toBytes 8 (65552#64).toInt).At 65540#64) ⋆ Eq ((z 160).At 65552#64))
       ⋆ (Eq ([0, 0, 0, 0].At 65536#64)
-        ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At 65708#64)
-        ⋆ Eq ((z 8).At 65716#64)
-        ⋆ Eq ((z 8).At 65724#64)
-        ⋆ Eq ((z 16).At 65732#64)
-        ⋆ Eq ((z 8).At 65748#64)
-        ⋆ Eq ((z 8).At 65756#64)
-        ⋆ Eq ((z 8).At 65764#64)
-        ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At 65772#64)
-        ⋆ Eq ((z 8).At 65780#64)
-        ⋆ Eq ((z 8).At 65788#64)
-        ⋆ Eq (in0.At 65796#64)
-        ⋆ Eq (in1.At 65804#64)
-        ⋆ Eq (root.At 65812#64)
-        ⋆ Eq (se.At 65844#64)
-        ⋆ Eq (sroot.At 65852#64)
-        ⋆ Eq (te.At 65884#64)
-        ⋆ Eq (troot.At 65892#64)
-        ⋆ Eq ((z 8).At 65924#64)
-        ⋆ Eq ((z 8).At 65932#64)
-        ⋆ Eq ((z 8).At 65940#64)
-        ⋆ Eq ((z 8).At 65948#64)
-        ⋆ Eq ((z 8).At 65956#64)
-        ⋆ Eq ((z 8).At 65964#64)
-        ⋆ Eq ((z 8).At 65972#64))) (mem in0 in1 root se sroot te troot) := by
+        ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At 65712#64)
+        ⋆ Eq ((z 8).At 65720#64)
+        ⋆ Eq ((z 8).At 65728#64)
+        ⋆ Eq ((z 16).At 65736#64)
+        ⋆ Eq ((z 8).At 65752#64)
+        ⋆ Eq ((z 8).At 65760#64)
+        ⋆ Eq ((z 8).At 65768#64)
+        ⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At 65776#64)
+        ⋆ Eq ((z 8).At 65784#64)
+        ⋆ Eq ((z 8).At 65792#64)
+        ⋆ Eq (in0.At 65800#64)
+        ⋆ Eq (in1.At 65808#64)
+        ⋆ Eq (root.At 65816#64)
+        ⋆ Eq (se.At 65848#64)
+        ⋆ Eq (sroot.At 65856#64)
+        ⋆ Eq (te.At 65888#64)
+        ⋆ Eq (troot.At 65896#64)
+        ⋆ Eq ((z 8).At 65928#64)
+        ⋆ Eq ((z 8).At 65936#64)
+        ⋆ Eq ((z 8).At 65944#64)
+        ⋆ Eq ((z 8).At 65952#64)
+        ⋆ Eq ((z 8).At 65960#64)
+        ⋆ Eq ((z 8).At 65968#64)
+        ⋆ Eq ((z 8).At 65976#64))) ⋆ Eq ((z 4).At 65548#64)) (mem in0 in1 root se sroot te troot) := by
     ecancel
-  have H3 := sep_mono_left (P' := bumpHeap 160) (fun m hm => ⟨65548#64, by decide, by rw [label_bump]; exact hm⟩) H2
-  have H4 := sep_true (F := Std.ExtHashMap.emp) (by simpa only [Std.ExtHashMap.sep_emp] using H3)
+  have H4 : ((bumpHeap 160 ⋆ _) ⋆ fun _ : DataMem => True) _ := sep_mono_left (fun _ => sep_mono_left (P' := bumpHeap 160) (fun m hm => ⟨65552#64, by decide, by rw [label_bump]; exact hm⟩)) (sep_true H2)
   rw [label_wb]
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]

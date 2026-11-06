@@ -17,6 +17,7 @@ MEM="(by have h := s_mem zmms flags; simp only [Std.ExtHashMap.sep_assoc] at h â
 if which=="sc":
     ch=[("guard",Z,8),("fp","z 8",8),("ra",Z,8),("sp1","z 8",8),("sp2","z 8",8),
         ("cA","z 1",1),("h1","z 1",1),("cB","z 2",2),("cC","z 4",4),("cD","z 8",8),("cE","[0]",1),
+        ("gap_pad","z 7",7),  # Scalars is 24 bytes in Go (layout.json): padding 17..23 (fix 2 X3)
         ("d0","z 1",1),("d1","z 2",2),("d2","z 4",4),("d3","z 8",8),("d4","z 1",1)]
     R="Eq ((z 1).At (s.regs.rax.toBitVec + 1))"
     prem=f"""Eq (({Z}).At s.regs.rsp.toBitVec)

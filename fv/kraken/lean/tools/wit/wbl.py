@@ -9,6 +9,7 @@ ch=[("guard",Z,8),("scratch","z 8",8),("rslot","z 8",8),("spl","z 40",40),("l80"
     ("l48","z 8",8),("l40","z 8",8),("l32","z 8",8),("hole","z 16",16),("fp","z 8",8),("ra",Z,8),
     ("s8","z 8",8),("s16","z 8",8),("s24","z 8",8),("b4","[4, 0, 0, 0]",4),("tl",TL,N),
     ("cP","z 8",8),("cL","z 8",8),("cC","z 8",8)]
+ch=wgen.aligned(ch,{"guard","cP"},base=wgen.CH0+heap)  # rsp and the receiver 8-aligned (fix 2 X3)
 prem=f"""Eq (({Z}).At s.regs.rsp.toBitVec)
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 8)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 8))
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 16)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 24))
