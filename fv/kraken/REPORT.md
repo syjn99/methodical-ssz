@@ -1,6 +1,6 @@
 # REPORT: Kraken x64 코덱 검증의 현재 상태
 
-기준 커밋: `0ef30e3`(재증명 수정 2와 그 리뷰). 정리 세션은 뜻을 바꾸지 않았다.
+기준: 재증명 수정 2와 그 리뷰(`0ef30e3`) 위의 정리 세션. 정리 세션은 정리의 뜻을 바꾸지 않았다.
 방향은 `DIRECTION.md`, 세션 이력은 `HISTORY.md`, 고정 버전은 `TOOLS.md`에 있다.
 
 ## 0. 판정
@@ -18,10 +18,10 @@ gpt-6-astra 수정 2 리뷰(`review/gpt6-astra-reprove-fix2.md` 8절)의 판정�
 6. 디코더의 EthLib 양방향 수용 정리는 BitVec(1바이트)뿐이다.
 7. x86-64 하드웨어 대조를 하지 않았다. 이 호스트는 arm64다.
 
-수치(`0ef30e3`, 정리 세션 끝에 다시 실행한 값은 `HISTORY.md` 끝 절):
+수치(정리 세션 끝, 기준선과의 비교는 `HISTORY.md` 7절):
 
 - `lake build`: 856 jobs, 성공.
-- 공리: 정리 `TOTAL 1583 NONSTANDARD 0`(`AXIOMS.txt`), 모든 선언 `TOTAL 8028 NONSTANDARD 0`(`AXIOMS-ALL.txt`).
+- 공리: 정리 `TOTAL 1571 NONSTANDARD 0`(`AXIOMS.txt`), 모든 선언 `TOTAL 7975 NONSTANDARD 0`(`AXIOMS-ALL.txt`).
 - 시험 타입 9개. 디코더·인코더·크기 주 정리 55개. 증인 파일 79개, `*_runs` 선언 80개.
 - 링크 검사 PASS(검사 (a)–(h)). 자기 시험 24개 기대대로.
 - 부정 시험 16개 기대대로(`negative/RESULT`).

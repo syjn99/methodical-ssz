@@ -75,9 +75,43 @@ ListC 원소 오프셋 순서 거부는 하지 않았다.
 astra 리뷰: 역할 분류가 Host 바인더와 이름 가림을 구분하지 못한다. (h)가 접미 식과 다른 포인터 타입을 받는다. Go 파서가 지역 `fmt`를 표준 패키지로 본다. 오류 증인이 유효한 Go 오류 인터페이스가 아니다. 크기 정리 분류가 틀렸다(일곱은 메모리 동일성). Scalars·ListU64의 "타입 전체 완료"를 철회했다. 필수 수정 8개.
 그 뒤 `DIRECTION.md`(`3548e9d`)가 (f)(g)(h)를 Lake `input_file`과 ELF 데이터 include로 바꾸기로 정했다.
 
-## 7. 정리 (2026-11-06)
+## 7. 정리 (2026-11-06 09:30 – 19:58)
 
-커밋 `3548e9d..`(이 세션).
+커밋 `3548e9d..`(브랜치 `syjn99/ssz-fv-cleanup`).
 코드·주석·보고서·아티팩트를 줄였다. 주 정리·증인·계약의 문장, 대상 Go 코드, ELF, link/out의 `.S`·objdump·nm, 부정 시험, 자기 시험은 바꾸지 않았다.
-보고서 여섯을 `REPORT.md`(현재 상태)와 이 파일로 합쳤다. `COST.md`를 지웠다(평가 세션 비용은 1절).
-게이트 표에 astra 수정 2 8절 정정을 반영했다.
+
+- 보고서 여섯을 `REPORT.md`(현재 상태)와 이 파일로 합쳤다. `COST.md`를 지웠다(평가 세션 비용은 1절). 게이트 표에 astra 수정 2 8절 정정을 반영했다.
+- `review/`: 로그·json·txt·변이 사본 68개를 지웠다. 현재 서명으로 빌드되지 않는 회귀 블록과 파일 셋(`Review1b.lean`, `ReviewB0CountAstra.lean`, `ReviewFixB0CountAstra.lean`)을 지웠다. 남은 Lean 파일 11개는 오류 없이 돈다.
+- 아티팩트: `link/out/raw/*.S` 30개(check.py가 읽지 않음), vcgen 로그 9개, `goval-result.txt`, `regress-fix2.log`, `link/out/SELFTEST`, `link/out/FUNCS.md`를 지우고 생성물을 `.gitignore`에 넣었다.
+- 미사용 보조 정리 16개를 의존성 폐포로 찾아 지웠다: `bva_s40`, `bva_s48`, `bva_slot'`, `bva_nat`, `bva_rbx`, `bvm_o`, `bvm_one`, `bvr_a`, `bvr_sc`, `bvr_sc'`, `Fk.sep_drop`, `cpm_slot`, `Fk.spill_sep`, `f88`, `f120`, `Keep1.refl`. `rtvbl_16`은 rfl 보조정리라 남겼다.
+- 증인 생성기: `wgen.py` 공통 함수와 표 `ALL` 하나로 74개 파일을 다시 만든다. 재생성 결과는 커밋된 파일과 바이트 단위로 같다. 생성기 없는 파일은 `WitAd`, `WitCp`, `WitCpM`, `WitFv`, `Witness`다. 증명 골격(`hk_*`, `hf_*`, 블록 분할)을 `WHost.lean`의 정리 넷과 매크로 `wit_split`으로 옮겼다.
+- `Fk/*.lean` 주석에서 세션 표식과 과거 상태 문장을 지웠다. 파일 머리 docstring은 5줄 이하다.
+- `fv/AGENTS.md`를 규칙만 남겨 76줄로 줄였다.
+
+검사(기준선 → 정리 뒤):
+
+| 검사 | 기준선 | 정리 뒤 |
+| --- | --- | --- |
+| `lake build` | 856 jobs | 856 jobs |
+| AXIOMS 정리 | 1583, NONSTANDARD 0 | 1571, NONSTANDARD 0 (−16 삭제, +4 `WHost` 정리) |
+| AXIOMS 모든 선언 | 8028, NONSTANDARD 0 | 7975, NONSTANDARD 0 (증인 골격 보조 선언 −26, 삭제 정리와 그 보조 선언 −27) |
+| 링크 검사 | PASS | PASS. ELF sha256 `9c850c97…c501`, `norm/*.S`·objdump·nm·`Code.lean` 불변. BUNDLE은 `AXIOMS.txt` 변경으로 바뀐다 |
+| 자기 시험 | 24 | 24 |
+| 부정 시험 | 16 | 16 기대대로(대조군 PASS, 변이 15개 지정 정리에서 FAIL) |
+| goval | 79/0/2 | 79/0/2 |
+| `go test ./fv/kraken/semtest/` | ok | ok |
+| `RegressFix2.lean`, 리뷰 Lean 파일 | 일부 실패 | 모두 오류 없음 |
+
+크기(git이 추적하는 파일):
+
+| 범위 | 파일 전 → 후 | 줄 전 → 후 | 용량 전 → 후 |
+| --- | --- | --- | --- |
+| `lean/Fk/*.lean` | 148 → 148 | 27,733 → 26,269 | 1,820K → 1,688K |
+| 그중 `Wit*.lean` | 79 → 79 | 9,645 → 8,596 | 740K → 640K |
+| `lean/tools/wit` | 34 → 31 | 3,679 → 3,164 | 304K → 244K |
+| `link` 전체 | 72 → 40 | 33,812 → 27,326 | 3,820K → 3,588K |
+| `review` | 96 → 23 | 10,612 → 3,857 | 948K → 304K |
+| `vcgen`(`.lake` 제외) | 17 → 8 | 2,583 → 388 | 192K → 44K |
+| 보고서 md | 11 → 6 | 2,267 → 586 | 244K → 68K |
+| `fv/AGENTS.md` | 1 → 1 | 167 → 76 | 8K → 8K |
+| `fv/kraken` 전체 | 434 → 311 | 85,757 → 66,598 | 7,712K → 6,372K |
