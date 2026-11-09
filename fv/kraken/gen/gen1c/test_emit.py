@@ -64,6 +64,8 @@ def run_emit(out, desc_dir, result, types=None, extra=()):
 
 def prepare(work, dwork):
     import shutil
+    # absolute paths: the symlinks and emit runs below must not depend on the cwd (review r5 S6)
+    work, dwork = os.path.abspath(work), os.path.abspath(dwork)
     if os.path.exists(work):
         shutil.rmtree(work)
     os.makedirs(work)

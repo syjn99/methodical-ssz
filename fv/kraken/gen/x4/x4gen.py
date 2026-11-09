@@ -952,9 +952,14 @@ def main():
     th = json.load(open(a.theorems))
     [(key, desc, _p, dsha, _r)] = emit.accept(a.desccheck_result, a.desc_dir, [a.type], "hand_case", th)
     t = key[1]
-    if any(f["kind"] == "list" for f in desc["fields"]):
-        return main_list(a, key, desc, dsha)
-    F = Fields(desc, LAYOUT["types"][t])
+    try:
+        if any(f["kind"] == "list" for f in desc["fields"]):
+            return main_list(a, key, desc, dsha)
+        F = Fields(desc, LAYOUT["types"][t])
+        check_offsets(F, directives(os.path.join(NORM, f"target.{t}.UnmarshalSSZ.S")))
+    except (KeyError, AssertionError, IndexError, StopIteration) as e:   # review r5 S5: classified refusal
+        raise SystemExit(f"x4gen: refused {key[0]}.{t}: template does not fit the Desc/layout/code "
+                         f"({type(e).__name__}: {e})")
     ns = a.ns or f"Gen1cX4.{t}"
     only = a.only.split(",")
     code = {m: f"{t}{m}" for m in ("SizeSSZ", "UnmarshalSSZ", "MarshalSSZTo")}
@@ -999,6 +1004,22 @@ def main():
     open(out, "w").write("\n".join(body))
     print(json.dumps({"type": t, "out": a.out_lean, "only": only, "mutant": a.mutant, "desc_sha256": dsha}))
 
+
+
+def check_offsets(F, D):
+    """Every input load (rbx) and receiver store (rax) of the decoder must hit a field of the Desc
+    (SSZ offset) and of the Go layout (Go offset); otherwise the Desc does not describe this code."""
+    ssz = {f["ssz"] for f in F.f}
+    go = {f["go"] for f in F.f}
+    for d, k, t in D:
+        mm = MEM.match(t) if k == "instr" else None
+        if not mm:
+            continue
+        a, b = disp(mm["a"]), disp(mm["b"])
+        if t.split()[0] in ("movzbl", "movzwl", "mov") and a and a[1] == "rbx" and a[0] not in ssz:
+            raise SystemExit(f"x4gen: refused {F.t}: directive {d} `{t}` loads input offset {a[0]}, not a field offset of the Desc {sorted(ssz)}")
+        if t.split()[0] in ("mov", "movb") and b and b[1] == "rax" and b[0] not in go:
+            raise SystemExit(f"x4gen: refused {F.t}: directive {d} `{t}` stores receiver offset {b[0]}, not a Go field offset {sorted(go)}")
 
 
 def main_list(a, key, desc, dsha):
