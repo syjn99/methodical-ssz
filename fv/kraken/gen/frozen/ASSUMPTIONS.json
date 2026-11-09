@@ -102,6 +102,6 @@
   "fv/kraken/CONTRACTS.md",
   "fv/kraken/REPORT.md sections 3 and 7",
   "fv/AGENTS.md",
-  "run shared/INCLUDE-API.json api_version 2 (fix3 b6c32c3, data include, committed, not yet approved); gen/gen1c/include_adapter.py names the version in use"
+  "run shared/INCLUDE-API.json api_version 2 (fix3 d9cdb40, data include, approved stage A); gen/gen1c/include_adapter.py names the version in use"
  ]
 }

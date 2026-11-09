@@ -32,6 +32,14 @@
    "hand_example": "sc_spec_rejects_bool"
   },
   {
+   "id": "unreachable_mc",
+   "function": "UnmarshalSSZ",
+   "per": "Go-source error return site that the machine code does not contain",
+   "statement": "the included machine code of the function has no path to the site's error return (for example the callee call was inlined and its only failure is excluded by the caller's own checks): proved from the included code. The site's reject row stays in the list (Go-source rule); this row never closes it as a reject path and is counted in its own column.",
+   "hand_example": null,
+   "added": "INBOX 005/009 (orchestrator, provisional until the user confirms; OUTBOX 002 item 1), frozen-list commit after the fix3 stage A rebase"
+  },
+  {
    "id": "marshal",
    "function": "MarshalSSZTo",
    "statement": "for every Go value in the EthLib domain of the type and every dst, MarshalSSZTo returns (dst ++ EthLib.encode v, nil); input, prefix, frame R, rsp after return and preserved registers stated.",
@@ -171,7 +179,8 @@
     "guard": "if sszSlice4[0] > 1 {",
     "ret": "ssz.ErrInvalidSerialization",
     "hand_theorems": [
-     "sc_reject_bool_main"
+     "sc_reject_bool_main",
+     "sc_reject_bool_err"
     ]
    },
    {
@@ -1018,7 +1027,9 @@
     "site_kind": "listc-offset-order",
     "guard": "if endOffset < startOffset {",
     "ret": "fmt.Errorf(\"offset %d is not greater than start offset %d when decoding c.Items\", endOffset, startOffset)",
-    "hand_theorems": []
+    "hand_theorems": [
+     "lc_reject_offset_order_main"
+    ]
    },
    {
     "id": "ListC.UnmarshalSSZ.reject_spec.r8",
@@ -1437,6 +1448,19 @@
     "hand_theorems": []
    },
    {
+    "id": "AttestationData.UnmarshalSSZ.unreachable_mc.r2",
+    "type": "AttestationData",
+    "function": "UnmarshalSSZ",
+    "obligation": "unreachable_mc",
+    "site": 2,
+    "line": 149,
+    "site_kind": "callee-error",
+    "guard": "if err = c.Source.UnmarshalSSZ(sszSlice3); err != nil {",
+    "ret": "fmt.Errorf(\"Source: %w\", err)",
+    "reason": "c.Source.UnmarshalSSZ(sszSlice3) on an exact 40-byte slice; inlined, no error path",
+    "hand_theorems": []
+   },
+   {
     "id": "AttestationData.UnmarshalSSZ.reject.r3",
     "type": "AttestationData",
     "function": "UnmarshalSSZ",
@@ -1446,6 +1470,19 @@
     "site_kind": "callee-error",
     "guard": "if err = c.Target.UnmarshalSSZ(sszSlice4); err != nil {",
     "ret": "fmt.Errorf(\"Target: %w\", err)",
+    "hand_theorems": []
+   },
+   {
+    "id": "AttestationData.UnmarshalSSZ.unreachable_mc.r3",
+    "type": "AttestationData",
+    "function": "UnmarshalSSZ",
+    "obligation": "unreachable_mc",
+    "site": 3,
+    "line": 155,
+    "site_kind": "callee-error",
+    "guard": "if err = c.Target.UnmarshalSSZ(sszSlice4); err != nil {",
+    "ret": "fmt.Errorf(\"Target: %w\", err)",
+    "reason": "c.Target.UnmarshalSSZ(sszSlice4) on an exact 40-byte slice; inlined, no error path",
     "hand_theorems": []
    },
    {
@@ -37499,11 +37536,16 @@
    "reject_spec": 25,
    "size": 9
   },
-  "hand_obligations_with_theorem": 63,
+  "hand_obligations_with_theorem": 64,
   "hand_obligations_with_theorem_partial": 5,
-  "hand_obligations_with_full_theorem": 58,
-  "hand_obligations_open": 69,
-  "hand_main_theorems_mapped": 55,
+  "hand_obligations_with_full_theorem": 59,
+  "hand_obligations_open": 68,
+  "hand_unreachable_mc": {
+   "rows": 2,
+   "with_theorem": 0,
+   "note": "own column (not in hand_obligations); never a closed reject path"
+  },
+  "hand_main_theorems_mapped": 56,
   "hand_names_in_table_not_mapped": [],
   "prysm_types_in": 132,
   "prysm_obligations": 3676,

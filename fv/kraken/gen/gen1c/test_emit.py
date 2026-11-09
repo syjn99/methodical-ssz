@@ -27,8 +27,8 @@ KRAKEN = os.path.normpath(os.path.join(HERE, "..", ".."))
 HAND = ["Scalars", "FixedVec", "ListU64", "BitVec", "Nested", "ListC", "BitL", "Checkpoint", "AttestationData"]
 TGT = "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
 HAND_Q = [f"{TGT}/prysm.{t}" if t in ("Checkpoint", "AttestationData") else f"{TGT}.{t}" for t in HAND]
-FROZEN = {"THEOREMS.json": "e4d7dcf8be132789333aced22c5e1e4278539edf4aee6aaeef9cc77dd141b342",
-          "ASSUMPTIONS.json": "9decb220f35736b9b8d07700f606e146c1c076f5016789ac5c7c22c1a213905f"}
+FROZEN = {"THEOREMS.json": "3476b07a4801728301c3736f313a0f43a5debb901ec517057e0727bb29bf81b8",
+          "ASSUMPTIONS.json": "3776c77eb337b741cfb2cfd3eb60cc99b61c2611c17394089187ca39a13bf78e"}
 # (emitted statement, hand theorem, expected, explanation)
 COMPARE = [
     ("Gen1c.Hand.Checkpoint.size_stmt", "cp_size_main", "SAME", "fixed-size template"),

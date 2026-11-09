@@ -44,6 +44,13 @@ KINDS = [
     {"id": "reject_spec", "function": "UnmarshalSSZ", "per": "error return site whose condition is a spec-level reject",
      "statement": "the EthLib decoder rejects every input that satisfies the site's path condition.",
      "hand_example": "sc_spec_rejects_bool"},
+    {"id": "unreachable_mc", "function": "UnmarshalSSZ", "per": "Go-source error return site that the machine code does not contain",
+     "statement": "the included machine code of the function has no path to the site's error return (for example the "
+                  "callee call was inlined and its only failure is excluded by the caller's own checks): proved from the "
+                  "included code. The site's reject row stays in the list (Go-source rule); this row never closes it as a "
+                  "reject path and is counted in its own column.",
+     "hand_example": None,
+     "added": "INBOX 005/009 (orchestrator, provisional until the user confirms; OUTBOX 002 item 1), frozen-list commit after the fix3 stage A rebase"},
     {"id": "marshal", "function": "MarshalSSZTo",
      "statement": "for every Go value in the EthLib domain of the type and every dst, MarshalSSZTo returns "
                   "(dst ++ EthLib.encode v, nil); input, prefix, frame R, rsp after return and preserved registers stated.",
@@ -90,7 +97,7 @@ HAND = {
     ("ListU64", "UnmarshalSSZ", "reject_complete"): ["lu_spec_accepts_iff"],
     ("Nested", "UnmarshalSSZ", "reject_complete"): ["ne_spec_accepts_iff"],
     ("Scalars", "UnmarshalSSZ", "size-fixed"): ["sc_reject_size_main"],
-    ("Scalars", "UnmarshalSSZ", "bool-range"): ["sc_reject_bool_main"],
+    ("Scalars", "UnmarshalSSZ", "bool-range"): ["sc_reject_bool_main", "sc_reject_bool_err"],
     ("Scalars", "UnmarshalSSZ", "reject_spec:bool-range"): ["sc_spec_rejects_bool"],
     ("Scalars", "MarshalSSZTo", "marshal"): ["sc_marshal_main"],
     ("Scalars", "SizeSSZ", "size"): ["sc_size_main"],
@@ -128,6 +135,7 @@ HAND = {
     ("ListC", "UnmarshalSSZ", "listc-offset-zero"): ["lc_reject_zero_main"],
     ("ListC", "UnmarshalSSZ", "listc-first-offset-past"): ["lc_reject_past_main"],
     ("ListC", "UnmarshalSSZ", "listc-tail"): ["lc_reject_tail_main"],
+    ("ListC", "UnmarshalSSZ", "listc-offset-order"): ["lc_reject_offset_order_main"],
     ("ListC", "MarshalSSZTo", "marshal"): ["lc_marshal_main"],
     ("ListC", "SizeSSZ", "size"): ["lc_size_main"],
     ("BitL", "UnmarshalSSZ", "accept"): ["bl_accept_main"],
@@ -148,6 +156,10 @@ HAND = {
     ("AttestationData", "SizeSSZ", "size"): ["ad_size_main"],
 }
 CALLEE_SPECS = {"ssz.ValidateBitvector": ["vbv_accept_main", "vbv_reject_pad_main"]}
+# Go-source sites with no counterpart in the machine code (P5 COMPARE.md: the decoder does not reference
+# "Source: %w" / "Target: %w"; Checkpoint.UnmarshalSSZ is inlined and fails only on size, which the caller fixes).
+UNREACHABLE_MC = {("AttestationData", "UnmarshalSSZ", 2): "c.Source.UnmarshalSSZ(sszSlice3) on an exact 40-byte slice; inlined, no error path",
+                  ("AttestationData", "UnmarshalSSZ", 3): "c.Target.UnmarshalSSZ(sszSlice4) on an exact 40-byte slice; inlined, no error path"}
 STATIC_FALSE = {("FixedVec", "MarshalSSZTo", 1): "len(c.R) on a Go array [32]byte is a constant 32; the compiler removes the branch"}
 SPEC_LEVEL = {"size-fixed", "size-short", "offset-first", "offset-past-or-order", "offset-order", "offset-past-size",
               "bool-range", "list-misaligned", "list-too-big", "listc-offset-zero", "listc-offset-misaligned",
@@ -176,6 +188,8 @@ def instantiate(fn_sites, types, hand=None):
         u = by.get((t, "UnmarshalSSZ"), {"reject_sites": []})
         for s in u["reject_sites"]:
             add("UnmarshalSSZ", "reject", s)
+            if hand is not None and (t, "UnmarshalSSZ", s["site"]) in UNREACHABLE_MC:
+                add("UnmarshalSSZ", "unreachable_mc", s, {"reason": UNREACHABLE_MC[(t, "UnmarshalSSZ", s["site"])]})
             if s["kind"] in SPEC_LEVEL:
                 add("UnmarshalSSZ", "reject_spec", s)
         add("MarshalSSZTo", "marshal")
@@ -189,7 +203,9 @@ def instantiate(fn_sites, types, hand=None):
     if hand is not None:
         seen = {}
         for r in rows:
-            if r["obligation"] in ("reject", "marshal_reject", "reject_spec"):
+            if r["obligation"] == "unreachable_mc":
+                names = hand.get((r["type"], r["function"], f"unreachable_mc#{r['site']}"), [])
+            elif r["obligation"] in ("reject", "marshal_reject", "reject_spec"):
                 key = r["site_kind"]
                 n = seen.setdefault((r["type"], r["function"], r["obligation"], key), 0) + 1
                 seen[(r["type"], r["function"], r["obligation"], key)] = n
@@ -217,6 +233,8 @@ def main():
     hand_types = ["Scalars", "FixedVec", "ListU64", "BitVec", "Nested", "ListC", "BitL", "Checkpoint", "AttestationData"]
     hs = obligations.sites([f"{k}/target/types.ssz.go", f"{k}/target/types1b.ssz.go", f"{k}/target/prysm/types.ssz.go"])
     hand_rows = instantiate(hs, hand_types, HAND)
+    hand_main = [r for r in hand_rows if r["obligation"] != "unreachable_mc"]
+    hand_unr = [r for r in hand_rows if r["obligation"] == "unreachable_mc"]
     mapped = sorted({n for r in hand_rows for n in r["hand_theorems"]} | {n for v in CALLEE_SPECS.values() for n in v})
     all_hand = sorted({n for v in HAND.values() for n in v} | {n for v in CALLEE_SPECS.values() for n in v})
     inv = json.load(open(f"{k}/prysm/inventory.json"))
@@ -244,14 +262,16 @@ def main():
         "hand_case": {"types": hand_types, "obligations": hand_rows},
         "prysm": {"preset": "mainnet", "types_in": in_types, "types_out_listed_only": out_types, "obligations": pr_rows},
         "counts": {
-            "hand_obligations": len(hand_rows),
-            "hand_obligations_by_kind": dict(sorted(Counter(r["obligation"] for r in hand_rows).items())),
-            "hand_obligations_with_theorem": sum(bool(r["hand_theorems"]) for r in hand_rows),
+            "hand_obligations": len(hand_main),
+            "hand_obligations_by_kind": dict(sorted(Counter(r["obligation"] for r in hand_main).items())),
+            "hand_obligations_with_theorem": sum(bool(r["hand_theorems"]) for r in hand_main),
             "hand_obligations_with_theorem_partial": sum(bool(r["hand_theorems"]) and r.get("hand_status", "").startswith("partial")
-                                                         for r in hand_rows),
+                                                         for r in hand_main),
             "hand_obligations_with_full_theorem": sum(bool(r["hand_theorems"]) and not r.get("hand_status", "").startswith("partial")
-                                                      for r in hand_rows),
-            "hand_obligations_open": sum(not r["hand_theorems"] for r in hand_rows),
+                                                      for r in hand_main),
+            "hand_obligations_open": sum(not r["hand_theorems"] for r in hand_main),
+            "hand_unreachable_mc": {"rows": len(hand_unr), "with_theorem": sum(bool(r["hand_theorems"]) for r in hand_unr),
+                                    "note": "own column (not in hand_obligations); never a closed reject path"},
             "hand_main_theorems_mapped": len([n for n in mapped if n.endswith("_main")]),
             "hand_names_in_table_not_mapped": sorted(set(all_hand) - set(mapped)),
             "prysm_types_in": len(in_types),
@@ -291,7 +311,7 @@ def main():
             {"id": "size-bounds", "what": "explicit size ranges in contracts", "conditions": "no quantification over all sizes and all frames (fv/AGENTS.md)"},
         ],
         "forbidden": ["sorry", "admit", "new axiom", "native_decide", "bv_decide", "hand-typed rodata/itab/type constants", "a premise that makes the conclusion vacuous (False derivable)", "dropping a live resource into `⋆ True` without classification"],
-        "sources": ["fv/kraken/CONTRACTS.md", "fv/kraken/REPORT.md sections 3 and 7", "fv/AGENTS.md", "run shared/INCLUDE-API.json api_version 2 (fix3 b6c32c3, data include, committed, not yet approved); gen/gen1c/include_adapter.py names the version in use"],
+        "sources": ["fv/kraken/CONTRACTS.md", "fv/kraken/REPORT.md sections 3 and 7", "fv/AGENTS.md", "run shared/INCLUDE-API.json api_version 2 (fix3 d9cdb40, data include, approved stage A); gen/gen1c/include_adapter.py names the version in use"],
     }
     d = out_dir or f"{k}/gen/frozen"
     for name, obj in (("THEOREMS.json", th), ("ASSUMPTIONS.json", asm)):
