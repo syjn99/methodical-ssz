@@ -1,0 +1,4259 @@
+[
+ {
+  "id": "t01-empty-list",
+  "source": "r3",
+  "verdict": "FAIL",
+  "list": {
+   "missing": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    },
+    {
+     "type": "FixedVec",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    },
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    },
+    {
+     "type": "BitVec",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    },
+    {
+     "type": "Nested",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    },
+    {
+     "type": "ListC",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    },
+    {
+     "type": "BitL",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    },
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    },
+    {
+     "type": "AttestationData",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    },
+    {
+     "type": "ConsolidationRequest",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
+    },
+    {
+     "type": "DepositRequest",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
+    },
+    {
+     "type": "ExecutionPayload",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
+    },
+    {
+     "type": "ExecutionPayloadCapella",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
+    },
+    {
+     "type": "ExecutionPayloadDeneb",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
+    },
+    {
+     "type": "ExecutionPayloadHeader",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
+    },
+    {
+     "type": "ExecutionPayloadHeaderCapella",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
+    },
+    {
+     "type": "ExecutionPayloadHeaderDeneb",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
+    },
+    {
+     "type": "ExecutionRequests",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
+    },
+    {
+     "type": "Withdrawal",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
+    },
+    {
+     "type": "WithdrawalRequest",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
+    },
+    {
+     "type": "AggregateAttestationAndProof",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "AggregateAttestationAndProofElectra",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "Attestation",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "AttestationData",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "AttestationElectra",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "AttesterSlashing",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "AttesterSlashingElectra",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BLSToExecutionChange",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconBlock",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconBlockAltair",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconBlockBellatrix",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconBlockBody",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconBlockBodyAltair",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconBlockBodyBellatrix",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconBlockBodyCapella",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconBlockBodyDeneb",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconBlockBodyElectra",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconBlockCapella",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconBlockContentsDeneb",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconBlockContentsElectra",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconBlockContentsFulu",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconBlockDeneb",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconBlockElectra",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconBlockHeader",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconState",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconStateAltair",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconStateBellatrix",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconStateCapella",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconStateDeneb",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconStateElectra",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BeaconStateFulu",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BlindedBeaconBlockBellatrix",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BlindedBeaconBlockBodyBellatrix",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BlindedBeaconBlockBodyCapella",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BlindedBeaconBlockBodyDeneb",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BlindedBeaconBlockBodyElectra",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BlindedBeaconBlockCapella",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BlindedBeaconBlockDeneb",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BlindedBeaconBlockElectra",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BlindedBeaconBlockFulu",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BlobIdentifier",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BlobSidecar",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BlobSidecars",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BuilderBidCapella",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BuilderBidDeneb",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "BuilderBidElectra",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "ContributionAndProof",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "DataColumnSidecar",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "DataColumnsByRootIdentifier",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "Deposit",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "DepositMessage",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "Deposit_Data",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "ENRForkID",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "Eth1Data",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "Fork",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "ForkData",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "HistoricalBatch",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "HistoricalSummary",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "IndexedAttestation",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "IndexedAttestationElectra",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "LightClientBootstrapAltair",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "LightClientBootstrapCapella",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "LightClientBootstrapDeneb",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "LightClientBootstrapElectra",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "LightClientFinalityUpdateAltair",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "LightClientFinalityUpdateCapella",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "LightClientFinalityUpdateDeneb",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "LightClientFinalityUpdateElectra",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "LightClientHeaderAltair",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "LightClientHeaderCapella",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "LightClientHeaderDeneb",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "LightClientOptimisticUpdateAltair",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "LightClientOptimisticUpdateCapella",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "LightClientOptimisticUpdateDeneb",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "LightClientUpdateAltair",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "LightClientUpdateCapella",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "LightClientUpdateDeneb",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "LightClientUpdateElectra",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "PartialDataColumnHeader",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "PartialDataColumnPartsMetadata",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "PartialDataColumnSidecar",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "PendingAttestation",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "PendingConsolidation",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "PendingDeposit",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "PendingPartialWithdrawal",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "PowBlock",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "ProposerSlashing",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedAggregateAttestationAndProof",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedAggregateAttestationAndProofElectra",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedBLSToExecutionChange",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedBeaconBlock",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedBeaconBlockAltair",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedBeaconBlockBellatrix",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedBeaconBlockCapella",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedBeaconBlockContentsDeneb",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedBeaconBlockContentsElectra",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedBeaconBlockContentsFulu",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedBeaconBlockDeneb",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedBeaconBlockElectra",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedBeaconBlockFulu",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedBeaconBlockHeader",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedBlindedBeaconBlockBellatrix",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedBlindedBeaconBlockCapella",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedBlindedBeaconBlockDeneb",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedBlindedBeaconBlockElectra",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedBlindedBeaconBlockFulu",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedBuilderBidCapella",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedBuilderBidDeneb",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedBuilderBidElectra",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedContributionAndProof",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SignedVoluntaryExit",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SigningData",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SingleAttestation",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "Status",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "StatusV2",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SyncAggregate",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SyncAggregatorSelectionData",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SyncCommittee",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SyncCommitteeContribution",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "SyncCommitteeMessage",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "Validator",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "ValidatorBalance",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    },
+    {
+     "type": "VoluntaryExit",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    }
+   ]
+  }
+ },
+ {
+  "id": "t02-drop-scalars",
+  "source": "r3",
+  "verdict": "FAIL",
+  "list": {
+   "missing": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "t03-only-prysm",
+  "source": "r3",
+  "verdict": "FAIL",
+  "list": {
+   "missing": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    },
+    {
+     "type": "FixedVec",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    },
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    },
+    {
+     "type": "BitVec",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    },
+    {
+     "type": "Nested",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    },
+    {
+     "type": "ListC",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    },
+    {
+     "type": "BitL",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    },
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    },
+    {
+     "type": "AttestationData",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "t04-two-files-one-key-wrong-second",
+  "source": "r3",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/scen/t04.ListU64.wrong.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "t05-two-files-one-key-wrong-first",
+  "source": "r3",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/scen/t04.ListU64.wrong.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "t06-two-right-copies",
+  "source": "r3",
+  "verdict": "FAIL",
+  "list": {
+   "duplicate_keys": [
+    {
+     "type": "ListC",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "t07-extra-q01",
+  "source": "r3",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q01-scalars-under-prysm-v1.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    }
+   ]
+  }
+ },
+ {
+  "id": "t08-extra-q02",
+  "source": "r3",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q02-nested-lowercase-type.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "nested",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "t09-extra-q12",
+  "source": "r3",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q12-cp-under-engine.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
+    }
+   ]
+  }
+ },
+ {
+  "id": "t10-missing-file",
+  "source": "r3",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/r3/scen/does-not-exist.desc.json"
+   ],
+   "failed_originals": [
+    "replay/r3/scen/does-not-exist.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "t11-drop-prysm-type",
+  "source": "r3",
+  "verdict": "FAIL",
+  "list": {
+   "missing": [
+    {
+     "type": "Validator",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    }
+   ]
+  }
+ },
+ {
+  "id": "t12-forge",
+  "source": "r3",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/forge/A.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "t13-forge-table-ok",
+  "source": "r3",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q51-log-forge-table-ok.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "s-n01",
+  "source": "phase1c",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "mut/n01-esc-pkg-slash.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "mut/n01-esc-pkg-slash.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "s-n02",
+  "source": "phase1c",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "mut/n02-esc-type-missing.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "BitL",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "mut/n02-esc-type-missing.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "s-n03",
+  "source": "phase1c",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "mut/n03-esc-pkg-missing.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "mut/n03-esc-pkg-missing.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "s-n05",
+  "source": "phase1c",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "mut/n05-esc-type-zwsp.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "FixedVec",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "mut/n05-esc-type-zwsp.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "s-drop-nested",
+  "source": "phase1c",
+  "verdict": "FAIL",
+  "list": {
+   "missing": [
+    {
+     "type": "Nested",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "s-dup-listc",
+  "source": "phase1c",
+  "verdict": "FAIL",
+  "list": {
+   "duplicate_paths": [
+    "orig/ListC.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListC",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "s-y1-replace-prysm-cp",
+  "source": "phase1c",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/y1-scalars-as-prysm-checkpoint.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "s-y2-replace-prysm-cp",
+  "source": "phase1c",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/y2-prysm-cp-epoch-bytes8.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-m-fixed-size",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-fixed-size.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-m-fixed-size",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-fixed-size.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-m-offset",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-offset.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "AttestationData",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-m-offset",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-offset.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-m-width",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-width.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-m-width",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-width.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-m-head",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-head.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Nested",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-m-head",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-head.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-m-variable",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-variable.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Nested",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-m-variable",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-variable.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-m-limit-claim",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-limit-claim.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-m-limit-claim",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-limit-claim.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-m-elem",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-elem.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-m-elem",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-elem.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-m-limit-spec",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-limit-spec.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-m-limit-spec",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-limit-spec.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-m-kind-spec",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-kind-spec.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "BitL",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-m-kind-spec",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-kind-spec.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-m-uint-width",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-uint-width.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-m-uint-width",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-uint-width.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-m-wf",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-wf.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "FixedVec",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-m-wf",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/m-wf.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-r1-ref-dropped",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/r1-ref-dropped.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-r1-ref-dropped",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/r1-ref-dropped.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-r2-ref-key-removed",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/r2-ref-key-removed.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "BitL",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-r2-ref-key-removed",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/r2-ref-key-removed.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-r12-type",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/r12-type.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-r12-type",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "missing": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "mut/r12-type.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-r7-claim-name",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/r7-claim-name.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-r7-claim-name",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/r7-claim-name.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-r11-index",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/r11-index.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-r11-index",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/r11-index.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-r8-term-names-swapped",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/r8-term-names-swapped.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-r8-term-names-swapped",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/r8-term-names-swapped.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-r9-elem-variable",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/r9-elem-variable.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListC",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-r9-elem-variable",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/r9-elem-variable.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-r10-callee",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/r10-callee.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "AttestationData",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-r10-callee",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/r10-callee.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-n01-esc-pkg-slash",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "mut/n01-esc-pkg-slash.desc.json"
+   ],
+   "failed_originals": [
+    "mut/n01-esc-pkg-slash.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-n01-esc-pkg-slash",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "mut/n01-esc-pkg-slash.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "mut/n01-esc-pkg-slash.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-n02-esc-type-missing",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "mut/n02-esc-type-missing.desc.json"
+   ],
+   "failed_originals": [
+    "mut/n02-esc-type-missing.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-n02-esc-type-missing",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "mut/n02-esc-type-missing.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "BitL",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "mut/n02-esc-type-missing.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-n03-esc-pkg-missing",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "mut/n03-esc-pkg-missing.desc.json"
+   ],
+   "failed_originals": [
+    "mut/n03-esc-pkg-missing.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-n03-esc-pkg-missing",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "mut/n03-esc-pkg-missing.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "mut/n03-esc-pkg-missing.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-n05-esc-type-zwsp",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "mut/n05-esc-type-zwsp.desc.json"
+   ],
+   "failed_originals": [
+    "mut/n05-esc-type-zwsp.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-n05-esc-type-zwsp",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "mut/n05-esc-type-zwsp.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "FixedVec",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "mut/n05-esc-type-zwsp.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-n11-ad-swap-slot-index",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/n11-ad-swap-slot-index.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "AttestationData",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-n11-ad-swap-slot-index",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/n11-ad-swap-slot-index.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-n12-ad-swap-source-target",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/n12-ad-swap-source-target.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "AttestationData",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-n12-ad-swap-source-target",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/n12-ad-swap-source-target.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-n14-cp-names-crossed",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/n14-cp-names-crossed.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-n14-cp-names-crossed",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/n14-cp-names-crossed.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-e1-nested-inner-names",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/e1-nested-inner-names.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Nested",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-e1-nested-inner-names",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/e1-nested-inner-names.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-e2-hand-type-other-hand-pkg",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/e2-hand-type-other-hand-pkg.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-e2-hand-type-other-hand-pkg",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "missing": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "mut/e2-hand-type-other-hand-pkg.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-e3-cyrillic-type",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "mut/e3-cyrillic-type.desc.json"
+   ],
+   "failed_originals": [
+    "mut/e3-cyrillic-type.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-e3-cyrillic-type",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "mut/e3-cyrillic-type.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ],
+   "failed_originals": [
+    "mut/e3-cyrillic-type.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-e4-status-key",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/e4-status-key.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-e4-status-key",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/e4-status-key.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-e5-pkg-case",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "mut/e5-pkg-case.desc.json"
+   ],
+   "failed_originals": [
+    "mut/e5-pkg-case.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-e5-pkg-case",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "mut/e5-pkg-case.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "mut/e5-pkg-case.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-e6-ad-inner-cp-names",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/e6-ad-inner-cp-names.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "AttestationData",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-e6-ad-inner-cp-names",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/e6-ad-inner-cp-names.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-e7-schema",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/e7-schema.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-e7-schema",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/e7-schema.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-e8-term-extra-key",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/e8-term-extra-key.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "BitL",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-e8-term-extra-key",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/e8-term-extra-key.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-y1-scalars-as-prysm-checkpoint",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/y1-scalars-as-prysm-checkpoint.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-y1-scalars-as-prysm-checkpoint",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "missing": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "mut/y1-scalars-as-prysm-checkpoint.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-y6-claim-limit-on-uint",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/y6-claim-limit-on-uint.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-y6-claim-limit-on-uint",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/y6-claim-limit-on-uint.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-y7-dup-type-key-same-value",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/y7-dup-type-key-same-value.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-y7-dup-type-key-same-value",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/y7-dup-type-key-same-value.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-y8-int-as-exponent",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/y8-int-as-exponent.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-y8-int-as-exponent",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/y8-int-as-exponent.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-y9-leading-zero",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "mut/y9-leading-zero.desc.json"
+   ],
+   "failed_originals": [
+    "mut/y9-leading-zero.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-y9-leading-zero",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "mut/y9-leading-zero.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ],
+   "failed_originals": [
+    "mut/y9-leading-zero.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-c-y10-escaped-key",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/y10-escaped-key.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-c-y10-escaped-key",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "mut/y10-escaped-key.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r1-r1-ref-dropped",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r1-ref-dropped.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r1-r1-ref-dropped",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r1-ref-dropped.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r1-r2-ref-key-removed",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r2-ref-key-removed.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "BitL",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r1-r2-ref-key-removed",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r2-ref-key-removed.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r1-r7-claim-name",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r7-claim-name.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r1-r7-claim-name",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r7-claim-name.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r1-r8-term-names-swapped",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r8-term-names-swapped.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r1-r8-term-names-swapped",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r8-term-names-swapped.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r1-r9-elem-variable",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r9-elem-variable.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListC",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r1-r9-elem-variable",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r9-elem-variable.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r1-r10-callee",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r10-callee.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "AttestationData",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r1-r10-callee",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r10-callee.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r1-r11-index",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r11-index.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r1-r11-index",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r11-index.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r1-r12-type",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r12-type.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r1-r12-type",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "missing": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "replay/rmut/r12-type.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-add-r1-r13-ref-wrong",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r13-ref-wrong.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r1-r13-ref-wrong",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r13-ref-wrong.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r1-r14-extra-claim",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r14-extra-claim.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r1-r14-extra-claim",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r14-extra-claim.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r1-r15-term-only",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r15-term-only.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r1-r15-term-only",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r15-term-only.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r1-r16-var-offset",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r16-var-offset.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Nested",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r1-r16-var-offset",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r16-var-offset.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r1-r19-order-dup",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r19-order-dup.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r1-r19-order-dup",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r19-order-dup.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r1-r20-fixed-for-variable",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r20-fixed-for-variable.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r1-r20-fixed-for-variable",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/rmut/r20-fixed-for-variable.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n01-esc-pkg-slash",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/n/n01-esc-pkg-slash.desc.json"
+   ],
+   "failed_originals": [
+    "replay/n/n01-esc-pkg-slash.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n01-esc-pkg-slash",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/n/n01-esc-pkg-slash.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "replay/n/n01-esc-pkg-slash.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n02-esc-type-missing",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/n/n02-esc-type-missing.desc.json"
+   ],
+   "failed_originals": [
+    "replay/n/n02-esc-type-missing.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n02-esc-type-missing",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/n/n02-esc-type-missing.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "BitL",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "replay/n/n02-esc-type-missing.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n03-esc-pkg-missing",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/n/n03-esc-pkg-missing.desc.json"
+   ],
+   "failed_originals": [
+    "replay/n/n03-esc-pkg-missing.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n03-esc-pkg-missing",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/n/n03-esc-pkg-missing.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "replay/n/n03-esc-pkg-missing.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n04-esc-pkg-prysm",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n04-esc-pkg-prysm.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n04-esc-pkg-prysm",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "missing": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ],
+   "failed_originals": [
+    "replay/n/n04-esc-pkg-prysm.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n05-esc-type-zwsp",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/n/n05-esc-type-zwsp.desc.json"
+   ],
+   "failed_originals": [
+    "replay/n/n05-esc-type-zwsp.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n05-esc-type-zwsp",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/n/n05-esc-type-zwsp.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "FixedVec",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "replay/n/n05-esc-type-zwsp.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n07-ref-nonstring",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n07-ref-nonstring.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n07-ref-nonstring",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n07-ref-nonstring.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n08-wrong-body-right-key",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n08-wrong-body-right-key.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n08-wrong-body-right-key",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n08-wrong-body-right-key.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n09-claims-status-none",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n09-claims-status-none.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n09-claims-status-none",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n09-claims-status-none.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n10-ref-trailing-space",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n10-ref-trailing-space.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n10-ref-trailing-space",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n10-ref-trailing-space.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n11-ad-swap-slot-index",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n11-ad-swap-slot-index.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "AttestationData",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n11-ad-swap-slot-index",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n11-ad-swap-slot-index.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n12-ad-swap-source-target",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n12-ad-swap-source-target.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "AttestationData",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n12-ad-swap-source-target",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n12-ad-swap-source-target.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n13-dup-field-name",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n13-dup-field-name.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n13-dup-field-name",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n13-dup-field-name.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n14-cp-names-crossed",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n14-cp-names-crossed.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n14-cp-names-crossed",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n14-cp-names-crossed.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n15-norm-bytevec-as-vector",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n15-norm-bytevec-as-vector.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "FixedVec",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n15-norm-bytevec-as-vector",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n15-norm-bytevec-as-vector.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n16-norm-bitvec4-as-uint8",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n16-norm-bitvec4-as-uint8.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "BitVec",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n16-norm-bitvec4-as-uint8",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n16-norm-bitvec4-as-uint8.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n17-nested-inner-limit",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n17-nested-inner-limit.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Nested",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n17-nested-inner-limit",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n17-nested-inner-limit.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n18-extra-trailing-field",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n18-extra-trailing-field.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n18-extra-trailing-field",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n18-extra-trailing-field.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n21-dupkey-last-wrong",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n21-dupkey-last-wrong.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n21-dupkey-last-wrong",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n21-dupkey-last-wrong.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n22-top-array",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/n/n22-top-array.desc.json"
+   ],
+   "failed_originals": [
+    "replay/n/n22-top-array.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n22-top-array",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/n/n22-top-array.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ],
+   "failed_originals": [
+    "replay/n/n22-top-array.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n23-ssz-string",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n23-ssz-string.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n23-ssz-string",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n23-ssz-string.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n24-claims-no-name-index",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n24-claims-no-name-index.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n24-claims-no-name-index",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n24-claims-no-name-index.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n25-index-string",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n25-index-string.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n25-index-string",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n25-index-string.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n26-claims-short",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n26-claims-short.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n26-claims-short",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n26-claims-short.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n27-empty-file",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/n/n27-empty-file.desc.json"
+   ],
+   "failed_originals": [
+    "replay/n/n27-empty-file.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n27-empty-file",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/n/n27-empty-file.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ],
+   "failed_originals": [
+    "replay/n/n27-empty-file.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n28-names-short",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n28-names-short.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n28-names-short",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n28-names-short.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n29-negative-width",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n29-negative-width.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n29-negative-width",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n29-negative-width.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n30-term-only-limit",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n30-term-only-limit.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n30-term-only-limit",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n30-term-only-limit.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r2-n31-term-number-string",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n31-term-number-string.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r2-n31-term-number-string",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/n/n31-term-number-string.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q01-scalars-under-prysm-v1",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q01-scalars-under-prysm-v1.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q01-scalars-under-prysm-v1",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "missing": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q01-scalars-under-prysm-v1.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q02-nested-lowercase-type",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q02-nested-lowercase-type.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "nested",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q02-nested-lowercase-type",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "missing": [
+    {
+     "type": "Nested",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q02-nested-lowercase-type.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "nested",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q03-listu64-suffix-underscore",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q03-listu64-suffix-underscore.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "ListU64_",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q03-listu64-suffix-underscore",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "missing": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q03-listu64-suffix-underscore.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "ListU64_",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q04-bitl-under-engine",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q04-bitl-under-engine.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "BitL",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q04-bitl-under-engine",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "missing": [
+    {
+     "type": "BitL",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q04-bitl-under-engine.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "BitL",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q05-fixedvec-arabic-digit",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/r3/mut/q05-fixedvec-arabic-digit.desc.json"
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q05-fixedvec-arabic-digit.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q05-fixedvec-arabic-digit",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/r3/mut/q05-fixedvec-arabic-digit.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "FixedVec",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q05-fixedvec-arabic-digit.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q06-pkg-cyrillic-o",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/r3/mut/q06-pkg-cyrillic-o.desc.json"
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q06-pkg-cyrillic-o.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q06-pkg-cyrillic-o",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/r3/mut/q06-pkg-cyrillic-o.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q06-pkg-cyrillic-o.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q07-type-leading-space",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/r3/mut/q07-type-leading-space.desc.json"
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q07-type-leading-space.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q07-type-leading-space",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/r3/mut/q07-type-leading-space.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q07-type-leading-space.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q08-pkg-trailing-space",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/r3/mut/q08-pkg-trailing-space.desc.json"
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q08-pkg-trailing-space.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q08-pkg-trailing-space",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/r3/mut/q08-pkg-trailing-space.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q08-pkg-trailing-space.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q09-type-nul",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/r3/mut/q09-type-nul.desc.json"
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q09-type-nul.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q09-type-nul",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/r3/mut/q09-type-nul.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "BitL",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q09-type-nul.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q10-type-array",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/r3/mut/q10-type-array.desc.json"
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q10-type-array.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q10-type-array",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/r3/mut/q10-type-array.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q10-type-array.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q11-pkg-uppercase",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/r3/mut/q11-pkg-uppercase.desc.json"
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q11-pkg-uppercase.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q11-pkg-uppercase",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/r3/mut/q11-pkg-uppercase.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q11-pkg-uppercase.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q12-cp-under-engine",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q12-cp-under-engine.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q12-cp-under-engine",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "missing": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q12-cp-under-engine.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q13-dup-type-key",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q13-dup-type-key.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "ListU64x",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q13-dup-type-key",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "missing": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q13-dup-type-key.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "ListU64x",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q20-cp-root-vector-u8",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q20-cp-root-vector-u8.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q20-cp-root-vector-u8",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q20-cp-root-vector-u8.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q21-bv-bits-4-to-8",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q21-bv-bits-4-to-8.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "BitVec",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q21-bv-bits-4-to-8",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q21-bv-bits-4-to-8.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q22-ad-root-bitvector",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q22-ad-root-bitvector.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "AttestationData",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q22-ad-root-bitvector",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q22-ad-root-bitvector.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q23-sc-bool-uint8",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q23-sc-bool-uint8.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q23-sc-bool-uint8",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q23-sc-bool-uint8.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q24-sc-names-lowercase",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q24-sc-names-lowercase.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q24-sc-names-lowercase",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q24-sc-names-lowercase.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q25-lc-inner-limit",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q25-lc-inner-limit.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListC",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q25-lc-inner-limit",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q25-lc-inner-limit.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q26-lc-inner-name-case",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q26-lc-inner-name-case.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListC",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q26-lc-inner-name-case",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q26-lc-inner-name-case.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q27-ref-trailing-space",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q27-ref-trailing-space.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q27-ref-trailing-space",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q27-ref-trailing-space.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q28-ref-null-correct-content",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q28-ref-null-correct-content.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Nested",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q28-ref-null-correct-content",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q28-ref-null-correct-content.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q29-ref-array",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q29-ref-array.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "BitL",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q29-ref-array",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q29-ref-array.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q30-sc-inapplicable-claims",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q30-sc-inapplicable-claims.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q30-sc-inapplicable-claims",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q30-sc-inapplicable-claims.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q31-lu-list-length-claim",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q31-lu-list-length-claim.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q31-lu-list-length-claim",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q31-lu-list-length-claim.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q32-fv-vector-limit-claim",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q32-fv-vector-limit-claim.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "FixedVec",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q32-fv-vector-limit-claim",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q32-fv-vector-limit-claim.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q33-dup-last-claim",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q33-dup-last-claim.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q33-dup-last-claim",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q33-dup-last-claim.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q34-cp-dup-field",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q34-cp-dup-field.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q34-cp-dup-field",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q34-cp-dup-field.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q35-lu-order-dup",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q35-lu-order-dup.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q35-lu-order-dup",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q35-lu-order-dup.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q42-trailing-second-object",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/r3/mut/q42-trailing-second-object.desc.json"
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q42-trailing-second-object.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q42-trailing-second-object",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/r3/mut/q42-trailing-second-object.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q42-trailing-second-object.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q43-top-array",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/r3/mut/q43-top-array.desc.json"
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q43-top-array.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q43-top-array",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/r3/mut/q43-top-array.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q43-top-array.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q44-empty-file",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/r3/mut/q44-empty-file.desc.json"
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q44-empty-file.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q44-empty-file",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "unkeyed": [
+    "replay/r3/mut/q44-empty-file.desc.json"
+   ],
+   "missing": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q44-empty-file.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q46-escaped-key",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q46-escaped-key.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "ListU64y",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q46-escaped-key",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "missing": [
+    {
+     "type": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ],
+   "failed_originals": [
+    "replay/r3/mut/q46-escaped-key.desc.json"
+   ],
+   "extra": [
+    {
+     "type": "ListU64y",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q47-names-not-strings",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q47-names-not-strings.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q47-names-not-strings",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q47-names-not-strings.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q48-fields-object",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q48-fields-object.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q48-fields-object",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q48-fields-object.desc.json"
+   ]
+  }
+ },
+ {
+  "id": "b-add-r3-q51-log-forge-table-ok",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q51-log-forge-table-ok.desc.json"
+   ],
+   "duplicate_keys": [
+    {
+     "type": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+    }
+   ]
+  }
+ },
+ {
+  "id": "b-replace-r3-q51-log-forge-table-ok",
+  "source": "boundary",
+  "verdict": "FAIL",
+  "list": {
+   "failed_originals": [
+    "replay/r3/mut/q51-log-forge-table-ok.desc.json"
+   ]
+  }
+ }
+]

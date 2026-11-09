@@ -13,19 +13,19 @@
    true
   ],
   [
-   "emit refuses Descs without a PASS record for that file (copied/changed after the check)",
+   "emit refuses a Desc changed after the check (copied tree, sha256)",
    true
   ],
   [
-   "emit refuses an escaped hand Desc (n01) chosen by bare name",
+   "emit refuses a bare type name (and the escaped n01 next to it)",
    true
   ],
   [
-   "emit refuses a checker log without DESCCHECK-TABLE OK",
+   "emit refuses a checker result whose verdict is FAIL",
    true
   ],
   [
-   "emit refuses a checked file changed in place after the check (FNV-1a 64)",
+   "emit refuses a checked file changed in place after the check (sha256)",
    true
   ],
   [
@@ -51,10 +51,10 @@
   "stderr": ""
  },
  "controls_stderr": [
-  "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars: no PASS record of the checker for tampered/Scalars.desc.json (None)",
-  "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/.ListU64: no PASS record of the checker for mut/n01-esc-pkg-slash.desc.json ({'result': 'FAIL', 'spec': 'NONE', 'role': 'mutant', 'fnv': 5430825524968275456})",
-  "logs/scen-s-n01.log: no 'DESCCHECK-TABLE OK' line (coverage or an original failed)",
-  "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Nested: orig/Nested.desc.json changed after the check (fnv 6703779436897155596 != 6071776902409315597)"
+  "en/target.Nested: tampered/Nested.desc.json sha256 a52df52f7918c22a18833ed3c3f13662770a50252a8aff918b6e18c4ec7fa2b5 != checked 9396a22442aa6b343beb45af77bda81e315083f4ead3cecc11afc1b2aa13f6f4 (changed, stale or mixed result)",
+  "ListU64: use a package-qualified name pkg.Type",
+  "scen/s-n01.result.json: checker verdict 'FAIL', not OK",
+  "raken/target.Nested: orig/Nested.desc.json sha256 a52df52f7918c22a18833ed3c3f13662770a50252a8aff918b6e18c4ec7fa2b5 != checked 9396a22442aa6b343beb45af77bda81e315083f4ead3cecc11afc1b2aa13f6f4 (changed, stale or mixed result)"
  ],
  "include_api_version": 2,
  "data_cross_check": [

@@ -1,0 +1,2621 @@
+{
+ "schema": "fvphase1c.emit-boundary/1",
+ "summary": {
+  "cases": 289,
+  "as_expected": 289,
+  "by_group": {
+   "boundary": 258,
+   "own": 16,
+   "positive": 5,
+   "review-r3": 10
+  },
+  "accepted_cases": [
+   "p1",
+   "p2"
+  ],
+  "unexpected": []
+ },
+ "rows": [
+  {
+   "id": "p1",
+   "group": "positive",
+   "what": "honest result, originals, 9 hand keys, hand_case",
+   "expected": "accepted",
+   "actual": "accepted",
+   "reason": "",
+   "as_expected": true
+  },
+  {
+   "id": "p2",
+   "group": "positive",
+   "what": "honest result, originals, all 132 in-scope Prysm keys, prysm",
+   "expected": "accepted",
+   "actual": "accepted",
+   "reason": "",
+   "as_expected": true
+  },
+  {
+   "id": "p3-0",
+   "group": "positive",
+   "what": "out-of-scope Prysm key github.com/OffchainLabs/prysm/v7/proto/engine/v1.ExecutionPayload (no frozen-list rows), prysm",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.ExecutionPayload: prysm mode needs a non-hand key with status NONE and frozen-list rows",
+   "as_expected": true
+  },
+  {
+   "id": "p3-1",
+   "group": "positive",
+   "what": "out-of-scope Prysm key github.com/OffchainLabs/prysm/v7/proto/engine/v1.ExecutionPayloadCapella (no frozen-list rows), prysm",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.ExecutionPayloadCapella: prysm mode needs a non-hand key with status NONE and frozen-list rows",
+   "as_expected": true
+  },
+  {
+   "id": "p3-2",
+   "group": "positive",
+   "what": "out-of-scope Prysm key github.com/OffchainLabs/prysm/v7/proto/engine/v1.ExecutionPayloadDeneb (no frozen-list rows), prysm",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.ExecutionPayloadDeneb: prysm mode needs a non-hand key with status NONE and frozen-list rows",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-m-fixed-size/hand",
+   "group": "boundary",
+   "what": "m-fixed-size add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-m-fixed-size.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-m-fixed-size/hand",
+   "group": "boundary",
+   "what": "m-fixed-size replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-m-fixed-size.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-m-offset/hand",
+   "group": "boundary",
+   "what": "m-offset add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-m-offset.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-m-offset/hand",
+   "group": "boundary",
+   "what": "m-offset replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-m-offset.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-m-width/hand",
+   "group": "boundary",
+   "what": "m-width add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-m-width.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-m-width/hand",
+   "group": "boundary",
+   "what": "m-width replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-m-width.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-m-head/hand",
+   "group": "boundary",
+   "what": "m-head add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-m-head.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-m-head/hand",
+   "group": "boundary",
+   "what": "m-head replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-m-head.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-m-variable/hand",
+   "group": "boundary",
+   "what": "m-variable add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-m-variable.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-m-variable/hand",
+   "group": "boundary",
+   "what": "m-variable replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-m-variable.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-m-limit-claim/hand",
+   "group": "boundary",
+   "what": "m-limit-claim add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-m-limit-claim.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-m-limit-claim/hand",
+   "group": "boundary",
+   "what": "m-limit-claim replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-m-limit-claim.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-m-elem/hand",
+   "group": "boundary",
+   "what": "m-elem add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-m-elem.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-m-elem/hand",
+   "group": "boundary",
+   "what": "m-elem replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-m-elem.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-m-limit-spec/hand",
+   "group": "boundary",
+   "what": "m-limit-spec add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-m-limit-spec.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-m-limit-spec/hand",
+   "group": "boundary",
+   "what": "m-limit-spec replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-m-limit-spec.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-m-kind-spec/hand",
+   "group": "boundary",
+   "what": "m-kind-spec add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-m-kind-spec.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-m-kind-spec/hand",
+   "group": "boundary",
+   "what": "m-kind-spec replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-m-kind-spec.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-m-uint-width/hand",
+   "group": "boundary",
+   "what": "m-uint-width add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-m-uint-width.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-m-uint-width/hand",
+   "group": "boundary",
+   "what": "m-uint-width replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-m-uint-width.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-m-wf/hand",
+   "group": "boundary",
+   "what": "m-wf add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-m-wf.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-m-wf/hand",
+   "group": "boundary",
+   "what": "m-wf replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-m-wf.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-r1-ref-dropped/hand",
+   "group": "boundary",
+   "what": "r1-ref-dropped add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-r1-ref-dropped.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-r1-ref-dropped/hand",
+   "group": "boundary",
+   "what": "r1-ref-dropped replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-r1-ref-dropped.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-r2-ref-key-removed/hand",
+   "group": "boundary",
+   "what": "r2-ref-key-removed add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-r2-ref-key-removed.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-r2-ref-key-removed/hand",
+   "group": "boundary",
+   "what": "r2-ref-key-removed replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-r2-ref-key-removed.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-r12-type/hand",
+   "group": "boundary",
+   "what": "r12-type add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-r12-type.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-r12-type/hand",
+   "group": "boundary",
+   "what": "r12-type replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-r12-type.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-r7-claim-name/hand",
+   "group": "boundary",
+   "what": "r7-claim-name add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-r7-claim-name.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-r7-claim-name/hand",
+   "group": "boundary",
+   "what": "r7-claim-name replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-r7-claim-name.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-r11-index/hand",
+   "group": "boundary",
+   "what": "r11-index add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-r11-index.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-r11-index/hand",
+   "group": "boundary",
+   "what": "r11-index replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-r11-index.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-r8-term-names-swapped/hand",
+   "group": "boundary",
+   "what": "r8-term-names-swapped add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-r8-term-names-swapped.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-r8-term-names-swapped/hand",
+   "group": "boundary",
+   "what": "r8-term-names-swapped replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-r8-term-names-swapped.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-r9-elem-variable/hand",
+   "group": "boundary",
+   "what": "r9-elem-variable add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-r9-elem-variable.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-r9-elem-variable/hand",
+   "group": "boundary",
+   "what": "r9-elem-variable replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-r9-elem-variable.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-r10-callee/hand",
+   "group": "boundary",
+   "what": "r10-callee add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-r10-callee.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-r10-callee/hand",
+   "group": "boundary",
+   "what": "r10-callee replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-r10-callee.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-n01-esc-pkg-slash/hand",
+   "group": "boundary",
+   "what": "n01-esc-pkg-slash add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-n01-esc-pkg-slash.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-n01-esc-pkg-slash/prysm",
+   "group": "boundary",
+   "what": "n01-esc-pkg-slash add: prysm, the mutant's own key github.com/OffchainLabs/methodical-ssz/fv/kraken/target/.ListU64",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-n01-esc-pkg-slash.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-n01-esc-pkg-slash/hand",
+   "group": "boundary",
+   "what": "n01-esc-pkg-slash replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-n01-esc-pkg-slash.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-n01-esc-pkg-slash/prysm",
+   "group": "boundary",
+   "what": "n01-esc-pkg-slash replace: prysm, the mutant's own key github.com/OffchainLabs/methodical-ssz/fv/kraken/target/.ListU64",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-n01-esc-pkg-slash.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-n02-esc-type-missing/hand",
+   "group": "boundary",
+   "what": "n02-esc-type-missing add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-n02-esc-type-missing.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-n02-esc-type-missing/hand",
+   "group": "boundary",
+   "what": "n02-esc-type-missing replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-n02-esc-type-missing.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-n03-esc-pkg-missing/hand",
+   "group": "boundary",
+   "what": "n03-esc-pkg-missing add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-n03-esc-pkg-missing.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-n03-esc-pkg-missing/hand",
+   "group": "boundary",
+   "what": "n03-esc-pkg-missing replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-n03-esc-pkg-missing.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-n05-esc-type-zwsp/hand",
+   "group": "boundary",
+   "what": "n05-esc-type-zwsp add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-n05-esc-type-zwsp.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-n05-esc-type-zwsp/hand",
+   "group": "boundary",
+   "what": "n05-esc-type-zwsp replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-n05-esc-type-zwsp.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-n11-ad-swap-slot-index/hand",
+   "group": "boundary",
+   "what": "n11-ad-swap-slot-index add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-n11-ad-swap-slot-index.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-n11-ad-swap-slot-index/hand",
+   "group": "boundary",
+   "what": "n11-ad-swap-slot-index replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-n11-ad-swap-slot-index.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-n12-ad-swap-source-target/hand",
+   "group": "boundary",
+   "what": "n12-ad-swap-source-target add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-n12-ad-swap-source-target.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-n12-ad-swap-source-target/hand",
+   "group": "boundary",
+   "what": "n12-ad-swap-source-target replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-n12-ad-swap-source-target.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-n14-cp-names-crossed/hand",
+   "group": "boundary",
+   "what": "n14-cp-names-crossed add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-n14-cp-names-crossed.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-n14-cp-names-crossed/hand",
+   "group": "boundary",
+   "what": "n14-cp-names-crossed replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-n14-cp-names-crossed.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-e1-nested-inner-names/hand",
+   "group": "boundary",
+   "what": "e1-nested-inner-names add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-e1-nested-inner-names.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-e1-nested-inner-names/hand",
+   "group": "boundary",
+   "what": "e1-nested-inner-names replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-e1-nested-inner-names.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-e2-hand-type-other-hand-pkg/hand",
+   "group": "boundary",
+   "what": "e2-hand-type-other-hand-pkg add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-e2-hand-type-other-hand-pkg.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-e2-hand-type-other-hand-pkg/hand",
+   "group": "boundary",
+   "what": "e2-hand-type-other-hand-pkg replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-e2-hand-type-other-hand-pkg.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-e3-cyrillic-type/hand",
+   "group": "boundary",
+   "what": "e3-cyrillic-type add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-e3-cyrillic-type.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-e3-cyrillic-type/hand",
+   "group": "boundary",
+   "what": "e3-cyrillic-type replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-e3-cyrillic-type.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-e4-status-key/hand",
+   "group": "boundary",
+   "what": "e4-status-key add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-e4-status-key.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-e4-status-key/hand",
+   "group": "boundary",
+   "what": "e4-status-key replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-e4-status-key.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-e5-pkg-case/hand",
+   "group": "boundary",
+   "what": "e5-pkg-case add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-e5-pkg-case.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-e5-pkg-case/prysm",
+   "group": "boundary",
+   "what": "e5-pkg-case add: prysm, the mutant's own key github.com/offchainlabs/methodical-ssz/fv/kraken/target.Scalars",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-e5-pkg-case.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-e5-pkg-case/hand",
+   "group": "boundary",
+   "what": "e5-pkg-case replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-e5-pkg-case.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-e5-pkg-case/prysm",
+   "group": "boundary",
+   "what": "e5-pkg-case replace: prysm, the mutant's own key github.com/offchainlabs/methodical-ssz/fv/kraken/target.Scalars",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-e5-pkg-case.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-e6-ad-inner-cp-names/hand",
+   "group": "boundary",
+   "what": "e6-ad-inner-cp-names add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-e6-ad-inner-cp-names.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-e6-ad-inner-cp-names/hand",
+   "group": "boundary",
+   "what": "e6-ad-inner-cp-names replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-e6-ad-inner-cp-names.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-e7-schema/hand",
+   "group": "boundary",
+   "what": "e7-schema add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-e7-schema.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-e7-schema/hand",
+   "group": "boundary",
+   "what": "e7-schema replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-e7-schema.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-e8-term-extra-key/hand",
+   "group": "boundary",
+   "what": "e8-term-extra-key add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-e8-term-extra-key.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-e8-term-extra-key/hand",
+   "group": "boundary",
+   "what": "e8-term-extra-key replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-e8-term-extra-key.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-y1-scalars-as-prysm-checkpoint/hand",
+   "group": "boundary",
+   "what": "y1-scalars-as-prysm-checkpoint add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-y1-scalars-as-prysm-checkpoint.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-y1-scalars-as-prysm-checkpoint/prysm",
+   "group": "boundary",
+   "what": "y1-scalars-as-prysm-checkpoint add: prysm, the mutant's own key github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Checkpoint",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-y1-scalars-as-prysm-checkpoint.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-y1-scalars-as-prysm-checkpoint/hand",
+   "group": "boundary",
+   "what": "y1-scalars-as-prysm-checkpoint replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-y1-scalars-as-prysm-checkpoint.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-y1-scalars-as-prysm-checkpoint/prysm",
+   "group": "boundary",
+   "what": "y1-scalars-as-prysm-checkpoint replace: prysm, the mutant's own key github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Checkpoint",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-y1-scalars-as-prysm-checkpoint.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-y6-claim-limit-on-uint/hand",
+   "group": "boundary",
+   "what": "y6-claim-limit-on-uint add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-y6-claim-limit-on-uint.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-y6-claim-limit-on-uint/hand",
+   "group": "boundary",
+   "what": "y6-claim-limit-on-uint replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-y6-claim-limit-on-uint.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-y7-dup-type-key-same-value/hand",
+   "group": "boundary",
+   "what": "y7-dup-type-key-same-value add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-y7-dup-type-key-same-value.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-y7-dup-type-key-same-value/hand",
+   "group": "boundary",
+   "what": "y7-dup-type-key-same-value replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-y7-dup-type-key-same-value.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-y8-int-as-exponent/hand",
+   "group": "boundary",
+   "what": "y8-int-as-exponent add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-y8-int-as-exponent.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-y8-int-as-exponent/hand",
+   "group": "boundary",
+   "what": "y8-int-as-exponent replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-y8-int-as-exponent.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-y9-leading-zero/hand",
+   "group": "boundary",
+   "what": "y9-leading-zero add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-y9-leading-zero.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-y9-leading-zero/hand",
+   "group": "boundary",
+   "what": "y9-leading-zero replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-y9-leading-zero.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-y10-escaped-key/hand",
+   "group": "boundary",
+   "what": "y10-escaped-key add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-y10-escaped-key.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-y10-escaped-key/hand",
+   "group": "boundary",
+   "what": "y10-escaped-key replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-y10-escaped-key.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r1-r1-ref-dropped/hand",
+   "group": "boundary",
+   "what": "r1-ref-dropped add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r1-r1-ref-dropped.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r1-r1-ref-dropped/hand",
+   "group": "boundary",
+   "what": "r1-ref-dropped replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r1-r1-ref-dropped.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r1-r2-ref-key-removed/hand",
+   "group": "boundary",
+   "what": "r2-ref-key-removed add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r1-r2-ref-key-removed.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r1-r2-ref-key-removed/hand",
+   "group": "boundary",
+   "what": "r2-ref-key-removed replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r1-r2-ref-key-removed.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r1-r7-claim-name/hand",
+   "group": "boundary",
+   "what": "r7-claim-name add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r1-r7-claim-name.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r1-r7-claim-name/hand",
+   "group": "boundary",
+   "what": "r7-claim-name replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r1-r7-claim-name.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r1-r8-term-names-swapped/hand",
+   "group": "boundary",
+   "what": "r8-term-names-swapped add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r1-r8-term-names-swapped.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r1-r8-term-names-swapped/hand",
+   "group": "boundary",
+   "what": "r8-term-names-swapped replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r1-r8-term-names-swapped.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r1-r9-elem-variable/hand",
+   "group": "boundary",
+   "what": "r9-elem-variable add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r1-r9-elem-variable.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r1-r9-elem-variable/hand",
+   "group": "boundary",
+   "what": "r9-elem-variable replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r1-r9-elem-variable.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r1-r10-callee/hand",
+   "group": "boundary",
+   "what": "r10-callee add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r1-r10-callee.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r1-r10-callee/hand",
+   "group": "boundary",
+   "what": "r10-callee replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r1-r10-callee.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r1-r11-index/hand",
+   "group": "boundary",
+   "what": "r11-index add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r1-r11-index.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r1-r11-index/hand",
+   "group": "boundary",
+   "what": "r11-index replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r1-r11-index.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r1-r12-type/hand",
+   "group": "boundary",
+   "what": "r12-type add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r1-r12-type.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r1-r12-type/hand",
+   "group": "boundary",
+   "what": "r12-type replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r1-r12-type.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r1-r13-ref-wrong/hand",
+   "group": "boundary",
+   "what": "r13-ref-wrong add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r1-r13-ref-wrong.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r1-r13-ref-wrong/hand",
+   "group": "boundary",
+   "what": "r13-ref-wrong replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r1-r13-ref-wrong.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r1-r14-extra-claim/hand",
+   "group": "boundary",
+   "what": "r14-extra-claim add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r1-r14-extra-claim.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r1-r14-extra-claim/hand",
+   "group": "boundary",
+   "what": "r14-extra-claim replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r1-r14-extra-claim.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r1-r15-term-only/hand",
+   "group": "boundary",
+   "what": "r15-term-only add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r1-r15-term-only.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r1-r15-term-only/hand",
+   "group": "boundary",
+   "what": "r15-term-only replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r1-r15-term-only.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r1-r16-var-offset/hand",
+   "group": "boundary",
+   "what": "r16-var-offset add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r1-r16-var-offset.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r1-r16-var-offset/hand",
+   "group": "boundary",
+   "what": "r16-var-offset replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r1-r16-var-offset.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r1-r19-order-dup/hand",
+   "group": "boundary",
+   "what": "r19-order-dup add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r1-r19-order-dup.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r1-r19-order-dup/hand",
+   "group": "boundary",
+   "what": "r19-order-dup replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r1-r19-order-dup.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r1-r20-fixed-for-variable/hand",
+   "group": "boundary",
+   "what": "r20-fixed-for-variable add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r1-r20-fixed-for-variable.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r1-r20-fixed-for-variable/hand",
+   "group": "boundary",
+   "what": "r20-fixed-for-variable replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r1-r20-fixed-for-variable.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n01-esc-pkg-slash/hand",
+   "group": "boundary",
+   "what": "n01-esc-pkg-slash add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n01-esc-pkg-slash.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n01-esc-pkg-slash/prysm",
+   "group": "boundary",
+   "what": "n01-esc-pkg-slash add: prysm, the mutant's own key github.com/OffchainLabs/methodical-ssz/fv/kraken/target/.ListU64",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n01-esc-pkg-slash.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n01-esc-pkg-slash/hand",
+   "group": "boundary",
+   "what": "n01-esc-pkg-slash replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n01-esc-pkg-slash.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n01-esc-pkg-slash/prysm",
+   "group": "boundary",
+   "what": "n01-esc-pkg-slash replace: prysm, the mutant's own key github.com/OffchainLabs/methodical-ssz/fv/kraken/target/.ListU64",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n01-esc-pkg-slash.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n02-esc-type-missing/hand",
+   "group": "boundary",
+   "what": "n02-esc-type-missing add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n02-esc-type-missing.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n02-esc-type-missing/hand",
+   "group": "boundary",
+   "what": "n02-esc-type-missing replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n02-esc-type-missing.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n03-esc-pkg-missing/hand",
+   "group": "boundary",
+   "what": "n03-esc-pkg-missing add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n03-esc-pkg-missing.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n03-esc-pkg-missing/hand",
+   "group": "boundary",
+   "what": "n03-esc-pkg-missing replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n03-esc-pkg-missing.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n04-esc-pkg-prysm/hand",
+   "group": "boundary",
+   "what": "n04-esc-pkg-prysm add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n04-esc-pkg-prysm.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n04-esc-pkg-prysm/prysm",
+   "group": "boundary",
+   "what": "n04-esc-pkg-prysm add: prysm, the mutant's own key github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Checkpoint",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n04-esc-pkg-prysm.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n04-esc-pkg-prysm/hand",
+   "group": "boundary",
+   "what": "n04-esc-pkg-prysm replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n04-esc-pkg-prysm.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n04-esc-pkg-prysm/prysm",
+   "group": "boundary",
+   "what": "n04-esc-pkg-prysm replace: prysm, the mutant's own key github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Checkpoint",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n04-esc-pkg-prysm.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n05-esc-type-zwsp/hand",
+   "group": "boundary",
+   "what": "n05-esc-type-zwsp add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n05-esc-type-zwsp.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n05-esc-type-zwsp/hand",
+   "group": "boundary",
+   "what": "n05-esc-type-zwsp replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n05-esc-type-zwsp.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n07-ref-nonstring/hand",
+   "group": "boundary",
+   "what": "n07-ref-nonstring add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n07-ref-nonstring.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n07-ref-nonstring/hand",
+   "group": "boundary",
+   "what": "n07-ref-nonstring replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n07-ref-nonstring.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n08-wrong-body-right-key/hand",
+   "group": "boundary",
+   "what": "n08-wrong-body-right-key add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n08-wrong-body-right-key.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n08-wrong-body-right-key/hand",
+   "group": "boundary",
+   "what": "n08-wrong-body-right-key replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n08-wrong-body-right-key.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n09-claims-status-none/hand",
+   "group": "boundary",
+   "what": "n09-claims-status-none add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n09-claims-status-none.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n09-claims-status-none/hand",
+   "group": "boundary",
+   "what": "n09-claims-status-none replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n09-claims-status-none.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n10-ref-trailing-space/hand",
+   "group": "boundary",
+   "what": "n10-ref-trailing-space add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n10-ref-trailing-space.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n10-ref-trailing-space/hand",
+   "group": "boundary",
+   "what": "n10-ref-trailing-space replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n10-ref-trailing-space.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n11-ad-swap-slot-index/hand",
+   "group": "boundary",
+   "what": "n11-ad-swap-slot-index add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n11-ad-swap-slot-index.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n11-ad-swap-slot-index/hand",
+   "group": "boundary",
+   "what": "n11-ad-swap-slot-index replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n11-ad-swap-slot-index.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n12-ad-swap-source-target/hand",
+   "group": "boundary",
+   "what": "n12-ad-swap-source-target add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n12-ad-swap-source-target.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n12-ad-swap-source-target/hand",
+   "group": "boundary",
+   "what": "n12-ad-swap-source-target replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n12-ad-swap-source-target.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n13-dup-field-name/hand",
+   "group": "boundary",
+   "what": "n13-dup-field-name add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n13-dup-field-name.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n13-dup-field-name/hand",
+   "group": "boundary",
+   "what": "n13-dup-field-name replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n13-dup-field-name.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n14-cp-names-crossed/hand",
+   "group": "boundary",
+   "what": "n14-cp-names-crossed add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n14-cp-names-crossed.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n14-cp-names-crossed/hand",
+   "group": "boundary",
+   "what": "n14-cp-names-crossed replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n14-cp-names-crossed.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n15-norm-bytevec-as-vector/hand",
+   "group": "boundary",
+   "what": "n15-norm-bytevec-as-vector add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n15-norm-bytevec-as-vector.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n15-norm-bytevec-as-vector/hand",
+   "group": "boundary",
+   "what": "n15-norm-bytevec-as-vector replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n15-norm-bytevec-as-vector.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n16-norm-bitvec4-as-uint8/hand",
+   "group": "boundary",
+   "what": "n16-norm-bitvec4-as-uint8 add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n16-norm-bitvec4-as-uint8.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n16-norm-bitvec4-as-uint8/hand",
+   "group": "boundary",
+   "what": "n16-norm-bitvec4-as-uint8 replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n16-norm-bitvec4-as-uint8.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n17-nested-inner-limit/hand",
+   "group": "boundary",
+   "what": "n17-nested-inner-limit add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n17-nested-inner-limit.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n17-nested-inner-limit/hand",
+   "group": "boundary",
+   "what": "n17-nested-inner-limit replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n17-nested-inner-limit.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n18-extra-trailing-field/hand",
+   "group": "boundary",
+   "what": "n18-extra-trailing-field add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n18-extra-trailing-field.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n18-extra-trailing-field/hand",
+   "group": "boundary",
+   "what": "n18-extra-trailing-field replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n18-extra-trailing-field.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n21-dupkey-last-wrong/hand",
+   "group": "boundary",
+   "what": "n21-dupkey-last-wrong add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n21-dupkey-last-wrong.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n21-dupkey-last-wrong/hand",
+   "group": "boundary",
+   "what": "n21-dupkey-last-wrong replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n21-dupkey-last-wrong.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n22-top-array/hand",
+   "group": "boundary",
+   "what": "n22-top-array add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n22-top-array.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n22-top-array/hand",
+   "group": "boundary",
+   "what": "n22-top-array replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n22-top-array.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n23-ssz-string/hand",
+   "group": "boundary",
+   "what": "n23-ssz-string add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n23-ssz-string.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n23-ssz-string/hand",
+   "group": "boundary",
+   "what": "n23-ssz-string replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n23-ssz-string.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n24-claims-no-name-index/hand",
+   "group": "boundary",
+   "what": "n24-claims-no-name-index add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n24-claims-no-name-index.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n24-claims-no-name-index/hand",
+   "group": "boundary",
+   "what": "n24-claims-no-name-index replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n24-claims-no-name-index.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n25-index-string/hand",
+   "group": "boundary",
+   "what": "n25-index-string add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n25-index-string.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n25-index-string/hand",
+   "group": "boundary",
+   "what": "n25-index-string replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n25-index-string.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n26-claims-short/hand",
+   "group": "boundary",
+   "what": "n26-claims-short add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n26-claims-short.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n26-claims-short/hand",
+   "group": "boundary",
+   "what": "n26-claims-short replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n26-claims-short.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n27-empty-file/hand",
+   "group": "boundary",
+   "what": "n27-empty-file add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n27-empty-file.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n27-empty-file/hand",
+   "group": "boundary",
+   "what": "n27-empty-file replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n27-empty-file.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n28-names-short/hand",
+   "group": "boundary",
+   "what": "n28-names-short add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n28-names-short.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n28-names-short/hand",
+   "group": "boundary",
+   "what": "n28-names-short replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n28-names-short.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n29-negative-width/hand",
+   "group": "boundary",
+   "what": "n29-negative-width add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n29-negative-width.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n29-negative-width/hand",
+   "group": "boundary",
+   "what": "n29-negative-width replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n29-negative-width.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n30-term-only-limit/hand",
+   "group": "boundary",
+   "what": "n30-term-only-limit add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n30-term-only-limit.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n30-term-only-limit/hand",
+   "group": "boundary",
+   "what": "n30-term-only-limit replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n30-term-only-limit.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r2-n31-term-number-string/hand",
+   "group": "boundary",
+   "what": "n31-term-number-string add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r2-n31-term-number-string.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r2-n31-term-number-string/hand",
+   "group": "boundary",
+   "what": "n31-term-number-string replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r2-n31-term-number-string.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q01-scalars-under-prysm-v1/hand",
+   "group": "boundary",
+   "what": "q01-scalars-under-prysm-v1 add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q01-scalars-under-prysm-v1.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q01-scalars-under-prysm-v1/prysm",
+   "group": "boundary",
+   "what": "q01-scalars-under-prysm-v1 add: prysm, the mutant's own key github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Scalars",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q01-scalars-under-prysm-v1.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q01-scalars-under-prysm-v1/hand",
+   "group": "boundary",
+   "what": "q01-scalars-under-prysm-v1 replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q01-scalars-under-prysm-v1.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q01-scalars-under-prysm-v1/prysm",
+   "group": "boundary",
+   "what": "q01-scalars-under-prysm-v1 replace: prysm, the mutant's own key github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Scalars",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q01-scalars-under-prysm-v1.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q02-nested-lowercase-type/hand",
+   "group": "boundary",
+   "what": "q02-nested-lowercase-type add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q02-nested-lowercase-type.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q02-nested-lowercase-type/hand",
+   "group": "boundary",
+   "what": "q02-nested-lowercase-type replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q02-nested-lowercase-type.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q03-listu64-suffix-underscore/hand",
+   "group": "boundary",
+   "what": "q03-listu64-suffix-underscore add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q03-listu64-suffix-underscore.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q03-listu64-suffix-underscore/hand",
+   "group": "boundary",
+   "what": "q03-listu64-suffix-underscore replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q03-listu64-suffix-underscore.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q04-bitl-under-engine/hand",
+   "group": "boundary",
+   "what": "q04-bitl-under-engine add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q04-bitl-under-engine.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q04-bitl-under-engine/prysm",
+   "group": "boundary",
+   "what": "q04-bitl-under-engine add: prysm, the mutant's own key github.com/OffchainLabs/prysm/v7/proto/engine/v1.BitL",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q04-bitl-under-engine.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q04-bitl-under-engine/hand",
+   "group": "boundary",
+   "what": "q04-bitl-under-engine replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q04-bitl-under-engine.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q04-bitl-under-engine/prysm",
+   "group": "boundary",
+   "what": "q04-bitl-under-engine replace: prysm, the mutant's own key github.com/OffchainLabs/prysm/v7/proto/engine/v1.BitL",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q04-bitl-under-engine.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q05-fixedvec-arabic-digit/hand",
+   "group": "boundary",
+   "what": "q05-fixedvec-arabic-digit add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q05-fixedvec-arabic-digit.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q05-fixedvec-arabic-digit/hand",
+   "group": "boundary",
+   "what": "q05-fixedvec-arabic-digit replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q05-fixedvec-arabic-digit.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q06-pkg-cyrillic-o/hand",
+   "group": "boundary",
+   "what": "q06-pkg-cyrillic-o add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q06-pkg-cyrillic-o.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q06-pkg-cyrillic-o/prysm",
+   "group": "boundary",
+   "what": "q06-pkg-cyrillic-o add: prysm, the mutant's own key github.com/\u041effchainLabs/methodical-ssz/fv/kraken/target.ListU64",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q06-pkg-cyrillic-o.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q06-pkg-cyrillic-o/hand",
+   "group": "boundary",
+   "what": "q06-pkg-cyrillic-o replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q06-pkg-cyrillic-o.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q06-pkg-cyrillic-o/prysm",
+   "group": "boundary",
+   "what": "q06-pkg-cyrillic-o replace: prysm, the mutant's own key github.com/\u041effchainLabs/methodical-ssz/fv/kraken/target.ListU64",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q06-pkg-cyrillic-o.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q07-type-leading-space/hand",
+   "group": "boundary",
+   "what": "q07-type-leading-space add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q07-type-leading-space.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q07-type-leading-space/hand",
+   "group": "boundary",
+   "what": "q07-type-leading-space replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q07-type-leading-space.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q08-pkg-trailing-space/hand",
+   "group": "boundary",
+   "what": "q08-pkg-trailing-space add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q08-pkg-trailing-space.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q08-pkg-trailing-space/prysm",
+   "group": "boundary",
+   "what": "q08-pkg-trailing-space add: prysm, the mutant's own key github.com/OffchainLabs/methodical-ssz/fv/kraken/target .Scalars",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q08-pkg-trailing-space.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q08-pkg-trailing-space/hand",
+   "group": "boundary",
+   "what": "q08-pkg-trailing-space replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q08-pkg-trailing-space.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q08-pkg-trailing-space/prysm",
+   "group": "boundary",
+   "what": "q08-pkg-trailing-space replace: prysm, the mutant's own key github.com/OffchainLabs/methodical-ssz/fv/kraken/target .Scalars",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q08-pkg-trailing-space.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q09-type-nul/hand",
+   "group": "boundary",
+   "what": "q09-type-nul add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q09-type-nul.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q09-type-nul/hand",
+   "group": "boundary",
+   "what": "q09-type-nul replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q09-type-nul.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q10-type-array/hand",
+   "group": "boundary",
+   "what": "q10-type-array add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q10-type-array.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q10-type-array/hand",
+   "group": "boundary",
+   "what": "q10-type-array replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q10-type-array.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q11-pkg-uppercase/hand",
+   "group": "boundary",
+   "what": "q11-pkg-uppercase add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q11-pkg-uppercase.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q11-pkg-uppercase/prysm",
+   "group": "boundary",
+   "what": "q11-pkg-uppercase add: prysm, the mutant's own key github.com/OffchainLabs/methodical-ssz/fv/kraken/target/Prysm.Checkpoint",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q11-pkg-uppercase.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q11-pkg-uppercase/hand",
+   "group": "boundary",
+   "what": "q11-pkg-uppercase replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q11-pkg-uppercase.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q11-pkg-uppercase/prysm",
+   "group": "boundary",
+   "what": "q11-pkg-uppercase replace: prysm, the mutant's own key github.com/OffchainLabs/methodical-ssz/fv/kraken/target/Prysm.Checkpoint",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q11-pkg-uppercase.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q12-cp-under-engine/hand",
+   "group": "boundary",
+   "what": "q12-cp-under-engine add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q12-cp-under-engine.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q12-cp-under-engine/prysm",
+   "group": "boundary",
+   "what": "q12-cp-under-engine add: prysm, the mutant's own key github.com/OffchainLabs/prysm/v7/proto/engine/v1.Checkpoint",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q12-cp-under-engine.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q12-cp-under-engine/hand",
+   "group": "boundary",
+   "what": "q12-cp-under-engine replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q12-cp-under-engine.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q12-cp-under-engine/prysm",
+   "group": "boundary",
+   "what": "q12-cp-under-engine replace: prysm, the mutant's own key github.com/OffchainLabs/prysm/v7/proto/engine/v1.Checkpoint",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q12-cp-under-engine.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q13-dup-type-key/hand",
+   "group": "boundary",
+   "what": "q13-dup-type-key add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q13-dup-type-key.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q13-dup-type-key/hand",
+   "group": "boundary",
+   "what": "q13-dup-type-key replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q13-dup-type-key.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q20-cp-root-vector-u8/hand",
+   "group": "boundary",
+   "what": "q20-cp-root-vector-u8 add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q20-cp-root-vector-u8.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q20-cp-root-vector-u8/hand",
+   "group": "boundary",
+   "what": "q20-cp-root-vector-u8 replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q20-cp-root-vector-u8.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q21-bv-bits-4-to-8/hand",
+   "group": "boundary",
+   "what": "q21-bv-bits-4-to-8 add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q21-bv-bits-4-to-8.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q21-bv-bits-4-to-8/hand",
+   "group": "boundary",
+   "what": "q21-bv-bits-4-to-8 replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q21-bv-bits-4-to-8.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q22-ad-root-bitvector/hand",
+   "group": "boundary",
+   "what": "q22-ad-root-bitvector add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q22-ad-root-bitvector.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q22-ad-root-bitvector/hand",
+   "group": "boundary",
+   "what": "q22-ad-root-bitvector replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q22-ad-root-bitvector.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q23-sc-bool-uint8/hand",
+   "group": "boundary",
+   "what": "q23-sc-bool-uint8 add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q23-sc-bool-uint8.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q23-sc-bool-uint8/hand",
+   "group": "boundary",
+   "what": "q23-sc-bool-uint8 replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q23-sc-bool-uint8.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q24-sc-names-lowercase/hand",
+   "group": "boundary",
+   "what": "q24-sc-names-lowercase add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q24-sc-names-lowercase.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q24-sc-names-lowercase/hand",
+   "group": "boundary",
+   "what": "q24-sc-names-lowercase replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q24-sc-names-lowercase.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q25-lc-inner-limit/hand",
+   "group": "boundary",
+   "what": "q25-lc-inner-limit add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q25-lc-inner-limit.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q25-lc-inner-limit/hand",
+   "group": "boundary",
+   "what": "q25-lc-inner-limit replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q25-lc-inner-limit.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q26-lc-inner-name-case/hand",
+   "group": "boundary",
+   "what": "q26-lc-inner-name-case add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q26-lc-inner-name-case.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q26-lc-inner-name-case/hand",
+   "group": "boundary",
+   "what": "q26-lc-inner-name-case replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q26-lc-inner-name-case.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q27-ref-trailing-space/hand",
+   "group": "boundary",
+   "what": "q27-ref-trailing-space add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q27-ref-trailing-space.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q27-ref-trailing-space/hand",
+   "group": "boundary",
+   "what": "q27-ref-trailing-space replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q27-ref-trailing-space.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q28-ref-null-correct-content/hand",
+   "group": "boundary",
+   "what": "q28-ref-null-correct-content add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q28-ref-null-correct-content.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q28-ref-null-correct-content/hand",
+   "group": "boundary",
+   "what": "q28-ref-null-correct-content replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q28-ref-null-correct-content.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q29-ref-array/hand",
+   "group": "boundary",
+   "what": "q29-ref-array add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q29-ref-array.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q29-ref-array/hand",
+   "group": "boundary",
+   "what": "q29-ref-array replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q29-ref-array.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q30-sc-inapplicable-claims/hand",
+   "group": "boundary",
+   "what": "q30-sc-inapplicable-claims add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q30-sc-inapplicable-claims.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q30-sc-inapplicable-claims/hand",
+   "group": "boundary",
+   "what": "q30-sc-inapplicable-claims replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q30-sc-inapplicable-claims.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q31-lu-list-length-claim/hand",
+   "group": "boundary",
+   "what": "q31-lu-list-length-claim add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q31-lu-list-length-claim.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q31-lu-list-length-claim/hand",
+   "group": "boundary",
+   "what": "q31-lu-list-length-claim replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q31-lu-list-length-claim.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q32-fv-vector-limit-claim/hand",
+   "group": "boundary",
+   "what": "q32-fv-vector-limit-claim add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q32-fv-vector-limit-claim.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q32-fv-vector-limit-claim/hand",
+   "group": "boundary",
+   "what": "q32-fv-vector-limit-claim replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q32-fv-vector-limit-claim.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q33-dup-last-claim/hand",
+   "group": "boundary",
+   "what": "q33-dup-last-claim add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q33-dup-last-claim.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q33-dup-last-claim/hand",
+   "group": "boundary",
+   "what": "q33-dup-last-claim replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q33-dup-last-claim.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q34-cp-dup-field/hand",
+   "group": "boundary",
+   "what": "q34-cp-dup-field add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q34-cp-dup-field.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q34-cp-dup-field/hand",
+   "group": "boundary",
+   "what": "q34-cp-dup-field replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q34-cp-dup-field.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q35-lu-order-dup/hand",
+   "group": "boundary",
+   "what": "q35-lu-order-dup add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q35-lu-order-dup.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q35-lu-order-dup/hand",
+   "group": "boundary",
+   "what": "q35-lu-order-dup replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q35-lu-order-dup.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q42-trailing-second-object/hand",
+   "group": "boundary",
+   "what": "q42-trailing-second-object add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q42-trailing-second-object.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q42-trailing-second-object/hand",
+   "group": "boundary",
+   "what": "q42-trailing-second-object replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q42-trailing-second-object.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q43-top-array/hand",
+   "group": "boundary",
+   "what": "q43-top-array add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q43-top-array.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q43-top-array/hand",
+   "group": "boundary",
+   "what": "q43-top-array replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q43-top-array.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q44-empty-file/hand",
+   "group": "boundary",
+   "what": "q44-empty-file add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q44-empty-file.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q44-empty-file/hand",
+   "group": "boundary",
+   "what": "q44-empty-file replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q44-empty-file.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q46-escaped-key/hand",
+   "group": "boundary",
+   "what": "q46-escaped-key add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q46-escaped-key.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q46-escaped-key/hand",
+   "group": "boundary",
+   "what": "q46-escaped-key replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q46-escaped-key.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q47-names-not-strings/hand",
+   "group": "boundary",
+   "what": "q47-names-not-strings add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q47-names-not-strings.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q47-names-not-strings/hand",
+   "group": "boundary",
+   "what": "q47-names-not-strings replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q47-names-not-strings.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q48-fields-object/hand",
+   "group": "boundary",
+   "what": "q48-fields-object add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q48-fields-object.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q48-fields-object/hand",
+   "group": "boundary",
+   "what": "q48-fields-object replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q48-fields-object.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-r3-q51-log-forge-table-ok/hand",
+   "group": "boundary",
+   "what": "q51-log-forge-table-ok add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-r3-q51-log-forge-table-ok.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-r3-q51-log-forge-table-ok/hand",
+   "group": "boundary",
+   "what": "q51-log-forge-table-ok replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-r3-q51-log-forge-table-ok.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "E1",
+   "group": "review-r3",
+   "what": "forge desc dir (wrong Nested never checked) with the result of run t12",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/t12-forge.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "E1c",
+   "group": "review-r3",
+   "what": "forge desc dir with the honest main result",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Nested: replay/r3/forge/descdir/Nested.desc.json sha256 a52df52f7918c22a18833ed3c3f13662770a50252a8aff918b6e18c4ec7fa2b5 != checked 9396a22442aa6b343beb45af77bda81e315",
+   "as_expected": true
+  },
+  {
+   "id": "E2",
+   "group": "review-r3",
+   "what": "q01 next to the originals (run t07), hand_case for v1alpha1.Scalars",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/t07-extra-q01.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "E3",
+   "group": "review-r3",
+   "what": "q01 next to the originals (run t07), prysm for v1alpha1.Scalars",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/t07-extra-q01.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "E3h",
+   "group": "review-r3",
+   "what": "q01 desc dir, honest main result, prysm for v1alpha1.Scalars (unknown key)",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Scalars: no original record in the checker result (unknown key)",
+   "as_expected": true
+  },
+  {
+   "id": "E4",
+   "group": "review-r3",
+   "what": "no --types (empty selection)",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "--types is required (explicit pkg.Type list; no implicit selection)",
+   "as_expected": true
+  },
+  {
+   "id": "E4b",
+   "group": "review-r3",
+   "what": "hand Checkpoint and Prysm Checkpoint selected together",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Checkpoint: hand_case needs a table key with status SPEC (got NONE)",
+   "as_expected": true
+  },
+  {
+   "id": "E5",
+   "group": "review-r3",
+   "what": "q01 desc dir, run t07, no --types",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/t07-extra-q01.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "E6",
+   "group": "review-r3",
+   "what": "run t13 (q51 forged TABLE OK string in place of Scalars), hand_case for 8 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/t13-forge-table-ok.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "E7",
+   "group": "review-r3",
+   "what": "q40 (fixed_size 1.6e1) in place of Scalars with the honest result",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "boundary/q40/008-q40-number-exp.desc.json: not a strict JSON Desc (non-integer number form '1.6e1')",
+   "as_expected": true
+  },
+  {
+   "id": "x01",
+   "group": "own",
+   "what": "a Desc changed after the check, result path differs (copied tree)",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Nested: boundary/x01/Nested.desc.json sha256 a52df52f7918c22a18833ed3c3f13662770a50252a8aff918b6e18c4ec7fa2b5 != checked 9396a22442aa6b343beb45af77bda81e315083f4ead3ce",
+   "as_expected": true
+  },
+  {
+   "id": "x02",
+   "group": "own",
+   "what": "a checked file re-written with one more newline (same JSON value, other sha256)",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64: boundary/x02/ListU64.desc.json sha256 fa39784b8999e1d6be281180a0b0d8b22d0725b0d9b91aa9dacb8da4d10f92fb != checked f3ccf82b8ce13d1cb74f98638223a418315fbe4fb1a5",
+   "as_expected": true
+  },
+  {
+   "id": "x03",
+   "group": "own",
+   "what": "symlink named like BitL pointing at a wrong BitL (control m-kind-spec)",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.BitL: boundary/x03/999-BitL.desc.json sha256 737e35762d4fa42ff6f018ce97d55fede6461c17d5b4dc0b9e88d6e00fb0e641 != checked ebe3c073b5d69644abdb7f964fabacc5a68e29ddb54c8c",
+   "as_expected": true
+  },
+  {
+   "id": "x04",
+   "group": "own",
+   "what": "desc dir with the right ListU64 and a wrong one (same key)",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "two Descs for ('github.com/OffchainLabs/methodical-ssz/fv/kraken/target', 'ListU64') in boundary/x04: boundary/x04/006-ListU64.desc.json and /work",
+   "as_expected": true
+  },
+  {
+   "id": "x05",
+   "group": "own",
+   "what": "honest desc dir with a FAIL scenario result (mixed results)",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/s-drop-nested.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "x06",
+   "group": "own",
+   "what": "result whose inventory sha256 differs from the committed inventory",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "boundary/x06.result.json: inventory sha256 0000000000000000000000000000000000000000000000000000000000000000 != committed d3fe6d31ea86b4d1abf7191bb03ca9d1e39d06b84b316e4fb7383ea0e2dbf527",
+   "as_expected": true
+  },
+  {
+   "id": "x07",
+   "group": "own",
+   "what": "result with a second original record for ListU64",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "boundary/x07.result.json: more than one original record for ('github.com/OffchainLabs/methodical-ssz/fv/kraken/target', 'ListU64') or orig/ListU64",
+   "as_expected": true
+  },
+  {
+   "id": "x08",
+   "group": "own",
+   "what": "result text with the key verdict twice (FAIL, OK)",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "boundary/x08.result.json: not a strict JSON checker result (duplicate JSON key in ['verdict'])",
+   "as_expected": true
+  },
+  {
+   "id": "x09",
+   "group": "own",
+   "what": "bare type name ListU64 in --types",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "ListU64: use a package-qualified name pkg.Type",
+   "as_expected": true
+  },
+  {
+   "id": "x10",
+   "group": "own",
+   "what": "type name with U+200B in --types",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64\u200b: no original record in the checker result (unknown key)",
+   "as_expected": true
+  },
+  {
+   "id": "x11",
+   "group": "own",
+   "what": "hand key in prysm mode",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64: prysm mode needs a non-hand key with status NONE and frozen-list rows",
+   "as_expected": true
+  },
+  {
+   "id": "x12",
+   "group": "own",
+   "what": "Prysm key in hand_case mode",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Checkpoint: hand_case needs a table key with status SPEC (got NONE)",
+   "as_expected": true
+  },
+  {
+   "id": "x13",
+   "group": "own",
+   "what": "the wrong ListU64 that the main run checked as a mutant (FAIL record) in place of the original",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64: boundary/x13/143-m-limit-spec.desc.json sha256 fc194bdfcdbda515fb24df157195b587b0daf853c3d856cb16c18cbcdf68382d != checked f3ccf82b8ce13d1cb74f98638223a418315",
+   "as_expected": true
+  },
+  {
+   "id": "x14",
+   "group": "own",
+   "what": "y1 (Scalars as v1alpha1.Checkpoint) with its run s-y1-replace-prysm-cp, prysm mode",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/s-y1-replace-prysm-cp.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "x15",
+   "group": "own",
+   "what": "same desc dir with the honest main result (sha256 differs)",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Checkpoint: boundary/x14/066-y1-scalars-as-prysm-checkpoint.desc.json sha256 b7ef9ad1d737afbae84103bea900392e3dcedc61678770f75bd662bc8c2ae4e3 != checked 69170680ed79682a",
+   "as_expected": true
+  },
+  {
+   "id": "x16",
+   "group": "own",
+   "what": "result text with expected_key_count 144.0",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "boundary/x16.result.json: not a strict JSON checker result (non-integer number form '144.0')",
+   "as_expected": true
+  }
+ ]
+}

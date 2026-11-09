@@ -10,10 +10,12 @@
    "types.ssz.go": "f54069057d0c46abe32b6aeda173ce102fb3c2d874ae0fc9547183089cc1fa1a",
    "types1b.ssz.go": "31d4226fc5922b74a7e980cc011711b068977fb3a7c8aa5f23982cdf99eaff54"
   },
-  "theorems": "0d9b70760d99f76d838994451f15790f7da06b0acc12519e558e3eac4a1348d1"
+  "theorems": "e4d7dcf8be132789333aced22c5e1e4278539edf4aee6aaeef9cc77dd141b342"
  },
  "types": {
-  "Scalars": {
+  "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars": {
+   "desc_sha256": "fe2c3c4afcab8cd2469dec5ae9ba843328bee3793f5ee74cd1785c799556c31d",
+   "out": "github.com_OffchainLabs_methodical-ssz_fv_kraken_target/Scalars",
    "code_name": "Scalars",
    "files": [
     "desc.json",
@@ -30,7 +32,9 @@
     "size_stmt"
    ]
   },
-  "FixedVec": {
+  "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.FixedVec": {
+   "desc_sha256": "e178df21f58d09a061632ba0780c75f9e9abd08f0af9ccd8803d8783441538b8",
+   "out": "github.com_OffchainLabs_methodical-ssz_fv_kraken_target/FixedVec",
    "code_name": "FixedVec",
    "files": [
     "desc.json",
@@ -47,7 +51,9 @@
     "size_stmt"
    ]
   },
-  "ListU64": {
+  "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64": {
+   "desc_sha256": "f3ccf82b8ce13d1cb74f98638223a418315fbe4fb1a5df950775ce5bf6b3cd33",
+   "out": "github.com_OffchainLabs_methodical-ssz_fv_kraken_target/ListU64",
    "code_name": "ListU64",
    "files": [
     "desc.json",
@@ -66,7 +72,9 @@
    "obligations": 16,
    "templates": []
   },
-  "BitVec": {
+  "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.BitVec": {
+   "desc_sha256": "9fe166aba765e9992b7f4a70dfd8de238340908ccf78be376c982fd402ea8504",
+   "out": "github.com_OffchainLabs_methodical-ssz_fv_kraken_target/BitVec",
    "code_name": "BitVec",
    "files": [
     "desc.json",
@@ -84,7 +92,9 @@
     "size_stmt"
    ]
   },
-  "Nested": {
+  "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Nested": {
+   "desc_sha256": "9396a22442aa6b343beb45af77bda81e315083f4ead3cecc11afc1b2aa13f6f4",
+   "out": "github.com_OffchainLabs_methodical-ssz_fv_kraken_target/Nested",
    "code_name": "Nested",
    "files": [
     "desc.json",
@@ -104,7 +114,9 @@
    "obligations": 15,
    "templates": []
   },
-  "ListC": {
+  "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListC": {
+   "desc_sha256": "1614ee2a02c42373c1a17bee0d504540c7b172f1c2e127eb8ac0943a75dda4f8",
+   "out": "github.com_OffchainLabs_methodical-ssz_fv_kraken_target/ListC",
    "code_name": "ListC",
    "files": [
     "desc.json",
@@ -128,7 +140,9 @@
    "obligations": 28,
    "templates": []
   },
-  "BitL": {
+  "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.BitL": {
+   "desc_sha256": "ebe3c073b5d69644abdb7f964fabacc5a68e29ddb54c8ce2d550d4b247a95f9b",
+   "out": "github.com_OffchainLabs_methodical-ssz_fv_kraken_target/BitL",
    "code_name": "BitL",
    "files": [
     "desc.json",
@@ -144,7 +158,9 @@
    "obligations": 14,
    "templates": []
   },
-  "Checkpoint": {
+  "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Checkpoint": {
+   "desc_sha256": "0006ac5075574bcdbff3fe81fe9ceb7cf0984093c1400e043e4580baa9a6ea0b",
+   "out": "github.com_OffchainLabs_methodical-ssz_fv_kraken_target_prysm/Checkpoint",
    "code_name": "PrysmCheckpoint",
    "files": [
     "desc.json",
@@ -161,7 +177,9 @@
     "size_stmt"
    ]
   },
-  "AttestationData": {
+  "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.AttestationData": {
+   "desc_sha256": "9804249bc11deb4035e8e991404c17249ec943ff39b04f34a7dc130125d4809c",
+   "out": "github.com_OffchainLabs_methodical-ssz_fv_kraken_target_prysm/AttestationData",
    "code_name": "PrysmAttestationData",
    "files": [
     "desc.json",

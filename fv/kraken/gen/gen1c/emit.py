@@ -3,11 +3,11 @@
 
 Usage:
   emit.py --out DIR --desc-dir DIR --go F.ssz.go[,F2...] --elf ELF --nm NM --norm DIR
-          --obligations hand_case|prysm --desccheck-log LOG [--types pkg.T1,pkg.T2]
+          --obligations hand_case|prysm --desccheck-result RESULT.json --types pkg.T1,pkg.T2
           [--code-prefix PKGSUFFIX=Prefix,...]
           [--theorems THEOREMS.json]
 
-Per type <T> it writes <out>/<T>/:
+Per selected key (package, T) it writes <out>/<package with / -> _>/<T>/:
   desc.json        the producer Desc (checked by gen/desccheck)
   statements.lean  Lean statements as `def ... [Host] : Prop` (no proofs, no sorry);
                    templates exist for: size of a fixed-size type. Other obligations of
@@ -89,25 +89,115 @@ def go_string_literal(lit):
     return bytes(out)
 
 
-def fnv1a64(b):
-    """FNV-1a 64 of bytes; the same function as DescCheck.lean `fnv`."""
-    h = 14695981039346656037
-    for x in b:
-        h = ((h ^ x) * 1099511628211) & 0xFFFFFFFFFFFFFFFF
-    return h
+HAND_PACKAGES = ("github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
+                 "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm")
+INVENTORY = os.path.join(KRAKEN, "prysm", "inventory.json")
+RESULT_SCHEMA = "fvphase1c.desccheck-result/1"
 
 
-def read_desccheck(log):
-    """path -> {result, spec, role, fnv} of DESCCHECK-FILE lines; and whether the run ended TABLE OK."""
-    recs, ok = {}, False
-    for line in open(log):
-        m = re.match(r"DESCCHECK-FILE (\S+) (PASS|FAIL) (SPEC|NONE) (original|mutant) fnv=(\d+)", line)
-        if m:
-            recs.setdefault(os.path.realpath(m.group(1)), {"result": m.group(2), "spec": m.group(3),
-                                                           "role": m.group(4), "fnv": int(m.group(5))})
-        if line.startswith("DESCCHECK-TABLE OK"):
-            ok = True
-    return recs, ok
+def _no_dup(pairs):
+    keys = [k for k, _ in pairs]
+    if len(keys) != len(set(keys)):
+        raise ValueError(f"duplicate JSON key in {sorted(k for k in set(keys) if keys.count(k) > 1)}")
+    return dict(pairs)
+
+
+def _no_float(x):
+    raise ValueError(f"non-integer number form {x!r}")
+
+
+def strict_load(path):
+    """JSON with the checker's strictness: no duplicate keys, integers only, no NaN/Infinity."""
+    return json.loads(open(path, "rb").read().decode("utf-8"), object_pairs_hook=_no_dup,
+                      parse_float=_no_float, parse_constant=_no_float)
+
+
+def pkg_ok(p):
+    return isinstance(p, str) and re.fullmatch(r"[A-Za-z0-9._/-]+", p) is not None and \
+        all(seg not in ("", ".", "..") for seg in p.split("/"))
+
+
+def accept(result_path, desc_dir, types, mode, th):
+    """The emit boundary. Returns [(key, desc, path, sha256, record)] or raises SystemExit.
+
+    A Desc is accepted only if (1) the checker result has schema RESULT_SCHEMA, verdict OK,
+    empty list-level findings and the sha256 of the committed inventory; (2) it has exactly
+    one `original` record for the key and one per path; (3) the sha256 of the bytes read here
+    equals that record's sha256 and the record is PASS; (4) the status fits the mode: hand_case
+    = a table key with status SPEC; prysm = not a table key, not a hand package, status NONE,
+    and the type has rows in the frozen list. Selection is explicit (pkg.Type), never implied.
+    """
+    try:
+        res = strict_load(result_path)
+    except (OSError, ValueError) as e:
+        raise SystemExit(f"{result_path}: not a strict JSON checker result ({e})")
+    if res.get("schema") != RESULT_SCHEMA:
+        raise SystemExit(f"{result_path}: schema {res.get('schema')!r}, want {RESULT_SCHEMA}")
+    if res.get("verdict") != "OK":
+        raise SystemExit(f"{result_path}: checker verdict {res.get('verdict')!r}, not OK")
+    lst = res.get("list", {})
+    if any(lst.get(k) for k in ("missing", "extra", "unkeyed", "duplicate_keys", "duplicate_paths", "failed_originals")) \
+            or lst.get("table_self_check") is not True:
+        raise SystemExit(f"{result_path}: list-level findings in an OK result: {lst}")
+    inv_sha = hashlib.sha256(open(INVENTORY, "rb").read()).hexdigest()
+    if res.get("inventory", {}).get("sha256") != inv_sha:
+        raise SystemExit(f"{result_path}: inventory sha256 {res.get('inventory', {}).get('sha256')} != committed {inv_sha}")
+    table = {(k["package"], k["type"]) for k in res.get("table_keys", [])}
+    if {k[0] for k in table} - set(HAND_PACKAGES) or len(table) != 9:
+        raise SystemExit(f"{result_path}: unexpected table keys {sorted(table)}")
+    by_key, by_path = {}, {}
+    for r in res.get("records", []):
+        if r.get("role") != "original":
+            continue
+        k = (r.get("package"), r.get("type"))
+        if k in by_key or r.get("path") in by_path:
+            raise SystemExit(f"{result_path}: more than one original record for {k} or {r.get('path')}")
+        by_key[k], by_path[r.get("path")] = r, k
+    files = {}
+    for fn in sorted(os.listdir(desc_dir)):
+        path = os.path.join(desc_dir, fn)
+        try:
+            d = strict_load(path)
+        except (OSError, ValueError) as e:
+            raise SystemExit(f"{path}: not a strict JSON Desc ({e})")
+        if not isinstance(d, dict):
+            raise SystemExit(f"{path}: not a JSON object")
+        k = (d.get("package"), d.get("type"))
+        if k in files:
+            raise SystemExit(f"two Descs for {k} in {desc_dir}: {files[k][1]} and {path}")
+        files[k] = (d, path)
+    if not types:
+        raise SystemExit("--types is required (explicit pkg.Type list; no implicit selection)")
+    want, seen_ns = [], set()
+    for q in types:
+        if "." not in q or "/" not in q.rsplit(".", 1)[0]:
+            raise SystemExit(f"{q}: use a package-qualified name pkg.Type")
+        k = tuple(q.rsplit(".", 1))
+        if k not in by_key:
+            raise SystemExit(f"{q}: no original record in the checker result (unknown key)")
+        if k not in files:
+            raise SystemExit(f"{q}: no Desc with this key in {desc_dir}")
+        d, path = files[k]
+        r = by_key[k]
+        h = hashlib.sha256(open(path, "rb").read()).hexdigest()
+        if r.get("result") != "PASS":
+            raise SystemExit(f"{q}: checker record is {r.get('result')}")
+        if r.get("sha256") != h:
+            raise SystemExit(f"{q}: {path} sha256 {h} != checked {r.get('sha256')} (changed, stale or mixed result)")
+        if mode == "hand_case":
+            if k not in table or r.get("status") != "SPEC":
+                raise SystemExit(f"{q}: hand_case needs a table key with status SPEC (got {r.get('status')})")
+        else:
+            prysm_types = set(th["prysm"]["types_in"])
+            if k in table or k[0] in HAND_PACKAGES or r.get("status") != "NONE" or k[1] not in prysm_types:
+                raise SystemExit(f"{q}: prysm mode needs a non-hand key with status NONE and frozen-list rows")
+        if not pkg_ok(k[0]):
+            raise SystemExit(f"{q}: package is not a plain path")
+        if k[1] in seen_ns:
+            raise SystemExit(f"{q}: two selected types named {k[1]} (Lean namespace and code name would collide)")
+        seen_ns.add(k[1])
+        want.append((k, d, path, h, r))
+    return want
 
 
 def code_name(t, pkg, prefixes):
@@ -175,9 +265,9 @@ def main():
     ap.add_argument("--elf", required=True)
     ap.add_argument("--nm", required=True)
     ap.add_argument("--norm", required=True)
-    ap.add_argument("--types", help="comma list of package-qualified names pkg.Type (a bare Type must be unique)")
-    ap.add_argument("--desccheck-log", required=True,
-                    help="log of a DescCheck.lean run (gen/desc/run_desccheck.sh main.log) that ends with DESCCHECK-TABLE OK")
+    ap.add_argument("--types", required=True, help="comma list of package-qualified names pkg.Type")
+    ap.add_argument("--desccheck-result", required=True,
+                    help="JSON result of a DescCheck.lean run (DESC_RESULT) with verdict OK")
     ap.add_argument("--code-prefix", default="")
     ap.add_argument("--theorems", default=os.path.join(KRAKEN, "gen", "frozen", "THEOREMS.json"))
     ap.add_argument("--obligations", choices=["hand_case", "prysm"], required=True,
@@ -193,40 +283,7 @@ def main():
     nm = elfmod.read_nm(a.nm)
     gs_addr, gs_size = elfmod.extent(nm, inc.RODATA_SYMBOL)
     gs = e.read(gs_addr, gs_size)
-    recs, table_ok = read_desccheck(a.desccheck_log)
-    if not table_ok:
-        raise SystemExit(f"{a.desccheck_log}: no 'DESCCHECK-TABLE OK' line (coverage or an original failed)")
-    descs, paths = {}, {}
-    for fn in sorted(os.listdir(a.desc_dir)):
-        path = os.path.realpath(os.path.join(a.desc_dir, fn))
-        d = json.load(open(path))
-        key = (d.get("package", ""), d.get("type", ""))
-        if key in descs:
-            raise SystemExit(f"two Descs for {key} in {a.desc_dir}")
-        descs[key], paths[key] = d, path
-    want = []
-    for q in (a.types.split(",") if a.types else [f"{k[0]}.{k[1]}" for k in sorted(descs)]):
-        if "/" in q:
-            pkg, t = q.rsplit(".", 1)
-            if (pkg, t) not in descs:
-                raise SystemExit(f"no Desc for {q} in {a.desc_dir}")
-            want.append((pkg, t))
-        else:
-            hits = [k for k in descs if k[1] == q]
-            if len(hits) != 1:
-                raise SystemExit(f"type {q}: {len(hits)} Descs; use pkg.Type")
-            want.append(hits[0])
-    # accept a Desc only with a PASS record of the checker for this very file (FNV-1a 64 of its
-    # bytes); hand types (--obligations hand_case) need PASS SPEC
-    for k in want:
-        r = recs.get(paths[k])
-        h = fnv1a64(open(paths[k], "rb").read())
-        if r is None or r["role"] != "original" or r["result"] != "PASS":
-            raise SystemExit(f"{k[0]}.{k[1]}: no PASS record of the checker for {paths[k]} ({r})")
-        if r["fnv"] != h:
-            raise SystemExit(f"{k[0]}.{k[1]}: {paths[k]} changed after the check (fnv {h} != {r['fnv']})")
-        if a.obligations == "hand_case" and r["spec"] != "SPEC":
-            raise SystemExit(f"{k[0]}.{k[1]}: hand type without a PASS SPEC record ({r['spec']})")
+    want = accept(a.desccheck_result, a.desc_dir, a.types.split(","), a.obligations, th)
     os.makedirs(os.path.join(out, "data"), exist_ok=True)
     manifest = {"schema": "fvphase1c.gen-manifest/1", "include_api_version": inc.API_VERSION,
                 "include_api_status": api["status"], "include_api_fix3_commit": api.get("fix3_commit"),
@@ -234,10 +291,9 @@ def main():
                            "theorems": sha(a.theorems)},
                 "types": {}, "data_items": {}}
     obl = th[a.obligations]["obligations"]
-    for key in want:
+    for key, d, dpath, dsha, _rec in want:
         t = key[1]
-        d = descs[key]
-        td = os.path.join(out, t)
+        td = os.path.join(out, key[0].replace("/", "_"), t)
         os.makedirs(td, exist_ok=True)
         json.dump(d, open(os.path.join(td, "desc.json"), "w"), indent=1)
         code = code_name(t, d["package"], prefixes)
@@ -290,7 +346,7 @@ def main():
                     manifest["data_items"][iid] = {"kind": "address only", "label": g, "off": 0,
                                                    "file": inc.file_name(iid), "lean": inc.addr_name(iid)}
                 items.append(iid)
-        manifest["types"][t] = {"code_name": code, "files": sorted(os.listdir(td)), "data_items": sorted(set(items)),
+        manifest["types"][f"{key[0]}.{t}"] = {"desc_sha256": dsha, "out": os.path.relpath(td, out), "code_name": code, "files": sorted(os.listdir(td)), "data_items": sorted(set(items)),
                                 "obligations": len(rows), "templates": ["size_stmt"] if has_size else []}
     json.dump(manifest, open(os.path.join(out, "manifest.json"), "w"), indent=1)
     print(json.dumps({"types": len(manifest["types"]), "data_items": len(manifest["data_items"]),

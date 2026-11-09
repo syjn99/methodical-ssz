@@ -1,9 +1,2 @@
 main 0
-s-drop-nested 1
-s-dup-listc 1
-s-n01 1
-s-n02 1
-s-n03 1
-s-n04 1
-s-n05 1
-replay 0
+batch 0

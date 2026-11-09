@@ -14,19 +14,19 @@
    true
   ],
   [
-   "emit refuses Descs without a PASS record for that file (copied/changed after the check)",
+   "emit refuses a Desc changed after the check (copied tree, sha256)",
    true
   ],
   [
-   "emit refuses an escaped hand Desc (n01) chosen by bare name",
+   "emit refuses a bare type name (and the escaped n01 next to it)",
    true
   ],
   [
-   "emit refuses a checker log without DESCCHECK-TABLE OK",
+   "emit refuses a checker result whose verdict is FAIL",
    true
   ],
   [
-   "emit refuses a checked file changed in place after the check (FNV-1a 64)",
+   "emit refuses a checked file changed in place after the check (sha256)",
    true
   ],
   [

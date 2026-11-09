@@ -2,8 +2,8 @@
 """Tests of the generator skeleton (P4).
 
   test_emit.py prepare <work-dir> <desc-work-dir>
-      Take the Descs and the checker main log of a gen/desc/test_desc.py run
-      (<desc-work-dir>/orig, <desc-work-dir>/logs/main.log), run emit.py for the 9 hand
+      Take the Descs and the checker result of a gen/desc/test_desc.py run
+      (<desc-work-dir>/orig, <desc-work-dir>/main.result.json), run emit.py for the 9 hand
       types, selected by package-qualified name (old Go 1.26.3 ELF, read-only) into
       <work-dir>/out, run the guard control, check the frozen-list hashes, cross-check
       the emitted data items with the include API item table, and write
@@ -47,9 +47,15 @@ def sha(p):
     return hashlib.sha256(open(p, "rb").read()).hexdigest()
 
 
-def run_emit(out, desc_dir, log, types=None, extra=()):
+def outdir(t):
+    """Output directory of a hand type: <package with / -> _>/<Type> (emit.py)."""
+    pkg = f"{TGT}/prysm" if t in ("Checkpoint", "AttestationData") else TGT
+    return f"{pkg.replace('/', '_')}/{t}"
+
+
+def run_emit(out, desc_dir, result, types=None, extra=()):
     k = KRAKEN
-    cmd = [sys.executable, "-I", f"{HERE}/emit.py", "--out", out, "--desc-dir", desc_dir, "--desccheck-log", log,
+    cmd = [sys.executable, "-I", f"{HERE}/emit.py", "--out", out, "--desc-dir", desc_dir, "--desccheck-result", result,
            "--go", f"{k}/target/types.ssz.go,{k}/target/types1b.ssz.go,{k}/target/prysm/types.ssz.go",
            "--elf", f"{k}/link/out/p1bin-amd64", "--nm", f"{k}/link/out/p1bin-amd64.nm", "--norm", f"{k}/link/out/norm",
            "--types", ",".join(types or HAND_Q), "--code-prefix", "/target/prysm=Prysm", "--obligations", "hand_case", *extra]
@@ -63,7 +69,7 @@ def prepare(work, dwork):
     os.makedirs(work)
     res = {"checks": []}
     desc_dir = f"{dwork}/orig"
-    log = f"{dwork}/logs/main.log"
+    log = f"{dwork}/main.result.json"
     before = {n: sha(f"{KRAKEN}/gen/frozen/{n}") for n in FROZEN}
     r = run_emit(f"{work}/out", desc_dir, log)
     res["emit"] = {"rc": r.returncode, "stdout": r.stdout.strip(), "stderr": r.stderr.strip()[-500:]}
@@ -75,15 +81,16 @@ def prepare(work, dwork):
     g = run_emit(bad, desc_dir, log)
     res["checks"].append(("guard refuses lean/Fk output", g.returncode != 0 and "refusing" in g.stderr + g.stdout
                           and not os.path.exists(bad)))
-    # control: a hand Desc changed after the check is refused (FNV of the file differs)
+    # end-to-end CLI controls (the full case table is gen1c/test_boundary.py)
+    # control: a hand Desc changed after the check in a copied tree is refused (sha256 differs)
     tam = f"{work}/tampered"
     shutil.copytree(desc_dir, tam)
     nd = json.load(open(f"{tam}/Nested.desc.json"))
     nd["ssz"]["fields"][2]["fields"][0]["limit"] = 17
     json.dump(nd, open(f"{tam}/Nested.desc.json", "w"), indent=1)
     t1 = run_emit(f"{work}/out-tampered", tam, log)
-    res["checks"].append(("emit refuses Descs without a PASS record for that file (copied/changed after the check)",
-                          t1.returncode != 0 and "no PASS record" in t1.stderr + t1.stdout))
+    res["checks"].append(("emit refuses a Desc changed after the check (copied tree, sha256)",
+                          t1.returncode != 0 and "sha256" in t1.stderr + t1.stdout))
     # control: the escaped hand ListU64 (review r2 n01: package + '/') in place of the original,
     # selected by bare name: its record is a FAIL mutant -> refused
     esc = f"{work}/escaped"
@@ -92,12 +99,13 @@ def prepare(work, dwork):
         src = f"{dwork}/mut/n01-esc-pkg-slash.desc.json" if f == "ListU64.desc.json" else f"{desc_dir}/{f}"
         os.symlink(src, f"{esc}/{f}")
     t2 = run_emit(f"{work}/out-escaped", esc, log, types=["ListU64"])
-    res["checks"].append(("emit refuses an escaped hand Desc (n01) chosen by bare name", t2.returncode != 0))
-    # control: the main log of a failed coverage run (scenario s-n01) is refused
-    t3 = run_emit(f"{work}/out-cov", desc_dir, f"{dwork}/logs/scen-s-n01.log")
-    res["checks"].append(("emit refuses a checker log without DESCCHECK-TABLE OK", t3.returncode != 0
-                          and "DESCCHECK-TABLE OK" in t3.stderr + t3.stdout))
-    # control: the checked file itself changed after the check (same path): FNV differs -> refused
+    res["checks"].append(("emit refuses a bare type name (and the escaped n01 next to it)", t2.returncode != 0
+                          and "package-qualified" in t2.stderr + t2.stdout))
+    # control: the result of a failed run (scenario s-n01, verdict FAIL) is refused
+    t3 = run_emit(f"{work}/out-cov", desc_dir, f"{dwork}/scen/s-n01.result.json")
+    res["checks"].append(("emit refuses a checker result whose verdict is FAIL", t3.returncode != 0
+                          and "verdict" in t3.stderr + t3.stdout))
+    # control: the checked file itself changed after the check (same path): sha256 differs -> refused
     orig_nested = f"{desc_dir}/Nested.desc.json"
     keep = open(orig_nested, "rb").read()
     try:
@@ -105,13 +113,13 @@ def prepare(work, dwork):
         t4 = run_emit(f"{work}/out-changed", desc_dir, log)
     finally:
         open(orig_nested, "wb").write(keep)
-    res["checks"].append(("emit refuses a checked file changed in place after the check (FNV-1a 64)",
-                          t4.returncode != 0 and "changed after the check" in t4.stderr + t4.stdout))
+    res["checks"].append(("emit refuses a checked file changed in place after the check (sha256)",
+                          t4.returncode != 0 and "sha256" in t4.stderr + t4.stdout))
     res["controls_stderr"] = [x.stderr.strip()[-300:] for x in (t1, t2, t3, t4)]
     m = json.load(open(f"{work}/out/manifest.json"))
-    files = sorted(os.listdir(f"{work}/out/Checkpoint"))
+    files = sorted(os.listdir(f"{work}/out/{outdir('Checkpoint')}"))
     res["checks"].append(("per-type files", files == ["desc.json", "negative.json", "statements.lean", "witness.json"]))
-    sorry = [p for t in HAND for p in [f"{work}/out/{t}/statements.lean"] if re.search(r"\b(sorry|admit|axiom|native_decide|bv_decide)\b", open(p).read())]
+    sorry = [p for t in HAND for p in [f"{work}/out/{outdir(t)}/statements.lean"] if re.search(r"\b(sorry|admit|axiom|native_decide|bv_decide)\b", open(p).read())]
     res["checks"].append(("no sorry/admit/axiom/native_decide/bv_decide in emitted Lean", not sorry))
     # data cross-check with the include API item table (old ELF offsets)
     sys.path.insert(0, HERE)
@@ -133,7 +141,7 @@ def prepare(work, dwork):
     res["checks"].append(("emitted rodata items that the API also lists agree on offset and length",
                           all(len(c["emitted"]) >= 1 for c in used) and len(used) >= 7))
     # Lean comparison file
-    stm = "\n".join(open(f"{work}/out/{t}/statements.lean").read() for t in ["Checkpoint", "AttestationData", "BitVec", "FixedVec", "Scalars"])
+    stm = "\n".join(open(f"{work}/out/{outdir(t)}/statements.lean").read() for t in ["Checkpoint", "AttestationData", "BitVec", "FixedVec", "Scalars"])
     pairs = ", ".join(f'(``{a}, ``{b})' for a, b, _, _ in COMPARE)
     lean = "\n".join([f"import {i}" for i in IMPORTS] + ["", "open Fk Fk.Code", "variable [Host]", "", stm, "",
         "open Lean Meta in",

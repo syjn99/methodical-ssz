@@ -1,5 +1,6 @@
 import Lean.Data.Json
 import EthLib.Serialization.Ssz
+import EthLib.Cryptography.Hash.Sha256
 import Fv1.SpecScalars
 import Fv1.SpecList
 import Fv1.SpecFixedVec
@@ -10,62 +11,55 @@ import Fv1.SpecPrysm
 import Fv1.SpecBitList
 
 /-!
-# Independent `Desc` checker (phase1c P3)
+# Independent `Desc` checker (phase1c P3; closed-world design after review phase1c-r3)
 
-Reads producer `Desc` JSON files (schema `fvphase1c.desc/1`): the originals, one path
-per line in `$DESC_LIST`, and optionally negative cases in `$DESC_MUTANTS`. It checks
-every claim with the functions of the pinned EthLib SSZ library. Only `ref` and
-`go-names` compare with a spec Desc, and only for the types of the checker's own
-table (status SPEC); for every other type (status NONE) the checks are consistency
-with EthLib layout semantics, not a spec comparison.
+Inputs (environment):
+* `DESC_LIST`       the originals, one path per line
+* `DESC_MUTANTS`    optional negative cases (recorded with role `mutant`; never count for the verdict)
+* `DESC_RESULT`     the result file to write (JSON, written by Lean's JSON encoder)
+* `DESC_INVENTORY`  the committed inventory (default `../prysm/inventory.json`); its sha256 is
+                    printed and written into the result
+* `DESC_BATCH`      test tooling: lines `id<TAB>list<TAB>result`, one closed-world run per line
 
-Identity (checker rules; the file's values never select what is checked):
-* `schema`     exactly `fvphase1c.desc/1`
-* `type`       non-empty ASCII identifier (letters, digits, `_`): no look-alike characters
-* `package`    one of the checker-owned `knownPackages`
-* `table-type` a table type name under another hand package is a FAIL. (Prysm packages
-               have real types of the same names, e.g. `Checkpoint`; those are
-               told apart by the coverage rule below.)
-* `keys`       no unknown key at the top level, in a claim, or in a term
+Closed world. The expected key set is the checker's own table (9 hand types, Fv1 spec Desc and
+21 Go field names) plus the (package, type) keys of the committed inventory (135). It never
+comes from the producer's output. The originals must equal this set exactly: a missing, extra,
+unkeyed or duplicate key, a duplicate path, or any failing original makes the verdict FAIL.
 
-Per file:
-* `parse`      the `ssz` term is an EthLib `Desc` (container at top level)
-* `wf`         `Desc.wellFormed = .ok ()`
-* `fixed`      claimed `fixed_size` = `Desc.fixedSize`
-* `nfields`    one claim per EthLib field
-* `width`, `variable`, `offset`, `kind`, `length`, `limit`, `elem`
-               per field, from EthLib `Desc.fixedSize` of the field (variable
-               fields take `bytesPerOffset` head bytes) and the field's
-               constructor arguments; offsets are prefix sums of the widths
-* `head`       claimed `fixed_part_size` = sum of the head widths
-* `order`      claimed `variable_order` = the variable fields in field order
-* `name`, `index` per field: the claim's `name` is the term's field name, `index` = i
-* `ref-claim`  a type in the table must carry exactly the table's `reference`; a type
-               not in the table must carry none
-* `ref`        table type: the shape equals the Fv1 spec Desc up to field names
-* `go-names`   table type: the term equals, exactly and with names at every level,
-               the checker's Go-named term (Fv1 term with the checker's 21 Go field
-               names). So reordered or renamed fields of equal shape FAIL.
-* `probe`      EthLib `serialize` of `Desc.default`: total size = head + the
-               default body of each variable field; each variable field's head
-               offset word at its claimed offset; for each fixed field, a marker value
-               changes bytes only inside [offset, offset + width). Skipped when
-               the head is larger than 65536 bytes.
+Per file (any failure = FAIL):
+* `strict-json` the raw text: no duplicate key (after decoding escapes), integers only
+                (`-?(0|[1-9][0-9]*)`), no byte-order mark, nothing after the top value
+* `schema`      exactly `fvphase1c.desc/1`
+* `type`        an ASCII Go identifier; `package` an ASCII path in the checker's package list
+* `expected-key` (package, type) is in the expected set
+* `hand-name`   a hand type name outside its table package, unless the key is in the
+                checker-owned exception list (the real Prysm `v1alpha1.Checkpoint` and
+                `v1alpha1.AttestationData`)
+* `keys`        no unknown key at the top level or in a term; `claim-keys[i]` only the claim
+                keys that apply to field i's kind
+* `names`       every field name at every level is an ASCII Go identifier
+* `parse`, `wf`, `fixed`, `nfields`, `width`, `variable`, `offset`, `kind`, `length`, `limit`,
+  `elem`, `name`, `index`, `head`, `order`, `probe`: claims against EthLib functions
+* table keys (status SPEC): `ref-claim` (the table's reference), `ref` (Fv1 spec Desc up to
+  names), `go-names` (exact term with the checker's Go field names at every level)
+* other keys (status NONE): `ref-claim` (no reference) and `inventory`: field names, head
+  widths, variable flags, field kinds and fixed size equal the committed inventory. This binds a
+  Prysm Desc to the inventory (same sszgen IR, another program). It is not a spec comparison.
 
-Over the originals (`$DESC_LIST`): every key of the table must appear exactly once as
-PASS SPEC (`DESCCHECK-COVERAGE`), and no (package, type) key may appear twice
-(`DESCCHECK-DUPKEY`). The expected set comes from the checker's table. A table
-self-check requires the Go-named terms to equal the Fv1 terms up to names (21 names).
-If the self-check, the coverage or any original fails, the run ends with an error
-(non-zero exit) after printing `DESCCHECK-TABLE FAIL`.
+Result file: schema `fvphase1c.desccheck-result/1`, inventory path and sha256, table keys,
+exceptions, list-level findings, one record per file (path, sha256 of the bytes (EthLib
+SHA-256, FIPS 180-4), role, package, type, status, PASS/FAIL, failed checks with details) and
+`verdict` OK/FAIL. `gen1c/emit.py` reads only this file. The human log escapes every character
+outside printable ASCII. A run with verdict FAIL ends with a non-zero exit.
 
-Prints `DESCCHECK <file> <check> OK|FAIL|SKIP <detail>` per check,
-`DESCCHECK-FILE <file> PASS|FAIL SPEC|NONE original|mutant fnv=<FNV-1a 64> <failed checks>`
-per file, `DESCCHECK-DONE originals ...` and `DESCCHECK-DONE mutants ...` (counted
-apart), then `DESCCHECK-TABLE OK|FAIL`. Shares no code with the producer
-(`gen/desc/producer.py`). Read-only; adds no declaration used elsewhere.
+Threat model. Defends against: producer or IR bugs in the 9 hand types (spec comparison),
+mislabelled, stray, missing or duplicated Desc files, look-alike names, JSON parser differences,
+and stale or mixed result files at the emit boundary (sha256 binding, verdict, inventory hash).
+Does not defend against: wrong shapes of the 135 Prysm types that agree with the inventory
+(no independent spec offline: consistency only), a forged result file written by hand (the
+result is not signed), or a wrong inventory committed on purpose.
 
-Run (gated): `cd fv/kraken/lean && DESC_LIST=<file> [DESC_MUTANTS=<file>] lake env lean ../gen/desccheck/DescCheck.lean`
+Run (gated): `cd fv/kraken/lean && DESC_LIST=<file> DESC_RESULT=<file> [DESC_MUTANTS=<file>] lake env lean ../gen/desccheck/DescCheck.lean`
 -/
 
 open Lean EthLib.Serialization.Ssz
@@ -147,12 +141,25 @@ def handPackages : List String := [tgt, tgtPrysm]
 def handTypeNames : List String := refs.map (·.1.2)
 
 /-- A Go type name: non-empty, ASCII letters, digits and `_` only (no look-alike characters). -/
-def goIdent (s : String) : Bool := !s.isEmpty && s.all (fun c => c.isAlphanum || c == '_')
+def goIdent (s : String) : Bool :=
+  !s.isEmpty && s.all (fun c => c.isAlphanum || c == '_') && !((s.toList.head?.map Char.isDigit).getD false)
+
+/-- A package path: ASCII letters, digits, `.`, `_`, `-`, `/`; no empty segment, no `..`. -/
+def pkgPath (s : String) : Bool :=
+  !s.isEmpty && s.all (fun c => c.isAlphanum || c == '.' || c == '_' || c == '-' || c == '/') &&
+    (s.splitOn "/").all (fun seg => !seg.isEmpty && seg != "." && seg != "..")
+
+/-- Checker-owned exceptions: real Prysm types whose names equal hand type names. -/
+def handNameExceptions : List (String × String) := [(prysmV1, "Checkpoint"), (prysmV1, "AttestationData")]
+
+/-- Claim keys that apply to every field, and those that apply to one term kind only. -/
+def claimBase : List String := ["name", "index", "offset", "width", "variable", "kind"]
+def claimExtra : String → List String
+  | "byteVector" | "bitVector" => ["length"] | "vector" => ["length", "elem_size"]
+  | "byteList" | "bitList" => ["limit"] | "list" => ["limit", "elem_size"] | _ => []
 
 def topKeys : List String :=
   ["schema", "type", "package", "ssz", "fixed_size", "fixed_part_size", "fields", "variable_order", "reference"]
-def claimKeys : List String :=
-  ["name", "index", "offset", "width", "variable", "kind", "length", "limit", "elem_size"]
 
 def keysOf : Json → List String
   | .obj kvs => kvs.toList.map Prod.fst
@@ -178,9 +185,120 @@ partial def termUnknown (path : String) (j : Json) : List String :=
     | _ => []
   own ++ sub
 
-/-- FNV-1a 64 of the file bytes (emit.py computes the same to bind a record to a file). -/
-def fnv (b : ByteArray) : UInt64 :=
-  b.foldl (fun h x => (h ^^^ x.toUInt64) * 1099511628211) 14695981039346656037
+def hexOf (b : ByteArray) : String :=
+  b.foldl (fun acc x => acc ++ (if x < 16 then "0" else "") ++ String.ofList (Nat.toDigits 16 x.toNat)) ""
+
+/-- SHA-256 (EthLib, FIPS 180-4) of the file bytes, lower-case hex. emit.py binds a record to a
+file by this value (hashlib.sha256). -/
+def sha256Hex (b : ByteArray) : String := hexOf (EthLib.Cryptography.Hash.sha256 b)
+
+/-- Escape a string for the human log: every character outside printable ASCII becomes \x<hex>;. -/
+def esc (s : String) : String :=
+  s.foldl (fun acc c => if c.toNat >= 32 && c.toNat < 127 then acc.push c
+    else acc ++ "\\x" ++ String.ofList (Nat.toDigits 16 c.toNat) ++ ";") ""
+
+/-! Strict JSON scan of the raw text (Lean's `Json.parse` keeps the last of duplicate keys and
+accepts `1.6e1` and `16.0`; the producer's format allows neither). Errors: duplicate key in an
+object (after decoding escapes), a number that is not `-?(0|[1-9][0-9]*)`, a byte-order mark,
+content after the top value, a syntax error. -/
+partial def skipWs (cs : Array Char) (i : Nat) : Nat :=
+  if h : i < cs.size then (if cs[i] == ' ' || cs[i] == '\n' || cs[i] == '\t' || cs[i] == '\r' then skipWs cs (i + 1) else i) else i
+
+def hexVal (c : Char) : Option Nat :=
+  if c.isDigit then some (c.toNat - '0'.toNat)
+  else if 'a' ≤ c && c ≤ 'f' then some (c.toNat - 'a'.toNat + 10)
+  else if 'A' ≤ c && c ≤ 'F' then some (c.toNat - 'A'.toNat + 10) else none
+
+/-- Read a string starting at the opening quote; returns (decoded, next index) or none. -/
+partial def scanStr (cs : Array Char) (i : Nat) (acc : String) : Option (String × Nat) :=
+  if h : i < cs.size then
+    let c := cs[i]
+    if c == '"' then some (acc, i + 1)
+    else if c == '\\' then
+      if h2 : i + 1 < cs.size then
+        let e := cs[i + 1]
+        if e == 'u' then
+          if i + 5 < cs.size then
+            match hexVal cs[i+2]!, hexVal cs[i+3]!, hexVal cs[i+4]!, hexVal cs[i+5]! with
+            | some a, some b, some c2, some d => scanStr cs (i + 6) (acc.push (Char.ofNat (((a * 16 + b) * 16 + c2) * 16 + d)))
+            | _, _, _, _ => none
+          else none
+        else
+          let m := if e == 'n' then '\n' else if e == 't' then '\t' else if e == 'r' then '\r'
+                   else if e == 'b' then Char.ofNat 8 else if e == 'f' then Char.ofNat 12 else e
+          scanStr cs (i + 2) (acc.push m)
+      else none
+    else scanStr cs (i + 1) (acc.push c)
+  else none
+
+partial def scanVal (cs : Array Char) (i0 : Nat) (path : String) (errs : Array String) : Option (Nat × Array String) := do
+  let i := skipWs cs i0
+  if h : i < cs.size then
+    let c := cs[i]
+    if c == '{' then
+      let mut j := skipWs cs (i + 1)
+      let mut seen : List String := []
+      let mut es := errs
+      if j < cs.size && cs[j]! == '}' then return (j + 1, es)
+      repeat
+        if !(j < cs.size && cs[j]! == '"') then failure
+        let (k, j2) ← scanStr cs (j + 1) ""
+        if seen.contains k then es := es.push s!"duplicate key {path}.{k}"
+        seen := k :: seen
+        let j3 := skipWs cs j2
+        if !(j3 < cs.size && cs[j3]! == ':') then failure
+        let (j4, es2) ← scanVal cs (j3 + 1) s!"{path}.{k}" es
+        es := es2
+        let j5 := skipWs cs j4
+        if j5 < cs.size && cs[j5]! == ',' then j := skipWs cs (j5 + 1)
+        else if j5 < cs.size && cs[j5]! == '}' then return (j5 + 1, es)
+        else failure
+      failure
+    else if c == '[' then
+      let mut j := skipWs cs (i + 1)
+      let mut es := errs
+      let mut n := 0
+      if j < cs.size && cs[j]! == ']' then return (j + 1, es)
+      repeat
+        let (j2, es2) ← scanVal cs j s!"{path}[{n}]" es
+        es := es2
+        n := n + 1
+        let j3 := skipWs cs j2
+        if j3 < cs.size && cs[j3]! == ',' then j := skipWs cs (j3 + 1)
+        else if j3 < cs.size && cs[j3]! == ']' then return (j3 + 1, es)
+        else failure
+      failure
+    else if c == '"' then
+      let (_, j) ← scanStr cs (i + 1) ""
+      return (j, errs)
+    else if c == '-' || c.isDigit then
+      let mut j := i
+      while j < cs.size && (cs[j]! == '-' || cs[j]! == '+' || cs[j]! == '.' || cs[j]! == 'e' || cs[j]! == 'E' || cs[j]!.isDigit) do
+        j := j + 1
+      let tok := String.ofList (cs.extract i j).toList
+      let body := if tok.startsWith "-" then tok.drop 1 else tok
+      let ok := !body.isEmpty && body.all Char.isDigit && (body == "0" || !body.startsWith "0")
+      return (j, if ok then errs else errs.push s!"number form {path} '{tok}' (integers only)")
+    else
+      for lit in ["true", "false", "null"] do
+        if String.ofList (cs.extract i (i + lit.length)).toList == lit then return (i + lit.length, errs)
+      failure
+  else failure
+
+/-- Strict-scan errors of a file text (empty list = clean). -/
+def strictScan (txt : String) : List String :=
+  let cs := txt.toList.toArray
+  if cs.size > 0 && cs[0]! == Char.ofNat 0xFEFF then ["byte-order mark"]
+  else match scanVal cs 0 "$" #[] with
+    | none => ["JSON syntax (strict scan)"]
+    | some (j, es) => es.toList ++ (if skipWs cs j < cs.size then ["content after the top value"] else [])
+
+/-- All container field names of a term, at every level. -/
+partial def allNames : Desc → List String
+  | .vector e _ => allNames e
+  | .list e _ => allNames e
+  | .container ns fs => ns ++ fs.flatMap allNames
+  | _ => []
 
 /-- A value of a fixed-size shape with every byte or bit set. -/
 partial def marker : Desc → Option Value
@@ -219,6 +337,9 @@ def checkFields (j : Json) (names : List String) (fs : List Desc) : Except Strin
     if isVar then vars := vars ++ [i]
     if h : i < claims.size then
       let c := claims[i]
+      let allowed := claimBase ++ claimExtra (kindName f)
+      let bad := (keysOf c).filter (fun x => !allowed.contains x)
+      out := out ++ [(s!"claim-keys[{i}]", bad.isEmpty, s!"keys not allowed for kind {kindName f}: {bad}")]
       let cw ← c.getObjValAs? Nat "width"
       let cv ← c.getObjValAs? Bool "variable"
       let co ← c.getObjValAs? Nat "offset"
@@ -291,34 +412,96 @@ def probe (d : Desc) (fs : List Desc) (head : Nat) (fixed : Option Nat) (claims 
             s!"changed bytes {diffs.head?.getD 0}..{diffs.getLast?.getD 0} ({diffs.length}), claimed [{co},{co + cw})")]
   return out
 
-def checkFile (path : String) : IO (List Line) := do
-  let txt ← IO.FS.readFile path
+/-- Inventory entry of a Prysm type: field names, per-field (head width, variable), per-field
+term kind expected from the inventory shape, fixed size. -/
+structure InvType where
+  names : List String
+  sizes : List (Nat × Bool)
+  kinds : List String
+  fixed : Option Nat
+
+/-- The EthLib term kind that an inventory field shape stands for ("?" = no rule: FAIL). -/
+def shapeKind (sh : String) : String :=
+  if sh == "bytesN" then "byteVector" else if sh == "uint64" then "uint" else if sh == "bool" then "bool"
+  else if sh == "bitvector" then "bitVector" else if sh == "bitlist" then "bitList"
+  else if sh == "list[byte]" then "byteList"
+  else if sh.startsWith "delegated overlay " then "uint"
+  else if sh.startsWith "delegated container" then "container"
+  else if sh.startsWith "list[" then "list" else if sh.startsWith "vector[" then "vector" else "?"
+
+/-- The checker's closed world: the 9 table keys and the keys of the committed inventory. -/
+structure Ctx where
+  inv : List ((String × String) × InvType)
+  expected : List (String × String)
+
+structure FileRes where
+  path : String
+  sha : String
+  key : Option (String × String)
+  status : String
+  lines : List Line
+  deriving Inhabited
+
+def FileRes.failed (r : FileRes) : List String := r.lines.filter (fun l => !l.2.1) |>.map (·.1)
+
+def readInventory (j : Json) : Except String (List ((String × String) × InvType)) := do
+  let ts ← j.getObjValAs? (Array Json) "types"
+  ts.toList.mapM fun t => do
+    let pk ← t.getObjValAs? String "package"
+    let ty ← t.getObjValAs? String "name"
+    let fs ← t.getObjValAs? (Array Json) "fields"
+    let names ← fs.toList.mapM (·.getObjValAs? String "name")
+    let sizes ← fs.toList.mapM fun f => do
+      let w ← f.getObjValAs? Nat "fixed_size"
+      let v ← f.getObjValAs? Bool "variable"
+      pure (w, v)
+    let kinds ← fs.toList.mapM fun f => do
+      let sh ← f.getObjValAs? String "shape"
+      pure (shapeKind sh)
+    let fixed ← optNat t "fixed_size"
+    let var ← t.getObjValAs? Bool "variable"
+    pure ((pk, ty), { names, sizes, kinds, fixed := if var then none else fixed })
+
+def checkFile (ctx : Ctx) (path : String) : IO FileRes := do
+  let rd ← (IO.FS.readBinFile path).toBaseIO
+  let bytes ← match rd with
+    | .ok b => pure b
+    | .error e => return { path, sha := "", key := none, status := "NONE", lines := [("read", false, s!"{e}")] }
+  let sha := sha256Hex bytes
+  let some txt := String.fromUTF8? bytes | return { path, sha, key := none, status := "NONE", lines := [("utf8", false, "not UTF-8")] }
+  let strict := strictScan txt
+  let mut idl : List Line := [("strict-json", strict.isEmpty, s!"{strict}")]
   let j ← match Json.parse txt with
     | .ok j => pure j
-    | .error e => return [("json", false, e)]
-  -- identity: schema, package, type (checker rules, not producer values)
+    | .error e => return { path, sha, key := none, status := "NONE", lines := idl ++ [("json", false, e)] }
+  -- identity: checker rules, closed world
   let schema := (j.getObjValAs? String "schema").toOption.getD ""
-  let ty := (j.getObjValAs? String "type").toOption.getD ""
-  let pk := (j.getObjValAs? String "package").toOption.getD ""
-  let mut idl : List Line := [("schema", schema == "fvphase1c.desc/1", s!"schema '{schema}'"),
-    ("type", goIdent ty, s!"type '{ty}' (non-empty ASCII identifier)"),
-    ("package", knownPackages.contains pk, s!"package '{pk}' (checker-owned list)")]
-  if handTypeNames.contains ty && handPackages.contains pk && (refs.lookup (pk, ty)).isNone then
-    idl := idl ++ [("table-type", false, s!"table type name {ty} under package {pk}")]
+  let tyE := j.getObjValAs? String "type"
+  let pkE := j.getObjValAs? String "package"
+  let ty := tyE.toOption.getD ""
+  let pk := pkE.toOption.getD ""
+  let tyOk := tyE.toOption.isSome && goIdent ty
+  let pkOk := pkE.toOption.isSome && pkgPath pk && knownPackages.contains pk
+  idl := idl ++ [("schema", schema == "fvphase1c.desc/1", s!"schema '{schema}'"),
+    ("type", tyOk, s!"type '{ty}' (ASCII Go identifier)"),
+    ("package", pkOk, s!"package '{pk}' (ASCII path in the checker's package list)")]
+  let key : Option (String × String) := if tyOk && pkOk then some (pk, ty) else none
+  idl := idl ++ [("expected-key", (key.map ctx.expected.contains).getD false,
+    s!"({pk}, {ty}) in the checker's expected set (table + committed inventory)")]
+  if handTypeNames.contains ty && (refs.lookup (pk, ty)).isNone && !handNameExceptions.contains (pk, ty) then
+    idl := idl ++ [("hand-name", false, s!"hand type name {ty} outside its table package and not a listed exception")]
   let unk := ((keysOf j).filter (fun x => !topKeys.contains x)) ++
-    (match j.getObjValAs? (Array Json) "fields" with
-     | .ok cs => (cs.toList.zip (List.range cs.size)).flatMap (fun (c, i) =>
-         (keysOf c).filter (fun x => !claimKeys.contains x) |>.map (fun x => s!"fields[{i}].{x}"))
-     | _ => []) ++
     (match j.getObjVal? "ssz" with | .ok t => termUnknown "ssz" t | _ => [])
   idl := idl ++ [("keys", unk.isEmpty, s!"unknown keys {unk}")]
+  let status := if (refs.lookup (pk, ty)).isSome then "SPEC" else "NONE"
   let d ← match (j.getObjVal? "ssz") >>= toDesc with
     | .ok d => pure d
-    | .error e => return idl ++ [("parse", false, e)]
+    | .error e => return { path, sha, key, status, lines := idl ++ [("parse", false, e)] }
   let (names, fs) ← match d with
     | .container ns fs => pure (ns, fs)
-    | _ => return idl ++ [("parse", false, "top level is not a container")]
-  let mut out : List Line := idl ++ [("parse", true, "")]
+    | _ => return { path, sha, key, status, lines := idl ++ [("parse", false, "top level is not a container")] }
+  let badNames := (allNames d).filter (fun n => !goIdent n)
+  let mut out : List Line := idl ++ [("parse", true, ""), ("names", badNames.isEmpty, s!"names that are not ASCII Go identifiers: {badNames}")]
   out := out ++ [("wf", (match d.wellFormed with | .ok _ => true | .error _ => false),
                   (match d.wellFormed with | .ok _ => "" | .error e => s!"{repr e}"))]
   let cf := optNat j "fixed_size"
@@ -356,80 +539,123 @@ def checkFile (path : String) : IO (List Line) := do
                    ("go-names", Desc.beq d gd, s!"exact term with the checker's Go field names of {ty}")]
   | none =>
     out := out ++ [("ref-claim", claimed.isNone, s!"no spec Desc for {pk}.{ty}, file {claimed}")]
-  return out
+    -- binding of a Prysm Desc to the committed inventory (same IR, other program; not a spec)
+    match ctx.inv.lookup (pk, ty) with
+    | some it =>
+      let sizes := fs.map (fun f => (f.fixedSize.getD bytesPerOffset, f.fixedSize.isNone))
+      let kinds := fs.map kindName
+      out := out ++ [("inventory", names == it.names && sizes == it.sizes && kinds == it.kinds && d.fixedSize == it.fixed,
+        s!"names/sizes/kinds/fixed vs inventory: {names == it.names}/{sizes == it.sizes}/{kinds == it.kinds}/{d.fixedSize == it.fixed}")]
+    | none => out := out ++ [("inventory", false, s!"no inventory entry for ({pk}, {ty})")]
+  return { path, sha, key, status, lines := out }
 
-def fileKey (path : String) : IO (Option (String × String)) := do
-  match Json.parse (← IO.FS.readFile path) with
-  | .ok j => return some ((j.getObjValAs? String "package").toOption.getD "", (j.getObjValAs? String "type").toOption.getD "")
-  | .error _ => return none
+def keyStr (k : String × String) : String := s!"{k.1}.{k.2}"
 
-/-- Check one list. Returns (pass, fail, spec, none, PASS-SPEC keys, all keys). -/
-def runList (label : String) (paths : List String) :
-    IO (Nat × Nat × Nat × Nat × List (String × String) × List (String × String)) := do
-  let mut pass := 0
-  let mut fail := 0
-  let mut nspec := 0
-  let mut nnone := 0
-  let mut specKeys : List (String × String) := []
-  let mut keys : List (String × String) := []
-  for p in paths do
-    let ls ← checkFile p
-    let key ← fileKey p
-    let st := match key with
-      | some k => if (refs.lookup k).isSome then "SPEC" else "NONE"
-      | none => "NONE"
-    if st == "SPEC" then nspec := nspec + 1 else nnone := nnone + 1
-    if let some k := key then keys := keys ++ [k]
-    for (c, ok, det) in ls do
-      let s := if det.startsWith "SKIP" then "SKIP" else if ok then "OK" else "FAIL"
-      IO.println s!"DESCCHECK {p} {c} {s} {det}"
-    let bad := ls.filter (fun l => !l.2.1) |>.map (·.1)
-    let h := fnv (← IO.FS.readBinFile p)
-    if bad.isEmpty then
-      pass := pass + 1
-      if st == "SPEC" then if let some k := key then specKeys := specKeys ++ [k]
-      IO.println s!"DESCCHECK-FILE {p} PASS {st} {label} fnv={h}"
-    else
-      fail := fail + 1
-      IO.println s!"DESCCHECK-FILE {p} FAIL {st} {label} fnv={h} {String.intercalate "," bad}"
-  return (pass, fail, nspec, nnone, specKeys, keys)
+def recordJson (role : String) (r : FileRes) : Json :=
+  Json.mkObj [("path", r.path), ("sha256", r.sha), ("role", role),
+    ("package", match r.key with | some k => Json.str k.1 | none => Json.null),
+    ("type", match r.key with | some k => Json.str k.2 | none => Json.null),
+    ("status", r.status), ("result", if r.failed.isEmpty then "PASS" else "FAIL"),
+    ("failed", Json.arr (r.failed.map Json.str).toArray),
+    ("failed_detail", Json.arr ((r.lines.filter (fun l => !l.2.1)).map (fun l => Json.mkObj [("check", l.1), ("detail", l.2.2)])).toArray)]
+
+/-- Check a list of originals (closed world) and optional mutants; return the result JSON and verdict. -/
+def runSet (ctx : Ctx) (invInfo : Json) (selfOk : Bool) (cache : IO.Ref (Std.HashMap String FileRes))
+    (origs : List String) (muts : List String) (quiet : Bool) : IO (Json × Bool) := do
+  let check (p : String) : IO FileRes := do
+    match (← cache.get).get? p with
+    | some r => pure r
+    | none =>
+      let r ← checkFile ctx p
+      cache.modify (·.insert p r)
+      pure r
+  let mut recs : Array Json := #[]
+  let mut ores : Array FileRes := #[]
+  for p in origs do
+    let r ← check p
+    ores := ores.push r
+    recs := recs.push (recordJson "original" r)
+    unless quiet do
+      for (c, ok, det) in r.lines do
+        IO.println (esc s!"DESCCHECK {p} {c} {if det.startsWith "SKIP" then "SKIP" else if ok then "OK" else "FAIL"} {det}")
+      IO.println (esc s!"DESCCHECK-FILE {p} {if r.failed.isEmpty then "PASS" else "FAIL"} {r.status} original {String.intercalate "," r.failed}")
+  for p in muts do
+    let r ← check p
+    recs := recs.push (recordJson "mutant" r)
+    unless quiet do
+      for (c, ok, det) in r.lines do
+        IO.println (esc s!"DESCCHECK {p} {c} {if det.startsWith "SKIP" then "SKIP" else if ok then "OK" else "FAIL"} {det}")
+      IO.println (esc s!"DESCCHECK-FILE {p} {if r.failed.isEmpty then "PASS" else "FAIL"} {r.status} mutant {String.intercalate "," r.failed}")
+  -- list level: the originals must be exactly the expected set
+  let keys := ores.toList.filterMap (·.key)
+  let missing := ctx.expected.filter (fun k => !keys.contains k)
+  let extra := (keys.filter (fun k => !ctx.expected.contains k)).eraseDups
+  let unkeyed := ores.toList.filter (·.key.isNone) |>.map (·.path)
+  let dupKeys := keys.eraseDups.filter (fun k => (keys.filter (· == k)).length > 1)
+  let paths := origs
+  let dupPaths := paths.eraseDups.filter (fun p => (paths.filter (· == p)).length > 1)
+  let failedOrig := ores.toList.filter (fun r => !r.failed.isEmpty) |>.map (·.path)
+  let ok := selfOk && missing.isEmpty && extra.isEmpty && unkeyed.isEmpty && dupKeys.isEmpty && dupPaths.isEmpty && failedOrig.isEmpty
+  let ks (l : List (String × String)) := Json.arr (l.map (fun k => Json.mkObj [("package", k.1), ("type", k.2)])).toArray
+  let res := Json.mkObj [("schema", "fvphase1c.desccheck-result/1"), ("checker", "fv/kraken/gen/desccheck/DescCheck.lean"),
+    ("inventory", invInfo), ("table_keys", Json.arr (refs.map (fun (k, (rn, _, _)) => Json.mkObj [("package", k.1), ("type", k.2), ("reference", rn)])).toArray),
+    ("hand_name_exceptions", ks handNameExceptions), ("expected_key_count", ctx.expected.length),
+    ("originals", origs.length), ("mutants", muts.length),
+    ("list", Json.mkObj [("missing", ks missing), ("extra", ks extra), ("unkeyed", Json.arr (unkeyed.map Json.str).toArray),
+      ("duplicate_keys", ks dupKeys), ("duplicate_paths", Json.arr (dupPaths.map Json.str).toArray),
+      ("failed_originals", Json.arr (failedOrig.map Json.str).toArray), ("table_self_check", selfOk)]),
+    ("records", Json.arr recs), ("verdict", if ok then "OK" else "FAIL")]
+  unless quiet do
+    IO.println (esc s!"DESCCHECK-LIST missing {missing.map keyStr} extra {extra.map keyStr} unkeyed {unkeyed} dupkeys {dupKeys.map keyStr} duppaths {dupPaths} failed {failedOrig.length}")
+  return (res, ok)
+
+def readList (p : String) : IO (List String) := do
+  return (← IO.FS.readFile p).splitOn "\n" |>.filter (· ≠ "")
 
 def main : IO Unit := do
-  let some list ← IO.getEnv "DESC_LIST" | throw (IO.userError "DESC_LIST is not set")
-  -- self-check of the checker's own table: Go-named terms = Fv1 terms up to names; 21 names
+  -- the closed world: table (checker-owned) + committed inventory (bound by sha256)
+  let invPath := (← IO.getEnv "DESC_INVENTORY").getD "../prysm/inventory.json"
+  let invBytes ← IO.FS.readBinFile invPath
+  let invSha := sha256Hex invBytes
+  let some invTxt := String.fromUTF8? invBytes | throw (IO.userError "inventory is not UTF-8")
+  let invJ ← IO.ofExcept (Json.parse invTxt)
+  let inv ← IO.ofExcept (readInventory invJ)
+  let ctx : Ctx := { inv, expected := refs.map (·.1) ++ inv.map (·.1) }
+  IO.println s!"DESCCHECK-INVENTORY {esc invPath} sha256={invSha} keys={inv.length} expected={ctx.expected.length}"
+  -- self-check of the checker's own tables
   let mut selfOk := true
   for (k, (rname, rd, gd)) in refs do
     let ok := Desc.beq (posNames gd) (posNames rd)
     selfOk := selfOk && ok
     IO.println s!"DESCCHECK-TABLE-SELF {k.1}.{k.2} {rname} {if ok then "OK" else "FAIL"}"
   let topNames := refs.foldl (fun n (_, (_, _, gd)) => n + (match gd with | .container ns _ => ns.length | _ => 0)) 0
-  IO.println s!"DESCCHECK-TABLE-SELF go-names {topNames} (expected 21)"
   selfOk := selfOk && topNames == 21
-  let origs := (← IO.FS.readFile list).splitOn "\n" |>.filter (· ≠ "")
-  let (op, of_, os, on, specKeys, keys) ← runList "original" origs
-  -- coverage: every key of the checker's table exactly once as PASS SPEC among the originals;
-  -- no (package, type) key twice among the originals
-  let mut covOk := true
-  for (k, (rname, _, _)) in refs do
-    let n := (specKeys.filter (· == k)).length
-    let ok := n == 1
-    covOk := covOk && ok
-    IO.println s!"DESCCHECK-COVERAGE {k.1}.{k.2} {rname} pass-spec={n} {if ok then "OK" else "FAIL"}"
-  for k in keys.eraseDups do
-    let n := (keys.filter (· == k)).length
-    if n > 1 then
-      covOk := false
-      IO.println s!"DESCCHECK-DUPKEY {k.1}.{k.2} {n} FAIL"
-  IO.println s!"DESCCHECK-DONE originals pass {op} fail {of_} spec {os} none {on}"
-  match ← IO.getEnv "DESC_MUTANTS" with
-  | some ml =>
-    let ms := (← IO.FS.readFile ml).splitOn "\n" |>.filter (· ≠ "")
-    let (mp, mf, msp, mn, _, _) ← runList "mutant" ms
-    IO.println s!"DESCCHECK-DONE mutants pass {mp} fail {mf} spec {msp} none {mn}"
-  | none => pure ()
-  let allOk := selfOk && covOk && of_ == 0
-  IO.println s!"DESCCHECK-TABLE {if allOk then "OK" else "FAIL"} self={selfOk} coverage={covOk} originals_failed={of_}"
-  if !allOk then throw (IO.userError "DescCheck: table self-check, coverage or an original failed")
+  let exOk := handNameExceptions.all (fun k => (inv.lookup k).isSome)
+  let overlap := refs.filter (fun (k, _) => (inv.lookup k).isSome) |>.length
+  let dupExpected := ctx.expected.length != ctx.expected.eraseDups.length
+  selfOk := selfOk && exOk && overlap == 0 && !dupExpected
+  IO.println s!"DESCCHECK-TABLE-SELF go-names={topNames} (21) exceptions-in-inventory={exOk} table-inventory-overlap={overlap} duplicate-expected={dupExpected} ok={selfOk}"
+  let invInfo := Json.mkObj [("path", invPath), ("sha256", invSha), ("keys", inv.length)]
+  let cache ← IO.mkRef ({} : Std.HashMap String FileRes)
+  -- batch of list scenarios: one result file each (test tooling; exit 0 if all ran)
+  if let some bp := ← IO.getEnv "DESC_BATCH" then
+    for line in ← readList bp do
+      match line.splitOn "\t" with
+      | [sid, lp, rp] =>
+        let (res, ok) ← runSet ctx invInfo selfOk cache (← readList lp) [] true
+        IO.FS.writeFile rp (res.pretty ++ "\n")
+        IO.println (esc s!"DESCCHECK-SCENARIO {sid} {if ok then "OK" else "FAIL"}")
+      | _ => throw (IO.userError s!"bad batch line {esc line}")
+    return
+  let some list ← IO.getEnv "DESC_LIST" | throw (IO.userError "DESC_LIST is not set")
+  let some resPath ← IO.getEnv "DESC_RESULT" | throw (IO.userError "DESC_RESULT is not set")
+  let muts ← match ← IO.getEnv "DESC_MUTANTS" with
+    | some m => readList m
+    | none => pure []
+  let (res, ok) ← runSet ctx invInfo selfOk cache (← readList list) muts false
+  IO.FS.writeFile resPath (res.pretty ++ "\n")
+  IO.println s!"DESCCHECK-VERDICT {if ok then "OK" else "FAIL"}"
+  if !ok then throw (IO.userError "DescCheck: verdict FAIL (see the result file)")
 
 end DescCheck
 

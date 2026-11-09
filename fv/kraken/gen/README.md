@@ -44,10 +44,19 @@ include API: `api_version` 2, status `committed`(fix3 `b6c32c3`, 리뷰 전). �
 
 | 시험 | 명령 | 결과 파일 |
 | --- | --- | --- |
-| Desc 검사기: 원본(범위 9/9 SPEC), 대조군, 목록 시나리오, 리뷰 변이 재생 52 | `desc/test_desc.py prepare` → gate `desc/run_desccheck.sh` → `desc/test_desc.py evaluate` | `desc/results/desc-test.{json,md}` |
-| 생성기 골격: 검사기 기록 요구, 대조군, 데이터 교차 검사 | `gen1c/test_emit.py prepare <work> <desc-work>` → gate `Compare.lean` → `evaluate` | `gen1c/results/gen-test.json` |
+| Desc 검사기: 원본 144(닫힌 세계), 대조군, 리뷰 변이 재생(r1 20, r2 32, r3 40), 목록 시나리오(리뷰 t01–t13, 내 것, 틀린 수작업 Desc마다 add/replace) | `desc/test_desc.py prepare` → gate `desc/run_desccheck.sh` → `desc/test_desc.py evaluate` | `desc/results/desc-test.{json,md}` |
+| emit 경계: 모든 시나리오를 `emit.accept`로, 리뷰 E1–E7, 내 탈출 시도 x01–x16 | `gen1c/test_boundary.py <desc-work> <out>` | `gen1c/results/boundary.{json,md}` |
+| 생성기 골격: 대조군, 데이터 교차 검사, 문장 비교 | `gen1c/test_emit.py prepare <work> <desc-work>` → gate `Compare.lean` → `evaluate` | `gen1c/results/gen-test.json` |
 | 고정 목록 재현 | `frozen/test_frozen.py <repo-root> <scratch>` | 종료 코드 |
 | 완료표: 실제 + 대조군 | gate `complete/run_complete.sh` → `complete/table.py` | `complete/results/` |
 | Prysm 시험 | gate `prysm-tests.sh` (종료 코드 = `prysm_tests_classify.py` 판정) | `prysm/tests/` |
 
-`gen1c/emit.py`는 `--desccheck-log`가 필요하다. 그 로그는 `DESCCHECK-TABLE OK`로 끝나야 하고, 고른 Desc 파일마다 같은 FNV-1a 64의 PASS 기록(수작업 타입은 PASS SPEC)이 있어야 한다.
+## 5. Desc 검사기와 emit 경계
+
+- 검사기(`desccheck/DescCheck.lean`)는 닫힌 세계다. 기대 열쇠 집합 = 검사기 표 9개 + 커밋된 `prysm/inventory.json`의 135개(sha256을 결과에 적는다). 생산기 출력에서 오지 않는다. 원본은 이 집합과 정확히 같아야 한다.
+- 결과는 JSON 파일 하나다(`fvphase1c.desccheck-result/1`, Lean JSON 인코더가 쓴다). 파일마다 경로, 내용의 sha256(EthLib SHA-256), 열쇠, 상태(SPEC/NONE), PASS/FAIL, 실패 검사가 있고 전체 `verdict`가 있다. 사람용 로그는 출력 가능한 ASCII 밖의 문자를 이스케이프한다.
+- `gen1c/emit.py`는 이 결과 파일만 읽는다(로그를 읽지 않는다). 받는 조건: 결과가 strict JSON, `verdict` OK, 목록 수준 발견 없음, 인벤토리 sha256 = 커밋된 파일; 열쇠마다 original 기록 정확히 하나; 읽은 바이트의 sha256 = 그 기록; 모드에 맞는 상태(hand_case = 표 열쇠 + SPEC, prysm = 수작업 아닌 열쇠 + NONE + 고정 목록 행 있음). `--types`(pkg.Type)는 필수다. 출력은 `<out>/<package의 /를 _로>/<Type>/`이고 같은 타입 이름 둘은 오류다.
+
+위협 모델:
+- 막는 것: 수작업 9타입의 생산기·IR 결함(명세 대조), 잘못 붙은·떠도는·빠진·중복된 Desc 파일, 유사 문자 이름, JSON 해석 차이(중복 키, 실수 표기), emit 경계의 낡은·섞인 결과 파일(sha256 결합, verdict, 인벤토리 해시).
+- 막지 않는 것: 인벤토리와 맞는 Prysm 135타입의 틀린 모양(오프라인 독립 명세가 없다. 일관성만 본다), 손으로 위조한 결과 파일(서명이 없다), 일부러 틀리게 커밋한 인벤토리.

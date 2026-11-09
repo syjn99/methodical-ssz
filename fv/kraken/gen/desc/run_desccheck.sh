@@ -1,26 +1,22 @@
 #!/bin/sh
 # Run the Desc checker for test_desc.py. Run inside the heavy-job gate with the Lean env.
 # Usage: run_desccheck.sh <work-dir> <fv/kraken/lean>
-#   main     : DESC_LIST=list.txt (originals), DESC_MUTANTS=mutants.txt (controls, known passes)
-#   scen-<id>: DESC_LIST=scen/<id>.txt (originals with one change): must exit non-zero
-#   replay   : DESC_LIST=list.txt, DESC_MUTANTS=replay.txt (review mutants)
-# Writes <work>/logs/*.log and <work>/logs/rc.txt ("<run> <rc>").
-# Exit status: 0 only if main and replay exit 0 and every scenario exits non-zero.
+#   main : DESC_LIST=list.txt (originals), DESC_MUTANTS=mutants.txt (controls, known passes,
+#          review replay) -> <work>/main.result.json, <work>/logs/main.log
+#   batch: DESC_BATCH=batch.txt (list scenarios, one result file each) -> <work>/logs/batch.log
+# The expected key set is the checker's table + the committed inventory (DESC_INVENTORY
+# defaults to ../prysm/inventory.json relative to fv/kraken/lean).
+# Exit status: 0 only if the main run ends with verdict OK (exit 0) and the batch ran (exit 0).
 set -u
 W=$1
 L=$2
 mkdir -p "$W/logs"
 : > "$W/logs/rc.txt"
 cd "$L" || exit 98
-fail=0
-DESC_LIST=$W/list.txt DESC_MUTANTS=$W/mutants.txt lake env lean ../gen/desccheck/DescCheck.lean > "$W/logs/main.log" 2>&1
-rc=$?; echo "main $rc" >> "$W/logs/rc.txt"; [ $rc -eq 0 ] || fail=1
-for s in "$W"/scen/*.txt; do
-  id=$(basename "$s" .txt)
-  DESC_LIST=$s lake env lean ../gen/desccheck/DescCheck.lean > "$W/logs/scen-$id.log" 2>&1
-  rc=$?; echo "$id $rc" >> "$W/logs/rc.txt"; [ $rc -ne 0 ] || fail=1
-done
-DESC_LIST=$W/list.txt DESC_MUTANTS=$W/replay.txt lake env lean ../gen/desccheck/DescCheck.lean > "$W/logs/replay.log" 2>&1
-rc=$?; echo "replay $rc" >> "$W/logs/rc.txt"; [ $rc -eq 0 ] || fail=1
-cat "$W/logs/rc.txt"
-exit $fail
+DESC_LIST=$W/list.txt DESC_MUTANTS=$W/mutants.txt DESC_RESULT=$W/main.result.json \
+  lake env lean ../gen/desccheck/DescCheck.lean > "$W/logs/main.log" 2>&1
+m=$?
+DESC_BATCH=$W/batch.txt lake env lean ../gen/desccheck/DescCheck.lean > "$W/logs/batch.log" 2>&1
+b=$?
+printf 'main %s\nbatch %s\n' "$m" "$b" | tee "$W/logs/rc.txt"
+[ "$m" -eq 0 ] && [ "$b" -eq 0 ]
