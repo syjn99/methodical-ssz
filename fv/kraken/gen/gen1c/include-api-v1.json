@@ -1,0 +1,268 @@
+{
+ "schema": "fvpar.include-api/1",
+ "api_version": 1,
+ "status": "committed",
+ "status_vocabulary": [
+  "proposed",
+  "committed",
+  "in-review",
+  "approved"
+ ],
+ "owner_of_content": "fix3 stream",
+ "owner_of_this_file": "orchestrator (promotes fix3's streams/fix3/INCLUDE-API.next.json after checking it against the fix3 commit)",
+ "origin": "fix3 first commit 427708e (TOOLS.md section 'ELF 데이터 include'). Changes from v0 listed in changes_from_v0.",
+ "frozen_for_phase1c": false,
+ "frozen_note": "phase1c may reference these names through one adapter module in its generator. phase1c must not generate lean/Fk or link/ code against this API until status = approved and it has rebased onto the reviewed fix3 SHA.",
+ "fix3_commit": "427708eeaf00c77a6dac4faf4c92fd8f7a8c88ff",
+ "lean": {
+  "module": "Fk.Data",
+  "file": "fv/kraken/lean/Fk/Data.lean",
+  "namespace": "Fk.Data",
+  "include_command": "data_include <id>  (defined in fv/kraken/lean/Fk/Include.lean; reads ../link/out/data/<id>.data relative to fv/kraken/lean)",
+  "bytes_decl": "Fk.Data.<id> : List UInt8  (items with `word` entries depend on [Host]: Fk.Data.<id> [Host] : List UInt8)",
+  "addr_decl": "Fk.Data.<id>_addr [Host] : BitVec 64 := (label \"<label>\" + <off>).toBitVec",
+  "addr_only_items": "only Fk.Data.<id>_addr is defined",
+  "premise_shape": "Theorem premises keep the shape `Eq (bytes.At addr)`. Only `bytes` and `addr` come from Fk.Data. Kraken data memory is separate from code (con-agua DESIGN `ldc`)."
+ },
+ "data_files": {
+  "dir": "fv/kraken/link/out/data/",
+  "naming": "<id>.data, one file per item",
+  "format": "text, one directive per line; '#' starts a comment line. First directive `at <label> <off>` (label = conv.py-cleaned symbol name, off decimal). Then any number of `bytes <hh> <hh> ...` (two-digit lowercase hex, space separated) and `word <label> <off>` (8-byte little-endian absolute address of label+off, a relocated pointer word). An address-only item has only `at`.",
+  "extractor": "fv/kraken/link/data.py (item table inside: id, label, offset, length); writes the files from the ELF and nm",
+  "check": "fv/kraken/link/check.py compares every data file with the ELF: bytes = file bytes of the range, word = 8-byte value at that position = symbol address + off; file sha256 in the RESULT bundle",
+  "lake_tracking": "Fk library `needs` = input_dir targets for link/out/norm, link/out/data and lean/Fk (*.S); confirmed or replaced by the X1 experiment"
+ },
+ "items": [
+  {
+   "id": "blFmtB",
+   "label": "go_string._",
+   "elf_symbol": "go:string.*",
+   "offset": 526,
+   "length": 5,
+   "kind": "rodata-string",
+   "host_dependent": false,
+   "replaces": "Fk/BlMarshal.lean blFmtB"
+  },
+  {
+   "id": "bvFmtJ",
+   "label": "go_string._",
+   "elf_symbol": "go:string.*",
+   "offset": 511,
+   "length": 5,
+   "kind": "rodata-string",
+   "host_dependent": false,
+   "replaces": "Fk/BvSpec.lean bvFmtJ"
+  },
+  {
+   "id": "vbvFmt",
+   "label": "go_string._",
+   "elf_symbol": "go:string.*",
+   "offset": 27706,
+   "length": 35,
+   "kind": "rodata-string",
+   "host_dependent": false,
+   "replaces": "Fk/Vbv.lean vbvFmt (bvRO)"
+  },
+  {
+   "id": "lcFmtZero",
+   "label": "go_string._",
+   "elf_symbol": "go:string.*",
+   "offset": 39370,
+   "length": 53,
+   "kind": "rodata-string",
+   "host_dependent": false,
+   "replaces": "Fk/LcReject.lean lcFmtZero"
+  },
+  {
+   "id": "lcFmtShort",
+   "label": "go_string._",
+   "elf_symbol": "go:string.*",
+   "offset": 42000,
+   "length": 63,
+   "kind": "rodata-string",
+   "host_dependent": false,
+   "replaces": "Fk/LcReject.lean lcFmtShort"
+  },
+  {
+   "id": "lcFmtOrder",
+   "label": "go_string._",
+   "elf_symbol": "go:string.*",
+   "offset": 42579,
+   "length": 67,
+   "kind": "rodata-string",
+   "host_dependent": false,
+   "replaces": "new (X5, ListC offset order)"
+  },
+  {
+   "id": "vblMsgE",
+   "label": "go_string._",
+   "elf_symbol": "go:string.*",
+   "offset": 33605,
+   "length": 42,
+   "kind": "rodata-string",
+   "host_dependent": false,
+   "replaces": "Fk/Vbl.lean vblMsgE (vblRO)"
+  },
+  {
+   "id": "vblMsgZ",
+   "label": "go_string._",
+   "elf_symbol": "go:string.*",
+   "offset": 13272,
+   "length": 21,
+   "kind": "rodata-string",
+   "host_dependent": false,
+   "replaces": "Fk/Vbl.lean vblMsgZ"
+  },
+  {
+   "id": "vblMsgB",
+   "label": "go_string._",
+   "elf_symbol": "go:string.*",
+   "offset": 5743,
+   "length": 13,
+   "kind": "rodata-string",
+   "host_dependent": false,
+   "replaces": "Fk/Vbl.lean vblMsgB"
+  },
+  {
+   "id": "luFmtTooBig",
+   "label": "go_string._",
+   "elf_symbol": "go:string.*",
+   "offset": 40290,
+   "length": 56,
+   "kind": "rodata-string",
+   "host_dependent": false,
+   "replaces": "Fk/LuRejectCall.lean luFmtTooBig"
+  },
+  {
+   "id": "luFmtMis",
+   "label": "go_string._",
+   "elf_symbol": "go:string.*",
+   "offset": 42646,
+   "length": 68,
+   "kind": "rodata-string",
+   "host_dependent": false,
+   "replaces": "Fk/LuRejectCall.lean luFmtMis"
+  },
+  {
+   "id": "errorStringItab",
+   "label": "go_itab._errors.errorString_error",
+   "elf_symbol": "go:itab.*errors.errorString,error",
+   "offset": 0,
+   "length": 32,
+   "kind": "itab (whole): words inter, Type, Fun[0]; Hash raw",
+   "host_dependent": true,
+   "replaces": "check (h) itab test"
+  },
+  {
+   "id": "errorStringPtrType",
+   "label": "type__",
+   "elf_symbol": "type:*",
+   "offset": 68096,
+   "length": 56,
+   "kind": "abi.PtrType of *errors.errorString (abi.Type 48 + Elem word)",
+   "host_dependent": true,
+   "replaces": "check (h) pointer-kind test; zero type descriptors in error witnesses (X3)"
+  },
+  {
+   "id": "intType",
+   "label": "type__",
+   "elf_symbol": "type:*",
+   "offset": 49184,
+   "length": 48,
+   "kind": "abi.Type of int",
+   "host_dependent": true,
+   "replaces": "Fk/LuRejectCall.lean luTW, check (h)"
+  },
+  {
+   "id": "uint64Type",
+   "label": "type__",
+   "elf_symbol": "type:*",
+   "offset": 49120,
+   "length": 48,
+   "kind": "abi.Type of uint64",
+   "host_dependent": true,
+   "replaces": "new (X5, %d uint64 argument)"
+  },
+  {
+   "id": "staticuint64s",
+   "label": "runtime.staticuint64s",
+   "elf_symbol": "runtime.staticuint64s",
+   "offset": 0,
+   "length": 2048,
+   "kind": "table uint64 0..255",
+   "host_dependent": false,
+   "replaces": "Fk/Contracts.lean StaticBox, check (h)"
+  },
+  {
+   "id": "ErrSize",
+   "label": "ssz.ErrSize",
+   "elf_symbol": "github.com/OffchainLabs/methodical-ssz/ssz.ErrSize",
+   "offset": 0,
+   "length": 0,
+   "kind": "address only (value set by runtime init; no bytes extracted)",
+   "host_dependent": true,
+   "replaces": "witness global-initialization premises (X3); theorems keep `label \"ssz.Err*\"` (a symbol, no hand number)"
+  },
+  {
+   "id": "ErrInvalidSerialization",
+   "label": "ssz.ErrInvalidSerialization",
+   "elf_symbol": "github.com/OffchainLabs/methodical-ssz/ssz.ErrInvalidSerialization",
+   "offset": 0,
+   "length": 0,
+   "kind": "address only (value set by runtime init; no bytes extracted)",
+   "host_dependent": true,
+   "replaces": "witness global-initialization premises (X3); theorems keep `label \"ssz.Err*\"` (a symbol, no hand number)"
+  },
+  {
+   "id": "ErrInvalidVariableOffset",
+   "label": "ssz.ErrInvalidVariableOffset",
+   "elf_symbol": "github.com/OffchainLabs/methodical-ssz/ssz.ErrInvalidVariableOffset",
+   "offset": 0,
+   "length": 0,
+   "kind": "address only (value set by runtime init; no bytes extracted)",
+   "host_dependent": true,
+   "replaces": "witness global-initialization premises (X3); theorems keep `label \"ssz.Err*\"` (a symbol, no hand number)"
+  },
+  {
+   "id": "ErrListTooBig",
+   "label": "ssz.ErrListTooBig",
+   "elf_symbol": "github.com/OffchainLabs/methodical-ssz/ssz.ErrListTooBig",
+   "offset": 0,
+   "length": 0,
+   "kind": "address only (value set by runtime init; no bytes extracted)",
+   "host_dependent": true,
+   "replaces": "witness global-initialization premises (X3); theorems keep `label \"ssz.Err*\"` (a symbol, no hand number)"
+  },
+  {
+   "id": "ErrBytesLength",
+   "label": "ssz.ErrBytesLength",
+   "elf_symbol": "github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength",
+   "offset": 0,
+   "length": 0,
+   "kind": "address only (value set by runtime init; no bytes extracted)",
+   "host_dependent": true,
+   "replaces": "witness global-initialization premises (X3); theorems keep `label \"ssz.Err*\"` (a symbol, no hand number)"
+  },
+  {
+   "id": "ErrIncorrectListSize",
+   "label": "ssz.ErrIncorrectListSize",
+   "elf_symbol": "github.com/OffchainLabs/methodical-ssz/ssz.ErrIncorrectListSize",
+   "offset": 0,
+   "length": 0,
+   "kind": "address only (value set by runtime init; no bytes extracted)",
+   "host_dependent": true,
+   "replaces": "witness global-initialization premises (X3); theorems keep `label \"ssz.Err*\"` (a symbol, no hand number)"
+  }
+ ],
+ "naming_note": "v1 names are fixed by fix3 commit 427708e. A later rename bumps api_version.",
+ "go1_26_10_note": "This API is defined on the old Go 1.26.3 ELF. phase1c's Go 1.26.10 ELF needs its own data files and tables in its own namespace (fv/kraken/prysm/). Same format, different bytes. No reuse of the Go 1.26.3 values.",
+ "changes_from_v0": [
+  "added lcFmtOrder (X5) and uint64Type (X5)",
+  "errGlobals split into one id per global: ErrSize, ErrInvalidSerialization, ErrInvalidVariableOffset, ErrListTooBig, ErrBytesLength, ErrIncorrectListSize",
+  "errorStringPtrType is the 56-byte abi.PtrType (Elem word included)",
+  "data file format decided (text, at/bytes/word)",
+  "include command data_include in Fk/Include.lean",
+  "items with pointer words are [Host]-dependent"
+ ],
+ "promoted_by": "orchestrator 2026-11-09; checked: commit 427708e exists on claude/ssz-fv-reprove-fix3, touches only fv/kraken/TOOLS.md, body states design + X1 experiment plan. Not reviewed. Not approved."
+}
