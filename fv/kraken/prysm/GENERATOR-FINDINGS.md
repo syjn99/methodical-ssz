@@ -78,3 +78,4 @@
 - 첫 전체 실행(`logs/10`)은 내 스크립트의 `head`가 출력을 잘라 rc 141이었다. `logs/11`이 그것을 대체한다.
 - 이 세션은 기준선(커밋된 파일)을 다시 돌리지 않았다. 3절의 "기준선에서도 같다"는 인용이다.
 - spec `ssz_static` 시험, Bazel 시험, 다른 Prysm 패키지는 돌리지 않았다.
+- 리뷰 phase1c-r1 S7: 위 실행은 `go test -p 2`였다. 규칙은 `-p 1`이다. `gen/prysm-tests.sh`(`-p 1`, `set -o pipefail`, 출력 전체 보관)로 같은 7개 명령을 다시 돌렸다(run `logs/28`). 결과가 같다: 실패한 하위 시험은 2절의 셋뿐이고 minimal 실패 둘도 같다. 원본 `tests/prysm-tests-p1.json`, 요약 `tests/prysm-tests-p1-summary.txt`. 이것이 위 표의 근거를 대체한다.

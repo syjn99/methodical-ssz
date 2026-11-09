@@ -1,0 +1,121 @@
+{
+ "schema": "fvphase1c.prysm-tests/2",
+ "command": "gen/prysm-tests.sh (go test -p 1, set -o pipefail, full output kept)",
+ "gate_log": "run logs/28-prysm-tests-p1.log",
+ "supersedes": "tests/prysm-tests.json (go test -p 2, logs/10-11)",
+ "runs": [
+  {
+   "run": 1,
+   "rc": 0,
+   "tags": "",
+   "filter": "Fulu|PartialDataColumns",
+   "pkgs": "./proto/prysm/v1alpha1",
+   "fail_lines": [],
+   "ok": [
+    "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+   ],
+   "output_lines": 9
+  },
+  {
+   "run": 2,
+   "rc": 0,
+   "tags": "minimal",
+   "filter": "Fulu|PartialDataColumns",
+   "pkgs": "./proto/prysm/v1alpha1",
+   "fail_lines": [],
+   "ok": [
+    "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+   ],
+   "output_lines": 9
+  },
+  {
+   "run": 3,
+   "rc": 1,
+   "tags": "",
+   "filter": "DataColumn|PartsMetadata|PartialColumn|DecodePartialColumnSidecar",
+   "pkgs": "./consensus-types/blocks",
+   "fail_lines": [
+    "--- FAIL: TestMarshalPartsMetadata (0.00s)",
+    "    --- FAIL: TestMarshalPartsMetadata/available_too_large (0.00s)",
+    "    --- FAIL: TestMarshalPartsMetadata/requests_too_large (0.00s)",
+    "--- FAIL: TestPartialDataColumn_PartsMetadata (0.00s)",
+    "    --- FAIL: TestPartialDataColumn_PartsMetadata/marshal_error_due_max_bitlist_size (0.00s)",
+    "FAIL",
+    "FAIL\tgithub.com/OffchainLabs/prysm/v7/consensus-types/blocks\t0.011s",
+    "FAIL"
+   ],
+   "ok": [],
+   "output_lines": 262
+  },
+  {
+   "run": 4,
+   "rc": 1,
+   "tags": "minimal",
+   "filter": "DataColumn|PartsMetadata|PartialColumn|DecodePartialColumnSidecar",
+   "pkgs": "./consensus-types/blocks",
+   "fail_lines": [
+    "FAIL\tgithub.com/OffchainLabs/prysm/v7/consensus-types/blocks [build failed]",
+    "FAIL"
+   ],
+   "ok": [],
+   "output_lines": 9
+  },
+  {
+   "run": 5,
+   "rc": 0,
+   "tags": "",
+   "filter": "TestSlotFromBlock|TestByState|TestUnmarshalState|TestDetectAndUnmarshalBlock",
+   "pkgs": "./encoding/ssz/detect",
+   "fail_lines": [],
+   "ok": [
+    "github.com/OffchainLabs/prysm/v7/encoding/ssz/detect"
+   ],
+   "output_lines": 53
+  },
+  {
+   "run": 6,
+   "rc": 1,
+   "tags": "minimal",
+   "filter": "TestSlotFromBlock|TestByState|TestUnmarshalState|TestDetectAndUnmarshalBlock",
+   "pkgs": "./encoding/ssz/detect",
+   "fail_lines": [
+    "--- FAIL: TestByState (0.00s)",
+    "panic: runtime error: index out of range [64] with length 64 [recovered, repanicked]",
+    "panic({0x1291480?, 0x481b70426138?})",
+    "FAIL\tgithub.com/OffchainLabs/prysm/v7/encoding/ssz/detect\t0.012s",
+    "FAIL"
+   ],
+   "ok": [],
+   "output_lines": 32
+  },
+  {
+   "run": 7,
+   "rc": 1,
+   "tags": "",
+   "filter": "",
+   "pkgs": "./proto/prysm/v1alpha1 ./proto/engine/v1 ./consensus-types/blocks ./encoding/ssz/detect",
+   "fail_lines": [
+    "--- FAIL: TestMarshalPartsMetadata (0.00s)",
+    "    --- FAIL: TestMarshalPartsMetadata/available_too_large (0.00s)",
+    "    --- FAIL: TestMarshalPartsMetadata/requests_too_large (0.00s)",
+    "--- FAIL: TestPartialDataColumn_PartsMetadata (0.00s)",
+    "    --- FAIL: TestPartialDataColumn_PartsMetadata/marshal_error_due_max_bitlist_size (0.00s)",
+    "FAIL",
+    "FAIL\tgithub.com/OffchainLabs/prysm/v7/consensus-types/blocks\t0.036s",
+    "FAIL"
+   ],
+   "ok": [
+    "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+    "github.com/OffchainLabs/prysm/v7/proto/engine/v1",
+    "github.com/OffchainLabs/prysm/v7/encoding/ssz/detect"
+   ],
+   "output_lines": 16
+  }
+ ],
+ "failed_subtests": [
+  "TestMarshalPartsMetadata/available_too_large",
+  "TestMarshalPartsMetadata/requests_too_large",
+  "TestPartialDataColumn_PartsMetadata/marshal_error_due_max_bitlist_size"
+ ],
+ "failed_subtests_not_in_smoke_known_3": []
+}

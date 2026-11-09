@@ -41,4 +41,10 @@ go tool nm -size -sort address "$O/p1cbin-amd64" > "$O/p1cbin-amd64.nm"
 } > "$O/BUILD-INFO"
 go version -m "$O/p1cbin-amd64" > "$O/p1cbin-amd64.version-m.txt"
 cat "$O/BUILD-INFO"
-cmp "$O/p1cbin-amd64" "$O/p1cbin-amd64.b2" && echo "REPRODUCIBLE: identical" || echo "REPRODUCIBLE: DIFFERENT"
+# The two builds must be byte-identical; a difference is a failure of this script.
+if cmp "$O/p1cbin-amd64" "$O/p1cbin-amd64.b2"; then
+  echo "REPRODUCIBLE: identical"
+else
+  echo "REPRODUCIBLE: DIFFERENT"
+  exit 3
+fi
