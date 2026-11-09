@@ -285,6 +285,28 @@ partial def scanVal (cs : Array Char) (i0 : Nat) (path : String) (errs : Array S
       failure
   else failure
 
+/-- Input bounds (R4-S2): a Desc is a few KB; the largest original is far below these. -/
+def maxFileBytes : Nat := 1048576
+def maxNesting : Nat := 64
+
+/-- Maximum bracket nesting depth outside strings, in one linear pass (no recursion). -/
+def maxDepth (txt : String) : Nat := Id.run do
+  let mut d := 0
+  let mut m := 0
+  let mut inStr := false
+  let mut escp := false
+  for c in txt.toList do
+    if inStr then
+      if escp then escp := false
+      else if c == '\\' then escp := true
+      else if c == '"' then inStr := false
+    else if c == '"' then inStr := true
+    else if c == '{' || c == '[' then
+      d := d + 1
+      if d > m then m := d
+    else if c == '}' || c == ']' then d := d - 1
+  return m
+
 /-- Strict-scan errors of a file text (empty list = clean). -/
 def strictScan (txt : String) : List String :=
   let cs := txt.toList.toArray
@@ -418,6 +440,7 @@ structure InvType where
   names : List String
   sizes : List (Nat × Bool)
   kinds : List String
+  callees : List (Option (String × String))
   fixed : Option Nat
 
 /-- The EthLib term kind that an inventory field shape stands for ("?" = no rule: FAIL). -/
@@ -458,9 +481,40 @@ def readInventory (j : Json) : Except String (List ((String × String) × InvTyp
     let kinds ← fs.toList.mapM fun f => do
       let sh ← f.getObjValAs? String "shape"
       pure (shapeKind sh)
+    let callees ← fs.toList.mapM fun f => do
+      match f.getObjVal? "callee" with
+      | .ok (.str c) =>
+        let parts := c.splitOn "/"
+        pure (some (String.intercalate "/" parts.dropLast, parts.getLast!))
+      | _ => pure none
     let fixed ← optNat t "fixed_size"
     let var ← t.getObjValAs? Bool "variable"
-    pure ((pk, ty), { names, sizes, kinds, fixed := if var then none else fixed })
+    pure ((pk, ty), { names, sizes, kinds, callees, fixed := if var then none else fixed })
+
+/-- The container a field term stands for: itself, or the element of a list/vector. -/
+def fieldContainer : Desc → Option Desc
+  | .container ns fs => some (.container ns fs)
+  | .list e _ => match e with | .container ns fs => some (.container ns fs) | _ => none
+  | .vector e _ => match e with | .container ns fs => some (.container ns fs) | _ => none
+  | _ => none
+
+/-- Bind a container term to an inventory entry, and every delegated container field (or element)
+recursively to its callee's entry (review phase1c-r4 R4-S3). Returns the mismatches. -/
+partial def invMatch (inv : List ((String × String) × InvType)) (key : String × String) (d : Desc) (fuel : Nat) : List String :=
+  if fuel == 0 then [s!"{key.2}: nesting deeper than the bound"] else
+  match inv.lookup key, d with
+  | none, _ => [s!"no inventory entry for {key.1}.{key.2}"]
+  | some it, .container ns fs =>
+    let sizes := fs.map (fun f => (f.fixedSize.getD bytesPerOffset, f.fixedSize.isNone))
+    let kinds := fs.map kindName
+    let own := (if ns == it.names then [] else [s!"{key.2}: names"]) ++ (if sizes == it.sizes then [] else [s!"{key.2}: head sizes"]) ++
+      (if kinds == it.kinds then [] else [s!"{key.2}: kinds"]) ++ (if d.fixedSize == it.fixed then [] else [s!"{key.2}: fixed size"])
+    let sub := (fs.zip it.callees).flatMap fun (f, c) =>
+      match c, fieldContainer f with
+      | some ck, some fc => if (inv.lookup ck).isSome then invMatch inv ck fc (fuel - 1) else []
+      | _, _ => []
+    own ++ sub
+  | some _, _ => [s!"{key.2}: not a container"]
 
 def checkFile (ctx : Ctx) (path : String) : IO FileRes := do
   let rd ← (IO.FS.readBinFile path).toBaseIO
@@ -469,8 +523,13 @@ def checkFile (ctx : Ctx) (path : String) : IO FileRes := do
     | .error e => return { path, sha := "", key := none, status := "NONE", lines := [("read", false, s!"{e}")] }
   let sha := sha256Hex bytes
   let some txt := String.fromUTF8? bytes | return { path, sha, key := none, status := "NONE", lines := [("utf8", false, "not UTF-8")] }
+  -- bounds before any parsing (review phase1c-r4 R4-S2): size and bracket nesting depth
+  let depth := maxDepth txt
+  if bytes.size > maxFileBytes || depth > maxNesting then
+    return { path, sha, key := none, status := "NONE",
+             lines := [("bounds", false, s!"size {bytes.size} (max {maxFileBytes}), nesting {depth} (max {maxNesting})")] }
   let strict := strictScan txt
-  let mut idl : List Line := [("strict-json", strict.isEmpty, s!"{strict}")]
+  let mut idl : List Line := [("bounds", true, s!"size {bytes.size}, nesting {depth}"), ("strict-json", strict.isEmpty, s!"{strict}")]
   let j ← match Json.parse txt with
     | .ok j => pure j
     | .error e => return { path, sha, key := none, status := "NONE", lines := idl ++ [("json", false, e)] }
@@ -490,6 +549,8 @@ def checkFile (ctx : Ctx) (path : String) : IO FileRes := do
     s!"({pk}, {ty}) in the checker's expected set (table + committed inventory)")]
   if handTypeNames.contains ty && (refs.lookup (pk, ty)).isNone && !handNameExceptions.contains (pk, ty) then
     idl := idl ++ [("hand-name", false, s!"hand type name {ty} outside its table package and not a listed exception")]
+  let missingTop := topKeys.filter (fun x => !(keysOf j).contains x)
+  idl := idl ++ [("required-keys", missingTop.isEmpty, s!"missing top-level keys {missingTop}")]
   let unk := ((keysOf j).filter (fun x => !topKeys.contains x)) ++
     (match j.getObjVal? "ssz" with | .ok t => termUnknown "ssz" t | _ => [])
   idl := idl ++ [("keys", unk.isEmpty, s!"unknown keys {unk}")]
@@ -541,11 +602,15 @@ def checkFile (ctx : Ctx) (path : String) : IO FileRes := do
     out := out ++ [("ref-claim", claimed.isNone, s!"no spec Desc for {pk}.{ty}, file {claimed}")]
     -- binding of a Prysm Desc to the committed inventory (same IR, other program; not a spec)
     match ctx.inv.lookup (pk, ty) with
-    | some it =>
-      let sizes := fs.map (fun f => (f.fixedSize.getD bytesPerOffset, f.fixedSize.isNone))
-      let kinds := fs.map kindName
-      out := out ++ [("inventory", names == it.names && sizes == it.sizes && kinds == it.kinds && d.fixedSize == it.fixed,
-        s!"names/sizes/kinds/fixed vs inventory: {names == it.names}/{sizes == it.sizes}/{kinds == it.kinds}/{d.fixedSize == it.fixed}")]
+    | some _ =>
+      let mism := invMatch ctx.inv (pk, ty) d 16
+      out := out ++ [("inventory", mism.isEmpty, s!"names/sizes/kinds/fixed vs inventory, delegated containers recursively: {mism}")]
+      -- the two excepted Prysm types must have the hand spec shape (Fv1) up to names
+      if handNameExceptions.contains (pk, ty) then
+        match refs.find? (fun (k, _) => k.2 == ty) with
+        | some (_, (rname, rd, _)) =>
+          out := out ++ [("exception-shape", Desc.beq (posNames d) (posNames rd), s!"excepted {ty} vs {rname} up to names")]
+        | none => out := out ++ [("exception-shape", false, s!"no Fv1 Desc for excepted {ty}")]
     | none => out := out ++ [("inventory", false, s!"no inventory entry for ({pk}, {ty})")]
   return { path, sha, key, status, lines := out }
 
@@ -633,7 +698,9 @@ def main : IO Unit := do
   let exOk := handNameExceptions.all (fun k => (inv.lookup k).isSome)
   let overlap := refs.filter (fun (k, _) => (inv.lookup k).isSome) |>.length
   let dupExpected := ctx.expected.length != ctx.expected.eraseDups.length
-  selfOk := selfOk && exOk && overlap == 0 && !dupExpected
+  let invPkgOk := inv.all (fun (k, _) => k.1 == prysmV1 || k.1 == prysmEngine)
+  IO.println s!"DESCCHECK-TABLE-SELF inventory-keys-in-prysm-packages={invPkgOk}"
+  selfOk := selfOk && exOk && overlap == 0 && !dupExpected && invPkgOk
   IO.println s!"DESCCHECK-TABLE-SELF go-names={topNames} (21) exceptions-in-inventory={exOk} table-inventory-overlap={overlap} duplicate-expected={dupExpected} ok={selfOk}"
   let invInfo := Json.mkObj [("path", invPath), ("sha256", invSha), ("keys", inv.length)]
   let cache ← IO.mkRef ({} : Std.HashMap String FileRes)

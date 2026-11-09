@@ -183,6 +183,12 @@ MUTANTS += [
     ("r3-prysm-bool-uint8", "prysm_v1alpha1.Validator", "Slashed bool -> uint8 (claims follow): the inventory kind binding sees it",
      "inventory", _both(_set(["ssz", "fields", 3], {"k": "uint", "w": 1}), _set(["fields", 3, "kind"], "uint"))),
     ("y6-claim-limit-on-uint", "Scalars", "uint claim carries limit (a key of another kind)", "claim-keys[0]", _set(["fields", 0, "limit"], 16)),
+    # review phase1c-r4: R4-S3 (delegated containers bound recursively; r17 was a known pass), R4-S4 (fixed_size required)
+    ("r17-prysm-inner-kind", "prysm_v1alpha1.Attestation", "inner AttestationData.Slot uint64 -> byteVector 8 (inside a delegated container)",
+     "inventory", _set(["ssz", "fields", 1, "fields", 0], {"k": "byteVector", "n": 8})),
+    ("z3-no-fixed-size", "Scalars", "top-level key fixed_size removed", "required-keys", _del(["fixed_size"])),
+    ("z4-no-fixed-size-prysm", "prysm_v1alpha1.StatusV2", "top-level key fixed_size removed (Prysm, variable type)", "required-keys",
+     _del(["fixed_size"])),
 ]
 MUTANTS = [m if m[4] is not None else (m[0], m[1], m[2], m[3], _swap01) for m in MUTANTS]
 TEXT_MUTANTS = [   # raw-text mutants: (id, base, what, designated, text transform)
@@ -190,6 +196,10 @@ TEXT_MUTANTS = [   # raw-text mutants: (id, base, what, designated, text transfo
      lambda t: t.replace('"type": "ListU64",', '"type": "ListU64",\n "type": "ListU64",', 1)),
     ("y8-int-as-exponent", "Checkpoint", "fixed_size written 4e1", "strict-json", lambda t: t.replace('"fixed_size": 40', '"fixed_size": 4e1', 1)),
     ("y9-leading-zero", "Checkpoint", "fixed_size written 040", "strict-json", lambda t: t.replace('"fixed_size": 40', '"fixed_size": 040', 1)),
+    # review phase1c-r4 R4-S2: bounds before parsing (small depth only; the 200000-level probe is not replayed)
+    ("z1-depth-100", "ListU64", "an extra key holding arrays nested 100 deep", "bounds",
+     lambda t: t.replace('"type": "ListU64",', '"type": "ListU64",\n "x": ' + "[" * 100 + "]" * 100 + ",", 1)),
+    ("z2-size-1100000", "ListU64", "1100000 bytes of trailing white space (valid JSON)", "bounds", lambda t: t + " " * 1100000),
     ("y10-escaped-key", "Scalars", "key 'refer\\u0065nce' written with an escape next to 'reference'", "strict-json",
      lambda t: t.replace('"reference": "Fv1.scDesc"', '"reference": "Fv1.scDesc",\n "refer\\u0065nce": null', 1)),
 ]
@@ -201,8 +211,6 @@ KNOWN_PASS = [
      _both(_set(["ssz", "fields", 0, "n"], 505), _set(["fields", 0, "length"], 505))),
     ("r5-prysm-limit", "prysm_v1alpha1.IndexedAttestation", "list[uint64] limit 2048 -> 4096 in term and claim",
      _both(_set(["ssz", "fields", 0, "limit"], 4096), _set(["fields", 0, "limit"], 4096))),
-    ("r17-prysm-inner-kind", "prysm_v1alpha1.Attestation", "inner AttestationData.Slot uint64 -> byteVector 8 (inside a delegated container)",
-     _set(["ssz", "fields", 1, "fields", 0], {"k": "byteVector", "n": 8})),
 ]
 
 # List-level scenarios of my own: (id, what, {base -> mutant id | None (drop) | "dup"}, list-level finding)

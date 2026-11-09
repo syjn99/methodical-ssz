@@ -14,13 +14,12 @@
   "originals_pass": 144,
   "originals_spec": 9,
   "originals_none": 135,
-  "controls": 49,
-  "controls_as_expected": 49,
-  "known_pass_prysm": 3,
+  "controls": 54,
+  "controls_as_expected": 54,
+  "known_pass_prysm": 2,
   "known_pass_result": {
    "r4-prysm-bitvec-505": "PASS",
-   "r5-prysm-limit": "PASS",
-   "r17-prysm-inner-kind": "PASS"
+   "r5-prysm-limit": "PASS"
   },
   "replay": 92,
   "replay_by_review": {
@@ -28,18 +27,17 @@
    "r2": 32,
    "r3": 40
   },
-  "replay_fail": 89,
-  "replay_pass": 3,
+  "replay_fail": 90,
+  "replay_pass": 2,
   "replay_pass_ids": [
    "r4-prysm-bitvec-505",
-   "r5-prysm-limit",
-   "r17-prysm-inner-kind"
+   "r5-prysm-limit"
   ],
   "wrong_hand_type_descs_passing_per_file": [],
-  "scenarios": 257,
-  "scenarios_as_expected": 257,
-  "boundary_scenarios": 236,
-  "boundary_scenarios_verdict_fail": 236,
+  "scenarios": 263,
+  "scenarios_as_expected": 263,
+  "boundary_scenarios": 242,
+  "boundary_scenarios_verdict_fail": 242,
   "unexpected": 0,
   "producer_skipped": []
  },
@@ -1302,6 +1300,7 @@
    "result": "FAIL",
    "status": "SPEC",
    "failed_checks": [
+    "required-keys",
     "ref-claim",
     "ref",
     "go-names"
@@ -1432,6 +1431,7 @@
    "failed_checks": [
     "type",
     "expected-key",
+    "required-keys",
     "inventory"
    ],
    "twin_result": "PASS",
@@ -1450,6 +1450,7 @@
     "package",
     "expected-key",
     "hand-name",
+    "required-keys",
     "inventory"
    ],
    "twin_result": "PASS",
@@ -1672,7 +1673,8 @@
    "result": "FAIL",
    "status": "NONE",
    "failed_checks": [
-    "inventory"
+    "inventory",
+    "exception-shape"
    ],
    "twin_result": "PASS",
    "as_expected": true
@@ -1687,7 +1689,8 @@
    "result": "FAIL",
    "status": "NONE",
    "failed_checks": [
-    "inventory"
+    "inventory",
+    "exception-shape"
    ],
    "twin_result": "PASS",
    "as_expected": true
@@ -1772,6 +1775,53 @@
    "as_expected": true
   },
   {
+   "file": "r17-prysm-inner-kind.desc.json",
+   "role": "control",
+   "id": "r17-prysm-inner-kind",
+   "base": "prysm_v1alpha1.Attestation",
+   "what": "inner AttestationData.Slot uint64 -> byteVector 8 (inside a delegated container)",
+   "designated": "inventory",
+   "result": "FAIL",
+   "status": "NONE",
+   "failed_checks": [
+    "inventory"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "z3-no-fixed-size.desc.json",
+   "role": "control",
+   "id": "z3-no-fixed-size",
+   "base": "Scalars",
+   "what": "top-level key fixed_size removed",
+   "designated": "required-keys",
+   "result": "FAIL",
+   "status": "SPEC",
+   "failed_checks": [
+    "required-keys",
+    "fixed"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "z4-no-fixed-size-prysm.desc.json",
+   "role": "control",
+   "id": "z4-no-fixed-size-prysm",
+   "base": "prysm_v1alpha1.StatusV2",
+   "what": "top-level key fixed_size removed (Prysm, variable type)",
+   "designated": "required-keys",
+   "result": "FAIL",
+   "status": "NONE",
+   "failed_checks": [
+    "required-keys",
+    "fixed"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
    "file": "y7-dup-type-key-same-value.desc.json",
    "role": "control",
    "id": "y7-dup-type-key-same-value",
@@ -1818,6 +1868,36 @@
    "as_expected": true
   },
   {
+   "file": "z1-depth-100.desc.json",
+   "role": "control",
+   "id": "z1-depth-100",
+   "base": "ListU64",
+   "what": "an extra key holding arrays nested 100 deep",
+   "designated": "bounds",
+   "result": "FAIL",
+   "status": "NONE",
+   "failed_checks": [
+    "bounds"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "z2-size-1100000.desc.json",
+   "role": "control",
+   "id": "z2-size-1100000",
+   "base": "ListU64",
+   "what": "1100000 bytes of trailing white space (valid JSON)",
+   "designated": "bounds",
+   "result": "FAIL",
+   "status": "NONE",
+   "failed_checks": [
+    "bounds"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
    "file": "y10-escaped-key.desc.json",
    "role": "control",
    "id": "y10-escaped-key",
@@ -1851,18 +1931,6 @@
    "id": "r5-prysm-limit",
    "base": "prysm_v1alpha1.IndexedAttestation",
    "what": "list[uint64] limit 2048 -> 4096 in term and claim",
-   "result": "PASS",
-   "status": "NONE",
-   "failed_checks": [],
-   "as_expected": true,
-   "note": "Prysm type: no independent spec; PASS is the known limit, FAIL means the inventory binding saw it"
-  },
-  {
-   "file": "r17-prysm-inner-kind.desc.json",
-   "role": "known-pass",
-   "id": "r17-prysm-inner-kind",
-   "base": "prysm_v1alpha1.Attestation",
-   "what": "inner AttestationData.Slot uint64 -> byteVector 8 (inside a delegated container)",
    "result": "PASS",
    "status": "NONE",
    "failed_checks": [],
@@ -4066,6 +4134,38 @@
    "as_expected": true
   },
   {
+   "id": "b-add-c-z3-no-fixed-size",
+   "source": "boundary",
+   "what": "z3-no-fixed-size add",
+   "verdict": "FAIL",
+   "findings": {
+    "failed_originals": [
+     "mut/z3-no-fixed-size.desc.json"
+    ],
+    "duplicate_keys": [
+     {
+      "type": "Scalars",
+      "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+     }
+    ]
+   },
+   "expected_finding": null,
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-z3-no-fixed-size",
+   "source": "boundary",
+   "what": "z3-no-fixed-size replace",
+   "verdict": "FAIL",
+   "findings": {
+    "failed_originals": [
+     "mut/z3-no-fixed-size.desc.json"
+    ]
+   },
+   "expected_finding": null,
+   "as_expected": true
+  },
+  {
    "id": "b-add-c-y7-dup-type-key-same-value",
    "source": "boundary",
    "what": "y7-dup-type-key-same-value add",
@@ -4162,6 +4262,82 @@
     ],
     "failed_originals": [
      "mut/y9-leading-zero.desc.json"
+    ]
+   },
+   "expected_finding": null,
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-z1-depth-100",
+   "source": "boundary",
+   "what": "z1-depth-100 add",
+   "verdict": "FAIL",
+   "findings": {
+    "unkeyed": [
+     "mut/z1-depth-100.desc.json"
+    ],
+    "failed_originals": [
+     "mut/z1-depth-100.desc.json"
+    ]
+   },
+   "expected_finding": null,
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-z1-depth-100",
+   "source": "boundary",
+   "what": "z1-depth-100 replace",
+   "verdict": "FAIL",
+   "findings": {
+    "unkeyed": [
+     "mut/z1-depth-100.desc.json"
+    ],
+    "missing": [
+     {
+      "type": "ListU64",
+      "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+     }
+    ],
+    "failed_originals": [
+     "mut/z1-depth-100.desc.json"
+    ]
+   },
+   "expected_finding": null,
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-z2-size-1100000",
+   "source": "boundary",
+   "what": "z2-size-1100000 add",
+   "verdict": "FAIL",
+   "findings": {
+    "unkeyed": [
+     "mut/z2-size-1100000.desc.json"
+    ],
+    "failed_originals": [
+     "mut/z2-size-1100000.desc.json"
+    ]
+   },
+   "expected_finding": null,
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-z2-size-1100000",
+   "source": "boundary",
+   "what": "z2-size-1100000 replace",
+   "verdict": "FAIL",
+   "findings": {
+    "unkeyed": [
+     "mut/z2-size-1100000.desc.json"
+    ],
+    "missing": [
+     {
+      "type": "ListU64",
+      "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+     }
+    ],
+    "failed_originals": [
+     "mut/z2-size-1100000.desc.json"
     ]
    },
    "expected_finding": null,
@@ -6928,6 +7104,7 @@
    "result": "FAIL",
    "status": "SPEC",
    "failed_checks": [
+    "required-keys",
     "ref-claim",
     "ref",
     "go-names"
@@ -7162,11 +7339,13 @@
    "hand_type": false,
    "what": "inner AttestationData.Slot uint64 -> byteVector 8",
    "reviewer_expects": "FAIL",
-   "result": "PASS",
+   "result": "FAIL",
    "status": "NONE",
-   "failed_checks": [],
+   "failed_checks": [
+    "inventory"
+   ],
    "as_expected": true,
-   "note": "Prysm type: known limit"
+   "note": ""
   },
   {
    "review": "r1",
@@ -7247,6 +7426,7 @@
    "failed_checks": [
     "type",
     "expected-key",
+    "required-keys",
     "inventory"
    ],
    "as_expected": true,
@@ -7265,6 +7445,7 @@
     "package",
     "expected-key",
     "hand-name",
+    "required-keys",
     "inventory"
    ],
    "as_expected": true,
@@ -7280,7 +7461,8 @@
    "result": "FAIL",
    "status": "NONE",
    "failed_checks": [
-    "inventory"
+    "inventory",
+    "exception-shape"
    ],
    "as_expected": true,
    "note": ""
@@ -7573,6 +7755,7 @@
     "type",
     "package",
     "expected-key",
+    "required-keys",
     "parse"
    ],
    "as_expected": true,
@@ -8265,6 +8448,7 @@
     "type",
     "package",
     "expected-key",
+    "required-keys",
     "parse"
    ],
    "as_expected": true,
