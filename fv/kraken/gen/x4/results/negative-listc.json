@@ -1,7 +1,7 @@
 {
  "schema": "fvphase1c.x4-negative/1",
- "cases": 6,
- "as_expected": 6,
+ "cases": 12,
+ "as_expected": 12,
  "rows": [
   {
    "id": "lc-short-cmp",
@@ -86,6 +86,90 @@
    ],
    "as_expected": true,
    "run": "logs/97"
+  },
+  {
+   "id": "lc-zero-je",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lc_zero_je_mutant.reject_zero",
+   "mutation": "'je L_target.ListC.UnmarshalSSZ_2a1' -> 'jne L_target.ListC.UnmarshalSSZ_2a1'",
+   "exit": "1",
+   "first_error": "line 132: unsolved goals",
+   "theorem_lines": [
+    56,
+    219
+   ],
+   "as_expected": true,
+   "run": "logs/99"
+  },
+  {
+   "id": "lc-zero-je",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lc_zero_je_control.reject_zero",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    56,
+    219
+   ],
+   "as_expected": true,
+   "run": "logs/99"
+  },
+  {
+   "id": "lc-past-ja",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lc_past_ja_mutant.reject_past",
+   "mutation": "'ja L_target.ListC.UnmarshalSSZ_172' -> 'jae L_target.ListC.UnmarshalSSZ_172'",
+   "exit": "1",
+   "first_error": "line 153: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+   "theorem_lines": [
+    56,
+    246
+   ],
+   "as_expected": true,
+   "run": "logs/99"
+  },
+  {
+   "id": "lc-past-ja",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lc_past_ja_control.reject_past",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    56,
+    246
+   ],
+   "as_expected": true,
+   "run": "logs/99"
+  },
+  {
+   "id": "lc-tail-add",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lc_tail_add_mutant.reject_tail",
+   "mutation": "'add $-0x4,%r10' -> 'add $-0x5,%r10'",
+   "exit": "1",
+   "first_error": "line 128: omega could not prove the goal:",
+   "theorem_lines": [
+    56,
+    215
+   ],
+   "as_expected": true,
+   "run": "logs/99"
+  },
+  {
+   "id": "lc-tail-add",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lc_tail_add_control.reject_tail",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    56,
+    215
+   ],
+   "as_expected": true,
+   "run": "logs/99"
   }
  ],
  "note": "logs/95 negative step did not run: the first offset mutation text (cmp $0x4,%rdx) occurs twice in the .S, prepare refused it; replaced by the unique jne (logs/96)"

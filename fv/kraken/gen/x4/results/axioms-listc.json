@@ -51,6 +51,33 @@
    "standard_only": true
   },
   {
+   "name": "Gen1cX4.ListC.reject_zero",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListC.reject_past",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListC.reject_tail",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
    "name": "Gen1cX4.ListC.ar_neg96",
    "axioms": [
     "Quot.sound",
@@ -70,6 +97,54 @@
    "name": "Gen1cX4.ListC.ar_m224",
    "axioms": [
     "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListC.ar_call232",
+   "axioms": [
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListC.ar_slot232'",
+   "axioms": [
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListC.ar_pop216'",
+   "axioms": [
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListC.fmt_len_lcFmtZero",
+   "axioms": [],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListC.fmt_len_lcFmtShort",
+   "axioms": [],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListC.fmt_nopct_lcFmtZero",
+   "axioms": [
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListC.fmt_nopct_lcFmtShort",
+   "axioms": [
     "propext"
    ],
    "standard_only": true
@@ -98,8 +173,78 @@
     "propext"
    ],
    "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.lc_rdx4",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.jle3_false",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.jle3_true",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.zx_o",
+   "axioms": [
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.and3_zero",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.shr2_o",
+   "axioms": [
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ja4_false",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.jae_false",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
   }
  ],
  "all_standard": true,
- "log": "run logs/97 (axioms step)"
+ "log": "run logs/99 (axioms step)"
 }

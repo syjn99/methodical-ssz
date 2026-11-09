@@ -39,6 +39,9 @@ CASES = [  # id, type, method, designated obligation, old instruction, new instr
     ("lc-short-cmp", "ListC", "UnmarshalSSZ", "reject_short", "cmp $0x4,%rcx", "cmp $0x3,%rcx"),
     ("lc-off-jne", "ListC", "UnmarshalSSZ", "reject_offset", "jne L_target.ListC.UnmarshalSSZ_36e", "je L_target.ListC.UnmarshalSSZ_36e"),
     ("lc-size-init", "ListC", "SizeSSZ", "size", "mov $0x4,%ebx", "mov $0x5,%ebx"),
+    ("lc-zero-je", "ListC", "UnmarshalSSZ", "reject_zero", "je L_target.ListC.UnmarshalSSZ_2a1", "jne L_target.ListC.UnmarshalSSZ_2a1"),
+    ("lc-past-ja", "ListC", "UnmarshalSSZ", "reject_past", "ja L_target.ListC.UnmarshalSSZ_172", "jae L_target.ListC.UnmarshalSSZ_172"),
+    ("lc-tail-add", "ListC", "UnmarshalSSZ", "reject_tail", "add $-0x4,%r10", "add $-0x5,%r10"),
     # statement mutation (method "stmt"): the generated composition must fail if it claims another length
     ("sc-compose-len", "Scalars", "stmt", "compose", "st'.data.regs.rbx = dlen + 16", "st'.data.regs.rbx = dlen + 17"),
     ("lu-compose-len", "ListU64", "stmt", "compose", "st'.data.regs.rbx.toNat = dlen.toNat + 4 + 8 * n", "st'.data.regs.rbx.toNat = dlen.toNat + 5 + 8 * n"),

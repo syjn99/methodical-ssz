@@ -194,3 +194,90 @@ theorem lcAcc_le (ls : List Nat) (i : Nat) : lcAcc ls i ≤ lcAcc ls ls.length :
   omega
 
 end Gen1cX4
+
+namespace Gen1cX4
+open Fk
+
+/-! The statements of `lc_rdx4`, `jle3_false`, `zx_o`, `and3_o`, `and3_zero`, `shr2_o`, `ja4_false`,
+`jae_false` and `jle3_true` of Fk/LcReject.lean (a hand proof module), written here again with the
+same text so the generated ListC fmt.errorf(nil) reject proofs do not import a hand proof module.
+`lc_rdx4` and `jle3_*` are for the 4-byte offset; `ja4_false` is for the item limit 4: x4gen
+refuses other limits on that path. -/
+
+/-- `lea -4(%rdi),%rdx; neg; sar $63; and $4,%edx`: 4 when `4 < cap < 2^63`. -/
+theorem lc_rdx4 (x : BitVec 64) (h : 4 < x.toNat) (h2 : x.toNat < 2 ^ 63) :
+    BitVec.zeroExtend 64 (BitVec.extractLsb' 0 32 (BitVec.sshiftRight (-(x + -4)) 63) &&& BitVec.truncate 32 (4 : BitVec 64)) = 4 := by
+  have hm : (-(x + -4)).msb = true := by
+    rw [BitVec.msb_eq_decide, ← BitVec.sub_eq_add_neg, BitVec.toNat_neg,
+      BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simp; omega)]
+    simp; omega
+  generalize -(x + -4) = y at hm ⊢
+  have hs : BitVec.sshiftRight y 63 = BitVec.allOnes 64 := by
+    apply BitVec.eq_of_toNat_eq
+    rw [BitVec.toNat_sshiftRight, ite_cond_eq_true _ _ (by simpa using hm)]
+    rw [BitVec.msb_eq_decide] at hm; simp at hm
+    simp [BitVec.toNat_not, Nat.shiftRight_eq_div_pow]; omega
+  rw [hs]; decide
+
+/-- `cmp $3, a; jle` is not taken when `3 < a < 2^63`. -/
+theorem jle3_false (a : BitVec 64) (af : Bool) (h : 3 < a.toNat) (h2 : a.toNat < 2 ^ 63) :
+    CondCode.le.interp (StatusFlags.from_result (a - 3)
+      { cf := BitVec.unsigned (a - 3) != a.unsigned - BitVec.unsigned (3 : BitVec 64), af := af,
+        of := BitVec.toInt (a - 3) != a.toInt - BitVec.toInt (3 : BitVec 64) }) = false := by
+  have ta : a.toInt = a.toNat := BitVec.toInt_eq_toNat_of_lt (by omega)
+  have t3 : BitVec.toInt (3 : BitVec 64) = 3 := by decide
+  have hs : (a - 3).toInt = (a.toNat : Int) - 3 := by
+    rw [BitVec.toInt_sub, ta, t3]; apply Int.bmod_eq_of_le <;> omega
+  have hz : a - 3 ≠ 0#64 := by
+    intro h0; have := congrArg BitVec.toNat h0; simp [BitVec.toNat_sub] at this; omega
+  have hm : (a - 3).msb = false := by
+    rw [BitVec.msb_eq_decide]; simp [BitVec.toNat_sub]; omega
+  simp [CondCode.interp, StatusFlags.from_result, ta, t3, hs]
+  refine ⟨?_, by simpa using hz⟩
+  rw [show (a - 3#64) = a - 3 from rfl, hm, Int.bmod_eq_of_le (by omega) (by omega)]; simp
+
+theorem zx_o (o : Nat) (h : o < 2 ^ 32) : BitVec.zeroExtend 64 (BitVec.ofInt 32 (o : Int)) = BitVec.ofNat 64 o := by
+  apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_ofInt]; omega
+
+theorem and3_o (o : Nat) (h : o < 2 ^ 32) : (BitVec.ofNat 64 o &&& 3).toNat = o % 4 := by
+  rw [BitVec.toNat_and, show (3 : BitVec 64).toNat = 2 ^ 2 - 1 from rfl, Nat.and_two_pow_sub_one_eq_mod]
+  simp
+
+theorem and3_zero (o : Nat) (h : o < 2 ^ 32) (h4 : o % 4 = 0) : BitVec.ofNat 64 o &&& 3 = 0 := by
+  apply BitVec.eq_of_toNat_eq; rw [and3_o o h, h4]; rfl
+
+theorem shr2_o (o : Nat) (h : o < 2 ^ 32) : (BitVec.ofNat 64 o).ushiftRight 2 = BitVec.ofNat 64 (o / 4) := by
+  apply BitVec.eq_of_toNat_eq
+  rw [show (BitVec.ofNat 64 o).ushiftRight 2 = BitVec.ofNat 64 o >>> 2 from rfl, BitVec.toNat_ushiftRight,
+    Nat.shiftRight_eq_div_pow]
+  simp; omega
+
+theorem ja4_false (x : Nat) (h : x ≤ 4) (af of' : Bool) :
+    CondCode.a.interp (StatusFlags.from_result (BitVec.ofNat 64 x - 4)
+      { cf := BitVec.unsigned (BitVec.ofNat 64 x - 4) != (BitVec.ofNat 64 x).unsigned - BitVec.unsigned (4 : BitVec 64),
+        af := af, of := of' }) = false := by
+  rcases (by omega : x = 0 ∨ x = 1 ∨ x = 2 ∨ x = 3 ∨ x = 4) with rfl | rfl | rfl | rfl | rfl <;>
+    simp (config := {decide := true}) [CondCode.interp, StatusFlags.from_result, BitVec.unsigned]
+
+theorem jae_false (a b : BitVec 64) (af of' : Bool) (h : a.toNat < b.toNat) :
+    CondCode.ae.interp (StatusFlags.from_result (a - b)
+      { cf := BitVec.unsigned (a - b) != a.unsigned - b.unsigned, af := af, of := of' }) = false := by
+  have hb : (a - b).toNat = 2 ^ 64 - b.toNat + a.toNat := by
+    rw [BitVec.toNat_sub]; have := b.isLt; omega
+  simp only [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, hb]
+  simp; omega
+
+theorem jle3_true (a : BitVec 64) (h : a.toNat ≤ 3) (af : Bool) :
+    CondCode.le.interp (StatusFlags.from_result (a - 3)
+      { cf := BitVec.unsigned (a - 3) != a.unsigned - BitVec.unsigned (3 : BitVec 64), af := af,
+        of := BitVec.toInt (a - 3) != a.toInt - BitVec.toInt (3 : BitVec 64) }) = true := by
+  have : a = 0 ∨ a = 1 ∨ a = 2 ∨ a = 3 := by
+    rcases (by omega : a.toNat = 0 ∨ a.toNat = 1 ∨ a.toNat = 2 ∨ a.toNat = 3) with h | h | h | h
+    · exact .inl (BitVec.eq_of_toNat_eq h)
+    · exact .inr (.inl (BitVec.eq_of_toNat_eq h))
+    · exact .inr (.inr (.inl (BitVec.eq_of_toNat_eq h)))
+    · exact .inr (.inr (.inr (BitVec.eq_of_toNat_eq h)))
+  rcases this with rfl | rfl | rfl | rfl <;>
+    simp (config := {decide := true}) [CondCode.interp, StatusFlags.from_result, BitVec.unsigned]
+
+end Gen1cX4

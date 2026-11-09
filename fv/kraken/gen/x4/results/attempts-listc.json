@@ -63,12 +63,42 @@
    "why": "offset table loop and per-item ListU64 decode calls; needs a nested template"
   },
   "reject r3 zero": {
-   "status": "not attempted",
-   "hand": "lc_reject_zero_main"
+   "status": "proved (generated), SAME",
+   "attempts": [
+    {
+     "log": "run logs/99",
+     "result": "pass"
+    }
+   ],
+   "hand": "lc_reject_zero_main",
+   "negative": "lc-zero-je (logs/99)",
+   "generator_decides": "from UnmarshalSSZ.S: the path (which conditional jumps are taken, by following the jle/je/ja/jae/jne targets), every directive number and label, the frame size 0xd8 and the call slot rsp-232, the guard distance, the two call sites, the format string (go_string offset + length, bound to the include API item), the type word of runtime.newobject (type__+82848) and the item limit (cmp $0x4,%rdx = Desc limit 4); other shapes are a classified refusal. Branch-closing and contract blocks are hand text of Fk/LcReject.lean; the path premises per mode (zero/past/tail) are hand text.",
+   "verbatim_measure": {
+    "what": "tactic lines verbatim (stripped) in Fk/LcReject.lean (gen/x4/verbatim.py); the other lines differ only by lemma/data names (ar_*, fmt_*, Fk.Data.*)",
+    "row": {
+     "tactic_lines": 162,
+     "verbatim_in_hand": 152
+    }
+   }
   },
   "reject r6 past": {
-   "status": "not attempted",
-   "hand": "lc_reject_past_main"
+   "status": "proved (generated), SAME",
+   "attempts": [
+    {
+     "log": "run logs/99",
+     "result": "pass"
+    }
+   ],
+   "hand": "lc_reject_past_main",
+   "negative": "lc-past-ja (logs/99)",
+   "generator_decides": "from UnmarshalSSZ.S: the path (which conditional jumps are taken, by following the jle/je/ja/jae/jne targets), every directive number and label, the frame size 0xd8 and the call slot rsp-232, the guard distance, the two call sites, the format string (go_string offset + length, bound to the include API item), the type word of runtime.newobject (type__+82848) and the item limit (cmp $0x4,%rdx = Desc limit 4); other shapes are a classified refusal. Branch-closing and contract blocks are hand text of Fk/LcReject.lean; the path premises per mode (zero/past/tail) are hand text.",
+   "verbatim_measure": {
+    "what": "tactic lines verbatim (stripped) in Fk/LcReject.lean (gen/x4/verbatim.py); the other lines differ only by lemma/data names (ar_*, fmt_*, Fk.Data.*)",
+    "row": {
+     "tactic_lines": 189,
+     "verbatim_in_hand": 179
+    }
+   }
   },
   "reject r8 offset-order": {
    "status": "not attempted",
@@ -81,8 +111,23 @@
    "why": "callee error wrap 'Items: %w' (lcFmtItems)"
   },
   "reject r10 tail": {
-   "status": "not attempted",
-   "hand": "lc_reject_tail_main"
+   "status": "proved (generated), SAME",
+   "attempts": [
+    {
+     "log": "run logs/99",
+     "result": "pass"
+    }
+   ],
+   "hand": "lc_reject_tail_main",
+   "negative": "lc-tail-add (logs/99)",
+   "generator_decides": "from UnmarshalSSZ.S: the path (which conditional jumps are taken, by following the jle/je/ja/jae/jne targets), every directive number and label, the frame size 0xd8 and the call slot rsp-232, the guard distance, the two call sites, the format string (go_string offset + length, bound to the include API item), the type word of runtime.newobject (type__+82848) and the item limit (cmp $0x4,%rdx = Desc limit 4); other shapes are a classified refusal. Branch-closing and contract blocks are hand text of Fk/LcReject.lean; the path premises per mode (zero/past/tail) are hand text.",
+   "verbatim_measure": {
+    "what": "tactic lines verbatim (stripped) in Fk/LcReject.lean (gen/x4/verbatim.py); the other lines differ only by lemma/data names (ar_*, fmt_*, Fk.Data.*)",
+    "row": {
+     "tactic_lines": 158,
+     "verbatim_in_hand": 148
+    }
+   }
   },
   "marshal": {
    "status": "not attempted",

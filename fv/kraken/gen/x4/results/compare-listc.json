@@ -1,6 +1,6 @@
 {
  "schema": "fvphase1c.x4-compare/1",
- "log": "run logs/98 (compare alone; the compare step of logs/97 failed: control lu_size_main not imported)",
+ "log": "run logs/99 (compare step)",
  "rows": [
   {
    "gen": "Gen1cX4.ListC.size_stmt",
@@ -27,6 +27,30 @@
    "as_expected": true
   },
   {
+   "gen": "Gen1cX4.ListC.reject_zero_stmt",
+   "hand": "lc_reject_zero_main",
+   "expect": "SAME",
+   "why": "reject r3 first offset 0 (fmt.errorf nil + newobject)",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListC.reject_past_stmt",
+   "hand": "lc_reject_past_main",
+   "expect": "SAME",
+   "why": "reject r6 first offset past the end",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListC.reject_tail_stmt",
+   "hand": "lc_reject_tail_main",
+   "expect": "SAME",
+   "why": "reject r10 5..7 bytes",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
    "gen": "Gen1cX4.ListC.reject_short_stmt",
    "hand": "lc_reject_offset_main",
    "expect": "DIFF",
@@ -47,6 +71,22 @@
    "hand": "lu_size_main",
    "expect": "DIFF",
    "why": "control (ListU64 size statement)",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListC.reject_zero_stmt",
+   "hand": "lc_reject_past_main",
+   "expect": "DIFF",
+   "why": "control (r3 vs r6)",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListC.reject_tail_stmt",
+   "hand": "lc_reject_zero_main",
+   "expect": "DIFF",
+   "why": "control (r10 vs r3)",
    "result": "DIFF",
    "as_expected": true
   }

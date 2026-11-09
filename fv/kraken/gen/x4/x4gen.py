@@ -2245,6 +2245,252 @@ def lc_size_proof(code, S):
             "rintro st ⟨h1, h2, h3, h4⟩", "apply Eventually.done", "exact ⟨h1, h2, h3, h4⟩"]
 
 
+# ---------------------------------------------------------------- ListC reject paths through fmt.errorf(nil) + newobject
+# Pattern of Fk/LcReject.lean (lc_reject_zero_main, lc_reject_past_main, lc_reject_tail_main): the length
+# and offset checks pass up to the failing one, `fmt.errorf` with a constant format and no arguments
+# (contract FmtErrorfNilC) returns nil (`errors.New` inlined), `runtime.newobject` allocates the 16-byte
+# errorString (contract NewobjectC), the itab word and the box are returned. The walker below emits
+# one block per directive kind along the path; which jumps are taken, the label numbers, the frame,
+# the call sites, the format strings (bound to include API items), the string lengths and the type
+# word of newobject are read from the directive list. Branch-closing and contract blocks are hand
+# text of Fk/LcReject.lean with these values substituted (README section 2).
+
+LC0_MODES = ("zero", "past", "tail")
+
+
+class LcCall0Path:
+    """Values of one fmt.errorf(nil) reject path of a list of containers (refuses anything else)."""
+    def __init__(self, D, mode, limit):
+        lab = {t: d for d, k, t in D if k == "label"}
+        txt = [x[2] for x in D]
+        self.G = guard_size(D)
+        self.F = next(int(t.split()[1].split(",")[0][1:], 16) for t in txt if re.fullmatch(r"sub \$0x[0-9a-f]+,%rsp", t))
+        self.C = self.F + 16
+        jle = next(d for d, t in enumerate(txt) if t.startswith("jle "))
+        assert txt[jle - 1] == "cmp $0x3,%rcx" and txt[jle + 1] == "mov (%rbx,%rdx,1),%ebx", txt[jle - 1:jle + 2]
+        je = next(d for d in range(jle, len(txt)) if txt[d].startswith("je "))
+        ja = next(d for d in range(je, len(txt)) if txt[d].startswith("ja "))
+        assert txt[ja - 1] == f"cmp ${hex(limit)},%rdx", (txt[ja - 1], limit)
+        self.limit = limit
+        if mode == "zero":
+            self.start = lab[txt[je].split()[1]] + 1
+        elif mode == "past":
+            jae = next(d for d in range(ja, len(txt)) if txt[d].startswith("jae "))
+            self.start = jae + 1
+        else:
+            t0 = lab[txt[jle].split()[1]]
+            assert txt[t0 + 1] == "add $-0x4,%r10" and txt[t0 + 2].startswith("jne "), txt[t0 + 1:t0 + 3]
+            self.tail_head = t0
+            self.start = lab[txt[t0 + 2].split()[1]] + 1
+        s = self.start
+        m = re.fullmatch(r"lea go_string\._\+(\d+)\(%rip\),%rax", txt[s])
+        n = re.fullmatch(r"mov \$(0x[0-9a-f]+),%ebx", txt[s + 1])
+        assert m and n and txt[s + 2:s + 5] == ["xor %ecx,%ecx", "xor %edi,%edi", "mov %rdi,%rsi"], txt[s:s + 5]
+        self.c1 = s + 5
+        assert txt[self.c1] == "callq fmt.errorf", txt[self.c1]
+        ln = int(n[1], 16)
+        fid, api_id = include_adapter.rodata_id(None, include_adapter.RODATA_LABEL, int(m[1]), ln)
+        assert api_id, f"format string go_string._+{m[1]} ({ln} bytes) is not an include API item"
+        self.fmt, self.fmtlen = fid, ln
+        self.c2 = next(d for d in range(self.c1 + 1, len(txt)) if txt[d].startswith("callq "))
+        assert txt[self.c2] == "callq runtime.newobject", txt[self.c2]
+        t = re.fullmatch(r"lea type__\+(\d+)\(%rip\),%rax", txt[self.c2 - 1])
+        assert t, txt[self.c2 - 1]
+        self.typ = int(t[1])
+        assert txt[self.c2 + 1:self.c2 + 6] == [f"movq ${hex(ln)},0x8(%rax)", f"lea go_string._+{m[1]}(%rip),%rcx",
+                                               "mov %rcx,(%rax)", "mov %rax,%rbx", "lea go_itab._errors.errorString_error(%rip),%rax"], txt[self.c2 + 1:self.c2 + 6]
+        self.mode = mode
+
+
+def lc_call0_lemmas(P):
+    F, C = P.F, P.C
+    u = "simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega"
+    fb = include_adapter.bytes_name(P.fmt)
+    return {f"ar_call{C}": f"(x : BitVec 64) : x - 8#64 - {F} - 8#64 = x - {C} := by bv_omega",
+            f"ar_slot{C}'": f"(x : BitVec 64) : ({{ toBitVec := x - {C} }} + 8 : UInt64).toBitVec - 8#64 = x - {C} := by\n  {u}",
+            f"ar_pop{F}'": f"(x : BitVec 64) : ({F} : BitVec 64) + ({{ toBitVec := x - {C} }} + 8 : UInt64).toBitVec = x - 8 := by\n  {u}",
+            f"fmt_len_{P.fmt}": f": {fb}.length = {P.fmtlen} := by rfl",
+            f"fmt_nopct_{P.fmt}": f": (0x25 : UInt8) ∉ {fb} := by simp [{fb}]"}
+
+
+def lc_call0_stmt(name, code, P):
+    fb, fa = include_adapter.bytes_name(P.fmt), include_adapter.addr_name(P.fmt)
+    C, mode = P.C, P.mode
+    o = {"zero": " (o4 : List UInt8) (ho4 : o4.length = 4) (hoff : Int.ofBytes o4 = 0)",
+         "past": f" (o4 : List UInt8) (ho4 : o4.length = 4) (o : Nat) (hoff : Int.ofBytes o4 = o) (ho0 : o ≠ 0) (ho4' : o % 4 = 0) (ho16 : o ≤ {4 * P.limit})",
+         "tail": ""}[mode]
+    o4m = "" if mode == "tail" else " ⋆ Eq (o4.At (s.regs.rbx.toBitVec + 4))"
+    hl = {"zero": "(hlen : 8 ≤ s.regs.rcx.toNat)", "past": "(hlen : 8 ≤ s.regs.rcx.toNat) (hpast : s.regs.rcx.toNat - 4 < o)",
+          "tail": "(hlen5 : 5 ≤ s.regs.rcx.toNat) (hlen : s.regs.rcx.toNat ≤ 7)"}[mode]
+    return f"""def {name}_stmt [Host] : Prop :=
+  ∀ (k : Nat) (hk : {code}.IsInfixAt Host.prog k)
+    (hf : LabelsFresh {code} k)
+    (s : MachineData) (ra guard : UInt64) (fp slot rslot : List UInt8) (hfp : fp.length = 8) (hsl : slot.length = 8)
+    (hrs : rslot.length = 8){o}
+    (R : DataMem → Prop) (S : Nat) (scratch spl : List UInt8) (hsc : scratch.length = S) (hspl : spl.length = 40)
+    (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : 16 ≤ avail)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (slot.At (s.regs.rsp.toBitVec + 16))
+      ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - {C})) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - {C} - BitVec.ofNat 64 S))
+      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - {C - 8})) ⋆ Eq ({fb}.At {fa})
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ Heap avail
+      ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec){o4m} ⋆ R)
+    (hguard : guard.toNat + {P.G} < s.regs.rsp.toNat) (hsp : {C} ≤ s.regs.rsp.toNat)
+    {hl} (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
+    (hfe : FmtErrorfNilC S) (hno : NewobjectC Heap (label "type__" + {P.typ}).toBitVec 16 S)
+    (hit : (label "go_itab._errors.errorString_error").toBitVec ≠ 0),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
+        ∧ (R ⋆ fun _ => True) st.data.dmem)
+      ⟨s, Host.addrOf k⟩
+"""
+
+
+SUBNEG = "rw [BitVec.add_comm, ← BitVec.sub_eq_add_neg, BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simp; omega)]; simp; omega"
+
+
+def lc_call0_proof(D, code, P):
+    lab = {t: d for d, k, t in D if k == "label"}
+    kat = lambda d: f"kat hk {code} {d}"
+    mode, F, C = P.mode, P.F, P.C
+    fb = include_adapter.bytes_name(P.fmt)
+    intro = {"zero": "intro k hk hf s ra guard fp slot rslot hfp hsl hrs o4 ho4 hoff R S scratch spl hsc hspl Heap avail hav h_mem hguard hsp hlen hcap hcap63 hfe hno hit",
+             "past": "intro k hk hf s ra guard fp slot rslot hfp hsl hrs o4 ho4 o hoff ho0 ho4' ho16 R S scratch spl hsc hspl Heap avail hav h_mem hguard hsp hlen hpast hcap hcap63 hfe hno hit",
+             "tail": "intro k hk hf s ra guard fp slot rslot hfp hsl hrs R S scratch spl hsc hspl Heap avail hav h_mem hguard hsp hlen5 hlen hcap hcap63 hfe hno hit"}[mode]
+    L = [intro,
+         "obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s",
+         "simp only at h_mem hguard hsp hlen hcap hcap63 ⊢",
+         "have := rsp.toNat_lt_size; have := guard.toNat_lt_size; have := rcx.toNat_lt_size; have := rdi.toNat_lt_size",
+         "simp only [UInt64.size] at *"]
+    NT = ["simp only [Effects.All]"]
+    d, seen, ncall = 0, set(), 0
+    while True:
+        assert d not in seen, d
+        seen.add(d)
+        _, kind, t = D[d]
+        if kind == "label":
+            L.append(kat(d)); d += 1; continue
+        op = t.split()[0]
+        a = t[len(op):].strip()
+        jt = lab.get(a)
+        if op == "cmp" and a == "0x10(%r14),%r12":
+            L += [kat(d), "apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
+        elif op == "jbe" and d < 8:
+            L += [kat(d), "split", "case isTrue h =>", "  exfalso",
+                  f"  rw [cmp_be_false _ _ _ _ (by rw [ar_neg{P.G} _ (by simp; omega)]; simp; omega)] at h",
+                  "  exact absurd h (by simp)", *NT]
+        elif op == "push":
+            L += [kat(d), "apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)",
+                  "intro m1 H1", "simp only [Width.bytes, Width.bits] at H1", "kunfold"]
+        elif op == "mov" and a == f"%rbx,{hex(F + 24)}(%rsp)":
+            L += [kat(d), f"apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ slot _ _ (ar_s{F + 24} _) (by ecancel) (by exact hsl)",
+                  "intro m2 H2", "simp only [Width.bytes, Width.bits] at H2", "kunfold"]
+        elif op == "jb":
+            L += [kat(d), "split", "case isTrue h =>",
+                  "  exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h; omega", *NT]
+        elif op == "mov" and a == "(%rbx),%edx":
+            L += [kat(d), "apply load_step_at _ _ rbx.toBitVec _ _ [4, 0, 0, 0] _ _ (by bv_omega) (by ecancel) (by simp)",
+                  "simp only [show Int.ofBytes [4, 0, 0, 0] = 4 by simp [Int.ofBytes]]", "kunfold"]
+        elif op == "jne" and D[d - 1][2] == "cmp $0x4,%rdx":
+            L += [kat(d), "split", "case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h", *NT]
+        elif op == "sar" and a == "$0x3f,%rdx":
+            L += [kat(d), "kshl64 63"]
+        elif op == "and" and a == "$0x4,%edx":
+            L += [kat(d), "intro _"] + (["rw [lc_rdx4 _ (by simp; omega) (by simp; omega)]"] if mode != "tail" else [])
+        elif op == "jle" and mode == "tail":
+            L += [kat(d), f"rw [jle3_true _ (by {SUBNEG})]", "simp only [↓reduceIte, Effects.All]", f"klabel hk hf {code} {jt}"]
+            d = jt; continue
+        elif op == "jle":
+            L += [kat(d), f"rw [jle3_false _ _ (by {SUBNEG})", f"  (by {SUBNEG})]",
+                  "simp only [Bool.false_eq_true, ↓reduceIte, Effects.All]"]
+        elif op == "mov" and a == "(%rbx,%rdx,1),%ebx":
+            L += [kat(d), "apply load_step_at _ _ (rbx.toBitVec + 4) _ _ o4 _ _ (by bv_omega) (by ecancel) (by exact ho4)",
+                  "rw [hoff]", "kunfold"]
+        elif op == "test" and a == "%rbx,%rbx":
+            L += [kat(d), "intro _"]
+            if mode == "past":
+                L += ["have ho32 : o < 2 ^ 32 := by", "  have := Int.ofBytes_lt o4; rw [ho4] at this; omega", "rw [zx_o o ho32]"]
+        elif op == "je" and mode == "zero":
+            L += [kat(d), "split", "case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h", *NT,
+                  f"klabel hk hf {code} {jt}"]
+            d = jt; continue
+        elif op == "je":
+            L += [kat(d), "split", "case isTrue h =>", "  exfalso; simp [CondCode.interp, StatusFlags.from_result] at h",
+                  "  have := congrArg BitVec.toNat h; simp at this; omega", *NT]
+        elif op == "test" and a == "$0x3,%rbx":
+            L += [kat(d), "intro _", "rw [and3_zero o ho32 ho4']"]
+        elif op == "jne" and D[d - 1][2] == "test $0x3,%rbx":
+            L += [kat(d), "split", "case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h", *NT]
+        elif op == "shr" and a == "$0x2,%rdx":
+            L += [kat(d), "kshl64 2", "rw [shr2_o o ho32]"]
+        elif op == "ja":
+            L += [kat(d), "rw [ja4_false _ (by omega)]", "simp only [Bool.false_eq_true, ↓reduceIte, Effects.All]"]
+        elif op == "jae":
+            L += [kat(d), "rw [jae_false _ _ _ _ (by",
+                  "  rw [BitVec.add_comm, ← BitVec.sub_eq_add_neg, BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simp; omega)]",
+                  "  simp; omega)]",
+                  "simp only [Bool.false_eq_true, ↓reduceIte, Effects.All]"]
+        elif op == "jne" and mode == "tail" and D[d - 1][2] == "add $-0x4,%r10":
+            L += [kat(d), "split", "case isFalse h =>", "  exfalso; simp [CondCode.interp, StatusFlags.from_result] at h",
+                  "  have := congrArg BitVec.toNat h", "  simp [BitVec.toNat_add] at this; omega", *NT, f"klabel hk hf {code} {jt}"]
+            d = jt; continue
+        elif op == "xor" and d >= P.start:
+            L += [kat(d), "intro _"]
+        elif op == "callq" and d == P.c1:
+            L += [kat(d), f"apply store_step_at _ _ (rsp.toBitVec - {C}) _ _ _ rslot _ _ (ar_call{C} _) (by ecancel) (by exact hrs)",
+                  "intro m5 H5", "simp only [Width.bytes, Width.bits] at H5", "kunfold", f"rw [ar_call{C}] at *",
+                  f"have hA : rsp.toBitVec - {C} + 8 = rsp.toBitVec - {C - 8} := by bv_omega",
+                  f"refine eventually_trans _ _ _ _ (hfe _ (Host.addrOf (k + {d} + 1)) {fb} scratch spl _",
+                  f"  (by rw [fmt_len_{P.fmt}]; rfl) (by apply UInt64.toBitVec_inj.mp; simp) fmt_nopct_{P.fmt} hsc hspl",
+                  "  (by dsimp only; rw [hA]; ecancel)) ?_",
+                  "rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hr142, hrax2, stk2, sp2, hstk2, hsp2, Hm2⟩",
+                  "dsimp only at hpc2 hrsp2 hrax2 Hm2", "subst hpc2",
+                  "obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,",
+                  "  zmms2, flags2, mem2⟩ := d2", "simp only at hrsp2 hrax2 Hm2", "subst hrsp2 hrax2"]
+        elif op == "test" and a == "%rax,%rax" and d > P.c1:
+            L += [kat(d), "intro _"]
+        elif op == "jne" and d > P.c1 and d < P.c2:
+            L += [kat(d), "split", "case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h", *NT]
+        elif op == "callq" and d == P.c2:
+            L += [kat(d), f"apply store_step_at _ _ (rsp.toBitVec - {C}) _ _ _ (Int.toBytes 8 (Host.addrOf (k + {P.c1} + 1)).toBitVec.toInt) _ _",
+                  "  (ar_slot{}' _) (by ecancel) (by exact Int.toBytes_length 8 _)".format(C),
+                  "intro m6 H6", "simp only [Width.bytes, Width.bits] at H6", "kunfold", f"rw [ar_slot{C}'] at *",
+                  f"rw [← List.take_append_drop 8 sp2, at_app (sp2.take 8) (sp2.drop 8) (b := rsp.toBitVec - {C} + 16)",
+                  "  (by simp [hsp2]; bv_omega) (by simp [hsp2])] at H6",
+                  f"refine eventually_trans _ _ _ _ (hno _ (Host.addrOf (k + {d} + 1)) avail stk2 (sp2.take 8) _ rfl hav hstk2",
+                  "  (by simp [hsp2]) (by dsimp only; ecancel)) ?_",
+                  "rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, hr143, -, stk3, sn3, hstk3, hsn3, Hm3⟩",
+                  "dsimp only at hpc3 hrsp3 Hm3", "subst hpc3",
+                  "obtain ⟨⟨rax3, rbx3, rcx3, rdx3, rsi3, rdi3, rsp3, rbp3, r83, r93, r103, r113, r123, r133, r143, r153⟩,",
+                  "  zmms3, flags3, mem3⟩ := d3", "simp only at hrsp3 Hm3", "subst hrsp3",
+                  "rw [show List.replicate 16 (0 : UInt8) = List.replicate 8 0 ++ List.replicate 8 0 from rfl,",
+                  "  Mem.At_append_sep _ _ _ (by simp)] at Hm3", "simp only [List.length_replicate] at Hm3"]
+        elif op == "movq" and d == P.c2 + 1:
+            L += [kat(d), "apply store_step_at _ _ (rax3.toBitVec + BitVec.ofNat 64 8) _ _ _ (List.replicate 8 0) _ _ (by bv_omega) (by ecancel) (by simp)",
+                  "intro m7 H7", "simp only [Width.bytes, Width.bits] at H7", "kunfold"]
+        elif op == "mov" and a == "%rcx,(%rax)" and d == P.c2 + 3:
+            L += [kat(d), "apply store_step _ _ _ _ _ (List.replicate 8 0) _ _ (by ecancel) (by simp)",
+                  "intro m8 H8", "simp only [Width.bytes, Width.bits] at H8", "kunfold"]
+        elif op == "pop" and d > P.c2:
+            L += [kat(d), f"rw [ar_pop{F}']",
+                  "apply load_step _ _ _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
+        elif op == "retq" and d > P.c2:
+            L += [kat(d), "rw [show rsp.toBitVec - 8 + 8#64 = rsp.toBitVec by bv_omega]",
+                  "apply load_step _ _ _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)",
+                  "kunfold", "apply Eventually.done", "simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]",
+                  "refine ⟨trivial, ?_, ?_, ?_, ?_⟩",
+                  "· intro h; apply hit; have := congrArg UInt64.toBitVec h; simpa using this",
+                  "· apply UInt64.toBitVec_inj.mp; simp", "· first | trivial | rfl", "· exact sep_true (by ecancel)"]
+            return L
+        elif (op in ("nop", "lea", "mov", "neg", "add", "sub", "cmp") and not op.startswith("j")
+              and not (op == "add" and a == f"${hex(F)},%rsp" and d < P.c2)):
+            L.append(kat(d))
+        else:
+            raise SystemExit(f"ListC fmt.errorf(nil) reject directive {d} `{t}` (mode {mode}): no tactic template")
+        d += 1
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--desccheck-result", required=True)
@@ -2339,19 +2585,27 @@ def main_list(a, key, desc, dsha):
     t = key[1]
     L = ListField(desc, LAYOUT["types"][t])
     ns = a.ns or f"Gen1cX4.{t}"
-    LIST_OBL = ("size", "accept", "marshal", "marshal_reject", "compose", "reject_short", "reject_offset", "reject_misaligned", "reject_toobig")
+    LIST_OBL = ("size", "accept", "marshal", "marshal_reject", "compose", "reject_short", "reject_offset", "reject_misaligned", "reject_toobig",
+                "reject_zero", "reject_past", "reject_tail")
     only = [x for x in a.only.split(",") if x in LIST_OBL] if a.only != ap_default() else list(LIST_OBL)
     if L.esz is None:   # list of containers (ListC): size (outer loop) and the templates that do not touch elements
-        LC_OBL = ("size", "reject_short", "reject_offset")
+        LC_OBL = ("size", "reject_short", "reject_offset", "reject_zero", "reject_past", "reject_tail")
         bad = [x for x in only if x not in LC_OBL]
         if a.only != ap_default() and bad:
             raise SystemExit(f"x4gen: refused {key[0]}.{t}: no template for {bad} on a list of containers")
         only = [x for x in only if x in LC_OBL]
+    else:               # the fmt.errorf(nil) offset-table rejects exist only for lists of containers
+        bad = [x for x in only if x in tuple(f"reject_{m}" for m in LC0_MODES)]
+        if a.only != ap_default() and bad:
+            raise SystemExit(f"x4gen: refused {key[0]}.{t}: {bad} are list-of-containers templates")
+        only = [x for x in only if x not in bad]
     code = {m: f"{t}{m}" for m in ("SizeSSZ", "UnmarshalSSZ", "MarshalSSZTo")}
     head = ["import Fk.Step", "import Fk.Bytes", "import Fk.Labels", "import Fk.Flags", "import Gen1cX4.Support"]
     if any(x in only for x in ("reject_misaligned", "reject_toobig", "accept", "marshal", "marshal_reject")) \
             or (L.esz is None and "size" in only):
         head += ["import Fk.Contracts", "import Fk.Frame", "import Fk.Block"]
+    if any(f"reject_{m}" in only for m in LC0_MODES):
+        head += ["import Fk.FunSpecs"]
     pre = []
     if a.mutant:
         m, f = a.mutant.split("=", 1)
@@ -2418,7 +2672,7 @@ def main_list(a, key, desc, dsha):
         subf = next((int(t.split()[1].split(",")[0][1:], 16) for _, k, t in Dun if k == "instr" and re.fullmatch(r"sub \$0x[0-9a-f]+,%rsp", t)), None)
     except (AssertionError, IndexError, ValueError) as e:
         raise SystemExit(f"x4gen: refused {key[0]}.{t}: prologue does not fit the reject template ({type(e).__name__}: {e})")
-    if subf is not None and any(f"reject_{m}" in only for m in ("short", "offset")):
+    if subf is not None and any(f"reject_{m}" in only for m in ("short", "offset") + LC0_MODES):
         body += ["-- prologue/epilogue arithmetic of the decoder's frame (generated with its guard distance and frame size)",
                  f"theorem ar_neg{G} (x : BitVec 64) (h : {G} ≤ x.toNat) : (x + -{G}).toNat = x.toNat - {G} := by",
                  "  rw [← BitVec.sub_eq_add_neg, BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simpa using h)]; rfl",
@@ -2430,6 +2684,26 @@ def main_list(a, key, desc, dsha):
                      "set_option maxHeartbeats 4000000 in", "set_option maxRecDepth 100000 in",
                      f"theorem reject_{mode} [Host] : reject_{mode}_stmt := by",
                      *["  " + x for x in lu_rej_proof(Dun, code["UnmarshalSSZ"], mode, G)], ""]
+    lc0 = [m for m in LC0_MODES if f"reject_{m}" in only]
+    if lc0:
+        try:
+            P0 = {m: LcCall0Path(Dun, m, L.limit) for m in lc0}
+        except (KeyError, AssertionError, IndexError, StopIteration, ValueError, TypeError) as e:
+            raise SystemExit(f"x4gen: refused {key[0]}.{t}: fmt.errorf(nil) reject template does not fit the code "
+                             f"({type(e).__name__}: {e})")
+        if L.limit != 4:
+            raise SystemExit(f"x4gen: refused {key[0]}.{t}: the fmt.errorf(nil) reject template is for the item limit 4 "
+                             f"(Support lemma ja4_false), not {L.limit}")
+        lem = {}
+        for m in lc0:
+            lem.update(lc_call0_lemmas(P0[m]))
+        body += ["-- frame arithmetic and format-string facts of the fmt.errorf(nil) reject paths (generated)"]
+        body += [f"theorem {n} {v}" for n, v in sorted(lem.items())] + [""]
+        for m in lc0:
+            body += [lc_call0_stmt(f"reject_{m}", code["UnmarshalSSZ"], P0[m]),
+                     "set_option maxHeartbeats 4000000 in", "set_option maxRecDepth 100000 in",
+                     f"theorem reject_{m} [Host] : reject_{m}_stmt := by",
+                     *["  " + x for x in lc_call0_proof(Dun, code["UnmarshalSSZ"], P0[m])], ""]
     calls = [m for m in ("misaligned", "toobig") if f"reject_{m}" in only]
     if calls:
         if (L.esz, L.limit) != (8, 16):
