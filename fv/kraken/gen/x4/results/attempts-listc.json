@@ -100,7 +100,8 @@
      }
     }
    },
-   "memory": "memcap 6 GiB: logs/100 peak session 2.61 GiB; logs/102 parallel witness build stopped by the cap at 6.03 GiB (not a kernel OOM kill, oom_kill 5->5); logs/103 one target per lake call, peak 3.34 GiB"
+   "memory": "memcap 6 GiB: logs/100 peak session 2.61 GiB; logs/102 parallel witness build stopped by the cap at 6.03 GiB (not a kernel OOM kill, oom_kill 5->5); logs/103 one target per lake call, peak 3.34 GiB",
+   "smart_unfolding_note": "review r7 S3: with smart unfolding on, two pairs compare DIFF: accept (lcObjs restated) and marshal (offTab restated, SupportLc.lean, also structurally recursive). With smart unfolding off (pairs-listc.json no_smart_unfolding, whole file) both are SAME (author isDefEq at transparency all; reviewer rfl/type_of)."
   },
   "reject r3 zero": {
    "status": "proved (generated), SAME",
@@ -140,16 +141,6 @@
     }
    }
   },
-  "reject r8 offset-order": {
-   "status": "not attempted",
-   "hand": "lc_reject_offset_order_main",
-   "why": "fmt.errorf %d %d (FmtErrorfDDC, lcFmtOrder)"
-  },
-  "reject r9 item-error": {
-   "status": "not attempted",
-   "hand": "lc_reject_item_main",
-   "why": "callee error wrap 'Items: %w' (lcFmtItems)"
-  },
   "reject r10 tail": {
    "status": "proved (generated), SAME",
    "attempts": [
@@ -172,6 +163,14 @@
   "marshal": {
    "status": "proved (generated from an anchored template), SAME",
    "attempts": [
+    {
+     "log": "run logs/111",
+     "result": "probe (gate exit 1): helper lemma name mismatch between the template and SupportLc (review r7 S5)"
+    },
+    {
+     "log": "run logs/112",
+     "result": "probe 2 (gate exit 1): the same class, second name"
+    },
     {
      "log": "run logs/113",
      "result": "build, compare (21/21 pairs as expected), axioms (19 names) 0; negative step 0 but all 4 cases unexpected: with --only marshal the module lacked the SupportLc import (generator defect of this session, fixed)"
@@ -214,7 +213,8 @@
       "verbatim_in_hand": 8
      }
     }
-   }
+   },
+   "smart_unfolding_note": "review r7 S3: with smart unfolding on, two pairs compare DIFF: accept (lcObjs restated) and marshal (offTab restated, SupportLc.lean, also structurally recursive). With smart unfolding off (pairs-listc.json no_smart_unfolding, whole file) both are SAME (author isDefEq at transparency all; reviewer rfl/type_of)."
   },
   "compose": {
    "status": "not attempted",
