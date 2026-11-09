@@ -1,12 +1,20 @@
 {
  "schema": "fvphase1c.x4-compare/1",
- "log": "run logs/87 (compare step; logs/77 for the first three)",
+ "log": "run logs/90 (compare step)",
  "rows": [
   {
    "gen": "Gen1cX4.ListU64.size_stmt",
    "hand": "lu_size_main",
    "expect": "SAME",
    "why": "size",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListU64.accept_stmt",
+   "hand": "lu_accept_main",
+   "expect": "SAME",
+   "why": "accept (makeslice + element loop)",
    "result": "SAME",
    "as_expected": true
   },
@@ -55,6 +63,14 @@
    "hand": "lu_reject_misaligned_main",
    "expect": "DIFF",
    "why": "control (call paths)",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListU64.accept_stmt",
+   "hand": "lu_reject_short_main",
+   "expect": "DIFF",
+   "why": "control (accept vs reject)",
    "result": "DIFF",
    "as_expected": true
   }

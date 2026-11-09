@@ -1,7 +1,7 @@
 {
  "schema": "fvphase1c.x4-negative/1",
- "cases": 10,
- "as_expected": 10,
+ "cases": 12,
+ "as_expected": 12,
  "rows": [
   {
    "id": "lu-size-add",
@@ -142,6 +142,34 @@
    ],
    "as_expected": true,
    "run": "logs/88"
+  },
+  {
+   "id": "lu-acc-store",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lu_acc_store_mutant.accept",
+   "mutation": "'mov %rdx,0x8(%rsi)' -> 'mov %rdx,0x18(%rsi)'",
+   "exit": "1",
+   "first_error": "line 353: omega could not prove the goal:",
+   "theorem_lines": [
+    224,
+    432
+   ],
+   "as_expected": true,
+   "run": "logs/90"
+  },
+  {
+   "id": "lu-acc-store",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lu_acc_store_control.accept",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    224,
+    432
+   ],
+   "as_expected": true,
+   "run": "logs/90"
   }
  ]
 }

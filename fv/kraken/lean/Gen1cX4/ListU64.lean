@@ -7,6 +7,7 @@ import Fk.Flags
 import Gen1cX4.Support
 import Fk.Contracts
 import Fk.Frame
+import Fk.Block
 
 namespace Gen1cX4.ListU64
 open Fk Fk.Code
@@ -41,6 +42,421 @@ theorem size [Host] : size_stmt := by
   · show (4 + BitVec.ofNat 64 n <<< 3).toNat = _
     simp [BitVec.toNat_add, BitVec.toNat_shiftLeft, Nat.shiftLeft_eq]; omega
   · apply UInt64.toBitVec_inj.mp; simp
+
+-- element loop of the decoder (generated from its directives)
+set_option maxHeartbeats 4000000 in
+theorem loop_iter [Host] (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh ListU64UnmarshalSSZ k)
+    (bs : List UInt8) (n i : Nat) (hbs : bs.length = 8 * n) (hn : n ≤ 16) (hi : i < n)
+    (d c p nb : BitVec 64) (hnb : nb.toNat = n) (R : DataMem → Prop) (s : MachineData)
+    (hrax : s.regs.rax.toNat = i) (hrdx : s.regs.rdx.toNat = n) (hrcx : 8 * n ≤ s.regs.rcx.toNat)
+    (hrdi : s.regs.rdi.toBitVec = d) (hrsi : s.regs.rsi.toBitVec = c)
+    (sp bp r14v : UInt64) (hrsp : s.regs.rsp = sp) (hrbp : s.regs.rbp = bp) (hr14 : s.regs.r14 = r14v)
+    (h_mem : s.dmem =⋆ Eq (bs.At d) ⋆ Eq ((Int.toBytes 8 p.toInt).At c) ⋆ Eq ((Int.toBytes 8 nb.toInt).At (c + 8))
+      ⋆ Eq ((bs.take (8 * i) ++ List.replicate (8 * (n - i)) 0).At p) ⋆ R) :
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + 148) ∧ st.data.regs.rax.toNat = i + 1 ∧ st.data.regs.rdx.toNat = n
+        ∧ 8 * n ≤ st.data.regs.rcx.toNat ∧ st.data.regs.rdi.toBitVec = d ∧ st.data.regs.rsi.toBitVec = c
+        ∧ st.data.regs.rsp = sp ∧ st.data.regs.rbp = bp ∧ st.data.regs.r14 = r14v
+        ∧ (Eq (bs.At d) ⋆ Eq ((Int.toBytes 8 p.toInt).At c) ⋆ Eq ((Int.toBytes 8 nb.toInt).At (c + 8))
+          ⋆ Eq ((bs.take (8 * (i + 1)) ++ List.replicate (8 * (n - (i + 1))) 0).At p) ⋆ R) st.data.dmem)
+      ⟨s, Host.addrOf (k + 148)⟩ := by
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
+  simp only at h_mem hrax hrdx hrcx hrdi hrsi hrsp hrbp hr14 ⊢
+  subst hrdi hrsi hrsp hrbp hr14
+  have := rax.toNat_lt_size; have := rdx.toNat_lt_size; have := rcx.toNat_lt_size
+  simp only [UInt64.size] at *
+  have hlen : bs.length < 2 ^ 64 := by omega
+  rw [block_split bs rdi.toBitVec (8 * i) (by omega) hlen, out_next bs n i hbs hi,
+    Mem.At_append_sep _ _ _ (by simp; omega), Mem.At_append_sep _ _ _ (by simp; omega)] at h_mem
+  simp only [List.length_take, List.length_replicate, hbs, Nat.min_eq_left (show 8 * i ≤ 8 * n by omega)] at h_mem
+  kat hk ListU64UnmarshalSSZ 148
+  kat hk ListU64UnmarshalSSZ 149
+  kat hk ListU64UnmarshalSSZ 150
+  split
+  case isTrue h =>
+    exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.signed] at h
+    exact jge_false _ _ (by simp; omega) (by simp; omega) h
+  simp only [Effects.All]
+  kat hk ListU64UnmarshalSSZ 151
+  kat hk ListU64UnmarshalSSZ 152
+  kat hk ListU64UnmarshalSSZ 153
+  kshl64 3
+  kat hk ListU64UnmarshalSSZ 154
+  kat hk ListU64UnmarshalSSZ 155
+  split
+  case isTrue h =>
+    exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
+    (try simp only [BitVec.toNat_shiftLeft, Nat.shiftLeft_eq, Int.shiftLeft_eq] at h)
+    obtain ⟨h1, h2⟩ := h; apply h2; apply BitVec.eq_of_toNat_eq
+    simp [BitVec.toNat_sub, BitVec.toNat_shiftLeft, Nat.shiftLeft_eq, BitVec.toNat_add]; omega
+  simp only [Effects.All]
+  kat hk ListU64UnmarshalSSZ 156
+  kat hk ListU64UnmarshalSSZ 157
+  kshl64 3
+  kat hk ListU64UnmarshalSSZ 158
+  kat hk ListU64UnmarshalSSZ 159
+  kat hk ListU64UnmarshalSSZ 160
+  split
+  case isTrue h =>
+    exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
+    (try simp only [BitVec.toNat_shiftLeft, Nat.shiftLeft_eq, Int.shiftLeft_eq] at h); omega
+  simp only [Effects.All]
+  kat hk ListU64UnmarshalSSZ 161
+  apply load_step_at _ _ (rsi.toBitVec + 8) _ _ (Int.toBytes 8 nb.toInt) _ _ (by bv_omega) (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk ListU64UnmarshalSSZ 162
+  kat hk ListU64UnmarshalSSZ 163
+  rw [show rdi.toBitVec + rax.toBitVec * 8#64 = rdi.toBitVec + BitVec.ofNat 64 (8 * i) by
+    apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_add, BitVec.toNat_mul]; omega]
+  apply load_step _ _ _ _ ((bs.drop (8 * i)).take 8) _ _ (by ecancel) (by simp; omega)
+  kunfold
+  kat hk ListU64UnmarshalSSZ 164
+  kat hk ListU64UnmarshalSSZ 165
+  split
+  case isFalse h =>
+    exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h; omega
+  simp only [Effects.All]
+  klabel hk hf ListU64UnmarshalSSZ 143
+  kat hk ListU64UnmarshalSSZ 143
+  kat hk ListU64UnmarshalSSZ 144
+  apply load_step_at _ _ rsi.toBitVec _ _ (Int.toBytes 8 p.toInt) _ _ (by bv_omega) (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk ListU64UnmarshalSSZ 145
+  rw [show p + rax.toBitVec * 8#64 = p + BitVec.ofNat 64 (8 * i) by
+    apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_add, BitVec.toNat_mul]; omega]
+  apply store_step _ _ _ _ _ (List.replicate 8 0) _ _ (by ecancel) (by simp)
+  intro m1 H1
+  simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl _ (show ((bs.drop (8 * i)).take 8).length = 8 by simp; omega)] at H1
+  kunfold
+  kat hk ListU64UnmarshalSSZ 146
+  kat hk ListU64UnmarshalSSZ 147
+  apply Eventually.done
+  refine ⟨rfl, ?_, hrdx, hrcx, rfl, rfl, rfl, rfl, rfl, ?_⟩
+  · show (rax.toBitVec + 1).toNat = i + 1; simp [BitVec.toNat_add]; omega
+  · dsimp only
+    rw [← out_step bs n i hbs hi, Mem.At_append_sep _ _ _ (by simp; omega), Mem.At_append_sep _ _ _ (by simp; omega),
+      block_split bs rdi.toBitVec (8 * i) (by omega) hlen]
+    simp only [List.length_take, List.length_replicate, List.length_drop, hbs,
+      Nat.min_eq_left (show 8 * i ≤ 8 * n by omega), Nat.min_eq_left (show 8 ≤ 8 * n - 8 * i by omega)]
+    (try simp only [BitVec.ofNat_eq_ofNat] at H1 ⊢)
+    ecancel
+
+set_option maxHeartbeats 4000000 in
+set_option maxRecDepth 20000 in
+theorem loop_exit [Host] (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh ListU64UnmarshalSSZ k)
+    (bs : List UInt8) (n : Nat) (hbs : bs.length = 8 * n) (hn : n ≤ 16)
+    (d c p nb : BitVec 64) (R : DataMem → Prop) (s : MachineData)
+    (hrax : s.regs.rax.toNat = n) (hrdx : s.regs.rdx.toNat = n)
+    (sp bp r14v : UInt64) (hrsp : s.regs.rsp = sp) (hrbp : s.regs.rbp = bp) (hr14 : s.regs.r14 = r14v)
+    (h_mem : s.dmem =⋆ Eq (bs.At d) ⋆ Eq ((Int.toBytes 8 p.toInt).At c) ⋆ Eq ((Int.toBytes 8 nb.toInt).At (c + 8))
+      ⋆ Eq ((bs.take (8 * n) ++ List.replicate (8 * (n - n)) 0).At p) ⋆ R) :
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + 167) ∧ st.data.regs.rsp = sp ∧ st.data.regs.rbp = bp ∧ st.data.regs.r14 = r14v
+        ∧ (Eq (bs.At d) ⋆ Eq ((Int.toBytes 8 p.toInt).At c) ⋆ Eq ((Int.toBytes 8 nb.toInt).At (c + 8))
+          ⋆ Eq (bs.At p) ⋆ R) st.data.dmem)
+      ⟨s, Host.addrOf (k + 148)⟩ := by
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
+  simp only at h_mem hrax hrdx hrsp hrbp hr14 ⊢
+  subst hrsp hrbp hr14
+  have hrr : rax = rdx := UInt64.toNat_inj.mp (by omega)
+  subst hrr
+  kat hk ListU64UnmarshalSSZ 148
+  kat hk ListU64UnmarshalSSZ 149
+  kat hk ListU64UnmarshalSSZ 150
+  split
+  case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
+  simp only [Effects.All]
+  klabel hk hf ListU64UnmarshalSSZ 167
+  apply Eventually.done
+  refine ⟨rfl, rfl, rfl, rfl, ?_⟩
+  rw [Nat.sub_self, Nat.mul_zero, List.replicate_zero, List.append_nil, List.take_of_length_le (by omega)] at h_mem
+  exact h_mem
+
+theorem loop [Host] (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh ListU64UnmarshalSSZ k)
+    (bs : List UInt8) (n : Nat) (hbs : bs.length = 8 * n) (hn : n ≤ 16)
+    (d c p nb : BitVec 64) (hnb : nb.toNat = n) (R : DataMem → Prop) (sp bp r14v : UInt64) :
+    ∀ j i (s : MachineData), i + j = n →
+    s.regs.rax.toNat = i → s.regs.rdx.toNat = n → 8 * n ≤ s.regs.rcx.toNat →
+    s.regs.rdi.toBitVec = d → s.regs.rsi.toBitVec = c → s.regs.rsp = sp → s.regs.rbp = bp → s.regs.r14 = r14v →
+    (s.dmem =⋆ Eq (bs.At d) ⋆ Eq ((Int.toBytes 8 p.toInt).At c) ⋆ Eq ((Int.toBytes 8 nb.toInt).At (c + 8))
+      ⋆ Eq ((bs.take (8 * i) ++ List.replicate (8 * (n - i)) 0).At p) ⋆ R) →
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + 167) ∧ st.data.regs.rsp = sp ∧ st.data.regs.rbp = bp ∧ st.data.regs.r14 = r14v
+        ∧ (Eq (bs.At d) ⋆ Eq ((Int.toBytes 8 p.toInt).At c) ⋆ Eq ((Int.toBytes 8 nb.toInt).At (c + 8))
+          ⋆ Eq (bs.At p) ⋆ R) st.data.dmem)
+      ⟨s, Host.addrOf (k + 148)⟩
+  | 0, i, s, hij, hrax, hrdx, _, _, _, hrsp, hrbp, hr14, h_mem => by
+    have hin : i = n := by omega
+    rw [hin] at hrax h_mem
+    exact loop_exit k hk hf bs n hbs hn d c p nb R s hrax hrdx sp bp r14v hrsp hrbp hr14 h_mem
+  | j + 1, i, s, hij, hrax, hrdx, hrcx, hrdi, hrsi, hrsp, hrbp, hr14, h_mem => by
+    refine eventually_trans _ _ _ _
+      (loop_iter k hk hf bs n i hbs hn (by omega) d c p nb hnb R s hrax hrdx hrcx hrdi hrsi sp bp r14v hrsp hrbp hr14 h_mem) ?_
+    rintro ⟨s', pc⟩ ⟨hpc, h1, h2, h3, h4, h5, h6, h7, h8, h9⟩
+    dsimp only at hpc; subst hpc
+    exact loop k hk hf bs n hbs hn d c p nb hnb R sp bp r14v j (i + 1) s' (by omega) h1 h2 h3 h4 h5 h6 h7 h8 h9
+
+def accept_stmt [Host] : Prop :=
+  ∀ (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh ListU64UnmarshalSSZ k)
+    (bs : List UInt8) (n : Nat) (hbs : bs.length = 8 * n) (hn : n ≤ 16)
+    (s : MachineData) (ra guard : UInt64)
+    (fp s28 s30 s38 s90 s98 rslot cP cL cC : List UInt8)
+    (hfp : fp.length = 8) (h28 : s28.length = 8) (h30 : s30.length = 8) (h38 : s38.length = 8)
+    (h90 : s90.length = 8) (h98 : s98.length = 8) (hrs : rslot.length = 8)
+    (hcP : cP.length = 8) (hcL : cL.length = 8) (hcC : cC.length = 8)
+    (R : DataMem → Prop) (S : Nat) (scratch spm : List UInt8) (hsc : scratch.length = S) (hspm : spm.length = 24)
+    (Heap : Nat → DataMem → Prop) (avail : Nat)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (spm.At (s.regs.rsp.toBitVec - 136))
+      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s28.At (s.regs.rsp.toBitVec - 96))
+      ⋆ Eq (s30.At (s.regs.rsp.toBitVec - 88)) ⋆ Eq (s38.At (s.regs.rsp.toBitVec - 80))
+      ⋆ Eq (s90.At (s.regs.rsp.toBitVec + 8)) ⋆ Eq (s98.At (s.regs.rsp.toBitVec + 16))
+      ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 144)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 144 - BitVec.ofNat 64 S))
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+      ⋆ Heap avail
+      ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec)
+      ⋆ (Eq (bs.At (s.regs.rbx.toBitVec + 4))
+        ⋆ Eq (cP.At s.regs.rax.toBitVec) ⋆ Eq (cL.At (s.regs.rax.toBitVec + 8)) ⋆ Eq (cC.At (s.regs.rax.toBitVec + 16))
+        ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R))
+    (hguard : guard.toNat < s.regs.rsp.toNat - 8) (hsp : 8 ≤ s.regs.rsp.toNat)
+    (hlen : s.regs.rcx.toNat = 4 + 8 * n) (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat)
+    (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
+    (hav : 8 * n ≤ avail)
+    (hms : MakesliceC Heap (label "type__" + 49120).toBitVec 8 S),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0 ∧
+        st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.r14 = s.regs.r14 ∧
+        ∃ (p : BitVec 64) (fp' s28' s30' s38' s90' s98' rslot' scratch' spm' : List UInt8),
+        fp'.length = 8 ∧ s28'.length = 8 ∧ s30'.length = 8 ∧ s38'.length = 8 ∧ s90'.length = 8 ∧
+        s98'.length = 8 ∧ rslot'.length = 8 ∧ scratch'.length = S ∧ spm'.length = 24 ∧
+        (Eq ((Int.toBytes 8 p.toInt).At s.regs.rax.toBitVec)
+          ⋆ Eq ((Int.toBytes 8 (n : Int)).At (s.regs.rax.toBitVec + 8))
+          ⋆ Eq ((Int.toBytes 8 (n : Int)).At (s.regs.rax.toBitVec + 16)) ⋆ Eq (bs.At p)
+          ⋆ Heap (avail - 8 * n)
+          ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec) ⋆ Eq (spm'.At (s.regs.rsp.toBitVec - 136))
+          ⋆ Eq (fp'.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s28'.At (s.regs.rsp.toBitVec - 96))
+          ⋆ Eq (s30'.At (s.regs.rsp.toBitVec - 88)) ⋆ Eq (s38'.At (s.regs.rsp.toBitVec - 80))
+          ⋆ Eq (s90'.At (s.regs.rsp.toBitVec + 8)) ⋆ Eq (s98'.At (s.regs.rsp.toBitVec + 16))
+          ⋆ Eq (rslot'.At (s.regs.rsp.toBitVec - 144)) ⋆ Eq (scratch'.At (s.regs.rsp.toBitVec - 144 - BitVec.ofNat 64 S))
+          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+          ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec) ⋆ Eq (bs.At (s.regs.rbx.toBitVec + 4))
+          ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
+      ⟨s, Host.addrOf k⟩
+
+set_option maxHeartbeats 8000000 in
+set_option maxRecDepth 100000 in
+theorem accept [Host] : accept_stmt := by
+  intro k hk hf bs n hbs hn s ra guard fp s28 s30 s38 s90 s98 rslot cP cL cC hfp h28 h30 h38 h90 h98 hrs hcP hcL hcC R S scratch spm hsc hspm Heap avail h_mem hguard hsp hlen hcap hcap63 hav hms
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
+  simp only at h_mem hguard hsp hlen hcap hcap63 ⊢
+  have := rcx.toNat_lt_size; have := rdi.toNat_lt_size; have := rsp.toNat_lt_size
+  have := guard.toNat_lt_size; simp only [UInt64.size] at *
+  generalize hQ : (Eq (bs.At (rbx.toBitVec + 4))
+        ⋆ Eq (cP.At rax.toBitVec) ⋆ Eq (cL.At (rax.toBitVec + 8)) ⋆ Eq (cC.At (rax.toBitVec + 16))
+        ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) = Q at h_mem
+  kat hk ListU64UnmarshalSSZ 0
+  kat hk ListU64UnmarshalSSZ 1
+  kat hk ListU64UnmarshalSSZ 2
+  kat hk ListU64UnmarshalSSZ 3
+  apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk ListU64UnmarshalSSZ 4
+  split
+  case isTrue h =>
+    exfalso
+    rw [cmp_be_false _ _ _ _ (by rw [toNat_add_neg8 _ (by simpa using hsp)]; simpa using hguard)] at h
+    exact absurd h (by simp)
+  simp only [Effects.All]
+  kat hk ListU64UnmarshalSSZ 5
+  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by kaddr) (by ecancel) (by exact hfp)
+  intro m1 H1
+  simp only [Width.bytes, Width.bits] at H1
+  kunfold
+  kat hk ListU64UnmarshalSSZ 6
+  kat hk ListU64UnmarshalSSZ 7
+  kat hk ListU64UnmarshalSSZ 8
+  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s98 _ _ (by kaddr) (by ecancel) (by exact h98)
+  intro m2 H2
+  simp only [Width.bytes, Width.bits] at H2
+  kunfold
+  kat hk ListU64UnmarshalSSZ 9
+  kat hk ListU64UnmarshalSSZ 10
+  kat hk ListU64UnmarshalSSZ 11
+  split
+  case isTrue h =>
+    exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h; omega
+  simp only [Effects.All]
+  kat hk ListU64UnmarshalSSZ 12
+  apply load_step_at _ _ rbx.toBitVec _ _ [4, 0, 0, 0] _ _ (by bv_omega) (by ecancel) (by simp)
+  simp only [show Int.ofBytes [4, 0, 0, 0] = 4 by simp [Int.ofBytes]]
+  kunfold
+  kat hk ListU64UnmarshalSSZ 13
+  kat hk ListU64UnmarshalSSZ 14
+  kat hk ListU64UnmarshalSSZ 15
+  kat hk ListU64UnmarshalSSZ 16
+  split
+  case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+  simp only [Effects.All]
+  kat hk ListU64UnmarshalSSZ 17
+  kat hk ListU64UnmarshalSSZ 18
+  kat hk ListU64UnmarshalSSZ 19
+  kat hk ListU64UnmarshalSSZ 20
+  kshl64 63
+  kat hk ListU64UnmarshalSSZ 21
+  intro _
+  kat hk ListU64UnmarshalSSZ 22
+  kat hk ListU64UnmarshalSSZ 23
+  kat hk ListU64UnmarshalSSZ 24
+  intro _
+  kat hk ListU64UnmarshalSSZ 25
+  split
+  case isTrue h =>
+    exfalso; rw [and7_zero rcx.toBitVec n hn (by simpa using hlen)] at h
+    simp [CondCode.interp, StatusFlags.from_result] at h
+  simp only [Effects.All]
+  kat hk ListU64UnmarshalSSZ 26
+  kshl64 3
+  kat hk ListU64UnmarshalSSZ 27
+  kat hk ListU64UnmarshalSSZ 28
+  split
+  case isTrue h =>
+    exfalso; rw [jg16_false _ _ (by rw [shr3_toNat rcx.toBitVec n hn (by simpa using hlen)]; omega)] at h
+    simp at h
+  simp only [Effects.All]
+  generalize hdV : rbx.toBitVec + BitVec.zeroExtend 64
+      (BitVec.extractLsb' 0 32 (BitVec.sshiftRight (-(rdi.toBitVec + -4)) 63) &&& BitVec.truncate 32 4) = dV
+  generalize hnV : BitVec.ushiftRight (-4 + rcx.toBitVec) 3 = nV
+  generalize hcV : rdi.toBitVec + -4 = cV
+  kat hk ListU64UnmarshalSSZ 29
+  apply store_step_at _ _ (rsp.toBitVec + 8) _ _ _ s90 _ _ (by kaddr) (by ecancel) (by exact h90)
+  intro m3 H3
+  simp only [Width.bytes, Width.bits] at H3
+  kunfold
+  kat hk ListU64UnmarshalSSZ 30
+  apply store_step_at _ _ (rsp.toBitVec - 88) _ _ _ s30 _ _ (by kaddr) (by ecancel) (by exact h30)
+  intro m4 H4
+  simp only [Width.bytes, Width.bits] at H4
+  kunfold
+  kat hk ListU64UnmarshalSSZ 31
+  apply store_step_at _ _ (rsp.toBitVec - 80) _ _ _ s38 _ _ (by kaddr) (by ecancel) (by exact h38)
+  intro m5 H5
+  simp only [Width.bytes, Width.bits] at H5
+  kunfold
+  kat hk ListU64UnmarshalSSZ 32
+  apply store_step_at _ _ (rsp.toBitVec - 96) _ _ _ s28 _ _ (by kaddr) (by ecancel) (by exact h28)
+  intro m6 H6
+  simp only [Width.bytes, Width.bits] at H6
+  kunfold
+  kat hk ListU64UnmarshalSSZ 33
+  kat hk ListU64UnmarshalSSZ 34
+  kat hk ListU64UnmarshalSSZ 35
+  apply store_step_at _ _ (rsp.toBitVec - 144) _ _ _ rslot _ _ (call_slot _) (by ecancel) (by exact hrs)
+  intro m7 H7
+  simp only [Width.bytes, Width.bits] at H7
+  kunfold
+  rw [call_slot] at *
+  have hnN : nV.toNat = n := by rw [← hnV]; exact shr3_toNat rcx.toBitVec n hn (by simpa using hlen)
+  have hspA : rsp.toBitVec - 144 + 8 = rsp.toBitVec - 136 := by bv_omega
+  refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 35 + 1)) n avail scratch spm _ rfl (Nat.le_of_eq hnN) hnN hav
+    (by unfold maxAlloc; omega) (by omega) hsc hspm (by dsimp only; rw [hspA]; ecancel)) ?_
+  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, -, stk1, spm1, hstk1, hspm1, Hm1⟩
+  dsimp only at hpc1 hrsp1 hr141 Hm1
+  subst hpc1
+  obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
+    zmms1, flags1, mem1⟩ := d1
+  simp only at hrsp1 hr141 Hm1
+  subst hrsp1 hr141 hQ
+  rw [hspA] at Hm1
+  kat hk ListU64UnmarshalSSZ 36
+  apply load_step_at _ _ (rsp.toBitVec - 96) _ _ (Int.toBytes 8 nV.toInt) _ _ (by kaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk ListU64UnmarshalSSZ 37
+  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by kaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk ListU64UnmarshalSSZ 38
+  apply store_step_at _ _ (rax.toBitVec + 8) _ _ _ cL _ _ (by kaddr) (by ecancel) (by exact hcL)
+  intro m8 H8
+  simp only [Width.bytes, Width.bits] at H8
+  kunfold
+  kat hk ListU64UnmarshalSSZ 39
+  apply store_step_at _ _ (rax.toBitVec + 16) _ _ _ cC _ _ (by kaddr) (by ecancel) (by exact hcC)
+  intro m9 H9
+  simp only [Width.bytes, Width.bits] at H9
+  kunfold
+  kat hk ListU64UnmarshalSSZ 40
+  apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
+  simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
+  kunfold
+  kat hk ListU64UnmarshalSSZ 41
+  split
+  case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+  simp only [Effects.All]
+  klabel hk hf ListU64UnmarshalSSZ 46
+  kat hk ListU64UnmarshalSSZ 46
+  kat hk ListU64UnmarshalSSZ 47
+  apply store_step_at _ _ (rax.toBitVec) _ _ _ cP _ _ (by kaddr) (by ecancel) (by exact hcP)
+  intro m10 H10
+  simp only [Width.bytes, Width.bits] at H10
+  kunfold
+  kat hk ListU64UnmarshalSSZ 48
+  apply load_step_at _ _ (rsp.toBitVec - 88) _ _ (Int.toBytes 8 cV.toInt) _ _ (by kaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk ListU64UnmarshalSSZ 49
+  apply load_step_at _ _ (rsp.toBitVec - 80) _ _ (Int.toBytes 8 dV.toInt) _ _ (by kaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk ListU64UnmarshalSSZ 50
+  intro _
+  kat hk ListU64UnmarshalSSZ 51
+  klabel hk hf ListU64UnmarshalSSZ 148
+  have hbsd : bs.At (rbx.toBitVec + 4) = bs.At dV := by
+    rcases Nat.eq_zero_or_pos n with h0 | h0
+    · subst h0; have hb0 : bs = [] := List.length_eq_zero_iff.mp (by simpa using hbs)
+      subst hb0; simp [List.At]
+    · rw [← hdV, dptr_buf rbx rdi n h0 (by simpa using hlen ▸ hcap) hcap63]
+  rw [hbsd] at H10
+  have hcN : 8 * n ≤ cV.toNat := by rw [← hcV]; exact cap_sub4 rdi n (by rw [← hlen]; exact hcap)
+  refine eventually_trans _ _ _ _ (loop k hk hf bs n hbs hn dV rax.toBitVec rax1.toBitVec nV hnN _ _ _ _ n 0 _
+    (by omega) (by simp) hnN hcN rfl rfl rfl rfl rfl (by simp only [Nat.mul_zero, List.take_zero, List.nil_append, Nat.sub_zero]; ecancel)) ?_
+  rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, -, hr142, Hm2⟩
+  dsimp only at hpc2 hrsp2 Hm2
+  subst hpc2
+  obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,
+    zmms2, flags2, mem2⟩ := d2
+  simp only at hrsp2 hr142 Hm2
+  subst hrsp2 hr142
+  kat hk ListU64UnmarshalSSZ 167
+  kat hk ListU64UnmarshalSSZ 168
+  intro _
+  kat hk ListU64UnmarshalSSZ 169
+  intro _
+  kat hk ListU64UnmarshalSSZ 170
+  kat hk ListU64UnmarshalSSZ 171
+  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (pop_slot _) (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk ListU64UnmarshalSSZ 172
+  rw [pop_slot, ret_slot]
+  apply load_step _ _ _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  apply Eventually.done
+  have hnI : nV.toInt = (n : Int) := by rw [BitVec.toInt_eq_toNat_of_lt (by omega), hnN]
+  rw [hnI] at Hm2
+  refine ⟨rfl, ?_, ?_, ?_, rfl, rax1.toBitVec, Int.toBytes 8 rbp.toBitVec.toInt, Int.toBytes 8 (n : Int),
+    Int.toBytes 8 cV.toInt, Int.toBytes 8 dV.toInt, Int.toBytes 8 rax.toBitVec.toInt, Int.toBytes 8 rbx.toBitVec.toInt,
+    Int.toBytes 8 (Host.addrOf (k + 35 + 1)).toBitVec.toInt, stk1, spm1,
+    ?l1, ?l2, ?l3, ?l4, ?l5, ?l6, ?l7, ?l8, hspm1, ?mem⟩
+  · apply UInt64.toBitVec_inj.mp; simp
+  · apply UInt64.toBitVec_inj.mp; simp
+  · apply UInt64.toBitVec_inj.mp; simp
+  case mem =>
+    dsimp only
+    simp only [Std.ExtHashMap.sep_emp, Width.bits, Width.bytes] at Hm2
+    rw [hbsd]
+    ecancel
+  all_goals first | exact hstk1 | simp [Int.toBytes_length]
 
 def reject_short_stmt [Host] : Prop :=
   ∀ (k : Nat) (hk : ListU64UnmarshalSSZ.IsInfixAt Host.prog k)

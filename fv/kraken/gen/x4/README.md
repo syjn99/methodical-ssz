@@ -46,7 +46,9 @@ fmt.errorf 경로의 산술 보조정리(`ar_*`)는 생성한다: 프레임 크�
 경로 값(실패 검사의 점프 대상, 인자 배열 오프셋, 두 호출 지점, 오류 전역, 형식 문자열, `int` 타입 단어)은 지시 목록에서 읽는다.
 형식 문자열과 타입 단어는 include 어댑터로 API 항목(`luFmtMis`, `luFmtTooBig`, `intType`)에 묶는다. 항목이 없으면 생성기가 거부한다.
 계약 적용 블록(`ConvT64C`, `FmtErrorfDWC`)은 손 증명 글에 값을 넣은 것이다.
-측정: 생성 전술 줄 중 `Fk/LuRejectCall.lean`에 글자 그대로 있는 줄은 정렬 191/217, 한도 초과 193/221이다(`attempts-listu64.json`의 `verbatim_measure`). 이 틀은 8바이트 원소와 한도 16만 받는다. 다른 값은 분류된 거부다.
+측정: 생성 전술 줄 중 손 증명에 글자 그대로 있는 줄은 정렬 191/217, 한도 초과 193/221, accept 205/207, `loop_iter` 80/80이다(`attempts-listu64.json`의 `verbatim_measure`).
+accept와 루프는 손 증명과 거의 같은 글이다. 생성기가 하는 일은 지시 번호, 프레임 오프셋, 호출 지점, 타입 단어를 코드에서 읽고 맞지 않는 모양을 거부하는 것이다.
+증인 `WitLuAcc`는 `gen/x4/witness.py --runs`가 `Fk/Witness.lean`의 `lu_accept_runs`를 생성 정리로 다시 겨눈 것이다. 그 손 모듈은 구체 Host, 메모리, 계약 인스턴스를 위해서만 가져온다. 이 틀은 8바이트 원소와 한도 16만 받는다. 다른 값은 분류된 거부다.
 
 | 의무 | 상태 |
 | --- | --- |
@@ -55,4 +57,5 @@ fmt.errorf 경로의 산술 보조정리(`ar_*`)는 생성한다: 프레임 크�
 | reject r2 첫 오프셋 | 생성 증명 통과(시도 1), 문장 SAME(`lu_reject_offset_main`) |
 | reject r3 정렬 | 생성 증명 통과(시도 1), 문장 SAME(`lu_reject_misaligned_main`). 변이 `lu-mis-test` |
 | reject r4 한도 초과 | 생성 증명 통과(시도 1), 문장 SAME(`lu_reject_toobig_main`). 변이 `lu-big-cmp` |
-| accept(0·1·16), marshal(growslice), 조합 | 시도하지 않음(루프 틀 필요) |
+| accept(0·1·16) | 생성 증명 통과(시도 1), 문장 SAME(`lu_accept_main`). 루프 보조정리 `loop_iter`, `loop_exit`, `loop`를 모듈 안에 생성한다(`Fk/LuLoop.lean`의 틀). 증인 `Gen1cX4.WitLuAcc`(n = 0, 1, 16). 변이 `lu-acc-store` |
+| marshal(growslice), 조합 | 시도하지 않음 |

@@ -1,8 +1,65 @@
-{"imports": ["Gen1cX4.ListU64", "Fk.LuMarshal", "Fk.LuReject", "Fk.LuRejectCall"],
- "pairs": [["Gen1cX4.ListU64.size_stmt", "lu_size_main", "SAME", "size"],
-           ["Gen1cX4.ListU64.reject_short_stmt", "lu_reject_short_main", "SAME", "reject size-short"],
-           ["Gen1cX4.ListU64.reject_offset_stmt", "lu_reject_offset_main", "SAME", "reject offset-first"],
-           ["Gen1cX4.ListU64.reject_misaligned_stmt", "lu_reject_misaligned_main", "SAME", "reject list-misaligned (fmt.errorf)"],
-           ["Gen1cX4.ListU64.reject_toobig_stmt", "lu_reject_toobig_main", "SAME", "reject list-too-big (fmt.errorf)"],
-           ["Gen1cX4.ListU64.reject_short_stmt", "lu_reject_offset_main", "DIFF", "control"],
-           ["Gen1cX4.ListU64.reject_toobig_stmt", "lu_reject_misaligned_main", "DIFF", "control (call paths)"]]}
+{
+ "imports": [
+  "Gen1cX4.ListU64",
+  "Fk.LuMarshal",
+  "Fk.LuReject",
+  "Fk.LuRejectCall",
+  "Fk.LuAccept"
+ ],
+ "pairs": [
+  [
+   "Gen1cX4.ListU64.size_stmt",
+   "lu_size_main",
+   "SAME",
+   "size"
+  ],
+  [
+   "Gen1cX4.ListU64.accept_stmt",
+   "lu_accept_main",
+   "SAME",
+   "accept (makeslice + element loop)"
+  ],
+  [
+   "Gen1cX4.ListU64.reject_short_stmt",
+   "lu_reject_short_main",
+   "SAME",
+   "reject size-short"
+  ],
+  [
+   "Gen1cX4.ListU64.reject_offset_stmt",
+   "lu_reject_offset_main",
+   "SAME",
+   "reject offset-first"
+  ],
+  [
+   "Gen1cX4.ListU64.reject_misaligned_stmt",
+   "lu_reject_misaligned_main",
+   "SAME",
+   "reject list-misaligned (fmt.errorf)"
+  ],
+  [
+   "Gen1cX4.ListU64.reject_toobig_stmt",
+   "lu_reject_toobig_main",
+   "SAME",
+   "reject list-too-big (fmt.errorf)"
+  ],
+  [
+   "Gen1cX4.ListU64.reject_short_stmt",
+   "lu_reject_offset_main",
+   "DIFF",
+   "control"
+  ],
+  [
+   "Gen1cX4.ListU64.reject_toobig_stmt",
+   "lu_reject_misaligned_main",
+   "DIFF",
+   "control (call paths)"
+  ],
+  [
+   "Gen1cX4.ListU64.accept_stmt",
+   "lu_reject_short_main",
+   "DIFF",
+   "control (accept vs reject)"
+  ]
+ ]
+}

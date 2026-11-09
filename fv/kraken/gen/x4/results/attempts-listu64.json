@@ -57,11 +57,6 @@
    "hand": "lu_reject_toobig_main",
    "negative": "lu-big-cmp (logs/88)"
   },
-  "accept (0, 1, 16)": {
-   "status": "not attempted",
-   "hand": "lu_accept_main",
-   "why": "makeslice call and the element loop (Fk/LuLoop.lean invariant); needs a loop template"
-  },
   "marshal (growslice site)": {
    "status": "not attempted",
    "hand": "lu_marshal_main, lum_grow_site",
@@ -71,6 +66,19 @@
    "status": "not attempted",
    "hand": "lu_unmarshal_then_marshal",
    "why": "needs the generated accept and marshal"
+  },
+  "accept (0, 1, 16)": {
+   "status": "proved (generated), SAME",
+   "attempts": [
+    {
+     "log": "run logs/89",
+     "result": "pass"
+    }
+   ],
+   "hand": "lu_accept_main",
+   "loop": "loop_iter, loop_exit, loop generated into Gen1cX4.ListU64 from the loop directives (pattern of Fk/LuLoop.lean)",
+   "witness": "Gen1cX4.WitLuAcc.lu_accept_runs (gen/x4/witness.py --runs from Fk.Witness.lu_accept_runs; examples n = 0, 1, 16) built in logs/90",
+   "negative": "lu-acc-store (logs/90)"
   }
  },
  "verbatim_measure": {
@@ -83,6 +91,22 @@
    "reject_toobig": {
     "tactic_lines": 221,
     "verbatim_in_Fk_LuRejectCall": 193
+   },
+   "accept": {
+    "tactic_lines": 207,
+    "verbatim_in_Fk_LuAccept_LuLoop": 205
+   },
+   "loop_iter": {
+    "tactic_lines": 80,
+    "verbatim_in_Fk_LuAccept_LuLoop": 80
+   },
+   "loop_exit": {
+    "tactic_lines": 16,
+    "verbatim_in_Fk_LuAccept_LuLoop": 16
+   },
+   "loop": {
+    "tactic_lines": 23,
+    "verbatim_in_Fk_LuAccept_LuLoop": 20
    }
   }
  }
