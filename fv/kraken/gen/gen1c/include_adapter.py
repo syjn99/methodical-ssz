@@ -16,6 +16,27 @@ DATA_DIR_IN_REPO = "fv/kraken/link/out/data/"   # where fix3 keeps data files (w
 LEAN_NAMESPACE = "Fk.Data"
 LEAN_INCLUDE = "data_include {id}"              # Lean command, Fk/Include.lean (fix3)
 
+# Labels are conv.py-cleaned symbol names (API data_files.format).
+RODATA_SYMBOL = "go:string.*"                   # ELF group symbol of Go string data
+RODATA_LABEL = "go_string._"                    # its cleaned label in .S files and data files
+ERR_GLOBAL_LABEL_RE = r"\b(ssz\.Err\w+)(?:\+\d+)?\(%rip\)"   # error-global references in a .S file
+RODATA_REF_RE = r"go_string\._\+(\d+)\(%rip\)"            # rodata offsets referenced in a .S file
+
+
+def err_global_id(label):
+    """API id of an error global: `ssz.ErrSize` -> `ErrSize` (one id per global, address only)."""
+    return label.split(".", 1)[1]
+
+
+def rodata_id(gen_id, label, off, length, api=None):
+    """The API item id for a rodata range, if the API table lists the same (label, offset, length);
+    otherwise the generator's own id. Returns (id, api_id or None)."""
+    api = api or check_api()
+    for it in api["items"]:
+        if it.get("label") == label and it.get("offset") == off and it.get("length") == length:
+            return it["id"], it["id"]
+    return gen_id, None
+
 
 def check_api(path=SNAPSHOT):
     """Fail loudly if the given API file is not the version this adapter speaks."""

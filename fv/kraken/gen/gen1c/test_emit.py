@@ -83,9 +83,10 @@ def prepare(work):
     res["include_api_version"] = include_adapter.API_VERSION
     cross = []
     for it in api["items"]:
-        if it.get("label") != "go_string._":
+        if it.get("label") != include_adapter.RODATA_LABEL:
             continue
-        hit = [k for k, v in m["data_items"].items() if v.get("off") == it["offset"] and v.get("length") == it["length"]]
+        hit = [k for k, v in m["data_items"].items() if v.get("off") == it["offset"] and v.get("length") == it["length"]
+               and v.get("api_id") == it["id"]]
         cross.append({"api_id": it["id"], "offset": it["offset"], "length": it["length"], "emitted": hit})
     used = [c for c in cross if c["emitted"]]
     res["data_cross_check"] = cross

@@ -167,7 +167,7 @@ def main():
     gof = go_functions(gofiles)
     e = elfmod.Elf(a.elf)
     nm = elfmod.read_nm(a.nm)
-    gs_addr, gs_size = elfmod.extent(nm, "go:string.*")
+    gs_addr, gs_size = elfmod.extent(nm, inc.RODATA_SYMBOL)
     gs = e.read(gs_addr, gs_size)
     descs = {}
     for fn in sorted(os.listdir(a.desc_dir)):
@@ -214,23 +214,25 @@ def main():
             for k, lit in enumerate(dict.fromkeys(lits)):
                 bs = go_string_literal(lit)
                 hits = [i for i in range(len(gs)) if gs.startswith(bs, i)]
-                refs = sorted({int(x) for x in re.findall(r"go_string\._\+(\d+)\(%rip\)", stext)})
+                refs = sorted({int(x) for x in re.findall(inc.RODATA_REF_RE, stext)})
                 ref_hits = [h for h in hits if h in refs]
                 iid = f"{t}_{m}_fmt{k}"
                 rec = {"kind": "rodata-string", "literal": lit, "length": len(bs), "occurrences": hits,
                        "referenced_by_code": ref_hits, "function": m}
                 if len(ref_hits) == 1 or (len(hits) == 1 and not ref_hits):
                     off = (ref_hits or hits)[0]
-                    rec["label"], rec["off"] = "go_string._", off
-                    open(os.path.join(out, "data", inc.file_name(iid)), "w").write(inc.render(iid, "go_string._", off, bs))
+                    rec["label"], rec["off"] = inc.RODATA_LABEL, off
+                    rec["gen_id"] = iid
+                    iid, rec["api_id"] = inc.rodata_id(iid, inc.RODATA_LABEL, off, len(bs), api)
+                    open(os.path.join(out, "data", inc.file_name(iid)), "w").write(inc.render(iid, inc.RODATA_LABEL, off, bs))
                     rec["file"] = inc.file_name(iid)
                     rec["lean"] = inc.lean_premise(iid)
                 else:
                     rec["error"] = "literal not located uniquely in go:string.*"
                 manifest["data_items"][iid] = rec
                 items.append(iid)
-            for g in sorted(set(re.findall(r"\b(ssz\.Err\w+)(?:\+\d+)?\(%rip\)", stext))):
-                iid = g.split(".", 1)[1]
+            for g in sorted(set(re.findall(inc.ERR_GLOBAL_LABEL_RE, stext))):
+                iid = inc.err_global_id(g)
                 if iid not in manifest["data_items"]:
                     open(os.path.join(out, "data", inc.file_name(iid)), "w").write(inc.render(iid, g, 0))
                     manifest["data_items"][iid] = {"kind": "address only", "label": g, "off": 0,

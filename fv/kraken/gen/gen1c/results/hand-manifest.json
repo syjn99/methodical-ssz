@@ -1,8 +1,8 @@
 {
  "schema": "fvphase1c.gen-manifest/1",
- "include_api_version": 1,
+ "include_api_version": 2,
  "include_api_status": "committed",
- "include_api_fix3_commit": "427708eeaf00c77a6dac4faf4c92fd8f7a8c88ff",
+ "include_api_fix3_commit": "b6c32c3",
  "inputs": {
   "elf": "9c850c97066b9d33d6e4c5ef0a385dcbe2c984ae774a527cdedd18d2b72ac501",
   "nm": "9e6c492bbe9a5cba422e785c3f0392291e7b5a25dca99c0a187bb4955684a597",
@@ -10,7 +10,7 @@
    "types.ssz.go": "f54069057d0c46abe32b6aeda173ce102fb3c2d874ae0fc9547183089cc1fa1a",
    "types1b.ssz.go": "31d4226fc5922b74a7e980cc011711b068977fb3a7c8aa5f23982cdf99eaff54"
   },
-  "theorems": "7b7a24f55047e3137c8745d27eec21d494fd1749cb26e277b71941dc6e10a479"
+  "theorems": "0d9b70760d99f76d838994451f15790f7da06b0acc12519e558e3eac4a1348d1"
  },
  "types": {
   "Scalars": {
@@ -25,7 +25,7 @@
     "ErrInvalidSerialization",
     "ErrSize"
    ],
-   "obligations": 10,
+   "obligations": 11,
    "templates": [
     "size_stmt"
    ]
@@ -42,7 +42,7 @@
     "ErrBytesLength",
     "ErrSize"
    ],
-   "obligations": 10,
+   "obligations": 11,
    "templates": [
     "size_stmt"
    ]
@@ -60,10 +60,10 @@
     "ErrInvalidVariableOffset",
     "ErrListTooBig",
     "ErrSize",
-    "ListU64_UnmarshalSSZ_fmt0",
-    "ListU64_UnmarshalSSZ_fmt1"
+    "luFmtMis",
+    "luFmtTooBig"
    ],
-   "obligations": 15,
+   "obligations": 16,
    "templates": []
   },
   "BitVec": {
@@ -75,12 +75,11 @@
     "witness.json"
    ],
    "data_items": [
-    "BitVec_MarshalSSZTo_fmt0",
-    "BitVec_UnmarshalSSZ_fmt0",
     "ErrBytesLength",
-    "ErrSize"
+    "ErrSize",
+    "bvFmtJ"
    ],
-   "obligations": 12,
+   "obligations": 13,
    "templates": [
     "size_stmt"
    ]
@@ -102,7 +101,7 @@
     "Nested_UnmarshalSSZ_fmt0",
     "Nested_UnmarshalSSZ_fmt1"
    ],
-   "obligations": 14,
+   "obligations": 15,
    "templates": []
   },
   "ListC": {
@@ -118,15 +117,15 @@
     "ErrListTooBig",
     "ErrSize",
     "ListC_MarshalSSZTo_fmt0",
-    "ListC_UnmarshalSSZ_fmt0",
     "ListC_UnmarshalSSZ_fmt1",
     "ListC_UnmarshalSSZ_fmt2",
-    "ListC_UnmarshalSSZ_fmt3",
     "ListC_UnmarshalSSZ_fmt4",
-    "ListC_UnmarshalSSZ_fmt5",
-    "ListC_UnmarshalSSZ_fmt6"
+    "ListC_UnmarshalSSZ_fmt6",
+    "lcFmtOrder",
+    "lcFmtShort",
+    "lcFmtZero"
    ],
-   "obligations": 27,
+   "obligations": 28,
    "templates": []
   },
   "BitL": {
@@ -138,12 +137,11 @@
     "witness.json"
    ],
    "data_items": [
-    "BitL_MarshalSSZTo_fmt0",
-    "BitL_UnmarshalSSZ_fmt0",
     "ErrInvalidVariableOffset",
-    "ErrSize"
+    "ErrSize",
+    "blFmtB"
    ],
-   "obligations": 13,
+   "obligations": 14,
    "templates": []
   },
   "Checkpoint": {
@@ -158,7 +156,7 @@
     "ErrBytesLength",
     "ErrSize"
    ],
-   "obligations": 9,
+   "obligations": 10,
    "templates": [
     "size_stmt"
    ]
@@ -179,7 +177,7 @@
     "ErrBytesLength",
     "ErrSize"
    ],
-   "obligations": 13,
+   "obligations": 14,
    "templates": [
     "size_stmt"
    ]
@@ -207,7 +205,7 @@
    "file": "ErrBytesLength.data",
    "lean": "Fk.Data.ErrBytesLength_addr"
   },
-  "ListU64_UnmarshalSSZ_fmt0": {
+  "luFmtMis": {
    "kind": "rodata-string",
    "literal": "\"misaligned bytes: c.L length is %d, which is not a multiple of 8: %w\"",
    "length": 68,
@@ -220,10 +218,12 @@
    "function": "UnmarshalSSZ",
    "label": "go_string._",
    "off": 42646,
-   "file": "ListU64_UnmarshalSSZ_fmt0.data",
-   "lean": "Eq (Fk.Data.ListU64_UnmarshalSSZ_fmt0.At Fk.Data.ListU64_UnmarshalSSZ_fmt0_addr)"
+   "gen_id": "ListU64_UnmarshalSSZ_fmt0",
+   "api_id": "luFmtMis",
+   "file": "luFmtMis.data",
+   "lean": "Eq (Fk.Data.luFmtMis.At Fk.Data.luFmtMis_addr)"
   },
-  "ListU64_UnmarshalSSZ_fmt1": {
+  "luFmtTooBig": {
    "kind": "rodata-string",
    "literal": "\"ssz-max exceeded: c.L has %d elements, ssz-max is 16: %w\"",
    "length": 56,
@@ -236,8 +236,10 @@
    "function": "UnmarshalSSZ",
    "label": "go_string._",
    "off": 40290,
-   "file": "ListU64_UnmarshalSSZ_fmt1.data",
-   "lean": "Eq (Fk.Data.ListU64_UnmarshalSSZ_fmt1.At Fk.Data.ListU64_UnmarshalSSZ_fmt1_addr)"
+   "gen_id": "ListU64_UnmarshalSSZ_fmt1",
+   "api_id": "luFmtTooBig",
+   "file": "luFmtTooBig.data",
+   "lean": "Eq (Fk.Data.luFmtTooBig.At Fk.Data.luFmtTooBig_addr)"
   },
   "ErrIncorrectListSize": {
    "kind": "address only",
@@ -260,23 +262,7 @@
    "file": "ErrListTooBig.data",
    "lean": "Fk.Data.ErrListTooBig_addr"
   },
-  "BitVec_UnmarshalSSZ_fmt0": {
-   "kind": "rodata-string",
-   "literal": "\"J: %w\"",
-   "length": 5,
-   "occurrences": [
-    511
-   ],
-   "referenced_by_code": [
-    511
-   ],
-   "function": "UnmarshalSSZ",
-   "label": "go_string._",
-   "off": 511,
-   "file": "BitVec_UnmarshalSSZ_fmt0.data",
-   "lean": "Eq (Fk.Data.BitVec_UnmarshalSSZ_fmt0.At Fk.Data.BitVec_UnmarshalSSZ_fmt0_addr)"
-  },
-  "BitVec_MarshalSSZTo_fmt0": {
+  "bvFmtJ": {
    "kind": "rodata-string",
    "literal": "\"J: %w\"",
    "length": 5,
@@ -289,8 +275,10 @@
    "function": "MarshalSSZTo",
    "label": "go_string._",
    "off": 511,
-   "file": "BitVec_MarshalSSZTo_fmt0.data",
-   "lean": "Eq (Fk.Data.BitVec_MarshalSSZTo_fmt0.At Fk.Data.BitVec_MarshalSSZTo_fmt0_addr)"
+   "gen_id": "BitVec_MarshalSSZTo_fmt0",
+   "api_id": "bvFmtJ",
+   "file": "bvFmtJ.data",
+   "lean": "Eq (Fk.Data.bvFmtJ.At Fk.Data.bvFmtJ_addr)"
   },
   "Nested_UnmarshalSSZ_fmt0": {
    "kind": "rodata-string",
@@ -305,6 +293,8 @@
    "function": "UnmarshalSSZ",
    "label": "go_string._",
    "off": 516,
+   "gen_id": "Nested_UnmarshalSSZ_fmt0",
+   "api_id": null,
    "file": "Nested_UnmarshalSSZ_fmt0.data",
    "lean": "Eq (Fk.Data.Nested_UnmarshalSSZ_fmt0.At Fk.Data.Nested_UnmarshalSSZ_fmt0_addr)"
   },
@@ -321,6 +311,8 @@
    "function": "UnmarshalSSZ",
    "label": "go_string._",
    "off": 521,
+   "gen_id": "Nested_UnmarshalSSZ_fmt1",
+   "api_id": null,
    "file": "Nested_UnmarshalSSZ_fmt1.data",
    "lean": "Eq (Fk.Data.Nested_UnmarshalSSZ_fmt1.At Fk.Data.Nested_UnmarshalSSZ_fmt1_addr)"
   },
@@ -335,6 +327,8 @@
    "function": "MarshalSSZTo",
    "label": "go_string._",
    "off": 516,
+   "gen_id": "Nested_MarshalSSZTo_fmt0",
+   "api_id": null,
    "file": "Nested_MarshalSSZTo_fmt0.data",
    "lean": "Eq (Fk.Data.Nested_MarshalSSZTo_fmt0.At Fk.Data.Nested_MarshalSSZTo_fmt0_addr)"
   },
@@ -351,10 +345,12 @@
    "function": "MarshalSSZTo",
    "label": "go_string._",
    "off": 521,
+   "gen_id": "Nested_MarshalSSZTo_fmt1",
+   "api_id": null,
    "file": "Nested_MarshalSSZTo_fmt1.data",
    "lean": "Eq (Fk.Data.Nested_MarshalSSZTo_fmt1.At Fk.Data.Nested_MarshalSSZTo_fmt1_addr)"
   },
-  "ListC_UnmarshalSSZ_fmt0": {
+  "lcFmtZero": {
    "kind": "rodata-string",
    "literal": "\"encountered invalid offset of 0 when decoding c.Items\"",
    "length": 53,
@@ -367,8 +363,10 @@
    "function": "UnmarshalSSZ",
    "label": "go_string._",
    "off": 39370,
-   "file": "ListC_UnmarshalSSZ_fmt0.data",
-   "lean": "Eq (Fk.Data.ListC_UnmarshalSSZ_fmt0.At Fk.Data.ListC_UnmarshalSSZ_fmt0_addr)"
+   "gen_id": "ListC_UnmarshalSSZ_fmt0",
+   "api_id": "lcFmtZero",
+   "file": "lcFmtZero.data",
+   "lean": "Eq (Fk.Data.lcFmtZero.At Fk.Data.lcFmtZero_addr)"
   },
   "ListC_UnmarshalSSZ_fmt1": {
    "kind": "rodata-string",
@@ -383,6 +381,8 @@
    "function": "UnmarshalSSZ",
    "label": "go_string._",
    "off": 44051,
+   "gen_id": "ListC_UnmarshalSSZ_fmt1",
+   "api_id": null,
    "file": "ListC_UnmarshalSSZ_fmt1.data",
    "lean": "Eq (Fk.Data.ListC_UnmarshalSSZ_fmt1.At Fk.Data.ListC_UnmarshalSSZ_fmt1_addr)"
   },
@@ -399,10 +399,12 @@
    "function": "UnmarshalSSZ",
    "label": "go_string._",
    "off": 40970,
+   "gen_id": "ListC_UnmarshalSSZ_fmt2",
+   "api_id": null,
    "file": "ListC_UnmarshalSSZ_fmt2.data",
    "lean": "Eq (Fk.Data.ListC_UnmarshalSSZ_fmt2.At Fk.Data.ListC_UnmarshalSSZ_fmt2_addr)"
   },
-  "ListC_UnmarshalSSZ_fmt3": {
+  "lcFmtShort": {
    "kind": "rodata-string",
    "literal": "\"list bytes too short to contain an offset when decoding c.Items\"",
    "length": 63,
@@ -415,8 +417,10 @@
    "function": "UnmarshalSSZ",
    "label": "go_string._",
    "off": 42000,
-   "file": "ListC_UnmarshalSSZ_fmt3.data",
-   "lean": "Eq (Fk.Data.ListC_UnmarshalSSZ_fmt3.At Fk.Data.ListC_UnmarshalSSZ_fmt3_addr)"
+   "gen_id": "ListC_UnmarshalSSZ_fmt3",
+   "api_id": "lcFmtShort",
+   "file": "lcFmtShort.data",
+   "lean": "Eq (Fk.Data.lcFmtShort.At Fk.Data.lcFmtShort_addr)"
   },
   "ListC_UnmarshalSSZ_fmt4": {
    "kind": "rodata-string",
@@ -431,10 +435,12 @@
    "function": "UnmarshalSSZ",
    "label": "go_string._",
    "off": 41506,
+   "gen_id": "ListC_UnmarshalSSZ_fmt4",
+   "api_id": null,
    "file": "ListC_UnmarshalSSZ_fmt4.data",
    "lean": "Eq (Fk.Data.ListC_UnmarshalSSZ_fmt4.At Fk.Data.ListC_UnmarshalSSZ_fmt4_addr)"
   },
-  "ListC_UnmarshalSSZ_fmt5": {
+  "lcFmtOrder": {
    "kind": "rodata-string",
    "literal": "\"offset %d is not greater than start offset %d when decoding c.Items\"",
    "length": 67,
@@ -447,8 +453,10 @@
    "function": "UnmarshalSSZ",
    "label": "go_string._",
    "off": 42579,
-   "file": "ListC_UnmarshalSSZ_fmt5.data",
-   "lean": "Eq (Fk.Data.ListC_UnmarshalSSZ_fmt5.At Fk.Data.ListC_UnmarshalSSZ_fmt5_addr)"
+   "gen_id": "ListC_UnmarshalSSZ_fmt5",
+   "api_id": "lcFmtOrder",
+   "file": "lcFmtOrder.data",
+   "lean": "Eq (Fk.Data.lcFmtOrder.At Fk.Data.lcFmtOrder_addr)"
   },
   "ListC_UnmarshalSSZ_fmt6": {
    "kind": "rodata-string",
@@ -463,6 +471,8 @@
    "function": "UnmarshalSSZ",
    "label": "go_string._",
    "off": 2158,
+   "gen_id": "ListC_UnmarshalSSZ_fmt6",
+   "api_id": null,
    "file": "ListC_UnmarshalSSZ_fmt6.data",
    "lean": "Eq (Fk.Data.ListC_UnmarshalSSZ_fmt6.At Fk.Data.ListC_UnmarshalSSZ_fmt6_addr)"
   },
@@ -479,26 +489,12 @@
    "function": "MarshalSSZTo",
    "label": "go_string._",
    "off": 2158,
+   "gen_id": "ListC_MarshalSSZTo_fmt0",
+   "api_id": null,
    "file": "ListC_MarshalSSZTo_fmt0.data",
    "lean": "Eq (Fk.Data.ListC_MarshalSSZTo_fmt0.At Fk.Data.ListC_MarshalSSZTo_fmt0_addr)"
   },
-  "BitL_UnmarshalSSZ_fmt0": {
-   "kind": "rodata-string",
-   "literal": "\"B: %w\"",
-   "length": 5,
-   "occurrences": [
-    526
-   ],
-   "referenced_by_code": [
-    526
-   ],
-   "function": "UnmarshalSSZ",
-   "label": "go_string._",
-   "off": 526,
-   "file": "BitL_UnmarshalSSZ_fmt0.data",
-   "lean": "Eq (Fk.Data.BitL_UnmarshalSSZ_fmt0.At Fk.Data.BitL_UnmarshalSSZ_fmt0_addr)"
-  },
-  "BitL_MarshalSSZTo_fmt0": {
+  "blFmtB": {
    "kind": "rodata-string",
    "literal": "\"B: %w\"",
    "length": 5,
@@ -511,8 +507,10 @@
    "function": "MarshalSSZTo",
    "label": "go_string._",
    "off": 526,
-   "file": "BitL_MarshalSSZTo_fmt0.data",
-   "lean": "Eq (Fk.Data.BitL_MarshalSSZTo_fmt0.At Fk.Data.BitL_MarshalSSZTo_fmt0_addr)"
+   "gen_id": "BitL_MarshalSSZTo_fmt0",
+   "api_id": "blFmtB",
+   "file": "blFmtB.data",
+   "lean": "Eq (Fk.Data.blFmtB.At Fk.Data.blFmtB_addr)"
   },
   "AttestationData_UnmarshalSSZ_fmt0": {
    "kind": "rodata-string",
@@ -525,6 +523,8 @@
    "function": "UnmarshalSSZ",
    "label": "go_string._",
    "off": 3151,
+   "gen_id": "AttestationData_UnmarshalSSZ_fmt0",
+   "api_id": null,
    "file": "AttestationData_UnmarshalSSZ_fmt0.data",
    "lean": "Eq (Fk.Data.AttestationData_UnmarshalSSZ_fmt0.At Fk.Data.AttestationData_UnmarshalSSZ_fmt0_addr)"
   },
@@ -539,6 +539,8 @@
    "function": "UnmarshalSSZ",
    "label": "go_string._",
    "off": 3161,
+   "gen_id": "AttestationData_UnmarshalSSZ_fmt1",
+   "api_id": null,
    "file": "AttestationData_UnmarshalSSZ_fmt1.data",
    "lean": "Eq (Fk.Data.AttestationData_UnmarshalSSZ_fmt1.At Fk.Data.AttestationData_UnmarshalSSZ_fmt1_addr)"
   },
@@ -555,6 +557,8 @@
    "function": "MarshalSSZTo",
    "label": "go_string._",
    "off": 3151,
+   "gen_id": "AttestationData_MarshalSSZTo_fmt0",
+   "api_id": null,
    "file": "AttestationData_MarshalSSZTo_fmt0.data",
    "lean": "Eq (Fk.Data.AttestationData_MarshalSSZTo_fmt0.At Fk.Data.AttestationData_MarshalSSZTo_fmt0_addr)"
   },
@@ -571,6 +575,8 @@
    "function": "MarshalSSZTo",
    "label": "go_string._",
    "off": 3161,
+   "gen_id": "AttestationData_MarshalSSZTo_fmt1",
+   "api_id": null,
    "file": "AttestationData_MarshalSSZTo_fmt1.data",
    "lean": "Eq (Fk.Data.AttestationData_MarshalSSZTo_fmt1.At Fk.Data.AttestationData_MarshalSSZTo_fmt1_addr)"
   }
