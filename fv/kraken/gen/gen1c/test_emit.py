@@ -23,7 +23,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 KRAKEN = os.path.normpath(os.path.join(HERE, "..", ".."))
 HAND = ["Scalars", "FixedVec", "ListU64", "BitVec", "Nested", "ListC", "BitL", "Checkpoint", "AttestationData"]
-FROZEN = {"THEOREMS.json": "7b7a24f55047e3137c8745d27eec21d494fd1749cb26e277b71941dc6e10a479",
+FROZEN = {"THEOREMS.json": "0d9b70760d99f76d838994451f15790f7da06b0acc12519e558e3eac4a1348d1",
           "ASSUMPTIONS.json": "84ca497180efbc1c091289b453796fff1649378f71f1bdc9c35159202795385c"}
 # (emitted statement, hand theorem, expected, explanation)
 COMPARE = [

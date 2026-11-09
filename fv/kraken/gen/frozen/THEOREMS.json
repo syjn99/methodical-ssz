@@ -18,6 +18,13 @@
    "hand_example": "lu_reject_toobig_main"
   },
   {
+   "id": "reject_complete",
+   "function": "UnmarshalSSZ",
+   "statement": "decoder soundness (machine code accepts => EthLib accepts): every input that the EthLib decoder rejects reaches some error return site (the path conditions of the reject sites cover the EthLib reject set), so the machine code returns a non-nil error on it. Together with accept this gives accepted set of the machine code = accepted set of EthLib (F1-class defects are visible).",
+   "hand_example": "bv_spec_accepts_iff (EthLib side only; the join with the reject sites is a doc comment)",
+   "added": "review phase1c-r1 S1 (orchestrator decision a), separate commit after P2"
+  },
+  {
    "id": "reject_spec",
    "function": "UnmarshalSSZ",
    "per": "error return site whose condition is a spec-level reject",
@@ -118,6 +125,14 @@
     "hand_theorems": [
      "sc_accept_main"
     ]
+   },
+   {
+    "id": "Scalars.UnmarshalSSZ.reject_complete",
+    "type": "Scalars",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete",
+    "hand_theorems": [],
+    "hand_status": "open"
    },
    {
     "id": "Scalars.UnmarshalSSZ.reject.r1",
@@ -226,6 +241,14 @@
     ]
    },
    {
+    "id": "FixedVec.UnmarshalSSZ.reject_complete",
+    "type": "FixedVec",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete",
+    "hand_theorems": [],
+    "hand_status": "open"
+   },
+   {
     "id": "FixedVec.UnmarshalSSZ.reject.r1",
     "type": "FixedVec",
     "function": "UnmarshalSSZ",
@@ -325,6 +348,16 @@
     "hand_theorems": [
      "lu_accept_main"
     ]
+   },
+   {
+    "id": "ListU64.UnmarshalSSZ.reject_complete",
+    "type": "ListU64",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete",
+    "hand_theorems": [
+     "lu_spec_accepts_iff"
+    ],
+    "hand_status": "partial: EthLib accepted set characterized; no theorem joins it with the reject sites"
    },
    {
     "id": "ListU64.UnmarshalSSZ.reject.r1",
@@ -497,6 +530,16 @@
     ]
    },
    {
+    "id": "BitVec.UnmarshalSSZ.reject_complete",
+    "type": "BitVec",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete",
+    "hand_theorems": [
+     "bv_spec_accepts_iff"
+    ],
+    "hand_status": "partial: EthLib accepted set characterized; no theorem joins it with the reject sites"
+   },
+   {
     "id": "BitVec.UnmarshalSSZ.reject.r1",
     "type": "BitVec",
     "function": "UnmarshalSSZ",
@@ -621,6 +664,16 @@
     "hand_theorems": [
      "ne_accept_main"
     ]
+   },
+   {
+    "id": "Nested.UnmarshalSSZ.reject_complete",
+    "type": "Nested",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete",
+    "hand_theorems": [
+     "ne_spec_accepts_iff"
+    ],
+    "hand_status": "partial: EthLib accepted set characterized; no theorem joins it with the reject sites"
    },
    {
     "id": "Nested.UnmarshalSSZ.reject.r1",
@@ -770,6 +823,14 @@
      "lc_accept_main",
      "lc_accept_empty_main"
     ]
+   },
+   {
+    "id": "ListC.UnmarshalSSZ.reject_complete",
+    "type": "ListC",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete",
+    "hand_theorems": [],
+    "hand_status": "open"
    },
    {
     "id": "ListC.UnmarshalSSZ.reject.r1",
@@ -1082,6 +1143,14 @@
     ]
    },
    {
+    "id": "BitL.UnmarshalSSZ.reject_complete",
+    "type": "BitL",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete",
+    "hand_theorems": [],
+    "hand_status": "open"
+   },
+   {
     "id": "BitL.UnmarshalSSZ.reject.r1",
     "type": "BitL",
     "function": "UnmarshalSSZ",
@@ -1222,6 +1291,16 @@
     ]
    },
    {
+    "id": "Checkpoint.UnmarshalSSZ.reject_complete",
+    "type": "Checkpoint",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete",
+    "hand_theorems": [
+     "cp_spec_accepts_iff"
+    ],
+    "hand_status": "partial: EthLib accepted set characterized; no theorem joins it with the reject sites"
+   },
+   {
     "id": "Checkpoint.UnmarshalSSZ.reject.r1",
     "type": "Checkpoint",
     "function": "UnmarshalSSZ",
@@ -1308,6 +1387,16 @@
     "hand_theorems": [
      "ad_accept_main"
     ]
+   },
+   {
+    "id": "AttestationData.UnmarshalSSZ.reject_complete",
+    "type": "AttestationData",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete",
+    "hand_theorems": [
+     "ad_spec_accepts_iff"
+    ],
+    "hand_status": "partial: EthLib accepted set characterized; no theorem joins it with the reject sites"
    },
    {
     "id": "AttestationData.UnmarshalSSZ.reject.r1",
@@ -1585,6 +1674,12 @@
     "obligation": "accept"
    },
    {
+    "id": "AggregateAttestationAndProof.UnmarshalSSZ.reject_complete",
+    "type": "AggregateAttestationAndProof",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "AggregateAttestationAndProof.UnmarshalSSZ.reject.r1",
     "type": "AggregateAttestationAndProof",
     "function": "UnmarshalSSZ",
@@ -1720,6 +1815,12 @@
     "obligation": "accept"
    },
    {
+    "id": "AggregateAttestationAndProofElectra.UnmarshalSSZ.reject_complete",
+    "type": "AggregateAttestationAndProofElectra",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "AggregateAttestationAndProofElectra.UnmarshalSSZ.reject.r1",
     "type": "AggregateAttestationAndProofElectra",
     "function": "UnmarshalSSZ",
@@ -1853,6 +1954,12 @@
     "type": "Attestation",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "Attestation.UnmarshalSSZ.reject_complete",
+    "type": "Attestation",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "Attestation.UnmarshalSSZ.reject.r1",
@@ -1999,6 +2106,12 @@
     "type": "AttestationData",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "AttestationData.UnmarshalSSZ.reject_complete",
+    "type": "AttestationData",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "AttestationData.UnmarshalSSZ.reject.r1",
@@ -2158,6 +2271,12 @@
     "obligation": "accept"
    },
    {
+    "id": "AttestationElectra.UnmarshalSSZ.reject_complete",
+    "type": "AttestationElectra",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "AttestationElectra.UnmarshalSSZ.reject.r1",
     "type": "AttestationElectra",
     "function": "UnmarshalSSZ",
@@ -2315,6 +2434,12 @@
     "obligation": "accept"
    },
    {
+    "id": "AttesterSlashing.UnmarshalSSZ.reject_complete",
+    "type": "AttesterSlashing",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "AttesterSlashing.UnmarshalSSZ.reject.r1",
     "type": "AttesterSlashing",
     "function": "UnmarshalSSZ",
@@ -2459,6 +2584,12 @@
     "type": "AttesterSlashingElectra",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "AttesterSlashingElectra.UnmarshalSSZ.reject_complete",
+    "type": "AttesterSlashingElectra",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "AttesterSlashingElectra.UnmarshalSSZ.reject.r1",
@@ -2607,6 +2738,12 @@
     "obligation": "accept"
    },
    {
+    "id": "BLSToExecutionChange.UnmarshalSSZ.reject_complete",
+    "type": "BLSToExecutionChange",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "BLSToExecutionChange.UnmarshalSSZ.reject.r1",
     "type": "BLSToExecutionChange",
     "function": "UnmarshalSSZ",
@@ -2707,6 +2844,12 @@
     "type": "BeaconBlock",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BeaconBlock.UnmarshalSSZ.reject_complete",
+    "type": "BeaconBlock",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BeaconBlock.UnmarshalSSZ.reject.r1",
@@ -2877,6 +3020,12 @@
     "obligation": "accept"
    },
    {
+    "id": "BeaconBlockAltair.UnmarshalSSZ.reject_complete",
+    "type": "BeaconBlockAltair",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "BeaconBlockAltair.UnmarshalSSZ.reject.r1",
     "type": "BeaconBlockAltair",
     "function": "UnmarshalSSZ",
@@ -3045,6 +3194,12 @@
     "obligation": "accept"
    },
    {
+    "id": "BeaconBlockBellatrix.UnmarshalSSZ.reject_complete",
+    "type": "BeaconBlockBellatrix",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "BeaconBlockBellatrix.UnmarshalSSZ.reject.r1",
     "type": "BeaconBlockBellatrix",
     "function": "UnmarshalSSZ",
@@ -3211,6 +3366,12 @@
     "type": "BeaconBlockBody",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BeaconBlockBody.UnmarshalSSZ.reject_complete",
+    "type": "BeaconBlockBody",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BeaconBlockBody.UnmarshalSSZ.reject.r1",
@@ -4028,6 +4189,12 @@
     "type": "BeaconBlockBodyAltair",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BeaconBlockBodyAltair.UnmarshalSSZ.reject_complete",
+    "type": "BeaconBlockBodyAltair",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BeaconBlockBodyAltair.UnmarshalSSZ.reject.r1",
@@ -4867,6 +5034,12 @@
     "type": "BeaconBlockBodyBellatrix",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BeaconBlockBodyBellatrix.UnmarshalSSZ.reject_complete",
+    "type": "BeaconBlockBodyBellatrix",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BeaconBlockBodyBellatrix.UnmarshalSSZ.reject.r1",
@@ -5750,6 +5923,12 @@
     "type": "BeaconBlockBodyCapella",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BeaconBlockBodyCapella.UnmarshalSSZ.reject_complete",
+    "type": "BeaconBlockBodyCapella",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BeaconBlockBodyCapella.UnmarshalSSZ.reject.r1",
@@ -6732,6 +6911,12 @@
     "type": "BeaconBlockBodyDeneb",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BeaconBlockBodyDeneb.UnmarshalSSZ.reject_complete",
+    "type": "BeaconBlockBodyDeneb",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BeaconBlockBodyDeneb.UnmarshalSSZ.reject.r1",
@@ -7802,6 +7987,12 @@
     "type": "BeaconBlockBodyElectra",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BeaconBlockBodyElectra.UnmarshalSSZ.reject_complete",
+    "type": "BeaconBlockBodyElectra",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BeaconBlockBodyElectra.UnmarshalSSZ.reject.r1",
@@ -8918,6 +9109,12 @@
     "obligation": "accept"
    },
    {
+    "id": "BeaconBlockCapella.UnmarshalSSZ.reject_complete",
+    "type": "BeaconBlockCapella",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "BeaconBlockCapella.UnmarshalSSZ.reject.r1",
     "type": "BeaconBlockCapella",
     "function": "UnmarshalSSZ",
@@ -9084,6 +9281,12 @@
     "type": "BeaconBlockContentsDeneb",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BeaconBlockContentsDeneb.UnmarshalSSZ.reject_complete",
+    "type": "BeaconBlockContentsDeneb",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BeaconBlockContentsDeneb.UnmarshalSSZ.reject.r1",
@@ -9364,6 +9567,12 @@
     "obligation": "accept"
    },
    {
+    "id": "BeaconBlockContentsElectra.UnmarshalSSZ.reject_complete",
+    "type": "BeaconBlockContentsElectra",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "BeaconBlockContentsElectra.UnmarshalSSZ.reject.r1",
     "type": "BeaconBlockContentsElectra",
     "function": "UnmarshalSSZ",
@@ -9640,6 +9849,12 @@
     "type": "BeaconBlockContentsFulu",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BeaconBlockContentsFulu.UnmarshalSSZ.reject_complete",
+    "type": "BeaconBlockContentsFulu",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BeaconBlockContentsFulu.UnmarshalSSZ.reject.r1",
@@ -9920,6 +10135,12 @@
     "obligation": "accept"
    },
    {
+    "id": "BeaconBlockDeneb.UnmarshalSSZ.reject_complete",
+    "type": "BeaconBlockDeneb",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "BeaconBlockDeneb.UnmarshalSSZ.reject.r1",
     "type": "BeaconBlockDeneb",
     "function": "UnmarshalSSZ",
@@ -10086,6 +10307,12 @@
     "type": "BeaconBlockElectra",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BeaconBlockElectra.UnmarshalSSZ.reject_complete",
+    "type": "BeaconBlockElectra",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BeaconBlockElectra.UnmarshalSSZ.reject.r1",
@@ -10256,6 +10483,12 @@
     "obligation": "accept"
    },
    {
+    "id": "BeaconBlockHeader.UnmarshalSSZ.reject_complete",
+    "type": "BeaconBlockHeader",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "BeaconBlockHeader.UnmarshalSSZ.reject.r1",
     "type": "BeaconBlockHeader",
     "function": "UnmarshalSSZ",
@@ -10389,6 +10622,12 @@
     "type": "BeaconState",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BeaconState.UnmarshalSSZ.reject_complete",
+    "type": "BeaconState",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BeaconState.UnmarshalSSZ.reject.r1",
@@ -11516,6 +11755,12 @@
     "obligation": "accept"
    },
    {
+    "id": "BeaconStateAltair.UnmarshalSSZ.reject_complete",
+    "type": "BeaconStateAltair",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "BeaconStateAltair.UnmarshalSSZ.reject.r1",
     "type": "BeaconStateAltair",
     "function": "UnmarshalSSZ",
@@ -12408,6 +12653,12 @@
     "type": "BeaconStateBellatrix",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BeaconStateBellatrix.UnmarshalSSZ.reject_complete",
+    "type": "BeaconStateBellatrix",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BeaconStateBellatrix.UnmarshalSSZ.reject.r1",
@@ -13346,6 +13597,12 @@
     "type": "BeaconStateCapella",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BeaconStateCapella.UnmarshalSSZ.reject_complete",
+    "type": "BeaconStateCapella",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BeaconStateCapella.UnmarshalSSZ.reject.r1",
@@ -14407,6 +14664,12 @@
     "obligation": "accept"
    },
    {
+    "id": "BeaconStateDeneb.UnmarshalSSZ.reject_complete",
+    "type": "BeaconStateDeneb",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "BeaconStateDeneb.UnmarshalSSZ.reject.r1",
     "type": "BeaconStateDeneb",
     "function": "UnmarshalSSZ",
@@ -15464,6 +15727,12 @@
     "type": "BeaconStateElectra",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BeaconStateElectra.UnmarshalSSZ.reject_complete",
+    "type": "BeaconStateElectra",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BeaconStateElectra.UnmarshalSSZ.reject.r1",
@@ -16930,6 +17199,12 @@
     "type": "BeaconStateFulu",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BeaconStateFulu.UnmarshalSSZ.reject_complete",
+    "type": "BeaconStateFulu",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BeaconStateFulu.UnmarshalSSZ.reject.r1",
@@ -18431,6 +18706,12 @@
     "obligation": "accept"
    },
    {
+    "id": "BlindedBeaconBlockBellatrix.UnmarshalSSZ.reject_complete",
+    "type": "BlindedBeaconBlockBellatrix",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "BlindedBeaconBlockBellatrix.UnmarshalSSZ.reject.r1",
     "type": "BlindedBeaconBlockBellatrix",
     "function": "UnmarshalSSZ",
@@ -18597,6 +18878,12 @@
     "type": "BlindedBeaconBlockBodyBellatrix",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BlindedBeaconBlockBodyBellatrix.UnmarshalSSZ.reject_complete",
+    "type": "BlindedBeaconBlockBodyBellatrix",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BlindedBeaconBlockBodyBellatrix.UnmarshalSSZ.reject.r1",
@@ -19480,6 +19767,12 @@
     "type": "BlindedBeaconBlockBodyCapella",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BlindedBeaconBlockBodyCapella.UnmarshalSSZ.reject_complete",
+    "type": "BlindedBeaconBlockBodyCapella",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BlindedBeaconBlockBodyCapella.UnmarshalSSZ.reject.r1",
@@ -20462,6 +20755,12 @@
     "type": "BlindedBeaconBlockBodyDeneb",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BlindedBeaconBlockBodyDeneb.UnmarshalSSZ.reject_complete",
+    "type": "BlindedBeaconBlockBodyDeneb",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BlindedBeaconBlockBodyDeneb.UnmarshalSSZ.reject.r1",
@@ -21532,6 +21831,12 @@
     "type": "BlindedBeaconBlockBodyElectra",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BlindedBeaconBlockBodyElectra.UnmarshalSSZ.reject_complete",
+    "type": "BlindedBeaconBlockBodyElectra",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BlindedBeaconBlockBodyElectra.UnmarshalSSZ.reject.r1",
@@ -22648,6 +22953,12 @@
     "obligation": "accept"
    },
    {
+    "id": "BlindedBeaconBlockCapella.UnmarshalSSZ.reject_complete",
+    "type": "BlindedBeaconBlockCapella",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "BlindedBeaconBlockCapella.UnmarshalSSZ.reject.r1",
     "type": "BlindedBeaconBlockCapella",
     "function": "UnmarshalSSZ",
@@ -22814,6 +23125,12 @@
     "type": "BlindedBeaconBlockDeneb",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BlindedBeaconBlockDeneb.UnmarshalSSZ.reject_complete",
+    "type": "BlindedBeaconBlockDeneb",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BlindedBeaconBlockDeneb.UnmarshalSSZ.reject.r1",
@@ -22984,6 +23301,12 @@
     "obligation": "accept"
    },
    {
+    "id": "BlindedBeaconBlockElectra.UnmarshalSSZ.reject_complete",
+    "type": "BlindedBeaconBlockElectra",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "BlindedBeaconBlockElectra.UnmarshalSSZ.reject.r1",
     "type": "BlindedBeaconBlockElectra",
     "function": "UnmarshalSSZ",
@@ -23150,6 +23473,12 @@
     "type": "BlindedBeaconBlockFulu",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BlindedBeaconBlockFulu.UnmarshalSSZ.reject_complete",
+    "type": "BlindedBeaconBlockFulu",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BlindedBeaconBlockFulu.UnmarshalSSZ.reject.r1",
@@ -23320,6 +23649,12 @@
     "obligation": "accept"
    },
    {
+    "id": "BlobIdentifier.UnmarshalSSZ.reject_complete",
+    "type": "BlobIdentifier",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "BlobIdentifier.UnmarshalSSZ.reject.r1",
     "type": "BlobIdentifier",
     "function": "UnmarshalSSZ",
@@ -23387,6 +23722,12 @@
     "type": "BlobSidecar",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BlobSidecar.UnmarshalSSZ.reject_complete",
+    "type": "BlobSidecar",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BlobSidecar.UnmarshalSSZ.reject.r1",
@@ -23522,6 +23863,12 @@
     "type": "BlobSidecars",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BlobSidecars.UnmarshalSSZ.reject_complete",
+    "type": "BlobSidecars",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BlobSidecars.UnmarshalSSZ.reject.r1",
@@ -23681,6 +24028,12 @@
     "obligation": "accept"
    },
    {
+    "id": "BuilderBidCapella.UnmarshalSSZ.reject_complete",
+    "type": "BuilderBidCapella",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "BuilderBidCapella.UnmarshalSSZ.reject.r1",
     "type": "BuilderBidCapella",
     "function": "UnmarshalSSZ",
@@ -23803,6 +24156,12 @@
     "type": "BuilderBidDeneb",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BuilderBidDeneb.UnmarshalSSZ.reject_complete",
+    "type": "BuilderBidDeneb",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BuilderBidDeneb.UnmarshalSSZ.reject.r1",
@@ -24015,6 +24374,12 @@
     "type": "BuilderBidElectra",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "BuilderBidElectra.UnmarshalSSZ.reject_complete",
+    "type": "BuilderBidElectra",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "BuilderBidElectra.UnmarshalSSZ.reject.r1",
@@ -24273,6 +24638,12 @@
     "obligation": "accept"
    },
    {
+    "id": "Checkpoint.UnmarshalSSZ.reject_complete",
+    "type": "Checkpoint",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "Checkpoint.UnmarshalSSZ.reject.r1",
     "type": "Checkpoint",
     "function": "UnmarshalSSZ",
@@ -24364,6 +24735,12 @@
     "obligation": "accept"
    },
    {
+    "id": "ConsolidationRequest.UnmarshalSSZ.reject_complete",
+    "type": "ConsolidationRequest",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "ConsolidationRequest.UnmarshalSSZ.reject.r1",
     "type": "ConsolidationRequest",
     "function": "UnmarshalSSZ",
@@ -24453,6 +24830,12 @@
     "type": "ContributionAndProof",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "ContributionAndProof.UnmarshalSSZ.reject_complete",
+    "type": "ContributionAndProof",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "ContributionAndProof.UnmarshalSSZ.reject.r1",
@@ -24566,6 +24949,12 @@
     "type": "DataColumnSidecar",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "DataColumnSidecar.UnmarshalSSZ.reject_complete",
+    "type": "DataColumnSidecar",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "DataColumnSidecar.UnmarshalSSZ.reject.r1",
@@ -24934,6 +25323,12 @@
     "obligation": "accept"
    },
    {
+    "id": "DataColumnsByRootIdentifier.UnmarshalSSZ.reject_complete",
+    "type": "DataColumnsByRootIdentifier",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "DataColumnsByRootIdentifier.UnmarshalSSZ.reject.r1",
     "type": "DataColumnsByRootIdentifier",
     "function": "UnmarshalSSZ",
@@ -25080,6 +25475,12 @@
     "obligation": "accept"
    },
    {
+    "id": "Deposit.UnmarshalSSZ.reject_complete",
+    "type": "Deposit",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "Deposit.UnmarshalSSZ.reject.r1",
     "type": "Deposit",
     "function": "UnmarshalSSZ",
@@ -25182,6 +25583,12 @@
     "obligation": "accept"
    },
    {
+    "id": "DepositMessage.UnmarshalSSZ.reject_complete",
+    "type": "DepositMessage",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "DepositMessage.UnmarshalSSZ.reject.r1",
     "type": "DepositMessage",
     "function": "UnmarshalSSZ",
@@ -25260,6 +25667,12 @@
     "type": "DepositRequest",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "DepositRequest.UnmarshalSSZ.reject_complete",
+    "type": "DepositRequest",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "DepositRequest.UnmarshalSSZ.reject.r1",
@@ -25353,6 +25766,12 @@
     "obligation": "accept"
    },
    {
+    "id": "Deposit_Data.UnmarshalSSZ.reject_complete",
+    "type": "Deposit_Data",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "Deposit_Data.UnmarshalSSZ.reject.r1",
     "type": "Deposit_Data",
     "function": "UnmarshalSSZ",
@@ -25442,6 +25861,12 @@
     "type": "ENRForkID",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "ENRForkID.UnmarshalSSZ.reject_complete",
+    "type": "ENRForkID",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "ENRForkID.UnmarshalSSZ.reject.r1",
@@ -25546,6 +25971,12 @@
     "obligation": "accept"
    },
    {
+    "id": "Eth1Data.UnmarshalSSZ.reject_complete",
+    "type": "Eth1Data",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "Eth1Data.UnmarshalSSZ.reject.r1",
     "type": "Eth1Data",
     "function": "UnmarshalSSZ",
@@ -25624,6 +26055,12 @@
     "type": "ExecutionPayloadHeader",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "ExecutionPayloadHeader.UnmarshalSSZ.reject_complete",
+    "type": "ExecutionPayloadHeader",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "ExecutionPayloadHeader.UnmarshalSSZ.reject.r1",
@@ -25814,6 +26251,12 @@
     "type": "ExecutionPayloadHeaderCapella",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "ExecutionPayloadHeaderCapella.UnmarshalSSZ.reject_complete",
+    "type": "ExecutionPayloadHeaderCapella",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "ExecutionPayloadHeaderCapella.UnmarshalSSZ.reject.r1",
@@ -26017,6 +26460,12 @@
     "obligation": "accept"
    },
    {
+    "id": "ExecutionPayloadHeaderDeneb.UnmarshalSSZ.reject_complete",
+    "type": "ExecutionPayloadHeaderDeneb",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "ExecutionPayloadHeaderDeneb.UnmarshalSSZ.reject.r1",
     "type": "ExecutionPayloadHeaderDeneb",
     "function": "UnmarshalSSZ",
@@ -26216,6 +26665,12 @@
     "type": "ExecutionRequests",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "ExecutionRequests.UnmarshalSSZ.reject_complete",
+    "type": "ExecutionRequests",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "ExecutionRequests.UnmarshalSSZ.reject.r1",
@@ -26573,6 +27028,12 @@
     "obligation": "accept"
    },
    {
+    "id": "Fork.UnmarshalSSZ.reject_complete",
+    "type": "Fork",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "Fork.UnmarshalSSZ.reject.r1",
     "type": "Fork",
     "function": "UnmarshalSSZ",
@@ -26675,6 +27136,12 @@
     "obligation": "accept"
    },
    {
+    "id": "ForkData.UnmarshalSSZ.reject_complete",
+    "type": "ForkData",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "ForkData.UnmarshalSSZ.reject.r1",
     "type": "ForkData",
     "function": "UnmarshalSSZ",
@@ -26753,6 +27220,12 @@
     "type": "HistoricalBatch",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "HistoricalBatch.UnmarshalSSZ.reject_complete",
+    "type": "HistoricalBatch",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "HistoricalBatch.UnmarshalSSZ.reject.r1",
@@ -26857,6 +27330,12 @@
     "obligation": "accept"
    },
    {
+    "id": "HistoricalSummary.UnmarshalSSZ.reject_complete",
+    "type": "HistoricalSummary",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "HistoricalSummary.UnmarshalSSZ.reject.r1",
     "type": "HistoricalSummary",
     "function": "UnmarshalSSZ",
@@ -26935,6 +27414,12 @@
     "type": "IndexedAttestation",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "IndexedAttestation.UnmarshalSSZ.reject_complete",
+    "type": "IndexedAttestation",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "IndexedAttestation.UnmarshalSSZ.reject.r1",
@@ -27105,6 +27590,12 @@
     "obligation": "accept"
    },
    {
+    "id": "IndexedAttestationElectra.UnmarshalSSZ.reject_complete",
+    "type": "IndexedAttestationElectra",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "IndexedAttestationElectra.UnmarshalSSZ.reject.r1",
     "type": "IndexedAttestationElectra",
     "function": "UnmarshalSSZ",
@@ -27273,6 +27764,12 @@
     "obligation": "accept"
    },
    {
+    "id": "LightClientBootstrapAltair.UnmarshalSSZ.reject_complete",
+    "type": "LightClientBootstrapAltair",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "LightClientBootstrapAltair.UnmarshalSSZ.reject.r1",
     "type": "LightClientBootstrapAltair",
     "function": "UnmarshalSSZ",
@@ -27395,6 +27892,12 @@
     "type": "LightClientBootstrapCapella",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "LightClientBootstrapCapella.UnmarshalSSZ.reject_complete",
+    "type": "LightClientBootstrapCapella",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "LightClientBootstrapCapella.UnmarshalSSZ.reject.r1",
@@ -27543,6 +28046,12 @@
     "obligation": "accept"
    },
    {
+    "id": "LightClientBootstrapDeneb.UnmarshalSSZ.reject_complete",
+    "type": "LightClientBootstrapDeneb",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "LightClientBootstrapDeneb.UnmarshalSSZ.reject.r1",
     "type": "LightClientBootstrapDeneb",
     "function": "UnmarshalSSZ",
@@ -27689,6 +28198,12 @@
     "obligation": "accept"
    },
    {
+    "id": "LightClientBootstrapElectra.UnmarshalSSZ.reject_complete",
+    "type": "LightClientBootstrapElectra",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "LightClientBootstrapElectra.UnmarshalSSZ.reject.r1",
     "type": "LightClientBootstrapElectra",
     "function": "UnmarshalSSZ",
@@ -27833,6 +28348,12 @@
     "type": "LightClientFinalityUpdateAltair",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "LightClientFinalityUpdateAltair.UnmarshalSSZ.reject_complete",
+    "type": "LightClientFinalityUpdateAltair",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "LightClientFinalityUpdateAltair.UnmarshalSSZ.reject.r1",
@@ -28001,6 +28522,12 @@
     "type": "LightClientFinalityUpdateCapella",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "LightClientFinalityUpdateCapella.UnmarshalSSZ.reject_complete",
+    "type": "LightClientFinalityUpdateCapella",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "LightClientFinalityUpdateCapella.UnmarshalSSZ.reject.r1",
@@ -28215,6 +28742,12 @@
     "obligation": "accept"
    },
    {
+    "id": "LightClientFinalityUpdateDeneb.UnmarshalSSZ.reject_complete",
+    "type": "LightClientFinalityUpdateDeneb",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "LightClientFinalityUpdateDeneb.UnmarshalSSZ.reject.r1",
     "type": "LightClientFinalityUpdateDeneb",
     "function": "UnmarshalSSZ",
@@ -28425,6 +28958,12 @@
     "type": "LightClientFinalityUpdateElectra",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "LightClientFinalityUpdateElectra.UnmarshalSSZ.reject_complete",
+    "type": "LightClientFinalityUpdateElectra",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "LightClientFinalityUpdateElectra.UnmarshalSSZ.reject.r1",
@@ -28639,6 +29178,12 @@
     "obligation": "accept"
    },
    {
+    "id": "LightClientHeaderAltair.UnmarshalSSZ.reject_complete",
+    "type": "LightClientHeaderAltair",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "LightClientHeaderAltair.UnmarshalSSZ.reject.r1",
     "type": "LightClientHeaderAltair",
     "function": "UnmarshalSSZ",
@@ -28717,6 +29262,12 @@
     "type": "LightClientHeaderCapella",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "LightClientHeaderCapella.UnmarshalSSZ.reject_complete",
+    "type": "LightClientHeaderCapella",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "LightClientHeaderCapella.UnmarshalSSZ.reject.r1",
@@ -28865,6 +29416,12 @@
     "obligation": "accept"
    },
    {
+    "id": "LightClientHeaderDeneb.UnmarshalSSZ.reject_complete",
+    "type": "LightClientHeaderDeneb",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "LightClientHeaderDeneb.UnmarshalSSZ.reject.r1",
     "type": "LightClientHeaderDeneb",
     "function": "UnmarshalSSZ",
@@ -29011,6 +29568,12 @@
     "obligation": "accept"
    },
    {
+    "id": "LightClientOptimisticUpdateAltair.UnmarshalSSZ.reject_complete",
+    "type": "LightClientOptimisticUpdateAltair",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "LightClientOptimisticUpdateAltair.UnmarshalSSZ.reject.r1",
     "type": "LightClientOptimisticUpdateAltair",
     "function": "UnmarshalSSZ",
@@ -29133,6 +29696,12 @@
     "type": "LightClientOptimisticUpdateCapella",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "LightClientOptimisticUpdateCapella.UnmarshalSSZ.reject_complete",
+    "type": "LightClientOptimisticUpdateCapella",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "LightClientOptimisticUpdateCapella.UnmarshalSSZ.reject.r1",
@@ -29281,6 +29850,12 @@
     "obligation": "accept"
    },
    {
+    "id": "LightClientOptimisticUpdateDeneb.UnmarshalSSZ.reject_complete",
+    "type": "LightClientOptimisticUpdateDeneb",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "LightClientOptimisticUpdateDeneb.UnmarshalSSZ.reject.r1",
     "type": "LightClientOptimisticUpdateDeneb",
     "function": "UnmarshalSSZ",
@@ -29425,6 +30000,12 @@
     "type": "LightClientUpdateAltair",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "LightClientUpdateAltair.UnmarshalSSZ.reject_complete",
+    "type": "LightClientUpdateAltair",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "LightClientUpdateAltair.UnmarshalSSZ.reject.r1",
@@ -29637,6 +30218,12 @@
     "type": "LightClientUpdateCapella",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "LightClientUpdateCapella.UnmarshalSSZ.reject_complete",
+    "type": "LightClientUpdateCapella",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "LightClientUpdateCapella.UnmarshalSSZ.reject.r1",
@@ -29895,6 +30482,12 @@
     "obligation": "accept"
    },
    {
+    "id": "LightClientUpdateDeneb.UnmarshalSSZ.reject_complete",
+    "type": "LightClientUpdateDeneb",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "LightClientUpdateDeneb.UnmarshalSSZ.reject.r1",
     "type": "LightClientUpdateDeneb",
     "function": "UnmarshalSSZ",
@@ -30149,6 +30742,12 @@
     "type": "LightClientUpdateElectra",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "LightClientUpdateElectra.UnmarshalSSZ.reject_complete",
+    "type": "LightClientUpdateElectra",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "LightClientUpdateElectra.UnmarshalSSZ.reject.r1",
@@ -30407,6 +31006,12 @@
     "obligation": "accept"
    },
    {
+    "id": "PartialDataColumnHeader.UnmarshalSSZ.reject_complete",
+    "type": "PartialDataColumnHeader",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "PartialDataColumnHeader.UnmarshalSSZ.reject.r1",
     "type": "PartialDataColumnHeader",
     "function": "UnmarshalSSZ",
@@ -30597,6 +31202,12 @@
     "obligation": "accept"
    },
    {
+    "id": "PartialDataColumnPartsMetadata.UnmarshalSSZ.reject_complete",
+    "type": "PartialDataColumnPartsMetadata",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "PartialDataColumnPartsMetadata.UnmarshalSSZ.reject.r1",
     "type": "PartialDataColumnPartsMetadata",
     "function": "UnmarshalSSZ",
@@ -30763,6 +31374,12 @@
     "type": "PartialDataColumnSidecar",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "PartialDataColumnSidecar.UnmarshalSSZ.reject_complete",
+    "type": "PartialDataColumnSidecar",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "PartialDataColumnSidecar.UnmarshalSSZ.reject.r1",
@@ -31263,6 +31880,12 @@
     "obligation": "accept"
    },
    {
+    "id": "PendingAttestation.UnmarshalSSZ.reject_complete",
+    "type": "PendingAttestation",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "PendingAttestation.UnmarshalSSZ.reject.r1",
     "type": "PendingAttestation",
     "function": "UnmarshalSSZ",
@@ -31442,6 +32065,12 @@
     "obligation": "accept"
    },
    {
+    "id": "PendingConsolidation.UnmarshalSSZ.reject_complete",
+    "type": "PendingConsolidation",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "PendingConsolidation.UnmarshalSSZ.reject.r1",
     "type": "PendingConsolidation",
     "function": "UnmarshalSSZ",
@@ -31542,6 +32171,12 @@
     "type": "PendingDeposit",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "PendingDeposit.UnmarshalSSZ.reject_complete",
+    "type": "PendingDeposit",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "PendingDeposit.UnmarshalSSZ.reject.r1",
@@ -31657,6 +32292,12 @@
     "obligation": "accept"
    },
    {
+    "id": "PendingPartialWithdrawal.UnmarshalSSZ.reject_complete",
+    "type": "PendingPartialWithdrawal",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "PendingPartialWithdrawal.UnmarshalSSZ.reject.r1",
     "type": "PendingPartialWithdrawal",
     "function": "UnmarshalSSZ",
@@ -31759,6 +32400,12 @@
     "obligation": "accept"
    },
    {
+    "id": "PowBlock.UnmarshalSSZ.reject_complete",
+    "type": "PowBlock",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "PowBlock.UnmarshalSSZ.reject.r1",
     "type": "PowBlock",
     "function": "UnmarshalSSZ",
@@ -31848,6 +32495,12 @@
     "type": "ProposerSlashing",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "ProposerSlashing.UnmarshalSSZ.reject_complete",
+    "type": "ProposerSlashing",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "ProposerSlashing.UnmarshalSSZ.reject.r1",
@@ -31950,6 +32603,12 @@
     "type": "SignedAggregateAttestationAndProof",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "SignedAggregateAttestationAndProof.UnmarshalSSZ.reject_complete",
+    "type": "SignedAggregateAttestationAndProof",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "SignedAggregateAttestationAndProof.UnmarshalSSZ.reject.r1",
@@ -32065,6 +32724,12 @@
     "obligation": "accept"
    },
    {
+    "id": "SignedAggregateAttestationAndProofElectra.UnmarshalSSZ.reject_complete",
+    "type": "SignedAggregateAttestationAndProofElectra",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "SignedAggregateAttestationAndProofElectra.UnmarshalSSZ.reject.r1",
     "type": "SignedAggregateAttestationAndProofElectra",
     "function": "UnmarshalSSZ",
@@ -32178,6 +32843,12 @@
     "obligation": "accept"
    },
    {
+    "id": "SignedBLSToExecutionChange.UnmarshalSSZ.reject_complete",
+    "type": "SignedBLSToExecutionChange",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "SignedBLSToExecutionChange.UnmarshalSSZ.reject.r1",
     "type": "SignedBLSToExecutionChange",
     "function": "UnmarshalSSZ",
@@ -32267,6 +32938,12 @@
     "type": "SignedBeaconBlock",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "SignedBeaconBlock.UnmarshalSSZ.reject_complete",
+    "type": "SignedBeaconBlock",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "SignedBeaconBlock.UnmarshalSSZ.reject.r1",
@@ -32382,6 +33059,12 @@
     "obligation": "accept"
    },
    {
+    "id": "SignedBeaconBlockAltair.UnmarshalSSZ.reject_complete",
+    "type": "SignedBeaconBlockAltair",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "SignedBeaconBlockAltair.UnmarshalSSZ.reject.r1",
     "type": "SignedBeaconBlockAltair",
     "function": "UnmarshalSSZ",
@@ -32493,6 +33176,12 @@
     "type": "SignedBeaconBlockBellatrix",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "SignedBeaconBlockBellatrix.UnmarshalSSZ.reject_complete",
+    "type": "SignedBeaconBlockBellatrix",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "SignedBeaconBlockBellatrix.UnmarshalSSZ.reject.r1",
@@ -32608,6 +33297,12 @@
     "obligation": "accept"
    },
    {
+    "id": "SignedBeaconBlockCapella.UnmarshalSSZ.reject_complete",
+    "type": "SignedBeaconBlockCapella",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "SignedBeaconBlockCapella.UnmarshalSSZ.reject.r1",
     "type": "SignedBeaconBlockCapella",
     "function": "UnmarshalSSZ",
@@ -32719,6 +33414,12 @@
     "type": "SignedBeaconBlockContentsDeneb",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "SignedBeaconBlockContentsDeneb.UnmarshalSSZ.reject_complete",
+    "type": "SignedBeaconBlockContentsDeneb",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "SignedBeaconBlockContentsDeneb.UnmarshalSSZ.reject.r1",
@@ -32999,6 +33700,12 @@
     "obligation": "accept"
    },
    {
+    "id": "SignedBeaconBlockContentsElectra.UnmarshalSSZ.reject_complete",
+    "type": "SignedBeaconBlockContentsElectra",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "SignedBeaconBlockContentsElectra.UnmarshalSSZ.reject.r1",
     "type": "SignedBeaconBlockContentsElectra",
     "function": "UnmarshalSSZ",
@@ -33275,6 +33982,12 @@
     "type": "SignedBeaconBlockContentsFulu",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "SignedBeaconBlockContentsFulu.UnmarshalSSZ.reject_complete",
+    "type": "SignedBeaconBlockContentsFulu",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "SignedBeaconBlockContentsFulu.UnmarshalSSZ.reject.r1",
@@ -33555,6 +34268,12 @@
     "obligation": "accept"
    },
    {
+    "id": "SignedBeaconBlockDeneb.UnmarshalSSZ.reject_complete",
+    "type": "SignedBeaconBlockDeneb",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "SignedBeaconBlockDeneb.UnmarshalSSZ.reject.r1",
     "type": "SignedBeaconBlockDeneb",
     "function": "UnmarshalSSZ",
@@ -33666,6 +34385,12 @@
     "type": "SignedBeaconBlockElectra",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "SignedBeaconBlockElectra.UnmarshalSSZ.reject_complete",
+    "type": "SignedBeaconBlockElectra",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "SignedBeaconBlockElectra.UnmarshalSSZ.reject.r1",
@@ -33781,6 +34506,12 @@
     "obligation": "accept"
    },
    {
+    "id": "SignedBeaconBlockFulu.UnmarshalSSZ.reject_complete",
+    "type": "SignedBeaconBlockFulu",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "SignedBeaconBlockFulu.UnmarshalSSZ.reject.r1",
     "type": "SignedBeaconBlockFulu",
     "function": "UnmarshalSSZ",
@@ -33894,6 +34625,12 @@
     "obligation": "accept"
    },
    {
+    "id": "SignedBeaconBlockHeader.UnmarshalSSZ.reject_complete",
+    "type": "SignedBeaconBlockHeader",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "SignedBeaconBlockHeader.UnmarshalSSZ.reject.r1",
     "type": "SignedBeaconBlockHeader",
     "function": "UnmarshalSSZ",
@@ -33983,6 +34720,12 @@
     "type": "SignedBlindedBeaconBlockBellatrix",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "SignedBlindedBeaconBlockBellatrix.UnmarshalSSZ.reject_complete",
+    "type": "SignedBlindedBeaconBlockBellatrix",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "SignedBlindedBeaconBlockBellatrix.UnmarshalSSZ.reject.r1",
@@ -34098,6 +34841,12 @@
     "obligation": "accept"
    },
    {
+    "id": "SignedBlindedBeaconBlockCapella.UnmarshalSSZ.reject_complete",
+    "type": "SignedBlindedBeaconBlockCapella",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "SignedBlindedBeaconBlockCapella.UnmarshalSSZ.reject.r1",
     "type": "SignedBlindedBeaconBlockCapella",
     "function": "UnmarshalSSZ",
@@ -34209,6 +34958,12 @@
     "type": "SignedBlindedBeaconBlockDeneb",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "SignedBlindedBeaconBlockDeneb.UnmarshalSSZ.reject_complete",
+    "type": "SignedBlindedBeaconBlockDeneb",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "SignedBlindedBeaconBlockDeneb.UnmarshalSSZ.reject.r1",
@@ -34324,6 +35079,12 @@
     "obligation": "accept"
    },
    {
+    "id": "SignedBlindedBeaconBlockElectra.UnmarshalSSZ.reject_complete",
+    "type": "SignedBlindedBeaconBlockElectra",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "SignedBlindedBeaconBlockElectra.UnmarshalSSZ.reject.r1",
     "type": "SignedBlindedBeaconBlockElectra",
     "function": "UnmarshalSSZ",
@@ -34435,6 +35196,12 @@
     "type": "SignedBlindedBeaconBlockFulu",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "SignedBlindedBeaconBlockFulu.UnmarshalSSZ.reject_complete",
+    "type": "SignedBlindedBeaconBlockFulu",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "SignedBlindedBeaconBlockFulu.UnmarshalSSZ.reject.r1",
@@ -34550,6 +35317,12 @@
     "obligation": "accept"
    },
    {
+    "id": "SignedBuilderBidCapella.UnmarshalSSZ.reject_complete",
+    "type": "SignedBuilderBidCapella",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "SignedBuilderBidCapella.UnmarshalSSZ.reject.r1",
     "type": "SignedBuilderBidCapella",
     "function": "UnmarshalSSZ",
@@ -34661,6 +35434,12 @@
     "type": "SignedBuilderBidDeneb",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "SignedBuilderBidDeneb.UnmarshalSSZ.reject_complete",
+    "type": "SignedBuilderBidDeneb",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "SignedBuilderBidDeneb.UnmarshalSSZ.reject.r1",
@@ -34776,6 +35555,12 @@
     "obligation": "accept"
    },
    {
+    "id": "SignedBuilderBidElectra.UnmarshalSSZ.reject_complete",
+    "type": "SignedBuilderBidElectra",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "SignedBuilderBidElectra.UnmarshalSSZ.reject.r1",
     "type": "SignedBuilderBidElectra",
     "function": "UnmarshalSSZ",
@@ -34889,6 +35674,12 @@
     "obligation": "accept"
    },
    {
+    "id": "SignedContributionAndProof.UnmarshalSSZ.reject_complete",
+    "type": "SignedContributionAndProof",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "SignedContributionAndProof.UnmarshalSSZ.reject.r1",
     "type": "SignedContributionAndProof",
     "function": "UnmarshalSSZ",
@@ -34978,6 +35769,12 @@
     "type": "SignedVoluntaryExit",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "SignedVoluntaryExit.UnmarshalSSZ.reject_complete",
+    "type": "SignedVoluntaryExit",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "SignedVoluntaryExit.UnmarshalSSZ.reject.r1",
@@ -35071,6 +35868,12 @@
     "obligation": "accept"
    },
    {
+    "id": "SigningData.UnmarshalSSZ.reject_complete",
+    "type": "SigningData",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "SigningData.UnmarshalSSZ.reject.r1",
     "type": "SigningData",
     "function": "UnmarshalSSZ",
@@ -35149,6 +35952,12 @@
     "type": "SingleAttestation",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "SingleAttestation.UnmarshalSSZ.reject_complete",
+    "type": "SingleAttestation",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "SingleAttestation.UnmarshalSSZ.reject.r1",
@@ -35286,6 +36095,12 @@
     "obligation": "accept"
    },
    {
+    "id": "Status.UnmarshalSSZ.reject_complete",
+    "type": "Status",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "Status.UnmarshalSSZ.reject.r1",
     "type": "Status",
     "function": "UnmarshalSSZ",
@@ -35419,6 +36234,12 @@
     "type": "StatusV2",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "StatusV2.UnmarshalSSZ.reject_complete",
+    "type": "StatusV2",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "StatusV2.UnmarshalSSZ.reject.r1",
@@ -35578,6 +36399,12 @@
     "obligation": "accept"
    },
    {
+    "id": "SyncAggregate.UnmarshalSSZ.reject_complete",
+    "type": "SyncAggregate",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "SyncAggregate.UnmarshalSSZ.reject.r1",
     "type": "SyncAggregate",
     "function": "UnmarshalSSZ",
@@ -35658,6 +36485,12 @@
     "obligation": "accept"
    },
    {
+    "id": "SyncAggregatorSelectionData.UnmarshalSSZ.reject_complete",
+    "type": "SyncAggregatorSelectionData",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "SyncAggregatorSelectionData.UnmarshalSSZ.reject.r1",
     "type": "SyncAggregatorSelectionData",
     "function": "UnmarshalSSZ",
@@ -35736,6 +36569,12 @@
     "type": "SyncCommittee",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "SyncCommittee.UnmarshalSSZ.reject_complete",
+    "type": "SyncCommittee",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "SyncCommittee.UnmarshalSSZ.reject.r1",
@@ -35827,6 +36666,12 @@
     "type": "SyncCommitteeContribution",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "SyncCommitteeContribution.UnmarshalSSZ.reject_complete",
+    "type": "SyncCommitteeContribution",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "SyncCommitteeContribution.UnmarshalSSZ.reject.r1",
@@ -35940,6 +36785,12 @@
     "type": "SyncCommitteeMessage",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "SyncCommitteeMessage.UnmarshalSSZ.reject_complete",
+    "type": "SyncCommitteeMessage",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "SyncCommitteeMessage.UnmarshalSSZ.reject.r1",
@@ -36064,6 +36915,12 @@
     "type": "Validator",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "Validator.UnmarshalSSZ.reject_complete",
+    "type": "Validator",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "Validator.UnmarshalSSZ.reject.r1",
@@ -36256,6 +37113,12 @@
     "obligation": "accept"
    },
    {
+    "id": "ValidatorBalance.UnmarshalSSZ.reject_complete",
+    "type": "ValidatorBalance",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "ValidatorBalance.UnmarshalSSZ.reject.r1",
     "type": "ValidatorBalance",
     "function": "UnmarshalSSZ",
@@ -36334,6 +37197,12 @@
     "type": "VoluntaryExit",
     "function": "UnmarshalSSZ",
     "obligation": "accept"
+   },
+   {
+    "id": "VoluntaryExit.UnmarshalSSZ.reject_complete",
+    "type": "VoluntaryExit",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
    },
    {
     "id": "VoluntaryExit.UnmarshalSSZ.reject.r1",
@@ -36438,6 +37307,12 @@
     "obligation": "accept"
    },
    {
+    "id": "Withdrawal.UnmarshalSSZ.reject_complete",
+    "type": "Withdrawal",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "Withdrawal.UnmarshalSSZ.reject.r1",
     "type": "Withdrawal",
     "function": "UnmarshalSSZ",
@@ -36529,6 +37404,12 @@
     "obligation": "accept"
    },
    {
+    "id": "WithdrawalRequest.UnmarshalSSZ.reject_complete",
+    "type": "WithdrawalRequest",
+    "function": "UnmarshalSSZ",
+    "obligation": "reject_complete"
+   },
+   {
     "id": "WithdrawalRequest.UnmarshalSSZ.reject.r1",
     "type": "WithdrawalRequest",
     "function": "UnmarshalSSZ",
@@ -36605,7 +37486,7 @@
   ]
  },
  "counts": {
-  "hand_obligations": 123,
+  "hand_obligations": 132,
   "hand_obligations_by_kind": {
    "accept": 9,
    "compose_caller": 9,
@@ -36614,14 +37495,15 @@
    "marshal": 9,
    "marshal_reject": 14,
    "reject": 30,
+   "reject_complete": 9,
    "reject_spec": 25,
    "size": 9
   },
-  "hand_obligations_with_theorem": 58,
+  "hand_obligations_with_theorem": 63,
   "hand_main_theorems_mapped": 55,
   "hand_names_in_table_not_mapped": [],
   "prysm_types_in": 132,
-  "prysm_obligations": 3544,
+  "prysm_obligations": 3676,
   "prysm_obligations_by_kind": {
    "accept": 132,
    "compose_caller": 132,
@@ -36630,6 +37512,7 @@
    "marshal": 132,
    "marshal_reject": 851,
    "reject": 1139,
+   "reject_complete": 132,
    "reject_spec": 762,
    "size": 132
   },

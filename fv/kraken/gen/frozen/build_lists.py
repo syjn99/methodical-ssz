@@ -34,6 +34,13 @@ KINDS = [
      "statement": "for every input that reaches the site (its path condition), the machine code returns a non-nil error "
                   "interface (the exact global or the fmt/validator result under its contract); frame R preserved.",
      "hand_example": "lu_reject_toobig_main"},
+    {"id": "reject_complete", "function": "UnmarshalSSZ",
+     "statement": "decoder soundness (machine code accepts => EthLib accepts): every input that the EthLib decoder "
+                  "rejects reaches some error return site (the path conditions of the reject sites cover the EthLib "
+                  "reject set), so the machine code returns a non-nil error on it. Together with accept this gives "
+                  "accepted set of the machine code = accepted set of EthLib (F1-class defects are visible).",
+     "hand_example": "bv_spec_accepts_iff (EthLib side only; the join with the reject sites is a doc comment)",
+     "added": "review phase1c-r1 S1 (orchestrator decision a), separate commit after P2"},
     {"id": "reject_spec", "function": "UnmarshalSSZ", "per": "error return site whose condition is a spec-level reject",
      "statement": "the EthLib decoder rejects every input that satisfies the site's path condition.",
      "hand_example": "sc_spec_rejects_bool"},
@@ -76,6 +83,12 @@ COMPLETION = [
 # Existing hand theorems per (type, function, kind[, site-ordinal-among-same-kind]).
 HAND = {
     ("Scalars", "UnmarshalSSZ", "accept"): ["sc_accept_main"],
+    # reject_complete: only EthLib-side characterizations exist (partial, see HAND_PARTIAL)
+    ("BitVec", "UnmarshalSSZ", "reject_complete"): ["bv_spec_accepts_iff"],
+    ("Checkpoint", "UnmarshalSSZ", "reject_complete"): ["cp_spec_accepts_iff"],
+    ("AttestationData", "UnmarshalSSZ", "reject_complete"): ["ad_spec_accepts_iff"],
+    ("ListU64", "UnmarshalSSZ", "reject_complete"): ["lu_spec_accepts_iff"],
+    ("Nested", "UnmarshalSSZ", "reject_complete"): ["ne_spec_accepts_iff"],
     ("Scalars", "UnmarshalSSZ", "size-fixed"): ["sc_reject_size_main"],
     ("Scalars", "UnmarshalSSZ", "bool-range"): ["sc_reject_bool_main"],
     ("Scalars", "UnmarshalSSZ", "reject_spec:bool-range"): ["sc_spec_rejects_bool"],
@@ -159,6 +172,7 @@ def instantiate(fn_sites, types, hand=None):
             rows.append(r)
             return r
         add("UnmarshalSSZ", "accept")
+        add("UnmarshalSSZ", "reject_complete")
         u = by.get((t, "UnmarshalSSZ"), {"reject_sites": []})
         for s in u["reject_sites"]:
             add("UnmarshalSSZ", "reject", s)
@@ -189,6 +203,9 @@ def instantiate(fn_sites, types, hand=None):
                 func = r["function"]
                 names = hand.get((r["type"], func, r["obligation"]), [])
             r["hand_theorems"] = names
+            if r["obligation"] == "reject_complete":
+                r["hand_status"] = ("partial: EthLib accepted set characterized; no theorem joins it with the reject sites"
+                                    if names else "open")
     return rows
 
 
