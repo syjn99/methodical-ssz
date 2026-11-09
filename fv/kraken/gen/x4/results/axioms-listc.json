@@ -1,0 +1,53 @@
+{
+ "allowed": [
+  "Classical.choice",
+  "Quot.sound",
+  "propext"
+ ],
+ "rows": [
+  {
+   "name": "Gen1cX4.ListC.reject_short",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListC.reject_offset",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListC.ar_neg96",
+   "axioms": [
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListC.ar_s240",
+   "axioms": [
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListC.ar_m224",
+   "axioms": [
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  }
+ ],
+ "all_standard": true,
+ "log": "run logs/95 (axioms step)"
+}

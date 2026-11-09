@@ -1,0 +1,5 @@
+{"imports": ["Gen1cX4.ListC", "Fk.LcReject"],
+ "pairs": [["Gen1cX4.ListC.reject_short_stmt", "lc_reject_short_main", "SAME", "reject size-short"],
+           ["Gen1cX4.ListC.reject_offset_stmt", "lc_reject_offset_main", "SAME", "reject offset-first"],
+           ["Gen1cX4.ListC.reject_short_stmt", "lc_reject_offset_main", "DIFF", "control"],
+           ["Gen1cX4.ListC.reject_offset_stmt", "lu_reject_offset_main", "DIFF", "control (ListU64 statement)"]]}

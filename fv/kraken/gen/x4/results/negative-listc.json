@@ -1,0 +1,64 @@
+{
+ "schema": "fvphase1c.x4-negative/1",
+ "cases": 4,
+ "as_expected": 4,
+ "rows": [
+  {
+   "id": "lc-short-cmp",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lc_short_cmp_mutant.reject_short",
+   "mutation": "'cmp $0x4,%rcx' -> 'cmp $0x3,%rcx'",
+   "exit": "1",
+   "first_error": "line 74: omega could not prove the goal:",
+   "theorem_lines": [
+    40,
+    102
+   ],
+   "as_expected": true,
+   "run": "logs/96"
+  },
+  {
+   "id": "lc-short-cmp",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lc_short_cmp_control.reject_short",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    40,
+    102
+   ],
+   "as_expected": true,
+   "run": "logs/96"
+  },
+  {
+   "id": "lc-off-jne",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lc_off_jne_mutant.reject_offset",
+   "mutation": "'jne L_target.ListC.UnmarshalSSZ_36e' -> 'je L_target.ListC.UnmarshalSSZ_36e'",
+   "exit": "1",
+   "first_error": "line 88: Application type mismatch: The argument",
+   "theorem_lines": [
+    42,
+    116
+   ],
+   "as_expected": true,
+   "run": "logs/96"
+  },
+  {
+   "id": "lc-off-jne",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lc_off_jne_control.reject_offset",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    42,
+    116
+   ],
+   "as_expected": true,
+   "run": "logs/96"
+  }
+ ],
+ "note": "logs/95 negative step did not run: the first offset mutation text (cmp $0x4,%rdx) occurs twice in the .S, prepare refused it; replaced by the unique jne (logs/96)"
+}

@@ -62,3 +62,17 @@ accept와 루프는 손 증명과 거의 같은 글이다. 생성기가 하는 �
 | marshal reject r1 한도 초과 | 생성 증명 통과(시도 1), 문장 SAME(`lu_marshal_reject_main`). marshal 틀의 두 번째 모드. 변이 `lu-mrej-cmp` |
 | growslice 호출 지점(`lum_grow_site`), r1의 프레임 보존 변형(`lu_reject_short_frame`) | 시도하지 않음(고정 목록의 주 정리 행이 아니거나 같은 행의 보강) |
 | 조합 | 생성 증명 통과(시도 1, 생성한 accept·marshal 위), 문장 SAME(`lu_unmarshal_then_marshal`). 증인 `Gen1cX4.WitLuComp`(gen/wit 출력을 다시 겨눔, n = 1). 변이 `lu-compose-len`(문장) |
+
+## 5. ListC 조각 (부분)
+
+`results/attempts-listc.json`, `compare-listc.json`, `negative-listc.json`, `axioms-listc.json`.
+ListU64의 거부 틀을 넓혔다: 스택 가드 거리 G(`lea -G(%rsp),%r12`)와 `sub $F,%rsp` 꼴 프레임을 코드에서 읽는다.
+G = 8이면 ListU64 문장(`hsp` 전제), 아니면 `guard + G < rsp` 전제와 생성 보조정리 `ar_neg{G}`를 쓴다(손 문장 `lc_reject_*_main`의 꼴).
+ListU64 출력은 이 변경 뒤에도 바이트가 같다.
+원소가 컨테이너인 리스트는 원소를 건드리지 않는 틀(r1, r2)만 받는다. 다른 의무는 분류된 거부다.
+
+| 의무 | 상태 |
+| --- | --- |
+| reject r1 짧은 길이 | 생성 증명 통과(시도 1), 문장 SAME(`lc_reject_short_main`). 변이 `lc-short-cmp` |
+| reject r2 첫 오프셋 | 생성 증명 통과(시도 1), 문장 SAME(`lc_reject_offset_main`). 변이 `lc-off-jne` |
+| size, accept(바깥 0·1·4 × 안 0·1·16), r3, r6, r8 오프셋 순서, r9 원소 오류, r10, marshal | 시도하지 않음 |

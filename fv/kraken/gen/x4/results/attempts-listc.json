@@ -1,0 +1,68 @@
+{
+ "schema": "fvphase1c.x4-attempts/1",
+ "type": "ListC",
+ "obligations": {
+  "reject r1 size-short": {
+   "status": "proved (generated), SAME",
+   "attempts": [
+    {
+     "log": "run logs/95",
+     "result": "pass"
+    }
+   ],
+   "hand": "lc_reject_short_main",
+   "negative": "lc-short-cmp (logs/96)"
+  },
+  "reject r2 offset-first": {
+   "status": "proved (generated), SAME",
+   "attempts": [
+    {
+     "log": "run logs/95",
+     "result": "pass"
+    }
+   ],
+   "hand": "lc_reject_offset_main",
+   "negative": "lc-off-jne (logs/96)"
+  },
+  "size": {
+   "status": "not attempted",
+   "hand": "lc_size_main",
+   "why": "outer loop over item pointers calling ListU64 size inline; needs a loop template"
+  },
+  "accept (outer 0/1/4 x inner 0/1/16)": {
+   "status": "not attempted",
+   "hand": "lc_accept_main, lc_accept_empty_main",
+   "why": "offset table loop and per-item ListU64 decode calls; needs a nested template"
+  },
+  "reject r3 zero": {
+   "status": "not attempted",
+   "hand": "lc_reject_zero_main"
+  },
+  "reject r6 past": {
+   "status": "not attempted",
+   "hand": "lc_reject_past_main"
+  },
+  "reject r8 offset-order": {
+   "status": "not attempted",
+   "hand": "lc_reject_offset_order_main",
+   "why": "fmt.errorf %d %d (FmtErrorfDDC, lcFmtOrder)"
+  },
+  "reject r9 item-error": {
+   "status": "not attempted",
+   "hand": "lc_reject_item_main",
+   "why": "callee error wrap 'Items: %w' (lcFmtItems)"
+  },
+  "reject r10 tail": {
+   "status": "not attempted",
+   "hand": "lc_reject_tail_main"
+  },
+  "marshal": {
+   "status": "not attempted",
+   "hand": "lc_marshal_main"
+  },
+  "compose": {
+   "status": "not attempted",
+   "hand": "(no ListC composition in the frozen hand list)"
+  }
+ }
+}

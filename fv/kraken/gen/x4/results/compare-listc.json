@@ -1,0 +1,38 @@
+{
+ "schema": "fvphase1c.x4-compare/1",
+ "log": "run logs/95 (compare step)",
+ "rows": [
+  {
+   "gen": "Gen1cX4.ListC.reject_short_stmt",
+   "hand": "lc_reject_short_main",
+   "expect": "SAME",
+   "why": "reject size-short",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListC.reject_offset_stmt",
+   "hand": "lc_reject_offset_main",
+   "expect": "SAME",
+   "why": "reject offset-first",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListC.reject_short_stmt",
+   "hand": "lc_reject_offset_main",
+   "expect": "DIFF",
+   "why": "control",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListC.reject_offset_stmt",
+   "hand": "lu_reject_offset_main",
+   "expect": "DIFF",
+   "why": "control (ListU64 statement)",
+   "result": "DIFF",
+   "as_expected": true
+  }
+ ]
+}

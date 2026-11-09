@@ -793,7 +793,7 @@ class ListField:
         lf = layout["fields"][0]
         assert lf["kind"] == "slice", lf
         self.t, self.esz, self.limit, self.goff = desc["type"], f["elem_size"], f["limit"], lf["offset"]
-        self.shift = {1: 0, 2: 1, 4: 2, 8: 3}[self.esz]
+        self.shift = {1: 0, 2: 1, 4: 2, 8: 3}.get(self.esz)   # None for a list of containers
 
 
 def lu_size_stmt(code, L):
@@ -825,7 +825,14 @@ def lu_size_proof(D, L, code):
             "· apply UInt64.toBitVec_inj.mp; simp"]
 
 
-def lu_rej_stmt(name, code, err, mode):
+def guard_size(D):
+    """Stack-guard distance G of the prologue `lea -G(%rsp),%r12; cmp 0x10(%r14),%r12; jbe`."""
+    m = re.fullmatch(r"lea -(0x[0-9a-f]+)\(%rsp\),%r12", D[2][2])
+    assert m and D[3][2] == "cmp 0x10(%r14),%r12", D[2:4]
+    return int(m[1], 16)
+
+
+def lu_rej_stmt(name, code, err, mode, G=8):
     o4 = "\n    (o4 : List UInt8) (ho4 : o4.length = 4) (hoff : Int.ofBytes o4 ≠ 4)" if mode == "offset" else ""
     o4m = "\n      ⋆ Eq (o4.At s.regs.rbx.toBitVec)" if mode == "offset" else ""
     hlen = "(hlen : s.regs.rcx.toNat < 4)" if mode == "short" else "(hlen : 4 ≤ s.regs.rcx.toNat)"
@@ -839,7 +846,7 @@ def lu_rej_stmt(name, code, err, mode):
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)){o4m}
       ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At (label "{err}").toBitVec)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "{err}" + 8).toBitVec) ⋆ R)
-    (hguard : guard.toNat < s.regs.rsp.toNat - 8) (hsp : 8 ≤ s.regs.rsp.toNat) {hlen},
+    {"(hguard : guard.toNat < s.regs.rsp.toNat - 8) (hsp : 8 ≤ s.regs.rsp.toNat)" if G == 8 else f"(hguard : guard.toNat + {G} < s.regs.rsp.toNat)"} {hlen},
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = e0 ∧ st.data.regs.rbx = e1
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
@@ -848,13 +855,16 @@ def lu_rej_stmt(name, code, err, mode):
 """
 
 
-def lu_rej_proof(D, code, mode):
+def lu_rej_proof(D, code, mode, G=8):
+    """G: stack-guard distance. G = 8 (ListU64) keeps the hsp premise; a larger guard (ListC: 0x60)
+    has the premise `guard + G < rsp` and a generated `ar_neg{G}` lemma."""
     lab_index = {t: d for d, k, t in D if k == "label"}
     kat = lambda d: f"kat hk {code} {d}"
-    intro = "intro k hk hf s ra guard e0 e1 fp slot hfp hsl " + ("o4 ho4 hoff " if mode == "offset" else "") + "R h_mem hguard hsp hlen"
+    hsp = "hsp " if G == 8 else ""
+    intro = "intro k hk hf s ra guard e0 e1 fp slot hfp hsl " + ("o4 ho4 hoff " if mode == "offset" else "") + f"R h_mem hguard {hsp}hlen"
     L = [intro,
          "obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s",
-         "simp only at h_mem hguard hsp hlen ⊢",
+         f"simp only at h_mem hguard {hsp}hlen ⊢",
          "have := rsp.toNat_lt_size; have := guard.toNat_lt_size; have := rcx.toNat_lt_size; simp only [UInt64.size] at *"]
     d, frame, err, seen = 0, None, None, set()
     while True:
@@ -865,25 +875,35 @@ def lu_rej_proof(D, code, mode):
             L.append(kat(d)); d += 1; continue
         op = t.split()[0]
         a = t[len(op):].strip()
-        if op == "lea" and a == "-0x8(%rsp),%r12" or op == "nop" or (op == "mov" and a == "%rsp,%rbp"):
+        if op == "lea" and a == f"-{hex(G)}(%rsp),%r12" or op == "nop" or (op == "mov" and a == "%rsp,%rbp"):
             L.append(kat(d))
         elif op == "cmp" and a == "0x10(%r14),%r12":
             L += [kat(d), "apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
-        elif op == "jbe":
+        elif op == "jbe" and G == 8:
             L += [kat(d), "split", "case isTrue h =>", "  exfalso",
                   "  rw [cmp_be_false _ _ _ _ (by rw [toNat_add_neg8 _ (by simpa using hsp)]; simpa using hguard)] at h",
                   "  exact absurd h (by simp)", "simp only [Effects.All]"]
+        elif op == "jbe":
+            L += [kat(d), "split", "case isTrue h =>", "  exfalso",
+                  f"  rw [cmp_be_false _ _ _ _ (by rw [ar_neg{G} _ (by simp; omega)]; simp; omega)] at h",
+                  "  exact absurd h (by simp)", "simp only [Effects.All]"]
+        elif op == "sub" and re.fullmatch(r"\$0x[0-9a-f]+,%rsp", a) and frame is None:
+            frame = ("sub", int(a.split(",")[0][1:], 16))
+            L.append(kat(d))
         elif op == "push":
             L += [kat(d), "apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by kaddr) (by ecancel) (by exact hfp)",
                   "intro m1 H1", "simp only [Width.bytes, Width.bits] at H1", "kunfold"]
-        elif op == "add" and a.endswith(",%rsp"):
+        elif op == "add" and a.endswith(",%rsp") and not isinstance(frame, tuple):
             assert a.startswith("$-"), a
             frame = -int(a.split(",")[0][1:], 16)
             L.append(kat(d))
         elif op == "mov" and a.startswith("%rbx,") and a.endswith("(%rsp)"):
-            off = int(a.split(",")[1].split("(")[0], 16) - frame - 8
+            F = frame[1] if isinstance(frame, tuple) else frame
+            raw = int(a.split(",")[1].split("(")[0], 16)
+            off = raw - F - 8
             assert off == 16, a
-            L += [kat(d), f"apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ slot _ _ (by bv_omega) (by ecancel) (by exact hsl)",
+            pf = f"(ar_s{raw} _)" if isinstance(frame, tuple) else "(by bv_omega)"
+            L += [kat(d), f"apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ slot _ _ {pf} (by ecancel) (by exact hsl)",
                   "intro m2 H2", "simp only [Width.bytes, Width.bits] at H2", "kunfold"]
         elif op == "cmp" and a == "$0x4,%rcx":
             L.append(kat(d))
@@ -906,8 +926,11 @@ def lu_rej_proof(D, code, mode):
         elif op == "mov" and re.fullmatch(r"ssz\.\w+(\+8)?\(%rip\),%r[ab]x", a):
             e = "e1" if "+8" in a else "e0"
             L += [kat(d), f"apply load_step _ _ _ _ (Int.toBytes 8 {e}.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
-        elif op == "sub" and a.endswith(",%rsp"):
+        elif op == "sub" and a.endswith(",%rsp") or (op == "add" and a.endswith(",%rsp") and isinstance(frame, tuple)):
             L.append(kat(d))
+        elif op == "pop" and isinstance(frame, tuple):
+            L += [kat(d), f"rw [ar_m{frame[1] + 8}]",
+                  "apply load_step _ _ _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
         elif op == "pop":
             L += [kat(d), f"rw [show -{frame} + (rsp.toBitVec - 8#64) - -{frame} = rsp.toBitVec - 8 by bv_omega]",
                   "apply load_step _ _ _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
@@ -2166,6 +2189,11 @@ def main_list(a, key, desc, dsha):
     ns = a.ns or f"Gen1cX4.{t}"
     LIST_OBL = ("size", "accept", "marshal", "marshal_reject", "compose", "reject_short", "reject_offset", "reject_misaligned", "reject_toobig")
     only = [x for x in a.only.split(",") if x in LIST_OBL] if a.only != ap_default() else list(LIST_OBL)
+    if L.esz is None:   # list of containers (ListC): only the templates that do not touch elements
+        bad = [x for x in only if x not in ("reject_short", "reject_offset")]
+        if a.only != ap_default() and bad:
+            raise SystemExit(f"x4gen: refused {key[0]}.{t}: no template for {bad} on a list of containers")
+        only = [x for x in only if x in ("reject_short", "reject_offset")]
     code = {m: f"{t}{m}" for m in ("SizeSSZ", "UnmarshalSSZ", "MarshalSSZTo")}
     head = ["import Fk.Step", "import Fk.Bytes", "import Fk.Labels", "import Fk.Flags", "import Gen1cX4.Support"]
     if any(x in only for x in ("reject_misaligned", "reject_toobig", "accept", "marshal", "marshal_reject")):
@@ -2222,12 +2250,23 @@ def main_list(a, key, desc, dsha):
             raise SystemExit("x4gen: compose uses the generated accept and marshal (add both to --only)")
         body += [lu_compose_stmt(code["UnmarshalSSZ"], code["MarshalSSZTo"], AS, MS), "set_option maxHeartbeats 16000000 in",
                  "set_option maxRecDepth 100000 in", "theorem compose [Host] : compose_stmt := by", *["  " + x for x in LU_COMPOSE_PROOF], ""]
+    try:
+        G = guard_size(Dun)
+        subf = next((int(t.split()[1].split(",")[0][1:], 16) for _, k, t in Dun if k == "instr" and re.fullmatch(r"sub \$0x[0-9a-f]+,%rsp", t)), None)
+    except (AssertionError, IndexError, ValueError) as e:
+        raise SystemExit(f"x4gen: refused {key[0]}.{t}: prologue does not fit the reject template ({type(e).__name__}: {e})")
+    if subf is not None and any(f"reject_{m}" in only for m in ("short", "offset")):
+        body += ["-- prologue/epilogue arithmetic of the decoder's frame (generated with its guard distance and frame size)",
+                 f"theorem ar_neg{G} (x : BitVec 64) (h : {G} ≤ x.toNat) : (x + -{G}).toNat = x.toNat - {G} := by",
+                 "  rw [← BitVec.sub_eq_add_neg, BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simpa using h)]; rfl",
+                 f"theorem ar_s{subf + 24} (x : BitVec 64) : x - 8#64 - {subf} + {subf + 24} = x + 16 := by bv_omega",
+                 f"theorem ar_m{subf + 8} (x : BitVec 64) : {subf} + (x - 8#64 - {subf}) = x - 8 := by bv_omega", ""]
     for mode in ("short", "offset"):
         if f"reject_{mode}" in only:
-            body += [lu_rej_stmt(f"reject_{mode}", code["UnmarshalSSZ"], lu_err(Dun, mode), mode),
+            body += [lu_rej_stmt(f"reject_{mode}", code["UnmarshalSSZ"], lu_err(Dun, mode), mode, G),
                      "set_option maxHeartbeats 4000000 in", "set_option maxRecDepth 100000 in",
                      f"theorem reject_{mode} [Host] : reject_{mode}_stmt := by",
-                     *["  " + x for x in lu_rej_proof(Dun, code["UnmarshalSSZ"], mode)], ""]
+                     *["  " + x for x in lu_rej_proof(Dun, code["UnmarshalSSZ"], mode, G)], ""]
     calls = [m for m in ("misaligned", "toobig") if f"reject_{m}" in only]
     if calls:
         if (L.esz, L.limit) != (8, 16):
