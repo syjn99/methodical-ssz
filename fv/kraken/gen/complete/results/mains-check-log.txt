@@ -1,5 +1,5 @@
-2:COMPLETE-MAINS env 55 input 55 missing_from_input [] not_in_env []
-69:REAL_RC=0
-71:COMPLETE-MAINS env 55 input 54 missing_from_input [cp_size_main] not_in_env []
-72:../gen/complete/Complete.lean:199:0: error: the input list of *_main theorems differs from the environment
-73:CONTROL_RC=1
+real.log:1:COMPLETE-MAINS env 55 input 55 missing_from_input [] not_in_env []
+control.log:1:COMPLETE-MAINS env 55 input 54 missing_from_input [cp_size_main] not_in_env []
+control.log:2:../gen/complete/Complete.lean:199:0: error: the input list of *_main theorems differs from the environment
+real 0
+control 1

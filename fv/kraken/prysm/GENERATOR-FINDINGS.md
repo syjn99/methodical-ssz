@@ -79,3 +79,4 @@
 - 이 세션은 기준선(커밋된 파일)을 다시 돌리지 않았다. 3절의 "기준선에서도 같다"는 인용이다.
 - spec `ssz_static` 시험, Bazel 시험, 다른 Prysm 패키지는 돌리지 않았다.
 - 리뷰 phase1c-r1 S7: 위 실행은 `go test -p 2`였다. 규칙은 `-p 1`이다. `gen/prysm-tests.sh`(`-p 1`, `set -o pipefail`, 출력 전체 보관)로 같은 7개 명령을 다시 돌렸다(run `logs/28`). 결과가 같다: 실패한 하위 시험은 2절의 셋뿐이고 minimal 실패 둘도 같다. 원본 `tests/prysm-tests-p1.json`, 요약 `tests/prysm-tests-p1-summary.txt`. 이것이 위 표의 근거를 대체한다.
+- 리뷰 phase1c-r2 N4: `gen/prysm-tests.sh`의 종료 코드는 이제 커밋된 분류기 `gen/prysm_tests_classify.py`의 판정이다(알려진 실패만이면 0). 분류기를 `logs/28`의 출력에 적용했다: 판정 "only known failures", 예상 밖 0(`tests/prysm-tests-p1-classified.json`). 알려지지 않은 실패를 넣은 대조군은 1로 끝난다. Prysm 시험 자체는 다시 돌리지 않았다(출력 7개는 `logs/28`의 것).

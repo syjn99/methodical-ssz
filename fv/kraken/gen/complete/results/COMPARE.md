@@ -1,7 +1,7 @@
 # P5: REPORT 2절 게이트 표의 재생성과 칸별 비교
 
-입력은 해석된 Lean 선언뿐이다(`Complete.lean`, gate 로그 run `logs/24-complete.log`, 사본 `complete-log.txt`).
-역할은 고정 목록(`gen/frozen/THEOREMS.json`)에서 온다. 증인은 "증명 항이 주 정리를 쓰고 타입에 `Host` 바인더가 없는 선언"이다.
+입력은 해석된 Lean 선언뿐이다(`Complete.lean`, `run_complete.sh`; 마지막 실행 run `logs/35-complete-r2.log`, 사본 `complete-log.txt`).
+역할은 고정 목록(`gen/frozen/THEOREMS.json`)에서 온다. 증인은 "증명 항이 주 정리를 쓰고, 타입에 `Host` 바인더가 없고, 구체 `Host` 인스턴스를 쓰는 선언"이다(3절).
 계약은 등록부의 상수가 가설에 나타나는지로 본다. 함수 명세 계약은 그것을 결론으로 갖는 선언의 계약까지 전파한다.
 재생성 표: `gate-table.md`. 수치와 칸: `gate-table.json`.
 
@@ -25,7 +25,7 @@
 ## 3. 한계
 
 - 주 정리 목록의 교차 검사: `Complete.lean`이 Fk 모듈의 `*_main` 정리를 환경에서 세어 입력과 비교한다. 다르면 실패한다.
-  run `logs/27`: 환경 55 = 입력 55. 대조군(입력에서 `cp_size_main`을 뺌)은 오류로 끝난다(`mains-check-log.txt`).
+  run `logs/27`, 다시 `logs/35`(`run_complete.sh`: 실제 rc 0이고 대조군 rc가 0이 아닐 때만 gate 종료 코드 0): 환경 55 = 입력 55. 대조군(입력에서 `cp_size_main`을 뺌)은 오류로 끝난다(`mains-check-log.txt`).
 - 계약 등록부는 고정 14개다(`Complete.lean` `registry`). 등록부에 없는 새 계약은 표에 나타나지 않는다. "같음 48칸"은 이 등록부와 키워드 대응(`table.py`) 수준의 비교다.
 - 증인 규칙: 증명 항이 주 정리를 쓰고, 타입에 `Host` 바인더가 없고, 구체 `Host` 인스턴스를 쓰는 선언(리뷰 뒤 마지막 조건을 더했다. 명세 수준 보조정리 `Fv1.lu_spec_rejects`가 증인으로 잘못 세어졌다).
 - 입력 65개 = 앞의 60 + `*_spec_accepts_iff` 다섯(고정 목록 `reject_complete`의 부분 대응). 앞의 60줄은 바뀌지 않았다.
