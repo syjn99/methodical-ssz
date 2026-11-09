@@ -133,9 +133,11 @@ def llvm_decode(elf, lo, hi):
         [tool("llvm-objdump"), "-d", f"--start-address={lo}", f"--stop-address={hi}", str(elf)], text=True)
     out = {}
     for line in text.splitlines():
-        m = re.match(r"\s*([0-9a-f]+):\s+((?:[0-9a-f]{2} )+)\s*(.*)$", line)
+        # `addr: bytes<TAB>text`; a 10-byte instruction fills the byte column, so its last byte is
+        # followed by the tab, not by a space (phase1c X5: movabs in the Go 1.26.10 ELF)
+        m = re.match(r"\s*([0-9a-f]+):\s((?:[0-9a-f]{2} ?)+?) *\t(.*)$", line)
         if m:
-            out[int(m[1], 16)] = (bytes.fromhex(m[2]), re.sub(r"\s+", " ", m[3]).split(" <")[0].strip())
+            out[int(m[1], 16)] = (bytes.fromhex(m[2].replace(" ", "")), re.sub(r"\s+", " ", m[3]).split(" <")[0].strip())
     return out
 
 
