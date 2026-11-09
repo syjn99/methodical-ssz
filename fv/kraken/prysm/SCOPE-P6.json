@@ -1,0 +1,6811 @@
+{
+ "schema": "fvphase1c.scope-p6/1",
+ "status": "PROVISIONAL (classification, no proof attempted)",
+ "hand_max_instructions": 395,
+ "types": 135,
+ "counts": {
+  "first_class": {
+   "missing contract": 61,
+   "new pattern (automation)": 23,
+   "none known": 38,
+   "tool gap": 13
+  },
+  "first_class_transitive": {
+   "missing contract": 77,
+   "new pattern (automation)": 8,
+   "none known": 8,
+   "tool gap": 42
+  },
+  "first_class_transitive_in_B": {
+   "missing contract": 28,
+   "new pattern (automation)": 2,
+   "none known": 6,
+   "tool gap": 9
+  },
+  "first_class_p1_in_only": {
+   "missing contract": 58,
+   "new pattern (automation)": 23,
+   "none known": 38,
+   "tool gap": 13
+  },
+  "has_class": {
+   "tool gap": 13,
+   "missing contract": 74,
+   "new pattern (automation)": 91,
+   "none known": 38
+  },
+  "size_band": {
+   "over 3x hand max": 17,
+   "up to 3x hand max": 23,
+   "within hand range": 95
+  },
+  "missing_contract_kinds": {
+   "fmt shape '%d%d'": 15,
+   "fmt shape '%d'": 15,
+   "hand-written primitives SSZ methods (no spec)": 52,
+   "runtime call moveSlice* (stack-backed result to heap)": 8
+  },
+  "new_pattern_kinds": {
+   "byte list (BitL without ValidateBitlist)": 12,
+   "hand-written delegate CommitteeIndex": 2,
+   "hand-written delegate Epoch": 10,
+   "hand-written delegate Gwei": 2,
+   "hand-written delegate Slot": 38,
+   "hand-written delegate ValidatorIndex": 28,
+   "list of byte lists (deep)": 3,
+   "list of fixed byte vectors": 22,
+   "list of fixed-size containers": 21,
+   "vector of byte slices": 27,
+   "vector of hand-written delegates": 1
+  },
+  "p1_in_split": {
+   "types": 132,
+   "calls_hand_written": 52,
+   "bitlist_via_contract": 5,
+   "list_container": 20,
+   "list_container_variable_elements_ListC": 12,
+   "list_container_fixed_elements_new": 19,
+   "vector_of_container_forms": 1,
+   "vector_of_byte_slices": 27,
+   "three_functions_parse": 119,
+   "some_function_does_not_parse": 13
+  },
+  "in_B_first_class": {
+   "missing contract": 20,
+   "new pattern (automation)": 7,
+   "none known": 15,
+   "tool gap": 3
+  }
+ },
+ "rows": [
+  {
+   "type": "ConsolidationRequest",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 3,
+   "shapes": [
+    "bytesN"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [
+    "runtime call moveSlice* (stack-backed result to heap)"
+   ],
+   "fmt_shapes": {},
+   "calls": {
+    "growslice": 3,
+    "memmove": 6,
+    "morestack_noctxt": 2,
+    "moveSlice* (stack-backed result to heap)": 1,
+    "makeslice": 3,
+    "write barrier": 6
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 139,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "DepositRequest",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 5,
+   "shapes": [
+    "bytesN",
+    "uint64"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Scalars"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {},
+   "calls": {
+    "growslice": 5,
+    "memmove": 6,
+    "morestack_noctxt": 2,
+    "makeslice": 3,
+    "write barrier": 6
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 160,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 0,
+   "first_class_transitive": "none known"
+  },
+  {
+   "type": "ExecutionPayload",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1",
+   "in_B": false,
+   "p1_scope": "out",
+   "kind": "variable container",
+   "fields": 14,
+   "shapes": [
+    "bytesN",
+    "list[byte]",
+    "list[list[byte]]",
+    "uint64"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Scalars"
+   ],
+   "new_patterns": [
+    "byte list (BitL without ValidateBitlist)",
+    "list of byte lists (deep)"
+   ],
+   "missing_contracts": [
+    "fmt shape '%d%d'",
+    "fmt shape '%d'"
+   ],
+   "fmt_shapes": {
+    "": 3,
+    "%d": 2,
+    "%d%w": 1,
+    "%d%d": 1
+   },
+   "calls": {
+    "growslice": 19,
+    "memmove": 20,
+    "morestack_noctxt": 2,
+    "convT64": 5,
+    "fmt": 7,
+    "makeslice": 9,
+    "newobject": 7,
+    "panic*": 4,
+    "write barrier": 20
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 714,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "ExecutionPayloadCapella",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1",
+   "in_B": false,
+   "p1_scope": "out",
+   "kind": "variable container",
+   "fields": 15,
+   "shapes": [
+    "bytesN",
+    "list[byte]",
+    "list[container]",
+    "list[list[byte]]",
+    "uint64"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Scalars"
+   ],
+   "new_patterns": [
+    "byte list (BitL without ValidateBitlist)",
+    "list of byte lists (deep)",
+    "list of fixed-size containers"
+   ],
+   "missing_contracts": [
+    "fmt shape '%d%d'",
+    "fmt shape '%d'"
+   ],
+   "fmt_shapes": {
+    "%w": 2,
+    "": 3,
+    "%d": 2,
+    "%d%w": 3,
+    "%d%d": 1
+   },
+   "calls": {
+    "fmt": 11,
+    "generated method": 2,
+    "growslice": 20,
+    "memmove": 20,
+    "morestack_noctxt": 2,
+    "newobject": 12,
+    "convT64": 7,
+    "makeslice": 10,
+    "panic*": 6,
+    "write barrier": 22
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 919,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 1,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "ExecutionPayloadDeneb",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1",
+   "in_B": true,
+   "p1_scope": "out",
+   "kind": "variable container",
+   "fields": 17,
+   "shapes": [
+    "bytesN",
+    "list[byte]",
+    "list[container]",
+    "list[list[byte]]",
+    "uint64"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Scalars"
+   ],
+   "new_patterns": [
+    "byte list (BitL without ValidateBitlist)",
+    "list of byte lists (deep)",
+    "list of fixed-size containers"
+   ],
+   "missing_contracts": [
+    "fmt shape '%d%d'",
+    "fmt shape '%d'"
+   ],
+   "fmt_shapes": {
+    "%w": 2,
+    "": 3,
+    "%d": 2,
+    "%d%w": 3,
+    "%d%d": 1
+   },
+   "calls": {
+    "fmt": 11,
+    "generated method": 2,
+    "growslice": 22,
+    "memmove": 20,
+    "morestack_noctxt": 2,
+    "newobject": 12,
+    "convT64": 7,
+    "makeslice": 10,
+    "panic*": 6,
+    "write barrier": 22
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 924,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 1,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "ExecutionPayloadHeader",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 14,
+   "shapes": [
+    "bytesN",
+    "list[byte]",
+    "uint64"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Scalars"
+   ],
+   "new_patterns": [
+    "byte list (BitL without ValidateBitlist)"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {},
+   "calls": {
+    "growslice": 16,
+    "memmove": 20,
+    "morestack_noctxt": 2,
+    "makeslice": 9,
+    "write barrier": 19
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 432,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 0,
+   "first_class_transitive": "new pattern (automation)"
+  },
+  {
+   "type": "ExecutionPayloadHeaderCapella",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 15,
+   "shapes": [
+    "bytesN",
+    "list[byte]",
+    "uint64"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Scalars"
+   ],
+   "new_patterns": [
+    "byte list (BitL without ValidateBitlist)"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {},
+   "calls": {
+    "growslice": 17,
+    "memmove": 22,
+    "morestack_noctxt": 2,
+    "makeslice": 10,
+    "write barrier": 21
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 465,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 0,
+   "first_class_transitive": "new pattern (automation)"
+  },
+  {
+   "type": "ExecutionPayloadHeaderDeneb",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 17,
+   "shapes": [
+    "bytesN",
+    "list[byte]",
+    "uint64"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Scalars"
+   ],
+   "new_patterns": [
+    "byte list (BitL without ValidateBitlist)"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {},
+   "calls": {
+    "growslice": 19,
+    "memmove": 22,
+    "morestack_noctxt": 2,
+    "makeslice": 10,
+    "write barrier": 21
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 491,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 0,
+   "first_class_transitive": "new pattern (automation)"
+  },
+  {
+   "type": "ExecutionRequests",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 3,
+   "shapes": [
+    "list[container]"
+   ],
+   "hand_patterns": [],
+   "new_patterns": [
+    "list of fixed-size containers"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 6,
+    "%d%w": 6
+   },
+   "calls": {
+    "fmt": 11,
+    "growslice": 14,
+    "memmove": 10,
+    "morestack_noctxt": 2,
+    "newobject": 14,
+    "convT64": 6,
+    "generated method": 2,
+    "makeslice": 5,
+    "panic*": 9,
+    "write barrier": 10
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 677,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 3,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "Withdrawal",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 4,
+   "shapes": [
+    "bytesN",
+    "delegated overlay ValidatorIndex",
+    "uint64"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Scalars"
+   ],
+   "new_patterns": [
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "growslice": 4,
+    "memmove": 2,
+    "morestack_noctxt": 2,
+    "fmt": 1,
+    "hand-written primitives method": 1,
+    "makeslice": 1,
+    "newobject": 1,
+    "write barrier": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 117,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "WithdrawalRequest",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/engine/v1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 3,
+   "shapes": [
+    "bytesN",
+    "uint64"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Scalars"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {},
+   "calls": {
+    "growslice": 3,
+    "memmove": 4,
+    "morestack_noctxt": 2,
+    "makeslice": 2,
+    "write barrier": 4
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 107,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 0,
+   "first_class_transitive": "none known"
+  },
+  {
+   "type": "AggregateAttestationAndProof",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 3,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)",
+    "delegated overlay ValidatorIndex"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 4
+   },
+   "calls": {
+    "fmt": 3,
+    "generated method": 2,
+    "growslice": 3,
+    "memmove": 2,
+    "morestack_noctxt": 3,
+    "newobject": 6,
+    "write barrier": 5,
+    "hand-written primitives method": 1,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 164,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 3,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "AggregateAttestationAndProofElectra",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 3,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)",
+    "delegated overlay ValidatorIndex"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 4
+   },
+   "calls": {
+    "fmt": 3,
+    "generated method": 2,
+    "growslice": 3,
+    "memmove": 2,
+    "morestack_noctxt": 3,
+    "newobject": 6,
+    "write barrier": 5,
+    "hand-written primitives method": 1,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 164,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 3,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "Attestation",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 3,
+   "shapes": [
+    "bitlist",
+    "bytesN",
+    "delegated container (fixed)"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "BitL",
+    "Checkpoint.root"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 4
+   },
+   "calls": {
+    "ValidateBitlist": 2,
+    "fmt": 4,
+    "generated method": 2,
+    "growslice": 4,
+    "memmove": 4,
+    "morestack_noctxt": 2,
+    "newobject": 6,
+    "write barrier": 5,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 198,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 2,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "AttestationData",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 5,
+   "shapes": [
+    "bytesN",
+    "delegated container (fixed)",
+    "delegated overlay CommitteeIndex",
+    "delegated overlay Slot"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Checkpoint.root"
+   ],
+   "new_patterns": [
+    "hand-written delegate CommitteeIndex",
+    "hand-written delegate Slot"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 8
+   },
+   "calls": {
+    "fmt": 6,
+    "generated method": 4,
+    "growslice": 3,
+    "memmove": 2,
+    "morestack_noctxt": 2,
+    "newobject": 10,
+    "write barrier": 6,
+    "hand-written primitives method": 2,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 220,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 1,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "AttestationElectra",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 4,
+   "shapes": [
+    "bitlist",
+    "bitvector",
+    "bytesN",
+    "delegated container (fixed)"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "BitL",
+    "BitVec",
+    "Checkpoint.root"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 4
+   },
+   "calls": {
+    "ValidateBitlist": 2,
+    "fmt": 4,
+    "generated method": 2,
+    "growslice": 5,
+    "memmove": 4,
+    "morestack_noctxt": 2,
+    "newobject": 6,
+    "write barrier": 7,
+    "makeslice": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 234,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 2,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "AttesterSlashing",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 2,
+   "shapes": [
+    "delegated container (variable)"
+   ],
+   "hand_patterns": [
+    "Nested.L"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 4
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 4,
+    "growslice": 2,
+    "morestack_noctxt": 3,
+    "newobject": 10,
+    "write barrier": 6
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 177,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 3,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "AttesterSlashingElectra",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 2,
+   "shapes": [
+    "delegated container (variable)"
+   ],
+   "hand_patterns": [
+    "Nested.L"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 4
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 4,
+    "growslice": 2,
+    "morestack_noctxt": 3,
+    "newobject": 10,
+    "write barrier": 6
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 177,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 3,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "BLSToExecutionChange",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 3,
+   "shapes": [
+    "bytesN",
+    "delegated overlay ValidatorIndex"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root"
+   ],
+   "new_patterns": [
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "growslice": 3,
+    "memmove": 4,
+    "morestack_noctxt": 2,
+    "fmt": 1,
+    "hand-written primitives method": 1,
+    "makeslice": 2,
+    "newobject": 1,
+    "write barrier": 4
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 130,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "BeaconBlock",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 5,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)",
+    "delegated overlay Slot",
+    "delegated overlay ValidatorIndex"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 6
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 4,
+    "growslice": 5,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "hand-written primitives method": 2,
+    "makeslice": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 228,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 14,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BeaconBlockAltair",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 5,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)",
+    "delegated overlay Slot",
+    "delegated overlay ValidatorIndex"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 6
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 4,
+    "growslice": 5,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "hand-written primitives method": 2,
+    "makeslice": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 228,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 15,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BeaconBlockBellatrix",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 5,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)",
+    "delegated overlay Slot",
+    "delegated overlay ValidatorIndex"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 6
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 4,
+    "growslice": 5,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "hand-written primitives method": 2,
+    "makeslice": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 228,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 16,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BeaconBlockBody",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 8,
+   "shapes": [
+    "bytesN",
+    "delegated container (fixed)",
+    "list[container]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Checkpoint.root",
+    "ListC"
+   ],
+   "new_patterns": [
+    "list of fixed-size containers"
+   ],
+   "missing_contracts": [
+    "fmt shape '%d%d'",
+    "fmt shape '%d'"
+   ],
+   "fmt_shapes": {
+    "%w": 12,
+    "%d%w": 8,
+    "": 6,
+    "%d": 4,
+    "%d%d": 2
+   },
+   "calls": {
+    "fmt": 31,
+    "generated method": 10,
+    "growslice": 12,
+    "memmove": 8,
+    "morestack_noctxt": 3,
+    "newobject": 44,
+    "write barrier": 28,
+    "convT64": 16,
+    "makeslice": 9,
+    "panic*": 13
+   },
+   "kraken_parse_M_S_U": [
+    "ERR",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 1505,
+   "size_band": "over 3x hand max",
+   "expected_failure_classes": [
+    "tool gap",
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "tool gap",
+   "callee_closure": 13,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BeaconBlockBodyAltair",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 9,
+   "shapes": [
+    "bytesN",
+    "delegated container (fixed)",
+    "list[container]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Checkpoint.root",
+    "ListC"
+   ],
+   "new_patterns": [
+    "list of fixed-size containers"
+   ],
+   "missing_contracts": [
+    "fmt shape '%d%d'",
+    "fmt shape '%d'"
+   ],
+   "fmt_shapes": {
+    "%w": 14,
+    "%d%w": 8,
+    "": 6,
+    "%d": 4,
+    "%d%d": 2
+   },
+   "calls": {
+    "fmt": 32,
+    "generated method": 10,
+    "growslice": 14,
+    "memmove": 12,
+    "morestack_noctxt": 3,
+    "newobject": 47,
+    "write barrier": 34,
+    "convT64": 16,
+    "makeslice": 11,
+    "panic*": 13
+   },
+   "kraken_parse_M_S_U": [
+    "ERR",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 1554,
+   "size_band": "over 3x hand max",
+   "expected_failure_classes": [
+    "tool gap",
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "tool gap",
+   "callee_closure": 14,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BeaconBlockBodyBellatrix",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 10,
+   "shapes": [
+    "bytesN",
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "list[container]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Checkpoint.root",
+    "ListC",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "list of fixed-size containers"
+   ],
+   "missing_contracts": [
+    "fmt shape '%d%d'",
+    "fmt shape '%d'"
+   ],
+   "fmt_shapes": {
+    "%w": 16,
+    "%d%w": 8,
+    "": 6,
+    "%d": 4,
+    "%d%d": 2
+   },
+   "calls": {
+    "fmt": 34,
+    "generated method": 12,
+    "growslice": 15,
+    "memmove": 12,
+    "morestack_noctxt": 3,
+    "newobject": 52,
+    "write barrier": 37,
+    "convT64": 16,
+    "makeslice": 11,
+    "panic*": 13
+   },
+   "kraken_parse_M_S_U": [
+    "ERR",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 1629,
+   "size_band": "over 3x hand max",
+   "expected_failure_classes": [
+    "tool gap",
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "tool gap",
+   "callee_closure": 15,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BeaconBlockBodyCapella",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 11,
+   "shapes": [
+    "bytesN",
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "list[container]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Checkpoint.root",
+    "ListC",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "list of fixed-size containers"
+   ],
+   "missing_contracts": [
+    "fmt shape '%d%d'",
+    "fmt shape '%d'"
+   ],
+   "fmt_shapes": {
+    "%w": 18,
+    "%d%w": 10,
+    "": 6,
+    "%d": 4,
+    "%d%d": 2
+   },
+   "calls": {
+    "fmt": 38,
+    "generated method": 14,
+    "growslice": 16,
+    "memmove": 12,
+    "morestack_noctxt": 3,
+    "newobject": 57,
+    "write barrier": 39,
+    "convT64": 18,
+    "makeslice": 12,
+    "panic*": 15
+   },
+   "kraken_parse_M_S_U": [
+    "ERR",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 1832,
+   "size_band": "over 3x hand max",
+   "expected_failure_classes": [
+    "tool gap",
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "tool gap",
+   "callee_closure": 18,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BeaconBlockBodyDeneb",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 12,
+   "shapes": [
+    "bytesN",
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "list[bytesN]",
+    "list[container]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Checkpoint.root",
+    "ListC",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "list of fixed byte vectors",
+    "list of fixed-size containers"
+   ],
+   "missing_contracts": [
+    "fmt shape '%d%d'",
+    "fmt shape '%d'"
+   ],
+   "fmt_shapes": {
+    "%w": 18,
+    "%d%w": 12,
+    "": 6,
+    "%d": 4,
+    "%d%d": 2
+   },
+   "calls": {
+    "fmt": 40,
+    "generated method": 14,
+    "growslice": 18,
+    "memmove": 14,
+    "morestack_noctxt": 3,
+    "newobject": 59,
+    "write barrier": 41,
+    "convT64": 20,
+    "makeslice": 14,
+    "panic*": 17
+   },
+   "kraken_parse_M_S_U": [
+    "ERR",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 2014,
+   "size_band": "over 3x hand max",
+   "expected_failure_classes": [
+    "tool gap",
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "tool gap",
+   "callee_closure": 18,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BeaconBlockBodyElectra",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 13,
+   "shapes": [
+    "bytesN",
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "list[bytesN]",
+    "list[container]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Checkpoint.root",
+    "ListC",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "list of fixed byte vectors",
+    "list of fixed-size containers"
+   ],
+   "missing_contracts": [
+    "fmt shape '%d%d'",
+    "fmt shape '%d'"
+   ],
+   "fmt_shapes": {
+    "%w": 20,
+    "%d%w": 12,
+    "": 6,
+    "%d": 4,
+    "%d%d": 2
+   },
+   "calls": {
+    "fmt": 41,
+    "generated method": 16,
+    "growslice": 19,
+    "memmove": 14,
+    "morestack_noctxt": 3,
+    "newobject": 63,
+    "write barrier": 44,
+    "convT64": 19,
+    "makeslice": 14,
+    "panic*": 16
+   },
+   "kraken_parse_M_S_U": [
+    "ERR",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 2023,
+   "size_band": "over 3x hand max",
+   "expected_failure_classes": [
+    "tool gap",
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "tool gap",
+   "callee_closure": 22,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BeaconBlockCapella",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 5,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)",
+    "delegated overlay Slot",
+    "delegated overlay ValidatorIndex"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 6
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 4,
+    "growslice": 5,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "hand-written primitives method": 2,
+    "makeslice": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 228,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 19,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BeaconBlockContentsDeneb",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 3,
+   "shapes": [
+    "delegated container (variable)",
+    "list[bytesN]"
+   ],
+   "hand_patterns": [
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "list of fixed byte vectors"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2,
+    "%d%w": 4
+   },
+   "calls": {
+    "fmt": 6,
+    "generated method": 4,
+    "growslice": 5,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 11,
+    "write barrier": 9,
+    "convT64": 4,
+    "makeslice": 4,
+    "panic*": 5
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 444,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 20,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BeaconBlockContentsElectra",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 3,
+   "shapes": [
+    "delegated container (variable)",
+    "list[bytesN]"
+   ],
+   "hand_patterns": [
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "list of fixed byte vectors"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2,
+    "%d%w": 4
+   },
+   "calls": {
+    "fmt": 6,
+    "generated method": 4,
+    "growslice": 5,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 11,
+    "write barrier": 9,
+    "convT64": 4,
+    "makeslice": 4,
+    "panic*": 5
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 444,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 24,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BeaconBlockContentsFulu",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 3,
+   "shapes": [
+    "delegated container (variable)",
+    "list[bytesN]"
+   ],
+   "hand_patterns": [
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "list of fixed byte vectors"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2,
+    "%d%w": 4
+   },
+   "calls": {
+    "fmt": 6,
+    "generated method": 4,
+    "growslice": 5,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 11,
+    "write barrier": 9,
+    "convT64": 4,
+    "makeslice": 4,
+    "panic*": 5
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 444,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 24,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BeaconBlockDeneb",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 5,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)",
+    "delegated overlay Slot",
+    "delegated overlay ValidatorIndex"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 6
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 4,
+    "growslice": 5,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "hand-written primitives method": 2,
+    "makeslice": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 228,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 19,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BeaconBlockElectra",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 5,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)",
+    "delegated overlay Slot",
+    "delegated overlay ValidatorIndex"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 6
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 4,
+    "growslice": 5,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "hand-written primitives method": 2,
+    "makeslice": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 228,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 23,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BeaconBlockHeader",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 5,
+   "shapes": [
+    "bytesN",
+    "delegated overlay Slot",
+    "delegated overlay ValidatorIndex"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 4
+   },
+   "calls": {
+    "growslice": 5,
+    "memmove": 6,
+    "morestack_noctxt": 2,
+    "fmt": 2,
+    "hand-written primitives method": 2,
+    "makeslice": 3,
+    "newobject": 2,
+    "write barrier": 6
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 198,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "BeaconState",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 21,
+   "shapes": [
+    "bitvector",
+    "bytesN",
+    "delegated container (fixed)",
+    "delegated overlay Slot",
+    "list[bytesN]",
+    "list[container]",
+    "list[uint64]",
+    "uint64",
+    "vector[bytesN]",
+    "vector[uint64]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "BitVec",
+    "Checkpoint.root",
+    "FixedVec.W",
+    "ListC",
+    "ListU64",
+    "Scalars"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "list of fixed byte vectors",
+    "list of fixed-size containers",
+    "vector of byte slices"
+   ],
+   "missing_contracts": [
+    "fmt shape '%d%d'",
+    "fmt shape '%d'",
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 24,
+    "%d%w": 10,
+    "": 6,
+    "%d": 4,
+    "%d%d": 2
+   },
+   "calls": {
+    "ValidateBitvector": 2,
+    "fmt": 41,
+    "generated method": 16,
+    "growslice": 25,
+    "memmove": 18,
+    "morestack_noctxt": 2,
+    "newobject": 57,
+    "write barrier": 44,
+    "convT64": 16,
+    "hand-written primitives method": 1,
+    "makeslice": 20,
+    "panic*": 29
+   },
+   "kraken_parse_M_S_U": [
+    "ERR",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 2099,
+   "size_band": "over 3x hand max",
+   "expected_failure_classes": [
+    "tool gap",
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "tool gap",
+   "callee_closure": 7,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BeaconStateAltair",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 24,
+   "shapes": [
+    "bitvector",
+    "bytesN",
+    "delegated container (fixed)",
+    "delegated overlay Slot",
+    "list[byte]",
+    "list[bytesN]",
+    "list[container]",
+    "list[uint64]",
+    "uint64",
+    "vector[bytesN]",
+    "vector[uint64]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "BitVec",
+    "Checkpoint.root",
+    "FixedVec.W",
+    "ListU64",
+    "Scalars"
+   ],
+   "new_patterns": [
+    "byte list (BitL without ValidateBitlist)",
+    "hand-written delegate Slot",
+    "list of fixed byte vectors",
+    "list of fixed-size containers",
+    "vector of byte slices"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 24,
+    "%d%w": 10
+   },
+   "calls": {
+    "ValidateBitvector": 2,
+    "fmt": 29,
+    "generated method": 14,
+    "growslice": 33,
+    "memmove": 26,
+    "morestack_noctxt": 2,
+    "newobject": 47,
+    "write barrier": 45,
+    "convT64": 8,
+    "hand-written primitives method": 1,
+    "makeslice": 19,
+    "panic*": 24
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 1746,
+   "size_band": "over 3x hand max",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 6,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "BeaconStateBellatrix",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 25,
+   "shapes": [
+    "bitvector",
+    "bytesN",
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "delegated overlay Slot",
+    "list[byte]",
+    "list[bytesN]",
+    "list[container]",
+    "list[uint64]",
+    "uint64",
+    "vector[bytesN]",
+    "vector[uint64]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "BitVec",
+    "Checkpoint.root",
+    "FixedVec.W",
+    "ListU64",
+    "Nested.L",
+    "Scalars"
+   ],
+   "new_patterns": [
+    "byte list (BitL without ValidateBitlist)",
+    "hand-written delegate Slot",
+    "list of fixed byte vectors",
+    "list of fixed-size containers",
+    "vector of byte slices"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 26,
+    "%d%w": 10
+   },
+   "calls": {
+    "ValidateBitvector": 2,
+    "fmt": 30,
+    "generated method": 16,
+    "growslice": 34,
+    "memmove": 26,
+    "morestack_noctxt": 3,
+    "newobject": 51,
+    "write barrier": 48,
+    "convT64": 7,
+    "hand-written primitives method": 1,
+    "makeslice": 19,
+    "panic*": 24
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 1818,
+   "size_band": "over 3x hand max",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 7,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "BeaconStateCapella",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 28,
+   "shapes": [
+    "bitvector",
+    "bytesN",
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "delegated overlay Slot",
+    "delegated overlay ValidatorIndex",
+    "list[byte]",
+    "list[bytesN]",
+    "list[container]",
+    "list[uint64]",
+    "uint64",
+    "vector[bytesN]",
+    "vector[uint64]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "BitVec",
+    "Checkpoint.root",
+    "FixedVec.W",
+    "ListU64",
+    "Nested.L",
+    "Scalars"
+   ],
+   "new_patterns": [
+    "byte list (BitL without ValidateBitlist)",
+    "hand-written delegate Slot",
+    "hand-written delegate ValidatorIndex",
+    "list of fixed byte vectors",
+    "list of fixed-size containers",
+    "vector of byte slices"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 30,
+    "%d%w": 12
+   },
+   "calls": {
+    "ValidateBitvector": 2,
+    "fmt": 34,
+    "generated method": 16,
+    "growslice": 39,
+    "memmove": 30,
+    "morestack_noctxt": 3,
+    "newobject": 56,
+    "write barrier": 54,
+    "convT64": 9,
+    "hand-written primitives method": 2,
+    "makeslice": 22,
+    "panic*": 29
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 2066,
+   "size_band": "over 3x hand max",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 8,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "BeaconStateDeneb",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 28,
+   "shapes": [
+    "bitvector",
+    "bytesN",
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "delegated overlay Slot",
+    "delegated overlay ValidatorIndex",
+    "list[byte]",
+    "list[bytesN]",
+    "list[container]",
+    "list[uint64]",
+    "uint64",
+    "vector[bytesN]",
+    "vector[uint64]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "BitVec",
+    "Checkpoint.root",
+    "FixedVec.W",
+    "ListU64",
+    "Nested.L",
+    "Scalars"
+   ],
+   "new_patterns": [
+    "byte list (BitL without ValidateBitlist)",
+    "hand-written delegate Slot",
+    "hand-written delegate ValidatorIndex",
+    "list of fixed byte vectors",
+    "list of fixed-size containers",
+    "vector of byte slices"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 30,
+    "%d%w": 12
+   },
+   "calls": {
+    "ValidateBitvector": 2,
+    "fmt": 34,
+    "generated method": 16,
+    "growslice": 39,
+    "memmove": 30,
+    "morestack_noctxt": 3,
+    "newobject": 56,
+    "write barrier": 54,
+    "convT64": 9,
+    "hand-written primitives method": 2,
+    "makeslice": 22,
+    "panic*": 29
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 2066,
+   "size_band": "over 3x hand max",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 8,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "BeaconStateElectra",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 37,
+   "shapes": [
+    "bitvector",
+    "bytesN",
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "delegated overlay Epoch",
+    "delegated overlay Gwei",
+    "delegated overlay Slot",
+    "delegated overlay ValidatorIndex",
+    "list[byte]",
+    "list[bytesN]",
+    "list[container]",
+    "list[uint64]",
+    "uint64",
+    "vector[bytesN]",
+    "vector[uint64]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "BitVec",
+    "Checkpoint.root",
+    "FixedVec.W",
+    "ListU64",
+    "Nested.L",
+    "Scalars"
+   ],
+   "new_patterns": [
+    "byte list (BitL without ValidateBitlist)",
+    "hand-written delegate Epoch",
+    "hand-written delegate Gwei",
+    "hand-written delegate Slot",
+    "hand-written delegate ValidatorIndex",
+    "list of fixed byte vectors",
+    "list of fixed-size containers",
+    "vector of byte slices"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 46,
+    "%d%w": 18
+   },
+   "calls": {
+    "ValidateBitvector": 2,
+    "fmt": 50,
+    "generated method": 22,
+    "growslice": 48,
+    "memmove": 30,
+    "morestack_noctxt": 3,
+    "newobject": 75,
+    "write barrier": 60,
+    "convT64": 14,
+    "hand-written primitives method": 7,
+    "makeslice": 25,
+    "panic*": 36
+   },
+   "kraken_parse_M_S_U": [
+    "ERR",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 2806,
+   "size_band": "over 3x hand max",
+   "expected_failure_classes": [
+    "tool gap",
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "tool gap",
+   "callee_closure": 11,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BeaconStateFulu",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 38,
+   "shapes": [
+    "bitvector",
+    "bytesN",
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "delegated overlay Epoch",
+    "delegated overlay Gwei",
+    "delegated overlay Slot",
+    "delegated overlay ValidatorIndex",
+    "list[byte]",
+    "list[bytesN]",
+    "list[container]",
+    "list[uint64]",
+    "uint64",
+    "vector[ValidatorIndex]",
+    "vector[bytesN]",
+    "vector[uint64]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "BitVec",
+    "Checkpoint.root",
+    "FixedVec.W",
+    "ListU64",
+    "Nested.L",
+    "Scalars"
+   ],
+   "new_patterns": [
+    "byte list (BitL without ValidateBitlist)",
+    "hand-written delegate Epoch",
+    "hand-written delegate Gwei",
+    "hand-written delegate Slot",
+    "hand-written delegate ValidatorIndex",
+    "list of fixed byte vectors",
+    "list of fixed-size containers",
+    "vector of byte slices",
+    "vector of hand-written delegates"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 48,
+    "%d%w": 18
+   },
+   "calls": {
+    "ValidateBitvector": 2,
+    "fmt": 51,
+    "generated method": 22,
+    "growslice": 50,
+    "memmove": 30,
+    "morestack_noctxt": 3,
+    "newobject": 76,
+    "write barrier": 61,
+    "convT64": 14,
+    "hand-written primitives method": 8,
+    "makeslice": 26,
+    "panic*": 38
+   },
+   "kraken_parse_M_S_U": [
+    "ERR",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 2890,
+   "size_band": "over 3x hand max",
+   "expected_failure_classes": [
+    "tool gap",
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "tool gap",
+   "callee_closure": 11,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BlindedBeaconBlockBellatrix",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 5,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)",
+    "delegated overlay Slot",
+    "delegated overlay ValidatorIndex"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 6
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 4,
+    "growslice": 5,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "hand-written primitives method": 2,
+    "makeslice": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 228,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 16,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BlindedBeaconBlockBodyBellatrix",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 10,
+   "shapes": [
+    "bytesN",
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "list[container]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Checkpoint.root",
+    "ListC",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "list of fixed-size containers"
+   ],
+   "missing_contracts": [
+    "fmt shape '%d%d'",
+    "fmt shape '%d'"
+   ],
+   "fmt_shapes": {
+    "%w": 16,
+    "%d%w": 8,
+    "": 6,
+    "%d": 4,
+    "%d%d": 2
+   },
+   "calls": {
+    "fmt": 34,
+    "generated method": 12,
+    "growslice": 15,
+    "memmove": 12,
+    "morestack_noctxt": 3,
+    "newobject": 52,
+    "write barrier": 37,
+    "convT64": 16,
+    "makeslice": 11,
+    "panic*": 13
+   },
+   "kraken_parse_M_S_U": [
+    "ERR",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 1629,
+   "size_band": "over 3x hand max",
+   "expected_failure_classes": [
+    "tool gap",
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "tool gap",
+   "callee_closure": 15,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BlindedBeaconBlockBodyCapella",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 11,
+   "shapes": [
+    "bytesN",
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "list[container]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Checkpoint.root",
+    "ListC",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "list of fixed-size containers"
+   ],
+   "missing_contracts": [
+    "fmt shape '%d%d'",
+    "fmt shape '%d'"
+   ],
+   "fmt_shapes": {
+    "%w": 18,
+    "%d%w": 10,
+    "": 6,
+    "%d": 4,
+    "%d%d": 2
+   },
+   "calls": {
+    "fmt": 38,
+    "generated method": 14,
+    "growslice": 16,
+    "memmove": 12,
+    "morestack_noctxt": 3,
+    "newobject": 57,
+    "write barrier": 39,
+    "convT64": 18,
+    "makeslice": 12,
+    "panic*": 15
+   },
+   "kraken_parse_M_S_U": [
+    "ERR",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 1832,
+   "size_band": "over 3x hand max",
+   "expected_failure_classes": [
+    "tool gap",
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "tool gap",
+   "callee_closure": 17,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BlindedBeaconBlockBodyDeneb",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 12,
+   "shapes": [
+    "bytesN",
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "list[bytesN]",
+    "list[container]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Checkpoint.root",
+    "ListC",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "list of fixed byte vectors",
+    "list of fixed-size containers"
+   ],
+   "missing_contracts": [
+    "fmt shape '%d%d'",
+    "fmt shape '%d'"
+   ],
+   "fmt_shapes": {
+    "%w": 18,
+    "%d%w": 12,
+    "": 6,
+    "%d": 4,
+    "%d%d": 2
+   },
+   "calls": {
+    "fmt": 40,
+    "generated method": 14,
+    "growslice": 18,
+    "memmove": 14,
+    "morestack_noctxt": 3,
+    "newobject": 59,
+    "write barrier": 41,
+    "convT64": 20,
+    "makeslice": 14,
+    "panic*": 17
+   },
+   "kraken_parse_M_S_U": [
+    "ERR",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 2014,
+   "size_band": "over 3x hand max",
+   "expected_failure_classes": [
+    "tool gap",
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "tool gap",
+   "callee_closure": 17,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BlindedBeaconBlockBodyElectra",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 13,
+   "shapes": [
+    "bytesN",
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "list[bytesN]",
+    "list[container]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Checkpoint.root",
+    "ListC",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "list of fixed byte vectors",
+    "list of fixed-size containers"
+   ],
+   "missing_contracts": [
+    "fmt shape '%d%d'",
+    "fmt shape '%d'"
+   ],
+   "fmt_shapes": {
+    "%w": 20,
+    "%d%w": 12,
+    "": 6,
+    "%d": 4,
+    "%d%d": 2
+   },
+   "calls": {
+    "fmt": 41,
+    "generated method": 16,
+    "growslice": 19,
+    "memmove": 14,
+    "morestack_noctxt": 3,
+    "newobject": 63,
+    "write barrier": 44,
+    "convT64": 19,
+    "makeslice": 14,
+    "panic*": 16
+   },
+   "kraken_parse_M_S_U": [
+    "ERR",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 2023,
+   "size_band": "over 3x hand max",
+   "expected_failure_classes": [
+    "tool gap",
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "tool gap",
+   "callee_closure": 21,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BlindedBeaconBlockCapella",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 5,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)",
+    "delegated overlay Slot",
+    "delegated overlay ValidatorIndex"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 6
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 4,
+    "growslice": 5,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "hand-written primitives method": 2,
+    "makeslice": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 228,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 18,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BlindedBeaconBlockDeneb",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 5,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)",
+    "delegated overlay Slot",
+    "delegated overlay ValidatorIndex"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 6
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 4,
+    "growslice": 5,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "hand-written primitives method": 2,
+    "makeslice": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 228,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 18,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BlindedBeaconBlockElectra",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 5,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)",
+    "delegated overlay Slot",
+    "delegated overlay ValidatorIndex"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 6
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 4,
+    "growslice": 5,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "hand-written primitives method": 2,
+    "makeslice": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 228,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 22,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BlindedBeaconBlockFulu",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 5,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)",
+    "delegated overlay Slot",
+    "delegated overlay ValidatorIndex"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 6
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 4,
+    "growslice": 5,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "hand-written primitives method": 2,
+    "makeslice": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 228,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 22,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "BlobIdentifier",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "uint64"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Scalars"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {},
+   "calls": {
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 2,
+    "makeslice": 1,
+    "write barrier": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 72,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 0,
+   "first_class_transitive": "none known"
+  },
+  {
+   "type": "BlobSidecar",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 6,
+   "shapes": [
+    "bytesN",
+    "delegated container (fixed)",
+    "uint64",
+    "vector[bytesN]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Checkpoint.root",
+    "Scalars"
+   ],
+   "new_patterns": [
+    "vector of byte slices"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 2,
+    "growslice": 5,
+    "memmove": 8,
+    "morestack_noctxt": 2,
+    "newobject": 4,
+    "write barrier": 10,
+    "makeslice": 5,
+    "panic*": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 255,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 2,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "BlobSidecars",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 1,
+   "shapes": [
+    "list[container]"
+   ],
+   "hand_patterns": [],
+   "new_patterns": [
+    "list of fixed-size containers"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2,
+    "%d%w": 2
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 2,
+    "growslice": 1,
+    "morestack_noctxt": 2,
+    "newobject": 5,
+    "convT64": 2,
+    "makeslice": 1,
+    "panic*": 2,
+    "write barrier": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 229,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 3,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "BuilderBidCapella",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 3,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 2,
+    "growslice": 3,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 5,
+    "write barrier": 7,
+    "makeslice": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 168,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 1,
+   "first_class_transitive": "new pattern (automation)"
+  },
+  {
+   "type": "BuilderBidDeneb",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 4,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)",
+    "list[bytesN]"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "list of fixed byte vectors"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2,
+    "%d%w": 2
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 2,
+    "growslice": 5,
+    "memmove": 6,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 9,
+    "convT64": 2,
+    "makeslice": 4,
+    "panic*": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 341,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 1,
+   "first_class_transitive": "new pattern (automation)"
+  },
+  {
+   "type": "BuilderBidElectra",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 5,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)",
+    "list[bytesN]"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "list of fixed byte vectors"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 4,
+    "%d%w": 2
+   },
+   "calls": {
+    "fmt": 6,
+    "generated method": 4,
+    "growslice": 6,
+    "memmove": 6,
+    "morestack_noctxt": 3,
+    "newobject": 12,
+    "write barrier": 12,
+    "convT64": 2,
+    "makeslice": 4,
+    "panic*": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 406,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 5,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "Checkpoint",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated overlay Epoch"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root"
+   ],
+   "new_patterns": [
+    "hand-written delegate Epoch"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 2,
+    "fmt": 1,
+    "hand-written primitives method": 1,
+    "makeslice": 1,
+    "newobject": 1,
+    "write barrier": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 98,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "ContributionAndProof",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 3,
+   "shapes": [
+    "bytesN",
+    "delegated container (fixed)",
+    "delegated overlay ValidatorIndex"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Checkpoint.root"
+   ],
+   "new_patterns": [
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 4
+   },
+   "calls": {
+    "fmt": 3,
+    "generated method": 2,
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 2,
+    "newobject": 5,
+    "write barrier": 4,
+    "hand-written primitives method": 1,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 142,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 1,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "DataColumnSidecar",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 6,
+   "shapes": [
+    "delegated container (fixed)",
+    "list[bytesN]",
+    "uint64",
+    "vector[bytesN]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Scalars"
+   ],
+   "new_patterns": [
+    "list of fixed byte vectors",
+    "vector of byte slices"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2,
+    "%d%w": 6
+   },
+   "calls": {
+    "fmt": 8,
+    "generated method": 2,
+    "growslice": 8,
+    "memmove": 8,
+    "morestack_noctxt": 2,
+    "newobject": 10,
+    "write barrier": 10,
+    "convT64": 6,
+    "makeslice": 8,
+    "panic*": 9
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 667,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 2,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "DataColumnsByRootIdentifier",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "list[uint64]"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "ListU64"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%d%w": 2
+   },
+   "calls": {
+    "growslice": 3,
+    "memmove": 2,
+    "morestack_noctxt": 2,
+    "convT64": 2,
+    "fmt": 2,
+    "makeslice": 2,
+    "newobject": 2,
+    "panic*": 3,
+    "write barrier": 3
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 208,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 0,
+   "first_class_transitive": "none known"
+  },
+  {
+   "type": "Deposit",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 2,
+   "shapes": [
+    "delegated container (fixed)",
+    "vector[bytesN]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source"
+   ],
+   "new_patterns": [
+    "vector of byte slices"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "growslice": 5,
+    "memmove": 5,
+    "morestack_noctxt": 2,
+    "newobject": 4,
+    "write barrier": 4,
+    "generated method": 1,
+    "makeslice": 2,
+    "panic*": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 257,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 1,
+   "first_class_transitive": "new pattern (automation)"
+  },
+  {
+   "type": "DepositMessage",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 3,
+   "shapes": [
+    "bytesN",
+    "uint64"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Scalars"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {},
+   "calls": {
+    "growslice": 3,
+    "memmove": 4,
+    "morestack_noctxt": 2,
+    "makeslice": 2,
+    "write barrier": 4
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 107,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 0,
+   "first_class_transitive": "none known"
+  },
+  {
+   "type": "Deposit_Data",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 4,
+   "shapes": [
+    "bytesN",
+    "uint64"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Scalars"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {},
+   "calls": {
+    "growslice": 4,
+    "memmove": 6,
+    "morestack_noctxt": 2,
+    "makeslice": 3,
+    "write barrier": 6
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 144,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 0,
+   "first_class_transitive": "none known"
+  },
+  {
+   "type": "ENRForkID",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 3,
+   "shapes": [
+    "bytesN",
+    "delegated overlay Epoch"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root"
+   ],
+   "new_patterns": [
+    "hand-written delegate Epoch"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "growslice": 3,
+    "morestack_noctxt": 2,
+    "fmt": 1,
+    "hand-written primitives method": 1,
+    "makeslice": 2,
+    "newobject": 1,
+    "write barrier": 4
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 116,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "Eth1Data",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 3,
+   "shapes": [
+    "bytesN",
+    "uint64"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Scalars"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {},
+   "calls": {
+    "growslice": 3,
+    "memmove": 4,
+    "morestack_noctxt": 2,
+    "makeslice": 2,
+    "write barrier": 4
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 110,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 0,
+   "first_class_transitive": "none known"
+  },
+  {
+   "type": "Fork",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 3,
+   "shapes": [
+    "bytesN",
+    "delegated overlay Epoch"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root"
+   ],
+   "new_patterns": [
+    "hand-written delegate Epoch"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "growslice": 3,
+    "morestack_noctxt": 2,
+    "fmt": 1,
+    "hand-written primitives method": 1,
+    "makeslice": 2,
+    "newobject": 1,
+    "write barrier": 4
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 116,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "ForkData",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 2,
+   "shapes": [
+    "bytesN"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [
+    "runtime call moveSlice* (stack-backed result to heap)"
+   ],
+   "fmt_shapes": {},
+   "calls": {
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 2,
+    "moveSlice* (stack-backed result to heap)": 1,
+    "makeslice": 2,
+    "write barrier": 4
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 102,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "HistoricalBatch",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 2,
+   "shapes": [
+    "vector[bytesN]"
+   ],
+   "hand_patterns": [],
+   "new_patterns": [
+    "vector of byte slices"
+   ],
+   "missing_contracts": [
+    "runtime call moveSlice* (stack-backed result to heap)"
+   ],
+   "fmt_shapes": {},
+   "calls": {
+    "growslice": 2,
+    "memmove": 4,
+    "morestack_noctxt": 2,
+    "moveSlice* (stack-backed result to heap)": 1,
+    "makeslice": 4,
+    "panic*": 4,
+    "write barrier": 4
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 164,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "HistoricalSummary",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 2,
+   "shapes": [
+    "bytesN"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [
+    "runtime call moveSlice* (stack-backed result to heap)"
+   ],
+   "fmt_shapes": {},
+   "calls": {
+    "growslice": 2,
+    "memmove": 4,
+    "morestack_noctxt": 2,
+    "moveSlice* (stack-backed result to heap)": 1,
+    "makeslice": 2,
+    "write barrier": 4
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 105,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "IndexedAttestation",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 3,
+   "shapes": [
+    "bytesN",
+    "delegated container (fixed)",
+    "list[uint64]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Checkpoint.root",
+    "ListU64"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2,
+    "%d%w": 2
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 2,
+    "growslice": 3,
+    "memmove": 2,
+    "morestack_noctxt": 2,
+    "newobject": 6,
+    "write barrier": 5,
+    "convT64": 2,
+    "makeslice": 2,
+    "panic*": 3
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 253,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 2,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "IndexedAttestationElectra",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 3,
+   "shapes": [
+    "bytesN",
+    "delegated container (fixed)",
+    "list[uint64]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Checkpoint.root",
+    "ListU64"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2,
+    "%d%w": 2
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 2,
+    "growslice": 3,
+    "memmove": 2,
+    "morestack_noctxt": 2,
+    "newobject": 6,
+    "write barrier": 5,
+    "convT64": 2,
+    "makeslice": 2,
+    "panic*": 3
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 253,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 2,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "LightClientBootstrapAltair",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 3,
+   "shapes": [
+    "delegated container (fixed)",
+    "vector[bytesN]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source"
+   ],
+   "new_patterns": [
+    "vector of byte slices"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 4
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 3,
+    "growslice": 3,
+    "memmove": 4,
+    "morestack_noctxt": 2,
+    "newobject": 8,
+    "write barrier": 6,
+    "makeslice": 2,
+    "panic*": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 287,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 3,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "LightClientBootstrapCapella",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 3,
+   "shapes": [
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "vector[bytesN]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "vector of byte slices"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 4
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 3,
+    "growslice": 4,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 11,
+    "write barrier": 9,
+    "makeslice": 2,
+    "panic*": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 327,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 4,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "LightClientBootstrapDeneb",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 3,
+   "shapes": [
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "vector[bytesN]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "vector of byte slices"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 4
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 3,
+    "growslice": 4,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 11,
+    "write barrier": 9,
+    "makeslice": 2,
+    "panic*": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 327,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 4,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "LightClientBootstrapElectra",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 3,
+   "shapes": [
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "vector[bytesN]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "vector of byte slices"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 4
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 3,
+    "growslice": 4,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 11,
+    "write barrier": 9,
+    "makeslice": 2,
+    "panic*": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 327,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 4,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "LightClientFinalityUpdateAltair",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 5,
+   "shapes": [
+    "delegated container (fixed)",
+    "delegated overlay Slot",
+    "vector[bytesN]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "vector of byte slices"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 8
+   },
+   "calls": {
+    "fmt": 6,
+    "generated method": 4,
+    "growslice": 4,
+    "memmove": 6,
+    "morestack_noctxt": 2,
+    "newobject": 12,
+    "write barrier": 12,
+    "hand-written primitives method": 1,
+    "makeslice": 4,
+    "panic*": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 344,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 3,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "LightClientFinalityUpdateCapella",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 5,
+   "shapes": [
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "delegated overlay Slot",
+    "vector[bytesN]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "vector of byte slices"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 8
+   },
+   "calls": {
+    "fmt": 6,
+    "generated method": 4,
+    "growslice": 6,
+    "memmove": 6,
+    "morestack_noctxt": 3,
+    "newobject": 18,
+    "write barrier": 18,
+    "hand-written primitives method": 1,
+    "makeslice": 4,
+    "panic*": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 432,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 4,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "LightClientFinalityUpdateDeneb",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 5,
+   "shapes": [
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "delegated overlay Slot",
+    "vector[bytesN]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "vector of byte slices"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 8
+   },
+   "calls": {
+    "fmt": 6,
+    "generated method": 4,
+    "growslice": 6,
+    "memmove": 6,
+    "morestack_noctxt": 3,
+    "newobject": 18,
+    "write barrier": 18,
+    "hand-written primitives method": 1,
+    "makeslice": 4,
+    "panic*": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 432,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 4,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "LightClientFinalityUpdateElectra",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 5,
+   "shapes": [
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "delegated overlay Slot",
+    "vector[bytesN]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "vector of byte slices"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 8
+   },
+   "calls": {
+    "fmt": 6,
+    "generated method": 4,
+    "growslice": 6,
+    "memmove": 6,
+    "morestack_noctxt": 3,
+    "newobject": 18,
+    "write barrier": 18,
+    "hand-written primitives method": 1,
+    "makeslice": 4,
+    "panic*": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 432,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 4,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "LightClientHeaderAltair",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 1,
+   "shapes": [
+    "delegated container (fixed)"
+   ],
+   "hand_patterns": [
+    "AttestationData.source"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 2,
+    "morestack_noctxt": 2,
+    "newobject": 4,
+    "write barrier": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 77,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 1,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "LightClientHeaderCapella",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 3,
+   "shapes": [
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "vector[bytesN]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "vector of byte slices"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 4
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 4,
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 3,
+    "newobject": 9,
+    "write barrier": 7,
+    "makeslice": 2,
+    "panic*": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 208,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 2,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "LightClientHeaderDeneb",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 3,
+   "shapes": [
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "vector[bytesN]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "vector of byte slices"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 4
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 4,
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 3,
+    "newobject": 9,
+    "write barrier": 7,
+    "makeslice": 2,
+    "panic*": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 208,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 2,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "LightClientOptimisticUpdateAltair",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 3,
+   "shapes": [
+    "delegated container (fixed)",
+    "delegated overlay Slot"
+   ],
+   "hand_patterns": [
+    "AttestationData.source"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 6
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 2,
+    "growslice": 3,
+    "memmove": 4,
+    "morestack_noctxt": 2,
+    "newobject": 8,
+    "write barrier": 8,
+    "hand-written primitives method": 1,
+    "makeslice": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 227,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 3,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "LightClientOptimisticUpdateCapella",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 3,
+   "shapes": [
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "delegated overlay Slot"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 6
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 2,
+    "growslice": 4,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 11,
+    "write barrier": 11,
+    "hand-written primitives method": 1,
+    "makeslice": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 268,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 4,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "LightClientOptimisticUpdateDeneb",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 3,
+   "shapes": [
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "delegated overlay Slot"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 6
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 2,
+    "growslice": 4,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 11,
+    "write barrier": 11,
+    "hand-written primitives method": 1,
+    "makeslice": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 268,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 4,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "LightClientUpdateAltair",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 7,
+   "shapes": [
+    "delegated container (fixed)",
+    "delegated overlay Slot",
+    "vector[bytesN]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "vector of byte slices"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 10
+   },
+   "calls": {
+    "fmt": 8,
+    "generated method": 5,
+    "growslice": 7,
+    "memmove": 10,
+    "morestack_noctxt": 2,
+    "newobject": 16,
+    "write barrier": 16,
+    "hand-written primitives method": 1,
+    "makeslice": 6,
+    "panic*": 4
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 543,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 4,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "LightClientUpdateCapella",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 7,
+   "shapes": [
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "delegated overlay Slot",
+    "vector[bytesN]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "vector of byte slices"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 10
+   },
+   "calls": {
+    "fmt": 8,
+    "generated method": 5,
+    "growslice": 9,
+    "memmove": 10,
+    "morestack_noctxt": 3,
+    "newobject": 22,
+    "write barrier": 22,
+    "hand-written primitives method": 1,
+    "makeslice": 6,
+    "panic*": 4
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 641,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 5,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "LightClientUpdateDeneb",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 7,
+   "shapes": [
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "delegated overlay Slot",
+    "vector[bytesN]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "vector of byte slices"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 10
+   },
+   "calls": {
+    "fmt": 8,
+    "generated method": 5,
+    "growslice": 9,
+    "memmove": 10,
+    "morestack_noctxt": 3,
+    "newobject": 22,
+    "write barrier": 22,
+    "hand-written primitives method": 1,
+    "makeslice": 6,
+    "panic*": 4
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 641,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 5,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "LightClientUpdateElectra",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 7,
+   "shapes": [
+    "delegated container (fixed)",
+    "delegated container (variable)",
+    "delegated overlay Slot",
+    "vector[bytesN]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "vector of byte slices"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 10
+   },
+   "calls": {
+    "fmt": 8,
+    "generated method": 5,
+    "growslice": 9,
+    "memmove": 10,
+    "morestack_noctxt": 3,
+    "newobject": 22,
+    "write barrier": 22,
+    "hand-written primitives method": 1,
+    "makeslice": 6,
+    "panic*": 4
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 641,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 5,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "PartialDataColumnHeader",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 3,
+   "shapes": [
+    "delegated container (fixed)",
+    "list[bytesN]",
+    "vector[bytesN]"
+   ],
+   "hand_patterns": [
+    "AttestationData.source"
+   ],
+   "new_patterns": [
+    "list of fixed byte vectors",
+    "vector of byte slices"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2,
+    "%d%w": 2
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 2,
+    "growslice": 3,
+    "memmove": 4,
+    "morestack_noctxt": 2,
+    "newobject": 6,
+    "write barrier": 6,
+    "convT64": 2,
+    "makeslice": 4,
+    "panic*": 4
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 316,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 2,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "PartialDataColumnPartsMetadata",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 2,
+   "shapes": [
+    "bitlist"
+   ],
+   "hand_patterns": [
+    "BitL"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 4
+   },
+   "calls": {
+    "ValidateBitlist": 4,
+    "fmt": 4,
+    "growslice": 6,
+    "memmove": 4,
+    "morestack_noctxt": 2,
+    "newobject": 4,
+    "write barrier": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 211,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 0,
+   "first_class_transitive": "none known"
+  },
+  {
+   "type": "PartialDataColumnSidecar",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 4,
+   "shapes": [
+    "bitlist",
+    "list[bytesN]",
+    "list[container]"
+   ],
+   "hand_patterns": [
+    "BitL",
+    "ListC"
+   ],
+   "new_patterns": [
+    "list of fixed byte vectors"
+   ],
+   "missing_contracts": [
+    "fmt shape '%d%d'",
+    "fmt shape '%d'"
+   ],
+   "fmt_shapes": {
+    "%w": 4,
+    "%d%w": 5,
+    "": 3,
+    "%d": 2,
+    "%d%d": 1
+   },
+   "calls": {
+    "ValidateBitlist": 2,
+    "fmt": 14,
+    "generated method": 2,
+    "growslice": 9,
+    "memmove": 6,
+    "morestack_noctxt": 2,
+    "newobject": 15,
+    "convT64": 8,
+    "makeslice": 5,
+    "panic*": 7,
+    "write barrier": 8
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 771,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 3,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "PendingAttestation",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 4,
+   "shapes": [
+    "bitlist",
+    "delegated container (fixed)",
+    "delegated overlay Slot",
+    "delegated overlay ValidatorIndex"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "BitL"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 8
+   },
+   "calls": {
+    "ValidateBitlist": 2,
+    "fmt": 6,
+    "generated method": 2,
+    "growslice": 5,
+    "memmove": 2,
+    "morestack_noctxt": 2,
+    "newobject": 8,
+    "write barrier": 3,
+    "hand-written primitives method": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 233,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 2,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "PendingConsolidation",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 2,
+   "shapes": [
+    "delegated overlay ValidatorIndex"
+   ],
+   "hand_patterns": [],
+   "new_patterns": [
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 4
+   },
+   "calls": {
+    "growslice": 2,
+    "morestack_noctxt": 2,
+    "fmt": 2,
+    "hand-written primitives method": 2,
+    "newobject": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 97,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "PendingDeposit",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 5,
+   "shapes": [
+    "bytesN",
+    "delegated overlay Slot",
+    "uint64"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Scalars"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "growslice": 5,
+    "memmove": 6,
+    "morestack_noctxt": 2,
+    "fmt": 1,
+    "hand-written primitives method": 1,
+    "makeslice": 3,
+    "newobject": 1,
+    "write barrier": 6
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 168,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "PendingPartialWithdrawal",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 3,
+   "shapes": [
+    "delegated overlay Epoch",
+    "delegated overlay ValidatorIndex",
+    "uint64"
+   ],
+   "hand_patterns": [
+    "Scalars"
+   ],
+   "new_patterns": [
+    "hand-written delegate Epoch",
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 4
+   },
+   "calls": {
+    "growslice": 3,
+    "morestack_noctxt": 2,
+    "fmt": 2,
+    "hand-written primitives method": 2,
+    "newobject": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 99,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "PowBlock",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 3,
+   "shapes": [
+    "bytesN"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [
+    "runtime call moveSlice* (stack-backed result to heap)"
+   ],
+   "fmt_shapes": {},
+   "calls": {
+    "growslice": 3,
+    "memmove": 6,
+    "morestack_noctxt": 2,
+    "moveSlice* (stack-backed result to heap)": 1,
+    "makeslice": 3,
+    "write barrier": 6
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 140,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "ProposerSlashing",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 2,
+   "shapes": [
+    "delegated container (fixed)"
+   ],
+   "hand_patterns": [
+    "AttestationData.source"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 4
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 4,
+    "morestack_noctxt": 2,
+    "newobject": 8,
+    "write barrier": 4
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 136,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 2,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "SignedAggregateAttestationAndProof",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 2,
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 158,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 4,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "SignedAggregateAttestationAndProofElectra",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 2,
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 158,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 4,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "SignedBLSToExecutionChange",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated container (fixed)"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Checkpoint.root"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 2,
+    "growslice": 1,
+    "memmove": 2,
+    "morestack_noctxt": 2,
+    "newobject": 4,
+    "write barrier": 4,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 115,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 1,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "SignedBeaconBlock",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 4,
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 153,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 15,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "SignedBeaconBlockAltair",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 4,
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 153,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 16,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "SignedBeaconBlockBellatrix",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 4,
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 153,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 17,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "SignedBeaconBlockCapella",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 4,
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 153,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 20,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "SignedBeaconBlockContentsDeneb",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 3,
+   "shapes": [
+    "delegated container (variable)",
+    "list[bytesN]"
+   ],
+   "hand_patterns": [
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "list of fixed byte vectors"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2,
+    "%d%w": 4
+   },
+   "calls": {
+    "fmt": 6,
+    "generated method": 4,
+    "growslice": 5,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 9,
+    "write barrier": 7,
+    "convT64": 4,
+    "makeslice": 4,
+    "panic*": 5
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 444,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 21,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "SignedBeaconBlockContentsElectra",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 3,
+   "shapes": [
+    "delegated container (variable)",
+    "list[bytesN]"
+   ],
+   "hand_patterns": [
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "list of fixed byte vectors"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2,
+    "%d%w": 4
+   },
+   "calls": {
+    "fmt": 6,
+    "generated method": 4,
+    "growslice": 5,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 9,
+    "write barrier": 7,
+    "convT64": 4,
+    "makeslice": 4,
+    "panic*": 5
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 444,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 25,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "SignedBeaconBlockContentsFulu",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 3,
+   "shapes": [
+    "delegated container (variable)",
+    "list[bytesN]"
+   ],
+   "hand_patterns": [
+    "Nested.L"
+   ],
+   "new_patterns": [
+    "list of fixed byte vectors"
+   ],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2,
+    "%d%w": 4
+   },
+   "calls": {
+    "fmt": 6,
+    "generated method": 4,
+    "growslice": 5,
+    "memmove": 4,
+    "morestack_noctxt": 3,
+    "newobject": 9,
+    "write barrier": 7,
+    "convT64": 4,
+    "makeslice": 4,
+    "panic*": 5
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 444,
+   "size_band": "up to 3x hand max",
+   "expected_failure_classes": [
+    "new pattern (automation)"
+   ],
+   "first_class": "new pattern (automation)",
+   "callee_closure": 25,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "SignedBeaconBlockDeneb",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 4,
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 153,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 20,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "SignedBeaconBlockElectra",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 4,
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 153,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 24,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "SignedBeaconBlockFulu",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 4,
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 153,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 24,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "SignedBeaconBlockHeader",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated container (fixed)"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Checkpoint.root"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 2,
+    "growslice": 1,
+    "memmove": 2,
+    "morestack_noctxt": 2,
+    "newobject": 4,
+    "write barrier": 4,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 115,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 1,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "SignedBlindedBeaconBlockBellatrix",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 4,
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 153,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 17,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "SignedBlindedBeaconBlockCapella",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 4,
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 153,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 19,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "SignedBlindedBeaconBlockDeneb",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 4,
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 153,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 19,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "SignedBlindedBeaconBlockElectra",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 4,
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 153,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 23,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "SignedBlindedBeaconBlockFulu",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 4,
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 153,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 23,
+   "first_class_transitive": "tool gap"
+  },
+  {
+   "type": "SignedBuilderBidCapella",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 2,
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 158,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 2,
+   "first_class_transitive": "new pattern (automation)"
+  },
+  {
+   "type": "SignedBuilderBidDeneb",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 2,
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 3,
+    "newobject": 7,
+    "write barrier": 7,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 158,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 2,
+   "first_class_transitive": "new pattern (automation)"
+  },
+  {
+   "type": "SignedBuilderBidElectra",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "variable container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated container (variable)"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Nested.L"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 4,
+    "growslice": 2,
+    "memmove": 2,
+    "morestack_noctxt": 3,
+    "newobject": 5,
+    "write barrier": 5,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 138,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 6,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "SignedContributionAndProof",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated container (fixed)"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Checkpoint.root"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 2,
+    "growslice": 1,
+    "memmove": 2,
+    "morestack_noctxt": 2,
+    "newobject": 4,
+    "write barrier": 4,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 115,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 2,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "SignedVoluntaryExit",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "delegated container (fixed)"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Checkpoint.root"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "fmt": 2,
+    "generated method": 2,
+    "growslice": 1,
+    "memmove": 2,
+    "morestack_noctxt": 2,
+    "newobject": 4,
+    "write barrier": 4,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 115,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "none known"
+   ],
+   "first_class": "none known",
+   "callee_closure": 1,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "SigningData",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 2,
+   "shapes": [
+    "bytesN"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [
+    "runtime call moveSlice* (stack-backed result to heap)"
+   ],
+   "fmt_shapes": {},
+   "calls": {
+    "growslice": 2,
+    "memmove": 4,
+    "morestack_noctxt": 2,
+    "moveSlice* (stack-backed result to heap)": 1,
+    "makeslice": 2,
+    "write barrier": 4
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 106,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "SingleAttestation",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 4,
+   "shapes": [
+    "bytesN",
+    "delegated container (fixed)",
+    "delegated overlay CommitteeIndex",
+    "delegated overlay ValidatorIndex"
+   ],
+   "hand_patterns": [
+    "AttestationData.source",
+    "Checkpoint.root"
+   ],
+   "new_patterns": [
+    "hand-written delegate CommitteeIndex",
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 6
+   },
+   "calls": {
+    "fmt": 4,
+    "generated method": 2,
+    "growslice": 3,
+    "memmove": 2,
+    "morestack_noctxt": 2,
+    "newobject": 6,
+    "write barrier": 4,
+    "hand-written primitives method": 2,
+    "makeslice": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 180,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 2,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "Status",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 5,
+   "shapes": [
+    "bytesN",
+    "delegated overlay Epoch",
+    "delegated overlay Slot"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root"
+   ],
+   "new_patterns": [
+    "hand-written delegate Epoch",
+    "hand-written delegate Slot"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 4
+   },
+   "calls": {
+    "growslice": 5,
+    "memmove": 4,
+    "morestack_noctxt": 2,
+    "fmt": 2,
+    "hand-written primitives method": 2,
+    "makeslice": 3,
+    "newobject": 2,
+    "write barrier": 6
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 192,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "StatusV2",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 6,
+   "shapes": [
+    "bytesN",
+    "delegated overlay Epoch",
+    "delegated overlay Slot"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root"
+   ],
+   "new_patterns": [
+    "hand-written delegate Epoch",
+    "hand-written delegate Slot"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 6
+   },
+   "calls": {
+    "growslice": 6,
+    "memmove": 4,
+    "morestack_noctxt": 2,
+    "fmt": 3,
+    "hand-written primitives method": 3,
+    "makeslice": 3,
+    "newobject": 3,
+    "write barrier": 6
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 227,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "SyncAggregate",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 2,
+   "shapes": [
+    "bitvector",
+    "bytesN"
+   ],
+   "hand_patterns": [
+    "BitVec",
+    "Checkpoint.root"
+   ],
+   "new_patterns": [],
+   "missing_contracts": [
+    "runtime call moveSlice* (stack-backed result to heap)"
+   ],
+   "fmt_shapes": {},
+   "calls": {
+    "growslice": 2,
+    "memmove": 4,
+    "morestack_noctxt": 2,
+    "moveSlice* (stack-backed result to heap)": 1,
+    "makeslice": 2,
+    "write barrier": 4
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 105,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "SyncAggregatorSelectionData",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 2,
+   "shapes": [
+    "delegated overlay Slot",
+    "uint64"
+   ],
+   "hand_patterns": [
+    "Scalars"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "growslice": 2,
+    "morestack_noctxt": 2,
+    "fmt": 1,
+    "hand-written primitives method": 1,
+    "newobject": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 67,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "SyncCommittee",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 2,
+   "shapes": [
+    "bytesN",
+    "vector[bytesN]"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root"
+   ],
+   "new_patterns": [
+    "vector of byte slices"
+   ],
+   "missing_contracts": [
+    "runtime call moveSlice* (stack-backed result to heap)"
+   ],
+   "fmt_shapes": {},
+   "calls": {
+    "growslice": 2,
+    "memmove": 4,
+    "morestack_noctxt": 2,
+    "moveSlice* (stack-backed result to heap)": 1,
+    "makeslice": 3,
+    "panic*": 1,
+    "write barrier": 4
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 133,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "SyncCommitteeContribution",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 5,
+   "shapes": [
+    "bitvector",
+    "bytesN",
+    "delegated overlay Slot",
+    "uint64"
+   ],
+   "hand_patterns": [
+    "BitVec",
+    "Checkpoint.root",
+    "Scalars"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "growslice": 5,
+    "memmove": 4,
+    "morestack_noctxt": 2,
+    "fmt": 1,
+    "hand-written primitives method": 1,
+    "makeslice": 3,
+    "newobject": 1,
+    "write barrier": 6
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 162,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "SyncCommitteeMessage",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 4,
+   "shapes": [
+    "bytesN",
+    "delegated overlay Slot",
+    "delegated overlay ValidatorIndex"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root"
+   ],
+   "new_patterns": [
+    "hand-written delegate Slot",
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 4
+   },
+   "calls": {
+    "growslice": 4,
+    "memmove": 4,
+    "morestack_noctxt": 2,
+    "fmt": 2,
+    "hand-written primitives method": 2,
+    "makeslice": 2,
+    "newobject": 2,
+    "write barrier": 4
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 163,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "Validator",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 8,
+   "shapes": [
+    "bool",
+    "bytesN",
+    "delegated overlay Epoch",
+    "uint64"
+   ],
+   "hand_patterns": [
+    "Checkpoint.root",
+    "Scalars"
+   ],
+   "new_patterns": [
+    "hand-written delegate Epoch"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 8
+   },
+   "calls": {
+    "growslice": 9,
+    "memmove": 4,
+    "morestack_noctxt": 2,
+    "fmt": 4,
+    "hand-written primitives method": 4,
+    "makeslice": 2,
+    "newobject": 4,
+    "write barrier": 4
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 249,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "ValidatorBalance",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": false,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 2,
+   "shapes": [
+    "delegated overlay ValidatorIndex",
+    "uint64"
+   ],
+   "hand_patterns": [
+    "Scalars"
+   ],
+   "new_patterns": [
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 2
+   },
+   "calls": {
+    "growslice": 2,
+    "morestack_noctxt": 2,
+    "fmt": 1,
+    "hand-written primitives method": 1,
+    "newobject": 1
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 67,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  },
+  {
+   "type": "VoluntaryExit",
+   "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+   "in_B": true,
+   "p1_scope": "in",
+   "kind": "fixed container",
+   "fields": 2,
+   "shapes": [
+    "delegated overlay Epoch",
+    "delegated overlay ValidatorIndex"
+   ],
+   "hand_patterns": [],
+   "new_patterns": [
+    "hand-written delegate Epoch",
+    "hand-written delegate ValidatorIndex"
+   ],
+   "missing_contracts": [
+    "hand-written primitives SSZ methods (no spec)"
+   ],
+   "fmt_shapes": {
+    "%w": 4
+   },
+   "calls": {
+    "growslice": 2,
+    "morestack_noctxt": 2,
+    "fmt": 2,
+    "hand-written primitives method": 2,
+    "newobject": 2
+   },
+   "kraken_parse_M_S_U": [
+    "OK",
+    "OK",
+    "OK"
+   ],
+   "max_instructions": 97,
+   "size_band": "within hand range",
+   "expected_failure_classes": [
+    "missing contract",
+    "new pattern (automation)"
+   ],
+   "first_class": "missing contract",
+   "callee_closure": 0,
+   "first_class_transitive": "missing contract"
+  }
+ ]
+}
