@@ -18,6 +18,8 @@ import sys
 KNOWN_SUBTESTS = {"TestMarshalPartsMetadata/available_too_large", "TestMarshalPartsMetadata/requests_too_large",
                   "TestPartialDataColumn_PartsMetadata/marshal_error_due_max_bitlist_size"}
 KNOWN_PARENTS = {"TestMarshalPartsMetadata", "TestPartialDataColumn_PartsMetadata"}
+# the one panic of the known minimal detect TestByState failure (review phase1c-r4 R4-S6: no other panic is masked)
+KNOWN_PANIC = "panic: runtime error: index out of range [64] with length 64 [recovered, repanicked]"
 
 
 def main():
@@ -31,7 +33,7 @@ def main():
                      "failed_tests": sorted(set(re.findall(r"^\s*--- FAIL: (\S+)", txt, re.M))),
                      "failed_pkgs": sorted(set(re.findall(r"^FAIL[ \t]+(\S+)", txt, re.M))),
                      "build_failed": sorted(set(re.findall(r"^FAIL[ \t]+(\S+) \[build failed\]", txt, re.M))),
-                     "panic": bool(re.search(r"^panic:", txt, re.M)),
+                     "panics": re.findall(r"^panic:.*$", txt, re.M),
                      "ok_pkgs": sorted(set(re.findall(r"^ok[ \t]+(\S+)", txt, re.M)))})
     unexpected = []
     seen_known = set()
@@ -62,12 +64,13 @@ def main():
             if p.endswith("encoding/ssz/detect") and known_detect:
                 continue
             unexpected.append(f"t{r['run']}: package FAIL {p}")
-        if r["panic"] and not known_detect:
-            unexpected.append(f"t{r['run']}: panic outside the known minimal detect TestByState failure")
+        allowed = [KNOWN_PANIC] if known_detect else []
+        if r["panics"] and r["panics"] != allowed:
+            unexpected.append(f"t{r['run']}: panics {r['panics']} other than the one known minimal detect TestByState panic")
     want = KNOWN_SUBTESTS | {"minimal:blocks:build", "minimal:detect:TestByState"}
     for k in sorted(want - seen_known):
         unexpected.append(f"known failure not seen: {k}")
-    res = {"schema": "fvphase1c.prysm-tests/3", "runs": runs, "known_seen": sorted(seen_known), "unexpected": unexpected,
+    res = {"schema": "fvphase1c.prysm-tests/4", "runs": runs, "known_seen": sorted(seen_known), "unexpected": unexpected,
            "verdict": "only known failures" if not unexpected else "UNEXPECTED"}
     json.dump(res, open(res_path, "w"), indent=1)
     print(json.dumps({"verdict": res["verdict"], "unexpected": unexpected, "known_seen": sorted(seen_known)}, indent=1))

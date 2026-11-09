@@ -1,5 +1,5 @@
 {
- "schema": "fvphase1c.prysm-tests/3",
+ "schema": "fvphase1c.prysm-tests/4",
  "runs": [
   {
    "run": 1,
@@ -12,7 +12,9 @@
    "failed_tests": [],
    "failed_pkgs": [],
    "build_failed": [],
-   "panic": true,
+   "panics": [
+    "panic: test timed out"
+   ],
    "ok_pkgs": [
     "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
    ]
@@ -28,7 +30,7 @@
    "failed_tests": [],
    "failed_pkgs": [],
    "build_failed": [],
-   "panic": false,
+   "panics": [],
    "ok_pkgs": [
     "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
    ]
@@ -52,7 +54,7 @@
     "github.com/OffchainLabs/prysm/v7/consensus-types/blocks"
    ],
    "build_failed": [],
-   "panic": false,
+   "panics": [],
    "ok_pkgs": []
   },
   {
@@ -70,7 +72,7 @@
    "build_failed": [
     "github.com/OffchainLabs/prysm/v7/consensus-types/blocks"
    ],
-   "panic": false,
+   "panics": [],
    "ok_pkgs": []
   },
   {
@@ -84,7 +86,7 @@
    "failed_tests": [],
    "failed_pkgs": [],
    "build_failed": [],
-   "panic": false,
+   "panics": [],
    "ok_pkgs": [
     "github.com/OffchainLabs/prysm/v7/encoding/ssz/detect"
    ]
@@ -104,7 +106,9 @@
     "github.com/OffchainLabs/prysm/v7/encoding/ssz/detect"
    ],
    "build_failed": [],
-   "panic": true,
+   "panics": [
+    "panic: runtime error: index out of range [64] with length 64 [recovered, repanicked]"
+   ],
    "ok_pkgs": []
   },
   {
@@ -129,7 +133,7 @@
     "github.com/OffchainLabs/prysm/v7/consensus-types/blocks"
    ],
    "build_failed": [],
-   "panic": false,
+   "panics": [],
    "ok_pkgs": [
     "github.com/OffchainLabs/prysm/v7/encoding/ssz/detect",
     "github.com/OffchainLabs/prysm/v7/proto/engine/v1",
@@ -145,7 +149,7 @@
   "minimal:detect:TestByState"
  ],
  "unexpected": [
-  "t1: panic outside the known minimal detect TestByState failure"
+  "t1: panics ['panic: test timed out'] other than the one known minimal detect TestByState panic"
  ],
  "verdict": "UNEXPECTED"
 }
