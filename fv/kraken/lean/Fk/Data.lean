@@ -33,6 +33,7 @@ data_include vblMsgZ
 data_include vblMsgB
 data_include luFmtTooBig
 data_include luFmtMis
+data_include lcFmtItems
 -- runtime data: the errorString itab, type descriptors, the static box table
 data_include errorStringItab
 data_include errorStringPtrType
@@ -97,5 +98,5 @@ constants): the theorems and witnesses name them as before. -/
 export Data (blFmtB blFmtB_addr bvFmtJ bvFmtJ_addr vbvFmt vbvFmt_addr lcFmtZero lcFmtZero_addr
   lcFmtShort lcFmtShort_addr lcFmtOrder lcFmtOrder_addr vblMsgE vblMsgE_addr vblMsgZ vblMsgZ_addr
   vblMsgB vblMsgB_addr luFmtTooBig luFmtTooBig_addr luFmtMis luFmtMis_addr intType_addr uint64Type_addr
-  errorStringPtrType errorStringPtrType_len)
+  errorStringPtrType errorStringPtrType_len lcFmtItems lcFmtItems_addr)
 end Fk

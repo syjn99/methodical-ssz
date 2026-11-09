@@ -44,6 +44,7 @@ ITEMS = [
     ("vblMsgB", "go_string._", 5743, 13, []),
     ("luFmtTooBig", "go_string._", 40290, 56, []),
     ("luFmtMis", "go_string._", 42646, 68, []),
+    ("lcFmtItems", "go_string._", 2158, 9, []),  # "Items: %w" (fix 3 review M4)
     # itab: inter, Type, Hash (+4 pad), Fun[0]
     ("errorStringItab", "go_itab._errors.errorString_error", 0, 32, [0, 8, 24]),
     # abi.PtrType of *errors.errorString: abi.Type (48) + Elem

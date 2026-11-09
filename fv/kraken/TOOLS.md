@@ -83,6 +83,7 @@ fv/kraken/link/build.sh          # ELF, objdump, nm, norm/*.S, data/*.data, buil
 | `vblMsgB` | `go_string._` + 5743 | 13 | rodata 문자열 | `Vbl.lean vblMsgB` |
 | `luFmtTooBig` | `go_string._` + 40290 | 56 | rodata 문자열 | `LuRejectCall.lean luFmtTooBig` |
 | `luFmtMis` | `go_string._` + 42646 | 68 | rodata 문자열 | `LuRejectCall.lean luFmtMis` |
+| `lcFmtItems` | `go_string._` + 2158 | 9 | rodata 문자열 `Items: %w` | 새 항목(수정 3 리뷰 M4, 원소 오류 전달) |
 | `errorStringItab` | `go_itab._errors.errorString_error` + 0 | 32 | itab 전체(워드 3: inter, Type, Fun[0]) | 옛 (h)의 itab 검사 |
 | `errorStringPtrType` | `type__` + 68096 | 56 | `*errors.errorString`의 abi.PtrType(abi.Type 48 + Elem) | 옛 (h)의 포인터 종류 검사, 증인의 0 기술자 |
 | `intType` | `type__` + 49184 | 48 | `int`의 abi.Type | `LuRejectCall.lean luTW`, 옛 (h) |
