@@ -1,12 +1,28 @@
 {
  "schema": "fvphase1c.x4-compare/1",
- "log": "run logs/99 (compare step)",
+ "log": "run logs/101 (compare with smart unfolding off; logs/100 compare step gave accept_stmt DIFF with it on)",
  "rows": [
   {
    "gen": "Gen1cX4.ListC.size_stmt",
    "hand": "lc_size_main",
    "expect": "SAME",
    "why": "size (outer item loop)",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListC.accept_stmt",
+   "hand": "lc_accept_main",
+   "expect": "SAME",
+   "why": "accept n >= 1 (item loop, element decoder calls)",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListC.accept_empty_stmt",
+   "hand": "Fk.lc_accept_empty_main",
+   "expect": "SAME",
+   "why": "accept empty list (len(buf) = 4)",
    "result": "SAME",
    "as_expected": true
   },
@@ -87,6 +103,22 @@
    "hand": "lc_reject_zero_main",
    "expect": "DIFF",
    "why": "control (r10 vs r3)",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListC.accept_stmt",
+   "hand": "Fk.lc_accept_empty_main",
+   "expect": "DIFF",
+   "why": "control (accept vs empty)",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListC.accept_empty_stmt",
+   "hand": "lc_reject_tail_main",
+   "expect": "DIFF",
+   "why": "control (empty vs r10)",
    "result": "DIFF",
    "as_expected": true
   }

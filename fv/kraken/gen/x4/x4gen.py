@@ -30,6 +30,8 @@ KRAKEN = os.path.normpath(os.path.join(HERE, "..", ".."))
 sys.path.insert(0, os.path.join(KRAKEN, "gen", "gen1c"))
 import emit  # noqa: E402
 import include_adapter  # noqa: E402
+sys.path.insert(0, HERE)
+import lcacc  # noqa: E402
 
 NORM = os.path.join(KRAKEN, "link", "out", "norm")
 LAYOUT = json.load(open(os.path.join(KRAKEN, "gen", "wit", "src", "layout.json")))
@@ -2350,15 +2352,17 @@ def lc_call0_stmt(name, code, P):
 SUBNEG = "rw [BitVec.add_comm, ← BitVec.sub_eq_add_neg, BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simp; omega)]; simp; omega"
 
 
-def lc_call0_proof(D, code, P):
+def lc_call0_proof(D, code, P, head=None, o="o", o4="o4", h4="ho4'"):
+    """The fmt.errorf(nil) reject paths; with P.mode "accept" or "empty" (lcacc.AccPrefix) only the common
+    prefix of the accept paths, up to the taken `jae` (accept) or `jle` (empty list); returns (lines, target)."""
     lab = {t: d for d, k, t in D if k == "label"}
     kat = lambda d: f"kat hk {code} {d}"
     mode, F, C = P.mode, P.F, P.C
-    fb = include_adapter.bytes_name(P.fmt)
+    fb = include_adapter.bytes_name(P.fmt) if P.fmt else None
     intro = {"zero": "intro k hk hf s ra guard fp slot rslot hfp hsl hrs o4 ho4 hoff R S scratch spl hsc hspl Heap avail hav h_mem hguard hsp hlen hcap hcap63 hfe hno hit",
              "past": "intro k hk hf s ra guard fp slot rslot hfp hsl hrs o4 ho4 o hoff ho0 ho4' ho16 R S scratch spl hsc hspl Heap avail hav h_mem hguard hsp hlen hpast hcap hcap63 hfe hno hit",
-             "tail": "intro k hk hf s ra guard fp slot rslot hfp hsl hrs R S scratch spl hsc hspl Heap avail hav h_mem hguard hsp hlen5 hlen hcap hcap63 hfe hno hit"}[mode]
-    L = [intro,
+             "tail": "intro k hk hf s ra guard fp slot rslot hfp hsl hrs R S scratch spl hsc hspl Heap avail hav h_mem hguard hsp hlen5 hlen hcap hcap63 hfe hno hit"}.get(mode)
+    L = head or [intro,
          "obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s",
          "simp only at h_mem hguard hsp hlen hcap hcap63 ⊢",
          "have := rsp.toNat_lt_size; have := guard.toNat_lt_size; have := rcx.toNat_lt_size; have := rdi.toNat_lt_size",
@@ -2397,20 +2401,24 @@ def lc_call0_proof(D, code, P):
         elif op == "sar" and a == "$0x3f,%rdx":
             L += [kat(d), "kshl64 63"]
         elif op == "and" and a == "$0x4,%edx":
-            L += [kat(d), "intro _"] + (["rw [lc_rdx4 _ (by simp; omega) (by simp; omega)]"] if mode != "tail" else [])
-        elif op == "jle" and mode == "tail":
+            L += [kat(d), "intro _"] + (["rw [lc_rdx4 _ (by simp; omega) (by simp; omega)]"] if mode not in ("tail", "empty") else [])
+        elif op == "jle" and mode in ("tail", "empty"):
             L += [kat(d), f"rw [jle3_true _ (by {SUBNEG})]", "simp only [↓reduceIte, Effects.All]", f"klabel hk hf {code} {jt}"]
+            if mode == "empty":
+                return L, jt
             d = jt; continue
         elif op == "jle":
             L += [kat(d), f"rw [jle3_false _ _ (by {SUBNEG})", f"  (by {SUBNEG})]",
                   "simp only [Bool.false_eq_true, ↓reduceIte, Effects.All]"]
         elif op == "mov" and a == "(%rbx,%rdx,1),%ebx":
-            L += [kat(d), "apply load_step_at _ _ (rbx.toBitVec + 4) _ _ o4 _ _ (by bv_omega) (by ecancel) (by exact ho4)",
+            L += [kat(d), f"apply load_step_at _ _ (rbx.toBitVec + 4) _ _ {o4} _ _ (by bv_omega) (by ecancel) (by exact ho4)",
                   "rw [hoff]", "kunfold"]
         elif op == "test" and a == "%rbx,%rbx":
             L += [kat(d), "intro _"]
             if mode == "past":
                 L += ["have ho32 : o < 2 ^ 32 := by", "  have := Int.ofBytes_lt o4; rw [ho4] at this; omega", "rw [zx_o o ho32]"]
+            elif mode == "accept":
+                L += [f"have ho32 : {o} < 2 ^ 32 := by", "  omega", f"rw [zx_o {o} ho32]"]
         elif op == "je" and mode == "zero":
             L += [kat(d), "split", "case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h", *NT,
                   f"klabel hk hf {code} {jt}"]
@@ -2419,13 +2427,18 @@ def lc_call0_proof(D, code, P):
             L += [kat(d), "split", "case isTrue h =>", "  exfalso; simp [CondCode.interp, StatusFlags.from_result] at h",
                   "  have := congrArg BitVec.toNat h; simp at this; omega", *NT]
         elif op == "test" and a == "$0x3,%rbx":
-            L += [kat(d), "intro _", "rw [and3_zero o ho32 ho4']"]
+            L += [kat(d), "intro _", f"rw [and3_zero {o} ho32 {h4}]"]
         elif op == "jne" and D[d - 1][2] == "test $0x3,%rbx":
             L += [kat(d), "split", "case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h", *NT]
         elif op == "shr" and a == "$0x2,%rdx":
-            L += [kat(d), "kshl64 2", "rw [shr2_o o ho32]"]
+            L += [kat(d), "kshl64 2", f"rw [shr2_o {o} ho32]"]
         elif op == "ja":
             L += [kat(d), "rw [ja4_false _ (by omega)]", "simp only [Bool.false_eq_true, ↓reduceIte, Effects.All]"]
+        elif op == "jae" and mode == "accept":
+            L += [kat(d), "split", "case isFalse h =>",
+                  "  exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.toNat_add] at h; omega",
+                  "simp only [Effects.All]", f"klabel hk hf {code} {jt}"]
+            return L, jt
         elif op == "jae":
             L += [kat(d), "rw [jae_false _ _ _ _ (by",
                   "  rw [BitVec.add_comm, ← BitVec.sub_eq_add_neg, BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simp; omega)]",
@@ -2586,10 +2599,10 @@ def main_list(a, key, desc, dsha):
     L = ListField(desc, LAYOUT["types"][t])
     ns = a.ns or f"Gen1cX4.{t}"
     LIST_OBL = ("size", "accept", "marshal", "marshal_reject", "compose", "reject_short", "reject_offset", "reject_misaligned", "reject_toobig",
-                "reject_zero", "reject_past", "reject_tail")
+                "reject_zero", "reject_past", "reject_tail", "accept_empty")
     only = [x for x in a.only.split(",") if x in LIST_OBL] if a.only != ap_default() else list(LIST_OBL)
     if L.esz is None:   # list of containers (ListC): size (outer loop) and the templates that do not touch elements
-        LC_OBL = ("size", "reject_short", "reject_offset", "reject_zero", "reject_past", "reject_tail")
+        LC_OBL = ("size", "accept", "accept_empty", "reject_short", "reject_offset", "reject_zero", "reject_past", "reject_tail")
         bad = [x for x in only if x not in LC_OBL]
         if a.only != ap_default() and bad:
             raise SystemExit(f"x4gen: refused {key[0]}.{t}: no template for {bad} on a list of containers")
@@ -2599,13 +2612,17 @@ def main_list(a, key, desc, dsha):
         if a.only != ap_default() and bad:
             raise SystemExit(f"x4gen: refused {key[0]}.{t}: {bad} are list-of-containers templates")
         only = [x for x in only if x not in bad]
+    if "accept_empty" in only and "accept" not in only:   # one template emits both accept paths
+        only.append("accept")
     code = {m: f"{t}{m}" for m in ("SizeSSZ", "UnmarshalSSZ", "MarshalSSZTo")}
     head = ["import Fk.Step", "import Fk.Bytes", "import Fk.Labels", "import Fk.Flags", "import Gen1cX4.Support"]
     if any(x in only for x in ("reject_misaligned", "reject_toobig", "accept", "marshal", "marshal_reject")) \
             or (L.esz is None and "size" in only):
         head += ["import Fk.Contracts", "import Fk.Frame", "import Fk.Block"]
-    if any(f"reject_{m}" in only for m in LC0_MODES):
+    if any(f"reject_{m}" in only for m in LC0_MODES) or (L.esz is None and "accept" in only):
         head += ["import Fk.FunSpecs"]
+    if L.esz is None and "accept" in only:
+        head += ["import Gen1cX4.SupportLc"]
     pre = []
     if a.mutant:
         m, f = a.mutant.split("=", 1)
@@ -2629,7 +2646,7 @@ def main_list(a, key, desc, dsha):
     elif "size" in only:
         body += [lu_size_stmt(code["SizeSSZ"], L), "theorem size [Host] : size_stmt := by",
                  *["  " + x for x in lu_size_proof(Dsz, L, code["SizeSSZ"])], ""]
-    if "accept" in only:
+    if "accept" in only and L.esz is not None:
         if (L.esz, L.limit) != (8, 16):
             raise SystemExit(f"x4gen: refused {key[0]}.{t}: the accept/loop template is for 8-byte elements and limit 16")
         try:
@@ -2672,7 +2689,8 @@ def main_list(a, key, desc, dsha):
         subf = next((int(t.split()[1].split(",")[0][1:], 16) for _, k, t in Dun if k == "instr" and re.fullmatch(r"sub \$0x[0-9a-f]+,%rsp", t)), None)
     except (AssertionError, IndexError, ValueError) as e:
         raise SystemExit(f"x4gen: refused {key[0]}.{t}: prologue does not fit the reject template ({type(e).__name__}: {e})")
-    if subf is not None and any(f"reject_{m}" in only for m in ("short", "offset") + LC0_MODES):
+    if subf is not None and (any(f"reject_{m}" in only for m in ("short", "offset") + LC0_MODES)
+                             or (L.esz is None and "accept" in only)):
         body += ["-- prologue/epilogue arithmetic of the decoder's frame (generated with its guard distance and frame size)",
                  f"theorem ar_neg{G} (x : BitVec 64) (h : {G} ≤ x.toNat) : (x + -{G}).toNat = x.toNat - {G} := by",
                  "  rw [← BitVec.sub_eq_add_neg, BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simpa using h)]; rfl",
@@ -2724,11 +2742,56 @@ def main_list(a, key, desc, dsha):
                      "set_option maxHeartbeats 8000000 in", "set_option maxRecDepth 100000 in",
                      f"theorem reject_{m} [Host] : reject_{m}_stmt := by",
                      *["  " + x for x in lu_call_proof(Dun, code["UnmarshalSSZ"], m, Ps[m])], ""]
+    if "accept" in only and L.esz is None:
+        body += lc_accept_block(a, key, desc, t, code["UnmarshalSSZ"], Dun, G, L)
     body += [f"end {ns}", ""]
     out = os.path.realpath(a.out_lean)
     os.makedirs(os.path.dirname(out), exist_ok=True)
     open(out, "w").write("\n".join(body))
     print(json.dumps({"type": t, "out": a.out_lean, "only": only, "mutant": a.mutant, "desc_sha256": dsha}))
+
+
+class AccPrefix:
+    """The common prefix of the ListC accept paths for lc_call0_proof (no format string, no call sites)."""
+    def __init__(self, D, mode, G):
+        self.mode, self.G, self.fmt, self.start, self.c1, self.c2 = mode, G, None, 10 ** 9, 10 ** 9, 10 ** 9
+        self.F = next(int(t.split()[1].split(",")[0][1:], 16) for _, k, t in D if k == "instr" and re.fullmatch(r"sub \$0x[0-9a-f]+,%rsp", t))
+        self.C = self.F + 16
+
+
+def lc_accept_block(a, key, desc, t, code, Dun, G, L):
+    """ListC accept (lcacc.py): loop lemmas, accept (n >= 1) and accept_empty (len(buf) = 4)."""
+    if L.limit != 4:
+        raise SystemExit(f"x4gen: refused {key[0]}.{t}: the ListC accept template is for the item limit 4, not {L.limit}")
+    try:
+        inner = LAYOUT["types"][t]["fields"][0]["elem"]
+        el = desc["ssz"]["fields"][0]["elem"]
+        assert el["k"] == "container" and [f["k"] for f in el["fields"]] == ["list"], el
+        S = lcacc.LcAccShape(Dun, inner)
+        S.code = code
+        pa, pe = AccPrefix(Dun, "accept", G), AccPrefix(Dun, "empty", G)
+        assert G == lcacc.GUARD and pa.F == lcacc.FRAME, (G, pa.F)
+        acc_head = [lcacc.ACCEPT_INTRO] + lcacc.body(lcacc.T.ACC_PRE, S)
+        Lacc, j = lc_call0_proof(Dun, code, pa, acc_head, o="(4 * gs.length)", o4="(tl.take 4)", h4="(by omega)")
+        assert j == S.acc0, (j, S.acc0)
+        acc = lcacc.accept_walk(S, Lacc, j)
+        emp_head = [lcacc.EMPTY_INTRO,
+                    "obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s",
+                    "simp only at h_mem hguard hsp hlen hcap hcap63 hx15 ⊢",
+                    "have := rsp.toNat_lt_size; have := guard.toNat_lt_size; have := rcx.toNat_lt_size; have := rdi.toNat_lt_size",
+                    "simp only [UInt64.size] at *"]
+        Lemp, j = lc_call0_proof(Dun, code, pe, emp_head)
+        emp = lcacc.empty_walk(S, Lemp, j)
+        loop = lcacc.loop_block(S)
+    except (KeyError, AssertionError, IndexError, StopIteration, ValueError, TypeError) as e:
+        raise SystemExit(f"x4gen: refused {key[0]}.{t}: ListC accept template does not fit the code ({type(e).__name__}: {e})")
+    return (["open Fv1 EthLib.Serialization.Ssz", "", "-- frame arithmetic of the accept paths (generated with the frame size and call slot)"]
+            + [f"theorem {n} {v}" for n, v in lcacc.lemmas(S).items()] + [""]
+            + ["-- item loop of the decoder: one item (lcl_iter), exit (lcl_exit), induction (lcl_loop)"] + loop
+            + [lcacc.sub(lcacc.T.ACC_STMT, S), "set_option maxHeartbeats 16000000 in", "set_option maxRecDepth 200000 in",
+               "theorem accept [Host] : accept_stmt := by", *["  " + x for x in acc], "",
+               lcacc.sub(lcacc.T.EMP_STMT, S), "set_option maxHeartbeats 4000000 in", "set_option maxRecDepth 100000 in",
+               "theorem accept_empty [Host] : accept_empty_stmt := by", *["  " + x for x in emp], ""])
 
 
 def ap_default():

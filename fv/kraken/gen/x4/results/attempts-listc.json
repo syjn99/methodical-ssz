@@ -58,9 +58,49 @@
    }
   },
   "accept (outer 0/1/4 x inner 0/1/16)": {
-   "status": "not attempted",
+   "status": "proved (generated), SAME (both hand theorems)",
+   "attempts": [
+    {
+     "log": "run logs/100",
+     "result": "pass (build, axioms, negative 6/6); compare: accept_stmt DIFF, accept_empty_stmt SAME"
+    },
+    {
+     "log": "run logs/101",
+     "result": "compare with smart unfolding off: accept_stmt SAME, accept_empty_stmt SAME, controls DIFF"
+    }
+   ],
    "hand": "lc_accept_main, lc_accept_empty_main",
-   "why": "offset table loop and per-item ListU64 decode calls; needs a nested template"
+   "negative": "lc-acc-cap (accept), lc-loop-next (lcl_iter), lc-empty-avx (accept_empty) (logs/100)",
+   "witness": "Gen1cX4.WitLcA1, WitLcA1x1, WitLcA4, WitLcA4x16, WitLcAMix (outer 1/4, inner 0/1/16), WitLcE (outer 0): gen/wit output retargeted by gen/x4/witness.py (logs/102 memcap stop after 4 of 6, logs/103 all 6 built, rc 0)",
+   "why_diff_first": "lcObjs is structurally recursive; the generated statement uses Gen1cX4.lcObjs (same text, Gen1cX4/SupportLc.lean). With smart unfolding on, isDefEq cannot unfold either copy on the variable argument acc, so the types compared DIFF. With smart unfolding off (pairs-listc.json no_smart_unfolding) both unfold to the same brecOn term: SAME. The other ListC pairs give the same result either way (logs/99/100 vs logs/101).",
+   "generator_decides": "from UnmarshalSSZ.S (gen/x4/lcacc.py): the label positions (loop head 239, exit 407, last-item branch 268, join 274, loop body 231, return block 226, accept branch 64, empty branch 178), the call sites (makeslice 75, newobject 246, ListU64.UnmarshalSSZ 295, checked against the layout's element type), the two type words (114368, 83104), which conditional jump is taken (error-block rule: a jump to a block whose every path calls fmt.errorf/panicBounds or loads ssz.Err* is not taken; a jump whose fall-through is such a block is taken; writeBarrier = 0; the loop-head jae and the last-item je are case splits), every directive number, the frame slot and held value of every spill and reload (register/slot table). The common prefix 0..42 reuses the fmt.errorf(nil) walker of x4gen.py with the accept/empty mode.",
+   "hand_text": "fixed text, not decided by the code: all statements (lcl_iter, lcl_exit, lcl_loop, accept, accept_empty; gen/x4/lcacc_tpl.py, copied from Fk/LcLoop.lean, Fk/LcAccept.lean, Fk/LcAcceptEmpty.lean with the code name, labels, call site and type words as placeholders), the whole lcl_loop proof, the call/contract blocks (makeslice, newobject, ListU64 decoder), the items-array store, the offset-table load, the branch-closing and finishing blocks. The frame layout is not generated: lcacc refuses code whose frame size (0xd8), guard distance (0x60) or spill-slot set differs. Support lemmas and the statement definitions lcObjs/ptrBytes/lcStart/lcStk are in Gen1cX4/SupportLc.lean (hand, same text as the hand modules).",
+   "verbatim_measure": {
+    "what": "tactic lines verbatim (stripped) in Fk/LcLoop.lean, Fk/LcAccept.lean, Fk/LcAcceptEmpty.lean (gen/x4/verbatim.py); lcl_iter is character-identical to the hand proof; accept/accept_empty differ in 4 lines each (intro line, ar_neg96/ar_s240/ar_m224 for toNat_add_neg96/lc_s16/lc_pop, n6/n7 order)",
+    "rows": {
+     "lcl_iter": {
+      "tactic_lines": 500,
+      "verbatim_in_hand": 500
+     },
+     "lcl_exit": {
+      "tactic_lines": 11,
+      "verbatim_in_hand": 11
+     },
+     "lcl_loop": {
+      "tactic_lines": 59,
+      "verbatim_in_hand": 59
+     },
+     "accept": {
+      "tactic_lines": 298,
+      "verbatim_in_hand": 294
+     },
+     "accept_empty": {
+      "tactic_lines": 118,
+      "verbatim_in_hand": 114
+     }
+    }
+   },
+   "memory": "memcap 6 GiB: logs/100 peak session 2.61 GiB; logs/102 parallel witness build stopped by the cap at 6.03 GiB (not a kernel OOM kill, oom_kill 5->5); logs/103 one target per lake call, peak 3.34 GiB"
   },
   "reject r3 zero": {
    "status": "proved (generated), SAME",

@@ -3,7 +3,9 @@
   "Gen1cX4.ListC",
   "Fk.LcReject",
   "Fk.LcSize",
-  "Fk.LuMarshal"
+  "Fk.LuMarshal",
+  "Fk.LcAccept",
+  "Fk.LcAcceptEmpty"
  ],
  "pairs": [
   [
@@ -11,6 +13,18 @@
    "lc_size_main",
    "SAME",
    "size (outer item loop)"
+  ],
+  [
+   "Gen1cX4.ListC.accept_stmt",
+   "lc_accept_main",
+   "SAME",
+   "accept n >= 1 (item loop, element decoder calls)"
+  ],
+  [
+   "Gen1cX4.ListC.accept_empty_stmt",
+   "Fk.lc_accept_empty_main",
+   "SAME",
+   "accept empty list (len(buf) = 4)"
   ],
   [
    "Gen1cX4.ListC.reject_short_stmt",
@@ -71,6 +85,19 @@
    "lc_reject_zero_main",
    "DIFF",
    "control (r10 vs r3)"
+  ],
+  [
+   "Gen1cX4.ListC.accept_stmt",
+   "Fk.lc_accept_empty_main",
+   "DIFF",
+   "control (accept vs empty)"
+  ],
+  [
+   "Gen1cX4.ListC.accept_empty_stmt",
+   "lc_reject_tail_main",
+   "DIFF",
+   "control (empty vs r10)"
   ]
- ]
+ ],
+ "no_smart_unfolding": true
 }

@@ -1,7 +1,7 @@
 {
  "schema": "fvphase1c.x4-negative/1",
- "cases": 12,
- "as_expected": 12,
+ "cases": 18,
+ "as_expected": 18,
  "rows": [
   {
    "id": "lc-short-cmp",
@@ -170,6 +170,90 @@
    ],
    "as_expected": true,
    "run": "logs/99"
+  },
+  {
+   "id": "lc-acc-cap",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lc_acc_cap_mutant.accept",
+   "mutation": "'mov %rdx,0x10(%rsi)' -> 'mov %rdx,0x18(%rsi)'",
+   "exit": "1",
+   "first_error": "line 988: omega could not prove the goal:",
+   "theorem_lines": [
+    785,
+    1084
+   ],
+   "as_expected": true,
+   "run": "logs/100"
+  },
+  {
+   "id": "lc-acc-cap",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lc_acc_cap_control.accept",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    785,
+    1084
+   ],
+   "as_expected": true,
+   "run": "logs/100"
+  },
+  {
+   "id": "lc-loop-next",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lc_loop_next_mutant.lcl_iter",
+   "mutation": "'mov 0x4(%rdx,%rcx,4),%esi' -> 'mov 0x8(%rdx,%rcx,4),%esi'",
+   "exit": "1",
+   "first_error": "line 402: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+   "theorem_lines": [
+    42,
+    604
+   ],
+   "as_expected": true,
+   "run": "logs/100"
+  },
+  {
+   "id": "lc-loop-next",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lc_loop_next_control.lcl_iter",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    42,
+    604
+   ],
+   "as_expected": true,
+   "run": "logs/100"
+  },
+  {
+   "id": "lc-empty-avx",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lc_empty_avx_mutant.accept_empty",
+   "mutation": "'movups %xmm15,0x8(%rax)' -> 'movups %xmm15,0x10(%rax)'",
+   "exit": "1",
+   "first_error": "line 1185: ecancel: could not automatically solve goal (Eq (cLC.At (rax.toBitVec + 16)) \u22c6 ?m.1054)",
+   "theorem_lines": [
+    1109,
+    1228
+   ],
+   "as_expected": true,
+   "run": "logs/100"
+  },
+  {
+   "id": "lc-empty-avx",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lc_empty_avx_control.accept_empty",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    1109,
+    1228
+   ],
+   "as_expected": true,
+   "run": "logs/100"
   }
  ],
  "note": "logs/95 negative step did not run: the first offset mutation text (cmp $0x4,%rdx) occurs twice in the .S, prepare refused it; replaced by the unique jne (logs/96)"

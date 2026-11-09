@@ -42,6 +42,10 @@ CASES = [  # id, type, method, designated obligation, old instruction, new instr
     ("lc-zero-je", "ListC", "UnmarshalSSZ", "reject_zero", "je L_target.ListC.UnmarshalSSZ_2a1", "jne L_target.ListC.UnmarshalSSZ_2a1"),
     ("lc-past-ja", "ListC", "UnmarshalSSZ", "reject_past", "ja L_target.ListC.UnmarshalSSZ_172", "jae L_target.ListC.UnmarshalSSZ_172"),
     ("lc-tail-add", "ListC", "UnmarshalSSZ", "reject_tail", "add $-0x4,%r10", "add $-0x5,%r10"),
+    # "<obligation>:<theorem>": emit the obligation, expect the first error inside the named theorem
+    ("lc-acc-cap", "ListC", "UnmarshalSSZ", "accept", "mov %rdx,0x10(%rsi)", "mov %rdx,0x18(%rsi)"),
+    ("lc-loop-next", "ListC", "UnmarshalSSZ", "accept:lcl_iter", "mov 0x4(%rdx,%rcx,4),%esi", "mov 0x8(%rdx,%rcx,4),%esi"),
+    ("lc-empty-avx", "ListC", "UnmarshalSSZ", "accept_empty", "movups %xmm15,0x8(%rax)", "movups %xmm15,0x10(%rax)"),
     # statement mutation (method "stmt"): the generated composition must fail if it claims another length
     ("sc-compose-len", "Scalars", "stmt", "compose", "st'.data.regs.rbx = dlen + 16", "st'.data.regs.rbx = dlen + 17"),
     ("lu-compose-len", "ListU64", "stmt", "compose", "st'.data.regs.rbx.toNat = dlen.toNat + 4 + 8 * n", "st'.data.regs.rbx.toNat = dlen.toNat + 5 + 8 * n"),
@@ -79,6 +83,7 @@ def prepare(work, result, ddir):
                               "lean": lf, "theorem_lines": [lo, hi], "log": os.path.join(work, f"{name}.log")})
                 run.append(f"lake env lean {lf} > {work}/{name}.log 2>&1; echo \"{name} $?\" >> {work}/rc.txt")
             continue
+        obl, thm = (obl.split(":") + [obl])[:2]
         src = open(os.path.join(NORM, f"target.{ty}.{meth}.S")).read()
         assert src.count("  " + old + "\n") == 1, (cid, old)
         for kind, text in (("mutant", src.replace("  " + old + "\n", "  " + new + "\n")), ("control", src)):
@@ -92,9 +97,9 @@ def prepare(work, result, ddir):
                                 "--mutant", f"{meth}={sf}"], capture_output=True, text=True)
             assert r.returncode == 0, r.stderr
             lines = open(lf).read().split("\n")
-            lo = next(i for i, l in enumerate(lines) if l.startswith(f"theorem {obl} ")) + 1
+            lo = next(i for i, l in enumerate(lines) if l.startswith(f"theorem {thm} ")) + 1
             hi = next(i for i in range(lo, len(lines)) if lines[i] == "") + 1
-            cases.append({"id": cid, "kind": kind, "type": ty, "method": meth, "designated": f"{ns}.{obl}",
+            cases.append({"id": cid, "kind": kind, "type": ty, "method": meth, "designated": f"{ns}.{thm}",
                           "mutation": f"'{old}' -> '{new}'" if kind == "mutant" else "none (unchanged copy)",
                           "lean": lf, "theorem_lines": [lo, hi], "log": os.path.join(work, f"{name}.log")})
             run.append(f"lake env lean {lf} > {work}/{name}.log 2>&1; echo \"{name} $?\" >> {work}/rc.txt")

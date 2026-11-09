@@ -9,6 +9,7 @@ import Fk.Contracts
 import Fk.Frame
 import Fk.Block
 import Fk.FunSpecs
+import Gen1cX4.SupportLc
 
 namespace Gen1cX4.ListC
 open Fk Fk.Code
@@ -935,5 +936,1208 @@ theorem reject_tail [Host] : reject_tail_stmt := by
   · apply UInt64.toBitVec_inj.mp; simp
   · first | trivial | rfl
   · exact sep_true (by ecancel)
+
+open Fv1 EthLib.Serialization.Ssz
+
+-- frame arithmetic of the accept paths (generated with the frame size and call slot)
+theorem lcl_ret (x : BitVec 64) : x - 8#64 - 216 - 8#64 = x - 232 := by bv_omega
+theorem lcl_g (x o : BitVec 64) : ({ toBitVec := x - 232 } + 8 : UInt64).toBitVec + o = x - 224 + o := by
+  simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega
+theorem lcl_blk (x : BitVec 64) (S : Nat) : x - 232 - BitVec.ofNat 64 (144 + S) = x - 232 - 144 - BitVec.ofNat 64 S := by
+  rw [show BitVec.ofNat 64 (144 + S) = 144 + BitVec.ofNat 64 S by
+    apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_add]]
+  bv_omega
+theorem lcl_call (x : BitVec 64) : ({ toBitVec := x - 232 } + 8 : UInt64).toBitVec - 8#64 = x - 232 := by
+  simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega
+
+-- item loop of the decoder: one item (lcl_iter), exit (lcl_exit), induction (lcl_loop)
+set_option maxHeartbeats 16000000 in
+set_option maxRecDepth 200000 in
+theorem lcl_iter [Host] (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh ListCUnmarshalSSZ k)
+    (x base recv A : BitVec 64) (tl ptrs : List UInt8) (T n i s e : Nat) (g : ListU64) (hg : g.ok)
+    (hT : tl.length = T) (hn : n ≤ 4) (hi : i < n) (hptrs : ptrs.length = 8 * i)
+    (hse : s + (4 + 8 * g.l.length) = e) (heT : e ≤ T) (hs4 : 4 * n ≤ s)
+    (hpart : (tl.drop s).take (4 + 8 * g.l.length) = [4, 0, 0, 0] ++ (u64Bytes g.l).toList)
+    (hnext : i + 1 < n → (tl.drop (4 * (i + 1))).take 4 = (uintBytes 4 e).toList)
+    (hlast : i + 1 = n → e = T)
+    (hT32 : T < 2 ^ 32) (cap0 : Nat) (hcap : T + 4 ≤ cap0) (hcap63 : cap0 < 2 ^ 63)
+    (S : Nat) (hS : S < 2 ^ 60) (blk rslot sp1 sp2 s136 s152 s160 s184 : List UInt8)
+    (hblk : blk.length = 144 + S) (hrs : rslot.length = 8) (hsp1 : sp1.length = 8) (hsp2 : sp2.length = 8)
+    (h136 : s136.length = 8) (h152 : s152.length = 8) (h160 : s160.length = 8) (h184 : s184.length = 8)
+    (ra rbp0 guard : UInt64) (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : 24 + 8 * 16 ≤ avail)
+    (O R : DataMem → Prop) (s0 : MachineData)
+    (hrax : s0.regs.rax.toNat = i) (hrdx : s0.regs.rdx.toNat = n) (hrcx : s0.regs.rcx.toNat = s)
+    (hrsp : s0.regs.rsp.toBitVec = x - 8#64 - 216)
+    (hguard : guard.toNat + 400 + S < x.toNat) (hx : 400 + S ≤ x.toNat)
+    (h_mem : s0.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At x) ⋆ Eq ((Int.toBytes 8 rbp0.toBitVec.toInt).At (x - 8))
+      ⋆ Eq ((Int.toBytes 8 recv.toInt).At (x + 8))
+      ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 cap0).toInt).At (x + 32))
+      ⋆ Eq ((Int.toBytes 8 base.toInt).At (x - 128)) ⋆ Eq (s136.At (x - 136))
+      ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 (cap0 - 4)).toInt).At (x - 144))
+      ⋆ Eq (s152.At (x - 152)) ⋆ Eq (s160.At (x - 160))
+      ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 n).toInt).At (x - 168))
+      ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 T).toInt).At (x - 176))
+      ⋆ Eq (s184.At (x - 184))
+      ⋆ Eq (sp1.At (x - 224)) ⋆ Eq (sp2.At (x - 216)) ⋆ Eq (rslot.At (x - 232))
+      ⋆ Eq (blk.At (x - 232 - 144 - BitVec.ofNat 64 S))
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s0.regs.r14.toBitVec + 16)) ⋆ Heap avail
+      ⋆ Eq (tl.At base)
+      ⋆ Eq ((Int.toBytes 8 A.toInt).At recv) ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 n).toInt).At (recv + 8))
+      ⋆ Eq ((ptrs ++ List.replicate (8 * (n - i)) 0).At A)
+      ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ O ⋆ R)
+    (hno : NewobjectC Heap (label "type__" + 83104).toBitVec 24 (144 + S)) (hlu : LuUAccC Heap S) :
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + 239) ∧ st.data.regs.rax.toNat = i + 1 ∧ st.data.regs.rdx.toNat = n
+        ∧ st.data.regs.rcx.toNat = e ∧ st.data.regs.rbx = 0 ∧ st.data.regs.rdi = 0
+        ∧ st.data.regs.rsp = s0.regs.rsp ∧ st.data.regs.r14 = s0.regs.r14 ∧
+        ∃ (p q : BitVec 64) (blk' rslot' sp1' sp2' s136' s152' s160' : List UInt8),
+          blk'.length = 144 + S ∧ rslot'.length = 8 ∧ sp1'.length = 8 ∧ sp2'.length = 8 ∧ s136'.length = 8
+          ∧ s152'.length = 8 ∧ s160'.length = 8 ∧
+        (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At x) ⋆ Eq ((Int.toBytes 8 rbp0.toBitVec.toInt).At (x - 8))
+          ⋆ Eq ((Int.toBytes 8 recv.toInt).At (x + 8))
+          ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 cap0).toInt).At (x + 32))
+          ⋆ Eq ((Int.toBytes 8 base.toInt).At (x - 128)) ⋆ Eq (s136'.At (x - 136))
+          ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 (cap0 - 4)).toInt).At (x - 144))
+          ⋆ Eq (s152'.At (x - 152)) ⋆ Eq (s160'.At (x - 160))
+          ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 n).toInt).At (x - 168))
+          ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 T).toInt).At (x - 176))
+          ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 e).toInt).At (x - 184))
+          ⋆ Eq (sp1'.At (x - 224)) ⋆ Eq (sp2'.At (x - 216)) ⋆ Eq (rslot'.At (x - 232))
+          ⋆ Eq (blk'.At (x - 232 - 144 - BitVec.ofNat 64 S))
+          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s0.regs.r14.toBitVec + 16))
+          ⋆ Heap (avail - 24 - 8 * g.l.length)
+          ⋆ Eq (tl.At base)
+          ⋆ Eq ((Int.toBytes 8 A.toInt).At recv) ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 n).toInt).At (recv + 8))
+          ⋆ Eq ((ptrs ++ Int.toBytes 8 p.toInt ++ List.replicate (8 * (n - (i + 1))) 0).At A)
+          ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec)
+          ⋆ (Eq ((Int.toBytes 8 q.toInt).At p) ⋆ Eq ((Int.toBytes 8 (g.l.length : Int)).At (p + 8))
+            ⋆ Eq ((Int.toBytes 8 (g.l.length : Int)).At (p + 16)) ⋆ Eq ((u64Bytes g.l).toList.At q) ⋆ O) ⋆ R)
+          st.data.dmem)
+      ⟨s0, Host.addrOf (k + 239)⟩ := by
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s0
+  simp only at h_mem hrax hrdx hrcx hrsp ⊢
+  have := rax.toNat_lt_size; have := rdx.toNat_lt_size; have := rcx.toNat_lt_size; have := x.isLt
+  simp only [UInt64.size] at *
+  kat hk ListCUnmarshalSSZ 239
+  kat hk ListCUnmarshalSSZ 240
+  kat hk ListCUnmarshalSSZ 241
+  split
+  case isTrue h =>
+    exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h; omega
+  simp only [Effects.All]
+  kat hk ListCUnmarshalSSZ 242
+  rw [show rsp.toBitVec + 64 = x - 160 by rw [hrsp]; bv_omega]
+  apply store_step _ _ _ _ _ s160 _ _ (by ecancel) (by exact h160)
+  intro m1 H1
+  simp only [Width.bytes, Width.bits] at H1
+  kunfold
+  kat hk ListCUnmarshalSSZ 243
+  rw [show rsp.toBitVec + 40 = x - 184 by rw [hrsp]; bv_omega]
+  apply store_step _ _ _ _ _ s184 _ _ (by ecancel) (by exact h184)
+  intro m2 H2
+  simp only [Width.bytes, Width.bits] at H2
+  kunfold
+  kat hk ListCUnmarshalSSZ 244
+  kat hk ListCUnmarshalSSZ 245
+  kat hk ListCUnmarshalSSZ 246
+  apply store_step_at _ _ (x - 232) _ _ _ rslot _ _ (by rw [hrsp, lcl_ret]) (by ecancel) (by exact hrs)
+  intro m3 H3
+  simp only [Width.bytes, Width.bits] at H3
+  kunfold
+  rw [show rsp.toBitVec - 8#64 = x - 232 by rw [hrsp, lcl_ret]] at *
+  have hspA : x - 232 + 8 = x - 224 := by bv_omega
+  refine eventually_trans _ _ _ _ (hno _ (Host.addrOf (k + 246 + 1)) avail blk sp1 _ rfl (by omega) hblk hsp1
+    (by dsimp only; rw [lcl_blk, hspA]; ecancel)) ?_
+  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, -, stk1, sn1, hstk1, hsn1, Hm1⟩
+  dsimp only at hpc1 hrsp1 hr141 Hm1
+  subst hpc1
+  obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
+    zmms1, flags1, mem1⟩ := d1
+  simp only at hrsp1 hr141 Hm1
+  subst hrsp1 hr141
+  rw [lcl_blk, luObj_sep, hspA] at Hm1
+  kat hk ListCUnmarshalSSZ 247
+  rw [lcl_g, show x - 224 + 64 = x - 160 by bv_omega]
+  apply load_step _ _ _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+  kunfold
+  kat hk ListCUnmarshalSSZ 248
+  kat hk ListCUnmarshalSSZ 249
+  rw [lcl_g, show x - 224 + 56 = x - 168 by bv_omega]
+  apply load_step _ _ _ _ (Int.toBytes 8 (BitVec.ofNat 64 n).toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+  kunfold
+  kat hk ListCUnmarshalSSZ 250
+  kat hk ListCUnmarshalSSZ 251
+  have hi1 : (rax.toBitVec + 1).toNat = i + 1 := by simp [BitVec.toNat_add]; omega
+  by_cases hl : i + 1 = n
+  · have heq := hlast hl
+    subst heq
+    split
+    case isFalse h =>
+      exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+      apply h; apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_sub, BitVec.toNat_add]; omega
+    simp only [Effects.All]
+    klabel hk hf ListCUnmarshalSSZ 268
+    kat hk ListCUnmarshalSSZ 268
+    kat hk ListCUnmarshalSSZ 269
+    rw [lcl_g, show x - 224 + 80 = x - 144 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 (BitVec.ofNat 64 (cap0 - 4)).toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 270
+    kat hk ListCUnmarshalSSZ 271
+    rw [lcl_g, show x - 224 + 48 = x - 176 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 (BitVec.ofNat 64 e).toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 272
+    kat hk ListCUnmarshalSSZ 273
+    rw [lcl_g, show x - 224 + 96 = x - 128 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 base.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 274
+    kat hk ListCUnmarshalSSZ 275
+    rw [lcl_g, show x - 224 + 40 = x - 184 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 rcx.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 276
+    kat hk ListCUnmarshalSSZ 277
+    rw [jb_false _ _ _ _ (by simp; omega)]
+    simp only [Bool.false_eq_true, ↓reduceIte, Effects.All]
+    kat hk ListCUnmarshalSSZ 278
+    kat hk ListCUnmarshalSSZ 279
+    kat hk ListCUnmarshalSSZ 280
+    rw [ja_false _ _ _ _ (by simp; omega)]
+    simp only [Bool.false_eq_true, ↓reduceIte, Effects.All]
+    kat hk ListCUnmarshalSSZ 281
+    rw [lcl_g, show x - 224 + 88 = x - 136 by bv_omega]
+    apply store_step _ _ _ _ _ s136 _ _ (by ecancel) (by exact h136)
+    intro m4 H4
+    simp only [Width.bytes, Width.bits] at H4
+    kunfold
+    kat hk ListCUnmarshalSSZ 282
+    rw [lcl_g, show x - 224 + 72 = x - 152 by bv_omega]
+    apply store_step _ _ _ _ _ s152 _ _ (by ecancel) (by exact h152)
+    intro m5 H5
+    simp only [Width.bytes, Width.bits] at H5
+    kunfold
+    kat hk ListCUnmarshalSSZ 283
+    rw [lcl_g, show x - 224 + 40 = x - 184 by bv_omega]
+    apply store_step _ _ _ _ _ (Int.toBytes 8 rcx.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    intro m6 H6
+    simp only [Width.bytes, Width.bits] at H6
+    kunfold
+    kat hk ListCUnmarshalSSZ 284
+    rw [lcl_g, show x - 224 + 256 = x + 32 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 (BitVec.ofNat 64 cap0).toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 285
+    kat hk ListCUnmarshalSSZ 286
+    kat hk ListCUnmarshalSSZ 287
+    kat hk ListCUnmarshalSSZ 288
+    kat hk ListCUnmarshalSSZ 289
+    kat hk ListCUnmarshalSSZ 290
+    kat hk ListCUnmarshalSSZ 291
+    kat hk ListCUnmarshalSSZ 292
+    kshl64 63
+    kat hk ListCUnmarshalSSZ 293
+    intro _
+    kat hk ListCUnmarshalSSZ 294
+    kat hk ListCUnmarshalSSZ 295
+    have hrcx' : rcx.toBitVec = BitVec.ofNat 64 s := by apply BitVec.eq_of_toNat_eq; simp; omega
+    have hy : (BitVec.ofNat 64 cap0 - rcx.toBitVec + -4).toNat = cap0 - s - 4 := by
+      rw [hrcx']; exact lcl_y cap0 s (by omega) hcap63
+    rw [lc_mask _ _ (by rw [hy]; omega) (by rw [hy]; omega)]
+    rw [show rcx.toBitVec + base * 1#64 = base + BitVec.ofNat 64 s by rw [hrcx', BitVec.mul_one, BitVec.add_comm]]
+    apply store_step_at _ _ (x - 232) _ _ _ (Int.toBytes 8 (Host.addrOf (k + 246 + 1)).toBitVec.toInt) _ _
+      (lcl_call _) (by ecancel) (by exact Int.toBytes_length 8 _)
+    intro m7 H7
+    simp only [Width.bytes, Width.bits] at H7
+    kunfold
+    rw [lcl_call] at *
+    rw [tl_split3 base tl s (4 + 8 * g.l.length) (by omega) (by omega), hpart,
+      at_app [4, 0, 0, 0] (u64Bytes g.l).toList (b := base + BitVec.ofNat 64 s + 4) (by rfl)
+      (by have : g.l.length ≤ 16 := hg; simp [u64Bytes_size]; omega)] at H7
+    have hx232 : (x - 232).toNat = x.toNat - 232 := by
+      rw [BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simp; omega)]; simp
+    refine eventually_trans _ _ _ _ (hlu _ (Host.addrOf (k + 295 + 1)) g stk1 sn1 sp2
+      (List.replicate 8 0) (List.replicate 8 0) (List.replicate 8 0) guard (avail - 24) _ hg hstk1 hsn1 hsp2
+      (by simp) (by simp) (by simp)
+      (by show (BitVec.ofNat 64 e - rcx.toBitVec).toNat = _; rw [hrcx']; simp [BitVec.toNat_sub]; omega)
+      (by show (BitVec.ofNat 64 e - rcx.toBitVec).toNat ≤ (BitVec.ofNat 64 cap0 - rcx.toBitVec + -4).toNat
+          rw [hy, hrcx']; simp [BitVec.toNat_sub]; omega)
+      (by show (BitVec.ofNat 64 cap0 - rcx.toBitVec + -4).toNat < 2 ^ 63; rw [hy]; omega)
+      (by show guard.toNat < (x - 232).toNat - 8; rw [hx232]; omega)
+      (by show 8 ≤ (x - 232).toNat; rw [hx232]; omega) (by omega)
+      (by dsimp only; rw [show x - 232 + 8 = x - 224 by bv_omega, show x - 232 + 16 = x - 216 by bv_omega]; ecancel)) ?_
+    rintro ⟨d2, pc2⟩ ⟨hpc2, hrax2, hrbx2, hrsp2, hr142, q, stk2, sp1', sp2', hstk2, hsp1', hsp2', Hm2⟩
+    dsimp only at hpc2 hrax2 hrbx2 hrsp2 hr142 Hm2
+    subst hpc2
+    obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,
+      zmms2, flags2, mem2⟩ := d2
+    simp only at hrax2 hrbx2 hrsp2 hr142 Hm2
+    subst hrax2 hrbx2 hrsp2 hr142
+    rw [show x - 232 + 8 = x - 224 by bv_omega, show x - 232 + 16 = x - 216 by bv_omega] at Hm2
+    have hrsp2 : ({ toBitVec := x - 232 } + 8 : UInt64) = { toBitVec := x - 224 } := by
+      apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega
+    simp only [hrsp2]
+    kat hk ListCUnmarshalSSZ 296
+    intro _
+    kat hk ListCUnmarshalSSZ 297
+    split
+    case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+    simp only [Effects.All]
+    kat hk ListCUnmarshalSSZ 298
+    rw [show x - 224 + 232 = x + 8 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 recv.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 299
+    apply load_step_at _ _ (recv + 8) _ _ (Int.toBytes 8 (BitVec.ofNat 64 n).toInt) _ _ (by bv_omega) (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 300
+    rw [show x - 224 + 64 = x - 160 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 301
+    kat hk ListCUnmarshalSSZ 302
+    rw [jnc_false _ _ _ _ (by simp; omega)]
+    simp only [Bool.false_eq_true, ↓reduceIte, Effects.All]
+    kat hk ListCUnmarshalSSZ 303
+    apply load_step _ _ _ _ (Int.toBytes 8 A.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 304
+    apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
+    simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
+    kunfold
+    kat hk ListCUnmarshalSSZ 305
+    split
+    case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+    simp only [Effects.All]
+    kat hk ListCUnmarshalSSZ 306
+    rw [show x - 224 + 88 = x - 136 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 rax1.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 307
+    klabel hk hf ListCUnmarshalSSZ 231
+    kat hk ListCUnmarshalSSZ 231
+    kat hk ListCUnmarshalSSZ 232
+    have hrep : List.replicate (8 * (n - i)) (0 : UInt8) = List.replicate 8 0 ++ List.replicate (8 * (n - (i + 1))) 0 := by
+      rw [List.replicate_append_replicate, show 8 + 8 * (n - (i + 1)) = 8 * (n - i) by omega]
+    rw [hrep, at_app ptrs _ (b := A + BitVec.ofNat 64 (8 * i)) (by rw [hptrs]) (by simp [hptrs]; omega),
+      at_app (List.replicate 8 0) _ (b := A + BitVec.ofNat 64 (8 * i) + 8) (by simp) (by simp; omega)] at Hm2
+    rw [show A + rax.toBitVec * 8#64 = A + BitVec.ofNat 64 (8 * i) by
+      apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_add, BitVec.toNat_mul]; omega]
+    apply store_step _ _ _ _ _ (List.replicate 8 0) _ _ (by ecancel) (by simp)
+    intro m8 H8
+    simp only [Width.bytes, Width.bits] at H8
+    kunfold
+    kat hk ListCUnmarshalSSZ 233
+    rw [show x - 224 + 56 = x - 168 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 (BitVec.ofNat 64 n).toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 234
+    kat hk ListCUnmarshalSSZ 235
+    rw [show x - 224 + 40 = x - 184 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 (BitVec.ofNat 64 e).toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 236
+    kat hk ListCUnmarshalSSZ 237
+    kat hk ListCUnmarshalSSZ 238
+    rw [show x - 224 + 72 = x - 152 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 (rax.toBitVec + 1).toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    apply Eventually.done
+    refine ⟨rfl, ?_, ?_, ?_, ?_, ?_, ?_, rfl, rax1.toBitVec, q, stk2, Int.toBytes 8 (Host.addrOf (k + 295 + 1)).toBitVec.toInt,
+      sp1', sp2', Int.toBytes 8 rax1.toBitVec.toInt, Int.toBytes 8 (rax.toBitVec + 1).toInt,
+      Int.toBytes 8 rax.toBitVec.toInt, hstk2, Int.toBytes_length 8 _, hsp1', hsp2', Int.toBytes_length 8 _,
+      Int.toBytes_length 8 _, Int.toBytes_length 8 _, ?_⟩
+    · exact hi1
+    · show (BitVec.ofNat 64 n).toNat = n; simp; omega
+    · show (BitVec.ofNat 64 e).toNat = e; simp; omega
+    · rfl
+    · rfl
+    · apply UInt64.toBitVec_inj.mp; simp only [hrsp]; bv_omega
+    · dsimp only
+      rw [tl_split3 base tl s (4 + 8 * g.l.length) (by omega) (by omega), hpart,
+        at_app [4, 0, 0, 0] (u64Bytes g.l).toList (b := base + BitVec.ofNat 64 s + 4) (by rfl)
+          (by have : g.l.length ≤ 16 := hg; simp [u64Bytes_size]; omega),
+        List.append_assoc, at_app ptrs _ (b := A + BitVec.ofNat 64 (8 * i)) (by rw [hptrs])
+          (by simp [hptrs, Int.toBytes_length]; omega),
+        at_app (Int.toBytes 8 rax1.toBitVec.toInt) _ (b := A + BitVec.ofNat 64 (8 * i) + 8) (by simp [Int.toBytes_length])
+          (by simp [Int.toBytes_length]; omega)]
+      simp only [Std.ExtHashMap.sep_assoc] at H8 ⊢
+      ecancel
+  · split
+    case isTrue h =>
+      exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+      apply hl; have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this; omega
+    simp only [Effects.All]
+    kat hk ListCUnmarshalSSZ 252
+    kat hk ListCUnmarshalSSZ 253
+    kshl64 2
+    kat hk ListCUnmarshalSSZ 254
+    rw [lcl_g, show x - 224 + 80 = x - 144 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 (BitVec.ofNat 64 (cap0 - 4)).toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 255
+    kat hk ListCUnmarshalSSZ 256
+    rw [ja_false _ _ _ _ (by
+      simp [BitVec.toNat_shiftLeft, Nat.shiftLeft_eq, BitVec.toNat_add]; omega)]
+    simp only [Bool.false_eq_true, ↓reduceIte, Effects.All]
+    kat hk ListCUnmarshalSSZ 257
+    kat hk ListCUnmarshalSSZ 258
+    kshl64 2
+    kat hk ListCUnmarshalSSZ 259
+    kat hk ListCUnmarshalSSZ 260
+    rw [jb_false _ _ _ _ (by
+      simp [BitVec.toNat_shiftLeft, Nat.shiftLeft_eq, BitVec.toNat_add]; omega)]
+    simp only [Bool.false_eq_true, ↓reduceIte, Effects.All]
+    kat hk ListCUnmarshalSSZ 261
+    rw [lcl_g, show x - 224 + 96 = x - 128 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 base.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 262
+    rw [tl_split3 base tl (4 * (i + 1)) 4 (by omega) (by omega)] at Hm1
+    rw [show base + rax.toBitVec * 4#64 + 4 = base + BitVec.ofNat 64 (4 * (i + 1)) by
+      apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_add, BitVec.toNat_mul]; omega]
+    apply load_step _ _ _ _ ((tl.drop (4 * (i + 1))).take 4) _ _ (by ecancel) (by simp; omega)
+    rw [hnext (by omega), ofBytes_uintBytes4 e (by omega)]
+    rw [← tl_split3 base tl (4 * (i + 1)) 4 (by omega) (by omega)] at Hm1
+    kunfold
+    kat hk ListCUnmarshalSSZ 263
+    kat hk ListCUnmarshalSSZ 264
+    rw [lcl_g, show x - 224 + 48 = x - 176 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 (BitVec.ofNat 64 T).toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 265
+    kat hk ListCUnmarshalSSZ 266
+    rw [zx_o e (by omega)]
+    split
+    case isFalse h =>
+      exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h; omega
+    simp only [Effects.All]
+    klabel hk hf ListCUnmarshalSSZ 274
+    kat hk ListCUnmarshalSSZ 274
+    kat hk ListCUnmarshalSSZ 275
+    rw [lcl_g, show x - 224 + 40 = x - 184 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 rcx.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 276
+    kat hk ListCUnmarshalSSZ 277
+    rw [jb_false _ _ _ _ (by simp; omega)]
+    simp only [Bool.false_eq_true, ↓reduceIte, Effects.All]
+    kat hk ListCUnmarshalSSZ 278
+    kat hk ListCUnmarshalSSZ 279
+    kat hk ListCUnmarshalSSZ 280
+    rw [ja_false _ _ _ _ (by simp; omega)]
+    simp only [Bool.false_eq_true, ↓reduceIte, Effects.All]
+    kat hk ListCUnmarshalSSZ 281
+    rw [lcl_g, show x - 224 + 88 = x - 136 by bv_omega]
+    apply store_step _ _ _ _ _ s136 _ _ (by ecancel) (by exact h136)
+    intro m4 H4
+    simp only [Width.bytes, Width.bits] at H4
+    kunfold
+    kat hk ListCUnmarshalSSZ 282
+    rw [lcl_g, show x - 224 + 72 = x - 152 by bv_omega]
+    apply store_step _ _ _ _ _ s152 _ _ (by ecancel) (by exact h152)
+    intro m5 H5
+    simp only [Width.bytes, Width.bits] at H5
+    kunfold
+    kat hk ListCUnmarshalSSZ 283
+    rw [lcl_g, show x - 224 + 40 = x - 184 by bv_omega]
+    apply store_step _ _ _ _ _ (Int.toBytes 8 rcx.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    intro m6 H6
+    simp only [Width.bytes, Width.bits] at H6
+    kunfold
+    kat hk ListCUnmarshalSSZ 284
+    rw [lcl_g, show x - 224 + 256 = x + 32 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 (BitVec.ofNat 64 cap0).toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 285
+    kat hk ListCUnmarshalSSZ 286
+    kat hk ListCUnmarshalSSZ 287
+    kat hk ListCUnmarshalSSZ 288
+    kat hk ListCUnmarshalSSZ 289
+    kat hk ListCUnmarshalSSZ 290
+    kat hk ListCUnmarshalSSZ 291
+    kat hk ListCUnmarshalSSZ 292
+    kshl64 63
+    kat hk ListCUnmarshalSSZ 293
+    intro _
+    kat hk ListCUnmarshalSSZ 294
+    kat hk ListCUnmarshalSSZ 295
+    have hrcx' : rcx.toBitVec = BitVec.ofNat 64 s := by apply BitVec.eq_of_toNat_eq; simp; omega
+    have hy : (BitVec.ofNat 64 cap0 - rcx.toBitVec + -4).toNat = cap0 - s - 4 := by
+      rw [hrcx']; exact lcl_y cap0 s (by omega) hcap63
+    rw [lc_mask _ _ (by rw [hy]; omega) (by rw [hy]; omega)]
+    rw [show rcx.toBitVec + base * 1#64 = base + BitVec.ofNat 64 s by rw [hrcx', BitVec.mul_one, BitVec.add_comm]]
+    apply store_step_at _ _ (x - 232) _ _ _ (Int.toBytes 8 (Host.addrOf (k + 246 + 1)).toBitVec.toInt) _ _
+      (lcl_call _) (by ecancel) (by exact Int.toBytes_length 8 _)
+    intro m7 H7
+    simp only [Width.bytes, Width.bits] at H7
+    kunfold
+    rw [lcl_call] at *
+    rw [tl_split3 base tl s (4 + 8 * g.l.length) (by omega) (by omega), hpart,
+      at_app [4, 0, 0, 0] (u64Bytes g.l).toList (b := base + BitVec.ofNat 64 s + 4) (by rfl)
+      (by have : g.l.length ≤ 16 := hg; simp [u64Bytes_size]; omega)] at H7
+    have hx232 : (x - 232).toNat = x.toNat - 232 := by
+      rw [BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simp; omega)]; simp
+    refine eventually_trans _ _ _ _ (hlu _ (Host.addrOf (k + 295 + 1)) g stk1 sn1 sp2
+      (List.replicate 8 0) (List.replicate 8 0) (List.replicate 8 0) guard (avail - 24) _ hg hstk1 hsn1 hsp2
+      (by simp) (by simp) (by simp)
+      (by show (BitVec.ofNat 64 e - rcx.toBitVec).toNat = _; rw [hrcx']; simp [BitVec.toNat_sub]; omega)
+      (by show (BitVec.ofNat 64 e - rcx.toBitVec).toNat ≤ (BitVec.ofNat 64 cap0 - rcx.toBitVec + -4).toNat
+          rw [hy, hrcx']; simp [BitVec.toNat_sub]; omega)
+      (by show (BitVec.ofNat 64 cap0 - rcx.toBitVec + -4).toNat < 2 ^ 63; rw [hy]; omega)
+      (by show guard.toNat < (x - 232).toNat - 8; rw [hx232]; omega)
+      (by show 8 ≤ (x - 232).toNat; rw [hx232]; omega) (by omega)
+      (by dsimp only; rw [show x - 232 + 8 = x - 224 by bv_omega, show x - 232 + 16 = x - 216 by bv_omega]; ecancel)) ?_
+    rintro ⟨d2, pc2⟩ ⟨hpc2, hrax2, hrbx2, hrsp2, hr142, q, stk2, sp1', sp2', hstk2, hsp1', hsp2', Hm2⟩
+    dsimp only at hpc2 hrax2 hrbx2 hrsp2 hr142 Hm2
+    subst hpc2
+    obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,
+      zmms2, flags2, mem2⟩ := d2
+    simp only at hrax2 hrbx2 hrsp2 hr142 Hm2
+    subst hrax2 hrbx2 hrsp2 hr142
+    rw [show x - 232 + 8 = x - 224 by bv_omega, show x - 232 + 16 = x - 216 by bv_omega] at Hm2
+    have hrsp2 : ({ toBitVec := x - 232 } + 8 : UInt64) = { toBitVec := x - 224 } := by
+      apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega
+    simp only [hrsp2]
+    kat hk ListCUnmarshalSSZ 296
+    intro _
+    kat hk ListCUnmarshalSSZ 297
+    split
+    case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+    simp only [Effects.All]
+    kat hk ListCUnmarshalSSZ 298
+    rw [show x - 224 + 232 = x + 8 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 recv.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 299
+    apply load_step_at _ _ (recv + 8) _ _ (Int.toBytes 8 (BitVec.ofNat 64 n).toInt) _ _ (by bv_omega) (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 300
+    rw [show x - 224 + 64 = x - 160 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 301
+    kat hk ListCUnmarshalSSZ 302
+    rw [jnc_false _ _ _ _ (by simp; omega)]
+    simp only [Bool.false_eq_true, ↓reduceIte, Effects.All]
+    kat hk ListCUnmarshalSSZ 303
+    apply load_step _ _ _ _ (Int.toBytes 8 A.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 304
+    apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
+    simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
+    kunfold
+    kat hk ListCUnmarshalSSZ 305
+    split
+    case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+    simp only [Effects.All]
+    kat hk ListCUnmarshalSSZ 306
+    rw [show x - 224 + 88 = x - 136 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 rax1.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 307
+    klabel hk hf ListCUnmarshalSSZ 231
+    kat hk ListCUnmarshalSSZ 231
+    kat hk ListCUnmarshalSSZ 232
+    have hrep : List.replicate (8 * (n - i)) (0 : UInt8) = List.replicate 8 0 ++ List.replicate (8 * (n - (i + 1))) 0 := by
+      rw [List.replicate_append_replicate, show 8 + 8 * (n - (i + 1)) = 8 * (n - i) by omega]
+    rw [hrep, at_app ptrs _ (b := A + BitVec.ofNat 64 (8 * i)) (by rw [hptrs]) (by simp [hptrs]; omega),
+      at_app (List.replicate 8 0) _ (b := A + BitVec.ofNat 64 (8 * i) + 8) (by simp) (by simp; omega)] at Hm2
+    rw [show A + rax.toBitVec * 8#64 = A + BitVec.ofNat 64 (8 * i) by
+      apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_add, BitVec.toNat_mul]; omega]
+    apply store_step _ _ _ _ _ (List.replicate 8 0) _ _ (by ecancel) (by simp)
+    intro m8 H8
+    simp only [Width.bytes, Width.bits] at H8
+    kunfold
+    kat hk ListCUnmarshalSSZ 233
+    rw [show x - 224 + 56 = x - 168 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 (BitVec.ofNat 64 n).toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 234
+    kat hk ListCUnmarshalSSZ 235
+    rw [show x - 224 + 40 = x - 184 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 (BitVec.ofNat 64 e).toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    kat hk ListCUnmarshalSSZ 236
+    kat hk ListCUnmarshalSSZ 237
+    kat hk ListCUnmarshalSSZ 238
+    rw [show x - 224 + 72 = x - 152 by bv_omega]
+    apply load_step _ _ _ _ (Int.toBytes 8 (rax.toBitVec + 1).toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    kunfold
+    apply Eventually.done
+    refine ⟨rfl, ?_, ?_, ?_, ?_, ?_, ?_, rfl, rax1.toBitVec, q, stk2, Int.toBytes 8 (Host.addrOf (k + 295 + 1)).toBitVec.toInt,
+      sp1', sp2', Int.toBytes 8 rax1.toBitVec.toInt, Int.toBytes 8 (rax.toBitVec + 1).toInt,
+      Int.toBytes 8 rax.toBitVec.toInt, hstk2, Int.toBytes_length 8 _, hsp1', hsp2', Int.toBytes_length 8 _,
+      Int.toBytes_length 8 _, Int.toBytes_length 8 _, ?_⟩
+    · exact hi1
+    · show (BitVec.ofNat 64 n).toNat = n; simp; omega
+    · show (BitVec.ofNat 64 e).toNat = e; simp; omega
+    · rfl
+    · rfl
+    · apply UInt64.toBitVec_inj.mp; simp only [hrsp]; bv_omega
+    · dsimp only
+      rw [tl_split3 base tl s (4 + 8 * g.l.length) (by omega) (by omega), hpart,
+        at_app [4, 0, 0, 0] (u64Bytes g.l).toList (b := base + BitVec.ofNat 64 s + 4) (by rfl)
+          (by have : g.l.length ≤ 16 := hg; simp [u64Bytes_size]; omega),
+        List.append_assoc, at_app ptrs _ (b := A + BitVec.ofNat 64 (8 * i)) (by rw [hptrs])
+          (by simp [hptrs, Int.toBytes_length]; omega),
+        at_app (Int.toBytes 8 rax1.toBitVec.toInt) _ (b := A + BitVec.ofNat 64 (8 * i) + 8) (by simp [Int.toBytes_length])
+          (by simp [Int.toBytes_length]; omega)]
+      simp only [Std.ExtHashMap.sep_assoc] at H8 ⊢
+      ecancel
+
+set_option maxHeartbeats 4000000 in
+set_option maxRecDepth 200000 in
+theorem lcl_exit [Host] (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh ListCUnmarshalSSZ k) (P : MachineState → Prop) (s0 : MachineData)
+    (hrr : s0.regs.rax = s0.regs.rdx)
+    (hP : ∀ f : StatusFlags, P ⟨⟨s0.regs, s0.zmms, f, s0.dmem⟩, Host.addrOf (k + 407)⟩) :
+    Eventually (step1 Host.exe) P ⟨s0, Host.addrOf (k + 239)⟩ := by
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s0
+  dsimp only at hrr
+  subst hrr
+  kat hk ListCUnmarshalSSZ 239
+  kat hk ListCUnmarshalSSZ 240
+  kat hk ListCUnmarshalSSZ 241
+  split
+  case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
+  simp only [Effects.All]
+  klabel hk hf ListCUnmarshalSSZ 407
+  exact Eventually.done _ (hP _)
+
+set_option maxHeartbeats 16000000 in
+set_option maxRecDepth 200000 in
+theorem lcl_loop [Host] (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh ListCUnmarshalSSZ k)
+    (x base recv A : BitVec 64) (tl : List UInt8) (T : Nat) (gs : List ListU64) (hgs : ∀ g ∈ gs, g.ok)
+    (hT : tl.length = T) (hn : gs.length ≤ 4) (hT32 : T < 2 ^ 32)
+    (hend : lcStart gs gs.length = T)
+    (hparts : ∀ i (hi : i < gs.length), (tl.drop (lcStart gs i)).take (4 + 8 * gs[i].l.length)
+      = [4, 0, 0, 0] ++ (u64Bytes gs[i].l).toList)
+    (hnexts : ∀ i, i + 1 < gs.length → (tl.drop (4 * (i + 1))).take 4 = (uintBytes 4 (lcStart gs (i + 1))).toList)
+    (cap0 : Nat) (hcap : T + 4 ≤ cap0) (hcap63 : cap0 < 2 ^ 63)
+    (S : Nat) (hS : S < 2 ^ 60) (ra rbp0 guard : UInt64) (Heap : Nat → DataMem → Prop) (R : DataMem → Prop)
+    (hguard : guard.toNat + 400 + S < x.toNat) (hx : 400 + S ≤ x.toNat)
+    (hno : NewobjectC Heap (label "type__" + 83104).toBitVec 24 (144 + S)) (hlu : LuUAccC Heap S) :
+    ∀ j i (s0 : MachineData) (acc : List (BitVec 64 × BitVec 64 × ListU64))
+      (blk rslot sp1 sp2 s136 s152 s160 s184 : List UInt8) (avail : Nat),
+    i + j = gs.length → acc.length = i → acc.reverse.map (fun t : BitVec 64 × BitVec 64 × ListU64 => t.2.2) = gs.take i →
+    blk.length = 144 + S → rslot.length = 8 → sp1.length = 8 → sp2.length = 8 → s136.length = 8 →
+    s152.length = 8 → s160.length = 8 → s184.length = 8 → 152 * j ≤ avail →
+    s0.regs.rax.toNat = i → s0.regs.rdx.toNat = gs.length → s0.regs.rcx.toNat = lcStart gs i →
+    s0.regs.rbx = 0 → s0.regs.rdi = 0 → s0.regs.rsp.toBitVec = x - 8#64 - 216 →
+    (s0.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At x) ⋆ Eq ((Int.toBytes 8 rbp0.toBitVec.toInt).At (x - 8))
+      ⋆ Eq ((Int.toBytes 8 recv.toInt).At (x + 8))
+      ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 cap0).toInt).At (x + 32))
+      ⋆ Eq ((Int.toBytes 8 base.toInt).At (x - 128)) ⋆ Eq (s136.At (x - 136))
+      ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 (cap0 - 4)).toInt).At (x - 144))
+      ⋆ Eq (s152.At (x - 152)) ⋆ Eq (s160.At (x - 160))
+      ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt).At (x - 168))
+      ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 T).toInt).At (x - 176))
+      ⋆ Eq (s184.At (x - 184))
+      ⋆ Eq (sp1.At (x - 224)) ⋆ Eq (sp2.At (x - 216)) ⋆ Eq (rslot.At (x - 232))
+      ⋆ Eq (blk.At (x - 232 - 144 - BitVec.ofNat 64 S))
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s0.regs.r14.toBitVec + 16)) ⋆ Heap avail
+      ⋆ Eq (tl.At base)
+      ⋆ Eq ((Int.toBytes 8 A.toInt).At recv) ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt).At (recv + 8))
+      ⋆ Eq ((ptrBytes (acc.reverse.map (fun t : BitVec 64 × BitVec 64 × ListU64 => t.1)) ++ List.replicate (8 * (gs.length - i)) 0).At A)
+      ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ lcObjs acc ⋆ R) →
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + 407) ∧ st.data.regs.rbx = 0 ∧ st.data.regs.rdi = 0
+        ∧ st.data.regs.rsp = s0.regs.rsp ∧ st.data.regs.r14 = s0.regs.r14 ∧
+        ∃ (acc' : List (BitVec 64 × BitVec 64 × ListU64)) (avail' : Nat),
+          acc'.reverse.map (fun t : BitVec 64 × BitVec 64 × ListU64 => t.2.2) = gs ∧
+          (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At x) ⋆ Eq ((Int.toBytes 8 rbp0.toBitVec.toInt).At (x - 8))
+            ⋆ Eq ((Int.toBytes 8 A.toInt).At recv) ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt).At (recv + 8))
+            ⋆ Eq ((ptrBytes (acc'.reverse.map (fun t : BitVec 64 × BitVec 64 × ListU64 => t.1))).At A) ⋆ lcObjs acc' ⋆ Eq (tl.At base) ⋆ Heap avail'
+            ⋆ R ⋆ lcStk x S ⋆ fun _ => True) st.data.dmem)
+      ⟨s0, Host.addrOf (k + 239)⟩ := by
+  intro j
+  induction j with
+  | zero =>
+    intro i s0 acc blk rslot sp1 sp2 s136 s152 s160 s184 avail hij hacc hgsa hblk hrs hsp1 hsp2 h136 h152 h160 h184 _
+      hrax hrdx _ hrbx hrdi _ h_mem
+    have hi : i = gs.length := by omega
+    subst hi
+    have hacc' : acc.reverse.map (fun t : BitVec 64 × BitVec 64 × ListU64 => t.2.2) = gs := by rw [hgsa, List.take_length]
+    refine lcl_exit k hk hf _ s0 (UInt64.toNat_inj.mp (by omega)) fun _ => ⟨rfl, hrbx, hrdi, rfl, rfl, acc, avail, hacc', ?_⟩
+    rw [Nat.sub_self, Nat.mul_zero, List.replicate_zero, List.append_nil] at h_mem
+    obtain ⟨F, H1⟩ : ∃ F, ((Eq ((Int.toBytes 8 recv.toInt).At (x + 8))
+        ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 cap0).toInt).At (x + 32))
+        ⋆ Eq ((Int.toBytes 8 base.toInt).At (x - 128)) ⋆ Eq (s136.At (x - 136))
+        ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 (cap0 - 4)).toInt).At (x - 144))
+        ⋆ Eq (s152.At (x - 152)) ⋆ Eq (s160.At (x - 160))
+        ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt).At (x - 168))
+        ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 T).toInt).At (x - 176))
+        ⋆ Eq (s184.At (x - 184)) ⋆ Eq (sp2.At (x - 216)) ⋆ Eq (sp1.At (x - 224)) ⋆ Eq (rslot.At (x - 232))
+        ⋆ Eq (blk.At (x - 232 - 144 - BitVec.ofNat 64 S)))
+      ⋆ (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At x) ⋆ Eq ((Int.toBytes 8 rbp0.toBitVec.toInt).At (x - 8))
+      ⋆ Eq ((Int.toBytes 8 A.toInt).At recv) ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt).At (recv + 8))
+      ⋆ Eq ((ptrBytes (acc.reverse.map (fun t : BitVec 64 × BitVec 64 × ListU64 => t.1))).At A) ⋆ lcObjs acc ⋆ Eq (tl.At base)
+      ⋆ Heap avail ⋆ R ⋆ F)) s0.dmem := ⟨_, by ecancel⟩
+    have H2 := lcs_mono (P' := lcStk x S) (fun m hm => ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _,
+      Int.toBytes_length 8 _, Int.toBytes_length 8 _, Int.toBytes_length 8 _, h136, Int.toBytes_length 8 _, h152, h160,
+      Int.toBytes_length 8 _, Int.toBytes_length 8 _, h184, hsp2, hsp1, hrs, hblk, hm⟩) H1
+    exact sep_true (P := Eq ((Int.toBytes 8 ra.toBitVec.toInt).At x) ⋆ Eq ((Int.toBytes 8 rbp0.toBitVec.toInt).At (x - 8))
+      ⋆ Eq ((Int.toBytes 8 A.toInt).At recv) ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt).At (recv + 8))
+      ⋆ Eq ((ptrBytes (acc.reverse.map (fun t : BitVec 64 × BitVec 64 × ListU64 => t.1))).At A) ⋆ lcObjs acc ⋆ Eq (tl.At base) ⋆ Heap avail ⋆ R
+      ⋆ lcStk x S) (by ecancel)
+  | succ j ih =>
+    intro i s0 acc blk rslot sp1 sp2 s136 s152 s160 s184 avail hij hacc hgsa hblk hrs hsp1 hsp2 h136 h152 h160 h184 hav
+      hrax hrdx hrcx hrbx hrdi hrsp h_mem
+    have hi : i < gs.length := by omega
+    have hg := hgs gs[i] (List.getElem_mem hi)
+    have hse := lcStart_succ gs i hi
+    have hle := lcStart_le gs (i + 1)
+    refine eventually_trans _ _ _ _ (lcl_iter k hk hf x base recv A tl (ptrBytes (acc.reverse.map (fun t : BitVec 64 × BitVec 64 × ListU64 => t.1))) T
+      gs.length i (lcStart gs i) (lcStart gs (i + 1)) gs[i] hg hT hn hi
+      (by rw [ptrBytes_length]; simp [hacc]) hse.symm (by omega)
+      (by simp only [lcStart]; omega) (hparts i hi) (hnexts i) (fun h => by rw [h, hend]) hT32 cap0 hcap hcap63
+      S hS blk rslot sp1 sp2 s136 s152 s160 s184 hblk hrs hsp1 hsp2 h136 h152 h160 h184 ra rbp0 guard Heap avail (by omega)
+      (lcObjs acc) R s0 hrax hrdx hrcx hrsp hguard hx h_mem hno hlu) ?_
+    rintro ⟨d, pc⟩ ⟨hpc, h1, h2, h3, h4, h5, h6, h7, p, q, blk', rslot', sp1', sp2', s136', s152', s160',
+      hb', hr', hs1', hs2', h136', h152', h160', Hm⟩
+    dsimp only at hpc h1 h2 h3 h4 h5 h6 h7 Hm
+    subst hpc
+    have := ih (i + 1) d ((p, q, gs[i]) :: acc) blk' rslot' sp1' sp2' s136' s152' s160'
+      (Int.toBytes 8 (BitVec.ofNat 64 (lcStart gs (i + 1))).toInt) (avail - 24 - 8 * gs[i].l.length)
+      (by omega) (by simp [hacc])
+      (by rw [List.reverse_cons, List.map_append, hgsa, List.take_add_one, List.getElem?_eq_getElem hi]; rfl)
+      hb' hr' hs1' hs2' h136' h152' h160' (Int.toBytes_length 8 _) (by have : gs[i].l.length ≤ 16 := hg; omega) h1 h2 h3 h4 h5 (by rw [h6]; exact hrsp)
+      (by
+        rw [h7]
+        simp only [List.reverse_cons, List.map_append, List.map_cons, List.map_nil, ptrBytes_snoc, lcObjs]
+        exact Hm)
+    refine eventually_trans _ _ _ _ this ?_
+    rintro st ⟨g1, g2, g3, g4, g5, g6⟩
+    exact Eventually.done _ ⟨g1, g2, g3, by rw [g4, h6], by rw [g5, h7], g6⟩
+
+def accept_stmt [Host] : Prop :=
+  ∀ (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh ListCUnmarshalSSZ k)
+    (tl : List UInt8) (T : Nat) (gs : List ListU64) (hgs : ∀ g ∈ gs, g.ok)
+    (hT : tl.length = T) (hn1 : 1 ≤ gs.length) (hn : gs.length ≤ 4) (hT32 : T < 2 ^ 32)
+    (hend : lcStart gs gs.length = T)
+    (hfirst : tl.take 4 = (uintBytes 4 (4 * gs.length)).toList)
+    (hparts : ∀ i (hi : i < gs.length), (tl.drop (lcStart gs i)).take (4 + 8 * gs[i].l.length)
+      = [4, 0, 0, 0] ++ (u64Bytes gs[i].l).toList)
+    (hnexts : ∀ i, i + 1 < gs.length → (tl.drop (4 * (i + 1))).take 4 = (uintBytes 4 (lcStart gs (i + 1))).toList)
+    (s : MachineData) (ra guard : UInt64) (fp slot s8 s32 l128 l136 l144 l152 l160 l168 l176 l184 l208 l216 l224 rslot blk
+      cP cL cC : List UInt8)
+    (hfp : fp.length = 8) (hsl : slot.length = 8) (h8 : s8.length = 8) (h32 : s32.length = 8)
+    (hl128 : l128.length = 8) (hl136 : l136.length = 8) (hl144 : l144.length = 8) (hl152 : l152.length = 8)
+    (hl160 : l160.length = 8) (hl168 : l168.length = 8) (hl176 : l176.length = 8) (hl184 : l184.length = 8)
+    (hl208 : l208.length = 8) (hl216 : l216.length = 8) (hl224 : l224.length = 8) (hrs : rslot.length = 8)
+    (hcP : cP.length = 8) (hcL : cL.length = 8) (hcC : cC.length = 8)
+    (S : Nat) (hS : S < 2 ^ 60) (hblk : blk.length = 144 + S)
+    (R : DataMem → Prop) (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : 8 * 4 + 152 * 4 ≤ avail)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s8.At (s.regs.rsp.toBitVec + 8))
+      ⋆ Eq (slot.At (s.regs.rsp.toBitVec + 16)) ⋆ Eq (s32.At (s.regs.rsp.toBitVec + 32))
+      ⋆ Eq (l128.At (s.regs.rsp.toBitVec - 128)) ⋆ Eq (l136.At (s.regs.rsp.toBitVec - 136))
+      ⋆ Eq (l144.At (s.regs.rsp.toBitVec - 144)) ⋆ Eq (l152.At (s.regs.rsp.toBitVec - 152))
+      ⋆ Eq (l160.At (s.regs.rsp.toBitVec - 160)) ⋆ Eq (l168.At (s.regs.rsp.toBitVec - 168))
+      ⋆ Eq (l176.At (s.regs.rsp.toBitVec - 176)) ⋆ Eq (l184.At (s.regs.rsp.toBitVec - 184))
+      ⋆ Eq (l224.At (s.regs.rsp.toBitVec - 224)) ⋆ Eq (l216.At (s.regs.rsp.toBitVec - 216))
+      ⋆ Eq (l208.At (s.regs.rsp.toBitVec - 208))
+      ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 232)) ⋆ Eq (blk.At (s.regs.rsp.toBitVec - 232 - 144 - BitVec.ofNat 64 S))
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ Heap avail
+      ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec) ⋆ Eq ((tl.take 4).At (s.regs.rbx.toBitVec + 4))
+      ⋆ Eq ((tl.drop 4).At (s.regs.rbx.toBitVec + 4 + 4))
+      ⋆ Eq (cP.At s.regs.rax.toBitVec) ⋆ Eq (cL.At (s.regs.rax.toBitVec + 8)) ⋆ Eq (cC.At (s.regs.rax.toBitVec + 16))
+      ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
+    (hguard : guard.toNat + 400 + S < s.regs.rsp.toNat) (hsp : 400 + S ≤ s.regs.rsp.toNat)
+    (hlen : s.regs.rcx.toNat = 4 + T) (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
+    (hms : MakesliceC Heap (label "type__" + 114368).toBitVec 8 (144 + S))
+    (hno : NewobjectC Heap (label "type__" + 83104).toBitVec 24 (144 + S)) (hlu : LuUAccC Heap S),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧
+        ∃ (A : BitVec 64) (acc : List (BitVec 64 × BitVec 64 × ListU64)) (avail' : Nat),
+          acc.reverse.map (fun t : BitVec 64 × BitVec 64 × ListU64 => t.2.2) = gs ∧
+          (Eq ((Int.toBytes 8 A.toInt).At s.regs.rax.toBitVec)
+            ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt).At (s.regs.rax.toBitVec + 8))
+            ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt).At (s.regs.rax.toBitVec + 16))
+            ⋆ Eq ((ptrBytes (acc.reverse.map (fun t : BitVec 64 × BitVec 64 × ListU64 => t.1))).At A)
+            ⋆ lcObjs acc ⋆ Eq (tl.At (s.regs.rbx.toBitVec + 4)) ⋆ Heap avail'
+            ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec) ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+            ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16)) ⋆ lcStk s.regs.rsp.toBitVec S
+            ⋆ R ⋆ fun _ => True) st.data.dmem)
+      ⟨s, Host.addrOf k⟩
+set_option maxHeartbeats 16000000 in
+set_option maxRecDepth 200000 in
+theorem accept [Host] : accept_stmt := by
+  intro k hk hf tl T gs hgs hT hn1 hn hT32 hend hfirst hparts hnexts s ra guard fp slot s8 s32 l128 l136 l144 l152 l160 l168 l176 l184 l208 l216 l224 rslot blk cP cL cC hfp hsl h8 h32 hl128 hl136 hl144 hl152 hl160 hl168 hl176 hl184 hl208 hl216 hl224 hrs hcP hcL hcC S hS hblk R Heap avail hav h_mem hguard hsp hlen hcap hcap63 hms hno hlu
+  have hT4 : 4 ≤ T := by have := congrArg List.length hfirst; simp [Fv.uintBytes_size] at this; omega
+  have ho4 : (tl.take 4).length = 4 := by simp; omega
+  have hoff : Int.ofBytes (tl.take 4) = ((4 * gs.length : Nat) : Int) := by
+    rw [hfirst, ofBytes_uintBytes4 _ (by omega)]
+  have hle4n : 4 * gs.length ≤ T := by
+    have := lcStart_le gs 0; rw [hend] at this; simp [lcStart] at this; omega
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
+  simp only at h_mem hguard hsp hlen hcap hcap63 ⊢
+  have := rsp.toNat_lt_size; have := guard.toNat_lt_size; have := rcx.toNat_lt_size; have := rdi.toNat_lt_size
+  simp only [UInt64.size] at *
+  kat hk ListCUnmarshalSSZ 0
+  kat hk ListCUnmarshalSSZ 1
+  kat hk ListCUnmarshalSSZ 2
+  kat hk ListCUnmarshalSSZ 3
+  apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk ListCUnmarshalSSZ 4
+  split
+  case isTrue h =>
+    exfalso
+    rw [cmp_be_false _ _ _ _ (by rw [ar_neg96 _ (by simp; omega)]; simp; omega)] at h
+    exact absurd h (by simp)
+  simp only [Effects.All]
+  kat hk ListCUnmarshalSSZ 5
+  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)
+  intro m1 H1
+  simp only [Width.bytes, Width.bits] at H1
+  kunfold
+  kat hk ListCUnmarshalSSZ 6
+  kat hk ListCUnmarshalSSZ 7
+  kat hk ListCUnmarshalSSZ 8
+  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ slot _ _ (ar_s240 _) (by ecancel) (by exact hsl)
+  intro m2 H2
+  simp only [Width.bytes, Width.bits] at H2
+  kunfold
+  kat hk ListCUnmarshalSSZ 9
+  kat hk ListCUnmarshalSSZ 10
+  split
+  case isTrue h =>
+    exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h; omega
+  simp only [Effects.All]
+  kat hk ListCUnmarshalSSZ 11
+  apply load_step_at _ _ rbx.toBitVec _ _ [4, 0, 0, 0] _ _ (by bv_omega) (by ecancel) (by simp)
+  simp only [show Int.ofBytes [4, 0, 0, 0] = 4 by simp [Int.ofBytes]]
+  kunfold
+  kat hk ListCUnmarshalSSZ 12
+  kat hk ListCUnmarshalSSZ 13
+  kat hk ListCUnmarshalSSZ 14
+  kat hk ListCUnmarshalSSZ 15
+  split
+  case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+  simp only [Effects.All]
+  kat hk ListCUnmarshalSSZ 16
+  kat hk ListCUnmarshalSSZ 17
+  kat hk ListCUnmarshalSSZ 18
+  kat hk ListCUnmarshalSSZ 19
+  kshl64 63
+  kat hk ListCUnmarshalSSZ 20
+  intro _
+  rw [lc_rdx4 _ (by simp; omega) (by simp; omega)]
+  kat hk ListCUnmarshalSSZ 21
+  kat hk ListCUnmarshalSSZ 22
+  kat hk ListCUnmarshalSSZ 23
+  kat hk ListCUnmarshalSSZ 24
+  kat hk ListCUnmarshalSSZ 25
+  kat hk ListCUnmarshalSSZ 26
+  kat hk ListCUnmarshalSSZ 27
+  rw [jle3_false _ _ (by rw [BitVec.add_comm, ← BitVec.sub_eq_add_neg, BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simp; omega)]; simp; omega)
+    (by rw [BitVec.add_comm, ← BitVec.sub_eq_add_neg, BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simp; omega)]; simp; omega)]
+  simp only [Bool.false_eq_true, ↓reduceIte, Effects.All]
+  kat hk ListCUnmarshalSSZ 28
+  apply load_step_at _ _ (rbx.toBitVec + 4) _ _ (tl.take 4) _ _ (by bv_omega) (by ecancel) (by exact ho4)
+  rw [hoff]
+  kunfold
+  kat hk ListCUnmarshalSSZ 29
+  kat hk ListCUnmarshalSSZ 30
+  kat hk ListCUnmarshalSSZ 31
+  intro _
+  have ho32 : (4 * gs.length) < 2 ^ 32 := by
+    omega
+  rw [zx_o (4 * gs.length) ho32]
+  kat hk ListCUnmarshalSSZ 32
+  split
+  case isTrue h =>
+    exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+    have := congrArg BitVec.toNat h; simp at this; omega
+  simp only [Effects.All]
+  kat hk ListCUnmarshalSSZ 33
+  kat hk ListCUnmarshalSSZ 34
+  intro _
+  rw [and3_zero (4 * gs.length) ho32 (by omega)]
+  kat hk ListCUnmarshalSSZ 35
+  split
+  case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+  simp only [Effects.All]
+  kat hk ListCUnmarshalSSZ 36
+  kat hk ListCUnmarshalSSZ 37
+  kshl64 2
+  rw [shr2_o (4 * gs.length) ho32]
+  kat hk ListCUnmarshalSSZ 38
+  kat hk ListCUnmarshalSSZ 39
+  rw [ja4_false _ (by omega)]
+  simp only [Bool.false_eq_true, ↓reduceIte, Effects.All]
+  kat hk ListCUnmarshalSSZ 40
+  kat hk ListCUnmarshalSSZ 41
+  kat hk ListCUnmarshalSSZ 42
+  split
+  case isFalse h =>
+    exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.toNat_add] at h; omega
+  simp only [Effects.All]
+  klabel hk hf ListCUnmarshalSSZ 64
+  kat hk ListCUnmarshalSSZ 64
+  kat hk ListCUnmarshalSSZ 65
+  rw [show rsp.toBitVec - 8#64 - 216 + 232 = rsp.toBitVec + 8 by bv_omega]
+  apply store_step _ _ _ _ _ s8 _ _ (by ecancel) (by exact h8)
+  intro n1 N1
+  simp only [Width.bytes, Width.bits] at N1
+  kunfold
+  kat hk ListCUnmarshalSSZ 66
+  rw [show rsp.toBitVec - 8#64 - 216 + 48 = rsp.toBitVec - 176 by bv_omega]
+  apply store_step _ _ _ _ _ l176 _ _ (by ecancel) (by exact hl176)
+  intro n2 N2
+  simp only [Width.bytes, Width.bits] at N2
+  kunfold
+  kat hk ListCUnmarshalSSZ 67
+  rw [show rsp.toBitVec - 8#64 - 216 + 80 = rsp.toBitVec - 144 by bv_omega]
+  apply store_step _ _ _ _ _ l144 _ _ (by ecancel) (by exact hl144)
+  intro n3 N3
+  simp only [Width.bytes, Width.bits] at N3
+  kunfold
+  kat hk ListCUnmarshalSSZ 68
+  rw [show rsp.toBitVec - 8#64 - 216 + 96 = rsp.toBitVec - 128 by bv_omega]
+  apply store_step _ _ _ _ _ l128 _ _ (by ecancel) (by exact hl128)
+  intro n4 N4
+  simp only [Width.bytes, Width.bits] at N4
+  kunfold
+  kat hk ListCUnmarshalSSZ 69
+  rw [show rsp.toBitVec - 8#64 - 216 + 56 = rsp.toBitVec - 168 by bv_omega]
+  apply store_step _ _ _ _ _ l168 _ _ (by ecancel) (by exact hl168)
+  intro n5 N5
+  simp only [Width.bytes, Width.bits] at N5
+  kunfold
+  kat hk ListCUnmarshalSSZ 70
+  rw [show rsp.toBitVec - 8#64 - 216 + 256 = rsp.toBitVec + 32 by bv_omega]
+  apply store_step _ _ _ _ _ s32 _ _ (by ecancel) (by exact h32)
+  intro n6 N6
+  simp only [Width.bytes, Width.bits] at N6
+  kunfold
+  kat hk ListCUnmarshalSSZ 71
+  rw [show rsp.toBitVec - 8#64 - 216 + 72 = rsp.toBitVec - 152 by bv_omega]
+  apply store_step _ _ _ _ _ l152 _ _ (by ecancel) (by exact hl152)
+  intro n7 N7
+  simp only [Width.bytes, Width.bits] at N7
+  kunfold
+  kat hk ListCUnmarshalSSZ 72
+  kat hk ListCUnmarshalSSZ 73
+  kat hk ListCUnmarshalSSZ 74
+  kat hk ListCUnmarshalSSZ 75
+  apply store_step_at _ _ (rsp.toBitVec - 232) _ _ _ rslot _ _ (lcl_ret _) (by ecancel) (by exact hrs)
+  intro n8 N8
+  simp only [Width.bytes, Width.bits] at N8
+  kunfold
+  rw [lcl_ret] at *
+  have hn4 : 4 * gs.length / 4 = gs.length := by omega
+  rw [hn4]
+  have hsp3 : ∀ (a b c : List UInt8), a.length = 8 → b.length = 8 → c.length = 8 →
+      Eq ((a ++ (b ++ c)).At (rsp.toBitVec - 232 + 8)) = Eq (a.At (rsp.toBitVec - 224)) ⋆ Eq (b.At (rsp.toBitVec - 216))
+        ⋆ Eq (c.At (rsp.toBitVec - 208)) := by
+    intro a b c ha hb hc
+    rw [at_app a _ (b := rsp.toBitVec - 216) (by rw [ha]; bv_omega) (by simp [*]),
+      at_app b c (b := rsp.toBitVec - 208) (by rw [hb]; bv_omega) (by simp [*]), show rsp.toBitVec - 232 + 8 = rsp.toBitVec - 224 by bv_omega]
+    simp only [Std.ExtHashMap.sep_assoc]
+  refine eventually_trans _ _ _ _ (hms _ (Host.addrOf (k + 75 + 1)) gs.length avail blk (l224 ++ (l216 ++ l208)) _ rfl
+    (by show (BitVec.ofNat 64 gs.length).toNat ≤ _; simp; omega)
+    (by show (BitVec.ofNat 64 gs.length).toNat = _; simp; omega) (by omega) (by unfold maxAlloc; omega) (by omega) hblk
+    (by simp [*]) (by dsimp only; rw [lcl_blk, hsp3 _ _ _ hl224 hl216 hl208]; ecancel)) ?_
+  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, -, stk1, sm1, hstk1, hsm1, Hm1⟩
+  dsimp only at hpc1 hrsp1 hr141 Hm1
+  subst hpc1
+  obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,
+    zmms1, flags1, mem1⟩ := d1
+  simp only at hrsp1 hr141 Hm1
+  subst hrsp1 hr141
+  rw [lcl_blk, hn4, ← List.take_append_drop 8 sm1, ← List.take_append_drop 8 (sm1.drop 8),
+    hsp3 _ _ _ (by simp [hsm1]) (by simp [hsm1]) (by simp [hsm1])] at Hm1
+  kat hk ListCUnmarshalSSZ 76
+  rw [lcl_g, show rsp.toBitVec - 224 + 56 = rsp.toBitVec - 168 by bv_omega]
+  apply load_step _ _ _ _ (Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+  kunfold
+  kat hk ListCUnmarshalSSZ 77
+  rw [lcl_g, show rsp.toBitVec - 224 + 232 = rsp.toBitVec + 8 by bv_omega]
+  apply load_step _ _ _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+  kunfold
+  kat hk ListCUnmarshalSSZ 78
+  apply store_step_at _ _ (rax.toBitVec + 8) _ _ _ cL _ _ (by bv_omega) (by ecancel) (by exact hcL)
+  intro n9 N9
+  simp only [Width.bytes, Width.bits] at N9
+  kunfold
+  kat hk ListCUnmarshalSSZ 79
+  apply store_step_at _ _ (rax.toBitVec + 16) _ _ _ cC _ _ (by bv_omega) (by ecancel) (by exact hcC)
+  intro n10 N10
+  simp only [Width.bytes, Width.bits] at N10
+  kunfold
+  kat hk ListCUnmarshalSSZ 80
+  apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
+  simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
+  kunfold
+  kat hk ListCUnmarshalSSZ 81
+  split
+  case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+  simp only [Effects.All]
+  klabel hk hf ListCUnmarshalSSZ 86
+  kat hk ListCUnmarshalSSZ 86
+  kat hk ListCUnmarshalSSZ 87
+  apply store_step_at _ _ rax.toBitVec _ _ _ cP _ _ (by bv_omega) (by ecancel) (by exact hcP)
+  intro n11 N11
+  simp only [Width.bytes, Width.bits] at N11
+  kunfold
+  kat hk ListCUnmarshalSSZ 88
+  intro _
+  kat hk ListCUnmarshalSSZ 89
+  rw [lcl_g, show rsp.toBitVec - 224 + 72 = rsp.toBitVec - 152 by bv_omega]
+  apply load_step _ _ _ _ (Int.toBytes 8 (BitVec.ofNat 64 (4 * gs.length)).toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+  kunfold
+  kat hk ListCUnmarshalSSZ 90
+  intro _
+  kat hk ListCUnmarshalSSZ 91
+  intro _
+  kat hk ListCUnmarshalSSZ 92
+  klabel hk hf ListCUnmarshalSSZ 239
+  have hrcx4 : 4 ≤ rcx.toNat := by omega
+  have hrdi4 : 4 ≤ rdi.toNat := by omega
+  rw [lca_m4 _ (by simpa using hrdi4), lca_m4' _ (by simpa using hrcx4), BitVec.mul_one,
+    show rcx.toBitVec.toNat - 4 = T by simp; omega] at N11
+  rw [show Int.toBytes 8 rdi.toBitVec.toInt = Int.toBytes 8 (BitVec.ofNat 64 rdi.toBitVec.toNat).toInt by simp] at N11
+  have hstart : lcStart gs 0 = 4 * gs.length := by simp [lcStart]
+  have htl : Eq (tl.At (rbx.toBitVec + 4)) = Eq ((tl.take 4).At (rbx.toBitVec + 4))
+      ⋆ Eq ((tl.drop 4).At (rbx.toBitVec + 4 + 4)) := by
+    conv => lhs; rw [← List.take_append_drop 4 tl]
+    exact at_app _ _ (by rw [List.length_take, Nat.min_eq_left (by omega)]; rfl) (by simp; omega)
+  refine eventually_trans _ _ _ _ (lcl_loop k hk hf rsp.toBitVec (rbx.toBitVec + 4) rax.toBitVec rax1.toBitVec tl T gs hgs
+    hT hn hT32 hend hparts hnexts rdi.toBitVec.toNat (by simp; omega) (by simpa using hcap63) S hS ra rbp guard Heap
+    (Eq ((Int.toBytes 8 rbx.toBitVec.toInt).At (rsp.toBitVec + 16)) ⋆ Eq ([4, 0, 0, 0].At rbx.toBitVec)
+      ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt).At (rax.toBitVec + 16))
+      ⋆ Eq (((sm1.drop 8).drop 8).At (rsp.toBitVec - 208)) ⋆ R)
+    hguard hsp hno hlu gs.length 0 _ [] stk1
+    (Int.toBytes 8 (Host.addrOf (k + 75 + 1)).toBitVec.toInt) (sm1.take 8) ((sm1.drop 8).take 8) l136
+    (Int.toBytes 8 (BitVec.ofNat 64 (4 * gs.length)).toInt) l160 l184 (avail - 8 * gs.length)
+    (by omega) rfl rfl hstk1 (Int.toBytes_length 8 _) (by simp [hsm1]) (by simp [hsm1]) hl136 (Int.toBytes_length 8 _) hl160 hl184
+    (by omega) (by simp) (by show (BitVec.ofNat 64 gs.length).toNat = _; simp; omega)
+    (by show (BitVec.ofNat 64 (4 * gs.length)).toNat = _; rw [hstart]; simp; omega)
+    (by apply UInt64.toBitVec_inj.mp; simp) (by apply UInt64.toBitVec_inj.mp; simp)
+    (by simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega)
+    (by
+      dsimp only
+      simp only [List.reverse_nil, List.map_nil, show ptrBytes [] = [] from rfl, List.nil_append, Nat.sub_zero,
+        lcObjs, Std.ExtHashMap.sep_emp]
+      rw [htl]
+      ecancel)) ?_
+  rintro ⟨d2, pc2⟩ ⟨hpc2, hrbx2, hrdi2, hrsp2, hr142, acc', av', hacc', Hm2⟩
+  dsimp only at hpc2 hrbx2 hrdi2 hrsp2 hr142 Hm2
+  subst hpc2
+  obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,
+    zmms2, flags2, mem2⟩ := d2
+  simp only at hrbx2 hrdi2 hrsp2 hr142 Hm2
+  subst hrbx2 hrdi2 hrsp2
+  kat hk ListCUnmarshalSSZ 407
+  kat hk ListCUnmarshalSSZ 408
+  kat hk ListCUnmarshalSSZ 409
+  kat hk ListCUnmarshalSSZ 410
+  klabel hk hf ListCUnmarshalSSZ 226
+  kat hk ListCUnmarshalSSZ 226
+  kat hk ListCUnmarshalSSZ 227
+  kat hk ListCUnmarshalSSZ 228
+  kat hk ListCUnmarshalSSZ 229
+  rw [show (216 : BitVec 64) + ({ toBitVec := rsp.toBitVec - 232 } + 8 : UInt64).toBitVec = rsp.toBitVec - 8 by
+    simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega]
+  apply load_step _ _ _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk ListCUnmarshalSSZ 230
+  rw [show rsp.toBitVec - 8 + 8#64 = rsp.toBitVec by bv_omega]
+  apply load_step _ _ _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  apply Eventually.done
+  simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+  refine ⟨trivial, rfl, rfl, ?_, rax1.toBitVec, acc', av', hacc', ?_⟩
+  · apply UInt64.toBitVec_inj.mp; simp
+  · exact sep_true (P := Eq ((Int.toBytes 8 rax1.toBitVec.toInt).At rax.toBitVec)
+      ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt).At (rax.toBitVec + 8))
+      ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt).At (rax.toBitVec + 16))
+      ⋆ Eq ((ptrBytes (acc'.reverse.map (fun t : BitVec 64 × BitVec 64 × ListU64 => t.1))).At rax1.toBitVec)
+      ⋆ lcObjs acc' ⋆ Eq (tl.At (rbx.toBitVec + 4)) ⋆ Heap av'
+      ⋆ Eq ([4, 0, 0, 0].At rbx.toBitVec) ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At rsp.toBitVec)
+      ⋆ Eq ((Int.toBytes 8 rbx.toBitVec.toInt).At (rsp.toBitVec + 16)) ⋆ lcStk rsp.toBitVec S ⋆ R) (by ecancel)
+
+def accept_empty_stmt [Host] : Prop :=
+  ∀ (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh ListCUnmarshalSSZ k)
+    (s : MachineData) (ra guard : UInt64) (fp slot cP cLC : List UInt8) (hfp : fp.length = 8)
+    (hsl : slot.length = 8) (hcP : cP.length = 8) (hcLC : cLC.length = 16)
+    (R : DataMem → Prop)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (slot.At (s.regs.rsp.toBitVec + 16))
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+      ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec)
+      ⋆ Eq (cP.At s.regs.rax.toBitVec) ⋆ Eq (cLC.At (s.regs.rax.toBitVec + 8))
+      ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
+    (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hsp : 232 ≤ s.regs.rsp.toNat)
+    (hlen : s.regs.rcx.toNat = 4) (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
+    (hx15 : s.zmms.get (AvxReg.xmm RegMm.mm15) = 0),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
+        ∧ (Eq ((Int.toBytes 8 (label "runtime.zerobase").toBitVec.toInt).At s.regs.rax.toBitVec)
+          ⋆ Eq ((List.replicate 16 0).At (s.regs.rax.toBitVec + 8))
+          ⋆ R ⋆ fun _ => True) st.data.dmem)
+      ⟨s, Host.addrOf k⟩
+set_option maxHeartbeats 4000000 in
+set_option maxRecDepth 100000 in
+theorem accept_empty [Host] : accept_empty_stmt := by
+  intro k hk hf s ra guard fp slot cP cLC hfp hsl hcP hcLC R h_mem hguard hsp hlen hcap hcap63 hx15
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
+  simp only at h_mem hguard hsp hlen hcap hcap63 hx15 ⊢
+  have := rsp.toNat_lt_size; have := guard.toNat_lt_size; have := rcx.toNat_lt_size; have := rdi.toNat_lt_size
+  simp only [UInt64.size] at *
+  kat hk ListCUnmarshalSSZ 0
+  kat hk ListCUnmarshalSSZ 1
+  kat hk ListCUnmarshalSSZ 2
+  kat hk ListCUnmarshalSSZ 3
+  apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk ListCUnmarshalSSZ 4
+  split
+  case isTrue h =>
+    exfalso
+    rw [cmp_be_false _ _ _ _ (by rw [ar_neg96 _ (by simp; omega)]; simp; omega)] at h
+    exact absurd h (by simp)
+  simp only [Effects.All]
+  kat hk ListCUnmarshalSSZ 5
+  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)
+  intro m1 H1
+  simp only [Width.bytes, Width.bits] at H1
+  kunfold
+  kat hk ListCUnmarshalSSZ 6
+  kat hk ListCUnmarshalSSZ 7
+  kat hk ListCUnmarshalSSZ 8
+  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ slot _ _ (ar_s240 _) (by ecancel) (by exact hsl)
+  intro m2 H2
+  simp only [Width.bytes, Width.bits] at H2
+  kunfold
+  kat hk ListCUnmarshalSSZ 9
+  kat hk ListCUnmarshalSSZ 10
+  split
+  case isTrue h =>
+    exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h; omega
+  simp only [Effects.All]
+  kat hk ListCUnmarshalSSZ 11
+  apply load_step_at _ _ rbx.toBitVec _ _ [4, 0, 0, 0] _ _ (by bv_omega) (by ecancel) (by simp)
+  simp only [show Int.ofBytes [4, 0, 0, 0] = 4 by simp [Int.ofBytes]]
+  kunfold
+  kat hk ListCUnmarshalSSZ 12
+  kat hk ListCUnmarshalSSZ 13
+  kat hk ListCUnmarshalSSZ 14
+  kat hk ListCUnmarshalSSZ 15
+  split
+  case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+  simp only [Effects.All]
+  kat hk ListCUnmarshalSSZ 16
+  kat hk ListCUnmarshalSSZ 17
+  kat hk ListCUnmarshalSSZ 18
+  kat hk ListCUnmarshalSSZ 19
+  kshl64 63
+  kat hk ListCUnmarshalSSZ 20
+  intro _
+  kat hk ListCUnmarshalSSZ 21
+  kat hk ListCUnmarshalSSZ 22
+  kat hk ListCUnmarshalSSZ 23
+  kat hk ListCUnmarshalSSZ 24
+  kat hk ListCUnmarshalSSZ 25
+  kat hk ListCUnmarshalSSZ 26
+  kat hk ListCUnmarshalSSZ 27
+  rw [jle3_true _ (by rw [BitVec.add_comm, ← BitVec.sub_eq_add_neg, BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simp; omega)]; simp; omega)]
+  simp only [↓reduceIte, Effects.All]
+  klabel hk hf ListCUnmarshalSSZ 178
+  kat hk ListCUnmarshalSSZ 178
+  kat hk ListCUnmarshalSSZ 179
+  kat hk ListCUnmarshalSSZ 180
+  split
+  case isTrue h =>
+    exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+    apply h; apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_add]; omega
+  simp only [Effects.All]
+  kat hk ListCUnmarshalSSZ 181
+  simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
+  kunfold
+  apply store_avx_step _ _ _ _ cLC _ _ (by ecancel) (by exact hcLC) (by decide)
+  intro m3 H3
+  kunfold
+  rw [hx15, show Int.toBytes AvxWidth.W128.bytes (0 : BitVec 128).toInt = List.replicate 16 0 by decide] at H3
+  kat hk ListCUnmarshalSSZ 182
+  apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
+  simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
+  kunfold
+  kat hk ListCUnmarshalSSZ 183
+  split
+  case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+  simp only [Effects.All]
+  klabel hk hf ListCUnmarshalSSZ 187
+  kat hk ListCUnmarshalSSZ 187
+  kat hk ListCUnmarshalSSZ 188
+  kat hk ListCUnmarshalSSZ 189
+  apply store_step_at _ _ rax.toBitVec _ _ _ cP _ _ (by kaddr) (by ecancel) (by exact hcP)
+  intro m4 H4
+  simp only [Width.bytes, Width.bits] at H4
+  kunfold
+  kat hk ListCUnmarshalSSZ 190
+  intro _
+  kat hk ListCUnmarshalSSZ 191
+  intro _
+  kat hk ListCUnmarshalSSZ 192
+  klabel hk hf ListCUnmarshalSSZ 226
+  kat hk ListCUnmarshalSSZ 226
+  kat hk ListCUnmarshalSSZ 227
+  kat hk ListCUnmarshalSSZ 228
+  kat hk ListCUnmarshalSSZ 229
+  rw [ar_m224]
+  apply load_step _ _ _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk ListCUnmarshalSSZ 230
+  rw [show rsp.toBitVec - 8 + 8#64 = rsp.toBitVec by bv_omega]
+  apply load_step _ _ _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  apply Eventually.done
+  simp only
+  refine ⟨trivial, UInt64.toBitVec_inj.mp (by simp), UInt64.toBitVec_inj.mp (by simp),
+    UInt64.toBitVec_inj.mp (by simp), trivial, ?_⟩
+  refine sep_mono_right' (Q := ?Q) (fun _ _ => trivial) ?h
+  case h => ecancel
 
 end Gen1cX4.ListC
