@@ -4,7 +4,8 @@
   "Fk.ScSize",
   "Fk.ScAccept",
   "Fk.ScReject",
-  "Fk.ScRejectBool"
+  "Fk.ScRejectBool",
+  "Fk.ScMarshal"
  ],
  "pairs": [
   [
@@ -26,6 +27,12 @@
    "reject r2 bool-range"
   ],
   [
+   "Gen1cX4.Scalars.marshal_stmt",
+   "sc_marshal_main",
+   "SAME",
+   "marshal"
+  ],
+  [
    "Gen1cX4.Scalars.size_stmt",
    "sc_accept_main",
    "DIFF",
@@ -34,6 +41,12 @@
   [
    "Gen1cX4.Scalars.reject_bool_stmt",
    "sc_reject_size_main",
+   "DIFF",
+   "control"
+  ],
+  [
+   "Gen1cX4.Scalars.marshal_stmt",
+   "sc_accept_main",
    "DIFF",
    "control"
   ]

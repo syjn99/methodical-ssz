@@ -431,13 +431,206 @@ def accept_labels(D, F):
     return [(s, lab_by_suf[s]) for s in sorted(labs, key=lambda s: [d for d, k, t in D if t == lab_by_suf[s]][0])]
 
 
+
+# ---------------------------------------------------------------- marshal (fast path, no growslice)
+# Patterns of Fk/ScMarshal.lean (sc_marshal_main): stack-guard check, frame push, spills, one
+# load-compare-append block per field, the bool appended by value, frame pop and return.
+
+STACK_NOT_TAKEN = ["· rename_i h; exfalso",
+                   "  simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl, CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h",
+                   "  have := guard.toNat_lt_size; have := rsp.toNat_lt_size",
+                   "  simp only [UInt64.size] at *",
+                   "  rcases h with h | h",
+                   "  · apply h; omega",
+                   "  · have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this; omega"]
+CAP_TAKEN = ["case isFalse h =>",
+             "  exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h; omega"]
+
+
+def marshal_stmt(code, F):
+    bi = [i for i, f in enumerate(F.f) if f["kind"] == "bool"][0]
+    cn = [f"c{f['name']}" for f in F.f]
+    n = len(F.f)
+    hc = " ".join(f"(h{f['name']} : c{f['name']}.length = {f['w']})" for i, f in enumerate(F.f) if i != bi)
+    hd = " ".join(f"(hd{i} : d{i}.length = {f['w']})" for i, f in enumerate(F.f))
+    rcv = lambda base: "\n      ⋆ ".join(f"Eq ({cn[i]}.At {plus(base, f['go'])})" for i, f in enumerate(F.f))
+    dst = "\n      ⋆ ".join(f"Eq (d{i}.At {plus('s.regs.rbx.toBitVec + s.regs.rcx.toBitVec', f['ssz']).replace('(s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + ', '(s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + ') if f['ssz'] else '(s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)'})" for i, f in enumerate(F.f))
+    outd = "\n          ⋆ ".join(f"Eq ({cn[i]}.At {('(s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + ' + str(f['ssz']) + ')') if f['ssz'] else '(s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)'})" for i, f in enumerate(F.f))
+    outc = "\n          ⋆ ".join(f"Eq ({cn[i]}.At {plus('s.regs.rax.toBitVec', f['go'])})" for i, f in enumerate(F.f))
+    return f"""def marshal_stmt [Host] : Prop :=
+  ∀ (k : Nat) (hk : {code}.IsInfixAt Host.prog k)
+    (hf : LabelsFresh {code} k)
+    (s : MachineData) (ra guard : UInt64) (fp sp1 sp2 {' '.join(cn)} {' '.join(f'd{i}' for i in range(n))} pre : List UInt8)
+    (hfp : fp.length = 8) (hs1 : sp1.length = 8) (hs2 : sp2.length = 8)
+    {hc}
+    {hd}
+    (R : DataMem → Prop)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (sp1.At (s.regs.rsp.toBitVec + 8)) ⋆ Eq (sp2.At (s.regs.rsp.toBitVec + 16))
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+      ⋆ {rcv('s.regs.rax.toBitVec')}
+      ⋆ {dst}
+      ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ R)
+    (hguard : guard.toNat < s.regs.rsp.toNat)
+    (hcap : s.regs.rcx.toNat + {F.size} ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
+    (h{F.f[bi]['name']} : c{F.f[bi]['name']} = [0] ∨ c{F.f[bi]['name']} = [1]),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = s.regs.rbx
+        ∧ st.data.regs.rbx = s.regs.rcx + {F.size} ∧ st.data.regs.rcx = s.regs.rdi
+        ∧ st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14
+        ∧ ({outd}
+          ⋆ Eq (pre.At s.regs.rbx.toBitVec)
+          ⋆ {outc}
+          ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+          ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
+          ⋆ Eq ((Int.toBytes 8 s.regs.rax.toBitVec.toInt).At (s.regs.rsp.toBitVec + 8))
+          ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
+          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ R) st.data.dmem)
+      ⟨s, Host.addrOf k⟩
+"""
+
+
+def marshal_walk(D, F, code, bval):
+    """Fast path of MarshalSSZTo for bool value bval; returns (lines, last store index)."""
+    by_go = {f["go"]: i for i, f in enumerate(F.f)}
+    lab_index = {t: d for d, k, t in D if k == "label"}
+    kat = lambda d: f"kat hk {code} {d}"
+    L, m, d, seen = [], 1, 1, set()
+    rdx, field, frame = None, None, None
+    while True:
+        assert d not in seen, f"loop at {d}"
+        seen.add(d)
+        _, kind, t = D[d]
+        if kind == "label":
+            L.append(kat(d)); d += 1; continue
+        op = t.split()[0]
+        args = t[len(op):].strip()
+        if op == "cmp" and args.startswith("0x10(%r14)"):
+            L += [kat(d), "apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
+        elif op == "jbe":
+            L += [kat(d), "split"] + STACK_NOT_TAKEN + ["simp only [Effects.All]"]
+        elif op == "push":
+            L += [kat(d), "apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)",
+                  f"intro m{m} H{m}", f"simp only [Width.bytes, Width.bits] at H{m}", "kunfold"]
+            m += 1
+        elif op == "sub" and args.endswith("%rsp"):
+            frame = int(args.split(",")[0][1:], 16)
+            L.append(kat(d))
+        elif op == "mov" and re.fullmatch(r"%r[ab]x,0x[0-9a-f]+\(%rsp\)", args):
+            off = int(re.search(r"0x([0-9a-f]+)\(", args)[1], 16) - frame - 8
+            ch, hy = {8: ("sp1", "hs1"), 16: ("sp2", "hs2")}[off]
+            L += [kat(d), f"apply store_step_at _ _ (rsp.toBitVec + {off}) _ _ _ {ch} _ _ (by bv_omega) (by ecancel) (by exact {hy})",
+                  f"intro m{m} H{m}", f"simp only [Width.bytes, Width.bits] at H{m}", "kunfold"]
+            m += 1
+        elif op == "lea" and args == "0x1(%rcx),%rdx":
+            rdx = "rcx.toBitVec + 1"; L.append(kat(d))
+        elif op in ("movzbl", "movzwl", "mov") and re.fullmatch(r"(0x[0-9a-f]+)?\(%rax\),%r8\w*", args):
+            off = disp(args.split(",")[0])[0]
+            field = by_go[off]
+            fn = F.f[field]["name"]
+            addr = "(rax.toBitVec)" if off == 0 else f"(rax.toBitVec + {off})"
+            L += [kat(d), f"apply load_step_at _ _ {addr} _ _ c{fn} _ _ (by bv_omega) (by ecancel) (by exact h{fn})", "kunfold"]
+        elif op == "cmpb" and re.fullmatch(r"\$0x0,0x[0-9a-f]+\(%rax\)", args):
+            off = int(args.split(",")[1].split("(")[0], 16)
+            field = by_go[off]
+            fn = F.f[field]["name"]
+            L += [kat(d), f"apply load_step_at _ _ (rax.toBitVec + {off}) _ _ c{fn} _ _ (by bv_omega) (by ecancel) (by rcases h{fn} with rfl | rfl <;> rfl)",
+                  "kunfold", f"rcases h{fn} with rfl | rfl"] if False else \
+                 [kat(d), f"apply load_step_at _ _ (rax.toBitVec + {off}) _ _ c{fn} _ _ (by bv_omega) (by ecancel) (by rfl)", "kunfold"]
+        elif op == "cmp" and args == "%rdx,%rdi":
+            L.append(kat(d))
+        elif op == "jae":
+            target = args
+            L += [kat(d), "split"] + CAP_TAKEN + ["simp only [Effects.All]", f"klabel hk hf {code} {lab_index[target]}"]
+            d = lab_index[target]; continue
+        elif op == "je":
+            target = args
+            if bval == 0:
+                L += [kat(d), "split", "case isFalse h => exact absurd h (by decide)", "simp only [Effects.All]",
+                      f"klabel hk hf {code} {lab_index[target]}"]
+                d = lab_index[target]; continue
+            L += [kat(d), "split", "case isTrue h => exact absurd h (by decide)", "simp only [Effects.All]"]
+        elif op == "jmp":
+            target = args
+            L += [kat(d), f"klabel hk hf {code} {lab_index[target]}"]
+            d = lab_index[target]; continue
+        elif op in ("mov", "movb") and re.fullmatch(r"(%r8\w*|\$0x[01]),-0x([0-9a-f]+)\(%rdx,%rbx,1\)", args):
+            w = int(re.search(r"-0x([0-9a-f]+)\(", args)[1], 16)
+            i = field if not args.startswith("$") else [j for j, f in enumerate(F.f) if f["kind"] == "bool"][0]
+            off = F.f[i]["ssz"]
+            rhs = "rbx.toBitVec + rcx.toBitVec" + (f" + {off}" if off else "")
+            L += [kat(d), f"rw [show {rdx} + rbx.toBitVec * 1#64 + -{w} = {rhs} by bv_omega]",
+                  f"apply store_step _ _ _ _ _ d{i} _ _ (by ecancel) (by exact hd{i})",
+                  f"intro m{m} H{m}", f"simp only [Width.bytes, Width.bits] at H{m}", "kunfold"]
+            m += 1
+        elif op == "add" and args.endswith(",%rdx"):
+            rdx = f"{int(args.split(',')[0][1:], 16)} + ({rdx})"; L.append(kat(d))
+        elif op == "inc" and args == "%rdx":
+            rdx = f"{rdx} + 1"; L.append(kat(d))
+        elif op == "xor":
+            L += [kat(d), "intro _"]
+        elif op == "add" and args.endswith(",%rsp"):
+            L.append(kat(d))
+        elif op == "pop" and args == "%rbp":
+            L += [kat(d), f"rw [show {frame} + (rsp.toBitVec - 8#64 - {frame}) = rsp.toBitVec - 8 by bv_omega]",
+                  f"obtain ⟨F{m}, H{m}⟩ : ∃ F, (Eq ((Int.toBytes 8 rbp.toBitVec.toInt).At (rsp.toBitVec - 8)) ⋆ F) m{m - 1} := ⟨_, by ecancel⟩",
+                  f"apply load_step _ _ _ _ _ F{m} _ H{m} (by exact Int.toBytes_length 8 _)", "kunfold"]
+        elif op == "retq":
+            L += [kat(d), "rw [show rsp.toBitVec - 8 + 8#64 = rsp.toBitVec by bv_omega]",
+                  "apply load_step _ _ _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)",
+                  "kunfold", "apply Eventually.done"]
+            return L, m - 1
+        elif op == "mov" and re.fullmatch(r"%r\w+,%r\w+", args):
+            L.append(kat(d))
+        else:
+            raise SystemExit(f"marshal directive {d} `{t}`: no tactic template")
+        d += 1
+
+
+def marshal_full(D, F, code):
+    bi = [i for i, f in enumerate(F.f) if f["kind"] == "bool"][0]
+    bn = F.f[bi]["name"]
+    cn = [f"c{f['name']}" for f in F.f]
+    n = len(F.f)
+    intro = ("intro k hk hf s ra guard fp sp1 sp2 " + " ".join(cn) + " " + " ".join(f"d{i}" for i in range(n)) +
+             " pre hfp hs1 hs2 " + " ".join(f"h{f['name']}" for i, f in enumerate(F.f) if i != bi) + " " +
+             " ".join(f"hd{i}" for i in range(n)) + f" R h_mem hguard hcap hcap63 h{bn}")
+    L = [intro,
+         "obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s",
+         "simp only at h_mem hguard hcap hcap63 ⊢",
+         "have := rcx.toNat_lt_size; have := rdi.toNat_lt_size; have := rsp.toNat_lt_size",
+         "have := guard.toNat_lt_size; simp only [UInt64.size] at *",
+         f"kat hk {code} 0"]
+    p0, l0 = marshal_walk(D, F, code, 0)
+    p1, l1 = marshal_walk(D, F, code, 1)
+    k = 0
+    while p0[k] == p1[k]:
+        k += 1
+    k = max(i for i in range(k) if p0[i].startswith("kat "))   # split before the `je` on the bool
+    simps = ", ".join(f"toBytes_ofInt_ofBytes {W[f['w']][0]} {f['w']} rfl c{f['name']} h{f['name']}" for i, f in enumerate(F.f) if i != bi)
+    def fin(last):
+        return ["simp only [Width.bytes, zx8, zx16, zx32, " + simps + ",",
+                "  show Int.toBytes 1 (BitVec.truncate 8 (0 : BitVec 64)).toInt = [0] by decide,",
+                f"  show Int.toBytes 1 (BitVec.truncate 8 (1 : BitVec 64)).toInt = [1] by decide] at H{last}",
+                "simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]",
+                "refine ⟨trivial, trivial, ?_, trivial, ?_, ?_, ?_, trivial, trivial, ?_⟩",
+                "· apply UInt64.toBitVec_inj.mp; simp; generalize rcx.toBitVec = x; apply BitVec.eq_of_toNat_eq; simp; omega",
+                "· apply UInt64.toBitVec_inj.mp; simp", "· apply UInt64.toBitVec_inj.mp; simp", "· apply UInt64.toBitVec_inj.mp; simp",
+                f"· (try simp only [BitVec.ofNat_eq_ofNat] at H{last} ⊢); ecancel"]
+    # the bool chunk is loaded before the split with a symbolic value: its length proof needs the cases
+    pre = [x.replace("(by rfl)", f"(by rcases h{bn} with rfl | rfl <;> rfl)") for x in p0[:k]]
+    L += pre + [f"rcases h{bn} with rfl | rfl", f"· -- {bn} = false"] + ["  " + x for x in p0[k:] + fin(l0)]
+    L += [f"· -- {bn} = true"] + ["  " + x for x in p1[k:] + fin(l1)]
+    return L
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--desccheck-result", required=True)
     ap.add_argument("--desc-dir", required=True)
     ap.add_argument("--type", required=True)
     ap.add_argument("--out-lean", required=True)
-    ap.add_argument("--only", default="size,accept,reject_bool,reject_size",
+    ap.add_argument("--only", default="size,accept,reject_bool,marshal",
                     help="obligations to emit (a failing one must not be in the library module)")
     ap.add_argument("--ns", default=None, help="namespace (default Gen1cX4.<T>)")
     ap.add_argument("--mutant", default=None,
@@ -454,7 +647,7 @@ def main():
     F = Fields(desc, LAYOUT["types"][t])
     ns = a.ns or f"Gen1cX4.{t}"
     only = a.only.split(",")
-    code = {m: f"{t}{m}" for m in ("SizeSSZ", "UnmarshalSSZ")}
+    code = {m: f"{t}{m}" for m in ("SizeSSZ", "UnmarshalSSZ", "MarshalSSZTo")}
     head = ["import Fk.Step", "import Fk.Bytes", "import Fk.Labels", "import Gen1cX4.Support"]
     pre = []
     if a.mutant:
@@ -483,6 +676,10 @@ def main():
         body += [reject_bool_stmt(code["UnmarshalSSZ"], F, rb_labels, err_label(Dun, [d for d, k, x in Dun if x == rb_labels[0][1]][0])),
                  "set_option maxHeartbeats 2000000 in",
                  "theorem reject_bool [Host] : reject_bool_stmt := by", *["  " + x for x in rb_proof], ""]
+    if "marshal" in only:
+        Dma = directives(os.path.join(NORM, f"target.{t}.MarshalSSZTo.S"))
+        body += [marshal_stmt(code["MarshalSSZTo"], F), "set_option maxHeartbeats 4000000 in", "set_option maxRecDepth 100000 in",
+                 "theorem marshal [Host] : marshal_stmt := by", *["  " + x for x in marshal_full(Dma, F, code["MarshalSSZTo"])], ""]
     body += [f"end {ns}", ""]
     os.makedirs(os.path.dirname(out), exist_ok=True)
     open(out, "w").write("\n".join(body))

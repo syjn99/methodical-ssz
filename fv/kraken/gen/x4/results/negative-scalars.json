@@ -1,7 +1,7 @@
 {
  "schema": "fvphase1c.x4-negative/1",
- "cases": 6,
- "as_expected": 6,
+ "cases": 8,
+ "as_expected": 8,
  "rows": [
   {
    "id": "sc-size-imm",
@@ -14,7 +14,8 @@
     22,
     36
    ],
-   "as_expected": true
+   "as_expected": true,
+   "run": "logs/70"
   },
   {
    "id": "sc-size-imm",
@@ -27,7 +28,8 @@
     22,
     36
    ],
-   "as_expected": true
+   "as_expected": true,
+   "run": "logs/70"
   },
   {
    "id": "sc-accept-ja",
@@ -40,7 +42,8 @@
     53,
     200
    ],
-   "as_expected": true
+   "as_expected": true,
+   "run": "logs/70"
   },
   {
    "id": "sc-accept-ja",
@@ -53,7 +56,8 @@
     53,
     200
    ],
-   "as_expected": true
+   "as_expected": true,
+   "run": "logs/70"
   },
   {
    "id": "sc-rbool-cmp",
@@ -66,7 +70,8 @@
     57,
     159
    ],
-   "as_expected": true
+   "as_expected": true,
+   "run": "logs/70"
   },
   {
    "id": "sc-rbool-cmp",
@@ -79,7 +84,36 @@
     57,
     159
    ],
-   "as_expected": true
+   "as_expected": true,
+   "run": "logs/70"
+  },
+  {
+   "id": "sc-marshal-add",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.sc_marshal_add_mutant.marshal",
+   "mutation": "'add $0x2,%rdx' -> 'add $0x3,%rdx'",
+   "exit": "1",
+   "first_error": "line 133: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+   "theorem_lines": [
+    64,
+    280
+   ],
+   "as_expected": true,
+   "run": "logs/72"
+  },
+  {
+   "id": "sc-marshal-add",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.sc_marshal_add_control.marshal",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    64,
+    280
+   ],
+   "as_expected": true,
+   "run": "logs/72"
   }
  ]
 }

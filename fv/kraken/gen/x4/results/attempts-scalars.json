@@ -57,7 +57,14 @@
    "note": "the hand proof (Fk/ScReject.lean) reorders h_mem by hand (h_mem') and uses Mem.storeInt_sep with sym/kstep; the generated template does not; last attempt kept in run scratch/x4/Scalars-attempt3-reject_size.lean"
   },
   "marshal": {
-   "status": "not attempted in this session"
+   "status": "proved (generated), SAME sc_marshal_main",
+   "attempts": [
+    {
+     "log": "run logs/71",
+     "result": "pass"
+    }
+   ],
+   "negative": "sc-marshal-add (logs/72)"
   },
   "compose": {
    "status": "not attempted in this session (needs marshal)"

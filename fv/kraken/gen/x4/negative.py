@@ -26,7 +26,13 @@ CASES = [  # id, type, method, designated obligation, old instruction, new instr
     ("sc-size-imm", "Scalars", "SizeSSZ", "size", "mov $0x10,%eax", "mov $0x11,%eax"),
     ("sc-accept-ja", "Scalars", "UnmarshalSSZ", "accept", "ja L_target.Scalars.UnmarshalSSZ_41", "jae L_target.Scalars.UnmarshalSSZ_41"),
     ("sc-rbool-cmp", "Scalars", "UnmarshalSSZ", "reject_bool", "cmp $0x1,%cl", "cmp $0x2,%cl"),
+    ("sc-marshal-add", "Scalars", "MarshalSSZTo", "marshal", "add $0x2,%rdx", "add $0x3,%rdx"),
 ]
+import sys as _sys
+if "--ids" in _sys.argv:   # restrict to the named cases (the others were run before)
+    _ids = _sys.argv[_sys.argv.index("--ids") + 1].split(",")
+    CASES = [c for c in CASES if c[0] in _ids]
+    del _sys.argv[_sys.argv.index("--ids"):_sys.argv.index("--ids") + 2]
 
 
 def prepare(work, result, ddir):

@@ -33,6 +33,15 @@
    "standard_only": true
   },
   {
+   "name": "Gen1cX4.Scalars.marshal",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
    "name": "Gen1cX4.ofBytes1",
    "axioms": [
     "propext"

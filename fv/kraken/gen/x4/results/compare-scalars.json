@@ -1,6 +1,6 @@
 {
  "schema": "fvphase1c.x4-compare/1",
- "log": "run logs/70 (compare step)",
+ "log": "run logs/71 (compare step)",
  "rows": [
   {
    "gen": "Gen1cX4.Scalars.size_stmt",
@@ -27,6 +27,14 @@
    "as_expected": true
   },
   {
+   "gen": "Gen1cX4.Scalars.marshal_stmt",
+   "hand": "sc_marshal_main",
+   "expect": "SAME",
+   "why": "marshal",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
    "gen": "Gen1cX4.Scalars.size_stmt",
    "hand": "sc_accept_main",
    "expect": "DIFF",
@@ -37,6 +45,14 @@
   {
    "gen": "Gen1cX4.Scalars.reject_bool_stmt",
    "hand": "sc_reject_size_main",
+   "expect": "DIFF",
+   "why": "control",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.Scalars.marshal_stmt",
+   "hand": "sc_accept_main",
    "expect": "DIFF",
    "why": "control",
    "result": "DIFF",
