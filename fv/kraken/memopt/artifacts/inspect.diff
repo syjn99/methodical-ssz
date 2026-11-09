@@ -1,0 +1,31 @@
+diff --color -r -x *.olean -x *.ilean -x .gitignore orig/Fk.WitLcM1x1.inspect.txt new/Fk.WitLcM1x1.inspect.txt
+154c154
+< axioms: #[]
+---
+> axioms: #[propext, Quot.sound]
+diff --color -r -x *.olean -x *.ilean -x .gitignore orig/Fk.WitLcM4x16.inspect.txt new/Fk.WitLcM4x16.inspect.txt
+201c201
+< axioms: #[]
+---
+> axioms: #[propext, Quot.sound]
+258c258
+< axioms: #[]
+---
+> axioms: #[propext, Quot.sound]
+315c315
+< axioms: #[]
+---
+> axioms: #[propext, Quot.sound]
+372c372
+< axioms: #[]
+---
+> axioms: #[propext, Quot.sound]
+diff --color -r -x *.olean -x *.ilean -x .gitignore orig/Fk.WitLcMMix.inspect.txt new/Fk.WitLcMMix.inspect.txt
+154c154
+< axioms: #[]
+---
+> axioms: #[propext, Quot.sound]
+211c211
+< axioms: #[]
+---
+> axioms: #[propext, Quot.sound]

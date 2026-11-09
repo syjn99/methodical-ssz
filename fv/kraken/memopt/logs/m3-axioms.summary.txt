@@ -1,0 +1,12 @@
+label: m3-axioms
+cmd: sh tools/axioms.sh
+cwd: /Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/lean
+start_epoch: 1794225159
+exit: 0
+wall_s_date: 11
+wall_s_time: 11.29
+time_maxrss_bytes: 1462632448
+time_maxrss_gib: 1.36
+sampled_peak_total_gib: 2.02
+sampled_peak_single_gib: 1.36
+samples: 21
