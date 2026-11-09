@@ -43,7 +43,7 @@ E=[f"lcElem ({A:#x} : BitVec 64) {i} ({P[i]:#x} : BitVec 64) ({Q[i]:#x} : BitVec
 OBJS=" ⋆ ".join(E) if N else "Std.ExtHashMap.emp"
 D1=f"(z {4*N})" if N else "([] : List UInt8)"
 DB=f"(z {LS})" if N else "([] : List UInt8)"
-U="".join(f"\n\nset_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\ntheorem u64v{i} : (u64Bytes [{', '.join(str(v) for v in range(1,m+1))}]).toList = [{', '.join(map(str,VB(m)))}] := by decide" for i,m in enumerate(LENS) if m)
+U="".join(f"\n\nset_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\ntheorem u64v{i} : (u64Bytes [{', '.join(str(v) for v in range(1,m+1))}]).toList = [{', '.join(map(str,VB(m)))}] := by simp [u64Bytes, EthLib.Serialization.Ssz.uintBytes]" for i,m in enumerate(LENS) if m)
 UL="".join(f", u64v{i}" for i,m in enumerate(LENS) if m)
 prem=f"""Eq (({Z}).At s.regs.rsp.toBitVec)
       ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec - 8)) ⋆ Eq ((z 8).At (s.regs.rsp.toBitVec + 8))

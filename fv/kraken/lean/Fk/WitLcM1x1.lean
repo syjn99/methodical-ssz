@@ -42,7 +42,7 @@ def objs : DataMem → Prop := lcElem (0x10088 : BitVec 64) 0 (0x10090 : BitVec 
 theorem u64nil : (u64Bytes ([] : List UInt64)).toList = [] := by decide
 
 set_option maxHeartbeats 4000000 in
-theorem u64v0 : (u64Bytes [1]).toList = [1, 0, 0, 0, 0, 0, 0, 0] := by decide
+theorem u64v0 : (u64Bytes [1]).toList = [1, 0, 0, 0, 0, 0, 0, 0] := by simp [u64Bytes, EthLib.Serialization.Ssz.uintBytes]
 
 def block  : List UInt8 :=
   (Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 32) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((Int.toBytes 8 (0x10088 : BitVec 64).toInt) ++ ((Int.toBytes 8 1) ++ ((Int.toBytes 8 1) ++ ((Int.toBytes 8 (0x10090 : BitVec 64).toInt) ++ ((Int.toBytes 8 (0x100a8 : BitVec 64).toInt) ++ ((Int.toBytes 8 1) ++ ((Int.toBytes 8 1) ++ ([1, 0, 0, 0, 0, 0, 0, 0] ++ ((z 4) ++ ((z 4) ++ ((z 12))))))))))))))))))))))
