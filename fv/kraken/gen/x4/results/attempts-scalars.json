@@ -56,7 +56,8 @@
       "result": "fail: ecancel cannot match Eq (slot.At (rsp.toBitVec + 16)) at the spill store (statement spells the offset 16#64, as sc_reject_size_main does); cascade to the rip loads"
      }
     ],
-    "class": "automation limit of the generated template (ecancel)"
+    "class": "automation limit of the generated template (ecancel)",
+    "note": "attempts 2 and 3 were one-line patches of attempt 1 (an added simp only [BitVec.ofNat_eq_ofNat], then the same under try); the approach did not change (review r5 S2)"
    },
    "design2": {
     "what": "generated h_mem' reorder + Mem.storeInt_sep + sym/kstep (pattern of Fk/ScReject.lean)",
