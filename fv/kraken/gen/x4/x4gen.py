@@ -2580,6 +2580,8 @@ def main():
         assert "accept" in only and "marshal" in only, "compose uses the generated accept and marshal"
         body += [compose_stmt(F, accept_labels(Dun, F)), "set_option maxHeartbeats 16000000 in", "set_option maxRecDepth 100000 in",
                  "theorem compose [Host] : compose_stmt := by", *["  " + x for x in compose_full(F, accept_labels(Dun, F))], ""]
+    if not any(x.startswith("theorem ") for x in body):
+        raise SystemExit(f"x4gen: refused {key[0]}.{t}: none of the requested obligations {only} has a template for this Desc")
     body += [f"end {ns}", ""]
     os.makedirs(os.path.dirname(out), exist_ok=True)
     open(out, "w").write("\n".join(body))
@@ -2616,8 +2618,8 @@ def main_list(a, key, desc, dsha):
         if a.only != ap_default() and bad:
             raise SystemExit(f"x4gen: refused {key[0]}.{t}: no template for {bad} on a list of containers")
         only = [x for x in only if x in LC_OBL]
-    else:               # the fmt.errorf(nil) offset-table rejects exist only for lists of containers
-        bad = [x for x in only if x in tuple(f"reject_{m}" for m in LC0_MODES)]
+    else:               # the fmt.errorf(nil) offset-table rejects and the item-loop templates exist only for lists of containers
+        bad = [x for x in only if x in tuple(f"reject_{m}" for m in LC0_MODES) + ("accept_empty", "reject_order", "reject_item")]
         if a.only != ap_default() and bad:
             raise SystemExit(f"x4gen: refused {key[0]}.{t}: {bad} are list-of-containers templates")
         only = [x for x in only if x not in bad]
@@ -2765,6 +2767,8 @@ def main_list(a, key, desc, dsha):
         if not any(x.startswith("open Fv1 EthLib.Serialization.Ssz") for x in body):
             body += ["open Fv1 EthLib.Serialization.Ssz", ""]
         body += mb
+    if not any(x.startswith("theorem ") for x in body):   # review r7 S4: never a theorem-less module with exit 0
+        raise SystemExit(f"x4gen: refused {key[0]}.{t}: none of the requested obligations {only} has a template for this Desc")
     body += [f"end {ns}", ""]
     out = os.path.realpath(a.out_lean)
     os.makedirs(os.path.dirname(out), exist_ok=True)
