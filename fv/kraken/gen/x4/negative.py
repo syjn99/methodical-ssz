@@ -47,6 +47,7 @@ CASES = [  # id, type, method, designated obligation, old instruction, new instr
     ("lc-loop-next", "ListC", "UnmarshalSSZ", "accept:lcl_iter", "mov 0x4(%rdx,%rcx,4),%esi", "mov 0x8(%rdx,%rcx,4),%esi"),
     ("lc-empty-avx", "ListC", "UnmarshalSSZ", "accept_empty", "movups %xmm15,0x8(%rax)", "movups %xmm15,0x10(%rax)"),
     ("lc-order-jb", "ListC", "UnmarshalSSZ", "reject_order", "jb L_target.ListC.UnmarshalSSZ_5ea", "jae L_target.ListC.UnmarshalSSZ_5ea"),
+    ("lc-item-jne", "ListC", "UnmarshalSSZ", "reject_item", "jne L_target.ListC.UnmarshalSSZ_57c", "je L_target.ListC.UnmarshalSSZ_57c"),
     # loop-body mutants (review r6 S4): the first error is inside a generated loop lemma of the obligation
     ("lu-loop-inc", "ListU64", "UnmarshalSSZ", "accept", "lea 0x1(%rax),%r8", "lea 0x2(%rax),%r8"),
     ("lu-mloop-add", "ListU64", "MarshalSSZTo", "marshal", "add $0x8,%rdx", "add $0x10,%rdx"),
@@ -60,7 +61,8 @@ LOOP_LEMMAS = {("ListU64", "accept"): ["loop_iter", "loop_exit", "loop"],
                ("ListU64", "marshal_reject"): ["mloop_iter", "mloop_exit", "mloop"],
                ("ListC", "size"): ["size_iter", "size_loop"],
                ("ListC", "accept"): ["lcl_iter", "lcl_exit", "lcl_loop"],
-               ("ListC", "reject_order"): ["lcl_order"]}
+               ("ListC", "reject_order"): ["lcl_order"],
+               ("ListC", "reject_item"): ["lcl_itemerr"]}
 
 
 def theorem_range(lines, name):

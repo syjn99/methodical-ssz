@@ -2604,10 +2604,10 @@ def main_list(a, key, desc, dsha):
     L = ListField(desc, LAYOUT["types"][t])
     ns = a.ns or f"Gen1cX4.{t}"
     LIST_OBL = ("size", "accept", "marshal", "marshal_reject", "compose", "reject_short", "reject_offset", "reject_misaligned", "reject_toobig",
-                "reject_zero", "reject_past", "reject_tail", "accept_empty", "reject_order")
+                "reject_zero", "reject_past", "reject_tail", "accept_empty", "reject_order", "reject_item")
     only = [x for x in a.only.split(",") if x in LIST_OBL] if a.only != ap_default() else list(LIST_OBL)
     if L.esz is None:   # list of containers (ListC): size (outer loop) and the templates that do not touch elements
-        LC_OBL = ("size", "accept", "accept_empty", "reject_order", "reject_short", "reject_offset", "reject_zero", "reject_past", "reject_tail")
+        LC_OBL = ("size", "accept", "accept_empty", "reject_order", "reject_item", "reject_short", "reject_offset", "reject_zero", "reject_past", "reject_tail")
         bad = [x for x in only if x not in LC_OBL]
         if a.only != ap_default() and bad:
             raise SystemExit(f"x4gen: refused {key[0]}.{t}: no template for {bad} on a list of containers")
@@ -2624,9 +2624,9 @@ def main_list(a, key, desc, dsha):
     if any(x in only for x in ("reject_misaligned", "reject_toobig", "accept", "marshal", "marshal_reject")) \
             or (L.esz is None and "size" in only):
         head += ["import Fk.Contracts", "import Fk.Frame", "import Fk.Block"]
-    if any(f"reject_{m}" in only for m in LC0_MODES) or (L.esz is None and ("accept" in only or "reject_order" in only)):
+    if any(f"reject_{m}" in only for m in LC0_MODES) or (L.esz is None and ("accept" in only or "reject_order" in only or "reject_item" in only)):
         head += ["import Fk.FunSpecs"]
-    if L.esz is None and ("accept" in only or "reject_order" in only):
+    if L.esz is None and ("accept" in only or "reject_order" in only or "reject_item" in only):
         head += ["import Gen1cX4.SupportLc"]
     pre = []
     if a.mutant:
@@ -2697,7 +2697,7 @@ def main_list(a, key, desc, dsha):
     except (AssertionError, IndexError, ValueError) as e:
         raise SystemExit(f"x4gen: refused {key[0]}.{t}: prologue does not fit the reject template ({type(e).__name__}: {e})")
     if subf is not None and (any(f"reject_{m}" in only for m in ("short", "offset") + LC0_MODES)
-                             or (L.esz is None and ("accept" in only or "reject_order" in only))):
+                             or (L.esz is None and ("accept" in only or "reject_order" in only or "reject_item" in only))):
         body += ["-- prologue/epilogue arithmetic of the decoder's frame (generated with its guard distance and frame size)",
                  f"theorem ar_neg{G} (x : BitVec 64) (h : {G} ≤ x.toNat) : (x + -{G}).toNat = x.toNat - {G} := by",
                  "  rw [← BitVec.sub_eq_add_neg, BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simpa using h)]; rfl",
@@ -2749,7 +2749,7 @@ def main_list(a, key, desc, dsha):
                      "set_option maxHeartbeats 8000000 in", "set_option maxRecDepth 100000 in",
                      f"theorem reject_{m} [Host] : reject_{m}_stmt := by",
                      *["  " + x for x in lu_call_proof(Dun, code["UnmarshalSSZ"], m, Ps[m])], ""]
-    if L.esz is None and ("accept" in only or "reject_order" in only):
+    if L.esz is None and ("accept" in only or "reject_order" in only or "reject_item" in only):
         body += lc_accept_block(a, key, desc, t, code["UnmarshalSSZ"], Dun, G, L, only)
     body += [f"end {ns}", ""]
     out = os.path.realpath(a.out_lean)
@@ -2815,6 +2815,25 @@ def lc_accept_block(a, key, desc, t, code, Dun, G, L, only):
                     + lcacc.order_block(S)
                     + [lcacc.sub(lcacc.T.ORD_MAIN_STMT, S), "set_option maxHeartbeats 16000000 in", "set_option maxRecDepth 200000 in",
                        "theorem reject_order [Host] : reject_order_stmt := by", *["  " + x for x in omain], ""])
+        if "reject_item" in only:
+            txt = [x[2] for x in Dun]
+            B = S.lab[txt[S.lu + 2].split()[1]]
+            assert txt[S.lu + 1] == "test %rax,%rax" and txt[S.lu + 2].startswith("jne "), txt[S.lu:S.lu + 3]
+            m = re.fullmatch(r"lea go_string\._\+(\d+)\(%rip\),%rax", txt[B + 7])
+            ln = int(re.fullmatch(r"mov \$(0x[0-9a-f]+),%ebx", txt[B + 8])[1], 16)
+            fid, api_id = include_adapter.rodata_id(None, include_adapter.RODATA_LABEL, int(m[1]), ln)
+            assert api_id == "lcFmtItems", (m[1], ln, api_id)
+            S.fmt_items = (int(m[1]), ln)
+            S.names = {"@FMTLEN@": f"fmt_len_{fid}", "@FMTA@": include_adapter.addr_name(fid), "@FMT@": include_adapter.bytes_name(fid)}
+            istmt = lcacc.sub(lcacc.T.ITM_MAIN_STMT, S)
+            ihead = [lcacc.intro_line(istmt)] + lcacc.body(lcacc.T.ITM_MAIN_PRE, S)
+            Litm, j = lc_call0_proof(Dun, code, pa, ihead, o="(4 * n)", o4="(tl.take 4)", h4="(by omega)")
+            imain = lcacc.accept_walk(S, Litm, j, "n", lcacc.T.ITM_MAIN_TAIL)
+            ordr += (["-- element decode error r9 (lcl_itemerr: the last item, the element decoder returns ssz.ErrSize)",
+                      f"theorem fmt_len_{fid} : {include_adapter.bytes_name(fid)}.length = {ln} := by rfl", ""]
+                     + lcacc.item_block(S)
+                     + [istmt, "set_option maxHeartbeats 16000000 in", "set_option maxRecDepth 200000 in",
+                        "theorem reject_item [Host] : reject_item_stmt := by", *["  " + x for x in imain], ""])
     except (KeyError, AssertionError, IndexError, StopIteration, ValueError, TypeError) as e:
         raise SystemExit(f"x4gen: refused {key[0]}.{t}: ListC accept template does not fit the code ({type(e).__name__}: {e})")
     out = (["open Fv1 EthLib.Serialization.Ssz", "", "-- frame arithmetic of the accept paths (generated with the frame size and call slot)"]

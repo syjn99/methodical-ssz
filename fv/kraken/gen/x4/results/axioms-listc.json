@@ -487,6 +487,29 @@
     "propext"
    ],
    "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListC.reject_item",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListC.lcl_itemerr",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListC.fmt_len_lcFmtItems",
+   "axioms": [],
+   "standard_only": true
   }
  ],
  "all_standard": true,

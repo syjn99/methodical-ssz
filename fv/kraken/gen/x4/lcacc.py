@@ -91,7 +91,7 @@ def lemmas(S):
 
 def sub(s, S):
     for k, v in (("@CODE@", S.code), ("@HEAD@", S.head), ("@EXIT@", S.exit), ("@NOTY@", S.noty),
-                 ("@MSTY@", S.msty), ("@MSCALL@", S.ms), ("@NOCALL@", S.no)) + tuple(getattr(S, "names", {}).items()):
+                 ("@MSTY@", S.msty), ("@MSCALL@", S.ms), ("@NOCALL@", S.no), ("@LUCALL@", S.lu)) + tuple(getattr(S, "names", {}).items()):
         s = s.replace(k, str(v))
     if getattr(S, "ordB", None) is not None:
         s = re.sub(r"@B(\d+)@", lambda m: str(S.ordB + int(m[1])), s)
@@ -220,6 +220,24 @@ def iter_walk(S, W, d, L, last, mode="accept"):
             L += [f"have hi1 : {W.regs['rdx']}.toNat = i + 1 := by simp [BitVec.toNat_add]; omega", "have hl : ¬ (i + 1 = n) := by omega",
                   "split", "case isTrue h =>", "  exfalso; simp [CondCode.interp, StatusFlags.from_result] at h",
                   "  apply hl; have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this; omega", "simp only [Effects.All]"]
+        elif op == "je" and W.cmp == ["rdx", "rbx"] and mode == "item":     # i + 1 = n: the last-item branch only
+            L += [f"have hi1 : {W.regs['rdx']}.toNat = i + 1 := by simp [BitVec.toNat_add]; omega", "have hl : i + 1 = n := hl'",
+                  "have heq := hlast hl", "subst heq", "split", "case isFalse h =>",
+                  "  exfalso; simp [CondCode.interp, StatusFlags.from_result] at h",
+                  "  apply h; apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_sub, BitVec.toNat_add]; omega",
+                  "simp only [Effects.All]", klabel(S, jt)]
+            W.slots = {k: v.replace("(BitVec.ofNat 64 T)", "(BitVec.ofNat 64 e)") if isinstance(v, str) else v for k, v in W.slots.items()}
+            last, d = True, jt
+            continue
+        elif op == "callq" and d == S.lu and mode == "item":
+            L += body(T.ITM_CALL, S); W.ph = "post"
+        elif op == "jne" and mode == "item" and d == S.lu + 2:          # the element decoder returned an error
+            item_block_check(S, jt)
+            S.ordB = jt
+            L += ["split", "case isFalse h =>", "  exfalso; simp [CondCode.interp, StatusFlags.from_result] at h",
+                  "  exact he0' (UInt64.toBitVec_inj.mp (by simpa using h))", "simp only [Effects.All]", klabel(S, jt),
+                  *body(T.ITM_ERR, S)]
+            return L
         elif op == "jb" and mode == "order" and W.cmp == ["r11", "rsi"]:   # next offset below the current start
             assert W.regs["r11"] == "rcx.toBitVec" and W.regs["rsi"] == "(BitVec.ofNat 64 e)", W.regs
             order_block_check(S, jt)
@@ -391,6 +409,36 @@ def order_block_check(S, B):
     assert m and (int(m[1]), int(re.fullmatch(r"mov \$(0x[0-9a-f]+),%ebx", t[B + 17])[1], 16)) == S.fmt_order, (t[B + 16], t[B + 17], S.fmt_order)
 
 
+def item_block_check(S, B):
+    """The element-error block whose text ITM_ERR is: fmt.errorf("Items: %w", err) (format bound to the
+    include API item lcFmtItems in x4gen, S.fmt_items), its jne, the error return."""
+    t = S.txt
+    want = {12: "callq fmt.errorf", 13: "test %rax,%rax", 27: "retq"}
+    for o, x in want.items():
+        assert t[B + o] == x, (B + o, t[B + o], x)
+    assert t[B + 14].startswith("jne ") and S.lab[t[B + 14].split()[1]] == B + 24, t[B + 14]
+    m = re.fullmatch(r"lea go_string\._\+(\d+)\(%rip\),%rax", t[B + 7])
+    assert m and (int(m[1]), int(re.fullmatch(r"mov \$(0x[0-9a-f]+),%ebx", t[B + 8])[1], 16)) == S.fmt_items, (t[B + 7], t[B + 8])
+
+
+def intro_line(stmt):
+    """`intro` with the binder names of a `def X_stmt : Prop := ∀ (a b : T) ..., body` (top-level binders)."""
+    i = stmt.index("∀ ") + 2
+    end = stmt.index("),\n    Eventually") + 1
+    names, depth, j = [], 0, i
+    while j < end:
+        c = stmt[j]
+        if c in "([{⟨":
+            if depth == 0 and c == "(":
+                k = stmt.index(":", j)
+                names += stmt[j + 1:k].split()
+            depth += 1
+        elif c in ")]}⟩":
+            depth -= 1
+        j += 1
+    return "intro " + " ".join(names)
+
+
 def iter_proof(S, mode="accept"):
     h = S.head
     W = Walk(S, "x", {-8: "recv", -32: "(BitVec.ofNat 64 cap0)", 128: "base", 136: ("s136", "h136"),
@@ -555,3 +603,9 @@ ORDER_INTRO = ("intro k hk hf tl T n e hT hn2 hn hT32 hle4n he hfirst hsecond s 
                "l160 l168 l176 l184 l192 l200 l208 l216 l224 rslot blk cP cL cC a0 a1 hfp hsl h8 h32 hl128 hl136 hl144 hl152 "
                "hl160 hl168 hl176 hl184 hl192 hl200 hl208 hl216 hl224 hrs hcP hcL hcC ha0 ha1 S hS hblk R Heap avail hav h_mem "
                "hguard hsp hlen hcap hcap63 hms hno hcv hfe")
+
+
+def item_block(S):
+    """lcl_itemerr: the last iteration, the element decoder fails (LuURejShortC), the Items: %w reject."""
+    return ["set_option maxHeartbeats 16000000 in", "set_option maxRecDepth 200000 in", sub(T.ITM_STMT, S),
+            *["  " + x for x in iter_proof(S, "item")], ""]

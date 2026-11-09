@@ -5,7 +5,7 @@ import Fk.LuErr
 /-! ListC accept support for the proofs that fv/kraken/gen/x4 generates. Written by hand, not generated.
 The statement definitions `lcObjs`, `ptrBytes`, `lcStart`, `lcStk` have the same text as in Fk/LcLoop.lean
 (so the generated statements compare equal by definitional unfolding); the lemmas are copies of
-Fk/LcLoop.lean, Fk/LcAccept.lean (`lca_m4`), Fk/LcMarshal.lean (`sep_mono_right'`), Fk/LcOrder.lean (`jb_true`) and Fk/NeAccept.lean
+Fk/LcLoop.lean, Fk/LcAccept.lean (`lca_m4`), Fk/LcMarshal.lean (`sep_mono_right'`), Fk/LcOrder.lean (`jb_true`), Fk/LcItems.lean (the contract statement `LuURejShortC`, with an explicit `[Host]` binder where the hand file has `variable [Host]`) and Fk/NeAccept.lean
 (`luObj_sep`) with the same statements, proved here again so the generated module does not import those
 hand proof modules. Kept apart from Support.lean so that only the ListC module depends on Fk.LuErr. -/
 
@@ -153,5 +153,29 @@ theorem jb_true (a b : BitVec 64) (af of' : Bool) (h : a.toNat < b.toNat) :
   have hs : (a - b).toNat = 2 ^ 64 - b.toNat + a.toNat := by rw [BitVec.toNat_sub]; omega
   simp only [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, hs]
   simp; omega
+
+/-- ListU64.UnmarshalSSZ, short input (`len(buf) < 4`): it returns the two
+words of `ssz.ErrSize` (rax, rbx). Frame like `LuUAccC`: a `144 + S`-byte stack
+block below the return slot and the spill slot at rsp + 16; the global words,
+the guard and `F` are kept. -/
+def LuURejShortC [Host] (S : Nat) : Prop :=
+  ∀ (st : MachineData) (ret : Int64) (stk sp2 : List UInt8) (guard e0 e1 : UInt64) (F : DataMem → Prop),
+    stk.length = 144 + S → sp2.length = 8 → st.regs.rcx.toNat < 4 →
+    guard.toNat < st.regs.rsp.toNat - 8 → 8 ≤ st.regs.rsp.toNat →
+    (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - 144 - BitVec.ofNat 64 S)) ⋆ Eq (sp2.At (st.regs.rsp.toBitVec + 16))
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (st.regs.r14.toBitVec + 16))
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At (label "ssz.ErrSize").toBitVec)
+      ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ F) st.dmem →
+    Eventually (step1 Host.exe)
+      (fun st' => st'.pc = ret ∧ st'.data.regs.rax = e0 ∧ st'.data.regs.rbx = e1
+        ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.r14 = st.regs.r14 ∧
+        ∃ stk' sp2' : List UInt8, stk'.length = 144 + S ∧ sp2'.length = 8 ∧
+        (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - 144 - BitVec.ofNat 64 S)) ⋆ Eq (sp2'.At (st.regs.rsp.toBitVec + 16))
+          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (st.regs.r14.toBitVec + 16))
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At (label "ssz.ErrSize").toBitVec)
+          ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ F) st'.data.dmem)
+      ⟨st, label "target.ListU64.UnmarshalSSZ"⟩
 
 end Gen1cX4

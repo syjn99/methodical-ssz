@@ -207,6 +207,33 @@
      }
     }
    }
+  },
+  "reject r9 element decode error": {
+   "status": "proved (generated), SAME",
+   "attempts": [
+    {
+     "log": "run logs/109",
+     "result": "build, compare (19/19 pairs as expected), axioms, negative: all 0"
+    }
+   ],
+   "hand": "lc_reject_item_main",
+   "negative": "lc-item-jne (fails inside lcl_itemerr, logs/109)",
+   "witness": "Gen1cX4.WitLcI (gen/wit output retargeted; imports the hand module Fk.LcItems only for the contract-instance lemma lu_urej_short_holds, witness.py --extra-import; logs/110 builds)",
+   "generator_decides": "the item-loop walker of lcacc.py in item mode: the last-item branch of the je, the element decoder call (call site from the code, contract LuURejShortC), the jne after it taken into the reject block; the block is checked (fmt.errorf, its jne, retq at fixed offsets) and its format string is bound to the include API item lcFmtItems. The main theorem reuses the accept prefix and walk; its intro line is derived from the statement's binders.",
+   "hand_text": "lcl_itemerr and lc_reject_item_main statements, the decoder call block under LuURejShortC (ITM_CALL), the reject block from its label (ITM_ERR), the main proof head and tail (lcacc_tpl.py, from Fk/LcItems.lean). The contract statement LuURejShortC is restated in Gen1cX4/SupportLc.lean with the same text plus an explicit [Host] binder (the hand file has `variable [Host]`).",
+   "verbatim_measure": {
+    "what": "tactic lines verbatim in Fk/LcItems.lean",
+    "rows": {
+     "lcl_itemerr": {
+      "tactic_lines": 259,
+      "verbatim_in_hand": 256
+     },
+     "reject_item": {
+      "tactic_lines": 263,
+      "verbatim_in_hand": 259
+     }
+    }
+   }
   }
  }
 }

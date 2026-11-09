@@ -1,7 +1,7 @@
 {
  "schema": "fvphase1c.x4-negative/1",
- "cases": 20,
- "as_expected": 20,
+ "cases": 22,
+ "as_expected": 22,
  "rows": [
   {
    "id": "lc-short-cmp",
@@ -294,6 +294,46 @@
    ],
    "as_expected": true,
    "run": "logs/106"
+  },
+  {
+   "id": "lc-item-jne",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lc_item_jne_mutant.reject_item",
+   "mutation": "'jne L_target.ListC.UnmarshalSSZ_57c' -> 'je L_target.ListC.UnmarshalSSZ_57c'",
+   "exit": "1",
+   "first_error": "line 259: Type mismatch: After simplification, term",
+   "theorem_lines": [
+    404,
+    668
+   ],
+   "lemma_lines": [
+    [
+     43,
+     351
+    ]
+   ],
+   "as_expected": true,
+   "run": "logs/109"
+  },
+  {
+   "id": "lc-item-jne",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lc_item_jne_control.reject_item",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    404,
+    668
+   ],
+   "lemma_lines": [
+    [
+     43,
+     351
+    ]
+   ],
+   "as_expected": true,
+   "run": "logs/109"
   }
  ],
  "note": "logs/95 negative step did not run: the first offset mutation text (cmp $0x4,%rdx) occurs twice in the .S, prepare refused it; replaced by the unique jne (logs/96)"

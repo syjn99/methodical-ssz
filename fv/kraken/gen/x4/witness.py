@@ -2,7 +2,7 @@
 """Full-premise witness of a generated composition theorem (X4).
 
 Usage: witness.py <regen-dir> <Wit name> <hand theorem> <generated theorem> <generated module> <out.lean> [<hand import>]
-       (both forms take --rename OLD=NEW, repeatable)
+       (both forms take --rename OLD=NEW and --extra-import M, repeatable)
        witness.py --runs <Fk module file> <runs theorem> <hand theorem> <generated theorem> <generated module> <out.lean>
 Takes the witness that gen/wit regenerated (byte-identical to lean/Fk, see gen/wit/results/regen.json),
 and retargets it to the generated theorem: import, theorem name and namespace change; the concrete
@@ -13,6 +13,11 @@ import os
 import re
 import sys
 
+EXTRA = []    # --extra-import M (repeatable): a hand module imported only for a contract-instance lemma
+while "--extra-import" in sys.argv:
+    i = sys.argv.index("--extra-import")
+    EXTRA.append(sys.argv[i + 1])
+    del sys.argv[i:i + 2]
 RENAME = []   # --rename OLD=NEW (repeatable): a hand lemma that the generated module restates under another name
 while "--rename" in sys.argv:
     i = sys.argv.index("--rename")
@@ -50,7 +55,7 @@ src = open(f"{regen}/{wit}.lean").read()
 imp = [l for l in src.split("\n") if l == f"import {hand_mod}" or (hand_mod == "Fk.Compose" and l.startswith("import Fk.Compose"))]
 assert len(imp) == 1, imp
 assert src.count(f"({hand} ") == 1, f"{hand} must be applied once"
-src = src.replace(imp[0], f"import {mod}", 1).replace(f"({hand} ", f"({gen} ", 1)
+src = src.replace(imp[0], "\n".join([f"import {mod}"] + [f"import {m}" for m in EXTRA]), 1).replace(f"({hand} ", f"({gen} ", 1)
 src = src.replace(f"namespace Fk.{wit}", f"namespace Gen1cX4.{wit}", 1).replace(f"end Fk.{wit}", f"end Gen1cX4.{wit}", 1)
 for old, new in RENAME:
     assert re.search(rf"\b{re.escape(old)}\b", src), f"{old} not used"

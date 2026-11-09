@@ -1,6 +1,6 @@
 {
  "schema": "fvphase1c.x4-compare/1",
- "log": "run logs/106 (compare with smart unfolding off)",
+ "log": "run logs/109 (compare with smart unfolding off)",
  "rows": [
   {
    "gen": "Gen1cX4.ListC.size_stmt",
@@ -31,6 +31,14 @@
    "hand": "lc_reject_offset_order_main",
    "expect": "SAME",
    "why": "reject r8 offset order (loop iteration 0, two convT64, fmt.errorf DD)",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListC.reject_item_stmt",
+   "hand": "lc_reject_item_main",
+   "expect": "SAME",
+   "why": "reject r9 element decode error (last item, LuURejShortC, fmt.errorf Items: %w)",
    "result": "SAME",
    "as_expected": true
   },
@@ -135,6 +143,14 @@
    "hand": "lc_accept_main",
    "expect": "DIFF",
    "why": "control (r8 vs accept)",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListC.reject_item_stmt",
+   "hand": "lc_reject_offset_order_main",
+   "expect": "DIFF",
+   "why": "control (r9 vs r8)",
    "result": "DIFF",
    "as_expected": true
   }
