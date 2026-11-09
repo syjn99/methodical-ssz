@@ -38,23 +38,40 @@
    ]
   },
   "reject_size": {
-   "status": "BLOCKED after 3 attempts",
-   "class": "automation limit of the generated template (ecancel)",
-   "attempts": [
-    {
-     "log": "run logs/66",
-     "result": "fail: ecancel cannot match the slot chunk at the spill store; omega in the jne-taken case; cascade"
-    },
-    {
-     "log": "run logs/68",
-     "result": "fail: simp only [BitVec.ofNat_eq_ofNat] at h_mem made no progress"
-    },
-    {
-     "log": "run logs/69",
-     "result": "fail: ecancel cannot match Eq (slot.At (rsp.toBitVec + 16)) at the spill store (statement spells the offset 16#64, as sc_reject_size_main does); cascade to the rip loads"
-    }
-   ],
-   "note": "the hand proof (Fk/ScReject.lean) reorders h_mem by hand (h_mem') and uses Mem.storeInt_sep with sym/kstep; the generated template does not; last attempt kept in run scratch/x4/Scalars-attempt3-reject_size.lean"
+   "status": "proved (generated, design 2), SAME sc_reject_size_main",
+   "note": "the hand proof (Fk/ScReject.lean) reorders h_mem by hand (h_mem') and uses Mem.storeInt_sep with sym/kstep; the generated template does not; last attempt kept in run scratch/x4/Scalars-attempt3-reject_size.lean",
+   "design1": {
+    "status": "blocked after 3 attempts",
+    "attempts": [
+     {
+      "log": "run logs/66",
+      "result": "fail: ecancel cannot match the slot chunk at the spill store; omega in the jne-taken case; cascade"
+     },
+     {
+      "log": "run logs/68",
+      "result": "fail: simp only [BitVec.ofNat_eq_ofNat] at h_mem made no progress"
+     },
+     {
+      "log": "run logs/69",
+      "result": "fail: ecancel cannot match Eq (slot.At (rsp.toBitVec + 16)) at the spill store (statement spells the offset 16#64, as sc_reject_size_main does); cascade to the rip loads"
+     }
+    ],
+    "class": "automation limit of the generated template (ecancel)"
+   },
+   "design2": {
+    "what": "generated h_mem' reorder + Mem.storeInt_sep + sym/kstep (pattern of Fk/ScReject.lean)",
+    "attempts": [
+     {
+      "log": "run logs/75",
+      "result": "pass (scratch module)"
+     },
+     {
+      "log": "run logs/76",
+      "result": "pass in the library module"
+     }
+    ],
+    "negative": "sc-rsize-cmp (logs/76)"
+   }
   },
   "marshal": {
    "status": "proved (generated), SAME sc_marshal_main",

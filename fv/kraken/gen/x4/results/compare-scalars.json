@@ -1,6 +1,6 @@
 {
  "schema": "fvphase1c.x4-compare/1",
- "log": "run logs/73 (compare step)",
+ "log": "run logs/76 (compare step)",
  "rows": [
   {
    "gen": "Gen1cX4.Scalars.size_stmt",
@@ -23,6 +23,14 @@
    "hand": "sc_reject_bool_main",
    "expect": "SAME",
    "why": "reject r2 bool-range",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.Scalars.reject_size_stmt",
+   "hand": "sc_reject_size_main",
+   "expect": "SAME",
+   "why": "reject r1 size-fixed (design 2)",
    "result": "SAME",
    "as_expected": true
   },

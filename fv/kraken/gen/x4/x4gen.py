@@ -706,13 +706,86 @@ def compose_full(F, labels):
             "dsimp only at e2 e3 hm'",
             "exact Eventually.done _ ⟨e1, e2, e3, sep_true (by ecancel)⟩"]
 
+
+# ---------------------------------------------------------------- reject_size, design 2
+# The first design (walk() with store_step) failed three times (logs/66, 68, 69). Design 2 follows
+# Fk/ScReject.lean: reorder h_mem by hand (h_mem'), store the spill with Mem.storeInt_sep, step with
+# sym/kstep, and give each rip load and the return its own separated-frame hypothesis.
+
+def reject_size_full2(D, F, code):
+    lab_index = {t: d for d, k, t in D if k == "label"}
+    # path: 0 label, 1 spill, 2 cmp $size,%rcx, 3 jne L, L: label, 2 rip loads, retq
+    assert D[1][2] == "mov %rbx,0x10(%rsp)" and D[2][2] == f"cmp ${hex(F.size)},%rcx" and D[3][2].startswith("jne "), D[:4]
+    lab = D[3][2].split()[1]
+    j = lab_index[lab]
+    err = re.match(r"mov (ssz\.\w+)\(%rip\),%rax", D[j + 1][2])[1]
+    assert D[j + 2][2] == f"mov {err}+8(%rip),%rbx" and D[j + 3][2] == "retq", D[j:j + 4]
+    E0 = f'Eq ((Int.toBytes 8 e0.toBitVec.toInt).At (label "{err}").toBitVec)'
+    E1 = f'Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "{err}" + 8).toBitVec)'
+    RA = "Eq ((Int.toBytes 8 ra.toBitVec.toInt).At rsp.toBitVec)"
+    SP = "Eq ((Int.toBytes 8 rbx.toBitVec.toInt).At (rsp.toBitVec + 16#64))"
+    MEM = "(Mem.storeInt mem (rsp.toBitVec + 16#64) 8 rbx.toBitVec.toInt)"
+    suf = lab.rsplit("_", 1)[1]
+    return ["intro k hk hLf s ra e0 e1 slot hsl R h_mem hlen",
+            f"have hL := label_in_fragment hk (j := {j}) (by decide) (by decide) hLf",
+            "have h0 := hk",
+            f"simp only [{code}] at h0",
+            "apply estep h0",
+            "simp [Directive.interp]",
+            "apply estep h0.cons.2",
+            "obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s",
+            "simp only at h_mem hlen ⊢",
+            f"have h_mem' : (Eq (slot.At (rsp.toBitVec + 16#64)) ⋆ ({RA}",
+            f"    ⋆ {E0} ⋆ {E1} ⋆ R)) mem := by",
+            "  ecancel",
+            "have h_mem1 := Mem.storeInt_sep (rsp.toBitVec + 16#64) 8 slot _ mem ⟨h_mem', hsl⟩ rbx.toBitVec.toInt",
+            "sym =>", "kstep",
+            "case h_mem => tactic => simp; exact h_mem'",
+            "case h_len => exact hsl",
+            "tactic =>",
+            "simp only [Effects.All_require_write_access, Effects.All]",
+            "apply estep h0.cons.2.cons.2",
+            "sym =>", "kstep", "tactic =>",
+            "apply estep h0.cons.2.cons.2.cons.2",
+            "sym =>", "kstep", "tactic =>",
+            "rename_i v status",
+            "have hv : ¬ (v = 0#64) := by grind",
+            "have hc : (!v == BitVec.zero 64) = true := by simpa using hv",
+            "simp only [hc, ↓reduceIte, Effects.All]",
+            "rw [hL]",
+            f"have hj := isInfixAt_drop hk {j}",
+            f"simp only [{code}, List.drop] at hj",
+            "apply estep hj",
+            "simp [Directive.interp]",
+            f"have hE0 : ({E0} ⋆", f"    ({SP} ⋆ {RA}", f"      ⋆ {E1} ⋆ R))", f"    {MEM} := by ecancel",
+            "apply estep hj.cons.2",
+            "sym =>", "kstep",
+            "case h_mem => tactic => simp [rip_addr']; exact hE0",
+            "case h_len => exact Int.toBytes_length 8 _",
+            "tactic =>",
+            "simp only [Effects.All_require_read_access, Effects.All]",
+            f"have hE1 : ({E1} ⋆", f"    ({SP} ⋆ {RA}", f"      ⋆ {E0} ⋆ R))", f"    {MEM} := by ecancel",
+            "apply estep hj.cons.2.cons.2",
+            "simp only [Directive.interp, Instr.interp, Operation.interp, Operand.interp, RegOrMem.interp,",
+            "  AddrExpr.interp, ConstExpr.interp, Effects.All]",
+            "simp only [Width.bits, Int.add_zero, rip_addr, BitVec.setWidth_eq]",
+            "rw [load_sep _ _ _ _ _ _ hE1 (Int.toBytes_length 8 _)]",
+            "simp only [Effects.All_require_read_access, MachineData.set, MachineData.setReg, Reg64s.set, Reg64s.set64,",
+            "  Effects.All, BitVec.ofInt_ofBytes_toBytes 64 8 rfl]",
+            f"have hRA : ({RA} ⋆", f"    ({SP}", f"      ⋆ {E0}", f"      ⋆ {E1} ⋆ R))", f"    {MEM} := by ecancel",
+            "apply estep hj.cons.2.cons.2.cons.2",
+            "simp only [Directive.interp, Instr.interp, Operation.interp, Effects.All, Reg64s.get64]",
+            "rw [load_sep _ _ _ _ _ _ hRA (Int.toBytes_length 8 _)]",
+            "simp only [Effects.All_require_read_access, Effects.All, BitVec.ofInt_ofBytes_toBytes 64 8 rfl]",
+            "exact Eventually.done _ ⟨rfl, rfl, rfl⟩"], (suf, lab)
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--desccheck-result", required=True)
     ap.add_argument("--desc-dir", required=True)
     ap.add_argument("--type", required=True)
     ap.add_argument("--out-lean", required=True)
-    ap.add_argument("--only", default="size,accept,reject_bool,marshal,compose",
+    ap.add_argument("--only", default="size,accept,reject_bool,reject_size,marshal,compose",
                     help="obligations to emit (a failing one must not be in the library module)")
     ap.add_argument("--ns", default=None, help="namespace (default Gen1cX4.<T>)")
     ap.add_argument("--mutant", default=None,
@@ -750,7 +823,7 @@ def main():
         body += [accept_stmt(code["UnmarshalSSZ"], F, labels), "set_option maxHeartbeats 2000000 in",
                  "theorem accept [Host] : accept_stmt := by", *["  " + x for x in accept_full(Dun, F, labels)], ""]
     if "reject_size" in only:
-        rs_proof, rs_lab = reject_size_full(Dun, F)
+        rs_proof, rs_lab = reject_size_full2(Dun, F, code["UnmarshalSSZ"])
         body += [reject_size_stmt(code["UnmarshalSSZ"], F, rs_lab[1], err_label(Dun, [d for d, k, x in Dun if x == rs_lab[1]][0])),
                  "theorem reject_size [Host] : reject_size_stmt := by", *["  " + x for x in rs_proof], ""]
     if "reject_bool" in only:

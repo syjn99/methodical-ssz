@@ -28,6 +28,12 @@
    "reject r2 bool-range"
   ],
   [
+   "Gen1cX4.Scalars.reject_size_stmt",
+   "sc_reject_size_main",
+   "SAME",
+   "reject r1 size-fixed (design 2)"
+  ],
+  [
    "Gen1cX4.Scalars.marshal_stmt",
    "sc_marshal_main",
    "SAME",

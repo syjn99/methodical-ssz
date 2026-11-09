@@ -1,7 +1,7 @@
 {
  "schema": "fvphase1c.x4-negative/1",
- "cases": 10,
- "as_expected": 10,
+ "cases": 12,
+ "as_expected": 12,
  "rows": [
   {
    "id": "sc-size-imm",
@@ -142,6 +142,34 @@
    ],
    "as_expected": true,
    "run": "logs/74"
+  },
+  {
+   "id": "sc-rsize-cmp",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.sc_rsize_cmp_mutant.reject_size",
+   "mutation": "'cmp $0x10,%rcx' -> 'cmp $0x11,%rcx'",
+   "exit": "1",
+   "first_error": "line 55: `grind` failed",
+   "theorem_lines": [
+    26,
+    95
+   ],
+   "as_expected": true,
+   "run": "logs/76"
+  },
+  {
+   "id": "sc-rsize-cmp",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.sc_rsize_cmp_control.reject_size",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    26,
+    95
+   ],
+   "as_expected": true,
+   "run": "logs/76"
   }
  ]
 }
