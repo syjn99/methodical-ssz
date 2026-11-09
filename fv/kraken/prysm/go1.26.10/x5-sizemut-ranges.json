@@ -1,0 +1,186 @@
+{
+ "ConsolidationRequest": [
+  54,
+  76
+ ],
+ "DepositRequest": [
+  77,
+  99
+ ],
+ "Withdrawal": [
+  100,
+  122
+ ],
+ "WithdrawalRequest": [
+  123,
+  145
+ ],
+ "AttestationData": [
+  146,
+  168
+ ],
+ "BLSToExecutionChange": [
+  169,
+  191
+ ],
+ "BeaconBlockHeader": [
+  192,
+  214
+ ],
+ "BlobIdentifier": [
+  215,
+  237
+ ],
+ "BlobSidecar": [
+  238,
+  260
+ ],
+ "Checkpoint": [
+  261,
+  283
+ ],
+ "ContributionAndProof": [
+  284,
+  306
+ ],
+ "Deposit": [
+  307,
+  329
+ ],
+ "DepositMessage": [
+  330,
+  352
+ ],
+ "Deposit_Data": [
+  353,
+  375
+ ],
+ "ENRForkID": [
+  376,
+  398
+ ],
+ "Eth1Data": [
+  399,
+  421
+ ],
+ "Fork": [
+  422,
+  444
+ ],
+ "ForkData": [
+  445,
+  467
+ ],
+ "HistoricalBatch": [
+  468,
+  490
+ ],
+ "HistoricalSummary": [
+  491,
+  513
+ ],
+ "LightClientBootstrapAltair": [
+  514,
+  536
+ ],
+ "LightClientFinalityUpdateAltair": [
+  537,
+  559
+ ],
+ "LightClientHeaderAltair": [
+  560,
+  582
+ ],
+ "LightClientOptimisticUpdateAltair": [
+  583,
+  605
+ ],
+ "LightClientUpdateAltair": [
+  606,
+  628
+ ],
+ "PendingConsolidation": [
+  629,
+  651
+ ],
+ "PendingDeposit": [
+  652,
+  674
+ ],
+ "PendingPartialWithdrawal": [
+  675,
+  697
+ ],
+ "PowBlock": [
+  698,
+  720
+ ],
+ "ProposerSlashing": [
+  721,
+  743
+ ],
+ "SignedBLSToExecutionChange": [
+  744,
+  766
+ ],
+ "SignedBeaconBlockHeader": [
+  767,
+  789
+ ],
+ "SignedContributionAndProof": [
+  790,
+  812
+ ],
+ "SignedVoluntaryExit": [
+  813,
+  835
+ ],
+ "SigningData": [
+  836,
+  858
+ ],
+ "SingleAttestation": [
+  859,
+  881
+ ],
+ "Status": [
+  882,
+  904
+ ],
+ "StatusV2": [
+  905,
+  927
+ ],
+ "SyncAggregate": [
+  928,
+  950
+ ],
+ "SyncAggregatorSelectionData": [
+  951,
+  973
+ ],
+ "SyncCommittee": [
+  974,
+  996
+ ],
+ "SyncCommitteeContribution": [
+  997,
+  1019
+ ],
+ "SyncCommitteeMessage": [
+  1020,
+  1042
+ ],
+ "Validator": [
+  1043,
+  1065
+ ],
+ "ValidatorBalance": [
+  1066,
+  1088
+ ],
+ "VoluntaryExit": [
+  1089,
+  1111
+ ]
+}

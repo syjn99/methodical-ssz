@@ -1,0 +1,433 @@
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_engine_v1.ConsolidationRequest.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_engine_v1.DepositRequest.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_engine_v1.ExecutionPayloadHeader.SizeSSZ: 3 instructions, 14 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_engine_v1.ExecutionPayloadHeaderCapella.SizeSSZ: 3 instructions, 14 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_engine_v1.ExecutionPayloadHeaderDeneb.SizeSSZ: 3 instructions, 14 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_engine_v1.ExecutionRequests.SizeSSZ: 11 instructions, 40 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_engine_v1.Withdrawal.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_engine_v1.WithdrawalRequest.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockAltair.SizeSSZ: 32 instructions, 119 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyAltair.SizeSSZ: 99 instructions, 425 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconStateAltair.SizeSSZ: 18 instructions, 87 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ContributionAndProof.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientHeaderAltair.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientBootstrapAltair.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientUpdateAltair.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientFinalityUpdateAltair.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientOptimisticUpdateAltair.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockAltair.SizeSSZ: 48 instructions, 197 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedContributionAndProof.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregatorSelectionData.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeContribution.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBellatrix.SizeSSZ: 32 instructions, 119 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyBellatrix.SizeSSZ: 134 instructions, 581 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconStateBellatrix.SizeSSZ: 51 instructions, 239 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBellatrix.SizeSSZ: 32 instructions, 119 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyBellatrix.SizeSSZ: 119 instructions, 527 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockBellatrix.SizeSSZ: 48 instructions, 197 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBlindedBeaconBlockBellatrix.SizeSSZ: 48 instructions, 197 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyCapella.SizeSSZ: 140 instructions, 613 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockCapella.SizeSSZ: 32 instructions, 119 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconStateCapella.SizeSSZ: 53 instructions, 250 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyCapella.SizeSSZ: 123 instructions, 549 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockCapella.SizeSSZ: 32 instructions, 119 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BLSToExecutionChange.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderBidCapella.SizeSSZ: 32 instructions, 123 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientBootstrapCapella.SizeSSZ: 48 instructions, 199 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientFinalityUpdateCapella.SizeSSZ: 88 instructions, 369 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientHeaderCapella.SizeSSZ: 32 instructions, 123 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientOptimisticUpdateCapella.SizeSSZ: 48 instructions, 199 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientUpdateCapella.SizeSSZ: 88 instructions, 369 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockCapella.SizeSSZ: 48 instructions, 197 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBlindedBeaconBlockCapella.SizeSSZ: 48 instructions, 197 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBLSToExecutionChange.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBuilderBidCapella.SizeSSZ: 48 instructions, 199 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyDeneb.SizeSSZ: 144 instructions, 629 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockContentsDeneb.SizeSSZ: 57 instructions, 229 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockDeneb.SizeSSZ: 32 instructions, 119 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconStateDeneb.SizeSSZ: 53 instructions, 250 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyDeneb.SizeSSZ: 126 instructions, 563 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockDeneb.SizeSSZ: 32 instructions, 119 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobSidecar.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobSidecars.SizeSSZ: 4 instructions, 16 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderBidDeneb.SizeSSZ: 36 instructions, 143 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientHeaderDeneb.SizeSSZ: 32 instructions, 123 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientBootstrapDeneb.SizeSSZ: 48 instructions, 199 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientUpdateDeneb.SizeSSZ: 88 instructions, 369 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientFinalityUpdateDeneb.SizeSSZ: 88 instructions, 369 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientOptimisticUpdateDeneb.SizeSSZ: 48 instructions, 199 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockContentsDeneb.SizeSSZ: 39 instructions, 157 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockDeneb.SizeSSZ: 48 instructions, 197 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBlindedBeaconBlockDeneb.SizeSSZ: 48 instructions, 197 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBuilderBidDeneb.SizeSSZ: 51 instructions, 211 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AggregateAttestationAndProofElectra.SizeSSZ: 32 instructions, 120 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationElectra.SizeSSZ: 3 instructions, 11 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttesterSlashingElectra.SizeSSZ: 52 instructions, 213 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyElectra.SizeSSZ: 172 instructions, 758 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockContentsElectra.SizeSSZ: 57 instructions, 229 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockElectra.SizeSSZ: 32 instructions, 119 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconStateElectra.SizeSSZ: 63 instructions, 297 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyElectra.SizeSSZ: 154 instructions, 689 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockElectra.SizeSSZ: 32 instructions, 119 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderBidElectra.SizeSSZ: 64 instructions, 261 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestationElectra.SizeSSZ: 4 instructions, 15 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientBootstrapElectra.SizeSSZ: 48 instructions, 199 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientUpdateElectra.SizeSSZ: 88 instructions, 369 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientFinalityUpdateElectra.SizeSSZ: 88 instructions, 369 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedAggregateAttestationAndProofElectra.SizeSSZ: 49 instructions, 197 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockContentsElectra.SizeSSZ: 39 instructions, 157 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockElectra.SizeSSZ: 48 instructions, 197 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBlindedBeaconBlockElectra.SizeSSZ: 48 instructions, 197 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBuilderBidElectra.SizeSSZ: 32 instructions, 119 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SingleAttestation.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockContentsFulu.SizeSSZ: 57 instructions, 229 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconStateFulu.SizeSSZ: 63 instructions, 297 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockFulu.SizeSSZ: 32 instructions, 119 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnSidecar.SizeSSZ: 12 instructions, 47 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.SizeSSZ: 4 instructions, 13 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PartialDataColumnHeader.SizeSSZ: 5 instructions, 19 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PartialDataColumnPartsMetadata.SizeSSZ: 4 instructions, 13 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PartialDataColumnSidecar.SizeSSZ: 23 instructions, 83 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockContentsFulu.SizeSSZ: 39 instructions, 157 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockFulu.SizeSSZ: 48 instructions, 197 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBlindedBeaconBlockFulu.SizeSSZ: 48 instructions, 197 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AggregateAttestationAndProof.SizeSSZ: 32 instructions, 120 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Attestation.SizeSSZ: 3 instructions, 11 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo: 218 instructions, 977 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ: 220 instructions, 1011 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttesterSlashing.SizeSSZ: 52 instructions, 213 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlock.SizeSSZ: 32 instructions, 119 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBody.SizeSSZ: 99 instructions, 425 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconState.SizeSSZ: 36 instructions, 150 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo: 85 instructions, 341 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ: 98 instructions, 433 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ENRForkID.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Fork.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ForkData.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.SizeSSZ: 4 instructions, 15 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingAttestation.SizeSSZ: 3 instructions, 11 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ProposerSlashing.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedAggregateAttestationAndProof.SizeSSZ: 49 instructions, 197 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlock.SizeSSZ: 48 instructions, 197 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockHeader.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedVoluntaryExit.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Status.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.SizeSSZ: 2 instructions, 6 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (b) runtime.newobject = 0x4254e0 .text code
+PASS (b) runtime.makeslice = 0x48aee0 .text code
+PASS (b) runtime.growslice = 0x48afc0 .text code
+PASS (b) runtime.morestack_noctxt.abi0 = 0x48e4c0 .text code
+PASS (b) runtime.gcWriteBarrier2 = 0x48fe40 .text code
+PASS (b) runtime.memmove = 0x490580 .text code
+PASS (b) fmt.errorf = 0x50a840 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ = 0x69e2a0 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ = 0x69ece0 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ = 0x69f9c0 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyAltair.SizeSSZ = 0x8fbec0 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyBellatrix.SizeSSZ = 0x93a380 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyBellatrix.SizeSSZ = 0x945ae0 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyCapella.SizeSSZ = 0x94b960 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyCapella.SizeSSZ = 0x958540 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyDeneb.SizeSSZ = 0x96a820 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyDeneb.SizeSSZ = 0x978d40 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockDeneb.SizeSSZ = 0x988ac0 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyElectra.SizeSSZ = 0x98d4c0 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyElectra.SizeSSZ = 0x99dfe0 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderBidElectra.SizeSSZ = 0x9a3ec0 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockElectra.SizeSSZ = 0x9adbe0 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockFulu.SizeSSZ = 0x9c3460 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBody.SizeSSZ = 0xa13700 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo = 0xa1db80 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ = 0xa1dce0 .text code
+PASS (b) type__+387072 = 0xae9800 .rodata group(nearest preceding symbol)
+PASS (b) type__+828672 = 0xb55500 .rodata group(nearest preceding symbol)
+PASS (b) type__+1289312 = 0xbc5c60 .rodata group(nearest preceding symbol)
+PASS (b) type__+1297152 = 0xbc7b00 .rodata group(nearest preceding symbol)
+PASS (b) type__+1297376 = 0xbc7be0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1297600 = 0xbc7cc0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1365952 = 0xbd87c0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1368256 = 0xbd90c0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1368512 = 0xbd91c0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1369024 = 0xbd93c0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1373632 = 0xbda5c0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1373888 = 0xbda6c0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1382592 = 0xbdc8c0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1383616 = 0xbdccc0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1385920 = 0xbdd5c0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1422240 = 0xbe63a0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1431168 = 0xbe8680 .rodata group(nearest preceding symbol)
+PASS (b) type__+1465088 = 0xbf0b00 .rodata group(nearest preceding symbol)
+PASS (b) type__+1465376 = 0xbf0c20 .rodata group(nearest preceding symbol)
+PASS (b) type__+1465664 = 0xbf0d40 .rodata group(nearest preceding symbol)
+PASS (b) type__+1465952 = 0xbf0e60 .rodata group(nearest preceding symbol)
+PASS (b) type__+1466240 = 0xbf0f80 .rodata group(nearest preceding symbol)
+PASS (b) type__+1466528 = 0xbf10a0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1466816 = 0xbf11c0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1467104 = 0xbf12e0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1467392 = 0xbf1400 .rodata group(nearest preceding symbol)
+PASS (b) type__+1467680 = 0xbf1520 .rodata group(nearest preceding symbol)
+PASS (b) type__+1468832 = 0xbf19a0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1474016 = 0xbf2de0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1576736 = 0xc0bf20 .rodata group(nearest preceding symbol)
+PASS (b) type__+1597792 = 0xc11160 .rodata group(nearest preceding symbol)
+PASS (b) type__+1612928 = 0xc14c80 .rodata group(nearest preceding symbol)
+PASS (b) type__+1613344 = 0xc14e20 .rodata group(nearest preceding symbol)
+PASS (b) type__+1626080 = 0xc17fe0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1626528 = 0xc181a0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1636000 = 0xc1a6a0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1636960 = 0xc1aa60 .rodata group(nearest preceding symbol)
+PASS (b) type__+1649440 = 0xc1db20 .rodata group(nearest preceding symbol)
+PASS (b) type__+1649920 = 0xc1dd00 .rodata group(nearest preceding symbol)
+PASS (b) type__+1659872 = 0xc203e0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1660384 = 0xc205e0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1670880 = 0xc22ee0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1671424 = 0xc23100 .rodata group(nearest preceding symbol)
+PASS (b) type__+1682112 = 0xc25ac0 .rodata group(nearest preceding symbol)
+PASS (b) type__+1682688 = 0xc25d00 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+14986 = 0xc3d372 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+18159 = 0xc3dfd7 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+21316 = 0xc3ec2c .rodata group(nearest preceding symbol)
+PASS (b) go_string._+21326 = 0xc3ec36 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+43533 = 0xc442f5 .rodata group(nearest preceding symbol)
+PASS (b) go_itab._errors.errorString_error = 0xd28520 .rodata in-symbol
+PASS (b) ssz.ErrBytesLength = 0x137fc70 .data in-symbol
+PASS (b) ssz.ErrBytesLength+8 = 0x137fc78 .data in-symbol
+PASS (b) ssz.ErrSize = 0x137fcd0 .data in-symbol
+PASS (b) ssz.ErrSize+8 = 0x137fcd8 .data in-symbol
+PASS (b) runtime.writeBarrier = 0x13c6e40 .noptrbss in-symbol
+PASS (c) all.S: 784 labels, each defined once; 66 external references not defined in all.S; 16 calls to target functions at their entry: ['github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBody.SizeSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyAltair.SizeSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyBellatrix.SizeSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyCapella.SizeSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyDeneb.SizeSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyElectra.SizeSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyBellatrix.SizeSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyCapella.SizeSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyDeneb.SizeSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyElectra.SizeSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderBidElectra.SizeSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockDeneb.SizeSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockElectra.SizeSSZ', 'github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockFulu.SizeSSZ']
+PASS (e) all.S: 5810 directives equal the 136 function files in order
+PASS (f) x5CpElemType.data: 0xae9800, 32 bytes and 2 words = ELF
+PASS (f) x5ErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyAltair.SizeSSZ 0x8fbf5e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyAltair.SizeSSZ 0x8fbf9b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyAltair.SizeSSZ 0x8fbfbe padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyBellatrix.SizeSSZ 0x93a41e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyBellatrix.SizeSSZ 0x93a45b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyBellatrix.SizeSSZ 0x93a47e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyBellatrix.SizeSSZ 0x93a59d padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyBellatrix.SizeSSZ 0x93a5be padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconStateBellatrix.SizeSSZ 0x93e47c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconStateBellatrix.SizeSSZ 0x93e4dc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyBellatrix.SizeSSZ 0x945b7e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyBellatrix.SizeSSZ 0x945bbb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyBellatrix.SizeSSZ 0x945bde padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyCapella.SizeSSZ 0x94b9fe padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyCapella.SizeSSZ 0x94ba3b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyCapella.SizeSSZ 0x94ba5e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyCapella.SizeSSZ 0x94bb7e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyCapella.SizeSSZ 0x94bbbd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconStateCapella.SizeSSZ 0x950fdc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyCapella.SizeSSZ 0x9585de padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyCapella.SizeSSZ 0x95861b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyCapella.SizeSSZ 0x95863e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyCapella.SizeSSZ 0x95875c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientFinalityUpdateCapella.SizeSSZ 0x96045e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientUpdateCapella.SizeSSZ 0x96367e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyDeneb.SizeSSZ 0x96a8be padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyDeneb.SizeSSZ 0x96a8fb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyDeneb.SizeSSZ 0x96a91e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyDeneb.SizeSSZ 0x96aa3e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockContentsDeneb.SizeSSZ 0x96f6de padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconStateDeneb.SizeSSZ 0x9717dc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyDeneb.SizeSSZ 0x978dde padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyDeneb.SizeSSZ 0x978e1b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyDeneb.SizeSSZ 0x978e3e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderBidDeneb.SizeSSZ 0x9808db padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientUpdateDeneb.SizeSSZ 0x9835fe padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientFinalityUpdateDeneb.SizeSSZ 0x98549e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyElectra.SizeSSZ 0x98d55e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyElectra.SizeSSZ 0x98d59b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyElectra.SizeSSZ 0x98d5be padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyElectra.SizeSSZ 0x98d6de padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockContentsElectra.SizeSSZ 0x99261e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconStateElectra.SizeSSZ 0x99471c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyElectra.SizeSSZ 0x99e07e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyElectra.SizeSSZ 0x99e0bb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyElectra.SizeSSZ 0x99e0de padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderBidElectra.SizeSSZ 0x9a3f5e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderBidElectra.SizeSSZ 0x9a3fbe padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientUpdateElectra.SizeSSZ 0x9a6fde padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientFinalityUpdateElectra.SizeSSZ 0x9a8e7e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockContentsFulu.SizeSSZ 0x9b079e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconStateFulu.SizeSSZ 0x9b19fc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo 0xa1119b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo 0xa112bd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo 0xa113dd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ 0xa1149a padding: elf 660f1f440000 asm 90 nopw (%rax,%rax,1) -> nop | (6, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ 0xa1151b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ 0xa115bb padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ 0xa1171e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ 0xa117fc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBody.SizeSSZ 0xa1379e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBody.SizeSSZ 0xa137db padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBody.SizeSSZ 0xa137fe padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ 0xa1dcf7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ 0xa1dd5e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ 0xa1de1e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+PASS (d) 5026 instructions reassembled by clang x86_64-linux-gnu: 4960 byte-identical, 0 encoding, 66 padding
+elf sha256 c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e
+S sha256 6b93b116da11f5e3b4c8178ffec82a3eca1b3a9c455105bfc6239252bd8876d9 all.S
+S sha256 70b2f1b12753af4c5c8e1417a51c78662ebee6528ff686c2baeffde5962e9ad1 github.com_OffchainLabs_prysm_v7_proto_engine_v1.ConsolidationRequest.SizeSSZ.S
+S sha256 525f5f754a99e0760c97496afac119282926d9e73cf8407ff64c46bc24be1be3 github.com_OffchainLabs_prysm_v7_proto_engine_v1.DepositRequest.SizeSSZ.S
+S sha256 f87d9941cf281699ddb9f5e424c3cb05d6c1517a5131c7ebca0b386a8f2a9478 github.com_OffchainLabs_prysm_v7_proto_engine_v1.ExecutionPayloadHeader.SizeSSZ.S
+S sha256 805344b336a751afd17511ea4a3b58a957d3503147d2752433ffce78d43fe4b3 github.com_OffchainLabs_prysm_v7_proto_engine_v1.ExecutionPayloadHeaderCapella.SizeSSZ.S
+S sha256 29e2cd99ec1409b82d7454c43a3bc762bdb75c241b5ee7b2adbd726d0825fff9 github.com_OffchainLabs_prysm_v7_proto_engine_v1.ExecutionPayloadHeaderDeneb.SizeSSZ.S
+S sha256 d7075f79be7396eadfdb2c9ac4ef573e29b83ef8ad350e9ac7dd05f8999175a9 github.com_OffchainLabs_prysm_v7_proto_engine_v1.ExecutionRequests.SizeSSZ.S
+S sha256 023410c5db4452dcdc61b67962319aa6c8d50ff80ee3a915effc8c30e3b00ef6 github.com_OffchainLabs_prysm_v7_proto_engine_v1.Withdrawal.SizeSSZ.S
+S sha256 aae620d3e49c8bab2535fecedc41ec13f0f7db25a71007f8438c8cc26a08142e github.com_OffchainLabs_prysm_v7_proto_engine_v1.WithdrawalRequest.SizeSSZ.S
+S sha256 484187d3b0c99b5d1caca7dab48d5b7875f6105b1a3725874d61d473745801a5 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AggregateAttestationAndProof.SizeSSZ.S
+S sha256 fd0afb611c6588fce4509c7b3075ccdcad4b294cd4fe3b166cb8c2151fb91b4b github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AggregateAttestationAndProofElectra.SizeSSZ.S
+S sha256 08616e466a13f22c331e95d5a4fa2c76c4882d2b2260ae338d2330a98a943486 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Attestation.SizeSSZ.S
+S sha256 939e0d3a172bafa9c2ce6aca9e4b6b08ac98c8e92290a4e9927023ee47472018 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.MarshalSSZTo.S
+S sha256 a944b1ce48bd830bb077e263d8ed7893ce54bbbed7ef3b4cef1140cc9d9f7725 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.SizeSSZ.S
+S sha256 70ca7f6820ce748263b71a4fc44468ab01bd69bc9665008ad540469b2fa62081 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S
+S sha256 6009a609e4a50da15347fbbfd489973ab58e4b8b1aefa60dc9827ce4ac0ed730 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationElectra.SizeSSZ.S
+S sha256 62a41a1db6ce5c4877e295c4685d6fb1382a8a17a5a14389c4e63865410e277a github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttesterSlashing.SizeSSZ.S
+S sha256 28ee140830dcee9030e61340eb2d6aa2a73f2aeac1bdb1f90566ba1031dbb9c6 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttesterSlashingElectra.SizeSSZ.S
+S sha256 7df830a8e54b0be011473fc0fc9487508876f5f20c1df99ca6d8796bccedbfb6 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BLSToExecutionChange.SizeSSZ.S
+S sha256 2ac25c63c3304d1defcb6fc991ca6487a459fac4138a862bb33f5b4e5977d4cf github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlock.SizeSSZ.S
+S sha256 480fbf23b802bc059eba356ddf332807d9bc2256ee4ffacd0137df3205f4dd17 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockAltair.SizeSSZ.S
+S sha256 84d780bf120a2f7558617e204e4d01a05e7a158ed61e72a32c4db27e67ff9d35 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBellatrix.SizeSSZ.S
+S sha256 179744596fe026ccbee3e631b37562f4cff2d66f711cb966c442a127026454ae github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBody.SizeSSZ.S
+S sha256 de373de7284e1f83702019a28b491e85da60e17154b252794ea446bf7b99adad github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyAltair.SizeSSZ.S
+S sha256 feac3d83466b2d2b858876ea133eb90feb6ce49f87d0c6d566d5849969b85cab github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyBellatrix.SizeSSZ.S
+S sha256 76602c6cd1da4de795f4d6042675d90fecf01f7c8720739e88e9da59e415b2bb github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyCapella.SizeSSZ.S
+S sha256 da33f0d64a1e4fc53757d4ddfd473c5fba97727f0c05380755aa8ccfb55910f7 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyDeneb.SizeSSZ.S
+S sha256 ea53e053ad9d49046ca3948ce22146d58dc954962e6b6387a0b1ad0ff16b35c5 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockBodyElectra.SizeSSZ.S
+S sha256 c980f33e0052ec8e205d70d7e50ec223299d895dc5fdc04f0f6a311190eaeee2 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockCapella.SizeSSZ.S
+S sha256 fc1a874945ff796f790af8e3e523ba4851f82f4de5b0f991e53f9cb2b11593d9 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockContentsDeneb.SizeSSZ.S
+S sha256 9d2bda192de07c1d9b7fe546fd7698a929be3bb476f60ed1b264766f2dcfcc49 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockContentsElectra.SizeSSZ.S
+S sha256 26cea895b0dee6dde38f9da0c47a310a85674015354895fbe2cd60e331d2cfbd github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockContentsFulu.SizeSSZ.S
+S sha256 07f55e24970f8c826c10ee35d3f727e1ee6c9cbe3a181d424a5a5ffab0944218 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockDeneb.SizeSSZ.S
+S sha256 086401d5ebdd285ae69684642a5d0893f01299e913ae46269b7f5333f38ba6b2 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockElectra.SizeSSZ.S
+S sha256 dc04eda1ee4eb3f690209d4e6cc08186e96b2953d4e63e5ff9007ffc713466a5 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.SizeSSZ.S
+S sha256 237a94033e5db4262f6adfc8cdeaedb5679b87db098b19c59bed1bebd8a09e09 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconState.SizeSSZ.S
+S sha256 10367fee94655e7aa62345deabc267f7c30fd4e68835b855de1959808dc519b8 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconStateAltair.SizeSSZ.S
+S sha256 f7e70e46d444f9a8ef46a8714ee0c06c3f9adc1ac48a7734926bd50f0b7f6f02 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconStateBellatrix.SizeSSZ.S
+S sha256 d0a2ea6517d8c27550ffb0effff9dfff23e58a8004baa9cf0702d8b0fb0cec45 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconStateCapella.SizeSSZ.S
+S sha256 6a7dece06e3563407031f9244397f9ad8e7b32099b371d6a6a400c0078c82d71 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconStateDeneb.SizeSSZ.S
+S sha256 f31c958b2efb0fc72174788b7e4f967242e45ab907318c3942b4ada80e802bb3 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconStateElectra.SizeSSZ.S
+S sha256 ec8cbf3171ae0bb3310a4ea9996ea528970633f8f5e7296fbf976d13a204f918 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconStateFulu.SizeSSZ.S
+S sha256 cc1eed7fc8545c0af2dc40f3b0fe8ee9b632e3808375997fba75ef6f32081fe1 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBellatrix.SizeSSZ.S
+S sha256 1c2d8b8caaa4d88a4ead02009589f5fc1781b21bd47732278f49a42e183de39b github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyBellatrix.SizeSSZ.S
+S sha256 b0f821edf8875e5ad47d3973c91a52cf1180079aa3d40e5082f02f18d0e911bc github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyCapella.SizeSSZ.S
+S sha256 d7fd8d8d958d9c5d3dfcab0e55f9e2a67074d7b9196f260d66429406afd3e733 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyDeneb.SizeSSZ.S
+S sha256 5a46c371cd6f16eeb1ab2cf812eb5fc827a11c971cb8d16676b2126c7d0d65e3 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockBodyElectra.SizeSSZ.S
+S sha256 168569b1eb226db3d8f198713f912153dc47bbe7cb9593a05b87968e41fbb900 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockCapella.SizeSSZ.S
+S sha256 b8c1580e3c6515ea74e740936af0225a8d3b3b4a33e7f3b02ac34e1bdac669e4 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockDeneb.SizeSSZ.S
+S sha256 7221a58626637e442c8f3fd777c3b5132742abcd8797f9061200818e658397e1 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockElectra.SizeSSZ.S
+S sha256 4f65b95dc8ba6187efb28753f5b0576ccd50f75f893493696e2f320c3428449c github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlindedBeaconBlockFulu.SizeSSZ.S
+S sha256 622cb6d5b9af72dcf1897c4ecbdf681696c7e11528f116ffe918dd4a9131b0f0 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.SizeSSZ.S
+S sha256 35da135283e30e4b4bcba1ac4a04d1fed8fc9303682598148915cfe041eaa37b github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobSidecar.SizeSSZ.S
+S sha256 01bf431c616b56b3ec5051298c30ed042308996ed5c824de196147283415df71 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobSidecars.SizeSSZ.S
+S sha256 0577b01ee490060b2ce28e890e177c92ee4f788c4643dbc69a5468cade4a2424 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderBidCapella.SizeSSZ.S
+S sha256 ba3a9501c23f96d03e1e299f0d27c143c19ad0c43a184be3024074a096e5163d github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderBidDeneb.SizeSSZ.S
+S sha256 c15f55dfe3390589a7445f30c36d70777822a942fc5336d07137de8552ded3aa github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BuilderBidElectra.SizeSSZ.S
+S sha256 c4345527c651c0a3ff8319af3f35df1e375b8c58a6a45054762da0a0dcef1b1d github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S
+S sha256 389e8f65adb01b47b0347e705a58767992d5488785ffe14a5065ff4df5137646 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.SizeSSZ.S
+S sha256 4b3fc17e5a75f8369353c5a7d937479e03667b975c93dfb4290ad7f866d006dc github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S
+S sha256 5023953f2adc4ac779bc8fee4b8f0a8526b6f52b180c37316b1cc35e1374aaea github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ContributionAndProof.SizeSSZ.S
+S sha256 e56a03a6bda8eb1ed33460265cb975167c8f20cfee1e46ac6230a9f15454c0ec github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnSidecar.SizeSSZ.S
+S sha256 0416e0229c692d45cd3c5393a847084c64de4be18e3430c2e49b5f5e7062365a github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.SizeSSZ.S
+S sha256 a3694646a984031d50ce5f658e45b4d61072f4d4701479b5b036b7035f11cc9b github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.SizeSSZ.S
+S sha256 83dd3587550d6c7d4bb9baca9b2b479ca75166ba1b3b73cc462209ee2d6e96bf github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.SizeSSZ.S
+S sha256 5c6adf8b3f1fcb96e5c8ab68e681a1b4598c0f625a6812a6eb4eabb3b589c865 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.SizeSSZ.S
+S sha256 9235dcdaa495915dc95b6317ac1a0cd900ee7ad0bd6d1939d8e7c9e8363fb373 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ENRForkID.SizeSSZ.S
+S sha256 6da0150279cb51c86a0047e8acdf4d2641d927bae313e9c86d9685f3d04df739 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.SizeSSZ.S
+S sha256 9671e16c394f2075ac529b6a11c7f51eeaa1aeebf82b6dae4b989cb4848dde3e github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Fork.SizeSSZ.S
+S sha256 09da19e9944e39c986792952d0fe3ca4764c3d1ab3fc45b81770b09aa81ccde2 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ForkData.SizeSSZ.S
+S sha256 559c788ffcc01574268260ff10d0ffccd878a21c6f3fdf4bf2682607d70885ca github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.SizeSSZ.S
+S sha256 99faa0f7c754e3e59ebfa9bae2cfff3300df5d843d9ca80dada1b67dc1511c15 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.SizeSSZ.S
+S sha256 d9ea155866cbe564b56ab9c4a97b21b23cd2d211f56e34418b0793ee792355bf github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.SizeSSZ.S
+S sha256 2417609ffb7d80f2196902a4dc019fb5b2588c380daf29b39c123f91924f32e0 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestationElectra.SizeSSZ.S
+S sha256 314fecee2f27278aed0b4dcb5d3a3e7275741ff02c4b96f422009dc30fdc8274 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientBootstrapAltair.SizeSSZ.S
+S sha256 61d67e29a86d0c8b7bbb7c625c99633dd540679aeca9d330de91f68ac4a8fcf8 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientBootstrapCapella.SizeSSZ.S
+S sha256 670838db54adb60b007f4031d6033342eaef23150e1d47e3e692c5c7fddad0a3 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientBootstrapDeneb.SizeSSZ.S
+S sha256 281fd784f15bed680b14baadda3a64caec388edf2d2d8a00aeedbfc7ca58992f github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientBootstrapElectra.SizeSSZ.S
+S sha256 2f9fdaff17ec7a3c474506c2e7042393f4ee98e17b389f97cb50666b16adc218 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientFinalityUpdateAltair.SizeSSZ.S
+S sha256 7258db50326c99a7f51310f59e0bf1ca48a90fc3fd5348ab018501dabd0f8d4f github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientFinalityUpdateCapella.SizeSSZ.S
+S sha256 431ff8a7bc27a3e36031b4b451fa1fa80dc69d01de07295f0a27f752a1805a29 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientFinalityUpdateDeneb.SizeSSZ.S
+S sha256 8535f9a0f7f885bff828c0dbc8d61fb5439257e01246610d18c406349d82a6fc github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientFinalityUpdateElectra.SizeSSZ.S
+S sha256 5d0ccffd6ae3c1ec96d8e047069b2d8e500152d66fa4d16a4528078744e11370 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientHeaderAltair.SizeSSZ.S
+S sha256 2a653d3fae479bf770cf90a3484e622d667df89d290e983846aee82ddf8a3749 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientHeaderCapella.SizeSSZ.S
+S sha256 6cf490d45e246e6a7ca5543a35a408b062a38ec479a470868587f6ba8a6c52e2 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientHeaderDeneb.SizeSSZ.S
+S sha256 33d262a3e6752e3a1790650e4ded3bc4dec6bf8adfb80f8befa43b1d32e8dba8 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientOptimisticUpdateAltair.SizeSSZ.S
+S sha256 63c5a04b42c2fafcfadf9cbfea280a3ff47497e186dde2a2c606341fa6733fca github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientOptimisticUpdateCapella.SizeSSZ.S
+S sha256 e8ee63f958e11205839c1a5b44bf8048cd72ac9dab6fcb2d2e194dc7387bae79 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientOptimisticUpdateDeneb.SizeSSZ.S
+S sha256 7b05f23095281433ae6e10e632595e630b1d421177f5492e60d96375c8ea0a28 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientUpdateAltair.SizeSSZ.S
+S sha256 567560df72f1b9fe97e16c9ed5caf86ed1ec10d25addc4da6a873ed27702cfad github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientUpdateCapella.SizeSSZ.S
+S sha256 ef4a6ead8daa9a2a63f465b44771d1b71cb7c1f63d2c1658b79fc3a4f4e76680 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientUpdateDeneb.SizeSSZ.S
+S sha256 45dadf9a553496a0457d18ef5c91feb7cb2ee4405f20267198a6586cc19cdb12 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.LightClientUpdateElectra.SizeSSZ.S
+S sha256 472ca6af2efae3da330dc413c834832075179170670639a505c90a7095c5e9cb github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PartialDataColumnHeader.SizeSSZ.S
+S sha256 9d362ae66e93336b03240a533c54fefb25fe32c666922ca8f724530f15ea6600 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PartialDataColumnPartsMetadata.SizeSSZ.S
+S sha256 0c98c053eba8dc7d3eb8d3ed7ca2f0d412720c70cab5292e5dcffb691f7dc4ff github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PartialDataColumnSidecar.SizeSSZ.S
+S sha256 9a3900a3bfd2b2ab9545c2039fb2e714c0a1a7e5711dfce1268f38e6a6f42f6c github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingAttestation.SizeSSZ.S
+S sha256 a0ed86d4d80fbed1d18c178e1614b0c0fc40d8ff668b5108f2670897c1d6154b github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.SizeSSZ.S
+S sha256 a4336e2ebd65be62fc8f1b9bd18ec150e468364f7d7d7fe19abddc5ce16f7e8d github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.SizeSSZ.S
+S sha256 ea25a112c9459c435ffb5f01374bccd47549c7fcf0e8c199a9686effb41db948 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.SizeSSZ.S
+S sha256 b2dabdc8cec680f9d277df41a07905c2b35d6bc3bc87f53940a9e097b80d230c github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.SizeSSZ.S
+S sha256 cb50e51e4346ef9933b46316a45888af8547ef8f369e6b1131a0e6286121c86e github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ProposerSlashing.SizeSSZ.S
+S sha256 212642af531eab96a2477a1b67d09a3f68cdadb056797a06ced69cd07f391bb3 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedAggregateAttestationAndProof.SizeSSZ.S
+S sha256 11f2324c58f8ceca95c372f09af3db3aa31ba87345593a49876e3ef0599614f8 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedAggregateAttestationAndProofElectra.SizeSSZ.S
+S sha256 ad75626f21cfd46521f5397ebc678f2c20ba66dfcc6251f29713b6f2c29f6e1d github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBLSToExecutionChange.SizeSSZ.S
+S sha256 366619d54ff924ff7c3b97ed447815b47cc353fd932bed291ec0f14e82c3ff6e github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlock.SizeSSZ.S
+S sha256 4dfe4f7ae55720625a8b90983b98f9e521718e360befecd9b8951e7b6a89882c github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockAltair.SizeSSZ.S
+S sha256 d07115a63a7b6659584a85152a2b46612f9ec6599f6e90445e7ee9567d87d7db github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockBellatrix.SizeSSZ.S
+S sha256 c4f3573863f538be312417906faf08e4a5c00c045514248e9243a5d26c8a03fb github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockCapella.SizeSSZ.S
+S sha256 cac37431bc1d2b295c9b934b64c617063c882b9ca8aa07d03cc65b75dba02398 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockContentsDeneb.SizeSSZ.S
+S sha256 12319915505a9b201bc5b0a915755c32d8e05e8a7a60ed31b16d98992b6df894 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockContentsElectra.SizeSSZ.S
+S sha256 d33a017171ca0be17b2ef24a29bfb19f3944192a4757d38d8fc198327d14e642 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockContentsFulu.SizeSSZ.S
+S sha256 4fc84c1fc45d950a8c6f3c8ada85546e652647f8b1ed1cb5a8d571b281d63800 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockDeneb.SizeSSZ.S
+S sha256 8974c07a5baa7d5df226df767bb75418121c99dd8d733a2cb5595084d7f1bbe1 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockElectra.SizeSSZ.S
+S sha256 5246ed8b929fbfde8b7ae36dea80028ce9310fccc0a2d6e7067759653f8f1e56 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockFulu.SizeSSZ.S
+S sha256 1bad092dacd607c0b4c0ab404804fbaed288cb2f55a34f9c25942cc31cfba719 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBeaconBlockHeader.SizeSSZ.S
+S sha256 96abd65f76edf8ae0f3cadd2ae0f2599ba8a1cb5bee901c7108a924040878597 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBlindedBeaconBlockBellatrix.SizeSSZ.S
+S sha256 c65641c348d09ad9ead26e843615a67489d61586b2f87d3339b1938883b31f00 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBlindedBeaconBlockCapella.SizeSSZ.S
+S sha256 09a255537ff8434869546ea86278671160379e8a4334968c5c64e2e8e5a36fd5 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBlindedBeaconBlockDeneb.SizeSSZ.S
+S sha256 b3c7ee1ba9223169e094ff384923d8b6c9538b473b3f6a0ae7a3a460def41e7b github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBlindedBeaconBlockElectra.SizeSSZ.S
+S sha256 c6742244b425287859eb3824e229e7236a6c62876c147f1b343b9a50f746df1b github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBlindedBeaconBlockFulu.SizeSSZ.S
+S sha256 f0aabd5b1db39a17e0c580f6755a5d2a99d2da71ba4d53754176f413f72f8cd4 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBuilderBidCapella.SizeSSZ.S
+S sha256 70a9981a21a321c07dbbb1f430b6bf937611043a982bd02e5ffef0674251ec0b github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBuilderBidDeneb.SizeSSZ.S
+S sha256 a89f8f8b096eb36cd8cb6467939f2d3208de58e7246d5137196d8f04c87fc6e2 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedBuilderBidElectra.SizeSSZ.S
+S sha256 b21aaddeef506df9c6b3016bebb380d9c04f1594462e22f3bf198e34440bca27 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedContributionAndProof.SizeSSZ.S
+S sha256 148c95a505db0faf7f7519c81b875e449cdc05ef3cf8c02c7683a76639ca1e98 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SignedVoluntaryExit.SizeSSZ.S
+S sha256 86f7c7c4d001003416ce158a55c2375c8ad61014be92ff0bca116140e358e769 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.SizeSSZ.S
+S sha256 e286df2009fe060f6f88d29b3b0e814fe25e38fdad980ac3dbdb65fac3be844f github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SingleAttestation.SizeSSZ.S
+S sha256 5759b11e7d6fcc6e8bf48f5aaddef61c9e2cf50aed7116ce37d62f99c0b7e4a0 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Status.SizeSSZ.S
+S sha256 a1efba65ae7b97b17f0564ca3fa76a458ce4681324566c0be0b39c71bb1d93f5 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.StatusV2.SizeSSZ.S
+S sha256 2f3d3b59d58d703f920ba4c38d0ef14af741494532982c30e079cb74b93351a8 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.SizeSSZ.S
+S sha256 d9b9800d7aec86514d3bd1594c2aaa273ced2f42b7acd616b0735828f289ea21 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregatorSelectionData.SizeSSZ.S
+S sha256 3f23cd50759ef164ee7294385d379574562b1869d01fa1f944deb909fb300745 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.SizeSSZ.S
+S sha256 f98d9c54230e9373717f788bc486d645685c14e4b42c2d32860b73e5eab5b125 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeContribution.SizeSSZ.S
+S sha256 1bb01ebaa1b5c2f58f80a29a64cf2dfd15eedee8bac53a4d92493be34a994fc4 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.SizeSSZ.S
+S sha256 81f1cf28480109246dcce18dd9b0146718626851eb03b73b4f7ce96c07218b57 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.SizeSSZ.S
+S sha256 efc54b83f29637551ad49d1bf82dace8da53e43b360dcf69ea159c3f5e96ff42 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.SizeSSZ.S
+S sha256 cb857608c651719c26677413fcea9f8aaa6b71feddcc45faece9ecb7d07d5aa9 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.SizeSSZ.S
+data sha256 209678496f443954c223eb266d97da346b415a65c9fe784ba699b107493e0cf2 x5CpElemType.data
+data sha256 deb19480fa40401edd1598c50378c24c6258275ed6176266ea9c46532ffce42c x5ErrSize.data
+file sha256 0bbe6f0da6d02e6f2720d7a1e98d7c71641ca00f1d9cb9a3111cf092ba98295a lean/Fk/Code.lean
+file sha256 1eb87dae6219795cd98f8642639939a5d6336f02184fc408e53524e4cf427c8f AXIOMS.txt
+PASS all
+BUNDLE sha256 1bdfc4f073d0b0af45a290d4d8b89d682d4da716632a345fe92e919520eaa5af
