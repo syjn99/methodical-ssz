@@ -1,31 +1,29 @@
 # REPORT: Kraken x64 코덱 검증의 현재 상태
 
-기준: 재증명 수정 2와 그 리뷰(`0ef30e3`) 위의 정리 세션. 정리 세션은 정리의 뜻을 바꾸지 않았다.
+기준: 수정 3(링크 재설계, `claude/ssz-fv-reprove-fix3`). 메모리 최적화 `e6e386d` 위다.
 방향은 `DIRECTION.md`, 세션 이력은 `HISTORY.md`, 고정 버전은 `TOOLS.md`에 있다.
 
 ## 0. 판정
 
 **조건부. 게이트 1 미통과.**
 
-gpt-6-astra 수정 2 리뷰(`review/gpt6-astra-reprove-fix2.md` 8절)의 판정과 같다.
 게이트 1을 막는 조건:
 
-1. ListC 원소 오프셋 순서 거부와 비어 있지 않은 원소의 오류 전달이 없다.
-2. 사후조건 잔여: `ne_marshal_main`은 프레임 `R`을 잃는다. `lc_accept_main`의 죽은 피호출자 스택은 `True`다. `sc_size_main`은 반환 값만 말한다. `sc_marshal_main`에 r14 보존이 없다.
-3. 오류 증인은 유효한 Go 오류 인터페이스가 아니다. 타입 기술자 내용과 오류 전역의 초기화를 증인에 연결하지 않았다. Scalars에 비nil 오류 거부 정리가 없다.
-4. 링크 검사 (g)(h)와 역할 분류가 Lean·Go 소스의 철자를 읽는다. 리뷰가 우회 셋을 재현했다(4절 1–3).
-5. 런타임 계약은 추상 모델로만 만족 가능성을 보였다. Go 런타임 정교화는 없다(3절).
-6. 디코더의 EthLib 양방향 수용 정리는 BitVec(1바이트)뿐이다.
-7. x86-64 하드웨어 대조를 하지 않았다. 이 호스트는 arm64다.
+1. ListC 원소 오프셋 순서 거부의 기계어 정리가 없다. 계약 `FmtErrorfDDC`와 모델만 있다(4절 7). 비어 있지 않은 원소의 오류 전달도 없다.
+2. 런타임 계약은 추상 모델로만 만족 가능성을 보였다. Go 런타임 정교화는 없다(3절).
+3. 디코더의 EthLib 양방향 수용 정리는 BitVec(1바이트)뿐이다.
+4. x86-64 하드웨어 대조를 하지 않았다. 이 호스트는 arm64다.
 
-수치(정리 세션 끝, 기준선과의 비교는 `HISTORY.md` 7절):
+수정 3에서 닫은 것: 링크 검사 (f)(g)(h)·역할 분류·`golits.go` 삭제(Lake 입력과 ELF 데이터 include로 대체), 오류 증인의 타입 기술자와 초기화된 오류 전역, Scalars 비nil 거부, 사후조건 잔여 넷, 게이트 표 정정.
 
-- `lake build`: 856 jobs, 성공.
-- 공리: 정리 `TOTAL 1571 NONSTANDARD 0`(`AXIOMS.txt`), 모든 선언 `TOTAL 7975 NONSTANDARD 0`(`AXIOMS-ALL.txt`).
-- 시험 타입 9개. 디코더·인코더·크기 주 정리 55개. 증인 파일 79개, `*_runs` 선언 80개.
-- 링크 검사 PASS(검사 (a)–(h)). 자기 시험 24개 기대대로.
+수치(수정 3 끝, 차가운 프로젝트 빌드 뒤):
+
+- `lake build`: 859 jobs, 성공(프로젝트 모듈 Built 159, 의존성은 따뜻함).
+- 공리: 정리 `TOTAL 1600 NONSTANDARD 0`(`AXIOMS.txt`), 모든 선언 `TOTAL 8110 NONSTANDARD 0`(`AXIOMS-ALL.txt`).
+- 시험 타입 9개. 증인 파일 79개.
+- 링크 검사 PASS(검사 (a)–(f)). 자기 시험 10개 기대대로.
 - 부정 시험 16개 기대대로(`negative/RESULT`).
-- goval: 79 파일, 위반 0, 미검사 2(`WitCpM` 기호 길이 dst, 1a `Witness.lean` 기호 n).
+- goval: 79 파일, 위반 0, 미검사 2. 오류 증인의 타입 기술자 5곳과 오류 전역 19곳을 검사한다.
 - `go test ./fv/kraken/semtest/`: PASS(F1, F2).
 
 ## 1. 완료 단위
@@ -35,13 +33,14 @@ gpt-6-astra 수정 2 리뷰(`review/gpt6-astra-reprove-fix2.md` 8절)의 판정�
 1. 계약 또는 정리.
 2. 구체 Host에서 전제 전체의 증인. 가변 길이는 빈 값, 1개, 최대.
 3. 기계어 정리.
-4. 링크 검사 PASS.
+4. 링크 검사 PASS. 정리가 읽는 데이터는 ELF include다(`Fk/Data.lean`).
 5. 부정 시험: 변이가 지정 정리 안에서 실패하고 대조군이 통과한다.
 6. Go 값: `lean/tools/wit/goval.py`가 `layout.json`(gc amd64 배치)으로 검사한다. 읽지 못한 값은 미검사로 센다.
 
 추상 증인(요소 2)과 Go 값 완료(요소 6)는 다른 주장이다.
 요소 6은 크기·정렬·패딩·bool·슬라이스·겹침을 본다.
-타입 기술자 내용, 오류 전역, 중간 상태의 Go 값은 보지 않는다.
+수정 3부터 `%w` 증인의 타입 기술자(Size_, Kind_)와 오류 전역의 초기화도 본다.
+중간 상태의 Go 값은 보지 않는다.
 
 ## 2. 게이트 1 표
 
@@ -93,9 +92,10 @@ protobuf 필드가 있는 실제 Prysm 바이너리의 증명이 아니다.
 | --- | --- | --- | --- |
 | Lean 커널, Kraken x64 의미론, EthLib 명세 | 공유 기반 | 없음 | 유지 |
 | Kraken = 실제 CPU | 하드웨어 대조를 하지 않았다 | 없음(arm64 호스트) | x86-64 Linux 기계 또는 CI |
-| ELF → Lean 프로그램 | objdump, `link/conv.py`, include | 링크 검사 (a)–(e): 독립 디코더 셋, 심볼·변위 | 유지 |
-| 재빌드 추적 (f) | `SHash.lean` = `.S` 해시 | 해시 파일 + 원문 비교 | 수정 3: Lake `input_file`로 바꾸고 삭제 |
-| 손으로 쓴 상수 (g)(h), 역할 분류, `golits.go` | Lean 상수 = ELF 바이트 | Lean·Go 소스 정규식. 리뷰 우회 셋 | 수정 3: ELF 데이터 include로 바꾸고 삭제 |
+| ELF → Lean 프로그램 | objdump, `link/conv.py`, `include_x64_rt` | 링크 검사 (a)–(e): 독립 디코더 셋, 심볼·변위 | 유지 |
+| ELF → Lean 데이터 | `link/data.py`, `data_include`(`Fk/Include.lean`) | 링크 검사 (f): 데이터 파일 = ELF 바이트, 포인터 워드 = 심볼 + 오프셋. 해시는 RESULT 묶음 | 유지 |
+| 재빌드 추적 | Lake가 `needs`의 `input_dir`(norm, data, `Fk/*.S`) 내용을 입력 해시에 넣는다 | X1 실험(수정 3 커밋 본문) | 유지 |
+| 오류 전역의 값 | Go의 패키지 초기화가 `(itab, errorString)`을 넣는다 | 정리의 전제(`sc_reject_bool_err`의 `e0 ≠ 0`), 증인은 초기화된 값 | 런타임 초기화 정교화 |
 | Go 값 | 증인이 실제 Go 값이다 | goval(크기·정렬·패딩·bool·겹침). 타입 내용·오류 전역·중간 상태 미검사 | 1c X2: Lean 술어로 |
 | 런타임 계약 | Go 1.26.3 런타임이 계약을 만족한다 | 추상 모델(`rt_*`, `bump_*`)과 `joint_models`(한 Host·한 힙) | 2단계(HTR) 뒤 |
 | fmt 할당량, GC | 할당이 예산 안이다. 호출 중 GC가 없다(`runtime.writeBarrier` = 0이 `F`에 있다) | 없음 | 런타임 정교화 |
@@ -112,17 +112,18 @@ protobuf 필드가 있는 실제 Prysm 바이너리의 증명이 아니다.
 
 | # | 필수 수정 | 상태 | 처리 계획(DIRECTION 4절) |
 | --- | --- | --- | --- |
-| 1 | Lean 참조 검사의 역할과 이름 해석. 이름 가림 변이를 자기 시험에 | 열림 | 수정 3: 역할 분류를 지운다 |
-| 2 | (h)의 전체 식과 타입 동일성. 접미사와 다른 포인터 기술자를 거부 | 열림 | 수정 3: 데이터 include로 바꾼다 |
-| 3 | Go 형식 호출의 실제 대상. 지역 `fmt`와 지원 밖 호출 모양 | 열림 | 수정 3: `golits.go`를 지운다 |
-| 4 | 오류 타입 자료와 전역 불변식을 증인에. Scalars 비nil 거부 정리와 증인 | 열림 | 수정 3 |
-| 5 | 배치 재생성 뒤 goval. 값·타입·조각 미검사를 따로 집계 | 열림 | 1c X2 |
-| 6 | 사후조건: NeMarshal, ListC 스택, Scalars Size, r14 보존 | 열림 | 수정 3 |
-| 7 | ListC 원소 오프셋 순서와 원소 오류 전달을 수작업 기준 사례로 | 열림 | 수정 3 |
-| 8 | 게이트 표 정정: 메모리 동일성 인정, 추상 증인과 Go 값 구분 | 완료(2절) | 정리 세션 |
+| 1 | Lean 참조 검사의 역할과 이름 해석 | 닫힘: 역할 분류를 지웠다. 정리는 include 정의의 이름을 쓴다 | 수정 3 X2 |
+| 2 | (h)의 전체 식과 타입 동일성 | 닫힘: (h)를 지웠다. 바이트와 포인터 워드를 include한다. 리뷰의 itab 변이는 자기 시험이 FAIL로 잡는다 | 수정 3 X2 |
+| 3 | Go 형식 호출의 실제 대상 | 닫힘: `golits.go`를 지웠다. 형식 바이트는 ELF에서 온다 | 수정 3 X2 |
+| 4 | 오류 타입 자료와 전역 불변식을 증인에. Scalars 비nil 거부 | 닫힘: `sc_reject_bool_err`, 증인 18개의 전역 초기화, `%w` 증인 5개의 ELF 기술자 | 수정 3 X3 |
+| 5 | 배치 재생성 뒤 goval. 미검사 종류별 집계 | 닫힘: 재생성 바이트 동일, 2절 집계 표 | 수정 3 X6, X7 |
+| 6 | 사후조건: NeMarshal, ListC 스택, Scalars Size, r14 | 닫힘 | 수정 3 X4 |
+| 7 | ListC 원소 오프셋 순서와 원소 오류 전달 | 부분: 계약 `FmtErrorfDDC`, 모델, `joint_models`만. 기계어 정리·증인·부정 시험·원소 오류 전달은 없다 | 다음 세션 |
+| 8 | 게이트 표 정정 | 닫힘(2절) | 수정 3 X6 |
 
-1–5는 1c 생성 결과를 검사기로 믿기 전에 필요하다.
-6–7은 게이트 완료와 일반 조합을 주장하기 전에 필요하다.
+7은 게이트 완료를 주장하기 전에 필요하다.
+순서 검사는 원소 루프 안(지시어 276–277)이다. 거부 블록은 인수 배열(진입 rsp − 104부터 32바이트)과 spill 40바이트를 쓴다.
+`lc_accept_main`의 전제는 그 일부(rsp − 200, − 192, 인수 배열)를 소유하지 않는다. 진입부와 첫 반복을 새 전제로 다시 증명해야 한다.
 
 ## 5. 발견
 
@@ -134,6 +135,9 @@ protobuf 필드가 있는 실제 Prysm 바이너리의 증명이 아니다.
 - `semtest/f12_test.go`가 두 결함의 Go 회귀 시험이다.
 
 관찰(결함 아님): ListC 원소 오프셋 순서 오류는 `%d` 두 개의 `fmt.Errorf`라 `convT64` 두 번과 할당이 있다.
+관찰(도구): `link/check.py`가 `link/__pycache__`를 만든다. `.gitignore`에 없다. `python3 -B`로 돌린다.
+관찰(도구): `negative/run.sh`의 `cp -Rc`는 macOS 형식이다. Linux에서는 `/workspace/tooling/fv/compat-bin`의 `cp` 대체가 필요하다.
+관찰(계약): `MakesliceC`·`NewobjectC`의 타입 인수(`type__ + n`)와 원소 크기 `esz`의 대응은 계약 가설이다. 타입 기술자 내용을 include해 연결하지 않았다.
 관찰(결함 아님): `u64v` 증인 정리는 `decide`가 아니라 `simp`로 증명한다. `decide`는 9.69 GiB에서 OOM이다. 근거 `memopt/REPORT.md`.
 
 ## 6. Kraken 요청 목록
@@ -174,10 +178,31 @@ lake env lean tools/RegressFix2.lean                             # 오류 없음
 for f in ../review/*.lean; do lake env lean $f; done             # Review1bFixB0.lean은 vcgen/에서
 cd ../../.. && go run fv/kraken/lean/tools/wit/layout.go > fv/kraken/lean/tools/wit/layout.json
 python3 fv/kraken/lean/tools/wit/goval.py                        # 위반 0
-python3 fv/kraken/link/check.py fv/kraken/link/out               # PASS all, BUNDLE
-python3 fv/kraken/link/check.py --selftest fv/kraken/link/out    # 24 cases
-fv/kraken/negative/run.sh <워크트리 밖 scratch 디렉터리>            # negative/RESULT, 16 cases
-GOROOT=$(go env GOROOT) go test ./fv/kraken/semtest/             # F1, F2 PASS
+python3 -B fv/kraken/link/check.py fv/kraken/link/out            # PASS all, BUNDLE
+python3 -B fv/kraken/link/check.py --selftest fv/kraken/link/out # 10 cases
+PATH=/workspace/tooling/fv/compat-bin:$PATH fv/kraken/negative/run.sh <워크트리 밖 scratch>  # 16 cases; Linux는 cp -c 대체 필요
+GOROOT=$(go env GOROOT) go test -count=1 ./fv/kraken/semtest/    # F1, F2 PASS
 ```
 
 대상 재생성과 증인 재생성 명령은 `TOOLS.md`와 `lean/tools/wit/README.md`에 있다.
+
+## 9. 1c 입력 (include 정의와 데이터 파일)
+
+인터페이스 전체는 `TOOLS.md` "ELF 데이터 include"에 있다. 1c는 같은 형식으로 자기 ELF의 데이터 파일을 만든다.
+
+| Lean 이름 | 데이터 파일 | 뜻 |
+| --- | --- | --- |
+| `Fk.Data.<id> : List UInt8` | `link/out/data/<id>.data` | 그 구간의 ELF 바이트. 포인터 워드가 있으면 `[Host]`에 의존한다 |
+| `Fk.Data.<id>_addr : BitVec 64` | 같은 파일의 `at` 줄 | `(label "<레이블>" + <오프셋>).toBitVec`. 오프셋 0이면 `+ 0`이 없다 |
+| `Fk.Data.intType_size_kind` 등 | — | 포함된 바이트에 대한 구조 정리(Size_, Kind_, Elem, itab 타입 워드·메서드, `staticuint64s` 표) |
+| `Fk.staticBox_of_lt` | `staticuint64s.data` | `StaticBox v`의 바이트 = `Int.toBytes 8 v` (v < 256) |
+
+생성기가 데이터 파일을 내는 규칙:
+
+1. 항목 표(id, 레이블, 오프셋, 길이, 포인터 슬롯)는 코드가 쓰는 주소와 길이다(`lea sym+off(%rip)`, `mov $len`). 바이트는 ELF에서 읽는다. 손으로 쓰지 않는다.
+2. 포인터 슬롯은 `word <레이블> <오프셋>`으로 쓴다. 레이블은 그 값 이하의 가장 가까운 심볼이다. 같은 주소에 여럿이면 변환된 코드가 쓰는 레이블을 고른다.
+3. 레이블 이름은 `conv.py`의 정리 규칙을 따른다(`go:string.*` → `go_string._`).
+4. 파일마다 `link/check.py` (f)가 ELF와 다시 비교한다. 파일은 Lake `input_dir` 입력이다.
+5. Go 1.26.10 ELF는 자기 데이터 파일과 표를 자기 이름공간에 둔다. Go 1.26.3 값을 다시 쓰지 않는다.
+6. 오류 전역은 주소만 뽑는다. 값은 런타임 초기화가 정한다. 거부 정리의 비nil 결론은 `e0 ≠ 0` 같은 초기화 전제를 둔다.
+7. 증인은 오류 전역을 초기화된 값으로 두고 `%w` 타입 워드가 ELF 기술자(`errorStringPtrType`)를 가리키게 한다. goval이 둘을 검사한다.

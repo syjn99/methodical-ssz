@@ -22,6 +22,7 @@
 | `fmt.errorf`, 인수 0개 | ListC.UnmarshalSSZ(오프셋 오류 zero, past, tail) | (b) | `FmtErrorfNilC` | `rt_errorf_nil` | `WitLcZ/P/T` |
 | `fmt.errorf`, `%w` | BitVec 디코더 `"J: %w"`, BitL 디코더·인코더 `"B: %w"` | (b) | `FmtErrorfWC` | `rt_errorf_w` | `WitBvR`, `WitBlR`, `WitBlRI` |
 | `fmt.errorf`, `%d %w` | ListU64.UnmarshalSSZ(정렬, 초과) | (b) | `FmtErrorfDWC` | `rt_errorf_dw` | `WitLuTb`, `WitLuMa` |
+| `fmt.errorf`, `%d %d` | ListC.UnmarshalSSZ 원소 오프셋 순서(정리 없음, 수정 3 X5 부분) | (b) | `FmtErrorfDDC` | `rt_errorf_dd` | 없음 |
 | `ssz.ValidateBitlist` | BitL.UnmarshalSSZ, BitL.MarshalSSZTo | (b) | `ValidateBitlistC`(유효), `ValidateBitlistErrC`(무효) | `rt_validate_bitlist`, `rt_validate_bitlist_err`(`Fk/RtVbl.S`) | `WitBl1/257`, `WitBlM1/257`, `WitBlR`, `WitBlRI` |
 | `ssz.ValidateBitvector` | BitVec 디코더·인코더 | (a) 함수 명세 | `VbvAccC`, `VbvPadC` | 정리에서 유도(`vbv_acc_holds`, `vbv_pad_holds`) | `WitBv`, `WitBvM`, `WitBvR` |
 | `target.Scalars.UnmarshalSSZ` | Nested.UnmarshalSSZ | (a) 함수 명세 | `ScUAccC` | `sc_uacc_holds` | `WitNe*` |
@@ -31,7 +32,7 @@
 | `runtime.morestack_noctxt.abi0` | 프레임이 있는 모든 함수 | (c) | 전제 `g.stackguard0`(r14 + 16) < rsp. `jbe`가 안 갈림을 증명한다 | | |
 | `runtime.panicBounds` | FixedVec·ListU64 UnmarshalSSZ 루프 | (a) | 경계 검사가 안 갈림을 한 바퀴마다 증명한다(`lu_iter`, `fv_iter`) | | |
 
-`joint_models`(`Fk/Regress.lean`)는 계약 10개를 한 Host·한 힙에서 함께 만족한다.
+`joint_models`(`Fk/Regress.lean`)는 계약 11개를 한 Host·한 힙에서 함께 만족한다(수정 3에서 `FmtErrorfDDC` 추가).
 `tools/RegressFix2.lean`은 정리가 쓰는 형식·자원 조합으로 그것을 다시 적용한다.
 
 ## 2. 계약별 조건
@@ -47,10 +48,11 @@ spill은 반환 슬롯 바로 위의 레지스터 인수 칸이다. 피호출자
 | `MemmoveC S` | rcx = n, 원천·목적 n바이트, 서로소 | 없음 | scratch S, spill 없음(asm `$0-24`) | rsp + 8, r14, rbp, 원천, `F`. 목적 = 원천 |
 | `GrowsliceC Heap ty esz S` | `0 < esz`, rsi = ty, `num ≤ newLen`, `oldLen = newLen − num ≤ oldCap < newLen` | `nc = nextSliceCap newLen oldCap`(Go `nextslicecap`), `2·esz·nc + 8192 ≤ avail ≤ maxAlloc = 2^48` | scratch S, spill 40 | rsp + 8, r14, rbp, rbx = newLen, 옛 블록, `F`. `nc ≤ newCap`, 새 블록 = `old ++ tail`, `avail' + esz·newCap ≤ avail` |
 | `NewobjectC Heap ty sz S` | rax = ty | `sz ≤ avail` | scratch S, spill 8 | rsp + 8, r14, rbp, `F`. 0으로 채운 `sz`바이트 블록 |
-| `ConvT64C Heap S` | 모든 v. 사전조건 `StaticBox v`(v < 256이면 `staticuint64s + 8v`의 8바이트, 읽기 전용) | `8 ≤ avail`. 결론 `avail' + hb.length ≤ avail ≤ avail' + 8` | scratch S, spill 8 | rsp + 8, r14, `StaticBox v`, `F`. `BoxIn rax v hb`(정적 표 또는 힙 8바이트 = v)와 `Eq (hb.At rax)` |
+| `ConvT64C Heap S` | 모든 v. 사전조건 `StaticBox v`(v < 256이면 포함된 ELF 표 `Fk.Data.staticuint64s`의 8v부터 8바이트, 읽기 전용; `staticBox_of_lt`로 = v) | `8 ≤ avail`. 결론 `avail' + hb.length ≤ avail ≤ avail' + 8` | scratch S, spill 8 | rsp + 8, r14, `StaticBox v`, `F`. `BoxIn rax v hb`(정적 표 또는 힙 8바이트 = v)와 `Eq (hb.At rax)` |
 | `FmtErrorfNilC S` | rdi = 0, 형식에 `%` 없음, 형식 바이트 조각 | 할당 없음 | scratch S, spill 40 | rsp + 8, r14, 형식, `F`. rax = 0 |
 | `FmtErrorfWC Heap fs RO MsgIn S` | 형식 `fs` 고정(`bvFmtJ`, `blFmtB`), rdi = rsi = 1, 인수 배열 `ity ++ e`, `ErrObj e sp msg`, `Eq (hm.At sp)`, 읽기 전용 `RO`, `MsgIn sp msg hm` | `fs + msg + 8192 ≤ avail`. 결론 `avail' ≤ avail` | scratch S, spill 40 | rsp + 8, r14, 형식, 인수, `ity`, 오류 객체, `hm`, `RO`, `F`. rax ≠ 0 |
-| `FmtErrorfDWC Heap fs tw S` | 형식 `fs` 고정(`luFmtTooBig`, `luFmtMis`), rdi = rsi = 2, 인수 배열 `tw ++ bx ++ ity ++ e`(tw = `type:int` = `luTW`), `BoxIn bx v hb`, `StaticBox v`, `Eq (hb.At bx)`, `ErrStr e sp msg` | `fs + 20 + msg + 8192 ≤ avail` | scratch S, spill 40 | 위와 같다. 상자 자원 포함. rax ≠ 0 |
+| `FmtErrorfDWC Heap fs tw S` | 형식 `fs` 고정(`luFmtTooBig`, `luFmtMis`), rdi = rsi = 2, 인수 배열 `tw ++ bx ++ ity ++ e`(tw = `Fk.Data.intType_addr`, `type:int`), `BoxIn bx v hb`, `StaticBox v`, `Eq (hb.At bx)`, `ErrStr e sp msg` | `fs + 20 + msg + 8192 ≤ avail` | scratch S, spill 40 | 위와 같다. 상자 자원 포함. rax ≠ 0 |
+| `FmtErrorfDDC Heap fs tw S` | 형식 `fs` 고정(`lcFmtOrder`), rdi = rsi = 2, 인수 배열 `tw ++ bx1 ++ tw ++ bx2`(tw = `Fk.Data.uint64Type_addr`), `BoxIn` 둘, `StaticBox v1`, `StaticBox v2`, 상자 바이트 둘 | `fs + 40 + 8192 ≤ avail` | scratch S, spill 40 | 위와 같다. 상자 자원 포함. rax ≠ 0 |
 | `ValidateBitlistC S` | rbx = len(buf), rdi = 2048, buf 조각, `blValid buf` | 할당 없음 | scratch S, spill 32 | rsp + 8, r14, rbp, buf, `F`. rax = 0 |
 | `ValidateBitlistErrC Heap S` | 위와 같다, `¬ blValid buf`. 사전조건에 rodata 메시지 셋 `vblRO`(`go_string._+33605/13272/5743`) | `8192 ≤ avail`. 결론 `avail' + 16 + hm.length ≤ avail ≤ avail' + 8192` | scratch S, spill 32 | rsp + 8, r14, rbp, buf, `vblRO`, `F`. rax = errorString itab, 새 `ErrObj rbx sp msg`(16바이트)와 `Eq (hm.At sp)`, `VblMsg sp msg hm`(rodata 셋 중 하나이고 hm = [], 또는 `%d` 힙 메시지 hm = msg ≤ 128) |
 
@@ -75,7 +77,7 @@ ValidateBitlist의 가장 긴 메시지는 82바이트다(고정 43, int 19자�
 
 | 계약 | 신뢰 항목 | 이유 |
 | --- | --- | --- |
-| `FmtErrorfWC`, `FmtErrorfDWC` | Go의 실제 할당량(printer 객체, 결과 문자열, `*fmt.wrapError` 32바이트)이 예산 안이다. 호출 중 GC가 없다. 결과 객체는 결론에 없다(rax ≠ 0만) | fmt의 할당 경로와 sync.Pool을 모델하지 않았다. 예산 값은 코드를 읽은 결과다 |
+| `FmtErrorfWC`, `FmtErrorfDWC`, `FmtErrorfDDC` | Go의 실제 할당량(printer 객체, 결과 문자열, `*fmt.wrapError` 32바이트)이 예산 안이다. 호출 중 GC가 없다. 결과 객체는 결론에 없다(rax ≠ 0만) | fmt의 할당 경로와 sync.Pool을 모델하지 않았다. 예산 값은 코드를 읽은 결과다 |
 | `FmtErrorfNilC` | 형식에 `%`가 없으면 할당 없이 nil을 돌려준다(Go 1.26.3 `fmt/errors.go`를 읽은 결과) | fmt 내부 코드를 증명하지 않았다 |
 | `ValidateBitlistC`, `ValidateBitlistErrC` | 수용 집합 = EthLib 규칙. 무효 입력에서 rax = errorString itab. `VblMsg`는 어느 입력이 어느 메시지인지 말하지 않는다 | Kraken이 `bsr`를 파싱하지 못한다 |
 | `MakesliceC`, `NewobjectC`, `GrowsliceC`, `ConvT64C` | 타입 기술자를 읽지 않는다. 할당 중 GC가 없다. 할당기 실패는 정리 밖이다 | 할당기와 GC 모델이 없다 |
