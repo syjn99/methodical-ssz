@@ -14,6 +14,7 @@ Desc와 Go 배치에서 정리 문장을, 기계어 지시 목록에서 증명�
 | `run_checks.sh` | gate 안 검사 실행기: build, 비교, 공리, 부정 시험을 메모리 캡 아래 돌리고 첫 실패 코드로 끝난다(리뷰 r5 S4) |
 | `lcacc.py`, `lcacc_tpl.py` | ListC 수용: 항목 루프와 두 수용 경로의 걷기, 그 손 글 틀(5절) |
 | `anchor.py` | 축약 Prysm 타입(바이트 벡터·컨테이너 필드)의 고정 손 틀(6절). 손 모듈에서 틀을 생성 시점에 읽는다 |
+| `uses.py` | 고정 틀 정리가 손 주 정리(`*_main`)를 쓰지 않음을 Lean 선언 의존성으로 확인(대조군 포함) |
 | `verbatim.py` | 생성 정리의 전술 줄 중 손 증명 파일에 글자 그대로 있는 줄 수(INBOX 014 정직성 규칙) |
 | `axioms.py` | `#print axioms`를 프로그램으로 판정(`propext`, `Classical.choice`, `Quot.sound`만) |
 | `lean/Gen1cX4/Support.lean` | 생성 증명이 쓰는 보조정리(손으로 씀, 생성 아님) |
@@ -103,3 +104,21 @@ ListU64 출력은 이 변경 뒤에도 바이트가 같다.
 | reject_spec r1, 조합 3행 | 시도하지 않음: 손 정리가 없다 |
 | AttestationData size, accept, reject r1 크기, marshal | 생성(고정 틀) 증명 통과(시도 1, logs/119), 문장 SAME(`ad_size_main`, `ad_accept_main`, `ad_reject_size_main`, `ad_marshal_main`), 대조군 DIFF 4, 공리 표준만(23개 이름), 변이 4개 지정 정리 안에서 실패·대조군 4개 통과. 증인 `WitAdAcc`, `WitAdM`. 손 글 비율 9/10, 556/557, 62/63, 437/438. 손 보조 선언 19개를 복사했다(Cp·Ad 손 모듈은 import하지 않음). 다른 타입의 손 모듈(`Fk.NeAccept`, `Fk.LcReject`, `Fk.FvAccept` 등)은 일반 보조정리 때문에 import한다 |
 | AttestationData reject r2/r3, unreachable_mc r2/r3, marshal_reject r1..r3, reject_spec, 조합 | 시도하지 않음: 손 정리가 없다 |
+
+## 7. 나머지 손 타입 넷 (BitVec, FixedVec, BitL, Nested): 같은 고정 틀
+
+`results/attempts-hand4.json`, `compare-hand4.json`, `negative-hand4.json`, `axioms-hand4.json`, `uses-anchored.json`.
+같은 `anchor.py` 방식이다. Desc 문지기는 `anchor.basic_gate`다: 고정 크기 타입은 SizeSSZ 즉값과 디코더 길이 검사, 가변 타입은 디코더 첫 `cmp $imm,%rcx`가 고정부 크기.
+
+| 타입 | 생성(고정 틀) + Lean 통과 + 문장 SAME (logs/120) | 손 글 비율(전술 줄) | 증인(다시 겨눔, logs/122-123) |
+| --- | --- | --- | --- |
+| BitVec | size, accept, reject r1 크기, reject r2 패딩, marshal, 조합(`bv_unmarshal_then_marshal`) | 9/10, 225/226, 57/58, 177/178, 171/172, 23/26 | WitBv, WitBvM, WitBvR |
+| FixedVec | size, accept, reject r1, marshal, marshal_reject r2 | 9/10, 168/169, 56/57, 158/159, 127/128 | WitFvAcc, WitFvM, WitFvMR |
+| BitL | size, accept, reject r1·r2·r3, marshal, marshal_reject r1 | 16/17, 317/318, 60/61, 72/73, 206/207, 241/242, 204/205 | WitBl1, WitBl257, WitBlM1, WitBlM257, WitBlRI, WitBlR |
+| Nested | size, accept, reject r1·r2, marshal | 60/61, 291/292, 60/61, 72/73, 229/230 | WitNe0, WitNe1, WitNe16, WitNeM0, WitNeM1, WitNeM16 |
+
+- 비교 23 SAME, 대조군 7 DIFF(똑똑한 펼침 끔). 공리: 155개 이름 표준만. 변이 22개가 지정 정리 안에서 실패, 대조군 22개 통과(`negative-hand4.json`).
+- 부정 시험 평가기의 정리 범위를 고쳤다: 손 글에는 증명 안에 빈 줄이 있다(`ne-marshal-bool`의 첫 오류 656줄은 `marshal` 안이다). 범위는 이제 다음 0열 줄까지다. 앞의 결과는 다시 평가해도 같다.
+- `uses.py`(logs/121): 고정 틀 정리 32개(Checkpoint, AttestationData 포함)가 Gen1cX4 선언을 따라가도 손 `*_main`에 닿지 않는다. 대조군(`cp_size_main`을 그대로 쓴 정리)은 잡힌다. Nested 생성 모듈은 import 닫힘에 손 `Fk.NeAccept`·`Fk.NeReject`가 들어 있다(`Fk.LcReject`를 거쳐). 그래도 손 주 정리는 쓰지 않는다.
+- 증인 다섯(WitBvR, WitBl257, WitBlM257, WitBlRI, WitBlR)은 손 모듈의 보조 항목(`bl2048`, `bvRO` 등)을 쓰므로 그 손 모듈을 함께 import한다(`witness.py --extra-import`, WitLcI와 같은 방식).
+- 조합(`compose`)에는 따로 변이가 없다. 그것이 쓰는 accept·marshal 정리의 변이가 덮는다.

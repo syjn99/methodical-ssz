@@ -281,6 +281,22 @@ def leaves(fields):
             yield (f["k"], f.get("n", f.get("w")))
 
 
+def basic_gate(desc, Dsz, Dun):
+    """Gate of the hand-case templates of gen/x4 types: a fixed type has SizeSSZ = `mov $fixed_size,%eax; retq`
+    and the decoder's length check `cmp $fixed_size,%rcx`; a variable type's first `cmp $imm,%rcx` of the
+    decoder is its fixed part size. Raises ValueError otherwise."""
+    fs, fp = desc["fixed_size"], desc["fixed_part_size"]
+    un = [t for k, t in Dun if k == "instr"]
+    cmp = [t for t in un if re.fullmatch(r"cmp \$0x[0-9a-f]+,%rcx", t)]
+    if fs is not None:
+        sz = [t for k, t in Dsz if k == "instr"]
+        if sz != [f"mov ${hex(fs)},%eax", "retq"]:
+            raise ValueError(f"SizeSSZ is {sz}, not `mov ${hex(fs)},%eax; retq`")
+    if not cmp or cmp[0] != f"cmp ${hex(fp)},%rcx":
+        raise ValueError(f"decoder's first length check {cmp[:1]} is not cmp ${hex(fp)},%rcx (fixed part {fp})")
+    return {"fixed_size": fs, "fixed_part_size": fp}
+
+
 def desc_gate(desc, Dsz, Dun, Dma):
     """The Desc decides which template may be used: fixed size (SizeSSZ immediate, decoder length check),
     one makeslice of the byte-vector length per byte vector (in order), one newobject per container field,

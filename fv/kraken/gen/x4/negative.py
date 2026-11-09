@@ -63,6 +63,28 @@ CASES = [  # id, type, method, designated obligation, old instruction, new instr
     ("ad-accept-ld", "prysm.AttestationData", "UnmarshalSSZ", "accept", "mov 0x8(%rbx),%rdx", "mov 0x10(%rbx),%rdx"),
     ("ad-rsize-cmp", "prysm.AttestationData", "UnmarshalSSZ", "reject_size", "cmp $0x80,%rcx", "cmp $0x81,%rcx"),
     ("ad-marshal-add", "prysm.AttestationData", "MarshalSSZTo", "marshal", "add $0x8,%rdx", "add $0x10,%rdx"),
+    ("bv-size-imm", "BitVec", "SizeSSZ", "size", "mov $0x1,%eax", "mov $0x2,%eax"),
+    ("bv-accept-st", "BitVec", "UnmarshalSSZ", "accept", "movq $0x1,0x8(%rdx)", "movq $0x2,0x8(%rdx)"),
+    ("bv-rsize-cmp", "BitVec", "UnmarshalSSZ", "reject_size", "cmp $0x1,%rcx", "cmp $0x2,%rcx"),
+    ("bv-pad-ebx", "BitVec", "UnmarshalSSZ", "reject_padding", "mov $0x5,%ebx", "mov $0x6,%ebx"),
+    ("bv-marshal-lea", "BitVec", "MarshalSSZTo", "marshal", "lea 0x1(%rdx),%r9", "lea 0x2(%rdx),%r9"),
+    ("fv-size-imm", "FixedVec", "SizeSSZ", "size", "mov $0x40,%eax", "mov $0x41,%eax"),
+    ("fv-accept-st", "FixedVec", "UnmarshalSSZ", "accept", "movq $0x4,0x28(%rdx)", "movq $0x5,0x28(%rdx)"),
+    ("fv-rsize-cmp", "FixedVec", "UnmarshalSSZ", "reject_size", "cmp $0x40,%rcx", "cmp $0x41,%rcx"),
+    ("fv-marshal-ld", "FixedVec", "MarshalSSZTo", "marshal", "mov 0x20(%rdx),%r8", "mov 0x18(%rdx),%r8"),
+    ("fv-mrej-cmp", "FixedVec", "MarshalSSZTo", "marshal_reject", "cmpq $0x4,0x28(%rdx)", "cmpq $0x5,0x28(%rdx)"),
+    ("bl-size-add", "BitL", "SizeSSZ", "size", "add $0x4,%rax", "add $0x5,%rax"),
+    ("bl-accept-st", "BitL", "UnmarshalSSZ", "accept", "mov %rdx,0x10(%rsi)", "mov %rdx,0x18(%rsi)"),
+    ("bl-short-cmp", "BitL", "UnmarshalSSZ", "reject_short", "cmp $0x4,%rcx", "cmp $0x3,%rcx"),
+    ("bl-off-cmp", "BitL", "UnmarshalSSZ", "reject_offset", "cmp $0x4,%rdx", "cmp $0x5,%rdx"),
+    ("bl-inv-ebx", "BitL", "UnmarshalSSZ", "reject_invalid", "mov $0x5,%ebx", "mov $0x6,%ebx"),
+    ("bl-marshal-ld", "BitL", "MarshalSSZTo", "marshal", "mov 0x70(%rsp),%rsi", "mov 0x68(%rsp),%rsi"),
+    ("bl-mrej-ebx", "BitL", "MarshalSSZTo", "marshal_reject", "mov $0x5,%ebx", "mov $0x6,%ebx"),
+    ("ne-size-add", "Nested", "SizeSSZ", "size", "add $0x20,%rax", "add $0x21,%rax"),
+    ("ne-accept-cap", "Nested", "UnmarshalSSZ", "accept", "mov $0x10,%ecx", "mov $0x11,%ecx"),
+    ("ne-short-cmp", "Nested", "UnmarshalSSZ", "reject_short", "cmp $0x1c,%rcx", "cmp $0x1b,%rcx"),
+    ("ne-off-cmp", "Nested", "UnmarshalSSZ", "reject_offset", "cmp $0x1c,%rdx", "cmp $0x1d,%rdx"),
+    ("ne-marshal-bool", "Nested", "MarshalSSZTo", "marshal", "movb $0x1,-0x1(%rdx,%rbx,1)", "movb $0x2,-0x1(%rdx,%rbx,1)"),
     # statement mutation (method "stmt"): the generated composition must fail if it claims another length
     ("sc-compose-len", "Scalars", "stmt", "compose", "st'.data.regs.rbx = dlen + 16", "st'.data.regs.rbx = dlen + 17"),
     ("lu-compose-len", "ListU64", "stmt", "compose", "st'.data.regs.rbx.toNat = dlen.toNat + 4 + 8 * n", "st'.data.regs.rbx.toNat = dlen.toNat + 5 + 8 * n"),
@@ -88,8 +110,10 @@ def norm_name(ty):
 
 
 def theorem_range(lines, name):
+    """1-based [first, last] line of a theorem: up to the next column-0 line (hand text copied by
+    anchor.py can have blank lines inside a proof)."""
     lo = next(i for i, l in enumerate(lines) if l.startswith(f"theorem {name} ")) + 1
-    hi = next(i for i in range(lo, len(lines)) if lines[i] == "") + 1
+    hi = next((i for i in range(lo, len(lines)) if lines[i] and not lines[i][0].isspace()), len(lines))
     return [lo, hi]
 
 

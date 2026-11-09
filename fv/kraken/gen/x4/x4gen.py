@@ -2532,7 +2532,7 @@ def main():
     try:
         if any(f["kind"] == "list" for f in desc["fields"]):
             return main_list(a, key, desc, dsha)
-        if any(f["kind"] in ("byteVector", "container") for f in desc["fields"]):
+        if any(f["kind"] in ("byteVector", "container", "bitList", "bitVector") for f in desc["fields"]):
             return main_anchor(a, key, desc, dsha)
         F = Fields(desc, LAYOUT["types"][t])
         check_offsets(F, directives(os.path.join(NORM, f"target.{t}.UnmarshalSSZ.S")))
@@ -2873,6 +2873,29 @@ ANCHOR_HAND = {
                         "rows": [("size", "ad_size_main", "SizeSSZ"), ("accept", "ad_accept_main", "UnmarshalSSZ"),
                                  ("reject_size", "ad_reject_size_main", "UnmarshalSSZ"),
                                  ("marshal", "ad_marshal_main", "MarshalSSZTo")]},
+    # hand types of the gen/x4 target package (Go 1.26.3 ELF): the same anchored mode, basic Desc gate
+    "BitVec": {"own": ["BvAccept", "BvSpec", "Compose"],
+               "rows": [("size", "bv_size_main", "SizeSSZ"), ("accept", "bv_accept_main", "UnmarshalSSZ"),
+                        ("reject_size", "bv_reject_size_main", "UnmarshalSSZ"),
+                        ("reject_padding", "bv_reject_padding_main", "UnmarshalSSZ"),
+                        ("marshal", "bv_marshal_main", "MarshalSSZTo"), ("compose", "bv_unmarshal_then_marshal", None)]},
+    "FixedVec": {"own": ["FvLoop", "FvAccept", "FvSmall", "FvMarshal"],
+                 "rows": [("size", "fv_size_main", "SizeSSZ"), ("accept", "fv_accept_main", "UnmarshalSSZ"),
+                          ("reject_size", "fv_reject_size_main", "UnmarshalSSZ"),
+                          ("marshal", "fv_marshal_main", "MarshalSSZTo"),
+                          ("marshal_reject", "fv_marshal_reject_main", "MarshalSSZTo")]},
+    "BitL": {"own": ["BlMarshal", "BlAccept", "BlReject", "BlSpec"],
+             "rows": [("size", "bl_size_main", "SizeSSZ"), ("accept", "bl_accept_main", "UnmarshalSSZ"),
+                      ("reject_short", "bl_reject_short_main", "UnmarshalSSZ"),
+                      ("reject_offset", "bl_reject_offset_main", "UnmarshalSSZ"),
+                      ("reject_invalid", "bl_reject_invalid_main", "UnmarshalSSZ"),
+                      ("marshal", "bl_marshal_main", "MarshalSSZTo"),
+                      ("marshal_reject", "bl_marshal_reject_main", "MarshalSSZTo")]},
+    "Nested": {"own": ["NeAccept", "NeReject", "NeSize", "NeMarshalLoop", "NeMarshal"],
+               "rows": [("size", "ne_size_main", "SizeSSZ"), ("accept", "ne_accept_main", "UnmarshalSSZ"),
+                        ("reject_short", "ne_reject_short_main", "UnmarshalSSZ"),
+                        ("reject_offset", "ne_reject_offset_main", "UnmarshalSSZ"),
+                        ("marshal", "ne_marshal_main", "MarshalSSZTo")]},
 }
 
 
@@ -2880,13 +2903,15 @@ def main_anchor(a, key, desc, dsha, target_norm=None, target_prefix=None, new_pr
     """Fixed container with byte-vector/container fields: the anchored hand templates of anchor.py.
     target_norm/target_prefix/new_prefix retarget the templates to other code (X5)."""
     t = key[1]
-    if not key[0].endswith("/prysm") or t not in ANCHOR_HAND:
+    prysm = key[0].endswith("/prysm")
+    if t not in ANCHOR_HAND or prysm != (t in ("Checkpoint", "AttestationData")):
         raise ValueError(f"no anchored hand template for {key[0]}.{t}")
     H = ANCHOR_HAND[t]
-    hp, cp = f"target_prysm.{t}", f"Prysm{t}"
+    hp, cp = (f"target_prysm.{t}", f"Prysm{t}") if prysm else (f"target.{t}", t)
     tn, tp, npf = target_norm or NORM, target_prefix or hp, new_prefix or cp
     S = {m: (os.path.join(NORM, f"{hp}.{m}.S"), os.path.join(tn, f"{tp}.{m}.S")) for m in ("SizeSSZ", "UnmarshalSSZ", "MarshalSSZTo")}
-    gate = anchor.desc_gate(desc, *[anchor.directives(S[m][1]) for m in ("SizeSSZ", "UnmarshalSSZ", "MarshalSSZTo")])
+    D3 = [anchor.directives(S[m][1]) for m in ("SizeSSZ", "UnmarshalSSZ", "MarshalSSZTo")]
+    gate = anchor.desc_gate(desc, *D3) if prysm else anchor.basic_gate(desc, *D3[:2])
     ns = a.ns or f"Gen1cX4.{t}"
     only = a.only.split(",") if a.only != ap_default() else [r[0] for r in H["rows"]]
     rows = [r for r in H["rows"] if r[0] in only]

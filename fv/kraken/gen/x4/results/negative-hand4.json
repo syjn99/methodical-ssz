@@ -1,0 +1,668 @@
+{
+ "schema": "fvphase1c.x4-negative/1",
+ "cases": 44,
+ "as_expected": 44,
+ "rows": [
+  {
+   "id": "bv-size-imm",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.bv_size_imm_mutant.size",
+   "mutation": "'mov $0x1,%eax' -> 'mov $0x2,%eax'",
+   "exit": "1",
+   "first_error": "line 31: unsolved goals",
+   "theorem_lines": [
+    31,
+    42
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bv-size-imm",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.bv_size_imm_control.size",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    31,
+    42
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bv-accept-st",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.bv_accept_st_mutant.accept",
+   "mutation": "'movq $0x1,0x8(%rdx)' -> 'movq $0x2,0x8(%rdx)'",
+   "exit": "1",
+   "first_error": "line 336: ecancel: could not automatically solve goal (Eq ((Int.toBytes 8 rax3.toBitVec.toInt).At rax.toBitVec) \u22c6",
+   "theorem_lines": [
+    115,
+    342
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bv-accept-st",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.bv_accept_st_control.accept",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    115,
+    342
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bv-rsize-cmp",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.bv_rsize_cmp_mutant.reject_size",
+   "mutation": "'cmp $0x1,%rcx' -> 'cmp $0x2,%rcx'",
+   "exit": "1",
+   "first_error": "line 77: omega could not prove the goal:",
+   "theorem_lines": [
+    40,
+    99
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bv-rsize-cmp",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.bv_rsize_cmp_control.reject_size",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    40,
+    99
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bv-pad-ebx",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.bv_pad_ebx_mutant.reject_padding",
+   "mutation": "'mov $0x5,%ebx' -> 'mov $0x6,%ebx'",
+   "exit": "1",
+   "first_error": "line 295: Tactic `rfl` failed: The left-hand side",
+   "theorem_lines": [
+    151,
+    330
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bv-pad-ebx",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.bv_pad_ebx_control.reject_padding",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    151,
+    330
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bv-marshal-lea",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.bv_marshal_lea_mutant.marshal",
+   "mutation": "'lea 0x1(%rdx),%r9' -> 'lea 0x2(%rdx),%r9'",
+   "exit": "1",
+   "first_error": "line 241: omega could not prove the goal:",
+   "theorem_lines": [
+    117,
+    290
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bv-marshal-lea",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.bv_marshal_lea_control.marshal",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    117,
+    290
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "fv-size-imm",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.fv_size_imm_mutant.size",
+   "mutation": "'mov $0x40,%eax' -> 'mov $0x41,%eax'",
+   "exit": "1",
+   "first_error": "line 25: unsolved goals",
+   "theorem_lines": [
+    25,
+    36
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "fv-size-imm",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.fv_size_imm_control.size",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    25,
+    36
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "fv-accept-st",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.fv_accept_st_mutant.accept",
+   "mutation": "'movq $0x4,0x28(%rdx)' -> 'movq $0x5,0x28(%rdx)'",
+   "exit": "1",
+   "first_error": "line 366: ecancel: could not automatically solve goal (Eq (ws.At (rbx.toBitVec + 32)) \u22c6",
+   "theorem_lines": [
+    227,
+    397
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "fv-accept-st",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.fv_accept_st_control.accept",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    227,
+    397
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "fv-rsize-cmp",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.fv_rsize_cmp_mutant.reject_size",
+   "mutation": "'cmp $0x40,%rcx' -> 'cmp $0x41,%rcx'",
+   "exit": "1",
+   "first_error": "line 71: omega could not prove the goal:",
+   "theorem_lines": [
+    35,
+    93
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "fv-rsize-cmp",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.fv_rsize_cmp_control.reject_size",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    35,
+    93
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "fv-marshal-ld",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.fv_marshal_ld_mutant.marshal",
+   "mutation": "'mov 0x20(%rdx),%r8' -> 'mov 0x18(%rdx),%r8'",
+   "exit": "1",
+   "first_error": "line 334: omega could not prove the goal:",
+   "theorem_lines": [
+    235,
+    395
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "fv-marshal-ld",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.fv_marshal_ld_control.marshal",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    235,
+    395
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "fv-mrej-cmp",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.fv_mrej_cmp_mutant.marshal_reject",
+   "mutation": "'cmpq $0x4,0x28(%rdx)' -> 'cmpq $0x5,0x28(%rdx)'",
+   "exit": "1",
+   "first_error": "line 171: Type mismatch",
+   "theorem_lines": [
+    74,
+    203
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "fv-mrej-cmp",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.fv_mrej_cmp_control.marshal_reject",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    74,
+    203
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bl-size-add",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.bl_size_add_mutant.size",
+   "mutation": "'add $0x4,%rax' -> 'add $0x5,%rax'",
+   "exit": "1",
+   "first_error": "line 47: 'show' tactic failed, pattern",
+   "theorem_lines": [
+    32,
+    50
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bl-size-add",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.bl_size_add_control.size",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    32,
+    50
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bl-accept-st",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.bl_accept_st_mutant.accept",
+   "mutation": "'mov %rdx,0x10(%rsi)' -> 'mov %rdx,0x18(%rsi)'",
+   "exit": "1",
+   "first_error": "line 350: omega could not prove the goal:",
+   "theorem_lines": [
+    87,
+    406
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bl-accept-st",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.bl_accept_st_control.accept",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    87,
+    406
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bl-short-cmp",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.bl_short_cmp_mutant.reject_short",
+   "mutation": "'cmp $0x4,%rcx' -> 'cmp $0x3,%rcx'",
+   "exit": "1",
+   "first_error": "line 76: omega could not prove the goal:",
+   "theorem_lines": [
+    41,
+    103
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bl-short-cmp",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.bl_short_cmp_control.reject_short",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    41,
+    103
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bl-off-cmp",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.bl_off_cmp_mutant.reject_offset",
+   "mutation": "'cmp $0x4,%rdx' -> 'cmp $0x5,%rdx'",
+   "exit": "1",
+   "first_error": "line 90: Application type mismatch: The argument",
+   "theorem_lines": [
+    43,
+    117
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bl-off-cmp",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.bl_off_cmp_control.reject_offset",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    43,
+    117
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bl-inv-ebx",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.bl_inv_ebx_mutant.reject_invalid",
+   "mutation": "'mov $0x5,%ebx' -> 'mov $0x6,%ebx'",
+   "exit": "1",
+   "first_error": "line 261: Tactic `rfl` failed: The left-hand side",
+   "theorem_lines": [
+    89,
+    297
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bl-inv-ebx",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.bl_inv_ebx_control.reject_invalid",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    89,
+    297
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bl-marshal-ld",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.bl_marshal_ld_mutant.marshal",
+   "mutation": "'mov 0x70(%rsp),%rsi' -> 'mov 0x68(%rsp),%rsi'",
+   "exit": "1",
+   "first_error": "line 334: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+   "theorem_lines": [
+    120,
+    363
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bl-marshal-ld",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.bl_marshal_ld_control.marshal",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    120,
+    363
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bl-mrej-ebx",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.bl_mrej_ebx_mutant.marshal_reject",
+   "mutation": "'mov $0x5,%ebx' -> 'mov $0x6,%ebx'",
+   "exit": "1",
+   "first_error": "line 261: Tactic `rfl` failed: The left-hand side",
+   "theorem_lines": [
+    97,
+    303
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "bl-mrej-ebx",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.bl_mrej_ebx_control.marshal_reject",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    97,
+    303
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "ne-size-add",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.ne_size_add_mutant.size",
+   "mutation": "'add $0x20,%rax' -> 'add $0x21,%rax'",
+   "exit": "1",
+   "first_error": "line 95: 'show' tactic failed, pattern",
+   "theorem_lines": [
+    38,
+    100
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "ne-size-add",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.ne_size_add_control.size",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    38,
+    100
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "ne-accept-cap",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.ne_accept_cap_mutant.accept",
+   "mutation": "'mov $0x10,%ecx' -> 'mov $0x11,%ecx'",
+   "exit": "1",
+   "first_error": "line 309: Tactic `rfl` failed: The left-hand side",
+   "theorem_lines": [
+    154,
+    447
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "ne-accept-cap",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.ne_accept_cap_control.accept",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    154,
+    447
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "ne-short-cmp",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.ne_short_cmp_mutant.reject_short",
+   "mutation": "'cmp $0x1c,%rcx' -> 'cmp $0x1b,%rcx'",
+   "exit": "1",
+   "first_error": "line 81: omega could not prove the goal:",
+   "theorem_lines": [
+    46,
+    108
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "ne-short-cmp",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.ne_short_cmp_control.reject_short",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    46,
+    108
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "ne-off-cmp",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.ne_off_cmp_mutant.reject_offset",
+   "mutation": "'cmp $0x1c,%rdx' -> 'cmp $0x1d,%rdx'",
+   "exit": "1",
+   "first_error": "line 106: Application type mismatch: The argument",
+   "theorem_lines": [
+    59,
+    133
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "ne-off-cmp",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.ne_off_cmp_control.reject_offset",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    59,
+    133
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "ne-marshal-bool",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.ne_marshal_bool_mutant.marshal",
+   "mutation": "'movb $0x1,-0x1(%rdx,%rbx,1)' -> 'movb $0x2,-0x1(%rdx,%rbx,1)'",
+   "exit": "1",
+   "first_error": "line 656: ecancel: could not automatically solve goal (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At rsp.toBitVec) \u22c6",
+   "theorem_lines": [
+    386,
+    693
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  },
+  {
+   "id": "ne-marshal-bool",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.ne_marshal_bool_control.marshal",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    386,
+    693
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/120"
+  }
+ ],
+ "note": "evaluated after the theorem-range fix (ranges end at the next column-0 line; ne-marshal-bool first error line 656 is inside theorem marshal, which has a blank line in its hand text)"
+}

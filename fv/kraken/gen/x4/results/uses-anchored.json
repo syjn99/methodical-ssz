@@ -1,0 +1,207 @@
+{
+ "rows": [
+  {
+   "name": "Gen1cX4.BitVec.size",
+   "gen1cx4_decls_followed": 4,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.BitVec.accept",
+   "gen1cx4_decls_followed": 53,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.BitVec.reject_size",
+   "gen1cx4_decls_followed": 10,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.BitVec.reject_padding",
+   "gen1cx4_decls_followed": 53,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.BitVec.marshal",
+   "gen1cx4_decls_followed": 45,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.BitVec.compose",
+   "gen1cx4_decls_followed": 112,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.FixedVec.size",
+   "gen1cx4_decls_followed": 4,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.FixedVec.accept",
+   "gen1cx4_decls_followed": 47,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.FixedVec.reject_size",
+   "gen1cx4_decls_followed": 10,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.FixedVec.marshal",
+   "gen1cx4_decls_followed": 70,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.FixedVec.marshal_reject",
+   "gen1cx4_decls_followed": 24,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.BitL.size",
+   "gen1cx4_decls_followed": 5,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.BitL.accept",
+   "gen1cx4_decls_followed": 50,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.BitL.reject_short",
+   "gen1cx4_decls_followed": 10,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.BitL.reject_offset",
+   "gen1cx4_decls_followed": 10,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.BitL.reject_invalid",
+   "gen1cx4_decls_followed": 37,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.BitL.marshal",
+   "gen1cx4_decls_followed": 50,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.BitL.marshal_reject",
+   "gen1cx4_decls_followed": 44,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.Nested.size",
+   "gen1cx4_decls_followed": 9,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.Nested.accept",
+   "gen1cx4_decls_followed": 72,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.Nested.reject_short",
+   "gen1cx4_decls_followed": 11,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.Nested.reject_offset",
+   "gen1cx4_decls_followed": 13,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.Nested.marshal",
+   "gen1cx4_decls_followed": 67,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.Checkpoint.size",
+   "gen1cx4_decls_followed": 4,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.Checkpoint.accept",
+   "gen1cx4_decls_followed": 23,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.Checkpoint.reject_size",
+   "gen1cx4_decls_followed": 10,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.Checkpoint.marshal",
+   "gen1cx4_decls_followed": 13,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.Checkpoint.marshal_reject",
+   "gen1cx4_decls_followed": 12,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.AttestationData.size",
+   "gen1cx4_decls_followed": 4,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.AttestationData.accept",
+   "gen1cx4_decls_followed": 46,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.AttestationData.reject_size",
+   "gen1cx4_decls_followed": 10,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.AttestationData.marshal",
+   "gen1cx4_decls_followed": 53,
+   "hand_mains_used": [],
+   "ok": true
+  },
+  {
+   "name": "Gen1cX4.UsesCtl.c",
+   "gen1cx4_decls_followed": 4,
+   "hand_mains_used": [
+    "cp_size_main"
+   ],
+   "ok": true
+  }
+ ],
+ "none_used": true,
+ "log": "logs/121",
+ "what": "gen/x4/uses.py: hand *_main theorems reachable from each generated anchored theorem through Gen1cX4 declarations; control Gen1cX4.UsesCtl.c := cp_size_main must report it"
+}

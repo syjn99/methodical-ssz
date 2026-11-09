@@ -1,0 +1,246 @@
+{
+ "schema": "fvphase1c.x4-compare/1",
+ "log": "run logs/120 (smart unfolding off)",
+ "rows": [
+  {
+   "gen": "Gen1cX4.BitVec.size_stmt",
+   "hand": "bv_size_main",
+   "expect": "SAME",
+   "why": "size",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.BitVec.accept_stmt",
+   "hand": "bv_accept_main",
+   "expect": "SAME",
+   "why": "accept",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.BitVec.reject_size_stmt",
+   "hand": "bv_reject_size_main",
+   "expect": "SAME",
+   "why": "reject r1",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.BitVec.reject_padding_stmt",
+   "hand": "bv_reject_padding_main",
+   "expect": "SAME",
+   "why": "reject r2",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.BitVec.marshal_stmt",
+   "hand": "bv_marshal_main",
+   "expect": "SAME",
+   "why": "marshal",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.BitVec.compose_stmt",
+   "hand": "bv_unmarshal_then_marshal",
+   "expect": "SAME",
+   "why": "compose_hupd",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.FixedVec.size_stmt",
+   "hand": "fv_size_main",
+   "expect": "SAME",
+   "why": "size",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.FixedVec.accept_stmt",
+   "hand": "fv_accept_main",
+   "expect": "SAME",
+   "why": "accept",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.FixedVec.reject_size_stmt",
+   "hand": "fv_reject_size_main",
+   "expect": "SAME",
+   "why": "reject r1",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.FixedVec.marshal_stmt",
+   "hand": "fv_marshal_main",
+   "expect": "SAME",
+   "why": "marshal",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.FixedVec.marshal_reject_stmt",
+   "hand": "fv_marshal_reject_main",
+   "expect": "SAME",
+   "why": "marshal_reject r2",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.BitL.size_stmt",
+   "hand": "bl_size_main",
+   "expect": "SAME",
+   "why": "size",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.BitL.accept_stmt",
+   "hand": "bl_accept_main",
+   "expect": "SAME",
+   "why": "accept",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.BitL.reject_short_stmt",
+   "hand": "bl_reject_short_main",
+   "expect": "SAME",
+   "why": "reject r1",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.BitL.reject_offset_stmt",
+   "hand": "bl_reject_offset_main",
+   "expect": "SAME",
+   "why": "reject r2",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.BitL.reject_invalid_stmt",
+   "hand": "bl_reject_invalid_main",
+   "expect": "SAME",
+   "why": "reject r3",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.BitL.marshal_stmt",
+   "hand": "bl_marshal_main",
+   "expect": "SAME",
+   "why": "marshal",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.BitL.marshal_reject_stmt",
+   "hand": "bl_marshal_reject_main",
+   "expect": "SAME",
+   "why": "marshal_reject r1",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.Nested.size_stmt",
+   "hand": "ne_size_main",
+   "expect": "SAME",
+   "why": "size",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.Nested.accept_stmt",
+   "hand": "ne_accept_main",
+   "expect": "SAME",
+   "why": "accept",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.Nested.reject_short_stmt",
+   "hand": "ne_reject_short_main",
+   "expect": "SAME",
+   "why": "reject r1",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.Nested.reject_offset_stmt",
+   "hand": "ne_reject_offset_main",
+   "expect": "SAME",
+   "why": "reject r2",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.Nested.marshal_stmt",
+   "hand": "ne_marshal_main",
+   "expect": "SAME",
+   "why": "marshal",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.BitVec.size_stmt",
+   "hand": "fv_size_main",
+   "expect": "DIFF",
+   "why": "control",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.BitVec.reject_size_stmt",
+   "hand": "bv_reject_padding_main",
+   "expect": "DIFF",
+   "why": "control",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.FixedVec.marshal_stmt",
+   "hand": "fv_marshal_reject_main",
+   "expect": "DIFF",
+   "why": "control",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.BitL.reject_short_stmt",
+   "hand": "bl_reject_offset_main",
+   "expect": "DIFF",
+   "why": "control",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.BitL.marshal_stmt",
+   "hand": "bl_marshal_reject_main",
+   "expect": "DIFF",
+   "why": "control",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.Nested.reject_short_stmt",
+   "hand": "ne_reject_offset_main",
+   "expect": "DIFF",
+   "why": "control",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.Nested.accept_stmt",
+   "hand": "bl_accept_main",
+   "expect": "DIFF",
+   "why": "control",
+   "result": "DIFF",
+   "as_expected": true
+  }
+ ]
+}
