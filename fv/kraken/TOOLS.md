@@ -13,6 +13,9 @@
 | Prysm 축약 타입의 출처 | v7.1.8 `51b5a75ebbadf05af22bd2601b5baf7a9e99b66d`, Checkpoint·AttestationData 스키마 | `target/prysm/types.go` |
 | gohashtree, go-bitfield | `v0.0.5-beta`, `v0.0.0-20260504143531-5cbb6d0f5f2e` | `go.mod` |
 | objdump, LLVM, clang | `go tool objdump -gnu`, `llvm-objdump`(독립 디코딩), `clang --target=x86_64-linux-gnu`(재조립) | `link/check.py`의 `tool()` |
+| 1c Prysm 소스 | `ab15ff70c72a568c870b2de662474685a95de294`(slice + `ssz-size`), 생성은 임시 트리에서만. 대체된 이력: `5ac1d028f5`/`45394e5` | `prysm/go1.26.10/MANIFEST.md` |
+| 1c Go (실험 기준선) | 1.26.10, 호스트 linux/arm64에서 linux/amd64 교차 컴파일, `GOAMD64=v1 CGO_ENABLED=0 -tags purego -trimpath`. Go 1.26.3 정리는 옮기지 않는다 | `prysm/go1.26.10/build-ids.txt` |
+| 1c ELF | sha256 `c6403c02…911e`(커밋하지 않음, 재빌드 명령은 MANIFEST). 링크 표 `prysm/go1.26.10/link/RESULT` | `prysm/go1.26.10/build-ids.txt` |
 | vcgen 평가(채택 안 함) | sgraf812/kraken `a4cce2ec6d840376e4dbbf4a11a777ebdf42a3cb`, `nightly-2026-10-29` | `vcgen/` |
 
 ## 대상 생성
@@ -39,6 +42,8 @@ fv/kraken/link/build.sh          # ELF, objdump, nm, norm/*.S, data/*.data, buil
 | `lean/tools/wit/` 생성기 | `Fk/Wit*.lean` 생성 | `lean/tools/wit/README.md` |
 | `lean/tools/RegressFix2.lean` | 현재 계약의 회귀 검사 | `cd fv/kraken/lean && lake env lean tools/RegressFix2.lean` |
 | `negative/run.sh` | 부정 시험 16개, `negative/RESULT` | `fv/kraken/negative/run.sh <워크트리 밖 scratch 디렉터리>` |
+| `gen/x4/` (1c) | 생성기: Desc → 문장, 지시 목록 → 증명, `Gen1cX4` 라이브러리. 비교·공리·부정 시험·`uses.py` | `gen/x4/README.md`, `gen/x4/run_checks.sh`(gate, `gen/tools/memcap.py` 6 GiB 세션·프로세스) |
+| `gen/x5/` (1c) | Go 1.26.10 링크 표(`conv.py --norm`, `x5data.py`, `check.py`)와 Prysm 적용 표 | `prysm/go1.26.10/X5.md` 4절 |
 | `semtest/` | F1·F2 Go 회귀 시험, x86-64 하드웨어 대조 스크립트 | `GOROOT=$(go env GOROOT) go test ./fv/kraken/semtest/` |
 
 `go run`과 `go test`는 `GOROOT=$(go env GOROOT)`로 돌린다.

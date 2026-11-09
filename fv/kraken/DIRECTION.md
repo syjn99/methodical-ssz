@@ -31,7 +31,7 @@ methodical-ssz가 생성한 x86-64 코드가 EthLib SSZ 명세대로 수용·거
 
 ## 5. 고정 기준
 
-생성기 소스 `698c202`, 병합 기준 `2d0150b`. Go 1.26.3 linux/amd64 GOAMD64=v1 purego trimpath CGO_ENABLED=0. Kraken `6064eec`, EthLib `8621856`, Lean nightly-2026-09-21. ELF `9c850c97…c501`. Prysm 축약 두 타입은 v7.1.8 `51b5a75`. 1c의 Prysm 고정 커밋은 `5ac1d028f5`(핀 브랜치 `45394e5`), fork Fulu, 생성은 임시 워크트리에서만.
+생성기 소스 `698c202`, 병합 기준 `2d0150b`. Go 1.26.3 linux/amd64 GOAMD64=v1 purego trimpath CGO_ENABLED=0. Kraken `6064eec`, EthLib `8621856`, Lean nightly-2026-09-21. ELF `9c850c97…c501`. Prysm 축약 두 타입은 v7.1.8 `51b5a75`. 1c의 Prysm 소스는 `ab15ff70c72a568c870b2de662474685a95de294`(slice + `ssz-size`), fork Fulu, 생성은 임시 워크트리에서만. 고정 배열 핀과 같다고 주장하지 않는다. 1c의 대상 컴파일러는 Go 1.26.10이다. 새 실험 기준선이며 이름공간이 따로다(`prysm/go1.26.10/MANIFEST.md`, ELF `c6403c02…911e`). Go 1.26.3 ELF `9c850c97…c501`의 정리는 이 기계어에 옮겨지지 않는다. 대체된 이력: 1c 핀 `5ac1d028f5`(핀 브랜치 `45394e5`, `syjn99/prysm`에서 얻을 수 없음), 1c 컴파일러 Go 1.26.3. 수정 3의 값(위 문장의 Go 1.26.3과 ELF)은 바뀌지 않는다.
 
 ## 6. 규칙 (요약, 전문은 fv/AGENTS.md)
 

@@ -16,6 +16,8 @@
 
 수정 3에서 닫은 것: 링크 검사 (f)(g)(h)·역할 분류·`golits.go` 삭제(Lake 입력과 ELF 데이터 include로 대체), 오류 증인의 타입 기술자와 초기화된 오류 전역, Scalars 비nil 거부, 사후조건 잔여 넷, ListC 원소 오프셋 순서 거부(첫 쌍), 게이트 표 정정.
 
+1c(phase1c, 생성기와 Prysm 목록)는 10절이다. 게이트 1c 미통과.
+
 수치(수정 3 끝, 차가운 프로젝트 빌드 뒤):
 
 - `lake build`: 867 jobs, 성공(차가운 프로젝트 빌드 Built 163, 의존성은 따뜻함, 메모리 감시 아래).
@@ -235,3 +237,66 @@ git diff --exit-code fv/kraken/AXIOMS.txt fv/kraken/AXIOMS-ALL.txt fv/kraken/lin
 5. Go 1.26.10 ELF는 자기 데이터 파일과 표를 자기 이름공간에 둔다. Go 1.26.3 값을 다시 쓰지 않는다.
 6. 오류 전역은 주소만 뽑는다. 값은 런타임 초기화가 정한다. 거부 정리의 비nil 결론은 `e0 ≠ 0` 같은 초기화 전제를 둔다.
 7. 증인은 오류 전역을 초기화된 값으로 두고 `%w` 타입 워드가 ELF 기술자(`errorStringPtrType`)를 가리키게 한다. goval이 전역의 초기화와 기술자의 Size_·Kind_를 검사한다.
+
+## 10. 1c: 생성기와 Prysm 목록 (phase1c 스트림, 브랜치 `claude/ssz-fv-phase1c`)
+
+**판정: 게이트 1c 미통과.** 손 사례 9개 타입의 손 주 정리 58개는 생성기가 다시 만들었다(문장 SAME, Lean 통과). 그러나 생성 증명은 손 증명 글을 틀로 쓴 것이다. Prysm 범위 안 132개 타입 중 모든 의무를 통과한 타입은 0개다.
+상세: 스트림 보고서(`$RUN/streams/phase1c/REPORT.md`), `gen/x4/README.md`, `prysm/go1.26.10/X5.md`, `prysm/TYPES.md`, `prysm/GENERATOR-FINDINGS.md`.
+
+### 10.1 게이트 1c 표: 손 사례 9개 타입 (Go 1.26.3 ELF, `Gen1cX4`)
+
+요소 번호는 1절과 같다. "생성"의 뜻은 10.3절. 수는 `gen/x4/results/*.json`에서 센다.
+
+| 타입 | 1 문장(생성, 손과 SAME) | 2 증인(다시 겨눔) | 3 기계어 정리 | 4 링크 | 5 부정 시험(변이/기대대로) | 6 Go 값 | 생성 방식 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Scalars | 6 | 1 (조합) | 6 | PASS | 6/6 | 손 증인 값(P7 goval)만 | 지시 걷기 |
+| ListU64 | 9 | 5 | 9 | PASS | 11/11 | 같음 | 지시 걷기 + 루프 틀 |
+| ListC | 11 | 14 | 11 | PASS | 13/13 | 같음 | 걷기 + 루프 틀, marshal은 고정 틀 |
+| Checkpoint | 5 | 3 | 5 | PASS | 5/5 | 같음 | 고정 틀 |
+| AttestationData | 4 | 2 | 4 | PASS | 4/4 | 같음 | 고정 틀 |
+| BitVec | 6 | 3 | 6 | PASS | 5/5 | 같음 | 고정 틀 |
+| FixedVec | 5 | 3 | 5 | PASS | 5/5 | 같음 | 고정 틀 |
+| BitL | 7 | 6 | 7 | PASS | 7/7 | 같음 | 고정 틀 |
+| Nested | 5 | 6 | 5 | PASS | 5/5 | 같음 | 고정 틀 |
+
+- 4 링크: 생성 정리는 `Fk.Code`(이 ELF의 `.S`)를 그대로 쓴다. `link/out/RESULT` BUNDLE `91757cbd…` 그대로.
+- 2 증인: 손 증인(gen/wit 재생성)에서 적용하는 정리만 생성 정리로 바꿨다. 거부 정리 다수와 Scalars accept 등은 증인이 없다.
+- 6 Go 값: 다시 겨눈 증인 모듈에서 goval을 다시 돌리지 않았다. 증인 값은 손 증인과 같다(P7: 76/76 바이트 같음, goval 오류 0).
+- 공리: 생성 정리 모두 `propext`, `Classical.choice`, `Quot.sound`만(`axioms-*.json`).
+- `uses.py`: 고정 틀 정리 32개는 Gen1cX4 선언을 따라가도 손 `*_main`을 쓰지 않는다(대조군 잡힘).
+- 시도하지 않음(이유 있음): 손 정리가 없는 고정 목록 행(조합 행 대부분, AttestationData r2/r3·marshal_reject, reject_spec), EthLib 쪽 부분 행(`*_spec_accepts_iff`), `lum_grow_site`, `lu_reject_short_frame`.
+
+### 10.2 Prysm 범위 안 132개 타입 (Go 1.26.10, 실험 기준선)
+
+- 링크 표: 함수 136개, `conv.py --norm` + `check.py` (a)–(f) PASS, BUNDLE `1bdfc4f0…`(`prysm/go1.26.10/link/RESULT`).
+- size: 46개 타입 생성 + Lean 통과, 변이 46/46, 공리 표준만. 86개는 가변 크기라서 틀이 없다.
+- 디코더·인코더: 134개 의무 모두 생성기 단계에서 거부. 계약 부재 2(Checkpoint·AttestationData 디코더가 손 작성 `primitives.*.UnmarshalSSZ`를 부른다), 자동화 한계 132(틀이 없는 필드 조합). 고정 틀을 억지로 댄 Lean 실행 4개는 모두 오류(첫 오류는 `X5.md`).
+- 모든 의무를 통과한 타입: 0. 타입당 고정 목록 의무 평균 약 28개(전체 3676) 중 size 하나만 증명됐다.
+
+### 10.3 신뢰 항목 (1c에 더해지는 것)
+
+1. "생성"은 손 증명 글을 기계어에서 읽은 값으로 틀에 맞춘 것이다. 생성 전술 줄 중 손 증명에 글자 그대로 있는 줄: 지시 걷기 정리는 88–100%(예: Scalars accept 130/146, ListU64 정렬 거부 191/217, ListC accept 294/298), 고정 틀 정리는 `intro` 한 줄 빼고 100%. 손 증명 없이 새 모양을 증명하는 능력은 보이지 않았다.
+2. 고정 틀(`gen/x4/anchor.py`)은 코드에서 레이블 위치와 기호 피연산자만 정한다. 정규화한 함수가 손 코드와 같아야 쓴다.
+3. Go 1.26.10은 새 실험 기준선이다. Go 1.26.3 정리는 옮기지 않았다. 그 런타임 계약(makeslice, growslice, memmove, newobject, fmt.errorf …)은 Go 1.26.10 런타임 소스로 다시 읽지 않았다(미확인 가정).
+4. Prysm 손 작성 원시 타입 메서드(Slot, Epoch, ValidatorIndex, Gwei, CommitteeIndex; 함수 24개)는 명세가 없다. 계약으로 둘지 함수 명세로 증명할지는 사용자 결정 대기다. 52개 생성 타입이 이것을 부른다.
+5. Prysm 135개 타입의 Desc는 독립 명세와 대조하지 않는다(일관성 검사만). 9개 손 타입만 EthLib 명세와 대조한다.
+6. 변환기: `conv.py --norm`에 `%riz` 규칙을 더했다(인덱스 없는 SIB, 같은 주소). Go 1.26.3 변환 결과는 바이트가 같다. 검사기 `check.py`의 LLVM 줄 읽기에서 10바이트 명령어의 마지막 바이트를 버리던 결함을 고쳤다(검사가 더 엄격해짐).
+7. 호스트는 arm64다. x86-64 하드웨어 대조는 하지 않았다.
+
+### 10.4 실패 분류
+
+| 분류 | 어디서 | 수 |
+| --- | --- | --- |
+| 자동화 한계 | Prysm 디코더·인코더(틀 없음), 가변 크기 size | 132 + 86 |
+| 계약 부재 | Prysm Checkpoint·AttestationData 디코더(손 작성 primitives 호출) | 2 |
+| 새 명령어 | `%riz` 피연산자(Kraken 파서)는 변환 규칙으로 닫음(18/18 파싱) | 0 남음 |
+| 생성기 결함(sszgen 698c202) | D1: IR의 중첩 container 필드 키(출력 코드에는 영향 없음, `GENERATOR-FINDINGS.md`) | 1 |
+| 손 사례 X4 막힘 | Scalars reject_size 설계 1(3회 실패, 설계 2로 통과) | 0 남음 |
+
+우리 도구의 결함(이 스트림에서 찾고 고침): x4gen 정리 없는 모듈(리뷰 r7 S4), 부정 시험 평가기의 정리 범위(손 글의 빈 줄), memcap 세션 최대값 표기(복사본에서), `check.py` 10바이트 명령어.
+
+### 10.5 2단계(HTR) 입력
+
+- 생성기가 가진 것: Desc(독립 검사기와 결합), 고정 목록 의무, 증인 생성(gen/wit), 기호 길이·`n#64` 정규화, include 어댑터(API v3). HTR 의무도 같은 고정 목록 형식에 넣을 수 있다.
+- HTR 전에 필요한 것: 지시 걷기 틀의 범위(바이트 벡터·컨테이너 필드, 프레임 있는 함수, 함수 호출), 손 작성 primitives의 명세 결정, Go 1.26.10 런타임 계약의 재확인, 가변 크기 size 틀.
+- gohashtree 경로(HTR)는 1c에서 손대지 않았다.
