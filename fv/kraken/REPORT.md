@@ -124,6 +124,7 @@ protobuf 필드가 있는 실제 Prysm 바이너리의 증명이 아니다.
 - `semtest/f12_test.go`가 두 결함의 Go 회귀 시험이다.
 
 관찰(결함 아님): ListC 원소 오프셋 순서 오류는 `%d` 두 개의 `fmt.Errorf`라 `convT64` 두 번과 할당이 있다.
+관찰(결함 아님): `u64v` 증인 정리는 `decide`가 아니라 `simp`로 증명한다. `decide`는 9.69 GiB에서 OOM이다. 근거 `memopt/REPORT.md`.
 
 ## 6. Kraken 요청 목록
 

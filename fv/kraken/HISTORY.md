@@ -115,3 +115,13 @@ astra 리뷰: 역할 분류가 Host 바인더와 이름 가림을 구분하지 �
 | 보고서 md | 11 → 6 | 2,267 → 586 | 244K → 68K |
 | `fv/AGENTS.md` | 1 → 1 | 167 → 76 | 8K → 8K |
 | `fv/kraken` 전체 | 434 → 311 | 85,757 → 66,598 | 7,712K → 6,372K |
+
+## 8. 메모리 최적화 memopt (2026-11-09 20:31 – 21:27)
+
+커밋 `86fd060..509faff`(브랜치 `syjn99/ssz-fv-memopt`). 보고서는 `memopt/REPORT.md`다.
+9.69 GiB Linux 환경에서 `lake build`가 `Fk.WitLcM4x16`에서 OOM으로 실패했다.
+원인은 `u64v0`–`u64v3`의 `by decide`다. elaboration이 `u64Bytes`를 계산하고, 네 증명이 동시에 돈다.
+`wlcm.py`의 증명 한 줄을 `simp [u64Bytes, uintBytes]`로 바꾸고 증인 셋을 재생성했다. 명제는 바꾸지 않았다.
+수치: `WitLcM4x16` 단독 peak 13.01–13.27 GiB → 1.42 GiB(macOS 48 GiB). 9.69 GiB 컨테이너에서 원본 단독은 OOM kill, 수정본 전체 빌드는 856 jobs 성공(`memory.peak` 7.41 GiB).
+inspector diff는 `u64v` 공리 7줄(`propext`, `Quot.sound`)뿐이다. AXIOMS 1571/7975, NONSTANDARD 0. 회귀는 모두 성공했다.
+판정은 "조건부"다. 사용자 머신 재현과 독립 리뷰가 남았다.
