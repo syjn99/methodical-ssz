@@ -128,14 +128,14 @@ inspector diff는 `u64v` 공리 7줄(`propext`, `Quot.sound`)뿐이다. AXIOMS 1
 독립 리뷰(gpt-6-astra, `253a84a`)도 조건부였다. 선언 290개의 `Expr.equal` 대조에서 assertion 약화는 없었다.
 리뷰의 P1(8.2절 재현에서 캐시 재사용)과 P2 두 건(`run.sh` 종료 코드, `gen.py` 원본)은 브랜치 끝 커밋에서 고쳤다.
 
-## 9. 수정 3 링크 재설계 (2026-11-09 15:15 – 16:52 UTC, fix3 스트림)
+## 9. 수정 3 링크 재설계 (2026-11-09 15:15 – 17:25 UTC, fix3 스트림)
 
 링크 검사의 Lean·Go 소스 정규식을 지우고 같은 보증을 Lake 입력과 ELF 데이터 include로 얻었다.
 X1: `lakefile.toml`의 `Fk` `needs`에 `input_dir` 셋을 등록했다. 실험(대조군 Built 0, 1바이트 변경 시 `Fk.Code` 재빌드와 지정 정리 실패, 복원)을 거쳐 SHash와 검사 (f)를 지웠다.
 X2: `link/data.py`와 `data_include`로 22개 항목을 include했다. 손 상수 12개를 바꾸고 검사 (g)(h)·역할 분류·`golits.go`를 지웠다. 새 검사 (f)는 데이터 파일 = ELF다. 자기 시험은 24개에서 10개다.
 X3: `sc_reject_bool_err`(전제 `e0 ≠ 0`, 결론 rax ≠ 0)를 더했다. 증인 18개의 오류 전역을 초기화된 값으로, `%w` 증인 5개의 타입 기술자를 ELF 바이트로 바꿨다. goval이 둘을 검사한다.
 X4: `sc_size_main` 메모리 동일, `sc_marshal_main` r14, `ne_marshal_main` R, ListC 죽은 스택 `lcStk`.
-X5는 부분이다. 계약 `FmtErrorfDDC`, 모델, `joint_models`만 했다. 기계어 정리는 다음 세션이다.
+X5: 계약 `FmtErrorfDDC`·모델·`joint_models`(11개), 루프 보조 정리 `lcl_order`, 진입부터의 `lc_reject_offset_order_main`(첫 쌍), 증인 `WitLcO`, 부정 시험 lcorder와 대조군. 처음에는 비용 추정만으로 미루었다가 오케스트레이터 결정에 따라 했다. 원소 오류 전달("Items: %w")은 시작하지 않았다.
 X6: 게이트 표 정정(크기 동일 여덟, BitVec makeslice, ListC 5/10, 미검사 종류별 집계).
-X7: 차가운 프로젝트 빌드 859 jobs, 공리 1600/8110 NONSTANDARD 0, 검사 PASS, 자기 시험 10, 부정 시험 16, goval 79/0/2, go test PASS.
+X7(최종 코드 `f45903c`): 차가운 프로젝트 빌드 863 jobs, 공리 1627/8287 NONSTANDARD 0, 검사 PASS, 자기 시험 10, 부정 시험 18, goval 80/0/2, go test PASS.
 철회: `review/ReviewSHashFixAstra.lean`(대상 삭제), `bool_two_returns_nil` 예시(지적이 닫혀 `bool_two_returns_error`로 바꿈).

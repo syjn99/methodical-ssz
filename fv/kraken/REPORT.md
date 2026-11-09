@@ -14,16 +14,16 @@
 3. 디코더의 EthLib 양방향 수용 정리는 BitVec(1바이트)뿐이다.
 4. x86-64 하드웨어 대조를 하지 않았다. 이 호스트는 arm64다.
 
-수정 3에서 닫은 것: 링크 검사 (f)(g)(h)·역할 분류·`golits.go` 삭제(Lake 입력과 ELF 데이터 include로 대체), 오류 증인의 타입 기술자와 초기화된 오류 전역, Scalars 비nil 거부, 사후조건 잔여 넷, 게이트 표 정정.
+수정 3에서 닫은 것: 링크 검사 (f)(g)(h)·역할 분류·`golits.go` 삭제(Lake 입력과 ELF 데이터 include로 대체), 오류 증인의 타입 기술자와 초기화된 오류 전역, Scalars 비nil 거부, 사후조건 잔여 넷, ListC 원소 오프셋 순서 거부(첫 쌍), 게이트 표 정정.
 
 수치(수정 3 끝, 차가운 프로젝트 빌드 뒤):
 
-- `lake build`: 859 jobs, 성공(프로젝트 모듈 Built 159, 의존성은 따뜻함).
-- 공리: 정리 `TOTAL 1600 NONSTANDARD 0`(`AXIOMS.txt`), 모든 선언 `TOTAL 8110 NONSTANDARD 0`(`AXIOMS-ALL.txt`).
-- 시험 타입 9개. 증인 파일 79개.
+- `lake build`: 863 jobs, 성공(프로젝트 모듈 Built 161, 의존성은 따뜻함).
+- 공리: 정리 `TOTAL 1627 NONSTANDARD 0`(`AXIOMS.txt`), 모든 선언 `TOTAL 8287 NONSTANDARD 0`(`AXIOMS-ALL.txt`).
+- 시험 타입 9개. 증인 파일 80개.
 - 링크 검사 PASS(검사 (a)–(f)). 자기 시험 10개 기대대로.
-- 부정 시험 16개 기대대로(`negative/RESULT`).
-- goval: 79 파일, 위반 0, 미검사 2. 오류 증인의 타입 기술자 5곳과 오류 전역 19곳을 검사한다.
+- 부정 시험 18개 기대대로(`negative/RESULT`, FAIL 16 + 대조군 PASS 2).
+- goval: 80 파일, 위반 0, 미검사 2. 오류 증인의 타입 기술자 5곳과 오류 전역 19곳을 검사한다.
 - `go test ./fv/kraken/semtest/`: PASS(F1, F2).
 
 ## 1. 완료 단위
@@ -74,7 +74,7 @@ Scalars의 비nil 오류 연결과 Size 사후조건은 수정 3에서 닫았다
 ListU64 오류 증인의 타입 기술자와 전역은 수정 3에서 채웠다. `%d` 인수의 int 기술자 내용은 증인에 없다.
 나머지 타입은 조합이 없거나 거부 경로가 남는다.
 
-Go 값 미검사의 종류별 집계(goval, 79 파일):
+Go 값 미검사의 종류별 집계(goval, 80 파일, 수치는 수정 3 X3 시점의 79 파일 기준이고 `WitLcO`는 미검사 0):
 
 | 종류 | 검사함 | 미검사 |
 | --- | --- | --- |
@@ -181,7 +181,7 @@ cd ../../.. && go run fv/kraken/lean/tools/wit/layout.go > fv/kraken/lean/tools/
 python3 fv/kraken/lean/tools/wit/goval.py                        # 위반 0
 python3 -B fv/kraken/link/check.py fv/kraken/link/out            # PASS all, BUNDLE
 python3 -B fv/kraken/link/check.py --selftest fv/kraken/link/out # 10 cases
-PATH=/workspace/tooling/fv/compat-bin:$PATH fv/kraken/negative/run.sh <워크트리 밖 scratch>  # 16 cases; Linux는 cp -c 대체 필요
+PATH=/workspace/tooling/fv/compat-bin:$PATH fv/kraken/negative/run.sh <워크트리 밖 scratch>  # 18 cases; Linux는 cp -c 대체 필요
 GOROOT=$(go env GOROOT) go test -count=1 ./fv/kraken/semtest/    # F1, F2 PASS
 ```
 
