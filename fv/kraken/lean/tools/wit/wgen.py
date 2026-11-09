@@ -21,6 +21,7 @@ wbvr
 wcomp
 wcompsc
 wlce
+wlco
 wlca 1
 wlca 4
 wlca 1 1x1

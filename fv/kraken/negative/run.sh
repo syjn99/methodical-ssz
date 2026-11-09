@@ -118,6 +118,13 @@ mutate scbool target.Scalars.UnmarshalSSZ.S 13 'cmp $0x1,%cl' 'cmp $0x2,%cl' Fk/
 mutate scrbword target.Scalars.UnmarshalSSZ.S 26 'mov ssz.ErrInvalidSerialization(%rip),%rax' 'mov ssz.ErrInvalidSerialization+8(%rip),%rax' Fk/ScRejectBool.lean sc_reject_bool_main FAIL
 # fix 2 X8b: the ValidateBitlist error path reads the type word at itab+16 instead of itab+8
 mutate blrity target.BitL.UnmarshalSSZ.S 37 'mov 0x8(%rax),%rax' 'mov 0x10(%rax),%rax' Fk/BlReject.lean bl_reject_invalid_main FAIL
+# fix 3 X5: the offset-order reject block passes 66 instead of 67 as the length
+# of the format lcFmtOrder to fmt.errorf (a directive only on the reject path);
+# the FmtErrorfDDC premise rbx = fs.length fails in lcl_order, the reject-branch
+# part of lc_reject_offset_order_main. lcorderctl: the same directive rewritten
+# to itself must build.
+mutate lcorder target.ListC.UnmarshalSSZ.S 388 'mov $0x43,%ebx' 'mov $0x42,%ebx' Fk/LcOrder.lean lcl_order FAIL
+mutate lcorderctl target.ListC.UnmarshalSSZ.S 388 'mov $0x43,%ebx' 'mov $0x43,%ebx' Fk/LcOrder.lean lcl_order PASS
 # control: a directive rewritten to itself must still check
 mutate control target.FixedVec.UnmarshalSSZ.S 47 'cmp $0x4,%rax' 'cmp $0x4,%rax' Fk/FvLoop.lean fv_iter PASS
 # 9. link (X6): a padding nop becomes retq; the link check must reject it
