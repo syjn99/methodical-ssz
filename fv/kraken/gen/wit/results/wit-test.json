@@ -1,0 +1,36 @@
+{
+ "schema": "fvphase1c.wit-test/1",
+ "all_ok": true,
+ "checks": [
+  {
+   "id": "symbolic-length",
+   "refused": true,
+   "no_file": true,
+   "stderr": [
+    "AssertionError: symbolic length refused in WitSymCtl.lean: layout known below 0x10020 (`z n` has a symbolic length)"
+   ]
+  },
+  {
+   "id": "symbolic-length twin (unchanged text)",
+   "refused": false,
+   "no_file": false,
+   "expect": "written"
+  },
+  {
+   "id": "lean/Fk",
+   "refused": true,
+   "no_file": true
+  },
+  {
+   "id": "non-empty out",
+   "refused": true,
+   "no_file": true
+  },
+  {
+   "id": "normalize",
+   "rewritten": 8,
+   "idempotent": true,
+   "atoms_left": 0
+  }
+ ]
+}

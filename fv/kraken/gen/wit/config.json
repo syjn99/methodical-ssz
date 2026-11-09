@@ -1,0 +1,631 @@
+{
+ "schema": "fvphase1c.wit-config/1",
+ "source": "fv/kraken/lean/tools/wit at fix3 stage A (d9cdb40); byte copies in gen/wit/src",
+ "invocations": [
+  {
+   "generator": "wacc",
+   "args": [
+    "sc"
+   ]
+  },
+  {
+   "generator": "wacc",
+   "args": [
+    "vbv"
+   ]
+  },
+  {
+   "generator": "wadm",
+   "args": [
+    "3"
+   ]
+  },
+  {
+   "generator": "wbl",
+   "args": [
+    "1"
+   ]
+  },
+  {
+   "generator": "wbl",
+   "args": [
+    "257"
+   ]
+  },
+  {
+   "generator": "wblm",
+   "args": [
+    "1"
+   ]
+  },
+  {
+   "generator": "wblm",
+   "args": [
+    "257"
+   ]
+  },
+  {
+   "generator": "wblr",
+   "args": []
+  },
+  {
+   "generator": "wblri",
+   "args": []
+  },
+  {
+   "generator": "wbv",
+   "args": []
+  },
+  {
+   "generator": "wbvr",
+   "args": []
+  },
+  {
+   "generator": "wcomp",
+   "args": []
+  },
+  {
+   "generator": "wcompsc",
+   "args": []
+  },
+  {
+   "generator": "wlce",
+   "args": []
+  },
+  {
+   "generator": "wlco",
+   "args": []
+  },
+  {
+   "generator": "wlca",
+   "args": [
+    "1"
+   ]
+  },
+  {
+   "generator": "wlca",
+   "args": [
+    "4"
+   ]
+  },
+  {
+   "generator": "wlca",
+   "args": [
+    "1",
+    "1x1"
+   ]
+  },
+  {
+   "generator": "wlca",
+   "args": [
+    "16,16,16,16",
+    "4x16"
+   ]
+  },
+  {
+   "generator": "wlca",
+   "args": [
+    "0,1,16",
+    "Mix"
+   ]
+  },
+  {
+   "generator": "wlcm",
+   "args": [
+    "0"
+   ]
+  },
+  {
+   "generator": "wlcm",
+   "args": [
+    "1"
+   ]
+  },
+  {
+   "generator": "wlcm",
+   "args": [
+    "4"
+   ]
+  },
+  {
+   "generator": "wlcm",
+   "args": [
+    "1",
+    "1x1"
+   ]
+  },
+  {
+   "generator": "wlcm",
+   "args": [
+    "16,16,16,16",
+    "4x16"
+   ]
+  },
+  {
+   "generator": "wlcm",
+   "args": [
+    "0,1,16",
+    "Mix"
+   ]
+  },
+  {
+   "generator": "wlcs",
+   "args": [
+    "0"
+   ]
+  },
+  {
+   "generator": "wlcs",
+   "args": [
+    "1"
+   ]
+  },
+  {
+   "generator": "wlcs",
+   "args": [
+    "4"
+   ]
+  },
+  {
+   "generator": "wlcz",
+   "args": [
+    "zero"
+   ]
+  },
+  {
+   "generator": "wlcz",
+   "args": [
+    "past"
+   ]
+  },
+  {
+   "generator": "wlcz",
+   "args": [
+    "tail"
+   ]
+  },
+  {
+   "generator": "wlug",
+   "args": []
+  },
+  {
+   "generator": "wlur",
+   "args": [
+    "toobig"
+   ]
+  },
+  {
+   "generator": "wlur",
+   "args": [
+    "misaligned"
+   ]
+  },
+  {
+   "generator": "wmar",
+   "args": [
+    "sc"
+   ]
+  },
+  {
+   "generator": "wmar",
+   "args": [
+    "fv"
+   ]
+  },
+  {
+   "generator": "wmar",
+   "args": [
+    "lu0"
+   ]
+  },
+  {
+   "generator": "wmar",
+   "args": [
+    "lu1"
+   ]
+  },
+  {
+   "generator": "wmar",
+   "args": [
+    "lu16"
+   ]
+  },
+  {
+   "generator": "wmar",
+   "args": [
+    "bv"
+   ]
+  },
+  {
+   "generator": "wmrej",
+   "args": [
+    "lu"
+   ]
+  },
+  {
+   "generator": "wmrej",
+   "args": [
+    "fv"
+   ]
+  },
+  {
+   "generator": "wmrej",
+   "args": [
+    "cp"
+   ]
+  },
+  {
+   "generator": "wne",
+   "args": [
+    "0"
+   ]
+  },
+  {
+   "generator": "wne",
+   "args": [
+    "1"
+   ]
+  },
+  {
+   "generator": "wne",
+   "args": [
+    "16"
+   ]
+  },
+  {
+   "generator": "wnem",
+   "args": [
+    "0"
+   ]
+  },
+  {
+   "generator": "wnem",
+   "args": [
+    "1"
+   ]
+  },
+  {
+   "generator": "wnem",
+   "args": [
+    "16"
+   ]
+  },
+  {
+   "generator": "wnes",
+   "args": [
+    "0"
+   ]
+  },
+  {
+   "generator": "wnes",
+   "args": [
+    "1"
+   ]
+  },
+  {
+   "generator": "wnes",
+   "args": [
+    "16"
+   ]
+  },
+  {
+   "generator": "wrej",
+   "args": []
+  },
+  {
+   "generator": "wscrb",
+   "args": []
+  },
+  {
+   "generator": "wsize",
+   "args": []
+  },
+  {
+   "generator": "wvbvr",
+   "args": []
+  }
+ ],
+ "modules": {
+  "WitAdM": {
+   "readme_generator": "wadm.py 3",
+   "theorem": "ad_marshal_runs"
+  },
+  "WitBl1": {
+   "readme_generator": "wbl.py 1",
+   "theorem": "bl_accept_runs"
+  },
+  "WitBl257": {
+   "readme_generator": "wbl.py 257",
+   "theorem": "bl_accept_runs"
+  },
+  "WitBlM1": {
+   "readme_generator": "wblm.py 1",
+   "theorem": "bl_marshal_runs"
+  },
+  "WitBlM257": {
+   "readme_generator": "wblm.py 257",
+   "theorem": "bl_marshal_runs"
+  },
+  "WitBlR": {
+   "readme_generator": "wblr.py",
+   "theorem": "bl_marshal_reject_runs"
+  },
+  "WitBlRI": {
+   "readme_generator": "wblri.py",
+   "theorem": "bl_reject_invalid_runs"
+  },
+  "WitBv": {
+   "readme_generator": "wbv.py",
+   "theorem": "bv_accept_runs"
+  },
+  "WitBvM": {
+   "readme_generator": "wmar.py bv",
+   "theorem": "bv_marshal_runs"
+  },
+  "WitBvR": {
+   "readme_generator": "wbvr.py",
+   "theorem": "bv_reject_padding_runs"
+  },
+  "WitCpMR": {
+   "readme_generator": "wmrej.py cp",
+   "theorem": "cp_marshal_reject_runs"
+  },
+  "WitFvM": {
+   "readme_generator": "wmar.py fv",
+   "theorem": "fv_marshal_runs"
+  },
+  "WitFvMR": {
+   "readme_generator": "wmrej.py fv",
+   "theorem": "fv_marshal_reject_runs"
+  },
+  "WitLcA1": {
+   "readme_generator": "wlca.py 1",
+   "theorem": "lc_accept_runs"
+  },
+  "WitLcA1x1": {
+   "readme_generator": "wlca.py 1 1x1",
+   "theorem": "lc_accept_runs"
+  },
+  "WitLcA4": {
+   "readme_generator": "wlca.py 4",
+   "theorem": "lc_accept_runs"
+  },
+  "WitLcA4x16": {
+   "readme_generator": "wlca.py 16,16,16,16 4x16",
+   "theorem": "lc_accept_runs"
+  },
+  "WitLcAMix": {
+   "readme_generator": "wlca.py 0,1,16 Mix",
+   "theorem": "lc_accept_runs"
+  },
+  "WitLcE": {
+   "readme_generator": "wlce.py",
+   "theorem": "lc_accept_empty_runs"
+  },
+  "WitLcO": {
+   "readme_generator": "wlco.py",
+   "theorem": "lc_reject_order_runs"
+  },
+  "WitLcM0": {
+   "readme_generator": "wlcm.py 0",
+   "theorem": "lc_marshal_runs"
+  },
+  "WitLcM1": {
+   "readme_generator": "wlcm.py 1",
+   "theorem": "lc_marshal_runs"
+  },
+  "WitLcM1x1": {
+   "readme_generator": "wlcm.py 1 1x1",
+   "theorem": "lc_marshal_runs"
+  },
+  "WitLcM4": {
+   "readme_generator": "wlcm.py 4",
+   "theorem": "lc_marshal_runs"
+  },
+  "WitLcM4x16": {
+   "readme_generator": "wlcm.py 16,16,16,16 4x16",
+   "theorem": "lc_marshal_runs"
+  },
+  "WitLcMMix": {
+   "readme_generator": "wlcm.py 0,1,16 Mix",
+   "theorem": "lc_marshal_runs"
+  },
+  "WitLcP": {
+   "readme_generator": "wlcz.py past",
+   "theorem": "lc_reject_past_runs"
+  },
+  "WitLcS0": {
+   "readme_generator": "wlcs.py 0",
+   "theorem": "lc_size_runs"
+  },
+  "WitLcS1": {
+   "readme_generator": "wlcs.py 1",
+   "theorem": "lc_size_runs"
+  },
+  "WitLcS4": {
+   "readme_generator": "wlcs.py 4",
+   "theorem": "lc_size_runs"
+  },
+  "WitLcT": {
+   "readme_generator": "wlcz.py tail",
+   "theorem": "lc_reject_tail_runs"
+  },
+  "WitLcZ": {
+   "readme_generator": "wlcz.py zero",
+   "theorem": "lc_reject_zero_runs"
+  },
+  "WitLuComp": {
+   "readme_generator": "wcomp.py",
+   "theorem": "lu_compose_runs"
+  },
+  "WitLuG": {
+   "readme_generator": "wlug.py",
+   "theorem": "lum_grow_runs"
+  },
+  "WitLuM0": {
+   "readme_generator": "wmar.py lu0",
+   "theorem": "lu_marshal_runs"
+  },
+  "WitLuM1": {
+   "readme_generator": "wmar.py lu1",
+   "theorem": "lu_marshal_runs"
+  },
+  "WitLuM16": {
+   "readme_generator": "wmar.py lu16",
+   "theorem": "lu_marshal_runs"
+  },
+  "WitLuMR": {
+   "readme_generator": "wmrej.py lu",
+   "theorem": "lu_marshal_reject_runs"
+  },
+  "WitLuMa": {
+   "readme_generator": "wlur.py misaligned",
+   "theorem": "lu_reject_misaligned_runs"
+  },
+  "WitLuTb": {
+   "readme_generator": "wlur.py toobig",
+   "theorem": "lu_reject_toobig_runs"
+  },
+  "WitNe0": {
+   "readme_generator": "wne.py 0",
+   "theorem": "ne_accept_runs"
+  },
+  "WitNe1": {
+   "readme_generator": "wne.py 1",
+   "theorem": "ne_accept_runs"
+  },
+  "WitNe16": {
+   "readme_generator": "wne.py 16",
+   "theorem": "ne_accept_runs"
+  },
+  "WitNeM0": {
+   "readme_generator": "wnem.py 0",
+   "theorem": "ne_marshal_runs"
+  },
+  "WitNeM1": {
+   "readme_generator": "wnem.py 1",
+   "theorem": "ne_marshal_runs"
+  },
+  "WitNeM16": {
+   "readme_generator": "wnem.py 16",
+   "theorem": "ne_marshal_runs"
+  },
+  "WitNeS0": {
+   "readme_generator": "wnes.py 0",
+   "theorem": "ne_size_runs"
+  },
+  "WitNeS1": {
+   "readme_generator": "wnes.py 1",
+   "theorem": "ne_size_runs"
+  },
+  "WitNeS16": {
+   "readme_generator": "wnes.py 16",
+   "theorem": "ne_size_runs"
+  },
+  "WitRjAdSz": {
+   "readme_generator": "wrej.py",
+   "theorem": "ad_reject_size_runs"
+  },
+  "WitRjBlOf": {
+   "readme_generator": "wrej.py",
+   "theorem": "bl_reject_offset_runs"
+  },
+  "WitRjBlSh": {
+   "readme_generator": "wrej.py",
+   "theorem": "bl_reject_short_runs"
+  },
+  "WitRjBvSz": {
+   "readme_generator": "wrej.py",
+   "theorem": "bv_reject_size_runs"
+  },
+  "WitRjCpSz": {
+   "readme_generator": "wrej.py",
+   "theorem": "cp_reject_size_runs"
+  },
+  "WitRjFvSz": {
+   "readme_generator": "wrej.py",
+   "theorem": "fv_reject_size_runs"
+  },
+  "WitRjLcOf": {
+   "readme_generator": "wrej.py",
+   "theorem": "lc_reject_offset_runs"
+  },
+  "WitRjLcSh": {
+   "readme_generator": "wrej.py",
+   "theorem": "lc_reject_short_runs"
+  },
+  "WitRjLuOf": {
+   "readme_generator": "wrej.py",
+   "theorem": "lu_reject_offset_runs"
+  },
+  "WitRjLuSh": {
+   "readme_generator": "wrej.py",
+   "theorem": "lu_reject_short_runs"
+  },
+  "WitRjNeOf": {
+   "readme_generator": "wrej.py",
+   "theorem": "ne_reject_offset_runs"
+  },
+  "WitRjNeSh": {
+   "readme_generator": "wrej.py",
+   "theorem": "ne_reject_short_runs"
+  },
+  "WitRjScSz": {
+   "readme_generator": "wrej.py",
+   "theorem": "sc_reject_size_runs"
+  },
+  "WitScA": {
+   "readme_generator": "wacc.py sc",
+   "theorem": "sc_accept_runs"
+  },
+  "WitScComp": {
+   "readme_generator": "wcompsc.py",
+   "theorem": "sc_compose_runs"
+  },
+  "WitScM": {
+   "readme_generator": "wmar.py sc",
+   "theorem": "sc_marshal_runs"
+  },
+  "WitScRB": {
+   "readme_generator": "wscrb.py",
+   "theorem": "sc_reject_bool_runs"
+  },
+  "WitSzAd": {
+   "readme_generator": "wsize.py",
+   "theorem": "ad_size_runs"
+  },
+  "WitSzBl": {
+   "readme_generator": "wsize.py",
+   "theorem": "bl_size_runs"
+  },
+  "WitSzBv": {
+   "readme_generator": "wsize.py",
+   "theorem": "bv_size_runs"
+  },
+  "WitSzCp": {
+   "readme_generator": "wsize.py",
+   "theorem": "cp_size_runs"
+  },
+  "WitSzFv": {
+   "readme_generator": "wsize.py",
+   "theorem": "fv_size_runs"
+  },
+  "WitSzLu": {
+   "readme_generator": "wsize.py",
+   "theorem": "lu_size_runs"
+  },
+  "WitSzSc": {
+   "readme_generator": "wsize.py",
+   "theorem": "sc_size_runs"
+  },
+  "WitVbv": {
+   "readme_generator": "wacc.py vbv",
+   "theorem": "vbv_accept_runs"
+  },
+  "WitVbvR": {
+   "readme_generator": "wvbvr.py",
+   "theorem": "vbv_reject_pad_runs"
+  }
+ },
+ "rule": "every invocation runs with cwd fv/kraken/lean and argv[1] = gen/wit/src; outputs go to $GEN_WIT_OUT"
+}

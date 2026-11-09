@@ -1,0 +1,199 @@
+{
+ "goarch": "amd64",
+ "goos": "linux",
+ "sizes": "gc",
+ "types": {
+  "BitL": {
+   "size": 24,
+   "align": 8,
+   "fields": [
+    {
+     "name": "B",
+     "offset": 0,
+     "size": 24,
+     "kind": "slice",
+     "esz": 1
+    }
+   ]
+  },
+  "BitVec": {
+   "size": 24,
+   "align": 8,
+   "fields": [
+    {
+     "name": "J",
+     "offset": 0,
+     "size": 24,
+     "kind": "slice",
+     "esz": 1
+    }
+   ]
+  },
+  "FixedVec": {
+   "size": 56,
+   "align": 8,
+   "fields": [
+    {
+     "name": "R",
+     "offset": 0,
+     "size": 32,
+     "kind": "array"
+    },
+    {
+     "name": "W",
+     "offset": 32,
+     "size": 24,
+     "kind": "slice",
+     "esz": 8
+    }
+   ]
+  },
+  "ListC": {
+   "size": 24,
+   "align": 8,
+   "fields": [
+    {
+     "name": "Items",
+     "offset": 0,
+     "size": 24,
+     "kind": "slice",
+     "elem": "ListU64",
+     "esz": 8
+    }
+   ]
+  },
+  "ListU64": {
+   "size": 24,
+   "align": 8,
+   "fields": [
+    {
+     "name": "L",
+     "offset": 0,
+     "size": 24,
+     "kind": "slice",
+     "esz": 8
+    }
+   ]
+  },
+  "Nested": {
+   "size": 24,
+   "align": 8,
+   "fields": [
+    {
+     "name": "A",
+     "offset": 0,
+     "size": 8,
+     "kind": "uint"
+    },
+    {
+     "name": "S",
+     "offset": 8,
+     "size": 8,
+     "kind": "ptr",
+     "elem": "Scalars"
+    },
+    {
+     "name": "L",
+     "offset": 16,
+     "size": 8,
+     "kind": "ptr",
+     "elem": "ListU64"
+    }
+   ]
+  },
+  "PrysmAttestationData": {
+   "size": 56,
+   "align": 8,
+   "fields": [
+    {
+     "name": "Slot",
+     "offset": 0,
+     "size": 8,
+     "kind": "uint"
+    },
+    {
+     "name": "CommitteeIndex",
+     "offset": 8,
+     "size": 8,
+     "kind": "uint"
+    },
+    {
+     "name": "BeaconBlockRoot",
+     "offset": 16,
+     "size": 24,
+     "kind": "slice",
+     "esz": 1
+    },
+    {
+     "name": "Source",
+     "offset": 40,
+     "size": 8,
+     "kind": "ptr",
+     "elem": "PrysmCheckpoint"
+    },
+    {
+     "name": "Target",
+     "offset": 48,
+     "size": 8,
+     "kind": "ptr",
+     "elem": "PrysmCheckpoint"
+    }
+   ]
+  },
+  "PrysmCheckpoint": {
+   "size": 32,
+   "align": 8,
+   "fields": [
+    {
+     "name": "Epoch",
+     "offset": 0,
+     "size": 8,
+     "kind": "uint"
+    },
+    {
+     "name": "Root",
+     "offset": 8,
+     "size": 24,
+     "kind": "slice",
+     "esz": 1
+    }
+   ]
+  },
+  "Scalars": {
+   "size": 24,
+   "align": 8,
+   "fields": [
+    {
+     "name": "A",
+     "offset": 0,
+     "size": 1,
+     "kind": "uint"
+    },
+    {
+     "name": "B",
+     "offset": 2,
+     "size": 2,
+     "kind": "uint"
+    },
+    {
+     "name": "C",
+     "offset": 4,
+     "size": 4,
+     "kind": "uint"
+    },
+    {
+     "name": "D",
+     "offset": 8,
+     "size": 8,
+     "kind": "uint"
+    },
+    {
+     "name": "E",
+     "offset": 16,
+     "size": 1,
+     "kind": "bool"
+    }
+   ]
+  }
+ }
+}

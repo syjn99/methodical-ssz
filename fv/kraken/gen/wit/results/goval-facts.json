@@ -1,0 +1,1084 @@
+{
+ "schema": "fvphase1c.goval-lean/1",
+ "witnesses": 75,
+ "bound": 63,
+ "python_violations": [],
+ "bindings": 596,
+ "predicates": 458,
+ "notes": {
+  "WitFvM.lean": [
+   "1 s_mem chunks not read"
+  ],
+  "WitLcM0.lean": [
+   "3 s_mem chunks not read"
+  ],
+  "WitLcM1.lean": [
+   "3 s_mem chunks not read"
+  ],
+  "WitLcM1x1.lean": [
+   "3 s_mem chunks not read"
+  ],
+  "WitLcM4.lean": [
+   "3 s_mem chunks not read"
+  ],
+  "WitLcM4x16.lean": [
+   "3 s_mem chunks not read"
+  ],
+  "WitLcMMix.lean": [
+   "3 s_mem chunks not read"
+  ],
+  "WitLcO.lean": [
+   "2 s_mem chunks not read"
+  ],
+  "WitLuComp.lean": [
+   "3 s_mem chunks not read"
+  ],
+  "WitLuM0.lean": [
+   "1 s_mem chunks not read"
+  ],
+  "WitLuM1.lean": [
+   "1 s_mem chunks not read"
+  ],
+  "WitLuM16.lean": [
+   "1 s_mem chunks not read"
+  ],
+  "WitLuMa.lean": [
+   "2 s_mem chunks not read"
+  ],
+  "WitLuTb.lean": [
+   "2 s_mem chunks not read"
+  ],
+  "WitScComp.lean": [
+   "6 s_mem chunks not read"
+  ],
+  "WitVbv.lean": [
+   "1 s_mem chunks not read"
+  ],
+  "WitVbvR.lean": [
+   "1 s_mem chunks not read"
+  ]
+ },
+ "rows": [
+  {
+   "file": "WitAdM.lean",
+   "bound": false,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 11,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 10
+   },
+   "notes": []
+  },
+  {
+   "file": "WitBl1.lean",
+   "bound": false,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": []
+  },
+  {
+   "file": "WitBl257.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": []
+  },
+  {
+   "file": "WitBlM1.lean",
+   "bound": false,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": []
+  },
+  {
+   "file": "WitBlM257.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": []
+  },
+  {
+   "file": "WitBlR.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 4,
+    "bytes": 0,
+    "typedesc": true,
+    "predicates": 7
+   },
+   "notes": []
+  },
+  {
+   "file": "WitBlRI.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 4,
+    "bytes": 0,
+    "typedesc": true,
+    "predicates": 7
+   },
+   "notes": []
+  },
+  {
+   "file": "WitBv.lean",
+   "bound": false,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": []
+  },
+  {
+   "file": "WitBvM.lean",
+   "bound": false,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": []
+  },
+  {
+   "file": "WitBvR.lean",
+   "bound": false,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 1,
+    "bytes": 0,
+    "typedesc": true,
+    "predicates": 5
+   },
+   "notes": []
+  },
+  {
+   "file": "WitCpMR.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 7,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 7
+   },
+   "notes": []
+  },
+  {
+   "file": "WitFvM.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": [
+    "1 s_mem chunks not read"
+   ]
+  },
+  {
+   "file": "WitFvMR.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 7,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 7
+   },
+   "notes": []
+  },
+  {
+   "file": "WitLcA1.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": []
+  },
+  {
+   "file": "WitLcA1x1.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": []
+  },
+  {
+   "file": "WitLcA4.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": []
+  },
+  {
+   "file": "WitLcA4x16.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": []
+  },
+  {
+   "file": "WitLcAMix.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": []
+  },
+  {
+   "file": "WitLcE.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": []
+  },
+  {
+   "file": "WitLcM0.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": [
+    "3 s_mem chunks not read"
+   ]
+  },
+  {
+   "file": "WitLcM1.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 7,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 8
+   },
+   "notes": [
+    "3 s_mem chunks not read"
+   ]
+  },
+  {
+   "file": "WitLcM1x1.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 7,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 8
+   },
+   "notes": [
+    "3 s_mem chunks not read"
+   ]
+  },
+  {
+   "file": "WitLcM4.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 19,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 14
+   },
+   "notes": [
+    "3 s_mem chunks not read"
+   ]
+  },
+  {
+   "file": "WitLcM4x16.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 19,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 14
+   },
+   "notes": [
+    "3 s_mem chunks not read"
+   ]
+  },
+  {
+   "file": "WitLcMMix.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 15,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 12
+   },
+   "notes": [
+    "3 s_mem chunks not read"
+   ]
+  },
+  {
+   "file": "WitLcO.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": [
+    "2 s_mem chunks not read"
+   ]
+  },
+  {
+   "file": "WitLcP.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 0,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 4
+   },
+   "notes": []
+  },
+  {
+   "file": "WitLcS0.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 5
+   },
+   "notes": []
+  },
+  {
+   "file": "WitLcS1.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 7,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 7
+   },
+   "notes": []
+  },
+  {
+   "file": "WitLcS4.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 19,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 13
+   },
+   "notes": []
+  },
+  {
+   "file": "WitLcT.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 0,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 4
+   },
+   "notes": []
+  },
+  {
+   "file": "WitLcZ.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 0,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 4
+   },
+   "notes": []
+  },
+  {
+   "file": "WitLuComp.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": [
+    "3 s_mem chunks not read"
+   ]
+  },
+  {
+   "file": "WitLuG.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": []
+  },
+  {
+   "file": "WitLuM0.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": [
+    "1 s_mem chunks not read"
+   ]
+  },
+  {
+   "file": "WitLuM1.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": [
+    "1 s_mem chunks not read"
+   ]
+  },
+  {
+   "file": "WitLuM16.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": [
+    "1 s_mem chunks not read"
+   ]
+  },
+  {
+   "file": "WitLuMR.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 7,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 7
+   },
+   "notes": []
+  },
+  {
+   "file": "WitLuMa.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 5,
+    "bytes": 0,
+    "typedesc": true,
+    "predicates": 6
+   },
+   "notes": [
+    "2 s_mem chunks not read"
+   ]
+  },
+  {
+   "file": "WitLuTb.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 5,
+    "bytes": 0,
+    "typedesc": true,
+    "predicates": 6
+   },
+   "notes": [
+    "2 s_mem chunks not read"
+   ]
+  },
+  {
+   "file": "WitNe0.lean",
+   "bound": false,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 2,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 5
+   },
+   "notes": []
+  },
+  {
+   "file": "WitNe1.lean",
+   "bound": false,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 2,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 5
+   },
+   "notes": []
+  },
+  {
+   "file": "WitNe16.lean",
+   "bound": false,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 2,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 5
+   },
+   "notes": []
+  },
+  {
+   "file": "WitNeM0.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 5,
+    "bytes": 1,
+    "typedesc": false,
+    "predicates": 9
+   },
+   "notes": []
+  },
+  {
+   "file": "WitNeM1.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 5,
+    "bytes": 1,
+    "typedesc": false,
+    "predicates": 9
+   },
+   "notes": []
+  },
+  {
+   "file": "WitNeM16.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 5,
+    "bytes": 1,
+    "typedesc": false,
+    "predicates": 9
+   },
+   "notes": []
+  },
+  {
+   "file": "WitNeS0.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 5,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": []
+  },
+  {
+   "file": "WitNeS1.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 5,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": []
+  },
+  {
+   "file": "WitNeS16.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 5,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": []
+  },
+  {
+   "file": "WitRjAdSz.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 4,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 5
+   },
+   "notes": []
+  },
+  {
+   "file": "WitRjBlOf.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 4,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 5
+   },
+   "notes": []
+  },
+  {
+   "file": "WitRjBlSh.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 4,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 5
+   },
+   "notes": []
+  },
+  {
+   "file": "WitRjBvSz.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 4,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 5
+   },
+   "notes": []
+  },
+  {
+   "file": "WitRjCpSz.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 4,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 5
+   },
+   "notes": []
+  },
+  {
+   "file": "WitRjFvSz.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 4,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 5
+   },
+   "notes": []
+  },
+  {
+   "file": "WitRjLcOf.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 4,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 5
+   },
+   "notes": []
+  },
+  {
+   "file": "WitRjLcSh.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 4,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 5
+   },
+   "notes": []
+  },
+  {
+   "file": "WitRjLuOf.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 4,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 5
+   },
+   "notes": []
+  },
+  {
+   "file": "WitRjLuSh.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 4,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 5
+   },
+   "notes": []
+  },
+  {
+   "file": "WitRjNeOf.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 4,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 5
+   },
+   "notes": []
+  },
+  {
+   "file": "WitRjNeSh.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 4,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 5
+   },
+   "notes": []
+  },
+  {
+   "file": "WitRjScSz.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 4,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 5
+   },
+   "notes": []
+  },
+  {
+   "file": "WitScA.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 0,
+    "bytes": 1,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": []
+  },
+  {
+   "file": "WitScComp.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 0,
+    "bytes": 1,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": [
+    "6 s_mem chunks not read"
+   ]
+  },
+  {
+   "file": "WitScM.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 0,
+    "bytes": 1,
+    "typedesc": false,
+    "predicates": 6
+   },
+   "notes": []
+  },
+  {
+   "file": "WitScRB.lean",
+   "bound": false,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 4,
+    "bytes": 1,
+    "typedesc": false,
+    "predicates": 7
+   },
+   "notes": []
+  },
+  {
+   "file": "WitSzAd.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 0,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 3
+   },
+   "notes": []
+  },
+  {
+   "file": "WitSzBl.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 5
+   },
+   "notes": []
+  },
+  {
+   "file": "WitSzBv.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 0,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 3
+   },
+   "notes": []
+  },
+  {
+   "file": "WitSzCp.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 0,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 3
+   },
+   "notes": []
+  },
+  {
+   "file": "WitSzFv.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 0,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 3
+   },
+   "notes": []
+  },
+  {
+   "file": "WitSzLu.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 3,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 5
+   },
+   "notes": []
+  },
+  {
+   "file": "WitSzSc.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 0,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 3
+   },
+   "notes": []
+  },
+  {
+   "file": "WitVbv.lean",
+   "bound": false,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 0,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 4
+   },
+   "notes": [
+    "1 s_mem chunks not read"
+   ]
+  },
+  {
+   "file": "WitVbvR.lean",
+   "bound": false,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 0,
+    "bytes": 0,
+    "typedesc": false,
+    "predicates": 4
+   },
+   "notes": [
+    "1 s_mem chunks not read"
+   ]
+  }
+ ],
+ "lean_check": {
+  "log": "run logs/58-goval-lean.log",
+  "exit": 0,
+  "errors": 0,
+  "end_marker": true
+ },
+ "lean_control": {
+  "log": "run logs/59-goval-ctl.log",
+  "exit": 1,
+  "errors": 4,
+  "expected_errors": 4
+ }
+}
