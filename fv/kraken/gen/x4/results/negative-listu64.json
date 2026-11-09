@@ -1,0 +1,91 @@
+{
+ "schema": "fvphase1c.x4-negative/1",
+ "cases": 6,
+ "as_expected": 6,
+ "rows": [
+  {
+   "id": "lu-size-add",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lu_size_add_mutant.size",
+   "mutation": "'add $0x4,%rax' -> 'add $0x5,%rax'",
+   "exit": "1",
+   "first_error": "line 42: 'show' tactic failed, pattern",
+   "theorem_lines": [
+    25,
+    45
+   ],
+   "as_expected": true,
+   "run": "logs/78"
+  },
+  {
+   "id": "lu-size-add",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lu_size_add_control.size",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    25,
+    45
+   ],
+   "as_expected": true,
+   "run": "logs/78"
+  },
+  {
+   "id": "lu-short-cmp",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lu_short_cmp_mutant.reject_short",
+   "mutation": "'cmp $0x4,%rcx' -> 'cmp $0x3,%rcx'",
+   "exit": "1",
+   "first_error": "line 69: omega could not prove the goal:",
+   "theorem_lines": [
+    34,
+    97
+   ],
+   "as_expected": true,
+   "run": "logs/78"
+  },
+  {
+   "id": "lu-short-cmp",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lu_short_cmp_control.reject_short",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    34,
+    97
+   ],
+   "as_expected": true,
+   "run": "logs/78"
+  },
+  {
+   "id": "lu-off-cmp",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lu_off_cmp_mutant.reject_offset",
+   "mutation": "'cmp $0x4,%rdx' -> 'cmp $0x5,%rdx'",
+   "exit": "1",
+   "first_error": "line 83: Application type mismatch: The argument",
+   "theorem_lines": [
+    36,
+    112
+   ],
+   "as_expected": true,
+   "run": "logs/78"
+  },
+  {
+   "id": "lu-off-cmp",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lu_off_cmp_control.reject_offset",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    36,
+    112
+   ],
+   "as_expected": true,
+   "run": "logs/78"
+  }
+ ]
+}

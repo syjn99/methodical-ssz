@@ -779,6 +779,159 @@ def reject_size_full2(D, F, code):
             "simp only [Effects.All_require_read_access, Effects.All, BitVec.ofInt_ofBytes_toBytes 64 8 rfl]",
             "exact Eventually.done _ ⟨rfl, rfl, rfl⟩"], (suf, lab)
 
+
+# ---------------------------------------------------------------- one list[uint] field (ListU64 shape)
+# Patterns of Fk/LuMarshal.lean (lu_size_main) and Fk/LuReject.lean (lu_reject_short_main,
+# lu_reject_offset_main): stack guard through r12, frame push, one spill, length and first-offset
+# checks, error epilogue (rip loads, frame pop, return).
+
+class ListField:
+    def __init__(self, desc, layout):
+        [f] = desc["fields"]
+        assert f["kind"] == "list" and f["variable"] and desc["fixed_part_size"] == 4, f
+        lf = layout["fields"][0]
+        assert lf["kind"] == "slice", lf
+        self.t, self.esz, self.limit, self.goff = desc["type"], f["elem_size"], f["limit"], lf["offset"]
+        self.shift = {1: 0, 2: 1, 4: 2, 8: 3}[self.esz]
+
+
+def lu_size_stmt(code, L):
+    return f"""def size_stmt [Host] : Prop :=
+  ∀ (k : Nat) (hk : {code}.IsInfixAt Host.prog k) (s : MachineData) (ra : UInt64)
+    (n : Nat) (hn : n < 2 ^ 60) (R : DataMem → Prop)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 n).toInt).At (s.regs.rax.toBitVec + {L.goff + 8})) ⋆ R),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax.toNat = 4 + {L.esz} * n
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.dmem = s.dmem)
+      ⟨s, Host.addrOf k⟩
+"""
+
+
+def lu_size_proof(D, L, code):
+    assert [x[2] for x in D[1:]] == [f"mov {hex(L.goff + 8)}(%rax),%rax", f"shl ${hex(L.shift)},%rax", "add $0x4,%rax", "retq"], D
+    return ["intro k hk s ra n hn R h_mem",
+            "obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s",
+            "simp only at h_mem ⊢",
+            f"kat hk {code} 0", f"kat hk {code} 1",
+            "apply load_step _ _ _ _ (Int.toBytes 8 (BitVec.ofNat 64 n).toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)",
+            "kunfold", f"kat hk {code} 2", f"kshl64 {L.shift}", f"kat hk {code} 3", f"kat hk {code} 4",
+            "apply load_step _ _ _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)",
+            "kunfold", "apply Eventually.done", "simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]",
+            "refine ⟨trivial, ?_, ?_, trivial⟩",
+            f"· show (4 + BitVec.ofNat 64 n <<< {L.shift}).toNat = _",
+            "  simp [BitVec.toNat_add, BitVec.toNat_shiftLeft, Nat.shiftLeft_eq]; omega",
+            "· apply UInt64.toBitVec_inj.mp; simp"]
+
+
+def lu_rej_stmt(name, code, err, mode):
+    o4 = "\n    (o4 : List UInt8) (ho4 : o4.length = 4) (hoff : Int.ofBytes o4 ≠ 4)" if mode == "offset" else ""
+    o4m = "\n      ⋆ Eq (o4.At s.regs.rbx.toBitVec)" if mode == "offset" else ""
+    hlen = "(hlen : s.regs.rcx.toNat < 4)" if mode == "short" else "(hlen : 4 ≤ s.regs.rcx.toNat)"
+    return f"""def {name}_stmt [Host] : Prop :=
+  ∀ (k : Nat) (hk : {code}.IsInfixAt Host.prog k)
+    (hf : LabelsFresh {code} k)
+    (s : MachineData) (ra guard e0 e1 : UInt64) (fp slot : List UInt8) (hfp : fp.length = 8) (hsl : slot.length = 8){o4}
+    (R : DataMem → Prop)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (slot.At (s.regs.rsp.toBitVec + 16))
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)){o4m}
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At (label "{err}").toBitVec)
+      ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "{err}" + 8).toBitVec) ⋆ R)
+    (hguard : guard.toNat < s.regs.rsp.toNat - 8) (hsp : 8 ≤ s.regs.rsp.toNat) {hlen},
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = e0 ∧ st.data.regs.rbx = e1
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
+        ∧ (R ⋆ fun _ => True) st.data.dmem)
+      ⟨s, Host.addrOf k⟩
+"""
+
+
+def lu_rej_proof(D, code, mode):
+    lab_index = {t: d for d, k, t in D if k == "label"}
+    kat = lambda d: f"kat hk {code} {d}"
+    intro = "intro k hk hf s ra guard e0 e1 fp slot hfp hsl " + ("o4 ho4 hoff " if mode == "offset" else "") + "R h_mem hguard hsp hlen"
+    L = [intro,
+         "obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s",
+         "simp only at h_mem hguard hsp hlen ⊢",
+         "have := rsp.toNat_lt_size; have := guard.toNat_lt_size; have := rcx.toNat_lt_size; simp only [UInt64.size] at *"]
+    d, frame, err, seen = 0, None, None, set()
+    while True:
+        assert d not in seen
+        seen.add(d)
+        _, kind, t = D[d]
+        if kind == "label":
+            L.append(kat(d)); d += 1; continue
+        op = t.split()[0]
+        a = t[len(op):].strip()
+        if op == "lea" and a == "-0x8(%rsp),%r12" or op == "nop" or (op == "mov" and a == "%rsp,%rbp"):
+            L.append(kat(d))
+        elif op == "cmp" and a == "0x10(%r14),%r12":
+            L += [kat(d), "apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
+        elif op == "jbe":
+            L += [kat(d), "split", "case isTrue h =>", "  exfalso",
+                  "  rw [cmp_be_false _ _ _ _ (by rw [toNat_add_neg8 _ (by simpa using hsp)]; simpa using hguard)] at h",
+                  "  exact absurd h (by simp)", "simp only [Effects.All]"]
+        elif op == "push":
+            L += [kat(d), "apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by kaddr) (by ecancel) (by exact hfp)",
+                  "intro m1 H1", "simp only [Width.bytes, Width.bits] at H1", "kunfold"]
+        elif op == "add" and a.endswith(",%rsp"):
+            assert a.startswith("$-"), a
+            frame = -int(a.split(",")[0][1:], 16)
+            L.append(kat(d))
+        elif op == "mov" and a.startswith("%rbx,") and a.endswith("(%rsp)"):
+            off = int(a.split(",")[1].split("(")[0], 16) - frame - 8
+            assert off == 16, a
+            L += [kat(d), f"apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ slot _ _ (by bv_omega) (by ecancel) (by exact hsl)",
+                  "intro m2 H2", "simp only [Width.bytes, Width.bits] at H2", "kunfold"]
+        elif op == "cmp" and a == "$0x4,%rcx":
+            L.append(kat(d))
+        elif op == "jb":
+            L += [kat(d), "split"]
+            if mode == "short":
+                L += ["case isFalse h =>", "  exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h; omega",
+                      "simp only [Effects.All]", f"klabel hk hf {code} {lab_index[a]}"]
+                d = lab_index[a]; continue
+            L += ["case isTrue h =>", "  exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h; omega",
+                  "simp only [Effects.All]"]
+        elif op == "mov" and a == "(%rbx),%edx":
+            L += [kat(d), "apply load_step_at _ _ rbx.toBitVec _ _ o4 _ _ (by bv_omega) (by ecancel) (by exact ho4)", "kunfold"]
+        elif op == "cmp" and a == "$0x4,%rdx":
+            L.append(kat(d))
+        elif op == "jne" and mode == "offset":
+            L += [kat(d), "split", "case isFalse h =>", "  exfalso; simp [CondCode.interp, StatusFlags.from_result] at h",
+                  "  exact hoff (Gen1cX4.off4 o4 ho4 h)", "simp only [Effects.All]", f"klabel hk hf {code} {lab_index[a]}"]
+            d = lab_index[a]; continue
+        elif op == "mov" and re.fullmatch(r"ssz\.\w+(\+8)?\(%rip\),%r[ab]x", a):
+            e = "e1" if "+8" in a else "e0"
+            L += [kat(d), f"apply load_step _ _ _ _ (Int.toBytes 8 {e}.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
+        elif op == "sub" and a.endswith(",%rsp"):
+            L.append(kat(d))
+        elif op == "pop":
+            L += [kat(d), f"rw [show -{frame} + (rsp.toBitVec - 8#64) - -{frame} = rsp.toBitVec - 8 by bv_omega]",
+                  "apply load_step _ _ _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
+        elif op == "retq":
+            L += [kat(d), "rw [show rsp.toBitVec - 8 + 8#64 = rsp.toBitVec by bv_omega]",
+                  "apply load_step _ _ _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)",
+                  "kunfold", "apply Eventually.done", "simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]",
+                  "refine ⟨trivial, ?_, ?_, ?_, ?_, ?_⟩",
+                  "· first | trivial | rfl | (apply UInt64.toBitVec_inj.mp; simp)",
+                  "· first | trivial | rfl | (apply UInt64.toBitVec_inj.mp; simp)",
+                  "· apply UInt64.toBitVec_inj.mp; simp", "· first | trivial | rfl",
+                  "· have : (R ⋆ fun _ => True) m2 := sep_true (by ecancel)", "  exact this"]
+            return L
+        else:
+            raise SystemExit(f"list reject directive {d} `{t}`: no tactic template")
+        d += 1
+
+
+def lu_err(D, mode):
+    """Error global of the path's first error label (short: jb target, offset: jne target)."""
+    lab_index = {t: d for d, k, t in D if k == "label"}
+    op = "jb" if mode == "short" else "jne"
+    tgt = next(t.split()[1] for _, k, t in D if k == "instr" and t.split()[0] == op)
+    return re.match(r"mov (ssz\.\w+)\(%rip\)", D[lab_index[tgt] + 1][2])[1]
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--desccheck-result", required=True)
@@ -799,6 +952,8 @@ def main():
     th = json.load(open(a.theorems))
     [(key, desc, _p, dsha, _r)] = emit.accept(a.desccheck_result, a.desc_dir, [a.type], "hand_case", th)
     t = key[1]
+    if any(f["kind"] == "list" for f in desc["fields"]):
+        return main_list(a, key, desc, dsha)
     F = Fields(desc, LAYOUT["types"][t])
     ns = a.ns or f"Gen1cX4.{t}"
     only = a.only.split(",")
@@ -843,6 +998,45 @@ def main():
     os.makedirs(os.path.dirname(out), exist_ok=True)
     open(out, "w").write("\n".join(body))
     print(json.dumps({"type": t, "out": a.out_lean, "only": only, "mutant": a.mutant, "desc_sha256": dsha}))
+
+
+
+def main_list(a, key, desc, dsha):
+    t = key[1]
+    L = ListField(desc, LAYOUT["types"][t])
+    ns = a.ns or f"Gen1cX4.{t}"
+    only = [x for x in a.only.split(",") if x in ("size", "reject_short", "reject_offset")] if a.only != ap_default() else ["size", "reject_short", "reject_offset"]
+    code = {m: f"{t}{m}" for m in ("SizeSSZ", "UnmarshalSSZ", "MarshalSSZTo")}
+    head = ["import Fk.Step", "import Fk.Bytes", "import Fk.Labels", "import Fk.Flags", "import Gen1cX4.Support"]
+    pre = []
+    if a.mutant:
+        m, f = a.mutant.split("=", 1)
+        head.append("import Fk.Include")
+        code[m] = f"{t}{m}Mut"
+        pre = [f'def {code[m]} : Program := include_x64_rt "{os.path.realpath(f)}"', ""]
+    Dsz = directives(os.path.join(NORM, f"target.{t}.SizeSSZ.S"))
+    Dun = directives(os.path.join(NORM, f"target.{t}.UnmarshalSSZ.S"))
+    body = [f"-- Generated by fv/kraken/gen/x4/x4gen.py from the Desc of {key[0]}.{t} (sha256 {dsha}).",
+            "-- Statements from the Desc and the Go layout; proofs from the directive list. Do not edit.",
+            *head, "", f"namespace {ns}", "open Fk Fk.Code", "", *pre]
+    if "size" in only:
+        body += [lu_size_stmt(code["SizeSSZ"], L), "theorem size [Host] : size_stmt := by",
+                 *["  " + x for x in lu_size_proof(Dsz, L, code["SizeSSZ"])], ""]
+    for mode in ("short", "offset"):
+        if f"reject_{mode}" in only:
+            body += [lu_rej_stmt(f"reject_{mode}", code["UnmarshalSSZ"], lu_err(Dun, mode), mode),
+                     "set_option maxHeartbeats 4000000 in", "set_option maxRecDepth 100000 in",
+                     f"theorem reject_{mode} [Host] : reject_{mode}_stmt := by",
+                     *["  " + x for x in lu_rej_proof(Dun, code["UnmarshalSSZ"], mode)], ""]
+    body += [f"end {ns}", ""]
+    out = os.path.realpath(a.out_lean)
+    os.makedirs(os.path.dirname(out), exist_ok=True)
+    open(out, "w").write("\n".join(body))
+    print(json.dumps({"type": t, "out": a.out_lean, "only": only, "mutant": a.mutant, "desc_sha256": dsha}))
+
+
+def ap_default():
+    return "size,accept,reject_bool,reject_size,marshal,compose"
 
 
 if __name__ == "__main__":

@@ -1,0 +1,39 @@
+{
+ "schema": "fvphase1c.x4-compare/1",
+ "log": "run logs/77 (compare step)",
+ "rows": [
+  {
+   "gen": "Gen1cX4.ListU64.size_stmt",
+   "hand": "lu_size_main",
+   "expect": "SAME",
+   "why": "size",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListU64.reject_short_stmt",
+   "hand": "lu_reject_short_main",
+   "expect": "SAME",
+   "why": "reject size-short",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListU64.reject_offset_stmt",
+   "hand": "lu_reject_offset_main",
+   "expect": "SAME",
+   "why": "reject offset-first",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListU64.reject_short_stmt",
+   "hand": "lu_reject_offset_main",
+   "expect": "DIFF",
+   "why": "control",
+   "result": "DIFF",
+   "as_expected": true
+  }
+ ],
+ "all_as_expected": true
+}

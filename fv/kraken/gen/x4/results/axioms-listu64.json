@@ -1,0 +1,45 @@
+{
+ "allowed": [
+  "Classical.choice",
+  "Quot.sound",
+  "propext"
+ ],
+ "rows": [
+  {
+   "name": "Gen1cX4.ListU64.size",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListU64.reject_short",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListU64.reject_offset",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.off4",
+   "axioms": [
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  }
+ ],
+ "all_standard": true
+}

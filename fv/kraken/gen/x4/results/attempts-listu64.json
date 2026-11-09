@@ -1,0 +1,64 @@
+{
+ "schema": "fvphase1c.x4-attempts/1",
+ "type": "ListU64",
+ "obligations": {
+  "size": {
+   "status": "proved (generated), SAME",
+   "attempts": [
+    {
+     "log": "run logs/77",
+     "result": "pass"
+    }
+   ],
+   "hand": "lu_size_main",
+   "negative": "lu-size-add (logs/78)"
+  },
+  "reject r1 size-short": {
+   "status": "proved (generated), SAME",
+   "attempts": [
+    {
+     "log": "run logs/77",
+     "result": "pass"
+    }
+   ],
+   "hand": "lu_reject_short_main",
+   "negative": "lu-short-cmp (logs/78)"
+  },
+  "reject r2 offset-first": {
+   "status": "proved (generated), SAME",
+   "attempts": [
+    {
+     "log": "run logs/77",
+     "result": "pass"
+    }
+   ],
+   "hand": "lu_reject_offset_main",
+   "negative": "lu-off-cmp (logs/78)"
+  },
+  "reject r3 list-misaligned": {
+   "status": "not attempted",
+   "hand": "lu_reject_misaligned_main",
+   "why": "fmt.Errorf call path (convT64, FmtErrorfDWC contracts); needs a call template"
+  },
+  "reject r4 list-too-big": {
+   "status": "not attempted",
+   "hand": "lu_reject_toobig_main",
+   "why": "fmt.Errorf call path; needs a call template"
+  },
+  "accept (0, 1, 16)": {
+   "status": "not attempted",
+   "hand": "lu_accept_main",
+   "why": "makeslice call and the element loop (Fk/LuLoop.lean invariant); needs a loop template"
+  },
+  "marshal (growslice site)": {
+   "status": "not attempted",
+   "hand": "lu_marshal_main, lum_grow_site",
+   "why": "element loop and growslice; needs a loop template"
+  },
+  "compose": {
+   "status": "not attempted",
+   "hand": "lu_unmarshal_then_marshal",
+   "why": "needs the generated accept and marshal"
+  }
+ }
+}

@@ -28,6 +28,9 @@ CASES = [  # id, type, method, designated obligation, old instruction, new instr
     ("sc-rbool-cmp", "Scalars", "UnmarshalSSZ", "reject_bool", "cmp $0x1,%cl", "cmp $0x2,%cl"),
     ("sc-rsize-cmp", "Scalars", "UnmarshalSSZ", "reject_size", "cmp $0x10,%rcx", "cmp $0x11,%rcx"),
     ("sc-marshal-add", "Scalars", "MarshalSSZTo", "marshal", "add $0x2,%rdx", "add $0x3,%rdx"),
+    ("lu-size-add", "ListU64", "SizeSSZ", "size", "add $0x4,%rax", "add $0x5,%rax"),
+    ("lu-short-cmp", "ListU64", "UnmarshalSSZ", "reject_short", "cmp $0x4,%rcx", "cmp $0x3,%rcx"),
+    ("lu-off-cmp", "ListU64", "UnmarshalSSZ", "reject_offset", "cmp $0x4,%rdx", "cmp $0x5,%rdx"),
     # statement mutation (method "stmt"): the generated composition must fail if it claims another length
     ("sc-compose-len", "Scalars", "stmt", "compose", "st'.data.regs.rbx = dlen + 16", "st'.data.regs.rbx = dlen + 17"),
 ]

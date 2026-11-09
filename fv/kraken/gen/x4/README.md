@@ -31,6 +31,19 @@ Desc와 Go 배치에서 정리 문장을, 기계어 지시 목록에서 증명�
 | size | 생성 증명 통과, 문장 SAME(`sc_size_main`) |
 | accept | 생성 증명 통과(시도 2), 문장 SAME(`sc_accept_main`) |
 | reject r2 bool | 생성 증명 통과(시도 2), 문장 SAME(`sc_reject_bool_main`) |
-| reject r1 size | 설계 1은 3회 실패(`ecancel`). 설계 2(`Fk/ScReject.lean`의 `h_mem' 재배열과 `sym`/`kstep` 틀)로 생성 증명 통과, 문장 SAME(`sc_reject_size_main`) |
+| reject r1 size | 설계 1은 3회 실패(`ecancel`). 설계 2(`Fk/ScReject.lean`의 `h_mem'` 재배열과 `sym`/`kstep` 틀)로 생성 증명 통과, 문장 SAME(`sc_reject_size_main`) |
 | marshal | 생성 증명 통과(시도 1), 문장 SAME(`sc_marshal_main`) |
 | 조합 | 생성 증명 통과(시도 1, 생성한 accept·marshal 위), 문장 SAME(`sc_unmarshal_then_marshal`). 전 전제 증인 `Gen1cX4.WitScComp`(gen/wit 출력을 생성 정리로 다시 겨눔) |
+
+## 4. ListU64 조각 (부분)
+
+`results/attempts-listu64.json`, `compare-listu64.json`, `negative-listu64.json`, `axioms-listu64.json`.
+틀은 `Fk/LuMarshal.lean`(size)과 `Fk/LuReject.lean`(짧은 길이, 첫 오프셋)의 조각을 따른다. 보조정리 `Gen1cX4.off4`는 손으로 다시 증명했다(`Fk.lu_off4`와 같은 문장).
+
+| 의무 | 상태 |
+| --- | --- |
+| size | 생성 증명 통과(시도 1), 문장 SAME(`lu_size_main`) |
+| reject r1 짧은 길이 | 생성 증명 통과(시도 1), 문장 SAME(`lu_reject_short_main`) |
+| reject r2 첫 오프셋 | 생성 증명 통과(시도 1), 문장 SAME(`lu_reject_offset_main`) |
+| reject r3 정렬, r4 한도 초과 | 시도하지 않음(fmt.Errorf 호출 틀 필요) |
+| accept(0·1·16), marshal(growslice), 조합 | 시도하지 않음(루프 틀 필요) |
