@@ -81,7 +81,7 @@ Go 값 미검사의 종류별 집계(goval, 80 파일):
 | 값 | 크기·정렬·패딩·bool·슬라이스·겹침 | 2 파일: `WitCpM` dst(기호 길이), 1a `Witness`(대상 없음) |
 | 자원 조각(`s_mem`) | 1088 조각 | 42 조각(기호 길이나 주소. `WitLcO`의 정적 상자 둘 포함) |
 | 타입 내용 | `%w` 증인 5개의 `*errors.errorString` 기술자(Size_, Kind_) | `%d` 인수의 int·uint64 기술자 내용(증인 2개) |
-| 런타임 전역 | `ssz.Err*` 전역 19곳의 초기화(itab, errorString) | `runtime.writeBarrier` 값, `staticuint64s` 항목(정리 `staticBox_of_lt`가 표와 연결). 증인은 쓰는 항목만 놓는다(`WitLcO`: 4와 8). 표의 나머지 항목은 증인 메모리에 없다 |
+| 런타임 전역 | `ssz.Err*` 전역 19곳의 초기화(itab, errorString) | `runtime.writeBarrier` 값, `staticuint64s` 항목(정리 `staticBox_of_lt`가 표와 연결). 증인은 쓰는 항목만 값으로 놓는다(`WitLcO`: 4와 8). 표의 나머지 자리는 0 채움 바이트다. 정리가 읽지 않는다. `WitLcO`의 표 주소 66012는 8의 배수가 아니다. goval은 정적 표를 보지 않는다 |
 
 Prysm 두 타입은 v7.1.8 `51b5a75` 스키마를 옮긴 축약 구조체다.
 protobuf 필드가 있는 실제 Prysm 바이너리의 증명이 아니다.
@@ -95,7 +95,7 @@ protobuf 필드가 있는 실제 Prysm 바이너리의 증명이 아니다.
 | ELF → Lean 프로그램 | objdump, `link/conv.py`, `include_x64_rt` | 링크 검사 (a)–(e): 독립 디코더 셋, 심볼·변위 | 유지 |
 | ELF → Lean 데이터 | `link/data.py`, `data_include`(`Fk/Include.lean`) | 링크 검사 (f): 데이터 파일 = ELF 바이트, 포인터 워드 = 심볼 + 오프셋, 같은 줄 규칙(출력 가능한 ASCII와 `\n`만). `data.py --check`: 재생성 = 추적 파일. 해시는 RESULT 묶음 | 유지 |
 | 정리가 include 정의를 쓰는가 | 정리의 전제는 정리 문장으로 읽는다. 검사 도구는 Lean 소스를 읽지 않는다(해시용 `Code.lean`, `AXIOMS.txt`만). 임의 Host 선언이나 이름 가림(astra 수정 2 발견 1)을 잡는 도구는 없다 | 없음(설계상, DIRECTION 3절) | 1c: 해석된 선언에서 의존성을 뽑는다 |
-| 항목 id와 주소 | id ↔ 주소의 결합은 증명이 한다. 검사 (f)는 파일 = ELF만 본다. 다른 주소와 그 자리 바이트로 바꾼 파일도 (f)는 PASS다. 정리가 쓰는 주소는 코드의 `lea`와 맞아야 증명된다(데이터 변이 `logs/34`) | 증명 | 유지 |
+| 항목 id와 주소 | 검사 (f)는 파일 = ELF만 본다. 다른 주소와 그 자리 바이트로 바꾼 파일도 (f)는 PASS다. 증명된 코드가 `lea`하는 항목(형식 문자열 9개, `int`·`uint64` 타입 워드)은 증명이 묶는다(데이터 변이 `logs/34`). 계약만 쓰는 항목 넷(`vblMsgE/Z/B`, `staticuint64s`)은 계약 가설이 묶는다 | 증명, 계약 가설 | 유지 |
 | 형식 문자열의 내용 | Lean이 묶는 것은 길이(`*_len`)와 nil 형식의 `%` 없음(`*_nopct`)뿐이다. `%w`·`%d` 동사 모양과 계약(`FmtErrorfWC`·`DWC`·`DDC`)의 대응은 계약 가설이다. 내용을 바꾼 형식도 증명은 통과한다 | 없음 | 형식 본문을 Lean 보조 정리로 고정(남은 일) |
 | 재빌드 추적 | Lake가 `needs`의 `input_dir`(norm, data, `Fk/*.S`) 내용을 입력 해시에 넣는다 | X1 실험(수정 3 커밋 본문) | 유지 |
 | 오류 전역의 값 | Go의 패키지 초기화가 `(itab, errorString)`을 넣는다 | 정리의 전제(`sc_reject_bool_err`의 `e0 ≠ 0`), 증인은 초기화된 값 | 런타임 초기화 정교화 |
@@ -179,6 +179,7 @@ protobuf 필드가 있는 실제 Prysm 바이너리의 증명이 아니다.
 
 ## 8. 재현
 
+전제: git 체크아웃(작업 트리 깨끗함), `lean/`과 `vcgen/`의 Lake 패키지를 미리 받아 둠.
 저장소 루트에서 `. /workspace/tooling/fv/env.sh` 뒤에 아래 블록을 그대로 `sh`로 돌린다.
 `SCR`는 워크트리 밖의 빈 디렉터리다. 한 단계라도 실패하면 멈춘다.
 부정 시험은 사례마다 복제 하나(약 1.1 GiB)를 만들고 다음 사례 전에 지운다.
@@ -199,11 +200,12 @@ git diff --exit-code fv/kraken/lean/tools/wit/layout.json         # 바이트 �
 python3 -B fv/kraken/link/check.py fv/kraken/link/out             # PASS all, BUNDLE
 python3 -B fv/kraken/link/check.py --selftest fv/kraken/link/out  # 11 cases
 : > fv/kraken/negative/RESULT
-for c in offset maxlen loop gsnum nilerr vbvje bvnochk blmnochk neoff cplen adcopy scbool scrbword blrity lcorder lcorderctl control nopret; do
+for c in offset maxlen loop gsnum nilerr vbvje bvnochk blmnochk neoff cplen adcopy scbool scrbword blrity lcorder lcorderctl lcitems lcitemsctl control nopret; do
   PATH=/workspace/tooling/fv/compat-bin:$PATH fv/kraken/negative/run.sh "$SCR" "$c"   # Linux: cp -c 대체
   rm -rf --one-file-system -- "$SCR/neg-$c"
-done                                                              # 18 cases, run.sh는 UNEXPECTED면 실패
+done                                                              # 20 cases, run.sh는 UNEXPECTED면 실패
 GOROOT=$(go env GOROOT) go test -count=1 ./fv/kraken/semtest/    # F1, F2 PASS
+git diff --exit-code fv/kraken/AXIOMS.txt fv/kraken/AXIOMS-ALL.txt fv/kraken/link/out/RESULT fv/kraken/negative/RESULT
 ```
 
 대상 재생성과 증인 재생성 명령은 `TOOLS.md`와 `lean/tools/wit/README.md`에 있다.
@@ -227,4 +229,4 @@ GOROOT=$(go env GOROOT) go test -count=1 ./fv/kraken/semtest/    # F1, F2 PASS
 4. 파일마다 `link/check.py` (f)가 ELF와 다시 비교한다. 파일은 Lake `input_dir` 입력이다.
 5. Go 1.26.10 ELF는 자기 데이터 파일과 표를 자기 이름공간에 둔다. Go 1.26.3 값을 다시 쓰지 않는다.
 6. 오류 전역은 주소만 뽑는다. 값은 런타임 초기화가 정한다. 거부 정리의 비nil 결론은 `e0 ≠ 0` 같은 초기화 전제를 둔다.
-7. 증인은 오류 전역을 초기화된 값으로 두고 `%w` 타입 워드가 ELF 기술자(`errorStringPtrType`)를 가리키게 한다. goval이 둘을 검사한다.
+7. 증인은 오류 전역을 초기화된 값으로 두고 `%w` 타입 워드가 ELF 기술자(`errorStringPtrType`)를 가리키게 한다. goval이 전역의 초기화와 기술자의 Size_·Kind_를 검사한다.

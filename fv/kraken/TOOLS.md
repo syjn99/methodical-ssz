@@ -64,7 +64,7 @@ fv/kraken/link/build.sh          # ELF, objdump, nm, norm/*.S, data/*.data, buil
 | `word <레이블> <오프셋>` | 8바이트 리틀엔디언 절대 주소 = 레이블 + 오프셋(재배치 워드) |
 
 검사: `link/check.py`가 모든 데이터 파일을 ELF와 비교한다. `python3 -B link/data.py --check link/out`은 재생성 결과가 추적 파일과 같은지 본다(다르면 종료 1).
-줄 규칙(두 읽기기 공통): 줄은 `\n`으로 나눈다. 다른 문자는 모두 출력 가능한 ASCII다. `\r`·탭·제어 문자가 있으면 `check.py` (f)와 `data_include`가 모두 거부한다.
+줄과 토큰 규칙(두 읽기기 공통, `bytes`는 소문자 두 자리 16진수, 오프셋은 10진 숫자만): 줄은 `\n`으로 나눈다. 다른 문자는 모두 출력 가능한 ASCII다. `\r`·탭·제어 문자가 있으면 `check.py` (f)와 `data_include`가 모두 거부한다.
 `bytes`는 그 구간의 파일 바이트와, `word`는 그 위치의 8바이트 값 = 심볼 주소 + 오프셋과 같아야 한다. 파일의 sha256은 (a)와 같은 해시 묶음에 들어간다.
 재빌드: `lean/lakefile.toml`의 `Fk` 라이브러리 `needs`에 `link/out/norm`, `link/out/data`, `lean/Fk/*.S`를 입력으로 등록한다.
 
@@ -93,7 +93,7 @@ fv/kraken/link/build.sh          # ELF, objdump, nm, norm/*.S, data/*.data, buil
 
 신뢰 한계(수정 3 리뷰 M3):
 - 검사 도구는 Lean 소스를 읽지 않는다. 정리가 이 정의를 쓰는지는 정리 문장으로 읽는다. 어떤 도구도 확인하지 않는다.
-- 항목 id ↔ 주소의 결합은 증명이 한다. 검사 (f)는 "파일 = 그 주소의 ELF 바이트"만 본다.
+- 검사 (f)는 "파일 = 그 주소의 ELF 바이트"만 본다. 증명된 코드가 `lea`하는 항목(형식 문자열, `int`·`uint64` 타입 워드)의 id ↔ 주소는 증명이 묶는다. 계약만 쓰는 항목 넷(`vblMsgE/Z/B`, `staticuint64s`)은 계약 가설이 묶는다.
 - 형식 문자열의 내용과 동사 모양이 계약(`FmtErrorfWC`·`DWC`·`DDC`)과 맞는지는 계약 가설이다. Lean은 길이와 `%` 없음만 묶는다.
 
 오류 전역 id: `ErrSize`, `ErrInvalidSerialization`, `ErrInvalidVariableOffset`, `ErrListTooBig`, `ErrBytesLength`, `ErrIncorrectListSize`.

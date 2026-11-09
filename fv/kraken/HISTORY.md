@@ -139,3 +139,10 @@ X5: 계약 `FmtErrorfDDC`·모델·`joint_models`(11개), 루프 보조 정리 `
 X6: 게이트 표 정정(크기 동일 여덟, BitVec makeslice, ListC 5/10(X5 뒤 6/10), 미검사 종류별 집계).
 X7(최종 코드 `f45903c`): 차가운 프로젝트 빌드 863 jobs, 공리 1627/8287 NONSTANDARD 0, 검사 PASS, 자기 시험 10, 부정 시험 18, goval 80/0/2, go test PASS.
 철회: `review/ReviewSHashFixAstra.lean`(대상 삭제), `bool_two_returns_nil` 예시(지적이 닫혀 `bool_two_returns_error`로 바꿈).
+
+## 10. 수정 3 리뷰 반영 (2026-11-09 17:55 – , fix3 스트림)
+
+리뷰 fix3-r1은 REQUEST_CHANGES(M1–M4)였다.
+Stage A(`d9cdb40`, 리뷰 r2 APPROVE): `data.py`가 추적 파일과 같은 출력을 낸다(`# text` 줄 삭제, `data.py --check` 추가). REPORT 8절을 그대로 도는 블록으로 다시 썼다. 삭제로 닫은 astra 1–3의 신뢰 한계를 적었다. 두 읽기기의 줄 규칙을 맞췄다.
+Stage B(M4): ListU64 짧은 입력 거부의 함수 명세(`LuURejShortC`, 기계어에서 유도), 원소 오류 전달 정리 `lcl_itemerr`·`lc_reject_item_main`, include 항목 `lcFmtItems`(API v3, 더하기만), 증인 `WitLcI`, 부정 시험 lcitems와 다시 빌드하는 대조군.
+`WitLcI` 첫 빌드는 커널 OOM kill이었다. 그 뒤 RSS 감시(5 GiB)를 두고 진단했다: 마지막 정리의 `exact h`가 남은 `emp` 프레임 때문에 분리 논리곱을 정의상 펼쳤다. 두 번째 시도는 2.74 GiB로 빌드됐다.

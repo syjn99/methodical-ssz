@@ -37,8 +37,11 @@ Checks:
      This replaced the checks of hand-written Lean constants and of Go source
      literals (fix 3 X2). This checker does not read Lean sources (only the
      hashes of Code.lean and AXIOMS.txt): which definitions a theorem uses is
-     read from the theorem statements, not checked here; an item id is bound
-     to its address by the proofs, not by this check.
+     read from the theorem statements, not checked here. Items that the
+     proven code addresses with `lea` (the format strings, the int and uint64
+     type words) are bound to their id by the proofs; the items that only a
+     contract uses (vblMsgE/Z/B, staticuint64s) are bound by the contract
+     hypothesis. This check binds neither.
 The bundle hash (sha256 over RESULT up to and including the last PASS line,
 which covers the ELF, the .S files, the data files, Code.lean and AXIOMS.txt
 hashes) is the last line.
@@ -275,6 +278,9 @@ def run(outdir, log):
             w = line.split()
             if not w or w[0].startswith("#"):
                 continue
+            need(all(re.fullmatch(r"[0-9a-f]{2}", x) for x in w[1:]) if w[0] == "bytes" else
+                 len(w) != 3 or w[0] not in ("at", "word") or re.fullmatch(r"[0-9]+", w[2]),
+                 f"(f) {p.name}: token not in the data_include grammar: {line!r}")
             if w[0] == "at" and len(w) == 3 and at is None and pos == 0:
                 at = esyms[orig(w[1])][0] + int(w[2])
             elif w[0] == "bytes" and at is not None:
