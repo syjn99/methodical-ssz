@@ -94,7 +94,7 @@
   "fv/kraken/target/types.ssz.go": "ea0b289026e920fdad16b134b6273e9b8dffdf8b119d092413881eca05fd6608",
   "fv/kraken/target/types1b.ssz.go": "31d4226fc5922b74a7e980cc011711b068977fb3a7c8aa5f23982cdf99eaff54",
   "fv/kraken/target/prysm/types.ssz.go": "f54069057d0c46abe32b6aeda173ce102fb3c2d874ae0fc9547183089cc1fa1a",
-  "fv/kraken/prysm/inventory.json": "7eb5058afa2d0f5ddf36fe7ae74763e7a94af2da5c44a6fe2f158888f2259d2a",
+  "fv/kraken/prysm/inventory.json": "d3fe6d31ea86b4d1abf7191bb03ca9d1e39d06b84b316e4fb7383ea0e2dbf527",
   "fv/kraken/prysm/_generated/mainnet/altair.ssz.go": "8551ad5ef8129b9821a6451732d60cf3b97a2c42132be2072e1721309245473a",
   "fv/kraken/prysm/_generated/mainnet/bellatrix.ssz.go": "57f9f22b7e151f5db31df5b459618a947f9a06fbf573c7efc4af7e3a8105fef5",
   "fv/kraken/prysm/_generated/mainnet/capella.ssz.go": "9c6b33899467501d2a22f5a93dc10ef220c7b737030dd7b3c41a0bc298cbbbe9",
@@ -37500,6 +37500,9 @@
    "size": 9
   },
   "hand_obligations_with_theorem": 63,
+  "hand_obligations_with_theorem_partial": 5,
+  "hand_obligations_with_full_theorem": 58,
+  "hand_obligations_open": 69,
   "hand_main_theorems_mapped": 55,
   "hand_names_in_table_not_mapped": [],
   "prysm_types_in": 132,

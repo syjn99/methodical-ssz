@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """One-time builder of the two frozen lists (P2). Not part of the generator.
 
-Usage: build_lists.py <repo-root>
+Usage: build_lists.py <repo-root> [--out DIR]
 Writes fv/kraken/gen/frozen/THEOREMS.json and fv/kraken/gen/frozen/ASSUMPTIONS.json.
 
 After the commit that adds them, the two JSON files are frozen:
@@ -83,7 +83,7 @@ COMPLETION = [
 # Existing hand theorems per (type, function, kind[, site-ordinal-among-same-kind]).
 HAND = {
     ("Scalars", "UnmarshalSSZ", "accept"): ["sc_accept_main"],
-    # reject_complete: only EthLib-side characterizations exist (partial, see HAND_PARTIAL)
+    # reject_complete: only EthLib-side characterizations exist; such rows get hand_status "partial"
     ("BitVec", "UnmarshalSSZ", "reject_complete"): ["bv_spec_accepts_iff"],
     ("Checkpoint", "UnmarshalSSZ", "reject_complete"): ["cp_spec_accepts_iff"],
     ("AttestationData", "UnmarshalSSZ", "reject_complete"): ["ad_spec_accepts_iff"],
@@ -211,6 +211,8 @@ def instantiate(fn_sites, types, hand=None):
 
 def main():
     root = sys.argv[1]
+    # --out DIR writes the two files elsewhere (used by test_frozen.py to compare with the committed bytes)
+    out_dir = sys.argv[sys.argv.index("--out") + 1] if "--out" in sys.argv else None
     k = f"{root}/fv/kraken"
     hand_types = ["Scalars", "FixedVec", "ListU64", "BitVec", "Nested", "ListC", "BitL", "Checkpoint", "AttestationData"]
     hs = obligations.sites([f"{k}/target/types.ssz.go", f"{k}/target/types1b.ssz.go", f"{k}/target/prysm/types.ssz.go"])
@@ -245,6 +247,11 @@ def main():
             "hand_obligations": len(hand_rows),
             "hand_obligations_by_kind": dict(sorted(Counter(r["obligation"] for r in hand_rows).items())),
             "hand_obligations_with_theorem": sum(bool(r["hand_theorems"]) for r in hand_rows),
+            "hand_obligations_with_theorem_partial": sum(bool(r["hand_theorems"]) and r.get("hand_status", "").startswith("partial")
+                                                         for r in hand_rows),
+            "hand_obligations_with_full_theorem": sum(bool(r["hand_theorems"]) and not r.get("hand_status", "").startswith("partial")
+                                                      for r in hand_rows),
+            "hand_obligations_open": sum(not r["hand_theorems"] for r in hand_rows),
             "hand_main_theorems_mapped": len([n for n in mapped if n.endswith("_main")]),
             "hand_names_in_table_not_mapped": sorted(set(all_hand) - set(mapped)),
             "prysm_types_in": len(in_types),
@@ -286,7 +293,7 @@ def main():
         "forbidden": ["sorry", "admit", "new axiom", "native_decide", "bv_decide", "hand-typed rodata/itab/type constants", "a premise that makes the conclusion vacuous (False derivable)", "dropping a live resource into `⋆ True` without classification"],
         "sources": ["fv/kraken/CONTRACTS.md", "fv/kraken/REPORT.md sections 3 and 7", "fv/AGENTS.md", "run shared/INCLUDE-API.json api_version 2 (fix3 b6c32c3, data include, committed, not yet approved); gen/gen1c/include_adapter.py names the version in use"],
     }
-    d = f"{k}/gen/frozen"
+    d = out_dir or f"{k}/gen/frozen"
     for name, obj in (("THEOREMS.json", th), ("ASSUMPTIONS.json", asm)):
         with open(f"{d}/{name}", "w") as f:
             json.dump(obj, f, indent=1, ensure_ascii=False)
