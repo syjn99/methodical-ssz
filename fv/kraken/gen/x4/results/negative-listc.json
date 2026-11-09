@@ -1,7 +1,7 @@
 {
  "schema": "fvphase1c.x4-negative/1",
- "cases": 22,
- "as_expected": 22,
+ "cases": 26,
+ "as_expected": 26,
  "rows": [
   {
    "id": "lc-short-cmp",
@@ -334,6 +334,230 @@
    ],
    "as_expected": true,
    "run": "logs/109"
+  },
+  {
+   "id": "lc-marshal-len",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lc_marshal_len_mutant.marshal",
+   "mutation": "'lea 0x4(%rcx),%rdx' -> 'lea 0x5(%rcx),%rdx'",
+   "exit": "1",
+   "first_error": "line 909: omega could not prove the goal:",
+   "theorem_lines": [
+    865,
+    1050
+   ],
+   "lemma_lines": [
+    [
+     45,
+     81
+    ],
+    [
+     89,
+     125
+    ],
+    [
+     171,
+     261
+    ],
+    [
+     264,
+     319
+    ],
+    [
+     334,
+     401
+    ],
+    [
+     404,
+     420
+    ],
+    [
+     421,
+     448
+    ],
+    [
+     509,
+     691
+    ],
+    [
+     696,
+     712
+    ],
+    [
+     718,
+     762
+    ]
+   ],
+   "as_expected": true,
+   "run": "logs/114"
+  },
+  {
+   "id": "lc-marshal-len",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lc_marshal_len_control.marshal",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    865,
+    1050
+   ],
+   "lemma_lines": [
+    [
+     45,
+     81
+    ],
+    [
+     89,
+     125
+    ],
+    [
+     171,
+     261
+    ],
+    [
+     264,
+     319
+    ],
+    [
+     334,
+     401
+    ],
+    [
+     404,
+     420
+    ],
+    [
+     421,
+     448
+    ],
+    [
+     509,
+     691
+    ],
+    [
+     696,
+     712
+    ],
+    [
+     718,
+     762
+    ]
+   ],
+   "as_expected": true,
+   "run": "logs/114"
+  },
+  {
+   "id": "lc-mloop-off",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lc_mloop_off_mutant.marshal",
+   "mutation": "'mov %r8d,-0x4(%rdx,%rbx,1)' -> 'mov %r8d,-0x8(%rdx,%rbx,1)'",
+   "exit": "1",
+   "first_error": "line 231: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+   "theorem_lines": [
+    865,
+    1050
+   ],
+   "lemma_lines": [
+    [
+     45,
+     81
+    ],
+    [
+     89,
+     125
+    ],
+    [
+     171,
+     261
+    ],
+    [
+     264,
+     319
+    ],
+    [
+     334,
+     401
+    ],
+    [
+     404,
+     420
+    ],
+    [
+     421,
+     448
+    ],
+    [
+     509,
+     691
+    ],
+    [
+     696,
+     712
+    ],
+    [
+     718,
+     762
+    ]
+   ],
+   "as_expected": true,
+   "run": "logs/114"
+  },
+  {
+   "id": "lc-mloop-off",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lc_mloop_off_control.marshal",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    865,
+    1050
+   ],
+   "lemma_lines": [
+    [
+     45,
+     81
+    ],
+    [
+     89,
+     125
+    ],
+    [
+     171,
+     261
+    ],
+    [
+     264,
+     319
+    ],
+    [
+     334,
+     401
+    ],
+    [
+     404,
+     420
+    ],
+    [
+     421,
+     448
+    ],
+    [
+     509,
+     691
+    ],
+    [
+     696,
+     712
+    ],
+    [
+     718,
+     762
+    ]
+   ],
+   "as_expected": true,
+   "run": "logs/114"
   }
  ],
  "note": "logs/95 negative step did not run: the first offset mutation text (cmp $0x4,%rdx) occurs twice in the .S, prepare refused it; replaced by the unique jne (logs/96)"

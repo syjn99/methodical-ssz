@@ -32,6 +32,7 @@ import emit  # noqa: E402
 import include_adapter  # noqa: E402
 sys.path.insert(0, HERE)
 import lcacc  # noqa: E402
+import lcmarsh  # noqa: E402
 
 NORM = os.path.join(KRAKEN, "link", "out", "norm")
 LAYOUT = json.load(open(os.path.join(KRAKEN, "gen", "wit", "src", "layout.json")))
@@ -2607,7 +2608,7 @@ def main_list(a, key, desc, dsha):
                 "reject_zero", "reject_past", "reject_tail", "accept_empty", "reject_order", "reject_item")
     only = [x for x in a.only.split(",") if x in LIST_OBL] if a.only != ap_default() else list(LIST_OBL)
     if L.esz is None:   # list of containers (ListC): size (outer loop) and the templates that do not touch elements
-        LC_OBL = ("size", "accept", "accept_empty", "reject_order", "reject_item", "reject_short", "reject_offset", "reject_zero", "reject_past", "reject_tail")
+        LC_OBL = ("size", "accept", "accept_empty", "reject_order", "reject_item", "marshal", "reject_short", "reject_offset", "reject_zero", "reject_past", "reject_tail")
         bad = [x for x in only if x not in LC_OBL]
         if a.only != ap_default() and bad:
             raise SystemExit(f"x4gen: refused {key[0]}.{t}: no template for {bad} on a list of containers")
@@ -2626,7 +2627,7 @@ def main_list(a, key, desc, dsha):
         head += ["import Fk.Contracts", "import Fk.Frame", "import Fk.Block"]
     if any(f"reject_{m}" in only for m in LC0_MODES) or (L.esz is None and ("accept" in only or "reject_order" in only or "reject_item" in only)):
         head += ["import Fk.FunSpecs"]
-    if L.esz is None and ("accept" in only or "reject_order" in only or "reject_item" in only):
+    if L.esz is None and any(o in only for o in ("accept", "reject_order", "reject_item", "marshal")):
         head += ["import Gen1cX4.SupportLc"]
     pre = []
     if a.mutant:
@@ -2663,7 +2664,7 @@ def main_list(a, key, desc, dsha):
         body += ["-- element loop of the decoder (generated from its directives)", *lu_loop_lemmas(Dun, code["UnmarshalSSZ"], LS),
                  lu_accept_stmt(code["UnmarshalSSZ"], AS), "set_option maxHeartbeats 8000000 in", "set_option maxRecDepth 100000 in",
                  "theorem accept [Host] : accept_stmt := by", *["  " + x for x in lu_accept_proof(Dun, code["UnmarshalSSZ"], AS, LS)], ""]
-    if "marshal" in only:
+    if "marshal" in only and L.esz is not None:
         if (L.esz, L.limit) != (8, 16):
             raise SystemExit(f"x4gen: refused {key[0]}.{t}: the marshal/loop template is for 8-byte elements and limit 16")
         Dma = directives(os.path.join(NORM, f"target.{t}.MarshalSSZTo.S"))
@@ -2751,6 +2752,16 @@ def main_list(a, key, desc, dsha):
                      *["  " + x for x in lu_call_proof(Dun, code["UnmarshalSSZ"], m, Ps[m])], ""]
     if L.esz is None and ("accept" in only or "reject_order" in only or "reject_item" in only):
         body += lc_accept_block(a, key, desc, t, code["UnmarshalSSZ"], Dun, G, L, only)
+    if L.esz is None and "marshal" in only:
+        if L.limit != 4:
+            raise SystemExit(f"x4gen: refused {key[0]}.{t}: the ListC marshal template is for the item limit 4, not {L.limit}")
+        try:
+            mb = lcmarsh.block(directives(os.path.join(NORM, f"target.{t}.MarshalSSZTo.S")), code["MarshalSSZTo"], lcacc.intro_line)
+        except (KeyError, AssertionError, IndexError, StopIteration, ValueError, TypeError) as e:
+            raise SystemExit(f"x4gen: refused {key[0]}.{t}: ListC marshal template does not fit the code ({type(e).__name__}: {e})")
+        if not any(x.startswith("open Fv1 EthLib.Serialization.Ssz") for x in body):
+            body += ["open Fv1 EthLib.Serialization.Ssz", ""]
+        body += mb
     body += [f"end {ns}", ""]
     out = os.path.realpath(a.out_lean)
     os.makedirs(os.path.dirname(out), exist_ok=True)

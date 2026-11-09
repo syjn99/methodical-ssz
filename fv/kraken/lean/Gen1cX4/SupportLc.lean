@@ -5,7 +5,7 @@ import Fk.LuErr
 /-! ListC accept support for the proofs that fv/kraken/gen/x4 generates. Written by hand, not generated.
 The statement definitions `lcObjs`, `ptrBytes`, `lcStart`, `lcStk` have the same text as in Fk/LcLoop.lean
 (so the generated statements compare equal by definitional unfolding); the lemmas are copies of
-Fk/LcLoop.lean, Fk/LcAccept.lean (`lca_m4`), Fk/LcMarshal.lean (`sep_mono_right'`), Fk/LcOrder.lean (`jb_true`), Fk/LcItems.lean (the contract statement `LuURejShortC`, with an explicit `[Host]` binder where the hand file has `variable [Host]`) and Fk/NeAccept.lean
+Fk/LcLoop.lean, Fk/LcAccept.lean (`lca_m4`), Fk/LcMarshal.lean (`sep_mono_right'`), Fk/LcOrder.lean (`jb_true`), Fk/Bump.lean (`sep_mono_left`, here `lc_sep_mono_left`: the witness modules see `Fk.sep_mono_left` too), Fk/NeMarshal.lean (`add4_neg4`), Fk/LcAcceptSpec.lean (`offTab`, `offTab_length`, `offTab_get`, `flatten_get`, `lc_sizes`, `lc_take_sizes`), Fk/LcItems.lean (the contract statement `LuURejShortC`, with an explicit `[Host]` binder where the hand file has `variable [Host]`) and Fk/NeAccept.lean
 (`luObj_sep`) with the same statements, proved here again so the generated module does not import those
 hand proof modules. Kept apart from Support.lean so that only the ListC module depends on Fk.LuErr. -/
 
@@ -177,5 +177,52 @@ def LuURejShortC [Host] (S : Nat) : Prop :=
           ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At (label "ssz.ErrSize").toBitVec)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ F) st'.data.dmem)
       ⟨st, label "target.ListU64.UnmarshalSSZ"⟩
+
+theorem lc_sep_mono_left {P P' R : DataMem → Prop} {m : DataMem} (hP : ∀ m, P m → P' m)
+    (h : (P ⋆ R) m) : (P' ⋆ R) m := by
+  obtain ⟨a, b, hu, hi, hp, hr⟩ := h
+  exact ⟨a, b, hu, hi, hP a hp, hr⟩
+
+theorem add4_neg4 (x y : BitVec 64) : 4 + y + x * 1#64 + -4 = x + y := by
+  rw [BitVec.mul_one, BitVec.add_assoc, BitVec.add_assoc, BitVec.add_comm 4, BitVec.add_assoc, BitVec.add_assoc]
+  rw [show (-4 : BitVec 64) + 4 = 0 by decide, Fk.add_lit_zero, BitVec.add_comm]
+
+def offTab : Nat → List (Array UInt8) → List UInt8
+  | _, [] => []
+  | s, p :: ps => (uintBytes 4 s).toList ++ offTab (s + p.size) ps
+
+theorem offTab_length : ∀ (ps : List (Array UInt8)) (s : Nat), (offTab s ps).length = 4 * ps.length
+  | [], _ => rfl
+  | p :: ps, s => by simp [offTab, offTab_length ps, Fv.uintBytes_size]; omega
+
+theorem offTab_get : ∀ (ps : List (Array UInt8)) (s j : Nat), j < ps.length →
+    ((offTab s ps).drop (4 * j)).take 4 = (uintBytes 4 (s + ((ps.take j).map Array.size).sum)).toList
+  | [], _, _, h => by simp at h
+  | p :: ps, s, 0, _ => by simp [offTab, Fv.uintBytes_size]
+  | p :: ps, s, j + 1, h => by
+    have := offTab_get ps (s + p.size) j (by simp at h; omega)
+    rw [show 4 * (j + 1) = 4 + 4 * j by omega, offTab, ← List.drop_drop,
+      List.drop_left' (by simp [Fv.uintBytes_size])]
+    rw [this]; simp [Nat.add_assoc]
+
+theorem flatten_get : ∀ (Ls : List (List UInt8)) (i : Nat) (hi : i < Ls.length),
+    (Ls.flatten.drop ((Ls.take i).map List.length).sum).take Ls[i].length = Ls[i]
+  | [], _, h => by simp at h
+  | L :: Ls, 0, _ => by simp
+  | L :: Ls, i + 1, h => by
+    have := flatten_get Ls i (by simp at h; omega)
+    simp only [List.flatten_cons, List.take_succ_cons, List.map_cons, List.sum_cons, List.getElem_cons_succ]
+    rw [← List.drop_drop, List.drop_left]; exact this
+
+theorem lc_sizes (gs : List ListU64) (j : Nat) :
+    (((gs.map luEncode).take j).map Array.size).sum = ((gs.take j).map fun g => 4 + 8 * g.l.length).sum := by
+  rw [← List.map_take, List.map_map]
+  congr 1; apply List.map_congr_left; intro g _; simp [lu_encode_size]
+
+theorem lc_take_sizes (gs : List ListU64) (i : Nat) :
+    (((gs.map luEncode).map Array.toList).take i |>.map List.length).sum
+      = ((gs.take i).map fun g => 4 + 8 * g.l.length).sum := by
+  rw [← lc_sizes, List.map_take, List.map_take, List.map_map, List.map_map]
+  simp [Function.comp_def]
 
 end Gen1cX4

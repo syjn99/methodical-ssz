@@ -1,6 +1,6 @@
 {
  "schema": "fvphase1c.x4-compare/1",
- "log": "run logs/109 (compare with smart unfolding off)",
+ "log": "run logs/113 (compare with smart unfolding off)",
  "rows": [
   {
    "gen": "Gen1cX4.ListC.size_stmt",
@@ -39,6 +39,14 @@
    "hand": "lc_reject_item_main",
    "expect": "SAME",
    "why": "reject r9 element decode error (last item, LuURejShortC, fmt.errorf Items: %w)",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListC.marshal_stmt",
+   "hand": "lc_marshal_main",
+   "expect": "SAME",
+   "why": "marshal fast path (four loops)",
    "result": "SAME",
    "as_expected": true
   },
@@ -151,6 +159,14 @@
    "hand": "lc_reject_offset_order_main",
    "expect": "DIFF",
    "why": "control (r9 vs r8)",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListC.marshal_stmt",
+   "hand": "lu_marshal_main",
+   "expect": "DIFF",
+   "why": "control (ListU64 marshal)",
    "result": "DIFF",
    "as_expected": true
   }

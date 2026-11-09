@@ -7,7 +7,8 @@
   "Fk.LcAccept",
   "Fk.LcAcceptEmpty",
   "Fk.LcOrder",
-  "Fk.LcItems"
+  "Fk.LcItems",
+  "Fk.LcMarshal"
  ],
  "pairs": [
   [
@@ -39,6 +40,12 @@
    "lc_reject_item_main",
    "SAME",
    "reject r9 element decode error (last item, LuURejShortC, fmt.errorf Items: %w)"
+  ],
+  [
+   "Gen1cX4.ListC.marshal_stmt",
+   "lc_marshal_main",
+   "SAME",
+   "marshal fast path (four loops)"
   ],
   [
    "Gen1cX4.ListC.reject_short_stmt",
@@ -123,6 +130,12 @@
    "lc_reject_offset_order_main",
    "DIFF",
    "control (r9 vs r8)"
+  ],
+  [
+   "Gen1cX4.ListC.marshal_stmt",
+   "lu_marshal_main",
+   "DIFF",
+   "control (ListU64 marshal)"
   ]
  ],
  "no_smart_unfolding": true

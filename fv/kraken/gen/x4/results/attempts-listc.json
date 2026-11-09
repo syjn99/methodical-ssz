@@ -170,8 +170,51 @@
    }
   },
   "marshal": {
-   "status": "not attempted",
-   "hand": "lc_marshal_main"
+   "status": "proved (generated from an anchored template), SAME",
+   "attempts": [
+    {
+     "log": "run logs/113",
+     "result": "build, compare (21/21 pairs as expected), axioms (19 names) 0; negative step 0 but all 4 cases unexpected: with --only marshal the module lacked the SupportLc import (generator defect of this session, fixed)"
+    },
+    {
+     "log": "run logs/114",
+     "result": "negative only, after the import fix: 4/4 as expected"
+    }
+   ],
+   "hand": "lc_marshal_main",
+   "negative": "lc-marshal-len (inside marshal), lc-mloop-off (inside lcm2_iter) (logs/114)",
+   "witness": "Gen1cX4.WitLcM0, M1, M1x1, M4, M4x16, MMix (gen/wit output retargeted; lcElem/lcS renamed to the generated Gen1cX4.ListC defs; logs/115 failed on those names, logs/116 all 6 build)",
+   "generator_decides": "weaker than the other ListC rows: no per-directive walker. lcmarsh.py reads the label positions of MarshalSSZTo.S and places every directive number of the hand text by anchor (label j + offset); each of the 113 anchored directives must have the instruction text it had in the hand case, else refusal.",
+   "hand_text": "everything else: statements, the four loops lcm1..lcm4 (iter/exit/loop), Keep1..4, lcBodyL/lcS/lcElem and all tactic text (gen/x4/lcm_tpl.py, from Fk/LcMarshal.lean). Support items restated in SupportLc.lean: offTab, offTab_length, offTab_get, flatten_get, lc_sizes, lc_take_sizes (Fk/LcAcceptSpec.lean), add4_neg4 (Fk/NeMarshal.lean), sep_mono_left as lc_sep_mono_left (Fk/Bump.lean).",
+   "verbatim_measure": {
+    "what": "tactic lines verbatim in Fk/LcMarshal.lean (only the intro line and the renamed lc_sep_mono_left differ)",
+    "rows": {
+     "marshal": {
+      "tactic_lines": 184,
+      "verbatim_in_hand": 183
+     },
+     "lcm1_iter": {
+      "tactic_lines": 27,
+      "verbatim_in_hand": 27
+     },
+     "lcm2_iter": {
+      "tactic_lines": 69,
+      "verbatim_in_hand": 69
+     },
+     "lcm3_iter": {
+      "tactic_lines": 51,
+      "verbatim_in_hand": 51
+     },
+     "lcm4_iter": {
+      "tactic_lines": 157,
+      "verbatim_in_hand": 157
+     },
+     "lcm4_loop": {
+      "tactic_lines": 8,
+      "verbatim_in_hand": 8
+     }
+    }
+   }
   },
   "compose": {
    "status": "not attempted",
