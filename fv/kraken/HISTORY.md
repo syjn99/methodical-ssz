@@ -136,6 +136,6 @@ X2: `link/data.py`와 `data_include`로 22개 항목을 include했다. 손 상�
 X3: `sc_reject_bool_err`(전제 `e0 ≠ 0`, 결론 rax ≠ 0)를 더했다. 증인 18개의 오류 전역을 초기화된 값으로, `%w` 증인 5개의 타입 기술자를 ELF 바이트로 바꿨다. goval이 둘을 검사한다.
 X4: `sc_size_main` 메모리 동일, `sc_marshal_main` r14, `ne_marshal_main` R, ListC 죽은 스택 `lcStk`.
 X5: 계약 `FmtErrorfDDC`·모델·`joint_models`(11개), 루프 보조 정리 `lcl_order`, 진입부터의 `lc_reject_offset_order_main`(첫 쌍), 증인 `WitLcO`, 부정 시험 lcorder와 대조군. 처음에는 비용 추정만으로 미루었다가 오케스트레이터 결정에 따라 했다. 원소 오류 전달("Items: %w")은 시작하지 않았다.
-X6: 게이트 표 정정(크기 동일 여덟, BitVec makeslice, ListC 5/10, 미검사 종류별 집계).
+X6: 게이트 표 정정(크기 동일 여덟, BitVec makeslice, ListC 5/10(X5 뒤 6/10), 미검사 종류별 집계).
 X7(최종 코드 `f45903c`): 차가운 프로젝트 빌드 863 jobs, 공리 1627/8287 NONSTANDARD 0, 검사 PASS, 자기 시험 10, 부정 시험 18, goval 80/0/2, go test PASS.
 철회: `review/ReviewSHashFixAstra.lean`(대상 삭제), `bool_two_returns_nil` 예시(지적이 닫혀 `bool_two_returns_error`로 바꿈).

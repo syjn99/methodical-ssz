@@ -23,7 +23,7 @@ Regenerate every generated `Fk/Wit*.lean` (from `fv/kraken/lean`): `python3 tool
 | WitLcA4x16 | `wlca.py 16,16,16,16 4x16` | `lc_accept_runs` |
 | WitLcAMix | `wlca.py 0,1,16 Mix` | `lc_accept_runs` |
 | WitLcE | `wlce.py` | `lc_accept_empty_runs` |
-| WitLcO | `wlco.py` | `lc_reject_order_runs` |
+| WitLcO | `wlco.py` | `lc_reject_order_runs` (정적 표는 항목 4·8만 놓는다. 표 레이블은 모든 조각 뒤) |
 | WitLcM0 | `wlcm.py 0` | `lc_marshal_runs` |
 | WitLcM1 | `wlcm.py 1` | `lc_marshal_runs` |
 | WitLcM1x1 | `wlcm.py 1 1x1` | `lc_marshal_runs` |

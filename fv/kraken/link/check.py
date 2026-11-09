@@ -32,9 +32,13 @@ Checks:
  (f) every data file data/<id>.data that Lean includes (Fk/Data.lean,
      `data_include`): its `at <label> <off>` names one ELF symbol; the file's
      `bytes` are the ELF file bytes there, and each `word <s> <o>` is the
-     8-byte little-endian value address(s) + o at its position. This replaces
-     the checks of hand-written Lean constants and of Go source literals
-     (fix 3 X2): the proofs use the included bytes, nothing else.
+     8-byte little-endian value address(s) + o at its position; every byte
+     of the file is printable ASCII or a newline (the rule of data_include).
+     This replaced the checks of hand-written Lean constants and of Go source
+     literals (fix 3 X2). This checker does not read Lean sources (only the
+     hashes of Code.lean and AXIOMS.txt): which definitions a theorem uses is
+     read from the theorem statements, not checked here; an item id is bound
+     to its address by the proofs, not by this check.
 The bundle hash (sha256 over RESULT up to and including the last PASS line,
 which covers the ELF, the .S files, the data files, Code.lean and AXIOMS.txt
 hashes) is the last line.
@@ -264,7 +268,10 @@ def run(outdir, log):
     need(datas, "(f) no data files in data/")
     for p in datas:
         at, pos, n_b, n_w = None, 0, 0, 0
-        for line in p.read_text().splitlines():
+        raw = p.read_bytes()
+        need(all(c == 10 or 0x20 <= c <= 0x7e for c in raw),
+             f"(f) {p.name}: a byte that is not printable ASCII or a newline (same rule as data_include)")
+        for line in raw.decode("ascii").split("\n"):
             w = line.split()
             if not w or w[0].startswith("#"):
                 continue
@@ -455,7 +462,11 @@ def selftest(outdir):
         assert struct.unpack_from("<Q", e, o)[0] == 0x4d4a00
         struct.pack_into("<Q", e, o, 0x4cbf00); p.write_bytes(bytes(e))
         cases.append(("ELF itab type word changed", t, False))
-        # 10. unchanged copy passes
+        # 10. a carriage return inside a data file (data_include splits on \n only)
+        t = copy(); p = t / "data" / "vblMsgB.data"
+        p.write_bytes(p.read_bytes().replace(b"\nat ", b"\rat ", 1))
+        cases.append(("data file with a carriage return", t, False))
+        # 11. unchanged copy passes
         t = copy()
         cases.append(("unchanged copy", t, True))
         ok = True

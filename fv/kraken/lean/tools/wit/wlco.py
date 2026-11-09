@@ -21,7 +21,7 @@ ch=[("guard",Z,8),("blk","z 144",144),("rslot","z 8",8),("l224","z 8",8),("l216"
     ("b4","[4, 0, 0, 0]",4),("t0","(lcTl.take 4)",4),("t1","(lcTl.drop 4)",T-4)]
 a=wgen.CH0+sum(n for _,_,n in ch)
 TAIL_IDX=5+432+6+6+15           # dataLabels, ListC, BumpAlloc, BumpNew24, RtErr
-NF=max(0,a-32-(0x10000+TAIL_IDX))
+NF=max(0,a-(0x10000+TAIL_IDX))   # the table label after every chunk (not on the input buffer, review S7)
 ST_IDX=TAIL_IDX+NF; STA=0x10000+ST_IDX
 G1=STA+32-a; assert G1>=0, G1
 ch+=[("gap_sb",f"z {G1}",G1),("sb4",f"Int.toBytes 8 (BitVec.ofNat 64 {E}).toInt",8),("gap_sb2","z 24",24),

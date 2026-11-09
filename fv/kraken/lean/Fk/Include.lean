@@ -51,6 +51,10 @@ meta def labelTerm (l : String) (o : Nat) : String :=
 
 /-- The Lean source of the two definitions of a data file (see above). -/
 meta def dataSource (id text : String) : Except String String := do
+  -- one rule with `link/check.py` (f): lines end with `\n`; every other character is
+  -- printable ASCII (no `\r`, tab or other control character)
+  unless text.toList.all (fun c => c == '\n' || (' ' ≤ c && c ≤ '~')) do
+    throw "a character that is not printable ASCII or a newline"
   let mut at? : Option String := none
   let mut parts : Array String := #[]
   let mut raw : Array String := #[]

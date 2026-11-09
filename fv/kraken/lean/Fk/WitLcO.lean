@@ -25,27 +25,27 @@ set_option maxRecDepth 100000
 def dataLabels : Program :=
   [.label "runtime.writeBarrier", .label "go_string._", .label "pad2", .label "pad3", .label "runtime.fvBump"]
 
-def P : Program := dataLabels ++ ListCUnmarshalSSZ ++ BumpAlloc ++ BumpNew24 ++ RtErr ++ [Kraken.Directive.label "runtime.staticuint64s"]
+def P : Program := dataLabels ++ ListCUnmarshalSSZ ++ BumpAlloc ++ BumpNew24 ++ RtErr ++ [Kraken.Directive.label "pad_s0", Kraken.Directive.label "pad_s1", Kraken.Directive.label "pad_s2", Kraken.Directive.label "pad_s3", Kraken.Directive.label "pad_s4", Kraken.Directive.label "pad_s5", Kraken.Directive.label "pad_s6", Kraken.Directive.label "pad_s7", Kraken.Directive.label "pad_s8", Kraken.Directive.label "pad_s9", Kraken.Directive.label "pad_s10", Kraken.Directive.label "pad_s11", Kraken.Directive.label "runtime.staticuint64s"]
 
-theorem P_len : P.length = 465 := by rfl
+theorem P_len : P.length = 477 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
 
 theorem prog_eq : Host.prog = P := rfl
 
 theorem hk_target : ListCUnmarshalSSZ.IsInfixAt Host.prog 5 :=
-  infixAt_of dataLabels (BumpAlloc ++ BumpNew24 ++ RtErr ++ [Kraken.Directive.label "runtime.staticuint64s"]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (rfl)
+  infixAt_of dataLabels (BumpAlloc ++ BumpNew24 ++ RtErr ++ [Kraken.Directive.label "pad_s0", Kraken.Directive.label "pad_s1", Kraken.Directive.label "pad_s2", Kraken.Directive.label "pad_s3", Kraken.Directive.label "pad_s4", Kraken.Directive.label "pad_s5", Kraken.Directive.label "pad_s6", Kraken.Directive.label "pad_s7", Kraken.Directive.label "pad_s8", Kraken.Directive.label "pad_s9", Kraken.Directive.label "pad_s10", Kraken.Directive.label "pad_s11", Kraken.Directive.label "runtime.staticuint64s"]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (rfl)
 
 theorem hk_makeslice : BumpAlloc.IsInfixAt Host.prog 437 :=
-  infixAt_of (dataLabels ++ ListCUnmarshalSSZ) (BumpNew24 ++ RtErr ++ [Kraken.Directive.label "runtime.staticuint64s"]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (by simp only [List.length_append, show ListCUnmarshalSSZ.length = 432 from by rfl]; rfl)
+  infixAt_of (dataLabels ++ ListCUnmarshalSSZ) (BumpNew24 ++ RtErr ++ [Kraken.Directive.label "pad_s0", Kraken.Directive.label "pad_s1", Kraken.Directive.label "pad_s2", Kraken.Directive.label "pad_s3", Kraken.Directive.label "pad_s4", Kraken.Directive.label "pad_s5", Kraken.Directive.label "pad_s6", Kraken.Directive.label "pad_s7", Kraken.Directive.label "pad_s8", Kraken.Directive.label "pad_s9", Kraken.Directive.label "pad_s10", Kraken.Directive.label "pad_s11", Kraken.Directive.label "runtime.staticuint64s"]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (by simp only [List.length_append, show ListCUnmarshalSSZ.length = 432 from by rfl]; rfl)
 
 theorem hk_newobject : BumpNew24.IsInfixAt Host.prog 443 :=
-  infixAt_of (dataLabels ++ ListCUnmarshalSSZ ++ BumpAlloc) (RtErr ++ [Kraken.Directive.label "runtime.staticuint64s"]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (by simp only [List.length_append, show ListCUnmarshalSSZ.length = 432 from by rfl, show BumpAlloc.length = 6 from by rfl]; rfl)
+  infixAt_of (dataLabels ++ ListCUnmarshalSSZ ++ BumpAlloc) (RtErr ++ [Kraken.Directive.label "pad_s0", Kraken.Directive.label "pad_s1", Kraken.Directive.label "pad_s2", Kraken.Directive.label "pad_s3", Kraken.Directive.label "pad_s4", Kraken.Directive.label "pad_s5", Kraken.Directive.label "pad_s6", Kraken.Directive.label "pad_s7", Kraken.Directive.label "pad_s8", Kraken.Directive.label "pad_s9", Kraken.Directive.label "pad_s10", Kraken.Directive.label "pad_s11", Kraken.Directive.label "runtime.staticuint64s"]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (by simp only [List.length_append, show ListCUnmarshalSSZ.length = 432 from by rfl, show BumpAlloc.length = 6 from by rfl]; rfl)
 
 theorem hk_rterr : RtErr.IsInfixAt Host.prog 449 :=
-  infixAt_of (dataLabels ++ ListCUnmarshalSSZ ++ BumpAlloc ++ BumpNew24) ([Kraken.Directive.label "runtime.staticuint64s"]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (by simp only [List.length_append, show ListCUnmarshalSSZ.length = 432 from by rfl, show BumpAlloc.length = 6 from by rfl, show BumpNew24.length = 6 from by rfl]; rfl)
+  infixAt_of (dataLabels ++ ListCUnmarshalSSZ ++ BumpAlloc ++ BumpNew24) ([Kraken.Directive.label "pad_s0", Kraken.Directive.label "pad_s1", Kraken.Directive.label "pad_s2", Kraken.Directive.label "pad_s3", Kraken.Directive.label "pad_s4", Kraken.Directive.label "pad_s5", Kraken.Directive.label "pad_s6", Kraken.Directive.label "pad_s7", Kraken.Directive.label "pad_s8", Kraken.Directive.label "pad_s9", Kraken.Directive.label "pad_s10", Kraken.Directive.label "pad_s11", Kraken.Directive.label "runtime.staticuint64s"]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (by simp only [List.length_append, show ListCUnmarshalSSZ.length = 432 from by rfl, show BumpAlloc.length = 6 from by rfl, show BumpNew24.length = 6 from by rfl]; rfl)
 
-theorem hk_fnSt : [Kraken.Directive.label "runtime.staticuint64s"].IsInfixAt Host.prog 464 :=
+theorem hk_fnSt : [Kraken.Directive.label "pad_s0", Kraken.Directive.label "pad_s1", Kraken.Directive.label "pad_s2", Kraken.Directive.label "pad_s3", Kraken.Directive.label "pad_s4", Kraken.Directive.label "pad_s5", Kraken.Directive.label "pad_s6", Kraken.Directive.label "pad_s7", Kraken.Directive.label "pad_s8", Kraken.Directive.label "pad_s9", Kraken.Directive.label "pad_s10", Kraken.Directive.label "pad_s11", Kraken.Directive.label "runtime.staticuint64s"].IsInfixAt Host.prog 464 :=
   infixAt_of (dataLabels ++ ListCUnmarshalSSZ ++ BumpAlloc ++ BumpNew24 ++ RtErr) ([]) (by simp only [prog_eq, P, List.append_assoc, List.append_nil]) (by simp only [List.length_append, show ListCUnmarshalSSZ.length = 432 from by rfl, show BumpAlloc.length = 6 from by rfl, show BumpNew24.length = 6 from by rfl, show RtErr.length = 15 from by rfl]; rfl)
 
 theorem hf_target : LabelsFresh ListCUnmarshalSSZ 5 := labelsFresh_of (by rw [prog_eq]; decide)
@@ -58,7 +58,7 @@ theorem hf_newobject : ∀ i < 443, Host.prog[i]? ≠ some (.label "runtime.newo
 
 theorem hf_rterr : LabelsFresh RtErr 449 := labelsFresh_of (by rw [prog_eq]; decide)
 
-theorem hf_fnSt : LabelsFresh [Kraken.Directive.label "runtime.staticuint64s"] 464 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf_fnSt : LabelsFresh [Kraken.Directive.label "pad_s0", Kraken.Directive.label "pad_s1", Kraken.Directive.label "pad_s2", Kraken.Directive.label "pad_s3", Kraken.Directive.label "pad_s4", Kraken.Directive.label "pad_s5", Kraken.Directive.label "pad_s6", Kraken.Directive.label "pad_s7", Kraken.Directive.label "pad_s8", Kraken.Directive.label "pad_s9", Kraken.Directive.label "pad_s10", Kraken.Directive.label "pad_s11", Kraken.Directive.label "runtime.staticuint64s"] 464 := labelsFresh_of (by rw [prog_eq]; decide)
 
 theorem label_wb : label "runtime.writeBarrier" = 0x10000 :=
   mk_label P _ 0 _ (by simp [P, dataLabels]) (by simp [labs])
@@ -69,8 +69,8 @@ theorem label_bump : label "runtime.fvBump" = 0x10004 :=
 theorem label_gs : label "go_string._" = 0x10001 :=
   mk_label P _ 1 _ (by simp [P, dataLabels]) (by decide)
 
-theorem label_st : label "runtime.staticuint64s" = 66000 :=
-  mk_label P _ 464 _ (by simp [P, dataLabels]; rfl) (by decide)
+theorem label_st : label "runtime.staticuint64s" = 66012 :=
+  mk_label P _ 476 _ (by simp [P, dataLabels]; rfl) (by decide)
 
 theorem staticBox_small (v : BitVec 64) (h : v.toNat < 256) :
     StaticBox v = Eq ((Int.toBytes 8 v.toInt).At ((label "runtime.staticuint64s").toBitVec + 8 * v)) := staticBox_of_lt h
@@ -85,7 +85,7 @@ theorem lcTl_first : lcTl.take 4 = (uintBytes 4 (4 * 2)).toList := by decide
 theorem lcTl_second : (lcTl.drop 4).take 4 = (uintBytes 4 4).toList := by decide
 
 def block  : List UInt8 :=
-  [0, 0, 0, 0] ++ ((Int.toBytes 8 (0x1a698 : BitVec 64).toInt) ++ ((z 4) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 144) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 16) ++ ((z 16) ++ ((z 16) ++ ((z 64) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ([4, 0, 0, 0] ++ (((lcTl.take 4)) ++ (((lcTl.drop 4)) ++ ((z 20) ++ ((Int.toBytes 8 (BitVec.ofNat 64 4).toInt) ++ ((z 24) ++ ((Int.toBytes 8 (BitVec.ofNat 64 8).toInt) ++ ((z 42044) ++ (lcFmtOrder ++ ((z 1) ++ ((z 8400)))))))))))))))))))))))))))))))))))))))))))
+  [0, 0, 0, 0] ++ ((Int.toBytes 8 (0x1a698 : BitVec 64).toInt) ++ ((z 4) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 144) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 16) ++ ((z 16) ++ ((z 16) ++ ((z 64) ++ ((z 8) ++ ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ((z 8) ++ ([4, 0, 0, 0] ++ (((lcTl.take 4)) ++ (((lcTl.drop 4)) ++ ((z 32) ++ ((Int.toBytes 8 (BitVec.ofNat 64 4).toInt) ++ ((z 24) ++ ((Int.toBytes 8 (BitVec.ofNat 64 8).toInt) ++ ((z 42032) ++ (lcFmtOrder ++ ((z 1) ++ ((z 8400)))))))))))))))))))))))))))))))))))))))))))
 
 def mem  : DataMem := (block ).At (0x10000 : BitVec 64)
 
@@ -152,11 +152,11 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
         ⋆ Eq ([4, 0, 0, 0].At 66000#64)
         ⋆ Eq (((lcTl.take 4)).At 66004#64)
         ⋆ Eq (((lcTl.drop 4)).At 66008#64)
-        ⋆ Eq ((z 20).At 66012#64)
-        ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 4).toInt).At 66032#64)
-        ⋆ Eq ((z 24).At 66040#64)
-        ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 8).toInt).At 66064#64)
-        ⋆ Eq ((z 42044).At 66072#64)
+        ⋆ Eq ((z 32).At 66012#64)
+        ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 4).toInt).At 66044#64)
+        ⋆ Eq ((z 24).At 66052#64)
+        ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 8).toInt).At 66076#64)
+        ⋆ Eq ((z 42032).At 66084#64)
         ⋆ Eq (lcFmtOrder.At 108116#64)
         ⋆ Eq ((z 1).At 108183#64))) (mem ) := by
     ecancel
@@ -165,7 +165,7 @@ theorem s_mem   (zmms : RegZmms) (flags : StatusFlags) :
   simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd, BitVec.reduceMul]
   simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
     Int64.toBitVec_ofNat, nil_At_emp, Std.ExtHashMap.sep_emp]
-  apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 4).At 65548#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 16).At 65816#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 64).At 65864#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 8).At 65960#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 20).At 66012#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 24).At 66040#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 42044).At 66072#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 1).At 108183#64))
+  apply sep_true (F := Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 4).At 65548#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 16).At 65816#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 64).At 65864#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 8).At 65960#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 32).At 66012#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 24).At 66052#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 42032).At 66084#64) ⋆ Eq (α := Std.ExtHashMap (BitVec 64) UInt8) ((z 1).At 108183#64))
   simp only [u64_toBitVec_zero, u64_toBitVec_ofNat] at H3 ⊢
   refine Eq.mp ?_ H3
   exact congrFun (by ac_rfl) _

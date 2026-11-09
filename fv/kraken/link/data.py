@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """ELF data include: write the bytes that the proofs read as data files.
 
-Usage: data.py <outdir>      (outdir = fv/kraken/link/out, after build.sh)
+Usage: data.py <outdir>          (outdir = fv/kraken/link/out, after build.sh)
+       data.py --check <outdir>  (regeneration equality, exit 1 on a difference)
 
 For every item of ITEMS, reads `length` bytes of p1bin-amd64 at the item's
 label + offset and writes <outdir>/data/<id>.data (format in TOOLS.md):
@@ -95,7 +96,7 @@ def symbols(nm):
     return by
 
 
-def main(outdir):
+def main(outdir, dest=None):
     outdir = pathlib.Path(outdir)
     b, secs = read_elf(outdir / "p1bin-amd64")
     nm = conv.read_nm(outdir / "p1bin-amd64.nm")
@@ -119,17 +120,14 @@ def main(outdir):
         assert addr(lab) == best
         return lab, v - best
 
-    d = outdir / "data"
+    d = pathlib.Path(dest) if dest else outdir / "data"
     d.mkdir(exist_ok=True)
     for old in d.glob("*.data"):
         old.unlink()
     for ident, label, off, n, words in ITEMS:
         a = addr(label) + off
         bs = elf_bytes(b, secs, a, n) if n else b""
-        lines = [f"# {ident}: link/data.py, p1bin-amd64 bytes [{a:#x}, {a + n:#x})"]
-        if label == "go_string._":
-            lines.append(f"# text {bs.decode()!r}")
-        lines.append(f"at {label} {off}")
+        lines = [f"# {ident}: link/data.py, p1bin-amd64 bytes [{a:#x}, {a + n:#x})", f"at {label} {off}"]
         i, raw = 0, []
 
         def flush():
@@ -151,5 +149,24 @@ def main(outdir):
         print(f"{ident}: {label}+{off} = {a:#x}, {n} bytes, {len(words)} words")
 
 
+def check(outdir):
+    """Regeneration equality: the files this extractor writes now (in a
+    temporary directory) are byte for byte the files in <outdir>/data.
+    Exit status 1 on any difference."""
+    import tempfile
+    outdir = pathlib.Path(outdir)
+    with tempfile.TemporaryDirectory() as tmp:
+        main(outdir, tmp)
+        new = {p.name: p.read_bytes() for p in pathlib.Path(tmp).glob("*.data")}
+        old = {p.name: p.read_bytes() for p in (outdir / "data").glob("*.data")}
+    bad = sorted(n for n in new.keys() | old.keys() if new.get(n) != old.get(n))
+    for n in bad:
+        print(f"DIFF data/{n}")
+    print(f"{'FAIL' if bad else 'PASS'} data.py regeneration = data/: {len(new)} files, {len(bad)} differ")
+    return 1 if bad else 0
+
+
 if __name__ == "__main__":
+    if sys.argv[1] == "--check":
+        sys.exit(check(sys.argv[2]))
     main(sys.argv[1])

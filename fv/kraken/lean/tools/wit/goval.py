@@ -386,6 +386,9 @@ def check(path):
 
 def main(paths):
     paths = paths or sorted(str(p) for p in pathlib.Path("Fk").glob("Wit*.lean"))
+    if not paths:  # e.g. run from the wrong directory: nothing checked is not a pass
+        print("0 witness files: run from fv/kraken/lean or name the files")
+        return 2
     bad = unchecked = 0
     for p in paths:
         ok, out = check(p)
