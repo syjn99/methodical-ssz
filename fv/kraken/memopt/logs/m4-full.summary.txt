@@ -1,0 +1,12 @@
+label: m4-full
+cmd: lake build
+cwd: /Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/lean
+start_epoch: 1794225451
+exit: 0
+wall_s_date: 153
+wall_s_time: 153.56
+time_maxrss_bytes: 4784046080
+time_maxrss_gib: 4.46
+sampled_peak_total_gib: 16.96
+sampled_peak_single_gib: 4.45
+samples: 269

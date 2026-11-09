@@ -1,0 +1,43 @@
+$ python3 fv/kraken/link/check.py fv/kraken/link/out  (cwd repo root)
+exit: 0
+PASS (c) all.S: 294 labels, each defined once; 53 external references not defined in all.S; 4 calls to target functions at their entry: ['ssz.ValidateBitlist', 'ssz.ValidateBitvector', 'target.ListU64.UnmarshalSSZ', 'target.Scalars.UnmarshalSSZ']
+PASS (e) all.S: 3221 directives equal the 29 function files in order
+PASS (f) lean/Fk/SHash.lean is the exact shash.sh text for all 38 .S files
+PASS (g) go_string._+39370 (53 bytes) = Lean lcFmtZero = fv/kraken/target/types1b.ssz.go lines [243]
+PASS (g) go_string._+42000 (63 bytes) = Lean lcFmtShort = fv/kraken/target/types1b.ssz.go lines [254, 280]
+PASS (g) go_string._+27706 (35 bytes) = Lean vbvFmt = ssz/unmarshal.go lines [45]
+PASS (g) go_string._+511 (5 bytes) = Lean bvFmtJ = fv/kraken/target/types1b.ssz.go lines [26, 47]
+PASS (g) go_string._+526 (5 bytes) = Lean blFmtB = fv/kraken/target/types1b.ssz.go lines [339, 360]
+PASS (g) go_string._+33605 (42 bytes) = Lean vblMsgE = ssz/unmarshal.go lines [21, 54]
+PASS (g) go_string._+13272 (21 bytes) = Lean vblMsgZ = ssz/unmarshal.go lines [24, 65]
+PASS (g) go_string._+5743 (13 bytes) = Lean vblMsgB = ssz/unmarshal.go lines [77]
+PASS (g) go_string._+40290 (56 bytes) = Lean luFmtTooBig = fv/kraken/target/types.ssz.go lines [249]
+PASS (g) go_string._+42646 (68 bytes) = Lean luFmtMis = fv/kraken/target/types.ssz.go lines [245]
+PASS (g) inventory: 95 go_string._ references in 17 files, checked offsets [511, 526, 5743, 13272, 27706, 33605, 39370, 40290, 42000, 42646]; witness fill and label references: 48
+PASS (h) luTW = type__+49184 = 0x4d0020: abi.Type Size_ 8, Kind_ 2 (int)
+PASS (h) go_itab._errors.errorString_error+8 = 0x4d4a00: abi.Type Size_ 8, Kind_ 22 (pointer, *errors.errorString)
+PASS (h) runtime.staticuint64s = 0x502740: 2048 bytes = uint64 0..255 (StaticBox v at + 8 v)
+PASS (d) 2927 instructions reassembled by clang x86_64-linux-gnu: 2877 byte-identical, 0 encoding, 50 padding
+PASS all
+BUNDLE sha256 215df51501a98052f96c1771a6b7ce1202b1adebe5c57a794979891b9ca47829
+
+$ python3 fv/kraken/link/check.py --selftest fv/kraken/link/out
+exit: 0
+selftest Wit file, unknown placement: fail (expected fail) (g) go_string._ references not checked: ['WitBlR.lean:180 junk (witness) place-unknown  99999']
+selftest unparsed bytes at a checked offset: fail (expected fail) (g) go_string._ references not checked: ['BlMarshal.lean:372 bl_marshal_reject_main (theorem) place-unknown  526']
+selftest offset written as a sum: fail (expected fail) (g) go_string._ references not checked: ['BlMarshal.lean:372 ? (?) unparsed']
+selftest luTW names another type: fail (expected fail) (h) type__+49120: abi.Type size 8 kind 11, want 8 and 2 (Int)
+selftest unchanged copy: pass (expected pass) 
+diff --git a/fv/kraken/link/out/RESULT b/fv/kraken/link/out/RESULT
+index 359baf8..96c5555 100644
+--- a/fv/kraken/link/out/RESULT
++++ b/fv/kraken/link/out/RESULT
+@@ -184,6 +184,6 @@ S sha256 3990b8f2369006c41c8475a817a075ada18b32ffd4de36397b5f3e079a39109a target
+ S sha256 a77ac17b8695d617c2f3bd5a731d3572d7fb69c2e8827190d3a5dd3e36a83cb1 target_prysm.Checkpoint.SizeSSZ.S
+ S sha256 bee62ab7dfa3da589159bdb47d767ba65cb09f7e8f64cec649e60aa3c026c78c target_prysm.Checkpoint.UnmarshalSSZ.S
+ file sha256 c4d64cb9c7857dc3f055d669ba2da5c406572f40ddf0fbb22aabdd8cda7926de lean/Fk/Code.lean
+-file sha256 8e4632f2470e998a058cc9b2389043c41add00b181ea5ae9643207bb0e33a488 AXIOMS.txt
++file sha256 dde4d7bb53aa6dc921ee500b504f8271300fd82e733d8571e171b8eb6f48d2b2 AXIOMS.txt
+ PASS all
+-BUNDLE sha256 f28fa78cc6df570709ec1af209ccc7c490f10d1c30505d4d0484ba0f7a47621c
++BUNDLE sha256 215df51501a98052f96c1771a6b7ce1202b1adebe5c57a794979891b9ca47829

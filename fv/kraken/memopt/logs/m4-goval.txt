@@ -1,0 +1,25 @@
+$ go run fv/kraken/lean/tools/wit/layout.go > fv/kraken/lean/tools/wit/layout.json  (cwd repo root)
+exit: 0
+$ git diff --stat
+(end diff)
+$ python3 fv/kraken/lean/tools/wit/goval.py  (cwd repo root)
+0 witness files, 0 with a violation, 0 with a value not checked
+
+Note: from repo root goval.py reads 0 files. HANDOFF.md says the correct cwd is fv/kraken/lean.
+$ python3 tools/wit/goval.py  (cwd fv/kraken/lean)
+exit: 0
+OK  WitSzLu    rsp                    0x10000                            ok
+OK  WitSzLu    recv                   0x10008                            ok: ListU64 size 24 align 8
+OK  WitSzLu    recv.L                 ('0x10020', 3, 3)                  ok
+OK  WitSzLu    chunks                 2 read, 0 not read                 ok
+OK  WitSzSc    rsp                    0x10000                            ok
+OK  WitSzSc    recv                   0                                  nil
+OK  WitSzSc    chunks                 1 read, 0 not read                 ok
+OK  WitVbv     rsp                    0x10010                            ok
+OK  WitVbv     buf                    ('0x10020', 1, 1)                  ok
+OK  WitVbv     chunks                 4 read, 1 not read                 ok
+OK  WitVbvR    rsp                    0x10060                            ok
+OK  WitVbvR    buf                    ('0x10070', 1, 1)                  ok
+OK  WitVbvR    chunks                 8 read, 1 not read                 ok
+--  Witness    -                      None                               not checked: no target or registers
+79 witness files, 0 with a violation, 2 with a value not checked

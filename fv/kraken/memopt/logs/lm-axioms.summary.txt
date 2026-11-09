@@ -1,0 +1,23 @@
+label: axioms
+cmd: sh tools/axioms.sh
+cwd: /work/new/fv/kraken/lean
+exit: 0
+wall_s: 13
+time_wall: 0:12.23
+time_maxrss_gib: 1.79
+time_exit: 0
+sampled_current_max_gib: 0.25
+max_lean_procs: 1
+memory.peak_gib: 0.25 (271970304 bytes)
+memory.max: 10403971072  memory.swap.max: 0
+oom_kill_delta: 0
+memory.events:
+  low 0
+  high 0
+  max 0
+  oom 0
+  oom_kill 0
+  oom_group_kill 0
+  sock_throttled 0
+(end status new)
+(end status orig)

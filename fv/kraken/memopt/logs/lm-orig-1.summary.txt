@@ -1,0 +1,21 @@
+label: orig-1
+cmd: lake build Fk.WitLcM4x16
+cwd: /work/orig/fv/kraken/lean
+exit: 1
+wall_s: 4
+time_wall: 0:04.45
+time_maxrss_gib: 11.16
+time_exit: 1
+sampled_current_max_gib: 8.96
+max_lean_procs: 1
+memory.peak_gib: 9.69 (10403971072 bytes)
+memory.max: 10403971072  memory.swap.max: 0
+oom_kill_delta: 1
+memory.events:
+  low 0
+  high 0
+  max 310
+  oom 6
+  oom_kill 1
+  oom_group_kill 0
+  sock_throttled 0

@@ -1,0 +1,70 @@
+$ lake env lean tools/RegressFix2.lean  (cwd fv/kraken/lean)
+WitLcA4x16.lc_accept_runs : ∀ (zmms : RegZmms) (flags : StatusFlags),
+  Eventually (step1 Host.exe) (fun st => st.pc = Int64.ofBitVec (UInt64.toBitVec 0) ∧ st.data.regs.rax = 0)
+    { data := WitLcA4x16.s0 zmms flags, pc := Host.addrOf 5 }
+WitLcM4x16.lc_marshal_runs : ∀ (zmms : RegZmms) (flags : StatusFlags),
+  Eventually (step1 Host.exe) (fun st => st.pc = Int64.ofBitVec (UInt64.toBitVec 0) ∧ st.data.regs.rbx.toNat = 548)
+    { data := WitLcM4x16.s0 zmms flags, pc := Host.addrOf 5 }
+WitLuComp.lu_compose_runs : ∀ (zmms : RegZmms) (flags : StatusFlags),
+  Eventually (step1 Host.exe)
+    (fun st =>
+      st.pc = Int64.ofBitVec (UInt64.toBitVec 0) ∧
+        st.data.regs.rax = 0 ∧
+          Eventually (step1 Host.exe)
+            (fun st' =>
+              st'.pc = Int64.ofBitVec (UInt64.toBitVec 0) ∧ st'.data.regs.rbx.toNat = UInt64.toNat 0 + 4 + 8 * 1)
+            {
+              data :=
+                {
+                  regs :=
+                    have __src := st.data.regs;
+                    { rax := (WitLuComp.s0 zmms flags).regs.rax, rbx := 65784, rdx := __src.rdx, rsi := __src.rsi,
+                      rdi := 12, rsp := (WitLuComp.s0 zmms flags).regs.rsp, rbp := __src.rbp, r8 := __src.r8,
+                      r9 := __src.r9, r10 := __src.r10, r11 := __src.r11, r12 := __src.r12, r13 := __src.r13,
+                      r14 := __src.r14, r15 := __src.r15 },
+                  zmms := zmms, status := flags,
+                  dmem :=
+                    Mem.storeInt st.data.dmem (WitLuComp.s0 zmms flags).regs.rsp.toBitVec 8 (UInt64.toBitVec 0).toInt },
+              pc := Host.addrOf 198 })
+    { data := WitLuComp.s0 zmms flags, pc := Host.addrOf 5 }
+WitScComp.sc_compose_runs : ∀ (zmms : RegZmms) (flags : StatusFlags),
+  Eventually (step1 Host.exe)
+    (fun st =>
+      st.pc = Int64.ofBitVec (UInt64.toBitVec 0) ∧
+        st.data.regs.rax = 0 ∧
+          Eventually (step1 Host.exe)
+            (fun st' => st'.pc = Int64.ofBitVec (UInt64.toBitVec 0) ∧ st'.data.regs.rbx = 0 + 16)
+            {
+              data :=
+                {
+                  regs :=
+                    have __src := st.data.regs;
+                    { rax := (WitScComp.s0 zmms flags).regs.rax, rbx := 65616, rdx := __src.rdx, rsi := __src.rsi,
+                      rdi := 16, rsp := (WitScComp.s0 zmms flags).regs.rsp, rbp := __src.rbp, r8 := __src.r8,
+                      r9 := __src.r9, r10 := __src.r10, r11 := __src.r11, r12 := __src.r12, r13 := __src.r13,
+                      r14 := __src.r14, r15 := __src.r15 },
+                  zmms := zmms, status := flags,
+                  dmem :=
+                    Mem.storeInt st.data.dmem (WitScComp.s0 zmms flags).regs.rsp.toBitVec 8 (UInt64.toBitVec 0).toInt },
+              pc := Host.addrOf 38 })
+    { data := WitScComp.s0 zmms flags, pc := Host.addrOf 5 }
+'RegressFix2.ten_not_false_bl' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RegressFix2.pad_derived' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RegressFix2.sc_object_whole' does not depend on any axioms
+'RegressFix2.sc_output_after_object' depends on axioms: [propext, Classical.choice, Quot.sound]
+'sc_reject_bool_main' depends on axioms: [propext, Classical.choice, Quot.sound]
+'sc_spec_rejects_bool' depends on axioms: [propext, Classical.choice, Quot.sound]
+'bl_reject_invalid_main' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitScRB.sc_reject_bool_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitBlRI.bl_reject_invalid_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitLcA4x16.lc_accept_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitLcAMix.lc_accept_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitLcM4x16.lc_marshal_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitLcMMix.lc_marshal_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitLuComp.lu_compose_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitScComp.sc_compose_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitLuTb.lu_reject_toobig_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitLuMa.lu_reject_misaligned_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitBlR.bl_marshal_reject_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fk.WitBvR.bv_reject_padding_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+exit: 0

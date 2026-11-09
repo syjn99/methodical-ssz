@@ -1,0 +1,47 @@
+$ lake env lean ../review/Review1bFixB0.lean  (cwd fv/kraken/vcgen; toolchain nightly-2026-10-29; .lake was absent, so lake fetched the manifest deps)
+info: batteries: materializing new dependency
+info: batteries: fetching revision '66e469188fe07963e5cf666c7d4433f45b8131c5' from https://github.com/leanprover-community/batteries
+info: batteries: checking out revision '66e469188fe07963e5cf666c7d4433f45b8131c5'
+info: cslib: materializing new dependency
+info: cslib: fetching revision '5b56df99362532c46e1175381fbbdd755bd56030' from https://github.com/leanprover/cslib
+info: cslib: checking out revision '5b56df99362532c46e1175381fbbdd755bd56030'
+info: Cli: materializing new dependency
+info: Cli: fetching revision 'c24fe6078c630e89b489bffe59b3e20ac30d12c8' from https://github.com/leanprover/lean4-cli
+info: Cli: checking out revision 'c24fe6078c630e89b489bffe59b3e20ac30d12c8'
+../review/Review1bFixB0.lean:1:0: error: unknown module prefix 'Kraken'
+
+No directory 'Kraken' or file 'Kraken.olean' in the search path entries:
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/vcgen/.lake/packages/Cli/.lake/build/lib/lean
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/vcgen/.lake/packages/cslib/.lake/build/lib/lean
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/vcgen/.lake/packages/batteries/.lake/build/lib/lean
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/vcgen/.lake/packages/Qq/.lake/build/lib/lean
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/vcgen/.lake/packages/aesop/.lake/build/lib/lean
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/vcgen/.lake/packages/proofwidgets/.lake/build/lib/lean
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/vcgen/.lake/packages/importGraph/.lake/build/lib/lean
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/vcgen/.lake/packages/LeanSearchClient/.lake/build/lib/lean
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/vcgen/.lake/packages/plausible/.lake/build/lib/lean
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/vcgen/.lake/packages/PolyFun/.lake/build/lib/lean
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/vcgen/.lake/packages/QuantumFoundations/.lake/build/lib/lean
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/vcgen/.lake/packages/mathlib/.lake/build/lib/lean
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/vcgen/.lake/packages/VCVio/.lake/build/lib/lean
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/vcgen/.lake/packages/Kraken/.lake/build/lib/lean
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/vcgen/.lake/packages/EthLib/.lake/build/lib/lean
+/Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/vcgen/.lake/build/lib/lean
+/Users/jsong@offchainlabs.com/.elan/toolchains/leanprover--lean4-nightly---nightly-2026-10-29/lib/lean
+/Users/jsong@offchainlabs.com/.elan/toolchains/leanprover--lean4-nightly---nightly-2026-10-29/lib/lean
+exit(pipestatus): 1
+wall_s: 65
+355M	.lake
+
+[exited with code 0]
+
+## attempt 2: build the import first
+$ lake build Kraken.FunSpec  (cwd fv/kraken/vcgen)
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+✔ [52/53] Built Kraken.FunSpec (1.4s)
+Build completed successfully (53 jobs).
+exit: 0  wall_s: 15
+$ lake env lean ../review/Review1bFixB0.lean
+'review_funspec_spill_address' depends on axioms: [propext, Classical.choice, Quot.sound]
+exit: 0  wall_s: 4
