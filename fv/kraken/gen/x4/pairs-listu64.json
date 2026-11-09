@@ -4,7 +4,8 @@
   "Fk.LuMarshal",
   "Fk.LuReject",
   "Fk.LuRejectCall",
-  "Fk.LuAccept"
+  "Fk.LuAccept",
+  "Fk.Compose"
  ],
  "pairs": [
   [
@@ -24,6 +25,12 @@
    "lu_marshal_main",
    "SAME",
    "marshal fast path (element loop)"
+  ],
+  [
+   "Gen1cX4.ListU64.compose_stmt",
+   "lu_unmarshal_then_marshal",
+   "SAME",
+   "compose (decode then encode)"
   ],
   [
    "Gen1cX4.ListU64.reject_short_stmt",
@@ -72,6 +79,12 @@
    "lu_marshal_reject_main",
    "DIFF",
    "control (marshal fast path vs too-big)"
+  ],
+  [
+   "Gen1cX4.ListU64.compose_stmt",
+   "bv_unmarshal_then_marshal",
+   "DIFF",
+   "control (another type's composition)"
   ]
  ]
 }

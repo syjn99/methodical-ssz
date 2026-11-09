@@ -1,7 +1,7 @@
 {
  "schema": "fvphase1c.x4-negative/1",
- "cases": 14,
- "as_expected": 14,
+ "cases": 16,
+ "as_expected": 16,
  "rows": [
   {
    "id": "lu-size-add",
@@ -198,6 +198,34 @@
    ],
    "as_expected": true,
    "run": "logs/91"
+  },
+  {
+   "id": "lu-compose-len",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lu_compose_len_mutant.compose",
+   "mutation": "statement 'st'.data.regs.rbx.toNat = dlen.toNat + 4 + 8 * n' -> 'st'.data.regs.rbx.toNat = dlen.toNat + 5 + 8 * n'",
+   "exit": "1",
+   "first_error": "line 768: Application type mismatch: The argument",
+   "theorem_lines": [
+    752,
+    769
+   ],
+   "as_expected": true,
+   "run": "logs/93"
+  },
+  {
+   "id": "lu-compose-len",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lu_compose_len_control.compose",
+   "mutation": "none (unchanged)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    752,
+    769
+   ],
+   "as_expected": true,
+   "run": "logs/93"
   }
  ]
 }

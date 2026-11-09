@@ -1929,6 +1929,83 @@ def lu_marshal_proof(D, code, M):
         d += 1
 
 
+
+# ---------------------------------------------------------------- ListU64 composition (decode then encode)
+# Pattern of Fk/Compose.lean (lu_unmarshal_then_marshal) over the generated accept and marshal.
+
+def lu_compose_stmt(cu, cm, A, M):
+    F = A.frame
+    r = lambda off: A.rel(off)
+    inv = {v: k for k, v in M.spills.items()}
+    mr = lambda off: M.rel(off).replace("rsp.toBitVec", "s.regs.rsp.toBitVec")
+    return f"""def compose_stmt [Host] : Prop :=
+  ∀ (kd : Nat) (hkd : {cu}.IsInfixAt Host.prog kd)
+    (hfd : LabelsFresh {cu} kd)
+    (km : Nat) (hkm : {cm}.IsInfixAt Host.prog km) (hfm : LabelsFresh {cm} km)
+    (bs : List UInt8) (n : Nat) (hbs : bs.length = 8 * n) (hn : n ≤ 16)
+    (s : MachineData) (ra ra2 guard : UInt64)
+    (fp s28 s30 s38 s90 s98 rslot cP cL cC l1 l2 pre o4 d : List UInt8)
+    (hfp : fp.length = 8) (h28 : s28.length = 8) (h30 : s30.length = 8) (h38 : s38.length = 8)
+    (h90 : s90.length = 8) (h98 : s98.length = 8) (hrs : rslot.length = 8)
+    (hcP : cP.length = 8) (hcL : cL.length = 8) (hcC : cC.length = 8)
+    (hl1 : l1.length = 8) (hl2 : l2.length = 8) (ho4 : o4.length = 4) (hd : d.length = 8 * n)
+    (dptr dlen cap : UInt64) (hpre : pre.length = dlen.toNat)
+    (hcap2 : dlen.toNat + 4 + 8 * n ≤ cap.toNat) (hcap2' : cap.toNat < 2 ^ 63)
+    (R0 : DataMem → Prop) (S : Nat) (scratch spm : List UInt8) (hsc : scratch.length = S) (hspm : spm.length = 24)
+    (Heap : Nat → DataMem → Prop) (avail : Nat)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (spm.At (s.regs.rsp.toBitVec - {F + 8}))
+      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s28.At ({r(0x28)}))
+      ⋆ Eq (s30.At ({r(0x30)})) ⋆ Eq (s38.At ({r(0x38)}))
+      ⋆ Eq (s90.At ({r(F + 16)})) ⋆ Eq (s98.At ({r(F + 24)}))
+      ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - {F + 16})) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - {F + 16} - BitVec.ofNat 64 S))
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+      ⋆ Heap avail
+      ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec)
+      ⋆ (Eq (bs.At (s.regs.rbx.toBitVec + 4))
+        ⋆ Eq (cP.At s.regs.rax.toBitVec) ⋆ Eq (cL.At (s.regs.rax.toBitVec + 8)) ⋆ Eq (cC.At (s.regs.rax.toBitVec + 16))
+        ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec)
+        ⋆ (Eq (l1.At ({mr(inv["r8"])})) ⋆ Eq (l2.At ({mr(inv["r9"])}))
+          ⋆ Eq (pre.At dptr.toBitVec) ⋆ Eq (o4.At (dptr.toBitVec + dlen.toBitVec))
+          ⋆ Eq (d.At (dptr.toBitVec + BitVec.ofNat 64 (dlen.toNat + 4))) ⋆ R0)))
+    (hguard : guard.toNat < s.regs.rsp.toNat - 8) (hsp : 8 ≤ s.regs.rsp.toNat)
+    (hlen : s.regs.rcx.toNat = 4 + 8 * n) (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat)
+    (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hav : 8 * n ≤ avail)
+    (hms : MakesliceC Heap (label "type__" + {A.ty}).toBitVec 8 S),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧
+        ∀ (m2 : DataMem) (zm : RegZmms) (fl : StatusFlags),
+          (∀ F : DataMem → Prop, (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec) ⋆ F) st.data.dmem →
+            (Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At s.regs.rsp.toBitVec) ⋆ F) m2) →
+          Eventually (step1 Host.exe)
+            (fun st' => st'.pc = Int64.ofBitVec ra2.toBitVec ∧ st'.data.regs.rax = dptr
+              ∧ st'.data.regs.rbx.toNat = dlen.toNat + 4 + 8 * n ∧
+              (Eq (pre.At dptr.toBitVec) ⋆ Eq ([4, 0, 0, 0].At (dptr.toBitVec + dlen.toBitVec))
+                ⋆ Eq (bs.At (dptr.toBitVec + BitVec.ofNat 64 (dlen.toNat + 4))) ⋆ fun _ => True) st'.data.dmem)
+            ⟨⟨{{ st.data.regs with rax := s.regs.rax, rbx := dptr, rcx := dlen, rdi := cap, rsp := s.regs.rsp }},
+              zm, fl, m2⟩, Host.addrOf km⟩)
+      ⟨s, Host.addrOf kd⟩
+"""
+
+
+LU_COMPOSE_PROOF = """intro kd hkd hfd km hkm hfm bs n hbs hn s ra ra2 guard fp s28 s30 s38 s90 s98 rslot cP cL cC l1 l2 pre o4 d hfp h28 h30 h38 h90 h98 hrs hcP hcL hcC hl1 hl2 ho4 hd dptr dlen cap hpre hcap2 hcap2' R0 S scratch spm hsc hspm Heap avail h_mem hguard hsp hlen hcap hcap63 hav hms
+refine eventually_trans _ _ _ _ (accept kd hkd hfd bs n hbs hn s ra guard fp s28 s30 s38 s90 s98 rslot
+  cP cL cC hfp h28 h30 h38 h90 h98 hrs hcP hcL hcC _ S scratch spm hsc hspm Heap avail h_mem hguard hsp hlen
+  hcap hcap63 hav hms) ?_
+rintro ⟨d', pc⟩ ⟨hpc, hrax, -, -, hr14, p, fp', s28', s30', s38', s90', s98', rs', sc', spm', hfp', h28', h30',
+  h38', h90', h98', hrs', hsc', hspm', hm⟩
+refine Eventually.done _ ⟨hpc, hrax, fun m2 zm fl hupd => ?_⟩
+have hm2 := hupd _ (by ecancel)
+refine eventually_trans _ _ _ _ (marshal km hkm hfm bs pre o4 d n hn hbs hd ho4 p _ ra2 guard
+  (by dsimp only; exact hpre) fp' s98' l1 l2 hfp' h98' hl1 hl2 _
+  (by dsimp only; rw [hr14]; ecancel)
+  (by dsimp only; omega) (by dsimp only; omega) (by dsimp only; omega) (by dsimp only; exact hcap2')) ?_
+intro st' hh
+obtain ⟨e1, e2, e3, -, -, -, -, -, hm'⟩ := hh
+dsimp only at e2 e3 hm'
+exact Eventually.done _ ⟨e1, e2, e3, sep_true (by ecancel)⟩""".split("\n")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--desccheck-result", required=True)
@@ -2023,7 +2100,7 @@ def main_list(a, key, desc, dsha):
     t = key[1]
     L = ListField(desc, LAYOUT["types"][t])
     ns = a.ns or f"Gen1cX4.{t}"
-    LIST_OBL = ("size", "accept", "marshal", "reject_short", "reject_offset", "reject_misaligned", "reject_toobig")
+    LIST_OBL = ("size", "accept", "marshal", "compose", "reject_short", "reject_offset", "reject_misaligned", "reject_toobig")
     only = [x for x in a.only.split(",") if x in LIST_OBL] if a.only != ap_default() else list(LIST_OBL)
     code = {m: f"{t}{m}" for m in ("SizeSSZ", "UnmarshalSSZ", "MarshalSSZTo")}
     head = ["import Fk.Step", "import Fk.Bytes", "import Fk.Labels", "import Fk.Flags", "import Gen1cX4.Support"]
@@ -2065,6 +2142,11 @@ def main_list(a, key, desc, dsha):
         body += [f"theorem {n} {v}" for n, v in sorted(lu_marshal_lemmas(MS).items())] + [""]
         body += [lu_marshal_stmt(code["MarshalSSZTo"], MS), "set_option maxHeartbeats 8000000 in", "set_option maxRecDepth 100000 in",
                  "theorem marshal [Host] : marshal_stmt := by", *["  " + x for x in lu_marshal_proof(Dma, code["MarshalSSZTo"], MS)], ""]
+    if "compose" in only:
+        if not ("accept" in only and "marshal" in only):
+            raise SystemExit("x4gen: compose uses the generated accept and marshal (add both to --only)")
+        body += [lu_compose_stmt(code["UnmarshalSSZ"], code["MarshalSSZTo"], AS, MS), "set_option maxHeartbeats 16000000 in",
+                 "set_option maxRecDepth 100000 in", "theorem compose [Host] : compose_stmt := by", *["  " + x for x in LU_COMPOSE_PROOF], ""]
     for mode in ("short", "offset"):
         if f"reject_{mode}" in only:
             body += [lu_rej_stmt(f"reject_{mode}", code["UnmarshalSSZ"], lu_err(Dun, mode), mode),

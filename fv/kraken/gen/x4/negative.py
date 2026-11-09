@@ -37,6 +37,7 @@ CASES = [  # id, type, method, designated obligation, old instruction, new instr
     ("lu-marshal-off", "ListU64", "MarshalSSZTo", "marshal", "movl $0x4,-0x4(%rdx,%rbx,1)", "movl $0x5,-0x4(%rdx,%rbx,1)"),
     # statement mutation (method "stmt"): the generated composition must fail if it claims another length
     ("sc-compose-len", "Scalars", "stmt", "compose", "st'.data.regs.rbx = dlen + 16", "st'.data.regs.rbx = dlen + 17"),
+    ("lu-compose-len", "ListU64", "stmt", "compose", "st'.data.regs.rbx.toNat = dlen.toNat + 4 + 8 * n", "st'.data.regs.rbx.toNat = dlen.toNat + 5 + 8 * n"),
 ]
 import sys as _sys
 if "--ids" in _sys.argv:   # restrict to the named cases (the others were run before)

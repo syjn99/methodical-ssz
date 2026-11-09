@@ -58,9 +58,17 @@
    "negative": "lu-big-cmp (logs/88)"
   },
   "compose": {
-   "status": "not attempted",
+   "status": "proved (generated), SAME",
+   "attempts": [
+    {
+     "log": "run logs/93",
+     "result": "pass"
+    }
+   ],
    "hand": "lu_unmarshal_then_marshal",
-   "why": "needs the generated accept and marshal"
+   "over": "Gen1cX4.ListU64.accept and Gen1cX4.ListU64.marshal (generated)",
+   "witness": "Gen1cX4.WitLuComp.lu_compose_runs (gen/wit WitLuComp, byte-identical to lean/Fk, retargeted by witness.py; n = 1) built in logs/93",
+   "negative": "lu-compose-len (statement mutation, logs/93)"
   },
   "accept (0, 1, 16)": {
    "status": "proved (generated), SAME",

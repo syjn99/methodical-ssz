@@ -37,7 +37,7 @@ Desc와 Go 배치에서 정리 문장을, 기계어 지시 목록에서 증명�
 | marshal | 생성 증명 통과(시도 1), 문장 SAME(`sc_marshal_main`) |
 | 조합 | 생성 증명 통과(시도 1, 생성한 accept·marshal 위), 문장 SAME(`sc_unmarshal_then_marshal`). 전 전제 증인 `Gen1cX4.WitScComp`(gen/wit 출력을 생성 정리로 다시 겨눔) |
 
-## 4. ListU64 조각 (부분)
+## 4. ListU64 조각 (주 정리 8개 중 8개, growslice 호출 지점 제외)
 
 `results/attempts-listu64.json`, `compare-listu64.json`, `negative-listu64.json`, `axioms-listu64.json`.
 틀은 `Fk/LuMarshal.lean`(size), `Fk/LuReject.lean`(짧은 길이, 첫 오프셋), `Fk/LuRejectCall.lean`(fmt.errorf 경로 둘)의 조각을 따른다.
@@ -60,4 +60,4 @@ accept와 루프는 손 증명과 거의 같은 글이다. 생성기가 하는 �
 | accept(0·1·16) | 생성 증명 통과(시도 1), 문장 SAME(`lu_accept_main`). 루프 보조정리 `loop_iter`, `loop_exit`, `loop`를 모듈 안에 생성한다(`Fk/LuLoop.lean`의 틀). 증인 `Gen1cX4.WitLuAcc`(n = 0, 1, 16). 변이 `lu-acc-store` |
 | marshal(빠른 경로) | 생성 증명 통과(시도 1), 문장 SAME(`lu_marshal_main`). 루프 보조정리 `mloop_iter`, `mloop_exit`, `mloop`를 생성한다. 증인 `Gen1cX4.WitLuM0/M1/M16`(gen/wit 출력을 다시 겨눔). 변이 `lu-marshal-off` |
 | growslice 호출 지점(`lum_grow_site`) | 시도하지 않음 |
-| 조합 | 시도하지 않음 |
+| 조합 | 생성 증명 통과(시도 1, 생성한 accept·marshal 위), 문장 SAME(`lu_unmarshal_then_marshal`). 증인 `Gen1cX4.WitLuComp`(gen/wit 출력을 다시 겨눔, n = 1). 변이 `lu-compose-len`(문장) |

@@ -1,6 +1,6 @@
 {
  "schema": "fvphase1c.x4-compare/1",
- "log": "run logs/91-92 (compare step)",
+ "log": "run logs/93 (compare step)",
  "rows": [
   {
    "gen": "Gen1cX4.ListU64.size_stmt",
@@ -23,6 +23,14 @@
    "hand": "lu_marshal_main",
    "expect": "SAME",
    "why": "marshal fast path (element loop)",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListU64.compose_stmt",
+   "hand": "lu_unmarshal_then_marshal",
+   "expect": "SAME",
+   "why": "compose (decode then encode)",
    "result": "SAME",
    "as_expected": true
   },
@@ -87,6 +95,14 @@
    "hand": "lu_marshal_reject_main",
    "expect": "DIFF",
    "why": "control (marshal fast path vs too-big)",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListU64.compose_stmt",
+   "hand": "bv_unmarshal_then_marshal",
+   "expect": "DIFF",
+   "why": "control (another type's composition)",
    "result": "DIFF",
    "as_expected": true
   }
