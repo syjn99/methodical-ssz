@@ -542,6 +542,7 @@ Fk.RtCopy	Fk.rg_zero3	[Classical.choice, Quot.sound, propext]
 Fk.RtCopy	Fk.rt_growslice	[Classical.choice, Quot.sound, propext]
 Fk.RtCopy	Fk.rt_memmove	[Classical.choice, Quot.sound, propext]
 Fk.RtErr	Fk.rt_convT64	[Classical.choice, Quot.sound, propext]
+Fk.RtErr	Fk.rt_errorf_dd	[Classical.choice, Quot.sound, propext]
 Fk.RtErr	Fk.rt_errorf_dw	[Classical.choice, Quot.sound, propext]
 Fk.RtErr	Fk.rt_errorf_nil	[Classical.choice, Quot.sound, propext]
 Fk.RtErr	Fk.rt_errorf_w	[Classical.choice, Quot.sound, propext]
@@ -1597,4 +1598,4 @@ Fv1.SpecScalars	Fv1.sc_toValue_surjective	[Quot.sound, propext]
 Fv1.Transfer	Fv1.accepted_is_enc	[Classical.choice, Quot.sound, propext]
 Fv1.Transfer	Fv1.deserialize_enc	[Classical.choice, Quot.sound, propext]
 Fv1.Transfer	Fv1.rejected_not_enc	[Classical.choice, Quot.sound, propext]
-TOTAL 1599 NONSTANDARD 0
+TOTAL 1600 NONSTANDARD 0

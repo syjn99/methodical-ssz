@@ -243,6 +243,39 @@ def FmtErrorfDWC (Heap : Nat → DataMem → Prop) (fs : List UInt8) (tw : BitVe
           ⋆ Heap avail' ⋆ F) st'.data.dmem)
       ⟨st, label "fmt.errorf"⟩
 
+/-- `FmtErrorfDDC Heap fs tw S` (fix 3 X5): the internal `fmt.errorf` for one fixed
+format `fs` with two `%d` verbs (the ListC offset-order format `Fk.Data.lcFmtOrder`)
+and two arguments: two `uint64` boxes (type word `tw` each, the theorems fix it to
+`Fk.Data.uint64Type_addr`; data words `bx1`, `bx2`, the `convT64` boxes of `v1`,
+`v2`, `BoxIn`). Budget from the format and the arguments: `fs.length + 40 + 8192
+≤ avail` (at most 20 digits each). Result as `FmtErrorfWC`: rsp + 8, r14 kept,
+rax ≠ 0, every read resource unchanged, the heap shrinks, `F` unchanged. -/
+def FmtErrorfDDC (Heap : Nat → DataMem → Prop) (fs : List UInt8) (tw : BitVec 64) (S : Nat) : Prop :=
+  ∀ (st : MachineData) (ret : Int64) (avail : Nat) (hb1 hb2 stk spill : List UInt8) (bx1 v1 bx2 v2 : BitVec 64)
+    (F : DataMem → Prop),
+    st.regs.rbx.toNat = fs.length → st.regs.rdi = 2 → st.regs.rsi = 2 →
+    BoxIn bx1 v1 hb1 → BoxIn bx2 v2 hb2 → stk.length = S → spill.length = 40 →
+    fs.length + 40 + 8192 ≤ avail →
+    (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+      ⋆ Eq (stk.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill.At (st.regs.rsp.toBitVec + 8))
+      ⋆ Eq (fs.At st.regs.rax.toBitVec)
+      ⋆ Eq ((Int.toBytes 8 tw.toInt ++ Int.toBytes 8 bx1.toInt ++ Int.toBytes 8 tw.toInt ++ Int.toBytes 8 bx2.toInt).At
+          st.regs.rcx.toBitVec)
+      ⋆ StaticBox v1 ⋆ Eq (hb1.At bx1) ⋆ StaticBox v2 ⋆ Eq (hb2.At bx2)
+      ⋆ Heap avail ⋆ F) st.dmem →
+    Eventually (step1 Host.exe)
+      (fun st' => st'.pc = ret ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.r14 = st.regs.r14
+        ∧ st'.data.regs.rax ≠ 0 ∧
+        ∃ (stk' spill' : List UInt8) (avail' : Nat), stk'.length = S ∧ spill'.length = 40 ∧ avail' ≤ avail ∧
+        (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
+          ⋆ Eq (stk'.At (st.regs.rsp.toBitVec - BitVec.ofNat 64 S)) ⋆ Eq (spill'.At (st.regs.rsp.toBitVec + 8))
+          ⋆ Eq (fs.At st.regs.rax.toBitVec)
+          ⋆ Eq ((Int.toBytes 8 tw.toInt ++ Int.toBytes 8 bx1.toInt ++ Int.toBytes 8 tw.toInt ++ Int.toBytes 8 bx2.toInt).At
+              st.regs.rcx.toBitVec)
+          ⋆ StaticBox v1 ⋆ Eq (hb1.At bx1) ⋆ StaticBox v2 ⋆ Eq (hb2.At bx2)
+          ⋆ Heap avail' ⋆ F) st'.data.dmem)
+      ⟨st, label "fmt.errorf"⟩
+
 /-- The growth loop of Go 1.26.3 `runtime.nextslicecap` (slice.go):
 `newcap += (newcap + 3*256) >> 2` until `newcap ≥ newLen`. The fuel argument
 only makes the recursion structural; `growLoop_ge` shows that fuel `newLen`

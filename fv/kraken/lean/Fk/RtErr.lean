@@ -97,6 +97,33 @@ theorem rt_errorf_dw (j : Nat) (hj : RtErr.IsInfixAt Host.prog j) (hf : LabelsFr
   · intro h; have := congrArg UInt64.toNat h; simp only [] at this; revert this; decide
 
 set_option maxHeartbeats 4000000 in
+/-- The same code meets `FmtErrorfDDC` (fix 3 X5). -/
+theorem rt_errorf_dd (j : Nat) (hj : RtErr.IsInfixAt Host.prog j) (hf : LabelsFresh RtErr j)
+    (Heap : Nat → DataMem → Prop) (fs : List UInt8) (tw : BitVec 64) (S : Nat) : FmtErrorfDDC Heap fs tw S := by
+  intro st ret avail hb1 hb2 stk spill bx1 v1 bx2 v2 F _hrbx hrdi _hrsi _hb1 _hb2 hstk hsp _hav hmem
+  rw [label_at' hj hf (j := 0) (l := "fmt.errorf") (by rfl) (by rfl)]
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := st
+  simp only at hrdi hmem ⊢
+  subst hrdi
+  kat hj RtErr 0
+  kat hj RtErr 1
+  intro _
+  kat hj RtErr 2
+  split
+  case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+  simp only [Effects.All]
+  klabel hj hf RtErr 5
+  kat hj RtErr 5
+  kat hj RtErr 6
+  kat hj RtErr 7
+  apply load_step _ _ _ _ (Int.toBytes 8 ret.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  apply Eventually.done
+  refine ⟨by simp, ?_, rfl, ?_, stk, spill, avail, hstk, hsp, Nat.le_refl _, by ecancel⟩
+  · apply UInt64.toBitVec_inj.mp; simp
+  · intro h; have := congrArg UInt64.toNat h; simp only [] at this; revert this; decide
+
+set_option maxHeartbeats 4000000 in
 /-- The bump-heap `convT64` meets `ConvT64C`: 8 bytes from the heap hold v; the box
 is the heap case of `BoxIn`. -/
 theorem rt_convT64 (j : Nat) (hj : RtErr.IsInfixAt Host.prog j) (hf : LabelsFresh RtErr j)
