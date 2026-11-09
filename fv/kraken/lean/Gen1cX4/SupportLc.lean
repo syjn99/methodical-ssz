@@ -5,7 +5,7 @@ import Fk.LuErr
 /-! ListC accept support for the proofs that fv/kraken/gen/x4 generates. Written by hand, not generated.
 The statement definitions `lcObjs`, `ptrBytes`, `lcStart`, `lcStk` have the same text as in Fk/LcLoop.lean
 (so the generated statements compare equal by definitional unfolding); the lemmas are copies of
-Fk/LcLoop.lean, Fk/LcAccept.lean (`lca_m4`), Fk/LcMarshal.lean (`sep_mono_right'`) and Fk/NeAccept.lean
+Fk/LcLoop.lean, Fk/LcAccept.lean (`lca_m4`), Fk/LcMarshal.lean (`sep_mono_right'`), Fk/LcOrder.lean (`jb_true`) and Fk/NeAccept.lean
 (`luObj_sep`) with the same statements, proved here again so the generated module does not import those
 hand proof modules. Kept apart from Support.lean so that only the ListC module depends on Fk.LuErr. -/
 
@@ -145,5 +145,13 @@ theorem lcs_mono {P P' F : DataMem → Prop} {m : DataMem} (hP : ∀ m, P m → 
     (h : (P ⋆ F) m) : (P' ⋆ F) m := by
   obtain ⟨a, b, hu, hi, hp, hr⟩ := h
   exact ⟨a, b, hu, hi, hP a hp, hr⟩
+
+theorem jb_true (a b : BitVec 64) (af of' : Bool) (h : a.toNat < b.toNat) :
+    CondCode.c.interp (StatusFlags.from_result (a - b)
+      { cf := BitVec.unsigned (a - b) != a.unsigned - b.unsigned, af := af, of := of' }) = true := by
+  have hb := b.isLt
+  have hs : (a - b).toNat = 2 ^ 64 - b.toNat + a.toNat := by rw [BitVec.toNat_sub]; omega
+  simp only [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, hs]
+  simp; omega
 
 end Gen1cX4

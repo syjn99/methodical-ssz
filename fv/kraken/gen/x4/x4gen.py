@@ -2604,10 +2604,10 @@ def main_list(a, key, desc, dsha):
     L = ListField(desc, LAYOUT["types"][t])
     ns = a.ns or f"Gen1cX4.{t}"
     LIST_OBL = ("size", "accept", "marshal", "marshal_reject", "compose", "reject_short", "reject_offset", "reject_misaligned", "reject_toobig",
-                "reject_zero", "reject_past", "reject_tail", "accept_empty")
+                "reject_zero", "reject_past", "reject_tail", "accept_empty", "reject_order")
     only = [x for x in a.only.split(",") if x in LIST_OBL] if a.only != ap_default() else list(LIST_OBL)
     if L.esz is None:   # list of containers (ListC): size (outer loop) and the templates that do not touch elements
-        LC_OBL = ("size", "accept", "accept_empty", "reject_short", "reject_offset", "reject_zero", "reject_past", "reject_tail")
+        LC_OBL = ("size", "accept", "accept_empty", "reject_order", "reject_short", "reject_offset", "reject_zero", "reject_past", "reject_tail")
         bad = [x for x in only if x not in LC_OBL]
         if a.only != ap_default() and bad:
             raise SystemExit(f"x4gen: refused {key[0]}.{t}: no template for {bad} on a list of containers")
@@ -2624,9 +2624,9 @@ def main_list(a, key, desc, dsha):
     if any(x in only for x in ("reject_misaligned", "reject_toobig", "accept", "marshal", "marshal_reject")) \
             or (L.esz is None and "size" in only):
         head += ["import Fk.Contracts", "import Fk.Frame", "import Fk.Block"]
-    if any(f"reject_{m}" in only for m in LC0_MODES) or (L.esz is None and "accept" in only):
+    if any(f"reject_{m}" in only for m in LC0_MODES) or (L.esz is None and ("accept" in only or "reject_order" in only)):
         head += ["import Fk.FunSpecs"]
-    if L.esz is None and "accept" in only:
+    if L.esz is None and ("accept" in only or "reject_order" in only):
         head += ["import Gen1cX4.SupportLc"]
     pre = []
     if a.mutant:
@@ -2697,7 +2697,7 @@ def main_list(a, key, desc, dsha):
     except (AssertionError, IndexError, ValueError) as e:
         raise SystemExit(f"x4gen: refused {key[0]}.{t}: prologue does not fit the reject template ({type(e).__name__}: {e})")
     if subf is not None and (any(f"reject_{m}" in only for m in ("short", "offset") + LC0_MODES)
-                             or (L.esz is None and "accept" in only)):
+                             or (L.esz is None and ("accept" in only or "reject_order" in only))):
         body += ["-- prologue/epilogue arithmetic of the decoder's frame (generated with its guard distance and frame size)",
                  f"theorem ar_neg{G} (x : BitVec 64) (h : {G} ≤ x.toNat) : (x + -{G}).toNat = x.toNat - {G} := by",
                  "  rw [← BitVec.sub_eq_add_neg, BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simpa using h)]; rfl",
@@ -2749,8 +2749,8 @@ def main_list(a, key, desc, dsha):
                      "set_option maxHeartbeats 8000000 in", "set_option maxRecDepth 100000 in",
                      f"theorem reject_{m} [Host] : reject_{m}_stmt := by",
                      *["  " + x for x in lu_call_proof(Dun, code["UnmarshalSSZ"], m, Ps[m])], ""]
-    if "accept" in only and L.esz is None:
-        body += lc_accept_block(a, key, desc, t, code["UnmarshalSSZ"], Dun, G, L)
+    if L.esz is None and ("accept" in only or "reject_order" in only):
+        body += lc_accept_block(a, key, desc, t, code["UnmarshalSSZ"], Dun, G, L, only)
     body += [f"end {ns}", ""]
     out = os.path.realpath(a.out_lean)
     os.makedirs(os.path.dirname(out), exist_ok=True)
@@ -2766,8 +2766,9 @@ class AccPrefix:
         self.C = self.F + 16
 
 
-def lc_accept_block(a, key, desc, t, code, Dun, G, L):
-    """ListC accept (lcacc.py): loop lemmas, accept (n >= 1) and accept_empty (len(buf) = 4)."""
+def lc_accept_block(a, key, desc, t, code, Dun, G, L, only):
+    """ListC accept (lcacc.py): loop lemmas, accept (n >= 1) and accept_empty (len(buf) = 4); with
+    reject_order the offset-order reject r8 (lcl_order and its main theorem)."""
     if L.limit != 4:
         raise SystemExit(f"x4gen: refused {key[0]}.{t}: the ListC accept template is for the item limit 4, not {L.limit}")
     try:
@@ -2790,15 +2791,41 @@ def lc_accept_block(a, key, desc, t, code, Dun, G, L):
         Lemp, j = lc_call0_proof(Dun, code, pe, emp_head)
         emp = lcacc.empty_walk(S, Lemp, j)
         loop = lcacc.loop_block(S)
+        ordr = []
+        if "reject_order" in only:
+            txt = [x[2] for x in Dun]
+            j = next(d for d in range(len(txt)) if txt[d] == "cmp %r11,%rsi" and txt[d + 1].startswith("jb "))
+            B = S.lab[txt[j + 1].split()[1]]
+            m = re.fullmatch(r"lea go_string\._\+(\d+)\(%rip\),%rax", txt[B + 16])
+            ln = int(re.fullmatch(r"mov \$(0x[0-9a-f]+),%ebx", txt[B + 17])[1], 16)
+            fid, api_id = include_adapter.rodata_id(None, include_adapter.RODATA_LABEL, int(m[1]), ln)
+            assert api_id == "lcFmtOrder", (m[1], ln, api_id)
+            tws = {re.fullmatch(r"lea type__\+(\d+)\(%rip\),%rcx", txt[B + o])[1] for o in (7, 13)}
+            api = include_adapter.check_api()
+            tw = [it["id"] for it in api["items"] if it.get("label") == "type__" and str(it.get("offset")) in tws]
+            assert len(tws) == 1 and tw == ["uint64Type"], (tws, tw)
+            S.fmt_order = (int(m[1]), ln)
+            S.names = {"@FMTLEN@": f"fmt_len_{fid}", "@FMTA@": include_adapter.addr_name(fid), "@FMT@": include_adapter.bytes_name(fid),
+                       "@U64T@": include_adapter.addr_name("uint64Type")}
+            ohead = [lcacc.ORDER_INTRO] + lcacc.body(lcacc.T.ORD_MAIN_PRE, S)
+            Lord, j = lc_call0_proof(Dun, code, pa, ohead, o="(4 * n)", o4="(tl.take 4)", h4="(by omega)")
+            omain = lcacc.accept_walk(S, Lord, j, "n", lcacc.T.ORD_MAIN_TAIL)
+            ordr = (["-- offset-order reject r8 (lcl_order: iteration i < n - 1 with the next offset below the start)",
+                     f"theorem fmt_len_{fid} : {include_adapter.bytes_name(fid)}.length = {ln} := by rfl", ""]
+                    + lcacc.order_block(S)
+                    + [lcacc.sub(lcacc.T.ORD_MAIN_STMT, S), "set_option maxHeartbeats 16000000 in", "set_option maxRecDepth 200000 in",
+                       "theorem reject_order [Host] : reject_order_stmt := by", *["  " + x for x in omain], ""])
     except (KeyError, AssertionError, IndexError, StopIteration, ValueError, TypeError) as e:
         raise SystemExit(f"x4gen: refused {key[0]}.{t}: ListC accept template does not fit the code ({type(e).__name__}: {e})")
-    return (["open Fv1 EthLib.Serialization.Ssz", "", "-- frame arithmetic of the accept paths (generated with the frame size and call slot)"]
-            + [f"theorem {n} {v}" for n, v in lcacc.lemmas(S).items()] + [""]
-            + ["-- item loop of the decoder: one item (lcl_iter), exit (lcl_exit), induction (lcl_loop)"] + loop
-            + [lcacc.sub(lcacc.T.ACC_STMT, S), "set_option maxHeartbeats 16000000 in", "set_option maxRecDepth 200000 in",
-               "theorem accept [Host] : accept_stmt := by", *["  " + x for x in acc], "",
-               lcacc.sub(lcacc.T.EMP_STMT, S), "set_option maxHeartbeats 4000000 in", "set_option maxRecDepth 100000 in",
-               "theorem accept_empty [Host] : accept_empty_stmt := by", *["  " + x for x in emp], ""])
+    out = (["open Fv1 EthLib.Serialization.Ssz", "", "-- frame arithmetic of the accept paths (generated with the frame size and call slot)"]
+           + [f"theorem {n} {v}" for n, v in lcacc.lemmas(S).items()] + [""])
+    if "accept" in only:
+        out += (["-- item loop of the decoder: one item (lcl_iter), exit (lcl_exit), induction (lcl_loop)"] + loop
+                + [lcacc.sub(lcacc.T.ACC_STMT, S), "set_option maxHeartbeats 16000000 in", "set_option maxRecDepth 200000 in",
+                   "theorem accept [Host] : accept_stmt := by", *["  " + x for x in acc], "",
+                   lcacc.sub(lcacc.T.EMP_STMT, S), "set_option maxHeartbeats 4000000 in", "set_option maxRecDepth 100000 in",
+                   "theorem accept_empty [Host] : accept_empty_stmt := by", *["  " + x for x in emp], ""])
+    return out + ordr
 
 
 def ap_default():

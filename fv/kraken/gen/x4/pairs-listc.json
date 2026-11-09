@@ -5,7 +5,8 @@
   "Fk.LcSize",
   "Fk.LuMarshal",
   "Fk.LcAccept",
-  "Fk.LcAcceptEmpty"
+  "Fk.LcAcceptEmpty",
+  "Fk.LcOrder"
  ],
  "pairs": [
   [
@@ -25,6 +26,12 @@
    "Fk.lc_accept_empty_main",
    "SAME",
    "accept empty list (len(buf) = 4)"
+  ],
+  [
+   "Gen1cX4.ListC.reject_order_stmt",
+   "lc_reject_offset_order_main",
+   "SAME",
+   "reject r8 offset order (loop iteration 0, two convT64, fmt.errorf DD)"
   ],
   [
    "Gen1cX4.ListC.reject_short_stmt",
@@ -97,6 +104,12 @@
    "lc_reject_tail_main",
    "DIFF",
    "control (empty vs r10)"
+  ],
+  [
+   "Gen1cX4.ListC.reject_order_stmt",
+   "lc_accept_main",
+   "DIFF",
+   "control (r8 vs accept)"
   ]
  ],
  "no_smart_unfolding": true

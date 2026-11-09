@@ -176,6 +176,37 @@
   "compose": {
    "status": "not attempted",
    "hand": "(no ListC composition in the frozen hand list)"
+  },
+  "reject r8 offset order": {
+   "status": "proved (generated), SAME",
+   "attempts": [
+    {
+     "log": "run logs/105",
+     "result": "compare SAME, axioms, negative pass; build step stopped by the 6 GiB memory cap (parallel rebuild of the six ListC witness modules; gate exit 125, oom_kill 5->5)"
+    },
+    {
+     "log": "run logs/106",
+     "result": "same files, run_checks.sh now builds one module per lake call: all steps 0"
+    }
+   ],
+   "hand": "lc_reject_offset_order_main",
+   "negative": "lc-order-jb (fails inside lcl_order, logs/106)",
+   "witness": "Gen1cX4.WitLcO (gen/wit output retargeted; the hand lemma lcFmtOrder_len renamed to the generated fmt_len_lcFmtOrder with the same statement; logs/107 failed on that name, logs/108 builds)",
+   "generator_decides": "the item-loop walker of lcacc.py in order mode: the not-last branch of the last-item je, the order check (jb after cmp %r11,%rsi, with r11 = the start reloaded from its slot and rsi = the next offset) taken into the reject block; the block is checked (two convT64 calls, fmt.errorf, its jne, retq at fixed offsets) and its format string and type word are bound to the include API items lcFmtOrder and uint64Type. The main theorem reuses the accept prefix and accept walk up to the loop-head jump.",
+   "hand_text": "lcl_order and lc_reject_offset_order_main statements, the whole reject block from its label (ORD_ERR), the main proof head and the tail after the loop-head label (lcacc_tpl.py, from Fk/LcOrder.lean).",
+   "verbatim_measure": {
+    "what": "tactic lines verbatim in Fk/LcOrder.lean",
+    "rows": {
+     "lcl_order": {
+      "tactic_lines": 266,
+      "verbatim_in_hand": 262
+     },
+     "reject_order": {
+      "tactic_lines": 262,
+      "verbatim_in_hand": 258
+     }
+    }
+   }
   }
  }
 }

@@ -8,7 +8,15 @@ MC=$1; O=$2; CMP=$3; AX=$4; NEG=${5:-}
 mkdir -p "$O"; : > "$O/rc.txt"; fail=0
 step() { name=$1; shift; python3 -I -B "$MC" 6442450944 -- "$@" > "$O/$name.log" 2>&1; rc=$?
          echo "$name $rc" >> "$O/rc.txt"; [ "$rc" -ne 0 ] && [ "$fail" -eq 0 ] && fail=$rc; }
-step build lake build Gen1cX4
+# one lake call per module (proof modules first, then witnesses): a parallel rebuild of several witness
+# modules exceeds the 6 GiB session cap (logs/102, logs/105)
+: > "$O/build.log"; brc=0
+for f in $(ls Gen1cX4/*.lean | grep -v '/Wit') $(ls Gen1cX4/Wit*.lean); do
+  m=$(echo "$f" | sed 's|/|.|; s|\.lean$||')
+  python3 -I -B "$MC" 6442450944 -- lake build "$m" >> "$O/build.log" 2>&1; rc=$?
+  [ "$rc" -ne 0 ] && [ "$brc" -eq 0 ] && brc=$rc
+done
+echo "build $brc" >> "$O/rc.txt"; [ "$brc" -ne 0 ] && fail=$brc
 step compare lake env lean "$CMP"
 step axioms lake env lean "$AX"
 [ -n "$NEG" ] && step negative sh "$NEG"

@@ -455,6 +455,38 @@
     "propext"
    ],
    "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListC.reject_order",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListC.lcl_order",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListC.fmt_len_lcFmtOrder",
+   "axioms": [],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.jb_true",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
   }
  ],
  "all_standard": true,

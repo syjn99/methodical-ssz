@@ -1,7 +1,7 @@
 {
  "schema": "fvphase1c.x4-negative/1",
- "cases": 18,
- "as_expected": 18,
+ "cases": 20,
+ "as_expected": 20,
  "rows": [
   {
    "id": "lc-short-cmp",
@@ -254,6 +254,46 @@
    ],
    "as_expected": true,
    "run": "logs/100"
+  },
+  {
+   "id": "lc-order-jb",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lc_order_jb_mutant.reject_order",
+   "mutation": "'jb L_target.ListC.UnmarshalSSZ_5ea' -> 'jae L_target.ListC.UnmarshalSSZ_5ea'",
+   "exit": "1",
+   "first_error": "line 203: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+   "theorem_lines": [
+    399,
+    662
+   ],
+   "lemma_lines": [
+    [
+     43,
+     351
+    ]
+   ],
+   "as_expected": true,
+   "run": "logs/106"
+  },
+  {
+   "id": "lc-order-jb",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lc_order_jb_control.reject_order",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    399,
+    662
+   ],
+   "lemma_lines": [
+    [
+     43,
+     351
+    ]
+   ],
+   "as_expected": true,
+   "run": "logs/106"
   }
  ],
  "note": "logs/95 negative step did not run: the first offset mutation text (cmp $0x4,%rdx) occurs twice in the .S, prepare refused it; replaced by the unique jne (logs/96)"

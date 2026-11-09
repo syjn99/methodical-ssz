@@ -1,6 +1,6 @@
 {
  "schema": "fvphase1c.x4-compare/1",
- "log": "run logs/101 (compare with smart unfolding off; logs/100 compare step gave accept_stmt DIFF with it on)",
+ "log": "run logs/106 (compare with smart unfolding off)",
  "rows": [
   {
    "gen": "Gen1cX4.ListC.size_stmt",
@@ -23,6 +23,14 @@
    "hand": "Fk.lc_accept_empty_main",
    "expect": "SAME",
    "why": "accept empty list (len(buf) = 4)",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListC.reject_order_stmt",
+   "hand": "lc_reject_offset_order_main",
+   "expect": "SAME",
+   "why": "reject r8 offset order (loop iteration 0, two convT64, fmt.errorf DD)",
    "result": "SAME",
    "as_expected": true
   },
@@ -119,6 +127,14 @@
    "hand": "lc_reject_tail_main",
    "expect": "DIFF",
    "why": "control (empty vs r10)",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListC.reject_order_stmt",
+   "hand": "lc_accept_main",
+   "expect": "DIFF",
+   "why": "control (r8 vs accept)",
    "result": "DIFF",
    "as_expected": true
   }

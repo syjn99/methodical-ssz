@@ -91,8 +91,10 @@ def lemmas(S):
 
 def sub(s, S):
     for k, v in (("@CODE@", S.code), ("@HEAD@", S.head), ("@EXIT@", S.exit), ("@NOTY@", S.noty),
-                 ("@MSTY@", S.msty), ("@MSCALL@", S.ms)):
+                 ("@MSTY@", S.msty), ("@MSCALL@", S.ms), ("@NOCALL@", S.no)) + tuple(getattr(S, "names", {}).items()):
         s = s.replace(k, str(v))
+    if getattr(S, "ordB", None) is not None:
+        s = re.sub(r"@B(\d+)@", lambda m: str(S.ordB + int(m[1])), s)
     return s
 
 
@@ -167,7 +169,7 @@ def frame_op(W, t):
 
 # ---------------------------------------------------------------- the item loop (lcl_iter)
 
-def iter_walk(S, W, d, L, last):
+def iter_walk(S, W, d, L, last, mode="accept"):
     """Walk from directive d to the loop head; `last` = the n = i + 1 branch (T substituted by e)."""
     txt, lab = S.txt, S.lab
     while True:
@@ -214,6 +216,16 @@ def iter_walk(S, W, d, L, last):
                   "rw [hnext (by omega), ofBytes_uintBytes4 e (by omega)]",
                   f"rw [← tl_split3 {b} tl (4 * (i + 1)) 4 (by omega) (by omega)] at Hm1", "kunfold"]
             W.regs["rsi"] = "(BitVec.ofNat 64 e)"; W.zx.add("rsi"); W.shl.discard("rsi")
+        elif op == "je" and W.cmp == ["rdx", "rbx"] and mode == "order":    # i + 1 < n: the not-last branch only
+            L += [f"have hi1 : {W.regs['rdx']}.toNat = i + 1 := by simp [BitVec.toNat_add]; omega", "have hl : ¬ (i + 1 = n) := by omega",
+                  "split", "case isTrue h =>", "  exfalso; simp [CondCode.interp, StatusFlags.from_result] at h",
+                  "  apply hl; have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this; omega", "simp only [Effects.All]"]
+        elif op == "jb" and mode == "order" and W.cmp == ["r11", "rsi"]:   # next offset below the current start
+            assert W.regs["r11"] == "rcx.toBitVec" and W.regs["rsi"] == "(BitVec.ofNat 64 e)", W.regs
+            order_block_check(S, jt)
+            S.ordB = jt
+            L += ["rw [jb_true _ _ _ _ (by simp; omega)]", "simp only [↓reduceIte, Effects.All]", klabel(S, jt), *body(T.ORD_ERR, S)]
+            return L
         elif op == "je" and W.cmp == ["rdx", "rbx"]:
             L += [f"have hi1 : {W.regs['rdx']}.toNat = i + 1 := by simp [BitVec.toNat_add]; omega", "by_cases hl : i + 1 = n"]
             import copy
@@ -366,7 +378,20 @@ def iter_finish(S, W, L):
     return L
 
 
-def iter_proof(S):
+def order_block_check(S, B):
+    """The offset-order reject block whose text ORD_ERR is: two convT64 boxes, fmt.errorf with the
+    lcFmtOrder format (S.fmt_order, bound by the include adapter in x4gen), the error return."""
+    t = S.txt
+    want = {6: "callq runtime.convT64", 12: "callq runtime.convT64", 21: "callq fmt.errorf", 22: "test %rax,%rax",
+            35: "retq"}
+    for o, x in want.items():
+        assert t[B + o] == x, (B + o, t[B + o], x)
+    assert S.lab[t[B + 23].split()[1]] == B + 32 and t[B + 23].startswith("jne "), t[B + 23]
+    m = re.fullmatch(r"lea go_string\._\+(\d+)\(%rip\),%rax", t[B + 16])
+    assert m and (int(m[1]), int(re.fullmatch(r"mov \$(0x[0-9a-f]+),%ebx", t[B + 17])[1], 16)) == S.fmt_order, (t[B + 16], t[B + 17], S.fmt_order)
+
+
+def iter_proof(S, mode="accept"):
     h = S.head
     W = Walk(S, "x", {-8: "recv", -32: "(BitVec.ofNat 64 cap0)", 128: "base", 136: ("s136", "h136"),
                       144: "(BitVec.ofNat 64 (cap0 - 4))", 152: ("s152", "h152"), 160: ("s160", "h160"),
@@ -388,7 +413,7 @@ def iter_proof(S):
         d += 1
     L += [kat(S, d), *iter_newobject(S, W, d)]
     W.ph = "call"
-    return iter_walk(S, W, d + 1, L, False)
+    return iter_walk(S, W, d + 1, L, False, mode)
 
 
 def exit_proof(S):
@@ -428,11 +453,11 @@ def recv_store(off, name, how="by bv_omega"):
     return f"apply store_step_at _ _ {a} _ _ _ {name} _ _ ({how}) (by ecancel) (by exact h{name})"
 
 
-def accept_walk(S, L, d):
+def accept_walk(S, L, d, nt="gs.length", tail=None):
     """From the accept branch (container offset and first offset checked) to the end of the function."""
     txt, lab = S.txt, S.lab
     W = Walk(S, "rsp.toBitVec", {-8: ("s8", "h8"), -32: ("s32", "h32")}, {"rax": "rax.toBitVec",
-             "rbx": "(BitVec.ofNat 64 (4 * gs.length))", "rdx": "(BitVec.ofNat 64 gs.length)"}, "entry", "n", "N")
+             "rbx": f"(BitVec.ofNat 64 (4 * {nt}))", "rdx": f"(BitVec.ofNat 64 {nt})"}, "entry", "n", "N")
     for o in (128, 136, 144, 152, 160, 168, 176, 184):
         W.slots[o] = (f"l{o}", f"hl{o}")
     recv = {8: "cL", 16: "cC", 0: "cP"}
@@ -448,7 +473,7 @@ def accept_walk(S, L, d):
         if fo is not None:
             L += fo
         elif op == "callq" and d == S.ms:
-            L += body(T.ACC_MS, S); W.ph = "call"; W.n = 8
+            L += [x.replace("gs.length", nt) for x in body(T.ACC_MS, S)]; W.ph = "call"; W.n = 8
         elif op == "mov" and re.fullmatch(r"%rdx,0x(8|10)\(%rsi\)|%rax,\(%rsi\)", a):
             off = 0 if a.endswith("(%rsi)") and "0x" not in a else int(a.split(",")[1].split("(")[0], 16)
             assert W.regs.get("rsi") == "rax.toBitVec", W.regs
@@ -460,6 +485,8 @@ def accept_walk(S, L, d):
             L += SPLIT_F + [klabel(S, jt)]; d = jt; continue
         elif op == "xor":
             L.append("intro _")
+        elif op == "jmpq" and jt == S.head and tail is not None:
+            return L + [klabel(S, jt), *body(tail, S)]
         elif op == "jmpq" and jt == S.head:
             L += [klabel(S, jt), *body(T.ACC_LOOP, S)]
             d = S.exit; L.append(kat(S, d)); d += 1
@@ -516,3 +543,15 @@ ACCEPT_INTRO = ("intro k hk hf tl T gs hgs hT hn1 hn hT32 hend hfirst hparts hne
                 "l152 l160 l168 l176 l184 l208 l216 l224 rslot blk cP cL cC hfp hsl h8 h32 hl128 hl136 hl144 hl152 hl160 "
                 "hl168 hl176 hl184 hl208 hl216 hl224 hrs hcP hcL hcC S hS hblk R Heap avail hav h_mem hguard hsp hlen hcap "
                 "hcap63 hms hno hlu")
+
+
+def order_block(S):
+    """lcl_order: iteration i (not the last) whose next offset is below the current start."""
+    return ["set_option maxHeartbeats 16000000 in", "set_option maxRecDepth 200000 in", sub(T.ORD_STMT, S),
+            *["  " + x for x in iter_proof(S, "order")], ""]
+
+
+ORDER_INTRO = ("intro k hk hf tl T n e hT hn2 hn hT32 hle4n he hfirst hsecond s ra guard fp slot s8 s32 l128 l136 l144 l152 "
+               "l160 l168 l176 l184 l192 l200 l208 l216 l224 rslot blk cP cL cC a0 a1 hfp hsl h8 h32 hl128 hl136 hl144 hl152 "
+               "hl160 hl168 hl176 hl184 hl192 hl200 hl208 hl216 hl224 hrs hcP hcL hcC ha0 ha1 S hS hblk R Heap avail hav h_mem "
+               "hguard hsp hlen hcap hcap63 hms hno hcv hfe")
