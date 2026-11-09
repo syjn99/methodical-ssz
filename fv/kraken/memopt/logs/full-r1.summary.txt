@@ -1,0 +1,12 @@
+label: full-r1
+cmd: lake build
+cwd: /Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/lean
+start_epoch: 1794223571
+exit: 0
+wall_s_date: 173
+wall_s_time: 173.11
+time_maxrss_bytes: 14165344256
+time_maxrss_gib: 13.19
+sampled_peak_total_gib: 19.08
+sampled_peak_single_gib: 13.18
+samples: 301

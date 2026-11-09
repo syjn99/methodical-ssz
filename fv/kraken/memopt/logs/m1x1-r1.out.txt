@@ -1,0 +1,54 @@
+Fk/WitLcM1x1.lean:33:56: warning: This simp argument is unused:
+  List.append_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [prog_eq, P, List.append_nil]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Fk/WitLcM1x1.lean:72:62: warning: This simp argument is unused:
+  List.length_replicate
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [objs, lcElem, List.length_nil, List.length_cons, Int.natCast_zero, Int.cast_ofNat_Int, u64nil,
+    u64v0, Nat.reduceMul, Nat.reduceAdd, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Fk/WitLcM1x1.lean:72:85: warning: This simp argument is unused:
+  Int.natCast_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [objs, lcElem, List.length_nil, List.length_cons, List.length_replicate, Int.cast_ofNat_Int, u64nil,
+    u64v0, Nat.reduceMul, Nat.reduceAdd, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Fk/WitLcM1x1.lean:72:123: warning: This simp argument is unused:
+  u64nil
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [objs, lcElem, List.length_nil, List.length_cons, List.length_replicate, Int.natCast_zero,
+    Int.cast_ofNat_Int, u64v0, Nat.reduceMul, Nat.reduceAdd, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Fk/WitLcM1x1.lean:74:43: warning: This simp argument is unused:
+  BitVec.ofNat_eq_ofNat
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.reduceAdd, BitVec.reduceSub, Int64.toBitVec_ofNat, nil_At_emp,
+    Std.ExtHashMap.sep_emp]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Fk/WitLcM1x1.lean:75:4: warning: This simp argument is unused:
+  Int64.toBitVec_ofNat
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [s, s0, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
+    nil_At_emp, Std.ExtHashMap.sep_emp]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Fk/WitLcM1x1.lean:77:32: warning: This simp argument is unused:
+  u64_toBitVec_ofNat
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [u64_toBitVec_zero] at H ⊢
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

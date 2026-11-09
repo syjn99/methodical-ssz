@@ -1,0 +1,24 @@
+[Elab.async] [14.241228] ✅️ elaborating proof of Fk.WitLcM4x16.u64v0
+  [Elab.definition.value] [13.780730] ✅️ Fk.WitLcM4x16.u64v0
+[Elab.async] [2.488323] ✅️ _private.Lean.AddDecl.0.Lean.addDeclCore
+  [Kernel] [2.488265] ✅️ typechecking declarations [Fk.WitLcM4x16.u64v0]
+[Elab.async] [14.365972] ✅️ elaborating proof of Fk.WitLcM4x16.u64v1
+  [Elab.definition.value] [13.878555] ✅️ Fk.WitLcM4x16.u64v1
+[Elab.async] [2.299483] ✅️ _private.Lean.AddDecl.0.Lean.addDeclCore
+  [Kernel] [2.299450] ✅️ typechecking declarations [Fk.WitLcM4x16.u64v1]
+[Elab.async] [14.383834] ✅️ elaborating proof of Fk.WitLcM4x16.u64v2
+  [Elab.definition.value] [13.893242] ✅️ Fk.WitLcM4x16.u64v2
+[Elab.async] [2.530437] ✅️ _private.Lean.AddDecl.0.Lean.addDeclCore
+  [Kernel] [2.530408] ✅️ typechecking declarations [Fk.WitLcM4x16.u64v2]
+[Elab.async] [14.346709] ✅️ elaborating proof of Fk.WitLcM4x16.u64v3
+  [Elab.definition.value] [13.855854] ✅️ Fk.WitLcM4x16.u64v3
+[Elab.async] [2.432667] ✅️ _private.Lean.AddDecl.0.Lean.addDeclCore
+  [Kernel] [2.432631] ✅️ typechecking declarations [Fk.WitLcM4x16.u64v3]
+[Elab.command] [0.179951] ✅️ def block : List UInt8 :=
+  [Elab.definition.value] [0.175611] ✅️ Fk.WitLcM4x16.block
+[Elab.async] [0.646002] ✅️ elaborating proof of Fk.WitLcM4x16.s_mem
+  [Elab.definition.value] [0.621145] ✅️ Fk.WitLcM4x16.s_mem
+[Elab.async] [0.120838] ✅️ _private.Lean.AddDecl.0.Lean.addDeclCore
+  [Kernel] [0.120780] ✅️ typechecking declarations [Fk.WitLcM4x16.s_mem]
+[Elab.async] [0.136163] ✅️ elaborating proof of Fk.WitLcM4x16.lc_marshal_runs
+  [Elab.definition.value] [0.132428] ✅️ Fk.WitLcM4x16.lc_marshal_runs
