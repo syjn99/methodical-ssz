@@ -1,0 +1,477 @@
+{
+ "files": 75,
+ "atoms_rewritten": 810,
+ "files_changed": 65,
+ "idempotent": true,
+ "rows": [
+  {
+   "file": "WitAdM.lean",
+   "atoms_rewritten": 20,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitBl1.lean",
+   "atoms_rewritten": 2,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitBl257.lean",
+   "atoms_rewritten": 2,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitBlM1.lean",
+   "atoms_rewritten": 9,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitBlM257.lean",
+   "atoms_rewritten": 9,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitBlR.lean",
+   "atoms_rewritten": 9,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitBlRI.lean",
+   "atoms_rewritten": 4,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitBv.lean",
+   "atoms_rewritten": 2,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitBvM.lean",
+   "atoms_rewritten": 8,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitBvR.lean",
+   "atoms_rewritten": 4,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitCpMR.lean",
+   "atoms_rewritten": 18,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitFvM.lean",
+   "atoms_rewritten": 5,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitFvMR.lean",
+   "atoms_rewritten": 18,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLcA1.lean",
+   "atoms_rewritten": 2,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLcA1x1.lean",
+   "atoms_rewritten": 2,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLcA4.lean",
+   "atoms_rewritten": 2,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLcA4x16.lean",
+   "atoms_rewritten": 2,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLcAMix.lean",
+   "atoms_rewritten": 2,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLcE.lean",
+   "atoms_rewritten": 0,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLcM0.lean",
+   "atoms_rewritten": 3,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLcM1.lean",
+   "atoms_rewritten": 10,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLcM1x1.lean",
+   "atoms_rewritten": 10,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLcM4.lean",
+   "atoms_rewritten": 67,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLcM4x16.lean",
+   "atoms_rewritten": 67,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLcMMix.lean",
+   "atoms_rewritten": 42,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLcO.lean",
+   "atoms_rewritten": 12,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLcP.lean",
+   "atoms_rewritten": 2,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLcS0.lean",
+   "atoms_rewritten": 7,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLcS1.lean",
+   "atoms_rewritten": 25,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLcS4.lean",
+   "atoms_rewritten": 127,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLcT.lean",
+   "atoms_rewritten": 2,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLcZ.lean",
+   "atoms_rewritten": 2,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLuComp.lean",
+   "atoms_rewritten": 2,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLuG.lean",
+   "atoms_rewritten": 2,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLuM0.lean",
+   "atoms_rewritten": 4,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLuM1.lean",
+   "atoms_rewritten": 4,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLuM16.lean",
+   "atoms_rewritten": 4,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLuMR.lean",
+   "atoms_rewritten": 14,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLuMa.lean",
+   "atoms_rewritten": 20,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitLuTb.lean",
+   "atoms_rewritten": 19,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitNe0.lean",
+   "atoms_rewritten": 2,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitNe1.lean",
+   "atoms_rewritten": 2,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitNe16.lean",
+   "atoms_rewritten": 2,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitNeM0.lean",
+   "atoms_rewritten": 23,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitNeM1.lean",
+   "atoms_rewritten": 23,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitNeM16.lean",
+   "atoms_rewritten": 23,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitNeS0.lean",
+   "atoms_rewritten": 10,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitNeS1.lean",
+   "atoms_rewritten": 10,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitNeS16.lean",
+   "atoms_rewritten": 10,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitRjAdSz.lean",
+   "atoms_rewritten": 9,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitRjBlOf.lean",
+   "atoms_rewritten": 9,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitRjBlSh.lean",
+   "atoms_rewritten": 9,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitRjBvSz.lean",
+   "atoms_rewritten": 9,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitRjCpSz.lean",
+   "atoms_rewritten": 9,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitRjFvSz.lean",
+   "atoms_rewritten": 9,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitRjLcOf.lean",
+   "atoms_rewritten": 9,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitRjLcSh.lean",
+   "atoms_rewritten": 9,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitRjLuOf.lean",
+   "atoms_rewritten": 9,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitRjLuSh.lean",
+   "atoms_rewritten": 9,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitRjNeOf.lean",
+   "atoms_rewritten": 9,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitRjNeSh.lean",
+   "atoms_rewritten": 9,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitRjScSz.lean",
+   "atoms_rewritten": 9,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitScA.lean",
+   "atoms_rewritten": 0,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitScComp.lean",
+   "atoms_rewritten": 0,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitScM.lean",
+   "atoms_rewritten": 0,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitScRB.lean",
+   "atoms_rewritten": 9,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitSzAd.lean",
+   "atoms_rewritten": 0,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitSzBl.lean",
+   "atoms_rewritten": 6,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitSzBv.lean",
+   "atoms_rewritten": 0,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitSzCp.lean",
+   "atoms_rewritten": 0,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitSzFv.lean",
+   "atoms_rewritten": 0,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitSzLu.lean",
+   "atoms_rewritten": 6,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitSzSc.lean",
+   "atoms_rewritten": 0,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitVbv.lean",
+   "atoms_rewritten": 0,
+   "idempotent": true,
+   "lean_rc": 0
+  },
+  {
+   "file": "WitVbvR.lean",
+   "atoms_rewritten": 2,
+   "idempotent": true,
+   "lean_rc": 0
+  }
+ ],
+ "lean": {
+  "attempt1": {
+   "log": "run logs/61",
+   "samples": 4,
+   "compiled": 1,
+   "errors": "N#64.toInt parse (no parentheses); wit_split made no progress (def mem / have H spelling)"
+  },
+  "attempt2": {
+   "log": "run logs/62",
+   "samples": 4,
+   "compiled": 4,
+   "change": "(N#64) with parentheses; def mem and have H lines kept"
+  },
+  "all": {
+   "log": "run logs/63",
+   "files": 75,
+   "compiled": 75
+  }
+ }
+}

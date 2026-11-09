@@ -32,4 +32,4 @@ fix3의 `lean/tools/wit` 생성기를 이 생성기 트리에서 돈다. `lean/F
 ## 4. 원자 정규화의 한계
 
 - `def mem`과 `have H : Eq ((block …` 줄은 바꾸지 않는다. `wit_split`(fix3 `Fk.WHost`)이 그 철자를 본다.
-- 정규화한 파일은 표본만 Lean으로 돌렸다(`results/wit-norm.json`). 정규화는 생성 출력의 기본이 아니다. 기본 출력은 `lean/Fk`와 바이트가 같다.
+- 정규화한 75개 파일은 모두 Lean에서 따로 돌아간다(run `logs/63`, `results/wit-norm.json`: 원자 810개, 바뀐 파일 65개). 첫 시도(괄호 없음, `mem`·`H` 줄까지 바꿈)는 표본 4개 중 1개만 통과했다. 정규화는 생성 출력의 기본이 아니다. 기본 출력은 `lean/Fk`와 바이트가 같다.
