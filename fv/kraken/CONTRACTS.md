@@ -20,13 +20,14 @@
 | `runtime.newobject` | Nested·AttestationData·ListC UnmarshalSSZ, ListC 오류 객체 셋, `ssz.ValidateBitvector` 오류 객체 | (b) | `NewobjectC` | `bump_newobject16/24/32` | `WitNe0/1/16`(24), `WitLcA*`(24), `WitAd`(32), `WitLcZ/P/T`(16), `WitBvR`(16) |
 | `runtime.convT64` | ListU64.UnmarshalSSZ(정렬, 초과), ListC.UnmarshalSSZ(정렬, 원소 수) | (b) | `ConvT64C` | `rt_convT64` | `WitLuTb`, `WitLuMa`. ListC의 두 경로는 정리가 없다 |
 | `fmt.errorf`, 인수 0개 | ListC.UnmarshalSSZ(오프셋 오류 zero, past, tail) | (b) | `FmtErrorfNilC` | `rt_errorf_nil` | `WitLcZ/P/T` |
-| `fmt.errorf`, `%w` | BitVec 디코더 `"J: %w"`, BitL 디코더·인코더 `"B: %w"` | (b) | `FmtErrorfWC` | `rt_errorf_w` | `WitBvR`, `WitBlR`, `WitBlRI` |
+| `fmt.errorf`, `%w` | BitVec 디코더 `"J: %w"`, BitL 디코더·인코더 `"B: %w"`, ListC 원소 오류 `"Items: %w"` | (b) | `FmtErrorfWC` | `rt_errorf_w` | `WitBvR`, `WitBlR`, `WitBlRI`, `WitLcI` |
 | `fmt.errorf`, `%d %w` | ListU64.UnmarshalSSZ(정렬, 초과) | (b) | `FmtErrorfDWC` | `rt_errorf_dw` | `WitLuTb`, `WitLuMa` |
 | `fmt.errorf`, `%d %d` | ListC.UnmarshalSSZ 원소 오프셋 순서(`lc_reject_offset_order_main`) | (b) | `FmtErrorfDDC` | `rt_errorf_dd` | `WitLcO` |
 | `ssz.ValidateBitlist` | BitL.UnmarshalSSZ, BitL.MarshalSSZTo | (b) | `ValidateBitlistC`(유효), `ValidateBitlistErrC`(무효) | `rt_validate_bitlist`, `rt_validate_bitlist_err`(`Fk/RtVbl.S`) | `WitBl1/257`, `WitBlM1/257`, `WitBlR`, `WitBlRI` |
 | `ssz.ValidateBitvector` | BitVec 디코더·인코더 | (a) 함수 명세 | `VbvAccC`, `VbvPadC` | 정리에서 유도(`vbv_acc_holds`, `vbv_pad_holds`) | `WitBv`, `WitBvM`, `WitBvR` |
 | `target.Scalars.UnmarshalSSZ` | Nested.UnmarshalSSZ | (a) 함수 명세 | `ScUAccC` | `sc_uacc_holds` | `WitNe*` |
 | `target.ListU64.UnmarshalSSZ` | Nested.UnmarshalSSZ, ListC.UnmarshalSSZ(원소마다) | (a) 함수 명세 | `LuUAccC` | `lu_uacc_holds`(`MakesliceC` 필요) | `WitNe*`, `WitLcA*` |
+| `target.ListU64.UnmarshalSSZ`, 짧은 입력(len < 4) | ListC.UnmarshalSSZ 원소 오류(`lc_reject_item_main`) | (a) 함수 명세 | `LuURejShortC` | `lu_urej_short_holds`(기계어, `lu_reject_short_frame`) | `WitLcI` |
 | `runtime.newobject` 뒤 nil 분기 | ListU64 거부(`fmt.errorf`가 nil을 돌려준 경우) | (c) | `FmtErrorfDWC`의 rax ≠ 0이 막는다 | | |
 | `runtime.gcWriteBarrier1/2` | 모든 디코더 | (c) | 전제 `runtime.writeBarrier` = 0. 플래그를 읽고 건너뜀을 증명한다 | | |
 | `runtime.morestack_noctxt.abi0` | 프레임이 있는 모든 함수 | (c) | 전제 `g.stackguard0`(r14 + 16) < rsp. `jbe`가 안 갈림을 증명한다 | | |
@@ -50,7 +51,7 @@ spill은 반환 슬롯 바로 위의 레지스터 인수 칸이다. 피호출자
 | `NewobjectC Heap ty sz S` | rax = ty | `sz ≤ avail` | scratch S, spill 8 | rsp + 8, r14, rbp, `F`. 0으로 채운 `sz`바이트 블록 |
 | `ConvT64C Heap S` | 모든 v. 사전조건 `StaticBox v`(v < 256이면 포함된 ELF 표 `Fk.Data.staticuint64s`의 8v부터 8바이트, 읽기 전용; `staticBox_of_lt`로 = v) | `8 ≤ avail`. 결론 `avail' + hb.length ≤ avail ≤ avail' + 8` | scratch S, spill 8 | rsp + 8, r14, `StaticBox v`, `F`. `BoxIn rax v hb`(정적 표 또는 힙 8바이트 = v)와 `Eq (hb.At rax)` |
 | `FmtErrorfNilC S` | rdi = 0, 형식에 `%` 없음, 형식 바이트 조각 | 할당 없음 | scratch S, spill 40 | rsp + 8, r14, 형식, `F`. rax = 0 |
-| `FmtErrorfWC Heap fs RO MsgIn S` | 형식 `fs` 고정(`bvFmtJ`, `blFmtB`), rdi = rsi = 1, 인수 배열 `ity ++ e`, `ErrObj e sp msg`, `Eq (hm.At sp)`, 읽기 전용 `RO`, `MsgIn sp msg hm` | `fs + msg + 8192 ≤ avail`. 결론 `avail' ≤ avail` | scratch S, spill 40 | rsp + 8, r14, 형식, 인수, `ity`, 오류 객체, `hm`, `RO`, `F`. rax ≠ 0 |
+| `FmtErrorfWC Heap fs RO MsgIn S` | 형식 `fs` 고정(`bvFmtJ`, `blFmtB`, `lcFmtItems`), rdi = rsi = 1, 인수 배열 `ity ++ e`, `ErrObj e sp msg`, `Eq (hm.At sp)`, 읽기 전용 `RO`, `MsgIn sp msg hm` | `fs + msg + 8192 ≤ avail`. 결론 `avail' ≤ avail` | scratch S, spill 40 | rsp + 8, r14, 형식, 인수, `ity`, 오류 객체, `hm`, `RO`, `F`. rax ≠ 0 |
 | `FmtErrorfDWC Heap fs tw S` | 형식 `fs` 고정(`luFmtTooBig`, `luFmtMis`), rdi = rsi = 2, 인수 배열 `tw ++ bx ++ ity ++ e`(tw = `Fk.Data.intType_addr`, `type:int`), `BoxIn bx v hb`, `StaticBox v`, `Eq (hb.At bx)`, `ErrStr e sp msg` | `fs + 20 + msg + 8192 ≤ avail` | scratch S, spill 40 | 위와 같다. 상자 자원 포함. rax ≠ 0 |
 | `FmtErrorfDDC Heap fs tw S` (제한: `StaticBox v1 ⋆ StaticBox v2`는 v1 = v2 < 256이면 만족할 수 없다. Go의 convT64는 그때 같은 포인터를 준다. 순서 거부는 e < s라서 영향이 없다) | 형식 `fs` 고정(`lcFmtOrder`), rdi = rsi = 2, 인수 배열 `tw ++ bx1 ++ tw ++ bx2`(tw = `Fk.Data.uint64Type_addr`), `BoxIn` 둘, `StaticBox v1`, `StaticBox v2`, 상자 바이트 둘 | `fs + 40 + 8192 ≤ avail` | scratch S, spill 40 | 위와 같다. 상자 자원 포함. rax ≠ 0 |
 | `ValidateBitlistC S` | rbx = len(buf), rdi = 2048, buf 조각, `blValid buf` | 할당 없음 | scratch S, spill 32 | rsp + 8, r14, rbp, buf, `F`. rax = 0 |

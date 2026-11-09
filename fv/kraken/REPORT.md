@@ -9,7 +9,7 @@
 
 게이트 1을 막는 조건:
 
-1. ListC 원소 오류 전달(`"Items: %w"`)의 정리가 없다(4절 7). 원소 오프셋 순서 거부는 첫 쌍만 닫았다.
+1. ListC 원소 오프셋 순서 거부는 첫 쌍만, 원소 오류 전달(`"Items: %w"`)은 짧은 원소 하나(ListU64가 `ssz.ErrSize`를 돌려주는 경우)만 닫았다(4절 7). 정렬·원소 수·끝 오프셋 초과 거부는 없다.
 2. 런타임 계약은 추상 모델로만 만족 가능성을 보였다. Go 런타임 정교화는 없다(3절).
 3. 디코더의 EthLib 양방향 수용 정리는 BitVec(1바이트)뿐이다.
 4. x86-64 하드웨어 대조를 하지 않았다. 이 호스트는 arm64다.
@@ -18,12 +18,12 @@
 
 수치(수정 3 끝, 차가운 프로젝트 빌드 뒤):
 
-- `lake build`: 863 jobs, 성공(프로젝트 모듈 Built 161, 의존성은 따뜻함).
-- 공리: 정리 `TOTAL 1627 NONSTANDARD 0`(`AXIOMS.txt`), 모든 선언 `TOTAL 8287 NONSTANDARD 0`(`AXIOMS-ALL.txt`).
+- `lake build`: 867 jobs, 성공(차가운 프로젝트 빌드 Built 163, 의존성은 따뜻함, 메모리 감시 아래).
+- 공리: 정리 `TOTAL 1658 NONSTANDARD 0`(`AXIOMS.txt`), 모든 선언 `TOTAL 8477 NONSTANDARD 0`(`AXIOMS-ALL.txt`).
 - 시험 타입 9개. 증인 파일 80개.
 - 링크 검사 PASS(검사 (a)–(f)). 자기 시험 11개 기대대로. `data.py --check`: 재생성 = 추적 파일.
-- 부정 시험 18개 기대대로(`negative/RESULT`, FAIL 16 + 대조군 PASS 2).
-- goval: 80 파일, 위반 0, 미검사 2. 오류 증인의 타입 기술자 5곳과 오류 전역 19곳을 검사한다.
+- 부정 시험 20개 기대대로(`negative/RESULT`, FAIL 17 + 대조군 PASS 3).
+- goval: 81 파일, 위반 0, 미검사 2. 오류 증인의 타입 기술자 6곳과 오류 전역 20곳을 검사한다.
 - `go test ./fv/kraken/semtest/`: PASS(F1, F2).
 
 ## 1. 완료 단위
@@ -61,7 +61,7 @@
 | BitVec | 양방향(1바이트) | 2/2: 크기, 패딩 | b < 16, 16 ≤ b | 위반 0. 오류 증인 타입 기술자 = ELF(근거는 Lean 이름, goval은 Size_·Kind_) | makeslice, fmt nil·`%w`, newobject 16 | vbvje, bvnochk | `bv_unmarshal_then_marshal`(증인 없음) | 수용·마샬 정확. 크기 동일 |
 | BitL | EthLib→기계어(규칙 동치) | 3/3: 짧음, 오프셋, ValidateBitlist 오류 | 1, 257바이트 / 2049비트, 꼬리 [0] | 위반 0 | ValidateBitlist 두 계약(rodata), growslice, memmove, fmt `%w` | gsnum, blmnochk, blrity | 없음 | `R` 보존. 크기 동일 |
 | Nested | EthLib→기계어 | 2/4. 남음: S 오류, L 오류(래핑) | 0·1·16 | 위반 0 | newobject 24, Scalars·ListU64 함수 명세 | neoff | 없음 | 수용·마샬·크기 `R` 보존 |
-| List[container] | EthLib→기계어 | 6/10: 짧음, 오프셋, 0 오프셋, 짧은 첫 오프셋 둘, 원소 오프셋 순서(`lc_reject_offset_order_main`, 원소 2개 이상의 첫 쌍). 남음: 정렬(`%d`), 원소 수(`%d %w`), 원소 끝 오프셋 초과(`%d`), 원소 디코드 오류(`%w`) | 바깥 0·1·4, 안쪽 1×1, 4×16, 0·1·16. 순서 거부: 오프셋 [8, 4](`WitLcO`) | 위반 0 | makeslice 두 지점, newobject 16·24, fmt nil·`%d %d`(`FmtErrorfDDC`), convT64, ListU64 함수 명세 | nilerr, lcorder | 없음 | `R`과 죽은 스택(`lcStk`) 보존. 크기 동일 |
+| List[container] | EthLib→기계어 | 7/10: 짧음, 오프셋, 0 오프셋, 짧은 첫 오프셋 둘, 원소 오프셋 순서(`lc_reject_offset_order_main`, 원소 2개 이상의 첫 쌍), 원소 디코드 오류(`lc_reject_item_main`, 원소 1개, 1–3바이트, ListU64의 `ErrSize`). 남음: 정렬(`%d`), 원소 수(`%d %w`), 원소 끝 오프셋 초과(`%d`) | 바깥 0·1·4, 안쪽 1×1, 4×16, 0·1·16. 순서 거부: 오프셋 [8, 4](`WitLcO`). 원소 오류: [4,0,0,0, 1,2](`WitLcI`) | 위반 0 | makeslice 두 지점, newobject 16·24, fmt nil·`%d %d`(`FmtErrorfDDC`)·`%w`(`FmtErrorfWC`), convT64, ListU64 함수 명세 둘(`LuUAccC`, `LuURejShortC`) | nilerr, lcorder, lcitems | 없음 | `R`과 죽은 스택(`lcStk`) 보존. 크기 동일 |
 | Prysm 축약 Checkpoint | EthLib→기계어 | 1/1: 크기 | 고정 | 위반 0. `WitCpM` dst 기호 길이 미검사 | makeslice, memmove | cplen | 없음 | `R` 보존. 크기 동일 |
 | Prysm 축약 AttestationData | EthLib→기계어 | 1/1: 크기. 하위 Checkpoint 오류 미도달은 정리가 없다 | 고정 | 위반 0 | makeslice, memmove, newobject 32 | adcopy | 없음 | `R` 보존. 크기 동일 |
 
@@ -74,14 +74,14 @@ Scalars의 비nil 오류 연결과 Size 사후조건은 수정 3에서 닫았다
 ListU64 오류 증인의 타입 기술자와 전역은 수정 3에서 채웠다. `%d` 인수의 int 기술자 내용은 증인에 없다.
 나머지 타입은 조합이 없거나 거부 경로가 남는다.
 
-Go 값 미검사의 종류별 집계(goval, 80 파일):
+Go 값 미검사의 종류별 집계(goval, 81 파일):
 
 | 종류 | 검사함 | 미검사 |
 | --- | --- | --- |
 | 값 | 크기·정렬·패딩·bool·슬라이스·겹침 | 2 파일: `WitCpM` dst(기호 길이), 1a `Witness`(대상 없음) |
-| 자원 조각(`s_mem`) | 1088 조각 | 42 조각(기호 길이나 주소. `WitLcO`의 정적 상자 둘 포함) |
+| 자원 조각(`s_mem`) | 1123 조각 | 42 조각(기호 길이나 주소. `WitLcO`의 정적 상자 둘 포함) |
 | 타입 내용 | `%w` 증인 5개의 `*errors.errorString` 기술자(Size_, Kind_) | `%d` 인수의 int·uint64 기술자 내용(증인 2개) |
-| 런타임 전역 | `ssz.Err*` 전역 19곳의 초기화(itab, errorString) | `runtime.writeBarrier` 값, `staticuint64s` 항목(정리 `staticBox_of_lt`가 표와 연결). 증인은 쓰는 항목만 값으로 놓는다(`WitLcO`: 4와 8). 표의 나머지 자리는 0 채움 바이트다. 정리가 읽지 않는다. `WitLcO`의 표 주소 66012는 8의 배수가 아니다. goval은 정적 표를 보지 않는다 |
+| 런타임 전역 | `ssz.Err*` 전역 20곳의 초기화(itab, errorString) | `runtime.writeBarrier` 값, `staticuint64s` 항목(정리 `staticBox_of_lt`가 표와 연결). 증인은 쓰는 항목만 값으로 놓는다(`WitLcO`: 4와 8). 표의 나머지 자리는 0 채움 바이트다. 정리가 읽지 않는다. `WitLcO`의 표 주소 66012는 8의 배수가 아니다. goval은 정적 표를 보지 않는다 |
 
 Prysm 두 타입은 v7.1.8 `51b5a75` 스키마를 옮긴 축약 구조체다.
 protobuf 필드가 있는 실제 Prysm 바이너리의 증명이 아니다.
@@ -121,13 +121,13 @@ protobuf 필드가 있는 실제 Prysm 바이너리의 증명이 아니다.
 | 4 | 오류 타입 자료와 전역 불변식을 증인에. Scalars 비nil 거부 | 닫힘: `sc_reject_bool_err`, 증인 18개의 전역 초기화, `%w` 증인 5개의 ELF 기술자 | 수정 3 X3 |
 | 5 | 배치 재생성 뒤 goval. 미검사 종류별 집계 | 닫힘: 재생성 바이트 동일, 2절 집계 표 | 수정 3 X6, X7 |
 | 6 | 사후조건: NeMarshal, ListC 스택, Scalars Size, r14 | 닫힘 | 수정 3 X4 |
-| 7 | ListC 원소 오프셋 순서와 원소 오류 전달 | 부분: 순서 거부는 닫힘(`lc_reject_offset_order_main`, `lcl_order`, `FmtErrorfDDC`·`rt_errorf_dd`·`joint_models`, `WitLcO`, 부정 시험 lcorder). 원소 오류 전달은 없음 | 다음 세션 |
+| 7 | ListC 원소 오프셋 순서와 원소 오류 전달 | 수작업 기준 사례 둘 닫힘: 순서 거부(`lc_reject_offset_order_main`, `lcl_order`, `FmtErrorfDDC`, `WitLcO`, lcorder), 짧은 원소 하나의 오류 전달(`lc_reject_item_main`, `lcl_itemerr`, `LuURejShortC`·`lu_urej_short_holds`, `WitLcI`, lcitems). 일반 반복과 다른 원소 오류는 남음 | 수정 3 X5, 리뷰 M4 |
 | 8 | 게이트 표 정정 | 닫힘(2절) | 수정 3 X6 |
 
 7의 남은 부분은 게이트 완료를 주장하기 전에 필요하다.
 순서 거부 정리는 반복 0(첫 쌍)만 진입부터 증명했다. `lcl_order`는 임의 반복 i의 루프 보조 정리다. 앞 원소를 수용한 뒤의 반복은 `lcl_loop`과 잇는 일이 남았다.
 순서 거부의 추가 전제: 인수 배열(진입 rsp − 104부터 32바이트), spill rsp − 200·− 192, `lcFmtOrder` 바이트, `StaticBox e`·`StaticBox 4n`. `lc_accept_main`은 바꾸지 않았다.
-원소 오류 전달은 시작하지 않았다. 필요한 것: ListU64 거부 정리(`lu_reject_misaligned_main` 등)에서 유도한 거부 함수 명세, 지시어 295–297(`callq ListU64.UnmarshalSSZ; test; jne`) 뒤 `"Items: %w"` 블록의 루프 보조 정리, 진입부, 증인.
+원소 오류 전달은 원소 1개(1–3바이트)만 진입부터 닫았다. ListU64의 짧은 입력 거부를 함수 명세 `LuURejShortC`로 두고 `lu_reject_short_frame`(프레임을 보존하는 새 정리, `lu_reject_short_main`은 그대로)에서 유도했다. 추가 전제: 초기화된 `ssz.ErrSize`(itab, `ErrObj`), itab+8의 타입 워드, 인수 배열(진입 rsp − 120부터 16바이트), spill rsp − 200·− 192, `lcFmtItems`. 빈 원소(0바이트)는 `lc_mask` 조건 때문에 제외했다. ListU64의 다른 거부(정렬, 초과)는 fmt가 만든 오류라 `FmtErrorfWC`의 errorString 인수 계약과 맞지 않는다(결과 객체 계약이 필요).
 
 알려진 한계(수정 3 리뷰 권고 중 고치지 않은 것):
 - goval의 기술자 검사는 Size_·Kind_만 본다. 증인 기술자가 ELF 바이트라는 근거는 Lean 이름 `errorStringPtrType`이다(S3).
@@ -187,8 +187,8 @@ protobuf 필드가 있는 실제 Prysm 바이너리의 증명이 아니다.
 ```sh
 set -eu
 : "${SCR:?SCR must be an empty directory outside the worktree}"
-python3 -B fv/kraken/link/data.py --check fv/kraken/link/out      # 22 files, 0 differ
-(cd fv/kraken/lean && lake build)                                 # 863 jobs
+python3 -B fv/kraken/link/data.py --check fv/kraken/link/out      # 23 files, 0 differ
+(cd fv/kraken/lean && lake build)                                 # 867 jobs
 (cd fv/kraken/lean && sh tools/axioms.sh)                         # NONSTANDARD 0 (두 범위)
 (cd fv/kraken/lean && lake env lean tools/RegressFix2.lean)       # 오류 없음
 (cd fv/kraken/lean && for f in ../review/*.lean; do
@@ -196,7 +196,7 @@ python3 -B fv/kraken/link/data.py --check fv/kraken/link/out      # 22 files, 0 
 (cd fv/kraken/vcgen && lake build Kraken.FunSpec && lake env lean ../review/Review1bFixB0.lean)
 GOROOT=$(go env GOROOT) go run fv/kraken/lean/tools/wit/layout.go > fv/kraken/lean/tools/wit/layout.json
 git diff --exit-code fv/kraken/lean/tools/wit/layout.json         # 바이트 동일
-(cd fv/kraken/lean && python3 -B tools/wit/goval.py)              # 80 files, 위반 0
+(cd fv/kraken/lean && python3 -B tools/wit/goval.py)              # 81 files, 위반 0
 python3 -B fv/kraken/link/check.py fv/kraken/link/out             # PASS all, BUNDLE
 python3 -B fv/kraken/link/check.py --selftest fv/kraken/link/out  # 11 cases
 : > fv/kraken/negative/RESULT

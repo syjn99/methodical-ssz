@@ -97,6 +97,7 @@ PASS (f) bvFmtJ.data: 0x4f02af, 5 bytes and 0 words = ELF
 PASS (f) errorStringItab.data: 0x4fcb18, 8 bytes and 3 words = ELF
 PASS (f) errorStringPtrType.data: 0x4d4a00, 32 bytes and 3 words = ELF
 PASS (f) intType.data: 0x4d0020, 32 bytes and 2 words = ELF
+PASS (f) lcFmtItems.data: 0x4f091e, 9 bytes and 0 words = ELF
 PASS (f) lcFmtOrder.data: 0x4fa703, 67 bytes and 0 words = ELF
 PASS (f) lcFmtShort.data: 0x4fa4c0, 63 bytes and 0 words = ELF
 PASS (f) lcFmtZero.data: 0x4f9a7a, 53 bytes and 0 words = ELF
@@ -201,6 +202,7 @@ data sha256 bdd97eaec714cd3d59c169a4baaf38be55787729ce89508ca8fb000db5cf612e bvF
 data sha256 77a8730792f722a3409193db1980db1a3ecb361e9db8e4aff22c06e959b51571 errorStringItab.data
 data sha256 92c50ced1b264800d71a5c39625b965c8561dab908809b43cbb08eb4366b994a errorStringPtrType.data
 data sha256 4ff813e864eaa29f91435fb13aa022f9173c1d4556546651c83e3e6ecc4d65f0 intType.data
+data sha256 4c883338fe91c2b8b9bb3629b066c9fe0f130e76fc5c24b4065c4c018e0ed3f3 lcFmtItems.data
 data sha256 4ed399121df8a9aa0dc7da15077b5962937db79337062b5812fcf6b5c0a6819c lcFmtOrder.data
 data sha256 67e99cecfe4b5c45d16da025c37ced15f0372d8a93b03e1479c4ce575238ea09 lcFmtShort.data
 data sha256 b3d1c602187fea209c2ad2681f7a02c9603553857367ec2ad178f10f394aafc2 lcFmtZero.data
@@ -213,6 +215,6 @@ data sha256 cf2dd827841f8342963e9cbbe0cf73d256454f36e6abc2e5d1e2ae79d1435eda vbl
 data sha256 27b2c4d57238669c69decf5789cac78c56d1f8f4bac99256576f8e0b9ddae4be vblMsgZ.data
 data sha256 88063b53c04054481d469ae3f58896543733cfa565bb6dfe730f62efeae6205b vbvFmt.data
 file sha256 0bbe6f0da6d02e6f2720d7a1e98d7c71641ca00f1d9cb9a3111cf092ba98295a lean/Fk/Code.lean
-file sha256 67e223c872ebb8cef49079c76bc5a1707795744a1fa7daadc0fffa55440365c6 AXIOMS.txt
+file sha256 1eb87dae6219795cd98f8642639939a5d6336f02184fc408e53524e4cf427c8f AXIOMS.txt
 PASS all
-BUNDLE sha256 5603c4d73464f91b810b42e1adc873781a77a7f0eaa045f497fdf05cfefb39ed
+BUNDLE sha256 91757cbd4c2cc50e04e0673fd80768631816f4e9af50ec19fd95fd33f54ba003

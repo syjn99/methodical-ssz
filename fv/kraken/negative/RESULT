@@ -14,5 +14,7 @@ scrbword | target.Scalars.UnmarshalSSZ.S:26 'mov ssz.ErrInvalidSerialization(%ri
 blrity | target.BitL.UnmarshalSSZ.S:37 'mov 0x8(%rax),%rax' -> 'mov 0x10(%rax),%rax' | bl_reject_invalid_main (Fk/BlReject.lean:19-256) | exit 1 | FAIL | ok | error: Fk/BlReject.lean:177:97: unsolved goals
 lcorder | target.ListC.UnmarshalSSZ.S:388 'mov $0x43,%ebx' -> 'mov $0x42,%ebx' | lcl_order (Fk/LcOrder.lean:31-339) | exit 1 | FAIL | ok | error: Fk/LcOrder.lean:295:29: Tactic `rfl` failed: The left-hand side
 lcorderctl | target.ListC.UnmarshalSSZ.S:388 'mov $0x43,%ebx' -> 'mov $0x43,%ebx' | lcl_order (Fk/LcOrder.lean:31-339) | exit 0 | PASS | ok | 
+lcitems | target.ListC.UnmarshalSSZ.S:351 'mov $0x9,%ebx' -> 'mov $0x8,%ebx' | lcl_itemerr (Fk/LcItems.lean:169-477) | exit 1 | FAIL | ok | error: Fk/LcItems.lean:435:29: Tactic `rfl` failed: The left-hand side
+lcitemsctl | target.ListC.UnmarshalSSZ.S:351 'mov $0x9,%ebx' -> 'mov $9,%ebx' | lcl_itemerr (Fk/LcItems.lean:169-477) | exit 0 | PASS | ok | 
 control | target.FixedVec.UnmarshalSSZ.S:47 'cmp $0x4,%rax' -> 'cmp $0x4,%rax' | fv_iter (Fk/FvLoop.lean:15-103) | exit 0 | PASS | ok | 
 nopret | target.BitVec.UnmarshalSSZ.S:8 'nop' -> 'retq' (also all.S) | link/check.py (d) | exit 1 | FAIL | ok | DIFF (d) target.BitVec.UnmarshalSSZ 0x4b7457 FAIL: elf 660f1f840000000000 asm c3 nopw (%rax,%rax,1) -> retq | (9, 'nopw (%rax,%rax)')
