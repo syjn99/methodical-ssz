@@ -62,6 +62,7 @@ import Fk.RoundTrip1b
 import Fk.LcLoop
 import Fk.LcAccept
 import Fk.LcAcceptSpec
+import Fk.LcOrder
 import Fk.LcMarshal
 import Fk.LcAcceptEmpty
 import Fk.WitBl1
