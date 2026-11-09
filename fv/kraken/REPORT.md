@@ -56,23 +56,33 @@ gpt-6-astra 수정 2 리뷰(`review/gpt6-astra-reprove-fix2.md` 8절)의 판정�
 
 | 타입 | 수용 방향 | 거부 경로 (닫힘 / 남음) | 증인 | Go 값 | 추상 모델 | 부정 시험 | 조합 | 사후 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Scalars | EthLib→기계어 + bool 거부(EthLib 거부 정리 포함) | 2/2: 크기, bool > 1. 비nil 오류 연결 없음 | 고정(수용, 거부, 마샬, 조합) | 위반 0. 전역 오류 값 미검사 | 없음 | scbool, scrbword | `sc_unmarshal_then_marshal` + WitScComp | 수용·마샬·bool 거부 정확(마샬 r14 없음). 크기는 반환 값만 |
+| Scalars | EthLib→기계어 + bool 거부(EthLib 거부 정리 포함) | 2/2: 크기, bool > 1. 비nil: `sc_reject_bool_err`(전역 초기화 전제 `e0 ≠ 0`) | 고정(수용, 거부, 마샬, 조합). 거부 증인의 전역은 초기화된 값 | 위반 0. 전역 초기화 검사 | 없음 | scbool, scrbword | `sc_unmarshal_then_marshal` + WitScComp | 수용·마샬·bool 거부 정확, 마샬 r14 보존. 크기 동일 |
 | FixedVec | EthLib→기계어 | 1/1: 크기 | 고정 | 위반 0 | makeslice, memmove | loop, control | 없음 | `R` + True. 크기 동일 |
-| ListU64 | EthLib→기계어 | 4/4: 짧음, 오프셋, 정렬, 초과 | 0·1·16, 거부 둘 | 위반 0. 오류 증인의 타입 자료·전역 미검사 | makeslice, growslice, convT64(상자), fmt `%d %w` | offset, maxlen | `lu_unmarshal_then_marshal` + WitLuComp | 수용 정확, 나머지 `R` + True. 크기 동일 |
-| BitVec | 양방향(1바이트) | 2/2: 크기, 패딩 | b < 16, 16 ≤ b | 위반 0 | fmt nil·`%w`, newobject 16 | vbvje, bvnochk | `bv_unmarshal_then_marshal`(증인 없음) | 수용·마샬 정확. 크기 동일 |
+| ListU64 | EthLib→기계어 | 4/4: 짧음, 오프셋, 정렬, 초과 | 0·1·16, 거부 둘 | 위반 0. 오류 증인의 타입 기술자 = ELF, 전역 초기화. `%d`의 int 기술자 내용은 증인에 없음 | makeslice, growslice, convT64(상자), fmt `%d %w` | offset, maxlen | `lu_unmarshal_then_marshal` + WitLuComp | 수용 정확, 나머지 `R` + True. 크기 동일 |
+| BitVec | 양방향(1바이트) | 2/2: 크기, 패딩 | b < 16, 16 ≤ b | 위반 0. 오류 증인 타입 기술자 = ELF | makeslice, fmt nil·`%w`, newobject 16 | vbvje, bvnochk | `bv_unmarshal_then_marshal`(증인 없음) | 수용·마샬 정확. 크기 동일 |
 | BitL | EthLib→기계어(규칙 동치) | 3/3: 짧음, 오프셋, ValidateBitlist 오류 | 1, 257바이트 / 2049비트, 꼬리 [0] | 위반 0 | ValidateBitlist 두 계약(rodata), growslice, memmove, fmt `%w` | gsnum, blmnochk, blrity | 없음 | `R` 보존. 크기 동일 |
-| Nested | EthLib→기계어 | 2/4. 남음: S 오류, L 오류(래핑) | 0·1·16 | 위반 0 | newobject 24, Scalars·ListU64 함수 명세 | neoff | 없음 | 수용 `R` 보존, 마샬 `R` 없음, 크기 `R` 보존 |
-| List[container] | EthLib→기계어 | 5/9. 남음: 정렬, 원소 수(convT64), 원소 오프셋 순서, 원소 디코드 오류 | 바깥 0·1·4, 안쪽 1×1, 4×16, 0·1·16 | 위반 0 | makeslice 두 지점, newobject 16·24, fmt nil, ListU64 함수 명세 | nilerr | 없음 | `R` 보존, 죽은 스택 True. 크기 동일 |
+| Nested | EthLib→기계어 | 2/4. 남음: S 오류, L 오류(래핑) | 0·1·16 | 위반 0 | newobject 24, Scalars·ListU64 함수 명세 | neoff | 없음 | 수용·마샬·크기 `R` 보존 |
+| List[container] | EthLib→기계어 | 5/10. 남음: 정렬(`%d`), 원소 수(`%d %w`), 원소 끝 오프셋 초과(`%d`), 원소 오프셋 순서(`%d %d`, 계약 `FmtErrorfDDC`만), 원소 디코드 오류(`%w`) | 바깥 0·1·4, 안쪽 1×1, 4×16, 0·1·16 | 위반 0 | makeslice 두 지점, newobject 16·24, fmt nil, ListU64 함수 명세 | nilerr | 없음 | `R`과 죽은 스택(`lcStk`) 보존. 크기 동일 |
 | Prysm 축약 Checkpoint | EthLib→기계어 | 1/1: 크기 | 고정 | 위반 0. `WitCpM` dst 기호 길이 미검사 | makeslice, memmove | cplen | 없음 | `R` 보존. 크기 동일 |
 | Prysm 축약 AttestationData | EthLib→기계어 | 1/1: 크기. 하위 Checkpoint 오류 미도달은 정리가 없다 | 고정 | 위반 0 | makeslice, memmove, newobject 32 | adcopy | 없음 | `R` 보존. 크기 동일 |
 
-"크기 동일" 정리 일곱: `ad_size_main`, `bl_size_main`, `bv_size_main`, `cp_size_main`, `fv_size_main`, `lc_size_main`, `lu_size_main`.
+"크기 동일" 정리 여덟: `ad_size_main`, `bl_size_main`, `bv_size_main`, `cp_size_main`, `fv_size_main`, `lc_size_main`, `lu_size_main`, `sc_size_main`.
+`ne_size_main`은 `R`을 보존한다.
 
 타입 전체 완료로 표시할 수 있는 타입은 없다.
-Scalars와 ListU64는 수용·마샬 조합 증인이 완료다.
-Scalars는 비nil 오류 연결과 Size 사후조건이 남는다.
-ListU64는 오류 증인의 Go 타입 자료와 전역 조건이 남는다.
+Scalars와 ListU64는 수용·마샬 조합 증인만 완료다.
+Scalars의 비nil 오류 연결과 Size 사후조건은 수정 3에서 닫았다. 조합은 `hupd`와 전체 증인까지다. 실제 호출자 명령 실행은 없다.
+ListU64 오류 증인의 타입 기술자와 전역은 수정 3에서 채웠다. `%d` 인수의 int 기술자 내용은 증인에 없다.
 나머지 타입은 조합이 없거나 거부 경로가 남는다.
+
+Go 값 미검사의 종류별 집계(goval, 79 파일):
+
+| 종류 | 검사함 | 미검사 |
+| --- | --- | --- |
+| 값 | 크기·정렬·패딩·bool·슬라이스·겹침 | 2 파일: `WitCpM` dst(기호 길이), 1a `Witness`(대상 없음) |
+| 자원 조각(`s_mem`) | 1057 조각 | 40 조각(기호 길이나 주소) |
+| 타입 내용 | `%w` 증인 5개의 `*errors.errorString` 기술자(Size_, Kind_) | `%d` 인수의 int·uint64 기술자 내용(증인 2개) |
+| 런타임 전역 | `ssz.Err*` 전역 19곳의 초기화(itab, errorString) | `runtime.writeBarrier` 값, `staticuint64s` 항목(정리 `staticBox_of_lt`가 표와 연결) |
 
 Prysm 두 타입은 v7.1.8 `51b5a75` 스키마를 옮긴 축약 구조체다.
 protobuf 필드가 있는 실제 Prysm 바이너리의 증명이 아니다.
