@@ -28,9 +28,10 @@
   },
   {
    "id": "normalize",
-   "rewritten": 8,
+   "rewritten": 6,
    "idempotent": true,
-   "atoms_left": 0
+   "atoms_left": 0,
+   "atoms_before_control": 6
   }
  ]
 }

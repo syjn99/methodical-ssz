@@ -7,7 +7,8 @@ Usage: test_wit.py <regen-dir> <scratch-dir> <out.json>
    is refused by wgen.write and no file is written;
 2. lean/Fk: wgen.write with $GEN_WIT_OUT = lean/Fk is refused and no file is written;
 3. run.py gen into a non-empty directory is refused;
-4. normalize.py is idempotent and leaves no `(N : BitVec 64)` / `BitVec.ofNat 64 N` atom.
+4. normalize.py is idempotent and leaves no `(N : BitVec 64)` / `BitVec.ofNat 64 N` atom outside the
+   lines its KEEP rule keeps (def mem, have H : Eq ((block ...).
 Python 3 standard library only. Run with python3 -I -B.
 """
 import json
@@ -59,11 +60,18 @@ def main(regen, scratch, out_json):
     checks.append({"id": "non-empty out", "refused": r3.returncode != 0 and "not empty" in (r3.stderr + r3.stdout), "no_file": True})
     t, n = normalize.normalize(base)
     t2, n2 = normalize.normalize(t)
-    left = re.findall(r"\((?:0x[0-9a-fA-F]+|\d+) : BitVec 64\)|BitVec\.ofNat 64 (?:0x[0-9a-fA-F]+|\d+)\b", t)
-    checks.append({"id": "normalize", "rewritten": n, "idempotent": n2 == 0 and t2 == t, "atoms_left": len(left)})
+    # lines that normalize.KEEP leaves on purpose (def mem, have H : Eq ((block ...) are not counted (review r5 S1)
+    body = "\n".join(l for l in t.split("\n") if not normalize.KEEP.match(l))
+    left = re.findall(r"\((?:0x[0-9a-fA-F]+|\d+) : BitVec 64\)|BitVec\.ofNat 64 (?:0x[0-9a-fA-F]+|\d+)\b", body)
+    before = re.findall(r"\((?:0x[0-9a-fA-F]+|\d+) : BitVec 64\)|BitVec\.ofNat 64 (?:0x[0-9a-fA-F]+|\d+)\b",
+                        "\n".join(l for l in base.split("\n") if not normalize.KEEP.match(l)))
+    # control: the same count on the unnormalised text is not zero (the check can fail)
+    checks.append({"id": "normalize", "rewritten": n, "idempotent": n2 == 0 and t2 == t, "atoms_left": len(left),
+                   "atoms_before_control": len(before)})
     ok = (checks[0]["refused"] and checks[0]["no_file"] and not checks[1]["refused"] and not checks[1]["no_file"]
           and checks[2]["refused"] and checks[2]["no_file"] and checks[3]["refused"]
-          and checks[4]["rewritten"] > 0 and checks[4]["idempotent"] and checks[4]["atoms_left"] == 0)
+          and checks[4]["rewritten"] > 0 and checks[4]["idempotent"] and checks[4]["atoms_left"] == 0
+          and checks[4]["atoms_before_control"] > 0)
     res = {"schema": "fvphase1c.wit-test/1", "all_ok": ok, "checks": checks}
     s = json.dumps(res, indent=1).replace(scratch + "/", "").replace(regen + "/", "")
     open(out_json, "w").write(s)
