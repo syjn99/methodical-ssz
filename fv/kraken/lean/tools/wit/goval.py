@@ -42,7 +42,7 @@ BASE = 0x10000
 # Lengths of named byte lists used in blocks.
 NAMED = {"errorStringPtrType": 56, "bl2049": 257, "bl2048": 257, "blFmtB": 5, "bvFmtJ": 5, "vbvFmt": 35,
          "lcFmtZero": 53, "lcFmtShort": 63, "vblMsgE": 42, "vblMsgZ": 21, "vblMsgB": 13,
-         "luFmtTooBig": 56, "luFmtMis": 68, "lcFmtOrder": 67}
+         "luFmtTooBig": 56, "luFmtMis": 68, "lcFmtOrder": 67, "lcFmtItems": 9}
 LAYOUT = json.loads((pathlib.Path(__file__).parent / "layout.json").read_text())
 assert (LAYOUT["goos"], LAYOUT["goarch"]) == ("linux", "amd64")
 TY = LAYOUT["types"]
