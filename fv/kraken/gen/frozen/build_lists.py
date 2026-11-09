@@ -257,9 +257,12 @@ def main():
         "schema": "fvphase1c.assumptions/1",
         "status": th["status"],
         "rule": "A generated theorem may use only these premise classes. A premise outside this list is a new trust assumption: stop and report.",
+        "revision": "2: review phase1c-r1 S2 (Go 1.26.10 re-check condition, model per instance, API version). Revision 1 = 0532cbd",
         "classes": [
             {"id": "callee-contract", "what": "runtime callee as a hypothesis in Kraken form (CONTRACTS.md section 2): MakesliceC, MemmoveC, GrowsliceC, NewobjectC, ConvT64C, FmtErrorfNilC, FmtErrorfWC, FmtErrorfDWC, ValidateBitlistC, ValidateBitlistErrC",
-             "conditions": "quantified over all states, return addresses and frames; argument conditions, budgets, scratch S and spill as in CONTRACTS.md; each contract has an abstract model and joint satisfiability (joint_models)",
+             "conditions": "quantified over all states, return addresses and frames; argument conditions, budgets, scratch S and spill as in CONTRACTS.md; joint satisfiability (joint_models)",
+             "go_version": "CONTRACTS.md reads every contract against Go 1.26.3 (ABIInternal, nextslicecap, fmt allocation, budgets). In the Go 1.26.10 namespace (fv/kraken/prysm/go1.26.10) each contract is an UNCONFIRMED ASSUMPTION until it is re-read against the Go 1.26.10 runtime source and the re-reading is recorded; until then a theorem that uses it states that",
+             "model_per_instance": "a model and a witness are needed per contract instance (each element size esz, object size sz, fmt format string and argument types, type descriptor), as in the hand case (bump_newobject16/24/32). An instance without a model is classed 'missing contract'",
              "new_contract": "a new runtime callee (for example runtime.moveSliceNoCapNoScan, a new fmt format shape) needs its own entry, model and witness; it is a list change"},
             {"id": "function-spec", "what": "a callee that is itself proved (generated method of another type, ssz.ValidateBitvector): a spec derived from its theorem (*_holds)",
              "conditions": "the spec's own contracts propagate to the caller's completion row"},
@@ -275,13 +278,13 @@ def main():
             {"id": "stack-guard", "what": "g.stackguard0 (r14 + 16) < rsp", "conditions": "fast-path premise; callee stack growth is outside contracts"},
             {"id": "write-barrier-off", "what": "runtime.writeBarrier = 0 for the whole call", "conditions": "fast-path premise; GC during the call is outside"},
             {"id": "x15-zero", "what": "X15 = 0 (Go ABIInternal)", "conditions": "only where the hand case uses it (ListC empty accept); reject paths do not assume it"},
-            {"id": "abi-arguments", "what": "Go ABIInternal amd64 argument registers and return slot", "conditions": "Go 1.26.x ABIInternal; Go 1.26.10 for the phase1c namespace"},
+            {"id": "abi-arguments", "what": "Go ABIInternal amd64 argument registers and return slot", "conditions": "Go 1.26.3 ABIInternal for the hand case; Go 1.26.10 ABIInternal for the phase1c namespace, unconfirmed until re-read against the Go 1.26.10 source (as callee-contract)"},
             {"id": "separation", "what": "input, receiver, stack and output pairwise disjoint (⋆)", "conditions": "aliasing excluded; memmove overlap excluded"},
             {"id": "go-value-invariants", "what": "bool byte in {0,1}, len <= cap < 2^63, object size/alignment/padding", "conditions": "theorems may allow more; witnesses must be Go values (goval / later Lean predicate)"},
             {"id": "size-bounds", "what": "explicit size ranges in contracts", "conditions": "no quantification over all sizes and all frames (fv/AGENTS.md)"},
         ],
         "forbidden": ["sorry", "admit", "new axiom", "native_decide", "bv_decide", "hand-typed rodata/itab/type constants", "a premise that makes the conclusion vacuous (False derivable)", "dropping a live resource into `⋆ True` without classification"],
-        "sources": ["fv/kraken/CONTRACTS.md", "fv/kraken/REPORT.md sections 3 and 7", "fv/AGENTS.md", "run shared/INCLUDE-API.json api_version 1 (data include, not yet approved)"],
+        "sources": ["fv/kraken/CONTRACTS.md", "fv/kraken/REPORT.md sections 3 and 7", "fv/AGENTS.md", "run shared/INCLUDE-API.json api_version 2 (fix3 b6c32c3, data include, committed, not yet approved); gen/gen1c/include_adapter.py names the version in use"],
     }
     d = f"{k}/gen/frozen"
     for name, obj in (("THEOREMS.json", th), ("ASSUMPTIONS.json", asm)):

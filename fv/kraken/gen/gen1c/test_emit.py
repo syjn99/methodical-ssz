@@ -24,7 +24,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 KRAKEN = os.path.normpath(os.path.join(HERE, "..", ".."))
 HAND = ["Scalars", "FixedVec", "ListU64", "BitVec", "Nested", "ListC", "BitL", "Checkpoint", "AttestationData"]
 FROZEN = {"THEOREMS.json": "0d9b70760d99f76d838994451f15790f7da06b0acc12519e558e3eac4a1348d1",
-          "ASSUMPTIONS.json": "84ca497180efbc1c091289b453796fff1649378f71f1bdc9c35159202795385c"}
+          "ASSUMPTIONS.json": "9decb220f35736b9b8d07700f606e146c1c076f5016789ac5c7c22c1a213905f"}
 # (emitted statement, hand theorem, expected, explanation)
 COMPARE = [
     ("Gen1c.Checkpoint.size_stmt", "cp_size_main", "SAME", "fixed-size template"),
