@@ -44,5 +44,10 @@ include API: `api_version` 2, status `committed`(fix3 `b6c32c3`, 리뷰 전). �
 
 | 시험 | 명령 | 결과 파일 |
 | --- | --- | --- |
-| Desc 검사기 양성·음성 | `desc/test_desc.py prepare/evaluate` + gate `DescCheck.lean` | `desc/results/desc-test.json` |
-| 생성기 골격 | `gen1c/test_emit.py prepare/evaluate` + gate `Compare.lean` | `gen1c/results/gen-test.json` |
+| Desc 검사기: 원본(범위 9/9 SPEC), 대조군, 목록 시나리오, 리뷰 변이 재생 52 | `desc/test_desc.py prepare` → gate `desc/run_desccheck.sh` → `desc/test_desc.py evaluate` | `desc/results/desc-test.{json,md}` |
+| 생성기 골격: 검사기 기록 요구, 대조군, 데이터 교차 검사 | `gen1c/test_emit.py prepare <work> <desc-work>` → gate `Compare.lean` → `evaluate` | `gen1c/results/gen-test.json` |
+| 고정 목록 재현 | `frozen/test_frozen.py <repo-root> <scratch>` | 종료 코드 |
+| 완료표: 실제 + 대조군 | gate `complete/run_complete.sh` → `complete/table.py` | `complete/results/` |
+| Prysm 시험 | gate `prysm-tests.sh` (종료 코드 = `prysm_tests_classify.py` 판정) | `prysm/tests/` |
+
+`gen1c/emit.py`는 `--desccheck-log`가 필요하다. 그 로그는 `DESCCHECK-TABLE OK`로 끝나야 하고, 고른 Desc 파일마다 같은 FNV-1a 64의 PASS 기록(수작업 타입은 PASS SPEC)이 있어야 한다.
