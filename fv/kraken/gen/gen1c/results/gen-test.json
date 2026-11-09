@@ -182,6 +182,14 @@
    "emitted": [
     "luFmtMis"
    ]
+  },
+  {
+   "api_id": "lcFmtItems",
+   "offset": 2158,
+   "length": 9,
+   "emitted": [
+    "lcFmtItems"
+   ]
   }
  ]
 }

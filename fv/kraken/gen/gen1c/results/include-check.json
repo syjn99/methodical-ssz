@@ -1,8 +1,8 @@
 {
- "api_version": 2,
- "status": "approved (stage A)",
- "fix3_commit": "d9cdb40f861e3e49f017928ade26bc936829ff8f",
- "items": 22,
+ "api_version": 3,
+ "status": "approved (final, stage B)",
+ "fix3_commit": "f9e2bc3dc02ed3521e33b04b4bdaeb9c1fa5f3fe",
+ "items": 23,
  "rows": [
   {
    "id": "blFmtB",
@@ -137,6 +137,18 @@
    "ok": true
   },
   {
+   "id": "lcFmtItems",
+   "kind": "rodata-string",
+   "file": "fv/kraken/link/out/data/lcFmtItems.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true,
+    "bytes: adapter render of ELF = file": true
+   },
+   "ok": true
+  },
+  {
    "id": "errorStringItab",
    "kind": "itab (whole): words inter, Type, Fun[0]; Hash raw",
    "file": "fv/kraken/link/out/data/errorStringItab.data",
@@ -259,7 +271,7 @@
   }
  ],
  "python_ok": true,
- "lean_examples": 33,
+ "lean_examples": 35,
  "lean_errors": [],
  "lean_end_seen": true,
  "control_errors": [
