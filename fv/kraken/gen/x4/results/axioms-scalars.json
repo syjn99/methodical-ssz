@@ -42,6 +42,24 @@
    "standard_only": true
   },
   {
+   "name": "Gen1cX4.Scalars.compose",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.WitScComp.sc_compose_runs",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
    "name": "Gen1cX4.ofBytes1",
    "axioms": [
     "propext"

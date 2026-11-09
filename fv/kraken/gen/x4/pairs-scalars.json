@@ -5,7 +5,8 @@
   "Fk.ScAccept",
   "Fk.ScReject",
   "Fk.ScRejectBool",
-  "Fk.ScMarshal"
+  "Fk.ScMarshal",
+  "Fk.ComposeSc"
  ],
  "pairs": [
   [
@@ -33,6 +34,12 @@
    "marshal"
   ],
   [
+   "Gen1cX4.Scalars.compose_stmt",
+   "sc_unmarshal_then_marshal",
+   "SAME",
+   "compose"
+  ],
+  [
    "Gen1cX4.Scalars.size_stmt",
    "sc_accept_main",
    "DIFF",
@@ -47,6 +54,12 @@
   [
    "Gen1cX4.Scalars.marshal_stmt",
    "sc_accept_main",
+   "DIFF",
+   "control"
+  ],
+  [
+   "Gen1cX4.Scalars.compose_stmt",
+   "sc_marshal_main",
    "DIFF",
    "control"
   ]

@@ -33,4 +33,4 @@ Desc와 Go 배치에서 정리 문장을, 기계어 지시 목록에서 증명�
 | reject r2 bool | 생성 증명 통과(시도 2), 문장 SAME(`sc_reject_bool_main`) |
 | reject r1 size | 3회 실패, 막힘. 분류: 생성 틀의 자동화 한계(`ecancel`) |
 | marshal | 생성 증명 통과(시도 1), 문장 SAME(`sc_marshal_main`) |
-| 조합 | 다음 단위 |
+| 조합 | 생성 증명 통과(시도 1, 생성한 accept·marshal 위), 문장 SAME(`sc_unmarshal_then_marshal`). 전 전제 증인 `Gen1cX4.WitScComp`(gen/wit 출력을 생성 정리로 다시 겨눔) |

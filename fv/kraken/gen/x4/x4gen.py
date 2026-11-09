@@ -54,6 +54,7 @@ class Fields:
             assert df["name"] == lf["name"] and df["kind"] in ("uint", "bool"), (df, lf)
             self.f.append({"name": df["name"], "kind": df["kind"], "w": df["width"], "ssz": df["offset"], "go": lf["offset"]})
         self.size = desc["fixed_size"]
+        self.t = desc["type"]
 
 
 def plus(base, off):
@@ -624,13 +625,94 @@ def marshal_full(D, F, code):
     L += [f"· -- {bn} = true"] + ["  " + x for x in p1[k:] + fin(l1)]
     return L
 
+
+# ---------------------------------------------------------------- compose (decode, then marshal)
+# Shape of Fk/ComposeSc.lean (sc_unmarshal_then_marshal); the proof uses the generated
+# `accept` and `marshal` of this module, not the hand theorems.
+
+def compose_stmt(F, labels):
+    n = len(F.f)
+    bi = [i for i, f in enumerate(F.f) if f["kind"] == "bool"][0]
+    bs, cs, ds = (" ".join(f"{x}{i}" for i in range(n)) for x in "bcd")
+    hb = " ".join(f"(h{i}l : b{i}.length = {f['w']})" for i, f in enumerate(F.f))
+    hc = " ".join(f"(g{i} : c{i}.length = {f['w']})" for i, f in enumerate(F.f))
+    hd = " ".join(f"(hd{i} : d{i}.length = {f['w']})" for i, f in enumerate(F.f))
+    inp = lambda: "\n      ⋆ ".join(f"Eq (b{i}.At {plus('s.regs.rbx.toBitVec', f['ssz'])})" for i, f in enumerate(F.f))
+    rcv = "\n      ⋆ ".join(f"Eq (c{i}.At {plus('s.regs.rax.toBitVec', f['go'])})" for i, f in enumerate(F.f))
+    D = "dptr.toBitVec + dlen.toBitVec"
+    dst = "\n        ⋆ ".join(f"Eq (d{i}.At {('(' + D + ' + ' + str(f['ssz']) + ')') if f['ssz'] else '(' + D + ')'})" for i, f in enumerate(F.f))
+    outd = "\n                ⋆ ".join(f"Eq (b{i}.At {('(' + D + ' + ' + str(f['ssz']) + ')') if f['ssz'] else '(' + D + ')'})" for i, f in enumerate(F.f))
+    outa = "\n                ⋆ ".join(f"Eq (b{i}.At {plus('s.regs.rax.toBitVec', f['go'])})" for i, f in enumerate(F.f))
+    outb = "\n                ⋆ ".join(f"Eq (b{i}.At {plus('s.regs.rbx.toBitVec', f['ssz'])})" for i, f in enumerate(F.f))
+    hl = "\n    ".join(f"(hL{l}f : ∀ i < kd, Host.prog[i]? ≠ some (.label \"{lab}\"))" for l, lab in labels)
+    return f"""def compose_stmt [Host] : Prop :=
+  ∀ (kd : Nat) (hkd : {F.t}UnmarshalSSZ.IsInfixAt Host.prog kd)
+    (km : Nat) (hkm : {F.t}MarshalSSZTo.IsInfixAt Host.prog km) (hfm : LabelsFresh {F.t}MarshalSSZTo km)
+    (s : MachineData) (ra ra2 guard : UInt64) (slot {bs} {cs} fp sp1 {ds} pre : List UInt8)
+    (hsl : slot.length = 8) {hb}
+    {hc}
+    (hfp : fp.length = 8) (hs1 : sp1.length = 8)
+    {hd}
+    (dptr dlen cap : UInt64) (hpre : pre.length = dlen.toNat)
+    (hcap2 : dlen.toNat + {F.size} ≤ cap.toNat) (hcap2' : cap.toNat < 2 ^ 63)
+    (R0 : DataMem → Prop)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (slot.At (s.regs.rsp.toBitVec + 16))
+      ⋆ {inp()}
+      ⋆ {rcv}
+      ⋆ (Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (sp1.At (s.regs.rsp.toBitVec + 8))
+        ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+        ⋆ Eq (pre.At dptr.toBitVec) ⋆ {dst} ⋆ R0))
+    {hl}
+    (hlen : s.regs.rcx = {F.size}) (hb{bi} : b{bi} = [0] ∨ b{bi} = [1]) (hguard : guard.toNat < s.regs.rsp.toNat),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧
+        ∀ (m2 : DataMem) (zm : RegZmms) (fl : StatusFlags),
+          (∀ F : DataMem → Prop, (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec) ⋆ F) st.data.dmem →
+            (Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At s.regs.rsp.toBitVec) ⋆ F) m2) →
+          Eventually (step1 Host.exe)
+            (fun st' => st'.pc = Int64.ofBitVec ra2.toBitVec ∧ st'.data.regs.rax = dptr
+              ∧ st'.data.regs.rbx = dlen + {F.size} ∧
+              ({outd} ⋆ Eq (pre.At dptr.toBitVec)
+                ⋆ {outa}
+                ⋆ {outb} ⋆ R0 ⋆ fun _ => True) st'.data.dmem)
+            ⟨⟨{{ st.data.regs with rax := s.regs.rax, rbx := dptr, rcx := dlen, rdi := cap, rsp := s.regs.rsp }},
+              zm, fl, m2⟩, Host.addrOf km⟩)
+      ⟨s, Host.addrOf kd⟩
+"""
+
+
+def compose_full(F, labels):
+    n = len(F.f)
+    bi = [i for i, f in enumerate(F.f) if f["kind"] == "bool"][0]
+    seq = lambda x: " ".join(f"{x}{i}" for i in range(n))
+    intro = (f"intro kd hkd km hkm hfm s ra ra2 guard slot {seq('b')} {seq('c')} fp sp1 {seq('d')} pre hsl "
+             f"{' '.join(f'h{i}l' for i in range(n))} {' '.join(f'g{i}' for i in range(n))} hfp hs1 {' '.join(f'hd{i}' for i in range(n))} "
+             f"dptr dlen cap hpre hcap2 hcap2' R0 h_mem {' '.join(f'hL{l}f' for l, _ in labels)} hlen hb{bi} hguard")
+    pre_l = " ".join(f"h{i}l" for i in range(n) if i != bi)
+    return [intro,
+            f"refine eventually_trans _ _ _ _ (accept kd hkd s ra slot {seq('b')} {seq('c')} hsl {' '.join(f'h{i}l' for i in range(n))}",
+            f"  {' '.join(f'g{i}' for i in range(n))} _ h_mem {' '.join(f'hL{l}f' for l, _ in labels)} hlen hb{bi}) ?_",
+            "rintro ⟨d', pc⟩ ⟨hpc, hrax, -, -, hr14, hm⟩",
+            "refine Eventually.done _ ⟨hpc, hrax, fun m2 zm fl hupd => ?_⟩",
+            "have hm2 := hupd _ (by ecancel)",
+            f"have hb' : b{bi} = [0] ∨ b{bi} = [1] := hb{bi}",
+            f"refine eventually_trans _ _ _ _ (marshal km hkm hfm _ ra2 guard fp sp1 (Int.toBytes 8 s.regs.rbx.toBitVec.toInt)",
+            f"  {seq('b')} {seq('d')} pre hfp hs1 (Int.toBytes_length 8 _) {pre_l} {' '.join(f'hd{i}' for i in range(n))} _",
+            "  (by dsimp only; rw [hr14]; ecancel)",
+            "  (by dsimp only; exact hguard) (by dsimp only; omega) (by dsimp only; exact hcap2') hb') ?_",
+            "intro st' hh",
+            "obtain ⟨e1, e2, e3, -, -, -, -, -, -, hm'⟩ := hh",
+            "dsimp only at e2 e3 hm'",
+            "exact Eventually.done _ ⟨e1, e2, e3, sep_true (by ecancel)⟩"]
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--desccheck-result", required=True)
     ap.add_argument("--desc-dir", required=True)
     ap.add_argument("--type", required=True)
     ap.add_argument("--out-lean", required=True)
-    ap.add_argument("--only", default="size,accept,reject_bool,marshal",
+    ap.add_argument("--only", default="size,accept,reject_bool,marshal,compose",
                     help="obligations to emit (a failing one must not be in the library module)")
     ap.add_argument("--ns", default=None, help="namespace (default Gen1cX4.<T>)")
     ap.add_argument("--mutant", default=None,
@@ -680,6 +762,10 @@ def main():
         Dma = directives(os.path.join(NORM, f"target.{t}.MarshalSSZTo.S"))
         body += [marshal_stmt(code["MarshalSSZTo"], F), "set_option maxHeartbeats 4000000 in", "set_option maxRecDepth 100000 in",
                  "theorem marshal [Host] : marshal_stmt := by", *["  " + x for x in marshal_full(Dma, F, code["MarshalSSZTo"])], ""]
+    if "compose" in only:
+        assert "accept" in only and "marshal" in only, "compose uses the generated accept and marshal"
+        body += [compose_stmt(F, accept_labels(Dun, F)), "set_option maxHeartbeats 16000000 in", "set_option maxRecDepth 100000 in",
+                 "theorem compose [Host] : compose_stmt := by", *["  " + x for x in compose_full(F, accept_labels(Dun, F))], ""]
     body += [f"end {ns}", ""]
     os.makedirs(os.path.dirname(out), exist_ok=True)
     open(out, "w").write("\n".join(body))

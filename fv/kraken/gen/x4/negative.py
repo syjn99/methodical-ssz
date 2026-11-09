@@ -27,6 +27,8 @@ CASES = [  # id, type, method, designated obligation, old instruction, new instr
     ("sc-accept-ja", "Scalars", "UnmarshalSSZ", "accept", "ja L_target.Scalars.UnmarshalSSZ_41", "jae L_target.Scalars.UnmarshalSSZ_41"),
     ("sc-rbool-cmp", "Scalars", "UnmarshalSSZ", "reject_bool", "cmp $0x1,%cl", "cmp $0x2,%cl"),
     ("sc-marshal-add", "Scalars", "MarshalSSZTo", "marshal", "add $0x2,%rdx", "add $0x3,%rdx"),
+    # statement mutation (method "stmt"): the generated composition must fail if it claims another length
+    ("sc-compose-len", "Scalars", "stmt", "compose", "st'.data.regs.rbx = dlen + 16", "st'.data.regs.rbx = dlen + 17"),
 ]
 import sys as _sys
 if "--ids" in _sys.argv:   # restrict to the named cases (the others were run before)
@@ -39,6 +41,28 @@ def prepare(work, result, ddir):
     os.makedirs(work, exist_ok=True)
     cases, run = [], ["#!/bin/sh", "# elaborate every case alone; one 'id rc' line each", f": > {work}/rc.txt"]
     for cid, ty, meth, obl, old, new in CASES:
+        if meth == "stmt":
+            for kind in ("mutant", "control"):
+                name = f"{cid}-{kind}"
+                lf = os.path.join(work, f"{name}.lean")
+                ns = "Gen1cX4.Neg." + re.sub(r"\W", "_", name)
+                r = subprocess.run([sys.executable, "-I", "-B", os.path.join(HERE, "x4gen.py"), "--desccheck-result", result,
+                                    "--desc-dir", ddir, "--type", f"{T}.{ty}", "--out-lean", lf, "--only", f"accept,marshal,{obl}",
+                                    "--ns", ns], capture_output=True, text=True)
+                assert r.returncode == 0, r.stderr
+                text = open(lf).read()
+                if kind == "mutant":
+                    assert text.count(old) == 1, (cid, old)
+                    text = text.replace(old, new)
+                open(lf, "w").write(text)
+                lines = text.split("\n")
+                lo = next(i for i, l in enumerate(lines) if l.startswith(f"theorem {obl} ")) + 1
+                hi = next(i for i in range(lo, len(lines)) if lines[i] == "") + 1
+                cases.append({"id": cid, "kind": kind, "type": ty, "method": meth, "designated": f"{ns}.{obl}",
+                              "mutation": f"statement '{old}' -> '{new}'" if kind == "mutant" else "none (unchanged)",
+                              "lean": lf, "theorem_lines": [lo, hi], "log": os.path.join(work, f"{name}.log")})
+                run.append(f"lake env lean {lf} > {work}/{name}.log 2>&1; echo \"{name} $?\" >> {work}/rc.txt")
+            continue
         src = open(os.path.join(NORM, f"target.{ty}.{meth}.S")).read()
         assert src.count("  " + old + "\n") == 1, (cid, old)
         for kind, text in (("mutant", src.replace("  " + old + "\n", "  " + new + "\n")), ("control", src)):

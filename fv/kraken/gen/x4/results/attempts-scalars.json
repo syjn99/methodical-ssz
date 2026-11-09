@@ -67,7 +67,15 @@
    "negative": "sc-marshal-add (logs/72)"
   },
   "compose": {
-   "status": "not attempted in this session (needs marshal)"
+   "status": "proved (generated, over the generated accept and marshal), SAME sc_unmarshal_then_marshal",
+   "attempts": [
+    {
+     "log": "run logs/73",
+     "result": "pass"
+    }
+   ],
+   "witness": "Gen1cX4.WitScComp.sc_compose_runs: gen/wit WitScComp retargeted to Gen1cX4.Scalars.compose (gen/x4/witness.py), builds (logs/73)",
+   "negative": "sc-compose-len statement mutation (logs/74)"
   }
  }
 }

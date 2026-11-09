@@ -1,7 +1,7 @@
 {
  "schema": "fvphase1c.x4-negative/1",
- "cases": 8,
- "as_expected": 8,
+ "cases": 10,
+ "as_expected": 10,
  "rows": [
   {
    "id": "sc-size-imm",
@@ -114,6 +114,34 @@
    ],
    "as_expected": true,
    "run": "logs/72"
+  },
+  {
+   "id": "sc-compose-len",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.sc_compose_len_mutant.compose",
+   "mutation": "statement 'st'.data.regs.rbx = dlen + 16' -> 'st'.data.regs.rbx = dlen + 17'",
+   "exit": "1",
+   "first_error": "line 542: Application type mismatch: The argument",
+   "theorem_lines": [
+    527,
+    543
+   ],
+   "as_expected": true,
+   "run": "logs/74"
+  },
+  {
+   "id": "sc-compose-len",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.sc_compose_len_control.compose",
+   "mutation": "none (unchanged)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    527,
+    543
+   ],
+   "as_expected": true,
+   "run": "logs/74"
   }
  ]
 }
