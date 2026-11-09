@@ -47,6 +47,9 @@ def cut(n):
         out["delegated_to"] = {"k": ref["k"], "name": ref.get("name"), "pkg": ref.get("pkg"),
                                "fixed_size": ref.get("fixed_size"), "variable": ref.get("variable"),
                                "progressive": bool(ref.get("active_fields"))}
+        if n["k"] == "overlay":
+            # keep the (small) underlying type of a delegated named basic type, e.g. Slot -> uint64
+            out["underlying"] = cut(n["underlying"])
         return out
     if "fields" in n:
         out["fields"] = [{"key": f["key"], "v": cut(f["v"])} for f in n["fields"]]

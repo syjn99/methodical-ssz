@@ -89,6 +89,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -406,6 +414,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -430,6 +446,14 @@
          "k": "overlay",
          "name": "CommitteeIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -735,6 +759,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -759,6 +791,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -1264,6 +1304,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -1288,6 +1336,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -1595,6 +1651,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -2117,6 +2181,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -2657,6 +2729,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -2928,6 +3008,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -3424,6 +3512,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -3448,6 +3544,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -4383,6 +4487,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -4424,6 +4536,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -4628,6 +4748,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -4652,6 +4780,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -4676,6 +4812,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -4700,6 +4844,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -4800,6 +4952,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -4911,6 +5071,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -4935,6 +5103,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -5066,6 +5242,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -5090,6 +5274,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -5781,6 +5973,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -6349,6 +6549,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -6906,6 +7114,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -7120,6 +7336,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -7272,6 +7496,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -7726,6 +7958,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -7978,6 +8218,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -8170,6 +8418,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -8211,6 +8467,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -8359,6 +8623,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -8383,6 +8655,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -9112,6 +9392,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -9718,6 +10006,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -9742,6 +10038,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -10966,6 +11270,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -10990,6 +11302,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -11358,6 +11678,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -11875,6 +12203,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -12450,6 +12786,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -12474,6 +12818,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -12638,6 +12990,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -13288,6 +13648,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -13592,6 +13960,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -13868,6 +14244,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -15067,6 +15451,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -15091,6 +15483,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -15459,6 +15859,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -15976,6 +16384,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -16583,6 +16999,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -16607,6 +17031,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -17832,6 +18264,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -18046,6 +18486,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -18198,6 +18646,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -18812,6 +19268,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -19926,6 +20390,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -19950,6 +20422,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -20390,6 +20870,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -20907,6 +21395,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -20971,6 +21467,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -20995,6 +21499,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -21019,6 +21531,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -21043,6 +21563,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -21067,6 +21595,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -21762,6 +22298,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -21786,6 +22330,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -22613,6 +23165,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -22827,6 +23387,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -23013,6 +23581,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -23113,6 +23689,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -23137,6 +23721,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -23245,6 +23837,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -23280,6 +23880,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -24010,6 +24618,14 @@
          "k": "overlay",
          "name": "CommitteeIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -24034,6 +24650,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -24626,6 +25250,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -25143,6 +25775,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -25207,6 +25847,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -25231,6 +25879,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -25255,6 +25911,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -25279,6 +25943,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -25303,6 +25975,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -25415,6 +26095,14 @@
           "k": "overlay",
           "name": "ValidatorIndex",
           "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+          "underlying": {
+           "bits": 64,
+           "fixed_size": 8,
+           "go_type": "uint64",
+           "k": "uint",
+           "name": "uint64",
+           "variable": false
+          },
           "variable": false
          },
          "fixed_size": 128,
@@ -25545,6 +26233,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -25569,6 +26265,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -27015,6 +27719,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -27056,6 +27768,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -27080,6 +27800,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -27663,6 +28391,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -27877,6 +28613,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -28029,6 +28773,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -28343,6 +29095,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -29460,6 +30220,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -29484,6 +30252,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -30078,6 +30854,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -30595,6 +31379,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -30659,6 +31451,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -30683,6 +31483,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -30707,6 +31515,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -30731,6 +31547,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -30755,6 +31579,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -30870,6 +31702,14 @@
           "k": "overlay",
           "name": "ValidatorIndex",
           "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+          "underlying": {
+           "bits": 64,
+           "fixed_size": 8,
+           "go_type": "uint64",
+           "k": "uint",
+           "name": "uint64",
+           "variable": false
+          },
           "variable": false
          },
          "fixed_size": 128,
@@ -30930,6 +31770,14 @@
          "k": "overlay",
          "name": "BuilderIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -31268,6 +32116,14 @@
          "k": "overlay",
          "name": "BuilderIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -31309,6 +32165,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -31526,6 +32390,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -31550,6 +32422,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -31574,6 +32454,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -31682,6 +32570,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -31728,6 +32624,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -31853,6 +32757,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -31877,6 +32789,14 @@
          "k": "overlay",
          "name": "BuilderIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -31985,6 +32905,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -32220,6 +33148,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -32244,6 +33180,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -32467,6 +33411,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -32639,6 +33591,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -32831,6 +33791,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -33142,6 +34110,14 @@
          "k": "overlay",
          "name": "BuilderIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -33166,6 +34142,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -33190,6 +34174,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -33214,6 +34206,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -33433,6 +34433,14 @@
          "k": "overlay",
          "name": "BuilderIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -33739,6 +34747,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -34209,6 +35225,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -34337,6 +35361,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -34517,6 +35549,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -34541,6 +35581,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -34662,6 +35710,14 @@
           "k": "overlay",
           "name": "ValidatorIndex",
           "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+          "underlying": {
+           "bits": 64,
+           "fixed_size": 8,
+           "go_type": "uint64",
+           "k": "uint",
+           "name": "uint64",
+           "variable": false
+          },
           "variable": false
          },
          "fixed_size": 128,
@@ -34785,6 +35841,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -36479,6 +37543,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -36503,6 +37575,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -37097,6 +38177,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -37614,6 +38702,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -37678,6 +38774,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -37702,6 +38806,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -37726,6 +38838,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -37750,6 +38870,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -37774,6 +38902,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -37889,6 +39025,14 @@
           "k": "overlay",
           "name": "ValidatorIndex",
           "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+          "underlying": {
+           "bits": 64,
+           "fixed_size": 8,
+           "go_type": "uint64",
+           "k": "uint",
+           "name": "uint64",
+           "variable": false
+          },
           "variable": false
          },
          "fixed_size": 128,
@@ -37949,6 +39093,14 @@
          "k": "overlay",
          "name": "BuilderIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -38411,6 +39563,14 @@
          "k": "overlay",
          "name": "BuilderIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -38435,6 +39595,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -38459,6 +39627,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -38483,6 +39659,14 @@
          "k": "overlay",
          "name": "Gwei",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -38674,6 +39858,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -38698,6 +39890,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -39197,6 +40397,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -39320,6 +40528,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -39580,6 +40796,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -39890,6 +41114,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -40839,6 +42071,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -40880,6 +42120,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -43615,6 +44863,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -45676,6 +46932,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -45948,6 +47212,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -46265,6 +47537,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -46289,6 +47569,14 @@
          "k": "overlay",
          "name": "CommitteeIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -46594,6 +47882,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -46618,6 +47914,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -47123,6 +48427,14 @@
          "k": "overlay",
          "name": "Slot",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -47147,6 +48459,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -47298,6 +48618,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -48768,6 +50096,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -48792,6 +50128,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -48816,6 +50160,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -48840,6 +50192,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }
@@ -48940,6 +50300,14 @@
          "k": "overlay",
          "name": "Epoch",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        },
@@ -48964,6 +50332,14 @@
          "k": "overlay",
          "name": "ValidatorIndex",
          "pkg": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
          "variable": false
         }
        }

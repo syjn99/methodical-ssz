@@ -1,0 +1,1228 @@
+{
+ "schema": "fvphase1c.desc-test/1",
+ "summary": {
+  "originals": 144,
+  "originals_pass": 144,
+  "mutants": 14,
+  "mutants_as_expected": 14,
+  "unexpected": 0,
+  "probe_skipped_files": 9,
+  "done_line": "DESCCHECK-DONE 144 14",
+  "producer_skipped": []
+ },
+ "rows": [
+  {
+   "file": "AttestationData.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "BitL.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "BitVec.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "Checkpoint.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "FixedVec.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "ListC.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "ListU64.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "Nested.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "Scalars.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "engine_v1.ConsolidationRequest.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "engine_v1.DepositRequest.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "engine_v1.ExecutionPayload.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "engine_v1.ExecutionPayloadCapella.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "engine_v1.ExecutionPayloadDeneb.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "engine_v1.ExecutionPayloadHeader.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "engine_v1.ExecutionPayloadHeaderCapella.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "engine_v1.ExecutionPayloadHeaderDeneb.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "engine_v1.ExecutionRequests.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "engine_v1.Withdrawal.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "engine_v1.WithdrawalRequest.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.AggregateAttestationAndProof.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.AggregateAttestationAndProofElectra.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.Attestation.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.AttestationData.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.AttestationElectra.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.AttesterSlashing.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.AttesterSlashingElectra.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BLSToExecutionChange.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconBlock.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconBlockAltair.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconBlockBellatrix.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconBlockBody.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconBlockBodyAltair.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconBlockBodyBellatrix.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconBlockBodyCapella.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconBlockBodyDeneb.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconBlockBodyElectra.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconBlockCapella.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconBlockContentsDeneb.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconBlockContentsElectra.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconBlockContentsFulu.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconBlockDeneb.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconBlockElectra.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconBlockHeader.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconState.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconStateAltair.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconStateBellatrix.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconStateCapella.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconStateDeneb.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconStateElectra.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BeaconStateFulu.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BlindedBeaconBlockBellatrix.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BlindedBeaconBlockBodyBellatrix.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BlindedBeaconBlockBodyCapella.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BlindedBeaconBlockBodyDeneb.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BlindedBeaconBlockBodyElectra.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BlindedBeaconBlockCapella.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BlindedBeaconBlockDeneb.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BlindedBeaconBlockElectra.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BlindedBeaconBlockFulu.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BlobIdentifier.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BlobSidecar.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BlobSidecars.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BuilderBidCapella.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BuilderBidDeneb.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.BuilderBidElectra.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.Checkpoint.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.ContributionAndProof.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.DataColumnSidecar.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.DataColumnsByRootIdentifier.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.Deposit.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.DepositMessage.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.Deposit_Data.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.ENRForkID.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.Eth1Data.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.Fork.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.ForkData.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.HistoricalBatch.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.HistoricalSummary.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.IndexedAttestation.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.IndexedAttestationElectra.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.LightClientBootstrapAltair.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.LightClientBootstrapCapella.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.LightClientBootstrapDeneb.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.LightClientBootstrapElectra.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.LightClientFinalityUpdateAltair.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.LightClientFinalityUpdateCapella.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.LightClientFinalityUpdateDeneb.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.LightClientFinalityUpdateElectra.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.LightClientHeaderAltair.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.LightClientHeaderCapella.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.LightClientHeaderDeneb.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.LightClientOptimisticUpdateAltair.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.LightClientOptimisticUpdateCapella.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.LightClientOptimisticUpdateDeneb.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.LightClientUpdateAltair.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.LightClientUpdateCapella.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.LightClientUpdateDeneb.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.LightClientUpdateElectra.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.PartialDataColumnHeader.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.PartialDataColumnPartsMetadata.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.PartialDataColumnSidecar.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.PendingAttestation.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.PendingConsolidation.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.PendingDeposit.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.PendingPartialWithdrawal.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.PowBlock.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.ProposerSlashing.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedAggregateAttestationAndProof.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedAggregateAttestationAndProofElectra.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedBLSToExecutionChange.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedBeaconBlock.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedBeaconBlockAltair.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedBeaconBlockBellatrix.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedBeaconBlockCapella.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedBeaconBlockContentsDeneb.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedBeaconBlockContentsElectra.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedBeaconBlockContentsFulu.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedBeaconBlockDeneb.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedBeaconBlockElectra.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedBeaconBlockFulu.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedBeaconBlockHeader.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedBlindedBeaconBlockBellatrix.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedBlindedBeaconBlockCapella.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedBlindedBeaconBlockDeneb.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedBlindedBeaconBlockElectra.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedBlindedBeaconBlockFulu.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedBuilderBidCapella.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedBuilderBidDeneb.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedBuilderBidElectra.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedContributionAndProof.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SignedVoluntaryExit.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SigningData.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SingleAttestation.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.Status.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.StatusV2.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SyncAggregate.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SyncAggregatorSelectionData.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SyncCommittee.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SyncCommitteeContribution.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.SyncCommitteeMessage.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.Validator.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.ValidatorBalance.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "prysm_v1alpha1.VoluntaryExit.desc.json",
+   "role": "original",
+   "result": "PASS",
+   "failed_checks": [],
+   "as_expected": true
+  },
+  {
+   "file": "m-fixed-size.desc.json",
+   "role": "mutant",
+   "id": "m-fixed-size",
+   "what": "wrong fixed size (16 -> 17)",
+   "designated": "fixed",
+   "result": "FAIL",
+   "failed_checks": [
+    "fixed"
+   ],
+   "twin": "Scalars.desc.json",
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "m-offset.desc.json",
+   "role": "mutant",
+   "id": "m-offset",
+   "what": "wrong field offset (field 2: 16 -> 17)",
+   "designated": "offset[2]",
+   "result": "FAIL",
+   "failed_checks": [
+    "offset[2]",
+    "probe-fix[2]"
+   ],
+   "twin": "AttestationData.desc.json",
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "m-width.desc.json",
+   "role": "mutant",
+   "id": "m-width",
+   "what": "wrong field width (field 1: 32 -> 31)",
+   "designated": "width[1]",
+   "result": "FAIL",
+   "failed_checks": [
+    "width[1]",
+    "probe-fix[1]"
+   ],
+   "twin": "Checkpoint.desc.json",
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "m-head.desc.json",
+   "role": "mutant",
+   "id": "m-head",
+   "what": "wrong head size (28 -> 32)",
+   "designated": "head",
+   "result": "FAIL",
+   "failed_checks": [
+    "head"
+   ],
+   "twin": "Nested.desc.json",
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "m-variable.desc.json",
+   "role": "mutant",
+   "id": "m-variable",
+   "what": "variable field claimed fixed (field 2)",
+   "designated": "variable[2]",
+   "result": "FAIL",
+   "failed_checks": [
+    "variable[2]"
+   ],
+   "twin": "Nested.desc.json",
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "m-limit-claim.desc.json",
+   "role": "mutant",
+   "id": "m-limit-claim",
+   "what": "wrong limit claim (16 -> 17)",
+   "designated": "limit[0]",
+   "result": "FAIL",
+   "failed_checks": [
+    "limit[0]"
+   ],
+   "twin": "ListU64.desc.json",
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "m-elem.desc.json",
+   "role": "mutant",
+   "id": "m-elem",
+   "what": "wrong element size (8 -> 4)",
+   "designated": "elem[0]",
+   "result": "FAIL",
+   "failed_checks": [
+    "elem[0]"
+   ],
+   "twin": "ListU64.desc.json",
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "m-limit-spec.desc.json",
+   "role": "mutant",
+   "id": "m-limit-spec",
+   "what": "wrong limit against the spec (term and claim 16 -> 17)",
+   "designated": "ref",
+   "result": "FAIL",
+   "failed_checks": [
+    "ref"
+   ],
+   "twin": "ListU64.desc.json",
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "m-kind-spec.desc.json",
+   "role": "mutant",
+   "id": "m-kind-spec",
+   "what": "wrong kind against the spec (bitList -> byteList, claims follow)",
+   "designated": "ref",
+   "result": "FAIL",
+   "failed_checks": [
+    "ref"
+   ],
+   "twin": "BitL.desc.json",
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "m-uint-width.desc.json",
+   "role": "mutant",
+   "id": "m-uint-width",
+   "what": "wrong uint width against the spec (field 1: 2 -> 4, claims follow)",
+   "designated": "ref",
+   "result": "FAIL",
+   "failed_checks": [
+    "ref"
+   ],
+   "twin": "Scalars.desc.json",
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "m-wf.desc.json",
+   "role": "mutant",
+   "id": "m-wf",
+   "what": "ill-formed type (vector length 4 -> 0)",
+   "designated": "wf",
+   "result": "FAIL",
+   "failed_checks": [
+    "wf",
+    "fixed",
+    "width[1]",
+    "length[1]",
+    "head",
+    "probe-fix[1]",
+    "ref"
+   ],
+   "twin": "FixedVec.desc.json",
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "m-order.desc.json",
+   "role": "mutant",
+   "id": "m-order",
+   "what": "wrong variable-field order (reversed)",
+   "designated": "order",
+   "result": "FAIL",
+   "failed_checks": [
+    "order"
+   ],
+   "twin": "prysm_v1alpha1.BeaconBlockBodyAltair.desc.json",
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "m-kind-claim.desc.json",
+   "role": "mutant",
+   "id": "m-kind-claim",
+   "what": "wrong kind claim (field 0 byteVector -> byteList)",
+   "designated": "kind[0]",
+   "result": "FAIL",
+   "failed_checks": [
+    "kind[0]"
+   ],
+   "twin": "prysm_v1alpha1.StatusV2.desc.json",
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "m-offset-prysm.desc.json",
+   "role": "mutant",
+   "id": "m-offset-prysm",
+   "what": "wrong field offset (field 3: 44 -> 45)",
+   "designated": "offset[3]",
+   "result": "FAIL",
+   "failed_checks": [
+    "offset[3]",
+    "probe-fix[3]"
+   ],
+   "twin": "prysm_v1alpha1.StatusV2.desc.json",
+   "twin_result": "PASS",
+   "as_expected": true
+  }
+ ]
+}

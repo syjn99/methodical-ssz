@@ -1,0 +1,916 @@
+{
+ "configs": [
+  {
+   "file": "/workspace/agent-runs/methodical-fv-parallel/streams/phase1c/artifacts/hand/target.yaml",
+   "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
+   "sha256": "eef33ec0a5d212b28c792f1231dc23bbe4c3b6f9f8e65691004b9c69993dd451",
+   "types": [
+    {
+     "field_configs": null,
+     "go_align_gc_amd64": 8,
+     "go_fields": [
+      {
+       "exported": true,
+       "name": "A",
+       "offset_gc_amd64": 0,
+       "size_gc_amd64": 1,
+       "tag": "",
+       "type": "uint8"
+      },
+      {
+       "exported": true,
+       "name": "B",
+       "offset_gc_amd64": 2,
+       "size_gc_amd64": 2,
+       "tag": "",
+       "type": "uint16"
+      },
+      {
+       "exported": true,
+       "name": "C",
+       "offset_gc_amd64": 4,
+       "size_gc_amd64": 4,
+       "tag": "",
+       "type": "uint32"
+      },
+      {
+       "exported": true,
+       "name": "D",
+       "offset_gc_amd64": 8,
+       "size_gc_amd64": 8,
+       "tag": "",
+       "type": "uint64"
+      },
+      {
+       "exported": true,
+       "name": "E",
+       "offset_gc_amd64": 16,
+       "size_gc_amd64": 1,
+       "tag": "",
+       "type": "bool"
+      }
+     ],
+     "go_file": "types.go",
+     "go_file_kind": "native",
+     "go_size_gc_amd64": 24,
+     "ir": {
+      "deleg": {
+       "marshaler": false,
+       "sizer": false,
+       "unmarshaler": false
+      },
+      "fields": [
+       {
+        "key": "A",
+        "v": {
+         "fixed_size": 1,
+         "go_type": "uint8",
+         "k": "byte",
+         "name": "uint8",
+         "variable": false
+        }
+       },
+       {
+        "key": "B",
+        "v": {
+         "bits": 16,
+         "fixed_size": 2,
+         "go_type": "uint16",
+         "k": "uint",
+         "name": "uint16",
+         "variable": false
+        }
+       },
+       {
+        "key": "C",
+        "v": {
+         "bits": 32,
+         "fixed_size": 4,
+         "go_type": "uint32",
+         "k": "uint",
+         "name": "uint32",
+         "variable": false
+        }
+       },
+       {
+        "key": "D",
+        "v": {
+         "bits": 64,
+         "fixed_size": 8,
+         "go_type": "uint64",
+         "k": "uint",
+         "name": "uint64",
+         "variable": false
+        }
+       },
+       {
+        "key": "E",
+        "v": {
+         "fixed_size": 1,
+         "go_type": "bool",
+         "k": "bool",
+         "name": "bool",
+         "variable": false
+        }
+       }
+      ],
+      "fixed_size": 16,
+      "go_type": "Scalars",
+      "k": "container",
+      "name": "Scalars",
+      "pkg": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
+      "variable": false
+     },
+     "is_struct": true,
+     "name": "Scalars",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
+     "progressive_config": null,
+     "ssz_methods_in_loaded_pkg": [
+      "HashTreeRoot",
+      "HashTreeRootWith",
+      "MarshalSSZ",
+      "MarshalSSZTo",
+      "SizeSSZ",
+      "UnmarshalSSZ"
+     ]
+    },
+    {
+     "field_configs": null,
+     "go_align_gc_amd64": 8,
+     "go_fields": [
+      {
+       "exported": true,
+       "name": "R",
+       "offset_gc_amd64": 0,
+       "size_gc_amd64": 32,
+       "tag": "ssz-size:\"32\"",
+       "type": "[32]byte"
+      },
+      {
+       "exported": true,
+       "name": "W",
+       "offset_gc_amd64": 32,
+       "size_gc_amd64": 24,
+       "tag": "ssz-size:\"4\"",
+       "type": "[]uint64"
+      }
+     ],
+     "go_file": "types.go",
+     "go_file_kind": "native",
+     "go_size_gc_amd64": 56,
+     "ir": {
+      "deleg": {
+       "marshaler": false,
+       "sizer": false,
+       "unmarshaler": false
+      },
+      "fields": [
+       {
+        "key": "R",
+        "v": {
+         "elem": {
+          "fixed_size": 1,
+          "go_type": "byte",
+          "k": "byte",
+          "name": "byte",
+          "variable": false
+         },
+         "fixed_size": 32,
+         "go_type": "[32]byte",
+         "is_array": true,
+         "k": "vector",
+         "size": 32,
+         "variable": false
+        }
+       },
+       {
+        "key": "W",
+        "v": {
+         "elem": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
+         "fixed_size": 32,
+         "go_type": "[]uint64",
+         "k": "vector",
+         "size": 4,
+         "variable": false
+        }
+       }
+      ],
+      "fixed_size": 64,
+      "go_type": "FixedVec",
+      "k": "container",
+      "name": "FixedVec",
+      "pkg": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
+      "variable": false
+     },
+     "is_struct": true,
+     "name": "FixedVec",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
+     "progressive_config": null,
+     "ssz_methods_in_loaded_pkg": [
+      "HashTreeRoot",
+      "HashTreeRootWith",
+      "MarshalSSZ",
+      "MarshalSSZTo",
+      "SizeSSZ",
+      "UnmarshalSSZ"
+     ]
+    },
+    {
+     "field_configs": null,
+     "go_align_gc_amd64": 8,
+     "go_fields": [
+      {
+       "exported": true,
+       "name": "L",
+       "offset_gc_amd64": 0,
+       "size_gc_amd64": 24,
+       "tag": "ssz-max:\"16\"",
+       "type": "[]uint64"
+      }
+     ],
+     "go_file": "types.go",
+     "go_file_kind": "native",
+     "go_size_gc_amd64": 24,
+     "ir": {
+      "deleg": {
+       "marshaler": false,
+       "sizer": false,
+       "unmarshaler": false
+      },
+      "fields": [
+       {
+        "key": "L",
+        "v": {
+         "elem": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
+         "fixed_size": 4,
+         "go_type": "[]uint64",
+         "k": "list",
+         "max": 16,
+         "variable": true
+        }
+       }
+      ],
+      "fixed_size": 4,
+      "go_type": "ListU64",
+      "k": "container",
+      "name": "ListU64",
+      "pkg": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
+      "variable": true
+     },
+     "is_struct": true,
+     "name": "ListU64",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
+     "progressive_config": null,
+     "ssz_methods_in_loaded_pkg": [
+      "HashTreeRoot",
+      "HashTreeRootWith",
+      "MarshalSSZ",
+      "MarshalSSZTo",
+      "SizeSSZ",
+      "UnmarshalSSZ"
+     ]
+    },
+    {
+     "field_configs": null,
+     "go_align_gc_amd64": 8,
+     "go_fields": [
+      {
+       "exported": true,
+       "name": "J",
+       "offset_gc_amd64": 0,
+       "size_gc_amd64": 24,
+       "tag": "cast-type:\"github.com/OffchainLabs/go-bitfield.Bitvector4\" ssz-size:\"1\"",
+       "type": "github.com/OffchainLabs/go-bitfield.Bitvector4"
+      }
+     ],
+     "go_file": "types1b.go",
+     "go_file_kind": "native",
+     "go_size_gc_amd64": 24,
+     "ir": {
+      "deleg": {
+       "marshaler": false,
+       "sizer": false,
+       "unmarshaler": false
+      },
+      "fields": [
+       {
+        "key": "J",
+        "v": {
+         "bitfield": true,
+         "deleg": {
+          "marshaler": false,
+          "sizer": false,
+          "unmarshaler": false
+         },
+         "fixed_size": 1,
+         "go_type": "Bitvector4",
+         "k": "overlay",
+         "name": "Bitvector4",
+         "pkg": "github.com/OffchainLabs/go-bitfield",
+         "underlying": {
+          "elem": {
+           "fixed_size": 1,
+           "go_type": "byte",
+           "k": "byte",
+           "name": "byte",
+           "variable": false
+          },
+          "fixed_size": 1,
+          "go_type": "[]byte",
+          "k": "vector",
+          "size": 1,
+          "variable": false
+         },
+         "variable": false
+        }
+       }
+      ],
+      "fixed_size": 1,
+      "go_type": "BitVec",
+      "k": "container",
+      "name": "BitVec",
+      "pkg": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
+      "variable": false
+     },
+     "is_struct": true,
+     "name": "BitVec",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
+     "progressive_config": null,
+     "ssz_methods_in_loaded_pkg": [
+      "HashTreeRoot",
+      "HashTreeRootWith",
+      "MarshalSSZ",
+      "MarshalSSZTo",
+      "SizeSSZ",
+      "UnmarshalSSZ"
+     ]
+    },
+    {
+     "field_configs": null,
+     "go_align_gc_amd64": 8,
+     "go_fields": [
+      {
+       "exported": true,
+       "name": "A",
+       "offset_gc_amd64": 0,
+       "size_gc_amd64": 8,
+       "tag": "",
+       "type": "uint64"
+      },
+      {
+       "exported": true,
+       "name": "S",
+       "offset_gc_amd64": 8,
+       "size_gc_amd64": 8,
+       "tag": "",
+       "type": "*github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars"
+      },
+      {
+       "exported": true,
+       "name": "L",
+       "offset_gc_amd64": 16,
+       "size_gc_amd64": 8,
+       "tag": "",
+       "type": "*github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64"
+      }
+     ],
+     "go_file": "types1b.go",
+     "go_file_kind": "native",
+     "go_size_gc_amd64": 24,
+     "ir": {
+      "deleg": {
+       "marshaler": false,
+       "sizer": false,
+       "unmarshaler": false
+      },
+      "fields": [
+       {
+        "key": "A",
+        "v": {
+         "bits": 64,
+         "fixed_size": 8,
+         "go_type": "uint64",
+         "k": "uint",
+         "name": "uint64",
+         "variable": false
+        }
+       },
+       {
+        "key": "S",
+        "v": {
+         "deleg": {
+          "marshaler": true,
+          "sizer": true,
+          "unmarshaler": true
+         },
+         "delegated_to": {
+          "fixed_size": 16,
+          "k": "container",
+          "name": "Scalars",
+          "pkg": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
+          "progressive": false,
+          "variable": false
+         },
+         "fixed_size": 16,
+         "go_type": "*Scalars",
+         "k": "pointer",
+         "variable": false
+        }
+       },
+       {
+        "key": "L",
+        "v": {
+         "deleg": {
+          "marshaler": true,
+          "sizer": true,
+          "unmarshaler": true
+         },
+         "delegated_to": {
+          "fixed_size": 4,
+          "k": "container",
+          "name": "ListU64",
+          "pkg": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
+          "progressive": false,
+          "variable": true
+         },
+         "fixed_size": 4,
+         "go_type": "*ListU64",
+         "k": "pointer",
+         "variable": true
+        }
+       }
+      ],
+      "fixed_size": 4,
+      "go_type": "Nested",
+      "k": "container",
+      "name": "Nested",
+      "pkg": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
+      "variable": true
+     },
+     "is_struct": true,
+     "name": "Nested",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
+     "progressive_config": null,
+     "ssz_methods_in_loaded_pkg": [
+      "HashTreeRoot",
+      "HashTreeRootWith",
+      "MarshalSSZ",
+      "MarshalSSZTo",
+      "SizeSSZ",
+      "UnmarshalSSZ"
+     ]
+    },
+    {
+     "field_configs": null,
+     "go_align_gc_amd64": 8,
+     "go_fields": [
+      {
+       "exported": true,
+       "name": "Items",
+       "offset_gc_amd64": 0,
+       "size_gc_amd64": 24,
+       "tag": "ssz-max:\"4\"",
+       "type": "[]*github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64"
+      }
+     ],
+     "go_file": "types1b.go",
+     "go_file_kind": "native",
+     "go_size_gc_amd64": 24,
+     "ir": {
+      "deleg": {
+       "marshaler": false,
+       "sizer": false,
+       "unmarshaler": false
+      },
+      "fields": [
+       {
+        "key": "Items",
+        "v": {
+         "elem": {
+          "deleg": {
+           "marshaler": true,
+           "sizer": true,
+           "unmarshaler": true
+          },
+          "delegated_to": {
+           "fixed_size": 4,
+           "k": "container",
+           "name": "ListU64",
+           "pkg": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
+           "progressive": false,
+           "variable": true
+          },
+          "fixed_size": 4,
+          "go_type": "*ListU64",
+          "k": "pointer",
+          "variable": true
+         },
+         "fixed_size": 4,
+         "go_type": "[]*ListU64",
+         "k": "list",
+         "max": 4,
+         "variable": true
+        }
+       }
+      ],
+      "fixed_size": 4,
+      "go_type": "ListC",
+      "k": "container",
+      "name": "ListC",
+      "pkg": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
+      "variable": true
+     },
+     "is_struct": true,
+     "name": "ListC",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
+     "progressive_config": null,
+     "ssz_methods_in_loaded_pkg": [
+      "HashTreeRoot",
+      "HashTreeRootWith",
+      "MarshalSSZ",
+      "MarshalSSZTo",
+      "SizeSSZ",
+      "UnmarshalSSZ"
+     ]
+    },
+    {
+     "field_configs": null,
+     "go_align_gc_amd64": 8,
+     "go_fields": [
+      {
+       "exported": true,
+       "name": "B",
+       "offset_gc_amd64": 0,
+       "size_gc_amd64": 24,
+       "tag": "cast-type:\"github.com/OffchainLabs/go-bitfield.Bitlist\" ssz-max:\"2048\"",
+       "type": "github.com/OffchainLabs/go-bitfield.Bitlist"
+      }
+     ],
+     "go_file": "types1b.go",
+     "go_file_kind": "native",
+     "go_size_gc_amd64": 24,
+     "ir": {
+      "deleg": {
+       "marshaler": false,
+       "sizer": false,
+       "unmarshaler": false
+      },
+      "fields": [
+       {
+        "key": "B",
+        "v": {
+         "bitfield": true,
+         "deleg": {
+          "marshaler": false,
+          "sizer": false,
+          "unmarshaler": false
+         },
+         "fixed_size": 4,
+         "go_type": "Bitlist",
+         "k": "overlay",
+         "name": "Bitlist",
+         "pkg": "github.com/OffchainLabs/go-bitfield",
+         "underlying": {
+          "elem": {
+           "fixed_size": 1,
+           "go_type": "byte",
+           "k": "byte",
+           "name": "byte",
+           "variable": false
+          },
+          "fixed_size": 4,
+          "go_type": "[]byte",
+          "k": "list",
+          "max": 2048,
+          "variable": true
+         },
+         "variable": true
+        }
+       }
+      ],
+      "fixed_size": 4,
+      "go_type": "BitL",
+      "k": "container",
+      "name": "BitL",
+      "pkg": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
+      "variable": true
+     },
+     "is_struct": true,
+     "name": "BitL",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
+     "progressive_config": null,
+     "ssz_methods_in_loaded_pkg": [
+      "HashTreeRoot",
+      "HashTreeRootWith",
+      "MarshalSSZ",
+      "MarshalSSZTo",
+      "SizeSSZ",
+      "UnmarshalSSZ"
+     ]
+    }
+   ]
+  },
+  {
+   "file": "/workspace/agent-runs/methodical-fv-parallel/streams/phase1c/artifacts/hand/target-prysm.yaml",
+   "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm",
+   "sha256": "88f4597f333529c2c369886aa2fea605b1bf4434e2902d52fc2ffde57ab1cdc7",
+   "types": [
+    {
+     "field_configs": null,
+     "go_align_gc_amd64": 8,
+     "go_fields": [
+      {
+       "exported": true,
+       "name": "Epoch",
+       "offset_gc_amd64": 0,
+       "size_gc_amd64": 8,
+       "tag": "",
+       "type": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Epoch"
+      },
+      {
+       "exported": true,
+       "name": "Root",
+       "offset_gc_amd64": 8,
+       "size_gc_amd64": 24,
+       "tag": "ssz-size:\"32\"",
+       "type": "[]byte"
+      }
+     ],
+     "go_file": "types.go",
+     "go_file_kind": "native",
+     "go_size_gc_amd64": 32,
+     "ir": {
+      "deleg": {
+       "marshaler": false,
+       "sizer": false,
+       "unmarshaler": false
+      },
+      "fields": [
+       {
+        "key": "Epoch",
+        "v": {
+         "deleg": {
+          "marshaler": false,
+          "sizer": false,
+          "unmarshaler": false
+         },
+         "fixed_size": 8,
+         "go_type": "Epoch",
+         "k": "overlay",
+         "name": "Epoch",
+         "pkg": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
+         "variable": false
+        }
+       },
+       {
+        "key": "Root",
+        "v": {
+         "elem": {
+          "fixed_size": 1,
+          "go_type": "byte",
+          "k": "byte",
+          "name": "byte",
+          "variable": false
+         },
+         "fixed_size": 32,
+         "go_type": "[]byte",
+         "k": "vector",
+         "size": 32,
+         "variable": false
+        }
+       }
+      ],
+      "fixed_size": 40,
+      "go_type": "Checkpoint",
+      "k": "container",
+      "name": "Checkpoint",
+      "pkg": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm",
+      "variable": false
+     },
+     "is_struct": true,
+     "name": "Checkpoint",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm",
+     "progressive_config": null,
+     "ssz_methods_in_loaded_pkg": [
+      "HashTreeRoot",
+      "HashTreeRootWith",
+      "MarshalSSZ",
+      "MarshalSSZTo",
+      "SizeSSZ",
+      "UnmarshalSSZ"
+     ]
+    },
+    {
+     "field_configs": null,
+     "go_align_gc_amd64": 8,
+     "go_fields": [
+      {
+       "exported": true,
+       "name": "Slot",
+       "offset_gc_amd64": 0,
+       "size_gc_amd64": 8,
+       "tag": "",
+       "type": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Slot"
+      },
+      {
+       "exported": true,
+       "name": "CommitteeIndex",
+       "offset_gc_amd64": 8,
+       "size_gc_amd64": 8,
+       "tag": "",
+       "type": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.CommitteeIndex"
+      },
+      {
+       "exported": true,
+       "name": "BeaconBlockRoot",
+       "offset_gc_amd64": 16,
+       "size_gc_amd64": 24,
+       "tag": "ssz-size:\"32\"",
+       "type": "[]byte"
+      },
+      {
+       "exported": true,
+       "name": "Source",
+       "offset_gc_amd64": 40,
+       "size_gc_amd64": 8,
+       "tag": "",
+       "type": "*github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Checkpoint"
+      },
+      {
+       "exported": true,
+       "name": "Target",
+       "offset_gc_amd64": 48,
+       "size_gc_amd64": 8,
+       "tag": "",
+       "type": "*github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Checkpoint"
+      }
+     ],
+     "go_file": "types.go",
+     "go_file_kind": "native",
+     "go_size_gc_amd64": 56,
+     "ir": {
+      "deleg": {
+       "marshaler": false,
+       "sizer": false,
+       "unmarshaler": false
+      },
+      "fields": [
+       {
+        "key": "Slot",
+        "v": {
+         "deleg": {
+          "marshaler": false,
+          "sizer": false,
+          "unmarshaler": false
+         },
+         "fixed_size": 8,
+         "go_type": "Slot",
+         "k": "overlay",
+         "name": "Slot",
+         "pkg": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
+         "variable": false
+        }
+       },
+       {
+        "key": "CommitteeIndex",
+        "v": {
+         "deleg": {
+          "marshaler": false,
+          "sizer": false,
+          "unmarshaler": false
+         },
+         "fixed_size": 8,
+         "go_type": "CommitteeIndex",
+         "k": "overlay",
+         "name": "CommitteeIndex",
+         "pkg": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm",
+         "underlying": {
+          "bits": 64,
+          "fixed_size": 8,
+          "go_type": "uint64",
+          "k": "uint",
+          "name": "uint64",
+          "variable": false
+         },
+         "variable": false
+        }
+       },
+       {
+        "key": "BeaconBlockRoot",
+        "v": {
+         "elem": {
+          "fixed_size": 1,
+          "go_type": "byte",
+          "k": "byte",
+          "name": "byte",
+          "variable": false
+         },
+         "fixed_size": 32,
+         "go_type": "[]byte",
+         "k": "vector",
+         "size": 32,
+         "variable": false
+        }
+       },
+       {
+        "key": "Source",
+        "v": {
+         "deleg": {
+          "marshaler": true,
+          "sizer": true,
+          "unmarshaler": true
+         },
+         "delegated_to": {
+          "fixed_size": 40,
+          "k": "container",
+          "name": "Checkpoint",
+          "pkg": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm",
+          "progressive": false,
+          "variable": false
+         },
+         "fixed_size": 40,
+         "go_type": "*Checkpoint",
+         "k": "pointer",
+         "variable": false
+        }
+       },
+       {
+        "key": "Target",
+        "v": {
+         "deleg": {
+          "marshaler": true,
+          "sizer": true,
+          "unmarshaler": true
+         },
+         "delegated_to": {
+          "fixed_size": 40,
+          "k": "container",
+          "name": "Checkpoint",
+          "pkg": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm",
+          "progressive": false,
+          "variable": false
+         },
+         "fixed_size": 40,
+         "go_type": "*Checkpoint",
+         "k": "pointer",
+         "variable": false
+        }
+       }
+      ],
+      "fixed_size": 128,
+      "go_type": "AttestationData",
+      "k": "container",
+      "name": "AttestationData",
+      "pkg": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm",
+      "variable": false
+     },
+     "is_struct": true,
+     "name": "AttestationData",
+     "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm",
+     "progressive_config": null,
+     "ssz_methods_in_loaded_pkg": [
+      "HashTreeRoot",
+      "HashTreeRootWith",
+      "MarshalSSZ",
+      "MarshalSSZTo",
+      "SizeSSZ",
+      "UnmarshalSSZ"
+     ]
+    }
+   ]
+  }
+ ],
+ "schema": "fvphase1c.ir-reduced/1",
+ "source_schema": "fvphase1c.ir/1",
+ "tags": ""
+}
