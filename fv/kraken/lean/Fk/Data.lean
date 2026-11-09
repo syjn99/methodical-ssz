@@ -71,6 +71,9 @@ theorem errorStringPtrType_shape :
     errorStringPtrType.drop 48 = Int.toBytes 8 (label "type__" + 82848).toBitVec.toInt :=
   ⟨rfl, rfl, rfl⟩
 
+theorem errorStringPtrType_len : errorStringPtrType.length = 56 := by
+  simp [errorStringPtrType, Int.toBytes_length]
+
 /-- The errorString itab: its type word (bytes 8–15, read by the `%w` paths at
 `itab + 8`) is the address of `errorStringPtrType`, and its one method
 (`Fun[0]`, bytes 24–31) is `errors.(*errorString).Error`. -/
@@ -93,5 +96,6 @@ namespace Fk
 constants): the theorems and witnesses name them as before. -/
 export Data (blFmtB blFmtB_addr bvFmtJ bvFmtJ_addr vbvFmt vbvFmt_addr lcFmtZero lcFmtZero_addr
   lcFmtShort lcFmtShort_addr lcFmtOrder lcFmtOrder_addr vblMsgE vblMsgE_addr vblMsgZ vblMsgZ_addr
-  vblMsgB vblMsgB_addr luFmtTooBig luFmtTooBig_addr luFmtMis luFmtMis_addr intType_addr uint64Type_addr)
+  vblMsgB vblMsgB_addr luFmtTooBig luFmtTooBig_addr luFmtMis luFmtMis_addr intType_addr uint64Type_addr
+  errorStringPtrType errorStringPtrType_len)
 end Fk

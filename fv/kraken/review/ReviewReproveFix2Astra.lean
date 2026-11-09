@@ -39,10 +39,12 @@ theorem bv_message_owned (sp : BitVec 64) (msg hm : List UInt8) (m : DataMem)
   exact ⟨Eq (([] : List UInt8).At (label "go_string._" + 27706).toBitVec), by unfold bvRO at hr; ecancel⟩
 end
 
--- An existing rejection witness returns nil on an EthLib-invalid input.
-theorem bool_two_returns_nil (z : RegZmms) (f : StatusFlags) :
+-- An existing rejection witness returned nil on an EthLib-invalid input (the
+-- error global was 0). Fix 3 X3 initializes the global in the witness
+-- (`sc_reject_bool_err`): the same input now returns a non-nil error.
+theorem bool_two_returns_error (z : RegZmms) (f : StatusFlags) :
     Eventually (step1 Fk.WitScRB.host.exe)
-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0)
+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax ≠ 0)
       ⟨Fk.WitScRB.s0 2 z f, Fk.WitScRB.host.addrOf 5⟩ :=
   (Fk.WitScRB.sc_reject_bool_runs 2 (by decide) z f).2
 
@@ -52,13 +54,15 @@ example : 8192 + 5 + 128 + 8192 ≤ 16640 := by decide
 example : 4 * 8 + 4 * 24 + 4 * 16 * 8 = 640 := by decide
 example : [16, 148, 280, 412].map (fun x : Nat => x + 132) = [148, 280, 412, 544] := by decide
 example : Fk.WitScA.block.length = 64 := by decide
-example : (Fk.WitLuTb.block.drop (105888 - 65536)).take 48 = List.replicate 48 0 := by decide
-example : (Fk.WitBlRI.block.drop (99184 - 65536)).take 48 = List.replicate 48 0 := by decide
+-- The witnesses' type descriptors were 48 zero bytes. Fix 3 X3 puts the ELF's
+-- `*errors.errorString` descriptor there (`Fk.Data.errorStringPtrType`): Size_ 8.
+example : (Fk.WitLuTb.block.drop (105888 - 65536)).take 8 = [8, 0, 0, 0, 0, 0, 0, 0] := by decide
+example : (Fk.WitBlRI.block.drop (99184 - 65536)).take 8 = [8, 0, 0, 0, 0, 0, 0, 0] := by decide
 
 #print axioms ten_not_false
 #print axioms vbl_message_owned
 #print axioms bv_message_owned
-#print axioms bool_two_returns_nil
+#print axioms bool_two_returns_error
 #print axioms Fk.WitLcA1x1.lc_accept_runs
 #print axioms Fk.WitLcA4x16.lc_accept_runs
 #print axioms Fk.WitLcAMix.lc_accept_runs

@@ -15,8 +15,16 @@ unsafe.Alignof, unsafe.Offsetof with the gc amd64 sizes; no table by hand):
   aligned to the type's alignment, whole Go size (padding included);
 - bool field: the byte is 0 or 1;
 - interface type word: for a witness whose premise places the errorString
-  itab's type word (itab+8, read into the `%w` argument), the word is a non-nil, 8-aligned pointer to a 48-byte type
-  descriptor (abi.Type) in the block (its contents are not read);
+  itab's type word (itab+8, read into the `%w` argument), the word is a
+  non-nil, 8-aligned pointer to the 56-byte `*errors.errorString` descriptor
+  (abi.PtrType) in the block, and the descriptor's raw bytes are the ELF's
+  (fix 3 X3): Size_ 8, Kind_ 22 (Pointer); the bytes of named included items
+  (`Fk.Data.*`) are read from link/out/data/<name>.data;
+- error global (fix 3 X3): for a witness whose premise places the two words
+  of an `ssz.Err*` global, the global is initialized as Go's `errors.New`
+  leaves it: word 0 is the errorString itab, word 1 a non-nil, 8-aligned
+  pointer to a 16-byte errorString in the block whose message (pointer, length)
+  is in the block;
 - overlap: the Go objects (objects, slice data up to cap, type descriptor)
   are pairwise disjoint, and every `s_mem` chunk lies inside one Go object or
   outside all of them (a chunk across an object boundary fails).
@@ -32,13 +40,30 @@ import sys
 
 BASE = 0x10000
 # Lengths of named byte lists used in blocks.
-NAMED = {"bl2049": 257, "bl2048": 257, "blFmtB": 5, "bvFmtJ": 5, "vbvFmt": 35,
+NAMED = {"errorStringPtrType": 56, "bl2049": 257, "bl2048": 257, "blFmtB": 5, "bvFmtJ": 5, "vbvFmt": 35,
          "lcFmtZero": 53, "lcFmtShort": 63, "vblMsgE": 42, "vblMsgZ": 21, "vblMsgB": 13,
          "luFmtTooBig": 56, "luFmtMis": 68}
 LAYOUT = json.loads((pathlib.Path(__file__).parent / "layout.json").read_text())
 assert (LAYOUT["goos"], LAYOUT["goarch"]) == ("linux", "amd64")
 TY = LAYOUT["types"]
-TYPEDESC = 48  # sizeof(abi.Type), Go 1.26.3 amd64
+TYPEDESC = 56  # sizeof(abi.PtrType) = abi.Type (48) + Elem, Go 1.26.3 amd64
+DATA = pathlib.Path(__file__).resolve().parents[3] / "link" / "out" / "data"
+
+
+def data_bytes(name):
+    """Raw bytes of an included item (link/out/data/<name>.data); None at `word`
+    positions (pointer words depend on the host's labels)."""
+    p = DATA / f"{name}.data"
+    if not p.exists():
+        return None
+    out = []
+    for line in p.read_text().splitlines():
+        w = line.split()
+        if w and w[0] == "bytes":
+            out += [int(x, 16) for x in w[1:]]
+        elif w and w[0] == "word":
+            out += [None] * 8
+    return out
 
 
 def split_top(s, sep):
@@ -113,7 +138,7 @@ def piece(e, lens):
         vals = [num(x) for x in items]
         return len(items), bytes(vals) if all(v is not None for v in vals) else None
     if e in NAMED:
-        return NAMED[e], None
+        return NAMED[e], data_bytes(e)
     if e in lens:
         return lens[e], None
     m = re.fullmatch(r"List\.replicate (\d+) .*", e)
@@ -145,7 +170,8 @@ class Mem:
                 self.partial = f"layout known below {a:#x} (`{p}` has a symbolic length)"; break
             if b is not None:
                 for i, x in enumerate(b):
-                    self.bytes[a + i] = x
+                    if x is not None:
+                        self.bytes[a + i] = x
             a += n
         self.end = a
 
@@ -162,6 +188,10 @@ REG = ["rax", "rbx", "rcx", "rdx", "rsi", "rdi", "rsp", "rbp", "r8", "r9", "r10"
 
 def labels_of(txt):
     out = {}
+    m = re.search(r"def dataLabels : Program :=\s*\[(.*?)\]", txt, re.S)
+    if m:  # the data labels of a witness host sit at 0x10000 + index
+        for i, name in enumerate(re.findall(r'\.label "([^"]+)"', m[1])):
+            out[name] = 0x10000 + i
     for name, v in re.findall(r'theorem label_\w+\'? : label "([^"]+)" = ([^:\n]+?) :=', txt):
         v = v.strip()
         m = re.fullmatch(r"0x10000 \+ Int64\.ofNat (\d+)", v)
@@ -304,7 +334,8 @@ def check(path):
     it = labs.get("go_itab._errors.errorString_error")
     # The type word matters where the code reads it into an interface value
     # (the `%w` argument): the premise places itab+8.
-    if it is not None and 'go_itab._errors.errorString_error").toBitVec + 8)' in txt:
+    if it is not None and ('go_itab._errors.errorString_error").toBitVec + 8)' in txt
+                           or f"(({it} : UInt64).toBitVec + 8))" in txt):
         w = mem.word(it + 8)
         if w is None:
             out.append(("itab+8", None, "not checked: symbolic"))
@@ -314,6 +345,24 @@ def check(path):
             ok &= good
             if good:
                 objs.add(w, w + TYPEDESC, "typedesc")
+                size, kind = mem.word(w), mem.bytes.get(w + 23)
+                td = size == 8 and kind is not None and kind & 31 == 22
+                out.append(("typedesc", f"size {size} kind {None if kind is None else kind & 31}",
+                            "ok: *errors.errorString descriptor" if td else "type descriptor is not the ELF's (Size_ 8, Kind_ 22)"))
+                ok &= td
+    # initialized error globals: (itab, pointer to a 16-byte errorString)
+    for g in sorted(set(re.findall(r'\.At \(label "(ssz\.Err\w+)"\)\.toBitVec\)', txt))):
+        ga = labs.get(g)
+        e0, e1 = (mem.word(ga), mem.word(ga + 8)) if ga is not None else (None, None)
+        if e0 is None or e1 is None:
+            out.append((g, None, "not checked: symbolic")); continue
+        sp, ln = (mem.word(e1), mem.word(e1 + 8)) if e1 else (None, None)
+        good = (it is not None and e0 == it and e1 != 0 and e1 % 8 == 0 and mem.inblock(e1, 16)
+                and sp is not None and ln is not None and mem.inblock(sp, ln))
+        out.append((g, f"({e0:#x}, {e1:#x})", "ok: initialized (itab, errorString)" if good else "error global is not initialized (nil or no errorString)"))
+        ok &= good
+        if good:
+            objs.add(e1, e1 + 16, f"{g}.obj")
     # overlap: Go objects pairwise disjoint; each s_mem chunk inside one object or outside all
     L = sorted(objs.l)
     for i in range(len(L)):

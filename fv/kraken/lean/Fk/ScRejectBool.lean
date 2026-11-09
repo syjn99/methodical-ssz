@@ -156,6 +156,50 @@ theorem sc_reject_bool_main (k : Nat) (hk : ScalarsUnmarshalSSZ.IsInfixAt Host.p
       BitVec.ofNat_eq_ofNat] at H5
     ecancel
 
+/-- **The bool reject path returns a non-nil error** (fix 3 X3, astra fix 2
+finding 4). `ssz.ErrInvalidSerialization` is set by `errors.New` in the ssz
+package's initialization (ssz/error.go:11): its first word, the errorString
+itab pointer, is not 0. With that runtime-initialization premise `he0`, the
+decoder returns `rax ≠ 0`: an error, not nil. The memory conclusion is the one
+of `sc_reject_bool_main`. -/
+theorem sc_reject_bool_err (k : Nat) (hk : ScalarsUnmarshalSSZ.IsInfixAt Host.prog k)
+    (s : MachineData) (ra e0 e1 : UInt64) (slot b0 b1 b2 b3 c0 c1 c2 c3 c4 : List UInt8) (e : UInt8)
+    (he : 1 < e.toNat) (he0 : e0 ≠ 0)
+    (hsl : slot.length = 8) (h0l : b0.length = 1) (h1l : b1.length = 2) (h2l : b2.length = 4)
+    (h3l : b3.length = 8)
+    (g0 : c0.length = 1) (g1 : c1.length = 2) (g2 : c2.length = 4) (g3 : c3.length = 8)
+    (R : DataMem → Prop)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (slot.At (s.regs.rsp.toBitVec + 16))
+      ⋆ Eq (b0.At s.regs.rbx.toBitVec) ⋆ Eq (b1.At (s.regs.rbx.toBitVec + 1))
+      ⋆ Eq (b2.At (s.regs.rbx.toBitVec + 3)) ⋆ Eq (b3.At (s.regs.rbx.toBitVec + 7))
+      ⋆ Eq ([e].At (s.regs.rbx.toBitVec + 15))
+      ⋆ Eq (c0.At s.regs.rax.toBitVec) ⋆ Eq (c1.At (s.regs.rax.toBitVec + 2))
+      ⋆ Eq (c2.At (s.regs.rax.toBitVec + 4)) ⋆ Eq (c3.At (s.regs.rax.toBitVec + 8))
+      ⋆ Eq (c4.At (s.regs.rax.toBitVec + 16))
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At (label "ssz.ErrInvalidSerialization").toBitVec)
+      ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrInvalidSerialization" + 8).toBitVec) ⋆ R)
+    (hL41f : ∀ i < k, Host.prog[i]? ≠ some (.label "L_target.Scalars.UnmarshalSSZ_41"))
+    (hlen : s.regs.rcx = 16) :
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0 ∧ st.data.regs.rax = e0
+        ∧ st.data.regs.rbx = e1 ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.r14 = s.regs.r14
+        ∧ (Eq (b0.At s.regs.rax.toBitVec) ⋆ Eq (b1.At (s.regs.rax.toBitVec + 2))
+          ⋆ Eq (b2.At (s.regs.rax.toBitVec + 4)) ⋆ Eq (b3.At (s.regs.rax.toBitVec + 8))
+          ⋆ Eq (c4.At (s.regs.rax.toBitVec + 16))
+          ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+          ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
+          ⋆ Eq (b0.At s.regs.rbx.toBitVec) ⋆ Eq (b1.At (s.regs.rbx.toBitVec + 1))
+          ⋆ Eq (b2.At (s.regs.rbx.toBitVec + 3)) ⋆ Eq (b3.At (s.regs.rbx.toBitVec + 7))
+          ⋆ Eq ([e].At (s.regs.rbx.toBitVec + 15))
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At (label "ssz.ErrInvalidSerialization").toBitVec)
+          ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrInvalidSerialization" + 8).toBitVec)
+          ⋆ R) st.data.dmem)
+      ⟨s, Host.addrOf k⟩ :=
+  eventually_trans _ _ _ _ (sc_reject_bool_main k hk s ra e0 e1 slot b0 b1 b2 b3 c0 c1 c2 c3 c4 e he hsl h0l h1l
+      h2l h3l g0 g1 g2 g3 R h_mem hL41f hlen)
+    (fun _ h => Eventually.done _ ⟨h.1, h.2.1 ▸ he0, h.2.1, h.2.2⟩)
+
 /-- **EthLib rejects a bool byte above 1.** If the 16th byte of a 16-byte
 input is above 1, EthLib's `deserialize scDesc` does not accept it: every
 accepted input is `scEncode g`, whose byte 15 is 0 or 1. -/
