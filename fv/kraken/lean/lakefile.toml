@@ -47,3 +47,9 @@ filter = {extension = ["S"]}
 [[lean_lib]]
 name = "Fk"
 needs = ["fk_norm_S", "fk_data", "fk_lean_S"]
+
+# phase1c (X4): generated statements and proofs, written by fv/kraken/gen/x4 into Gen1cX4/.
+# Not a default target; build with `lake build Gen1cX4`.
+[[lean_lib]]
+name = "Gen1cX4"
+globs = ["Gen1cX4.+"]

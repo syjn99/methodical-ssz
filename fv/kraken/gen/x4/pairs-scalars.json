@@ -1,0 +1,41 @@
+{
+ "imports": [
+  "Gen1cX4.Scalars",
+  "Fk.ScSize",
+  "Fk.ScAccept",
+  "Fk.ScReject",
+  "Fk.ScRejectBool"
+ ],
+ "pairs": [
+  [
+   "Gen1cX4.Scalars.size_stmt",
+   "sc_size_main",
+   "SAME",
+   "size"
+  ],
+  [
+   "Gen1cX4.Scalars.accept_stmt",
+   "sc_accept_main",
+   "SAME",
+   "accept"
+  ],
+  [
+   "Gen1cX4.Scalars.reject_bool_stmt",
+   "sc_reject_bool_main",
+   "SAME",
+   "reject r2 bool-range"
+  ],
+  [
+   "Gen1cX4.Scalars.size_stmt",
+   "sc_accept_main",
+   "DIFF",
+   "control"
+  ],
+  [
+   "Gen1cX4.Scalars.reject_bool_stmt",
+   "sc_reject_size_main",
+   "DIFF",
+   "control"
+  ]
+ ]
+}

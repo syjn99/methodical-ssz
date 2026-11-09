@@ -1,0 +1,85 @@
+{
+ "schema": "fvphase1c.x4-negative/1",
+ "cases": 6,
+ "as_expected": 6,
+ "rows": [
+  {
+   "id": "sc-size-imm",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.sc_size_imm_mutant.size",
+   "mutation": "'mov $0x10,%eax' -> 'mov $0x11,%eax'",
+   "exit": "1",
+   "first_error": "line 22: unsolved goals",
+   "theorem_lines": [
+    22,
+    36
+   ],
+   "as_expected": true
+  },
+  {
+   "id": "sc-size-imm",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.sc_size_imm_control.size",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    22,
+    36
+   ],
+   "as_expected": true
+  },
+  {
+   "id": "sc-accept-ja",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.sc_accept_ja_mutant.accept",
+   "mutation": "'ja L_target.Scalars.UnmarshalSSZ_41' -> 'jae L_target.Scalars.UnmarshalSSZ_41'",
+   "exit": "1",
+   "first_error": "line 119: Tactic `decide` proved that the proposition",
+   "theorem_lines": [
+    53,
+    200
+   ],
+   "as_expected": true
+  },
+  {
+   "id": "sc-accept-ja",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.sc_accept_ja_control.accept",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    53,
+    200
+   ],
+   "as_expected": true
+  },
+  {
+   "id": "sc-rbool-cmp",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.sc_rbool_cmp_mutant.reject_bool",
+   "mutation": "'cmp $0x1,%cl' -> 'cmp $0x2,%cl'",
+   "exit": "1",
+   "first_error": "line 131: omega could not prove the goal:",
+   "theorem_lines": [
+    57,
+    159
+   ],
+   "as_expected": true
+  },
+  {
+   "id": "sc-rbool-cmp",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.sc_rbool_cmp_control.reject_bool",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    57,
+    159
+   ],
+   "as_expected": true
+  }
+ ]
+}
