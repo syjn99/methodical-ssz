@@ -210,9 +210,11 @@ def build(pdir):
         "fulu_reachable": "strict sense: B. The classification covers I and marks in_B per type",
         "hand_written_delegate": "a named type in the field closure of A with SSZ methods that no config generates (its methods are hand-written Go)",
         "inline_depth": "list/vector levels the type's own code walks; bytesN and delegated fields count 0",
-        "scope_in": "not progressive, no union, inline depth <= 1, every field one of: uint8..64, bool, bytesN, "
-                    "bitvector, bitlist (ValidateBitlist contract), vector/list of a basic, bytesN or delegated container, "
-                    "list[byte], list[uint64], delegated container or delegated hand-written type",
+        "scope_in": "first-pass rule: not excluded, i.e. not progressive, no union, inline depth <= 1, and every field one of: "
+                    "uint8..64, bool, bytesN, bitvector, bitlist (ValidateBitlist contract), vector of a uint/bool, of bytesN or "
+                    "of a delegated type, list[byte], list[uint64] (a list of another uint is out), list of bytesN or of a delegated "
+                    "container, a delegated container or a delegated hand-written type. Depth is the inline depth (delegated "
+                    "fields are not followed). 'in' is neither provability nor a match with a hand proof pattern (see SCOPE-P6)",
         "preset": "mainnet is primary; minimal differences are listed separately",
     }
     main = irs["mainnet"]

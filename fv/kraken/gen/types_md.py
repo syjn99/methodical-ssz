@@ -47,6 +47,11 @@ def main():
     w(f"- 범위 안 {c['scope_in']}개, 범위 밖 {c['scope_out']}개(잠정). 범위 밖 이유: " +
       ", ".join(f"{k} {v}" for k, v in c["out_primary_reason"].items()) + ".")
     w(f"- B만 보면 범위 안 {c['B_scope_in']}개, 범위 밖 {c['B_scope_out']}개.")
+    fsh = c["field_shape"]
+    w("- \"범위 안\"은 1차 규칙이 빼지 않았다는 뜻이다. 증명 가능성이 아니다. 손 증명 패턴과 맞는다는 뜻도 아니다.")
+    w(f"  Gist 1차 목록보다 넓다: `vector[bytesN]` 필드 {fsh.get('vector[bytesN]', 0)}개, `list[bytesN]` 필드 {fsh.get('list[bytesN]', 0)}개, "
+      f"`vector[uint64]` 필드 {fsh.get('vector[uint64]', 0)}개가 들어 있다. 깊이는 인라인 깊이다(위임은 따라가지 않는다).")
+    w("  증명에 필요한 것으로 나눈 분류는 `SCOPE-P6.md`에 있다.")
     w(f"- 손 작성 위임 대상(`consensus-types/primitives`) {c['I_hand_written']}개. 이것을 부르는 타입 {c['types_calling_hand_written']}개.")
     w(f"- 생성 함수 {fc['generated_functions_inventory']}개(타입 × 3), 명령어 {fc['generated_instructions']}개, 함수당 최대 {fc['max_instructions']}개.")
     w(f"- 니모닉 수준: 생성 함수 {fc['generated_functions_all_supported']}/{fc['generated_functions_inventory']}개가 Kraken 런타임 파서가 받는 이름만 쓴다.")

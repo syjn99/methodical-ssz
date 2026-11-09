@@ -66,3 +66,7 @@ python3 -I fv/kraken/gen/types_md.py fv/kraken/prysm
 - x86-64 하드웨어에서 실행하지 않았다. Kraken = 실제 CPU 대조가 없다.
 - `layout`과 Go 배치는 `go/types`의 gc amd64 규칙이다(`ir/*.json` `go_fields`). amd64 실행으로 확인하지 않았다.
 - 이 ELF에 대한 정리는 아직 없다. 표는 분류다.
+- 런타임 계약은 추상 모델뿐이다. 계약은 Go 1.26.3 런타임 소스를 읽은 결과다. Go 1.26.10 런타임에 대해 다시 읽지 않았다. 이 이름공간에서는 미확인 가정이다(`gen/frozen/ASSUMPTIONS.json` 개정 2).
+- 이 ELF에는 링크 검사 (a)–(h)가 없다. 명령어 통계와 `.S`는 디스어셈블러 하나(`go tool objdump -gnu`)와 `link/conv.py`의 출력이다. 독립 디코더 교차 검사를 하지 않았다.
+- 손 작성 primitives SSZ 메서드(`consensus-types/primitives`의 5타입, 함수 24개, 생성 타입 52개가 부른다)는 명세도 증명도 없다.
+- 임시 Prysm 트리의 `fvphase1c/invtool/main.go`는 커밋된 `gen/invtool/main.go`의 gofmt 전 사본이다. 차이는 공백뿐이다(구조체 태그 정렬). IR은 이 사본으로 만들었다.

@@ -8,6 +8,9 @@
 - 목록 집합 I: 생성 타입 135개. 설정 타입 A 124개, Fulu 도달 B 50개(생성 45, 손 작성 5).
 - 범위 안 132개, 범위 밖 3개(잠정). 범위 밖 이유: deep nesting 3.
 - B만 보면 범위 안 44개, 범위 밖 1개.
+- "범위 안"은 1차 규칙이 빼지 않았다는 뜻이다. 증명 가능성이 아니다. 손 증명 패턴과 맞는다는 뜻도 아니다.
+  Gist 1차 목록보다 넓다: `vector[bytesN]` 필드 46개, `list[bytesN]` 필드 31개, `vector[uint64]` 필드 7개가 들어 있다. 깊이는 인라인 깊이다(위임은 따라가지 않는다).
+  증명에 필요한 것으로 나눈 분류는 `SCOPE-P6.md`에 있다.
 - 손 작성 위임 대상(`consensus-types/primitives`) 5개. 이것을 부르는 타입 52개.
 - 생성 함수 405개(타입 × 3), 명령어 116889개, 함수당 최대 2890개.
 - 니모닉 수준: 생성 함수 405/405개가 Kraken 런타임 파서가 받는 이름만 쓴다.
@@ -47,7 +50,7 @@ Go 1.26.10은 새 실험 기준선이다. Go 1.26.3 ELF `9c850c97…c501`의 정
 - `fulu_reachable`: strict sense: B. The classification covers I and marks in_B per type
 - `hand_written_delegate`: a named type in the field closure of A with SSZ methods that no config generates (its methods are hand-written Go)
 - `inline_depth`: list/vector levels the type's own code walks; bytesN and delegated fields count 0
-- `scope_in`: not progressive, no union, inline depth <= 1, every field one of: uint8..64, bool, bytesN, bitvector, bitlist (ValidateBitlist contract), vector/list of a basic, bytesN or delegated container, list[byte], list[uint64], delegated container or delegated hand-written type
+- `scope_in`: first-pass rule: not excluded, i.e. not progressive, no union, inline depth <= 1, and every field one of: uint8..64, bool, bytesN, bitvector, bitlist (ValidateBitlist contract), vector of a uint/bool, of bytesN or of a delegated type, list[byte], list[uint64] (a list of another uint is out), list of bytesN or of a delegated container, a delegated container or a delegated hand-written type. Depth is the inline depth (delegated fields are not followed). 'in' is neither provability nor a match with a hand proof pattern (see SCOPE-P6)
 - `preset`: mainnet is primary; minimal differences are listed separately
 
 "Kraken이 받는가"의 결정:
