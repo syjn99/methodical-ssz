@@ -1,11 +1,11 @@
 {
  "schema": "fvphase1c.emit-boundary/1",
  "summary": {
-  "cases": 289,
-  "as_expected": 289,
+  "cases": 302,
+  "as_expected": 302,
   "by_group": {
-   "boundary": 258,
-   "own": 16,
+   "boundary": 264,
+   "own": 23,
    "positive": 5,
    "review-r3": 10
   },
@@ -764,6 +764,24 @@
    "as_expected": true
   },
   {
+   "id": "b-add-c-z3-no-fixed-size/hand",
+   "group": "boundary",
+   "what": "z3-no-fixed-size add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-z3-no-fixed-size.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-z3-no-fixed-size/hand",
+   "group": "boundary",
+   "what": "z3-no-fixed-size replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-z3-no-fixed-size.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
    "id": "b-add-c-y7-dup-type-key-same-value/hand",
    "group": "boundary",
    "what": "y7-dup-type-key-same-value add: hand_case, 9 hand keys",
@@ -815,6 +833,42 @@
    "expected": "refused",
    "actual": "refused",
    "reason": "scen/b-replace-c-y9-leading-zero.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-z1-depth-100/hand",
+   "group": "boundary",
+   "what": "z1-depth-100 add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-z1-depth-100.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-z1-depth-100/hand",
+   "group": "boundary",
+   "what": "z1-depth-100 replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-z1-depth-100.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-add-c-z2-size-1100000/hand",
+   "group": "boundary",
+   "what": "z2-size-1100000 add: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-add-c-z2-size-1100000.result.json: checker verdict 'FAIL', not OK",
+   "as_expected": true
+  },
+  {
+   "id": "b-replace-c-z2-size-1100000/hand",
+   "group": "boundary",
+   "what": "z2-size-1100000 replace: hand_case, 9 hand keys",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "scen/b-replace-c-z2-size-1100000.result.json: checker verdict 'FAIL', not OK",
    "as_expected": true
   },
   {
@@ -2398,7 +2452,7 @@
    "what": "forge desc dir with the honest main result",
    "expected": "refused",
    "actual": "refused",
-   "reason": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Nested: replay/r3/forge/descdir/Nested.desc.json sha256 a52df52f7918c22a18833ed3c3f13662770a50252a8aff918b6e18c4ec7fa2b5 != checked 9396a22442aa6b343beb45af77bda81e315",
+   "reason": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Nested: replay/r3/forge/descdir/Nested.desc.json sha256 a52df52f7918c22a18833ed3c3f13662770a50252a8aff918b6e18c4ec7fa2b5 != checked 9396a22442aa6b343beb45af77bda81e315083f4ead3cecc11afc1b2aa13f6f4 (changed, stale or mixed result)",
    "as_expected": true
   },
   {
@@ -2479,7 +2533,7 @@
    "what": "a Desc changed after the check, result path differs (copied tree)",
    "expected": "refused",
    "actual": "refused",
-   "reason": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Nested: boundary/x01/Nested.desc.json sha256 a52df52f7918c22a18833ed3c3f13662770a50252a8aff918b6e18c4ec7fa2b5 != checked 9396a22442aa6b343beb45af77bda81e315083f4ead3ce",
+   "reason": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Nested: boundary/x01/Nested.desc.json sha256 a52df52f7918c22a18833ed3c3f13662770a50252a8aff918b6e18c4ec7fa2b5 != checked 9396a22442aa6b343beb45af77bda81e315083f4ead3cecc11afc1b2aa13f6f4 (changed, stale or mixed result)",
    "as_expected": true
   },
   {
@@ -2488,7 +2542,7 @@
    "what": "a checked file re-written with one more newline (same JSON value, other sha256)",
    "expected": "refused",
    "actual": "refused",
-   "reason": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64: boundary/x02/ListU64.desc.json sha256 fa39784b8999e1d6be281180a0b0d8b22d0725b0d9b91aa9dacb8da4d10f92fb != checked f3ccf82b8ce13d1cb74f98638223a418315fbe4fb1a5",
+   "reason": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64: boundary/x02/ListU64.desc.json sha256 fa39784b8999e1d6be281180a0b0d8b22d0725b0d9b91aa9dacb8da4d10f92fb != checked f3ccf82b8ce13d1cb74f98638223a418315fbe4fb1a5df950775ce5bf6b3cd33 (changed, stale or mixed result)",
    "as_expected": true
   },
   {
@@ -2497,7 +2551,7 @@
    "what": "symlink named like BitL pointing at a wrong BitL (control m-kind-spec)",
    "expected": "refused",
    "actual": "refused",
-   "reason": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.BitL: boundary/x03/999-BitL.desc.json sha256 737e35762d4fa42ff6f018ce97d55fede6461c17d5b4dc0b9e88d6e00fb0e641 != checked ebe3c073b5d69644abdb7f964fabacc5a68e29ddb54c8c",
+   "reason": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.BitL: boundary/x03/999-BitL.desc.json sha256 737e35762d4fa42ff6f018ce97d55fede6461c17d5b4dc0b9e88d6e00fb0e641 != checked ebe3c073b5d69644abdb7f964fabacc5a68e29ddb54c8ce2d550d4b247a95f9b (changed, stale or mixed result)",
    "as_expected": true
   },
   {
@@ -2506,7 +2560,7 @@
    "what": "desc dir with the right ListU64 and a wrong one (same key)",
    "expected": "refused",
    "actual": "refused",
-   "reason": "two Descs for ('github.com/OffchainLabs/methodical-ssz/fv/kraken/target', 'ListU64') in boundary/x04: boundary/x04/006-ListU64.desc.json and /work",
+   "reason": "two Descs for ('github.com/OffchainLabs/methodical-ssz/fv/kraken/target', 'ListU64') in boundary/x04: boundary/x04/006-ListU64.desc.json and boundary/x04/144-m-limit-spec.desc.json",
    "as_expected": true
   },
   {
@@ -2524,7 +2578,7 @@
    "what": "result whose inventory sha256 differs from the committed inventory",
    "expected": "refused",
    "actual": "refused",
-   "reason": "boundary/x06.result.json: inventory sha256 0000000000000000000000000000000000000000000000000000000000000000 != committed d3fe6d31ea86b4d1abf7191bb03ca9d1e39d06b84b316e4fb7383ea0e2dbf527",
+   "reason": "boundary/x06.result.json: inventory sha256 0000000000000000000000000000000000000000000000000000000000000000, working tree d3fe6d31ea86b4d1abf7191bb03ca9d1e39d06b84b316e4fb7383ea0e2dbf527, frozen-list pin d3fe6d31ea86b4d1abf7191bb03ca9d1e39d06b84b316e4fb7383ea0e2dbf527: not all equal",
    "as_expected": true
   },
   {
@@ -2533,7 +2587,7 @@
    "what": "result with a second original record for ListU64",
    "expected": "refused",
    "actual": "refused",
-   "reason": "boundary/x07.result.json: more than one original record for ('github.com/OffchainLabs/methodical-ssz/fv/kraken/target', 'ListU64') or orig/ListU64",
+   "reason": "boundary/x07.result.json: more than one original record for ('github.com/OffchainLabs/methodical-ssz/fv/kraken/target', 'ListU64') or orig/ListU64.desc.json",
    "as_expected": true
   },
   {
@@ -2587,7 +2641,7 @@
    "what": "the wrong ListU64 that the main run checked as a mutant (FAIL record) in place of the original",
    "expected": "refused",
    "actual": "refused",
-   "reason": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64: boundary/x13/143-m-limit-spec.desc.json sha256 fc194bdfcdbda515fb24df157195b587b0daf853c3d856cb16c18cbcdf68382d != checked f3ccf82b8ce13d1cb74f98638223a418315",
+   "reason": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64: boundary/x13/143-m-limit-spec.desc.json sha256 fc194bdfcdbda515fb24df157195b587b0daf853c3d856cb16c18cbcdf68382d != checked f3ccf82b8ce13d1cb74f98638223a418315fbe4fb1a5df950775ce5bf6b3cd33 (changed, stale or mixed result)",
    "as_expected": true
   },
   {
@@ -2605,7 +2659,7 @@
    "what": "same desc dir with the honest main result (sha256 differs)",
    "expected": "refused",
    "actual": "refused",
-   "reason": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Checkpoint: boundary/x14/066-y1-scalars-as-prysm-checkpoint.desc.json sha256 b7ef9ad1d737afbae84103bea900392e3dcedc61678770f75bd662bc8c2ae4e3 != checked 69170680ed79682a",
+   "reason": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Checkpoint: boundary/x14/066-y1-scalars-as-prysm-checkpoint.desc.json sha256 b7ef9ad1d737afbae84103bea900392e3dcedc61678770f75bd662bc8c2ae4e3 != checked 69170680ed79682aea61798e381440ac43913c11ef36f637c5dbfd10ba90f644 (changed, stale or mixed res",
    "as_expected": true
   },
   {
@@ -2615,6 +2669,69 @@
    "expected": "refused",
    "actual": "refused",
    "reason": "boundary/x16.result.json: not a strict JSON checker result (non-integer number form '144.0')",
+   "as_expected": true
+  },
+  {
+   "id": "x17",
+   "group": "own",
+   "what": "frozen-list inventory pin differs from the committed inventory (result and file agree)",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "main.result.json: inventory sha256 d3fe6d31ea86b4d1abf7191bb03ca9d1e39d06b84b316e4fb7383ea0e2dbf527, working tree d3fe6d31ea86b4d1abf7191bb03ca9d1e39d06b84b316e4fb7383ea0e2dbf527, frozen-list pin 0000000000000000000000000000000000000000000000000000000000000000: not all equal",
+   "as_expected": true
+  },
+  {
+   "id": "x18",
+   "group": "own",
+   "what": "Scalars without fixed_size, forged record sha256 (only the Desc shape check is left)",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "boundary/x18/Scalars.desc.json: missing top-level keys ['fixed_size']",
+   "as_expected": true
+  },
+  {
+   "id": "x19",
+   "group": "own",
+   "what": "result whose records list holds a number",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "boundary/x19.result.json: malformed checker result, Desc or arguments (AttributeError: 'int' object has no attribute 'get')",
+   "as_expected": true
+  },
+  {
+   "id": "x20",
+   "group": "own",
+   "what": "result whose list field is a string",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "boundary/x20.result.json: malformed checker result, Desc or arguments (AttributeError: 'str' object has no attribute 'get')",
+   "as_expected": true
+  },
+  {
+   "id": "x21",
+   "group": "own",
+   "what": "result whose table_keys holds a string",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "boundary/x21.result.json: malformed checker result, Desc or arguments (TypeError: string indices must be integers, not 'str')",
+   "as_expected": true
+  },
+  {
+   "id": "x22",
+   "group": "own",
+   "what": "result whose inventory field is a list",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "boundary/x22.result.json: malformed checker result, Desc or arguments (AttributeError: 'list' object has no attribute 'get')",
+   "as_expected": true
+  },
+  {
+   "id": "x23",
+   "group": "own",
+   "what": "a Desc with two non-UTF-8 bytes in front",
+   "expected": "refused",
+   "actual": "refused",
+   "reason": "boundary/x23/ListU64.desc.json: not a strict JSON Desc ('utf-8' codec can't decode byte 0xff in position 0: invalid start byte)",
    "as_expected": true
   }
  ]

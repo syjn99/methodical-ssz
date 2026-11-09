@@ -31,14 +31,14 @@ FROZEN = {"THEOREMS.json": "e4d7dcf8be132789333aced22c5e1e4278539edf4aee6aaeef9c
           "ASSUMPTIONS.json": "9decb220f35736b9b8d07700f606e146c1c076f5016789ac5c7c22c1a213905f"}
 # (emitted statement, hand theorem, expected, explanation)
 COMPARE = [
-    ("Gen1c.Checkpoint.size_stmt", "cp_size_main", "SAME", "fixed-size template"),
-    ("Gen1c.AttestationData.size_stmt", "ad_size_main", "SAME", "fixed-size template"),
-    ("Gen1c.BitVec.size_stmt", "bv_size_main", "SAME", "fixed-size template"),
-    ("Gen1c.FixedVec.size_stmt", "fv_size_main", "SAME", "fixed-size template"),
-    ("Gen1c.Scalars.size_stmt", "sc_size_main", "DIFF",
+    ("Gen1c.Hand.Checkpoint.size_stmt", "cp_size_main", "SAME", "fixed-size template"),
+    ("Gen1c.Hand.AttestationData.size_stmt", "ad_size_main", "SAME", "fixed-size template"),
+    ("Gen1c.Hand.BitVec.size_stmt", "bv_size_main", "SAME", "fixed-size template"),
+    ("Gen1c.Hand.FixedVec.size_stmt", "fv_size_main", "SAME", "fixed-size template"),
+    ("Gen1c.Hand.Scalars.size_stmt", "sc_size_main", "DIFF",
      "sc_size_main states only pc and rax = 16, without rsp + 8 and memory identity (REPORT section 0 item 2, "
      "astra fix2 review finding 5); the template states the full postcondition"),
-    ("Gen1c.Checkpoint.size_stmt", "ad_size_main", "DIFF", "control: 40 vs 128, must differ"),
+    ("Gen1c.Hand.Checkpoint.size_stmt", "ad_size_main", "DIFF", "control: 40 vs 128, must differ"),
 ]
 IMPORTS = ["Fk.CpSpec", "Fk.AdSpec", "Fk.BvSpec", "Fk.FvSmall", "Fk.ScSize"]
 
@@ -115,7 +115,12 @@ def prepare(work, dwork):
         open(orig_nested, "wb").write(keep)
     res["checks"].append(("emit refuses a checked file changed in place after the check (sha256)",
                           t4.returncode != 0 and "sha256" in t4.stderr + t4.stdout))
-    res["controls_stderr"] = [x.stderr.strip()[-300:] for x in (t1, t2, t3, t4)]
+    # control (R4-S5): a second run into the non-empty output directory is refused, nothing merged
+    before_out = sorted(os.listdir(f"{work}/out"))
+    t5 = run_emit(f"{work}/out", desc_dir, log)
+    res["checks"].append(("emit refuses a non-empty --out (no merge)", t5.returncode != 0 and "not an empty directory" in t5.stderr + t5.stdout
+                          and sorted(os.listdir(f"{work}/out")) == before_out))
+    res["controls_stderr"] = [x.stderr.strip()[-300:].replace(work + "/", "").replace(dwork + "/", "") for x in (t1, t2, t3, t4, t5)]
     m = json.load(open(f"{work}/out/manifest.json"))
     files = sorted(os.listdir(f"{work}/out/{outdir('Checkpoint')}"))
     res["checks"].append(("per-type files", files == ["desc.json", "negative.json", "statements.lean", "witness.json"]))

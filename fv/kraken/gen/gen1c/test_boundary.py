@@ -39,14 +39,18 @@ HAND = [f"{TGT}.{t}" for t in ("Scalars", "FixedVec", "ListU64", "BitVec", "Nest
 PV1 = "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
 
 
-def try_accept(result, ddir, types, mode, th):
+def try_accept(result, ddir, types, mode, th, work=""):
+    """Paths under the work dir are stripped before the reason is cut (R4-S6: byte-reproducible output)."""
     err = io.StringIO()
+    cut = lambda s: (s.replace(work + "/", "") if work else s)[:300]
     try:
         with contextlib.redirect_stderr(err):
             got = emit.accept(result, ddir, types, mode, th)
         return {"accepted": True, "n": len(got), "reason": ""}
     except SystemExit as e:
-        return {"accepted": False, "n": 0, "reason": str(e)[:300]}
+        return {"accepted": False, "n": 0, "reason": cut(str(e))}
+    except Exception as e:   # R4-S4: any other exception is an uncontrolled crash, never "refused"
+        return {"accepted": None, "n": 0, "reason": cut(f"CRASH {type(e).__name__}: {e}")}
 
 
 def desc_dir(path, files):
@@ -75,9 +79,9 @@ def main():
     prysm_out = [f"{t['package']}.{t['name']}" for t in inv["types"] if t["scope"] == "out"]
     rows = []
 
-    def case(cid, group, what, want, result, ddir, types, mode):
-        r = try_accept(result, ddir, types, mode, th)
-        got = "accepted" if r["accepted"] else "refused"
+    def case(cid, group, what, want, result, ddir, types, mode, th=th):
+        r = try_accept(result, ddir, types, mode, th, W)
+        got = {True: "accepted", False: "refused", None: "crash"}[r["accepted"]]
         rows.append({"id": cid, "group": group, "what": what, "expected": want, "actual": got, "reason": r["reason"],
                      "as_expected": got == want})
 
@@ -190,6 +194,35 @@ def main():
     t = open(main_res).read().replace('"expected_key_count": 144', '"expected_key_count": 144.0', 1)
     open(f"{tmp}/x16.result.json", "w").write(t)
     case("x16", "own", "result text with expected_key_count 144.0", "refused", f"{tmp}/x16.result.json", odir, HAND, "hand_case")
+    # review phase1c-r4: R4-S1 (inventory pin), R4-S4 (malformed input ends in SystemExit), R4-S5 (hashed = parsed bytes)
+    th_pin = copy.deepcopy(th)
+    th_pin["sources_sha256"]["fv/kraken/prysm/inventory.json"] = "0" * 64
+    case("x17", "own", "frozen-list inventory pin differs from the committed inventory (result and file agree)", "refused",
+         main_res, odir, HAND, "hand_case", th=th_pin)
+    xdir18 = f"{tmp}/x18"
+    shutil.copytree(f"{W}/orig", xdir18)
+    sd = json.load(open(f"{xdir18}/Scalars.desc.json"))
+    sd.pop("fixed_size")
+    json.dump(sd, open(f"{xdir18}/Scalars.desc.json", "w"), indent=1)
+    h18 = hashlib.sha256(open(f"{xdir18}/Scalars.desc.json", "rb").read()).hexdigest()
+    def f18(d):
+        for r in d["records"]:
+            if r["role"] == "original" and r["type"] == "Scalars" and r["package"] == TGT:
+                r["sha256"], r["path"] = h18, f"{xdir18}/Scalars.desc.json"
+    case("x18", "own", "Scalars without fixed_size, forged record sha256 (only the Desc shape check is left)", "refused",
+         forged("x18", f18), xdir18, HAND, "hand_case")
+    case("x19", "own", "result whose records list holds a number", "refused",
+         forged("x19", lambda d: d["records"].insert(0, 1)), odir, HAND, "hand_case")
+    case("x20", "own", "result whose list field is a string", "refused",
+         forged("x20", lambda d: d.__setitem__("list", "none")), odir, HAND, "hand_case")
+    case("x21", "own", "result whose table_keys holds a string", "refused",
+         forged("x21", lambda d: d["table_keys"].append("x")), odir, HAND, "hand_case")
+    case("x22", "own", "result whose inventory field is a list", "refused",
+         forged("x22", lambda d: d.__setitem__("inventory", [])), odir, HAND, "hand_case")
+    xdir23 = f"{tmp}/x23"
+    shutil.copytree(f"{W}/orig", xdir23)
+    open(f"{xdir23}/ListU64.desc.json", "wb").write(b"\xff\xfe" + open(f"{W}/orig/ListU64.desc.json", "rb").read())
+    case("x23", "own", "a Desc with two non-UTF-8 bytes in front", "refused", main_res, xdir23, HAND, "hand_case")
     bad = [r for r in rows if not r["as_expected"]]
     summary = {"cases": len(rows), "as_expected": len(rows) - len(bad),
                "by_group": {g: sum(r["group"] == g for r in rows) for g in sorted({r["group"] for r in rows})},

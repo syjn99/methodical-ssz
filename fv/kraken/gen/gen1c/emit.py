@@ -7,6 +7,8 @@ Usage:
           [--code-prefix PKGSUFFIX=Prefix,...]
           [--theorems THEOREMS.json]
 
+--out must not exist or be empty (no merge into older output). Lean namespaces: hand types
+Gen1c.Hand.T (code Fk.Code), Prysm types Gen1c.Prysm.<last two package segments>.T (code Fk.PrysmCode).
 Per selected key (package, T) it writes <out>/<package with / -> _>/<T>/:
   desc.json        the producer Desc (checked by gen/desccheck)
   statements.lean  Lean statements as `def ... [Host] : Prop` (no proofs, no sorry);
@@ -106,10 +108,31 @@ def _no_float(x):
     raise ValueError(f"non-integer number form {x!r}")
 
 
-def strict_load(path):
+def strict_parse(raw):
     """JSON with the checker's strictness: no duplicate keys, integers only, no NaN/Infinity."""
-    return json.loads(open(path, "rb").read().decode("utf-8"), object_pairs_hook=_no_dup,
-                      parse_float=_no_float, parse_constant=_no_float)
+    return json.loads(raw.decode("utf-8"), object_pairs_hook=_no_dup, parse_float=_no_float, parse_constant=_no_float)
+
+
+def strict_load(path):
+    return strict_parse(open(path, "rb").read())
+
+
+DESC_KEYS = ("schema", "type", "package", "ssz", "fixed_size", "fixed_part_size", "fields", "variable_order", "reference")
+INVENTORY_PIN_KEY = "fv/kraken/prysm/inventory.json"
+
+
+def check_desc_shape(path, d):
+    """Shape of a Desc read here (R4-S4): every top-level key present, fixed_size an integer or null."""
+    if not isinstance(d, dict):
+        raise SystemExit(f"{path}: not a JSON object")
+    miss = [k for k in DESC_KEYS if k not in d]
+    if miss:
+        raise SystemExit(f"{path}: missing top-level keys {miss}")
+    fs = d["fixed_size"]
+    if not (fs is None or (isinstance(fs, int) and not isinstance(fs, bool) and fs >= 0)):
+        raise SystemExit(f"{path}: fixed_size {fs!r} is not a natural number or null")
+    if not isinstance(d["fields"], list) or not all(isinstance(f, dict) for f in d["fields"]):
+        raise SystemExit(f"{path}: fields is not a list of objects")
 
 
 def pkg_ok(p):
@@ -118,6 +141,14 @@ def pkg_ok(p):
 
 
 def accept(result_path, desc_dir, types, mode, th):
+    """The emit boundary. Any malformed input ends in SystemExit, never in another exception (R4-S4)."""
+    try:
+        return _accept(result_path, desc_dir, types, mode, th)
+    except (KeyError, TypeError, AttributeError, ValueError, IndexError, UnicodeError) as e:
+        raise SystemExit(f"{result_path}: malformed checker result, Desc or arguments ({type(e).__name__}: {e})")
+
+
+def _accept(result_path, desc_dir, types, mode, th):
     """The emit boundary. Returns [(key, desc, path, sha256, record)] or raises SystemExit.
 
     A Desc is accepted only if (1) the checker result has schema RESULT_SCHEMA, verdict OK,
@@ -139,9 +170,12 @@ def accept(result_path, desc_dir, types, mode, th):
     if any(lst.get(k) for k in ("missing", "extra", "unkeyed", "duplicate_keys", "duplicate_paths", "failed_originals")) \
             or lst.get("table_self_check") is not True:
         raise SystemExit(f"{result_path}: list-level findings in an OK result: {lst}")
+    # R4-S1: the result, the working-tree inventory and the pin in the frozen list must agree
     inv_sha = hashlib.sha256(open(INVENTORY, "rb").read()).hexdigest()
-    if res.get("inventory", {}).get("sha256") != inv_sha:
-        raise SystemExit(f"{result_path}: inventory sha256 {res.get('inventory', {}).get('sha256')} != committed {inv_sha}")
+    pin = th["sources_sha256"].get(INVENTORY_PIN_KEY)
+    if res.get("inventory", {}).get("sha256") != inv_sha or inv_sha != pin:
+        raise SystemExit(f"{result_path}: inventory sha256 {res.get('inventory', {}).get('sha256')}, working tree {inv_sha}, "
+                         f"frozen-list pin {pin}: not all equal")
     table = {(k["package"], k["type"]) for k in res.get("table_keys", [])}
     if {k[0] for k in table} - set(HAND_PACKAGES) or len(table) != 9:
         raise SystemExit(f"{result_path}: unexpected table keys {sorted(table)}")
@@ -156,8 +190,10 @@ def accept(result_path, desc_dir, types, mode, th):
     files = {}
     for fn in sorted(os.listdir(desc_dir)):
         path = os.path.join(desc_dir, fn)
+        # R4-S5: read once; the bytes that are hashed are the bytes that are parsed
         try:
-            d = strict_load(path)
+            raw = open(path, "rb").read()
+            d = strict_parse(raw)
         except (OSError, ValueError) as e:
             raise SystemExit(f"{path}: not a strict JSON Desc ({e})")
         if not isinstance(d, dict):
@@ -165,7 +201,7 @@ def accept(result_path, desc_dir, types, mode, th):
         k = (d.get("package"), d.get("type"))
         if k in files:
             raise SystemExit(f"two Descs for {k} in {desc_dir}: {files[k][1]} and {path}")
-        files[k] = (d, path)
+        files[k] = (d, path, hashlib.sha256(raw).hexdigest())
     if not types:
         raise SystemExit("--types is required (explicit pkg.Type list; no implicit selection)")
     want, seen_ns = [], set()
@@ -177,9 +213,10 @@ def accept(result_path, desc_dir, types, mode, th):
             raise SystemExit(f"{q}: no original record in the checker result (unknown key)")
         if k not in files:
             raise SystemExit(f"{q}: no Desc with this key in {desc_dir}")
-        d, path = files[k]
+        d, path, h = files[k]
         r = by_key[k]
-        h = hashlib.sha256(open(path, "rb").read()).hexdigest()
+        if not isinstance(r, dict):
+            raise SystemExit(f"{q}: checker record is not an object")
         if r.get("result") != "PASS":
             raise SystemExit(f"{q}: checker record is {r.get('result')}")
         if r.get("sha256") != h:
@@ -193,6 +230,7 @@ def accept(result_path, desc_dir, types, mode, th):
                 raise SystemExit(f"{q}: prysm mode needs a non-hand key with status NONE and frozen-list rows")
         if not pkg_ok(k[0]):
             raise SystemExit(f"{q}: package is not a plain path")
+        check_desc_shape(path, d)
         if k[1] in seen_ns:
             raise SystemExit(f"{q}: two selected types named {k[1]} (Lean namespace and code name would collide)")
         seen_ns.add(k[1])
@@ -207,9 +245,24 @@ def code_name(t, pkg, prefixes):
     return t
 
 
-def size_stmt(code, n):
+def lean_namespace(mode, pkg, t):
+    """R4-S5: hand types and Prysm types never share a namespace (Gen1c.Hand.T vs Gen1c.Prysm.<pkg>.T)."""
+    if mode == "hand_case":
+        return f"Gen1c.Hand.{t}"
+    seg = "_".join(pkg.split("/")[-2:])
+    if re.fullmatch(r"[A-Za-z][A-Za-z0-9_]*", seg) is None:
+        raise SystemExit(f"{pkg}: no Lean namespace segment")
+    return f"Gen1c.Prysm.{seg}.{t}"
+
+
+# code namespace of the machine-code constants: the hand ELF's code is Fk.Code; Prysm code has none
+# yet and gets its own name so a Prysm statement can never refer to hand code
+CODE_NS = {"hand_case": "Fk.Code", "prysm": "Fk.PrysmCode"}
+
+
+def size_stmt(code, n, code_ns="Fk.Code"):
     return (f"def size_stmt [Host] : Prop :=\n"
-            f"  ∀ (k : Nat) (hk : Fk.Code.{code}SizeSSZ.IsInfixAt Host.prog k) (s : MachineData) (ra : UInt64)\n"
+            f"  ∀ (k : Nat) (hk : {code_ns}.{code}SizeSSZ.IsInfixAt Host.prog k) (s : MachineData) (ra : UInt64)\n"
             f"    (R : DataMem → Prop) (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec) ⋆ R),\n"
             f"    Eventually (step1 Host.exe)\n"
             f"      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = {n} ∧ st.data.regs.rsp = s.regs.rsp + 8\n"
@@ -274,6 +327,8 @@ def main():
                     help="which part of the frozen list the types belong to")
     a = ap.parse_args()
     out = guard_out(a.out)
+    if os.path.exists(out) and (not os.path.isdir(out) or os.listdir(out)):
+        raise SystemExit(f"{out}: exists and is not an empty directory (no merge into older output)")
     api = inc.check_api()
     prefixes = dict(x.split("=", 1) for x in a.code_prefix.split(",") if x)
     th = json.load(open(a.theorems))
@@ -297,17 +352,18 @@ def main():
         os.makedirs(td, exist_ok=True)
         json.dump(d, open(os.path.join(td, "desc.json"), "w"), indent=1)
         code = code_name(t, d["package"], prefixes)
+        ns = lean_namespace(a.obligations, key[0], t)
         lines = [f"-- Generated by fv/kraken/gen/gen1c/emit.py for {d['package']}.{t}. Statements only.",
-                 f"namespace Gen1c.{t}", "open Fk Fk.Code", ""]
+                 f"namespace {ns}", "open Fk Fk.Code" if a.obligations == "hand_case" else "open Fk", ""]
         has_size = d["fixed_size"] is not None
         if has_size:
-            lines.append(size_stmt(code, d["fixed_size"]))
+            lines.append(size_stmt(code, d["fixed_size"], CODE_NS[a.obligations]))
         rows = [r for r in obl if r["type"] == t]
         lines.append("/-! Obligations of the frozen list (gen/frozen/THEOREMS.json) for this type:")
         for r in rows:
             tmpl = "template: size_stmt" if (r["obligation"] == "size" and has_size) else "no template yet (X4)"
             lines.append(f"  {r['id']}: {tmpl}")
-        lines += ["-/", "", f"end Gen1c.{t}", ""]
+        lines += ["-/", "", f"end {ns}", ""]
         open(os.path.join(td, "statements.lean"), "w").write("\n".join(lines))
         json.dump(witness_config(d), open(os.path.join(td, "witness.json"), "w"), indent=1)
         json.dump(negative_cases(t, d, has_size), open(os.path.join(td, "negative.json"), "w"), indent=1)
@@ -346,7 +402,7 @@ def main():
                     manifest["data_items"][iid] = {"kind": "address only", "label": g, "off": 0,
                                                    "file": inc.file_name(iid), "lean": inc.addr_name(iid)}
                 items.append(iid)
-        manifest["types"][f"{key[0]}.{t}"] = {"desc_sha256": dsha, "out": os.path.relpath(td, out), "code_name": code, "files": sorted(os.listdir(td)), "data_items": sorted(set(items)),
+        manifest["types"][f"{key[0]}.{t}"] = {"desc_sha256": dsha, "out": os.path.relpath(td, out), "namespace": ns, "code_name": code, "files": sorted(os.listdir(td)), "data_items": sorted(set(items)),
                                 "obligations": len(rows), "templates": ["size_stmt"] if has_size else []}
     json.dump(manifest, open(os.path.join(out, "manifest.json"), "w"), indent=1)
     print(json.dumps({"types": len(manifest["types"]), "data_items": len(manifest["data_items"]),
