@@ -1,0 +1,550 @@
+{
+ "schema": "fvphase1c.gate-table/1",
+ "counts": {
+  "cells_compared": 54,
+  "equal": 48,
+  "different": 6,
+  "not_compared": 18,
+  "mains_resolved": 60,
+  "mains_with_witness": 58
+ },
+ "rows": [
+  {
+   "type": "Scalars",
+   "hand_row": "Scalars",
+   "derived": {
+    "수용 방향": "EthLib→기계어 (link: sc_unmarshal_accept_spec_k) + EthLib 거부 정리 sc_spec_rejects_bool",
+    "거부 경로 (닫힘 / 남음)": "2/2",
+    "증인": "5 선언",
+    "추상 모델": "없음",
+    "부정 시험": "scbool, scrbword",
+    "조합": "sc_unmarshal_then_marshal (증인 1)",
+    "사후": "UnmarshalSSZ.accept: frame exact; MarshalSSZTo.marshal: frame exact; SizeSSZ.size: no frame"
+   },
+   "hand": {
+    "타입": "Scalars",
+    "수용 방향": "EthLib→기계어 + bool 거부(EthLib 거부 정리 포함)",
+    "거부 경로 (닫힘 / 남음)": "2/2: 크기, bool > 1. 비nil 오류 연결 없음",
+    "증인": "고정(수용, 거부, 마샬, 조합)",
+    "Go 값": "위반 0. 전역 오류 값 미검사",
+    "추상 모델": "없음",
+    "부정 시험": "scbool, scrbword",
+    "조합": "`sc_unmarshal_then_marshal` + WitScComp",
+    "사후": "수용·마샬·bool 거부 정확(마샬 r14 없음). 크기는 반환 값만"
+   },
+   "compare": {
+    "거부 경로 (닫힘 / 남음)": "equal",
+    "추상 모델": "equal",
+    "부정 시험": "equal",
+    "조합": "equal",
+    "수용 방향": "equal",
+    "사후": "size: equal",
+    "증인": "not compared (free text)",
+    "Go 값": "not derivable from Lean (goval)"
+   },
+   "mains": [
+    "sc_accept_main",
+    "sc_marshal_main",
+    "sc_reject_bool_main",
+    "sc_reject_size_main",
+    "sc_size_main",
+    "sc_spec_rejects_bool"
+   ],
+   "witnesses": [
+    "Fk.WitRjScSz.sc_reject_size_runs",
+    "Fk.WitScA.sc_accept_runs",
+    "Fk.WitScM.sc_marshal_runs",
+    "Fk.WitScRB.sc_reject_bool_runs",
+    "Fk.WitSzSc.sc_size_runs"
+   ],
+   "contracts": [],
+   "open_reject_sites": []
+  },
+  {
+   "type": "FixedVec",
+   "hand_row": "FixedVec",
+   "derived": {
+    "수용 방향": "EthLib→기계어 (link: fv_unmarshal_accept_spec_k)",
+    "거부 경로 (닫힘 / 남음)": "1/1",
+    "증인": "5 선언",
+    "추상 모델": "makeslice, memmove",
+    "부정 시험": "loop, control",
+    "조합": "없음",
+    "사후": "UnmarshalSSZ.accept: frame + True; MarshalSSZTo.marshal: frame + True; SizeSSZ.size: memory identity"
+   },
+   "hand": {
+    "타입": "FixedVec",
+    "수용 방향": "EthLib→기계어",
+    "거부 경로 (닫힘 / 남음)": "1/1: 크기",
+    "증인": "고정",
+    "Go 값": "위반 0",
+    "추상 모델": "makeslice, memmove",
+    "부정 시험": "loop, control",
+    "조합": "없음",
+    "사후": "`R` + True. 크기 동일"
+   },
+   "compare": {
+    "거부 경로 (닫힘 / 남음)": "equal",
+    "추상 모델": "equal",
+    "부정 시험": "equal",
+    "조합": "equal",
+    "수용 방향": "equal",
+    "사후": "size: equal",
+    "증인": "not compared (free text)",
+    "Go 값": "not derivable from Lean (goval)"
+   },
+   "mains": [
+    "fv_accept_main",
+    "fv_marshal_main",
+    "fv_marshal_reject_main",
+    "fv_reject_size_main",
+    "fv_size_main"
+   ],
+   "witnesses": [
+    "Fk.WitFv.fv_accept_runs",
+    "Fk.WitFvM.fv_marshal_runs",
+    "Fk.WitFvMR.fv_marshal_reject_runs",
+    "Fk.WitRjFvSz.fv_reject_size_runs",
+    "Fk.WitSzFv.fv_size_runs"
+   ],
+   "contracts": [
+    "MakesliceC",
+    "MemmoveC"
+   ],
+   "open_reject_sites": []
+  },
+  {
+   "type": "ListU64",
+   "hand_row": "ListU64",
+   "derived": {
+    "수용 방향": "EthLib→기계어 (link: lu_unmarshal_accept_spec_k)",
+    "거부 경로 (닫힘 / 남음)": "4/4",
+    "증인": "10 선언",
+    "추상 모델": "convT64, fmt, makeslice",
+    "부정 시험": "offset, maxlen",
+    "조합": "lu_unmarshal_then_marshal (증인 1)",
+    "사후": "UnmarshalSSZ.accept: frame exact; MarshalSSZTo.marshal: frame + True; SizeSSZ.size: memory identity"
+   },
+   "hand": {
+    "타입": "ListU64",
+    "수용 방향": "EthLib→기계어",
+    "거부 경로 (닫힘 / 남음)": "4/4: 짧음, 오프셋, 정렬, 초과",
+    "증인": "0·1·16, 거부 둘",
+    "Go 값": "위반 0. 오류 증인의 타입 자료·전역 미검사",
+    "추상 모델": "makeslice, growslice, convT64(상자), fmt `%d %w`",
+    "부정 시험": "offset, maxlen",
+    "조합": "`lu_unmarshal_then_marshal` + WitLuComp",
+    "사후": "수용 정확, 나머지 `R` + True. 크기 동일"
+   },
+   "compare": {
+    "거부 경로 (닫힘 / 남음)": "equal",
+    "추상 모델": "different: hand ['convT64', 'fmt', 'growslice', 'makeslice'], derived ['convT64', 'fmt', 'makeslice']",
+    "부정 시험": "equal",
+    "조합": "equal",
+    "수용 방향": "equal",
+    "사후": "size: equal",
+    "증인": "not compared (free text)",
+    "Go 값": "not derivable from Lean (goval)"
+   },
+   "mains": [
+    "lu_accept_main",
+    "lu_marshal_main",
+    "lu_marshal_reject_main",
+    "lu_reject_misaligned_main",
+    "lu_reject_offset_main",
+    "lu_reject_short_main",
+    "lu_reject_toobig_main",
+    "lu_size_main"
+   ],
+   "witnesses": [
+    "Fk.WitLuM0.lu_marshal_runs",
+    "Fk.WitLuM1.lu_marshal_runs",
+    "Fk.WitLuM16.lu_marshal_runs",
+    "Fk.WitLuMR.lu_marshal_reject_runs",
+    "Fk.WitLuMa.lu_reject_misaligned_runs",
+    "Fk.WitLuTb.lu_reject_toobig_runs",
+    "Fk.WitRjLuOf.lu_reject_offset_runs",
+    "Fk.WitRjLuSh.lu_reject_short_runs",
+    "Fk.WitSzLu.lu_size_runs",
+    "Fk.Witness.lu_accept_runs"
+   ],
+   "contracts": [
+    "ConvT64C",
+    "FmtErrorfDWC",
+    "MakesliceC"
+   ],
+   "open_reject_sites": []
+  },
+  {
+   "type": "BitVec",
+   "hand_row": "BitVec",
+   "derived": {
+    "수용 방향": "EthLib→기계어 (link: bv_unmarshal_accept_machine)",
+    "거부 경로 (닫힘 / 남음)": "2/2",
+    "증인": "5 선언",
+    "추상 모델": "ValidateBitvector, fmt, makeslice, newobject",
+    "부정 시험": "vbvje, bvnochk",
+    "조합": "bv_unmarshal_then_marshal (증인 0)",
+    "사후": "UnmarshalSSZ.accept: frame exact; MarshalSSZTo.marshal: frame exact; SizeSSZ.size: memory identity"
+   },
+   "hand": {
+    "타입": "BitVec",
+    "수용 방향": "양방향(1바이트)",
+    "거부 경로 (닫힘 / 남음)": "2/2: 크기, 패딩",
+    "증인": "b < 16, 16 ≤ b",
+    "Go 값": "위반 0",
+    "추상 모델": "fmt nil·`%w`, newobject 16",
+    "부정 시험": "vbvje, bvnochk",
+    "조합": "`bv_unmarshal_then_marshal`(증인 없음)",
+    "사후": "수용·마샬 정확. 크기 동일"
+   },
+   "compare": {
+    "거부 경로 (닫힘 / 남음)": "equal",
+    "추상 모델": "different: hand ['fmt', 'newobject'], derived ['fmt', 'makeslice', 'newobject']",
+    "부정 시험": "equal",
+    "조합": "equal",
+    "수용 방향": "different: hand '양방향(1바이트)', derived 'EthLib→기계어 (link: bv_unmarshal_accept_machine)'",
+    "사후": "size: equal",
+    "증인": "not compared (free text)",
+    "Go 값": "not derivable from Lean (goval)"
+   },
+   "mains": [
+    "bv_accept_main",
+    "bv_marshal_main",
+    "bv_reject_padding_main",
+    "bv_reject_size_main",
+    "bv_size_main"
+   ],
+   "witnesses": [
+    "Fk.WitBv.bv_accept_runs",
+    "Fk.WitBvM.bv_marshal_runs",
+    "Fk.WitBvR.bv_reject_padding_runs",
+    "Fk.WitRjBvSz.bv_reject_size_runs",
+    "Fk.WitSzBv.bv_size_runs"
+   ],
+   "contracts": [
+    "FmtErrorfNilC",
+    "FmtErrorfWC",
+    "MakesliceC",
+    "NewobjectC",
+    "VbvAccC",
+    "VbvPadC"
+   ],
+   "open_reject_sites": []
+  },
+  {
+   "type": "BitL",
+   "hand_row": "BitL",
+   "derived": {
+    "수용 방향": "EthLib→기계어 (link: bl_unmarshal_accept_spec_k)",
+    "거부 경로 (닫힘 / 남음)": "3/3",
+    "증인": "9 선언",
+    "추상 모델": "ValidateBitlist, fmt, growslice, memmove",
+    "부정 시험": "gsnum, blmnochk, blrity",
+    "조합": "없음",
+    "사후": "UnmarshalSSZ.accept: frame + True; MarshalSSZTo.marshal: frame exact; SizeSSZ.size: memory identity"
+   },
+   "hand": {
+    "타입": "BitL",
+    "수용 방향": "EthLib→기계어(규칙 동치)",
+    "거부 경로 (닫힘 / 남음)": "3/3: 짧음, 오프셋, ValidateBitlist 오류",
+    "증인": "1, 257바이트 / 2049비트, 꼬리 [0]",
+    "Go 값": "위반 0",
+    "추상 모델": "ValidateBitlist 두 계약(rodata), growslice, memmove, fmt `%w`",
+    "부정 시험": "gsnum, blmnochk, blrity",
+    "조합": "없음",
+    "사후": "`R` 보존. 크기 동일"
+   },
+   "compare": {
+    "거부 경로 (닫힘 / 남음)": "equal",
+    "추상 모델": "equal",
+    "부정 시험": "equal",
+    "조합": "equal",
+    "수용 방향": "equal",
+    "사후": "size: equal",
+    "증인": "not compared (free text)",
+    "Go 값": "not derivable from Lean (goval)"
+   },
+   "mains": [
+    "bl_accept_main",
+    "bl_marshal_main",
+    "bl_marshal_reject_main",
+    "bl_reject_invalid_main",
+    "bl_reject_offset_main",
+    "bl_reject_short_main",
+    "bl_size_main"
+   ],
+   "witnesses": [
+    "Fk.WitBl1.bl_accept_runs",
+    "Fk.WitBl257.bl_accept_runs",
+    "Fk.WitBlM1.bl_marshal_runs",
+    "Fk.WitBlM257.bl_marshal_runs",
+    "Fk.WitBlR.bl_marshal_reject_runs",
+    "Fk.WitBlRI.bl_reject_invalid_runs",
+    "Fk.WitRjBlOf.bl_reject_offset_runs",
+    "Fk.WitRjBlSh.bl_reject_short_runs",
+    "Fk.WitSzBl.bl_size_runs"
+   ],
+   "contracts": [
+    "FmtErrorfWC",
+    "GrowsliceC",
+    "MemmoveC",
+    "ValidateBitlistC",
+    "ValidateBitlistErrC"
+   ],
+   "open_reject_sites": []
+  },
+  {
+   "type": "Nested",
+   "hand_row": "Nested",
+   "derived": {
+    "수용 방향": "EthLib→기계어 (link: ne_unmarshal_accept_spec_k)",
+    "거부 경로 (닫힘 / 남음)": "2/4. 남음: callee-error, callee-error",
+    "증인": "11 선언",
+    "추상 모델": "ListU64 함수 명세, Scalars 함수 명세, makeslice, newobject",
+    "부정 시험": "neoff",
+    "조합": "없음",
+    "사후": "UnmarshalSSZ.accept: frame + True; MarshalSSZTo.marshal: no frame (True); SizeSSZ.size: frame + True"
+   },
+   "hand": {
+    "타입": "Nested",
+    "수용 방향": "EthLib→기계어",
+    "거부 경로 (닫힘 / 남음)": "2/4. 남음: S 오류, L 오류(래핑)",
+    "증인": "0·1·16",
+    "Go 값": "위반 0",
+    "추상 모델": "newobject 24, Scalars·ListU64 함수 명세",
+    "부정 시험": "neoff",
+    "조합": "없음",
+    "사후": "수용 `R` 보존, 마샬 `R` 없음, 크기 `R` 보존"
+   },
+   "compare": {
+    "거부 경로 (닫힘 / 남음)": "equal",
+    "추상 모델": "different: hand ['newobject'], derived ['makeslice', 'newobject']",
+    "부정 시험": "equal",
+    "조합": "equal",
+    "수용 방향": "equal",
+    "사후": "size: equal",
+    "증인": "not compared (free text)",
+    "Go 값": "not derivable from Lean (goval)"
+   },
+   "mains": [
+    "ne_accept_main",
+    "ne_marshal_main",
+    "ne_reject_offset_main",
+    "ne_reject_short_main",
+    "ne_size_main"
+   ],
+   "witnesses": [
+    "Fk.WitNe0.ne_accept_runs",
+    "Fk.WitNe1.ne_accept_runs",
+    "Fk.WitNe16.ne_accept_runs",
+    "Fk.WitNeM0.ne_marshal_runs",
+    "Fk.WitNeM1.ne_marshal_runs",
+    "Fk.WitNeM16.ne_marshal_runs",
+    "Fk.WitNeS0.ne_size_runs",
+    "Fk.WitNeS1.ne_size_runs",
+    "Fk.WitNeS16.ne_size_runs",
+    "Fk.WitRjNeOf.ne_reject_offset_runs",
+    "Fk.WitRjNeSh.ne_reject_short_runs"
+   ],
+   "contracts": [
+    "LuUAccC",
+    "MakesliceC",
+    "NewobjectC",
+    "ScUAccC"
+   ],
+   "open_reject_sites": [
+    "callee-error",
+    "callee-error"
+   ]
+  },
+  {
+   "type": "ListC",
+   "hand_row": "List[container]",
+   "derived": {
+    "수용 방향": "EthLib→기계어 (link: lc_unmarshal_accept_empty_spec_k, lc_unmarshal_accept_spec_k)",
+    "거부 경로 (닫힘 / 남음)": "5/10. 남음: listc-offset-misaligned, list-too-big, listc-offset-past, listc-offset-order, callee-error",
+    "증인": "20 선언",
+    "추상 모델": "ListU64 함수 명세, fmt, makeslice, newobject",
+    "부정 시험": "nilerr",
+    "조합": "없음",
+    "사후": "UnmarshalSSZ.accept: frame + True; MarshalSSZTo.marshal: frame + True; SizeSSZ.size: memory identity"
+   },
+   "hand": {
+    "타입": "List[container]",
+    "수용 방향": "EthLib→기계어",
+    "거부 경로 (닫힘 / 남음)": "5/9. 남음: 정렬, 원소 수(convT64), 원소 오프셋 순서, 원소 디코드 오류",
+    "증인": "바깥 0·1·4, 안쪽 1×1, 4×16, 0·1·16",
+    "Go 값": "위반 0",
+    "추상 모델": "makeslice 두 지점, newobject 16·24, fmt nil, ListU64 함수 명세",
+    "부정 시험": "nilerr",
+    "조합": "없음",
+    "사후": "`R` 보존, 죽은 스택 True. 크기 동일"
+   },
+   "compare": {
+    "거부 경로 (닫힘 / 남음)": "different: hand 5/9, derived 5/10",
+    "추상 모델": "equal",
+    "부정 시험": "equal",
+    "조합": "equal",
+    "수용 방향": "equal",
+    "사후": "size: equal",
+    "증인": "not compared (free text)",
+    "Go 값": "not derivable from Lean (goval)"
+   },
+   "mains": [
+    "lc_accept_empty_main",
+    "lc_accept_main",
+    "lc_marshal_main",
+    "lc_reject_offset_main",
+    "lc_reject_past_main",
+    "lc_reject_short_main",
+    "lc_reject_tail_main",
+    "lc_reject_zero_main",
+    "lc_size_main"
+   ],
+   "witnesses": [
+    "Fk.WitLcA1.lc_accept_runs",
+    "Fk.WitLcA1x1.lc_accept_runs",
+    "Fk.WitLcA4.lc_accept_runs",
+    "Fk.WitLcA4x16.lc_accept_runs",
+    "Fk.WitLcAMix.lc_accept_runs",
+    "Fk.WitLcE.lc_accept_empty_runs",
+    "Fk.WitLcM0.lc_marshal_runs",
+    "Fk.WitLcM1.lc_marshal_runs",
+    "Fk.WitLcM1x1.lc_marshal_runs",
+    "Fk.WitLcM4.lc_marshal_runs",
+    "Fk.WitLcM4x16.lc_marshal_runs",
+    "Fk.WitLcMMix.lc_marshal_runs",
+    "Fk.WitLcP.lc_reject_past_runs",
+    "Fk.WitLcS0.lc_size_runs",
+    "Fk.WitLcS1.lc_size_runs",
+    "Fk.WitLcS4.lc_size_runs",
+    "Fk.WitLcT.lc_reject_tail_runs",
+    "Fk.WitLcZ.lc_reject_zero_runs",
+    "Fk.WitRjLcOf.lc_reject_offset_runs",
+    "Fk.WitRjLcSh.lc_reject_short_runs"
+   ],
+   "contracts": [
+    "FmtErrorfNilC",
+    "LuUAccC",
+    "MakesliceC",
+    "NewobjectC"
+   ],
+   "open_reject_sites": [
+    "listc-offset-misaligned",
+    "list-too-big",
+    "listc-offset-past",
+    "listc-offset-order",
+    "callee-error"
+   ]
+  },
+  {
+   "type": "Checkpoint",
+   "hand_row": "Prysm 축약 Checkpoint",
+   "derived": {
+    "수용 방향": "EthLib→기계어 (link: cp_unmarshal_accept_spec_k)",
+    "거부 경로 (닫힘 / 남음)": "1/1",
+    "증인": "5 선언",
+    "추상 모델": "makeslice, memmove",
+    "부정 시험": "cplen",
+    "조합": "없음",
+    "사후": "UnmarshalSSZ.accept: frame + True; MarshalSSZTo.marshal: frame + True; SizeSSZ.size: memory identity"
+   },
+   "hand": {
+    "타입": "Prysm 축약 Checkpoint",
+    "수용 방향": "EthLib→기계어",
+    "거부 경로 (닫힘 / 남음)": "1/1: 크기",
+    "증인": "고정",
+    "Go 값": "위반 0. `WitCpM` dst 기호 길이 미검사",
+    "추상 모델": "makeslice, memmove",
+    "부정 시험": "cplen",
+    "조합": "없음",
+    "사후": "`R` 보존. 크기 동일"
+   },
+   "compare": {
+    "거부 경로 (닫힘 / 남음)": "equal",
+    "추상 모델": "equal",
+    "부정 시험": "equal",
+    "조합": "equal",
+    "수용 방향": "equal",
+    "사후": "size: equal",
+    "증인": "not compared (free text)",
+    "Go 값": "not derivable from Lean (goval)"
+   },
+   "mains": [
+    "cp_accept_main",
+    "cp_marshal_main",
+    "cp_marshal_reject_main",
+    "cp_reject_size_main",
+    "cp_size_main"
+   ],
+   "witnesses": [
+    "Fk.WitCp.cp_accept_runs",
+    "Fk.WitCpM.cp_marshal_runs",
+    "Fk.WitCpMR.cp_marshal_reject_runs",
+    "Fk.WitRjCpSz.cp_reject_size_runs",
+    "Fk.WitSzCp.cp_size_runs"
+   ],
+   "contracts": [
+    "MakesliceC",
+    "MemmoveC"
+   ],
+   "open_reject_sites": []
+  },
+  {
+   "type": "AttestationData",
+   "hand_row": "Prysm 축약 AttestationData",
+   "derived": {
+    "수용 방향": "EthLib→기계어 (link: ad_unmarshal_accept_spec_k)",
+    "거부 경로 (닫힘 / 남음)": "1/3. 남음: callee-error, callee-error",
+    "증인": "4 선언",
+    "추상 모델": "makeslice, memmove, newobject",
+    "부정 시험": "adcopy",
+    "조합": "없음",
+    "사후": "UnmarshalSSZ.accept: frame + True; MarshalSSZTo.marshal: frame + True; SizeSSZ.size: memory identity"
+   },
+   "hand": {
+    "타입": "Prysm 축약 AttestationData",
+    "수용 방향": "EthLib→기계어",
+    "거부 경로 (닫힘 / 남음)": "1/1: 크기. 하위 Checkpoint 오류 미도달은 정리가 없다",
+    "증인": "고정",
+    "Go 값": "위반 0",
+    "추상 모델": "makeslice, memmove, newobject 32",
+    "부정 시험": "adcopy",
+    "조합": "없음",
+    "사후": "`R` 보존. 크기 동일"
+   },
+   "compare": {
+    "거부 경로 (닫힘 / 남음)": "different: hand 1/1, derived 1/3",
+    "추상 모델": "equal",
+    "부정 시험": "equal",
+    "조합": "equal",
+    "수용 방향": "equal",
+    "사후": "size: equal",
+    "증인": "not compared (free text)",
+    "Go 값": "not derivable from Lean (goval)"
+   },
+   "mains": [
+    "ad_accept_main",
+    "ad_marshal_main",
+    "ad_reject_size_main",
+    "ad_size_main"
+   ],
+   "witnesses": [
+    "Fk.WitAd.ad_accept_runs",
+    "Fk.WitAdM.ad_marshal_runs",
+    "Fk.WitRjAdSz.ad_reject_size_runs",
+    "Fk.WitSzAd.ad_size_runs"
+   ],
+   "contracts": [
+    "MakesliceC",
+    "MemmoveC",
+    "NewobjectC"
+   ],
+   "open_reject_sites": [
+    "callee-error",
+    "callee-error"
+   ]
+  }
+ ]
+}
