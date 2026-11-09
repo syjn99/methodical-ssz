@@ -53,6 +53,12 @@ CASES = [  # id, type, method, designated obligation, old instruction, new instr
     # loop-body mutants (review r6 S4): the first error is inside a generated loop lemma of the obligation
     ("lu-loop-inc", "ListU64", "UnmarshalSSZ", "accept", "lea 0x1(%rax),%r8", "lea 0x2(%rax),%r8"),
     ("lu-mloop-add", "ListU64", "MarshalSSZTo", "marshal", "add $0x8,%rdx", "add $0x10,%rdx"),
+    # reduced Prysm types (anchored hand templates, anchor.py); type "prysm.T" = package target/prysm
+    ("cp-size-imm", "prysm.Checkpoint", "SizeSSZ", "size", "mov $0x28,%eax", "mov $0x29,%eax"),
+    ("cp-accept-st", "prysm.Checkpoint", "UnmarshalSSZ", "accept", "mov %rdx,(%rax)", "mov %rdx,0x8(%rax)"),
+    ("cp-rsize-cmp", "prysm.Checkpoint", "UnmarshalSSZ", "reject_size", "cmp $0x28,%rcx", "cmp $0x29,%rcx"),
+    ("cp-marshal-st", "prysm.Checkpoint", "MarshalSSZTo", "marshal", "mov %r8,-0x8(%rdx,%rbx,1)", "mov %r8,-0x10(%rdx,%rbx,1)"),
+    ("cp-mrej-cmp", "prysm.Checkpoint", "MarshalSSZTo", "marshal_reject", "cmpq $0x20,0x10(%rax)", "cmpq $0x21,0x10(%rax)"),
     # statement mutation (method "stmt"): the generated composition must fail if it claims another length
     ("sc-compose-len", "Scalars", "stmt", "compose", "st'.data.regs.rbx = dlen + 16", "st'.data.regs.rbx = dlen + 17"),
     ("lu-compose-len", "ListU64", "stmt", "compose", "st'.data.regs.rbx.toNat = dlen.toNat + 4 + 8 * n", "st'.data.regs.rbx.toNat = dlen.toNat + 5 + 8 * n"),
@@ -67,6 +73,14 @@ LOOP_LEMMAS = {("ListU64", "accept"): ["loop_iter", "loop_exit", "loop"],
                ("ListC", "reject_item"): ["lcl_itemerr"],
                ("ListC", "marshal"): ["lcm1_iter", "lcm1_loop", "lcm2_iter", "lcm2_loop", "lcm3_iter", "lcm3_exit",
                                       "lcm3_loop", "lcm4_iter", "lcm4_exit", "lcm4_loop"]}
+
+
+def type_key(ty):
+    return f"{T}/{ty}" if ty.startswith("prysm.") else f"{T}.{ty}"
+
+
+def norm_name(ty):
+    return f"target_{ty}" if ty.startswith("prysm.") else f"target.{ty}"
 
 
 def theorem_range(lines, name):
@@ -97,7 +111,7 @@ def prepare(work, result, ddir):
                 lf = os.path.join(work, f"{name}.lean")
                 ns = "Gen1cX4.Neg." + re.sub(r"\W", "_", name)
                 r = subprocess.run([sys.executable, "-I", "-B", os.path.join(HERE, "x4gen.py"), "--desccheck-result", result,
-                                    "--desc-dir", ddir, "--type", f"{T}.{ty}", "--out-lean", lf, "--only", f"accept,marshal,{obl}",
+                                    "--desc-dir", ddir, "--type", type_key(ty), "--out-lean", lf, "--only", f"accept,marshal,{obl}",
                                     "--ns", ns], capture_output=True, text=True)
                 assert r.returncode == 0, r.stderr
                 text = open(lf).read()
@@ -114,7 +128,7 @@ def prepare(work, result, ddir):
                 run.append(f"lake env lean {lf} > {work}/{name}.log 2>&1; echo \"{name} $?\" >> {work}/rc.txt")
             continue
         obl, thm = (obl.split(":") + [obl])[:2]
-        src = open(os.path.join(NORM, f"target.{ty}.{meth}.S")).read()
+        src = open(os.path.join(NORM, f"{norm_name(ty)}.{meth}.S")).read()
         assert src.count("  " + old + "\n") == 1, (cid, old)
         for kind, text in (("mutant", src.replace("  " + old + "\n", "  " + new + "\n")), ("control", src)):
             name = f"{cid}-{kind}"
@@ -123,7 +137,7 @@ def prepare(work, result, ddir):
             lf = os.path.join(work, f"{name}.lean")
             ns = "Gen1cX4.Neg." + re.sub(r"\W", "_", name)
             r = subprocess.run([sys.executable, "-I", "-B", os.path.join(HERE, "x4gen.py"), "--desccheck-result", result,
-                                "--desc-dir", ddir, "--type", f"{T}.{ty}", "--out-lean", lf, "--only", obl, "--ns", ns,
+                                "--desc-dir", ddir, "--type", type_key(ty), "--out-lean", lf, "--only", obl, "--ns", ns,
                                 "--mutant", f"{meth}={sf}"], capture_output=True, text=True)
             assert r.returncode == 0, r.stderr
             lines = open(lf).read().split("\n")

@@ -35,9 +35,22 @@ if sys.argv[1] == "--runs":
     i = next(j for j, l in enumerate(lines) if l.startswith(f"theorem {runs} "))
     while i > 0 and (lines[i - 1].startswith("/--") or lines[i - 1].startswith(" ") or lines[i - 1].startswith("(")):
         i -= 1
-    j = next(j for j in range(i, len(lines)) if lines[j].startswith("example"))
-    while j < len(lines) and lines[j].startswith("example"):
+    j = next(j for j in range(i + 1, len(lines)) if lines[j] and not lines[j][0].isspace()
+             and not lines[j].startswith("theorem " + runs))   # end of the runs theorem
+    end = j
+    while j < len(lines) and not lines[j].strip():
         j += 1
+    if lines[j].startswith("/--"):   # a docstring of the examples
+        while "-/" not in lines[j]:
+            j += 1
+        j += 1
+    if j < len(lines) and lines[j].startswith("example"):   # its examples, if any
+        while j < len(lines) and lines[j].startswith("example"):
+            j += 1
+    else:
+        j = end
+    while lines[j - 1] == "":
+        j -= 1
     block = "\n".join(lines[i:j])
     assert block.count(f"({hand} ") == 1, f"{hand} must be applied once"
     block = block.replace(f"({hand} ", f"({gen} ", 1)

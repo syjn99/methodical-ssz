@@ -13,6 +13,7 @@ Desc와 Go 배치에서 정리 문장을, 기계어 지시 목록에서 증명�
 | `negative.py` | 부정 시험: 기계어 한 줄을 바꾼 사본으로 지정 정리를 다시 돈다. 대조군은 바꾸지 않은 사본 |
 | `run_checks.sh` | gate 안 검사 실행기: build, 비교, 공리, 부정 시험을 메모리 캡 아래 돌리고 첫 실패 코드로 끝난다(리뷰 r5 S4) |
 | `lcacc.py`, `lcacc_tpl.py` | ListC 수용: 항목 루프와 두 수용 경로의 걷기, 그 손 글 틀(5절) |
+| `anchor.py` | 축약 Prysm 타입(바이트 벡터·컨테이너 필드)의 고정 손 틀(6절). 손 모듈에서 틀을 생성 시점에 읽는다 |
 | `verbatim.py` | 생성 정리의 전술 줄 중 손 증명 파일에 글자 그대로 있는 줄 수(INBOX 014 정직성 규칙) |
 | `axioms.py` | `#print axioms`를 프로그램으로 판정(`propext`, `Classical.choice`, `Quot.sound`만) |
 | `lean/Gen1cX4/Support.lean` | 생성 증명이 쓰는 보조정리(손으로 씀, 생성 아님) |
@@ -84,3 +85,19 @@ ListU64 출력은 이 변경 뒤에도 바이트가 같다.
 | reject r8 오프셋 순서 | 생성 증명 통과(시도 1; logs/105는 증인 병렬 재빌드가 메모리 캡에 멈춤, logs/106에서 모듈마다 따로 빌드해 통과), 문장 SAME(`lc_reject_offset_order_main`). `lcacc.py` 항목 루프 걷기의 order 모드: 마지막 항목 `je`의 아닌 갈래, 순서 검사 `jb`(`cmp %r11,%rsi`)를 거부 블록으로 탄다. 블록 모양(convT64 둘, fmt.errorf, jne, retq)을 검사하고 형식 문자열·타입 단어를 API 항목 `lcFmtOrder`, `uint64Type`에 묶는다. 거부 블록 글 전체와 문장은 손 글(`Fk/LcOrder.lean`). 손 글 비율 `lcl_order` 262/266, 주 정리 258/262. 증인 `Gen1cX4.WitLcO`(손 보조정리 `lcFmtOrder_len`을 같은 문장의 생성 `fmt_len_lcFmtOrder`로 바꿈, `witness.py --rename`). 변이 `lc-order-jb`(`lcl_order` 안) |
 | reject r9 원소 오류 | 생성 증명 통과(시도 1, logs/109), 문장 SAME(`lc_reject_item_main`). `lcacc.py` item 모드: 마지막 항목 갈래, 원소 디코더 호출(계약 `LuURejShortC`), 그 뒤 `jne`를 `Items: %w` 거부 블록으로 탄다. 블록 모양을 검사하고 형식 문자열을 API 항목 `lcFmtItems`에 묶는다. 주 정리의 `intro` 줄은 문장의 묶음 이름에서 만든다. 문장, 호출 블록, 거부 블록은 손 글(`Fk/LcItems.lean`). 계약 문장 `LuURejShortC`는 `SupportLc.lean`에 같은 글로(명시 `[Host]`) 다시 씀. 손 글 비율 `lcl_itemerr` 256/259, 주 정리 259/263. 증인 `Gen1cX4.WitLcI`(계약 인스턴스 보조정리 `lu_urej_short_holds`만을 위해 손 모듈 `Fk.LcItems`를 가져온다, `witness.py --extra-import`; logs/110). 변이 `lc-item-jne`(`lcl_itemerr` 안) |
 | marshal(빠른 경로, 루프 넷) | 생성 증명 통과(logs/113; 부정 시험은 생성기 import 결함으로 logs/113에서 4건 모두 기대 밖, 고친 뒤 logs/114에서 4/4), 문장 SAME(`lc_marshal_main`). **다른 ListC 행보다 약하다**: 지시 종류별 걷기가 없다. `lcmarsh.py`는 `MarshalSSZTo.S`의 레이블 위치만 읽고, 손 글의 지시 번호 113개를 (레이블, 오프셋)으로 다시 놓는다. 그 지시마다 손 사례의 명령어 글과 같아야 하고 다르면 거부한다. 문장, 루프 넷(`lcm1..4`), 정의, 전술 글 전체가 손 글(`lcm_tpl.py`, `Fk/LcMarshal.lean`). 손 글 비율 marshal 183/184, 루프 보조정리 100%. 보조 항목(`offTab` 등)은 `SupportLc.lean`에 같은 글. 증인 `WitLcM0/M1/M1x1/M4/M4x16/MMix`(logs/116). 변이 `lc-marshal-len`(marshal 안), `lc-mloop-off`(`lcm2_iter` 안) |
+
+## 6. 축약 Checkpoint (`target/prysm`, Go 1.26.3 ELF의 손 타입)
+
+`results/attempts-checkpoint.json`, `compare-checkpoint.json`, `negative-checkpoint.json`, `axioms-checkpoint.json`.
+**가장 약한 생성 방식이다.** `anchor.py`는 지시 종류별 걷기를 하지 않고, 손 틀 파일도 따로 두지 않는다.
+- 틀: 손 정리와, 그 정리가 이름으로 쓰는 같은 타입 손 모듈의 선언(닫힘)을 생성할 때 그대로 복사한다(`Fk/CpAccept.lean`, `Fk/CpMarshal.lean`, `Fk/CpSpec.lean`). 그 손 모듈은 import하지 않는다.
+- 코드가 정하는 것: 대상 함수의 레이블 위치와, 그로부터 글 안의 모든 지시 번호(`kat`, `klabel`, `k + N`: 손 코드에서 레이블 j + 오프셋 o → 대상에서 레이블 j + o), rip 기호 피연산자(`type__+N` 등, 위치로 짝지음).
+- 검사: 대상 함수 전체를 정규화(자기 레이블 → 순번, 기호 → 첫 사용 순번)해서 손 함수와 같아야 한다. 다르면 처음 다른 지시와 함께 거부한다. 그래서 이 틀은 손 사례와 레이블 배치·기호 주소만 다른 코드에만 맞는다.
+- Desc 문지기(`anchor.desc_gate`): SizeSSZ = `mov $고정크기,%eax`, 디코더 `cmp $고정크기,%rcx`, 바이트 벡터마다 그 길이의 makeslice 하나, 컨테이너 필드마다 newobject 하나, 인코더의 바이트 벡터마다 memmove 하나.
+- 손 글 비율: size 9/10, accept 182/183, reject_size 62/63, marshal 138/139, marshal_reject 90/91줄. 나머지 한 줄은 생성한 `intro` 줄이다.
+
+| 의무 | 상태 |
+| --- | --- |
+| size, accept, reject r1 크기, marshal, marshal_reject r1 | 생성(고정 틀) 증명 통과(시도 1, logs/117), 문장 SAME(`cp_size_main`, `cp_accept_main`, `cp_reject_size_main`, `cp_marshal_main`, `cp_marshal_reject_main`), 대조군 DIFF 4, 공리 표준만(10개 이름), 변이 5개가 지정 정리 안에서 실패·대조군 5개 통과. 증인 `Gen1cX4.WitCpAcc`, `WitCpM`, `WitCpMR`(손 증인의 runs 정리를 `witness.py --runs`로 다시 겨눔, logs/118) |
+| reject_complete | 시도하지 않음: 손 행이 부분이고 EthLib 쪽 정리(`cp_spec_accepts_iff`)뿐이다. 기계어 의무가 아니다 |
+| reject_spec r1, 조합 3행 | 시도하지 않음: 손 정리가 없다 |

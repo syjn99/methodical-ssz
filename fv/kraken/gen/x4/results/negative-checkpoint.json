@@ -1,0 +1,157 @@
+{
+ "schema": "fvphase1c.x4-negative/1",
+ "cases": 10,
+ "as_expected": 10,
+ "rows": [
+  {
+   "id": "cp-size-imm",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.cp_size_imm_mutant.size",
+   "mutation": "'mov $0x28,%eax' -> 'mov $0x29,%eax'",
+   "exit": "1",
+   "first_error": "line 29: unsolved goals",
+   "theorem_lines": [
+    29,
+    40
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/117"
+  },
+  {
+   "id": "cp-size-imm",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.cp_size_imm_control.size",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    29,
+    40
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/117"
+  },
+  {
+   "id": "cp-accept-st",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.cp_accept_st_mutant.accept",
+   "mutation": "'mov %rdx,(%rax)' -> 'mov %rdx,0x8(%rax)'",
+   "exit": "1",
+   "first_error": "line 122: omega could not prove the goal:",
+   "theorem_lines": [
+    71,
+    255
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/117"
+  },
+  {
+   "id": "cp-accept-st",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.cp_accept_st_control.accept",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    71,
+    255
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/117"
+  },
+  {
+   "id": "cp-rsize-cmp",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.cp_rsize_cmp_mutant.reject_size",
+   "mutation": "'cmp $0x28,%rcx' -> 'cmp $0x29,%rcx'",
+   "exit": "1",
+   "first_error": "line 77: omega could not prove the goal:",
+   "theorem_lines": [
+    40,
+    104
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/117"
+  },
+  {
+   "id": "cp-rsize-cmp",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.cp_rsize_cmp_control.reject_size",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    40,
+    104
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/117"
+  },
+  {
+   "id": "cp-marshal-st",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.cp_marshal_st_mutant.marshal",
+   "mutation": "'mov %r8,-0x8(%rdx,%rbx,1)' -> 'mov %r8,-0x10(%rdx,%rbx,1)'",
+   "exit": "1",
+   "first_error": "line 109: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+   "theorem_lines": [
+    65,
+    205
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/117"
+  },
+  {
+   "id": "cp-marshal-st",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.cp_marshal_st_control.marshal",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    65,
+    205
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/117"
+  },
+  {
+   "id": "cp-mrej-cmp",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.cp_mrej_cmp_mutant.marshal_reject",
+   "mutation": "'cmpq $0x20,0x10(%rax)' -> 'cmpq $0x21,0x10(%rax)'",
+   "exit": "1",
+   "first_error": "line 124: omega could not prove the goal:",
+   "theorem_lines": [
+    63,
+    155
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/117"
+  },
+  {
+   "id": "cp-mrej-cmp",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.cp_mrej_cmp_control.marshal_reject",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    63,
+    155
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/117"
+  }
+ ]
+}
