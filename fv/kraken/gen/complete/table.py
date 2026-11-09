@@ -16,7 +16,7 @@ Rules per column (all from the data above, no Lean source text):
   witnesses     witness declarations (resolved: proof uses the main, type has no Host binder)
   contracts     registry contracts in the hypotheses of the type's mains, plus the contracts of
                 function-spec holders (contracts_via)
-  negative      RESULT cases (controls with an identity mutation excluded) whose designated theorem is a main of the type, reaches one
+  negative      RESULT cases (controls, i.e. PASS rows, excluded) whose designated theorem is a main of the type, reaches one
                 (dependent_mains), or is a callee spec whose contract the type's mains assume
   compose       composition theorem resolves; its witnesses
   post          per main: dmem_eq -> memory identity; frame and no True -> frame exact;
@@ -82,9 +82,10 @@ def main():
     for line in open(resp):
         f = [x.strip() for x in line.split("|")]
         if len(f) >= 5:
-            # a case whose mutation leaves the instruction unchanged ('X' -> 'X') is a control, not a negative test
+            # a control (expected and observed PASS: an unchanged or same-value instruction, e.g. 'X' -> 'X'
+            # or '$0x9' -> '$9') is not a negative test
             mu = re.search(r"'([^']*)' -> '([^']*)'", f[1])
-            if mu and mu.group(1) == mu.group(2):
+            if f[4] == "PASS" or (mu and mu.group(1) == mu.group(2)):
                 continue
             neg.append({"case": f[0], "designated": f[2].split(" ")[0], "result": f[4]})
     head, hand = hand_table(report)

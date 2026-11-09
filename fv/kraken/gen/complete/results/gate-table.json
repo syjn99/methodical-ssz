@@ -2,11 +2,11 @@
  "schema": "fvphase1c.gate-table/1",
  "counts": {
   "cells_compared": 54,
-  "equal": 48,
-  "different": 6,
+  "equal": 47,
+  "different": 7,
   "not_compared": 18,
-  "mains_resolved": 68,
-  "mains_with_witness": 59
+  "mains_resolved": 71,
+  "mains_with_witness": 60
  },
  "rows": [
   {
@@ -121,7 +121,7 @@
    "hand_row": "ListU64",
    "derived": {
     "수용 방향": "EthLib→기계어 (link: lu_unmarshal_accept_spec_k)",
-    "거부 경로 (닫힘 / 남음)": "4/4",
+    "거부 경로 (닫힘 / 남음)": "3/4. 남음: size-short",
     "증인": "10 선언",
     "추상 모델": "convT64, fmt, makeslice",
     "부정 시험": "offset, maxlen",
@@ -140,7 +140,7 @@
     "사후": "수용 정확, 나머지 `R` + True. 크기 동일"
    },
    "compare": {
-    "거부 경로 (닫힘 / 남음)": "equal",
+    "거부 경로 (닫힘 / 남음)": "different: hand 4/4, derived 3/4",
     "추상 모델": "different: hand ['convT64', 'fmt', 'growslice', 'makeslice'], derived ['convT64', 'fmt', 'makeslice']",
     "부정 시험": "equal",
     "조합": "equal",
@@ -155,6 +155,7 @@
     "lu_marshal_reject_main",
     "lu_reject_misaligned_main",
     "lu_reject_offset_main",
+    "lu_reject_short_frame",
     "lu_reject_short_main",
     "lu_reject_toobig_main",
     "lu_size_main",
@@ -177,7 +178,9 @@
     "FmtErrorfDWC",
     "MakesliceC"
    ],
-   "open_reject_sites": []
+   "open_reject_sites": [
+    "size-short"
+   ]
   },
   {
    "type": "BitVec",
@@ -369,21 +372,21 @@
    "hand_row": "List[container]",
    "derived": {
     "수용 방향": "EthLib→기계어 (link: lc_unmarshal_accept_empty_spec_k, lc_unmarshal_accept_spec_k)",
-    "거부 경로 (닫힘 / 남음)": "6/10. 남음: listc-offset-misaligned, list-too-big, listc-offset-past, callee-error",
-    "증인": "21 선언",
+    "거부 경로 (닫힘 / 남음)": "7/10. 남음: listc-offset-misaligned, list-too-big, listc-offset-past",
+    "증인": "22 선언",
     "추상 모델": "ListU64 함수 명세, convT64, fmt, makeslice, newobject",
-    "부정 시험": "nilerr, lcorder",
+    "부정 시험": "nilerr, lcorder, lcitems",
     "조합": "없음",
     "사후": "UnmarshalSSZ.accept: frame + True; MarshalSSZTo.marshal: frame + True; SizeSSZ.size: memory identity"
    },
    "hand": {
     "타입": "List[container]",
     "수용 방향": "EthLib→기계어",
-    "거부 경로 (닫힘 / 남음)": "6/10: 짧음, 오프셋, 0 오프셋, 짧은 첫 오프셋 둘, 원소 오프셋 순서(`lc_reject_offset_order_main`, 원소 2개 이상의 첫 쌍). 남음: 정렬(`%d`), 원소 수(`%d %w`), 원소 끝 오프셋 초과(`%d`), 원소 디코드 오류(`%w`)",
-    "증인": "바깥 0·1·4, 안쪽 1×1, 4×16, 0·1·16. 순서 거부: 오프셋 [8, 4](`WitLcO`)",
+    "거부 경로 (닫힘 / 남음)": "7/10: 짧음, 오프셋, 0 오프셋, 짧은 첫 오프셋 둘, 원소 오프셋 순서(`lc_reject_offset_order_main`, 원소 2개 이상의 첫 쌍), 원소 디코드 오류(`lc_reject_item_main`, 원소 1개, 1–3바이트, ListU64의 `ErrSize`). 남음: 정렬(`%d`), 원소 수(`%d %w`), 원소 끝 오프셋 초과(`%d`)",
+    "증인": "바깥 0·1·4, 안쪽 1×1, 4×16, 0·1·16. 순서 거부: 오프셋 [8, 4](`WitLcO`). 원소 오류: [4,0,0,0, 1,2](`WitLcI`)",
     "Go 값": "위반 0",
-    "추상 모델": "makeslice 두 지점, newobject 16·24, fmt nil·`%d %d`(`FmtErrorfDDC`), convT64, ListU64 함수 명세",
-    "부정 시험": "nilerr, lcorder",
+    "추상 모델": "makeslice 두 지점, newobject 16·24, fmt nil·`%d %d`(`FmtErrorfDDC`)·`%w`(`FmtErrorfWC`), convT64, ListU64 함수 명세 둘(`LuUAccC`, `LuURejShortC`)",
+    "부정 시험": "nilerr, lcorder, lcitems",
     "조합": "없음",
     "사후": "`R`과 죽은 스택(`lcStk`) 보존. 크기 동일"
    },
@@ -401,6 +404,7 @@
     "lc_accept_empty_main",
     "lc_accept_main",
     "lc_marshal_main",
+    "lc_reject_item_main",
     "lc_reject_offset_main",
     "lc_reject_offset_order_main",
     "lc_reject_past_main",
@@ -416,6 +420,7 @@
     "Fk.WitLcA4x16.lc_accept_runs",
     "Fk.WitLcAMix.lc_accept_runs",
     "Fk.WitLcE.lc_accept_empty_runs",
+    "Fk.WitLcI.lc_reject_item_runs",
     "Fk.WitLcM0.lc_marshal_runs",
     "Fk.WitLcM1.lc_marshal_runs",
     "Fk.WitLcM1x1.lc_marshal_runs",
@@ -435,6 +440,7 @@
    "contracts": [
     "ConvT64C",
     "FmtErrorfNilC",
+    "FmtErrorfWC",
     "LuUAccC",
     "MakesliceC",
     "NewobjectC"
@@ -442,8 +448,7 @@
    "open_reject_sites": [
     "listc-offset-misaligned",
     "list-too-big",
-    "listc-offset-past",
-    "callee-error"
+    "listc-offset-past"
    ]
   },
   {

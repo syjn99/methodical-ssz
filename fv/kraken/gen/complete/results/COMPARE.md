@@ -1,6 +1,6 @@
 # P5: REPORT 2절 게이트 표의 재생성과 칸별 비교
 
-입력은 해석된 Lean 선언뿐이다(`Complete.lean`, `run_complete.sh`; 마지막 실행: fix3 stage A(`d9cdb40`) 위 rebase 뒤 run `logs/54-complete-r4c.log`, 사본 `complete-log.txt`).
+입력은 해석된 Lean 선언뿐이다(`Complete.lean`, `run_complete.sh`; 마지막 실행: fix3 FINAL(`93b63cd`) 위 rebase 뒤 run `logs/84`(retest-93b63cd의 complete 단계), 사본 `complete-log.txt`).
 역할은 고정 목록(`gen/frozen/THEOREMS.json`)에서 온다. 증인은 "증명 항이 주 정리를 쓰고, 타입에 `Host` 바인더가 없고, 구체 `Host` 인스턴스를 쓰는 선언"이다(3절).
 계약은 등록부의 상수가 가설에 나타나는지로 본다. 함수 명세 계약은 그것을 결론으로 갖는 선언의 계약까지 전파한다.
 재생성 표: `gate-table.md`. 수치와 칸: `gate-table.json`.
@@ -13,12 +13,19 @@
 - 데이터 상수: fix3 `Fk.Data`의 항목을 환경에서 읽는다(`<id>`, `<id>_addr`; 38개) + `StaticBox` = 39(`COMPLETE-DATA 39`). 손 목록은 없앴다(`luTW`는 fix3에서 `intType_addr`로 바뀌어 없어졌다).
 - 부정 시험: 변이가 명령을 바꾸지 않는 사례(`'X' -> 'X'`)는 대조군이다. 부정 시험으로 세지 않는다(`control`, `lcorderctl`).
 
+## 1b. fix3 FINAL 뒤 (rebase 2)
+
+- 해석된 이름 68 → 71(`lc_reject_item_main`, `lu_reject_short_frame`, `lcl_itemerr`), 증인 있음 59 → 60, 환경 `*_main` 56 → 57, 데이터 상수 39 → 41(`lcFmtItems`, `lcFmtItems_addr`).
+- 비교 54칸: 같음 48 → 47, 다름 6 → 7. 새 차이 하나: ListU64 거부 경로 손 4/4, 재생성 3/4. `lu_reject_short_frame`(fix3 새 정리)이 r1 행에 대응되었는데 직접 증인이 없다(함수 명세 `lu_urej_short_holds`가 쓴다). 재생성 규칙(행의 정리마다 직접 증인)은 이것을 닫힘으로 세지 않는다. Scalars의 `sc_reject_bool_err`와 같은 꼴이다.
+- ListC: 거부 경로 6/10 → 7/10(`lc_reject_item_main`, 증인 `WitLcI`), 손 표도 7/10으로 같다. 부정 시험 규칙을 고쳤다: 대조군은 RESULT의 PASS 행이다(`lcitemsctl`의 변이 `$0x9` → `$9`는 같은 값의 다른 철자라 앞의 "같은 글자" 규칙이 놓쳤다). 그래서 ListC 부정 시험은 같음이다.
+
 ## 2. 다른 칸과 원인
 
 | 타입 | 칸 | 손 표 | 재생성 | 원인 |
 | --- | --- | --- | --- | --- |
+| ListU64 | 거부 경로 | 4/4 | 3/4 | rebase 2 뒤 새 차이. `lu_reject_short_frame`에 직접 증인이 없다(1b절) |
 | Scalars | 거부 경로 | 2/2 | 1/2 | rebase 뒤 새 차이. fix3에서 `WitScRB`의 `sc_reject_bool_runs`가 `sc_reject_bool_err`를 쓴다. `sc_reject_bool_main`은 `sc_reject_bool_err`의 증명 안에서만 쓰이고 직접 증인이 없다. 재생성 규칙(행의 정리마다 직접 증인)은 이것을 닫힘으로 세지 않는다. `err`의 가설이 `main`의 가설을 포함하는지는 기계로 보지 않았다 |
-| FixedVec | 부정 시험 | control, loop | loop | 새 규칙: 변이가 명령을 바꾸지 않는 `control`은 대조군이다. 손 표는 그것을 부정 시험으로 적는다(ListC의 `lcorderctl`은 적지 않는다) |
+| FixedVec | 부정 시험 | control, loop | loop | 규칙: 대조군(RESULT의 PASS 행; `control`)은 부정 시험이 아니다. 손 표는 그것을 부정 시험으로 적는다(ListC의 `lcorderctl`은 적지 않는다) |
 | AttestationData | 거부 경로 | 1/1 | 1/3 | Go 소스에는 `Source`·`Target` 하위 오류 두 곳이 있다. 기계어에는 없다: P4 매니페스트에서 `"Source: %w"`, `"Target: %w"`를 디코더 기계어가 참조하지 않는다(인라인 후 도달 불가). 손 표는 기계어 기준, 고정 목록은 Go 소스 기준이다. 이 두 의무는 "기계어에서 도달 불가"를 보이는 형태가 필요하다(X4 결정 사항) |
 | ListU64 | 추상 모델 | growslice 포함 | growslice 없음 | `GrowsliceC`는 `lum_grow_site`(별도 정리, 증인 `WitLuG`)의 가설이다. 주 정리 `lu_marshal_main`의 가설에는 없다. 재생성 규칙은 주 정리만 본다. 손 표가 더 넓다 |
 | Nested | 추상 모델 | newobject + 함수 명세 | + makeslice | `LuUAccC`를 결론으로 갖는 `lu_uacc_holds`가 `MakesliceC`를 가정한다. 함수 명세 아래 계약의 전파(REPORT 7절 4)다. 손 표는 전파하지 않았다 |

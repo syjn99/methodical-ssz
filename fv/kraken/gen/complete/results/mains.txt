@@ -32,6 +32,7 @@ fv_size_main
 Fk.lc_accept_empty_main
 lc_accept_main
 lc_marshal_main
+lc_reject_item_main
 lc_reject_offset_main
 lc_reject_offset_order_main
 lc_reject_past_main
@@ -39,12 +40,14 @@ lc_reject_short_main
 lc_reject_tail_main
 lc_reject_zero_main
 lc_size_main
+lcl_itemerr
 lcl_order
 lu_accept_main
 lu_marshal_main
 lu_marshal_reject_main
 lu_reject_misaligned_main
 lu_reject_offset_main
+lu_reject_short_frame
 lu_reject_short_main
 lu_reject_toobig_main
 lu_size_main
