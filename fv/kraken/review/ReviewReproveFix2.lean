@@ -12,9 +12,9 @@ set_option maxHeartbeats 8000000
 namespace ReviewFix2
 
 -- 1. Joint satisfiability with exactly the arguments the theorems pass.
-example (S : Nat) (ty : BitVec 64) : Fk.Regress.Joint S ty blFmtB vblRO VblMsg luFmtTooBig luTW :=
+example (S : Nat) (ty : BitVec 64) : Fk.Regress.Joint S ty blFmtB vblRO VblMsg luFmtTooBig intType_addr :=
   Fk.Regress.joint_models S ty _ _ _ _ _
-example (S : Nat) (ty : BitVec 64) : Fk.Regress.Joint S ty bvFmtJ bvRO BvMsg luFmtMis luTW :=
+example (S : Nat) (ty : BitVec 64) : Fk.Regress.Joint S ty bvFmtJ bvRO BvMsg luFmtMis intType_addr :=
   Fk.Regress.joint_models S ty _ _ _ _ _
 -- The model satisfies FmtErrorfWC for *every* RO and MsgIn, including ones that
 -- do not put the message bytes anywhere: the contract does not tie MsgIn to RO.

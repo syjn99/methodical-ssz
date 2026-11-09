@@ -44,34 +44,27 @@ def ValidateBitlistC (S : Nat) : Prop :=
           ⋆ Eq (buf.At st.regs.rax.toBitVec) ⋆ F) st'.data.dmem)
       ⟨st, label "ssz.ValidateBitlist"⟩
 
--- "bitlist empty, it does not have length bit" (ssz/unmarshal.go:54)
-def vblMsgE : List UInt8 :=
-  [98, 105, 116, 108, 105, 115, 116, 32, 101, 109, 112, 116, 121, 44, 32, 105, 116, 32, 100, 111, 101, 115, 32, 110, 111, 116, 32, 104, 97, 118, 101, 32, 108, 101, 110, 103, 116, 104, 32, 98, 105, 116]
--- "trailing byte is zero" (ssz/unmarshal.go:65)
-def vblMsgZ : List UInt8 := [116, 114, 97, 105, 108, 105, 110, 103, 32, 98, 121, 116, 101, 32, 105, 115, 32, 122, 101, 114, 111]
--- "too many bits" (ssz/unmarshal.go:77)
-def vblMsgB : List UInt8 := [116, 111, 111, 32, 109, 97, 110, 121, 32, 98, 105, 116, 115]
 
 theorem vblMsgE_len : vblMsgE.length = 42 := by rfl
 theorem vblMsgZ_len : vblMsgZ.length = 21 := by rfl
 theorem vblMsgB_len : vblMsgB.length = 13 := by rfl
 
-/-- The three constant messages of `ssz.ValidateBitlist` in rodata: `go_string._ +
-33605`, `+ 13272`, `+ 5743` (the `lea` operands of the real code;
-`link/check.py` (g) compares the bytes with the ELF and the Go source).
+/-- The three constant messages of `ssz.ValidateBitlist` in rodata, included
+from the ELF (`Fk.Data.vblMsgE`, `vblMsgZ`, `vblMsgB` at their `_addr`, the
+`lea` operands of the real code).
 Read-only: the contract keeps it and its frame `F` is separate from it. -/
 def vblRO : DataMem → Prop :=
-  Eq (vblMsgE.At (label "go_string._" + 33605).toBitVec) ⋆ Eq (vblMsgZ.At (label "go_string._" + 13272).toBitVec)
-    ⋆ Eq (vblMsgB.At (label "go_string._" + 5743).toBitVec)
+  Eq (vblMsgE.At vblMsgE_addr) ⋆ Eq (vblMsgZ.At vblMsgZ_addr)
+    ⋆ Eq (vblMsgB.At vblMsgB_addr)
 
 /-- Where the message of a `ValidateBitlist` error is: one of the three rodata
 messages (`sp` is its address; no heap bytes, `hm = []`), or the `%d` message
 `"unexpected number of bytes, got %d but found %d"`, formatted on the heap (`hm
 = msg`, at most 128 bytes). -/
 def VblMsg (sp : BitVec 64) (msg hm : List UInt8) : Prop :=
-  (hm = [] ∧ ((sp = (label "go_string._" + 33605).toBitVec ∧ msg = vblMsgE)
-    ∨ (sp = (label "go_string._" + 13272).toBitVec ∧ msg = vblMsgZ)
-    ∨ (sp = (label "go_string._" + 5743).toBitVec ∧ msg = vblMsgB)))
+  (hm = [] ∧ ((sp = vblMsgE_addr ∧ msg = vblMsgE)
+    ∨ (sp = vblMsgZ_addr ∧ msg = vblMsgZ)
+    ∨ (sp = vblMsgB_addr ∧ msg = vblMsgB)))
   ∨ (hm = msg ∧ msg.length ≤ 128)
 
 theorem VblMsg.len {sp : BitVec 64} {msg hm : List UInt8} (h : VblMsg sp msg hm) : msg.length ≤ 128 := by

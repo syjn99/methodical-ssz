@@ -1,4 +1,5 @@
 import Fk.Step
+import Fk.Data
 
 /-!
 # Contracts of Go runtime functions (Kraken hypotheses)
@@ -61,18 +62,54 @@ def MemmoveC (S : Nat) : Prop :=
           ⋆ Eq (src.At st.regs.rbx.toBitVec) ⋆ Eq (src.At st.regs.rax.toBitVec) ⋆ F) st'.data.dmem)
       ⟨st, label "runtime.memmove"⟩
 
-/-- The 8-byte entry `v` of Go's read-only `runtime.staticuint64s` table
-(`staticuint64s[v] = v`), for v < 256; nothing otherwise. The table bytes in the
-ELF are checked by `link/check.py` (h). -/
+/-- The 8-byte entry `v` of Go's read-only `runtime.staticuint64s` table, for
+v < 256; nothing otherwise. The bytes are the included ELF table
+(`Fk.Data.staticuint64s`); `staticBox_of_lt` shows that the entry holds v. -/
 def StaticBox (v : BitVec 64) : DataMem → Prop :=
-  if v.toNat < 256 then Eq ((Int.toBytes 8 v.toInt).At ((label "runtime.staticuint64s").toBitVec + 8 * v))
+  if v.toNat < 256 then Eq (((Data.staticuint64s.drop (8 * v.toNat)).take 8).At (Data.staticuint64s_addr + 8 * v))
   else Eq (([] : List UInt8).At 0)
+
+omit [Host] in
+/-- The k-byte chunk i of a concatenation of k-byte chunks. -/
+theorem flatMap_range_chunk {α : Type} (f : Nat → List α) (k : Nat) (hf : ∀ j, (f j).length = k) :
+    ∀ n i, i < n → (((List.range n).flatMap f).drop (k * i)).take k = f i := by
+  have hl : ∀ m, ((List.range m).flatMap f).length = k * m := by
+    intro m
+    induction m with
+    | zero => simp
+    | succ m ih => rw [List.range_succ, List.flatMap_append, List.length_append, ih]; simp [hf, Nat.mul_succ]
+  intro n
+  induction n with
+  | zero => intro i h; omega
+  | succ n ih =>
+    intro i hi
+    have hlen := hl n
+    rw [List.range_succ, List.flatMap_append, List.flatMap_singleton]
+    rcases Nat.lt_or_ge i n with h | h
+    · rw [List.drop_append_of_le_length (by rw [hlen]; exact Nat.mul_le_mul_left k (Nat.le_of_lt h)),
+        List.take_append_of_le_length (by rw [List.length_drop, hlen, ← Nat.mul_sub]; exact Nat.le_mul_of_pos_right k (by omega)), ih i h]
+    · have : i = n := by omega
+      subst this
+      rw [List.drop_append_of_le_length (by rw [hlen]; omega), List.drop_eq_nil_of_le (by rw [hlen]; omega), List.nil_append,
+        List.take_of_length_le (by rw [hf]; omega)]
+
+omit [Host] in
+/-- The table entry v (v < 256) is the 8-byte value v. -/
+theorem staticuint64s_entry (v : BitVec 64) (h : v.toNat < 256) :
+    (Data.staticuint64s.drop (8 * v.toNat)).take 8 = Int.toBytes 8 v.toInt := by
+  rw [Data.staticuint64s_table, flatMap_range_chunk _ 8 (fun _ => Int.toBytes_length _ _) 256 _ h]
+  congr 1
+  rw [BitVec.toInt_eq_toNat_of_lt (by omega)]
+
+theorem staticBox_of_lt {v : BitVec 64} (h : v.toNat < 256) :
+    StaticBox v = Eq ((Int.toBytes 8 v.toInt).At (Data.staticuint64s_addr + 8 * v)) := by
+  rw [StaticBox, if_pos h, staticuint64s_entry v h]
 
 /-- Where `convT64`'s box `bx` of the value `v` is: in the static table (`hb = []`,
 v < 256, bx = staticuint64s + 8v; the bytes are in `StaticBox v`) or in 8 heap
 bytes `hb = v` at bx. -/
 def BoxIn (bx v : BitVec 64) (hb : List UInt8) : Prop :=
-  (hb = [] ∧ v.toNat < 256 ∧ bx = (label "runtime.staticuint64s").toBitVec + 8 * v) ∨ hb = Int.toBytes 8 v.toInt
+  (hb = [] ∧ v.toNat < 256 ∧ bx = Data.staticuint64s_addr + 8 * v) ∨ hb = Int.toBytes 8 v.toInt
 
 /-- `runtime.convT64(v uint64) unsafe.Pointer` (rax = v; Go 1.26.3
 runtime/iface.go): returns a pointer to a box of v. For v < 256 Go returns
@@ -138,7 +175,7 @@ def ErrStr (e sp : BitVec 64) (msg : List UInt8) : DataMem → Prop :=
 
 /-- `FmtErrorfWC Heap fs RO MsgIn S`: the internal `fmt.errorf` for one fixed format
 `fs` with one `%w` verb (the generated `"J: %w"`, `"B: %w"`; the theorems name
-the constant, `link/check.py` (g) compares it with the ELF and the Go source)
+the included ELF bytes `Fk.Data.bvFmtJ`, `Fk.Data.blFmtB`)
 and one argument: an `*errors.errorString` error, type word `ity` (the word at
 `itab + 8` of the errorString itab, read there by the code), data word `e`. The
 object `ErrObj e sp msg` and the message are in the footprint: `MsgIn sp msg hm`
@@ -174,8 +211,8 @@ def FmtErrorfWC (Heap : Nat → DataMem → Prop) (fs : List UInt8) (RO : DataMe
 
 /-- `FmtErrorfDWC Heap fs tw S`: the internal `fmt.errorf` for one fixed format `fs`
 with `%d` then `%w` (the two ListU64 formats) and two arguments: an `int` box
-(type word `tw`, the theorems fix it to the ELF's `type:int` descriptor, checked
-by `link/check.py` (h); data word `bx`, the `convT64` box of `v`, its bytes in
+(type word `tw`, the theorems fix it to `Fk.Data.intType_addr`, the ELF's
+`type:int` descriptor, `Fk.Data.intType_size_kind`); data word `bx`, the `convT64` box of `v`, its bytes in
 `StaticBox v` or `hb`: `BoxIn bx v hb`) and an `*errors.errorString` error (type
 word `ity` at `itab + 8`, data word `e`, `ErrStr e sp msg`). Budget from the
 format and the arguments: `fs.length + 20 + msg.length + 8192 ≤ avail` (at most

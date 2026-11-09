@@ -4,7 +4,8 @@
 Usage: check.py <outdir>      (outdir = fv/kraken/link/out, after build.sh)
        check.py --selftest <outdir>
 
-Inputs in <outdir>: p1bin-amd64 (ELF), target.objdump, p1bin-amd64.nm, norm/*.S.
+Inputs in <outdir>: p1bin-amd64 (ELF), target.objdump, p1bin-amd64.nm, norm/*.S,
+data/*.data (link/data.py).
 Writes <outdir>/RESULT. Exit status 1 on any failure.
 
 Checks:
@@ -28,24 +29,15 @@ Checks:
      bytes as a nop (1b-fix X6: a `retq` there used to pass).
  (e) all.S has the same directives as the per-function .S files, in order
      (instructions included, not only labels).
- (g) format strings that the proofs fix. Lean text is read with comments
-     removed by a scanner that knows string literals. A definition in FMTS is
-     the only one of its name and is exactly `def n : List UInt8 := [..]` up
-     to the next command. For every `<name>.At (label "go_string._" + off)`
-     (any whitespace) the ELF bytes at `go_string._+off` equal the Lean byte
-     list, and the Go source has a `fmt.Errorf` call (go/parser, golits.go)
-     whose literal has the same bytes; strings fixed by length only (FMTLEN)
-     are a whole Go literal in the ELF. Every `go_string._` reference in every
-     Fk/*.lean is classified by declaration role (theorem over every Host or
-     witness on one concrete host); a reference that is not a checked
-     placement, a checked pointer, or witness fill/label fails.
- (h) runtime data that the contracts fix (fix 2 X4): `luTW` (the `%d` type
-     word) is an abi.Type of size 8 and kind Int; the errorString itab's type
-     word points to an abi.Type of kind Pointer; `runtime.staticuint64s` is
-     the 2048-byte table of uint64 0..255 that `StaticBox` reads.
+ (f) every data file data/<id>.data that Lean includes (Fk/Data.lean,
+     `data_include`): its `at <label> <off>` names one ELF symbol; the file's
+     `bytes` are the ELF file bytes there, and each `word <s> <o>` is the
+     8-byte little-endian value address(s) + o at its position. This replaces
+     the checks of hand-written Lean constants and of Go source literals
+     (fix 3 X2): the proofs use the included bytes, nothing else.
 The bundle hash (sha256 over RESULT up to and including the last PASS line,
-which covers the ELF, the .S files, Code.lean and AXIOMS.txt hashes) is the
-last line.
+which covers the ELF, the .S files, the data files, Code.lean and AXIOMS.txt
+hashes) is the last line.
 """
 import hashlib
 import importlib.util
@@ -61,134 +53,6 @@ HERE = pathlib.Path(__file__).resolve().parent
 spec = importlib.util.spec_from_file_location("conv", HERE / "conv.py")
 conv = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(conv)
-
-
-# (g): format strings fixed by the reject proofs: (Lean file that defines the
-# byte list, Lean name, Go source file relative to the repository root). The
-# ELF offset is read from every `<name>.At (label "go_string._" + off)` in the
-# Lean sources, so a proof that names a stale offset fails here.
-# The last field says whether the proofs use the string with FmtErrorfNilC
-# (no arguments), which needs the format to have no `%`.
-FMTS = [("LcReject.lean", "lcFmtZero", "fv/kraken/target/types1b.ssz.go", True),
-        ("LcReject.lean", "lcFmtShort", "fv/kraken/target/types1b.ssz.go", True),
-        ("Vbv.lean", "vbvFmt", "ssz/unmarshal.go", True),
-        ("BvSpec.lean", "bvFmtJ", "fv/kraken/target/types1b.ssz.go", False),
-        ("BlMarshal.lean", "blFmtB", "fv/kraken/target/types1b.ssz.go", False),
-        # fix 2 X5: the rodata messages of ssz.ValidateBitlist (vblRO)
-        ("Vbl.lean", "vblMsgE", "ssz/unmarshal.go", True),
-        ("Vbl.lean", "vblMsgZ", "ssz/unmarshal.go", True),
-        ("Vbl.lean", "vblMsgB", "ssz/unmarshal.go", True),
-        # fix 2 X4: the ListU64 formats are constants (no longer length only)
-        ("LuRejectCall.lean", "luFmtTooBig", "fv/kraken/target/types.ssz.go", False),
-        ("LuRejectCall.lean", "luFmtMis", "fv/kraken/target/types.ssz.go", False)]
-# (g): format strings that a statement places by length only (any bytes `fs`
-# with `fs.length = n`): (Lean file, go_string._ offset, n, Go source file).
-# The ELF bytes there must be a whole fmt.Errorf literal of the Go source.
-FMTLEN = []  # fix 2 X4: every format string the proofs use is a constant in FMTS
-
-
-def strip_lean_comments(txt):
-    """Lean text with `--` line comments and nested `/- -/` block comments
-    replaced by spaces (newlines kept). A scanner with string state: inside a
-    string literal `"..."` (with `\\` escapes) or a char literal, `/-` and `--`
-    are text (astra reprove-fix finding 1)."""
-    out, i, n = [], 0, len(txt)
-    while i < n:
-        c = txt[i]
-        if c == '"':
-            j = i + 1
-            while j < n and txt[j] != '"':
-                j += 2 if txt[j] == "\\" else 1
-            need(j < n, "(lean) unterminated string literal")
-            out.append(txt[i:j + 1]); i = j + 1
-        elif c == "'" and (i == 0 or not (txt[i - 1].isalnum() or txt[i - 1] in "_'.!?")):
-            m = re.match(r"'(\\.[^']*|[^'\\])'", txt[i:])
-            k = m.end() if m else 1
-            out.append(txt[i:i + k]); i += k
-        elif txt.startswith("--", i):
-            j = txt.find("\n", i)
-            j = n if j < 0 else j
-            out.append(" " * (j - i)); i = j
-        elif txt.startswith("/-", i):
-            depth, j = 1, i + 2
-            while j < n and depth:
-                if txt.startswith("/-", j):
-                    depth, j = depth + 1, j + 2
-                elif txt.startswith("-/", j):
-                    depth, j = depth - 1, j + 2
-                else:
-                    j += 1
-            need(not depth, "(lean) unterminated block comment")
-            out.append(re.sub(r"[^\n]", " ", txt[i:j])); i = j
-        else:
-            out.append(c); i += 1
-    return "".join(out)
-
-
-GS_REF = re.compile(r'(?:(?P<z>\(z (?P<n>\d+)\))|(?P<name>[A-Za-z_][A-Za-z0-9_]*))\.At\s*\(\s*label\s+"go_string\._"\s*\+\s*(?P<off>\d+)\s*\)'
-                    r'|label\s+"go_string\._"\s*\+\s*(?P<poff>\d+)\s*\)'
-                    r'|(?P<lab>\.label\s+"go_string\._"|\btheorem\s+label_gs\s*:\s*label\s+"go_string\._"\s*=)')
-DECL = re.compile(r"^(?:@\[[^\]]*\]\s*)?(?:(?:private|protected|public|noncomputable)\s+)*"
-                  r"(theorem|lemma|def|abbrev|instance|example)\b\s*([^\s:(\[{]*)", re.M)
-
-
-def lean_gs_refs(src):
-    """Every go_string._ reference in comment-free Lean sources, with its kind
-    (place, fill, ptr, label), format name, offset, enclosing declaration and
-    role. A module is a witness module if it builds a concrete host
-    (`instance host : Host := mkHost`); a declaration there is a witness unless
-    it takes `[Host]` (then it is a theorem over every host)."""
-    out = []
-    for fname, txt in src.items():
-        wmod = re.search(r"^instance host : Host := mkHost", txt, re.M) and not re.search(r"^variable \[Host\]", txt, re.M)
-        decls = [(m.start(), m[2] or m[1]) for m in DECL.finditer(txt)]
-        covered = set()
-        for m in GS_REF.finditer(txt):
-            covered |= set(range(m.start(), m.end()))
-            d = [x for x in decls if x[0] <= m.start()]
-            dstart, dname = d[-1] if d else (0, "-")
-            head = txt[dstart:txt.find(":=", dstart) if ":=" in txt[dstart:] else len(txt)]
-            role = "witness" if wmod and "[Host]" not in head else "theorem"
-            kind = "label" if m["lab"] else "fill" if m["z"] else "place" if m["name"] else "ptr"
-            if kind == "ptr" and re.search(r"\.At\s*\(\s*$", txt[max(0, m.start() - 40):m.start()]):
-                kind = "place-unknown"  # bytes of an unparsed expression placed at go_string._+off
-            off = int(m["off"] or m["poff"]) if (m["off"] or m["poff"]) else None
-            out.append(dict(file=fname, line=txt.count("\n", 0, m.start()) + 1, decl=dname, role=role,
-                            kind=kind, name=m["name"], off=off))
-        for m in re.finditer(r"go_string", txt):
-            if m.start() not in covered:
-                out.append(dict(file=fname, line=txt.count("\n", 0, m.start()) + 1, decl="?", role="?",
-                                kind="unparsed", name=None, off=None))
-    return out
-
-
-def lean_bytes(src, lfile, ldef):
-    """The byte list of `def <ldef> : List UInt8 := [..]`: the only definition
-    of that name in Fk/*.lean, in lfile, the whole (comment-free) line, and the
-    next non-blank line starts a new command (no suffix such as `|>.map f`)."""
-    defs = [(f, m) for f, t in src.items() for m in re.finditer(r"\bdef\s+" + re.escape(ldef) + r"\b", t)]
-    need(len(defs) == 1 and defs[0][0] == lfile, f"(g) {ldef}: {len(defs)} definitions, want one in {lfile}")
-    txt = src[lfile]
-    ls = txt[defs[0][1].start():].split("\n")
-    k = 1 + next((i for i, l in enumerate(ls[1:]) if l.strip() and not l[0].isspace()), len(ls) - 1)
-    m = re.fullmatch(r"def " + re.escape(ldef) + r" : List UInt8 :=\s*\[(\d+(?:,\s*\d+)*)\]\s*", "\n".join(ls[:k]))
-    need(m, f"(g) {ldef}: the definition is not exactly `def {ldef} : List UInt8 := [n, ...]` up to the next command")
-    nxt = ls[k] if k < len(ls) else ""
-    need(re.match(r"(theorem|lemma|def|abbrev|instance|example|end|namespace|section|open|set_option|@\[|"
-                  r"private|protected|public|noncomputable|variable|/--|#)\b", nxt) or nxt.startswith(("@[", "/--")),
-         f"(g) {ldef}: the line after the definition does not start a new command: {nxt!r}")
-    return bytes(int(x) for x in m[1].split(","))
-
-
-def go_literals(root, files):
-    """{file: [(line, value)]}: first string argument of every fmt.Errorf call
-    (go/parser, link/golits.go)."""
-    env = dict(__import__("os").environ)
-    env["GOROOT"] = subprocess.check_output(["go", "env", "GOROOT"], text=True).strip()
-    js = subprocess.check_output(["go", "run", str(HERE / "golits.go"), "--"] + [str(root / f) for f in files],
-                                 text=True, env=env)
-    got = __import__("json").loads(js)
-    return {f: [(x["line"], x["value"]) for x in got[str(root / f)]] for f in files}
 
 
 class Fail(Exception):
@@ -283,7 +147,7 @@ def parse_S(path):
     return out
 
 
-def run(outdir, log, lean=None, fmts=None, goroot=None):
+def run(outdir, log):
     outdir = pathlib.Path(outdir)
     elf = outdir / "p1bin-amd64"
     b, secs, esyms = read_elf(elf)
@@ -395,78 +259,31 @@ def run(outdir, log, lean=None, fmts=None, goroot=None):
          next((f" (first at directive {i}: {x} vs {y})" for i, (x, y) in enumerate(zip(allS, want)) if x != y),
               f" (lengths {len(allS)} vs {len(want)})"))
     log(f"PASS (e) all.S: {len(allS)} directives equal the {len(per_fn)} function files in order")
-    lean = pathlib.Path(lean or HERE.parent / "lean")
-    # (g) format strings: ELF rodata = Go source literal = Lean byte list.
-    g = "go_string._"
-    gsa = esyms[orig(g)][0]
-    src = {q.name: strip_lean_comments(q.read_text()) for q in sorted((lean / "Fk").glob("*.lean"))}
-    root = pathlib.Path(goroot or HERE.parent.parent.parent)
-    fmts = FMTS if fmts is None else fmts
-    lits = go_literals(root, sorted({x[2] for x in fmts} | {x[3] for x in FMTLEN}))
-    refs = lean_gs_refs(src)
-    names = {x[1] for x in fmts}
-    lenplaces = {(x[0], x[1]) for x in FMTLEN}
-    checked = set()
-    for lfile, ldef, gofile, nopct in fmts:
-        lb = lean_bytes(src, lfile, ldef)
-        lines = [l for l, v in lits[gofile] if v.encode() == lb]
-        need(lines, f"(g) {gofile} has no fmt.Errorf literal (go/parser) equal to Lean {ldef}")
-        need(not nopct or b"%" not in lb, f"(g) {ldef} has a %")
-        offs = sorted({r["off"] for r in refs if r["name"] == ldef})
-        need(offs, f"(g) no Lean statement places {ldef} at go_string._+off")
-        for off in offs:
-            eb = elf_bytes(b, secs, gsa + off, len(lb))
-            need(lb == eb, f"(g) {ldef}: Lean {lb!r} ELF {g}+{off} {eb!r}")
-            log(f"PASS (g) {g}+{off} ({len(lb)} bytes) = Lean {ldef} = {gofile} lines {lines}")
-        checked |= set(offs)
-    for lfile, off, n, gofile in FMTLEN:
-        need(any(r["file"] == lfile and r["off"] == off and r["name"] == "fs" for r in refs),
-             f"(g) {lfile} does not place a string at {g}+{off}")
-        eb = elf_bytes(b, secs, gsa + off, n)
-        lines = [l for l, v in lits[gofile] if v.encode() == eb]
-        need(lines, f"(g) ELF {g}+{off} ({n} bytes) {eb!r} is not a fmt.Errorf literal (go/parser) of {gofile}")
-        checked.add(off)
-        log(f"PASS (g) {g}+{off} ({n} bytes, length only in {lfile}) = {gofile} lines {lines}")
-    # Inventory by declaration role (astra reprove-fix finding 2), over every
-    # Fk/*.lean: a theorem (a declaration over every Host) may name go_string._
-    # only at a checked offset, with a checked format name or as a pointer
-    # value; a witness (a declaration about one concrete host) may also place
-    # zero fill bytes `(z n)` there and name the label itself. Any other form,
-    # and any go_string._ text the parser does not read, fails.
-    bad = []
-    for r in refs:
-        k, role, off = r["kind"], r["role"], r["off"]
-        ok = (k == "place" and (r["name"] in names or (r["file"], off) in lenplaces and r["name"] == "fs")
-              or k == "ptr" and off in checked
-              or k == "fill" and role == "witness"
-              or k == "label" and role == "witness")
-        if not ok:
-            bad.append(f'{r["file"]}:{r["line"]} {r["decl"]} ({role}) {k} {r["name"] or ""} {off if off is not None else ""}'.strip())
-    need(not bad, f"(g) go_string._ references not checked: {bad}")
-    log(f"PASS (g) inventory: {len(refs)} go_string._ references in {len({r['file'] for r in refs})} files, "
-        f"checked offsets {sorted(checked)}; witness fill and label references: "
-        f"{sum(r['kind'] in ('fill', 'label') for r in refs)}")
-    # (h) runtime data the contracts fix (fix 2 X4): the int type word of the
-    # `%d` argument, the errorString itab's type word, the static box table.
-    luTW = re.search(r'def luTW : BitVec 64 := \(label "type__" \+ (\d+)\)\.toBitVec', src["LuRejectCall.lean"])
-    need(luTW, "(h) Lean luTW is not `(label \"type__\" + n).toBitVec`")
-    ta = esyms[orig("type__")][0] + int(luTW[1])
-    tsize, = struct.unpack("<Q", elf_bytes(b, secs, ta, 8))
-    tkind = elf_bytes(b, secs, ta + 23, 1)[0] & 0x1f
-    need((tsize, tkind) == (8, 2), f"(h) type__+{luTW[1]}: abi.Type size {tsize} kind {tkind}, want 8 and 2 (Int)")
-    log(f"PASS (h) luTW = type__+{luTW[1]} = {ta:#x}: abi.Type Size_ 8, Kind_ 2 (int)")
-    it = esyms[orig("go_itab._errors.errorString_error")][0]
-    tw, = struct.unpack("<Q", elf_bytes(b, secs, it + 8, 8))
-    pk = elf_bytes(b, secs, tw + 23, 1)[0] & 0x1f
-    need(pk == 22 and struct.unpack("<Q", elf_bytes(b, secs, tw, 8))[0] == 8,
-         f"(h) errorString itab+8 -> {tw:#x}: kind {pk}, want 22 (Pointer)")
-    log(f"PASS (h) go_itab._errors.errorString_error+8 = {tw:#x}: abi.Type Size_ 8, Kind_ 22 (pointer, *errors.errorString)")
-    need("runtime.staticuint64s" in esyms and esyms["runtime.staticuint64s"][1] == 2048, "(h) runtime.staticuint64s: no 2048-byte symbol")
-    sa = esyms["runtime.staticuint64s"][0]
-    need(elf_bytes(b, secs, sa, 2048) == b"".join(struct.pack("<Q", i) for i in range(256)),
-         "(h) runtime.staticuint64s is not [0, 1, ..., 255] as uint64")
-    need('(label "runtime.staticuint64s").toBitVec + 8 * v' in src["Contracts.lean"], "(h) StaticBox does not use staticuint64s + 8 v")
-    log(f"PASS (h) runtime.staticuint64s = {sa:#x}: 2048 bytes = uint64 0..255 (StaticBox v at + 8 v)")
+    # (f) data files = ELF bytes (fix 3 X2)
+    datas = sorted((outdir / "data").glob("*.data"))
+    need(datas, "(f) no data files in data/")
+    for p in datas:
+        at, pos, n_b, n_w = None, 0, 0, 0
+        for line in p.read_text().splitlines():
+            w = line.split()
+            if not w or w[0].startswith("#"):
+                continue
+            if w[0] == "at" and len(w) == 3 and at is None and pos == 0:
+                at = esyms[orig(w[1])][0] + int(w[2])
+            elif w[0] == "bytes" and at is not None:
+                bs = bytes(int(x, 16) for x in w[1:])
+                need(all(len(x) == 2 for x in w[1:]) and elf_bytes(b, secs, at + pos, len(bs)) == bs,
+                     f"(f) {p.name}: bytes at {at + pos:#x} differ from the ELF")
+                pos += len(bs); n_b += len(bs)
+            elif w[0] == "word" and len(w) == 3 and at is not None:
+                v, = struct.unpack("<Q", elf_bytes(b, secs, at + pos, 8))
+                need(v == esyms[orig(w[1])][0] + int(w[2]),
+                     f"(f) {p.name}: word at {at + pos:#x} is {v:#x}, not {w[1]}+{w[2]}")
+                pos += 8; n_w += 1
+            else:
+                need(False, f"(f) {p.name}: bad directive {line!r}")
+        need(at is not None, f"(f) {p.name}: no `at` directive")
+        log(f"PASS (f) {p.name}: {at:#x}, {n_b} bytes and {n_w} words = ELF")
     # (d) reassembly
     diffs = reassemble(per_fn, {g.split("+")[0]: orig(g.split("+")[0]) for g in externals}, esyms, b, secs, outdir)
     for name, a, kind, orig, new, txt in diffs:
@@ -570,6 +387,8 @@ def main(outdir):
     log(f"elf sha256 {sha(outdir / 'p1bin-amd64')}")
     for p in sorted((outdir / "norm").glob("*.S")):
         log(f"S sha256 {sha(p)} {p.name}")
+    for p in sorted((outdir / "data").glob("*.data")):
+        log(f"data sha256 {sha(p)} {p.name}")
     for p in [lean / "Fk" / "Code.lean", HERE.parent / "AXIOMS.txt"]:
         if p.exists():
             log(f"file sha256 {sha(p)} {p.relative_to(HERE.parent)}")
@@ -623,80 +442,28 @@ def selftest(outdir):
         t = copy(); p = t / "norm" / "all.S"
         p.write_text(p.read_text().replace("cmp $0x10,%rcx", "cmp $0x11,%rcx", 1))
         cases.append(("all.S instruction changed", t, False))
-        # Lean-side mutations run on a copy of lean/Fk (astra reprove 1, 2).
-        def leancopy(t):
-            shutil.copytree(HERE.parent / "lean" / "Fk", t / "lean" / "Fk")
-            return t / "lean" / "Fk"
-        # 11. blFmtB value: first byte 66 -> 67 ("B: %w" -> "C: %w") (astra reprove 2)
-        t = copy(); fk = leancopy(t); f = fk / "BlMarshal.lean"
-        f.write_text(f.read_text().replace("def blFmtB : List UInt8 := [66,", "def blFmtB : List UInt8 := [67,"))
-        cases.append(("blFmtB value 66 -> 67", t, False))
-        # 12. blFmtB offset: every statement places it one byte later
-        t = copy(); fk = leancopy(t); f = fk / "BlMarshal.lean"
-        f.write_text(f.read_text().replace('blFmtB.At (label "go_string._" + 526)', 'blFmtB.At (label "go_string._" + 527)'))
-        cases.append(("blFmtB offset 526 -> 527", t, False))
-        # 13. blFmtB not registered in FMTS: the inventory finds go_string._+526
+        # 8. a data file byte: blFmtB "B: %w" -> "C: %w" (fix 3 X2)
+        t = copy(); p = t / "data" / "blFmtB.data"
+        s = p.read_text(); assert "bytes 42 3a 20 25 77" in s; p.write_text(s.replace("bytes 42 3a", "bytes 43 3a"))
+        cases.append(("data file byte changed", t, False))
+        # 9. the ELF range of a data file: the errorString itab's type word points to
+        #    another *uint64 descriptor (0x4cbf00; astra reprove-fix2 itab-wrong-pointee)
+        t = copy(); p = t / "p1bin-amd64"
+        e = bytearray(p.read_bytes()); _, es, sy = read_elf(p)
+        ia = sy["go:itab.*errors.errorString,error"][0] + 8
+        o = next(s["off"] + ia - s["addr"] for s in es if s["typ"] == 1 and s["addr"] <= ia < s["addr"] + s["size"])
+        assert struct.unpack_from("<Q", e, o)[0] == 0x4d4a00
+        struct.pack_into("<Q", e, o, 0x4cbf00); p.write_bytes(bytes(e))
+        cases.append(("ELF itab type word changed", t, False))
+        # 10. unchanged copy passes
         t = copy()
-        cases.append(("blFmtB not registered", t, False))
-        # astra reprove-fix mutations (logs in commit 28ea489).
-        # 16. blFmtB value with a suffix on the same line (finding 2, fmt-value-suffix)
-        t = copy(); fk = leancopy(t); f = fk / "BlMarshal.lean"
-        f.write_text(f.read_text().replace("def blFmtB : List UInt8 := [66, 58, 32, 37, 119]",
-                                           "def blFmtB : List UInt8 := [66, 58, 32, 37, 119].map (fun b => b + 1)"))
-        cases.append(("blFmtB suffix .map", t, False))
-        # 17. the same suffix on the next line at column 0
-        t = copy(); fk = leancopy(t); f = fk / "BlMarshal.lean"
-        f.write_text(f.read_text().replace("def blFmtB : List UInt8 := [66, 58, 32, 37, 119]\n",
-                                           "def blFmtB : List UInt8 := [66, 58, 32, 37, 119]\n|>.map (fun b => b + 1)\n"))
-        cases.append(("blFmtB suffix on the next line", t, False))
-        # 18. one placement written with two spaces and offset 527 (second-offset-space)
-        t = copy(); fk = leancopy(t); f = fk / "BlMarshal.lean"
-        f.write_text(f.read_text().replace('blFmtB.At (label "go_string._" + 526)', 'blFmtB.At (label  "go_string._" + 527)', 1))
-        cases.append(("blFmtB offset with two spaces", t, False))
-        # 19. Go literal changed, the old call kept in a comment (fmtlen-go-comment)
-        t = copy(); gr = t / "gosrc"
-        for f in ("fv/kraken/target/types.ssz.go", "fv/kraken/target/types1b.ssz.go", "ssz/unmarshal.go"):
-            (gr / f).parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy(HERE.parent.parent.parent / f, gr / f)
-        f = gr / "fv/kraken/target/types.ssz.go"; tx = f.read_text()
-        a = 'fmt.Errorf("ssz-max exceeded: c.L has %d elements, ssz-max is 16: %w", numElem, ssz.ErrListTooBig)'
-        assert a in tx
-        f.write_text(tx.replace(a, "// " + a + "\n\t\t\treturn " + a.replace("exceeded:", "exceeded;"), 1))
-        cases.append(("Go literal only in a comment", t, False))
-        # 20. a declaration over every Host in a Wit file places fill bytes at a new offset (wit-exclusion)
-        t = copy(); fk = leancopy(t); f = fk / "WitBlR.lean"
-        f.write_text(f.read_text().replace("end Fk.WitBlR", "theorem astra_gen [Host] : Eq ((z 5).At (label \"go_string._\" + 99999).toBitVec)\n"
-                                           "    = Eq ((z 5).At (label \"go_string._\" + 99999).toBitVec) := rfl\n\nend Fk.WitBlR"))
-        cases.append(("Wit file, theorem over every Host", t, False))
-        # 21. a witness names an unknown byte list at a new offset
-        t = copy(); fk = leancopy(t); f = fk / "WitBlR.lean"
-        f.write_text(f.read_text().replace("end Fk.WitBlR", "def junk : DataMem → Prop := Eq ((z 1 ++ z 1).At (label \"go_string._\" + 99999).toBitVec)\n\nend Fk.WitBlR"))
-        cases.append(("Wit file, unknown placement", t, False))
-        # 22. a theorem places an unparsed byte expression at a checked offset
-        t = copy(); fk = leancopy(t); f = fk / "BlMarshal.lean"
-        f.write_text(f.read_text().replace('Eq (blFmtB.At (label "go_string._" + 526)', 'Eq ((blFmtB ++ []).At (label "go_string._" + 526)', 1))
-        cases.append(("unparsed bytes at a checked offset", t, False))
-        # 23. an offset written as a sum (not read by the parser)
-        t = copy(); fk = leancopy(t); f = fk / "BlMarshal.lean"
-        f.write_text(f.read_text().replace('blFmtB.At (label "go_string._" + 526)', 'blFmtB.At (label "go_string._" + 500 + 26)', 1))
-        cases.append(("offset written as a sum", t, False))
-        # 24. (h) the %d type word names the uint64 descriptor (type__+49120, kind Uint64), not int
-        t = copy(); fk = leancopy(t); f = fk / "LuRejectCall.lean"
-        f.write_text(f.read_text().replace('def luTW : BitVec 64 := (label "type__" + 49184).toBitVec',
-                                           'def luTW : BitVec 64 := (label "type__" + 49120).toBitVec'))
-        cases.append(("luTW names another type", t, False))
-        # 25. unchanged copy passes (also the Lean copy)
-        t = copy(); leancopy(t)
         cases.append(("unchanged copy", t, True))
         ok = True
         for name, t, expect in cases:
             why = ""
             try:
                 conv.CLEANED.clear()
-                run(t, lambda s: None,
-                    goroot=t / "gosrc" if (t / "gosrc").exists() else None,
-                    lean=t / "lean" if (t / "lean").exists() else None,
-                    fmts=[x for x in FMTS if x[1] != "blFmtB"] if name == "blFmtB not registered" else None)
+                run(t, lambda s: None)
                 got = True
             except (Fail, SystemExit) as e:
                 got, why = False, str(e).splitlines()[0][:120]

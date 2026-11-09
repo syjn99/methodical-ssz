@@ -25,12 +25,17 @@ name = "Fv1"
 roots = ["Fv1.SpecScalars", "Fv1.SpecList", "Fv1.SpecFixedVec", "Fv1.SpecBitVec", "Fv1.SpecNested", "Fv1.SpecListC", "Fv1.SpecPrysm", "Fv1.SpecBitList", "Fv1.Transfer"]
 
 # Rebuild tracking (fix 3 X1, con-agua ConAgua/AsmFile/Include.lean): the files that
-# `include_x64_rt` reads are not in the import graph. As `needs` of the Fk library their
+# `include_x64_rt` and `data_include` read are not in the import graph. As `needs` of the Fk library their
 # contents are part of the input hash of every Fk module, so Lake rebuilds the proofs
 # when a converted .S file changes (a `needs` invalidates the whole library).
 [[input_dir]]
 name = "fk_norm_S"
 path = "../link/out/norm"
+text = true
+
+[[input_dir]]
+name = "fk_data"
+path = "../link/out/data"
 text = true
 
 [[input_dir]]
@@ -41,4 +46,4 @@ filter = {extension = ["S"]}
 
 [[lean_lib]]
 name = "Fk"
-needs = ["fk_norm_S", "fk_lean_S"]
+needs = ["fk_norm_S", "fk_data", "fk_lean_S"]

@@ -76,7 +76,7 @@ theorem errstr_eq : ErrStr (65928 : UInt64).toBitVec (65944 : BitVec 64) [101, 1
   rfl
 
 theorem staticBox_small (v : BitVec 64) (h : v.toNat < 256) :
-    StaticBox v = Eq ((Int.toBytes 8 v.toInt).At ((label "runtime.staticuint64s").toBitVec + 8 * v)) := if_pos h
+    StaticBox v = Eq ((Int.toBytes 8 v.toInt).At ((label "runtime.staticuint64s").toBitVec + 8 * v)) := staticBox_of_lt h
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 
@@ -167,7 +167,7 @@ theorem lu_reject_toobig_runs (zmms : RegZmms) (flags : StatusFlags) :
     (by rw [errstr_eq, staticBox_small (BitVec.ofNat 64 17) (by decide)]
         have h := s_mem zmms flags; simp only [Std.ExtHashMap.sep_assoc] at h ⊢; exact h)
     (by simp [s0]) (by simp [s0]) (by simp [s0])
-    (rt_convT64 198 hk_rterr hf_rterr 8) (rt_errorf_dw 198 hk_rterr hf_rterr bumpHeap luFmtTooBig luTW 8))
+    (rt_convT64 198 hk_rterr hf_rterr 8) (rt_errorf_dw 198 hk_rterr hf_rterr bumpHeap luFmtTooBig intType_addr 8))
     (fun _ h => ⟨h.1, h.2.1⟩)
 
 end Fk.WitLuTb

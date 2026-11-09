@@ -108,7 +108,7 @@ theorem {THM.replace('_main','_runs')} (zmms : RegZmms) (flags : StatusFlags) :
     (by rw [errstr_eq{SBRW}, staticBox_small (BitVec.ofNat 64 {V}) (by decide)]
         have h := s_mem zmms flags; simp only [Std.ExtHashMap.sep_assoc] at h ⊢; exact h)
     {TAIL}
-    (rt_convT64 {st['rterr']} hk_rterr hf_rterr 8) (rt_errorf_dw {st['rterr']} hk_rterr hf_rterr bumpHeap {FDEF} luTW 8))
+    (rt_convT64 {st['rterr']} hk_rterr hf_rterr 8) (rt_errorf_dw {st['rterr']} hk_rterr hf_rterr bumpHeap {FDEF} intType_addr 8))
     (fun _ h => ⟨h.1, h.2.1⟩)
 """)
 src,addr,starts=wgen.gen(cfg)
@@ -139,7 +139,7 @@ theorem errstr_eq : ErrStr ({OBJ} : UInt64).toBitVec ({SP} : BitVec 64) [101, 11
   rfl
 
 theorem staticBox_small (v : BitVec 64) (h : v.toNat < 256) :
-    StaticBox v = Eq ((Int.toBytes 8 v.toInt).At ((label "runtime.staticuint64s").toBitVec + 8 * v)) := if_pos h
+    StaticBox v = Eq ((Int.toBytes 8 v.toInt).At ((label "runtime.staticuint64s").toBitVec + 8 * v)) := staticBox_of_lt h
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0""",1)
 src=wgen.sub(src,"  rw [label_wb]\n","  rw [label_wb, label_gs, label_err, label_st]\n  simp only [Int64.toBitVec_add, Int64.toBitVec_ofNat, BitVec.reduceAdd, BitVec.reduceMul]\n",1)

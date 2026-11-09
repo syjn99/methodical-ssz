@@ -85,9 +85,6 @@ theorem vbv_ret (x : BitVec 64) : x - 8 + 8#64 = x := by bv_omega
 theorem vbv_ge1 (y : UInt64) (n : Nat) (h : n + 1 = y.toNat) : 1 ≤ y.toBitVec.toNat := by
   show 1 ≤ y.toNat; omega
 
--- "bitvector padding bits are not zero" (ssz/unmarshal.go, ValidateBitvector)
-def vbvFmt : List UInt8 :=
-  [98, 105, 116, 118, 101, 99, 116, 111, 114, 32, 112, 97, 100, 100, 105, 110, 103, 32, 98, 105, 116, 115, 32, 97, 114, 101, 32, 110, 111, 116, 32, 122, 101, 114, 111]
 theorem vbvFmt_len : vbvFmt.length = 35 := by rfl
 theorem vbvFmt_nopct : (0x25 : UInt8) ∉ vbvFmt := by simp [vbvFmt]
 
@@ -246,7 +243,7 @@ theorem vbv_reject_pad_main (k : Nat) (hk : ValidateBitvector.IsInfixAt Host.pro
       ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 56 - BitVec.ofNat 64 S))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Eq ((init ++ [last]).At s.regs.rax.toBitVec)
-      ⋆ Eq (vbvFmt.At (label "go_string._" + 27706).toBitVec) ⋆ Heap avail ⋆ R)
+      ⋆ Eq (vbvFmt.At vbvFmt_addr) ⋆ Heap avail ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp8 : 8 ≤ s.regs.rsp.toNat)
     (hlen : s.regs.rbx.toNat = s.regs.rdi.toNat / 8 + (if s.regs.rdi.toNat % 8 = 0 then 0 else 1))
     (hbuf : init.length + 1 = s.regs.rbx.toNat)
@@ -257,18 +254,18 @@ theorem vbv_reject_pad_main (k : Nat) (hk : ValidateBitvector.IsInfixAt Host.pro
         ∧ st.data.regs.rax.toBitVec = (label "go_itab._errors.errorString_error").toBitVec
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
         ∃ fp' sp' fr' rs' sc' obj : List UInt8, fp'.length = 8 ∧ sp'.length = 8 ∧ fr'.length = 40 ∧ rs'.length = 8
-          ∧ sc'.length = S ∧ obj.length = 16 ∧ obj = Int.toBytes 8 (label "go_string._" + 27706).toBitVec.toInt ++ Int.toBytes 8 (35 : BitVec 64).toInt ∧
+          ∧ sc'.length = S ∧ obj.length = 16 ∧ obj = Int.toBytes 8 vbvFmt_addr.toInt ++ Int.toBytes 8 (35 : BitVec 64).toInt ∧
         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
           ⋆ Eq (fp'.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (sp'.At (s.regs.rsp.toBitVec + 8))
           ⋆ Eq (fr'.At (s.regs.rsp.toBitVec - 48)) ⋆ Eq (rs'.At (s.regs.rsp.toBitVec - 56))
           ⋆ Eq (sc'.At (s.regs.rsp.toBitVec - 56 - BitVec.ofNat 64 S))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
           ⋆ Eq ((init ++ [last]).At s.regs.rax.toBitVec)
-          ⋆ Eq (vbvFmt.At (label "go_string._" + 27706).toBitVec) ⋆ Eq (obj.At st.data.regs.rbx.toBitVec)
+          ⋆ Eq (vbvFmt.At vbvFmt_addr) ⋆ Eq (obj.At st.data.regs.rbx.toBitVec)
           ⋆ Heap (avail - 16) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
-  simp only at h_mem hguard hsp8 hlen hpad hlast hbuf ⊢
+  simp only [Data.vbvFmt_addr] at h_mem hguard hsp8 hlen hpad hlast hbuf ⊢
   have := rsp.toNat_lt_size; have := guard.toNat_lt_size; simp only [UInt64.size] at *
   kat hk ValidateBitvector 0
   kat hk ValidateBitvector 1
@@ -424,10 +421,11 @@ theorem vbv_reject_pad_main (k : Nat) (hk : ValidateBitvector.IsInfixAt Host.pro
     apply Eventually.done
     simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
     refine ⟨trivial, ?_, ?_, ?_, ?_, _, _, sn3 ++ List.drop 8 sp2, _, stk3,
-      Int.toBytes 8 (label "go_string._" + 27706).toBitVec.toInt ++ Int.toBytes 8 (BitVec.toInt (35 : BitVec 64)),
+      Int.toBytes 8 vbvFmt_addr.toInt ++ Int.toBytes 8 (BitVec.toInt (35 : BitVec 64)),
       Int.toBytes_length 8 rbp.toBitVec.toInt, Int.toBytes_length 8 rax.toBitVec.toInt,
       by simp [hsn3, hsp2], Int.toBytes_length 8 (Host.addrOf (k + 37 + 1)).toBitVec.toInt, hstk3, by simp [Int.toBytes_length], rfl, ?mem⟩
     case mem =>
+      simp only [Data.vbvFmt_addr]
       have hb := vbv_split init last rbx.toBitVec hbuf
       rw [vbv_a48, Mem.At_append_sep sn3 (List.drop 8 sp2) _ (by simp [hsn3, hsp2]),
         Mem.At_append_sep init [last] _ hb, Mem.At_append_sep (Int.toBytes 8 _) (Int.toBytes 8 _) _ (by simp [Int.toBytes_length])]
@@ -486,20 +484,20 @@ def VbvPadC (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
       ⋆ Eq (scratch.At (st.regs.rsp.toBitVec - 56 - BitVec.ofNat 64 S))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (st.regs.r14.toBitVec + 16))
       ⋆ Eq ((init ++ [last]).At st.regs.rax.toBitVec)
-      ⋆ Eq (vbvFmt.At (label "go_string._" + 27706).toBitVec) ⋆ Heap avail ⋆ R) st.dmem →
+      ⋆ Eq (vbvFmt.At vbvFmt_addr) ⋆ Heap avail ⋆ R) st.dmem →
     Eventually (step1 Host.exe)
       (fun st' => st'.pc = ret
         ∧ st'.data.regs.rax.toBitVec = (label "go_itab._errors.errorString_error").toBitVec
         ∧ st'.data.regs.rsp = st.regs.rsp + 8 ∧ st'.data.regs.rbp = st.regs.rbp ∧ st'.data.regs.r14 = st.regs.r14 ∧
         ∃ fp' sp' fr' rs' sc' obj : List UInt8, fp'.length = 8 ∧ sp'.length = 8 ∧ fr'.length = 40 ∧ rs'.length = 8
-          ∧ sc'.length = S ∧ obj.length = 16 ∧ obj = Int.toBytes 8 (label "go_string._" + 27706).toBitVec.toInt ++ Int.toBytes 8 (35 : BitVec 64).toInt ∧
+          ∧ sc'.length = S ∧ obj.length = 16 ∧ obj = Int.toBytes 8 vbvFmt_addr.toInt ++ Int.toBytes 8 (35 : BitVec 64).toInt ∧
         (Eq ((Int.toBytes 8 ret.toBitVec.toInt).At st.regs.rsp.toBitVec)
           ⋆ Eq (fp'.At (st.regs.rsp.toBitVec - 8)) ⋆ Eq (sp'.At (st.regs.rsp.toBitVec + 8))
           ⋆ Eq (fr'.At (st.regs.rsp.toBitVec - 48)) ⋆ Eq (rs'.At (st.regs.rsp.toBitVec - 56))
           ⋆ Eq (sc'.At (st.regs.rsp.toBitVec - 56 - BitVec.ofNat 64 S))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (st.regs.r14.toBitVec + 16))
           ⋆ Eq ((init ++ [last]).At st.regs.rax.toBitVec)
-          ⋆ Eq (vbvFmt.At (label "go_string._" + 27706).toBitVec) ⋆ Eq (obj.At st'.data.regs.rbx.toBitVec)
+          ⋆ Eq (vbvFmt.At vbvFmt_addr) ⋆ Eq (obj.At st'.data.regs.rbx.toBitVec)
           ⋆ Heap (avail - 16) ⋆ R) st'.data.dmem)
       ⟨st, label "ssz.ValidateBitvector"⟩
 

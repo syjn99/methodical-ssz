@@ -24,15 +24,15 @@ P=github.com/OffchainLabs/methodical-ssz/fv/kraken/target
 go run ./cmd/ssz gen --package $P --output=fv/kraken/target/types.ssz.go --type-names=Scalars,FixedVec,ListU64
 go run ./cmd/ssz gen --package $P --output=fv/kraken/target/types1b.ssz.go --type-names=BitVec,Nested,ListC,BitL
 go run ./cmd/ssz gen --package $P/prysm --output=fv/kraken/target/prysm/types.ssz.go --type-names=Checkpoint,AttestationData
-fv/kraken/link/build.sh          # ELF, objdump, nm, norm/*.S, build-ids.txt
+fv/kraken/link/build.sh          # ELF, objdump, nm, norm/*.S, data/*.data, build-ids.txt
 ```
 
 ## 도구
 
 | 도구 | 역할 | 실행 |
 | --- | --- | --- |
-| `link/check.py` | ELF ↔ objdump ↔ `.S` ↔ Host 레이블·전역 주소, (a)–(h), `link/out/RESULT` | `python3 fv/kraken/link/check.py fv/kraken/link/out [--selftest]` |
-| `link/golits.go` | Go 소스의 `fmt.Errorf` 첫 인수 리터럴(링크 검사 (g)) | `go run fv/kraken/link/golits.go -- <file.go> ...` |
+| `link/check.py` | ELF ↔ objdump ↔ `.S` ↔ Host 레이블·전역 주소 (a)–(e), 데이터 파일 = ELF (f), `link/out/RESULT` | `python3 -B fv/kraken/link/check.py fv/kraken/link/out [--selftest]` |
+| `link/data.py` | ELF 데이터 항목을 `link/out/data/<id>.data`로 | `python3 -B fv/kraken/link/data.py fv/kraken/link/out` |
 | `lean/tools/axioms.sh` | `AXIOMS.txt`(정리), `AXIOMS-ALL.txt`(모든 선언) | `cd fv/kraken/lean && sh tools/axioms.sh` |
 | `lean/tools/wit/layout.go` | gc amd64 배치를 `layout.json`에 | `go run fv/kraken/lean/tools/wit/layout.go > fv/kraken/lean/tools/wit/layout.json` |
 | `lean/tools/wit/goval.py` | 증인의 Go 값 검사 | `python3 fv/kraken/lean/tools/wit/goval.py` |
@@ -81,11 +81,11 @@ fv/kraken/link/build.sh          # ELF, objdump, nm, norm/*.S, build-ids.txt
 | `vblMsgB` | `go_string._` + 5743 | 13 | rodata 문자열 | `Vbl.lean vblMsgB` |
 | `luFmtTooBig` | `go_string._` + 40290 | 56 | rodata 문자열 | `LuRejectCall.lean luFmtTooBig` |
 | `luFmtMis` | `go_string._` + 42646 | 68 | rodata 문자열 | `LuRejectCall.lean luFmtMis` |
-| `errorStringItab` | `go_itab._errors.errorString_error` + 0 | 32 | itab 전체(워드 3: inter, Type, Fun[0]) | (h)의 itab 검사 |
-| `errorStringPtrType` | `type__` + 68096 | 56 | `*errors.errorString`의 abi.PtrType(abi.Type 48 + Elem) | (h)의 포인터 종류 검사, 증인의 0 기술자 |
-| `intType` | `type__` + 49184 | 48 | `int`의 abi.Type | `LuRejectCall.lean luTW`, (h) |
+| `errorStringItab` | `go_itab._errors.errorString_error` + 0 | 32 | itab 전체(워드 3: inter, Type, Fun[0]) | 옛 (h)의 itab 검사 |
+| `errorStringPtrType` | `type__` + 68096 | 56 | `*errors.errorString`의 abi.PtrType(abi.Type 48 + Elem) | 옛 (h)의 포인터 종류 검사, 증인의 0 기술자 |
+| `intType` | `type__` + 49184 | 48 | `int`의 abi.Type | `LuRejectCall.lean luTW`, 옛 (h) |
 | `uint64Type` | `type__` + 49120 | 48 | `uint64`의 abi.Type | 새 항목(X5, `%d` uint64 인수) |
-| `staticuint64s` | `runtime.staticuint64s` + 0 | 2048 | uint64 0..255 표 | `Contracts.lean StaticBox`, (h) |
+| `staticuint64s` | `runtime.staticuint64s` + 0 | 2048 | uint64 0..255 표 | `Contracts.lean StaticBox`, 옛 (h) |
 | `ErrSize` 외 오류 전역 6개 | `ssz.Err*` + 0 | 0 | 주소만(값은 런타임 초기화) | 증인의 전역 초기화 전제(X3) |
 
 오류 전역 id: `ErrSize`, `ErrInvalidSerialization`, `ErrInvalidVariableOffset`, `ErrListTooBig`, `ErrBytesLength`, `ErrIncorrectListSize`.

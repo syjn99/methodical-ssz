@@ -36,7 +36,7 @@ theorem bl_reject_invalid_main (k : Nat) (hk : BitLUnmarshalSSZ.IsInfixAt Host.p
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ Heap avail
       ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec) ⋆ Eq (tl.At (s.regs.rbx.toBitVec + 4))
       ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
-      ⋆ Eq (blFmtB.At (label "go_string._" + 526).toBitVec) ⋆ vblRO ⋆ R)
+      ⋆ Eq (blFmtB.At blFmtB_addr) ⋆ vblRO ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 128 ≤ s.regs.rsp.toNat)
     (hlen : s.regs.rcx.toNat = 4 + tl.length) (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat)
     (hcap63 : s.regs.rdi.toNat < 2 ^ 63)

@@ -5,7 +5,7 @@ set_option maxHeartbeats 16000000
 namespace ReviewFix2
 
 theorem ten_not_false (S : Nat) (ty : BitVec 64) :
-    ¬ (Fk.Regress.Joint S ty blFmtB vblRO VblMsg luFmtTooBig luTW → False) :=
+    ¬ (Fk.Regress.Joint S ty blFmtB vblRO VblMsg luFmtTooBig intType_addr → False) :=
   Fk.Regress.not_joint_false S ty _ _ _ _ _
 
 section

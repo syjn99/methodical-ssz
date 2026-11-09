@@ -86,20 +86,28 @@ PASS (b) runtime.zerobase = 0x5f3040 .noptrbss in-symbol
 PASS (b) runtime.writeBarrier = 0x5f3340 .noptrbss in-symbol
 PASS (c) all.S: 294 labels, each defined once; 53 external references not defined in all.S; 4 calls to target functions at their entry: ['ssz.ValidateBitlist', 'ssz.ValidateBitvector', 'target.ListU64.UnmarshalSSZ', 'target.Scalars.UnmarshalSSZ']
 PASS (e) all.S: 3221 directives equal the 29 function files in order
-PASS (g) go_string._+39370 (53 bytes) = Lean lcFmtZero = fv/kraken/target/types1b.ssz.go lines [243]
-PASS (g) go_string._+42000 (63 bytes) = Lean lcFmtShort = fv/kraken/target/types1b.ssz.go lines [254, 280]
-PASS (g) go_string._+27706 (35 bytes) = Lean vbvFmt = ssz/unmarshal.go lines [45]
-PASS (g) go_string._+511 (5 bytes) = Lean bvFmtJ = fv/kraken/target/types1b.ssz.go lines [26, 47]
-PASS (g) go_string._+526 (5 bytes) = Lean blFmtB = fv/kraken/target/types1b.ssz.go lines [339, 360]
-PASS (g) go_string._+33605 (42 bytes) = Lean vblMsgE = ssz/unmarshal.go lines [21, 54]
-PASS (g) go_string._+13272 (21 bytes) = Lean vblMsgZ = ssz/unmarshal.go lines [24, 65]
-PASS (g) go_string._+5743 (13 bytes) = Lean vblMsgB = ssz/unmarshal.go lines [77]
-PASS (g) go_string._+40290 (56 bytes) = Lean luFmtTooBig = fv/kraken/target/types.ssz.go lines [249]
-PASS (g) go_string._+42646 (68 bytes) = Lean luFmtMis = fv/kraken/target/types.ssz.go lines [245]
-PASS (g) inventory: 95 go_string._ references in 17 files, checked offsets [511, 526, 5743, 13272, 27706, 33605, 39370, 40290, 42000, 42646]; witness fill and label references: 48
-PASS (h) luTW = type__+49184 = 0x4d0020: abi.Type Size_ 8, Kind_ 2 (int)
-PASS (h) go_itab._errors.errorString_error+8 = 0x4d4a00: abi.Type Size_ 8, Kind_ 22 (pointer, *errors.errorString)
-PASS (h) runtime.staticuint64s = 0x502740: 2048 bytes = uint64 0..255 (StaticBox v at + 8 v)
+PASS (f) ErrBytesLength.data: 0x5ccde0, 0 bytes and 0 words = ELF
+PASS (f) ErrIncorrectListSize.data: 0x5d2a50, 0 bytes and 0 words = ELF
+PASS (f) ErrInvalidSerialization.data: 0x5ccdf0, 0 bytes and 0 words = ELF
+PASS (f) ErrInvalidVariableOffset.data: 0x5cce00, 0 bytes and 0 words = ELF
+PASS (f) ErrListTooBig.data: 0x5cce10, 0 bytes and 0 words = ELF
+PASS (f) ErrSize.data: 0x5cce30, 0 bytes and 0 words = ELF
+PASS (f) blFmtB.data: 0x4f02be, 5 bytes and 0 words = ELF
+PASS (f) bvFmtJ.data: 0x4f02af, 5 bytes and 0 words = ELF
+PASS (f) errorStringItab.data: 0x4fcb18, 8 bytes and 3 words = ELF
+PASS (f) errorStringPtrType.data: 0x4d4a00, 32 bytes and 3 words = ELF
+PASS (f) intType.data: 0x4d0020, 32 bytes and 2 words = ELF
+PASS (f) lcFmtOrder.data: 0x4fa703, 67 bytes and 0 words = ELF
+PASS (f) lcFmtShort.data: 0x4fa4c0, 63 bytes and 0 words = ELF
+PASS (f) lcFmtZero.data: 0x4f9a7a, 53 bytes and 0 words = ELF
+PASS (f) luFmtMis.data: 0x4fa746, 68 bytes and 0 words = ELF
+PASS (f) luFmtTooBig.data: 0x4f9e12, 56 bytes and 0 words = ELF
+PASS (f) staticuint64s.data: 0x502740, 2048 bytes and 0 words = ELF
+PASS (f) uint64Type.data: 0x4cffe0, 32 bytes and 2 words = ELF
+PASS (f) vblMsgB.data: 0x4f171f, 13 bytes and 0 words = ELF
+PASS (f) vblMsgE.data: 0x4f83f5, 42 bytes and 0 words = ELF
+PASS (f) vblMsgZ.data: 0x4f3488, 21 bytes and 0 words = ELF
+PASS (f) vbvFmt.data: 0x4f6cea, 35 bytes and 0 words = ELF
 DIFF (d) ssz.ValidateBitvector 0x4b661b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
 DIFF (d) ssz.ValidateBitlist 0x4b66f7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
 DIFF (d) ssz.ValidateBitlist 0x4b673c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
@@ -182,7 +190,29 @@ S sha256 67b0f2900b842ae65c8c8a64b0db302c576de4cb6eca43d4b09cde70713a18b3 target
 S sha256 3990b8f2369006c41c8475a817a075ada18b32ffd4de36397b5f3e079a39109a target_prysm.Checkpoint.MarshalSSZTo.S
 S sha256 a77ac17b8695d617c2f3bd5a731d3572d7fb69c2e8827190d3a5dd3e36a83cb1 target_prysm.Checkpoint.SizeSSZ.S
 S sha256 bee62ab7dfa3da589159bdb47d767ba65cb09f7e8f64cec649e60aa3c026c78c target_prysm.Checkpoint.UnmarshalSSZ.S
+data sha256 16bdd5fa876325661be5471d2be9dfd84e8e56490b4e04787cd9bdc91b86a37f ErrBytesLength.data
+data sha256 57083cf6c9253366dbbea766f7ad3ec4bf4b9e939da6b92ad3000cb252053736 ErrIncorrectListSize.data
+data sha256 0bd2b93d10d489108269f5a83780d3219bda88b15315367a324113a5f4227599 ErrInvalidSerialization.data
+data sha256 f64c5ac1d6deeb11dbf43f3062746ec63fb38817b79ba9f2f704f2c26dee576b ErrInvalidVariableOffset.data
+data sha256 5ec5a4d1c84c6821c33c0a7340d66e73380e3405ecfc75759e42809c819ed239 ErrListTooBig.data
+data sha256 c5c0dfa75afa27adc9233e51f8dddb3bd1e968fd5e4cd5e91e7e84e74a54e437 ErrSize.data
+data sha256 874fa335f44617efa08c63fe7edc690c0f24b30d8806a1e4515bb1799834c285 blFmtB.data
+data sha256 bdd97eaec714cd3d59c169a4baaf38be55787729ce89508ca8fb000db5cf612e bvFmtJ.data
+data sha256 77a8730792f722a3409193db1980db1a3ecb361e9db8e4aff22c06e959b51571 errorStringItab.data
+data sha256 92c50ced1b264800d71a5c39625b965c8561dab908809b43cbb08eb4366b994a errorStringPtrType.data
+data sha256 4ff813e864eaa29f91435fb13aa022f9173c1d4556546651c83e3e6ecc4d65f0 intType.data
+data sha256 4ed399121df8a9aa0dc7da15077b5962937db79337062b5812fcf6b5c0a6819c lcFmtOrder.data
+data sha256 67e99cecfe4b5c45d16da025c37ced15f0372d8a93b03e1479c4ce575238ea09 lcFmtShort.data
+data sha256 b3d1c602187fea209c2ad2681f7a02c9603553857367ec2ad178f10f394aafc2 lcFmtZero.data
+data sha256 c481785e93e365c650c77730315e81f3a795d1c75cec8b72eb2f82a7697c2ec3 luFmtMis.data
+data sha256 d2838e44a8d3bd3a487b050222fc2b6d4af28931dde4b961d00b653f5ddc0c4b luFmtTooBig.data
+data sha256 ab4ad47c36a7335d1b68454cefccdf5804748a77b00f926c2bc9e64942dd39b0 staticuint64s.data
+data sha256 1e3810a7d2b6cd9ef6ddfe343a50e8eb97be1d276cb17dbbccdd0c1114a91451 uint64Type.data
+data sha256 5964c30c929cb3aad1fbcfda7bb1ec779ab2eef790fe53a18a64d73950636780 vblMsgB.data
+data sha256 cf2dd827841f8342963e9cbbe0cf73d256454f36e6abc2e5d1e2ae79d1435eda vblMsgE.data
+data sha256 27b2c4d57238669c69decf5789cac78c56d1f8f4bac99256576f8e0b9ddae4be vblMsgZ.data
+data sha256 88063b53c04054481d469ae3f58896543733cfa565bb6dfe730f62efeae6205b vbvFmt.data
 file sha256 0bbe6f0da6d02e6f2720d7a1e98d7c71641ca00f1d9cb9a3111cf092ba98295a lean/Fk/Code.lean
-file sha256 dde4d7bb53aa6dc921ee500b504f8271300fd82e733d8571e171b8eb6f48d2b2 AXIOMS.txt
+file sha256 fa6145e3dd03a655c0c11cd6369cca9b69ca07f6769d547df1733c9eb1762165 AXIOMS.txt
 PASS all
-BUNDLE sha256 a9fd725eb15965aa79bbf93b0e3d8a1d1d18fd51162e79f36b09ed4db8983554
+BUNDLE sha256 29878b3698cbad055319a28673c457aaeb327fc2d65d8a311106da80d930594c

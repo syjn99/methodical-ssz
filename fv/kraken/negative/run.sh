@@ -27,8 +27,6 @@ clone() { # name
   cp -Rc "$K/lean" "$d/fv/kraken/lean"
   cp -R "$K/link" "$d/fv/kraken/link"
   cp -R "$K/target" "$d/fv/kraken/target"
-  # check.py (g) reads the Go source of ValidateBitvector's format string
-  mkdir -p "$d/ssz"; cp "$K/../../ssz/unmarshal.go" "$d/ssz/"
 }
 
 edit() { # file index old new

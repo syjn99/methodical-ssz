@@ -1,0 +1,6 @@
+# errorStringItab: link/data.py, p1bin-amd64 bytes [0x4fcb18, 0x4fcb38)
+at go_itab._errors.errorString_error 0
+word type__ 76064
+word type__ 68096
+bytes a0 d2 33 8f 00 00 00 00
+word errors.errorString.Error 0

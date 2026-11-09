@@ -12,10 +12,10 @@ namespace RegressFix2
 -- 1. The ten contracts hold together on one host and heap, for the formats,
 --    resources and type words that the theorems use (Joint takes them, fix 2 X4/X5).
 theorem ten_not_false_bl (S : Nat) (ty : BitVec 64) :
-    ¬ (Fk.Regress.Joint S ty blFmtB vblRO VblMsg luFmtTooBig luTW → False) :=
+    ¬ (Fk.Regress.Joint S ty blFmtB vblRO VblMsg luFmtTooBig intType_addr → False) :=
   Fk.Regress.not_joint_false S ty _ _ _ _ _
 theorem ten_not_false_bv (S : Nat) (ty : BitVec 64) :
-    ¬ (Fk.Regress.Joint S ty bvFmtJ bvRO BvMsg luFmtMis luTW → False) :=
+    ¬ (Fk.Regress.Joint S ty bvFmtJ bvRO BvMsg luFmtMis intType_addr → False) :=
   Fk.Regress.not_joint_false S ty _ _ _ _ _
 
 -- 2. The invalid-input premise `¬ blValid` matches the semtest cases (unchanged).

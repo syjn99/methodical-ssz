@@ -333,8 +333,6 @@ theorem bl_marshal_main (k : Nat) (hk : BitLMarshalSSZTo.IsInfixAt Host.prog k)
     | (simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl, Fk.ofInt_ofBytes_toBytes64, UInt64.toNat]
        rw [BitVec.mul_one]; simp [BitVec.toNat_add]; omega)
 
--- "B: %w" (types1b.ssz.go, the wrap of the ValidateBitlist error)
-def blFmtB : List UInt8 := [66, 58, 32, 37, 119]
 theorem blFmtB_len : blFmtB.length = 5 := by rfl
 
 set_option maxHeartbeats 16000000 in
@@ -369,7 +367,7 @@ theorem bl_marshal_reject_main (k : Nat) (hk : BitLMarshalSSZTo.IsInfixAt Host.p
       ⋆ Eq ((Int.toBytes 8 c.toInt).At (s.regs.rax.toBitVec + 16)) ⋆ Eq (bl.At q)
       ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
       ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
-      ⋆ Eq (blFmtB.At (label "go_string._" + 526).toBitVec) ⋆ vblRO ⋆ Heap avail ⋆ R)
+      ⋆ Eq (blFmtB.At blFmtB_addr) ⋆ vblRO ⋆ Heap avail ⋆ R)
     (hguard : guard.toNat + 24 < s.regs.rsp.toNat) (hsp : 160 + S ≤ s.regs.rsp.toNat)
     (hcap : s.regs.rcx.toNat + 4 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
     (hbl : bl.length < 2 ^ 63) (hit : (label "go_itab._errors.errorString_error").toBitVec ≠ 0)
@@ -637,7 +635,7 @@ theorem bl_marshal_overlong_rejected (k : Nat) (hk : BitLMarshalSSZTo.IsInfixAt 
       ⋆ Eq ((Int.toBytes 8 c.toInt).At (s.regs.rax.toBitVec + 16)) ⋆ Eq (Fv1.blOverlong.toList.At q)
       ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
       ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
-      ⋆ Eq (blFmtB.At (label "go_string._" + 526).toBitVec) ⋆ vblRO ⋆ Heap avail ⋆ R)
+      ⋆ Eq (blFmtB.At blFmtB_addr) ⋆ vblRO ⋆ Heap avail ⋆ R)
     (hguard : guard.toNat + 24 < s.regs.rsp.toNat) (hsp : 160 + S ≤ s.regs.rsp.toNat)
     (hcap : s.regs.rcx.toNat + 4 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
     (hit : (label "go_itab._errors.errorString_error").toBitVec ≠ 0)

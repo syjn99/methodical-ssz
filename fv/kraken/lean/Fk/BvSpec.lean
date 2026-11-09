@@ -424,20 +424,18 @@ theorem bv_spec_one (b : UInt8) : deserialize bvDesc #[b] =
   · simp [h, (uint8_shr4 b).mpr h]
   · simp [h, show ¬ b >>> 4 = 0 from fun e => h ((uint8_shr4 b).mp e)]
 
--- "J: %w" (types1b.ssz.go, the wrap of the ValidateBitvector error)
-def bvFmtJ : List UInt8 := [74, 58, 32, 37, 119]
 theorem bvFmtJ_len : bvFmtJ.length = 5 := by rfl
 
-theorem bv_errobj (e : BitVec 64) : ErrObj e (label "go_string._" + 27706).toBitVec vbvFmt
-    = Eq ((Int.toBytes 8 (label "go_string._" + 27706).toBitVec.toInt ++ Int.toBytes 8 (35 : BitVec 64).toInt).At e) := by
+theorem bv_errobj (e : BitVec 64) : ErrObj e vbvFmt_addr vbvFmt
+    = Eq ((Int.toBytes 8 vbvFmt_addr.toInt ++ Int.toBytes 8 (35 : BitVec 64).toInt).At e) := by
   simp only [ErrObj, vbvFmt_len]; rfl
 
 /-- The read-only message of the ValidateBitvector padding error (rodata,
-`go_string._ + 27706`): the resource that `"J: %w"` reads. -/
-def bvRO : DataMem → Prop := Eq (vbvFmt.At (label "go_string._" + 27706).toBitVec)
+`Fk.Data.vbvFmt` at `vbvFmt_addr`): the resource that `"J: %w"` reads. -/
+def bvRO : DataMem → Prop := Eq (vbvFmt.At vbvFmt_addr)
 /-- The message of the padding error is `bvRO` (no heap bytes). -/
 def BvMsg (sp : BitVec 64) (msg hm : List UInt8) : Prop :=
-  hm = [] ∧ sp = (label "go_string._" + 27706).toBitVec ∧ msg = vbvFmt
+  hm = [] ∧ sp = vbvFmt_addr ∧ msg = vbvFmt
 
 theorem bvr_56 (x : BitVec 64) : x - 80 + 56 = x - 24 := by bv_omega
 theorem bvr_64 (x : BitVec 64) : x - 80 + 64 = x - 16 := by bv_omega
@@ -485,8 +483,8 @@ theorem bv_reject_padding_main (k : Nat) (hk : BitVecUnmarshalSSZ.IsInfixAt Host
       ⋆ Eq (vrs.At (s.regs.rsp.toBitVec - 144)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 144 - BitVec.ofNat 64 S))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
-      ⋆ Eq (bvFmtJ.At (label "go_string._" + 511).toBitVec)
-      ⋆ Eq (vbvFmt.At (label "go_string._" + 27706).toBitVec)
+      ⋆ Eq (bvFmtJ.At bvFmtJ_addr)
+      ⋆ Eq (vbvFmt.At vbvFmt_addr)
       ⋆ Heap avail ⋆ Eq ([b].At s.regs.rbx.toBitVec) ⋆ R)
     (hguard : guard.toNat + 88 < s.regs.rsp.toNat) (hsp : 144 + S ≤ s.regs.rsp.toNat)
     (hlen : s.regs.rcx = 1) (hit : (label "go_itab._errors.errorString_error").toBitVec ≠ 0)
@@ -635,7 +633,7 @@ theorem bv_reject_padding_main (k : Nat) (hk : BitVecUnmarshalSSZ.IsInfixAt Host
       = Eq (sp2.At (rsp.toBitVec - 80)) ⋆ Eq ((spl.drop 8).At (rsp.toBitVec - 72)) := by
     rw [bvr_sp]; exact at_app _ _ (by rw [hsp2]; bv_omega) (by simp [hsp2, hspl])
   refine eventually_trans _ _ _ _ (hfe _ (Host.addrOf (k + 32 + 1)) (avail - 16) ity vbvFmt []
-    (sc2 ++ (rs2 ++ (fr2 ++ fp2))) (sp2 ++ spl.drop 8) rbx2.toBitVec (label "go_string._" + 27706).toBitVec _
+    (sc2 ++ (rs2 ++ (fr2 ++ fp2))) (sp2 ++ spl.drop 8) rbx2.toBitVec vbvFmt_addr _
     ?f1 ?f2 ?f3 hity ⟨rfl, rfl, rfl⟩ ?f5 ?f6 (by rw [bvFmtJ_len, vbvFmt_len]; omega)
     (by dsimp only; rw [hA, hB, hC, bv_errobj]; simp only [bvRO, errNil_At_emp, Std.ExtHashMap.sep_emp]; ecancel)) ?_
   case f1 => dsimp only; rfl

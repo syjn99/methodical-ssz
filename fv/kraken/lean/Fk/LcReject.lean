@@ -13,14 +13,6 @@ import Fk.FunSpecs
 open Fk Fk.Code
 variable [Host]
 
-/-- The two format strings of the nil-`fmt.errorf` paths (types1b.ssz.go:243,
-:254, :280). `link/check.py` compares them with the ELF's `go_string._` bytes. -/
--- "encountered invalid offset of 0 when decoding c.Items"
-def lcFmtZero : List UInt8 :=
-  [101, 110, 99, 111, 117, 110, 116, 101, 114, 101, 100, 32, 105, 110, 118, 97, 108, 105, 100, 32, 111, 102, 102, 115, 101, 116, 32, 111, 102, 32, 48, 32, 119, 104, 101, 110, 32, 100, 101, 99, 111, 100, 105, 110, 103, 32, 99, 46, 73, 116, 101, 109, 115]
--- "list bytes too short to contain an offset when decoding c.Items"
-def lcFmtShort : List UInt8 :=
-  [108, 105, 115, 116, 32, 98, 121, 116, 101, 115, 32, 116, 111, 111, 32, 115, 104, 111, 114, 116, 32, 116, 111, 32, 99, 111, 110, 116, 97, 105, 110, 32, 97, 110, 32, 111, 102, 102, 115, 101, 116, 32, 119, 104, 101, 110, 32, 100, 101, 99, 111, 100, 105, 110, 103, 32, 99, 46, 73, 116, 101, 109, 115]
 theorem lcFmtZero_len : lcFmtZero.length = 53 := by rfl
 theorem lcFmtShort_len : lcFmtShort.length = 63 := by rfl
 theorem lcFmtZero_nopct : (0x25 : UInt8) ∉ lcFmtZero := by simp [lcFmtZero]
@@ -296,7 +288,7 @@ theorem lc_reject_zero_main (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.pro
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (slot.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 232)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 232 - BitVec.ofNat 64 S))
-      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - 224)) ⋆ Eq (lcFmtZero.At (label "go_string._" + 39370).toBitVec)
+      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - 224)) ⋆ Eq (lcFmtZero.At lcFmtZero_addr)
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ Heap avail
       ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec) ⋆ Eq (o4.At (s.regs.rbx.toBitVec + 4)) ⋆ R)
     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hsp : 232 ≤ s.regs.rsp.toNat)
@@ -484,7 +476,7 @@ theorem lc_reject_past_main (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.pro
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (slot.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 232)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 232 - BitVec.ofNat 64 S))
-      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - 224)) ⋆ Eq (lcFmtShort.At (label "go_string._" + 42000).toBitVec)
+      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - 224)) ⋆ Eq (lcFmtShort.At lcFmtShort_addr)
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ Heap avail
       ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec) ⋆ Eq (o4.At (s.regs.rbx.toBitVec + 4)) ⋆ R)
     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hsp : 232 ≤ s.regs.rsp.toNat)
@@ -698,7 +690,7 @@ theorem lc_reject_tail_main (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.pro
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (slot.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 232)) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - 232 - BitVec.ofNat 64 S))
-      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - 224)) ⋆ Eq (lcFmtShort.At (label "go_string._" + 42000).toBitVec)
+      ⋆ Eq (spl.At (s.regs.rsp.toBitVec - 224)) ⋆ Eq (lcFmtShort.At lcFmtShort_addr)
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) ⋆ Heap avail
       ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec) ⋆ R)
     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hsp : 232 ≤ s.regs.rsp.toNat)
