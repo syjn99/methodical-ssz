@@ -1,6 +1,6 @@
 {
  "schema": "fvphase1c.x4-compare/1",
- "log": "run logs/90 (compare step)",
+ "log": "run logs/91-92 (compare step)",
  "rows": [
   {
    "gen": "Gen1cX4.ListU64.size_stmt",
@@ -15,6 +15,14 @@
    "hand": "lu_accept_main",
    "expect": "SAME",
    "why": "accept (makeslice + element loop)",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListU64.marshal_stmt",
+   "hand": "lu_marshal_main",
+   "expect": "SAME",
+   "why": "marshal fast path (element loop)",
    "result": "SAME",
    "as_expected": true
   },
@@ -71,6 +79,14 @@
    "hand": "lu_reject_short_main",
    "expect": "DIFF",
    "why": "control (accept vs reject)",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListU64.marshal_stmt",
+   "hand": "lu_marshal_reject_main",
+   "expect": "DIFF",
+   "why": "control (marshal fast path vs too-big)",
    "result": "DIFF",
    "as_expected": true
   }

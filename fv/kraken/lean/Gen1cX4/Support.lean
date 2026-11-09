@@ -108,3 +108,48 @@ theorem join4 (a b c d : BitVec 64) (A0 A1 A2 A3 : List UInt8) (h0 : A0.length =
   simp only [Std.ExtHashMap.sep_assoc]
 
 end Gen1cX4
+
+namespace Gen1cX4
+open Fk
+
+/-! The statements of `mix_split`, `mix_step`, `add8_neg8` (Fk/FvMarshal.lean) and `lum_addr`,
+`lum_room`, `lum_rdx`, `inc_toNat16`, `idx8'`, `lum_off` (Fk/LuMarshal.lean), hand proof modules,
+proved here again with the same text for the generated ListU64 marshal proof and its loop. -/
+
+theorem mix_split (ws d : List UInt8) (i : Nat) :
+    ws.take (8 * i) ++ d.drop (8 * i) = ws.take (8 * i) ++ ((d.drop (8 * i)).take 8 ++ d.drop (8 * i + 8)) := by
+  rw [← List.drop_drop, List.take_append_drop]
+
+theorem mix_step (ws d : List UInt8) (i : Nat) :
+    ws.take (8 * i) ++ ((ws.drop (8 * i)).take 8 ++ d.drop (8 * i + 8)) = ws.take (8 * (i + 1)) ++ d.drop (8 * (i + 1)) := by
+  rw [← List.append_assoc, ← List.take_add, show 8 * i + 8 = 8 * (i + 1) by omega]
+
+theorem add8_neg8 (x y : BitVec 64) : 8 + y + x * 1#64 + -8 = x + y := by
+  rw [BitVec.mul_one, BitVec.add_assoc, BitVec.add_assoc, BitVec.add_comm 8, BitVec.add_assoc, BitVec.add_assoc]
+  rw [show (-8 : BitVec 64) + 8 = 0 by decide, Fk.add_lit_zero, BitVec.add_comm]
+
+theorem lum_addr (x y : BitVec 64) (L i : Nat) (h : y.toNat = L + 4 + 8 * i) (hL : L + 4 + 8 * i < 2 ^ 63) :
+    8 + y + x * 1#64 + -8 = x + BitVec.ofNat 64 (L + 4) + BitVec.ofNat 64 (8 * i) := by
+  rw [add8_neg8, BitVec.add_assoc]; congr 1
+  apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_add]; omega
+
+theorem lum_room (y z : BitVec 64) (L n i cap : Nat) (h : y.toNat = L + 4 + 8 * i) (hi : i < n)
+    (hz : z.toNat = cap) (hc : L + 4 + 8 * n ≤ cap) (hc63 : cap < 2 ^ 63) : (8 + y).toNat ≤ z.toNat := by
+  simp [BitVec.toNat_add]; omega
+
+theorem lum_rdx (y : BitVec 64) (L i : Nat) (h : y.toNat = L + 4 + 8 * i) (hL : L + 4 + 8 * (i + 1) < 2 ^ 63) :
+    (8 + y).toNat = L + 4 + 8 * (i + 1) := by
+  simp [BitVec.toNat_add]; omega
+
+theorem inc_toNat16 (x : BitVec 64) (i : Nat) (h : x.toNat = i) (hi : i < 16) : (x + 1).toNat = i + 1 := by
+  simp [BitVec.toNat_add]; omega
+
+theorem idx8' (x y : BitVec 64) (i : Nat) (h : y.toNat = i) (hi : i < 16) :
+    x + y * 8#64 = x + BitVec.ofNat 64 (8 * i) := by
+  apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_add, BitVec.toNat_mul]; omega
+
+theorem lum_off (x y : BitVec 64) : y + 4 + x * 1#64 + -4 = x + y := by
+  rw [BitVec.mul_one, BitVec.add_assoc, BitVec.add_assoc, BitVec.add_comm 4, BitVec.add_assoc,
+    show (-4 : BitVec 64) + 4 = 0 by decide, Fk.add_lit_zero, BitVec.add_comm]
+
+end Gen1cX4

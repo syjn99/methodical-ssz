@@ -57,11 +57,6 @@
    "hand": "lu_reject_toobig_main",
    "negative": "lu-big-cmp (logs/88)"
   },
-  "marshal (growslice site)": {
-   "status": "not attempted",
-   "hand": "lu_marshal_main, lum_grow_site",
-   "why": "element loop and growslice; needs a loop template"
-  },
   "compose": {
    "status": "not attempted",
    "hand": "lu_unmarshal_then_marshal",
@@ -79,6 +74,20 @@
    "loop": "loop_iter, loop_exit, loop generated into Gen1cX4.ListU64 from the loop directives (pattern of Fk/LuLoop.lean)",
    "witness": "Gen1cX4.WitLuAcc.lu_accept_runs (gen/x4/witness.py --runs from Fk.Witness.lu_accept_runs; examples n = 0, 1, 16) built in logs/90",
    "negative": "lu-acc-store (logs/90)"
+  },
+  "marshal (fast path; growslice site separate)": {
+   "status": "proved (generated), SAME",
+   "attempts": [
+    {
+     "log": "run logs/91",
+     "result": "pass (attempt 1 after one generator fix found by the text diff before any Lean run: a missing `kat` for `inc %rax`)"
+    }
+   ],
+   "hand": "lu_marshal_main",
+   "loop": "mloop_iter, mloop_exit, mloop generated (pattern of Fk/LuMarshal.lean lum_*)",
+   "witness": "Gen1cX4.WitLuM0/M1/M16.lu_marshal_runs (gen/wit WitLuM0/1/16 retargeted by witness.py; sources byte-identical to lean/Fk) built in logs/92",
+   "negative": "lu-marshal-off (logs/91)",
+   "not_covered": "lum_grow_site (Fk/LuGrow.lean, the growslice call site of the slow path) is not generated: not attempted"
   }
  },
  "verbatim_measure": {
@@ -107,6 +116,14 @@
    "loop": {
     "tactic_lines": 23,
     "verbatim_in_Fk_LuAccept_LuLoop": 20
+   },
+   "marshal": {
+    "tactic_lines": 116,
+    "verbatim_in_Fk_LuMarshal": 109
+   },
+   "mloop_iter": {
+    "tactic_lines": 51,
+    "verbatim_in_Fk_LuMarshal": 44
    }
   }
  }

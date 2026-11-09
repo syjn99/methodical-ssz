@@ -1,7 +1,7 @@
 {
  "schema": "fvphase1c.x4-negative/1",
- "cases": 12,
- "as_expected": 12,
+ "cases": 14,
+ "as_expected": 14,
  "rows": [
   {
    "id": "lu-size-add",
@@ -170,6 +170,34 @@
    ],
    "as_expected": true,
    "run": "logs/90"
+  },
+  {
+   "id": "lu-marshal-off",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lu_marshal_off_mutant.marshal",
+   "mutation": "'movl $0x4,-0x4(%rdx,%rbx,1)' -> 'movl $0x5,-0x4(%rdx,%rbx,1)'",
+   "exit": "1",
+   "first_error": "line 222: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+   "theorem_lines": [
+    172,
+    289
+   ],
+   "as_expected": true,
+   "run": "logs/91"
+  },
+  {
+   "id": "lu-marshal-off",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lu_marshal_off_control.marshal",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    172,
+    289
+   ],
+   "as_expected": true,
+   "run": "logs/91"
   }
  ]
 }

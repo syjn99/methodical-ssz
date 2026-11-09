@@ -1638,6 +1638,297 @@ def lu_accept_proof(D, code, A, LS):
         d += 1
 
 
+
+# ---------------------------------------------------------------- ListU64 marshal fast path + its loop
+# Pattern of Fk/LuMarshal.lean (lum_iter, lum_exit, lum_loop, lu_marshal_main): the room check passes
+# (no growslice), the offset 4 is written, the count check passes, the element loop copies 8n bytes,
+# the epilogue returns (dst, len + 4 + 8n, cap, nil). Loop lemmas are generated into the module.
+
+class MarshalShape:
+    def __init__(self, D):
+        lab_index = {t: d for d, k, t in D if k == "label"}
+        ins = [(d, t) for d, k, t in D if k == "instr"]
+        self.frame = next(int(t.split()[1].split(",")[0][1:], 16) for d, t in ins if re.fullmatch(r"sub \$0x[0-9a-f]+,%rsp", t))
+        jge = next(d for d, t in ins if t.startswith("jge ") and D[d - 1][2] == "cmp %r8,%rax")
+        assert D[jge - 2][1] == "label", D[jge - 2]
+        self.H, self.X = jge - 2, lab_index[D[jge][2].split()[1]]
+        jae = next(d for d in range(jge, self.X) if D[d][2].startswith("jae "))
+        self.B = lab_index[D[jae][2].split()[1]]
+        assert [D[self.B + 1][2], D[self.B + 2][2]] == ["mov %r10,-0x8(%rdx,%rbx,1)", "inc %rax"] and self.B + 3 == self.H
+        jae0 = next(d for d, t in ins if t.startswith("jae ") and D[d - 1][2] == "cmp %rdx,%rdi")
+        self.fast = lab_index[D[jae0][2].split()[1]]
+        self.spills = {}
+        for d in range(self.fast, self.H):
+            mm = re.fullmatch(r"mov %(r\w+),(0x[0-9a-f]+)\(%rsp\)", D[d][2])
+            if mm:
+                self.spills[int(mm[2], 16)] = mm[1]
+        assert sorted(self.spills.values()) == ["r8", "r9"], self.spills
+
+    def rel(self, off):
+        r = off - self.frame - 8
+        return f"rsp.toBitVec + {r}" if r > 0 else f"rsp.toBitVec - {-r}"
+
+
+def lu_mloop_lemmas(D, code, M):
+    H, B, X = M.H, M.B, M.X
+    kat = lambda d: f"  kat hk {code} {d}"
+    L = [f"""set_option maxHeartbeats 4000000 in
+set_option maxRecDepth 20000 in
+theorem mloop_iter [Host] (k : Nat) (hk : {code}.IsInfixAt Host.prog k)
+    (hf : LabelsFresh {code} k)
+    (bs d : List UInt8) (n : Nat) (hn : n ≤ 16) (hbs : bs.length = 8 * n) (hd : d.length = 8 * n) (i : Nat) (hi : i < n)
+    (b p : BitVec 64) (L cap : Nat) (hcap : L + 4 + 8 * n ≤ cap) (hcap63 : cap < 2 ^ 63)
+    (R : DataMem → Prop) (s : MachineData)
+    (hrax : s.regs.rax.toNat = i) (hrbx : s.regs.rbx.toBitVec = b) (hrdx : s.regs.rdx.toNat = L + 4 + 8 * i)
+    (hrdi : s.regs.rdi.toNat = cap) (hr8 : s.regs.r8.toNat = n) (hr9 : s.regs.r9.toBitVec = p)
+    (sp bp : UInt64) (hrsp : s.regs.rsp = sp) (hrbp : s.regs.rbp = bp)
+    (h_mem : s.dmem =⋆ Eq (bs.At p) ⋆ Eq ((bs.take (8 * i) ++ d.drop (8 * i)).At (b + BitVec.ofNat 64 (L + 4))) ⋆ R) :
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + {H}) ∧ st.data.regs.rax.toNat = i + 1 ∧ st.data.regs.rbx.toBitVec = b
+        ∧ st.data.regs.rdx.toNat = L + 4 + 8 * (i + 1) ∧ st.data.regs.rdi.toNat = cap ∧ st.data.regs.r8.toNat = n
+        ∧ st.data.regs.r9.toBitVec = p ∧ st.data.regs.rsp = sp ∧ st.data.regs.rbp = bp
+        ∧ (Eq (bs.At p) ⋆ Eq ((bs.take (8 * (i + 1)) ++ d.drop (8 * (i + 1))).At (b + BitVec.ofNat 64 (L + 4))) ⋆ R)
+          st.data.dmem)
+      ⟨s, Host.addrOf (k + {H})⟩ := by
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
+  simp only at h_mem hrax hrbx hrdx hrdi hr8 hr9 hrsp hrbp ⊢
+  subst hrbx hr9 hrsp hrbp
+  have := rax.toNat_lt_size; have := rdx.toNat_lt_size; have := rdi.toNat_lt_size; have := r8.toNat_lt_size
+  simp only [UInt64.size] at *
+  have hlen : bs.length < 2 ^ 64 := by omega
+  rw [block_split bs r9.toBitVec (8 * i) (by omega) hlen, Gen1cX4.mix_split bs d i,
+    Mem.At_append_sep _ _ _ (by simp; omega), Mem.At_append_sep _ _ _ (by simp; omega)] at h_mem
+  simp only [List.length_take, List.length_drop, hbs, hd, Nat.min_eq_left (show 8 * i ≤ 8 * n by omega),
+    Nat.min_eq_left (show 8 ≤ 8 * n - 8 * i by omega)] at h_mem"""]
+    d, seen = H, set()
+    while True:
+        _, kind, t = D[d]
+        if kind == "label":
+            if d == H and d in seen:
+                break
+            seen.add(d); L.append(kat(d)); d += 1; continue
+        if d in seen:
+            raise SystemExit(f"mloop_iter: directive {d} visited twice")
+        seen.add(d)
+        if t in ("cmp %r8,%rax", "add $0x8,%rdx", "cmp %rdx,%rdi", "inc %rax"):
+            L.append(kat(d))
+        elif t.startswith("jge "):
+            L += [kat(d), "  split", "  case isTrue h =>",
+                  "    exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.signed] at h",
+                  "    exact jge_false rax.toBitVec r8.toBitVec (by simp; omega) (by simp; omega) (by simpa using h)",
+                  "  simp only [Effects.All]"]
+        elif t == "mov (%r9,%rax,8),%r10":
+            L += [kat(d), "  rw [Gen1cX4.idx8' _ _ i (by simpa using hrax) (by omega)]",
+                  "  apply load_step _ _ _ _ ((bs.drop (8 * i)).take 8) _ _ (by ecancel) (by simp; omega)", "  kunfold"]
+        elif t.startswith("jae ") and D[d - 1][2] == "cmp %rdx,%rdi":
+            L += [kat(d), "  split", "  case isFalse h =>",
+                  "    exfalso; simp only [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h",
+                  "    have := Gen1cX4.lum_room rdx.toBitVec rdi.toBitVec L n i cap (by simpa using hrdx) hi (by simpa using hrdi) hcap hcap63",
+                  "    simp at h; omega", "  simp only [Effects.All]", f"  klabel hk hf {code} {B}"]
+            d = B; continue
+        elif t == "mov %r10,-0x8(%rdx,%rbx,1)":
+            L += [kat(d), "  rw [Gen1cX4.lum_addr _ _ L i (by simpa using hrdx) (by omega)]",
+                  "  apply store_step _ _ _ _ _ ((d.drop (8 * i)).take 8) _ _ (by ecancel) (by simp; omega)",
+                  "  intro m1 H1",
+                  "  simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl _ (show ((bs.drop (8 * i)).take 8).length = 8 by simp; omega)] at H1",
+                  "  kunfold"]
+        else:
+            raise SystemExit(f"mloop_iter: directive {d} `{t}`: no tactic template")
+        d += 1
+    L += ["  apply Eventually.done", "  refine ⟨rfl, ?_, rfl, ?_, hrdi, hr8, rfl, rfl, rfl, ?_⟩",
+          "  · exact Gen1cX4.inc_toNat16 _ i (by simpa using hrax) (by omega)",
+          "  · exact Gen1cX4.lum_rdx _ L i (by simpa using hrdx) (by omega)",
+          "  · dsimp only",
+          "    rw [← Gen1cX4.mix_step bs d i, Mem.At_append_sep _ _ _ (by simp; omega), Mem.At_append_sep _ _ _ (by simp; omega),",
+          "      block_split bs r9.toBitVec (8 * i) (by omega) hlen]",
+          "    simp only [List.length_take, List.length_drop, hbs, hd, Nat.min_eq_left (show 8 * i ≤ 8 * n by omega),",
+          "      Nat.min_eq_left (show 8 ≤ 8 * n - 8 * i by omega)]",
+          "    (try simp only [BitVec.ofNat_eq_ofNat] at H1 ⊢)", "    ecancel", ""]
+    L.append(f"""set_option maxHeartbeats 4000000 in
+set_option maxRecDepth 20000 in
+theorem mloop_exit [Host] (k : Nat) (hk : {code}.IsInfixAt Host.prog k)
+    (hf : LabelsFresh {code} k) (P : MachineState → Prop) (s : MachineData)
+    (hrr : s.regs.rax = s.regs.r8)
+    (hP : ∀ f : StatusFlags, P ⟨⟨s.regs, s.zmms, f, s.dmem⟩, Host.addrOf (k + {X})⟩) :
+    Eventually (step1 Host.exe) P ⟨s, Host.addrOf (k + {H})⟩ := by
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
+  simp only at hrr hP ⊢
+  subst hrr
+  kat hk {code} {H}
+  kat hk {code} {H + 1}
+  kat hk {code} {H + 2}
+  split
+  case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
+  simp only [Effects.All]
+  klabel hk hf {code} {X}
+  exact Eventually.done _ (hP _)
+
+theorem mloop [Host] (k : Nat) (hk : {code}.IsInfixAt Host.prog k)
+    (hf : LabelsFresh {code} k)
+    (bs d : List UInt8) (n : Nat) (hn : n ≤ 16) (hbs : bs.length = 8 * n) (hd : d.length = 8 * n)
+    (b p : BitVec 64) (L cap : Nat) (hcap : L + 4 + 8 * n ≤ cap) (hcap63 : cap < 2 ^ 63)
+    (R : DataMem → Prop) (sp bp : UInt64) :
+    ∀ j i (s : MachineData), i + j = n →
+    s.regs.rax.toNat = i → s.regs.rbx.toBitVec = b → s.regs.rdx.toNat = L + 4 + 8 * i →
+    s.regs.rdi.toNat = cap → s.regs.r8.toNat = n → s.regs.r9.toBitVec = p → s.regs.rsp = sp → s.regs.rbp = bp →
+    (s.dmem =⋆ Eq (bs.At p) ⋆ Eq ((bs.take (8 * i) ++ d.drop (8 * i)).At (b + BitVec.ofNat 64 (L + 4))) ⋆ R) →
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + {X}) ∧ st.data.regs.rbx.toBitVec = b
+        ∧ st.data.regs.rdx.toNat = L + 4 + 8 * n ∧ st.data.regs.rdi.toNat = cap
+        ∧ st.data.regs.rsp = sp ∧ st.data.regs.rbp = bp
+        ∧ (Eq (bs.At p) ⋆ Eq (bs.At (b + BitVec.ofNat 64 (L + 4))) ⋆ R) st.data.dmem)
+      ⟨s, Host.addrOf (k + {H})⟩
+  | 0, i, s, hij, hrax, hrbx, hrdx, hrdi, hr8, _, hrsp, hrbp, h_mem => by
+    have hin : i = n := by omega
+    subst hin
+    refine mloop_exit k hk hf _ s (UInt64.toNat_inj.mp (by omega)) fun _ => ⟨rfl, hrbx, hrdx, hrdi, hrsp, hrbp, ?_⟩
+    rw [List.take_of_length_le (by omega), List.drop_of_length_le (by omega), List.append_nil] at h_mem
+    exact h_mem
+  | j + 1, i, s, hij, hrax, hrbx, hrdx, hrdi, hr8, hr9, hrsp, hrbp, h_mem => by
+    refine eventually_trans _ _ _ _
+      (mloop_iter k hk hf bs d n hn hbs hd i (by omega) b p L cap hcap hcap63 R s hrax hrbx hrdx hrdi hr8 hr9 sp bp hrsp hrbp h_mem) ?_
+    rintro ⟨s', pc⟩ ⟨hpc, h1, h2, h3, h4, h5, h6, h7, h8, h9⟩
+    dsimp only at hpc; subst hpc
+    exact mloop k hk hf bs d n hn hbs hd b p L cap hcap hcap63 R sp bp j (i + 1) s' (by omega) h1 h2 h3 h4 h5 h6 h7 h8 h9
+""")
+    return L
+
+
+def lu_marshal_lemmas(M):
+    F = M.frame
+    out = {f"ar_m{F + 8}": f"(x : BitVec 64) : {F} + (x - 8#64 - {F}) = x - 8 := by bv_omega"}
+    for off in [F + 24] + sorted(M.spills):
+        r = off - F - 8
+        rhs = f"x + {r}" if r > 0 else f"x - {-r}"
+        out[f"ar_s{off}"] = f"(x : BitVec 64) : x - 8#64 - {F} + {off} = {rhs} := by bv_omega"
+    return out
+
+
+def lu_marshal_stmt(code, M):
+    inv = {v: k for k, v in M.spills.items()}
+    r = lambda off: M.rel(off).replace("rsp.toBitVec", "s.regs.rsp.toBitVec")
+    return f"""def marshal_stmt [Host] : Prop :=
+  ∀ (k : Nat) (hk : {code}.IsInfixAt Host.prog k)
+    (hf : LabelsFresh {code} k)
+    (bs pre o4 d : List UInt8) (n : Nat) (hn : n ≤ 16) (hbs : bs.length = 8 * n) (hd : d.length = 8 * n)
+    (ho4 : o4.length = 4) (p : BitVec 64)
+    (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)
+    (fp slot l1 l2 : List UInt8)
+    (hfp : fp.length = 8) (hsl : slot.length = 8) (hl1 : l1.length = 8) (hl2 : l2.length = 8)
+    (R : DataMem → Prop)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (slot.At ({r(M.frame + 24)}))
+      ⋆ Eq (l1.At ({r(inv["r8"])})) ⋆ Eq (l2.At ({r(inv["r9"])}))
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+      ⋆ Eq ((Int.toBytes 8 p.toInt).At s.regs.rax.toBitVec) ⋆ Eq ((Int.toBytes 8 (n : Int)).At (s.regs.rax.toBitVec + 8))
+      ⋆ Eq (bs.At p)
+      ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (o4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
+      ⋆ Eq (d.At (s.regs.rbx.toBitVec + BitVec.ofNat 64 (s.regs.rcx.toNat + 4))) ⋆ R)
+    (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 8 ≤ s.regs.rsp.toNat)
+    (hcap : s.regs.rcx.toNat + 4 + 8 * n ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = s.regs.rbx
+        ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 4 + 8 * n ∧ st.data.regs.rcx = s.regs.rdi
+        ∧ st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
+        ∧ (Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq ([4, 0, 0, 0].At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
+          ⋆ Eq (bs.At (s.regs.rbx.toBitVec + BitVec.ofNat 64 (s.regs.rcx.toNat + 4)))
+          ⋆ Eq (bs.At p) ⋆ R ⋆ fun _ => True) st.data.dmem)
+      ⟨s, Host.addrOf k⟩
+"""
+
+
+def lu_marshal_proof(D, code, M):
+    lab_index = {t: d for d, k, t in D if k == "label"}
+    kat = lambda d: f"kat hk {code} {d}"
+    F = M.frame
+    names = {"r8": ("l1", "hl1", 4), "r9": ("l2", "hl2", 5)}
+    L = ["intro k hk hf bs pre o4 d n hn hbs hd ho4 p s ra guard hpre fp slot l1 l2 hfp hsl hl1 hl2 R h_mem hguard hsp hcap hcap63",
+         "obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s",
+         "simp only at h_mem hguard hsp hcap hcap63 hpre ⊢",
+         "have := rsp.toNat_lt_size; have := guard.toNat_lt_size; have := rcx.toNat_lt_size; have := rdi.toNat_lt_size",
+         "simp only [UInt64.size] at *",
+         "have hnI : (n : Int) = (BitVec.ofNat 64 n).toInt := by",
+         "  rw [BitVec.toInt_eq_toNat_of_lt (by simp; omega)]; simp; omega",
+         "rw [hnI] at h_mem"]
+    d, seen = 0, set()
+    while True:
+        if d in seen:
+            raise SystemExit(f"marshal: directive {d} visited twice")
+        seen.add(d)
+        _, kind, t = D[d]
+        if kind == "label":
+            L.append(kat(d)); d += 1; continue
+        op = t.split()[0]
+        a = t[len(op):].strip()
+        if t in ("mov %rsp,%rbp", f"sub {'$' + hex(F)},%rsp", "lea 0x4(%rcx),%rdx", "nop", "cmp %rdx,%rdi", "cmp $0x10,%r8",
+                 "mov %rbx,%rax", "mov %rdx,%rbx", "mov %rdi,%rcx", f"add {'$' + hex(F)},%rsp"):
+            L.append(kat(d))
+        elif t == "cmp 0x10(%r14),%rsp":
+            L += [kat(d), "apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
+        elif op == "jbe":
+            L += [kat(d), "split", "· rename_i h; exfalso",
+                  "  simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl, CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h",
+                  "  rcases h with h | h", "  · apply h; omega",
+                  "  · have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this; omega", "simp only [Effects.All]"]
+        elif op == "push":
+            L += [kat(d), "apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)",
+                  "intro m1 H1", "simp only [Width.bytes, Width.bits] at H1", "kunfold"]
+        elif t == f"mov %rbx,{hex(F + 24)}(%rsp)":
+            L += [kat(d), f"apply store_step_at _ _ ({M.rel(F + 24)}) _ _ _ slot _ _ (ar_s{F + 24} _) (by ecancel) (by exact hsl)",
+                  "intro m2 H2", "simp only [Width.bytes, Width.bits] at H2", "kunfold"]
+        elif op == "jae" and lab_index[a] == M.fast:
+            L += [kat(d), "split", "case isFalse h =>",
+                  "  exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.toNat_add] at h; omega",
+                  "simp only [Effects.All]", f"klabel hk hf {code} {M.fast}"]
+            d = M.fast; continue
+        elif t == "movl $0x4,-0x4(%rdx,%rbx,1)":
+            L += [kat(d), "rw [Gen1cX4.lum_off]", "apply store_step _ _ _ _ _ o4 _ _ (by ecancel) (by exact ho4)",
+                  "intro m3 H3", "simp only [Width.bytes, Width.bits] at H3",
+                  "rw [show Int.toBytes 4 (BitVec.truncate 32 (4 : BitVec 64)).toInt = [4, 0, 0, 0] by decide] at H3", "kunfold"]
+        elif t == "mov 0x8(%rax),%r8":
+            L += [kat(d), "apply load_step_at _ _ (rax.toBitVec + 8) _ _ (Int.toBytes 8 (BitVec.ofNat 64 n).toInt) _ _ (by kaddr) (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
+        elif op == "jg":
+            L += [kat(d), "split", "case isTrue h =>", "  exfalso; rw [jg16_false _ _ (by simp; omega)] at h; simp at h", "simp only [Effects.All]"]
+        elif re.fullmatch(r"mov %r(8|9),0x[0-9a-f]+\(%rsp\)", t) and d < M.H:
+            off = int(t.split(",")[1].split("(")[0], 16)
+            nm, hn_, i = names[M.spills[off]]
+            L += [kat(d), f"apply store_step_at _ _ ({M.rel(off)}) _ _ _ {nm} _ _ (ar_s{off} _) (by ecancel) (by exact {hn_})",
+                  f"intro m{i} H{i}", f"simp only [Width.bytes, Width.bits] at H{i}", "kunfold"]
+        elif t == "mov (%rax),%r9":
+            L += [kat(d), "apply load_step _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
+        elif t in ("xor %eax,%eax", "xor %edi,%edi", "xor %esi,%esi"):
+            L += [kat(d), "intro _"]
+        elif op == "jmp" and lab_index[a] == M.H:
+            L += [kat(d), f"klabel hk hf {code} {M.H}",
+                  "refine eventually_trans _ _ _ _ (mloop k hk hf bs d n hn hbs hd rbx.toBitVec p rcx.toNat rdi.toNat hcap hcap63 _ _ _ n 0 _",
+                  "  (by omega) (by simp) rfl (by show (rcx.toBitVec + 4).toNat = rcx.toNat + 4; simp [BitVec.toNat_add]; omega)",
+                  "  (by simp) (by show (BitVec.ofNat 64 n).toNat = n; simp; omega) rfl rfl rfl",
+                  "  (by simp only [Nat.mul_zero, List.take_zero, List.nil_append, List.drop_zero]; ecancel)) ?_",
+                  "rintro ⟨e3, pc3⟩ ⟨hpc3, hrbx3, hrdx3, hrdi3, hrsp3, hrbp3, Hm3⟩",
+                  "dsimp only at hpc3 hrbx3 hrdx3 hrdi3 hrsp3 hrbp3 Hm3", "subst hpc3",
+                  "obtain ⟨⟨rax3, rbx3, rcx3, rdx3, rsi3, rdi3, rsp3, rbp3, r83, r93, r103, r113, r123, r133, r143, r153⟩,",
+                  "  zmms3, flags3, mem3⟩ := e3",
+                  "simp only at hrbx3 hrdx3 hrdi3 hrsp3 hrbp3 Hm3", "subst hrsp3 hrbp3", kat(M.X)]
+            d = M.X + 1; continue
+        elif op == "pop" and d > M.X:
+            L += [kat(d), f"rw [ar_m{F + 8}]",
+                  "apply load_step _ _ _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
+        elif op == "retq" and d > M.X:
+            L += [kat(d), "rw [show rsp.toBitVec - 8 + 8#64 = rsp.toBitVec by bv_omega]",
+                  "apply load_step _ _ _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)",
+                  "kunfold", "apply Eventually.done", "simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]",
+                  "refine ⟨trivial, ?_, ?_, ?_, ?_, ?_, ?_, trivial, ?_⟩",
+                  "· exact UInt64.toBitVec_inj.mp hrbx3", "· simpa using hrdx3",
+                  "· exact UInt64.toNat_inj.mp (by simpa using hrdi3)",
+                  "· apply UInt64.toBitVec_inj.mp; simp", "· apply UInt64.toBitVec_inj.mp; simp", "· apply UInt64.toBitVec_inj.mp; simp",
+                  "· exact sep_true (by ecancel)"]
+            return L
+        else:
+            raise SystemExit(f"marshal: directive {d} `{t}`: no tactic template")
+        d += 1
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--desccheck-result", required=True)
@@ -1732,11 +2023,11 @@ def main_list(a, key, desc, dsha):
     t = key[1]
     L = ListField(desc, LAYOUT["types"][t])
     ns = a.ns or f"Gen1cX4.{t}"
-    LIST_OBL = ("size", "accept", "reject_short", "reject_offset", "reject_misaligned", "reject_toobig")
+    LIST_OBL = ("size", "accept", "marshal", "reject_short", "reject_offset", "reject_misaligned", "reject_toobig")
     only = [x for x in a.only.split(",") if x in LIST_OBL] if a.only != ap_default() else list(LIST_OBL)
     code = {m: f"{t}{m}" for m in ("SizeSSZ", "UnmarshalSSZ", "MarshalSSZTo")}
     head = ["import Fk.Step", "import Fk.Bytes", "import Fk.Labels", "import Fk.Flags", "import Gen1cX4.Support"]
-    if any(x in only for x in ("reject_misaligned", "reject_toobig", "accept")):
+    if any(x in only for x in ("reject_misaligned", "reject_toobig", "accept", "marshal")):
         head += ["import Fk.Contracts", "import Fk.Frame", "import Fk.Block"]
     pre = []
     if a.mutant:
@@ -1762,6 +2053,18 @@ def main_list(a, key, desc, dsha):
         body += ["-- element loop of the decoder (generated from its directives)", *lu_loop_lemmas(Dun, code["UnmarshalSSZ"], LS),
                  lu_accept_stmt(code["UnmarshalSSZ"], AS), "set_option maxHeartbeats 8000000 in", "set_option maxRecDepth 100000 in",
                  "theorem accept [Host] : accept_stmt := by", *["  " + x for x in lu_accept_proof(Dun, code["UnmarshalSSZ"], AS, LS)], ""]
+    if "marshal" in only:
+        if (L.esz, L.limit) != (8, 16):
+            raise SystemExit(f"x4gen: refused {key[0]}.{t}: the marshal/loop template is for 8-byte elements and limit 16")
+        Dma = directives(os.path.join(NORM, f"target.{t}.MarshalSSZTo.S"))
+        try:
+            MS = MarshalShape(Dma)
+        except (KeyError, AssertionError, IndexError, StopIteration, ValueError, TypeError) as e:
+            raise SystemExit(f"x4gen: refused {key[0]}.{t}: marshal/loop template does not fit the code ({type(e).__name__}: {e})")
+        body += ["-- element loop of the encoder and the frame arithmetic (generated)", *lu_mloop_lemmas(Dma, code["MarshalSSZTo"], MS)]
+        body += [f"theorem {n} {v}" for n, v in sorted(lu_marshal_lemmas(MS).items())] + [""]
+        body += [lu_marshal_stmt(code["MarshalSSZTo"], MS), "set_option maxHeartbeats 8000000 in", "set_option maxRecDepth 100000 in",
+                 "theorem marshal [Host] : marshal_stmt := by", *["  " + x for x in lu_marshal_proof(Dma, code["MarshalSSZTo"], MS)], ""]
     for mode in ("short", "offset"):
         if f"reject_{mode}" in only:
             body += [lu_rej_stmt(f"reject_{mode}", code["UnmarshalSSZ"], lu_err(Dun, mode), mode),

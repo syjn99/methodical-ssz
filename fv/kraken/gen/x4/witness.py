@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Full-premise witness of a generated composition theorem (X4).
 
-Usage: witness.py <regen-dir> <Wit name> <hand theorem> <generated theorem> <generated module> <out.lean>
+Usage: witness.py <regen-dir> <Wit name> <hand theorem> <generated theorem> <generated module> <out.lean> [<hand import>]
        witness.py --runs <Fk module file> <runs theorem> <hand theorem> <generated theorem> <generated module> <out.lean>
 Takes the witness that gen/wit regenerated (byte-identical to lean/Fk, see gen/wit/results/regen.json),
 and retargets it to the generated theorem: import, theorem name and namespace change; the concrete
@@ -37,8 +37,9 @@ if sys.argv[1] == "--runs":
     sys.exit(0)
 
 regen, wit, hand, gen, mod, out = sys.argv[1:7]
+hand_mod = sys.argv[7] if len(sys.argv) > 7 else "Fk.Compose"   # the import that provides the hand theorem
 src = open(f"{regen}/{wit}.lean").read()
-imp = [l for l in src.split("\n") if l.startswith("import Fk.Compose")]
+imp = [l for l in src.split("\n") if l == f"import {hand_mod}" or (hand_mod == "Fk.Compose" and l.startswith("import Fk.Compose"))]
 assert len(imp) == 1, imp
 assert src.count(f"({hand} ") == 1, f"{hand} must be applied once"
 src = src.replace(imp[0], f"import {mod}", 1).replace(f"({hand} ", f"({gen} ", 1)

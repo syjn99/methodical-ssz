@@ -20,6 +20,12 @@
    "accept (makeslice + element loop)"
   ],
   [
+   "Gen1cX4.ListU64.marshal_stmt",
+   "lu_marshal_main",
+   "SAME",
+   "marshal fast path (element loop)"
+  ],
+  [
    "Gen1cX4.ListU64.reject_short_stmt",
    "lu_reject_short_main",
    "SAME",
@@ -60,6 +66,12 @@
    "lu_reject_short_main",
    "DIFF",
    "control (accept vs reject)"
+  ],
+  [
+   "Gen1cX4.ListU64.marshal_stmt",
+   "lu_marshal_reject_main",
+   "DIFF",
+   "control (marshal fast path vs too-big)"
   ]
  ]
 }

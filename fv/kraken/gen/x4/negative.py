@@ -34,6 +34,7 @@ CASES = [  # id, type, method, designated obligation, old instruction, new instr
     ("lu-mis-test", "ListU64", "UnmarshalSSZ", "reject_misaligned", "test $0x7,%rcx", "test $0x3,%rcx"),
     ("lu-big-cmp", "ListU64", "UnmarshalSSZ", "reject_toobig", "cmp $0x10,%rcx", "cmp $0x11,%rcx"),
     ("lu-acc-store", "ListU64", "UnmarshalSSZ", "accept", "mov %rdx,0x8(%rsi)", "mov %rdx,0x18(%rsi)"),
+    ("lu-marshal-off", "ListU64", "MarshalSSZTo", "marshal", "movl $0x4,-0x4(%rdx,%rbx,1)", "movl $0x5,-0x4(%rdx,%rbx,1)"),
     # statement mutation (method "stmt"): the generated composition must fail if it claims another length
     ("sc-compose-len", "Scalars", "stmt", "compose", "st'.data.regs.rbx = dlen + 16", "st'.data.regs.rbx = dlen + 17"),
 ]
