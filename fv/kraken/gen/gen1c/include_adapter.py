@@ -1,8 +1,9 @@
 """The one adapter between the phase1c generator and the fix3 data-include API.
 
 Every name and syntax of the include interface lives here and nowhere else.
-Built against INCLUDE-API api_version 2 (status "committed", fix3 b6c32c3, not
-reviewed; snapshot include-api-v2.json). include-api-v1.json is kept as history.
+Built against INCLUDE-API api_version 2, status "approved (stage A)", fix3 d9cdb40
+(review fix3-r2 APPROVE; snapshot include-api-v2.json = $RUN/shared/INCLUDE-API.json).
+The earlier "committed" (b6c32c3) snapshot had the same 22 items. include-api-v1.json is history.
 v1 -> v2: names and file format unchanged; an address term at offset 0 has no `+ 0`.
 An api_version change touches this file only.
 """
@@ -10,6 +11,8 @@ import json
 import os
 
 API_VERSION = 2
+API_STATUS = "approved (stage A)"
+API_FIX3_COMMIT = "d9cdb40f861e3e49f017928ade26bc936829ff8f"
 SNAPSHOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "include-api-v2.json")
 
 DATA_DIR_IN_REPO = "fv/kraken/link/out/data/"   # where fix3 keeps data files (we never write there)
@@ -43,6 +46,9 @@ def check_api(path=SNAPSHOT):
     d = json.load(open(path))
     if d.get("api_version") != API_VERSION:
         raise SystemExit(f"include adapter speaks api_version {API_VERSION}, {path} has {d.get('api_version')}")
+    if d.get("status") != API_STATUS or d.get("fix3_commit") != API_FIX3_COMMIT:
+        raise SystemExit(f"include adapter is built against {API_STATUS} at {API_FIX3_COMMIT}, {path} has "
+                         f"{d.get('status')!r} at {d.get('fix3_commit')!r}")
     return d
 
 

@@ -1,0 +1,270 @@
+{
+ "api_version": 2,
+ "status": "approved (stage A)",
+ "fix3_commit": "d9cdb40f861e3e49f017928ade26bc936829ff8f",
+ "items": 22,
+ "rows": [
+  {
+   "id": "blFmtB",
+   "kind": "rodata-string",
+   "file": "fv/kraken/link/out/data/blFmtB.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true,
+    "bytes: adapter render of ELF = file": true
+   },
+   "ok": true
+  },
+  {
+   "id": "bvFmtJ",
+   "kind": "rodata-string",
+   "file": "fv/kraken/link/out/data/bvFmtJ.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true,
+    "bytes: adapter render of ELF = file": true
+   },
+   "ok": true
+  },
+  {
+   "id": "vbvFmt",
+   "kind": "rodata-string",
+   "file": "fv/kraken/link/out/data/vbvFmt.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true,
+    "bytes: adapter render of ELF = file": true
+   },
+   "ok": true
+  },
+  {
+   "id": "lcFmtZero",
+   "kind": "rodata-string",
+   "file": "fv/kraken/link/out/data/lcFmtZero.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true,
+    "bytes: adapter render of ELF = file": true
+   },
+   "ok": true
+  },
+  {
+   "id": "lcFmtShort",
+   "kind": "rodata-string",
+   "file": "fv/kraken/link/out/data/lcFmtShort.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true,
+    "bytes: adapter render of ELF = file": true
+   },
+   "ok": true
+  },
+  {
+   "id": "lcFmtOrder",
+   "kind": "rodata-string",
+   "file": "fv/kraken/link/out/data/lcFmtOrder.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true,
+    "bytes: adapter render of ELF = file": true
+   },
+   "ok": true
+  },
+  {
+   "id": "vblMsgE",
+   "kind": "rodata-string",
+   "file": "fv/kraken/link/out/data/vblMsgE.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true,
+    "bytes: adapter render of ELF = file": true
+   },
+   "ok": true
+  },
+  {
+   "id": "vblMsgZ",
+   "kind": "rodata-string",
+   "file": "fv/kraken/link/out/data/vblMsgZ.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true,
+    "bytes: adapter render of ELF = file": true
+   },
+   "ok": true
+  },
+  {
+   "id": "vblMsgB",
+   "kind": "rodata-string",
+   "file": "fv/kraken/link/out/data/vblMsgB.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true,
+    "bytes: adapter render of ELF = file": true
+   },
+   "ok": true
+  },
+  {
+   "id": "luFmtTooBig",
+   "kind": "rodata-string",
+   "file": "fv/kraken/link/out/data/luFmtTooBig.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true,
+    "bytes: adapter render of ELF = file": true
+   },
+   "ok": true
+  },
+  {
+   "id": "luFmtMis",
+   "kind": "rodata-string",
+   "file": "fv/kraken/link/out/data/luFmtMis.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true,
+    "bytes: adapter render of ELF = file": true
+   },
+   "ok": true
+  },
+  {
+   "id": "errorStringItab",
+   "kind": "itab (whole): words inter, Type, Fun[0]; Hash raw",
+   "file": "fv/kraken/link/out/data/errorStringItab.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true
+   },
+   "ok": true
+  },
+  {
+   "id": "errorStringPtrType",
+   "kind": "abi.PtrType of *errors.errorString (abi.Type 48 + Elem word)",
+   "file": "fv/kraken/link/out/data/errorStringPtrType.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true
+   },
+   "ok": true
+  },
+  {
+   "id": "intType",
+   "kind": "abi.Type of int",
+   "file": "fv/kraken/link/out/data/intType.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true
+   },
+   "ok": true
+  },
+  {
+   "id": "uint64Type",
+   "kind": "abi.Type of uint64",
+   "file": "fv/kraken/link/out/data/uint64Type.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true
+   },
+   "ok": true
+  },
+  {
+   "id": "staticuint64s",
+   "kind": "table uint64 0..255",
+   "file": "fv/kraken/link/out/data/staticuint64s.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true
+   },
+   "ok": true
+  },
+  {
+   "id": "ErrSize",
+   "kind": "address only (value set by runtime init; no bytes extracted)",
+   "file": "fv/kraken/link/out/data/ErrSize.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true
+   },
+   "ok": true
+  },
+  {
+   "id": "ErrInvalidSerialization",
+   "kind": "address only (value set by runtime init; no bytes extracted)",
+   "file": "fv/kraken/link/out/data/ErrInvalidSerialization.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true
+   },
+   "ok": true
+  },
+  {
+   "id": "ErrInvalidVariableOffset",
+   "kind": "address only (value set by runtime init; no bytes extracted)",
+   "file": "fv/kraken/link/out/data/ErrInvalidVariableOffset.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true
+   },
+   "ok": true
+  },
+  {
+   "id": "ErrListTooBig",
+   "kind": "address only (value set by runtime init; no bytes extracted)",
+   "file": "fv/kraken/link/out/data/ErrListTooBig.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true
+   },
+   "ok": true
+  },
+  {
+   "id": "ErrBytesLength",
+   "kind": "address only (value set by runtime init; no bytes extracted)",
+   "file": "fv/kraken/link/out/data/ErrBytesLength.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true
+   },
+   "ok": true
+  },
+  {
+   "id": "ErrIncorrectListSize",
+   "kind": "address only (value set by runtime init; no bytes extracted)",
+   "file": "fv/kraken/link/out/data/ErrIncorrectListSize.data",
+   "checks": {
+    "file exists": true,
+    "at-line = adapter render": true,
+    "Fk/Data.lean includes it": true
+   },
+   "ok": true
+  }
+ ],
+ "python_ok": true,
+ "lean_examples": 33,
+ "lean_errors": [],
+ "lean_end_seen": true,
+ "control_errors": [
+  "IncludeControl.lean:7:52: error: Type mismatch",
+  "IncludeControl.lean:8:79: error: Type mismatch"
+ ],
+ "all_ok": true
+}
