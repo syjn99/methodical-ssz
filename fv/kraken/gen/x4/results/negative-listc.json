@@ -1,7 +1,7 @@
 {
  "schema": "fvphase1c.x4-negative/1",
- "cases": 4,
- "as_expected": 4,
+ "cases": 6,
+ "as_expected": 6,
  "rows": [
   {
    "id": "lc-short-cmp",
@@ -58,6 +58,34 @@
    ],
    "as_expected": true,
    "run": "logs/96"
+  },
+  {
+   "id": "lc-size-init",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lc_size_init_mutant.size",
+   "mutation": "'mov $0x4,%ebx' -> 'mov $0x5,%ebx'",
+   "exit": "1",
+   "first_error": "line 150: Tactic `rfl` failed: The left-hand side",
+   "theorem_lines": [
+    131,
+    155
+   ],
+   "as_expected": true,
+   "run": "logs/97"
+  },
+  {
+   "id": "lc-size-init",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lc_size_init_control.size",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    131,
+    155
+   ],
+   "as_expected": true,
+   "run": "logs/97"
   }
  ],
  "note": "logs/95 negative step did not run: the first offset mutation text (cmp $0x4,%rdx) occurs twice in the .S, prepare refused it; replaced by the unique jne (logs/96)"

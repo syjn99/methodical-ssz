@@ -5,9 +5,150 @@ import Fk.Bytes
 import Fk.Labels
 import Fk.Flags
 import Gen1cX4.Support
+import Fk.Contracts
+import Fk.Frame
+import Fk.Block
 
 namespace Gen1cX4.ListC
 open Fk Fk.Code
+
+-- outer item loop of SizeSSZ (generated from its directives)
+set_option maxHeartbeats 4000000 in
+set_option maxRecDepth 20000 in
+theorem size_iter [Host] (k : Nat) (hk : ListCSizeSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh ListCSizeSSZ k)
+    (q p : BitVec 64) (n i acc l : Nat) (hi : i < n) (hn : n < 2 ^ 62) (hl : 8 + 8 * l + acc < 2 ^ 63)
+    (s : MachineData) (R : DataMem → Prop)
+    (hrax : s.regs.rax.toNat = i) (hrbx : s.regs.rbx.toNat = acc) (hrcx : s.regs.rcx.toBitVec = q)
+    (hrdx : s.regs.rdx.toNat = n)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 p.toInt).At (q + BitVec.ofNat 64 (8 * i)))
+      ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 l).toInt).At (p + 8)) ⋆ R) :
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + 12) ∧ st.data.regs.rax.toNat = i + 1
+        ∧ st.data.regs.rbx.toNat = acc + 8 + 8 * l ∧ st.data.regs.rcx.toBitVec = q
+        ∧ st.data.regs.rdx.toNat = n ∧ st.data.regs.rsp = s.regs.rsp ∧ st.data.dmem = s.dmem)
+      ⟨s, Host.addrOf (k + 12)⟩ := by
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
+  simp only at h_mem hrax hrbx hrcx hrdx ⊢
+  subst hrcx
+  have := rax.toNat_lt_size; have := rbx.toNat_lt_size; have := rdx.toNat_lt_size
+  simp only [UInt64.size] at *
+  kat hk ListCSizeSSZ 12
+  kat hk ListCSizeSSZ 13
+  kat hk ListCSizeSSZ 14
+  rw [jl_val _ _ (by simp; omega) (by simp; omega)]
+  simp only [show decide (rax.toBitVec.toNat < rdx.toBitVec.toNat) = true by simp; omega, ↓reduceIte, Effects.All]
+  klabel hk hf ListCSizeSSZ 6
+  kat hk ListCSizeSSZ 6
+  kat hk ListCSizeSSZ 7
+  rw [show rcx.toBitVec + rax.toBitVec * 8#64 = rcx.toBitVec + BitVec.ofNat 64 (8 * i) by
+    apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_add, BitVec.toNat_mul]; omega]
+  apply load_step _ _ _ _ (Int.toBytes 8 p.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+  kunfold
+  kat hk ListCSizeSSZ 8
+  apply load_step _ _ _ _ (Int.toBytes 8 (BitVec.ofNat 64 l).toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+  kunfold
+  kat hk ListCSizeSSZ 9
+  kat hk ListCSizeSSZ 10
+  kat hk ListCSizeSSZ 11
+  apply Eventually.done
+  refine ⟨rfl, ?_, ?_, rfl, hrdx, rfl, rfl⟩
+  · show (rax.toBitVec + 1).toNat = i + 1; simp [BitVec.toNat_add]; omega
+  · show (rbx.toBitVec + BitVec.ofNat 64 l * 8#64 + 8).toNat = _
+    simp [BitVec.toNat_add, BitVec.toNat_mul]; omega
+
+theorem size_loop [Host] (k : Nat) (hk : ListCSizeSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh ListCSizeSSZ k) (q : BitVec 64) (ps : List (BitVec 64)) (ls : List Nat)
+    (hlen : ps.length = ls.length) (hn : ls.length < 2 ^ 62) (hsum : lcAcc ls ls.length < 2 ^ 63)
+    (ra : UInt64) (R : DataMem → Prop) :
+    ∀ (j : Nat) (s : MachineData), j ≤ ls.length → s.regs.rax.toNat = ls.length - j →
+      s.regs.rbx.toNat = lcAcc ls (ls.length - j) → s.regs.rcx.toBitVec = q → s.regs.rdx.toNat = ls.length →
+      (∀ i (hi : i < ls.length), (Eq ((Int.toBytes 8 (ps[i]'(by omega)).toInt).At (q + BitVec.ofNat 64 (8 * i)))
+        ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 ls[i]).toInt).At (ps[i]'(by omega) + 8)) ⋆ fun _ => True) s.dmem) →
+      (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec) ⋆ R) s.dmem →
+      Eventually (step1 Host.exe)
+        (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax.toNat = lcAcc ls ls.length
+          ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.dmem = s.dmem)
+        ⟨s, Host.addrOf (k + 12)⟩ := by
+  intro j
+  induction j with
+  | zero =>
+    intro s _ hrax hrbx hrcx hrdx _ hret
+    obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
+    simp only at hrax hrbx hrcx hrdx hret ⊢
+    have := rax.toNat_lt_size; have := rdx.toNat_lt_size; simp only [UInt64.size] at *
+    kat hk ListCSizeSSZ 12
+    kat hk ListCSizeSSZ 13
+    kat hk ListCSizeSSZ 14
+    rw [jl_val _ _ (by simp; omega) (by simp; omega)]
+    simp only [show decide (rax.toBitVec.toNat < rdx.toBitVec.toNat) = false by simp; omega, Bool.false_eq_true,
+      ↓reduceIte, Effects.All]
+    kat hk ListCSizeSSZ 15
+    kat hk ListCSizeSSZ 16
+    apply load_step _ _ _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+    kunfold
+    apply Eventually.done
+    simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+    refine ⟨trivial, ?_, ?_, ?_⟩
+    · simpa using hrbx
+    · apply UInt64.toBitVec_inj.mp; simp
+    · first | trivial | rfl
+  | succ j ih =>
+    intro s hj hrax hrbx hrcx hrdx hall hret
+    have hi : ls.length - (j + 1) < ls.length := by omega
+    have hacc := lcAcc_succ ls (ls.length - (j + 1)) hi
+    have hle := lcAcc_le ls (ls.length - (j + 1) + 1)
+    refine eventually_trans _ _ _ _ (size_iter k hk hf q (ps[ls.length - (j + 1)]'(by omega)) ls.length
+      (ls.length - (j + 1)) (lcAcc ls (ls.length - (j + 1))) ls[ls.length - (j + 1)] hi hn (by omega) s
+      (fun _ => True) hrax hrbx hrcx hrdx (hall _ hi)) ?_
+    rintro ⟨d, pc⟩ ⟨hpc, hrax', hrbx', hrcx', hrdx', hrsp', hmem'⟩
+    dsimp only at hpc hrax' hrbx' hrcx' hrdx' hrsp' hmem'
+    subst hpc
+    have := ih d (by omega) (by rw [hrax']; omega) (by rw [hrbx', ← hacc]; congr 1; omega) hrcx' hrdx'
+      (by rw [hmem']; exact hall) (by rw [hmem', hrsp']; exact hret)
+    simpa [hrsp', hmem'] using this
+
+def size_stmt [Host] : Prop :=
+  ∀ (k : Nat) (hk : ListCSizeSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh ListCSizeSSZ k) (q : BitVec 64) (ps : List (BitVec 64)) (ls : List Nat)
+    (hlen : ps.length = ls.length) (hn : ls.length < 2 ^ 62) (hsum : lcAcc ls ls.length < 2 ^ 63)
+    (s : MachineData) (ra : UInt64) (R : DataMem → Prop)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq ((Int.toBytes 8 q.toInt).At s.regs.rax.toBitVec)
+      ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 ls.length).toInt).At (s.regs.rax.toBitVec + 8)) ⋆ R)
+    (hall : ∀ i (hi : i < ls.length), (Eq ((Int.toBytes 8 (ps[i]'(by omega)).toInt).At (q + BitVec.ofNat 64 (8 * i)))
+        ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 ls[i]).toInt).At (ps[i]'(by omega) + 8)) ⋆ fun _ => True) s.dmem),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax.toNat = lcAcc ls ls.length
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.dmem = s.dmem)
+      ⟨s, Host.addrOf k⟩
+
+theorem size [Host] : size_stmt := by
+  intro k hk hf q ps ls hlen hn hsum s ra R h_mem hall
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
+  simp only at h_mem hall ⊢
+  kat hk ListCSizeSSZ 0
+  kat hk ListCSizeSSZ 1
+  apply load_step _ _ _ _ (Int.toBytes 8 q.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+  kunfold
+  kat hk ListCSizeSSZ 2
+  apply load_step _ _ _ _ (Int.toBytes 8 (BitVec.ofNat 64 ls.length).toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+  kunfold
+  kat hk ListCSizeSSZ 3
+  intro _
+  kat hk ListCSizeSSZ 4
+  kat hk ListCSizeSSZ 5
+  klabel hk hf ListCSizeSSZ 12
+  refine eventually_trans _ _ _ _ (size_loop k hk hf q ps ls hlen hn hsum ra (fun _ => True) ls.length _
+    (Nat.le_refl _) (by simp) (by simp [lcAcc]; rfl)
+    rfl (by show (BitVec.ofNat 64 ls.length).toNat = _; simp; omega) hall (sep_true (by ecancel))) ?_
+  rintro st ⟨h1, h2, h3, h4⟩
+  apply Eventually.done
+  exact ⟨h1, h2, h3, h4⟩
 
 -- prologue/epilogue arithmetic of the decoder's frame (generated with its guard distance and frame size)
 theorem ar_neg96 (x : BitVec 64) (h : 96 ≤ x.toNat) : (x + -96).toNat = x.toNat - 96 := by

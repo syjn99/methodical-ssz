@@ -153,3 +153,44 @@ theorem lum_off (x y : BitVec 64) : y + 4 + x * 1#64 + -4 = x + y := by
     show (-4 : BitVec 64) + 4 = 0 by decide, Fk.add_lit_zero, BitVec.add_comm]
 
 end Gen1cX4
+
+namespace Gen1cX4
+open Fk
+
+/-! The definition `lcAcc` and the statements of `jl_val`, `sum_take_le`, `lcAcc_succ`, `lcAcc_le`
+of Fk/LcSize.lean (a hand proof module), written here again with the same text so the generated
+ListC size proof does not import a hand proof module. `lcAcc` is the sum after the first `i` items of
+a list of single-list containers with 8-byte inner elements (offset 4 + inner fixed part 4 + 8·l):
+x4gen refuses other element shapes on that path. -/
+
+theorem jl_val (a b : BitVec 64) (ha : a.toNat < 2 ^ 62) (hb : b.toNat < 2 ^ 62) (af : Bool) :
+    CondCode.l.interp (StatusFlags.from_result (a - b)
+      { cf := BitVec.unsigned (a - b) != a.unsigned - b.unsigned, af := af,
+        of := BitVec.toInt (a - b) != a.toInt - b.toInt }) = decide (a.toNat < b.toNat) := by
+  have ta : a.toInt = a.toNat := BitVec.toInt_eq_toNat_of_lt (by omega)
+  have tb : b.toInt = b.toNat := BitVec.toInt_eq_toNat_of_lt (by omega)
+  have hs : (a - b).toInt = (a.toNat : Int) - b.toNat := by
+    rw [BitVec.toInt_sub, ta, tb]; apply Int.bmod_eq_of_le <;> omega
+  have hm : (a - b).msb = decide (a.toNat < b.toNat) := by
+    rw [BitVec.msb_eq_toInt, hs]; simp; omega
+  simp only [CondCode.interp, StatusFlags.from_result, hm, hs, ta, tb]
+  simp
+theorem sum_take_le (f : Nat → Nat) (ls : List Nat) (i : Nat) :
+    ((ls.take i).map f).sum ≤ (ls.map f).sum := by
+  conv => rhs; rw [← List.take_append_drop i ls]
+  rw [List.map_append, List.sum_append]; omega
+
+/-- The sum the loop computes after the first `i` elements. -/
+def lcAcc (ls : List Nat) (i : Nat) : Nat := 4 + ((ls.take i).map fun l => 8 + 8 * l).sum
+
+theorem lcAcc_succ (ls : List Nat) (i : Nat) (hi : i < ls.length) :
+    lcAcc ls (i + 1) = lcAcc ls i + 8 + 8 * ls[i] := by
+  simp only [lcAcc, List.take_add_one, List.map_append, List.sum_append, List.getElem?_eq_getElem hi]
+  simp; omega
+
+theorem lcAcc_le (ls : List Nat) (i : Nat) : lcAcc ls i ≤ lcAcc ls ls.length := by
+  simp only [lcAcc, List.take_length]
+  have := sum_take_le (fun l => 8 + 8 * l) ls i
+  omega
+
+end Gen1cX4

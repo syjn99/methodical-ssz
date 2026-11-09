@@ -1,5 +1,46 @@
-{"imports": ["Gen1cX4.ListC", "Fk.LcReject"],
- "pairs": [["Gen1cX4.ListC.reject_short_stmt", "lc_reject_short_main", "SAME", "reject size-short"],
-           ["Gen1cX4.ListC.reject_offset_stmt", "lc_reject_offset_main", "SAME", "reject offset-first"],
-           ["Gen1cX4.ListC.reject_short_stmt", "lc_reject_offset_main", "DIFF", "control"],
-           ["Gen1cX4.ListC.reject_offset_stmt", "lu_reject_offset_main", "DIFF", "control (ListU64 statement)"]]}
+{
+ "imports": [
+  "Gen1cX4.ListC",
+  "Fk.LcReject",
+  "Fk.LcSize",
+  "Fk.LuMarshal"
+ ],
+ "pairs": [
+  [
+   "Gen1cX4.ListC.size_stmt",
+   "lc_size_main",
+   "SAME",
+   "size (outer item loop)"
+  ],
+  [
+   "Gen1cX4.ListC.reject_short_stmt",
+   "lc_reject_short_main",
+   "SAME",
+   "reject size-short"
+  ],
+  [
+   "Gen1cX4.ListC.reject_offset_stmt",
+   "lc_reject_offset_main",
+   "SAME",
+   "reject offset-first"
+  ],
+  [
+   "Gen1cX4.ListC.reject_short_stmt",
+   "lc_reject_offset_main",
+   "DIFF",
+   "control"
+  ],
+  [
+   "Gen1cX4.ListC.reject_offset_stmt",
+   "lu_reject_offset_main",
+   "DIFF",
+   "control (ListU64 statement)"
+  ],
+  [
+   "Gen1cX4.ListC.size_stmt",
+   "lu_size_main",
+   "DIFF",
+   "control (ListU64 size statement)"
+  ]
+ ]
+}

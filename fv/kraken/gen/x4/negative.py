@@ -38,6 +38,7 @@ CASES = [  # id, type, method, designated obligation, old instruction, new instr
     ("lu-mrej-cmp", "ListU64", "MarshalSSZTo", "marshal_reject", "cmp $0x10,%r8", "cmp $0x11,%r8"),
     ("lc-short-cmp", "ListC", "UnmarshalSSZ", "reject_short", "cmp $0x4,%rcx", "cmp $0x3,%rcx"),
     ("lc-off-jne", "ListC", "UnmarshalSSZ", "reject_offset", "jne L_target.ListC.UnmarshalSSZ_36e", "je L_target.ListC.UnmarshalSSZ_36e"),
+    ("lc-size-init", "ListC", "SizeSSZ", "size", "mov $0x4,%ebx", "mov $0x5,%ebx"),
     # statement mutation (method "stmt"): the generated composition must fail if it claims another length
     ("sc-compose-len", "Scalars", "stmt", "compose", "st'.data.regs.rbx = dlen + 16", "st'.data.regs.rbx = dlen + 17"),
     ("lu-compose-len", "ListU64", "stmt", "compose", "st'.data.regs.rbx.toNat = dlen.toNat + 4 + 8 * n", "st'.data.regs.rbx.toNat = dlen.toNat + 5 + 8 * n"),

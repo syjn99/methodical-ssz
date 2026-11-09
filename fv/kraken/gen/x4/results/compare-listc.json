@@ -1,7 +1,15 @@
 {
  "schema": "fvphase1c.x4-compare/1",
- "log": "run logs/95 (compare step)",
+ "log": "run logs/98 (compare alone; the compare step of logs/97 failed: control lu_size_main not imported)",
  "rows": [
+  {
+   "gen": "Gen1cX4.ListC.size_stmt",
+   "hand": "lc_size_main",
+   "expect": "SAME",
+   "why": "size (outer item loop)",
+   "result": "SAME",
+   "as_expected": true
+  },
   {
    "gen": "Gen1cX4.ListC.reject_short_stmt",
    "hand": "lc_reject_short_main",
@@ -31,6 +39,14 @@
    "hand": "lu_reject_offset_main",
    "expect": "DIFF",
    "why": "control (ListU64 statement)",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.ListC.size_stmt",
+   "hand": "lu_size_main",
+   "expect": "DIFF",
+   "why": "control (ListU64 size statement)",
    "result": "DIFF",
    "as_expected": true
   }

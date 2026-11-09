@@ -2093,6 +2093,158 @@ dsimp only at e2 e3 hm'
 exact Eventually.done _ ⟨e1, e2, e3, sep_true (by ecancel)⟩""".split("\n")
 
 
+# ---------------------------------------------------------------- ListC: size (outer loop over item pointers)
+
+class LcSizeShape:
+    """SizeSSZ of a list of single-list containers (`size := 4; for o := range Items { size += 4 + o.SizeSSZ() }`,
+    the element's SizeSSZ inlined). Every offset, stride and constant is read from the directive list and
+    checked against the Desc (offset 4 + inner fixed part + w·len) and the Go layout. The statement uses
+    Gen1cX4.lcAcc (8 + 8·l per item), so only inner width 8 and inner fixed part 4 are accepted."""
+
+    def __init__(self, D, desc, layout_t):
+        f = desc["fields"][0]
+        el = desc["ssz"]["fields"][0]["elem"]
+        assert el["k"] == "container" and len(el["fields"]) == 1, el
+        inner = el["fields"][0]
+        assert inner["k"] == "list" and inner["elem"]["k"] == "uint", inner
+        self.w, self.ifixed = inner["elem"]["w"], 4
+        lf = layout_t["fields"][0]
+        assert lf["kind"] == "slice" and lf["esz"] == 8 and "elem" in lf, lf     # slice of item pointers
+        ilay = LAYOUT["types"][lf["elem"]]["fields"][0]
+        assert ilay["kind"] == "slice" and ilay["esz"] == self.w, ilay
+        self.goff, self.igoff = lf["offset"], ilay["offset"]
+        if (self.w, self.ifixed) != (8, 4):
+            raise ValueError(f"lcAcc is 8 + 8·l per item; inner width {self.w}, inner fixed part {self.ifixed}")
+        m = lambda off, r: f"{hex(off)}(%{r})" if off else f"(%{r})"
+        txt = [x[2] for x in D]
+        hb = [i for i, (_, k, x) in enumerate(D) if k == "label" and i > 0]
+        assert len(hb) == 2, hb
+        self.body, self.head = hb
+        want = {1: f"mov {m(self.goff, 'rax')},%rcx", 2: f"mov {m(self.goff + 8, 'rax')},%rdx", 3: "xor %eax,%eax",
+                4: "mov $0x4,%ebx", 5: f"jmp {txt[self.head]}",
+                self.body + 1: "mov (%rcx,%rax,8),%rsi", self.body + 2: f"mov {m(self.igoff + 8, 'rsi')},%rsi",
+                self.body + 3: f"lea (%rbx,%rsi,{self.w}),%rbx", self.body + 4: f"lea {hex(4 + self.ifixed)}(%rbx),%rbx",
+                self.body + 5: "inc %rax",
+                self.head + 1: "cmp %rdx,%rax", self.head + 2: f"jl {txt[self.body]}", self.head + 3: "mov %rbx,%rax",
+                self.head + 4: "retq"}
+        assert self.body == 6 and self.head == self.body + 6 and len(D) == self.head + 5, (self.body, self.head, len(D))
+        for i, x in want.items():
+            assert txt[i] == x, (i, txt[i], x)
+
+
+def lc_size_stmt(code, S):
+    item = f"(Eq ((Int.toBytes 8 (ps[i]'(by omega)).toInt).At (q + BitVec.ofNat 64 (8 * i)))\n        ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 ls[i]).toInt).At (ps[i]'(by omega) + {S.igoff + 8})) ⋆ fun _ => True)"
+    return f"""def size_stmt [Host] : Prop :=
+  ∀ (k : Nat) (hk : {code}.IsInfixAt Host.prog k)
+    (hf : LabelsFresh {code} k) (q : BitVec 64) (ps : List (BitVec 64)) (ls : List Nat)
+    (hlen : ps.length = ls.length) (hn : ls.length < 2 ^ 62) (hsum : lcAcc ls ls.length < 2 ^ 63)
+    (s : MachineData) (ra : UInt64) (R : DataMem → Prop)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq ((Int.toBytes 8 q.toInt).At {plus("s.regs.rax.toBitVec", S.goff)})
+      ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 ls.length).toInt).At (s.regs.rax.toBitVec + {S.goff + 8})) ⋆ R)
+    (hall : ∀ i (hi : i < ls.length), {item} s.dmem),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax.toNat = lcAcc ls ls.length
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.dmem = s.dmem)
+      ⟨s, Host.addrOf k⟩
+"""
+
+
+def lc_size_lemmas(code, S):
+    """size_iter (one item, from the loop head back to it) and size_loop (induction over the remaining items);
+    directive numbers from the shape, tactic text of Fk/LcSize.lean `lcs_iter`/`lcs_loop`."""
+    h, b = S.head, S.body
+    ld = lambda v: [f"apply load_step _ _ _ _ (Int.toBytes 8 {v}) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)",
+                    "simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]", "kunfold"]
+    it = ["obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s",
+          "simp only at h_mem hrax hrbx hrcx hrdx ⊢", "subst hrcx",
+          "have := rax.toNat_lt_size; have := rbx.toNat_lt_size; have := rdx.toNat_lt_size",
+          "simp only [UInt64.size] at *",
+          f"kat hk {code} {h}", f"kat hk {code} {h + 1}", f"kat hk {code} {h + 2}",
+          "rw [jl_val _ _ (by simp; omega) (by simp; omega)]",
+          "simp only [show decide (rax.toBitVec.toNat < rdx.toBitVec.toNat) = true by simp; omega, ↓reduceIte, Effects.All]",
+          f"klabel hk hf {code} {b}", f"kat hk {code} {b}", f"kat hk {code} {b + 1}",
+          "rw [show rcx.toBitVec + rax.toBitVec * 8#64 = rcx.toBitVec + BitVec.ofNat 64 (8 * i) by",
+          "  apply BitVec.eq_of_toNat_eq; simp [BitVec.toNat_add, BitVec.toNat_mul]; omega]",
+          *ld("p.toInt"), f"kat hk {code} {b + 2}", *ld("(BitVec.ofNat 64 l).toInt"),
+          f"kat hk {code} {b + 3}", f"kat hk {code} {b + 4}", f"kat hk {code} {b + 5}",
+          "apply Eventually.done", "refine ⟨rfl, ?_, ?_, rfl, hrdx, rfl, rfl⟩",
+          "· show (rax.toBitVec + 1).toNat = i + 1; simp [BitVec.toNat_add]; omega",
+          f"· show (rbx.toBitVec + BitVec.ofNat 64 l * 8#64 + {4 + S.ifixed}).toNat = _",
+          "  simp [BitVec.toNat_add, BitVec.toNat_mul]; omega"]
+    iter_stmt = f"""theorem size_iter [Host] (k : Nat) (hk : {code}.IsInfixAt Host.prog k)
+    (hf : LabelsFresh {code} k)
+    (q p : BitVec 64) (n i acc l : Nat) (hi : i < n) (hn : n < 2 ^ 62) (hl : 8 + 8 * l + acc < 2 ^ 63)
+    (s : MachineData) (R : DataMem → Prop)
+    (hrax : s.regs.rax.toNat = i) (hrbx : s.regs.rbx.toNat = acc) (hrcx : s.regs.rcx.toBitVec = q)
+    (hrdx : s.regs.rdx.toNat = n)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 p.toInt).At (q + BitVec.ofNat 64 (8 * i)))
+      ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 l).toInt).At (p + {S.igoff + 8})) ⋆ R) :
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + {h}) ∧ st.data.regs.rax.toNat = i + 1
+        ∧ st.data.regs.rbx.toNat = acc + 8 + 8 * l ∧ st.data.regs.rcx.toBitVec = q
+        ∧ st.data.regs.rdx.toNat = n ∧ st.data.regs.rsp = s.regs.rsp ∧ st.data.dmem = s.dmem)
+      ⟨s, Host.addrOf (k + {h})⟩ := by"""
+    item = f"(Eq ((Int.toBytes 8 (ps[i]'(by omega)).toInt).At (q + BitVec.ofNat 64 (8 * i)))\n        ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 ls[i]).toInt).At (ps[i]'(by omega) + {S.igoff + 8})) ⋆ fun _ => True)"
+    loop_stmt = f"""theorem size_loop [Host] (k : Nat) (hk : {code}.IsInfixAt Host.prog k)
+    (hf : LabelsFresh {code} k) (q : BitVec 64) (ps : List (BitVec 64)) (ls : List Nat)
+    (hlen : ps.length = ls.length) (hn : ls.length < 2 ^ 62) (hsum : lcAcc ls ls.length < 2 ^ 63)
+    (ra : UInt64) (R : DataMem → Prop) :
+    ∀ (j : Nat) (s : MachineData), j ≤ ls.length → s.regs.rax.toNat = ls.length - j →
+      s.regs.rbx.toNat = lcAcc ls (ls.length - j) → s.regs.rcx.toBitVec = q → s.regs.rdx.toNat = ls.length →
+      (∀ i (hi : i < ls.length), {item} s.dmem) →
+      (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec) ⋆ R) s.dmem →
+      Eventually (step1 Host.exe)
+        (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax.toNat = lcAcc ls ls.length
+          ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.dmem = s.dmem)
+        ⟨s, Host.addrOf (k + {h})⟩ := by"""
+    lp = ["intro j", "induction j with", "| zero =>",
+          "  intro s _ hrax hrbx hrcx hrdx _ hret",
+          "  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s",
+          "  simp only at hrax hrbx hrcx hrdx hret ⊢",
+          "  have := rax.toNat_lt_size; have := rdx.toNat_lt_size; simp only [UInt64.size] at *",
+          f"  kat hk {code} {h}", f"  kat hk {code} {h + 1}", f"  kat hk {code} {h + 2}",
+          "  rw [jl_val _ _ (by simp; omega) (by simp; omega)]",
+          "  simp only [show decide (rax.toBitVec.toNat < rdx.toBitVec.toNat) = false by simp; omega, Bool.false_eq_true,",
+          "    ↓reduceIte, Effects.All]",
+          f"  kat hk {code} {h + 3}", f"  kat hk {code} {h + 4}",
+          "  apply load_step _ _ _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)",
+          "  kunfold", "  apply Eventually.done", "  simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]",
+          "  refine ⟨trivial, ?_, ?_, ?_⟩", "  · simpa using hrbx", "  · apply UInt64.toBitVec_inj.mp; simp",
+          "  · first | trivial | rfl",
+          "| succ j ih =>",
+          "  intro s hj hrax hrbx hrcx hrdx hall hret",
+          "  have hi : ls.length - (j + 1) < ls.length := by omega",
+          "  have hacc := lcAcc_succ ls (ls.length - (j + 1)) hi",
+          "  have hle := lcAcc_le ls (ls.length - (j + 1) + 1)",
+          "  refine eventually_trans _ _ _ _ (size_iter k hk hf q (ps[ls.length - (j + 1)]'(by omega)) ls.length",
+          "    (ls.length - (j + 1)) (lcAcc ls (ls.length - (j + 1))) ls[ls.length - (j + 1)] hi hn (by omega) s",
+          "    (fun _ => True) hrax hrbx hrcx hrdx (hall _ hi)) ?_",
+          "  rintro ⟨d, pc⟩ ⟨hpc, hrax', hrbx', hrcx', hrdx', hrsp', hmem'⟩",
+          "  dsimp only at hpc hrax' hrbx' hrcx' hrdx' hrsp' hmem'",
+          "  subst hpc",
+          "  have := ih d (by omega) (by rw [hrax']; omega) (by rw [hrbx', ← hacc]; congr 1; omega) hrcx' hrdx'",
+          "    (by rw [hmem']; exact hall) (by rw [hmem', hrsp']; exact hret)",
+          "  simpa [hrsp', hmem'] using this"]
+    return ["set_option maxHeartbeats 4000000 in", "set_option maxRecDepth 20000 in", iter_stmt, *["  " + x for x in it], "",
+            loop_stmt, *["  " + x for x in lp], ""]
+
+
+def lc_size_proof(code, S):
+    h = S.head
+    ld = lambda v: [f"apply load_step _ _ _ _ (Int.toBytes 8 {v}) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)",
+                    "simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]", "kunfold"]
+    return ["intro k hk hf q ps ls hlen hn hsum s ra R h_mem hall",
+            "obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s",
+            "simp only at h_mem hall ⊢",
+            f"kat hk {code} 0", f"kat hk {code} 1", *ld("q.toInt"), f"kat hk {code} 2", *ld("(BitVec.ofNat 64 ls.length).toInt"),
+            f"kat hk {code} 3", "intro _", f"kat hk {code} 4", f"kat hk {code} 5", f"klabel hk hf {code} {h}",
+            "refine eventually_trans _ _ _ _ (size_loop k hk hf q ps ls hlen hn hsum ra (fun _ => True) ls.length _",
+            "  (Nat.le_refl _) (by simp) (by simp [lcAcc]; rfl)",
+            "  rfl (by show (BitVec.ofNat 64 ls.length).toNat = _; simp; omega) hall (sep_true (by ecancel))) ?_",
+            "rintro st ⟨h1, h2, h3, h4⟩", "apply Eventually.done", "exact ⟨h1, h2, h3, h4⟩"]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--desccheck-result", required=True)
@@ -2189,14 +2341,16 @@ def main_list(a, key, desc, dsha):
     ns = a.ns or f"Gen1cX4.{t}"
     LIST_OBL = ("size", "accept", "marshal", "marshal_reject", "compose", "reject_short", "reject_offset", "reject_misaligned", "reject_toobig")
     only = [x for x in a.only.split(",") if x in LIST_OBL] if a.only != ap_default() else list(LIST_OBL)
-    if L.esz is None:   # list of containers (ListC): only the templates that do not touch elements
-        bad = [x for x in only if x not in ("reject_short", "reject_offset")]
+    if L.esz is None:   # list of containers (ListC): size (outer loop) and the templates that do not touch elements
+        LC_OBL = ("size", "reject_short", "reject_offset")
+        bad = [x for x in only if x not in LC_OBL]
         if a.only != ap_default() and bad:
             raise SystemExit(f"x4gen: refused {key[0]}.{t}: no template for {bad} on a list of containers")
-        only = [x for x in only if x in ("reject_short", "reject_offset")]
+        only = [x for x in only if x in LC_OBL]
     code = {m: f"{t}{m}" for m in ("SizeSSZ", "UnmarshalSSZ", "MarshalSSZTo")}
     head = ["import Fk.Step", "import Fk.Bytes", "import Fk.Labels", "import Fk.Flags", "import Gen1cX4.Support"]
-    if any(x in only for x in ("reject_misaligned", "reject_toobig", "accept", "marshal", "marshal_reject")):
+    if any(x in only for x in ("reject_misaligned", "reject_toobig", "accept", "marshal", "marshal_reject")) \
+            or (L.esz is None and "size" in only):
         head += ["import Fk.Contracts", "import Fk.Frame", "import Fk.Block"]
     pre = []
     if a.mutant:
@@ -2209,7 +2363,16 @@ def main_list(a, key, desc, dsha):
     body = [f"-- Generated by fv/kraken/gen/x4/x4gen.py from the Desc of {key[0]}.{t} (sha256 {dsha}).",
             "-- Statements from the Desc and the Go layout; proofs from the directive list. Do not edit.",
             *head, "", f"namespace {ns}", "open Fk Fk.Code", "", *pre]
-    if "size" in only:
+    if "size" in only and L.esz is None:
+        try:
+            SS = LcSizeShape(Dsz, desc, LAYOUT["types"][t])
+        except (KeyError, AssertionError, IndexError, StopIteration, ValueError, TypeError) as e:
+            raise SystemExit(f"x4gen: refused {key[0]}.{t}: list-of-containers size template does not fit "
+                             f"({type(e).__name__}: {e})")
+        body += ["-- outer item loop of SizeSSZ (generated from its directives)", *lc_size_lemmas(code["SizeSSZ"], SS),
+                 lc_size_stmt(code["SizeSSZ"], SS), "theorem size [Host] : size_stmt := by",
+                 *["  " + x for x in lc_size_proof(code["SizeSSZ"], SS)], ""]
+    elif "size" in only:
         body += [lu_size_stmt(code["SizeSSZ"], L), "theorem size [Host] : size_stmt := by",
                  *["  " + x for x in lu_size_proof(Dsz, L, code["SizeSSZ"])], ""]
     if "accept" in only:

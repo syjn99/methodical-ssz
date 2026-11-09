@@ -12,6 +12,7 @@ Desc와 Go 배치에서 정리 문장을, 기계어 지시 목록에서 증명�
 | `compare.py`, `pairs-*.json` | 문장 비교: `∀ [Host], <obl>_stmt`와 손 정리의 타입이 정의상 같은지(`isDefEq`, 투명도 all) |
 | `negative.py` | 부정 시험: 기계어 한 줄을 바꾼 사본으로 지정 정리를 다시 돈다. 대조군은 바꾸지 않은 사본 |
 | `run_checks.sh` | gate 안 검사 실행기: build, 비교, 공리, 부정 시험을 메모리 캡 아래 돌리고 첫 실패 코드로 끝난다(리뷰 r5 S4) |
+| `verbatim.py` | 생성 정리의 전술 줄 중 손 증명 파일에 글자 그대로 있는 줄 수(INBOX 014 정직성 규칙) |
 | `axioms.py` | `#print axioms`를 프로그램으로 판정(`propext`, `Classical.choice`, `Quot.sound`만) |
 | `lean/Gen1cX4/Support.lean` | 생성 증명이 쓰는 보조정리(손으로 씀, 생성 아님) |
 | `results/` | 커밋된 결과 |
@@ -75,4 +76,5 @@ ListU64 출력은 이 변경 뒤에도 바이트가 같다.
 | --- | --- |
 | reject r1 짧은 길이 | 생성 증명 통과(시도 1), 문장 SAME(`lc_reject_short_main`). 변이 `lc-short-cmp` |
 | reject r2 첫 오프셋 | 생성 증명 통과(시도 1), 문장 SAME(`lc_reject_offset_main`). 변이 `lc-off-jne` |
-| size, accept(바깥 0·1·4 × 안 0·1·16), r3, r6, r8 오프셋 순서, r9 원소 오류, r10, marshal | 시도하지 않음 |
+| size | 생성 증명 통과(시도 1; logs/97 비교 단계는 대조군 import 누락으로 오류, logs/98에서 비교만 다시), 문장 SAME(`lc_size_main`). 바깥 항목 루프 보조정리 `size_iter`, `size_loop`를 생성한다(`Fk/LcSize.lean`의 틀). 변이 `lc-size-init`. 손 글 비율: `size` 21/23, `size_iter` 30/30, `size_loop` 36/37줄이 `Fk/LcSize.lean`에 글자 그대로 있다(`gen/x4/verbatim.py`). 생성기가 코드에서 정하는 것: 두 레이블 위치, 바깥 Go 오프셋, 포인터 보폭 8, 안쪽 길이 오프셋, 안쪽 원소 너비(`lea` 배율), 항목당 상수 8. 각각을 Desc(오프셋 4 + 안쪽 고정부 4 + w·len)와 layout.json에 맞춘다. `lcAcc`(`Support.lean`, 손으로 씀)가 8 + 8·l로 고정이라 안쪽 너비 8만 받는다 |
+| accept(바깥 0·1·4 × 안 0·1·16), r3, r6, r8 오프셋 순서, r9 원소 오류, r10, marshal | 시도하지 않음 |

@@ -25,9 +25,37 @@
    "negative": "lc-off-jne (logs/96)"
   },
   "size": {
-   "status": "not attempted",
+   "status": "proved (generated), SAME",
+   "attempts": [
+    {
+     "log": "run logs/97",
+     "result": "pass (build, axioms, negative); compare step error: control import"
+    },
+    {
+     "log": "run logs/98",
+     "result": "compare SAME, controls DIFF"
+    }
+   ],
    "hand": "lc_size_main",
-   "why": "outer loop over item pointers calling ListU64 size inline; needs a loop template"
+   "negative": "lc-size-init (logs/97)",
+   "generator_decides": "from SizeSSZ.S: the two label positions (loop body, loop head), the outer Go offset of the item slice and its length, the pointer stride 8, the inner length offset, the inner element width (lea scale) and the per-item constant 8; each is checked against the Desc (offset 4 + inner fixed part 4 + w*len) and layout.json; other shapes are a classified refusal. lcAcc fixes 8 + 8*l, so only inner width 8 is accepted.",
+   "verbatim_measure": {
+    "what": "tactic lines of the generated theorem that occur verbatim (stripped) as a line of Fk/LcSize.lean (gen/x4/verbatim.py)",
+    "rows": {
+     "size": {
+      "tactic_lines": 23,
+      "verbatim_in_hand": 21
+     },
+     "size_iter": {
+      "tactic_lines": 30,
+      "verbatim_in_hand": 30
+     },
+     "size_loop": {
+      "tactic_lines": 37,
+      "verbatim_in_hand": 36
+     }
+    }
+   }
   },
   "accept (outer 0/1/4 x inner 0/1/16)": {
    "status": "not attempted",
