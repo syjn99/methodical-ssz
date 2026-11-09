@@ -324,8 +324,17 @@
     "propext"
    ],
    "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListU64.marshal_reject",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
   }
  ],
  "all_standard": true,
- "log": "run logs/93 (axioms step)"
+ "log": "run logs/94 (axioms step)"
 }

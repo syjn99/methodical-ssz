@@ -96,6 +96,21 @@
    "witness": "Gen1cX4.WitLuM0/M1/M16.lu_marshal_runs (gen/wit WitLuM0/1/16 retargeted by witness.py; sources byte-identical to lean/Fk) built in logs/92",
    "negative": "lu-marshal-off (logs/91)",
    "not_covered": "lum_grow_site (Fk/LuGrow.lean, the growslice call site of the slow path) is not generated: not attempted"
+  },
+  "marshal_reject r1 too-big": {
+   "status": "proved (generated), SAME",
+   "attempts": [
+    {
+     "log": "run logs/94",
+     "result": "pass"
+    }
+   ],
+   "hand": "lu_marshal_reject_main",
+   "negative": "lu-mrej-cmp (logs/94)"
+  },
+  "reject r1 frame-keeping variant": {
+   "status": "not attempted",
+   "hand": "lu_reject_short_frame (fix3 stage B strengthening of r1)"
   }
  },
  "verbatim_measure": {

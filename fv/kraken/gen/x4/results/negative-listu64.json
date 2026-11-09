@@ -1,7 +1,7 @@
 {
  "schema": "fvphase1c.x4-negative/1",
- "cases": 16,
- "as_expected": 16,
+ "cases": 18,
+ "as_expected": 18,
  "rows": [
   {
    "id": "lu-size-add",
@@ -226,6 +226,34 @@
    ],
    "as_expected": true,
    "run": "logs/93"
+  },
+  {
+   "id": "lu-mrej-cmp",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lu_mrej_cmp_mutant.marshal_reject",
+   "mutation": "'cmp $0x10,%r8' -> 'cmp $0x11,%r8'",
+   "exit": "1",
+   "first_error": "line 111: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+   "theorem_lines": [
+    51,
+    143
+   ],
+   "as_expected": true,
+   "run": "logs/94"
+  },
+  {
+   "id": "lu-mrej-cmp",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lu_mrej_cmp_control.marshal_reject",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    51,
+    143
+   ],
+   "as_expected": true,
+   "run": "logs/94"
   }
  ]
 }

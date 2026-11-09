@@ -1838,12 +1838,52 @@ def lu_marshal_stmt(code, M):
 """
 
 
-def lu_marshal_proof(D, code, M):
+def lu_marshal_reject_stmt(code, M, err):
+    inv = {v: k for k, v in M.spills.items()}
+    r = lambda off: M.rel(off).replace("rsp.toBitVec", "s.regs.rsp.toBitVec")
+    return f"""def marshal_reject_stmt [Host] : Prop :=
+  ∀ (k : Nat) (hk : {code}.IsInfixAt Host.prog k)
+    (hf : LabelsFresh {code} k)
+    (pre o4 : List UInt8) (n : Nat) (hn : 16 < n) (hn63 : n < 2 ^ 59)
+    (ho4 : o4.length = 4) (p e0 e1 : BitVec 64)
+    (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)
+    (fp slot l1 l2 : List UInt8)
+    (hfp : fp.length = 8) (hsl : slot.length = 8) (hl1 : l1.length = 8) (hl2 : l2.length = 8)
+    (R : DataMem → Prop)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (slot.At ({r(M.frame + 24)}))
+      ⋆ Eq (l1.At ({r(inv["r8"])})) ⋆ Eq (l2.At ({r(inv["r9"])}))
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+      ⋆ Eq ((Int.toBytes 8 p.toInt).At s.regs.rax.toBitVec) ⋆ Eq ((Int.toBytes 8 (n : Int)).At (s.regs.rax.toBitVec + 8))
+      ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (o4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
+      ⋆ Eq ((Int.toBytes 8 e0.toInt).At (label "{err}").toBitVec)
+      ⋆ Eq ((Int.toBytes 8 e1.toInt).At (label "{err}" + 8).toBitVec) ⋆ R)
+    (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 8 ≤ s.regs.rsp.toNat)
+    (hcap : s.regs.rcx.toNat + 4 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
+        ∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi.toBitVec = e0 ∧ st.data.regs.rsi.toBitVec = e1
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
+        ∧ (Eq (pre.At s.regs.rbx.toBitVec) ⋆ R ⋆ fun _ => True) st.data.dmem)
+      ⟨s, Host.addrOf k⟩
+"""
+
+
+def lu_marshal_err(D):
+    lab_index = {t: d for d, k, t in D if k == "label"}
+    jg = next(d for d, k, t in D if k == "instr" and t.startswith("jg "))
+    return re.match(r"mov (ssz\.\w+)\(%rip\),%rdi", D[lab_index[D[jg][2].split()[1]] + 1][2])[1]
+
+
+def lu_marshal_proof(D, code, M, mode="fast"):
+    """mode fast: the room and count checks pass (lu_marshal_main); mode toobig: the count check
+    fails and the error global is returned (lu_marshal_reject_main)."""
     lab_index = {t: d for d, k, t in D if k == "label"}
     kat = lambda d: f"kat hk {code} {d}"
     F = M.frame
     names = {"r8": ("l1", "hl1", 4), "r9": ("l2", "hl2", 5)}
-    L = ["intro k hk hf bs pre o4 d n hn hbs hd ho4 p s ra guard hpre fp slot l1 l2 hfp hsl hl1 hl2 R h_mem hguard hsp hcap hcap63",
+    L = ["intro k hk hf bs pre o4 d n hn hbs hd ho4 p s ra guard hpre fp slot l1 l2 hfp hsl hl1 hl2 R h_mem hguard hsp hcap hcap63"
+         if mode == "fast" else "intro k hk hf pre o4 n hn hn63 ho4 p e0 e1 s ra guard hpre fp slot l1 l2 hfp hsl hl1 hl2 R h_mem hguard hsp hcap hcap63",
          "obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s",
          "simp only at h_mem hguard hsp hcap hcap63 hpre ⊢",
          "have := rsp.toNat_lt_size; have := guard.toNat_lt_size; have := rcx.toNat_lt_size; have := rdi.toNat_lt_size",
@@ -1888,8 +1928,32 @@ def lu_marshal_proof(D, code, M):
                   "rw [show Int.toBytes 4 (BitVec.truncate 32 (4 : BitVec 64)).toInt = [4, 0, 0, 0] by decide] at H3", "kunfold"]
         elif t == "mov 0x8(%rax),%r8":
             L += [kat(d), "apply load_step_at _ _ (rax.toBitVec + 8) _ _ (Int.toBytes 8 (BitVec.ofNat 64 n).toInt) _ _ (by kaddr) (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
-        elif op == "jg":
+        elif op == "jg" and mode == "fast":
             L += [kat(d), "split", "case isTrue h =>", "  exfalso; rw [jg16_false _ _ (by simp; omega)] at h; simp at h", "simp only [Effects.All]"]
+        elif op == "jg":
+            tgt = lab_index[a]
+            L += [kat(d), "split", "case isFalse h =>",
+                  "  exfalso; rw [Gen1cX4.jg16_true _ _ (by simp; omega) (by simp; omega)] at h; simp at h",
+                  "simp only [Effects.All]", f"klabel hk hf {code} {tgt}"]
+            d = tgt; continue
+        elif mode == "toobig" and re.fullmatch(r"mov ssz\.\w+(\+8)?\(%rip\),%r(di|si)", t):
+            e = "e1" if "+8" in t else "e0"
+            L += [kat(d), f"apply load_step _ _ _ _ (Int.toBytes 8 {e}.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
+        elif mode == "toobig" and t in ("xor %ebx,%ebx",):
+            L += [kat(d), "intro _"]
+        elif mode == "toobig" and t == "mov %rbx,%rcx":
+            L.append(kat(d))
+        elif mode == "toobig" and op == "pop":
+            L += [kat(d), f"rw [ar_m{F + 8}]",
+                  "apply load_step _ _ _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
+        elif mode == "toobig" and op == "retq":
+            L += [kat(d), "rw [show rsp.toBitVec - 8 + 8#64 = rsp.toBitVec by bv_omega]",
+                  "apply load_step _ _ _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)",
+                  "kunfold", "apply Eventually.done", "simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]",
+                  "refine ⟨trivial, ?_, ?_, ?_, ?_, ?_, ?_, trivial, ?_⟩", "all_goals first", "  | rfl",
+                  "  | (simp [Fk.ofInt_ofBytes_toBytes64]; done)", "  | (apply UInt64.toBitVec_inj.mp; simp; done)",
+                  "  | exact sep_true (P := Eq (pre.At rbx.toBitVec) ⋆ R) (by ecancel)"]
+            return L
         elif re.fullmatch(r"mov %r(8|9),0x[0-9a-f]+\(%rsp\)", t) and d < M.H:
             off = int(t.split(",")[1].split("(")[0], 16)
             nm, hn_, i = names[M.spills[off]]
@@ -2100,11 +2164,11 @@ def main_list(a, key, desc, dsha):
     t = key[1]
     L = ListField(desc, LAYOUT["types"][t])
     ns = a.ns or f"Gen1cX4.{t}"
-    LIST_OBL = ("size", "accept", "marshal", "compose", "reject_short", "reject_offset", "reject_misaligned", "reject_toobig")
+    LIST_OBL = ("size", "accept", "marshal", "marshal_reject", "compose", "reject_short", "reject_offset", "reject_misaligned", "reject_toobig")
     only = [x for x in a.only.split(",") if x in LIST_OBL] if a.only != ap_default() else list(LIST_OBL)
     code = {m: f"{t}{m}" for m in ("SizeSSZ", "UnmarshalSSZ", "MarshalSSZTo")}
     head = ["import Fk.Step", "import Fk.Bytes", "import Fk.Labels", "import Fk.Flags", "import Gen1cX4.Support"]
-    if any(x in only for x in ("reject_misaligned", "reject_toobig", "accept", "marshal")):
+    if any(x in only for x in ("reject_misaligned", "reject_toobig", "accept", "marshal", "marshal_reject")):
         head += ["import Fk.Contracts", "import Fk.Frame", "import Fk.Block"]
     pre = []
     if a.mutant:
@@ -2142,6 +2206,17 @@ def main_list(a, key, desc, dsha):
         body += [f"theorem {n} {v}" for n, v in sorted(lu_marshal_lemmas(MS).items())] + [""]
         body += [lu_marshal_stmt(code["MarshalSSZTo"], MS), "set_option maxHeartbeats 8000000 in", "set_option maxRecDepth 100000 in",
                  "theorem marshal [Host] : marshal_stmt := by", *["  " + x for x in lu_marshal_proof(Dma, code["MarshalSSZTo"], MS)], ""]
+    if "marshal_reject" in only:
+        Dma = directives(os.path.join(NORM, f"target.{t}.MarshalSSZTo.S"))
+        try:
+            MS2, err = MarshalShape(Dma), lu_marshal_err(Dma)
+        except (KeyError, AssertionError, IndexError, StopIteration, ValueError, TypeError) as e:
+            raise SystemExit(f"x4gen: refused {key[0]}.{t}: marshal reject template does not fit the code ({type(e).__name__}: {e})")
+        if "marshal" not in only:
+            body += [f"theorem {n} {v}" for n, v in sorted(lu_marshal_lemmas(MS2).items())] + [""]
+        body += [lu_marshal_reject_stmt(code["MarshalSSZTo"], MS2, err), "set_option maxHeartbeats 8000000 in", "set_option maxRecDepth 100000 in",
+                 "theorem marshal_reject [Host] : marshal_reject_stmt := by",
+                 *["  " + x for x in lu_marshal_proof(Dma, code["MarshalSSZTo"], MS2, "toobig")], ""]
     if "compose" in only:
         if not ("accept" in only and "marshal" in only):
             raise SystemExit("x4gen: compose uses the generated accept and marshal (add both to --only)")

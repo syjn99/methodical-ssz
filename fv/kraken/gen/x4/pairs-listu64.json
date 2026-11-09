@@ -27,6 +27,12 @@
    "marshal fast path (element loop)"
   ],
   [
+   "Gen1cX4.ListU64.marshal_reject_stmt",
+   "lu_marshal_reject_main",
+   "SAME",
+   "marshal reject r1 too-big"
+  ],
+  [
    "Gen1cX4.ListU64.compose_stmt",
    "lu_unmarshal_then_marshal",
    "SAME",

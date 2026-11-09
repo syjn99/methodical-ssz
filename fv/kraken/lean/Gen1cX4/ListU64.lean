@@ -730,6 +730,127 @@ theorem marshal [Host] : marshal_stmt := by
   · apply UInt64.toBitVec_inj.mp; simp
   · exact sep_true (by ecancel)
 
+def marshal_reject_stmt [Host] : Prop :=
+  ∀ (k : Nat) (hk : ListU64MarshalSSZTo.IsInfixAt Host.prog k)
+    (hf : LabelsFresh ListU64MarshalSSZTo k)
+    (pre o4 : List UInt8) (n : Nat) (hn : 16 < n) (hn63 : n < 2 ^ 59)
+    (ho4 : o4.length = 4) (p e0 e1 : BitVec 64)
+    (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)
+    (fp slot l1 l2 : List UInt8)
+    (hfp : fp.length = 8) (hsl : slot.length = 8) (hl1 : l1.length = 8) (hl2 : l2.length = 8)
+    (R : DataMem → Prop)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (slot.At (s.regs.rsp.toBitVec + 16))
+      ⋆ Eq (l1.At (s.regs.rsp.toBitVec - 24)) ⋆ Eq (l2.At (s.regs.rsp.toBitVec - 16))
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+      ⋆ Eq ((Int.toBytes 8 p.toInt).At s.regs.rax.toBitVec) ⋆ Eq ((Int.toBytes 8 (n : Int)).At (s.regs.rax.toBitVec + 8))
+      ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (o4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
+      ⋆ Eq ((Int.toBytes 8 e0.toInt).At (label "ssz.ErrListTooBig").toBitVec)
+      ⋆ Eq ((Int.toBytes 8 e1.toInt).At (label "ssz.ErrListTooBig" + 8).toBitVec) ⋆ R)
+    (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 8 ≤ s.regs.rsp.toNat)
+    (hcap : s.regs.rcx.toNat + 4 ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
+        ∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi.toBitVec = e0 ∧ st.data.regs.rsi.toBitVec = e1
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
+        ∧ (Eq (pre.At s.regs.rbx.toBitVec) ⋆ R ⋆ fun _ => True) st.data.dmem)
+      ⟨s, Host.addrOf k⟩
+
+set_option maxHeartbeats 8000000 in
+set_option maxRecDepth 100000 in
+theorem marshal_reject [Host] : marshal_reject_stmt := by
+  intro k hk hf pre o4 n hn hn63 ho4 p e0 e1 s ra guard hpre fp slot l1 l2 hfp hsl hl1 hl2 R h_mem hguard hsp hcap hcap63
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
+  simp only at h_mem hguard hsp hcap hcap63 hpre ⊢
+  have := rsp.toNat_lt_size; have := guard.toNat_lt_size; have := rcx.toNat_lt_size; have := rdi.toNat_lt_size
+  simp only [UInt64.size] at *
+  have hnI : (n : Int) = (BitVec.ofNat 64 n).toInt := by
+    rw [BitVec.toInt_eq_toNat_of_lt (by simp; omega)]; simp; omega
+  rw [hnI] at h_mem
+  kat hk ListU64MarshalSSZTo 0
+  kat hk ListU64MarshalSSZTo 1
+  kat hk ListU64MarshalSSZTo 2
+  apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk ListU64MarshalSSZTo 3
+  split
+  · rename_i h; exfalso
+    simp [BitVec.ofInt_ofBytes_toBytes 64 8 rfl, CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
+    rcases h with h | h
+    · apply h; omega
+    · have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this; omega
+  simp only [Effects.All]
+  kat hk ListU64MarshalSSZTo 4
+  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)
+  intro m1 H1
+  simp only [Width.bytes, Width.bits] at H1
+  kunfold
+  kat hk ListU64MarshalSSZTo 5
+  kat hk ListU64MarshalSSZTo 6
+  kat hk ListU64MarshalSSZTo 7
+  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ slot _ _ (ar_s120 _) (by ecancel) (by exact hsl)
+  intro m2 H2
+  simp only [Width.bytes, Width.bits] at H2
+  kunfold
+  kat hk ListU64MarshalSSZTo 8
+  kat hk ListU64MarshalSSZTo 9
+  kat hk ListU64MarshalSSZTo 10
+  kat hk ListU64MarshalSSZTo 11
+  kat hk ListU64MarshalSSZTo 12
+  split
+  case isFalse h =>
+    exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.toNat_add] at h; omega
+  simp only [Effects.All]
+  klabel hk hf ListU64MarshalSSZTo 25
+  kat hk ListU64MarshalSSZTo 25
+  kat hk ListU64MarshalSSZTo 26
+  rw [Gen1cX4.lum_off]
+  apply store_step _ _ _ _ _ o4 _ _ (by ecancel) (by exact ho4)
+  intro m3 H3
+  simp only [Width.bytes, Width.bits] at H3
+  rw [show Int.toBytes 4 (BitVec.truncate 32 (4 : BitVec 64)).toInt = [4, 0, 0, 0] by decide] at H3
+  kunfold
+  kat hk ListU64MarshalSSZTo 27
+  apply load_step_at _ _ (rax.toBitVec + 8) _ _ (Int.toBytes 8 (BitVec.ofNat 64 n).toInt) _ _ (by kaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk ListU64MarshalSSZTo 28
+  kat hk ListU64MarshalSSZTo 29
+  kat hk ListU64MarshalSSZTo 30
+  split
+  case isFalse h =>
+    exfalso; rw [Gen1cX4.jg16_true _ _ (by simp; omega) (by simp; omega)] at h; simp at h
+  simp only [Effects.All]
+  klabel hk hf ListU64MarshalSSZTo 36
+  kat hk ListU64MarshalSSZTo 36
+  kat hk ListU64MarshalSSZTo 37
+  apply load_step _ _ _ _ (Int.toBytes 8 e0.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk ListU64MarshalSSZTo 38
+  apply load_step _ _ _ _ (Int.toBytes 8 e1.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk ListU64MarshalSSZTo 39
+  intro _
+  kat hk ListU64MarshalSSZTo 40
+  intro _
+  kat hk ListU64MarshalSSZTo 41
+  kat hk ListU64MarshalSSZTo 42
+  kat hk ListU64MarshalSSZTo 43
+  rw [ar_m104]
+  apply load_step _ _ _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  kat hk ListU64MarshalSSZTo 44
+  rw [show rsp.toBitVec - 8 + 8#64 = rsp.toBitVec by bv_omega]
+  apply load_step _ _ _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
+  kunfold
+  apply Eventually.done
+  simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
+  refine ⟨trivial, ?_, ?_, ?_, ?_, ?_, ?_, trivial, ?_⟩
+  all_goals first
+    | rfl
+    | (simp [Fk.ofInt_ofBytes_toBytes64]; done)
+    | (apply UInt64.toBitVec_inj.mp; simp; done)
+    | exact sep_true (P := Eq (pre.At rbx.toBitVec) ⋆ R) (by ecancel)
+
 def compose_stmt [Host] : Prop :=
   ∀ (kd : Nat) (hkd : ListU64UnmarshalSSZ.IsInfixAt Host.prog kd)
     (hfd : LabelsFresh ListU64UnmarshalSSZ kd)
