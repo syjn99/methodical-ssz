@@ -7,7 +7,8 @@ Known failures (cited from the prysm-fv-pin-smoke run, REPORT section 6; GENERAT
   in the mainnet runs that include that package.
 - KNOWN_MINIMAL: under -tags minimal, consensus-types/blocks test files do not build and
   encoding/ssz/detect TestByState panics (same on the committed baseline files).
-Every other failure, a missing run output, or a known failure that is gone, is "unexpected".
+Every other failure (a test, a build, a package-level FAIL line or a panic not explained by a known
+failure of that run), a missing run output, or a known failure that is gone, is "unexpected".
 Exit status 0 only if nothing is unexpected. Python 3 standard library only. Run with python3 -I.
 """
 import json
@@ -28,10 +29,10 @@ def main():
         txt = open(f"{out_dir}/t{n:02d}.out").read()
         runs.append({"run": n, "rc": int(m.group(2)), "tags": m.group(3), "filter": m.group(4), "pkgs": m.group(5).split(),
                      "failed_tests": sorted(set(re.findall(r"^\s*--- FAIL: (\S+)", txt, re.M))),
-                     "failed_pkgs": sorted(set(re.findall(r"^FAIL\s+(\S+)", txt, re.M))),
-                     "build_failed": sorted(set(re.findall(r"^FAIL\s+(\S+) \[build failed\]", txt, re.M))),
+                     "failed_pkgs": sorted(set(re.findall(r"^FAIL[ \t]+(\S+)", txt, re.M))),
+                     "build_failed": sorted(set(re.findall(r"^FAIL[ \t]+(\S+) \[build failed\]", txt, re.M))),
                      "panic": bool(re.search(r"^panic:", txt, re.M)),
-                     "ok_pkgs": sorted(set(re.findall(r"^ok\s+(\S+)", txt, re.M)))})
+                     "ok_pkgs": sorted(set(re.findall(r"^ok[ \t]+(\S+)", txt, re.M)))})
     unexpected = []
     seen_known = set()
     for r in runs:
@@ -52,6 +53,17 @@ def main():
                 unexpected.append(f"t{r['run']}: build failed {p}")
         if r["rc"] != 0 and not (r["failed_tests"] or r["build_failed"]):
             unexpected.append(f"t{r['run']}: rc {r['rc']} without a failed test or build")
+        # package-level FAIL lines and panics must be explained by a known failure of that run
+        known_blocks = r["tags"] == "" and bool(set(r["failed_tests"]) & KNOWN_SUBTESTS)
+        known_detect = r["tags"] == "minimal" and "TestByState" in r["failed_tests"]
+        for p in r["failed_pkgs"]:
+            if p.endswith("consensus-types/blocks") and (known_blocks or (r["tags"] == "minimal" and p in r["build_failed"])):
+                continue
+            if p.endswith("encoding/ssz/detect") and known_detect:
+                continue
+            unexpected.append(f"t{r['run']}: package FAIL {p}")
+        if r["panic"] and not known_detect:
+            unexpected.append(f"t{r['run']}: panic outside the known minimal detect TestByState failure")
     want = KNOWN_SUBTESTS | {"minimal:blocks:build", "minimal:detect:TestByState"}
     for k in sorted(want - seen_known):
         unexpected.append(f"known failure not seen: {k}")

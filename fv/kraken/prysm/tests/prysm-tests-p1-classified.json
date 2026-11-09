@@ -49,7 +49,7 @@
     "TestPartialDataColumn_PartsMetadata/marshal_error_due_max_bitlist_size"
    ],
    "failed_pkgs": [
-    "FAIL"
+    "github.com/OffchainLabs/prysm/v7/consensus-types/blocks"
    ],
    "build_failed": [],
    "panic": false,
@@ -126,7 +126,7 @@
     "TestPartialDataColumn_PartsMetadata/marshal_error_due_max_bitlist_size"
    ],
    "failed_pkgs": [
-    "FAIL"
+    "github.com/OffchainLabs/prysm/v7/consensus-types/blocks"
    ],
    "build_failed": [],
    "panic": false,
