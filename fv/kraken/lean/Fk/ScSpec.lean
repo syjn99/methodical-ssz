@@ -90,7 +90,7 @@ theorem sc_marshal_spec_k (k : Nat) (hk : ScalarsMarshalSSZTo.IsInfixAt Host.pro
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = s.regs.rbx
         ∧ st.data.regs.rbx = s.regs.rcx + 16 ∧ st.data.regs.rcx = s.regs.rdi
         ∧ st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0
-        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14
         ∧ (Eq ((scField g 0).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
           ⋆ Eq ((scField g 1).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))
           ⋆ Eq ((scField g 2).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 3))

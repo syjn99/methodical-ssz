@@ -61,6 +61,6 @@ theorem sc_size_runs (zmms : RegZmms) (flags : StatusFlags) :
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 16)
       ⟨s0 zmms flags, Host.addrOf 5⟩ :=
   eventually_mono (sc_size_main 5 hk_target (s0 zmms flags) 0 (fun _ => True) (s_mem zmms flags))
-    (fun _ h => ⟨h.1, h.2⟩)
+    (fun _ h => ⟨h.1, h.2.1⟩)
 
 end Fk.WitSzSc

@@ -278,6 +278,7 @@ Fk.LcLoop	lcl_iter	[Classical.choice, Quot.sound, propext]
 Fk.LcLoop	lcl_loop	[Classical.choice, Quot.sound, propext]
 Fk.LcLoop	lcl_ret	[Classical.choice, Quot.sound, propext]
 Fk.LcLoop	lcl_y	[Classical.choice, Quot.sound, propext]
+Fk.LcLoop	lcs_mono	[Classical.choice, Quot.sound, propext]
 Fk.LcLoop	ofBytes_uintBytes4	[Classical.choice, Quot.sound, propext]
 Fk.LcLoop	ptrBytes_length	[Classical.choice, Quot.sound, propext]
 Fk.LcLoop	ptrBytes_snoc	[Classical.choice, Quot.sound, propext]
@@ -1596,4 +1597,4 @@ Fv1.SpecScalars	Fv1.sc_toValue_surjective	[Quot.sound, propext]
 Fv1.Transfer	Fv1.accepted_is_enc	[Classical.choice, Quot.sound, propext]
 Fv1.Transfer	Fv1.deserialize_enc	[Classical.choice, Quot.sound, propext]
 Fv1.Transfer	Fv1.rejected_not_enc	[Classical.choice, Quot.sound, propext]
-TOTAL 1598 NONSTANDARD 0
+TOTAL 1599 NONSTANDARD 0

@@ -6,7 +6,8 @@ import Fk.Labels
 
 When `dst` has room (`len + 16 ≤ cap`), the function appends the 16 receiver
 bytes to `dst` and returns `(ptr, len + 16, cap, nil)`. No `growslice` call is
-taken. Go ABIInternal amd64: rax = c, (rbx, rcx, rdi) = dst, r14 = g.
+taken. Go ABIInternal amd64: rax = c, (rbx, rcx, rdi) = dst, r14 = g (kept:
+the result names it, fix 3 X4).
 -/
 
 open Fk Fk.Code
@@ -38,7 +39,7 @@ theorem sc_marshal_main (k : Nat) (hk : ScalarsMarshalSSZTo.IsInfixAt Host.prog 
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = s.regs.rbx
         ∧ st.data.regs.rbx = s.regs.rcx + 16 ∧ st.data.regs.rcx = s.regs.rdi
         ∧ st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0
-        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14
         ∧ (Eq (cA.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
           ⋆ Eq (cB.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))
           ⋆ Eq (cC.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 3))
@@ -220,7 +221,7 @@ theorem sc_marshal_main (k : Nat) (hk : ScalarsMarshalSSZTo.IsInfixAt Host.prog 
         show Int.toBytes 1 (BitVec.truncate 8 (0 : BitVec 64)).toInt = [0] by decide,
         show Int.toBytes 1 (BitVec.truncate 8 (1 : BitVec 64)).toInt = [1] by decide] at H8
       simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
-      refine ⟨trivial, trivial, ?_, trivial, ?_, ?_, ?_, trivial, ?_⟩
+      refine ⟨trivial, trivial, ?_, trivial, ?_, ?_, ?_, trivial, trivial, ?_⟩
       · apply UInt64.toBitVec_inj.mp; simp; generalize rcx.toBitVec = x; apply BitVec.eq_of_toNat_eq; simp; omega
       · apply UInt64.toBitVec_inj.mp; simp
       · apply UInt64.toBitVec_inj.mp; simp
@@ -274,7 +275,7 @@ theorem sc_marshal_main (k : Nat) (hk : ScalarsMarshalSSZTo.IsInfixAt Host.prog 
         show Int.toBytes 1 (BitVec.truncate 8 (0 : BitVec 64)).toInt = [0] by decide,
         show Int.toBytes 1 (BitVec.truncate 8 (1 : BitVec 64)).toInt = [1] by decide] at H8
       simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
-      refine ⟨trivial, trivial, ?_, trivial, ?_, ?_, ?_, trivial, ?_⟩
+      refine ⟨trivial, trivial, ?_, trivial, ?_, ?_, ?_, trivial, trivial, ?_⟩
       · apply UInt64.toBitVec_inj.mp; simp; generalize rcx.toBitVec = x; apply BitVec.eq_of_toNat_eq; simp; omega
       · apply UInt64.toBitVec_inj.mp; simp
       · apply UInt64.toBitVec_inj.mp; simp

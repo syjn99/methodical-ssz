@@ -72,6 +72,6 @@ theorem sc_unmarshal_then_marshal (kd : Nat) (hkd : ScalarsUnmarshalSSZ.IsInfixA
     (by dsimp only; rw [hr14]; ecancel)
     (by dsimp only; exact hguard) (by dsimp only; omega) (by dsimp only; exact hcap2') hb4') ?_
   intro st' hh
-  obtain ⟨e1, e2, e3, -, -, -, -, -, hm'⟩ := hh
+  obtain ⟨e1, e2, e3, -, -, -, -, -, -, hm'⟩ := hh
   dsimp only at e2 e3 hm'
   exact Eventually.done _ ⟨e1, e2, e3, sep_true (by ecancel)⟩

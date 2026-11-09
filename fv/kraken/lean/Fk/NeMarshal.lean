@@ -253,7 +253,7 @@ theorem ne_marshal_main (k : Nat) (hk : NestedMarshalSSZTo.IsInfixAt Host.prog k
           ⋆ Eq (cE.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 23))
           ⋆ Eq ([28, 0, 0, 0].At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 24))
           ⋆ Eq ([4, 0, 0, 0].At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 28))
-          ⋆ Eq (bs.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 32)) ⋆ fun _ => True) st.data.dmem)
+          ⋆ Eq (bs.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 32)) ⋆ R ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hsp hcap hcap63 hpre ⊢
@@ -445,7 +445,7 @@ theorem ne_marshal_main (k : Nat) (hk : NestedMarshalSSZTo.IsInfixAt Host.prog k
         ⋆ Eq (pre.At rbx.toBitVec) ⋆ Eq (a8.At (rbx.toBitVec + rcx.toBitVec))
         ⋆ Eq (cA.At (rbx.toBitVec + rcx.toBitVec + 8)) ⋆ Eq (cB.At (rbx.toBitVec + rcx.toBitVec + 9))
         ⋆ Eq (cC.At (rbx.toBitVec + rcx.toBitVec + 11)) ⋆ Eq (cD.At (rbx.toBitVec + rcx.toBitVec + 15))
-        ⋆ Eq ([0].At (rbx.toBitVec + rcx.toBitVec + 23)) ⋆ F) m9 := by
+        ⋆ Eq ([0].At (rbx.toBitVec + rcx.toBitVec + 23)) ⋆ R ⋆ F) m9 := by
       rw [hb24, hb28, hb32] at *
       exact ⟨_, by ecancel⟩
     have HF : (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At rsp.toBitVec)
@@ -460,14 +460,14 @@ theorem ne_marshal_main (k : Nat) (hk : NestedMarshalSSZTo.IsInfixAt Host.prog k
         ⋆ (Eq (pre.At rbx.toBitVec) ⋆ Eq (a8.At (rbx.toBitVec + rcx.toBitVec))
         ⋆ Eq (cA.At (rbx.toBitVec + rcx.toBitVec + 8)) ⋆ Eq (cB.At (rbx.toBitVec + rcx.toBitVec + 9))
         ⋆ Eq (cC.At (rbx.toBitVec + rcx.toBitVec + 11)) ⋆ Eq (cD.At (rbx.toBitVec + rcx.toBitVec + 15))
-        ⋆ Eq ([0].At (rbx.toBitVec + rcx.toBitVec + 23)) ⋆ F)) m9 := by
+        ⋆ Eq ([0].At (rbx.toBitVec + rcx.toBitVec + 23)) ⋆ R ⋆ F)) m9 := by
       simp only [Std.ExtHashMap.sep_assoc] at HF0 ⊢; exact HF0
     refine eventually_trans _ _ _ _ (ne_marshal_tail k hk hf rsp.toBitVec rax.toBitVec rbx.toBitVec pl q rcx.toNat
       rdi.toNat bs d o28 o4 n hn hbs hd h28 h4 (by omega) hcap63 hpl ra rbp l72 l32 hl72 hl32
       (Eq (pre.At rbx.toBitVec) ⋆ Eq (a8.At (rbx.toBitVec + rcx.toBitVec))
         ⋆ Eq (cA.At (rbx.toBitVec + rcx.toBitVec + 8)) ⋆ Eq (cB.At (rbx.toBitVec + rcx.toBitVec + 9))
         ⋆ Eq (cC.At (rbx.toBitVec + rcx.toBitVec + 11)) ⋆ Eq (cD.At (rbx.toBitVec + rcx.toBitVec + 15))
-        ⋆ Eq ([0].At (rbx.toBitVec + rcx.toBitVec + 23)) ⋆ F) _ rfl rfl
+        ⋆ Eq ([0].At (rbx.toBitVec + rcx.toBitVec + 23)) ⋆ R ⋆ F) _ rfl rfl
       hrd (by simp) (by bv_omega) (by bv_omega) HF) ?_
     rintro ⟨d1, pc1⟩ ⟨hpc1, h1, h2, h3, h4', h5, h6, h7, Hm1⟩
     dsimp only at hpc1 h1 h2 h3 h4' h5 h6 h7 Hm1
@@ -483,7 +483,7 @@ theorem ne_marshal_main (k : Nat) (hk : NestedMarshalSSZTo.IsInfixAt Host.prog k
         ⋆ Eq (cC.At (rbx.toBitVec + rcx.toBitVec + 11)) ⋆ Eq (cD.At (rbx.toBitVec + rcx.toBitVec + 15))
         ⋆ Eq ([0].At (rbx.toBitVec + rcx.toBitVec + 23))
         ⋆ Eq ([28, 0, 0, 0].At (rbx.toBitVec + rcx.toBitVec + 24)) ⋆ Eq ([4, 0, 0, 0].At (rbx.toBitVec + rcx.toBitVec + 28))
-        ⋆ Eq (bs.At (rbx.toBitVec + rcx.toBitVec + 32))) (by ecancel)
+        ⋆ Eq (bs.At (rbx.toBitVec + rcx.toBitVec + 32)) ⋆ R) (by ecancel)
 
   · kat hk NestedMarshalSSZTo 132
     split
@@ -521,7 +521,7 @@ theorem ne_marshal_main (k : Nat) (hk : NestedMarshalSSZTo.IsInfixAt Host.prog k
         ⋆ Eq (pre.At rbx.toBitVec) ⋆ Eq (a8.At (rbx.toBitVec + rcx.toBitVec))
         ⋆ Eq (cA.At (rbx.toBitVec + rcx.toBitVec + 8)) ⋆ Eq (cB.At (rbx.toBitVec + rcx.toBitVec + 9))
         ⋆ Eq (cC.At (rbx.toBitVec + rcx.toBitVec + 11)) ⋆ Eq (cD.At (rbx.toBitVec + rcx.toBitVec + 15))
-        ⋆ Eq ([1].At (rbx.toBitVec + rcx.toBitVec + 23)) ⋆ F) m9 := by
+        ⋆ Eq ([1].At (rbx.toBitVec + rcx.toBitVec + 23)) ⋆ R ⋆ F) m9 := by
       rw [hb24, hb28, hb32] at *
       exact ⟨_, by ecancel⟩
     have HF : (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At rsp.toBitVec)
@@ -536,14 +536,14 @@ theorem ne_marshal_main (k : Nat) (hk : NestedMarshalSSZTo.IsInfixAt Host.prog k
         ⋆ (Eq (pre.At rbx.toBitVec) ⋆ Eq (a8.At (rbx.toBitVec + rcx.toBitVec))
         ⋆ Eq (cA.At (rbx.toBitVec + rcx.toBitVec + 8)) ⋆ Eq (cB.At (rbx.toBitVec + rcx.toBitVec + 9))
         ⋆ Eq (cC.At (rbx.toBitVec + rcx.toBitVec + 11)) ⋆ Eq (cD.At (rbx.toBitVec + rcx.toBitVec + 15))
-        ⋆ Eq ([1].At (rbx.toBitVec + rcx.toBitVec + 23)) ⋆ F)) m9 := by
+        ⋆ Eq ([1].At (rbx.toBitVec + rcx.toBitVec + 23)) ⋆ R ⋆ F)) m9 := by
       simp only [Std.ExtHashMap.sep_assoc] at HF0 ⊢; exact HF0
     refine eventually_trans _ _ _ _ (ne_marshal_tail k hk hf rsp.toBitVec rax.toBitVec rbx.toBitVec pl q rcx.toNat
       rdi.toNat bs d o28 o4 n hn hbs hd h28 h4 (by omega) hcap63 hpl ra rbp l72 l32 hl72 hl32
       (Eq (pre.At rbx.toBitVec) ⋆ Eq (a8.At (rbx.toBitVec + rcx.toBitVec))
         ⋆ Eq (cA.At (rbx.toBitVec + rcx.toBitVec + 8)) ⋆ Eq (cB.At (rbx.toBitVec + rcx.toBitVec + 9))
         ⋆ Eq (cC.At (rbx.toBitVec + rcx.toBitVec + 11)) ⋆ Eq (cD.At (rbx.toBitVec + rcx.toBitVec + 15))
-        ⋆ Eq ([1].At (rbx.toBitVec + rcx.toBitVec + 23)) ⋆ F) _ rfl rfl
+        ⋆ Eq ([1].At (rbx.toBitVec + rcx.toBitVec + 23)) ⋆ R ⋆ F) _ rfl rfl
       hrd (by simp) (by bv_omega) (by bv_omega) HF) ?_
     rintro ⟨d1, pc1⟩ ⟨hpc1, h1, h2, h3, h4', h5, h6, h7, Hm1⟩
     dsimp only at hpc1 h1 h2 h3 h4' h5 h6 h7 Hm1
@@ -559,5 +559,5 @@ theorem ne_marshal_main (k : Nat) (hk : NestedMarshalSSZTo.IsInfixAt Host.prog k
         ⋆ Eq (cC.At (rbx.toBitVec + rcx.toBitVec + 11)) ⋆ Eq (cD.At (rbx.toBitVec + rcx.toBitVec + 15))
         ⋆ Eq ([1].At (rbx.toBitVec + rcx.toBitVec + 23))
         ⋆ Eq ([28, 0, 0, 0].At (rbx.toBitVec + rcx.toBitVec + 24)) ⋆ Eq ([4, 0, 0, 0].At (rbx.toBitVec + rcx.toBitVec + 28))
-        ⋆ Eq (bs.At (rbx.toBitVec + rcx.toBitVec + 32))) (by ecancel)
+        ⋆ Eq (bs.At (rbx.toBitVec + rcx.toBitVec + 32)) ⋆ R) (by ecancel)
 

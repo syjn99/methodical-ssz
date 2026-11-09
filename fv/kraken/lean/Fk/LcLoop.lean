@@ -703,6 +703,25 @@ theorem lcl_exit (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
   klabel hk hf ListCUnmarshalSSZ 407
   exact Eventually.done _ (hP _)
 
+/-- The dead stack of `ListC.UnmarshalSSZ` after its element loop (fix 3 X4,
+astra fix 2 required 6): the slots that the loop owns, relative to the entry
+rsp `x` (return address at `x`), as bytes of fixed lengths. The values are not
+named (the caller does not read them); the region is owned, not `True`. -/
+def lcStk (x : BitVec 64) (S : Nat) : DataMem → Prop := fun m =>
+  ∃ a8 a32 b128 b136 b144 b152 b160 b168 b176 b184 b216 b224 b232 blk : List UInt8,
+    a8.length = 8 ∧ a32.length = 8 ∧ b128.length = 8 ∧ b136.length = 8 ∧ b144.length = 8 ∧ b152.length = 8
+    ∧ b160.length = 8 ∧ b168.length = 8 ∧ b176.length = 8 ∧ b184.length = 8 ∧ b216.length = 8
+    ∧ b224.length = 8 ∧ b232.length = 8 ∧ blk.length = 144 + S ∧
+    (Eq (a8.At (x + 8)) ⋆ Eq (a32.At (x + 32)) ⋆ Eq (b128.At (x - 128)) ⋆ Eq (b136.At (x - 136))
+      ⋆ Eq (b144.At (x - 144)) ⋆ Eq (b152.At (x - 152)) ⋆ Eq (b160.At (x - 160)) ⋆ Eq (b168.At (x - 168))
+      ⋆ Eq (b176.At (x - 176)) ⋆ Eq (b184.At (x - 184)) ⋆ Eq (b216.At (x - 216)) ⋆ Eq (b224.At (x - 224))
+      ⋆ Eq (b232.At (x - 232)) ⋆ Eq (blk.At (x - 232 - 144 - BitVec.ofNat 64 S))) m
+
+theorem lcs_mono {P P' F : DataMem → Prop} {m : DataMem} (hP : ∀ m, P m → P' m)
+    (h : (P ⋆ F) m) : (P' ⋆ F) m := by
+  obtain ⟨a, b, hu, hi, hp, hr⟩ := h
+  exact ⟨a, b, hu, hi, hP a hp, hr⟩
+
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 200000 in
 theorem lcl_loop (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
@@ -748,20 +767,38 @@ theorem lcl_loop (k : Nat) (hk : ListCUnmarshalSSZ.IsInfixAt Host.prog k)
           (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At x) ⋆ Eq ((Int.toBytes 8 rbp0.toBitVec.toInt).At (x - 8))
             ⋆ Eq ((Int.toBytes 8 A.toInt).At recv) ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt).At (recv + 8))
             ⋆ Eq ((ptrBytes (acc'.reverse.map (fun t : BitVec 64 × BitVec 64 × ListU64 => t.1))).At A) ⋆ lcObjs acc' ⋆ Eq (tl.At base) ⋆ Heap avail'
-            ⋆ R ⋆ fun _ => True) st.data.dmem)
+            ⋆ R ⋆ lcStk x S ⋆ fun _ => True) st.data.dmem)
       ⟨s0, Host.addrOf (k + 239)⟩ := by
   intro j
   induction j with
   | zero =>
-    intro i s0 acc blk rslot sp1 sp2 s136 s152 s160 s184 avail hij hacc hgsa _ _ _ _ _ _ _ _ _ hrax hrdx _ hrbx hrdi _ h_mem
+    intro i s0 acc blk rslot sp1 sp2 s136 s152 s160 s184 avail hij hacc hgsa hblk hrs hsp1 hsp2 h136 h152 h160 h184 _
+      hrax hrdx _ hrbx hrdi _ h_mem
     have hi : i = gs.length := by omega
     subst hi
     have hacc' : acc.reverse.map (fun t : BitVec 64 × BitVec 64 × ListU64 => t.2.2) = gs := by rw [hgsa, List.take_length]
     refine lcl_exit k hk hf _ s0 (UInt64.toNat_inj.mp (by omega)) fun _ => ⟨rfl, hrbx, hrdi, rfl, rfl, acc, avail, hacc', ?_⟩
     rw [Nat.sub_self, Nat.mul_zero, List.replicate_zero, List.append_nil] at h_mem
+    obtain ⟨F, H1⟩ : ∃ F, ((Eq ((Int.toBytes 8 recv.toInt).At (x + 8))
+        ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 cap0).toInt).At (x + 32))
+        ⋆ Eq ((Int.toBytes 8 base.toInt).At (x - 128)) ⋆ Eq (s136.At (x - 136))
+        ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 (cap0 - 4)).toInt).At (x - 144))
+        ⋆ Eq (s152.At (x - 152)) ⋆ Eq (s160.At (x - 160))
+        ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt).At (x - 168))
+        ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 T).toInt).At (x - 176))
+        ⋆ Eq (s184.At (x - 184)) ⋆ Eq (sp2.At (x - 216)) ⋆ Eq (sp1.At (x - 224)) ⋆ Eq (rslot.At (x - 232))
+        ⋆ Eq (blk.At (x - 232 - 144 - BitVec.ofNat 64 S)))
+      ⋆ (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At x) ⋆ Eq ((Int.toBytes 8 rbp0.toBitVec.toInt).At (x - 8))
+      ⋆ Eq ((Int.toBytes 8 A.toInt).At recv) ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt).At (recv + 8))
+      ⋆ Eq ((ptrBytes (acc.reverse.map (fun t : BitVec 64 × BitVec 64 × ListU64 => t.1))).At A) ⋆ lcObjs acc ⋆ Eq (tl.At base)
+      ⋆ Heap avail ⋆ R ⋆ F)) s0.dmem := ⟨_, by ecancel⟩
+    have H2 := lcs_mono (P' := lcStk x S) (fun m hm => ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _,
+      Int.toBytes_length 8 _, Int.toBytes_length 8 _, Int.toBytes_length 8 _, h136, Int.toBytes_length 8 _, h152, h160,
+      Int.toBytes_length 8 _, Int.toBytes_length 8 _, h184, hsp2, hsp1, hrs, hblk, hm⟩) H1
     exact sep_true (P := Eq ((Int.toBytes 8 ra.toBitVec.toInt).At x) ⋆ Eq ((Int.toBytes 8 rbp0.toBitVec.toInt).At (x - 8))
       ⋆ Eq ((Int.toBytes 8 A.toInt).At recv) ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 gs.length).toInt).At (recv + 8))
-      ⋆ Eq ((ptrBytes (acc.reverse.map (fun t : BitVec 64 × BitVec 64 × ListU64 => t.1))).At A) ⋆ lcObjs acc ⋆ Eq (tl.At base) ⋆ Heap avail ⋆ R) (by ecancel)
+      ⋆ Eq ((ptrBytes (acc.reverse.map (fun t : BitVec 64 × BitVec 64 × ListU64 => t.1))).At A) ⋆ lcObjs acc ⋆ Eq (tl.At base) ⋆ Heap avail ⋆ R
+      ⋆ lcStk x S) (by ecancel)
   | succ j ih =>
     intro i s0 acc blk rslot sp1 sp2 s136 s152 s160 s184 avail hij hacc hgsa hblk hrs hsp1 hsp2 h136 h152 h160 h184 hav
       hrax hrdx hrcx hrbx hrdi hrsp h_mem
