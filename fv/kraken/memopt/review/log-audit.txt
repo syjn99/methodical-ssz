@@ -1,0 +1,264 @@
+full-r1: {'Built': 159, 'Replayed': 1, 'Reused': 0}
+⚠ [838/856] Built Fk.WitLcM0 (5.8s)
+⚠ [840/856] Built Fk.WitLcM1x1 (5.9s)
+⚠ [842/856] Built Fk.WitLcM4 (6.1s)
+⚠ [846/856] Built Fk.WitLcM1 (9.0s)
+⚠ [848/856] Built Fk.WitLcMMix (13s)
+⚠ [852/856] Built Fk.WitLcM4x16 (22s)
+✔ [854/856] Built Fk (3.7s)
+Build completed successfully (856 jobs).
+label: full-r1
+cmd: lake build
+cwd: /Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/lean
+start_epoch: 1794223571
+exit: 0
+wall_s_date: 173
+wall_s_time: 173.11
+time_maxrss_bytes: 14165344256
+time_maxrss_gib: 13.19
+sampled_peak_total_gib: 19.08
+sampled_peak_single_gib: 13.18
+samples: 301
+
+m4-full: {'Built': 159, 'Replayed': 1, 'Reused': 0}
+⚠ [838/856] Built Fk.WitLcM0 (5.3s)
+⚠ [840/856] Built Fk.WitLcM1 (5.4s)
+⚠ [842/856] Built Fk.WitLcM1x1 (5.5s)
+⚠ [844/856] Built Fk.WitLcM4 (5.6s)
+⚠ [846/856] Built Fk.WitLcMMix (5.9s)
+⚠ [848/856] Built Fk.WitLcM4x16 (6.3s)
+✔ [854/856] Built Fk (3.4s)
+Build completed successfully (856 jobs).
+label: m4-full
+cmd: lake build
+cwd: /Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/lean
+start_epoch: 1794225451
+exit: 0
+wall_s_date: 153
+wall_s_time: 153.56
+time_maxrss_bytes: 4784046080
+time_maxrss_gib: 4.46
+sampled_peak_total_gib: 16.96
+sampled_peak_single_gib: 4.45
+samples: 269
+
+m3-build6: {'Built': 3, 'Replayed': 42, 'Reused': 0}
+⚠ [632/643] Replayed Fk.WitLcM0
+⚠ [634/643] Replayed Fk.WitLcM1
+⚠ [636/643] Replayed Fk.WitLcM4
+⚠ [638/643] Built Fk.WitLcM1x1 (4.2s)
+⚠ [640/643] Built Fk.WitLcMMix (4.5s)
+⚠ [642/643] Built Fk.WitLcM4x16 (4.9s)
+Build completed successfully (643 jobs).
+label: m3-build6
+cmd: lake build Fk.WitLcM0 Fk.WitLcM1 Fk.WitLcM1x1 Fk.WitLcM4 Fk.WitLcM4x16 Fk.WitLcMMix
+cwd: /Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/lean
+start_epoch: 1794225077
+exit: 0
+wall_s_date: 7
+wall_s_time: 6.63
+time_maxrss_bytes: 1538326528
+time_maxrss_gib: 1.43
+sampled_peak_total_gib: 4.66
+sampled_peak_single_gib: 1.39
+samples: 12
+
+m3-orig-noop: {'Built': 0, 'Replayed': 45, 'Reused': 0}
+⚠ [632/643] Replayed Fk.WitLcM0
+⚠ [634/643] Replayed Fk.WitLcM1
+⚠ [636/643] Replayed Fk.WitLcM1x1
+⚠ [638/643] Replayed Fk.WitLcM4
+⚠ [640/643] Replayed Fk.WitLcM4x16
+⚠ [642/643] Replayed Fk.WitLcMMix
+Build completed successfully (643 jobs).
+lm-full: {'Built': 159, 'Replayed': 1, 'Reused': 0}
+⚠ [836/856] Built Fk.WitLcM0 (1.9s)
+⚠ [838/856] Built Fk.WitLcM1 (1.9s)
+⚠ [840/856] Built Fk.WitLcM1x1 (1.9s)
+⚠ [842/856] Built Fk.WitLcM4 (2.1s)
+⚠ [844/856] Built Fk.WitLcMMix (2.3s)
+⚠ [846/856] Built Fk.WitLcM4x16 (2.7s)
+✔ [854/856] Built Fk (1.4s)
+Build completed successfully (856 jobs).
+label: full
+cmd: lake build
+cwd: /work/new/fv/kraken/lean
+exit: 0
+wall_s: 96
+time_wall: 1:35.37
+time_maxrss_gib: 4.78
+time_exit: 0
+sampled_current_max_gib: 7.40
+max_lean_procs: 18
+memory.peak_gib: 7.41 (7953956864 bytes)
+memory.max: 10403971072  memory.swap.max: 0
+oom_kill_delta: 0
+memory.events:
+  low 0
+  high 0
+  max 0
+  oom 0
+  oom_kill 0
+  oom_group_kill 0
+  sock_throttled 0
+
+lm-prebuild-new: {'Built': 426, 'Replayed': 0, 'Reused': 0}
+Build completed successfully (631 jobs).
+label: prebuild-new
+cmd: lake build Fk.LcMarshal Fk.RtCopy Fk.WHost
+cwd: /work/new/fv/kraken/lean
+exit: 0
+wall_s: 107
+time_wall: 1:47.27
+time_maxrss_gib: 3.58
+time_exit: 0
+sampled_current_max_gib: 4.83
+max_lean_procs: 17
+memory.peak_gib: 4.85 (5203230720 bytes)
+memory.max: 10403971072  memory.swap.max: 0
+oom_kill_delta: 0
+memory.events:
+  low 0
+  high 0
+  max 0
+  oom 0
+  oom_kill 0
+  oom_group_kill 0
+  sock_throttled 0
+
+lm-prebuild-orig: {'Built': 48, 'Replayed': 1, 'Reused': 0}
+Build completed successfully (631 jobs).
+label: prebuild-orig
+cmd: lake build Fk.LcMarshal Fk.RtCopy Fk.WHost
+cwd: /work/orig/fv/kraken/lean
+exit: 0
+wall_s: 78
+time_wall: 1:18.38
+time_maxrss_gib: 3.59
+time_exit: 0
+sampled_current_max_gib: 2.76
+max_lean_procs: 10
+memory.peak_gib: 2.77 (2973089792 bytes)
+memory.max: 10403971072  memory.swap.max: 0
+oom_kill_delta: 0
+memory.events:
+  low 0
+  high 0
+  max 0
+  oom 0
+  oom_kill 0
+  oom_group_kill 0
+  sock_throttled 0
+
+lm-orig-1: {'Built': 0, 'Replayed': 39, 'Reused': 0}
+error: Lean exited with code 137
+error: build failed
+label: orig-1
+cmd: lake build Fk.WitLcM4x16
+cwd: /work/orig/fv/kraken/lean
+exit: 1
+wall_s: 4
+time_wall: 0:04.45
+time_maxrss_gib: 11.16
+time_exit: 1
+sampled_current_max_gib: 8.96
+max_lean_procs: 1
+memory.peak_gib: 9.69 (10403971072 bytes)
+memory.max: 10403971072  memory.swap.max: 0
+oom_kill_delta: 1
+memory.events:
+  low 0
+  high 0
+  max 310
+  oom 6
+  oom_kill 1
+  oom_group_kill 0
+  sock_throttled 0
+
+lm-orig-2: {'Built': 0, 'Replayed': 39, 'Reused': 0}
+error: Lean exited with code 137
+error: build failed
+label: orig-2
+cmd: lake build Fk.WitLcM4x16
+cwd: /work/orig/fv/kraken/lean
+exit: 1
+wall_s: 5
+time_wall: 0:04.32
+time_maxrss_gib: 11.18
+time_exit: 1
+sampled_current_max_gib: 9.24
+max_lean_procs: 1
+memory.peak_gib: 9.69 (10403971072 bytes)
+memory.max: 10403971072  memory.swap.max: 0
+oom_kill_delta: 1
+memory.events:
+  low 0
+  high 0
+  max 275
+  oom 6
+  oom_kill 1
+  oom_group_kill 0
+  sock_throttled 0
+
+lm-new-1: {'Built': 1, 'Replayed': 39, 'Reused': 0}
+⚠ [632/633] Built Fk.WitLcM4x16 (2.4s)
+Build completed successfully (633 jobs).
+label: new-1
+cmd: lake build Fk.WitLcM4x16
+cwd: /work/new/fv/kraken/lean
+exit: 0
+wall_s: 3
+time_wall: 0:02.73
+time_maxrss_gib: 1.80
+time_exit: 0
+sampled_current_max_gib: 0.43
+max_lean_procs: 1
+memory.peak_gib: 0.44 (467312640 bytes)
+memory.max: 10403971072  memory.swap.max: 0
+oom_kill_delta: 0
+memory.events:
+  low 0
+  high 0
+  max 0
+  oom 0
+  oom_kill 0
+  oom_group_kill 0
+  sock_throttled 0
+
+lm-new-2: {'Built': 1, 'Replayed': 39, 'Reused': 0}
+⚠ [632/633] Built Fk.WitLcM4x16 (2.7s)
+Build completed successfully (633 jobs).
+label: new-2
+cmd: lake build Fk.WitLcM4x16
+cwd: /work/new/fv/kraken/lean
+exit: 0
+wall_s: 3
+time_wall: 0:03.03
+time_maxrss_gib: 1.77
+time_exit: 0
+sampled_current_max_gib: 1.39
+max_lean_procs: 1
+memory.peak_gib: 1.46 (1570275328 bytes)
+memory.max: 10403971072  memory.swap.max: 0
+oom_kill_delta: 0
+memory.events:
+  low 0
+  high 0
+  max 0
+  oom 0
+  oom_kill 0
+  oom_group_kill 0
+  sock_throttled 0
+
+orig/WitLcM0.olean 31ab1c237c27d907d4faa62dbfe8bd57cd51c339483613968820ad5fcd2c7f17
+orig/WitLcM1.olean eebea4415ad3a7ed782d6409fa3147baaf816299cb260231a8d9bdb7caf86f63
+orig/WitLcM1x1.olean 88a0f10cd695ac21c28cb384a687fec5ca5a2ebcfab1f29ed1e6d1a94ef5444f
+orig/WitLcM4.olean 1bcb4d231a2afd829c1e67fb060a011fbf170f86019f70a7d1d6a659b18da338
+orig/WitLcM4x16.olean b3a5e22d21f2059632c1e5afd39a55a63bf73c60a180d3fc75cce77984778927
+orig/WitLcMMix.olean 18393ff5d722e110e6cc90ec77f03ae6a8925674376b85f90f3182c67fd6f84e
+new/WitLcM0.olean 31ab1c237c27d907d4faa62dbfe8bd57cd51c339483613968820ad5fcd2c7f17
+new/WitLcM1.olean eebea4415ad3a7ed782d6409fa3147baaf816299cb260231a8d9bdb7caf86f63
+new/WitLcM1x1.olean 5b7e854d74db0f8ba833da974345a8b6ba3deb0bb6ccbe9a2a98a8101a7bdd92
+new/WitLcM4.olean 1bcb4d231a2afd829c1e67fb060a011fbf170f86019f70a7d1d6a659b18da338
+new/WitLcM4x16.olean d2aacbbced582ed847ce7ecc13809ab25a5e9406998fa27fae6550a96488cab5
+new/WitLcMMix.olean b7a0cef45c4196539815ddd32770353b4f2fd27c4e9c355e08d4a610cc77eedf
