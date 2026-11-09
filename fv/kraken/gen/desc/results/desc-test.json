@@ -3,11 +3,21 @@
  "summary": {
   "originals": 144,
   "originals_pass": 144,
-  "mutants": 14,
-  "mutants_as_expected": 14,
+  "originals_spec_compared": 9,
+  "originals_spec_compared_pass": 9,
+  "originals_consistency_only": 135,
+  "originals_consistency_only_pass": 135,
+  "known_pass_mutants": 6,
+  "known_pass_as_expected": 6,
+  "not_applicable": [
+   "r9-elem-variable",
+   "r10-callee"
+  ],
+  "mutants": 19,
+  "mutants_as_expected": 19,
   "unexpected": 0,
   "probe_skipped_files": 9,
-  "done_line": "DESCCHECK-DONE 144 14",
+  "done_line": "DESCCHECK-DONE 150 19 25 144",
   "producer_skipped": []
  },
  "rows": [
@@ -15,6 +25,7 @@
    "file": "AttestationData.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "SPEC",
    "failed_checks": [],
    "as_expected": true
   },
@@ -22,6 +33,7 @@
    "file": "BitL.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "SPEC",
    "failed_checks": [],
    "as_expected": true
   },
@@ -29,6 +41,7 @@
    "file": "BitVec.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "SPEC",
    "failed_checks": [],
    "as_expected": true
   },
@@ -36,6 +49,7 @@
    "file": "Checkpoint.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "SPEC",
    "failed_checks": [],
    "as_expected": true
   },
@@ -43,6 +57,7 @@
    "file": "FixedVec.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "SPEC",
    "failed_checks": [],
    "as_expected": true
   },
@@ -50,6 +65,7 @@
    "file": "ListC.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "SPEC",
    "failed_checks": [],
    "as_expected": true
   },
@@ -57,6 +73,7 @@
    "file": "ListU64.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "SPEC",
    "failed_checks": [],
    "as_expected": true
   },
@@ -64,6 +81,7 @@
    "file": "Nested.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "SPEC",
    "failed_checks": [],
    "as_expected": true
   },
@@ -71,6 +89,7 @@
    "file": "Scalars.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "SPEC",
    "failed_checks": [],
    "as_expected": true
   },
@@ -78,6 +97,7 @@
    "file": "engine_v1.ConsolidationRequest.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -85,6 +105,7 @@
    "file": "engine_v1.DepositRequest.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -92,6 +113,7 @@
    "file": "engine_v1.ExecutionPayload.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -99,6 +121,7 @@
    "file": "engine_v1.ExecutionPayloadCapella.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -106,6 +129,7 @@
    "file": "engine_v1.ExecutionPayloadDeneb.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -113,6 +137,7 @@
    "file": "engine_v1.ExecutionPayloadHeader.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -120,6 +145,7 @@
    "file": "engine_v1.ExecutionPayloadHeaderCapella.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -127,6 +153,7 @@
    "file": "engine_v1.ExecutionPayloadHeaderDeneb.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -134,6 +161,7 @@
    "file": "engine_v1.ExecutionRequests.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -141,6 +169,7 @@
    "file": "engine_v1.Withdrawal.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -148,6 +177,7 @@
    "file": "engine_v1.WithdrawalRequest.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -155,6 +185,7 @@
    "file": "prysm_v1alpha1.AggregateAttestationAndProof.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -162,6 +193,7 @@
    "file": "prysm_v1alpha1.AggregateAttestationAndProofElectra.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -169,6 +201,7 @@
    "file": "prysm_v1alpha1.Attestation.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -176,6 +209,7 @@
    "file": "prysm_v1alpha1.AttestationData.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -183,6 +217,7 @@
    "file": "prysm_v1alpha1.AttestationElectra.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -190,6 +225,7 @@
    "file": "prysm_v1alpha1.AttesterSlashing.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -197,6 +233,7 @@
    "file": "prysm_v1alpha1.AttesterSlashingElectra.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -204,6 +241,7 @@
    "file": "prysm_v1alpha1.BLSToExecutionChange.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -211,6 +249,7 @@
    "file": "prysm_v1alpha1.BeaconBlock.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -218,6 +257,7 @@
    "file": "prysm_v1alpha1.BeaconBlockAltair.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -225,6 +265,7 @@
    "file": "prysm_v1alpha1.BeaconBlockBellatrix.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -232,6 +273,7 @@
    "file": "prysm_v1alpha1.BeaconBlockBody.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -239,6 +281,7 @@
    "file": "prysm_v1alpha1.BeaconBlockBodyAltair.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -246,6 +289,7 @@
    "file": "prysm_v1alpha1.BeaconBlockBodyBellatrix.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -253,6 +297,7 @@
    "file": "prysm_v1alpha1.BeaconBlockBodyCapella.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -260,6 +305,7 @@
    "file": "prysm_v1alpha1.BeaconBlockBodyDeneb.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -267,6 +313,7 @@
    "file": "prysm_v1alpha1.BeaconBlockBodyElectra.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -274,6 +321,7 @@
    "file": "prysm_v1alpha1.BeaconBlockCapella.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -281,6 +329,7 @@
    "file": "prysm_v1alpha1.BeaconBlockContentsDeneb.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -288,6 +337,7 @@
    "file": "prysm_v1alpha1.BeaconBlockContentsElectra.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -295,6 +345,7 @@
    "file": "prysm_v1alpha1.BeaconBlockContentsFulu.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -302,6 +353,7 @@
    "file": "prysm_v1alpha1.BeaconBlockDeneb.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -309,6 +361,7 @@
    "file": "prysm_v1alpha1.BeaconBlockElectra.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -316,6 +369,7 @@
    "file": "prysm_v1alpha1.BeaconBlockHeader.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -323,6 +377,7 @@
    "file": "prysm_v1alpha1.BeaconState.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -330,6 +385,7 @@
    "file": "prysm_v1alpha1.BeaconStateAltair.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -337,6 +393,7 @@
    "file": "prysm_v1alpha1.BeaconStateBellatrix.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -344,6 +401,7 @@
    "file": "prysm_v1alpha1.BeaconStateCapella.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -351,6 +409,7 @@
    "file": "prysm_v1alpha1.BeaconStateDeneb.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -358,6 +417,7 @@
    "file": "prysm_v1alpha1.BeaconStateElectra.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -365,6 +425,7 @@
    "file": "prysm_v1alpha1.BeaconStateFulu.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -372,6 +433,7 @@
    "file": "prysm_v1alpha1.BlindedBeaconBlockBellatrix.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -379,6 +441,7 @@
    "file": "prysm_v1alpha1.BlindedBeaconBlockBodyBellatrix.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -386,6 +449,7 @@
    "file": "prysm_v1alpha1.BlindedBeaconBlockBodyCapella.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -393,6 +457,7 @@
    "file": "prysm_v1alpha1.BlindedBeaconBlockBodyDeneb.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -400,6 +465,7 @@
    "file": "prysm_v1alpha1.BlindedBeaconBlockBodyElectra.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -407,6 +473,7 @@
    "file": "prysm_v1alpha1.BlindedBeaconBlockCapella.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -414,6 +481,7 @@
    "file": "prysm_v1alpha1.BlindedBeaconBlockDeneb.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -421,6 +489,7 @@
    "file": "prysm_v1alpha1.BlindedBeaconBlockElectra.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -428,6 +497,7 @@
    "file": "prysm_v1alpha1.BlindedBeaconBlockFulu.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -435,6 +505,7 @@
    "file": "prysm_v1alpha1.BlobIdentifier.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -442,6 +513,7 @@
    "file": "prysm_v1alpha1.BlobSidecar.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -449,6 +521,7 @@
    "file": "prysm_v1alpha1.BlobSidecars.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -456,6 +529,7 @@
    "file": "prysm_v1alpha1.BuilderBidCapella.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -463,6 +537,7 @@
    "file": "prysm_v1alpha1.BuilderBidDeneb.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -470,6 +545,7 @@
    "file": "prysm_v1alpha1.BuilderBidElectra.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -477,6 +553,7 @@
    "file": "prysm_v1alpha1.Checkpoint.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -484,6 +561,7 @@
    "file": "prysm_v1alpha1.ContributionAndProof.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -491,6 +569,7 @@
    "file": "prysm_v1alpha1.DataColumnSidecar.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -498,6 +577,7 @@
    "file": "prysm_v1alpha1.DataColumnsByRootIdentifier.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -505,6 +585,7 @@
    "file": "prysm_v1alpha1.Deposit.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -512,6 +593,7 @@
    "file": "prysm_v1alpha1.DepositMessage.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -519,6 +601,7 @@
    "file": "prysm_v1alpha1.Deposit_Data.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -526,6 +609,7 @@
    "file": "prysm_v1alpha1.ENRForkID.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -533,6 +617,7 @@
    "file": "prysm_v1alpha1.Eth1Data.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -540,6 +625,7 @@
    "file": "prysm_v1alpha1.Fork.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -547,6 +633,7 @@
    "file": "prysm_v1alpha1.ForkData.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -554,6 +641,7 @@
    "file": "prysm_v1alpha1.HistoricalBatch.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -561,6 +649,7 @@
    "file": "prysm_v1alpha1.HistoricalSummary.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -568,6 +657,7 @@
    "file": "prysm_v1alpha1.IndexedAttestation.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -575,6 +665,7 @@
    "file": "prysm_v1alpha1.IndexedAttestationElectra.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -582,6 +673,7 @@
    "file": "prysm_v1alpha1.LightClientBootstrapAltair.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -589,6 +681,7 @@
    "file": "prysm_v1alpha1.LightClientBootstrapCapella.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -596,6 +689,7 @@
    "file": "prysm_v1alpha1.LightClientBootstrapDeneb.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -603,6 +697,7 @@
    "file": "prysm_v1alpha1.LightClientBootstrapElectra.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -610,6 +705,7 @@
    "file": "prysm_v1alpha1.LightClientFinalityUpdateAltair.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -617,6 +713,7 @@
    "file": "prysm_v1alpha1.LightClientFinalityUpdateCapella.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -624,6 +721,7 @@
    "file": "prysm_v1alpha1.LightClientFinalityUpdateDeneb.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -631,6 +729,7 @@
    "file": "prysm_v1alpha1.LightClientFinalityUpdateElectra.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -638,6 +737,7 @@
    "file": "prysm_v1alpha1.LightClientHeaderAltair.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -645,6 +745,7 @@
    "file": "prysm_v1alpha1.LightClientHeaderCapella.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -652,6 +753,7 @@
    "file": "prysm_v1alpha1.LightClientHeaderDeneb.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -659,6 +761,7 @@
    "file": "prysm_v1alpha1.LightClientOptimisticUpdateAltair.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -666,6 +769,7 @@
    "file": "prysm_v1alpha1.LightClientOptimisticUpdateCapella.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -673,6 +777,7 @@
    "file": "prysm_v1alpha1.LightClientOptimisticUpdateDeneb.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -680,6 +785,7 @@
    "file": "prysm_v1alpha1.LightClientUpdateAltair.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -687,6 +793,7 @@
    "file": "prysm_v1alpha1.LightClientUpdateCapella.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -694,6 +801,7 @@
    "file": "prysm_v1alpha1.LightClientUpdateDeneb.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -701,6 +809,7 @@
    "file": "prysm_v1alpha1.LightClientUpdateElectra.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -708,6 +817,7 @@
    "file": "prysm_v1alpha1.PartialDataColumnHeader.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -715,6 +825,7 @@
    "file": "prysm_v1alpha1.PartialDataColumnPartsMetadata.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -722,6 +833,7 @@
    "file": "prysm_v1alpha1.PartialDataColumnSidecar.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -729,6 +841,7 @@
    "file": "prysm_v1alpha1.PendingAttestation.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -736,6 +849,7 @@
    "file": "prysm_v1alpha1.PendingConsolidation.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -743,6 +857,7 @@
    "file": "prysm_v1alpha1.PendingDeposit.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -750,6 +865,7 @@
    "file": "prysm_v1alpha1.PendingPartialWithdrawal.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -757,6 +873,7 @@
    "file": "prysm_v1alpha1.PowBlock.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -764,6 +881,7 @@
    "file": "prysm_v1alpha1.ProposerSlashing.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -771,6 +889,7 @@
    "file": "prysm_v1alpha1.SignedAggregateAttestationAndProof.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -778,6 +897,7 @@
    "file": "prysm_v1alpha1.SignedAggregateAttestationAndProofElectra.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -785,6 +905,7 @@
    "file": "prysm_v1alpha1.SignedBLSToExecutionChange.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -792,6 +913,7 @@
    "file": "prysm_v1alpha1.SignedBeaconBlock.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -799,6 +921,7 @@
    "file": "prysm_v1alpha1.SignedBeaconBlockAltair.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -806,6 +929,7 @@
    "file": "prysm_v1alpha1.SignedBeaconBlockBellatrix.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -813,6 +937,7 @@
    "file": "prysm_v1alpha1.SignedBeaconBlockCapella.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -820,6 +945,7 @@
    "file": "prysm_v1alpha1.SignedBeaconBlockContentsDeneb.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -827,6 +953,7 @@
    "file": "prysm_v1alpha1.SignedBeaconBlockContentsElectra.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -834,6 +961,7 @@
    "file": "prysm_v1alpha1.SignedBeaconBlockContentsFulu.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -841,6 +969,7 @@
    "file": "prysm_v1alpha1.SignedBeaconBlockDeneb.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -848,6 +977,7 @@
    "file": "prysm_v1alpha1.SignedBeaconBlockElectra.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -855,6 +985,7 @@
    "file": "prysm_v1alpha1.SignedBeaconBlockFulu.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -862,6 +993,7 @@
    "file": "prysm_v1alpha1.SignedBeaconBlockHeader.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -869,6 +1001,7 @@
    "file": "prysm_v1alpha1.SignedBlindedBeaconBlockBellatrix.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -876,6 +1009,7 @@
    "file": "prysm_v1alpha1.SignedBlindedBeaconBlockCapella.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -883,6 +1017,7 @@
    "file": "prysm_v1alpha1.SignedBlindedBeaconBlockDeneb.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -890,6 +1025,7 @@
    "file": "prysm_v1alpha1.SignedBlindedBeaconBlockElectra.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -897,6 +1033,7 @@
    "file": "prysm_v1alpha1.SignedBlindedBeaconBlockFulu.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -904,6 +1041,7 @@
    "file": "prysm_v1alpha1.SignedBuilderBidCapella.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -911,6 +1049,7 @@
    "file": "prysm_v1alpha1.SignedBuilderBidDeneb.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -918,6 +1057,7 @@
    "file": "prysm_v1alpha1.SignedBuilderBidElectra.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -925,6 +1065,7 @@
    "file": "prysm_v1alpha1.SignedContributionAndProof.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -932,6 +1073,7 @@
    "file": "prysm_v1alpha1.SignedVoluntaryExit.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -939,6 +1081,7 @@
    "file": "prysm_v1alpha1.SigningData.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -946,6 +1089,7 @@
    "file": "prysm_v1alpha1.SingleAttestation.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -953,6 +1097,7 @@
    "file": "prysm_v1alpha1.Status.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -960,6 +1105,7 @@
    "file": "prysm_v1alpha1.StatusV2.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -967,6 +1113,7 @@
    "file": "prysm_v1alpha1.SyncAggregate.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -974,6 +1121,7 @@
    "file": "prysm_v1alpha1.SyncAggregatorSelectionData.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -981,6 +1129,7 @@
    "file": "prysm_v1alpha1.SyncCommittee.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -988,6 +1137,7 @@
    "file": "prysm_v1alpha1.SyncCommitteeContribution.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -995,6 +1145,7 @@
    "file": "prysm_v1alpha1.SyncCommitteeMessage.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -1002,6 +1153,7 @@
    "file": "prysm_v1alpha1.Validator.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -1009,6 +1161,7 @@
    "file": "prysm_v1alpha1.ValidatorBalance.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -1016,6 +1169,7 @@
    "file": "prysm_v1alpha1.VoluntaryExit.desc.json",
    "role": "original",
    "result": "PASS",
+   "spec": "NONE",
    "failed_checks": [],
    "as_expected": true
   },
@@ -1222,6 +1376,138 @@
    ],
    "twin": "prysm_v1alpha1.StatusV2.desc.json",
    "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "r1-ref-dropped.desc.json",
+   "role": "mutant",
+   "id": "r1-ref-dropped",
+   "what": "limit 16 -> 17 in term and claim, reference set to null",
+   "designated": "ref-claim",
+   "result": "FAIL",
+   "failed_checks": [
+    "ref-claim",
+    "ref"
+   ],
+   "twin": "ListU64.desc.json",
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "r2-ref-key-removed.desc.json",
+   "role": "mutant",
+   "id": "r2-ref-key-removed",
+   "what": "bitList -> byteList in term and claim, reference key deleted",
+   "designated": "ref-claim",
+   "result": "FAIL",
+   "failed_checks": [
+    "ref-claim",
+    "ref"
+   ],
+   "twin": "BitL.desc.json",
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "r12-type.desc.json",
+   "role": "mutant",
+   "id": "r12-type",
+   "what": "type name Scalars -> Checkpoint (reference stays Fv1.scDesc)",
+   "designated": "ref-claim",
+   "result": "FAIL",
+   "failed_checks": [
+    "ref-claim"
+   ],
+   "twin": "Scalars.desc.json",
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "r7-claim-name.desc.json",
+   "role": "mutant",
+   "id": "r7-claim-name",
+   "what": "claim name of field 0 changed (term names unchanged)",
+   "designated": "name[0]",
+   "result": "FAIL",
+   "failed_checks": [
+    "name[0]"
+   ],
+   "twin": "Scalars.desc.json",
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "r11-index.desc.json",
+   "role": "mutant",
+   "id": "r11-index",
+   "what": "index claim of field 1 -> 7",
+   "designated": "index[1]",
+   "result": "FAIL",
+   "failed_checks": [
+    "index[1]"
+   ],
+   "twin": "Checkpoint.desc.json",
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "r3-prysm-bool-uint8.desc.json",
+   "role": "known-pass",
+   "id": "r3-prysm-bool-uint8",
+   "what": "Slashed bool -> uint8, claim follows",
+   "why": "known pass: no independent spec for this property",
+   "result": "PASS",
+   "spec": "NONE",
+   "as_expected": true
+  },
+  {
+   "file": "r4-prysm-bitvec-505.desc.json",
+   "role": "known-pass",
+   "id": "r4-prysm-bitvec-505",
+   "what": "Bitvector 512 -> 505 bits (still 64 bytes), claim follows",
+   "why": "known pass: no independent spec for this property",
+   "result": "PASS",
+   "spec": "NONE",
+   "as_expected": true
+  },
+  {
+   "file": "r5-prysm-limit.desc.json",
+   "role": "known-pass",
+   "id": "r5-prysm-limit",
+   "what": "list[uint64] limit 2048 -> 4096 in term and claim",
+   "why": "known pass: no independent spec for this property",
+   "result": "PASS",
+   "spec": "NONE",
+   "as_expected": true
+  },
+  {
+   "file": "r6-prysm-field-swap.desc.json",
+   "role": "known-pass",
+   "id": "r6-prysm-field-swap",
+   "what": "fields 0 and 1 swapped consistently",
+   "why": "known pass: no independent spec for this property",
+   "result": "PASS",
+   "spec": "NONE",
+   "as_expected": true
+  },
+  {
+   "file": "r17-prysm-inner-kind.desc.json",
+   "role": "known-pass",
+   "id": "r17-prysm-inner-kind",
+   "what": "inner AttestationData.Slot uint64 -> byteVector 8",
+   "why": "known pass: no independent spec for this property",
+   "result": "PASS",
+   "spec": "NONE",
+   "as_expected": true
+  },
+  {
+   "file": "r8-term-names-swapped.desc.json",
+   "role": "known-pass",
+   "id": "r8-term-names-swapped",
+   "what": "term field names reversed, shapes unchanged (spec names are not compared)",
+   "why": "known pass: no independent spec for this property",
+   "result": "PASS",
+   "spec": "SPEC",
    "as_expected": true
   }
  ]

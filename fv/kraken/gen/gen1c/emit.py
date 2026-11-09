@@ -126,8 +126,8 @@ def witness_config(desc):
                     c["inner"] = inner
                 cfg["configs"].append(c)
         else:
-            cfg["configs"].append({"name": f"{f['name']}=callee", "field": f["name"],
-                                   "length": "from the callee's own configurations", "callee": f.get("callee")})
+            cfg["configs"].append({"name": f"{f['name']}=nested", "field": f["name"], "kind": f["kind"],
+                                   "length": "from the nested type's own configurations"})
     return cfg
 
 

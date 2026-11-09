@@ -13,9 +13,13 @@ Desc format (schema fvphase1c.desc/1):
   fixed_size          the generator's fixed size (null if variable)
   fixed_part_size     bytes of the container head (fixed fields + 4 per variable field)
   fields[i]           name, offset (in the head), width (in the head), variable, kind,
-                      length / limit / elem_size where they apply, callee (delegated type)
+                      length / limit / elem_size (null = variable elements) where they apply.
+                      Every field claim is checked by the checker; claims it cannot
+                      check (delegated callee, element variability) are not in the format.
   variable_order      indices of the variable fields in head order
-  reference           Lean constant of a hand-written EthLib Desc to compare with (or null)
+  reference           Lean constant of the hand-written EthLib Desc (or null). The checker
+                      owns its own (package, type) table and FAILs a file whose
+                      reference differs from it; this field never selects the spec.
 All layout numbers come from the generator IR (its FixedSize/IsVariableSized), not from EthLib.
 The checker (fv/kraken/gen/desccheck) shares no code with this file.
 Python 3 standard library only. Run with python3 -I.
@@ -111,13 +115,9 @@ def field_info(i, name, n, off, idx):
             e = e["referent"] if e["k"] == "pointer" else e["underlying"]
         el = e.get("elem")
         if el is not None:
-            info["elem_variable"] = el.get("variable") if "delegated_to" not in el else el["delegated_to"]["variable"]
-            info["elem_size"] = (el.get("fixed_size") if "delegated_to" not in el else el["delegated_to"]["fixed_size"])
-            if info["elem_variable"]:
-                info["elem_size"] = None
-    if "delegated_to" in n:
-        d = n["delegated_to"]
-        info["callee"] = f"{d['pkg']}.{d['name']}"
+            elem_var = el.get("variable") if "delegated_to" not in el else el["delegated_to"]["variable"]
+            info["elem_size"] = None if elem_var else \
+                (el.get("fixed_size") if "delegated_to" not in el else el["delegated_to"]["fixed_size"])
     return info
 
 

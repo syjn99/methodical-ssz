@@ -229,7 +229,81 @@
    "twin": "orig/prysm_v1alpha1.StatusV2.desc.json",
    "what": "wrong field offset (field 3: 44 -> 45)",
    "designated": "offset[3]"
+  },
+  "mut/r1-ref-dropped.desc.json": {
+   "id": "r1-ref-dropped",
+   "twin": "orig/ListU64.desc.json",
+   "what": "limit 16 -> 17 in term and claim, reference set to null",
+   "designated": "ref-claim"
+  },
+  "mut/r2-ref-key-removed.desc.json": {
+   "id": "r2-ref-key-removed",
+   "twin": "orig/BitL.desc.json",
+   "what": "bitList -> byteList in term and claim, reference key deleted",
+   "designated": "ref-claim"
+  },
+  "mut/r12-type.desc.json": {
+   "id": "r12-type",
+   "twin": "orig/Scalars.desc.json",
+   "what": "type name Scalars -> Checkpoint (reference stays Fv1.scDesc)",
+   "designated": "ref-claim"
+  },
+  "mut/r7-claim-name.desc.json": {
+   "id": "r7-claim-name",
+   "twin": "orig/Scalars.desc.json",
+   "what": "claim name of field 0 changed (term names unchanged)",
+   "designated": "name[0]"
+  },
+  "mut/r11-index.desc.json": {
+   "id": "r11-index",
+   "twin": "orig/Checkpoint.desc.json",
+   "what": "index claim of field 1 -> 7",
+   "designated": "index[1]"
   }
  },
+ "known_pass": {
+  "mut/r3-prysm-bool-uint8.desc.json": {
+   "id": "r3-prysm-bool-uint8",
+   "what": "Slashed bool -> uint8, claim follows",
+   "why": "known pass: no independent spec for this property"
+  },
+  "mut/r4-prysm-bitvec-505.desc.json": {
+   "id": "r4-prysm-bitvec-505",
+   "what": "Bitvector 512 -> 505 bits (still 64 bytes), claim follows",
+   "why": "known pass: no independent spec for this property"
+  },
+  "mut/r5-prysm-limit.desc.json": {
+   "id": "r5-prysm-limit",
+   "what": "list[uint64] limit 2048 -> 4096 in term and claim",
+   "why": "known pass: no independent spec for this property"
+  },
+  "mut/r6-prysm-field-swap.desc.json": {
+   "id": "r6-prysm-field-swap",
+   "what": "fields 0 and 1 swapped consistently",
+   "why": "known pass: no independent spec for this property"
+  },
+  "mut/r17-prysm-inner-kind.desc.json": {
+   "id": "r17-prysm-inner-kind",
+   "what": "inner AttestationData.Slot uint64 -> byteVector 8",
+   "why": "known pass: no independent spec for this property"
+  },
+  "mut/r8-term-names-swapped.desc.json": {
+   "id": "r8-term-names-swapped",
+   "what": "term field names reversed, shapes unchanged (spec names are not compared)",
+   "why": "known pass: no independent spec for this property"
+  }
+ },
+ "not_applicable": [
+  {
+   "id": "r9-elem-variable",
+   "base": "ListC",
+   "why": "elem_variable claim: removed from the Desc format (not checkable)"
+  },
+  {
+   "id": "r10-callee",
+   "base": "AttestationData",
+   "why": "callee claim: removed from the Desc format (not checkable)"
+  }
+ ],
  "producer_skipped": []
 }

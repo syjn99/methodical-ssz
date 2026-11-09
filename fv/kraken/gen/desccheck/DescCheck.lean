@@ -25,9 +25,15 @@ line in `$DESC_LIST`) and compares every claim with the pinned EthLib SSZ spec:
                constructor arguments; offsets are prefix sums of the widths
 * `head`       claimed `fixed_part_size` = sum of the head widths
 * `order`      claimed `variable_order` = the variable fields in field order
-* `ref`        if `reference` names a hand-written EthLib `Desc` (Fv1), the
-               shape equals it up to field names (EthLib `Desc.beq` after
-               positional renaming)
+* `name`, `index` per field: the claim's `name` is the term's field name, `index` = i
+* `ref-claim`  the checker owns the table (package, type) -> hand-written EthLib
+               `Desc` (Fv1). A type in the table must carry exactly that
+               `reference`; a type not in the table must carry no reference.
+               The file's `reference` never selects what is compared.
+* `ref`        for a type in the table: the shape equals the table's Desc up to
+               field names (EthLib `Desc.beq` after positional renaming).
+               Field names are not compared with the spec (Go names differ from
+               spec names, e.g. `CommitteeIndex` / `index`): a limit.
 * `probe`      EthLib `serialize` of `Desc.default`: total size = head + the
                default body of each variable field; each variable field's head
                offset word at its claimed offset; for each fixed field, a marker value
@@ -35,8 +41,9 @@ line in `$DESC_LIST`) and compares every claim with the pinned EthLib SSZ spec:
                the head is larger than 65536 bytes.
 
 Prints `DESCCHECK <file> <check> OK|FAIL|SKIP <detail>` per check and
-`DESCCHECK-FILE <file> PASS|FAIL <failed checks>` per file, then
-`DESCCHECK-DONE <pass> <fail>`. Shares no code with the producer
+`DESCCHECK-FILE <file> PASS|FAIL SPEC|NONE <failed checks>` per file (SPEC: compared
+with a hand-written EthLib spec Desc; NONE: no independent spec, consistency with
+EthLib layout semantics only), then `DESCCHECK-DONE <pass> <fail> <spec> <none>`. Shares no code with the producer
 (`gen/desc/producer.py`). Read-only; adds no declaration used elsewhere.
 
 Run (gated): `cd fv/kraken/lean && DESC_LIST=<file> lake env lean ../gen/desccheck/DescCheck.lean`
@@ -75,10 +82,16 @@ def kindName : Desc → String
   | .bitVector _ => "bitVector" | .bitList _ => "bitList" | .vector _ _ => "vector" | .list _ _ => "list"
   | .container _ _ => "container" | _ => "other"
 
-def refs : List (String × Desc) :=
-  [("Fv1.scDesc", Fv1.scDesc), ("Fv1.fvDesc", Fv1.fvDesc), ("Fv1.luDesc", Fv1.luDesc),
-   ("Fv1.bvDesc", Fv1.bvDesc), ("Fv1.neDesc", Fv1.neDesc), ("Fv1.lcDesc", Fv1.lcDesc),
-   ("Fv1.blDesc", Fv1.blDesc), ("Fv1.cpDesc", Fv1.cpDesc), ("Fv1.adDesc", Fv1.adDesc)]
+def tgt : String := "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+def tgtPrysm : String := "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
+
+/-- Checker-owned spec table: (package, type) -> (reference name, EthLib Desc). -/
+def refs : List ((String × String) × (String × Desc)) :=
+  [((tgt, "Scalars"), ("Fv1.scDesc", Fv1.scDesc)), ((tgt, "FixedVec"), ("Fv1.fvDesc", Fv1.fvDesc)),
+   ((tgt, "ListU64"), ("Fv1.luDesc", Fv1.luDesc)), ((tgt, "BitVec"), ("Fv1.bvDesc", Fv1.bvDesc)),
+   ((tgt, "Nested"), ("Fv1.neDesc", Fv1.neDesc)), ((tgt, "ListC"), ("Fv1.lcDesc", Fv1.lcDesc)),
+   ((tgt, "BitL"), ("Fv1.blDesc", Fv1.blDesc)), ((tgtPrysm, "Checkpoint"), ("Fv1.cpDesc", Fv1.cpDesc)),
+   ((tgtPrysm, "AttestationData"), ("Fv1.adDesc", Fv1.adDesc))]
 
 /-- A value of a fixed-size shape with every byte or bit set. -/
 partial def marker : Desc → Option Value
@@ -101,7 +114,7 @@ def optNat (j : Json) (k : String) : Except String (Option Nat) :=
   | .ok v => (fromJson? v : Except String Nat).map some
   | .error _ => .ok none
 
-def checkFields (j : Json) (fs : List Desc) : Except String (List Line × Nat × List Nat) := do
+def checkFields (j : Json) (names : List String) (fs : List Desc) : Except String (List Line × Nat × List Nat) := do
   let claims ← j.getObjValAs? (Array Json) "fields"
   let mut out : List Line := []
   if claims.size != fs.length then
@@ -121,6 +134,10 @@ def checkFields (j : Json) (fs : List Desc) : Except String (List Line × Nat ×
       let cv ← c.getObjValAs? Bool "variable"
       let co ← c.getObjValAs? Nat "offset"
       let ck ← c.getObjValAs? String "kind"
+      let cn := (c.getObjValAs? String "name").toOption
+      let ci := (c.getObjValAs? Nat "index").toOption
+      out := out ++ [(s!"name[{i}]", cn == some names[i]!, s!"claimed {cn}, term {names[i]!}"),
+                     (s!"index[{i}]", ci == some i, s!"claimed {ci}, position {i}")]
       out := out ++ [(s!"width[{i}]", cw == w, s!"claimed {cw}, EthLib {w}"),
                      (s!"variable[{i}]", cv == isVar, s!"claimed {cv}, EthLib {isVar}"),
                      (s!"offset[{i}]", co == off, s!"claimed {co}, EthLib {off}"),
@@ -193,8 +210,8 @@ def checkFile (path : String) : IO (List Line) := do
   let d ← match (j.getObjVal? "ssz") >>= toDesc with
     | .ok d => pure d
     | .error e => return [("parse", false, e)]
-  let fs ← match d with
-    | .container _ fs => pure fs
+  let (names, fs) ← match d with
+    | .container ns fs => pure (ns, fs)
     | _ => return [("parse", false, "top level is not a container")]
   let mut out : List Line := [("parse", true, "")]
   out := out ++ [("wf", (match d.wellFormed with | .ok _ => true | .error _ => false),
@@ -203,7 +220,7 @@ def checkFile (path : String) : IO (List Line) := do
   match cf with
   | .ok c => out := out ++ [("fixed", c == d.fixedSize, s!"claimed {c}, EthLib {d.fixedSize}")]
   | .error e => out := out ++ [("fixed", false, e)]
-  match checkFields j fs with
+  match checkFields j names fs with
   | .error e => out := out ++ [("fields", false, e)]
   | .ok (ls, head, vars) =>
     out := out ++ ls
@@ -222,32 +239,50 @@ def checkFile (path : String) : IO (List Line) := do
         match probe d fs head d.fixedSize claims with
         | .ok ls => out := out ++ ls
         | .error e => out := out ++ [("probe", false, e)]
-  match j.getObjVal? "reference" with
-  | .ok (.str r) =>
-    match refs.lookup r with
-    | some rd => out := out ++ [("ref", Desc.beq (posNames d) (posNames rd), s!"reference {r}")]
-    | none => out := out ++ [("ref", false, s!"unknown reference {r}")]
-  | _ => pure ()
+  let ty := (j.getObjValAs? String "type").toOption.getD ""
+  let pk := (j.getObjValAs? String "package").toOption.getD ""
+  let claimed : Option String := match j.getObjVal? "reference" with
+    | .ok (.str r) => some r
+    | _ => none
+  match refs.lookup (pk, ty) with
+  | some (rn, rd) =>
+    out := out ++ [("ref-claim", claimed == some rn, s!"table {rn} for {pk}.{ty}, file {claimed}"),
+                   ("ref", Desc.beq (posNames d) (posNames rd), s!"SPEC compared with {rn}")]
+  | none =>
+    out := out ++ [("ref-claim", claimed.isNone, s!"no spec Desc for {pk}.{ty}, file {claimed}")]
   return out
+
+/-- SPEC if the checker's table has a spec Desc for the file's (package, type). -/
+def specStatus (path : String) : IO String := do
+  match Json.parse (← IO.FS.readFile path) with
+  | .ok j =>
+    let ty := (j.getObjValAs? String "type").toOption.getD ""
+    let pk := (j.getObjValAs? String "package").toOption.getD ""
+    return if (refs.lookup (pk, ty)).isSome then "SPEC" else "NONE"
+  | .error _ => return "NONE"
 
 def main : IO Unit := do
   let some list ← IO.getEnv "DESC_LIST" | throw (IO.userError "DESC_LIST is not set")
   let paths := (← IO.FS.readFile list).splitOn "\n" |>.filter (· ≠ "")
   let mut pass := 0
   let mut fail := 0
+  let mut nspec := 0
+  let mut nnone := 0
   for p in paths do
     let ls ← checkFile p
+    let st ← specStatus p
+    if st == "SPEC" then nspec := nspec + 1 else nnone := nnone + 1
     for (c, ok, det) in ls do
       let st := if det.startsWith "SKIP" then "SKIP" else if ok then "OK" else "FAIL"
       IO.println s!"DESCCHECK {p} {c} {st} {det}"
     let bad := ls.filter (fun l => !l.2.1) |>.map (·.1)
     if bad.isEmpty then
       pass := pass + 1
-      IO.println s!"DESCCHECK-FILE {p} PASS"
+      IO.println s!"DESCCHECK-FILE {p} PASS {st}"
     else
       fail := fail + 1
-      IO.println s!"DESCCHECK-FILE {p} FAIL {String.intercalate "," bad}"
-  IO.println s!"DESCCHECK-DONE {pass} {fail}"
+      IO.println s!"DESCCHECK-FILE {p} FAIL {st} {String.intercalate "," bad}"
+  IO.println s!"DESCCHECK-DONE {pass} {fail} {nspec} {nnone}"
 
 end DescCheck
 
