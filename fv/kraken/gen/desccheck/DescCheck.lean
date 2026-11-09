@@ -13,7 +13,10 @@ import Fv1.SpecBitList
 # Independent `Desc` checker (phase1c P3)
 
 Reads producer `Desc` JSON files (schema `fvphase1c.desc/1`, listed one path per
-line in `$DESC_LIST`) and compares every claim with the pinned EthLib SSZ spec:
+line in `$DESC_LIST`) and checks every claim with the functions of the pinned EthLib
+SSZ library. Only the `ref` check compares with a spec Desc, and only for the types
+of the checker's own table (status SPEC); for every other type (status NONE) the
+checks are consistency with EthLib layout semantics, not a spec comparison:
 
 * `parse`      the `ssz` term is an EthLib `Desc` (container at top level)
 * `wf`         `Desc.wellFormed = .ok ()`
