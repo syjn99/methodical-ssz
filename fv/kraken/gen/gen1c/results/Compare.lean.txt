@@ -21,6 +21,7 @@ def size_stmt [Host] : Prop :=
 
 /-! Obligations of the frozen list (gen/frozen/THEOREMS.json) for this type:
   Checkpoint.UnmarshalSSZ.accept: no template yet (X4)
+  Checkpoint.UnmarshalSSZ.reject_complete: no template yet (X4)
   Checkpoint.UnmarshalSSZ.reject.r1: no template yet (X4)
   Checkpoint.UnmarshalSSZ.reject_spec.r1: no template yet (X4)
   Checkpoint.MarshalSSZTo.marshal: no template yet (X4)
@@ -47,6 +48,7 @@ def size_stmt [Host] : Prop :=
 
 /-! Obligations of the frozen list (gen/frozen/THEOREMS.json) for this type:
   AttestationData.UnmarshalSSZ.accept: no template yet (X4)
+  AttestationData.UnmarshalSSZ.reject_complete: no template yet (X4)
   AttestationData.UnmarshalSSZ.reject.r1: no template yet (X4)
   AttestationData.UnmarshalSSZ.reject_spec.r1: no template yet (X4)
   AttestationData.UnmarshalSSZ.reject.r2: no template yet (X4)
@@ -77,6 +79,7 @@ def size_stmt [Host] : Prop :=
 
 /-! Obligations of the frozen list (gen/frozen/THEOREMS.json) for this type:
   BitVec.UnmarshalSSZ.accept: no template yet (X4)
+  BitVec.UnmarshalSSZ.reject_complete: no template yet (X4)
   BitVec.UnmarshalSSZ.reject.r1: no template yet (X4)
   BitVec.UnmarshalSSZ.reject_spec.r1: no template yet (X4)
   BitVec.UnmarshalSSZ.reject.r2: no template yet (X4)
@@ -106,6 +109,7 @@ def size_stmt [Host] : Prop :=
 
 /-! Obligations of the frozen list (gen/frozen/THEOREMS.json) for this type:
   FixedVec.UnmarshalSSZ.accept: no template yet (X4)
+  FixedVec.UnmarshalSSZ.reject_complete: no template yet (X4)
   FixedVec.UnmarshalSSZ.reject.r1: no template yet (X4)
   FixedVec.UnmarshalSSZ.reject_spec.r1: no template yet (X4)
   FixedVec.MarshalSSZTo.marshal: no template yet (X4)
@@ -133,6 +137,7 @@ def size_stmt [Host] : Prop :=
 
 /-! Obligations of the frozen list (gen/frozen/THEOREMS.json) for this type:
   Scalars.UnmarshalSSZ.accept: no template yet (X4)
+  Scalars.UnmarshalSSZ.reject_complete: no template yet (X4)
   Scalars.UnmarshalSSZ.reject.r1: no template yet (X4)
   Scalars.UnmarshalSSZ.reject_spec.r1: no template yet (X4)
   Scalars.UnmarshalSSZ.reject.r2: no template yet (X4)

@@ -12,12 +12,23 @@ import Fv1.SpecBitList
 /-!
 # Independent `Desc` checker (phase1c P3)
 
-Reads producer `Desc` JSON files (schema `fvphase1c.desc/1`, listed one path per
-line in `$DESC_LIST`) and checks every claim with the functions of the pinned EthLib
-SSZ library. Only the `ref` check compares with a spec Desc, and only for the types
-of the checker's own table (status SPEC); for every other type (status NONE) the
-checks are consistency with EthLib layout semantics, not a spec comparison:
+Reads producer `Desc` JSON files (schema `fvphase1c.desc/1`): the originals, one path
+per line in `$DESC_LIST`, and optionally negative cases in `$DESC_MUTANTS`. It checks
+every claim with the functions of the pinned EthLib SSZ library. Only `ref` and
+`go-names` compare with a spec Desc, and only for the types of the checker's own
+table (status SPEC); for every other type (status NONE) the checks are consistency
+with EthLib layout semantics, not a spec comparison.
 
+Identity (checker rules; the file's values never select what is checked):
+* `schema`     exactly `fvphase1c.desc/1`
+* `type`       non-empty ASCII identifier (letters, digits, `_`): no look-alike characters
+* `package`    one of the checker-owned `knownPackages`
+* `table-type` a table type name under another hand package is a FAIL. (Prysm packages
+               have real types of the same names, e.g. `Checkpoint`; those are
+               told apart by the coverage rule below.)
+* `keys`       no unknown key at the top level, in a claim, or in a term
+
+Per file:
 * `parse`      the `ssz` term is an EthLib `Desc` (container at top level)
 * `wf`         `Desc.wellFormed = .ok ()`
 * `fixed`      claimed `fixed_size` = `Desc.fixedSize`
@@ -29,27 +40,32 @@ checks are consistency with EthLib layout semantics, not a spec comparison:
 * `head`       claimed `fixed_part_size` = sum of the head widths
 * `order`      claimed `variable_order` = the variable fields in field order
 * `name`, `index` per field: the claim's `name` is the term's field name, `index` = i
-* `ref-claim`  the checker owns the table (package, type) -> hand-written EthLib
-               `Desc` (Fv1). A type in the table must carry exactly that
-               `reference`; a type not in the table must carry no reference.
-               The file's `reference` never selects what is compared.
-* `ref`        for a type in the table: the shape equals the table's Desc up to
-               field names (EthLib `Desc.beq` after positional renaming).
-               Field names are not compared with the spec (Go names differ from
-               spec names, e.g. `CommitteeIndex` / `index`): a limit.
+* `ref-claim`  a type in the table must carry exactly the table's `reference`; a type
+               not in the table must carry none
+* `ref`        table type: the shape equals the Fv1 spec Desc up to field names
+* `go-names`   table type: the term equals, exactly and with names at every level,
+               the checker's Go-named term (Fv1 term with the checker's 21 Go field
+               names). So reordered or renamed fields of equal shape FAIL.
 * `probe`      EthLib `serialize` of `Desc.default`: total size = head + the
                default body of each variable field; each variable field's head
                offset word at its claimed offset; for each fixed field, a marker value
                changes bytes only inside [offset, offset + width). Skipped when
                the head is larger than 65536 bytes.
 
-Prints `DESCCHECK <file> <check> OK|FAIL|SKIP <detail>` per check and
-`DESCCHECK-FILE <file> PASS|FAIL SPEC|NONE <failed checks>` per file (SPEC: compared
-with a hand-written EthLib spec Desc; NONE: no independent spec, consistency with
-EthLib layout semantics only), then `DESCCHECK-DONE <pass> <fail> <spec> <none>`. Shares no code with the producer
+Over the originals (`$DESC_LIST`): every key of the table must appear exactly once as
+PASS SPEC (`DESCCHECK-COVERAGE`), and no (package, type) key may appear twice
+(`DESCCHECK-DUPKEY`). The expected set comes from the checker's table. A table
+self-check requires the Go-named terms to equal the Fv1 terms up to names (21 names).
+If the self-check, the coverage or any original fails, the run ends with an error
+(non-zero exit) after printing `DESCCHECK-TABLE FAIL`.
+
+Prints `DESCCHECK <file> <check> OK|FAIL|SKIP <detail>` per check,
+`DESCCHECK-FILE <file> PASS|FAIL SPEC|NONE original|mutant fnv=<FNV-1a 64> <failed checks>`
+per file, `DESCCHECK-DONE originals ...` and `DESCCHECK-DONE mutants ...` (counted
+apart), then `DESCCHECK-TABLE OK|FAIL`. Shares no code with the producer
 (`gen/desc/producer.py`). Read-only; adds no declaration used elsewhere.
 
-Run (gated): `cd fv/kraken/lean && DESC_LIST=<file> lake env lean ../gen/desccheck/DescCheck.lean`
+Run (gated): `cd fv/kraken/lean && DESC_LIST=<file> [DESC_MUTANTS=<file>] lake env lean ../gen/desccheck/DescCheck.lean`
 -/
 
 open Lean EthLib.Serialization.Ssz
@@ -88,13 +104,83 @@ def kindName : Desc → String
 def tgt : String := "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
 def tgtPrysm : String := "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"
 
-/-- Checker-owned spec table: (package, type) -> (reference name, EthLib Desc). -/
-def refs : List ((String × String) × (String × Desc)) :=
-  [((tgt, "Scalars"), ("Fv1.scDesc", Fv1.scDesc)), ((tgt, "FixedVec"), ("Fv1.fvDesc", Fv1.fvDesc)),
-   ((tgt, "ListU64"), ("Fv1.luDesc", Fv1.luDesc)), ((tgt, "BitVec"), ("Fv1.bvDesc", Fv1.bvDesc)),
-   ((tgt, "Nested"), ("Fv1.neDesc", Fv1.neDesc)), ((tgt, "ListC"), ("Fv1.lcDesc", Fv1.lcDesc)),
-   ((tgt, "BitL"), ("Fv1.blDesc", Fv1.blDesc)), ((tgtPrysm, "Checkpoint"), ("Fv1.cpDesc", Fv1.cpDesc)),
-   ((tgtPrysm, "AttestationData"), ("Fv1.adDesc", Fv1.adDesc))]
+def prysmV1 : String := "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+def prysmEngine : String := "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
+
+/-- Checker-owned package list. Any other `package` value is a FAIL. -/
+def knownPackages : List String := [tgt, tgtPrysm, prysmV1, prysmEngine]
+
+/-- Replace the top-level field names of a container term. -/
+def rn (ns : List String) : Desc → Desc
+  | .container _ fs => .container ns fs
+  | d => d
+
+/-! Checker-owned Go field names of the 9 hand types (21 names). The Go-named terms
+are the Fv1 spec terms with the Go field names at every container level; a self-check
+in `main` requires them to equal the Fv1 terms up to names. -/
+def scGo : Desc := rn ["A", "B", "C", "D", "E"] Fv1.scDesc
+def luGo : Desc := rn ["L"] Fv1.luDesc
+def fvGo : Desc := rn ["R", "W"] Fv1.fvDesc
+def bvGo : Desc := rn ["J"] Fv1.bvDesc
+def blGo : Desc := rn ["B"] Fv1.blDesc
+def cpGo : Desc := rn ["Epoch", "Root"] Fv1.cpDesc
+def neGo : Desc := match Fv1.neDesc with
+  | .container _ [a, _, _] => .container ["A", "S", "L"] [a, scGo, luGo]
+  | d => d
+def lcGo : Desc := match Fv1.lcDesc with
+  | .container _ [.list _ n] => .container ["Items"] [.list luGo n]
+  | d => d
+def adGo : Desc := match Fv1.adDesc with
+  | .container _ [a, b, c, _, _] =>
+    .container ["Slot", "CommitteeIndex", "BeaconBlockRoot", "Source", "Target"] [a, b, c, cpGo, cpGo]
+  | d => d
+
+/-- Checker-owned spec table: (package, type) -> (reference name, Fv1 spec Desc, Go-named Desc). -/
+def refs : List ((String × String) × (String × Desc × Desc)) :=
+  [((tgt, "Scalars"), ("Fv1.scDesc", Fv1.scDesc, scGo)), ((tgt, "FixedVec"), ("Fv1.fvDesc", Fv1.fvDesc, fvGo)),
+   ((tgt, "ListU64"), ("Fv1.luDesc", Fv1.luDesc, luGo)), ((tgt, "BitVec"), ("Fv1.bvDesc", Fv1.bvDesc, bvGo)),
+   ((tgt, "Nested"), ("Fv1.neDesc", Fv1.neDesc, neGo)), ((tgt, "ListC"), ("Fv1.lcDesc", Fv1.lcDesc, lcGo)),
+   ((tgt, "BitL"), ("Fv1.blDesc", Fv1.blDesc, blGo)), ((tgtPrysm, "Checkpoint"), ("Fv1.cpDesc", Fv1.cpDesc, cpGo)),
+   ((tgtPrysm, "AttestationData"), ("Fv1.adDesc", Fv1.adDesc, adGo))]
+
+def handPackages : List String := [tgt, tgtPrysm]
+def handTypeNames : List String := refs.map (·.1.2)
+
+/-- A Go type name: non-empty, ASCII letters, digits and `_` only (no look-alike characters). -/
+def goIdent (s : String) : Bool := !s.isEmpty && s.all (fun c => c.isAlphanum || c == '_')
+
+def topKeys : List String :=
+  ["schema", "type", "package", "ssz", "fixed_size", "fixed_part_size", "fields", "variable_order", "reference"]
+def claimKeys : List String :=
+  ["name", "index", "offset", "width", "variable", "kind", "length", "limit", "elem_size"]
+
+def keysOf : Json → List String
+  | .obj kvs => kvs.toList.map Prod.fst
+  | _ => []
+
+/-- Keys of a term object that its kind allows. -/
+def termKeys : String → List String
+  | "bool" => ["k"] | "uint" => ["k", "w"] | "byteVector" => ["k", "n"] | "bitVector" => ["k", "n"]
+  | "byteList" => ["k", "limit"] | "bitList" => ["k", "limit"] | "vector" => ["k", "elem", "n"]
+  | "list" => ["k", "elem", "limit"] | "container" => ["k", "names", "fields"] | _ => []
+
+/-- Unknown keys anywhere in a term, as paths. -/
+partial def termUnknown (path : String) (j : Json) : List String :=
+  let k := (j.getObjValAs? String "k").toOption.getD ""
+  let own := (keysOf j).filter (fun x => !(termKeys k).contains x) |>.map (fun x => s!"{path}.{x}")
+  let sub := match k with
+    | "vector" | "list" => match j.getObjVal? "elem" with
+      | .ok e => termUnknown s!"{path}.elem" e
+      | _ => []
+    | "container" => match j.getObjValAs? (Array Json) "fields" with
+      | .ok fs => (fs.toList.zip (List.range fs.size)).flatMap (fun (f, i) => termUnknown s!"{path}.fields[{i}]" f)
+      | _ => []
+    | _ => []
+  own ++ sub
+
+/-- FNV-1a 64 of the file bytes (emit.py computes the same to bind a record to a file). -/
+def fnv (b : ByteArray) : UInt64 :=
+  b.foldl (fun h x => (h ^^^ x.toUInt64) * 1099511628211) 14695981039346656037
 
 /-- A value of a fixed-size shape with every byte or bit set. -/
 partial def marker : Desc → Option Value
@@ -210,13 +296,29 @@ def checkFile (path : String) : IO (List Line) := do
   let j ← match Json.parse txt with
     | .ok j => pure j
     | .error e => return [("json", false, e)]
+  -- identity: schema, package, type (checker rules, not producer values)
+  let schema := (j.getObjValAs? String "schema").toOption.getD ""
+  let ty := (j.getObjValAs? String "type").toOption.getD ""
+  let pk := (j.getObjValAs? String "package").toOption.getD ""
+  let mut idl : List Line := [("schema", schema == "fvphase1c.desc/1", s!"schema '{schema}'"),
+    ("type", goIdent ty, s!"type '{ty}' (non-empty ASCII identifier)"),
+    ("package", knownPackages.contains pk, s!"package '{pk}' (checker-owned list)")]
+  if handTypeNames.contains ty && handPackages.contains pk && (refs.lookup (pk, ty)).isNone then
+    idl := idl ++ [("table-type", false, s!"table type name {ty} under package {pk}")]
+  let unk := ((keysOf j).filter (fun x => !topKeys.contains x)) ++
+    (match j.getObjValAs? (Array Json) "fields" with
+     | .ok cs => (cs.toList.zip (List.range cs.size)).flatMap (fun (c, i) =>
+         (keysOf c).filter (fun x => !claimKeys.contains x) |>.map (fun x => s!"fields[{i}].{x}"))
+     | _ => []) ++
+    (match j.getObjVal? "ssz" with | .ok t => termUnknown "ssz" t | _ => [])
+  idl := idl ++ [("keys", unk.isEmpty, s!"unknown keys {unk}")]
   let d ← match (j.getObjVal? "ssz") >>= toDesc with
     | .ok d => pure d
-    | .error e => return [("parse", false, e)]
+    | .error e => return idl ++ [("parse", false, e)]
   let (names, fs) ← match d with
     | .container ns fs => pure (ns, fs)
-    | _ => return [("parse", false, "top level is not a container")]
-  let mut out : List Line := [("parse", true, "")]
+    | _ => return idl ++ [("parse", false, "top level is not a container")]
+  let mut out : List Line := idl ++ [("parse", true, "")]
   out := out ++ [("wf", (match d.wellFormed with | .ok _ => true | .error _ => false),
                   (match d.wellFormed with | .ok _ => "" | .error e => s!"{repr e}"))]
   let cf := optNat j "fixed_size"
@@ -242,50 +344,92 @@ def checkFile (path : String) : IO (List Line) := do
         match probe d fs head d.fixedSize claims with
         | .ok ls => out := out ++ ls
         | .error e => out := out ++ [("probe", false, e)]
-  let ty := (j.getObjValAs? String "type").toOption.getD ""
-  let pk := (j.getObjValAs? String "package").toOption.getD ""
   let claimed : Option String := match j.getObjVal? "reference" with
     | .ok (.str r) => some r
-    | _ => none
+    | .ok .null => none
+    | .ok _ => some "<not a string>"
+    | .error _ => none
   match refs.lookup (pk, ty) with
-  | some (rn, rd) =>
-    out := out ++ [("ref-claim", claimed == some rn, s!"table {rn} for {pk}.{ty}, file {claimed}"),
-                   ("ref", Desc.beq (posNames d) (posNames rd), s!"SPEC compared with {rn}")]
+  | some (rname, rd, gd) =>
+    out := out ++ [("ref-claim", claimed == some rname, s!"table {rname} for {pk}.{ty}, file {claimed}"),
+                   ("ref", Desc.beq (posNames d) (posNames rd), s!"SPEC compared with {rname} (up to names)"),
+                   ("go-names", Desc.beq d gd, s!"exact term with the checker's Go field names of {ty}")]
   | none =>
     out := out ++ [("ref-claim", claimed.isNone, s!"no spec Desc for {pk}.{ty}, file {claimed}")]
   return out
 
-/-- SPEC if the checker's table has a spec Desc for the file's (package, type). -/
-def specStatus (path : String) : IO String := do
+def fileKey (path : String) : IO (Option (String × String)) := do
   match Json.parse (← IO.FS.readFile path) with
-  | .ok j =>
-    let ty := (j.getObjValAs? String "type").toOption.getD ""
-    let pk := (j.getObjValAs? String "package").toOption.getD ""
-    return if (refs.lookup (pk, ty)).isSome then "SPEC" else "NONE"
-  | .error _ => return "NONE"
+  | .ok j => return some ((j.getObjValAs? String "package").toOption.getD "", (j.getObjValAs? String "type").toOption.getD "")
+  | .error _ => return none
 
-def main : IO Unit := do
-  let some list ← IO.getEnv "DESC_LIST" | throw (IO.userError "DESC_LIST is not set")
-  let paths := (← IO.FS.readFile list).splitOn "\n" |>.filter (· ≠ "")
+/-- Check one list. Returns (pass, fail, spec, none, PASS-SPEC keys, all keys). -/
+def runList (label : String) (paths : List String) :
+    IO (Nat × Nat × Nat × Nat × List (String × String) × List (String × String)) := do
   let mut pass := 0
   let mut fail := 0
   let mut nspec := 0
   let mut nnone := 0
+  let mut specKeys : List (String × String) := []
+  let mut keys : List (String × String) := []
   for p in paths do
     let ls ← checkFile p
-    let st ← specStatus p
+    let key ← fileKey p
+    let st := match key with
+      | some k => if (refs.lookup k).isSome then "SPEC" else "NONE"
+      | none => "NONE"
     if st == "SPEC" then nspec := nspec + 1 else nnone := nnone + 1
+    if let some k := key then keys := keys ++ [k]
     for (c, ok, det) in ls do
-      let st := if det.startsWith "SKIP" then "SKIP" else if ok then "OK" else "FAIL"
-      IO.println s!"DESCCHECK {p} {c} {st} {det}"
+      let s := if det.startsWith "SKIP" then "SKIP" else if ok then "OK" else "FAIL"
+      IO.println s!"DESCCHECK {p} {c} {s} {det}"
     let bad := ls.filter (fun l => !l.2.1) |>.map (·.1)
+    let h := fnv (← IO.FS.readBinFile p)
     if bad.isEmpty then
       pass := pass + 1
-      IO.println s!"DESCCHECK-FILE {p} PASS {st}"
+      if st == "SPEC" then if let some k := key then specKeys := specKeys ++ [k]
+      IO.println s!"DESCCHECK-FILE {p} PASS {st} {label} fnv={h}"
     else
       fail := fail + 1
-      IO.println s!"DESCCHECK-FILE {p} FAIL {st} {String.intercalate "," bad}"
-  IO.println s!"DESCCHECK-DONE {pass} {fail} {nspec} {nnone}"
+      IO.println s!"DESCCHECK-FILE {p} FAIL {st} {label} fnv={h} {String.intercalate "," bad}"
+  return (pass, fail, nspec, nnone, specKeys, keys)
+
+def main : IO Unit := do
+  let some list ← IO.getEnv "DESC_LIST" | throw (IO.userError "DESC_LIST is not set")
+  -- self-check of the checker's own table: Go-named terms = Fv1 terms up to names; 21 names
+  let mut selfOk := true
+  for (k, (rname, rd, gd)) in refs do
+    let ok := Desc.beq (posNames gd) (posNames rd)
+    selfOk := selfOk && ok
+    IO.println s!"DESCCHECK-TABLE-SELF {k.1}.{k.2} {rname} {if ok then "OK" else "FAIL"}"
+  let topNames := refs.foldl (fun n (_, (_, _, gd)) => n + (match gd with | .container ns _ => ns.length | _ => 0)) 0
+  IO.println s!"DESCCHECK-TABLE-SELF go-names {topNames} (expected 21)"
+  selfOk := selfOk && topNames == 21
+  let origs := (← IO.FS.readFile list).splitOn "\n" |>.filter (· ≠ "")
+  let (op, of_, os, on, specKeys, keys) ← runList "original" origs
+  -- coverage: every key of the checker's table exactly once as PASS SPEC among the originals;
+  -- no (package, type) key twice among the originals
+  let mut covOk := true
+  for (k, (rname, _, _)) in refs do
+    let n := (specKeys.filter (· == k)).length
+    let ok := n == 1
+    covOk := covOk && ok
+    IO.println s!"DESCCHECK-COVERAGE {k.1}.{k.2} {rname} pass-spec={n} {if ok then "OK" else "FAIL"}"
+  for k in keys.eraseDups do
+    let n := (keys.filter (· == k)).length
+    if n > 1 then
+      covOk := false
+      IO.println s!"DESCCHECK-DUPKEY {k.1}.{k.2} {n} FAIL"
+  IO.println s!"DESCCHECK-DONE originals pass {op} fail {of_} spec {os} none {on}"
+  match ← IO.getEnv "DESC_MUTANTS" with
+  | some ml =>
+    let ms := (← IO.FS.readFile ml).splitOn "\n" |>.filter (· ≠ "")
+    let (mp, mf, msp, mn, _, _) ← runList "mutant" ms
+    IO.println s!"DESCCHECK-DONE mutants pass {mp} fail {mf} spec {msp} none {mn}"
+  | none => pure ()
+  let allOk := selfOk && covOk && of_ == 0
+  IO.println s!"DESCCHECK-TABLE {if allOk then "OK" else "FAIL"} self={selfOk} coverage={covOk} originals_failed={of_}"
+  if !allOk then throw (IO.userError "DescCheck: table self-check, coverage or an original failed")
 
 end DescCheck
 

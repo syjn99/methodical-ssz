@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Tests of the generator skeleton (P4).
 
-  test_emit.py prepare <work-dir>
-      Produce the 9 hand Descs (gen/desc/producer.py), run emit.py for them (old Go 1.26.3 ELF, read-only) into
+  test_emit.py prepare <work-dir> <desc-work-dir>
+      Take the Descs and the checker main log of a gen/desc/test_desc.py run
+      (<desc-work-dir>/orig, <desc-work-dir>/logs/main.log), run emit.py for the 9 hand
+      types, selected by package-qualified name (old Go 1.26.3 ELF, read-only) into
       <work-dir>/out, run the guard control, check the frozen-list hashes, cross-check
       the emitted data items with the include API item table, and write
       <work-dir>/Compare.lean (statement comparison, to be run gated) and
@@ -23,6 +25,8 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 KRAKEN = os.path.normpath(os.path.join(HERE, "..", ".."))
 HAND = ["Scalars", "FixedVec", "ListU64", "BitVec", "Nested", "ListC", "BitL", "Checkpoint", "AttestationData"]
+TGT = "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"
+HAND_Q = [f"{TGT}/prysm.{t}" if t in ("Checkpoint", "AttestationData") else f"{TGT}.{t}" for t in HAND]
 FROZEN = {"THEOREMS.json": "0d9b70760d99f76d838994451f15790f7da06b0acc12519e558e3eac4a1348d1",
           "ASSUMPTIONS.json": "9decb220f35736b9b8d07700f606e146c1c076f5016789ac5c7c22c1a213905f"}
 # (emitted statement, hand theorem, expected, explanation)
@@ -43,33 +47,67 @@ def sha(p):
     return hashlib.sha256(open(p, "rb").read()).hexdigest()
 
 
-def run_emit(out, desc_dir, extra=()):
+def run_emit(out, desc_dir, log, types=None, extra=()):
     k = KRAKEN
-    cmd = [sys.executable, "-I", f"{HERE}/emit.py", "--out", out, "--desc-dir", desc_dir,
+    cmd = [sys.executable, "-I", f"{HERE}/emit.py", "--out", out, "--desc-dir", desc_dir, "--desccheck-log", log,
            "--go", f"{k}/target/types.ssz.go,{k}/target/types1b.ssz.go,{k}/target/prysm/types.ssz.go",
            "--elf", f"{k}/link/out/p1bin-amd64", "--nm", f"{k}/link/out/p1bin-amd64.nm", "--norm", f"{k}/link/out/norm",
-           "--types", ",".join(HAND), "--code-prefix", "/target/prysm=Prysm", "--obligations", "hand_case", *extra]
+           "--types", ",".join(types or HAND_Q), "--code-prefix", "/target/prysm=Prysm", "--obligations", "hand_case", *extra]
     return subprocess.run(cmd, capture_output=True, text=True)
 
 
-def prepare(work):
-    os.makedirs(work, exist_ok=True)
+def prepare(work, dwork):
+    import shutil
+    if os.path.exists(work):
+        shutil.rmtree(work)
+    os.makedirs(work)
     res = {"checks": []}
-    desc_dir = f"{work}/desc"
-    r = subprocess.run([sys.executable, "-I", f"{KRAKEN}/gen/desc/producer.py", desc_dir, f"{KRAKEN}/gen/desc/ir-hand.json",
-                        f"--refs={KRAKEN}/gen/desc/refs-hand.json"], capture_output=True, text=True)
-    res["checks"].append(("producer rc 0 (9 hand Descs)", r.returncode == 0 and len(os.listdir(desc_dir)) == 9))
+    desc_dir = f"{dwork}/orig"
+    log = f"{dwork}/logs/main.log"
     before = {n: sha(f"{KRAKEN}/gen/frozen/{n}") for n in FROZEN}
-    r = run_emit(f"{work}/out", desc_dir)
+    r = run_emit(f"{work}/out", desc_dir, log)
     res["emit"] = {"rc": r.returncode, "stdout": r.stdout.strip(), "stderr": r.stderr.strip()[-500:]}
     res["checks"].append(("emit rc 0", r.returncode == 0))
     after = {n: sha(f"{KRAKEN}/gen/frozen/{n}") for n in FROZEN}
     res["checks"].append(("frozen lists unchanged and equal to the P2 hashes", before == after == FROZEN))
     # guard control: an output inside lean/Fk must be refused and nothing written there
     bad = f"{KRAKEN}/lean/Fk/zz-gen1c-guard-test"
-    g = run_emit(bad, desc_dir)
+    g = run_emit(bad, desc_dir, log)
     res["checks"].append(("guard refuses lean/Fk output", g.returncode != 0 and "refusing" in g.stderr + g.stdout
                           and not os.path.exists(bad)))
+    # control: a hand Desc changed after the check is refused (FNV of the file differs)
+    tam = f"{work}/tampered"
+    shutil.copytree(desc_dir, tam)
+    nd = json.load(open(f"{tam}/Nested.desc.json"))
+    nd["ssz"]["fields"][2]["fields"][0]["limit"] = 17
+    json.dump(nd, open(f"{tam}/Nested.desc.json", "w"), indent=1)
+    t1 = run_emit(f"{work}/out-tampered", tam, log)
+    res["checks"].append(("emit refuses Descs without a PASS record for that file (copied/changed after the check)",
+                          t1.returncode != 0 and "no PASS record" in t1.stderr + t1.stdout))
+    # control: the escaped hand ListU64 (review r2 n01: package + '/') in place of the original,
+    # selected by bare name: its record is a FAIL mutant -> refused
+    esc = f"{work}/escaped"
+    os.makedirs(esc)
+    for f in os.listdir(desc_dir):
+        src = f"{dwork}/mut/n01-esc-pkg-slash.desc.json" if f == "ListU64.desc.json" else f"{desc_dir}/{f}"
+        os.symlink(src, f"{esc}/{f}")
+    t2 = run_emit(f"{work}/out-escaped", esc, log, types=["ListU64"])
+    res["checks"].append(("emit refuses an escaped hand Desc (n01) chosen by bare name", t2.returncode != 0))
+    # control: the main log of a failed coverage run (scenario s-n01) is refused
+    t3 = run_emit(f"{work}/out-cov", desc_dir, f"{dwork}/logs/scen-s-n01.log")
+    res["checks"].append(("emit refuses a checker log without DESCCHECK-TABLE OK", t3.returncode != 0
+                          and "DESCCHECK-TABLE OK" in t3.stderr + t3.stdout))
+    # control: the checked file itself changed after the check (same path): FNV differs -> refused
+    orig_nested = f"{desc_dir}/Nested.desc.json"
+    keep = open(orig_nested, "rb").read()
+    try:
+        open(orig_nested, "w").write(json.dumps(nd, indent=1))
+        t4 = run_emit(f"{work}/out-changed", desc_dir, log)
+    finally:
+        open(orig_nested, "wb").write(keep)
+    res["checks"].append(("emit refuses a checked file changed in place after the check (FNV-1a 64)",
+                          t4.returncode != 0 and "changed after the check" in t4.stderr + t4.stdout))
+    res["controls_stderr"] = [x.stderr.strip()[-300:] for x in (t1, t2, t3, t4)]
     m = json.load(open(f"{work}/out/manifest.json"))
     files = sorted(os.listdir(f"{work}/out/Checkpoint"))
     res["checks"].append(("per-type files", files == ["desc.json", "negative.json", "statements.lean", "witness.json"]))
@@ -140,7 +178,7 @@ def evaluate(work, log, out):
 
 if __name__ == "__main__":
     if sys.argv[1] == "prepare":
-        sys.exit(prepare(sys.argv[2]))
+        sys.exit(prepare(sys.argv[2], sys.argv[3]))
     elif sys.argv[1] == "evaluate":
         sys.exit(evaluate(sys.argv[2], sys.argv[3], sys.argv[4]))
     raise SystemExit(__doc__)

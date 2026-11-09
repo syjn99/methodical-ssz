@@ -1,0 +1,1615 @@
+DESCCHECK-TABLE-SELF github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars Fv1.scDesc OK
+DESCCHECK-TABLE-SELF github.com/OffchainLabs/methodical-ssz/fv/kraken/target.FixedVec Fv1.fvDesc OK
+DESCCHECK-TABLE-SELF github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64 Fv1.luDesc OK
+DESCCHECK-TABLE-SELF github.com/OffchainLabs/methodical-ssz/fv/kraken/target.BitVec Fv1.bvDesc OK
+DESCCHECK-TABLE-SELF github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Nested Fv1.neDesc OK
+DESCCHECK-TABLE-SELF github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListC Fv1.lcDesc OK
+DESCCHECK-TABLE-SELF github.com/OffchainLabs/methodical-ssz/fv/kraken/target.BitL Fv1.blDesc OK
+DESCCHECK-TABLE-SELF github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Checkpoint Fv1.cpDesc OK
+DESCCHECK-TABLE-SELF github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.AttestationData Fv1.adDesc OK
+DESCCHECK-TABLE-SELF go-names 21 (expected 21)
+DESCCHECK-COVERAGE github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars Fv1.scDesc pass-spec=1 OK
+DESCCHECK-COVERAGE github.com/OffchainLabs/methodical-ssz/fv/kraken/target.FixedVec Fv1.fvDesc pass-spec=1 OK
+DESCCHECK-COVERAGE github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64 Fv1.luDesc pass-spec=1 OK
+DESCCHECK-COVERAGE github.com/OffchainLabs/methodical-ssz/fv/kraken/target.BitVec Fv1.bvDesc pass-spec=1 OK
+DESCCHECK-COVERAGE github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Nested Fv1.neDesc pass-spec=1 OK
+DESCCHECK-COVERAGE github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListC Fv1.lcDesc pass-spec=1 OK
+DESCCHECK-COVERAGE github.com/OffchainLabs/methodical-ssz/fv/kraken/target.BitL Fv1.blDesc pass-spec=1 OK
+DESCCHECK-COVERAGE github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Checkpoint Fv1.cpDesc pass-spec=1 OK
+DESCCHECK-COVERAGE github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.AttestationData Fv1.adDesc pass-spec=1 OK
+DESCCHECK-DONE originals pass 144 fail 0 spec 9 none 135
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json type OK type 'ListU64' (non-empty ASCII identifier)
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json keys OK unknown keys []
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json parse OK 
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json wf OK 
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json fixed OK claimed none, EthLib none
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json nfields OK 1
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json name[0] OK claimed (some L), term L
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json width[0] OK claimed 4, EthLib 4
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json variable[0] OK claimed true, EthLib true
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json kind[0] OK claimed list, EthLib list
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json limit[0] OK claimed (some 17), EthLib 17
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json elem[0] OK claimed (some 8), EthLib (some 8)
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json head OK claimed 4, EthLib 4
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json order OK claimed [0], EthLib [0]
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json probe-size OK serialized 4, claimed head 4 + default bodies = 4
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json probe-var[0] OK offset word at 0 = 4, expected 4
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json ref-claim FAIL table Fv1.luDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64, file none
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json ref FAIL SPEC compared with Fv1.luDesc (up to names)
+DESCCHECK replay/rmut/r1-ref-dropped.desc.json go-names FAIL exact term with the checker's Go field names of ListU64
+DESCCHECK-FILE replay/rmut/r1-ref-dropped.desc.json FAIL SPEC mutant fnv=14231795256459902655 ref-claim,ref,go-names
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json type OK type 'BitL' (non-empty ASCII identifier)
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json keys OK unknown keys []
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json parse OK 
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json wf OK 
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json fixed OK claimed none, EthLib none
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json nfields OK 1
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json name[0] OK claimed (some B), term B
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json width[0] OK claimed 4, EthLib 4
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json variable[0] OK claimed true, EthLib true
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json kind[0] OK claimed byteList, EthLib byteList
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json limit[0] OK claimed (some 2048), EthLib 2048
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json head OK claimed 4, EthLib 4
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json order OK claimed [0], EthLib [0]
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json probe-size OK serialized 4, claimed head 4 + default bodies = 4
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json probe-var[0] OK offset word at 0 = 4, expected 4
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json ref-claim FAIL table Fv1.blDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.BitL, file none
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json ref FAIL SPEC compared with Fv1.blDesc (up to names)
+DESCCHECK replay/rmut/r2-ref-key-removed.desc.json go-names FAIL exact term with the checker's Go field names of BitL
+DESCCHECK-FILE replay/rmut/r2-ref-key-removed.desc.json FAIL SPEC mutant fnv=808229282959370173 ref-claim,ref,go-names
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json type OK type 'Validator' (non-empty ASCII identifier)
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json package OK package 'github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1' (checker-owned list)
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json keys OK unknown keys []
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json parse OK 
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json wf OK 
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json fixed OK claimed (some 121), EthLib (some 121)
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json nfields OK 8
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json name[0] OK claimed (some PublicKey), term PublicKey
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json width[0] OK claimed 48, EthLib 48
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json kind[0] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json length[0] OK claimed (some 48), EthLib 48
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json name[1] OK claimed (some WithdrawalCredentials), term WithdrawalCredentials
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json width[1] OK claimed 32, EthLib 32
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json offset[1] OK claimed 48, EthLib 48
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json kind[1] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json length[1] OK claimed (some 32), EthLib 32
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json name[2] OK claimed (some EffectiveBalance), term EffectiveBalance
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json index[2] OK claimed (some 2), position 2
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json width[2] OK claimed 8, EthLib 8
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json variable[2] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json offset[2] OK claimed 80, EthLib 80
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json kind[2] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json name[3] OK claimed (some Slashed), term Slashed
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json index[3] OK claimed (some 3), position 3
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json width[3] OK claimed 1, EthLib 1
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json variable[3] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json offset[3] OK claimed 88, EthLib 88
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json kind[3] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json name[4] OK claimed (some ActivationEligibilityEpoch), term ActivationEligibilityEpoch
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json index[4] OK claimed (some 4), position 4
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json width[4] OK claimed 8, EthLib 8
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json variable[4] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json offset[4] OK claimed 89, EthLib 89
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json kind[4] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json name[5] OK claimed (some ActivationEpoch), term ActivationEpoch
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json index[5] OK claimed (some 5), position 5
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json width[5] OK claimed 8, EthLib 8
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json variable[5] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json offset[5] OK claimed 97, EthLib 97
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json kind[5] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json name[6] OK claimed (some ExitEpoch), term ExitEpoch
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json index[6] OK claimed (some 6), position 6
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json width[6] OK claimed 8, EthLib 8
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json variable[6] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json offset[6] OK claimed 105, EthLib 105
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json kind[6] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json name[7] OK claimed (some WithdrawableEpoch), term WithdrawableEpoch
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json index[7] OK claimed (some 7), position 7
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json width[7] OK claimed 8, EthLib 8
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json variable[7] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json offset[7] OK claimed 113, EthLib 113
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json kind[7] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json head OK claimed 121, EthLib 121
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json probe-size OK serialized 121, claimed head 121 + default bodies = 121
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json probe-fix[0] OK changed bytes 0..47 (48), claimed [0,48)
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json probe-fix[1] OK changed bytes 48..79 (32), claimed [48,80)
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json probe-fix[2] OK changed bytes 80..87 (8), claimed [80,88)
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json probe-fix[3] OK changed bytes 88..88 (1), claimed [88,89)
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json probe-fix[4] OK changed bytes 89..96 (8), claimed [89,97)
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json probe-fix[5] OK changed bytes 97..104 (8), claimed [97,105)
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json probe-fix[6] OK changed bytes 105..112 (8), claimed [105,113)
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json probe-fix[7] OK changed bytes 113..120 (8), claimed [113,121)
+DESCCHECK replay/rmut/r3-prysm-bool-uint8.desc.json ref-claim OK no spec Desc for github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Validator, file none
+DESCCHECK-FILE replay/rmut/r3-prysm-bool-uint8.desc.json PASS NONE mutant fnv=9326037743462350545
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json type OK type 'SyncAggregate' (non-empty ASCII identifier)
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json package OK package 'github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1' (checker-owned list)
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json keys OK unknown keys []
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json parse OK 
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json wf OK 
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json fixed OK claimed (some 160), EthLib (some 160)
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json nfields OK 2
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json name[0] OK claimed (some SyncCommitteeBits), term SyncCommitteeBits
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json width[0] OK claimed 64, EthLib 64
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json kind[0] OK claimed bitVector, EthLib bitVector
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json length[0] OK claimed (some 505), EthLib 505
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json name[1] OK claimed (some SyncCommitteeSignature), term SyncCommitteeSignature
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json width[1] OK claimed 96, EthLib 96
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json offset[1] OK claimed 64, EthLib 64
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json kind[1] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json length[1] OK claimed (some 96), EthLib 96
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json head OK claimed 160, EthLib 160
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json probe-size OK serialized 160, claimed head 160 + default bodies = 160
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json probe-fix[0] OK changed bytes 0..63 (64), claimed [0,64)
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json probe-fix[1] OK changed bytes 64..159 (96), claimed [64,160)
+DESCCHECK replay/rmut/r4-prysm-bitvec-505.desc.json ref-claim OK no spec Desc for github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.SyncAggregate, file none
+DESCCHECK-FILE replay/rmut/r4-prysm-bitvec-505.desc.json PASS NONE mutant fnv=12433917687933442424
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json type OK type 'IndexedAttestation' (non-empty ASCII identifier)
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json package OK package 'github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1' (checker-owned list)
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json keys OK unknown keys []
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json parse OK 
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json wf OK 
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json fixed OK claimed none, EthLib none
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json nfields OK 3
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json name[0] OK claimed (some AttestingIndices), term AttestingIndices
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json width[0] OK claimed 4, EthLib 4
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json variable[0] OK claimed true, EthLib true
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json kind[0] OK claimed list, EthLib list
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json limit[0] OK claimed (some 4096), EthLib 4096
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json elem[0] OK claimed (some 8), EthLib (some 8)
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json name[1] OK claimed (some Data), term Data
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json width[1] OK claimed 128, EthLib 128
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json offset[1] OK claimed 4, EthLib 4
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json kind[1] OK claimed container, EthLib container
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json name[2] OK claimed (some Signature), term Signature
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json index[2] OK claimed (some 2), position 2
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json width[2] OK claimed 96, EthLib 96
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json variable[2] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json offset[2] OK claimed 132, EthLib 132
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json kind[2] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json length[2] OK claimed (some 96), EthLib 96
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json head OK claimed 228, EthLib 228
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json order OK claimed [0], EthLib [0]
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json probe-size OK serialized 228, claimed head 228 + default bodies = 228
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json probe-var[0] OK offset word at 0 = 228, expected 228
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json probe-fix[1] OK changed bytes 4..131 (128), claimed [4,132)
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json probe-fix[2] OK changed bytes 132..227 (96), claimed [132,228)
+DESCCHECK replay/rmut/r5-prysm-limit.desc.json ref-claim OK no spec Desc for github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.IndexedAttestation, file none
+DESCCHECK-FILE replay/rmut/r5-prysm-limit.desc.json PASS NONE mutant fnv=3784279351673022668
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json type OK type 'StatusV2' (non-empty ASCII identifier)
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json package OK package 'github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1' (checker-owned list)
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json keys OK unknown keys []
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json parse OK 
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json wf OK 
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json fixed OK claimed (some 92), EthLib (some 92)
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json nfields OK 6
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json name[0] OK claimed (some FinalizedRoot), term FinalizedRoot
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json width[0] OK claimed 32, EthLib 32
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json kind[0] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json length[0] OK claimed (some 32), EthLib 32
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json name[1] OK claimed (some ForkDigest), term ForkDigest
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json width[1] OK claimed 4, EthLib 4
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json offset[1] OK claimed 32, EthLib 32
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json kind[1] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json length[1] OK claimed (some 4), EthLib 4
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json name[2] OK claimed (some FinalizedEpoch), term FinalizedEpoch
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json index[2] OK claimed (some 2), position 2
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json width[2] OK claimed 8, EthLib 8
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json variable[2] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json offset[2] OK claimed 36, EthLib 36
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json kind[2] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json name[3] OK claimed (some HeadRoot), term HeadRoot
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json index[3] OK claimed (some 3), position 3
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json width[3] OK claimed 32, EthLib 32
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json variable[3] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json offset[3] OK claimed 44, EthLib 44
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json kind[3] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json length[3] OK claimed (some 32), EthLib 32
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json name[4] OK claimed (some HeadSlot), term HeadSlot
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json index[4] OK claimed (some 4), position 4
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json width[4] OK claimed 8, EthLib 8
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json variable[4] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json offset[4] OK claimed 76, EthLib 76
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json kind[4] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json name[5] OK claimed (some EarliestAvailableSlot), term EarliestAvailableSlot
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json index[5] OK claimed (some 5), position 5
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json width[5] OK claimed 8, EthLib 8
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json variable[5] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json offset[5] OK claimed 84, EthLib 84
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json kind[5] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json head OK claimed 92, EthLib 92
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json probe-size OK serialized 92, claimed head 92 + default bodies = 92
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json probe-fix[0] OK changed bytes 0..31 (32), claimed [0,32)
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json probe-fix[1] OK changed bytes 32..35 (4), claimed [32,36)
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json probe-fix[2] OK changed bytes 36..43 (8), claimed [36,44)
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json probe-fix[3] OK changed bytes 44..75 (32), claimed [44,76)
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json probe-fix[4] OK changed bytes 76..83 (8), claimed [76,84)
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json probe-fix[5] OK changed bytes 84..91 (8), claimed [84,92)
+DESCCHECK replay/rmut/r6-prysm-field-swap.desc.json ref-claim OK no spec Desc for github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.StatusV2, file none
+DESCCHECK-FILE replay/rmut/r6-prysm-field-swap.desc.json PASS NONE mutant fnv=6158050886792526447
+DESCCHECK replay/rmut/r7-claim-name.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/rmut/r7-claim-name.desc.json type OK type 'Scalars' (non-empty ASCII identifier)
+DESCCHECK replay/rmut/r7-claim-name.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/rmut/r7-claim-name.desc.json keys OK unknown keys []
+DESCCHECK replay/rmut/r7-claim-name.desc.json parse OK 
+DESCCHECK replay/rmut/r7-claim-name.desc.json wf OK 
+DESCCHECK replay/rmut/r7-claim-name.desc.json fixed OK claimed (some 16), EthLib (some 16)
+DESCCHECK replay/rmut/r7-claim-name.desc.json nfields OK 5
+DESCCHECK replay/rmut/r7-claim-name.desc.json name[0] FAIL claimed (some Zzz), term A
+DESCCHECK replay/rmut/r7-claim-name.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/rmut/r7-claim-name.desc.json width[0] OK claimed 1, EthLib 1
+DESCCHECK replay/rmut/r7-claim-name.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r7-claim-name.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/rmut/r7-claim-name.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r7-claim-name.desc.json name[1] OK claimed (some B), term B
+DESCCHECK replay/rmut/r7-claim-name.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/rmut/r7-claim-name.desc.json width[1] OK claimed 2, EthLib 2
+DESCCHECK replay/rmut/r7-claim-name.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r7-claim-name.desc.json offset[1] OK claimed 1, EthLib 1
+DESCCHECK replay/rmut/r7-claim-name.desc.json kind[1] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r7-claim-name.desc.json name[2] OK claimed (some C), term C
+DESCCHECK replay/rmut/r7-claim-name.desc.json index[2] OK claimed (some 2), position 2
+DESCCHECK replay/rmut/r7-claim-name.desc.json width[2] OK claimed 4, EthLib 4
+DESCCHECK replay/rmut/r7-claim-name.desc.json variable[2] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r7-claim-name.desc.json offset[2] OK claimed 3, EthLib 3
+DESCCHECK replay/rmut/r7-claim-name.desc.json kind[2] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r7-claim-name.desc.json name[3] OK claimed (some D), term D
+DESCCHECK replay/rmut/r7-claim-name.desc.json index[3] OK claimed (some 3), position 3
+DESCCHECK replay/rmut/r7-claim-name.desc.json width[3] OK claimed 8, EthLib 8
+DESCCHECK replay/rmut/r7-claim-name.desc.json variable[3] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r7-claim-name.desc.json offset[3] OK claimed 7, EthLib 7
+DESCCHECK replay/rmut/r7-claim-name.desc.json kind[3] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r7-claim-name.desc.json name[4] OK claimed (some E), term E
+DESCCHECK replay/rmut/r7-claim-name.desc.json index[4] OK claimed (some 4), position 4
+DESCCHECK replay/rmut/r7-claim-name.desc.json width[4] OK claimed 1, EthLib 1
+DESCCHECK replay/rmut/r7-claim-name.desc.json variable[4] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r7-claim-name.desc.json offset[4] OK claimed 15, EthLib 15
+DESCCHECK replay/rmut/r7-claim-name.desc.json kind[4] OK claimed bool, EthLib bool
+DESCCHECK replay/rmut/r7-claim-name.desc.json head OK claimed 16, EthLib 16
+DESCCHECK replay/rmut/r7-claim-name.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/rmut/r7-claim-name.desc.json probe-size OK serialized 16, claimed head 16 + default bodies = 16
+DESCCHECK replay/rmut/r7-claim-name.desc.json probe-fix[0] OK changed bytes 0..0 (1), claimed [0,1)
+DESCCHECK replay/rmut/r7-claim-name.desc.json probe-fix[1] OK changed bytes 1..2 (2), claimed [1,3)
+DESCCHECK replay/rmut/r7-claim-name.desc.json probe-fix[2] OK changed bytes 3..6 (4), claimed [3,7)
+DESCCHECK replay/rmut/r7-claim-name.desc.json probe-fix[3] OK changed bytes 7..14 (8), claimed [7,15)
+DESCCHECK replay/rmut/r7-claim-name.desc.json probe-fix[4] OK changed bytes 15..15 (1), claimed [15,16)
+DESCCHECK replay/rmut/r7-claim-name.desc.json ref-claim OK table Fv1.scDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars, file (some Fv1.scDesc)
+DESCCHECK replay/rmut/r7-claim-name.desc.json ref OK SPEC compared with Fv1.scDesc (up to names)
+DESCCHECK replay/rmut/r7-claim-name.desc.json go-names OK exact term with the checker's Go field names of Scalars
+DESCCHECK-FILE replay/rmut/r7-claim-name.desc.json FAIL SPEC mutant fnv=12328033508078281761 name[0]
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json type OK type 'Scalars' (non-empty ASCII identifier)
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json keys OK unknown keys []
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json parse OK 
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json wf OK 
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json fixed OK claimed (some 16), EthLib (some 16)
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json nfields OK 5
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json name[0] FAIL claimed (some A), term E
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json width[0] OK claimed 1, EthLib 1
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json name[1] FAIL claimed (some B), term D
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json width[1] OK claimed 2, EthLib 2
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json offset[1] OK claimed 1, EthLib 1
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json kind[1] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json name[2] OK claimed (some C), term C
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json index[2] OK claimed (some 2), position 2
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json width[2] OK claimed 4, EthLib 4
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json variable[2] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json offset[2] OK claimed 3, EthLib 3
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json kind[2] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json name[3] FAIL claimed (some D), term B
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json index[3] OK claimed (some 3), position 3
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json width[3] OK claimed 8, EthLib 8
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json variable[3] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json offset[3] OK claimed 7, EthLib 7
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json kind[3] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json name[4] FAIL claimed (some E), term A
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json index[4] OK claimed (some 4), position 4
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json width[4] OK claimed 1, EthLib 1
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json variable[4] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json offset[4] OK claimed 15, EthLib 15
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json kind[4] OK claimed bool, EthLib bool
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json head OK claimed 16, EthLib 16
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json probe-size OK serialized 16, claimed head 16 + default bodies = 16
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json probe-fix[0] OK changed bytes 0..0 (1), claimed [0,1)
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json probe-fix[1] OK changed bytes 1..2 (2), claimed [1,3)
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json probe-fix[2] OK changed bytes 3..6 (4), claimed [3,7)
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json probe-fix[3] OK changed bytes 7..14 (8), claimed [7,15)
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json probe-fix[4] OK changed bytes 15..15 (1), claimed [15,16)
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json ref-claim OK table Fv1.scDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars, file (some Fv1.scDesc)
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json ref OK SPEC compared with Fv1.scDesc (up to names)
+DESCCHECK replay/rmut/r8-term-names-swapped.desc.json go-names FAIL exact term with the checker's Go field names of Scalars
+DESCCHECK-FILE replay/rmut/r8-term-names-swapped.desc.json FAIL SPEC mutant fnv=7305351407971327774 name[0],name[1],name[3],name[4],go-names
+DESCCHECK replay/rmut/r9-elem-variable.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/rmut/r9-elem-variable.desc.json type OK type 'ListC' (non-empty ASCII identifier)
+DESCCHECK replay/rmut/r9-elem-variable.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/rmut/r9-elem-variable.desc.json keys FAIL unknown keys [fields[0].elem_variable]
+DESCCHECK replay/rmut/r9-elem-variable.desc.json parse OK 
+DESCCHECK replay/rmut/r9-elem-variable.desc.json wf OK 
+DESCCHECK replay/rmut/r9-elem-variable.desc.json fixed OK claimed none, EthLib none
+DESCCHECK replay/rmut/r9-elem-variable.desc.json nfields OK 1
+DESCCHECK replay/rmut/r9-elem-variable.desc.json name[0] OK claimed (some Items), term Items
+DESCCHECK replay/rmut/r9-elem-variable.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/rmut/r9-elem-variable.desc.json width[0] OK claimed 4, EthLib 4
+DESCCHECK replay/rmut/r9-elem-variable.desc.json variable[0] OK claimed true, EthLib true
+DESCCHECK replay/rmut/r9-elem-variable.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/rmut/r9-elem-variable.desc.json kind[0] OK claimed list, EthLib list
+DESCCHECK replay/rmut/r9-elem-variable.desc.json limit[0] OK claimed (some 4), EthLib 4
+DESCCHECK replay/rmut/r9-elem-variable.desc.json elem[0] OK claimed none, EthLib none
+DESCCHECK replay/rmut/r9-elem-variable.desc.json head OK claimed 4, EthLib 4
+DESCCHECK replay/rmut/r9-elem-variable.desc.json order OK claimed [0], EthLib [0]
+DESCCHECK replay/rmut/r9-elem-variable.desc.json probe-size OK serialized 4, claimed head 4 + default bodies = 4
+DESCCHECK replay/rmut/r9-elem-variable.desc.json probe-var[0] OK offset word at 0 = 4, expected 4
+DESCCHECK replay/rmut/r9-elem-variable.desc.json ref-claim OK table Fv1.lcDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListC, file (some Fv1.lcDesc)
+DESCCHECK replay/rmut/r9-elem-variable.desc.json ref OK SPEC compared with Fv1.lcDesc (up to names)
+DESCCHECK replay/rmut/r9-elem-variable.desc.json go-names OK exact term with the checker's Go field names of ListC
+DESCCHECK-FILE replay/rmut/r9-elem-variable.desc.json FAIL SPEC mutant fnv=7411582547073551880 keys
+DESCCHECK replay/rmut/r10-callee.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/rmut/r10-callee.desc.json type OK type 'AttestationData' (non-empty ASCII identifier)
+DESCCHECK replay/rmut/r10-callee.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm' (checker-owned list)
+DESCCHECK replay/rmut/r10-callee.desc.json keys FAIL unknown keys [fields[3].callee]
+DESCCHECK replay/rmut/r10-callee.desc.json parse OK 
+DESCCHECK replay/rmut/r10-callee.desc.json wf OK 
+DESCCHECK replay/rmut/r10-callee.desc.json fixed OK claimed (some 128), EthLib (some 128)
+DESCCHECK replay/rmut/r10-callee.desc.json nfields OK 5
+DESCCHECK replay/rmut/r10-callee.desc.json name[0] OK claimed (some Slot), term Slot
+DESCCHECK replay/rmut/r10-callee.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/rmut/r10-callee.desc.json width[0] OK claimed 8, EthLib 8
+DESCCHECK replay/rmut/r10-callee.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r10-callee.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/rmut/r10-callee.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r10-callee.desc.json name[1] OK claimed (some CommitteeIndex), term CommitteeIndex
+DESCCHECK replay/rmut/r10-callee.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/rmut/r10-callee.desc.json width[1] OK claimed 8, EthLib 8
+DESCCHECK replay/rmut/r10-callee.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r10-callee.desc.json offset[1] OK claimed 8, EthLib 8
+DESCCHECK replay/rmut/r10-callee.desc.json kind[1] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r10-callee.desc.json name[2] OK claimed (some BeaconBlockRoot), term BeaconBlockRoot
+DESCCHECK replay/rmut/r10-callee.desc.json index[2] OK claimed (some 2), position 2
+DESCCHECK replay/rmut/r10-callee.desc.json width[2] OK claimed 32, EthLib 32
+DESCCHECK replay/rmut/r10-callee.desc.json variable[2] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r10-callee.desc.json offset[2] OK claimed 16, EthLib 16
+DESCCHECK replay/rmut/r10-callee.desc.json kind[2] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/rmut/r10-callee.desc.json length[2] OK claimed (some 32), EthLib 32
+DESCCHECK replay/rmut/r10-callee.desc.json name[3] OK claimed (some Source), term Source
+DESCCHECK replay/rmut/r10-callee.desc.json index[3] OK claimed (some 3), position 3
+DESCCHECK replay/rmut/r10-callee.desc.json width[3] OK claimed 40, EthLib 40
+DESCCHECK replay/rmut/r10-callee.desc.json variable[3] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r10-callee.desc.json offset[3] OK claimed 48, EthLib 48
+DESCCHECK replay/rmut/r10-callee.desc.json kind[3] OK claimed container, EthLib container
+DESCCHECK replay/rmut/r10-callee.desc.json name[4] OK claimed (some Target), term Target
+DESCCHECK replay/rmut/r10-callee.desc.json index[4] OK claimed (some 4), position 4
+DESCCHECK replay/rmut/r10-callee.desc.json width[4] OK claimed 40, EthLib 40
+DESCCHECK replay/rmut/r10-callee.desc.json variable[4] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r10-callee.desc.json offset[4] OK claimed 88, EthLib 88
+DESCCHECK replay/rmut/r10-callee.desc.json kind[4] OK claimed container, EthLib container
+DESCCHECK replay/rmut/r10-callee.desc.json head OK claimed 128, EthLib 128
+DESCCHECK replay/rmut/r10-callee.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/rmut/r10-callee.desc.json probe-size OK serialized 128, claimed head 128 + default bodies = 128
+DESCCHECK replay/rmut/r10-callee.desc.json probe-fix[0] OK changed bytes 0..7 (8), claimed [0,8)
+DESCCHECK replay/rmut/r10-callee.desc.json probe-fix[1] OK changed bytes 8..15 (8), claimed [8,16)
+DESCCHECK replay/rmut/r10-callee.desc.json probe-fix[2] OK changed bytes 16..47 (32), claimed [16,48)
+DESCCHECK replay/rmut/r10-callee.desc.json probe-fix[3] OK changed bytes 48..87 (40), claimed [48,88)
+DESCCHECK replay/rmut/r10-callee.desc.json probe-fix[4] OK changed bytes 88..127 (40), claimed [88,128)
+DESCCHECK replay/rmut/r10-callee.desc.json ref-claim OK table Fv1.adDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.AttestationData, file (some Fv1.adDesc)
+DESCCHECK replay/rmut/r10-callee.desc.json ref OK SPEC compared with Fv1.adDesc (up to names)
+DESCCHECK replay/rmut/r10-callee.desc.json go-names OK exact term with the checker's Go field names of AttestationData
+DESCCHECK-FILE replay/rmut/r10-callee.desc.json FAIL SPEC mutant fnv=2249229093756480243 keys
+DESCCHECK replay/rmut/r11-index.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/rmut/r11-index.desc.json type OK type 'Checkpoint' (non-empty ASCII identifier)
+DESCCHECK replay/rmut/r11-index.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm' (checker-owned list)
+DESCCHECK replay/rmut/r11-index.desc.json keys OK unknown keys []
+DESCCHECK replay/rmut/r11-index.desc.json parse OK 
+DESCCHECK replay/rmut/r11-index.desc.json wf OK 
+DESCCHECK replay/rmut/r11-index.desc.json fixed OK claimed (some 40), EthLib (some 40)
+DESCCHECK replay/rmut/r11-index.desc.json nfields OK 2
+DESCCHECK replay/rmut/r11-index.desc.json name[0] OK claimed (some Epoch), term Epoch
+DESCCHECK replay/rmut/r11-index.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/rmut/r11-index.desc.json width[0] OK claimed 8, EthLib 8
+DESCCHECK replay/rmut/r11-index.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r11-index.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/rmut/r11-index.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r11-index.desc.json name[1] OK claimed (some Root), term Root
+DESCCHECK replay/rmut/r11-index.desc.json index[1] FAIL claimed (some 7), position 1
+DESCCHECK replay/rmut/r11-index.desc.json width[1] OK claimed 32, EthLib 32
+DESCCHECK replay/rmut/r11-index.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r11-index.desc.json offset[1] OK claimed 8, EthLib 8
+DESCCHECK replay/rmut/r11-index.desc.json kind[1] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/rmut/r11-index.desc.json length[1] OK claimed (some 32), EthLib 32
+DESCCHECK replay/rmut/r11-index.desc.json head OK claimed 40, EthLib 40
+DESCCHECK replay/rmut/r11-index.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/rmut/r11-index.desc.json probe-size OK serialized 40, claimed head 40 + default bodies = 40
+DESCCHECK replay/rmut/r11-index.desc.json probe-fix[0] OK changed bytes 0..7 (8), claimed [0,8)
+DESCCHECK replay/rmut/r11-index.desc.json probe-fix[1] OK changed bytes 8..39 (32), claimed [8,40)
+DESCCHECK replay/rmut/r11-index.desc.json ref-claim OK table Fv1.cpDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Checkpoint, file (some Fv1.cpDesc)
+DESCCHECK replay/rmut/r11-index.desc.json ref OK SPEC compared with Fv1.cpDesc (up to names)
+DESCCHECK replay/rmut/r11-index.desc.json go-names OK exact term with the checker's Go field names of Checkpoint
+DESCCHECK-FILE replay/rmut/r11-index.desc.json FAIL SPEC mutant fnv=3186675377374642113 index[1]
+DESCCHECK replay/rmut/r12-type.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/rmut/r12-type.desc.json type OK type 'Checkpoint' (non-empty ASCII identifier)
+DESCCHECK replay/rmut/r12-type.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/rmut/r12-type.desc.json table-type FAIL table type name Checkpoint under package github.com/OffchainLabs/methodical-ssz/fv/kraken/target
+DESCCHECK replay/rmut/r12-type.desc.json keys OK unknown keys []
+DESCCHECK replay/rmut/r12-type.desc.json parse OK 
+DESCCHECK replay/rmut/r12-type.desc.json wf OK 
+DESCCHECK replay/rmut/r12-type.desc.json fixed OK claimed (some 16), EthLib (some 16)
+DESCCHECK replay/rmut/r12-type.desc.json nfields OK 5
+DESCCHECK replay/rmut/r12-type.desc.json name[0] OK claimed (some A), term A
+DESCCHECK replay/rmut/r12-type.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/rmut/r12-type.desc.json width[0] OK claimed 1, EthLib 1
+DESCCHECK replay/rmut/r12-type.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r12-type.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/rmut/r12-type.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r12-type.desc.json name[1] OK claimed (some B), term B
+DESCCHECK replay/rmut/r12-type.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/rmut/r12-type.desc.json width[1] OK claimed 2, EthLib 2
+DESCCHECK replay/rmut/r12-type.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r12-type.desc.json offset[1] OK claimed 1, EthLib 1
+DESCCHECK replay/rmut/r12-type.desc.json kind[1] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r12-type.desc.json name[2] OK claimed (some C), term C
+DESCCHECK replay/rmut/r12-type.desc.json index[2] OK claimed (some 2), position 2
+DESCCHECK replay/rmut/r12-type.desc.json width[2] OK claimed 4, EthLib 4
+DESCCHECK replay/rmut/r12-type.desc.json variable[2] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r12-type.desc.json offset[2] OK claimed 3, EthLib 3
+DESCCHECK replay/rmut/r12-type.desc.json kind[2] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r12-type.desc.json name[3] OK claimed (some D), term D
+DESCCHECK replay/rmut/r12-type.desc.json index[3] OK claimed (some 3), position 3
+DESCCHECK replay/rmut/r12-type.desc.json width[3] OK claimed 8, EthLib 8
+DESCCHECK replay/rmut/r12-type.desc.json variable[3] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r12-type.desc.json offset[3] OK claimed 7, EthLib 7
+DESCCHECK replay/rmut/r12-type.desc.json kind[3] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r12-type.desc.json name[4] OK claimed (some E), term E
+DESCCHECK replay/rmut/r12-type.desc.json index[4] OK claimed (some 4), position 4
+DESCCHECK replay/rmut/r12-type.desc.json width[4] OK claimed 1, EthLib 1
+DESCCHECK replay/rmut/r12-type.desc.json variable[4] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r12-type.desc.json offset[4] OK claimed 15, EthLib 15
+DESCCHECK replay/rmut/r12-type.desc.json kind[4] OK claimed bool, EthLib bool
+DESCCHECK replay/rmut/r12-type.desc.json head OK claimed 16, EthLib 16
+DESCCHECK replay/rmut/r12-type.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/rmut/r12-type.desc.json probe-size OK serialized 16, claimed head 16 + default bodies = 16
+DESCCHECK replay/rmut/r12-type.desc.json probe-fix[0] OK changed bytes 0..0 (1), claimed [0,1)
+DESCCHECK replay/rmut/r12-type.desc.json probe-fix[1] OK changed bytes 1..2 (2), claimed [1,3)
+DESCCHECK replay/rmut/r12-type.desc.json probe-fix[2] OK changed bytes 3..6 (4), claimed [3,7)
+DESCCHECK replay/rmut/r12-type.desc.json probe-fix[3] OK changed bytes 7..14 (8), claimed [7,15)
+DESCCHECK replay/rmut/r12-type.desc.json probe-fix[4] OK changed bytes 15..15 (1), claimed [15,16)
+DESCCHECK replay/rmut/r12-type.desc.json ref-claim FAIL no spec Desc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Checkpoint, file (some Fv1.scDesc)
+DESCCHECK-FILE replay/rmut/r12-type.desc.json FAIL NONE mutant fnv=15800381990516794809 table-type,ref-claim
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json type OK type 'Scalars' (non-empty ASCII identifier)
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json keys OK unknown keys []
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json parse OK 
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json wf OK 
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json fixed OK claimed (some 16), EthLib (some 16)
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json nfields OK 5
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json name[0] OK claimed (some A), term A
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json width[0] OK claimed 1, EthLib 1
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json name[1] OK claimed (some B), term B
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json width[1] OK claimed 2, EthLib 2
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json offset[1] OK claimed 1, EthLib 1
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json kind[1] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json name[2] OK claimed (some C), term C
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json index[2] OK claimed (some 2), position 2
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json width[2] OK claimed 4, EthLib 4
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json variable[2] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json offset[2] OK claimed 3, EthLib 3
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json kind[2] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json name[3] OK claimed (some D), term D
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json index[3] OK claimed (some 3), position 3
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json width[3] OK claimed 8, EthLib 8
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json variable[3] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json offset[3] OK claimed 7, EthLib 7
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json kind[3] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json name[4] OK claimed (some E), term E
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json index[4] OK claimed (some 4), position 4
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json width[4] OK claimed 1, EthLib 1
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json variable[4] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json offset[4] OK claimed 15, EthLib 15
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json kind[4] OK claimed bool, EthLib bool
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json head OK claimed 16, EthLib 16
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json probe-size OK serialized 16, claimed head 16 + default bodies = 16
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json probe-fix[0] OK changed bytes 0..0 (1), claimed [0,1)
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json probe-fix[1] OK changed bytes 1..2 (2), claimed [1,3)
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json probe-fix[2] OK changed bytes 3..6 (4), claimed [3,7)
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json probe-fix[3] OK changed bytes 7..14 (8), claimed [7,15)
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json probe-fix[4] OK changed bytes 15..15 (1), claimed [15,16)
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json ref-claim FAIL table Fv1.scDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars, file (some Fv1.cpDesc)
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json ref OK SPEC compared with Fv1.scDesc (up to names)
+DESCCHECK replay/rmut/r13-ref-wrong.desc.json go-names OK exact term with the checker's Go field names of Scalars
+DESCCHECK-FILE replay/rmut/r13-ref-wrong.desc.json FAIL SPEC mutant fnv=8332580579355303245 ref-claim
+DESCCHECK replay/rmut/r14-extra-claim.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/rmut/r14-extra-claim.desc.json type OK type 'Checkpoint' (non-empty ASCII identifier)
+DESCCHECK replay/rmut/r14-extra-claim.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm' (checker-owned list)
+DESCCHECK replay/rmut/r14-extra-claim.desc.json keys OK unknown keys []
+DESCCHECK replay/rmut/r14-extra-claim.desc.json parse OK 
+DESCCHECK replay/rmut/r14-extra-claim.desc.json wf OK 
+DESCCHECK replay/rmut/r14-extra-claim.desc.json fixed OK claimed (some 40), EthLib (some 40)
+DESCCHECK replay/rmut/r14-extra-claim.desc.json nfields FAIL claimed 3, EthLib 2
+DESCCHECK replay/rmut/r14-extra-claim.desc.json name[0] OK claimed (some Epoch), term Epoch
+DESCCHECK replay/rmut/r14-extra-claim.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/rmut/r14-extra-claim.desc.json width[0] OK claimed 8, EthLib 8
+DESCCHECK replay/rmut/r14-extra-claim.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r14-extra-claim.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/rmut/r14-extra-claim.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r14-extra-claim.desc.json name[1] OK claimed (some Root), term Root
+DESCCHECK replay/rmut/r14-extra-claim.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/rmut/r14-extra-claim.desc.json width[1] OK claimed 32, EthLib 32
+DESCCHECK replay/rmut/r14-extra-claim.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r14-extra-claim.desc.json offset[1] OK claimed 8, EthLib 8
+DESCCHECK replay/rmut/r14-extra-claim.desc.json kind[1] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/rmut/r14-extra-claim.desc.json length[1] OK claimed (some 32), EthLib 32
+DESCCHECK replay/rmut/r14-extra-claim.desc.json head OK claimed 40, EthLib 40
+DESCCHECK replay/rmut/r14-extra-claim.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/rmut/r14-extra-claim.desc.json probe-size OK serialized 40, claimed head 40 + default bodies = 40
+DESCCHECK replay/rmut/r14-extra-claim.desc.json probe-fix[0] OK changed bytes 0..7 (8), claimed [0,8)
+DESCCHECK replay/rmut/r14-extra-claim.desc.json probe-fix[1] OK changed bytes 8..39 (32), claimed [8,40)
+DESCCHECK replay/rmut/r14-extra-claim.desc.json ref-claim OK table Fv1.cpDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Checkpoint, file (some Fv1.cpDesc)
+DESCCHECK replay/rmut/r14-extra-claim.desc.json ref OK SPEC compared with Fv1.cpDesc (up to names)
+DESCCHECK replay/rmut/r14-extra-claim.desc.json go-names OK exact term with the checker's Go field names of Checkpoint
+DESCCHECK-FILE replay/rmut/r14-extra-claim.desc.json FAIL SPEC mutant fnv=9456261246146223363 nfields
+DESCCHECK replay/rmut/r15-term-only.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/rmut/r15-term-only.desc.json type OK type 'Checkpoint' (non-empty ASCII identifier)
+DESCCHECK replay/rmut/r15-term-only.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm' (checker-owned list)
+DESCCHECK replay/rmut/r15-term-only.desc.json keys OK unknown keys []
+DESCCHECK replay/rmut/r15-term-only.desc.json parse OK 
+DESCCHECK replay/rmut/r15-term-only.desc.json wf OK 
+DESCCHECK replay/rmut/r15-term-only.desc.json fixed FAIL claimed (some 40), EthLib (some 36)
+DESCCHECK replay/rmut/r15-term-only.desc.json nfields OK 2
+DESCCHECK replay/rmut/r15-term-only.desc.json name[0] OK claimed (some Epoch), term Epoch
+DESCCHECK replay/rmut/r15-term-only.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/rmut/r15-term-only.desc.json width[0] FAIL claimed 8, EthLib 4
+DESCCHECK replay/rmut/r15-term-only.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r15-term-only.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/rmut/r15-term-only.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r15-term-only.desc.json name[1] OK claimed (some Root), term Root
+DESCCHECK replay/rmut/r15-term-only.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/rmut/r15-term-only.desc.json width[1] OK claimed 32, EthLib 32
+DESCCHECK replay/rmut/r15-term-only.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r15-term-only.desc.json offset[1] FAIL claimed 8, EthLib 4
+DESCCHECK replay/rmut/r15-term-only.desc.json kind[1] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/rmut/r15-term-only.desc.json length[1] OK claimed (some 32), EthLib 32
+DESCCHECK replay/rmut/r15-term-only.desc.json head FAIL claimed 40, EthLib 36
+DESCCHECK replay/rmut/r15-term-only.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/rmut/r15-term-only.desc.json probe-size OK serialized 36, claimed head 36 + default bodies = 36
+DESCCHECK replay/rmut/r15-term-only.desc.json probe-fix[0] OK changed bytes 0..3 (4), claimed [0,8)
+DESCCHECK replay/rmut/r15-term-only.desc.json probe-fix[1] FAIL changed bytes 4..35 (32), claimed [8,40)
+DESCCHECK replay/rmut/r15-term-only.desc.json ref-claim OK table Fv1.cpDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Checkpoint, file (some Fv1.cpDesc)
+DESCCHECK replay/rmut/r15-term-only.desc.json ref FAIL SPEC compared with Fv1.cpDesc (up to names)
+DESCCHECK replay/rmut/r15-term-only.desc.json go-names FAIL exact term with the checker's Go field names of Checkpoint
+DESCCHECK-FILE replay/rmut/r15-term-only.desc.json FAIL SPEC mutant fnv=11496629540369692347 fixed,width[0],offset[1],head,probe-fix[1],ref,go-names
+DESCCHECK replay/rmut/r16-var-offset.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/rmut/r16-var-offset.desc.json type OK type 'Nested' (non-empty ASCII identifier)
+DESCCHECK replay/rmut/r16-var-offset.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/rmut/r16-var-offset.desc.json keys OK unknown keys []
+DESCCHECK replay/rmut/r16-var-offset.desc.json parse OK 
+DESCCHECK replay/rmut/r16-var-offset.desc.json wf OK 
+DESCCHECK replay/rmut/r16-var-offset.desc.json fixed OK claimed none, EthLib none
+DESCCHECK replay/rmut/r16-var-offset.desc.json nfields OK 3
+DESCCHECK replay/rmut/r16-var-offset.desc.json name[0] OK claimed (some A), term A
+DESCCHECK replay/rmut/r16-var-offset.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/rmut/r16-var-offset.desc.json width[0] OK claimed 8, EthLib 8
+DESCCHECK replay/rmut/r16-var-offset.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r16-var-offset.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/rmut/r16-var-offset.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/rmut/r16-var-offset.desc.json name[1] OK claimed (some S), term S
+DESCCHECK replay/rmut/r16-var-offset.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/rmut/r16-var-offset.desc.json width[1] OK claimed 16, EthLib 16
+DESCCHECK replay/rmut/r16-var-offset.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r16-var-offset.desc.json offset[1] OK claimed 8, EthLib 8
+DESCCHECK replay/rmut/r16-var-offset.desc.json kind[1] OK claimed container, EthLib container
+DESCCHECK replay/rmut/r16-var-offset.desc.json name[2] OK claimed (some L), term L
+DESCCHECK replay/rmut/r16-var-offset.desc.json index[2] OK claimed (some 2), position 2
+DESCCHECK replay/rmut/r16-var-offset.desc.json width[2] OK claimed 4, EthLib 4
+DESCCHECK replay/rmut/r16-var-offset.desc.json variable[2] OK claimed true, EthLib true
+DESCCHECK replay/rmut/r16-var-offset.desc.json offset[2] FAIL claimed 20, EthLib 24
+DESCCHECK replay/rmut/r16-var-offset.desc.json kind[2] OK claimed container, EthLib container
+DESCCHECK replay/rmut/r16-var-offset.desc.json head OK claimed 28, EthLib 28
+DESCCHECK replay/rmut/r16-var-offset.desc.json order OK claimed [2], EthLib [2]
+DESCCHECK replay/rmut/r16-var-offset.desc.json probe-size OK serialized 32, claimed head 28 + default bodies = 32
+DESCCHECK replay/rmut/r16-var-offset.desc.json probe-fix[0] OK changed bytes 0..7 (8), claimed [0,8)
+DESCCHECK replay/rmut/r16-var-offset.desc.json probe-fix[1] OK changed bytes 8..23 (16), claimed [8,24)
+DESCCHECK replay/rmut/r16-var-offset.desc.json probe-var[2] FAIL offset word at 20 = 0, expected 28
+DESCCHECK replay/rmut/r16-var-offset.desc.json ref-claim OK table Fv1.neDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Nested, file (some Fv1.neDesc)
+DESCCHECK replay/rmut/r16-var-offset.desc.json ref OK SPEC compared with Fv1.neDesc (up to names)
+DESCCHECK replay/rmut/r16-var-offset.desc.json go-names OK exact term with the checker's Go field names of Nested
+DESCCHECK-FILE replay/rmut/r16-var-offset.desc.json FAIL SPEC mutant fnv=4257732292910082969 offset[2],probe-var[2]
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json type OK type 'Attestation' (non-empty ASCII identifier)
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json package OK package 'github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1' (checker-owned list)
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json keys OK unknown keys []
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json parse OK 
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json wf OK 
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json fixed OK claimed none, EthLib none
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json nfields OK 3
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json name[0] OK claimed (some AggregationBits), term AggregationBits
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json width[0] OK claimed 4, EthLib 4
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json variable[0] OK claimed true, EthLib true
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json kind[0] OK claimed bitList, EthLib bitList
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json limit[0] OK claimed (some 2048), EthLib 2048
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json name[1] OK claimed (some Data), term Data
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json width[1] OK claimed 128, EthLib 128
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json offset[1] OK claimed 4, EthLib 4
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json kind[1] OK claimed container, EthLib container
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json name[2] OK claimed (some Signature), term Signature
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json index[2] OK claimed (some 2), position 2
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json width[2] OK claimed 96, EthLib 96
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json variable[2] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json offset[2] OK claimed 132, EthLib 132
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json kind[2] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json length[2] OK claimed (some 96), EthLib 96
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json head OK claimed 228, EthLib 228
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json order OK claimed [0], EthLib [0]
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json probe-size OK serialized 229, claimed head 228 + default bodies = 229
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json probe-var[0] OK offset word at 0 = 228, expected 228
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json probe-fix[1] OK changed bytes 4..131 (128), claimed [4,132)
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json probe-fix[2] OK changed bytes 132..227 (96), claimed [132,228)
+DESCCHECK replay/rmut/r17-prysm-inner-kind.desc.json ref-claim OK no spec Desc for github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Attestation, file none
+DESCCHECK-FILE replay/rmut/r17-prysm-inner-kind.desc.json PASS NONE mutant fnv=17781216784154459813
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json type OK type 'SyncAggregate' (non-empty ASCII identifier)
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json package OK package 'github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1' (checker-owned list)
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json keys OK unknown keys []
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json parse OK 
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json wf FAIL EthLib.Serialization.Ssz.Err.vectorEmpty
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json fixed FAIL claimed (some 160), EthLib (some 64)
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json nfields OK 2
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json name[0] OK claimed (some SyncCommitteeBits), term SyncCommitteeBits
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json width[0] OK claimed 64, EthLib 64
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json kind[0] OK claimed bitVector, EthLib bitVector
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json length[0] OK claimed (some 512), EthLib 512
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json name[1] OK claimed (some SyncCommitteeSignature), term SyncCommitteeSignature
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json width[1] OK claimed 0, EthLib 0
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json offset[1] OK claimed 64, EthLib 64
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json kind[1] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json length[1] OK claimed (some 0), EthLib 0
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json head FAIL claimed 160, EthLib 64
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json probe-size OK serialized 64, claimed head 64 + default bodies = 64
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json probe-fix[0] OK changed bytes 0..63 (64), claimed [0,64)
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json probe-fix[1] FAIL changed bytes 0..0 (0), claimed [64,64)
+DESCCHECK replay/rmut/r18-prysm-bytes0.desc.json ref-claim OK no spec Desc for github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.SyncAggregate, file none
+DESCCHECK-FILE replay/rmut/r18-prysm-bytes0.desc.json FAIL NONE mutant fnv=2400980752048200273 wf,fixed,head,probe-fix[1]
+DESCCHECK replay/rmut/r19-order-dup.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/rmut/r19-order-dup.desc.json type OK type 'ListU64' (non-empty ASCII identifier)
+DESCCHECK replay/rmut/r19-order-dup.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/rmut/r19-order-dup.desc.json keys OK unknown keys []
+DESCCHECK replay/rmut/r19-order-dup.desc.json parse OK 
+DESCCHECK replay/rmut/r19-order-dup.desc.json wf OK 
+DESCCHECK replay/rmut/r19-order-dup.desc.json fixed OK claimed none, EthLib none
+DESCCHECK replay/rmut/r19-order-dup.desc.json nfields OK 1
+DESCCHECK replay/rmut/r19-order-dup.desc.json name[0] OK claimed (some L), term L
+DESCCHECK replay/rmut/r19-order-dup.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/rmut/r19-order-dup.desc.json width[0] OK claimed 4, EthLib 4
+DESCCHECK replay/rmut/r19-order-dup.desc.json variable[0] OK claimed true, EthLib true
+DESCCHECK replay/rmut/r19-order-dup.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/rmut/r19-order-dup.desc.json kind[0] OK claimed list, EthLib list
+DESCCHECK replay/rmut/r19-order-dup.desc.json limit[0] OK claimed (some 16), EthLib 16
+DESCCHECK replay/rmut/r19-order-dup.desc.json elem[0] OK claimed (some 8), EthLib (some 8)
+DESCCHECK replay/rmut/r19-order-dup.desc.json head OK claimed 4, EthLib 4
+DESCCHECK replay/rmut/r19-order-dup.desc.json order FAIL claimed [0, 0], EthLib [0]
+DESCCHECK replay/rmut/r19-order-dup.desc.json probe-size OK serialized 4, claimed head 4 + default bodies = 4
+DESCCHECK replay/rmut/r19-order-dup.desc.json probe-var[0] OK offset word at 0 = 4, expected 4
+DESCCHECK replay/rmut/r19-order-dup.desc.json ref-claim OK table Fv1.luDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64, file (some Fv1.luDesc)
+DESCCHECK replay/rmut/r19-order-dup.desc.json ref OK SPEC compared with Fv1.luDesc (up to names)
+DESCCHECK replay/rmut/r19-order-dup.desc.json go-names OK exact term with the checker's Go field names of ListU64
+DESCCHECK-FILE replay/rmut/r19-order-dup.desc.json FAIL SPEC mutant fnv=13537895163810699535 order
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json type OK type 'ListU64' (non-empty ASCII identifier)
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json keys OK unknown keys []
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json parse OK 
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json wf OK 
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json fixed FAIL claimed (some 4), EthLib none
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json nfields OK 1
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json name[0] OK claimed (some L), term L
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json width[0] OK claimed 4, EthLib 4
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json variable[0] OK claimed true, EthLib true
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json kind[0] OK claimed list, EthLib list
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json limit[0] OK claimed (some 16), EthLib 16
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json elem[0] OK claimed (some 8), EthLib (some 8)
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json head OK claimed 4, EthLib 4
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json order OK claimed [0], EthLib [0]
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json probe-size OK serialized 4, claimed head 4 + default bodies = 4
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json probe-var[0] OK offset word at 0 = 4, expected 4
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json ref-claim OK table Fv1.luDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64, file (some Fv1.luDesc)
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json ref OK SPEC compared with Fv1.luDesc (up to names)
+DESCCHECK replay/rmut/r20-fixed-for-variable.desc.json go-names OK exact term with the checker's Go field names of ListU64
+DESCCHECK-FILE replay/rmut/r20-fixed-for-variable.desc.json FAIL SPEC mutant fnv=16831610197730696616 fixed
+DESCCHECK replay/n/n01-esc-pkg-slash.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n01-esc-pkg-slash.desc.json type OK type 'ListU64' (non-empty ASCII identifier)
+DESCCHECK replay/n/n01-esc-pkg-slash.desc.json package FAIL package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target/' (checker-owned list)
+DESCCHECK replay/n/n01-esc-pkg-slash.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n01-esc-pkg-slash.desc.json parse OK 
+DESCCHECK replay/n/n01-esc-pkg-slash.desc.json wf OK 
+DESCCHECK replay/n/n01-esc-pkg-slash.desc.json fixed OK claimed none, EthLib none
+DESCCHECK replay/n/n01-esc-pkg-slash.desc.json nfields OK 1
+DESCCHECK replay/n/n01-esc-pkg-slash.desc.json name[0] OK claimed (some L), term L
+DESCCHECK replay/n/n01-esc-pkg-slash.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n01-esc-pkg-slash.desc.json width[0] OK claimed 4, EthLib 4
+DESCCHECK replay/n/n01-esc-pkg-slash.desc.json variable[0] OK claimed true, EthLib true
+DESCCHECK replay/n/n01-esc-pkg-slash.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n01-esc-pkg-slash.desc.json kind[0] OK claimed list, EthLib list
+DESCCHECK replay/n/n01-esc-pkg-slash.desc.json limit[0] OK claimed (some 17), EthLib 17
+DESCCHECK replay/n/n01-esc-pkg-slash.desc.json elem[0] OK claimed (some 8), EthLib (some 8)
+DESCCHECK replay/n/n01-esc-pkg-slash.desc.json head OK claimed 4, EthLib 4
+DESCCHECK replay/n/n01-esc-pkg-slash.desc.json order OK claimed [0], EthLib [0]
+DESCCHECK replay/n/n01-esc-pkg-slash.desc.json probe-size OK serialized 4, claimed head 4 + default bodies = 4
+DESCCHECK replay/n/n01-esc-pkg-slash.desc.json probe-var[0] OK offset word at 0 = 4, expected 4
+DESCCHECK replay/n/n01-esc-pkg-slash.desc.json ref-claim OK no spec Desc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target/.ListU64, file none
+DESCCHECK-FILE replay/n/n01-esc-pkg-slash.desc.json FAIL NONE mutant fnv=5430825524968275456 package
+DESCCHECK replay/n/n02-esc-type-missing.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n02-esc-type-missing.desc.json type FAIL type '' (non-empty ASCII identifier)
+DESCCHECK replay/n/n02-esc-type-missing.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/n/n02-esc-type-missing.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n02-esc-type-missing.desc.json parse OK 
+DESCCHECK replay/n/n02-esc-type-missing.desc.json wf OK 
+DESCCHECK replay/n/n02-esc-type-missing.desc.json fixed OK claimed none, EthLib none
+DESCCHECK replay/n/n02-esc-type-missing.desc.json nfields OK 1
+DESCCHECK replay/n/n02-esc-type-missing.desc.json name[0] OK claimed (some B), term B
+DESCCHECK replay/n/n02-esc-type-missing.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n02-esc-type-missing.desc.json width[0] OK claimed 4, EthLib 4
+DESCCHECK replay/n/n02-esc-type-missing.desc.json variable[0] OK claimed true, EthLib true
+DESCCHECK replay/n/n02-esc-type-missing.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n02-esc-type-missing.desc.json kind[0] OK claimed byteList, EthLib byteList
+DESCCHECK replay/n/n02-esc-type-missing.desc.json limit[0] OK claimed (some 2048), EthLib 2048
+DESCCHECK replay/n/n02-esc-type-missing.desc.json head OK claimed 4, EthLib 4
+DESCCHECK replay/n/n02-esc-type-missing.desc.json order OK claimed [0], EthLib [0]
+DESCCHECK replay/n/n02-esc-type-missing.desc.json probe-size OK serialized 4, claimed head 4 + default bodies = 4
+DESCCHECK replay/n/n02-esc-type-missing.desc.json probe-var[0] OK offset word at 0 = 4, expected 4
+DESCCHECK replay/n/n02-esc-type-missing.desc.json ref-claim OK no spec Desc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target., file none
+DESCCHECK-FILE replay/n/n02-esc-type-missing.desc.json FAIL NONE mutant fnv=9240681710730648398 type
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json type OK type 'Scalars' (non-empty ASCII identifier)
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json package FAIL package '' (checker-owned list)
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json parse OK 
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json wf OK 
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json fixed OK claimed (some 18), EthLib (some 18)
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json nfields OK 5
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json name[0] OK claimed (some A), term A
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json width[0] OK claimed 1, EthLib 1
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json name[1] OK claimed (some B), term B
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json width[1] OK claimed 4, EthLib 4
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json offset[1] OK claimed 1, EthLib 1
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json kind[1] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json name[2] OK claimed (some C), term C
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json index[2] OK claimed (some 2), position 2
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json width[2] OK claimed 4, EthLib 4
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json variable[2] OK claimed false, EthLib false
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json offset[2] OK claimed 5, EthLib 5
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json kind[2] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json name[3] OK claimed (some D), term D
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json index[3] OK claimed (some 3), position 3
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json width[3] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json variable[3] OK claimed false, EthLib false
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json offset[3] OK claimed 9, EthLib 9
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json kind[3] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json name[4] OK claimed (some E), term E
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json index[4] OK claimed (some 4), position 4
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json width[4] OK claimed 1, EthLib 1
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json variable[4] OK claimed false, EthLib false
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json offset[4] OK claimed 17, EthLib 17
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json kind[4] OK claimed bool, EthLib bool
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json head OK claimed 18, EthLib 18
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json probe-size OK serialized 18, claimed head 18 + default bodies = 18
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json probe-fix[0] OK changed bytes 0..0 (1), claimed [0,1)
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json probe-fix[1] OK changed bytes 1..4 (4), claimed [1,5)
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json probe-fix[2] OK changed bytes 5..8 (4), claimed [5,9)
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json probe-fix[3] OK changed bytes 9..16 (8), claimed [9,17)
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json probe-fix[4] OK changed bytes 17..17 (1), claimed [17,18)
+DESCCHECK replay/n/n03-esc-pkg-missing.desc.json ref-claim OK no spec Desc for .Scalars, file none
+DESCCHECK-FILE replay/n/n03-esc-pkg-missing.desc.json FAIL NONE mutant fnv=11296255015717650466 package
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json type OK type 'Checkpoint' (non-empty ASCII identifier)
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json package OK package 'github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1' (checker-owned list)
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json parse OK 
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json wf OK 
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json fixed OK claimed (some 40), EthLib (some 40)
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json nfields OK 2
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json name[0] OK claimed (some Epoch), term Epoch
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json width[0] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json kind[0] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json length[0] OK claimed (some 8), EthLib 8
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json name[1] OK claimed (some Root), term Root
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json width[1] OK claimed 32, EthLib 32
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json offset[1] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json kind[1] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json length[1] OK claimed (some 32), EthLib 32
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json head OK claimed 40, EthLib 40
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json probe-size OK serialized 40, claimed head 40 + default bodies = 40
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json probe-fix[0] OK changed bytes 0..7 (8), claimed [0,8)
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json probe-fix[1] OK changed bytes 8..39 (32), claimed [8,40)
+DESCCHECK replay/n/n04-esc-pkg-prysm.desc.json ref-claim OK no spec Desc for github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Checkpoint, file none
+DESCCHECK-FILE replay/n/n04-esc-pkg-prysm.desc.json PASS NONE mutant fnv=13215963824920879462
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json type FAIL type 'FixedVec​' (non-empty ASCII identifier)
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json parse OK 
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json wf OK 
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json fixed OK claimed (some 72), EthLib (some 72)
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json nfields OK 2
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json name[0] OK claimed (some R), term R
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json width[0] OK claimed 32, EthLib 32
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json kind[0] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json length[0] OK claimed (some 32), EthLib 32
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json name[1] OK claimed (some W), term W
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json width[1] OK claimed 40, EthLib 40
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json offset[1] OK claimed 32, EthLib 32
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json kind[1] OK claimed vector, EthLib vector
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json length[1] OK claimed (some 5), EthLib 5
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json elem[1] OK claimed (some 8), EthLib (some 8)
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json head OK claimed 72, EthLib 72
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json probe-size OK serialized 72, claimed head 72 + default bodies = 72
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json probe-fix[0] OK changed bytes 0..31 (32), claimed [0,32)
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json probe-fix[1] OK changed bytes 32..71 (40), claimed [32,72)
+DESCCHECK replay/n/n05-esc-type-zwsp.desc.json ref-claim OK no spec Desc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.FixedVec​, file none
+DESCCHECK-FILE replay/n/n05-esc-type-zwsp.desc.json FAIL NONE mutant fnv=15540749581570594988 type
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json type OK type 'Checkpoint' (non-empty ASCII identifier)
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json package OK package 'github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1' (checker-owned list)
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json parse OK 
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json wf OK 
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json fixed OK claimed (some 40), EthLib (some 40)
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json nfields OK 2
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json name[0] OK claimed (some Epoch), term Epoch
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json width[0] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json name[1] OK claimed (some Root), term Root
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json width[1] OK claimed 32, EthLib 32
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json offset[1] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json kind[1] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json length[1] OK claimed (some 32), EthLib 32
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json head OK claimed 40, EthLib 40
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json probe-size OK serialized 40, claimed head 40 + default bodies = 40
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json probe-fix[0] OK changed bytes 0..7 (8), claimed [0,8)
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json probe-fix[1] OK changed bytes 8..39 (32), claimed [8,40)
+DESCCHECK replay/n/n06-ref-extra-on-prysm.desc.json ref-claim FAIL no spec Desc for github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Checkpoint, file (some Fv1.cpDesc)
+DESCCHECK-FILE replay/n/n06-ref-extra-on-prysm.desc.json FAIL NONE mutant fnv=17139788944381583711 ref-claim
+DESCCHECK replay/n/n07-ref-nonstring.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n07-ref-nonstring.desc.json type OK type 'ListU64' (non-empty ASCII identifier)
+DESCCHECK replay/n/n07-ref-nonstring.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/n/n07-ref-nonstring.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n07-ref-nonstring.desc.json parse OK 
+DESCCHECK replay/n/n07-ref-nonstring.desc.json wf OK 
+DESCCHECK replay/n/n07-ref-nonstring.desc.json fixed OK claimed none, EthLib none
+DESCCHECK replay/n/n07-ref-nonstring.desc.json nfields OK 1
+DESCCHECK replay/n/n07-ref-nonstring.desc.json name[0] OK claimed (some L), term L
+DESCCHECK replay/n/n07-ref-nonstring.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n07-ref-nonstring.desc.json width[0] OK claimed 4, EthLib 4
+DESCCHECK replay/n/n07-ref-nonstring.desc.json variable[0] OK claimed true, EthLib true
+DESCCHECK replay/n/n07-ref-nonstring.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n07-ref-nonstring.desc.json kind[0] OK claimed list, EthLib list
+DESCCHECK replay/n/n07-ref-nonstring.desc.json limit[0] OK claimed (some 17), EthLib 17
+DESCCHECK replay/n/n07-ref-nonstring.desc.json elem[0] OK claimed (some 8), EthLib (some 8)
+DESCCHECK replay/n/n07-ref-nonstring.desc.json head OK claimed 4, EthLib 4
+DESCCHECK replay/n/n07-ref-nonstring.desc.json order OK claimed [0], EthLib [0]
+DESCCHECK replay/n/n07-ref-nonstring.desc.json probe-size OK serialized 4, claimed head 4 + default bodies = 4
+DESCCHECK replay/n/n07-ref-nonstring.desc.json probe-var[0] OK offset word at 0 = 4, expected 4
+DESCCHECK replay/n/n07-ref-nonstring.desc.json ref-claim FAIL table Fv1.luDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64, file (some (<not a string>))
+DESCCHECK replay/n/n07-ref-nonstring.desc.json ref FAIL SPEC compared with Fv1.luDesc (up to names)
+DESCCHECK replay/n/n07-ref-nonstring.desc.json go-names FAIL exact term with the checker's Go field names of ListU64
+DESCCHECK-FILE replay/n/n07-ref-nonstring.desc.json FAIL SPEC mutant fnv=11973645873555769711 ref-claim,ref,go-names
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json type OK type 'ListU64' (non-empty ASCII identifier)
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json parse OK 
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json wf OK 
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json fixed OK claimed none, EthLib none
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json nfields OK 1
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json name[0] OK claimed (some Items), term Items
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json width[0] OK claimed 4, EthLib 4
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json variable[0] OK claimed true, EthLib true
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json kind[0] OK claimed list, EthLib list
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json limit[0] OK claimed (some 4), EthLib 4
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json elem[0] OK claimed none, EthLib none
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json head OK claimed 4, EthLib 4
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json order OK claimed [0], EthLib [0]
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json probe-size OK serialized 4, claimed head 4 + default bodies = 4
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json probe-var[0] OK offset word at 0 = 4, expected 4
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json ref-claim FAIL table Fv1.luDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64, file (some Fv1.lcDesc)
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json ref FAIL SPEC compared with Fv1.luDesc (up to names)
+DESCCHECK replay/n/n08-wrong-body-right-key.desc.json go-names FAIL exact term with the checker's Go field names of ListU64
+DESCCHECK-FILE replay/n/n08-wrong-body-right-key.desc.json FAIL SPEC mutant fnv=12168888570367580293 ref-claim,ref,go-names
+DESCCHECK replay/n/n09-claims-status-none.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n09-claims-status-none.desc.json type OK type 'Scalars' (non-empty ASCII identifier)
+DESCCHECK replay/n/n09-claims-status-none.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/n/n09-claims-status-none.desc.json keys FAIL unknown keys [ref_status, spec, status]
+DESCCHECK replay/n/n09-claims-status-none.desc.json parse OK 
+DESCCHECK replay/n/n09-claims-status-none.desc.json wf OK 
+DESCCHECK replay/n/n09-claims-status-none.desc.json fixed OK claimed (some 18), EthLib (some 18)
+DESCCHECK replay/n/n09-claims-status-none.desc.json nfields OK 5
+DESCCHECK replay/n/n09-claims-status-none.desc.json name[0] OK claimed (some A), term A
+DESCCHECK replay/n/n09-claims-status-none.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n09-claims-status-none.desc.json width[0] OK claimed 1, EthLib 1
+DESCCHECK replay/n/n09-claims-status-none.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/n/n09-claims-status-none.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n09-claims-status-none.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n09-claims-status-none.desc.json name[1] OK claimed (some B), term B
+DESCCHECK replay/n/n09-claims-status-none.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/n/n09-claims-status-none.desc.json width[1] OK claimed 4, EthLib 4
+DESCCHECK replay/n/n09-claims-status-none.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/n/n09-claims-status-none.desc.json offset[1] OK claimed 1, EthLib 1
+DESCCHECK replay/n/n09-claims-status-none.desc.json kind[1] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n09-claims-status-none.desc.json name[2] OK claimed (some C), term C
+DESCCHECK replay/n/n09-claims-status-none.desc.json index[2] OK claimed (some 2), position 2
+DESCCHECK replay/n/n09-claims-status-none.desc.json width[2] OK claimed 4, EthLib 4
+DESCCHECK replay/n/n09-claims-status-none.desc.json variable[2] OK claimed false, EthLib false
+DESCCHECK replay/n/n09-claims-status-none.desc.json offset[2] OK claimed 5, EthLib 5
+DESCCHECK replay/n/n09-claims-status-none.desc.json kind[2] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n09-claims-status-none.desc.json name[3] OK claimed (some D), term D
+DESCCHECK replay/n/n09-claims-status-none.desc.json index[3] OK claimed (some 3), position 3
+DESCCHECK replay/n/n09-claims-status-none.desc.json width[3] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n09-claims-status-none.desc.json variable[3] OK claimed false, EthLib false
+DESCCHECK replay/n/n09-claims-status-none.desc.json offset[3] OK claimed 9, EthLib 9
+DESCCHECK replay/n/n09-claims-status-none.desc.json kind[3] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n09-claims-status-none.desc.json name[4] OK claimed (some E), term E
+DESCCHECK replay/n/n09-claims-status-none.desc.json index[4] OK claimed (some 4), position 4
+DESCCHECK replay/n/n09-claims-status-none.desc.json width[4] OK claimed 1, EthLib 1
+DESCCHECK replay/n/n09-claims-status-none.desc.json variable[4] OK claimed false, EthLib false
+DESCCHECK replay/n/n09-claims-status-none.desc.json offset[4] OK claimed 17, EthLib 17
+DESCCHECK replay/n/n09-claims-status-none.desc.json kind[4] OK claimed bool, EthLib bool
+DESCCHECK replay/n/n09-claims-status-none.desc.json head OK claimed 18, EthLib 18
+DESCCHECK replay/n/n09-claims-status-none.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/n/n09-claims-status-none.desc.json probe-size OK serialized 18, claimed head 18 + default bodies = 18
+DESCCHECK replay/n/n09-claims-status-none.desc.json probe-fix[0] OK changed bytes 0..0 (1), claimed [0,1)
+DESCCHECK replay/n/n09-claims-status-none.desc.json probe-fix[1] OK changed bytes 1..4 (4), claimed [1,5)
+DESCCHECK replay/n/n09-claims-status-none.desc.json probe-fix[2] OK changed bytes 5..8 (4), claimed [5,9)
+DESCCHECK replay/n/n09-claims-status-none.desc.json probe-fix[3] OK changed bytes 9..16 (8), claimed [9,17)
+DESCCHECK replay/n/n09-claims-status-none.desc.json probe-fix[4] OK changed bytes 17..17 (1), claimed [17,18)
+DESCCHECK replay/n/n09-claims-status-none.desc.json ref-claim FAIL table Fv1.scDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars, file none
+DESCCHECK replay/n/n09-claims-status-none.desc.json ref FAIL SPEC compared with Fv1.scDesc (up to names)
+DESCCHECK replay/n/n09-claims-status-none.desc.json go-names FAIL exact term with the checker's Go field names of Scalars
+DESCCHECK-FILE replay/n/n09-claims-status-none.desc.json FAIL SPEC mutant fnv=7722764334450451178 keys,ref-claim,ref,go-names
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json type OK type 'ListU64' (non-empty ASCII identifier)
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json parse OK 
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json wf OK 
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json fixed OK claimed none, EthLib none
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json nfields OK 1
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json name[0] OK claimed (some L), term L
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json width[0] OK claimed 4, EthLib 4
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json variable[0] OK claimed true, EthLib true
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json kind[0] OK claimed list, EthLib list
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json limit[0] OK claimed (some 17), EthLib 17
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json elem[0] OK claimed (some 8), EthLib (some 8)
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json head OK claimed 4, EthLib 4
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json order OK claimed [0], EthLib [0]
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json probe-size OK serialized 4, claimed head 4 + default bodies = 4
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json probe-var[0] OK offset word at 0 = 4, expected 4
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json ref-claim FAIL table Fv1.luDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64, file (some (Fv1.luDesc ))
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json ref FAIL SPEC compared with Fv1.luDesc (up to names)
+DESCCHECK replay/n/n10-ref-trailing-space.desc.json go-names FAIL exact term with the checker's Go field names of ListU64
+DESCCHECK-FILE replay/n/n10-ref-trailing-space.desc.json FAIL SPEC mutant fnv=7896710864538590085 ref-claim,ref,go-names
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json type OK type 'AttestationData' (non-empty ASCII identifier)
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm' (checker-owned list)
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json parse OK 
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json wf OK 
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json fixed OK claimed (some 128), EthLib (some 128)
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json nfields OK 5
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json name[0] OK claimed (some CommitteeIndex), term CommitteeIndex
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json width[0] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json name[1] OK claimed (some Slot), term Slot
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json width[1] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json offset[1] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json kind[1] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json name[2] OK claimed (some BeaconBlockRoot), term BeaconBlockRoot
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json index[2] OK claimed (some 2), position 2
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json width[2] OK claimed 32, EthLib 32
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json variable[2] OK claimed false, EthLib false
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json offset[2] OK claimed 16, EthLib 16
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json kind[2] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json length[2] OK claimed (some 32), EthLib 32
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json name[3] OK claimed (some Source), term Source
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json index[3] OK claimed (some 3), position 3
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json width[3] OK claimed 40, EthLib 40
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json variable[3] OK claimed false, EthLib false
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json offset[3] OK claimed 48, EthLib 48
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json kind[3] OK claimed container, EthLib container
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json name[4] OK claimed (some Target), term Target
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json index[4] OK claimed (some 4), position 4
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json width[4] OK claimed 40, EthLib 40
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json variable[4] OK claimed false, EthLib false
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json offset[4] OK claimed 88, EthLib 88
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json kind[4] OK claimed container, EthLib container
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json head OK claimed 128, EthLib 128
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json probe-size OK serialized 128, claimed head 128 + default bodies = 128
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json probe-fix[0] OK changed bytes 0..7 (8), claimed [0,8)
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json probe-fix[1] OK changed bytes 8..15 (8), claimed [8,16)
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json probe-fix[2] OK changed bytes 16..47 (32), claimed [16,48)
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json probe-fix[3] OK changed bytes 48..87 (40), claimed [48,88)
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json probe-fix[4] OK changed bytes 88..127 (40), claimed [88,128)
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json ref-claim OK table Fv1.adDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.AttestationData, file (some Fv1.adDesc)
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json ref OK SPEC compared with Fv1.adDesc (up to names)
+DESCCHECK replay/n/n11-ad-swap-slot-index.desc.json go-names FAIL exact term with the checker's Go field names of AttestationData
+DESCCHECK-FILE replay/n/n11-ad-swap-slot-index.desc.json FAIL SPEC mutant fnv=17644722484608424474 go-names
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json type OK type 'AttestationData' (non-empty ASCII identifier)
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm' (checker-owned list)
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json parse OK 
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json wf OK 
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json fixed OK claimed (some 128), EthLib (some 128)
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json nfields OK 5
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json name[0] OK claimed (some Slot), term Slot
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json width[0] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json name[1] OK claimed (some CommitteeIndex), term CommitteeIndex
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json width[1] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json offset[1] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json kind[1] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json name[2] OK claimed (some BeaconBlockRoot), term BeaconBlockRoot
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json index[2] OK claimed (some 2), position 2
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json width[2] OK claimed 32, EthLib 32
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json variable[2] OK claimed false, EthLib false
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json offset[2] OK claimed 16, EthLib 16
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json kind[2] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json length[2] OK claimed (some 32), EthLib 32
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json name[3] OK claimed (some Target), term Target
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json index[3] OK claimed (some 3), position 3
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json width[3] OK claimed 40, EthLib 40
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json variable[3] OK claimed false, EthLib false
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json offset[3] OK claimed 48, EthLib 48
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json kind[3] OK claimed container, EthLib container
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json name[4] OK claimed (some Source), term Source
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json index[4] OK claimed (some 4), position 4
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json width[4] OK claimed 40, EthLib 40
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json variable[4] OK claimed false, EthLib false
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json offset[4] OK claimed 88, EthLib 88
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json kind[4] OK claimed container, EthLib container
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json head OK claimed 128, EthLib 128
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json probe-size OK serialized 128, claimed head 128 + default bodies = 128
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json probe-fix[0] OK changed bytes 0..7 (8), claimed [0,8)
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json probe-fix[1] OK changed bytes 8..15 (8), claimed [8,16)
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json probe-fix[2] OK changed bytes 16..47 (32), claimed [16,48)
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json probe-fix[3] OK changed bytes 48..87 (40), claimed [48,88)
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json probe-fix[4] OK changed bytes 88..127 (40), claimed [88,128)
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json ref-claim OK table Fv1.adDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.AttestationData, file (some Fv1.adDesc)
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json ref OK SPEC compared with Fv1.adDesc (up to names)
+DESCCHECK replay/n/n12-ad-swap-source-target.desc.json go-names FAIL exact term with the checker's Go field names of AttestationData
+DESCCHECK-FILE replay/n/n12-ad-swap-source-target.desc.json FAIL SPEC mutant fnv=13511633877294671460 go-names
+DESCCHECK replay/n/n13-dup-field-name.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n13-dup-field-name.desc.json type OK type 'Checkpoint' (non-empty ASCII identifier)
+DESCCHECK replay/n/n13-dup-field-name.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm' (checker-owned list)
+DESCCHECK replay/n/n13-dup-field-name.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n13-dup-field-name.desc.json parse OK 
+DESCCHECK replay/n/n13-dup-field-name.desc.json wf FAIL EthLib.Serialization.Ssz.Err.badDeclaration
+DESCCHECK replay/n/n13-dup-field-name.desc.json fixed OK claimed (some 40), EthLib (some 40)
+DESCCHECK replay/n/n13-dup-field-name.desc.json nfields OK 2
+DESCCHECK replay/n/n13-dup-field-name.desc.json name[0] OK claimed (some Epoch), term Epoch
+DESCCHECK replay/n/n13-dup-field-name.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n13-dup-field-name.desc.json width[0] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n13-dup-field-name.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/n/n13-dup-field-name.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n13-dup-field-name.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n13-dup-field-name.desc.json name[1] OK claimed (some Epoch), term Epoch
+DESCCHECK replay/n/n13-dup-field-name.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/n/n13-dup-field-name.desc.json width[1] OK claimed 32, EthLib 32
+DESCCHECK replay/n/n13-dup-field-name.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/n/n13-dup-field-name.desc.json offset[1] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n13-dup-field-name.desc.json kind[1] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/n/n13-dup-field-name.desc.json length[1] OK claimed (some 32), EthLib 32
+DESCCHECK replay/n/n13-dup-field-name.desc.json head OK claimed 40, EthLib 40
+DESCCHECK replay/n/n13-dup-field-name.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/n/n13-dup-field-name.desc.json probe-size OK serialized 40, claimed head 40 + default bodies = 40
+DESCCHECK replay/n/n13-dup-field-name.desc.json probe-fix[0] OK changed bytes 0..7 (8), claimed [0,8)
+DESCCHECK replay/n/n13-dup-field-name.desc.json probe-fix[1] OK changed bytes 8..39 (32), claimed [8,40)
+DESCCHECK replay/n/n13-dup-field-name.desc.json ref-claim OK table Fv1.cpDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Checkpoint, file (some Fv1.cpDesc)
+DESCCHECK replay/n/n13-dup-field-name.desc.json ref OK SPEC compared with Fv1.cpDesc (up to names)
+DESCCHECK replay/n/n13-dup-field-name.desc.json go-names FAIL exact term with the checker's Go field names of Checkpoint
+DESCCHECK-FILE replay/n/n13-dup-field-name.desc.json FAIL SPEC mutant fnv=15714943058206779893 wf,go-names
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json type OK type 'Checkpoint' (non-empty ASCII identifier)
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm' (checker-owned list)
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json parse OK 
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json wf OK 
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json fixed OK claimed (some 40), EthLib (some 40)
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json nfields OK 2
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json name[0] OK claimed (some Root), term Root
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json width[0] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json name[1] OK claimed (some Epoch), term Epoch
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json width[1] OK claimed 32, EthLib 32
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json offset[1] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json kind[1] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json length[1] OK claimed (some 32), EthLib 32
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json head OK claimed 40, EthLib 40
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json probe-size OK serialized 40, claimed head 40 + default bodies = 40
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json probe-fix[0] OK changed bytes 0..7 (8), claimed [0,8)
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json probe-fix[1] OK changed bytes 8..39 (32), claimed [8,40)
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json ref-claim OK table Fv1.cpDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Checkpoint, file (some Fv1.cpDesc)
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json ref OK SPEC compared with Fv1.cpDesc (up to names)
+DESCCHECK replay/n/n14-cp-names-crossed.desc.json go-names FAIL exact term with the checker's Go field names of Checkpoint
+DESCCHECK-FILE replay/n/n14-cp-names-crossed.desc.json FAIL SPEC mutant fnv=15883856136515581995 go-names
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json type OK type 'FixedVec' (non-empty ASCII identifier)
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json parse OK 
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json wf OK 
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json fixed OK claimed (some 64), EthLib (some 64)
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json nfields OK 2
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json name[0] OK claimed (some R), term R
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json width[0] OK claimed 32, EthLib 32
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json kind[0] OK claimed vector, EthLib vector
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json length[0] OK claimed (some 32), EthLib 32
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json elem[0] OK claimed (some 1), EthLib (some 1)
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json name[1] OK claimed (some W), term W
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json width[1] OK claimed 32, EthLib 32
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json offset[1] OK claimed 32, EthLib 32
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json kind[1] OK claimed vector, EthLib vector
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json length[1] OK claimed (some 4), EthLib 4
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json elem[1] OK claimed (some 8), EthLib (some 8)
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json head OK claimed 64, EthLib 64
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json probe-size OK serialized 64, claimed head 64 + default bodies = 64
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json probe-fix[0] OK changed bytes 0..31 (32), claimed [0,32)
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json probe-fix[1] OK changed bytes 32..63 (32), claimed [32,64)
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json ref-claim OK table Fv1.fvDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.FixedVec, file (some Fv1.fvDesc)
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json ref FAIL SPEC compared with Fv1.fvDesc (up to names)
+DESCCHECK replay/n/n15-norm-bytevec-as-vector.desc.json go-names FAIL exact term with the checker's Go field names of FixedVec
+DESCCHECK-FILE replay/n/n15-norm-bytevec-as-vector.desc.json FAIL SPEC mutant fnv=1825347711706815261 ref,go-names
+DESCCHECK replay/n/n16-norm-bitvec4-as-uint8.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n16-norm-bitvec4-as-uint8.desc.json type OK type 'BitVec' (non-empty ASCII identifier)
+DESCCHECK replay/n/n16-norm-bitvec4-as-uint8.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/n/n16-norm-bitvec4-as-uint8.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n16-norm-bitvec4-as-uint8.desc.json parse OK 
+DESCCHECK replay/n/n16-norm-bitvec4-as-uint8.desc.json wf OK 
+DESCCHECK replay/n/n16-norm-bitvec4-as-uint8.desc.json fixed OK claimed (some 1), EthLib (some 1)
+DESCCHECK replay/n/n16-norm-bitvec4-as-uint8.desc.json nfields OK 1
+DESCCHECK replay/n/n16-norm-bitvec4-as-uint8.desc.json name[0] OK claimed (some J), term J
+DESCCHECK replay/n/n16-norm-bitvec4-as-uint8.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n16-norm-bitvec4-as-uint8.desc.json width[0] OK claimed 1, EthLib 1
+DESCCHECK replay/n/n16-norm-bitvec4-as-uint8.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/n/n16-norm-bitvec4-as-uint8.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n16-norm-bitvec4-as-uint8.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n16-norm-bitvec4-as-uint8.desc.json head OK claimed 1, EthLib 1
+DESCCHECK replay/n/n16-norm-bitvec4-as-uint8.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/n/n16-norm-bitvec4-as-uint8.desc.json probe-size OK serialized 1, claimed head 1 + default bodies = 1
+DESCCHECK replay/n/n16-norm-bitvec4-as-uint8.desc.json probe-fix[0] OK changed bytes 0..0 (1), claimed [0,1)
+DESCCHECK replay/n/n16-norm-bitvec4-as-uint8.desc.json ref-claim OK table Fv1.bvDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.BitVec, file (some Fv1.bvDesc)
+DESCCHECK replay/n/n16-norm-bitvec4-as-uint8.desc.json ref FAIL SPEC compared with Fv1.bvDesc (up to names)
+DESCCHECK replay/n/n16-norm-bitvec4-as-uint8.desc.json go-names FAIL exact term with the checker's Go field names of BitVec
+DESCCHECK-FILE replay/n/n16-norm-bitvec4-as-uint8.desc.json FAIL SPEC mutant fnv=4580216116390432679 ref,go-names
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json type OK type 'Nested' (non-empty ASCII identifier)
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json parse OK 
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json wf OK 
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json fixed OK claimed none, EthLib none
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json nfields OK 3
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json name[0] OK claimed (some A), term A
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json width[0] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json name[1] OK claimed (some S), term S
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json width[1] OK claimed 16, EthLib 16
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json offset[1] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json kind[1] OK claimed container, EthLib container
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json name[2] OK claimed (some L), term L
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json index[2] OK claimed (some 2), position 2
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json width[2] OK claimed 4, EthLib 4
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json variable[2] OK claimed true, EthLib true
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json offset[2] OK claimed 24, EthLib 24
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json kind[2] OK claimed container, EthLib container
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json head OK claimed 28, EthLib 28
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json order OK claimed [2], EthLib [2]
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json probe-size OK serialized 32, claimed head 28 + default bodies = 32
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json probe-fix[0] OK changed bytes 0..7 (8), claimed [0,8)
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json probe-fix[1] OK changed bytes 8..23 (16), claimed [8,24)
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json probe-var[2] OK offset word at 24 = 28, expected 28
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json ref-claim OK table Fv1.neDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Nested, file (some Fv1.neDesc)
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json ref FAIL SPEC compared with Fv1.neDesc (up to names)
+DESCCHECK replay/n/n17-nested-inner-limit.desc.json go-names FAIL exact term with the checker's Go field names of Nested
+DESCCHECK-FILE replay/n/n17-nested-inner-limit.desc.json FAIL SPEC mutant fnv=6703779436897155596 ref,go-names
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json type OK type 'Scalars' (non-empty ASCII identifier)
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json parse OK 
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json wf OK 
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json fixed OK claimed (some 17), EthLib (some 17)
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json nfields OK 6
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json name[0] OK claimed (some A), term A
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json width[0] OK claimed 1, EthLib 1
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json name[1] OK claimed (some B), term B
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json width[1] OK claimed 2, EthLib 2
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json offset[1] OK claimed 1, EthLib 1
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json kind[1] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json name[2] OK claimed (some C), term C
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json index[2] OK claimed (some 2), position 2
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json width[2] OK claimed 4, EthLib 4
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json variable[2] OK claimed false, EthLib false
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json offset[2] OK claimed 3, EthLib 3
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json kind[2] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json name[3] OK claimed (some D), term D
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json index[3] OK claimed (some 3), position 3
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json width[3] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json variable[3] OK claimed false, EthLib false
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json offset[3] OK claimed 7, EthLib 7
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json kind[3] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json name[4] OK claimed (some E), term E
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json index[4] OK claimed (some 4), position 4
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json width[4] OK claimed 1, EthLib 1
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json variable[4] OK claimed false, EthLib false
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json offset[4] OK claimed 15, EthLib 15
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json kind[4] OK claimed bool, EthLib bool
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json name[5] OK claimed (some Z), term Z
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json index[5] OK claimed (some 5), position 5
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json width[5] OK claimed 1, EthLib 1
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json variable[5] OK claimed false, EthLib false
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json offset[5] OK claimed 16, EthLib 16
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json kind[5] OK claimed bool, EthLib bool
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json head OK claimed 17, EthLib 17
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json probe-size OK serialized 17, claimed head 17 + default bodies = 17
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json probe-fix[0] OK changed bytes 0..0 (1), claimed [0,1)
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json probe-fix[1] OK changed bytes 1..2 (2), claimed [1,3)
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json probe-fix[2] OK changed bytes 3..6 (4), claimed [3,7)
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json probe-fix[3] OK changed bytes 7..14 (8), claimed [7,15)
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json probe-fix[4] OK changed bytes 15..15 (1), claimed [15,16)
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json probe-fix[5] OK changed bytes 16..16 (1), claimed [16,17)
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json ref-claim OK table Fv1.scDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars, file (some Fv1.scDesc)
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json ref FAIL SPEC compared with Fv1.scDesc (up to names)
+DESCCHECK replay/n/n18-extra-trailing-field.desc.json go-names FAIL exact term with the checker's Go field names of Scalars
+DESCCHECK-FILE replay/n/n18-extra-trailing-field.desc.json FAIL SPEC mutant fnv=3499357350686670555 ref,go-names
+DESCCHECK replay/n/n19-num-float.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n19-num-float.desc.json type OK type 'ListU64' (non-empty ASCII identifier)
+DESCCHECK replay/n/n19-num-float.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/n/n19-num-float.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n19-num-float.desc.json parse FAIL Natural number expected
+DESCCHECK-FILE replay/n/n19-num-float.desc.json FAIL SPEC mutant fnv=16241961388654223835 parse
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json type OK type 'ListU64' (non-empty ASCII identifier)
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json parse OK 
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json wf OK 
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json fixed OK claimed none, EthLib none
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json nfields OK 1
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json name[0] OK claimed (some L), term L
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json width[0] OK claimed 4, EthLib 4
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json variable[0] OK claimed true, EthLib true
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json kind[0] OK claimed list, EthLib list
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json limit[0] OK claimed (some 16), EthLib 16
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json elem[0] OK claimed (some 8), EthLib (some 8)
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json head OK claimed 4, EthLib 4
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json order OK claimed [0], EthLib [0]
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json probe-size OK serialized 4, claimed head 4 + default bodies = 4
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json probe-var[0] OK offset word at 0 = 4, expected 4
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json ref-claim OK table Fv1.luDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64, file (some Fv1.luDesc)
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json ref OK SPEC compared with Fv1.luDesc (up to names)
+DESCCHECK replay/n/n20-dupkey-first-wrong.desc.json go-names OK exact term with the checker's Go field names of ListU64
+DESCCHECK-FILE replay/n/n20-dupkey-first-wrong.desc.json PASS SPEC mutant fnv=2047457024228241443
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json type OK type 'ListU64' (non-empty ASCII identifier)
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json parse OK 
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json wf OK 
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json fixed OK claimed none, EthLib none
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json nfields OK 1
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json name[0] OK claimed (some L), term L
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json width[0] OK claimed 4, EthLib 4
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json variable[0] OK claimed true, EthLib true
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json kind[0] OK claimed list, EthLib list
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json limit[0] OK claimed (some 17), EthLib 17
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json elem[0] OK claimed (some 8), EthLib (some 8)
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json head OK claimed 4, EthLib 4
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json order OK claimed [0], EthLib [0]
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json probe-size OK serialized 4, claimed head 4 + default bodies = 4
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json probe-var[0] OK offset word at 0 = 4, expected 4
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json ref-claim OK table Fv1.luDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64, file (some Fv1.luDesc)
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json ref FAIL SPEC compared with Fv1.luDesc (up to names)
+DESCCHECK replay/n/n21-dupkey-last-wrong.desc.json go-names FAIL exact term with the checker's Go field names of ListU64
+DESCCHECK-FILE replay/n/n21-dupkey-last-wrong.desc.json FAIL SPEC mutant fnv=12214800500661230231 ref,go-names
+DESCCHECK replay/n/n22-top-array.desc.json schema FAIL schema ''
+DESCCHECK replay/n/n22-top-array.desc.json type FAIL type '' (non-empty ASCII identifier)
+DESCCHECK replay/n/n22-top-array.desc.json package FAIL package '' (checker-owned list)
+DESCCHECK replay/n/n22-top-array.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n22-top-array.desc.json parse FAIL object expected
+DESCCHECK-FILE replay/n/n22-top-array.desc.json FAIL NONE mutant fnv=2165005775532425109 schema,type,package,parse
+DESCCHECK replay/n/n23-ssz-string.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n23-ssz-string.desc.json type OK type 'ListU64' (non-empty ASCII identifier)
+DESCCHECK replay/n/n23-ssz-string.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/n/n23-ssz-string.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n23-ssz-string.desc.json parse FAIL String expected
+DESCCHECK-FILE replay/n/n23-ssz-string.desc.json FAIL SPEC mutant fnv=3019379279416348069 parse
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json type OK type 'Checkpoint' (non-empty ASCII identifier)
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm' (checker-owned list)
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json parse OK 
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json wf OK 
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json fixed OK claimed (some 40), EthLib (some 40)
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json nfields OK 2
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json name[0] FAIL claimed none, term Epoch
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json index[0] FAIL claimed none, position 0
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json width[0] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json name[1] FAIL claimed none, term Root
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json index[1] FAIL claimed none, position 1
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json width[1] OK claimed 32, EthLib 32
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json offset[1] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json kind[1] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json length[1] OK claimed (some 32), EthLib 32
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json head OK claimed 40, EthLib 40
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json probe-size OK serialized 40, claimed head 40 + default bodies = 40
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json probe-fix[0] OK changed bytes 0..7 (8), claimed [0,8)
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json probe-fix[1] OK changed bytes 8..39 (32), claimed [8,40)
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json ref-claim OK table Fv1.cpDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Checkpoint, file (some Fv1.cpDesc)
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json ref OK SPEC compared with Fv1.cpDesc (up to names)
+DESCCHECK replay/n/n24-claims-no-name-index.desc.json go-names OK exact term with the checker's Go field names of Checkpoint
+DESCCHECK-FILE replay/n/n24-claims-no-name-index.desc.json FAIL SPEC mutant fnv=7598401299631693435 name[0],index[0],name[1],index[1]
+DESCCHECK replay/n/n25-index-string.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n25-index-string.desc.json type OK type 'Checkpoint' (non-empty ASCII identifier)
+DESCCHECK replay/n/n25-index-string.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm' (checker-owned list)
+DESCCHECK replay/n/n25-index-string.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n25-index-string.desc.json parse OK 
+DESCCHECK replay/n/n25-index-string.desc.json wf OK 
+DESCCHECK replay/n/n25-index-string.desc.json fixed OK claimed (some 40), EthLib (some 40)
+DESCCHECK replay/n/n25-index-string.desc.json nfields OK 2
+DESCCHECK replay/n/n25-index-string.desc.json name[0] OK claimed (some Epoch), term Epoch
+DESCCHECK replay/n/n25-index-string.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n25-index-string.desc.json width[0] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n25-index-string.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/n/n25-index-string.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n25-index-string.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n25-index-string.desc.json name[1] OK claimed (some Root), term Root
+DESCCHECK replay/n/n25-index-string.desc.json index[1] FAIL claimed none, position 1
+DESCCHECK replay/n/n25-index-string.desc.json width[1] OK claimed 32, EthLib 32
+DESCCHECK replay/n/n25-index-string.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/n/n25-index-string.desc.json offset[1] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n25-index-string.desc.json kind[1] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/n/n25-index-string.desc.json length[1] OK claimed (some 32), EthLib 32
+DESCCHECK replay/n/n25-index-string.desc.json head OK claimed 40, EthLib 40
+DESCCHECK replay/n/n25-index-string.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/n/n25-index-string.desc.json probe-size OK serialized 40, claimed head 40 + default bodies = 40
+DESCCHECK replay/n/n25-index-string.desc.json probe-fix[0] OK changed bytes 0..7 (8), claimed [0,8)
+DESCCHECK replay/n/n25-index-string.desc.json probe-fix[1] OK changed bytes 8..39 (32), claimed [8,40)
+DESCCHECK replay/n/n25-index-string.desc.json ref-claim OK table Fv1.cpDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Checkpoint, file (some Fv1.cpDesc)
+DESCCHECK replay/n/n25-index-string.desc.json ref OK SPEC compared with Fv1.cpDesc (up to names)
+DESCCHECK replay/n/n25-index-string.desc.json go-names OK exact term with the checker's Go field names of Checkpoint
+DESCCHECK-FILE replay/n/n25-index-string.desc.json FAIL SPEC mutant fnv=9579664384157723017 index[1]
+DESCCHECK replay/n/n26-claims-short.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n26-claims-short.desc.json type OK type 'Checkpoint' (non-empty ASCII identifier)
+DESCCHECK replay/n/n26-claims-short.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm' (checker-owned list)
+DESCCHECK replay/n/n26-claims-short.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n26-claims-short.desc.json parse OK 
+DESCCHECK replay/n/n26-claims-short.desc.json wf OK 
+DESCCHECK replay/n/n26-claims-short.desc.json fixed OK claimed (some 40), EthLib (some 40)
+DESCCHECK replay/n/n26-claims-short.desc.json nfields FAIL claimed 1, EthLib 2
+DESCCHECK replay/n/n26-claims-short.desc.json name[0] OK claimed (some Epoch), term Epoch
+DESCCHECK replay/n/n26-claims-short.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n26-claims-short.desc.json width[0] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n26-claims-short.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/n/n26-claims-short.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n26-claims-short.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n26-claims-short.desc.json head OK claimed 40, EthLib 40
+DESCCHECK replay/n/n26-claims-short.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/n/n26-claims-short.desc.json probe-size OK serialized 40, claimed head 40 + default bodies = 40
+DESCCHECK replay/n/n26-claims-short.desc.json probe-fix[0] OK changed bytes 0..7 (8), claimed [0,8)
+DESCCHECK replay/n/n26-claims-short.desc.json ref-claim OK table Fv1.cpDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Checkpoint, file (some Fv1.cpDesc)
+DESCCHECK replay/n/n26-claims-short.desc.json ref OK SPEC compared with Fv1.cpDesc (up to names)
+DESCCHECK replay/n/n26-claims-short.desc.json go-names OK exact term with the checker's Go field names of Checkpoint
+DESCCHECK-FILE replay/n/n26-claims-short.desc.json FAIL SPEC mutant fnv=1284773103399563152 nfields
+DESCCHECK replay/n/n27-empty-file.desc.json json FAIL offset 0: unexpected end of input
+DESCCHECK-FILE replay/n/n27-empty-file.desc.json FAIL NONE mutant fnv=14695981039346656037 json
+DESCCHECK replay/n/n28-names-short.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n28-names-short.desc.json type OK type 'Checkpoint' (non-empty ASCII identifier)
+DESCCHECK replay/n/n28-names-short.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm' (checker-owned list)
+DESCCHECK replay/n/n28-names-short.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n28-names-short.desc.json parse FAIL names and fields differ in length
+DESCCHECK-FILE replay/n/n28-names-short.desc.json FAIL SPEC mutant fnv=1012756387566570855 parse
+DESCCHECK replay/n/n29-negative-width.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n29-negative-width.desc.json type OK type 'Checkpoint' (non-empty ASCII identifier)
+DESCCHECK replay/n/n29-negative-width.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm' (checker-owned list)
+DESCCHECK replay/n/n29-negative-width.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n29-negative-width.desc.json parse OK 
+DESCCHECK replay/n/n29-negative-width.desc.json wf OK 
+DESCCHECK replay/n/n29-negative-width.desc.json fixed OK claimed (some 40), EthLib (some 40)
+DESCCHECK replay/n/n29-negative-width.desc.json fields FAIL Natural number expected
+DESCCHECK replay/n/n29-negative-width.desc.json ref-claim OK table Fv1.cpDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Checkpoint, file (some Fv1.cpDesc)
+DESCCHECK replay/n/n29-negative-width.desc.json ref OK SPEC compared with Fv1.cpDesc (up to names)
+DESCCHECK replay/n/n29-negative-width.desc.json go-names OK exact term with the checker's Go field names of Checkpoint
+DESCCHECK-FILE replay/n/n29-negative-width.desc.json FAIL SPEC mutant fnv=15808988797548279934 fields
+DESCCHECK replay/n/n30-term-only-limit.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n30-term-only-limit.desc.json type OK type 'ListU64' (non-empty ASCII identifier)
+DESCCHECK replay/n/n30-term-only-limit.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target' (checker-owned list)
+DESCCHECK replay/n/n30-term-only-limit.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n30-term-only-limit.desc.json parse OK 
+DESCCHECK replay/n/n30-term-only-limit.desc.json wf OK 
+DESCCHECK replay/n/n30-term-only-limit.desc.json fixed OK claimed none, EthLib none
+DESCCHECK replay/n/n30-term-only-limit.desc.json nfields OK 1
+DESCCHECK replay/n/n30-term-only-limit.desc.json name[0] OK claimed (some L), term L
+DESCCHECK replay/n/n30-term-only-limit.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n30-term-only-limit.desc.json width[0] OK claimed 4, EthLib 4
+DESCCHECK replay/n/n30-term-only-limit.desc.json variable[0] OK claimed true, EthLib true
+DESCCHECK replay/n/n30-term-only-limit.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n30-term-only-limit.desc.json kind[0] OK claimed list, EthLib list
+DESCCHECK replay/n/n30-term-only-limit.desc.json limit[0] FAIL claimed (some 16), EthLib 17
+DESCCHECK replay/n/n30-term-only-limit.desc.json elem[0] OK claimed (some 8), EthLib (some 8)
+DESCCHECK replay/n/n30-term-only-limit.desc.json head OK claimed 4, EthLib 4
+DESCCHECK replay/n/n30-term-only-limit.desc.json order OK claimed [0], EthLib [0]
+DESCCHECK replay/n/n30-term-only-limit.desc.json probe-size OK serialized 4, claimed head 4 + default bodies = 4
+DESCCHECK replay/n/n30-term-only-limit.desc.json probe-var[0] OK offset word at 0 = 4, expected 4
+DESCCHECK replay/n/n30-term-only-limit.desc.json ref-claim OK table Fv1.luDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64, file (some Fv1.luDesc)
+DESCCHECK replay/n/n30-term-only-limit.desc.json ref FAIL SPEC compared with Fv1.luDesc (up to names)
+DESCCHECK replay/n/n30-term-only-limit.desc.json go-names FAIL exact term with the checker's Go field names of ListU64
+DESCCHECK-FILE replay/n/n30-term-only-limit.desc.json FAIL SPEC mutant fnv=5390276611520795652 limit[0],ref,go-names
+DESCCHECK replay/n/n31-term-number-string.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n31-term-number-string.desc.json type OK type 'Checkpoint' (non-empty ASCII identifier)
+DESCCHECK replay/n/n31-term-number-string.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm' (checker-owned list)
+DESCCHECK replay/n/n31-term-number-string.desc.json keys OK unknown keys []
+DESCCHECK replay/n/n31-term-number-string.desc.json parse FAIL Natural number expected
+DESCCHECK-FILE replay/n/n31-term-number-string.desc.json FAIL SPEC mutant fnv=3556461471998434423 parse
+DESCCHECK replay/n/n32-unknown-keys.desc.json schema OK schema 'fvphase1c.desc/1'
+DESCCHECK replay/n/n32-unknown-keys.desc.json type OK type 'Checkpoint' (non-empty ASCII identifier)
+DESCCHECK replay/n/n32-unknown-keys.desc.json package OK package 'github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm' (checker-owned list)
+DESCCHECK replay/n/n32-unknown-keys.desc.json keys FAIL unknown keys [bogus_claim, fields[0].callee, ssz.fields[0].extra]
+DESCCHECK replay/n/n32-unknown-keys.desc.json parse OK 
+DESCCHECK replay/n/n32-unknown-keys.desc.json wf OK 
+DESCCHECK replay/n/n32-unknown-keys.desc.json fixed OK claimed (some 40), EthLib (some 40)
+DESCCHECK replay/n/n32-unknown-keys.desc.json nfields OK 2
+DESCCHECK replay/n/n32-unknown-keys.desc.json name[0] OK claimed (some Epoch), term Epoch
+DESCCHECK replay/n/n32-unknown-keys.desc.json index[0] OK claimed (some 0), position 0
+DESCCHECK replay/n/n32-unknown-keys.desc.json width[0] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n32-unknown-keys.desc.json variable[0] OK claimed false, EthLib false
+DESCCHECK replay/n/n32-unknown-keys.desc.json offset[0] OK claimed 0, EthLib 0
+DESCCHECK replay/n/n32-unknown-keys.desc.json kind[0] OK claimed uint, EthLib uint
+DESCCHECK replay/n/n32-unknown-keys.desc.json name[1] OK claimed (some Root), term Root
+DESCCHECK replay/n/n32-unknown-keys.desc.json index[1] OK claimed (some 1), position 1
+DESCCHECK replay/n/n32-unknown-keys.desc.json width[1] OK claimed 32, EthLib 32
+DESCCHECK replay/n/n32-unknown-keys.desc.json variable[1] OK claimed false, EthLib false
+DESCCHECK replay/n/n32-unknown-keys.desc.json offset[1] OK claimed 8, EthLib 8
+DESCCHECK replay/n/n32-unknown-keys.desc.json kind[1] OK claimed byteVector, EthLib byteVector
+DESCCHECK replay/n/n32-unknown-keys.desc.json length[1] OK claimed (some 32), EthLib 32
+DESCCHECK replay/n/n32-unknown-keys.desc.json head OK claimed 40, EthLib 40
+DESCCHECK replay/n/n32-unknown-keys.desc.json order OK claimed [], EthLib []
+DESCCHECK replay/n/n32-unknown-keys.desc.json probe-size OK serialized 40, claimed head 40 + default bodies = 40
+DESCCHECK replay/n/n32-unknown-keys.desc.json probe-fix[0] OK changed bytes 0..7 (8), claimed [0,8)
+DESCCHECK replay/n/n32-unknown-keys.desc.json probe-fix[1] OK changed bytes 8..39 (32), claimed [8,40)
+DESCCHECK replay/n/n32-unknown-keys.desc.json ref-claim OK table Fv1.cpDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Checkpoint, file (some Fv1.cpDesc)
+DESCCHECK replay/n/n32-unknown-keys.desc.json ref OK SPEC compared with Fv1.cpDesc (up to names)
+DESCCHECK replay/n/n32-unknown-keys.desc.json go-names OK exact term with the checker's Go field names of Checkpoint
+DESCCHECK-FILE replay/n/n32-unknown-keys.desc.json FAIL SPEC mutant fnv=12843775124814499435 keys
+DESCCHECK-DONE mutants pass 7 fail 45 spec 37 none 15
+DESCCHECK-TABLE OK self=true coverage=true originals_failed=0

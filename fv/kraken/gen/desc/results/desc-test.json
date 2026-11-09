@@ -1,24 +1,38 @@
 {
- "schema": "fvphase1c.desc-test/1",
+ "schema": "fvphase1c.desc-test/2",
  "summary": {
   "originals": 144,
   "originals_pass": 144,
   "originals_spec_compared": 9,
-  "originals_spec_compared_pass": 9,
   "originals_consistency_only": 135,
-  "originals_consistency_only_pass": 135,
-  "known_pass_mutants": 6,
-  "known_pass_as_expected": 6,
-  "not_applicable": [
-   "r9-elem-variable",
-   "r10-callee"
+  "coverage_9_of_9_pass_spec": true,
+  "main_checker_rc": "0",
+  "controls": 37,
+  "controls_as_expected": 37,
+  "known_pass": 5,
+  "known_pass_as_expected": 5,
+  "scenarios": 7,
+  "scenarios_as_expected": 7,
+  "replay": 52,
+  "replay_fail": 45,
+  "replay_pass": 7,
+  "replay_pass_ids": [
+   "r3-prysm-bool-uint8",
+   "r4-prysm-bitvec-505",
+   "r5-prysm-limit",
+   "r6-prysm-field-swap",
+   "r17-prysm-inner-kind",
+   "n04-esc-pkg-prysm",
+   "n20-dupkey-first-wrong"
   ],
-  "mutants": 19,
-  "mutants_as_expected": 19,
+  "replay_hand_type_wrong_desc_passing_per_file": [],
   "unexpected": 0,
-  "probe_skipped_files": 9,
-  "done_line": "DESCCHECK-DONE 150 19 25 144",
-  "producer_skipped": []
+  "producer_skipped": [],
+  "done_lines": [
+   "DESCCHECK-DONE originals pass 144 fail 0 spec 9 none 135",
+   "DESCCHECK-DONE mutants pass 5 fail 37 spec 26 none 16"
+  ],
+  "probe_skipped_files": 9
  },
  "rows": [
   {
@@ -26,7 +40,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "SPEC",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -34,7 +47,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "SPEC",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -42,7 +54,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "SPEC",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -50,7 +61,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "SPEC",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -58,7 +68,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "SPEC",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -66,7 +75,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "SPEC",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -74,7 +82,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "SPEC",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -82,7 +89,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "SPEC",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -90,7 +96,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "SPEC",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -98,7 +103,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -106,7 +110,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -114,7 +117,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -122,7 +124,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -130,7 +131,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -138,7 +138,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -146,7 +145,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -154,7 +152,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -162,7 +159,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -170,7 +166,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -178,7 +173,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -186,7 +180,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -194,7 +187,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -202,7 +194,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -210,7 +201,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -218,7 +208,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -226,7 +215,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -234,7 +222,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -242,7 +229,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -250,7 +236,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -258,7 +243,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -266,7 +250,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -274,7 +257,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -282,7 +264,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -290,7 +271,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -298,7 +278,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -306,7 +285,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -314,7 +292,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -322,7 +299,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -330,7 +306,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -338,7 +313,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -346,7 +320,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -354,7 +327,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -362,7 +334,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -370,7 +341,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -378,7 +348,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -386,7 +355,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -394,7 +362,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -402,7 +369,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -410,7 +376,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -418,7 +383,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -426,7 +390,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -434,7 +397,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -442,7 +404,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -450,7 +411,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -458,7 +418,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -466,7 +425,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -474,7 +432,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -482,7 +439,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -490,7 +446,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -498,7 +453,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -506,7 +460,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -514,7 +467,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -522,7 +474,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -530,7 +481,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -538,7 +488,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -546,7 +495,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -554,7 +502,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -562,7 +509,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -570,7 +516,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -578,7 +523,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -586,7 +530,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -594,7 +537,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -602,7 +544,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -610,7 +551,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -618,7 +558,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -626,7 +565,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -634,7 +572,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -642,7 +579,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -650,7 +586,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -658,7 +593,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -666,7 +600,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -674,7 +607,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -682,7 +614,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -690,7 +621,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -698,7 +628,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -706,7 +635,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -714,7 +642,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -722,7 +649,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -730,7 +656,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -738,7 +663,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -746,7 +670,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -754,7 +677,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -762,7 +684,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -770,7 +691,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -778,7 +698,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -786,7 +705,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -794,7 +712,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -802,7 +719,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -810,7 +726,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -818,7 +733,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -826,7 +740,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -834,7 +747,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -842,7 +754,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -850,7 +761,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -858,7 +768,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -866,7 +775,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -874,7 +782,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -882,7 +789,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -890,7 +796,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -898,7 +803,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -906,7 +810,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -914,7 +817,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -922,7 +824,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -930,7 +831,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -938,7 +838,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -946,7 +845,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -954,7 +852,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -962,7 +859,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -970,7 +866,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -978,7 +873,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -986,7 +880,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -994,7 +887,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1002,7 +894,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1010,7 +901,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1018,7 +908,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1026,7 +915,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1034,7 +922,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1042,7 +929,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1050,7 +936,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1058,7 +943,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1066,7 +950,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1074,7 +957,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1082,7 +964,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1090,7 +971,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1098,7 +978,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1106,7 +985,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1114,7 +992,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1122,7 +999,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1130,7 +1006,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1138,7 +1013,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1146,7 +1020,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1154,7 +1027,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1162,7 +1034,6 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
@@ -1170,158 +1041,161 @@
    "role": "original",
    "result": "PASS",
    "spec": "NONE",
-   "failed_checks": [],
    "as_expected": true
   },
   {
    "file": "m-fixed-size.desc.json",
-   "role": "mutant",
+   "role": "control",
    "id": "m-fixed-size",
    "what": "wrong fixed size (16 -> 17)",
    "designated": "fixed",
    "result": "FAIL",
+   "spec": "SPEC",
    "failed_checks": [
     "fixed"
    ],
-   "twin": "Scalars.desc.json",
    "twin_result": "PASS",
    "as_expected": true
   },
   {
    "file": "m-offset.desc.json",
-   "role": "mutant",
+   "role": "control",
    "id": "m-offset",
    "what": "wrong field offset (field 2: 16 -> 17)",
    "designated": "offset[2]",
    "result": "FAIL",
+   "spec": "SPEC",
    "failed_checks": [
     "offset[2]",
     "probe-fix[2]"
    ],
-   "twin": "AttestationData.desc.json",
    "twin_result": "PASS",
    "as_expected": true
   },
   {
    "file": "m-width.desc.json",
-   "role": "mutant",
+   "role": "control",
    "id": "m-width",
    "what": "wrong field width (field 1: 32 -> 31)",
    "designated": "width[1]",
    "result": "FAIL",
+   "spec": "SPEC",
    "failed_checks": [
     "width[1]",
     "probe-fix[1]"
    ],
-   "twin": "Checkpoint.desc.json",
    "twin_result": "PASS",
    "as_expected": true
   },
   {
    "file": "m-head.desc.json",
-   "role": "mutant",
+   "role": "control",
    "id": "m-head",
    "what": "wrong head size (28 -> 32)",
    "designated": "head",
    "result": "FAIL",
+   "spec": "SPEC",
    "failed_checks": [
     "head"
    ],
-   "twin": "Nested.desc.json",
    "twin_result": "PASS",
    "as_expected": true
   },
   {
    "file": "m-variable.desc.json",
-   "role": "mutant",
+   "role": "control",
    "id": "m-variable",
    "what": "variable field claimed fixed (field 2)",
    "designated": "variable[2]",
    "result": "FAIL",
+   "spec": "SPEC",
    "failed_checks": [
     "variable[2]"
    ],
-   "twin": "Nested.desc.json",
    "twin_result": "PASS",
    "as_expected": true
   },
   {
    "file": "m-limit-claim.desc.json",
-   "role": "mutant",
+   "role": "control",
    "id": "m-limit-claim",
    "what": "wrong limit claim (16 -> 17)",
    "designated": "limit[0]",
    "result": "FAIL",
+   "spec": "SPEC",
    "failed_checks": [
     "limit[0]"
    ],
-   "twin": "ListU64.desc.json",
    "twin_result": "PASS",
    "as_expected": true
   },
   {
    "file": "m-elem.desc.json",
-   "role": "mutant",
+   "role": "control",
    "id": "m-elem",
    "what": "wrong element size (8 -> 4)",
    "designated": "elem[0]",
    "result": "FAIL",
+   "spec": "SPEC",
    "failed_checks": [
     "elem[0]"
    ],
-   "twin": "ListU64.desc.json",
    "twin_result": "PASS",
    "as_expected": true
   },
   {
    "file": "m-limit-spec.desc.json",
-   "role": "mutant",
+   "role": "control",
    "id": "m-limit-spec",
    "what": "wrong limit against the spec (term and claim 16 -> 17)",
    "designated": "ref",
    "result": "FAIL",
+   "spec": "SPEC",
    "failed_checks": [
-    "ref"
+    "ref",
+    "go-names"
    ],
-   "twin": "ListU64.desc.json",
    "twin_result": "PASS",
    "as_expected": true
   },
   {
    "file": "m-kind-spec.desc.json",
-   "role": "mutant",
+   "role": "control",
    "id": "m-kind-spec",
    "what": "wrong kind against the spec (bitList -> byteList, claims follow)",
    "designated": "ref",
    "result": "FAIL",
+   "spec": "SPEC",
    "failed_checks": [
-    "ref"
+    "ref",
+    "go-names"
    ],
-   "twin": "BitL.desc.json",
    "twin_result": "PASS",
    "as_expected": true
   },
   {
    "file": "m-uint-width.desc.json",
-   "role": "mutant",
+   "role": "control",
    "id": "m-uint-width",
    "what": "wrong uint width against the spec (field 1: 2 -> 4, claims follow)",
    "designated": "ref",
    "result": "FAIL",
+   "spec": "SPEC",
    "failed_checks": [
-    "ref"
+    "ref",
+    "go-names"
    ],
-   "twin": "Scalars.desc.json",
    "twin_result": "PASS",
    "as_expected": true
   },
   {
    "file": "m-wf.desc.json",
-   "role": "mutant",
+   "role": "control",
    "id": "m-wf",
    "what": "ill-formed type (vector length 4 -> 0)",
    "designated": "wf",
    "result": "FAIL",
+   "spec": "SPEC",
    "failed_checks": [
     "wf",
     "fixed",
@@ -1329,124 +1203,382 @@
     "length[1]",
     "head",
     "probe-fix[1]",
-    "ref"
+    "ref",
+    "go-names"
    ],
-   "twin": "FixedVec.desc.json",
    "twin_result": "PASS",
    "as_expected": true
   },
   {
    "file": "m-order.desc.json",
-   "role": "mutant",
+   "role": "control",
    "id": "m-order",
    "what": "wrong variable-field order (reversed)",
    "designated": "order",
    "result": "FAIL",
+   "spec": "NONE",
    "failed_checks": [
     "order"
    ],
-   "twin": "prysm_v1alpha1.BeaconBlockBodyAltair.desc.json",
    "twin_result": "PASS",
    "as_expected": true
   },
   {
    "file": "m-kind-claim.desc.json",
-   "role": "mutant",
+   "role": "control",
    "id": "m-kind-claim",
    "what": "wrong kind claim (field 0 byteVector -> byteList)",
    "designated": "kind[0]",
    "result": "FAIL",
+   "spec": "NONE",
    "failed_checks": [
     "kind[0]"
    ],
-   "twin": "prysm_v1alpha1.StatusV2.desc.json",
    "twin_result": "PASS",
    "as_expected": true
   },
   {
    "file": "m-offset-prysm.desc.json",
-   "role": "mutant",
+   "role": "control",
    "id": "m-offset-prysm",
    "what": "wrong field offset (field 3: 44 -> 45)",
    "designated": "offset[3]",
    "result": "FAIL",
+   "spec": "NONE",
    "failed_checks": [
     "offset[3]",
     "probe-fix[3]"
    ],
-   "twin": "prysm_v1alpha1.StatusV2.desc.json",
    "twin_result": "PASS",
    "as_expected": true
   },
   {
    "file": "r1-ref-dropped.desc.json",
-   "role": "mutant",
+   "role": "control",
    "id": "r1-ref-dropped",
    "what": "limit 16 -> 17 in term and claim, reference set to null",
    "designated": "ref-claim",
    "result": "FAIL",
+   "spec": "SPEC",
    "failed_checks": [
     "ref-claim",
-    "ref"
+    "ref",
+    "go-names"
    ],
-   "twin": "ListU64.desc.json",
    "twin_result": "PASS",
    "as_expected": true
   },
   {
    "file": "r2-ref-key-removed.desc.json",
-   "role": "mutant",
+   "role": "control",
    "id": "r2-ref-key-removed",
    "what": "bitList -> byteList in term and claim, reference key deleted",
    "designated": "ref-claim",
    "result": "FAIL",
+   "spec": "SPEC",
    "failed_checks": [
     "ref-claim",
-    "ref"
+    "ref",
+    "go-names"
    ],
-   "twin": "BitL.desc.json",
    "twin_result": "PASS",
    "as_expected": true
   },
   {
    "file": "r12-type.desc.json",
-   "role": "mutant",
+   "role": "control",
    "id": "r12-type",
    "what": "type name Scalars -> Checkpoint (reference stays Fv1.scDesc)",
-   "designated": "ref-claim",
+   "designated": "table-type",
    "result": "FAIL",
+   "spec": "NONE",
    "failed_checks": [
+    "table-type",
     "ref-claim"
    ],
-   "twin": "Scalars.desc.json",
    "twin_result": "PASS",
    "as_expected": true
   },
   {
    "file": "r7-claim-name.desc.json",
-   "role": "mutant",
+   "role": "control",
    "id": "r7-claim-name",
    "what": "claim name of field 0 changed (term names unchanged)",
    "designated": "name[0]",
    "result": "FAIL",
+   "spec": "SPEC",
    "failed_checks": [
     "name[0]"
    ],
-   "twin": "Scalars.desc.json",
    "twin_result": "PASS",
    "as_expected": true
   },
   {
    "file": "r11-index.desc.json",
-   "role": "mutant",
+   "role": "control",
    "id": "r11-index",
    "what": "index claim of field 1 -> 7",
    "designated": "index[1]",
    "result": "FAIL",
+   "spec": "SPEC",
    "failed_checks": [
     "index[1]"
    ],
-   "twin": "Checkpoint.desc.json",
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "r8-term-names-swapped.desc.json",
+   "role": "control",
+   "id": "r8-term-names-swapped",
+   "what": "term field names reversed, claims follow (shapes unchanged)",
+   "designated": "go-names",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "go-names"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "r9-elem-variable.desc.json",
+   "role": "control",
+   "id": "r9-elem-variable",
+   "what": "claim key elem_variable (removed from the format) put back",
+   "designated": "keys",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "keys"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "r10-callee.desc.json",
+   "role": "control",
+   "id": "r10-callee",
+   "what": "claim key callee (removed from the format) put back",
+   "designated": "keys",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "keys"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "n01-esc-pkg-slash.desc.json",
+   "role": "control",
+   "id": "n01-esc-pkg-slash",
+   "what": "limit 16 -> 17, package gets a trailing '/', reference null",
+   "designated": "package",
+   "result": "FAIL",
+   "spec": "NONE",
+   "failed_checks": [
+    "package"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "n02-esc-type-missing.desc.json",
+   "role": "control",
+   "id": "n02-esc-type-missing",
+   "what": "bitList -> byteList, type key deleted, reference null",
+   "designated": "type",
+   "result": "FAIL",
+   "spec": "NONE",
+   "failed_checks": [
+    "type"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "n03-esc-pkg-missing.desc.json",
+   "role": "control",
+   "id": "n03-esc-pkg-missing",
+   "what": "uint16 -> uint32 (claims follow), package key deleted, reference null",
+   "designated": "package",
+   "result": "FAIL",
+   "spec": "NONE",
+   "failed_checks": [
+    "package"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "n05-esc-type-zwsp.desc.json",
+   "role": "control",
+   "id": "n05-esc-type-zwsp",
+   "what": "vector length 4 -> 5 (claims follow), type name gets U+200B, reference null",
+   "designated": "type",
+   "result": "FAIL",
+   "spec": "NONE",
+   "failed_checks": [
+    "type"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "n11-ad-swap-slot-index.desc.json",
+   "role": "control",
+   "id": "n11-ad-swap-slot-index",
+   "what": "Slot and CommitteeIndex swapped in term, names and claims",
+   "designated": "go-names",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "go-names"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "n12-ad-swap-source-target.desc.json",
+   "role": "control",
+   "id": "n12-ad-swap-source-target",
+   "what": "Source and Target swapped in term, names and claims",
+   "designated": "go-names",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "go-names"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "n14-cp-names-crossed.desc.json",
+   "role": "control",
+   "id": "n14-cp-names-crossed",
+   "what": "uint64 field named Root, bytes32 field named Epoch (term and claims)",
+   "designated": "go-names",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "go-names"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "e1-nested-inner-names.desc.json",
+   "role": "control",
+   "id": "e1-nested-inner-names",
+   "what": "inner Scalars field names B and C swapped inside Nested (claims cover only the top)",
+   "designated": "go-names",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "go-names"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "e2-hand-type-other-hand-pkg.desc.json",
+   "role": "control",
+   "id": "e2-hand-type-other-hand-pkg",
+   "what": "hand ListU64 under the hand prysm package (a known package)",
+   "designated": "table-type",
+   "result": "FAIL",
+   "spec": "NONE",
+   "failed_checks": [
+    "table-type",
+    "ref-claim"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "e3-cyrillic-type.desc.json",
+   "role": "control",
+   "id": "e3-cyrillic-type",
+   "what": "type name with Cyrillic '\u0421' (U+0421) instead of 'C'",
+   "designated": "type",
+   "result": "FAIL",
+   "spec": "NONE",
+   "failed_checks": [
+    "type",
+    "ref-claim"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "e4-status-key.desc.json",
+   "role": "control",
+   "id": "e4-status-key",
+   "what": "extra top-level key status = SPEC",
+   "designated": "keys",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "keys"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "e5-pkg-case.desc.json",
+   "role": "control",
+   "id": "e5-pkg-case",
+   "what": "package with a lower-case path segment (offchainlabs)",
+   "designated": "package",
+   "result": "FAIL",
+   "spec": "NONE",
+   "failed_checks": [
+    "package",
+    "ref-claim"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "e6-ad-inner-cp-names.desc.json",
+   "role": "control",
+   "id": "e6-ad-inner-cp-names",
+   "what": "Checkpoint names crossed inside Source (claims cover only the top)",
+   "designated": "go-names",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "go-names"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "e7-schema.desc.json",
+   "role": "control",
+   "id": "e7-schema",
+   "what": "schema fvphase1c.desc/2",
+   "designated": "schema",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "schema"
+   ],
+   "twin_result": "PASS",
+   "as_expected": true
+  },
+  {
+   "file": "e8-term-extra-key.desc.json",
+   "role": "control",
+   "id": "e8-term-extra-key",
+   "what": "unknown key inside a term (limit2 next to limit)",
+   "designated": "keys",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "keys"
+   ],
    "twin_result": "PASS",
    "as_expected": true
   },
@@ -1455,7 +1587,7 @@
    "role": "known-pass",
    "id": "r3-prysm-bool-uint8",
    "what": "Slashed bool -> uint8, claim follows",
-   "why": "known pass: no independent spec for this property",
+   "why": "known pass: Prysm type, no independent spec Desc offline",
    "result": "PASS",
    "spec": "NONE",
    "as_expected": true
@@ -1465,7 +1597,7 @@
    "role": "known-pass",
    "id": "r4-prysm-bitvec-505",
    "what": "Bitvector 512 -> 505 bits (still 64 bytes), claim follows",
-   "why": "known pass: no independent spec for this property",
+   "why": "known pass: Prysm type, no independent spec Desc offline",
    "result": "PASS",
    "spec": "NONE",
    "as_expected": true
@@ -1475,7 +1607,7 @@
    "role": "known-pass",
    "id": "r5-prysm-limit",
    "what": "list[uint64] limit 2048 -> 4096 in term and claim",
-   "why": "known pass: no independent spec for this property",
+   "why": "known pass: Prysm type, no independent spec Desc offline",
    "result": "PASS",
    "spec": "NONE",
    "as_expected": true
@@ -1484,8 +1616,8 @@
    "file": "r6-prysm-field-swap.desc.json",
    "role": "known-pass",
    "id": "r6-prysm-field-swap",
-   "what": "fields 0 and 1 swapped consistently",
-   "why": "known pass: no independent spec for this property",
+   "what": "fields 0 and 1 swapped consistently (offsets recomputed)",
+   "why": "known pass: Prysm type, no independent spec Desc offline",
    "result": "PASS",
    "spec": "NONE",
    "as_expected": true
@@ -1495,20 +1627,910 @@
    "role": "known-pass",
    "id": "r17-prysm-inner-kind",
    "what": "inner AttestationData.Slot uint64 -> byteVector 8",
-   "why": "known pass: no independent spec for this property",
+   "why": "known pass: Prysm type, no independent spec Desc offline",
    "result": "PASS",
    "spec": "NONE",
    "as_expected": true
+  }
+ ],
+ "scenarios": [
+  {
+   "id": "s-n01",
+   "what": "n01 replaces the hand ListU64 original",
+   "designated": "coverage github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64",
+   "checker_rc": "1",
+   "table": "FAIL",
+   "coverage_fail": [
+    "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64"
+   ],
+   "dupkeys": [],
+   "as_expected": true
   },
   {
-   "file": "r8-term-names-swapped.desc.json",
-   "role": "known-pass",
+   "id": "s-n02",
+   "what": "n02 replaces the hand BitL original",
+   "designated": "coverage github.com/OffchainLabs/methodical-ssz/fv/kraken/target.BitL",
+   "checker_rc": "1",
+   "table": "FAIL",
+   "coverage_fail": [
+    "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.BitL"
+   ],
+   "dupkeys": [],
+   "as_expected": true
+  },
+  {
+   "id": "s-n03",
+   "what": "n03 replaces the hand Scalars original",
+   "designated": "coverage github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars",
+   "checker_rc": "1",
+   "table": "FAIL",
+   "coverage_fail": [
+    "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars"
+   ],
+   "dupkeys": [],
+   "as_expected": true
+  },
+  {
+   "id": "s-n04",
+   "what": "n04 (hand Checkpoint with a wrong Epoch, package = real Prysm package) replaces the hand Checkpoint original",
+   "designated": "coverage github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Checkpoint",
+   "checker_rc": "1",
+   "table": "FAIL",
+   "coverage_fail": [
+    "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Checkpoint"
+   ],
+   "dupkeys": [
+    "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Checkpoint"
+   ],
+   "as_expected": true
+  },
+  {
+   "id": "s-n05",
+   "what": "n05 replaces the hand FixedVec original",
+   "designated": "coverage github.com/OffchainLabs/methodical-ssz/fv/kraken/target.FixedVec",
+   "checker_rc": "1",
+   "table": "FAIL",
+   "coverage_fail": [
+    "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.FixedVec"
+   ],
+   "dupkeys": [],
+   "as_expected": true
+  },
+  {
+   "id": "s-drop-nested",
+   "what": "the hand Nested original is missing",
+   "designated": "coverage github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Nested",
+   "checker_rc": "1",
+   "table": "FAIL",
+   "coverage_fail": [
+    "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Nested"
+   ],
+   "dupkeys": [],
+   "as_expected": true
+  },
+  {
+   "id": "s-dup-listc",
+   "what": "the hand ListC original appears twice",
+   "designated": "dupkey github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListC",
+   "checker_rc": "1",
+   "table": "FAIL",
+   "coverage_fail": [
+    "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListC"
+   ],
+   "dupkeys": [
+    "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListC"
+   ],
+   "as_expected": true
+  }
+ ],
+ "replay": [
+  {
+   "review": "r1",
+   "id": "r1-ref-dropped",
+   "base": "ListU64",
+   "what": "limit 16->17 in term and claim, reference set to null",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "ref-claim",
+    "ref",
+    "go-names"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r1",
+   "id": "r2-ref-key-removed",
+   "base": "BitL",
+   "what": "bitList->byteList in term and claim, reference key deleted",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "ref-claim",
+    "ref",
+    "go-names"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r1",
+   "id": "r3-prysm-bool-uint8",
+   "base": "prysm_v1alpha1.Validator",
+   "what": "Slashed bool -> uint8, claim follows",
+   "reviewer_expects": "FAIL",
+   "result": "PASS",
+   "spec": "NONE",
+   "failed_checks": [],
+   "hand_type": false,
+   "as_expected": true,
+   "note": "Prysm type: known pass, no independent spec Desc offline"
+  },
+  {
+   "review": "r1",
+   "id": "r4-prysm-bitvec-505",
+   "base": "prysm_v1alpha1.SyncAggregate",
+   "what": "Bitvector 512 -> 505 bits (still 64 bytes), claim follows",
+   "reviewer_expects": "FAIL",
+   "result": "PASS",
+   "spec": "NONE",
+   "failed_checks": [],
+   "hand_type": false,
+   "as_expected": true,
+   "note": "Prysm type: known pass, no independent spec Desc offline"
+  },
+  {
+   "review": "r1",
+   "id": "r5-prysm-limit",
+   "base": "prysm_v1alpha1.IndexedAttestation",
+   "what": "list[uint64] limit 2048 -> 4096 in term and claim",
+   "reviewer_expects": "FAIL",
+   "result": "PASS",
+   "spec": "NONE",
+   "failed_checks": [],
+   "hand_type": false,
+   "as_expected": true,
+   "note": "Prysm type: known pass, no independent spec Desc offline"
+  },
+  {
+   "review": "r1",
+   "id": "r6-prysm-field-swap",
+   "base": "prysm_v1alpha1.StatusV2",
+   "what": "fields 0 and 1 swapped consistently",
+   "reviewer_expects": "FAIL",
+   "result": "PASS",
+   "spec": "NONE",
+   "failed_checks": [],
+   "hand_type": false,
+   "as_expected": true,
+   "note": "Prysm type: known pass, no independent spec Desc offline"
+  },
+  {
+   "review": "r1",
+   "id": "r7-claim-name",
+   "base": "Scalars",
+   "what": "claim name of field 0 changed (term names unchanged)",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "name[0]"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r1",
    "id": "r8-term-names-swapped",
-   "what": "term field names reversed, shapes unchanged (spec names are not compared)",
-   "why": "known pass: no independent spec for this property",
+   "base": "Scalars",
+   "what": "term field names reversed, shapes unchanged",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "name[0]",
+    "name[1]",
+    "name[3]",
+    "name[4]",
+    "go-names"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r1",
+   "id": "r9-elem-variable",
+   "base": "ListC",
+   "what": "elem_variable true -> false (elem_size stays null)",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "keys"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r1",
+   "id": "r10-callee",
+   "base": "AttestationData",
+   "what": "callee of field 3 changed",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "keys"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r1",
+   "id": "r11-index",
+   "base": "Checkpoint",
+   "what": "index claim of field 1 -> 7",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "index[1]"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r1",
+   "id": "r12-type",
+   "base": "Scalars",
+   "what": "type name Scalars -> Checkpoint (reference stays Fv1.scDesc)",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "NONE",
+   "failed_checks": [
+    "table-type",
+    "ref-claim"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r1",
+   "id": "r13-ref-wrong",
+   "base": "Scalars",
+   "what": "reference Fv1.scDesc -> Fv1.cpDesc",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "ref-claim"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r1",
+   "id": "r14-extra-claim",
+   "base": "Checkpoint",
+   "what": "one extra field claim",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "nfields"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r1",
+   "id": "r15-term-only",
+   "base": "Checkpoint",
+   "what": "term uint 8 -> 4, claims unchanged",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "fixed",
+    "width[0]",
+    "offset[1]",
+    "head",
+    "probe-fix[1]",
+    "ref",
+    "go-names"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r1",
+   "id": "r16-var-offset",
+   "base": "Nested",
+   "what": "variable field 2 offset 24 -> 20",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "offset[2]",
+    "probe-var[2]"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r1",
+   "id": "r17-prysm-inner-kind",
+   "base": "prysm_v1alpha1.Attestation",
+   "what": "inner AttestationData.Slot uint64 -> byteVector 8",
+   "reviewer_expects": "FAIL",
+   "result": "PASS",
+   "spec": "NONE",
+   "failed_checks": [],
+   "hand_type": false,
+   "as_expected": true,
+   "note": "Prysm type: known pass, no independent spec Desc offline"
+  },
+  {
+   "review": "r1",
+   "id": "r18-prysm-bytes0",
+   "base": "prysm_v1alpha1.SyncAggregate",
+   "what": "byteVector 96 -> 0 with claims (offsets consistent)",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "NONE",
+   "failed_checks": [
+    "wf",
+    "fixed",
+    "head",
+    "probe-fix[1]"
+   ],
+   "hand_type": false,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r1",
+   "id": "r19-order-dup",
+   "base": "ListU64",
+   "what": "variable_order [0] -> [0,0]",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "order"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r1",
+   "id": "r20-fixed-for-variable",
+   "base": "ListU64",
+   "what": "fixed_size null -> 4",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "fixed"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n01-esc-pkg-slash",
+   "base": "ListU64",
+   "what": "limit 16->17 (term+claim), package gets a trailing '/', reference null",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "NONE",
+   "failed_checks": [
+    "package"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n02-esc-type-missing",
+   "base": "BitL",
+   "what": "bitList->byteList (term+claim), `type` key deleted, reference null",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "NONE",
+   "failed_checks": [
+    "type"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n03-esc-pkg-missing",
+   "base": "Scalars",
+   "what": "uint16->uint32 with all claims following, `package` key deleted, reference null",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "NONE",
+   "failed_checks": [
+    "package"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n04-esc-pkg-prysm",
+   "base": "Checkpoint",
+   "what": "hand Checkpoint, Epoch uint64->byteVector 8 (claims follow), package = the real Prysm package, reference null",
+   "reviewer_expects": "FAIL",
+   "result": "PASS",
+   "spec": "NONE",
+   "failed_checks": [],
+   "hand_type": true,
+   "as_expected": true,
+   "note": "per file PASS NONE; caught at list level by scenario s-n04 (coverage FAIL)"
+  },
+  {
+   "review": "r2",
+   "id": "n05-esc-type-zwsp",
+   "base": "FixedVec",
+   "what": "vector length 4->5 (claims follow), type name gets U+200B, reference null",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "NONE",
+   "failed_checks": [
+    "type"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n06-ref-extra-on-prysm",
+   "base": "prysm_v1alpha1.Checkpoint",
+   "what": "unchanged Prysm Checkpoint, reference set to Fv1.cpDesc (type not in table)",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "NONE",
+   "failed_checks": [
+    "ref-claim"
+   ],
+   "hand_type": false,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n07-ref-nonstring",
+   "base": "ListU64",
+   "what": "limit 16->17, reference is a JSON array",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "ref-claim",
+    "ref",
+    "go-names"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n08-wrong-body-right-key",
+   "base": "ListU64",
+   "what": "whole body of ListC under type ListU64, reference Fv1.lcDesc",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "ref-claim",
+    "ref",
+    "go-names"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n09-claims-status-none",
+   "base": "Scalars",
+   "what": "uint16->uint32 (claims follow), reference null, file carries status/spec/ref_status = NONE",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "keys",
+    "ref-claim",
+    "ref",
+    "go-names"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n10-ref-trailing-space",
+   "base": "ListU64",
+   "what": "limit 16->17, reference 'Fv1.luDesc ' (trailing space)",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "ref-claim",
+    "ref",
+    "go-names"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n11-ad-swap-slot-index",
+   "base": "AttestationData",
+   "what": "fields 0 (Slot) and 1 (CommitteeIndex) swapped in term, names and claims; shapes are equal",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "go-names"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n12-ad-swap-source-target",
+   "base": "AttestationData",
+   "what": "fields 3 (Source) and 4 (Target) swapped in term, names and claims; shapes are equal",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "go-names"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n13-dup-field-name",
+   "base": "Checkpoint",
+   "what": "both fields named Epoch in term and claims",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "wf",
+    "go-names"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n14-cp-names-crossed",
+   "base": "Checkpoint",
+   "what": "names crossed: uint64 field named Root, bytes32 field named Epoch (term and claims agree)",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "go-names"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n15-norm-bytevec-as-vector",
+   "base": "FixedVec",
+   "what": "byteVector 32 -> vector(uint8) 32 (same bytes, different Desc), claims follow",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "ref",
+    "go-names"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n16-norm-bitvec4-as-uint8",
+   "base": "BitVec",
+   "what": "bitVector 4 -> uint8 (same width), claims follow",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "ref",
+    "go-names"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n17-nested-inner-limit",
+   "base": "Nested",
+   "what": "inner ListU64 limit 16->17 inside Nested (no claim covers it)",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "ref",
+    "go-names"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n18-extra-trailing-field",
+   "base": "Scalars",
+   "what": "one extra bool field at the end, all claims consistent",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "ref",
+    "go-names"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n19-num-float",
+   "base": "ListU64",
+   "what": "limit written 16.0 in term and claim (value equal; informational)",
+   "reviewer_expects": "either",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "parse"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n20-dupkey-first-wrong",
+   "base": "ListU64",
+   "what": "every key twice: first copy limit 17, second copy correct (Python json reads the second)",
+   "reviewer_expects": "either (must agree with last-wins)",
    "result": "PASS",
    "spec": "SPEC",
-   "as_expected": true
+   "failed_checks": [],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n21-dupkey-last-wrong",
+   "base": "ListU64",
+   "what": "every key twice: first copy correct, second copy limit 17 (Python json reads the second = wrong)",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "ref",
+    "go-names"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n22-top-array",
+   "base": "Checkpoint",
+   "what": "top level is a JSON array holding the Desc",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "NONE",
+   "failed_checks": [
+    "schema",
+    "type",
+    "package",
+    "parse"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n23-ssz-string",
+   "base": "ListU64",
+   "what": "ssz is the string 'Fv1.luDesc'",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "parse"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n24-claims-no-name-index",
+   "base": "Checkpoint",
+   "what": "claims without name and index keys",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "name[0]",
+    "index[0]",
+    "name[1]",
+    "index[1]"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n25-index-string",
+   "base": "Checkpoint",
+   "what": "index of field 1 is the string '1'",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "index[1]"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n26-claims-short",
+   "base": "Checkpoint",
+   "what": "claims truncated to one field",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "nfields"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n27-empty-file",
+   "base": "Checkpoint",
+   "what": "empty file",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "NONE",
+   "failed_checks": [
+    "json"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n28-names-short",
+   "base": "Checkpoint",
+   "what": "term names has 1 entry for 2 fields",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "parse"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n29-negative-width",
+   "base": "Checkpoint",
+   "what": "width of field 0 is -8",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "fields"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n30-term-only-limit",
+   "base": "ListU64",
+   "what": "term limit 17, claim limit 16, reference kept",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "limit[0]",
+    "ref",
+    "go-names"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n31-term-number-string",
+   "base": "Checkpoint",
+   "what": "term uint width is the string '8'",
+   "reviewer_expects": "FAIL",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "parse"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
+  },
+  {
+   "review": "r2",
+   "id": "n32-unknown-keys",
+   "base": "Checkpoint",
+   "what": "unknown keys in term, top level and a claim (informational: ignored or rejected?)",
+   "reviewer_expects": "either",
+   "result": "FAIL",
+   "spec": "SPEC",
+   "failed_checks": [
+    "keys"
+   ],
+   "hand_type": true,
+   "as_expected": true,
+   "note": ""
   }
  ]
 }

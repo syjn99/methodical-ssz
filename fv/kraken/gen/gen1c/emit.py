@@ -3,7 +3,8 @@
 
 Usage:
   emit.py --out DIR --desc-dir DIR --go F.ssz.go[,F2...] --elf ELF --nm NM --norm DIR
-          --obligations hand_case|prysm [--types T1,T2] [--code-prefix PKGSUFFIX=Prefix,...]
+          --obligations hand_case|prysm --desccheck-log LOG [--types pkg.T1,pkg.T2]
+          [--code-prefix PKGSUFFIX=Prefix,...]
           [--theorems THEOREMS.json]
 
 Per type <T> it writes <out>/<T>/:
@@ -88,6 +89,27 @@ def go_string_literal(lit):
     return bytes(out)
 
 
+def fnv1a64(b):
+    """FNV-1a 64 of bytes; the same function as DescCheck.lean `fnv`."""
+    h = 14695981039346656037
+    for x in b:
+        h = ((h ^ x) * 1099511628211) & 0xFFFFFFFFFFFFFFFF
+    return h
+
+
+def read_desccheck(log):
+    """path -> {result, spec, role, fnv} of DESCCHECK-FILE lines; and whether the run ended TABLE OK."""
+    recs, ok = {}, False
+    for line in open(log):
+        m = re.match(r"DESCCHECK-FILE (\S+) (PASS|FAIL) (SPEC|NONE) (original|mutant) fnv=(\d+)", line)
+        if m:
+            recs.setdefault(os.path.realpath(m.group(1)), {"result": m.group(2), "spec": m.group(3),
+                                                           "role": m.group(4), "fnv": int(m.group(5))})
+        if line.startswith("DESCCHECK-TABLE OK"):
+            ok = True
+    return recs, ok
+
+
 def code_name(t, pkg, prefixes):
     for suf, pre in prefixes.items():
         if pkg.endswith(suf):
@@ -153,7 +175,9 @@ def main():
     ap.add_argument("--elf", required=True)
     ap.add_argument("--nm", required=True)
     ap.add_argument("--norm", required=True)
-    ap.add_argument("--types")
+    ap.add_argument("--types", help="comma list of package-qualified names pkg.Type (a bare Type must be unique)")
+    ap.add_argument("--desccheck-log", required=True,
+                    help="log of a DescCheck.lean run (gen/desc/run_desccheck.sh main.log) that ends with DESCCHECK-TABLE OK")
     ap.add_argument("--code-prefix", default="")
     ap.add_argument("--theorems", default=os.path.join(KRAKEN, "gen", "frozen", "THEOREMS.json"))
     ap.add_argument("--obligations", choices=["hand_case", "prysm"], required=True,
@@ -169,13 +193,40 @@ def main():
     nm = elfmod.read_nm(a.nm)
     gs_addr, gs_size = elfmod.extent(nm, inc.RODATA_SYMBOL)
     gs = e.read(gs_addr, gs_size)
-    descs = {}
+    recs, table_ok = read_desccheck(a.desccheck_log)
+    if not table_ok:
+        raise SystemExit(f"{a.desccheck_log}: no 'DESCCHECK-TABLE OK' line (coverage or an original failed)")
+    descs, paths = {}, {}
     for fn in sorted(os.listdir(a.desc_dir)):
-        d = json.load(open(os.path.join(a.desc_dir, fn)))
-        if d["type"] in descs:
-            raise SystemExit(f"two Descs for type {d['type']} in {a.desc_dir}; use one package per run")
-        descs[d["type"]] = d
-    want = a.types.split(",") if a.types else sorted(descs)
+        path = os.path.realpath(os.path.join(a.desc_dir, fn))
+        d = json.load(open(path))
+        key = (d.get("package", ""), d.get("type", ""))
+        if key in descs:
+            raise SystemExit(f"two Descs for {key} in {a.desc_dir}")
+        descs[key], paths[key] = d, path
+    want = []
+    for q in (a.types.split(",") if a.types else [f"{k[0]}.{k[1]}" for k in sorted(descs)]):
+        if "/" in q:
+            pkg, t = q.rsplit(".", 1)
+            if (pkg, t) not in descs:
+                raise SystemExit(f"no Desc for {q} in {a.desc_dir}")
+            want.append((pkg, t))
+        else:
+            hits = [k for k in descs if k[1] == q]
+            if len(hits) != 1:
+                raise SystemExit(f"type {q}: {len(hits)} Descs; use pkg.Type")
+            want.append(hits[0])
+    # accept a Desc only with a PASS record of the checker for this very file (FNV-1a 64 of its
+    # bytes); hand types (--obligations hand_case) need PASS SPEC
+    for k in want:
+        r = recs.get(paths[k])
+        h = fnv1a64(open(paths[k], "rb").read())
+        if r is None or r["role"] != "original" or r["result"] != "PASS":
+            raise SystemExit(f"{k[0]}.{k[1]}: no PASS record of the checker for {paths[k]} ({r})")
+        if r["fnv"] != h:
+            raise SystemExit(f"{k[0]}.{k[1]}: {paths[k]} changed after the check (fnv {h} != {r['fnv']})")
+        if a.obligations == "hand_case" and r["spec"] != "SPEC":
+            raise SystemExit(f"{k[0]}.{k[1]}: hand type without a PASS SPEC record ({r['spec']})")
     os.makedirs(os.path.join(out, "data"), exist_ok=True)
     manifest = {"schema": "fvphase1c.gen-manifest/1", "include_api_version": inc.API_VERSION,
                 "include_api_status": api["status"], "include_api_fix3_commit": api.get("fix3_commit"),
@@ -183,8 +234,9 @@ def main():
                            "theorems": sha(a.theorems)},
                 "types": {}, "data_items": {}}
     obl = th[a.obligations]["obligations"]
-    for t in want:
-        d = descs[t]
+    for key in want:
+        t = key[1]
+        d = descs[key]
         td = os.path.join(out, t)
         os.makedirs(td, exist_ok=True)
         json.dump(d, open(os.path.join(td, "desc.json"), "w"), indent=1)

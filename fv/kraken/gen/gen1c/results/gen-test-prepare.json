@@ -1,10 +1,6 @@
 {
  "checks": [
   [
-   "producer rc 0 (9 hand Descs)",
-   true
-  ],
-  [
    "emit rc 0",
    true
   ],
@@ -14,6 +10,22 @@
   ],
   [
    "guard refuses lean/Fk output",
+   true
+  ],
+  [
+   "emit refuses Descs without a PASS record for that file (copied/changed after the check)",
+   true
+  ],
+  [
+   "emit refuses an escaped hand Desc (n01) chosen by bare name",
+   true
+  ],
+  [
+   "emit refuses a checker log without DESCCHECK-TABLE OK",
+   true
+  ],
+  [
+   "emit refuses a checked file changed in place after the check (FNV-1a 64)",
    true
   ],
   [
@@ -38,6 +50,12 @@
   "stdout": "{\"types\": 9, \"data_items\": 26, \"data_errors\": []}",
   "stderr": ""
  },
+ "controls_stderr": [
+  "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars: no PASS record of the checker for tampered/Scalars.desc.json (None)",
+  "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/.ListU64: no PASS record of the checker for mut/n01-esc-pkg-slash.desc.json ({'result': 'FAIL', 'spec': 'NONE', 'role': 'mutant', 'fnv': 5430825524968275456})",
+  "logs/scen-s-n01.log: no 'DESCCHECK-TABLE OK' line (coverage or an original failed)",
+  "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Nested: orig/Nested.desc.json changed after the check (fnv 6703779436897155596 != 6071776902409315597)"
+ ],
  "include_api_version": 2,
  "data_cross_check": [
   {

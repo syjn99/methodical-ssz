@@ -1,151 +1,151 @@
 {
- "originals": {
-  "orig/AttestationData.desc.json": "PASS",
-  "orig/BitL.desc.json": "PASS",
-  "orig/BitVec.desc.json": "PASS",
-  "orig/Checkpoint.desc.json": "PASS",
-  "orig/FixedVec.desc.json": "PASS",
-  "orig/ListC.desc.json": "PASS",
-  "orig/ListU64.desc.json": "PASS",
-  "orig/Nested.desc.json": "PASS",
-  "orig/Scalars.desc.json": "PASS",
-  "orig/engine_v1.ConsolidationRequest.desc.json": "PASS",
-  "orig/engine_v1.DepositRequest.desc.json": "PASS",
-  "orig/engine_v1.ExecutionPayload.desc.json": "PASS",
-  "orig/engine_v1.ExecutionPayloadCapella.desc.json": "PASS",
-  "orig/engine_v1.ExecutionPayloadDeneb.desc.json": "PASS",
-  "orig/engine_v1.ExecutionPayloadHeader.desc.json": "PASS",
-  "orig/engine_v1.ExecutionPayloadHeaderCapella.desc.json": "PASS",
-  "orig/engine_v1.ExecutionPayloadHeaderDeneb.desc.json": "PASS",
-  "orig/engine_v1.ExecutionRequests.desc.json": "PASS",
-  "orig/engine_v1.Withdrawal.desc.json": "PASS",
-  "orig/engine_v1.WithdrawalRequest.desc.json": "PASS",
-  "orig/prysm_v1alpha1.AggregateAttestationAndProof.desc.json": "PASS",
-  "orig/prysm_v1alpha1.AggregateAttestationAndProofElectra.desc.json": "PASS",
-  "orig/prysm_v1alpha1.Attestation.desc.json": "PASS",
-  "orig/prysm_v1alpha1.AttestationData.desc.json": "PASS",
-  "orig/prysm_v1alpha1.AttestationElectra.desc.json": "PASS",
-  "orig/prysm_v1alpha1.AttesterSlashing.desc.json": "PASS",
-  "orig/prysm_v1alpha1.AttesterSlashingElectra.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BLSToExecutionChange.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconBlock.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconBlockAltair.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconBlockBellatrix.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconBlockBody.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconBlockBodyAltair.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconBlockBodyBellatrix.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconBlockBodyCapella.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconBlockBodyDeneb.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconBlockBodyElectra.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconBlockCapella.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconBlockContentsDeneb.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconBlockContentsElectra.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconBlockContentsFulu.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconBlockDeneb.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconBlockElectra.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconBlockHeader.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconState.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconStateAltair.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconStateBellatrix.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconStateCapella.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconStateDeneb.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconStateElectra.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BeaconStateFulu.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BlindedBeaconBlockBellatrix.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BlindedBeaconBlockBodyBellatrix.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BlindedBeaconBlockBodyCapella.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BlindedBeaconBlockBodyDeneb.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BlindedBeaconBlockBodyElectra.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BlindedBeaconBlockCapella.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BlindedBeaconBlockDeneb.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BlindedBeaconBlockElectra.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BlindedBeaconBlockFulu.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BlobIdentifier.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BlobSidecar.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BlobSidecars.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BuilderBidCapella.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BuilderBidDeneb.desc.json": "PASS",
-  "orig/prysm_v1alpha1.BuilderBidElectra.desc.json": "PASS",
-  "orig/prysm_v1alpha1.Checkpoint.desc.json": "PASS",
-  "orig/prysm_v1alpha1.ContributionAndProof.desc.json": "PASS",
-  "orig/prysm_v1alpha1.DataColumnSidecar.desc.json": "PASS",
-  "orig/prysm_v1alpha1.DataColumnsByRootIdentifier.desc.json": "PASS",
-  "orig/prysm_v1alpha1.Deposit.desc.json": "PASS",
-  "orig/prysm_v1alpha1.DepositMessage.desc.json": "PASS",
-  "orig/prysm_v1alpha1.Deposit_Data.desc.json": "PASS",
-  "orig/prysm_v1alpha1.ENRForkID.desc.json": "PASS",
-  "orig/prysm_v1alpha1.Eth1Data.desc.json": "PASS",
-  "orig/prysm_v1alpha1.Fork.desc.json": "PASS",
-  "orig/prysm_v1alpha1.ForkData.desc.json": "PASS",
-  "orig/prysm_v1alpha1.HistoricalBatch.desc.json": "PASS",
-  "orig/prysm_v1alpha1.HistoricalSummary.desc.json": "PASS",
-  "orig/prysm_v1alpha1.IndexedAttestation.desc.json": "PASS",
-  "orig/prysm_v1alpha1.IndexedAttestationElectra.desc.json": "PASS",
-  "orig/prysm_v1alpha1.LightClientBootstrapAltair.desc.json": "PASS",
-  "orig/prysm_v1alpha1.LightClientBootstrapCapella.desc.json": "PASS",
-  "orig/prysm_v1alpha1.LightClientBootstrapDeneb.desc.json": "PASS",
-  "orig/prysm_v1alpha1.LightClientBootstrapElectra.desc.json": "PASS",
-  "orig/prysm_v1alpha1.LightClientFinalityUpdateAltair.desc.json": "PASS",
-  "orig/prysm_v1alpha1.LightClientFinalityUpdateCapella.desc.json": "PASS",
-  "orig/prysm_v1alpha1.LightClientFinalityUpdateDeneb.desc.json": "PASS",
-  "orig/prysm_v1alpha1.LightClientFinalityUpdateElectra.desc.json": "PASS",
-  "orig/prysm_v1alpha1.LightClientHeaderAltair.desc.json": "PASS",
-  "orig/prysm_v1alpha1.LightClientHeaderCapella.desc.json": "PASS",
-  "orig/prysm_v1alpha1.LightClientHeaderDeneb.desc.json": "PASS",
-  "orig/prysm_v1alpha1.LightClientOptimisticUpdateAltair.desc.json": "PASS",
-  "orig/prysm_v1alpha1.LightClientOptimisticUpdateCapella.desc.json": "PASS",
-  "orig/prysm_v1alpha1.LightClientOptimisticUpdateDeneb.desc.json": "PASS",
-  "orig/prysm_v1alpha1.LightClientUpdateAltair.desc.json": "PASS",
-  "orig/prysm_v1alpha1.LightClientUpdateCapella.desc.json": "PASS",
-  "orig/prysm_v1alpha1.LightClientUpdateDeneb.desc.json": "PASS",
-  "orig/prysm_v1alpha1.LightClientUpdateElectra.desc.json": "PASS",
-  "orig/prysm_v1alpha1.PartialDataColumnHeader.desc.json": "PASS",
-  "orig/prysm_v1alpha1.PartialDataColumnPartsMetadata.desc.json": "PASS",
-  "orig/prysm_v1alpha1.PartialDataColumnSidecar.desc.json": "PASS",
-  "orig/prysm_v1alpha1.PendingAttestation.desc.json": "PASS",
-  "orig/prysm_v1alpha1.PendingConsolidation.desc.json": "PASS",
-  "orig/prysm_v1alpha1.PendingDeposit.desc.json": "PASS",
-  "orig/prysm_v1alpha1.PendingPartialWithdrawal.desc.json": "PASS",
-  "orig/prysm_v1alpha1.PowBlock.desc.json": "PASS",
-  "orig/prysm_v1alpha1.ProposerSlashing.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedAggregateAttestationAndProof.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedAggregateAttestationAndProofElectra.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedBLSToExecutionChange.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedBeaconBlock.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedBeaconBlockAltair.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedBeaconBlockBellatrix.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedBeaconBlockCapella.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedBeaconBlockContentsDeneb.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedBeaconBlockContentsElectra.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedBeaconBlockContentsFulu.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedBeaconBlockDeneb.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedBeaconBlockElectra.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedBeaconBlockFulu.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedBeaconBlockHeader.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedBlindedBeaconBlockBellatrix.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedBlindedBeaconBlockCapella.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedBlindedBeaconBlockDeneb.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedBlindedBeaconBlockElectra.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedBlindedBeaconBlockFulu.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedBuilderBidCapella.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedBuilderBidDeneb.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedBuilderBidElectra.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedContributionAndProof.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SignedVoluntaryExit.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SigningData.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SingleAttestation.desc.json": "PASS",
-  "orig/prysm_v1alpha1.Status.desc.json": "PASS",
-  "orig/prysm_v1alpha1.StatusV2.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SyncAggregate.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SyncAggregatorSelectionData.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SyncCommittee.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SyncCommitteeContribution.desc.json": "PASS",
-  "orig/prysm_v1alpha1.SyncCommitteeMessage.desc.json": "PASS",
-  "orig/prysm_v1alpha1.Validator.desc.json": "PASS",
-  "orig/prysm_v1alpha1.ValidatorBalance.desc.json": "PASS",
-  "orig/prysm_v1alpha1.VoluntaryExit.desc.json": "PASS"
- },
- "mutants": {
+ "originals": [
+  "orig/AttestationData.desc.json",
+  "orig/BitL.desc.json",
+  "orig/BitVec.desc.json",
+  "orig/Checkpoint.desc.json",
+  "orig/FixedVec.desc.json",
+  "orig/ListC.desc.json",
+  "orig/ListU64.desc.json",
+  "orig/Nested.desc.json",
+  "orig/Scalars.desc.json",
+  "orig/engine_v1.ConsolidationRequest.desc.json",
+  "orig/engine_v1.DepositRequest.desc.json",
+  "orig/engine_v1.ExecutionPayload.desc.json",
+  "orig/engine_v1.ExecutionPayloadCapella.desc.json",
+  "orig/engine_v1.ExecutionPayloadDeneb.desc.json",
+  "orig/engine_v1.ExecutionPayloadHeader.desc.json",
+  "orig/engine_v1.ExecutionPayloadHeaderCapella.desc.json",
+  "orig/engine_v1.ExecutionPayloadHeaderDeneb.desc.json",
+  "orig/engine_v1.ExecutionRequests.desc.json",
+  "orig/engine_v1.Withdrawal.desc.json",
+  "orig/engine_v1.WithdrawalRequest.desc.json",
+  "orig/prysm_v1alpha1.AggregateAttestationAndProof.desc.json",
+  "orig/prysm_v1alpha1.AggregateAttestationAndProofElectra.desc.json",
+  "orig/prysm_v1alpha1.Attestation.desc.json",
+  "orig/prysm_v1alpha1.AttestationData.desc.json",
+  "orig/prysm_v1alpha1.AttestationElectra.desc.json",
+  "orig/prysm_v1alpha1.AttesterSlashing.desc.json",
+  "orig/prysm_v1alpha1.AttesterSlashingElectra.desc.json",
+  "orig/prysm_v1alpha1.BLSToExecutionChange.desc.json",
+  "orig/prysm_v1alpha1.BeaconBlock.desc.json",
+  "orig/prysm_v1alpha1.BeaconBlockAltair.desc.json",
+  "orig/prysm_v1alpha1.BeaconBlockBellatrix.desc.json",
+  "orig/prysm_v1alpha1.BeaconBlockBody.desc.json",
+  "orig/prysm_v1alpha1.BeaconBlockBodyAltair.desc.json",
+  "orig/prysm_v1alpha1.BeaconBlockBodyBellatrix.desc.json",
+  "orig/prysm_v1alpha1.BeaconBlockBodyCapella.desc.json",
+  "orig/prysm_v1alpha1.BeaconBlockBodyDeneb.desc.json",
+  "orig/prysm_v1alpha1.BeaconBlockBodyElectra.desc.json",
+  "orig/prysm_v1alpha1.BeaconBlockCapella.desc.json",
+  "orig/prysm_v1alpha1.BeaconBlockContentsDeneb.desc.json",
+  "orig/prysm_v1alpha1.BeaconBlockContentsElectra.desc.json",
+  "orig/prysm_v1alpha1.BeaconBlockContentsFulu.desc.json",
+  "orig/prysm_v1alpha1.BeaconBlockDeneb.desc.json",
+  "orig/prysm_v1alpha1.BeaconBlockElectra.desc.json",
+  "orig/prysm_v1alpha1.BeaconBlockHeader.desc.json",
+  "orig/prysm_v1alpha1.BeaconState.desc.json",
+  "orig/prysm_v1alpha1.BeaconStateAltair.desc.json",
+  "orig/prysm_v1alpha1.BeaconStateBellatrix.desc.json",
+  "orig/prysm_v1alpha1.BeaconStateCapella.desc.json",
+  "orig/prysm_v1alpha1.BeaconStateDeneb.desc.json",
+  "orig/prysm_v1alpha1.BeaconStateElectra.desc.json",
+  "orig/prysm_v1alpha1.BeaconStateFulu.desc.json",
+  "orig/prysm_v1alpha1.BlindedBeaconBlockBellatrix.desc.json",
+  "orig/prysm_v1alpha1.BlindedBeaconBlockBodyBellatrix.desc.json",
+  "orig/prysm_v1alpha1.BlindedBeaconBlockBodyCapella.desc.json",
+  "orig/prysm_v1alpha1.BlindedBeaconBlockBodyDeneb.desc.json",
+  "orig/prysm_v1alpha1.BlindedBeaconBlockBodyElectra.desc.json",
+  "orig/prysm_v1alpha1.BlindedBeaconBlockCapella.desc.json",
+  "orig/prysm_v1alpha1.BlindedBeaconBlockDeneb.desc.json",
+  "orig/prysm_v1alpha1.BlindedBeaconBlockElectra.desc.json",
+  "orig/prysm_v1alpha1.BlindedBeaconBlockFulu.desc.json",
+  "orig/prysm_v1alpha1.BlobIdentifier.desc.json",
+  "orig/prysm_v1alpha1.BlobSidecar.desc.json",
+  "orig/prysm_v1alpha1.BlobSidecars.desc.json",
+  "orig/prysm_v1alpha1.BuilderBidCapella.desc.json",
+  "orig/prysm_v1alpha1.BuilderBidDeneb.desc.json",
+  "orig/prysm_v1alpha1.BuilderBidElectra.desc.json",
+  "orig/prysm_v1alpha1.Checkpoint.desc.json",
+  "orig/prysm_v1alpha1.ContributionAndProof.desc.json",
+  "orig/prysm_v1alpha1.DataColumnSidecar.desc.json",
+  "orig/prysm_v1alpha1.DataColumnsByRootIdentifier.desc.json",
+  "orig/prysm_v1alpha1.Deposit.desc.json",
+  "orig/prysm_v1alpha1.DepositMessage.desc.json",
+  "orig/prysm_v1alpha1.Deposit_Data.desc.json",
+  "orig/prysm_v1alpha1.ENRForkID.desc.json",
+  "orig/prysm_v1alpha1.Eth1Data.desc.json",
+  "orig/prysm_v1alpha1.Fork.desc.json",
+  "orig/prysm_v1alpha1.ForkData.desc.json",
+  "orig/prysm_v1alpha1.HistoricalBatch.desc.json",
+  "orig/prysm_v1alpha1.HistoricalSummary.desc.json",
+  "orig/prysm_v1alpha1.IndexedAttestation.desc.json",
+  "orig/prysm_v1alpha1.IndexedAttestationElectra.desc.json",
+  "orig/prysm_v1alpha1.LightClientBootstrapAltair.desc.json",
+  "orig/prysm_v1alpha1.LightClientBootstrapCapella.desc.json",
+  "orig/prysm_v1alpha1.LightClientBootstrapDeneb.desc.json",
+  "orig/prysm_v1alpha1.LightClientBootstrapElectra.desc.json",
+  "orig/prysm_v1alpha1.LightClientFinalityUpdateAltair.desc.json",
+  "orig/prysm_v1alpha1.LightClientFinalityUpdateCapella.desc.json",
+  "orig/prysm_v1alpha1.LightClientFinalityUpdateDeneb.desc.json",
+  "orig/prysm_v1alpha1.LightClientFinalityUpdateElectra.desc.json",
+  "orig/prysm_v1alpha1.LightClientHeaderAltair.desc.json",
+  "orig/prysm_v1alpha1.LightClientHeaderCapella.desc.json",
+  "orig/prysm_v1alpha1.LightClientHeaderDeneb.desc.json",
+  "orig/prysm_v1alpha1.LightClientOptimisticUpdateAltair.desc.json",
+  "orig/prysm_v1alpha1.LightClientOptimisticUpdateCapella.desc.json",
+  "orig/prysm_v1alpha1.LightClientOptimisticUpdateDeneb.desc.json",
+  "orig/prysm_v1alpha1.LightClientUpdateAltair.desc.json",
+  "orig/prysm_v1alpha1.LightClientUpdateCapella.desc.json",
+  "orig/prysm_v1alpha1.LightClientUpdateDeneb.desc.json",
+  "orig/prysm_v1alpha1.LightClientUpdateElectra.desc.json",
+  "orig/prysm_v1alpha1.PartialDataColumnHeader.desc.json",
+  "orig/prysm_v1alpha1.PartialDataColumnPartsMetadata.desc.json",
+  "orig/prysm_v1alpha1.PartialDataColumnSidecar.desc.json",
+  "orig/prysm_v1alpha1.PendingAttestation.desc.json",
+  "orig/prysm_v1alpha1.PendingConsolidation.desc.json",
+  "orig/prysm_v1alpha1.PendingDeposit.desc.json",
+  "orig/prysm_v1alpha1.PendingPartialWithdrawal.desc.json",
+  "orig/prysm_v1alpha1.PowBlock.desc.json",
+  "orig/prysm_v1alpha1.ProposerSlashing.desc.json",
+  "orig/prysm_v1alpha1.SignedAggregateAttestationAndProof.desc.json",
+  "orig/prysm_v1alpha1.SignedAggregateAttestationAndProofElectra.desc.json",
+  "orig/prysm_v1alpha1.SignedBLSToExecutionChange.desc.json",
+  "orig/prysm_v1alpha1.SignedBeaconBlock.desc.json",
+  "orig/prysm_v1alpha1.SignedBeaconBlockAltair.desc.json",
+  "orig/prysm_v1alpha1.SignedBeaconBlockBellatrix.desc.json",
+  "orig/prysm_v1alpha1.SignedBeaconBlockCapella.desc.json",
+  "orig/prysm_v1alpha1.SignedBeaconBlockContentsDeneb.desc.json",
+  "orig/prysm_v1alpha1.SignedBeaconBlockContentsElectra.desc.json",
+  "orig/prysm_v1alpha1.SignedBeaconBlockContentsFulu.desc.json",
+  "orig/prysm_v1alpha1.SignedBeaconBlockDeneb.desc.json",
+  "orig/prysm_v1alpha1.SignedBeaconBlockElectra.desc.json",
+  "orig/prysm_v1alpha1.SignedBeaconBlockFulu.desc.json",
+  "orig/prysm_v1alpha1.SignedBeaconBlockHeader.desc.json",
+  "orig/prysm_v1alpha1.SignedBlindedBeaconBlockBellatrix.desc.json",
+  "orig/prysm_v1alpha1.SignedBlindedBeaconBlockCapella.desc.json",
+  "orig/prysm_v1alpha1.SignedBlindedBeaconBlockDeneb.desc.json",
+  "orig/prysm_v1alpha1.SignedBlindedBeaconBlockElectra.desc.json",
+  "orig/prysm_v1alpha1.SignedBlindedBeaconBlockFulu.desc.json",
+  "orig/prysm_v1alpha1.SignedBuilderBidCapella.desc.json",
+  "orig/prysm_v1alpha1.SignedBuilderBidDeneb.desc.json",
+  "orig/prysm_v1alpha1.SignedBuilderBidElectra.desc.json",
+  "orig/prysm_v1alpha1.SignedContributionAndProof.desc.json",
+  "orig/prysm_v1alpha1.SignedVoluntaryExit.desc.json",
+  "orig/prysm_v1alpha1.SigningData.desc.json",
+  "orig/prysm_v1alpha1.SingleAttestation.desc.json",
+  "orig/prysm_v1alpha1.Status.desc.json",
+  "orig/prysm_v1alpha1.StatusV2.desc.json",
+  "orig/prysm_v1alpha1.SyncAggregate.desc.json",
+  "orig/prysm_v1alpha1.SyncAggregatorSelectionData.desc.json",
+  "orig/prysm_v1alpha1.SyncCommittee.desc.json",
+  "orig/prysm_v1alpha1.SyncCommitteeContribution.desc.json",
+  "orig/prysm_v1alpha1.SyncCommitteeMessage.desc.json",
+  "orig/prysm_v1alpha1.Validator.desc.json",
+  "orig/prysm_v1alpha1.ValidatorBalance.desc.json",
+  "orig/prysm_v1alpha1.VoluntaryExit.desc.json"
+ ],
+ "controls": {
   "mut/m-fixed-size.desc.json": {
    "id": "m-fixed-size",
    "twin": "orig/Scalars.desc.json",
@@ -246,7 +246,7 @@
    "id": "r12-type",
    "twin": "orig/Scalars.desc.json",
    "what": "type name Scalars -> Checkpoint (reference stays Fv1.scDesc)",
-   "designated": "ref-claim"
+   "designated": "table-type"
   },
   "mut/r7-claim-name.desc.json": {
    "id": "r7-claim-name",
@@ -259,51 +259,545 @@
    "twin": "orig/Checkpoint.desc.json",
    "what": "index claim of field 1 -> 7",
    "designated": "index[1]"
+  },
+  "mut/r8-term-names-swapped.desc.json": {
+   "id": "r8-term-names-swapped",
+   "twin": "orig/Scalars.desc.json",
+   "what": "term field names reversed, claims follow (shapes unchanged)",
+   "designated": "go-names"
+  },
+  "mut/r9-elem-variable.desc.json": {
+   "id": "r9-elem-variable",
+   "twin": "orig/ListC.desc.json",
+   "what": "claim key elem_variable (removed from the format) put back",
+   "designated": "keys"
+  },
+  "mut/r10-callee.desc.json": {
+   "id": "r10-callee",
+   "twin": "orig/AttestationData.desc.json",
+   "what": "claim key callee (removed from the format) put back",
+   "designated": "keys"
+  },
+  "mut/n01-esc-pkg-slash.desc.json": {
+   "id": "n01-esc-pkg-slash",
+   "twin": "orig/ListU64.desc.json",
+   "what": "limit 16 -> 17, package gets a trailing '/', reference null",
+   "designated": "package"
+  },
+  "mut/n02-esc-type-missing.desc.json": {
+   "id": "n02-esc-type-missing",
+   "twin": "orig/BitL.desc.json",
+   "what": "bitList -> byteList, type key deleted, reference null",
+   "designated": "type"
+  },
+  "mut/n03-esc-pkg-missing.desc.json": {
+   "id": "n03-esc-pkg-missing",
+   "twin": "orig/Scalars.desc.json",
+   "what": "uint16 -> uint32 (claims follow), package key deleted, reference null",
+   "designated": "package"
+  },
+  "mut/n05-esc-type-zwsp.desc.json": {
+   "id": "n05-esc-type-zwsp",
+   "twin": "orig/FixedVec.desc.json",
+   "what": "vector length 4 -> 5 (claims follow), type name gets U+200B, reference null",
+   "designated": "type"
+  },
+  "mut/n11-ad-swap-slot-index.desc.json": {
+   "id": "n11-ad-swap-slot-index",
+   "twin": "orig/AttestationData.desc.json",
+   "what": "Slot and CommitteeIndex swapped in term, names and claims",
+   "designated": "go-names"
+  },
+  "mut/n12-ad-swap-source-target.desc.json": {
+   "id": "n12-ad-swap-source-target",
+   "twin": "orig/AttestationData.desc.json",
+   "what": "Source and Target swapped in term, names and claims",
+   "designated": "go-names"
+  },
+  "mut/n14-cp-names-crossed.desc.json": {
+   "id": "n14-cp-names-crossed",
+   "twin": "orig/Checkpoint.desc.json",
+   "what": "uint64 field named Root, bytes32 field named Epoch (term and claims)",
+   "designated": "go-names"
+  },
+  "mut/e1-nested-inner-names.desc.json": {
+   "id": "e1-nested-inner-names",
+   "twin": "orig/Nested.desc.json",
+   "what": "inner Scalars field names B and C swapped inside Nested (claims cover only the top)",
+   "designated": "go-names"
+  },
+  "mut/e2-hand-type-other-hand-pkg.desc.json": {
+   "id": "e2-hand-type-other-hand-pkg",
+   "twin": "orig/ListU64.desc.json",
+   "what": "hand ListU64 under the hand prysm package (a known package)",
+   "designated": "table-type"
+  },
+  "mut/e3-cyrillic-type.desc.json": {
+   "id": "e3-cyrillic-type",
+   "twin": "orig/Checkpoint.desc.json",
+   "what": "type name with Cyrillic '\u0421' (U+0421) instead of 'C'",
+   "designated": "type"
+  },
+  "mut/e4-status-key.desc.json": {
+   "id": "e4-status-key",
+   "twin": "orig/Scalars.desc.json",
+   "what": "extra top-level key status = SPEC",
+   "designated": "keys"
+  },
+  "mut/e5-pkg-case.desc.json": {
+   "id": "e5-pkg-case",
+   "twin": "orig/Scalars.desc.json",
+   "what": "package with a lower-case path segment (offchainlabs)",
+   "designated": "package"
+  },
+  "mut/e6-ad-inner-cp-names.desc.json": {
+   "id": "e6-ad-inner-cp-names",
+   "twin": "orig/AttestationData.desc.json",
+   "what": "Checkpoint names crossed inside Source (claims cover only the top)",
+   "designated": "go-names"
+  },
+  "mut/e7-schema.desc.json": {
+   "id": "e7-schema",
+   "twin": "orig/ListU64.desc.json",
+   "what": "schema fvphase1c.desc/2",
+   "designated": "schema"
+  },
+  "mut/e8-term-extra-key.desc.json": {
+   "id": "e8-term-extra-key",
+   "twin": "orig/BitL.desc.json",
+   "what": "unknown key inside a term (limit2 next to limit)",
+   "designated": "keys"
   }
  },
  "known_pass": {
   "mut/r3-prysm-bool-uint8.desc.json": {
    "id": "r3-prysm-bool-uint8",
    "what": "Slashed bool -> uint8, claim follows",
-   "why": "known pass: no independent spec for this property"
+   "why": "known pass: Prysm type, no independent spec Desc offline"
   },
   "mut/r4-prysm-bitvec-505.desc.json": {
    "id": "r4-prysm-bitvec-505",
    "what": "Bitvector 512 -> 505 bits (still 64 bytes), claim follows",
-   "why": "known pass: no independent spec for this property"
+   "why": "known pass: Prysm type, no independent spec Desc offline"
   },
   "mut/r5-prysm-limit.desc.json": {
    "id": "r5-prysm-limit",
    "what": "list[uint64] limit 2048 -> 4096 in term and claim",
-   "why": "known pass: no independent spec for this property"
+   "why": "known pass: Prysm type, no independent spec Desc offline"
   },
   "mut/r6-prysm-field-swap.desc.json": {
    "id": "r6-prysm-field-swap",
-   "what": "fields 0 and 1 swapped consistently",
-   "why": "known pass: no independent spec for this property"
+   "what": "fields 0 and 1 swapped consistently (offsets recomputed)",
+   "why": "known pass: Prysm type, no independent spec Desc offline"
   },
   "mut/r17-prysm-inner-kind.desc.json": {
    "id": "r17-prysm-inner-kind",
    "what": "inner AttestationData.Slot uint64 -> byteVector 8",
-   "why": "known pass: no independent spec for this property"
-  },
-  "mut/r8-term-names-swapped.desc.json": {
-   "id": "r8-term-names-swapped",
-   "what": "term field names reversed, shapes unchanged (spec names are not compared)",
-   "why": "known pass: no independent spec for this property"
+   "why": "known pass: Prysm type, no independent spec Desc offline"
   }
  },
- "not_applicable": [
-  {
+ "scenarios": {
+  "s-n01": {
+   "what": "n01 replaces the hand ListU64 original",
+   "designated": "coverage github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64",
+   "list": "scen/s-n01.txt"
+  },
+  "s-n02": {
+   "what": "n02 replaces the hand BitL original",
+   "designated": "coverage github.com/OffchainLabs/methodical-ssz/fv/kraken/target.BitL",
+   "list": "scen/s-n02.txt"
+  },
+  "s-n03": {
+   "what": "n03 replaces the hand Scalars original",
+   "designated": "coverage github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars",
+   "list": "scen/s-n03.txt"
+  },
+  "s-n04": {
+   "what": "n04 (hand Checkpoint with a wrong Epoch, package = real Prysm package) replaces the hand Checkpoint original",
+   "designated": "coverage github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Checkpoint",
+   "list": "scen/s-n04.txt"
+  },
+  "s-n05": {
+   "what": "n05 replaces the hand FixedVec original",
+   "designated": "coverage github.com/OffchainLabs/methodical-ssz/fv/kraken/target.FixedVec",
+   "list": "scen/s-n05.txt"
+  },
+  "s-drop-nested": {
+   "what": "the hand Nested original is missing",
+   "designated": "coverage github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Nested",
+   "list": "scen/s-drop-nested.txt"
+  },
+  "s-dup-listc": {
+   "what": "the hand ListC original appears twice",
+   "designated": "dupkey github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListC",
+   "list": "scen/s-dup-listc.txt"
+  }
+ },
+ "replay": {
+  "replay/rmut/r1-ref-dropped.desc.json": {
+   "review": "r1",
+   "id": "r1-ref-dropped",
+   "base": "ListU64",
+   "what": "limit 16->17 in term and claim, reference set to null",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/rmut/r2-ref-key-removed.desc.json": {
+   "review": "r1",
+   "id": "r2-ref-key-removed",
+   "base": "BitL",
+   "what": "bitList->byteList in term and claim, reference key deleted",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/rmut/r3-prysm-bool-uint8.desc.json": {
+   "review": "r1",
+   "id": "r3-prysm-bool-uint8",
+   "base": "prysm_v1alpha1.Validator",
+   "what": "Slashed bool -> uint8, claim follows",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/rmut/r4-prysm-bitvec-505.desc.json": {
+   "review": "r1",
+   "id": "r4-prysm-bitvec-505",
+   "base": "prysm_v1alpha1.SyncAggregate",
+   "what": "Bitvector 512 -> 505 bits (still 64 bytes), claim follows",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/rmut/r5-prysm-limit.desc.json": {
+   "review": "r1",
+   "id": "r5-prysm-limit",
+   "base": "prysm_v1alpha1.IndexedAttestation",
+   "what": "list[uint64] limit 2048 -> 4096 in term and claim",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/rmut/r6-prysm-field-swap.desc.json": {
+   "review": "r1",
+   "id": "r6-prysm-field-swap",
+   "base": "prysm_v1alpha1.StatusV2",
+   "what": "fields 0 and 1 swapped consistently",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/rmut/r7-claim-name.desc.json": {
+   "review": "r1",
+   "id": "r7-claim-name",
+   "base": "Scalars",
+   "what": "claim name of field 0 changed (term names unchanged)",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/rmut/r8-term-names-swapped.desc.json": {
+   "review": "r1",
+   "id": "r8-term-names-swapped",
+   "base": "Scalars",
+   "what": "term field names reversed, shapes unchanged",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/rmut/r9-elem-variable.desc.json": {
+   "review": "r1",
    "id": "r9-elem-variable",
    "base": "ListC",
-   "why": "elem_variable claim: removed from the Desc format (not checkable)"
+   "what": "elem_variable true -> false (elem_size stays null)",
+   "reviewer_expects": "FAIL"
   },
-  {
+  "replay/rmut/r10-callee.desc.json": {
+   "review": "r1",
    "id": "r10-callee",
    "base": "AttestationData",
-   "why": "callee claim: removed from the Desc format (not checkable)"
+   "what": "callee of field 3 changed",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/rmut/r11-index.desc.json": {
+   "review": "r1",
+   "id": "r11-index",
+   "base": "Checkpoint",
+   "what": "index claim of field 1 -> 7",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/rmut/r12-type.desc.json": {
+   "review": "r1",
+   "id": "r12-type",
+   "base": "Scalars",
+   "what": "type name Scalars -> Checkpoint (reference stays Fv1.scDesc)",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/rmut/r13-ref-wrong.desc.json": {
+   "review": "r1",
+   "id": "r13-ref-wrong",
+   "base": "Scalars",
+   "what": "reference Fv1.scDesc -> Fv1.cpDesc",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/rmut/r14-extra-claim.desc.json": {
+   "review": "r1",
+   "id": "r14-extra-claim",
+   "base": "Checkpoint",
+   "what": "one extra field claim",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/rmut/r15-term-only.desc.json": {
+   "review": "r1",
+   "id": "r15-term-only",
+   "base": "Checkpoint",
+   "what": "term uint 8 -> 4, claims unchanged",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/rmut/r16-var-offset.desc.json": {
+   "review": "r1",
+   "id": "r16-var-offset",
+   "base": "Nested",
+   "what": "variable field 2 offset 24 -> 20",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/rmut/r17-prysm-inner-kind.desc.json": {
+   "review": "r1",
+   "id": "r17-prysm-inner-kind",
+   "base": "prysm_v1alpha1.Attestation",
+   "what": "inner AttestationData.Slot uint64 -> byteVector 8",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/rmut/r18-prysm-bytes0.desc.json": {
+   "review": "r1",
+   "id": "r18-prysm-bytes0",
+   "base": "prysm_v1alpha1.SyncAggregate",
+   "what": "byteVector 96 -> 0 with claims (offsets consistent)",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/rmut/r19-order-dup.desc.json": {
+   "review": "r1",
+   "id": "r19-order-dup",
+   "base": "ListU64",
+   "what": "variable_order [0] -> [0,0]",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/rmut/r20-fixed-for-variable.desc.json": {
+   "review": "r1",
+   "id": "r20-fixed-for-variable",
+   "base": "ListU64",
+   "what": "fixed_size null -> 4",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n01-esc-pkg-slash.desc.json": {
+   "review": "r2",
+   "id": "n01-esc-pkg-slash",
+   "base": "ListU64",
+   "what": "limit 16->17 (term+claim), package gets a trailing '/', reference null",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n02-esc-type-missing.desc.json": {
+   "review": "r2",
+   "id": "n02-esc-type-missing",
+   "base": "BitL",
+   "what": "bitList->byteList (term+claim), `type` key deleted, reference null",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n03-esc-pkg-missing.desc.json": {
+   "review": "r2",
+   "id": "n03-esc-pkg-missing",
+   "base": "Scalars",
+   "what": "uint16->uint32 with all claims following, `package` key deleted, reference null",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n04-esc-pkg-prysm.desc.json": {
+   "review": "r2",
+   "id": "n04-esc-pkg-prysm",
+   "base": "Checkpoint",
+   "what": "hand Checkpoint, Epoch uint64->byteVector 8 (claims follow), package = the real Prysm package, reference null",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n05-esc-type-zwsp.desc.json": {
+   "review": "r2",
+   "id": "n05-esc-type-zwsp",
+   "base": "FixedVec",
+   "what": "vector length 4->5 (claims follow), type name gets U+200B, reference null",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n06-ref-extra-on-prysm.desc.json": {
+   "review": "r2",
+   "id": "n06-ref-extra-on-prysm",
+   "base": "prysm_v1alpha1.Checkpoint",
+   "what": "unchanged Prysm Checkpoint, reference set to Fv1.cpDesc (type not in table)",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n07-ref-nonstring.desc.json": {
+   "review": "r2",
+   "id": "n07-ref-nonstring",
+   "base": "ListU64",
+   "what": "limit 16->17, reference is a JSON array",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n08-wrong-body-right-key.desc.json": {
+   "review": "r2",
+   "id": "n08-wrong-body-right-key",
+   "base": "ListU64",
+   "what": "whole body of ListC under type ListU64, reference Fv1.lcDesc",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n09-claims-status-none.desc.json": {
+   "review": "r2",
+   "id": "n09-claims-status-none",
+   "base": "Scalars",
+   "what": "uint16->uint32 (claims follow), reference null, file carries status/spec/ref_status = NONE",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n10-ref-trailing-space.desc.json": {
+   "review": "r2",
+   "id": "n10-ref-trailing-space",
+   "base": "ListU64",
+   "what": "limit 16->17, reference 'Fv1.luDesc ' (trailing space)",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n11-ad-swap-slot-index.desc.json": {
+   "review": "r2",
+   "id": "n11-ad-swap-slot-index",
+   "base": "AttestationData",
+   "what": "fields 0 (Slot) and 1 (CommitteeIndex) swapped in term, names and claims; shapes are equal",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n12-ad-swap-source-target.desc.json": {
+   "review": "r2",
+   "id": "n12-ad-swap-source-target",
+   "base": "AttestationData",
+   "what": "fields 3 (Source) and 4 (Target) swapped in term, names and claims; shapes are equal",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n13-dup-field-name.desc.json": {
+   "review": "r2",
+   "id": "n13-dup-field-name",
+   "base": "Checkpoint",
+   "what": "both fields named Epoch in term and claims",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n14-cp-names-crossed.desc.json": {
+   "review": "r2",
+   "id": "n14-cp-names-crossed",
+   "base": "Checkpoint",
+   "what": "names crossed: uint64 field named Root, bytes32 field named Epoch (term and claims agree)",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n15-norm-bytevec-as-vector.desc.json": {
+   "review": "r2",
+   "id": "n15-norm-bytevec-as-vector",
+   "base": "FixedVec",
+   "what": "byteVector 32 -> vector(uint8) 32 (same bytes, different Desc), claims follow",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n16-norm-bitvec4-as-uint8.desc.json": {
+   "review": "r2",
+   "id": "n16-norm-bitvec4-as-uint8",
+   "base": "BitVec",
+   "what": "bitVector 4 -> uint8 (same width), claims follow",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n17-nested-inner-limit.desc.json": {
+   "review": "r2",
+   "id": "n17-nested-inner-limit",
+   "base": "Nested",
+   "what": "inner ListU64 limit 16->17 inside Nested (no claim covers it)",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n18-extra-trailing-field.desc.json": {
+   "review": "r2",
+   "id": "n18-extra-trailing-field",
+   "base": "Scalars",
+   "what": "one extra bool field at the end, all claims consistent",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n19-num-float.desc.json": {
+   "review": "r2",
+   "id": "n19-num-float",
+   "base": "ListU64",
+   "what": "limit written 16.0 in term and claim (value equal; informational)",
+   "reviewer_expects": "either"
+  },
+  "replay/n/n20-dupkey-first-wrong.desc.json": {
+   "review": "r2",
+   "id": "n20-dupkey-first-wrong",
+   "base": "ListU64",
+   "what": "every key twice: first copy limit 17, second copy correct (Python json reads the second)",
+   "reviewer_expects": "either (must agree with last-wins)"
+  },
+  "replay/n/n21-dupkey-last-wrong.desc.json": {
+   "review": "r2",
+   "id": "n21-dupkey-last-wrong",
+   "base": "ListU64",
+   "what": "every key twice: first copy correct, second copy limit 17 (Python json reads the second = wrong)",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n22-top-array.desc.json": {
+   "review": "r2",
+   "id": "n22-top-array",
+   "base": "Checkpoint",
+   "what": "top level is a JSON array holding the Desc",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n23-ssz-string.desc.json": {
+   "review": "r2",
+   "id": "n23-ssz-string",
+   "base": "ListU64",
+   "what": "ssz is the string 'Fv1.luDesc'",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n24-claims-no-name-index.desc.json": {
+   "review": "r2",
+   "id": "n24-claims-no-name-index",
+   "base": "Checkpoint",
+   "what": "claims without name and index keys",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n25-index-string.desc.json": {
+   "review": "r2",
+   "id": "n25-index-string",
+   "base": "Checkpoint",
+   "what": "index of field 1 is the string '1'",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n26-claims-short.desc.json": {
+   "review": "r2",
+   "id": "n26-claims-short",
+   "base": "Checkpoint",
+   "what": "claims truncated to one field",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n27-empty-file.desc.json": {
+   "review": "r2",
+   "id": "n27-empty-file",
+   "base": "Checkpoint",
+   "what": "empty file",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n28-names-short.desc.json": {
+   "review": "r2",
+   "id": "n28-names-short",
+   "base": "Checkpoint",
+   "what": "term names has 1 entry for 2 fields",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n29-negative-width.desc.json": {
+   "review": "r2",
+   "id": "n29-negative-width",
+   "base": "Checkpoint",
+   "what": "width of field 0 is -8",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n30-term-only-limit.desc.json": {
+   "review": "r2",
+   "id": "n30-term-only-limit",
+   "base": "ListU64",
+   "what": "term limit 17, claim limit 16, reference kept",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n31-term-number-string.desc.json": {
+   "review": "r2",
+   "id": "n31-term-number-string",
+   "base": "Checkpoint",
+   "what": "term uint width is the string '8'",
+   "reviewer_expects": "FAIL"
+  },
+  "replay/n/n32-unknown-keys.desc.json": {
+   "review": "r2",
+   "id": "n32-unknown-keys",
+   "base": "Checkpoint",
+   "what": "unknown keys in term, top level and a claim (informational: ignored or rejected?)",
+   "reviewer_expects": "either"
   }
- ],
+ },
  "producer_skipped": []
 }
