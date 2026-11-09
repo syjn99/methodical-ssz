@@ -1,7 +1,7 @@
 {
  "schema": "fvphase1c.x4-negative/1",
- "cases": 18,
- "as_expected": 18,
+ "cases": 22,
+ "as_expected": 22,
  "rows": [
   {
    "id": "lu-size-add",
@@ -254,6 +254,119 @@
    ],
    "as_expected": true,
    "run": "logs/94"
+  },
+  {
+   "id": "lu-loop-inc",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lu_loop_inc_mutant.accept",
+   "mutation": "'lea 0x1(%rax),%r8' -> 'lea 0x2(%rax),%r8'",
+   "exit": "1",
+   "first_error": "line 66: omega could not prove the goal:",
+   "theorem_lines": [
+    226,
+    434
+   ],
+   "lemma_lines": [
+    [
+     22,
+     118
+    ],
+    [
+     121,
+     150
+    ],
+    [
+     151,
+     175
+    ]
+   ],
+   "as_expected": true,
+   "run": "logs/104"
+  },
+  {
+   "id": "lu-loop-inc",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lu_loop_inc_control.accept",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    226,
+    434
+   ],
+   "lemma_lines": [
+    [
+     22,
+     118
+    ],
+    [
+     121,
+     150
+    ],
+    [
+     151,
+     175
+    ]
+   ],
+   "as_expected": true,
+   "run": "logs/104"
+  },
+  {
+   "id": "lu-mloop-add",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lu_mloop_add_mutant.marshal",
+   "mutation": "'add $0x8,%rdx' -> 'add $0x10,%rdx'",
+   "exit": "1",
+   "first_error": "line 68: omega could not prove the goal:",
+   "theorem_lines": [
+    174,
+    291
+   ],
+   "lemma_lines": [
+    [
+     23,
+     90
+    ],
+    [
+     93,
+     109
+    ],
+    [
+     110,
+     137
+    ]
+   ],
+   "as_expected": true,
+   "run": "logs/104"
+  },
+  {
+   "id": "lu-mloop-add",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lu_mloop_add_control.marshal",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    174,
+    291
+   ],
+   "lemma_lines": [
+    [
+     23,
+     90
+    ],
+    [
+     93,
+     109
+    ],
+    [
+     110,
+     137
+    ]
+   ],
+   "as_expected": true,
+   "run": "logs/104"
   }
- ]
+ ],
+ "note_r6_S4": "logs/104 reran lu-acc-store, lu-marshal-off, lc-size-init, lc-acc-cap, lc-loop-next with the widened evaluator (designated theorem or its generated loop lemmas): all as expected"
 }

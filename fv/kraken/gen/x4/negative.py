@@ -8,7 +8,7 @@ Usage:
 Each case writes a copy of the normalised .S with one instruction changed, generates the obligation
 with gen/x4/x4gen.py --mutant (statement and proof generated from the original code; only the code
 constant is the mutant) and elaborates it alone. Expected: the mutant fails with its first error
-inside the designated theorem; the control (an unchanged copy through the same path) elaborates.
+inside the designated theorem or one of its generated loop lemmas (LOOP_LEMMAS); the control (an unchanged copy through the same path) elaborates.
 Python 3 standard library only. Run with python3 -I -B.
 """
 import json
@@ -46,10 +46,32 @@ CASES = [  # id, type, method, designated obligation, old instruction, new instr
     ("lc-acc-cap", "ListC", "UnmarshalSSZ", "accept", "mov %rdx,0x10(%rsi)", "mov %rdx,0x18(%rsi)"),
     ("lc-loop-next", "ListC", "UnmarshalSSZ", "accept:lcl_iter", "mov 0x4(%rdx,%rcx,4),%esi", "mov 0x8(%rdx,%rcx,4),%esi"),
     ("lc-empty-avx", "ListC", "UnmarshalSSZ", "accept_empty", "movups %xmm15,0x8(%rax)", "movups %xmm15,0x10(%rax)"),
+    # loop-body mutants (review r6 S4): the first error is inside a generated loop lemma of the obligation
+    ("lu-loop-inc", "ListU64", "UnmarshalSSZ", "accept", "lea 0x1(%rax),%r8", "lea 0x2(%rax),%r8"),
+    ("lu-mloop-add", "ListU64", "MarshalSSZTo", "marshal", "add $0x8,%rdx", "add $0x10,%rdx"),
     # statement mutation (method "stmt"): the generated composition must fail if it claims another length
     ("sc-compose-len", "Scalars", "stmt", "compose", "st'.data.regs.rbx = dlen + 16", "st'.data.regs.rbx = dlen + 17"),
     ("lu-compose-len", "ListU64", "stmt", "compose", "st'.data.regs.rbx.toNat = dlen.toNat + 4 + 8 * n", "st'.data.regs.rbx.toNat = dlen.toNat + 5 + 8 * n"),
 ]
+# generated lemmas that belong to an obligation (review r6 S4): an error inside them counts as inside it
+LOOP_LEMMAS = {("ListU64", "accept"): ["loop_iter", "loop_exit", "loop"],
+               ("ListU64", "marshal"): ["mloop_iter", "mloop_exit", "mloop"],
+               ("ListU64", "marshal_reject"): ["mloop_iter", "mloop_exit", "mloop"],
+               ("ListC", "size"): ["size_iter", "size_loop"],
+               ("ListC", "accept"): ["lcl_iter", "lcl_exit", "lcl_loop"]}
+
+
+def theorem_range(lines, name):
+    lo = next(i for i, l in enumerate(lines) if l.startswith(f"theorem {name} ")) + 1
+    hi = next(i for i in range(lo, len(lines)) if lines[i] == "") + 1
+    return [lo, hi]
+
+
+def lemma_ranges(lines, ty, obl):
+    return [theorem_range(lines, n) for n in LOOP_LEMMAS.get((ty, obl), [])
+            if any(l.startswith(f"theorem {n} ") for l in lines)]
+
+
 import sys as _sys
 if "--ids" in _sys.argv:   # restrict to the named cases (the others were run before)
     _ids = _sys.argv[_sys.argv.index("--ids") + 1].split(",")
@@ -97,9 +119,9 @@ def prepare(work, result, ddir):
                                 "--mutant", f"{meth}={sf}"], capture_output=True, text=True)
             assert r.returncode == 0, r.stderr
             lines = open(lf).read().split("\n")
-            lo = next(i for i, l in enumerate(lines) if l.startswith(f"theorem {thm} ")) + 1
-            hi = next(i for i in range(lo, len(lines)) if lines[i] == "") + 1
+            lo, hi = theorem_range(lines, thm)
             cases.append({"id": cid, "kind": kind, "type": ty, "method": meth, "designated": f"{ns}.{thm}",
+                          "lemma_lines": lemma_ranges(lines, ty, obl) if thm == obl else [],
                           "mutation": f"'{old}' -> '{new}'" if kind == "mutant" else "none (unchanged copy)",
                           "lean": lf, "theorem_lines": [lo, hi], "log": os.path.join(work, f"{name}.log")})
             run.append(f"lake env lean {lf} > {work}/{name}.log 2>&1; echo \"{name} $?\" >> {work}/rc.txt")
@@ -120,11 +142,12 @@ def evaluate(work, out):
         if c["kind"] == "control":
             ok = rc.get(name) == "0" and not errs
         else:
-            ok = rc.get(name) not in ("0", None) and bool(errs) and lo <= errs[0][0] <= hi
+            ok = rc.get(name) not in ("0", None) and bool(errs) and any(
+                a <= errs[0][0] <= b for a, b in [[lo, hi]] + c.get("lemma_lines", []))
         bad += not ok
         rows.append({"id": c["id"], "kind": c["kind"], "designated": c["designated"], "mutation": c["mutation"],
                      "exit": rc.get(name), "first_error": f"line {errs[0][0]}: {errs[0][1][:120]}" if errs else None,
-                     "theorem_lines": c["theorem_lines"], "as_expected": ok})
+                     "theorem_lines": c["theorem_lines"], "lemma_lines": c.get("lemma_lines", []), "as_expected": ok})
     res = {"schema": "fvphase1c.x4-negative/1", "cases": len(rows), "as_expected": len(rows) - bad, "rows": rows}
     json.dump(res, open(out, "w"), indent=1)
     print(json.dumps({"cases": len(rows), "as_expected": len(rows) - bad}))

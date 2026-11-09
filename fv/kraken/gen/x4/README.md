@@ -41,6 +41,7 @@ Desc와 Go 배치에서 정리 문장을, 기계어 지시 목록에서 증명�
 
 ## 4. ListU64 조각 (손 주 정리가 있는 고정 목록 행 9개 모두 생성; growslice 호출 지점과 r1 프레임 변형은 제외)
 
+리스트 타입에서 Desc가 문장에 주는 값은 `size_stmt`의 원소 크기 하나뿐이다(리뷰 r6 S3). 나머지 Desc 값(원소 크기 8, 한도 16, 고정부 4)은 틀을 고르는 문지기다. 그 밖의 값(프레임, 오프셋, 레이블)은 코드와 Go 배치에서 온다. 생성 모듈 머리 주석도 그렇게 적는다.
 `results/attempts-listu64.json`, `compare-listu64.json`, `negative-listu64.json`, `axioms-listu64.json`.
 틀은 `Fk/LuMarshal.lean`(size), `Fk/LuReject.lean`(짧은 길이, 첫 오프셋), `Fk/LuRejectCall.lean`(fmt.errorf 경로 둘)의 조각을 따른다.
 보조정리 `Gen1cX4.off4`와 fmt.errorf 경로의 일반 보조정리 8개(`staticBox_congr`, `and7_ne`, `and7_zero'`, `shr3_toNat'`, `jg16_true`, `store_avx_step`, `lr_split16`, `join4`)는 `Support.lean`에서 같은 문장으로 다시 증명했다(손으로 씀).

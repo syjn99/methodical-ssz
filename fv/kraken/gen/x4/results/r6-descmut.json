@@ -1,0 +1,183 @@
+{
+ "schema": "fvphase1c.x4-descmut/1",
+ "source": "review r6 tools/descmut.py prepare (generator step only; forged checker records on purpose), replayed after S2",
+ "tracebacks": 0,
+ "rows": [
+  {
+   "id": "sc-width-C2",
+   "type": "Scalars",
+   "what": "field C width 4 -> 2 (Desc and ssz.w)",
+   "obligation": "accept",
+   "generator": "written",
+   "message": ""
+  },
+  {
+   "id": "sc-width-C2",
+   "type": "Scalars",
+   "what": "field C width 4 -> 2 (Desc and ssz.w)",
+   "obligation": "marshal",
+   "generator": "written",
+   "message": ""
+  },
+  {
+   "id": "sc-E-uint",
+   "type": "Scalars",
+   "what": "field E kind bool -> uint (width 1)",
+   "obligation": "accept",
+   "generator": "refused",
+   "message": "x4gen: refused github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars: template does not fit the Desc/layout/code (ValueError: 0 bool fields: the accept/reject_bool/marshal/compose templates take exactly one)"
+  },
+  {
+   "id": "sc-D-offset8",
+   "type": "Scalars",
+   "what": "field D ssz offset 7 -> 8",
+   "obligation": "accept",
+   "generator": "refused",
+   "message": "x4gen: refused Scalars: directive 10 `mov 0x7(%rbx),%rcx` loads input offset 7, not a field offset of the Desc [0, 1, 3, 8, 15]"
+  },
+  {
+   "id": "lu-esz4",
+   "type": "ListU64",
+   "what": "elem_size 8 -> 4",
+   "obligation": "size",
+   "generator": "refused",
+   "message": "x4gen: refused github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64: template does not fit the Desc/layout/code (AssertionError: [(0, 'label', 'target.ListU64.SizeSSZ'), (1, 'instr', 'mov 0x8(%rax),%rax'), (2,"
+  },
+  {
+   "id": "lu-esz4",
+   "type": "ListU64",
+   "what": "elem_size 8 -> 4",
+   "obligation": "accept",
+   "generator": "refused",
+   "message": "x4gen: refused github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64: the accept/loop template is for 8-byte elements and limit 16"
+  },
+  {
+   "id": "lu-esz4",
+   "type": "ListU64",
+   "what": "elem_size 8 -> 4",
+   "obligation": "reject_toobig",
+   "generator": "refused",
+   "message": "x4gen: refused github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64: the fmt.errorf reject template is for 8-byte elements and limit 16 (Support lemmas and7_*, shr3_toNat', jg16_true), not 4/16"
+  },
+  {
+   "id": "lu-limit32",
+   "type": "ListU64",
+   "what": "limit 16 -> 32",
+   "obligation": "size",
+   "generator": "written",
+   "message": ""
+  },
+  {
+   "id": "lu-limit32",
+   "type": "ListU64",
+   "what": "limit 16 -> 32",
+   "obligation": "reject_short",
+   "generator": "written",
+   "message": ""
+  },
+  {
+   "id": "lu-limit32",
+   "type": "ListU64",
+   "what": "limit 16 -> 32",
+   "obligation": "reject_offset",
+   "generator": "written",
+   "message": ""
+  },
+  {
+   "id": "lu-limit32",
+   "type": "ListU64",
+   "what": "limit 16 -> 32",
+   "obligation": "accept",
+   "generator": "refused",
+   "message": "x4gen: refused github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64: the accept/loop template is for 8-byte elements and limit 16"
+  },
+  {
+   "id": "lu-limit32",
+   "type": "ListU64",
+   "what": "limit 16 -> 32",
+   "obligation": "marshal",
+   "generator": "refused",
+   "message": "x4gen: refused github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64: the marshal/loop template is for 8-byte elements and limit 16"
+  },
+  {
+   "id": "lu-limit32",
+   "type": "ListU64",
+   "what": "limit 16 -> 32",
+   "obligation": "reject_toobig",
+   "generator": "refused",
+   "message": "x4gen: refused github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64: the fmt.errorf reject template is for 8-byte elements and limit 16 (Support lemmas and7_*, shr3_toNat', jg16_true), not 8/32"
+  },
+  {
+   "id": "lu-esz16",
+   "type": "ListU64",
+   "what": "elem_size 8 -> 16",
+   "obligation": "size",
+   "generator": "refused",
+   "message": "x4gen: refused github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64: template does not fit the Desc/layout/code (ValueError: element size 16: the list templates take 1, 2, 4, 8 bytes or containers (null))"
+  },
+  {
+   "id": "lu-esz16",
+   "type": "ListU64",
+   "what": "elem_size 8 -> 16",
+   "obligation": "reject_short",
+   "generator": "refused",
+   "message": "x4gen: refused github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64: template does not fit the Desc/layout/code (ValueError: element size 16: the list templates take 1, 2, 4, 8 bytes or containers (null))"
+  },
+  {
+   "id": "lu-fps8",
+   "type": "ListU64",
+   "what": "fixed_part_size 4 -> 8",
+   "obligation": "size",
+   "generator": "refused",
+   "message": "x4gen: refused github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64: template does not fit the Desc/layout/code (AssertionError: {'name': 'L', 'index': 0, 'offset': 0, 'width': 4, 'variable': True, 'kind': 'li"
+  },
+  {
+   "id": "lu-fps8",
+   "type": "ListU64",
+   "what": "fixed_part_size 4 -> 8",
+   "obligation": "reject_short",
+   "generator": "refused",
+   "message": "x4gen: refused github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64: template does not fit the Desc/layout/code (AssertionError: {'name': 'L', 'index': 0, 'offset': 0, 'width': 4, 'variable': True, 'kind': 'li"
+  },
+  {
+   "id": "lc-fps8",
+   "type": "ListC",
+   "what": "fixed_part_size 4 -> 8",
+   "obligation": "reject_short",
+   "generator": "refused",
+   "message": "x4gen: refused github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListC: template does not fit the Desc/layout/code (AssertionError: {'name': 'Items', 'index': 0, 'offset': 0, 'width': 4, 'variable': True, 'kind': '"
+  },
+  {
+   "id": "lc-limit8",
+   "type": "ListC",
+   "what": "limit 4 -> 8",
+   "obligation": "reject_short",
+   "generator": "written",
+   "message": ""
+  },
+  {
+   "id": "lc-limit8",
+   "type": "ListC",
+   "what": "limit 4 -> 8",
+   "obligation": "reject_offset",
+   "generator": "written",
+   "message": ""
+  },
+  {
+   "id": "lc-esz8",
+   "type": "ListC",
+   "what": "elem_size null -> 8 (container list declared as uint64 list)",
+   "obligation": "reject_short",
+   "generator": "written",
+   "message": ""
+  },
+  {
+   "id": "lc-esz8",
+   "type": "ListC",
+   "what": "elem_size null -> 8 (container list declared as uint64 list)",
+   "obligation": "accept",
+   "generator": "refused",
+   "message": "x4gen: refused github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListC: the accept/loop template is for 8-byte elements and limit 16"
+  }
+ ]
+}
