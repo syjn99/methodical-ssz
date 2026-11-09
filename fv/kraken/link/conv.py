@@ -15,7 +15,8 @@ The converter changes only what Kraken cannot take from objdump directly:
   `[A-Za-z0-9_.]` become `_` (Kraken identifier token).
 With --norm it also rewrites padding forms (table NORM) to `nop` (a gap in the
 Kraken parser, not a semantic change: Kraken layouts are abstract, so the byte
-length of a nop is not used; check.py compares the original bytes).
+length of a nop is not used; check.py compares the original bytes), and drops
+the zero index `,%riz,1)` of a SIB operand (RIZ; same address).
 
 The converter fails (exit status 1) on: an instruction line without the GNU
 form (`// ...`), an address gap between instructions, a branch into the middle
@@ -95,6 +96,10 @@ RIP = re.compile(r"(-?0x[0-9a-f]+|-?\d+)\(%rip\)")
 NORM = {"nopl (%rax)": "nop", "data16 nop": "nop", "nopw 0x0(%rax,%rax,1)": "nop",
         "nopw (%rax,%rax,1)": "nop", "nopl 0x0(%rax)": "nop", "nopl 0x0(%rax,%rax,1)": "nop", "nopl (%rax,%rax,1)": "nop",
         "nopw %cs:0x0(%rax,%rax,1)": "nop", "data16 nopw %cs:0x0(%rax,%rax,1)": "nop", "xchg %ax,%ax": "nop"}
+# `%riz` (phase1c, Go 1.26.10): GNU objdump prints a SIB byte without an index register as index
+# `%riz` (for example `0x10(%r12,%riz,1)`: base r12 needs a SIB byte). The index is zero, so the
+# address is `0x10(%r12)`. Kraken's parser has no `riz` register. Same address, same bytes (check.py (d)).
+RIZ = re.compile(r",%riz,1\)")
 
 
 def convert(fn, syms, norm):
@@ -127,6 +132,7 @@ def convert(fn, syms, norm):
                 att = att[: r.start()] + f"{ref}(%rip)" + att[r.end():]
         if norm:
             att = NORM.get(att, att)
+            att = RIZ.sub(")", att)
         body.append((addr, att))
     out = [f"{name}:"]
     for addr, att in body:
@@ -161,6 +167,9 @@ def selftest():
             raise AssertionError("mid-instruction branch accepted")
         except SystemExit:
             pass
+    riz = {"name": "pkg.r", "ins": [(0x100, 6, "mov 0x10(%r12,%riz,1),%r12"), (0x106, 1, "retq")]}
+    assert "  mov 0x10(%r12),%r12\n" in convert(riz, syms, True)[1]
+    assert "%riz" in convert(riz, syms, False)[1]
     clean("pkg.h[uint8]")
     try:
         clean("pkg.h_uint8_")
