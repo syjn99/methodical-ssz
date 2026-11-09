@@ -1,0 +1,162 @@
+--- a/proto/prysm/v1alpha1/fulu.ssz.go
++++ b/proto/prysm/v1alpha1/fulu.ssz.go
+@@ -85,9 +85,6 @@
+ 	sszVarOffset0 := ssz.ReadOffset(buf[0:4]) // c.Block
+ 	if sszVarOffset0 != 12 {
+ 		return ssz.ErrInvalidVariableOffset
+-	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+ 	}
+ 	sszVarOffset1 := ssz.ReadOffset(buf[4:8]) // c.KzgProofs
+ 	if sszVarOffset1 > size || sszVarOffset1 < sszVarOffset0 {
+@@ -334,6 +331,9 @@
+ 	offset += len(c.CurrentEpochParticipation)
+ 
+ 	// Field 17: JustificationBits
++	if err = ssz.ValidateBitvector(c.JustificationBits, 4); err != nil {
++		return nil, fmt.Errorf("JustificationBits: %w", err)
++	}
+ 	if len([]byte(c.JustificationBits)) != 1 {
+ 		return nil, ssz.ErrBytesLength
+ 	}
+@@ -596,9 +596,6 @@
+ 	if sszVarOffset7 != 2737225 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset7 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszVarOffset9 := ssz.ReadOffset(buf[524540:524544]) // c.Eth1DataVotes
+ 	if sszVarOffset9 > size || sszVarOffset9 < sszVarOffset7 {
+ 		return ssz.ErrOffset
+@@ -828,6 +825,9 @@
+ 	c.CurrentEpochParticipation = append([]byte{}, sszSlice16...)
+ 
+ 	// Field 17: JustificationBits
++	if err = ssz.ValidateBitvector(sszSlice17, 4); err != nil {
++		return fmt.Errorf("JustificationBits: %w", err)
++	}
+ 	c.JustificationBits = make([]byte, 0, 1)
+ 	c.JustificationBits = append(c.JustificationBits, go_bitfield.Bitvector4(sszSlice17)...)
+ 
+@@ -1397,9 +1397,6 @@
+ 	if sszVarOffset4 != 84 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset4 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice4 := buf[sszVarOffset4:] // c.Body
+ 
+ 	// Field 0: Slot
+@@ -1568,9 +1565,6 @@
+ 	if sszVarOffset1 != 356 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset1 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszVarOffset2 := ssz.ReadOffset(buf[12:16]) // c.KzgCommitments
+ 	if sszVarOffset2 > size || sszVarOffset2 < sszVarOffset1 {
+ 		return ssz.ErrOffset
+@@ -1794,9 +1788,6 @@
+ 	if sszVarOffset1 != 36 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset1 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice1 := buf[sszVarOffset1:] // c.Columns
+ 
+ 	// Field 0: BlockRoot
+@@ -1924,9 +1915,6 @@
+ 	if sszVarOffset0 != 340 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice0 := buf[sszVarOffset0:] // c.KzgCommitments
+ 
+ 	// Field 0: KzgCommitments
+@@ -2044,14 +2032,14 @@
+ 	offset += len(c.Requests)
+ 
+ 	// Field 0: Available
+-	if len(c.Available) > 4096 {
+-		return nil, ssz.ErrListTooBig
++	if err = ssz.ValidateBitlist(c.Available, 4096); err != nil {
++		return nil, fmt.Errorf("Available: %w", err)
+ 	}
+ 	dst = append(dst, c.Available...)
+ 
+ 	// Field 1: Requests
+-	if len(c.Requests) > 4096 {
+-		return nil, ssz.ErrListTooBig
++	if err = ssz.ValidateBitlist(c.Requests, 4096); err != nil {
++		return nil, fmt.Errorf("Requests: %w", err)
+ 	}
+ 	dst = append(dst, c.Requests...)
+ 	return dst, err
+@@ -2067,9 +2055,6 @@
+ 	sszVarOffset0 := ssz.ReadOffset(buf[0:4]) // c.Available
+ 	if sszVarOffset0 != 8 {
+ 		return ssz.ErrInvalidVariableOffset
+-	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+ 	}
+ 	sszVarOffset1 := ssz.ReadOffset(buf[4:8]) // c.Requests
+ 	if sszVarOffset1 > size || sszVarOffset1 < sszVarOffset0 {
+@@ -2160,8 +2145,8 @@
+ 	}
+ 
+ 	// Field 0: CellsPresentBitmap
+-	if len(c.CellsPresentBitmap) > 4096 {
+-		return nil, ssz.ErrListTooBig
++	if err = ssz.ValidateBitlist(c.CellsPresentBitmap, 4096); err != nil {
++		return nil, fmt.Errorf("CellsPresentBitmap: %w", err)
+ 	}
+ 	dst = append(dst, c.CellsPresentBitmap...)
+ 
+@@ -2216,9 +2201,6 @@
+ 	sszVarOffset0 := ssz.ReadOffset(buf[0:4]) // c.CellsPresentBitmap
+ 	if sszVarOffset0 != 16 {
+ 		return ssz.ErrInvalidVariableOffset
+-	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+ 	}
+ 	sszVarOffset1 := ssz.ReadOffset(buf[4:8]) // c.PartialColumn
+ 	if sszVarOffset1 > size || sszVarOffset1 < sszVarOffset0 {
+@@ -2473,9 +2455,6 @@
+ 	if sszVarOffset0 != 12 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszVarOffset1 := ssz.ReadOffset(buf[4:8]) // c.KzgProofs
+ 	if sszVarOffset1 > size || sszVarOffset1 < sszVarOffset0 {
+ 		return ssz.ErrOffset
+@@ -2636,9 +2615,6 @@
+ 	if sszVarOffset0 != 100 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice0 := buf[sszVarOffset0:] // c.Block
+ 
+ 	// Field 0: Block
+@@ -2729,9 +2705,6 @@
+ 	sszVarOffset0 := ssz.ReadOffset(buf[0:4]) // c.Message
+ 	if sszVarOffset0 != 100 {
+ 		return ssz.ErrInvalidVariableOffset
+-	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+ 	}
+ 	sszSlice0 := buf[sszVarOffset0:] // c.Message
+ 

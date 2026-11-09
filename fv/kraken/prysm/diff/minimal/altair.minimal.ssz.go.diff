@@ -1,0 +1,62 @@
+--- a/proto/prysm/v1alpha1/altair.minimal.ssz.go
++++ b/proto/prysm/v1alpha1/altair.minimal.ssz.go
+@@ -79,9 +79,6 @@
+ 	if sszVarOffset4 != 84 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset4 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice4 := buf[sszVarOffset4:] // c.Body
+ 
+ 	// Field 0: Slot
+@@ -309,9 +306,6 @@
+ 	sszVarOffset3 := ssz.ReadOffset(buf[200:204]) // c.ProposerSlashings
+ 	if sszVarOffset3 != 320 {
+ 		return ssz.ErrInvalidVariableOffset
+-	}
+-	if sszVarOffset3 > size {
+-		return ssz.ErrOffset
+ 	}
+ 	sszVarOffset4 := ssz.ReadOffset(buf[204:208]) // c.AttesterSlashings
+ 	if sszVarOffset4 > size || sszVarOffset4 < sszVarOffset3 {
+@@ -748,6 +742,9 @@
+ 	offset += len(c.CurrentEpochParticipation)
+ 
+ 	// Field 17: JustificationBits
++	if err = ssz.ValidateBitvector(c.JustificationBits, 4); err != nil {
++		return nil, fmt.Errorf("JustificationBits: %w", err)
++	}
+ 	if len([]byte(c.JustificationBits)) != 1 {
+ 		return nil, ssz.ErrBytesLength
+ 	}
+@@ -887,9 +884,6 @@
+ 	if sszVarOffset7 != 10229 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset7 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszVarOffset9 := ssz.ReadOffset(buf[4348:4352]) // c.Eth1DataVotes
+ 	if sszVarOffset9 > size || sszVarOffset9 < sszVarOffset7 {
+ 		return ssz.ErrOffset
+@@ -1094,6 +1088,9 @@
+ 	c.CurrentEpochParticipation = append([]byte{}, sszSlice16...)
+ 
+ 	// Field 17: JustificationBits
++	if err = ssz.ValidateBitvector(sszSlice17, 4); err != nil {
++		return fmt.Errorf("JustificationBits: %w", err)
++	}
+ 	c.JustificationBits = make([]byte, 0, 1)
+ 	c.JustificationBits = append(c.JustificationBits, go_bitfield.Bitvector4(sszSlice17)...)
+ 
+@@ -2152,9 +2149,6 @@
+ 	if sszVarOffset0 != 100 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice0 := buf[sszVarOffset0:] // c.Block
+ 
+ 	// Field 0: Block

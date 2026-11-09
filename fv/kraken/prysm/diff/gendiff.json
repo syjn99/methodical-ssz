@@ -1,0 +1,251 @@
+{
+ "schema": "fvphase1c.gendiff/1",
+ "rules": [
+  {
+   "commit": "b51620a",
+   "title": "drop unreachable first-offset bound check"
+  },
+  {
+   "commit": "b51620a",
+   "title": "drop unreachable first-offset bound check (diff aligned one line earlier)"
+  },
+  {
+   "commit": "f0b85c7",
+   "title": "ValidateBitvector on marshal"
+  },
+  {
+   "commit": "f0b85c7",
+   "title": "ValidateBitvector on unmarshal"
+  },
+  {
+   "commit": "280b752",
+   "title": "Bitlist marshal length in bits (ValidateBitlist)"
+  }
+ ],
+ "files": [
+  {
+   "preset": "mainnet",
+   "file": "proto/prysm/v1alpha1/altair.ssz.go",
+   "identical": false,
+   "blocks": 6,
+   "classified": 6,
+   "unclassified": 0,
+   "per_commit": {
+    "b51620a": 4,
+    "f0b85c7": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "mainnet",
+   "file": "proto/prysm/v1alpha1/bellatrix.ssz.go",
+   "identical": false,
+   "blocks": 9,
+   "classified": 9,
+   "unclassified": 0,
+   "per_commit": {
+    "b51620a": 7,
+    "f0b85c7": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "mainnet",
+   "file": "proto/prysm/v1alpha1/capella.ssz.go",
+   "identical": false,
+   "blocks": 16,
+   "classified": 16,
+   "unclassified": 0,
+   "per_commit": {
+    "b51620a": 14,
+    "f0b85c7": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "mainnet",
+   "file": "proto/prysm/v1alpha1/deneb.ssz.go",
+   "identical": false,
+   "blocks": 19,
+   "classified": 19,
+   "unclassified": 0,
+   "per_commit": {
+    "b51620a": 17,
+    "f0b85c7": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "mainnet",
+   "file": "proto/prysm/v1alpha1/electra.ssz.go",
+   "identical": false,
+   "blocks": 22,
+   "classified": 22,
+   "unclassified": 0,
+   "per_commit": {
+    "b51620a": 19,
+    "280b752": 1,
+    "f0b85c7": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "mainnet",
+   "file": "proto/engine/v1/engine.ssz.go",
+   "identical": false,
+   "blocks": 13,
+   "classified": 13,
+   "unclassified": 0,
+   "per_commit": {
+    "b51620a": 13
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "mainnet",
+   "file": "proto/prysm/v1alpha1/fulu.ssz.go",
+   "identical": false,
+   "blocks": 16,
+   "classified": 16,
+   "unclassified": 0,
+   "per_commit": {
+    "b51620a": 11,
+    "f0b85c7": 2,
+    "280b752": 3
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "mainnet",
+   "file": "proto/prysm/v1alpha1/phase0.ssz.go",
+   "identical": false,
+   "blocks": 14,
+   "classified": 14,
+   "unclassified": 0,
+   "per_commit": {
+    "b51620a": 10,
+    "280b752": 2,
+    "f0b85c7": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "minimal",
+   "file": "proto/prysm/v1alpha1/altair.minimal.ssz.go",
+   "identical": false,
+   "blocks": 6,
+   "classified": 6,
+   "unclassified": 0,
+   "per_commit": {
+    "b51620a": 4,
+    "f0b85c7": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "minimal",
+   "file": "proto/prysm/v1alpha1/bellatrix.minimal.ssz.go",
+   "identical": false,
+   "blocks": 9,
+   "classified": 9,
+   "unclassified": 0,
+   "per_commit": {
+    "b51620a": 7,
+    "f0b85c7": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "minimal",
+   "file": "proto/prysm/v1alpha1/capella.minimal.ssz.go",
+   "identical": false,
+   "blocks": 16,
+   "classified": 16,
+   "unclassified": 0,
+   "per_commit": {
+    "b51620a": 14,
+    "f0b85c7": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "minimal",
+   "file": "proto/prysm/v1alpha1/deneb.minimal.ssz.go",
+   "identical": false,
+   "blocks": 19,
+   "classified": 19,
+   "unclassified": 0,
+   "per_commit": {
+    "b51620a": 17,
+    "f0b85c7": 2
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "minimal",
+   "file": "proto/prysm/v1alpha1/electra.minimal.ssz.go",
+   "identical": false,
+   "blocks": 24,
+   "classified": 24,
+   "unclassified": 0,
+   "per_commit": {
+    "b51620a": 19,
+    "f0b85c7": 4,
+    "280b752": 1
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "minimal",
+   "file": "proto/engine/v1/engine.minimal.ssz.go",
+   "identical": false,
+   "blocks": 13,
+   "classified": 13,
+   "unclassified": 0,
+   "per_commit": {
+    "b51620a": 13
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "minimal",
+   "file": "proto/prysm/v1alpha1/fulu.minimal.ssz.go",
+   "identical": false,
+   "blocks": 16,
+   "classified": 16,
+   "unclassified": 0,
+   "per_commit": {
+    "b51620a": 11,
+    "f0b85c7": 2,
+    "280b752": 3
+   },
+   "unclassified_blocks": []
+  },
+  {
+   "preset": "minimal",
+   "file": "proto/prysm/v1alpha1/phase0.minimal.ssz.go",
+   "identical": false,
+   "blocks": 14,
+   "classified": 14,
+   "unclassified": 0,
+   "per_commit": {
+    "b51620a": 10,
+    "280b752": 2,
+    "f0b85c7": 2
+   },
+   "unclassified_blocks": []
+  }
+ ],
+ "totals": {
+  "files": 16,
+  "identical_files": 0,
+  "blocks": 232,
+  "classified": 232,
+  "unclassified": 0,
+  "per_commit": {
+   "280b752": 12,
+   "b51620a": 190,
+   "f0b85c7": 30
+  }
+ }
+}

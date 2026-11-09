@@ -1,0 +1,192 @@
+--- a/proto/prysm/v1alpha1/deneb.ssz.go
++++ b/proto/prysm/v1alpha1/deneb.ssz.go
+@@ -217,9 +217,6 @@
+ 	sszVarOffset3 := ssz.ReadOffset(buf[200:204]) // c.ProposerSlashings
+ 	if sszVarOffset3 != 392 {
+ 		return ssz.ErrInvalidVariableOffset
+-	}
+-	if sszVarOffset3 > size {
+-		return ssz.ErrOffset
+ 	}
+ 	sszVarOffset4 := ssz.ReadOffset(buf[204:208]) // c.AttesterSlashings
+ 	if sszVarOffset4 > size || sszVarOffset4 < sszVarOffset3 {
+@@ -696,9 +693,6 @@
+ 	if sszVarOffset0 != 12 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszVarOffset1 := ssz.ReadOffset(buf[4:8]) // c.KzgProofs
+ 	if sszVarOffset1 > size || sszVarOffset1 < sszVarOffset0 {
+ 		return ssz.ErrOffset
+@@ -877,9 +871,6 @@
+ 	sszVarOffset4 := ssz.ReadOffset(buf[80:84]) // c.Body
+ 	if sszVarOffset4 != 84 {
+ 		return ssz.ErrInvalidVariableOffset
+-	}
+-	if sszVarOffset4 > size {
+-		return ssz.ErrOffset
+ 	}
+ 	sszSlice4 := buf[sszVarOffset4:] // c.Body
+ 
+@@ -1081,6 +1072,9 @@
+ 	offset += len(c.CurrentEpochParticipation)
+ 
+ 	// Field 17: JustificationBits
++	if err = ssz.ValidateBitvector(c.JustificationBits, 4); err != nil {
++		return nil, fmt.Errorf("JustificationBits: %w", err)
++	}
+ 	if len([]byte(c.JustificationBits)) != 1 {
+ 		return nil, ssz.ErrBytesLength
+ 	}
+@@ -1256,9 +1250,6 @@
+ 	if sszVarOffset7 != 2736653 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset7 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszVarOffset9 := ssz.ReadOffset(buf[524540:524544]) // c.Eth1DataVotes
+ 	if sszVarOffset9 > size || sszVarOffset9 < sszVarOffset7 {
+ 		return ssz.ErrOffset
+@@ -1473,6 +1464,9 @@
+ 	c.CurrentEpochParticipation = append([]byte{}, sszSlice16...)
+ 
+ 	// Field 17: JustificationBits
++	if err = ssz.ValidateBitvector(sszSlice17, 4); err != nil {
++		return fmt.Errorf("JustificationBits: %w", err)
++	}
+ 	c.JustificationBits = make([]byte, 0, 1)
+ 	c.JustificationBits = append(c.JustificationBits, go_bitfield.Bitvector4(sszSlice17)...)
+ 
+@@ -2002,9 +1996,6 @@
+ 	sszVarOffset3 := ssz.ReadOffset(buf[200:204]) // c.ProposerSlashings
+ 	if sszVarOffset3 != 392 {
+ 		return ssz.ErrInvalidVariableOffset
+-	}
+-	if sszVarOffset3 > size {
+-		return ssz.ErrOffset
+ 	}
+ 	sszVarOffset4 := ssz.ReadOffset(buf[204:208]) // c.AttesterSlashings
+ 	if sszVarOffset4 > size || sszVarOffset4 < sszVarOffset3 {
+@@ -2476,9 +2467,6 @@
+ 	if sszVarOffset4 != 84 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset4 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice4 := buf[sszVarOffset4:] // c.Body
+ 
+ 	// Field 0: Slot
+@@ -2816,9 +2804,6 @@
+ 	if sszVarOffset0 != 4 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice0 := buf[sszVarOffset0:] // c.Sidecars
+ 
+ 	// Field 0: Sidecars
+@@ -2948,9 +2933,6 @@
+ 	if sszVarOffset0 != 88 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszVarOffset1 := ssz.ReadOffset(buf[4:8]) // c.BlobKzgCommitments
+ 	if sszVarOffset1 > size || sszVarOffset1 < sszVarOffset0 {
+ 		return ssz.ErrOffset
+@@ -3104,9 +3086,6 @@
+ 	if sszVarOffset1 != 244 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset1 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice1 := buf[sszVarOffset1:] // c.Execution
+ 
+ 	// Field 0: Beacon
+@@ -3240,9 +3219,6 @@
+ 	if sszVarOffset0 != 24788 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice0 := buf[sszVarOffset0:] // c.Header
+ 
+ 	// Field 0: Header
+@@ -3419,9 +3395,6 @@
+ 	if sszVarOffset0 != 25152 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszVarOffset3 := ssz.ReadOffset(buf[24788:24792]) // c.FinalizedHeader
+ 	if sszVarOffset3 > size || sszVarOffset3 < sszVarOffset0 {
+ 		return ssz.ErrOffset
+@@ -3638,9 +3611,6 @@
+ 	if sszVarOffset0 != 368 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszVarOffset1 := ssz.ReadOffset(buf[4:8]) // c.FinalizedHeader
+ 	if sszVarOffset1 > size || sszVarOffset1 < sszVarOffset0 {
+ 		return ssz.ErrOffset
+@@ -3792,9 +3762,6 @@
+ 	if sszVarOffset0 != 172 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice0 := buf[sszVarOffset0:] // c.AttestedHeader
+ 
+ 	// Field 0: AttestedHeader
+@@ -3920,9 +3887,6 @@
+ 	if sszVarOffset0 != 12 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszVarOffset1 := ssz.ReadOffset(buf[4:8]) // c.KzgProofs
+ 	if sszVarOffset1 > size || sszVarOffset1 < sszVarOffset0 {
+ 		return ssz.ErrOffset
+@@ -4083,9 +4047,6 @@
+ 	if sszVarOffset0 != 100 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice0 := buf[sszVarOffset0:] // c.Block
+ 
+ 	// Field 0: Block
+@@ -4177,9 +4138,6 @@
+ 	if sszVarOffset0 != 100 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice0 := buf[sszVarOffset0:] // c.Message
+ 
+ 	// Field 0: Message
+@@ -4271,9 +4229,6 @@
+ 	if sszVarOffset0 != 100 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice0 := buf[sszVarOffset0:] // c.Message
+ 
+ 	// Field 0: Message

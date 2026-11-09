@@ -1,0 +1,162 @@
+--- a/proto/prysm/v1alpha1/capella.ssz.go
++++ b/proto/prysm/v1alpha1/capella.ssz.go
+@@ -201,9 +201,6 @@
+ 	sszVarOffset3 := ssz.ReadOffset(buf[200:204]) // c.ProposerSlashings
+ 	if sszVarOffset3 != 388 {
+ 		return ssz.ErrInvalidVariableOffset
+-	}
+-	if sszVarOffset3 > size {
+-		return ssz.ErrOffset
+ 	}
+ 	sszVarOffset4 := ssz.ReadOffset(buf[204:208]) // c.AttesterSlashings
+ 	if sszVarOffset4 > size || sszVarOffset4 < sszVarOffset3 {
+@@ -636,9 +633,6 @@
+ 	if sszVarOffset4 != 84 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset4 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice4 := buf[sszVarOffset4:] // c.Body
+ 
+ 	// Field 0: Slot
+@@ -839,6 +833,9 @@
+ 	offset += len(c.CurrentEpochParticipation)
+ 
+ 	// Field 17: JustificationBits
++	if err = ssz.ValidateBitvector(c.JustificationBits, 4); err != nil {
++		return nil, fmt.Errorf("JustificationBits: %w", err)
++	}
+ 	if len([]byte(c.JustificationBits)) != 1 {
+ 		return nil, ssz.ErrBytesLength
+ 	}
+@@ -1014,9 +1011,6 @@
+ 	if sszVarOffset7 != 2736653 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset7 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszVarOffset9 := ssz.ReadOffset(buf[524540:524544]) // c.Eth1DataVotes
+ 	if sszVarOffset9 > size || sszVarOffset9 < sszVarOffset7 {
+ 		return ssz.ErrOffset
+@@ -1231,6 +1225,9 @@
+ 	c.CurrentEpochParticipation = append([]byte{}, sszSlice16...)
+ 
+ 	// Field 17: JustificationBits
++	if err = ssz.ValidateBitvector(sszSlice17, 4); err != nil {
++		return fmt.Errorf("JustificationBits: %w", err)
++	}
+ 	c.JustificationBits = make([]byte, 0, 1)
+ 	c.JustificationBits = append(c.JustificationBits, go_bitfield.Bitvector4(sszSlice17)...)
+ 
+@@ -1744,9 +1741,6 @@
+ 	sszVarOffset3 := ssz.ReadOffset(buf[200:204]) // c.ProposerSlashings
+ 	if sszVarOffset3 != 388 {
+ 		return ssz.ErrInvalidVariableOffset
+-	}
+-	if sszVarOffset3 > size {
+-		return ssz.ErrOffset
+ 	}
+ 	sszVarOffset4 := ssz.ReadOffset(buf[204:208]) // c.AttesterSlashings
+ 	if sszVarOffset4 > size || sszVarOffset4 < sszVarOffset3 {
+@@ -2179,9 +2173,6 @@
+ 	if sszVarOffset4 != 84 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset4 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice4 := buf[sszVarOffset4:] // c.Body
+ 
+ 	// Field 0: Slot
+@@ -2398,9 +2389,6 @@
+ 	if sszVarOffset0 != 84 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice0 := buf[sszVarOffset0:] // c.Header
+ 
+ 	// Field 0: Header
+@@ -2591,9 +2579,6 @@
+ 	if sszVarOffset0 != 24788 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice0 := buf[sszVarOffset0:] // c.Header
+ 
+ 	// Field 0: Header
+@@ -2749,9 +2734,6 @@
+ 	if sszVarOffset0 != 368 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszVarOffset1 := ssz.ReadOffset(buf[4:8]) // c.FinalizedHeader
+ 	if sszVarOffset1 > size || sszVarOffset1 < sszVarOffset0 {
+ 		return ssz.ErrOffset
+@@ -2909,9 +2891,6 @@
+ 	if sszVarOffset1 != 244 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset1 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice1 := buf[sszVarOffset1:] // c.Execution
+ 
+ 	// Field 0: Beacon
+@@ -3039,9 +3018,6 @@
+ 	if sszVarOffset0 != 172 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice0 := buf[sszVarOffset0:] // c.AttestedHeader
+ 
+ 	// Field 0: AttestedHeader
+@@ -3200,9 +3176,6 @@
+ 	if sszVarOffset0 != 25152 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszVarOffset3 := ssz.ReadOffset(buf[24788:24792]) // c.FinalizedHeader
+ 	if sszVarOffset3 > size || sszVarOffset3 < sszVarOffset0 {
+ 		return ssz.ErrOffset
+@@ -3383,9 +3356,6 @@
+ 	if sszVarOffset0 != 100 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice0 := buf[sszVarOffset0:] // c.Block
+ 
+ 	// Field 0: Block
+@@ -3477,9 +3447,6 @@
+ 	if sszVarOffset0 != 100 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice0 := buf[sszVarOffset0:] // c.Block
+ 
+ 	// Field 0: Block
+@@ -3650,9 +3617,6 @@
+ 	if sszVarOffset0 != 100 {
+ 		return ssz.ErrInvalidVariableOffset
+ 	}
+-	if sszVarOffset0 > size {
+-		return ssz.ErrOffset
+-	}
+ 	sszSlice0 := buf[sszVarOffset0:] // c.Message
+ 
+ 	// Field 0: Message
