@@ -20,7 +20,7 @@
 
 - `lake build`: 867 jobs, 성공(차가운 프로젝트 빌드 Built 163, 의존성은 따뜻함, 메모리 감시 아래).
 - 공리: 정리 `TOTAL 1658 NONSTANDARD 0`(`AXIOMS.txt`), 모든 선언 `TOTAL 8477 NONSTANDARD 0`(`AXIOMS-ALL.txt`).
-- 시험 타입 9개. 증인 파일 80개.
+- 시험 타입 9개. 증인 파일 81개.
 - 링크 검사 PASS(검사 (a)–(f)). 자기 시험 11개 기대대로. `data.py --check`: 재생성 = 추적 파일.
 - 부정 시험 20개 기대대로(`negative/RESULT`, FAIL 17 + 대조군 PASS 3).
 - goval: 81 파일, 위반 0, 미검사 2. 오류 증인의 타입 기술자 6곳과 오류 전역 20곳을 검사한다.
@@ -80,7 +80,7 @@ Go 값 미검사의 종류별 집계(goval, 81 파일):
 | --- | --- | --- |
 | 값 | 크기·정렬·패딩·bool·슬라이스·겹침 | 2 파일: `WitCpM` dst(기호 길이), 1a `Witness`(대상 없음) |
 | 자원 조각(`s_mem`) | 1123 조각 | 42 조각(기호 길이나 주소. `WitLcO`의 정적 상자 둘 포함) |
-| 타입 내용 | `%w` 증인 5개의 `*errors.errorString` 기술자(Size_, Kind_) | `%d` 인수의 int·uint64 기술자 내용(증인 2개) |
+| 타입 내용 | `%w` 증인 6개의 `*errors.errorString` 기술자(Size_, Kind_) | `%d` 인수의 int·uint64 기술자 내용(증인 2개) |
 | 런타임 전역 | `ssz.Err*` 전역 20곳의 초기화(itab, errorString) | `runtime.writeBarrier` 값, `staticuint64s` 항목(정리 `staticBox_of_lt`가 표와 연결). 증인은 쓰는 항목만 값으로 놓는다(`WitLcO`: 4와 8). 표의 나머지 자리는 0 채움 바이트다. 정리가 읽지 않는다. `WitLcO`의 표 주소 66012는 8의 배수가 아니다. goval은 정적 표를 보지 않는다 |
 
 Prysm 두 타입은 v7.1.8 `51b5a75` 스키마를 옮긴 축약 구조체다.
@@ -131,7 +131,8 @@ protobuf 필드가 있는 실제 Prysm 바이너리의 증명이 아니다.
 
 알려진 한계(수정 3 리뷰 권고 중 고치지 않은 것):
 - goval의 기술자 검사는 Size_·Kind_만 본다. 증인 기술자가 ELF 바이트라는 근거는 Lean 이름 `errorStringPtrType`이다(S3).
-- 부정 시험 대조군(`control`, `lcorderctl`)은 바뀌지 않은 파일이라 Lake 캐시 재생이다. 다시 증명하지 않는다(S4). lcorder의 지정 정리는 주 정리가 부르는 `lcl_order`다.
+- 부정 시험 대조군 `control`, `lcorderctl`은 바뀌지 않은 파일이라 Lake 캐시 재생이다. 다시 증명하지 않는다(S4). `lcitemsctl`은 파일을 바꾸므로 다시 빌드한다. lcorder와 lcitems의 지정 정리는 주 정리가 부르는 루프 보조 정리(`lcl_order`, `lcl_itemerr`)다. 변이 지시어가 거부 경로에만 있고, 진입부 변이는 `LcAccept`를 먼저 깨기 때문이다(`negative/run.sh` 주석).
+- `lu_reject_short_frame`(`Fk/LcItems.lean`)은 `lu_reject_short_main`(`Fk/LuReject.lean`)과 전제가 같고 결론만 강하다. 같은 경로를 두 번 증명한다. 옛 정리를 새 정리에서 유도하면 중복이 없어진다. 이번에는 문서만 고쳤다(R5).
 - 증인은 `runtime.staticuint64s` 표 중 쓰는 항목만 놓는다. `WitLcO`는 표 레이블을 입력 버퍼 뒤로 옮겼다(S7).
 - 형식 문자열 본문을 Lean 보조 정리로 고정하지 않았다(S9). 3절 "형식 문자열의 내용"을 본다.
 
@@ -180,6 +181,10 @@ protobuf 필드가 있는 실제 Prysm 바이너리의 증명이 아니다.
 ## 8. 재현
 
 전제: git 체크아웃(작업 트리 깨끗함), `lean/`과 `vcgen/`의 Lake 패키지를 미리 받아 둠.
+메모리(이 호스트: 9.69 GiB, 스왑 없음): Lake 5.0.0의 `lake build`는 `-j`가 없고 CPU 제한과 무관하게 Lean 여러 개를 동시에 띄운다.
+fix3의 차가운 빌드(4 CPU)는 세션 익명 메모리 최대 7.30 GiB였다(`streams/fix3/logs/246`). 리뷰의 2 CPU 실행은 6 GiB 감시를 넘었다.
+모듈을 하나씩 빌드하면 최대 프로세스 4.61 GiB, 세션 3.32 GiB다. `WitLcI` 단독은 VmRSS 1.82 GiB다(리뷰 fix3-r3).
+작은 기계에서는 모듈을 하나씩 빌드하거나 메모리 감시(예: `streams/fix3/tools/memcap.py`)를 둔다. fix3 스트림은 커널 OOM kill을 한 번 겪었다(`WitLcI` 첫 빌드).
 저장소 루트에서 `. /workspace/tooling/fv/env.sh` 뒤에 아래 블록을 그대로 `sh`로 돌린다.
 `SCR`는 워크트리 밖의 빈 디렉터리다. 한 단계라도 실패하면 멈춘다.
 부정 시험은 사례마다 복제 하나(약 1.1 GiB)를 만들고 다음 사례 전에 지운다.
