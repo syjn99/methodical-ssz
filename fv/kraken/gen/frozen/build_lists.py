@@ -109,7 +109,7 @@ HAND = {
     ("FixedVec", "MarshalSSZTo", "vector-length#2"): ["fv_marshal_reject_main"],
     ("FixedVec", "SizeSSZ", "size"): ["fv_size_main"],
     ("ListU64", "UnmarshalSSZ", "accept"): ["lu_accept_main"],
-    ("ListU64", "UnmarshalSSZ", "size-short"): ["lu_reject_short_main"],
+    ("ListU64", "UnmarshalSSZ", "size-short"): ["lu_reject_short_main", "lu_reject_short_frame"],
     ("ListU64", "UnmarshalSSZ", "offset-first"): ["lu_reject_offset_main"],
     ("ListU64", "UnmarshalSSZ", "list-misaligned"): ["lu_reject_misaligned_main"],
     ("ListU64", "UnmarshalSSZ", "list-too-big"): ["lu_reject_toobig_main"],
@@ -136,6 +136,7 @@ HAND = {
     ("ListC", "UnmarshalSSZ", "listc-first-offset-past"): ["lc_reject_past_main"],
     ("ListC", "UnmarshalSSZ", "listc-tail"): ["lc_reject_tail_main"],
     ("ListC", "UnmarshalSSZ", "listc-offset-order"): ["lc_reject_offset_order_main"],
+    ("ListC", "UnmarshalSSZ", "callee-error"): ["lc_reject_item_main"],
     ("ListC", "MarshalSSZTo", "marshal"): ["lc_marshal_main"],
     ("ListC", "SizeSSZ", "size"): ["lc_size_main"],
     ("BitL", "UnmarshalSSZ", "accept"): ["bl_accept_main"],
@@ -311,7 +312,7 @@ def main():
             {"id": "size-bounds", "what": "explicit size ranges in contracts", "conditions": "no quantification over all sizes and all frames (fv/AGENTS.md)"},
         ],
         "forbidden": ["sorry", "admit", "new axiom", "native_decide", "bv_decide", "hand-typed rodata/itab/type constants", "a premise that makes the conclusion vacuous (False derivable)", "dropping a live resource into `⋆ True` without classification"],
-        "sources": ["fv/kraken/CONTRACTS.md", "fv/kraken/REPORT.md sections 3 and 7", "fv/AGENTS.md", "run shared/INCLUDE-API.json api_version 2 (fix3 d9cdb40, data include, approved stage A); gen/gen1c/include_adapter.py names the version in use"],
+        "sources": ["fv/kraken/CONTRACTS.md", "fv/kraken/REPORT.md sections 3 and 7", "fv/AGENTS.md", "run shared/INCLUDE-API.json api_version 3 (fix3 f9e2bc3 / FINAL 93b63cd, data include, approved final); gen/gen1c/include_adapter.py names the version in use"],
     }
     d = out_dir or f"{k}/gen/frozen"
     for name, obj in (("THEOREMS.json", th), ("ASSUMPTIONS.json", asm)):

@@ -1,8 +1,8 @@
 {
  "schema": "fvphase1c.gen-manifest/1",
- "include_api_version": 2,
- "include_api_status": "approved (stage A)",
- "include_api_fix3_commit": "d9cdb40f861e3e49f017928ade26bc936829ff8f",
+ "include_api_version": 3,
+ "include_api_status": "approved (final, stage B)",
+ "include_api_fix3_commit": "f9e2bc3dc02ed3521e33b04b4bdaeb9c1fa5f3fe",
  "inputs": {
   "elf": "9c850c97066b9d33d6e4c5ef0a385dcbe2c984ae774a527cdedd18d2b72ac501",
   "nm": "9e6c492bbe9a5cba422e785c3f0392291e7b5a25dca99c0a187bb4955684a597",
@@ -10,7 +10,7 @@
    "types.ssz.go": "f54069057d0c46abe32b6aeda173ce102fb3c2d874ae0fc9547183089cc1fa1a",
    "types1b.ssz.go": "31d4226fc5922b74a7e980cc011711b068977fb3a7c8aa5f23982cdf99eaff54"
   },
-  "theorems": "3476b07a4801728301c3736f313a0f43a5debb901ec517057e0727bb29bf81b8"
+  "theorems": "bc8260ee2abfa71b8115700d6ab9a3a6400e15898c41c198d2abc1bb16cc0afe"
  },
  "types": {
   "github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars": {
@@ -134,11 +134,10 @@
     "ErrInvalidVariableOffset",
     "ErrListTooBig",
     "ErrSize",
-    "ListC_MarshalSSZTo_fmt0",
     "ListC_UnmarshalSSZ_fmt1",
     "ListC_UnmarshalSSZ_fmt2",
     "ListC_UnmarshalSSZ_fmt4",
-    "ListC_UnmarshalSSZ_fmt6",
+    "lcFmtItems",
     "lcFmtOrder",
     "lcFmtShort",
     "lcFmtZero"
@@ -485,25 +484,7 @@
    "file": "lcFmtOrder.data",
    "lean": "Eq (Fk.Data.lcFmtOrder.At Fk.Data.lcFmtOrder_addr)"
   },
-  "ListC_UnmarshalSSZ_fmt6": {
-   "kind": "rodata-string",
-   "literal": "\"Items: %w\"",
-   "length": 9,
-   "occurrences": [
-    2158
-   ],
-   "referenced_by_code": [
-    2158
-   ],
-   "function": "UnmarshalSSZ",
-   "label": "go_string._",
-   "off": 2158,
-   "gen_id": "ListC_UnmarshalSSZ_fmt6",
-   "api_id": null,
-   "file": "ListC_UnmarshalSSZ_fmt6.data",
-   "lean": "Eq (Fk.Data.ListC_UnmarshalSSZ_fmt6.At Fk.Data.ListC_UnmarshalSSZ_fmt6_addr)"
-  },
-  "ListC_MarshalSSZTo_fmt0": {
+  "lcFmtItems": {
    "kind": "rodata-string",
    "literal": "\"Items: %w\"",
    "length": 9,
@@ -517,9 +498,9 @@
    "label": "go_string._",
    "off": 2158,
    "gen_id": "ListC_MarshalSSZTo_fmt0",
-   "api_id": null,
-   "file": "ListC_MarshalSSZTo_fmt0.data",
-   "lean": "Eq (Fk.Data.ListC_MarshalSSZTo_fmt0.At Fk.Data.ListC_MarshalSSZTo_fmt0_addr)"
+   "api_id": "lcFmtItems",
+   "file": "lcFmtItems.data",
+   "lean": "Eq (Fk.Data.lcFmtItems.At Fk.Data.lcFmtItems_addr)"
   },
   "blFmtB": {
    "kind": "rodata-string",

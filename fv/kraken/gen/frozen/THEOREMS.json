@@ -379,7 +379,8 @@
     "guard": "if size < 4 {",
     "ret": "ssz.ErrSize",
     "hand_theorems": [
-     "lu_reject_short_main"
+     "lu_reject_short_main",
+     "lu_reject_short_frame"
     ]
    },
    {
@@ -1053,7 +1054,9 @@
     "site_kind": "callee-error",
     "guard": "if err = tmp.UnmarshalSSZ(tmpSlice); err != nil {",
     "ret": "fmt.Errorf(\"Items: %w\", err)",
-    "hand_theorems": []
+    "hand_theorems": [
+     "lc_reject_item_main"
+    ]
    },
    {
     "id": "ListC.UnmarshalSSZ.reject.r10",
@@ -37536,16 +37539,16 @@
    "reject_spec": 25,
    "size": 9
   },
-  "hand_obligations_with_theorem": 64,
+  "hand_obligations_with_theorem": 65,
   "hand_obligations_with_theorem_partial": 5,
-  "hand_obligations_with_full_theorem": 59,
-  "hand_obligations_open": 68,
+  "hand_obligations_with_full_theorem": 60,
+  "hand_obligations_open": 67,
   "hand_unreachable_mc": {
    "rows": 2,
    "with_theorem": 0,
    "note": "own column (not in hand_obligations); never a closed reject path"
   },
-  "hand_main_theorems_mapped": 56,
+  "hand_main_theorems_mapped": 57,
   "hand_names_in_table_not_mapped": [],
   "prysm_types_in": 132,
   "prysm_obligations": 3676,
