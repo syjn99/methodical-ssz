@@ -33,11 +33,13 @@ Fk.lc_accept_empty_main
 lc_accept_main
 lc_marshal_main
 lc_reject_offset_main
+lc_reject_offset_order_main
 lc_reject_past_main
 lc_reject_short_main
 lc_reject_tail_main
 lc_reject_zero_main
 lc_size_main
+lcl_order
 lu_accept_main
 lu_marshal_main
 lu_marshal_reject_main
@@ -56,6 +58,7 @@ ne_size_main
 ne_spec_accepts_iff
 sc_accept_main
 sc_marshal_main
+sc_reject_bool_err
 sc_reject_bool_main
 sc_reject_size_main
 sc_size_main

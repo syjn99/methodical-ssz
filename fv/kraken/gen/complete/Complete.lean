@@ -43,9 +43,15 @@ def registry : List Name :=
 
 def funSpecs : List Name := [``VbvAccC, ``VbvPadC, ``ScUAccC, ``LuUAccC]
 
-def dataConsts : List Name :=
-  [``blFmtB, ``bvFmtJ, ``vbvFmt, ``lcFmtZero, ``lcFmtShort, ``vblMsgE, ``vblMsgZ, ``vblMsgB,
-   ``luFmtTooBig, ``luFmtMis, ``luTW, ``StaticBox]
+/-- Data constants: every included item of fix3's `Fk.Data` (`<id>` and `<id>_addr`, read from the
+environment, not listed by hand; since the fix3 stage A rebase) and `StaticBox`. -/
+def dataConstsOf (env : Environment) : List Name :=
+  let items := env.constants.toList.filterMap fun (n, _) =>
+    match n with
+    | .str (.str (.str .anonymous "Fk") "Data") s =>
+      if s.endsWith "_addr" then some [n, .str (.str (.str .anonymous "Fk") "Data") ((s.take (s.length - 5)).toString)] else none
+    | _ => none
+  (items.flatten.filter env.contains).eraseDups ++ [``StaticBox]
 
 def ethlibCodec : List Name := [``EthLib.Serialization.Ssz.deserialize, ``EthLib.Serialization.Ssz.serialize]
 
@@ -109,6 +115,8 @@ def main : MetaM Unit := do
   let some path ← IO.getEnv "COMPLETE_MAINS" | throwError "COMPLETE_MAINS is not set"
   let mains := ((← IO.FS.readFile path).splitOn "\n").filter (· ≠ "") |>.map String.toName
   -- resolve the registry first: every name must exist
+  let dataConsts := dataConstsOf env
+  IO.println s!"COMPLETE-DATA {dataConsts.length}"
   for c in registry ++ dataConsts do
     if !env.contains c then throwError "registry name does not resolve: {c}"
   -- one pass over Fk declarations: used constants of values and types
