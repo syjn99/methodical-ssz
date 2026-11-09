@@ -1,0 +1,127 @@
+{
+ "schema": "fvphase1c.x4-negative/1",
+ "cases": 8,
+ "as_expected": 8,
+ "rows": [
+  {
+   "id": "ad-size-imm",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.ad_size_imm_mutant.size",
+   "mutation": "'mov $0x80,%eax' -> 'mov $0x81,%eax'",
+   "exit": "1",
+   "first_error": "line 31: unsolved goals",
+   "theorem_lines": [
+    31,
+    42
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/119"
+  },
+  {
+   "id": "ad-size-imm",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.ad_size_imm_control.size",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    31,
+    42
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/119"
+  },
+  {
+   "id": "ad-accept-ld",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.ad_accept_ld_mutant.accept",
+   "mutation": "'mov 0x8(%rbx),%rdx' -> 'mov 0x10(%rbx),%rdx'",
+   "exit": "1",
+   "first_error": "line 188: omega could not prove the goal:",
+   "theorem_lines": [
+    132,
+    690
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/119"
+  },
+  {
+   "id": "ad-accept-ld",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.ad_accept_ld_control.accept",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    132,
+    690
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/119"
+  },
+  {
+   "id": "ad-rsize-cmp",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.ad_rsize_cmp_mutant.reject_size",
+   "mutation": "'cmp $0x80,%rcx' -> 'cmp $0x81,%rcx'",
+   "exit": "1",
+   "first_error": "line 79: omega could not prove the goal:",
+   "theorem_lines": [
+    42,
+    106
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/119"
+  },
+  {
+   "id": "ad-rsize-cmp",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.ad_rsize_cmp_control.reject_size",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    42,
+    106
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/119"
+  },
+  {
+   "id": "ad-marshal-add",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.ad_marshal_add_mutant.marshal",
+   "mutation": "'add $0x8,%rdx' -> 'add $0x10,%rdx'",
+   "exit": "1",
+   "first_error": "line 182: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+   "theorem_lines": [
+    114,
+    553
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/119"
+  },
+  {
+   "id": "ad-marshal-add",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.ad_marshal_add_control.marshal",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    114,
+    553
+   ],
+   "lemma_lines": [],
+   "as_expected": true,
+   "run": "logs/119"
+  }
+ ]
+}

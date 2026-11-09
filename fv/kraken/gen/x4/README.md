@@ -86,9 +86,9 @@ ListU64 출력은 이 변경 뒤에도 바이트가 같다.
 | reject r9 원소 오류 | 생성 증명 통과(시도 1, logs/109), 문장 SAME(`lc_reject_item_main`). `lcacc.py` item 모드: 마지막 항목 갈래, 원소 디코더 호출(계약 `LuURejShortC`), 그 뒤 `jne`를 `Items: %w` 거부 블록으로 탄다. 블록 모양을 검사하고 형식 문자열을 API 항목 `lcFmtItems`에 묶는다. 주 정리의 `intro` 줄은 문장의 묶음 이름에서 만든다. 문장, 호출 블록, 거부 블록은 손 글(`Fk/LcItems.lean`). 계약 문장 `LuURejShortC`는 `SupportLc.lean`에 같은 글로(명시 `[Host]`) 다시 씀. 손 글 비율 `lcl_itemerr` 256/259, 주 정리 259/263. 증인 `Gen1cX4.WitLcI`(계약 인스턴스 보조정리 `lu_urej_short_holds`만을 위해 손 모듈 `Fk.LcItems`를 가져온다, `witness.py --extra-import`; logs/110). 변이 `lc-item-jne`(`lcl_itemerr` 안) |
 | marshal(빠른 경로, 루프 넷) | 생성 증명 통과(logs/113; 부정 시험은 생성기 import 결함으로 logs/113에서 4건 모두 기대 밖, 고친 뒤 logs/114에서 4/4), 문장 SAME(`lc_marshal_main`). **다른 ListC 행보다 약하다**: 지시 종류별 걷기가 없다. `lcmarsh.py`는 `MarshalSSZTo.S`의 레이블 위치만 읽고, 손 글의 지시 번호 113개를 (레이블, 오프셋)으로 다시 놓는다. 그 지시마다 손 사례의 명령어 글과 같아야 하고 다르면 거부한다. 문장, 루프 넷(`lcm1..4`), 정의, 전술 글 전체가 손 글(`lcm_tpl.py`, `Fk/LcMarshal.lean`). 손 글 비율 marshal 183/184, 루프 보조정리 100%. 보조 항목(`offTab` 등)은 `SupportLc.lean`에 같은 글. 증인 `WitLcM0/M1/M1x1/M4/M4x16/MMix`(logs/116). 변이 `lc-marshal-len`(marshal 안), `lc-mloop-off`(`lcm2_iter` 안) |
 
-## 6. 축약 Checkpoint (`target/prysm`, Go 1.26.3 ELF의 손 타입)
+## 6. 축약 Checkpoint·AttestationData (`target/prysm`, Go 1.26.3 ELF의 손 타입)
 
-`results/attempts-checkpoint.json`, `compare-checkpoint.json`, `negative-checkpoint.json`, `axioms-checkpoint.json`.
+`results/attempts-{checkpoint,attestationdata}.json`, `compare-*`, `negative-*`, `axioms-*` 같은 이름.
 **가장 약한 생성 방식이다.** `anchor.py`는 지시 종류별 걷기를 하지 않고, 손 틀 파일도 따로 두지 않는다.
 - 틀: 손 정리와, 그 정리가 이름으로 쓰는 같은 타입 손 모듈의 선언(닫힘)을 생성할 때 그대로 복사한다(`Fk/CpAccept.lean`, `Fk/CpMarshal.lean`, `Fk/CpSpec.lean`). 그 손 모듈은 import하지 않는다.
 - 코드가 정하는 것: 대상 함수의 레이블 위치와, 그로부터 글 안의 모든 지시 번호(`kat`, `klabel`, `k + N`: 손 코드에서 레이블 j + 오프셋 o → 대상에서 레이블 j + o), rip 기호 피연산자(`type__+N` 등, 위치로 짝지음).
@@ -101,3 +101,5 @@ ListU64 출력은 이 변경 뒤에도 바이트가 같다.
 | size, accept, reject r1 크기, marshal, marshal_reject r1 | 생성(고정 틀) 증명 통과(시도 1, logs/117), 문장 SAME(`cp_size_main`, `cp_accept_main`, `cp_reject_size_main`, `cp_marshal_main`, `cp_marshal_reject_main`), 대조군 DIFF 4, 공리 표준만(10개 이름), 변이 5개가 지정 정리 안에서 실패·대조군 5개 통과. 증인 `Gen1cX4.WitCpAcc`, `WitCpM`, `WitCpMR`(손 증인의 runs 정리를 `witness.py --runs`로 다시 겨눔, logs/118) |
 | reject_complete | 시도하지 않음: 손 행이 부분이고 EthLib 쪽 정리(`cp_spec_accepts_iff`)뿐이다. 기계어 의무가 아니다 |
 | reject_spec r1, 조합 3행 | 시도하지 않음: 손 정리가 없다 |
+| AttestationData size, accept, reject r1 크기, marshal | 생성(고정 틀) 증명 통과(시도 1, logs/119), 문장 SAME(`ad_size_main`, `ad_accept_main`, `ad_reject_size_main`, `ad_marshal_main`), 대조군 DIFF 4, 공리 표준만(23개 이름), 변이 4개 지정 정리 안에서 실패·대조군 4개 통과. 증인 `WitAdAcc`, `WitAdM`. 손 글 비율 9/10, 556/557, 62/63, 437/438. 손 보조 선언 19개를 복사했다(Cp·Ad 손 모듈은 import하지 않음). 다른 타입의 손 모듈(`Fk.NeAccept`, `Fk.LcReject`, `Fk.FvAccept` 등)은 일반 보조정리 때문에 import한다 |
+| AttestationData reject r2/r3, unreachable_mc r2/r3, marshal_reject r1..r3, reject_spec, 조합 | 시도하지 않음: 손 정리가 없다 |

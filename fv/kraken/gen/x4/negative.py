@@ -59,6 +59,10 @@ CASES = [  # id, type, method, designated obligation, old instruction, new instr
     ("cp-rsize-cmp", "prysm.Checkpoint", "UnmarshalSSZ", "reject_size", "cmp $0x28,%rcx", "cmp $0x29,%rcx"),
     ("cp-marshal-st", "prysm.Checkpoint", "MarshalSSZTo", "marshal", "mov %r8,-0x8(%rdx,%rbx,1)", "mov %r8,-0x10(%rdx,%rbx,1)"),
     ("cp-mrej-cmp", "prysm.Checkpoint", "MarshalSSZTo", "marshal_reject", "cmpq $0x20,0x10(%rax)", "cmpq $0x21,0x10(%rax)"),
+    ("ad-size-imm", "prysm.AttestationData", "SizeSSZ", "size", "mov $0x80,%eax", "mov $0x81,%eax"),
+    ("ad-accept-ld", "prysm.AttestationData", "UnmarshalSSZ", "accept", "mov 0x8(%rbx),%rdx", "mov 0x10(%rbx),%rdx"),
+    ("ad-rsize-cmp", "prysm.AttestationData", "UnmarshalSSZ", "reject_size", "cmp $0x80,%rcx", "cmp $0x81,%rcx"),
+    ("ad-marshal-add", "prysm.AttestationData", "MarshalSSZTo", "marshal", "add $0x8,%rdx", "add $0x10,%rdx"),
     # statement mutation (method "stmt"): the generated composition must fail if it claims another length
     ("sc-compose-len", "Scalars", "stmt", "compose", "st'.data.regs.rbx = dlen + 16", "st'.data.regs.rbx = dlen + 17"),
     ("lu-compose-len", "ListU64", "stmt", "compose", "st'.data.regs.rbx.toNat = dlen.toNat + 4 + 8 * n", "st'.data.regs.rbx.toNat = dlen.toNat + 5 + 8 * n"),

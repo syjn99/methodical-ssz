@@ -1,0 +1,70 @@
+{
+ "schema": "fvphase1c.x4-compare/1",
+ "log": "run logs/119",
+ "rows": [
+  {
+   "gen": "Gen1cX4.AttestationData.size_stmt",
+   "hand": "ad_size_main",
+   "expect": "SAME",
+   "why": "size",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.AttestationData.accept_stmt",
+   "hand": "ad_accept_main",
+   "expect": "SAME",
+   "why": "accept",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.AttestationData.reject_size_stmt",
+   "hand": "ad_reject_size_main",
+   "expect": "SAME",
+   "why": "reject r1 size-fixed",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.AttestationData.marshal_stmt",
+   "hand": "ad_marshal_main",
+   "expect": "SAME",
+   "why": "marshal",
+   "result": "SAME",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.AttestationData.size_stmt",
+   "hand": "cp_size_main",
+   "expect": "DIFF",
+   "why": "control",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.AttestationData.accept_stmt",
+   "hand": "ad_reject_size_main",
+   "expect": "DIFF",
+   "why": "control",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.AttestationData.reject_size_stmt",
+   "hand": "cp_reject_size_main",
+   "expect": "DIFF",
+   "why": "control",
+   "result": "DIFF",
+   "as_expected": true
+  },
+  {
+   "gen": "Gen1cX4.AttestationData.marshal_stmt",
+   "hand": "ad_accept_main",
+   "expect": "DIFF",
+   "why": "control",
+   "result": "DIFF",
+   "as_expected": true
+  }
+ ]
+}

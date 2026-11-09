@@ -1,0 +1,108 @@
+{
+ "schema": "fvphase1c.x4-attempts/1",
+ "type": "AttestationData (target/prysm, reduced Prysm shape, Go 1.26.3 ELF)",
+ "obligations": {
+  "size": {
+   "status": "proved (generated from an anchored template), SAME",
+   "attempts": [
+    {
+     "log": "run logs/119",
+     "result": "pass (build, compare 8/8 as expected, axioms 23 names standard, negative 8/8)"
+    }
+   ],
+   "hand": "ad_size_main",
+   "negative": "ad-size-imm (logs/119)",
+   "generator_decides": "anchored hand template (gen/x4/anchor.py), the weakest mode: no per-directive walker and no hand-made template file. The template is read from the hand modules at generation time. The code decides the label positions (every directive number of kat/klabel/k + N is label j + offset) and the rip symbol operands; the whole normalised function must equal the hand function, else refusal. The Desc gates the template: SizeSSZ = mov $fixed_size,%eax; decoder cmp $fixed_size,%rcx; one makeslice with the byte-vector length per byte vector; one newobject per container field; one memmove per byte vector in the encoder.",
+   "hand_text": "statements, proofs and 19 helper declarations (cpm_addr, cpObj_sep, ad_slot.., adm_slot.., toNat_add_neg104) copied by name closure from Fk/CpAccept, CpMarshal, CpSpec, AdAccept, AdMarshal, AdSpec (not imported); the generated module imports the remaining hand modules Fk.FvAccept, FvMarshal, FvSmall, NeAccept, LcReject, LuErr, Bytes, Fv1.SpecPrysm for general lemmas",
+   "verbatim_measure": {
+    "what": "tactic lines verbatim in the hand files (gen/x4/verbatim.py); the other line is the generated `intro` line",
+    "row": {
+     "tactic_lines": 10,
+     "verbatim_in_hand": 9
+    }
+   }
+  },
+  "accept": {
+   "status": "proved (generated from an anchored template), SAME",
+   "attempts": [
+    {
+     "log": "run logs/119",
+     "result": "pass (build, compare 8/8 as expected, axioms 23 names standard, negative 8/8)"
+    }
+   ],
+   "hand": "ad_accept_main",
+   "negative": "ad-accept-ld (logs/119)",
+   "generator_decides": "anchored hand template (gen/x4/anchor.py), the weakest mode: no per-directive walker and no hand-made template file. The template is read from the hand modules at generation time. The code decides the label positions (every directive number of kat/klabel/k + N is label j + offset) and the rip symbol operands; the whole normalised function must equal the hand function, else refusal. The Desc gates the template: SizeSSZ = mov $fixed_size,%eax; decoder cmp $fixed_size,%rcx; one makeslice with the byte-vector length per byte vector; one newobject per container field; one memmove per byte vector in the encoder.",
+   "hand_text": "statements, proofs and 19 helper declarations (cpm_addr, cpObj_sep, ad_slot.., adm_slot.., toNat_add_neg104) copied by name closure from Fk/CpAccept, CpMarshal, CpSpec, AdAccept, AdMarshal, AdSpec (not imported); the generated module imports the remaining hand modules Fk.FvAccept, FvMarshal, FvSmall, NeAccept, LcReject, LuErr, Bytes, Fv1.SpecPrysm for general lemmas",
+   "verbatim_measure": {
+    "what": "tactic lines verbatim in the hand files (gen/x4/verbatim.py); the other line is the generated `intro` line",
+    "row": {
+     "tactic_lines": 557,
+     "verbatim_in_hand": 556
+    }
+   },
+   "witness": "Gen1cX4.WitAdAcc (Fk/WitAd.lean ad_accept_runs retargeted by gen/x4/witness.py --runs; logs/119 build)"
+  },
+  "reject r1 size-fixed": {
+   "status": "proved (generated from an anchored template), SAME",
+   "attempts": [
+    {
+     "log": "run logs/119",
+     "result": "pass (build, compare 8/8 as expected, axioms 23 names standard, negative 8/8)"
+    }
+   ],
+   "hand": "ad_reject_size_main",
+   "negative": "ad-rsize-cmp (logs/119)",
+   "generator_decides": "anchored hand template (gen/x4/anchor.py), the weakest mode: no per-directive walker and no hand-made template file. The template is read from the hand modules at generation time. The code decides the label positions (every directive number of kat/klabel/k + N is label j + offset) and the rip symbol operands; the whole normalised function must equal the hand function, else refusal. The Desc gates the template: SizeSSZ = mov $fixed_size,%eax; decoder cmp $fixed_size,%rcx; one makeslice with the byte-vector length per byte vector; one newobject per container field; one memmove per byte vector in the encoder.",
+   "hand_text": "statements, proofs and 19 helper declarations (cpm_addr, cpObj_sep, ad_slot.., adm_slot.., toNat_add_neg104) copied by name closure from Fk/CpAccept, CpMarshal, CpSpec, AdAccept, AdMarshal, AdSpec (not imported); the generated module imports the remaining hand modules Fk.FvAccept, FvMarshal, FvSmall, NeAccept, LcReject, LuErr, Bytes, Fv1.SpecPrysm for general lemmas",
+   "verbatim_measure": {
+    "what": "tactic lines verbatim in the hand files (gen/x4/verbatim.py); the other line is the generated `intro` line",
+    "row": {
+     "tactic_lines": 63,
+     "verbatim_in_hand": 62
+    }
+   }
+  },
+  "marshal": {
+   "status": "proved (generated from an anchored template), SAME",
+   "attempts": [
+    {
+     "log": "run logs/119",
+     "result": "pass (build, compare 8/8 as expected, axioms 23 names standard, negative 8/8)"
+    }
+   ],
+   "hand": "ad_marshal_main",
+   "negative": "ad-marshal-add (logs/119)",
+   "generator_decides": "anchored hand template (gen/x4/anchor.py), the weakest mode: no per-directive walker and no hand-made template file. The template is read from the hand modules at generation time. The code decides the label positions (every directive number of kat/klabel/k + N is label j + offset) and the rip symbol operands; the whole normalised function must equal the hand function, else refusal. The Desc gates the template: SizeSSZ = mov $fixed_size,%eax; decoder cmp $fixed_size,%rcx; one makeslice with the byte-vector length per byte vector; one newobject per container field; one memmove per byte vector in the encoder.",
+   "hand_text": "statements, proofs and 19 helper declarations (cpm_addr, cpObj_sep, ad_slot.., adm_slot.., toNat_add_neg104) copied by name closure from Fk/CpAccept, CpMarshal, CpSpec, AdAccept, AdMarshal, AdSpec (not imported); the generated module imports the remaining hand modules Fk.FvAccept, FvMarshal, FvSmall, NeAccept, LcReject, LuErr, Bytes, Fv1.SpecPrysm for general lemmas",
+   "verbatim_measure": {
+    "what": "tactic lines verbatim in the hand files (gen/x4/verbatim.py); the other line is the generated `intro` line",
+    "row": {
+     "tactic_lines": 438,
+     "verbatim_in_hand": 437
+    }
+   },
+   "witness": "Gen1cX4.WitAdM (Fk/WitAdM.lean ad_marshal_runs retargeted; logs/119 build)"
+  },
+  "reject_complete": {
+   "status": "not attempted",
+   "reason": "hand row partial and spec-side only (ad_spec_accepts_iff, EthLib)"
+  },
+  "reject_spec r1": {
+   "status": "not attempted",
+   "reason": "no hand theorem"
+  },
+  "reject r2/r3 callee-error, unreachable_mc r2/r3": {
+   "status": "not attempted",
+   "reason": "no hand theorem (the Checkpoint decoders are inlined; the Go-source error sites have no machine-code counterpart proved by hand)"
+  },
+  "marshal_reject r1..r3": {
+   "status": "not attempted",
+   "reason": "no hand theorem"
+  },
+  "compose (hupd, witness, caller)": {
+   "status": "not attempted",
+   "reason": "no hand composition theorem for AttestationData"
+  }
+ }
+}
