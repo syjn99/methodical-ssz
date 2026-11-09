@@ -77,6 +77,10 @@
    "args": []
   },
   {
+   "generator": "wlci",
+   "args": []
+  },
+  {
    "generator": "wlca",
    "args": [
     "1"
@@ -401,6 +405,10 @@
   "WitLcE": {
    "readme_generator": "wlce.py",
    "theorem": "lc_accept_empty_runs"
+  },
+  "WitLcI": {
+   "readme_generator": "wlci.py",
+   "theorem": "lc_reject_item_runs"
   },
   "WitLcO": {
    "readme_generator": "wlco.py",

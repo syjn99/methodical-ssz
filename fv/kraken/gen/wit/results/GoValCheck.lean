@@ -317,6 +317,30 @@ example : (sliceOk 65536 65616 0 0 0 8) = true := rfl  -- slice recv.Items esz f
 example : (pairwiseDisjoint [(65584, 65588), (65592, 65616)]) = true := rfl  -- Go objects pairwise disjoint
 example : (chunksOk [(65584, 65588), (65592, 65616)] [(65560, 65568), (65552, 65560), (65576, 65584), (65544, 65552), (65584, 65588), (65592, 65600), (65600, 65616), (65536, 65540), (65568, 65576)]) = true := rfl  -- 9 s_mem chunks (0 not read)
 
+-- WitLcI.lean: bound to Fk.WitLcI
+example (z : RegZmms) (f : StatusFlags) : (regsN (Fk.WitLcI.s0 z f))[0]! = 65976 := rfl
+example (z : RegZmms) (f : StatusFlags) : (regsN (Fk.WitLcI.s0 z f))[1]! = 66000 := rfl
+example (z : RegZmms) (f : StatusFlags) : (regsN (Fk.WitLcI.s0 z f))[2]! = 10 := rfl
+example (z : RegZmms) (f : StatusFlags) : (regsN (Fk.WitLcI.s0 z f))[5]! = 10 := rfl
+example (z : RegZmms) (f : StatusFlags) : (regsN (Fk.WitLcI.s0 z f))[6]! = 65936 := rfl
+example : wordAt Fk.WitLcI.block 440 = 0 := rfl
+example : wordAt Fk.WitLcI.block 448 = 0 := rfl
+example : wordAt Fk.WitLcI.block 456 = 0 := rfl
+example : wordAt Fk.WitLcI.block 665 = 66256 := rfl
+example : wordAt Fk.WitLcI.block 673 = 66193 := rfl
+example : wordAt Fk.WitLcI.block 681 = 66232 := rfl
+example : wordAt Fk.WitLcI.block 696 = 66248 := rfl
+example : wordAt Fk.WitLcI.block 704 = 3 := rfl
+example : ((Fk.WitLcI.block.drop 720).take 56) = @Fk.Data.errorStringPtrType Fk.WitLcI.host := rfl
+example : ((65936 % 8 == 0 : Bool)) = true := rfl  -- rsp 8-aligned
+example : (sliceOk 65536 76004 66000 10 10 1) = true := rfl  -- slice buf esz from byte
+example : (objOk 65536 76004 65976 24 8) = true := rfl  -- object recv: ListC (layout.json)
+example : (sliceOk 65536 76004 0 0 0 8) = true := rfl  -- slice recv.Items esz from pointer (layout.json)
+example : (objOk 65536 76004 66256 56 8) = true := rfl  -- itab+8 points to a 56-byte descriptor in the block
+example : ((66193 == 66193 : Bool) && objOk 65536 76004 66232 16 8 && objOk 65536 76004 66248 3 1) = true := rfl  -- ssz.ErrSize initialized (itab, errorString)
+example : (pairwiseDisjoint [(65976, 66000), (66000, 66010), (66232, 66248), (66256, 66312)]) = true := rfl  -- Go objects pairwise disjoint
+example : (chunksOk [(65976, 66000), (66000, 66010), (66232, 66248), (66256, 66312)] [(65936, 65944), (65928, 65936), (65944, 65952), (65952, 65960), (65968, 65976), (65808, 65816), (65800, 65808), (65792, 65800), (65784, 65792), (65776, 65784), (65768, 65776), (65760, 65768), (65752, 65760), (65712, 65720), (65720, 65728), (65728, 65736), (65704, 65712), (65560, 65704), (65552, 65560), (66000, 66004), (66004, 66008), (66008, 66010), (65976, 65984), (65984, 65992), (65992, 66000), (65536, 65540), (65736, 65744), (65744, 65752), (65816, 65832), (67695, 67704), (66209, 66217), (66217, 66225), (66201, 66209), (66248, 66251), (66256, 66312)]) = true := rfl  -- 35 s_mem chunks (0 not read)
+
 -- WitLcM0.lean: bound to Fk.WitLcM0
 example (z : RegZmms) (f : StatusFlags) : (regsN (Fk.WitLcM0.s0 z f))[0]! = 65648 := rfl
 example (z : RegZmms) (f : StatusFlags) : (regsN (Fk.WitLcM0.s0 z f))[1]! = 65672 := rfl

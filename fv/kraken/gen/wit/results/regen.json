@@ -1,11 +1,11 @@
 {
  "schema": "fvphase1c.wit-regen/1",
- "invocations": 57,
+ "invocations": 58,
  "failed_invocations": [],
- "files_written": 75,
- "byte_identical": 75,
+ "files_written": 76,
+ "byte_identical": 76,
  "different": [],
- "fk_wit_files": 80,
+ "fk_wit_files": 81,
  "fk_wit_files_not_generated": [
   "WitAd.lean",
   "WitCp.lean",
@@ -161,6 +161,15 @@
    "rc": 0,
    "wrote": [
     "WitLcO.lean"
+   ],
+   "stderr_tail": []
+  },
+  {
+   "generator": "wlci",
+   "args": [],
+   "rc": 0,
+   "wrote": [
+    "WitLcI.lean"
    ],
    "stderr_tail": []
   },
@@ -772,6 +781,13 @@
    "file": "WitLcE.lean",
    "out_sha256": "88dfc0772c066cf17d84b92e192a04d480eb35f988471be2b82b968598de47ad",
    "fk_sha256": "88dfc0772c066cf17d84b92e192a04d480eb35f988471be2b82b968598de47ad",
+   "byte_identical": true,
+   "times_written": 1
+  },
+  {
+   "file": "WitLcI.lean",
+   "out_sha256": "9aca305e3ca24359b85c352a3262f728a9ea73e67d57ee7aab103b28b7d69d25",
+   "fk_sha256": "9aca305e3ca24359b85c352a3262f728a9ea73e67d57ee7aab103b28b7d69d25",
    "byte_identical": true,
    "times_written": 1
   },

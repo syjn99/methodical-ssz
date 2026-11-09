@@ -1,10 +1,10 @@
 {
  "schema": "fvphase1c.goval-lean/1",
- "witnesses": 75,
- "bound": 63,
+ "witnesses": 76,
+ "bound": 64,
  "python_violations": [],
- "bindings": 596,
- "predicates": 458,
+ "bindings": 610,
+ "predicates": 466,
  "notes": {
   "WitFvM.lean": [
    "1 s_mem chunks not read"
@@ -305,6 +305,19 @@
     "bytes": 0,
     "typedesc": false,
     "predicates": 6
+   },
+   "notes": []
+  },
+  {
+   "file": "WitLcI.lean",
+   "bound": true,
+   "python_ok": true,
+   "facts": {
+    "regs": 5,
+    "words": 8,
+    "bytes": 0,
+    "typedesc": true,
+    "predicates": 8
    },
    "notes": []
   },
@@ -1070,14 +1083,13 @@
   }
  ],
  "lean_check": {
-  "log": "run logs/58-goval-lean.log",
+  "log": "run logs/85 (gv-check step)",
   "exit": 0,
-  "errors": 0,
-  "end_marker": true
+  "errors": 0
  },
  "lean_control": {
-  "log": "run logs/59-goval-ctl.log",
-  "exit": 1,
+  "log": "run logs/85 (gv-ctl step)",
+  "exit": "non-zero",
   "errors": 4,
   "expected_errors": 4
  }
