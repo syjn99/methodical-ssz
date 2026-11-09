@@ -9,7 +9,7 @@
 
 게이트 1을 막는 조건:
 
-1. ListC 원소 오프셋 순서 거부의 기계어 정리가 없다. 계약 `FmtErrorfDDC`와 모델만 있다(4절 7). 비어 있지 않은 원소의 오류 전달도 없다.
+1. ListC 원소 오류 전달(`"Items: %w"`)의 정리가 없다(4절 7). 원소 오프셋 순서 거부는 첫 쌍만 닫았다.
 2. 런타임 계약은 추상 모델로만 만족 가능성을 보였다. Go 런타임 정교화는 없다(3절).
 3. 디코더의 EthLib 양방향 수용 정리는 BitVec(1바이트)뿐이다.
 4. x86-64 하드웨어 대조를 하지 않았다. 이 호스트는 arm64다.
@@ -61,7 +61,7 @@
 | BitVec | 양방향(1바이트) | 2/2: 크기, 패딩 | b < 16, 16 ≤ b | 위반 0. 오류 증인 타입 기술자 = ELF | makeslice, fmt nil·`%w`, newobject 16 | vbvje, bvnochk | `bv_unmarshal_then_marshal`(증인 없음) | 수용·마샬 정확. 크기 동일 |
 | BitL | EthLib→기계어(규칙 동치) | 3/3: 짧음, 오프셋, ValidateBitlist 오류 | 1, 257바이트 / 2049비트, 꼬리 [0] | 위반 0 | ValidateBitlist 두 계약(rodata), growslice, memmove, fmt `%w` | gsnum, blmnochk, blrity | 없음 | `R` 보존. 크기 동일 |
 | Nested | EthLib→기계어 | 2/4. 남음: S 오류, L 오류(래핑) | 0·1·16 | 위반 0 | newobject 24, Scalars·ListU64 함수 명세 | neoff | 없음 | 수용·마샬·크기 `R` 보존 |
-| List[container] | EthLib→기계어 | 5/10. 남음: 정렬(`%d`), 원소 수(`%d %w`), 원소 끝 오프셋 초과(`%d`), 원소 오프셋 순서(`%d %d`, 계약 `FmtErrorfDDC`만), 원소 디코드 오류(`%w`) | 바깥 0·1·4, 안쪽 1×1, 4×16, 0·1·16 | 위반 0 | makeslice 두 지점, newobject 16·24, fmt nil, ListU64 함수 명세 | nilerr | 없음 | `R`과 죽은 스택(`lcStk`) 보존. 크기 동일 |
+| List[container] | EthLib→기계어 | 6/10: 짧음, 오프셋, 0 오프셋, 짧은 첫 오프셋 둘, 원소 오프셋 순서(`lc_reject_offset_order_main`, 원소 2개 이상의 첫 쌍). 남음: 정렬(`%d`), 원소 수(`%d %w`), 원소 끝 오프셋 초과(`%d`), 원소 디코드 오류(`%w`) | 바깥 0·1·4, 안쪽 1×1, 4×16, 0·1·16. 순서 거부: 오프셋 [8, 4](`WitLcO`) | 위반 0 | makeslice 두 지점, newobject 16·24, fmt nil·`%d %d`(`FmtErrorfDDC`), convT64, ListU64 함수 명세 | nilerr, lcorder | 없음 | `R`과 죽은 스택(`lcStk`) 보존. 크기 동일 |
 | Prysm 축약 Checkpoint | EthLib→기계어 | 1/1: 크기 | 고정 | 위반 0. `WitCpM` dst 기호 길이 미검사 | makeslice, memmove | cplen | 없음 | `R` 보존. 크기 동일 |
 | Prysm 축약 AttestationData | EthLib→기계어 | 1/1: 크기. 하위 Checkpoint 오류 미도달은 정리가 없다 | 고정 | 위반 0 | makeslice, memmove, newobject 32 | adcopy | 없음 | `R` 보존. 크기 동일 |
 
@@ -118,12 +118,13 @@ protobuf 필드가 있는 실제 Prysm 바이너리의 증명이 아니다.
 | 4 | 오류 타입 자료와 전역 불변식을 증인에. Scalars 비nil 거부 | 닫힘: `sc_reject_bool_err`, 증인 18개의 전역 초기화, `%w` 증인 5개의 ELF 기술자 | 수정 3 X3 |
 | 5 | 배치 재생성 뒤 goval. 미검사 종류별 집계 | 닫힘: 재생성 바이트 동일, 2절 집계 표 | 수정 3 X6, X7 |
 | 6 | 사후조건: NeMarshal, ListC 스택, Scalars Size, r14 | 닫힘 | 수정 3 X4 |
-| 7 | ListC 원소 오프셋 순서와 원소 오류 전달 | 부분: 계약 `FmtErrorfDDC`, 모델, `joint_models`만. 기계어 정리·증인·부정 시험·원소 오류 전달은 없다 | 다음 세션 |
+| 7 | ListC 원소 오프셋 순서와 원소 오류 전달 | 부분: 순서 거부는 닫힘(`lc_reject_offset_order_main`, `lcl_order`, `FmtErrorfDDC`·`rt_errorf_dd`·`joint_models`, `WitLcO`, 부정 시험 lcorder). 원소 오류 전달은 없음 | 다음 세션 |
 | 8 | 게이트 표 정정 | 닫힘(2절) | 수정 3 X6 |
 
-7은 게이트 완료를 주장하기 전에 필요하다.
-순서 검사는 원소 루프 안(지시어 276–277)이다. 거부 블록은 인수 배열(진입 rsp − 104부터 32바이트)과 spill 40바이트를 쓴다.
-`lc_accept_main`의 전제는 그 일부(rsp − 200, − 192, 인수 배열)를 소유하지 않는다. 진입부와 첫 반복을 새 전제로 다시 증명해야 한다.
+7의 남은 부분은 게이트 완료를 주장하기 전에 필요하다.
+순서 거부 정리는 반복 0(첫 쌍)만 진입부터 증명했다. `lcl_order`는 임의 반복 i의 루프 보조 정리다. 앞 원소를 수용한 뒤의 반복은 `lcl_loop`과 잇는 일이 남았다.
+순서 거부의 추가 전제: 인수 배열(진입 rsp − 104부터 32바이트), spill rsp − 200·− 192, `lcFmtOrder` 바이트, `StaticBox e`·`StaticBox 4n`. `lc_accept_main`은 바꾸지 않았다.
+원소 오류 전달은 시작하지 않았다. 필요한 것: ListU64 거부 정리(`lu_reject_misaligned_main` 등)에서 유도한 거부 함수 명세, 지시어 295–297(`callq ListU64.UnmarshalSSZ; test; jne`) 뒤 `"Items: %w"` 블록의 루프 보조 정리, 진입부, 증인.
 
 ## 5. 발견
 

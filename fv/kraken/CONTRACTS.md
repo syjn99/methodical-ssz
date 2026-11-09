@@ -22,7 +22,7 @@
 | `fmt.errorf`, 인수 0개 | ListC.UnmarshalSSZ(오프셋 오류 zero, past, tail) | (b) | `FmtErrorfNilC` | `rt_errorf_nil` | `WitLcZ/P/T` |
 | `fmt.errorf`, `%w` | BitVec 디코더 `"J: %w"`, BitL 디코더·인코더 `"B: %w"` | (b) | `FmtErrorfWC` | `rt_errorf_w` | `WitBvR`, `WitBlR`, `WitBlRI` |
 | `fmt.errorf`, `%d %w` | ListU64.UnmarshalSSZ(정렬, 초과) | (b) | `FmtErrorfDWC` | `rt_errorf_dw` | `WitLuTb`, `WitLuMa` |
-| `fmt.errorf`, `%d %d` | ListC.UnmarshalSSZ 원소 오프셋 순서(정리 없음, 수정 3 X5 부분) | (b) | `FmtErrorfDDC` | `rt_errorf_dd` | 없음 |
+| `fmt.errorf`, `%d %d` | ListC.UnmarshalSSZ 원소 오프셋 순서(`lc_reject_offset_order_main`) | (b) | `FmtErrorfDDC` | `rt_errorf_dd` | `WitLcO` |
 | `ssz.ValidateBitlist` | BitL.UnmarshalSSZ, BitL.MarshalSSZTo | (b) | `ValidateBitlistC`(유효), `ValidateBitlistErrC`(무효) | `rt_validate_bitlist`, `rt_validate_bitlist_err`(`Fk/RtVbl.S`) | `WitBl1/257`, `WitBlM1/257`, `WitBlR`, `WitBlRI` |
 | `ssz.ValidateBitvector` | BitVec 디코더·인코더 | (a) 함수 명세 | `VbvAccC`, `VbvPadC` | 정리에서 유도(`vbv_acc_holds`, `vbv_pad_holds`) | `WitBv`, `WitBvM`, `WitBvR` |
 | `target.Scalars.UnmarshalSSZ` | Nested.UnmarshalSSZ | (a) 함수 명세 | `ScUAccC` | `sc_uacc_holds` | `WitNe*` |
