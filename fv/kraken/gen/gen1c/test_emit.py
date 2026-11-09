@@ -76,7 +76,11 @@ def prepare(work):
     sorry = [p for t in HAND for p in [f"{work}/out/{t}/statements.lean"] if re.search(r"\b(sorry|admit|axiom|native_decide|bv_decide)\b", open(p).read())]
     res["checks"].append(("no sorry/admit/axiom/native_decide/bv_decide in emitted Lean", not sorry))
     # data cross-check with the include API item table (old ELF offsets)
-    api = json.load(open(f"{HERE}/include-api-v1.json"))
+    sys.path.insert(0, HERE)
+    sys.dont_write_bytecode = True
+    import include_adapter
+    api = include_adapter.check_api()
+    res["include_api_version"] = include_adapter.API_VERSION
     cross = []
     for it in api["items"]:
         if it.get("label") != "go_string._":

@@ -1,14 +1,16 @@
 """The one adapter between the phase1c generator and the fix3 data-include API.
 
 Every name and syntax of the include interface lives here and nowhere else.
-Built against INCLUDE-API api_version 1 (status "committed", fix3 427708e;
-snapshot in include-api-v1.json). An api_version change touches this file only.
+Built against INCLUDE-API api_version 2 (status "committed", fix3 b6c32c3, not
+reviewed; snapshot include-api-v2.json). include-api-v1.json is kept as history.
+v1 -> v2: names and file format unchanged; an address term at offset 0 has no `+ 0`.
+An api_version change touches this file only.
 """
 import json
 import os
 
-API_VERSION = 1
-SNAPSHOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "include-api-v1.json")
+API_VERSION = 2
+SNAPSHOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "include-api-v2.json")
 
 DATA_DIR_IN_REPO = "fv/kraken/link/out/data/"   # where fix3 keeps data files (we never write there)
 LEAN_NAMESPACE = "Fk.Data"
@@ -53,6 +55,11 @@ def render(item_id, label, off, data=None, words=()):
             out.append("bytes " + " ".join(f"{b:02x}" for b in data[pos:end]))
             pos = end
     return "\n".join(out) + "\n"
+
+
+def addr_term(label, off):
+    """Lean address term of `at <label> <off>` (v2: no `+ 0` for offset 0)."""
+    return f'(label "{label}").toBitVec' if off == 0 else f'(label "{label}" + {off}).toBitVec'
 
 
 def lean_premise(item_id):

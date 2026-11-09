@@ -1,0 +1,164 @@
+{
+ "checks": [
+  [
+   "producer rc 0 (9 hand Descs)",
+   true
+  ],
+  [
+   "emit rc 0",
+   true
+  ],
+  [
+   "frozen lists unchanged and equal to the P2 hashes",
+   true
+  ],
+  [
+   "guard refuses lean/Fk output",
+   true
+  ],
+  [
+   "per-type files",
+   true
+  ],
+  [
+   "no sorry/admit/axiom/native_decide/bv_decide in emitted Lean",
+   true
+  ],
+  [
+   "every emitted format literal is located once in go:string.*",
+   true
+  ],
+  [
+   "emitted rodata items that the API also lists agree on offset and length",
+   true
+  ]
+ ],
+ "emit": {
+  "rc": 0,
+  "stdout": "{\"types\": 9, \"data_items\": 28, \"data_errors\": []}",
+  "stderr": ""
+ },
+ "include_api_version": 2,
+ "data_cross_check": [
+  {
+   "api_id": "blFmtB",
+   "offset": 526,
+   "length": 5,
+   "emitted": [
+    "BitL_UnmarshalSSZ_fmt0",
+    "BitL_MarshalSSZTo_fmt0"
+   ]
+  },
+  {
+   "api_id": "bvFmtJ",
+   "offset": 511,
+   "length": 5,
+   "emitted": [
+    "BitVec_UnmarshalSSZ_fmt0",
+    "BitVec_MarshalSSZTo_fmt0"
+   ]
+  },
+  {
+   "api_id": "vbvFmt",
+   "offset": 27706,
+   "length": 35,
+   "emitted": []
+  },
+  {
+   "api_id": "lcFmtZero",
+   "offset": 39370,
+   "length": 53,
+   "emitted": [
+    "ListC_UnmarshalSSZ_fmt0"
+   ]
+  },
+  {
+   "api_id": "lcFmtShort",
+   "offset": 42000,
+   "length": 63,
+   "emitted": [
+    "ListC_UnmarshalSSZ_fmt3"
+   ]
+  },
+  {
+   "api_id": "lcFmtOrder",
+   "offset": 42579,
+   "length": 67,
+   "emitted": [
+    "ListC_UnmarshalSSZ_fmt5"
+   ]
+  },
+  {
+   "api_id": "vblMsgE",
+   "offset": 33605,
+   "length": 42,
+   "emitted": []
+  },
+  {
+   "api_id": "vblMsgZ",
+   "offset": 13272,
+   "length": 21,
+   "emitted": []
+  },
+  {
+   "api_id": "vblMsgB",
+   "offset": 5743,
+   "length": 13,
+   "emitted": []
+  },
+  {
+   "api_id": "luFmtTooBig",
+   "offset": 40290,
+   "length": 56,
+   "emitted": [
+    "ListU64_UnmarshalSSZ_fmt1"
+   ]
+  },
+  {
+   "api_id": "luFmtMis",
+   "offset": 42646,
+   "length": 68,
+   "emitted": [
+    "ListU64_UnmarshalSSZ_fmt0"
+   ]
+  }
+ ],
+ "compare_expected": [
+  {
+   "gen": "Gen1c.Checkpoint.size_stmt",
+   "hand": "cp_size_main",
+   "expect": "SAME",
+   "why": "fixed-size template"
+  },
+  {
+   "gen": "Gen1c.AttestationData.size_stmt",
+   "hand": "ad_size_main",
+   "expect": "SAME",
+   "why": "fixed-size template"
+  },
+  {
+   "gen": "Gen1c.BitVec.size_stmt",
+   "hand": "bv_size_main",
+   "expect": "SAME",
+   "why": "fixed-size template"
+  },
+  {
+   "gen": "Gen1c.FixedVec.size_stmt",
+   "hand": "fv_size_main",
+   "expect": "SAME",
+   "why": "fixed-size template"
+  },
+  {
+   "gen": "Gen1c.Scalars.size_stmt",
+   "hand": "sc_size_main",
+   "expect": "DIFF",
+   "why": "sc_size_main states only pc and rax = 16, without rsp + 8 and memory identity (REPORT section 0 item 2, astra fix2 review finding 5); the template states the full postcondition"
+  },
+  {
+   "gen": "Gen1c.Checkpoint.size_stmt",
+   "hand": "ad_size_main",
+   "expect": "DIFF",
+   "why": "control: 40 vs 128, must differ"
+  }
+ ]
+}
