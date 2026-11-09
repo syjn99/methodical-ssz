@@ -2,7 +2,8 @@
 # Negative cases. Each mutation edits one directive of a converted .S file in a
 # scratch clone (same directive count, so every index-based step before the
 # mutated directive is unchanged; Kraken layouts are abstract, so no address
-# needs regenerating), rebuilds the Lean module there, and checks the result:
+# needs regenerating), rebuilds the Lean module there (the .S files are Lake
+# inputs of the Fk library, lean/lakefile.toml), and checks the result:
 # - a mutation must make `lake build` exit non-zero, and the first error must
 #   lie inside the designated theorem (its line span in the theorem file);
 # - the control (a directive rewritten to itself) must build (exit 0);
@@ -54,7 +55,6 @@ mutate() { # name file directive-index old new theorem-file theorem expect(FAIL|
   want "$name" || return 0
   clone "$name"; d="$SCR/neg-$name"
   edit "$d/fv/kraken/link/out/norm/$file" "$idx" "$old" "$new"
-  (cd "$d/fv/kraken" && link/shash.sh)
   log="$d/check.log"
   mod=$(echo "$tf" | sed 's/\.lean$//; s#/#.#g')
   rc=0; (cd "$d/fv/kraken/lean" && lake build "$mod" > "$log" 2>&1) || rc=$?
@@ -69,7 +69,7 @@ mutate() { # name file directive-index old new theorem-file theorem expect(FAIL|
 }
 
 linkmut() { # name file directive-index old new: mutate the function .S and all.S
-  # consistently, regenerate SHash.lean, and expect check.py to fail in (d)
+  # consistently and expect check.py to fail in (d)
   name=$1; file=$2; idx=$3; old=$4; new=$5
   want "$name" || return 0
   clone "$name"; d="$SCR/neg-$name"
@@ -77,12 +77,11 @@ linkmut() { # name file directive-index old new: mutate the function .S and all.
   fn=$(head -1 "$K/link/out/norm/$file" | sed 's/:$//')
   aidx=$(awk -v f="$fn:" '$0 == f { print NR - 1; exit }' "$K/link/out/norm/all.S")
   edit "$d/fv/kraken/link/out/norm/all.S" $((aidx + idx)) "$old" "$new"
-  (cd "$d/fv/kraken" && link/shash.sh)
   rc=0; python3 "$d/fv/kraken/link/check.py" "$d/fv/kraken/link/out" > "$d/check.log" 2>&1 || rc=$?
   first=$(grep -m1 'DIFF (d).* FAIL\|^FAIL' "$d/check.log" | cut -c1-200 || true)
   if [ "$rc" -ne 0 ] && grep -q 'DIFF (d).* FAIL' "$d/check.log"; then res=FAIL; ok=ok
   else res="exit $rc"; ok=UNEXPECTED; bad=1; fi
-  echo "$name | $file:$idx '$old' -> '$new' (also all.S, SHash regenerated) | link/check.py (d) | exit $rc | $res | $ok | $first" | tee -a "$OUT"
+  echo "$name | $file:$idx '$old' -> '$new' (also all.S) | link/check.py (d) | exit $rc | $res | $ok | $first" | tee -a "$OUT"
 }
 
 # 1. offset constant: the decoder compares the offset with 8 instead of 4

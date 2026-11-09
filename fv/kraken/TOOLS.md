@@ -24,7 +24,7 @@ P=github.com/OffchainLabs/methodical-ssz/fv/kraken/target
 go run ./cmd/ssz gen --package $P --output=fv/kraken/target/types.ssz.go --type-names=Scalars,FixedVec,ListU64
 go run ./cmd/ssz gen --package $P --output=fv/kraken/target/types1b.ssz.go --type-names=BitVec,Nested,ListC,BitL
 go run ./cmd/ssz gen --package $P/prysm --output=fv/kraken/target/prysm/types.ssz.go --type-names=Checkpoint,AttestationData
-fv/kraken/link/build.sh          # ELF, objdump, nm, norm/*.S, SHash.lean, build-ids.txt
+fv/kraken/link/build.sh          # ELF, objdump, nm, norm/*.S, build-ids.txt
 ```
 
 ## 도구

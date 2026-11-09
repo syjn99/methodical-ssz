@@ -86,7 +86,6 @@ PASS (b) runtime.zerobase = 0x5f3040 .noptrbss in-symbol
 PASS (b) runtime.writeBarrier = 0x5f3340 .noptrbss in-symbol
 PASS (c) all.S: 294 labels, each defined once; 53 external references not defined in all.S; 4 calls to target functions at their entry: ['ssz.ValidateBitlist', 'ssz.ValidateBitvector', 'target.ListU64.UnmarshalSSZ', 'target.Scalars.UnmarshalSSZ']
 PASS (e) all.S: 3221 directives equal the 29 function files in order
-PASS (f) lean/Fk/SHash.lean is the exact shash.sh text for all 38 .S files
 PASS (g) go_string._+39370 (53 bytes) = Lean lcFmtZero = fv/kraken/target/types1b.ssz.go lines [243]
 PASS (g) go_string._+42000 (63 bytes) = Lean lcFmtShort = fv/kraken/target/types1b.ssz.go lines [254, 280]
 PASS (g) go_string._+27706 (35 bytes) = Lean vbvFmt = ssz/unmarshal.go lines [45]
@@ -183,7 +182,7 @@ S sha256 67b0f2900b842ae65c8c8a64b0db302c576de4cb6eca43d4b09cde70713a18b3 target
 S sha256 3990b8f2369006c41c8475a817a075ada18b32ffd4de36397b5f3e079a39109a target_prysm.Checkpoint.MarshalSSZTo.S
 S sha256 a77ac17b8695d617c2f3bd5a731d3572d7fb69c2e8827190d3a5dd3e36a83cb1 target_prysm.Checkpoint.SizeSSZ.S
 S sha256 bee62ab7dfa3da589159bdb47d767ba65cb09f7e8f64cec649e60aa3c026c78c target_prysm.Checkpoint.UnmarshalSSZ.S
-file sha256 c4d64cb9c7857dc3f055d669ba2da5c406572f40ddf0fbb22aabdd8cda7926de lean/Fk/Code.lean
+file sha256 0bbe6f0da6d02e6f2720d7a1e98d7c71641ca00f1d9cb9a3111cf092ba98295a lean/Fk/Code.lean
 file sha256 dde4d7bb53aa6dc921ee500b504f8271300fd82e733d8571e171b8eb6f48d2b2 AXIOMS.txt
 PASS all
-BUNDLE sha256 215df51501a98052f96c1771a6b7ce1202b1adebe5c57a794979891b9ca47829
+BUNDLE sha256 a9fd725eb15965aa79bbf93b0e3d8a1d1d18fd51162e79f36b09ed4db8983554

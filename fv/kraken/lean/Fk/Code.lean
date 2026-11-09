@@ -1,7 +1,6 @@
 module
 public import Kraken.X64.Parser
 public import Fk.Include
-public import Fk.SHash
 @[expose] public section
 namespace Fk.Code
 def FixedVecMarshalSSZTo : Program := include_x64_rt "../link/out/norm/target.FixedVec.MarshalSSZTo.S"
