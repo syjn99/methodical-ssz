@@ -1,0 +1,12 @@
+label: A3-r2
+cmd: lake env lean ../memopt/scratch/A3.lean
+cwd: /Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/lean
+start_epoch: 1794224198
+exit: 0
+wall_s_date: 16
+wall_s_time: 15.51
+time_maxrss_bytes: 14228717568
+time_maxrss_gib: 13.25
+sampled_peak_total_gib: 13.90
+sampled_peak_single_gib: 13.25
+samples: 28

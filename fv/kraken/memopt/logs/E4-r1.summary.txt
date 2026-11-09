@@ -1,0 +1,12 @@
+label: E4-r1
+cmd: lake env lean ../memopt/scratch/E4.lean
+cwd: /Users/jsong@offchainlabs.com/orca/workspaces/methodical-ssz/ssz-fv-memopt/fv/kraken/lean
+start_epoch: 1794224468
+exit: 0
+wall_s_date: 2
+wall_s_time: 2.90
+time_maxrss_bytes: 1447952384
+time_maxrss_gib: 1.35
+sampled_peak_total_gib: 2.00
+sampled_peak_single_gib: 1.35
+samples: 6

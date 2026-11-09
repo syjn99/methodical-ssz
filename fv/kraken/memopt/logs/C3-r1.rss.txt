@@ -1,0 +1,7 @@
+n el_s total_kb max_kb max_comm nproc
+0 0 4976 4976 lake 1
+1 0 678304 678272 lake 2
+2 1 683360 683328 lake 2
+3 1 779984 684192 lake 2
+4 2 970336 684192 lake 2
+5 2 684192 684192 (lake) 2
