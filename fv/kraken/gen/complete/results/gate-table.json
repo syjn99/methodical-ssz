@@ -5,7 +5,7 @@
   "equal": 48,
   "different": 6,
   "not_compared": 18,
-  "mains_resolved": 60,
+  "mains_resolved": 65,
   "mains_with_witness": 58
  },
  "rows": [
@@ -154,7 +154,8 @@
     "lu_reject_offset_main",
     "lu_reject_short_main",
     "lu_reject_toobig_main",
-    "lu_size_main"
+    "lu_size_main",
+    "lu_spec_accepts_iff"
    ],
    "witnesses": [
     "Fk.WitLuM0.lu_marshal_runs",
@@ -213,7 +214,8 @@
     "bv_marshal_main",
     "bv_reject_padding_main",
     "bv_reject_size_main",
-    "bv_size_main"
+    "bv_size_main",
+    "bv_spec_accepts_iff"
    ],
    "witnesses": [
     "Fk.WitBv.bv_accept_runs",
@@ -332,7 +334,8 @@
     "ne_marshal_main",
     "ne_reject_offset_main",
     "ne_reject_short_main",
-    "ne_size_main"
+    "ne_size_main",
+    "ne_spec_accepts_iff"
    ],
    "witnesses": [
     "Fk.WitNe0.ne_accept_runs",
@@ -476,7 +479,8 @@
     "cp_marshal_main",
     "cp_marshal_reject_main",
     "cp_reject_size_main",
-    "cp_size_main"
+    "cp_size_main",
+    "cp_spec_accepts_iff"
    ],
    "witnesses": [
     "Fk.WitCp.cp_accept_runs",
@@ -528,7 +532,8 @@
     "ad_accept_main",
     "ad_marshal_main",
     "ad_reject_size_main",
-    "ad_size_main"
+    "ad_size_main",
+    "ad_spec_accepts_iff"
    ],
    "witnesses": [
     "Fk.WitAd.ad_accept_runs",

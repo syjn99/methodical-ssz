@@ -2,6 +2,7 @@ ad_accept_main
 ad_marshal_main
 ad_reject_size_main
 ad_size_main
+ad_spec_accepts_iff
 bl_accept_main
 bl_marshal_main
 bl_marshal_reject_main
@@ -14,12 +15,14 @@ bv_marshal_main
 bv_reject_padding_main
 bv_reject_size_main
 bv_size_main
+bv_spec_accepts_iff
 bv_unmarshal_then_marshal
 cp_accept_main
 cp_marshal_main
 cp_marshal_reject_main
 cp_reject_size_main
 cp_size_main
+cp_spec_accepts_iff
 fv_accept_main
 fv_iter
 fv_marshal_main
@@ -43,12 +46,14 @@ lu_reject_offset_main
 lu_reject_short_main
 lu_reject_toobig_main
 lu_size_main
+Fv1.lu_spec_accepts_iff
 lu_unmarshal_then_marshal
 ne_accept_main
 ne_marshal_main
 ne_reject_offset_main
 ne_reject_short_main
 ne_size_main
+ne_spec_accepts_iff
 sc_accept_main
 sc_marshal_main
 sc_reject_bool_main

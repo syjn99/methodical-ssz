@@ -9,9 +9,9 @@ frozen list `gen/frozen/THEOREMS.json`, plus the composition theorems).
 For each name it prints one `COMPLETE <json>` line:
 
 * `module`        module of the declaration
-* `witnesses`     declarations of `Fk` modules whose proof term uses the theorem
-                  and whose type has no binder of type `Host` (so they fix a
-                  concrete `Host`); with the `Host` instances they use
+* `witnesses`     declarations of `Fk` modules whose proof term uses the theorem,
+                  whose type has no binder of type `Host`, and which use a concrete
+                  `Host` instance; with the instances they use
 * `users`         other `Fk` declarations that use the theorem (with a `Host` binder)
 * `ethlib_links`  users whose type mentions `EthLib…deserialize` or `serialize`
 * `contracts`     registry contracts in the theorem's hypotheses (resolved
@@ -21,6 +21,8 @@ For each name it prints one `COMPLETE <json>` line:
                   `dmem_eq` (an `Eq` on `DataMem`), `frame` (a hypothesis of type
                   `DataMem → Prop` occurs in P), `true` (`True` occurs in P)
 * `data_consts`   hand constants the include API replaces (resolved names)
+* `COMPLETE-MAINS` line: the `*_main` theorems of the `Fk` modules (enumerated from the
+                  environment) against the `*_main` names of the input; any difference is an error
 * `dependent_mains` input names whose proof term reaches this one through Fk
                   constants (auxiliary declarations included)
 
@@ -136,6 +138,16 @@ def main : MetaM Unit := do
         if y == target then found := true
         else if !seen.contains y then stack := stack.push y
     return found
+  -- cross-check: the `*_main` theorems of the Fk modules = the `*_main` names of the input
+  let envMains := fkDecls.filter (fun n => match env.find? n with
+    | some (.thmInfo _) => (n.componentsRev.head?.map (·.toString.endsWith "_main")).getD false
+    | _ => false)
+  let inMains := mains.filter (fun n => (n.componentsRev.head?.map (·.toString.endsWith "_main")).getD false)
+  let missing := envMains.toList.filter (fun n => !inMains.contains n)
+  let extra := inMains.filter (fun n => !envMains.contains n)
+  IO.println s!"COMPLETE-MAINS env {envMains.size} input {inMains.length} missing_from_input {missing} not_in_env {extra}"
+  if !missing.isEmpty || !extra.isEmpty then
+    throwError "the input list of *_main theorems differs from the environment"
   -- holders of function specs
   let mut holders : List (Name × Name × List Name) := []
   for n in fkDecls do
@@ -159,7 +171,12 @@ def main : MetaM Unit := do
       else
         let hs ← hostConsts env (uci.type.headBeta)
         let hs2 ← hostConsts env ((uci.value? (allowOpaque := true)).getD (mkConst ``True))
-        wits := wits ++ [Json.mkObj [("name", toString u), ("module", moduleOf env u), ("hosts", jsonNames (hs ++ hs2).eraseDups)]]
+        -- a witness fixes a concrete Host instance; a declaration with neither a Host
+        -- binder nor a Host instance (a spec-level lemma) is a user, not a witness
+        if (hs ++ hs2).isEmpty then
+          users := users ++ [u]
+        else
+          wits := wits ++ [Json.mkObj [("name", toString u), ("module", moduleOf env u), ("hosts", jsonNames (hs ++ hs2).eraseDups)]]
     let direct ← hypContracts ci.type
     let mut via : List Json := []
     for c in direct do
