@@ -124,4 +124,6 @@ astra 리뷰: 역할 분류가 Host 바인더와 이름 가림을 구분하지 �
 `wlcm.py`의 증명 한 줄을 `simp [u64Bytes, uintBytes]`로 바꾸고 증인 셋을 재생성했다. 명제는 바꾸지 않았다.
 수치: `WitLcM4x16` 단독 peak 13.01–13.27 GiB → 1.42 GiB(macOS 48 GiB). 9.69 GiB 컨테이너에서 원본 단독은 OOM kill, 수정본 전체 빌드는 856 jobs 성공(`memory.peak` 7.41 GiB).
 inspector diff는 `u64v` 공리 7줄(`propext`, `Quot.sound`)뿐이다. AXIOMS 1571/7975, NONSTANDARD 0. 회귀는 모두 성공했다.
-판정은 "조건부"다. 사용자 머신 재현과 독립 리뷰가 남았다.
+판정은 "조건부"다. 사용자 머신 재현이 남았다.
+독립 리뷰(gpt-6-astra, `253a84a`)도 조건부였다. 선언 290개의 `Expr.equal` 대조에서 assertion 약화는 없었다.
+리뷰의 P1(8.2절 재현에서 캐시 재사용)과 P2 두 건(`run.sh` 종료 코드, `gen.py` 원본)은 브랜치 끝 커밋에서 고쳤다.

@@ -11,7 +11,7 @@
 
 ## 1. 방법
 
-- 진단 파일은 `scratch/*.lean`이다. `scratch/gen.py`가 `Fk/WitLcM4x16.lean`의 줄을 잘라 만든다.
+- 진단 파일은 `scratch/*.lean`이다. `scratch/gen.py`가 `86fd060`의 `Fk/WitLcM4x16.lean`의 줄을 잘라 만든다.
 - `A4.lean`은 원본과 바이트 단위로 같다(`diff` 출력 없음).
 - 모든 측정은 `fv/kraken/lean`에서 `../memopt/measure.sh <label> lake env lean ../memopt/scratch/<f>.lean`이다.
 - B2, B3만 원본 `Fk/WitLcM4x16.lean`을 측정했다. 명령은 표에 적는다.
@@ -129,6 +129,8 @@ A4의 peak는 M1 값(13.01–13.27 GiB)과 같은 범위다. A4의 wall은 M1(17
 - 다른 witness(`WitLcA4x16` 등)의 원인 분리는 범위 밖이라서 하지 않았다.
 
 ## 6. 재현
+
+`gen.py`는 원본을 git에서 읽는다(`git show 86fd060:fv/kraken/lean/Fk/WitLcM4x16.lean`). 현재 파일은 읽지 않는다.
 
 ```sh
 cd fv/kraken/lean

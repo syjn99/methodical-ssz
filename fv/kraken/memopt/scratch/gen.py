@@ -1,11 +1,16 @@
 """Generate the M2 diagnostic copies of Fk/WitLcM4x16.lean.
 
 Run from fv/kraken/lean: python3 ../memopt/scratch/gen.py
-Line numbers refer to Fk/WitLcM4x16.lean at daa9dbc.
+The source is the original (`by decide`) file, read from git at the base
+commit 86fd060, not the working tree (which has the M3 `simp` proofs).
+Line numbers refer to that file (same as at daa9dbc).
 """
 import pathlib
+import subprocess
 
-SRC = pathlib.Path("Fk/WitLcM4x16.lean").read_text().splitlines()
+BASE = "86fd060:fv/kraken/lean/Fk/WitLcM4x16.lean"
+SRC = subprocess.run(["git", "show", BASE], check=True, capture_output=True,
+                     text=True).stdout.splitlines()
 OUT = pathlib.Path(__file__).parent
 END = "end Fk.WitLcM4x16"
 

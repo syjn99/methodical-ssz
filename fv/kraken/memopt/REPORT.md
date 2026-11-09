@@ -6,10 +6,10 @@
 
 조건:
 
-1. 사용자 머신(macOS 16 GiB, Colima 10 GiB Linux aarch64)에서 재현하지 않았다. 저메모리 결과는 OrbStack 컨테이너의 모사다.
-2. 독립 리뷰를 하지 않았다. 대상은 assertion 약화, cache 혼입, 측정 조건 차이다.
-3. 전체 빌드의 여유는 cgroup 기준 2.28 GiB다. 이 값은 CPU 18개, 기본 병렬도에서 쟀다. Colima의 CPU 수에서는 재지 않았다.
-4. 의미 보존 검사는 두 `.olean`을 한 환경에서 kernel로 비교하지 않았다. 근거는 `pp.all` 타입, `Expr.hash`, 외부 정의의 소스 diff다(5절).
+1. 사용자 머신(macOS 16 GiB, Colima 10 GiB Linux aarch64)에서 재현하지 않았다. 저메모리 결과는 OrbStack 컨테이너의 모사다. 재현 절차는 8.2절이다.
+2. 전체 빌드의 여유 2.28 GiB는 보장값이 아니다. 이 값은 OrbStack, CPU 18개, 기본 병렬도, 1회 측정의 관측값이다. Colima에서는 재지 않았다.
+
+독립 리뷰(gpt-6-astra)는 끝났다. 판정은 조건부, 필수 수정 1건, 권고 2건이다. 세 건 모두 반영했다(11절).
 
 ## 1. 기준과 최종
 
@@ -17,11 +17,11 @@
 | --- | --- |
 | 기준 | 브랜치 `syjn99/ssz-fv-cleanup`, SHA `86fd060349257c133e981e420120f63c61f582e1` |
 | 작업 브랜치 | `syjn99/ssz-fv-memopt` |
-| 최종 | 보고서 커밋 직전 HEAD `509faff1b985bfc0c095be8a61a160d8bc8eb8e2` |
-| Lean 소스 | `e5fb3d3`와 `509faff`의 `fv/kraken/lean` diff는 없다. 저메모리 측정(`e5fb3d3`)은 최종 Lean 소스와 같다 |
+| 최종 | 브랜치 `syjn99/ssz-fv-memopt` 끝 커밋. `git log -1`로 확인한다 |
+| Lean 소스 | `e5fb3d3` 뒤 `fv/kraken/lean` diff는 없다. 저메모리 측정(`e5fb3d3`)은 최종 Lean 소스와 같다 |
 | 보호 ELF | `fv/kraken/link/out/p1bin-amd64` sha256 `9c850c97066b9d33d6e4c5ef0a385dcbe2c984ae774a527cdedd18d2b72ac501`. 기준과 같다 |
 
-커밋(`86fd060..509faff`):
+커밋(`86fd060..`브랜치 끝):
 
 | 커밋 | 내용 |
 | --- | --- |
@@ -31,6 +31,9 @@
 | `e5fb3d3` | M3: 변경 기록과 inspector 결과 |
 | `54ac82e` | M4: 전체 회귀와 9.69 GiB 컨테이너 검증 |
 | `509faff` | M5: `link/out/RESULT` 갱신 |
+| `e8f95e3` | M5: 이 보고서와 `HISTORY.md` 단락 |
+| `253a84a` | M6: 독립 리뷰 본문과 증거(`memopt/review/`) |
+| 끝 커밋 | M6: 리뷰 반영(8.2절 재현 절차, `run.sh` 종료 코드, `gen.py` 원본) |
 
 ## 2. 변경 파일
 
@@ -55,7 +58,8 @@
 | `lowmem/run.sh`, `cmeasure.sh`, `Dockerfile` | 9.69 GiB 컨테이너 검증 |
 | `scratch/*.lean`, `scratch/gen.py` | M2 진단 파일 26개. 증명으로 쓰지 않는다 |
 | `artifacts/` | inspector 출력, `inspect.diff`, `olean.sha256`. `.olean`, `.ilean`은 git이 무시한다 |
-| `logs/` | 측정 로그 268개. M5가 `m5-link.txt`를 더한다 |
+| `logs/` | 측정 로그 268개. M5가 `m5-link.txt`를, M6가 `m6-*.txt` 2개를 더한다 |
+| `review/` | 독립 리뷰 본문과 증거. `review/README.md`가 파일 역할을 적는다 |
 
 ## 3. 모델과 세션
 
@@ -137,8 +141,9 @@ macOS peak RSS는 `/usr/bin/time -l`의 최대 단일 프로세스 값이다.
 
 한계:
 
-- 두 `.olean`을 한 환경에 적재하지 않았다. kernel이 두 타입의 같음을 직접 검사하지 않았다.
-- `Expr.hash`는 충돌할 수 있다. `pp.all` 텍스트 일치가 그 보완이다.
+- 이 inspector는 두 `.olean`을 한 환경에 적재하지 않았다. `Expr.hash`는 충돌할 수 있다. `pp.all` 텍스트 일치가 그 보완이다.
+- 독립 리뷰가 이 한계를 보완했다. 원본과 수정본을 별도로 컴파일하고 두 환경으로 읽었다. 선언 290개의 타입과 정의 값 57개가 `Expr.equal`로 같다(`review/compare-final.txt`).
+- 두 환경의 동등성을 kernel 정리로 증명하지는 않았다. 정리의 증명 값은 비교하지 않았다. 증명 값의 변경이 이 최적화다.
 - 원본과 수정본을 별도 artifact 디렉터리에서 각각 cold 빌드하지 않았다. 원본 `.olean`은 빌드 뒤 복사로 보존했다.
 
 ### 5.3 공리
@@ -206,57 +211,103 @@ python3 tools/wit/wlcm.py tools/wit 0,1,16 Mix
 
 사용자 환경: macOS 16 GiB, Colima 10 GiB, Linux aarch64 작업 컨테이너(약 9.69 GiB, swap 0).
 
-A. 작업 컨테이너 안에서 직접 빌드한다(주 방법).
+성공 기준은 실제 재빌드(로그에 `Built` 기록)의 exit 0과 적용된 `memory.max`다.
+OrbStack 수치(아래 표)는 고정 기대값이 아니다.
+
+A. 작업 컨테이너 안에서 직접 빌드한다(주 방법). 저장소 루트에서 시작한다.
+
+`<remote>`는 사용자의 fork remote다. 대상은 `syjn99/ssz-fv-memopt` 끝 커밋이다. `git log -1`로 확인한다.
 
 ```sh
 git fetch <remote> syjn99/ssz-fv-memopt
-git checkout --detach <보고서 커밋 SHA>      # 보고서 커밋 직전 HEAD는 509faff. Lean 소스는 같다
-git rev-parse HEAD
+git checkout --detach FETCH_HEAD
+git log -1                                 # syjn99/ssz-fv-memopt 끝 커밋인지 확인한다
 cd fv/kraken/lean
-cat /sys/fs/cgroup/memory.events           # oom_kill 값을 적는다
-lake build                                 # 기대: Build completed successfully (856 jobs)
-cat /sys/fs/cgroup/memory.events           # 기대: oom_kill 증가 없음
-sh tools/axioms.sh                         # 기대: TOTAL 1571 NONSTANDARD 0, ALL-DECLARATIONS TOTAL 7975 NONSTANDARD 0
-git status --short                         # 기대: 출력 없음
 ```
 
-단독 빌드는 전체 빌드 뒤에 한다. 산출물을 지워 lake가 이 모듈을 다시 빌드하게 한다.
+A(a). 증분 빌드(참고용). 기존 산출물을 재사용한다.
+
+```sh
+cat /sys/fs/cgroup/memory.events           # oom_kill 값을 적는다
+lake build
+cat /sys/fs/cgroup/memory.events
+```
+
+- 이 결과는 저메모리 검증이 아니다. Lake는 유효한 기존 산출물을 `Replayed`로 재사용한다.
+- 성공 메시지의 jobs 수(856)는 재컴파일한 모듈 수가 아니다.
+
+A(b). 검증용 전체 재빌드. 프로젝트 산출물 `.lake/build`를 지운다.
+의존성 산출물 `.lake/packages`(Kraken, EthLib 등)는 지우지 않는다.
+컨테이너에 `trash`가 없을 수 있다. 그래서 Linux의 재귀 삭제 명령을 쓴다.
+
+```sh
+cat /sys/fs/cgroup/memory.max              # 적용된 상한을 적는다
+cat /sys/fs/cgroup/memory.events           # 시작 oom_kill 값을 적는다
+rm -rf .lake/build                         # 프로젝트 산출물만. .lake/packages는 유지한다
+/usr/bin/time -v -o /tmp/memopt-full.time.txt lake build > /tmp/memopt-full.out.txt 2>&1; echo "exit $?"
+cat /sys/fs/cgroup/memory.events           # 종료 oom_kill 값을 적는다
+cat /sys/fs/cgroup/memory.peak             # 파일이 있으면 적는다
+grep -E 'Exit status|Elapsed|Maximum resident' /tmp/memopt-full.time.txt
+grep -c ' Built ' /tmp/memopt-full.out.txt # OrbStack: 159
+grep 'Built Fk.WitLcM4x16' /tmp/memopt-full.out.txt
+tail -1 /tmp/memopt-full.out.txt           # Build completed successfully (856 jobs).
+sh tools/axioms.sh                         # TOTAL 1571 NONSTANDARD 0, ALL-DECLARATIONS TOTAL 7975 NONSTANDARD 0
+git status --short                         # 출력 없음
+```
+
+- 기록할 값: 시작과 종료의 `oom_kill`, `/usr/bin/time -v`의 exit·wall·max RSS, `memory.peak`(있으면), `memory.max`, `Built` 줄 수.
+- `memory.peak` 파일이 없는 커널도 있다. 그러면 `memory.peak`는 적지 않는다.
+
+A(c). 단독 빌드. A(b) 뒤에 한다. 이 모듈의 산출물을 지워 lake가 다시 빌드하게 한다.
 
 ```sh
 find .lake/build -name 'WitLcM4x16.*' -delete
-/usr/bin/time -v lake build Fk.WitLcM4x16  # 기대: exit 0, max RSS 약 1.8 GiB
+/usr/bin/time -v lake build Fk.WitLcM4x16  # exit 0. OrbStack max RSS 약 1.8 GiB
 ```
 
 - `/usr/bin/time`이 없으면 `time` 패키지를 설치하거나 `memory.peak`만 본다.
 - 처음 빌드는 의존성(Kraken, EthLib)을 받는다. Mathlib cache는 쓰지 않는다. toolchain과 manifest를 바꾸지 않는다.
 
-B. `memopt/lowmem/run.sh`로 원본과 수정본을 같이 잰다(선택).
+A와 B는 다른 셸이다. B 전에 저장소 루트로 돌아간다.
 
 ```sh
-docker context use colima                  # 지금 컨텍스트를 docker context ls로 먼저 적는다
+cd "$(git rev-parse --show-toplevel)"
+```
+
+B. `memopt/lowmem/run.sh`로 원본과 수정본을 같이 잰다(선택). Docker 호스트의 저장소 루트에서 실행한다.
+
+`run.sh`는 `docker`를 직접 부른다. 그래서 컨텍스트는 환경 변수 `DOCKER_CONTEXT`로 정한다. 전역 컨텍스트는 바꾸지 않는다.
+
+```sh
+export DOCKER_CONTEXT=colima
 NEW=$(git rev-parse HEAD) fv/kraken/memopt/lowmem/run.sh image setup env prebuild-new prebuild-orig
 NEW=$(git rev-parse HEAD) fv/kraken/memopt/lowmem/run.sh orig-1 new-1 new-2 full axioms
 fv/kraken/memopt/lowmem/run.sh clean
+unset DOCKER_CONTEXT
 ```
 
 주의:
 
-- 스크립트는 OrbStack에서 만들었다. 지금 docker 컨텍스트를 그대로 쓴다. Colima에서는 컨텍스트를 `colima`로 맞춘다.
+- 스크립트는 OrbStack에서 만들었다. `DOCKER_CONTEXT`가 없으면 지금 docker 컨텍스트를 쓴다.
+- `orig-*` 단계는 실패(OOM)를 기대한다. 그 exit는 스크립트를 멈추지 않는다.
+- `new-*`, `full`, `axioms` 단계가 실패하면 스크립트는 그 exit로 멈춘다. 뒤 단계는 실행하지 않는다.
+- `full` 단계는 컨테이너 안 수정본의 `.lake/build`를 지운 뒤 빌드한다. 의존성 산출물(`/work/pkgs`)은 유지한다.
 - `--memory=9922m`은 Colima VM 전체 RAM(약 9.69 GiB)과 거의 같다. VM의 OOM이 cgroup OOM보다 먼저 올 수 있다. 그러면 `oom_kill` 값이 아니라 컨테이너 종료로 보인다.
 - `setup`은 호스트의 `fv/kraken/lean/.lake/packages` 소스를 복사한다. 호스트에 그 디렉터리가 없으면 `setup`은 실패한다.
 - `image`는 elan과 toolchain을 네트워크로 받는다.
-- 이미지 크기는 3.67 GB다. 끝나면 `docker image rm memopt-lowmem`으로 지울 수 있다.
+- 이미지 크기는 3.67 GB다. 끝나면 `docker --context colima image rm memopt-lowmem`으로 지울 수 있다.
 
-기대 수치(OrbStack 측정값, 사용자 머신에서는 다를 수 있다):
+OrbStack 관측값(고정 기대값이 아니다. 사용자 머신에서는 다를 수 있다):
 
-| 항목 | 기대 |
+| 항목 | OrbStack 관측값 |
 | --- | --- |
 | 원본 단독 | exit 1, `Lean exited with code 137`, `oom_kill` 1 |
 | 수정본 단독 | exit 0, `memory.peak` 0.44–1.46 GiB, max RSS 약 1.8 GiB |
-| 수정본 전체 | exit 0, 856 jobs, `memory.peak` 7.41 GiB, `oom_kill` 0 |
+| 수정본 전체 | exit 0, `Built` 159줄, 856 jobs, `memory.peak` 7.41 GiB, `oom_kill` 0 |
 | 공리 | 두 범위 `NONSTANDARD 0` |
 
-결과가 기대와 다르면 바꾸지 말고 보고한다. 보고에 명령, exit, `memory.events`, `nproc`, 로그를 넣는다.
+수정본 단독·전체의 exit가 0이 아니거나 `oom_kill`이 늘면 바꾸지 말고 보고한다.
+보고에 명령, exit, `memory.max`, `memory.events`, `nproc`, 로그를 넣는다.
 
 ## 9. 완료 기준 (HANDOFF.md)
 
@@ -269,7 +320,7 @@ fv/kraken/memopt/lowmem/run.sh clean
 - [x] 전체 baseline 회귀가 성공했거나, 미실행·실패 항목이 명확히 분리됐다. — M4 A 9개 모두 exit 0. `RESULT` diff는 `509faff`로 해결했다.
 - [x] 저메모리 환경의 단독/전체 빌드 결과가 있다. — OrbStack 9.69 GiB 컨테이너에서 원본 OOM, 수정본 단독 2/2와 전체 1/1 성공. 사용자 머신 결과는 아니다.
 - [x] 생성기에서 재현 가능한 변경이다. — `wlcm.py` 1줄, 재생성 명령 6개, diff 7줄, 손 패치 없음.
-- [ ] 독립 리뷰가 assertion 약화, cache 혼입, 측정 조건 차이를 확인했다. — 하지 않았다. 다음 단계다.
+- [x] 독립 리뷰가 assertion 약화, cache 혼입, 측정 조건 차이를 확인했다. — gpt-6-astra, `review/REVIEW-gpt6-astra.md`. 별도 컴파일한 원본·수정본의 선언 290개를 `Expr.equal`로 대조했다(`review/compare-final.txt`). 판정과 반영은 11절이다.
 
 추가 항목:
 
@@ -288,3 +339,22 @@ fv/kraken/memopt/lowmem/run.sh clean
 `WitLcA4x16`(macOS 단독 4.44 GiB)에는 `u64v` decide가 없다. 그래서 원인은 이 작업의 원인과 다르다.
 그 원인은 조사하지 않았다. 위 `lcTl_*` 증명은 후보일 뿐이다.
 다른 witness로 확대할지는 오케스트레이터와 사용자가 정한다.
+
+## 11. 독립 리뷰
+
+| 항목 | 값 |
+| --- | --- |
+| 리뷰어 | gpt-6-astra |
+| 대상 | `e8f95e3` |
+| 판정 | 조건부. 증명 변경은 수용할 수 있다. 공개 assertion의 약화는 없다 |
+| 근거 | `review/REVIEW-gpt6-astra.md`. 파일 역할은 `review/README.md`다 |
+
+| # | 등급 | 발견 | 반영 | 확인 |
+| --- | --- | --- | --- | --- |
+| 1 | P1 | 8.2절 A의 `lake build`가 기존 프로젝트 산출물을 재사용할 수 있다. 성공 메시지만으로 저메모리 재빌드를 확인할 수 없다 | 8.2절 A를 증분 빌드(참고용)와 검증용 전체 재빌드로 나눈다. 재빌드는 `.lake/build`를 지우고 `.lake/packages`를 유지한다. `memory.events`, `/usr/bin/time -v`, `memory.peak`, `Built` 줄 수를 기록한다. B의 컨텍스트는 `DOCKER_CONTEXT=colima`로 정한다 | 문서 변경. 사용자 머신 실행은 하지 않았다 |
+| 2 | P2 | `lowmem/run.sh`의 `new-[12]`, `full`, `axioms`가 실패를 exit 0으로 바꾼다 | 세 곳의 `\|\| true`를 지운다. `orig-[123]`은 기대 실패라서 남긴다 | 가짜 `docker`(exit 23): `new-1`, `new-2`, `full`, `axioms`는 exit 23, `orig-1`은 exit 0(`logs/m6-wrapper-exit-test.txt`) |
+| 3 | P2 | `scratch/gen.py`가 현재 수정본을 읽어서 잘못된 진단 파일을 만든다 | `git show 86fd060:fv/kraken/lean/Fk/WitLcM4x16.lean`에서 원본을 읽는다 | 임시 사본 실행: `A4.lean`이 원본과 바이트 단위로 같다. 생성 파일 23개가 커밋된 `scratch/*.lean`과 같다. `C10.lean`은 HEAD의 `Fk/WitLcM4x16.lean`과 같다. `lake env lean ../memopt/scratch/C1.lean` exit 0(`logs/m6-gen-check.txt`) |
+
+- 반영 커밋: 리뷰 증거 `253a84a`, 수정은 브랜치 끝 커밋 `fix(kraken): apply the memopt review fixes ...`다.
+- `scratch/N1.lean`, `N2.lean`은 `gen.py`의 출력이 아니다. M3의 손 진단 파일이다(`M3-CHANGE.md`).
+- `C10.lean`이 HEAD의 증인과 같은 이유: C10은 원본의 `u64v` 증명을 M3의 `simp` 증명으로 바꾼 파일이다. M3는 같은 바꿈을 생성기에 넣었다.

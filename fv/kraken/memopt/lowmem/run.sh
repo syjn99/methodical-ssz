@@ -59,10 +59,11 @@ for s in "$@"; do
     cat "$LOGS/lm-env.txt" ;;
   prebuild-new) m new prebuild-new lake build Fk.LcMarshal Fk.RtCopy Fk.WHost ;;
   prebuild-orig) m orig prebuild-orig lake build Fk.LcMarshal Fk.RtCopy Fk.WHost ;;
+  # The original is expected to fail (OOM), so its exit does not stop the run.
   orig-[123]) unbuild orig; m orig $s lake build Fk.WitLcM4x16 || true ;;
-  new-[12]) unbuild new; m new $s lake build Fk.WitLcM4x16 || true ;;
-  full) dr /work/new/$LD rm -rf .lake/build; m new full lake build || true ;;
-  axioms) m new axioms sh tools/axioms.sh || true ;;
+  new-[12]) unbuild new; m new $s lake build Fk.WitLcM4x16 ;;
+  full) dr /work/new/$LD rm -rf .lake/build; m new full lake build ;;
+  axioms) m new axioms sh tools/axioms.sh ;;
   clean) docker volume rm $VOL ;;
   *) echo "unknown stage $s" >&2; exit 2 ;;
   esac
