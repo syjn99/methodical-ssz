@@ -125,6 +125,15 @@ mutate blrity target.BitL.UnmarshalSSZ.S 37 'mov 0x8(%rax),%rax' 'mov 0x10(%rax)
 # to itself must build.
 mutate lcorder target.ListC.UnmarshalSSZ.S 388 'mov $0x43,%ebx' 'mov $0x42,%ebx' Fk/LcOrder.lean lcl_order FAIL
 mutate lcorderctl target.ListC.UnmarshalSSZ.S 388 'mov $0x43,%ebx' 'mov $0x43,%ebx' Fk/LcOrder.lean lcl_order PASS
+# fix 3 review M4: the element-error wrap passes 8 instead of 9 as the length of
+# the format lcFmtItems ("Items: %w") to fmt.errorf (a directive only on that
+# reject path); the FmtErrorfWC premise rbx = fs.length fails in lcl_itemerr,
+# the loop part of lc_reject_item_main (its entry part is the code that
+# lc_accept_main proves, so a mutation there breaks LcAccept first).
+# lcitemsctl: the same immediate in decimal ($9): the file changes, so Lake
+# rebuilds and re-proves (not a cache replay), and the build must pass.
+mutate lcitems target.ListC.UnmarshalSSZ.S 351 'mov $0x9,%ebx' 'mov $0x8,%ebx' Fk/LcItems.lean lcl_itemerr FAIL
+mutate lcitemsctl target.ListC.UnmarshalSSZ.S 351 'mov $0x9,%ebx' 'mov $9,%ebx' Fk/LcItems.lean lcl_itemerr PASS
 # control: a directive rewritten to itself must still check
 mutate control target.FixedVec.UnmarshalSSZ.S 47 'cmp $0x4,%rax' 'cmp $0x4,%rax' Fk/FvLoop.lean fv_iter PASS
 # 9. link (X6): a padding nop becomes retq; the link check must reject it
