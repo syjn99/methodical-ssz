@@ -29,6 +29,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 KRAKEN = os.path.normpath(os.path.join(HERE, "..", ".."))
 sys.path.insert(0, os.path.join(KRAKEN, "gen", "gen1c"))
 import emit  # noqa: E402
+import include_adapter  # noqa: E402
 
 NORM = os.path.join(KRAKEN, "link", "out", "norm")
 LAYOUT = json.load(open(os.path.join(KRAKEN, "gen", "wit", "src", "layout.json")))
@@ -932,6 +933,300 @@ def lu_err(D, mode):
     tgt = next(t.split()[1] for _, k, t in D if k == "instr" and t.split()[0] == op)
     return re.match(r"mov (ssz\.\w+)\(%rip\)", D[lab_index[tgt] + 1][2])[1]
 
+
+# ---------------------------------------------------------------- ListU64 reject paths through fmt.errorf
+# Pattern of Fk/LuRejectCall.lean (lu_reject_toobig_main, lu_reject_misaligned_main): the length
+# checks pass up to the failing one, then a 4-word argument array (two `any`) is built in the frame
+# with two `movups %xmm15`, `runtime.convT64` boxes the count (contract ConvT64C), the type word of
+# `int` and the error global's itab/data words fill the array, `fmt.errorf` with a `%d ... %w` format
+# (contract FmtErrorfDWC) returns a non-nil error and the epilogue returns it. Per-directive steps,
+# label numbers, frame/argument offsets, call sites, data items and the arithmetic lemmas are
+# generated from the directive list; the contract application blocks are hand text with these
+# values substituted (README section 2).
+
+class CallPath:
+    """Values of one fmt.errorf reject path, read from the directive list (refuses anything else)."""
+    def __init__(self, D, mode):
+        lab_index = {t: d for d, k, t in D if k == "label"}
+        ins = [(d, t) for d, k, t in D if k == "instr"]
+        self.frame = next(-int(t.split()[1].split(",")[0][1:], 16) for d, t in ins if re.fullmatch(r"add \$-0x[0-9a-f]+,%rsp", t))
+        test7 = next(d for d, t in ins if t == "test $0x7,%rcx")
+        assert D[test7 + 1][2].startswith("jne "), D[test7 + 1]
+        if mode == "misaligned":
+            self.start = lab_index[D[test7 + 1][2].split()[1]]
+        else:
+            jg = next(d for d, t in ins if d > test7 and t.startswith("jg "))
+            assert [D[jg - 2][2], D[jg - 1][2]] == ["shr $0x3,%rcx", "cmp $0x10,%rcx"], (D[jg - 2], D[jg - 1])
+            self.start = lab_index[D[jg][2].split()[1]]
+        d = self.start + 1
+        m = re.fullmatch(r"lea (0x[0-9a-f]+)\(%rsp\),%rdx", D[d][2])
+        assert m, D[d]
+        self.argoff = int(m[1], 16)
+        calls = [i for i in range(d, len(D)) if D[i][2].startswith("callq ")]
+        self.c1, self.c2 = calls[0], calls[1]
+        assert D[self.c1][2] == "callq runtime.convT64" and D[self.c2][2] == "callq fmt.errorf", (D[self.c1], D[self.c2])
+        m = re.fullmatch(r"lea type__\+(\d+)\(%rip\),%rcx", D[self.c1 + 1][2])
+        assert m, D[self.c1 + 1]
+        self.tw = tw_item(int(m[1]))
+        self.err = next(re.fullmatch(r"mov (ssz\.\w+)\(%rip\),%rcx", D[i][2])[1] for i in range(self.c1, self.c2)
+                        if re.fullmatch(r"mov ssz\.\w+\(%rip\),%rcx", D[i][2]))
+        fs = [re.fullmatch(r"lea go_string\._\+(\d+)\(%rip\),%rax", D[i][2]) for i in range(self.c1, self.c2)]
+        [fs] = [x for x in fs if x]
+        ln = next(int(re.fullmatch(r"mov \$(0x[0-9a-f]+),%ebx", D[i][2])[1], 16) for i in range(self.c1, self.c2)
+                  if re.fullmatch(r"mov \$0x[0-9a-f]+,%ebx", D[i][2]))
+        fid, api_id = include_adapter.rodata_id(None, include_adapter.RODATA_LABEL, int(fs[1]), ln)
+        assert api_id, f"format string go_string._+{fs[1]} ({ln} bytes) is not an include API item"
+        self.fmt, self.fmtlen = fid, ln
+        assert D[self.c2 + 1][2] == "test %rax,%rax" and D[self.c2 + 2][2].startswith("jne "), D[self.c2 + 1:self.c2 + 3]
+        self.end = lab_index[D[self.c2 + 2][2].split()[1]]
+        C = self.frame + 16                    # call slot rsp - C (return address of a call)
+        self.C = C
+        self.P1 = 8 + self.frame - self.argoff  # argument array at rsp - P1 (16 bytes) and rsp - P2
+        self.P2 = self.P1 - 16
+        assert self.P2 - 8 > 8 and self.argoff >= 40, "argument array must lie above the 40-byte spill area"
+        self.budget = ln + 20 + 8192 + 8        # FmtErrorfDWC budget + the convT64 box
+
+
+def tw_item(off):
+    api = include_adapter.check_api()
+    hits = [it["id"] for it in api["items"] if it.get("label") == "type__" and it.get("offset") == off]
+    assert hits == ["intType"], f"type word type__+{off} is not the include API item intType ({hits})"
+    return "intType"
+
+
+def lu_call_lemmas(P):
+    """Arithmetic lemmas of one call path with the path's numbers (generated, proved by bv_omega)."""
+    F, A, C, P1, P2 = P.frame, P.argoff, P.C, P.P1, P.P2
+    u = "simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega"
+    L = {f"ar_a{P1}": f"(x : BitVec 64) : -{F} + (x - 8#64) + {A} = x - {P1} := by bv_omega",
+         f"ar_a{P2}": f"(x : BitVec 64) : x - {P1} + 16 = x - {P2} := by bv_omega",
+         f"ar_slot{C}": f"(x : BitVec 64) : -{F} + (x - 8#64) - 8#64 = x - {C} := by bv_omega",
+         f"ar_d{P1}": f"(x : BitVec 64) : x - {P1} + 8 = x - {P1 - 8} := by bv_omega",
+         f"ar_d{P2}": f"(x : BitVec 64) : x - {P2} + 8 = x - {P2 - 8} := by bv_omega",
+         f"ar_b{C}": f"(x o : BitVec 64) : ({{ toBitVec := x - {C} }} + 8 : UInt64).toBitVec + o = x - {C - 8} + o := by\n  {u}",
+         f"ar_p{F}": f"(x : BitVec 64) : ({{ toBitVec := x - {C} }} + 8 : UInt64).toBitVec - -{F} = x - 8 := by\n  {u}",
+         f"ar_c{C}": f"(x : BitVec 64) : ({{ toBitVec := x - {C} }} + 8 : UInt64).toBitVec - 8#64 = x - {C} := by\n  {u}"}
+    for j in range(4):
+        L[f"ar_c{C - 8}_{A + 8 * j}"] = f"(x : BitVec 64) : x - {C - 8} + {A + 8 * j} = x - {P1 - 8 * j} := by bv_omega"
+    return L
+
+
+def lu_call_stmt(name, code, mode, P):
+    fb, fa = include_adapter.bytes_name(P.fmt), include_adapter.addr_name(P.fmt)
+    nn = "\n    (n : Nat) (hn : 16 < n)" if mode == "toobig" else ""
+    box = "BitVec.ofNat 64 n" if mode == "toobig" else "s.regs.rcx.toBitVec - 4"
+    hlen = ("(hlen : s.regs.rcx.toNat = 4 + 8 * n)" if mode == "toobig"
+            else "(hlen : 4 ≤ s.regs.rcx.toNat) (hmis : (s.regs.rcx.toNat - 4) % 8 ≠ 0)")
+    return f"""def {name}_stmt [Host] : Prop :=
+  ∀ (k : Nat) (hk : {code}.IsInfixAt Host.prog k)
+    (hf : LabelsFresh {code} k){nn}
+    (s : MachineData) (ra guard e0 e1 t8 : UInt64) (he0 : e0 ≠ 0)
+    (hei : e0.toBitVec = (label "go_itab._errors.errorString_error").toBitVec) (esp : BitVec 64) (msg : List UInt8)
+    (fp slot a0 a1 rslot : List UInt8) (hfp : fp.length = 8) (hsl : slot.length = 8)
+    (ha0 : a0.length = 16) (ha1 : a1.length = 16) (hrs : rslot.length = 8)
+    (R : DataMem → Prop) (S : Nat) (scratch spl : List UInt8) (hsc : scratch.length = S)
+    (hspl : spl.length = 40)
+    (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : 8 ≤ avail) (hbud : msg.length + {P.budget} ≤ avail)
+    (h_mem : s.dmem =⋆ Eq (spl.At (s.regs.rsp.toBitVec - {P.C - 8})) ⋆ Eq ({fb}.At {fa}) ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
+      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (slot.At (s.regs.rsp.toBitVec + 16))
+      ⋆ Eq (a0.At (s.regs.rsp.toBitVec - {P.P1})) ⋆ Eq (a1.At (s.regs.rsp.toBitVec - {P.P2}))
+      ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - {P.C})) ⋆ Eq (scratch.At (s.regs.rsp.toBitVec - {P.C} - BitVec.ofNat 64 S))
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
+      ⋆ Heap avail
+      ⋆ Eq ([4, 0, 0, 0].At s.regs.rbx.toBitVec)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At (label "{P.err}").toBitVec)
+      ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "{P.err}" + 8).toBitVec)
+      ⋆ Eq ((Int.toBytes 8 t8.toBitVec.toInt).At (e0.toBitVec + 8)) ⋆ ErrStr e1.toBitVec esp msg ⋆ StaticBox ({box}) ⋆ R)
+    (hguard : guard.toNat < s.regs.rsp.toNat - 8) (hsp : {P.C} ≤ s.regs.rsp.toNat)
+    {hlen}
+    (hcv : ConvT64C Heap S) (hfe : FmtErrorfDWC Heap {fb} {include_adapter.addr_name(P.tw)} S),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
+        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp
+        ∧ (R ⋆ fun _ => True) st.data.dmem)
+      ⟨s, Host.addrOf k⟩
+"""
+
+
+def lu_call_proof(D, code, mode, P):
+    """Proof of one fmt.errorf reject path: walk the directives from the entry to the failing check,
+    then from the path label through both calls to `retq`."""
+    lab_index = {t: d for d, k, t in D if k == "label"}
+    kat = lambda d: f"kat hk {code} {d}"
+    F, A, C, P1, P2 = P.frame, P.argoff, P.C, P.P1, P.P2
+    hyps = "hlen hmis" if mode == "misaligned" else "hlen"
+    intro = ("intro k hk hf " + ("n hn " if mode == "toobig" else "") + "s ra guard e0 e1 t8 he0 hei esp msg "
+             "fp slot a0 a1 rslot hfp hsl ha0 ha1 hrs R S scratch spl hsc hspl Heap avail hav hbud h_mem hguard hsp "
+             f"{hyps} hcv hfe")
+    L = [intro,
+         "obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s",
+         f"simp only at h_mem hguard hsp {hyps} ⊢"]
+    if mode == "misaligned":
+        L += ["generalize hSB : StaticBox (rcx.toBitVec - 4) = SB at h_mem"]
+    L += ["have := rsp.toNat_lt_size; have := guard.toNat_lt_size; have := rcx.toNat_lt_size",
+          "simp only [UInt64.size] at *",
+          f"have hfl : {include_adapter.bytes_name(P.fmt)}.length = {P.fmtlen} := by rfl"]
+    xmm = "(Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt)"
+    d, seen, done_c1 = 0, set(), False
+    while True:
+        if d in seen:
+            raise SystemExit(f"call path {mode}: directive {d} visited twice")
+        seen.add(d)
+        _, kind, t = D[d]
+        if kind == "label":
+            L.append(kat(d)); d += 1; continue
+        op = t.split()[0]
+        a = t[len(op):].strip()
+        if (op == "lea" and a == "-0x8(%rsp),%r12") or op == "nop" or (op == "mov" and a in ("%rsp,%rbp", "%rdx,%rsi", "%rcx,%rax", "%rax,%rbx", "%rdi,%rsi")):
+            L.append(kat(d))
+        elif op == "cmp" and a == "0x10(%r14),%r12":
+            L += [kat(d), "apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
+        elif op == "jbe":
+            L += [kat(d), "split", "case isTrue h =>", "  exfalso",
+                  "  rw [cmp_be_false _ _ _ _ (by rw [toNat_add_neg8 _ (by simp; omega)]; simpa using hguard)] at h",
+                  "  exact absurd h (by simp)", "simp only [Effects.All]"]
+        elif op == "push":
+            L += [kat(d), "apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by kaddr) (by ecancel) (by exact hfp)",
+                  "intro m1 H1", "simp only [Width.bytes, Width.bits] at H1", "kunfold"]
+        elif op == "add" and a == f"$-{hex(F)},%rsp":
+            L.append(kat(d))
+        elif op == "mov" and a == f"%rbx,{hex(F + 24)}(%rsp)":
+            L += [kat(d), "apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ slot _ _ (by bv_omega) (by ecancel) (by exact hsl)",
+                  "intro m2 H2", "simp only [Width.bytes, Width.bits] at H2", "kunfold"]
+        elif op == "cmp" and a in ("$0x4,%rcx", "$0x4,%rdx", "$0x10,%rcx"):
+            L.append(kat(d))
+        elif op == "jb":
+            L += [kat(d), "split", "case isTrue h =>",
+                  "  exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h; omega", "simp only [Effects.All]"]
+        elif op == "mov" and a == "(%rbx),%edx":
+            L += [kat(d), "apply load_step_at _ _ rbx.toBitVec _ _ [4, 0, 0, 0] _ _ (by bv_omega) (by ecancel) (by simp)",
+                  "simp only [show Int.ofBytes [4, 0, 0, 0] = 4 by simp [Int.ofBytes]]", "kunfold"]
+        elif op == "jne" and D[d - 1][2] == "cmp $0x4,%rdx":
+            L += [kat(d), "split", "case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h",
+                  "simp only [Effects.All]"]
+        elif op == "lea" and a == "-0x4(%rdi),%rdx" or op == "neg" and a == "%rdx" or op == "add" and a in ("$-0x4,%rcx", "%rbx,%rdx"):
+            L.append(kat(d))
+        elif op == "sar" and a == "$0x3f,%rdx":
+            L += [kat(d), "kshl64 63"]
+        elif (op == "and" and a == "$0x4,%edx") or op == "test":
+            L += [kat(d), "intro _"]
+        elif op == "jne" and D[d - 1][2] == "test $0x7,%rcx":
+            L += [kat(d), "split"]
+            if mode == "misaligned":
+                L += ["case isFalse h =>", "  exfalso; simp [CondCode.interp, StatusFlags.from_result] at h",
+                      "  exact Gen1cX4.and7_ne rcx.toBitVec (by simpa using hlen) (by simpa using hmis) h",
+                      "simp only [Effects.All]", f"klabel hk hf {code} {P.start}"]
+                d = P.start; continue
+            L += ["case isTrue h =>", "  exfalso; rw [Gen1cX4.and7_zero' rcx.toBitVec n (by simpa using hlen)] at h",
+                  "  simp [CondCode.interp, StatusFlags.from_result] at h", "simp only [Effects.All]"]
+        elif op == "shr" and a == "$0x3,%rcx":
+            L += [kat(d), "kshl64 3"]
+        elif op == "jg":
+            assert mode == "toobig", t
+            L += [kat(d), "have hnN := Gen1cX4.shr3_toNat' rcx.toBitVec n (by simpa using hlen)",
+                  "generalize BitVec.ushiftRight (-4 + rcx.toBitVec) 3 = nV at hnN ⊢",
+                  "rw [Gen1cX4.jg16_true nV _ (by omega) (by omega)]", "simp only [↓reduceIte, Effects.All]",
+                  f"klabel hk hf {code} {P.start}"]
+            d = P.start; continue
+        elif op == "lea" and a in (f"{hex(A)}(%rsp),%rdx", f"{hex(A)}(%rsp),%rcx"):
+            L.append(kat(d))
+        elif op == "movups" and a in ("%xmm15,(%rdx)", "%xmm15,0x10(%rdx)"):
+            first = a.endswith(",(%rdx)")
+            L += [kat(d), "simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]", "kunfold",
+                  f"rw [ar_a{P1 if first else P2}]",
+                  f"apply Gen1cX4.store_avx_step _ _ _ _ {'a0' if first else 'a1'} _ _ (by ecancel) (by exact {'ha0' if first else 'ha1'}) (by decide)",
+                  f"intro m{3 if first else 4} H{3 if first else 4}", "kunfold"]
+        elif op == "callq" and d == P.c1:
+            box = ("rw [hA, Gen1cX4.staticBox_congr (y := BitVec.ofNat 64 n) ?hv]" if mode == "toobig"
+                   else "rw [hA, Gen1cX4.staticBox_congr (y := rcx.toBitVec - 4) ?hv, hSB]")
+            hv = ("first | bv_omega | (apply BitVec.eq_of_toNat_eq; rw [Gen1cX4.shr3_toNat' _ _ hlen]; simp; omega)"
+                  if mode == "toobig" else "rw [BitVec.add_comm, ← BitVec.sub_eq_add_neg]")
+            L += [kat(d), f"apply store_step_at _ _ (rsp.toBitVec - {C}) _ _ _ rslot _ _ (ar_slot{C} _) (by ecancel) (by exact hrs)",
+                  "intro m5 H5", "simp only [Width.bytes, Width.bits] at H5", "kunfold", f"rw [ar_slot{C}] at *",
+                  f"have hA : rsp.toBitVec - {C} + 8 = rsp.toBitVec - {C - 8} := by bv_omega",
+                  f"rw [← List.take_append_drop 8 spl, at_app (spl.take 8) (spl.drop 8) (a := rsp.toBitVec - {C - 8})",
+                  f"  (b := rsp.toBitVec - {C - 16}) (by simp [hspl]; bv_omega) (by simp [hspl])] at H5",
+                  f"refine eventually_trans _ _ _ _ (hcv _ (Host.addrOf (k + {d} + 1)) avail scratch (spl.take 8) _ hav hsc",
+                  "  (by simp [hspl]) (by", "    try dsimp only", f"    {box}", "    · ecancel", f"    · {hv})) ?_",
+                  "rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, stk1, sp1, hb1, av1, hstk1, hsp1, hbox1, hav1, hav1', Hm1⟩",
+                  "dsimp only at hpc1 hrsp1 Hm1"]
+            if mode == "misaligned":
+                L += ["have hv4 : -4 + rcx.toBitVec = rcx.toBitVec - 4 := by rw [BitVec.add_comm, ← BitVec.sub_eq_add_neg]",
+                      "rw [hv4] at hbox1", "rw [Gen1cX4.staticBox_congr hv4, hSB] at Hm1"]
+            L += ["subst hpc1",
+                  "obtain ⟨⟨rax1, rbx1, rcx1, rdx1, rsi1, rdi1, rsp1, rbp1, r81, r91, r101, r111, r121, r131, r141, r151⟩,",
+                  "  zmms1, flags1, mem1⟩ := d1",
+                  "simp only at hrsp1 Hm1", "rw [hA] at Hm1", "subst hrsp1",
+                  f"rw [Gen1cX4.lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - {P1}), Gen1cX4.lr_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - {P2})] at Hm1",
+                  f"rw [ar_d{P1}, ar_d{P2}] at Hm1"]
+            done_c1 = True
+        elif op == "lea" and re.fullmatch(r"(type__|go_string\._|go_itab\.\w+)\+?\d*\(%rip\),%r[a-z]x", a):
+            L.append(kat(d))
+        elif op == "mov" and re.fullmatch(r"%r[a-d]x,(0x[0-9a-f]+)\(%rsp\)", a) and done_c1:
+            o = int(re.fullmatch(r"%r[a-d]x,(0x[0-9a-f]+)\(%rsp\)", a)[1], 16)
+            assert A <= o < A + 32 and o % 8 == 0, t
+            j = (o - A) // 8
+            half = "take" if j % 2 == 0 else "drop"
+            hn = {0: 6, 1: 7, 2: 8, 3: 9}[j]
+            L += [kat(d), f"rw [ar_b{C}, ar_c{C - 8}_{o}]",
+                  f"apply store_step _ _ _ _ _ ({xmm}.{half} 8) _ _ (by ecancel) (by simp [Int.toBytes_length])",
+                  f"intro m{hn} H{hn}", f"simp only [Width.bytes, Width.bits] at H{hn}", "kunfold"]
+        elif op == "mov" and a == f"{P.err}(%rip),%rcx":
+            L += [kat(d), "apply load_step _ _ _ _ (Int.toBytes 8 e0.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
+        elif op == "mov" and a == f"{P.err}+8(%rip),%rdx":
+            L += [kat(d), "apply load_step _ _ _ _ (Int.toBytes 8 e1.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
+        elif op == "je" and D[d - 1][2] == "test %rcx,%rcx":
+            L += [kat(d), "split", "case isTrue h =>", "  exfalso; simp [CondCode.interp, StatusFlags.from_result] at h",
+                  "  exact he0 (UInt64.toBitVec_inj.mp (by simpa using h))", "simp only [Effects.All]"]
+        elif op == "mov" and a == "0x8(%rcx),%rcx":
+            L += [kat(d), "apply load_step _ _ _ _ (Int.toBytes 8 t8.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
+        elif op == "mov" and re.fullmatch(r"\$0x[0-9a-f]+,%e[bd]i?x?", a):
+            L.append(kat(d))
+        elif op == "callq" and d == P.c2:
+            L += [kat(d), f"apply store_step_at _ _ (rsp.toBitVec - {C}) _ _ _ (Int.toBytes 8 (Host.addrOf (k + {P.c1} + 1)).toBitVec.toInt) _ _",
+                  f"  (ar_c{C} _) (by ecancel) (by exact Int.toBytes_length 8 _)",
+                  "intro m10 H10", "simp only [Width.bytes, Width.bits] at H10", "kunfold",
+                  f"rw [ar_c{C}] at *", "rw [← hA] at H10",
+                  f"refine eventually_trans _ _ _ _ (hfe _ (Host.addrOf (k + {d} + 1)) av1",
+                  "  (Int.toBytes 8 t8.toBitVec.toInt) msg hb1 stk1 (sp1 ++ spl.drop 8) rax1.toBitVec _ e1.toBitVec esp _",
+                  "  (by rw [hfl]; rfl) (by first | rfl | decide) (by first | rfl | decide)",
+                  "  (Int.toBytes_length 8 _) hbox1 hstk1 (by simp [hsp1, hspl]) (by rw [hfl]; omega)",
+                  "  (by dsimp only",
+                  "      rw [← hei" + (", hSB]" if mode == "misaligned" else "]"),
+                  f"      simp only [{include_adapter.addr_name(P.tw)}]",
+                  "      simp only [List.append_assoc]",
+                  f"      try simp only [ar_b{C}, ar_c{C - 8}_{A}]",
+                  f"      rw [at_app sp1 (spl.drop 8) (b := rsp.toBitVec - {C - 16}) (by rw [hsp1]; bv_omega) (by simp [hsp1, hspl]),",
+                  f"        Gen1cX4.join4 (rsp.toBitVec - {P1}) (rsp.toBitVec - {P1 - 8}) (rsp.toBitVec - {P2}) (rsp.toBitVec - {P2 - 8}) _ _ _ _ (Int.toBytes_length 8 _)",
+                  "          (Int.toBytes_length 8 _) (Int.toBytes_length 8 _) (Int.toBytes_length 8 _) (by bv_omega) (by bv_omega) (by bv_omega)]",
+                  "      ecancel)) ?_",
+                  "rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hr142, hrax2, stk2, sp2, av2, hstk2, hsp2, hav2, Hm2⟩",
+                  "dsimp only at hpc2 hrsp2 hrax2 Hm2", "subst hpc2",
+                  "obtain ⟨⟨rax2, rbx2, rcx2, rdx2, rsi2, rdi2, rsp2, rbp2, r82, r92, r102, r112, r122, r132, r142, r152⟩,",
+                  "  zmms2, flags2, mem2⟩ := d2",
+                  "simp only at hrsp2 hrax2 Hm2", "subst hrsp2"]
+        elif op == "jne" and D[d - 1][2] == "test %rax,%rax":
+            L += [kat(d), "split", "case isFalse h =>", "  exfalso; simp [CondCode.interp, StatusFlags.from_result] at h",
+                  "  exact hrax2 (UInt64.toBitVec_inj.mp (by simpa using h))", "simp only [Effects.All]",
+                  f"klabel hk hf {code} {P.end}"]
+            d = P.end; continue
+        elif op == "sub" and a == f"$-{hex(F)},%rsp":
+            L.append(kat(d))
+        elif op == "pop" and d > P.end:
+            L += [kat(d), f"rw [ar_p{F}]",
+                  "apply load_step _ _ _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)", "kunfold"]
+        elif op == "retq" and d > P.end:
+            L += [kat(d), "rw [show rsp.toBitVec - 8 + 8#64 = rsp.toBitVec by bv_omega]",
+                  "apply load_step _ _ _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)",
+                  "kunfold", "apply Eventually.done", "simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]",
+                  "refine ⟨trivial, hrax2, ?_, ?_, ?_⟩", "· apply UInt64.toBitVec_inj.mp; simp", "· first | trivial | rfl",
+                  "· have : (R ⋆ fun _ => True) mem2 := sep_true (by ecancel)", "  exact this"]
+            return L
+        else:
+            raise SystemExit(f"call path {mode}: directive {d} `{t}`: no tactic template")
+        d += 1
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--desccheck-result", required=True)
@@ -1026,9 +1321,12 @@ def main_list(a, key, desc, dsha):
     t = key[1]
     L = ListField(desc, LAYOUT["types"][t])
     ns = a.ns or f"Gen1cX4.{t}"
-    only = [x for x in a.only.split(",") if x in ("size", "reject_short", "reject_offset")] if a.only != ap_default() else ["size", "reject_short", "reject_offset"]
+    LIST_OBL = ("size", "reject_short", "reject_offset", "reject_misaligned", "reject_toobig")
+    only = [x for x in a.only.split(",") if x in LIST_OBL] if a.only != ap_default() else list(LIST_OBL)
     code = {m: f"{t}{m}" for m in ("SizeSSZ", "UnmarshalSSZ", "MarshalSSZTo")}
     head = ["import Fk.Step", "import Fk.Bytes", "import Fk.Labels", "import Fk.Flags", "import Gen1cX4.Support"]
+    if any(x in only for x in ("reject_misaligned", "reject_toobig")):
+        head += ["import Fk.Contracts", "import Fk.Frame"]
     pre = []
     if a.mutant:
         m, f = a.mutant.split("=", 1)
@@ -1049,6 +1347,26 @@ def main_list(a, key, desc, dsha):
                      "set_option maxHeartbeats 4000000 in", "set_option maxRecDepth 100000 in",
                      f"theorem reject_{mode} [Host] : reject_{mode}_stmt := by",
                      *["  " + x for x in lu_rej_proof(Dun, code["UnmarshalSSZ"], mode)], ""]
+    calls = [m for m in ("misaligned", "toobig") if f"reject_{m}" in only]
+    if calls:
+        if (L.esz, L.limit) != (8, 16):
+            raise SystemExit(f"x4gen: refused {key[0]}.{t}: the fmt.errorf reject template is for 8-byte elements "
+                             f"and limit 16 (Support lemmas and7_*, shr3_toNat', jg16_true), not {L.esz}/{L.limit}")
+        try:
+            Ps = {m: CallPath(Dun, m) for m in calls}
+        except (KeyError, AssertionError, IndexError, StopIteration, ValueError, TypeError) as e:
+            raise SystemExit(f"x4gen: refused {key[0]}.{t}: fmt.errorf reject template does not fit the code "
+                             f"({type(e).__name__}: {e})")
+        lem = {}
+        for m in calls:
+            lem.update(lu_call_lemmas(Ps[m]))
+        body += ["-- arithmetic lemmas of the fmt.errorf reject paths (generated with the paths' frame and argument offsets)"]
+        body += [f"theorem {n} {v}" for n, v in sorted(lem.items())] + [""]
+        for m in calls:
+            body += [lu_call_stmt(f"reject_{m}", code["UnmarshalSSZ"], m, Ps[m]),
+                     "set_option maxHeartbeats 8000000 in", "set_option maxRecDepth 100000 in",
+                     f"theorem reject_{m} [Host] : reject_{m}_stmt := by",
+                     *["  " + x for x in lu_call_proof(Dun, code["UnmarshalSSZ"], m, Ps[m])], ""]
     body += [f"end {ns}", ""]
     out = os.path.realpath(a.out_lean)
     os.makedirs(os.path.dirname(out), exist_ok=True)

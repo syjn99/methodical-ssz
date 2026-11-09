@@ -40,12 +40,19 @@ Desc와 Go 배치에서 정리 문장을, 기계어 지시 목록에서 증명�
 ## 4. ListU64 조각 (부분)
 
 `results/attempts-listu64.json`, `compare-listu64.json`, `negative-listu64.json`, `axioms-listu64.json`.
-틀은 `Fk/LuMarshal.lean`(size)과 `Fk/LuReject.lean`(짧은 길이, 첫 오프셋)의 조각을 따른다. 보조정리 `Gen1cX4.off4`는 손으로 다시 증명했다(`Fk.lu_off4`와 같은 문장).
+틀은 `Fk/LuMarshal.lean`(size), `Fk/LuReject.lean`(짧은 길이, 첫 오프셋), `Fk/LuRejectCall.lean`(fmt.errorf 경로 둘)의 조각을 따른다.
+보조정리 `Gen1cX4.off4`와 fmt.errorf 경로의 일반 보조정리 8개(`staticBox_congr`, `and7_ne`, `and7_zero'`, `shr3_toNat'`, `jg16_true`, `store_avx_step`, `lr_split16`, `join4`)는 `Support.lean`에서 같은 문장으로 다시 증명했다(손으로 씀).
+fmt.errorf 경로의 산술 보조정리(`ar_*`)는 생성한다: 프레임 크기, 인자 배열 오프셋, 호출 슬롯에서 숫자를 정하고 `bv_omega`로 증명한다.
+경로 값(실패 검사의 점프 대상, 인자 배열 오프셋, 두 호출 지점, 오류 전역, 형식 문자열, `int` 타입 단어)은 지시 목록에서 읽는다.
+형식 문자열과 타입 단어는 include 어댑터로 API 항목(`luFmtMis`, `luFmtTooBig`, `intType`)에 묶는다. 항목이 없으면 생성기가 거부한다.
+계약 적용 블록(`ConvT64C`, `FmtErrorfDWC`)은 손 증명 글에 값을 넣은 것이다.
+측정: 생성 전술 줄 중 `Fk/LuRejectCall.lean`에 글자 그대로 있는 줄은 정렬 191/217, 한도 초과 193/221이다(`attempts-listu64.json`의 `verbatim_measure`). 이 틀은 8바이트 원소와 한도 16만 받는다. 다른 값은 분류된 거부다.
 
 | 의무 | 상태 |
 | --- | --- |
 | size | 생성 증명 통과(시도 1), 문장 SAME(`lu_size_main`) |
 | reject r1 짧은 길이 | 생성 증명 통과(시도 1), 문장 SAME(`lu_reject_short_main`) |
 | reject r2 첫 오프셋 | 생성 증명 통과(시도 1), 문장 SAME(`lu_reject_offset_main`) |
-| reject r3 정렬, r4 한도 초과 | 시도하지 않음(fmt.Errorf 호출 틀 필요) |
+| reject r3 정렬 | 생성 증명 통과(시도 1), 문장 SAME(`lu_reject_misaligned_main`). 변이 `lu-mis-test` |
+| reject r4 한도 초과 | 생성 증명 통과(시도 1), 문장 SAME(`lu_reject_toobig_main`). 변이 `lu-big-cmp` |
 | accept(0·1·16), marshal(growslice), 조합 | 시도하지 않음(루프 틀 필요) |

@@ -36,14 +36,26 @@
    "negative": "lu-off-cmp (logs/78)"
   },
   "reject r3 list-misaligned": {
-   "status": "not attempted",
+   "status": "proved (generated), SAME",
+   "attempts": [
+    {
+     "log": "run logs/87",
+     "result": "pass (logs/86: not run, lake not on PATH)"
+    }
+   ],
    "hand": "lu_reject_misaligned_main",
-   "why": "fmt.Errorf call path (convT64, FmtErrorfDWC contracts); needs a call template"
+   "negative": "lu-mis-test (logs/88)"
   },
   "reject r4 list-too-big": {
-   "status": "not attempted",
+   "status": "proved (generated), SAME",
+   "attempts": [
+    {
+     "log": "run logs/87",
+     "result": "pass (logs/86: not run, lake not on PATH)"
+    }
+   ],
    "hand": "lu_reject_toobig_main",
-   "why": "fmt.Errorf call path; needs a call template"
+   "negative": "lu-big-cmp (logs/88)"
   },
   "accept (0, 1, 16)": {
    "status": "not attempted",
@@ -59,6 +71,19 @@
    "status": "not attempted",
    "hand": "lu_unmarshal_then_marshal",
    "why": "needs the generated accept and marshal"
+  }
+ },
+ "verbatim_measure": {
+  "what": "generated tactic lines of the theorem that occur verbatim (stripped) as a line of Fk/LuRejectCall.lean; the rest differ by lemma names, hypothesis names or generated numbers",
+  "rows": {
+   "reject_misaligned": {
+    "tactic_lines": 217,
+    "verbatim_in_Fk_LuRejectCall": 191
+   },
+   "reject_toobig": {
+    "tactic_lines": 221,
+    "verbatim_in_Fk_LuRejectCall": 193
+   }
   }
  }
 }

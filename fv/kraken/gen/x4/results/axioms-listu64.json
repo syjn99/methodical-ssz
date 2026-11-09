@@ -33,13 +33,103 @@
    "standard_only": true
   },
   {
+   "name": "Gen1cX4.ListU64.reject_misaligned",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.ListU64.reject_toobig",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
    "name": "Gen1cX4.off4",
    "axioms": [
     "Quot.sound",
     "propext"
    ],
    "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.and7_ne",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.and7_zero'",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.shr3_toNat'",
+   "axioms": [
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.jg16_true",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.store_avx_step",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.lr_split16",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.join4",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
+  },
+  {
+   "name": "Gen1cX4.staticBox_congr",
+   "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+   ],
+   "standard_only": true
   }
  ],
- "all_standard": true
+ "all_standard": true,
+ "log": "run logs/87 (axioms step)"
 }

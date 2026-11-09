@@ -1,5 +1,7 @@
 import Fk.Bytes
 import Fk.Flags
+import Fk.Contracts
+import Fk.Frame
 
 /-! Lemmas used by the proofs that fv/kraken/gen/x4 generates. Written by hand, not generated.
 `ofBytes1` is the statement of `Fk.sc_ofBytes1` (Fk/ScRejectBool.lean), proved here again so the
@@ -28,5 +30,81 @@ theorem off4 (o4 : List UInt8) (ho4 : o4.length = 4)
   have := congrArg BitVec.toNat hx
   simp [BitVec.toNat_ofInt] at this
   omega
+
+end Gen1cX4
+
+namespace Gen1cX4
+open Fk
+
+/-! The statements of `staticBox_congr`, `and7_ne`, `and7_zero'`, `shr3_toNat'`, `jg16_true`,
+`store_avx_step`, `lr_split16` and `join4` of Fk/LuRejectCall.lean (a hand proof module), proved
+here again with the same text so the generated ListU64 call-path proofs (convT64 + fmt.errorf)
+do not import a hand proof module. `and7_*`, `shr3_toNat'` and `jg16_true` are for 8-byte
+elements and the limit 16: x4gen refuses other element sizes and limits on that path. -/
+
+theorem staticBox_congr [Host] {x y : BitVec 64} (h : x = y) : StaticBox x = StaticBox y := h ▸ rfl
+
+theorem and7_ne (x : BitVec 64) (h4 : 4 ≤ x.toNat) (h : (x.toNat - 4) % 8 ≠ 0) : (-4 + x) &&& 7 ≠ 0#64 := by
+  intro h0
+  have := congrArg BitVec.toNat h0
+  rw [BitVec.toNat_and, BitVec.add_comm, ← BitVec.sub_eq_add_neg,
+    BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simp; omega),
+    show (7 : BitVec 64).toNat = 2 ^ 3 - 1 from rfl, Nat.and_two_pow_sub_one_eq_mod] at this
+  simp at this; omega
+
+theorem and7_zero' (x : BitVec 64) (n : Nat) (h : x.toNat = 4 + 8 * n) : (-4 + x) &&& 7 = 0#64 := by
+  apply BitVec.eq_of_toNat_eq
+  rw [BitVec.toNat_and, BitVec.add_comm, ← BitVec.sub_eq_add_neg,
+    BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simp; omega),
+    show (7 : BitVec 64).toNat = 2 ^ 3 - 1 from rfl, Nat.and_two_pow_sub_one_eq_mod]
+  simp; omega
+
+theorem shr3_toNat' (x : BitVec 64) (n : Nat) (h : x.toNat = 4 + 8 * n) :
+    (BitVec.ushiftRight (-4 + x) 3).toNat = n := by
+  rw [show (-4 + x).ushiftRight 3 = (-4 + x) >>> 3 from rfl, BitVec.toNat_ushiftRight, BitVec.add_comm,
+    ← BitVec.sub_eq_add_neg, BitVec.toNat_sub_of_le (by rw [BitVec.le_def]; simp; omega), Nat.shiftRight_eq_div_pow]
+  simp; omega
+
+/-- `cmp $16, a; jg` is taken when `16 < a < 2^62`. -/
+theorem jg16_true (a : BitVec 64) (af : Bool) (h : 16 < a.toNat) (h2 : a.toNat < 2 ^ 62) :
+    CondCode.g.interp (StatusFlags.from_result (a - 16)
+      { cf := BitVec.unsigned (a - 16) != a.unsigned - BitVec.unsigned (16 : BitVec 64), af := af,
+        of := BitVec.toInt (a - 16) != a.toInt - BitVec.toInt (16 : BitVec 64) }) = true := by
+  have ta : a.toInt = a.toNat := BitVec.toInt_eq_toNat_of_lt (by omega)
+  have t16 : BitVec.toInt (16 : BitVec 64) = 16 := by decide
+  have hs : (a - 16).toInt = (a.toNat : Int) - 16 := by
+    rw [BitVec.toInt_sub, ta, t16]; apply Int.bmod_eq_of_le <;> omega
+  have hz : a - 16 ≠ 0#64 := by
+    intro h0; have := congrArg BitVec.toNat h0; simp [BitVec.toNat_sub] at this; omega
+  have hm : (a - 16).msb = false := by
+    rw [BitVec.msb_eq_decide]; simp [BitVec.toNat_sub]; omega
+  simp [CondCode.interp, StatusFlags.from_result, ta, t16, hs]
+  refine ⟨by simpa using hz, ?_⟩
+  rw [show (a - 16#64) = a - 16 from rfl, hm, Int.bmod_eq_of_le (by omega) (by omega)]; simp
+
+/-- A 16-byte AVX store (`movups`) into a separated chunk. -/
+theorem store_avx_step (s : MachineData) (addr : BitVec 64) {w : AvxWidth} (v : w.type) (ret : MachineData → Effects)
+    (bs : List UInt8) (F : DataMem → Prop) (post : MachineState → Prop)
+    (H : (Eq (bs.At addr) ⋆ F) s.dmem) (hl : bs.length = w.bytes) (hw : w.bytes ≤ 2 ^ 64)
+    (k : ∀ m', (Eq ((Int.toBytes w.bytes v.toInt).At addr) ⋆ F) m' → (ret { s with dmem := m' }).All post) :
+    (MachineData.storeAvx s addr v ret).All post := by
+  unfold MachineData.storeAvx
+  simp only [Bool.false_and, Bool.false_eq_true, ↓reduceIte]
+  rw [Effects.All_require_write_access]
+  rw [Mem.loadInt_sep bs addr _ F s.dmem H hl hw]
+  exact k _ (Mem.storeInt_sep addr w.bytes bs F s.dmem ⟨H, hl⟩ v.toInt)
+
+theorem lr_split16 (bs : List UInt8) (h : bs.length = 16) (a : BitVec 64) :
+    Eq (bs.At a) = Eq ((bs.take 8).At a) ⋆ Eq ((bs.drop 8).At (a + 8)) := by
+  conv => lhs; rw [← List.take_append_drop 8 bs]
+  rw [Mem.At_append_sep _ _ _ (by simp; omega)]; simp [h]
+
+/-- Four 8-byte words as one argument array (two `any` values). -/
+theorem join4 (a b c d : BitVec 64) (A0 A1 A2 A3 : List UInt8) (h0 : A0.length = 8) (h1 : A1.length = 8)
+    (h2 : A2.length = 8) (h3 : A3.length = 8) (hb : b = a + 8) (hc : c = a + 16) (hd : d = a + 24) :
+    Eq ((A0 ++ (A1 ++ (A2 ++ A3))).At a) = Eq (A0.At a) ⋆ Eq (A1.At b) ⋆ Eq (A2.At c) ⋆ Eq (A3.At d) := by
+  rw [at_app A0 _ (b := b) (by rw [h0, hb]; rfl) (by simp [*]), at_app A1 _ (b := c) (by rw [h1, hb, hc]; bv_omega) (by simp [*]),
+    at_app A2 A3 (b := d) (by rw [h2, hc, hd]; bv_omega) (by simp [*])]
+  simp only [Std.ExtHashMap.sep_assoc]
 
 end Gen1cX4

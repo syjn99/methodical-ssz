@@ -1,7 +1,7 @@
 {
  "schema": "fvphase1c.x4-negative/1",
- "cases": 6,
- "as_expected": 6,
+ "cases": 10,
+ "as_expected": 10,
  "rows": [
   {
    "id": "lu-size-add",
@@ -86,6 +86,62 @@
    ],
    "as_expected": true,
    "run": "logs/78"
+  },
+  {
+   "id": "lu-mis-test",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lu_mis_test_mutant.reject_misaligned",
+   "mutation": "'test $0x7,%rcx' -> 'test $0x3,%rcx'",
+   "exit": "1",
+   "first_error": "line 131: Application type mismatch: The argument",
+   "theorem_lines": [
+    65,
+    283
+   ],
+   "as_expected": true,
+   "run": "logs/88"
+  },
+  {
+   "id": "lu-mis-test",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lu_mis_test_control.reject_misaligned",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    65,
+    283
+   ],
+   "as_expected": true,
+   "run": "logs/88"
+  },
+  {
+   "id": "lu-big-cmp",
+   "kind": "mutant",
+   "designated": "Gen1cX4.Neg.lu_big_cmp_mutant.reject_toobig",
+   "mutation": "'cmp $0x10,%rcx' -> 'cmp $0x11,%rcx'",
+   "exit": "1",
+   "first_error": "line 139: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+   "theorem_lines": [
+    66,
+    288
+   ],
+   "as_expected": true,
+   "run": "logs/88"
+  },
+  {
+   "id": "lu-big-cmp",
+   "kind": "control",
+   "designated": "Gen1cX4.Neg.lu_big_cmp_control.reject_toobig",
+   "mutation": "none (unchanged copy)",
+   "exit": "0",
+   "first_error": null,
+   "theorem_lines": [
+    66,
+    288
+   ],
+   "as_expected": true,
+   "run": "logs/88"
   }
  ]
 }
