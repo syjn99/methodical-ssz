@@ -303,13 +303,13 @@ git diff --exit-code fv/kraken/AXIOMS.txt fv/kraken/AXIOMS-ALL.txt fv/kraken/lin
 
 ## 11. 실제 Prysm `v1alpha1.Checkpoint` 인코더·디코더 종단 증명 (prysm-e2e 스트림, 브랜치 `claude/ssz-fv-prysm-e2e`)
 
-**판정: 조건부.** 실제 protoc 타입 `v1alpha1.Checkpoint`의 디코더 수용·크기 거부와 인코더 빠른 경로가 Go 1.26.10 ELF `c6403c02…911e`의 기계어에서 증명됐다.
+**판정: 조건부.** 실제 protoc 타입 `v1alpha1.Checkpoint`의 디코더(수용, 크기 거부)와 인코더(빠른 경로, `ErrBytesLength` 거부, 명세 정렬)와 SizeSSZ가 Go 1.26.10 ELF `c6403c02…911e`의 기계어에서 증명됐다. Epoch 디코더는 수용과 길이 거부 둘 다 증명됐다. 인코더 growslice 경로만 남았다.
 조건:
 
-1. 런타임 계약 `MakesliceC`(uint8, esz 1, cnt 32)와 `MemmoveC`는 가설이다. Go 1.26.10 소스를 다시 읽었고 바뀌지 않았다(`prysm/go1.26.10/e2e/RUNTIME-1.26.10.md`). 정교화 증명은 없다.
+1. 런타임 계약 `MakesliceC`(uint8, esz 1, cnt 32), `MemmoveC`, `ConvT64C`, `FmtErrorfDDC`(Epoch 형식, `type:int`)는 가설이다. Go 1.26.10 소스를 다시 읽었고 바뀌지 않았다(`prysm/go1.26.10/e2e/RUNTIME-1.26.10.md`). 정교화 증명은 없다.
 2. 전제: 스택 가드, `runtime.writeBarrier` = 0, 힙 여유, 레이블 신선성, 전역 주소(링크 검사 (a)–(f) PASS), `ssz.ErrSize`의 초기화된 값.
 3. x86-64 하드웨어에서 실행하지 않았다. Go 차분 검사는 같은 소스의 arm64 빌드다.
-4. 인코더 거부(`ssz.ErrBytesLength`), growslice 경로, Epoch 디코더 거부, 인코더 명세 정렬은 증명하지 않았다(아래 표).
+4. growslice 경로(인코더 용량 부족)는 증명하지 않았다(아래 표). 인코더 거부, Epoch 디코더 거부, 인코더 명세 정렬, 증인 있는 size는 INBOX 004에서 증명했다.
 
 손 작성 `(*primitives.Epoch).UnmarshalSSZ`는 함수 명세 `EpUAccC`로 증명했다(`ep_uacc_holds`). 디코더 주 정리에는 Epoch에 대한 가설이 없다.
 `Epoch.MarshalSSZTo`는 인코더에 인라인된다(`-gcflags=-m=2`, `prysm/go1.26.10/e2e/CALLGRAPH.md`). 인라인된 몸체는 인코더 정리 안에서 증명했다.
@@ -320,28 +320,29 @@ Go 1.26.3 증명은 옮기지 않았다. 모든 지시 색인, 오프셋, 레이
 
 | 정리 | 의무 | 문장 | 증인 | 기계어 정리 | 링크 | 부정 시험 | Go 값 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `E2e.ep_unmarshal_accept_main` | callee accept (function spec source) | done | done | done | done | 5/5 통과 | partial |
-| `E2e.ep_uacc_holds (EpUAccC)` | function spec | done | done | done | done | via ep_unmarshal_accept_main | partial |
-| `E2e.cp_e2e_accept_main (+ cp_e2e_accept_tail)` | accept | done | done | done | done | 9/9 통과 | partial |
-| `E2e.cp_e2e_reject_size_main` | reject (ssz.ErrSize) | done | done | done | done | 4/4 통과 | partial |
-| `E2e.cp_e2e_reject_complete + cp_e2e_reject_size_spec` | reject_complete / reject_spec | done | via WitCpR | done | n/a | via main | partial |
-| `E2e.cp_e2e_accept_spec_k` | accept against EthLib | done | via WitCpA | done | done | via main | partial |
-| `E2e.cp_e2e_marshal_main` | marshal (fast path) | done | done | done | done | 7/7 통과 | partial |
-| `E2e.cp_e2e_unmarshal_then_marshal` | compose_hupd | done | WitCpA + WitCpM (decoded receiver form) | done | done | 3/3 통과 | partial |
-| `cp_e2e_marshal_reject_main (ssz.ErrBytesLength)` | marshal_reject | not attempted | not attempted | not attempted | done | not attempted | differential only |
+| `E2e.ep_unmarshal_accept_main` | callee accept (function spec source) | done | done | done | done | 5/5 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
+| `E2e.ep_uacc_holds (EpUAccC)` | function spec | done | done | done | done | via ep_unmarshal_accept_main | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
+| `E2e.cp_e2e_accept_main (+ cp_e2e_accept_tail)` | accept | done | done | done | done | 9/9 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
+| `E2e.cp_e2e_reject_size_main` | reject (ssz.ErrSize) | done | done | done | done | 4/4 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
+| `E2e.cp_e2e_reject_complete + cp_e2e_reject_size_spec` | reject_complete / reject_spec | done | via WitCpR | done | n/a | via main | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
+| `E2e.cp_e2e_accept_spec_k` | accept against EthLib | done | via WitCpA | done | done | via main | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
+| `E2e.cp_e2e_marshal_main` | marshal (fast path) | done | done | done | done | 7/7 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
+| `E2e.cp_e2e_unmarshal_then_marshal` | compose_hupd | done | WitCpA + WitCpM (decoded receiver form) | done | done | 3/3 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
+| `E2e.cp_e2e_marshal_reject_main` | marshal_reject | done | done | done | done | 4/4 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
 | `cp_e2e_marshal_grow_main (growslice)` | marshal (capacity too small) | not attempted | not attempted | not attempted | done | not attempted | differential only |
-| `ep_unmarshal_reject_len_main` | callee reject (standalone) | not attempted | not attempted | not attempted | done | not attempted | differential only |
-| `cp_e2e_marshal_spec_k / cp_e2e_size_main with witness` | marshal against EthLib / size | not attempted | not attempted | not attempted (size: Gen1cX5.Size.Checkpoint_size exists, no witness) | done | not attempted | n/a |
+| `E2e.ep_unmarshal_reject_len_main` | callee reject (standalone) | done | done | done | done | 5/5 통과 | differential (epoch-len7/9) |
+| `E2e.cp_e2e_marshal_spec_k + cp_e2e_size_main (+ size_spec)` | marshal against EthLib / size | done | done (WitCpS; spec_k via WitCpM) | done | done | 4/4 통과 | n/a (size) / via marshal |
+| `E2e.cp_layout / cpGoValue (Go-value element)` | go value | done | evaluated on WitCpA/WitCpM/WitCpMR receivers | done | n/a | 2/2 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
 
 | unreachable_mc 행 | 정리 | 상태 | reject 범위에 셈 |
 | --- | --- | --- | --- |
 | phase0.ssz.go:1988 fmt.Errorf("Epoch: %w") (decoder) | E2e.cp_e2e_epoch_err_unreachable | done | 아니요 |
 | phase0.ssz.go:1964 fmt.Errorf("Epoch: %w") (encoder) | none needed: removed by the compiler (inlined Epoch.MarshalSSZTo cannot fail; no fmt.errorf call in the machine code, CALLGRAPH.md) | absent from the code | 아니요 |
 
-부정 시험 전체: 30/30 통과 (`negative/result.json`). Go 차분: 47건, 불일치 0건 (`differential.json`). 공리: 23개 이름, 판정 PASS (`axioms.json`).
+부정 시험 전체: 45/45 통과 (`negative/result.json`). Go 차분: 47건, 불일치 0건 (`differential.json`). 공리: 38개 이름, 판정 PASS (`axioms.json`).
 
 수용기 메모: 정리의 수신자 배치는 `prysm/ir/ir-mainnet.json` `go_fields`(gc amd64 규칙)다. `state` 0, `Epoch` 8, `Root` 16, `unknownFields` 40, `sizeCache` 64, 크기 72.
-Go 값 요소는 부분이다. 증인의 수신자는 배치에 맞는 0 값 구조체다. Lean Go 값 술어와 ELF abi.Type 배치 검사는 하지 않았다.
+Go 값 요소: `E2e.GoVal`의 `cpGoValue`로 모든 증인 수신자 바이트를 평가해 확인했다. 배치는 IR(go/types)에서 왔다. ELF abi.Type은 이름 있는 기호가 없어서 읽지 않았다(신뢰 항목).
 인코더 스택 임시 영역 32바이트 중 8–31바이트는 X15 내용이다. X15 = 0을 가정하지 않아서 결론에서 존재 양화다.
 디코더 정리는 메모리 상한 6 GiB 안에 들도록 `L_b4`(지시 47)에서 둘로 나눴다(`cp_e2e_accept_tail`).
 

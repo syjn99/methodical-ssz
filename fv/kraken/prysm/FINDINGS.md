@@ -29,7 +29,7 @@ None confirmed. Candidate C-1 is in §5.
 | ID | Found | Affected | Evidence | Note | Status |
 | --- | --- | --- | --- | --- | --- |
 | O1 | 2026-11-09 (phase1c) | generator log | `GENERATOR-FINDINGS.md` §1 observations | empty package name in a log line | unchanged |
-| O2 | 2026-11-09 (phase1c) | Prysm hand-written `primitives` SSZ methods | `GENERATOR-FINDINGS.md` §1 observations | not generated; need their own proofs | `(*Epoch).UnmarshalSSZ` accept path now proved as function spec `EpUAccC` (`37fdcf9`); the other 23 methods not |
+| O2 | 2026-11-09 (phase1c) | Prysm hand-written `primitives` SSZ methods | `GENERATOR-FINDINGS.md` §1 observations | not generated; need their own proofs | `(*Epoch).UnmarshalSSZ` accept path proved as function spec `EpUAccC` (`37fdcf9`), length reject proved (`e5b68c9`); the other 23 methods not |
 | N-1 | 2026-11-10, run fve2e, `e10b146` | `Checkpoint.UnmarshalSSZ` → `fmt.Errorf("Epoch: %w")` | `cp_e2e_epoch_err_unreachable` | unreachable with `len = 40` (unreachable_mc column, not reject coverage) | proved |
 | N-2 | 2026-11-10, run fve2e, `61eec5e` | `Checkpoint.MarshalSSZTo` → `fmt.Errorf("Epoch: %w")` | `CALLGRAPH.md`, `-m=2` log | removed by the compiler (inlined `Epoch.MarshalSSZTo` cannot fail) | recorded |
 
@@ -47,4 +47,7 @@ None confirmed. Candidate C-1 is in §5.
 
 ## Checkpoint deltas
 
+(T-5 is recorded in the delta below; status: worked around; review pending.)
+
 - 2026-11-10 `02b0e89` (prysm-e2e E6): new T-1, T-2, T-3, T-4, N-1, N-2, C-1, FP-1; O2 updated (Epoch decoder accept proved). No new generator defect.
+- 2026-11-10 `507da34`+ (INBOX 004): C-1 confirmed and stated by `cp_e2e_marshal_reject_main` (classified known behaviour); O2 updated (Epoch reject proved). New tooling note T-5: `ecancel` bounded unfolding times out on `uintBytes` of a symbolic epoch (job 84/85); worked around by `generalize` (job 86). No new generator or generated-code defect.

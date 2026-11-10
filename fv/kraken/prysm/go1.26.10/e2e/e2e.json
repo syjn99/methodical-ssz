@@ -3,33 +3,194 @@
  "elf": "c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e",
  "link_bundle": "96298a344d6f093c1aec60d6722936476276ae9d7914e77969207a2e4b7bed39",
  "theorems": [
-  {"name": "E2e.ep_unmarshal_accept_main", "kind": "callee accept (function spec source)", "function": "primitives.(*Epoch).UnmarshalSSZ",
-   "statement": "done", "witness": "done", "theorem": "done", "link": "done", "negative": "done", "go_value": "partial", "neg_ids": ["ep-"]},
-  {"name": "E2e.ep_uacc_holds (EpUAccC)", "kind": "function spec", "function": "primitives.(*Epoch).UnmarshalSSZ",
-   "statement": "done", "witness": "done", "theorem": "done", "link": "done", "negative": "via ep_unmarshal_accept_main", "go_value": "partial", "neg_ids": []},
-  {"name": "E2e.cp_e2e_accept_main (+ cp_e2e_accept_tail)", "kind": "accept", "function": "v1alpha1.(*Checkpoint).UnmarshalSSZ",
-   "statement": "done", "witness": "done", "theorem": "done", "link": "done", "negative": "done", "go_value": "partial", "neg_ids": ["cpa-"]},
-  {"name": "E2e.cp_e2e_reject_size_main", "kind": "reject (ssz.ErrSize)", "function": "v1alpha1.(*Checkpoint).UnmarshalSSZ",
-   "statement": "done", "witness": "done", "theorem": "done", "link": "done", "negative": "done", "go_value": "partial", "neg_ids": ["cpr-"]},
-  {"name": "E2e.cp_e2e_reject_complete + cp_e2e_reject_size_spec", "kind": "reject_complete / reject_spec", "function": "v1alpha1.(*Checkpoint).UnmarshalSSZ",
-   "statement": "done", "witness": "via WitCpR", "theorem": "done", "link": "n/a", "negative": "via main", "go_value": "partial", "neg_ids": []},
-  {"name": "E2e.cp_e2e_accept_spec_k", "kind": "accept against EthLib", "function": "v1alpha1.(*Checkpoint).UnmarshalSSZ",
-   "statement": "done", "witness": "via WitCpA", "theorem": "done", "link": "done", "negative": "via main", "go_value": "partial", "neg_ids": []},
-  {"name": "E2e.cp_e2e_marshal_main", "kind": "marshal (fast path)", "function": "v1alpha1.(*Checkpoint).MarshalSSZTo",
-   "statement": "done", "witness": "done", "theorem": "done", "link": "done", "negative": "done", "go_value": "partial", "neg_ids": ["cpm-"]},
-  {"name": "E2e.cp_e2e_unmarshal_then_marshal", "kind": "compose_hupd", "function": "UnmarshalSSZ;MarshalSSZTo",
-   "statement": "done", "witness": "WitCpA + WitCpM (decoded receiver form)", "theorem": "done", "link": "done", "negative": "done", "go_value": "partial", "neg_ids": ["cpc-"]},
-  {"name": "cp_e2e_marshal_reject_main (ssz.ErrBytesLength)", "kind": "marshal_reject", "function": "v1alpha1.(*Checkpoint).MarshalSSZTo",
-   "statement": "not attempted", "witness": "not attempted", "theorem": "not attempted", "link": "done", "negative": "not attempted", "go_value": "differential only", "neg_ids": []},
-  {"name": "cp_e2e_marshal_grow_main (growslice)", "kind": "marshal (capacity too small)", "function": "v1alpha1.(*Checkpoint).MarshalSSZTo",
-   "statement": "not attempted", "witness": "not attempted", "theorem": "not attempted", "link": "done", "negative": "not attempted", "go_value": "differential only", "neg_ids": []},
-  {"name": "ep_unmarshal_reject_len_main", "kind": "callee reject (standalone)", "function": "primitives.(*Epoch).UnmarshalSSZ",
-   "statement": "not attempted", "witness": "not attempted", "theorem": "not attempted", "link": "done", "negative": "not attempted", "go_value": "differential only", "neg_ids": []},
-  {"name": "cp_e2e_marshal_spec_k / cp_e2e_size_main with witness", "kind": "marshal against EthLib / size", "function": "v1alpha1.(*Checkpoint).MarshalSSZTo / SizeSSZ",
-   "statement": "not attempted", "witness": "not attempted", "theorem": "not attempted (size: Gen1cX5.Size.Checkpoint_size exists, no witness)", "link": "done", "negative": "not attempted", "go_value": "n/a", "neg_ids": []}
+  {
+   "name": "E2e.ep_unmarshal_accept_main",
+   "kind": "callee accept (function spec source)",
+   "function": "primitives.(*Epoch).UnmarshalSSZ",
+   "statement": "done",
+   "witness": "done",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
+   "neg_ids": [
+    "ep-"
+   ]
+  },
+  {
+   "name": "E2e.ep_uacc_holds (EpUAccC)",
+   "kind": "function spec",
+   "function": "primitives.(*Epoch).UnmarshalSSZ",
+   "statement": "done",
+   "witness": "done",
+   "theorem": "done",
+   "link": "done",
+   "negative": "via ep_unmarshal_accept_main",
+   "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
+   "neg_ids": []
+  },
+  {
+   "name": "E2e.cp_e2e_accept_main (+ cp_e2e_accept_tail)",
+   "kind": "accept",
+   "function": "v1alpha1.(*Checkpoint).UnmarshalSSZ",
+   "statement": "done",
+   "witness": "done",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
+   "neg_ids": [
+    "cpa-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_reject_size_main",
+   "kind": "reject (ssz.ErrSize)",
+   "function": "v1alpha1.(*Checkpoint).UnmarshalSSZ",
+   "statement": "done",
+   "witness": "done",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
+   "neg_ids": [
+    "cpr-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_reject_complete + cp_e2e_reject_size_spec",
+   "kind": "reject_complete / reject_spec",
+   "function": "v1alpha1.(*Checkpoint).UnmarshalSSZ",
+   "statement": "done",
+   "witness": "via WitCpR",
+   "theorem": "done",
+   "link": "n/a",
+   "negative": "via main",
+   "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
+   "neg_ids": []
+  },
+  {
+   "name": "E2e.cp_e2e_accept_spec_k",
+   "kind": "accept against EthLib",
+   "function": "v1alpha1.(*Checkpoint).UnmarshalSSZ",
+   "statement": "done",
+   "witness": "via WitCpA",
+   "theorem": "done",
+   "link": "done",
+   "negative": "via main",
+   "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
+   "neg_ids": []
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_main",
+   "kind": "marshal (fast path)",
+   "function": "v1alpha1.(*Checkpoint).MarshalSSZTo",
+   "statement": "done",
+   "witness": "done",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
+   "neg_ids": [
+    "cpm-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_unmarshal_then_marshal",
+   "kind": "compose_hupd",
+   "function": "UnmarshalSSZ;MarshalSSZTo",
+   "statement": "done",
+   "witness": "WitCpA + WitCpM (decoded receiver form)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
+   "neg_ids": [
+    "cpc-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_reject_main",
+   "kind": "marshal_reject",
+   "function": "v1alpha1.(*Checkpoint).MarshalSSZTo",
+   "statement": "done",
+   "witness": "done",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
+   "neg_ids": [
+    "cpmr-"
+   ]
+  },
+  {
+   "name": "cp_e2e_marshal_grow_main (growslice)",
+   "kind": "marshal (capacity too small)",
+   "function": "v1alpha1.(*Checkpoint).MarshalSSZTo",
+   "statement": "not attempted",
+   "witness": "not attempted",
+   "theorem": "not attempted",
+   "link": "done",
+   "negative": "not attempted",
+   "go_value": "differential only",
+   "neg_ids": []
+  },
+  {
+   "name": "E2e.ep_unmarshal_reject_len_main",
+   "kind": "callee reject (standalone)",
+   "function": "primitives.(*Epoch).UnmarshalSSZ",
+   "statement": "done",
+   "witness": "done",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "differential (epoch-len7/9)",
+   "neg_ids": [
+    "epr-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_spec_k + cp_e2e_size_main (+ size_spec)",
+   "kind": "marshal against EthLib / size",
+   "function": "v1alpha1.(*Checkpoint).MarshalSSZTo / SizeSSZ",
+   "statement": "done",
+   "witness": "done (WitCpS; spec_k via WitCpM)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "n/a (size) / via marshal",
+   "neg_ids": [
+    "cps-",
+    "cpms-"
+   ]
+  },
+  {
+   "name": "E2e.cp_layout / cpGoValue (Go-value element)",
+   "kind": "go value",
+   "function": "receiver layout",
+   "statement": "done",
+   "witness": "evaluated on WitCpA/WitCpM/WitCpMR receivers",
+   "theorem": "done",
+   "link": "n/a",
+   "negative": "done",
+   "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
+   "neg_ids": [
+    "gv-"
+   ]
+  }
  ],
  "unreachable_mc": [
-  {"site": "phase0.ssz.go:1988 fmt.Errorf(\"Epoch: %w\") (decoder)", "theorem": "E2e.cp_e2e_epoch_err_unreachable", "status": "done", "counts_as_reject": false},
-  {"site": "phase0.ssz.go:1964 fmt.Errorf(\"Epoch: %w\") (encoder)", "theorem": "none needed: removed by the compiler (inlined Epoch.MarshalSSZTo cannot fail; no fmt.errorf call in the machine code, CALLGRAPH.md)", "status": "absent from the code", "counts_as_reject": false}
+  {
+   "site": "phase0.ssz.go:1988 fmt.Errorf(\"Epoch: %w\") (decoder)",
+   "theorem": "E2e.cp_e2e_epoch_err_unreachable",
+   "status": "done",
+   "counts_as_reject": false
+  },
+  {
+   "site": "phase0.ssz.go:1964 fmt.Errorf(\"Epoch: %w\") (encoder)",
+   "theorem": "none needed: removed by the compiler (inlined Epoch.MarshalSSZTo cannot fail; no fmt.errorf call in the machine code, CALLGRAPH.md)",
+   "status": "absent from the code",
+   "counts_as_reject": false
+  }
  ]
 }
