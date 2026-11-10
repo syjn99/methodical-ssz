@@ -21,6 +21,9 @@ import E2e.CpCompose
 import E2e.WitCpC
 import E2e.CpMarshalG
 import E2e.WitCpG
+import E2e.SpecEq
+import E2e.WitCpAS
+import E2e.WitCpRS
 #print axioms E2e.ep_unmarshal_accept_main
 #print axioms E2e.ep_uacc_holds
 #print axioms E2e.WitEp.ep_accept_runs
@@ -65,3 +68,8 @@ import E2e.WitCpG
 #print axioms E2e.cp_e2e_marshal_grow_main
 #print axioms E2e.WitCpG.cpg_runs
 #print axioms E2e.WitCpG.witCpG_recv
+#print axioms E2e.prysmCpDesc_serialize_checker
+#print axioms E2e.prysmCpDesc_deserialize_checker
+#print axioms E2e.WitCpA.pcp_toValue_inj
+#print axioms E2e.WitCpA.cp_accept_spec_runs
+#print axioms E2e.WitCpR.cp_reject_spec_runs

@@ -179,6 +179,27 @@
    "Classical.choice",
    "Quot.sound"
   ],
+  "E2e.prysmCpDesc_serialize_checker": [
+   "propext",
+   "Quot.sound"
+  ],
+  "E2e.prysmCpDesc_deserialize_checker": [
+   "propext",
+   "Quot.sound"
+  ],
+  "E2e.WitCpA.pcp_toValue_inj": [
+   "propext"
+  ],
+  "E2e.WitCpA.cp_accept_spec_runs": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.WitCpR.cp_reject_spec_runs": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
   "E2e.prysmCpDesc_checker": [],
   "E2e.cp_layout": [],
   "E2e.witCpA_recv_pre": [],
@@ -191,6 +212,6 @@
  },
  "missing": [],
  "nonstandard": {},
- "count": 44,
+ "count": 49,
  "verdict": "PASS"
 }

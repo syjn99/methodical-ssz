@@ -62,24 +62,28 @@
    "kind": "reject_complete / reject_spec",
    "function": "v1alpha1.(*Checkpoint).UnmarshalSSZ",
    "statement": "done",
-   "witness": "via WitCpR",
+   "witness": "done (WitCpRS.cp_reject_spec_runs on Array.replicate n 0x11, n = 39, 41, 0; review e2e-r1 S6)",
    "theorem": "done",
    "link": "n/a",
-   "negative": "via main",
+   "negative": "done",
    "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
-   "neg_ids": []
+   "neg_ids": [
+    "wrs-"
+   ]
   },
   {
    "name": "E2e.cp_e2e_accept_spec_k",
    "kind": "accept against EthLib",
    "function": "v1alpha1.(*Checkpoint).UnmarshalSSZ",
    "statement": "done",
-   "witness": "via WitCpA",
+   "witness": "done (WitCpAS.cp_accept_spec_runs on pcpEnc g0 for 3 closed g0; review e2e-r1 S6)",
    "theorem": "done",
    "link": "done",
-   "negative": "via main",
+   "negative": "done",
    "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
-   "neg_ids": []
+   "neg_ids": [
+    "was-"
+   ]
   },
   {
    "name": "E2e.cp_e2e_marshal_main",
@@ -192,6 +196,20 @@
    "go_value": "done for the witness receiver (WitCpC.witCpC_recv, IR layout) + differential roundtrip",
    "neg_ids": [
     "cpx-"
+   ]
+  },
+  {
+   "name": "E2e.prysmCpDesc_serialize_checker / deserialize_checker",
+   "kind": "spec bridge: codec equality with the checker Desc (review e2e-r1 S1)",
+   "function": "spec",
+   "statement": "done",
+   "witness": "n/a (spec level)",
+   "theorem": "done",
+   "link": "n/a",
+   "negative": "done",
+   "go_value": "n/a",
+   "neg_ids": [
+    "spe-"
    ]
   }
  ],

@@ -578,5 +578,61 @@
   "theorem": "cp_e2e_marshal_grow_main",
   "old": "(hfit : s.regs.rcx.toNat + 40 ≤",
   "new": "(hfit : s.regs.rcx.toNat + 39 ≤"
+ },
+ {
+  "id": "spe-control",
+  "kind": "control",
+  "module": "E2e/SpecEq.lean",
+  "theorem": "prysmCpDesc_serialize_checker"
+ },
+ {
+  "id": "spe-stmt-uint4",
+  "kind": "stmt",
+  "module": "E2e/SpecEq.lean",
+  "theorem": "prysmCpDesc_serialize_checker",
+  "old": "serialize prysmCpDesc v = serialize cpCheckerDesc v",
+  "new": "serialize prysmCpDesc v = serialize (.container [\"Epoch\", \"Root\"] [.uint 4, .byteVector 32]) v"
+ },
+ {
+  "id": "spe-control-de",
+  "kind": "control",
+  "module": "E2e/SpecEq.lean",
+  "theorem": "prysmCpDesc_deserialize_checker"
+ },
+ {
+  "id": "spe-stmt-de-bv31",
+  "kind": "stmt",
+  "module": "E2e/SpecEq.lean",
+  "theorem": "prysmCpDesc_deserialize_checker",
+  "old": "deserialize prysmCpDesc bs = deserialize cpCheckerDesc bs",
+  "new": "deserialize prysmCpDesc bs = deserialize (.container [\"Epoch\", \"Root\"] [.uint 8, .byteVector 31]) bs"
+ },
+ {
+  "id": "wrs-control",
+  "kind": "control",
+  "module": "E2e/WitCpRS.lean",
+  "theorem": "cp_reject_spec_runs"
+ },
+ {
+  "id": "wrs-stmt-rax",
+  "kind": "stmt",
+  "module": "E2e/WitCpRS.lean",
+  "theorem": "cp_reject_spec_runs",
+  "old": "st.data.regs.rax = 0x10e8",
+  "new": "st.data.regs.rax = 0x10e9"
+ },
+ {
+  "id": "was-control",
+  "kind": "control",
+  "module": "E2e/WitCpAS.lean",
+  "theorem": "cp_accept_spec_runs"
+ },
+ {
+  "id": "was-stmt-rbx",
+  "kind": "stmt",
+  "module": "E2e/WitCpAS.lean",
+  "theorem": "cp_accept_spec_runs",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
+  "new": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 1"
  }
 ]

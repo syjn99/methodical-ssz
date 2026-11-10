@@ -313,7 +313,7 @@ git diff --exit-code fv/kraken/AXIOMS.txt fv/kraken/AXIOMS-ALL.txt fv/kraken/lin
 
 손 작성 `(*primitives.Epoch).UnmarshalSSZ`는 함수 명세 `EpUAccC`로 증명했다(`ep_uacc_holds`). 디코더 주 정리에는 Epoch에 대한 가설이 없다.
 `Epoch.MarshalSSZTo`는 인코더에 인라인된다(`-gcflags=-m=2`, `prysm/go1.26.10/e2e/CALLGRAPH.md`). 인라인된 몸체는 인코더 정리 안에서 증명했다.
-명세는 consensus-specs에서 손으로 쓴 `E2e.prysmCpDesc`다. Desc 검사기의 Desc와는 필드 이름만 다르다(`prysmCpDesc_checker`).
+명세는 consensus-specs에서 손으로 쓴 `E2e.prysmCpDesc`다. Desc 검사기의 Desc와는 필드 이름만 다르다(`prysmCpDesc_checker`). EthLib의 `serialize`/`deserialize`는 컨테이너 필드 이름을 쓰지 않으므로 두 Desc의 직렬화와 역직렬화는 모든 값과 모든 바이트 배열에서 같다(`prysmCpDesc_serialize_checker`, `prysmCpDesc_deserialize_checker`, 리뷰 S1).
 Go 1.26.3 증명은 옮기지 않았다. 모든 지시 색인, 오프셋, 레이블, 프레임은 Go 1.26.10 `.S`에서 다시 유도했다.
 
 표는 `prysm/go1.26.10/e2e/e2e.json`, `negative/result.json`, `differential.json`, `axioms.json`에서 프로그램이 만든다.
@@ -324,8 +324,8 @@ Go 1.26.3 증명은 옮기지 않았다. 모든 지시 색인, 오프셋, 레이
 | `E2e.ep_uacc_holds (EpUAccC)` | function spec | done | done | done | done | via ep_unmarshal_accept_main | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
 | `E2e.cp_e2e_accept_main (+ cp_e2e_accept_tail)` | accept | done | done | done | done | 9/9 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
 | `E2e.cp_e2e_reject_size_main` | reject (ssz.ErrSize) | done | done | done | done | 4/4 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
-| `E2e.cp_e2e_reject_complete + cp_e2e_reject_size_spec` | reject_complete / reject_spec | done | via WitCpR | done | n/a | via main | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
-| `E2e.cp_e2e_accept_spec_k` | accept against EthLib | done | via WitCpA | done | done | via main | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
+| `E2e.cp_e2e_reject_complete + cp_e2e_reject_size_spec` | reject_complete / reject_spec | done | done (WitCpRS.cp_reject_spec_runs on Array.replicate n 0x11, n = 39, 41, 0; review e2e-r1 S6) | done | n/a | 2/2 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
+| `E2e.cp_e2e_accept_spec_k` | accept against EthLib | done | done (WitCpAS.cp_accept_spec_runs on pcpEnc g0 for 3 closed g0; review e2e-r1 S6) | done | done | 2/2 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
 | `E2e.cp_e2e_marshal_main` | marshal (fast path) | done | done | done | done | 7/7 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
 | `E2e.cp_e2e_marshal_decoded_receiver` | encoder on a decoded-form receiver (not compose_hupd; review e2e-r1 M1) | done | WitCpM (decoded-form receiver) | done | done | 3/3 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
 | `E2e.cp_e2e_marshal_reject_main` | marshal_reject | done | done | done | done | 4/4 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
@@ -334,13 +334,14 @@ Go 1.26.3 증명은 옮기지 않았다. 모든 지시 색인, 오프셋, 레이
 | `E2e.cp_e2e_marshal_spec_k + cp_e2e_size_main (+ size_spec)` | marshal against EthLib / size | done | done (WitCpS; spec_k via WitCpM) | done | done | 4/4 통과 | n/a (size) / via marshal |
 | `E2e.cp_layout / cpGoValue (Go-value element)` | go value | done | evaluated on WitCpA/WitCpM/WitCpMR receivers | done | n/a | 2/2 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
 | `E2e.cp_e2e_unmarshal_then_marshal` | compose_hupd / compose_witness (decoder entry → cp_e2e_accept_main → hupd → cp_e2e_marshal_main) | done | done (WitCpC: one Host with CpUnmarshal, EpUnmarshal, BumpAlloc1, RtCopy, CpMarshal; real middle memory by storeInt) | done | done | 11/11 통과 | done for the witness receiver (WitCpC.witCpC_recv, IR layout) + differential roundtrip |
+| `E2e.prysmCpDesc_serialize_checker / deserialize_checker` | spec bridge: codec equality with the checker Desc (review e2e-r1 S1) | done | n/a (spec level) | done | n/a | 4/4 통과 | n/a |
 
 | unreachable_mc 행 | 정리 | 상태 | reject 범위에 셈 |
 | --- | --- | --- | --- |
 | phase0.ssz.go:1988 fmt.Errorf("Epoch: %w") (decoder) | E2e.cp_e2e_epoch_err_unreachable | done | 아니요 |
 | phase0.ssz.go:1964 fmt.Errorf("Epoch: %w") (encoder) | none needed: removed by the compiler (inlined Epoch.MarshalSSZTo cannot fail; no fmt.errorf call in the machine code, CALLGRAPH.md) | absent from the code | 아니요 |
 
-부정 시험 전체: 65/65 통과 (`negative/result.json`). Go 차분: 48건, 불일치 0건 (`differential.json`). 공리: 44개 이름, 판정 PASS (`axioms.json`).
+부정 시험 전체: 73/73 통과 (`negative/result.json`). Go 차분: 48건, 불일치 0건 (`differential.json`). 공리: 49개 이름, 판정 PASS (`axioms.json`).
 
 수용기 메모: 정리의 수신자 배치는 `prysm/ir/ir-mainnet.json` `go_fields`(gc amd64 규칙)다. `state` 0, `Epoch` 8, `Root` 16, `unknownFields` 40, `sizeCache` 64, 크기 72.
 Go 값 요소: `E2e.GoVal`의 `cpGoValue`로 모든 증인 수신자 바이트를 평가해 확인했다. 배치는 IR(go/types)에서 왔다. ELF abi.Type은 이름 있는 기호가 없어서 읽지 않았다(신뢰 항목).
