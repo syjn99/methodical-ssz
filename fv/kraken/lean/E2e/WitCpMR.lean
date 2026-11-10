@@ -75,4 +75,50 @@ example (z' : RegZmms) (f : StatusFlags) := cpmr_runs (Int.toBytes 8 7) (by deci
 example (z' : RegZmms) (f : StatusFlags) := cpmr_runs (Int.toBytes 8 (2 ^ 64 - 1)) (by decide) 33 (by decide) z' f
 example (z' : RegZmms) (f : StatusFlags) := cpmr_runs (Int.toBytes 8 0) (by decide) 0 (by decide) z' f
 
+/-! ## Non-empty prefix (review e2e-r2 N5)
+
+Same Host and layout; `dst` at 0x100b8 has `len = 5` (prefix bytes 1..5), `cap = 48`; `d0` at 0x100bd,
+frame `dst[13:48]`. -/
+namespace P5
+
+def pre5 : List UInt8 := [1, 2, 3, 4, 5]
+
+def block (e8 : List UInt8) (rl : UInt64) : List UInt8 :=
+  w 0x10e8 ++ (w 0x2b ++ (w 0 ++ (z 8 ++ (e8 ++ (w 0x5000 ++ (w rl ++ (w 48 ++ (z 32 ++ (z 16 ++ (z 16 ++ (z 24
+    ++ (z 8 ++ (w 0 ++ (z 8 ++ (z 8 ++ (pre5 ++ (z 8 ++ z 35)))))))))))))))))
+
+def mem (e8 : List UInt8) (rl : UInt64) : DataMem := (block e8 rl).At (0x10000 : BitVec 64)
+
+def cs0 (e8 : List UInt8) (rl : UInt64) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
+  ⟨⟨0x10018, 0x100b8, 5, 0, 0, 48, 0x100a0, 0, 0, 0, 0, 0, 0, 0, 0x10000, 0⟩, zmms, flags, mem e8 rl⟩
+
+set_option maxHeartbeats 16000000 in
+/-- **Non-vacuity of `cp_e2e_marshal_reject_main`** with a 5-byte prefix. -/
+theorem cpmr_runs_prefix (e8 : List UInt8) (he8 : e8.length = 8) (rl : UInt64) (hrl : rl ≠ 32)
+    (zmms : RegZmms) (flags : StatusFlags) :
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
+        ∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi = 0x10e8 ∧ st.data.regs.rsi = 0x2b)
+      ⟨cs0 e8 rl zmms flags, Host.addrOf 1⟩ :=
+  eventually_mono (cp_e2e_marshal_reject_main 1 hk1 hf1 (z 8) e8 (w 48) (z 32) pre5 (z 8) rfl he8 rfl rfl rfl 0x5000 rl
+    hrl (cs0 e8 rl zmms flags) 0 0 0x10e8 0x2b rfl (z 8) (z 8) (z 16) (z 16) rfl rfl rfl rfl
+    (Eq ((z 24).At (0x10080 : BitVec 64)) ⋆ Eq ((z 8).At (0x100a8 : BitVec 64)) ⋆ Eq ((z 35).At (0x100c5 : BitVec 64)))
+    (by
+      have H : Eq ((block e8 rl).At (0x10000 : BitVec 64)) (mem e8 rl) := rfl
+      wit_split [he8, show pre5.length = 5 from rfl]
+      simp only [cs0, w, E2e.Data.e2eErrBytesLength_addr, label_ebl, nil_At_emp, Std.ExtHashMap.sep_emp,
+        Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, Int64.toBitVec_add,
+        BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, show (UInt64.ofNat 0).toBitVec = 0#64 from rfl,
+        show (p : UInt64) → p.toBitVec = p.toBitVec from fun _ => rfl] at H ⊢
+      simp only [Std.ExtHashMap.sep_assoc] at H ⊢
+      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
+      exact H)
+    (by simp [cs0]) (by simp [cs0]) (by simp [cs0]))
+    (fun _ h => ⟨h.1, h.2.1, h.2.2.1, h.2.2.2.1, h.2.2.2.2.1, h.2.2.2.2.2.1⟩)
+
+example (z' : RegZmms) (f : StatusFlags) := cpmr_runs_prefix (Int.toBytes 8 7) (by decide) 31 (by decide) z' f
+example (z' : RegZmms) (f : StatusFlags) := cpmr_runs_prefix (Int.toBytes 8 (2 ^ 64 - 1)) (by decide) 0 (by decide) z' f
+
+end P5
+
 end E2e.WitCpMR

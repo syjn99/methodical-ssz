@@ -23,6 +23,7 @@
 'E2e.cp_e2e_spec_roundtrip' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.cp_e2e_marshal_reject_main' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.WitCpMR.cpmr_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E2e.WitCpMR.P5.cpmr_runs_prefix' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.cp_e2e_marshal_spec_k' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.cp_e2e_size_main' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.cp_e2e_size_spec' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -31,6 +32,8 @@
 'E2e.ep_static_table' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.ep_static_addr' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.WitEpR.epr_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E2e.WitEpR.L9.epr_runs9' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E2e.WitEpR.L300.epr_runs300' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.cp_layout' does not depend on any axioms
 'E2e.witCpA_recv_pre' does not depend on any axioms
 'E2e.witCpA_recv_post' depends on axioms: [propext, Classical.choice, Quot.sound]

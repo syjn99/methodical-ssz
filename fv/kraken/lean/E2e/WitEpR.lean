@@ -3,7 +3,7 @@ import Fk.RtErr
 import Fk.WHost
 
 /-!
-# Witness of `ep_unmarshal_reject_len_main` (len 7)
+# Witnesses of `ep_unmarshal_reject_len_main` (len 7, 9 and 300)
 
 Host: four data labels (`go_string._` at 0x10000, `runtime.gcbits._` 0x10001,
 `runtime.staticuint64s` 0x10002, `runtime.fvBump` 0x10003), the real Go 1.26.10
@@ -100,5 +100,107 @@ theorem epr_runs (zmms : RegZmms) (flags : StatusFlags) :
     (by simp [cs0]) (by simp [cs0]) (by omega) (rt_convT64 67 hk67 hf67 0)
     (rt_errorf_dd 67 hk67 hf67 bumpHeap E2e.Data.e2eEpFmt E2e.Data.e2eIntType_addr 0))
     (fun _ h => ⟨h.1, h.2.1⟩)
+
+/-! ## len 9 and len 300 (review e2e-r2 N5)
+
+Same Host and layout. len 9: the static entries 8 and 9 at 0x10042 and 0x1004a. len 300 (≥ 256):
+`StaticBox 300` is empty and `convT64` takes the heap-box branch (`BoxIn` right disjunct: an 8-byte
+allocation from the bump heap). -/
+
+theorem staticBox_big (v : BitVec 64) (h : 256 ≤ v.toNat) : StaticBox v = Eq (([] : List UInt8).At 0) := by
+  unfold StaticBox; rw [if_neg (by omega)]
+
+namespace L9
+
+def block : List UInt8 :=
+  Int.toBytes 8 (0x105a1 : BitVec 64).toInt ++ (z 55 ++ (Int.toBytes 8 (8 : BitVec 64).toInt
+    ++ (Int.toBytes 8 (9 : BitVec 64).toInt ++ (z 1351 ++ (E2e.Data.e2eEight ++ (z 8280 ++ (w 0 ++ (z 8 ++ (z 8
+    ++ (z 32 ++ (z 16 ++ (z 16 ++ (z 8 ++ (w 0 ++ (z 8 ++ (z 8 ++ (z 100216 ++ E2e.Data.e2eEpFmt)))))))))))))))))
+
+def mem : DataMem := block.At (0x10003 : BitVec 64)
+
+def cs0 (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
+  ⟨⟨0x13000, 0x14000, 9, 0, 0, 0, 0x12659, 0, 0, 0, 0, 0, 0, 0, 0x125e9, 0⟩, zmms, flags, mem⟩
+
+def R0 : DataMem → Prop :=
+  Eq ((z 55).At (0x1000b : BitVec 64)) ⋆ Eq ((z 1351).At (0x10052 : BitVec 64))
+    ⋆ Eq ((z 8).At (0x12661 : BitVec 64)) ⋆ Eq ((z 100216).At (0x12671 : BitVec 64))
+
+set_option maxHeartbeats 16000000 in
+/-- **Non-vacuity of `ep_unmarshal_reject_len_main`** (len 9, static box). -/
+theorem epr_runs9 (zmms : RegZmms) (flags : StatusFlags) :
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax ≠ 0)
+      ⟨cs0 zmms flags, Host.addrOf 4⟩ :=
+  eventually_mono (ep_unmarshal_reject_len_main 4 hk4 hf4 (cs0 zmms flags) 0 0 (z 8) (z 8) (z 16) (z 16) (z 8) (z 32)
+    (z 8) rfl rfl rfl rfl rfl rfl rfl 0 [] rfl bumpHeap 8280 R0
+    (by
+      have H : Eq (block.At (0x10003 : BitVec 64)) mem := rfl
+      wit_split [ep_eight_len, ep_fmt_len]
+      rw [Std.ExtHashMap.sep_comm_l (Eq (E2e.Data.e2eEight.At _)) (Eq ((z 8280).At _)),
+        Std.ExtHashMap.sep_comm_l (Eq ((z 1351).At _)) (Eq ((z 8280).At _)),
+        Std.ExtHashMap.sep_comm_l (Eq ((Int.toBytes 8 (9#64).toInt).At _)) (Eq ((z 8280).At _)),
+        Std.ExtHashMap.sep_comm_l (Eq ((Int.toBytes 8 (8#64).toInt).At _)) (Eq ((z 8280).At _)),
+        Std.ExtHashMap.sep_comm_l (Eq ((z 55).At _)) (Eq ((z 8280).At _))] at H
+      have H2 := lift_heap H
+      rw [staticBox_of_lt (v := 8) (by decide), staticBox_of_lt (v := (cs0 zmms flags).regs.rcx.toBitVec) (by simp [cs0])]
+      simp only [cs0, R0, w, Fk.Data.staticuint64s_addr, E2e.Data.e2eEpFmt_addr, E2e.Data.e2eEight_addr, label_gs,
+        label_gc, label_st, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
+        Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
+        BitVec.reduceMul] at H2 ⊢
+      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
+      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
+      exact H2)
+    (by simp [cs0]) (by simp [cs0]) (by omega) (rt_convT64 67 hk67 hf67 0)
+    (rt_errorf_dd 67 hk67 hf67 bumpHeap E2e.Data.e2eEpFmt E2e.Data.e2eIntType_addr 0))
+    (fun _ h => ⟨h.1, h.2.1⟩)
+
+end L9
+
+namespace L300
+
+def block : List UInt8 :=
+  Int.toBytes 8 (0x105a1 : BitVec 64).toInt ++ (z 55 ++ (Int.toBytes 8 (8 : BitVec 64).toInt
+    ++ (z 1359 ++ (E2e.Data.e2eEight ++ (z 8280 ++ (w 0 ++ (z 8 ++ (z 8
+    ++ (z 32 ++ (z 16 ++ (z 16 ++ (z 8 ++ (w 0 ++ (z 8 ++ (z 8 ++ (z 100216 ++ E2e.Data.e2eEpFmt))))))))))))))))
+
+def mem : DataMem := block.At (0x10003 : BitVec 64)
+
+def cs0 (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
+  ⟨⟨0x13000, 0x14000, 300, 0, 0, 0, 0x12659, 0, 0, 0, 0, 0, 0, 0, 0x125e9, 0⟩, zmms, flags, mem⟩
+
+def R0 : DataMem → Prop :=
+  Eq ((z 55).At (0x1000b : BitVec 64)) ⋆ Eq ((z 1359).At (0x1004a : BitVec 64))
+    ⋆ Eq ((z 8).At (0x12661 : BitVec 64)) ⋆ Eq ((z 100216).At (0x12671 : BitVec 64))
+
+set_option maxHeartbeats 16000000 in
+/-- **Non-vacuity of `ep_unmarshal_reject_len_main`** (len 300 ≥ 256: heap box). -/
+theorem epr_runs300 (zmms : RegZmms) (flags : StatusFlags) :
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax ≠ 0)
+      ⟨cs0 zmms flags, Host.addrOf 4⟩ :=
+  eventually_mono (ep_unmarshal_reject_len_main 4 hk4 hf4 (cs0 zmms flags) 0 0 (z 8) (z 8) (z 16) (z 16) (z 8) (z 32)
+    (z 8) rfl rfl rfl rfl rfl rfl rfl 0 [] rfl bumpHeap 8280 R0
+    (by
+      have H : Eq (block.At (0x10003 : BitVec 64)) mem := rfl
+      wit_split [ep_eight_len, ep_fmt_len]
+      rw [Std.ExtHashMap.sep_comm_l (Eq (E2e.Data.e2eEight.At _)) (Eq ((z 8280).At _)),
+        Std.ExtHashMap.sep_comm_l (Eq ((z 1359).At _)) (Eq ((z 8280).At _)),
+        Std.ExtHashMap.sep_comm_l (Eq ((Int.toBytes 8 (8#64).toInt).At _)) (Eq ((z 8280).At _)),
+        Std.ExtHashMap.sep_comm_l (Eq ((z 55).At _)) (Eq ((z 8280).At _))] at H
+      have H2 := lift_heap H
+      rw [staticBox_of_lt (v := 8) (by decide), staticBox_big (cs0 zmms flags).regs.rcx.toBitVec (by simp [cs0])]
+      simp only [cs0, R0, w, Fk.Data.staticuint64s_addr, E2e.Data.e2eEpFmt_addr, E2e.Data.e2eEight_addr, label_gs,
+        label_gc, label_st, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
+        Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
+        BitVec.reduceMul] at H2 ⊢
+      simp only [Std.ExtHashMap.sep_assoc] at H2 ⊢
+      simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
+      exact H2)
+    (by simp [cs0]) (by simp [cs0]) (by omega) (rt_convT64 67 hk67 hf67 0)
+    (rt_errorf_dd 67 hk67 hf67 bumpHeap E2e.Data.e2eEpFmt E2e.Data.e2eIntType_addr 0))
+    (fun _ h => ⟨h.1, h.2.1⟩)
+
+end L300
 
 end E2e.WitEpR

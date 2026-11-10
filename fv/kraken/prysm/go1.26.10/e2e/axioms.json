@@ -124,6 +124,11 @@
    "Classical.choice",
    "Quot.sound"
   ],
+  "E2e.WitCpMR.P5.cpmr_runs_prefix": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
   "E2e.cp_e2e_marshal_spec_k": [
    "propext",
    "Classical.choice",
@@ -160,6 +165,16 @@
    "Quot.sound"
   ],
   "E2e.WitEpR.epr_runs": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.WitEpR.L9.epr_runs9": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.WitEpR.L300.epr_runs300": [
    "propext",
    "Classical.choice",
    "Quot.sound"
@@ -230,6 +245,6 @@
  },
  "missing": [],
  "nonstandard": {},
- "count": 51,
+ "count": 54,
  "verdict": "PASS"
 }

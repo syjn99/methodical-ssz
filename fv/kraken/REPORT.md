@@ -329,9 +329,9 @@ Go 1.26.3 증명은 옮기지 않았다. 모든 지시 색인, 오프셋, 레이
 | `E2e.cp_e2e_accept_spec_k` | accept against EthLib | done | done (WitCpAS.cp_accept_spec_runs on pcpEnc g0 for 3 closed g0; review e2e-r1 S6) | done | done | 2/2 통과 | via cp_e2e_accept_main (witCpA_recv_pre/post) |
 | `E2e.cp_e2e_marshal_main` | marshal (fast path) | done | done | done | done | 7/7 통과 | witCpM_recv (witness block, offset 8); IR layout + differential |
 | `E2e.cp_e2e_marshal_decoded_receiver` | encoder on a decoded-form receiver (not compose_hupd; review e2e-r1 M1) | done | WitCpM (decoded-form receiver) | done | done | 3/3 통과 | witCpM_recv (witness block) + differential |
-| `E2e.cp_e2e_marshal_reject_main` | marshal_reject | done | done | done | done | 4/4 통과 | witCpMR_recv (witness blocks, len(Root) 31/33/0); IR layout + differential |
+| `E2e.cp_e2e_marshal_reject_main` | marshal_reject | done | done (WitCpMR: empty prefix rl 31/33/0; P5: 5-byte prefix rl 31/0; review e2e-r2 N5) | done | done | 4/4 통과 | witCpMR_recv (witness blocks, len(Root) 31/33/0); IR layout + differential |
 | `E2e.cp_e2e_marshal_grow_main` | marshal (capacity too small: first growslice site; GrowsliceC esz 1, premise len + 40 ≤ nextSliceCap (len + 8) cap) | done | done (WitCpG: len 30, cap 36, rt_growslice + rt_memmove, 3 value instances) | done | done | 10/10 통과 | witCpG_recv (witness block, offset 0x20a0); IR layout + differential (enc-grow-cap0, enc-grow-len30-cap36) |
-| `E2e.ep_unmarshal_reject_len_main` | callee reject (standalone) | done | done | done | done | 7/7 통과 | differential (epoch-len7/9) |
+| `E2e.ep_unmarshal_reject_len_main` | callee reject (standalone) | done | done (WitEpR: len 7 and 9 static box, len 300 heap box; review e2e-r2 N5) | done | done | 7/7 통과 | differential (epoch-len7/9) |
 | `E2e.cp_e2e_marshal_spec_k + cp_e2e_size_main (+ size_spec)` | marshal against EthLib / size | done | done (WitCpS; spec_k via WitCpM) | done | done | 4/4 통과 | n/a (size) / via marshal |
 | `E2e.cp_layout / cpGoValue (Go-value element)` | go value | done | evaluated on WitCpA/WitCpM/WitCpMR receivers | done | n/a | 4/4 통과 | this is the Go-value predicate (slice-header sanity only; IR layout, not ELF abi.Type) |
 | `E2e.cp_e2e_unmarshal_then_marshal` | compose_hupd / compose_witness (decoder entry → cp_e2e_accept_main → hupd → cp_e2e_marshal_main) | done | done (WitCpC: one Host with CpUnmarshal, EpUnmarshal, BumpAlloc1, RtCopy, CpMarshal; real middle memory by storeInt) | done | done | 7/7 통과 | witCpC_recv: before from the witness block, after = cp_after_decode_goValue (every p ≠ 0) + differential roundtrip |
@@ -342,7 +342,7 @@ Go 1.26.3 증명은 옮기지 않았다. 모든 지시 색인, 오프셋, 레이
 | phase0.ssz.go:1988 fmt.Errorf("Epoch: %w") (decoder) | E2e.cp_e2e_epoch_err_unreachable | done | 아니요 |
 | phase0.ssz.go:1964 fmt.Errorf("Epoch: %w") (encoder) | none needed: removed by the compiler (inlined Epoch.MarshalSSZTo cannot fail; no fmt.errorf call in the machine code, CALLGRAPH.md) | absent from the code | 아니요 |
 
-부정 시험 전체: 74/74 통과 (`negative/result.json`). Go 차분: 48건, 불일치 0건 (`differential.json`). 공리: 50개 이름, 판정 PASS (`axioms.json`).
+부정 시험 전체: 74/74 통과 (`negative/result.json`). Go 차분: 48건, 불일치 0건 (`differential.json`). 공리: 51개 이름, 판정 PASS (`axioms.json`).
 
 부정 시험 등급(리뷰 e2e-r2 N1): `negative.py`는 결과마다 `class`를 적는다. Lean의 "(deterministic) timeout" 오류는 `timeout_heartbeat`, 사례별 제한(300초) 초과는 `timeout_wall`이다. Lean의 "maximum recursion depth" 오류는 `recursion_limit`이다. 세 자원 등급은 통과가 아니다. 하트비트 시간 초과였던 문장 변이 2건은 명확하게 실패하는 변이로 바꿨다: `cpmr-stmt-noown`(전제에서 `dst[len..len+8]` 소유 삭제, C-1 저장 단계에서 실패), `cpg-stmt-growle`(`cap < len + 8`을 `≤`로), 그리고 코드 변이 `cpg-oldcap`(첫 지점 growslice oldCap 인수)을 더했다. 시도한 `cpg-stmt-noroot`는 300초 제한에 걸려서 넣지 않았다(gate 작업 126).
 

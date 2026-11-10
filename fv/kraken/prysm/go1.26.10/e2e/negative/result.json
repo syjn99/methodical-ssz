@@ -1427,27 +1427,6 @@
    "recursion_limit": false
   },
   {
-   "id": "cpmr-control",
-   "kind": "control",
-   "module": "E2e/CpMarshalR.lean",
-   "theorem": "cp_e2e_marshal_reject_main",
-   "range": [
-    33,
-    197
-   ],
-   "error_lines": [],
-   "first_error": null,
-   "rc": 0,
-   "killed": false,
-   "timeout": false,
-   "heartbeat_timeout": false,
-   "seconds": 3.4,
-   "diff": "",
-   "class": "control_pass",
-   "pass": true,
-   "recursion_limit": false
-  },
-  {
    "id": "cpmr-stmt-noown",
    "kind": "stmt",
    "module": "E2e/CpMarshalR.lean",
@@ -1558,27 +1537,6 @@
    "seconds": 6.8,
    "diff": "--- orig\n+++ mut\n@@ -23,7 +23,7 @@\n       \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40)) \u22c6 Eq (root.At p)\n       \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Heap avail \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 \u2264 s.regs.rsp.toNat)\n-    (hlc : s.regs.rcx.toNat \u2264 s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)\n+    (hlc : s.regs.rcx.toNat \u2264 s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat \u2264 s.regs.rcx.toNat + 8)\n     (hfit : s.regs.rcx.toNat + 40 \u2264 nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat)\n     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat + 8192 \u2264 avail) (hmax : avail \u2264 maxAlloc)\n     (hgs : GrowsliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n",
    "class": "inside",
-   "pass": true,
-   "recursion_limit": false
-  },
-  {
-   "id": "epr-control",
-   "kind": "control",
-   "module": "E2e/EpReject.lean",
-   "theorem": "ep_unmarshal_reject_len_main",
-   "range": [
-    62,
-    272
-   ],
-   "error_lines": [],
-   "first_error": null,
-   "rc": 0,
-   "killed": false,
-   "timeout": false,
-   "heartbeat_timeout": false,
-   "seconds": 3.6,
-   "diff": "",
-   "class": "control_pass",
    "pass": true,
    "recursion_limit": false
   },
@@ -1713,6 +1671,48 @@
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "seconds": 0.9,
+   "diff": "",
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "cpmr-control",
+   "kind": "control",
+   "module": "E2e/CpMarshalR.lean",
+   "theorem": "cp_e2e_marshal_reject_main",
+   "range": [
+    33,
+    197
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 3.1,
+   "diff": "",
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "epr-control",
+   "kind": "control",
+   "module": "E2e/EpReject.lean",
+   "theorem": "ep_unmarshal_reject_len_main",
+   "range": [
+    62,
+    272
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 3.7,
    "diff": "",
    "class": "control_pass",
    "pass": true
