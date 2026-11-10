@@ -108,7 +108,7 @@ Section 8 IDs are unchanged. "Fixed" below means a commit after `a372145`, not r
 
 | ID | Sev | Finding (short) | State |
 | --- | --- | --- | --- |
-| NF-1 | must-fix (M1) | `negative.py`: first error `unknown tactic`, `unknown namespace`, `Invalid field … environment does not contain` counted as `inside` | fixed `23eceac` (patterns enumerated from the toolchain's error strings; selftest with 15 new fixtures fails on 12 of them with the old pattern; reclassification delta 0) |
+| NF-1 | must-fix (M1) | `negative.py`: first error `unknown tactic`, `unknown namespace`, `Invalid field … environment does not contain` counted as `inside` | fixed `23eceac` (patterns enumerated from the toolchain's error strings; selftest with 15 new fixtures fails on 12 of them with the old pattern; reclassification delta 0). The list is not complete: two escapes found by review fix-r2, see NF-6 |
 | NF-2 | must-fix (M2) | p2dec statement check covered only the text after the colon; a hypothesis added before it compiled | fixed `094e51e` (`_kind` identity on the whole declared type against the hand kind `rootDecSegKind`; 5 added-binder cases fail only in the `_kind` line) |
 | NF-3 | should-fix (S1) | p1 statement unchecked without a hand theorem | fixed `094e51e` (`u64DecAcceptKind`; anchored to the two hand theorems; no hand theorem needed for a new instance) |
 | NF-4 | should-fix (S2) | a wrong conclusion literal ran into the 300 s wall limit | fixed `094e51e` (`with_reducible exact`: `scal-gad-stmt-literal` fails inside in 1.4 s) |
@@ -116,6 +116,17 @@ Section 8 IDs are unchanged. "Fixed" below means a commit after `a372145`, not r
 
 Also fixed: S7 (`negative.py` with an unknown case id exits 2, `23eceac`), S3 (counts by command), S4 (paths and run
 names in the files of this range; older generated records listed in `TOOLS.md` "Known deviations"), S5 (marker text).
+
+## 10. Independent review fix-r2 of `56dfc27` (NF-6 … NF-8)
+
+Review verdict: APPROVE, hold-out ready with conditions. Section 9 IDs are unchanged.
+These items were handled by the evaluation session BEFORE the hold-out was opened (step 0 of the S3 order).
+
+| ID | Sev | Finding (short) | State |
+| --- | --- | --- | --- |
+| NF-6 | should-fix (N1) | `negative.py`: first errors ``Unknown option `o` `` and ``Case tag `t` not found`` classified `inside` (a pass) | fixed (step 0): both forms are `wrong_target`; 3 selftest fixtures fail with the old pattern; reclassification delta 0 (154/154, 28/28). The `WRONG_TARGET` list is still not complete: an unlisted parse or name form classifies `inside`, so the first error of every row is read |
+| NF-7 | should-fix (N2) | the `_kind` line is generator output; nothing checked its right-hand side by program (a degenerate line compiles) | reader-side check `gen/scal/kindcheck.py` (step 0), see its README limits |
+| NF-8 | should-fix (N3) | no `stale_olean.py` run after failed builds; known-deviation list incomplete; one hand-typed OUTBOX time | (a) the evaluation session runs `stale_olean.py` after every failed build before trusting a later pass; (b), (c) recorded, not changed |
 
 ## Checkpoint deltas
 

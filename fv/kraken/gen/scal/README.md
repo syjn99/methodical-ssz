@@ -49,6 +49,16 @@ after the colon: a binder added before the colon still compiles (`rv-gad-extra-b
 it. `gen/e2e/negative.py` keeps `t_kind` in a mutant of `t`. The proofs end in `with_reducible exact`, so a
 wrong conclusion literal fails at once (S2: 300 s wall timeout before, 1.4 s now).
 
+Limit of `t_kind` (review fix-r2 N2): the `_kind` line is generator output too. Lean checks the identity, but
+not WHICH kind is named: a degenerate right-hand side (e.g. `type_of% (@t h)` itself) compiles. The reader-side
+check `gen/scal/kindcheck.py <file>` (no generator change) checks by text that every generated theorem `t` has
+`t_kind` with right-hand side `@E2eScal.u64DecAcceptKind h C` or `@E2eScal.rootDecSegKind h C n1 … n9`
+(C = the code constant of `t`'s `hk` binder), the proof `intro h; with_reducible rfl`, no local definition or
+banned token, and that `lean/E2eScal/Kind.lean` has the frozen blob `3c9b95b1…` (method freeze `56dfc27`).
+`--selftest`: 13 crafted cases; a degenerate copy of `GenCi.lean` fails. Not checked by it: the kind parameters
+(checked only through the proof's code facts), name resolution of the kind constant, that the file builds.
+A `_kind` identity is not a non-vacuity witness.
+
 Generated (raw output, not edited): `lean/E2eScal/GenCi.lean` (CommitteeIndex accept, end to end, with
 `ci_unmarshal_accept_main_g_same` against the hand theorem), `GenAdDec.lean` (AttestationData
 BeaconBlockRoot segment), `GenCpDec.lean` (Checkpoint Root segment). Driver: `gen/scal/gen.sh` (three
