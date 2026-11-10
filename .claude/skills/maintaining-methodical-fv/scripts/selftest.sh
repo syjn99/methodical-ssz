@@ -9,6 +9,9 @@
 # content of fv/kraken/lean/lean-toolchain) to choose the elan toolchain;
 # otherwise the `lean` on PATH is used as it is.
 #
+# Requires GNU coreutils `date -d` and `touch -d` (the stale_olean controls set
+# fixed mtimes). On BSD/macOS those controls fail; they do not pass falsely.
+#
 # Exit: 0 every control ran and passed; 1 at least one control failed;
 # 3 no failure but some controls were skipped (--no-lean). A skip is not a pass.
 set -u
@@ -62,9 +65,12 @@ printf 'one file\n' > "$g/committed_file.txt"
 chmod +x "$g"/*.sh
 cp -R "$g/committed" "$g/changed"
 printf 'hello, edited\n' > "$g/changed/a.txt"
+cp -R "$g/committed" "$g/nested"
+printf 'nested 43\n' > "$g/nested/b/c.txt"
 ctl regen.same          0 '^SAME '                "$R" "$g/committed" -- "$g/gen_ok.sh"
 ctl regen.single-file   0 '^SAME '                "$R" "$g/committed_file.txt" -- "$g/gen_file.sh"
 ctl regen.changed       1 '^DIFFER '              "$R" "$g/changed" -- "$g/gen_ok.sh"
+ctl regen.nested-only   1 '^DIFFER '              "$R" "$g/nested" -- "$g/gen_ok.sh"
 ctl regen.gen-error     3 'GENERATOR-FAILED.*exit=7' "$R" "$g/committed" -- "$g/gen_fail.sh"
 ctl regen.no-output     4 '^NO-OUTPUT '           "$R" "$g/committed" -- "$g/gen_none.sh"
 ctl regen.nondet        5 '^NONDETERMINISTIC '    "$R" "$g/committed" -- "$g/gen_nondet.sh"
@@ -90,6 +96,11 @@ ctl stale.stale         1 '^STALE	A/B.olean'     $S --src "$s/src" --build "$s/b
 touch -d '2026-01-01 00:00:00' "$s/src/A/B.lean"
 touch -d '2026-01-02 00:00:00' "$s/build/A/Gone.olean"
 ctl stale.orphan        1 '^ORPHAN	A/Gone.olean' $S --src "$s/src" --build "$s/build"
+# only the .ilean is stale: the .olean is newer than the source
+mkdir -p "$s/build2/A"
+touch -d '2026-01-02 00:00:00' "$s/build2/A/B.olean"
+touch -d '2025-12-31 00:00:00' "$s/build2/A/B.ilean"
+ctl stale.ilean-only    1 '^STALE	A/B.ilean'     $S --src "$s/src" --build "$s/build2"
 
 # ---------- decl_drift.py (inputs that need no Lean) ----------
 D="python3 -I $here/decl_drift.py"
@@ -98,10 +109,12 @@ mkdir -p "$d"
 printf '# decl_dump v1 lean=X githash=Y roots=Fix\nFix.a\tdef\t01\t02\t-\n' > "$d/x.tsv"
 printf 'Fix.a\tdef\t01\t02\t-\n' > "$d/nohdr.tsv"
 printf '# decl_dump v1 lean=X githash=Y roots=Fix\n' > "$d/empty.tsv"
+printf '# decl_dump v1 lean=X githash=Y roots=Fix\nFix.a\topaque\t01\t02\t-\n' > "$d/kind.tsv"
 ctl drift.missing-file  2 'cannot read'           $D "$d/x.tsv" "$d/nope.tsv"
 ctl drift.no-header     2 'missing'               $D "$d/x.tsv" "$d/nohdr.tsv"
 ctl drift.empty-dump    2 'vacuous'               $D "$d/x.tsv" "$d/empty.tsv"
 ctl drift.usage         2 'usage'                 $D "$d/x.tsv"
+ctl drift.kind-only     1 '^CHANGED	Fix\.a	kind: def -> opaque$' $D "$d/x.tsv" "$d/kind.tsv"
 
 # ---------- decl_dump.lean on compiled fixtures ----------
 LEAN_CONTROLS="dump.base dump.no-match drift.identical drift.private-def drift.statement drift.axiom-grows \

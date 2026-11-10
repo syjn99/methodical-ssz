@@ -8,7 +8,7 @@ A claim is about one exact set of inputs. Record all of them before work starts 
 | --- | --- |
 | Reviewed base commit (full SHA) | the review that accepted it; `git rev-parse <sha>^{commit}` |
 | Target ELF sha256 | `link/out/build-ids.txt` or the project's `build-ids.txt` |
-| Generator commit (`sszgen/`, `ssz/`) | `git rev-parse HEAD:ssz`, `build-ids.txt` |
+| Generator commit (`sszgen/`, `ssz/`) | the commit recorded in `fv/kraken/TOOLS.md` and `build-ids.txt`. `git rev-parse HEAD:ssz` gives a tree id, not a commit; record it only as "`ssz/` tree id" |
 | Go version and build flags | `build-ids.txt`, `TOOLS.md` |
 | Kraken commit | `lean/lake-manifest.json` |
 | Lean toolchain | `lean/lean-toolchain` |
@@ -41,6 +41,8 @@ Steps:
 3. Run `decl_drift.py base.tsv head.tsv --allow allow.txt`.
 4. Every line is fixed or allowlisted. Allowlist format: `<full declaration name> <reason>`, one per line.
    An allowlist entry that matches no drift fails the check, so the list stays the exact set of intended changes.
+   The allowlist is by name only: an allowlisted name passes any change to it (kind, type, value, axioms, REMOVED).
+   The reviewer must read every ALLOWED line and check that the change is the one the reason describes.
 5. Give the reviewer the drift output, the allowlist and both SHAs.
 
 An axiom-set change is drift even when every axiom is on the allowed policy list (`propext`, `Classical.choice`, `Quot.sound`).
@@ -54,7 +56,8 @@ now uses `Classical.em`. `scripts/selftest.sh` does this on fixtures; repeat it 
 
 ### Limits (state them in the report)
 
-- `Expr.hash` is a structural hash; on the tested toolchain it has only 32 bits. A collision can hide a change. It ignores binder names.
+- `Expr.hash` is a structural hash; on the tested toolchain it has only 32 bits. A collision can hide a change. It ignores binder names
+  and binder kind (explicit, implicit, instance-implicit): `(n : Nat)` changed to `{n : Nat}` is not drift.
 - Equal hashes or equal printed Lean text are not a proof of definitional equivalence. A different hash does not say what changed.
 - Hashes are comparable only between dumps from the same Lean build. `decl_drift.py` refuses different `lean=`/`githash=` headers.
 - Theorem proofs are not hashed. A changed proof is visible only if its axiom set changes. That is intended: the statement is the claim.

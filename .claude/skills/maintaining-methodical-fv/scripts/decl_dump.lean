@@ -25,7 +25,7 @@ The first line is a header with the Lean version and git hash.
 
 Limits: `Expr.hash` is a structural hash; on the tested toolchain only 32 bits
 are used (the upper 8 hex digits are 0). It ignores binder names and
-is not a definitional-equivalence check. It is comparable only between dumps
+binder kind (explicit, implicit, instance-implicit), and it is not a definitional-equivalence check. It is comparable only between dumps
 made by the same Lean build. Exit 0 on success, 2 on a usage error or when no
 declaration matched.
 -/

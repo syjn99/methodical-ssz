@@ -39,7 +39,9 @@ Keep them in separate sections of every report. Never present one as another.
 
 1. Reproduce: a minimal input and an executable failure (or a proof that cannot close for a stated reason).
 2. Record the finding with a new ID.
-3. Get approval for the fix. Changes to the generator or the target binary need explicit user approval.
+3. Get approval for the fix. Agents do not modify `sszgen/` or `ssz/` (`fv/AGENTS.md`).
+   For a generator bug the agent reports the finding; the user makes or approves the generator change.
+   A change to the target binary also needs explicit user approval.
 4. Regenerate the target with `regen_check.sh`-style determinism, rebuild, and record the new pins (new ELF sha256).
 5. Recompile and re-prove. A proof about the old binary does not transfer to the changed binary automatically.
    Retargeting tables are PROPOSED, not available.
