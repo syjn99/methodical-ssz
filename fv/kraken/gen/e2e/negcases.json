@@ -185,5 +185,71 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
   "old": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4",
   "new": "  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4"
+ },
+ {
+  "id": "cpm-control",
+  "kind": "control",
+  "module": "E2e/CpMarshal.lean",
+  "theorem": "cp_e2e_marshal_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "cpm-len33",
+  "kind": "code",
+  "module": "E2e/CpMarshal.lean",
+  "theorem": "cp_e2e_marshal_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  cmpq $0x20,0x18(%rax)",
+  "new": "  cmpq $0x21,0x18(%rax)"
+ },
+ {
+  "id": "cpm-newlen16",
+  "kind": "code",
+  "module": "E2e/CpMarshal.lean",
+  "theorem": "cp_e2e_marshal_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  lea 0x8(%rcx),%rdx",
+  "new": "  lea 0x10(%rcx),%rdx"
+ },
+ {
+  "id": "cpm-epoch-field",
+  "kind": "code",
+  "module": "E2e/CpMarshal.lean",
+  "theorem": "cp_e2e_marshal_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov 0x8(%rax),%r8",
+  "new": "  mov 0x10(%rax),%r8"
+ },
+ {
+  "id": "cpm-memmove31",
+  "kind": "code",
+  "module": "E2e/CpMarshal.lean",
+  "theorem": "cp_e2e_marshal_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov $0x20,%ecx",
+  "new": "  mov $0x1f,%ecx"
+ },
+ {
+  "id": "cpm-jne-je",
+  "kind": "code",
+  "module": "E2e/CpMarshal.lean",
+  "theorem": "cp_e2e_marshal_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108",
+  "new": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108"
+ },
+ {
+  "id": "cpm-stmt-rdi1",
+  "kind": "stmt",
+  "module": "E2e/CpMarshal.lean",
+  "theorem": "cp_e2e_marshal_main",
+  "old": "st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0",
+  "new": "st.data.regs.rdi = 1 ∧ st.data.regs.rsi = 0"
  }
 ]

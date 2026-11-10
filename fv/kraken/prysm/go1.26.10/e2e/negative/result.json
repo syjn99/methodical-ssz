@@ -374,8 +374,141 @@
    "seconds": 2.1,
    "pass": true,
    "diff": "--- orig.S\n+++ mut.S\n@@ -17,7 +17,7 @@\n   nop\n   callq github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ\n   test %rax,%rax\n-  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4\n+  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4\n   movups %xmm15,0x40(%rsp)\n   je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_56\n   mov 0x8(%rax),%rax\n"
+  },
+  {
+   "id": "cpm-control",
+   "kind": "control",
+   "module": "E2e/CpMarshal.lean",
+   "theorem": "cp_e2e_marshal_main",
+   "range": [
+    60,
+    279
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "seconds": 4.5,
+   "pass": true,
+   "diff": ""
+  },
+  {
+   "id": "cpm-len33",
+   "kind": "code",
+   "module": "E2e/CpMarshal.lean",
+   "theorem": "cp_e2e_marshal_main",
+   "range": [
+    60,
+    279
+   ],
+   "error_lines": [
+    194
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpm-len33/mut.lean:194:16: error: unsolved goals",
+   "rc": 1,
+   "killed": false,
+   "seconds": 4.6,
+   "pass": true,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -35,7 +35,7 @@\n   mov 0x30(%rsp),%r8\n   mov %r8,(%rbx,%rcx,1)\n   mov 0x10(%rax),%r8\n-  cmpq $0x20,0x18(%rax)\n+  cmpq $0x21,0x18(%rax)\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108\n   lea 0x20(%rdx),%r9\n   cmp %r9,%rdi\n"
+  },
+  {
+   "id": "cpm-newlen16",
+   "kind": "code",
+   "module": "E2e/CpMarshal.lean",
+   "theorem": "cp_e2e_marshal_main",
+   "range": [
+    60,
+    279
+   ],
+   "error_lines": [
+    201,
+    229
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpm-newlen16/mut.lean:201:102: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "seconds": 3.1,
+   "pass": true,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -6,7 +6,7 @@\n   mov %rsp,%rbp\n   sub $0x68,%rsp\n   mov %rbx,0x80(%rsp)\n-  lea 0x8(%rcx),%rdx\n+  lea 0x10(%rcx),%rdx\n   mov 0x8(%rax),%r8\n   nop\n   nop\n"
+  },
+  {
+   "id": "cpm-epoch-field",
+   "kind": "code",
+   "module": "E2e/CpMarshal.lean",
+   "theorem": "cp_e2e_marshal_main",
+   "range": [
+    60,
+    279
+   ],
+   "error_lines": [
+    139,
+    279
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpm-epoch-field/mut.lean:139:37: error: ecancel: could not automatically solve goal (Eq (e8.At (rax.toBitVec + 16)) \u22c6 ?m.1168)",
+   "rc": 1,
+   "killed": false,
+   "seconds": 4.6,
+   "pass": true,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -7,7 +7,7 @@\n   sub $0x68,%rsp\n   mov %rbx,0x80(%rsp)\n   lea 0x8(%rcx),%rdx\n-  mov 0x8(%rax),%r8\n+  mov 0x10(%rax),%r8\n   nop\n   nop\n   nop\n"
+  },
+  {
+   "id": "cpm-memmove31",
+   "kind": "code",
+   "module": "E2e/CpMarshal.lean",
+   "theorem": "cp_e2e_marshal_main",
+   "range": [
+    60,
+    279
+   ],
+   "error_lines": [
+    231
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpm-memmove31/mut.lean:231:20: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "seconds": 4.7,
+   "pass": true,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -59,7 +59,7 @@\n   mov %rbx,0x60(%rsp)\n   lea (%rbx,%rdx,1),%rax\n   mov %r8,%rbx\n-  mov $0x20,%ecx\n+  mov $0x1f,%ecx\n   callq runtime.memmove\n   mov 0x60(%rsp),%rax\n   mov 0x50(%rsp),%rbx\n"
+  },
+  {
+   "id": "cpm-jne-je",
+   "kind": "code",
+   "module": "E2e/CpMarshal.lean",
+   "theorem": "cp_e2e_marshal_main",
+   "range": [
+    60,
+    279
+   ],
+   "error_lines": [
+    194
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpm-jne-je/mut.lean:194:16: error: unsolved goals",
+   "rc": 1,
+   "killed": false,
+   "seconds": 4.7,
+   "pass": true,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -36,7 +36,7 @@\n   mov %r8,(%rbx,%rcx,1)\n   mov 0x10(%rax),%r8\n   cmpq $0x20,0x18(%rax)\n-  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108\n+  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108\n   lea 0x20(%rdx),%r9\n   cmp %r9,%rdi\n   jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf\n"
+  },
+  {
+   "id": "cpm-stmt-rdi1",
+   "kind": "stmt",
+   "module": "E2e/CpMarshal.lean",
+   "theorem": "cp_e2e_marshal_main",
+   "range": [
+    58,
+    277
+   ],
+   "error_lines": [
+    277
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpm-stmt-rdi1/mut.lean:277:37: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "seconds": 4.6,
+   "pass": true,
+   "diff": "--- orig\n+++ mut\n@@ -25,7 +25,7 @@\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n         \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 \u2227 st.data.regs.rcx = s.regs.rdi\n-        \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n+        \u2227 st.data.regs.rdi = 1 \u2227 st.data.regs.rsi = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (t u scr : List UInt8), t.length = 8 \u2227 u.length = 16 \u2227 scr.length = S \u2227\n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n"
   }
  ],
- "pass": 20,
- "total": 20
+ "pass": 27,
+ "total": 27
 }
