@@ -413,6 +413,8 @@ python3 -I -B fv/kraken/gen/e2e/callgraph.py <objdump> prysm/go1.26.10/e2e/callg
 python3 -I -B fv/kraken/gen/e2e/e2elink.py filter <out> <objdump> <elf> <nm>
 mkdir -p <out>/norm && python3 -I -B fv/kraken/link/conv.py <out>/target.objdump <out>/p1bin-amd64.nm <out>/norm --norm
 python3 -I -B fv/kraken/gen/e2e/e2elink.py data <out> && python3 -I -B fv/kraken/link/check.py <out>
+# <nm> = p1bin-amd64.nm, sha256 88ee8b9a…40ac (e2e.json link_check_inputs; 커밋하지 않음, 감사 AU-17)
+GOROOT=$(go env GOROOT) go test -count=1 ./ssz/ ./sszgen/... ./fv/kraken/semtest/    # 검사점 gate 목록 (감사 AU-17)
 (cd fv/kraken/lean && lake build E2e.<모듈>)            # 모듈 하나씩: Epoch WitEp Spec CpAccept WitCpA CpReject WitCpR CpSpecK CpMarshal WitCpM Compose CpCompose WitCpC CpMarshalG WitCpG CpMarshalR WitCpMR CpSpecM WitCpS EpReject WitEpR GoVal CpWTail CpWTailG CpWHead CpWGrow CpWGrowAny CpWCover WitCpW WitCpWR CpWSharp CpWCoverF WitCpWF WitCpWRF GoValW
 python3 -I -B fv/kraken/gen/e2e/axioms.py run fv/kraken/gen/e2e/Axioms.lean prysm/go1.26.10/e2e/axioms.json   # lake build --no-build 먼저 (감사 AU-05)
 python3 -I -B fv/kraken/gen/e2e/axioms_gate.py run prysm/go1.26.10/e2e/axioms-gate.json <dump.tsv>   # E2e/E2eAd/E2eScal의 모든 선언 (감사 AU-10)

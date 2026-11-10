@@ -2,6 +2,18 @@
  "schema": "prysm-e2e.status/1",
  "elf": "c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e",
  "link_bundle": "96298a344d6f093c1aec60d6722936476276ae9d7914e77969207a2e4b7bed39",
+ "link_check_inputs": {
+  "note": "audit AU-17: the link check (e2elink.py filter, conv.py, check.py) reads the ELF and its nm symbol table as files; they are not committed (size). Their sha256 is recorded here.",
+  "elf": {
+   "name": "p1bin-amd64 (Go 1.26.10 ELF)",
+   "sha256": "c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e"
+  },
+  "nm": {
+   "name": "p1bin-amd64.nm",
+   "bytes": 2017324,
+   "sha256": "88ee8b9afe7d5265982e869fc33a2fe7b69acc38d52f4efd173326d1db4140ac"
+  }
+ },
  "theorems": [
   {
    "name": "E2e.ep_unmarshal_accept_main",
