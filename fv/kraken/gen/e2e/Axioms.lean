@@ -60,6 +60,7 @@ import E2e.WitCpRS
 #print axioms E2e.cp_layout
 #print axioms E2e.witCpA_recv_pre
 #print axioms E2e.witCpA_recv_post
+#print axioms E2e.cp_after_decode_goValue
 #print axioms E2e.witCpM_recv
 #print axioms E2e.witCpMR_recv
 #print axioms E2e.cpGoValue_rejects_bad

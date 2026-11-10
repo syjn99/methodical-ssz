@@ -33,13 +33,14 @@
 'E2e.WitEpR.epr_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.cp_layout' does not depend on any axioms
 'E2e.witCpA_recv_pre' does not depend on any axioms
-'E2e.witCpA_recv_post' does not depend on any axioms
+'E2e.witCpA_recv_post' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E2e.cp_after_decode_goValue' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.witCpM_recv' does not depend on any axioms
 'E2e.witCpMR_recv' does not depend on any axioms
 'E2e.cpGoValue_rejects_bad' does not depend on any axioms
 'E2e.cp_e2e_unmarshal_then_marshal' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.WitCpC.cp_compose_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
-'E2e.WitCpC.witCpC_recv' does not depend on any axioms
+'E2e.WitCpC.witCpC_recv' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.cp_e2e_marshal_grow_main' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.WitCpG.cpg_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.WitCpG.witCpG_recv' does not depend on any axioms

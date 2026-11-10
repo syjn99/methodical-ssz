@@ -111,8 +111,9 @@ example (z' : RegZmms) (f : StatusFlags) :=
 example (z' : RegZmms) (f : StatusFlags) :=
   cpg_runs (Int.toBytes 8 (2 ^ 64 - 1)) (List.replicate 32 0xff) (by decide) rfl z' f
 
-/-- Go-value element: the receiver of this witness (block offset 0x20a0, Root = (0x120e8, 32, 32)). -/
-theorem witCpG_recv : cpGoValue (z 8 ++ Int.toBytes 8 0x0123456789abcdef ++ w 0x120e8 ++ w 32 ++ w 32 ++ z 32)
+/-- Go-value element: the receiver of this witness, read from the witness block at offset 0x20a0
+(Root = (0x120e8, 32, 32); review e2e-r2 N4). -/
+theorem witCpG_recv : cpGoValue (recvAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)) 0x20a0)
     = true := by decide
 
 end E2e.WitCpG

@@ -12,7 +12,7 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
+   "go_value": "differential only (uint64 receiver; no GoVal theorem; epoch-len8 cases)",
    "neg_ids": [
     "ep-"
    ]
@@ -26,7 +26,7 @@
    "theorem": "done",
    "link": "done",
    "negative": "via ep_unmarshal_accept_main",
-   "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
+   "go_value": "differential only (uint64 receiver; no GoVal theorem)",
    "neg_ids": []
   },
   {
@@ -38,7 +38,7 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
+   "go_value": "before: witCpA_recv_pre (witness block); after: cp_after_decode_goValue on the conclusion fragments, every p ≠ 0 (MakesliceC does not state non-nil) + witCpA_recv_post; IR layout (not ELF abi.Type) + differential",
    "neg_ids": [
     "cpa-"
    ]
@@ -52,7 +52,7 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
+   "go_value": "differential only (receiver unchanged; no GoVal theorem)",
    "neg_ids": [
     "cpr-"
    ]
@@ -66,7 +66,7 @@
    "theorem": "done",
    "link": "n/a",
    "negative": "done",
-   "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
+   "go_value": "n/a (spec level) / differential",
    "neg_ids": [
     "wrs-"
    ]
@@ -80,7 +80,7 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
+   "go_value": "via cp_e2e_accept_main (witCpA_recv_pre/post)",
    "neg_ids": [
     "was-"
    ]
@@ -94,7 +94,7 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
+   "go_value": "witCpM_recv (witness block, offset 8); IR layout + differential",
    "neg_ids": [
     "cpm-"
    ]
@@ -108,7 +108,7 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
+   "go_value": "witCpM_recv (witness block) + differential",
    "neg_ids": [
     "cpc-"
    ]
@@ -122,7 +122,7 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
+   "go_value": "witCpMR_recv (witness blocks, len(Root) 31/33/0); IR layout + differential",
    "neg_ids": [
     "cpmr-"
    ]
@@ -136,7 +136,7 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "done for the witness receiver (WitCpG.witCpG_recv, IR layout) + differential (enc-grow-cap0, enc-grow-len30-cap36)",
+   "go_value": "witCpG_recv (witness block, offset 0x20a0); IR layout + differential (enc-grow-cap0, enc-grow-len30-cap36)",
    "neg_ids": [
     "cpg-"
    ]
@@ -179,7 +179,7 @@
    "theorem": "done",
    "link": "n/a",
    "negative": "done",
-   "go_value": "done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential",
+   "go_value": "this is the Go-value predicate (slice-header sanity only; IR layout, not ELF abi.Type)",
    "neg_ids": [
     "gv-"
    ]
@@ -193,7 +193,7 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "done for the witness receiver (WitCpC.witCpC_recv, IR layout) + differential roundtrip",
+   "go_value": "witCpC_recv: before from the witness block, after = cp_after_decode_goValue (every p ≠ 0) + differential roundtrip",
    "neg_ids": [
     "cpx-"
    ]
@@ -235,12 +235,12 @@
   "note": "review e2e-r1 S3: the link bundle hash covers lean/Fk/Code.lean and the Go 1.26.3 AXIOMS.txt (check.py unchanged); these are the E2e include files and the E2e axioms list"
  },
  "negative_suite": {
-  "run": "gate job 125 (full suite, per-case limit 900 s) re-classified by negative.py classify(); jobs 126-127 (per-case limit 300 s): review e2e-r2 N1 replacement mutants cpmr-stmt-noown, cpg-stmt-growle, cpg-oldcap; N2: the 4 composition code mutants that failed only by the constant renaming were removed; jobs 128-130: N3 address lemma ep_static_addr (epr-stmt-addr, epr-control-addr); harness class recursion_limit added (first epr-stmt-addr form failed by maximum recursion depth in job 128/129 and was replaced by a definitional-equality failure)",
-  "pass": 72,
-  "total": 72,
+  "run": "gate job 125 (full suite, per-case limit 900 s) re-classified by negative.py classify(); jobs 126-127 (per-case limit 300 s): review e2e-r2 N1 replacement mutants cpmr-stmt-noown, cpg-stmt-growle, cpg-oldcap; N2: the 4 composition code mutants that failed only by the constant renaming were removed; jobs 128-130: N3 address lemma ep_static_addr (epr-stmt-addr, epr-control-addr); harness class recursion_limit added (first epr-stmt-addr form failed by maximum recursion depth in job 128/129 and was replaced by a definitional-equality failure); job 133: N4 cp_after_decode_goValue (gv-stmt-after-nil, gv-control-after)",
+  "pass": 74,
+  "total": 74,
   "classes": {
-   "control_pass": 19,
-   "inside": 53
+   "control_pass": 20,
+   "inside": 54
   },
   "timeouts_wall": 0,
   "timeouts_heartbeat": 0,

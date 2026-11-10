@@ -146,11 +146,16 @@ example (z' : RegZmms) (f : StatusFlags) :=
 example (z' : RegZmms) (f : StatusFlags) :=
   cp_compose_runs (Int.toBytes 8 (2 ^ 64 - 1)) (List.replicate 32 0xff) (by decide) rfl z' f
 
-/-- Go-value element: the receiver of this witness (offset 0x5c of the block) is a zero
-`Checkpoint` before the decoder; after it, the encoder reads `Root` = (heap block 0x1000c, 32, 32)
-(the same bytes as `witCpA_recv_post`). Layout: `E2e.cpGoFields` (IR; trust note in `E2e.GoVal`). -/
-theorem witCpC_recv : cpGoValue (recvAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)) 0x5c) = true
-    ∧ cpGoValue (List.replicate 8 0 ++ Int.toBytes 8 0x0123456789abcdef ++ Int.toBytes 8 (0x1000c : BitVec 64).toInt
-      ++ Int.toBytes 8 32 ++ Int.toBytes 8 32 ++ List.replicate 32 0) = true := by decide
+/-- Go-value element: the receiver of this witness (offset 0x5c of the block) is a zero `Checkpoint`
+before the decoder; the receiver that the encoder reads is the decoder conclusion's fragments
+`cpAfterDecode` over it, a Go value for every `p ≠ 0` (review e2e-r2 N4). Layout: `E2e.cpGoFields`
+(IR; trust note in `E2e.GoVal`). -/
+theorem witCpC_recv (p : BitVec 64) (hp : p ≠ 0) :
+    cpGoValue (recvAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)) 0x5c) = true
+    ∧ cpGoValue (cpAfterDecode (recvAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)) 0x5c)
+      (Int.toBytes 8 0x0123456789abcdef) p) = true :=
+  have h : cpGoValue (recvAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)) 0x5c) = true := by
+    decide
+  ⟨h, cp_after_decode_goValue _ _ h (by decide) p hp⟩
 
 end E2e.WitCpC
