@@ -13,3 +13,7 @@
 'E2eAd.WitSl.sl_spec_here' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2eAd.WitCi.ci_accept_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2eAd.WitCi.ci_spec_here' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E2eAd.cp_uacc_holds' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E2eAd.cp_macc_holds' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E2eAd.WitCpSpecs.cpu_spec_here' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E2eAd.WitCpMS.cpm_spec_here' depends on axioms: [propext, Classical.choice, Quot.sound]

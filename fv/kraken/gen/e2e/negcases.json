@@ -779,5 +779,35 @@
   "theorem": "prysmAdDesc_deserialize_checker",
   "old": "deserialize adCheckerDesc bs = .ok v",
   "new": "deserialize prysmCpDesc bs = .ok v"
+ },
+ {
+  "id": "cps-control-u",
+  "kind": "control",
+  "module": "E2eAd/CpSpecs.lean",
+  "theorem": "cp_uacc_holds"
+ },
+ {
+  "id": "cps-stmt-u-rax",
+  "kind": "stmt",
+  "module": "E2eAd/CpSpecs.lean",
+  "theorem": "cp_uacc_holds",
+  "old": "(hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) : CpUAccC Heap S",
+  "new": "(hmm : MemmoveC S) : CpUAccC Heap S",
+  "why": "without the makeslice contract the decoder spec cannot be derived"
+ },
+ {
+  "id": "cps-control-m",
+  "kind": "control",
+  "module": "E2eAd/CpSpecs.lean",
+  "theorem": "cp_macc_holds"
+ },
+ {
+  "id": "cps-stmt-m-mm",
+  "kind": "stmt",
+  "module": "E2eAd/CpSpecs.lean",
+  "theorem": "cp_macc_holds",
+  "old": "(S : Nat) (hmm : MemmoveC S) : CpMAccC S",
+  "new": "(S : Nat) : CpMAccC S",
+  "why": "without the memmove contract the encoder spec cannot be derived"
  }
 ]
