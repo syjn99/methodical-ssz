@@ -154,6 +154,11 @@
    "Classical.choice",
    "Quot.sound"
   ],
+  "E2e.ep_static_addr": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
   "E2e.WitEpR.epr_runs": [
    "propext",
    "Classical.choice",
@@ -212,6 +217,6 @@
  },
  "missing": [],
  "nonstandard": {},
- "count": 49,
+ "count": 50,
  "verdict": "PASS"
 }

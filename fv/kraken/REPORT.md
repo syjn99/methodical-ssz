@@ -311,6 +311,7 @@ git diff --exit-code fv/kraken/AXIOMS.txt fv/kraken/AXIOMS-ALL.txt fv/kraken/lin
 3. x86-64 하드웨어에서 실행하지 않았다. Go 차분 검사는 같은 소스의 arm64 빌드다.
 4. 인코더 둘째 growslice 지점(지시 39–50)은 증명하지 않았다. 첫 지점 경로는 `cp_e2e_marshal_grow_main`(세션 2), 인코더 거부, Epoch 디코더 거부, 인코더 명세 정렬, 증인 있는 size는 INBOX 004에서 증명했다.
 
+Epoch 길이 거부의 기존 계약 형식 `StaticBox`는 `Fk.Data`(Go 1.26.3 이름공간)의 `staticuint64s`와 `staticuint64s_addr`를 읽는다. `E2e.ep_static_table`(바이트 2048개 같음)과 `E2e.ep_static_addr`(주소 같음, 둘 다 `runtime.staticuint64s` 레이블)가 이것을 Go 1.26.10 include에 잇는다. Go 1.26.3의 사실은 쓰지 않는다(리뷰 e2e-r2 N3, `RUNTIME-1.26.10.md` 2절).
 손 작성 `(*primitives.Epoch).UnmarshalSSZ`는 함수 명세 `EpUAccC`로 증명했다(`ep_uacc_holds`). 디코더 주 정리에는 Epoch에 대한 가설이 없다.
 `Epoch.MarshalSSZTo`는 인코더에 인라인된다(`-gcflags=-m=2`, `prysm/go1.26.10/e2e/CALLGRAPH.md`). 인라인된 몸체는 인코더 정리 안에서 증명했다.
 명세는 consensus-specs에서 손으로 쓴 `E2e.prysmCpDesc`다. Desc 검사기의 Desc와는 필드 이름만 다르다(`prysmCpDesc_checker`). EthLib의 `serialize`/`deserialize`는 컨테이너 필드 이름을 쓰지 않으므로 두 Desc의 직렬화와 역직렬화는 모든 값과 모든 바이트 배열에서 같다(`prysmCpDesc_serialize_checker`, `prysmCpDesc_deserialize_checker`, 리뷰 S1).
@@ -330,7 +331,7 @@ Go 1.26.3 증명은 옮기지 않았다. 모든 지시 색인, 오프셋, 레이
 | `E2e.cp_e2e_marshal_decoded_receiver` | encoder on a decoded-form receiver (not compose_hupd; review e2e-r1 M1) | done | WitCpM (decoded-form receiver) | done | done | 3/3 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
 | `E2e.cp_e2e_marshal_reject_main` | marshal_reject | done | done | done | done | 4/4 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
 | `E2e.cp_e2e_marshal_grow_main` | marshal (capacity too small: first growslice site; GrowsliceC esz 1, premise len + 40 ≤ nextSliceCap (len + 8) cap) | done | done (WitCpG: len 30, cap 36, rt_growslice + rt_memmove, 3 value instances) | done | done | 10/10 통과 | done for the witness receiver (WitCpG.witCpG_recv, IR layout) + differential (enc-grow-cap0, enc-grow-len30-cap36) |
-| `E2e.ep_unmarshal_reject_len_main` | callee reject (standalone) | done | done | done | done | 5/5 통과 | differential (epoch-len7/9) |
+| `E2e.ep_unmarshal_reject_len_main` | callee reject (standalone) | done | done | done | done | 7/7 통과 | differential (epoch-len7/9) |
 | `E2e.cp_e2e_marshal_spec_k + cp_e2e_size_main (+ size_spec)` | marshal against EthLib / size | done | done (WitCpS; spec_k via WitCpM) | done | done | 4/4 통과 | n/a (size) / via marshal |
 | `E2e.cp_layout / cpGoValue (Go-value element)` | go value | done | evaluated on WitCpA/WitCpM/WitCpMR receivers | done | n/a | 2/2 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
 | `E2e.cp_e2e_unmarshal_then_marshal` | compose_hupd / compose_witness (decoder entry → cp_e2e_accept_main → hupd → cp_e2e_marshal_main) | done | done (WitCpC: one Host with CpUnmarshal, EpUnmarshal, BumpAlloc1, RtCopy, CpMarshal; real middle memory by storeInt) | done | done | 7/7 통과 | done for the witness receiver (WitCpC.witCpC_recv, IR layout) + differential roundtrip |
@@ -341,9 +342,9 @@ Go 1.26.3 증명은 옮기지 않았다. 모든 지시 색인, 오프셋, 레이
 | phase0.ssz.go:1988 fmt.Errorf("Epoch: %w") (decoder) | E2e.cp_e2e_epoch_err_unreachable | done | 아니요 |
 | phase0.ssz.go:1964 fmt.Errorf("Epoch: %w") (encoder) | none needed: removed by the compiler (inlined Epoch.MarshalSSZTo cannot fail; no fmt.errorf call in the machine code, CALLGRAPH.md) | absent from the code | 아니요 |
 
-부정 시험 전체: 70/70 통과 (`negative/result.json`). Go 차분: 48건, 불일치 0건 (`differential.json`). 공리: 49개 이름, 판정 PASS (`axioms.json`).
+부정 시험 전체: 72/72 통과 (`negative/result.json`). Go 차분: 48건, 불일치 0건 (`differential.json`). 공리: 50개 이름, 판정 PASS (`axioms.json`).
 
-부정 시험 등급(리뷰 e2e-r2 N1): `negative.py`는 결과마다 `class`를 적는다. Lean의 "(deterministic) timeout" 오류는 `timeout_heartbeat`, 사례별 제한(300초) 초과는 `timeout_wall`이다. 두 등급은 통과가 아니다. 하트비트 시간 초과였던 문장 변이 2건은 명확하게 실패하는 변이로 바꿨다: `cpmr-stmt-noown`(전제에서 `dst[len..len+8]` 소유 삭제, C-1 저장 단계에서 실패), `cpg-stmt-growle`(`cap < len + 8`을 `≤`로), 그리고 코드 변이 `cpg-oldcap`(첫 지점 growslice oldCap 인수)을 더했다. 시도한 `cpg-stmt-noroot`는 300초 제한에 걸려서 넣지 않았다(gate 작업 126).
+부정 시험 등급(리뷰 e2e-r2 N1): `negative.py`는 결과마다 `class`를 적는다. Lean의 "(deterministic) timeout" 오류는 `timeout_heartbeat`, 사례별 제한(300초) 초과는 `timeout_wall`이다. Lean의 "maximum recursion depth" 오류는 `recursion_limit`이다. 세 자원 등급은 통과가 아니다. 하트비트 시간 초과였던 문장 변이 2건은 명확하게 실패하는 변이로 바꿨다: `cpmr-stmt-noown`(전제에서 `dst[len..len+8]` 소유 삭제, C-1 저장 단계에서 실패), `cpg-stmt-growle`(`cap < len + 8`을 `≤`로), 그리고 코드 변이 `cpg-oldcap`(첫 지점 growslice oldCap 인수)을 더했다. 시도한 `cpg-stmt-noroot`는 300초 제한에 걸려서 넣지 않았다(gate 작업 126).
 
 리뷰 e2e-r1 처리(세션 2): M1 수정(진짜 합성 `cp_e2e_unmarshal_then_marshal`), S1 증명(`E2e.SpecEq`), S2 문구 유지(`cp_e2e_epoch_err_unreachable`은 지시 18에서 rax = 0이면 지시 47에 닿는다는 국소 보조정리이고, rax = 0은 `ep_uacc_holds`가 준다; 둘을 잇는 단일 정리는 쓰지 않았다), S3 E2e include 파일과 `e2e/AXIOMS.txt`의 sha256을 `e2e.json` `e2e_include_sha256`에 기록, S4 재현 줄, S5 adjustframe 행, S6 증인 `WitCpAS`·`WitCpRS`, S7 사례별 900초 제한으로 전체 부정 시험을 실행(gate 작업 125: 73건; 리뷰 e2e-r2 N1에 따라 다시 분류하면 안 실패 53, 대조 18, Lean 하트비트 시간 초과 2: `cpmr-stmt-dst-unchanged` 482초, `cpg-stmt-e8off` 480초), S8 차분 확장(수신자 불변, 오류 정체성과 반대 오류 아님, Epoch 오류 문구, C-1 바이트를 호출자 배열에서 관찰), S9 참조 행 G-2, G-3.
 

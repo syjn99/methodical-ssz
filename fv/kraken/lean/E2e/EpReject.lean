@@ -17,8 +17,10 @@ array at rsp − 40 (two `movups %xmm15`, then `type:int`, `&8` (static box
 39–42 epilogue. Contracts: `ConvT64C Heap S` and the `FmtErrorfDDC` instance
 with the format `E2e.Data.e2eEpFmt` (40 bytes) and the type word
 `E2e.Data.e2eIntType_addr` (`type:int` of the Go 1.26.10 ELF); existing forms only.
-`StaticBox` uses the table `Fk.Data.staticuint64s`; `ep_static_table` shows that
-the Go 1.26.10 ELF's table (`e2eStaticuint64s`) has the same bytes.
+`StaticBox` uses the table `Fk.Data.staticuint64s` at `Fk.Data.staticuint64s_addr` (the existing
+contract form reads the Fk.Data namespace); `ep_static_table` shows that the Go 1.26.10 ELF's table
+(`e2eStaticuint64s`) has the same bytes and `ep_static_addr` that the two addresses are the same
+term (review e2e-r2 N3).
 Standalone obligation: from `Checkpoint.UnmarshalSSZ` this path is unreachable.
 -/
 
@@ -29,6 +31,8 @@ namespace E2e
 
 set_option maxRecDepth 100000 in
 theorem ep_static_table : E2e.Data.e2eStaticuint64s = Fk.Data.staticuint64s := by rfl
+-- The address that `Fk.StaticBox` reads is the Go 1.26.10 label `runtime.staticuint64s` (review e2e-r2 N3).
+theorem ep_static_addr : E2e.Data.e2eStaticuint64s_addr = Fk.Data.staticuint64s_addr := rfl
 theorem ep_eight_bytes : E2e.Data.e2eEight = Int.toBytes 8 (8 : BitVec 64).toInt := by decide
 theorem ep_fmt_len : E2e.Data.e2eEpFmt.length = 40 := by decide
 theorem epr_eq (x : BitVec 64) (h : x - 8#64 = 0#64) : x = 8 := by bv_omega

@@ -235,12 +235,12 @@
   "note": "review e2e-r1 S3: the link bundle hash covers lean/Fk/Code.lean and the Go 1.26.3 AXIOMS.txt (check.py unchanged); these are the E2e include files and the E2e axioms list"
  },
  "negative_suite": {
-  "run": "gate job 125 (full suite, per-case limit 900 s) re-classified by negative.py classify(); jobs 126-127 (per-case limit 300 s): review e2e-r2 N1 replacement mutants cpmr-stmt-noown, cpg-stmt-growle, cpg-oldcap; N2: the 4 composition code mutants that failed only by the constant renaming were removed",
-  "pass": 70,
-  "total": 70,
+  "run": "gate job 125 (full suite, per-case limit 900 s) re-classified by negative.py classify(); jobs 126-127 (per-case limit 300 s): review e2e-r2 N1 replacement mutants cpmr-stmt-noown, cpg-stmt-growle, cpg-oldcap; N2: the 4 composition code mutants that failed only by the constant renaming were removed; jobs 128-130: N3 address lemma ep_static_addr (epr-stmt-addr, epr-control-addr); harness class recursion_limit added (first epr-stmt-addr form failed by maximum recursion depth in job 128/129 and was replaced by a definitional-equality failure)",
+  "pass": 72,
+  "total": 72,
   "classes": {
-   "control_pass": 18,
-   "inside": 52
+   "control_pass": 19,
+   "inside": 53
   },
   "timeouts_wall": 0,
   "timeouts_heartbeat": 0,

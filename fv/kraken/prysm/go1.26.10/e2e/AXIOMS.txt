@@ -29,6 +29,7 @@
 'E2e.WitCpS.cps_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.ep_unmarshal_reject_len_main' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.ep_static_table' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E2e.ep_static_addr' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.WitEpR.epr_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.cp_layout' does not depend on any axioms
 'E2e.witCpA_recv_pre' does not depend on any axioms

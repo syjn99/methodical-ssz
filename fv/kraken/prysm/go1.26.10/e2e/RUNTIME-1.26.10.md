@@ -40,6 +40,8 @@ The change is in `moveSliceNoCap`; `growslice` and `nextslicecap` are byte-ident
 | `FmtErrorfDDC` | `fs = E2e.Data.e2eEpFmt` (40 bytes), `tw = E2e.Data.e2eIntType_addr` (`type:int`, `type__+387520`) | no (same form, new format and type word) | `rt_errorf_dd` |
 | `FmtErrorfWC` | `fs = E2e.Data.e2eCpFmtW` ("Epoch: %w") | no | `rt_errorf_w` (only the unreachable Checkpoint path; no theorem uses it) |
 
+`StaticBox` (the existing form in `Fk/Contracts.lean`, used by `ep_unmarshal_reject_len_main` and its witness `WitEpR`) reads the table `Fk.Data.staticuint64s` at `Fk.Data.staticuint64s_addr`, which are names in the Fk.Data (Go 1.26.3) namespace. Two kernel-checked lemmas tie them to the Go 1.26.10 include: `E2e.ep_static_table` (`e2eStaticuint64s = Fk.Data.staticuint64s`, the 2048 bytes; link check (f) compares `e2eStaticuint64s.data` with the Go 1.26.10 ELF) and `E2e.ep_static_addr` (`e2eStaticuint64s_addr = Fk.Data.staticuint64s_addr`; both are `(label "runtime.staticuint64s").toBitVec`). No Go 1.26.3 fact is used: the bytes and the address are those of the new ELF (review e2e-r2 N3).
+
 ## 3. What this does not show
 
 No Go 1.26.3 refinement proof exists (CONTRACTS.md §3: the Go machine code of the runtime is not proved to satisfy any contract), and none is transferred.

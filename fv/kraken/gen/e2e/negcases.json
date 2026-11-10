@@ -390,6 +390,21 @@
   "new": "st.data.regs.rax = 0"
  },
  {
+  "id": "epr-stmt-addr",
+  "kind": "stmt",
+  "module": "E2e/EpReject.lean",
+  "theorem": "ep_static_addr",
+  "old": "E2e.Data.e2eStaticuint64s_addr = Fk.Data.staticuint64s_addr",
+  "new": "E2e.Data.e2eStaticuint64s_addr = Fk.Data.staticuint64s_addr + 8",
+  "why": "review e2e-r2 N3: the address lemma must name the staticuint64s label"
+ },
+ {
+  "id": "epr-control-addr",
+  "kind": "control",
+  "module": "E2e/EpReject.lean",
+  "theorem": "ep_static_addr"
+ },
+ {
   "id": "gv-control",
   "kind": "control",
   "module": "E2e/GoVal.lean",

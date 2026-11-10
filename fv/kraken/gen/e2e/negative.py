@@ -18,7 +18,8 @@ under the memory cap from fv/kraken/lean. A mutant passes the suite when Lean re
 every error line lies inside the theorem's line range and no error is a Lean heartbeat timeout;
 a control when Lean reports no error. Each result has a "class": control_pass, inside, outside,
 no_error, killed, timeout_wall (CASE_TIMEOUT expired) or timeout_heartbeat (an error line is Lean's
-"(deterministic) timeout"; review e2e-r2 N1). The two timeout classes are never a pass.
+"(deterministic) timeout"; review e2e-r2 N1) or recursion_limit (an error line is "maximum recursion
+depth has been reached"). These three resource classes are never a pass.
 Old results whose id is not in <cases.json> are dropped from <result.json>.
 Writes <result.json> and, per case, <work-dir>/<id>/{mut.lean, mut.S?, diff, log}. Python 3 stdlib only.
 """
@@ -38,6 +39,7 @@ MEMCAP = KR / "gen" / "tools" / "memcap.py"
 CAP = str(6 * 2 ** 30)
 CASE_TIMEOUT = 300  # seconds per case (review e2e-r1 S7; INBOX 007: 300 s)
 HEARTBEAT = "(deterministic) timeout"
+RECDEPTH = "maximum recursion depth has been reached"
 TOP = re.compile(r"^((theorem|def|end|example|set_option|abbrev|structure|instance|namespace|section|open)\b|/--|/-!)")
 
 
@@ -112,9 +114,10 @@ def run_case(c, work):
     first = next((l for l in log.splitlines() if ": error" in l), None)
     killed = "killed=True" in log
     hb = any(HEARTBEAT in l for l in log.splitlines() if ": error" in l)
+    rd = any(RECDEPTH in l for l in log.splitlines() if ": error" in l)
     r = {"id": c["id"], "kind": c["kind"], "module": c["module"], "theorem": c["theorem"],
          "range": [lo, hi], "error_lines": errs, "first_error": first, "rc": rc,
-         "killed": killed, "timeout": timed_out, "heartbeat_timeout": hb,
+         "killed": killed, "timeout": timed_out, "heartbeat_timeout": hb, "recursion_limit": rd,
          "seconds": round(time.time() - t0, 1), "diff": diff}
     return classify(r)
 
@@ -124,6 +127,8 @@ def classify(r):
     errs, lo, hi = r["error_lines"], r["range"][0], r["range"][1]
     hb = r.get("heartbeat_timeout", HEARTBEAT in (r.get("first_error") or ""))
     r["heartbeat_timeout"] = hb
+    rd = r.get("recursion_limit", RECDEPTH in (r.get("first_error") or ""))
+    r["recursion_limit"] = rd
     if r["timeout"]:
         k = "timeout_wall"
     elif r["killed"]:
@@ -132,6 +137,8 @@ def classify(r):
         k = "control_pass" if r["rc"] == 0 and not errs else "control_fail"
     elif hb:
         k = "timeout_heartbeat"
+    elif rd:
+        k = "recursion_limit"
     elif not errs:
         k = "no_error"
     else:
@@ -174,6 +181,7 @@ def selftest():
           ("wall", dict(error_lines=[], first_error=None, rc=None, timeout=True), "timeout_wall"),
           ("out", dict(error_lines=[12], first_error="x:12:1: error: e"), "outside"),
           ("none", dict(error_lines=[], first_error=None, rc=0), "no_error"),
+          ("rd", dict(error_lines=[5], first_error="x:5:0: error: maximum recursion depth has been reached"), "recursion_limit"),
           ("ctl", dict(kind="control", error_lines=[], first_error=None, rc=0), "control_pass")]
     bad = []
     for name, f, want in fx:

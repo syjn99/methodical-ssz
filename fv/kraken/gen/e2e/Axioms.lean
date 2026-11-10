@@ -55,6 +55,7 @@ import E2e.WitCpRS
 #print axioms E2e.WitCpS.cps_runs
 #print axioms E2e.ep_unmarshal_reject_len_main
 #print axioms E2e.ep_static_table
+#print axioms E2e.ep_static_addr
 #print axioms E2e.WitEpR.epr_runs
 #print axioms E2e.cp_layout
 #print axioms E2e.witCpA_recv_pre
