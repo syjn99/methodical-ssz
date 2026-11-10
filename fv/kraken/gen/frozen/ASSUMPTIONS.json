@@ -2,15 +2,16 @@
  "schema": "fvphase1c.assumptions/1",
  "status": "frozen at the commit that adds this file (P2). Change only by a separate commit with the reason in the run OUTBOX. The generator never writes this file.",
  "rule": "A generated theorem may use only these premise classes. A premise outside this list is a new trust assumption: stop and report.",
- "revision": "2: review phase1c-r1 S2 (Go 1.26.10 re-check condition, model per instance, API version). Revision 1 = 0532cbd",
+ "revision": "3: prysm-e2e E1.4 (run fve2e-20261110T010000Z-2dd40dab, OUTBOX 001): FmtErrorfDDC listed (existing form of Fk/Contracts.lean since fix3 X5); Go 1.26.10 re-read recorded for the prysm/go1.26.10/e2e instances; primitives.Epoch.UnmarshalSSZ present as a function spec. Revision 2 = review phase1c-r1 S2, revision 1 = 0532cbd",
  "classes": [
   {
    "id": "callee-contract",
-   "what": "runtime callee as a hypothesis in Kraken form (CONTRACTS.md section 2): MakesliceC, MemmoveC, GrowsliceC, NewobjectC, ConvT64C, FmtErrorfNilC, FmtErrorfWC, FmtErrorfDWC, ValidateBitlistC, ValidateBitlistErrC",
+   "what": "runtime callee as a hypothesis in Kraken form (CONTRACTS.md section 2): MakesliceC, MemmoveC, GrowsliceC, NewobjectC, ConvT64C, FmtErrorfNilC, FmtErrorfWC, FmtErrorfDWC, FmtErrorfDDC, ValidateBitlistC, ValidateBitlistErrC",
    "conditions": "quantified over all states, return addresses and frames; argument conditions, budgets, scratch S and spill as in CONTRACTS.md; joint satisfiability (joint_models)",
    "go_version": "CONTRACTS.md reads every contract against Go 1.26.3 (ABIInternal, nextslicecap, fmt allocation, budgets). In the Go 1.26.10 namespace (fv/kraken/prysm/go1.26.10) each contract is an UNCONFIRMED ASSUMPTION until it is re-read against the Go 1.26.10 runtime source and the re-reading is recorded; until then a theorem that uses it states that",
    "model_per_instance": "a model and a witness are needed per contract instance (each element size esz, object size sz, fmt format string and argument types, type descriptor), as in the hand case (bump_newobject16/24/32). An instance without a model is classed 'missing contract'",
-   "new_contract": "a new runtime callee (for example runtime.moveSliceNoCapNoScan, a new fmt format shape) needs its own entry, model and witness; it is a list change"
+   "new_contract": "a new runtime callee (for example runtime.moveSliceNoCapNoScan, a new fmt format shape) needs its own entry, model and witness; it is a list change",
+   "go_1_26_10_reread": "prysm/go1.26.10/e2e/RUNTIME-1.26.10.md (gen/e2e/runtime_diff.py, runtime-diff.json): the sources behind MakesliceC, GrowsliceC, MemmoveC, NewobjectC, ConvT64C, FmtErrorfWC/DDC, writeBarrier, morestack and the ABI are unchanged from Go 1.26.3. For the instances listed there the condition 'unconfirmed until re-read' is met; the contracts stay conditional (trusted) assumptions: no refinement proof exists"
   },
   {
    "id": "function-spec",
@@ -20,7 +21,7 @@
   {
    "id": "hand-written-callee",
    "what": "a hand-written Go method called by generated code (Prysm consensus-types/primitives SSZ methods)",
-   "conditions": "allowed only as a function spec proved from its own machine code, or as a named contract listed here with a model; not yet present; adding one is a list change"
+   "conditions": "allowed only as a function spec proved from its own machine code, or as a named contract listed here with a model; present: (*primitives.Epoch).UnmarshalSSZ accept path as the function spec E2e.EpUAccC, proved by E2e.ep_uacc_holds from the Go 1.26.10 machine code (prysm-e2e E2); adding another is a list change"
   },
   {
    "id": "frame",
