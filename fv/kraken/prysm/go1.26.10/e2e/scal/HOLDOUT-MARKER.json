@@ -15,5 +15,16 @@
   "v1alpha1.Checkpoint",
   "v1alpha1.AttestationData (decoder)"
  ],
- "exposure_note_session7": "Audit AU-09 (C-03, C-04), recorded before any hold-out opening: (1) the P1 development instances are identical modulo labels, so a ValidatorIndex success predicts little; (2) the generator has no encode mode; (3) BeaconBlockHeader and Eth1Data SizeSSZ code, their IR entries and generated Go were already in the repository and proved in phase1c; (4) session 1 printed one phase1c code-constant line that names a BeaconBlockHeader symbol (no code body). Any hold-out result is reported with these limits. The hold-out choice is a pending user decision (default: keep H1 with restricted claims)."
+ "exposure_note_session7": "Audit AU-09 (C-03, C-04), recorded before any hold-out opening: (1) the P1 development instances are identical modulo labels, so a ValidatorIndex success predicts little; (2) the generator has no encode mode; (3) BeaconBlockHeader and Eth1Data SizeSSZ code, their IR entries and generated Go were already in the repository and proved in phase1c; (4) session 1 printed one phase1c code-constant line that names a BeaconBlockHeader symbol (no code body). Any hold-out result is reported with these limits.",
+ "user_decisions": {
+  "source": "user decisions on T-7, AU-01, AU-09 (approved recommendations), relayed to the worker; recorded here before any hold-out opening (review fix-r1 S5)",
+  "H1": "primitives.ValidatorIndex + v1alpha1.BeaconBlockHeader. Kept with limited claims: SizeSSZ is excluded from the hold-out claim, and the exposure above (AU-09) is reported next to any result.",
+  "H2": "v1alpha1.Eth1Data, limited to UnmarshalSSZ and MarshalSSZTo (no SizeSSZ, no other method).",
+  "evaluation": "Done by a separate evaluation session, not by a builder session. Builders and relays do not inspect hold-out inputs before that. scal/HOLDOUT-OPENED is committed before any opening; evaluation is kept apart from development; every adaptation is recorded in scal/CONTAMINATION.md.",
+  "claims": "One out-of-sample case per type. No generator-superiority claim. No causal speed-up claim from types of unequal size. A timeout of a hold-out negative or build is reported as a timeout, not as a pass or a rejection.",
+  "limits_to_state": "The generator has no encode mode. The P1 development instances are identical modulo labels. The encode template is net-negative in build time (P2EncCp, AU-07 open).",
+  "T-7": "Deferred: GrowsliceC unchanged (no lower-bound or equality form, no Fk/* change, no generator or ELF change). The residual (3C) path stays unproved / differential-only. Never claim 'Checkpoint encoder complete'.",
+  "AU-01": "Gate unchanged (serialization and 6 GiB cap kept); measure first; >= 2 s pause between a worker's consecutive gated jobs.",
+  "state": "NOT OPENED: scal/HOLDOUT-OPENED does not exist; no hold-out .S, objdump section, IR entry, Go source or generated code was opened by the worker."
+ }
 }
