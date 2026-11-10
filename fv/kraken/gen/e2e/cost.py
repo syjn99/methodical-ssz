@@ -8,6 +8,8 @@ Usage: cost.py <records.jsonl> <logs-dir> <COST.json>
   Kind `probe`: the module from PROBE below. Kind `neg`: negative-suite job. Others: `other`.
 - Gate seconds = end_mono - start_mono of the exit record. Peak = max `peak_process_rss` over the
   MEMCAP lines of the log (bytes). Memcap kill = a MEMCAP line with `killed=True` or exit 125.
+- Jobs that build several modules print "== <module>" before each: each segment counts as a run of
+  that module (failed if lake prints "error: build failed"; peak from its MEMCAP line); the gate time stays with the job.
 - Theorem rows use THM (module -> theorems proved in it); the cost of a module is shared by its
   theorems (not divided). Python 3 stdlib only.
 """
@@ -36,6 +38,10 @@ THM = {
     "E2e.SpecEq": ["prysmCpDesc_serialize_checker", "prysmCpDesc_deserialize_checker"],
     "E2e.Spec": ["pcp_spec_accepts_iff", "pcp_serialize", "pcp_roundtrip"],
     "E2e.GoVal": ["cp_layout", "cp_after_decode_goValue"],
+    "E2eAd.Spec": ["prysmAdDesc_serialize_checker", "prysmAdDesc_deserialize_checker", "pad_spec_accepts_iff",
+                   "pad_roundtrip"],
+    "E2eAd.Prims": ["sl_unmarshal_accept_main", "sl_uacc_holds", "ci_unmarshal_accept_main", "ci_uacc_holds"],
+    "E2eAd.CpSpecs": ["cp_uacc_holds (CpUAccC)", "cp_macc_holds (CpMAccC)"],
 }
 NAME = re.compile(r"^(\d+)-([A-Za-z0-9]+)(?:-(.*))?$")
 MEM = re.compile(r"peak_process_rss=(\d+)")
@@ -43,7 +49,7 @@ MEM = re.compile(r"peak_process_rss=(\d+)")
 
 def main(records, logs, out):
     logs = pathlib.Path(logs).resolve()
-    jobs = []
+    jobs, multi = [], []
     for line in open(records):
         r = json.loads(line)
         if r.get("stream") != "prysm-e2e" or r.get("event") != "exit":
@@ -58,7 +64,17 @@ def main(records, logs, out):
         text = lp.read_text(errors="replace")
         peaks = [int(x) for x in MEM.findall(text)]
         killed = "killed=True" in text or r["exit_code"] == 125
-        if kind == "lake" and target.startswith("E2e."):
+        segs = re.split(r"^== (E2e\S*)\n", text, flags=re.M)
+        for i in range(1, len(segs) - 1, 2):  # multi-module jobs: "== <module>" markers of the job script
+            seg = segs[i + 1]
+            end = min([seg.find(t) + len(t) for t in ("Build completed successfully", "error: build failed")
+                       if t in seg] or [len(seg)])
+            seg = seg[:seg.find("\n", end) + 1 or len(seg)]  # this module's lake output and its MEMCAP line
+            mm = MEM.search(segs[i + 1])  # memcap prints its line right after this module's lake run
+            pk = [int(mm[1])] if mm else []
+            multi.append({"job": lp.stem, "module": segs[i], "failed": "error: build failed" in seg,
+                          "peak_rss": max(pk) if pk else None})
+        if kind == "lake" and (target.startswith("E2e.") or target.startswith("E2eAd.")):
             cls, mod = "build", target
         elif kind == "probe":
             cls, mod = "probe", PROBE.get(target)
@@ -84,6 +100,13 @@ def main(records, logs, out):
         d["peak_rss_bytes"] = max(d["peak_rss_bytes"], j["peak_rss"] or 0)
         d["memcap_kills"] += j["memcap_kill"]
         d["jobs"].append(j["job"])
+    for m in multi:  # module runs inside multi-module jobs: counted as runs, gate time stays with the job
+        d = per_mod.setdefault(m["module"], {"runs": 0, "failed_runs": 0, "probes": 0, "gate_s": 0.0,
+                                             "peak_rss_bytes": 0, "memcap_kills": 0, "jobs": []})
+        d["runs"] += 1
+        d["failed_runs"] += m["failed"]
+        d["peak_rss_bytes"] = max(d["peak_rss_bytes"], m["peak_rss"] or 0)
+        d.setdefault("in_multi_jobs", []).append(m["job"])
     for d in per_mod.values():
         d["peak_rss_gib"] = round(d["peak_rss_bytes"] / 2 ** 30, 2)
     per_thm = {}
