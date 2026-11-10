@@ -1,0 +1,49 @@
+{
+ "header": "# decl_dump v1 lean=4.36.0-nightly-2026-09-21 githash=ca39d2bc730f0382e4897ce314b93a4f168ff15e roots=E2e,E2eAd,E2eScal",
+ "allowed": [
+  "Classical.choice",
+  "Quot.sound",
+  "propext"
+ ],
+ "declarations": 2705,
+ "kinds": {
+  "theorem": 2282,
+  "def": 409,
+  "inductive": 4,
+  "ctor": 6,
+  "recursor": 4
+ },
+ "axiom_sets": {
+  "propext": 206,
+  "-": 904,
+  "Classical.choice,Quot.sound,propext": 535,
+  "Quot.sound,propext": 1060
+ },
+ "theorems": 2282,
+ "hand_list_names": 129,
+ "hand_list_missing": [],
+ "nonstandard": {},
+ "sorryAx": [],
+ "verdict": "PASS",
+ "modules": 76,
+ "precheck": {
+  "argv": "lake build --no-build <modules>",
+  "rc": 0,
+  "failures": []
+ },
+ "dump": {
+  "rc": 0,
+  "stderr_tail": ""
+ },
+ "job": "gate job 254",
+ "dump_sha256": "4e35a21322f05dfba9ef41379b89d328caf29cb1ca0b06a3cd7facd48fa23142",
+ "negative_control": {
+  "job": "gate job 256",
+  "what": "scratch module E2e.SorryCtl (not committed) with theorem E2e.sorry_ctl' : (1 : Nat) = 2 := sorry",
+  "verdict": "FAIL",
+  "rc": 1,
+  "sorryAx": [
+   "E2e.sorry_ctl'"
+  ]
+ }
+}

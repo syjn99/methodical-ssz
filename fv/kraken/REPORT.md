@@ -383,6 +383,7 @@ AttestationData 인코더(A4–A6)는 시작하지 않았다.
 | AttestationData decoder fmt.Errorf("Source: %w") | E2eAd.ad_e2e_source_err_unreachable | done | 아니요 |
 | AttestationData decoder fmt.Errorf("Target: %w") | E2eAd.ad_e2e_target_err_unreachable | done | 아니요 |
 
+공리 전체 검사(감사 AU-10): `gen/e2e/axioms_gate.py`가 E2e, E2eAd, E2eScal의 모듈 76개를 프로그램으로 나열한다. 선언 2705개(정리 2282개)의 공리 집합이 모두 표준이고 `sorryAx`는 0개다(gate 작업 254, `axioms-gate.json`). 손 목록 129개 이름은 "있어야 함" 검사로 남는다. 빠진 이름은 0개다. 부정 대조: `sorry`를 쓰는 임시 정리 `E2e.sorry_ctl'`을 더하면 FAIL이다(작업 256).
 부정 시험 전체: 154/154 통과 (`negative/result.json`, 감사 AU-04 분류기). 3건은 세션 7에 형 약화 변이로 바꿔 다시 실행했다. Go 차분: 59건, 불일치 0건 (`differential.json`). 공리: 79개 이름, 판정 PASS (`axioms.json`).
 
 비용 기록(PROOF-PLAN §4): `prysm/go1.26.10/e2e/COST.json`은 `gen/e2e/cost.py`가 gate 기록(`records.jsonl`)과 작업 로그에서 만든다. 모듈과 정리마다 gate 안 벽시계 초, 실행 수, 실패한 실행 수, 프로세스 최대 RSS, memcap 종료 수다. gate 밖의 시간(생각, 편집)은 들어 있지 않다.
@@ -412,6 +413,7 @@ mkdir -p <out>/norm && python3 -I -B fv/kraken/link/conv.py <out>/target.objdump
 python3 -I -B fv/kraken/gen/e2e/e2elink.py data <out> && python3 -I -B fv/kraken/link/check.py <out>
 (cd fv/kraken/lean && lake build E2e.<모듈>)            # 모듈 하나씩: Epoch WitEp Spec CpAccept WitCpA CpReject WitCpR CpSpecK CpMarshal WitCpM Compose CpCompose WitCpC CpMarshalG WitCpG CpMarshalR WitCpMR CpSpecM WitCpS EpReject WitEpR GoVal CpWTail CpWTailG CpWHead CpWGrow CpWGrowAny CpWCover WitCpW WitCpWR CpWSharp CpWCoverF WitCpWF WitCpWRF GoValW
 python3 -I -B fv/kraken/gen/e2e/axioms.py run fv/kraken/gen/e2e/Axioms.lean prysm/go1.26.10/e2e/axioms.json   # lake build --no-build 먼저 (감사 AU-05)
+python3 -I -B fv/kraken/gen/e2e/axioms_gate.py run prysm/go1.26.10/e2e/axioms-gate.json <dump.tsv>   # E2e/E2eAd/E2eScal의 모든 선언 (감사 AU-10)
 python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/e2e/negcases.json <work> prysm/go1.26.10/e2e/negative/result.json
 python3 -I -B fv/kraken/gen/e2e/differential.py cases <c.json>; go run ./fve2e/cpcheck <c.json> > <o.json>   # Prysm 임시 트리, Go 1.26.10
 python3 -I -B fv/kraken/gen/e2e/differential.py check <c.json> <o.json> prysm/go1.26.10/e2e/differential.json
