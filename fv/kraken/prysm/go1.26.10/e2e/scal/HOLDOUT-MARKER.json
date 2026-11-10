@@ -1,0 +1,8 @@
+{
+ "schema": 1,
+ "stage": "S1-S2 (INBOX 011, session 6)",
+ "created_utc": "2026-11-10T11:43:34Z",
+ "holdout": ["primitives.ValidatorIndex.UnmarshalSSZ", "v1alpha1.BeaconBlockHeader UnmarshalSSZ + MarshalSSZTo", "v1alpha1.Eth1Data"],
+ "statement": "As of created_utc the worker of session 6 has not opened the .S, objdump section, IR entry or Go source of the hold-out types; S1/S2 use only the development set (Epoch, Slot, CommitteeIndex, Checkpoint, AttestationData decoder). The generator and lemmas are developed without hold-out inputs. Any later opening is recorded by a new marker at S3 start.",
+ "dev_set": ["primitives.Epoch", "primitives.Slot", "primitives.CommitteeIndex", "v1alpha1.Checkpoint", "v1alpha1.AttestationData (decoder)"]
+}
