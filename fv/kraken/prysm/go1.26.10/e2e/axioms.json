@@ -351,10 +351,13 @@
   "E2e.witCpM_recv": [],
   "E2e.witCpMR_recv": [],
   "E2e.cpGoValue_rejects_bad": [],
-  "E2e.WitCpG.witCpG_recv": []
+  "E2e.WitCpG.witCpG_recv": [],
+  "E2e.witCpW_recv": [],
+  "E2e.witCpWR_recv": [],
+  "E2e.witCpWR_recv_bad": []
  },
  "missing": [],
  "nonstandard": {},
- "count": 76,
+ "count": 79,
  "verdict": "PASS"
 }

@@ -1362,5 +1362,29 @@
   "old": "⋆ Eq (pre.At nb) ⋆ Eq (e8.At (nb + s.regs.rcx.toBitVec))",
   "new": "⋆ Eq (pre.At nb) ⋆ Eq (e8.At (nb + s.regs.rcx.toBitVec + 1))",
   "why": "cap < len + 8: the epoch is in the new block at nb + len only"
+ },
+ {
+  "id": "gv-w-control",
+  "kind": "control",
+  "module": "E2e/GoValW.lean",
+  "theorem": "witCpWR_recv"
+ },
+ {
+  "id": "gv-w-stmt-rl49",
+  "kind": "stmt",
+  "module": "E2e/GoValW.lean",
+  "theorem": "witCpWR_recv",
+  "old": "cpGoValue (recvAt (WitCpWR.block (Int.toBytes 8 7) 48 []) 9032) = true",
+  "new": "cpGoValue (recvAt (WitCpWR.block (Int.toBytes 8 7) 49 []) 9032) = true",
+  "why": "len(Root) 49 > cap 48 is not a Go value"
+ },
+ {
+  "id": "gv-w-stmt-root",
+  "kind": "stmt",
+  "module": "E2e/GoValW.lean",
+  "theorem": "witCpW_recv",
+  "old": "++ Int.toBytes 8 0x12380 ++ Int.toBytes 8 32 ++ Int.toBytes 8 32",
+  "new": "++ Int.toBytes 8 0x12380 ++ Int.toBytes 8 33 ++ Int.toBytes 8 32",
+  "why": "the cover witness receiver has len(Root) = 32"
  }
 ]

@@ -74,3 +74,6 @@
 'E2e.WitCpWF.covf_runs_nil' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.WitCpWRF.rejf_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.WitCpWRF.rejf_runs_nil' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E2e.witCpW_recv' does not depend on any axioms
+'E2e.witCpWR_recv' does not depend on any axioms
+'E2e.witCpWR_recv_bad' does not depend on any axioms

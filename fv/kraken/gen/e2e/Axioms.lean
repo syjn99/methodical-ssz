@@ -31,6 +31,7 @@ import E2e.CpWSharp
 import E2e.CpWCoverF
 import E2e.WitCpWF
 import E2e.WitCpWRF
+import E2e.GoValW
 #print axioms E2e.ep_unmarshal_accept_main
 #print axioms E2e.ep_uacc_holds
 #print axioms E2e.WitEp.ep_accept_runs
@@ -107,3 +108,6 @@ import E2e.WitCpWRF
 #print axioms E2e.WitCpWF.covf_runs_nil
 #print axioms E2e.WitCpWRF.rejf_runs
 #print axioms E2e.WitCpWRF.rejf_runs_nil
+#print axioms E2e.witCpW_recv
+#print axioms E2e.witCpWR_recv
+#print axioms E2e.witCpWR_recv_bad

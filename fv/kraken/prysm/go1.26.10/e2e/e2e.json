@@ -175,13 +175,14 @@
    "kind": "go value",
    "function": "receiver layout",
    "statement": "done",
-   "witness": "evaluated on WitCpA/WitCpM/WitCpMR receivers",
+   "witness": "evaluated on WitCpA/WitCpM/WitCpMR receivers; WitCpW/WitCpWR receivers (GoValW)",
    "theorem": "done",
    "link": "n/a",
    "negative": "done",
    "go_value": "this is the Go-value predicate (slice-header sanity only; IR layout, not ELF abi.Type)",
    "neg_ids": [
-    "gv-"
+    "gv-",
+    "gv-w-"
    ]
   },
   {
@@ -253,7 +254,7 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "differential (enc-w-len30-spare8/20/39)",
+   "go_value": "differential (enc-w-len30-spare8/20/39); witness receiver: GoValW.witCpW_recv (review e2e-r3 S1)",
    "neg_ids": [
     "cpw-g2-"
    ]
@@ -267,7 +268,7 @@
    "theorem": "done (partial: right disjunct ends at the call)",
    "link": "done",
    "negative": "done",
-   "go_value": "differential (enc-w-len30-spare0/3, enc-w-len10-spare0, enc-grow-cap0)",
+   "go_value": "differential (enc-w-len30-spare0/3, enc-w-len10-spare0, enc-grow-cap0); witness receiver: GoValW.witCpW_recv (review e2e-r3 S1)",
    "neg_ids": [
     "cpw-ga-"
    ]
@@ -281,7 +282,7 @@
    "theorem": "done (partial: (C) ends at the call)",
    "link": "done",
    "negative": "done",
-   "go_value": "differential (enc-w-len30-spare0/3, enc-w-len10-spare0, enc-grow-cap0)",
+   "go_value": "differential (enc-w-len30-spare0/3, enc-w-len10-spare0, enc-grow-cap0); witness receiver: GoValW.witCpW_recv (review e2e-r3 S1)",
    "neg_ids": [
     "cpw-sh-"
    ]
@@ -295,7 +296,7 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "differential (enc-w-rej-len30-spare0/3: caller array unchanged)",
+   "go_value": "differential (enc-w-rej-len30-spare0/3: caller array unchanged); witness receivers: GoValW.witCpWR_recv (rl 0/31/33/48), rl 49 not a Go value (witCpWR_recv_bad); rej_runs allows any rl ≠ 32, a Go caller only rl ≤ 48 (review e2e-r3 S1)",
    "neg_ids": [
     "cpw-rg-"
    ]
@@ -309,7 +310,7 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "differential",
+   "go_value": "differential; witness receiver: GoValW.witCpW_recv (review e2e-r3 S1)",
    "neg_ids": [
     "cpw-cv-"
    ]
@@ -323,7 +324,7 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "differential",
+   "go_value": "differential; witness receivers: GoValW.witCpWR_recv (rl 0/31/33/48), rl 49 not a Go value (witCpWR_recv_bad); rej_runs allows any rl ≠ 32, a Go caller only rl ≤ 48 (review e2e-r3 S1)",
    "neg_ids": [
     "cpw-rc-"
    ]
@@ -337,7 +338,7 @@
    "theorem": "done (partial: (3C) ends at the call)",
    "link": "done",
    "negative": "done",
-   "go_value": "differential (accept cases)",
+   "go_value": "differential (accept cases); witness receiver: GoValW.witCpW_recv (review e2e-r3 S1)",
    "neg_ids": [
     "cpw-cf-"
    ]
@@ -351,9 +352,125 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "differential (reject cases)",
+   "go_value": "differential (reject cases); witness receivers: GoValW.witCpWR_recv (rl 0/31/33/48), rl 49 not a Go value (witCpWR_recv_bad); rej_runs allows any rl ≠ 32, a Go caller only rl ≤ 48 (review e2e-r3 S1)",
    "neg_ids": [
     "cpw-rf-"
+   ]
+  },
+  {
+   "name": "E2eAd.sl_unmarshal_accept_main + sl_uacc_holds (SlUAccC)",
+   "kind": "callee accept primitives.Slot (function spec source)",
+   "function": "unmarshal",
+   "statement": "done",
+   "witness": "done (WitSl, 3 values)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "n/a (uint64 receiver)",
+   "neg_ids": [
+    "sl-"
+   ]
+  },
+  {
+   "name": "E2eAd.ci_unmarshal_accept_main + ci_uacc_holds (CiUAccC)",
+   "kind": "callee accept primitives.CommitteeIndex (function spec source)",
+   "function": "unmarshal",
+   "statement": "done",
+   "witness": "done (WitCi, 3 values)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "n/a (uint64 receiver)",
+   "neg_ids": [
+    "ci-"
+   ]
+  },
+  {
+   "name": "E2eAd.ad_e2e_head / ad_e2e_root / ad_e2e_src / ad_e2e_tgt",
+   "kind": "segment lemmas of the AttestationData decoder (size test, Slot, CommitteeIndex, Root, Source, Target)",
+   "function": "unmarshal",
+   "statement": "done",
+   "witness": "via WitAdA",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "n/a (segment)",
+   "neg_ids": [
+    "ada-h-",
+    "ada-r-",
+    "ada-s-",
+    "ada-t-"
+   ]
+  },
+  {
+   "name": "E2eAd.ad_e2e_accept_main",
+   "kind": "accept v1alpha1.AttestationData (callees via sl/ci/cp_uacc_holds; Source/Target always new, N-3)",
+   "function": "unmarshal",
+   "statement": "done",
+   "witness": "done (WitAdA, 3 inputs)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "partial (full receiver and both 72-byte objects in the conclusion; no Lean Go-value predicate for AttestationData)",
+   "neg_ids": [
+    "ada-m-"
+   ]
+  },
+  {
+   "name": "E2eAd.ad_e2e_reject_size_main",
+   "kind": "reject (ssz.ErrSize)",
+   "function": "unmarshal",
+   "statement": "done",
+   "witness": "done (WitAdR len 127/129/0)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "n/a (receiver unchanged; error words as they are)",
+   "neg_ids": [
+    "ada-rj-"
+   ]
+  },
+  {
+   "name": "E2eAd.ad_e2e_accept_spec_k (+ reject_size_spec, reject_complete)",
+   "kind": "accept / reject against EthLib",
+   "function": "unmarshal",
+   "statement": "done",
+   "witness": "via WitAdA / WitAdR",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "via ad_e2e_accept_main",
+   "neg_ids": [
+    "ada-k-"
+   ]
+  },
+  {
+   "name": "E2e.prysmAdDesc_serialize_checker / deserialize_checker / pad_spec_accepts_iff",
+   "kind": "spec bridge AttestationData (codec equality with the checker Desc)",
+   "function": "spec",
+   "statement": "done",
+   "witness": "n/a (spec level)",
+   "theorem": "done",
+   "link": "n/a",
+   "negative": "done",
+   "go_value": "n/a",
+   "neg_ids": [
+    "spa-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_epoch_err_unreachable; E2eAd.ad_e2e_{slot,ci,source,target}_err_unreachable",
+   "kind": "unreachable_mc (own column; not reject coverage)",
+   "function": "unmarshal",
+   "statement": "done",
+   "witness": "n/a (local lemmas)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "n/a",
+   "neg_ids": [
+    "cpu-",
+    "ada-u-"
    ]
   }
  ],
@@ -369,27 +486,57 @@
    "theorem": "none needed: removed by the compiler (inlined Epoch.MarshalSSZTo cannot fail; no fmt.errorf call in the machine code, CALLGRAPH.md)",
    "status": "absent from the code",
    "counts_as_reject": false
+  },
+  {
+   "site": "AttestationData decoder fmt.Errorf(\"Slot: %w\") wrap",
+   "theorem": "E2eAd.ad_e2e_slot_err_unreachable",
+   "status": "done",
+   "counts_as_reject": false
+  },
+  {
+   "site": "AttestationData decoder fmt.Errorf(\"CommitteeIndex: %w\") wrap",
+   "theorem": "E2eAd.ad_e2e_ci_err_unreachable",
+   "status": "done",
+   "counts_as_reject": false
+  },
+  {
+   "site": "AttestationData decoder fmt.Errorf(\"Source: %w\") wrap",
+   "theorem": "E2eAd.ad_e2e_source_err_unreachable",
+   "status": "done",
+   "counts_as_reject": false
+  },
+  {
+   "site": "AttestationData decoder fmt.Errorf(\"Target: %w\") wrap",
+   "theorem": "E2eAd.ad_e2e_target_err_unreachable",
+   "status": "done",
+   "counts_as_reject": false
   }
  ],
  "e2e_include_sha256": {
   "lean/E2e/Code.lean": "eddb369f7e981590a0fe7d60cff12f753f40f89aba92e5718bd95c0fabd0d728",
   "lean/E2e/Data.lean": "3be0b30a4d71d726d67dbcbbb85afe88b7a741f3f8b2fdaf8bd0c42d7f7de4af",
   "lean/E2e/Include.lean": "1f3517fe642186c9212ada0ddf2d16a50860e69eac4e0df4fd1517dc6b57c5e1",
-  "prysm/go1.26.10/e2e/AXIOMS.txt": "3b32378a27d853edc7675d74ff181326b3a86733bd07b48459b83e92a1c5a805",
-  "note": "review e2e-r1 S3: the link bundle hash covers lean/Fk/Code.lean and the Go 1.26.3 AXIOMS.txt (check.py unchanged); these are the E2e include files and the E2e axioms list"
+  "prysm/go1.26.10/e2e/AXIOMS.txt": "8779ae6005e5b384cd89d57b6b56a28f3650e3a06897cc4cc9e6ffa23e37bd4c",
+  "lean/E2eAd/Code.lean": "f22dd87781c1242503df3864b1e5c59c56968dd2291b927c0bef610d36ec8c08",
+  "lean/E2eAd/Data.lean": "e621939c00d64035918cf4d216451e22e0c10208ac519de4816bac41b65fc7d1",
+  "lean/E2eAd/Include.lean": "66e6fd12fe31214b302413b91d03402b865e45f6d08746c9a170ca4e0d2a9846",
+  "prysm/go1.26.10/e2e/ad/AXIOMS.txt": "8514bcddb73383c9efd5f3fb9b9c02fc08f604648ee1111fa5cf9b61f2698b6b",
+  "note": "review e2e-r1 S3: the link bundle hash covers lean/Fk/Code.lean and the Go 1.26.3 AXIOMS.txt (check.py unchanged); these are the E2e include files and the E2e axioms list. Session 5 (review e2e-r3 S3): AXIOMS.txt rehashed after job 213 (79 lines); the E2eAd include files and ad/AXIOMS.txt added."
  },
  "negative_suite": {
-  "run": "gate job 139: full suite at the per-case limit 300 s (session 3, after F0), classified by negative.py (resource classes by the first error line; review e2e-r2 N1)",
-  "pass": 73,
-  "total": 73,
+  "run": "merged result file: gate job 139 (session 3 full suite at 300 s, 73 cases) + the jobs that added or re-ran cases since: 144, 150 (A2), 177, 178 (A3), 202, 203 (INBOX 009), 211, 212, 213 (INBOX 010). Every case ran at the 300 s per-case limit; negative.py merges by id. No single run covers all cases (≤ 20 min of gate time per run).",
+  "pass": 154,
+  "total": 154,
   "classes": {
-   "control_pass": 20,
-   "inside": 53
+   "control_pass": 49,
+   "inside": 105
   },
   "case_timeout_s": 300,
-  "max_case_seconds": 127.5,
+  "max_case_seconds": 176.5,
   "later_resource_error": [
-   "ep-load8"
+   "ci-load8",
+   "ep-load8",
+   "sl-load8"
   ],
   "removed": {
    "heartbeat_timeout first error (N1)": [
@@ -405,6 +552,11 @@
    "wall_timeout_300s": [
     "cpg-stmt-noroot (job 126)",
     "cpg-newptr (job 139; 489.7 s in job 125, first error ecancel inside)"
+   ],
+   "outside in job 202 (an earlier lemma of the same file steps the same directive; the mutants did fail), replaced in job 203 (review e2e-r3 S6)": [
+    "cpw-tr-jne -> cpw-tr-err1",
+    "cpw-tc-lea -> cpw-tc-stmt-num",
+    "cpw-hg-jae -> cpw-hg-spill"
    ]
   },
   "added": [
@@ -414,7 +566,16 @@
    "epr-stmt-addr",
    "epr-control-addr",
    "gv-stmt-after-nil",
-   "gv-control-after"
-  ]
+   "gv-control-after",
+   "ci-load8 (S4: replayed in job 213, inside)",
+   "cpw-sh-* (4)",
+   "cpw-cf-* (4)",
+   "cpw-rf-* (3)",
+   "gv-w-* (3)"
+  ],
+  "split": {
+   "E2e modules": 110,
+   "E2eAd modules": 44
+  }
  }
 }
