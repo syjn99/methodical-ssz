@@ -300,3 +300,61 @@ git diff --exit-code fv/kraken/AXIOMS.txt fv/kraken/AXIOMS-ALL.txt fv/kraken/lin
 - 생성기가 가진 것: Desc(독립 검사기와 결합), 고정 목록 의무, 증인 생성(gen/wit), 기호 길이·`n#64` 정규화, include 어댑터(API v3). HTR 의무도 같은 고정 목록 형식에 넣을 수 있다.
 - HTR 전에 필요한 것: 지시 걷기 틀의 범위(바이트 벡터·컨테이너 필드, 프레임 있는 함수, 함수 호출), 손 작성 primitives의 명세 결정, Go 1.26.10 런타임 계약의 재확인, 가변 크기 size 틀.
 - gohashtree 경로(HTR)는 1c에서 손대지 않았다.
+
+## 11. 실제 Prysm `v1alpha1.Checkpoint` 인코더·디코더 종단 증명 (prysm-e2e 스트림, 브랜치 `claude/ssz-fv-prysm-e2e`)
+
+**판정: 조건부.** 실제 protoc 타입 `v1alpha1.Checkpoint`의 디코더 수용·크기 거부와 인코더 빠른 경로가 Go 1.26.10 ELF `c6403c02…911e`의 기계어에서 증명됐다.
+조건:
+
+1. 런타임 계약 `MakesliceC`(uint8, esz 1, cnt 32)와 `MemmoveC`는 가설이다. Go 1.26.10 소스를 다시 읽었고 바뀌지 않았다(`prysm/go1.26.10/e2e/RUNTIME-1.26.10.md`). 정교화 증명은 없다.
+2. 전제: 스택 가드, `runtime.writeBarrier` = 0, 힙 여유, 레이블 신선성, 전역 주소(링크 검사 (a)–(f) PASS), `ssz.ErrSize`의 초기화된 값.
+3. x86-64 하드웨어에서 실행하지 않았다. Go 차분 검사는 같은 소스의 arm64 빌드다.
+4. 인코더 거부(`ssz.ErrBytesLength`), growslice 경로, Epoch 디코더 거부, 인코더 명세 정렬은 증명하지 않았다(아래 표).
+
+손 작성 `(*primitives.Epoch).UnmarshalSSZ`는 함수 명세 `EpUAccC`로 증명했다(`ep_uacc_holds`). 디코더 주 정리에는 Epoch에 대한 가설이 없다.
+`Epoch.MarshalSSZTo`는 인코더에 인라인된다(`-gcflags=-m=2`, `prysm/go1.26.10/e2e/CALLGRAPH.md`). 인라인된 몸체는 인코더 정리 안에서 증명했다.
+명세는 consensus-specs에서 손으로 쓴 `E2e.prysmCpDesc`다. Desc 검사기의 Desc와는 필드 이름만 다르다(`prysmCpDesc_checker`).
+Go 1.26.3 증명은 옮기지 않았다. 모든 지시 색인, 오프셋, 레이블, 프레임은 Go 1.26.10 `.S`에서 다시 유도했다.
+
+표는 `prysm/go1.26.10/e2e/e2e.json`, `negative/result.json`, `differential.json`, `axioms.json`에서 프로그램이 만든다.
+
+| 정리 | 의무 | 문장 | 증인 | 기계어 정리 | 링크 | 부정 시험 | Go 값 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `E2e.ep_unmarshal_accept_main` | callee accept (function spec source) | done | done | done | done | 5/5 통과 | partial |
+| `E2e.ep_uacc_holds (EpUAccC)` | function spec | done | done | done | done | via ep_unmarshal_accept_main | partial |
+| `E2e.cp_e2e_accept_main (+ cp_e2e_accept_tail)` | accept | done | done | done | done | 9/9 통과 | partial |
+| `E2e.cp_e2e_reject_size_main` | reject (ssz.ErrSize) | done | done | done | done | 4/4 통과 | partial |
+| `E2e.cp_e2e_reject_complete + cp_e2e_reject_size_spec` | reject_complete / reject_spec | done | via WitCpR | done | n/a | via main | partial |
+| `E2e.cp_e2e_accept_spec_k` | accept against EthLib | done | via WitCpA | done | done | via main | partial |
+| `E2e.cp_e2e_marshal_main` | marshal (fast path) | done | done | done | done | 7/7 통과 | partial |
+| `E2e.cp_e2e_unmarshal_then_marshal` | compose_hupd | done | WitCpA + WitCpM (decoded receiver form) | done | done | 3/3 통과 | partial |
+| `cp_e2e_marshal_reject_main (ssz.ErrBytesLength)` | marshal_reject | not attempted | not attempted | not attempted | done | not attempted | differential only |
+| `cp_e2e_marshal_grow_main (growslice)` | marshal (capacity too small) | not attempted | not attempted | not attempted | done | not attempted | differential only |
+| `ep_unmarshal_reject_len_main` | callee reject (standalone) | not attempted | not attempted | not attempted | done | not attempted | differential only |
+| `cp_e2e_marshal_spec_k / cp_e2e_size_main with witness` | marshal against EthLib / size | not attempted | not attempted | not attempted (size: Gen1cX5.Size.Checkpoint_size exists, no witness) | done | not attempted | n/a |
+
+| unreachable_mc 행 | 정리 | 상태 | reject 범위에 셈 |
+| --- | --- | --- | --- |
+| phase0.ssz.go:1988 fmt.Errorf("Epoch: %w") (decoder) | E2e.cp_e2e_epoch_err_unreachable | done | 아니요 |
+| phase0.ssz.go:1964 fmt.Errorf("Epoch: %w") (encoder) | none needed: removed by the compiler (inlined Epoch.MarshalSSZTo cannot fail; no fmt.errorf call in the machine code, CALLGRAPH.md) | absent from the code | 아니요 |
+
+부정 시험 전체: 30/30 통과 (`negative/result.json`). Go 차분: 47건, 불일치 0건 (`differential.json`). 공리: 23개 이름, 판정 PASS (`axioms.json`).
+
+수용기 메모: 정리의 수신자 배치는 `prysm/ir/ir-mainnet.json` `go_fields`(gc amd64 규칙)다. `state` 0, `Epoch` 8, `Root` 16, `unknownFields` 40, `sizeCache` 64, 크기 72.
+Go 값 요소는 부분이다. 증인의 수신자는 배치에 맞는 0 값 구조체다. Lean Go 값 술어와 ELF abi.Type 배치 검사는 하지 않았다.
+인코더 스택 임시 영역 32바이트 중 8–31바이트는 X15 내용이다. X15 = 0을 가정하지 않아서 결론에서 존재 양화다.
+디코더 정리는 메모리 상한 6 GiB 안에 들도록 `L_b4`(지시 47)에서 둘로 나눴다(`cp_e2e_accept_tail`).
+
+재현(모두 gate와 memcap 6 GiB 안에서):
+
+```sh
+python3 -I -B fv/kraken/gen/e2e/callgraph.py <objdump> prysm/go1.26.10/e2e/callgraph.json <m2.log>
+python3 -I -B fv/kraken/gen/e2e/e2elink.py filter <out> <objdump> <elf> <nm>
+python3 -I -B fv/kraken/link/conv.py <out>/target.objdump <out>/p1bin-amd64.nm <out>/norm --norm
+python3 -I -B fv/kraken/gen/e2e/e2elink.py data <out> && python3 -I -B fv/kraken/link/check.py <out>
+(cd fv/kraken/lean && lake build E2e.<모듈>)            # 모듈 하나씩: Epoch WitEp Spec CpAccept WitCpA CpReject WitCpR CpSpecK CpMarshal WitCpM Compose
+(cd fv/kraken/lean && lake env lean ../gen/e2e/Axioms.lean) | python3 -I -B fv/kraken/gen/e2e/axioms.py /dev/stdin prysm/go1.26.10/e2e/axioms.json
+python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/e2e/negcases.json <work> prysm/go1.26.10/e2e/negative/result.json
+python3 -I -B fv/kraken/gen/e2e/differential.py cases <c.json>; go run ./fve2e/cpcheck <c.json> > <o.json>   # Prysm 임시 트리, Go 1.26.10
+python3 -I -B fv/kraken/gen/e2e/differential.py check <c.json> <o.json> prysm/go1.26.10/e2e/differential.json
+```
