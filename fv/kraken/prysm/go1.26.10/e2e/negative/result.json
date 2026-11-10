@@ -711,8 +711,101 @@
    "seconds": 1.1,
    "pass": true,
    "diff": "--- orig\n+++ mut\n@@ -27,7 +27,7 @@\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n         \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 \u2227 st.data.regs.rcx = s.regs.rdi\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n-        \u2227 (Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n+        \u2227 (Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))\n           \u22c6 fun _ => True) st.data.dmem)\n       \u27e8s, Host.addrOf k\u27e9 := by\n   refine \u27e8pcpEnc g, pcp_serialize g, ?_\u27e9\n"
+  },
+  {
+   "id": "epr-control",
+   "kind": "control",
+   "module": "E2e/EpReject.lean",
+   "theorem": "ep_unmarshal_reject_len_main",
+   "range": [
+    58,
+    268
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "seconds": 3.6,
+   "pass": true,
+   "diff": ""
+  },
+  {
+   "id": "epr-cmp7",
+   "kind": "code",
+   "module": "E2e/EpReject.lean",
+   "theorem": "ep_unmarshal_reject_len_main",
+   "range": [
+    58,
+    268
+   ],
+   "error_lines": [
+    126
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/epr-cmp7/mut.lean:126:49: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "seconds": 3.9,
+   "pass": true,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -7,7 +7,7 @@\n   sub $0x48,%rsp\n   mov %rbx,0x60(%rsp)\n   nop\n-  cmp $0x8,%rcx\n+  cmp $0x7,%rcx\n   je L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ_bb\n   lea 0x28(%rsp),%rdx\n   movups %xmm15,(%rdx)\n"
+  },
+  {
+   "id": "epr-fmtlen",
+   "kind": "code",
+   "module": "E2e/EpReject.lean",
+   "theorem": "ep_unmarshal_reject_len_main",
+   "range": [
+    58,
+    268
+   ],
+   "error_lines": [
+    207
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/epr-fmtlen/mut.lean:207:25: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "seconds": 3.9,
+   "pass": true,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -22,7 +22,7 @@\n   mov %rcx,0x38(%rsp)\n   mov %rax,0x40(%rsp)\n   lea go_string._+110057(%rip),%rax\n-  mov $0x28,%ebx\n+  mov $0x27,%ebx\n   lea 0x28(%rsp),%rcx\n   mov $0x2,%edi\n   mov %rdi,%rsi\n"
+  },
+  {
+   "id": "epr-nargs",
+   "kind": "code",
+   "module": "E2e/EpReject.lean",
+   "theorem": "ep_unmarshal_reject_len_main",
+   "range": [
+    58,
+    268
+   ],
+   "error_lines": [
+    207
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/epr-nargs/mut.lean:207:34: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "seconds": 2.3,
+   "pass": true,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -24,7 +24,7 @@\n   lea go_string._+110057(%rip),%rax\n   mov $0x28,%ebx\n   lea 0x28(%rsp),%rcx\n-  mov $0x2,%edi\n+  mov $0x1,%edi\n   mov %rdi,%rsi\n   callq fmt.errorf\n   test %rax,%rax\n"
+  },
+  {
+   "id": "epr-stmt-nil",
+   "kind": "stmt",
+   "module": "E2e/EpReject.lean",
+   "theorem": "ep_unmarshal_reject_len_main",
+   "range": [
+    56,
+    266
+   ],
+   "error_lines": [
+    254
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/epr-stmt-nil/mut.lean:254:14: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "seconds": 3.9,
+   "pass": true,
+   "diff": "--- orig\n+++ mut\n@@ -16,7 +16,7 @@\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 8) (hav : 8 + 40 + 40 + 8192 \u2264 avail)\n     (hct : ConvT64C Heap S) (hdd : FmtErrorfDDC Heap E2e.Data.e2eEpFmt E2e.Data.e2eIntType_addr S) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax \u2260 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (bx : BitVec 64) (hb stk' sp' : List UInt8) (av' : Nat), stk'.length = S \u2227 sp'.length = 40\n           \u2227 BoxIn bx s.regs.rcx.toBitVec hb \u2227 av' \u2264 avail \u2227\n"
   }
  ],
- "pass": 38,
- "total": 38
+ "pass": 43,
+ "total": 43
 }

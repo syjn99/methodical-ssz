@@ -341,5 +341,51 @@
   "theorem": "cp_e2e_marshal_spec_k",
   "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
   "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))"
+ },
+ {
+  "id": "epr-control",
+  "kind": "control",
+  "module": "E2e/EpReject.lean",
+  "theorem": "ep_unmarshal_reject_len_main",
+  "code_def": "EpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S"
+ },
+ {
+  "id": "epr-cmp7",
+  "kind": "code",
+  "module": "E2e/EpReject.lean",
+  "theorem": "ep_unmarshal_reject_len_main",
+  "code_def": "EpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
+  "old": "  cmp $0x8,%rcx",
+  "new": "  cmp $0x7,%rcx"
+ },
+ {
+  "id": "epr-fmtlen",
+  "kind": "code",
+  "module": "E2e/EpReject.lean",
+  "theorem": "ep_unmarshal_reject_len_main",
+  "code_def": "EpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
+  "old": "  mov $0x28,%ebx",
+  "new": "  mov $0x27,%ebx"
+ },
+ {
+  "id": "epr-nargs",
+  "kind": "code",
+  "module": "E2e/EpReject.lean",
+  "theorem": "ep_unmarshal_reject_len_main",
+  "code_def": "EpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
+  "old": "  mov $0x2,%edi",
+  "new": "  mov $0x1,%edi"
+ },
+ {
+  "id": "epr-stmt-nil",
+  "kind": "stmt",
+  "module": "E2e/EpReject.lean",
+  "theorem": "ep_unmarshal_reject_len_main",
+  "old": "st.data.regs.rax ≠ 0",
+  "new": "st.data.regs.rax = 0"
  }
 ]
