@@ -148,7 +148,9 @@
    }
   },
   "beacon_block_header_encoder (iii)": {
-   "state": "see 'encoder' (filled when attempted)"
+   "state": "not started",
+   "reason": "INBOX 019 end condition: when the hold-out decoder (ii) is kernel-checked with its evidence, set in-review and end. (iii) is hand work (no encode mode) and is left to a later controller order after review.",
+   "read_only_observation": "Textual comparison (no proof attempt): the P2 encode template rootEncHead/rootEncTail (fixed registers, from Checkpoint.MarshalSSZTo) matches none of the three BBH root encode blocks. Root 1 (directives 62-89): the field pointer is loaded into rdx and the offset kept in r8 (template: r8 / rdx), a nop sits between cmpq and jne, and the three spills come in another order (rbx, r9, rdi vs rdi, r9, rbx). Root 2 (90-): the receiver is reloaded into rdx, the capacity test is `cmp %r9,%rcx; jb` with a reload from the stack. An encode mode would need a register-parametric template or several templates; this is an observation from reading the .S, not a measured cost."
   }
  },
  "contamination": {
