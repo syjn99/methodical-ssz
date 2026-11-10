@@ -1,4 +1,4 @@
-# gen/scal — scalability stage S1–S2 (run fve2e-20261110T010000Z-2dd40dab, INBOX 011)
+# gen/scal — scalability stage S1–S2
 
 Question (NEXT-PLAN after MS1, stage S): for a machine-code pattern that recurs, does a parameterized Lean
 segment lemma plus an untrusted proof-text generator lower the marginal cost of the next same-pattern type,
@@ -17,6 +17,8 @@ the hold-out types were not opened (`prysm/go1.26.10/e2e/scal/HOLDOUT-MARKER.jso
 | `P1Slot.lean` | in-sample: `sl_unmarshal_accept_main_s`, statement of `E2eAd.sl_unmarshal_accept_main` word for word, proof = one application of `u64dec_accept`; `sl_same_stmt` (`rfl`: same proposition). |
 | `P2DecAd.lean` | in-sample: `ad_e2e_root_s` = statement of `E2eAd.ad_e2e_root`; `rootdec_seg` + 3 instance directives (85 label, 112 reload into rbx, 113 jmp); `ad_root_same_stmt`. |
 | `P2EncCpAt.lean` | `cp_enc_tmpl_at`: the encode template placement in `CpMarshal` (code-negative target; `P2EncCp` builds in about 730 s, above the 300 s case limit). |
+| `Kind.lean` | frozen statement kinds `u64DecAcceptKind`, `rootDecSegKind` (`abbrev`) and `*_of`: each kind proved from its lemma (review fix-r1 M2/S1). |
+| `KindAnchor.lean` | `sl_kind_anchor`, `ci_kind_anchor`: the P1 kind is the full type of the hand theorems `E2eAd.sl_unmarshal_accept_main` / `ci_unmarshal_accept_main`. |
 | `P2EncCp.lean` | in-sample: `cp_e2e_marshal_main_s` = statement of `E2e.cp_e2e_marshal_main`; directives 36–62 by `rootenc_seg`, 0–35 and 63–70 the hand text verbatim; `cp_marshal_same_stmt`. |
 
 A template is a Lean function from parameters to a directive list; the lemma takes the template's place
@@ -27,23 +29,36 @@ included `.S` by computation (`infix_sub` + `simp`, `Fk.label_at'`). A wrong par
 
 - `p1`: reads the `.S`, checks the 11 head and 9 tail directives textually, reads the four labels, the
   frame size, the spill (must be frame + 24) and the accept-label index; emits the P1-kind function
-  theorem for the code constant and, with `--same-as`, the statement-identity check.
+  theorem for the code constant, its `_kind` check and, with `--same-as`, the identity with a hand theorem.
 - `p2dec`: reads the IR type (only that entry): for every 32-byte `[]byte` field its SSZ offset and Go
   offset; finds the unique decode segment whose `len` store is at Go offset + 8; checks every template
   directive and that the pointer store is at the IR Go offset and the source offset is the IR SSZ offset;
-  emits one segment theorem per field (statement = `rootdec_seg` with the code hypotheses of the
-  function). A field whose code does not match (e.g. source offset 0, no `add`) stops with exit 2.
+  emits one segment theorem per field (proof = the `rootdec_seg` instance) and its `_kind` check.
+  A field whose code does not match (e.g. source offset 0, no `add`) stops with exit 2.
 - No mode for the encode segment yet (one development instance only).
+
+Statement check (review fix-r1 M2, S1). Each generated theorem `t` is followed by
+`t_kind : ∀ (h : Host), type_of% (@t h) = <kind> h <parameters> := by intro h; with_reducible rfl`.
+The kinds are hand text in `lean/E2eScal/Kind.lean` (`u64DecAcceptKind`, `rootDecSegKind`). `*_of` there proves
+each kind from its lemma; `KindAnchor.lean` shows that the P1 kind is the full type of the reviewed hand
+theorems for Slot and CommitteeIndex. `@t h` is the whole declared type, binders before and after the colon,
+so an added, removed or changed hypothesis in any position fails `t_kind`. No hand theorem of the instance is
+needed. Not checked by `t_kind`: that the parameters of the kind are the right ones for the Go type; a wrong
+parameter fails the proof (its code facts), not `t_kind`. The `exact` of the proof alone checks only the text
+after the colon: a binder added before the colon still compiles (`rv-gad-extra-before`); only `t_kind` catches
+it. `gen/e2e/negative.py` keeps `t_kind` in a mutant of `t`. The proofs end in `with_reducible exact`, so a
+wrong conclusion literal fails at once (S2: 300 s wall timeout before, 1.4 s now).
 
 Generated (raw output, not edited): `lean/E2eScal/GenCi.lean` (CommitteeIndex accept, end to end, with
 `ci_unmarshal_accept_main_g_same` against the hand theorem), `GenAdDec.lean` (AttestationData
-BeaconBlockRoot segment), `GenCpDec.lean` (Checkpoint Root segment). Driver: the stream's
-`scratch/s6/gen1.sh` (three `scalgen.py` commands: `p1` on the CommitteeIndex `.S` with `--const CiUnmarshal
---same-as E2eAd.ci_unmarshal_accept_main`; `p2dec` on the AttestationData and Checkpoint decoders with `--type
-v1alpha1.AttestationData` / `v1alpha1.Checkpoint`), gate jobs 227 and 236.
+BeaconBlockRoot segment), `GenCpDec.lean` (Checkpoint Root segment). Driver: `gen/scal/gen.sh` (three
+`scalgen.py` commands). Check: for each file, `.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh
+<file> -- sh -c "<its scalgen.py command> > $REGEN_OUT"` (SAME for all three, gate job 294).
 
-Generator fixes during development (before any hold-out input; `prysm/go1.26.10/e2e/scal/CONTAMINATION.md`): AU-08 — the p2dec statement was fixed text, so an added false hypothesis still compiled; now only `k hk hf` precede the colon and the proof is the `rootdec_seg` instance with no further argument, so the kernel checks the statement against the lemma instance (negatives `scal-gad-stmt-extra`, `scal-gcp-stmt-extra`). G1 — the doc comment of a p2dec theorem
-was emitted before its `set_option … in` lines (Lean parse error, jobs 229/230); fixed by emitting it after.
+Generator changes before any hold-out input are in `prysm/go1.26.10/e2e/scal/CONTAMINATION.md`:
+AU-08 (session 7: the p2dec proof became the bare lemma instance; this checks the text after the colon
+only), fix-r1 M2/S1/S2 (session 8: the `_kind` check above, `with_reducible`). G1 — the doc comment of a p2dec
+theorem was emitted before its `set_option … in` lines (Lean parse error, jobs 229/230); fixed by emitting it after.
 
 ## Evidence files
 
@@ -52,10 +67,11 @@ was emitted before its `set_option … in` lines (Lean parse error, jobs 229/230
   (run with `gen/e2e/negative.py`).
 - `tcost.py` → `prysm/go1.26.10/e2e/scal/TEMPLATE-COST.json` (template cost, separate from hold-out cost).
 
-## Results (session 6)
+## Results
 
-Kernel-checked: all 11 modules of `E2eScal` (count by command: `ls fv/kraken/lean/E2eScal/*.lean | wc -l` = 11; audit AU-13, the old text said 14). Axioms: 15 names, standard only (`scal/axioms.json`, job 247).
+Kernel-checked: all 13 modules of `E2eScal` (count by command: `ls fv/kraken/lean/E2eScal/*.lean | wc -l` = 13 at session 8; 11 before `Kind`, `KindAnchor`; audit AU-13). Axioms: 22 names (`grep -c '^#print axioms' gen/scal/AxiomsScal.lean`), standard only (`scal/axioms.json`, job 292; 15 names at job 247).
 Negatives: 18/18 (6 controls pass, 12 mutants fail inside their theorem; `scal/negative-result.json`, jobs 242, 246).
 Session 7 (audit AU-08): 20/20 after the two `*-stmt-extra` cases were added (jobs 258, 259).
+Session 8 (review fix-r1): 28/28 (6 controls, 22 inside) after 8 new statement cases; GenCi / GenAdDec / GenCpDec cases rerun after regeneration, one gated job per batch (jobs 288–291).
 Cost: `scal/TEMPLATE-COST.json` (jobs 214–247; 31 gate jobs, 24 lake runs, 13 failed, 2271 cumulative gate s — 2203 s of them the
 P2 encode in-sample — peak 1.83 GiB, no memcap kill).

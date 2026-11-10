@@ -13,7 +13,8 @@ cases.json: list of {"id", "module" (path under fv/kraken/lean, e.g. "E2e/Epoch.
   optional for code/control: "code_ns" (namespace of the code constant, default E2e.Code) and "norm"
   (path of the .S under fv/kraken instead of prysm/go1.26.10/e2e/link/norm/<S>; AttestationData set)}
 For each case the mutant Lean file is the module's text up to the end of the designated theorem
-(the next top-level `theorem`/`def`/`end`/`example`/`/--` after it is cut), with, for code cases, a
+(the next top-level `theorem`/`def`/`end`/`example`/`/--` after it is cut; a `theorem <thm>_kind` that
+directly follows it is kept and belongs to the case range, review fix-r1 M2), with, for code cases, a
 new constant `E2e.Code.<code_def>Mut` that includes the mutated .S copy (absolute path in <work-dir>)
 and every whole-word use of <code_def> after the imports renamed to it. `lake env lean <file>` runs
 under the memory cap from fv/kraken/lean. A mutant passes the suite when Lean reports an error and
@@ -88,6 +89,13 @@ def cut(text, thm):
     while s0 > 0 and lines[s0 - 1].startswith("set_option") and lines[s0 - 1].rstrip().endswith(" in"):
         s0 -= 1
     end = next((i for i in range(start + 1, len(lines)) if TOP.match(lines[i])), len(lines))
+    # review fix-r1 M2/S1: a statement-kind identity `theorem <thm>_kind` right after the theorem checks the
+    # theorem's whole declared type; it stays in the mutant and in the case range
+    j = end
+    while j < len(lines) and (lines[j].strip() == "" or lines[j].lstrip().startswith("--")):
+        j += 1
+    if j < len(lines) and re.match(rf"^theorem {re.escape(thm)}_kind\b", lines[j]):
+        end = next((i for i in range(j + 1, len(lines)) if TOP.match(lines[i])), len(lines))
     while end > start and lines[end - 1].strip() == "":
         end -= 1
     ns = [l for l in lines[:s0] if l.startswith("namespace ")]
@@ -229,6 +237,8 @@ def run_case(c, work):
     killed = "killed=True" in log
     errl = [l for l in log.splitlines() if ": error" in l]
     later = next((l for l in errl[1:] if HEARTBEAT in l or RECDEPTH in l), None)
+    # review fix-r1 S4: no absolute work-dir path in the committed result file
+    first, later = [x.replace(str(work), "<work>") if x else x for x in (first, later)]
     r = {"id": c["id"], "kind": c["kind"], "module": c["module"], "theorem": c["theorem"],
          "range": [lo, hi], "error_lines": errs, "first_error": first, "rc": rc,
          "killed": killed, "timeout": timed_out, "timeout_reaped_pids": reaped, "later_resource_error": later,

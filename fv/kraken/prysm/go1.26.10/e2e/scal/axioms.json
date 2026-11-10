@@ -79,11 +79,46 @@
    "propext",
    "Classical.choice",
    "Quot.sound"
+  ],
+  "E2eScal.u64DecAcceptKind_of": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eScal.rootDecSegKind_of": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eScal.sl_kind_anchor": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eScal.ci_kind_anchor": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eScal.Gen.ci_unmarshal_accept_main_g_kind": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eScal.Gen.ad_dec_BeaconBlockRoot_seg_kind": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eScal.Gen.cp_dec_Root_seg_kind": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
   ]
  },
  "missing": [],
  "nonstandard": {},
- "count": 15,
+ "count": 22,
  "verdict": "PASS",
  "precheck": {
   "argv": "lake build --no-build <imports>",
@@ -91,6 +126,8 @@
    "E2eScal.GenAdDec",
    "E2eScal.GenCi",
    "E2eScal.GenCpDec",
+   "E2eScal.Kind",
+   "E2eScal.KindAnchor",
    "E2eScal.P1Slot",
    "E2eScal.P2DecAd",
    "E2eScal.P2EncCp",

@@ -5,6 +5,8 @@ import E2eScal.GenCi
 import E2eScal.GenAdDec
 import E2eScal.GenCpDec
 import E2eScal.P2EncCpAt
+import E2eScal.Kind
+import E2eScal.KindAnchor
 
 -- prysm-e2e scalability stage S1-S2 (INBOX 011): the segment lemmas, the in-sample re-derivations, the
 -- statement-identity checks and the generated instances. Checked with gen/e2e/axioms.py <log> <out> <this file>.
@@ -23,3 +25,11 @@ import E2eScal.P2EncCpAt
 #print axioms E2eScal.Gen.ci_unmarshal_accept_main_g_same
 #print axioms E2eScal.Gen.ad_dec_BeaconBlockRoot_seg
 #print axioms E2eScal.Gen.cp_dec_Root_seg
+-- review fix-r1 M2/S1: frozen statement kinds, their lemma ties and anchors, and the generated `_kind` identities
+#print axioms E2eScal.u64DecAcceptKind_of
+#print axioms E2eScal.rootDecSegKind_of
+#print axioms E2eScal.sl_kind_anchor
+#print axioms E2eScal.ci_kind_anchor
+#print axioms E2eScal.Gen.ci_unmarshal_accept_main_g_kind
+#print axioms E2eScal.Gen.ad_dec_BeaconBlockRoot_seg_kind
+#print axioms E2eScal.Gen.cp_dec_Root_seg_kind

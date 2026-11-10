@@ -196,5 +196,69 @@
   "theorem": "cp_enc_tmpl_at",
   "old": "88 80 96",
   "new": "88 80 104"
+ },
+ {
+  "id": "scal-gad-stmt-extra-before",
+  "kind": "stmt",
+  "module": "E2eScal/GenAdDec.lean",
+  "theorem": "ad_dec_BeaconBlockRoot_seg",
+  "old": "(hf : LabelsFresh AdUnmarshal k) :",
+  "new": "(hf : LabelsFresh AdUnmarshal k) (hextra : (1 : Nat) = 2) :"
+ },
+ {
+  "id": "scal-gad-stmt-extra-first",
+  "kind": "stmt",
+  "module": "E2eScal/GenAdDec.lean",
+  "theorem": "ad_dec_BeaconBlockRoot_seg",
+  "old": "theorem ad_dec_BeaconBlockRoot_seg (k : Nat)",
+  "new": "theorem ad_dec_BeaconBlockRoot_seg (hextra : (1 : Nat) = 2) (k : Nat)"
+ },
+ {
+  "id": "scal-gad-stmt-drop",
+  "kind": "stmt",
+  "module": "E2eScal/GenAdDec.lean",
+  "theorem": "ad_dec_BeaconBlockRoot_seg",
+  "old": "(avail : Nat) (hav : 32 ≤ avail)",
+  "new": "(avail : Nat)"
+ },
+ {
+  "id": "scal-gad-stmt-literal",
+  "kind": "stmt",
+  "module": "E2eScal/GenAdDec.lean",
+  "theorem": "ad_dec_BeaconBlockRoot_seg",
+  "old": "Eq ((Int.toBytes 8 32).At aL)",
+  "new": "Eq ((Int.toBytes 8 33).At aL)"
+ },
+ {
+  "id": "scal-gad-kind-arg",
+  "kind": "stmt",
+  "module": "E2eScal/GenAdDec.lean",
+  "theorem": "ad_dec_BeaconBlockRoot_seg",
+  "old": "AdUnmarshal 86 100 128 136 104 24 32 40 16",
+  "new": "AdUnmarshal 86 100 128 136 104 24 32 40 8"
+ },
+ {
+  "id": "scal-gcp-stmt-extra-before",
+  "kind": "stmt",
+  "module": "E2eScal/GenCpDec.lean",
+  "theorem": "cp_dec_Root_seg",
+  "old": "(hf : LabelsFresh CpUnmarshal k) :",
+  "new": "(hf : LabelsFresh CpUnmarshal k) (hextra : (1 : Nat) = 2) :"
+ },
+ {
+  "id": "scal-gci-stmt-extra-before",
+  "kind": "stmt",
+  "module": "E2eScal/GenCi.lean",
+  "theorem": "ci_unmarshal_accept_main_g",
+  "old": "(hlen : s.regs.rcx = 8) :",
+  "new": "(hlen : s.regs.rcx = 8) (hextra : (1 : Nat) = 2) :"
+ },
+ {
+  "id": "scal-gci-stmt-extra-first",
+  "kind": "stmt",
+  "module": "E2eScal/GenCi.lean",
+  "theorem": "ci_unmarshal_accept_main_g",
+  "old": "theorem ci_unmarshal_accept_main_g (k : Nat)",
+  "new": "theorem ci_unmarshal_accept_main_g (hextra : (1 : Nat) = 2) (k : Nat)"
  }
 ]
