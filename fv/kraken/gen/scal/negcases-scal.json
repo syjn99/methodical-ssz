@@ -1,0 +1,182 @@
+[
+ {
+  "id": "scal-sl-control",
+  "kind": "control",
+  "module": "E2eScal/P1Slot.lean",
+  "theorem": "sl_unmarshal_accept_main_s",
+  "code_def": "SlUnmarshal",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
+ },
+ {
+  "id": "scal-sl-fs",
+  "kind": "code",
+  "module": "E2eScal/P1Slot.lean",
+  "theorem": "sl_unmarshal_accept_main_s",
+  "code_def": "SlUnmarshal",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
+  "old": "  sub $0x48,%rsp",
+  "new": "  sub $0x50,%rsp",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
+ },
+ {
+  "id": "scal-sl-load",
+  "kind": "code",
+  "module": "E2eScal/P1Slot.lean",
+  "theorem": "sl_unmarshal_accept_main_s",
+  "code_def": "SlUnmarshal",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
+  "old": "  mov (%rbx),%rcx",
+  "new": "  mov 0x8(%rbx),%rcx",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
+ },
+ {
+  "id": "scal-sl-stmt",
+  "kind": "stmt",
+  "module": "E2eScal/P1Slot.lean",
+  "theorem": "sl_unmarshal_accept_main_s",
+  "old": "Eq (s2.At (s.regs.rsp.toBitVec + 16))",
+  "new": "Eq (s2.At (s.regs.rsp.toBitVec + 24))"
+ },
+ {
+  "id": "scal-gci-control",
+  "kind": "control",
+  "module": "E2eScal/GenCi.lean",
+  "theorem": "ci_unmarshal_accept_main_g",
+  "code_def": "CiUnmarshal",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
+ },
+ {
+  "id": "scal-gci-cmp",
+  "kind": "code",
+  "module": "E2eScal/GenCi.lean",
+  "theorem": "ci_unmarshal_accept_main_g",
+  "code_def": "CiUnmarshal",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "old": "  cmp $0x8,%rcx",
+  "new": "  cmp $0x9,%rcx",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
+ },
+ {
+  "id": "scal-gci-stmt",
+  "kind": "stmt",
+  "module": "E2eScal/GenCi.lean",
+  "theorem": "ci_unmarshal_accept_main_g",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "scal-adr-control",
+  "kind": "control",
+  "module": "E2eScal/P2DecAd.lean",
+  "theorem": "ad_e2e_root_s",
+  "code_def": "AdUnmarshal",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+ },
+ {
+  "id": "scal-adr-src",
+  "kind": "code",
+  "module": "E2eScal/P2DecAd.lean",
+  "theorem": "ad_e2e_root_s",
+  "line": 105,
+  "old": "  add $0x10,%rbx",
+  "new": "  add $0x18,%rbx",
+  "code_def": "AdUnmarshal",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+ },
+ {
+  "id": "scal-adr-stmt",
+  "kind": "stmt",
+  "module": "E2eScal/P2DecAd.lean",
+  "theorem": "ad_e2e_root_s",
+  "old": "Eq ((Int.toBytes 8 32).At (rcv + 40)) ⋆ Eq (root.At p)",
+  "new": "Eq ((Int.toBytes 8 0).At (rcv + 40)) ⋆ Eq (root.At p)"
+ },
+ {
+  "id": "scal-gad-control",
+  "kind": "control",
+  "module": "E2eScal/GenAdDec.lean",
+  "theorem": "ad_dec_BeaconBlockRoot_seg",
+  "code_def": "AdUnmarshal",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+ },
+ {
+  "id": "scal-gad-cap",
+  "kind": "code",
+  "module": "E2eScal/GenAdDec.lean",
+  "theorem": "ad_dec_BeaconBlockRoot_seg",
+  "line": 110,
+  "old": "  movq $0x20,0x28(%rdx)",
+  "new": "  movq $0x21,0x28(%rdx)",
+  "code_def": "AdUnmarshal",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+ },
+ {
+  "id": "scal-gcp-control",
+  "kind": "control",
+  "module": "E2eScal/GenCpDec.lean",
+  "theorem": "cp_dec_Root_seg",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
+ },
+ {
+  "id": "scal-gcp-src",
+  "kind": "code",
+  "module": "E2eScal/GenCpDec.lean",
+  "theorem": "cp_dec_Root_seg",
+  "old": "  add $0x8,%rbx",
+  "new": "  add $0x10,%rbx",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
+ },
+ {
+  "id": "scal-cpa-control",
+  "kind": "control",
+  "module": "E2eScal/P2EncCpAt.lean",
+  "theorem": "cp_enc_tmpl_at",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "scal-cpa-len",
+  "kind": "code",
+  "module": "E2eScal/P2EncCpAt.lean",
+  "theorem": "cp_enc_tmpl_at",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  cmpq $0x20,0x18(%rax)",
+  "new": "  cmpq $0x20,0x20(%rax)"
+ },
+ {
+  "id": "scal-cpa-spill",
+  "kind": "code",
+  "module": "E2eScal/P2EncCpAt.lean",
+  "theorem": "cp_enc_tmpl_at",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov %rdi,0x58(%rsp)",
+  "new": "  mov %rdi,0x50(%rsp)"
+ },
+ {
+  "id": "scal-cpa-stmt",
+  "kind": "stmt",
+  "module": "E2eScal/P2EncCpAt.lean",
+  "theorem": "cp_enc_tmpl_at",
+  "old": "88 80 96",
+  "new": "88 80 104"
+ }
+]

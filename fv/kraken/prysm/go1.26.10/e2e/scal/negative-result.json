@@ -1,0 +1,431 @@
+{
+ "cases": [
+  {
+   "id": "scal-sl-control",
+   "kind": "control",
+   "module": "E2eScal/P1Slot.lean",
+   "theorem": "sl_unmarshal_accept_main_s",
+   "range": [
+    23,
+    57
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 1.1,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "scal-sl-fs",
+   "kind": "code",
+   "module": "E2eScal/P1Slot.lean",
+   "theorem": "sl_unmarshal_accept_main_s",
+   "range": [
+    23,
+    57
+   ],
+   "error_lines": [
+    47
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/s6/neg/scal-sl-fs/mut.lean:47:5: error: unsolved goals",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 1.1,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -4,7 +4,7 @@\n   jbe L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ_cc\n   push %rbp\n   mov %rsp,%rbp\n-  sub $0x48,%rsp\n+  sub $0x50,%rsp\n   mov %rbx,0x60(%rsp)\n   nop\n   cmp $0x8,%rcx\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "scal-sl-load",
+   "kind": "code",
+   "module": "E2eScal/P1Slot.lean",
+   "theorem": "sl_unmarshal_accept_main_s",
+   "range": [
+    23,
+    57
+   ],
+   "error_lines": [
+    51
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/s6/neg/scal-sl-load/mut.lean:51:5: error: unsolved goals",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -42,7 +42,7 @@\n   pop %rbp\n   retq\n L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ_bb:\n-  mov (%rbx),%rcx\n+  mov 0x8(%rbx),%rcx\n   nop\n   mov %rcx,(%rax)\n   xor %eax,%eax\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "scal-sl-stmt",
+   "kind": "stmt",
+   "module": "E2eScal/P1Slot.lean",
+   "theorem": "sl_unmarshal_accept_main_s",
+   "range": [
+    21,
+    55
+   ],
+   "error_lines": [
+    55
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/s6/neg/scal-sl-stmt/mut.lean:55:4: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 1.5,
+   "diff": "--- orig\n+++ mut\n@@ -4,7 +4,7 @@\n     (s : MachineData) (ra guard : UInt64) (fp s2 c0 : List UInt8)\n     (hfp : fp.length = 8) (h2 : s2.length = 8) (hc0 : c0.length = 8) (R : DataMem \u2192 Prop)\n     (h_mem : s.dmem =\u22c6 Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n-      \u22c6 Eq (fp.At (s.regs.rsp.toBitVec - 8)) \u22c6 Eq (s2.At (s.regs.rsp.toBitVec + 16))\n+      \u22c6 Eq (fp.At (s.regs.rsp.toBitVec - 8)) \u22c6 Eq (s2.At (s.regs.rsp.toBitVec + 24))\n       \u22c6 Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))\n       \u22c6 Eq (e8.At s.regs.rbx.toBitVec) \u22c6 Eq (c0.At s.regs.rax.toBitVec) \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 8) :\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "scal-gci-control",
+   "kind": "control",
+   "module": "E2eScal/GenCi.lean",
+   "theorem": "ci_unmarshal_accept_main_g",
+   "range": [
+    16,
+    43
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 1.2,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "scal-gci-cmp",
+   "kind": "code",
+   "module": "E2eScal/GenCi.lean",
+   "theorem": "ci_unmarshal_accept_main_g",
+   "range": [
+    16,
+    43
+   ],
+   "error_lines": [
+    36
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/s6/neg/scal-gci-cmp/mut.lean:36:5: error: unsolved goals",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 1.2,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -7,7 +7,7 @@\n   sub $0x48,%rsp\n   mov %rbx,0x60(%rsp)\n   nop\n-  cmp $0x8,%rcx\n+  cmp $0x9,%rcx\n   je L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ_bb\n   lea 0x28(%rsp),%rdx\n   movups %xmm15,(%rdx)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "scal-gci-stmt",
+   "kind": "stmt",
+   "module": "E2eScal/GenCi.lean",
+   "theorem": "ci_unmarshal_accept_main_g",
+   "range": [
+    14,
+    41
+   ],
+   "error_lines": [
+    40
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/s6/neg/scal-gci-stmt/mut.lean:40:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 1.1,
+   "diff": "--- orig\n+++ mut\n@@ -9,7 +9,7 @@\n       \u22c6 Eq (e8.At s.regs.rbx.toBitVec) \u22c6 Eq (c0.At s.regs.rax.toBitVec) \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 8) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14\n         \u2227 (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n           \u22c6 Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "scal-adr-control",
+   "kind": "control",
+   "module": "E2eScal/P2DecAd.lean",
+   "theorem": "ad_e2e_root_s",
+   "range": [
+    25,
+    106
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 2.0,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "scal-adr-src",
+   "kind": "code",
+   "module": "E2eScal/P2DecAd.lean",
+   "theorem": "ad_e2e_root_s",
+   "range": [
+    25,
+    106
+   ],
+   "error_lines": [
+    68
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/s6/neg/scal-adr-src/mut.lean:68:5: error: unsolved goals",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 2.0,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -102,7 +102,7 @@\n   mov %rax,0x68(%rsp)\n   mov %rax,0x18(%rdx)\n   mov 0x88(%rsp),%rbx\n-  add $0x10,%rbx\n+  add $0x18,%rbx\n   mov $0x20,%ecx\n   callq runtime.memmove\n   mov 0x80(%rsp),%rdx\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "scal-adr-stmt",
+   "kind": "stmt",
+   "module": "E2eScal/P2DecAd.lean",
+   "theorem": "ad_e2e_root_s",
+   "range": [
+    23,
+    104
+   ],
+   "error_lines": [
+    104
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/s6/neg/scal-adr-stmt/mut.lean:104:71: error: ecancel: could not automatically solve goal (Eq ((Int.toBytes 8 rcv.toInt).At (rsp0.toBitVec + 8)) \u22c6",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 2.0,
+   "diff": "--- orig\n+++ mut\n@@ -29,7 +29,7 @@\n           \u22c6 Eq ((Int.toBytes 8 p.toInt).At (rsp0.toBitVec - 16))\n           \u22c6 Heap (avail - 32)\n           \u22c6 Eq ((Int.toBytes 8 p.toInt).At (rcv + 24)) \u22c6 Eq ((Int.toBytes 8 32).At (rcv + 32))\n-          \u22c6 Eq ((Int.toBytes 8 32).At (rcv + 40)) \u22c6 Eq (root.At p)\n+          \u22c6 Eq ((Int.toBytes 8 0).At (rcv + 40)) \u22c6 Eq (root.At p)\n           \u22c6 Eq (root.At (bf + 16))\n           \u22c6 Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec) \u22c6 R) st.data.dmem)\n       \u27e8s, Host.addrOf (k + 85)\u27e9 := by\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "scal-gad-control",
+   "kind": "control",
+   "module": "E2eScal/GenAdDec.lean",
+   "theorem": "ad_dec_BeaconBlockRoot_seg",
+   "range": [
+    18,
+    65
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 1.3,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "scal-gad-cap",
+   "kind": "code",
+   "module": "E2eScal/GenAdDec.lean",
+   "theorem": "ad_dec_BeaconBlockRoot_seg",
+   "range": [
+    18,
+    65
+   ],
+   "error_lines": [
+    59
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/s6/neg/scal-gad-cap/mut.lean:59:5: error: unsolved goals",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 1.3,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -107,7 +107,7 @@\n   callq runtime.memmove\n   mov 0x80(%rsp),%rdx\n   movq $0x20,0x20(%rdx)\n-  movq $0x20,0x28(%rdx)\n+  movq $0x21,0x28(%rdx)\n   cmpl $0x0,runtime.writeBarrier(%rip)\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1f3\n   mov 0x68(%rsp),%rbx\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "scal-gcp-control",
+   "kind": "control",
+   "module": "E2eScal/GenCpDec.lean",
+   "theorem": "cp_dec_Root_seg",
+   "range": [
+    18,
+    65
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 1.1,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "scal-gcp-src",
+   "kind": "code",
+   "module": "E2eScal/GenCpDec.lean",
+   "theorem": "cp_dec_Root_seg",
+   "range": [
+    18,
+    65
+   ],
+   "error_lines": [
+    59
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/s6/neg/scal-gcp-src/mut.lean:59:5: error: unsolved goals",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 1.1,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -65,7 +65,7 @@\n   mov %rax,0x38(%rsp)\n   mov %rax,0x10(%rdx)\n   mov 0x68(%rsp),%rbx\n-  add $0x8,%rbx\n+  add $0x10,%rbx\n   mov $0x20,%ecx\n   callq runtime.memmove\n   mov 0x60(%rsp),%rdx\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "scal-cpa-control",
+   "kind": "control",
+   "module": "E2eScal/P2EncCpAt.lean",
+   "theorem": "cp_enc_tmpl_at",
+   "range": [
+    21,
+    35
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "scal-cpa-len",
+   "kind": "code",
+   "module": "E2eScal/P2EncCpAt.lean",
+   "theorem": "cp_enc_tmpl_at",
+   "range": [
+    21,
+    35
+   ],
+   "error_lines": [
+    30
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/s6/neg/scal-cpa-len/mut.lean:30:2: error: unsolved goals",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -35,7 +35,7 @@\n   mov 0x30(%rsp),%r8\n   mov %r8,(%rbx,%rcx,1)\n   mov 0x10(%rax),%r8\n-  cmpq $0x20,0x18(%rax)\n+  cmpq $0x20,0x20(%rax)\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108\n   lea 0x20(%rdx),%r9\n   cmp %r9,%rdi\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "scal-cpa-spill",
+   "kind": "code",
+   "module": "E2eScal/P2EncCpAt.lean",
+   "theorem": "cp_enc_tmpl_at",
+   "range": [
+    21,
+    35
+   ],
+   "error_lines": [
+    32
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/s6/neg/scal-cpa-spill/mut.lean:32:2: error: unsolved goals",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -54,7 +54,7 @@\n   mov %rbx,%r9\n   mov %rax,%rbx\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf:\n-  mov %rdi,0x58(%rsp)\n+  mov %rdi,0x50(%rsp)\n   mov %r9,0x50(%rsp)\n   mov %rbx,0x60(%rsp)\n   lea (%rbx,%rdx,1),%rax\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "scal-cpa-stmt",
+   "kind": "stmt",
+   "module": "E2eScal/P2EncCpAt.lean",
+   "theorem": "cp_enc_tmpl_at",
+   "range": [
+    19,
+    33
+   ],
+   "error_lines": [
+    30
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/s6/neg/scal-cpa-stmt/mut.lean:30:2: error: unsolved goals",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig\n+++ mut\n@@ -3,7 +3,7 @@\n       \"L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf\" 16 24).IsInfixAt\n         Host.prog (k + 36)\n     \u2227 (rootEncTail \"L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf\"\n-      88 80 96).IsInfixAt Host.prog (k + 55)\n+      88 80 104).IsInfixAt Host.prog (k + 55)\n     \u2227 label \"L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf\"\n       = Host.addrOf (k + 55) := by\n   refine \u27e8infix_sub 36 hk ?_, infix_sub 55 hk ?_, Fk.label_at' hk hf (j := 55) ?_ ?_\u27e9\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  }
+ ],
+ "pass": 18,
+ "total": 18,
+ "classes": {
+  "control_pass": 6,
+  "inside": 12
+ },
+ "case_timeout_s": 300
+}

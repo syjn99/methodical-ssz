@@ -1,0 +1,527 @@
+{
+ "schema": 1,
+ "stage": "S1-S2 template cost (INBOX 011, session 6); not hold-out cost",
+ "source": {
+  "records": "/workspace/agent-runs/methodical-fv-prysm-e2e/gate/records.jsonl",
+  "logs": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/logs",
+  "first_job": 214
+ },
+ "totals": {
+  "jobs": 31,
+  "gate_s": 2270.9,
+  "lake_runs": 24,
+  "failed_lake_runs": 13,
+  "generator_runs": 2,
+  "failed_generator_runs": 0,
+  "jobs_killed_before_run": 3,
+  "peak_rss_gib": 1.83,
+  "memcap_kills": 0
+ },
+ "agent_wall_clock": {
+  "start_utc": "2026-11-10T11:43:19Z",
+  "last_job_end_utc": "2026-11-10T13:27:20Z",
+  "seconds": 6241
+ },
+ "per_module": {
+  "E2eScal.P1": {
+   "runs": 3,
+   "failed_runs": 2,
+   "gate_s": 6.6,
+   "peak_rss_bytes": 1663078400,
+   "memcap_kills": 0,
+   "jobs": [
+    "216-lake-E2eScal.P1",
+    "217-lake-E2eScal.P1",
+    "219-lake-E2eScal.P1"
+   ],
+   "peak_rss_gib": 1.55
+  },
+  "E2eScal.P2Dec": {
+   "runs": 1,
+   "failed_runs": 0,
+   "gate_s": 2.9,
+   "peak_rss_bytes": 1783160832,
+   "memcap_kills": 0,
+   "jobs": [
+    "218-lake-E2eScal.P2Dec"
+   ],
+   "peak_rss_gib": 1.66
+  },
+  "E2eScal.P1Slot": {
+   "runs": 1,
+   "failed_runs": 0,
+   "gate_s": 1.2,
+   "peak_rss_bytes": 1640816640,
+   "memcap_kills": 0,
+   "jobs": [
+    "220-lake-E2eScal.P1Slot"
+   ],
+   "peak_rss_gib": 1.53
+  },
+  "E2eScal.P2DecAd": {
+   "runs": 2,
+   "failed_runs": 1,
+   "gate_s": 6.6,
+   "peak_rss_bytes": 1778315264,
+   "memcap_kills": 0,
+   "jobs": [
+    "221-lake-E2eScal.P2DecAd",
+    "223-lake-E2eScal.P2DecAd"
+   ],
+   "peak_rss_gib": 1.66
+  },
+  "E2eScal.P2Enc": {
+   "runs": 3,
+   "failed_runs": 2,
+   "gate_s": 4.2,
+   "peak_rss_bytes": 1684025344,
+   "memcap_kills": 0,
+   "jobs": [
+    "222-lake-E2eScal.P2Enc",
+    "224-lake-E2eScal.P2Enc",
+    "234-lake-E2eScal.P2Enc"
+   ],
+   "peak_rss_gib": 1.57
+  },
+  "E2eScal.P2EncCp": {
+   "runs": 4,
+   "failed_runs": 3,
+   "gate_s": 2203.0,
+   "peak_rss_bytes": 1961725952,
+   "memcap_kills": 0,
+   "jobs": [
+    "225-lake-E2eScal.P2EncCp",
+    "235-lake-E2eScal.P2EncCp",
+    "239-lake-E2eScal.P2EncCp",
+    "240-lake-E2eScal.P2EncCp"
+   ],
+   "peak_rss_gib": 1.83
+  },
+  "E2eScal.GenCi": {
+   "runs": 1,
+   "failed_runs": 0,
+   "gate_s": 1.8,
+   "peak_rss_bytes": 1647222784,
+   "memcap_kills": 0,
+   "jobs": [
+    "228-lake-E2eScal.GenCi"
+   ],
+   "peak_rss_gib": 1.53
+  },
+  "E2eScal.GenAdDec": {
+   "runs": 3,
+   "failed_runs": 2,
+   "gate_s": 4.8,
+   "peak_rss_bytes": 1694269440,
+   "memcap_kills": 0,
+   "jobs": [
+    "229-lake-E2eScal.GenAdDec",
+    "232-lake-E2eScal.GenAdDec",
+    "237-lake-E2eScal.GenAdDec"
+   ],
+   "peak_rss_gib": 1.58
+  },
+  "E2eScal.GenCpDec": {
+   "runs": 3,
+   "failed_runs": 2,
+   "gate_s": 4.2,
+   "peak_rss_bytes": 1663488000,
+   "memcap_kills": 0,
+   "jobs": [
+    "230-lake-E2eScal.GenCpDec",
+    "233-lake-E2eScal.GenCpDec",
+    "238-lake-E2eScal.GenCpDec"
+   ],
+   "peak_rss_gib": 1.55
+  },
+  "E2eScal.P2EncCpAt": {
+   "runs": 3,
+   "failed_runs": 1,
+   "gate_s": 4.0,
+   "peak_rss_bytes": 1669152768,
+   "memcap_kills": 0,
+   "jobs": [
+    "241-lake-E2eScal.P2EncCpAt",
+    "243-lake-E2eScal.P2EncCpAt",
+    "245-lake-E2eScal.P2EncCpAt"
+   ],
+   "peak_rss_gib": 1.55
+  }
+ },
+ "lines": {
+  "lemma": {
+   "E2eScal/Seg.lean": {
+    "lines": 41,
+    "code_lines": 19
+   },
+   "E2eScal/P1.lean": {
+    "lines": 174,
+    "code_lines": 137
+   },
+   "E2eScal/P2Dec.lean": {
+    "lines": 265,
+    "code_lines": 221
+   },
+   "E2eScal/P2Enc.lean": {
+    "lines": 173,
+    "code_lines": 140
+   }
+  },
+  "in_sample": {
+   "E2eScal/P1Slot.lean": {
+    "lines": 60,
+    "code_lines": 43
+   },
+   "E2eScal/P2DecAd.lean": {
+    "lines": 109,
+    "code_lines": 91
+   },
+   "E2eScal/P2EncCp.lean": {
+    "lines": 219,
+    "code_lines": 200
+   }
+  },
+  "generated": {
+   "E2eScal/GenAdDec.lean": {
+    "lines": 65,
+    "code_lines": 56
+   },
+   "E2eScal/GenCi.lean": {
+    "lines": 46,
+    "code_lines": 36
+   },
+   "E2eScal/GenCpDec.lean": {
+    "lines": 65,
+    "code_lines": 56
+   }
+  },
+  "generator": {
+   "gen/scal/scalgen.py": {
+    "lines": 311,
+    "code_lines": 265
+   },
+   "gen/scal/tcost.py": {
+    "lines": 115,
+    "code_lines": 105
+   }
+  }
+ },
+ "jobs_killed_before_run": [
+  "- 215-lake-E2eScal.P1: S1 P1 attempt 1 \u2014 killed by my foreground timeout while waiting for the gate (reviewer e2e-r4 held it); child never ran (2026-11-10T12:03:01Z)",
+  "- 226-scalgen: S2 generator run 1 \u2014 stopped by me while waiting for the gate (reviewer held it); child never ran (2026-11-10T12:38:14Z)",
+  "- 231-scalgen: S2 generator run 2 \u2014 my script passed an empty cwd (shell variable not set); job.sh failed before the gate; child never ran (2026-11-10T12:49:07Z)"
+ ],
+ "jobs": [
+  {
+   "job": "214-probe-s6",
+   "kind": "probe",
+   "target": "s6",
+   "exit": 1,
+   "gate_s": 1.0,
+   "end_utc": "2026-11-10T11:50:35.247Z",
+   "peak_rss": 1600684032,
+   "memcap_kill": false
+  },
+  {
+   "job": "216-lake-E2eScal.P1",
+   "kind": "lake",
+   "target": "E2eScal.P1",
+   "exit": 1,
+   "gate_s": 2.1,
+   "end_utc": "2026-11-10T12:09:49.278Z",
+   "peak_rss": 1617108992,
+   "memcap_kill": false
+  },
+  {
+   "job": "217-lake-E2eScal.P1",
+   "kind": "lake",
+   "target": "E2eScal.P1",
+   "exit": 1,
+   "gate_s": 2.0,
+   "end_utc": "2026-11-10T12:18:23.282Z",
+   "peak_rss": 1642606592,
+   "memcap_kill": false
+  },
+  {
+   "job": "218-lake-E2eScal.P2Dec",
+   "kind": "lake",
+   "target": "E2eScal.P2Dec",
+   "exit": 0,
+   "gate_s": 2.9,
+   "end_utc": "2026-11-10T12:18:26.212Z",
+   "peak_rss": 1783160832,
+   "memcap_kill": false
+  },
+  {
+   "job": "219-lake-E2eScal.P1",
+   "kind": "lake",
+   "target": "E2eScal.P1",
+   "exit": 0,
+   "gate_s": 2.5,
+   "end_utc": "2026-11-10T12:20:25.773Z",
+   "peak_rss": 1663078400,
+   "memcap_kill": false
+  },
+  {
+   "job": "220-lake-E2eScal.P1Slot",
+   "kind": "lake",
+   "target": "E2eScal.P1Slot",
+   "exit": 0,
+   "gate_s": 1.2,
+   "end_utc": "2026-11-10T12:20:27.019Z",
+   "peak_rss": 1640816640,
+   "memcap_kill": false
+  },
+  {
+   "job": "221-lake-E2eScal.P2DecAd",
+   "kind": "lake",
+   "target": "E2eScal.P2DecAd",
+   "exit": 1,
+   "gate_s": 4.3,
+   "end_utc": "2026-11-10T12:20:31.362Z",
+   "peak_rss": 1778315264,
+   "memcap_kill": false
+  },
+  {
+   "job": "222-lake-E2eScal.P2Enc",
+   "kind": "lake",
+   "target": "E2eScal.P2Enc",
+   "exit": 1,
+   "gate_s": 1.2,
+   "end_utc": "2026-11-10T12:20:32.618Z",
+   "peak_rss": 1561870336,
+   "memcap_kill": false
+  },
+  {
+   "job": "223-lake-E2eScal.P2DecAd",
+   "kind": "lake",
+   "target": "E2eScal.P2DecAd",
+   "exit": 0,
+   "gate_s": 2.3,
+   "end_utc": "2026-11-10T12:43:42.001Z",
+   "peak_rss": 1768759296,
+   "memcap_kill": false
+  },
+  {
+   "job": "224-lake-E2eScal.P2Enc",
+   "kind": "lake",
+   "target": "E2eScal.P2Enc",
+   "exit": 1,
+   "gate_s": 1.2,
+   "end_utc": "2026-11-10T12:43:43.270Z",
+   "peak_rss": 1612103680,
+   "memcap_kill": false
+  },
+  {
+   "job": "225-lake-E2eScal.P2EncCp",
+   "kind": "lake",
+   "target": "E2eScal.P2EncCp",
+   "exit": 1,
+   "gate_s": 1.2,
+   "end_utc": "2026-11-10T12:43:44.547Z",
+   "peak_rss": 1552183296,
+   "memcap_kill": false
+  },
+  {
+   "job": "227-scalgen",
+   "kind": "scalgen",
+   "target": null,
+   "exit": 0,
+   "gate_s": 0.2,
+   "end_utc": "2026-11-10T12:48:42.123Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "228-lake-E2eScal.GenCi",
+   "kind": "lake",
+   "target": "E2eScal.GenCi",
+   "exit": 0,
+   "gate_s": 1.8,
+   "end_utc": "2026-11-10T12:48:43.979Z",
+   "peak_rss": 1647222784,
+   "memcap_kill": false
+  },
+  {
+   "job": "229-lake-E2eScal.GenAdDec",
+   "kind": "lake",
+   "target": "E2eScal.GenAdDec",
+   "exit": 1,
+   "gate_s": 1.6,
+   "end_utc": "2026-11-10T12:48:45.677Z",
+   "peak_rss": 1658445824,
+   "memcap_kill": false
+  },
+  {
+   "job": "230-lake-E2eScal.GenCpDec",
+   "kind": "lake",
+   "target": "E2eScal.GenCpDec",
+   "exit": 1,
+   "gate_s": 1.4,
+   "end_utc": "2026-11-10T12:48:47.137Z",
+   "peak_rss": 1662300160,
+   "memcap_kill": false
+  },
+  {
+   "job": "232-lake-E2eScal.GenAdDec",
+   "kind": "lake",
+   "target": "E2eScal.GenAdDec",
+   "exit": 1,
+   "gate_s": 1.4,
+   "end_utc": "2026-11-10T12:48:57.852Z",
+   "peak_rss": 1694269440,
+   "memcap_kill": false
+  },
+  {
+   "job": "233-lake-E2eScal.GenCpDec",
+   "kind": "lake",
+   "target": "E2eScal.GenCpDec",
+   "exit": 1,
+   "gate_s": 1.4,
+   "end_utc": "2026-11-10T12:48:59.324Z",
+   "peak_rss": 1611931648,
+   "memcap_kill": false
+  },
+  {
+   "job": "234-lake-E2eScal.P2Enc",
+   "kind": "lake",
+   "target": "E2eScal.P2Enc",
+   "exit": 0,
+   "gate_s": 1.8,
+   "end_utc": "2026-11-10T12:49:01.211Z",
+   "peak_rss": 1684025344,
+   "memcap_kill": false
+  },
+  {
+   "job": "235-lake-E2eScal.P2EncCp",
+   "kind": "lake",
+   "target": "E2eScal.P2EncCp",
+   "exit": 1,
+   "gate_s": 736.0,
+   "end_utc": "2026-11-10T13:01:17.209Z",
+   "peak_rss": 1759715328,
+   "memcap_kill": false
+  },
+  {
+   "job": "236-scalgen",
+   "kind": "scalgen",
+   "target": null,
+   "exit": 0,
+   "gate_s": 0.2,
+   "end_utc": "2026-11-10T13:01:37.429Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "237-lake-E2eScal.GenAdDec",
+   "kind": "lake",
+   "target": "E2eScal.GenAdDec",
+   "exit": 0,
+   "gate_s": 1.8,
+   "end_utc": "2026-11-10T13:01:39.311Z",
+   "peak_rss": 1689055232,
+   "memcap_kill": false
+  },
+  {
+   "job": "238-lake-E2eScal.GenCpDec",
+   "kind": "lake",
+   "target": "E2eScal.GenCpDec",
+   "exit": 0,
+   "gate_s": 1.4,
+   "end_utc": "2026-11-10T13:01:40.784Z",
+   "peak_rss": 1663488000,
+   "memcap_kill": false
+  },
+  {
+   "job": "239-lake-E2eScal.P2EncCp",
+   "kind": "lake",
+   "target": "E2eScal.P2EncCp",
+   "exit": 1,
+   "gate_s": 732.2,
+   "end_utc": "2026-11-10T13:13:52.993Z",
+   "peak_rss": 1938235392,
+   "memcap_kill": false
+  },
+  {
+   "job": "240-lake-E2eScal.P2EncCp",
+   "kind": "lake",
+   "target": "E2eScal.P2EncCp",
+   "exit": 0,
+   "gate_s": 733.6,
+   "end_utc": "2026-11-10T13:26:17.948Z",
+   "peak_rss": 1961725952,
+   "memcap_kill": false
+  },
+  {
+   "job": "241-lake-E2eScal.P2EncCpAt",
+   "kind": "lake",
+   "target": "E2eScal.P2EncCpAt",
+   "exit": 1,
+   "gate_s": 1.4,
+   "end_utc": "2026-11-10T13:26:19.882Z",
+   "peak_rss": 1669152768,
+   "memcap_kill": false
+  },
+  {
+   "job": "242-scal-ev",
+   "kind": "scal",
+   "target": "ev",
+   "exit": 1,
+   "gate_s": 23.9,
+   "end_utc": "2026-11-10T13:26:43.808Z",
+   "peak_rss": 848314368,
+   "memcap_kill": false
+  },
+  {
+   "job": "243-lake-E2eScal.P2EncCpAt",
+   "kind": "lake",
+   "target": "E2eScal.P2EncCpAt",
+   "exit": 0,
+   "gate_s": 1.2,
+   "end_utc": "2026-11-10T13:26:59.850Z",
+   "peak_rss": 1662853120,
+   "memcap_kill": false
+  },
+  {
+   "job": "244-scal-axioms",
+   "kind": "scal",
+   "target": "axioms",
+   "exit": 0,
+   "gate_s": 1.0,
+   "end_utc": "2026-11-10T13:27:00.922Z",
+   "peak_rss": 1597939712,
+   "memcap_kill": false
+  },
+  {
+   "job": "245-lake-E2eScal.P2EncCpAt",
+   "kind": "lake",
+   "target": "E2eScal.P2EncCpAt",
+   "exit": 0,
+   "gate_s": 1.4,
+   "end_utc": "2026-11-10T13:27:15.115Z",
+   "peak_rss": 1629188096,
+   "memcap_kill": false
+  },
+  {
+   "job": "246-scal-neg",
+   "kind": "scal",
+   "target": "neg",
+   "exit": 0,
+   "gate_s": 4.3,
+   "end_utc": "2026-11-10T13:27:19.459Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "247-scal-axioms",
+   "kind": "scal",
+   "target": "axioms",
+   "exit": 0,
+   "gate_s": 1.0,
+   "end_utc": "2026-11-10T13:27:20.517Z",
+   "peak_rss": 1607196672,
+   "memcap_kill": false
+  }
+ ],
+ "note": "Lemma counts are not evidence. The in-sample files re-derive existing hand theorems with the same statement; their cost is template cost. Gate seconds exclude time spent waiting for the gate."
+}

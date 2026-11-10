@@ -1,0 +1,88 @@
+{
+ "allowed": [
+  "Classical.choice",
+  "Quot.sound",
+  "propext"
+ ],
+ "theorems": {
+  "E2eScal.infix_sub": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eScal.u64dec_accept": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eScal.rootdec_seg": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eScal.rootenc_seg": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eScal.sl_unmarshal_accept_main_s": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eScal.sl_same_stmt": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eScal.ad_e2e_root_s": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eScal.ad_root_same_stmt": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eScal.cp_e2e_marshal_main_s": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eScal.cp_marshal_same_stmt": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eScal.cp_enc_tmpl_at": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eScal.Gen.ci_unmarshal_accept_main_g": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eScal.Gen.ci_unmarshal_accept_main_g_same": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eScal.Gen.ad_dec_BeaconBlockRoot_seg": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eScal.Gen.cp_dec_Root_seg": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ]
+ },
+ "missing": [],
+ "nonstandard": {},
+ "count": 15,
+ "verdict": "PASS"
+}
