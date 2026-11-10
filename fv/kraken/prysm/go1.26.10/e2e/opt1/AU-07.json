@@ -1,0 +1,40 @@
+{
+ "item": "INBOX 015 OPT-1 item 8 (audit AU-07)",
+ "result": "NOT DONE: 3 attempts used, no speed-up; lean/E2eScal/P2EncCp.lean left unchanged",
+ "before": "audit numbers (not rerun by session 7): build 732 s (agent C profile: one omega call 720 s of 721 s tactic time), 725 s (agent A)",
+ "method": "each attempt = one gated job: `lake build --no-build <imports>` exit 0, then `lake env lean` of a scratch copy (not in the tree) with -Dprofiler=true -Dprofiler.threshold=2000 (attempt 2 also trace.profiler); n = 1",
+ "attempts": [
+  {
+   "n": 1,
+   "job": 279,
+   "change": "the hfit side goal (lines 164-165, audit attribution) replaced by a standalone lemma cp_enc_fit over the two capacity bounds only",
+   "rc": 0,
+   "seconds": 973.0,
+   "profile": "tactic execution of omega took 968s",
+   "peak_gib": 1.89,
+   "reading": "no speed-up: the slow omega is not the hfit side goal; the audit attribution to lines 164-165 is not confirmed"
+  },
+  {
+   "n": 2,
+   "job": 280,
+   "change": "diagnosis run on the attempt-1 text with trace.profiler (threshold 100 s) to locate the call",
+   "rc": 0,
+   "seconds": 979,
+   "profile": "omega took 973s; the trace printed no timed node, so the call was not located",
+   "peak_gib": 1.87
+  },
+  {
+   "n": 3,
+   "job": 281,
+   "change": "attempt 1 + the three haves hA/hB/hl (the only context difference from the 4.5 s hand proof at every omega) inlined into the rootenc_seg application",
+   "rc": 1,
+   "seconds": 958.4,
+   "profile": "omega took 953s; new error 'No goals to be solved' at 164:83 (an inlined `; rfl` after a closing simp)",
+   "peak_gib": 1.87,
+   "reading": "the haves are not the cause either (the omega cost is unchanged before the new error)"
+  }
+ ],
+ "open": "which omega call of cp_e2e_marshal_main_s takes ~720-970 s is not located (candidates by text: lines 95, 96, 144, 212 of the committed file). The encode template stays net-negative in build time so far (732 s vs 4.5 s for the hand proof).",
+ "statement": "unchanged (no file change)",
+ "negatives": "no negative case targets E2eScal/P2EncCp.lean (P2EncCpAt is the code-negative target); none rerun"
+}

@@ -338,6 +338,8 @@ Go 1.26.3 증명은 옮기지 않았다. 모든 지시 색인, 오프셋, 레이
 표의 행은 부정 시험 사례를 하나씩 정확히 한 번 센다. 세션 5에서 A2/A3 단위(Slot, CommitteeIndex, AttestationData 디코더, 명세 다리)와 도달 불가 보조정리의 행을 더했다(리뷰 e2e-r3 S5). 7b5e956의 표 합 98은 E2e 모듈 사례 96건 중 `cpu-*` 2건을 빼고 E2eAd의 `cps-*` 4건을 더한 값이었다.
 AttestationData 인코더(A4–A6)는 시작하지 않았다.
 감사 AU-11: "나머지" 칸은 `gen/e2e/table.py`가 정리 문장에서 읽는다. `⋆ True`는 결론의 나머지 메모리를 말하지 않는다는 뜻이다. 이런 정리는 5개다: `cp_e2e_marshal_decoded_receiver`, `cp_e2e_marshal_spec_k`, `cp_e2e_unmarshal_then_marshal`, `cp_e2e_marshal_cover`, `cp_e2e_marshal_reject_cover`. 정확한 프레임은 각 구성 정리와 `*_framed` 덮기 정리에 있다. 합성 `cp_e2e_unmarshal_then_marshal`에는 프레임을 적은 판이 없다.
+감사 AU-06(세션 7): 덮기 증인 4개는 E2e 쪽 전술 `wit_split_n`(`E2e/WitSplit.lean`)을 쓴다. `Fk/WHost.lean`은 그대로다. 같은 방법으로 한 번씩 잰 정교화 시간: WitCpW 265.6→39.2초, WitCpWF 262.7→35.0초, WitCpWR 517.7→47.7초, WitCpWRF 590.8→43.4초(`opt1/AU-06.json`). 이름 있는 선언의 문장과 공리는 같다.
+감사 AU-07(세션 7): `E2eScal.P2EncCp`는 바꾸지 않았다. 시도 3번에서 빨라지지 않았다. 느린 omega는 `hfit` 곁목표가 아니고 위치를 찾지 못했다(`opt1/AU-07.json`).
 감사 AU-12: `cp_e2e_marshal_decoded_receiver`는 따름 정리이고 자기 증인이 없다. `WitCpM`은 `cp_e2e_marshal_main`을 실행한다. `*_spec_here`(`ep`, `sl`, `ci`, `cpu`, `cpm`)는 명세가 그 호스트에서 성립함을 보인다. 주 정리 전제의 만족 가능성(비공허성)은 실행 증인(`*_runs`)이 보인다.
 
 | 정리 | 의무 | 문장 | 증인 | 기계어 정리 | 나머지 | 링크 | 부정 시험 | Go 값 |
