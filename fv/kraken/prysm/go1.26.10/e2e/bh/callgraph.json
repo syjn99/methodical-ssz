@@ -1,0 +1,268 @@
+{
+ "functions": {
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockHeader).MarshalSSZTo": {
+   "addr": "0xa16f60",
+   "instructions": 182,
+   "calls": [
+    {
+     "site": "0xa16fca",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa1702e",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa17091",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa170ca",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa17122",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa17151",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa171ae",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa171e0",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa17273",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (H1 encoder fast path)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockHeader).UnmarshalSSZ": {
+   "addr": "0xa172a0",
+   "instructions": 198,
+   "calls": [
+    {
+     "site": "0xa172e7",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec SlUAccC, proved from machine code"
+    },
+    {
+     "site": "0xa17320",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps 'Slot: %w', 'ProposerIndex: %w'); decoder: unreachable under the callee specs; ValidatorIndex length reject (not in H1)"
+    },
+    {
+     "site": "0xa17332",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0xa17380",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*ValidatorIndex).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec ViUAccC, proved from machine code (P1)"
+    },
+    {
+     "site": "0xa173b9",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps 'Slot: %w', 'ProposerIndex: %w'); decoder: unreachable under the callee specs; ValidatorIndex length reject (not in H1)"
+    },
+    {
+     "site": "0xa173cd",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0xa1740c",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0xa17433",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa17456",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa17486",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa174a9",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0xa174d0",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa174f3",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa17521",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa17544",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0xa1756b",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa1758e",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa175c0",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa1760d",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (H1 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*ValidatorIndex).UnmarshalSSZ": {
+   "addr": "0x69ff40",
+   "instructions": 58,
+   "calls": [
+    {
+     "site": "0x69ff93",
+     "target": "runtime.convT64",
+     "class": "b",
+     "how": "ConvT64C (Slot/CommitteeIndex length reject only; not on the accept specs)"
+    },
+    {
+     "site": "0x69ffc2",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps 'Slot: %w', 'ProposerIndex: %w'); decoder: unreachable under the callee specs; ValidatorIndex length reject (not in H1)"
+    },
+    {
+     "site": "0x69ffd4",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0x6a0020",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (H1 P1 callee)"
+  },
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*ValidatorIndex).MarshalSSZTo": {
+   "addr": "0x6a0040",
+   "instructions": 47,
+   "calls": [
+    {
+     "site": "0x6a008e",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x6a00d1",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "record only (inlined into BeaconBlockHeader.MarshalSSZTo or unused)"
+  }
+ },
+ "call_counts": {
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockHeader).MarshalSSZTo": {
+   "runtime.growslice": 5,
+   "runtime.memmove": 3,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockHeader).UnmarshalSSZ": {
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ": 1,
+   "fmt.errorf": 2,
+   "runtime.newobject": 2,
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*ValidatorIndex).UnmarshalSSZ": 1,
+   "runtime.makeslice": 3,
+   "runtime.gcWriteBarrier2": 6,
+   "runtime.memmove": 3,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*ValidatorIndex).UnmarshalSSZ": {
+   "runtime.convT64": 1,
+   "fmt.errorf": 1,
+   "runtime.newobject": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*ValidatorIndex).MarshalSSZTo": {
+   "runtime.growslice": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  }
+ },
+ "asm_inlining": {
+  "BeaconBlockHeader.MarshalSSZTo calls a Slot/ValidatorIndex method": false
+ },
+ "unclassified_in_scope": [],
+ "missing": []
+}
