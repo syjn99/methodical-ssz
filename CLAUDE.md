@@ -6,7 +6,7 @@ only when the session starts in the repository root. Start FV sessions there.
 @AGENTS.md
 @fv/AGENTS.md
 
-If the rules of `AGENTS.md` and `fv/AGENTS.md` are not in your context
+If the rules of either file (`AGENTS.md`, `fv/AGENTS.md`) are not in your context
 (for example, the session started in a subdirectory), read both files from the repository root before FV work.
 
 Before FV work (proofs, generator output, Lean builds, drift or review reports, findings),
