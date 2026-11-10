@@ -627,5 +627,157 @@
   "theorem": "cp_accept_spec_runs",
   "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
   "new": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 1"
+ },
+ {
+  "id": "sl-control",
+  "kind": "control",
+  "module": "E2eAd/Prims.lean",
+  "theorem": "sl_unmarshal_accept_main",
+  "code_def": "SlUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
+ },
+ {
+  "id": "sl-cmp9",
+  "kind": "code",
+  "module": "E2eAd/Prims.lean",
+  "theorem": "sl_unmarshal_accept_main",
+  "code_def": "SlUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
+  "old": "  cmp $0x8,%rcx",
+  "new": "  cmp $0x9,%rcx",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
+ },
+ {
+  "id": "sl-load8",
+  "kind": "code",
+  "module": "E2eAd/Prims.lean",
+  "theorem": "sl_unmarshal_accept_main",
+  "code_def": "SlUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
+  "old": "  mov (%rbx),%rcx",
+  "new": "  mov 0x8(%rbx),%rcx",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
+ },
+ {
+  "id": "sl-store8",
+  "kind": "code",
+  "module": "E2eAd/Prims.lean",
+  "theorem": "sl_unmarshal_accept_main",
+  "code_def": "SlUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
+  "line": 47,
+  "old": "  mov %rcx,(%rax)",
+  "new": "  mov %rcx,0x8(%rax)",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
+ },
+ {
+  "id": "sl-stmt-rax1",
+  "kind": "stmt",
+  "module": "E2eAd/Prims.lean",
+  "theorem": "sl_unmarshal_accept_main",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
+  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
+ },
+ {
+  "id": "ci-control",
+  "kind": "control",
+  "module": "E2eAd/Prims.lean",
+  "theorem": "ci_unmarshal_accept_main",
+  "code_def": "CiUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
+ },
+ {
+  "id": "ci-cmp9",
+  "kind": "code",
+  "module": "E2eAd/Prims.lean",
+  "theorem": "ci_unmarshal_accept_main",
+  "code_def": "CiUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "old": "  cmp $0x8,%rcx",
+  "new": "  cmp $0x9,%rcx",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
+ },
+ {
+  "id": "ci-load8",
+  "kind": "code",
+  "module": "E2eAd/Prims.lean",
+  "theorem": "ci_unmarshal_accept_main",
+  "code_def": "CiUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "old": "  mov (%rbx),%rcx",
+  "new": "  mov 0x8(%rbx),%rcx",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
+ },
+ {
+  "id": "ci-store8",
+  "kind": "code",
+  "module": "E2eAd/Prims.lean",
+  "theorem": "ci_unmarshal_accept_main",
+  "code_def": "CiUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "line": 47,
+  "old": "  mov %rcx,(%rax)",
+  "new": "  mov %rcx,0x8(%rax)",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
+ },
+ {
+  "id": "ci-stmt-rax1",
+  "kind": "stmt",
+  "module": "E2eAd/Prims.lean",
+  "theorem": "ci_unmarshal_accept_main",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
+  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
+ },
+ {
+  "id": "spa-control",
+  "kind": "control",
+  "module": "E2eAd/Spec.lean",
+  "theorem": "pad_spec_accepts_iff"
+ },
+ {
+  "id": "spa-stmt-127",
+  "kind": "stmt",
+  "module": "E2eAd/Spec.lean",
+  "theorem": "pad_spec_accepts_iff",
+  "old": "↔ bs.size = 128",
+  "new": "↔ bs.size = 127"
+ },
+ {
+  "id": "spa-control-ser",
+  "kind": "control",
+  "module": "E2eAd/Spec.lean",
+  "theorem": "prysmAdDesc_serialize_checker"
+ },
+ {
+  "id": "spa-stmt-ser-cp",
+  "kind": "stmt",
+  "module": "E2eAd/Spec.lean",
+  "theorem": "prysmAdDesc_serialize_checker",
+  "old": "serialize adCheckerDesc v",
+  "new": "serialize prysmCpDesc v"
+ },
+ {
+  "id": "spa-control-de",
+  "kind": "control",
+  "module": "E2eAd/Spec.lean",
+  "theorem": "prysmAdDesc_deserialize_checker"
+ },
+ {
+  "id": "spa-stmt-de-cp",
+  "kind": "stmt",
+  "module": "E2eAd/Spec.lean",
+  "theorem": "prysmAdDesc_deserialize_checker",
+  "old": "deserialize adCheckerDesc bs = .ok v",
+  "new": "deserialize prysmCpDesc bs = .ok v"
  }
 ]

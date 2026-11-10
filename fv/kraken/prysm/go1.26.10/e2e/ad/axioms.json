@@ -1,0 +1,82 @@
+{
+ "allowed": [
+  "Classical.choice",
+  "Quot.sound",
+  "propext"
+ ],
+ "theorems": {
+  "E2e.prysmAdDesc_serialize_checker": [
+   "propext",
+   "Quot.sound"
+  ],
+  "E2e.prysmAdDesc_deserialize_checker": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.pad_serialize": [
+   "propext",
+   "Quot.sound"
+  ],
+  "E2e.pad_roundtrip": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.pad_spec_accepts_iff": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.pad_spec_rejects": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.sl_unmarshal_accept_main": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.sl_uacc_holds": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.ci_unmarshal_accept_main": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.ci_uacc_holds": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.WitSl.sl_accept_runs": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.WitSl.sl_spec_here": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.WitCi.ci_accept_runs": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.WitCi.ci_spec_here": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.prysmAdDesc_checker": []
+ },
+ "missing": [],
+ "nonstandard": {},
+ "count": 15,
+ "verdict": "PASS"
+}
