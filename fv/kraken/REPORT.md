@@ -343,6 +343,8 @@ Go 1.26.3 증명은 옮기지 않았다. 모든 지시 색인, 오프셋, 레이
 
 부정 시험 전체: 73/73 통과 (`negative/result.json`). Go 차분: 48건, 불일치 0건 (`differential.json`). 공리: 49개 이름, 판정 PASS (`axioms.json`).
 
+리뷰 e2e-r1 처리(세션 2): M1 수정(진짜 합성 `cp_e2e_unmarshal_then_marshal`), S1 증명(`E2e.SpecEq`), S2 문구 유지(`cp_e2e_epoch_err_unreachable`은 지시 18에서 rax = 0이면 지시 47에 닿는다는 국소 보조정리이고, rax = 0은 `ep_uacc_holds`가 준다; 둘을 잇는 단일 정리는 쓰지 않았다), S3 E2e include 파일과 `e2e/AXIOMS.txt`의 sha256을 `e2e.json` `e2e_include_sha256`에 기록, S4 재현 줄, S5 adjustframe 행, S6 증인 `WitCpAS`·`WitCpRS`, S7 사례별 900초 제한으로 전체 부정 시험을 실행(gate 작업 125: 73/73, 시간 초과 0, 최장 490초), S8 차분 확장(수신자 불변, 오류 정체성과 반대 오류 아님, Epoch 오류 문구, C-1 바이트를 호출자 배열에서 관찰), S9 참조 행 G-2, G-3.
+
 수용기 메모: 정리의 수신자 배치는 `prysm/ir/ir-mainnet.json` `go_fields`(gc amd64 규칙)다. `state` 0, `Epoch` 8, `Root` 16, `unknownFields` 40, `sizeCache` 64, 크기 72.
 Go 값 요소: `E2e.GoVal`의 `cpGoValue`로 모든 증인 수신자 바이트를 평가해 확인했다. 배치는 IR(go/types)에서 왔다. ELF abi.Type은 이름 있는 기호가 없어서 읽지 않았다(신뢰 항목).
 인코더 스택 임시 영역 32바이트 중 8–31바이트는 X15 내용이다. X15 = 0을 가정하지 않아서 결론에서 존재 양화다.

@@ -226,5 +226,18 @@
    "status": "absent from the code",
    "counts_as_reject": false
   }
- ]
+ ],
+ "e2e_include_sha256": {
+  "lean/E2e/Code.lean": "eddb369f7e981590a0fe7d60cff12f753f40f89aba92e5718bd95c0fabd0d728",
+  "lean/E2e/Data.lean": "3be0b30a4d71d726d67dbcbbb85afe88b7a741f3f8b2fdaf8bd0c42d7f7de4af",
+  "lean/E2e/Include.lean": "1f3517fe642186c9212ada0ddf2d16a50860e69eac4e0df4fd1517dc6b57c5e1",
+  "prysm/go1.26.10/e2e/AXIOMS.txt": "3b32378a27d853edc7675d74ff181326b3a86733bd07b48459b83e92a1c5a805",
+  "note": "review e2e-r1 S3: the link bundle hash covers lean/Fk/Code.lean and the Go 1.26.3 AXIOMS.txt (check.py unchanged); these are the E2e include files and the E2e axioms list"
+ },
+ "negative_suite": {
+  "run": "gate job 125 (full suite, per-case limit 900 s, review e2e-r1 S7)",
+  "pass": 73,
+  "total": 73,
+  "timeouts": 0
+ }
 }
