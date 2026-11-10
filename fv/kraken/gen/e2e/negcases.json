@@ -792,8 +792,8 @@
   "module": "E2eAd/CpSpecs.lean",
   "theorem": "cp_uacc_holds",
   "old": "(hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) : CpUAccC Heap S",
-  "new": "(hmm : MemmoveC S) : CpUAccC Heap S",
-  "why": "without the makeslice contract the decoder spec cannot be derived"
+  "new": "(hms : True) (hmm : MemmoveC S) : CpUAccC Heap S",
+  "why": "audit AU-04: the makeslice hypothesis keeps its name with type True (was: binder deleted, unknown identifier); without the makeslice contract the decoder spec cannot be derived"
  },
  {
   "id": "cps-control-m",
@@ -807,8 +807,8 @@
   "module": "E2eAd/CpSpecs.lean",
   "theorem": "cp_macc_holds",
   "old": "(S : Nat) (hmm : MemmoveC S) : CpMAccC S",
-  "new": "(S : Nat) : CpMAccC S",
-  "why": "without the memmove contract the encoder spec cannot be derived"
+  "new": "(S : Nat) (hmm : True) : CpMAccC S",
+  "why": "audit AU-04: the memmove hypothesis keeps its name with type True (was: binder deleted, unknown identifier); without the memmove contract the encoder spec cannot be derived"
  },
  {
   "id": "ada-h-control",
@@ -1057,8 +1057,8 @@
   "module": "E2eAd/AdAccept.lean",
   "theorem": "ad_e2e_accept_main",
   "old": "(hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S)",
-  "new": "(hmm : MemmoveC S)",
-  "why": "without the Checkpoint callee's makeslice contract CpUAccC cannot be discharged"
+  "new": "(hms : True) (hmm : MemmoveC S)",
+  "why": "audit AU-04: the Checkpoint callee's makeslice hypothesis keeps its name with type True (was: binder deleted, unknown identifier); without it CpUAccC cannot be discharged"
  },
  {
   "id": "ada-k-control",
