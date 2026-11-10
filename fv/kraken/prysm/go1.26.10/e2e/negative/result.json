@@ -14,12 +14,13 @@
    "rc": 0,
    "killed": false,
    "timeout": false,
-   "seconds": 1.9,
-   "pass": true,
-   "diff": "",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 1.9,
+   "diff": "",
    "class": "control_pass",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "ep-cmp9",
@@ -37,12 +38,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 1.9,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -7,7 +7,7 @@\n   sub $0x48,%rsp\n   mov %rbx,0x60(%rsp)\n   nop\n-  cmp $0x8,%rcx\n+  cmp $0x9,%rcx\n   je L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ_bb\n   lea 0x28(%rsp),%rdx\n   movups %xmm15,(%rdx)\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 1.9,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -7,7 +7,7 @@\n   sub $0x48,%rsp\n   mov %rbx,0x60(%rsp)\n   nop\n-  cmp $0x8,%rcx\n+  cmp $0x9,%rcx\n   je L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ_bb\n   lea 0x28(%rsp),%rdx\n   movups %xmm15,(%rdx)\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "ep-load8",
@@ -62,12 +64,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 126.2,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -42,7 +42,7 @@\n   pop %rbp\n   retq\n L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ_bb:\n-  mov (%rbx),%rcx\n+  mov 0x8(%rbx),%rcx\n   nop\n   mov %rcx,(%rax)\n   xor %eax,%eax\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 127.5,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -42,7 +42,7 @@\n   pop %rbp\n   retq\n L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ_bb:\n-  mov (%rbx),%rcx\n+  mov 0x8(%rbx),%rcx\n   nop\n   mov %rcx,(%rax)\n   xor %eax,%eax\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/ep-load8/mut.lean:35:0: error: (deterministic) timeout at `whnf`, maximum number of heartbeats (4000000) has been reached"
   },
   {
    "id": "ep-store8",
@@ -85,12 +88,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 2.0,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -44,7 +44,7 @@\n L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ_bb:\n   mov (%rbx),%rcx\n   nop\n-  mov %rcx,(%rax)\n+  mov %rcx,0x8(%rax)\n   xor %eax,%eax\n   xor %ebx,%ebx\n   add $0x48,%rsp\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 2.0,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -44,7 +44,7 @@\n L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ_bb:\n   mov (%rbx),%rcx\n   nop\n-  mov %rcx,(%rax)\n+  mov %rcx,0x8(%rax)\n   xor %eax,%eax\n   xor %ebx,%ebx\n   add $0x48,%rsp\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "ep-stmt-rax1",
@@ -108,12 +112,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 1.9,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -9,7 +9,7 @@\n       \u22c6 Eq (e8.At s.regs.rbx.toBitVec) \u22c6 Eq (c0.At s.regs.rax.toBitVec) \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 8) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14\n         \u2227 (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n           \u22c6 Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 2.0,
+   "diff": "--- orig\n+++ mut\n@@ -9,7 +9,7 @@\n       \u22c6 Eq (e8.At s.regs.rbx.toBitVec) \u22c6 Eq (c0.At s.regs.rax.toBitVec) \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 8) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14\n         \u2227 (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n           \u22c6 Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpa-control-main",
@@ -129,12 +134,13 @@
    "rc": 0,
    "killed": false,
    "timeout": false,
-   "seconds": 5.7,
-   "pass": true,
-   "diff": "",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 5.7,
+   "diff": "",
    "class": "control_pass",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpa-cmp41",
@@ -152,12 +158,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 5.9,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -7,7 +7,7 @@\n   sub $0x50,%rsp\n   mov %rbx,0x68(%rsp)\n   nop\n-  cmp $0x28,%rcx\n+  cmp $0x29,%rcx\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_16b\n   mov %rax,0x60(%rsp)\n   mov %rbx,0x68(%rsp)\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 5.9,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -7,7 +7,7 @@\n   sub $0x50,%rsp\n   mov %rbx,0x68(%rsp)\n   nop\n-  cmp $0x28,%rcx\n+  cmp $0x29,%rcx\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_16b\n   mov %rax,0x60(%rsp)\n   mov %rbx,0x68(%rsp)\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpa-epoch-field",
@@ -175,12 +182,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 5.3,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -12,7 +12,7 @@\n   mov %rax,0x60(%rsp)\n   mov %rbx,0x68(%rsp)\n   test %al,(%rax)\n-  add $0x8,%rax\n+  add $0x10,%rax\n   mov $0x8,%ecx\n   nop\n   callq github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 5.3,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -12,7 +12,7 @@\n   mov %rax,0x60(%rsp)\n   mov %rbx,0x68(%rsp)\n   test %al,(%rax)\n-  add $0x8,%rax\n+  add $0x10,%rax\n   mov $0x8,%ecx\n   nop\n   callq github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpa-epoch-len",
@@ -198,12 +206,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 5.4,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -13,7 +13,7 @@\n   mov %rbx,0x68(%rsp)\n   test %al,(%rax)\n   add $0x8,%rax\n-  mov $0x8,%ecx\n+  mov $0x9,%ecx\n   nop\n   callq github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ\n   test %rax,%rax\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 5.2,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -13,7 +13,7 @@\n   mov %rbx,0x68(%rsp)\n   test %al,(%rax)\n   add $0x8,%rax\n-  mov $0x8,%ecx\n+  mov $0x9,%ecx\n   nop\n   callq github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ\n   test %rax,%rax\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpa-stmt-rbx1",
@@ -222,12 +231,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 5.3,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -27,7 +27,7 @@\n     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 40) (hav : 32 \u2264 avail)\n     (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (p : BitVec 64) (scr mm : List UInt8), scr.length = S \u2227 mm.length = 24 \u2227\n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 5.3,
+   "diff": "--- orig\n+++ mut\n@@ -27,7 +27,7 @@\n     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 40) (hav : 32 \u2264 avail)\n     (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (p : BitVec 64) (scr mm : List UInt8), scr.length = S \u2227 mm.length = 24 \u2227\n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpa-control-tail",
@@ -243,12 +253,13 @@
    "rc": 0,
    "killed": false,
    "timeout": false,
-   "seconds": 4.9,
-   "pass": true,
-   "diff": "",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 4.9,
+   "diff": "",
    "class": "control_pass",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpa-cap33",
@@ -266,12 +277,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 4.9,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -70,7 +70,7 @@\n   callq runtime.memmove\n   mov 0x60(%rsp),%rdx\n   movq $0x20,0x18(%rdx)\n-  movq $0x20,0x20(%rdx)\n+  movq $0x21,0x20(%rdx)\n   cmpl $0x0,runtime.writeBarrier(%rip)\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_142\n   mov 0x38(%rsp),%rsi\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 4.9,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -70,7 +70,7 @@\n   callq runtime.memmove\n   mov 0x60(%rsp),%rdx\n   movq $0x20,0x18(%rdx)\n-  movq $0x20,0x20(%rdx)\n+  movq $0x21,0x20(%rdx)\n   cmpl $0x0,runtime.writeBarrier(%rip)\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_142\n   mov 0x38(%rsp),%rsi\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpa-memmove31",
@@ -289,12 +301,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 5.0,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -66,7 +66,7 @@\n   mov %rax,0x10(%rdx)\n   mov 0x68(%rsp),%rbx\n   add $0x8,%rbx\n-  mov $0x20,%ecx\n+  mov $0x1f,%ecx\n   callq runtime.memmove\n   mov 0x60(%rsp),%rdx\n   movq $0x20,0x18(%rdx)\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 4.7,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -66,7 +66,7 @@\n   mov %rax,0x10(%rdx)\n   mov 0x68(%rsp),%rbx\n   add $0x8,%rbx\n-  mov $0x20,%ecx\n+  mov $0x1f,%ecx\n   callq runtime.memmove\n   mov 0x60(%rsp),%rdx\n   movq $0x20,0x18(%rdx)\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpa-rootptr",
@@ -312,12 +325,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 4.9,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -83,7 +83,7 @@\n   mov %rsi,(%r11)\n   mov %rcx,0x8(%r11)\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_157:\n-  mov %rsi,0x10(%rdx)\n+  mov %rsi,0x18(%rdx)\n   mov 0x28(%rsp),%rax\n   mov 0x30(%rsp),%rbx\n   add $0x50,%rsp\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 4.9,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -83,7 +83,7 @@\n   mov %rsi,(%r11)\n   mov %rcx,0x8(%r11)\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_157:\n-  mov %rsi,0x10(%rdx)\n+  mov %rsi,0x18(%rdx)\n   mov 0x28(%rsp),%rax\n   mov 0x30(%rsp),%rbx\n   add $0x50,%rsp\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpr-control",
@@ -333,12 +347,13 @@
    "rc": 0,
    "killed": false,
    "timeout": false,
-   "seconds": 2.0,
-   "pass": true,
-   "diff": "",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 2.1,
+   "diff": "",
    "class": "control_pass",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpr-cmp41",
@@ -356,12 +371,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 2.1,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -7,7 +7,7 @@\n   sub $0x50,%rsp\n   mov %rbx,0x68(%rsp)\n   nop\n-  cmp $0x28,%rcx\n+  cmp $0x29,%rcx\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_16b\n   mov %rax,0x60(%rsp)\n   mov %rbx,0x68(%rsp)\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 2.1,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -7,7 +7,7 @@\n   sub $0x50,%rsp\n   mov %rbx,0x68(%rsp)\n   nop\n-  cmp $0x28,%rcx\n+  cmp $0x29,%rcx\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_16b\n   mov %rax,0x60(%rsp)\n   mov %rbx,0x68(%rsp)\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpr-errword",
@@ -381,12 +397,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 5.1,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -90,7 +90,7 @@\n   pop %rbp\n   retq\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_16b:\n-  mov ssz.ErrSize(%rip),%rax\n+  mov ssz.ErrSize+8(%rip),%rax\n   mov ssz.ErrSize+8(%rip),%rbx\n   add $0x50,%rsp\n   pop %rbp\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 5.1,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -90,7 +90,7 @@\n   pop %rbp\n   retq\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_16b:\n-  mov ssz.ErrSize(%rip),%rax\n+  mov ssz.ErrSize+8(%rip),%rax\n   mov ssz.ErrSize+8(%rip),%rbx\n   add $0x50,%rsp\n   pop %rbp\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpr-stmt-e1",
@@ -404,12 +421,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 2.1,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -9,7 +9,7 @@\n       \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrSize\" + 8).toBitVec) \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 40) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e0 \u2227 st.data.regs.rbx = e1\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e1 \u2227 st.data.regs.rbx = e1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14\n         \u2227 (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n           \u22c6 Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 2.1,
+   "diff": "--- orig\n+++ mut\n@@ -9,7 +9,7 @@\n       \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrSize\" + 8).toBitVec) \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 40) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e0 \u2227 st.data.regs.rbx = e1\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e1 \u2227 st.data.regs.rbx = e1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14\n         \u2227 (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n           \u22c6 Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpu-control",
@@ -425,12 +443,13 @@
    "rc": 0,
    "killed": false,
    "timeout": false,
-   "seconds": 2.3,
-   "pass": true,
-   "diff": "",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 2.1,
+   "diff": "",
    "class": "control_pass",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpu-jne",
@@ -448,12 +467,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 2.2,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -17,7 +17,7 @@\n   nop\n   callq github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ\n   test %rax,%rax\n-  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4\n+  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4\n   movups %xmm15,0x40(%rsp)\n   je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_56\n   mov 0x8(%rax),%rax\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 2.2,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -17,7 +17,7 @@\n   nop\n   callq github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ\n   test %rax,%rax\n-  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4\n+  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4\n   movups %xmm15,0x40(%rsp)\n   je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_56\n   mov 0x8(%rax),%rax\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpm-control",
@@ -469,12 +489,13 @@
    "rc": 0,
    "killed": false,
    "timeout": false,
-   "seconds": 4.8,
-   "pass": true,
-   "diff": "",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 4.7,
+   "diff": "",
    "class": "control_pass",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpm-len33",
@@ -492,12 +513,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 4.8,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -35,7 +35,7 @@\n   mov 0x30(%rsp),%r8\n   mov %r8,(%rbx,%rcx,1)\n   mov 0x10(%rax),%r8\n-  cmpq $0x20,0x18(%rax)\n+  cmpq $0x21,0x18(%rax)\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108\n   lea 0x20(%rdx),%r9\n   cmp %r9,%rdi\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 4.6,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -35,7 +35,7 @@\n   mov 0x30(%rsp),%r8\n   mov %r8,(%rbx,%rcx,1)\n   mov 0x10(%rax),%r8\n-  cmpq $0x20,0x18(%rax)\n+  cmpq $0x21,0x18(%rax)\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108\n   lea 0x20(%rdx),%r9\n   cmp %r9,%rdi\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpm-newlen16",
@@ -516,12 +538,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 3.1,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -6,7 +6,7 @@\n   mov %rsp,%rbp\n   sub $0x68,%rsp\n   mov %rbx,0x80(%rsp)\n-  lea 0x8(%rcx),%rdx\n+  lea 0x10(%rcx),%rdx\n   mov 0x8(%rax),%r8\n   nop\n   nop\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 3.1,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -6,7 +6,7 @@\n   mov %rsp,%rbp\n   sub $0x68,%rsp\n   mov %rbx,0x80(%rsp)\n-  lea 0x8(%rcx),%rdx\n+  lea 0x10(%rcx),%rdx\n   mov 0x8(%rax),%r8\n   nop\n   nop\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpm-epoch-field",
@@ -540,12 +563,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 4.7,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -7,7 +7,7 @@\n   sub $0x68,%rsp\n   mov %rbx,0x80(%rsp)\n   lea 0x8(%rcx),%rdx\n-  mov 0x8(%rax),%r8\n+  mov 0x10(%rax),%r8\n   nop\n   nop\n   nop\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 4.7,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -7,7 +7,7 @@\n   sub $0x68,%rsp\n   mov %rbx,0x80(%rsp)\n   lea 0x8(%rcx),%rdx\n-  mov 0x8(%rax),%r8\n+  mov 0x10(%rax),%r8\n   nop\n   nop\n   nop\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpm-memmove31",
@@ -563,12 +587,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 4.9,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -59,7 +59,7 @@\n   mov %rbx,0x60(%rsp)\n   lea (%rbx,%rdx,1),%rax\n   mov %r8,%rbx\n-  mov $0x20,%ecx\n+  mov $0x1f,%ecx\n   callq runtime.memmove\n   mov 0x60(%rsp),%rax\n   mov 0x50(%rsp),%rbx\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 4.7,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -59,7 +59,7 @@\n   mov %rbx,0x60(%rsp)\n   lea (%rbx,%rdx,1),%rax\n   mov %r8,%rbx\n-  mov $0x20,%ecx\n+  mov $0x1f,%ecx\n   callq runtime.memmove\n   mov 0x60(%rsp),%rax\n   mov 0x50(%rsp),%rbx\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpm-jne-je",
@@ -586,12 +611,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 4.9,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -36,7 +36,7 @@\n   mov %r8,(%rbx,%rcx,1)\n   mov 0x10(%rax),%r8\n   cmpq $0x20,0x18(%rax)\n-  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108\n+  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108\n   lea 0x20(%rdx),%r9\n   cmp %r9,%rdi\n   jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 4.7,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -36,7 +36,7 @@\n   mov %r8,(%rbx,%rcx,1)\n   mov 0x10(%rax),%r8\n   cmpq $0x20,0x18(%rax)\n-  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108\n+  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108\n   lea 0x20(%rdx),%r9\n   cmp %r9,%rdi\n   jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpm-stmt-rdi1",
@@ -609,12 +635,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 4.8,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -25,7 +25,7 @@\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n         \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 \u2227 st.data.regs.rcx = s.regs.rdi\n-        \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n+        \u2227 st.data.regs.rdi = 1 \u2227 st.data.regs.rsi = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (t u scr : List UInt8), t.length = 8 \u2227 u.length = 16 \u2227 scr.length = S \u2227\n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 4.6,
+   "diff": "--- orig\n+++ mut\n@@ -25,7 +25,7 @@\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n         \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 \u2227 st.data.regs.rcx = s.regs.rdi\n-        \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n+        \u2227 st.data.regs.rdi = 1 \u2227 st.data.regs.rsi = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (t u scr : List UInt8), t.length = 8 \u2227 u.length = 16 \u2227 scr.length = S \u2227\n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpc-control",
@@ -630,12 +657,13 @@
    "rc": 0,
    "killed": false,
    "timeout": false,
-   "seconds": 1.1,
-   "pass": true,
-   "diff": "",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 1.1,
+   "diff": "",
    "class": "control_pass",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpc-stmt-swap",
@@ -653,12 +681,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 0.9,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -26,7 +26,7 @@\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n         \u2227 st.data.regs.rbx.toNat = 40 \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n-        \u2227 (Eq ((e8 ++ root).At s.regs.rbx.toBitVec) \u22c6 fun _ => True) st.data.dmem)\n+        \u2227 (Eq ((root ++ e8).At s.regs.rbx.toBitVec) \u22c6 fun _ => True) st.data.dmem)\n       \u27e8s, Host.addrOf km\u27e9 := by\n   have hr0 : s.regs.rcx.toBitVec = 0 := by rw [hlen0]; rfl\n   have h := cp_e2e_marshal_main km hkm hfm cst e8 (Int.toBytes 8 32) ctl root [] d0 d1 hcst he8 rfl hctl hroot hd0\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 1.1,
+   "diff": "--- orig\n+++ mut\n@@ -26,7 +26,7 @@\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n         \u2227 st.data.regs.rbx.toNat = 40 \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n-        \u2227 (Eq ((e8 ++ root).At s.regs.rbx.toBitVec) \u22c6 fun _ => True) st.data.dmem)\n+        \u2227 (Eq ((root ++ e8).At s.regs.rbx.toBitVec) \u22c6 fun _ => True) st.data.dmem)\n       \u27e8s, Host.addrOf km\u27e9 := by\n   have hr0 : s.regs.rcx.toBitVec = 0 := by rw [hlen0]; rfl\n   have h := cp_e2e_marshal_main km hkm hfm cst e8 (Int.toBytes 8 32) ctl root [] d0 d1 hcst he8 rfl hctl hroot hd0\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpc-stmt-len41",
@@ -676,12 +705,35 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 1.1,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -25,7 +25,7 @@\n     (hcap : 40 \u2264 s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n-        \u2227 st.data.regs.rbx.toNat = 40 \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n+        \u2227 st.data.regs.rbx.toNat = 41 \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n         \u2227 (Eq ((e8 ++ root).At s.regs.rbx.toBitVec) \u22c6 fun _ => True) st.data.dmem)\n       \u27e8s, Host.addrOf km\u27e9 := by\n   have hr0 : s.regs.rcx.toBitVec = 0 := by rw [hlen0]; rfl\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 1.1,
+   "diff": "--- orig\n+++ mut\n@@ -25,7 +25,7 @@\n     (hcap : 40 \u2264 s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n-        \u2227 st.data.regs.rbx.toNat = 40 \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n+        \u2227 st.data.regs.rbx.toNat = 41 \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n         \u2227 (Eq ((e8 ++ root).At s.regs.rbx.toBitVec) \u22c6 fun _ => True) st.data.dmem)\n       \u27e8s, Host.addrOf km\u27e9 := by\n   have hr0 : s.regs.rcx.toBitVec = 0 := by rw [hlen0]; rfl\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "cpmr-control",
+   "kind": "control",
+   "module": "E2e/CpMarshalR.lean",
+   "theorem": "cp_e2e_marshal_reject_main",
+   "range": [
+    33,
+    197
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 3.2,
+   "diff": "",
+   "class": "control_pass",
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpmr-errword",
@@ -699,12 +751,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 2.3,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -70,7 +70,7 @@\n   pop %rbp\n   retq\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108:\n-  mov ssz.ErrBytesLength(%rip),%rdi\n+  mov ssz.ErrBytesLength+8(%rip),%rdi\n   mov ssz.ErrBytesLength+8(%rip),%rsi\n   xor %eax,%eax\n   xor %ebx,%ebx\n",
    "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 2.4,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -70,7 +70,7 @@\n   pop %rbp\n   retq\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108:\n-  mov ssz.ErrBytesLength(%rip),%rdi\n+  mov ssz.ErrBytesLength+8(%rip),%rdi\n   mov ssz.ErrBytesLength+8(%rip),%rsi\n   xor %eax,%eax\n   xor %ebx,%ebx\n",
    "class": "inside",
-   "recursion_limit": false
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "cpmr-rcx",
@@ -722,709 +775,13 @@
    "rc": 1,
    "killed": false,
    "timeout": false,
-   "seconds": 3.2,
-   "pass": true,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 3.1,
    "diff": "--- orig.S\n+++ mut.S\n@@ -74,7 +74,7 @@\n   mov ssz.ErrBytesLength+8(%rip),%rsi\n   xor %eax,%eax\n   xor %ebx,%ebx\n-  mov %rbx,%rcx\n+  mov %rdi,%rcx\n   add $0x68,%rsp\n   pop %rbp\n   retq\n",
-   "heartbeat_timeout": false,
    "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "cps-control",
-   "kind": "control",
-   "module": "E2e/CpSpecM.lean",
-   "theorem": "cp_e2e_size_main",
-   "range": [
-    75,
-    95
-   ],
-   "error_lines": [],
-   "first_error": null,
-   "rc": 0,
-   "killed": false,
-   "timeout": false,
-   "seconds": 1.2,
    "pass": true,
-   "diff": "",
-   "heartbeat_timeout": false,
-   "class": "control_pass",
-   "recursion_limit": false
-  },
-  {
-   "id": "cps-41",
-   "kind": "code",
-   "module": "E2e/CpSpecM.lean",
-   "theorem": "cp_e2e_size_main",
-   "range": [
-    75,
-    95
-   ],
-   "error_lines": [
-    95
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cps-41/mut.lean:95:43: error: unsolved goals",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 1.0,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -1,3 +1,3 @@\n github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.SizeSSZ:\n-  mov $0x28,%eax\n+  mov $0x29,%eax\n   retq\n",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "cpms-control",
-   "kind": "control",
-   "module": "E2e/CpSpecM.lean",
-   "theorem": "cp_e2e_marshal_spec_k",
-   "range": [
-    28,
-    71
-   ],
-   "error_lines": [],
-   "first_error": null,
-   "rc": 0,
-   "killed": false,
-   "timeout": false,
-   "seconds": 1.0,
-   "pass": true,
-   "diff": "",
-   "heartbeat_timeout": false,
-   "class": "control_pass",
-   "recursion_limit": false
-  },
-  {
-   "id": "cpms-stmt-off1",
-   "kind": "stmt",
-   "module": "E2e/CpSpecM.lean",
-   "theorem": "cp_e2e_marshal_spec_k",
-   "range": [
-    28,
-    71
-   ],
-   "error_lines": [
-    68,
-    71,
-    59
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpms-stmt-off1/mut.lean:68:94: error: Tactic `rfl` failed: The left-hand side",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 1.1,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -27,7 +27,7 @@\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n         \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 \u2227 st.data.regs.rcx = s.regs.rdi\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n-        \u2227 (Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n+        \u2227 (Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))\n           \u22c6 fun _ => True) st.data.dmem)\n       \u27e8s, Host.addrOf k\u27e9 := by\n   refine \u27e8pcpEnc g, pcp_serialize g, ?_\u27e9\n",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "epr-cmp7",
-   "kind": "code",
-   "module": "E2e/EpReject.lean",
-   "theorem": "ep_unmarshal_reject_len_main",
-   "range": [
-    58,
-    268
-   ],
-   "error_lines": [
-    126
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/epr-cmp7/mut.lean:126:49: error: Application type mismatch: The argument",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 3.9,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -7,7 +7,7 @@\n   sub $0x48,%rsp\n   mov %rbx,0x60(%rsp)\n   nop\n-  cmp $0x8,%rcx\n+  cmp $0x7,%rcx\n   je L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ_bb\n   lea 0x28(%rsp),%rdx\n   movups %xmm15,(%rdx)\n",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "epr-fmtlen",
-   "kind": "code",
-   "module": "E2e/EpReject.lean",
-   "theorem": "ep_unmarshal_reject_len_main",
-   "range": [
-    58,
-    268
-   ],
-   "error_lines": [
-    207
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/epr-fmtlen/mut.lean:207:25: error: Tactic `rfl` failed: The left-hand side",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 3.9,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -22,7 +22,7 @@\n   mov %rcx,0x38(%rsp)\n   mov %rax,0x40(%rsp)\n   lea go_string._+110057(%rip),%rax\n-  mov $0x28,%ebx\n+  mov $0x27,%ebx\n   lea 0x28(%rsp),%rcx\n   mov $0x2,%edi\n   mov %rdi,%rsi\n",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "epr-nargs",
-   "kind": "code",
-   "module": "E2e/EpReject.lean",
-   "theorem": "ep_unmarshal_reject_len_main",
-   "range": [
-    58,
-    268
-   ],
-   "error_lines": [
-    207
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/epr-nargs/mut.lean:207:34: error: Application type mismatch: The argument",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 2.4,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -24,7 +24,7 @@\n   lea go_string._+110057(%rip),%rax\n   mov $0x28,%ebx\n   lea 0x28(%rsp),%rcx\n-  mov $0x2,%edi\n+  mov $0x1,%edi\n   mov %rdi,%rsi\n   callq fmt.errorf\n   test %rax,%rax\n",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "epr-stmt-nil",
-   "kind": "stmt",
-   "module": "E2e/EpReject.lean",
-   "theorem": "ep_unmarshal_reject_len_main",
-   "range": [
-    56,
-    266
-   ],
-   "error_lines": [
-    254
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/epr-stmt-nil/mut.lean:254:14: error: Application type mismatch: The argument",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 3.8,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -16,7 +16,7 @@\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 8) (hav : 8 + 40 + 40 + 8192 \u2264 avail)\n     (hct : ConvT64C Heap S) (hdd : FmtErrorfDDC Heap E2e.Data.e2eEpFmt E2e.Data.e2eIntType_addr S) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax \u2260 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (bx : BitVec 64) (hb stk' sp' : List UInt8) (av' : Nat), stk'.length = S \u2227 sp'.length = 40\n           \u2227 BoxIn bx s.regs.rcx.toBitVec hb \u2227 av' \u2264 avail \u2227\n",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "cpx-control",
-   "kind": "control",
-   "module": "E2e/CpCompose.lean",
-   "theorem": "cp_e2e_unmarshal_then_marshal",
-   "range": [
-    64,
-    143
-   ],
-   "error_lines": [],
-   "first_error": null,
-   "rc": 0,
-   "killed": false,
-   "timeout": false,
-   "seconds": 1.5,
-   "pass": true,
-   "diff": "",
-   "heartbeat_timeout": false,
-   "class": "control_pass",
-   "recursion_limit": false
-  },
-  {
-   "id": "cpx-stmt-dec-rax1",
-   "kind": "stmt",
-   "module": "E2e/CpCompose.lean",
-   "theorem": "cp_e2e_unmarshal_then_marshal",
-   "range": [
-    64,
-    143
-   ],
-   "error_lines": [
-    122
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpx-stmt-dec-rax1/mut.lean:122:33: error: Application type mismatch: The argument",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 1.5,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -39,7 +39,7 @@\n     (hlen : s.regs.rcx = 40) (hav : 32 \u2264 avail)\n     (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) (hmm2 : MemmoveC (S - 24)) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0 \u2227\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0 \u2227\n         \u2200 (mem2 : DataMem) (zm : RegZmms) (fl : StatusFlags),\n           (\u2200 F : DataMem \u2192 Prop, (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec) \u22c6 F) st.data.dmem \u2192\n             (Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At s.regs.rsp.toBitVec) \u22c6 F) mem2) \u2192\n",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "cpx-stmt-dec-len41",
-   "kind": "stmt",
-   "module": "E2e/CpCompose.lean",
-   "theorem": "cp_e2e_unmarshal_then_marshal",
-   "range": [
-    64,
-    143
-   ],
-   "error_lines": [
-    120
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpx-stmt-dec-len41/mut.lean:120:75: error: Application type mismatch: The argument",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 1.5,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -36,7 +36,7 @@\n         \u22c6 Eq (pre.At dptr.toBitVec) \u22c6 Eq (d0.At (dptr.toBitVec + dlen.toBitVec))\n         \u22c6 Eq (d1.At (dptr.toBitVec + dlen.toBitVec + 8)) \u22c6 R0))\n     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hsp : 120 \u2264 s.regs.rsp.toNat)\n-    (hlen : s.regs.rcx = 40) (hav : 32 \u2264 avail)\n+    (hlen : s.regs.rcx = 41) (hav : 32 \u2264 avail)\n     (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) (hmm2 : MemmoveC (S - 24)) :\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0 \u2227\n",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "cpx-stmt-enc-swap",
-   "kind": "stmt",
-   "module": "E2e/CpCompose.lean",
-   "theorem": "cp_e2e_unmarshal_then_marshal",
-   "range": [
-    64,
-    143
-   ],
-   "error_lines": [
-    141,
-    142
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpx-stmt-enc-swap/mut.lean:141:76: error: Tactic `rfl` failed: The left-hand side",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 1.4,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -47,7 +47,7 @@\n             (fun st' => st'.pc = Int64.ofBitVec ra2.toBitVec \u2227 st'.data.regs.rax = dptr\n               \u2227 st'.data.regs.rbx.toNat = dlen.toNat + 40 \u2227 st'.data.regs.rcx = cap\n               \u2227 st'.data.regs.rdi = 0 \u2227 st'.data.regs.rsi = 0 \u2227\n-              (Eq (pre.At dptr.toBitVec) \u22c6 Eq ((e8 ++ root).At (dptr.toBitVec + dlen.toBitVec))\n+              (Eq (pre.At dptr.toBitVec) \u22c6 Eq ((root ++ e8).At (dptr.toBitVec + dlen.toBitVec))\n                 \u22c6 Eq ((e8 ++ root).At s.regs.rbx.toBitVec) \u22c6 fun _ => True) st'.data.dmem)\n             \u27e8\u27e8{ st.data.regs with rax := s.regs.rax, rbx := dptr, rcx := dlen, rdi := cap, rsp := s.regs.rsp },\n               zm, fl, mem2\u27e9, Host.addrOf km\u27e9)\n",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "cpx-stmt-enc-len41",
-   "kind": "stmt",
-   "module": "E2e/CpCompose.lean",
-   "theorem": "cp_e2e_unmarshal_then_marshal",
-   "range": [
-    64,
-    143
-   ],
-   "error_lines": [
-    140
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpx-stmt-enc-len41/mut.lean:140:36: error: Application type mismatch: The argument",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 1.5,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -45,7 +45,7 @@\n             (Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At s.regs.rsp.toBitVec) \u22c6 F) mem2) \u2192\n           Eventually (step1 Host.exe)\n             (fun st' => st'.pc = Int64.ofBitVec ra2.toBitVec \u2227 st'.data.regs.rax = dptr\n-              \u2227 st'.data.regs.rbx.toNat = dlen.toNat + 40 \u2227 st'.data.regs.rcx = cap\n+              \u2227 st'.data.regs.rbx.toNat = dlen.toNat + 41 \u2227 st'.data.regs.rcx = cap\n               \u2227 st'.data.regs.rdi = 0 \u2227 st'.data.regs.rsi = 0 \u2227\n               (Eq (pre.At dptr.toBitVec) \u22c6 Eq ((e8 ++ root).At (dptr.toBitVec + dlen.toBitVec))\n                 \u22c6 Eq ((e8 ++ root).At s.regs.rbx.toBitVec) \u22c6 fun _ => True) st'.data.dmem)\n",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "cpx-stmt-enc-cap39",
-   "kind": "stmt",
-   "module": "E2e/CpCompose.lean",
-   "theorem": "cp_e2e_unmarshal_then_marshal",
-   "range": [
-    64,
-    143
-   ],
-   "error_lines": [
-    136
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpx-stmt-enc-cap39/mut.lean:136:66: error: omega could not prove the goal:",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 1.5,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -12,7 +12,7 @@\n     (hg16 : g16.length = 8) (hg24 : g24.length = 8) (hg64 : g64.length = 16)\n     (hd0 : d0.length = 8) (hd1 : d1.length = 32)\n     (dptr dlen cap : UInt64) (hpre : pre.length = dlen.toNat)\n-    (hcap2 : dlen.toNat + 40 \u2264 cap.toNat) (hcap63 : cap.toNat < 2 ^ 63)\n+    (hcap2 : dlen.toNat + 39 \u2264 cap.toNat) (hcap63 : cap.toNat < 2 ^ 63)\n     (R0 : DataMem \u2192 Prop) (S : Nat) (hS24 : 24 \u2264 S) (hS : S < 2 ^ 60) (scratch : List UInt8)\n     (hsc : scratch.length = S)\n     (Heap : Nat \u2192 DataMem \u2192 Prop) (avail : Nat)\n",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "cpx-stmt-hupd-slot",
-   "kind": "stmt",
-   "module": "E2e/CpCompose.lean",
-   "theorem": "cp_e2e_unmarshal_then_marshal",
-   "range": [
-    64,
-    143
-   ],
-   "error_lines": [
-    135,
-    143,
-    117
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpx-stmt-hupd-slot/mut.lean:135:6: error: ecancel: could not automatically solve goal (Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At s.regs.rsp.toBitVec) \u22c6",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 1.3,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -42,7 +42,7 @@\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0 \u2227\n         \u2200 (mem2 : DataMem) (zm : RegZmms) (fl : StatusFlags),\n           (\u2200 F : DataMem \u2192 Prop, (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec) \u22c6 F) st.data.dmem \u2192\n-            (Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At s.regs.rsp.toBitVec) \u22c6 F) mem2) \u2192\n+            (Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At (s.regs.rsp.toBitVec + 8)) \u22c6 F) mem2) \u2192\n           Eventually (step1 Host.exe)\n             (fun st' => st'.pc = Int64.ofBitVec ra2.toBitVec \u2227 st'.data.regs.rax = dptr\n               \u2227 st'.data.regs.rbx.toNat = dlen.toNat + 40 \u2227 st'.data.regs.rcx = cap\n",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "cpg-num9",
-   "kind": "code",
-   "module": "E2e/CpMarshalG.lean",
-   "theorem": "cp_e2e_marshal_grow_main",
-   "range": [
-    61,
-    361
-   ],
-   "error_lines": [
-    216,
-    217,
-    220
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpg-num9/mut.lean:216:31: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 7.0,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -22,7 +22,7 @@\n   mov %rbx,%rax\n   mov %rdx,%rbx\n   mov %rdi,%rcx\n-  mov $0x8,%edi\n+  mov $0x9,%edi\n   lea type__+387072(%rip),%rsi\n   nop\n   callq runtime.growslice\n",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "cpg-spillrcx",
-   "kind": "code",
-   "module": "E2e/CpMarshalG.lean",
-   "theorem": "cp_e2e_marshal_grow_main",
-   "range": [
-    61,
-    361
-   ],
-   "error_lines": [
-    197
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpg-spillrcx/mut.lean:197:63: error: omega could not prove the goal:",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 6.8,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -18,7 +18,7 @@\n   cmp %rdx,%rdi\n   jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b\n   mov %rax,0x78(%rsp)\n-  mov %rcx,0x88(%rsp)\n+  mov %rcx,0x90(%rsp)\n   mov %rbx,%rax\n   mov %rdx,%rbx\n   mov %rdi,%rcx\n",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "cpg-reloadrcx",
-   "kind": "code",
-   "module": "E2e/CpMarshalG.lean",
-   "theorem": "cp_e2e_marshal_grow_main",
-   "range": [
-    61,
-    361
-   ],
-   "error_lines": [
-    240
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpg-reloadrcx/mut.lean:240:92: error: omega could not prove the goal:",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 6.9,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -28,7 +28,7 @@\n   callq runtime.growslice\n   mov %rcx,%rdi\n   mov %rbx,%rdx\n-  mov 0x88(%rsp),%rcx\n+  mov 0x80(%rsp),%rcx\n   mov %rax,%rbx\n   mov 0x78(%rsp),%rax\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b:\n",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "cpg-newptr",
-   "kind": "code",
-   "module": "E2e/CpMarshalG.lean",
-   "theorem": "cp_e2e_marshal_grow_main",
-   "range": [
-    61,
-    361
-   ],
-   "error_lines": [
-    255,
-    260,
-    264,
-    281,
-    286,
-    291,
-    300,
-    308,
-    318,
-    323,
-    326,
-    335,
-    339,
-    349,
-    61
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpg-newptr/mut.lean:255:51: error: ecancel: could not automatically solve goal (Eq ((List.take 8 tail).At (rcx.toBitVec + rcx.toBitVec)) \u22c6 ?m.2892)",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 489.7,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -29,7 +29,7 @@\n   mov %rcx,%rdi\n   mov %rbx,%rdx\n   mov 0x88(%rsp),%rcx\n-  mov %rax,%rbx\n+  mov %rcx,%rbx\n   mov 0x78(%rsp),%rax\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b:\n   mov 0x30(%rsp),%r8\n",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "cpg-jae-jb",
-   "kind": "code",
-   "module": "E2e/CpMarshalG.lean",
-   "theorem": "cp_e2e_marshal_grow_main",
-   "range": [
-    61,
-    361
-   ],
-   "error_lines": [
-    188
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpg-jae-jb/mut.lean:188:102: error: omega could not prove the goal:",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 7.1,
-   "pass": true,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -16,7 +16,7 @@\n   movups %xmm15,0x10(%r9)\n   mov %r8,0x30(%rsp)\n   cmp %rdx,%rdi\n-  jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b\n+  jb L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b\n   mov %rax,0x78(%rsp)\n   mov %rcx,0x88(%rsp)\n   mov %rbx,%rax\n",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "cpg-stmt-len41",
-   "kind": "stmt",
-   "module": "E2e/CpMarshalG.lean",
-   "theorem": "cp_e2e_marshal_grow_main",
-   "range": [
-    59,
-    359
-   ],
-   "error_lines": [
-    359
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpg-stmt-len41/mut.lean:359:7: error: Tactic `apply` failed: could not unify the conclusion of `UInt64.toBitVec_inj.mp`",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 7.0,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -29,7 +29,7 @@\n     (hgs : GrowsliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec\n-        \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40\n+        \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 41\n         \u2227 nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat \u2264 st.data.regs.rcx.toNat\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "cpg-stmt-fit39",
-   "kind": "stmt",
-   "module": "E2e/CpMarshalG.lean",
-   "theorem": "cp_e2e_marshal_grow_main",
-   "range": [
-    59,
-    359
-   ],
-   "error_lines": [
-    228
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpg-stmt-fit39/mut.lean:228:36: error: omega could not prove the goal:",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 7.2,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -24,7 +24,7 @@\n       \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Heap avail \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 \u2264 s.regs.rsp.toNat)\n     (hlc : s.regs.rcx.toNat \u2264 s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)\n-    (hfit : s.regs.rcx.toNat + 40 \u2264 nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat)\n+    (hfit : s.regs.rcx.toNat + 39 \u2264 nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat)\n     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat + 8192 \u2264 avail) (hmax : avail \u2264 maxAlloc)\n     (hgs : GrowsliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "spe-control",
-   "kind": "control",
-   "module": "E2e/SpecEq.lean",
-   "theorem": "prysmCpDesc_serialize_checker",
-   "range": [
-    17,
-    19
-   ],
-   "error_lines": [],
-   "first_error": null,
-   "rc": 0,
-   "killed": false,
-   "timeout": false,
-   "seconds": 0.5,
-   "pass": true,
-   "diff": "",
-   "heartbeat_timeout": false,
-   "class": "control_pass",
-   "recursion_limit": false
-  },
-  {
-   "id": "spe-stmt-uint4",
-   "kind": "stmt",
-   "module": "E2e/SpecEq.lean",
-   "theorem": "prysmCpDesc_serialize_checker",
-   "range": [
-    17,
-    19
-   ],
-   "error_lines": [
-    18
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/spe-stmt-uint4/mut.lean:18:21: error: Tactic `unfold` failed to unfold `cpCheckerDesc` in",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 0.5,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -1,3 +1,3 @@\n-theorem prysmCpDesc_serialize_checker (v : Value) : serialize prysmCpDesc v = serialize cpCheckerDesc v := by\n+theorem prysmCpDesc_serialize_checker (v : Value) : serialize prysmCpDesc v = serialize (.container [\"Epoch\", \"Root\"] [.uint 4, .byteVector 32]) v := by\n   unfold prysmCpDesc cpCheckerDesc\n   cases v <;> simp only [serialize]",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "spe-control-de",
-   "kind": "control",
-   "module": "E2e/SpecEq.lean",
-   "theorem": "prysmCpDesc_deserialize_checker",
-   "range": [
-    21,
-    23
-   ],
-   "error_lines": [],
-   "first_error": null,
-   "rc": 0,
-   "killed": false,
-   "timeout": false,
-   "seconds": 0.5,
-   "pass": true,
-   "diff": "",
-   "heartbeat_timeout": false,
-   "class": "control_pass",
-   "recursion_limit": false
-  },
-  {
-   "id": "spe-stmt-de-bv31",
-   "kind": "stmt",
-   "module": "E2e/SpecEq.lean",
-   "theorem": "prysmCpDesc_deserialize_checker",
-   "range": [
-    21,
-    23
-   ],
-   "error_lines": [
-    22
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/spe-stmt-de-bv31/mut.lean:22:21: error: Tactic `unfold` failed to unfold `cpCheckerDesc` in",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 0.5,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -1,3 +1,3 @@\n-theorem prysmCpDesc_deserialize_checker (bs : Bytes) : deserialize prysmCpDesc bs = deserialize cpCheckerDesc bs := by\n+theorem prysmCpDesc_deserialize_checker (bs : Bytes) : deserialize prysmCpDesc bs = deserialize (.container [\"Epoch\", \"Root\"] [.uint 8, .byteVector 31]) bs := by\n   unfold prysmCpDesc cpCheckerDesc\n   simp only [deserialize]",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "wrs-control",
-   "kind": "control",
-   "module": "E2e/WitCpRS.lean",
-   "theorem": "cp_reject_spec_runs",
-   "range": [
-    18,
-    35
-   ],
-   "error_lines": [],
-   "first_error": null,
-   "rc": 0,
-   "killed": false,
-   "timeout": false,
-   "seconds": 1.9,
-   "pass": true,
-   "diff": "",
-   "heartbeat_timeout": false,
-   "class": "control_pass",
-   "recursion_limit": false
-  },
-  {
-   "id": "wrs-stmt-rax",
-   "kind": "stmt",
-   "module": "E2e/WitCpRS.lean",
-   "theorem": "cp_reject_spec_runs",
-   "range": [
-    18,
-    35
-   ],
-   "error_lines": [
-    35
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/wrs-stmt-rax/mut.lean:35:46: error: Application type mismatch: The argument",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 1.8,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem cp_reject_spec_runs (n : Nat) (hn : n \u2260 40) (hn64 : n < 2 ^ 64) (zmms : RegZmms) (flags : StatusFlags) :\n     (\u2203 e, deserialize prysmCpDesc (Array.replicate n (0x11 : UInt8)) = .error e) \u2227\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x10e8\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x10e9\n         \u2227 st.data.regs.rbx = 0x2a)\n       \u27e8cs0 (UInt64.ofNat n) zmms flags, Host.addrOf 1\u27e9 :=\n   let h := cp_e2e_reject_size_spec 1 hk1 hf1 (Array.replicate n (0x11 : UInt8)) (by simpa using hn)\n",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
-  },
-  {
-   "id": "was-control",
-   "kind": "control",
-   "module": "E2e/WitCpAS.lean",
-   "theorem": "cp_accept_spec_runs",
-   "range": [
-    32,
-    63
-   ],
-   "error_lines": [],
-   "first_error": null,
-   "rc": 0,
-   "killed": false,
-   "timeout": false,
-   "seconds": 22.2,
-   "pass": true,
-   "diff": "",
-   "heartbeat_timeout": false,
-   "class": "control_pass",
-   "recursion_limit": false
-  },
-  {
-   "id": "was-stmt-rbx",
-   "kind": "stmt",
-   "module": "E2e/WitCpAS.lean",
-   "theorem": "cp_accept_spec_runs",
-   "range": [
-    32,
-    63
-   ],
-   "error_lines": [
-    63
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/was-stmt-rbx/mut.lean:63:64: error: Application type mismatch: The argument",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "seconds": 22.8,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem cp_accept_spec_runs (g0 : PCp) (zmms : RegZmms) (flags : StatusFlags) :\n     \u2203 g : PCp, g.toValue = g0.toValue \u2227 pcpEnc g0 = pcpEnc g \u2227\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0)\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 1)\n       \u27e8cs0 (uintBytes 8 g0.epoch.toNat).toList g0.root.toList zmms flags, Host.addrOf 9\u27e9 := by\n   obtain \u27e8g, h1, h2, h3\u27e9 := cp_e2e_accept_spec_k 9 hk9 hf9 117 hk117 hf117 (pcpEnc g0) g0.toValue (pcp_roundtrip g0)\n     (cs0 (uintBytes 8 g0.epoch.toNat).toList g0.root.toList zmms flags) 0 0\n",
-   "heartbeat_timeout": false,
-   "class": "inside",
-   "recursion_limit": false
+   "later_resource_error": null
   },
   {
    "id": "cpmr-stmt-noown",
@@ -1461,20 +818,21 @@
    "killed": false,
    "timeout": false,
    "heartbeat_timeout": false,
+   "recursion_limit": false,
    "seconds": 3.2,
    "diff": "--- orig\n+++ mut\n@@ -14,7 +14,7 @@\n       \u22c6 Eq ((Int.toBytes 8 p.toInt).At (s.regs.rax.toBitVec + 16))\n       \u22c6 Eq ((Int.toBytes 8 rl.toBitVec.toInt).At (s.regs.rax.toBitVec + 24)) \u22c6 Eq (cC.At (s.regs.rax.toBitVec + 32))\n       \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40))\n-      \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n+      \u22c6 Eq (pre.At s.regs.rbx.toBitVec)\n       \u22c6 Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrBytesLength_addr)\n       \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrBytesLength\" + 8).toBitVec) \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 \u2264 s.regs.rsp.toNat)\n",
    "class": "inside",
    "pass": true,
-   "recursion_limit": false
+   "later_resource_error": null
   },
   {
-   "id": "cpg-control",
+   "id": "cps-control",
    "kind": "control",
-   "module": "E2e/CpMarshalG.lean",
-   "theorem": "cp_e2e_marshal_grow_main",
+   "module": "E2e/CpSpecM.lean",
+   "theorem": "cp_e2e_size_main",
    "range": [
-    61,
-    361
+    75,
+    95
    ],
    "error_lines": [],
    "first_error": null,
@@ -1482,63 +840,202 @@
    "killed": false,
    "timeout": false,
    "heartbeat_timeout": false,
-   "seconds": 6.7,
+   "recursion_limit": false,
+   "seconds": 1.1,
    "diff": "",
    "class": "control_pass",
    "pass": true,
-   "recursion_limit": false
+   "later_resource_error": null
   },
   {
-   "id": "cpg-oldcap",
+   "id": "cps-41",
    "kind": "code",
-   "module": "E2e/CpMarshalG.lean",
-   "theorem": "cp_e2e_marshal_grow_main",
+   "module": "E2e/CpSpecM.lean",
+   "theorem": "cp_e2e_size_main",
    "range": [
-    61,
-    361
+    75,
+    95
    ],
    "error_lines": [
-    218,
-    219,
-    229,
-    230,
-    361
+    95
    ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpg-oldcap/mut.lean:218:31: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cps-41/mut.lean:95:43: error: unsolved goals",
    "rc": 1,
    "killed": false,
    "timeout": false,
    "heartbeat_timeout": false,
-   "seconds": 7.6,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -21,7 +21,7 @@\n   mov %rcx,0x88(%rsp)\n   mov %rbx,%rax\n   mov %rdx,%rbx\n-  mov %rdi,%rcx\n+  mov %rdx,%rcx\n   mov $0x8,%edi\n   lea type__+387072(%rip),%rsi\n   nop\n",
+   "recursion_limit": false,
+   "seconds": 0.9,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -1,3 +1,3 @@\n github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.SizeSSZ:\n-  mov $0x28,%eax\n+  mov $0x29,%eax\n   retq\n",
    "class": "inside",
    "pass": true,
-   "recursion_limit": false
+   "later_resource_error": null
   },
   {
-   "id": "cpg-stmt-growle",
-   "kind": "stmt",
-   "module": "E2e/CpMarshalG.lean",
-   "theorem": "cp_e2e_marshal_grow_main",
+   "id": "cpms-control",
+   "kind": "control",
+   "module": "E2e/CpSpecM.lean",
+   "theorem": "cp_e2e_marshal_spec_k",
    "range": [
-    59,
-    359
+    28,
+    71
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 1.1,
+   "diff": "",
+   "class": "control_pass",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "cpms-stmt-off1",
+   "kind": "stmt",
+   "module": "E2e/CpSpecM.lean",
+   "theorem": "cp_e2e_marshal_spec_k",
+   "range": [
+    28,
+    71
    ],
    "error_lines": [
-    124,
-    186,
-    216
+    68,
+    71,
+    59
    ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpg-stmt-growle/mut.lean:124:61: error: omega could not prove the goal:",
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpms-stmt-off1/mut.lean:68:94: error: Tactic `rfl` failed: The left-hand side",
    "rc": 1,
    "killed": false,
    "timeout": false,
    "heartbeat_timeout": false,
-   "seconds": 6.8,
-   "diff": "--- orig\n+++ mut\n@@ -23,7 +23,7 @@\n       \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40)) \u22c6 Eq (root.At p)\n       \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Heap avail \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 \u2264 s.regs.rsp.toNat)\n-    (hlc : s.regs.rcx.toNat \u2264 s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)\n+    (hlc : s.regs.rcx.toNat \u2264 s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat \u2264 s.regs.rcx.toNat + 8)\n     (hfit : s.regs.rcx.toNat + 40 \u2264 nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat)\n     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat + 8192 \u2264 avail) (hmax : avail \u2264 maxAlloc)\n     (hgs : GrowsliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n",
+   "recursion_limit": false,
+   "seconds": 1.1,
+   "diff": "--- orig\n+++ mut\n@@ -27,7 +27,7 @@\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n         \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 \u2227 st.data.regs.rcx = s.regs.rdi\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n-        \u2227 (Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n+        \u2227 (Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))\n           \u22c6 fun _ => True) st.data.dmem)\n       \u27e8s, Host.addrOf k\u27e9 := by\n   refine \u27e8pcpEnc g, pcp_serialize g, ?_\u27e9\n",
    "class": "inside",
    "pass": true,
-   "recursion_limit": false
+   "later_resource_error": null
+  },
+  {
+   "id": "epr-control",
+   "kind": "control",
+   "module": "E2e/EpReject.lean",
+   "theorem": "ep_unmarshal_reject_len_main",
+   "range": [
+    62,
+    272
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 3.8,
+   "diff": "",
+   "class": "control_pass",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "epr-cmp7",
+   "kind": "code",
+   "module": "E2e/EpReject.lean",
+   "theorem": "ep_unmarshal_reject_len_main",
+   "range": [
+    62,
+    272
+   ],
+   "error_lines": [
+    130
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/epr-cmp7/mut.lean:130:49: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 3.7,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -7,7 +7,7 @@\n   sub $0x48,%rsp\n   mov %rbx,0x60(%rsp)\n   nop\n-  cmp $0x8,%rcx\n+  cmp $0x7,%rcx\n   je L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ_bb\n   lea 0x28(%rsp),%rdx\n   movups %xmm15,(%rdx)\n",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "epr-fmtlen",
+   "kind": "code",
+   "module": "E2e/EpReject.lean",
+   "theorem": "ep_unmarshal_reject_len_main",
+   "range": [
+    62,
+    272
+   ],
+   "error_lines": [
+    211
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/epr-fmtlen/mut.lean:211:25: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 3.9,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -22,7 +22,7 @@\n   mov %rcx,0x38(%rsp)\n   mov %rax,0x40(%rsp)\n   lea go_string._+110057(%rip),%rax\n-  mov $0x28,%ebx\n+  mov $0x27,%ebx\n   lea 0x28(%rsp),%rcx\n   mov $0x2,%edi\n   mov %rdi,%rsi\n",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "epr-nargs",
+   "kind": "code",
+   "module": "E2e/EpReject.lean",
+   "theorem": "ep_unmarshal_reject_len_main",
+   "range": [
+    62,
+    272
+   ],
+   "error_lines": [
+    211
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/epr-nargs/mut.lean:211:34: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 2.4,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -24,7 +24,7 @@\n   lea go_string._+110057(%rip),%rax\n   mov $0x28,%ebx\n   lea 0x28(%rsp),%rcx\n-  mov $0x2,%edi\n+  mov $0x1,%edi\n   mov %rdi,%rsi\n   callq fmt.errorf\n   test %rax,%rax\n",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "epr-stmt-nil",
+   "kind": "stmt",
+   "module": "E2e/EpReject.lean",
+   "theorem": "ep_unmarshal_reject_len_main",
+   "range": [
+    60,
+    270
+   ],
+   "error_lines": [
+    258
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/epr-stmt-nil/mut.lean:258:14: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 3.6,
+   "diff": "--- orig\n+++ mut\n@@ -16,7 +16,7 @@\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 8) (hav : 8 + 40 + 40 + 8192 \u2264 avail)\n     (hct : ConvT64C Heap S) (hdd : FmtErrorfDDC Heap E2e.Data.e2eEpFmt E2e.Data.e2eIntType_addr S) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax \u2260 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (bx : BitVec 64) (hb stk' sp' : List UInt8) (av' : Nat), stk'.length = S \u2227 sp'.length = 40\n           \u2227 BoxIn bx s.regs.rcx.toBitVec hb \u2227 av' \u2264 avail \u2227\n",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "epr-stmt-addr",
@@ -1559,10 +1056,11 @@
    "timeout": false,
    "heartbeat_timeout": false,
    "recursion_limit": false,
-   "seconds": 0.8,
+   "seconds": 0.9,
    "diff": "--- orig\n+++ mut\n@@ -1 +1 @@\n-theorem ep_static_addr : E2e.Data.e2eStaticuint64s_addr = Fk.Data.staticuint64s_addr := rfl+theorem ep_static_addr : E2e.Data.e2eStaticuint64s_addr = Fk.Data.staticuint64s_addr + 8 := rfl",
    "class": "inside",
-   "pass": true
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "epr-control-addr",
@@ -1580,10 +1078,33 @@
    "timeout": false,
    "heartbeat_timeout": false,
    "recursion_limit": false,
-   "seconds": 0.9,
+   "seconds": 0.8,
    "diff": "",
    "class": "control_pass",
-   "pass": true
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "gv-control",
+   "kind": "control",
+   "module": "E2e/GoVal.lean",
+   "theorem": "cp_layout",
+   "range": [
+    28,
+    29
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 1.0,
+   "diff": "",
+   "class": "control_pass",
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "gv-stmt-epoch16",
@@ -1606,7 +1127,8 @@
    "seconds": 0.9,
    "diff": "--- orig\n+++ mut\n@@ -1,2 +1,2 @@\n-theorem cp_layout : cpOff \"state\" = 0 \u2227 cpOff \"Epoch\" = 8 \u2227 cpOff \"Root\" = 16 \u2227 cpOff \"unknownFields\" = 40\n+theorem cp_layout : cpOff \"state\" = 0 \u2227 cpOff \"Epoch\" = 16 \u2227 cpOff \"Root\" = 16 \u2227 cpOff \"unknownFields\" = 40\n     \u2227 cpOff \"sizeCache\" = 64 \u2227 cpGoSize = 72 := by decide",
    "class": "inside",
-   "pass": true
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "gv-control-after",
@@ -1627,7 +1149,8 @@
    "seconds": 1.0,
    "diff": "",
    "class": "control_pass",
-   "pass": true
+   "pass": true,
+   "later_resource_error": null
   },
   {
    "id": "gv-stmt-after-nil",
@@ -1649,19 +1172,20 @@
    "timeout": false,
    "heartbeat_timeout": false,
    "recursion_limit": false,
-   "seconds": 0.9,
+   "seconds": 1.1,
    "diff": "--- orig\n+++ mut\n@@ -1,5 +1,5 @@\n theorem cp_after_decode_goValue (b e8 : List UInt8) (hb : cpGoValue b = true) (he8 : e8.length = 8)\n-    (p : BitVec 64) (hp : p \u2260 0) : cpGoValue (cpAfterDecode b e8 p) = true := by\n+    (p : BitVec 64) (hp : p \u2260 0) : cpGoValue (cpAfterDecode b e8 0) = true := by\n   have hbl : b.length = 72 := by\n     simp only [cpGoValue, Bool.and_eq_true, decide_eq_true_eq] at hb; exact hb.1.1\n   have h8 : (b.take 8).length = 8 := by simp [hbl]\n",
    "class": "inside",
-   "pass": true
+   "pass": true,
+   "later_resource_error": null
   },
   {
-   "id": "gv-control",
+   "id": "cpx-control",
    "kind": "control",
-   "module": "E2e/GoVal.lean",
-   "theorem": "cp_layout",
+   "module": "E2e/CpCompose.lean",
+   "theorem": "cp_e2e_unmarshal_then_marshal",
    "range": [
-    28,
-    29
+    64,
+    143
    ],
    "error_lines": [],
    "first_error": null,
@@ -1670,40 +1194,389 @@
    "timeout": false,
    "heartbeat_timeout": false,
    "recursion_limit": false,
-   "seconds": 0.9,
+   "seconds": 1.5,
    "diff": "",
    "class": "control_pass",
-   "pass": true
+   "pass": true,
+   "later_resource_error": null
   },
   {
-   "id": "cpmr-control",
-   "kind": "control",
-   "module": "E2e/CpMarshalR.lean",
-   "theorem": "cp_e2e_marshal_reject_main",
+   "id": "cpx-stmt-dec-rax1",
+   "kind": "stmt",
+   "module": "E2e/CpCompose.lean",
+   "theorem": "cp_e2e_unmarshal_then_marshal",
    "range": [
-    33,
+    64,
+    143
+   ],
+   "error_lines": [
+    122
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpx-stmt-dec-rax1/mut.lean:122:33: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 1.5,
+   "diff": "--- orig\n+++ mut\n@@ -39,7 +39,7 @@\n     (hlen : s.regs.rcx = 40) (hav : 32 \u2264 avail)\n     (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) (hmm2 : MemmoveC (S - 24)) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0 \u2227\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0 \u2227\n         \u2200 (mem2 : DataMem) (zm : RegZmms) (fl : StatusFlags),\n           (\u2200 F : DataMem \u2192 Prop, (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec) \u22c6 F) st.data.dmem \u2192\n             (Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At s.regs.rsp.toBitVec) \u22c6 F) mem2) \u2192\n",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "cpx-stmt-dec-len41",
+   "kind": "stmt",
+   "module": "E2e/CpCompose.lean",
+   "theorem": "cp_e2e_unmarshal_then_marshal",
+   "range": [
+    64,
+    143
+   ],
+   "error_lines": [
+    120
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpx-stmt-dec-len41/mut.lean:120:75: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 1.6,
+   "diff": "--- orig\n+++ mut\n@@ -36,7 +36,7 @@\n         \u22c6 Eq (pre.At dptr.toBitVec) \u22c6 Eq (d0.At (dptr.toBitVec + dlen.toBitVec))\n         \u22c6 Eq (d1.At (dptr.toBitVec + dlen.toBitVec + 8)) \u22c6 R0))\n     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hsp : 120 \u2264 s.regs.rsp.toNat)\n-    (hlen : s.regs.rcx = 40) (hav : 32 \u2264 avail)\n+    (hlen : s.regs.rcx = 41) (hav : 32 \u2264 avail)\n     (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) (hmm2 : MemmoveC (S - 24)) :\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0 \u2227\n",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "cpx-stmt-enc-swap",
+   "kind": "stmt",
+   "module": "E2e/CpCompose.lean",
+   "theorem": "cp_e2e_unmarshal_then_marshal",
+   "range": [
+    64,
+    143
+   ],
+   "error_lines": [
+    141,
+    142
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpx-stmt-enc-swap/mut.lean:141:76: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 1.3,
+   "diff": "--- orig\n+++ mut\n@@ -47,7 +47,7 @@\n             (fun st' => st'.pc = Int64.ofBitVec ra2.toBitVec \u2227 st'.data.regs.rax = dptr\n               \u2227 st'.data.regs.rbx.toNat = dlen.toNat + 40 \u2227 st'.data.regs.rcx = cap\n               \u2227 st'.data.regs.rdi = 0 \u2227 st'.data.regs.rsi = 0 \u2227\n-              (Eq (pre.At dptr.toBitVec) \u22c6 Eq ((e8 ++ root).At (dptr.toBitVec + dlen.toBitVec))\n+              (Eq (pre.At dptr.toBitVec) \u22c6 Eq ((root ++ e8).At (dptr.toBitVec + dlen.toBitVec))\n                 \u22c6 Eq ((e8 ++ root).At s.regs.rbx.toBitVec) \u22c6 fun _ => True) st'.data.dmem)\n             \u27e8\u27e8{ st.data.regs with rax := s.regs.rax, rbx := dptr, rcx := dlen, rdi := cap, rsp := s.regs.rsp },\n               zm, fl, mem2\u27e9, Host.addrOf km\u27e9)\n",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "cpx-stmt-enc-len41",
+   "kind": "stmt",
+   "module": "E2e/CpCompose.lean",
+   "theorem": "cp_e2e_unmarshal_then_marshal",
+   "range": [
+    64,
+    143
+   ],
+   "error_lines": [
+    140
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpx-stmt-enc-len41/mut.lean:140:36: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 1.6,
+   "diff": "--- orig\n+++ mut\n@@ -45,7 +45,7 @@\n             (Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At s.regs.rsp.toBitVec) \u22c6 F) mem2) \u2192\n           Eventually (step1 Host.exe)\n             (fun st' => st'.pc = Int64.ofBitVec ra2.toBitVec \u2227 st'.data.regs.rax = dptr\n-              \u2227 st'.data.regs.rbx.toNat = dlen.toNat + 40 \u2227 st'.data.regs.rcx = cap\n+              \u2227 st'.data.regs.rbx.toNat = dlen.toNat + 41 \u2227 st'.data.regs.rcx = cap\n               \u2227 st'.data.regs.rdi = 0 \u2227 st'.data.regs.rsi = 0 \u2227\n               (Eq (pre.At dptr.toBitVec) \u22c6 Eq ((e8 ++ root).At (dptr.toBitVec + dlen.toBitVec))\n                 \u22c6 Eq ((e8 ++ root).At s.regs.rbx.toBitVec) \u22c6 fun _ => True) st'.data.dmem)\n",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "cpx-stmt-enc-cap39",
+   "kind": "stmt",
+   "module": "E2e/CpCompose.lean",
+   "theorem": "cp_e2e_unmarshal_then_marshal",
+   "range": [
+    64,
+    143
+   ],
+   "error_lines": [
+    136
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpx-stmt-enc-cap39/mut.lean:136:66: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 1.5,
+   "diff": "--- orig\n+++ mut\n@@ -12,7 +12,7 @@\n     (hg16 : g16.length = 8) (hg24 : g24.length = 8) (hg64 : g64.length = 16)\n     (hd0 : d0.length = 8) (hd1 : d1.length = 32)\n     (dptr dlen cap : UInt64) (hpre : pre.length = dlen.toNat)\n-    (hcap2 : dlen.toNat + 40 \u2264 cap.toNat) (hcap63 : cap.toNat < 2 ^ 63)\n+    (hcap2 : dlen.toNat + 39 \u2264 cap.toNat) (hcap63 : cap.toNat < 2 ^ 63)\n     (R0 : DataMem \u2192 Prop) (S : Nat) (hS24 : 24 \u2264 S) (hS : S < 2 ^ 60) (scratch : List UInt8)\n     (hsc : scratch.length = S)\n     (Heap : Nat \u2192 DataMem \u2192 Prop) (avail : Nat)\n",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "cpx-stmt-hupd-slot",
+   "kind": "stmt",
+   "module": "E2e/CpCompose.lean",
+   "theorem": "cp_e2e_unmarshal_then_marshal",
+   "range": [
+    64,
+    143
+   ],
+   "error_lines": [
+    135,
+    143,
+    117
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpx-stmt-hupd-slot/mut.lean:135:6: error: ecancel: could not automatically solve goal (Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At s.regs.rsp.toBitVec) \u22c6",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 1.3,
+   "diff": "--- orig\n+++ mut\n@@ -42,7 +42,7 @@\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0 \u2227\n         \u2200 (mem2 : DataMem) (zm : RegZmms) (fl : StatusFlags),\n           (\u2200 F : DataMem \u2192 Prop, (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec) \u22c6 F) st.data.dmem \u2192\n-            (Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At s.regs.rsp.toBitVec) \u22c6 F) mem2) \u2192\n+            (Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At (s.regs.rsp.toBitVec + 8)) \u22c6 F) mem2) \u2192\n           Eventually (step1 Host.exe)\n             (fun st' => st'.pc = Int64.ofBitVec ra2.toBitVec \u2227 st'.data.regs.rax = dptr\n               \u2227 st'.data.regs.rbx.toNat = dlen.toNat + 40 \u2227 st'.data.regs.rcx = cap\n",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "cpg-control",
+   "kind": "control",
+   "module": "E2e/CpMarshalG.lean",
+   "theorem": "cp_e2e_marshal_grow_main",
+   "range": [
+    61,
+    361
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 6.8,
+   "diff": "",
+   "class": "control_pass",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "cpg-num9",
+   "kind": "code",
+   "module": "E2e/CpMarshalG.lean",
+   "theorem": "cp_e2e_marshal_grow_main",
+   "range": [
+    61,
+    361
+   ],
+   "error_lines": [
+    216,
+    217,
+    220
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpg-num9/mut.lean:216:31: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 7.0,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -22,7 +22,7 @@\n   mov %rbx,%rax\n   mov %rdx,%rbx\n   mov %rdi,%rcx\n-  mov $0x8,%edi\n+  mov $0x9,%edi\n   lea type__+387072(%rip),%rsi\n   nop\n   callq runtime.growslice\n",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "cpg-spillrcx",
+   "kind": "code",
+   "module": "E2e/CpMarshalG.lean",
+   "theorem": "cp_e2e_marshal_grow_main",
+   "range": [
+    61,
+    361
+   ],
+   "error_lines": [
     197
    ],
-   "error_lines": [],
-   "first_error": null,
-   "rc": 0,
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpg-spillrcx/mut.lean:197:63: error: omega could not prove the goal:",
+   "rc": 1,
    "killed": false,
    "timeout": false,
    "heartbeat_timeout": false,
    "recursion_limit": false,
-   "seconds": 3.1,
-   "diff": "",
-   "class": "control_pass",
-   "pass": true
+   "seconds": 6.8,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -18,7 +18,7 @@\n   cmp %rdx,%rdi\n   jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b\n   mov %rax,0x78(%rsp)\n-  mov %rcx,0x88(%rsp)\n+  mov %rcx,0x90(%rsp)\n   mov %rbx,%rax\n   mov %rdx,%rbx\n   mov %rdi,%rcx\n",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
   },
   {
-   "id": "epr-control",
-   "kind": "control",
-   "module": "E2e/EpReject.lean",
-   "theorem": "ep_unmarshal_reject_len_main",
+   "id": "cpg-reloadrcx",
+   "kind": "code",
+   "module": "E2e/CpMarshalG.lean",
+   "theorem": "cp_e2e_marshal_grow_main",
    "range": [
-    62,
-    272
+    61,
+    361
+   ],
+   "error_lines": [
+    240
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpg-reloadrcx/mut.lean:240:92: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 8.4,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -28,7 +28,7 @@\n   callq runtime.growslice\n   mov %rcx,%rdi\n   mov %rbx,%rdx\n-  mov 0x88(%rsp),%rcx\n+  mov 0x80(%rsp),%rcx\n   mov %rax,%rbx\n   mov 0x78(%rsp),%rax\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b:\n",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "cpg-jae-jb",
+   "kind": "code",
+   "module": "E2e/CpMarshalG.lean",
+   "theorem": "cp_e2e_marshal_grow_main",
+   "range": [
+    61,
+    361
+   ],
+   "error_lines": [
+    188
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpg-jae-jb/mut.lean:188:102: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 7.2,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -16,7 +16,7 @@\n   movups %xmm15,0x10(%r9)\n   mov %r8,0x30(%rsp)\n   cmp %rdx,%rdi\n-  jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b\n+  jb L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b\n   mov %rax,0x78(%rsp)\n   mov %rcx,0x88(%rsp)\n   mov %rbx,%rax\n",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "cpg-stmt-len41",
+   "kind": "stmt",
+   "module": "E2e/CpMarshalG.lean",
+   "theorem": "cp_e2e_marshal_grow_main",
+   "range": [
+    59,
+    359
+   ],
+   "error_lines": [
+    359
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpg-stmt-len41/mut.lean:359:7: error: Tactic `apply` failed: could not unify the conclusion of `UInt64.toBitVec_inj.mp`",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 7.2,
+   "diff": "--- orig\n+++ mut\n@@ -29,7 +29,7 @@\n     (hgs : GrowsliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec\n-        \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40\n+        \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 41\n         \u2227 nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat \u2264 st.data.regs.rcx.toNat\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "cpg-stmt-growle",
+   "kind": "stmt",
+   "module": "E2e/CpMarshalG.lean",
+   "theorem": "cp_e2e_marshal_grow_main",
+   "range": [
+    59,
+    359
+   ],
+   "error_lines": [
+    124,
+    186,
+    216
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpg-stmt-growle/mut.lean:124:61: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 6.9,
+   "diff": "--- orig\n+++ mut\n@@ -23,7 +23,7 @@\n       \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40)) \u22c6 Eq (root.At p)\n       \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Heap avail \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 \u2264 s.regs.rsp.toNat)\n-    (hlc : s.regs.rcx.toNat \u2264 s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)\n+    (hlc : s.regs.rcx.toNat \u2264 s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat \u2264 s.regs.rcx.toNat + 8)\n     (hfit : s.regs.rcx.toNat + 40 \u2264 nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat)\n     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat + 8192 \u2264 avail) (hmax : avail \u2264 maxAlloc)\n     (hgs : GrowsliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "cpg-oldcap",
+   "kind": "code",
+   "module": "E2e/CpMarshalG.lean",
+   "theorem": "cp_e2e_marshal_grow_main",
+   "range": [
+    61,
+    361
+   ],
+   "error_lines": [
+    218,
+    219,
+    229,
+    230,
+    361
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpg-oldcap/mut.lean:218:31: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 7.2,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -21,7 +21,7 @@\n   mov %rcx,0x88(%rsp)\n   mov %rbx,%rax\n   mov %rdx,%rbx\n-  mov %rdi,%rcx\n+  mov %rdx,%rcx\n   mov $0x8,%edi\n   lea type__+387072(%rip),%rsi\n   nop\n",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "cpg-stmt-fit39",
+   "kind": "stmt",
+   "module": "E2e/CpMarshalG.lean",
+   "theorem": "cp_e2e_marshal_grow_main",
+   "range": [
+    59,
+    359
+   ],
+   "error_lines": [
+    228
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpg-stmt-fit39/mut.lean:228:36: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 7.3,
+   "diff": "--- orig\n+++ mut\n@@ -24,7 +24,7 @@\n       \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Heap avail \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 \u2264 s.regs.rsp.toNat)\n     (hlc : s.regs.rcx.toNat \u2264 s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)\n-    (hfit : s.regs.rcx.toNat + 40 \u2264 nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat)\n+    (hfit : s.regs.rcx.toNat + 39 \u2264 nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat)\n     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat + 8192 \u2264 avail) (hmax : avail \u2264 maxAlloc)\n     (hgs : GrowsliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "spe-control",
+   "kind": "control",
+   "module": "E2e/SpecEq.lean",
+   "theorem": "prysmCpDesc_serialize_checker",
+   "range": [
+    17,
+    19
    ],
    "error_lines": [],
    "first_error": null,
@@ -1712,17 +1585,180 @@
    "timeout": false,
    "heartbeat_timeout": false,
    "recursion_limit": false,
-   "seconds": 3.7,
+   "seconds": 0.7,
    "diff": "",
    "class": "control_pass",
-   "pass": true
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "spe-stmt-uint4",
+   "kind": "stmt",
+   "module": "E2e/SpecEq.lean",
+   "theorem": "prysmCpDesc_serialize_checker",
+   "range": [
+    17,
+    19
+   ],
+   "error_lines": [
+    18
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/spe-stmt-uint4/mut.lean:18:21: error: Tactic `unfold` failed to unfold `cpCheckerDesc` in",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 0.5,
+   "diff": "--- orig\n+++ mut\n@@ -1,3 +1,3 @@\n-theorem prysmCpDesc_serialize_checker (v : Value) : serialize prysmCpDesc v = serialize cpCheckerDesc v := by\n+theorem prysmCpDesc_serialize_checker (v : Value) : serialize prysmCpDesc v = serialize (.container [\"Epoch\", \"Root\"] [.uint 4, .byteVector 32]) v := by\n   unfold prysmCpDesc cpCheckerDesc\n   cases v <;> simp only [serialize]",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "spe-control-de",
+   "kind": "control",
+   "module": "E2e/SpecEq.lean",
+   "theorem": "prysmCpDesc_deserialize_checker",
+   "range": [
+    21,
+    23
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 0.6,
+   "diff": "",
+   "class": "control_pass",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "spe-stmt-de-bv31",
+   "kind": "stmt",
+   "module": "E2e/SpecEq.lean",
+   "theorem": "prysmCpDesc_deserialize_checker",
+   "range": [
+    21,
+    23
+   ],
+   "error_lines": [
+    22
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/spe-stmt-de-bv31/mut.lean:22:21: error: Tactic `unfold` failed to unfold `cpCheckerDesc` in",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 0.6,
+   "diff": "--- orig\n+++ mut\n@@ -1,3 +1,3 @@\n-theorem prysmCpDesc_deserialize_checker (bs : Bytes) : deserialize prysmCpDesc bs = deserialize cpCheckerDesc bs := by\n+theorem prysmCpDesc_deserialize_checker (bs : Bytes) : deserialize prysmCpDesc bs = deserialize (.container [\"Epoch\", \"Root\"] [.uint 8, .byteVector 31]) bs := by\n   unfold prysmCpDesc cpCheckerDesc\n   simp only [deserialize]",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "wrs-control",
+   "kind": "control",
+   "module": "E2e/WitCpRS.lean",
+   "theorem": "cp_reject_spec_runs",
+   "range": [
+    18,
+    35
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 2.1,
+   "diff": "",
+   "class": "control_pass",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "wrs-stmt-rax",
+   "kind": "stmt",
+   "module": "E2e/WitCpRS.lean",
+   "theorem": "cp_reject_spec_runs",
+   "range": [
+    18,
+    35
+   ],
+   "error_lines": [
+    35
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/wrs-stmt-rax/mut.lean:35:46: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 2.0,
+   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem cp_reject_spec_runs (n : Nat) (hn : n \u2260 40) (hn64 : n < 2 ^ 64) (zmms : RegZmms) (flags : StatusFlags) :\n     (\u2203 e, deserialize prysmCpDesc (Array.replicate n (0x11 : UInt8)) = .error e) \u2227\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x10e8\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x10e9\n         \u2227 st.data.regs.rbx = 0x2a)\n       \u27e8cs0 (UInt64.ofNat n) zmms flags, Host.addrOf 1\u27e9 :=\n   let h := cp_e2e_reject_size_spec 1 hk1 hf1 (Array.replicate n (0x11 : UInt8)) (by simpa using hn)\n",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "was-control",
+   "kind": "control",
+   "module": "E2e/WitCpAS.lean",
+   "theorem": "cp_accept_spec_runs",
+   "range": [
+    32,
+    63
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 22.6,
+   "diff": "",
+   "class": "control_pass",
+   "pass": true,
+   "later_resource_error": null
+  },
+  {
+   "id": "was-stmt-rbx",
+   "kind": "stmt",
+   "module": "E2e/WitCpAS.lean",
+   "theorem": "cp_accept_spec_runs",
+   "range": [
+    32,
+    63
+   ],
+   "error_lines": [
+    63
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/was-stmt-rbx/mut.lean:63:64: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "seconds": 22.4,
+   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem cp_accept_spec_runs (g0 : PCp) (zmms : RegZmms) (flags : StatusFlags) :\n     \u2203 g : PCp, g.toValue = g0.toValue \u2227 pcpEnc g0 = pcpEnc g \u2227\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0)\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 1)\n       \u27e8cs0 (uintBytes 8 g0.epoch.toNat).toList g0.root.toList zmms flags, Host.addrOf 9\u27e9 := by\n   obtain \u27e8g, h1, h2, h3\u27e9 := cp_e2e_accept_spec_k 9 hk9 hf9 117 hk117 hf117 (pcpEnc g0) g0.toValue (pcp_roundtrip g0)\n     (cs0 (uintBytes 8 g0.epoch.toNat).toList g0.root.toList zmms flags) 0 0\n",
+   "class": "inside",
+   "pass": true,
+   "later_resource_error": null
   }
  ],
- "pass": 74,
- "total": 74,
+ "pass": 73,
+ "total": 73,
  "classes": {
   "control_pass": 20,
-  "inside": 54
+  "inside": 53
  },
  "case_timeout_s": 300
 }

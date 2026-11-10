@@ -526,17 +526,6 @@
   "new": "  mov 0x80(%rsp),%rcx"
  },
  {
-  "id": "cpg-newptr",
-  "kind": "code",
-  "module": "E2e/CpMarshalG.lean",
-  "theorem": "cp_e2e_marshal_grow_main",
-  "code_def": "CpMarshal",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
-  "old": "  mov %rax,%rbx",
-  "new": "  mov %rcx,%rbx",
-  "line": 32
- },
- {
   "id": "cpg-jae-jb",
   "kind": "code",
   "module": "E2e/CpMarshalG.lean",

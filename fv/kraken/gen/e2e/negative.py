@@ -19,7 +19,9 @@ every error line lies inside the theorem's line range and no error is a Lean hea
 a control when Lean reports no error. Each result has a "class": control_pass, inside, outside,
 no_error, killed, timeout_wall (CASE_TIMEOUT expired) or timeout_heartbeat (an error line is Lean's
 "(deterministic) timeout"; review e2e-r2 N1) or recursion_limit (an error line is "maximum recursion
-depth has been reached"). These three resource classes are never a pass.
+depth has been reached"); the resource classes are decided by the FIRST error line (a later resource
+error is kept in "later_resource_error"). These three resource classes are never a pass.
+negative.py --reclassify <result.json> [<work-dir>] recomputes the classes of a result file; --selftest checks them.
 Old results whose id is not in <cases.json> are dropped from <result.json>.
 Writes <result.json> and, per case, <work-dir>/<id>/{mut.lean, mut.S?, diff, log}. Python 3 stdlib only.
 """
@@ -113,22 +115,27 @@ def run_case(c, work):
     errs = [int(m[1]) for m in re.finditer(rf"{re.escape(str(f))}:(\d+):\d+: error", log)]
     first = next((l for l in log.splitlines() if ": error" in l), None)
     killed = "killed=True" in log
-    hb = any(HEARTBEAT in l for l in log.splitlines() if ": error" in l)
-    rd = any(RECDEPTH in l for l in log.splitlines() if ": error" in l)
+    errl = [l for l in log.splitlines() if ": error" in l]
+    later = next((l for l in errl[1:] if HEARTBEAT in l or RECDEPTH in l), None)
     r = {"id": c["id"], "kind": c["kind"], "module": c["module"], "theorem": c["theorem"],
          "range": [lo, hi], "error_lines": errs, "first_error": first, "rc": rc,
-         "killed": killed, "timeout": timed_out, "heartbeat_timeout": hb, "recursion_limit": rd,
+         "killed": killed, "timeout": timed_out, "later_resource_error": later,
          "seconds": round(time.time() - t0, 1), "diff": diff}
     return classify(r)
 
 
 def classify(r):
-    """Class and pass flag from the recorded fields only (also applied to old results)."""
+    """Class and pass flag from the recorded fields only (also applied to old results). The resource
+    classes follow the FIRST error line (review e2e-r2 N1: the first error is Lean's timeout); a later
+    heartbeat or recursion error after a real first error is kept as a flag (`later_resource_error`)."""
     errs, lo, hi = r["error_lines"], r["range"][0], r["range"][1]
-    hb = r.get("heartbeat_timeout", HEARTBEAT in (r.get("first_error") or ""))
+    first = r.get("first_error") or ""
+    hb = HEARTBEAT in first
+    rd = RECDEPTH in first
     r["heartbeat_timeout"] = hb
-    rd = r.get("recursion_limit", RECDEPTH in (r.get("first_error") or ""))
     r["recursion_limit"] = rd
+    if "later_resource_error" not in r:
+        r["later_resource_error"] = None
     if r["timeout"]:
         k = "timeout_wall"
     elif r["killed"]:
@@ -146,6 +153,23 @@ def classify(r):
     r["class"] = k
     r["pass"] = k in ("control_pass", "inside")
     return r
+
+
+def reclassify(out, work=None):
+    d = json.load(open(out))
+    for c in d["cases"]:  # fill the later-resource flag from the archived log when it is there
+        lp = pathlib.Path(work) / c["id"] / "log" if work else None
+        if lp and lp.exists():
+            errl = [l for l in lp.read_text(errors="replace").splitlines() if ": error" in l]
+            c["later_resource_error"] = next((l for l in errl[1:] if HEARTBEAT in l or RECDEPTH in l), None)
+    d["cases"] = [classify(c) for c in d["cases"]]
+    cls = {}
+    for c in d["cases"]:
+        cls[c["class"]] = cls.get(c["class"], 0) + 1
+    d.update({"pass": sum(c["pass"] for c in d["cases"]), "total": len(d["cases"]), "classes": cls})
+    json.dump(d, open(out, "w"), indent=1)
+    print(json.dumps({"pass": d["pass"], "total": d["total"], "classes": cls}))
+    return 0
 
 
 def main(cases, work, out, *ids):
@@ -182,6 +206,8 @@ def selftest():
           ("out", dict(error_lines=[12], first_error="x:12:1: error: e"), "outside"),
           ("none", dict(error_lines=[], first_error=None, rc=0), "no_error"),
           ("rd", dict(error_lines=[5], first_error="x:5:0: error: maximum recursion depth has been reached"), "recursion_limit"),
+          ("later_hb", dict(error_lines=[5, 7], first_error="x:5:1: error: ecancel failed",
+                            later_resource_error="x:7:1: error: (deterministic) timeout at `whnf`"), "inside"),
           ("ctl", dict(kind="control", error_lines=[], first_error=None, rc=0), "control_pass")]
     bad = []
     for name, f, want in fx:
@@ -193,4 +219,8 @@ def selftest():
 
 
 if __name__ == "__main__":
-    sys.exit(selftest() if sys.argv[1:] == ["--selftest"] else main(*sys.argv[1:]))
+    if sys.argv[1:] == ["--selftest"]:
+        sys.exit(selftest())
+    if sys.argv[1:2] == ["--reclassify"]:
+        sys.exit(reclassify(*sys.argv[2:4]))
+    sys.exit(main(*sys.argv[1:]))

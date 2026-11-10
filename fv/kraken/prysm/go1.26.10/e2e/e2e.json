@@ -235,17 +235,20 @@
   "note": "review e2e-r1 S3: the link bundle hash covers lean/Fk/Code.lean and the Go 1.26.3 AXIOMS.txt (check.py unchanged); these are the E2e include files and the E2e axioms list"
  },
  "negative_suite": {
-  "run": "gate job 125 (full suite, per-case limit 900 s) re-classified by negative.py classify(); jobs 126-127 (per-case limit 300 s): review e2e-r2 N1 replacement mutants cpmr-stmt-noown, cpg-stmt-growle, cpg-oldcap; N2: the 4 composition code mutants that failed only by the constant renaming were removed; jobs 128-130: N3 address lemma ep_static_addr (epr-stmt-addr, epr-control-addr); harness class recursion_limit added (first epr-stmt-addr form failed by maximum recursion depth in job 128/129 and was replaced by a definitional-equality failure); job 133: N4 cp_after_decode_goValue (gv-stmt-after-nil, gv-control-after)",
-  "pass": 74,
-  "total": 74,
+  "run": "gate job 139: full suite at the per-case limit 300 s (session 3, after F0), classified by negative.py (resource classes by the first error line; review e2e-r2 N1)",
+  "pass": 73,
+  "total": 73,
   "classes": {
    "control_pass": 20,
-   "inside": 54
+   "inside": 53
   },
-  "timeouts_wall": 0,
-  "timeouts_heartbeat": 0,
+  "case_timeout_s": 300,
+  "max_case_seconds": 127.5,
+  "later_resource_error": [
+   "ep-load8"
+  ],
   "removed": {
-   "heartbeat_timeout (N1)": [
+   "heartbeat_timeout first error (N1)": [
     "cpmr-stmt-dst-unchanged (482 s)",
     "cpg-stmt-e8off (480 s)"
    ],
@@ -255,9 +258,19 @@
     "cpx-enc-len33",
     "cpx-enc-newlen16"
    ],
-   "wall_timeout_300s (tried in job 126, not kept)": [
-    "cpg-stmt-noroot"
+   "wall_timeout_300s": [
+    "cpg-stmt-noroot (job 126)",
+    "cpg-newptr (job 139; 489.7 s in job 125, first error ecancel inside)"
    ]
-  }
+  },
+  "added": [
+   "cpmr-stmt-noown",
+   "cpg-stmt-growle",
+   "cpg-oldcap",
+   "epr-stmt-addr",
+   "epr-control-addr",
+   "gv-stmt-after-nil",
+   "gv-control-after"
+  ]
  }
 }

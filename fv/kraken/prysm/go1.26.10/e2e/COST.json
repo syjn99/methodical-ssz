@@ -1,0 +1,2252 @@
+{
+ "schema": 1,
+ "source": {
+  "records": "/workspace/agent-runs/methodical-fv-prysm-e2e/gate/records.jsonl",
+  "logs": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/logs"
+ },
+ "note": "gate wall-clock only (excludes the agent's thinking/editing time); module cost is shared by the theorems of that module, not divided; witnesses are their own modules (WitCp*, WitEp*)",
+ "totals": {
+  "jobs": 139,
+  "gate_s": 7391.5,
+  "peak_rss_gib": 6.01,
+  "memcap_kills": 4,
+  "by_class": {
+   "other": {
+    "jobs": 18,
+    "gate_s": 209.2
+   },
+   "build": {
+    "jobs": 94,
+    "gate_s": 2147.4
+   },
+   "negative": {
+    "jobs": 18,
+    "gate_s": 4962.5
+   },
+   "probe": {
+    "jobs": 9,
+    "gate_s": 72.4
+   }
+  }
+ },
+ "per_module": {
+  "E2e.Compose": {
+   "runs": 3,
+   "failed_runs": 2,
+   "probes": 0,
+   "gate_s": 7.4,
+   "peak_rss_bytes": 1662287872,
+   "memcap_kills": 0,
+   "jobs": [
+    "65-lake-E2e.Compose",
+    "66-lake-E2e.Compose",
+    "67-lake-E2e.Compose"
+   ],
+   "peak_rss_gib": 1.55
+  },
+  "E2e.CpAccept": {
+   "runs": 22,
+   "failed_runs": 21,
+   "probes": 4,
+   "gate_s": 342.2,
+   "peak_rss_bytes": 6450642944,
+   "memcap_kills": 4,
+   "jobs": [
+    "20-lake-E2e.CpAccept",
+    "21-lake-E2e.CpAccept",
+    "22-lake-E2e.CpAccept",
+    "23-lake-E2e.CpAccept",
+    "24-lake-E2e.CpAccept",
+    "25-lake-E2e.CpAccept",
+    "26-lake-E2e.CpAccept",
+    "27-lake-E2e.CpAccept",
+    "28-lake-E2e.CpAccept",
+    "29-lake-E2e.CpAccept",
+    "30-lake-E2e.CpAccept",
+    "31-lake-E2e.CpAccept",
+    "32-lake-E2e.CpAccept",
+    "33-lake-E2e.CpAccept",
+    "34-probe-A",
+    "35-probe-C",
+    "36-lake-E2e.CpAccept",
+    "37-probe-E",
+    "38-lake-E2e.CpAccept",
+    "39-lake-E2e.CpAccept",
+    "40-lake-E2e.CpAccept",
+    "41-probe-F",
+    "42-lake-E2e.CpAccept",
+    "43-lake-E2e.CpAccept",
+    "44-lake-E2e.CpAccept",
+    "45-lake-E2e.CpAccept"
+   ],
+   "peak_rss_gib": 6.01
+  },
+  "E2e.CpCompose": {
+   "runs": 2,
+   "failed_runs": 1,
+   "probes": 0,
+   "gate_s": 6.2,
+   "peak_rss_bytes": 1762050048,
+   "memcap_kills": 0,
+   "jobs": [
+    "104-lake-E2e.CpCompose",
+    "105-lake-E2e.CpCompose"
+   ],
+   "peak_rss_gib": 1.64
+  },
+  "E2e.CpMarshal": {
+   "runs": 7,
+   "failed_runs": 6,
+   "probes": 0,
+   "gate_s": 512.4,
+   "peak_rss_bytes": 1999822848,
+   "memcap_kills": 0,
+   "jobs": [
+    "54-lake-E2e.CpMarshal",
+    "55-lake-E2e.CpMarshal",
+    "56-lake-E2e.CpMarshal",
+    "57-lake-E2e.CpMarshal",
+    "58-lake-E2e.CpMarshal",
+    "59-lake-E2e.CpMarshal",
+    "60-lake-E2e.CpMarshal"
+   ],
+   "peak_rss_gib": 1.86
+  },
+  "E2e.CpMarshalG": {
+   "runs": 4,
+   "failed_runs": 3,
+   "probes": 1,
+   "gate_s": 29.7,
+   "peak_rss_bytes": 2219630592,
+   "memcap_kills": 0,
+   "jobs": [
+    "111-lake-E2e.CpMarshalG",
+    "112-lake-E2e.CpMarshalG",
+    "113-probe-grow",
+    "114-lake-E2e.CpMarshalG",
+    "115-lake-E2e.CpMarshalG"
+   ],
+   "peak_rss_gib": 2.07
+  },
+  "E2e.CpMarshalR": {
+   "runs": 6,
+   "failed_runs": 5,
+   "probes": 1,
+   "gate_s": 24.1,
+   "peak_rss_bytes": 1856380928,
+   "memcap_kills": 0,
+   "jobs": [
+    "73-lake-E2e.CpMarshalR",
+    "74-lake-E2e.CpMarshalR",
+    "75-lake-E2e.CpMarshalR",
+    "76-lake-E2e.CpMarshalR",
+    "77-lake-E2e.CpMarshalR",
+    "78-probe-R",
+    "79-lake-E2e.CpMarshalR"
+   ],
+   "peak_rss_gib": 1.73
+  },
+  "E2e.CpReject": {
+   "runs": 1,
+   "failed_runs": 0,
+   "probes": 0,
+   "gate_s": 2.4,
+   "peak_rss_bytes": 1752555520,
+   "memcap_kills": 0,
+   "jobs": [
+    "49-lake-E2e.CpReject"
+   ],
+   "peak_rss_gib": 1.63
+  },
+  "E2e.CpSpecK": {
+   "runs": 1,
+   "failed_runs": 0,
+   "probes": 0,
+   "gate_s": 2.3,
+   "peak_rss_bytes": 1634181120,
+   "memcap_kills": 0,
+   "jobs": [
+    "52-lake-E2e.CpSpecK"
+   ],
+   "peak_rss_gib": 1.52
+  },
+  "E2e.Data": {
+   "runs": 1,
+   "failed_runs": 0,
+   "probes": 0,
+   "gate_s": 2.0,
+   "peak_rss_bytes": 1631600640,
+   "memcap_kills": 0,
+   "jobs": [
+    "15-lake-E2e.Data"
+   ],
+   "peak_rss_gib": 1.52
+  },
+  "E2e.EpReject": {
+   "runs": 6,
+   "failed_runs": 5,
+   "probes": 1,
+   "gate_s": 469.8,
+   "peak_rss_bytes": 1901772800,
+   "memcap_kills": 0,
+   "jobs": [
+    "88-lake-E2e.EpReject",
+    "89-lake-E2e.EpReject",
+    "90-lake-E2e.EpReject",
+    "91-lake-E2e.EpReject",
+    "92-lake-E2e.EpReject",
+    "93-probe-ER",
+    "94-lake-E2e.EpReject"
+   ],
+   "peak_rss_gib": 1.77
+  },
+  "E2e.Epoch": {
+   "runs": 4,
+   "failed_runs": 3,
+   "probes": 0,
+   "gate_s": 132.4,
+   "peak_rss_bytes": 1673752576,
+   "memcap_kills": 0,
+   "jobs": [
+    "05-lake-E2e.Epoch",
+    "06-lake-E2e.Epoch",
+    "07-lake-E2e.Epoch",
+    "08-lake-E2e.Epoch"
+   ],
+   "peak_rss_gib": 1.56
+  },
+  "E2e.GoVal": {
+   "runs": 1,
+   "failed_runs": 0,
+   "probes": 2,
+   "gate_s": 4.7,
+   "peak_rss_bytes": 1681920000,
+   "memcap_kills": 0,
+   "jobs": [
+    "101-lake-E2e.GoVal",
+    "131-probe-n4",
+    "132-probe-n4"
+   ],
+   "peak_rss_gib": 1.57
+  },
+  "E2e.Spec": {
+   "runs": 1,
+   "failed_runs": 0,
+   "probes": 0,
+   "gate_s": 3.3,
+   "peak_rss_bytes": 823787520,
+   "memcap_kills": 0,
+   "jobs": [
+    "16-lake-E2e.Spec"
+   ],
+   "peak_rss_gib": 0.77
+  },
+  "E2e.SpecEq": {
+   "runs": 1,
+   "failed_runs": 0,
+   "probes": 0,
+   "gate_s": 1.8,
+   "peak_rss_bytes": 855650304,
+   "memcap_kills": 0,
+   "jobs": [
+    "119-lake-E2e.SpecEq"
+   ],
+   "peak_rss_gib": 0.8
+  },
+  "E2e.WitCpA": {
+   "runs": 2,
+   "failed_runs": 1,
+   "probes": 0,
+   "gate_s": 50.4,
+   "peak_rss_bytes": 1787715584,
+   "memcap_kills": 0,
+   "jobs": [
+    "46-lake-E2e.WitCpA",
+    "47-lake-E2e.WitCpA"
+   ],
+   "peak_rss_gib": 1.66
+  },
+  "E2e.WitCpAS": {
+   "runs": 3,
+   "failed_runs": 2,
+   "probes": 0,
+   "gate_s": 71.4,
+   "peak_rss_bytes": 1707204608,
+   "memcap_kills": 0,
+   "jobs": [
+    "121-lake-E2e.WitCpAS",
+    "122-lake-E2e.WitCpAS",
+    "123-lake-E2e.WitCpAS"
+   ],
+   "peak_rss_gib": 1.59
+  },
+  "E2e.WitCpC": {
+   "runs": 3,
+   "failed_runs": 1,
+   "probes": 0,
+   "gate_s": 78.1,
+   "peak_rss_bytes": 1899773952,
+   "memcap_kills": 0,
+   "jobs": [
+    "106-lake-E2e.WitCpC",
+    "107-lake-E2e.WitCpC",
+    "109-lake-E2e.WitCpC"
+   ],
+   "peak_rss_gib": 1.77
+  },
+  "E2e.WitCpG": {
+   "runs": 1,
+   "failed_runs": 0,
+   "probes": 0,
+   "gate_s": 25.4,
+   "peak_rss_bytes": 1732554752,
+   "memcap_kills": 0,
+   "jobs": [
+    "117-lake-E2e.WitCpG"
+   ],
+   "peak_rss_gib": 1.61
+  },
+  "E2e.WitCpM": {
+   "runs": 3,
+   "failed_runs": 1,
+   "probes": 0,
+   "gate_s": 50.7,
+   "peak_rss_bytes": 1658179584,
+   "memcap_kills": 0,
+   "jobs": [
+    "61-lake-E2e.WitCpM",
+    "62-lake-E2e.WitCpM",
+    "63-lake-E2e.WitCpM"
+   ],
+   "peak_rss_gib": 1.54
+  },
+  "E2e.WitCpMR": {
+   "runs": 2,
+   "failed_runs": 0,
+   "probes": 0,
+   "gate_s": 23.5,
+   "peak_rss_bytes": 1660137472,
+   "memcap_kills": 0,
+   "jobs": [
+    "80-lake-E2e.WitCpMR",
+    "137-lake-E2e.WitCpMR"
+   ],
+   "peak_rss_gib": 1.55
+  },
+  "E2e.WitCpR": {
+   "runs": 2,
+   "failed_runs": 1,
+   "probes": 0,
+   "gate_s": 4.5,
+   "peak_rss_bytes": 1643597824,
+   "memcap_kills": 0,
+   "jobs": [
+    "50-lake-E2e.WitCpR",
+    "51-lake-E2e.WitCpR"
+   ],
+   "peak_rss_gib": 1.53
+  },
+  "E2e.WitCpRS": {
+   "runs": 1,
+   "failed_runs": 0,
+   "probes": 0,
+   "gate_s": 3.3,
+   "peak_rss_bytes": 1651187712,
+   "memcap_kills": 0,
+   "jobs": [
+    "120-lake-E2e.WitCpRS"
+   ],
+   "peak_rss_gib": 1.54
+  },
+  "E2e.WitCpS": {
+   "runs": 4,
+   "failed_runs": 3,
+   "probes": 0,
+   "gate_s": 310.8,
+   "peak_rss_bytes": 1677590528,
+   "memcap_kills": 0,
+   "jobs": [
+    "83-lake-E2e.WitCpS",
+    "84-lake-E2e.WitCpS",
+    "85-lake-E2e.WitCpS",
+    "86-lake-E2e.WitCpS"
+   ],
+   "peak_rss_gib": 1.56
+  },
+  "E2e.WitEp": {
+   "runs": 6,
+   "failed_runs": 5,
+   "probes": 0,
+   "gate_s": 10.2,
+   "peak_rss_bytes": 1675710464,
+   "memcap_kills": 0,
+   "jobs": [
+    "09-lake-E2e.WitEp",
+    "10-lake-E2e.WitEp",
+    "11-lake-E2e.WitEp",
+    "12-lake-E2e.WitEp",
+    "13-lake-E2e.WitEp",
+    "14-lake-E2e.WitEp"
+   ],
+   "peak_rss_gib": 1.56
+  },
+  "E2e.WitEpR": {
+   "runs": 7,
+   "failed_runs": 5,
+   "probes": 0,
+   "gate_s": 50.8,
+   "peak_rss_bytes": 1683472384,
+   "memcap_kills": 0,
+   "jobs": [
+    "95-lake-E2e.WitEpR",
+    "96-lake-E2e.WitEpR",
+    "97-lake-E2e.WitEpR",
+    "98-lake-E2e.WitEpR",
+    "99-lake-E2e.WitEpR",
+    "135-lake-E2e.WitEpR",
+    "136-lake-E2e.WitEpR"
+   ],
+   "peak_rss_gib": 1.57
+  }
+ },
+ "per_theorem": {
+  "ep_unmarshal_accept_main": {
+   "module": "E2e.Epoch",
+   "gate_s_module": 132.4,
+   "runs_module": 4,
+   "failed_runs_module": 3,
+   "peak_rss_gib": 1.56
+  },
+  "ep_uacc_holds (witness)": {
+   "module": "E2e.WitEp",
+   "gate_s_module": 10.2,
+   "runs_module": 6,
+   "failed_runs_module": 5,
+   "peak_rss_gib": 1.56
+  },
+  "cp_e2e_accept_main": {
+   "module": "E2e.CpAccept",
+   "gate_s_module": 342.2,
+   "runs_module": 22,
+   "failed_runs_module": 21,
+   "peak_rss_gib": 6.01
+  },
+  "cp_e2e_accept_tail": {
+   "module": "E2e.CpAccept",
+   "gate_s_module": 342.2,
+   "runs_module": 22,
+   "failed_runs_module": 21,
+   "peak_rss_gib": 6.01
+  },
+  "cp_e2e_reject_size_main": {
+   "module": "E2e.CpReject",
+   "gate_s_module": 2.4,
+   "runs_module": 1,
+   "failed_runs_module": 0,
+   "peak_rss_gib": 1.63
+  },
+  "cp_e2e_epoch_err_unreachable": {
+   "module": "E2e.CpReject",
+   "gate_s_module": 2.4,
+   "runs_module": 1,
+   "failed_runs_module": 0,
+   "peak_rss_gib": 1.63
+  },
+  "cp_e2e_accept_spec_k": {
+   "module": "E2e.CpSpecK",
+   "gate_s_module": 2.3,
+   "runs_module": 1,
+   "failed_runs_module": 0,
+   "peak_rss_gib": 1.52
+  },
+  "cp_e2e_reject_size_spec": {
+   "module": "E2e.CpSpecK",
+   "gate_s_module": 2.3,
+   "runs_module": 1,
+   "failed_runs_module": 0,
+   "peak_rss_gib": 1.52
+  },
+  "cp_e2e_reject_complete": {
+   "module": "E2e.CpSpecK",
+   "gate_s_module": 2.3,
+   "runs_module": 1,
+   "failed_runs_module": 0,
+   "peak_rss_gib": 1.52
+  },
+  "cp_e2e_marshal_main": {
+   "module": "E2e.CpMarshal",
+   "gate_s_module": 512.4,
+   "runs_module": 7,
+   "failed_runs_module": 6,
+   "peak_rss_gib": 1.86
+  },
+  "cp_e2e_marshal_decoded_receiver": {
+   "module": "E2e.Compose",
+   "gate_s_module": 7.4,
+   "runs_module": 3,
+   "failed_runs_module": 2,
+   "peak_rss_gib": 1.55
+  },
+  "cp_e2e_marshal_reject_main": {
+   "module": "E2e.CpMarshalR",
+   "gate_s_module": 24.1,
+   "runs_module": 6,
+   "failed_runs_module": 5,
+   "peak_rss_gib": 1.73
+  },
+  "ep_unmarshal_reject_len_main": {
+   "module": "E2e.EpReject",
+   "gate_s_module": 469.8,
+   "runs_module": 6,
+   "failed_runs_module": 5,
+   "peak_rss_gib": 1.77
+  },
+  "ep_static_table": {
+   "module": "E2e.EpReject",
+   "gate_s_module": 469.8,
+   "runs_module": 6,
+   "failed_runs_module": 5,
+   "peak_rss_gib": 1.77
+  },
+  "ep_static_addr": {
+   "module": "E2e.EpReject",
+   "gate_s_module": 469.8,
+   "runs_module": 6,
+   "failed_runs_module": 5,
+   "peak_rss_gib": 1.77
+  },
+  "cp_e2e_unmarshal_then_marshal": {
+   "module": "E2e.CpCompose",
+   "gate_s_module": 6.2,
+   "runs_module": 2,
+   "failed_runs_module": 1,
+   "peak_rss_gib": 1.64
+  },
+  "cp_e2e_marshal_grow_main": {
+   "module": "E2e.CpMarshalG",
+   "gate_s_module": 29.7,
+   "runs_module": 4,
+   "failed_runs_module": 3,
+   "peak_rss_gib": 2.07
+  },
+  "prysmCpDesc_serialize_checker": {
+   "module": "E2e.SpecEq",
+   "gate_s_module": 1.8,
+   "runs_module": 1,
+   "failed_runs_module": 0,
+   "peak_rss_gib": 0.8
+  },
+  "prysmCpDesc_deserialize_checker": {
+   "module": "E2e.SpecEq",
+   "gate_s_module": 1.8,
+   "runs_module": 1,
+   "failed_runs_module": 0,
+   "peak_rss_gib": 0.8
+  },
+  "pcp_spec_accepts_iff": {
+   "module": "E2e.Spec",
+   "gate_s_module": 3.3,
+   "runs_module": 1,
+   "failed_runs_module": 0,
+   "peak_rss_gib": 0.77
+  },
+  "pcp_serialize": {
+   "module": "E2e.Spec",
+   "gate_s_module": 3.3,
+   "runs_module": 1,
+   "failed_runs_module": 0,
+   "peak_rss_gib": 0.77
+  },
+  "pcp_roundtrip": {
+   "module": "E2e.Spec",
+   "gate_s_module": 3.3,
+   "runs_module": 1,
+   "failed_runs_module": 0,
+   "peak_rss_gib": 0.77
+  },
+  "cp_layout": {
+   "module": "E2e.GoVal",
+   "gate_s_module": 4.7,
+   "runs_module": 1,
+   "failed_runs_module": 0,
+   "peak_rss_gib": 1.57
+  },
+  "cp_after_decode_goValue": {
+   "module": "E2e.GoVal",
+   "gate_s_module": 4.7,
+   "runs_module": 1,
+   "failed_runs_module": 0,
+   "peak_rss_gib": 1.57
+  }
+ },
+ "jobs": [
+  {
+   "job": "01-gcflags-m2",
+   "n": 1,
+   "class": "other",
+   "module": null,
+   "label": "go build -gcflags=-m=2 v1alpha1+primitives (inlining evidence)",
+   "exit": 0,
+   "gate_s": 0.2,
+   "start_utc": "2026-11-10T01:21:07.350Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "02-gcflags-m2",
+   "n": 2,
+   "class": "other",
+   "module": null,
+   "label": "go build -gcflags=-m=2 v1alpha1+primitives (inlining evidence)",
+   "exit": 0,
+   "gate_s": 3.3,
+   "start_utc": "2026-11-10T01:21:22.635Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "03-e2e-link",
+   "n": 3,
+   "class": "other",
+   "module": null,
+   "label": "e2e link: conv.py --norm, e2elink data, check.py",
+   "exit": 1,
+   "gate_s": 0.2,
+   "start_utc": "2026-11-10T01:22:20.034Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "04-e2e-link",
+   "n": 4,
+   "class": "other",
+   "module": null,
+   "label": "e2e link: conv.py --norm, e2elink data, check.py",
+   "exit": 0,
+   "gate_s": 0.6,
+   "start_utc": "2026-11-10T01:22:24.006Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "05-lake-E2e.Epoch",
+   "n": 5,
+   "class": "build",
+   "module": "E2e.Epoch",
+   "label": "lake build E2e.Epoch (attempt 1)",
+   "exit": 1,
+   "gate_s": 5.1,
+   "start_utc": "2026-11-10T01:24:18.904Z",
+   "peak_rss": 1602600960,
+   "memcap_kill": false
+  },
+  {
+   "job": "06-lake-E2e.Epoch",
+   "n": 6,
+   "class": "build",
+   "module": "E2e.Epoch",
+   "label": "lake build E2e.Epoch (attempt 2)",
+   "exit": 1,
+   "gate_s": 122.1,
+   "start_utc": "2026-11-10T01:24:34.570Z",
+   "peak_rss": 1604046848,
+   "memcap_kill": false
+  },
+  {
+   "job": "07-lake-E2e.Epoch",
+   "n": 7,
+   "class": "build",
+   "module": "E2e.Epoch",
+   "label": "lake build E2e.Epoch (attempt 3)",
+   "exit": 1,
+   "gate_s": 2.5,
+   "start_utc": "2026-11-10T01:26:50.077Z",
+   "peak_rss": 1665101824,
+   "memcap_kill": false
+  },
+  {
+   "job": "08-lake-E2e.Epoch",
+   "n": 8,
+   "class": "build",
+   "module": "E2e.Epoch",
+   "label": "lake build E2e.Epoch (attempt 4)",
+   "exit": 0,
+   "gate_s": 2.7,
+   "start_utc": "2026-11-10T01:27:06.599Z",
+   "peak_rss": 1673752576,
+   "memcap_kill": false
+  },
+  {
+   "job": "09-lake-E2e.WitEp",
+   "n": 9,
+   "class": "build",
+   "module": "E2e.WitEp",
+   "label": "lake build E2e.WitEp (Epoch spec + witness, attempt 1)",
+   "exit": 1,
+   "gate_s": 3.1,
+   "start_utc": "2026-11-10T01:28:37.816Z",
+   "peak_rss": 1675710464,
+   "memcap_kill": false
+  },
+  {
+   "job": "10-lake-E2e.WitEp",
+   "n": 10,
+   "class": "build",
+   "module": "E2e.WitEp",
+   "label": "lake build E2e.WitEp (attempt 2)",
+   "exit": 1,
+   "gate_s": 1.2,
+   "start_utc": "2026-11-10T01:29:23.711Z",
+   "peak_rss": 1576402944,
+   "memcap_kill": false
+  },
+  {
+   "job": "11-lake-E2e.WitEp",
+   "n": 11,
+   "class": "build",
+   "module": "E2e.WitEp",
+   "label": "lake build E2e.WitEp (attempt 3)",
+   "exit": 1,
+   "gate_s": 1.2,
+   "start_utc": "2026-11-10T01:29:36.959Z",
+   "peak_rss": 1584558080,
+   "memcap_kill": false
+  },
+  {
+   "job": "12-lake-E2e.WitEp",
+   "n": 12,
+   "class": "build",
+   "module": "E2e.WitEp",
+   "label": "lake build E2e.WitEp (attempt 4)",
+   "exit": 1,
+   "gate_s": 1.9,
+   "start_utc": "2026-11-10T01:30:06.417Z",
+   "peak_rss": 1595039744,
+   "memcap_kill": false
+  },
+  {
+   "job": "13-lake-E2e.WitEp",
+   "n": 13,
+   "class": "build",
+   "module": "E2e.WitEp",
+   "label": "lake build E2e.WitEp (attempt 5)",
+   "exit": 1,
+   "gate_s": 1.2,
+   "start_utc": "2026-11-10T01:30:43.131Z",
+   "peak_rss": 1586528256,
+   "memcap_kill": false
+  },
+  {
+   "job": "14-lake-E2e.WitEp",
+   "n": 14,
+   "class": "build",
+   "module": "E2e.WitEp",
+   "label": "lake build E2e.WitEp (attempt 6)",
+   "exit": 0,
+   "gate_s": 1.6,
+   "start_utc": "2026-11-10T01:31:38.555Z",
+   "peak_rss": 1584852992,
+   "memcap_kill": false
+  },
+  {
+   "job": "15-lake-E2e.Data",
+   "n": 15,
+   "class": "build",
+   "module": "E2e.Data",
+   "label": "lake build E2e.Data",
+   "exit": 0,
+   "gate_s": 2.0,
+   "start_utc": "2026-11-10T01:32:01.695Z",
+   "peak_rss": 1631600640,
+   "memcap_kill": false
+  },
+  {
+   "job": "16-lake-E2e.Spec",
+   "n": 16,
+   "class": "build",
+   "module": "E2e.Spec",
+   "label": "lake build E2e.Spec (spec bridge, attempt 1)",
+   "exit": 0,
+   "gate_s": 3.3,
+   "start_utc": "2026-11-10T01:34:40.723Z",
+   "peak_rss": 823787520,
+   "memcap_kill": false
+  },
+  {
+   "job": "17-neg-E2",
+   "n": 17,
+   "class": "negative",
+   "module": null,
+   "label": "negative suite E2 (Epoch accept: control + 3 code + 1 statement)",
+   "exit": 1,
+   "gate_s": 126.2,
+   "start_utc": "2026-11-10T01:37:44.667Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "18-neg-E2",
+   "n": 18,
+   "class": "negative",
+   "module": null,
+   "label": "negative suite E2 (Epoch accept: control + 3 code + 1 statement)",
+   "exit": 1,
+   "gate_s": 131.1,
+   "start_utc": "2026-11-10T01:40:02.588Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "19-neg-E2",
+   "n": 19,
+   "class": "negative",
+   "module": null,
+   "label": "negative suite E2 (Epoch accept: control + 3 code + 1 statement)",
+   "exit": 0,
+   "gate_s": 132.0,
+   "start_utc": "2026-11-10T01:42:29.038Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "20-lake-E2e.CpAccept",
+   "n": 20,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 1)",
+   "exit": 1,
+   "gate_s": 2.3,
+   "start_utc": "2026-11-10T01:49:59.010Z",
+   "peak_rss": 1614495744,
+   "memcap_kill": false
+  },
+  {
+   "job": "21-lake-E2e.CpAccept",
+   "n": 21,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 2)",
+   "exit": 1,
+   "gate_s": 3.3,
+   "start_utc": "2026-11-10T01:50:34.336Z",
+   "peak_rss": 1672646656,
+   "memcap_kill": false
+  },
+  {
+   "job": "22-lake-E2e.CpAccept",
+   "n": 22,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 3)",
+   "exit": 1,
+   "gate_s": 7.4,
+   "start_utc": "2026-11-10T01:51:56.111Z",
+   "peak_rss": 1729548288,
+   "memcap_kill": false
+  },
+  {
+   "job": "23-lake-E2e.CpAccept",
+   "n": 23,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 4)",
+   "exit": 1,
+   "gate_s": 7.4,
+   "start_utc": "2026-11-10T01:52:39.580Z",
+   "peak_rss": 1733709824,
+   "memcap_kill": false
+  },
+  {
+   "job": "24-lake-E2e.CpAccept",
+   "n": 24,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 5, trace_state debug)",
+   "exit": 1,
+   "gate_s": 7.6,
+   "start_utc": "2026-11-10T01:52:56.991Z",
+   "peak_rss": 1731264512,
+   "memcap_kill": false
+  },
+  {
+   "job": "25-lake-E2e.CpAccept",
+   "n": 25,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 6)",
+   "exit": 1,
+   "gate_s": 6.4,
+   "start_utc": "2026-11-10T01:53:37.840Z",
+   "peak_rss": 1893281792,
+   "memcap_kill": false
+  },
+  {
+   "job": "26-lake-E2e.CpAccept",
+   "n": 26,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 7)",
+   "exit": 1,
+   "gate_s": 6.3,
+   "start_utc": "2026-11-10T01:53:51.806Z",
+   "peak_rss": 1888673792,
+   "memcap_kill": false
+  },
+  {
+   "job": "27-lake-E2e.CpAccept",
+   "n": 27,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 8)",
+   "exit": 125,
+   "gate_s": 56.5,
+   "start_utc": "2026-11-10T01:54:11.272Z",
+   "peak_rss": 6443397120,
+   "memcap_kill": true
+  },
+  {
+   "job": "28-lake-E2e.CpAccept",
+   "n": 28,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 9)",
+   "exit": 125,
+   "gate_s": 49.5,
+   "start_utc": "2026-11-10T01:55:43.760Z",
+   "peak_rss": 6448381952,
+   "memcap_kill": true
+  },
+  {
+   "job": "29-lake-E2e.CpAccept",
+   "n": 29,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 10, split at L_b4)",
+   "exit": 1,
+   "gate_s": 5.6,
+   "start_utc": "2026-11-10T01:58:26.483Z",
+   "peak_rss": 1909760000,
+   "memcap_kill": false
+  },
+  {
+   "job": "30-lake-E2e.CpAccept",
+   "n": 30,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 11)",
+   "exit": 1,
+   "gate_s": 4.7,
+   "start_utc": "2026-11-10T01:58:53.556Z",
+   "peak_rss": 1918054400,
+   "memcap_kill": false
+  },
+  {
+   "job": "31-lake-E2e.CpAccept",
+   "n": 31,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 12)",
+   "exit": 1,
+   "gate_s": 4.8,
+   "start_utc": "2026-11-10T01:59:24.773Z",
+   "peak_rss": 1911365632,
+   "memcap_kill": false
+  },
+  {
+   "job": "32-lake-E2e.CpAccept",
+   "n": 32,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 13)",
+   "exit": 1,
+   "gate_s": 5.7,
+   "start_utc": "2026-11-10T01:59:37.339Z",
+   "peak_rss": 2056130560,
+   "memcap_kill": false
+  },
+  {
+   "job": "33-lake-E2e.CpAccept",
+   "n": 33,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 14)",
+   "exit": 125,
+   "gate_s": 46.1,
+   "start_utc": "2026-11-10T02:00:08.951Z",
+   "peak_rss": 6443524096,
+   "memcap_kill": true
+  },
+  {
+   "job": "34-probe-A",
+   "n": 34,
+   "class": "probe",
+   "module": "E2e.CpAccept",
+   "label": "probe CpAccept tail: final memory goal replaced by fail (memory diagnosis)",
+   "exit": 125,
+   "gate_s": 44.3,
+   "start_utc": "2026-11-10T02:01:23.264Z",
+   "peak_rss": 6450642944,
+   "memcap_kill": true
+  },
+  {
+   "job": "35-probe-C",
+   "n": 35,
+   "class": "probe",
+   "module": "E2e.CpAccept",
+   "label": "probe CpAccept tail: stop before Eventually.done (memory diagnosis)",
+   "exit": 1,
+   "gate_s": 4.7,
+   "start_utc": "2026-11-10T02:02:24.127Z",
+   "peak_rss": 1722966016,
+   "memcap_kill": false
+  },
+  {
+   "job": "36-lake-E2e.CpAccept",
+   "n": 36,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 15)",
+   "exit": 1,
+   "gate_s": 5.7,
+   "start_utc": "2026-11-10T02:02:52.119Z",
+   "peak_rss": 2069200896,
+   "memcap_kill": false
+  },
+  {
+   "job": "37-probe-E",
+   "n": 37,
+   "class": "probe",
+   "module": "E2e.CpAccept",
+   "label": "probe CpAccept tail: print the final memory hypothesis",
+   "exit": 1,
+   "gate_s": 4.9,
+   "start_utc": "2026-11-10T02:03:17.444Z",
+   "peak_rss": 1998151680,
+   "memcap_kill": false
+  },
+  {
+   "job": "38-lake-E2e.CpAccept",
+   "n": 38,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 16)",
+   "exit": 1,
+   "gate_s": 5.7,
+   "start_utc": "2026-11-10T02:03:35.526Z",
+   "peak_rss": 2066616320,
+   "memcap_kill": false
+  },
+  {
+   "job": "39-lake-E2e.CpAccept",
+   "n": 39,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 17)",
+   "exit": 1,
+   "gate_s": 5.7,
+   "start_utc": "2026-11-10T02:04:09.923Z",
+   "peak_rss": 2069889024,
+   "memcap_kill": false
+  },
+  {
+   "job": "40-lake-E2e.CpAccept",
+   "n": 40,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 18)",
+   "exit": 1,
+   "gate_s": 5.7,
+   "start_utc": "2026-11-10T02:04:30.453Z",
+   "peak_rss": 2095652864,
+   "memcap_kill": false
+  },
+  {
+   "job": "41-probe-F",
+   "n": 41,
+   "class": "probe",
+   "module": "E2e.CpAccept",
+   "label": "probe CpAccept main: print the memory after the Epoch call",
+   "exit": 1,
+   "gate_s": 5.8,
+   "start_utc": "2026-11-10T02:04:43.215Z",
+   "peak_rss": 2073202688,
+   "memcap_kill": false
+  },
+  {
+   "job": "42-lake-E2e.CpAccept",
+   "n": 42,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 19)",
+   "exit": 1,
+   "gate_s": 5.7,
+   "start_utc": "2026-11-10T02:05:18.143Z",
+   "peak_rss": 2074107904,
+   "memcap_kill": false
+  },
+  {
+   "job": "43-lake-E2e.CpAccept",
+   "n": 43,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 20)",
+   "exit": 1,
+   "gate_s": 28.4,
+   "start_utc": "2026-11-10T02:06:02.520Z",
+   "peak_rss": 2063630336,
+   "memcap_kill": false
+  },
+  {
+   "job": "44-lake-E2e.CpAccept",
+   "n": 44,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 21)",
+   "exit": 1,
+   "gate_s": 5.7,
+   "start_utc": "2026-11-10T02:07:04.042Z",
+   "peak_rss": 2079039488,
+   "memcap_kill": false
+  },
+  {
+   "job": "45-lake-E2e.CpAccept",
+   "n": 45,
+   "class": "build",
+   "module": "E2e.CpAccept",
+   "label": "lake build E2e.CpAccept (attempt 22)",
+   "exit": 0,
+   "gate_s": 6.3,
+   "start_utc": "2026-11-10T02:07:29.083Z",
+   "peak_rss": 2069127168,
+   "memcap_kill": false
+  },
+  {
+   "job": "46-lake-E2e.WitCpA",
+   "n": 46,
+   "class": "build",
+   "module": "E2e.WitCpA",
+   "label": "lake build E2e.WitCpA (attempt 1)",
+   "exit": 1,
+   "gate_s": 25.3,
+   "start_utc": "2026-11-10T02:09:29.477Z",
+   "peak_rss": 1787715584,
+   "memcap_kill": false
+  },
+  {
+   "job": "47-lake-E2e.WitCpA",
+   "n": 47,
+   "class": "build",
+   "module": "E2e.WitCpA",
+   "label": "lake build E2e.WitCpA (attempt 2)",
+   "exit": 0,
+   "gate_s": 25.1,
+   "start_utc": "2026-11-10T02:10:11.623Z",
+   "peak_rss": 1784455168,
+   "memcap_kill": false
+  },
+  {
+   "job": "48-neg-E3a",
+   "n": 48,
+   "class": "negative",
+   "module": null,
+   "label": "negative suite E3 accept (9 cases)",
+   "exit": 0,
+   "gate_s": 45.9,
+   "start_utc": "2026-11-10T02:11:02.184Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "49-lake-E2e.CpReject",
+   "n": 49,
+   "class": "build",
+   "module": "E2e.CpReject",
+   "label": "lake build E2e.CpReject (attempt 1)",
+   "exit": 0,
+   "gate_s": 2.4,
+   "start_utc": "2026-11-10T02:12:16.141Z",
+   "peak_rss": 1752555520,
+   "memcap_kill": false
+  },
+  {
+   "job": "50-lake-E2e.WitCpR",
+   "n": 50,
+   "class": "build",
+   "module": "E2e.WitCpR",
+   "label": "lake build E2e.WitCpR (attempt 1)",
+   "exit": 1,
+   "gate_s": 2.5,
+   "start_utc": "2026-11-10T02:13:13.369Z",
+   "peak_rss": 1643597824,
+   "memcap_kill": false
+  },
+  {
+   "job": "51-lake-E2e.WitCpR",
+   "n": 51,
+   "class": "build",
+   "module": "E2e.WitCpR",
+   "label": "lake build E2e.WitCpR (attempt 2)",
+   "exit": 0,
+   "gate_s": 2.0,
+   "start_utc": "2026-11-10T02:13:23.348Z",
+   "peak_rss": 1643528192,
+   "memcap_kill": false
+  },
+  {
+   "job": "52-lake-E2e.CpSpecK",
+   "n": 52,
+   "class": "build",
+   "module": "E2e.CpSpecK",
+   "label": "lake build E2e.CpSpecK (attempt 1)",
+   "exit": 0,
+   "gate_s": 2.3,
+   "start_utc": "2026-11-10T02:14:07.474Z",
+   "peak_rss": 1634181120,
+   "memcap_kill": false
+  },
+  {
+   "job": "53-neg-E3b",
+   "n": 53,
+   "class": "negative",
+   "module": null,
+   "label": "negative suite E3 reject + unreachable (6 cases)",
+   "exit": 0,
+   "gate_s": 15.3,
+   "start_utc": "2026-11-10T02:14:25.555Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "54-lake-E2e.CpMarshal",
+   "n": 54,
+   "class": "build",
+   "module": "E2e.CpMarshal",
+   "label": "lake build E2e.CpMarshal (attempt 1, probe end)",
+   "exit": 1,
+   "gate_s": 2.0,
+   "start_utc": "2026-11-10T02:17:00.761Z",
+   "peak_rss": 1645117440,
+   "memcap_kill": false
+  },
+  {
+   "job": "55-lake-E2e.CpMarshal",
+   "n": 55,
+   "class": "build",
+   "module": "E2e.CpMarshal",
+   "label": "lake build E2e.CpMarshal (attempt 2, probe end)",
+   "exit": 1,
+   "gate_s": 486.3,
+   "start_utc": "2026-11-10T02:17:47.625Z",
+   "peak_rss": 1727340544,
+   "memcap_kill": false
+  },
+  {
+   "job": "56-lake-E2e.CpMarshal",
+   "n": 56,
+   "class": "build",
+   "module": "E2e.CpMarshal",
+   "label": "lake build E2e.CpMarshal (attempt 3, probe end)",
+   "exit": 1,
+   "gate_s": 4.7,
+   "start_utc": "2026-11-10T02:26:09.219Z",
+   "peak_rss": 1977257984,
+   "memcap_kill": false
+  },
+  {
+   "job": "57-lake-E2e.CpMarshal",
+   "n": 57,
+   "class": "build",
+   "module": "E2e.CpMarshal",
+   "label": "lake build E2e.CpMarshal (attempt 4)",
+   "exit": 1,
+   "gate_s": 4.9,
+   "start_utc": "2026-11-10T02:26:33.701Z",
+   "peak_rss": 1986826240,
+   "memcap_kill": false
+  },
+  {
+   "job": "58-lake-E2e.CpMarshal",
+   "n": 58,
+   "class": "build",
+   "module": "E2e.CpMarshal",
+   "label": "lake build E2e.CpMarshal (attempt 5)",
+   "exit": 1,
+   "gate_s": 4.7,
+   "start_utc": "2026-11-10T02:27:08.701Z",
+   "peak_rss": 1999822848,
+   "memcap_kill": false
+  },
+  {
+   "job": "59-lake-E2e.CpMarshal",
+   "n": 59,
+   "class": "build",
+   "module": "E2e.CpMarshal",
+   "label": "lake build E2e.CpMarshal (attempt 6)",
+   "exit": 1,
+   "gate_s": 4.9,
+   "start_utc": "2026-11-10T02:27:27.448Z",
+   "peak_rss": 1981583360,
+   "memcap_kill": false
+  },
+  {
+   "job": "60-lake-E2e.CpMarshal",
+   "n": 60,
+   "class": "build",
+   "module": "E2e.CpMarshal",
+   "label": "lake build E2e.CpMarshal (attempt 7)",
+   "exit": 0,
+   "gate_s": 4.9,
+   "start_utc": "2026-11-10T02:27:49.916Z",
+   "peak_rss": 1992720384,
+   "memcap_kill": false
+  },
+  {
+   "job": "61-lake-E2e.WitCpM",
+   "n": 61,
+   "class": "build",
+   "module": "E2e.WitCpM",
+   "label": "lake build E2e.WitCpM (attempt 1)",
+   "exit": 1,
+   "gate_s": 14.6,
+   "start_utc": "2026-11-10T02:28:41.547Z",
+   "peak_rss": 1653936128,
+   "memcap_kill": false
+  },
+  {
+   "job": "62-lake-E2e.WitCpM",
+   "n": 62,
+   "class": "build",
+   "module": "E2e.WitCpM",
+   "label": "lake build E2e.WitCpM (attempt 2)",
+   "exit": 0,
+   "gate_s": 14.8,
+   "start_utc": "2026-11-10T02:29:01.827Z",
+   "peak_rss": 1653821440,
+   "memcap_kill": false
+  },
+  {
+   "job": "63-lake-E2e.WitCpM",
+   "n": 63,
+   "class": "build",
+   "module": "E2e.WitCpM",
+   "label": "lake build E2e.WitCpM (attempt 3, prefix instance)",
+   "exit": 0,
+   "gate_s": 21.3,
+   "start_utc": "2026-11-10T02:29:30.082Z",
+   "peak_rss": 1658179584,
+   "memcap_kill": false
+  },
+  {
+   "job": "64-neg-E4",
+   "n": 64,
+   "class": "negative",
+   "module": null,
+   "label": "negative suite E4 marshal (7 cases)",
+   "exit": 0,
+   "gate_s": 30.9,
+   "start_utc": "2026-11-10T02:30:04.813Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "65-lake-E2e.Compose",
+   "n": 65,
+   "class": "build",
+   "module": "E2e.Compose",
+   "label": "lake build E2e.Compose (attempt 1)",
+   "exit": 1,
+   "gate_s": 2.4,
+   "start_utc": "2026-11-10T02:31:09.598Z",
+   "peak_rss": 1639206912,
+   "memcap_kill": false
+  },
+  {
+   "job": "66-lake-E2e.Compose",
+   "n": 66,
+   "class": "build",
+   "module": "E2e.Compose",
+   "label": "lake build E2e.Compose (attempt 2)",
+   "exit": 1,
+   "gate_s": 2.5,
+   "start_utc": "2026-11-10T02:31:27.490Z",
+   "peak_rss": 1661423616,
+   "memcap_kill": false
+  },
+  {
+   "job": "67-lake-E2e.Compose",
+   "n": 67,
+   "class": "build",
+   "module": "E2e.Compose",
+   "label": "lake build E2e.Compose (attempt 3)",
+   "exit": 0,
+   "gate_s": 2.5,
+   "start_utc": "2026-11-10T02:31:46.804Z",
+   "peak_rss": 1662287872,
+   "memcap_kill": false
+  },
+  {
+   "job": "68-neg-E5",
+   "n": 68,
+   "class": "negative",
+   "module": null,
+   "label": "negative suite E5 composition (3 cases)",
+   "exit": 0,
+   "gate_s": 3.1,
+   "start_utc": "2026-11-10T02:32:01.052Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "69-axioms-E2e",
+   "n": 69,
+   "class": "other",
+   "module": null,
+   "label": "axioms over the E2e closure (#print axioms, 23 names)",
+   "exit": 0,
+   "gate_s": 1.0,
+   "start_utc": "2026-11-10T02:32:33.022Z",
+   "peak_rss": 1625546752,
+   "memcap_kill": false
+  },
+  {
+   "job": "70-axioms-E2e",
+   "n": 70,
+   "class": "other",
+   "module": null,
+   "label": "axioms over the E2e closure (rerun on the committed file)",
+   "exit": 0,
+   "gate_s": 1.0,
+   "start_utc": "2026-11-10T02:32:45.399Z",
+   "peak_rss": 1635000320,
+   "memcap_kill": false
+  },
+  {
+   "job": "71-go-differential",
+   "n": 71,
+   "class": "other",
+   "module": null,
+   "label": "Go differential fve2e/cpcheck (native Go 1.26.10)",
+   "exit": 0,
+   "gate_s": 3.0,
+   "start_utc": "2026-11-10T02:33:30.226Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "72-relink",
+   "n": 72,
+   "class": "other",
+   "module": null,
+   "label": "check.py (a)-(f) rerun on the committed E2e link tables",
+   "exit": 0,
+   "gate_s": 0.6,
+   "start_utc": "2026-11-10T02:34:18.282Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "73-lake-E2e.CpMarshalR",
+   "n": 73,
+   "class": "build",
+   "module": "E2e.CpMarshalR",
+   "label": "lake build E2e.CpMarshalR (attempt 1)",
+   "exit": 1,
+   "gate_s": 3.7,
+   "start_utc": "2026-11-10T02:40:01.125Z",
+   "peak_rss": 1834397696,
+   "memcap_kill": false
+  },
+  {
+   "job": "74-lake-E2e.CpMarshalR",
+   "n": 74,
+   "class": "build",
+   "module": "E2e.CpMarshalR",
+   "label": "lake build E2e.CpMarshalR (attempt 2)",
+   "exit": 1,
+   "gate_s": 3.5,
+   "start_utc": "2026-11-10T02:40:32.863Z",
+   "peak_rss": 1828524032,
+   "memcap_kill": false
+  },
+  {
+   "job": "75-lake-E2e.CpMarshalR",
+   "n": 75,
+   "class": "build",
+   "module": "E2e.CpMarshalR",
+   "label": "lake build E2e.CpMarshalR (attempt 3)",
+   "exit": 1,
+   "gate_s": 3.5,
+   "start_utc": "2026-11-10T02:41:07.352Z",
+   "peak_rss": 1856380928,
+   "memcap_kill": false
+  },
+  {
+   "job": "76-lake-E2e.CpMarshalR",
+   "n": 76,
+   "class": "build",
+   "module": "E2e.CpMarshalR",
+   "label": "lake build E2e.CpMarshalR (attempt 4)",
+   "exit": 1,
+   "gate_s": 3.3,
+   "start_utc": "2026-11-10T02:41:22.359Z",
+   "peak_rss": 1838268416,
+   "memcap_kill": false
+  },
+  {
+   "job": "77-lake-E2e.CpMarshalR",
+   "n": 77,
+   "class": "build",
+   "module": "E2e.CpMarshalR",
+   "label": "lake build E2e.CpMarshalR (attempt 5)",
+   "exit": 1,
+   "gate_s": 3.3,
+   "start_utc": "2026-11-10T02:41:44.909Z",
+   "peak_rss": 1840652288,
+   "memcap_kill": false
+  },
+  {
+   "job": "78-probe-R",
+   "n": 78,
+   "class": "probe",
+   "module": "E2e.CpMarshalR",
+   "label": "probe marshal reject jne hypothesis",
+   "exit": 1,
+   "gate_s": 3.1,
+   "start_utc": "2026-11-10T02:42:04.416Z",
+   "peak_rss": 1754583040,
+   "memcap_kill": false
+  },
+  {
+   "job": "79-lake-E2e.CpMarshalR",
+   "n": 79,
+   "class": "build",
+   "module": "E2e.CpMarshalR",
+   "label": "lake build E2e.CpMarshalR (attempt 6)",
+   "exit": 0,
+   "gate_s": 3.7,
+   "start_utc": "2026-11-10T02:42:18.375Z",
+   "peak_rss": 1828257792,
+   "memcap_kill": false
+  },
+  {
+   "job": "80-lake-E2e.WitCpMR",
+   "n": 80,
+   "class": "build",
+   "module": "E2e.WitCpMR",
+   "label": "lake build E2e.WitCpMR (attempt 1)",
+   "exit": 0,
+   "gate_s": 10.2,
+   "start_utc": "2026-11-10T02:42:52.628Z",
+   "peak_rss": 1630920704,
+   "memcap_kill": false
+  },
+  {
+   "job": "81-neg-E4r",
+   "n": 81,
+   "class": "negative",
+   "module": null,
+   "label": "negative suite marshal reject (4 cases)",
+   "exit": 0,
+   "gate_s": 494.9,
+   "start_utc": "2026-11-10T02:43:15.201Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "83-lake-E2e.WitCpS",
+   "n": 83,
+   "class": "build",
+   "module": "E2e.WitCpS",
+   "label": "lake build E2e.WitCpS (+CpSpecM, attempt 1, relaunch)",
+   "exit": 1,
+   "gate_s": 99.1,
+   "start_utc": "2026-11-10T03:46:49.447Z",
+   "peak_rss": 1670778880,
+   "memcap_kill": false
+  },
+  {
+   "job": "84-lake-E2e.WitCpS",
+   "n": 84,
+   "class": "build",
+   "module": "E2e.WitCpS",
+   "label": "lake build E2e.WitCpS (+CpSpecM, attempt 2)",
+   "exit": 1,
+   "gate_s": 103.0,
+   "start_utc": "2026-11-10T03:48:54.846Z",
+   "peak_rss": 1673220096,
+   "memcap_kill": false
+  },
+  {
+   "job": "85-lake-E2e.WitCpS",
+   "n": 85,
+   "class": "build",
+   "module": "E2e.WitCpS",
+   "label": "lake build E2e.WitCpS (+CpSpecM, attempt 3)",
+   "exit": 1,
+   "gate_s": 104.4,
+   "start_utc": "2026-11-10T03:50:50.859Z",
+   "peak_rss": 1671249920,
+   "memcap_kill": false
+  },
+  {
+   "job": "86-lake-E2e.WitCpS",
+   "n": 86,
+   "class": "build",
+   "module": "E2e.WitCpS",
+   "label": "lake build E2e.WitCpS (+CpSpecM, attempt 4)",
+   "exit": 0,
+   "gate_s": 4.3,
+   "start_utc": "2026-11-10T03:52:54.722Z",
+   "peak_rss": 1677590528,
+   "memcap_kill": false
+  },
+  {
+   "job": "87-neg-spec-size",
+   "n": 87,
+   "class": "negative",
+   "module": null,
+   "label": "negative suite size + marshal spec_k (4 cases)",
+   "exit": 0,
+   "gate_s": 4.3,
+   "start_utc": "2026-11-10T03:53:08.615Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "88-lake-E2e.EpReject",
+   "n": 88,
+   "class": "build",
+   "module": "E2e.EpReject",
+   "label": "lake build E2e.EpReject (attempt 1, probe end)",
+   "exit": 1,
+   "gate_s": 2.9,
+   "start_utc": "2026-11-10T03:53:32.147Z",
+   "peak_rss": 1802240000,
+   "memcap_kill": false
+  },
+  {
+   "job": "89-lake-E2e.EpReject",
+   "n": 89,
+   "class": "build",
+   "module": "E2e.EpReject",
+   "label": "lake build E2e.EpReject (attempt 2)",
+   "exit": 1,
+   "gate_s": 3.7,
+   "start_utc": "2026-11-10T03:54:42.765Z",
+   "peak_rss": 1788239872,
+   "memcap_kill": false
+  },
+  {
+   "job": "90-lake-E2e.EpReject",
+   "n": 90,
+   "class": "build",
+   "module": "E2e.EpReject",
+   "label": "lake build E2e.EpReject (attempt 3)",
+   "exit": 1,
+   "gate_s": 3.3,
+   "start_utc": "2026-11-10T03:54:55.573Z",
+   "peak_rss": 1788305408,
+   "memcap_kill": false
+  },
+  {
+   "job": "91-lake-E2e.EpReject",
+   "n": 91,
+   "class": "build",
+   "module": "E2e.EpReject",
+   "label": "lake build E2e.EpReject (attempt 4)",
+   "exit": 1,
+   "gate_s": 3.7,
+   "start_utc": "2026-11-10T03:55:11.361Z",
+   "peak_rss": 1874587648,
+   "memcap_kill": false
+  },
+  {
+   "job": "92-lake-E2e.EpReject",
+   "n": 92,
+   "class": "build",
+   "module": "E2e.EpReject",
+   "label": "lake build E2e.EpReject (attempt 5)",
+   "exit": 1,
+   "gate_s": 448.0,
+   "start_utc": "2026-11-10T03:55:38.665Z",
+   "peak_rss": 1731149824,
+   "memcap_kill": false
+  },
+  {
+   "job": "93-probe-ER",
+   "n": 93,
+   "class": "probe",
+   "module": "E2e.EpReject",
+   "label": "probe Epoch reject final memory",
+   "exit": 1,
+   "gate_s": 3.9,
+   "start_utc": "2026-11-10T04:03:15.027Z",
+   "peak_rss": 1876054016,
+   "memcap_kill": false
+  },
+  {
+   "job": "94-lake-E2e.EpReject",
+   "n": 94,
+   "class": "build",
+   "module": "E2e.EpReject",
+   "label": "lake build E2e.EpReject (attempt 6)",
+   "exit": 0,
+   "gate_s": 4.3,
+   "start_utc": "2026-11-10T04:03:28.222Z",
+   "peak_rss": 1901772800,
+   "memcap_kill": false
+  },
+  {
+   "job": "95-lake-E2e.WitEpR",
+   "n": 95,
+   "class": "build",
+   "module": "E2e.WitEpR",
+   "label": "lake build E2e.WitEpR (attempt 1)",
+   "exit": 1,
+   "gate_s": 1.2,
+   "start_utc": "2026-11-10T04:05:07.558Z",
+   "peak_rss": 1678655488,
+   "memcap_kill": false
+  },
+  {
+   "job": "96-lake-E2e.WitEpR",
+   "n": 96,
+   "class": "build",
+   "module": "E2e.WitEpR",
+   "label": "lake build E2e.WitEpR (attempt 2)",
+   "exit": 1,
+   "gate_s": 1.2,
+   "start_utc": "2026-11-10T04:05:32.236Z",
+   "peak_rss": 1657536512,
+   "memcap_kill": false
+  },
+  {
+   "job": "97-lake-E2e.WitEpR",
+   "n": 97,
+   "class": "build",
+   "module": "E2e.WitEpR",
+   "label": "lake build E2e.WitEpR (attempt 3)",
+   "exit": 1,
+   "gate_s": 1.2,
+   "start_utc": "2026-11-10T04:05:48.906Z",
+   "peak_rss": 1674612736,
+   "memcap_kill": false
+  },
+  {
+   "job": "98-lake-E2e.WitEpR",
+   "n": 98,
+   "class": "build",
+   "module": "E2e.WitEpR",
+   "label": "lake build E2e.WitEpR (attempt 4)",
+   "exit": 1,
+   "gate_s": 11.2,
+   "start_utc": "2026-11-10T04:06:09.340Z",
+   "peak_rss": 1683001344,
+   "memcap_kill": false
+  },
+  {
+   "job": "99-lake-E2e.WitEpR",
+   "n": 99,
+   "class": "build",
+   "module": "E2e.WitEpR",
+   "label": "lake build E2e.WitEpR (attempt 5)",
+   "exit": 0,
+   "gate_s": 11.1,
+   "start_utc": "2026-11-10T04:06:37.014Z",
+   "peak_rss": 1676705792,
+   "memcap_kill": false
+  },
+  {
+   "job": "100-neg-epr",
+   "n": 100,
+   "class": "negative",
+   "module": null,
+   "label": "negative suite Epoch reject (5 cases)",
+   "exit": 0,
+   "gate_s": 17.9,
+   "start_utc": "2026-11-10T04:06:59.630Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "101-lake-E2e.GoVal",
+   "n": 101,
+   "class": "build",
+   "module": "E2e.GoVal",
+   "label": "lake build E2e.GoVal (attempt 1)",
+   "exit": 0,
+   "gate_s": 2.7,
+   "start_utc": "2026-11-10T04:07:54.548Z",
+   "peak_rss": 1681920000,
+   "memcap_kill": false
+  },
+  {
+   "job": "102-neg-gv-axioms",
+   "n": 102,
+   "class": "negative",
+   "module": null,
+   "label": "negatives GoVal (2) + axioms rerun (38 names)",
+   "exit": 0,
+   "gate_s": 2.6,
+   "start_utc": "2026-11-10T04:08:11.367Z",
+   "peak_rss": 1640165376,
+   "memcap_kill": false
+  },
+  {
+   "job": "103-m1-rename",
+   "n": 103,
+   "class": "other",
+   "module": null,
+   "label": "M1 correction: rebuild E2e.Compose, cpc negatives, axioms",
+   "exit": 0,
+   "gate_s": 6.3,
+   "start_utc": "2026-11-10T04:09:55.080Z",
+   "peak_rss": 1669435392,
+   "memcap_kill": false
+  },
+  {
+   "job": "104-lake-E2e.CpCompose",
+   "n": 104,
+   "class": "build",
+   "module": "E2e.CpCompose",
+   "label": "lake build E2e.CpCompose (M1 attempt 1)",
+   "exit": 1,
+   "gate_s": 3.1,
+   "start_utc": "2026-11-10T04:15:14.148Z",
+   "peak_rss": 1738711040,
+   "memcap_kill": false
+  },
+  {
+   "job": "105-lake-E2e.CpCompose",
+   "n": 105,
+   "class": "build",
+   "module": "E2e.CpCompose",
+   "label": "lake build E2e.CpCompose (M1 attempt 1, run 2)",
+   "exit": 0,
+   "gate_s": 3.1,
+   "start_utc": "2026-11-10T04:15:32.509Z",
+   "peak_rss": 1762050048,
+   "memcap_kill": false
+  },
+  {
+   "job": "106-lake-E2e.WitCpC",
+   "n": 106,
+   "class": "build",
+   "module": "E2e.WitCpC",
+   "label": "lake build E2e.WitCpC (M1 witness attempt 1)",
+   "exit": 1,
+   "gate_s": 3.7,
+   "start_utc": "2026-11-10T04:17:00.145Z",
+   "peak_rss": 1899360256,
+   "memcap_kill": false
+  },
+  {
+   "job": "107-lake-E2e.WitCpC",
+   "n": 107,
+   "class": "build",
+   "module": "E2e.WitCpC",
+   "label": "lake build E2e.WitCpC (M1 witness attempt 1, run 2)",
+   "exit": 0,
+   "gate_s": 36.9,
+   "start_utc": "2026-11-10T04:17:45.620Z",
+   "peak_rss": 1899773952,
+   "memcap_kill": false
+  },
+  {
+   "job": "108-neg-E5",
+   "n": 108,
+   "class": "negative",
+   "module": null,
+   "label": "M1 negatives (11 cpx cases) + axioms",
+   "exit": 0,
+   "gate_s": 16.9,
+   "start_utc": "2026-11-10T04:18:50.529Z",
+   "peak_rss": 1643196416,
+   "memcap_kill": false
+  },
+  {
+   "job": "109-lake-E2e.WitCpC",
+   "n": 109,
+   "class": "build",
+   "module": "E2e.WitCpC",
+   "label": "lake build E2e.WitCpC (M1 witness + Go-value)",
+   "exit": 0,
+   "gate_s": 37.5,
+   "start_utc": "2026-11-10T04:21:10.403Z",
+   "peak_rss": 1895616512,
+   "memcap_kill": false
+  },
+  {
+   "job": "110-axioms",
+   "n": 110,
+   "class": "other",
+   "module": null,
+   "label": "axioms rerun (41 names)",
+   "exit": 0,
+   "gate_s": 1.0,
+   "start_utc": "2026-11-10T04:22:04.700Z",
+   "peak_rss": 1578283008,
+   "memcap_kill": false
+  },
+  {
+   "job": "111-lake-E2e.CpMarshalG",
+   "n": 111,
+   "class": "build",
+   "module": "E2e.CpMarshalG",
+   "label": "lake build E2e.CpMarshalG (grow attempt 1, run 1)",
+   "exit": 1,
+   "gate_s": 4.5,
+   "start_utc": "2026-11-10T04:25:44.711Z",
+   "peak_rss": 1774657536,
+   "memcap_kill": false
+  },
+  {
+   "job": "112-lake-E2e.CpMarshalG",
+   "n": 112,
+   "class": "build",
+   "module": "E2e.CpMarshalG",
+   "label": "lake build E2e.CpMarshalG (grow attempt 1, run 2)",
+   "exit": 1,
+   "gate_s": 7.2,
+   "start_utc": "2026-11-10T04:27:34.368Z",
+   "peak_rss": 2184335360,
+   "memcap_kill": false
+  },
+  {
+   "job": "113-probe-grow",
+   "n": 113,
+   "class": "probe",
+   "module": "E2e.CpMarshalG",
+   "label": "probe: growslice premise and return goals (scratch file, not committed)",
+   "exit": 1,
+   "gate_s": 3.7,
+   "start_utc": "2026-11-10T04:30:00.384Z",
+   "peak_rss": 1844580352,
+   "memcap_kill": false
+  },
+  {
+   "job": "114-lake-E2e.CpMarshalG",
+   "n": 114,
+   "class": "build",
+   "module": "E2e.CpMarshalG",
+   "label": "lake build E2e.CpMarshalG (grow attempt 1, run 3)",
+   "exit": 1,
+   "gate_s": 6.8,
+   "start_utc": "2026-11-10T04:31:19.684Z",
+   "peak_rss": 2180902912,
+   "memcap_kill": false
+  },
+  {
+   "job": "115-lake-E2e.CpMarshalG",
+   "n": 115,
+   "class": "build",
+   "module": "E2e.CpMarshalG",
+   "label": "lake build E2e.CpMarshalG (grow attempt 1, run 4)",
+   "exit": 0,
+   "gate_s": 7.5,
+   "start_utc": "2026-11-10T04:32:03.045Z",
+   "peak_rss": 2219630592,
+   "memcap_kill": false
+  },
+  {
+   "job": "116-go-differential",
+   "n": 116,
+   "class": "other",
+   "module": null,
+   "label": "Go differential fve2e/cpcheck with S8 fields (native Go 1.26.10)",
+   "exit": 0,
+   "gate_s": 1.0,
+   "start_utc": "2026-11-10T04:33:14.390Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "117-lake-E2e.WitCpG",
+   "n": 117,
+   "class": "build",
+   "module": "E2e.WitCpG",
+   "label": "lake build E2e.WitCpG (grow witness attempt 1)",
+   "exit": 0,
+   "gate_s": 25.4,
+   "start_utc": "2026-11-10T04:34:44.484Z",
+   "peak_rss": 1732554752,
+   "memcap_kill": false
+  },
+  {
+   "job": "118-neg-grow",
+   "n": 118,
+   "class": "negative",
+   "module": null,
+   "label": "grow negatives (9 cpg cases) + axioms",
+   "exit": 0,
+   "gate_s": 1025.8,
+   "start_utc": "2026-11-10T04:35:23.943Z",
+   "peak_rss": 1566531584,
+   "memcap_kill": false
+  },
+  {
+   "job": "119-lake-E2e.SpecEq",
+   "n": 119,
+   "class": "build",
+   "module": "E2e.SpecEq",
+   "label": "lake build E2e.SpecEq (S1 attempt 1)",
+   "exit": 0,
+   "gate_s": 1.8,
+   "start_utc": "2026-11-10T04:53:56.404Z",
+   "peak_rss": 855650304,
+   "memcap_kill": false
+  },
+  {
+   "job": "120-lake-E2e.WitCpRS",
+   "n": 120,
+   "class": "build",
+   "module": "E2e.WitCpRS",
+   "label": "lake build E2e.WitCpRS (S6 attempt 1)",
+   "exit": 0,
+   "gate_s": 3.3,
+   "start_utc": "2026-11-10T04:54:21.809Z",
+   "peak_rss": 1651187712,
+   "memcap_kill": false
+  },
+  {
+   "job": "121-lake-E2e.WitCpAS",
+   "n": 121,
+   "class": "build",
+   "module": "E2e.WitCpAS",
+   "label": "lake build E2e.WitCpAS (S6 attempt 1)",
+   "exit": 1,
+   "gate_s": 23.8,
+   "start_utc": "2026-11-10T04:54:29.799Z",
+   "peak_rss": 1685102592,
+   "memcap_kill": false
+  },
+  {
+   "job": "122-lake-E2e.WitCpAS",
+   "n": 122,
+   "class": "build",
+   "module": "E2e.WitCpAS",
+   "label": "lake build E2e.WitCpAS (S6 attempt 1, run 2: literal-bytes lemma)",
+   "exit": 1,
+   "gate_s": 23.6,
+   "start_utc": "2026-11-10T04:55:04.783Z",
+   "peak_rss": 1707204608,
+   "memcap_kill": false
+  },
+  {
+   "job": "123-lake-E2e.WitCpAS",
+   "n": 123,
+   "class": "build",
+   "module": "E2e.WitCpAS",
+   "label": "lake build E2e.WitCpAS (S6 attempt 1, run 3: literal lemma dropped)",
+   "exit": 0,
+   "gate_s": 24.0,
+   "start_utc": "2026-11-10T04:55:36.633Z",
+   "peak_rss": 1671073792,
+   "memcap_kill": false
+  },
+  {
+   "job": "124-neg-s1s6",
+   "n": 124,
+   "class": "negative",
+   "module": null,
+   "label": "S1/S6 negatives (8) + axioms",
+   "exit": 0,
+   "gate_s": 51.0,
+   "start_utc": "2026-11-10T04:56:25.805Z",
+   "peak_rss": 1652084736,
+   "memcap_kill": false
+  },
+  {
+   "job": "125-neg-full",
+   "n": 125,
+   "class": "negative",
+   "module": null,
+   "label": "full negative suite (73 cases, S7 per-case limit 900 s) + axioms",
+   "exit": 0,
+   "gate_s": 1833.0,
+   "start_utc": "2026-11-10T04:57:50.834Z",
+   "peak_rss": 1629736960,
+   "memcap_kill": false
+  },
+  {
+   "job": "126-neg-n1",
+   "n": 126,
+   "class": "negative",
+   "module": null,
+   "label": "N1 replacement mutants + controls (300 s limit)",
+   "exit": 1,
+   "gate_s": 322.2,
+   "start_utc": "2026-11-10T06:00:57.727Z",
+   "peak_rss": 1644781568,
+   "memcap_kill": false
+  },
+  {
+   "job": "127-neg-n1b",
+   "n": 127,
+   "class": "negative",
+   "module": null,
+   "label": "N1 grow replacement mutant (300 s limit)",
+   "exit": 0,
+   "gate_s": 7.9,
+   "start_utc": "2026-11-10T06:06:26.352Z",
+   "peak_rss": 1655885824,
+   "memcap_kill": false
+  },
+  {
+   "job": "128-n3",
+   "n": 128,
+   "class": "other",
+   "module": null,
+   "label": "N3 ep_static_addr: build EpReject, WitEpR, negatives, axioms",
+   "exit": 1,
+   "gate_s": 21.1,
+   "start_utc": "2026-11-10T06:07:52.223Z",
+   "peak_rss": 1907965952,
+   "memcap_kill": false
+  },
+  {
+   "job": "129-n3b",
+   "n": 129,
+   "class": "other",
+   "module": null,
+   "label": "N3 ep_static_addr (line comment): build EpReject, WitEpR, negatives, axioms",
+   "exit": 0,
+   "gate_s": 21.1,
+   "start_utc": "2026-11-10T06:08:28.502Z",
+   "peak_rss": 1928478720,
+   "memcap_kill": false
+  },
+  {
+   "job": "130-n3c",
+   "n": 130,
+   "class": "other",
+   "module": null,
+   "label": "N3 address mutant (+8) and controls",
+   "exit": 0,
+   "gate_s": 2.6,
+   "start_utc": "2026-11-10T06:09:15.747Z",
+   "peak_rss": 1645662208,
+   "memcap_kill": false
+  },
+  {
+   "job": "131-probe-n4",
+   "n": 131,
+   "class": "probe",
+   "module": "E2e.GoVal",
+   "label": "probe: N4 after-decode Go-value lemma (scratch, not committed)",
+   "exit": 1,
+   "gate_s": 1.0,
+   "start_utc": "2026-11-10T06:11:29.887Z",
+   "peak_rss": 1664503808,
+   "memcap_kill": false
+  },
+  {
+   "job": "132-probe-n4",
+   "n": 132,
+   "class": "probe",
+   "module": "E2e.GoVal",
+   "label": "probe: N4 after-decode Go-value lemma, run 2 (scratch)",
+   "exit": 0,
+   "gate_s": 1.0,
+   "start_utc": "2026-11-10T06:11:51.683Z",
+   "peak_rss": 1640730624,
+   "memcap_kill": false
+  },
+  {
+   "job": "133-n4",
+   "n": 133,
+   "class": "other",
+   "module": null,
+   "label": "N4: build GoVal, WitCpC, WitCpG; gv negatives; axioms",
+   "exit": 0,
+   "gate_s": 70.3,
+   "start_utc": "2026-11-10T06:12:34.217Z",
+   "peak_rss": 1903796224,
+   "memcap_kill": false
+  },
+  {
+   "job": "134-axioms",
+   "n": 134,
+   "class": "other",
+   "module": null,
+   "label": "axioms after N4 (Axioms.lean)",
+   "exit": 0,
+   "gate_s": 2.0,
+   "start_utc": "2026-11-10T06:14:03.951Z",
+   "peak_rss": 1657978880,
+   "memcap_kill": false
+  },
+  {
+   "job": "135-lake-E2e.WitEpR",
+   "n": 135,
+   "class": "build",
+   "module": "E2e.WitEpR",
+   "label": "N5: lake build E2e.WitEpR (len 9, 300; attempt 1)",
+   "exit": 1,
+   "gate_s": 10.9,
+   "start_utc": "2026-11-10T06:15:03.800Z",
+   "peak_rss": 1679368192,
+   "memcap_kill": false
+  },
+  {
+   "job": "136-lake-E2e.WitEpR",
+   "n": 136,
+   "class": "build",
+   "module": "E2e.WitEpR",
+   "label": "N5: lake build E2e.WitEpR (len 9, 300; attempt 2: own namespaces for wit_split)",
+   "exit": 0,
+   "gate_s": 14.0,
+   "start_utc": "2026-11-10T06:15:31.764Z",
+   "peak_rss": 1683472384,
+   "memcap_kill": false
+  },
+  {
+   "job": "137-lake-E2e.WitCpMR",
+   "n": 137,
+   "class": "build",
+   "module": "E2e.WitCpMR",
+   "label": "N5: lake build E2e.WitCpMR (non-empty prefix; attempt 1)",
+   "exit": 0,
+   "gate_s": 13.3,
+   "start_utc": "2026-11-10T06:16:08.931Z",
+   "peak_rss": 1660137472,
+   "memcap_kill": false
+  },
+  {
+   "job": "138-n5-axioms",
+   "n": 138,
+   "class": "other",
+   "module": null,
+   "label": "N5: rebuild GoVal/WitCpC/WitCpG after WitCpMR; controls; axioms",
+   "exit": 0,
+   "gate_s": 73.1,
+   "start_utc": "2026-11-10T06:16:36.479Z",
+   "peak_rss": 1905922048,
+   "memcap_kill": false
+  },
+  {
+   "job": "139-neg-full300",
+   "n": 139,
+   "class": "negative",
+   "module": null,
+   "label": "full negative suite at the 300 s per-case limit (session 3, after F0) + axioms",
+   "exit": 1,
+   "gate_s": 701.5,
+   "start_utc": "2026-11-10T06:18:16.390Z",
+   "peak_rss": 1614303232,
+   "memcap_kill": false
+  },
+  {
+   "job": "140-ad-link",
+   "n": 140,
+   "class": "other",
+   "module": null,
+   "label": "A1 AttestationData link: conv.py --norm, adlink data, check.py",
+   "exit": 0,
+   "gate_s": 0.8,
+   "start_utc": "2026-11-10T06:29:53.585Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  }
+ ]
+}
