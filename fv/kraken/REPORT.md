@@ -338,8 +338,9 @@ Go 1.26.3 증명은 옮기지 않았다. 모든 지시 색인, 오프셋, 레이
 표의 행은 부정 시험 사례를 하나씩 정확히 한 번 센다. 세션 5에서 A2/A3 단위(Slot, CommitteeIndex, AttestationData 디코더, 명세 다리)와 도달 불가 보조정리의 행을 더했다(리뷰 e2e-r3 S5). 7b5e956의 표 합 98은 E2e 모듈 사례 96건 중 `cpu-*` 2건을 빼고 E2eAd의 `cps-*` 4건을 더한 값이었다.
 AttestationData 인코더(A4–A6)는 시작하지 않았다.
 감사 AU-11: "나머지" 칸은 `gen/e2e/table.py`가 정리 문장에서 읽는다. `⋆ True`는 결론의 나머지 메모리를 말하지 않는다는 뜻이다. 이런 정리는 5개다: `cp_e2e_marshal_decoded_receiver`, `cp_e2e_marshal_spec_k`, `cp_e2e_unmarshal_then_marshal`, `cp_e2e_marshal_cover`, `cp_e2e_marshal_reject_cover`. 정확한 프레임은 각 구성 정리와 `*_framed` 덮기 정리에 있다. 합성 `cp_e2e_unmarshal_then_marshal`에는 프레임을 적은 판이 없다.
-감사 AU-06(세션 7): 덮기 증인 4개는 E2e 쪽 전술 `wit_split_n`(`E2e/WitSplit.lean`)을 쓴다. `Fk/WHost.lean`은 그대로다. 같은 방법으로 한 번씩 잰 정교화 시간: WitCpW 265.6→39.2초, WitCpWF 262.7→35.0초, WitCpWR 517.7→47.7초, WitCpWRF 590.8→43.4초(`opt1/AU-06.json`). 이름 있는 선언의 문장과 공리는 같다.
-감사 AU-07(세션 7): `E2eScal.P2EncCp`는 바꾸지 않았다. 시도 3번에서 빨라지지 않았다. 느린 omega는 `hfit` 곁목표가 아니고 위치를 찾지 못했다(`opt1/AU-07.json`).
+감사 AU-06(커밋 `301300f`): 덮기 증인 4개는 E2e 쪽 전술 `wit_split_n`(`E2e/WitSplit.lean`)을 쓴다. `Fk/WHost.lean`은 그대로다. 같은 방법으로 한 번씩 잰 정교화 시간: WitCpW 265.6→39.2초, WitCpWF 262.7→35.0초, WitCpWR 517.7→47.7초, WitCpWRF 590.8→43.4초(`opt1/AU-06.json`). 이름 있는 선언의 문장과 공리는 같다.
+감사 AU-07: `E2eScal.P2EncCp`는 바꾸지 않았다. 시도 3번에서 빨라지지 않았다(953–973초 omega). 느린 omega는 `hfit` 곁목표가 아니고 위치를 찾지 못했다(`opt1/AU-07.json`).
+같은 방법의 기준(리뷰 fix-r1 S6): 바꾸지 않은 파일을 리뷰어가 한 번 돌려 986.0초였다. 감사의 732초는 다른 실행의 값이고 같은 방법의 기준이 아니다.
 감사 AU-12: `cp_e2e_marshal_decoded_receiver`는 따름 정리이고 자기 증인이 없다. `WitCpM`은 `cp_e2e_marshal_main`을 실행한다. `*_spec_here`(`ep`, `sl`, `ci`, `cpu`, `cpm`)는 명세가 그 호스트에서 성립함을 보인다. 주 정리 전제의 만족 가능성(비공허성)은 실행 증인(`*_runs`)이 보인다.
 
 | 정리 | 의무 | 문장 | 증인 | 기계어 정리 | 나머지 | 링크 | 부정 시험 | Go 값 |
@@ -387,15 +388,19 @@ AttestationData 인코더(A4–A6)는 시작하지 않았다.
 | AttestationData decoder fmt.Errorf("Source: %w") | E2eAd.ad_e2e_source_err_unreachable | done | 아니요 |
 | AttestationData decoder fmt.Errorf("Target: %w") | E2eAd.ad_e2e_target_err_unreachable | done | 아니요 |
 
-공리 전체 검사(감사 AU-10): `gen/e2e/axioms_gate.py`가 E2e, E2eAd, E2eScal의 모듈 76개를 프로그램으로 나열한다. 선언 2705개(정리 2282개)의 공리 집합이 모두 표준이고 `sorryAx`는 0개다(gate 작업 254, `axioms-gate.json`). 손 목록 129개 이름은 "있어야 함" 검사로 남는다. 빠진 이름은 0개다. 부정 대조: `sorry`를 쓰는 임시 정리 `E2e.sorry_ctl'`을 더하면 FAIL이다(작업 256).
+공리 전체 검사(감사 AU-10): `gen/e2e/axioms_gate.py`가 E2e, E2eAd, E2eScal의 모듈 79개를 프로그램으로 나열한다. 선언 2726개(정리 2299개)의 공리 집합이 모두 표준이고 `sorryAx`는 0개다(gate 작업 293, `axioms-gate.json`; 수는 그 명령의 출력이다). 손 목록 136개 이름은 "있어야 함" 검사로 남는다. 빠진 이름은 0개다. 부정 대조: `sorry`를 쓰는 임시 정리 `E2e.sorry_ctl'`을 더하면 FAIL이다(작업 256).
 부정 시험 전체: 154/154 통과 (`negative/result.json`). Go 차분: 59건, 불일치 0건 (`differential.json`). 공리: 79개 이름, 판정 PASS (`axioms.json`).
 
 비용 기록(PROOF-PLAN §4): `prysm/go1.26.10/e2e/COST.json`은 `gen/e2e/cost.py`가 gate 기록(`records.jsonl`)과 작업 로그에서 만든다. 모듈과 정리마다 gate 안 벽시계 초, 실행 수, 실패한 실행 수, 프로세스 최대 RSS, memcap 종료 수다. gate 밖의 시간(생각, 편집)은 들어 있지 않다. 감사 AU-16: 모듈의 `gate_s`는 "누적 gate 초"다. 실패와 성공을 합친 모든 시도의 합이고 빌드 시간이 아니다. `last_ok_run_gate_s`는 마지막 성공 실행의 gate 초이고 통제된 냉 빌드가 아니다. 냉 빌드 초는 따로 잰 곳에만 적는다. `cost.py`와 `tcost.py`는 마지막 작업 번호를 인수로 받아 출력의 `source`에 적는다. 그래서 스트림이 진행해도 같은 출력이 나온다. `COST.json`은 상한 213(작업 212개, 15151.6초)이고, 커밋된 값과 같다. `TEMPLATE-COST.json`은 작업 214–247이다.
 
 부정 시험 등급(리뷰 e2e-r2 N1): `negative.py`는 결과마다 `class`를 적는다. Lean의 "(deterministic) timeout" 오류는 `timeout_heartbeat`, 사례별 제한(300초) 초과는 `timeout_wall`이다. Lean의 "maximum recursion depth" 오류는 `recursion_limit`이다. 세 자원 등급은 통과가 아니다. 하트비트 시간 초과였던 문장 변이 2건은 명확하게 실패하는 변이로 바꿨다: `cpmr-stmt-noown`(전제에서 `dst[len..len+8]` 소유 삭제, C-1 저장 단계에서 실패), `cpg-stmt-growle`(`cap < len + 8`을 `≤`로), 그리고 코드 변이 `cpg-oldcap`(첫 지점 growslice oldCap 인수)을 더했다. 시도한 `cpg-stmt-noroot`는 300초 제한에 걸려서 넣지 않았다(gate 작업 126). 세션 3의 전체 실행(gate 작업 139, 사례별 300초): 73/73, 시간 초과 0. `cpg-newptr`(작업 125에서 489.7초 뒤 정리 안 실패)는 300초를 넘어 뺐다. 등급은 첫 오류 줄로 정한다. `ep-load8`은 첫 오류가 정리 안의 `ecancel` 실패이고 뒤의 오류 하나가 하트비트 시간 초과다(`later_resource_error`에 적음). `sl-load8`, `ci-load8`도 같다.
-감사 AU-04: 첫 오류가 구문 오류, 알 수 없는 식별자, 알 수 없는 상수이면 등급은 `wrong_target`이다. 통과가 아니다. 변이가 목표에 닿지 않았다는 뜻이다. 다시 분류한 결과 `cps-stmt-u-rax`, `cps-stmt-m-mm`, `ada-m-nohms` 3건이 `inside`에서 `wrong_target`으로 바뀌었다. `scal/negative-result.json`(18건)은 바뀌지 않았다.
+감사 AU-04: 첫 오류가 구문 오류나 이름 해석 오류이면 등급은 `wrong_target`이다. 목록은 고정된 도구 사슬 소스의 오류 문구에서 뽑았다(`negative.py` `WRONG_TARGET`: unknown tactic/identifier/constant/namespace 등, Invalid field … environment does not contain, ambiguous, unexpected token 등; 리뷰 fix-r1 M1). 통과가 아니다. 변이가 목표에 닿지 않았다는 뜻이다. 다시 분류한 결과 `cps-stmt-u-rax`, `cps-stmt-m-mm`, `ada-m-nohms` 3건이 `inside`에서 `wrong_target`으로 바뀌었다. `scal/negative-result.json`(18건)은 바뀌지 않았다.
+리뷰 fix-r1 M1 뒤 다시 분류: 154/154, 20/20, 변화 0. 일치하는 사례가 없는 id로 부르면 아무것도 돌리지 않고 종료 2다(S7).
+생성 문장 검사(리뷰 fix-r1 M2, S1): 생성 정리 `t`마다 `t_kind`가 `@t`의 선언 형 전체를 손 종류(`E2eScal/Kind.lean`)와 `rfl`로 맞춘다. 콜론 앞 묶음도 포함한다. 손 정리는 필요 없다.
+이전의 `exact` 검사는 콜론 뒤만 보았다. 콜론 앞에 전제를 더한 변이 5건은 `_kind` 줄에서만 실패한다. scal 부정 시험은 28/28이다(gate 작업 288–291).
+결론 상수 변이는 이제 1.4초에 정리 안에서 실패한다(S2, 이전 300초 벽시계 초과). 근거와 한계는 `gen/scal/README.md`와 `scal/CONTAMINATION.md` 2절에 있다.
 그 3건을 형 약화 변이로 바꿨다. 이름은 두고 전제의 형을 `True`로 바꾼다. 사례마다 gate 작업 하나다(작업 251–253). 세 건 모두 `inside`다. 첫 오류는 그 전제를 쓰는 자리의 "Application type mismatch"다(`hms`/`hmm`의 형 `True`, 기대 형 `MakesliceC …`/`MemmoveC S`). 이것은 증명이 그 자리에서 전제를 쓴다는 것을 보인다. 전제 없이는 정리가 거짓이라는 것은 보이지 않는다.
-감사 AU-05: `lake env lean`은 trace를 검사하지 않는다. 그래서 `negative.py`와 `axioms.py run`은 먼저 `lake build --no-build <가져오는 모듈>`을 실행한다. 종료 코드가 0이 아니면 아무 사례도 실행하지 않는다. 세션 7: gate 작업 248 `lake build --no-build E2e E2eAd E2eScal` 종료 3(E2eAd 5개 모듈 trace 낡음), 작업 249 `lake build E2eAd` 종료 0, 작업 250 같은 검사 종료 0.
+감사 AU-05: `lake env lean`은 trace를 검사하지 않는다. 그래서 `negative.py`와 `axioms.py run`은 먼저 `lake build --no-build <가져오는 모듈>`을 실행한다. 종료 코드가 0이 아니면 아무 사례도 실행하지 않는다. gate 작업 248 `lake build --no-build E2e E2eAd E2eScal` 종료 3(E2eAd 5개 모듈 trace 낡음), 작업 249 `lake build E2eAd` 종료 0, 작업 250 같은 검사 종료 0.
 세션 4 작업 202에서 3건(`cpw-tr-jne`, `cpw-tc-lea`, `cpw-hg-jae`)은 "outside"였다. 같은 파일의 앞 정리가 같은 지시문을 지나기 때문이다. 변이는 실패했다. 작업 203에서 `cpw-tr-err1`, `cpw-tc-stmt-num`, `cpw-hg-spill`로 바꿨다(리뷰 e2e-r3 S6, `e2e.json` `negative_suite.removed`).
 `ci-load8`은 세션 4 결과 파일에 없었다. 세션 5 작업 213에서 다시 실행했다: 안 실패, 하트비트 오류가 뒤에 있다(리뷰 e2e-r3 S4).
 결과 파일은 여러 작업의 결과를 사례 id로 합친 것이다. 모든 사례는 사례별 300초 제한으로 실행됐다. 한 번의 실행으로 전부를 돌리지 않았다(실행당 gate 20분 제한).

@@ -1,5 +1,5 @@
 {
- "item": "INBOX 015 OPT-1 item 7 (audit AU-06)",
+ "item": "audit AU-06",
  "change": "E2e/WitSplit.lean: tactic wit_split_n = Fk.W.wit_split with `← Nat.add_assoc, Nat.reduceAdd` added to the side-goal simp set; used by E2e.WitCpW, WitCpWF, WitCpWR, WitCpWRF. Fk/WHost.lean unchanged (sha256 2973a2f6ee7c33c8713bb23e5357844c54cdeedd4d4cbb6a586ed4abccb369f8).",
  "method": "one gated job per module: `lake build --no-build <imports>` (exit 0), then one `lake env lean <file>` timed by the job script; peak = memcap peak_process_rss. Same method before and after. Wall time on a shared machine; n = 1 each.",
  "modules": {

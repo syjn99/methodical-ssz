@@ -97,7 +97,7 @@ name = "E2eAd"
 globs = ["E2eAd.+"]
 needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S"]
 
-# prysm-e2e scalability stage S1-S2 (run fve2e-20261110T010000Z-2dd40dab, session 6, INBOX 011): parameterized
+# prysm-e2e scalability stage S1-S2: parameterized
 # segment lemmas (P1 uint64 decoder body, P2 32-byte field segments), their in-sample instances and the generated
 # instance. Own library: the E2e / E2eAd modules and statements do not change. Build one module at a time.
 [[lean_lib]]

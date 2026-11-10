@@ -56,8 +56,8 @@ BeaconBlockRoot segment), `GenCpDec.lean` (Checkpoint Root segment). Driver: `ge
 <file> -- sh -c "<its scalgen.py command> > $REGEN_OUT"` (SAME for all three, gate job 294).
 
 Generator changes before any hold-out input are in `prysm/go1.26.10/e2e/scal/CONTAMINATION.md`:
-AU-08 (session 7: the p2dec proof became the bare lemma instance; this checks the text after the colon
-only), fix-r1 M2/S1/S2 (session 8: the `_kind` check above, `with_reducible`). G1 — the doc comment of a p2dec
+AU-08 (commit `4581b8f`: the p2dec proof became the bare lemma instance; this checks the text after the colon
+only), review fix-r1 M2/S1/S2 (the `_kind` check above, `with_reducible`). G1 — the doc comment of a p2dec
 theorem was emitted before its `set_option … in` lines (Lean parse error, jobs 229/230); fixed by emitting it after.
 
 ## Evidence files
@@ -69,9 +69,10 @@ theorem was emitted before its `set_option … in` lines (Lean parse error, jobs
 
 ## Results
 
-Kernel-checked: all 13 modules of `E2eScal` (count by command: `ls fv/kraken/lean/E2eScal/*.lean | wc -l` = 13 at session 8; 11 before `Kind`, `KindAnchor`; audit AU-13). Axioms: 22 names (`grep -c '^#print axioms' gen/scal/AxiomsScal.lean`), standard only (`scal/axioms.json`, job 292; 15 names at job 247).
+Kernel-checked: all 13 modules of `E2eScal` (count by command: `ls fv/kraken/lean/E2eScal/*.lean | wc -l` = 13; 11 before `Kind`, `KindAnchor`; audit AU-13). Axioms: 22 names (`grep -c '^#print axioms' gen/scal/AxiomsScal.lean`), standard only (`scal/axioms.json`, job 292; 15 names at job 247).
 Negatives: 18/18 (6 controls pass, 12 mutants fail inside their theorem; `scal/negative-result.json`, jobs 242, 246).
-Session 7 (audit AU-08): 20/20 after the two `*-stmt-extra` cases were added (jobs 258, 259).
-Session 8 (review fix-r1): 28/28 (6 controls, 22 inside) after 8 new statement cases; GenCi / GenAdDec / GenCpDec cases rerun after regeneration, one gated job per batch (jobs 288–291).
+Audit AU-08: 20/20 after the two `*-stmt-extra` cases were added (jobs 258, 259).
+Review fix-r1: 28/28 (6 controls, 22 inside) after 8 new statement cases; GenCi / GenAdDec / GenCpDec cases rerun after regeneration, one gated job per batch (jobs 288–291).
 Cost: `scal/TEMPLATE-COST.json` (jobs 214–247; 31 gate jobs, 24 lake runs, 13 failed, 2271 cumulative gate s — 2203 s of them the
 P2 encode in-sample — peak 1.83 GiB, no memcap kill).
+`P2EncCp` alone: about 730 s in its own build (job record in `TEMPLATE-COST.json`), 986.0 s in the review fix-r1 run of the unchanged file (n = 1; `opt1/AU-07.json`).

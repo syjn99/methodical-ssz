@@ -103,3 +103,17 @@ fv/kraken/link/build.sh          # ELF, objdump, nm, norm/*.S, data/*.data, buil
 
 오류 전역 id: `ErrSize`, `ErrInvalidSerialization`, `ErrInvalidVariableOffset`, `ErrListTooBig`, `ErrBytesLength`, `ErrIncorrectListSize`.
 정리는 지금처럼 `label "ssz.Err*"`를 직접 쓴다. 이것은 심볼이고 손 숫자가 아니다.
+
+## 알려진 위반 (루트 `AGENTS.md`: 절대 경로, 세션 id, 실행 디렉터리 이름 금지)
+
+리뷰 fix-r1 S4. 아래 파일은 규칙을 어긴다. 생성된 기록이나 이전 파일이라 한꺼번에 고치지 않았다.
+새 기록은 저장소 상대 경로와 gate 작업 번호만 쓴다. `negative.py`는 결과의 작업 디렉터리를 `<work>`로 적는다(커밋 `094e51e`부터).
+
+- `prysm/go1.26.10/e2e/negative/result.json`, `prysm/go1.26.10/e2e/scal/negative-result.json`: 이전 행의 `first_error`, `later_resource_error`에 실행 디렉터리의 절대 경로가 있다.
+- `prysm/go1.26.10/e2e/COST.json`, `prysm/go1.26.10/e2e/scal/TEMPLATE-COST.json`, `prysm/go1.26.10/e2e/scal/BASELINE.json`: `source`의 `records`, `logs`, `events`가 실행 디렉터리의 절대 경로다.
+- `lean/lakefile.toml` 57행, 75행: 주석에 실행 이름이 있다. 88행과 이전 기록(`REPORT.md`, `HISTORY.md`, `prysm/FINDINGS.md`의 지난 체크포인트 줄)에는 세션 번호가 있다.
+- `REPORT.md` 152, 190, 211행 근처: 도구 사슬 활성화 경로 `/workspace/tooling/fv/...`가 있다(재현 절의 환경 경로).
+- `prysm/FINDINGS.md` 7절: 컨트롤러 파일의 절대 경로가 한 줄 있다.
+- 그 밖의 이전 파일(`gen/x5/x5run.py`, `memopt/` 기록 등). 아래 확인 명령의 출력이 전체 목록이다.
+
+확인 명령: `git grep -nE "/workspace|fve2e-" -- fv/kraken ':!fv/kraken/lean/.lake'`.
