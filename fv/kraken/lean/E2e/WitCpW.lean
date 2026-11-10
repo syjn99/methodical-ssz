@@ -1,6 +1,7 @@
 import E2e.CpWCover
 import Fk.RtCopy
 import Fk.WHost
+import E2e.WitSplit
 
 /-!
 # Witness of `cp_e2e_marshal_cover` (INBOX 009): every capacity range on one host
@@ -89,7 +90,7 @@ theorem cov_runs (g : PCp) (n : Nat) (hn : n ≤ 64) (zmms : RegZmms) (flags : S
     (by
       have H : Eq ((block (uintBytes 8 g.epoch.toNat).toList g.root.toList (pre30 ++ z n)).At (0x10000 : BitVec 64))
         (mem (uintBytes 8 g.epoch.toNat).toList g.root.toList (pre30 ++ z n)) := rfl
-      wit_split [he8, hroot, show pre30.length = 30 from rfl]
+      wit_split_n [he8, hroot, show pre30.length = 30 from rfl]
       have H2 := lift_heap H
       rw [at_app pre30 (z n) rfl (by simp [pre30]; omega)]
       simp only [cs0, w, nil_At_emp, Std.ExtHashMap.sep_emp, show Int.toBytes 8 (32#64).toInt = Int.toBytes 8 32 by decide, show pre30.length = 30 from rfl, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
@@ -120,7 +121,7 @@ theorem cov_runs_nil (g : PCp) (zmms : RegZmms) (flags : StatusFlags) :
     (by
       have H : Eq ((block (uintBytes 8 g.epoch.toNat).toList g.root.toList []).At (0x10000 : BitVec 64))
         (mem (uintBytes 8 g.epoch.toNat).toList g.root.toList []) := rfl
-      wit_split [he8, hroot]
+      wit_split_n [he8, hroot]
       have H2 := lift_heap H
       simp only [cs0, w, nil_At_emp, List.nil_append, Std.ExtHashMap.sep_emp, show Int.toBytes 8 (32#64).toInt = Int.toBytes 8 32 by decide, show pre30.length = 30 from rfl, Std.ExtHashMap.emp_sep,
         UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,

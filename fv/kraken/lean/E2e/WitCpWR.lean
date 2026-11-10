@@ -1,6 +1,7 @@
 import E2e.CpWCover
 import Fk.RtCopy
 import Fk.WHost
+import E2e.WitSplit
 
 /-!
 # Witness of `cp_e2e_marshal_reject_cover` (INBOX 009): `len(Root) ≠ 32`, every capacity range
@@ -87,7 +88,7 @@ theorem rej_runs (e8 : List UInt8) (he8 : e8.length = 8) (rl : UInt64) (hrl : rl
     Std.ExtHashMap.emp 0 [] rfl bumpHeap 9000
     (by
       have H : Eq ((block e8 rl (pre30 ++ z n)).At (0x10000 : BitVec 64)) (mem e8 rl (pre30 ++ z n)) := rfl
-      wit_split [he8, show pre30.length = 30 from rfl]
+      wit_split_n [he8, show pre30.length = 30 from rfl]
       rw [Std.ExtHashMap.sep_comm_l (Eq ((w 0x2b).At _)) (Eq ((z 9000).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((w 0x10e8).At _)) (Eq ((z 9000).At _))] at H
       have H2 := lift_heap H
@@ -120,7 +121,7 @@ theorem rej_runs_nil (e8 : List UInt8) (he8 : e8.length = 8) (rl : UInt64) (hrl 
     Std.ExtHashMap.emp 0 [] rfl bumpHeap 9000
     (by
       have H : Eq ((block e8 rl []).At (0x10000 : BitVec 64)) (mem e8 rl []) := rfl
-      wit_split [he8]
+      wit_split_n [he8]
       rw [Std.ExtHashMap.sep_comm_l (Eq ((w 0x2b).At _)) (Eq ((z 9000).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((w 0x10e8).At _)) (Eq ((z 9000).At _))] at H
       have H2 := lift_heap H

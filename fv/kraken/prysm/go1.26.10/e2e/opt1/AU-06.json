@@ -1,0 +1,48 @@
+{
+ "item": "INBOX 015 OPT-1 item 7 (audit AU-06)",
+ "change": "E2e/WitSplit.lean: tactic wit_split_n = Fk.W.wit_split with `← Nat.add_assoc, Nat.reduceAdd` added to the side-goal simp set; used by E2e.WitCpW, WitCpWF, WitCpWR, WitCpWRF. Fk/WHost.lean unchanged (sha256 2973a2f6ee7c33c8713bb23e5357844c54cdeedd4d4cbb6a586ed4abccb369f8).",
+ "method": "one gated job per module: `lake build --no-build <imports>` (exit 0), then one `lake env lean <file>` timed by the job script; peak = memcap peak_process_rss. Same method before and after. Wall time on a shared machine; n = 1 each.",
+ "modules": {
+  "E2e.WitCpW": {
+   "before_s": 265.6,
+   "before_job": 267,
+   "after_s": 39.2,
+   "after_job": 272,
+   "peak_gib_before": 1.68,
+   "peak_gib_after": 1.67
+  },
+  "E2e.WitCpWF": {
+   "before_s": 262.7,
+   "before_job": 268,
+   "after_s": 35.0,
+   "after_job": 273,
+   "peak_gib_before": 1.67,
+   "peak_gib_after": 1.67
+  },
+  "E2e.WitCpWR": {
+   "before_s": 517.7,
+   "before_job": 269,
+   "after_s": 47.7,
+   "after_job": 274,
+   "peak_gib_before": 1.68,
+   "peak_gib_after": 1.67
+  },
+  "E2e.WitCpWRF": {
+   "before_s": 590.8,
+   "before_job": 270,
+   "after_s": 43.4,
+   "after_job": 275,
+   "peak_gib_before": 1.66,
+   "peak_gib_after": 1.65
+  }
+ },
+ "totals_s": {
+  "before": 1636.8,
+  "after": 165.3
+ },
+ "lake_build": "job 271 `lake build E2e.WitSplit E2e.WitCpW E2e.WitCpWR E2e.WitCpWF E2e.WitCpWRF` exit 0; job 277 dependent E2e.GoValW exit 0 (job 276 gate precheck had stopped on it, exit 2)",
+ "drift": "decl dump job 265 (before) vs job 278 (after): 25 named declarations of the 4 modules identical (type hash, axioms); 237 drift lines, all auto-generated _proof_/_simp_ auxiliaries of the 8 witness theorems plus the 2 macro definitions of E2e.WitSplit; with allow-au06.txt (one reason per name): drift 0, allowed 237",
+ "axioms": "job 278 axioms gate PASS: 2715 declarations, standard only, sorryAx 0, hand list complete",
+ "negatives": "no negative case targets these modules (checked by program over negcases.json and negcases-scal.json); none rerun",
+ "audit_reference": "audit scratch numbers to beat: WitCpW 27 s, WitCpWR 33 s (controller, other method: lake build of a scratch copy). Not reached with this method (39.2 s, 47.7 s); the methods differ, so the numbers are not directly comparable."
+}
