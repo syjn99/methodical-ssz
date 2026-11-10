@@ -21,8 +21,9 @@ every error line lies inside the theorem's line range and no error is a Lean hea
 a control when Lean reports no error. Each result has a "class": control_pass, inside, outside,
 no_error, killed, timeout_wall (CASE_TIMEOUT expired) or timeout_heartbeat (an error line is Lean's
 "(deterministic) timeout"; review e2e-r2 N1) or recursion_limit (an error line is "maximum recursion
-depth has been reached"); the resource classes are decided by the FIRST error line (a later resource
-error is kept in "later_resource_error"). These three resource classes are never a pass.
+depth has been reached") or wrong_target (the FIRST error is a parse error or an unknown identifier /
+constant: the mutant does not reach its target; audit AU-04); the resource classes are decided by the FIRST error line (a later resource
+error is kept in "later_resource_error"). These three resource classes and wrong_target are never a pass.
 negative.py --reclassify <result.json> [<work-dir>] recomputes the classes of a result file; --selftest checks them.
 On a per-case timeout the whole process tree (memcap.py, and lake/lean in memcap's own session) is killed
 and the driver asserts that none survives before the next case (audit AU-03); --selftest-timeout checks
@@ -49,6 +50,11 @@ CAP = str(6 * 2 ** 30)
 CASE_TIMEOUT = 300  # seconds per case (review e2e-r1 S7; INBOX 007: 300 s)
 HEARTBEAT = "(deterministic) timeout"
 RECDEPTH = "maximum recursion depth has been reached"
+# audit AU-04: a first error that is a parse error or a name-resolution error says nothing about the
+# mutated hypothesis or instruction; the mutant does not reach its target. Class wrong_target, never a pass.
+WRONG_TARGET = re.compile(
+    r"error(\((lean\.)?(unknownIdentifier|unknownConstant|parse\w*)\))?: "
+    r"(unknown (identifier|constant)|unexpected (token|end of input|identifier)|expected [^\s])", re.I)
 TOP = re.compile(r"^((theorem|def|end|example|set_option|abbrev|structure|instance|namespace|section|open)\b|/--|/-!)")
 
 
@@ -230,6 +236,8 @@ def classify(r):
         k = "timeout_heartbeat"
     elif rd:
         k = "recursion_limit"
+    elif errs and WRONG_TARGET.search(first):
+        k = "wrong_target"
     elif not errs:
         k = "no_error"
     else:
@@ -292,7 +300,23 @@ def selftest():
           ("rd", dict(error_lines=[5], first_error="x:5:0: error: maximum recursion depth has been reached"), "recursion_limit"),
           ("later_hb", dict(error_lines=[5, 7], first_error="x:5:1: error: ecancel failed",
                             later_resource_error="x:7:1: error: (deterministic) timeout at `whnf`"), "inside"),
-          ("ctl", dict(kind="control", error_lines=[], first_error=None, rc=0), "control_pass")]
+          ("ctl", dict(kind="control", error_lines=[], first_error=None, rc=0), "control_pass"),
+          # audit AU-04: name resolution and parse errors inside the range are wrong_target, not inside
+          ("wt_uid", dict(error_lines=[5], first_error="x:5:47: error(lean.unknownIdentifier): Unknown identifier `hms`"),
+           "wrong_target"),
+          ("wt_uid_old", dict(error_lines=[5], first_error="x:5:47: error: unknown identifier 'hms'"), "wrong_target"),
+          ("wt_ucst", dict(error_lines=[5], first_error="x:5:3: error(lean.unknownConstant): Unknown constant `E2e.foo`"),
+           "wrong_target"),
+          ("wt_ucst_old", dict(error_lines=[5], first_error="x:5:3: error: unknown constant 'E2e.foo'"), "wrong_target"),
+          ("wt_parse", dict(error_lines=[5], first_error="x:5:0: error: unexpected token 'theorem'; expected term"),
+           "wrong_target"),
+          ("wt_parse2", dict(error_lines=[5], first_error="x:5:9: error: expected ':=', 'where' or '|'"), "wrong_target"),
+          ("wt_eoi", dict(error_lines=[9], first_error="x:9:0: error: unexpected end of input"), "wrong_target"),
+          # a later unknown identifier after a real first error does not change the class
+          ("in_then_uid", dict(error_lines=[5, 6], first_error="x:5:1: error: Type mismatch"), "inside"),
+          ("in_unsolved", dict(error_lines=[5], first_error="x:5:1: error: unsolved goals"), "inside"),
+          ("in_expected_type", dict(error_lines=[5], first_error="x:5:1: error: Application type mismatch: expected type"),
+           "inside")]
     bad = []
     for name, f, want in fx:
         r = classify({**base, "id": name, **f})
