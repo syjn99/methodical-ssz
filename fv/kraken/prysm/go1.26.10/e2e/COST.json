@@ -6,18 +6,18 @@
  },
  "note": "gate wall-clock only (excludes the agent's thinking/editing time); module cost is shared by the theorems of that module, not divided; witnesses are their own modules (WitCp*, WitEp*)",
  "totals": {
-  "jobs": 202,
-  "gate_s": 13063.3,
+  "jobs": 212,
+  "gate_s": 15151.6,
   "peak_rss_gib": 6.01,
   "memcap_kills": 4,
   "by_class": {
    "other": {
-    "jobs": 31,
-    "gate_s": 1397.0
+    "jobs": 34,
+    "gate_s": 2262.0
    },
    "build": {
-    "jobs": 144,
-    "gate_s": 6631.4
+    "jobs": 151,
+    "gate_s": 7854.7
    },
    "negative": {
     "jobs": 18,
@@ -188,6 +188,21 @@
    ],
    "peak_rss_gib": 1.75
   },
+  "E2e.CpWCoverF": {
+   "runs": 2,
+   "failed_runs": 0,
+   "probes": 0,
+   "gate_s": 5.1,
+   "peak_rss_bytes": 1958871040,
+   "memcap_kills": 0,
+   "jobs": [
+    "206-lake-E2e.CpWCoverF"
+   ],
+   "in_multi_jobs": [
+    "212-w10-neg"
+   ],
+   "peak_rss_gib": 1.82
+  },
   "E2e.CpWGrow": {
    "runs": 1,
    "failed_runs": 1,
@@ -226,6 +241,22 @@
     "182-lake-E2e.CpWHead"
    ],
    "peak_rss_gib": 1.7
+  },
+  "E2e.CpWSharp": {
+   "runs": 3,
+   "failed_runs": 1,
+   "probes": 0,
+   "gate_s": 178.9,
+   "peak_rss_bytes": 1802063872,
+   "memcap_kills": 0,
+   "jobs": [
+    "204-lake-E2e.CpWSharp",
+    "205-lake-E2e.CpWSharp"
+   ],
+   "in_multi_jobs": [
+    "211-w10-neg"
+   ],
+   "peak_rss_gib": 1.68
   },
   "E2e.CpWTail": {
    "runs": 1,
@@ -310,6 +341,21 @@
     "132-probe-n4"
    ],
    "peak_rss_gib": 1.57
+  },
+  "E2e.GoValW": {
+   "runs": 2,
+   "failed_runs": 0,
+   "probes": 0,
+   "gate_s": 5.5,
+   "peak_rss_bytes": 2295287808,
+   "memcap_kills": 0,
+   "jobs": [
+    "207-lake-E2e.GoValW"
+   ],
+   "in_multi_jobs": [
+    "213-w10-neg"
+   ],
+   "peak_rss_gib": 2.14
   },
   "E2e.ProbeW": {
    "runs": 1,
@@ -499,6 +545,22 @@
    ],
    "peak_rss_gib": 1.62
   },
+  "E2e.WitCpWF": {
+   "runs": 3,
+   "failed_runs": 1,
+   "probes": 0,
+   "gate_s": 527.2,
+   "peak_rss_bytes": 1724256256,
+   "memcap_kills": 0,
+   "jobs": [
+    "208-lake-E2e.WitCpWF",
+    "209-lake-E2e.WitCpWF"
+   ],
+   "in_multi_jobs": [
+    "212-w10-neg"
+   ],
+   "peak_rss_gib": 1.61
+  },
   "E2e.WitCpWR": {
    "runs": 5,
    "failed_runs": 2,
@@ -516,6 +578,21 @@
     "203-w9-neg"
    ],
    "peak_rss_gib": 1.62
+  },
+  "E2e.WitCpWRF": {
+   "runs": 2,
+   "failed_runs": 0,
+   "probes": 0,
+   "gate_s": 506.6,
+   "peak_rss_bytes": 1712824320,
+   "memcap_kills": 0,
+   "jobs": [
+    "210-lake-E2e.WitCpWRF"
+   ],
+   "in_multi_jobs": [
+    "212-w10-neg"
+   ],
+   "peak_rss_gib": 1.6
   },
   "E2e.WitEp": {
    "runs": 6,
@@ -3720,6 +3797,126 @@
    "gate_s": 13.3,
    "start_utc": "2026-11-10T09:56:26.497Z",
    "peak_rss": 1629401088,
+   "memcap_kill": false
+  },
+  {
+   "job": "204-lake-E2e.CpWSharp",
+   "n": 204,
+   "class": "build",
+   "module": "E2e.CpWSharp",
+   "label": "INBOX 010 M1: lake build E2e.CpWSharp (attempt 1)",
+   "exit": 1,
+   "gate_s": 1.4,
+   "start_utc": "2026-11-10T10:54:08.438Z",
+   "peak_rss": 1624096768,
+   "memcap_kill": false
+  },
+  {
+   "job": "205-lake-E2e.CpWSharp",
+   "n": 205,
+   "class": "build",
+   "module": "E2e.CpWSharp",
+   "label": "INBOX 010 M1: lake build E2e.CpWSharp (attempt 1b: paren typo)",
+   "exit": 0,
+   "gate_s": 177.5,
+   "start_utc": "2026-11-10T10:55:18.739Z",
+   "peak_rss": 1802063872,
+   "memcap_kill": false
+  },
+  {
+   "job": "206-lake-E2e.CpWCoverF",
+   "n": 206,
+   "class": "build",
+   "module": "E2e.CpWCoverF",
+   "label": "INBOX 010 M2: lake build E2e.CpWCoverF (attempt 1)",
+   "exit": 0,
+   "gate_s": 5.1,
+   "start_utc": "2026-11-10T10:58:19.583Z",
+   "peak_rss": 1958871040,
+   "memcap_kill": false
+  },
+  {
+   "job": "207-lake-E2e.GoValW",
+   "n": 207,
+   "class": "build",
+   "module": "E2e.GoValW",
+   "label": "INBOX 010 S1: lake build E2e.GoValW (attempt 1)",
+   "exit": 0,
+   "gate_s": 5.5,
+   "start_utc": "2026-11-10T11:02:23.122Z",
+   "peak_rss": 2295287808,
+   "memcap_kill": false
+  },
+  {
+   "job": "208-lake-E2e.WitCpWF",
+   "n": 208,
+   "class": "build",
+   "module": "E2e.WitCpWF",
+   "label": "INBOX 010 M2: lake build E2e.WitCpWF (attempt 1)",
+   "exit": 1,
+   "gate_s": 264.9,
+   "start_utc": "2026-11-10T11:04:29.526Z",
+   "peak_rss": 1718939648,
+   "memcap_kill": false
+  },
+  {
+   "job": "209-lake-E2e.WitCpWF",
+   "n": 209,
+   "class": "build",
+   "module": "E2e.WitCpWF",
+   "label": "INBOX 010 M2: lake build E2e.WitCpWF (attempt 2: UInt64.toNat 30)",
+   "exit": 0,
+   "gate_s": 262.3,
+   "start_utc": "2026-11-10T11:09:07.128Z",
+   "peak_rss": 1724256256,
+   "memcap_kill": false
+  },
+  {
+   "job": "210-lake-E2e.WitCpWRF",
+   "n": 210,
+   "class": "build",
+   "module": "E2e.WitCpWRF",
+   "label": "INBOX 010 M2: lake build E2e.WitCpWRF (attempt 1)",
+   "exit": 0,
+   "gate_s": 506.6,
+   "start_utc": "2026-11-10T11:13:32.961Z",
+   "peak_rss": 1712824320,
+   "memcap_kill": false
+  },
+  {
+   "job": "211-w10-neg",
+   "n": 211,
+   "class": "other",
+   "module": null,
+   "label": "INBOX 010 M1: build CpWSharp; negatives cpw-sh-* (4); E2e axioms",
+   "exit": 0,
+   "gate_s": 703.6,
+   "start_utc": "2026-11-10T11:22:04.059Z",
+   "peak_rss": 1530347520,
+   "memcap_kill": false
+  },
+  {
+   "job": "212-w10-neg",
+   "n": 212,
+   "class": "other",
+   "module": null,
+   "label": "INBOX 010 M2: build CpWCoverF WitCpWF WitCpWRF; negatives cpw-cf-* cpw-rf-* (6); E2e axioms",
+   "exit": 0,
+   "gate_s": 23.7,
+   "start_utc": "2026-11-10T11:34:37.435Z",
+   "peak_rss": 1638903808,
+   "memcap_kill": false
+  },
+  {
+   "job": "213-w10-neg",
+   "n": 213,
+   "class": "other",
+   "module": null,
+   "label": "INBOX 010 S1/S4: build GoValW; negatives gv-w-* (3) + ci-load8 (S4 replay); E2e axioms",
+   "exit": 0,
+   "gate_s": 137.7,
+   "start_utc": "2026-11-10T11:35:30.466Z",
+   "peak_rss": 1589764096,
    "memcap_kill": false
   }
  ]
