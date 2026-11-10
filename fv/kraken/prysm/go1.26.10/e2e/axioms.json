@@ -310,6 +310,11 @@
    "Classical.choice",
    "Quot.sound"
   ],
+  "E2e.cp_e2e_marshal_grow_any_sharp": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
   "E2e.prysmCpDesc_checker": [],
   "E2e.cp_layout": [],
   "E2e.witCpA_recv_pre": [],
@@ -320,6 +325,6 @@
  },
  "missing": [],
  "nonstandard": {},
- "count": 69,
+ "count": 70,
  "verdict": "PASS"
 }

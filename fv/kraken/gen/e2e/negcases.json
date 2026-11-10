@@ -1272,5 +1272,38 @@
   "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0\n        ∧ st.data.regs.rcx = 0",
   "new": "st.data.regs.rax = s.regs.rbx ∧ st.data.regs.rbx = 0\n        ∧ st.data.regs.rcx = 0",
   "why": "the reject returns a nil slice"
+ },
+ {
+  "id": "cpw-sh-control",
+  "kind": "control",
+  "module": "E2e/CpWSharp.lean",
+  "theorem": "cp_e2e_marshal_grow_any_sharp"
+ },
+ {
+  "id": "cpw-sh-budget",
+  "kind": "stmt",
+  "module": "E2e/CpWSharp.lean",
+  "theorem": "cp_e2e_marshal_grow_any_sharp",
+  "old": "∧ av' < 2 * nextSliceCap (s.regs.rcx.toNat + 40) st.data.regs.rcx.toNat + 8192 ∧",
+  "new": "∧ av' < 2 * nextSliceCap (s.regs.rcx.toNat + 40) st.data.regs.rcx.toNat + 8191 ∧",
+  "why": "(C) is reached only with the remaining heap strictly below the budget of the second call; a tighter bound is not derivable"
+ },
+ {
+  "id": "cpw-sh-b-old",
+  "kind": "stmt",
+  "module": "E2e/CpWSharp.lean",
+  "theorem": "cp_e2e_marshal_grow_any_sharp",
+  "old": "⋆ Eq (pre.At nb) ⋆ Eq (e8.At (nb + s.regs.rcx.toBitVec)) ⋆ Eq (mid.At (nb + s.regs.rcx.toBitVec + 8))",
+  "new": "⋆ Eq (pre.At nb) ⋆ Eq (e8.At (nb + s.regs.rcx.toBitVec + 8)) ⋆ Eq (mid.At (nb + s.regs.rcx.toBitVec + 8))",
+  "why": "(B): the first new block holds the epoch at nb + len (C-1 form), not after it"
+ },
+ {
+  "id": "cpw-sh-b-cap",
+  "kind": "stmt",
+  "module": "E2e/CpWSharp.lean",
+  "theorem": "cp_e2e_marshal_grow_any_sharp",
+  "old": "∧ nextSliceCap (s.regs.rcx.toNat + 40) C1 ≤ st.data.regs.rcx.toNat",
+  "new": "∧ nextSliceCap (s.regs.rcx.toNat + 41) C1 ≤ st.data.regs.rcx.toNat",
+  "why": "(B): the second growslice is called with newLen = len + 40"
  }
 ]

@@ -308,7 +308,11 @@ INBOX 009(세션 4)에서 나머지 용량 경우를 새 정리로 덮었다. �
 첫 지점이 맞고 둘째 지점이 자라는 경우(`len + 8 ≤ cap < len + 40`)는 `cp_e2e_marshal_grow2_main`이 증명한다.
 첫 지점이 자라는 모든 경우(`cap < len + 8`, `cap = 0`과 nil `dst` 포함, `nextSliceCap` 전제 없음)는 `cp_e2e_marshal_grow_any_main`이 다룬다.
 그 결론은 코드의 분기 그대로 둘 중 하나다. 왼쪽: growslice가 준 용량이 `len + 40` 이상이면 반환까지 증명했다. 오른쪽: 용량이 작으면 둘째 growslice 호출 진입의 정확한 상태까지 증명했다.
-**둘째 호출 뒤의 실행은 증명하지 않았다(막힘).** `GrowsliceC` 결과는 남은 힙을 `avail' + newCap ≤ avail`(상한)으로만 준다. 그래서 둘째 `GrowsliceC` 적용의 힙 예산 전제를 유도할 수 없다. 기존 계약 형식은 growslice 두 번을 잇지 못한다(FINDINGS T-7). 이 경우(첫 성장 뒤 둘째 성장)는 Go 차분 검사만 있다(`enc-w-len30-spare0`, `enc-w-len10-spare0`).
+세션 5(INBOX 010 M1)에서 같은 전제의 더 강한 정리 `cp_e2e_marshal_grow_any_sharp`를 더했다. 결론은 세 경우이고 모두 정확한 프레임을 적는다.
+(A) 첫 새 블록에 Root가 들어가면 반환한다. (B) 첫 호출 뒤 남은 힙 `av1`이 둘째 호출의 예산 `2·nextSliceCap (len + 40) C1 + 8192` 이상이면 둘째 growslice를 지나 반환한다.
+(C) 남은 힙이 그 예산보다 작으면 둘째 호출 진입의 정확한 상태에 있고 `Heap av1`, `av1 < 2·nextSliceCap (len + 40) C1 + 8192`이다.
+**(C) 뒤의 실행은 증명하지 않았다(막힘, 차분만).** `GrowsliceC` 결과는 남은 힙을 `avail' + newCap ≤ avail`(상한)으로만 준다. 그래서 둘째 호출의 예산 전제만 유도할 수 없다(FINDINGS T-7, 리뷰 e2e-r3 S7). 그 사실이 있으면 기존 보조정리 `cpw_tail_grow`가 반환을 준다.
+컨트롤러 결정(INBOX 010): 새 계약 형식은 없다. 남은 영역은 사용자 결정 전까지 "막힘 / 차분만"이다. "Checkpoint 인코더 완전"을 주장하지 않는다. 이 영역의 증거는 Go 차분 검사뿐이다(`enc-w-len30-spare0`, `enc-w-len10-spare0`).
 growslice 뒤의 거부(`cap < len + 8`, `len(Root) ≠ 32`)는 `cp_e2e_marshal_reject_grow_main`이 증명한다. 에폭 8바이트는 새 블록의 `[len, len+8)`에 있고 호출자 배열은 바뀌지 않는다(C-1 형식).
 경우 덮기 정리 `cp_e2e_marshal_cover`(`len(Root) = 32`)와 `cp_e2e_marshal_reject_cover`(`len(Root) ≠ 32`)는 `len ≤ cap`인 모든 용량을 위 정리들로 나눈다. 덮기 정리의 결론은 출력 바이트(`dst ++ serialize`, EthLib 독립 Desc)와 프레임 `R`이고 나머지는 `⋆ True`다. 정확한 메모리 회계는 각 정리에 있다.
 조건:
@@ -316,7 +320,7 @@ growslice 뒤의 거부(`cap < len + 8`, `len(Root) ≠ 32`)는 `cp_e2e_marshal_
 1. 런타임 계약 `MakesliceC`(uint8, esz 1, cnt 32), `MemmoveC`, `GrowsliceC`(uint8, esz 1, 인코더 첫 지점), `ConvT64C`, `FmtErrorfDDC`(Epoch 형식, `type:int`)는 가설이다. Go 1.26.10 소스를 다시 읽었고 바뀌지 않았다(`prysm/go1.26.10/e2e/RUNTIME-1.26.10.md`). 정교화 증명은 없다.
 2. 전제: 스택 가드, `runtime.writeBarrier` = 0, 힙 여유, 레이블 신선성, 전역 주소(링크 검사 (a)–(f) PASS), `ssz.ErrSize`와 `ssz.ErrBytesLength`의 초기화된 값(값은 패키지 init이 쓴다; 정리는 두 워드를 그대로 돌려주고 non-nil은 결론이 아니다; non-nil과 서로 다름은 Go 차분의 `errors.Is`만 본다).
 3. x86-64 하드웨어에서 실행하지 않았다. Go 차분 검사는 같은 소스의 arm64 빌드다.
-4. 첫 growslice 뒤 둘째 growslice가 필요한 실행(첫 성장 용량 `< len + 40`)은 둘째 호출 진입까지만 증명했다. 그 뒤는 기존 `GrowsliceC` 형식으로 이을 수 없다(T-7). Go 차분 검사만 있다. 증인 모델 `rt_growslice`(새 용량 `2·newLen + 192`)는 이 오른쪽 분기를 실행하지 않는다. 오류 워드의 non-nil은 증명하지 않았다(차분만).
+4. 첫 growslice 뒤 둘째 growslice가 필요한 실행(첫 성장 용량 `< len + 40`)은 남은 힙이 둘째 호출의 예산 이상이면 반환까지 증명했다(`cp_e2e_marshal_grow_any_sharp` (B)). 예산보다 작으면 둘째 호출 진입까지만 증명했다((C)). 남은 힙의 하한은 기존 `GrowsliceC` 형식에 없다(T-7). 그 영역은 Go 차분 검사만 있다(막힘, 사용자 결정 대기). 증인 모델 `rt_growslice`(새 용량 `2·newLen + 192`)는 이 오른쪽 분기를 실행하지 않는다. 오류 워드의 non-nil은 증명하지 않았다(차분만).
 
 Epoch 길이 거부의 기존 계약 형식 `StaticBox`는 `Fk.Data`(Go 1.26.3 이름공간)의 `staticuint64s`와 `staticuint64s_addr`를 읽는다. `E2e.ep_static_table`(바이트 2048개 같음)과 `E2e.ep_static_addr`(주소 같음, 둘 다 `runtime.staticuint64s` 레이블)가 이것을 Go 1.26.10 include에 잇는다. Go 1.26.3의 사실은 쓰지 않는다(리뷰 e2e-r2 N3, `RUNTIME-1.26.10.md` 2절).
 손 작성 `(*primitives.Epoch).UnmarshalSSZ`는 함수 명세 `EpUAccC`로 증명했다(`ep_uacc_holds`). 디코더 주 정리에는 Epoch에 대한 가설이 없다.
@@ -347,6 +351,7 @@ Go 1.26.3 증명은 옮기지 않았다. 모든 지시 색인, 오프셋, 레이
 | `E2e.cpw_tail_fit / cpw_tail_rej / cpw_tail_grow / cpw_tail_grow_call (tails from L_7b)` | segment lemmas (second capacity test; second growslice; ErrBytesLength) | done | via WitCpW / WitCpWR; cpw_tail_grow via cp_e2e_marshal_grow2_main | done | done | 9/9 통과 | n/a (segment) |
 | `E2e.cp_e2e_marshal_grow2_main` | marshal: first append fits, second grows (len + 8 ≤ cap < len + 40; GrowsliceC esz 1) | done | done (WitCpW.cov_runs n = 8, 39 through the cover) | done | done | 2/2 통과 | differential (enc-w-len30-spare8/20/39) |
 | `E2e.cp_e2e_marshal_grow_any_main` | marshal: first append grows, every cap < len + 8 (no nextSliceCap premise); left: returns; right: reaches the 2nd growslice call — the run after it is NOT proved (GrowsliceC does not chain, T-7) | done | done (WitCpW.cov_runs n = 0, 3 and cov_runs_nil: left disjunct; right disjunct not exercised by the model) | done (partial: right disjunct ends at the call) | done | 2/2 통과 | differential (enc-w-len30-spare0/3, enc-w-len10-spare0, enc-grow-cap0) |
+| `E2e.cp_e2e_marshal_grow_any_sharp` | marshal: first append grows, every cap < len + 8 (same premises as grow_any_main; GrowsliceC esz 1, MemmoveC). (A) returns through the first block; (B) returns through the second growslice when the heap left av1 ≥ 2·nextSliceCap(len+40, C1) + 8192; (C) entry of the second call with Heap av1 and av1 below that budget — the run after (C) is NOT proved (no lower bound on the remaining heap in GrowsliceC, T-7; blocked / differential only pending a user decision) | done | premises: WitCpW / WitCpWF (n = 0, 3, nil dst) through the covers; which of (A)/(B)/(C) a run takes is not decidable through GrowsliceC (it hides the returned capacity and heap); the witness model takes (A) | done (partial: (C) ends at the call) | done | 4/4 통과 | differential (enc-w-len30-spare0/3, enc-w-len10-spare0, enc-grow-cap0) |
 | `E2e.cp_e2e_marshal_reject_grow_main` | marshal_reject after the first growslice (cap < len + 8, len(Root) ≠ 32; C-1 form on the new block) | done | done (WitCpWR.rej_runs n = 0, 3; rej_runs_nil) | done | done | 2/2 통과 | differential (enc-w-rej-len30-spare0/3: caller array unchanged) |
 | `E2e.cp_e2e_marshal_cover` | case cover len(Root) = 32 × every len ≤ cap, against EthLib (dst ++ serialize; ⋆ True remainder) or at the 2nd growslice call | done | done (WitCpW: cap = len, len+3, len+8, len+39, len+40, nil dst) | done | done | 2/2 통과 | differential |
 | `E2e.cp_e2e_marshal_reject_cover` | case cover len(Root) ≠ 32 × every len ≤ cap (ErrBytesLength words; some block holds pre ++ epoch) | done | done (WitCpWR: cap = len, len+3, len+8, len+40, nil dst; rl 31/0/33) | done | done | 2/2 통과 | differential |
@@ -356,7 +361,7 @@ Go 1.26.3 증명은 옮기지 않았다. 모든 지시 색인, 오프셋, 레이
 | phase0.ssz.go:1988 fmt.Errorf("Epoch: %w") (decoder) | E2e.cp_e2e_epoch_err_unreachable | done | 아니요 |
 | phase0.ssz.go:1964 fmt.Errorf("Epoch: %w") (encoder) | none needed: removed by the compiler (inlined Epoch.MarshalSSZTo cannot fail; no fmt.errorf call in the machine code, CALLGRAPH.md) | absent from the code | 아니요 |
 
-부정 시험 전체: 139/139 통과 (`negative/result.json`). Go 차분: 59건, 불일치 0건 (`differential.json`). 공리: 69개 이름, 판정 PASS (`axioms.json`).
+부정 시험 전체: 143/143 통과 (`negative/result.json`). Go 차분: 59건, 불일치 0건 (`differential.json`). 공리: 70개 이름, 판정 PASS (`axioms.json`).
 
 비용 기록(PROOF-PLAN §4): `prysm/go1.26.10/e2e/COST.json`은 `gen/e2e/cost.py`가 gate 기록(`records.jsonl`)과 작업 로그에서 만든다. 모듈과 정리마다 gate 안 벽시계 초, 실행 수, 실패한 실행 수, 프로세스 최대 RSS, memcap 종료 수다. gate 밖의 시간(생각, 편집)은 들어 있지 않다.
 
@@ -377,7 +382,7 @@ python3 -I -B fv/kraken/gen/e2e/callgraph.py <objdump> prysm/go1.26.10/e2e/callg
 python3 -I -B fv/kraken/gen/e2e/e2elink.py filter <out> <objdump> <elf> <nm>
 mkdir -p <out>/norm && python3 -I -B fv/kraken/link/conv.py <out>/target.objdump <out>/p1bin-amd64.nm <out>/norm --norm
 python3 -I -B fv/kraken/gen/e2e/e2elink.py data <out> && python3 -I -B fv/kraken/link/check.py <out>
-(cd fv/kraken/lean && lake build E2e.<모듈>)            # 모듈 하나씩: Epoch WitEp Spec CpAccept WitCpA CpReject WitCpR CpSpecK CpMarshal WitCpM Compose CpCompose WitCpC CpMarshalG WitCpG CpMarshalR WitCpMR CpSpecM WitCpS EpReject WitEpR GoVal CpWTail CpWTailG CpWHead CpWGrow CpWGrowAny CpWCover WitCpW WitCpWR
+(cd fv/kraken/lean && lake build E2e.<모듈>)            # 모듈 하나씩: Epoch WitEp Spec CpAccept WitCpA CpReject WitCpR CpSpecK CpMarshal WitCpM Compose CpCompose WitCpC CpMarshalG WitCpG CpMarshalR WitCpMR CpSpecM WitCpS EpReject WitEpR GoVal CpWTail CpWTailG CpWHead CpWGrow CpWGrowAny CpWCover WitCpW WitCpWR CpWSharp
 (cd fv/kraken/lean && lake env lean ../gen/e2e/Axioms.lean) | python3 -I -B fv/kraken/gen/e2e/axioms.py /dev/stdin prysm/go1.26.10/e2e/axioms.json
 python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/e2e/negcases.json <work> prysm/go1.26.10/e2e/negative/result.json
 python3 -I -B fv/kraken/gen/e2e/differential.py cases <c.json>; go run ./fve2e/cpcheck <c.json> > <o.json>   # Prysm 임시 트리, Go 1.26.10

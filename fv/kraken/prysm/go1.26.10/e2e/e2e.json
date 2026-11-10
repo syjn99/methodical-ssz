@@ -273,6 +273,20 @@
    ]
   },
   {
+   "name": "E2e.cp_e2e_marshal_grow_any_sharp",
+   "kind": "marshal: first append grows, every cap < len + 8 (same premises as grow_any_main; GrowsliceC esz 1, MemmoveC). (A) returns through the first block; (B) returns through the second growslice when the heap left av1 ≥ 2·nextSliceCap(len+40, C1) + 8192; (C) entry of the second call with Heap av1 and av1 below that budget — the run after (C) is NOT proved (no lower bound on the remaining heap in GrowsliceC, T-7; blocked / differential only pending a user decision)",
+   "function": "marshal",
+   "statement": "done",
+   "witness": "premises: WitCpW / WitCpWF (n = 0, 3, nil dst) through the covers; which of (A)/(B)/(C) a run takes is not decidable through GrowsliceC (it hides the returned capacity and heap); the witness model takes (A)",
+   "theorem": "done (partial: (C) ends at the call)",
+   "link": "done",
+   "negative": "done",
+   "go_value": "differential (enc-w-len30-spare0/3, enc-w-len10-spare0, enc-grow-cap0)",
+   "neg_ids": [
+    "cpw-sh-"
+   ]
+  },
+  {
    "name": "E2e.cp_e2e_marshal_reject_grow_main",
    "kind": "marshal_reject after the first growslice (cap < len + 8, len(Root) ≠ 32; C-1 form on the new block)",
    "function": "marshal",

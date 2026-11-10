@@ -27,6 +27,7 @@ import E2e.WitCpRS
 import E2e.CpWCover
 import E2e.WitCpW
 import E2e.WitCpWR
+import E2e.CpWSharp
 #print axioms E2e.ep_unmarshal_accept_main
 #print axioms E2e.ep_uacc_holds
 #print axioms E2e.WitEp.ep_accept_runs
@@ -96,3 +97,4 @@ import E2e.WitCpWR
 #print axioms E2e.WitCpW.cov_runs_nil
 #print axioms E2e.WitCpWR.rej_runs
 #print axioms E2e.WitCpWR.rej_runs_nil
+#print axioms E2e.cp_e2e_marshal_grow_any_sharp

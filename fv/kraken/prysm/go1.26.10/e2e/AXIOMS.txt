@@ -67,3 +67,4 @@
 'E2e.WitCpW.cov_runs_nil' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.WitCpWR.rej_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.WitCpWR.rej_runs_nil' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E2e.cp_e2e_marshal_grow_any_sharp' depends on axioms: [propext, Classical.choice, Quot.sound]
