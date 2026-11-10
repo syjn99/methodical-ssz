@@ -74,6 +74,32 @@ Only F1 and F2 are behaviour-defect fixes found by FV. `698c2025a73a296b55b95744
 and the generator pin; it is not the fix commit of any ID. The G2, G3, H1 and `60d4d3b` rows come from the commit bodies
 (controller's `HISTORICAL-FIXES.md`); this session did not re-read their diffs line by line.
 
+## 8. Policy audit of `4a5e0b9` (AU-01 … AU-17)
+
+Source: the controller's audit report and `audit.json` (3 Opus agents + controller, run dir outside the repository).
+Historical IDs above are unchanged. Audit verdict: bounded pass with findings; no false or weakened proof found.
+"Fixed" below means a commit of session 7 on this branch; it is not reviewed yet.
+
+| ID | Sev | Finding (short) | State at session 7 |
+| --- | --- | --- | --- |
+| AU-01 | high | gate lock is not FIFO | needs user decision (gate tooling); interim rule: ≥ 2 s pause between own gated jobs (followed) |
+| AU-02 | medium | whole negative suites ran as one gated job | rule adopted: one gated job per case or small batch (session 7 jobs 251–253, 258–259) |
+| AU-03 | medium | per-case timeout killed only memcap.py | fixed `cc61ebc` (tree kill + survivor assertion, fake-child test) |
+| AU-04 | medium | unknown-identifier first error counted as pass | fixed `e9e8565` (class `wrong_target`), `6951eb8` (3 mutants re-expressed as type-weakening; all inside) |
+| AU-05 | medium | trace-stale E2eAd modules; `lake env lean` has no trace check | fixed `875368f` (precheck in drivers; jobs 248 exit 3, 249 rebuild, 250 exit 0) |
+| AU-06 | medium | wit_split side-goal omega dominates WitCpW/WitCpWR | OPT-1 (session 7), see the delta below |
+| AU-07 | medium | P2EncCp omega side goal 720 s | OPT-1 (session 7), see the delta below |
+| AU-08 | medium | p2dec statement had no same-statement check | fixed `4581b8f` (statement = lemma instance; extra-hypothesis negatives) |
+| AU-09 | medium | hold-out limits (C-03, C-04) | needs user decision; exposure noted in `HOLDOUT-MARKER.json` |
+| AU-10 | low | axioms gate checked a hand list only | fixed `fcead74` (all 2705 declarations by program; `sorry` control fails) |
+| AU-11 | low | `⋆ True` remainders not all disclosed | fixed `6308c64` (REPORT §11 column "나머지") |
+| AU-12 | low | witness wording (corollary, `*_spec_here`) | fixed `6308c64` |
+| AU-13 | low | README module count 14 (true: 11) | fixed `1a99ef9` |
+| AU-14 | low | policy tool limits (decl_dump roots, stale_olean) | deferred (policy repository; no push authorized) |
+| AU-15 | low | many tactic-limit overrides; heartbeat-timeout runs | rule adopted for new work (small `maxHeartbeats`, raise only with a profiled cause) |
+| AU-16 | low | cost records not bounded; proof_lines +1 per file | fixed `cfb7613` |
+| AU-17 | info | stale docstrings, nm file hash, Go tests not in the gate, other minor items | docstrings `a497f54`, nm hash + Go tests `151c99c`; other items recorded in the audit, not changed |
+
 ## Checkpoint deltas
 
 (T-5 has its row in section 3 since session 3, review e2e-r2 N7.)
@@ -90,3 +116,4 @@ and the generator pin; it is not the fix commit of any ID. The G2, G3, H1 and `6
 - 2026-11-10 session 5 (INBOX 010 M1): `cp_e2e_marshal_grow_any_sharp` (three exact disjuncts: return through the first block, return through the second growslice, or the second call's entry with the remaining heap below its budget). T-7 narrowed to the budget premise of the second call (S7); residual blocked / differential only pending a user decision. No new contract form, no new defect.
 - 2026-11-10 session 5 (INBOX 010 M2, S1–S7, items 4–5): framed covers `cp_e2e_marshal_cover_framed` / `cp_e2e_marshal_reject_cover_framed` (no `⋆ True`; reject: `blk = dst` when len + 8 ≤ cap, else the caller's array unchanged); Go-value theorems for the cover witnesses (`rl ≤ 48` is the Go-value range); stale records fixed (S3–S6); historical index (section 7); S0 baseline. C-1 unchanged (stated per range in the framed covers). T-7 residual unchanged (blocked / differential only, user decision). C-2 unchanged (A4 not started). No new ID.
 - 2026-11-10 session 6 (INBOX 011, scalability S1–S2, development set only): parameterized segment lemmas `E2eScal.u64dec_accept` (P1), `rootdec_seg` / `rootenc_seg` (P2 decode / encode, fits case); in-sample re-derivations with the hand statements (`sl_same_stmt`, `ad_root_same_stmt`, `cp_marshal_same_stmt`: `rfl`); generator `gen/scal/scalgen.py` (raw outputs `GenCi`, `GenAdDec`, `GenCpDec` build unedited; `ci_unmarshal_accept_main_g_same`). No new generated-code or generator (sszgen) defect. Tooling notes, not defects: (a) a Lean structure instance whose fields continue on a less indented line does not parse (`{ base := …,⏎ disp := … }`; the error recovery silently drops `disp`, and the template then reads displacement 0 — the next errors are far away, job 216); templates use `AddrExpr.mk` (job 217). (b) `cp_e2e_marshal_main_s` (the hand proof with directives 36–62 replaced by one lemma application) exceeds the hand theorem's 16 M heartbeats (job 235) and builds in about 730 s, longer than the 300 s negative-case limit: `maxHeartbeats` 64 M for that theorem; its code negatives run on the separate placement theorem `cp_enc_tmpl_at`. (c) Generator G1 (development, before any hold-out input): doc comment emitted before `set_option … in` (jobs 229/230), fixed. The hold-out sources were not opened (`scal/HOLDOUT-MARKER.json`).
+- 2026-11-10 session 7 (INBOX 015, FIX-1): new section 8 with AU-01 … AU-17 (policy audit of `4a5e0b9`). No new generator or generated-code defect. Negative suite 154/154 again after the AU-04 re-expression (the 3 cases were not passed between the reclassification and the rerun). Scal negatives 20/20.

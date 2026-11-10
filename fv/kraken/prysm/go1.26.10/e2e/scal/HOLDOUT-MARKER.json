@@ -2,7 +2,18 @@
  "schema": 1,
  "stage": "S1-S2 (INBOX 011, session 6)",
  "created_utc": "2026-11-10T11:43:34Z",
- "holdout": ["primitives.ValidatorIndex.UnmarshalSSZ", "v1alpha1.BeaconBlockHeader UnmarshalSSZ + MarshalSSZTo", "v1alpha1.Eth1Data"],
+ "holdout": [
+  "primitives.ValidatorIndex.UnmarshalSSZ",
+  "v1alpha1.BeaconBlockHeader UnmarshalSSZ + MarshalSSZTo",
+  "v1alpha1.Eth1Data"
+ ],
  "statement": "As of created_utc the worker of session 6 has not opened the .S, objdump section, IR entry or Go source of the hold-out types; S1/S2 use only the development set (Epoch, Slot, CommitteeIndex, Checkpoint, AttestationData decoder). The generator and lemmas are developed without hold-out inputs. Any later opening is recorded by a new marker at S3 start.",
- "dev_set": ["primitives.Epoch", "primitives.Slot", "primitives.CommitteeIndex", "v1alpha1.Checkpoint", "v1alpha1.AttestationData (decoder)"]
+ "dev_set": [
+  "primitives.Epoch",
+  "primitives.Slot",
+  "primitives.CommitteeIndex",
+  "v1alpha1.Checkpoint",
+  "v1alpha1.AttestationData (decoder)"
+ ],
+ "exposure_note_session7": "Audit AU-09 (C-03, C-04), recorded before any hold-out opening: (1) the P1 development instances are identical modulo labels, so a ValidatorIndex success predicts little; (2) the generator has no encode mode; (3) BeaconBlockHeader and Eth1Data SizeSSZ code, their IR entries and generated Go were already in the repository and proved in phase1c; (4) session 1 printed one phase1c code-constant line that names a BeaconBlockHeader symbol (no code body). Any hold-out result is reported with these limits. The hold-out choice is a pending user decision (default: keep H1 with restricted claims)."
 }
