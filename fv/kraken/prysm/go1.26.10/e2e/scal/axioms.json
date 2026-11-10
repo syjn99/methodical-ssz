@@ -84,5 +84,20 @@
  "missing": [],
  "nonstandard": {},
  "count": 15,
- "verdict": "PASS"
+ "verdict": "PASS",
+ "precheck": {
+  "argv": "lake build --no-build <imports>",
+  "imports": [
+   "E2eScal.GenAdDec",
+   "E2eScal.GenCi",
+   "E2eScal.GenCpDec",
+   "E2eScal.P1Slot",
+   "E2eScal.P2DecAd",
+   "E2eScal.P2EncCp",
+   "E2eScal.P2EncCpAt"
+  ],
+  "rc": 0,
+  "failures": []
+ },
+ "lean_rc": 0
 }

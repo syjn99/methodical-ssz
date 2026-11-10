@@ -126,6 +126,15 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
  },
  {
+  "id": "scal-gad-stmt-extra",
+  "kind": "stmt",
+  "module": "E2eScal/GenAdDec.lean",
+  "theorem": "ad_dec_BeaconBlockRoot_seg",
+  "old": "(hmm : MemmoveC St),",
+  "new": "(hmm : MemmoveC St) (hextra : (1 : Nat) = 2),",
+  "why": "audit AU-08: an extra false hypothesis in the generated statement must fail (the statement is kernel-checked against the rootdec_seg instance); with the old fixed-text statement this mutant compiled (rc 0)"
+ },
+ {
   "id": "scal-gcp-control",
   "kind": "control",
   "module": "E2eScal/GenCpDec.lean",
@@ -142,6 +151,15 @@
   "new": "  add $0x10,%rbx",
   "code_def": "CpUnmarshal",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
+ },
+ {
+  "id": "scal-gcp-stmt-extra",
+  "kind": "stmt",
+  "module": "E2eScal/GenCpDec.lean",
+  "theorem": "cp_dec_Root_seg",
+  "old": "(hmm : MemmoveC St),",
+  "new": "(hmm : MemmoveC St) (hextra : (1 : Nat) = 2),",
+  "why": "audit AU-08: an extra false hypothesis in the generated statement must fail (the statement is kernel-checked against the rootdec_seg instance); with the old fixed-text statement this mutant compiled (rc 0)"
  },
  {
   "id": "scal-cpa-control",

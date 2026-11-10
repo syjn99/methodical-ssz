@@ -13,8 +13,8 @@ namespace E2eScal.Gen
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `BeaconBlockRoot` (SSZ offset 16, Go offset 24): decode segment, directives 86–111. -/
-theorem ad_dec_BeaconBlockRoot_seg (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh AdUnmarshal k)
-    (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
+theorem ad_dec_BeaconBlockRoot_seg (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh AdUnmarshal k) :
+    ∀ (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + (128 : Int64).toBitVec = aR) (hB' : sp + (136 : Int64).toBitVec = aB)
     (hS : sp + (104 : Int64).toBitVec = aS)
     (hRet : sp - 8 = aRet) (hLo : sp - 8 - BitVec.ofNat 64 St = aLo)
@@ -34,7 +34,7 @@ theorem ad_dec_BeaconBlockRoot_seg (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.pr
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 St) (hmm : MemmoveC St) :
+    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 100 + 12) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -58,8 +58,6 @@ theorem ad_dec_BeaconBlockRoot_seg (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.pr
   have hl := Fk.label_at' hk hf (j := 100)
     (by simp only [AdUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [AdUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  exact E2eScal.rootdec_seg _ _ _ _ _ _ _ _ _ (k + 86) (k + 100) hA hB hl sp rcv bf aR aB aS aRet aLo
-    aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC
-    hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm
+  exact E2eScal.rootdec_seg _ _ _ _ _ _ _ _ _ (k + 86) (k + 100) hA hB hl
 
 end E2eScal.Gen

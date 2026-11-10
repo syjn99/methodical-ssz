@@ -8,7 +8,9 @@ field offsets). Emits Lean text that applies the parameterized lemmas of `lean/E
   p1     the accept path of a uint64 primitive `UnmarshalSSZ` (`E2eScal.u64dec_accept`);
          emits the whole function theorem (P1 statement kind) for the code constant.
   p2dec  for every 32-byte `[]byte` field of a container decoder, the decode segment
-         (`E2eScal.rootdec_seg`) as a theorem about the function's code constant.
+         (`E2eScal.rootdec_seg`) as a theorem about the function's code constant. The proof is the lemma
+         instance with no argument after the code facts, so the kernel checks that the emitted statement is
+         the lemma instance's type (audit AU-08; before, an added false hypothesis still compiled).
 
 Nothing here is trusted: the output is ordinary Lean, checked by the kernel. A wrong read of
 the `.S` (wrong label, index, displacement) makes the code hypotheses of the lemma
@@ -154,8 +156,12 @@ def p1(args):
 
 # ---------------------------------------------------------------- P2 decode
 
-P2DEC_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k)
-    (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
+# Audit AU-08: only the code hypotheses (k, hk, hf) are binders before the colon; the rest of the statement is one
+# `∀ …, …` after it, and the proof is `exact E2eScal.rootdec_seg … hA hB hl` with NO further argument. The kernel
+# therefore checks that this text is definitionally the type of the lemma instance (an added, removed or changed
+# hypothesis makes `exact` fail). `theorem t (x : X) : P` and `theorem t : ∀ (x : X), P` declare the same type.
+P2DEC_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
+    ∀ (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + ({dR} : Int64).toBitVec = aR) (hB' : sp + ({dB} : Int64).toBitVec = aB)
     (hS : sp + ({dS} : Int64).toBitVec = aS)
     (hRet : sp - 8 = aRet) (hLo : sp - 8 - BitVec.ofNat 64 St = aLo)
@@ -175,7 +181,7 @@ P2DEC_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (h
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 St) (hmm : MemmoveC St) :
+    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + {j2} + 12) ∧ st.data.regs.rsp = {{ toBitVec := sp }}
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -279,9 +285,8 @@ def p2dec(args):
         out += infix_have("hB", f"E2eScal.rootDecMid {lean_str(p['lff'])} {lean_str(p['lwb'])} {p['dR']} {p['dB']} "
                           f"{p['dS']} {p['fP']} {p['fL']} {p['fC']} {p['src']}", j2, c)
         out += label_have("hl", j2, c)
-        out += (f"  exact E2eScal.rootdec_seg _ _ _ _ _ _ _ _ _ (k + {j1}) (k + {j2}) hA hB hl sp rcv bf aR aB aS aRet aLo\n"
-                f"    aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC\n"
-                f"    hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm\n\n")
+        # statement identity (AU-08): the lemma instance closes the whole `∀` goal, no argument after hl
+        out += f"  exact E2eScal.rootdec_seg _ _ _ _ _ _ _ _ _ (k + {j1}) (k + {j2}) hA hB hl\n\n"
     out += "end E2eScal.Gen\n"
     return out
 

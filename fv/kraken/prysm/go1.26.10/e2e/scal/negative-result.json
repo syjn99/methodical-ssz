@@ -235,98 +235,6 @@
    "pass": true
   },
   {
-   "id": "scal-gad-control",
-   "kind": "control",
-   "module": "E2eScal/GenAdDec.lean",
-   "theorem": "ad_dec_BeaconBlockRoot_seg",
-   "range": [
-    18,
-    65
-   ],
-   "error_lines": [],
-   "first_error": null,
-   "rc": 0,
-   "killed": false,
-   "timeout": false,
-   "later_resource_error": null,
-   "seconds": 1.3,
-   "diff": "",
-   "heartbeat_timeout": false,
-   "recursion_limit": false,
-   "class": "control_pass",
-   "pass": true
-  },
-  {
-   "id": "scal-gad-cap",
-   "kind": "code",
-   "module": "E2eScal/GenAdDec.lean",
-   "theorem": "ad_dec_BeaconBlockRoot_seg",
-   "range": [
-    18,
-    65
-   ],
-   "error_lines": [
-    59
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/s6/neg/scal-gad-cap/mut.lean:59:5: error: unsolved goals",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "later_resource_error": null,
-   "seconds": 1.3,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -107,7 +107,7 @@\n   callq runtime.memmove\n   mov 0x80(%rsp),%rdx\n   movq $0x20,0x20(%rdx)\n-  movq $0x20,0x28(%rdx)\n+  movq $0x21,0x28(%rdx)\n   cmpl $0x0,runtime.writeBarrier(%rip)\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1f3\n   mov 0x68(%rsp),%rbx\n",
-   "heartbeat_timeout": false,
-   "recursion_limit": false,
-   "class": "inside",
-   "pass": true
-  },
-  {
-   "id": "scal-gcp-control",
-   "kind": "control",
-   "module": "E2eScal/GenCpDec.lean",
-   "theorem": "cp_dec_Root_seg",
-   "range": [
-    18,
-    65
-   ],
-   "error_lines": [],
-   "first_error": null,
-   "rc": 0,
-   "killed": false,
-   "timeout": false,
-   "later_resource_error": null,
-   "seconds": 1.1,
-   "diff": "",
-   "heartbeat_timeout": false,
-   "recursion_limit": false,
-   "class": "control_pass",
-   "pass": true
-  },
-  {
-   "id": "scal-gcp-src",
-   "kind": "code",
-   "module": "E2eScal/GenCpDec.lean",
-   "theorem": "cp_dec_Root_seg",
-   "range": [
-    18,
-    65
-   ],
-   "error_lines": [
-    59
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/s6/neg/scal-gcp-src/mut.lean:59:5: error: unsolved goals",
-   "rc": 1,
-   "killed": false,
-   "timeout": false,
-   "later_resource_error": null,
-   "seconds": 1.1,
-   "diff": "--- orig.S\n+++ mut.S\n@@ -65,7 +65,7 @@\n   mov %rax,0x38(%rsp)\n   mov %rax,0x10(%rdx)\n   mov 0x68(%rsp),%rbx\n-  add $0x8,%rbx\n+  add $0x10,%rbx\n   mov $0x20,%ecx\n   callq runtime.memmove\n   mov 0x60(%rsp),%rdx\n",
-   "heartbeat_timeout": false,
-   "recursion_limit": false,
-   "class": "inside",
-   "pass": true
-  },
-  {
    "id": "scal-cpa-control",
    "kind": "control",
    "module": "E2eScal/P2EncCpAt.lean",
@@ -419,13 +327,193 @@
    "recursion_limit": false,
    "class": "inside",
    "pass": true
+  },
+  {
+   "id": "scal-gad-control",
+   "kind": "control",
+   "module": "E2eScal/GenAdDec.lean",
+   "theorem": "ad_dec_BeaconBlockRoot_seg",
+   "range": [
+    18,
+    63
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.3,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "scal-gad-cap",
+   "kind": "code",
+   "module": "E2eScal/GenAdDec.lean",
+   "theorem": "ad_dec_BeaconBlockRoot_seg",
+   "range": [
+    18,
+    63
+   ],
+   "error_lines": [
+    59
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/s7/negscal/scal-gad-cap/mut.lean:59:5: error: unsolved goals",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.3,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -107,7 +107,7 @@\n   callq runtime.memmove\n   mov 0x80(%rsp),%rdx\n   movq $0x20,0x20(%rdx)\n-  movq $0x20,0x28(%rdx)\n+  movq $0x21,0x28(%rdx)\n   cmpl $0x0,runtime.writeBarrier(%rip)\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1f3\n   mov 0x68(%rsp),%rbx\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "scal-gad-stmt-extra",
+   "kind": "stmt",
+   "module": "E2eScal/GenAdDec.lean",
+   "theorem": "ad_dec_BeaconBlockRoot_seg",
+   "range": [
+    16,
+    61
+   ],
+   "error_lines": [
+    61
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/s7/negscal/scal-gad-stmt-extra/mut.lean:61:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.1,
+   "diff": "--- orig\n+++ mut\n@@ -19,7 +19,7 @@\n       \u22c6 Eq (vP.At aP) \u22c6 Eq (vL.At aL) \u22c6 Eq (vC.At aC)\n       \u22c6 Eq (root.At aSrc)\n       \u22c6 Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec) \u22c6 R)\n-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 St) (hmm : MemmoveC St),\n+    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 St) (hmm : MemmoveC St) (hextra : (1 : Nat) = 2),\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Host.addrOf (k + 100 + 12) \u2227 st.data.regs.rsp = { toBitVec := sp }\n         \u2227 st.data.regs.rbp = rbp0 \u2227 st.data.regs.r14 = r140 \u2227\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "scal-gcp-control",
+   "kind": "control",
+   "module": "E2eScal/GenCpDec.lean",
+   "theorem": "cp_dec_Root_seg",
+   "range": [
+    18,
+    63
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.1,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "scal-gcp-src",
+   "kind": "code",
+   "module": "E2eScal/GenCpDec.lean",
+   "theorem": "cp_dec_Root_seg",
+   "range": [
+    18,
+    63
+   ],
+   "error_lines": [
+    59
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/s7/negscal/scal-gcp-src/mut.lean:59:5: error: unsolved goals",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.2,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -65,7 +65,7 @@\n   mov %rax,0x38(%rsp)\n   mov %rax,0x10(%rdx)\n   mov 0x68(%rsp),%rbx\n-  add $0x8,%rbx\n+  add $0x10,%rbx\n   mov $0x20,%ecx\n   callq runtime.memmove\n   mov 0x60(%rsp),%rdx\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "scal-gcp-stmt-extra",
+   "kind": "stmt",
+   "module": "E2eScal/GenCpDec.lean",
+   "theorem": "cp_dec_Root_seg",
+   "range": [
+    16,
+    61
+   ],
+   "error_lines": [
+    61
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/s7/negscal/scal-gcp-stmt-extra/mut.lean:61:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.1,
+   "diff": "--- orig\n+++ mut\n@@ -19,7 +19,7 @@\n       \u22c6 Eq (vP.At aP) \u22c6 Eq (vL.At aL) \u22c6 Eq (vC.At aC)\n       \u22c6 Eq (root.At aSrc)\n       \u22c6 Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec) \u22c6 R)\n-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 St) (hmm : MemmoveC St),\n+    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 St) (hmm : MemmoveC St) (hextra : (1 : Nat) = 2),\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Host.addrOf (k + 63 + 12) \u2227 st.data.regs.rsp = { toBitVec := sp }\n         \u2227 st.data.regs.rbp = rbp0 \u2227 st.data.regs.r14 = r140 \u2227\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
   }
  ],
- "pass": 18,
- "total": 18,
+ "pass": 20,
+ "total": 20,
  "classes": {
   "control_pass": 6,
-  "inside": 12
+  "inside": 14
  },
- "case_timeout_s": 300
+ "case_timeout_s": 300,
+ "prechecks": [
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eAd.Code",
+    "E2eScal.P2Dec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "scal-gad-control",
+    "scal-gad-cap",
+    "scal-gad-stmt-extra"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Code",
+    "E2eScal.P2Dec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "scal-gcp-control",
+    "scal-gcp-src",
+    "scal-gcp-stmt-extra"
+   ]
+  }
+ ]
 }

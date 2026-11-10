@@ -42,7 +42,7 @@ BeaconBlockRoot segment), `GenCpDec.lean` (Checkpoint Root segment). Driver: the
 --same-as E2eAd.ci_unmarshal_accept_main`; `p2dec` on the AttestationData and Checkpoint decoders with `--type
 v1alpha1.AttestationData` / `v1alpha1.Checkpoint`), gate jobs 227 and 236.
 
-Generator fixes during development (before any hold-out input): G1 — the doc comment of a p2dec theorem
+Generator fixes during development (before any hold-out input; `prysm/go1.26.10/e2e/scal/CONTAMINATION.md`): AU-08 — the p2dec statement was fixed text, so an added false hypothesis still compiled; now only `k hk hf` precede the colon and the proof is the `rootdec_seg` instance with no further argument, so the kernel checks the statement against the lemma instance (negatives `scal-gad-stmt-extra`, `scal-gcp-stmt-extra`). G1 — the doc comment of a p2dec theorem
 was emitted before its `set_option … in` lines (Lean parse error, jobs 229/230); fixed by emitting it after.
 
 ## Evidence files
