@@ -3,8 +3,10 @@
 Question (NEXT-PLAN after MS1, stage S): for a machine-code pattern that recurs, does a parameterized Lean
 segment lemma plus an untrusted proof-text generator lower the marginal cost of the next same-pattern type,
 with the same theorem statements and kernel checking? This directory holds the S2 generator and the S1/S2
-evidence inputs. Development set only (Epoch, Slot, CommitteeIndex, Checkpoint, AttestationData decoder);
-the hold-out types were not opened (`prysm/go1.26.10/e2e/scal/HOLDOUT-MARKER.json`).
+evidence inputs. The method was developed on the development set only (Epoch, Slot, CommitteeIndex, Checkpoint,
+AttestationData decoder; `prysm/go1.26.10/e2e/scal/HOLDOUT-MARKER.json`). Hold-out H1 (ValidatorIndex,
+BeaconBlockHeader) was opened at 2026-11-10T17:53:24Z under the method freeze `56dfc27`
+(`prysm/go1.26.10/e2e/scal/HOLDOUT-OPENED`); H2 (Eth1Data) is not opened. Result: `prysm/go1.26.10/e2e/scal/RESULT.json`.
 
 ## S1 lemmas (`lean/E2eScal/`, library `E2eScal`, own lakefile block)
 
@@ -61,9 +63,10 @@ A `_kind` identity is not a non-vacuity witness.
 
 Generated (raw output, not edited): `lean/E2eScal/GenCi.lean` (CommitteeIndex accept, end to end, with
 `ci_unmarshal_accept_main_g_same` against the hand theorem), `GenAdDec.lean` (AttestationData
-BeaconBlockRoot segment), `GenCpDec.lean` (Checkpoint Root segment). Driver: `gen/scal/gen.sh` (three
-`scalgen.py` commands). Check: for each file, `.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh
-<file> -- sh -c "<its scalgen.py command> > $REGEN_OUT"` (SAME for all three, gate job 294).
+BeaconBlockRoot segment), `GenCpDec.lean` (Checkpoint Root segment); hold-out H1 (after `HOLDOUT-OPENED`): `GenVi.lean` (ValidatorIndex
+accept, `p1`, gate job 299) and `GenBhDec.lean` (three BeaconBlockHeader root segments, `p2dec`, gate job 312).
+Driver: `gen/scal/gen.sh` (five `scalgen.py` commands, repo-relative; the last two are the hold-out command lines). Check: for each file, `.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh
+<file> -- sh -c "<its scalgen.py command> > $REGEN_OUT"` (SAME for all three, gate job 294; SAME for GenVi / GenBhDec in review s4-r1).
 
 Generator changes before any hold-out input are in `prysm/go1.26.10/e2e/scal/CONTAMINATION.md`:
 AU-08 (commit `4581b8f`: the p2dec proof became the bare lemma instance; this checks the text after the colon

@@ -170,7 +170,9 @@
   "The BBH composition and head are adapted texts of the reviewed AttestationData hand proofs; most of the low cost comes from that reuse and from the generated segments, not from the generator alone.",
   "Rebuild tracking: prysm/go1.26.10/e2e/bh/link/norm is not a Lake input_dir (no lakefile change); a .S change would not trigger a rebuild. The link bundle binds the files.",
   "Runtime contracts MakesliceC / MemmoveC (S + 8) stay hypotheses; Slot and ValidatorIndex callees are discharged by proved function specs (no callee contract).",
-  "A timeout is a timeout; none occurred."
+  "A timeout is a timeout; none occurred.",
+  "The hand Desc prysmBhDesc was written after the checker Desc had been printed in the same session: independent of the code under test in content, not in time (review s4-r1, FINDINGS NF-10).",
+  "bh_e2e_accept_main keeps the three argument-area slots in one 24-byte existential (dead stack only; FINDINGS NF-11)."
  ],
  "not_run": [
   "reviewer cold rebuild (S4)",

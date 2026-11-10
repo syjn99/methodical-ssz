@@ -25,6 +25,7 @@
   "limits_to_state": "The generator has no encode mode. The P1 development instances are identical modulo labels. The encode template is net-negative in build time (P2EncCp, AU-07 open).",
   "T-7": "Deferred: GrowsliceC unchanged (no lower-bound or equality form, no Fk/* change, no generator or ELF change). The residual (3C) path stays unproved / differential-only. Never claim 'Checkpoint encoder complete'.",
   "AU-01": "Gate unchanged (serialization and 6 GiB cap kept); measure first; >= 2 s pause between a worker's consecutive gated jobs.",
-  "state": "NOT OPENED: scal/HOLDOUT-OPENED does not exist; no hold-out .S, objdump section, IR entry, Go source or generated code was opened by the worker."
+  "state": "NOT OPENED: scal/HOLDOUT-OPENED does not exist; no hold-out .S, objdump section, IR entry, Go source or generated code was opened by the worker.",
+  "state_note": "The state above is as of the user-decision record (before opening). Current state: see scal/HOLDOUT-OPENED (H1 ValidatorIndex + BeaconBlockHeader opened 2026-11-10T17:53:24Z, method freeze 56dfc27; H2 Eth1Data CLOSED). Review s4-r1 S3."
  }
 }

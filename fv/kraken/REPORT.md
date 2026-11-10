@@ -17,6 +17,7 @@
 수정 3에서 닫은 것: 링크 검사 (f)(g)(h)·역할 분류·`golits.go` 삭제(Lake 입력과 ELF 데이터 include로 대체), 오류 증인의 타입 기술자와 초기화된 오류 전역, Scalars 비nil 거부, 사후조건 잔여 넷, ListC 원소 오프셋 순서 거부(첫 쌍), 게이트 표 정정.
 
 1c(phase1c, 생성기와 Prysm 목록)는 10절이다. 게이트 1c 미통과.
+prysm-e2e 스트림은 11절이다. 확장성 홀드아웃 H1(ValidatorIndex, BeaconBlockHeader)의 결과는 `prysm/go1.26.10/e2e/scal/RESULT.json`에 있다(11절 끝 문단).
 
 수치(수정 3 끝, 차가운 프로젝트 빌드 뒤):
 
@@ -321,6 +322,10 @@ growslice 뒤의 거부(`cap < len + 8`, `len(Root) ≠ 32`)는 `cp_e2e_marshal_
 반환 경우의 출력 블록은 `pre ++ bs`이고 `serialize prysmCpDesc g.toValue = .ok bs`다. (2)에서 호출자 배열은 `pre ++ epoch ++ spare[8:]`이다(C-1). (3)에서 호출자 배열은 바뀌지 않는다.
 `cp_e2e_marshal_reject_cover_framed`: `len + 8 ≤ cap`이면 에폭이 호출자 배열 `dst + len`에 있다(`blk = dst`, C-1). `cap < len + 8`이면 호출자 배열은 바뀌지 않고 에폭은 새 블록 `nb`에만 있다.
 증인 `WitCpWF.covf_runs`(len 30, cap 30 + n)와 `covf_runs_nil`은 실행이 닿는 용량 범위를 결론에 적는다. (3A)/(3B)/(3C) 중 어느 것인지는 `GrowsliceC`가 용량과 남은 힙을 숨기므로 정리로 정할 수 없다(리뷰 e2e-r3 S2, 아래 조건 4).
+홀드아웃 H1(확장성 S3, 방법 고정 `56dfc27`, 연 시각 2026-11-10T17:53:24Z): 결과, 비용, 한계는 `prysm/go1.26.10/e2e/scal/RESULT.json`에 있다.
+오염 기록은 `scal/CONTAMINATION.md`, 연 기록은 `scal/HOLDOUT-OPENED`다. H2(Eth1Data)는 열지 않았다.
+증명한 것: ValidatorIndex 디코더 수용, BeaconBlockHeader 디코더 수용·크기 거부·명세 정렬. 인코더는 빠른 경로만 대상이다. "인코더 완전"이 아니다.
+
 조건:
 
 1. 런타임 계약 `MakesliceC`(uint8, esz 1, cnt 32), `MemmoveC`, `GrowsliceC`(uint8, esz 1, 인코더 첫 지점과 둘째 지점), `ConvT64C`, `FmtErrorfDDC`(Epoch 형식, `type:int`)는 가설이다. Go 1.26.10 소스를 다시 읽었고 바뀌지 않았다(`prysm/go1.26.10/e2e/RUNTIME-1.26.10.md`). 정교화 증명은 없다.
