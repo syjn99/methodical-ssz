@@ -124,16 +124,18 @@
    ]
   },
   {
-   "name": "cp_e2e_marshal_grow_main (growslice)",
-   "kind": "marshal (capacity too small)",
+   "name": "E2e.cp_e2e_marshal_grow_main",
+   "kind": "marshal (capacity too small: first growslice site; GrowsliceC esz 1, premise len + 40 ≤ nextSliceCap (len + 8) cap)",
    "function": "v1alpha1.(*Checkpoint).MarshalSSZTo",
-   "statement": "not attempted",
-   "witness": "not attempted",
-   "theorem": "not attempted",
+   "statement": "done",
+   "witness": "done (WitCpG: len 30, cap 36, rt_growslice + rt_memmove, 3 value instances)",
+   "theorem": "done",
    "link": "done",
-   "negative": "not attempted",
-   "go_value": "differential only",
-   "neg_ids": []
+   "negative": "done",
+   "go_value": "done for the witness receiver (WitCpG.witCpG_recv, IR layout) + differential (enc-grow-cap0, enc-grow-len30-cap36)",
+   "neg_ids": [
+    "cpg-"
+   ]
   },
   {
    "name": "E2e.ep_unmarshal_reject_len_main",

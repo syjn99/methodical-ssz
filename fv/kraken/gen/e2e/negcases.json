@@ -495,5 +495,88 @@
   "theorem": "cp_e2e_unmarshal_then_marshal",
   "old": "(Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At s.regs.rsp.toBitVec) ⋆ F) mem2",
   "new": "(Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At (s.regs.rsp.toBitVec + 8)) ⋆ F) mem2"
+ },
+ {
+  "id": "cpg-control",
+  "kind": "control",
+  "module": "E2e/CpMarshalG.lean",
+  "theorem": "cp_e2e_marshal_grow_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "cpg-num9",
+  "kind": "code",
+  "module": "E2e/CpMarshalG.lean",
+  "theorem": "cp_e2e_marshal_grow_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov $0x8,%edi",
+  "new": "  mov $0x9,%edi"
+ },
+ {
+  "id": "cpg-spillrcx",
+  "kind": "code",
+  "module": "E2e/CpMarshalG.lean",
+  "theorem": "cp_e2e_marshal_grow_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov %rcx,0x88(%rsp)",
+  "new": "  mov %rcx,0x90(%rsp)"
+ },
+ {
+  "id": "cpg-reloadrcx",
+  "kind": "code",
+  "module": "E2e/CpMarshalG.lean",
+  "theorem": "cp_e2e_marshal_grow_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov 0x88(%rsp),%rcx",
+  "new": "  mov 0x80(%rsp),%rcx"
+ },
+ {
+  "id": "cpg-newptr",
+  "kind": "code",
+  "module": "E2e/CpMarshalG.lean",
+  "theorem": "cp_e2e_marshal_grow_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov %rax,%rbx",
+  "new": "  mov %rcx,%rbx",
+  "line": 32
+ },
+ {
+  "id": "cpg-jae-jb",
+  "kind": "code",
+  "module": "E2e/CpMarshalG.lean",
+  "theorem": "cp_e2e_marshal_grow_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b",
+  "new": "  jb L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b"
+ },
+ {
+  "id": "cpg-stmt-len41",
+  "kind": "stmt",
+  "module": "E2e/CpMarshalG.lean",
+  "theorem": "cp_e2e_marshal_grow_main",
+  "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40",
+  "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 41"
+ },
+ {
+  "id": "cpg-stmt-e8off",
+  "kind": "stmt",
+  "module": "E2e/CpMarshalG.lean",
+  "theorem": "cp_e2e_marshal_grow_main",
+  "old": "Eq (e8.At (st.data.regs.rax.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (e8.At (st.data.regs.rax.toBitVec + s.regs.rcx.toBitVec + 1))"
+ },
+ {
+  "id": "cpg-stmt-fit39",
+  "kind": "stmt",
+  "module": "E2e/CpMarshalG.lean",
+  "theorem": "cp_e2e_marshal_grow_main",
+  "old": "(hfit : s.regs.rcx.toNat + 40 ≤",
+  "new": "(hfit : s.regs.rcx.toNat + 39 ≤"
  }
 ]

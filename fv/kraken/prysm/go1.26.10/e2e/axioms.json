@@ -169,6 +169,16 @@
    "Classical.choice",
    "Quot.sound"
   ],
+  "E2e.cp_e2e_marshal_grow_main": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.WitCpG.cpg_runs": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
   "E2e.prysmCpDesc_checker": [],
   "E2e.cp_layout": [],
   "E2e.witCpA_recv_pre": [],
@@ -176,10 +186,11 @@
   "E2e.witCpM_recv": [],
   "E2e.witCpMR_recv": [],
   "E2e.cpGoValue_rejects_bad": [],
-  "E2e.WitCpC.witCpC_recv": []
+  "E2e.WitCpC.witCpC_recv": [],
+  "E2e.WitCpG.witCpG_recv": []
  },
  "missing": [],
  "nonstandard": {},
- "count": 41,
+ "count": 44,
  "verdict": "PASS"
 }

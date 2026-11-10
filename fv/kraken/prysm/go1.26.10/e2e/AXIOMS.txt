@@ -39,3 +39,6 @@
 'E2e.cp_e2e_unmarshal_then_marshal' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.WitCpC.cp_compose_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.WitCpC.witCpC_recv' does not depend on any axioms
+'E2e.cp_e2e_marshal_grow_main' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E2e.WitCpG.cpg_runs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E2e.WitCpG.witCpG_recv' does not depend on any axioms

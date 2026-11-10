@@ -166,4 +166,4 @@ Epoch 디코더 수용을 함수 명세로 증명하고 Checkpoint 디코더 수
 디코더 정리는 6 GiB 프로세스 상한에서 두 번 죽었다(커널 OOM 아님). 마지막 레지스터 목표의 `trivial`/`rfl`이 원인이었다. 정리를 둘로 나누고 닫는 전술을 바꿨다.
 부정 시험 30/30, 공리 23개 표준, Go 차분 47건 일치. 인코더 거부, growslice 경로, Epoch 거부는 하지 않았다.
 리뷰 e2e-r1(9bad532)은 합성 정리가 디코더를 실행하지 않음을 찾았다(M1, FINDINGS R-1). 이름을 `cp_e2e_marshal_decoded_receiver`로 바꾸고 E5를 미완료로 고쳤다. INBOX 004에서 인코더 거부, 인코더 명세 정렬, 증인 있는 size, Epoch 거부, Go 값 술어를 증명했다.
-세션 2에서 M1의 진짜 합성 `cp_e2e_unmarshal_then_marshal`(디코더 진입 → 인코더 반환, 출력 = dst ++ 입력 40바이트)과 한 Host 증인 `WitCpC`를 증명했다(첫 시도, 증인은 구문 수정 1회). 부정 시험 11/11.
+세션 2에서 M1의 진짜 합성 `cp_e2e_unmarshal_then_marshal`(디코더 진입 → 인코더 반환, 출력 = dst ++ 입력 40바이트)과 한 Host 증인 `WitCpC`를 증명했다(첫 시도, 증인은 구문 수정 1회). 부정 시험 11/11. 이어서 인코더 growslice 경로 `cp_e2e_marshal_grow_main`(첫 지점, `GrowsliceC` esz 1)과 증인 `WitCpG`(len 30, cap 36)를 증명했다(정리 4회 실행: 길이 부등식의 UInt64/BitVec 형태, 탐침 1회; 증인 첫 시도). 부정 시험 9/9.
