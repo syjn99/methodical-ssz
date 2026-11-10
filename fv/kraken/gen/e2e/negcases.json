@@ -1,0 +1,7 @@
+[
+ {"id": "ep-control", "kind": "control", "module": "E2e/Epoch.lean", "theorem": "ep_unmarshal_accept_main", "code_def": "EpUnmarshal", "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S"},
+ {"id": "ep-cmp9", "kind": "code", "module": "E2e/Epoch.lean", "theorem": "ep_unmarshal_accept_main", "code_def": "EpUnmarshal", "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S", "old": "  cmp $0x8,%rcx", "new": "  cmp $0x9,%rcx"},
+ {"id": "ep-load8", "kind": "code", "module": "E2e/Epoch.lean", "theorem": "ep_unmarshal_accept_main", "code_def": "EpUnmarshal", "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S", "old": "  mov (%rbx),%rcx", "new": "  mov 0x8(%rbx),%rcx"},
+ {"id": "ep-store8", "kind": "code", "module": "E2e/Epoch.lean", "theorem": "ep_unmarshal_accept_main", "code_def": "EpUnmarshal", "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S", "line": 47, "old": "  mov %rcx,(%rax)", "new": "  mov %rcx,0x8(%rax)"},
+ {"id": "ep-stmt-rax1", "kind": "stmt", "module": "E2e/Epoch.lean", "theorem": "ep_unmarshal_accept_main", "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0", "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"}
+]
