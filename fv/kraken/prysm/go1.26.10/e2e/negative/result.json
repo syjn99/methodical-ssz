@@ -509,61 +509,6 @@
    "diff": "--- orig\n+++ mut\n@@ -25,7 +25,7 @@\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n         \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 \u2227 st.data.regs.rcx = s.regs.rdi\n-        \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n+        \u2227 st.data.regs.rdi = 1 \u2227 st.data.regs.rsi = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (t u scr : List UInt8), t.length = 8 \u2227 u.length = 16 \u2227 scr.length = S \u2227\n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n"
   },
   {
-   "id": "cpc-control",
-   "kind": "control",
-   "module": "E2e/Compose.lean",
-   "theorem": "cp_e2e_unmarshal_then_marshal",
-   "range": [
-    31,
-    71
-   ],
-   "error_lines": [],
-   "first_error": null,
-   "rc": 0,
-   "killed": false,
-   "seconds": 1.0,
-   "pass": true,
-   "diff": ""
-  },
-  {
-   "id": "cpc-stmt-swap",
-   "kind": "stmt",
-   "module": "E2e/Compose.lean",
-   "theorem": "cp_e2e_unmarshal_then_marshal",
-   "range": [
-    31,
-    71
-   ],
-   "error_lines": [
-    70
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpc-stmt-swap/mut.lean:70:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
-   "rc": 1,
-   "killed": false,
-   "seconds": 0.9,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -26,7 +26,7 @@\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n         \u2227 st.data.regs.rbx.toNat = 40 \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n-        \u2227 (Eq ((e8 ++ root).At s.regs.rbx.toBitVec) \u22c6 fun _ => True) st.data.dmem)\n+        \u2227 (Eq ((root ++ e8).At s.regs.rbx.toBitVec) \u22c6 fun _ => True) st.data.dmem)\n       \u27e8s, Host.addrOf km\u27e9 := by\n   have hr0 : s.regs.rcx.toBitVec = 0 := by rw [hlen0]; rfl\n   have h := cp_e2e_marshal_main km hkm hfm cst e8 (Int.toBytes 8 32) ctl root [] d0 d1 hcst he8 rfl hctl hroot hd0\n"
-  },
-  {
-   "id": "cpc-stmt-len41",
-   "kind": "stmt",
-   "module": "E2e/Compose.lean",
-   "theorem": "cp_e2e_unmarshal_then_marshal",
-   "range": [
-    31,
-    71
-   ],
-   "error_lines": [
-    68
-   ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpc-stmt-len41/mut.lean:68:37: error: Tactic `rfl` failed: The left-hand side",
-   "rc": 1,
-   "killed": false,
-   "seconds": 1.0,
-   "pass": true,
-   "diff": "--- orig\n+++ mut\n@@ -25,7 +25,7 @@\n     (hcap : 40 \u2264 s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n-        \u2227 st.data.regs.rbx.toNat = 40 \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n+        \u2227 st.data.regs.rbx.toNat = 41 \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n         \u2227 (Eq ((e8 ++ root).At s.regs.rbx.toBitVec) \u22c6 fun _ => True) st.data.dmem)\n       \u27e8s, Host.addrOf km\u27e9 := by\n   have hr0 : s.regs.rcx.toBitVec = 0 := by rw [hlen0]; rfl\n"
-  },
-  {
    "id": "cpmr-control",
    "kind": "control",
    "module": "E2e/CpMarshalR.lean",
@@ -840,6 +785,61 @@
    "seconds": 0.8,
    "pass": true,
    "diff": "--- orig\n+++ mut\n@@ -1,2 +1,2 @@\n-theorem cp_layout : cpOff \"state\" = 0 \u2227 cpOff \"Epoch\" = 8 \u2227 cpOff \"Root\" = 16 \u2227 cpOff \"unknownFields\" = 40\n+theorem cp_layout : cpOff \"state\" = 0 \u2227 cpOff \"Epoch\" = 16 \u2227 cpOff \"Root\" = 16 \u2227 cpOff \"unknownFields\" = 40\n     \u2227 cpOff \"sizeCache\" = 64 \u2227 cpGoSize = 72 := by decide"
+  },
+  {
+   "id": "cpc-control",
+   "kind": "control",
+   "module": "E2e/Compose.lean",
+   "theorem": "cp_e2e_marshal_decoded_receiver",
+   "range": [
+    34,
+    74
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "seconds": 1.0,
+   "pass": true,
+   "diff": ""
+  },
+  {
+   "id": "cpc-stmt-swap",
+   "kind": "stmt",
+   "module": "E2e/Compose.lean",
+   "theorem": "cp_e2e_marshal_decoded_receiver",
+   "range": [
+    34,
+    74
+   ],
+   "error_lines": [
+    73
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpc-stmt-swap/mut.lean:73:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+   "rc": 1,
+   "killed": false,
+   "seconds": 0.9,
+   "pass": true,
+   "diff": "--- orig\n+++ mut\n@@ -26,7 +26,7 @@\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n         \u2227 st.data.regs.rbx.toNat = 40 \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n-        \u2227 (Eq ((e8 ++ root).At s.regs.rbx.toBitVec) \u22c6 fun _ => True) st.data.dmem)\n+        \u2227 (Eq ((root ++ e8).At s.regs.rbx.toBitVec) \u22c6 fun _ => True) st.data.dmem)\n       \u27e8s, Host.addrOf km\u27e9 := by\n   have hr0 : s.regs.rcx.toBitVec = 0 := by rw [hlen0]; rfl\n   have h := cp_e2e_marshal_main km hkm hfm cst e8 (Int.toBytes 8 32) ctl root [] d0 d1 hcst he8 rfl hctl hroot hd0\n"
+  },
+  {
+   "id": "cpc-stmt-len41",
+   "kind": "stmt",
+   "module": "E2e/Compose.lean",
+   "theorem": "cp_e2e_marshal_decoded_receiver",
+   "range": [
+    34,
+    74
+   ],
+   "error_lines": [
+    71
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpc-stmt-len41/mut.lean:71:37: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "seconds": 1.0,
+   "pass": true,
+   "diff": "--- orig\n+++ mut\n@@ -25,7 +25,7 @@\n     (hcap : 40 \u2264 s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n-        \u2227 st.data.regs.rbx.toNat = 40 \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n+        \u2227 st.data.regs.rbx.toNat = 41 \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n         \u2227 (Eq ((e8 ++ root).At s.regs.rbx.toBitVec) \u22c6 fun _ => True) st.data.dmem)\n       \u27e8s, Host.addrOf km\u27e9 := by\n   have hr0 : s.regs.rcx.toBitVec = 0 := by rw [hlen0]; rfl\n"
   }
  ],
  "pass": 45,

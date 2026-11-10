@@ -104,7 +104,7 @@
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_unmarshal_then_marshal": [
+  "E2e.cp_e2e_marshal_decoded_receiver": [
    "propext",
    "Classical.choice",
    "Quot.sound"

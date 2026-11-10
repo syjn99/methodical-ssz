@@ -38,7 +38,7 @@ import E2e.GoVal
 #print axioms E2e.cp_e2e_marshal_main
 #print axioms E2e.WitCpM.cpm_runs_empty
 #print axioms E2e.WitCpM.cpm_runs_prefix
-#print axioms E2e.cp_e2e_unmarshal_then_marshal
+#print axioms E2e.cp_e2e_marshal_decoded_receiver
 #print axioms E2e.cp_e2e_spec_roundtrip
 #print axioms E2e.cp_e2e_marshal_reject_main
 #print axioms E2e.WitCpMR.cpmr_runs

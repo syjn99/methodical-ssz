@@ -24,6 +24,8 @@ None confirmed. Candidate C-1 is in §5.
 | T-3 | 2026-11-10, run fve2e, `61eec5e` | `Fk/Include.lean` keeps the data reader private to its module | `lean/E2e/Include.lean` | a second data directory needs a copy of the reader | copy with a textual check (`gen/e2e/check_include.py`: SAME ×4) | pending |
 | T-4 | 2026-11-10, run fve2e, before `fd8a561` | `kaddr` (Fk.Step) does not reduce `Width.W64.bits` | job 21 (omega atoms `2 ^ Width.W64.bits`) | address goals after a callee return fail | local macro `eaddr` (E2e.CpAccept) with `Width.bits` | pending |
 
+| R-1 | review e2e-r1 at `9bad532` (M1) | `E2e.cp_e2e_unmarshal_then_marshal`, REPORT §11 E5 row | the theorem starts at the encoder entry, runs no decoder code and does not use `cp_e2e_accept_main`; no single witness host | E5 (compose_hupd, compose_witness) was reported as done | corrected: renamed `cp_e2e_marshal_decoded_receiver`, E5 marked not done in REPORT, e2e.json, HISTORY, stream REPORT, checkpoint; the real composition is open | found by review; fix pending re-review |
+
 ## 4. Known issues (not defects)
 
 | ID | Found | Affected | Evidence | Note | Status |

@@ -256,13 +256,13 @@
   "id": "cpc-control",
   "kind": "control",
   "module": "E2e/Compose.lean",
-  "theorem": "cp_e2e_unmarshal_then_marshal"
+  "theorem": "cp_e2e_marshal_decoded_receiver"
  },
  {
   "id": "cpc-stmt-swap",
   "kind": "stmt",
   "module": "E2e/Compose.lean",
-  "theorem": "cp_e2e_unmarshal_then_marshal",
+  "theorem": "cp_e2e_marshal_decoded_receiver",
   "old": "Eq ((e8 ++ root).At s.regs.rbx.toBitVec)",
   "new": "Eq ((root ++ e8).At s.regs.rbx.toBitVec)"
  },
@@ -270,7 +270,7 @@
   "id": "cpc-stmt-len41",
   "kind": "stmt",
   "module": "E2e/Compose.lean",
-  "theorem": "cp_e2e_unmarshal_then_marshal",
+  "theorem": "cp_e2e_marshal_decoded_receiver",
   "old": "st.data.regs.rbx.toNat = 40 ∧",
   "new": "st.data.regs.rbx.toNat = 41 ∧"
  },

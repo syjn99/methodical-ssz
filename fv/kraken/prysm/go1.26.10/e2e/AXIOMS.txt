@@ -19,7 +19,7 @@
 'E2e.cp_e2e_marshal_main' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.WitCpM.cpm_runs_empty' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.WitCpM.cpm_runs_prefix' depends on axioms: [propext, Classical.choice, Quot.sound]
-'E2e.cp_e2e_unmarshal_then_marshal' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E2e.cp_e2e_marshal_decoded_receiver' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.cp_e2e_spec_roundtrip' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.cp_e2e_marshal_reject_main' depends on axioms: [propext, Classical.choice, Quot.sound]
 'E2e.WitCpMR.cpmr_runs' depends on axioms: [propext, Classical.choice, Quot.sound]

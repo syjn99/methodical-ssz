@@ -96,11 +96,11 @@
    ]
   },
   {
-   "name": "E2e.cp_e2e_unmarshal_then_marshal",
-   "kind": "compose_hupd",
+   "name": "E2e.cp_e2e_marshal_decoded_receiver",
+   "kind": "encoder on a decoded-form receiver (not compose_hupd; review e2e-r1 M1)",
    "function": "UnmarshalSSZ;MarshalSSZTo",
    "statement": "done",
-   "witness": "WitCpA + WitCpM (decoded receiver form)",
+   "witness": "WitCpM (decoded-form receiver)",
    "theorem": "done",
    "link": "done",
    "negative": "done",
@@ -177,6 +177,18 @@
    "neg_ids": [
     "gv-"
    ]
+  },
+  {
+   "name": "cp_e2e_unmarshal_then_marshal (machine composition from the decoder entry)",
+   "kind": "compose_hupd / compose_witness",
+   "function": "UnmarshalSSZ;MarshalSSZTo",
+   "statement": "not done",
+   "witness": "not done",
+   "theorem": "not done",
+   "link": "done",
+   "negative": "not done",
+   "go_value": "differential roundtrip only",
+   "neg_ids": []
   }
  ],
  "unreachable_mc": [

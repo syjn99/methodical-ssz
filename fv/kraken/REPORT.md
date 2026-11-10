@@ -303,7 +303,7 @@ git diff --exit-code fv/kraken/AXIOMS.txt fv/kraken/AXIOMS-ALL.txt fv/kraken/lin
 
 ## 11. 실제 Prysm `v1alpha1.Checkpoint` 인코더·디코더 종단 증명 (prysm-e2e 스트림, 브랜치 `claude/ssz-fv-prysm-e2e`)
 
-**판정: 조건부.** 실제 protoc 타입 `v1alpha1.Checkpoint`의 디코더(수용, 크기 거부)와 인코더(빠른 경로, `ErrBytesLength` 거부, 명세 정렬)와 SizeSSZ가 Go 1.26.10 ELF `c6403c02…911e`의 기계어에서 증명됐다. Epoch 디코더는 수용과 길이 거부 둘 다 증명됐다. 인코더 growslice 경로만 남았다.
+**판정: 조건부.** 실제 protoc 타입 `v1alpha1.Checkpoint`의 디코더(수용, 크기 거부)와 인코더(빠른 경로, `ErrBytesLength` 거부, 명세 정렬)와 SizeSSZ가 Go 1.26.10 ELF `c6403c02…911e`의 기계어에서 증명됐다. Epoch 디코더는 수용과 길이 거부 둘 다 증명됐다. 남은 것: 인코더 growslice 경로, 기계어 수준 합성(E5: 디코더 진입에서 시작하는 compose_hupd와 그 증인, 리뷰 e2e-r1 M1).
 조건:
 
 1. 런타임 계약 `MakesliceC`(uint8, esz 1, cnt 32), `MemmoveC`, `ConvT64C`, `FmtErrorfDDC`(Epoch 형식, `type:int`)는 가설이다. Go 1.26.10 소스를 다시 읽었고 바뀌지 않았다(`prysm/go1.26.10/e2e/RUNTIME-1.26.10.md`). 정교화 증명은 없다.
@@ -327,12 +327,13 @@ Go 1.26.3 증명은 옮기지 않았다. 모든 지시 색인, 오프셋, 레이
 | `E2e.cp_e2e_reject_complete + cp_e2e_reject_size_spec` | reject_complete / reject_spec | done | via WitCpR | done | n/a | via main | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
 | `E2e.cp_e2e_accept_spec_k` | accept against EthLib | done | via WitCpA | done | done | via main | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
 | `E2e.cp_e2e_marshal_main` | marshal (fast path) | done | done | done | done | 7/7 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
-| `E2e.cp_e2e_unmarshal_then_marshal` | compose_hupd | done | WitCpA + WitCpM (decoded receiver form) | done | done | 3/3 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
+| `E2e.cp_e2e_marshal_decoded_receiver` | encoder on a decoded-form receiver (not compose_hupd; review e2e-r1 M1) | done | WitCpM (decoded-form receiver) | done | done | 3/3 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
 | `E2e.cp_e2e_marshal_reject_main` | marshal_reject | done | done | done | done | 4/4 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
 | `cp_e2e_marshal_grow_main (growslice)` | marshal (capacity too small) | not attempted | not attempted | not attempted | done | not attempted | differential only |
 | `E2e.ep_unmarshal_reject_len_main` | callee reject (standalone) | done | done | done | done | 5/5 통과 | differential (epoch-len7/9) |
 | `E2e.cp_e2e_marshal_spec_k + cp_e2e_size_main (+ size_spec)` | marshal against EthLib / size | done | done (WitCpS; spec_k via WitCpM) | done | done | 4/4 통과 | n/a (size) / via marshal |
 | `E2e.cp_layout / cpGoValue (Go-value element)` | go value | done | evaluated on WitCpA/WitCpM/WitCpMR receivers | done | n/a | 2/2 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
+| `cp_e2e_unmarshal_then_marshal (machine composition from the decoder entry)` | compose_hupd / compose_witness | not done | not done | not done | done | not done | differential roundtrip only |
 
 | unreachable_mc 행 | 정리 | 상태 | reject 범위에 셈 |
 | --- | --- | --- | --- |
