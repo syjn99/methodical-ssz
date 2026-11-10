@@ -2,9 +2,14 @@
  "schema": 1,
  "source": {
   "records": "/workspace/agent-runs/methodical-fv-prysm-e2e/gate/records.jsonl",
-  "logs": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/logs"
+  "logs": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/logs",
+  "last_job_bound": 213,
+  "job_range": [
+   1,
+   213
+  ]
  },
- "note": "gate wall-clock only (excludes the agent's thinking/editing time); module cost is shared by the theorems of that module, not divided; witnesses are their own modules (WitCp*, WitEp*)",
+ "note": "gate wall-clock only (excludes the agent's thinking/editing time); module cost is shared by the theorems of that module, not divided; witnesses are their own modules (WitCp*, WitEp*). Per-module gate_s = cumulative gate seconds of all attempts, not a cold build time; last_ok_run_gate_s = gate seconds of the last exit-0 run, not a controlled cold build.",
  "totals": {
   "jobs": 212,
   "gate_s": 15151.6,
@@ -42,6 +47,7 @@
     "66-lake-E2e.Compose",
     "67-lake-E2e.Compose"
    ],
+   "last_ok_run_gate_s": 2.5,
    "peak_rss_gib": 1.55
   },
   "E2e.CpAccept": {
@@ -79,6 +85,7 @@
     "44-lake-E2e.CpAccept",
     "45-lake-E2e.CpAccept"
    ],
+   "last_ok_run_gate_s": 6.3,
    "peak_rss_gib": 6.01
   },
   "E2e.CpCompose": {
@@ -92,6 +99,7 @@
     "104-lake-E2e.CpCompose",
     "105-lake-E2e.CpCompose"
    ],
+   "last_ok_run_gate_s": 3.1,
    "peak_rss_gib": 1.64
   },
   "E2e.CpMarshal": {
@@ -110,6 +118,7 @@
     "59-lake-E2e.CpMarshal",
     "60-lake-E2e.CpMarshal"
    ],
+   "last_ok_run_gate_s": 4.9,
    "peak_rss_gib": 1.86
   },
   "E2e.CpMarshalG": {
@@ -126,6 +135,7 @@
     "114-lake-E2e.CpMarshalG",
     "115-lake-E2e.CpMarshalG"
    ],
+   "last_ok_run_gate_s": 7.5,
    "peak_rss_gib": 2.07
   },
   "E2e.CpMarshalR": {
@@ -144,6 +154,7 @@
     "78-probe-R",
     "79-lake-E2e.CpMarshalR"
    ],
+   "last_ok_run_gate_s": 3.7,
    "peak_rss_gib": 1.73
   },
   "E2e.CpReject": {
@@ -156,6 +167,7 @@
    "jobs": [
     "49-lake-E2e.CpReject"
    ],
+   "last_ok_run_gate_s": 2.4,
    "peak_rss_gib": 1.63
   },
   "E2e.CpSpecK": {
@@ -168,6 +180,7 @@
    "jobs": [
     "52-lake-E2e.CpSpecK"
    ],
+   "last_ok_run_gate_s": 2.3,
    "peak_rss_gib": 1.52
   },
   "E2e.CpWCover": {
@@ -182,6 +195,7 @@
     "190-lake-E2e.CpWCover",
     "191-lake-E2e.CpWCover"
    ],
+   "last_ok_run_gate_s": 3.5,
    "in_multi_jobs": [
     "202-w9-neg",
     "203-w9-neg"
@@ -198,6 +212,7 @@
    "jobs": [
     "206-lake-E2e.CpWCoverF"
    ],
+   "last_ok_run_gate_s": 5.1,
    "in_multi_jobs": [
     "212-w10-neg"
    ],
@@ -228,6 +243,7 @@
     "187-lake-E2e.CpWGrowAny",
     "188-lake-E2e.CpWGrowAny"
    ],
+   "last_ok_run_gate_s": 103.2,
    "peak_rss_gib": 1.79
   },
   "E2e.CpWHead": {
@@ -240,6 +256,7 @@
    "jobs": [
     "182-lake-E2e.CpWHead"
    ],
+   "last_ok_run_gate_s": 3.5,
    "peak_rss_gib": 1.7
   },
   "E2e.CpWSharp": {
@@ -253,6 +270,7 @@
     "204-lake-E2e.CpWSharp",
     "205-lake-E2e.CpWSharp"
    ],
+   "last_ok_run_gate_s": 177.5,
    "in_multi_jobs": [
     "211-w10-neg"
    ],
@@ -281,6 +299,7 @@
     "180-lake-E2e.CpWTailG",
     "181-lake-E2e.CpWTailG"
    ],
+   "last_ok_run_gate_s": 4.7,
    "peak_rss_gib": 1.76
   },
   "E2e.Data": {
@@ -293,6 +312,7 @@
    "jobs": [
     "15-lake-E2e.Data"
    ],
+   "last_ok_run_gate_s": 2.0,
    "peak_rss_gib": 1.52
   },
   "E2e.EpReject": {
@@ -311,6 +331,7 @@
     "93-probe-ER",
     "94-lake-E2e.EpReject"
    ],
+   "last_ok_run_gate_s": 4.3,
    "peak_rss_gib": 1.77
   },
   "E2e.Epoch": {
@@ -326,6 +347,7 @@
     "07-lake-E2e.Epoch",
     "08-lake-E2e.Epoch"
    ],
+   "last_ok_run_gate_s": 2.7,
    "peak_rss_gib": 1.56
   },
   "E2e.GoVal": {
@@ -340,6 +362,7 @@
     "131-probe-n4",
     "132-probe-n4"
    ],
+   "last_ok_run_gate_s": 2.7,
    "peak_rss_gib": 1.57
   },
   "E2e.GoValW": {
@@ -352,6 +375,7 @@
    "jobs": [
     "207-lake-E2e.GoValW"
    ],
+   "last_ok_run_gate_s": 5.5,
    "in_multi_jobs": [
     "213-w10-neg"
    ],
@@ -379,6 +403,7 @@
    "jobs": [
     "196-lake-E2e.ProbeWW"
    ],
+   "last_ok_run_gate_s": 2.5,
    "peak_rss_gib": 1.62
   },
   "E2e.Spec": {
@@ -391,6 +416,7 @@
    "jobs": [
     "16-lake-E2e.Spec"
    ],
+   "last_ok_run_gate_s": 3.3,
    "peak_rss_gib": 0.77
   },
   "E2e.SpecEq": {
@@ -403,6 +429,7 @@
    "jobs": [
     "119-lake-E2e.SpecEq"
    ],
+   "last_ok_run_gate_s": 1.8,
    "peak_rss_gib": 0.8
   },
   "E2e.WitCpA": {
@@ -416,6 +443,7 @@
     "46-lake-E2e.WitCpA",
     "47-lake-E2e.WitCpA"
    ],
+   "last_ok_run_gate_s": 25.1,
    "peak_rss_gib": 1.66
   },
   "E2e.WitCpAS": {
@@ -430,6 +458,7 @@
     "122-lake-E2e.WitCpAS",
     "123-lake-E2e.WitCpAS"
    ],
+   "last_ok_run_gate_s": 24.0,
    "peak_rss_gib": 1.59
   },
   "E2e.WitCpC": {
@@ -444,6 +473,7 @@
     "107-lake-E2e.WitCpC",
     "109-lake-E2e.WitCpC"
    ],
+   "last_ok_run_gate_s": 37.5,
    "peak_rss_gib": 1.77
   },
   "E2e.WitCpG": {
@@ -456,6 +486,7 @@
    "jobs": [
     "117-lake-E2e.WitCpG"
    ],
+   "last_ok_run_gate_s": 25.4,
    "peak_rss_gib": 1.61
   },
   "E2e.WitCpM": {
@@ -470,6 +501,7 @@
     "62-lake-E2e.WitCpM",
     "63-lake-E2e.WitCpM"
    ],
+   "last_ok_run_gate_s": 21.3,
    "peak_rss_gib": 1.54
   },
   "E2e.WitCpMR": {
@@ -483,6 +515,7 @@
     "80-lake-E2e.WitCpMR",
     "137-lake-E2e.WitCpMR"
    ],
+   "last_ok_run_gate_s": 13.3,
    "peak_rss_gib": 1.55
   },
   "E2e.WitCpR": {
@@ -496,6 +529,7 @@
     "50-lake-E2e.WitCpR",
     "51-lake-E2e.WitCpR"
    ],
+   "last_ok_run_gate_s": 2.0,
    "peak_rss_gib": 1.53
   },
   "E2e.WitCpRS": {
@@ -508,6 +542,7 @@
    "jobs": [
     "120-lake-E2e.WitCpRS"
    ],
+   "last_ok_run_gate_s": 3.3,
    "peak_rss_gib": 1.54
   },
   "E2e.WitCpS": {
@@ -523,6 +558,7 @@
     "85-lake-E2e.WitCpS",
     "86-lake-E2e.WitCpS"
    ],
+   "last_ok_run_gate_s": 4.3,
    "peak_rss_gib": 1.56
   },
   "E2e.WitCpW": {
@@ -539,6 +575,7 @@
     "195-lake-E2e.WitCpW",
     "197-lake-E2e.WitCpW"
    ],
+   "last_ok_run_gate_s": 268.8,
    "in_multi_jobs": [
     "202-w9-neg",
     "203-w9-neg"
@@ -556,6 +593,7 @@
     "208-lake-E2e.WitCpWF",
     "209-lake-E2e.WitCpWF"
    ],
+   "last_ok_run_gate_s": 262.3,
    "in_multi_jobs": [
     "212-w10-neg"
    ],
@@ -573,6 +611,7 @@
     "199-lake-E2e.WitCpWR",
     "200-lake-E2e.WitCpWR"
    ],
+   "last_ok_run_gate_s": 521.1,
    "in_multi_jobs": [
     "202-w9-neg",
     "203-w9-neg"
@@ -589,6 +628,7 @@
    "jobs": [
     "210-lake-E2e.WitCpWRF"
    ],
+   "last_ok_run_gate_s": 506.6,
    "in_multi_jobs": [
     "212-w10-neg"
    ],
@@ -609,6 +649,7 @@
     "13-lake-E2e.WitEp",
     "14-lake-E2e.WitEp"
    ],
+   "last_ok_run_gate_s": 1.6,
    "peak_rss_gib": 1.56
   },
   "E2e.WitEpR": {
@@ -627,6 +668,7 @@
     "135-lake-E2e.WitEpR",
     "136-lake-E2e.WitEpR"
    ],
+   "last_ok_run_gate_s": 14.0,
    "peak_rss_gib": 1.57
   },
   "E2eAd.AdAccept": {
@@ -640,6 +682,7 @@
     "169-lake-E2eAd.AdAccept",
     "170-lake-E2eAd.AdAccept"
    ],
+   "last_ok_run_gate_s": 3.3,
    "peak_rss_gib": 1.97
   },
   "E2eAd.AdHead": {
@@ -656,6 +699,7 @@
     "156-lake-E2eAd.AdHead",
     "157-lake-E2eAd.AdHead"
    ],
+   "last_ok_run_gate_s": 3.9,
    "peak_rss_gib": 1.74
   },
   "E2eAd.AdReject": {
@@ -669,6 +713,7 @@
     "171-lake-E2eAd.AdReject",
     "172-lake-E2eAd.AdReject"
    ],
+   "last_ok_run_gate_s": 3.3,
    "peak_rss_gib": 1.7
   },
   "E2eAd.AdRoot": {
@@ -683,6 +728,7 @@
     "159-lake-E2eAd.AdRoot",
     "160-lake-E2eAd.AdRoot"
    ],
+   "last_ok_run_gate_s": 3.5,
    "peak_rss_gib": 1.74
   },
   "E2eAd.AdSpecK": {
@@ -695,6 +741,7 @@
    "jobs": [
     "173-lake-E2eAd.AdSpecK"
    ],
+   "last_ok_run_gate_s": 2.2,
    "in_multi_jobs": [
     "177-a3-neg1",
     "178-a3-neg2"
@@ -716,6 +763,7 @@
     "165-lake-E2eAd.AdSrc",
     "166-lake-E2eAd.AdSrc"
    ],
+   "last_ok_run_gate_s": 6.8,
    "peak_rss_gib": 1.97
   },
   "E2eAd.AdTgt": {
@@ -729,6 +777,7 @@
     "167-lake-E2eAd.AdTgt",
     "168-lake-E2eAd.AdTgt"
    ],
+   "last_ok_run_gate_s": 7.4,
    "peak_rss_gib": 1.98
   },
   "E2eAd.BumpNew72": {
@@ -741,6 +790,7 @@
    "jobs": [
     "174-lake-E2eAd.BumpNew72"
    ],
+   "last_ok_run_gate_s": 2.4,
    "peak_rss_gib": 1.56
   },
   "E2eAd.Code": {
@@ -769,6 +819,7 @@
     "145-lake-E2eAd.CpSpecs",
     "146-lake-E2eAd.CpSpecs"
    ],
+   "last_ok_run_gate_s": 1.2,
    "peak_rss_gib": 1.52
   },
   "E2eAd.Data": {
@@ -825,6 +876,7 @@
     "153-lake-E2eAd.ProbeAd",
     "154-lake-E2eAd.ProbeAd"
    ],
+   "last_ok_run_gate_s": 3.5,
    "peak_rss_gib": 1.72
   },
   "E2eAd.Spec": {
@@ -852,6 +904,7 @@
    "jobs": [
     "175-lake-E2eAd.WitAdA"
    ],
+   "last_ok_run_gate_s": 68.8,
    "in_multi_jobs": [
     "177-a3-neg1",
     "178-a3-neg2"
@@ -868,6 +921,7 @@
    "jobs": [
     "176-lake-E2eAd.WitAdR"
    ],
+   "last_ok_run_gate_s": 4.9,
    "in_multi_jobs": [
     "177-a3-neg1",
     "178-a3-neg2"

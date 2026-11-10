@@ -135,7 +135,8 @@ def main(cost_p, logs_d, ev_d, lean_d, out_p):
         files = [lean_d / (m.replace(".", "/") + ".lean") for m in mods]
         present = [f for f in files if f.exists()]
         row["files_not_in_tree"] = [str(f.relative_to(lean_d)) for f in files if not f.exists()]
-        row["proof_lines"] = sum(len(f.read_text().split("\n")) for f in present)
+        # audit AU-16 (= e2e-r4 R4): splitlines, not split("\n") (that counted one extra line per file)
+        row["proof_lines"] = sum(len(f.read_text().splitlines()) for f in present)
         row["code_lines"] = sum(code_lines(f.read_text()) for f in present)
         rel = [str(f.relative_to(lean_d)) for f in files]
         wr = re.compile(r"(>|open\(|sed -i|\bcp\b|\bmv\b|write)")

@@ -2,8 +2,13 @@
 """prysm-e2e cost record (PROOF-PLAN §4): gate wall-clock, runs, failed runs and peak memory per
 Lean module and per theorem, from the gate records and the job logs only.
 
-Usage: cost.py <records.jsonl> <logs-dir> <COST.json>
-- Jobs: every `exit` record of stream `prysm-e2e` whose `log` lies in <logs-dir>.
+Usage: cost.py <records.jsonl> <logs-dir> <COST.json> <last-job-number>
+- Jobs: every `exit` record of stream `prysm-e2e` whose `log` lies in <logs-dir> and whose job number is at most
+  <last-job-number> (audit AU-16: without this upper bound the output changed when the stream advanced). The bound
+  and the job range found are written to "source".
+- Column meaning (audit AU-16): per-module `gate_s` is the CUMULATIVE gate seconds of all attempts (failed and
+  passed runs, probes); it is not a build time. `last_ok_run_gate_s` is the gate seconds of the module's last exit-0
+  single-module run (dependencies may or may not have been rebuilt in it); it is not a controlled cold build either.
 - Job name = log file stem `NN-<kind>[-<target>]`. Kind `lake` + target `E2e.X` -> module E2e.X.
   Kind `probe`: the module from PROBE below. Kind `neg`: negative-suite job. Others: `other`.
 - Gate seconds = end_mono - start_mono of the exit record. Peak = max `peak_process_rss` over the
@@ -68,7 +73,8 @@ NAME = re.compile(r"^(\d+)-([A-Za-z0-9]+)(?:-(.*))?$")
 MEM = re.compile(r"peak_process_rss=(\d+)")
 
 
-def main(records, logs, out):
+def main(records, logs, out, last):
+    last = int(last)
     logs = pathlib.Path(logs).resolve()
     jobs, multi = [], []
     for line in open(records):
@@ -82,6 +88,8 @@ def main(records, logs, out):
         if not m:
             continue
         num, kind, target = int(m[1]), m[2], m[3] or ""
+        if num > last:
+            continue
         text = lp.read_text(errors="replace")
         peaks = [int(x) for x in MEM.findall(text)]
         killed = "killed=True" in text or r["exit_code"] == 125
@@ -121,6 +129,8 @@ def main(records, logs, out):
         d["peak_rss_bytes"] = max(d["peak_rss_bytes"], j["peak_rss"] or 0)
         d["memcap_kills"] += j["memcap_kill"]
         d["jobs"].append(j["job"])
+        if j["class"] == "build" and j["exit"] == 0:
+            d["last_ok_run_gate_s"] = j["gate_s"]
     for m in multi:  # module runs inside multi-module jobs: counted as runs, gate time stays with the job
         d = per_mod.setdefault(m["module"], {"runs": 0, "failed_runs": 0, "probes": 0, "gate_s": 0.0,
                                              "peak_rss_bytes": 0, "memcap_kills": 0, "jobs": []})
@@ -142,9 +152,12 @@ def main(records, logs, out):
         b = by.setdefault(j["class"], {"jobs": 0, "gate_s": 0.0})
         b["jobs"] += 1
         b["gate_s"] = round(b["gate_s"] + j["gate_s"], 1)
-    res = {"schema": 1, "source": {"records": str(records), "logs": str(logs)},
+    res = {"schema": 1, "source": {"records": str(records), "logs": str(logs), "last_job_bound": last,
+                                   "job_range": [jobs[0]["n"], jobs[-1]["n"]] if jobs else None},
            "note": "gate wall-clock only (excludes the agent's thinking/editing time); module cost is shared by "
-                   "the theorems of that module, not divided; witnesses are their own modules (WitCp*, WitEp*)",
+                   "the theorems of that module, not divided; witnesses are their own modules (WitCp*, WitEp*). "
+                   "Per-module gate_s = cumulative gate seconds of all attempts, not a cold build time; "
+                   "last_ok_run_gate_s = gate seconds of the last exit-0 run, not a controlled cold build.",
            "totals": {"jobs": len(jobs), "gate_s": round(sum(j["gate_s"] for j in jobs), 1),
                       "peak_rss_gib": round(max((j["peak_rss"] or 0) for j in jobs) / 2 ** 30, 2),
                       "memcap_kills": sum(j["memcap_kill"] for j in jobs), "by_class": by},
@@ -152,7 +165,7 @@ def main(records, logs, out):
     json.dump(res, open(out, "w"), indent=1, ensure_ascii=False)
     print(json.dumps(res["totals"]))
     for m, d in sorted(per_mod.items()):
-        print(f"{m:16} runs {d['runs']:3} failed {d['failed_runs']:3} probes {d['probes']} gate {d['gate_s']:7.1f}s "
+        print(f"{m:16} runs {d['runs']:3} failed {d['failed_runs']:3} probes {d['probes']} cumulative gate {d['gate_s']:7.1f}s "
               f"peak {d['peak_rss_gib']} GiB kills {d['memcap_kills']}")
     return 0
 

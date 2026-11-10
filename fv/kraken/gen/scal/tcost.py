@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Scalability stage S1-S2 template cost (INBOX 011 item 4), from the gate records and job logs only.
 
-Usage: tcost.py <records.jsonl> <logs-dir> <first-job-number> <session-start-utc> <out.json>
-- Jobs: `exit` records of stream `prysm-e2e` whose log is `<logs-dir>/NN-*.log` with NN >= first-job-number.
+Usage: tcost.py <records.jsonl> <logs-dir> <first-job-number> <session-start-utc> <out.json> <last-job-number>
+- Jobs: `exit` records of stream `prysm-e2e` whose log is `<logs-dir>/NN-*.log` with
+  first-job-number <= NN <= last-job-number (audit AU-16: explicit upper bound, written to "source").
+- Per-module gate_s is the CUMULATIVE gate seconds of all attempts, not a build time.
 - Kind from the log stem `NN-<kind>[-<target>]`: `lake` + target `E2eScal.X` -> module run of E2eScal.X
   (failed if exit != 0); `scalgen` -> generator run; anything else -> `other`.
 - Jobs killed before they ran (foreground timeout while waiting for the gate) have no exit record;
@@ -44,7 +46,7 @@ def utc(s):
     return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S")
 
 
-def main(records, logs, first, start, out):
+def main(records, logs, first, start, out, lastj):
     logs = pathlib.Path(logs)
     jobs = []
     for line in open(records):
@@ -55,7 +57,7 @@ def main(records, logs, first, start, out):
         if lp.parent != logs:
             continue
         m = re.match(r"(\d+)-([a-z0-9]+)(?:-(.*))?$", lp.stem)
-        if not m or int(m.group(1)) < first:
+        if not m or int(m.group(1)) < first or int(m.group(1)) > lastj:
             continue
         text = lp.read_text(errors="replace") if lp.exists() else ""
         pk = [int(x) for x in MEM.findall(text)]
@@ -64,7 +66,8 @@ def main(records, logs, first, start, out):
                      "peak_rss": max(pk) if pk else None,
                      "memcap_kill": "killed=True" in text or r["exit_code"] == 125})
     never = [l.strip() for l in (logs / "INDEX.md").read_text().split("\n")
-             if "child never ran" in l and re.match(r"- (\d+)-", l) and int(re.match(r"- (\d+)-", l).group(1)) >= first]
+             if "child never ran" in l and re.match(r"- (\d+)-", l)
+             and first <= int(re.match(r"- (\d+)-", l).group(1)) <= lastj]
     mods = {}
     for j in jobs:
         if j["kind"] == "lake" and (j["target"] or "").startswith("E2eScal."):
@@ -85,7 +88,7 @@ def main(records, logs, first, start, out):
     res = {
         "schema": 1,
         "stage": "S1-S2 template cost (INBOX 011, session 6); not hold-out cost",
-        "source": {"records": records, "logs": str(logs), "first_job": first},
+        "source": {"records": records, "logs": str(logs), "first_job": first, "last_job_bound": lastj},
         "totals": {
             "jobs": len(jobs), "gate_s": round(sum(j["gate_s"] for j in jobs), 1),
             "lake_runs": len(lake), "failed_lake_runs": sum(j["exit"] != 0 for j in lake),
@@ -103,7 +106,8 @@ def main(records, logs, first, start, out):
         "jobs_killed_before_run": never,
         "jobs": jobs,
         "note": "Lemma counts are not evidence. The in-sample files re-derive existing hand theorems with the same "
-                "statement; their cost is template cost. Gate seconds exclude time spent waiting for the gate.",
+                "statement; their cost is template cost. Gate seconds exclude time spent waiting for the gate. "
+                "Per-module gate_s is cumulative over all attempts, not a cold build time.",
     }
     pathlib.Path(out).write_text(json.dumps(res, indent=1) + "\n")
     t = res["totals"]
@@ -112,4 +116,4 @@ def main(records, logs, first, start, out):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2], int(sys.argv[3]), sys.argv[4], sys.argv[5])
+    main(sys.argv[1], sys.argv[2], int(sys.argv[3]), sys.argv[4], sys.argv[5], int(sys.argv[6]))

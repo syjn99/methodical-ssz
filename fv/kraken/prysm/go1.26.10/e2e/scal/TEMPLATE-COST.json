@@ -4,7 +4,8 @@
  "source": {
   "records": "/workspace/agent-runs/methodical-fv-prysm-e2e/gate/records.jsonl",
   "logs": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/logs",
-  "first_job": 214
+  "first_job": 214,
+  "last_job_bound": 247
  },
  "totals": {
   "jobs": 31,
@@ -183,26 +184,26 @@
   },
   "generated": {
    "E2eScal/GenAdDec.lean": {
-    "lines": 65,
-    "code_lines": 56
+    "lines": 63,
+    "code_lines": 54
    },
    "E2eScal/GenCi.lean": {
     "lines": 46,
     "code_lines": 36
    },
    "E2eScal/GenCpDec.lean": {
-    "lines": 65,
-    "code_lines": 56
+    "lines": 63,
+    "code_lines": 54
    }
   },
   "generator": {
    "gen/scal/scalgen.py": {
-    "lines": 311,
-    "code_lines": 265
+    "lines": 316,
+    "code_lines": 270
    },
    "gen/scal/tcost.py": {
-    "lines": 115,
-    "code_lines": 105
+    "lines": 119,
+    "code_lines": 109
    }
   }
  },
@@ -523,5 +524,5 @@
    "memcap_kill": false
   }
  ],
- "note": "Lemma counts are not evidence. The in-sample files re-derive existing hand theorems with the same statement; their cost is template cost. Gate seconds exclude time spent waiting for the gate."
+ "note": "Lemma counts are not evidence. The in-sample files re-derive existing hand theorems with the same statement; their cost is template cost. Gate seconds exclude time spent waiting for the gate. Per-module gate_s is cumulative over all attempts, not a cold build time."
 }
