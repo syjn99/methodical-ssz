@@ -54,6 +54,26 @@ None confirmed. Candidate C-1 is in §5.
 | --- | --- | --- | --- |
 | FP-1 | 2026-11-10, run fve2e (PROOF-PLAN §1) | Go 1.26.10 changed `growslice` | the `slice.go` hunk is in `moveSliceNoCap`; `growslice`, `nextslicecap` are byte-identical (`go1.26.10/e2e/runtime-diff.json`); orchestrator erratum (INBOX 002) |
 
+## 7. Historical index (F1, F2, G1–G3, H1)
+
+Index only (no new finding, no fix in this commit). Stable IDs of the sszgen work before run fve2e. Source:
+`/workspace/agent-runs/methodical-fv-milestone-scalability/milestone/FINDINGS-INDEX.md` (controller, MS1); every commit
+below resolves in this repository. **Namespace:** historical `G2`/`G3` (no hyphen) are not the ledger rows `G-2`/`G-3`.
+
+| ID | Kind | Commit | What | Status |
+| --- | --- | --- | --- | --- |
+| F1 | behaviour-defect fix (generated code and runtime) | `f0b85c7d5dcf56a54a0507eb6a0849e1f54e101a` | a Bitvector with nonzero padding bits was accepted; now rejected | fixed; found by an FV counterexample (commit body) |
+| F2 | behaviour-defect fix (generated code) | `280b7523805233cdb96a58a7f50677637309b4c6` | the Bitlist encoder checked the length in bytes; now in bits | fixed; found by an FV counterexample (commit body) |
+| G1 | compile fix (generator template) | `ab0fb00e3f7c1f6272d428d6331541eb133f53cf` (mapping presumed: by elimination only) | the `[N]T` array-field decoder emitted a `make` that does not compile | fixed; ID mapping not confirmed |
+| G2 | documentation and test — **not a bug fix** | `e9cbf5c3a6748ce2d17a5b0dad454d39ed1021f2` | on a `MarshalSSZTo` error, `dst[:len]` is unchanged (more than "unspecified") | documented |
+| G3 | dead-code removal — **not a bug fix** (the commit subject says "fix") | `b51620a2ab5b55a706f16d56841d8a2c1508bbde` | the unreachable first-offset `ErrOffset` branch is removed | removed |
+| H1 | test and comment — **not a defect** | `b03a45d69c7229c74af0fb09fbded3ba46e05c82` | the in-place `gohashtree.Hash` aliasing premise is pinned by a test | tested |
+| (none) | behaviour fix found by code review, not by FV | `60d4d3b366919cb5b991d311a8a19bfa96b3eeb4` | `ValidateBitvector` uint64 overflow panic (introduced by the F1 fix) | fixed |
+
+Only F1 and F2 are behaviour-defect fixes found by FV. `698c2025a73a296b55b95744a8408f3b03b2546b` is a comment-only follow-up
+and the generator pin; it is not the fix commit of any ID. The G2, G3, H1 and `60d4d3b` rows come from the commit bodies
+(controller's `HISTORICAL-FIXES.md`); this session did not re-read their diffs line by line.
+
 ## Checkpoint deltas
 
 (T-5 has its row in section 3 since session 3, review e2e-r2 N7.)
