@@ -8,6 +8,9 @@ import E2eScal.P2EncCpAt
 import E2eScal.Kind
 import E2eScal.KindAnchor
 import E2eScal.WitVi
+import E2eScal.BhSpecK
+import E2eScal.WitBhA
+import E2eScal.WitBhR
 
 -- prysm-e2e scalability stage S1-S2 (INBOX 011): the segment lemmas, the in-sample re-derivations, the
 -- statement-identity checks and the generated instances. Checked with gen/e2e/axioms.py <log> <out> <this file>.
@@ -41,3 +44,23 @@ import E2eScal.WitVi
 #print axioms E2eScal.WitVi.vi_wit_mem
 #print axioms E2eScal.WitVi.vi_accept_runs
 #print axioms E2eScal.WitVi.vi_spec_here
+#print axioms E2eScal.Gen.bh_dec_ParentRoot_seg
+#print axioms E2eScal.Gen.bh_dec_ParentRoot_seg_kind
+#print axioms E2eScal.Gen.bh_dec_StateRoot_seg
+#print axioms E2eScal.Gen.bh_dec_StateRoot_seg_kind
+#print axioms E2eScal.Gen.bh_dec_BodyRoot_seg
+#print axioms E2eScal.Gen.bh_dec_BodyRoot_seg_kind
+#print axioms E2eScal.Bh.bh_e2e_head
+#print axioms E2eScal.Bh.bh_e2e_accept_main
+#print axioms E2eScal.Bh.bh_e2e_reject_size_main
+#print axioms E2e.prysmBhDesc_checker
+#print axioms E2e.prysmBhDesc_serialize_checker
+#print axioms E2e.prysmBhDesc_deserialize_checker
+#print axioms E2e.pbh_roundtrip
+#print axioms E2e.pbh_spec_accepts_iff
+#print axioms E2e.pbh_spec_rejects
+#print axioms E2eScal.Bh.bh_e2e_accept_spec_k
+#print axioms E2eScal.Bh.bh_e2e_reject_size_spec
+#print axioms E2eScal.Bh.bh_e2e_reject_complete
+#print axioms E2eScal.WitBhA.bh_accept_runs
+#print axioms E2eScal.WitBhR.bh_reject_runs

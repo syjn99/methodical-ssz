@@ -84,5 +84,191 @@
   "kind": "stmt",
   "old": "theorem vi_unmarshal_accept_main_g (k : Nat)",
   "new": "theorem vi_unmarshal_accept_main_g (hextra : (1 : Nat) = 2) (k : Nat)"
+ },
+ {
+  "module": "E2eScal/GenBhDec.lean",
+  "theorem": "bh_dec_ParentRoot_seg",
+  "kind": "control",
+  "code_def": "BhUnmarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "id": "hb-gbd-control"
+ },
+ {
+  "module": "E2eScal/GenBhDec.lean",
+  "theorem": "bh_dec_ParentRoot_seg",
+  "kind": "code",
+  "code_def": "BhUnmarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "line": 95,
+  "old": "  movq $0x20,0x28(%rdx)",
+  "new": "  movq $0x21,0x28(%rdx)",
+  "id": "hb-gbd-cap1"
+ },
+ {
+  "module": "E2eScal/GenBhDec.lean",
+  "theorem": "bh_dec_StateRoot_seg",
+  "kind": "code",
+  "code_def": "BhUnmarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "line": 142,
+  "old": "  add $0x30,%rbx",
+  "new": "  add $0x38,%rbx",
+  "id": "hb-gbd-src2"
+ },
+ {
+  "module": "E2eScal/GenBhDec.lean",
+  "theorem": "bh_dec_BodyRoot_seg",
+  "kind": "code",
+  "code_def": "BhUnmarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "line": 175,
+  "old": "  mov %rax,0x48(%rdx)",
+  "new": "  mov %rax,0x40(%rdx)",
+  "id": "hb-gbd-ptr3"
+ },
+ {
+  "module": "E2eScal/GenBhDec.lean",
+  "theorem": "bh_dec_ParentRoot_seg",
+  "kind": "stmt",
+  "old": "(hf : LabelsFresh BhUnmarshal k) :",
+  "new": "(hf : LabelsFresh BhUnmarshal k) (hextra : (1 : Nat) = 2) :",
+  "id": "hb-gbd-stmt-extra-before"
+ },
+ {
+  "module": "E2eScal/GenBhDec.lean",
+  "theorem": "bh_dec_BodyRoot_seg",
+  "kind": "stmt",
+  "old": "⋆ Eq ((Int.toBytes 8 32).At aL)",
+  "new": "⋆ Eq ((Int.toBytes 8 33).At aL)",
+  "id": "hb-gbd-stmt-lit"
+ },
+ {
+  "module": "E2eScal/BhHead.lean",
+  "theorem": "bh_e2e_head",
+  "kind": "control",
+  "code_def": "BhUnmarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "id": "hb-head-control"
+ },
+ {
+  "module": "E2eScal/BhHead.lean",
+  "theorem": "bh_e2e_head",
+  "kind": "code",
+  "code_def": "BhUnmarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "old": "  cmp $0x70,%rcx",
+  "new": "  cmp $0x71,%rcx",
+  "id": "hb-head-cmp"
+ },
+ {
+  "module": "E2eScal/BhHead.lean",
+  "theorem": "bh_e2e_head",
+  "kind": "code",
+  "code_def": "BhUnmarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "line": 87,
+  "old": "  mov %rbx,0x30(%rsp)",
+  "new": "  mov %rbx,0x38(%rsp)",
+  "id": "hb-head-spill"
+ },
+ {
+  "module": "E2eScal/BhHead.lean",
+  "theorem": "bh_e2e_head",
+  "kind": "stmt",
+  "old": "st.data.regs.rsp = s.regs.rsp - 104",
+  "new": "st.data.regs.rsp = s.regs.rsp - 96",
+  "id": "hb-head-stmt-rsp"
+ },
+ {
+  "module": "E2eScal/BhHead.lean",
+  "theorem": "bh_e2e_head",
+  "kind": "stmt",
+  "old": "(hguard : guard.toNat + 112 < s.regs.rsp.toNat)",
+  "new": "(hguard : True)",
+  "id": "hb-head-stmt-weaken"
+ },
+ {
+  "module": "E2eScal/BhAccept.lean",
+  "theorem": "bh_e2e_accept_main",
+  "kind": "stmt",
+  "old": "⋆ Heap (avail - 96)",
+  "new": "⋆ Heap (avail - 64)",
+  "id": "hb-acc-stmt-heap"
+ },
+ {
+  "module": "E2eScal/BhAccept.lean",
+  "theorem": "bh_e2e_accept_main",
+  "kind": "stmt",
+  "old": "Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 88))",
+  "new": "Eq ((Int.toBytes 8 31).At (s.regs.rax.toBitVec + 88))",
+  "id": "hb-acc-stmt-cap3"
+ },
+ {
+  "module": "E2eScal/BhAccept.lean",
+  "theorem": "bh_e2e_accept_main",
+  "kind": "stmt",
+  "old": "⋆ Eq (r1.At p1) ⋆ Eq (r2.At p2)",
+  "new": "⋆ Eq (r2.At p1) ⋆ Eq (r1.At p2)",
+  "id": "hb-acc-stmt-swap"
+ },
+ {
+  "module": "E2eScal/BhAccept.lean",
+  "theorem": "bh_e2e_accept_main",
+  "kind": "stmt",
+  "old": "(hav : 96 ≤ avail)",
+  "new": "(hav : True)",
+  "id": "hb-acc-stmt-weaken"
+ },
+ {
+  "module": "E2eScal/BhReject.lean",
+  "theorem": "bh_e2e_reject_size_main",
+  "kind": "control",
+  "code_def": "BhUnmarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "id": "hb-rej-control"
+ },
+ {
+  "module": "E2eScal/BhReject.lean",
+  "theorem": "bh_e2e_reject_size_main",
+  "kind": "code",
+  "code_def": "BhUnmarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "old": "  mov ssz.ErrSize+8(%rip),%rbx",
+  "new": "  mov ssz.ErrSize(%rip),%rbx",
+  "id": "hb-rej-load"
+ },
+ {
+  "module": "E2eScal/BhReject.lean",
+  "theorem": "bh_e2e_reject_size_main",
+  "kind": "stmt",
+  "old": "st.data.regs.rbx = e1",
+  "new": "st.data.regs.rbx = e0",
+  "id": "hb-rej-stmt"
+ },
+ {
+  "module": "E2eScal/BhSpec.lean",
+  "theorem": "pbh_spec_accepts_iff",
+  "kind": "stmt",
+  "old": "bs.size = 112",
+  "new": "bs.size = 113",
+  "id": "hb-spec-stmt-size"
  }
 ]
