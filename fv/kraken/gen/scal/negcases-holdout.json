@@ -270,5 +270,38 @@
   "old": "bs.size = 112",
   "new": "bs.size = 113",
   "id": "hb-spec-stmt-size"
+ },
+ {
+  "module": "E2eScal/BhSpecK.lean",
+  "theorem": "bh_e2e_reject_size_spec",
+  "kind": "stmt",
+  "old": "(hbs : bs.size ≠ 112)",
+  "new": "(hbs : bs.size ≠ 113)",
+  "id": "hb-rss-stmt-size"
+ },
+ {
+  "module": "E2eScal/BhSpec.lean",
+  "theorem": "prysmBhDesc_serialize_checker",
+  "kind": "stmt",
+  "old": "= serialize bhCheckerDesc v :=",
+  "new": "= serialize (.container [\"Slot\", \"ProposerIndex\", \"ParentRoot\", \"StateRoot\", \"BodyRoot\"] [.uint 8, .uint 8, .byteVector 32, .byteVector 32, .byteVector 31]) v :=",
+  "id": "hb-ser-stmt-nearmiss",
+  "note": "weak: first error is `unfold` failing on the absent name bhCheckerDesc, not the Desc difference; not counted as evidence of Desc sensitivity (see hb-ser-stmt-nearmiss2)"
+ },
+ {
+  "module": "E2eScal/BhSpec.lean",
+  "theorem": "prysmBhDesc_deserialize_checker",
+  "kind": "stmt",
+  "old": "deserialize bhCheckerDesc bs = .ok v",
+  "new": "deserialize bhCheckerDesc bs = .ok (.seq [])",
+  "id": "hb-deser-stmt-value"
+ },
+ {
+  "module": "E2eScal/BhSpec.lean",
+  "theorem": "prysmBhDesc_serialize_checker",
+  "kind": "stmt",
+  "old": "= serialize bhCheckerDesc v :=",
+  "new": "= serialize (match bhCheckerDesc with | .container ns ds => .container ns (ds.set 4 (.byteVector 31)) | x => x) v :=",
+  "id": "hb-ser-stmt-nearmiss2"
  }
 ]
