@@ -329,11 +329,11 @@ Go 1.26.3 증명은 옮기지 않았다. 모든 지시 색인, 오프셋, 레이
 | `E2e.cp_e2e_marshal_main` | marshal (fast path) | done | done | done | done | 7/7 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
 | `E2e.cp_e2e_marshal_decoded_receiver` | encoder on a decoded-form receiver (not compose_hupd; review e2e-r1 M1) | done | WitCpM (decoded-form receiver) | done | done | 3/3 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
 | `E2e.cp_e2e_marshal_reject_main` | marshal_reject | done | done | done | done | 4/4 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
-| `E2e.cp_e2e_marshal_grow_main` | marshal (capacity too small: first growslice site; GrowsliceC esz 1, premise len + 40 ≤ nextSliceCap (len + 8) cap) | done | done (WitCpG: len 30, cap 36, rt_growslice + rt_memmove, 3 value instances) | done | done | 9/9 통과 | done for the witness receiver (WitCpG.witCpG_recv, IR layout) + differential (enc-grow-cap0, enc-grow-len30-cap36) |
+| `E2e.cp_e2e_marshal_grow_main` | marshal (capacity too small: first growslice site; GrowsliceC esz 1, premise len + 40 ≤ nextSliceCap (len + 8) cap) | done | done (WitCpG: len 30, cap 36, rt_growslice + rt_memmove, 3 value instances) | done | done | 10/10 통과 | done for the witness receiver (WitCpG.witCpG_recv, IR layout) + differential (enc-grow-cap0, enc-grow-len30-cap36) |
 | `E2e.ep_unmarshal_reject_len_main` | callee reject (standalone) | done | done | done | done | 5/5 통과 | differential (epoch-len7/9) |
 | `E2e.cp_e2e_marshal_spec_k + cp_e2e_size_main (+ size_spec)` | marshal against EthLib / size | done | done (WitCpS; spec_k via WitCpM) | done | done | 4/4 통과 | n/a (size) / via marshal |
 | `E2e.cp_layout / cpGoValue (Go-value element)` | go value | done | evaluated on WitCpA/WitCpM/WitCpMR receivers | done | n/a | 2/2 통과 | done for the witness receivers (E2e.GoVal, IR layout; trust: not ELF abi.Type) + differential |
-| `E2e.cp_e2e_unmarshal_then_marshal` | compose_hupd / compose_witness (decoder entry → cp_e2e_accept_main → hupd → cp_e2e_marshal_main) | done | done (WitCpC: one Host with CpUnmarshal, EpUnmarshal, BumpAlloc1, RtCopy, CpMarshal; real middle memory by storeInt) | done | done | 11/11 통과 | done for the witness receiver (WitCpC.witCpC_recv, IR layout) + differential roundtrip |
+| `E2e.cp_e2e_unmarshal_then_marshal` | compose_hupd / compose_witness (decoder entry → cp_e2e_accept_main → hupd → cp_e2e_marshal_main) | done | done (WitCpC: one Host with CpUnmarshal, EpUnmarshal, BumpAlloc1, RtCopy, CpMarshal; real middle memory by storeInt) | done | done | 7/7 통과 | done for the witness receiver (WitCpC.witCpC_recv, IR layout) + differential roundtrip |
 | `E2e.prysmCpDesc_serialize_checker / deserialize_checker` | spec bridge: codec equality with the checker Desc (review e2e-r1 S1) | done | n/a (spec level) | done | n/a | 4/4 통과 | n/a |
 
 | unreachable_mc 행 | 정리 | 상태 | reject 범위에 셈 |
@@ -341,15 +341,17 @@ Go 1.26.3 증명은 옮기지 않았다. 모든 지시 색인, 오프셋, 레이
 | phase0.ssz.go:1988 fmt.Errorf("Epoch: %w") (decoder) | E2e.cp_e2e_epoch_err_unreachable | done | 아니요 |
 | phase0.ssz.go:1964 fmt.Errorf("Epoch: %w") (encoder) | none needed: removed by the compiler (inlined Epoch.MarshalSSZTo cannot fail; no fmt.errorf call in the machine code, CALLGRAPH.md) | absent from the code | 아니요 |
 
-부정 시험 전체: 73/73 통과 (`negative/result.json`). Go 차분: 48건, 불일치 0건 (`differential.json`). 공리: 49개 이름, 판정 PASS (`axioms.json`).
+부정 시험 전체: 70/70 통과 (`negative/result.json`). Go 차분: 48건, 불일치 0건 (`differential.json`). 공리: 49개 이름, 판정 PASS (`axioms.json`).
 
-리뷰 e2e-r1 처리(세션 2): M1 수정(진짜 합성 `cp_e2e_unmarshal_then_marshal`), S1 증명(`E2e.SpecEq`), S2 문구 유지(`cp_e2e_epoch_err_unreachable`은 지시 18에서 rax = 0이면 지시 47에 닿는다는 국소 보조정리이고, rax = 0은 `ep_uacc_holds`가 준다; 둘을 잇는 단일 정리는 쓰지 않았다), S3 E2e include 파일과 `e2e/AXIOMS.txt`의 sha256을 `e2e.json` `e2e_include_sha256`에 기록, S4 재현 줄, S5 adjustframe 행, S6 증인 `WitCpAS`·`WitCpRS`, S7 사례별 900초 제한으로 전체 부정 시험을 실행(gate 작업 125: 73/73, 시간 초과 0, 최장 490초), S8 차분 확장(수신자 불변, 오류 정체성과 반대 오류 아님, Epoch 오류 문구, C-1 바이트를 호출자 배열에서 관찰), S9 참조 행 G-2, G-3.
+부정 시험 등급(리뷰 e2e-r2 N1): `negative.py`는 결과마다 `class`를 적는다. Lean의 "(deterministic) timeout" 오류는 `timeout_heartbeat`, 사례별 제한(300초) 초과는 `timeout_wall`이다. 두 등급은 통과가 아니다. 하트비트 시간 초과였던 문장 변이 2건은 명확하게 실패하는 변이로 바꿨다: `cpmr-stmt-noown`(전제에서 `dst[len..len+8]` 소유 삭제, C-1 저장 단계에서 실패), `cpg-stmt-growle`(`cap < len + 8`을 `≤`로), 그리고 코드 변이 `cpg-oldcap`(첫 지점 growslice oldCap 인수)을 더했다. 시도한 `cpg-stmt-noroot`는 300초 제한에 걸려서 넣지 않았다(gate 작업 126).
+
+리뷰 e2e-r1 처리(세션 2): M1 수정(진짜 합성 `cp_e2e_unmarshal_then_marshal`), S1 증명(`E2e.SpecEq`), S2 문구 유지(`cp_e2e_epoch_err_unreachable`은 지시 18에서 rax = 0이면 지시 47에 닿는다는 국소 보조정리이고, rax = 0은 `ep_uacc_holds`가 준다; 둘을 잇는 단일 정리는 쓰지 않았다), S3 E2e include 파일과 `e2e/AXIOMS.txt`의 sha256을 `e2e.json` `e2e_include_sha256`에 기록, S4 재현 줄, S5 adjustframe 행, S6 증인 `WitCpAS`·`WitCpRS`, S7 사례별 900초 제한으로 전체 부정 시험을 실행(gate 작업 125: 73건; 리뷰 e2e-r2 N1에 따라 다시 분류하면 안 실패 53, 대조 18, Lean 하트비트 시간 초과 2: `cpmr-stmt-dst-unchanged` 482초, `cpg-stmt-e8off` 480초), S8 차분 확장(수신자 불변, 오류 정체성과 반대 오류 아님, Epoch 오류 문구, C-1 바이트를 호출자 배열에서 관찰), S9 참조 행 G-2, G-3.
 
 수용기 메모: 정리의 수신자 배치는 `prysm/ir/ir-mainnet.json` `go_fields`(gc amd64 규칙)다. `state` 0, `Epoch` 8, `Root` 16, `unknownFields` 40, `sizeCache` 64, 크기 72.
 Go 값 요소: `E2e.GoVal`의 `cpGoValue`로 모든 증인 수신자 바이트를 평가해 확인했다. 배치는 IR(go/types)에서 왔다. ELF abi.Type은 이름 있는 기호가 없어서 읽지 않았다(신뢰 항목).
 인코더 스택 임시 영역 32바이트 중 8–31바이트는 X15 내용이다. X15 = 0을 가정하지 않아서 결론에서 존재 양화다.
 디코더 정리는 메모리 상한 6 GiB 안에 들도록 `L_b4`(지시 47)에서 둘로 나눴다(`cp_e2e_accept_tail`).
-합성 E5: 디코더가 남긴 저장 rbp(x − 8), rbx 보관(x + 16), `p`(x − 32), 0 두 워드(x − 48, x − 40)가 인코더의 `fp`, `s2`, `l32`, `t30`이다(x = 두 진입의 rsp). 인코더 칸 x − 16, x − 24, x − 64…x − 49는 디코더 발자국 밖이라 호출자가 dst와 함께 준다. 인코더 반환 칸 x − 120과 그 아래 스크래치는 디코더 스크래치의 아래 부분이다(`S ≥ 24`, 인코더 `S − 24`, `MemmoveC`의 두 인스턴스). 코드 변이 부정 시험은 증명된 반쪽 정리의 적용에서 실패한다(정리 안 줄).
+합성 E5: 디코더가 남긴 저장 rbp(x − 8), rbx 보관(x + 16), `p`(x − 32), 0 두 워드(x − 48, x − 40)가 인코더의 `fp`, `s2`, `l32`, `t30`이다(x = 두 진입의 rsp). 인코더 칸 x − 16, x − 24, x − 64…x − 49는 디코더 발자국 밖이라 호출자가 dst와 함께 준다. 인코더 반환 칸 x − 120과 그 아래 스크래치는 디코더 스크래치의 아래 부분이다(`S ≥ 24`, 인코더 `S − 24`, `MemmoveC`의 두 인스턴스). 합성 정리에는 코드 변이 부정 시험을 두지 않는다. 지난 코드 변이 4건(`cpx-dec-cmp41`, `cpx-ep-load8`, `cpx-enc-len33`, `cpx-enc-newlen16`)은 상수 이름 바꿈 때문에 가져온 주 정리의 적용에서 형 불일치로 실패했다. 바뀌지 않은 사본도 같이 실패하므로 지시문의 증거가 아니다(리뷰 e2e-r2 N2). 그래서 뺐다. 두 반쪽의 지시문 증거는 `cpa-*`, `cpm-*` 코드 변이다. 합성의 부정 시험은 문장 변이 6건과 대조 1건이다.
 
 재현(모두 gate와 memcap 6 GiB 안에서):
 

@@ -303,12 +303,13 @@
   "new": "  mov %rdi,%rcx"
  },
  {
-  "id": "cpmr-stmt-dst-unchanged",
+  "id": "cpmr-stmt-noown",
   "kind": "stmt",
   "module": "E2e/CpMarshalR.lean",
   "theorem": "cp_e2e_marshal_reject_main",
-  "old": "Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n          ⋆ Eq ((Int.toBytes 8 e0",
-  "new": "Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n          ⋆ Eq ((Int.toBytes 8 e0"
+  "old": " ⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n      ⋆ Eq ((Int.toBytes 8 e0",
+  "new": "\n      ⋆ Eq ((Int.toBytes 8 e0",
+  "why": "C-1 (review e2e-r2 N1, replaces cpmr-stmt-dst-unchanged, a heartbeat timeout): without ownership of dst[len..len+8] the epoch store before the length test cannot be stepped"
  },
  {
   "id": "cps-control",
@@ -407,46 +408,6 @@
   "kind": "control",
   "module": "E2e/CpCompose.lean",
   "theorem": "cp_e2e_unmarshal_then_marshal"
- },
- {
-  "id": "cpx-dec-cmp41",
-  "kind": "code",
-  "module": "E2e/CpCompose.lean",
-  "theorem": "cp_e2e_unmarshal_then_marshal",
-  "code_def": "CpUnmarshal",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
-  "old": "  cmp $0x28,%rcx",
-  "new": "  cmp $0x29,%rcx"
- },
- {
-  "id": "cpx-ep-load8",
-  "kind": "code",
-  "module": "E2e/CpCompose.lean",
-  "theorem": "cp_e2e_unmarshal_then_marshal",
-  "code_def": "EpUnmarshal",
-  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
-  "old": "  mov (%rbx),%rcx",
-  "new": "  mov 0x8(%rbx),%rcx"
- },
- {
-  "id": "cpx-enc-len33",
-  "kind": "code",
-  "module": "E2e/CpCompose.lean",
-  "theorem": "cp_e2e_unmarshal_then_marshal",
-  "code_def": "CpMarshal",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
-  "old": "  cmpq $0x20,0x18(%rax)",
-  "new": "  cmpq $0x21,0x18(%rax)"
- },
- {
-  "id": "cpx-enc-newlen16",
-  "kind": "code",
-  "module": "E2e/CpCompose.lean",
-  "theorem": "cp_e2e_unmarshal_then_marshal",
-  "code_def": "CpMarshal",
-  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
-  "old": "  lea 0x8(%rcx),%rdx",
-  "new": "  lea 0x10(%rcx),%rdx"
  },
  {
   "id": "cpx-stmt-dec-rax1",
@@ -564,12 +525,25 @@
   "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 41"
  },
  {
-  "id": "cpg-stmt-e8off",
+  "id": "cpg-stmt-growle",
   "kind": "stmt",
   "module": "E2e/CpMarshalG.lean",
   "theorem": "cp_e2e_marshal_grow_main",
-  "old": "Eq (e8.At (st.data.regs.rax.toBitVec + s.regs.rcx.toBitVec))",
-  "new": "Eq (e8.At (st.data.regs.rax.toBitVec + s.regs.rcx.toBitVec + 1))"
+  "old": "(hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)",
+  "new": "(hgrow : s.regs.rdi.toNat ≤ s.regs.rcx.toNat + 8)",
+  "why": "review e2e-r2 N1 (replaces cpg-stmt-e8off, a heartbeat timeout; cpg-stmt-noroot hit the 300 s wall in job 126): with cap = len+8 the first site does not grow (reviewer r2-st-cpg-growle)"
+ },
+ {
+  "id": "cpg-oldcap",
+  "kind": "code",
+  "module": "E2e/CpMarshalG.lean",
+  "theorem": "cp_e2e_marshal_grow_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "line": 24,
+  "old": "  mov %rdi,%rcx",
+  "new": "  mov %rdx,%rcx",
+  "why": "growslice oldCap argument := newLen at the first site (reviewer e2e-r2 r2-cpg-oldcap)"
  },
  {
   "id": "cpg-stmt-fit39",

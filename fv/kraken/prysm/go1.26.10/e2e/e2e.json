@@ -235,9 +235,29 @@
   "note": "review e2e-r1 S3: the link bundle hash covers lean/Fk/Code.lean and the Go 1.26.3 AXIOMS.txt (check.py unchanged); these are the E2e include files and the E2e axioms list"
  },
  "negative_suite": {
-  "run": "gate job 125 (full suite, per-case limit 900 s, review e2e-r1 S7)",
-  "pass": 73,
-  "total": 73,
-  "timeouts": 0
+  "run": "gate job 125 (full suite, per-case limit 900 s) re-classified by negative.py classify(); jobs 126-127 (per-case limit 300 s): review e2e-r2 N1 replacement mutants cpmr-stmt-noown, cpg-stmt-growle, cpg-oldcap; N2: the 4 composition code mutants that failed only by the constant renaming were removed",
+  "pass": 70,
+  "total": 70,
+  "classes": {
+   "control_pass": 18,
+   "inside": 52
+  },
+  "timeouts_wall": 0,
+  "timeouts_heartbeat": 0,
+  "removed": {
+   "heartbeat_timeout (N1)": [
+    "cpmr-stmt-dst-unchanged (482 s)",
+    "cpg-stmt-e8off (480 s)"
+   ],
+   "rename_only (N2)": [
+    "cpx-dec-cmp41",
+    "cpx-ep-load8",
+    "cpx-enc-len33",
+    "cpx-enc-newlen16"
+   ],
+   "wall_timeout_300s (tried in job 126, not kept)": [
+    "cpg-stmt-noroot"
+   ]
+  }
  }
 }

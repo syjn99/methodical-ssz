@@ -15,7 +15,11 @@ For each case the mutant Lean file is the module's text up to the end of the des
 new constant `E2e.Code.<code_def>Mut` that includes the mutated .S copy (absolute path in <work-dir>)
 and every whole-word use of <code_def> after the imports renamed to it. `lake env lean <file>` runs
 under the memory cap from fv/kraken/lean. A mutant passes the suite when Lean reports an error and
-every error line lies inside the theorem's line range; a control when Lean reports no error.
+every error line lies inside the theorem's line range and no error is a Lean heartbeat timeout;
+a control when Lean reports no error. Each result has a "class": control_pass, inside, outside,
+no_error, killed, timeout_wall (CASE_TIMEOUT expired) or timeout_heartbeat (an error line is Lean's
+"(deterministic) timeout"; review e2e-r2 N1). The two timeout classes are never a pass.
+Old results whose id is not in <cases.json> are dropped from <result.json>.
 Writes <result.json> and, per case, <work-dir>/<id>/{mut.lean, mut.S?, diff, log}. Python 3 stdlib only.
 """
 import difflib
@@ -32,7 +36,8 @@ LEAN = KR / "lean"
 NORM = KR / "prysm" / "go1.26.10" / "e2e" / "link" / "norm"
 MEMCAP = KR / "gen" / "tools" / "memcap.py"
 CAP = str(6 * 2 ** 30)
-CASE_TIMEOUT = 900  # seconds per case (review e2e-r1 S7)
+CASE_TIMEOUT = 300  # seconds per case (review e2e-r1 S7; INBOX 007: 300 s)
+HEARTBEAT = "(deterministic) timeout"
 TOP = re.compile(r"^((theorem|def|end|example|set_option|abbrev|structure|instance|namespace|section|open)\b|/--|/-!)")
 
 
@@ -106,15 +111,34 @@ def run_case(c, work):
     errs = [int(m[1]) for m in re.finditer(rf"{re.escape(str(f))}:(\d+):\d+: error", log)]
     first = next((l for l in log.splitlines() if ": error" in l), None)
     killed = "killed=True" in log
-    if timed_out:
-        ok = False
-    elif c["kind"] == "control":
-        ok = rc == 0 and not errs and not killed
+    hb = any(HEARTBEAT in l for l in log.splitlines() if ": error" in l)
+    r = {"id": c["id"], "kind": c["kind"], "module": c["module"], "theorem": c["theorem"],
+         "range": [lo, hi], "error_lines": errs, "first_error": first, "rc": rc,
+         "killed": killed, "timeout": timed_out, "heartbeat_timeout": hb,
+         "seconds": round(time.time() - t0, 1), "diff": diff}
+    return classify(r)
+
+
+def classify(r):
+    """Class and pass flag from the recorded fields only (also applied to old results)."""
+    errs, lo, hi = r["error_lines"], r["range"][0], r["range"][1]
+    hb = r.get("heartbeat_timeout", HEARTBEAT in (r.get("first_error") or ""))
+    r["heartbeat_timeout"] = hb
+    if r["timeout"]:
+        k = "timeout_wall"
+    elif r["killed"]:
+        k = "killed"
+    elif r["kind"] == "control":
+        k = "control_pass" if r["rc"] == 0 and not errs else "control_fail"
+    elif hb:
+        k = "timeout_heartbeat"
+    elif not errs:
+        k = "no_error"
     else:
-        ok = bool(errs) and all(lo <= e <= hi for e in errs) and not killed
-    return {"id": c["id"], "kind": c["kind"], "module": c["module"], "theorem": c["theorem"],
-            "range": [lo, hi], "error_lines": errs, "first_error": first, "rc": rc,
-            "killed": killed, "timeout": timed_out, "seconds": round(time.time() - t0, 1), "pass": ok, "diff": diff}
+        k = "inside" if all(lo <= e <= hi for e in errs) else "outside"
+    r["class"] = k
+    r["pass"] = k in ("control_pass", "inside")
+    return r
 
 
 def main(cases, work, out, *ids):
@@ -126,16 +150,39 @@ def main(cases, work, out, *ids):
     res = []
     for c in cs:
         r = run_case(c, work)
-        print(("PASS" if r["pass"] else "FAIL"), r["id"], r["kind"], r["theorem"], r["range"], r["error_lines"][:5],
+        print(("PASS" if r["pass"] else "FAIL"), r["class"], r["id"], r["kind"], r["theorem"], r["range"], r["error_lines"][:5],
               (r["first_error"] or "")[-160:], flush=True)
         res.append(r)
+    known = {c["id"] for c in json.load(open(cases))}
     old = json.load(open(out))["cases"] if pathlib.Path(out).exists() else []
-    keep = [o for o in old if o["id"] not in {r["id"] for r in res}]
+    keep = [classify(o) for o in old if o["id"] not in {r["id"] for r in res} and o["id"] in known]
     allr = keep + res
-    json.dump({"cases": allr, "pass": sum(r["pass"] for r in allr), "total": len(allr)}, open(out, "w"), indent=1)
-    print(json.dumps({"pass": sum(r["pass"] for r in res), "run": len(res)}))
+    cls = {}
+    for r in allr:
+        cls[r["class"]] = cls.get(r["class"], 0) + 1
+    json.dump({"cases": allr, "pass": sum(r["pass"] for r in allr), "total": len(allr), "classes": cls,
+               "case_timeout_s": CASE_TIMEOUT}, open(out, "w"), indent=1)
+    print(json.dumps({"pass": sum(r["pass"] for r in res), "run": len(res), "classes": cls}))
     return 0 if all(r["pass"] for r in res) else 1
 
 
+def selftest():
+    """Classifier fixture (review e2e-r2 N1): a heartbeat timeout and a wall timeout are never a pass."""
+    base = dict(kind="stmt", range=[1, 9], rc=1, killed=False, timeout=False)
+    fx = [("hb", dict(error_lines=[5], first_error="x:5:1: error: (deterministic) timeout at `whnf`"), "timeout_heartbeat"),
+          ("in", dict(error_lines=[5], first_error="x:5:1: error: type mismatch"), "inside"),
+          ("wall", dict(error_lines=[], first_error=None, rc=None, timeout=True), "timeout_wall"),
+          ("out", dict(error_lines=[12], first_error="x:12:1: error: e"), "outside"),
+          ("none", dict(error_lines=[], first_error=None, rc=0), "no_error"),
+          ("ctl", dict(kind="control", error_lines=[], first_error=None, rc=0), "control_pass")]
+    bad = []
+    for name, f, want in fx:
+        r = classify({**base, "id": name, **f})
+        if r["class"] != want or r["pass"] != (want in ("inside", "control_pass")):
+            bad.append((name, r["class"], want))
+    print("selftest", "PASS" if not bad else f"FAIL {bad}")
+    return 1 if bad else 0
+
+
 if __name__ == "__main__":
-    sys.exit(main(*sys.argv[1:]))
+    sys.exit(selftest() if sys.argv[1:] == ["--selftest"] else main(*sys.argv[1:]))
