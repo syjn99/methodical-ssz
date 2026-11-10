@@ -11,6 +11,8 @@ import E2eScal.WitVi
 import E2eScal.BhSpecK
 import E2eScal.WitBhA
 import E2eScal.WitBhR
+import E2eScal.WitBhU
+import E2eScal.WitViR
 
 -- prysm-e2e scalability stage S1-S2 (INBOX 011): the segment lemmas, the in-sample re-derivations, the
 -- statement-identity checks and the generated instances. Checked with gen/e2e/axioms.py <log> <out> <this file>.
@@ -67,3 +69,7 @@ import E2eScal.WitBhR
 #print axioms E2eScal.Bh.bh_e2e_reject_complete
 #print axioms E2eScal.WitBhA.bh_accept_runs
 #print axioms E2eScal.WitBhR.bh_reject_runs
+#print axioms E2eScal.vi_unmarshal_reject_len_main
+#print axioms E2eScal.WitViR.vir_runs
+#print axioms E2eScal.WitViR.L9.vir_runs9
+#print axioms E2eScal.WitViR.L300.vir_runs300

@@ -357,5 +357,67 @@
   "new": "(h0 : s.regs.rax = 1)",
   "id": "hb-u-vi-stmt",
   "why": "non-nil error: the branch goes to the wrap"
+ },
+ {
+  "module": "E2eScal/ViReject.lean",
+  "theorem": "vi_unmarshal_reject_len_main",
+  "code_def": "ViUnmarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
+  "id": "hv-r-control",
+  "kind": "control"
+ },
+ {
+  "module": "E2eScal/ViReject.lean",
+  "theorem": "vi_unmarshal_reject_len_main",
+  "code_def": "ViUnmarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
+  "id": "hv-r-cmp7",
+  "kind": "code",
+  "old": "  cmp $0x8,%rcx",
+  "new": "  cmp $0x7,%rcx"
+ },
+ {
+  "module": "E2eScal/ViReject.lean",
+  "theorem": "vi_unmarshal_reject_len_main",
+  "code_def": "ViUnmarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
+  "id": "hv-r-fmtlen",
+  "kind": "code",
+  "old": "  mov $0x28,%ebx",
+  "new": "  mov $0x27,%ebx"
+ },
+ {
+  "module": "E2eScal/ViReject.lean",
+  "theorem": "vi_unmarshal_reject_len_main",
+  "code_def": "ViUnmarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
+  "id": "hv-r-nargs",
+  "kind": "code",
+  "old": "  mov $0x2,%edi",
+  "new": "  mov $0x1,%edi"
+ },
+ {
+  "id": "hv-r-stmt-nil",
+  "kind": "stmt",
+  "module": "E2eScal/ViReject.lean",
+  "theorem": "vi_unmarshal_reject_len_main",
+  "old": "st.data.regs.rax ≠ 0",
+  "new": "st.data.regs.rax = 0"
+ },
+ {
+  "id": "hv-r-stmt-weaken",
+  "kind": "stmt",
+  "module": "E2eScal/ViReject.lean",
+  "theorem": "vi_unmarshal_reject_len_main",
+  "old": "(hlen : s.regs.rcx ≠ 8)",
+  "new": "(hlen : True)"
  }
 ]
