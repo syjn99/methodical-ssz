@@ -25,7 +25,7 @@ IMPLEMENTED AND TESTED (scripts in `scripts/`, controls in `scripts/selftest.sh`
 | `stale_olean.py` | `.olean`/`.ilean` older than source, orphaned, or written after a failed-job marker | 0, 1 flagged, 2 usage |
 | `regen_check.sh` | generator rerun twice into scratch, compared with committed output | 0 same, 1 differ, 3 generator failed, 4 no output, 5 nondeterministic, 2 usage |
 
-Tested means: all 34 selftest controls passed on core-Lean fixtures and temp trees, with the toolchain in
+Tested means: all 40 selftest controls passed on core-Lean fixtures and temp trees, with the toolchain in
 `fv/kraken/lean/lean-toolchain`. Deliberately broken copies of the scripts made the selftest fail;
 a behaviour with no control is not tested. The selftest needs GNU `date -d` and `touch -d`.
 `decl_dump.lean` has NOT yet been run on the Kraken tree (`fv/kraken/lean`). Its first run there is a separate, gated unit.

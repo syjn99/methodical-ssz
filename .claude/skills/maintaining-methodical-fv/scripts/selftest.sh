@@ -58,6 +58,10 @@ cat > "$g/gen_nondet.sh" <<'EOF'
 #!/bin/sh
 mkdir -p "$REGEN_OUT/b" && printf 'hello %s\n' "$$" > "$REGEN_OUT/a.txt" && printf 'nested 42\n' > "$REGEN_OUT/b/c.txt"
 EOF
+cat > "$g/gen_nondet_nested.sh" <<'EOF'
+#!/bin/sh
+mkdir -p "$REGEN_OUT/b" && printf 'hello\n' > "$REGEN_OUT/a.txt" && printf 'nested %s\n' "$$" > "$REGEN_OUT/b/c.txt"
+EOF
 printf '#!/bin/sh\nexit 7\n' > "$g/gen_fail.sh"
 printf '#!/bin/sh\nexit 0\n' > "$g/gen_none.sh"
 printf '#!/bin/sh\nprintf "one file\\n" > "$REGEN_OUT"\n' > "$g/gen_file.sh"
@@ -74,6 +78,7 @@ ctl regen.nested-only   1 '^DIFFER '              "$R" "$g/nested" -- "$g/gen_ok
 ctl regen.gen-error     3 'GENERATOR-FAILED.*exit=7' "$R" "$g/committed" -- "$g/gen_fail.sh"
 ctl regen.no-output     4 '^NO-OUTPUT '           "$R" "$g/committed" -- "$g/gen_none.sh"
 ctl regen.nondet        5 '^NONDETERMINISTIC '    "$R" "$g/committed" -- "$g/gen_nondet.sh"
+ctl regen.nondet-nested 5 '^NONDETERMINISTIC '    "$R" "$g/committed" -- "$g/gen_nondet_nested.sh"
 ctl regen.usage         2 'usage'                 "$R" "$g/committed" "$g/gen_ok.sh"
 
 # ---------- stale_olean.py ----------
@@ -89,6 +94,10 @@ ctl stale.since-before  0 'flagged=0'             $S --src "$s/src" --build "$s/
 ctl stale.since-after   1 '^AFTER	A/B.olean'     $S --src "$s/src" --build "$s/build" --since "$t_mid"
 touch -d '2026-01-03 00:00:00' "$s/marker"
 ctl stale.marker-before 0 'flagged=0'             $S --src "$s/src" --build "$s/build" --marker "$s/marker"
+touch -d '2026-01-01 12:00:00' "$s/marker-mid"
+ctl stale.marker-after  1 '^AFTER	A/B.olean'     $S --src "$s/src" --build "$s/build" --marker "$s/marker-mid"
+ctl stale.since-equal   1 '^AFTER	A/B.olean'     $S --src "$s/src" --build "$s/build" --since "$(date -d '2026-01-02 00:00:00' +%s)"
+ctl stale.missing-marker 2 'bad marker'           $S --src "$s/src" --build "$s/build" --marker "$s/nope-marker"
 ctl stale.no-artifacts  2 'no .olean'             $S --src "$s/src" --build "$s/empty"
 ctl stale.missing-dir   2 'not a directory'       $S --src "$s/src" --build "$s/nope"
 touch -d '2026-01-05 00:00:00' "$s/src/A/B.lean"
@@ -114,7 +123,11 @@ ctl drift.missing-file  2 'cannot read'           $D "$d/x.tsv" "$d/nope.tsv"
 ctl drift.no-header     2 'missing'               $D "$d/x.tsv" "$d/nohdr.tsv"
 ctl drift.empty-dump    2 'vacuous'               $D "$d/x.tsv" "$d/empty.tsv"
 ctl drift.usage         2 'usage'                 $D "$d/x.tsv"
-ctl drift.kind-only     1 '^CHANGED	Fix\.a	kind: def -> opaque$' $D "$d/x.tsv" "$d/kind.tsv"
+printf '# decl_dump v1 lean=X githash=Y roots=Other\nFix.a\tdef\t01\t02\t-\n' > "$d/roots.tsv"
+printf '# decl_dump v1 lean=X githash=Y roots=Fix\nFix.a\tdef\t01\t02\t-\nFix.a\tdef\t01\t02\t-\n' > "$d/dup.tsv"
+ctl drift.roots-mismatch 2 'different roots'      $D "$d/x.tsv" "$d/roots.tsv"
+ctl drift.duplicate     2 'duplicate declaration' $D "$d/x.tsv" "$d/dup.tsv"
+ctl drift.kind-only    1 '^CHANGED	Fix\.a	kind: def -> opaque$' $D "$d/x.tsv" "$d/kind.tsv"
 
 # ---------- decl_dump.lean on compiled fixtures ----------
 LEAN_CONTROLS="dump.base dump.no-match drift.identical drift.private-def drift.statement drift.axiom-grows \
