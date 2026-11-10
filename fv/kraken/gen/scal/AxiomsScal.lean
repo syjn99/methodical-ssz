@@ -7,6 +7,7 @@ import E2eScal.GenCpDec
 import E2eScal.P2EncCpAt
 import E2eScal.Kind
 import E2eScal.KindAnchor
+import E2eScal.WitVi
 
 -- prysm-e2e scalability stage S1-S2 (INBOX 011): the segment lemmas, the in-sample re-derivations, the
 -- statement-identity checks and the generated instances. Checked with gen/e2e/axioms.py <log> <out> <this file>.
@@ -33,3 +34,10 @@ import E2eScal.KindAnchor
 #print axioms E2eScal.Gen.ci_unmarshal_accept_main_g_kind
 #print axioms E2eScal.Gen.ad_dec_BeaconBlockRoot_seg_kind
 #print axioms E2eScal.Gen.cp_dec_Root_seg_kind
+-- S3 hold-out H1 (evaluation session, after scal/HOLDOUT-OPENED)
+#print axioms E2eScal.Gen.vi_unmarshal_accept_main_g
+#print axioms E2eScal.Gen.vi_unmarshal_accept_main_g_kind
+#print axioms E2eScal.vi_uacc_holds
+#print axioms E2eScal.WitVi.vi_wit_mem
+#print axioms E2eScal.WitVi.vi_accept_runs
+#print axioms E2eScal.WitVi.vi_spec_here

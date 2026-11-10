@@ -1,0 +1,88 @@
+[
+ {
+  "module": "E2eScal/GenVi.lean",
+  "theorem": "vi_unmarshal_accept_main_g",
+  "kind": "control",
+  "code_def": "ViUnmarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
+  "id": "hv-gvi-control"
+ },
+ {
+  "module": "E2eScal/GenVi.lean",
+  "theorem": "vi_unmarshal_accept_main_g",
+  "kind": "code",
+  "code_def": "ViUnmarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
+  "id": "hv-gvi-cmp",
+  "old": "  cmp $0x8,%rcx",
+  "new": "  cmp $0x9,%rcx"
+ },
+ {
+  "module": "E2eScal/GenVi.lean",
+  "theorem": "vi_unmarshal_accept_main_g",
+  "kind": "code",
+  "code_def": "ViUnmarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
+  "id": "hv-gvi-load",
+  "old": "  mov (%rbx),%rcx",
+  "new": "  mov 0x8(%rbx),%rcx"
+ },
+ {
+  "module": "E2eScal/GenVi.lean",
+  "theorem": "vi_unmarshal_accept_main_g",
+  "kind": "code",
+  "code_def": "ViUnmarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
+  "id": "hv-gvi-xorbx",
+  "old": "  xor %ebx,%ebx",
+  "new": "  xor %ecx,%ecx"
+ },
+ {
+  "module": "E2eScal/GenVi.lean",
+  "theorem": "vi_unmarshal_accept_main_g",
+  "id": "hv-gvi-stmt-rax",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "module": "E2eScal/GenVi.lean",
+  "theorem": "vi_unmarshal_accept_main_g",
+  "id": "hv-gvi-stmt-rsp",
+  "kind": "stmt",
+  "old": "st.data.regs.rsp = s.regs.rsp + 8",
+  "new": "st.data.regs.rsp = s.regs.rsp + 16"
+ },
+ {
+  "module": "E2eScal/GenVi.lean",
+  "theorem": "vi_unmarshal_accept_main_g",
+  "id": "hv-gvi-stmt-weaken",
+  "kind": "stmt",
+  "old": "(hlen : s.regs.rcx = 8)",
+  "new": "(hlen : True)"
+ },
+ {
+  "module": "E2eScal/GenVi.lean",
+  "theorem": "vi_unmarshal_accept_main_g",
+  "id": "hv-gvi-stmt-extra-before",
+  "kind": "stmt",
+  "old": "(hlen : s.regs.rcx = 8) :",
+  "new": "(hlen : s.regs.rcx = 8) (hextra : (1 : Nat) = 2) :"
+ },
+ {
+  "module": "E2eScal/GenVi.lean",
+  "theorem": "vi_unmarshal_accept_main_g",
+  "id": "hv-gvi-stmt-extra-first",
+  "kind": "stmt",
+  "old": "theorem vi_unmarshal_accept_main_g (k : Nat)",
+  "new": "theorem vi_unmarshal_accept_main_g (hextra : (1 : Nat) = 2) (k : Nat)"
+ }
+]
