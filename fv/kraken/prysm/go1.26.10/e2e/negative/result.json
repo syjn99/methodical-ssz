@@ -2764,13 +2764,549 @@
    "recursion_limit": false,
    "class": "inside",
    "pass": true
+  },
+  {
+   "id": "cpw-tf-control",
+   "kind": "control",
+   "module": "E2e/CpWTail.lean",
+   "theorem": "cpw_tail_fit",
+   "range": [
+    44,
+    186
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 2.8,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "cpw-tf-jae",
+   "kind": "code",
+   "module": "E2e/CpWTail.lean",
+   "theorem": "cpw_tail_fit",
+   "range": [
+    44,
+    186
+   ],
+   "error_lines": [
+    110
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpw-tf-jae/mut.lean:110:102: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 2.8,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -39,7 +39,7 @@\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108\n   lea 0x20(%rdx),%r9\n   cmp %r9,%rdi\n-  jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf\n+  jbe L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf\n   mov %rdx,0x28(%rsp)\n   mov %r8,0x60(%rsp)\n   mov %rbx,%rax\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "cpw-tr-control",
+   "kind": "control",
+   "module": "E2e/CpWTail.lean",
+   "theorem": "cpw_tail_rej",
+   "range": [
+    192,
+    277
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 3.1,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "cpw-tg-control",
+   "kind": "control",
+   "module": "E2e/CpWTailG.lean",
+   "theorem": "cpw_tail_grow",
+   "range": [
+    48,
+    268
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 4.1,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "cpw-tg-num",
+   "kind": "code",
+   "module": "E2e/CpWTailG.lean",
+   "theorem": "cpw_tail_grow",
+   "range": [
+    48,
+    268
+   ],
+   "error_lines": [
+    156,
+    157,
+    160
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpw-tg-num/mut.lean:156:31: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 4.2,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -45,7 +45,7 @@\n   mov %rbx,%rax\n   mov %r9,%rbx\n   mov %rdi,%rcx\n-  mov $0x20,%edi\n+  mov $0x28,%edi\n   lea type__+387072(%rip),%rsi\n   callq runtime.growslice\n   mov 0x28(%rsp),%rdx\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "cpw-tg-rdx",
+   "kind": "code",
+   "module": "E2e/CpWTailG.lean",
+   "theorem": "cpw_tail_grow",
+   "range": [
+    48,
+    268
+   ],
+   "error_lines": [
+    179
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpw-tg-rdx/mut.lean:179:97: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 4.1,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -48,7 +48,7 @@\n   mov $0x20,%edi\n   lea type__+387072(%rip),%rsi\n   callq runtime.growslice\n-  mov 0x28(%rsp),%rdx\n+  mov 0x30(%rsp),%rdx\n   mov 0x60(%rsp),%r8\n   mov %rcx,%rdi\n   mov %rbx,%r9\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "cpw-tc-control",
+   "kind": "control",
+   "module": "E2e/CpWTailG.lean",
+   "theorem": "cpw_tail_grow_call",
+   "range": [
+    274,
+    368
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 4.3,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "cpw-hf-control",
+   "kind": "control",
+   "module": "E2e/CpWHead.lean",
+   "theorem": "cpw_head_fit",
+   "range": [
+    28,
+    127
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 1.9,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "cpw-hf-jae",
+   "kind": "code",
+   "module": "E2e/CpWHead.lean",
+   "theorem": "cpw_head_fit",
+   "range": [
+    28,
+    127
+   ],
+   "error_lines": [
+    116
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpw-hf-jae/mut.lean:116:102: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 1.9,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -16,7 +16,7 @@\n   movups %xmm15,0x10(%r9)\n   mov %r8,0x30(%rsp)\n   cmp %rdx,%rdi\n-  jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b\n+  jbe L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b\n   mov %rax,0x78(%rsp)\n   mov %rcx,0x88(%rsp)\n   mov %rbx,%rax\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "cpw-hg-control",
+   "kind": "control",
+   "module": "E2e/CpWHead.lean",
+   "theorem": "cpw_head_grow",
+   "range": [
+    131,
+    309
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 3.1,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "cpw-g2-control",
+   "kind": "control",
+   "module": "E2e/CpWGrow.lean",
+   "theorem": "cp_e2e_marshal_grow2_main",
+   "range": [
+    34,
+    104
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 1.3,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "cpw-g2-hi",
+   "kind": "stmt",
+   "module": "E2e/CpWGrow.lean",
+   "theorem": "cp_e2e_marshal_grow2_main",
+   "range": [
+    34,
+    104
+   ],
+   "error_lines": [
+    102
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpw-g2-hi/mut.lean:102:89: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 1.3,
+   "diff": "--- orig\n+++ mut\n@@ -22,7 +22,7 @@\n       \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40)) \u22c6 Eq (root.At p)\n       \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) \u22c6 Heap avail \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 \u2264 s.regs.rsp.toNat)\n-    (hlo : s.regs.rcx.toNat + 8 \u2264 s.regs.rdi.toNat) (hhi : s.regs.rdi.toNat < s.regs.rcx.toNat + 40)\n+    (hlo : s.regs.rcx.toNat + 8 \u2264 s.regs.rdi.toNat) (hhi : s.regs.rdi.toNat < s.regs.rcx.toNat + 41)\n     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 40) s.regs.rdi.toNat + 8192 \u2264 avail) (hmax : avail \u2264 maxAlloc)\n     (hgs : GrowsliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "cpw-ga-control",
+   "kind": "control",
+   "module": "E2e/CpWGrowAny.lean",
+   "theorem": "cp_e2e_marshal_grow_any_main",
+   "range": [
+    37,
+    178
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 97.0,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "cpw-ga-num",
+   "kind": "stmt",
+   "module": "E2e/CpWGrowAny.lean",
+   "theorem": "cp_e2e_marshal_grow_any_main",
+   "range": [
+    37,
+    178
+   ],
+   "error_lines": [
+    171
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpw-ga-num/mut.lean:171:39: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 98.1,
+   "diff": "--- orig\n+++ mut\n@@ -59,7 +59,7 @@\n           \u22c6 Heap av' \u22c6 R) st.data.dmem)\n         \u2228 (st.pc = label \"runtime.growslice\" \u2227 st.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 120 }\n           \u2227 st.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8#64 } \u2227 st.data.regs.r14 = s.regs.r14\n-          \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 \u2227 st.data.regs.rdi.toNat = 32\n+          \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 \u2227 st.data.regs.rdi.toNat = 40\n           \u2227 st.data.regs.rsi.toBitVec = E2e.Data.e2eU8Type_addr\n           \u2227 nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat \u2264 st.data.regs.rcx.toNat\n           \u2227 st.data.regs.rcx.toNat < s.regs.rcx.toNat + 40 \u2227\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "cpw-rg-control",
+   "kind": "control",
+   "module": "E2e/CpWGrowAny.lean",
+   "theorem": "cp_e2e_marshal_reject_grow_main",
+   "range": [
+    182,
+    265
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 102.9,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "cpw-rg-old",
+   "kind": "stmt",
+   "module": "E2e/CpWGrowAny.lean",
+   "theorem": "cp_e2e_marshal_reject_grow_main",
+   "range": [
+    182,
+    265
+   ],
+   "error_lines": [
+    265
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpw-rg-old/mut.lean:265:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 101.4,
+   "diff": "--- orig\n+++ mut\n@@ -51,7 +51,7 @@\n           \u22c6 Eq ((Int.toBytes 8 p.toInt).At (s.regs.rax.toBitVec + 16))\n           \u22c6 Eq ((Int.toBytes 8 rl.toBitVec.toInt).At (s.regs.rax.toBitVec + 24)) \u22c6 Eq (cC.At (s.regs.rax.toBitVec + 32))\n           \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40))\n-          \u22c6 Eq (pre.At s.regs.rbx.toBitVec)\n+          \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n           \u22c6 Eq (pre.At nb) \u22c6 Eq (e8.At (nb + s.regs.rcx.toBitVec)) \u22c6 Eq (mid.At (nb + s.regs.rcx.toBitVec + 8))\n           \u22c6 Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrBytesLength_addr)\n           \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrBytesLength\" + 8).toBitVec)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "cpw-cv-control",
+   "kind": "control",
+   "module": "E2e/CpWCover.lean",
+   "theorem": "cp_e2e_marshal_cover",
+   "range": [
+    49,
+    140
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 2.0,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "cpw-cv-out",
+   "kind": "stmt",
+   "module": "E2e/CpWCover.lean",
+   "theorem": "cp_e2e_marshal_cover",
+   "range": [
+    49,
+    140
+   ],
+   "error_lines": [
+    109,
+    124,
+    138
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpw-cv-out/mut.lean:109:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 1.6,
+   "diff": "--- orig\n+++ mut\n@@ -31,7 +31,7 @@\n       (fun st => (st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40\n           \u2227 s.regs.rcx.toNat + 40 \u2264 st.data.regs.rcx.toNat \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n           \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14\n-          \u2227 (Eq ((pre ++ bs.toList).At st.data.regs.rax.toBitVec) \u22c6 Eq (g.root.toList.At p) \u22c6 R \u22c6 fun _ => True)\n+          \u2227 (Eq ((bs.toList ++ pre).At st.data.regs.rax.toBitVec) \u22c6 Eq (g.root.toList.At p) \u22c6 R \u22c6 fun _ => True)\n             st.data.dmem)\n         \u2228 (st.pc = label \"runtime.growslice\" \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40\n           \u2227 st.data.regs.rdi.toNat = 32))\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "cpw-rc-control",
+   "kind": "control",
+   "module": "E2e/CpWCover.lean",
+   "theorem": "cp_e2e_marshal_reject_cover",
+   "range": [
+    144,
+    208
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 2.1,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "cpw-rc-rax",
+   "kind": "stmt",
+   "module": "E2e/CpWCover.lean",
+   "theorem": "cp_e2e_marshal_reject_cover",
+   "range": [
+    144,
+    208
+   ],
+   "error_lines": [
+    194,
+    206
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpw-rc-rax/mut.lean:194:16: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 2.2,
+   "diff": "--- orig\n+++ mut\n@@ -30,7 +30,7 @@\n     (hbud : 4 * s.regs.rcx.toNat + 8736 \u2264 avail) (hmax : avail \u2264 maxAlloc)\n     (hgs : GrowsliceC Heap E2e.Data.e2eU8Type_addr 1 S) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rcx = 0 \u2227 st.data.regs.rdi = e0 \u2227 st.data.regs.rsi = e1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 blk : BitVec 64, (Eq (pre.At blk) \u22c6 Eq (e8.At (blk + s.regs.rcx.toBitVec))\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "cpw-tr-err1",
+   "kind": "code",
+   "module": "E2e/CpWTail.lean",
+   "theorem": "cpw_tail_rej",
+   "range": [
+    192,
+    277
+   ],
+   "error_lines": [
+    253,
+    277
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpw-tr-err1/mut.lean:253:68: error: ecancel: could not automatically solve goal (Eq",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 3.1,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -71,7 +71,7 @@\n   retq\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108:\n   mov ssz.ErrBytesLength(%rip),%rdi\n-  mov ssz.ErrBytesLength+8(%rip),%rsi\n+  mov ssz.ErrBytesLength(%rip),%rsi\n   xor %eax,%eax\n   xor %ebx,%ebx\n   mov %rbx,%rcx\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "cpw-tc-stmt-num",
+   "kind": "stmt",
+   "module": "E2e/CpWTailG.lean",
+   "theorem": "cpw_tail_grow_call",
+   "range": [
+    272,
+    366
+   ],
+   "error_lines": [
+    366
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpw-tc-stmt-num/mut.lean:366:16: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 4.4,
+   "diff": "--- orig\n+++ mut\n@@ -21,7 +21,7 @@\n       (fun st => st.pc = label \"runtime.growslice\" \u2227 st.data.regs.rsp = { toBitVec := rsp0.toBitVec - 120 }\n         \u2227 st.data.regs.rbp = { toBitVec := rsp0.toBitVec - 8#64 } \u2227 st.data.regs.r14 = r140\n         \u2227 st.data.regs.rax.toBitVec = b \u2227 st.data.regs.rbx.toNat = L.toNat + 40 \u2227 st.data.regs.rcx = C\n-        \u2227 st.data.regs.rdi.toNat = 32 \u2227 st.data.regs.rsi.toBitVec = E2e.Data.e2eU8Type_addr \u2227\n+        \u2227 st.data.regs.rdi.toNat = 8 \u2227 st.data.regs.rsi.toBitVec = E2e.Data.e2eU8Type_addr \u2227\n         (Eq ((Int.toBytes 8 (Host.addrOf (k + 50)).toBitVec.toInt).At (rsp0.toBitVec - 120))\n           \u22c6 Eq ((Int.toBytes 8 ra.toBitVec.toInt).At rsp0.toBitVec)\n           \u22c6 Eq ((Int.toBytes 8 rbp0.toBitVec.toInt).At (rsp0.toBitVec - 8))\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "cpw-hg-spill",
+   "kind": "code",
+   "module": "E2e/CpWHead.lean",
+   "theorem": "cpw_head_grow",
+   "range": [
+    131,
+    309
+   ],
+   "error_lines": [
+    247
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpw-hg-spill/mut.lean:247:62: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 3.0,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -17,7 +17,7 @@\n   mov %r8,0x30(%rsp)\n   cmp %rdx,%rdi\n   jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b\n-  mov %rax,0x78(%rsp)\n+  mov %rax,0x70(%rsp)\n   mov %rcx,0x88(%rsp)\n   mov %rbx,%rax\n   mov %rdx,%rbx\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
   }
  ],
- "pass": 116,
- "total": 116,
+ "pass": 139,
+ "total": 139,
  "classes": {
-  "control_pass": 34,
-  "inside": 82
+  "control_pass": 45,
+  "inside": 94
  },
  "case_timeout_s": 300
 }

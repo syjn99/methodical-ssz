@@ -211,6 +211,108 @@
    "neg_ids": [
     "spe-"
    ]
+  },
+  {
+   "name": "E2e.cpw_head_fit / cpw_head_grow (prefixes to L_7b)",
+   "kind": "segment lemmas (first capacity test; first growslice, GrowsliceC esz 1)",
+   "function": "marshal",
+   "statement": "done",
+   "witness": "via WitCpW / WitCpWR (cover instances)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "n/a (segment)",
+   "neg_ids": [
+    "cpw-hf-",
+    "cpw-hg-"
+   ]
+  },
+  {
+   "name": "E2e.cpw_tail_fit / cpw_tail_rej / cpw_tail_grow / cpw_tail_grow_call (tails from L_7b)",
+   "kind": "segment lemmas (second capacity test; second growslice; ErrBytesLength)",
+   "function": "marshal",
+   "statement": "done",
+   "witness": "via WitCpW / WitCpWR; cpw_tail_grow via cp_e2e_marshal_grow2_main",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "n/a (segment)",
+   "neg_ids": [
+    "cpw-tf-",
+    "cpw-tr-",
+    "cpw-tg-",
+    "cpw-tc-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_grow2_main",
+   "kind": "marshal: first append fits, second grows (len + 8 ≤ cap < len + 40; GrowsliceC esz 1)",
+   "function": "marshal",
+   "statement": "done",
+   "witness": "done (WitCpW.cov_runs n = 8, 39 through the cover)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "differential (enc-w-len30-spare8/20/39)",
+   "neg_ids": [
+    "cpw-g2-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_grow_any_main",
+   "kind": "marshal: first append grows, every cap < len + 8 (no nextSliceCap premise); left: returns; right: reaches the 2nd growslice call — the run after it is NOT proved (GrowsliceC does not chain, T-7)",
+   "function": "marshal",
+   "statement": "done",
+   "witness": "done (WitCpW.cov_runs n = 0, 3 and cov_runs_nil: left disjunct; right disjunct not exercised by the model)",
+   "theorem": "done (partial: right disjunct ends at the call)",
+   "link": "done",
+   "negative": "done",
+   "go_value": "differential (enc-w-len30-spare0/3, enc-w-len10-spare0, enc-grow-cap0)",
+   "neg_ids": [
+    "cpw-ga-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_reject_grow_main",
+   "kind": "marshal_reject after the first growslice (cap < len + 8, len(Root) ≠ 32; C-1 form on the new block)",
+   "function": "marshal",
+   "statement": "done",
+   "witness": "done (WitCpWR.rej_runs n = 0, 3; rej_runs_nil)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "differential (enc-w-rej-len30-spare0/3: caller array unchanged)",
+   "neg_ids": [
+    "cpw-rg-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_cover",
+   "kind": "case cover len(Root) = 32 × every len ≤ cap, against EthLib (dst ++ serialize; ⋆ True remainder) or at the 2nd growslice call",
+   "function": "marshal",
+   "statement": "done",
+   "witness": "done (WitCpW: cap = len, len+3, len+8, len+39, len+40, nil dst)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "differential",
+   "neg_ids": [
+    "cpw-cv-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_reject_cover",
+   "kind": "case cover len(Root) ≠ 32 × every len ≤ cap (ErrBytesLength words; some block holds pre ++ epoch)",
+   "function": "marshal",
+   "statement": "done",
+   "witness": "done (WitCpWR: cap = len, len+3, len+8, len+40, nil dst; rl 31/0/33)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "differential",
+   "neg_ids": [
+    "cpw-rc-"
+   ]
   }
  ],
  "unreachable_mc": [

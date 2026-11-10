@@ -53,6 +53,16 @@ THM = {
     "E2eAd.BumpNew72": ["bump_newobject72 (witness runtime model)"],
     "E2eAd.WitAdA": ["ad_accept_runs (witness)"],
     "E2eAd.WitAdR": ["ad_reject_runs (witness)"],
+    "E2e.CpWTail": ["cpw_tail_fit", "cpw_tail_rej"],
+    "E2e.CpWTailG": ["cpw_tail_grow", "cpw_tail_grow_call"],
+    "E2e.CpWHead": ["cpw_head_fit", "cpw_head_grow"],
+    "E2e.CpWGrow": ["cp_e2e_marshal_grow2_main"],
+    "E2e.CpWGrowAny": ["cp_e2e_marshal_grow_any_main", "cp_e2e_marshal_reject_grow_main"],
+    "E2e.CpWCover": ["cp_e2e_marshal_cover", "cp_e2e_marshal_reject_cover"],
+    "E2e.ProbeW": ["(probe, scratch module, deleted)"],
+    "E2e.ProbeWW": ["(probe, scratch module, deleted)"],
+    "E2e.WitCpW": ["cov_runs, cov_runs_nil (witness)"],
+    "E2e.WitCpWR": ["rej_runs, rej_runs_nil (witness)"],
 }
 NAME = re.compile(r"^(\d+)-([A-Za-z0-9]+)(?:-(.*))?$")
 MEM = re.compile(r"peak_process_rss=(\d+)")

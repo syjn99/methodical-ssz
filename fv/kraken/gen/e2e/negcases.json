@@ -1074,5 +1074,203 @@
   "old": "(hlen : s.regs.rcx.toNat = bsA.size)",
   "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)",
   "why": "rcx must be the input length 128"
+ },
+ {
+  "id": "cpw-tf-control",
+  "kind": "control",
+  "module": "E2e/CpWTail.lean",
+  "theorem": "cpw_tail_fit",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "cpw-tf-jae",
+  "kind": "code",
+  "module": "E2e/CpWTail.lean",
+  "theorem": "cpw_tail_fit",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf",
+  "new": "  jbe L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf",
+  "why": "second capacity test inverted"
+ },
+ {
+  "id": "cpw-tr-control",
+  "kind": "control",
+  "module": "E2e/CpWTail.lean",
+  "theorem": "cpw_tail_rej",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "cpw-tr-err1",
+  "kind": "code",
+  "module": "E2e/CpWTail.lean",
+  "theorem": "cpw_tail_rej",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov ssz.ErrBytesLength+8(%rip),%rsi",
+  "new": "  mov ssz.ErrBytesLength(%rip),%rsi",
+  "why": "second error word read from the first (reject path only)"
+ },
+ {
+  "id": "cpw-tg-control",
+  "kind": "control",
+  "module": "E2e/CpWTailG.lean",
+  "theorem": "cpw_tail_grow",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "cpw-tg-num",
+  "kind": "code",
+  "module": "E2e/CpWTailG.lean",
+  "theorem": "cpw_tail_grow",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov $0x20,%edi",
+  "new": "  mov $0x28,%edi",
+  "why": "growslice num 40: old = len bytes, not len + 8"
+ },
+ {
+  "id": "cpw-tg-rdx",
+  "kind": "code",
+  "module": "E2e/CpWTailG.lean",
+  "theorem": "cpw_tail_grow",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov 0x28(%rsp),%rdx",
+  "new": "  mov 0x30(%rsp),%rdx",
+  "why": "restored len + 8 read from the wrong slot"
+ },
+ {
+  "id": "cpw-tc-control",
+  "kind": "control",
+  "module": "E2e/CpWTailG.lean",
+  "theorem": "cpw_tail_grow_call",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "cpw-tc-stmt-num",
+  "kind": "stmt",
+  "module": "E2e/CpWTailG.lean",
+  "theorem": "cpw_tail_grow_call",
+  "why": "the second growslice is called with num = 32",
+  "old": "∧ st.data.regs.rdi.toNat = 32 ∧",
+  "new": "∧ st.data.regs.rdi.toNat = 8 ∧"
+ },
+ {
+  "id": "cpw-hf-control",
+  "kind": "control",
+  "module": "E2e/CpWHead.lean",
+  "theorem": "cpw_head_fit",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "cpw-hf-jae",
+  "kind": "code",
+  "module": "E2e/CpWHead.lean",
+  "theorem": "cpw_head_fit",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b",
+  "new": "  jbe L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b",
+  "why": "first capacity test inverted"
+ },
+ {
+  "id": "cpw-hg-control",
+  "kind": "control",
+  "module": "E2e/CpWHead.lean",
+  "theorem": "cpw_head_grow",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "cpw-hg-spill",
+  "kind": "code",
+  "module": "E2e/CpWHead.lean",
+  "theorem": "cpw_head_grow",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov %rax,0x78(%rsp)",
+  "new": "  mov %rax,0x70(%rsp)",
+  "why": "receiver spilled to the wrong slot on the growslice path (later reload reads rsp + 8)"
+ },
+ {
+  "id": "cpw-g2-control",
+  "kind": "control",
+  "module": "E2e/CpWGrow.lean",
+  "theorem": "cp_e2e_marshal_grow2_main"
+ },
+ {
+  "id": "cpw-g2-hi",
+  "kind": "stmt",
+  "module": "E2e/CpWGrow.lean",
+  "theorem": "cp_e2e_marshal_grow2_main",
+  "old": "(hhi : s.regs.rdi.toNat < s.regs.rcx.toNat + 40)",
+  "new": "(hhi : s.regs.rdi.toNat < s.regs.rcx.toNat + 41)",
+  "why": "cap = len + 40 takes the fast path, not the growslice"
+ },
+ {
+  "id": "cpw-ga-control",
+  "kind": "control",
+  "module": "E2e/CpWGrowAny.lean",
+  "theorem": "cp_e2e_marshal_grow_any_main"
+ },
+ {
+  "id": "cpw-ga-num",
+  "kind": "stmt",
+  "module": "E2e/CpWGrowAny.lean",
+  "theorem": "cp_e2e_marshal_grow_any_main",
+  "old": "st.data.regs.rdi.toNat = 32",
+  "new": "st.data.regs.rdi.toNat = 40",
+  "why": "the second growslice is called with num = 32 (the root length)"
+ },
+ {
+  "id": "cpw-rg-control",
+  "kind": "control",
+  "module": "E2e/CpWGrowAny.lean",
+  "theorem": "cp_e2e_marshal_reject_grow_main"
+ },
+ {
+  "id": "cpw-rg-old",
+  "kind": "stmt",
+  "module": "E2e/CpWGrowAny.lean",
+  "theorem": "cp_e2e_marshal_reject_grow_main",
+  "old": "          ⋆ Eq (pre.At s.regs.rbx.toBitVec)\n          ⋆ Eq (pre.At nb)",
+  "new": "          ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n          ⋆ Eq (pre.At nb)",
+  "why": "C-1 after growth: the epoch bytes are in the new block, not in the caller's spare capacity"
+ },
+ {
+  "id": "cpw-cv-control",
+  "kind": "control",
+  "module": "E2e/CpWCover.lean",
+  "theorem": "cp_e2e_marshal_cover"
+ },
+ {
+  "id": "cpw-cv-out",
+  "kind": "stmt",
+  "module": "E2e/CpWCover.lean",
+  "theorem": "cp_e2e_marshal_cover",
+  "old": "(Eq ((pre ++ bs.toList).At st.data.regs.rax.toBitVec)",
+  "new": "(Eq ((bs.toList ++ pre).At st.data.regs.rax.toBitVec)",
+  "why": "output is dst ++ serialize, not serialize ++ dst"
+ },
+ {
+  "id": "cpw-rc-control",
+  "kind": "control",
+  "module": "E2e/CpWCover.lean",
+  "theorem": "cp_e2e_marshal_reject_cover"
+ },
+ {
+  "id": "cpw-rc-rax",
+  "kind": "stmt",
+  "module": "E2e/CpWCover.lean",
+  "theorem": "cp_e2e_marshal_reject_cover",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0\n        ∧ st.data.regs.rcx = 0",
+  "new": "st.data.regs.rax = s.regs.rbx ∧ st.data.regs.rbx = 0\n        ∧ st.data.regs.rcx = 0",
+  "why": "the reject returns a nil slice"
  }
 ]

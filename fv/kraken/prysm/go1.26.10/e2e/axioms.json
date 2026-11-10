@@ -235,6 +235,81 @@
    "Classical.choice",
    "Quot.sound"
   ],
+  "E2e.cpw_tail_fit": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.cpw_tail_rej": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.cpw_tail_grow": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.cpw_tail_grow_call": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.cpw_head_fit": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.cpw_head_grow": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.cp_e2e_marshal_grow2_main": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.cp_e2e_marshal_grow_any_main": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.cp_e2e_marshal_reject_grow_main": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.cp_e2e_marshal_cover": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.cp_e2e_marshal_reject_cover": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.WitCpW.cov_runs": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.WitCpW.cov_runs_nil": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.WitCpWR.rej_runs": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.WitCpWR.rej_runs_nil": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
   "E2e.prysmCpDesc_checker": [],
   "E2e.cp_layout": [],
   "E2e.witCpA_recv_pre": [],
@@ -245,6 +320,6 @@
  },
  "missing": [],
  "nonstandard": {},
- "count": 54,
+ "count": 69,
  "verdict": "PASS"
 }

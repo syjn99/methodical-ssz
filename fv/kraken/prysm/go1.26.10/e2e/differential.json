@@ -1,6 +1,6 @@
 {
  "go": "go1.26.10 linux/arm64 (native)",
- "cases": 48,
+ "cases": 59,
  "mismatches": 0,
  "rows": [
   {
@@ -1081,6 +1081,278 @@
     "out_nil": false,
     "recv_unchanged": false,
     "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d000000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-len30-spare0",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "path": "cap = len: growslice, then (real Go: 64 < 70) a second growslice"
+   },
+   "observed": {
+    "id": "enc-w-len30-spare0",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-len30-spare3",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "path": "cap < len + 8: growslice, then a second growslice"
+   },
+   "observed": {
+    "id": "enc-w-len30-spare3",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d000000"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-len30-spare8",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "path": "cap = len + 8: first fits, second grows"
+   },
+   "observed": {
+    "id": "enc-w-len30-spare8",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-len30-spare20",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "path": "first fits, second grows"
+   },
+   "observed": {
+    "id": "enc-w-len30-spare20",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000000000000000000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-len30-spare39",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "path": "cap = len + 39: first fits, second grows"
+   },
+   "observed": {
+    "id": "enc-w-len30-spare39",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d090000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-len30-spare40",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "path": "fast (cap = len + 40)"
+   },
+   "observed": {
+    "id": "enc-w-len30-spare40",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-len10-spare0",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "606162636465666768690900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "path": "cap = len: growslice x2"
+   },
+   "observed": {
+    "id": "enc-w-len10-spare0",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "606162636465666768690900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "60616263646566676869"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-rej-len30-spare0-rootlen31",
+   "op": "marshal",
+   "expected": {
+    "ok": false,
+    "ErrBytesLength": true,
+    "not_ErrSize": true,
+    "out_nil": true,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d"
+   },
+   "observed": {
+    "id": "enc-w-rej-len30-spare0-rootlen31",
+    "err": "bytes array does not have the correct length",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": true,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "",
+    "out_nil": true,
+    "recv_unchanged": false,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-rej-len30-spare3-rootlen33",
+   "op": "marshal",
+   "expected": {
+    "ok": false,
+    "ErrBytesLength": true,
+    "not_ErrSize": true,
+    "out_nil": true,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d000000"
+   },
+   "observed": {
+    "id": "enc-w-rej-len30-spare3-rootlen33",
+    "err": "bytes array does not have the correct length",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": true,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "",
+    "out_nil": true,
+    "recv_unchanged": false,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d000000"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-rej-len30-spare0-rootlen0",
+   "op": "marshal",
+   "expected": {
+    "ok": false,
+    "ErrBytesLength": true,
+    "not_ErrSize": true,
+    "out_nil": true,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d"
+   },
+   "observed": {
+    "id": "enc-w-rej-len30-spare0-rootlen0",
+    "err": "bytes array does not have the correct length",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": true,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "",
+    "out_nil": true,
+    "recv_unchanged": false,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-rej-len30-spare8-rootlen33",
+   "op": "marshal",
+   "expected": {
+    "ok": false,
+    "ErrBytesLength": true,
+    "not_ErrSize": true,
+    "out_nil": true,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0700000000000000"
+   },
+   "observed": {
+    "id": "enc-w-rej-len30-spare8-rootlen33",
+    "err": "bytes array does not have the correct length",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": true,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "",
+    "out_nil": true,
+    "recv_unchanged": false,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0700000000000000"
    },
    "match": true
   },

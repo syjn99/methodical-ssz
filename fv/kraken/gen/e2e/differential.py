@@ -47,6 +47,27 @@ def cases():
     cs.append({"id": "enc-grow-len30-cap36", "op": "marshal", "epoch": 0x0123456789ABCDEF, "root": (b"\xff" * 32).hex(),
                "prefix": pre30.hex(), "spare": 6,
                "exp": {"ok": True, "out": (pre30 + enc(0x0123456789ABCDEF, b"\xff" * 32)).hex(), "path": "growslice"}})
+    # INBOX 009: every capacity range of the encoder (prefix 30 bytes, cap = 30 + spare) and the reject after growth
+    rp = bytes(range(32))
+    for sp, path in ((0, "cap = len: growslice, then (real Go: 64 < 70) a second growslice"),
+                     (3, "cap < len + 8: growslice, then a second growslice"),
+                     (8, "cap = len + 8: first fits, second grows"), (20, "first fits, second grows"),
+                     (39, "cap = len + 39: first fits, second grows"), (40, "fast (cap = len + 40)")):
+        cs.append({"id": f"enc-w-len30-spare{sp}", "op": "marshal", "epoch": 9, "root": rp.hex(), "prefix": pre30.hex(),
+                   "spare": sp, "exp": {"ok": True, "out": (pre30 + enc(9, rp)).hex(), "path": path}})
+    pre10 = bytes(range(0x60, 0x60 + 10))
+    cs.append({"id": "enc-w-len10-spare0", "op": "marshal", "epoch": 9, "root": rp.hex(), "prefix": pre10.hex(), "spare": 0,
+               "exp": {"ok": True, "out": (pre10 + enc(9, rp)).hex(), "path": "cap = len: growslice x2"}})
+    for sp, rl in ((0, 31), (3, 33), (0, 0)):
+        cs.append({"id": f"enc-w-rej-len30-spare{sp}-rootlen{rl}", "op": "marshal", "epoch": 7, "root": (b"\x22" * rl).hex(),
+                   "prefix": pre30.hex(), "spare": sp,
+                   "exp": {"ok": False, "ErrBytesLength": True, "not_ErrSize": True, "out_nil": True,
+                           # cap < len + 8: the epoch bytes go to the growslice block; the caller's array is unchanged
+                           "backing": (pre30 + bytes(sp)).hex()}})
+    cs.append({"id": "enc-w-rej-len30-spare8-rootlen33", "op": "marshal", "epoch": 7, "root": (b"\x22" * 33).hex(),
+               "prefix": pre30.hex(), "spare": 8,
+               "exp": {"ok": False, "ErrBytesLength": True, "not_ErrSize": True, "out_nil": True,
+                       "backing": (pre30 + struct.pack("<Q", 7)).hex()}})
     for n in (7, 9):
         cs.append({"id": f"epoch-len{n}", "op": "epoch_unmarshal", "in": (b"\x01" * n).hex(),
                    "exp": {"ok": False, "err_text": f"expected buffer of length 8 received {n}", "epoch": 0x77}})

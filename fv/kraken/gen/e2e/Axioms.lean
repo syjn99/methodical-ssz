@@ -24,6 +24,9 @@ import E2e.WitCpG
 import E2e.SpecEq
 import E2e.WitCpAS
 import E2e.WitCpRS
+import E2e.CpWCover
+import E2e.WitCpW
+import E2e.WitCpWR
 #print axioms E2e.ep_unmarshal_accept_main
 #print axioms E2e.ep_uacc_holds
 #print axioms E2e.WitEp.ep_accept_runs
@@ -78,3 +81,18 @@ import E2e.WitCpRS
 #print axioms E2e.WitCpA.pcp_toValue_inj
 #print axioms E2e.WitCpA.cp_accept_spec_runs
 #print axioms E2e.WitCpR.cp_reject_spec_runs
+#print axioms E2e.cpw_tail_fit
+#print axioms E2e.cpw_tail_rej
+#print axioms E2e.cpw_tail_grow
+#print axioms E2e.cpw_tail_grow_call
+#print axioms E2e.cpw_head_fit
+#print axioms E2e.cpw_head_grow
+#print axioms E2e.cp_e2e_marshal_grow2_main
+#print axioms E2e.cp_e2e_marshal_grow_any_main
+#print axioms E2e.cp_e2e_marshal_reject_grow_main
+#print axioms E2e.cp_e2e_marshal_cover
+#print axioms E2e.cp_e2e_marshal_reject_cover
+#print axioms E2e.WitCpW.cov_runs
+#print axioms E2e.WitCpW.cov_runs_nil
+#print axioms E2e.WitCpWR.rej_runs
+#print axioms E2e.WitCpWR.rej_runs_nil

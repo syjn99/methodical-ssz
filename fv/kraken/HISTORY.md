@@ -167,3 +167,5 @@ Epoch 디코더 수용을 함수 명세로 증명하고 Checkpoint 디코더 수
 부정 시험 30/30, 공리 23개 표준, Go 차분 47건 일치. 인코더 거부, growslice 경로, Epoch 거부는 하지 않았다.
 리뷰 e2e-r1(9bad532)은 합성 정리가 디코더를 실행하지 않음을 찾았다(M1, FINDINGS R-1). 이름을 `cp_e2e_marshal_decoded_receiver`로 바꾸고 E5를 미완료로 고쳤다. INBOX 004에서 인코더 거부, 인코더 명세 정렬, 증인 있는 size, Epoch 거부, Go 값 술어를 증명했다.
 세션 2에서 M1의 진짜 합성 `cp_e2e_unmarshal_then_marshal`(디코더 진입 → 인코더 반환, 출력 = dst ++ 입력 40바이트)과 한 Host 증인 `WitCpC`를 증명했다(첫 시도, 증인은 구문 수정 1회). 부정 시험 11/11. 이어서 인코더 growslice 경로 `cp_e2e_marshal_grow_main`(첫 지점, `GrowsliceC` esz 1)과 증인 `WitCpG`(len 30, cap 36)를 증명했다(정리 4회 실행: 길이 부등식의 UInt64/BitVec 형태, 탐침 1회; 증인 첫 시도). 부정 시험 9/9. 리뷰 S1–S9를 처리했다(S2는 문구 유지). 전체 부정 시험 73/73(사례별 900초 제한), 공리 49개 표준, Go 차분 48건 불일치 0.
+
+2026-11-10 prysm-e2e 세션 4: A3(실제 AttestationData 디코더 수용, 크기 거부, 도달 불가 래핑 4개, 명세 정렬, 증인)을 `8cba8b4`로 증명했다. 그 뒤 INBOX 009에 따라 A4를 멈추고 Checkpoint 인코더의 남은 용량 경우를 증명했다: 첫 지점이 맞고 둘째가 자라는 경우, 첫 지점이 자라는 모든 경우(둘째 growslice 호출 진입까지), growslice 뒤 거부, 경우 덮기 두 개. 첫 성장 뒤 둘째 성장의 나머지 실행은 `GrowsliceC` 형식이 두 호출을 잇지 못해서 막혔다(T-7, OUTBOX 007). 기존 정리 문장은 바꾸지 않았다.

@@ -6,18 +6,18 @@
  },
  "note": "gate wall-clock only (excludes the agent's thinking/editing time); module cost is shared by the theorems of that module, not divided; witnesses are their own modules (WitCp*, WitEp*)",
  "totals": {
-  "jobs": 177,
-  "gate_s": 9245.5,
+  "jobs": 202,
+  "gate_s": 13063.3,
   "peak_rss_gib": 6.01,
   "memcap_kills": 4,
   "by_class": {
    "other": {
-    "jobs": 28,
-    "gate_s": 927.5
+    "jobs": 31,
+    "gate_s": 1397.0
    },
    "build": {
-    "jobs": 122,
-    "gate_s": 3283.1
+    "jobs": 144,
+    "gate_s": 6631.4
    },
    "negative": {
     "jobs": 18,
@@ -170,6 +170,88 @@
    ],
    "peak_rss_gib": 1.52
   },
+  "E2e.CpWCover": {
+   "runs": 5,
+   "failed_runs": 2,
+   "probes": 0,
+   "gate_s": 416.2,
+   "peak_rss_bytes": 1874030592,
+   "memcap_kills": 0,
+   "jobs": [
+    "189-lake-E2e.CpWCover",
+    "190-lake-E2e.CpWCover",
+    "191-lake-E2e.CpWCover"
+   ],
+   "in_multi_jobs": [
+    "202-w9-neg",
+    "203-w9-neg"
+   ],
+   "peak_rss_gib": 1.75
+  },
+  "E2e.CpWGrow": {
+   "runs": 1,
+   "failed_runs": 1,
+   "probes": 0,
+   "gate_s": 1.2,
+   "peak_rss_bytes": 1661788160,
+   "memcap_kills": 0,
+   "jobs": [
+    "183-lake-E2e.CpWGrow"
+   ],
+   "peak_rss_gib": 1.55
+  },
+  "E2e.CpWGrowAny": {
+   "runs": 4,
+   "failed_runs": 3,
+   "probes": 0,
+   "gate_s": 715.5,
+   "peak_rss_bytes": 1919217664,
+   "memcap_kills": 0,
+   "jobs": [
+    "184-lake-E2e.CpWGrowAny",
+    "186-lake-E2e.CpWGrowAny",
+    "187-lake-E2e.CpWGrowAny",
+    "188-lake-E2e.CpWGrowAny"
+   ],
+   "peak_rss_gib": 1.79
+  },
+  "E2e.CpWHead": {
+   "runs": 1,
+   "failed_runs": 0,
+   "probes": 0,
+   "gate_s": 3.5,
+   "peak_rss_bytes": 1826476032,
+   "memcap_kills": 0,
+   "jobs": [
+    "182-lake-E2e.CpWHead"
+   ],
+   "peak_rss_gib": 1.7
+  },
+  "E2e.CpWTail": {
+   "runs": 1,
+   "failed_runs": 1,
+   "probes": 0,
+   "gate_s": 3.2,
+   "peak_rss_bytes": 1828134912,
+   "memcap_kills": 0,
+   "jobs": [
+    "179-lake-E2e.CpWTail"
+   ],
+   "peak_rss_gib": 1.7
+  },
+  "E2e.CpWTailG": {
+   "runs": 2,
+   "failed_runs": 1,
+   "probes": 0,
+   "gate_s": 9.6,
+   "peak_rss_bytes": 1894375424,
+   "memcap_kills": 0,
+   "jobs": [
+    "180-lake-E2e.CpWTailG",
+    "181-lake-E2e.CpWTailG"
+   ],
+   "peak_rss_gib": 1.76
+  },
   "E2e.Data": {
    "runs": 1,
    "failed_runs": 0,
@@ -228,6 +310,30 @@
     "132-probe-n4"
    ],
    "peak_rss_gib": 1.57
+  },
+  "E2e.ProbeW": {
+   "runs": 1,
+   "failed_runs": 1,
+   "probes": 0,
+   "gate_s": 2.5,
+   "peak_rss_bytes": 1786654720,
+   "memcap_kills": 0,
+   "jobs": [
+    "185-lake-E2e.ProbeW"
+   ],
+   "peak_rss_gib": 1.66
+  },
+  "E2e.ProbeWW": {
+   "runs": 1,
+   "failed_runs": 0,
+   "probes": 0,
+   "gate_s": 2.5,
+   "peak_rss_bytes": 1735933952,
+   "memcap_kills": 0,
+   "jobs": [
+    "196-lake-E2e.ProbeWW"
+   ],
+   "peak_rss_gib": 1.62
   },
   "E2e.Spec": {
    "runs": 1,
@@ -372,6 +478,44 @@
     "86-lake-E2e.WitCpS"
    ],
    "peak_rss_gib": 1.56
+  },
+  "E2e.WitCpW": {
+   "runs": 7,
+   "failed_runs": 4,
+   "probes": 0,
+   "gate_s": 1127.6,
+   "peak_rss_bytes": 1735249920,
+   "memcap_kills": 0,
+   "jobs": [
+    "192-lake-E2e.WitCpW",
+    "193-lake-E2e.WitCpW",
+    "194-lake-E2e.WitCpW",
+    "195-lake-E2e.WitCpW",
+    "197-lake-E2e.WitCpW"
+   ],
+   "in_multi_jobs": [
+    "202-w9-neg",
+    "203-w9-neg"
+   ],
+   "peak_rss_gib": 1.62
+  },
+  "E2e.WitCpWR": {
+   "runs": 5,
+   "failed_runs": 2,
+   "probes": 0,
+   "gate_s": 1066.5,
+   "peak_rss_bytes": 1739005952,
+   "memcap_kills": 0,
+   "jobs": [
+    "198-lake-E2e.WitCpWR",
+    "199-lake-E2e.WitCpWR",
+    "200-lake-E2e.WitCpWR"
+   ],
+   "in_multi_jobs": [
+    "202-w9-neg",
+    "203-w9-neg"
+   ],
+   "peak_rss_gib": 1.62
   },
   "E2e.WitEp": {
    "runs": 6,
@@ -1053,6 +1197,104 @@
    "runs_module": 3,
    "failed_runs_module": 0,
    "peak_rss_gib": 1.7
+  },
+  "cpw_tail_fit": {
+   "module": "E2e.CpWTail",
+   "gate_s_module": 3.2,
+   "runs_module": 1,
+   "failed_runs_module": 1,
+   "peak_rss_gib": 1.7
+  },
+  "cpw_tail_rej": {
+   "module": "E2e.CpWTail",
+   "gate_s_module": 3.2,
+   "runs_module": 1,
+   "failed_runs_module": 1,
+   "peak_rss_gib": 1.7
+  },
+  "cpw_tail_grow": {
+   "module": "E2e.CpWTailG",
+   "gate_s_module": 9.6,
+   "runs_module": 2,
+   "failed_runs_module": 1,
+   "peak_rss_gib": 1.76
+  },
+  "cpw_tail_grow_call": {
+   "module": "E2e.CpWTailG",
+   "gate_s_module": 9.6,
+   "runs_module": 2,
+   "failed_runs_module": 1,
+   "peak_rss_gib": 1.76
+  },
+  "cpw_head_fit": {
+   "module": "E2e.CpWHead",
+   "gate_s_module": 3.5,
+   "runs_module": 1,
+   "failed_runs_module": 0,
+   "peak_rss_gib": 1.7
+  },
+  "cpw_head_grow": {
+   "module": "E2e.CpWHead",
+   "gate_s_module": 3.5,
+   "runs_module": 1,
+   "failed_runs_module": 0,
+   "peak_rss_gib": 1.7
+  },
+  "cp_e2e_marshal_grow2_main": {
+   "module": "E2e.CpWGrow",
+   "gate_s_module": 1.2,
+   "runs_module": 1,
+   "failed_runs_module": 1,
+   "peak_rss_gib": 1.55
+  },
+  "cp_e2e_marshal_grow_any_main": {
+   "module": "E2e.CpWGrowAny",
+   "gate_s_module": 715.5,
+   "runs_module": 4,
+   "failed_runs_module": 3,
+   "peak_rss_gib": 1.79
+  },
+  "cp_e2e_marshal_reject_grow_main": {
+   "module": "E2e.CpWGrowAny",
+   "gate_s_module": 715.5,
+   "runs_module": 4,
+   "failed_runs_module": 3,
+   "peak_rss_gib": 1.79
+  },
+  "cp_e2e_marshal_cover": {
+   "module": "E2e.CpWCover",
+   "gate_s_module": 416.2,
+   "runs_module": 5,
+   "failed_runs_module": 2,
+   "peak_rss_gib": 1.75
+  },
+  "cp_e2e_marshal_reject_cover": {
+   "module": "E2e.CpWCover",
+   "gate_s_module": 416.2,
+   "runs_module": 5,
+   "failed_runs_module": 2,
+   "peak_rss_gib": 1.75
+  },
+  "(probe, scratch module, deleted)": {
+   "module": "E2e.ProbeWW",
+   "gate_s_module": 2.5,
+   "runs_module": 1,
+   "failed_runs_module": 0,
+   "peak_rss_gib": 1.62
+  },
+  "cov_runs, cov_runs_nil (witness)": {
+   "module": "E2e.WitCpW",
+   "gate_s_module": 1127.6,
+   "runs_module": 7,
+   "failed_runs_module": 4,
+   "peak_rss_gib": 1.62
+  },
+  "rej_runs, rej_runs_nil (witness)": {
+   "module": "E2e.WitCpWR",
+   "gate_s_module": 1066.5,
+   "runs_module": 5,
+   "failed_runs_module": 2,
+   "peak_rss_gib": 1.62
   }
  },
  "jobs": [
@@ -3178,6 +3420,306 @@
    "gate_s": 42.0,
    "start_utc": "2026-11-10T08:03:20.089Z",
    "peak_rss": 1648549888,
+   "memcap_kill": false
+  },
+  {
+   "job": "179-lake-E2e.CpWTail",
+   "n": 179,
+   "class": "build",
+   "module": "E2e.CpWTail",
+   "label": "INBOX 009: lake build E2e.CpWTail (tails fit/rej from L_7b, attempt 1)",
+   "exit": 1,
+   "gate_s": 3.2,
+   "start_utc": "2026-11-10T08:18:37.708Z",
+   "peak_rss": 1828134912,
+   "memcap_kill": false
+  },
+  {
+   "job": "180-lake-E2e.CpWTailG",
+   "n": 180,
+   "class": "build",
+   "module": "E2e.CpWTailG",
+   "label": "INBOX 009: lake build E2e.CpWTailG (tails fit/rej + second growslice tail; attempt 2 of CpWTail, 1 of CpWTailG)",
+   "exit": 1,
+   "gate_s": 4.9,
+   "start_utc": "2026-11-10T08:20:12.236Z",
+   "peak_rss": 1838309376,
+   "memcap_kill": false
+  },
+  {
+   "job": "181-lake-E2e.CpWTailG",
+   "n": 181,
+   "class": "build",
+   "module": "E2e.CpWTailG",
+   "label": "INBOX 009: lake build E2e.CpWTailG (attempt 2: join lemma by toNat, nextSliceCap_ge, join in the premise)",
+   "exit": 0,
+   "gate_s": 4.7,
+   "start_utc": "2026-11-10T08:23:04.325Z",
+   "peak_rss": 1894375424,
+   "memcap_kill": false
+  },
+  {
+   "job": "182-lake-E2e.CpWHead",
+   "n": 182,
+   "class": "build",
+   "module": "E2e.CpWHead",
+   "label": "INBOX 009: lake build E2e.CpWHead (prefixes fit/grow to L_7b, attempt 1)",
+   "exit": 0,
+   "gate_s": 3.5,
+   "start_utc": "2026-11-10T08:26:09.139Z",
+   "peak_rss": 1826476032,
+   "memcap_kill": false
+  },
+  {
+   "job": "183-lake-E2e.CpWGrow",
+   "n": 183,
+   "class": "build",
+   "module": "E2e.CpWGrow",
+   "label": "INBOX 009: lake build E2e.CpWGrow (grow2 composition, attempt 1)",
+   "exit": 1,
+   "gate_s": 1.2,
+   "start_utc": "2026-11-10T08:29:30.567Z",
+   "peak_rss": 1661788160,
+   "memcap_kill": false
+  },
+  {
+   "job": "184-lake-E2e.CpWGrowAny",
+   "n": 184,
+   "class": "build",
+   "module": "E2e.CpWGrowAny",
+   "label": "INBOX 009: lake build E2e.CpWGrowAny (grow2 attempt 2: import; grow_any + reject_grow attempt 1)",
+   "exit": 1,
+   "gate_s": 24.7,
+   "start_utc": "2026-11-10T08:31:18.141Z",
+   "peak_rss": 1770414080,
+   "memcap_kill": false
+  },
+  {
+   "job": "185-lake-E2e.ProbeW",
+   "n": 185,
+   "class": "build",
+   "module": "E2e.ProbeW",
+   "label": "INBOX 009: probe (scratch, sorry, deleted after) final ecancel goals of grow_any case A and reject_grow",
+   "exit": 1,
+   "gate_s": 2.5,
+   "start_utc": "2026-11-10T08:35:23.902Z",
+   "peak_rss": 1786654720,
+   "memcap_kill": false
+  },
+  {
+   "job": "186-lake-E2e.CpWGrowAny",
+   "n": 186,
+   "class": "build",
+   "module": "E2e.CpWGrowAny",
+   "label": "INBOX 009: lake build E2e.CpWGrowAny (tail_grow_call attempt 1; grow_any attempt 2 (case B to the second call); reject_grow attempt 2: AC close)",
+   "exit": 1,
+   "gate_s": 134.8,
+   "start_utc": "2026-11-10T08:37:59.435Z",
+   "peak_rss": 1919217664,
+   "memcap_kill": false
+  },
+  {
+   "job": "187-lake-E2e.CpWGrowAny",
+   "n": 187,
+   "class": "build",
+   "module": "E2e.CpWGrowAny",
+   "label": "INBOX 009: lake build E2e.CpWGrowAny (attempt 3: sep_emp in the AC close; refine in reject)",
+   "exit": 1,
+   "gate_s": 452.8,
+   "start_utc": "2026-11-10T08:40:51.742Z",
+   "peak_rss": 1768407040,
+   "memcap_kill": false
+  },
+  {
+   "job": "188-lake-E2e.CpWGrowAny",
+   "n": 188,
+   "class": "build",
+   "module": "E2e.CpWGrowAny",
+   "label": "INBOX 009: lake build E2e.CpWGrowAny (attempt 4: reject post keeps l16/l24/l32/l72)",
+   "exit": 0,
+   "gate_s": 103.2,
+   "start_utc": "2026-11-10T08:48:43.028Z",
+   "peak_rss": 1792622592,
+   "memcap_kill": false
+  },
+  {
+   "job": "189-lake-E2e.CpWCover",
+   "n": 189,
+   "class": "build",
+   "module": "E2e.CpWCover",
+   "label": "INBOX 009: lake build E2e.CpWCover (accept and reject covers, attempt 1)",
+   "exit": 1,
+   "gate_s": 409.0,
+   "start_utc": "2026-11-10T08:53:11.622Z",
+   "peak_rss": 1721655296,
+   "memcap_kill": false
+  },
+  {
+   "job": "190-lake-E2e.CpWCover",
+   "n": 190,
+   "class": "build",
+   "module": "E2e.CpWCover",
+   "label": "INBOX 009: lake build E2e.CpWCover (attempt 2: generalize uintBytes (T-5), apply sep_true)",
+   "exit": 1,
+   "gate_s": 3.7,
+   "start_utc": "2026-11-10T09:00:23.709Z",
+   "peak_rss": 1854283776,
+   "memcap_kill": false
+  },
+  {
+   "job": "191-lake-E2e.CpWCover",
+   "n": 191,
+   "class": "build",
+   "module": "E2e.CpWCover",
+   "label": "INBOX 009: lake build E2e.CpWCover (attempt 3: dsimp before omega)",
+   "exit": 0,
+   "gate_s": 3.5,
+   "start_utc": "2026-11-10T09:02:35.297Z",
+   "peak_rss": 1874030592,
+   "memcap_kill": false
+  },
+  {
+   "job": "192-lake-E2e.WitCpW",
+   "n": 192,
+   "class": "build",
+   "module": "E2e.WitCpW",
+   "label": "INBOX 009: lake build E2e.WitCpW (cover witness, attempt 1)",
+   "exit": 1,
+   "gate_s": 122.8,
+   "start_utc": "2026-11-10T09:05:28.821Z",
+   "peak_rss": 1730699264,
+   "memcap_kill": false
+  },
+  {
+   "job": "193-lake-E2e.WitCpW",
+   "n": 193,
+   "class": "build",
+   "module": "E2e.WitCpW",
+   "label": "INBOX 009: lake build E2e.WitCpW (attempt 2: pre30 length, Root.cap word, 32 literal)",
+   "exit": 1,
+   "gate_s": 244.2,
+   "start_utc": "2026-11-10T09:08:00.151Z",
+   "peak_rss": 1732882432,
+   "memcap_kill": false
+  },
+  {
+   "job": "194-lake-E2e.WitCpW",
+   "n": 194,
+   "class": "build",
+   "module": "E2e.WitCpW",
+   "label": "INBOX 009: lake build E2e.WitCpW (attempt 3: ecancel close, at_app split of dst)",
+   "exit": 1,
+   "gate_s": 245.1,
+   "start_utc": "2026-11-10T09:12:46.757Z",
+   "peak_rss": 1735249920,
+   "memcap_kill": false
+  },
+  {
+   "job": "195-lake-E2e.WitCpW",
+   "n": 195,
+   "class": "build",
+   "module": "E2e.WitCpW",
+   "label": "INBOX 009: lake build E2e.WitCpW (attempt 4: generalize epoch/root lists, T-5)",
+   "exit": 1,
+   "gate_s": 246.7,
+   "start_utc": "2026-11-10T09:17:07.692Z",
+   "peak_rss": 1733427200,
+   "memcap_kill": false
+  },
+  {
+   "job": "196-lake-E2e.ProbeWW",
+   "n": 196,
+   "class": "build",
+   "module": "E2e.ProbeWW",
+   "label": "INBOX 009: probe (scratch, sorry, deleted after) nil witness memory goal",
+   "exit": 0,
+   "gate_s": 2.5,
+   "start_utc": "2026-11-10T09:21:25.184Z",
+   "peak_rss": 1735933952,
+   "memcap_kill": false
+  },
+  {
+   "job": "197-lake-E2e.WitCpW",
+   "n": 197,
+   "class": "build",
+   "module": "E2e.WitCpW",
+   "label": "INBOX 009: lake build E2e.WitCpW (attempt 5: generalize then AC close)",
+   "exit": 0,
+   "gate_s": 268.8,
+   "start_utc": "2026-11-10T09:23:07.015Z",
+   "peak_rss": 1732890624,
+   "memcap_kill": false
+  },
+  {
+   "job": "198-lake-E2e.WitCpWR",
+   "n": 198,
+   "class": "build",
+   "module": "E2e.WitCpWR",
+   "label": "INBOX 009: lake build E2e.WitCpWR (reject cover witness, attempt 1)",
+   "exit": 143,
+   "gate_s": 17.5,
+   "start_utc": "2026-11-10T09:28:27.527Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "199-lake-E2e.WitCpWR",
+   "n": 199,
+   "class": "build",
+   "module": "E2e.WitCpWR",
+   "label": "INBOX 009: lake build E2e.WitCpWR (attempt 2: heap adjacency rewrite)",
+   "exit": 1,
+   "gate_s": 527.9,
+   "start_utc": "2026-11-10T09:29:03.967Z",
+   "peak_rss": 1734877184,
+   "memcap_kill": false
+  },
+  {
+   "job": "200-lake-E2e.WitCpWR",
+   "n": 200,
+   "class": "build",
+   "module": "E2e.WitCpWR",
+   "label": "INBOX 009: lake build E2e.WitCpWR (attempt 3: Int64.toBitVec_add for the second error word)",
+   "exit": 0,
+   "gate_s": 521.1,
+   "start_utc": "2026-11-10T09:38:05.446Z",
+   "peak_rss": 1739005952,
+   "memcap_kill": false
+  },
+  {
+   "job": "201-go-differential",
+   "n": 201,
+   "class": "other",
+   "module": null,
+   "label": "INBOX 009: Go differential fve2e/cpcheck with the capacity-range and reject-after-growth cases (native Go 1.26.10)",
+   "exit": 0,
+   "gate_s": 0.4,
+   "start_utc": "2026-11-10T09:47:28.219Z",
+   "peak_rss": null,
+   "memcap_kill": false
+  },
+  {
+   "job": "202-w9-neg",
+   "n": 202,
+   "class": "other",
+   "module": null,
+   "label": "INBOX 009: build covers + witnesses; negatives (23 cpw-*); E2e axioms",
+   "exit": 1,
+   "gate_s": 455.8,
+   "start_utc": "2026-11-10T09:48:31.983Z",
+   "peak_rss": 1621188608,
+   "memcap_kill": false
+  },
+  {
+   "job": "203-w9-neg",
+   "n": 203,
+   "class": "other",
+   "module": null,
+   "label": "INBOX 009: negatives rerun of the 3 replaced cpw cases; E2e axioms",
+   "exit": 0,
+   "gate_s": 13.3,
+   "start_utc": "2026-11-10T09:56:26.497Z",
+   "peak_rss": 1629401088,
    "memcap_kill": false
   }
  ]
