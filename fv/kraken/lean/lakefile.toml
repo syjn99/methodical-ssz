@@ -85,7 +85,14 @@ name = "e2e_ad_data"
 path = "../prysm/go1.26.10/e2e/ad/link/data"
 text = true
 
+# witness-only runtime model (session 4): the 72-byte bump newobject E2eAd/BumpNew72.S
+[[input_dir]]
+name = "e2e_ad_lean_S"
+path = "E2eAd"
+text = true
+filter = {extension = ["S"]}
+
 [[lean_lib]]
 name = "E2eAd"
 globs = ["E2eAd.+"]
-needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data"]
+needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S"]

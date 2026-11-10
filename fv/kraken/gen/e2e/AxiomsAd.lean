@@ -4,6 +4,9 @@ import E2eAd.WitSl
 import E2eAd.WitCi
 import E2eAd.WitCpSpecs
 import E2eAd.WitCpMS
+import E2eAd.AdSpecK
+import E2eAd.WitAdA
+import E2eAd.WitAdR
 
 -- prysm-e2e AttestationData set (A1-A6): every theorem of the E2eAd closure that the report names.
 #print axioms E2e.prysmAdDesc_checker
@@ -25,3 +28,19 @@ import E2eAd.WitCpMS
 #print axioms E2eAd.cp_macc_holds
 #print axioms E2eAd.WitCpSpecs.cpu_spec_here
 #print axioms E2eAd.WitCpMS.cpm_spec_here
+#print axioms E2eAd.ad_e2e_head
+#print axioms E2eAd.ad_e2e_root
+#print axioms E2eAd.ad_e2e_src
+#print axioms E2eAd.ad_e2e_tgt
+#print axioms E2eAd.ad_e2e_accept_main
+#print axioms E2eAd.ad_e2e_reject_size_main
+#print axioms E2eAd.ad_e2e_slot_err_unreachable
+#print axioms E2eAd.ad_e2e_ci_err_unreachable
+#print axioms E2eAd.ad_e2e_source_err_unreachable
+#print axioms E2eAd.ad_e2e_target_err_unreachable
+#print axioms E2eAd.ad_e2e_accept_spec_k
+#print axioms E2eAd.ad_e2e_reject_size_spec
+#print axioms E2eAd.ad_e2e_reject_complete
+#print axioms E2eAd.bump_newobject72
+#print axioms E2eAd.WitAdA.ad_accept_runs
+#print axioms E2eAd.WitAdR.ad_reject_runs

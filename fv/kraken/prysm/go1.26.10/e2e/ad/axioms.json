@@ -93,10 +93,90 @@
    "Classical.choice",
    "Quot.sound"
   ],
+  "E2eAd.ad_e2e_head": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.ad_e2e_root": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.ad_e2e_src": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.ad_e2e_tgt": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.ad_e2e_accept_main": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.ad_e2e_reject_size_main": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.ad_e2e_slot_err_unreachable": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.ad_e2e_ci_err_unreachable": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.ad_e2e_source_err_unreachable": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.ad_e2e_target_err_unreachable": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.ad_e2e_accept_spec_k": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.ad_e2e_reject_size_spec": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.ad_e2e_reject_complete": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.bump_newobject72": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.WitAdA.ad_accept_runs": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2eAd.WitAdR.ad_reject_runs": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
   "E2e.prysmAdDesc_checker": []
  },
  "missing": [],
  "nonstandard": {},
- "count": 19,
+ "count": 35,
  "verdict": "PASS"
 }

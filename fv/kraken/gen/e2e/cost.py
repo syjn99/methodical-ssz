@@ -42,6 +42,17 @@ THM = {
                    "pad_roundtrip"],
     "E2eAd.Prims": ["sl_unmarshal_accept_main", "sl_uacc_holds", "ci_unmarshal_accept_main", "ci_uacc_holds"],
     "E2eAd.CpSpecs": ["cp_uacc_holds (CpUAccC)", "cp_macc_holds (CpMAccC)"],
+    "E2eAd.ProbeAd": ["ad_e2e_head (probe, scratch module, deleted)"],
+    "E2eAd.AdHead": ["ad_e2e_head (segment 1 of ad_e2e_accept_main)"],
+    "E2eAd.AdRoot": ["ad_e2e_root (segment 2 of ad_e2e_accept_main)"],
+    "E2eAd.AdSrc": ["ad_e2e_src (segment 3 of ad_e2e_accept_main)"],
+    "E2eAd.AdTgt": ["ad_e2e_tgt (segment 4 of ad_e2e_accept_main)"],
+    "E2eAd.AdAccept": ["ad_e2e_accept_main (composition of the 4 segments)"],
+    "E2eAd.AdReject": ["ad_e2e_reject_size_main", "ad_e2e_{slot,ci,source,target}_err_unreachable"],
+    "E2eAd.AdSpecK": ["ad_e2e_accept_spec_k", "ad_e2e_reject_size_spec", "ad_e2e_reject_complete"],
+    "E2eAd.BumpNew72": ["bump_newobject72 (witness runtime model)"],
+    "E2eAd.WitAdA": ["ad_accept_runs (witness)"],
+    "E2eAd.WitAdR": ["ad_reject_runs (witness)"],
 }
 NAME = re.compile(r"^(\d+)-([A-Za-z0-9]+)(?:-(.*))?$")
 MEM = re.compile(r"peak_process_rss=(\d+)")

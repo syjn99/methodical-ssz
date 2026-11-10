@@ -6,18 +6,18 @@
  },
  "note": "gate wall-clock only (excludes the agent's thinking/editing time); module cost is shared by the theorems of that module, not divided; witnesses are their own modules (WitCp*, WitEp*)",
  "totals": {
-  "jobs": 149,
-  "gate_s": 8029.3,
+  "jobs": 177,
+  "gate_s": 9245.5,
   "peak_rss_gib": 6.01,
   "memcap_kills": 4,
   "by_class": {
    "other": {
-    "jobs": 26,
-    "gate_s": 844.6
+    "jobs": 28,
+    "gate_s": 927.5
    },
    "build": {
-    "jobs": 96,
-    "gate_s": 2149.8
+    "jobs": 122,
+    "gate_s": 3283.1
    },
    "negative": {
     "jobs": 18,
@@ -408,6 +408,120 @@
    ],
    "peak_rss_gib": 1.57
   },
+  "E2eAd.AdAccept": {
+   "runs": 2,
+   "failed_runs": 1,
+   "probes": 0,
+   "gate_s": 22.3,
+   "peak_rss_bytes": 2110521344,
+   "memcap_kills": 0,
+   "jobs": [
+    "169-lake-E2eAd.AdAccept",
+    "170-lake-E2eAd.AdAccept"
+   ],
+   "peak_rss_gib": 1.97
+  },
+  "E2eAd.AdHead": {
+   "runs": 5,
+   "failed_runs": 4,
+   "probes": 0,
+   "gate_s": 482.2,
+   "peak_rss_bytes": 1871822848,
+   "memcap_kills": 0,
+   "jobs": [
+    "151-lake-E2eAd.AdHead",
+    "152-lake-E2eAd.AdHead",
+    "155-lake-E2eAd.AdHead",
+    "156-lake-E2eAd.AdHead",
+    "157-lake-E2eAd.AdHead"
+   ],
+   "peak_rss_gib": 1.74
+  },
+  "E2eAd.AdReject": {
+   "runs": 2,
+   "failed_runs": 1,
+   "probes": 0,
+   "gate_s": 5.8,
+   "peak_rss_bytes": 1826484224,
+   "memcap_kills": 0,
+   "jobs": [
+    "171-lake-E2eAd.AdReject",
+    "172-lake-E2eAd.AdReject"
+   ],
+   "peak_rss_gib": 1.7
+  },
+  "E2eAd.AdRoot": {
+   "runs": 3,
+   "failed_runs": 2,
+   "probes": 0,
+   "gate_s": 10.9,
+   "peak_rss_bytes": 1866326016,
+   "memcap_kills": 0,
+   "jobs": [
+    "158-lake-E2eAd.AdRoot",
+    "159-lake-E2eAd.AdRoot",
+    "160-lake-E2eAd.AdRoot"
+   ],
+   "peak_rss_gib": 1.74
+  },
+  "E2eAd.AdSpecK": {
+   "runs": 3,
+   "failed_runs": 0,
+   "probes": 0,
+   "gate_s": 2.2,
+   "peak_rss_bytes": 1709445120,
+   "memcap_kills": 0,
+   "jobs": [
+    "173-lake-E2eAd.AdSpecK"
+   ],
+   "in_multi_jobs": [
+    "177-a3-neg1",
+    "178-a3-neg2"
+   ],
+   "peak_rss_gib": 1.59
+  },
+  "E2eAd.AdSrc": {
+   "runs": 6,
+   "failed_runs": 5,
+   "probes": 0,
+   "gate_s": 512.4,
+   "peak_rss_bytes": 2113265664,
+   "memcap_kills": 0,
+   "jobs": [
+    "161-lake-E2eAd.AdSrc",
+    "162-lake-E2eAd.AdSrc",
+    "163-lake-E2eAd.AdSrc",
+    "164-lake-E2eAd.AdSrc",
+    "165-lake-E2eAd.AdSrc",
+    "166-lake-E2eAd.AdSrc"
+   ],
+   "peak_rss_gib": 1.97
+  },
+  "E2eAd.AdTgt": {
+   "runs": 2,
+   "failed_runs": 1,
+   "probes": 0,
+   "gate_s": 14.2,
+   "peak_rss_bytes": 2124869632,
+   "memcap_kills": 0,
+   "jobs": [
+    "167-lake-E2eAd.AdTgt",
+    "168-lake-E2eAd.AdTgt"
+   ],
+   "peak_rss_gib": 1.98
+  },
+  "E2eAd.BumpNew72": {
+   "runs": 1,
+   "failed_runs": 0,
+   "probes": 0,
+   "gate_s": 2.4,
+   "peak_rss_bytes": 1669771264,
+   "memcap_kills": 0,
+   "jobs": [
+    "174-lake-E2eAd.BumpNew72"
+   ],
+   "peak_rss_gib": 1.56
+  },
   "E2eAd.Code": {
    "runs": 3,
    "failed_runs": 0,
@@ -479,6 +593,19 @@
    ],
    "peak_rss_gib": 1.63
   },
+  "E2eAd.ProbeAd": {
+   "runs": 2,
+   "failed_runs": 1,
+   "probes": 0,
+   "gate_s": 7.2,
+   "peak_rss_bytes": 1851342848,
+   "memcap_kills": 0,
+   "jobs": [
+    "153-lake-E2eAd.ProbeAd",
+    "154-lake-E2eAd.ProbeAd"
+   ],
+   "peak_rss_gib": 1.72
+  },
   "E2eAd.Spec": {
    "runs": 3,
    "failed_runs": 2,
@@ -493,6 +620,38 @@
     "143-lake-E2eAd-a1"
    ],
    "peak_rss_gib": 0.8
+  },
+  "E2eAd.WitAdA": {
+   "runs": 3,
+   "failed_runs": 0,
+   "probes": 0,
+   "gate_s": 68.8,
+   "peak_rss_bytes": 2150637568,
+   "memcap_kills": 0,
+   "jobs": [
+    "175-lake-E2eAd.WitAdA"
+   ],
+   "in_multi_jobs": [
+    "177-a3-neg1",
+    "178-a3-neg2"
+   ],
+   "peak_rss_gib": 2.0
+  },
+  "E2eAd.WitAdR": {
+   "runs": 3,
+   "failed_runs": 0,
+   "probes": 0,
+   "gate_s": 4.9,
+   "peak_rss_bytes": 1830576128,
+   "memcap_kills": 0,
+   "jobs": [
+    "176-lake-E2eAd.WitAdR"
+   ],
+   "in_multi_jobs": [
+    "177-a3-neg1",
+    "178-a3-neg2"
+   ],
+   "peak_rss_gib": 1.7
   },
   "E2eAd.WitCi": {
    "runs": 5,
@@ -796,6 +955,104 @@
    "runs_module": 2,
    "failed_runs_module": 1,
    "peak_rss_gib": 1.52
+  },
+  "ad_e2e_head (probe, scratch module, deleted)": {
+   "module": "E2eAd.ProbeAd",
+   "gate_s_module": 7.2,
+   "runs_module": 2,
+   "failed_runs_module": 1,
+   "peak_rss_gib": 1.72
+  },
+  "ad_e2e_head (segment 1 of ad_e2e_accept_main)": {
+   "module": "E2eAd.AdHead",
+   "gate_s_module": 482.2,
+   "runs_module": 5,
+   "failed_runs_module": 4,
+   "peak_rss_gib": 1.74
+  },
+  "ad_e2e_root (segment 2 of ad_e2e_accept_main)": {
+   "module": "E2eAd.AdRoot",
+   "gate_s_module": 10.9,
+   "runs_module": 3,
+   "failed_runs_module": 2,
+   "peak_rss_gib": 1.74
+  },
+  "ad_e2e_src (segment 3 of ad_e2e_accept_main)": {
+   "module": "E2eAd.AdSrc",
+   "gate_s_module": 512.4,
+   "runs_module": 6,
+   "failed_runs_module": 5,
+   "peak_rss_gib": 1.97
+  },
+  "ad_e2e_tgt (segment 4 of ad_e2e_accept_main)": {
+   "module": "E2eAd.AdTgt",
+   "gate_s_module": 14.2,
+   "runs_module": 2,
+   "failed_runs_module": 1,
+   "peak_rss_gib": 1.98
+  },
+  "ad_e2e_accept_main (composition of the 4 segments)": {
+   "module": "E2eAd.AdAccept",
+   "gate_s_module": 22.3,
+   "runs_module": 2,
+   "failed_runs_module": 1,
+   "peak_rss_gib": 1.97
+  },
+  "ad_e2e_reject_size_main": {
+   "module": "E2eAd.AdReject",
+   "gate_s_module": 5.8,
+   "runs_module": 2,
+   "failed_runs_module": 1,
+   "peak_rss_gib": 1.7
+  },
+  "ad_e2e_{slot,ci,source,target}_err_unreachable": {
+   "module": "E2eAd.AdReject",
+   "gate_s_module": 5.8,
+   "runs_module": 2,
+   "failed_runs_module": 1,
+   "peak_rss_gib": 1.7
+  },
+  "ad_e2e_accept_spec_k": {
+   "module": "E2eAd.AdSpecK",
+   "gate_s_module": 2.2,
+   "runs_module": 3,
+   "failed_runs_module": 0,
+   "peak_rss_gib": 1.59
+  },
+  "ad_e2e_reject_size_spec": {
+   "module": "E2eAd.AdSpecK",
+   "gate_s_module": 2.2,
+   "runs_module": 3,
+   "failed_runs_module": 0,
+   "peak_rss_gib": 1.59
+  },
+  "ad_e2e_reject_complete": {
+   "module": "E2eAd.AdSpecK",
+   "gate_s_module": 2.2,
+   "runs_module": 3,
+   "failed_runs_module": 0,
+   "peak_rss_gib": 1.59
+  },
+  "bump_newobject72 (witness runtime model)": {
+   "module": "E2eAd.BumpNew72",
+   "gate_s_module": 2.4,
+   "runs_module": 1,
+   "failed_runs_module": 0,
+   "peak_rss_gib": 1.56
+  },
+  "ad_accept_runs (witness)": {
+   "module": "E2eAd.WitAdA",
+   "gate_s_module": 68.8,
+   "runs_module": 3,
+   "failed_runs_module": 0,
+   "peak_rss_gib": 2.0
+  },
+  "ad_reject_runs (witness)": {
+   "module": "E2eAd.WitAdR",
+   "gate_s_module": 4.9,
+   "runs_module": 3,
+   "failed_runs_module": 0,
+   "peak_rss_gib": 1.7
   }
  },
  "jobs": [
@@ -2585,6 +2842,342 @@
    "gate_s": 9.2,
    "start_utc": "2026-11-10T06:47:20.136Z",
    "peak_rss": 1642651648,
+   "memcap_kill": false
+  },
+  {
+   "job": "151-lake-E2eAd.AdHead",
+   "n": 151,
+   "class": "build",
+   "module": "E2eAd.AdHead",
+   "label": "A3: lake build E2eAd.AdHead (segment 1, attempt 1)",
+   "exit": 1,
+   "gate_s": 3.7,
+   "start_utc": "2026-11-10T06:57:18.188Z",
+   "peak_rss": 1841278976,
+   "memcap_kill": false
+  },
+  {
+   "job": "152-lake-E2eAd.AdHead",
+   "n": 152,
+   "class": "build",
+   "module": "E2eAd.AdHead",
+   "label": "A3: lake build E2eAd.AdHead (segment 1, attempt 2: dsimp after subst)",
+   "exit": 1,
+   "gate_s": 2.1,
+   "start_utc": "2026-11-10T06:58:53.962Z",
+   "peak_rss": 1679577088,
+   "memcap_kill": false
+  },
+  {
+   "job": "153-lake-E2eAd.ProbeAd",
+   "n": 153,
+   "class": "build",
+   "module": "E2eAd.ProbeAd",
+   "label": "A3: probe (scratch, sorry) goal forms at the CommitteeIndex call; needs AdHead built",
+   "exit": 1,
+   "gate_s": 3.7,
+   "start_utc": "2026-11-10T07:00:57.264Z",
+   "peak_rss": 1851342848,
+   "memcap_kill": false
+  },
+  {
+   "job": "154-lake-E2eAd.ProbeAd",
+   "n": 154,
+   "class": "build",
+   "module": "E2eAd.ProbeAd",
+   "label": "A3: probe (scratch, sorry) goal forms at the CommitteeIndex call (self-contained)",
+   "exit": 0,
+   "gate_s": 3.5,
+   "start_utc": "2026-11-10T07:01:11.118Z",
+   "peak_rss": 1824555008,
+   "memcap_kill": false
+  },
+  {
+   "job": "155-lake-E2eAd.AdHead",
+   "n": 155,
+   "class": "build",
+   "module": "E2eAd.AdHead",
+   "label": "A3: lake build E2eAd.AdHead (segment 1, attempt 3: callee saved-rbp slot existential)",
+   "exit": 1,
+   "gate_s": 468.8,
+   "start_utc": "2026-11-10T07:02:04.091Z",
+   "peak_rss": 1706889216,
+   "memcap_kill": false
+  },
+  {
+   "job": "156-lake-E2eAd.AdHead",
+   "n": 156,
+   "class": "build",
+   "module": "E2eAd.AdHead",
+   "label": "A3: lake build E2eAd.AdHead (segment 1, attempt 4: re-elaborate the saved-rbp atom by rw rfl)",
+   "exit": 1,
+   "gate_s": 3.7,
+   "start_utc": "2026-11-10T07:10:12.964Z",
+   "peak_rss": 1846018048,
+   "memcap_kill": false
+  },
+  {
+   "job": "157-lake-E2eAd.AdHead",
+   "n": 157,
+   "class": "build",
+   "module": "E2eAd.AdHead",
+   "label": "A3: lake build E2eAd.AdHead (segment 1, attempt 5: split state chunk in the goal)",
+   "exit": 0,
+   "gate_s": 3.9,
+   "start_utc": "2026-11-10T07:10:47.934Z",
+   "peak_rss": 1871822848,
+   "memcap_kill": false
+  },
+  {
+   "job": "158-lake-E2eAd.AdRoot",
+   "n": 158,
+   "class": "build",
+   "module": "E2eAd.AdRoot",
+   "label": "A3: lake build E2eAd.AdRoot (segment 2, attempt 1)",
+   "exit": 1,
+   "gate_s": 4.1,
+   "start_utc": "2026-11-10T07:12:33.423Z",
+   "peak_rss": 1839255552,
+   "memcap_kill": false
+  },
+  {
+   "job": "159-lake-E2eAd.AdRoot",
+   "n": 159,
+   "class": "build",
+   "module": "E2eAd.AdRoot",
+   "label": "A3: lake build E2eAd.AdRoot (segment 2, attempt 2: import E2e.Data)",
+   "exit": 1,
+   "gate_s": 3.3,
+   "start_utc": "2026-11-10T07:13:46.462Z",
+   "peak_rss": 1850617856,
+   "memcap_kill": false
+  },
+  {
+   "job": "160-lake-E2eAd.AdRoot",
+   "n": 160,
+   "class": "build",
+   "module": "E2eAd.AdRoot",
+   "label": "A3: lake build E2eAd.AdRoot (segment 2, attempt 3: ada_lo by simp)",
+   "exit": 0,
+   "gate_s": 3.5,
+   "start_utc": "2026-11-10T07:14:53.806Z",
+   "peak_rss": 1866326016,
+   "memcap_kill": false
+  },
+  {
+   "job": "161-lake-E2eAd.AdSrc",
+   "n": 161,
+   "class": "build",
+   "module": "E2eAd.AdSrc",
+   "label": "A3: lake build E2eAd.AdSrc (segment 3, attempt 1)",
+   "exit": 1,
+   "gate_s": 1.7,
+   "start_utc": "2026-11-10T07:16:01.222Z",
+   "peak_rss": 1693638656,
+   "memcap_kill": false
+  },
+  {
+   "job": "162-lake-E2eAd.AdSrc",
+   "n": 162,
+   "class": "build",
+   "module": "E2eAd.AdSrc",
+   "label": "A3: lake build E2eAd.AdSrc (segment 3, attempt 2: import Fk.FunSpecs)",
+   "exit": 1,
+   "gate_s": 3.9,
+   "start_utc": "2026-11-10T07:17:38.516Z",
+   "peak_rss": 1778024448,
+   "memcap_kill": false
+  },
+  {
+   "job": "163-lake-E2eAd.AdSrc",
+   "n": 163,
+   "class": "build",
+   "module": "E2eAd.AdSrc",
+   "label": "A3: lake build E2eAd.AdSrc (segment 3, attempt 3: try dsimp)",
+   "exit": 1,
+   "gate_s": 486.9,
+   "start_utc": "2026-11-10T07:19:29.063Z",
+   "peak_rss": 1817673728,
+   "memcap_kill": false
+  },
+  {
+   "job": "164-lake-E2eAd.AdSrc",
+   "n": 164,
+   "class": "build",
+   "module": "E2eAd.AdSrc",
+   "label": "A3: lake build E2eAd.AdSrc (segment 3, attempt 4: explicit argument words)",
+   "exit": 1,
+   "gate_s": 6.7,
+   "start_utc": "2026-11-10T07:27:49.473Z",
+   "peak_rss": 2083110912,
+   "memcap_kill": false
+  },
+  {
+   "job": "165-lake-E2eAd.AdSrc",
+   "n": 165,
+   "class": "build",
+   "module": "E2eAd.AdSrc",
+   "label": "A3: lake build E2eAd.AdSrc (segment 3, attempt 5: length side goals)",
+   "exit": 1,
+   "gate_s": 6.4,
+   "start_utc": "2026-11-10T07:29:58.153Z",
+   "peak_rss": 2074976256,
+   "memcap_kill": false
+  },
+  {
+   "job": "166-lake-E2eAd.AdSrc",
+   "n": 166,
+   "class": "build",
+   "module": "E2eAd.AdSrc",
+   "label": "A3: lake build E2eAd.AdSrc (segment 3, attempt 6: simp closes the length goals)",
+   "exit": 0,
+   "gate_s": 6.8,
+   "start_utc": "2026-11-10T07:32:03.453Z",
+   "peak_rss": 2113265664,
+   "memcap_kill": false
+  },
+  {
+   "job": "167-lake-E2eAd.AdTgt",
+   "n": 167,
+   "class": "build",
+   "module": "E2eAd.AdTgt",
+   "label": "A3: lake build E2eAd.AdTgt (segment 4, attempt 1)",
+   "exit": 1,
+   "gate_s": 6.8,
+   "start_utc": "2026-11-10T07:34:06.959Z",
+   "peak_rss": 2114424832,
+   "memcap_kill": false
+  },
+  {
+   "job": "168-lake-E2eAd.AdTgt",
+   "n": 168,
+   "class": "build",
+   "module": "E2eAd.AdTgt",
+   "label": "A3: lake build E2eAd.AdTgt (segment 4, attempt 2: final goals as in cp_e2e_accept_tail)",
+   "exit": 0,
+   "gate_s": 7.4,
+   "start_utc": "2026-11-10T07:36:23.042Z",
+   "peak_rss": 2124869632,
+   "memcap_kill": false
+  },
+  {
+   "job": "169-lake-E2eAd.AdAccept",
+   "n": 169,
+   "class": "build",
+   "module": "E2eAd.AdAccept",
+   "label": "A3: lake build E2eAd.AdAccept (main composition, attempt 1; rebuilds AdRoot/AdSrc/AdTgt for the rdx conjunct)",
+   "exit": 1,
+   "gate_s": 19.0,
+   "start_utc": "2026-11-10T07:40:27.869Z",
+   "peak_rss": 2110521344,
+   "memcap_kill": false
+  },
+  {
+   "job": "170-lake-E2eAd.AdAccept",
+   "n": 170,
+   "class": "build",
+   "module": "E2eAd.AdAccept",
+   "label": "A3: lake build E2eAd.AdAccept (main composition, attempt 2: assoc and length side goals)",
+   "exit": 0,
+   "gate_s": 3.3,
+   "start_utc": "2026-11-10T07:44:43.232Z",
+   "peak_rss": 1897132032,
+   "memcap_kill": false
+  },
+  {
+   "job": "171-lake-E2eAd.AdReject",
+   "n": 171,
+   "class": "build",
+   "module": "E2eAd.AdReject",
+   "label": "A3: lake build E2eAd.AdReject (size reject + 4 unreachable_mc rows, attempt 1)",
+   "exit": 1,
+   "gate_s": 2.5,
+   "start_utc": "2026-11-10T07:46:48.131Z",
+   "peak_rss": 1811374080,
+   "memcap_kill": false
+  },
+  {
+   "job": "172-lake-E2eAd.AdReject",
+   "n": 172,
+   "class": "build",
+   "module": "E2eAd.AdReject",
+   "label": "A3: lake build E2eAd.AdReject (attempt 2: E2e.errSize_addr_eq, maxRecDepth)",
+   "exit": 0,
+   "gate_s": 3.3,
+   "start_utc": "2026-11-10T07:47:04.841Z",
+   "peak_rss": 1826484224,
+   "memcap_kill": false
+  },
+  {
+   "job": "173-lake-E2eAd.AdSpecK",
+   "n": 173,
+   "class": "build",
+   "module": "E2eAd.AdSpecK",
+   "label": "A3: lake build E2eAd.AdSpecK (spec alignment, attempt 1)",
+   "exit": 0,
+   "gate_s": 2.2,
+   "start_utc": "2026-11-10T07:47:45.643Z",
+   "peak_rss": 1707663360,
+   "memcap_kill": false
+  },
+  {
+   "job": "174-lake-E2eAd.BumpNew72",
+   "n": 174,
+   "class": "build",
+   "module": "E2eAd.BumpNew72",
+   "label": "A3: lake build E2eAd.BumpNew72 (witness model, attempt 1; lakefile input_dir e2e_ad_lean_S)",
+   "exit": 0,
+   "gate_s": 2.4,
+   "start_utc": "2026-11-10T07:49:41.748Z",
+   "peak_rss": 1669771264,
+   "memcap_kill": false
+  },
+  {
+   "job": "175-lake-E2eAd.WitAdA",
+   "n": 175,
+   "class": "build",
+   "module": "E2eAd.WitAdA",
+   "label": "A3: lake build E2eAd.WitAdA (witness, attempt 1)",
+   "exit": 0,
+   "gate_s": 68.8,
+   "start_utc": "2026-11-10T07:51:24.591Z",
+   "peak_rss": 2150637568,
+   "memcap_kill": false
+  },
+  {
+   "job": "176-lake-E2eAd.WitAdR",
+   "n": 176,
+   "class": "build",
+   "module": "E2eAd.WitAdR",
+   "label": "A3: lake build E2eAd.WitAdR (reject witness, attempt 1)",
+   "exit": 0,
+   "gate_s": 4.9,
+   "start_utc": "2026-11-10T07:52:45.226Z",
+   "peak_rss": 1830576128,
+   "memcap_kill": false
+  },
+  {
+   "job": "177-a3-neg1",
+   "n": 177,
+   "class": "other",
+   "module": null,
+   "label": "A3: build WitAdA/WitAdR/AdSpecK; negatives part 1 (11: head, root, reject, unreachable); AD axioms",
+   "exit": 0,
+   "gate_s": 40.9,
+   "start_utc": "2026-11-10T07:53:39.333Z",
+   "peak_rss": 1709445120,
+   "memcap_kill": false
+  },
+  {
+   "job": "178-a3-neg2",
+   "n": 178,
+   "class": "other",
+   "module": null,
+   "label": "A3: negatives part 2 (13: src, tgt, main and spec statements); AD axioms",
+   "exit": 0,
+   "gate_s": 42.0,
+   "start_utc": "2026-11-10T08:03:20.089Z",
+   "peak_rss": 1648549888,
    "memcap_kill": false
   }
  ]
