@@ -1,7 +1,135 @@
 [
- {"id": "ep-control", "kind": "control", "module": "E2e/Epoch.lean", "theorem": "ep_unmarshal_accept_main", "code_def": "EpUnmarshal", "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S"},
- {"id": "ep-cmp9", "kind": "code", "module": "E2e/Epoch.lean", "theorem": "ep_unmarshal_accept_main", "code_def": "EpUnmarshal", "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S", "old": "  cmp $0x8,%rcx", "new": "  cmp $0x9,%rcx"},
- {"id": "ep-load8", "kind": "code", "module": "E2e/Epoch.lean", "theorem": "ep_unmarshal_accept_main", "code_def": "EpUnmarshal", "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S", "old": "  mov (%rbx),%rcx", "new": "  mov 0x8(%rbx),%rcx"},
- {"id": "ep-store8", "kind": "code", "module": "E2e/Epoch.lean", "theorem": "ep_unmarshal_accept_main", "code_def": "EpUnmarshal", "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S", "line": 47, "old": "  mov %rcx,(%rax)", "new": "  mov %rcx,0x8(%rax)"},
- {"id": "ep-stmt-rax1", "kind": "stmt", "module": "E2e/Epoch.lean", "theorem": "ep_unmarshal_accept_main", "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0", "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"}
+ {
+  "id": "ep-control",
+  "kind": "control",
+  "module": "E2e/Epoch.lean",
+  "theorem": "ep_unmarshal_accept_main",
+  "code_def": "EpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S"
+ },
+ {
+  "id": "ep-cmp9",
+  "kind": "code",
+  "module": "E2e/Epoch.lean",
+  "theorem": "ep_unmarshal_accept_main",
+  "code_def": "EpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
+  "old": "  cmp $0x8,%rcx",
+  "new": "  cmp $0x9,%rcx"
+ },
+ {
+  "id": "ep-load8",
+  "kind": "code",
+  "module": "E2e/Epoch.lean",
+  "theorem": "ep_unmarshal_accept_main",
+  "code_def": "EpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
+  "old": "  mov (%rbx),%rcx",
+  "new": "  mov 0x8(%rbx),%rcx"
+ },
+ {
+  "id": "ep-store8",
+  "kind": "code",
+  "module": "E2e/Epoch.lean",
+  "theorem": "ep_unmarshal_accept_main",
+  "code_def": "EpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
+  "line": 47,
+  "old": "  mov %rcx,(%rax)",
+  "new": "  mov %rcx,0x8(%rax)"
+ },
+ {
+  "id": "ep-stmt-rax1",
+  "kind": "stmt",
+  "module": "E2e/Epoch.lean",
+  "theorem": "ep_unmarshal_accept_main",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
+  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
+ },
+ {
+  "id": "cpa-control-main",
+  "kind": "control",
+  "module": "E2e/CpAccept.lean",
+  "theorem": "cp_e2e_accept_main",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
+ },
+ {
+  "id": "cpa-cmp41",
+  "kind": "code",
+  "module": "E2e/CpAccept.lean",
+  "theorem": "cp_e2e_accept_main",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  cmp $0x28,%rcx",
+  "new": "  cmp $0x29,%rcx"
+ },
+ {
+  "id": "cpa-epoch-field",
+  "kind": "code",
+  "module": "E2e/CpAccept.lean",
+  "theorem": "cp_e2e_accept_main",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  add $0x8,%rax",
+  "new": "  add $0x10,%rax"
+ },
+ {
+  "id": "cpa-epoch-len",
+  "kind": "code",
+  "module": "E2e/CpAccept.lean",
+  "theorem": "cp_e2e_accept_main",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  mov $0x8,%ecx",
+  "new": "  mov $0x9,%ecx"
+ },
+ {
+  "id": "cpa-stmt-rbx1",
+  "kind": "stmt",
+  "module": "E2e/CpAccept.lean",
+  "theorem": "cp_e2e_accept_main",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
+  "new": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 1"
+ },
+ {
+  "id": "cpa-control-tail",
+  "kind": "control",
+  "module": "E2e/CpAccept.lean",
+  "theorem": "cp_e2e_accept_tail",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
+ },
+ {
+  "id": "cpa-cap33",
+  "kind": "code",
+  "module": "E2e/CpAccept.lean",
+  "theorem": "cp_e2e_accept_tail",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "line": 73,
+  "old": "  movq $0x20,0x20(%rdx)",
+  "new": "  movq $0x21,0x20(%rdx)"
+ },
+ {
+  "id": "cpa-memmove31",
+  "kind": "code",
+  "module": "E2e/CpAccept.lean",
+  "theorem": "cp_e2e_accept_tail",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "line": 69,
+  "old": "  mov $0x20,%ecx",
+  "new": "  mov $0x1f,%ecx"
+ },
+ {
+  "id": "cpa-rootptr",
+  "kind": "code",
+  "module": "E2e/CpAccept.lean",
+  "theorem": "cp_e2e_accept_tail",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  mov %rsi,0x10(%rdx)",
+  "new": "  mov %rsi,0x18(%rdx)"
+ }
 ]

@@ -94,8 +94,176 @@
    "seconds": 2.0,
    "pass": true,
    "diff": "--- orig\n+++ mut\n@@ -9,7 +9,7 @@\n       \u22c6 Eq (e8.At s.regs.rbx.toBitVec) \u22c6 Eq (c0.At s.regs.rax.toBitVec) \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 8) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14\n         \u2227 (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n           \u22c6 Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))\n"
+  },
+  {
+   "id": "cpa-control-main",
+   "kind": "control",
+   "module": "E2e/CpAccept.lean",
+   "theorem": "cp_e2e_accept_main",
+   "range": [
+    330,
+    487
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "seconds": 5.4,
+   "pass": true,
+   "diff": ""
+  },
+  {
+   "id": "cpa-cmp41",
+   "kind": "code",
+   "module": "E2e/CpAccept.lean",
+   "theorem": "cp_e2e_accept_main",
+   "range": [
+    330,
+    487
+   ],
+   "error_lines": [
+    431
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpa-cmp41/mut.lean:431:38: error: Tactic `decide` proved that the proposition",
+   "rc": 1,
+   "killed": false,
+   "seconds": 5.6,
+   "pass": true,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -7,7 +7,7 @@\n   sub $0x50,%rsp\n   mov %rbx,0x68(%rsp)\n   nop\n-  cmp $0x28,%rcx\n+  cmp $0x29,%rcx\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_16b\n   mov %rax,0x60(%rsp)\n   mov %rbx,0x68(%rsp)\n"
+  },
+  {
+   "id": "cpa-epoch-field",
+   "kind": "code",
+   "module": "E2e/CpAccept.lean",
+   "theorem": "cp_e2e_accept_main",
+   "range": [
+    330,
+    487
+   ],
+   "error_lines": [
+    457
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpa-epoch-field/mut.lean:457:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+   "rc": 1,
+   "killed": false,
+   "seconds": 5.1,
+   "pass": true,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -12,7 +12,7 @@\n   mov %rax,0x60(%rsp)\n   mov %rbx,0x68(%rsp)\n   test %al,(%rax)\n-  add $0x8,%rax\n+  add $0x10,%rax\n   mov $0x8,%ecx\n   nop\n   callq github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ\n"
+  },
+  {
+   "id": "cpa-epoch-len",
+   "kind": "code",
+   "module": "E2e/CpAccept.lean",
+   "theorem": "cp_e2e_accept_main",
+   "range": [
+    330,
+    487
+   ],
+   "error_lines": [
+    459
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpa-epoch-len/mut.lean:459:39: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "seconds": 5.2,
+   "pass": true,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -13,7 +13,7 @@\n   mov %rbx,0x68(%rsp)\n   test %al,(%rax)\n   add $0x8,%rax\n-  mov $0x8,%ecx\n+  mov $0x9,%ecx\n   nop\n   callq github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ\n   test %rax,%rax\n"
+  },
+  {
+   "id": "cpa-stmt-rbx1",
+   "kind": "stmt",
+   "module": "E2e/CpAccept.lean",
+   "theorem": "cp_e2e_accept_main",
+   "range": [
+    328,
+    485
+   ],
+   "error_lines": [
+    479,
+    478
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpa-stmt-rbx1/mut.lean:479:8: error: `dsimp` made no progress",
+   "rc": 1,
+   "killed": false,
+   "seconds": 5.2,
+   "pass": true,
+   "diff": "--- orig\n+++ mut\n@@ -27,7 +27,7 @@\n     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 40) (hav : 32 \u2264 avail)\n     (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (p : BitVec 64) (scr mm : List UInt8), scr.length = S \u2227 mm.length = 24 \u2227\n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n"
+  },
+  {
+   "id": "cpa-control-tail",
+   "kind": "control",
+   "module": "E2e/CpAccept.lean",
+   "theorem": "cp_e2e_accept_tail",
+   "range": [
+    74,
+    326
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "seconds": 4.9,
+   "pass": true,
+   "diff": ""
+  },
+  {
+   "id": "cpa-cap33",
+   "kind": "code",
+   "module": "E2e/CpAccept.lean",
+   "theorem": "cp_e2e_accept_tail",
+   "range": [
+    74,
+    326
+   ],
+   "error_lines": [
+    319
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpa-cap33/mut.lean:319:4: error: ecancel: could not automatically solve goal (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At rsp0.toBitVec) \u22c6",
+   "rc": 1,
+   "killed": false,
+   "seconds": 4.7,
+   "pass": true,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -70,7 +70,7 @@\n   callq runtime.memmove\n   mov 0x60(%rsp),%rdx\n   movq $0x20,0x18(%rdx)\n-  movq $0x20,0x20(%rdx)\n+  movq $0x21,0x20(%rdx)\n   cmpl $0x0,runtime.writeBarrier(%rip)\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_142\n   mov 0x38(%rsp),%rsi\n"
+  },
+  {
+   "id": "cpa-memmove31",
+   "kind": "code",
+   "module": "E2e/CpAccept.lean",
+   "theorem": "cp_e2e_accept_tail",
+   "range": [
+    74,
+    326
+   ],
+   "error_lines": [
+    243
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpa-memmove31/mut.lean:243:20: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "seconds": 4.9,
+   "pass": true,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -66,7 +66,7 @@\n   mov %rax,0x10(%rdx)\n   mov 0x68(%rsp),%rbx\n   add $0x8,%rbx\n-  mov $0x20,%ecx\n+  mov $0x1f,%ecx\n   callq runtime.memmove\n   mov 0x60(%rsp),%rdx\n   movq $0x20,0x18(%rdx)\n"
+  },
+  {
+   "id": "cpa-rootptr",
+   "kind": "code",
+   "module": "E2e/CpAccept.lean",
+   "theorem": "cp_e2e_accept_tail",
+   "range": [
+    74,
+    326
+   ],
+   "error_lines": [
+    288
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpa-rootptr/mut.lean:288:97: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "seconds": 4.8,
+   "pass": true,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -83,7 +83,7 @@\n   mov %rsi,(%r11)\n   mov %rcx,0x8(%r11)\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_157:\n-  mov %rsi,0x10(%rdx)\n+  mov %rsi,0x18(%rdx)\n   mov 0x28(%rsp),%rax\n   mov 0x30(%rsp),%rbx\n   add $0x50,%rsp\n"
   }
  ],
- "pass": 5,
- "total": 5
+ "pass": 14,
+ "total": 14
 }
