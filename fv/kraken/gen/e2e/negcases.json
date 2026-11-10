@@ -131,5 +131,59 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
   "old": "  mov %rsi,0x10(%rdx)",
   "new": "  mov %rsi,0x18(%rdx)"
+ },
+ {
+  "id": "cpr-control",
+  "kind": "control",
+  "module": "E2e/CpReject.lean",
+  "theorem": "cp_e2e_reject_size_main",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
+ },
+ {
+  "id": "cpr-cmp41",
+  "kind": "code",
+  "module": "E2e/CpReject.lean",
+  "theorem": "cp_e2e_reject_size_main",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  cmp $0x28,%rcx",
+  "new": "  cmp $0x29,%rcx"
+ },
+ {
+  "id": "cpr-errword",
+  "kind": "code",
+  "module": "E2e/CpReject.lean",
+  "theorem": "cp_e2e_reject_size_main",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  mov ssz.ErrSize(%rip),%rax",
+  "new": "  mov ssz.ErrSize+8(%rip),%rax"
+ },
+ {
+  "id": "cpr-stmt-e1",
+  "kind": "stmt",
+  "module": "E2e/CpReject.lean",
+  "theorem": "cp_e2e_reject_size_main",
+  "old": "st.data.regs.rax = e0 ∧",
+  "new": "st.data.regs.rax = e1 ∧"
+ },
+ {
+  "id": "cpu-control",
+  "kind": "control",
+  "module": "E2e/CpReject.lean",
+  "theorem": "cp_e2e_epoch_err_unreachable",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
+ },
+ {
+  "id": "cpu-jne",
+  "kind": "code",
+  "module": "E2e/CpReject.lean",
+  "theorem": "cp_e2e_epoch_err_unreachable",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4",
+  "new": "  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4"
  }
 ]
