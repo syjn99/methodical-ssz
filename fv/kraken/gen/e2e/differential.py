@@ -33,14 +33,23 @@ def cases():
                        "spare": 45, "exp": {"ok": True, "out": "aabbcc" + b.hex(), "path": "fast (cap > len + 40)"}})
             cs.append({"id": f"roundtrip-{e:x}-{rn}", "op": "roundtrip", "in": b.hex(), "exp": {"ok": True, "out": b.hex()}})
     for n in (0, 39, 41, 80):
-        cs.append({"id": f"dec-len{n}", "op": "unmarshal", "in": (b"\x11" * n).hex(), "exp": {"ok": False, "ErrSize": True}})
+        cs.append({"id": f"dec-len{n}", "op": "unmarshal", "in": (b"\x11" * n).hex(), "sentinel": True,
+                   "exp": {"ok": False, "ErrSize": True, "not_ErrBytesLength": True, "recv_unchanged": True}})
     for n in (0, 31, 33):
         cs.append({"id": f"enc-rootlen{n}", "op": "marshal", "epoch": 7, "root": (b"\x22" * n).hex(), "prefix": "", "spare": 48,
-                   "exp": {"ok": False, "ErrBytesLength": True, "out_nil": True}})
+                   "exp": {"ok": False, "ErrBytesLength": True, "not_ErrSize": True, "out_nil": True,
+                           # C-1: the 8 epoch bytes are already in the caller's spare capacity
+                           "backing": (struct.pack("<Q", 7) + bytes(40)).hex()}})
     cs.append({"id": "enc-grow-cap0", "op": "marshal", "epoch": 5, "root": bytes(range(32)).hex(), "prefix": "", "spare": 0,
-               "exp": {"ok": True, "out": enc(5, bytes(range(32))).hex(), "path": "growslice (not proved)"}})
+               "exp": {"ok": True, "out": enc(5, bytes(range(32))).hex(), "path": "growslice"}})
+    # the growslice witness shape of cp_e2e_marshal_grow_main: len 30, cap 36
+    pre30 = bytes(range(0x40, 0x40 + 30))
+    cs.append({"id": "enc-grow-len30-cap36", "op": "marshal", "epoch": 0x0123456789ABCDEF, "root": (b"\xff" * 32).hex(),
+               "prefix": pre30.hex(), "spare": 6,
+               "exp": {"ok": True, "out": (pre30 + enc(0x0123456789ABCDEF, b"\xff" * 32)).hex(), "path": "growslice"}})
     for n in (7, 9):
-        cs.append({"id": f"epoch-len{n}", "op": "epoch_unmarshal", "in": (b"\x01" * n).hex(), "exp": {"ok": False}})
+        cs.append({"id": f"epoch-len{n}", "op": "epoch_unmarshal", "in": (b"\x01" * n).hex(),
+                   "exp": {"ok": False, "err_text": f"expected buffer of length 8 received {n}", "epoch": 0x77}})
     cs.append({"id": "epoch-len8", "op": "epoch_unmarshal", "in": struct.pack("<Q", 0x0102030405060708).hex(),
                "exp": {"ok": True, "epoch": 0x0102030405060708}})
     return cs
@@ -63,12 +72,24 @@ def check(cases_path, out_path, res_path):
                 ok &= g["out"] == x["out"]
             if x.get("ErrSize"):
                 ok &= g["err_is_ErrSize"]
+            if x.get("not_ErrBytesLength"):
+                ok &= not g["err_is_ErrBytesLength"]
+            if x.get("not_ErrSize"):
+                ok &= not g["err_is_ErrSize"]
+            if x.get("recv_unchanged"):
+                ok &= g["recv_unchanged"]
+            if "backing" in x:
+                ok &= g["backing"] == x["backing"]
+            if "err_text" in x:
+                ok &= g["err"] == x["err_text"]
             if x.get("ErrBytesLength"):
                 ok &= g["err_is_ErrBytesLength"] and g["out_nil"] == x["out_nil"]
         bad += not ok
         rows.append({"id": i, "op": c["op"], "expected": x, "observed": g, "match": ok})
     res = {"go": "go1.26.10 linux/arm64 (native)", "cases": len(rows), "mismatches": bad, "rows": rows,
-           "oracle": "struct.pack('<Q', epoch) + root; 40-byte acceptance; ErrSize / ErrBytesLength identities"}
+           "oracle": "struct.pack('<Q', epoch) + root; 40-byte acceptance; ErrSize / ErrBytesLength identities (and not the other); "
+                     "decoder reject leaves a sentinel receiver unchanged; encoder reject leaves LE(epoch) in the caller's backing "
+                     "array (C-1); Epoch reject error text and receiver unchanged"}
     json.dump(res, open(res_path, "w"), indent=1)
     print(json.dumps({"cases": len(rows), "mismatches": bad}))
     return 1 if bad else 0

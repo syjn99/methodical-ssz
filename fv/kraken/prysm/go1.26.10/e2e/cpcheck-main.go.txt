@@ -1,6 +1,6 @@
 // Scratch differential program (prysm-e2e E6, not committed in Prysm): runs the real generated
 // v1alpha1.Checkpoint SSZ methods and the hand-written primitives.Epoch decoder on the cases of
-// fv/kraken/gen/e2e/differential.py and prints the observed results as JSON. Expected values are
+// fv/kraken/gen/e2e/differential.py (with the review e2e-r1 S8 fields) and prints the observed results as JSON. Expected values are
 // computed by that script independently (Python struct.pack), never from this program.
 package main
 
@@ -23,6 +23,8 @@ type Case struct {
 	Root   string `json:"root"`
 	Prefix string `json:"prefix"`
 	Spare  int    `json:"spare"`
+	// review e2e-r1 S8: start the receiver from a sentinel value (reject cases)
+	Sentinel bool `json:"sentinel"`
 }
 
 type Res struct {
@@ -36,6 +38,8 @@ type Res struct {
 	RootCap        int    `json:"root_cap"`
 	Out            string `json:"out"`
 	OutNil         bool   `json:"out_nil"`
+	RecvUnchanged  bool   `json:"recv_unchanged"`
+	Backing        string `json:"backing"`
 }
 
 func errs(r *Res, err error) {
@@ -62,7 +66,20 @@ func main() {
 		case "unmarshal", "roundtrip":
 			in, _ := hex.DecodeString(c.In)
 			cp := &ethpb.Checkpoint{}
+			sRoot := []byte{}
+			if c.Sentinel {
+				sRoot = make([]byte, 32)
+				for i := range sRoot {
+					sRoot[i] = 0x33
+				}
+				cp = &ethpb.Checkpoint{Epoch: 0xAAAAAAAAAAAAAAAA, Root: sRoot}
+			}
+			sHex := hex.EncodeToString(sRoot) // taken before the call
 			err := cp.UnmarshalSSZ(in)
+			if c.Sentinel {
+				r.RecvUnchanged = cp.Epoch == 0xAAAAAAAAAAAAAAAA && len(cp.Root) == 32 && cap(cp.Root) == 32 &&
+					&cp.Root[0] == &sRoot[0] && hex.EncodeToString(cp.Root) == sHex
+			}
 			errs(&r, err)
 			r.Epoch, r.Root, r.RootLen, r.RootCap = uint64(cp.Epoch), hex.EncodeToString(cp.Root), len(cp.Root), cap(cp.Root)
 			if c.Op == "roundtrip" && err == nil {
@@ -79,9 +96,10 @@ func main() {
 			out, err := cp.MarshalSSZTo(dst)
 			errs(&r, err)
 			r.Out, r.OutNil = hex.EncodeToString(out), out == nil
+			r.Backing = hex.EncodeToString(dst[:cap(dst)]) // the caller's backing array after the call (C-1)
 		case "epoch_unmarshal":
 			in, _ := hex.DecodeString(c.In)
-			var e primitives.Epoch
+			var e primitives.Epoch = 0x77
 			errs(&r, e.UnmarshalSSZ(in))
 			r.Epoch = uint64(e)
 		}
