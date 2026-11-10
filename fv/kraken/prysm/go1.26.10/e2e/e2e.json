@@ -104,7 +104,7 @@
    "kind": "encoder on a decoded-form receiver (not compose_hupd; review e2e-r1 M1)",
    "function": "UnmarshalSSZ;MarshalSSZTo",
    "statement": "done",
-   "witness": "WitCpM (decoded-form receiver)",
+   "witness": "corollary; no own witness (WitCpM runs cp_e2e_marshal_main on a decoded-form receiver; audit AU-12)",
    "theorem": "done",
    "link": "done",
    "negative": "done",
