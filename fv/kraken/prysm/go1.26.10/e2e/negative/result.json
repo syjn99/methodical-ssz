@@ -637,8 +637,82 @@
    "seconds": 486.1,
    "pass": true,
    "diff": "--- orig\n+++ mut\n@@ -34,7 +34,7 @@\n           \u22c6 Eq ((Int.toBytes 8 p.toInt).At (s.regs.rax.toBitVec + 16))\n           \u22c6 Eq ((Int.toBytes 8 rl.toBitVec.toInt).At (s.regs.rax.toBitVec + 24)) \u22c6 Eq (cC.At (s.regs.rax.toBitVec + 32))\n           \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40))\n-          \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n+          \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n           \u22c6 Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrBytesLength_addr)\n           \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrBytesLength\" + 8).toBitVec) \u22c6 R) st.data.dmem)\n       \u27e8s, Host.addrOf k\u27e9 := by\n"
+  },
+  {
+   "id": "cps-control",
+   "kind": "control",
+   "module": "E2e/CpSpecM.lean",
+   "theorem": "cp_e2e_size_main",
+   "range": [
+    75,
+    95
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "seconds": 1.1,
+   "pass": true,
+   "diff": ""
+  },
+  {
+   "id": "cps-41",
+   "kind": "code",
+   "module": "E2e/CpSpecM.lean",
+   "theorem": "cp_e2e_size_main",
+   "range": [
+    75,
+    95
+   ],
+   "error_lines": [
+    95
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cps-41/mut.lean:95:43: error: unsolved goals",
+   "rc": 1,
+   "killed": false,
+   "seconds": 1.0,
+   "pass": true,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -1,3 +1,3 @@\n github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.SizeSSZ:\n-  mov $0x28,%eax\n+  mov $0x29,%eax\n   retq\n"
+  },
+  {
+   "id": "cpms-control",
+   "kind": "control",
+   "module": "E2e/CpSpecM.lean",
+   "theorem": "cp_e2e_marshal_spec_k",
+   "range": [
+    28,
+    71
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "seconds": 1.1,
+   "pass": true,
+   "diff": ""
+  },
+  {
+   "id": "cpms-stmt-off1",
+   "kind": "stmt",
+   "module": "E2e/CpSpecM.lean",
+   "theorem": "cp_e2e_marshal_spec_k",
+   "range": [
+    28,
+    71
+   ],
+   "error_lines": [
+    68,
+    71,
+    59
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpms-stmt-off1/mut.lean:68:94: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "seconds": 1.1,
+   "pass": true,
+   "diff": "--- orig\n+++ mut\n@@ -27,7 +27,7 @@\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n         \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 \u2227 st.data.regs.rcx = s.regs.rdi\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n-        \u2227 (Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n+        \u2227 (Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))\n           \u22c6 fun _ => True) st.data.dmem)\n       \u27e8s, Host.addrOf k\u27e9 := by\n   refine \u27e8pcpEnc g, pcp_serialize g, ?_\u27e9\n"
   }
  ],
- "pass": 34,
- "total": 34
+ "pass": 38,
+ "total": 38
 }

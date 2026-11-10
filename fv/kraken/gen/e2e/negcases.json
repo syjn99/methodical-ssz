@@ -309,5 +309,37 @@
   "theorem": "cp_e2e_marshal_reject_main",
   "old": "Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n          ⋆ Eq ((Int.toBytes 8 e0",
   "new": "Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n          ⋆ Eq ((Int.toBytes 8 e0"
+ },
+ {
+  "id": "cps-control",
+  "kind": "control",
+  "module": "E2e/CpSpecM.lean",
+  "theorem": "cp_e2e_size_main",
+  "code_def": "CpSize",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.SizeSSZ.S"
+ },
+ {
+  "id": "cps-41",
+  "kind": "code",
+  "module": "E2e/CpSpecM.lean",
+  "theorem": "cp_e2e_size_main",
+  "code_def": "CpSize",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.SizeSSZ.S",
+  "old": "  mov $0x28,%eax",
+  "new": "  mov $0x29,%eax"
+ },
+ {
+  "id": "cpms-control",
+  "kind": "control",
+  "module": "E2e/CpSpecM.lean",
+  "theorem": "cp_e2e_marshal_spec_k"
+ },
+ {
+  "id": "cpms-stmt-off1",
+  "kind": "stmt",
+  "module": "E2e/CpSpecM.lean",
+  "theorem": "cp_e2e_marshal_spec_k",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))"
  }
 ]
