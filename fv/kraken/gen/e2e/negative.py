@@ -22,7 +22,8 @@ a control when Lean reports no error. Each result has a "class": control_pass, i
 no_error, killed, timeout_wall (CASE_TIMEOUT expired) or timeout_heartbeat (an error line is Lean's
 "(deterministic) timeout"; review e2e-r2 N1) or recursion_limit (an error line is "maximum recursion
 depth has been reached") or wrong_target (the FIRST error is a parse error or an unknown identifier /
-constant: the mutant does not reach its target; audit AU-04); the resource classes are decided by the FIRST error line (a later resource
+constant, or another parse / name-resolution form listed at WRONG_TARGET: the mutant does not reach its
+target; audit AU-04, review fix-r1 M1); the resource classes are decided by the FIRST error line (a later resource
 error is kept in "later_resource_error"). These three resource classes and wrong_target are never a pass.
 negative.py --reclassify <result.json> [<work-dir>] recomputes the classes of a result file; --selftest checks them.
 On a per-case timeout the whole process tree (memcap.py, and lake/lean in memcap's own session) is killed
@@ -30,7 +31,8 @@ and the driver asserts that none survives before the next case (audit AU-03); --
 this with a fake child (no Lean). Before the first case, `lake build --no-build <imports of the case modules>`
 must exit 0 (audit AU-05: `lake env lean` does not check traces); otherwise no case runs and the exit code is 2.
 The precheck argv and exit code are appended to "prechecks" of <result.json>.
-Old results whose id is not in <cases.json> are dropped from <result.json>.
+Old results whose id is not in <cases.json> are dropped from <result.json>. A <case-id> that matches no
+case is a usage error: nothing runs and the exit code is 2 (review fix-r1 S7).
 Writes <result.json> and, per case, <work-dir>/<id>/{mut.lean, mut.S?, diff, log}. Python 3 stdlib only.
 """
 import difflib
@@ -54,9 +56,27 @@ HEARTBEAT = "(deterministic) timeout"
 RECDEPTH = "maximum recursion depth has been reached"
 # audit AU-04: a first error that is a parse error or a name-resolution error says nothing about the
 # mutated hypothesis or instruction; the mutant does not reach its target. Class wrong_target, never a pass.
+# Review fix-r1 M1: the list is enumerated from the message strings of the pinned toolchain's sources
+# (Lean/Parser, Lean/ResolveName.lean, Lean/Elab/*: `errorAtSavedPos`, `throwError`, `logError`), not only
+# from observed records. It is matched at the START of the first error message (after `error:` or
+# `error(<kind>):`), case-insensitive:
+#   parse:            unknown tactic | unexpected token/end of input/identifier/command/tactic | expected <x>
+#                     | unknown syntax category | unknown category | unknown parser
+#   name resolution:  unknown identifier/constant/namespace/declaration/universe level/attribute/hypothesis
+#                     /local declaration/alternative name/tag | unknown `grind` attribute
+#                     | Invalid field `f`: The environment does not contain … (and the old lower-case form)
+#                     | ambiguous identifier/namespace/…, possible interpretations
+# Not included (elaborator-internal invariants, not a parse or user-name error): unknown metavariable,
+# free variable, goal, let-declaration, parameter, local function, function.
 WRONG_TARGET = re.compile(
-    r"error(\((lean\.)?(unknownIdentifier|unknownConstant|parse\w*)\))?: "
-    r"(unknown (identifier|constant)|unexpected (token|end of input|identifier)|expected [^\s])", re.I)
+    r"error(\([\w.]+\))?: "
+    r"(unknown (tactic|identifier|constant|namespace|declaration|universe level|attribute|hypothesis"
+    r"|local declaration|alternative name|tag|syntax category|category|parser)\b"
+    r"|unknown `grind` attribute"
+    r"|invalid field\b.*\benvironment does not contain"
+    r"|ambiguous\b"
+    r"|unexpected (token|end of input|identifier|command|tactic)\b"
+    r"|expected [^\s])", re.I)
 TOP = re.compile(r"^((theorem|def|end|example|set_option|abbrev|structure|instance|namespace|section|open)\b|/--|/-!)")
 
 
@@ -290,7 +310,11 @@ def precheck(modules):
 def main(cases, work, out, *ids):
     cs = json.load(open(cases))
     if ids:
+        missing = sorted(set(ids) - {c["id"] for c in cs})
         cs = [c for c in cs if c["id"] in ids]
+        if missing or not cs:  # review fix-r1 S7: an id that matches no case is a usage error, not 0 cases run
+            print("NO SUCH CASE:", missing, "; no case run", flush=True)
+            return 2
     work = pathlib.Path(work).resolve()
     work.mkdir(parents=True, exist_ok=True)
     pc = precheck(sorted({c["module"] for c in cs}))
@@ -341,6 +365,32 @@ def selftest():
            "wrong_target"),
           ("wt_parse2", dict(error_lines=[5], first_error="x:5:9: error: expected ':=', 'where' or '|'"), "wrong_target"),
           ("wt_eoi", dict(error_lines=[9], first_error="x:9:0: error: unexpected end of input"), "wrong_target"),
+          # review fix-r1 M1: the reviewer's real record rv-unknown-tactic (`exact` -> `exactt`) and crafted forms
+          ("wt_tactic", dict(error_lines=[54], first_error="x:54:3: error: unknown tactic", range=[1, 60]), "wrong_target"),
+          ("wt_ns", dict(error_lines=[5], first_error="x:5:5: error: unknown namespace `Foo`"), "wrong_target"),
+          ("wt_field", dict(error_lines=[5], first_error="x:5:2: error: Invalid field `foo`: The environment does not "
+                                                          "contain `Nat.foo`, so it is not possible to project"),
+           "wrong_target"),
+          ("wt_field_old", dict(error_lines=[5], first_error="x:5:2: error: invalid field 'foo', the environment does "
+                                                              "not contain 'Nat.foo'"), "wrong_target"),
+          ("wt_ambig", dict(error_lines=[5], first_error="x:5:2: error: Ambiguous identifier `f`; possible "
+                                                          "interpretations: [A.f, B.f]"), "wrong_target"),
+          ("wt_ambig_old", dict(error_lines=[5], first_error="x:5:2: error: ambiguous, possible interpretations"),
+           "wrong_target"),
+          ("wt_decl", dict(error_lines=[5], first_error="x:5:2: error: unknown declaration 'E2e.foo'"), "wrong_target"),
+          ("wt_univ", dict(error_lines=[5], first_error="x:5:2: error: unknown universe level `v`"), "wrong_target"),
+          ("wt_attr", dict(error_lines=[5], first_error="x:5:2: error: Unknown attribute `[simpp]`"), "wrong_target"),
+          ("wt_hyp", dict(error_lines=[5], first_error="x:5:2: error: unknown hypothesis `h`"), "wrong_target"),
+          ("wt_kind", dict(error_lines=[5], first_error="x:5:2: error(lean.unknownIdentifier): Unknown identifier `h`"),
+           "wrong_target"),
+          ("wt_cmd", dict(error_lines=[5], first_error="x:5:0: error: unexpected command"), "wrong_target"),
+          # messages that only contain such words later are real failures
+          ("in_mentions_expected", dict(error_lines=[5], first_error="x:5:1: error: Application type mismatch: "
+                                                                         "hms has type True but is expected to have type"),
+           "inside"),
+          ("in_unknown_later", dict(error_lines=[5], first_error="x:5:1: error: omega could not prove the goal: "
+                                                                     "unknown identifier in a hint"), "inside"),
+          ("wt_unexp_tactic", dict(error_lines=[5], first_error="x:5:1: error: Unexpected tactic"), "wrong_target"),
           # a later unknown identifier after a real first error does not change the class
           ("in_then_uid", dict(error_lines=[5, 6], first_error="x:5:1: error: Type mismatch"), "inside"),
           ("in_unsolved", dict(error_lines=[5], first_error="x:5:1: error: unsolved goals"), "inside"),
