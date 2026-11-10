@@ -804,8 +804,44 @@
    "seconds": 3.9,
    "pass": true,
    "diff": "--- orig\n+++ mut\n@@ -16,7 +16,7 @@\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 8) (hav : 8 + 40 + 40 + 8192 \u2264 avail)\n     (hct : ConvT64C Heap S) (hdd : FmtErrorfDDC Heap E2e.Data.e2eEpFmt E2e.Data.e2eIntType_addr S) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax \u2260 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (bx : BitVec 64) (hb stk' sp' : List UInt8) (av' : Nat), stk'.length = S \u2227 sp'.length = 40\n           \u2227 BoxIn bx s.regs.rcx.toBitVec hb \u2227 av' \u2264 avail \u2227\n"
+  },
+  {
+   "id": "gv-control",
+   "kind": "control",
+   "module": "E2e/GoVal.lean",
+   "theorem": "cp_layout",
+   "range": [
+    28,
+    29
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "seconds": 0.7,
+   "pass": true,
+   "diff": ""
+  },
+  {
+   "id": "gv-stmt-epoch16",
+   "kind": "stmt",
+   "module": "E2e/GoVal.lean",
+   "theorem": "cp_layout",
+   "range": [
+    28,
+    29
+   ],
+   "error_lines": [
+    29
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/gv-stmt-epoch16/mut.lean:29:51: error: Tactic `decide` proved that the proposition",
+   "rc": 1,
+   "killed": false,
+   "seconds": 0.8,
+   "pass": true,
+   "diff": "--- orig\n+++ mut\n@@ -1,2 +1,2 @@\n-theorem cp_layout : cpOff \"state\" = 0 \u2227 cpOff \"Epoch\" = 8 \u2227 cpOff \"Root\" = 16 \u2227 cpOff \"unknownFields\" = 40\n+theorem cp_layout : cpOff \"state\" = 0 \u2227 cpOff \"Epoch\" = 16 \u2227 cpOff \"Root\" = 16 \u2227 cpOff \"unknownFields\" = 40\n     \u2227 cpOff \"sizeCache\" = 64 \u2227 cpGoSize = 72 := by decide"
   }
  ],
- "pass": 43,
- "total": 43
+ "pass": 45,
+ "total": 45
 }

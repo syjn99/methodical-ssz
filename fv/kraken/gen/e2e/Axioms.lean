@@ -10,6 +10,13 @@ import E2e.CpSpecK
 import E2e.CpMarshal
 import E2e.WitCpM
 import E2e.Compose
+import E2e.CpMarshalR
+import E2e.WitCpMR
+import E2e.CpSpecM
+import E2e.WitCpS
+import E2e.EpReject
+import E2e.WitEpR
+import E2e.GoVal
 #print axioms E2e.ep_unmarshal_accept_main
 #print axioms E2e.ep_uacc_holds
 #print axioms E2e.WitEp.ep_accept_runs
@@ -33,3 +40,18 @@ import E2e.Compose
 #print axioms E2e.WitCpM.cpm_runs_prefix
 #print axioms E2e.cp_e2e_unmarshal_then_marshal
 #print axioms E2e.cp_e2e_spec_roundtrip
+#print axioms E2e.cp_e2e_marshal_reject_main
+#print axioms E2e.WitCpMR.cpmr_runs
+#print axioms E2e.cp_e2e_marshal_spec_k
+#print axioms E2e.cp_e2e_size_main
+#print axioms E2e.cp_e2e_size_spec
+#print axioms E2e.WitCpS.cps_runs
+#print axioms E2e.ep_unmarshal_reject_len_main
+#print axioms E2e.ep_static_table
+#print axioms E2e.WitEpR.epr_runs
+#print axioms E2e.cp_layout
+#print axioms E2e.witCpA_recv_pre
+#print axioms E2e.witCpA_recv_post
+#print axioms E2e.witCpM_recv
+#print axioms E2e.witCpMR_recv
+#print axioms E2e.cpGoValue_rejects_bad

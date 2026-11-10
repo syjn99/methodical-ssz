@@ -114,10 +114,61 @@
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.prysmCpDesc_checker": []
+  "E2e.cp_e2e_marshal_reject_main": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.WitCpMR.cpmr_runs": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.cp_e2e_marshal_spec_k": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.cp_e2e_size_main": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.cp_e2e_size_spec": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.WitCpS.cps_runs": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.ep_unmarshal_reject_len_main": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.ep_static_table": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.WitEpR.epr_runs": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.prysmCpDesc_checker": [],
+  "E2e.cp_layout": [],
+  "E2e.witCpA_recv_pre": [],
+  "E2e.witCpA_recv_post": [],
+  "E2e.witCpM_recv": [],
+  "E2e.witCpMR_recv": [],
+  "E2e.cpGoValue_rejects_bad": []
  },
  "missing": [],
  "nonstandard": {},
- "count": 23,
+ "count": 38,
  "verdict": "PASS"
 }
