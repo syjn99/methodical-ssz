@@ -389,6 +389,7 @@ AttestationData 인코더(A4–A6)는 시작하지 않았다.
 
 부정 시험 등급(리뷰 e2e-r2 N1): `negative.py`는 결과마다 `class`를 적는다. Lean의 "(deterministic) timeout" 오류는 `timeout_heartbeat`, 사례별 제한(300초) 초과는 `timeout_wall`이다. Lean의 "maximum recursion depth" 오류는 `recursion_limit`이다. 세 자원 등급은 통과가 아니다. 하트비트 시간 초과였던 문장 변이 2건은 명확하게 실패하는 변이로 바꿨다: `cpmr-stmt-noown`(전제에서 `dst[len..len+8]` 소유 삭제, C-1 저장 단계에서 실패), `cpg-stmt-growle`(`cap < len + 8`을 `≤`로), 그리고 코드 변이 `cpg-oldcap`(첫 지점 growslice oldCap 인수)을 더했다. 시도한 `cpg-stmt-noroot`는 300초 제한에 걸려서 넣지 않았다(gate 작업 126). 세션 3의 전체 실행(gate 작업 139, 사례별 300초): 73/73, 시간 초과 0. `cpg-newptr`(작업 125에서 489.7초 뒤 정리 안 실패)는 300초를 넘어 뺐다. 등급은 첫 오류 줄로 정한다. `ep-load8`은 첫 오류가 정리 안의 `ecancel` 실패이고 뒤의 오류 하나가 하트비트 시간 초과다(`later_resource_error`에 적음). `sl-load8`, `ci-load8`도 같다.
 감사 AU-04: 첫 오류가 구문 오류, 알 수 없는 식별자, 알 수 없는 상수이면 등급은 `wrong_target`이다. 통과가 아니다. 변이가 목표에 닿지 않았다는 뜻이다. 다시 분류한 결과 `cps-stmt-u-rax`, `cps-stmt-m-mm`, `ada-m-nohms` 3건이 `inside`에서 `wrong_target`으로 바뀌었다. `scal/negative-result.json`(18건)은 바뀌지 않았다.
+감사 AU-05: `lake env lean`은 trace를 검사하지 않는다. 그래서 `negative.py`와 `axioms.py run`은 먼저 `lake build --no-build <가져오는 모듈>`을 실행한다. 종료 코드가 0이 아니면 아무 사례도 실행하지 않는다. 세션 7: gate 작업 248 `lake build --no-build E2e E2eAd E2eScal` 종료 3(E2eAd 5개 모듈 trace 낡음), 작업 249 `lake build E2eAd` 종료 0, 작업 250 같은 검사 종료 0.
 세션 4 작업 202에서 3건(`cpw-tr-jne`, `cpw-tc-lea`, `cpw-hg-jae`)은 "outside"였다. 같은 파일의 앞 정리가 같은 지시문을 지나기 때문이다. 변이는 실패했다. 작업 203에서 `cpw-tr-err1`, `cpw-tc-stmt-num`, `cpw-hg-spill`로 바꿨다(리뷰 e2e-r3 S6, `e2e.json` `negative_suite.removed`).
 `ci-load8`은 세션 4 결과 파일에 없었다. 세션 5 작업 213에서 다시 실행했다: 안 실패, 하트비트 오류가 뒤에 있다(리뷰 e2e-r3 S4).
 결과 파일은 여러 작업의 결과를 사례 id로 합친 것이다. 모든 사례는 사례별 300초 제한으로 실행됐다. 한 번의 실행으로 전부를 돌리지 않았다(실행당 gate 20분 제한).
@@ -409,7 +410,7 @@ python3 -I -B fv/kraken/gen/e2e/e2elink.py filter <out> <objdump> <elf> <nm>
 mkdir -p <out>/norm && python3 -I -B fv/kraken/link/conv.py <out>/target.objdump <out>/p1bin-amd64.nm <out>/norm --norm
 python3 -I -B fv/kraken/gen/e2e/e2elink.py data <out> && python3 -I -B fv/kraken/link/check.py <out>
 (cd fv/kraken/lean && lake build E2e.<모듈>)            # 모듈 하나씩: Epoch WitEp Spec CpAccept WitCpA CpReject WitCpR CpSpecK CpMarshal WitCpM Compose CpCompose WitCpC CpMarshalG WitCpG CpMarshalR WitCpMR CpSpecM WitCpS EpReject WitEpR GoVal CpWTail CpWTailG CpWHead CpWGrow CpWGrowAny CpWCover WitCpW WitCpWR CpWSharp CpWCoverF WitCpWF WitCpWRF GoValW
-(cd fv/kraken/lean && lake env lean ../gen/e2e/Axioms.lean) | python3 -I -B fv/kraken/gen/e2e/axioms.py /dev/stdin prysm/go1.26.10/e2e/axioms.json
+python3 -I -B fv/kraken/gen/e2e/axioms.py run fv/kraken/gen/e2e/Axioms.lean prysm/go1.26.10/e2e/axioms.json   # lake build --no-build 먼저 (감사 AU-05)
 python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/e2e/negcases.json <work> prysm/go1.26.10/e2e/negative/result.json
 python3 -I -B fv/kraken/gen/e2e/differential.py cases <c.json>; go run ./fve2e/cpcheck <c.json> > <o.json>   # Prysm 임시 트리, Go 1.26.10
 python3 -I -B fv/kraken/gen/e2e/differential.py check <c.json> <o.json> prysm/go1.26.10/e2e/differential.json

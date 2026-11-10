@@ -27,7 +27,9 @@ error is kept in "later_resource_error"). These three resource classes and wrong
 negative.py --reclassify <result.json> [<work-dir>] recomputes the classes of a result file; --selftest checks them.
 On a per-case timeout the whole process tree (memcap.py, and lake/lean in memcap's own session) is killed
 and the driver asserts that none survives before the next case (audit AU-03); --selftest-timeout checks
-this with a fake child (no Lean).
+this with a fake child (no Lean). Before the first case, `lake build --no-build <imports of the case modules>`
+must exit 0 (audit AU-05: `lake env lean` does not check traces); otherwise no case runs and the exit code is 2.
+The precheck argv and exit code are appended to "prechecks" of <result.json>.
 Old results whose id is not in <cases.json> are dropped from <result.json>.
 Writes <result.json> and, per case, <work-dir>/<id>/{mut.lean, mut.S?, diff, log}. Python 3 stdlib only.
 """
@@ -264,12 +266,37 @@ def reclassify(out, work=None):
     return 0
 
 
+def imports_of(modules):
+    """Module names imported by the given files (paths under fv/kraken/lean)."""
+    mods = set()
+    for m in modules:
+        for l in (LEAN / m).read_text().split("\n"):
+            if l.startswith("import "):
+                mods.update(l.split()[1:])
+    return sorted(mods)
+
+
+def precheck(modules):
+    """Audit AU-05: `lake env lean` does no trace check, so a stale .olean could be used. Before any case,
+    `lake build --no-build <imports>` must exit 0 (every imported module is up to date)."""
+    imps = imports_of(modules)
+    argv = ["lake", "build", "--no-build"] + imps
+    r = subprocess.run(argv, cwd=LEAN, capture_output=True, text=True)
+    tail = [l for l in (r.stdout + r.stderr).splitlines() if l.startswith("- ") or "error" in l][-20:]
+    print("PRECHECK", "rc", r.returncode, " ".join(argv), flush=True)
+    return {"argv": argv, "rc": r.returncode, "failures": tail}
+
+
 def main(cases, work, out, *ids):
     cs = json.load(open(cases))
     if ids:
         cs = [c for c in cs if c["id"] in ids]
     work = pathlib.Path(work).resolve()
     work.mkdir(parents=True, exist_ok=True)
+    pc = precheck(sorted({c["module"] for c in cs}))
+    if pc["rc"] != 0:
+        print("PRECHECK FAILED: stale or missing imported modules; no case run", pc["failures"], flush=True)
+        return 2
     res = []
     for c in cs:
         r = run_case(c, work)
@@ -283,8 +310,10 @@ def main(cases, work, out, *ids):
     cls = {}
     for r in allr:
         cls[r["class"]] = cls.get(r["class"], 0) + 1
+    prev = json.load(open(out)).get("prechecks", []) if pathlib.Path(out).exists() else []
+    pc["cases"] = [r["id"] for r in res]
     json.dump({"cases": allr, "pass": sum(r["pass"] for r in allr), "total": len(allr), "classes": cls,
-               "case_timeout_s": CASE_TIMEOUT}, open(out, "w"), indent=1)
+               "case_timeout_s": CASE_TIMEOUT, "prechecks": (prev + [pc])[-50:]}, open(out, "w"), indent=1)
     print(json.dumps({"pass": sum(r["pass"] for r in res), "run": len(res), "classes": cls}))
     return 0 if all(r["pass"] for r in res) else 1
 
