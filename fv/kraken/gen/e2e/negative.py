@@ -67,6 +67,9 @@ RECDEPTH = "maximum recursion depth has been reached"
 #                     /local declaration/alternative name/tag | unknown `grind` attribute
 #                     | Invalid field `f`: The environment does not contain … (and the old lower-case form)
 #                     | ambiguous identifier/namespace/…, possible interpretations
+#   option / case:    Unknown option `o` | Case tag `t` not found (review fix-r2 N1: both escaped as inside)
+# THE LIST IS NOT COMPLETE. It covers the forms named above and no others. A first error of another
+# parse or name form that is not listed here still classifies as inside; read the first error of every row.
 # Not included (elaborator-internal invariants, not a parse or user-name error): unknown metavariable,
 # free variable, goal, let-declaration, parameter, local function, function.
 WRONG_TARGET = re.compile(
@@ -74,6 +77,8 @@ WRONG_TARGET = re.compile(
     r"(unknown (tactic|identifier|constant|namespace|declaration|universe level|attribute|hypothesis"
     r"|local declaration|alternative name|tag|syntax category|category|parser)\b"
     r"|unknown `grind` attribute"
+    r"|unknown option\b"
+    r"|case tag\b.*\bnot found"
     r"|invalid field\b.*\benvironment does not contain"
     r"|ambiguous\b"
     r"|unexpected (token|end of input|identifier|command|tactic)\b"
@@ -394,6 +399,13 @@ def selftest():
           ("wt_kind", dict(error_lines=[5], first_error="x:5:2: error(lean.unknownIdentifier): Unknown identifier `h`"),
            "wrong_target"),
           ("wt_cmd", dict(error_lines=[5], first_error="x:5:0: error: unexpected command"), "wrong_target"),
+          # review fix-r2 N1: the reviewer's two escapes (real first-error strings of the pinned toolchain)
+          ("wt_option", dict(error_lines=[54], first_error="x:54:2: error: Unknown option `rv.nosuch`", range=[21, 55]),
+           "wrong_target"),
+          ("wt_casetag", dict(error_lines=[54], first_error="x:54:2: error: Case tag `rvnosuch` not found.",
+                              range=[21, 55]), "wrong_target"),
+          ("wt_casetag_hint", dict(error_lines=[5], first_error="x:5:2: error: Case tag `h` not found.\nHint: x"),
+           "wrong_target"),
           # messages that only contain such words later are real failures
           ("in_mentions_expected", dict(error_lines=[5], first_error="x:5:1: error: Application type mismatch: "
                                                                          "hms has type True but is expected to have type"),
