@@ -1,0 +1,178 @@
+{
+ "schema": 1,
+ "stage": "S3 hold-out H1 (INBOX 019), evaluation session",
+ "method_freeze": {
+  "sha": "56dfc27a6b0c7890105bd16971e0d33bbcd9980e",
+  "Kind.lean": "3c9b95b1b37036831527396975d4232cc20174f3",
+  "scalgen.py": "78e3339bc0ff3f20b6daa9a28582c97d7df9f712"
+ },
+ "opened_utc": "2026-11-10T17:53:24Z",
+ "baseline": "BASELINE.json (hand proofs, same measures; numbers as they are, no target)",
+ "template_cost": "TEMPLATE-COST.json (S1+S2, separate; not amortised here)",
+ "measures_note": "job seconds = log header start to footer end (1 s resolution; includes gate wait); 'cumulative gate s' is the sum over the jobs listed, not a cold build. Cold build s of the new modules: the single successful build jobs (GenVi 0.8 s, GenBhDec 1.0 s, BhHead 5.1 s, BhAccept 7.4 s, BhReject 2.3 s, BhSpec 1.5 s, BhSpecK 1.9 s, WitVi 1.0 s, WitBhA 60 s, WitBhR 2.2 s, as printed by lake).",
+ "units": {
+  "validator_index_decoder (i)": {
+   "theorem": "E2eScal.Gen.vi_unmarshal_accept_main_g (generated) + E2eScal.vi_uacc_holds (hand, 3 lines of proof)",
+   "generator_runs": 1,
+   "raw_to_accepted_diff_lines": {
+    "lean/E2eScal/GenVi.lean": 0
+   },
+   "hand_files": {
+    "lean/E2eScal/BhCode.lean": 27,
+    "lean/E2eScal/ViSpec.lean": 46,
+    "lean/E2eScal/WitVi.lean": 93
+   },
+   "hand_files_note": "line counts by wc -l; WitVi is the text of WitCi with names replaced (sed); ViSpec is the text of CiUAccC / ci_uacc_holds",
+   "jobs": [
+    299,
+    300,
+    301,
+    302,
+    303,
+    304,
+    305,
+    306,
+    307,
+    308,
+    309,
+    310,
+    311
+   ],
+   "lake_runs": 2,
+   "failed_lake_runs": 0,
+   "cumulative_gate_s": 73.0,
+   "peak_rss_gib": 3.71,
+   "memcap_kills": 0,
+   "kernel_checked_utc": "2026-11-10T17:55:50Z (job 300)",
+   "wall_clock_from_opening_to_first_accept_s": 146,
+   "evidence": {
+    "statement_kind": "_kind (with_reducible rfl) + kindcheck.py PASS",
+    "witness": "WitVi.vi_accept_runs (3 inputs)",
+    "link": "bundle 140eb7bd (job 298)",
+    "negatives": "9/9 (1 control, 8 inside; jobs 302-310)",
+    "go_value": "uint64 receiver: any 8 bytes; Go differential vi-accept 3/3, vi-len 3/3 (job 345)",
+    "axioms": "standard (job 311, 2761 declarations)"
+   }
+  },
+  "beacon_block_header_decoder (ii)": {
+   "theorems": [
+    "E2eScal.Bh.bh_e2e_accept_main",
+    "E2eScal.Bh.bh_e2e_reject_size_main",
+    "E2eScal.Bh.bh_e2e_accept_spec_k",
+    "E2eScal.Bh.bh_e2e_reject_size_spec",
+    "E2eScal.Bh.bh_e2e_reject_complete",
+    "E2e.prysmBhDesc_serialize_checker",
+    "E2e.prysmBhDesc_deserialize_checker"
+   ],
+   "generated": [
+    "E2eScal.Gen.bh_dec_ParentRoot_seg",
+    "E2eScal.Gen.bh_dec_StateRoot_seg",
+    "E2eScal.Gen.bh_dec_BodyRoot_seg"
+   ],
+   "generator_runs": 1,
+   "raw_to_accepted_diff_lines": {
+    "lean/E2eScal/GenBhDec.lean": 0
+   },
+   "hand_files": {
+    "lean/E2eScal/BhHead.lean": 257,
+    "lean/E2eScal/BhAccept.lean": 292,
+    "lean/E2eScal/BhReject.lean": 120,
+    "lean/E2eScal/BhSpec.lean": 181,
+    "lean/E2eScal/BhSpecK.lean": 141,
+    "lean/E2eScal/WitBhA.lean": 139,
+    "lean/E2eScal/WitBhR.lean": 73
+   },
+   "hand_files_note": "BhHead, BhReject, BhSpecK, WitBhA, WitBhR, BhSpec are adapted texts of the AttestationData hand files (AdHead, AdReject, AdSpecK, WitAdA, WitAdR, Spec); the hand-written new part is the composition in BhAccept (3 glue blocks + epilogue) and the offset/index changes",
+   "tooling_after_opening": [
+    "gen/e2e/bhlink.py (text of adlink.py with the function set)",
+    "gen/e2e/bhdiff.py + fve2e/bhcheck (differential)",
+    "BhSpecChecker.lean by descterm.py (existing tool)"
+   ],
+   "jobs": [
+    298,
+    312,
+    313,
+    314,
+    315,
+    316,
+    317,
+    318,
+    319,
+    320,
+    321,
+    322,
+    323,
+    324,
+    325,
+    326,
+    327,
+    328,
+    329,
+    330,
+    331,
+    332,
+    333,
+    334,
+    335,
+    336,
+    337,
+    338,
+    339,
+    340,
+    341,
+    342,
+    343,
+    344
+   ],
+   "lake_runs": 12,
+   "failed_lake_runs": 4,
+   "cumulative_gate_s": 254.0,
+   "peak_rss_gib": 3.73,
+   "memcap_kills": 0,
+   "kernel_checked_accept_utc": "2026-11-10T18:06:26Z (job 319)",
+   "wall_clock_from_opening_to_accept_s": 782,
+   "wall_clock_from_opening_to_full_evidence_s": 1435,
+   "failed_runs_detail": {
+    "314": "BhHead: rdi/rbx spill order differs from AttestationData (directives 12/13)",
+    "317": "BhAccept development step ending in `done` (expected unsolved goal; not a proof attempt)",
+    "318": "BhAccept: missing rsp < 2^64 fact; UInt64.toBitVec 0 vs 0#64 form",
+    "321": "BhSpec: serialize_checker by `cases v <;> rfl`"
+   },
+   "evidence": {
+    "statement_kind": "generated segments: _kind + kindcheck.py PASS; hand theorems: no kind (hand statements)",
+    "witness": "WitBhA.bh_accept_runs (3 inputs, Go-valid fresh receiver and non-nil old pointers), WitBhR.bh_reject_runs (111, 113, 0)",
+    "link": "bundle 140eb7bd (job 298)",
+    "negatives": "19 cases: 3 controls, 16 inside (jobs 325-343); hold-out file total 28/28",
+    "go_value": "Go differential bh-accept 3/3, bh-size 3/3 (job 345; Go semantics, not the ELF); no Lean Go-value predicate",
+    "axioms": "standard (job 344, 2989 declarations); drift vs job 311: 228 ADDED only"
+   }
+  },
+  "beacon_block_header_encoder (iii)": {
+   "state": "see 'encoder' (filled when attempted)"
+  }
+ },
+ "contamination": {
+  "generator_changes_after_opening": 0,
+  "lemma_changes_after_opening": 0,
+  "kind_changes_after_opening": 0,
+  "kind_blob_checked": "kindcheck.py: 3c9b95b1 frozen",
+  "raw_output_edits": 0
+ },
+ "claims_and_limits": [
+  "One out-of-sample case per type (ValidatorIndex, BeaconBlockHeader). No generator-superiority claim. No causal speed-up claim from types of unequal size.",
+  "P1 development instances are identical modulo labels; ValidatorIndex is too (only the format-string offset differs from CommitteeIndex). A ValidatorIndex success predicts little (AU-09 C-03).",
+  "Kind parameters (indices, displacements, offsets) are generator-read and checked only through the proof's code facts. The P2 decode kind has no hand-theorem anchor. A _kind identity is not a non-vacuity witness (the witnesses are WitVi, WitBhA).",
+  "SizeSSZ is excluded from the hold-out claim; AU-09 exposure (phase1c SizeSSZ proofs, IR entries and generated Go already in the repository; one phase1c code-constant line naming a BeaconBlockHeader symbol printed in session 1).",
+  "The generator has no encode mode; the MarshalSSZTo fast path is hand work (iii).",
+  "AU-07 stays open (encode template net-negative in build time).",
+  "The BBH composition and head are adapted texts of the reviewed AttestationData hand proofs; most of the low cost comes from that reuse and from the generated segments, not from the generator alone.",
+  "Rebuild tracking: prysm/go1.26.10/e2e/bh/link/norm is not a Lake input_dir (no lakefile change); a .S change would not trigger a rebuild. The link bundle binds the files.",
+  "Runtime contracts MakesliceC / MemmoveC (S + 8) stay hypotheses; Slot and ValidatorIndex callees are discharged by proved function specs (no callee contract).",
+  "A timeout is a timeout; none occurred."
+ ],
+ "not_run": [
+  "reviewer cold rebuild (S4)",
+  "Lean Go-value predicate for the BBH receiver",
+  "unreachable_mc theorems for the two fmt.errorf wraps (stated in BhReject doc only)"
+ ]
+}
