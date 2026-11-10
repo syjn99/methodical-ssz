@@ -1,0 +1,354 @@
+{
+ "go_1_26_3": "/workspace/tooling/fv/go1.26.3",
+ "go_1_26_10": "/workspace/tooling/go1.26.10",
+ "rows": [
+  {
+   "contract": "MakesliceC (esz 1)",
+   "unchanged": true,
+   "parts": [
+    {
+     "file": "src/runtime/slice.go",
+     "function": "makeslice",
+     "same": true,
+     "sha256_1_26_3": "06b36beb2ac09c58671a662bc116c6b75b71b1926ae11fdfe1d3295524a525f6",
+     "sha256_1_26_10": "06b36beb2ac09c58671a662bc116c6b75b71b1926ae11fdfe1d3295524a525f6",
+     "diff": []
+    },
+    {
+     "file": "src/runtime/malloc.go",
+     "function": "mallocgc",
+     "same": true,
+     "sha256_1_26_3": "1c50f2fd766105db6ac72d091a5ef650bae7f36166e77e7b39b608e01dbc7a4e",
+     "sha256_1_26_10": "1c50f2fd766105db6ac72d091a5ef650bae7f36166e77e7b39b608e01dbc7a4e",
+     "diff": []
+    }
+   ]
+  },
+  {
+   "contract": "GrowsliceC (esz 1)",
+   "unchanged": true,
+   "parts": [
+    {
+     "file": "src/runtime/slice.go",
+     "function": "growslice",
+     "same": true,
+     "sha256_1_26_3": "f028652ecf90ffdc71fb20d4104d3d6e70a0e4050ca34b66c38fbdc979cd2207",
+     "sha256_1_26_10": "f028652ecf90ffdc71fb20d4104d3d6e70a0e4050ca34b66c38fbdc979cd2207",
+     "diff": []
+    },
+    {
+     "file": "src/runtime/slice.go",
+     "function": "nextslicecap",
+     "same": true,
+     "sha256_1_26_3": "7a110ba828f2af4dacddc230b1748a95e6db6c67bea9cbb343290d705f89a0ec",
+     "sha256_1_26_10": "7a110ba828f2af4dacddc230b1748a95e6db6c67bea9cbb343290d705f89a0ec",
+     "diff": []
+    },
+    {
+     "file": "src/runtime/malloc.go",
+     "function": "mallocgc",
+     "same": true,
+     "sha256_1_26_3": "1c50f2fd766105db6ac72d091a5ef650bae7f36166e77e7b39b608e01dbc7a4e",
+     "sha256_1_26_10": "1c50f2fd766105db6ac72d091a5ef650bae7f36166e77e7b39b608e01dbc7a4e",
+     "diff": []
+    },
+    {
+     "file": "src/runtime/msize.go",
+     "function": "roundupsize",
+     "same": true,
+     "sha256_1_26_3": "1d5b5be0dd36c9cca5cfb373451068c44f6864625b8c7352ab643bd08183e28c",
+     "sha256_1_26_10": "1d5b5be0dd36c9cca5cfb373451068c44f6864625b8c7352ab643bd08183e28c",
+     "diff": []
+    }
+   ]
+  },
+  {
+   "contract": "MemmoveC",
+   "unchanged": true,
+   "parts": [
+    {
+     "file": "src/runtime/memmove_amd64.s",
+     "function": null,
+     "same": true,
+     "sha256_1_26_3": "1d239c1a965baf43cbdfb82a5144d33aadd95d20ff95becf8347a93ddf08985d",
+     "sha256_1_26_10": "1d239c1a965baf43cbdfb82a5144d33aadd95d20ff95becf8347a93ddf08985d",
+     "diff": []
+    }
+   ]
+  },
+  {
+   "contract": "NewobjectC",
+   "unchanged": true,
+   "parts": [
+    {
+     "file": "src/runtime/malloc.go",
+     "function": "newobject",
+     "same": true,
+     "sha256_1_26_3": "f753c4ebb54da1ce140a3745bafc80c946cbc30ba018f5a5af1adc6a6676b92c",
+     "sha256_1_26_10": "f753c4ebb54da1ce140a3745bafc80c946cbc30ba018f5a5af1adc6a6676b92c",
+     "diff": []
+    },
+    {
+     "file": "src/runtime/malloc.go",
+     "function": "mallocgc",
+     "same": true,
+     "sha256_1_26_3": "1c50f2fd766105db6ac72d091a5ef650bae7f36166e77e7b39b608e01dbc7a4e",
+     "sha256_1_26_10": "1c50f2fd766105db6ac72d091a5ef650bae7f36166e77e7b39b608e01dbc7a4e",
+     "diff": []
+    }
+   ]
+  },
+  {
+   "contract": "ConvT64C",
+   "unchanged": true,
+   "parts": [
+    {
+     "file": "src/runtime/iface.go",
+     "function": "convT64",
+     "same": true,
+     "sha256_1_26_3": "8c51d813b3368e49b3dd9f3169d570385941e2c4e81af747e8000273fd7dc05d",
+     "sha256_1_26_10": "8c51d813b3368e49b3dd9f3169d570385941e2c4e81af747e8000273fd7dc05d",
+     "diff": []
+    },
+    {
+     "file": "src/runtime/malloc.go",
+     "function": "mallocgc",
+     "same": true,
+     "sha256_1_26_3": "1c50f2fd766105db6ac72d091a5ef650bae7f36166e77e7b39b608e01dbc7a4e",
+     "sha256_1_26_10": "1c50f2fd766105db6ac72d091a5ef650bae7f36166e77e7b39b608e01dbc7a4e",
+     "diff": []
+    }
+   ]
+  },
+  {
+   "contract": "FmtErrorfWC / FmtErrorfDDC (fmt.errorf)",
+   "unchanged": true,
+   "parts": [
+    {
+     "file": "src/fmt/errors.go",
+     "function": null,
+     "same": true,
+     "sha256_1_26_3": "01fd304868493a3aa1198cc79a56274930f687353e9405211ca063c1b8195ea6",
+     "sha256_1_26_10": "01fd304868493a3aa1198cc79a56274930f687353e9405211ca063c1b8195ea6",
+     "diff": []
+    },
+    {
+     "file": "src/fmt/print.go",
+     "function": null,
+     "same": true,
+     "sha256_1_26_3": "57250462a0d06d61f124b4530493bcdd150e9de29600bd60347e1c74457ac8a1",
+     "sha256_1_26_10": "57250462a0d06d61f124b4530493bcdd150e9de29600bd60347e1c74457ac8a1",
+     "diff": []
+    },
+    {
+     "file": "src/fmt/format.go",
+     "function": null,
+     "same": true,
+     "sha256_1_26_3": "a668c0d6bb23f6ac929b73ef661a65be2225a9f665052a2ce02c4c58339c3335",
+     "sha256_1_26_10": "a668c0d6bb23f6ac929b73ef661a65be2225a9f665052a2ce02c4c58339c3335",
+     "diff": []
+    },
+    {
+     "file": "src/errors/errors.go",
+     "function": null,
+     "same": true,
+     "sha256_1_26_3": "865b9cce008bf68d4d2cc4146455a9c5692756bbe57be29ee1ef0de345dafe1e",
+     "sha256_1_26_10": "865b9cce008bf68d4d2cc4146455a9c5692756bbe57be29ee1ef0de345dafe1e",
+     "diff": []
+    }
+   ]
+  },
+  {
+   "contract": "writeBarrier = 0 (gcWriteBarrier2 excluded)",
+   "unchanged": true,
+   "parts": [
+    {
+     "file": "src/runtime/mbarrier.go",
+     "function": null,
+     "same": true,
+     "sha256_1_26_3": "a7a24f880adbf607fa8997ac7f14b6999ba466b395a99ce01baaf39e361a0122",
+     "sha256_1_26_10": "a7a24f880adbf607fa8997ac7f14b6999ba466b395a99ce01baaf39e361a0122",
+     "diff": []
+    },
+    {
+     "file": "src/runtime/mwbbuf.go",
+     "function": null,
+     "same": true,
+     "sha256_1_26_3": "f738c769f502a9073bcacb4c4db473ebb44dcbe91453135c4c21a26356288794",
+     "sha256_1_26_10": "f738c769f502a9073bcacb4c4db473ebb44dcbe91453135c4c21a26356288794",
+     "diff": []
+    },
+    {
+     "file": "src/runtime/asm_amd64.s",
+     "function": null,
+     "same": true,
+     "sha256_1_26_3": "837d93ba923e8ee89144512a7a9c7a3aa54da91b0143fa149ac7732fe68756b8",
+     "sha256_1_26_10": "837d93ba923e8ee89144512a7a9c7a3aa54da91b0143fa149ac7732fe68756b8",
+     "diff": []
+    }
+   ]
+  },
+  {
+   "contract": "stack guard (morestack excluded)",
+   "unchanged": true,
+   "parts": [
+    {
+     "file": "src/runtime/asm_amd64.s",
+     "function": null,
+     "same": true,
+     "sha256_1_26_3": "837d93ba923e8ee89144512a7a9c7a3aa54da91b0143fa149ac7732fe68756b8",
+     "sha256_1_26_10": "837d93ba923e8ee89144512a7a9c7a3aa54da91b0143fa149ac7732fe68756b8",
+     "diff": []
+    },
+    {
+     "file": "src/runtime/stack.go",
+     "function": "newstack",
+     "same": true,
+     "sha256_1_26_3": "7eaf936cee7e42b90613d6e4185db3d4d3c0095bfdeb94de3a20fb60a2ce7b4d",
+     "sha256_1_26_10": "7eaf936cee7e42b90613d6e4185db3d4d3c0095bfdeb94de3a20fb60a2ce7b4d",
+     "diff": []
+    }
+   ]
+  },
+  {
+   "contract": "ABIInternal amd64",
+   "unchanged": true,
+   "parts": [
+    {
+     "file": "src/cmd/compile/abi-internal.md",
+     "function": null,
+     "same": true,
+     "sha256_1_26_3": "02084c42584d5d338ecd594c61c48db0a6a24cf2d4e47a2ae15a0276d6ae6e20",
+     "sha256_1_26_10": "02084c42584d5d338ecd594c61c48db0a6a24cf2d4e47a2ae15a0276d6ae6e20",
+     "diff": []
+    },
+    {
+     "file": "src/internal/abi/abi_amd64.go",
+     "function": null,
+     "same": true,
+     "sha256_1_26_3": "b8d763278ba88322c8a7eb1b0aec4ec04063e0a86c2940eeee865a04b12b78c7",
+     "sha256_1_26_10": "b8d763278ba88322c8a7eb1b0aec4ec04063e0a86c2940eeee865a04b12b78c7",
+     "diff": []
+    },
+    {
+     "file": "src/internal/abi/type.go",
+     "function": null,
+     "same": true,
+     "sha256_1_26_3": "b7245bd743802e2b5eced71a1f87963c395c2536cd7ea1b77f2364d20a79bf3d",
+     "sha256_1_26_10": "b7245bd743802e2b5eced71a1f87963c395c2536cd7ea1b77f2364d20a79bf3d",
+     "diff": []
+    }
+   ]
+  },
+  {
+   "contract": "not used: moveSliceNoCap",
+   "unchanged": false,
+   "parts": [
+    {
+     "file": "src/runtime/slice.go",
+     "function": "moveSliceNoCap",
+     "same": false,
+     "sha256_1_26_3": "e1759d0aca88f72353ff0d99e5871e964d9f405fb377ee7b16f2a8564601c0c5",
+     "sha256_1_26_10": "6368367daee6448d413c4188b26abdda48ed444680694fc4081ec8a0ae409e7c",
+     "diff": [
+      "@@ -11 +11,2 @@",
+      "-\tnew := mallocgc(capmem, et, true)",
+      "+\tcap := capmem / et.Size_",
+      "+\tnew := mallocgc(cap*et.Size_, et, true)",
+      "@@ -14 +15 @@",
+      "-\treturn new, len, int(capmem / et.Size_)",
+      "+\treturn new, len, int(cap)"
+     ]
+    }
+   ]
+  },
+  {
+   "contract": "not used: itabInit",
+   "unchanged": false,
+   "parts": [
+    {
+     "file": "src/runtime/iface.go",
+     "function": "itabInit",
+     "same": false,
+     "sha256_1_26_3": "9fd74f59b08350664400c428c7463de9778c05b3f88b52b0e73ee0b45bbb8f56",
+     "sha256_1_26_10": "5231f96fd27907c5e605f9df2f1554791334a851e16adccaa714905da8f3b1fc",
+     "diff": [
+      "@@ -15 +15,4 @@",
+      "-\tmethods := (*[1 << 16]unsafe.Pointer)(unsafe.Pointer(&m.Fun[0]))[:ni:ni]",
+      "+\t// These are code pointers, not heap pointers. Use a uintptr slice so the",
+      "+\t// store emits no write barrier: on wasm a code pointer can look like a",
+      "+\t// heap pointer and make the GC crash (see issue 80472).",
+      "+\tmethods := (*[1 << 16]uintptr)(unsafe.Pointer(&m.Fun[0]))[:ni:ni]",
+      "@@ -41 +44 @@",
+      "-\t\t\t\t\t\tmethods[k] = ifn",
+      "+\t\t\t\t\t\tmethods[k] = uintptr(ifn)"
+     ]
+    }
+   ]
+  },
+  {
+   "contract": "not used: adjustframe (morestack path, excluded)",
+   "unchanged": false,
+   "parts": [
+    {
+     "file": "src/runtime/stack.go",
+     "function": "adjustframe",
+     "same": false,
+     "sha256_1_26_3": "8c96f43f66da6f05c1cf3d3ae105b7b562c5377dbf24683f431a4b414127edde",
+     "sha256_1_26_10": "c29be2aa48eb2ea20d43ee3cd02d0259d2ad46dd6fc5962b7e247e2003e35d15",
+     "diff": [
+      "@@ -3,9 +2,0 @@",
+      "-\tif frame.continpc == 0 {",
+      "-\t\t// Frame is dead.",
+      "-\t\treturn",
+      "-\t}",
+      "-\tf := frame.fn",
+      "-\tif stackDebug >= 2 {",
+      "-\t\tprint(\"    adjusting \", funcname(f), \" frame=[\", hex(frame.sp), \",\", hex(frame.fp), \"] pc=\", hex(frame.pc), \" continpc=\", hex(frame.continpc), \"\\n\")",
+      "-\t}",
+      "-",
+      "@@ -31,0 +23,38 @@",
+      "+\t}",
+      "+\tif goarch.ArchFamily == goarch.ARM64 && isInjectedCall(frame.fn.funcID) {",
+      "+\t\t// If this is an injected call on arm64, then we need to adjust",
+      "+\t\t// the frame pointer saved by the original function into which",
+      "+\t\t// the call was injected. Normally this would be handled when",
+      "+\t\t// adjusting the callee's frame or in adjustctxt. But when a",
+      "+\t\t// call is injected, the frame is placed 16 bytes below the",
+      "+\t\t// original stack pointer to make room to save the link",
+      "+\t\t// register, and the frame pointer saved by the original",
+      "+\t\t// function isn't inside any call frame. We can adjust that",
+      "+\t\t// saved frame pointer here by looking just above frame.fp.",
+      "+\t\t//",
+      "+\t\t// ^  original call    ^",
+      "+\t\t// |  frame above...   |",
+      "+\t\t// +-------------------+ <- stack pointer at the time of injection",
+      "+\t\t// :  FP saved by      :",
+      "+\t\t// :  original func    :",
+      "+\t\t// :\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7: <- frame pointer register from original function",
+      "+\t\t// :  LR saved during  :",
+      "+\t\t// :  injection        :",
+      "+\t\t// +-------------------+ <- frame.fp (injection decrements SP by 16 bytes)",
+      "+\t\t// |  FP saved         |",
+      "+\t\t// |  during injection |",
+      "+\t\t// +-------------------+",
+      "+\t\t// |  injected call    |",
+      "+\t\t// V  frame below...   V",
+      "+\t\tadjustpointer(adjinfo, unsafe.Pointer(frame.fp+goarch.PtrSize))",
+      "+\t}",
+      "+",
+      "+\tif frame.continpc == 0 {",
+      "+\t\t// Frame is dead. The program might still see the frame pointer",
+      "+\t\t// saved in the frame, adjusted above, but we don't need to",
+      "+\t\t// adjust the rest of the frame.",
+      "+\t\treturn",
+      "+\t}",
+      "+\tf := frame.fn",
+      "+\tif stackDebug >= 2 {",
+      "+\t\tprint(\"    adjusting \", funcname(f), \" frame=[\", hex(frame.sp), \",\", hex(frame.fp), \"] pc=\", hex(frame.pc), \" continpc=\", hex(frame.continpc), \"\\n\")"
+     ]
+    }
+   ]
+  }
+ ]
+}
