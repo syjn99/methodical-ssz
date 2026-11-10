@@ -32,6 +32,7 @@ LEAN = KR / "lean"
 NORM = KR / "prysm" / "go1.26.10" / "e2e" / "link" / "norm"
 MEMCAP = KR / "gen" / "tools" / "memcap.py"
 CAP = str(6 * 2 ** 30)
+CASE_TIMEOUT = 900  # seconds per case (review e2e-r1 S7)
 TOP = re.compile(r"^((theorem|def|end|example|set_option|abbrev|structure|instance|namespace|section|open)\b|/--|/-!)")
 
 
@@ -93,20 +94,27 @@ def run_case(c, work):
     f.write_text(text)
     (d / "diff").write_text(diff)
     t0 = time.time()
-    r = subprocess.run(["python3", "-I", str(MEMCAP), CAP, "--per-proc", CAP, "--", "lake", "env", "lean", str(f)],
-                       cwd=LEAN, capture_output=True, text=True)
-    log = r.stdout + r.stderr
+    timed_out = False
+    try:
+        r = subprocess.run(["python3", "-I", str(MEMCAP), CAP, "--per-proc", CAP, "--", "lake", "env", "lean", str(f)],
+                           cwd=LEAN, capture_output=True, text=True, timeout=CASE_TIMEOUT)
+        log, rc = r.stdout + r.stderr, r.returncode
+    except subprocess.TimeoutExpired as e:  # its own class (review e2e-r1 S7): never a pass
+        timed_out = True
+        log, rc = (e.stdout or b"").decode(errors="replace") + (e.stderr or b"").decode(errors="replace"), None
     (d / "log").write_text(log)
     errs = [int(m[1]) for m in re.finditer(rf"{re.escape(str(f))}:(\d+):\d+: error", log)]
     first = next((l for l in log.splitlines() if ": error" in l), None)
     killed = "killed=True" in log
-    if c["kind"] == "control":
-        ok = r.returncode == 0 and not errs and not killed
+    if timed_out:
+        ok = False
+    elif c["kind"] == "control":
+        ok = rc == 0 and not errs and not killed
     else:
         ok = bool(errs) and all(lo <= e <= hi for e in errs) and not killed
     return {"id": c["id"], "kind": c["kind"], "module": c["module"], "theorem": c["theorem"],
-            "range": [lo, hi], "error_lines": errs, "first_error": first, "rc": r.returncode,
-            "killed": killed, "seconds": round(time.time() - t0, 1), "pass": ok, "diff": diff}
+            "range": [lo, hi], "error_lines": errs, "first_error": first, "rc": rc,
+            "killed": killed, "timeout": timed_out, "seconds": round(time.time() - t0, 1), "pass": ok, "diff": diff}
 
 
 def main(cases, work, out, *ids):
