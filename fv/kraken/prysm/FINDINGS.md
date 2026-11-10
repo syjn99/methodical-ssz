@@ -24,7 +24,7 @@ None confirmed. Candidate C-1 is in §5.
 | T-3 | 2026-11-10, run fve2e, `61eec5e` | `Fk/Include.lean` keeps the data reader private to its module | `lean/E2e/Include.lean` | a second data directory needs a copy of the reader | copy with a textual check (`gen/e2e/check_include.py`: SAME ×4) | pending |
 | T-4 | 2026-11-10, run fve2e, before `fd8a561` | `kaddr` (Fk.Step) does not reduce `Width.W64.bits` | job 21 (omega atoms `2 ^ Width.W64.bits`) | address goals after a callee return fail | local macro `eaddr` (E2e.CpAccept) with `Width.bits` | pending |
 
-| R-1 | review e2e-r1 at `9bad532` (M1) | `E2e.cp_e2e_unmarshal_then_marshal`, REPORT §11 E5 row | the theorem starts at the encoder entry, runs no decoder code and does not use `cp_e2e_accept_main`; no single witness host | E5 (compose_hupd, compose_witness) was reported as done | corrected: renamed `cp_e2e_marshal_decoded_receiver`, E5 marked not done in REPORT, e2e.json, HISTORY, stream REPORT, checkpoint; the real composition is open | found by review; fix pending re-review |
+| R-1 | review e2e-r1 at `9bad532` (M1) | `E2e.cp_e2e_unmarshal_then_marshal`, REPORT §11 E5 row | the theorem starts at the encoder entry, runs no decoder code and does not use `cp_e2e_accept_main`; no single witness host | E5 (compose_hupd, compose_witness) was reported as done | fixed: renamed `cp_e2e_marshal_decoded_receiver` (`fcb4f7e`); the real composition `E2e.cp_e2e_unmarshal_then_marshal` (`E2e/CpCompose.lean`, decoder entry → `cp_e2e_accept_main` → hupd → `cp_e2e_marshal_main`) with the one-Host witness `E2e.WitCpC.cp_compose_runs` and 11 negatives (`cpx-*`, logs 104–110) | found by review; fix pending re-review |
 
 ## 4. Known issues (not defects)
 
@@ -53,3 +53,4 @@ None confirmed. Candidate C-1 is in §5.
 
 - 2026-11-10 `02b0e89` (prysm-e2e E6): new T-1, T-2, T-3, T-4, N-1, N-2, C-1, FP-1; O2 updated (Epoch decoder accept proved). No new generator defect.
 - 2026-11-10 `507da34`+ (INBOX 004): C-1 confirmed and stated by `cp_e2e_marshal_reject_main` (classified known behaviour); O2 updated (Epoch reject proved). New tooling note T-5: `ecancel` bounded unfolding times out on `uintBytes` of a symbolic epoch (job 84/85); worked around by `generalize` (job 86). No new generator or generated-code defect.
+- 2026-11-10 session 2 (M1 fix): R-1 fixed by the real machine composition and its witness (pending re-review). No new generator or generated-code defect.

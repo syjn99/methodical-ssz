@@ -17,6 +17,8 @@ import E2e.WitCpS
 import E2e.EpReject
 import E2e.WitEpR
 import E2e.GoVal
+import E2e.CpCompose
+import E2e.WitCpC
 #print axioms E2e.ep_unmarshal_accept_main
 #print axioms E2e.ep_uacc_holds
 #print axioms E2e.WitEp.ep_accept_runs
@@ -55,3 +57,6 @@ import E2e.GoVal
 #print axioms E2e.witCpM_recv
 #print axioms E2e.witCpMR_recv
 #print axioms E2e.cpGoValue_rejects_bad
+#print axioms E2e.cp_e2e_unmarshal_then_marshal
+#print axioms E2e.WitCpC.cp_compose_runs
+#print axioms E2e.WitCpC.witCpC_recv

@@ -401,5 +401,99 @@
   "theorem": "cp_layout",
   "old": "cpOff \"Epoch\" = 8",
   "new": "cpOff \"Epoch\" = 16"
+ },
+ {
+  "id": "cpx-control",
+  "kind": "control",
+  "module": "E2e/CpCompose.lean",
+  "theorem": "cp_e2e_unmarshal_then_marshal"
+ },
+ {
+  "id": "cpx-dec-cmp41",
+  "kind": "code",
+  "module": "E2e/CpCompose.lean",
+  "theorem": "cp_e2e_unmarshal_then_marshal",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  cmp $0x28,%rcx",
+  "new": "  cmp $0x29,%rcx"
+ },
+ {
+  "id": "cpx-ep-load8",
+  "kind": "code",
+  "module": "E2e/CpCompose.lean",
+  "theorem": "cp_e2e_unmarshal_then_marshal",
+  "code_def": "EpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
+  "old": "  mov (%rbx),%rcx",
+  "new": "  mov 0x8(%rbx),%rcx"
+ },
+ {
+  "id": "cpx-enc-len33",
+  "kind": "code",
+  "module": "E2e/CpCompose.lean",
+  "theorem": "cp_e2e_unmarshal_then_marshal",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  cmpq $0x20,0x18(%rax)",
+  "new": "  cmpq $0x21,0x18(%rax)"
+ },
+ {
+  "id": "cpx-enc-newlen16",
+  "kind": "code",
+  "module": "E2e/CpCompose.lean",
+  "theorem": "cp_e2e_unmarshal_then_marshal",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  lea 0x8(%rcx),%rdx",
+  "new": "  lea 0x10(%rcx),%rdx"
+ },
+ {
+  "id": "cpx-stmt-dec-rax1",
+  "kind": "stmt",
+  "module": "E2e/CpCompose.lean",
+  "theorem": "cp_e2e_unmarshal_then_marshal",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
+  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
+ },
+ {
+  "id": "cpx-stmt-dec-len41",
+  "kind": "stmt",
+  "module": "E2e/CpCompose.lean",
+  "theorem": "cp_e2e_unmarshal_then_marshal",
+  "old": "(hlen : s.regs.rcx = 40)",
+  "new": "(hlen : s.regs.rcx = 41)"
+ },
+ {
+  "id": "cpx-stmt-enc-swap",
+  "kind": "stmt",
+  "module": "E2e/CpCompose.lean",
+  "theorem": "cp_e2e_unmarshal_then_marshal",
+  "old": "Eq ((e8 ++ root).At (dptr.toBitVec + dlen.toBitVec))",
+  "new": "Eq ((root ++ e8).At (dptr.toBitVec + dlen.toBitVec))"
+ },
+ {
+  "id": "cpx-stmt-enc-len41",
+  "kind": "stmt",
+  "module": "E2e/CpCompose.lean",
+  "theorem": "cp_e2e_unmarshal_then_marshal",
+  "old": "st'.data.regs.rbx.toNat = dlen.toNat + 40",
+  "new": "st'.data.regs.rbx.toNat = dlen.toNat + 41"
+ },
+ {
+  "id": "cpx-stmt-enc-cap39",
+  "kind": "stmt",
+  "module": "E2e/CpCompose.lean",
+  "theorem": "cp_e2e_unmarshal_then_marshal",
+  "old": "(hcap2 : dlen.toNat + 40 ≤ cap.toNat)",
+  "new": "(hcap2 : dlen.toNat + 39 ≤ cap.toNat)"
+ },
+ {
+  "id": "cpx-stmt-hupd-slot",
+  "kind": "stmt",
+  "module": "E2e/CpCompose.lean",
+  "theorem": "cp_e2e_unmarshal_then_marshal",
+  "old": "(Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At s.regs.rsp.toBitVec) ⋆ F) mem2",
+  "new": "(Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At (s.regs.rsp.toBitVec + 8)) ⋆ F) mem2"
  }
 ]

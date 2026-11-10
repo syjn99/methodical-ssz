@@ -179,16 +179,18 @@
    ]
   },
   {
-   "name": "cp_e2e_unmarshal_then_marshal (machine composition from the decoder entry)",
-   "kind": "compose_hupd / compose_witness",
+   "name": "E2e.cp_e2e_unmarshal_then_marshal",
+   "kind": "compose_hupd / compose_witness (decoder entry → cp_e2e_accept_main → hupd → cp_e2e_marshal_main)",
    "function": "UnmarshalSSZ;MarshalSSZTo",
-   "statement": "not done",
-   "witness": "not done",
-   "theorem": "not done",
+   "statement": "done",
+   "witness": "done (WitCpC: one Host with CpUnmarshal, EpUnmarshal, BumpAlloc1, RtCopy, CpMarshal; real middle memory by storeInt)",
+   "theorem": "done",
    "link": "done",
-   "negative": "not done",
-   "go_value": "differential roundtrip only",
-   "neg_ids": []
+   "negative": "done",
+   "go_value": "done for the witness receiver (WitCpC.witCpC_recv, IR layout) + differential roundtrip",
+   "neg_ids": [
+    "cpx-"
+   ]
   }
  ],
  "unreachable_mc": [
