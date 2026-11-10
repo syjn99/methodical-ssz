@@ -144,7 +144,7 @@ theorem ad_e2e_slot_err_unreachable (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.p
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- **`unreachable_mc`: the `fmt.errorf("Slot: %w")` path** (directives 20–46). -/
+/-- **`unreachable_mc`: the `fmt.errorf("CommitteeIndex: %w")` path** (directives 58–84). -/
 theorem ad_e2e_ci_err_unreachable (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k)
     (hf : LabelsFresh AdUnmarshal k) (s : MachineData) (h0 : s.regs.rax = 0) :
     Eventually (step1 Host.exe)
@@ -164,7 +164,7 @@ theorem ad_e2e_ci_err_unreachable (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.pro
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- **`unreachable_mc`: the `fmt.errorf("Slot: %w")` path** (directives 20–46). -/
+/-- **`unreachable_mc`: the `fmt.errorf("Source: %w")` path** (directives 145–171). -/
 theorem ad_e2e_source_err_unreachable (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k)
     (hf : LabelsFresh AdUnmarshal k) (s : MachineData) (h0 : s.regs.rax = 0) :
     Eventually (step1 Host.exe)
@@ -184,7 +184,7 @@ theorem ad_e2e_source_err_unreachable (k : Nat) (hk : AdUnmarshal.IsInfixAt Host
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- **`unreachable_mc`: the `fmt.errorf("Slot: %w")` path** (directives 20–46). -/
+/-- **`unreachable_mc`: the `fmt.errorf("Target: %w")` path** (directives 195–221). -/
 theorem ad_e2e_target_err_unreachable (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k)
     (hf : LabelsFresh AdUnmarshal k) (s : MachineData) (h0 : s.regs.rax = 0) :
     Eventually (step1 Host.exe)

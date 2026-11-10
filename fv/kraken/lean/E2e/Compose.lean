@@ -7,7 +7,8 @@ import Fk.RtCopy
 
 Review e2e-r1 M1 (FINDINGS R-1): this theorem starts at the encoder entry and
 does not run the decoder; it is not `compose_hupd`. The machine-level
-composition (decoder entry → `cp_e2e_accept_main` → encoder call) is not done.
+composition (decoder entry → `cp_e2e_accept_main` → encoder call) is
+`cp_e2e_unmarshal_then_marshal` in `E2e.CpCompose` (session 2), not this file.
 
 `cp_e2e_marshal_decoded_receiver`: the receiver that
 `cp_e2e_accept_main` leaves (its postcondition's receiver chunks: `state`
