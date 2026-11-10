@@ -23,7 +23,7 @@ Changed functions in these files, and why no contract rests on them:
 | --- | --- | --- |
 | `slice.go` `moveSliceNoCap` | allocates `(capmem / et.Size_) * et.Size_` and returns `cap = capmem / et.Size_` | No. It is not `growslice`. No function of this set calls it (CALLGRAPH.md). |
 | `iface.go` `itabInit` | `//go:nowritebarrier`, code pointers stored as `uintptr` | No. `convT64` is unchanged. The itab `go_itab._errors.errorString_error` is static data in the ELF. |
-| `stack.go` `adjustframe` | arm64 injected-call frame pointer adjustment | No. It is on the `morestack` path, which the stack-guard premise excludes. |
+| `stack.go` `adjustframe` | arm64 injected-call frame pointer adjustment; on amd64 the dead-frame return (`continpc == 0`) moves after the saved frame pointer adjustment (review e2e-r1 S5) | No. It is on the `morestack` path, which the stack-guard premise excludes. |
 | `mgcmark.go`, `traceback.go` (other runtime files) | GC stack scanning of injected frames | No. GC during a call is outside every contract (CONTRACTS.md §3 trust table). |
 
 Correction to PROOF-PLAN.md §1: the plan says that `growslice` changed.

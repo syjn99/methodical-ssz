@@ -23,7 +23,6 @@ None confirmed. Candidate C-1 is in §5.
 | T-2 | 2026-11-10, run fve2e, before `fd8a561` | `ecancel` final AC step | job 44: all 26 chunks match textually but `ecancel` fails; job 43 shows two atoms sorted differently (same print, different elaboration) | composition of `cp_e2e_accept_main` with its tail failed | worked around: `rw [show a = a from rfl] at Hm2` re-elaborates the two atoms (log 45) | pending |
 | T-3 | 2026-11-10, run fve2e, `61eec5e` | `Fk/Include.lean` keeps the data reader private to its module | `lean/E2e/Include.lean` | a second data directory needs a copy of the reader | copy with a textual check (`gen/e2e/check_include.py`: SAME ×4) | pending |
 | T-4 | 2026-11-10, run fve2e, before `fd8a561` | `kaddr` (Fk.Step) does not reduce `Width.W64.bits` | job 21 (omega atoms `2 ^ Width.W64.bits`) | address goals after a callee return fail | local macro `eaddr` (E2e.CpAccept) with `Width.bits` | pending |
-
 | R-1 | review e2e-r1 at `9bad532` (M1) | `E2e.cp_e2e_unmarshal_then_marshal`, REPORT §11 E5 row | the theorem starts at the encoder entry, runs no decoder code and does not use `cp_e2e_accept_main`; no single witness host | E5 (compose_hupd, compose_witness) was reported as done | fixed: renamed `cp_e2e_marshal_decoded_receiver` (`fcb4f7e`); the real composition `E2e.cp_e2e_unmarshal_then_marshal` (`E2e/CpCompose.lean`, decoder entry → `cp_e2e_accept_main` → hupd → `cp_e2e_marshal_main`) with the one-Host witness `E2e.WitCpC.cp_compose_runs` and 11 negatives (`cpx-*`, logs 104–110) | found by review; fix pending re-review |
 
 ## 4. Known issues (not defects)
@@ -34,6 +33,8 @@ None confirmed. Candidate C-1 is in §5.
 | O2 | 2026-11-09 (phase1c) | Prysm hand-written `primitives` SSZ methods | `GENERATOR-FINDINGS.md` §1 observations | not generated; need their own proofs | `(*Epoch).UnmarshalSSZ` accept path proved as function spec `EpUAccC` (`37fdcf9`), length reject proved (`e5b68c9`); the other 23 methods not |
 | N-1 | 2026-11-10, run fve2e, `e10b146` | `Checkpoint.UnmarshalSSZ` → `fmt.Errorf("Epoch: %w")` | `cp_e2e_epoch_err_unreachable` | unreachable with `len = 40` (unreachable_mc column, not reject coverage) | proved |
 | N-2 | 2026-11-10, run fve2e, `61eec5e` | `Checkpoint.MarshalSSZTo` → `fmt.Errorf("Epoch: %w")` | `CALLGRAPH.md`, `-m=2` log | removed by the compiler (inlined `Epoch.MarshalSSZTo` cannot fail) | recorded |
+| G-2 | 2026-11-09 (pin smoke, before phase1c) | Prysm `consensus-types/blocks` error-text tests (`TestMarshalPartsMetadata/available_too_large`, `/requests_too_large`, `TestPartialDataColumn_PartsMetadata/marshal_error_due_max_bitlist_size`) | `GENERATOR-FINDINGS.md` §2 | generator change `280b752` checks the Bitlist by bits (`ssz.ValidateBitlist(x, 4096)`); too large input still rejected, only the error text differs from the test | reference row (review e2e-r1 S9); compatibility issue, not a generator defect; unchanged |
+| G-3 | 2026-11-09 (pin smoke, before phase1c) | `-tags minimal`: `consensus-types/blocks` test build, `encoding/ssz/detect` `TestByState` | `GENERATOR-FINDINGS.md` §3 | fails on the committed baseline too; unrelated to generated code | reference row (review e2e-r1 S9); baseline failure; unchanged |
 
 ## 5. Unconfirmed candidates
 
