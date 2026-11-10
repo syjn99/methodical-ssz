@@ -307,9 +307,9 @@ git diff --exit-code fv/kraken/AXIOMS.txt fv/kraken/AXIOMS-ALL.txt fv/kraken/lin
 조건:
 
 1. 런타임 계약 `MakesliceC`(uint8, esz 1, cnt 32), `MemmoveC`, `GrowsliceC`(uint8, esz 1, 인코더 첫 지점), `ConvT64C`, `FmtErrorfDDC`(Epoch 형식, `type:int`)는 가설이다. Go 1.26.10 소스를 다시 읽었고 바뀌지 않았다(`prysm/go1.26.10/e2e/RUNTIME-1.26.10.md`). 정교화 증명은 없다.
-2. 전제: 스택 가드, `runtime.writeBarrier` = 0, 힙 여유, 레이블 신선성, 전역 주소(링크 검사 (a)–(f) PASS), `ssz.ErrSize`의 초기화된 값.
+2. 전제: 스택 가드, `runtime.writeBarrier` = 0, 힙 여유, 레이블 신선성, 전역 주소(링크 검사 (a)–(f) PASS), `ssz.ErrSize`와 `ssz.ErrBytesLength`의 초기화된 값(값은 패키지 init이 쓴다; 정리는 두 워드를 그대로 돌려주고 non-nil은 결론이 아니다; non-nil과 서로 다름은 Go 차분의 `errors.Is`만 본다).
 3. x86-64 하드웨어에서 실행하지 않았다. Go 차분 검사는 같은 소스의 arm64 빌드다.
-4. 인코더 둘째 growslice 지점(지시 39–50)은 증명하지 않았다. 첫 지점 경로는 `cp_e2e_marshal_grow_main`(세션 2), 인코더 거부, Epoch 디코더 거부, 인코더 명세 정렬, 증인 있는 size는 INBOX 004에서 증명했다.
+4. 인코더 둘째 growslice 지점(지시 39–50)은 증명하지 않았다. growslice 뒤의 인코더 거부(`cap < len + 8`이고 `len(Root) ≠ 32`: 첫 지점이 자란 뒤 `ErrBytesLength`)도 증명하지 않았다. `cp_e2e_marshal_reject_main`은 `len + 8 ≤ cap`을 가정한다. 이 경우는 Go 차분 검사만 있다(리뷰 e2e-r2 N6). 첫 지점 경로는 `cp_e2e_marshal_grow_main`(세션 2), 인코더 거부, Epoch 디코더 거부, 인코더 명세 정렬, 증인 있는 size는 INBOX 004에서 증명했다.
 
 Epoch 길이 거부의 기존 계약 형식 `StaticBox`는 `Fk.Data`(Go 1.26.3 이름공간)의 `staticuint64s`와 `staticuint64s_addr`를 읽는다. `E2e.ep_static_table`(바이트 2048개 같음)과 `E2e.ep_static_addr`(주소 같음, 둘 다 `runtime.staticuint64s` 레이블)가 이것을 Go 1.26.10 include에 잇는다. Go 1.26.3의 사실은 쓰지 않는다(리뷰 e2e-r2 N3, `RUNTIME-1.26.10.md` 2절).
 손 작성 `(*primitives.Epoch).UnmarshalSSZ`는 함수 명세 `EpUAccC`로 증명했다(`ep_uacc_holds`). 디코더 주 정리에는 Epoch에 대한 가설이 없다.
