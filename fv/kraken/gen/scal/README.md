@@ -54,7 +54,8 @@ was emitted before its `set_option … in` lines (Lean parse error, jobs 229/230
 
 ## Results (session 6)
 
-Kernel-checked: all 14 modules of `E2eScal`. Axioms: 15 names, standard only (`scal/axioms.json`, job 247).
+Kernel-checked: all 11 modules of `E2eScal` (count by command: `ls fv/kraken/lean/E2eScal/*.lean | wc -l` = 11; audit AU-13, the old text said 14). Axioms: 15 names, standard only (`scal/axioms.json`, job 247).
 Negatives: 18/18 (6 controls pass, 12 mutants fail inside their theorem; `scal/negative-result.json`, jobs 242, 246).
-Cost: `scal/TEMPLATE-COST.json` (31 gate jobs, 24 lake runs, 13 failed, 2271 gate s — 2203 s of them the
+Session 7 (audit AU-08): 20/20 after the two `*-stmt-extra` cases were added (jobs 258, 259).
+Cost: `scal/TEMPLATE-COST.json` (jobs 214–247; 31 gate jobs, 24 lake runs, 13 failed, 2271 cumulative gate s — 2203 s of them the
 P2 encode in-sample — peak 1.83 GiB, no memcap kill).
