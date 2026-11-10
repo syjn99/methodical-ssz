@@ -18,6 +18,11 @@ are the global's value after package init (premise, as in `cp_e2e_reject_size_ma
 The `fmt.errorf` wraps after the Slot call (directives 20–45) and the ValidatorIndex call (58–84) are not
 reached on a 112-byte input: `bh_e2e_accept_main` passes from directive 19 to 46 and from 57 to 85 under
 `SlUAccC` / `ViUAccC` (rax = 0). Not a reject row.
+
+**`unreachable_mc` rows** (session 10, review s4-r1; the form of `E2eAd.ad_e2e_slot_err_unreachable`):
+`bh_e2e_slot_err_unreachable` (directive 18 → 46, skips 20–45, "Slot: %w") and
+`bh_e2e_vi_err_unreachable` (56 → 85, skips 58–84, "ValidatorIndex: %w"): with `rax = 0` after the callee
+the code jumps over the wrap with registers and memory unchanged.
 -/
 
 open Fk E2eScal.BhCode
@@ -116,5 +121,45 @@ theorem bh_e2e_reject_size_main (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog 
        simp only [BitVec.toNat_add, BitVec.toNat_sub, BitVec.toNat_ofNat, UInt64.toBitVec_add,
          UInt64.toBitVec_ofNat, Width.bits]
        omega)
+
+set_option maxHeartbeats 4000000 in
+set_option maxRecDepth 100000 in
+/-- **`unreachable_mc`: the `fmt.errorf("Slot: %w")` path** (directives 20–45). -/
+theorem bh_e2e_slot_err_unreachable (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k)
+    (hf : LabelsFresh BhUnmarshal k) (s : MachineData) (h0 : s.regs.rax = 0) :
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + 46) ∧ st.data.regs = s.regs ∧ st.data.dmem = s.dmem)
+      ⟨s, Host.addrOf (k + 18)⟩ := by
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
+  simp only at h0 ⊢
+  subst h0
+  kat hk BhUnmarshal 18
+  intro _
+  kat hk BhUnmarshal 19
+  split
+  case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+  simp only [Effects.All]
+  klabel hk hf BhUnmarshal 46
+  exact Eventually.done _ ⟨rfl, rfl, rfl⟩
+
+set_option maxHeartbeats 4000000 in
+set_option maxRecDepth 100000 in
+/-- **`unreachable_mc`: the `fmt.errorf("ValidatorIndex: %w")` path** (directives 58–84). -/
+theorem bh_e2e_vi_err_unreachable (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k)
+    (hf : LabelsFresh BhUnmarshal k) (s : MachineData) (h0 : s.regs.rax = 0) :
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + 85) ∧ st.data.regs = s.regs ∧ st.data.dmem = s.dmem)
+      ⟨s, Host.addrOf (k + 56)⟩ := by
+  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
+  simp only at h0 ⊢
+  subst h0
+  kat hk BhUnmarshal 56
+  intro _
+  kat hk BhUnmarshal 57
+  split
+  case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
+  simp only [Effects.All]
+  klabel hk hf BhUnmarshal 85
+  exact Eventually.done _ ⟨rfl, rfl, rfl⟩
 
 end E2eScal.Bh

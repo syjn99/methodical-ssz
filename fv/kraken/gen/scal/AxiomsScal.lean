@@ -53,6 +53,9 @@ import E2eScal.WitBhR
 #print axioms E2eScal.Bh.bh_e2e_head
 #print axioms E2eScal.Bh.bh_e2e_accept_main
 #print axioms E2eScal.Bh.bh_e2e_reject_size_main
+#print axioms E2eScal.Bh.bh_e2e_slot_err_unreachable
+#print axioms E2eScal.Bh.bh_e2e_vi_err_unreachable
+#print axioms E2eScal.WitBhU.bh_unreach_runs
 #print axioms E2e.prysmBhDesc_checker
 #print axioms E2e.prysmBhDesc_serialize_checker
 #print axioms E2e.prysmBhDesc_deserialize_checker

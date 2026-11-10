@@ -303,5 +303,59 @@
   "old": "= serialize bhCheckerDesc v :=",
   "new": "= serialize (match bhCheckerDesc with | .container ns ds => .container ns (ds.set 4 (.byteVector 31)) | x => x) v :=",
   "id": "hb-ser-stmt-nearmiss2"
+ },
+ {
+  "module": "E2eScal/BhReject.lean",
+  "code_def": "BhUnmarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "id": "hb-u-control",
+  "kind": "control",
+  "theorem": "bh_e2e_vi_err_unreachable"
+ },
+ {
+  "module": "E2eScal/BhReject.lean",
+  "code_def": "BhUnmarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "id": "hb-u-slot",
+  "kind": "code",
+  "theorem": "bh_e2e_slot_err_unreachable",
+  "old": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9",
+  "new": "  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9",
+  "why": "nil Slot error jumps into the wrap path"
+ },
+ {
+  "module": "E2eScal/BhReject.lean",
+  "code_def": "BhUnmarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+  "id": "hb-u-vi",
+  "kind": "code",
+  "theorem": "bh_e2e_vi_err_unreachable",
+  "old": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154",
+  "new": "  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154",
+  "why": "nil ValidatorIndex error jumps into the wrap path"
+ },
+ {
+  "module": "E2eScal/BhReject.lean",
+  "theorem": "bh_e2e_slot_err_unreachable",
+  "kind": "stmt",
+  "old": "Host.addrOf (k + 46)",
+  "new": "Host.addrOf (k + 20)",
+  "id": "hb-u-slot-stmt",
+  "why": "claims the wrap entry is reached"
+ },
+ {
+  "module": "E2eScal/BhReject.lean",
+  "theorem": "bh_e2e_vi_err_unreachable",
+  "kind": "stmt",
+  "old": "(h0 : s.regs.rax = 0)",
+  "new": "(h0 : s.regs.rax = 1)",
+  "id": "hb-u-vi-stmt",
+  "why": "non-nil error: the branch goes to the wrap"
  }
 ]
