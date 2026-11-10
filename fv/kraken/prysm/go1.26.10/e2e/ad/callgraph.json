@@ -1,0 +1,469 @@
+{
+ "functions": {
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttestationData).SizeSSZ": {
+   "addr": "0xa11020",
+   "instructions": 2,
+   "calls": [],
+   "scope": "in (A4 size)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttestationData).MarshalSSZTo": {
+   "addr": "0xa110a0",
+   "instructions": 218,
+   "calls": [
+    {
+     "site": "0xa1110a",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa1116e",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa111d1",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa1120a",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa11225",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC (Checkpoint type word, 72 bytes): decoder Source/Target, encoder nil Source/Target; after fmt.errorf: the nil-result branch, excluded by rax != 0"
+    },
+    {
+     "site": "0xa11249",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa1126f",
+     "target": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Checkpoint).MarshalSSZTo",
+     "class": "a",
+     "how": "function spec CpMAccC = cp_e2e_marshal_main (its runtime contracts stay hypotheses)"
+    },
+    {
+     "site": "0xa112b8",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps 'Slot: %w', 'CommitteeIndex: %w', 'Source: %w', 'Target: %w'); decoder: unreachable_mc under the callee specs; encoder Source/Target: reachable when a child Root has len != 32"
+    },
+    {
+     "site": "0xa112cd",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC (Checkpoint type word, 72 bytes): decoder Source/Target, encoder nil Source/Target; after fmt.errorf: the nil-result branch, excluded by rax != 0"
+    },
+    {
+     "site": "0xa1132c",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC (Checkpoint type word, 72 bytes): decoder Source/Target, encoder nil Source/Target; after fmt.errorf: the nil-result branch, excluded by rax != 0"
+    },
+    {
+     "site": "0xa11350",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa11382",
+     "target": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Checkpoint).MarshalSSZTo",
+     "class": "a",
+     "how": "function spec CpMAccC = cp_e2e_marshal_main (its runtime contracts stay hypotheses)"
+    },
+    {
+     "site": "0xa113cb",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps 'Slot: %w', 'CommitteeIndex: %w', 'Source: %w', 'Target: %w'); decoder: unreachable_mc under the callee specs; encoder Source/Target: reachable when a child Root has len != 32"
+    },
+    {
+     "site": "0xa113e0",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC (Checkpoint type word, 72 bytes): decoder Source/Target, encoder nil Source/Target; after fmt.errorf: the nil-result branch, excluded by rax != 0"
+    },
+    {
+     "site": "0xa11453",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (A4 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttestationData).UnmarshalSSZ": {
+   "addr": "0xa11480",
+   "instructions": 220,
+   "calls": [
+    {
+     "site": "0xa114d0",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec SlUAccC, proved from machine code"
+    },
+    {
+     "site": "0xa11509",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps 'Slot: %w', 'CommitteeIndex: %w', 'Source: %w', 'Target: %w'); decoder: unreachable_mc under the callee specs; encoder Source/Target: reachable when a child Root has len != 32"
+    },
+    {
+     "site": "0xa11520",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC (Checkpoint type word, 72 bytes): decoder Source/Target, encoder nil Source/Target; after fmt.errorf: the nil-result branch, excluded by rax != 0"
+    },
+    {
+     "site": "0xa11570",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*CommitteeIndex).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec CiUAccC, proved from machine code"
+    },
+    {
+     "site": "0xa115a9",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps 'Slot: %w', 'CommitteeIndex: %w', 'Source: %w', 'Target: %w'); decoder: unreachable_mc under the callee specs; encoder Source/Target: reachable when a child Root has len != 32"
+    },
+    {
+     "site": "0xa115c0",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC (Checkpoint type word, 72 bytes): decoder Source/Target, encoder nil Source/Target; after fmt.errorf: the nil-result branch, excluded by rax != 0"
+    },
+    {
+     "site": "0xa115f5",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0xa11620",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa11646",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa11677",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa11693",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC (Checkpoint type word, 72 bytes): decoder Source/Target, encoder nil Source/Target; after fmt.errorf: the nil-result branch, excluded by rax != 0"
+    },
+    {
+     "site": "0xa116b8",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa116e5",
+     "target": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Checkpoint).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec CpUAccC = cp_e2e_accept_main (its runtime contracts stay hypotheses)"
+    },
+    {
+     "site": "0xa11720",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps 'Slot: %w', 'CommitteeIndex: %w', 'Source: %w', 'Target: %w'); decoder: unreachable_mc under the callee specs; encoder Source/Target: reachable when a child Root has len != 32"
+    },
+    {
+     "site": "0xa11732",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC (Checkpoint type word, 72 bytes): decoder Source/Target, encoder nil Source/Target; after fmt.errorf: the nil-result branch, excluded by rax != 0"
+    },
+    {
+     "site": "0xa11760",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC (Checkpoint type word, 72 bytes): decoder Source/Target, encoder nil Source/Target; after fmt.errorf: the nil-result branch, excluded by rax != 0"
+    },
+    {
+     "site": "0xa11784",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa117b1",
+     "target": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Checkpoint).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec CpUAccC = cp_e2e_accept_main (its runtime contracts stay hypotheses)"
+    },
+    {
+     "site": "0xa117ea",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps 'Slot: %w', 'CommitteeIndex: %w', 'Source: %w', 'Target: %w'); decoder: unreachable_mc under the callee specs; encoder Source/Target: reachable when a child Root has len != 32"
+    },
+    {
+     "site": "0xa11800",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC (Checkpoint type word, 72 bytes): decoder Source/Target, encoder nil Source/Target; after fmt.errorf: the nil-result branch, excluded by rax != 0"
+    },
+    {
+     "site": "0xa11855",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (A3 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ": {
+   "addr": "0x69f9c0",
+   "instructions": 58,
+   "calls": [
+    {
+     "site": "0x69fa13",
+     "target": "runtime.convT64",
+     "class": "b",
+     "how": "ConvT64C (Slot/CommitteeIndex length reject only; not on the accept specs)"
+    },
+    {
+     "site": "0x69fa42",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps 'Slot: %w', 'CommitteeIndex: %w', 'Source: %w', 'Target: %w'); decoder: unreachable_mc under the callee specs; encoder Source/Target: reachable when a child Root has len != 32"
+    },
+    {
+     "site": "0x69fa54",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC (Checkpoint type word, 72 bytes): decoder Source/Target, encoder nil Source/Target; after fmt.errorf: the nil-result branch, excluded by rax != 0"
+    },
+    {
+     "site": "0x69faa0",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (callee, function spec SlUAccC, A2)"
+  },
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).MarshalSSZTo": {
+   "addr": "0x69fac0",
+   "instructions": 47,
+   "calls": [
+    {
+     "site": "0x69fb0e",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x69fb51",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "record only (inlined into AttestationData.MarshalSSZTo or unused; out-of-line body unused)"
+  },
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).MarshalSSZ": {
+   "addr": "0x69fb80",
+   "instructions": 25,
+   "calls": [
+    {
+     "site": "0x69fbae",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x69fbcf",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "record only (inlined into AttestationData.MarshalSSZTo or unused; out-of-line body unused)"
+  },
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).SizeSSZ": {
+   "addr": "0x69fbe0",
+   "instructions": 2,
+   "calls": [],
+   "scope": "record only (inlined into AttestationData.MarshalSSZTo or unused; out-of-line body unused)"
+  },
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*CommitteeIndex).UnmarshalSSZ": {
+   "addr": "0x69e2a0",
+   "instructions": 58,
+   "calls": [
+    {
+     "site": "0x69e2f3",
+     "target": "runtime.convT64",
+     "class": "b",
+     "how": "ConvT64C (Slot/CommitteeIndex length reject only; not on the accept specs)"
+    },
+    {
+     "site": "0x69e322",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps 'Slot: %w', 'CommitteeIndex: %w', 'Source: %w', 'Target: %w'); decoder: unreachable_mc under the callee specs; encoder Source/Target: reachable when a child Root has len != 32"
+    },
+    {
+     "site": "0x69e334",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC (Checkpoint type word, 72 bytes): decoder Source/Target, encoder nil Source/Target; after fmt.errorf: the nil-result branch, excluded by rax != 0"
+    },
+    {
+     "site": "0x69e380",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (callee, function spec CiUAccC, A2)"
+  },
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*CommitteeIndex).MarshalSSZTo": {
+   "addr": "0x69e3a0",
+   "instructions": 47,
+   "calls": [
+    {
+     "site": "0x69e3ee",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x69e431",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "record only (inlined into AttestationData.MarshalSSZTo or unused; out-of-line body unused)"
+  },
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*CommitteeIndex).MarshalSSZ": {
+   "addr": "0x69e460",
+   "instructions": 25,
+   "calls": [
+    {
+     "site": "0x69e48e",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x69e4af",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "record only (inlined into AttestationData.MarshalSSZTo or unused; out-of-line body unused)"
+  },
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*CommitteeIndex).SizeSSZ": {
+   "addr": "0x69e4c0",
+   "instructions": 2,
+   "calls": [],
+   "scope": "record only (inlined into AttestationData.MarshalSSZTo or unused; out-of-line body unused)"
+  }
+ },
+ "call_counts": {
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttestationData).SizeSSZ": {},
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttestationData).MarshalSSZTo": {
+   "runtime.growslice": 3,
+   "runtime.memmove": 1,
+   "runtime.newobject": 4,
+   "runtime.gcWriteBarrier2": 2,
+   "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Checkpoint).MarshalSSZTo": 2,
+   "fmt.errorf": 2,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttestationData).UnmarshalSSZ": {
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ": 1,
+   "fmt.errorf": 4,
+   "runtime.newobject": 6,
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*CommitteeIndex).UnmarshalSSZ": 1,
+   "runtime.makeslice": 1,
+   "runtime.gcWriteBarrier2": 4,
+   "runtime.memmove": 1,
+   "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Checkpoint).UnmarshalSSZ": 2,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ": {
+   "runtime.convT64": 1,
+   "fmt.errorf": 1,
+   "runtime.newobject": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).MarshalSSZTo": {
+   "runtime.growslice": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).MarshalSSZ": {
+   "runtime.growslice": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).SizeSSZ": {},
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*CommitteeIndex).UnmarshalSSZ": {
+   "runtime.convT64": 1,
+   "fmt.errorf": 1,
+   "runtime.newobject": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*CommitteeIndex).MarshalSSZTo": {
+   "runtime.growslice": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*CommitteeIndex).MarshalSSZ": {
+   "runtime.growslice": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*CommitteeIndex).SizeSSZ": {}
+ },
+ "inlining_m2": {
+  "cannot_inline_Slot_UnmarshalSSZ": [
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives/slot.go:183:6: cannot inline (*Slot).UnmarshalSSZ: function too complex: cost 113 exceeds budget 80"
+  ],
+  "can_inline_Slot_MarshalSSZTo": [
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives/slot.go:192:6: can inline (*Slot).MarshalSSZTo with cost 39 as: method(*Slot) func([]byte) ([]byte, error) { marshalled, err := ([]byte)(.autotmp_6), .autotmp_7; if err != nil { return nil, err }; return append(dst, marshalled...), nil }"
+  ],
+  "cannot_inline_CommitteeIndex_UnmarshalSSZ": [
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives/committee_index.go:28:6: cannot inline (*CommitteeIndex).UnmarshalSSZ: function too complex: cost 113 exceeds budget 80"
+  ],
+  "can_inline_CommitteeIndex_MarshalSSZTo": [
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives/committee_index.go:37:6: can inline (*CommitteeIndex).MarshalSSZTo with cost 39 as: method(*CommitteeIndex) func([]byte) ([]byte, error) { marshalled, err := ([]byte)(.autotmp_6), .autotmp_7; if err != nil { return nil, err }; return append(dst, marshalled...), nil }"
+  ],
+  "ad_marshal_inlines_Slot_MarshalSSZTo": [
+   "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:239:35: inlining call to primitives.(*Slot).MarshalSSZTo"
+  ],
+  "ad_marshal_inlines_CommitteeIndex_MarshalSSZTo": [
+   "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:244:45: inlining call to primitives.(*CommitteeIndex).MarshalSSZTo"
+  ],
+  "ad_unmarshal_inlines_any_primitives": []
+ },
+ "asm_inlining": {
+  "AttestationData.MarshalSSZTo calls a Slot/CommitteeIndex method": false
+ },
+ "unclassified_in_scope": [],
+ "missing": []
+}

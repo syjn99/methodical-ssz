@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """prysm-e2e: parse `lake env lean gen/e2e/Axioms.lean` output into JSON; allowed axioms: propext,
-Classical.choice, Quot.sound. Usage: axioms.py <log> <out.json>. Exit 1 if any theorem uses another axiom,
+Classical.choice, Quot.sound. Usage: axioms.py <log> <out.json> [<names.lean>] (default: the Axioms.lean next
+to this file; the AttestationData set passes gen/e2e/AxiomsAd.lean). Exit 1 if any theorem uses another axiom,
 if a theorem is missing from the output, or if `sorryAx` appears."""
 import json, re, sys
 log = open(sys.argv[1]).read()
-want = re.findall(r"#print axioms (\S+)", open(__file__.replace("axioms.py", "Axioms.lean")).read())
+src = sys.argv[3] if len(sys.argv) > 3 else __file__.replace("axioms.py", "Axioms.lean")
+want = re.findall(r"#print axioms (\S+)", open(src).read())
 ok = {"propext", "Classical.choice", "Quot.sound"}
 res = {}
 for m in re.finditer(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log):

@@ -1,0 +1,110 @@
+{
+ "schema": "fvphase1c.desc/1",
+ "type": "AttestationData",
+ "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+ "ssz": {
+  "k": "container",
+  "names": [
+   "Slot",
+   "CommitteeIndex",
+   "BeaconBlockRoot",
+   "Source",
+   "Target"
+  ],
+  "fields": [
+   {
+    "k": "uint",
+    "w": 8
+   },
+   {
+    "k": "uint",
+    "w": 8
+   },
+   {
+    "k": "byteVector",
+    "n": 32
+   },
+   {
+    "k": "container",
+    "names": [
+     "Epoch",
+     "Root"
+    ],
+    "fields": [
+     {
+      "k": "uint",
+      "w": 8
+     },
+     {
+      "k": "byteVector",
+      "n": 32
+     }
+    ]
+   },
+   {
+    "k": "container",
+    "names": [
+     "Epoch",
+     "Root"
+    ],
+    "fields": [
+     {
+      "k": "uint",
+      "w": 8
+     },
+     {
+      "k": "byteVector",
+      "n": 32
+     }
+    ]
+   }
+  ]
+ },
+ "fixed_size": 128,
+ "fixed_part_size": 128,
+ "fields": [
+  {
+   "name": "Slot",
+   "index": 0,
+   "offset": 0,
+   "width": 8,
+   "variable": false,
+   "kind": "uint"
+  },
+  {
+   "name": "CommitteeIndex",
+   "index": 1,
+   "offset": 8,
+   "width": 8,
+   "variable": false,
+   "kind": "uint"
+  },
+  {
+   "name": "BeaconBlockRoot",
+   "index": 2,
+   "offset": 16,
+   "width": 32,
+   "variable": false,
+   "kind": "byteVector",
+   "length": 32
+  },
+  {
+   "name": "Source",
+   "index": 3,
+   "offset": 48,
+   "width": 40,
+   "variable": false,
+   "kind": "container"
+  },
+  {
+   "name": "Target",
+   "index": 4,
+   "offset": 88,
+   "width": 40,
+   "variable": false,
+   "kind": "container"
+  }
+ ],
+ "variable_order": [],
+ "reference": null
+}

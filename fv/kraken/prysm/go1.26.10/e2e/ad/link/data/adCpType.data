@@ -1,0 +1,7 @@
+# adCpType: link/data.py, p1bin-amd64 bytes [0xbc5c60, 0xbc5c90)
+at type__ 1289312
+bytes 48 00 00 00 00 00 00 00 30 00 00 00 00 00 00 00
+bytes 99 6b dc 31 07 08 08 19
+word go.go 0
+word runtime.gcbits._ 128
+bytes a1 11 01 00 a0 b6 16 00

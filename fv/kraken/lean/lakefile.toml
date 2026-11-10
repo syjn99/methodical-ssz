@@ -71,3 +71,21 @@ text = true
 name = "E2e"
 globs = ["E2e.+"]
 needs = ["e2e_norm_S", "e2e_data"]
+
+# prysm-e2e A1-A6 (run fve2e-20261110T010000Z-2dd40dab, session 3): real v1alpha1.AttestationData and the
+# primitives.Slot / CommitteeIndex decoders on the same Go 1.26.10 ELF. Own library so that the reviewed E2e
+# modules and their traces do not change; E2eAd modules import E2e modules. Build one module at a time.
+[[input_dir]]
+name = "e2e_ad_norm_S"
+path = "../prysm/go1.26.10/e2e/ad/link/norm"
+text = true
+
+[[input_dir]]
+name = "e2e_ad_data"
+path = "../prysm/go1.26.10/e2e/ad/link/data"
+text = true
+
+[[lean_lib]]
+name = "E2eAd"
+globs = ["E2eAd.+"]
+needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data"]

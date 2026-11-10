@@ -9,7 +9,9 @@ cases.json: list of {"id", "module" (path under fv/kraken/lean, e.g. "E2e/Epoch.
          prysm/go1.26.10/e2e/link/norm), "old", "new" (one exact instruction line, unique in the file,
          or at the 1-based "line" of the file)
   stmt:  "old", "new" (exact text, unique inside the theorem statement)
-  control: optional "code_def"/"S" (then an unmutated copy of the .S is included the same way)}
+  control: optional "code_def"/"S" (then an unmutated copy of the .S is included the same way)
+  optional for code/control: "code_ns" (namespace of the code constant, default E2e.Code) and "norm"
+  (path of the .S under fv/kraken instead of prysm/go1.26.10/e2e/link/norm/<S>; AttestationData set)}
 For each case the mutant Lean file is the module's text up to the end of the designated theorem
 (the next top-level `theorem`/`def`/`end`/`example`/`/--` after it is cut), with, for code cases, a
 new constant `E2e.Code.<code_def>Mut` that includes the mutated .S copy (absolute path in <work-dir>)
@@ -70,7 +72,7 @@ def run_case(c, work):
     text = "\n".join(lines)
     diff = ""
     if c.get("code_def"):
-        S = (NORM / c["S"]).read_text()
+        S = (KR / c["norm"] if "norm" in c else NORM / c["S"]).read_text()
         if c["kind"] == "code":
             if "line" in c:  # 1-based line of the .S file (for an instruction that occurs twice)
                 sl = S.split("\n")
@@ -88,7 +90,8 @@ def run_case(c, work):
         tl = text.split("\n")
         k = max(i for i, l in enumerate(tl) if l.startswith("import ")) + 1
         rest = re.sub(rf"(?<![A-Za-z0-9_.']){re.escape(name)}(?![A-Za-z0-9_'])", name + "Mut", "\n".join(tl[k:]))
-        decl = f'def E2e.Code.{name}Mut : Program := include_x64_rt "{d / "mut.S"}"'
+        ns = c.get("code_ns", "E2e.Code")
+        decl = f'def {ns}.{name}Mut : Program := include_x64_rt "{d / "mut.S"}"'
         text = "\n".join(tl[:k] + ["", decl] + [rest])
         lo += 2
         hi += 2

@@ -39,6 +39,8 @@ The change is in `moveSliceNoCap`; `growslice` and `nextslicecap` are byte-ident
 | `ConvT64C` | Epoch reject, v = len(buf) | no | `rt_convT64` |
 | `FmtErrorfDDC` | `fs = E2e.Data.e2eEpFmt` (40 bytes), `tw = E2e.Data.e2eIntType_addr` (`type:int`, `type__+387520`) | no (same form, new format and type word) | `rt_errorf_dd` |
 | `FmtErrorfWC` | `fs = E2e.Data.e2eCpFmtW` ("Epoch: %w") | no | `rt_errorf_w` (only the unreachable Checkpoint path; no theorem uses it) |
+| `NewobjectC` | AttestationData (A3/A4): `ty = E2eAd.Data.adCpType_addr` (`type__+1289312`, Checkpoint abi.Type, Size_ 72), sz 72; reachable (decoder Source/Target always, encoder for nil fields) | no (form of `Fk/FunSpecs.lean`, listed in `ASSUMPTIONS.json` class callee-contract) | to be instantiated by a witness model in A3 |
+| `FmtErrorfWC` | AttestationData field wraps `adFmtSlot` (8), `adFmtCi` (18), `adFmtSource` (10), `adFmtTarget` (10) | no | decoder: unreachable under the callee specs; encoder Source/Target: reachable when a child Root has len ≠ 32 |
 
 `StaticBox` (the existing form in `Fk/Contracts.lean`, used by `ep_unmarshal_reject_len_main` and its witness `WitEpR`) reads the table `Fk.Data.staticuint64s` at `Fk.Data.staticuint64s_addr`, which are names in the Fk.Data (Go 1.26.3) namespace. Two kernel-checked lemmas tie them to the Go 1.26.10 include: `E2e.ep_static_table` (`e2eStaticuint64s = Fk.Data.staticuint64s`, the 2048 bytes; link check (f) compares `e2eStaticuint64s.data` with the Go 1.26.10 ELF) and `E2e.ep_static_addr` (`e2eStaticuint64s_addr = Fk.Data.staticuint64s_addr`; both are `(label "runtime.staticuint64s").toBitVec`). No Go 1.26.3 fact is used: the bytes and the address are those of the new ELF (review e2e-r2 N3).
 
