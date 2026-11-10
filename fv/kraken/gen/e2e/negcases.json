@@ -1305,5 +1305,62 @@
   "old": "∧ nextSliceCap (s.regs.rcx.toNat + 40) C1 ≤ st.data.regs.rcx.toNat",
   "new": "∧ nextSliceCap (s.regs.rcx.toNat + 41) C1 ≤ st.data.regs.rcx.toNat",
   "why": "(B): the second growslice is called with newLen = len + 40"
+ },
+ {
+  "id": "cpw-cf-control",
+  "kind": "control",
+  "module": "E2e/CpWCoverF.lean",
+  "theorem": "cp_e2e_marshal_cover_framed"
+ },
+ {
+  "id": "cpw-cf-spare40",
+  "kind": "stmt",
+  "module": "E2e/CpWCoverF.lean",
+  "theorem": "cp_e2e_marshal_cover_framed",
+  "old": "⋆ Eq ((spare.drop 40).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))",
+  "new": "⋆ Eq ((spare.drop 39).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))",
+  "why": "(1): the spare bytes after the 40 written bytes are unchanged"
+ },
+ {
+  "id": "cpw-cf-c1",
+  "kind": "stmt",
+  "module": "E2e/CpWCoverF.lean",
+  "theorem": "cp_e2e_marshal_cover_framed",
+  "old": "⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))",
+  "why": "(2): the epoch is written into the caller's spare at dst + len (C-1 form)"
+ },
+ {
+  "id": "cpw-cf-3c-ret",
+  "kind": "stmt",
+  "module": "E2e/CpWCoverF.lean",
+  "theorem": "cp_e2e_marshal_cover_framed",
+  "old": "∨ (st.pc = label \"runtime.growslice\" ∧ s.regs.rdi.toNat < s.regs.rcx.toNat + 8",
+  "new": "∨ (st.pc = Int64.ofBitVec ra.toBitVec ∧ s.regs.rdi.toNat < s.regs.rcx.toNat + 8",
+  "why": "(3C) is the entry of the second growslice call, not a return (T-7)"
+ },
+ {
+  "id": "cpw-rf-control",
+  "kind": "control",
+  "module": "E2e/CpWCoverF.lean",
+  "theorem": "cp_e2e_marshal_reject_cover_framed"
+ },
+ {
+  "id": "cpw-rf-c1",
+  "kind": "stmt",
+  "module": "E2e/CpWCoverF.lean",
+  "theorem": "cp_e2e_marshal_reject_cover_framed",
+  "old": "⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))",
+  "why": "len + 8 <= cap: blk = dst, the epoch is at dst + len (C-1)"
+ },
+ {
+  "id": "cpw-rf-nb",
+  "kind": "stmt",
+  "module": "E2e/CpWCoverF.lean",
+  "theorem": "cp_e2e_marshal_reject_cover_framed",
+  "old": "⋆ Eq (pre.At nb) ⋆ Eq (e8.At (nb + s.regs.rcx.toBitVec))",
+  "new": "⋆ Eq (pre.At nb) ⋆ Eq (e8.At (nb + s.regs.rcx.toBitVec + 1))",
+  "why": "cap < len + 8: the epoch is in the new block at nb + len only"
  }
 ]

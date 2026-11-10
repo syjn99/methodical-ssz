@@ -28,6 +28,9 @@ import E2e.CpWCover
 import E2e.WitCpW
 import E2e.WitCpWR
 import E2e.CpWSharp
+import E2e.CpWCoverF
+import E2e.WitCpWF
+import E2e.WitCpWRF
 #print axioms E2e.ep_unmarshal_accept_main
 #print axioms E2e.ep_uacc_holds
 #print axioms E2e.WitEp.ep_accept_runs
@@ -98,3 +101,9 @@ import E2e.CpWSharp
 #print axioms E2e.WitCpWR.rej_runs
 #print axioms E2e.WitCpWR.rej_runs_nil
 #print axioms E2e.cp_e2e_marshal_grow_any_sharp
+#print axioms E2e.cp_e2e_marshal_cover_framed
+#print axioms E2e.cp_e2e_marshal_reject_cover_framed
+#print axioms E2e.WitCpWF.covf_runs
+#print axioms E2e.WitCpWF.covf_runs_nil
+#print axioms E2e.WitCpWRF.rejf_runs
+#print axioms E2e.WitCpWRF.rejf_runs_nil

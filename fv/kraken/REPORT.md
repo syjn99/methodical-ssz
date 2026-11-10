@@ -315,6 +315,12 @@ INBOX 009(세션 4)에서 나머지 용량 경우를 새 정리로 덮었다. �
 컨트롤러 결정(INBOX 010): 새 계약 형식은 없다. 남은 영역은 사용자 결정 전까지 "막힘 / 차분만"이다. "Checkpoint 인코더 완전"을 주장하지 않는다. 이 영역의 증거는 Go 차분 검사뿐이다(`enc-w-len30-spare0`, `enc-w-len10-spare0`).
 growslice 뒤의 거부(`cap < len + 8`, `len(Root) ≠ 32`)는 `cp_e2e_marshal_reject_grow_main`이 증명한다. 에폭 8바이트는 새 블록의 `[len, len+8)`에 있고 호출자 배열은 바뀌지 않는다(C-1 형식).
 경우 덮기 정리 `cp_e2e_marshal_cover`(`len(Root) = 32`)와 `cp_e2e_marshal_reject_cover`(`len(Root) ≠ 32`)는 `len ≤ cap`인 모든 용량을 위 정리들로 나눈다. 덮기 정리의 결론은 출력 바이트(`dst ++ serialize`, EthLib 독립 Desc)와 프레임 `R`이고 나머지는 `⋆ True`다. 정확한 메모리 회계는 각 정리에 있다.
+세션 5(INBOX 010 M2)에서 프레임을 적은 덮기 정리 2개를 더했다. 기존 덮기 정리는 그대로 둔다.
+`cp_e2e_marshal_cover_framed`의 결론은 구성 정리 사후조건의 선언이다: (1) 빠른 경로, (2) 첫 append가 맞고 둘째가 자람, (3A)/(3B)/(3C) `cp_e2e_marshal_grow_any_sharp`의 세 경우.
+각 경우는 용량 범위, 수신자 72바이트, 스택 칸, 가드 워드, 호출자 배열(`pre ++ spare`), 새 블록, `Heap`, `R`을 이름으로 적는다. `⋆ True`는 없다.
+반환 경우의 출력 블록은 `pre ++ bs`이고 `serialize prysmCpDesc g.toValue = .ok bs`다. (2)에서 호출자 배열은 `pre ++ epoch ++ spare[8:]`이다(C-1). (3)에서 호출자 배열은 바뀌지 않는다.
+`cp_e2e_marshal_reject_cover_framed`: `len + 8 ≤ cap`이면 에폭이 호출자 배열 `dst + len`에 있다(`blk = dst`, C-1). `cap < len + 8`이면 호출자 배열은 바뀌지 않고 에폭은 새 블록 `nb`에만 있다.
+증인 `WitCpWF.covf_runs`(len 30, cap 30 + n)와 `covf_runs_nil`은 실행이 닿는 용량 범위를 결론에 적는다. (3A)/(3B)/(3C) 중 어느 것인지는 `GrowsliceC`가 용량과 남은 힙을 숨기므로 정리로 정할 수 없다(리뷰 e2e-r3 S2, 아래 조건 4).
 조건:
 
 1. 런타임 계약 `MakesliceC`(uint8, esz 1, cnt 32), `MemmoveC`, `GrowsliceC`(uint8, esz 1, 인코더 첫 지점), `ConvT64C`, `FmtErrorfDDC`(Epoch 형식, `type:int`)는 가설이다. Go 1.26.10 소스를 다시 읽었고 바뀌지 않았다(`prysm/go1.26.10/e2e/RUNTIME-1.26.10.md`). 정교화 증명은 없다.
@@ -355,13 +361,15 @@ Go 1.26.3 증명은 옮기지 않았다. 모든 지시 색인, 오프셋, 레이
 | `E2e.cp_e2e_marshal_reject_grow_main` | marshal_reject after the first growslice (cap < len + 8, len(Root) ≠ 32; C-1 form on the new block) | done | done (WitCpWR.rej_runs n = 0, 3; rej_runs_nil) | done | done | 2/2 통과 | differential (enc-w-rej-len30-spare0/3: caller array unchanged) |
 | `E2e.cp_e2e_marshal_cover` | case cover len(Root) = 32 × every len ≤ cap, against EthLib (dst ++ serialize; ⋆ True remainder) or at the 2nd growslice call | done | done (WitCpW: cap = len, len+3, len+8, len+39, len+40, nil dst) | done | done | 2/2 통과 | differential |
 | `E2e.cp_e2e_marshal_reject_cover` | case cover len(Root) ≠ 32 × every len ≤ cap (ErrBytesLength words; some block holds pre ++ epoch) | done | done (WitCpWR: cap = len, len+3, len+8, len+40, nil dst; rl 31/0/33) | done | done | 2/2 통과 | differential |
+| `E2e.cp_e2e_marshal_cover_framed` | case cover len(Root) = 32 × every len ≤ cap with the exact frame (no ⋆ True): disjunction of the member postconditions (1) cp_e2e_marshal_main, (2) cp_e2e_marshal_grow2_main, (3A)/(3B)/(3C) cp_e2e_marshal_grow_any_sharp; returned block pre ++ bs with serialize = .ok bs (EthLib); (3C) is the entry of the second growslice call (T-7) | done | done (WitCpWF.covf_runs: cap = len, len+3, len+8, len+39, len+40 with the reached capacity range in the conclusion; covf_runs_nil) | done (partial: (3C) ends at the call) | done | 4/4 통과 | differential (accept cases) |
+| `E2e.cp_e2e_marshal_reject_cover_framed` | case cover len(Root) ≠ 32 × every len ≤ cap with the exact frame: len + 8 ≤ cap: epoch in the caller's array (blk = dst, C-1); cap < len + 8: caller's array pre ++ spare unchanged, epoch in the new block only | done | done (WitCpWRF.rejf_runs: cap = len, len+3, len+8, len+40, nil dst; rl 31/0/33/48) | done | done | 3/3 통과 | differential (reject cases) |
 
 | unreachable_mc 행 | 정리 | 상태 | reject 범위에 셈 |
 | --- | --- | --- | --- |
 | phase0.ssz.go:1988 fmt.Errorf("Epoch: %w") (decoder) | E2e.cp_e2e_epoch_err_unreachable | done | 아니요 |
 | phase0.ssz.go:1964 fmt.Errorf("Epoch: %w") (encoder) | none needed: removed by the compiler (inlined Epoch.MarshalSSZTo cannot fail; no fmt.errorf call in the machine code, CALLGRAPH.md) | absent from the code | 아니요 |
 
-부정 시험 전체: 143/143 통과 (`negative/result.json`). Go 차분: 59건, 불일치 0건 (`differential.json`). 공리: 70개 이름, 판정 PASS (`axioms.json`).
+부정 시험 전체: 150/150 통과 (`negative/result.json`). Go 차분: 59건, 불일치 0건 (`differential.json`). 공리: 76개 이름, 판정 PASS (`axioms.json`).
 
 비용 기록(PROOF-PLAN §4): `prysm/go1.26.10/e2e/COST.json`은 `gen/e2e/cost.py`가 gate 기록(`records.jsonl`)과 작업 로그에서 만든다. 모듈과 정리마다 gate 안 벽시계 초, 실행 수, 실패한 실행 수, 프로세스 최대 RSS, memcap 종료 수다. gate 밖의 시간(생각, 편집)은 들어 있지 않다.
 
@@ -382,7 +390,7 @@ python3 -I -B fv/kraken/gen/e2e/callgraph.py <objdump> prysm/go1.26.10/e2e/callg
 python3 -I -B fv/kraken/gen/e2e/e2elink.py filter <out> <objdump> <elf> <nm>
 mkdir -p <out>/norm && python3 -I -B fv/kraken/link/conv.py <out>/target.objdump <out>/p1bin-amd64.nm <out>/norm --norm
 python3 -I -B fv/kraken/gen/e2e/e2elink.py data <out> && python3 -I -B fv/kraken/link/check.py <out>
-(cd fv/kraken/lean && lake build E2e.<모듈>)            # 모듈 하나씩: Epoch WitEp Spec CpAccept WitCpA CpReject WitCpR CpSpecK CpMarshal WitCpM Compose CpCompose WitCpC CpMarshalG WitCpG CpMarshalR WitCpMR CpSpecM WitCpS EpReject WitEpR GoVal CpWTail CpWTailG CpWHead CpWGrow CpWGrowAny CpWCover WitCpW WitCpWR CpWSharp
+(cd fv/kraken/lean && lake build E2e.<모듈>)            # 모듈 하나씩: Epoch WitEp Spec CpAccept WitCpA CpReject WitCpR CpSpecK CpMarshal WitCpM Compose CpCompose WitCpC CpMarshalG WitCpG CpMarshalR WitCpMR CpSpecM WitCpS EpReject WitEpR GoVal CpWTail CpWTailG CpWHead CpWGrow CpWGrowAny CpWCover WitCpW WitCpWR CpWSharp CpWCoverF WitCpWF WitCpWRF
 (cd fv/kraken/lean && lake env lean ../gen/e2e/Axioms.lean) | python3 -I -B fv/kraken/gen/e2e/axioms.py /dev/stdin prysm/go1.26.10/e2e/axioms.json
 python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/e2e/negcases.json <work> prysm/go1.26.10/e2e/negative/result.json
 python3 -I -B fv/kraken/gen/e2e/differential.py cases <c.json>; go run ./fve2e/cpcheck <c.json> > <o.json>   # Prysm 임시 트리, Go 1.26.10

@@ -3394,13 +3394,177 @@
    "recursion_limit": false,
    "class": "inside",
    "pass": true
+  },
+  {
+   "id": "cpw-cf-control",
+   "kind": "control",
+   "module": "E2e/CpWCoverF.lean",
+   "theorem": "cp_e2e_marshal_cover_framed",
+   "range": [
+    40,
+    287
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 3.0,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "cpw-cf-spare40",
+   "kind": "stmt",
+   "module": "E2e/CpWCoverF.lean",
+   "theorem": "cp_e2e_marshal_cover_framed",
+   "range": [
+    40,
+    287
+   ],
+   "error_lines": [
+    247
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpw-cf-spare40/mut.lean:247:4: error: ecancel: could not automatically solve goal (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At rsp.toBitVec) \u22c6",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 2.8,
+   "diff": "--- orig\n+++ mut\n@@ -55,7 +55,7 @@\n               \u22c6 Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 24)) \u22c6 Eq (cC.At (s.regs.rax.toBitVec + 32))\n               \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40)) \u22c6 Eq (g.root.toList.At p)\n               \u22c6 Eq ((pre ++ bs.toList).At s.regs.rbx.toBitVec)\n-              \u22c6 Eq ((spare.drop 40).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))\n+              \u22c6 Eq ((spare.drop 39).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))\n               \u22c6 Heap avail \u22c6 R) st.data.dmem)\n           -- (2) len + 8 \u2264 cap < len + 40: epoch into the caller's array, then one growth (cp_e2e_marshal_grow2_main)\n           \u2228 (s.regs.rcx.toNat + 8 \u2264 s.regs.rdi.toNat \u2227 s.regs.rdi.toNat < s.regs.rcx.toNat + 40\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "cpw-cf-c1",
+   "kind": "stmt",
+   "module": "E2e/CpWCoverF.lean",
+   "theorem": "cp_e2e_marshal_cover_framed",
+   "range": [
+    40,
+    287
+   ],
+   "error_lines": [
+    262
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpw-cf-c1/mut.lean:262:4: error: ecancel: could not automatically solve goal (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At rsp.toBitVec) \u22c6",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 2.7,
+   "diff": "--- orig\n+++ mut\n@@ -82,7 +82,7 @@\n               \u22c6 Eq ((Int.toBytes 8 p.toInt).At (s.regs.rax.toBitVec + 16))\n               \u22c6 Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 24)) \u22c6 Eq (cC.At (s.regs.rax.toBitVec + 32))\n               \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40)) \u22c6 Eq (g.root.toList.At p)\n-              \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n+              \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))\n               \u22c6 Eq ((spare.drop 8).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))\n               \u22c6 Eq ((pre ++ bs.toList).At st.data.regs.rax.toBitVec)\n               \u22c6 Eq (rest.At (st.data.regs.rax.toBitVec + s.regs.rcx.toBitVec + 40))\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "cpw-cf-3c-ret",
+   "kind": "stmt",
+   "module": "E2e/CpWCoverF.lean",
+   "theorem": "cp_e2e_marshal_cover_framed",
+   "range": [
+    40,
+    287
+   ],
+   "error_lines": [
+    284
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpw-cf-3c-ret/mut.lean:284:21: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 3.0,
+   "diff": "--- orig\n+++ mut\n@@ -150,7 +150,7 @@\n               \u22c6 Eq (rest.At (st.data.regs.rax.toBitVec + s.regs.rcx.toBitVec + 40))\n               \u22c6 Heap av' \u22c6 R) st.data.dmem)))\n         -- (3C) cap < len + 8, C1 < len + 40, heap left below the second call's budget: entry of that call\n-        \u2228 (st.pc = label \"runtime.growslice\" \u2227 s.regs.rdi.toNat < s.regs.rcx.toNat + 8\n+        \u2228 (st.pc = Int64.ofBitVec ra.toBitVec \u2227 s.regs.rdi.toNat < s.regs.rcx.toNat + 8\n           \u2227 st.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 120 }\n           \u2227 st.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8#64 } \u2227 st.data.regs.r14 = s.regs.r14\n           \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 \u2227 st.data.regs.rdi.toNat = 32\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "cpw-rf-control",
+   "kind": "control",
+   "module": "E2e/CpWCoverF.lean",
+   "theorem": "cp_e2e_marshal_reject_cover_framed",
+   "range": [
+    291,
+    403
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 3.2,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "cpw-rf-c1",
+   "kind": "stmt",
+   "module": "E2e/CpWCoverF.lean",
+   "theorem": "cp_e2e_marshal_reject_cover_framed",
+   "range": [
+    291,
+    403
+   ],
+   "error_lines": [
+    389
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpw-rf-c1/mut.lean:389:4: error: ecancel: could not automatically solve goal (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At rsp.toBitVec) \u22c6",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 3.1,
+   "diff": "--- orig\n+++ mut\n@@ -52,7 +52,7 @@\n             \u22c6 Eq ((Int.toBytes 8 p.toInt).At (s.regs.rax.toBitVec + 16))\n             \u22c6 Eq ((Int.toBytes 8 rl.toBitVec.toInt).At (s.regs.rax.toBitVec + 24))\n             \u22c6 Eq (cC.At (s.regs.rax.toBitVec + 32)) \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40))\n-            \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n+            \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))\n             \u22c6 Eq ((spare.drop 8).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))\n             \u22c6 Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrBytesLength_addr)\n             \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrBytesLength\" + 8).toBitVec)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "cpw-rf-nb",
+   "kind": "stmt",
+   "module": "E2e/CpWCoverF.lean",
+   "theorem": "cp_e2e_marshal_reject_cover_framed",
+   "range": [
+    291,
+    403
+   ],
+   "error_lines": [
+    403
+   ],
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/cpw-rf-nb/mut.lean:403:4: error: ecancel: could not automatically solve goal (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At rsp.toBitVec) \u22c6",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "later_resource_error": null,
+   "seconds": 3.2,
+   "diff": "--- orig\n+++ mut\n@@ -80,7 +80,7 @@\n             \u22c6 Eq ((Int.toBytes 8 rl.toBitVec.toInt).At (s.regs.rax.toBitVec + 24))\n             \u22c6 Eq (cC.At (s.regs.rax.toBitVec + 32)) \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40))\n             \u22c6 Eq ((pre ++ spare).At s.regs.rbx.toBitVec)\n-            \u22c6 Eq (pre.At nb) \u22c6 Eq (e8.At (nb + s.regs.rcx.toBitVec)) \u22c6 Eq (mid.At (nb + s.regs.rcx.toBitVec + 8))\n+            \u22c6 Eq (pre.At nb) \u22c6 Eq (e8.At (nb + s.regs.rcx.toBitVec + 1)) \u22c6 Eq (mid.At (nb + s.regs.rcx.toBitVec + 8))\n             \u22c6 Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrBytesLength_addr)\n             \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrBytesLength\" + 8).toBitVec)\n             \u22c6 Heap av' \u22c6 R) st.data.dmem)))\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
   }
  ],
- "pass": 143,
- "total": 143,
+ "pass": 150,
+ "total": 150,
  "classes": {
-  "control_pass": 46,
-  "inside": 97
+  "control_pass": 48,
+  "inside": 102
  },
  "case_timeout_s": 300
 }

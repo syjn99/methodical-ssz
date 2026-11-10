@@ -315,6 +315,36 @@
    "Classical.choice",
    "Quot.sound"
   ],
+  "E2e.cp_e2e_marshal_cover_framed": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.cp_e2e_marshal_reject_cover_framed": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.WitCpWF.covf_runs": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.WitCpWF.covf_runs_nil": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.WitCpWRF.rejf_runs": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "E2e.WitCpWRF.rejf_runs_nil": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
   "E2e.prysmCpDesc_checker": [],
   "E2e.cp_layout": [],
   "E2e.witCpA_recv_pre": [],
@@ -325,6 +355,6 @@
  },
  "missing": [],
  "nonstandard": {},
- "count": 70,
+ "count": 76,
  "verdict": "PASS"
 }

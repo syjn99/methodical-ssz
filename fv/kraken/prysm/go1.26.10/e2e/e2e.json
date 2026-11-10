@@ -327,6 +327,34 @@
    "neg_ids": [
     "cpw-rc-"
    ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_cover_framed",
+   "kind": "case cover len(Root) = 32 × every len ≤ cap with the exact frame (no ⋆ True): disjunction of the member postconditions (1) cp_e2e_marshal_main, (2) cp_e2e_marshal_grow2_main, (3A)/(3B)/(3C) cp_e2e_marshal_grow_any_sharp; returned block pre ++ bs with serialize = .ok bs (EthLib); (3C) is the entry of the second growslice call (T-7)",
+   "function": "marshal",
+   "statement": "done",
+   "witness": "done (WitCpWF.covf_runs: cap = len, len+3, len+8, len+39, len+40 with the reached capacity range in the conclusion; covf_runs_nil)",
+   "theorem": "done (partial: (3C) ends at the call)",
+   "link": "done",
+   "negative": "done",
+   "go_value": "differential (accept cases)",
+   "neg_ids": [
+    "cpw-cf-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_reject_cover_framed",
+   "kind": "case cover len(Root) ≠ 32 × every len ≤ cap with the exact frame: len + 8 ≤ cap: epoch in the caller's array (blk = dst, C-1); cap < len + 8: caller's array pre ++ spare unchanged, epoch in the new block only",
+   "function": "marshal",
+   "statement": "done",
+   "witness": "done (WitCpWRF.rejf_runs: cap = len, len+3, len+8, len+40, nil dst; rl 31/0/33/48)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "differential (reject cases)",
+   "neg_ids": [
+    "cpw-rf-"
+   ]
   }
  ],
  "unreachable_mc": [
