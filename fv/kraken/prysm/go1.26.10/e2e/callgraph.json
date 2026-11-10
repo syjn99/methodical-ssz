@@ -1,0 +1,208 @@
+{
+ "elf_sha256": "c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e",
+ "functions": [
+  {
+   "name": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Checkpoint).SizeSSZ",
+   "scope": "in",
+   "addr": 10607360,
+   "instructions": 2,
+   "calls": []
+  },
+  {
+   "name": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Checkpoint).MarshalSSZTo",
+   "scope": "in",
+   "addr": 10607488,
+   "instructions": 85,
+   "calls": [
+    {
+     "site": "0xa1dbe0",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1)"
+    },
+    {
+     "site": "0xa1dc37",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1)"
+    },
+    {
+     "site": "0xa1dc6a",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC"
+    },
+    {
+     "site": "0xa1dcb7",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ]
+  },
+  {
+   "name": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Checkpoint).UnmarshalSSZ",
+   "scope": "in",
+   "addr": 10607840,
+   "instructions": 98,
+   "calls": [
+    {
+     "site": "0xa1dd20",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec EpUAccC, proved from machine code (ep_uacc_holds)"
+    },
+    {
+     "site": "0xa1dd59",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC ('Epoch: %w', Checkpoint) / FmtErrorfDDC ('expected buffer of length %d received %d', Epoch)"
+    },
+    {
+     "site": "0xa1dd6d",
+     "target": "runtime.newobject",
+     "class": "c",
+     "how": "nil-result branch after fmt.errorf: excluded by the contract's rax != 0"
+    },
+    {
+     "site": "0xa1ddac",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word)"
+    },
+    {
+     "site": "0xa1ddd3",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/je is proved to skip the call"
+    },
+    {
+     "site": "0xa1ddf6",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC"
+    },
+    {
+     "site": "0xa1de26",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/je is proved to skip the call"
+    },
+    {
+     "site": "0xa1de73",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ]
+  },
+  {
+   "name": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).UnmarshalSSZ",
+   "scope": "in (callee, function spec E2)",
+   "addr": 6941920,
+   "instructions": 58,
+   "calls": [
+    {
+     "site": "0x69ed33",
+     "target": "runtime.convT64",
+     "class": "b",
+     "how": "ConvT64C"
+    },
+    {
+     "site": "0x69ed62",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC ('Epoch: %w', Checkpoint) / FmtErrorfDDC ('expected buffer of length %d received %d', Epoch)"
+    },
+    {
+     "site": "0x69ed74",
+     "target": "runtime.newobject",
+     "class": "c",
+     "how": "nil-result branch after fmt.errorf: excluded by the contract's rax != 0"
+    },
+    {
+     "site": "0x69edc0",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ]
+  },
+  {
+   "name": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).MarshalSSZTo",
+   "scope": "record only (inlined into Checkpoint.MarshalSSZTo; out-of-line body unused by it)",
+   "addr": 6942176,
+   "instructions": 47,
+   "calls": [
+    {
+     "site": "0x69ee2e",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1)"
+    },
+    {
+     "site": "0x69ee71",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ]
+  },
+  {
+   "name": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).MarshalSSZ",
+   "scope": "record only (inlined)",
+   "addr": 6942368,
+   "instructions": 25,
+   "calls": [
+    {
+     "site": "0x69eece",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1)"
+    },
+    {
+     "site": "0x69eeef",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ]
+  },
+  {
+   "name": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).SizeSSZ",
+   "scope": "record only (inlined)",
+   "addr": 6942464,
+   "instructions": 2,
+   "calls": []
+  }
+ ],
+ "missing": [],
+ "asm_call_evidence": {
+  "Checkpoint.MarshalSSZTo calls Epoch.MarshalSSZTo/MarshalSSZ/SizeSSZ": false,
+  "Checkpoint.UnmarshalSSZ calls Epoch.UnmarshalSSZ": true
+ },
+ "gcflags_m2": {
+  "can_inline_Epoch_MarshalSSZTo": [
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:135:6: can inline (*Epoch).MarshalSSZTo with cost 39 as: method(*Epoch) func([]byte) ([]byte, error) { marshalled, err := ([]byte)(.autotmp_6), .autotmp_7; if err != nil { return nil, err }; return append(dst, marshalled...), nil }"
+  ],
+  "can_inline_Epoch_MarshalSSZ": [
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:144:6: can inline (*Epoch).MarshalSSZ with cost 18 as: method(*Epoch) func() ([]byte, error) { marshalled := MarshalUint64([]byte{}, uint64(*e)); return marshalled, nil }"
+  ],
+  "can_inline_Epoch_SizeSSZ": [
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:150:6: can inline (*Epoch).SizeSSZ with cost 2 as: method(*Epoch) func() int { return 8 }"
+  ],
+  "can_inline_Epoch_UnmarshalSSZ": [],
+  "cannot_inline_Epoch_UnmarshalSSZ": [
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:126:6: cannot inline (*Epoch).UnmarshalSSZ: function too complex: cost 113 exceeds budget 80"
+  ],
+  "cp_marshal_inlines_Epoch_MarshalSSZTo": [
+   "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1963:36: inlining call to primitives.(*Epoch).MarshalSSZTo"
+  ],
+  "cp_marshal_inlines_Epoch_MarshalSSZ": [
+   "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1963:36: inlining call to primitives.(*Epoch).MarshalSSZ"
+  ],
+  "cp_unmarshal_inlines_Epoch_UnmarshalSSZ": [],
+  "cp_unmarshal_inlines_Epoch_SizeSSZ": []
+ },
+ "unclassified_calls": 0
+}

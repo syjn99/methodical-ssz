@@ -53,3 +53,21 @@ needs = ["fk_norm_S", "fk_data", "fk_lean_S"]
 [[lean_lib]]
 name = "Gen1cX4"
 globs = ["Gen1cX4.+"]
+
+# prysm-e2e (run fve2e-20261110T010000Z-2dd40dab): real v1alpha1.Checkpoint encoder/decoder and the
+# primitives.Epoch decoder on the Go 1.26.10 ELF. Not a default target; build one module at a time,
+# e.g. `lake build E2e.Epoch`. The .S and data files of this namespace are inputs of every E2e module.
+[[input_dir]]
+name = "e2e_norm_S"
+path = "../prysm/go1.26.10/e2e/link/norm"
+text = true
+
+[[input_dir]]
+name = "e2e_data"
+path = "../prysm/go1.26.10/e2e/link/data"
+text = true
+
+[[lean_lib]]
+name = "E2e"
+globs = ["E2e.+"]
+needs = ["e2e_norm_S", "e2e_data"]
