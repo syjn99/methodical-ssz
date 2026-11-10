@@ -148,9 +148,97 @@
    }
   },
   "beacon_block_header_encoder (iii)": {
-   "state": "not started",
-   "reason": "INBOX 019 end condition: when the hold-out decoder (ii) is kernel-checked with its evidence, set in-review and end. (iii) is hand work (no encode mode) and is left to a later controller order after review.",
-   "read_only_observation": "Textual comparison (no proof attempt): the P2 encode template rootEncHead/rootEncTail (fixed registers, from Checkpoint.MarshalSSZTo) matches none of the three BBH root encode blocks. Root 1 (directives 62-89): the field pointer is loaded into rdx and the offset kept in r8 (template: r8 / rdx), a nop sits between cmpq and jne, and the three spills come in another order (rbx, r9, rdi vs rdi, r9, rbx). Root 2 (90-): the receiver is reloaded into rdx, the capacity test is `cmp %r9,%rcx; jb` with a reload from the stack. An encode mode would need a register-parametric template or several templates; this is an observation from reading the .S, not a measured cost."
+   "state": "stopped at the attempt limit (INBOX 020 item 3: three real attempts per obstruction); no theorem stated as proved; fast path only was the scope (never 'encoder complete')",
+   "scope": "MarshalSSZTo fast path: len(dst) + 112 <= cap(dst), three roots of length 32; growslice branches and the length reject out of scope (T-7 deferred, GrowsliceC untouched)",
+   "method": "hand proof (no encode mode; the P2 encode template matches none of the three root blocks; no template, generator, Kind or S1-lemma change; no template-change proposal)",
+   "plan": "segments A (entry to directive 62), B (62 to the return of memmove 1, directive 90), M2 (90 to 118), M3 (118 to return), composition bh_e2e_marshal_main in the shape of cp_e2e_marshal_main",
+   "reached": "segment A: every step of directives 0-61 elaborated (stack guard lea/r12 form, prologue, both inlined uint64 temps, two capacity tests, two stores); the final memory post of A (14 separation atoms, sl and pi each at three addresses) was not closed",
+   "obstruction": "closing the memory post of segment A at directive 62",
+   "attempts": {
+    "367": "development step to directive 4 (unsolved goals expected; showed the guard condition form); not an attempt",
+    "368": "whole head (0-90) in one theorem: memcap kill at 6 GiB (6.00 GiB process); led to the A/B split (as T-1 for the decoders)",
+    "369": "attempt 1: ecancel with four existential X15 witnesses: heartbeat timeout (4 M) inside ecancel (line 214), peak 1.68 GiB",
+    "370": "diagnostic (print the goal by `done`): memcap kill while the error was produced; not an attempt",
+    "371": "attempt 2: explicit X15 witnesses + ecancel: memcap kill (6.02 GiB)",
+    "372": "diagnostic (cleared hypotheses, pp.maxSteps 4000): memcap kill; not an attempt",
+    "373": "attempt 3: AC-normalise both sides (sep_assoc, sep_comm, sep_comm_l) then exact: heartbeat timeout (4 M) at exact (line 222), peak 1.68 GiB. The two AC-normal forms are not syntactically equal. Cause not known: an atom of the stated post may have no partner, or the atoms are the same and the AC order differs (FINDINGS T-8 saw that until the symbolic byte lists were generalized). Printing the goal exhausted memory twice (370, 372)."
+   },
+   "maxHeartbeats": "4 M in development (below the 16 M of cp_e2e_marshal_main); not raised (no profiled cause)",
+   "hand_lines_attempted": 235,
+   "hand_lines_note": "the last draft (BhEncHead, 235 lines by wc -l) is not committed: it does not build and the E2eScal glob would include it; kept as a run artifact outside the repository",
+   "jobs": [
+    367,
+    368,
+    369,
+    370,
+    371,
+    372,
+    373
+   ],
+   "lake_runs": 7,
+   "failed_lake_runs": 7,
+   "cumulative_gate_s": 326.0,
+   "cold_build_s": "none (no successful build)",
+   "peak_rss_gib": 6.02,
+   "memcap_kills": 4,
+   "memcap_kill_jobs": [
+    368,
+    370,
+    371,
+    372
+   ],
+   "stale_check_after_each_failure": "stale_olean.py after every failed build (session 10 rule); the BhEncHead draft left one orphan build file (ir/E2eScal/BhEncHead.setup.json); lake build --no-build E2e E2eAd E2eScal exit 0 afterwards (job 375)",
+   "wall_clock_s": 774,
+   "wall_clock_note": "from the item-2b commit (18:46:34Z) to the end of job 373 (18:59:28Z)",
+   "baseline_next_to_it": "BASELINE.json units.checkpoint_encoder: the whole Checkpoint encoder unit (fast path, reject, growslice sites, covers; 70 lake runs, 36 failed, 5550.6 gate s, 0 memcap kills, 32825 s). Its fast-path theorem cp_e2e_marshal_main alone is not separated in the baseline. Two hand proofs of unequal types and scope: no speed-up or slow-down claim.",
+   "next_step": "apply the T-8 workaround (generalize the symbolic byte lists, e.g. the X15 bytes and sl/pi, before the AC sort) or close the post one atom at a time on a cleared context, to find out whether an atom is unmatched; then B, M2, M3 and the composition. A new attempt budget is the controller's decision.",
+   "read_only_observation": "Textual comparison (no proof attempt): the P2 encode template rootEncHead/rootEncTail (fixed registers, from Checkpoint.MarshalSSZTo) matches none of the three BBH root encode blocks. Root 1 (directives 62-89): the field pointer is loaded into rdx and the offset kept in r8 (template: r8 / rdx), a nop sits between cmpq and jne, and the three spills come in another order (rbx, r9, rdi vs rdi, r9, rbx). Root 2 (90-): the receiver is reloaded into rdx, the capacity test is `cmp %r9,%rcx; jb` with a reload from the stack. An encode mode would need a register-parametric template or several templates; this is an observation from reading the .S, not a measured cost.",
+   "session9_state": "not started in session 9 (INBOX 019 end condition at (ii))"
+  },
+  "decoder_completions (INBOX 020 item 2)": {
+   "bbh_unreachable_mc": {
+    "theorems": [
+     "E2eScal.Bh.bh_e2e_slot_err_unreachable",
+     "E2eScal.Bh.bh_e2e_vi_err_unreachable"
+    ],
+    "witness": "E2eScal.WitBhU.bh_unreach_runs",
+    "jobs": [
+     352,
+     353,
+     354,
+     355,
+     356,
+     357,
+     358
+    ],
+    "lake_runs": 2,
+    "failed_lake_runs": 0,
+    "cumulative_gate_s": 21.0,
+    "negatives": "5 (1 control, 4 inside)",
+    "peak_rss_gib": 1.76
+   },
+   "vi_length_reject": {
+    "theorem": "E2eScal.vi_unmarshal_reject_len_main",
+    "witness": "E2eScal.WitViR.vir_runs (len 7), L9.vir_runs9, L300.vir_runs300",
+    "contracts": "ConvT64C, FmtErrorfDDC (e2eEpFmt, type:int): existing instances; the ValidatorIndex .S equals the Epoch .S modulo labels, including go_string._+110057",
+    "jobs": [
+     359,
+     360,
+     361,
+     362,
+     363,
+     364,
+     365,
+     366
+    ],
+    "lake_runs": 2,
+    "failed_lake_runs": 0,
+    "cumulative_gate_s": 44.0,
+    "negatives": "6 (1 control, 5 inside)",
+    "peak_rss_gib": 1.84,
+    "go_value": "Go differential vi-len 3/3 (job 345)"
+   },
+   "note": "both are texts of reviewed development-set proofs (AdReject unreachable theorems, EpReject / WitEpR) with the code constant replaced"
   }
  },
  "contamination": {
@@ -172,11 +260,18 @@
   "Runtime contracts MakesliceC / MemmoveC (S + 8) stay hypotheses; Slot and ValidatorIndex callees are discharged by proved function specs (no callee contract).",
   "A timeout is a timeout; none occurred.",
   "The hand Desc prysmBhDesc was written after the checker Desc had been printed in the same session: independent of the code under test in content, not in time (review s4-r1, FINDINGS NF-10).",
-  "bh_e2e_accept_main keeps the three argument-area slots in one 24-byte existential (dead stack only; FINDINGS NF-11)."
+  "bh_e2e_accept_main keeps the three argument-area slots in one 24-byte existential (dead stack only; FINDINGS NF-11).",
+  "Encoder (iii): fast path only was in scope, and it is not proved. No claim about the BeaconBlockHeader encoder is made."
  ],
  "not_run": [
   "reviewer cold rebuild (S4)",
   "Lean Go-value predicate for the BBH receiver",
-  "unreachable_mc theorems for the two fmt.errorf wraps (stated in BhReject doc only)"
- ]
+  "BeaconBlockHeader MarshalSSZTo fast path: not proved (stopped at the attempt limit, see units)"
+ ],
+ "session10_checks": {
+  "lake_build_E2eScal": "exit 0 (job 374)",
+  "no_build_E2e_E2eAd_E2eScal": "exit 0 (job 375)",
+  "axioms_gate": "PASS 3125 declarations, nonstandard 0, sorryAx 0 (job 376)",
+  "decl_drift_vs_job_347": "136 ADDED, 0 CHANGED, 0 REMOVED"
+ }
 }

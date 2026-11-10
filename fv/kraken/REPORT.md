@@ -324,7 +324,8 @@ growslice 뒤의 거부(`cap < len + 8`, `len(Root) ≠ 32`)는 `cp_e2e_marshal_
 증인 `WitCpWF.covf_runs`(len 30, cap 30 + n)와 `covf_runs_nil`은 실행이 닿는 용량 범위를 결론에 적는다. (3A)/(3B)/(3C) 중 어느 것인지는 `GrowsliceC`가 용량과 남은 힙을 숨기므로 정리로 정할 수 없다(리뷰 e2e-r3 S2, 아래 조건 4).
 홀드아웃 H1(확장성 S3, 방법 고정 `56dfc27`, 연 시각 2026-11-10T17:53:24Z): 결과, 비용, 한계는 `prysm/go1.26.10/e2e/scal/RESULT.json`에 있다.
 오염 기록은 `scal/CONTAMINATION.md`, 연 기록은 `scal/HOLDOUT-OPENED`다. H2(Eth1Data)는 열지 않았다.
-증명한 것: ValidatorIndex 디코더 수용, BeaconBlockHeader 디코더 수용·크기 거부·명세 정렬. 인코더는 빠른 경로만 대상이다. "인코더 완전"이 아니다.
+증명한 것: ValidatorIndex 디코더 수용과 길이 거부, BeaconBlockHeader 디코더 수용·크기 거부·명세 정렬·오류 감싸기 두 곳의 도달 불가.
+BeaconBlockHeader 인코더 빠른 경로는 증명하지 않았다. 시도 한도 3회에서 멈췄다(FINDINGS T-9, memcap 종료 4회).
 
 조건:
 
@@ -392,6 +393,8 @@ AttestationData 인코더(A4–A6)는 시작하지 않았다.
 | AttestationData decoder fmt.Errorf("CommitteeIndex: %w") | E2eAd.ad_e2e_ci_err_unreachable | done | 아니요 |
 | AttestationData decoder fmt.Errorf("Source: %w") | E2eAd.ad_e2e_source_err_unreachable | done | 아니요 |
 | AttestationData decoder fmt.Errorf("Target: %w") | E2eAd.ad_e2e_target_err_unreachable | done | 아니요 |
+| BeaconBlockHeader decoder fmt.Errorf("Slot: %w") (홀드아웃 H1) | E2eScal.Bh.bh_e2e_slot_err_unreachable (증인 WitBhU) | done | 아니요 |
+| BeaconBlockHeader decoder fmt.Errorf("ValidatorIndex: %w") (홀드아웃 H1) | E2eScal.Bh.bh_e2e_vi_err_unreachable (증인 WitBhU) | done | 아니요 |
 
 공리 전체 검사(감사 AU-10): `gen/e2e/axioms_gate.py`가 E2e, E2eAd, E2eScal의 모듈 79개를 프로그램으로 나열한다. 선언 2726개(정리 2299개)의 공리 집합이 모두 표준이고 `sorryAx`는 0개다(gate 작업 293, `axioms-gate.json`; 수는 그 명령의 출력이다). 손 목록 136개 이름은 "있어야 함" 검사로 남는다. 빠진 이름은 0개다. 부정 대조: `sorry`를 쓰는 임시 정리 `E2e.sorry_ctl'`을 더하면 FAIL이다(작업 256).
 부정 시험 전체: 154/154 통과 (`negative/result.json`). Go 차분: 59건, 불일치 0건 (`differential.json`). 공리: 79개 이름, 판정 PASS (`axioms.json`).
