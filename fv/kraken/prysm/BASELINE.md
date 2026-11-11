@@ -23,6 +23,7 @@ Paths are relative to `fv/kraken/` unless they start with `fv/` or `.claude/`. C
 | Kraken | `6064eecbb730a1152aa6ed891a155d3a92a4f298`, AeneasVerif/kraken main (not a PR branch) | `lean/lake-manifest.json`, `TOOLS.md` |
 | EthLib | `862185680cf23ccf54d44eb25b63b26c5020597b` | `lean/lake-manifest.json` |
 | Lean | `leanprover/lean4:nightly-2026-09-21`; dump header `lean=4.36.0-nightly-2026-09-21 githash=ca39d2bc…` | `lean/lean-toolchain`, `prysm/go1.26.10/e2e/axioms-gate.json` |
+| Pilot OPT-R1 (pilot ELF only; not the e2e baseline) | generator `ca191bb0c573830126dd017bd71a801f90038573` (branch `claude/ssz-gen-opt-r1`, parent `698c202`, NOT merged here; opt-in flag `--reserve-marshal`, default off); ELF `3ef7ac890ba1a797fb90877b84ad1a6ffe0ac283f77c10b09ffb2c8cd7b7f602`, 23486305 bytes, same Go and flags; stream `5821b19` (review opt-r1-r1 APPROVE), merge `83e0b6a` (integration INT3, not yet reviewed) | `prysm/go1.26.10/opt-r1/MANIFEST.md` §1–2, `opt-r1/build-ids.txt` |
 
 Where the binaries and link tables are:
 
@@ -75,11 +76,17 @@ Module path is `lean/<Namespace>/<Module>.lean`. Sources: `prysm/go1.26.10/e2e/e
 | decoder `fmt.Errorf` wraps | unreachable_mc (conditional skip, not reject coverage) | K | `E2e.cp_e2e_epoch_err_unreachable`, `E2eAd.ad_e2e_*_err_unreachable` |
 | hand-written `primitives` methods | every method and path not in a K row above (FINDINGS O2 counts "the other 23 methods" after Epoch only; it predates the Slot, CommitteeIndex and ValidatorIndex decoder rows above) | N | `prysm/FINDINGS.md` O2 |
 | runtime callees (makeslice, memmove, growslice, convT64, newobject, fmt.errorf) | contract bodies | N (hypotheses) | `CONTRACTS.md` |
+| Checkpoint.MarshalSSZTo, pilot ELF `3ef7ac89…f602` only (old proofs are about the old ELF) | fast (`len + 40 ≤ cap < 2^63`); reject in that range; grow (`len ≤ cap < len + 40`); reject on grow; spec (fast path) | K; covers unframed (they end in `⋆ True`) | `E2e.OptR1.cpo_marshal_main`, `cpo_marshal_reject_main`, `cpo_marshal_grow_main`, `cpo_marshal_reject_grow_main`, `cpo_marshal_spec_k`; covers `cpo_marshal_cover`, `cpo_marshal_reject_cover` |
+| Pilot ELF `3ef7ac89…f602` only | framed covers; nil receiver; morestack; every other function of the pilot ELF (AttestationData encoder included) | N (nil receiver: X, differential only) | — |
 
 Every growslice branch except the Checkpoint ones above is NOT proved. No encoder is complete; there is no full coverage claim.
 Rows marked "ENC stream" are kernel-checked on the branch `claude/ssz-fv-enc-reuse` (base `dda707c`); review enc-r1 approved `ad15fbc`. Both encoders: fast path only; the BeaconBlockHeader rejects only under `len + 112 ≤ cap`.
 Go-value checks: a Lean predicate exists for Checkpoint only (`E2e.cpGoValue`, module `lean/E2e/GoVal.lean`); BeaconBlockHeader, Eth1Data, AttestationData, BlobIdentifier and DepositMessage receivers have none (`REPORT.md` §11).
 No run on x86-64 hardware (`REPORT.md` §11 condition 3).
+OPT-R1 rows (integration INT3): kernel-checked on the pilot ELF only, review opt-r1-r1 APPROVE on `5821b19`. The e2e ELF rows above are unchanged and do not transfer.
+In the pilot binary's function the second growslice call does not exist, so path (C) does not occur there. T-7 itself is unchanged and deferred (`GrowsliceC` form unchanged).
+Pilot reject proof for `8 ≤ spare < 40` depends on `GrowsliceC`, `MemmoveC` and the heap budget; the e2e reject theorem (`spare ≥ 8`) is contract-free.
+Direct witnesses exist for `cpo_marshal_main`, `cpo_marshal_cover`, `cpo_marshal_reject_cover`; the other four theorems are reached through the cover witnesses only.
 
 ## 4. Method evidence (as recorded)
 
@@ -96,6 +103,9 @@ No run on x86-64 hardware (`REPORT.md` §11 condition 3).
 - Witness-build measurement (AU-06, `e2e/opt1/AU-06.json`): four witness modules 1636.8 s → 165.3 s after the `wit_split_n` tactic.
   Measured: one gated `lake env lean` per module, same method before and after, wall time on a shared machine, n = 1 each.
   Limits: n = 1, so the run-to-run spread is not known; a per-file `lean` run is not a full build. Audit numbers from another method are not comparable. No negative case targets these modules.
+- OPT-R1 pilot (one function, one binary; integration INT3): the generator option reserves `len + 40` once in `Checkpoint.MarshalSSZTo`. Correctness-preserving re-validation shown: 7 theorems, 8 witnesses, link check PASS, Go differential 31/31 (arm64, Go semantics only). Speed-up NOT shown in general (mixed result).
+  Benchmarks (linux/arm64 only, medians of n = 20, `opt-r1/bench/bench-summary.json`): B2 nil dst allocs 2 → 1, 56 → 48 B, ns faster but run-dependent; B3 cap 8: the expected 2 → 1 allocs did not hold (2 = 2); B5 fast-path reuse 1.92 → 2.19 ns (+14 %); B8 1000 appends allocs 18 → 17, ns +3.4 %; B9 invalid Root, spare 16: allocs 0 → 1, ns worse; B1 `MarshalSSZ()` and B7 nested AttestationData unchanged.
+  Limits: the reviewer's spot rerun (B2, B5, B8, B9 only, not the full protocol) reproduced B5 +12.6 % and the alloc and B/op counts; ns of allocating cases varied up to about 35 % between rounds, so no fixed percentage for B2 is quoted. No x86-64 run. Negatives 21/23 at 300 s; the two `tail_fit` store mutants, rerun once at 900 s, are `outside` and `timeout_heartbeat`: not passes (`opt-r1/RESULT.json` `negatives.s3_rerun_int3`).
 
 ## 5. Reproduction (commands relative to the repository root)
 
@@ -115,6 +125,7 @@ Expected at the reviewed state `c3c56a1`: `axioms-gate.json` `verdict` PASS, `de
 On the ENC branch alone (enc-r1 APPROVE): `declarations` 3813, `theorems` 3223, `modules` 123 (`scal/RESULT.json` unit `enc-reuse`).
 Both `axioms_gate.py run <out.json> <dump.tsv>` and `axioms_gate.py check <dump.tsv> <out.json>` overwrite the JSON argument (review b1-r1 S7). The committed record is `prysm/go1.26.10/e2e/axioms-gate.json`.
 After the integration INT2 (H3 + ENC, merge `c10daf9`): `declarations` 4142, `theorems` 3467, `modules` 143, hand list 315 (`scal/RESULT.json` `integration_int2`). The integration is not yet reviewed.
+After the integration INT3 (OPT-R1, merge `83e0b6a`): `declarations` 4519 (= 4142 + 377 `E2e.OptR1`), `theorems` 3813, `modules` 154, hand list 315 (OptR1 names are not in the hand lists). The integration is not yet reviewed.
 The count comes from `decl_dump.lean` (`.claude/skills/maintaining-methodical-fv/scripts/`) over the roots E2e, E2eAd, E2eScal, run by `axioms_gate.py`.
 `scal/RESULT.json` `integration_s15.executed` lists the other expected results (negatives 36/36 T9, 15/15 SG1; regen SAME 6/6; `p2dec_test.py` 10/10).
 A cold build from an empty `.lake` was not run in any reviewed unit (`scal/RESULT.json` `integration_s15.not_run`).
@@ -149,6 +160,7 @@ Portability caveats:
 | T-6, T-8 | one witness host per file; `ecancel` with `⋆ emp` and AC forms of witness memory (workarounds); review pending |
 | AU-09 | hold-out limits: `SizeSSZ` excluded from H1; H2 = Eth1Data `UnmarshalSSZ` / `MarshalSSZTo` only (user decision) |
 | O2 | 23 hand-written `primitives` methods have no proof |
+| OPT-R1 | pilot: reserve option for `Checkpoint.MarshalSSZTo` on a separate ELF; re-validated, mixed benchmark result; user decisions U1–U6 open (§8) |
 
 ## 7. Test contract for a new type
 
@@ -163,3 +175,14 @@ A new-type unit is done only with all of these, each recorded with its job and e
 7. A Go-value check: a Lean predicate, or a Go differential stated as Go semantics only.
 8. Axioms gate PASS and a decl drift with only ADDED rows against the reviewed base dump.
 9. A list of NOT proved paths. Never "complete".
+
+## 8. OPT-R1 pilot: open user decisions (review opt-r1-r1)
+
+Each needs an explicit yes from the user. None is decided. Source: `opt-r1/RESULT.json` `review_opt_r1_r1`.
+
+- U1 Item 6: with an invalid Root and `8 ≤ spare < 40` the new code allocates one block (old: none) and does not write the caller's spare (old: C-1 write). Returned values unchanged. That range of the reject proof depends on `GrowsliceC`, `MemmoveC` and the heap budget.
+- U2 `cap < 2^63` on `cpo_marshal_reject_main` and `cpo_marshal_reject_cover` (signed reserve compare; Go guarantees `cap ≤ 2^48`).
+- U3 Guard premise `guard + 24 < rsp`; frame 0x90; spill slots rsp+8 and rsp+24 are now written.
+- U4 `head_fast` took 4 compiles against a bound of 3.
+- U5 Keep the opt-in option? Gains: allocs 2 → 1 when dst has fewer than 40 spare bytes. Costs: fast path +12–14 % (B5), error path 0 → 1 alloc (B9), B8 ns not better.
+- U6 No push or publication of either branch (`claude/ssz-gen-opt-r1`, the research branch). Not requested, not done.

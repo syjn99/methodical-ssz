@@ -128,5 +128,28 @@
   "reviewer_spot_rerun": "review opt-r1-r1, B2/B5/B8/B9 only, not the full protocol: B5 +12.6 % reproduced (1.90 -> 2.14 ns, disjoint ranges); allocs and B/op reproduced; ns of allocating cases varied up to ~35 % between rounds (B2-new 24.96 vs 16.94 ns, B9-new 24.02 vs 15.92 ns; B2-old 26.4 ns vs worker 38.6 ns)",
   "conclusion": "correctness-preserving re-validation shown; speed-up not shown in general (mixed result)"
  },
- "review_opt_r1_r1": "APPROVE, no must-fix; should-fix S1-S6 closed in records by integration INT3 (S2 and S4 by statement, no new proofs; S3 by one 900 s rerun per case, neither passes); user decisions U1-U6 open"
+ "review_opt_r1_r1": "APPROVE, no must-fix; should-fix S1-S6 closed in records by integration INT3 (S2 and S4 by statement, no new proofs; S3 by one 900 s rerun per case, neither passes); user decisions U1-U6 open",
+ "integration_int3": {
+  "merge": "83e0b6a (git merge --no-ff 5821b19 into the research branch at 83ed294; no conflict; 54 added files byte-identical to 5821b19)",
+  "generator_branch": "claude/ssz-gen-opt-r1 ca191bb not merged; sszgen/ and ssz/ unchanged on the research branch",
+  "executed": [
+   "lake build of the 11 E2e.OptR1 modules: exit 0, Built 11 (all E2e.OptR1); every one of the 365 earlier .olean files has the same sha256 before and after; P2EncCp not rebuilt",
+   "lake build --no-build E2e E2eAd E2eScal: exit 0",
+   "axioms_gate.py run -> ../e2e/axioms-gate.json: PASS, 4519 declarations, 3813 theorems, 154 modules, hand list 315, nonstandard 0, sorryAx 0",
+   "decl_drift INT2 dump (4142) -> merged dump (4519): ADDED 377, CHANGED 0, REMOVED 0; the ADDED names equal the 377 ADDED names of review opt-r1-r1; the E2e.OptR1 rows are byte-equal to the reviewer's dump",
+   "decl_drift pilot dump (3860) -> merged dump: ADDED 659 (H3 + ENC), CHANGED 0, REMOVED 0",
+   "planted control at dump level: one type hash changed and one row removed -> CHANGED + REMOVED, exit 1",
+   "S3 reruns (900 s, one run each): o-tail-fit-store outside, o-tail-fit-val timeout_heartbeat; neither a pass"
+  ],
+  "not_run": [
+   "Lean-level planted control (no .lake copy; the reviewer ran one on a scratch copy)",
+   "cold build from an empty .lake",
+   "link check",
+   "Go differential and go test",
+   "benchmarks",
+   "x86-64",
+   "the other 21 OPT-R1 negatives",
+   "independent review of the integration"
+  ]
+ }
 }
