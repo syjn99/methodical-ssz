@@ -32,7 +32,10 @@ compiler variation that the template does not cover is reported, not patched.
 Python 3 standard library only. Usage:
   scalgen.py p1 --S FILE --const LEAN_CONST --name THM [--same-as HAND_THM] --imports M1,M2 [--open NS]
   scalgen.py p2dec --S FILE --const LEAN_CONST --ir IR.json --type PKGSUFFIX.TYPE --prefix NAME
-                   --imports M1,M2 [--open NS] [--partial-out FILE]
+                   --imports M1,M2 [--open NS] [--partial-out FILE] [--gen2 [--summary FILE.json]]
+
+GEN2 (`--gen2`, off by default): see the block comment before `ir_fields`. Without `--gen2` the output is the
+S2 / SG-1 text byte for byte (compatibility switch; `regen_check.sh` of every committed file).
 """
 import argparse, hashlib, json, pathlib, re, sys
 
@@ -292,20 +295,25 @@ P2DECZ_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (
 """
 
 
-def p2dec_find(dirs, fo, src):
+def p2dec_find(dirs, fo, src, n=32, gen2=False):
     """The decode segment of the field at Go offset `fo`, SSZ offset `src`: (j1, j2, params), params["form"]
-    "add" (`rootDecMid`, 12 directives) or "zero" (`rootDecMidZ`, 11 directives, SSZ offset 0)."""
+    "add" (`rootDecMid`, 12 directives) or "zero" (`rootDecMidZ`, 11 directives, SSZ offset 0).
+    GEN2: `n` is the vector size (IR); every size immediate of the segment must be `n` (default 32: the
+    directive texts and regular expressions are exactly the S2 / SG-1 ones, `{32:#x}` = `0x20`). Only with
+    `gen2` (the `--gen2` mode) is a pointer store without displacement, `mov %rax,(%rdx)`, read as Go offset 0
+    (DepositMessage.PublicKey); the default mode keeps the S2 / SG-1 reading (such a field does not match)."""
+    N = f"{n:#x}"
     hits = []
     for i in range(len(dirs)):
         if dirs[i] != "lea type__+387072(%rip),%rax":
             continue
         try:
             expect(dirs, i + 1, r"xor %ebx,%ebx", "xor %ebx,%ebx")
-            expect(dirs, i + 2, r"mov \$0x20,%ecx", "mov $0x20,%ecx")
+            expect(dirs, i + 2, rf"mov \${N},%ecx", f"mov ${N},%ecx")
             expect(dirs, i + 3, r"callq runtime\.makeslice", "callq runtime.makeslice")
             dR = int(expect(dirs, i + 4, rf"mov ({HEX})\(%rsp\),%rdx", "the receiver reload").group(1), 16)
             fL = int(expect(dirs, i + 5, rf"movq \$0x0,({HEX})\(%rdx\)", "len = 0").group(1), 16)
-            fC = int(expect(dirs, i + 6, rf"movq \$0x20,({HEX})\(%rdx\)", "cap = 32").group(1), 16)
+            fC = int(expect(dirs, i + 6, rf"movq \${N},({HEX})\(%rdx\)", f"cap = {n}").group(1), 16)
         except NoMatch:
             continue
         if fL != fo + 8:
@@ -316,7 +324,10 @@ def p2dec_find(dirs, fo, src):
         lff = expect(dirs, i + 8, r"je (\S+)", "je <no-barrier label>").group(1)
         j2 = label_index(dirs, lff)
         dS = int(expect(dirs, j2 + 1, rf"mov %rax,({HEX})\(%rsp\)", "the pointer save").group(1), 16)
-        fP = int(expect(dirs, j2 + 2, rf"mov %rax,({HEX})\(%rdx\)", "the pointer store").group(1), 16)
+        if gen2 and fo == 0 and j2 + 2 < len(dirs) and dirs[j2 + 2] == "mov %rax,(%rdx)":
+            fP = 0
+        else:
+            fP = int(expect(dirs, j2 + 2, rf"mov %rax,({HEX})\(%rdx\)", "the pointer store").group(1), 16)
         if fP != fo:
             raise NoMatch(f"directive {j2 + 2}: pointer at {fP:#x}, IR field offset {fo:#x}")
         dB = int(expect(dirs, j2 + 3, rf"mov ({HEX})\(%rsp\),%rbx", "the buffer reload").group(1), 16)
@@ -325,23 +336,23 @@ def p2dec_find(dirs, fo, src):
             s_ = int(expect(dirs, j2 + 4, rf"add \$({HEX}),%rbx", "add $src,%rbx").group(1), 16)
             if s_ != src:
                 raise NoMatch(f"directive {j2 + 4}: source offset {s_:#x}, IR SSZ offset {src:#x}")
-        elif j2 + 4 < len(dirs) and dirs[j2 + 4] == "mov $0x20,%ecx":
+        elif j2 + 4 < len(dirs) and dirs[j2 + 4] == f"mov ${N},%ecx":
             form, a = "zero", 0  # no add: the memmove source is the buffer pointer itself (offset 0)
             if src != 0:
                 raise NoMatch(f"directive {j2 + 4}: no `add $src,%rbx` (source offset 0), IR SSZ offset {src:#x}")
         else:
             raise NoMatch(f"directive {j2 + 4}: `{dirs[j2 + 4] if j2 + 4 < len(dirs) else 'end of file'}` is "
-                          f"neither add $src,%rbx nor mov $0x20,%ecx (offset-0 form)")
-        expect(dirs, j2 + 4 + a, r"mov \$0x20,%ecx", "mov $0x20,%ecx")
+                          f"neither add $src,%rbx nor mov ${N},%ecx (offset-0 form)")
+        expect(dirs, j2 + 4 + a, rf"mov \${N},%ecx", f"mov ${N},%ecx")
         expect(dirs, j2 + 5 + a, r"callq runtime\.memmove", "callq runtime.memmove")
         if int(expect(dirs, j2 + 6 + a, rf"mov ({HEX})\(%rsp\),%rdx", "the receiver reload").group(1), 16) != dR:
             raise NoMatch(f"directive {j2 + 6 + a}: receiver reload differs from {dR:#x}")
-        expect(dirs, j2 + 7 + a, rf"movq \$0x20,{fL:#x}\(%rdx\)", "len = 32")
-        expect(dirs, j2 + 8 + a, rf"movq \$0x20,{fC:#x}\(%rdx\)", "cap = 32")
+        expect(dirs, j2 + 7 + a, rf"movq \${N},{fL:#x}\(%rdx\)", f"len = {n}")
+        expect(dirs, j2 + 8 + a, rf"movq \${N},{fC:#x}\(%rdx\)", f"cap = {n}")
         expect(dirs, j2 + 9 + a, r"cmpl \$0x0,runtime\.writeBarrier\(%rip\)", "the write-barrier test")
         lwb = expect(dirs, j2 + 10 + a, r"jne (\S+)", "jne <barrier label>").group(1)
         hits.append((i, j2, dict(lff=lff, lwb=lwb, dR=dR, dB=dB, dS=dS, fP=fP, fL=fL, fC=fC, src=src,
-                                 form=form, last=j2 + 10 + a)))
+                                 form=form, last=j2 + 10 + a, n=n)))
     if len(hits) != 1:
         raise NoMatch(f"field at Go offset {fo:#x}: {len(hits)} decode segments match (expected 1)")
     return hits[0]
@@ -426,6 +437,249 @@ def p2dec(args):
     raise Partial(report, text)
 
 
+# ---------------------------------------------------------------- GEN2 (`p2dec --gen2`)
+#
+# Compatibility switch: the extended coverage is ONLY behind `--gen2`. Without the flag, `p2dec` is the S2 /
+# SG-1 generator text for text (32-byte fields only, same stdout, same exit codes), so every committed output
+# of `gen.sh` and the H3 commands regenerates byte for byte. With `--gen2` every own field of the IR type is
+# classified and reported:
+#   fixed byte vector, `[]byte`, size 32  -> the S2 / SG-1 theorem text (`rootdec_seg` / `rootdec_seg_z`);
+#   fixed byte vector, `[]byte`, size 48 / 96 -> `E2eScal.bytesdec_seg` / `bytesdec_seg_z` (lemmas of GEN2 L1,
+#                                             `lean/E2eScal/{SegN,KindN}.lean`), kinds `bytesDecSeg(Z)Kind`;
+#   `uint64` (IR k = uint, 64 bits)        -> `E2eScal.u64dec_inline_seg` (GEN2 L2, `{U64Inline,KindU64}.lean`);
+#   anything else (byte vector of another size, delegated overlay fields such as Slot / Epoch, nested
+#   containers, lists, bitfields, bool)    -> "not covered: <reason>", never a guessed theorem.
+# Exit codes as for `p2dec`: 0 every field covered (whole file on stdout); 3 some fields covered (nothing on
+# stdout; `--partial-out` writes the covered ones under a PARTIAL OUTPUT header); 2 no field covered, two
+# fields claim overlapping directives, the covered segments are not in IR field order, or the IR read fails.
+# `--summary FILE` writes a machine-readable per-field report (JSON) in every case (also on exit 2 / 3).
+
+GEN2_SIZES = (32, 48, 96)
+HN = {32: "Or.inl rfl", 48: "Or.inr (Or.inl rfl)", 96: "Or.inr (Or.inr rfl)"}
+# the scratch registers of `E2eScal.U64InlineReg` (every 64-bit register except rdx, rsp, rbp, r14)
+U64_REGS = ("rax", "rbx", "rcx", "rsi", "rdi", "r8", "r9", "r10", "r11", "r12", "r13", "r15")
+
+
+def ir_fields(ir_path, tname):
+    """Every own field of the container, in IR order: (name, SSZ offset, Go offset, class, size or reason).
+    class: "bytes" (fixed `[]byte` vector, size 32 / 48 / 96), "u64" (`uint64`), "none" (not covered)."""
+    raw = pathlib.Path(ir_path).read_bytes()
+    pkg, name = tname.rsplit(".", 1)
+    ts = [t for c in json.loads(raw)["configs"] for t in c.get("types", [])
+          if t.get("name") == name and t.get("package", "").endswith("/" + pkg)]
+    if not ts:
+        raise NoMatch(f"type {tname} not in the IR")
+    t = ts[0]
+    goff = {f["name"]: f["offset_gc_amd64"] for f in t["go_fields"]}
+    out, off = [], 0
+    for f in t["ir"]["fields"]:
+        v = f["v"]
+        if v.get("variable"):
+            raise NoMatch(f"field {f['key']} is variable-size (not a P2 container)")
+        k, fo = v.get("k"), goff.get(f["key"])
+        if fo is None:
+            cls, info = "none", "no Go field offset in the IR"
+        elif k == "vector" and v.get("elem", {}).get("k") == "byte" and v.get("go_type") == "[]byte":
+            if v.get("size") in GEN2_SIZES and v.get("fixed_size") == v.get("size"):
+                cls, info = "bytes", v["size"]
+            else:
+                cls, info = "none", f"byte vector of size {v.get('size')} (lemma sizes 32, 48, 96 only)"
+        elif k == "uint" and v.get("bits") == 64 and v.get("go_type") == "uint64" and v.get("fixed_size") == 8:
+            cls, info = "u64", 8
+        elif k == "overlay" or v.get("deleg"):
+            cls, info = "none", f"delegated overlay field ({v.get('go_type')}): compiled as a call, no template"
+        else:
+            cls, info = "none", f"field kind {k} ({v.get('go_type')}): no GEN2 template (nested containers, lists, bitfields, bool, other uints)"
+        out.append((f["key"], off, fo, cls, info))
+        off += v["fixed_size"]
+    return out, hashlib.sha256(raw).hexdigest()
+
+
+def u64_find(dirs, fo, src):
+    """The inline uint64 read of the field at Go offset `fo`, SSZ offset `src` (interface (c) of GEN2 L2):
+    `mov dB(%rsp),%rX; mov src(%rX),%rX; mov %rX,fo(%rdx)`, the same 64-bit scratch register rX in all four
+    places, rX in U64_REGS. Exactly one site must match. Displacement 0 (src = 0 or fo = 0) is not covered
+    (not exercised for the lemma; the `.S` writes such a displacement without a number)."""
+    if src == 0 or fo == 0:
+        raise NoMatch(f"inline uint64 with displacement 0 (SSZ offset {src}, Go offset {fo}): not exercised for "
+                      f"u64dec_inline_seg")
+    hits = []
+    for j in range(len(dirs) - 2):
+        m = re.fullmatch(rf"mov %(\w+),({HEX})\(%rdx\)", dirs[j + 2])
+        if not m or int(m.group(2), 16) != fo:
+            continue
+        rX = m.group(1)
+        m0 = re.fullmatch(rf"mov ({HEX})\(%rsp\),%{re.escape(rX)}", dirs[j])
+        m1 = re.fullmatch(rf"mov ({HEX})\(%{re.escape(rX)}\),%{re.escape(rX)}", dirs[j + 1])
+        if not m0:
+            raise NoMatch(f"directive {j}: `{dirs[j]}` is not `mov dB(%rsp),%{rX}` (no reload of the buffer "
+                          f"from the spill slot into the stored register)")
+        if not m1:
+            raise NoMatch(f"directive {j + 1}: `{dirs[j + 1]}` is not `mov src(%{rX}),%{rX}`")
+        if rX not in U64_REGS:
+            raise NoMatch(f"directive {j}: scratch register {rX} is not one of {', '.join(U64_REGS)}")
+        if int(m1.group(1), 16) != src:
+            raise NoMatch(f"directive {j + 1}: source offset {int(m1.group(1), 16):#x}, IR SSZ offset {src:#x}")
+        hits.append((j, dict(rX=rX, dB=int(m0.group(1), 16), src=src, f=fo, last=j + 2)))
+    if len(hits) != 1:
+        raise NoMatch(f"field at Go offset {fo:#x}: {len(hits)} inline uint64 reads match (expected 1)")
+    return hits[0]
+
+
+def _sub_once(text, old, new):
+    if text.count(old) != 1:
+        raise AssertionError(f"template text: {old!r} occurs {text.count(old)} times")
+    return text.replace(old, new)
+
+
+def _size_stmt(stmt):
+    """The S2 / SG-1 statement with the size 32 in its five places replaced by `{n}` (interface (a)/(b))."""
+    for old, new in [("(hroot : root.length = 32)", "(hroot : root.length = {n})"),
+                     ("(hav : 32 ≤ avail)", "(hav : {n} ≤ avail)"),
+                     ("⋆ Heap (avail - 32)", "⋆ Heap (avail - {n})"),
+                     ("Eq ((Int.toBytes 8 32).At aL)", "Eq ((Int.toBytes 8 {n}).At aL)"),
+                     ("Eq ((Int.toBytes 8 32).At aC)", "Eq ((Int.toBytes 8 {n}).At aC)")]:
+        stmt = _sub_once(stmt, old, new)
+    return stmt
+
+
+BYTES_STMT = _size_stmt(P2DEC_STMT)
+BYTESZ_STMT = _size_stmt(P2DECZ_STMT)
+
+U64_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
+    ∀ (sp rcv bf aB aSrc aF : BitVec 64)
+    (hB' : sp + ({dB} : Int64).toBitVec = aB) (hSrc : bf + ({src} : Int64).toBitVec = aSrc)
+    (hF : rcv + ({f} : Int64).toBitVec = aF)
+    (rbp0 r140 : UInt64) (v vF : List UInt8) (hv : v.length = 8) (hvF : vF.length = 8)
+    (R : DataMem → Prop)
+    (s : MachineData) (hrsp : s.regs.rsp = {{ toBitVec := sp }}) (hrbp : s.regs.rbp = rbp0)
+    (hr14 : s.regs.r14 = r140) (hrdx : s.regs.rdx.toBitVec = rcv)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 bf.toInt).At aB) ⋆ Eq (v.At aSrc) ⋆ Eq (vF.At aF) ⋆ R),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + {j} + 3) ∧ st.data.regs.rsp = {{ toBitVec := sp }}
+        ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧ st.data.regs.rdx.toBitVec = rcv ∧
+        (Eq ((Int.toBytes 8 bf.toInt).At aB) ⋆ Eq (v.At aSrc) ⋆ Eq (v.At aF) ⋆ R) st.data.dmem)
+      ⟨s, Host.addrOf (k + {j})⟩ := by
+"""
+
+
+def bytes_seg(c, fname, src, fo, j1, j2, p):
+    """GEN2 text of a 48- / 96-byte field (interface (a) add form, (b) offset-0 form)."""
+    n = p["n"]
+    name = f"{c['prefix']}_{fname}_seg"
+    k = c["const"]
+    out = "set_option maxHeartbeats 16000000 in\nset_option maxRecDepth 100000 in\n"
+    out += f"/-- `{fname}` ({n} bytes, SSZ offset {src}, Go offset {fo}): decode segment, directives {j1}–{p['last']}. -/\n"
+    head = f"E2eScal.bytesDecHead {n} {lean_str(p['lff'])} {p['dR']} {p['fL']} {p['fC']}"
+    if p["form"] == "add":
+        out += BYTES_STMT.format(name=name, const=k, j1=j1, j2=j2, **p)
+        out += infix_have("hA", head, j1, k)
+        out += infix_have("hB", f"E2eScal.bytesDecMid {n} {lean_str(p['lff'])} {lean_str(p['lwb'])} {p['dR']} {p['dB']} "
+                          f"{p['dS']} {p['fP']} {p['fL']} {p['fC']} {p['src']}", j2, k)
+        out += label_have("hl", j2, k)
+        out += (f"  with_reducible exact E2eScal.bytesdec_seg {n} ({HN[n]}) _ _ _ _ _ _ _ _ _ (k + {j1}) (k + {j2}) "
+                f"hA hB hl\n")
+        out += kind_thm(name, f"E2eScal.bytesDecSegKind h {n} {k} {j1} {j2} {p['dR']} {p['dB']} {p['dS']} {p['fP']} "
+                              f"{p['fL']} {p['fC']} {p['src']}") + "\n"
+    else:
+        out += BYTESZ_STMT.format(name=name, const=k, j1=j1, j2=j2, **p)
+        out += infix_have("hA", head, j1, k)
+        out += infix_have("hB", f"E2eScal.bytesDecMidZ {n} {lean_str(p['lff'])} {lean_str(p['lwb'])} {p['dR']} {p['dB']} "
+                          f"{p['dS']} {p['fP']} {p['fL']} {p['fC']}", j2, k)
+        out += label_have("hl", j2, k)
+        out += (f"  with_reducible exact E2eScal.bytesdec_seg_z {n} ({HN[n]}) _ _ _ _ _ _ _ _ (k + {j1}) (k + {j2}) "
+                f"hA hB hl\n")
+        out += kind_thm(name, f"E2eScal.bytesDecSegZKind h {n} {k} {j1} {j2} {p['dR']} {p['dB']} {p['dS']} {p['fP']} "
+                              f"{p['fL']} {p['fC']}") + "\n"
+    return out
+
+
+def u64_seg(c, fname, src, fo, j, p):
+    """GEN2 text of an inline uint64 field (interface (c))."""
+    name = f"{c['prefix']}_{fname}_seg"
+    k = c["const"]
+    tmpl = f"E2eScal.u64DecInline Reg64.{p['rX']} {p['dB']} {p['src']} {p['f']}"
+    out = "set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
+    out += (f"/-- `{fname}` (inline uint64, SSZ offset {src}, Go offset {fo}): decode segment, directives "
+            f"{j}–{p['last']}, scratch register {p['rX']}. -/\n")
+    out += U64_STMT.format(name=name, const=k, j=j, **p)
+    out += infix_have("hA", tmpl, j, k)
+    out += f"  have hX : E2eScal.U64InlineReg Reg64.{p['rX']} := by decide\n"
+    out += f"  with_reducible exact E2eScal.u64dec_inline_seg Reg64.{p['rX']} hX _ _ _ (k + {j}) hA\n"
+    out += kind_thm(name, f"E2eScal.u64DecInlineSegKind h {k} {j} {p['dB']} {p['src']} {p['f']}") + "\n"
+    return out
+
+
+def p2dec_gen2(args):
+    """`p2dec --gen2`: per-field coverage (see the block comment above). Returns the text or raises
+    NoMatch (exit 2) / Partial (exit 3); `args.summary_data` collects the per-field report."""
+    dirs, sha = read_S(args.S)
+    fields, irsha = ir_fields(args.ir, args.type)
+    summ = args.summary_data = dict(type=args.type, S=args.S, S_sha256=sha, ir_sha256=irsha, fields=[])
+    if not fields:
+        raise NoMatch(f"{args.type}: no field")
+    if len({f[0] for f in fields}) != len(fields):
+        raise NoMatch(f"{args.type}: a field name repeats")
+    c = dict(const=args.const, prefix=args.prefix)
+    found, report = [], []
+    for (fname, src, fo, cls, info) in fields:
+        rec = dict(field=fname, ssz_offset=src, go_offset=fo)
+        try:
+            if cls == "none":
+                raise NoMatch(info)
+            if cls == "bytes":
+                j1, j2, p = p2dec_find(dirs, fo, src, n=info, gen2=True)
+                shape = (f"rootdec_seg{'_z' if p['form'] == 'zero' else ''}" if info == 32
+                         else f"bytesdec_seg{'_z' if p['form'] == 'zero' else ''} {info}")
+                found.append((j1, p["last"], fname, "bytes", (fname, src, fo, j1, j2, p)))
+            else:
+                j1, p = u64_find(dirs, fo, src)
+                shape = f"u64dec_inline_seg {p['rX']}"
+                found.append((j1, p["last"], fname, "u64", (fname, src, fo, j1, p)))
+            rec.update(status="covered", shape=shape, directives=[j1, p["last"]])
+            report.append(f"field {fname}: MATCH {shape}, directives {j1}–{p['last']}")
+        except NoMatch as e:
+            rec.update(status="not covered", reason=str(e))
+            report.append(f"field {fname}: NOT COVERED: {e}")
+        summ["fields"].append(rec)
+    spans = sorted(found)
+    for (a0, a1, fa, *_), (b0, b1, fb, *_) in zip(spans, spans[1:]):
+        if b0 <= a1:
+            raise NoMatch(f"fields {fa} and {fb} claim overlapping directives {a0}–{a1} and {b0}–{b1}")
+    order = [f[0] for f in fields]
+    if [x[2] for x in spans] != [x[2] for x in found] or \
+            [x[2] for x in found] != [f for f in order if f in {x[2] for x in found}]:
+        raise NoMatch("the covered segments are not in IR field order in the code: "
+                      + ", ".join(f"{x[2]}@{x[0]}" for x in spans))
+    if not found:
+        raise NoMatch("; ".join(report))
+    kinds = []
+    if any(cl == "bytes" and a[5]["n"] == 32 and a[5]["form"] == "zero" for *_, cl, a in found):
+        kinds.append("E2eScal.KindZ")
+    if any(cl == "bytes" and a[5]["n"] != 32 for *_, cl, a in found):
+        kinds.append("E2eScal.KindN")
+    if any(cl == "u64" for *_, cl, a in found):
+        kinds.append("E2eScal.KindU64")
+    extra = (f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`); GEN2 coverage (`p2dec --gen2`): "
+             f"{len(found)} of {len(fields)} fields")
+    body = ""
+    for *_, cl, a in found:
+        if cl == "u64":
+            body += u64_seg(c, *a)
+        elif a[5]["n"] == 32:
+            body += p2dec_seg(c, *a)
+        else:
+            body += bytes_seg(c, *a)
+    body += "end E2eScal.Gen\n"
+    if len(found) == len(fields):
+        return header(sha, args.S, args, extra, kinds) + body
+    missing = [f for f in order if f not in {x[2] for x in found}]
+    text = (f"/-! PARTIAL OUTPUT (scalgen exit 3): {len(found)} of {len(fields)} fields of `{args.type}` (--gen2); "
+            f"NOT generated: {', '.join(missing)}. Not a complete p2dec output. -/\n"
+            + header(sha, args.S, args, extra, kinds) + body)
+    raise Partial(report, text)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("mode", choices=["p1", "p2dec"])
@@ -439,13 +693,34 @@ def main():
     ap.add_argument("--imports", required=True)
     ap.add_argument("--open", default="")
     ap.add_argument("--partial-out", help="p2dec: on exit 3, write the matched fields here (marked PARTIAL)")
+    ap.add_argument("--gen2", action="store_true",
+                    help="p2dec: GEN2 coverage (byte vectors of 32 / 48 / 96 bytes, inline uint64); off = S2 / SG-1 text")
+    ap.add_argument("--summary", help="p2dec --gen2: write the per-field coverage report (JSON) here")
     args = ap.parse_args()
     if args.partial_out and args.mode != "p2dec":
         ap.error("--partial-out is a p2dec option")
+    if (args.gen2 or args.summary) and args.mode != "p2dec":
+        ap.error("--gen2 / --summary are p2dec options")
+    if args.summary and not args.gen2:
+        ap.error("--summary needs --gen2")
+    args.summary_data = None
+
+    def summary(exit_code):
+        if args.summary:
+            d = dict(args.summary_data or dict(type=args.type, fields=[]), exit=exit_code)
+            d["covered"] = sum(f.get("status") == "covered" for f in d["fields"])
+            d["total"] = len(d["fields"])
+            pathlib.Path(args.summary).write_text(json.dumps(d, indent=1) + "\n")
+
     try:
-        out = p1(args) if args.mode == "p1" else p2dec(args)
+        out = p1(args) if args.mode == "p1" else (p2dec_gen2(args) if args.gen2 else p2dec(args))
     except NoMatch as e:
         print(f"scalgen {args.mode}: no template match: {e}", file=sys.stderr)
+        if args.summary_data:
+            summary(2)  # the report says why; nothing else is written
+        elif args.summary:
+            args.summary_data = dict(type=args.type, fields=[], error=str(e))
+            summary(2)
         sys.exit(2)
     except Partial as e:
         for r in e.report:
@@ -454,7 +729,14 @@ def main():
             pathlib.Path(args.partial_out).write_text(e.text)
             print(f"scalgen {args.mode}: partial output (marked PARTIAL) written to {args.partial_out}", file=sys.stderr)
         print(f"scalgen {args.mode}: incomplete: nothing on stdout (exit 3)", file=sys.stderr)
+        summary(3)
         sys.exit(3)
+    if args.gen2:
+        for f in args.summary_data["fields"]:
+            print(f"scalgen {args.mode}: field {f['field']}: {f['status'].upper()} "
+                  + (f"{f['shape']}, directives {f['directives'][0]}–{f['directives'][1]}" if f["status"] == "covered"
+                     else f["reason"]), file=sys.stderr)
+        summary(0)
     sys.stdout.write(out)
 
 
