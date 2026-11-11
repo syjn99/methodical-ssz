@@ -15,3 +15,5 @@ step	utc	exit	log	command
 13-build-StmtSa	2026-11-11T16:51:17Z	0	logs/13-build-StmtSa.log	heavy.py -- lake build E2eList.StmtSa (12.5 s, peak sampled RSS 1.91 GiB)
 14-build-StmtSc	2026-11-11T16:51:37Z	0	logs/14-build-StmtSc.log	heavy.py -- lake build E2eList.StmtSc (8.3 s, peak sampled RSS 1.95 GiB)
 15-nobuild	2026-11-11T16:51:53Z	0	logs/15-nobuild.log	heavy.py -- lake build --no-build E2e E2eAd E2eScal E2eList.StmtSa E2eList.StmtSc: All targets up-to-date (998 jobs)
+16-SaReject	2026-11-11T16:54:14Z	0	logs/16-SaReject.log	heavy.py -- lake build E2eList.SaReject (6.3 s wall, module 4.3 s, peak sampled RSS 1.93 GiB)
+17-ScReject	2026-11-11T16:54:31Z	0	logs/17-ScReject.log	heavy.py -- lake build E2eList.ScReject (6.3 s wall, module 3.8 s, peak sampled RSS 1.98 GiB)

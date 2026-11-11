@@ -44,3 +44,14 @@
 - `lake build --no-build E2e E2eAd E2eScal E2eList.StmtSa E2eList.StmtSc`(로그 15): exit 0, `All targets up-to-date (998 jobs)`.
 - `E2eList/*.lean`에 `sorry`, `admit`, `axiom`, `native_decide`, `bv_decide`, `maxHeartbeats`, `maxRecDepth`가 없다(`grep` exit 1).
 - 측정 방법: `heavy.py`의 벽시계와 1초 표본 RSS 합. n = 1.
+
+## 증명 단위
+
+### T1 크기 거부 `sa_e2e_reject_size_main : sa_reject_size_stmt`
+
+- 시도 1(로그 16): exit 0. `DdReject.lean`의 증명 글에 지시어 번호(88–93)만 바꿨다.
+- `maxHeartbeats`, `maxRecDepth` 설정 없이 통과했다. 본의 `set_option`은 옮기지 않았다.
+
+### T2 크기 거부 `sc_e2e_reject_size_main : sc_reject_size_stmt`
+
+- 시도 1(로그 17): exit 0. 지시어 번호(30–35)와 틀 크기 48(`sub $0x30`)만 바꿨다. 설정 없이 통과했다.
