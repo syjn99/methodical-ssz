@@ -34,6 +34,23 @@ GEN2 cases (unit G2-G, `p2dec --gen2`; ids `g2-*`; mutated `.S` and IR copies in
    identical; kindcheck PASS "identity-checked"); without `--same-as` the run warns on stderr and kindcheck
    rejects the file (no statement check); a field not covered, a tail store from another register and a
    shifted epilogue give exit 2 and 0 bytes.
+
+Unit G2-F cases (review g2g-r1; ids `g2f-*`):
+ - g2-partial (changed): the `--gen2 --partial-out` file is a Lean module: imports first, then the PARTIAL header
+   with an `UNCOVERED-JSON:` line; `kindcheck.py` exit 1 by default, exit 3 with `--partial`.
+ - g2f-bh-partial: real BeaconBlockHeader (Slot, ProposerIndex are delegated overlay fields): exit 3, 0 bytes on
+   stdout, partial file = the committed `lean/E2eScal/Gen2BhDecPartial.lean`, two runs identical, kindcheck
+   default exit 1, `--partial` exit 3 with `PARTIAL 3/5 fields`.
+ - g2f-compose-*: `--compose` refusals, exit 2, 0 bytes, no partial file even with `--partial-out`: partial
+   coverage (BeaconBlockHeader), frame 0x28, a non-contiguous field (a `nop` between two fields), uint64 first
+   field (IR order of BlobIdentifier swapped: displacement 0, not covered).
+ - g2f-no-same-as-marker: `--compose` without `--same-as` still exits 0; the theorem line carries
+   `-- UNCHECKED STATEMENT` and the header says the statement is checked by nobody; kindcheck exit 1.
+ - g2f-same-as-generated: `--same-as E2eScal.Gen.bi_e2e_accept_main_gc` (a generated theorem): exit 0, kindcheck
+   exit 1 (review g2g-r1 case (ii)).
+ - g2f-same-as-prop: `--same-as-prop E2eScal.Fx.biStmt`: exit 0, the Prop identity line, kindcheck PASS; the
+   test fixture `g2f-bi-prop-fixture.lean` (the output with a scratch `abbrev` equal to the type of
+   `Bi.bi_e2e_accept_main`) is written to <work-dir> for a separate gated `lake env lean`.
 """
 import json
 import pathlib
@@ -279,11 +296,16 @@ def gen2_cases(work, new):
     rc, so, se = run(["python3", "-I", str(new), "p2dec", "--gen2", "--S", str(f), "--partial-out", str(po), "--ir", IR,
                       "--type", c["type"]] + c["args"], KR)
     pt = po.read_text() if po.exists() else ""
-    kc = subprocess.run(["python3", "-I", str(HERE / "kindcheck.py"), str(po)], capture_output=True, text=True)
-    ok = (rc == 3 and so == b"" and pt.startswith("/-! PARTIAL OUTPUT") and "NOT generated: Amount" in pt.split("\n")[0]
-          and "dm_g2dec_Amount_seg" not in pt and kc.returncode == 1)
-    res.append(dict(id="g2-partial", expect="exit 3, PARTIAL file without Amount, kindcheck exit 1", exit=rc,
-                    stdout_bytes=len(so), partial_first_line=pt.split("\n")[0], kindcheck_exit=kc.returncode, ok=bool(ok)))
+    kc = subprocess.run(["python3", "-I", "-B", str(HERE / "kindcheck.py"), str(po)], capture_output=True, text=True)
+    kp = subprocess.run(["python3", "-I", "-B", str(HERE / "kindcheck.py"), "--partial", str(po)], capture_output=True, text=True)
+    ph = [l for l in pt.split("\n") if "PARTIAL OUTPUT" in l]
+    uj = [json.loads(l.split(": ", 1)[1]) for l in pt.split("\n") if l.startswith("UNCOVERED-JSON: ")]
+    ok = (rc == 3 and so == b"" and pt.startswith("import ") and len(ph) == 1 and "NOT generated: Amount" in ph[0]
+          and uj and [u["field"] for u in uj[0]] == ["Amount"] and "dm_g2dec_Amount_seg" not in pt
+          and kc.returncode == 1 and kp.returncode == 3 and "PARTIAL 2/3 fields" in kp.stdout)
+    res.append(dict(id="g2-partial", expect="exit 3, Lean-module PARTIAL file without Amount, kindcheck exit 1, --partial exit 3",
+                    exit=rc, stdout_bytes=len(so), partial_header=ph, kindcheck_exit=kc.returncode,
+                    kindcheck_partial_exit=kp.returncode, ok=bool(ok)))
     bad |= not ok
     # composition (`--compose`)
     CP = {"BI": ("bi_e2e_accept_main_gc", "E2eScal.Bi.bi_e2e_accept_main", "lean/E2eScal/Gen2BiAccept.lean",
@@ -308,7 +330,7 @@ def gen2_cases(work, new):
         tf.write_bytes(outs[0][1])
         kc = subprocess.run(["python3", "-I", str(HERE / "kindcheck.py"), str(tf)], capture_output=True, text=True)
         ok = (outs[0][0] == 0 and outs[1][0] == 0 and outs[0][1] == outs[1][1] == com and kc.returncode == 0
-              and "identity-checked" in kc.stdout)
+              and f"identity against {CP[key][1]} — statement evidence only if" in kc.stdout)
         res.append(dict(id=f"g2c-new-{key}", expect=f"exit 0 twice, identical, = {CP[key][2]}, kindcheck identity PASS",
                         exit=[o[0] for o in outs], stdout_bytes=len(outs[0][1]), equals_committed=outs[0][1] == com,
                         kindcheck_exit=kc.returncode, ok=bool(ok)))
@@ -333,6 +355,116 @@ def gen2_cases(work, new):
         res.append(dict(id=mid, what=what, expect="exit 2, 0 bytes", exit=rc, stdout_bytes=len(so),
                         stderr=se.strip().split("\n")[-1:], ok=bool(ok)))
         bad |= not ok
+    r2, b2 = g2f_cases(work, new, cargs, CP, irt)
+    return res + r2, bad | b2
+
+
+GEN2_BH_PARTIAL = "lean/E2eScal/Gen2BhDecPartial.lean"
+
+
+def g2f_cases(work, new, cargs, CP, irt):
+    """Unit G2-F (review g2g-r1): partial output as a Lean module, compose refusals, statement markers."""
+    res, bad = [], 0
+    KC = ["python3", "-I", "-B", str(HERE / "kindcheck.py")]
+    c = G2["BH"]
+    outs = []
+    for i in range(2):
+        po = work / f"g2f-bh-partial-{i}.lean"
+        if po.exists():
+            po.unlink()
+        rc, so, se = run(["python3", "-I", "-B", str(new), "p2dec", "--gen2", "--partial-out", str(po), "--S", c["S"],
+                          "--ir", IR, "--type", c["type"]] + c["args"], KR)
+        outs.append((rc, so, po.read_bytes() if po.exists() else b""))
+    po = work / "g2f-bh-partial-0.lean"
+    kc = subprocess.run(KC + [str(po)], capture_output=True, text=True)
+    kp = subprocess.run(KC + ["--partial", str(po)], capture_output=True, text=True)
+    com = (KR / GEN2_BH_PARTIAL).read_bytes() if (KR / GEN2_BH_PARTIAL).exists() else None
+    pt = outs[0][2].decode()
+    uj = [json.loads(l.split(": ", 1)[1]) for l in pt.split("\n") if l.startswith("UNCOVERED-JSON: ")]
+    ok = (all(o[0] == 3 and o[1] == b"" for o in outs) and outs[0][2] == outs[1][2] and outs[0][2] == com
+          and uj and [u["field"] for u in uj[0]] == ["Slot", "ProposerIndex"]
+          and all("delegated overlay" in u["reason"] for u in uj[0])
+          and kc.returncode == 1 and kp.returncode == 3 and "PARTIAL 3/5 fields" in kp.stdout)
+    res.append(dict(id="g2f-bh-partial", expect=f"exit 3 twice, 0 bytes, file = {GEN2_BH_PARTIAL}, kindcheck 1, --partial 3",
+                    exit=[o[0] for o in outs], stdout_bytes=len(outs[0][1]), equals_committed=outs[0][2] == com,
+                    uncovered=uj, kindcheck_exit=kc.returncode, kindcheck_partial_exit=kp.returncode, ok=bool(ok)))
+    bad |= not ok
+    # --compose refusals
+    dm = (KR / G2["DM"]["S"]).read_text().split("\n")
+    bia = ["p2dec", "--gen2", "--compose", "--name", "bi_e2e_accept_main_gc", "--same-as", "E2eScal.Bi.bi_e2e_accept_main"]
+    for (mid, what, base_args, S_text, ir_text) in [
+            ("g2f-compose-partial-bh", "partial coverage: real BeaconBlockHeader (3 of 5 fields)",
+             ["p2dec", "--gen2", "--compose", "--name", "bh_e2e_accept_main_gc", "--ir", IR, "--type", c["type"]] + c["args"],
+             None, None),
+            ("g2f-compose-frame-0x28", "DepositMessage frame 0x28 (prologue and epilogue)", cargs("DM"),
+             "\n".join(edits(dm, [(7, "  sub $0x20,%rsp", "  sub $0x28,%rsp"), (89, "  add $0x20,%rsp", "  add $0x28,%rsp")])), None),
+            ("g2f-compose-not-contiguous", "DepositMessage: a nop between the PublicKey tail and WithdrawalCredentials",
+             cargs("DM"), "\n".join(edits(dm, [(47, "  mov %rdi,(%rdx)", "  mov %rdi,(%rdx)\n  nop")])), None),
+            ("g2f-compose-u64-first", "BlobIdentifier IR order swapped: uint64 Index first (displacement 0)",
+             cargs("BI"), None, ir_edit(irt, G2["BI"]["type"], ir_swap("BlockRoot", "Index")))]:
+        a = list(base_args)
+        S = c["S"] if mid == "g2f-compose-partial-bh" else (G2["DM"]["S"] if mid != "g2f-compose-u64-first" else G2["BI"]["S"])
+        if S_text is not None:
+            f = work / f"{mid}.S"
+            f.write_text(S_text)
+            S = str(f)
+        if ir_text is not None:
+            f = work / f"{mid}.ir.json"
+            f.write_text(ir_text)
+            a[a.index("--ir") + 1] = str(f)
+        po = work / f"{mid}.partial.lean"
+        if po.exists():
+            po.unlink()
+        rc, so, se = run(["python3", "-I", "-B", str(new)] + a + ["--S", S, "--partial-out", str(po)], KR)
+        ok = rc == 2 and so == b"" and not po.exists() and "no template match" in se
+        res.append(dict(id=mid, what=what, expect="exit 2, 0 bytes, no partial file", exit=rc, stdout_bytes=len(so),
+                        partial_file=po.exists(), stderr=se.strip().split("\n")[-1:], ok=bool(ok)))
+        bad |= not ok
+    # --compose without --same-as: marker
+    rc, so, se = run(["python3", "-I", "-B", str(new)] + cargs("BI", same=False) + ["--S", G2["BI"]["S"]], KR)
+    tf = work / "g2f-nosame.lean"
+    tf.write_bytes(so)
+    kc = subprocess.run(KC + [str(tf)], capture_output=True, text=True)
+    th = [l for l in so.decode().split("\n") if l.startswith("theorem ")]
+    ok = (rc == 0 and th and th[0].endswith("-- UNCHECKED STATEMENT: checked by nobody") and len(th) == 1
+          and "checked by nobody" in so.decode().split("-/")[0] and kc.returncode == 1)
+    res.append(dict(id="g2f-no-same-as-marker", expect="exit 0, UNCHECKED STATEMENT on the theorem line, kindcheck 1",
+                    exit=rc, stdout_bytes=len(so), theorem_line_end=th[0][-45:] if th else None,
+                    kindcheck_exit=kc.returncode, ok=bool(ok)))
+    bad |= not ok
+    # --same-as a generated theorem (review g2g-r1 case (ii))
+    a = cargs("BI")
+    a[a.index("--same-as") + 1] = "E2eScal.Gen.bi_e2e_accept_main_gc"
+    a[a.index("--name") + 1] = "bi_selfgen_gc"  # the reviewer's case: another name, right-hand side generated
+    rc, so, se = run(["python3", "-I", "-B", str(new)] + a + ["--S", G2["BI"]["S"]], KR)
+    tf = work / "g2f-same-as-generated.lean"
+    tf.write_bytes(so)
+    kc = subprocess.run(KC + [str(tf)], capture_output=True, text=True)
+    ok = rc == 0 and kc.returncode == 1 and "is a generated name" in kc.stdout
+    res.append(dict(id="g2f-same-as-generated", expect="exit 0, kindcheck exit 1 (generated right-hand side)", exit=rc,
+                    stdout_bytes=len(so), kindcheck_exit=kc.returncode, ok=bool(ok)))
+    bad |= not ok
+    # --same-as-prop
+    a = cargs("BI")
+    a[a.index("--same-as"):a.index("--same-as") + 2] = ["--same-as-prop", "E2eScal.Fx.biStmt"]
+    rc, so, se = run(["python3", "-I", "-B", str(new)] + a + ["--S", G2["BI"]["S"]], KR)
+    t = so.decode()
+    tf = work / "g2f-same-as-prop.lean"
+    tf.write_bytes(so)
+    kc = subprocess.run(KC + [str(tf)], capture_output=True, text=True)
+    line = "    type_of% (@bi_e2e_accept_main_gc h) = @E2eScal.Fx.biStmt h := by"
+    com = (KR / CP["BI"][2]).read_text()
+    ok = (rc == 0 and line in t and kc.returncode == 0 and "identity against E2eScal.Fx.biStmt" in kc.stdout
+          and t.split("\n/-- Statement check")[0].replace("E2eScal.Fx.biStmt", "E2eScal.Bi.bi_e2e_accept_main")
+          == com.split("\n/-- Statement check")[0])
+    imps, rest = t.split("\n\n", 1)
+    (work / "g2f-bi-prop-fixture.lean").write_text(
+        imps + "\n\n-- TEST FIXTURE (scratch, not in the library): a Prop-valued abbrev equal to the type of the hand\n"
+        "-- theorem `E2eScal.Bi.bi_e2e_accept_main`.\n"
+        "abbrev E2eScal.Fx.biStmt [h : Host] : Prop := type_of% (@E2eScal.Bi.bi_e2e_accept_main h)\n\n" + rest)
+    res.append(dict(id="g2f-same-as-prop", expect="exit 0, Prop identity line, kindcheck PASS; fixture written",
+                    exit=rc, stdout_bytes=len(so), kindcheck_exit=kc.returncode, ok=bool(ok)))
+    bad |= not ok
     return res, bad
 
 
