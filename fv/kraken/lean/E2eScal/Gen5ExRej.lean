@@ -57,11 +57,11 @@ theorem ve_reject_g5 : ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k) (h
     _ (k + 93) (win hk 92 1) (by rfl) (by rfl) _ (win hk 93 2) (by rfl)
     s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard (fun h => hlen (h.trans (by rfl)))
 theorem ve_reject_g5_kind : ∀ (h : Host), type_of% (@ve_reject_g5 h)
-    = @E2eScal.decRejectKindN h E2eScal.H6Code.VeUnmarshal 16 := by
+    = @E2eScal.decRejectKindN h VeUnmarshal 16 := by
   intro h; with_reducible rfl
 
 theorem pd_reject_g5_kind : ∀ (h : Host), type_of% (@pd_reject_g5 h)
-    = @E2eScal.decRejectKindN h E2eScal.H6Code.PdUnmarshal 192 := by
+    = @E2eScal.decRejectKindN h PdUnmarshal 192 := by
   intro h; with_reducible rfl
 
 end E2eScal.Gen5

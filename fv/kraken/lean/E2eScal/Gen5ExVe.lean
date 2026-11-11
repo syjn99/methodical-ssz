@@ -113,7 +113,7 @@ theorem ve_g5_head : ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k) (hf 
   rw [hcs]; simp only [Std.ExtHashMap.sep_assoc]
   ecancel
 theorem ve_g5_head_kind : ∀ (h : Host), type_of% (@ve_g5_head h)
-    = @E2eScal.decHeadKindN h E2eScal.H6Code.VeUnmarshal (E2eScal.layCal [E2e.Code.EpUnmarshal, E2eScal.BhCode.ViUnmarshal] 56) [.u64, .u64]
+    = @E2eScal.decHeadKindN h VeUnmarshal (E2eScal.layCal [E2e.Code.EpUnmarshal, E2eScal.BhCode.ViUnmarshal] 56) [.u64, .u64]
     ⟨15, 0, [(.rax, .rcv), (.rbx, .bf)],
       [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.up 32) (.reg .rdi), .at (.dn 72) (.orig 4), .at (.dn 88) (.orig 5), .at (.dn 96) (.orig 6)],
       []⟩ := by
@@ -208,7 +208,7 @@ theorem ve_g5_f1 : ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k) (hf : 
   rw [show k + 17 + 1 = k + 18 from rfl] at Hm'
   ecancel
 theorem ve_g5_f1_kind : ∀ (h : Host), type_of% (@ve_g5_f1 h)
-    = @E2eScal.decFieldKindN h E2eScal.H6Code.VeUnmarshal (E2eScal.layCal [E2e.Code.EpUnmarshal, E2eScal.BhCode.ViUnmarshal] 56) [.u64, .u64]
+    = @E2eScal.decFieldKindN h VeUnmarshal (E2eScal.layCal [E2e.Code.EpUnmarshal, E2eScal.BhCode.ViUnmarshal] 56) [.u64, .u64]
     ⟨15, 0, [(.rax, .rcv), (.rbx, .bf)],
       [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.up 32) (.reg .rdi), .at (.dn 72) (.orig 4), .at (.dn 88) (.orig 5), .at (.dn 96) (.orig 6)],
       []⟩
@@ -314,7 +314,7 @@ theorem ve_g5_f2 : ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k) (hf : 
   rw [show k + 55 + 1 = k + 56 from rfl] at Hm'
   ecancel
 theorem ve_g5_f2_kind : ∀ (h : Host), type_of% (@ve_g5_f2 h)
-    = @E2eScal.decFieldKindN h E2eScal.H6Code.VeUnmarshal (E2eScal.layCal [E2e.Code.EpUnmarshal, E2eScal.BhCode.ViUnmarshal] 56) [.u64, .u64]
+    = @E2eScal.decFieldKindN h VeUnmarshal (E2eScal.layCal [E2e.Code.EpUnmarshal, E2eScal.BhCode.ViUnmarshal] 56) [.u64, .u64]
     ⟨48, 1, [],
       [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.up 32) (.reg .rdi), .at (.dn 72) (.ex 0), .at (.dn 88) (.ret 18), .at (.dn 96) (.ex 1)],
       [.n 8, .n 8]⟩
@@ -401,7 +401,7 @@ theorem ve_g5_epi : ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k) (hf :
       | (simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega)
   · dsimp only; rw [hmem']; ecancel
 theorem ve_g5_epi_kind : ∀ (h : Host), type_of% (@ve_g5_epi h)
-    = @E2eScal.decEpiKindN h E2eScal.H6Code.VeUnmarshal (E2eScal.layCal [E2e.Code.EpUnmarshal, E2eScal.BhCode.ViUnmarshal] 56) [.u64, .u64]
+    = @E2eScal.decEpiKindN h VeUnmarshal (E2eScal.layCal [E2e.Code.EpUnmarshal, E2eScal.BhCode.ViUnmarshal] 56) [.u64, .u64]
     ⟨86, 2, [(.rax, .zero), (.rbx, .zero)],
       [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.up 32) (.reg .rdi), .at (.dn 72) (.ex 0), .at (.dn 88) (.ret 56), .at (.dn 96) (.ex 1)],
       [.n 8, .n 8]⟩ := by
@@ -464,7 +464,7 @@ theorem ve_e2e_accept_g5 : ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k
   intro st2 h2
   exact ve_g5_epi k hk hf kE hkE hfE kV hkV hfV in0 in1 hin0 hin1 s ra guard fp s1 s2 s4 sp1 rslot lo ast aN0 aN1 hfp hs1 hs2 hs4 hsp1 hrslot hlo hast haN0 haN1 R st2 h2
 theorem ve_e2e_accept_g5_kind : ∀ (h : Host), type_of% (@ve_e2e_accept_g5 h)
-    = @E2eScal.decAcceptKindN h E2eScal.H6Code.VeUnmarshal (E2eScal.layCal [E2e.Code.EpUnmarshal, E2eScal.BhCode.ViUnmarshal] 56) [.u64, .u64] := by
+    = @E2eScal.decAcceptKindN h VeUnmarshal (E2eScal.layCal [E2e.Code.EpUnmarshal, E2eScal.BhCode.ViUnmarshal] 56) [.u64, .u64] := by
   intro h; rfl
 
 end E2eScal.Gen5

@@ -116,7 +116,7 @@ theorem pb_g5_head : ∀ (k : Nat) (hk : PbUnmarshal.IsInfixAt Host.prog k) (hf 
   dsimp only
   ecancel
 theorem pb_g5_head_kind : ∀ (h : Host), type_of% (@pb_g5_head h)
-    = @E2eScal.decHeadKindN h E2eScal.H6Code.PbUnmarshal (E2eScal.layRt false 104 3) [.bytes 32, .bytes 32, .bytes 32]
+    = @E2eScal.decHeadKindN h PbUnmarshal (E2eScal.layRt false 104 3) [.bytes 32, .bytes 32, .bytes 32]
     ⟨13, 0, [],
       [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 40) (.orig 3), .at (.dn 16) (.orig 4), .at (.dn 48) (.orig 5), .lo (.orig 6)],
       []⟩ := by
@@ -232,7 +232,7 @@ theorem pb_g5_f1 : ∀ (k : Nat) (hk : PbUnmarshal.IsInfixAt Host.prog k) (hf : 
   rw [show k + 31 + 1 = k + 32 from rfl] at H
   ecancel
 theorem pb_g5_f1_kind : ∀ (h : Host), type_of% (@pb_g5_f1 h)
-    = @E2eScal.decFieldKindN h E2eScal.H6Code.PbUnmarshal (E2eScal.layRt false 104 3) [.bytes 32, .bytes 32, .bytes 32]
+    = @E2eScal.decFieldKindN h PbUnmarshal (E2eScal.layRt false 104 3) [.bytes 32, .bytes 32, .bytes 32]
     ⟨13, 0, [],
       [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 40) (.orig 3), .at (.dn 16) (.orig 4), .at (.dn 48) (.orig 5), .lo (.orig 6)],
       []⟩
@@ -354,7 +354,7 @@ theorem pb_g5_f2 : ∀ (k : Nat) (hk : PbUnmarshal.IsInfixAt Host.prog k) (hf : 
   rw [show avail - 32 - 32 = avail - 64 by omega] at H
   ecancel
 theorem pb_g5_f2_kind : ∀ (h : Host), type_of% (@pb_g5_f2 h)
-    = @E2eScal.decFieldKindN h E2eScal.H6Code.PbUnmarshal (E2eScal.layRt false 104 3) [.bytes 32, .bytes 32, .bytes 32]
+    = @E2eScal.decFieldKindN h PbUnmarshal (E2eScal.layRt false 104 3) [.bytes 32, .bytes 32, .bytes 32]
     ⟨47, 1, [],
       [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 40) (.ex 0), .at (.dn 16) (.ptr 0), .at (.dn 48) (.ret 32), .lo (.ex 1)],
       [.n 24, .lo]⟩
@@ -478,7 +478,7 @@ theorem pb_g5_f3 : ∀ (k : Nat) (hk : PbUnmarshal.IsInfixAt Host.prog k) (hf : 
   rw [show avail - 64 - 32 = avail - 96 by omega] at H
   ecancel
 theorem pb_g5_f3_kind : ∀ (h : Host), type_of% (@pb_g5_f3 h)
-    = @E2eScal.decFieldKindN h E2eScal.H6Code.PbUnmarshal (E2eScal.layRt false 104 3) [.bytes 32, .bytes 32, .bytes 32]
+    = @E2eScal.decFieldKindN h PbUnmarshal (E2eScal.layRt false 104 3) [.bytes 32, .bytes 32, .bytes 32]
     ⟨83, 2, [],
       [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 40) (.ex 0), .at (.dn 16) (.ptr 1), .at (.dn 48) (.ret 68), .lo (.ex 1)],
       [.n 24, .lo]⟩
@@ -582,7 +582,7 @@ theorem pb_g5_epi : ∀ (k : Nat) (hk : PbUnmarshal.IsInfixAt Host.prog k) (hf :
       | (simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega)
   · dsimp only; ecancel
 theorem pb_g5_epi_kind : ∀ (h : Host), type_of% (@pb_g5_epi h)
-    = @E2eScal.decEpiKindN h E2eScal.H6Code.PbUnmarshal (E2eScal.layRt false 104 3) [.bytes 32, .bytes 32, .bytes 32]
+    = @E2eScal.decEpiKindN h PbUnmarshal (E2eScal.layRt false 104 3) [.bytes 32, .bytes 32, .bytes 32]
     ⟨119, 3, [],
       [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 40) (.ex 0), .at (.dn 16) (.ptr 2), .at (.dn 48) (.ret 104), .lo (.ex 1)],
       [.n 24, .lo]⟩ := by
@@ -668,7 +668,7 @@ theorem pb_e2e_accept_g5 : ∀ (k : Nat) (hk : PbUnmarshal.IsInfixAt Host.prog k
   intro st3 h3
   exact pb_g5_epi k hk hf bh ph td hbh hph htd s ra guard fp s1 s2 spl l18 rslot lo aP0 aL0 aC0 aP1 aL1 aC1 aP2 aL2 aC2 hfp hs1 hs2 hspl hl18 hrslot haP0 haL0 haC0 haP1 haL1 haC1 haP2 haL2 haC2 R S hlo Heap avail st3 h3
 theorem pb_e2e_accept_g5_kind : ∀ (h : Host), type_of% (@pb_e2e_accept_g5 h)
-    = @E2eScal.decAcceptKindN h E2eScal.H6Code.PbUnmarshal (E2eScal.layRt false 104 3) [.bytes 32, .bytes 32, .bytes 32] := by
+    = @E2eScal.decAcceptKindN h PbUnmarshal (E2eScal.layRt false 104 3) [.bytes 32, .bytes 32, .bytes 32] := by
   intro h; rfl
 
 /-- The generated-style theorem proves the committed hand statement `E2eScal.H6.pb_accept_stmt` (unchanged). -/
