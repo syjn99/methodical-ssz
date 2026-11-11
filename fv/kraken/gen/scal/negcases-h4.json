@@ -1,0 +1,271 @@
+[
+ {
+  "id": "dd-gen-control",
+  "module": "E2eScal/Gen2DdDecPartial.lean",
+  "theorem": "dd_g2dec_Signature_seg",
+  "kind": "control"
+ },
+ {
+  "id": "dd-gen-stmt-src",
+  "module": "E2eScal/Gen2DdDecPartial.lean",
+  "theorem": "dd_g2dec_Signature_seg",
+  "kind": "stmt",
+  "old": "(hSrc : bf + (88 : Int64).toBitVec = aSrc)",
+  "new": "(hSrc : bf + (80 : Int64).toBitVec = aSrc)"
+ },
+ {
+  "id": "dd-gen-code-control",
+  "module": "E2eScal/Gen2DdDecPartial.lean",
+  "theorem": "dd_g2dec_Signature_seg",
+  "kind": "control",
+  "code_def": "DdUnmarshal",
+  "code_ns": "E2eScal.H4Code",
+  "norm": "prysm/go1.26.10/e2e/h4/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
+ },
+ {
+  "id": "dd-gen-code-siglen",
+  "module": "E2eScal/Gen2DdDecPartial.lean",
+  "theorem": "dd_g2dec_Signature_seg",
+  "kind": "code",
+  "line": 105,
+  "old": "  mov $0x60,%ecx",
+  "new": "  mov $0x50,%ecx",
+  "code_def": "DdUnmarshal",
+  "code_ns": "E2eScal.H4Code",
+  "norm": "prysm/go1.26.10/e2e/h4/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
+ },
+ {
+  "id": "dd-gen-code-amt",
+  "module": "E2eScal/Gen2DdDecPartial.lean",
+  "theorem": "dd_g2dec_Amount_seg",
+  "kind": "code",
+  "old": "  mov 0x50(%rsi),%rsi",
+  "new": "  mov 0x48(%rsi),%rsi",
+  "code_def": "DdUnmarshal",
+  "code_ns": "E2eScal.H4Code",
+  "norm": "prysm/go1.26.10/e2e/h4/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
+ },
+ {
+  "id": "dd-segnop-control",
+  "module": "E2eScal/DdSegNop.lean",
+  "theorem": "bytes32dec_seg_nop",
+  "kind": "control"
+ },
+ {
+  "id": "dd-segnop-stmt-heap",
+  "module": "E2eScal/DdSegNop.lean",
+  "theorem": "bytes32dec_seg_nop",
+  "kind": "stmt",
+  "old": "⋆ Heap (avail - 32)",
+  "new": "⋆ Heap (avail - 31)"
+ },
+ {
+  "id": "dd-segnop-stmt-ret",
+  "module": "E2eScal/DdSegNop.lean",
+  "theorem": "bytes32dec_seg_nop",
+  "kind": "stmt",
+  "old": "⋆ Eq ((Int.toBytes 8 (Host.addrOf (j2 + 6 + 1)).toBitVec.toInt).At aRet)",
+  "new": "⋆ Eq ((Int.toBytes 8 (Host.addrOf (j2 + 7 + 1)).toBitVec.toInt).At aRet)"
+ },
+ {
+  "id": "dd-rej-control",
+  "module": "E2eScal/DdReject.lean",
+  "theorem": "dd_e2e_reject_size_main",
+  "kind": "control",
+  "code_def": "DdUnmarshal",
+  "code_ns": "E2eScal.H4Code",
+  "norm": "prysm/go1.26.10/e2e/h4/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
+ },
+ {
+  "id": "dd-rej-stmt",
+  "module": "E2eScal/DdReject.lean",
+  "theorem": "dd_e2e_reject_size_main",
+  "kind": "stmt",
+  "old": "st.data.regs.rbx = e1",
+  "new": "st.data.regs.rbx = e0"
+ },
+ {
+  "id": "dd-rej-code-size",
+  "module": "E2eScal/DdReject.lean",
+  "theorem": "dd_e2e_reject_size_main",
+  "kind": "code",
+  "old": "  cmp $0xb8,%rcx",
+  "new": "  cmp $0xb0,%rcx",
+  "code_def": "DdUnmarshal",
+  "code_ns": "E2eScal.H4Code",
+  "norm": "prysm/go1.26.10/e2e/h4/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S"
+ },
+ {
+  "id": "dd-spec-control",
+  "module": "E2eScal/DdSpec.lean",
+  "theorem": "pdd_spec_accepts_iff",
+  "kind": "control"
+ },
+ {
+  "id": "dd-spec-stmt-size",
+  "module": "E2eScal/DdSpec.lean",
+  "theorem": "pdd_spec_accepts_iff",
+  "kind": "stmt",
+  "old": "bs.size = 184",
+  "new": "bs.size = 185"
+ },
+ {
+  "id": "dd-ser-stmt-nearmiss",
+  "module": "E2eScal/DdSpec.lean",
+  "theorem": "prysmDdDesc_serialize_checker",
+  "kind": "stmt",
+  "old": "= serialize ddCheckerDesc v :=",
+  "new": "= serialize (match ddCheckerDesc with | .container ns ds => .container ns (ds.set 3 (.byteVector 48)) | x => x) v :="
+ },
+ {
+  "id": "dd-deser-stmt-value",
+  "module": "E2eScal/DdSpec.lean",
+  "theorem": "prysmDdDesc_deserialize_checker",
+  "kind": "stmt",
+  "old": "deserialize ddCheckerDesc bs = .ok v",
+  "new": "deserialize ddCheckerDesc bs = .ok (.seq [])"
+ },
+ {
+  "id": "dd-ask-control",
+  "module": "E2eScal/DdSpecK.lean",
+  "theorem": "dd_e2e_accept_spec_k",
+  "kind": "control"
+ },
+ {
+  "id": "dd-ask-stmt-heap",
+  "module": "E2eScal/DdSpecK.lean",
+  "theorem": "dd_e2e_accept_spec_k",
+  "kind": "stmt",
+  "old": "⋆ Heap (avail - 176)",
+  "new": "⋆ Heap (avail - 175)"
+ },
+ {
+  "id": "dd-ask-stmt-swap",
+  "module": "E2eScal/DdSpecK.lean",
+  "theorem": "dd_e2e_accept_spec_k",
+  "kind": "stmt",
+  "old": "⋆ Eq (g.pubkey.toList.At p1) ⋆ Eq (g.withdrawalCredentials.toList.At p2)",
+  "new": "⋆ Eq (g.withdrawalCredentials.toList.At p1) ⋆ Eq (g.pubkey.toList.At p2)"
+ },
+ {
+  "id": "dd-ask-stmt-siglen",
+  "module": "E2eScal/DdSpecK.lean",
+  "theorem": "dd_e2e_accept_spec_k",
+  "kind": "stmt",
+  "old": "Eq ((Int.toBytes 8 96).At (s.regs.rax.toBitVec + 72))",
+  "new": "Eq ((Int.toBytes 8 48).At (s.regs.rax.toBitVec + 72))"
+ },
+ {
+  "id": "dd-ask-stmt-weaken",
+  "module": "E2eScal/DdSpecK.lean",
+  "theorem": "dd_e2e_accept_spec_k",
+  "kind": "stmt",
+  "old": "(hav : 176 ≤ avail)",
+  "new": "(hav : True)"
+ },
+ {
+  "id": "dd-ask-stmt-rsp",
+  "module": "E2eScal/DdSpecK.lean",
+  "theorem": "dd_e2e_accept_spec_k",
+  "kind": "stmt",
+  "old": "∧ st.data.regs.rsp = s.regs.rsp + 8 ∧",
+  "new": "∧ st.data.regs.rsp = s.regs.rsp + 16 ∧"
+ },
+ {
+  "id": "dd-rc-stmt-size",
+  "module": "E2eScal/DdSpecK.lean",
+  "theorem": "dd_e2e_reject_complete",
+  "kind": "stmt",
+  "old": "bs.size ≠ 184 :=",
+  "new": "bs.size ≠ 183 :="
+ },
+ {
+  "id": "dd-wita-stmt-rax",
+  "module": "E2eScal/WitDdA.lean",
+  "theorem": "dd_accept_runs",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "dd-witr-stmt-len",
+  "module": "E2eScal/WitDdR.lean",
+  "theorem": "dd_reject_runs",
+  "kind": "stmt",
+  "old": "(hlen : len ≠ 184)",
+  "new": "(hlen : len ≠ 185)"
+ },
+ {
+  "id": "pw-rej-control",
+  "module": "E2eScal/PwReject.lean",
+  "theorem": "pw_e2e_reject_size_main",
+  "kind": "control",
+  "code_def": "PwUnmarshal",
+  "code_ns": "E2eScal.H4Code",
+  "norm": "prysm/go1.26.10/e2e/h4/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pw-rej-stmt",
+  "module": "E2eScal/PwReject.lean",
+  "theorem": "pw_e2e_reject_size_main",
+  "kind": "stmt",
+  "old": "st.data.regs.rbx = e1",
+  "new": "st.data.regs.rbx = e0"
+ },
+ {
+  "id": "pw-rej-code-size",
+  "module": "E2eScal/PwReject.lean",
+  "theorem": "pw_e2e_reject_size_main",
+  "kind": "code",
+  "old": "  cmp $0x18,%rcx",
+  "new": "  cmp $0x10,%rcx",
+  "code_def": "PwUnmarshal",
+  "code_ns": "E2eScal.H4Code",
+  "norm": "prysm/go1.26.10/e2e/h4/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pw-spec-control",
+  "module": "E2eScal/PwSpec.lean",
+  "theorem": "ppw_spec_accepts_iff",
+  "kind": "control"
+ },
+ {
+  "id": "pw-spec-stmt-size",
+  "module": "E2eScal/PwSpec.lean",
+  "theorem": "ppw_spec_accepts_iff",
+  "kind": "stmt",
+  "old": "bs.size = 24",
+  "new": "bs.size = 25"
+ },
+ {
+  "id": "pw-deser-stmt-value",
+  "module": "E2eScal/PwSpec.lean",
+  "theorem": "prysmPwDesc_deserialize_checker",
+  "kind": "stmt",
+  "old": "deserialize pwCheckerDesc bs = .ok v",
+  "new": "deserialize pwCheckerDesc bs = .ok (.seq [])"
+ },
+ {
+  "id": "pw-rc-stmt-size",
+  "module": "E2eScal/PwSpecK.lean",
+  "theorem": "pw_e2e_reject_complete",
+  "kind": "stmt",
+  "old": "bs.size ≠ 24 :=",
+  "new": "bs.size ≠ 23 :="
+ },
+ {
+  "id": "pw-witr-stmt-len",
+  "module": "E2eScal/WitPwR.lean",
+  "theorem": "pw_reject_runs",
+  "kind": "stmt",
+  "old": "(hlen : len ≠ 24)",
+  "new": "(hlen : len ≠ 25)"
+ }
+]
