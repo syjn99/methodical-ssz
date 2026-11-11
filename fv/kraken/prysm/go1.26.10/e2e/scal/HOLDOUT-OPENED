@@ -128,5 +128,44 @@
    "H4-A2_alternative": "if \"pick TWO\" meant the first two of the merged order (ascending field count, then name) instead of one pick per class, the picks would be PendingPartialWithdrawal (3) and PowBlock (3), both class B; not adopted (source: the curator selection record outside this repository)",
    "commit_type_note": "three H4 commits use the type spec(...), which fv/AGENTS.md lists as a scope; no history rewrite"
   }
+ },
+ "H5": {
+  "opened_utc": "2026-11-11T11:25:14Z",
+  "by": "separate evaluation session (fresh Opus 5.5; did not build the GEN3 generator, checker, kinds or lemmas; it can read the H1-H4 and GEN2/GEN3 files, so it is not independent of that experience)",
+  "method_freeze": {
+   "sha": "6dc0e2a4cf6d37cddcea9e5aa3e8eea2f1e1fe76",
+   "gen/scal/scalgen.py": "3fc21d731de0fe4fd3b4c6211aeca272d6618f86",
+   "gen/scal/kindcheck.py": "21562eef24c020e9852aa70c6126edd22717f95c",
+   "gen/scal/gen.sh": "7f1987544bef41f39f1d2e49353a87000e8442f0",
+   "gen/scal/p2dec_test.py": "d5f14223a0f1931dbfa5e0e986973e2d0139599f",
+   "gen/e2e/negative.py": "96dc2d17586db2e33e42aa985e28645f070716de",
+   "lean/E2eScal tree": "2003b049a9f3f345557b8b9ef639bbb34f282841",
+   "lean/Fk tree": "50a7c8c350d4d6cccba61db659045c3431c97a9c",
+   "lean/E2e tree": "d41c842e6fd753359c739e9d701f3bb7e8bfb56e",
+   "lean/E2eAd tree": "de5607e4489e373ed3e11901e19229be47cdd1b5",
+   "checked_at": "git rev-parse HEAD:<path> at the freeze SHA gives the same 5 blob ids and the same four tree ids"
+  },
+  "step0_checks": "gated lake build E2e E2eAd E2eScal exit 0 (1018 jobs; 18 GEN3 modules built that the moved .lake lacked; E2eScal.P2EncCp replayed, not rebuilt; peak 2.22 GiB per process), then lake build --no-build E2e E2eAd E2eScal exit 0 (All targets up-to-date, 1018 jobs)",
+  "selection": "curator record and controller confirmation outside this repository; rule = GEN3-PLAN paragraph 'H5 hold-out' (sha256 34dffe02a2bc780e424232f4a202f38c3c5311298a5a80510f1c914e80738961), frozen before GEN3 existed; measurement protocol H4-PROTOCOL unchanged (sha256 b95dae863a186cb9c5394fca09a439ed563be2dfa1b28754107f02c5be32eafd)",
+  "scope_H5": [
+   "v1alpha1.SyncCommitteeMessage UnmarshalSSZ (class C): result (S) one p2dec --gen3 run, result (C) one --gen3 --compose --same-as-prop run against a hand statement committed BEFORE the generator runs, then hand accept, size reject, independent Desc, codec equality, spec alignment, witnesses, link check, negatives, Go-value differential",
+   "v1alpha1.PendingConsolidation UnmarshalSSZ (class D): same items"
+  ],
+  "excluded": [
+   "MarshalSSZTo, SizeSSZ and HashTreeRoot of both types",
+   "every other type",
+   "generator, checker, kind, lemma, Fk and contract changes"
+  ],
+  "readings": {
+   "H5-A1": "confirmed by the controller as reading (a): a primitive type has no field rows, so its sequence is empty. Alternatives: (b) [u64] leaves the picks unchanged; (c) [overlay] empties class D and only SyncCommitteeMessage would be evaluated",
+   "H5-A2": "confirmed: one kind appended or prepended",
+   "H5-A5": "confirmed: one pick per class",
+   "H5-A3": "DISCLOSED, not corrected: both picks are near-in-sample BY KIND (PendingConsolidation = two ValidatorIndex call fields, a callee met in development; SyncCommitteeMessage starts like Checkpoint [overlay,b32]); H5 tests new ORDERS of known kinds, not new kinds",
+   "H5-A7": "stated exposure: SizeSSZ .S, IR entries, generated Go and desc-checker results of both types were already in the tree"
+  },
+  "known_in_advance": "review g3g-r1: --gen3 --compose refuses every type with an overlay-typed field; both H5 classes require one, so result (C) is expected to be 'refused' (exit 2) for both types by construction; one (C) run per type is still made and recorded",
+  "protocol": "two results per type kept apart: (S) one p2dec --gen3 run (segments), (C) one --gen3 --compose --same-as-prop run against a hand statement committed BEFORE the generator runs on that type, plus a non-vacuity witness if it builds. A generated _call theorem is conditional on hC : U64CalleeAcc and counts as used only where an accept proof discharges hC with a proved uacc spec",
+  "state_before_commit": "No UnmarshalSSZ/MarshalSSZTo source, .S, objdump section, IR entry, functions.json body or generator output of SyncCommitteeMessage or PendingConsolidation was opened by this session before this record was committed.",
+  "rule": "H5 is touched once. No change to gen/scal/*, lemma / kind modules, Fk or contracts afterwards; existing modules under lean/E2eScal may only be joined by NEW H5 modules; a needed fix is recorded in CONTAMINATION.md as 'proposed, not done'. Raw generator output is committed unmodified before any hand work."
  }
 }
