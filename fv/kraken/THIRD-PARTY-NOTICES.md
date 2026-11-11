@@ -2,6 +2,7 @@
 
 This repository's `LICENSE` is Apache-2.0. Some files under `fv/kraken/` are derived from other projects. This file names those files, how they were produced, and the upstream project and licence name.
 Counts are `git ls-files` counts. Paths are relative to `fv/kraken/`.
+Scope: the path lists come from program scans of the tracked files for Go source, generated Go, disassembly, `-m` and diff lines (section H). They are best-effort, not a guarantee of completeness; other files may quote short fragments of generated code or upstream identifiers.
 
 ## A. Machine code compiled in a Prysm tree (Go 1.26.10)
 
@@ -63,17 +64,21 @@ Counts are `git ls-files` counts. Paths are relative to `fv/kraken/`.
 - `prysm/go1.26.10/e2e/callgraph.json`, `e2e/ad/callgraph.json`, `e2e/CALLGRAPH.md`, `e2e/ad/CALLGRAPH.md` (4): call graphs.
   They quote `-m=2` lines of `gcflags-m2.txt` with five one-line Prysm `consensus-types/primitives` function bodies (cut in the `.md` files).
 - `prysm/go1.26.10/prysm-go.mod.diff` (1): a diff of Prysm `go.mod`; its context lines are Prysm text. `prysm/go1.26.10/opt-r1/generated.diff` (1):
-  a diff of generator output for Prysm `phase0` types (`698c202` against `ca191bb`). Total 18. Upstream: Prysm, as in family A.
+  a diff of generator output for Prysm `phase0` types (`698c202` against `ca191bb`).
+- `gen/frozen/THEOREMS.json` (1): obligation lists written by `gen/frozen/build_lists.py` with the site enumerator `gen/obligations.py`. Its 2752 `prysm.obligations` records
+  quote a `guard` and a `ret` line of family B `mainnet/*.ssz.go` (132 types, 523 distinct pairs). Its `hand_case` records quote lines of `target/**/*.ssz.go`.
+- `prysm/go1.26.10/**/negative*.json` (8), `prysm/go1.26.10/e2e/negative/result.json` (1): negative-test records; their `diff` fields hold unified diffs of family A `.S` lines. Total 28. Upstream: Prysm, as in family A.
 
 ## H. Files that only name upstream symbols
 
-- Other files under `fv/kraken/` (1126) name Prysm or Go packages, types, functions, tests or ELF addresses, or quote short instruction fragments of families A and E.
+- Other files under `fv/kraken/` (1116) name Prysm or Go packages, types, functions, tests or ELF addresses, or quote short instruction fragments of families A and E.
   Examples: `prysm/tests/**` (11, Prysm `go test` logs and summaries), `prysm/go1.26.10/opt-r1/bench/raw/*` (5, benchmark output),
   `e2e/{bh,e1,h3}/callgraph.json`, `prysm/go1.26.10/functions.json`, `kparse*`, negative-test case files and the reports.
 - A program scan of these files for Go source fragments (`func `, `return `, `{ return`, `inline call to`, `can inline`) found these quotes:
   - doc comments in `lean/E2e*/` quote short excerpts of family B methods and of Prysm `consensus-types/primitives` (`lean/E2e/Epoch.lean` lines 9-11, `lean/E2eScal/P1.lean` lines 7-8);
   - `prysm/go1.26.10/e2e/runtime-diff.json` holds 57 diff lines of Go runtime source (Go 1.26.3 against 1.26.10). Upstream: Go, as in family A.
 - The other hits are this project's own tool code or prose. The `.py`, `.go` and `.sh` hits were not each read. The files were not each read in full.
+- The scans matched these patterns only: Go `if … {`, `return `, `func (`, `dst = append`, `binary.LittleEndian`, `ssz.Err`, `fmt.Errorf(`, `for … := range`, AT&T/objdump instruction lines and `-m` lines. Short one-line quotes also occur, for example in `SPEC.md` (this repository's `ssz/` helpers) and `REPORT.md` (`fmt.Errorf` error sites).
 - `lean/**/*.S` (9) are stubs written for this project under Go runtime and `ssz` symbol names. They are not disassembly.
 
 ## I. Lean dependencies and skill material
