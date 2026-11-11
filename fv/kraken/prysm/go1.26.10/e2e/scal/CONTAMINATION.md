@@ -358,3 +358,36 @@
 - 리뷰 g3l-r1(APPROVE)의 생성기 항목: 꼬리의 `nop`(BeaconBlockHeader.ParentRoot, Checkpoint.Root)은 덮지 않음으로 적었다.
 - `kindcheck.py`에 g2f-r1 S1–S4를 넣었다. H4가 끝나서 이제 바꿀 수 있다.
 - 일반성 주장은 없다. 속도 주장도 없다. 독립 리뷰는 아직 없다.
+
+## 20. 홀드아웃 H5 평가 — 열린 뒤
+
+- 연 시각: `scal/HOLDOUT-OPENED`의 `H5.opened_utc`(커밋 `3762644`, 2026-11-11T11:25:14Z).
+- 방법 고정: 커밋 `6dc0e2a`. 고정 기록의 blob 5개와 트리 id 4개를 다시 셌다. 모두 같다.
+- 형: `v1alpha1.SyncCommitteeMessage`(C 부류), `v1alpha1.PendingConsolidation`(D 부류). 범위는 `UnmarshalSSZ`뿐이다.
+- 평가 세션은 GEN3 생성기, 검사기, 종류, 보조정리를 만들지 않았다. 이전 단위의 파일은 읽을 수 있었다.
+- 밝힌 유사성(H5-A3): 두 형은 필드 종류로 보면 표본에 가깝다. 새것은 종류의 순서뿐이다.
+- 손 Desc(`08adf1d`)는 검사기 Desc를 출력하기 전에 커밋했다.
+- 손 문장 `H5.sm_accept_stmt`, `H5.pc_accept_stmt`(`3c4625c`)는 생성기를 돌리기 전에 커밋했다.
+- 링크 표(`8f3aac7`)는 손 문장 전에 만들었다. 문장이 `.S`의 프레임 사실을 써야 했다. 생성기는 돌리지 않았다.
+- 생성기 (S)와 (C)는 형마다 한 번씩 돌렸다(작업 09, 10, 14, 15). 다른 선택으로 다시 돌리지 않았다.
+- 원 출력은 손대지 않고 먼저 커밋했다(`fe2f266`, `dea6b37`). 손 수정 줄은 0이다.
+- (S)의 stderr 둘에는 실행 디렉터리 경로가 있어 커밋하지 않았다. 요약 JSON은 커밋했다.
+- `gen/scal/*`, 종류와 보조정리 모듈, `Fk/*`, 계약, 기존 문장은 바꾸지 않았다.
+- 그래서 `gen/scal/AxiomsScal.lean`을 늘리지 않았다. 공리 게이트는 모든 선언을 센다. 새 선언도 들어간다.
+- 부정 시험 사례 파일은 `gen/scal/` 밖에 두었다: `h5/negcases-h5.json`. 실행 중에는 같은 바이트가 커밋 전 `gen/scal/`에 있었다.
+- 새 H5 모듈만 더했다: `H5Code`, `H5Stmt`, `SmDesc`, `PcDesc`, `SmSeg`, `SmAccept`, `PcAccept`, `Sm*`/`Pc*`, `Wit*`.
+- 새 손 보조정리: `bytes32dec_seg_rax`, `sm_vi_arg`, `calldec_nop_seg`. 기존 증명 글에서 지시 몇 개만 바꿨다.
+- 열린 뒤 더한 도구: `gen/e2e/h5link.py`(`h4link.py`의 글), `gen/e2e/h5diff.py`(`h4diff.py`의 글), `h5/h5check-main.go.txt`.
+- 검사기 json은 phase1c-r5 리뷰의 임시 사본에서 왔다. sha256은 `main.result.json` 기록과 같다.
+- 제안(하지 않음) P-H5-1: 32바이트 구간 둘째 블록에서 receiver를 rax로 다시 읽는 꼴을 허용한다.
+- P-H5-1이 있으면 SyncCommitteeMessage.BlockRoot(지시 47–81)가 생성 대상이 된다.
+- 제안(하지 않음) P-H5-2: receiver가 이미 rax에 있는 호출 인자 꼴을 읽는다(지시 82–87).
+- 생성기는 그 자리를 "첫 필드 꼴"로 읽고 SSZ 오프셋이 0이 아니라서 거부했다. 거부는 옳다. 꼴이 없다.
+- 제안(하지 않음) P-H5-3: `callq`와 `test %rax,%rax` 사이의 패딩 `nop`을 허용한다.
+- P-H5-3이 있으면 PendingConsolidation.TargetIndex(지시 48–58)가 생성 대상이 된다.
+- 제안(하지 않음) P-H5-4: 호출 필드가 있는 형의 합성. 고정 전에 알려진 한계다.
+- 네 제안은 방법 변경이다. 그래서 해당 필드는 생성기가 덮지 않은 것으로 보고한다.
+- 생성된 `_call` 정리는 `hC : U64CalleeAcc`를 전제로 둔다. 수용 증명이 증명된 `sl_uacc_holds`, `vi_uacc_holds`로 채웠다.
+- 한계: `h5/link/norm`은 Lake `input_dir`가 아니다. lakefile 변경은 승인이 필요해서 하지 않았다.
+- 일반성 주장은 없다. 독립 리뷰는 아직 없다.
+
