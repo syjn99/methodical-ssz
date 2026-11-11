@@ -179,3 +179,40 @@ P2 encode in-sample — peak 1.83 GiB, no memcap kill).
 - PendingPartialWithdrawal: exit 2, 0 of 3 (two overlay-typed fields compiled as calls; an inline uint64 read with the
   receiver in rax, interleaved). `--compose` refused both types: no generated whole proof exists for a hold-out type.
 - The development-set coverage above is in-sample; it did not transfer unchanged. Proposals P-H4-1..3 are not done.
+
+## GEN3 (unit G3-G; generator change after H4, development set only; not yet reviewed)
+
+`scal/CONTAMINATION.md` §19. Lemmas: unit G3-L (`CallDec`, `KindCall`, `U64RR`, `SegNPad`, `KindAccept`).
+In-sample coverage only; no hold-out claim until H5.
+
+- Compatibility switch: the new shapes are only behind `--gen3` (it implies `--gen2`). Default and `--gen2`
+  output unchanged: `regen_check.sh` SAME for the 16 earlier commands; base-vs-head differential (default,
+  `--gen2`, `--gen2 --compose`, 10 inputs) 30/30 equal.
+- `p2dec --gen3 [--summary FILE.json] [--partial-out FILE]` adds three shapes:
+  - a `uint64`-overlay field decoded by a call to `primitives.{Slot,CommitteeIndex,ValidatorIndex,Epoch}.UnmarshalSSZ`
+    (callees with a proved accept spec): call block `calldec_seg` (`<p>_<field>_call`, hypothesis
+    `hC : U64CalleeAcc "<callee>"`) plus the argument set-up, one of `callarg_first_seg pad` (SSZ offset 0),
+    `callarg_reload_seg pad`, or the `lea` form `callarg_lea_seg` + [two-directive read of the IR field just
+    before] + `callarg_mov_seg` (`_arg`, or `_arg1` / `_arg2`);
+  - the two-directive uint64 read `mov src(%rbx),%rX; mov %rX,f(%rax)` (`u64dec_rr_seg`, register in the kind);
+  - a byte vector with one padding `nop` between `mov $n,%ecx` and `callq runtime.makeslice`, add form
+    (`bytesdec_seg_p true n`, kind `bytesDecSegKind`).
+  Anything else is "not covered: <reason>". Exit codes as for `--gen2`.
+- `--gen3 --compose`: refuses types with callee or two-directive fields (exit 2). Otherwise the GEN2
+  composition plus `T_kind : type_of% (@T h) = @E2eScal.decAcceptKind h C st [fields] jret` (`rfl` at default
+  transparency under `set_option maxHeartbeats 200000 in`; a timeout is a build failure). `--same-as-prop`
+  adds the identity with a hand statement.
+- Output (raw, unedited; `gen.sh` last five commands): `Gen3PwDec` 3/3, `Gen3DdDec` 4/4, `Gen3BhDec` 5/5,
+  `Gen3AdDecPartial` 3/5 (exit 3), `Gen3DdAccept2` (composed). Run 1 of the compose command wrote a doc
+  comment before `set_option … in` and did not parse; that file is kept unedited as
+  `scal/gen3/Gen3DdAccept.run1-parse-error.lean.txt`. Hand compositions over the generated theorems:
+  `PwAcceptG3.lean`, `BhAcceptG3.lean`.
+- `kindcheck.py`: the six GEN3 kinds with `KindCall` / `CallDec` / `U64RR` pinned, callee list,
+  `SegNPad` pin for `bytesdec_seg_p`, `decAcceptKind` on composed theorems only (`KindAccept` pinned);
+  review g2f-r1 S1–S4 (rule 6a on comment-stripped text; coverage `n of m` with n ≠ m fails in the default
+  mode; n must equal the fields with theorems; exit-code controls). Selftest 114 cases + 4 exit-code cases.
+- Tests: `p2dec_test.py` (GEN3 cases `g3-*`), negatives `negcases-g3g.json`.
+- Not covered: other set-up forms (other registers, extra moves), callees without a proved spec, pointer /
+  nested-container fields, lists, bitfields, sizes other than 32 / 48 / 96, a `nop` elsewhere (also the
+  observed tail `nop` of BeaconBlockHeader.ParentRoot / Checkpoint.Root, which `--compose` does not read),
+  the offset-0 form with a `nop`, encoders; composed theorems with callee fields or frames other than `0x20`.

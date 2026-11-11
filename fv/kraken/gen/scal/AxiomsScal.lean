@@ -58,6 +58,24 @@ import E2eScal.WitDdA
 import E2eScal.WitDdR
 import E2eScal.PwSpecK
 import E2eScal.WitPwR
+import E2eScal.CallDec
+import E2eScal.CallDecRel
+import E2eScal.KindCall
+import E2eScal.U64RR
+import E2eScal.SegNPad
+import E2eScal.KindAccept
+import E2eScal.KindAcceptRel
+import E2eScal.Gen3Examples
+import E2eScal.PwAccept
+import E2eScal.BhHeadG3
+import E2eScal.WitPwA
+import E2eScal.Gen3PwDec
+import E2eScal.Gen3DdDec
+import E2eScal.Gen3BhDec
+import E2eScal.Gen3AdDecPartial
+import E2eScal.Gen3DdAccept2
+import E2eScal.PwAcceptG3
+import E2eScal.BhAcceptG3
 
 -- prysm-e2e scalability stage S1-S2 (INBOX 011): the segment lemmas, the in-sample re-derivations, the
 -- statement-identity checks and the generated instances. Checked with gen/e2e/axioms.py <log> <out> <this file>.
@@ -406,3 +424,143 @@ import E2eScal.WitPwR
 #print axioms E2eScal.WitDdA.dd_accept_runs
 #print axioms E2eScal.WitDdR.dd_reject_runs
 #print axioms E2eScal.WitPwR.pw_reject_runs
+-- GEN3 (units G3-L and G3-G): every new theorem of the GEN3 lemma, example, generated and composition modules
+#print axioms E2eScal.Bh.bh_e2e_accept_main_g3
+#print axioms E2eScal.Bh.bh_e2e_accept_main_g3_type
+#print axioms E2eScal.Bh.bh_e2e_head_g3
+#print axioms E2eScal.Bh.bh_e2e_head_g3_type
+#print axioms E2eScal.Bh.bh_e2e_head_g3g
+#print axioms E2eScal.Bh.bh_e2e_head_g3g_type
+#print axioms E2eScal.Bh.bh_head0
+#print axioms E2eScal.Bh.bh_spill2
+#print axioms E2eScal.Bh.bhg_guard
+#print axioms E2eScal.Bh.bhh_sp
+#print axioms E2eScal.Gen.ad_g3dec_BeaconBlockRoot_seg
+#print axioms E2eScal.Gen.ad_g3dec_BeaconBlockRoot_seg_kind
+#print axioms E2eScal.Gen.ad_g3dec_CommitteeIndex_arg
+#print axioms E2eScal.Gen.ad_g3dec_CommitteeIndex_arg_kind
+#print axioms E2eScal.Gen.ad_g3dec_CommitteeIndex_call
+#print axioms E2eScal.Gen.ad_g3dec_CommitteeIndex_call_kind
+#print axioms E2eScal.Gen.ad_g3dec_Slot_arg
+#print axioms E2eScal.Gen.ad_g3dec_Slot_arg_kind
+#print axioms E2eScal.Gen.ad_g3dec_Slot_call
+#print axioms E2eScal.Gen.ad_g3dec_Slot_call_kind
+#print axioms E2eScal.Gen.bh_g3dec_BodyRoot_seg
+#print axioms E2eScal.Gen.bh_g3dec_BodyRoot_seg_kind
+#print axioms E2eScal.Gen.bh_g3dec_ParentRoot_seg
+#print axioms E2eScal.Gen.bh_g3dec_ParentRoot_seg_kind
+#print axioms E2eScal.Gen.bh_g3dec_ProposerIndex_arg
+#print axioms E2eScal.Gen.bh_g3dec_ProposerIndex_arg_kind
+#print axioms E2eScal.Gen.bh_g3dec_ProposerIndex_call
+#print axioms E2eScal.Gen.bh_g3dec_ProposerIndex_call_kind
+#print axioms E2eScal.Gen.bh_g3dec_Slot_arg
+#print axioms E2eScal.Gen.bh_g3dec_Slot_arg_kind
+#print axioms E2eScal.Gen.bh_g3dec_Slot_call
+#print axioms E2eScal.Gen.bh_g3dec_Slot_call_kind
+#print axioms E2eScal.Gen.bh_g3dec_StateRoot_seg
+#print axioms E2eScal.Gen.bh_g3dec_StateRoot_seg_kind
+#print axioms E2eScal.Gen.dd_e2e_accept_main_g3
+#print axioms E2eScal.Gen.dd_e2e_accept_main_g3_kind
+#print axioms E2eScal.Gen.dd_e2e_accept_main_g3_type
+#print axioms E2eScal.Gen.dd_g3dec_Amount_seg
+#print axioms E2eScal.Gen.dd_g3dec_Amount_seg_kind
+#print axioms E2eScal.Gen.dd_g3dec_PublicKey_seg
+#print axioms E2eScal.Gen.dd_g3dec_PublicKey_seg_kind
+#print axioms E2eScal.Gen.dd_g3dec_Signature_seg
+#print axioms E2eScal.Gen.dd_g3dec_Signature_seg_kind
+#print axioms E2eScal.Gen.dd_g3dec_WithdrawalCredentials_seg
+#print axioms E2eScal.Gen.dd_g3dec_WithdrawalCredentials_seg_kind
+#print axioms E2eScal.Gen.pw_g3dec_Amount_seg
+#print axioms E2eScal.Gen.pw_g3dec_Amount_seg_kind
+#print axioms E2eScal.Gen.pw_g3dec_Index_arg
+#print axioms E2eScal.Gen.pw_g3dec_Index_arg_kind
+#print axioms E2eScal.Gen.pw_g3dec_Index_call
+#print axioms E2eScal.Gen.pw_g3dec_Index_call_kind
+#print axioms E2eScal.Gen.pw_g3dec_WithdrawableEpoch_arg1
+#print axioms E2eScal.Gen.pw_g3dec_WithdrawableEpoch_arg1_kind
+#print axioms E2eScal.Gen.pw_g3dec_WithdrawableEpoch_arg2
+#print axioms E2eScal.Gen.pw_g3dec_WithdrawableEpoch_arg2_kind
+#print axioms E2eScal.Gen.pw_g3dec_WithdrawableEpoch_call
+#print axioms E2eScal.Gen.pw_g3dec_WithdrawableEpoch_call_kind
+#print axioms E2eScal.Gen3Ex.ad_dec_CommitteeIndex_arg
+#print axioms E2eScal.Gen3Ex.ad_dec_CommitteeIndex_arg_kind
+#print axioms E2eScal.Gen3Ex.ad_dec_CommitteeIndex_call
+#print axioms E2eScal.Gen3Ex.ad_dec_CommitteeIndex_call_kind
+#print axioms E2eScal.Gen3Ex.ad_dec_Slot_arg
+#print axioms E2eScal.Gen3Ex.ad_dec_Slot_arg_kind
+#print axioms E2eScal.Gen3Ex.ad_dec_Slot_call
+#print axioms E2eScal.Gen3Ex.ad_dec_Slot_call_kind
+#print axioms E2eScal.Gen3Ex.bh_dec_ProposerIndex_arg
+#print axioms E2eScal.Gen3Ex.bh_dec_ProposerIndex_arg_kind
+#print axioms E2eScal.Gen3Ex.bh_dec_ProposerIndex_call
+#print axioms E2eScal.Gen3Ex.bh_dec_ProposerIndex_call_kind
+#print axioms E2eScal.Gen3Ex.bh_dec_Slot_arg
+#print axioms E2eScal.Gen3Ex.bh_dec_Slot_arg_kind
+#print axioms E2eScal.Gen3Ex.bh_dec_Slot_call
+#print axioms E2eScal.Gen3Ex.bh_dec_Slot_call_kind
+#print axioms E2eScal.Gen3Ex.cp_dec_Epoch_arg
+#print axioms E2eScal.Gen3Ex.cp_dec_Epoch_arg_kind
+#print axioms E2eScal.Gen3Ex.cp_dec_Epoch_call
+#print axioms E2eScal.Gen3Ex.cp_dec_Epoch_call_kind
+#print axioms E2eScal.Gen3Ex.dd_dec_WithdrawalCredentials_seg
+#print axioms E2eScal.Gen3Ex.dd_dec_WithdrawalCredentials_seg_kind
+#print axioms E2eScal.Gen3Ex.pw_dec_Amount_seg
+#print axioms E2eScal.Gen3Ex.pw_dec_Amount_seg_kind
+#print axioms E2eScal.Gen3Ex.pw_dec_Index_arg
+#print axioms E2eScal.Gen3Ex.pw_dec_Index_arg_kind
+#print axioms E2eScal.Gen3Ex.pw_dec_Index_call
+#print axioms E2eScal.Gen3Ex.pw_dec_Index_call_kind
+#print axioms E2eScal.Gen3Ex.pw_dec_WithdrawableEpoch_arg1
+#print axioms E2eScal.Gen3Ex.pw_dec_WithdrawableEpoch_arg1_kind
+#print axioms E2eScal.Gen3Ex.pw_dec_WithdrawableEpoch_arg2
+#print axioms E2eScal.Gen3Ex.pw_dec_WithdrawableEpoch_arg2_kind
+#print axioms E2eScal.Gen3Ex.pw_dec_WithdrawableEpoch_call
+#print axioms E2eScal.Gen3Ex.pw_dec_WithdrawableEpoch_call_kind
+#print axioms E2eScal.H4.pw_e2e_accept_main
+#print axioms E2eScal.H4.pw_e2e_accept_main_g3
+#print axioms E2eScal.H4.pw_e2e_accept_main_g3_type
+#print axioms E2eScal.H4.pw_epi
+#print axioms E2eScal.H4.pw_head
+#print axioms E2eScal.H4.pwa_guard
+#print axioms E2eScal.H4.pwh_sp
+#print axioms E2eScal.WitPwA.P_len
+#print axioms E2eScal.WitPwA.hf1
+#print axioms E2eScal.WitPwA.hf110
+#print axioms E2eScal.WitPwA.hf173
+#print axioms E2eScal.WitPwA.hk1
+#print axioms E2eScal.WitPwA.hk110
+#print axioms E2eScal.WitPwA.hk173
+#print axioms E2eScal.WitPwA.prog_eq
+#print axioms E2eScal.WitPwA.pw_accept_runs
+#print axioms E2eScal.bi_accept_gc_kind
+#print axioms E2eScal.bi_accept_is_kind
+#print axioms E2eScal.bytes32dec_seg_nop_is_p32
+#print axioms E2eScal.bytes32dec_seg_nop_is_pad32
+#print axioms E2eScal.bytesDecHeadP_false
+#print axioms E2eScal.bytesDecHeadP_true
+#print axioms E2eScal.bytesDecHeadPad32_eq_nop
+#print axioms E2eScal.bytesDecSegKind_of_p
+#print axioms E2eScal.bytesdec_seg_p
+#print axioms E2eScal.bytesdec_seg_p_false_is_bytesdec_seg
+#print axioms E2eScal.bytesdec_seg_pad
+#print axioms E2eScal.callArgFirstKind_of
+#print axioms E2eScal.callArgLeaKind_of
+#print axioms E2eScal.callArgMovKind_of
+#print axioms E2eScal.callArgReloadKind_of
+#print axioms E2eScal.callDecSegKind_of
+#print axioms E2eScal.callarg_first_seg
+#print axioms E2eScal.callarg_lea_seg
+#print axioms E2eScal.callarg_mov_seg
+#print axioms E2eScal.callarg_reload_seg
+#print axioms E2eScal.calldec_seg
+#print axioms E2eScal.ciUAccC_eq
+#print axioms E2eScal.dd_accept_is_kind
+#print axioms E2eScal.dm_accept_gc_kind
+#print axioms E2eScal.dm_accept_is_kind
+#print axioms E2eScal.e1_accept_gc_kind
+#print axioms E2eScal.e1_accept_is_kind
+#print axioms E2eScal.epUAccC_eq
+#print axioms E2eScal.slUAccC_eq
+#print axioms E2eScal.u64DecRRSegKind_of
+#print axioms E2eScal.u64dec_rr_seg
+#print axioms E2eScal.viUAccC_eq
