@@ -1,0 +1,158 @@
+[
+ {
+  "id": "sm-accept-0",
+  "op": "sm_u",
+  "in": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "exp": {
+   "err": "",
+   "u64s": [
+    0,
+    0
+   ],
+   "bytes": [
+    "0000000000000000000000000000000000000000000000000000000000000000",
+    "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   ],
+   "lens": [
+    32,
+    96
+   ],
+   "caps": [
+    32,
+    96
+   ]
+  }
+ },
+ {
+  "id": "sm-accept-1",
+  "op": "sm_u",
+  "in": "efcdab8967452301000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f07000000000000006465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3",
+  "exp": {
+   "err": "",
+   "u64s": [
+    81985529216486895,
+    7
+   ],
+   "bytes": [
+    "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "6465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3"
+   ],
+   "lens": [
+    32,
+    96
+   ],
+   "caps": [
+    32,
+    96
+   ]
+  }
+ },
+ {
+  "id": "sm-accept-2",
+  "op": "sm_u",
+  "in": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "exp": {
+   "err": "",
+   "u64s": [
+    18446744073709551615,
+    18446744073709551615
+   ],
+   "bytes": [
+    "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   ],
+   "lens": [
+    32,
+    96
+   ],
+   "caps": [
+    32,
+    96
+   ]
+  }
+ },
+ {
+  "id": "sm-size-0",
+  "op": "sm_u",
+  "in": "",
+  "exp": {
+   "err_is_ErrSize": true
+  }
+ },
+ {
+  "id": "sm-size-143",
+  "op": "sm_u",
+  "in": "0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+  "exp": {
+   "err_is_ErrSize": true
+  }
+ },
+ {
+  "id": "sm-size-145",
+  "op": "sm_u",
+  "in": "01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+  "exp": {
+   "err_is_ErrSize": true
+  }
+ },
+ {
+  "id": "pc-accept-0",
+  "op": "pc_u",
+  "in": "00000000000000000000000000000000",
+  "exp": {
+   "err": "",
+   "u64s": [
+    0,
+    0
+   ]
+  }
+ },
+ {
+  "id": "pc-accept-1",
+  "op": "pc_u",
+  "in": "efcdab89674523011032547698badcfe",
+  "exp": {
+   "err": "",
+   "u64s": [
+    81985529216486895,
+    18364758544493064720
+   ]
+  }
+ },
+ {
+  "id": "pc-accept-2",
+  "op": "pc_u",
+  "in": "ffffffffffffffffffffffffffffffff",
+  "exp": {
+   "err": "",
+   "u64s": [
+    18446744073709551615,
+    18446744073709551615
+   ]
+  }
+ },
+ {
+  "id": "pc-size-0",
+  "op": "pc_u",
+  "in": "",
+  "exp": {
+   "err_is_ErrSize": true
+  }
+ },
+ {
+  "id": "pc-size-15",
+  "op": "pc_u",
+  "in": "010101010101010101010101010101",
+  "exp": {
+   "err_is_ErrSize": true
+  }
+ },
+ {
+  "id": "pc-size-17",
+  "op": "pc_u",
+  "in": "0101010101010101010101010101010101",
+  "exp": {
+   "err_is_ErrSize": true
+  }
+ }
+]

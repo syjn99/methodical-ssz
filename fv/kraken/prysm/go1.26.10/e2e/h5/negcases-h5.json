@@ -1,0 +1,355 @@
+[
+ {
+  "id": "sm-gen-control",
+  "module": "E2eScal/Gen3SmDecPartial.lean",
+  "theorem": "sm_g3dec_Signature_seg",
+  "kind": "control",
+  "code_def": "SmUnmarshal",
+  "code_ns": "E2eScal.H5Code",
+  "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
+ },
+ {
+  "id": "sm-gen-code-siglen",
+  "module": "E2eScal/Gen3SmDecPartial.lean",
+  "theorem": "sm_g3dec_Signature_seg",
+  "kind": "code",
+  "line": 123,
+  "old": "  mov $0x60,%ecx",
+  "new": "  mov $0x50,%ecx",
+  "code_def": "SmUnmarshal",
+  "code_ns": "E2eScal.H5Code",
+  "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
+ },
+ {
+  "id": "sm-gen-stmt-src",
+  "module": "E2eScal/Gen3SmDecPartial.lean",
+  "theorem": "sm_g3dec_Signature_seg",
+  "kind": "stmt",
+  "old": "(hSrc : bf + (48 : Int64).toBitVec = aSrc)",
+  "new": "(hSrc : bf + (40 : Int64).toBitVec = aSrc)"
+ },
+ {
+  "id": "sm-seg-control",
+  "module": "E2eScal/SmSeg.lean",
+  "theorem": "sm_vi_arg",
+  "kind": "control",
+  "code_def": "SmUnmarshal",
+  "code_ns": "E2eScal.H5Code",
+  "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
+ },
+ {
+  "id": "sm-seg-code-viadd",
+  "module": "E2eScal/SmSeg.lean",
+  "theorem": "sm_vi_arg",
+  "kind": "code",
+  "old": "  add $0x28,%rbx",
+  "new": "  add $0x20,%rbx",
+  "code_def": "SmUnmarshal",
+  "code_ns": "E2eScal.H5Code",
+  "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
+ },
+ {
+  "id": "sm-seg-stmt-vi",
+  "module": "E2eScal/SmSeg.lean",
+  "theorem": "sm_vi_arg",
+  "kind": "stmt",
+  "old": "(hSrc : bf + (40 : Int64).toBitVec = aSrc)",
+  "new": "(hSrc : bf + (32 : Int64).toBitVec = aSrc)"
+ },
+ {
+  "id": "sm-rax-control",
+  "module": "E2eScal/SmSeg.lean",
+  "theorem": "bytes32dec_seg_rax",
+  "kind": "control"
+ },
+ {
+  "id": "sm-rax-stmt-len",
+  "module": "E2eScal/SmSeg.lean",
+  "theorem": "bytes32dec_seg_rax",
+  "kind": "stmt",
+  "old": "⋆ Heap (avail - 32)\n          ⋆ Eq ((Int.toBytes 8 p.toInt).At aP) ⋆ Eq ((Int.toBytes 8 32).At aL)",
+  "new": "⋆ Heap (avail - 32)\n          ⋆ Eq ((Int.toBytes 8 p.toInt).At aP) ⋆ Eq ((Int.toBytes 8 0).At aL)"
+ },
+ {
+  "id": "sm-rej-control",
+  "module": "E2eScal/SmReject.lean",
+  "theorem": "sm_e2e_reject_size_main",
+  "kind": "control",
+  "code_def": "SmUnmarshal",
+  "code_ns": "E2eScal.H5Code",
+  "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
+ },
+ {
+  "id": "sm-rej-stmt",
+  "module": "E2eScal/SmReject.lean",
+  "theorem": "sm_e2e_reject_size_main",
+  "kind": "stmt",
+  "old": "st.data.regs.rbx = e1",
+  "new": "st.data.regs.rbx = e0"
+ },
+ {
+  "id": "sm-rej-code-size",
+  "module": "E2eScal/SmReject.lean",
+  "theorem": "sm_e2e_reject_size_main",
+  "kind": "code",
+  "old": "  cmp $0x90,%rcx",
+  "new": "  cmp $0x91,%rcx",
+  "code_def": "SmUnmarshal",
+  "code_ns": "E2eScal.H5Code",
+  "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
+ },
+ {
+  "id": "sm-spec-control",
+  "module": "E2eScal/SmSpec.lean",
+  "theorem": "psm_spec_accepts_iff",
+  "kind": "control"
+ },
+ {
+  "id": "sm-spec-stmt-size",
+  "module": "E2eScal/SmSpec.lean",
+  "theorem": "psm_spec_accepts_iff",
+  "kind": "stmt",
+  "old": "bs.size = 144",
+  "new": "bs.size = 145"
+ },
+ {
+  "id": "sm-deser-stmt-value",
+  "module": "E2eScal/SmSpec.lean",
+  "theorem": "prysmSmDesc_deserialize_checker",
+  "kind": "stmt",
+  "old": "deserialize smCheckerDesc bs = .ok v",
+  "new": "deserialize smCheckerDesc bs = .ok (.seq [])"
+ },
+ {
+  "id": "sm-ask-control",
+  "module": "E2eScal/SmSpecK.lean",
+  "theorem": "sm_e2e_accept_spec_k",
+  "kind": "control"
+ },
+ {
+  "id": "sm-ask-stmt-heap",
+  "module": "E2eScal/SmSpecK.lean",
+  "theorem": "sm_e2e_accept_spec_k",
+  "kind": "stmt",
+  "old": "⋆ Heap (avail - 128)",
+  "new": "⋆ Heap (avail - 96)"
+ },
+ {
+  "id": "sm-ask-stmt-swap",
+  "module": "E2eScal/SmSpecK.lean",
+  "theorem": "sm_e2e_accept_spec_k",
+  "kind": "stmt",
+  "old": "(uintBytes 8 g.validatorIndex.toNat).toList.At (s.regs.rax.toBitVec + 40)",
+  "new": "(uintBytes 8 g.slot.toNat).toList.At (s.regs.rax.toBitVec + 40)"
+ },
+ {
+  "id": "sm-ask-stmt-ret",
+  "module": "E2eScal/SmSpecK.lean",
+  "theorem": "sm_e2e_accept_spec_k",
+  "kind": "stmt",
+  "old": "(Host.addrOf (k + 141))",
+  "new": "(Host.addrOf (k + 140))"
+ },
+ {
+  "id": "sm-ask-stmt-weaken",
+  "module": "E2eScal/SmSpecK.lean",
+  "theorem": "sm_e2e_accept_spec_k",
+  "kind": "stmt",
+  "old": "(hav : 128 ≤ avail)",
+  "new": "(hav : True)"
+ },
+ {
+  "id": "sm-rc-stmt-size",
+  "module": "E2eScal/SmSpecK.lean",
+  "theorem": "sm_e2e_reject_complete",
+  "kind": "stmt",
+  "old": "bs.size ≠ 144 :=",
+  "new": "bs.size ≠ 143 :="
+ },
+ {
+  "id": "sm-wita-stmt-rax",
+  "module": "E2eScal/WitSmA.lean",
+  "theorem": "sm_accept_runs",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "sm-witr-stmt-len",
+  "module": "E2eScal/WitSmR.lean",
+  "theorem": "sm_reject_runs",
+  "kind": "stmt",
+  "old": "(hlen : len ≠ 144)",
+  "new": "(hlen : len ≠ 145)"
+ },
+ {
+  "id": "pc-gen-control",
+  "module": "E2eScal/Gen3PcDecPartial.lean",
+  "theorem": "pc_g3dec_SourceIndex_arg",
+  "kind": "control",
+  "code_def": "PcUnmarshal",
+  "code_ns": "E2eScal.H5Code",
+  "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pc-gen-code-off",
+  "module": "E2eScal/Gen3PcDecPartial.lean",
+  "theorem": "pc_g3dec_SourceIndex_arg",
+  "kind": "code",
+  "old": "  add $0x8,%rax",
+  "new": "  add $0x10,%rax",
+  "code_def": "PcUnmarshal",
+  "code_ns": "E2eScal.H5Code",
+  "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pc-gen-stmt-off",
+  "module": "E2eScal/Gen3PcDecPartial.lean",
+  "theorem": "pc_g3dec_SourceIndex_arg",
+  "kind": "stmt",
+  "old": "(hF : rcv + (8 : Int64).toBitVec = aF)",
+  "new": "(hF : rcv + (16 : Int64).toBitVec = aF)"
+ },
+ {
+  "id": "pc-nop-control",
+  "module": "E2eScal/PcAccept.lean",
+  "theorem": "calldec_nop_seg",
+  "kind": "control"
+ },
+ {
+  "id": "pc-nop-stmt-spill",
+  "module": "E2eScal/PcAccept.lean",
+  "theorem": "calldec_nop_seg",
+  "kind": "stmt",
+  "old": "(hS2 : sp + 8 = aS2)",
+  "new": "(hS2 : sp + 16 = aS2)"
+ },
+ {
+  "id": "pc-head-control",
+  "module": "E2eScal/PcAccept.lean",
+  "theorem": "pc_head",
+  "kind": "control",
+  "code_def": "PcUnmarshal",
+  "code_ns": "E2eScal.H5Code",
+  "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pc-head-code-order",
+  "module": "E2eScal/PcAccept.lean",
+  "theorem": "pc_head",
+  "kind": "code",
+  "old": "  mov %rdi,0x70(%rsp)",
+  "new": "  mov %rdi,0x68(%rsp)",
+  "code_def": "PcUnmarshal",
+  "code_ns": "E2eScal.H5Code",
+  "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pc-rej-control",
+  "module": "E2eScal/PcReject.lean",
+  "theorem": "pc_e2e_reject_size_main",
+  "kind": "control",
+  "code_def": "PcUnmarshal",
+  "code_ns": "E2eScal.H5Code",
+  "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pc-rej-stmt",
+  "module": "E2eScal/PcReject.lean",
+  "theorem": "pc_e2e_reject_size_main",
+  "kind": "stmt",
+  "old": "st.data.regs.rbx = e1",
+  "new": "st.data.regs.rbx = e0"
+ },
+ {
+  "id": "pc-rej-code-size",
+  "module": "E2eScal/PcReject.lean",
+  "theorem": "pc_e2e_reject_size_main",
+  "kind": "code",
+  "old": "  cmp $0x10,%rcx",
+  "new": "  cmp $0x18,%rcx",
+  "code_def": "PcUnmarshal",
+  "code_ns": "E2eScal.H5Code",
+  "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pc-spec-control",
+  "module": "E2eScal/PcSpec.lean",
+  "theorem": "ppc_spec_accepts_iff",
+  "kind": "control"
+ },
+ {
+  "id": "pc-spec-stmt-size",
+  "module": "E2eScal/PcSpec.lean",
+  "theorem": "ppc_spec_accepts_iff",
+  "kind": "stmt",
+  "old": "bs.size = 16",
+  "new": "bs.size = 24"
+ },
+ {
+  "id": "pc-deser-stmt-value",
+  "module": "E2eScal/PcSpec.lean",
+  "theorem": "prysmPcDesc_deserialize_checker",
+  "kind": "stmt",
+  "old": "deserialize pcCheckerDesc bs = .ok v",
+  "new": "deserialize pcCheckerDesc bs = .ok (.seq [])"
+ },
+ {
+  "id": "pc-ask-control",
+  "module": "E2eScal/PcSpecK.lean",
+  "theorem": "pc_e2e_accept_spec_k",
+  "kind": "control"
+ },
+ {
+  "id": "pc-ask-stmt-swap",
+  "module": "E2eScal/PcSpecK.lean",
+  "theorem": "pc_e2e_accept_spec_k",
+  "kind": "stmt",
+  "old": "(uintBytes 8 g.targetIndex.toNat).toList.At (s.regs.rax.toBitVec + 16)",
+  "new": "(uintBytes 8 g.sourceIndex.toNat).toList.At (s.regs.rax.toBitVec + 16)"
+ },
+ {
+  "id": "pc-ask-stmt-ret",
+  "module": "E2eScal/PcSpecK.lean",
+  "theorem": "pc_e2e_accept_spec_k",
+  "kind": "stmt",
+  "old": "(Host.addrOf (k + 56))",
+  "new": "(Host.addrOf (k + 55))"
+ },
+ {
+  "id": "pc-rc-stmt-size",
+  "module": "E2eScal/PcSpecK.lean",
+  "theorem": "pc_e2e_reject_complete",
+  "kind": "stmt",
+  "old": "bs.size ≠ 16 :=",
+  "new": "bs.size ≠ 15 :="
+ },
+ {
+  "id": "pc-wita-stmt-rax",
+  "module": "E2eScal/WitPcA.lean",
+  "theorem": "pc_accept_runs",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "pc-witr-stmt-len",
+  "module": "E2eScal/WitPcR.lean",
+  "theorem": "pc_reject_runs",
+  "kind": "stmt",
+  "old": "(hlen : len ≠ 16)",
+  "new": "(hlen : len ≠ 17)"
+ }
+]
