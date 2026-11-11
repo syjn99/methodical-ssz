@@ -5,8 +5,9 @@ Usage (one gated job, Lean env, cwd anywhere):
   lvnegative.py <cases.json> <work-dir> <result.json> [<case-id>...]
 It imports `negative.py` and uses its `cut`, `classify`, `precheck` and `main` unchanged. Two functions differ:
 * run_case: the LV main theorems state `theorem X : <frozen stmt def>`, and the stmt defs live in another module
-  (`StmtSa.lean`, `StmtSc.lean`). A case may name "stmt_module" (path under fv/kraken/lean). The mutant file then
-  inlines that module's body (its import is replaced by its own imports), so that the code rename
+  (`StmtSa.lean`, `StmtSc.lean`). A case may name "stmt_module" (path under fv/kraken/lean), or "inline", a list of
+  such modules in dependency order (review r1 S4: `Desc.lean` then `Defs.lean` for a Desc mutant). The mutant file then
+  inlines those modules' bodies (their imports are replaced by their own imports), so that the code rename
   `<code_def>` → `<code_def>Mut` also reaches the statement. A "stmt" case names "stmt_def" and mutates the text
   of that def (old → new, unique inside the def). "norm" is the .S path under fv/kraken; "code_ns" the namespace
   of the code constant (E2eList.Code).
@@ -63,12 +64,17 @@ def run_case(c, work):
     src = (LEAN / c["module"]).read_text()
     lines, _, _ = n.cut(src, c["theorem"])
     imps, body = split_imports("\n".join(lines))
-    if c.get("stmt_module"):
-        smod = c["stmt_module"].removesuffix(".lean").replace("/", ".")
-        simps, sbody = split_imports((LEAN / c["stmt_module"]).read_text())
-        imps = [l for l in imps if l.split()[1:] != [smod]]
-        imps = imps + [l for l in simps if l not in imps]
-        body = sbody + [""] + body
+    inl = c.get("inline", [c["stmt_module"]] if c.get("stmt_module") else [])
+    if inl:
+        names = {m.removesuffix(".lean").replace("/", ".") for m in inl}
+        pre_imps, pre_body = [], []
+        for m in inl:  # dependency order: earlier modules first
+            mi, mb = split_imports((LEAN / m).read_text())
+            pre_imps += [l for l in mi if l not in pre_imps]
+            pre_body += mb + [""]
+        imps = [l for l in pre_imps + imps if l.split()[1] not in names]
+        imps = list(dict.fromkeys(imps))
+        body = pre_body + body
     rest = "\n".join(body)
     diff = ""
     if c.get("code_def"):
