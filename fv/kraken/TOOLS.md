@@ -115,5 +115,10 @@ fv/kraken/link/build.sh          # ELF, objdump, nm, norm/*.S, data/*.data, buil
 - `REPORT.md` 152, 190, 211행 근처: 도구 사슬 활성화 경로 `/workspace/tooling/fv/...`가 있다(재현 절의 환경 경로).
 - `prysm/FINDINGS.md` 7절: 컨트롤러 파일의 절대 경로가 한 줄 있다.
 - 그 밖의 이전 파일(`gen/x5/x5run.py`, `memopt/` 기록 등). 아래 확인 명령의 출력이 전체 목록이다.
+- git 이력에만 있는 Python 바이트코드 두 개(리뷰 int-r2 S1, S2). 둘 다 `gen/e2e/__pycache__/negative.cpython-311.pyc`다.
+  첫째는 `094e51e`가 더하고 `ae1ea1a`가 지웠다. 둘째는 `ff81bc7`이 더하고 `a70492c`가 지웠다.
+  현재 트리에는 없다. 이력 재작성 없이는 지울 수 없고, 정책은 재작성을 금지한다.
+  비밀은 없다(리뷰 int-r2의 정규식 검사). 두 파일에는 작업 트리의 컨테이너 경로가 들어 있다.
+  공개 전 처리는 사용자가 정한다(int-r2 S1). `fv/kraken/.gitignore`가 이제 `__pycache__/`와 `*.pyc`를 무시한다.
 
 확인 명령: `git grep -nE "/workspace|fve2e-" -- fv/kraken ':!fv/kraken/lean/.lake'`.
