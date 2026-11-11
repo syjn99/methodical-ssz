@@ -5,27 +5,27 @@
   "Quot.sound",
   "propext"
  ],
- "declarations": 3464,
+ "declarations": 3483,
  "kinds": {
-  "theorem": 2906,
-  "def": 538,
+  "theorem": 2923,
+  "def": 540,
   "inductive": 6,
   "ctor": 8,
   "recursor": 6
  },
  "axiom_sets": {
   "propext": 233,
-  "-": 1040,
-  "Classical.choice,Quot.sound,propext": 732,
-  "Quot.sound,propext": 1459
+  "-": 1043,
+  "Classical.choice,Quot.sound,propext": 742,
+  "Quot.sound,propext": 1465
  },
- "theorems": 2906,
- "hand_list_names": 195,
+ "theorems": 2923,
+ "hand_list_names": 204,
  "hand_list_missing": [],
  "nonstandard": {},
  "sorryAx": [],
  "verdict": "PASS",
- "modules": 111,
+ "modules": 115,
  "precheck": {
   "argv": "lake build --no-build <modules>",
   "rc": 0,
