@@ -180,7 +180,7 @@ P2 encode in-sample — peak 1.83 GiB, no memcap kill).
   receiver in rax, interleaved). `--compose` refused both types: no generated whole proof exists for a hold-out type.
 - The development-set coverage above is in-sample; it did not transfer unchanged. Proposals P-H4-1..3 are not done.
 
-## GEN3 (unit G3-G; generator change after H4, development set only; not yet reviewed)
+## GEN3 (unit G3-G; generator change after H4, development set only; reviewed g3g-r1 APPROVE on `6dc0e2a`, the H5 method freeze)
 
 `scal/CONTAMINATION.md` §19. Lemmas: unit G3-L (`CallDec`, `KindCall`, `U64RR`, `SegNPad`, `KindAccept`).
 In-sample coverage only; no hold-out claim until H5.
@@ -216,3 +216,17 @@ In-sample coverage only; no hold-out claim until H5.
   nested-container fields, lists, bitfields, sizes other than 32 / 48 / 96, a `nop` elsewhere (also the
   observed tail `nop` of BeaconBlockHeader.ParentRoot / Checkpoint.Root, which `--compose` does not read),
   the offset-0 form with a `nop`, encoders; composed theorems with callee fields or frames other than `0x20`.
+- Review g3g-r1 (APPROVE, 0 must-fix; records added at integration INT5):
+  - "n/m covered" means the template directives of n fields are proved; it is not a decoder proof. The
+    first-field set-up form carries no SSZ offset parameter, and directives outside the template spans are not
+    read (S1). Take n/m from the exit code and `--summary`.
+  - Also not covered (S3): a plain `uint64` at SSZ offset 0 or Go offset 0 (`u64_find_gen3` refuses); the `lea`
+    set-up form needs the two-directive read of the IR field just before.
+  - The base-vs-head differential is byte-equal for every output; only the argparse usage text changed (it lists
+    `[--gen3]`) (S6). Checkpoint, reviewer run: 2/2 fields, `--compose` refuses (S5; no committed file).
+  - OPEN, not done (S2, checker change): require the coverage header for `--gen2` / `--gen3` files; strip string
+    literals in rule 6a. Until then `kindcheck.py` output is evidence only for a file byte-equal to a
+    regeneration (`regen_check.sh`).
+- Hold-out H5 (frozen at `6dc0e2a`; h5-r1 APPROVE): SyncCommitteeMessage 2/4, PendingConsolidation 1/2, both
+  near-in-sample by field kind; `--compose` refused both. Missed forms (proposals P-H5-1..3, not done): receiver
+  reloaded into rax in the 32-byte segment, call set-up with the receiver already in rax, padding `nop` after a call.

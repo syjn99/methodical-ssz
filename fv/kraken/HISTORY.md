@@ -290,3 +290,11 @@ Deposit_Data 합성 실행 1은 구문 오류였다. 원 출력은 기록으로 
 부정 시험 37/41, 공리 게이트 PASS, 선언 비교 ADDED 378개뿐, Go 차분 12/12다.
 원격에 쓰지 않았다. 기록: REPORT 11절, `scal/CONTAMINATION.md` 20절, `scal/RESULT.json`의 `H5`, FINDINGS SG-4.
 
+2026-11-11 통합 INT5(새 Opus 세션): `claude/ssz-fv-h5` `1fec11e`를 병합했다(`2bedf6d`, 충돌 없음).
+위 G3-G, H5 단락의 "리뷰 전", "아직 리뷰 없음"은 다음 리뷰로 대체한다. 그 단락은 고치지 않는다.
+g3l-r1, g3g-r1, h5-r1은 APPROVE, 필수 수정 0이다. 통합 INT4는 int4-r1이 APPROVE했다.
+H5 정정(리뷰 h5-r1 S1): 2/4와 1/2는 필드 종류로 보면 표본에 가까운 형의 결과다.
+H5 정정(S2): gate 작업은 77개다. 공유 gate 초는 315.0이다(작업 84, 85 포함).
+h5-r1 S6 기록: H5 커밋 넷은 type으로 `spec(...)`, 하나는 `test(link)`를 쓴다. 이력 재작성은 하지 않는다.
+병합 트리에서 빌드, 공리 게이트(선언 5841개), 선언 비교(차이 0), `regen_check.sh` 23/23 SAME을 다시 확인했다.
+`.lean`, 생성기, 검사기, 고정 버전은 바꾸지 않았다. 원격에 쓰지 않았다. 기록: REPORT 11절, `scal/RESULT.json`의 `integration_int5`.

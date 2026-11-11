@@ -1059,7 +1059,17 @@
     "link / Go differential / hardware checks",
     "independent review"
    ],
-   "wording": "development-set results are in-sample and are not transfer evidence"
+   "wording": "development-set results are in-sample and are not transfer evidence",
+   "review_g3l_r1": {
+    "what": "correction entry added at integration INT5; the values above are not rewritten",
+    "state_now": "reviewed: the words 'not yet reviewed' in state and 'independent review' in not_run are superseded by this entry",
+    "review": "g3l-r1 APPROVE on f5c5f528c29ccdfc9361a407c2790ea01c5b5c5d (fresh Fable 5.2 reviewer); 0 must-fix; should-fix S1-S5; Lean-level planted control caught (axioms gate FAIL, decl_drift CHANGED + ADDED)",
+    "S1": "closed by a note: '13 byte segments, 1 padding variant' holds for the head and middle of the segments only. A second nop position exists in the pointer tail (mov d(%rsp),%rY; nop; jmp L) of BeaconBlockHeader.ParentRoot (directives 113-115) and Checkpoint.Root (75-77): observed, not covered (bytesdec_seg_p ends before it; Compose.bytesDecTailA does not match it). gen/scal/README.md GEN3 not-covered list already names it (unit G3-G)",
+    "S2": "OPEN: pw_e2e_accept_main is elaborated under set_option maxHeartbeats 16000000 but elaborates at 4000000 (reviewer). Lowering it is a .lean edit; integration INT5 changes no .lean. No profiled cause is recorded for 16000000 on this theorem",
+    "S3": "OPEN: the negative suite has no statement mutant of pw_e2e_accept_main (control only). Not run at INT5 (no negatives at integration)",
+    "S4": "closed: unit G3-G added the GEN3 count row to BASELINE section 5 (5463), regenerated axioms-gate.json and extended gen/scal/AxiomsScal.lean (commit 76d8fe8, review g3g-r1); INT5 adds the pointer from the BASELINE H4 summary to the GEN3 row",
+    "S5": "closed by unit G3-G: kindcheck.py requires the line 'set_option maxHeartbeats 200000 in' before every decAcceptKind line (selftest cases g3c_heartbeats_raised, g3c_no_heartbeat_line), so a wrong parameter ends as a build timeout = FAIL"
+   }
   }
  },
  "contamination": {
@@ -1836,7 +1846,15 @@
    "negative cases",
    "x86-64 hardware",
    "independent review of INT4"
-  ]
+  ],
+  "review_int4_r1": {
+   "what": "correction entry added at integration INT5; the values above are not rewritten",
+   "state_now": "reviewed: 'independent review of INT4' in not_run is superseded by this entry",
+   "review": "int4-r1 APPROVE on 6a78c591e8bcd698b7b9313b1c09cb25f3986911 (fresh Fable 5.2 reviewer); 0 must-fix; should-fix S1-S3",
+   "S1": "closed at INT5: the 'INT4 not yet reviewed' texts are superseded by appended entries naming int4-r1 (REPORT 0 / 11, BASELINE pins and section 5, CONTAMINATION section 21, FINDINGS INT5 delta, this key)",
+   "S2": "closed at INT5 by a note: the INT4 FINDINGS delta did not say that the state cells of SG-2, SG-3 and OPT-R1 (current state) were edited in place; they were (FINDINGS INT5 delta)",
+   "S3": "note only: a stale local ref refs/remotes/offchainlabs/main exists with no such remote configured; older than INT4; untouched"
+  }
  },
  "gen3": {
   "what": "GEN3 unit G3-G: proof generator scalgen.py p2dec --gen3 (opt-in, implies --gen2) for the three SG-3 shapes with the G3-L lemmas; one run per development type; reuse demonstration; evidence. Development data only (in-sample); generator change after H4; no hold-out claim until H5",
@@ -1969,7 +1987,18 @@
    "Go differential",
    "x86-64 hardware"
   ],
-  "wording": "in-sample; no transfer, generality or speed claim"
+  "wording": "in-sample; no transfer, generality or speed claim",
+  "review_g3g_r1": {
+   "what": "correction entry added at integration INT5; the values above are not rewritten",
+   "state_now": "reviewed: the word 'not yet reviewed' in state is superseded by this entry",
+   "review": "g3g-r1 APPROVE on 6dc0e2a4cf6d37cddcea9e5aa3e8eea2f1e1fe76 (fresh Fable 5.2 reviewer; this SHA is the H5 method freeze); 0 must-fix; should-fix S1-S6",
+   "S1_coverage_meaning": "'n/m covered' means: the template directives of n fields are proved. It is not a decoder proof. The first-field set-up form carries no SSZ offset parameter ('buffer pointer unchanged' is the generator's reading of the 5 directives before), and directives outside the template spans are not read (reviewer input a32)",
+   "S2": "OPEN checker proposal (not implemented; checker change): kindcheck.py should require the coverage header for --gen2 / --gen3 files (reviewer input n29) and strip string literals in rule 6a (n26b); document k10 and n25. Today kindcheck output is evidence only for a file byte-equal to a regeneration (regen_check.sh)",
+   "S3_not_covered_additions": "not covered by --gen3: a plain uint64 at SSZ offset 0 or Go offset 0 (u64_find_gen3 refuses; a type whose first field is a plain uint64 loses that field); the lea set-up form needs the two-directive read of the IR field just before",
+   "S4_contamination_jobs": "closed by a note: CONTAMINATION section 19 cites worker job numbers 01 and 06 whose gate logs are not in the repository. The numbers are labels only; the repository evidence is the committed raw output and the regen_check.sh result",
+   "S5_checkpoint": "reviewer run (g3g-r1, not an INT5 run): p2dec --gen3 on Checkpoint covers 2/2 fields; --gen3 --compose refuses (callee field). Development type; in-sample; no committed file for it",
+   "S6_differential": "the base-vs-head differential is byte-equal for every output (stdout, stderr, partial and summary files, exit codes); the argparse usage text changed (it lists [--gen3]), so 2 of the reviewer's 54 inputs (usage errors, exit 2 in both) differ in the usage line only"
+  }
  },
  "H5": {
   "scope": "v1alpha1.SyncCommitteeMessage (class C) and v1alpha1.PendingConsolidation (class D), UnmarshalSSZ only; two types, one touch; both near-in-sample by field kind (H5-A3), new orders only",
@@ -2168,6 +2197,44 @@
    "x86-64 hardware",
    "independent review"
   ],
-  "limits": "two types, one touch; near-in-sample by kind, new orders only; no generality, superiority or speed claim; H4 history unchanged (PendingPartialWithdrawal 'not proved (bound)' stays the H4 record)"
+  "limits": "two types, one touch; near-in-sample by kind, new orders only; no generality, superiority or speed claim; H4 history unchanged (PendingPartialWithdrawal 'not proved (bound)' stays the H4 record)",
+  "review_h5_r1": {
+   "what": "correction entry added at integration INT5; the values above are not rewritten",
+   "state_now": "reviewed: 'not yet reviewed' in evaluator and 'independent review' in not_run are superseded by this entry",
+   "review": "h5-r1 APPROVE on 1fec11ef28e626cac0138d43114b39ceabceecf7 (fresh Fable 5.2 reviewer, not the curator, evaluator, a GEN2 / GEN3 author or an earlier reviewer); 0 must-fix; should-fix S1-S7; discipline verified (similarity filter recomputed, statements before the first of exactly four generator runs, raw outputs equal to the reviewer regeneration, freeze intact)",
+   "S1_near_in_sample": "REPORT section 0 now carries the near-in-sample-by-kind note where 2/4 and 1/2 are quoted",
+   "S2_gate_numbers": "gate_jobs 85 is the last job number; the gate has 77 exit records (numbers 33-40 unused). shared_gate_s 191.7 leaves out jobs 84 and 85 (124.0 s); from the gate records (reviewer): SyncCommitteeMessage 365.0, PendingConsolidation 261.4, shared 315.0, base build 19.7, total 961.1",
+   "S3_negatives_scope": "37/41: no mutant targets sm_e2e_accept_main or pc_e2e_accept_main; for PendingConsolidation the only counted accept-side statement mutant is the witness one (pc-wita-stmt-rax); the 4 heartbeat timeouts leave pc_e2e_accept_spec_k with no counted mutant",
+   "S4_docstrings": "OPEN (a .lean edit; INT5 changes no .lean): the docstrings of sm_e2e_reject_complete / pc_e2e_reject_complete say 'reaches the ssz.ErrSize site'. The theorems prove only: EthLib rejects -> size != N (144 / 16). The callee error returns are not excluded",
+   "S5_diagnostic_and_drift_control": "job 22 (scratch file, two examples of one address equation) was a reproduction AND an isolated check of the candidate fix (rsp.toNat < 2^64); not an attempt at the obligation. The evaluator's drift control was a text edit of the dump (tests decl_drift.py only); the reviewer ran the Lean-level planted control (weakened pc_e2e_reject_complete + a sorry theorem: axioms gate FAIL exit 1, decl_drift 1 CHANGED + 1 ADDED)",
+   "S6_commit_types": "four H5 commits use the type spec(...) and one test(link); fv/AGENTS.md lists spec and link as scopes; note only, no history rewrite",
+   "S7_holdout_record": "the A5 alternative pick is added to HOLDOUT-OPENED H5 (key review_h5_r1_correction)",
+   "not_verified_by_review": "Go differential not rerun; 29 of 41 negatives not rerun; cold build from an empty .lake; x86-64 hardware; morestack, writeBarrier != 0, callee error paths; runtime callee contracts; Kraken and EthLib; consensus-specs text compared from memory; IR go_fields trusted"
+  }
+ },
+ "integration_int5": {
+  "what": "merge of claude/ssz-fv-h5 at 1fec11e (GEN3 units G3-L, G3-G and the H5 hold-out evaluation, linear on 6a78c59) into claude/ssz-fv-prysm-e2e; integration and records only: no new proof text, no statement change, no generator or checker change",
+  "merge": "2bedf6dad53f82f57e9c0ebff18f4b9eb5d0e496 (--no-ff, no conflict); merged tree id = tree id of 1fec11e (8b59debb...), so every file equals the stream tip byte for byte",
+  "reviews": "g3l-r1 APPROVE (f5c5f52); g3g-r1 APPROVE (6dc0e2a, the H5 method freeze); h5-r1 APPROVE (1fec11e); int4-r1 APPROVE (6a78c59)",
+  "executed": {
+   "lake build E2e E2eAd E2eScal": "exit 0, 1060 jobs; built exactly 39 modules = the 39 new E2eScal .lean files of the stream; E2eScal.P2EncCp not rebuilt (.olean sha256 91e82a13... unchanged); peak 2.19 GiB per process under the 6 GiB cap (gate job 01)",
+   "lake build --no-build E2e E2eAd E2eScal": "exit 0, All targets up-to-date (1060 jobs) (job 02)",
+   "axioms gate": "PASS, 5841 declarations, 4826 theorems, 228 modules, hand list 582, non-standard 0, sorryAx 0 (job 03, scratch JSON); byte-identical to the committed prysm/go1.26.10/e2e/axioms-gate.json, so the record is not rewritten",
+   "decl drift": "decl_drift.py h5-r1 reviewer dump vs merged dump: 0 CHANGED, 0 REMOVED, 0 ADDED (the two dumps are byte-identical)",
+   "planted control": "dump level only: one type hash of E2eScal.H5.pc_e2e_reject_complete changed in a copy of the merged dump: decl_drift exit 1, 1 CHANGED. No Lean-level planted control at INT5 (g3l-r1, g3g-r1 and h5-r1 each ran one)",
+   "regen_check.sh": "SAME for 23 generator commands, two scratch runs each: the 16 INT4 commands, the 5 GEN3 gen.sh commands (Gen3PwDec, Gen3DdDec, Gen3BhDec, Gen3AdDecPartial, Gen3DdAccept2) and the 2 H5 (S) partial outputs (Gen3SmDecPartial, Gen3PcDecPartial; generator exit 3 mapped to 0 by || [ $? -eq 3 ]) (job 06). An integration regen check into scratch; it is not an H5 run and not part of the H5 one-run rule. The H5 (C) refusals (no output file) were not regenerated at INT5 (h5-r1 did)",
+   "kindcheck.py --selftest": "PASS, 114 cases + 4 exit-code cases (job 07)",
+   "p2dec_test.py": "88/88 as expected (job 08)"
+  },
+  "gate_s": 206.5,
+  "not_run": [
+   "cold build from an empty .lake",
+   "Lean-level planted control",
+   "link check",
+   "Go differential and go test",
+   "negative cases",
+   "x86-64 hardware",
+   "independent review of INT5"
+  ]
  }
 }

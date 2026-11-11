@@ -26,8 +26,13 @@ SG-1 확장은 두 홀드아웃을 연 뒤의 개발 작업이다. 그 확장에
 홀드아웃 H4(Deposit_Data, PendingPartialWithdrawal의 `UnmarshalSSZ`)의 결과는 `scal/RESULT.json`의 `H4`에 있다(11절).
 리뷰 h4-r1이 H4 `fae7d6f`를 승인했다. 필수 수정 0, 고칠 항목 7이다.
 GEN2 단위의 리뷰: g2l-r1 APPROVE, g2g-r1 REQUEST_CHANGES(문서만, G2-F가 닫음), g2f-r1 APPROVE다.
-GEN2와 H4는 통합 INT4에서 병합했다(`56e0c88`). 통합 INT4 자체의 리뷰는 아직 없다.
-홀드아웃 H5(SyncCommitteeMessage 2/4, PendingConsolidation 1/2, 합성 거부; 수용 정리는 손 합성으로 증명)는 11절에 있다. 아직 리뷰 없음.
+GEN2와 H4는 통합 INT4에서 병합했다(`56e0c88`). 리뷰 int4-r1이 통합 INT4(`6a78c59`)를 승인했다.
+홀드아웃 H5(SyncCommitteeMessage 2/4, PendingConsolidation 1/2, 합성 거부; 수용 정리는 손 합성으로 증명)는 11절에 있다.
+두 H5 형은 필드 종류로 보면 표본에 가깝다. 2/4와 1/2는 그런 형의 결과다(리뷰 h5-r1 S1).
+리뷰 h5-r1이 H5 `1fec11e`를 승인했다. 필수 수정 0, 고칠 항목 7이다.
+GEN3 단위의 리뷰: g3l-r1 APPROVE(`f5c5f52`), g3g-r1 APPROVE(`6dc0e2a`, H5 방법 고정)다.
+GEN3와 H5는 통합 INT5에서 병합했다(`2bedf6d`). 통합 INT5 자체의 리뷰는 아직 없다.
+H5에서 GEN3의 개발 자료 결과는 그대로 옮겨지지 않았다(11절).
 H4에서 GEN2의 개발 자료 결과는 그대로 옮겨지지 않았다(11절).
 BeaconBlockHeader 인코더는 빠른 경로와 길이 거부 세 곳을 증명했다. 길이 거부의 전제는 `len + 112 ≤ cap`이다(11절).
 `Eth1Data.MarshalSSZTo`는 빠른 경로만 증명했다(11절, ENC 스트림). 리뷰 enc-r1이 ENC `ad15fbc`를 승인했다.
@@ -603,7 +608,7 @@ H4의 한계: 두 형, 한 번이다. 일반성, 우월성, 속도 주장은 없
 h4-r1이 확인하지 않은 것: Go 차분, 부정 시험 32건 중 20건, 빈 `.lake`의 콜드 빌드, x86-64, 런타임 계약.
 기록: `scal/CONTAMINATION.md` 16절과 17절, `scal/RESULT.json`의 `H4`, FINDINGS SG-3.
 
-통합 INT4(`claude/ssz-fv-h4` `fae7d6f`를 병합, 병합 커밋 `56e0c88`; 아직 리뷰 없음):
+통합 INT4(`claude/ssz-fv-h4` `fae7d6f`를 병합, 병합 커밋 `56e0c88`; 리뷰 int4-r1 APPROVE, `6a78c59`):
 병합 트리 id는 `fae7d6f`의 트리 id와 같다. 증명 글, 문장, 생성기, 검사기는 바꾸지 않았다.
 실행 검사(gate와 6 GiB 상한 안): `lake build E2e E2eAd E2eScal` 종료 0, 새 모듈 35개만 빌드했다.
 `E2eScal.P2EncCp`는 다시 빌드하지 않았다. `lake build --no-build` 종료 0이다.
@@ -613,8 +618,9 @@ h4-r1 덤프 대비 선언 비교: CHANGED 0, REMOVED 0, ADDED 0이다. 덤프 �
 `kindcheck.py --selftest` 70건 PASS, `p2dec_test.py` 51/51이다.
 실행하지 않은 것(통합자): Lean 수준 심은 대조, 콜드 빌드, 링크 검사, Go 차분, 부정 시험, x86-64.
 기록: `scal/RESULT.json`의 `integration_int4`.
+리뷰 int4-r1: 필수 수정 0, 고칠 항목 S1–S3이다. S1, S2는 INT5에서 문서로 닫았다. S3은 기록뿐이다.
 
-GEN3 단위 G3-G(기준 `f5c5f52`, 증명 생성기 변경, 개발 자료만; 아직 리뷰 없음):
+GEN3 단위 G3-G(기준 `f5c5f52`, 증명 생성기 변경, 개발 자료만; 리뷰 g3g-r1 APPROVE, `6dc0e2a`):
 `scalgen.py p2dec --gen3`가 G3-L 보조정리의 세 꼴을 낸다. 기본 모드와 `--gen2` 출력은 그대로다.
 세 꼴: 증명된 명세가 있는 피호출 디코더의 호출 필드, 두 지시어 uint64 읽기, makeslice 앞 패딩 `nop`.
 표본 안 덮음: PendingPartialWithdrawal 3/3, Deposit_Data 4/4, BeaconBlockHeader 5/5, AttestationData 3/5이다.
@@ -631,8 +637,19 @@ GEN3 보조정리 모듈(손으로 한 번 씀)은 905줄이다. 속도 주장�
 부정 시험 17/17(대조 4, 정리 안 실패 13, 시간 초과 0)이다. 공리 게이트 PASS, 선언 5463개, 비표준 0이다.
 int4-r1 덤프 대비 선언 비교는 ADDED 456뿐이다. 심은 대조는 잡혔다. `lake build --no-build` 종료 0이다.
 실행하지 않은 것: 콜드 빌드, 링크 검사, Go 차분, x86-64. 기록: CONTAMINATION 19절, `scal/RESULT.json`의 `gen3`.
+리뷰 g3g-r1: 필수 수정 0, 고칠 항목 S1–S6이다. 문서 항목은 INT5에서 닫았다(`gen3.review_g3g_r1`).
+"n/m 덮음"은 n개 필드의 템플릿 지시어를 증명했다는 뜻이다. 디코더 증명이 아니다(S1).
+첫 필드 인자 꼴에는 SSZ 오프셋 매개변수가 없다. 템플릿 구간 밖의 지시어는 읽지 않는다.
+더 덮지 않는 꼴(S3): 오프셋 0의 일반 uint64, 앞 필드의 두 지시어 읽기가 없는 `lea` 꼴.
+차분은 모든 출력에서 바이트가 같다. 사용법 글만 `[--gen3]`이 더해져 달라졌다(S6).
+Checkpoint는 리뷰어 실행에서 2/2, 합성 거부다(S5). 커밋된 파일은 없다.
+S2(`kindcheck.py`가 덮음 머리를 요구하고 규칙 6a에서 문자열을 뺀다)는 검사기 변경이다. 열린 제안으로 남는다.
+리뷰 g3l-r1(G3-L, `f5c5f52`): APPROVE, 필수 수정 0, 고칠 항목 S1–S5다.
+S1: 포인터 꼬리의 `nop`(BeaconBlockHeader.ParentRoot, Checkpoint.Root)은 관측했고 덮지 않는다. S4, S5는 G3-G가 닫았다.
+열림: S2 `pw_e2e_accept_main`의 `maxHeartbeats 16000000`(4000000에서 정교화된다). S3 그 정리의 문장 변이가 없다.
+둘 다 `.lean` 수정이나 부정 시험이 필요하다. 통합에서 하지 않았다.
 
-홀드아웃 H5(방법 고정 `6dc0e2a`, 연 기록 커밋 `3762644`, 2026-11-11T11:25:14Z; 아직 리뷰 없음):
+홀드아웃 H5(방법 고정 `6dc0e2a`, 연 기록 커밋 `3762644`, 2026-11-11T11:25:14Z; 리뷰 h5-r1 APPROVE, `1fec11e`):
 형은 SyncCommitteeMessage(C)와 PendingConsolidation(D)의 `UnmarshalSSZ`다. 두 형, 한 번이다.
 두 형은 필드 종류로 보면 표본에 가깝다(H5-A3). 새것은 종류의 순서뿐이다.
 손 Desc(`08adf1d`)와 손 문장 `H5.sm_accept_stmt`, `H5.pc_accept_stmt`(`3c4625c`)는 생성기 실행 전에 커밋했다.
@@ -652,13 +669,33 @@ TargetIndex는 호출 뒤 `nop`이 있다. 원 출력은 손대지 않았다. `k
 참고(인과 주장 없음, 다른 형): H4 Deposit_Data 336(문장 112 별도), H3 210과 464(문장 포함), GEN3 PwAcceptG3 87.
 실행 검사: 링크 검사 PASS(묶음 `d532fc57`). 부정 시험 37/41(대조 12, 정리 안 실패 25)이다.
 4건은 하트비트 시간 초과로 끝났다(spec_k 사후조건 변이). 통과로 세지 않는다.
+어느 변이도 `sm_e2e_accept_main`, `pc_e2e_accept_main`을 겨누지 않는다(리뷰 h5-r1 S3).
+시간 초과 4건 때문에 `pc_e2e_accept_spec_k`에는 센 변이가 없다.
 공리 게이트 PASS, 선언 5841개, 비표준 0이다. g3g-r1 덤프 대비 선언 비교는 ADDED 378뿐이다. 심은 대조는 잡혔다.
+평가자의 심은 대조는 덤프 글 수정이었다. Lean 수준의 심은 대조는 리뷰 h5-r1이 돌렸다(S5).
 Go 차분 12/12(Go 의미론, linux/arm64, ELF 아님)이다. 심은 대조는 불일치 2다.
 증명하지 않은 것: 호출 대상 오류 경로, morestack, `writeBarrier ≠ 0`, Lean Go 값 술어, spec_k의 `Pm` 증인, x86-64.
+`*_reject_complete`는 "EthLib 거부 → 크기 ≠ N"만 증명한다(N = 144, 16).
+그 문서 주석의 "`ssz.ErrSize` 자리에 닿는다"는 정리보다 많이 말한다(S4). `.lean` 수정이라 열림으로 둔다.
 시도: SyncCommitteeMessage 수용 정리 3회(마지막 성공), SmSeg 2회, 거부 2회, 나머지 1회다. 한도에 닿지 않았다.
-게이트 초: SyncCommitteeMessage 364.6, PendingConsolidation 262.3, 공유 191.7, 기본 빌드 20.3이다.
+작업 22는 재현과 함께 후보 수정을 따로 시험했다. 의무 자체의 시도는 아니다(S5).
+게이트 초(gate 기록, 리뷰 h5-r1 S2): SyncCommitteeMessage 365.0, PendingConsolidation 261.4, 공유 315.0, 기본 빌드 19.7이다.
+합계 961.1초, gate 작업 77개다. 평가자의 공유 191.7은 작업 84, 85를 뺐다.
 한계: 두 형, 한 번이다. 일반성, 우월성, 속도 주장은 없다. H4 기록은 바꾸지 않았다.
 기록: `scal/CONTAMINATION.md` 20절, `scal/RESULT.json`의 `H5`, FINDINGS SG-4.
+리뷰 h5-r1: 필수 수정 0, 고칠 항목 S1–S7이다. S4를 뺀 여섯은 INT5에서 문서로 닫았다(`H5.review_h5_r1`).
+h5-r1이 확인하지 않은 것: Go 차분, 부정 시험 41건 중 29건, 빈 `.lake`의 콜드 빌드, x86-64, 런타임 계약.
+
+통합 INT5(`claude/ssz-fv-h5` `1fec11e`를 병합, 병합 커밋 `2bedf6d`; 아직 리뷰 없음):
+병합 트리 id는 `1fec11e`의 트리 id와 같다. 증명 글, 문장, 생성기, 검사기는 바꾸지 않았다.
+실행 검사(gate와 6 GiB 상한 안): `lake build E2e E2eAd E2eScal` 종료 0, 새 모듈 39개만 빌드했다.
+`E2eScal.P2EncCp`는 다시 빌드하지 않았다. `lake build --no-build` 종료 0이다.
+공리 게이트 PASS, 선언 5841개다. 출력은 커밋된 `axioms-gate.json`과 바이트가 같다.
+h5-r1 덤프 대비 선언 비교: CHANGED 0, REMOVED 0, ADDED 0이다. 덤프 수준의 심은 대조를 잡았다(종료 1).
+`regen_check.sh` 23/23 SAME(INT4의 16, GEN3 5, H5 부분 출력 2)이다. H5 실행이 아니고 통합 검사다.
+`kindcheck.py --selftest` 114건과 종료 코드 4건 PASS, `p2dec_test.py` 88/88이다.
+실행하지 않은 것(통합자): Lean 수준 심은 대조, 콜드 빌드, 링크 검사, Go 차분, 부정 시험, x86-64.
+기록: `scal/RESULT.json`의 `integration_int5`. 홀드아웃 연속 결과의 표는 `prysm/BASELINE.md` 4절에 있다.
 
 조건:
 
