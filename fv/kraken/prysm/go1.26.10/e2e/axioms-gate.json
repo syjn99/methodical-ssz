@@ -5,9 +5,9 @@
   "Quot.sound",
   "propext"
  ],
- "declarations": 4720,
+ "declarations": 4726,
  "kinds": {
-  "theorem": 3994,
+  "theorem": 4000,
   "def": 700,
   "inductive": 8,
   "ctor": 10,
@@ -16,16 +16,16 @@
  "axiom_sets": {
   "propext": 271,
   "-": 1246,
-  "Classical.choice,Quot.sound,propext": 1056,
+  "Classical.choice,Quot.sound,propext": 1062,
   "Quot.sound,propext": 2147
  },
- "theorems": 3994,
- "hand_list_names": 391,
+ "theorems": 4000,
+ "hand_list_names": 397,
  "hand_list_missing": [],
  "nonstandard": {},
  "sorryAx": [],
  "verdict": "PASS",
- "modules": 170,
+ "modules": 171,
  "precheck": {
   "argv": "lake build --no-build <modules>",
   "rc": 0,

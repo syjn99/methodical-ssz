@@ -50,6 +50,7 @@ import E2eScal.DmAcceptG2
 import E2eScal.Gen2BiAccept
 import E2eScal.Gen2DmAccept
 import E2eScal.Gen2E1Accept
+import E2eScal.Gen2BhDecPartial
 
 -- prysm-e2e scalability stage S1-S2 (INBOX 011): the segment lemmas, the in-sample re-derivations, the
 -- statement-identity checks and the generated instances. Checked with gen/e2e/axioms.py <log> <out> <this file>.
@@ -343,3 +344,10 @@ import E2eScal.Gen2E1Accept
 #print axioms E2eScal.Gen.e1_g2dec_DepositCount_seg_kind
 #print axioms E2eScal.Gen.e1_g2dec_DepositRoot_seg
 #print axioms E2eScal.Gen.e1_g2dec_DepositRoot_seg_kind
+-- GEN2 unit G2-F (raw p2dec --gen2 --partial-out output for BeaconBlockHeader, 3 of 5 fields)
+#print axioms E2eScal.Gen.bh_g2dec_BodyRoot_seg
+#print axioms E2eScal.Gen.bh_g2dec_BodyRoot_seg_kind
+#print axioms E2eScal.Gen.bh_g2dec_ParentRoot_seg
+#print axioms E2eScal.Gen.bh_g2dec_ParentRoot_seg_kind
+#print axioms E2eScal.Gen.bh_g2dec_StateRoot_seg
+#print axioms E2eScal.Gen.bh_g2dec_StateRoot_seg_kind
