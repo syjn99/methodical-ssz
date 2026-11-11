@@ -259,3 +259,14 @@
 - 로그 115, 116: exit 0. 로그 117: `lake build E2eList` exit 0, 705 jobs. 로그 118: `--no-build E2e E2eAd E2eScal E2eList` exit 0, 1048 jobs.
 - `StmtIa.lean`의 문장 글은 scratch 생성 스크립트로 썼다(같은 프레임 글을 반복하지 않게). 스크립트는 커밋하지 않았다. 결과 Lean 파일이 문장이다.
 - 새 파일에 `sorry`, `admit`, `axiom`, `native_decide`, `bv_decide`, `maxHeartbeats`, `maxRecDepth`가 없다(`grep` exit 1).
+
+## T3 증명
+
+### U1: P1 `ia_e2e_reject_size_main`, P2 `ia_e2e_reject_offset_main` (시도 1)
+
+- 로그 119–123: 한 전략의 개발 단계다. 막힌 곳 셋.
+- 1. `simp only [E2e.errSize_addr_eq] at … ⊢`와 `simp only [UInt64.size] at *`가 재귀 한도에 닿았다. 목표와 `hk`를 건드리지 않게 바꿨다(`dsimp only`, 이름 붙인 가설에만 `simp`).
+- 2. `kat`의 `simp`가 279개 지시어의 프로그램 글자(`IaUnmarshal`)를 펼치며 기본 `maxRecDepth`(512)에서 멈춘다(로그 123, 첫 `kat`).
+- 측정(로그 124): 1024, 2048, 4096 모두 그 오류가 사라졌다. 남은 오류는 P2의 미완성 가지뿐이었다. 그래서 값은 1024다. 두 정리 각각에 `set_option maxRecDepth 1024 in`을 두고 옆에 원인을 적었다.
+- 3. P2의 `jne` 안 갈림 가지: 32비트 값 `ofInt 32 (ofBytes off)`가 228이면 `off = iaOff`다. `toBytes_ofInt_ofBytes`와 `isLt`로 닫았다(로그 125–127은 이름과 산술 정리의 개발 단계).
+- 로그 128: `lake build E2eList.IaReject` exit 0.
