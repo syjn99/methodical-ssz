@@ -18,6 +18,8 @@ Checks, per file (text only):
     `t_kind` whose whole header is
         theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.u64DecAcceptKind h C := by
     or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.rootDecSegKind h C n1 … n9 := by
+    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.rootDecSegZKind h C n1 … n8 := by
+        (SG-1 offset-0 kind; only when `lean/E2eScal/KindZ.lean` has the pinned blob KINDZ_BLOB)
     with C the code constant of `t`'s `hk : C.IsInfixAt Host.prog k` binder and n1..n9 natural literals,
     and the next line is exactly `  intro h; with_reducible rfl`.
  5. Every `_kind` theorem belongs to a theorem of the file; every `_same` theorem has the form
@@ -38,6 +40,8 @@ HERE = pathlib.Path(__file__).resolve().parent
 KR = HERE.parent.parent
 KIND = KR / "lean" / "E2eScal" / "Kind.lean"
 KIND_BLOB = "3c9b95b1b37036831527396975d4232cc20174f3"  # method freeze 56dfc27 (INBOX 019)
+KINDZ = KR / "lean" / "E2eScal" / "KindZ.lean"
+KINDZ_BLOB = "0c790fa1882cd2e91419c285f66de0810c2b85e2"  # SG-1 extension (after both hold-outs were opened)
 
 TOP_OK = re.compile(r"^(import |open |variable |namespace |end\b|set_option \S+ \S+ in$|theorem |/-|--|$|\s)")
 BANNED = re.compile(r"\b(sorry|admit|native_decide|bv_decide|axiom)\b")
@@ -50,7 +54,7 @@ def blob(path):
     return subprocess.run(["git", "hash-object", str(path)], capture_output=True, text=True, check=True).stdout.strip()
 
 
-def check_text(text, kind_blob):
+def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB):
     errs = []
     if kind_blob != KIND_BLOB:
         errs.append(f"Kind.lean blob {kind_blob} != frozen {KIND_BLOB}")
@@ -89,9 +93,12 @@ def check_text(text, kind_blob):
             continue
         j = pos[t + "_kind"]
         want = (rf"theorem {re.escape(t)}_kind : ∀ \(h : Host\), type_of% \(@{re.escape(t)} h\) = "
-                rf"@E2eScal\.(u64DecAcceptKind h {C}|rootDecSegKind h {C}(?: {NAT}){{9}}) := by")
+                rf"@E2eScal\.(u64DecAcceptKind h {C}|rootDecSegKind h {C}(?: {NAT}){{9}}"
+                rf"|rootDecSegZKind h {C}(?: {NAT}){{8}}) := by")
         if not re.fullmatch(want, lines[j]):
             errs.append(f"{t}_kind: header is not a frozen kind: {lines[j][:160]}")
+        elif "@E2eScal.rootDecSegZKind " in lines[j] and kindz_blob != KINDZ_BLOB:
+            errs.append(f"{t}_kind: KindZ.lean blob {kindz_blob} != pinned {KINDZ_BLOB}")
         if j + 1 >= len(lines) or lines[j + 1] != "  intro h; with_reducible rfl":
             errs.append(f"{t}_kind: proof line is not `  intro h; with_reducible rfl`")
     for n in names:
@@ -106,14 +113,16 @@ def check_text(text, kind_blob):
 
 def main(files):
     kb = blob(KIND)
+    kzb = blob(KINDZ) if KINDZ.exists() else "missing"
     bad = 0
     for f in files:
-        errs, mains = check_text(pathlib.Path(f).read_text(), kb)
+        errs, mains = check_text(pathlib.Path(f).read_text(), kb, kzb)
         print(("PASS" if not errs else "FAIL"), f, "theorems:", ",".join(mains))
         for e in errs:
             print("  ", e)
         bad |= bool(errs)
     print("Kind.lean blob", kb, "frozen" if kb == KIND_BLOB else "NOT FROZEN")
+    print("KindZ.lean blob", kzb, "pinned" if kzb == KINDZ_BLOB else "NOT PINNED")
     return 1 if bad else 0
 
 
@@ -141,6 +150,12 @@ theorem s (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh B
 theorem s_kind : ∀ (h : Host), type_of% (@s h) = @E2eScal.rootDecSegKind h BhUnmarshal 86 100 128 136 104 24 32 40 16 := by
   intro h; with_reducible rfl
 
+theorem z (k : Nat) (hk : E1Unmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh E1Unmarshal k) :
+    Z := by
+  with_reducible exact baz
+theorem z_kind : ∀ (h : Host), type_of% (@z h) = @E2eScal.rootDecSegZKind h E1Unmarshal 13 26 48 56 24 8 16 24 := by
+  intro h; with_reducible rfl
+
 theorem t_same : @E2eAd.x = @t := rfl
 
 end E2eScal.Gen
@@ -165,9 +180,23 @@ def selftest():
         ("same_not_identity", GOOD.replace("@E2eAd.x = @t := rfl", "True := trivial"), K, False),
         ("orphan_kind", GOOD + "theorem q_kind : True := trivial\n", K, False),
     ]
+    # SG-1 offset-0 kind (rootDecSegZKind, 8 parameters, KindZ.lean pinned); the 5th field: KindZ blob pinned?
+    zk = "= @E2eScal.rootDecSegZKind h E1Unmarshal 13 26 48 56 24 8 16 24 := by"
+    assert zk in GOOD
+    nz = GOOD.split("theorem z (k")[0] + "theorem t_same" + GOOD.split("theorem t_same")[1]
+    cases = [c + (True,) for c in cases] + [
+        ("z_degenerate_rhs_self", GOOD.replace(zk, "= type_of% (@z h) := by"), K, False, True),
+        ("z_degenerate_rhs_true", GOOD.replace(zk, "= True := by"), K, False, True),
+        ("z_nine_params", GOOD.replace(zk, zk.replace(" 16 24 :=", " 16 24 0 :=")), K, False, True),
+        ("z_seven_params", GOOD.replace(zk, zk.replace(" 16 24 :=", " 16 :=")), K, False, True),
+        ("z_other_const", GOOD.replace(zk, zk.replace("E1Unmarshal", "BhUnmarshal")), K, False, True),
+        ("z_as_add_kind", GOOD.replace(zk, zk.replace("rootDecSegZKind", "rootDecSegKind")), K, False, True),
+        ("z_kindz_blob_changed", GOOD, K, False, False),
+        ("no_z_kindz_blob_not_needed", nz, K, True, False),
+    ]
     bad = []
-    for name, text, kb, ok in cases:
-        errs, _ = check_text(text, kb)
+    for name, text, kb, ok, zpin in cases:
+        errs, _ = check_text(text, kb, KINDZ_BLOB if zpin else "0" * 40)
         if (not errs) != ok:
             bad.append((name, errs))
     print("selftest", "PASS" if not bad else f"FAIL {bad}", f"({len(cases)} cases)")
