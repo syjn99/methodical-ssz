@@ -90,7 +90,13 @@ GEN4 cases (unit G4-G, `p2dec --gen4`; ids `g4-*`; mutated `.S` / IR copies in <
    block entry being established (a05, a15, a29, a31, b05: an 8-byte stack store overlapping a tracked slot; b01, b02:
    head not the `decpro_seg` prologue) and b03 must be refused; a41 (extra head `nop`) is a head miss of class
    padding; a13 (wrong source offset) class other; stores to the return-address slot or below rsp, writes to r14 /
-   rbp refused; the eleven valid variants (a08, a14, a16, a19, a21, a27, a34, a35, a38, b04, b06) stay covered.
+   rbp refused; the ten valid variants (a08, a14, a16, a19, a21, a27, a35, a38, b04, b06) stay covered. a34 (a
+   store after the last field event) is refused since unit G4-F2 (epilogue rule, exit 2).
+ - g4f2-*: unit G4-F2, the inputs of review g4f-r1 and the systematic pass. The head size immediate must equal the IR
+   SSZ fixed size (c34, d15, d16: exit 2, class other); a callee that is not the IR field's overlay type is refused
+   (ValidatorIndex field calling Epoch.UnmarshalSSZ and the reverse); after the last field event only the plain return
+   (`mov d(%rsp),%rax|%rbx`, `xor`, nops, labels, forward jmp, `add $F,%rsp; pop %rbp; retq`) is accepted: a store, a
+   call or a wrong frame size there gives exit 2 with every field `reached` and not covered; a nop there stays covered.
    Every `--gen4` case also checks the summary flag `reached` (true up to the first uncovered field, false after it,
    false for every field on a head miss); on exit 2 the summary lists every field.
 """
@@ -915,8 +921,8 @@ G4F_MUT = [
     ("g4f-a21", "rcx = 16 - 8", "SM", rv([(88, "mov $0x8,%ecx", ["mov $0x10,%ecx", "add $-0x8,%rcx"])]), None, 0, SMF, None),
     ("g4f-a27", "DepositCount value moved through rcx", "E1",
      rv([(50, "mov %rsi,0x20(%rdx)", ["mov %rsi,%rcx", "nop", "mov %rcx,0x20(%rdx)"])]), None, 0, E1F, None),
-    ("g4f-a34", "store after the last field event (LIMIT: not examined)", "E1",
-     rv([(87, "xor %eax,%eax", ("before", ["mov %rsi,0x20(%rdx)"]))]), None, 0, E1F, None),
+    ("g4f-a34", "store after the last field event (G4-F2: epilogue rule, refused)", "E1",
+     rv([(87, "xor %eax,%eax", ("before", ["mov %rsi,0x20(%rdx)"]))]), None, 2, [], "other"),
     ("g4f-a35", "buffer reloaded from sp + 8 after the call", "PC",
      rv([(49, "mov 0x60(%rsp),%rbx", "mov 0x8(%rsp),%rbx")]), None, 0, PCF, None),
     ("g4f-a38", "receiver in another frame slot across the call", "PC",
@@ -926,6 +932,30 @@ G4F_MUT = [
     ("g4f-b06", "aligned store to the neighbour slot 0x40", "E1",
      rv([(48, "mov 0x38(%rsp),%rsi", ("before", ["mov %rdx,0x40(%rsp)"]))]), None, 0, E1F, None),
 ]
+
+# Unit G4-F2: review g4f-r1 M3 (head size immediate vs the IR) and the systematic pass (callee vs the IR overlay
+# type, the directives after the last field event)
+G4F2_MUT = [
+    ("g4f2-c34", "head: `cmp $0x10,%rcx` (IR SSZ size 0x90) (M3)", "SM",
+     rv([(10, "cmp $0x90,%rcx", "cmp $0x10,%rcx")]), None, 2, [], "other"),
+    ("g4f2-d15", "head: `cmp $0x20,%rcx` (IR SSZ size 0x48) (M3)", "E1",
+     rv([(10, "cmp $0x48,%rcx", "cmp $0x20,%rcx")]), None, 2, [], "other"),
+    ("g4f2-d16", "head: `cmp $0x100,%rcx` (IR SSZ size 0x48) (M3)", "E1",
+     rv([(10, "cmp $0x48,%rcx", "cmp $0x100,%rcx")]), None, 2, [], "other"),
+    ("g4f2-callee-vi-epoch", "Index (IR ValidatorIndex): `callq …Epoch.UnmarshalSSZ` (callee not the overlay type)", "PW",
+     rv([(18, f"callq {PRIM}ValidatorIndex.UnmarshalSSZ", f"callq {PRIM}Epoch.UnmarshalSSZ")]), None, 2, [], "set-up order"),
+    ("g4f2-callee-epoch-vi", "WithdrawableEpoch (IR Epoch): `callq …ValidatorIndex.UnmarshalSSZ`", "PW",
+     rv([(60, f"callq {PRIM}Epoch.UnmarshalSSZ", f"callq {PRIM}ValidatorIndex.UnmarshalSSZ")]), None, 3, PWF[:2], "other"),
+    ("g4f2-epi-call", "a `callq …Epoch.UnmarshalSSZ` after the last field event", "E1",
+     rv([(87, "xor %eax,%eax", ("before", [f"callq {PRIM}Epoch.UnmarshalSSZ"]))]), None, 2, [], "other"),
+    ("g4f2-epi-store-rsp", "a stack store `mov %rsi,0x8(%rsp)` after the last field event", "E1",
+     rv([(87, "xor %eax,%eax", ("before", ["mov %rsi,0x8(%rsp)"]))]), None, 2, [], "other"),
+    ("g4f2-epi-frame", "`add $0x28,%rsp` (head frame 0x20) after the last field event", "E1",
+     rv([(89, "add $0x20,%rsp", "add $0x28,%rsp")]), None, 2, [], "other"),
+    ("g4f2-epi-nop-valid", "a `nop` in the epilogue (plain return: covered)", "E1",
+     rv([(89, "add $0x20,%rsp", ("before", ["nop"]))]), None, 0, E1F, None),
+]
+
 
 def g4_cases(work, new):
     """Unit G4-G: `--gen4` on the development types, compose refusal, dataflow adversarial inputs."""
@@ -968,7 +998,7 @@ def g4_cases(work, new):
     res.append(dict(id="g4-compose-refuse", expect="exit 2, 0 bytes, no file, reason", exit=rc, stdout_bytes=len(so),
                     stderr=se.strip()[:300], ok=bool(ok)))
     bad |= not ok
-    for (mid, what, key, eds, irf, want, covw, mcls) in G4_MUT + G4F_MUT:
+    for (mid, what, key, eds, irf, want, covw, mcls) in G4_MUT + G4F_MUT + G4F2_MUT:
         c = G4[key]
         base = (KR / c["S"]).read_text().split("\n")
         lines = eds(base) if callable(eds) else edits(base, eds)
@@ -998,7 +1028,10 @@ def g4_cases(work, new):
         fl = sm.get("fields", [])
         x0 = next((x for x, f in enumerate(fl) if f.get("status") != "covered"), len(fl))
         head_miss = sm.get("head", {}).get("status") == "not covered"
-        reach_ok = all(f.get("reached") == (False if head_miss else x <= x0) for x, f in enumerate(fl))
+        # G4-F2: on an epilogue miss every field was reached
+        epi_miss = sm.get("epilogue", {}).get("status") == "not covered"
+        reach_ok = all(f.get("reached") == (False if head_miss else True if epi_miss else x <= x0)
+                       for x, f in enumerate(fl))
         ok = (rc == want and (so == b"") == (want != 0) and sm.get("exit") == want and cov == covw
               and kcr == {3: 3, 0: 0}.get(want) and (mcls is None or (unc and unc[0].get("miss_class") == mcls))
               and reach_ok and (want != 2 or len(fl) == len(c["fields"])))

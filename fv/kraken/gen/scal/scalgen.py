@@ -506,6 +506,21 @@ def ir_fields(ir_path, tname, gen3=False):
     return out, hashlib.sha256(raw).hexdigest()
 
 
+def ir_ssz_size(ir_path, tname):
+    """The SSZ fixed size of a fixed-size container (unit G4-F2, M3): the sum of the field sizes in the IR; it must
+    equal the container's own `fixed_size` in the IR, else NoMatch."""
+    pkg, name = tname.rsplit(".", 1)
+    ts = [t for c in json.loads(pathlib.Path(ir_path).read_bytes())["configs"] for t in c.get("types", [])
+          if t.get("name") == name and t.get("package", "").endswith("/" + pkg)]
+    if not ts:
+        raise NoMatch(f"type {tname} not in the IR")
+    ir = ts[0]["ir"]
+    total = sum(f["v"]["fixed_size"] for f in ir["fields"])
+    if ir.get("variable") or ir.get("fixed_size") != total:
+        raise NoMatch(f"type {tname}: IR fixed size {ir.get('fixed_size')} is not the sum of the field sizes {total}")
+    return total
+
+
 def u64_find(dirs, fo, src):
     """The inline uint64 read of the field at Go offset `fo`, SSZ offset `src` (interface (c) of GEN2 L2):
     `mov dB(%rsp),%rX; mov src(%rX),%rX; mov %rX,fo(%rdx)`, the same 64-bit scratch register rX in all four
@@ -1598,6 +1613,10 @@ def _vstr(v):
 G4_HEAD_SPILL = {"rax": ("RCV", 0), "rbx": ("BF", 0), "rcx": ("LEN",), "rdi": ("CAP",)}
 
 
+class G4EpiMiss(G4Stop):
+    """Every field is complete but the directives after the last field event are not the plain return (G4-F2)."""
+
+
 class G4HeadMiss(NoMatch):
     """The head is not the covered prologue (exit 2); `cls` is the miss class reported for every field (unit G4-F)."""
 
@@ -1619,13 +1638,15 @@ def g4_slot_ok(d, F):
     return d % 8 == 0 and (0 <= d < F or F + 16 <= d < F + 48)
 
 
-def g4_head(dirs):
+def g4_head(dirs, ssz_size):
     """The decoder head: directives 0–10 must be the `decPro` prologue of `decpro_seg` (two labels; directives 2–8
     the six instructions `cmp 0x10(%r14),%rsp; jbe; push %rbp; mov %rsp,%rbp; sub $F,%rsp; mov %rbx,dB(%rsp)` in
     this order and one `nop`; directives 9–10 `cmp $size,%rcx; jne <size error>`), then the spills `mov %r,d(%rsp)`
     of the argument registers rax / rbx / rcx / rdi (after the frame is set up; each under the stack-store rule),
     then an optional `test %al,(%rax)`. Returns (index after the head, slots, F); a mismatch raises G4HeadMiss
-    (class `padding` when the head matches with its nops erased but not at the fixed positions, else `other`)."""
+    (class `padding` when the head matches with its nops erased but not at the fixed positions, else `other`).
+    G4-F2 (M3): the immediate of `cmp $size,%rcx` must equal `ssz_size`, the IR SSZ fixed size of the type (as the
+    default mode checks in `compose_read`); else G4HeadMiss, class `other`."""
     if len(dirs) < 12 or label_of(dirs[0]) is None or label_of(dirs[1]) is None:
         raise G4HeadMiss("gen4 head: directives 0, 1 are not the two function labels", "other")
     win = [d for d in dirs[2:9] if d != "nop"]
@@ -1638,6 +1659,10 @@ def g4_head(dirs):
                          "push %rbp; mov %rsp,%rbp; sub $F,%rsp; mov %rbx,dB(%rsp)` and one `nop` in 2–8, `cmp $size,%rcx; "
                          "jne` at 9–10)" + ("; it matches with the nops erased: a `nop` moves the fixed head positions"
                                             if shifted else ""), "padding" if shifted else "other")
+    size = int(re.fullmatch(G4_PRO[6], dirs[9]).group(1), 16)
+    if size != ssz_size:
+        raise G4HeadMiss(f"gen4 head: directive 9 `{dirs[9]}`: size immediate {size:#x}, IR SSZ fixed size "
+                         f"{ssz_size:#x}", "other")
     F = int(re.fullmatch(G4_PRO[4], win[4]).group(1), 16)
     dB = int(re.fullmatch(G4_PRO[5], win[5]).group(1), 16)
     if F % 8 or not g4_slot_ok(dB, F):
@@ -1867,7 +1892,11 @@ def _g4_walk(dirs, fields, head_end, slots0, F, done):
                 raise G4Stop(i, why, "new field kind" if cls == "none" else "other")
             if cls != "call" or info != fn:
                 raise G4Stop(i, f"directive {i} `callq {fn}`: the next IR field is {name} ({cls}"
-                                f"{', callee ' + info if cls == 'call' else ''})", "set-up order" if cls == "call" else "other")
+                                f"{', callee ' + info if cls == 'call' else ''})",
+                             # G4-F2: "set-up order" only when a LATER IR field has this callee; a callee that is not the
+                             # overlay type of any later field (ValidatorIndex field calling Epoch) is "other"
+                             "set-up order" if cls == "call" and any(f[3] == "call" and f[4] == fn for f in fields[cur + 1:])
+                             else "other")
             end, ms, idx = g4_window(dirs, a, [re.escape(f"callq {fn}"), r"test %rax,%rax", r"je (\S+)"], i,
                                      f"call block at {i}")
             lok = ms[2].group(1)
@@ -1991,7 +2020,40 @@ def _g4_walk(dirs, fields, head_end, slots0, F, done):
             raise G4Stop(i, why, "new field kind" if cls == "none" else "new directive form")
         i += 1
         a = i
+    g4_epilogue(dirs, i, F)
     return None
+
+
+def g4_epilogue(dirs, i, F):
+    """G4-F2: the directives after the last field event (from `i`, following forward `jmp`s and labels) must be the
+    plain return: only `nop`, labels, `mov d(%rsp),%rax|%rbx`, `xor %eax,%eax`, `xor %ebx,%ebx`, then
+    `add $F,%rsp; pop %rbp; retq` with the head's frame size F. Any other directive (a store, a call, a branch)
+    could change a decoded field after its event: G4EpiMiss (class other)."""
+    seen = set()
+    while True:
+        if i >= len(dirs) or i in seen:
+            raise G4EpiMiss(i, "epilogue: end of file or a loop before `add $F,%rsp; pop %rbp; retq`", "other")
+        seen.add(i)
+        d = dirs[i]
+        if d == "nop" or label_of(d) is not None or re.fullmatch(r"mov (0x[0-9a-f]+)?\(%rsp\),%(rax|rbx)", d) \
+                or d in ("xor %eax,%eax", "xor %ebx,%ebx"):
+            i += 1
+            continue
+        m = re.fullmatch(r"jmp (\S+)", d)
+        if m:
+            jl = g4_label_index(dirs, m.group(1), i)
+            if jl <= i:
+                raise G4EpiMiss(i, f"epilogue: directive {i} `{d}` jumps backwards", "other")
+            i = jl
+            continue
+        if d == f"add ${F:#x},%rsp":
+            rest = [x for x in dirs[i + 1:i + 6] if x != "nop"][:2]
+            if rest == ["pop %rbp", "retq"]:
+                return
+            raise G4EpiMiss(i, f"epilogue: `{d}` not followed by `pop %rbp; retq`", "other")
+        raise G4EpiMiss(i, f"epilogue: directive {i} `{d}` after the last field event is not part of the plain "
+                           f"return (`mov d(%rsp),%rax|%rbx`, `xor`, `add ${F:#x},%rsp; pop %rbp; retq`): it could change "
+                           f"a decoded field", "other")
 
 
 # statement texts of the step kinds (`KindStep.lean`) with the parameters in place (G4-L `Gen4Examples.lean`)
@@ -2193,7 +2255,7 @@ def p2dec_gen4(args):
                       "theorem would have no statement check. Accept theorems over the generated chains stay hand "
                       "compositions")
     try:
-        head_end, slots, F = g4_head(dirs)
+        head_end, slots, F = g4_head(dirs, ir_ssz_size(args.ir, args.type))
     except G4HeadMiss as e:
         # G4-F S1: a head miss is reported per field (class, `reached: false`) before exit 2
         summ["head"] = dict(status="not covered", reason=e.why, miss_class=e.cls)
@@ -2204,6 +2266,15 @@ def p2dec_gen4(args):
     summ["head"] = dict(status="covered", end=head_end, frame=F)
     C, pre = args.const, args.prefix
     done, stop = g4_walk(dirs, fields, head_end, slots, F)
+    if isinstance(stop, G4EpiMiss):
+        # G4-F2: a directive after the last field event could change any decoded field: no field is covered (exit 2)
+        summ["epilogue"] = dict(status="not covered", at=stop.at, reason=stop.why)
+        for (fname, src, fo, cls, info) in fields:
+            summ["fields"].append(dict(field=fname, ssz_offset=src, go_offset=fo, status="not covered", reached=True,
+                                       reason=f"{stop.why} (directive {stop.at})", miss_class=stop.cls))
+        raise NoMatch(f"gen4: {stop.why} (directive {stop.at}); no field is reported covered")
+    if stop is None:
+        summ["epilogue"] = dict(status="covered")
     body, report, ncov, used = "", [], 0, set()
     for x, (fname, src, fo, cls, info) in enumerate(fields):
         rec = dict(field=fname, ssz_offset=src, go_offset=fo)
