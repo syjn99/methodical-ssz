@@ -1,0 +1,2 @@
+scalgen p2dec: field Epoch: COVERED call field (Epoch): 2 set-up steps + call block, directives 15–47
+scalgen p2dec: field ValidatorIndex: COVERED call field (ValidatorIndex): 7 set-up steps + call block, directives 48–85

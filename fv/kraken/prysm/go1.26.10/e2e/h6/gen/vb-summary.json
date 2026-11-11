@@ -1,0 +1,55 @@
+{
+ "type": "v1alpha1.ValidatorBalance",
+ "S": "prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.UnmarshalSSZ.S",
+ "S_sha256": "cd239e36faa09475986967f45b8530065c5a029a7590a36b167d4d3febcf0ee5",
+ "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a",
+ "mode": "gen4",
+ "fields": [
+  {
+   "field": "Index",
+   "ssz_offset": 0,
+   "go_offset": 8,
+   "status": "covered",
+   "reached": true,
+   "shape": "call field (ValidatorIndex): 2 set-up steps + call block",
+   "directives": [
+    14,
+    47
+   ],
+   "theorems": [
+    "vb_g4dec_s14",
+    "vb_g4dec_s15",
+    "vb_g4dec_Index_call"
+   ]
+  },
+  {
+   "field": "Balance",
+   "ssz_offset": 8,
+   "go_offset": 16,
+   "status": "covered",
+   "reached": true,
+   "shape": "uint64 field: 4 steps",
+   "directives": [
+    48,
+    51
+   ],
+   "theorems": [
+    "vb_g4dec_s48",
+    "vb_g4dec_s49",
+    "vb_g4dec_s50",
+    "vb_g4dec_s51"
+   ]
+  }
+ ],
+ "head": {
+  "status": "covered",
+  "end": 14,
+  "frame": 56
+ },
+ "epilogue": {
+  "status": "covered"
+ },
+ "exit": 0,
+ "covered": 2,
+ "total": 2
+}

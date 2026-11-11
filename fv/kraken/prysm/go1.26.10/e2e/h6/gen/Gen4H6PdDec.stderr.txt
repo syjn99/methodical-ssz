@@ -1,0 +1,5 @@
+scalgen p2dec: field PublicKey: COVERED byte field (48 bytes): 4 steps + segment, directives 14–48
+scalgen p2dec: field WithdrawalCredentials: COVERED byte field (32 bytes): 4 steps + segment, directives 49–84
+scalgen p2dec: field Amount: COVERED uint64 field: 3 steps, directives 85–87
+scalgen p2dec: field Signature: COVERED byte field (96 bytes): 4 steps + segment, directives 88–122
+scalgen p2dec: field Slot: COVERED call field (Slot): 6 set-up steps + call block, directives 123–160

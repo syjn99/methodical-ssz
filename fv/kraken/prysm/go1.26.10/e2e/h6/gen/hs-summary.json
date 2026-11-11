@@ -1,0 +1,58 @@
+{
+ "type": "v1alpha1.HistoricalSummary",
+ "S": "prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.UnmarshalSSZ.S",
+ "S_sha256": "cb7e6f1310c41a0647dc45bcc15258750ad331cf55b0745dec96db7736b8cfee",
+ "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a",
+ "mode": "gen4",
+ "fields": [
+  {
+   "field": "BlockSummaryRoot",
+   "ssz_offset": 0,
+   "go_offset": 8,
+   "status": "covered",
+   "reached": true,
+   "shape": "byte field (32 bytes): 4 steps + segment",
+   "directives": [
+    13,
+    46
+   ],
+   "theorems": [
+    "hs_g4dec_BlockSummaryRoot_seg",
+    "hs_g4dec_s37",
+    "hs_g4dec_s38",
+    "hs_g4dec_s45",
+    "hs_g4dec_s46"
+   ]
+  },
+  {
+   "field": "StateSummaryRoot",
+   "ssz_offset": 32,
+   "go_offset": 32,
+   "status": "covered",
+   "reached": true,
+   "shape": "byte field (32 bytes): 4 steps + segment",
+   "directives": [
+    47,
+    81
+   ],
+   "theorems": [
+    "hs_g4dec_StateSummaryRoot_seg",
+    "hs_g4dec_s72",
+    "hs_g4dec_s73",
+    "hs_g4dec_s80",
+    "hs_g4dec_s81"
+   ]
+  }
+ ],
+ "head": {
+  "status": "covered",
+  "end": 13,
+  "frame": 32
+ },
+ "epilogue": {
+  "status": "covered"
+ },
+ "exit": 0,
+ "covered": 2,
+ "total": 2
+}
