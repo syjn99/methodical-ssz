@@ -51,6 +51,13 @@ import E2eScal.Gen2BiAccept
 import E2eScal.Gen2DmAccept
 import E2eScal.Gen2E1Accept
 import E2eScal.Gen2BhDecPartial
+import E2eScal.H4Stmt
+import E2eScal.Gen2DdDecPartial
+import E2eScal.DdSpecK
+import E2eScal.WitDdA
+import E2eScal.WitDdR
+import E2eScal.PwSpecK
+import E2eScal.WitPwR
 
 -- prysm-e2e scalability stage S1-S2 (INBOX 011): the segment lemmas, the in-sample re-derivations, the
 -- statement-identity checks and the generated instances. Checked with gen/e2e/axioms.py <log> <out> <this file>.
@@ -351,3 +358,51 @@ import E2eScal.Gen2BhDecPartial
 #print axioms E2eScal.Gen.bh_g2dec_ParentRoot_seg_kind
 #print axioms E2eScal.Gen.bh_g2dec_StateRoot_seg
 #print axioms E2eScal.Gen.bh_g2dec_StateRoot_seg_kind
+-- H4 hold-out (Deposit_Data, PendingPartialWithdrawal UnmarshalSSZ): every new theorem (raw generated segments,
+-- hand lemma, hand accept / reject / spec / witnesses). PendingPartialWithdrawal accept: not proved (bound).
+#print axioms E2eScal.Gen.dd_g2dec_PublicKey_seg
+#print axioms E2eScal.Gen.dd_g2dec_PublicKey_seg_kind
+#print axioms E2eScal.Gen.dd_g2dec_Amount_seg
+#print axioms E2eScal.Gen.dd_g2dec_Amount_seg_kind
+#print axioms E2eScal.Gen.dd_g2dec_Signature_seg
+#print axioms E2eScal.Gen.dd_g2dec_Signature_seg_kind
+#print axioms E2eScal.H4.bytes32dec_seg_nop
+#print axioms E2eScal.H4.dd_e2e_accept_main
+#print axioms E2eScal.H4.dd_e2e_reject_size_main
+#print axioms E2eScal.H4.pw_e2e_reject_size_main
+#print axioms E2e.prysmDdDesc_checker
+#print axioms E2e.prysmDdDesc_wellFormed
+#print axioms E2e.prysmDdDesc_fixedSize
+#print axioms E2e.prysmDdDesc_serialize_checker
+#print axioms E2e.pdd_enc_size
+#print axioms E2e.pdd_toValue_fits
+#print axioms E2e.pdd_toValue_injective
+#print axioms E2e.pdd_toValue_surjective
+#print axioms E2e.pdd_serialize
+#print axioms E2e.pdd_roundtrip
+#print axioms E2e.pdd_accepted_is_enc
+#print axioms E2e.pdd_spec_accepts_iff
+#print axioms E2e.pdd_spec_rejects
+#print axioms E2e.prysmDdDesc_deserialize_checker
+#print axioms E2e.prysmPwDesc_checker
+#print axioms E2e.prysmPwDesc_wellFormed
+#print axioms E2e.prysmPwDesc_fixedSize
+#print axioms E2e.prysmPwDesc_serialize_checker
+#print axioms E2e.ppw_enc_size
+#print axioms E2e.ppw_toValue_fits
+#print axioms E2e.ppw_toValue_injective
+#print axioms E2e.ppw_toValue_surjective
+#print axioms E2e.ppw_serialize
+#print axioms E2e.ppw_roundtrip
+#print axioms E2e.ppw_accepted_is_enc
+#print axioms E2e.ppw_spec_accepts_iff
+#print axioms E2e.ppw_spec_rejects
+#print axioms E2e.prysmPwDesc_deserialize_checker
+#print axioms E2eScal.H4.dd_e2e_accept_spec_k
+#print axioms E2eScal.H4.dd_e2e_reject_size_spec
+#print axioms E2eScal.H4.dd_e2e_reject_complete
+#print axioms E2eScal.H4.pw_e2e_reject_size_spec
+#print axioms E2eScal.H4.pw_e2e_reject_complete
+#print axioms E2eScal.WitDdA.dd_accept_runs
+#print axioms E2eScal.WitDdR.dd_reject_runs
+#print axioms E2eScal.WitPwR.pw_reject_runs
