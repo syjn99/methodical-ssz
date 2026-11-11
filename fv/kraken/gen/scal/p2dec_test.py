@@ -99,7 +99,7 @@ def main(work, out):
         f = work / f"{mid}.S"
         f.write_text("\n".join(lines))
         rc, so, se = run(["python3", "-I", str(new), "p2dec", "--S", str(f)] + ARGS, KR)
-        got = sorted(l.split()[2].rstrip(":") for l in se.split("\n") if ": MATCH form" in l)
+        got = sorted(l.split()[3].rstrip(":") for l in se.split("\n") if ": MATCH form" in l)
         ok = rc == want and so == b"" and (want == 2 or got == sorted(match))
         res.append(dict(id=mid, what=what, expect=f"exit {want}, 0 bytes" + (f", MATCH {match}" if want == 3 else ""),
                         exit=rc, stdout_bytes=len(so), matched=got, stderr=se.strip().split("\n"), ok=bool(ok)))
