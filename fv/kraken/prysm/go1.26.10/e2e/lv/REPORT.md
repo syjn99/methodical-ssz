@@ -78,14 +78,14 @@ T1과 T2에서 시도 한도에 닿은 의무는 없다(`ATTEMPTS.md`).
 | Seg | 3.6 s | 6.3 s | 2.17 GiB |
 | SaAccept | 4.7 s | 7.3 s | 2.15 GiB |
 | SaSpec / SaSpecK / SaDescEq | 3.2 s 각각 | 5.2–8.3 s | 0.86 GiB 이하 |
-| WitSaA | 12 s | 15.7 s | 2.04 GiB |
+| WitSaA | 12 s | 17.7 s | 2.04 GiB |
 | ScReject | 3.8 s | 6.3 s | 1.98 GiB |
 | ScLemmas | 3.4 s | 5.2 s | 0.86 GiB |
 | ScLoop | 6.3 s | 8.3 s | 2.22 GiB |
 | ScAccept | 6.6 s | 9.4 s | 2.12 GiB |
 | ScSpec / ScSpecK / ScDescEq | 3.2–3.5 s | 5.2–8.4 s | 1.93 GiB 이하 |
 | BumpT | 1.7 s | 4.2 s | 1.97 GiB |
-| WitScA | 16 s | 18.8 s | 2.07 GiB |
+| WitScA | 16 s | 18.8 s | 2.06 GiB |
 
 `maxHeartbeats`는 증인 둘에만 있다: `WitSaA.sa_accept_runs` 2000000, `WitScA.sc_accept_runs` 4000000.
 원인: `simp` AC 정렬(로그 27, 7.03 s + 2.08 s).
@@ -128,7 +128,7 @@ T1과 T2에서 시도 한도에 닿은 의무는 없다(`ATTEMPTS.md`).
 | 선언 drift (기준 `6a78c591`, 뿌리 E2e/E2eAd/E2eScal) | 0 (`decl-drift-lv.txt`. 리뷰 r2 수정 뒤 다시 0, 로그 102) |
 | drift 대조군 | CHANGED(기대대로), 되돌림 |
 | 링크 T1, T2 | PASS all |
-| 부정 시험 | 26개 중 25개 통과(control_pass 7, inside 18). `lv-sa-bitslen63`은 outside다(오류가 `sa_bits_seg`에 있다). 같은 변이를 `sa_bits_seg`에 겨눈 경우는 inside다. `Desc` 변이와 T2 크기 거부 변이를 포함한다(로그 94). `Desc` 변이 파일은 대상에서 잘린다. `prysmS*Desc_fixedSize`나 `ps*_toValue_fits`까지만 간다. `*_spec_k`를 시험하는 `Desc` 변이는 없다. 부정 시험은 리뷰 r2 수정 뒤 다시 돌리지 않았다 |
+| 부정 시험 | 26개 중 25개 통과(control_pass 7, inside 18). `lv-sa-bitslen63`은 outside다(오류가 `sa_bits_seg`에 있다). 같은 변이를 `sa_bits_seg`에 겨눈 경우는 inside다. `Desc` 변이와 T2 크기 거부 변이를 포함한다(로그 94). `Desc` 변이 파일은 대상에서 잘린다. `prysmS*Desc_fixedSize`나 `ps*_toValue_fits`까지만 간다. `*_spec_k`를 시험하는 `Desc` 변이는 없다. 작성자는 리뷰 r2 수정 뒤 다시 돌리지 않았다. 리뷰어 r3가 다시 돌렸고 사례별 결과는 같다 |
 | stale 검사 | flagged 0 |
 | Go 차분 시험 | 실행하지 않음 |
 | 하드웨어 대조 | 실행하지 않음. 호스트는 arm64다 |
@@ -153,7 +153,7 @@ T1과 T2에서 시도 한도에 닿은 의무는 없다(`ATTEMPTS.md`).
 - 새 production 결함 후보는 없다.
 - 독립 리뷰 r1(`fbf729a`): REQUEST_CHANGES, 필수 수정 1개(M1). `REVIEW-R1.md`를 본다. 수정은 `463ec97`, `3bb6cc1`, `4a18079`, `ec75cd5`다.
 - 독립 리뷰 r2(`d169e4b`): REQUEST_CHANGES, 필수 수정 2개(M1, M2). `REVIEW-R2.md`를 본다. 수정은 `1ba8b41`, `69f1a70`, `252380f`와 이 파일의 커밋이다.
-- 리뷰 r3의 결과는 `REVIEW-R3.md`에 적는다.
+- 독립 리뷰 r3(`650b1f5`): APPROVE, 필수 수정 없음. `REVIEW-R3.md`를 본다. 그 뒤의 문서 커밋(N1, N2, `REVIEW-R3.md`)은 리뷰받지 않았다.
 - 사용자 확인이 필요한 것:
   - esz 24 `MakesliceC` 인스턴스(리뷰 r1 S7).
   - 기한.
