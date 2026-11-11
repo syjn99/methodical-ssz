@@ -233,7 +233,7 @@ In-sample coverage only; no hold-out claim until H5.
 `P2EncCp` alone, before the AU-07 fix: about 730 s in its own build (job record in `TEMPLATE-COST.json`), 986.0 s in the review fix-r1 run of the unchanged file (n = 1; `opt1/AU-07.json`).
 After the AU-07 fix: see `opt1/AU-07.json` attempt 4.
 
-## GEN4 (unit G4-G; generator change after H5, development set only; not yet reviewed)
+## GEN4 (unit G4-G; generator change after H5, development set only; g4g-r1 REQUEST_CHANGES, fixed below)
 
 `scal/CONTAMINATION.md` §22. Lemmas: unit G4-L (`NopView`, `StepK`, `KindStep`, `CallReg`, `SegReg`, `SegRegZ`,
 `KindSegReg`; review g4l-r1 APPROVE). In-sample coverage only; no hold-out claim until H6.
@@ -276,7 +276,7 @@ After the AU-07 fix: see `opt1/AU-07.json` attempt 4.
   32 / 48 / 96, receiver registers outside the lemma sets, index / rip / immediate-store operands, head and epilogue
   emission, encoders.
 
-### Unit G4-F (fixes after review g4g-r1; not yet reviewed)
+### Unit G4-F (fixes after review g4g-r1; g4f-r1 REQUEST_CHANGES, fixed in G4-F2)
 
 **What "covered" means.** A field marked "covered" by `--gen4` is the GENERATOR's claim: its walker believes that
 the code before each emitted block establishes the block's entry state. Each emitted theorem is kernel-checked on its
@@ -321,7 +321,7 @@ did not establish the entry state (every theorem still built); the rules below r
   head classes, frame register writes; `reached` checked on every `--gen4` case. Committed `Gen4*.lean`: unchanged
   (the fixed generator regenerates all 10 byte-identical).
 
-### G4-F2 (review g4f-r1 M3 and a systematic pass; not yet reviewed)
+### G4-F2 (review g4f-r1 M3 and a systematic pass; g4f2-r1 REQUEST_CHANGES, fixed in G4-F3)
 
 - Head size (M3): the immediate of `cmp $size,%rcx` (directive 9) must equal the IR SSZ fixed size of the type (the
   sum of the IR field sizes, which must equal the container's IR `fixed_size`), as the default mode checks in
@@ -342,7 +342,7 @@ did not establish the entry state (every theorem still built); the rules below r
 - Tests: `p2dec_test.py` cases `g4f2-*` (9) and `g4f-a34` changed to "refused"; 169/169. Committed `Gen4*.lean`:
   unchanged (10/10 byte-identical; 33/33 `regen_check.sh` SAME).
 
-### G4-F3 (review g4f2-r1 M4 and fail-closed result logic; not yet reviewed)
+### G4-F3 (review g4f2-r1 M4 and fail-closed result logic; g4f3-r1 APPROVE on `0e775ac`, the H6 method freeze; open items S6–S9 in `REPORT.md` §11)
 
 - M4: in the epilogue, a `jmp` to a label that is not in the file (`jmp runtime.abort`, `jmp *%rdx`, a tail `jmp` to
   another decoder) is an epilogue miss: exit 2, every field not covered, `reached: true`, class `other`.
@@ -363,3 +363,13 @@ did not establish the entry state (every theorem still built); the rules below r
   `g4_parse` / `g4_label_index` call of the walk (every field), at every theorem-text call and in the epilogue
   (also wrong return values), plus a walk that returns every field with a stop. No injection reaches exit 0.
   Committed `Gen4*.lean`: unchanged (33/33 `regen_check.sh` SAME).
+
+### Review g4f3-r1 should-fix notes (added at integration INT6; documents only, the generator is unchanged)
+
+- S7: on exit 3 the code after the stopping field is not examined; later code may overwrite a covered field
+  (reviewer input p01: fields 0–1 covered, later code overwrites field 1). A partial output says nothing about that code.
+- S8: `fail_closed` appears in the summary only when the result guard fires; head or epilogue exceptions and errors
+  before the IR is read give exit 2 without that key.
+- S6 (a `NoMatch` inside a phase can leave `covered = total` in a summary with exit 2; not reachable in the code as
+  written) and S9 (a stale `--partial-out` file stays on exit 0 / 2; no summary on `KeyboardInterrupt`) need a
+  generator change: open, not done.

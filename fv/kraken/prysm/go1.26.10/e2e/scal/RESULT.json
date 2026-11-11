@@ -2445,7 +2445,23 @@
    "link / Go / hardware checks",
    "orca (not installed)",
    "independent review"
-  ]
+  ],
+  "reviews": {
+   "what": "correction entry added at integration INT6; the values above are not rewritten",
+   "state_now": "reviewed: 'not yet reviewed' in state is superseded by this entry",
+   "g4l-r1": "APPROVE on 718e023 (lemmas); should-fix S1-S4 recorded or assigned to G4-G",
+   "g4g-r1": "REQUEST_CHANGES on 21b8aab: M1 walker soundness (overlapping stack store; head not the decpro_seg prologue), M2 records ('covered' = generator claim); fixed in G4-F",
+   "g4f-r1": "REQUEST_CHANGES on a81c0ea: M3 head size immediate not compared with the IR size; fixed in G4-F2",
+   "g4f2-r1": "REQUEST_CHANGES on 6ac27e4: M4 epilogue jmp to a label not in the file accepted; fixed in G4-F3",
+   "g4f3-r1": "APPROVE on 0e775ac (the H6 method freeze); 0 must-fix; should-fix S6-S9",
+   "why_three_fix_rounds": "each earlier review found one path on which --gen4 reported coverage without a check; attempt 3 (G4-F3) made the result logic fail-closed: exit 0 only when the head, every field and the epilogue success flags are all set",
+   "g4f3_r1_should_fix": {
+    "S6": "OPEN (generator change): a NoMatch inside a phase can leave covered = total in a summary with exit 2; not reachable in the code as written",
+    "S7": "closed at INT6 (documents): README and REPORT section 11 say that on exit 3 the code after the stop is not examined",
+    "S8": "closed at INT6 (documents): README says when the fail_closed key is absent",
+    "S9": "OPEN (generator change): stale --partial-out file on exit 0 / 2; no summary on KeyboardInterrupt"
+   }
+  }
  },
  "H5": {
   "scope": "v1alpha1.SyncCommitteeMessage (class C) and v1alpha1.PendingConsolidation (class D), UnmarshalSSZ only; two types, one touch; both near-in-sample by field kind (H5-A3), new orders only",
@@ -2682,7 +2698,17 @@
    "negative cases",
    "x86-64 hardware",
    "independent review of INT5"
-  ]
+  ],
+  "review_int5_r1": {
+   "what": "correction entry added at integration INT6; the values above are not rewritten",
+   "state_now": "reviewed: 'independent review of INT5' in not_run is superseded by this entry",
+   "review": "int5-r1 APPROVE on fbbc382; 0 must-fix; should-fix S1-S5",
+   "S1": "closed at INT6: BASELINE section 6 row SG-2 now carries the near-in-sample note next to H5 2/4, 1/2",
+   "S2": "closed at INT6: series table tags aligned (H4 Amount: register form, no base reload; SyncCommitteeMessage ValidatorIndex: omitted receiver reload) and the reading sentence",
+   "S3": "closed at INT6: INT5 'not yet reviewed' texts superseded (REPORT 0 / 11, BASELINE pins row and section 5, CONTAMINATION 27, FINDINGS delta, this entry)",
+   "S4": "OPEN: documenting the kindcheck controls k10 and n25 in README needs a reading of the checker tests; not done at INT6",
+   "S5": "note only: merge subject type 'merge:' is not in the commit type list; INT6 uses the same form"
+  }
  },
  "H6": {
   "scope": "result (S) over all 7 batch types of the frozen H6 rule (UnmarshalSSZ); full decoder proof for v1alpha1.PendingDeposit and v1alpha1.PowBlock; one touch; several types near-variants by field kind (H6-A5): compiler-variation robustness on known kinds, not new kinds",
@@ -2906,6 +2932,52 @@
    "x86-64 hardware",
    "independent review"
   ],
-  "wording": "n/m per type and in total, whatever it is: 18/18 walker-covered, 7/7 types; H6-A5: near-variants by kind; no generality, superiority or speed claim; earlier hold-out records untouched; this pool is used up"
+  "wording": "n/m per type and in total, whatever it is: 18/18 walker-covered, 7/7 types; H6-A5: near-variants by kind; no generality, superiority or speed claim; earlier hold-out records untouched; this pool is used up",
+  "review_h6_r1": {
+   "what": "correction entry added at integration INT6; the values above are not rewritten",
+   "state_now": "reviewed: 'not yet reviewed' in evaluator and 'independent review' in not_run are superseded by this entry",
+   "review": "h6-r1 APPROVE on 8ce5ddaf91126edd2726e9f87a66d78cb7cd7093 (fresh Fable 5.2 reviewer); 0 must-fix; should-fix S1-S9; Lean-level planted control, cold rebuild of the 25 H6 modules, regeneration of the 7 (S) outputs byte-identical, link rerun, 15 of 36 negatives rerun",
+   "S1_caveat": "closed: REPORT section 0 states next to 18/18 that (S) is the walker's claim and that the types are near-variants by kind without a similarity filter",
+   "S2_series": "closed: REPORT sections 0 and 11 and BASELINE section 4 state that H3 1/2, 1/3, H4 3/4, 0/3, H5 2/4, 1/2 and H6 18/18 come from different populations and filters (not a trend) and list the kinds still not covered: nested containers, lists, bitfields, other sizes, callees without a proved spec, encoders",
+   "S3_gate_s": "corrected: 642.5 gate-seconds in 84 gated jobs; shared 464.5 including jobs 89 and 90 (the value shared 265.8 above omits them)",
+   "S4_template_scripts": "closed: PdAccept.lean, PbAccept.lean, PdSpecK.lean, PbSpecK.lean are output of per-type template scripts of the evaluator (not in the repository); hand-line numbers count text outside the generator, not typed lines",
+   "S5_negatives_scope": "closed: no mutant targets pd_e2e_accept_g4gen, pb_e2e_accept_g4gen, the two *_accept_spec_k or the files of the 5 (S)-only types",
+   "S6_docstrings": "OPEN (.lean edit): the *_reject_complete docstrings say 'reaches the ssz.ErrSize site'; the proved fact is size != N only",
+   "S7_drift_control": "closed: the evaluator's drift control was a text edit of the dump; the reviewer's Lean-level control covers it",
+   "S8_commit_types": "note only: four commits use spec(kraken), one test(link); no history rewrite",
+   "S9_curator_tmp": "note only: the curator scratch script was written to /tmp, outside its evidence directory",
+   "not_verified_by_review": [
+    "Go differential not rerun",
+    "21 of 36 negatives not rerun",
+    "cold build from an empty .lake",
+    "kernel composition of the 10 fields of the 5 (S)-only types",
+    "x86-64 hardware; morestack; writeBarrier != 0; callee error paths; runtime callee contracts (hypotheses)"
+   ]
+  }
+ },
+ "integration_int6": {
+  "what": "merge of claude/ssz-fv-h6 at 8ce5dda (GEN4 units G4-L, G4-G, G4-F, G4-F2, G4-F3 and the H6 hold-out evaluation, linear on 1fec11e) into claude/ssz-fv-prysm-e2e at 3e1cedc (reviewed INT5 head fbbc382 plus the ARM task B fix 74cc9ca); integration and records only: no new proof text, no statement change, no generator or checker change",
+  "merge": "9d8aaf9edf55745058e8da1167d5c7e900a8b2ee (--no-ff); conflicts in 8 record files, one hunk each (HISTORY.md, REPORT.md, gen/scal/README.md, BASELINE.md, FINDINGS.md, scal/CONTAMINATION.md, scal/HOLDOUT-OPENED, scal/RESULT.json): both sides kept, ours first; every .lean equals 8ce5dda except E2eScal/P2EncCp.lean, which equals 74cc9ca (the stream does not touch it)",
+  "reviews": "g4l-r1 APPROVE (718e023); g4g-r1, g4f-r1, g4f2-r1 REQUEST_CHANGES; g4f3-r1 APPROVE (0e775ac, the H6 method freeze); h6-r1 APPROVE (8ce5dda); int5-r1 APPROVE (fbbc382)",
+  "executed": {
+   "lake build E2e E2eAd E2eScal": "exit 0, 1164 jobs, 124.7 s wall (gate job 01); built 53 modules = the 52 new .lean modules of the stream + E2eScal.P2EncCp (first build of the ARM-B fix on this branch); peak over the whole build 3.40 GiB per process, 2.66 GiB session, under the 6 GiB cap",
+   "E2eScal.P2EncCp": "rebuilt; Lake reports 10 s (one measurement, n = 1; per-module memory not measured); earlier records: 986 s before the fix (other method), about 8 s after the fix on another machine; no speed claim beyond 'rebuilt in 10 s here'",
+   "lake build --no-build E2e E2eAd E2eScal": "exit 0 (job 02)",
+   "axioms gate": "PASS, 7649 declarations, 6440 theorems, 280 modules, hand list 1186, non-standard 0, sorryAx 0 (job 03); committed prysm/go1.26.10/e2e/axioms-gate.json regenerated from this run (was 7650 / 6441, the stream record)",
+   "decl drift": "decl_drift.py h6-r1 reviewer dump (7650 rows) vs merged dump (7649): E2eScal.cp_e2e_marshal_main_s._proof_1_23 REMOVED, _proof_1_13.._22 CHANGED (type hash), nothing else; head _proof_1_n equals base _proof_1_(n+1) on all columns for n = 13..22; base _proof_1_13 (type 00000000e439c2be) has no head counterpart; the theorem row E2eScal.cp_e2e_marshal_main_s is unchanged; the 11 names allowlisted with that reason: exit 0, 11 ALLOWED",
+   "planted control": "dump level: type hash of E2eScal.H6.pd_e2e_reject_complete changed in a copy of the merged dump, with the same allowlist: decl_drift exit 1, 1 CHANGED",
+   "regen_check.sh": "SAME for 40 generator commands, two scratch runs each: the 23 INT5 commands, the 10 GEN4 gen.sh commands (9 development types + Gen4AdDecPartial) and the 7 H6 (S) outputs (job 06); an integration regen check, not an H6 run",
+   "kindcheck.py --selftest": "PASS, 157 cases + 7 exit-code cases (job 07)",
+   "p2dec_test.py": "262/262 as expected (job 09; job 08 was run without its two arguments and exited 2 = usage)"
+  },
+  "not_run": [
+   "cold build from an empty .lake",
+   "Lean-level planted control",
+   "link check",
+   "Go differential and go test",
+   "negative cases",
+   "x86-64 hardware",
+   "independent review of INT6"
+  ]
  }
 }

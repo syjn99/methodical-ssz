@@ -374,3 +374,15 @@ SyncCommitteeMessage 생성 사슬은 457줄이다. 400줄 조건을 넘는다�
 PendingDeposit, PowBlock 수용 정리는 생성 사슬 8개를 낸 그대로 손 합성해 커널 검사했다.
 부정 시험 36/36, 공리 게이트 PASS, 선언 비교 ADDED 570개뿐, Go 차분 12/12다.
 이 모집단의 홀드아웃은 다 썼다. 원격에 쓰지 않았다. 기록: REPORT 11절, CONTAMINATION 26절, `scal/RESULT.json`의 `H6`, FINDINGS SG-5.
+2026-11-11 통합 INT6(새 Opus 세션): `claude/ssz-fv-h6` `8ce5dda`를 `3e1cedc` 위에 병합했다(`9d8aaf9`).
+충돌은 기록 파일 8개였다. 두 쪽을 모두 남겼다. `.lean`은 스트림과 같고, `P2EncCp.lean`만 `74cc9ca`와 같다.
+위 G4-G, G4-F, G4-F3, H6 단락의 "리뷰 전", "아직 리뷰 없음"은 다음 리뷰로 대체한다. 그 단락은 고치지 않는다.
+g4l-r1, g4f3-r1, h6-r1은 APPROVE, g4g-r1, g4f-r1, g4f2-r1은 REQUEST_CHANGES였다. 통합 INT5는 int5-r1이 APPROVE했다.
+위 ARM-B 병합 기록의 "병합된 트리를 빌드하지 않음"에 덧붙인다: 이 통합에서 처음 빌드했다.
+`lake build` 종료 0, 모듈 53개를 빌드했다(새 모듈 52개와 `P2EncCp`). `E2eScal.P2EncCp`는 10초에 다시 빌드됐다(Lake 표시, n = 1).
+공리 게이트 PASS, 선언 7649다. 커밋된 `axioms-gate.json`을 다시 만들었다.
+h6-r1 덤프 대비 차이는 `cp_e2e_marshal_main_s`의 보조정리 11줄뿐이다(REMOVED 1, CHANGED 10). 주 정리 행은 같다.
+h6-r1 S8 기록: H6 커밋 넷은 type `spec(kraken)`, 하나는 `test(link)`를 쓴다. 이력 재작성은 하지 않는다.
+`regen_check.sh` 40/40 SAME, `kindcheck.py --selftest` PASS, `p2dec_test.py` 262/262다.
+작업 08은 인수 없이 돌려 종료 2(사용법)였다. 작업 09에서 인수를 넣어 다시 돌렸다.
+`.lean`, 생성기, 검사기, 고정 버전은 바꾸지 않았다. 원격에 쓰지 않았다. 기록: REPORT 11절, `scal/RESULT.json`의 `integration_int6`.
