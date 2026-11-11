@@ -256,3 +256,12 @@ REPORT 11절의 "남는 손 작업은 형마다 생성기 명령 한 줄" 문장
 `--compose`에 손 문장이 없으면 `UNCHECKED STATEMENT` 표시를 쓴다. `--same-as-prop`을 더했다.
 알려진 외형 항목: 보조정리 모듈 `KindN.lean` 머리말은 "four places"라 쓰고 다섯을 든다(리뷰 g2l-r1 S4). 보조정리 모듈이라 고치지 않는다.
 원격에 쓰지 않았다. 기록: REPORT 11절, `scal/CONTAMINATION.md` 15절, `scal/RESULT.json`의 `gen2-fix`.
+
+2026-11-11 홀드아웃 H4 평가(새 Opus 세션, 평가자, 아직 리뷰 없음).
+방법 고정 `eacf0fb`의 blob 15개와 트리 id 둘을 다시 셌다. 모두 같다. 연 기록은 `9d338fa`다.
+손 Desc와 손 문장(`H4Stmt.lean`)을 생성기 실행 전에 커밋했다.
+결과 (S): Deposit_Data 3/4(종료 3), PendingPartialWithdrawal 0/3(종료 2). 결과 (C): 둘 다 거부(종료 2).
+Deposit_Data 수용 정리는 손 합성으로 커널 검사했다. 생성 구간 셋과 새 손 보조정리 하나를 쓴다.
+PendingPartialWithdrawal 수용 정리는 시도 3회 한도로 증명하지 못했다.
+부정 시험 30/32, 공리 게이트 PASS, 선언 비교 ADDED 281개뿐, Go 차분 12/12다.
+원격에 쓰지 않았다. 기록: REPORT 11절, `scal/CONTAMINATION.md` 16절, `scal/RESULT.json`의 `H4`, FINDINGS SG-3.

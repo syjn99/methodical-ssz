@@ -23,6 +23,7 @@ H2에서 고정 생성기는 루트 필드 2개 중 0개를 덮었다(SG-1). 이
 SG-1 확장은 두 홀드아웃을 연 뒤의 개발 작업이다. 그 확장에서 Eth1Data는 표본 안 자료다(11절).
 홀드아웃 H3(BlobIdentifier, DepositMessage의 `UnmarshalSSZ`)의 결과는 `scal/RESULT.json`의 `H3`에 있다(11절).
 리뷰 h3-r1이 H3 `75166e4`를 승인했다.
+홀드아웃 H4(Deposit_Data, PendingPartialWithdrawal의 `UnmarshalSSZ`)의 결과는 `scal/RESULT.json`의 `H4`에 있다(11절). 독립 리뷰는 아직 없다.
 BeaconBlockHeader 인코더는 빠른 경로와 길이 거부 세 곳을 증명했다. 길이 거부의 전제는 `len + 112 ≤ cap`이다(11절).
 `Eth1Data.MarshalSSZTo`는 빠른 경로만 증명했다(11절, ENC 스트림). 리뷰 enc-r1이 ENC `ad15fbc`를 승인했다.
 어느 인코더도 완전하지 않다.
@@ -553,6 +554,31 @@ G2-F에서 부정 시험은 다시 돌리지 않았다.
 BlobIdentifier와 DepositMessage는 표본 안 자료다. 전이의 증거는 H4 전까지 없다.
 기록: `scal/CONTAMINATION.md` 14절, `scal/RESULT.json`의 `gen2`, FINDINGS SG-2.
 
+홀드아웃 H4(방법 고정 `eacf0fb`, 연 기록 커밋 `9d338fa`, 2026-11-11T08:53:45Z; 아직 리뷰 없음):
+범위는 `v1alpha1.Deposit_Data`(A 부류)와 `v1alpha1.PendingPartialWithdrawal`(B 부류)의 `UnmarshalSSZ`뿐이다. 두 형을 한 번 열었다.
+Deposit_Data는 표본 안 DepositMessage에 96바이트 Signature를 더한 형이다. 필드 4개 중 3개는 표본에 가깝다.
+손 문장 `H4.dd_accept_stmt`, `H4.pw_accept_stmt`(`H4Stmt.lean`)는 생성기를 돌리기 전에 커밋했다(`d7e3304`).
+결과 (S), 형마다 `p2dec --gen2` 한 번: Deposit_Data는 종료 3, 필드 4개 중 3개다.
+PublicKey(48, 0 꼴), Amount(인라인, rsi), Signature(96, add 꼴)를 덮었다. 원 출력은 손대지 않았다(`Gen2DdDecPartial.lean`).
+WithdrawalCredentials는 덮지 못했다. 코드의 `mov $0x20,%ecx`와 `callq runtime.makeslice` 사이에 `nop`이 있다(FINDINGS SG-3).
+`kindcheck.py --partial`은 종료 3(그 도구의 성공 코드)이다. 그 파일은 빌드된다.
+PendingPartialWithdrawal은 종료 2, 필드 3개 중 0개다. Index와 WithdrawableEpoch는 호출로 컴파일된 위임 overlay다.
+Amount는 인라인 읽기지만 3지시 꼴이 아니다(`mov 0x8(%rbx),%r8; mov %r8,0x10(%rax)`, SG-3).
+결과 (C), 형마다 `--compose --same-as-prop` 한 번: 둘 다 종료 2로 거부했다. 덮지 못한 필드가 있다. 항등식 검사는 돌지 않았다.
+손 작업(생성 출력 커밋 뒤, 새 H4 모듈만): Deposit_Data 수용 정리 `H4.dd_e2e_accept_main : dd_accept_stmt`를 커널 검사했다.
+그 증명은 생성 구간 세 개를 그대로 부른다. WithdrawalCredentials는 새 손 보조정리 `H4.bytes32dec_seg_nop`(`DdSegNop.lean`)이다.
+또 크기 거부, 코덱 동등, 명세 정렬, `reject_complete`, 증인 `WitDdA`(Go 배치 수신자), `WitDdR`이다.
+PendingPartialWithdrawal 수용 정리는 증명하지 못했다. 시도 3회 한도에 걸렸다(마지막 프레임 `ecancel`의 항 꼴).
+PendingPartialWithdrawal은 크기 거부, 코덱 동등, 명세의 거부 쪽, 증인 `WitPwR`만 커널 검사했다.
+손 줄(g2g 규칙): Deposit_Data 수용 경로 336(DdAccept 148, DdSegNop 188), H4Stmt 112다. H3: BlobIdentifier 210, DepositMessage 464다.
+형이 다르다. 이 줄 수에서 원인을 주장하지 않는다.
+실행 검사: 링크 검사 PASS(`h4/link/RESULT`), 부정 시험 30/32, Go 차분 12/12(arm64의 Go 의미, ELF 아님).
+부정 시험에서 메모리 상한 kill 1건, heartbeat 시간 초과 1건은 통과로 세지 않는다.
+공리 게이트 PASS(선언 5007개, 비표준 0), g2f-r1 덤프 대비 ADDED 281개뿐이다.
+게이트 초: Deposit_Data 294.2, PendingPartialWithdrawal 36.5, 공유 124.2, 기준 빌드 86.7이다.
+H4의 한계: 두 형, 한 번이다. 일반성, 우월성, 속도 주장은 없다.
+기록: `scal/CONTAMINATION.md` 16절, `scal/RESULT.json`의 `H4`, FINDINGS SG-3.
+
 조건:
 
 1. 런타임 계약 `MakesliceC`(uint8, esz 1, cnt 32), `MemmoveC`, `GrowsliceC`(uint8, esz 1, 인코더 첫 지점과 둘째 지점), `ConvT64C`, `FmtErrorfDDC`(Epoch 형식, `type:int`)는 가설이다. Go 1.26.10 소스를 다시 읽었고 바뀌지 않았다(`prysm/go1.26.10/e2e/RUNTIME-1.26.10.md`). 정교화 증명은 없다.
@@ -699,4 +725,14 @@ python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/prysm/go1.26.10/opt-r1/neg
 python3 -I -B fv/kraken/gen/scal/p2dec_test.py <work> <result.json>; python3 -I -B fv/kraken/gen/scal/kindcheck.py fv/kraken/lean/E2eScal/Gen2*Dec.lean fv/kraken/lean/E2eScal/Gen2*Accept.lean
 python3 -I -B fv/kraken/gen/scal/kindcheck.py --partial fv/kraken/lean/E2eScal/Gen2BhDecPartial.lean   # 종료 3 = 있는 정리의 kind PASS, 완전 덮음 아님
 python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/scal/negcases-g2g.json <work> <result.json> <case-id>   # 사례마다 gate 작업 하나
+# H4 홀드아웃: 링크 표, 생성기 (S)와 (C)를 형마다 한 번, 모듈, 부정 시험, Go 차분
+python3 -I -B fv/kraken/gen/e2e/h4link.py callgraph <objdump> <out.json>; python3 -I -B fv/kraken/gen/e2e/h4link.py filter <out> <objdump> <elf> <nm>
+mkdir -p <out>/norm && python3 -I -B fv/kraken/link/conv.py <out>/target.objdump <out>/p1bin-amd64.nm <out>/norm --norm; python3 -I -B fv/kraken/gen/e2e/h4link.py data <out> prysm/go1.26.10/e2e/link prysm/go1.26.10/e2e/ad/link; python3 -I -B fv/kraken/link/check.py <out>
+(cd fv/kraken && python3 -I gen/scal/scalgen.py p2dec --gen2 --summary <s.json> --partial-out <partial.lean> --S prysm/go1.26.10/e2e/h4/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S --const DdUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.Deposit_Data --prefix dd_g2dec --imports E2eScal.P2Dec,E2eScal.P2DecZ,E2eScal.SegN,E2eScal.U64Inline,E2eScal.H4Code --open E2eScal.H4Code)   # 종료 3; PendingPartialWithdrawal: --const PwUnmarshal --type v1alpha1.PendingPartialWithdrawal --prefix pw_g2dec (종료 2)
+(cd fv/kraken && python3 -I gen/scal/scalgen.py p2dec --gen2 --compose --name dd_e2e_accept_main_gc --same-as-prop E2eScal.H4.dd_accept_stmt --S <위와 같다> --const DdUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.Deposit_Data --prefix dd_g2dec --imports E2eScal.Compose,E2eScal.Gen2DdDecPartial,E2eScal.E1Accept,E2eScal.H4Stmt --open E2eScal.H4Code)   # 종료 2(거부); pw: --name pw_e2e_accept_main_gc --same-as-prop E2eScal.H4.pw_accept_stmt
+python3 -I -B fv/kraken/gen/scal/kindcheck.py --partial fv/kraken/lean/E2eScal/Gen2DdDecPartial.lean   # 종료 3 = 있는 정리의 kind PASS
+# 모듈 18개: H4Code H4Stmt DdDesc PwDesc Gen2DdDecPartial DdSegNop DdAccept DdReject PwReject DdSpecChecker PwSpecChecker DdSpec PwSpec DdSpecK PwSpecK WitDdA WitDdR WitPwR (lake build E2eScal.<모듈>)
+python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/scal/negcases-h4.json <work> prysm/go1.26.10/e2e/scal/negative-h4.json <case-id>   # 사례마다 gate 작업 하나
+python3 -I -B fv/kraken/gen/e2e/h4diff.py cases <c.json>; go run -overlay <overlay.json> ./fve2e/h4check < <c.json> > <o.json>   # Prysm 임시 트리, Go 1.26.10; overlay가 h4/h4check-main.go.txt를 main.go로 준다
+python3 -I -B fv/kraken/gen/e2e/h4diff.py check <c.json> <o.json> prysm/go1.26.10/e2e/h4/differential.json
 ```

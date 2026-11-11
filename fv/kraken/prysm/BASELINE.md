@@ -75,6 +75,10 @@ Module path is `lean/<Namespace>/<Module>.lean`. Sources: `prysm/go1.26.10/e2e/e
 | DepositMessage.UnmarshalSSZ (GEN2, development set) | accept, same statement as `Dm.dm_e2e_accept_main` (`_type` identity) | K (3/3 segments generated; composition generated and by hand; GEN2 unit G2-G, not yet reviewed) | `E2eScal.Gen.dm_e2e_accept_main_gc` (generated), `E2eScal.G2.dm_e2e_accept_main_g2` (hand over generated segments) |
 | Eth1Data.UnmarshalSSZ (GEN2, development set) | accept, same statement as `E1.e1_e2e_accept_main` (`_type` identity) | K (3/3 segments and composition generated; GEN2 unit G2-G, not yet reviewed) | `E2eScal.Gen.e1_e2e_accept_main_gc` |
 | BlobIdentifier, DepositMessage: MarshalSSZTo, SizeSSZ, HashTreeRoot | all paths | N (out of H3 scope) | — |
+| Deposit_Data.UnmarshalSSZ (hold-out H4) | accept (statement = independent hand statement `H4.dd_accept_stmt`); size reject; spec; reject_complete | K (result (S) 3/4: PublicKey, Amount, Signature segments generated, raw; WithdrawalCredentials hand lemma `H4.bytes32dec_seg_nop`; result (C) refused, composition by hand; not yet reviewed) | `E2eScal.H4.dd_e2e_accept_main`, `dd_e2e_reject_size_main`, `dd_e2e_accept_spec_k`, `dd_e2e_reject_complete`; witnesses `WitDdA`, `WitDdR` |
+| PendingPartialWithdrawal.UnmarshalSSZ (hold-out H4) | size reject; reject-side spec; reject_complete (spec side) | K (result (S) 0/3, result (C) refused; not yet reviewed) | `E2eScal.H4.pw_e2e_reject_size_main`, `pw_e2e_reject_size_spec`, `pw_e2e_reject_complete`; witness `WitPwR` |
+| PendingPartialWithdrawal.UnmarshalSSZ (hold-out H4) | accept (hand statement `H4.pw_accept_stmt`); callee error paths | N (accept: not proved, H4 attempt bound) | — |
+| Deposit_Data, PendingPartialWithdrawal: MarshalSSZTo, SizeSSZ, HashTreeRoot | all paths | N (out of H4 scope) | — |
 | MarshalSSZ, HashTreeRoot, HashTreeRootWith of every type (Checkpoint included); SizeSSZ of every type except Checkpoint | all paths | N (outside the e2e function set) | — (`e2e/CALLGRAPH.md` §4, FINDINGS AU-09) |
 | decoder `fmt.Errorf` wraps | unreachable_mc (conditional skip, not reject coverage) | K | `E2e.cp_e2e_epoch_err_unreachable`, `E2eAd.ad_e2e_*_err_unreachable` |
 | hand-written `primitives` methods | every method and path not in a K row above (FINDINGS O2 counts "the other 23 methods" after Epoch only; it predates the Slot, CommitteeIndex and ValidatorIndex decoder rows above) | N | `prysm/FINDINGS.md` O2 |
@@ -84,7 +88,7 @@ Module path is `lean/<Namespace>/<Module>.lean`. Sources: `prysm/go1.26.10/e2e/e
 
 Every growslice branch except the Checkpoint ones above is NOT proved. No encoder is complete; there is no full coverage claim.
 Rows marked "ENC stream" are kernel-checked on the branch `claude/ssz-fv-enc-reuse` (base `dda707c`); review enc-r1 approved `ad15fbc`. Both encoders: fast path only; the BeaconBlockHeader rejects only under `len + 112 ≤ cap`.
-Go-value checks: a Lean predicate exists for Checkpoint only (`E2e.cpGoValue`, module `lean/E2e/GoVal.lean`); BeaconBlockHeader, Eth1Data, AttestationData, BlobIdentifier and DepositMessage receivers have none (`REPORT.md` §11).
+Go-value checks: a Lean predicate exists for Checkpoint only (`E2e.cpGoValue`, module `lean/E2e/GoVal.lean`); BeaconBlockHeader, Eth1Data, AttestationData, BlobIdentifier, DepositMessage, Deposit_Data and PendingPartialWithdrawal receivers have none (`REPORT.md` §11).
 No run on x86-64 hardware (`REPORT.md` §11 condition 3).
 OPT-R1 rows (integration INT3): kernel-checked on the pilot ELF only, review opt-r1-r1 APPROVE on `5821b19`. The e2e ELF rows above are unchanged and do not transfer.
 In the pilot binary's function the second growslice call does not exist, so path (C) does not occur there. T-7 itself is unchanged and deferred (`GrowsliceC` form unchanged).
@@ -155,6 +159,7 @@ Portability caveats:
 | ENC-1 | six root-append sites have six instruction texts; the shared encode block is the call site (`enc32_call`), the steps before it stay per site (reuse partial); reviewed (enc-r1) |
 | ENC-2 | the BeaconBlockHeader encoder writes earlier fields to `dst[len:]` before a later length reject (class of C-1); reviewed (enc-r1) |
 | SG-2 | frozen generator covers 32-byte `[]byte` vectors only: H3 coverage 1/2 and 1/3 fields; GEN2 (`p2dec --gen2`, not yet reviewed): addressed on the development set (3/3, 2/2, 3/3), open as transfer evidence until H4 |
+| SG-3 | H4 hold-out, frozen GEN2 generator: Deposit_Data 3/4 (a `nop` before `callq runtime.makeslice` in the WithdrawalCredentials segment), PendingPartialWithdrawal 0/3 (delegated overlay calls; an interleaved inline uint64 form); `--compose` refused both | recorded; proposals P-H4-1..3 not done (`scal/CONTAMINATION.md` §16); not yet reviewed |
 | SG-1 | extended after both hold-outs; no hold-out claim for the extension; DepositCount has no template |
 | AU-01 | gate lock is not FIFO; user decision: measure first |
 | AU-07 | `P2EncCp` `omega` cost not located; the encode template is net-negative in build time |

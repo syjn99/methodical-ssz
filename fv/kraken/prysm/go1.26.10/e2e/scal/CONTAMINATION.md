@@ -258,3 +258,35 @@
 - `Gen2BhDecPartial.lean`은 생성기를 한 번 돌린 원 출력이다(작업 05). 같은 명령의 scratch 시험이 앞섰다(작업 02).
 - 기본 모드와 커밋된 생성 파일은 바뀌지 않았다: `regen_check.sh` 15/15 SAME(작업 13).
 - 일반성 주장은 없다. 독립 리뷰는 아직 없다.
+
+## 16. 홀드아웃 H4 평가 — 열린 뒤
+
+- 연 시각: `scal/HOLDOUT-OPENED`의 `H4.opened_utc`(커밋 `9d338fa`, 2026-11-11T08:53:45Z).
+- 방법 고정: 커밋 `eacf0fb`. 고정 기록의 blob 15개와 `lean/E2eScal`, `lean/Fk` 트리 id를 다시 셌다. 모두 같다.
+- 형: `v1alpha1.Deposit_Data`(A 부류), `v1alpha1.PendingPartialWithdrawal`(B 부류). 범위는 `UnmarshalSSZ`뿐이다.
+- 평가 세션은 GEN2 생성기, 검사기, 종류, 보조정리를 만들지 않았다. 이전 단위의 파일은 읽을 수 있었다.
+- 밝힌 유사성(H4-A5): Deposit_Data는 DepositMessage에 96바이트 Signature를 더한 형이다. 필드 3개는 표본에 가깝다.
+- 손 Desc(`2daf204`)는 검사기 Desc를 출력하기 전에 커밋했다.
+- 손 문장 `H4.dd_accept_stmt`, `H4.pw_accept_stmt`(`d7e3304`)는 생성기를 돌리기 전에 커밋했다.
+- 손 문장은 IR `go_fields`, SSZ 배치, `.S`의 프레임 사실, Bi/Dm/E1/Bh 손 정리의 꼴에서 썼다.
+- 링크 표는 손 문장 전에 만들었다. 문장이 `.S`의 프레임 사실을 써야 했다. 생성기는 돌리지 않았다.
+- 생성기 (S)와 (C)는 형마다 한 번씩 돌렸다(작업 12, 13, 16, 17). 다른 선택으로 다시 돌리지 않았다.
+- 원 출력 `Gen2DdDecPartial.lean`, 요약 JSON 둘, stderr 기록 셋은 손대지 않고 먼저 커밋했다(`43a0847`, `76b66ba`).
+- 손 수정 줄은 0이다. stderr 하나(Deposit_Data (S))에는 실행 디렉터리 경로가 있어 커밋하지 않았다.
+- `scalgen.py`, `kindcheck.py`, `Kind*.lean`, 보조정리 모듈, `Fk/*`, 계약, 기존 문장은 바꾸지 않았다.
+- 새 손 보조정리: `H4.bytes32dec_seg_nop`(`DdSegNop.lean`). `bytesdec_seg`(n = 32)의 글에 `nop` 한 단계를 더했다.
+- 그 글은 임시 스크립트가 `SegN.lean`에서 만들었다. 스크립트는 커밋하지 않았다. 방법의 일부가 아니다.
+- 열린 뒤 더한 도구: `gen/e2e/h4link.py`(`h3link.py`의 글), `gen/e2e/h4diff.py`(`h3diff.py`의 글), `h4/h4check-main.go.txt`.
+- 열린 뒤 더한 증거 파일: `gen/scal/negcases-h4.json`, `AxiomsScal.lean`의 import 7개와 손 목록 46개.
+- 검사기 json은 phase1c-r5 리뷰의 임시 사본에서 왔다. sha256은 `main.result.json` 기록과 같다.
+- `DdSpecChecker.lean`, `PwSpecChecker.lean`은 `descterm.py` 출력이다. 머리에 경로 한 줄을 손으로 더했다(H3와 같다).
+- 제안(하지 않음) P-H4-1: 32바이트 구간 머리에서 `callq runtime.makeslice` 앞의 `nop`을 허용한다.
+- P-H4-1이 있으면 Deposit_Data의 WithdrawalCredentials(지시 47–72)가 생성 대상이 된다.
+- 제안(하지 않음) P-H4-2: 인라인 uint64 읽기의 다른 꼴을 읽는다.
+- 그 꼴은 `mov 0x8(%rbx),%r8; mov %r8,0x10(%rax)`이다. 두 기준 레지스터를 앞의 다른 지시가 다시 읽는다.
+- 제안(하지 않음) P-H4-3: 위임 overlay 필드(호출)를 기존 함수 명세 `ViUAccC`, `EpUAccC`로 덮는 구간 템플릿.
+- 세 제안은 방법 변경이다. 그래서 해당 필드는 생성기가 덮지 않은 것으로 보고한다.
+- 도구 한계: `negative.py`의 코드 변이는 그 모듈 안의 이름만 바꾼다.
+- 문장이 다른 모듈의 `abbrev`이면 대조군도 실패한다(`dd-acc-control`, 작업 46). 그 네 사례는 철회했다.
+- 한계: `h4/link/norm`은 Lake `input_dir`가 아니다. lakefile 변경은 승인이 필요해서 하지 않았다.
+- 일반성 주장은 없다. 독립 리뷰는 아직 없다.

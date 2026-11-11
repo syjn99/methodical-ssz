@@ -1471,5 +1471,213 @@
    "independent review of this integration"
   ],
   "review_int_r2": "superseded by review int-r2 (APPROVE on a70492c; 0 must-fix, 6 should-fix S1-S6): the item 'independent review of this integration' in not_run is superseded on that point only. int-r2 did NOT verify: cold build from an empty .lake (115 base modules and E2eScal.P2EncCp not re-elaborated); link checks (no ELF in the tree), Go differentials, Go tests, benchmarks; x86-64 hardware; 73 of 89 negative cases (the two pilot S3 cases read from the integrator's result files only); runtime contracts, morestack paths, Kraken semantics; secret and path scans are regex based"
+ },
+ "H4": {
+  "scope": "H4 hold-out: UnmarshalSSZ of v1alpha1.Deposit_Data (class A) and v1alpha1.PendingPartialWithdrawal (class B). Encoders, SizeSSZ, HashTreeRoot: out of scope. Two types, one touch. Not yet reviewed.",
+  "method_freeze": {
+   "sha": "eacf0fb4c03bf4b34ecf8b7a7705297998c848f7",
+   "blobs_checked": "15 blob ids of the freeze record and the lean/E2eScal (bef19fbb) and lean/Fk (50a7c8c3) tree ids equal (git rev-parse HEAD:<path>)"
+  },
+  "opening": {
+   "record": "scal/HOLDOUT-OPENED H4",
+   "commit": "9d338fa",
+   "opened_utc": "2026-11-11T08:53:45Z",
+   "step0": "gated lake build E2e E2eAd E2eScal exit 0 (48 modules built that the moved .lake lacked; E2eScal.P2EncCp replayed, not rebuilt; 86.7 gate-s, recorded separately), then --no-build exit 0",
+   "state_before_commit": "no method code, .S, objdump, IR entry, functions.json body or generator output of the two types opened before the commit"
+  },
+  "evaluator": "fresh Opus 5.5 session; did not build the GEN2 generator, checker, kinds or lemmas; could read earlier unit files (not independent of that experience)",
+  "order": {
+   "hand_desc_commit": "2daf204 (before the checker Desc was rendered)",
+   "link_commit": "05f64b5 (before the hand statements: the statements use .S frame facts; no generator run)",
+   "hand_statement_commit": "d7e3304 (H4Stmt.lean: dd_accept_stmt, pw_accept_stmt; before any generator run on either type)",
+   "raw_S_commit": "43a0847",
+   "raw_C_commit": "76b66ba"
+  },
+  "similarity": "Deposit_Data = development type DepositMessage + Signature bytes96; 3 of its 4 fields are near-in-sample (H4-A5). Only the Signature field and the 4-field composition are out-of-sample evidence for type A.",
+  "types": {
+   "Deposit_Data": {
+    "layout": "protoc struct, IR go_fields: state 0, PublicKey 8, WithdrawalCredentials 32, Amount 56, Signature 64, unknownFields 88, sizeCache 112, size 120; the code's store offsets agree",
+    "S": {
+     "runs": 1,
+     "job": "12",
+     "exit": 3,
+     "covered": "3/4",
+     "covered_fields": {
+      "PublicKey": "bytesdec_seg_z 48, directives 13-36",
+      "Amount": "u64dec_inline_seg rsi, directives 83-85",
+      "Signature": "bytesdec_seg 96, directives 86-110"
+     },
+     "reasons": {
+      "WithdrawalCredentials": "field at Go offset 0x20: 0 decode segments match (expected 1) [code: nop at directive 50 before callq runtime.makeslice]"
+     },
+     "raw_file": "lean/E2eScal/Gen2DdDecPartial.lean",
+     "raw_edited_lines": 0,
+     "builds": "yes (job 14)",
+     "kindcheck": "--partial mode, exit 3 (its success code): PASS 3/4, kinds of present theorems (job 15)",
+     "near_in_sample_note": "3 of 4 fields are near-in-sample"
+    },
+    "C": {
+     "runs": 1,
+     "job": "16",
+     "result": "refused",
+     "exit": 2,
+     "reason": "--compose needs every field covered (3 of 4)",
+     "identity_check": "not run (nothing generated)",
+     "witness_of_generated": "n/a",
+     "evaluator_statement_corrections": []
+    },
+    "hand": {
+     "accept": "E2eScal.H4.dd_e2e_accept_main : H4.dd_accept_stmt (hand composition over the three raw generated segments + hand lemma H4.bytes32dec_seg_nop for WithdrawalCredentials; composition text of Gen2DmAccept)",
+     "witness": "WitDdA.dd_accept_runs: the premises of dd_accept_stmt are satisfiable (zero/nil, representative with old pointers, all-0xff), Go-layout receiver (IR go_fields)"
+    },
+    "kernel_checked": [
+     "E2eScal.Gen.dd_g2dec_PublicKey_seg (+_kind)",
+     "E2eScal.Gen.dd_g2dec_Amount_seg (+_kind)",
+     "E2eScal.Gen.dd_g2dec_Signature_seg (+_kind)",
+     "E2eScal.H4.bytes32dec_seg_nop",
+     "E2eScal.H4.dd_e2e_accept_main",
+     "E2eScal.H4.dd_e2e_reject_size_main",
+     "E2e.prysmDdDesc_checker",
+     "E2e.prysmDdDesc_serialize_checker",
+     "E2e.prysmDdDesc_deserialize_checker",
+     "E2e.pdd_spec_accepts_iff",
+     "E2e.pdd_roundtrip",
+     "E2eScal.H4.dd_e2e_accept_spec_k",
+     "E2eScal.H4.dd_e2e_reject_size_spec",
+     "E2eScal.H4.dd_e2e_reject_complete",
+     "E2eScal.WitDdA.dd_accept_runs",
+     "E2eScal.WitDdR.dd_reject_runs (184-1, 184+1, 0)"
+    ],
+    "not_proved": [
+     "morestack path (stack-guard premise)",
+     "runs with runtime.writeBarrier != 0 (premise)",
+     "runtime callees makeslice/memmove (contracts MakesliceC, MemmoveC stay hypotheses)",
+     "a Lean Go-value predicate for the receiver (Go differential only)",
+     "no witness fills the Pm premise of dd_e2e_accept_spec_k (as the H3 models)",
+     "MarshalSSZTo, SizeSSZ, HashTreeRoot (out of scope)",
+     "x86-64 hardware run"
+    ],
+    "hand_lines": {
+     "rule": "g2g rule: non-blank lines that are not comment lines (/- ... -/ blocks incl. doc comments, -- lines), whole hand module file; the script reproduces the g2g values 210/255/209/155",
+     "accept_path": 336,
+     "accept_path_files": "DdAccept.lean 148 (182 file lines) + DdSegNop.lean 188 (211 file lines)",
+     "hand_statement_H4Stmt_both_types": 112,
+     "all_hand_modules": 783,
+     "H3_for_reference_no_causal_claim": {
+      "BlobIdentifier_accept": 210,
+      "DepositMessage_accept": 464,
+      "DepositMessage_G2_hand_composition": 155
+     }
+    },
+    "attempts": {
+     "DdSegNop": 1,
+     "DdAccept": 1,
+     "DdReject": 1,
+     "DdSpec": 1,
+     "DdSpecK": 1,
+     "WitDdA": 1,
+     "WitDdR": 1,
+     "failed": 0
+    },
+    "gate_s": 294.2
+   },
+   "PendingPartialWithdrawal": {
+    "layout": "protoc struct, IR go_fields: state 0, Index 8, Amount 16, WithdrawableEpoch 24, unknownFields 32, sizeCache 56, size 64",
+    "S": {
+     "runs": 1,
+     "job": "13",
+     "exit": 2,
+     "covered": "0/3",
+     "reasons": {
+      "Index": "delegated overlay field (ValidatorIndex): compiled as a call, no template",
+      "Amount": "field at Go offset 0x10: 0 inline uint64 reads match (expected 1) [code: mov 0x8(%rbx),%r8; mov %r8,0x10(%rax) after base-register reloads]",
+      "WithdrawableEpoch": "delegated overlay field (Epoch): compiled as a call, no template"
+     },
+     "raw_file": "none written (exit 2); raw stderr prysm/go1.26.10/e2e/h4/gen/Gen2PwDec.raw.txt",
+     "raw_edited_lines": 0,
+     "kindcheck": "not run (no file)"
+    },
+    "C": {
+     "runs": 1,
+     "job": "17",
+     "result": "refused",
+     "exit": 2,
+     "reason": "no field covered (same three reasons)",
+     "identity_check": "not run",
+     "witness_of_generated": "n/a",
+     "evaluator_statement_corrections": []
+    },
+    "hand": {
+     "accept": "NOT proved (bound): 3 real attempts (jobs 21, 22, 25), diagnostics jobs 23-24 (trace_state, not attempts). Last failure: only the final frame ecancel; the callee post states the saved-rbp slot in a different term form (BitVec.toInt vs .toInt). Proposed next step (untested): the rw ... from rfl normalization of BhHead at Hm3 before the final ecancel. Text kept outside the repository."
+    },
+    "kernel_checked": [
+     "E2eScal.H4.pw_e2e_reject_size_main",
+     "E2e.prysmPwDesc_checker",
+     "E2e.prysmPwDesc_serialize_checker",
+     "E2e.prysmPwDesc_deserialize_checker",
+     "E2e.ppw_spec_accepts_iff",
+     "E2e.ppw_roundtrip",
+     "E2eScal.H4.pw_e2e_reject_size_spec",
+     "E2eScal.H4.pw_e2e_reject_complete (spec side: EthLib reject -> size != 24)",
+     "E2eScal.WitPwR.pw_reject_runs (23, 25, 0)"
+    ],
+    "not_proved": [
+     "accept path (pw_accept_stmt) and pw_e2e_accept_spec_k: attempt bound",
+     "the two callee error paths (fmt.errorf wraps)",
+     "morestack path",
+     "a Lean Go-value predicate for the receiver",
+     "no accept witness (accept not proved)",
+     "MarshalSSZTo, SizeSSZ, HashTreeRoot (out of scope)",
+     "x86-64 hardware run"
+    ],
+    "hand_lines": {
+     "accept_path_kernel_checked": 0,
+     "unproved_accept_attempt_not_committed": 199,
+     "all_committed_hand_modules": 294
+    },
+    "attempts": {
+     "PwAccept": "3 (all failed) + 2 diagnostics",
+     "PwReject": 1,
+     "PwSpec": 1,
+     "PwSpecK": 1,
+     "WitPwR": "2 (attempt 1: wrong program-length constant)",
+     "failed": 4
+    },
+    "gate_s": 36.5
+   }
+  },
+  "shared_gate_s": 124.2,
+  "base_build_gate_s": 86.7,
+  "total_gate_s": 541.6,
+  "gate_jobs": 74,
+  "link": "check.py (a)-(f) PASS all, bundle e1d4d2e3 (job 08); ELF sha256 c6403c02...911e checked (reused local artifact)",
+  "negatives": {
+   "result": "30/32 (8 controls pass, 22 mutants fail inside the target; 0 wrong_target)",
+   "not_counted": [
+    "dd-ask-stmt-heap: killed (memcap 6 GiB per process, job 58)",
+    "dd-ask-stmt-siglen: timeout_heartbeat (job 60)"
+   ],
+   "withdrawn": "dd-acc-control (control_fail, job 46), dd-acc-code-amt/siglen/nop: negative.py renames the code constant only inside the mutated file; the statement of dd_e2e_accept_main is the abbrev in H4Stmt, so the control fails; replaced by code mutants on the generated segments",
+   "file": "scal/negative-h4.json",
+   "cases": "gen/scal/negcases-h4.json",
+   "jobs": "41-77"
+  },
+  "axioms": "PASS: 5007 declarations, 4204 theorems, 0 nonstandard, 0 sorryAx, hand list 443, missing 0 (scratch run job 79; the committed record is regenerated at the end)",
+  "drift": "vs the g2f-r1 dump at eacf0fb: 281 ADDED, 0 REMOVED, 0 CHANGED (scal/h4-drift.txt); planted CHANGED control -> exit 1",
+  "go_differential": "12/12 (job 80): Go semantics on linux/arm64, not the ELF; go run -overlay in the parked Prysm tree (git status hash unchanged); planted control -> 2 mismatches, exit 1",
+  "stale_olean": "job 78 after the killed job 58: AFTER 0; STALE mtime-only (checkout newer than the moved .lake), 6 pre-existing ORPHAN probe artifacts; lake build --no-build exit 0 at the end",
+  "contamination": "CONTAMINATION.md section 16: no generator/checker/kind/lemma/Fk/contract change; proposals P-H4-1..3 not done; new hand lemma module DdSegNop (not method)",
+  "bounds_hit": [
+   "PendingPartialWithdrawal accept: 3 attempts -> not proved (bound)"
+  ],
+  "not_run": [
+   "cold build from an empty .lake",
+   "regen_check.sh (reruns the generator; H4 allows one run per type)",
+   "kindcheck --selftest, p2dec_test.py (no generator change)",
+   "earlier negative suites",
+   "x86-64 hardware",
+   "independent review"
+  ],
+  "limits": "two types, one touch; Deposit_Data near-in-sample for 3 of 4 fields; no generality, superiority or speed-up claim; H1/H2/H3 records untouched"
  }
 }
