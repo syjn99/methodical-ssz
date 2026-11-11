@@ -121,3 +121,18 @@
 - EthLib의 `headOf_inline`, `bodiesOf_inline`, `concatParts_size`, `concat_fixed_slices`를 그대로 썼다.
 - 시도 1(로그 54–56): 개발 단계 셋. 원인: `serializeEach`, `Value.allFit`의 빈 목록 경우가 `rfl`로 줄지 않았다. 덩어리 크기 증명에 `i < 512`가 없었다(`toV48`로 바꾸고 `List.map_congr_left`로 경계를 넣었다). 로그 56에서 exit 0.
 - `ScSpecK`, `ScDescEq`(로그 57): 시도 1에 exit 0.
+
+### T2 증인 모델 `E2eList.BumpT` (판정 2)
+
+- 한 Host에는 `runtime.makeslice`가 하나뿐이다. T2 증인에는 `MakesliceC … lvSliceType_addr 24 S`와 `MakesliceC … e2eU8Type_addr 1 S`가 함께 필요하다.
+- 그래서 esz 24만의 모델(`bump_makeslice` 꼴)은 `bump_makeslice1`과 한 Host에 둘 수 없다.
+- 조치: `BumpAllocT.S`는 `BumpAlloc1.S`에 형식 단어 비교 하나를 더했다. rax가 `type__+337600`이면 24·cnt, 아니면 cnt를 민다.
+- 정리 둘: `bump_makeslice_t24`(esz 24), `bump_makeslice_t1`(형식 단어가 `lvSliceType_addr`가 아니면 esz 1). 증명 글은 `bump_makeslice1`이다.
+- 시도 1(로그 58–62): 개발 단계. 원인: 분기 조건의 `omega`가 레이블 산술을 풀지 못했다. `BitVec.sub_add_cancel`과 `BitVec.sub_self`로 닫았다. 로그 62에서 exit 0.
+- 이 모델은 비공허성 근거일 뿐이다. Go `makeslice`는 `et.Size_`를 읽는다. 이 모델은 주소 하나와 비교한다.
+
+### T2 증인 `WitScA.sc_accept_runs`
+
+- 시도 1(로그 63): `u8_ne_slice`의 보조 이름이 없었다(`BitVec.add_sub_cancel_left`). 로그 64: `bv_omega`로 바꿔 exit 0. 증인 본문은 첫 빌드부터 통과했다.
+- `maxHeartbeats 16000000`을 이 선언 하나에만 둔다. 설정 없는 scratch 사본(로그 65)은 `whnf`에서 기본 한도를 넘었다(`simp` 2.3 s 뒤). 원인은 T1 증인과 같다(로그 27).
+- 입력 셋(0, 대표값, 0xff)의 `example` 셋이 통과했다. 각 입력은 48바이트 덩어리 512개다.
