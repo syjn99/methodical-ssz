@@ -512,7 +512,7 @@ int-r2가 확인하지 않은 것: 빈 `.lake`에서의 콜드 빌드(기준 모
 런타임 계약, morestack 경로, Kraken 의미론도 확인하지 않았다. 비밀과 경로 검사는 정규식 기반이다.
 기록: `prysm/go1.26.10/opt-r1/MANIFEST.md`, `RESULT.json`의 `integration_int3`(`review_int_r2` 포함).
 
-GEN2 생성기 작업(단위 G2-G, 기준 `6c62a49`, 개발 작업, 아직 리뷰 없음):
+GEN2 생성기 작업(단위 G2-G, 기준 `6c62a49`, 개발 작업; 리뷰 g2g-r1 REQUEST_CHANGES, 문서만; 수정 단위 G2-F, 아직 리뷰 없음):
 증명 생성기에 선택 모드 `p2dec --gen2`를 더했다. 기본 모드의 출력은 글자 그대로 같다.
 옛 생성기 명령 8개는 `regen_check.sh` SAME이다. 새 명령 6개도 두 번 실행이 같다.
 덮은 필드: Eth1Data 3/3, BlobIdentifier 2/2, DepositMessage 3/3이다. 원 출력은 손대지 않았다.
@@ -521,9 +521,34 @@ GEN2 생성기 작업(단위 G2-G, 기준 `6c62a49`, 개발 작업, 아직 리�
 손 정리가 없는 형에서는 합성 문장을 검사하지 못한다. 합성 문장의 종류(kind)는 없다.
 손 합성 `G2.bi_e2e_accept_main_g2`, `G2.dm_e2e_accept_main_g2`도 생성 구간 정리만 부른다.
 손 줄 수(빈 줄과 주석 제외, 파일 전체): BlobIdentifier 210 → 120 → 0, DepositMessage 464 → 155 → 0이다.
-가운데 값은 손 합성, 마지막 값은 생성 합성이다. 남는 손 작업은 형마다 생성기 명령 한 줄이다.
-실행 검사: 공리 게이트 PASS(선언 4720개), 선언 비교 ADDED 201개뿐, 부정 시험 17/17이다.
-`p2dec_test.py` 43/43, `kindcheck.py` 자기 시험 52건 PASS, `lake build --no-build` 종료 0이다.
+가운데 값은 손 합성, 마지막 값은 생성 합성이다. 0은 "생성 모듈 안의 손 줄"만 뜻한다.
+`DmSeg0`(209줄)를 빼면 DepositMessage는 255 → 155(−39.2 %)다.
+수용 정리의 증명 몸체만 세면 80 → 62, 120 → 93(각 −22.5 %)이다.
+남는 손 작업은 다음과 같다.
+손 기준 정리(`Bi.bi_e2e_accept_main`, `Dm.dm_e2e_accept_main`, `E1.e1_e2e_accept_main`)는 그대로 남는다.
+이 손 정리가 합성 정리의 유일한 문장 검사다. 생성 모듈이 이 정리를 import한다.
+G2-L 보조정리 모듈은 한 번 손으로 썼다: 824줄(SegN 413, Compose 209, KindN 96, U64Inline 55, SegNRel 27, KindU64 24).
+생성 증명은 형별 손 보조정리 `E1.e1_lo`도 부른다.
+손 줄 수에 넣지 않은 것: 코드 모듈, Desc, 명세 정렬, 거부 정리, 증인, 링크 표, 부정 시험.
+덮지 못하는 꼴: 위임 overlay 필드(Slot, Epoch, ValidatorIndex 등, 호출로 컴파일됨), 32/48/96 외 크기의 바이트 벡터.
+또 변위 0인 uint64, 중첩 컨테이너, 리스트, 비트필드, bool과 다른 정수, 인코더다.
+Slot, Epoch, ValidatorIndex 형 필드는 덮지 않는다. 그래서 대부분의 합의 컨테이너는 지금의 GEN2 밖이다.
+리뷰어 실행: BeaconBlockHeader 3/5, Checkpoint 1/2, AttestationData 1/5 필드다.
+합성(`--compose`)의 꼴 한계: 프레임 `0x20`, 첫 필드는 바이트 벡터, 필드는 IR 순서로 이어짐, 수신자는 rdx다.
+이 밖이거나 덮지 못한 필드가 있으면 `--compose`는 종료 2로 거부하고 아무것도 쓰지 않는다.
+G2-F 수정(리뷰 g2g-r1): `kindcheck.py`는 `_type` 항등식을 합성 정리에만 받는다.
+그 오른쪽은 생성 이름(`E2eScal.Gen…`, `Gen*.lean`의 선언)이면 안 된다.
+PASS 줄은 "오른쪽이 독립 손 문장일 때만 문장 증거"라고 적는다. 독립인지는 사람이 확인한다.
+`--compose`에 `--same-as`가 없으면 정리 줄에 `UNCHECKED STATEMENT` 표시가 붙고 `kindcheck.py`가 거부한다.
+`--same-as-prop NAME`은 손으로 쓴 Prop `abbrev`와의 항등식을 쓴다. 시험은 scratch 고정물로만 했다.
+`--gen2 --partial-out`은 이제 유효한 Lean 모듈을 쓴다. 덮지 못한 필드는 `UNCOVERED-JSON` 줄에 이유와 함께 있다.
+`kindcheck.py`는 이 파일을 기본으로 거부한다. `--partial`은 있는 정리의 kind를 검사하고 종료 3을 준다.
+`Gen2BhDecPartial.lean`(BeaconBlockHeader 3/5, 표본 안)은 손대지 않은 출력이고 빌드된다.
+실행 검사(G2-G): 선언 비교 ADDED 201개뿐, 부정 시험 17/17이다.
+실행 검사(G2-F 뒤): 공리 게이트 PASS(선언 4726개), g2g-r1 덤프 대비 ADDED 6개뿐이다.
+`p2dec_test.py` 51/51, `kindcheck.py` 자기 시험 70건 PASS, 일부러 깬 검사기 7개는 모두 실패한다.
+`regen_check.sh` 15/15 SAME(옛 8, GEN2 6, 부분 출력 1), `lake build --no-build` 종료 0이다.
+G2-F에서 부정 시험은 다시 돌리지 않았다.
 한계: 96바이트 필드는 실제 코드에서 쓰지 않았다. 48바이트 add 꼴은 합성 `.S`의 글 검사뿐이다.
 BlobIdentifier와 DepositMessage는 표본 안 자료다. 전이의 증거는 H4 전까지 없다.
 기록: `scal/CONTAMINATION.md` 14절, `scal/RESULT.json`의 `gen2`, FINDINGS SG-2.
@@ -671,6 +696,7 @@ python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/prysm/go1.26.10/opt-r1/neg
 # Go 차분(arm64, Go 의미론만): fv/kraken/prysm/go1.26.10/opt-r1/diff/; 벤치마크(arm64만): fv/kraken/prysm/go1.26.10/opt-r1/bench/
 # GEN2 생성기(단위 G2-G): gen.sh 마지막 명령 6개, 형마다 한 번; 모듈 Gen2E1Dec Gen2BiDec Gen2DmDec BiAcceptG2 DmAcceptG2 Gen2BiAccept Gen2DmAccept Gen2E1Accept (lake build E2eScal.<모듈>)
 (cd fv/kraken && python3 -I gen/scal/scalgen.py p2dec --gen2 --summary <s.json> --S prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S --const DmUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.DepositMessage --prefix dm_g2dec --imports E2eScal.P2Dec,E2eScal.SegN,E2eScal.U64Inline,E2eScal.H3Code --open E2eScal.H3Code)   # 다른 형과 --compose: gen.sh
-python3 -I -B fv/kraken/gen/scal/p2dec_test.py <work> <result.json>; python3 -I -B fv/kraken/gen/scal/kindcheck.py fv/kraken/lean/E2eScal/Gen2*.lean
+python3 -I -B fv/kraken/gen/scal/p2dec_test.py <work> <result.json>; python3 -I -B fv/kraken/gen/scal/kindcheck.py fv/kraken/lean/E2eScal/Gen2*Dec.lean fv/kraken/lean/E2eScal/Gen2*Accept.lean
+python3 -I -B fv/kraken/gen/scal/kindcheck.py --partial fv/kraken/lean/E2eScal/Gen2BhDecPartial.lean   # 종료 3 = 있는 정리의 kind PASS, 완전 덮음 아님
 python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/scal/negcases-g2g.json <work> <result.json> <case-id>   # 사례마다 gate 작업 하나
 ```

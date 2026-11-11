@@ -142,3 +142,31 @@ P2 encode in-sample — peak 1.83 GiB, no memcap kill).
 - Tests: `p2dec_test.py` (43 cases), negatives `negcases-g2g.json` (17 cases).
 - Not covered: delegated overlay fields (compiled as a call), other vector sizes, displacement 0 for
   uint64, nested containers, lists, bitfields, encoders; compose needs frame `0x20` and the receiver in rdx.
+
+## GEN2 fixes (unit G2-F; after review g2g-r1, before the H4 freeze; not yet reviewed)
+
+`scal/CONTAMINATION.md` §15. Default mode and every committed output unchanged (`regen_check.sh` 15/15 SAME).
+
+- `kindcheck.py` (review S1): a `_type` identity is accepted ONLY for a composed accept theorem (its proof uses
+  `E2eScal.dechead_seg` and `E2eScal.decepi_seg`), never in place of a segment `_kind`. Its right-hand side must
+  not be under `E2eScal.Gen…` and must not be declared in a `lean/E2eScal/Gen*.lean` module. A theorem line with
+  `UNCHECKED STATEMENT` fails. The PASS line reads "identity against X — statement evidence only if X is an
+  independent hand statement": whether X is independent is for a human to confirm. Selftest: 70 cases; seven
+  deliberately broken checker copies (one per new rule) each fail it.
+- `p2dec --gen2 --partial-out FILE` (exit 3, stdout empty): FILE is a valid Lean module. Imports first, then the
+  `PARTIAL OUTPUT` header with one line `UNCOVERED-JSON: [{"field": …, "reason": …}, …]`, then the covered
+  fields' segment theorems and kinds. Example: `lean/E2eScal/Gen2BhDecPartial.lean` (BeaconBlockHeader 3/5).
+  The default mode (no `--gen2`) keeps its old partial text.
+- `kindcheck.py FILE` still rejects a partial file. `kindcheck.py --partial FILE` checks the kinds of the present
+  theorems: exit 3 with the line `PARTIAL n/m fields: kinds of present theorems checked; NOT a full-coverage
+  result`, 1 on failure, 2 usage; never 0.
+- `--compose` refuses (exit 2, nothing written, no partial file) when a field is not covered or the code is
+  outside the shape: frame `0x20`, spills `0x30` / `0x38`, first field a byte vector at directive 13, receiver
+  in rdx, fields contiguous in IR order, epilogue after the last field. `--imports` must supply any per-type
+  module the proof calls (e.g. `E2eScal.E1Accept` for `e1_lo`).
+- `--same-as NAME`: NAME must be an independently written hand statement (a hand theorem; not generated).
+  `--same-as-prop NAME`: NAME is a hand-written Prop-valued `abbrev NAME [Host] : Prop`; emits
+  `T_type : ∀ (h : Host), type_of% (@T h) = @NAME h` (tested with a scratch fixture, not in the library).
+  Without either, the theorem line carries `-- UNCHECKED STATEMENT: checked by nobody` (exit 0; kindcheck fails).
+- Tests: `p2dec_test.py` 51 cases (G2-F: partial module, BeaconBlockHeader partial, four compose refusals,
+  the marker, a generated `--same-as`, `--same-as-prop`).

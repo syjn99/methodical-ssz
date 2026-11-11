@@ -246,3 +246,13 @@ S6: 병합 커밋 `500571c`에는 `Co-Authored-By` 줄이 없다. 이력 재작�
 BlobIdentifier와 DepositMessage의 수용 정리를 생성 구간으로 다시 증명했다. 문장은 손 정리와 `rfl`로 같다.
 `AxiomsScal.lean`에 GEN2 두 단위의 이름 76개를 더했다. 커밋된 `axioms-gate.json`을 현재 트리의 출력으로 바꿨다.
 원격에 쓰지 않았다. 기록: REPORT 11절, `scal/CONTAMINATION.md` 14절, `scal/RESULT.json`의 `gen2`.
+
+2026-11-11 GEN2 수정 단위 G2-F(새 Opus 세션, 아직 리뷰 없음).
+리뷰 g2g-r1은 REQUEST_CHANGES였다. 필수 수정 둘은 문서였다.
+REPORT 11절의 "남는 손 작업은 형마다 생성기 명령 한 줄" 문장을 고쳤다. 손 기준 정리와 G2-L 모듈 824줄이 남는다.
+`kindcheck.py` 주석의 실행 디렉터리 이름을 지웠다.
+`kindcheck.py`는 `_type`을 합성 정리에만, 생성 이름이 아닌 오른쪽에만 받는다.
+`--gen2 --partial-out`은 유효한 Lean 모듈을 쓴다. `Gen2BhDecPartial.lean`(3/5)을 원 출력 그대로 커밋했다.
+`--compose`에 손 문장이 없으면 `UNCHECKED STATEMENT` 표시를 쓴다. `--same-as-prop`을 더했다.
+알려진 외형 항목: 보조정리 모듈 `KindN.lean` 머리말은 "four places"라 쓰고 다섯을 든다(리뷰 g2l-r1 S4). 보조정리 모듈이라 고치지 않는다.
+원격에 쓰지 않았다. 기록: REPORT 11절, `scal/CONTAMINATION.md` 15절, `scal/RESULT.json`의 `gen2-fix`.

@@ -876,6 +876,71 @@
     "composed statements have no kind; the _type identity needs a hand theorem (development types only)",
     "not yet reviewed; no cold build; link / Go / hardware checks not run"
    ]
+  },
+  "gen2-fix (GEN2 unit G2-F, fresh Opus session)": {
+   "base": "cd47028",
+   "status": "not yet reviewed; fixes after review g2g-r1 (REQUEST_CHANGES, documents only), before the generator is frozen for H4",
+   "contamination": "second proof-generator change after H3 (CONTAMINATION.md section 15); development data only; BeaconBlockHeader is in-sample for GEN2 from here on",
+   "must_fix": {
+    "M1": "REPORT section 11: the hand reference theorems stay and are the only statement check of a composed theorem; G2-L lemma modules hand-written once (824 lines); exclusions stated",
+    "M2": "run-directory name removed from the kindcheck.py GEN2_PINS comment; range 71161fa..HEAD grepped for container paths, run directories, session ids: no other hit"
+   },
+   "hand_lines_added_rows": {
+    "DepositMessage_without_DmSeg0": "255 -> 155 (-39.2 %)",
+    "accept_proof_body_only": {
+     "BlobIdentifier": "80 -> 62 (-22.5 %)",
+     "DepositMessage": "120 -> 93 (-22.5 %)"
+    },
+    "g2l_hand_modules_one_time": 824,
+    "zero_means": "hand lines in the generated module only",
+    "excluded": [
+     "hand reference theorem",
+     "G2-L lemma modules",
+     "code module",
+     "Desc",
+     "spec alignment",
+     "reject",
+     "witnesses",
+     "link tables",
+     "negatives",
+     "per-type hand lemma E1.e1_lo"
+    ],
+    "source": "review g2g-r1 recount (results/16-hand-lines.txt); not recounted here"
+   },
+   "kindcheck_rules": [
+    "6a _type only for a composed theorem (proof uses dechead_seg and decepi_seg)",
+    "6b right-hand side not under E2eScal.Gen... and not declared in a Gen*.lean module",
+    "6c UNCHECKED STATEMENT marker fails",
+    "Prop form `= @X h` (--same-as-prop) under the same rules",
+    "7 --partial mode: one PARTIAL header after the imports, UNCOVERED-JSON with m - n entries; exit 3, never 0"
+   ],
+   "kindcheck_selftest": "70/70 PASS; 7 broken checker copies (one per rule) each exit 1",
+   "partial_out": {
+    "valid_lean": true,
+    "file": "lean/E2eScal/Gen2BhDecPartial.lean",
+    "coverage": "BeaconBlockHeader 3/5 (Slot, ProposerIndex: delegated overlay)",
+    "raw_output_edited_lines": 0,
+    "build_s": 1.4,
+    "kindcheck_default": "exit 1",
+    "kindcheck_partial": "exit 3, PARTIAL 3/5 fields"
+   },
+   "compose_refusals": [
+    "partial coverage (BeaconBlockHeader 3/5)",
+    "frame 0x28",
+    "non-contiguous field (nop between fields)",
+    "uint64 first field (IR order swapped)"
+   ],
+   "same_as_prop": "BlobIdentifier with a scratch abbrev fixture: kindcheck PASS, lake env lean exit 0; fixture of the DepositMessage type: Lean fails at the _type line",
+   "executed_checks": {
+    "regen_check": "15/15 SAME (8 earlier, 6 GEN2, 1 partial)",
+    "p2dec_test": "51/51",
+    "axioms_gate": "PASS 4726 declarations, 4000 theorems, 171 modules, hand list 397",
+    "decl_drift_vs_g2g_r1": "ADDED 6, CHANGED 0, REMOVED 0",
+    "no_build": "exit 0",
+    "negatives": "not run in G2-F"
+   },
+   "not_covered_consequence": "fields typed Slot / Epoch / ValidatorIndex (delegated overlay, compiled as calls) are not covered: most consensus containers are outside GEN2 as it stands",
+   "known_cosmetic": "KindN.lean header says 'four places' and lists five (g2l-r1 S4); lemma module, not edited"
   }
  },
  "contamination": {
