@@ -112,7 +112,10 @@ Checks, per file (text only):
     identity `_type` with an independent hand statement) FAILS; `scalgen.py --gen3 --compose` without `--same-as*`
     now also marks it `UNCHECKED STATEMENT` (rule 6c).
 
-Limits (not checked here): that the kind parameters (C, indices, displacements, offsets) are the right
+Limits (not checked here): GEN4 label strings in `stepLabelKind`, `stepJmpKind` and `callDecSegKindG4` (`lok`) are
+phantom kind parameters (review g4l-r1: they do not occur in the kind body; `stepLabelKind C l j e` is
+`stepNopsKind C j e` by `rfl`), so a label name in a kind line is NOT checked by this program or by the `_kind`
+line; the label is checked only by the proof's code fact (`he`, `hl`). Also not checked: that the kind parameters (C, indices, displacements, offsets) are the right
 ones for the Go type (a wrong one fails the proof's code facts, not this check); name resolution (the
 check reads `@E2eScal.<kind>` as text; an `open` of a namespace that declares another `E2eScal.<kind>`
 would not be seen); that the file builds. A pass is not a non-vacuity witness.
