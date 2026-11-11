@@ -136,3 +136,27 @@
 - 시도 1(로그 63): `u8_ne_slice`의 보조 이름이 없었다(`BitVec.add_sub_cancel_left`). 로그 64: `bv_omega`로 바꿔 exit 0. 증인 본문은 첫 빌드부터 통과했다.
 - `maxHeartbeats 16000000`을 이 선언 하나에만 둔다. 설정 없는 scratch 사본(로그 65)은 `whnf`에서 기본 한도를 넘었다(`simp` 2.3 s 뒤). 원인은 T1 증인과 같다(로그 27).
 - 입력 셋(0, 대표값, 0xff)의 `example` 셋이 통과했다. 각 입력은 48바이트 덩어리 512개다.
+
+## 검증 (작업 지시 6절)
+
+- 전체 빌드(로그 67): `lake build E2eList` exit 0, 682 jobs. `--no-build E2e E2eAd E2eScal E2eList`(로그 68): exit 0, `All targets up-to-date (1035 jobs)`.
+- 공리 게이트(로그 69): 새 파일 `gen/e2e/lvaxioms_gate.py`(기존 `axioms_gate.py`를 import, ROOTS에 `E2eList`, 손 목록에 `gen/e2e/AxiomsLv.lean`). PASS, 선언 5632, 정리 4684, 손 목록 462, 비표준 0, `sorryAx` 0. 결과 `lv/axioms-gate-lv.json`. 기존 `axioms-gate.json`은 덮어쓰지 않았다.
+- 공리 게이트 대조군(로그 79–82): 저장소 밖 scratch 모듈 `E2eList.Planted`(`sorry` 정리 하나)를 넣었다. FAIL, `sorryAx ['E2eList.Planted.planted_sorry']`. 결과 `lv/axioms-gate-lv-plant.json`. 넣은 `.olean`은 바로 지웠다.
+- 로그 79: `lake env lean -o`가 exit 1. 원인: 원천 파일이 루트 디렉터리 밖이다(wrong-target). 로그 81에서 `--root`를 주어 다시 했다.
+- 로그 80: exit 2. 원인: 첫 `LEAN_PATH` 항목에 `E2eList` 디렉터리가 있으면 Lean이 다른 `E2eList` 모듈도 거기서 찾는다(wrong-target). 로그 82에서 빈 경로와 빌드 디렉터리 안의 임시 `.olean`으로 다시 했다.
+- 선언 drift: 기준 `6a78c591…`을 `git archive`로 scratch에 풀고 현재 `.lake`를 복제(APFS clone)했다. 기준 트리의 `--no-build E2e E2eAd E2eScal`이 exit 0이었다(로그 70).
+- 한계: 기준의 `.olean`은 기준 트리에서 따로 만든 것이 아니다. Lake 추적이 원천과 입력이 같다고 판단한 것이다.
+- 로그 72: `decl_drift.py`가 exit 2로 거부했다(덤프의 roots가 다르다). 로그 73–74: 같은 roots(E2e, E2eAd, E2eScal)로 현재 트리를 다시 덤프했다. drift 0, base 5007 = head 5007.
+- `E2eList` 선언은 새 root라서 drift 비교 밖이다. 게이트 덤프에서 `E2eList.` 이름은 622개다(5632 − 5007 = 625와의 차이 3은 `E2eList.` 접두사가 없는 보조 이름으로 본다. 확인하지 않았다).
+- drift 대조군(로그 75–78): scratch 기준 사본의 `E2eScal.WitBhU.s0`에 `0 + 0`을 심었다. drift exit 1, `CHANGED E2eScal.WitBhU.s0 value`. 파일을 되돌리고 그 모듈을 다시 빌드했다.
+- 스킬 `SKILL.md`는 "`decl_dump.lean`의 Kraken 트리 첫 실행은 따로 게이트된 단위"라고 적는다. 이 실행이 그 첫 실행이다. 대조군으로 검사가 실패할 수 있음을 보였다.
+- 부정 시험(로그 83–84): 새 파일 `gen/e2e/lvnegative.py`(기존 `negative.py`를 import; 문장 모듈을 펼쳐 넣고, memcap 없이 프로세스 그룹으로 시간 제한). 경우 `lv/negcases-lv.json`, 결과 `lv/negative-lv.json`.
+- 결과: 18개 중 17개 통과(control_pass 4, inside 13). `lv-sa-bitslen63`은 outside다. 오류가 주 정리 앞의 `sa_bits_seg`에 있다. 그 뒤 같은 변이를 `sa_bits_seg`에 겨눈 경우 `lv-sa-bitslen63-seg`를 더했다(inside). 첫 결과는 그대로 둔다.
+- stale 검사(로그 85): `stale_olean.py` exit 0, flagged 0.
+- Go 차분 시험: 실행하지 않았다. Prysm Go 빌드 환경(계획 담당의 Docker)과 새 Go 하네스가 필요하다. 이 장비는 arm64라서 실행해도 x86-64 ELF의 증거가 아니다.
+
+## T3 변위 확인 (판정: 증명 없이 값만)
+
+- 로그 66: scratch `.S`의 `lea 0xffffff1c(%rdi),%rdx`를 Kraken `include_x64_rt`로 읽고 `#print`했다. 결과 `disp := ↑4294967068`. 같은 파일의 `lea -0xe4(%rdi),%rdx`는 `disp := ↑(-228)`다.
+- 기계는 32비트 변위를 부호 확장한다(−228). 그래서 이 표기를 Kraken에 그대로 주면 다른 주소를 계산한다. 실행 증거(X)다.
+- 커밋된 다른 `.S`에는 `0xffffff..(%` 꼴이 없다(`git grep`, 결과 0).
