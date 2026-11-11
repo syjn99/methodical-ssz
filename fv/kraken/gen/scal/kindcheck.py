@@ -6,6 +6,10 @@ kind it names: a degenerate right-hand side (for example `type_of% (@t h)` itsel
 This program is run by the evaluator on every generated file. It does not change the generator.
 
 usage: kindcheck.py <generated.lean>...      exit 0 = every file passes, 1 = a file fails, 2 = usage
+       kindcheck.py --partial <partial.lean>  a `p2dec --gen2 --partial-out` file (unit G2-F): exit 3 = the
+                                             kinds of the theorems that are present pass, printed together with
+                                             `PARTIAL n/m fields: kinds of present theorems checked; NOT a
+                                             full-coverage result`; 1 = the file fails; 2 = usage. Never 0.
        kindcheck.py --selftest               crafted good and bad files; exit 0 = all controls behave
 
 Checks, per file (text only):
@@ -38,10 +42,27 @@ Checks, per file (text only):
         theorem t_type : ∀ (h : Host),
             type_of% (@t h) = type_of% (@X h) := by
           intro h; with_reducible rfl
-    with X a dotted name under `E2eScal.` that is not `t` and not declared in the file (a hand theorem). This
-    is an identity with a hand theorem, NOT a kind: such a theorem is reported as "identity-checked" and a
-    composed theorem of a type without a hand theorem (no `_type`) FAILS this check. There is no kind for a
-    composed statement (gap recorded in GEN2 unit G2-G).
+    with X a dotted name under `E2eScal.` that is not `t` and not declared in the file (a hand theorem), or
+    (`--same-as-prop`, unit G2-F) the Prop form
+        theorem t_type : ∀ (h : Host),
+            type_of% (@t h) = @X h := by
+          intro h; with_reducible rfl
+    with X a Prop-valued `abbrev` written by hand. This is an identity, NOT a kind. Unit G2-F (review g2g-r1
+    S1) restricts it:
+     6a. `_type` is accepted ONLY for a composed theorem: its proof (the lines up to the next theorem) uses
+         both `E2eScal.dechead_seg` and `E2eScal.decepi_seg`. A segment theorem needs its `_kind`; a `_type`
+         in place of a `_kind` fails.
+     6b. X must not be a generated name: not under a namespace `E2eScal.Gen…` (`Gen`, `Gen2Ex`, …) and not a
+         name declared in a module `lean/E2eScal/Gen*.lean` (compared by the last name component). A
+         generated theorem never vouches for a generated theorem.
+     6c. A theorem line with the marker `UNCHECKED STATEMENT` (`--compose` without `--same-as`) fails.
+    The PASS line names X: "identity against X — statement evidence only if X is an independent hand
+    statement". Whether X is independent is NOT checked here (a human must confirm it). A composed theorem
+    of a type without a hand statement (no `_type`) FAILS. There is no kind for a composed statement.
+ 7. `--partial` mode (unit G2-F): the file must carry exactly one `PARTIAL OUTPUT` header, after the imports,
+    with `n of m fields`, and one line `UNCOVERED-JSON: [...]` (a JSON list of {field, reason}) whose length
+    is m - n; the theorems present are checked by rules 1-6 as usual (no composed theorem allowed). The
+    default mode rejects every partial file (rule 0, unchanged).
 
 Limits (not checked here): that the kind parameters (C, indices, displacements, offsets) are the right
 ones for the Go type (a wrong one fails the proof's code facts, not this check); name resolution (the
@@ -60,9 +81,13 @@ KIND = KR / "lean" / "E2eScal" / "Kind.lean"
 KIND_BLOB = "3c9b95b1b37036831527396975d4232cc20174f3"  # method freeze 56dfc27 (INBOX 019)
 KINDZ = KR / "lean" / "E2eScal" / "KindZ.lean"
 KINDZ_BLOB = "0c790fa1882cd2e91419c285f66de0810c2b85e2"  # SG-1 extension (after both hold-outs were opened)
+GENNS = re.compile(r"^E2eScal\.Gen\w*\.")  # rule 6b: generated namespaces (E2eScal.Gen, E2eScal.Gen2Ex, ...)
+DECL = re.compile(r"^(?:private |protected |noncomputable )*(?:theorem|lemma|def|abbrev) (\S+)")
+COMPOSED = ("(E2eScal.dechead_seg ", "(E2eScal.decepi_seg ")  # rule 6a
+UNCHECKED = "UNCHECKED STATEMENT"  # rule 6c
 
 # GEN2 (unit G2-G): the kind and lemma modules of the GEN2 L1 / L2 lemmas, pinned at the blobs of the lemma
-# unit's head 6c62a49 (`gen2/L` hand-over, "Pins for kindcheck.py"). A new kind is accepted only with both
+# unit's head 6c62a49 (the lemma unit's hand-over, "Pins for kindcheck.py"). A new kind is accepted only with both
 # its kind module and its lemma module at these blobs.
 GEN2_PINS = {
     "KindN.lean": "8947c5757f522463a495ad585d3480b7c2f3830b",
@@ -86,15 +111,60 @@ def blob(path):
     return subprocess.run(["git", "hash-object", str(path)], capture_output=True, text=True, check=True).stdout.strip()
 
 
-def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB, gen2_blobs=None):
+def gen_names(lean_dir=KIND.parent):
+    """Rule 6b: last name components of every declaration in a module `Gen*.lean` (generated or example)."""
+    out = set()
+    for f in sorted(lean_dir.glob("Gen*.lean")):
+        for l in f.read_text().split("\n"):
+            if (m := DECL.match(l)):
+                out.add(m.group(1).rsplit(".", 1)[-1])
+    return out
+
+
+def partial_header(lines):
+    """Rule 7: (n, m, uncovered list) of a `--partial-out` file, or an error string."""
+    import json
+    hs = [i for i, l in enumerate(lines) if PARTIAL in l]
+    if len(hs) != 1:
+        return f"{len(hs)} `{PARTIAL}` headers (expected 1)"
+    i = hs[0]
+    imps = [j for j, l in enumerate(lines) if l.startswith("import ")]
+    if not imps or i < max(imps):
+        return "the PARTIAL header is not after the imports"
+    m = re.search(r"\b(\d+) of (\d+) fields\b", lines[i])
+    js = [l for l in lines if l.startswith("UNCOVERED-JSON: ")]
+    if not m or len(js) != 1:
+        return "no `n of m fields` in the PARTIAL header or not exactly one `UNCOVERED-JSON:` line"
+    try:
+        unc = json.loads(js[0][len("UNCOVERED-JSON: "):])
+    except ValueError as e:
+        return f"UNCOVERED-JSON does not parse: {e}"
+    n, tot = int(m.group(1)), int(m.group(2))
+    if not (isinstance(unc, list) and all(isinstance(u, dict) and set(u) == {"field", "reason"} for u in unc)):
+        return "UNCOVERED-JSON is not a list of {field, reason}"
+    if not 0 < n < tot or len(unc) != tot - n:
+        return f"PARTIAL {n} of {tot} fields with {len(unc)} uncovered entries"
+    return n, tot, unc
+
+
+def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB, gen2_blobs=None, gnames=None, partial=False):
     gen2_blobs = dict(GEN2_PINS) if gen2_blobs is None else gen2_blobs
+    gnames = gen_names() if gnames is None else gnames
     errs = []
     if kind_blob != KIND_BLOB:
         errs.append(f"Kind.lean blob {kind_blob} != frozen {KIND_BLOB}")
     lines = text.split("\n")
+    if partial:
+        ph = partial_header(lines)
+        if isinstance(ph, str):
+            errs.append(f"--partial: {ph}")
+    else:
+        for i, l in enumerate(lines, 1):
+            if PARTIAL in l:
+                errs.append(f"line {i}: partial generator output (`{PARTIAL}` header): not a complete generated file")
     for i, l in enumerate(lines, 1):
-        if PARTIAL in l:
-            errs.append(f"line {i}: partial generator output (`{PARTIAL}` header): not a complete generated file")
+        if UNCHECKED in l:
+            errs.append(f"line {i}: `{UNCHECKED}` marker (composed statement without a hand statement)")
     in_block = 0
     for i, l in enumerate(lines, 1):
         # skip block comments (doc and plain) for the top-level and banned-token checks
@@ -127,17 +197,28 @@ def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB, gen2_blobs=None):
         nxt = [n for _, n in thms if _ > i]
         if nxt and nxt[0] == t + "_type":
             j = pos[t + "_type"]
-            m = re.fullmatch(rf"    type_of% \(@{re.escape(t)} h\) = type_of% \(@(E2eScal(?:\.\w+)+) h\) := by",
-                             lines[j + 1] if j + 1 < len(lines) else "")
+            nx = lines[j + 1] if j + 1 < len(lines) else ""
+            m = (re.fullmatch(rf"    type_of% \(@{re.escape(t)} h\) = type_of% \(@(E2eScal(?:\.\w+)+) h\) := by", nx)
+                 or re.fullmatch(rf"    type_of% \(@{re.escape(t)} h\) = @(E2eScal(?:\.\w+)+) h := by", nx))
+            body = "\n".join(lines[i:j])
             if lines[j] != f"theorem {t}_type : ∀ (h : Host),":
                 errs.append(f"{t}_type: header is not `theorem {t}_type : ∀ (h : Host),`")
             elif not m:
-                errs.append(f"{t}_type: not an identity `type_of% (@{t} h) = type_of% (@E2eScal.… h)`: {lines[j + 1][:160]}")
+                errs.append(f"{t}_type: not an identity `type_of% (@{t} h) = type_of% (@E2eScal.… h)` "
+                            f"or `= @E2eScal.… h`: {nx[:160]}")
             elif m.group(1).rsplit(".", 1)[-1] in names or m.group(1) == t:
                 errs.append(f"{t}_type: right-hand side {m.group(1)} is declared in this file (degenerate identity)")
+            elif GENNS.match(m.group(1)) or m.group(1).rsplit(".", 1)[-1] in gnames:
+                errs.append(f"{t}_type: right-hand side {m.group(1)} is a generated name (namespace E2eScal.Gen… or "
+                            f"declared in a Gen*.lean module): a generated theorem cannot vouch for a generated theorem")
+            if not all(c in body for c in COMPOSED):
+                errs.append(f"{t}_type: {t} is not a composed accept theorem (its proof does not use "
+                            f"E2eScal.dechead_seg and E2eScal.decepi_seg): a segment theorem needs its `_kind`")
+            elif partial:
+                errs.append(f"{t}: composed theorem in a partial file")
             if j + 2 >= len(lines) or lines[j + 2] != "  intro h; with_reducible rfl":
                 errs.append(f"{t}_type: proof line is not `  intro h; with_reducible rfl`")
-            ident.append(t)
+            ident.append((t, m.group(1) if m else "?"))
             continue
         if not nxt or nxt[0] != t + "_kind":
             errs.append(f"{t}: the next theorem is not {t}_kind")
@@ -163,30 +244,40 @@ def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB, gen2_blobs=None):
     for n in names:
         if n.endswith("_kind") and n[:-5] not in mains:
             errs.append(f"{n}: no generated theorem {n[:-5]}")
-        if n.endswith("_type") and n[:-5] not in ident:
+        if n.endswith("_type") and n[:-5] not in [x for x, _ in ident]:
             errs.append(f"{n}: not the identity line of a generated theorem {n[:-5]}")
         if n.endswith("_same"):
             t = n[:-5]
             if t not in mains or not re.fullmatch(rf"theorem {re.escape(n)} : @\S+ = @{re.escape(t)} := rfl", lines[pos[n]]):
                 errs.append(f"{n}: not an identity `@X = @{t} := rfl` of a kinded theorem")
-    return errs, [t + (" (identity-checked, no kind)" if t in ident else "") for t in mains]
+    idm = dict(ident)
+    return errs, [t + (f" (identity against {idm[t]} — statement evidence only if {idm[t]} is an independent hand "
+                       f"statement; no kind)" if t in idm else "") for t in mains]
 
 
-def main(files):
+def main(files, partial=False):
     kb = blob(KIND)
     kzb = blob(KINDZ) if KINDZ.exists() else "missing"
     g2b = {m: (blob(KIND.parent / m) if (KIND.parent / m).exists() else "missing") for m in GEN2_PINS}
+    gn = gen_names()
     bad = 0
     for f in files:
-        errs, mains = check_text(pathlib.Path(f).read_text(), kb, kzb, g2b)
+        text = pathlib.Path(f).read_text()
+        errs, mains = check_text(text, kb, kzb, g2b, gn, partial)
         print(("PASS" if not errs else "FAIL"), f, "theorems:", ",".join(mains))
         for e in errs:
             print("  ", e)
+        if partial and not errs:
+            n, tot, unc = partial_header(text.split("\n"))
+            print(f"PARTIAL {n}/{tot} fields: kinds of present theorems checked; NOT a full-coverage result "
+                  f"(uncovered: {', '.join(u['field'] for u in unc)})")
         bad |= bool(errs)
     print("Kind.lean blob", kb, "frozen" if kb == KIND_BLOB else "NOT FROZEN")
     print("KindZ.lean blob", kzb, "pinned" if kzb == KINDZ_BLOB else "NOT PINNED")
     for m, b in g2b.items():
         print(m, "blob", b, "pinned" if b == GEN2_PINS[m] else "NOT PINNED")
+    if partial:
+        return 1 if bad else 3
     return 1 if bad else 0
 
 
@@ -266,8 +357,9 @@ def selftest():
     ]
     cases = [c + (None,) for c in cases] + gen2_cases(K)
     bad = []
-    for name, text, kb, ok, zpin, g2 in cases:
-        errs, _ = check_text(text, kb, KINDZ_BLOB if zpin else "0" * 40, g2)
+    cases = [c + (False,) for c in cases] + g2f_cases(K)
+    for name, text, kb, ok, zpin, g2, part in cases:
+        errs, _ = check_text(text, kb, KINDZ_BLOB if zpin else "0" * 40, g2, GNAMES, part)
         if (not errs) != ok:
             bad.append((name, errs))
     print("selftest", "PASS" if not bad else f"FAIL {bad}", f"({len(cases)} cases)")
@@ -330,7 +422,9 @@ set_option maxRecDepth 100000 in
 theorem d (k : Nat) (hk : DmUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DmUnmarshal k)
     (x1 : List UInt8) :
     D := by
+  refine eventually_trans _ _ _ _ (E2eScal.dechead_seg _ _ _ _ 88 (k + 0) hH) ?_
   refine eventually_trans _ _ _ _ (E2eScal.Gen.dm_g2dec_Amount_seg k hk hf) ?_
+  refine eventually_trans _ _ _ _ (E2eScal.decepi_seg (k + 86) hE) ?_
 
 /-- Statement check: the declared type is that of the hand theorem (definitional identity). -/
 theorem d_type : ∀ (h : Host),
@@ -396,10 +490,71 @@ def gen2_cases(K):
     ]
 
 
+# rule 6b in the selftest: a fixed set of "generated" names instead of the tree's Gen*.lean (the controls do
+# not depend on the tree); `gen_seg_x` stands for a theorem of another generated module
+GNAMES = {"gen_seg_x", "bi_e2e_accept_main_gc", "bi_e2e_accept_main_composed"}
+
+
+def g2f_cases(K):
+    """Unit G2-F controls: rules 6a-6c and 7 (review g2g-r1 S1, for_h4 items 2 and 4)."""
+    ty = ("theorem {t}_type : ∀ (h : Host),\n    type_of% (@{t} h) = type_of% (@E2eScal.Dm.dm_e2e_accept_main h) := by\n"
+          "  intro h; with_reducible rfl\n")
+    uc = "theorem c_kind : ∀ (h : Host), type_of% (@c h) = @E2eScal.u64DecInlineSegKind h DmUnmarshal 83 56 80 48 := by\n  intro h; with_reducible rfl\n"
+    assert GOOD2.count(uc) == 1
+    seg_type = GOOD2.replace(uc, ty.format(t="c"))           # reviewer case (i): `_type` in place of a segment kind
+    rhs = "type_of% (@E2eScal.Dm.dm_e2e_accept_main h)"
+    assert COMP.count(rhs) == 1
+    gen_rhs = COMP.replace(rhs, "type_of% (@E2eScal.Gen.bi_e2e_accept_main_gc h)")  # reviewer case (ii)
+    prop = COMP.replace(rhs, "@E2eScal.Fx.dmStmt h")
+    unc = json_line([("Slot", "delegated overlay field"), ("ProposerIndex", "delegated overlay field")])
+    PH = ("/-! PARTIAL OUTPUT (scalgen exit 3): 3 of 5 fields of `v1alpha1.BeaconBlockHeader` (--gen2); NOT "
+          "generated: Slot, ProposerIndex. Not a complete p2dec output.\n" + unc + "\n-/\n")
+    part = GOOD2.replace("\n/-! Generated", "\n" + PH + "/-! Generated").replace(" 3 of 3 fields", " 3 of 5 fields")
+    assert part.count(PARTIAL) == 1
+    return [
+        ("g2f_segment_type_instead_of_kind", seg_type, K, False, True, None, False),
+        ("g2f_rhs_generated_namespace", gen_rhs, K, False, True, None, False),
+        ("g2f_rhs_gen2ex_namespace", COMP.replace(rhs, "type_of% (@E2eScal.Gen2Ex.bi_e2e_accept_main_composed h)"),
+         K, False, True, None, False),
+        ("g2f_rhs_generated_namespace_fresh_name", COMP.replace(rhs, "type_of% (@E2eScal.Gen.zz_fresh h)"),
+         K, False, True, None, False),
+        ("g2f_unchecked_marker_with_identity", COMP.replace(
+            "(hf : LabelsFresh DmUnmarshal k)\n", "(hf : LabelsFresh DmUnmarshal k) -- UNCHECKED STATEMENT\n"),
+         K, False, True, None, False),
+        ("g2f_rhs_declared_in_gen_module", COMP.replace(rhs, "type_of% (@E2eScal.Other.gen_seg_x h)"),
+         K, False, True, None, False),
+        ("g2f_composed_without_decepi", COMP.replace("E2eScal.decepi_seg", "E2eScal.decepi_sex"), K, False, True, None, False),
+        ("g2f_prop_identity_good", prop, K, True, True, None, False),
+        ("g2f_prop_identity_generated_rhs", COMP.replace(rhs, "@E2eScal.Gen.bi_e2e_accept_main_gc h"),
+         K, False, True, None, False),
+        ("g2f_prop_identity_on_segment", GOOD2.replace(uc, ty.format(t="c").replace(rhs, "@E2eScal.Fx.dmStmt h")),
+         K, False, True, None, False),
+        ("g2f_unchecked_marker", COMP.split("\n/-- Statement check")[0].replace(
+            "(hf : LabelsFresh DmUnmarshal k)\n", "(hf : LabelsFresh DmUnmarshal k) -- UNCHECKED STATEMENT\n")
+         + "\nend E2eScal.Gen\n", K, False, True, None, False),
+        ("g2f_partial_default_rejects", part, K, False, True, None, False),
+        ("g2f_partial_mode_good", part, K, True, True, None, True),
+        ("g2f_partial_mode_complete_file", GOOD2, K, False, True, None, True),
+        ("g2f_partial_mode_header_before_imports", PH + GOOD2.replace(" 3 of 3 fields", " 3 of 5 fields"),
+         K, False, True, None, True),
+        ("g2f_partial_mode_count_mismatch", part.replace(unc, json_line([("Slot", "x")])), K, False, True, None, True),
+        ("g2f_partial_mode_bad_kind", part.replace(" 83 56 80 48 := by", " 83 56 80 := by"), K, False, True, None, True),
+        ("g2f_partial_mode_composed", COMP.replace("\n/-! Generated", "\n" + PH + "/-! Generated"),
+         K, False, True, None, True),
+    ]
+
+
+def json_line(pairs):
+    import json
+    return "UNCOVERED-JSON: " + json.dumps([dict(field=f, reason=r) for f, r in pairs])
+
+
 if __name__ == "__main__":
     if sys.argv[1:] == ["--selftest"]:
         sys.exit(selftest())
-    if len(sys.argv) < 2:
+    if len(sys.argv) < 2 or sys.argv[1:] == ["--partial"]:
         print(__doc__)
         sys.exit(2)
+    if sys.argv[1] == "--partial":
+        sys.exit(main(sys.argv[2:], partial=True))
     sys.exit(main(sys.argv[1:]))
