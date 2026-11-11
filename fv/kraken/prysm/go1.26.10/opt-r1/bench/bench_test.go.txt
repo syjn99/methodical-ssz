@@ -1,0 +1,110 @@
+// OPT-R1 benchmarks (protocol §5; scratch package of the temporary Prysm tree, not committed in Prysm).
+// The same file is compiled into two test binaries with identical flags: one with the old (698c202) and one
+// with the new (reserve) phase0 files. Native linux/arm64 only; no x86-64 claim.
+package bench
+
+import (
+	"testing"
+
+	"github.com/OffchainLabs/prysm/v7/consensus-types/primitives"
+	ethpb "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+)
+
+var sink []byte
+
+func cp() *ethpb.Checkpoint {
+	r := make([]byte, 32)
+	for i := range r {
+		r[i] = byte(i)
+	}
+	return &ethpb.Checkpoint{Epoch: primitives.Epoch(0x0123456789abcdef), Root: r}
+}
+
+// B1: MarshalSSZ() (presized buffer, fast path).
+func BenchmarkB1MarshalSSZ(b *testing.B) {
+	c := cp()
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		sink, _ = c.MarshalSSZ()
+	}
+}
+
+// B2: MarshalSSZTo(nil).
+func BenchmarkB2ToNil(b *testing.B) {
+	c := cp()
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		sink, _ = c.MarshalSSZTo(nil)
+	}
+}
+
+// B3: MarshalSSZTo(make([]byte, 0, 8)).
+func BenchmarkB3ToCap8(b *testing.B) {
+	c := cp()
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		sink, _ = c.MarshalSSZTo(make([]byte, 0, 8))
+	}
+}
+
+// B4: MarshalSSZTo(make([]byte, 0, 39)).
+func BenchmarkB4ToCap39(b *testing.B) {
+	c := cp()
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		sink, _ = c.MarshalSSZTo(make([]byte, 0, 39))
+	}
+}
+
+// B5: MarshalSSZTo(buf[:0]) with one reused cap-40 buffer.
+func BenchmarkB5ReuseCap40(b *testing.B) {
+	c := cp()
+	buf := make([]byte, 0, 40)
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		sink, _ = c.MarshalSSZTo(buf[:0])
+	}
+}
+
+// B6: 1024-byte prefix, spare 0.
+func BenchmarkB6Prefix1024Spare0(b *testing.B) {
+	c := cp()
+	pre := make([]byte, 1024)
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		sink, _ = c.MarshalSSZTo(pre[:1024:1024])
+	}
+}
+
+// B7: AttestationData.MarshalSSZ() (two nested Checkpoints, presized).
+func BenchmarkB7AttestationData(b *testing.B) {
+	r := make([]byte, 32)
+	ad := &ethpb.AttestationData{Slot: 5, CommitteeIndex: 3, BeaconBlockRoot: r, Source: cp(), Target: cp()}
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		sink, _ = ad.MarshalSSZ()
+	}
+}
+
+// B8: append 1000 Checkpoints to one slice that grows from nil.
+func BenchmarkB8Append1000(b *testing.B) {
+	c := cp()
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		var out []byte
+		for j := 0; j < 1000; j++ {
+			out, _ = c.MarshalSSZTo(out)
+		}
+		sink = out
+	}
+}
+
+// B9: invalid Root (length 31), spare 16 (error path; item 6 allocation change).
+func BenchmarkB9InvalidRootSpare16(b *testing.B) {
+	c := &ethpb.Checkpoint{Epoch: 7, Root: make([]byte, 31)}
+	buf := make([]byte, 0, 16)
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		sink, _ = c.MarshalSSZTo(buf[:0])
+	}
+}

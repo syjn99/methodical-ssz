@@ -1,0 +1,38 @@
+{
+ "header": "# decl_dump v1 lean=4.36.0-nightly-2026-09-21 githash=ca39d2bc730f0382e4897ce314b93a4f168ff15e roots=E2e,E2eAd,E2eScal",
+ "allowed": [
+  "Classical.choice",
+  "Quot.sound",
+  "propext"
+ ],
+ "declarations": 3860,
+ "kinds": {
+  "theorem": 3269,
+  "def": 571,
+  "inductive": 6,
+  "ctor": 8,
+  "recursor": 6
+ },
+ "axiom_sets": {
+  "propext": 245,
+  "-": 1083,
+  "Classical.choice,Quot.sound,propext": 801,
+  "Quot.sound,propext": 1731
+ },
+ "theorems": 3269,
+ "hand_list_names": 204,
+ "hand_list_missing": [],
+ "nonstandard": {},
+ "sorryAx": [],
+ "verdict": "PASS",
+ "modules": 126,
+ "precheck": {
+  "argv": "lake build --no-build <modules>",
+  "rc": 0,
+  "failures": []
+ },
+ "dump": {
+  "rc": 0,
+  "stderr_tail": ""
+ }
+}

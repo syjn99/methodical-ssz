@@ -1,0 +1,80 @@
+{
+ "schema": "opt-r1/1",
+ "elf_sha256": "3ef7ac890ba1a797fb90877b84ad1a6ffe0ac283f77c10b09ffb2c8cd7b7f602",
+ "baseline_elf_sha256": "c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e",
+ "generator": "claude/ssz-gen-opt-r1 ca191bb (parent 698c202), flag --reserve-marshal=Checkpoint on phase0.yaml",
+ "form": "G",
+ "link_check": "link/RESULT PASS all",
+ "theorems": [
+  "E2e.OptR1.cpo_marshal_main",
+  "E2e.OptR1.cpo_marshal_reject_main",
+  "E2e.OptR1.cpo_marshal_grow_main",
+  "E2e.OptR1.cpo_marshal_reject_grow_main",
+  "E2e.OptR1.cpo_marshal_spec_k",
+  "E2e.OptR1.cpo_marshal_cover",
+  "E2e.OptR1.cpo_marshal_reject_cover"
+ ],
+ "lemmas": [
+  "E2e.OptR1.head_fast",
+  "E2e.OptR1.head_grow",
+  "E2e.OptR1.tail_fit",
+  "E2e.OptR1.tail_rej"
+ ],
+ "witnesses": [
+  "E2e.OptR1.WitO.cpo_runs_empty",
+  "E2e.OptR1.WitO.cpo_runs_prefix",
+  "E2e.OptR1.WitOW.covo_runs",
+  "E2e.OptR1.WitOW.covo_runs_nil",
+  "E2e.OptR1.WitOWR.rejo_runs",
+  "E2e.OptR1.WitOWR.rejo_runs_nil",
+  "E2e.OptR1.WitO.witO_recv",
+  "E2e.OptR1.WitOW.witOW_recv"
+ ],
+ "contract_hypotheses": [
+  "GrowsliceC Heap e2eU8Type_addr 1 S",
+  "MemmoveC S"
+ ],
+ "premises_changed_vs_baseline": [
+  "stack guard guard + 24 < rsp (large-frame form)",
+  "spill slots rsp+8, rsp+24 and return slot rsp-160 in the frame",
+  "reject theorems: cap < 2^63 (signed compare of the reserve test)"
+ ],
+ "negatives": {
+  "run": 23,
+  "pass": 21,
+  "timeout_wall": [
+   "o-tail-fit-store",
+   "o-tail-fit-val"
+  ]
+ },
+ "axioms_gate": {
+  "verdict": "PASS",
+  "declarations": 3860,
+  "theorems": 3269,
+  "modules": 126
+ },
+ "decl_drift": {
+  "base_rows": 3483,
+  "head_rows": 3860,
+  "added": 377,
+  "removed": 0,
+  "changed": 0,
+  "planted_control": "detected"
+ },
+ "differential": {
+  "odiff_cases": 31,
+  "mismatches": 0,
+  "baseline_cases_old_mismatches": 0,
+  "baseline_cases_new_mismatches": 1,
+  "baseline_new_mismatch": "enc-w-rej-len30-spare8-rootlen33: caller backing no longer holds LE(epoch) (item 6)"
+ },
+ "not_proved": [
+  "nil receiver (differential only: both panic)",
+  "morestack path (excluded by premise)",
+  "growslice / memmove bodies (contracts)",
+  "number of growslice calls as a statement (only one heap block in the post)",
+  "exact-frame covers (covers end in ⋆ True)",
+  "AttestationData encoder in the new ELF",
+  "x86-64 hardware run"
+ ]
+}

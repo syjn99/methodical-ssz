@@ -1,0 +1,7 @@
+# e2eIntType: link/data.py, p1bin-amd64 bytes [0xae99c0, 0xae99f0)
+at type__ 387520
+bytes 08 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+bytes 92 a8 8c 34 0f 08 08 02
+word go_funcdesc 0
+word r5 8
+bytes 94 0b 00 00 60 4e 04 00
