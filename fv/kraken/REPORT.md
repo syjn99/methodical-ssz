@@ -2,6 +2,7 @@
 
 기준: 수정 3(링크 재설계, `claude/ssz-fv-reprove-fix3`). 메모리 최적화 `e6e386d` 위다.
 방향은 `DIRECTION.md`, 세션 이력은 `HISTORY.md`, 고정 버전은 `TOOLS.md`에 있다.
+다른 기계로 옮길 prysm-e2e 기준(고정 버전, 범위, 재현)은 `prysm/BASELINE.md`에 있다.
 
 ## 0. 판정
 

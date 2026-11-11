@@ -1,0 +1,142 @@
+# BASELINE: portable handoff of the prysm-e2e research state
+
+Every value below is copied from the named file in this tree. "not recorded" means no file in the tree holds it.
+Paths are relative to `fv/kraken/` unless they start with `fv/` or `.claude/`. Current state: `REPORT.md` §11.
+`e2e/` abbreviates `prysm/go1.26.10/e2e/`; `scal/` abbreviates `prysm/go1.26.10/e2e/scal/`.
+
+## 1. Pins
+
+| Pin | Value | Read from |
+| --- | --- | --- |
+| Reviewed research state | `c3c56a1` (integration, int-r1 APPROVE); this file is in a later documents-only commit whose ancestry contains `c3c56a1` | `prysm/FINDINGS.md` checkpoint deltas (last entry), `HISTORY.md` |
+| Reviewed streams | T-9 `154944e` (t9-r1 APPROVE), SG-1 `da3f233` (sg1-r1 APPROVE), merges `e56063c`, `63ef3b9` | `prysm/go1.26.10/e2e/scal/RESULT.json` `integration_s15` |
+| Generator (`sszgen/`, `ssz/`) | `698c2025a73a296b55b95744a8408f3b03b2546b` (`syjn99/ssz-gen-fixes`, merge base `2d0150b`) | `prysm/go1.26.10/MANIFEST.md` §1, `TOOLS.md` |
+| scal method freeze (H1, H2) | `56dfc27a6b0c7890105bd16971e0d33bbcd9980e`; `scalgen.py` blob `78e3339…`; SG-1 extended it afterwards | `scal/RESULT.json` `method_freeze`, `units.sg1-extension` |
+| Prysm source | `ab15ff70c72a568c870b2de662474685a95de294` (slice + `ssz-size`), generated in a temporary tree only | `prysm/go1.26.10/MANIFEST.md` §1 |
+| Go (e2e target) | `go version go1.26.10 linux/arm64`, cross-compiled | `prysm/go1.26.10/build-ids.txt` |
+| Build flags | `GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 go build -p 2 -tags purego -trimpath` | `prysm/go1.26.10/build-ids.txt` |
+| e2e ELF sha256 | `c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e`, 23486009 bytes; second build with empty GOCACHE: same sha256 and build ID | `prysm/go1.26.10/build-ids.txt`, `MANIFEST.md` §2 |
+| e2e nm / objdump sha256 | nm `88ee8b9a…40ac` (2017324 bytes), full objdump `580b0da9…4a47` | `prysm/go1.26.10/e2e/e2e.json` `link_check_inputs`, `build-ids.txt` |
+| Older Go 1.26.3 artifacts | `go1.26.3 darwin/arm64, GOAMD64=v1`; ELF `9c850c97066b9d33d6e4c5ef0a385dcbe2c984ae774a527cdedd18d2b72ac501`; `ssz/` tree id `92bba071…` (a tree id, not a commit) | `link/out/build-ids.txt` |
+| Kraken | `6064eecbb730a1152aa6ed891a155d3a92a4f298`, AeneasVerif/kraken main (not a PR branch) | `lean/lake-manifest.json`, `TOOLS.md` |
+| EthLib | `862185680cf23ccf54d44eb25b63b26c5020597b` | `lean/lake-manifest.json` |
+| Lean | `leanprover/lean4:nightly-2026-09-21`; dump header `lean=4.36.0-nightly-2026-09-21 githash=ca39d2bc…` | `lean/lean-toolchain`, `prysm/go1.26.10/e2e/axioms-gate.json` |
+
+Where the binaries and link tables are:
+
+- e2e ELF (Go 1.26.10) and its nm file: NOT in the tree (size). Rebuild: `prysm/go1.26.10/MANIFEST.md` §4. Check the rebuilt file against the sha256 above.
+- e2e link tables in the tree: `prysm/go1.26.10/e2e/link/` (Checkpoint, Epoch), `e2e/ad/link/` (AttestationData, Slot, CommitteeIndex), `e2e/bh/link/` (BeaconBlockHeader, ValidatorIndex), `e2e/e1/link/` (Eth1Data). Each has `RESULT`, `norm/*.S`, `data/`. `e2e/link/target.objdump` is the filtered objdump.
+- Prysm-wide Go 1.26.10 table: `prysm/go1.26.10/link/RESULT`. Go 1.26.3 ELF, nm, objdump: in the tree at `link/out/`.
+- Go 1.26.3 theorems do not transfer to the Go 1.26.10 ELF (`MANIFEST.md` §1). The e2e proofs use the Go 1.26.10 `.S` only (`REPORT.md` §11).
+
+## 2. Layout and runtime assumptions
+
+- Receiver layout from `prysm/ir/ir-mainnet.json` `go_fields` (gc amd64 rules of `go/types`), not from the ELF `abi.Type` (`REPORT.md` §11).
+- Runtime contracts are hypotheses, not proved: `MakesliceC`, `MemmoveC` (non-overlapping ranges only), `GrowsliceC`, `ConvT64C`, `NewobjectC`, `FmtErrorfWC`, `FmtErrorfDDC` (`CONTRACTS.md` §1–3; instances in `prysm/go1.26.10/e2e/RUNTIME-1.26.10.md` §2).
+- They were re-read in Go 1.26.10 runtime source: unchanged. Source text only; the compiled runtime code is not compared (`RUNTIME-1.26.10.md` §1, §3).
+- Each contract has a scratch stack window `S` and a spill size; the frame `F` is preserved (`CONTRACTS.md` §2).
+- Premises: stack guard (`guard < rsp`, or `guard + N < rsp` for the large-frame form of `E2eScal.lea_cmp_be_false`), `runtime.writeBarrier = 0`, heap budget, label freshness, global addresses, initialised `ssz.Err*` words (`REPORT.md` §11 conditions 1–2; `CONTRACTS.md` §4).
+- The morestack path is excluded by the stack-guard premise. GC during a call is outside every contract (`CONTRACTS.md` §3).
+- X15 is not assumed zero on the encoder paths: bytes 8–31 of the temps are existential (`scal/RESULT.json` T-9 unit).
+- T-7 is deferred: `GrowsliceC` gives no lower bound on the heap left after a call (`prysm/FINDINGS.md` T-7).
+
+## 3. Coverage (type × function × path)
+
+K = kernel-checked theorem (axioms standard). X = executable or differential only. N = NOT proved.
+Module path is `lean/<Namespace>/<Module>.lean`. Sources: `prysm/go1.26.10/e2e/e2e.json`, `REPORT.md` §11, `scal/RESULT.json`.
+
+| Type / function | Path | State | Theorem (namespace) |
+| --- | --- | --- | --- |
+| Epoch.UnmarshalSSZ | accept; length reject | K | `E2e.ep_unmarshal_accept_main`, `ep_uacc_holds`; `ep_unmarshal_reject_len_main` |
+| Checkpoint.UnmarshalSSZ | accept; size reject; spec | K | `E2e.cp_e2e_accept_main`, `cp_e2e_reject_size_main`, `cp_e2e_accept_spec_k`, `cp_e2e_reject_complete` |
+| Checkpoint.MarshalSSZTo | fast path; `ErrBytesLength` reject; spec | K | `E2e.cp_e2e_marshal_main`, `cp_e2e_marshal_reject_main`, `cp_e2e_marshal_spec_k` |
+| Checkpoint.MarshalSSZTo | first growslice; second grows; reject after growslice | K | `cp_e2e_marshal_grow_main`, `cp_e2e_marshal_grow2_main`, `cp_e2e_marshal_reject_grow_main` |
+| Checkpoint.MarshalSSZTo | first grows, then (A) / (B) return | K | `cp_e2e_marshal_grow_any_sharp` (A), (B) |
+| Checkpoint.MarshalSSZTo | (C): run after the second growslice call when the heap left is below the budget (T-7) | N (X: differential only) | `cp_e2e_marshal_grow_any_sharp` and the covers end at the call entry |
+| Checkpoint.SizeSSZ; decode→encode | size; composition | K | `cp_e2e_size_main`; `cp_e2e_unmarshal_then_marshal` (`⋆ True` remainder) |
+| Slot, CommitteeIndex .UnmarshalSSZ | accept (function specs) | K | `E2eAd.sl_unmarshal_accept_main`, `ci_unmarshal_accept_main` |
+| AttestationData.UnmarshalSSZ | accept; size reject; spec | K | `E2eAd.ad_e2e_accept_main`, `ad_e2e_reject_size_main`, `ad_e2e_accept_spec_k` |
+| AttestationData.MarshalSSZTo | all paths | N (not started, A4–A6) | — |
+| ValidatorIndex.UnmarshalSSZ | accept (generated); length reject | K | `E2eScal.Gen.vi_unmarshal_accept_main_g`, `E2eScal.vi_unmarshal_reject_len_main` |
+| BeaconBlockHeader.UnmarshalSSZ | accept; size reject; spec; two wraps | K | `E2eScal.Bh.bh_e2e_accept_main`, `bh_e2e_reject_size_main`, `bh_e2e_accept_spec_k`; `bh_e2e_{slot,vi}_err_unreachable` |
+| BeaconBlockHeader.MarshalSSZTo | fast path (`len + 112 ≤ cap`, three roots of length 32) | K | `E2eScal.Bh.bh_e2e_marshal_main`, `bh_e2e_marshal_spec_k`, witness `WitBhM` |
+| BeaconBlockHeader.MarshalSSZTo | every growslice branch; three length rejects; morestack | N | — (X: 6 growslice + 6 reject differential cases, not the proved path) |
+| Eth1Data.UnmarshalSSZ | accept; size reject; spec | K (hand) | `E2eScal.E1.e1_e2e_accept_main`, `e1_e2e_reject_size_main`, `e1_e2e_accept_spec_k` |
+| Eth1Data.MarshalSSZTo | all paths | N (not attempted) | — |
+| decoder `fmt.Errorf` wraps | unreachable_mc (conditional skip, not reject coverage) | K | `E2e.cp_e2e_epoch_err_unreachable`, `E2eAd.ad_e2e_*_err_unreachable` |
+| hand-written `primitives` methods | the other 23 methods | N | `prysm/FINDINGS.md` O2 |
+| runtime callees (makeslice, memmove, growslice, convT64, newobject, fmt.errorf) | contract bodies | N (hypotheses) | `CONTRACTS.md` |
+
+Every growslice branch except the Checkpoint ones above is NOT proved. No encoder is complete; there is no full coverage claim.
+Go-value checks: a Lean predicate exists for Checkpoint only (`E2e.GoVal`); BeaconBlockHeader, Eth1Data and AttestationData receivers have none (`REPORT.md` §11).
+No run on x86-64 hardware (`REPORT.md` §11 condition 3).
+
+## 4. Method evidence (as recorded)
+
+- H1 (frozen method `56dfc27`): ValidatorIndex decoder accept generated, BeaconBlockHeader decoder with 3 generated root segments. One out-of-sample case per type; no generator-superiority or causal speed-up claim (`scal/RESULT.json` `claims_and_limits`).
+- H1 encoder: the BeaconBlockHeader fast path was not proved at H1 time; 9 attempts failed (3 in session 10, 6 in session 11) (`REPORT.md` §11, `prysm/FINDINGS.md` T-9).
+- H2 (historical, before SG-1): the frozen generator ran once on Eth1Data: exit 2, 0 bytes, 0 of 2 root fields (job 393; `scal/RESULT.json` `H2`, FINDINGS SG-1). The decoder was then proved by hand.
+- SG-1 extension: offset-0 template `rootdec_seg_z` and `scalgen.py p2dec` form, developed on Eth1Data after both hold-outs were opened. Eth1Data is in-sample and the hold-out is contaminated for it. Output 2 of 2 fields; no generalisation claim (`scal/RESULT.json` `units.sg1-extension`, `scal/CONTAMINATION.md` §8).
+- T-9: cause = the `simp` + `omega` proof of the large-frame guard branch fails in the kernel under the memory limit (4.88 GiB under `lean -M 5000`); the costly subterm was not profiled; the `2^64 − 32` literal is an inference. Fixed by the lemma `E2eScal.lea_cmp_be_false`; then 5 attempts, 2 failed (`scal/RESULT.json` T-9 unit).
+- AU-07 (open): `E2eScal.P2EncCp` (Checkpoint encode template) costs 986.0 s for one `lake env lean` (n = 1, review fix-r1), against 4.5 s for the hand proof. Three attempts (953–973 s `omega`) gave no speed-up; the slow call was not located (`e2e/opt1/AU-07.json`).
+- Witness-build measurement (AU-06, `e2e/opt1/AU-06.json`): four witness modules 1636.8 s → 165.3 s after the `wit_split_n` tactic.
+  Measured: one gated `lake env lean` per module, same method before and after, wall time on a shared machine, n = 1 each.
+  Limits: n = 1, so the run-to-run spread is not known; a per-file `lean` run is not a full build. Audit numbers from another method are not comparable. No negative case targets these modules.
+
+## 5. Reproduction (commands relative to the repository root)
+
+The heavy-job gate and the 6 GiB memory cap used in these runs are local infrastructure; they are NOT in the repository.
+Run heavy jobs one at a time and under a memory limit. Commands in `REPORT.md` §11 "재현" and `prysm/go1.26.10/MANIFEST.md` §4 are the full list.
+
+```sh
+(cd fv/kraken/lean && lake build E2e E2eAd E2eScal)    # E2eScal.P2EncCp alone took 986 s (n = 1)
+(cd fv/kraken/lean && lake build --no-build E2e E2eAd E2eScal)   # expect exit 0 after the build
+python3 -I -B fv/kraken/gen/e2e/axioms_gate.py run fv/kraken/prysm/go1.26.10/e2e/axioms-gate.json <dump.tsv>
+GOROOT=$(go env GOROOT) go test -count=1 ./ssz/ ./sszgen/... ./fv/kraken/semtest/
+python3 -I -B fv/kraken/gen/scal/kindcheck.py --selftest
+python3 -I -B fv/kraken/gen/e2e/negative.py <negcases.json> <work> <result.json> <case-id>   # one job per case
+```
+
+Expected: `axioms-gate.json` `verdict` PASS, `declarations` 3483, `theorems` 2923, `modules` 115, `nonstandard` {}, `sorryAx` [].
+The count comes from `decl_dump.lean` (`.claude/skills/maintaining-methodical-fv/scripts/`) over the roots E2e, E2eAd, E2eScal, run by `axioms_gate.py`.
+`scal/RESULT.json` `integration_s15.executed` lists the other expected results (negatives 36/36 T9, 15/15 SG1; regen SAME 6/6; `p2dec_test.py` 10/10).
+A cold build from an empty `.lake` was not run in any reviewed unit (`scal/RESULT.json` `integration_s15.not_run`).
+
+Portability caveats:
+
+- Rebuild `.lake` on the new machine with the pinned toolchain; do not copy it. `lake build --no-build` checks the trace, `lake env lean` does not (AU-05).
+- Go differentials ran natively on linux/arm64: they check Go semantics, not the amd64 ELF (`REPORT.md` §11).
+- The link check needs the ELF and nm file, which are not committed; rebuild them first and compare sha256.
+- Historical cost and negative records hold absolute paths of the original machine (`TOOLS.md` "알려진 위반"). They are records, not inputs.
+- `MANIFEST.md` §3–4 names local tree paths and environment files of the original runs; the commands use them as placeholders.
+- The Prysm tree for differentials is temporary and not in the repository (`MANIFEST.md` §3).
+
+## 6. Open findings (`prysm/FINDINGS.md`)
+
+| ID | One line |
+| --- | --- |
+| T-7 | `GrowsliceC` gives no lower bound on the heap left; the run after the second growslice call is not proved |
+| T-9 (residue) | fast path proved; growslice branches, length rejects and morestack of the BeaconBlockHeader encoder not proved; `Eth1Data.MarshalSSZTo` not attempted |
+| SG-1 | extended after both hold-outs; no hold-out claim for the extension; DepositCount has no template |
+| AU-01 | gate lock is not FIFO; user decision: measure first |
+| AU-07 | `P2EncCp` `omega` cost not located; the encode template is net-negative in build time |
+| AU-14 | policy tool limits (decl_dump roots, stale_olean); deferred |
+| D1 | generator IR key for nested container fields; generator not changed |
+| K2 | Kraken parser has no `bsr`; Kraken request |
+| C-1 | Checkpoint encoder writes the epoch before the root-length test; known behaviour, review pending |
+| T-3, T-4 | local workarounds (data reader copy, `eaddr` macro); review pending |
+| O2 | 23 hand-written `primitives` methods have no proof |
+
+## 7. Test contract for a new type
+
+A new-type unit is done only with all of these, each recorded with its job and exit code:
+
+1. An independent Desc written from consensus-specs before the checker Desc is printed (FINDINGS NF-10).
+2. Codec equality of that Desc with the checker Desc (`*_serialize_checker`, `*_deserialize_checker`).
+3. Accept and reject theorems on the target `.S`, with exact frames; spec alignment against EthLib (`*_spec_k`).
+4. Witnesses that satisfy every premise: empty, one, maximum for variable lengths; Go-valid receivers (`fv/AGENTS.md`).
+5. A link check PASS for the new functions on the pinned ELF (`e2e/<type>/link/RESULT`).
+6. Negative cases, one gated job each: controls pass, mutants fail inside the target; no timeout or wrong-target counted.
+7. A Go-value check: a Lean predicate, or a Go differential stated as Go semantics only.
+8. Axioms gate PASS and a decl drift with only ADDED rows against the reviewed base dump.
+9. A list of NOT proved paths. Never "complete".
