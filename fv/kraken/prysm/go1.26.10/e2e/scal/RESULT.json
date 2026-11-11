@@ -583,7 +583,44 @@
     "the address forms Kraken prints for add (source first: `8 + v`, `-128 + (rsp - 8)`), which the block parameters aRet / aLo / aFp hide",
     "for rejects: the three rejTail parameters (add|sub, constant, nop) and the label index",
     "AU-07 stays open: P2EncCp was not touched"
-   ]
+   ],
+   "review_enc_r1": {
+    "what": "correction entry added at integration INT2; the values above are not rewritten",
+    "review": "enc-r1 APPROVE on ad15fbc7409e3bb3d20ea9b7094cecdd359900f9 (fresh Fable 5.2 reviewer); no must-fix; should-fix S1-S6",
+    "state_now": "reviewed: the words 'NOT yet reviewed' in state and 'independent review' in not_run are superseded by this entry",
+    "S1_bbh_reuse_lines": {
+     "via_block": [
+      56,
+      66,
+      68
+     ],
+     "hand": [
+      61,
+      71,
+      73
+     ],
+     "block": 18,
+     "identical_to_hand": [
+      49,
+      59,
+      61
+     ],
+     "reading": "reuse is PARTIAL: 5 lines per site move into the block; about 88 % of each per-site proof is still the straight-line step text"
+    },
+    "S2_gate_jobs": "gated jobs = 51 (gate records with label 'enc:'); the 52nd PROGRESS.log row exited 2 before the gate. gate.jobs 52 above counts that row",
+    "S3_attempts": "job 09 is recorded as a diagnostic but also ran a fix; counted as an attempt the total is 11 of the 12 allowed (failed attempts stay 3: jobs 03, 08, 41)",
+    "S4_S5": "notes only, in HISTORY.md: one inter-job gap of 1.95 s (rule: at least 2 s); the author listed the file names of the run's h3/ directory and saw 5 gate records with the H3 worktree path and one module name (names only, no code)",
+    "S6_not_proved_addition": "AttestationData.MarshalSSZTo (not started) is in not_proved above; REPORT §11 ENC paragraph now names it too",
+    "reviewer_checks": "own decl dump 3813 rows (byte-identical to the author's), drift 330 ADDED / 0 CHANGED / 0 REMOVED, planted Lean control caught, cold per-file lean of the 8 new modules exit 0, rfl identities 3/3, 13/13 negatives rerun as designed, directives 58/58 on the Eth1Data fast path",
+    "not_verified_by_the_review": [
+     "link check re-run",
+     "Go differential of the new paths",
+     "20 of 33 negatives",
+     "cold build from an empty .lake",
+     "E2eScal.P2EncCp not re-elaborated",
+     "x86-64 hardware"
+    ]
+   }
   }
  },
  "contamination": {
@@ -1054,6 +1091,64 @@
    "no causal speed-up claim from comparing unlike types",
    "the generator covered the 32-byte root field of each type (1/2, 1/3); the rest is hand work",
    "H1/H2 records unchanged; Eth1Data stays development data"
+  ],
+  "review_h3_r1": {
+   "what": "correction entry added at integration INT2; the H3 values above are not rewritten",
+   "review": "h3-r1 APPROVE on 75166e43ad3d0b31df202fb149782c7b2e45dbc6 (fresh Fable 5.2 reviewer); no must-fix; should-fix S1-S8",
+   "S1_readings": "A3 (class N counts the type's own fields) was fixed by the controller after the candidate list was visible to the curator and before any method code was opened by anyone. Under the other (transitive) reading class N is ProposerSlashing, not DepositMessage; that reading was not adopted. A1 read word for word (any existing .S or record of the type excludes it) empties the population; the confirmed A1 is the narrower reading in HOLDOUT-OPENED H3.readings. Source: the controller confirmation file outside the repository",
+   "S2_axioms_list": "the pre-existing gen/scal/AxiomsScal.lean was extended by H3 (+97 / -0 lines: 8 imports, 87 #print axioms lines); it is the axioms hand list, not a method file",
+   "S3_checker_files": "lean/E2eScal/BiSpecChecker.lean and DmSpecChecker.lean say 'Do not edit' (descterm.py output) and carry one hand-inserted header line; the header names the descterm.py fixed directory, where the desc.json file is not (the file is in e2e/h3/)",
+   "S4_hand_lines_scope": "hand_lines 844 (BlobIdentifier) and 1137 (DepositMessage) count only the files in hand_files. Excluded: lean/E2eScal/H3Code.lean (23 lines) and the hand tools gen/e2e/h3link.py (130), gen/e2e/h3diff.py (70), e2e/h3/h3check-main.go.txt (75), gen/scal/negcases-h3.json (281 lines; wc -l prints 280, no final newline)",
+   "S5_witness_scope": "no witness instantiates the premise Pm of *_accept_spec_k (same as the Eth1Data and BeaconBlockHeader models; only Checkpoint has one). The accept witnesses keep only pc, rax and rbx in their conclusion",
+   "S6_checker_desc_provenance": "the two checker desc.json files were copied from another review's scratch directory (phase1c-r5); they are tied to the committed checker record gen/desc/results/main.result.json by sha256 only; the repository cannot regenerate them by itself",
+   "S7_S8": "notes only, in HISTORY.md: commit 11babc9 uses the type spec(...), which fv/AGENTS.md lists as a scope (no history rewrite); the evaluator ran ls and git log -1 read-only in a second worktree (the replace target of the Prysm go.mod), not listed in the deviations",
+   "reviewer_checks": "the reviewer reran the generator once per type in scratch (a reviewer check, a second run; byte-identical), the link check (PASS, same bundle), 12 of 33 negatives (12/12 as recorded), kindcheck (PASS 2/2), cold re-elaboration of the 20 H3 modules and the decl drift (0 CHANGED, 0 REMOVED, 329 ADDED)",
+   "not_verified_by_the_review": [
+    "Go differential not rerun",
+    "21 of 33 negatives not rerun",
+    "cold build from an empty .lake",
+    "x86-64 hardware run",
+    "consensus-specs text compared from the reviewer's knowledge, not fetched"
+   ]
+  }
+ },
+ "integration_int2": {
+  "what": "merge of the H3 hold-out stream (75166e4, review h3-r1 APPROVE) and the ENC stream (ad15fbc, review enc-r1 APPROVE), both on base dda707c, into claude/ssz-fv-prysm-e2e; integration and records only: no new proof text, no statement change, no generator change",
+  "merges": [
+   "500571c (H3, --no-ff, no conflict)",
+   "c10daf9 (ENC, --no-ff)"
+  ],
+  "conflicts": "records and lists only: gen/scal/AxiomsScal.lean (H3 87 + ENC 24 #print lines, both kept; 201 = 90 + 87 + 24), HISTORY.md, REPORT.md head, prysm/BASELINE.md, prysm/FINDINGS.md (both added section 15: H3 keeps 15, ENC is 16), axioms-gate.json (regenerated). scal/RESULT.json merged without conflict; checked by program: every top-level key and unit equals the side that changed it",
+  "byte_identity": "by program: every .lean file changed by one stream only is byte-identical to that stream's tip (28 new modules); the one .lean changed by both is AxiomsScal.lean (line multiset = base + H3 added + ENC added, plus one blank separator line)",
+  "executed": {
+   "lake build E2eScal": "exit 0, 800 jobs; built exactly the 28 new modules (20 H3 + 8 ENC); E2eScal.P2EncCp not rebuilt (.olean sha256 91e82a13... unchanged) (gate job 01)",
+   "lake build --no-build E2e E2eAd E2eScal": "exit 0 (job 02)",
+   "axioms gate": "PASS, 4142 declarations, 3467 theorems, 143 modules, hand list 315, non-standard 0, sorryAx 0 (job 03; prysm/go1.26.10/e2e/axioms-gate.json)",
+   "decl three-way": "merged 4142 = base 3483 (review b1-r1 dump of dda707c) + H3-added 329 (review h3-r1 dump) + ENC-added 330 (review enc-r1 dump); 0 CHANGED, 0 REMOVED, 0 rows added by the integration; the H3 and ENC added sets do not overlap (E2eScal.E1Code.E1Marshal.eq_1 is ENC-only). decl_drift.py base vs merged: 659 ADDED, 0 CHANGED, 0 REMOVED, no allowlist. All rows: standard axioms only",
+   "planted control": "scratch module E2eScal.Int2Plant (a sorry theorem and a weakened restatement, never in the tree), compiled against the merged build and added by axioms_gate.py --extra-module with a scratch JSON: axioms gate FAIL exit 1 naming sorryAx E2eScal.Int2Plant.planted_sorry; three-way exit 1 (2 rows added by the integration); decl_drift.py merged vs planted exit 1 (2 ADDED) (job 22; job 06 was a setup error of the lean --root option, job 21 a package-shadowing setup error, neither a result). Dump-level control: one type hash changed in a copy of the merged dump: three-way exit 1, 1 CHANGED. A planted change of an existing theorem's statement was NOT run (no .lake copy)",
+   "regen_check.sh": "SAME for 8 generator commands: the 6 gen.sh commands and the two H3 p2dec commands (BlobIdentifier, DepositMessage), two scratch runs each (job 04). This is an integration regen check into scratch; it is not part of the H3 evaluation, whose rule was one generator run per type by the evaluator (the reviewer h3-r1 also reran once per type as a reviewer check)",
+   "kindcheck.py": "PASS on all 8 generated files (GenCi, GenAdDec, GenCpDec, GenVi, GenBhDec, GenE1Dec, GenBiDec, GenDmDec); selftest 23 cases PASS (job 05)",
+   "negatives rerun": "10 cases, one gated job each (jobs 11-20): H3 bi-rej-control, bi-acc-stmt-idx, bi-deser-stmt-value, dm-acc-code-amt, dm-ask-stmt-weaken; ENC enc-block-control, enc-e1-main-stmt-cap, enc-rej-block-stmt-rsp, enc-e1-m-store-disp, enc-bh-rej1-stmt-dst-clean. 2 controls pass, 8 mutants inside; class and first-error line equal to scal/negative-h3.json and scal/negative-enc.json in 10/10"
+  },
+  "gate": {
+   "jobs": 18,
+   "wrapper_s_including_gate_waits": 773.2,
+   "peak_process_rss_gib": 3.81,
+   "memcap_kills": 0,
+   "timeouts": 0
+  },
+  "should_fix_closed": {
+   "b1-r1": "S1-S7 in prysm/BASELINE.md and REPORT §11; S8 one line in HISTORY",
+   "h3-r1": "S1-S6 in H3.review_h3_r1, CONTAMINATION §11 and REPORT §11; S7, S8 one line each in HISTORY",
+   "enc-r1": "S1-S3, S6 in units.enc-reuse.review_enc_r1 and REPORT §11; S4, S5 one line each in HISTORY"
+  },
+  "not_run": [
+   "cold build from an empty .lake (the 28 new modules were built on the existing .lake)",
+   "link check rerun (no .S or link input change in the integration)",
+   "Go differential and go test (no Go change)",
+   "the other 23 H3 and 28 ENC negative cases",
+   "x86-64 hardware run",
+   "independent review of this integration"
   ]
  }
 }

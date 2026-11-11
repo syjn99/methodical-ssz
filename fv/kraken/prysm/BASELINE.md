@@ -10,6 +10,8 @@ Paths are relative to `fv/kraken/` unless they start with `fv/` or `.claude/`. C
 | --- | --- | --- |
 | Reviewed research state | `c3c56a1` (integration, int-r1 APPROVE); this file is in a later documents-only commit whose ancestry contains `c3c56a1` | `prysm/FINDINGS.md` checkpoint deltas (last entry), `HISTORY.md` |
 | Reviewed streams | T-9 `154944e` (t9-r1 APPROVE), SG-1 `da3f233` (sg1-r1 APPROVE), merges `e56063c`, `63ef3b9` | `prysm/go1.26.10/e2e/scal/RESULT.json` `integration_s15` |
+| Reviewed streams after this file was first written | H3 hold-out `75166e4` (h3-r1 APPROVE), ENC `ad15fbc` (enc-r1 APPROVE), both on base `dda707c`; merges `500571c`, `c10daf9` (integration INT2; the integration itself is not yet reviewed) | `scal/RESULT.json` `integration_int2` |
+| scal method freeze (H3) | `dda707c77e9c2168cb778d13624b32fe87e07caa` (7 blob ids and the `lean/E2eScal` tree id) | `scal/HOLDOUT-OPENED` `H3.method_freeze` |
 | Generator (`sszgen/`, `ssz/`) | `698c2025a73a296b55b95744a8408f3b03b2546b` (`syjn99/ssz-gen-fixes`, merge base `2d0150b`) | `prysm/go1.26.10/MANIFEST.md` §1, `TOOLS.md` |
 | scal method freeze (H1, H2) | `56dfc27a6b0c7890105bd16971e0d33bbcd9980e`; `scalgen.py` blob `78e3339…`; SG-1 extended it afterwards | `scal/RESULT.json` `method_freeze`, `units.sg1-extension` |
 | Prysm source | `ab15ff70c72a568c870b2de662474685a95de294` (slice + `ssz-size`), generated in a temporary tree only | `prysm/go1.26.10/MANIFEST.md` §1 |
@@ -55,26 +57,28 @@ Module path is `lean/<Namespace>/<Module>.lean`. Sources: `prysm/go1.26.10/e2e/e
 | Checkpoint.MarshalSSZTo | (C): run after the second growslice call when the heap left is below the budget (T-7) | N (X: differential only) | `cp_e2e_marshal_grow_any_sharp` and the covers end at the call entry |
 | Checkpoint.SizeSSZ; decode→encode | size; composition | K | `cp_e2e_size_main`; `cp_e2e_unmarshal_then_marshal` (`⋆ True` remainder) |
 | Slot, CommitteeIndex .UnmarshalSSZ | accept (function specs) | K | `E2eAd.sl_unmarshal_accept_main`, `ci_unmarshal_accept_main` |
+| Slot, CommitteeIndex .UnmarshalSSZ | length reject | N | — (only `E2e.ep_unmarshal_reject_len_main` and `E2eScal.vi_unmarshal_reject_len_main` exist for the primitives) |
 | AttestationData.UnmarshalSSZ | accept; size reject; spec | K | `E2eAd.ad_e2e_accept_main`, `ad_e2e_reject_size_main`, `ad_e2e_accept_spec_k` |
 | AttestationData.MarshalSSZTo | all paths | N (not started, A4–A6) | — |
 | ValidatorIndex.UnmarshalSSZ | accept (generated); length reject | K | `E2eScal.Gen.vi_unmarshal_accept_main_g`, `E2eScal.vi_unmarshal_reject_len_main` |
 | BeaconBlockHeader.UnmarshalSSZ | accept; size reject; spec; two wraps | K | `E2eScal.Bh.bh_e2e_accept_main`, `bh_e2e_reject_size_main`, `bh_e2e_accept_spec_k`; `bh_e2e_{slot,vi}_err_unreachable` |
 | BeaconBlockHeader.MarshalSSZTo | fast path (`len + 112 ≤ cap`, three roots of length 32) | K | `E2eScal.Bh.bh_e2e_marshal_main`, `bh_e2e_marshal_spec_k`, witness `WitBhM` |
-| BeaconBlockHeader.MarshalSSZTo | three length rejects with `len + 112 ≤ cap` | K (ENC stream, not yet reviewed) | `E2eScal.Bh.bh_e2e_marshal_reject{1,2,3}_main`, witness `WitBhMR`; block `E2eScal.enc_reject_tail` |
+| BeaconBlockHeader.MarshalSSZTo | three length rejects with `len + 112 ≤ cap` | K (ENC stream, enc-r1 APPROVE at `ad15fbc`) | `E2eScal.Bh.bh_e2e_marshal_reject{1,2,3}_main`, witness `WitBhMR`; block `E2eScal.enc_reject_tail` |
 | BeaconBlockHeader.MarshalSSZTo | every growslice branch; length rejects with `cap < len + 112`; morestack | N | — (X: 6 growslice + 6 reject differential cases, not the proved path) |
 | Eth1Data.UnmarshalSSZ | accept; size reject; spec | K (hand) | `E2eScal.E1.e1_e2e_accept_main`, `e1_e2e_reject_size_main`, `e1_e2e_accept_spec_k` |
-| Eth1Data.MarshalSSZTo | fast path (`len + 72 ≤ cap`, two roots of length 32) | K (ENC stream, not yet reviewed) | `E2eScal.E1.e1_e2e_marshal_main`, `e1_e2e_marshal_spec_k`, witness `WitE1M`; block `E2eScal.enc32_call` |
+| Eth1Data.MarshalSSZTo | fast path (`len + 72 ≤ cap`, two roots of length 32) | K (ENC stream, enc-r1 APPROVE at `ad15fbc`) | `E2eScal.E1.e1_e2e_marshal_main`, `e1_e2e_marshal_spec_k`, witness `WitE1M`; block `E2eScal.enc32_call` |
 | Eth1Data.MarshalSSZTo | every growslice branch; two length rejects; morestack | N | — |
-| BlobIdentifier.UnmarshalSSZ (hold-out H3) | accept; size reject; spec; reject_complete | K (BlockRoot segment generated, rest hand; review pending) | `E2eScal.Bi.bi_e2e_accept_main`, `bi_e2e_reject_size_main`, `bi_e2e_accept_spec_k`, `bi_e2e_reject_complete` |
-| DepositMessage.UnmarshalSSZ (hold-out H3) | accept; size reject; spec; reject_complete | K (WithdrawalCredentials segment generated, rest hand; review pending) | `E2eScal.Dm.dm_e2e_accept_main`, `dm_e2e_reject_size_main`, `dm_e2e_accept_spec_k`, `dm_e2e_reject_complete` |
+| BlobIdentifier.UnmarshalSSZ (hold-out H3) | accept; size reject; spec; reject_complete | K (BlockRoot segment generated, rest hand; h3-r1 APPROVE at `75166e4`) | `E2eScal.Bi.bi_e2e_accept_main`, `bi_e2e_reject_size_main`, `bi_e2e_accept_spec_k`, `bi_e2e_reject_complete` |
+| DepositMessage.UnmarshalSSZ (hold-out H3) | accept; size reject; spec; reject_complete | K (WithdrawalCredentials segment generated, rest hand; h3-r1 APPROVE at `75166e4`) | `E2eScal.Dm.dm_e2e_accept_main`, `dm_e2e_reject_size_main`, `dm_e2e_accept_spec_k`, `dm_e2e_reject_complete` |
 | BlobIdentifier, DepositMessage: MarshalSSZTo, SizeSSZ, HashTreeRoot | all paths | N (out of H3 scope) | — |
+| MarshalSSZ, HashTreeRoot, HashTreeRootWith of every type (Checkpoint included); SizeSSZ of every type except Checkpoint | all paths | N (outside the e2e function set) | — (`e2e/CALLGRAPH.md` §4, FINDINGS AU-09) |
 | decoder `fmt.Errorf` wraps | unreachable_mc (conditional skip, not reject coverage) | K | `E2e.cp_e2e_epoch_err_unreachable`, `E2eAd.ad_e2e_*_err_unreachable` |
-| hand-written `primitives` methods | the other 23 methods | N | `prysm/FINDINGS.md` O2 |
+| hand-written `primitives` methods | every method and path not in a K row above (FINDINGS O2 counts "the other 23 methods" after Epoch only; it predates the Slot, CommitteeIndex and ValidatorIndex decoder rows above) | N | `prysm/FINDINGS.md` O2 |
 | runtime callees (makeslice, memmove, growslice, convT64, newobject, fmt.errorf) | contract bodies | N (hypotheses) | `CONTRACTS.md` |
 
 Every growslice branch except the Checkpoint ones above is NOT proved. No encoder is complete; there is no full coverage claim.
-Rows marked "ENC stream, not yet reviewed" are kernel-checked on the branch `claude/ssz-fv-enc-reuse` (base `dda707c`); no independent review has checked them.
-Go-value checks: a Lean predicate exists for Checkpoint only (`E2e.GoVal`); BeaconBlockHeader, Eth1Data, AttestationData, BlobIdentifier and DepositMessage receivers have none (`REPORT.md` §11).
+Rows marked "ENC stream" are kernel-checked on the branch `claude/ssz-fv-enc-reuse` (base `dda707c`); review enc-r1 approved `ad15fbc`. Both encoders: fast path only; the BeaconBlockHeader rejects only under `len + 112 ≤ cap`.
+Go-value checks: a Lean predicate exists for Checkpoint only (`E2e.cpGoValue`, module `lean/E2e/GoVal.lean`); BeaconBlockHeader, Eth1Data, AttestationData, BlobIdentifier and DepositMessage receivers have none (`REPORT.md` §11).
 No run on x86-64 hardware (`REPORT.md` §11 condition 3).
 
 ## 4. Method evidence (as recorded)
@@ -84,6 +88,9 @@ No run on x86-64 hardware (`REPORT.md` §11 condition 3).
 - H2 (historical, before SG-1): the frozen generator ran once on Eth1Data: exit 2, 0 bytes, 0 of 2 root fields (job 393; `scal/RESULT.json` `H2`, FINDINGS SG-1). The decoder was then proved by hand.
 - SG-1 extension: offset-0 template `rootdec_seg_z` and `scalgen.py p2dec` form, developed on Eth1Data after both hold-outs were opened. Eth1Data is in-sample and the hold-out is contaminated for it. Output 2 of 2 fields; no generalisation claim (`scal/RESULT.json` `units.sg1-extension`, `scal/CONTAMINATION.md` §8).
 - H3 (frozen method `dda707c`, opened in `782a41b`): one generator run per type, exit 0, raw output unedited; coverage 1/2 (BlobIdentifier) and 1/3 (DepositMessage) fields; the inline uint64 fields and the 48-byte PublicKey by hand (FINDINGS SG-2). Two types, one touch; no superiority, general-automation or speed-up claim (`scal/RESULT.json` `H3`, `scal/CONTAMINATION.md` §11). Independent review pending.
+- H3 review (correction, integration INT2): h3-r1 APPROVE on `75166e4`; the reviewer reran the generator once per type in scratch (byte-identical), 12 of 33 negatives and the link check. Reading A3 (class N counts own fields) was fixed after the candidate list was visible and before any method code was opened; under the other reading class N is `ProposerSlashing` (`scal/CONTAMINATION.md` §11).
+- H3 limits: generator 1 of 2 and 1 of 3 fields; SG-2 open (no inline uint64 template, no 48-byte segment). One touch of two types; no generalisation, superiority or causal speed-up claim. No witness instantiates the `*_accept_spec_k` premise `Pm` (as for Eth1Data and BeaconBlockHeader).
+- ENC (development data, not a hold-out; enc-r1 APPROVE on `ad15fbc`): encode block `E2eScal.enc32_call` (the memmove call site) and reject block `E2eScal.enc_reject_tail`. Reuse is PARTIAL: proof lines per BeaconBlockHeader root site 56 / 66 / 68 via the block against 61 / 71 / 73 by hand, block 18 lines; the straight-line steps stay per site (FINDINGS ENC-1). `Eth1Data.MarshalSSZTo` and `BeaconBlockHeader.MarshalSSZTo`: fast path only; BeaconBlockHeader length rejects only under `len + 112 ≤ cap`. No speed-up claim (`scal/RESULT.json` unit `enc-reuse`).
 - T-9: cause = the `simp` + `omega` proof of the large-frame guard branch fails in the kernel under the memory limit (4.88 GiB under `lean -M 5000`); the costly subterm was not profiled; the `2^64 − 32` literal is an inference. Fixed by the lemma `E2eScal.lea_cmp_be_false`; then 5 attempts, 2 failed (`scal/RESULT.json` T-9 unit).
 - AU-07 (open): `E2eScal.P2EncCp` (Checkpoint encode template) costs 986.0 s for one `lake env lean` (n = 1, review fix-r1), against 4.5 s for the hand proof. Three attempts (953–973 s `omega`) gave no speed-up; the slow call was not located (`e2e/opt1/AU-07.json`).
 - Witness-build measurement (AU-06, `e2e/opt1/AU-06.json`): four witness modules 1636.8 s → 165.3 s after the `wit_split_n` tactic.
@@ -98,14 +105,16 @@ Run heavy jobs one at a time and under a memory limit. Commands in `REPORT.md` �
 ```sh
 (cd fv/kraken/lean && lake build E2e E2eAd E2eScal)    # E2eScal.P2EncCp alone took 986 s (n = 1)
 (cd fv/kraken/lean && lake build --no-build E2e E2eAd E2eScal)   # expect exit 0 after the build
-python3 -I -B fv/kraken/gen/e2e/axioms_gate.py run fv/kraken/prysm/go1.26.10/e2e/axioms-gate.json <dump.tsv>
+python3 -I -B fv/kraken/gen/e2e/axioms_gate.py run <out.json> <dump.tsv>   # WRITES <out.json>; give a scratch path unless you mean to update the committed record
 GOROOT=$(go env GOROOT) go test -count=1 ./ssz/ ./sszgen/... ./fv/kraken/semtest/
 python3 -I -B fv/kraken/gen/scal/kindcheck.py --selftest
 python3 -I -B fv/kraken/gen/e2e/negative.py <negcases.json> <work> <result.json> <case-id>   # one job per case
 ```
 
 Expected at the reviewed state `c3c56a1`: `axioms-gate.json` `verdict` PASS, `declarations` 3483, `theorems` 2923, `modules` 115, `nonstandard` {}, `sorryAx` [].
-With the ENC stream (not yet reviewed): `declarations` 3813, `theorems` 3223, `modules` 123 (`scal/RESULT.json` unit `enc-reuse`).
+On the ENC branch alone (enc-r1 APPROVE): `declarations` 3813, `theorems` 3223, `modules` 123 (`scal/RESULT.json` unit `enc-reuse`).
+Both `axioms_gate.py run <out.json> <dump.tsv>` and `axioms_gate.py check <dump.tsv> <out.json>` overwrite the JSON argument (review b1-r1 S7). The committed record is `prysm/go1.26.10/e2e/axioms-gate.json`.
+After the integration INT2 (H3 + ENC, merge `c10daf9`): `declarations` 4142, `theorems` 3467, `modules` 143, hand list 315 (`scal/RESULT.json` `integration_int2`). The integration is not yet reviewed.
 The count comes from `decl_dump.lean` (`.claude/skills/maintaining-methodical-fv/scripts/`) over the roots E2e, E2eAd, E2eScal, run by `axioms_gate.py`.
 `scal/RESULT.json` `integration_s15.executed` lists the other expected results (negatives 36/36 T9, 15/15 SG1; regen SAME 6/6; `p2dec_test.py` 10/10).
 A cold build from an empty `.lake` was not run in any reviewed unit (`scal/RESULT.json` `integration_s15.not_run`).
@@ -124,9 +133,10 @@ Portability caveats:
 | ID | One line |
 | --- | --- |
 | T-7 | `GrowsliceC` gives no lower bound on the heap left; the run after the second growslice call is not proved |
-| T-9 (residue) | fast paths proved for BeaconBlockHeader and (ENC stream, not yet reviewed) Eth1Data; BeaconBlockHeader length rejects proved only for `len + 112 ≤ cap` (ENC stream); growslice branches and morestack of both encoders, and the Eth1Data length rejects, not proved |
-| ENC-1 | six root-append sites have six instruction texts; the shared encode block is the call site (`enc32_call`), the steps before it stay per site; review pending |
-| ENC-2 | the BeaconBlockHeader encoder writes earlier fields to `dst[len:]` before a later length reject (class of C-1); review pending |
+| T-9 (residue) | fast paths proved for BeaconBlockHeader and (ENC stream, enc-r1) Eth1Data; BeaconBlockHeader length rejects proved only for `len + 112 ≤ cap` (ENC stream); growslice branches and morestack of both encoders, and the Eth1Data length rejects, not proved |
+| ENC-1 | six root-append sites have six instruction texts; the shared encode block is the call site (`enc32_call`), the steps before it stay per site (reuse partial); reviewed (enc-r1) |
+| ENC-2 | the BeaconBlockHeader encoder writes earlier fields to `dst[len:]` before a later length reject (class of C-1); reviewed (enc-r1) |
+| SG-2 | frozen generator covers 32-byte `[]byte` vectors only: H3 coverage 1/2 and 1/3 fields; proposals P-H3-1, P-H3-2 not done |
 | SG-1 | extended after both hold-outs; no hold-out claim for the extension; DepositCount has no template |
 | AU-01 | gate lock is not FIFO; user decision: measure first |
 | AU-07 | `P2EncCp` `omega` cost not located; the encode template is net-negative in build time |
@@ -135,6 +145,9 @@ Portability caveats:
 | K2 | Kraken parser has no `bsr`; Kraken request |
 | C-1 | Checkpoint encoder writes the epoch before the root-length test; known behaviour, review pending |
 | T-3, T-4 | local workarounds (data reader copy, `eaddr` macro); review pending |
+| T-1, T-2 | decoder closing tactics above 6 GiB (split at `L_b4`) and `ecancel` AC step (re-elaboration workaround); review pending |
+| T-6, T-8 | one witness host per file; `ecancel` with `⋆ emp` and AC forms of witness memory (workarounds); review pending |
+| AU-09 | hold-out limits: `SizeSSZ` excluded from H1; H2 = Eth1Data `UnmarshalSSZ` / `MarshalSSZTo` only (user decision) |
 | O2 | 23 hand-written `primitives` methods have no proof |
 
 ## 7. Test contract for a new type

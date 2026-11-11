@@ -22,9 +22,11 @@ prysm-e2e 스트림은 11절이다. 확장성 홀드아웃 H1(ValidatorIndex, Be
 H2에서 고정 생성기는 루트 필드 2개 중 0개를 덮었다(SG-1). 이것은 확장 전의 역사적 결과다. 디코더는 손으로 증명했다.
 SG-1 확장은 두 홀드아웃을 연 뒤의 개발 작업이다. 그 확장에서 Eth1Data는 표본 안 자료다(11절).
 홀드아웃 H3(BlobIdentifier, DepositMessage의 `UnmarshalSSZ`)의 결과는 `scal/RESULT.json`의 `H3`에 있다(11절).
+리뷰 h3-r1이 H3 `75166e4`를 승인했다.
 BeaconBlockHeader 인코더는 빠른 경로와 길이 거부 세 곳을 증명했다. 길이 거부의 전제는 `len + 112 ≤ cap`이다(11절).
-`Eth1Data.MarshalSSZTo`는 빠른 경로만 증명했다(11절, ENC 스트림). ENC 스트림은 독립 리뷰를 아직 받지 않았다.
+`Eth1Data.MarshalSSZTo`는 빠른 경로만 증명했다(11절, ENC 스트림). 리뷰 enc-r1이 ENC `ad15fbc`를 승인했다.
 어느 인코더도 완전하지 않다.
+두 스트림은 통합 INT2에서 병합했다(`500571c`, `c10daf9`). 통합의 독립 리뷰는 아직 없다.
 
 수치(수정 3 끝, 차가운 프로젝트 빌드 뒤):
 
@@ -353,7 +355,8 @@ Go 차분 21/21(빠른 경로 9건)은 linux/arm64 호스트에서 돌렸다. Go
 비용과 한계는 `scal/RESULT.json`의 `beacon_block_header_encoder_t9`에 있다.
 임시 결과는 `#print axioms` 출력에 `sorryAx`와 자기 이름이 없을 때만 닫힌 것이다(FINDINGS P-1).
 
-ENC 스트림(브랜치 `claude/ssz-fv-enc-reuse`, 기준 `dda707c`)은 재사용 블록 두 개를 더했다. 독립 리뷰는 아직 없다.
+ENC 스트림(브랜치 `claude/ssz-fv-enc-reuse`, 기준 `dda707c`)은 재사용 블록 두 개를 더했다.
+리뷰 enc-r1이 `ad15fbc`를 승인했다. 필수 수정은 없다. 통합 INT2가 병합했다(`c10daf9`).
 기존 정리, 정의, 증인은 바꾸지 않았다. 기준 덤프 대비 선언 차이는 ADDED 330, CHANGED 0, REMOVED 0이다.
 관찰(FINDINGS ENC-1): 32바이트 필드를 붙이는 컴파일된 자리 6곳은 명령어 글이 모두 다르다.
 레지스터, 주소 계산(`lea` 또는 `add`), 값의 출처(레지스터 또는 프레임), `nop`이 다르다.
@@ -362,6 +365,8 @@ ENC 스트림(브랜치 `claude/ssz-fv-enc-reuse`, 기준 `dda707c`)은 재사�
 이 블록은 호출, 반환 슬롯, 계약 적용, 프레임을 한 번 적는다. 호출 앞의 직선 구간은 자리마다 손으로 밟는다.
 사례는 5개다: BeaconBlockHeader 89, 117, 147과 Eth1Data 36, 80.
 `bh_enc_{b,c,d}_via_block`의 타입은 기존 `bh_enc_{b,c,d}`의 타입과 `rfl`로 같다.
+재사용은 부분적이다. 자리마다 증명 줄 수는 블록을 거쳐 56, 66, 68줄이다.
+손 증명은 61, 71, 73줄이다. 블록 자체는 18줄이다(리뷰 enc-r1).
 측정(작업 07, 파일마다 `lake env lean`, n = 2, 공유 기계): `EncBlock.lean` 1.01초와 1.04초, `BhEncBlock.lean` 3.12초와 3.09초, 손 파일 `BhEncRoots.lean` 3.43초와 3.37초.
 두 파일의 내용은 같지 않다(`bh_enc_e`와 보조정리). 속도 향상을 주장하지 않는다.
 `Eth1Data.MarshalSSZTo`는 **빠른 경로만** 증명했다: `E2eScal.E1.e1_e2e_marshal_main`. 문장 꼴은 `bh_e2e_marshal_main`과 같다.
@@ -377,8 +382,11 @@ BeaconBlockHeader 길이 거부 세 곳을 이 블록의 사례로 증명했다:
 나머지 1건(`enc-e1-a-call`)은 통과가 아니다. 변이는 코드 사실 보조정리 `e1_call_at`에서 거부됐고 지정한 정리 밖이다. 작성자의 대상 지정 오류다.
 공리 게이트는 PASS다: 선언 3813개, 정리 3223개, 표준 공리만, `sorryAx` 0개(작업 70).
 시도 10회 중 3회가 실패했다. 진단은 3회다. gate 시간은 646초다(대기 포함). `maxHeartbeats`는 올리지 않았다.
+작업 09는 진단으로 적었지만 수정도 돌렸다. 시도로 세면 한도 12회 중 11회다(리뷰 enc-r1).
+gate를 거친 작업은 51개다. 52번째 행은 gate 전에 종료 2로 끝났다(리뷰 enc-r1).
 증명하지 않은 것: 두 인코더의 growslice 분기와 morestack 경로(T-7은 미뤘다), Eth1Data 길이 거부 두 곳, 수신자의 Lean Go 값 술어.
-실행하지 않은 것: 링크 검사 재실행(트리의 `e1/link`, `bh/link` 묶음을 쓴다), 새 경로의 Go 차분, 차가운 빌드, 독립 리뷰.
+증명하지 않은 것(계속): `AttestationData.MarshalSSZTo`(시작하지 않음), `runtime.memmove`(`MemmoveC`는 가설).
+실행하지 않은 것: 링크 검사 재실행(트리의 `e1/link`, `bh/link` 묶음을 쓴다), 새 경로의 Go 차분, 차가운 빌드.
 "인코더 완전"을 주장하지 않는다. 비용과 한계는 `scal/RESULT.json`의 `enc-reuse`에 있다.
 
 아래 H2 결과와 위의 H1 결과는 SG-1 확장 전의 결과다. 바뀌지 않았고 역사적 결과로 둔다.
@@ -438,7 +446,12 @@ Index, Amount(인라인 uint64)와 48바이트 PublicKey는 손으로 증명했�
 실행 검사: 링크 검사 PASS(`h3/link/RESULT`), 부정 시험 33/33, Go 차분 12/12(arm64의 Go 의미, ELF 아님).
 공리 게이트 PASS(선언 3812개), `dda707c` 덤프 대비 선언 변동은 ADDED 329개뿐이다.
 증명하지 않은 것: morestack 경로, 런타임 호출 대상(계약 가설), 수신자의 Lean Go 값 술어, `UnmarshalSSZ` 밖의 모든 것.
-실행하지 않은 것: 콜드 빌드, `regen_check.sh`(생성기를 다시 돌린다), x86-64 하드웨어, H3의 독립 리뷰.
+H3 평가 세션이 실행하지 않은 것: 콜드 빌드, `regen_check.sh`(생성기를 다시 돌린다), x86-64 하드웨어.
+리뷰 h3-r1이 `75166e4`를 승인했다. 필수 수정은 없다. 통합 INT2가 병합했다(`500571c`).
+리뷰어는 생성기를 형마다 한 번 더 scratch에서 돌렸다. 출력은 커밋된 파일과 바이트가 같다.
+읽기 A3(N 부류는 형 자신의 필드를 센다)는 후보 목록이 보인 뒤에 정했다. 방법 코드를 열기 전이다.
+다른 읽기(전이적 필드)에서는 N 부류가 `ProposerSlashing`이다. 읽기 A1을 글자 그대로 읽으면 후보가 없다.
+`*_accept_spec_k`의 전제 `Pm`을 채우는 증인은 없다. Eth1Data, BeaconBlockHeader 모델과 같다.
 H3의 한계: 두 형, 한 번이다. 이 두 형에 대한 전이의 증거일 뿐이다. 우월성, 일반 자동화, 인과적 속도 주장은 없다.
 기록: `scal/CONTAMINATION.md` 11절, `scal/RESULT.json`의 `H3`, FINDINGS SG-2.
 
@@ -451,7 +464,23 @@ H3의 한계: 두 형, 한 번이다. 이 두 형에 대한 전이의 증거일 
 `kindcheck.py`: 생성 파일 6개 PASS, 자기 시험 23건 PASS.
 부정 시험 재실행: T9 36/36, SG1 7/7. 분류와 첫 오류 위치가 스트림 결과와 같다(작업 439–481).
 새 SG1 사례 8건: 대조 2 통과, 변이 6 정리 안 실패(작업 482–489).
-실행하지 않은 것: `E2eScal` 전체 콜드 빌드, 링크 검사, Go 차분, Go 시험(Go와 링크 입력 변경 없음). 통합의 독립 리뷰.
+실행하지 않은 것: `E2eScal` 전체 콜드 빌드, 링크 검사, Go 차분, Go 시험(Go와 링크 입력 변경 없음).
+리뷰 int-r1이 이 통합(`c3c56a1`)을 승인했다(HISTORY, FINDINGS의 정정 항목).
+
+병합 검사(통합 INT2, 실행 검사; 병합 `c10daf9` 위, gate와 6 GiB 상한 안):
+H3 `75166e4`와 ENC `ad15fbc`를 병합했다(`500571c`, `c10daf9`). 새 증명과 문장 변경은 없다.
+`lake build E2eScal` 종료 0이다. 새 모듈 28개만 빌드했다. `P2EncCp`는 다시 빌드되지 않았다(작업 01).
+`lake build --no-build E2e E2eAd E2eScal` 종료 0이다(작업 02).
+공리 게이트 PASS: 선언 4142개, 정리 3467개, 비표준 공리 0, `sorryAx` 0(작업 03).
+선언 비교: 병합 4142 = 기준 3483 + H3 329 + ENC 330이다. CHANGED 0, REMOVED 0이다.
+통합이 더한 행은 0이다. 두 스트림의 추가 행은 겹치지 않는다.
+심은 대조: scratch 모듈의 `sorry` 정리를 게이트가 잡았다(종료 1). 선언 비교도 종료 1이다(작업 22).
+`regen_check.sh`: 생성기 명령 8개 모두 SAME이다(`gen.sh` 6개, H3 2개, 작업 04).
+이것은 scratch에서 돌린 통합 검사다. H3 평가의 "형마다 한 번" 실행에 넣지 않는다.
+`kindcheck.py`: 생성 파일 8개 PASS, 자기 시험 23건 PASS(작업 05).
+부정 시험 재실행: H3 5건, ENC 5건. 10건 모두 분류와 첫 오류 줄이 기록과 같다(작업 11–20).
+실행하지 않은 것: 빈 `.lake`에서의 콜드 빌드, 링크 검사, Go 차분, Go 시험, 통합의 독립 리뷰.
+기록: `scal/RESULT.json`의 `integration_int2`.
 
 조건:
 
