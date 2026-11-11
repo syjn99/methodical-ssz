@@ -195,3 +195,16 @@ T9 스트림 단락과 세션 15 단락의 "독립 리뷰는 아직 없다"는 �
 `scal/RESULT.json`의 H1 시점과 H2 시점 문장에 "역사적" 표시를 더했다. 수치는 바꾸지 않았다.
 `StackGuard.lean` 설명문을 기록된 원인으로 고쳤다. 정리와 증명은 바꾸지 않았다.
 다른 기계로 옮길 기준 문서 `prysm/BASELINE.md`를 더했다.
+
+2026-11-11 ENC 스트림 (사용자 지시; 기준 `dda707c`, 브랜치 `claude/ssz-fv-enc-reuse`): 새 Fable 5.2 세션이 직접 작성했다.
+재사용 블록 `E2eScal.enc32_call`(memmove 호출)과 `E2eScal.enc_reject_tail`(길이 거부 꼬리)을 더했다.
+BeaconBlockHeader 루트 블록 세 개를 `enc32_call`로 다시 증명했다. 문장은 기존과 `rfl`로 같다. 기존 모듈은 고치지 않았다.
+`Eth1Data.MarshalSSZTo`의 빠른 경로, 명세 따름정리, 증인을 증명했다.
+BeaconBlockHeader 길이 거부 세 곳과 증인을 증명했다. 전제는 `len + 112 ≤ cap`이다.
+여러 지시어의 인코드 템플릿은 자리 6곳에 공통으로 맞지 않는다(FINDINGS ENC-1). 호출 앞 구간은 자리마다 손으로 밟았다.
+시도 10회(실패 4회), 진단 3회, gate 646초다. 첫 작업에서 옮겨 온 `.lake`의 두 모듈이 낡아서 `lake build E2eScal`을 한 번 돌렸다. `P2EncCp`는 다시 빌드되지 않았다.
+gate는 스트림 이름 `enc`를 받지 않았다. 작업은 스트림 `prysm-e2e`와 표지 `enc:`로 돌렸다.
+부정 시험은 33건 중 32건이 설계대로다. 1건은 작성자가 대상 정리를 잘못 지정했고 통과로 세지 않는다.
+공리 게이트는 PASS다(선언 3813개). 선언 차이는 ADDED 330, CHANGED 0, REMOVED 0이다.
+증명하지 않은 것: growslice 분기, morestack 경로, 용량이 작은 길이 거부, Eth1Data 길이 거부, Go 값 술어.
+독립 리뷰는 아직 없다. 원격에 쓰지 않았다.

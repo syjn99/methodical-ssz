@@ -60,14 +60,17 @@ Module path is `lean/<Namespace>/<Module>.lean`. Sources: `prysm/go1.26.10/e2e/e
 | ValidatorIndex.UnmarshalSSZ | accept (generated); length reject | K | `E2eScal.Gen.vi_unmarshal_accept_main_g`, `E2eScal.vi_unmarshal_reject_len_main` |
 | BeaconBlockHeader.UnmarshalSSZ | accept; size reject; spec; two wraps | K | `E2eScal.Bh.bh_e2e_accept_main`, `bh_e2e_reject_size_main`, `bh_e2e_accept_spec_k`; `bh_e2e_{slot,vi}_err_unreachable` |
 | BeaconBlockHeader.MarshalSSZTo | fast path (`len + 112 ≤ cap`, three roots of length 32) | K | `E2eScal.Bh.bh_e2e_marshal_main`, `bh_e2e_marshal_spec_k`, witness `WitBhM` |
-| BeaconBlockHeader.MarshalSSZTo | every growslice branch; three length rejects; morestack | N | — (X: 6 growslice + 6 reject differential cases, not the proved path) |
+| BeaconBlockHeader.MarshalSSZTo | three length rejects with `len + 112 ≤ cap` | K (ENC stream, not yet reviewed) | `E2eScal.Bh.bh_e2e_marshal_reject{1,2,3}_main`, witness `WitBhMR`; block `E2eScal.enc_reject_tail` |
+| BeaconBlockHeader.MarshalSSZTo | every growslice branch; length rejects with `cap < len + 112`; morestack | N | — (X: 6 growslice + 6 reject differential cases, not the proved path) |
 | Eth1Data.UnmarshalSSZ | accept; size reject; spec | K (hand) | `E2eScal.E1.e1_e2e_accept_main`, `e1_e2e_reject_size_main`, `e1_e2e_accept_spec_k` |
-| Eth1Data.MarshalSSZTo | all paths | N (not attempted) | — |
+| Eth1Data.MarshalSSZTo | fast path (`len + 72 ≤ cap`, two roots of length 32) | K (ENC stream, not yet reviewed) | `E2eScal.E1.e1_e2e_marshal_main`, `e1_e2e_marshal_spec_k`, witness `WitE1M`; block `E2eScal.enc32_call` |
+| Eth1Data.MarshalSSZTo | every growslice branch; two length rejects; morestack | N | — |
 | decoder `fmt.Errorf` wraps | unreachable_mc (conditional skip, not reject coverage) | K | `E2e.cp_e2e_epoch_err_unreachable`, `E2eAd.ad_e2e_*_err_unreachable` |
 | hand-written `primitives` methods | the other 23 methods | N | `prysm/FINDINGS.md` O2 |
 | runtime callees (makeslice, memmove, growslice, convT64, newobject, fmt.errorf) | contract bodies | N (hypotheses) | `CONTRACTS.md` |
 
 Every growslice branch except the Checkpoint ones above is NOT proved. No encoder is complete; there is no full coverage claim.
+Rows marked "ENC stream, not yet reviewed" are kernel-checked on the branch `claude/ssz-fv-enc-reuse` (base `dda707c`); no independent review has checked them.
 Go-value checks: a Lean predicate exists for Checkpoint only (`E2e.GoVal`); BeaconBlockHeader, Eth1Data and AttestationData receivers have none (`REPORT.md` §11).
 No run on x86-64 hardware (`REPORT.md` §11 condition 3).
 
@@ -97,7 +100,8 @@ python3 -I -B fv/kraken/gen/scal/kindcheck.py --selftest
 python3 -I -B fv/kraken/gen/e2e/negative.py <negcases.json> <work> <result.json> <case-id>   # one job per case
 ```
 
-Expected: `axioms-gate.json` `verdict` PASS, `declarations` 3483, `theorems` 2923, `modules` 115, `nonstandard` {}, `sorryAx` [].
+Expected at the reviewed state `c3c56a1`: `axioms-gate.json` `verdict` PASS, `declarations` 3483, `theorems` 2923, `modules` 115, `nonstandard` {}, `sorryAx` [].
+With the ENC stream (not yet reviewed): `declarations` 3813, `theorems` 3223, `modules` 123 (`scal/RESULT.json` unit `enc-reuse`).
 The count comes from `decl_dump.lean` (`.claude/skills/maintaining-methodical-fv/scripts/`) over the roots E2e, E2eAd, E2eScal, run by `axioms_gate.py`.
 `scal/RESULT.json` `integration_s15.executed` lists the other expected results (negatives 36/36 T9, 15/15 SG1; regen SAME 6/6; `p2dec_test.py` 10/10).
 A cold build from an empty `.lake` was not run in any reviewed unit (`scal/RESULT.json` `integration_s15.not_run`).
@@ -116,7 +120,9 @@ Portability caveats:
 | ID | One line |
 | --- | --- |
 | T-7 | `GrowsliceC` gives no lower bound on the heap left; the run after the second growslice call is not proved |
-| T-9 (residue) | fast path proved; growslice branches, length rejects and morestack of the BeaconBlockHeader encoder not proved; `Eth1Data.MarshalSSZTo` not attempted |
+| T-9 (residue) | fast paths proved for BeaconBlockHeader and (ENC stream, not yet reviewed) Eth1Data; BeaconBlockHeader length rejects proved only for `len + 112 ≤ cap` (ENC stream); growslice branches and morestack of both encoders, and the Eth1Data length rejects, not proved |
+| ENC-1 | six root-append sites have six instruction texts; the shared encode block is the call site (`enc32_call`), the steps before it stay per site; review pending |
+| ENC-2 | the BeaconBlockHeader encoder writes earlier fields to `dst[len:]` before a later length reject (class of C-1); review pending |
 | SG-1 | extended after both hold-outs; no hold-out claim for the extension; DepositCount has no template |
 | AU-01 | gate lock is not FIFO; user decision: measure first |
 | AU-07 | `P2EncCp` `omega` cost not located; the encode template is net-negative in build time |

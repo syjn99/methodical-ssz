@@ -21,7 +21,9 @@
 prysm-e2e 스트림은 11절이다. 확장성 홀드아웃 H1(ValidatorIndex, BeaconBlockHeader)과 H2(Eth1Data)의 결과는 `prysm/go1.26.10/e2e/scal/RESULT.json`에 있다(11절 끝 문단).
 H2에서 고정 생성기는 루트 필드 2개 중 0개를 덮었다(SG-1). 이것은 확장 전의 역사적 결과다. 디코더는 손으로 증명했다.
 SG-1 확장은 두 홀드아웃을 연 뒤의 개발 작업이다. 그 확장에서 Eth1Data는 표본 안 자료다(11절).
-BeaconBlockHeader 인코더는 빠른 경로만 증명했다. `Eth1Data.MarshalSSZTo`는 증명하지 않았다(11절).
+BeaconBlockHeader 인코더는 빠른 경로와 길이 거부 세 곳을 증명했다. 길이 거부의 전제는 `len + 112 ≤ cap`이다(11절).
+`Eth1Data.MarshalSSZTo`는 빠른 경로만 증명했다(11절, ENC 스트림). ENC 스트림은 독립 리뷰를 아직 받지 않았다.
+어느 인코더도 완전하지 않다.
 
 수치(수정 3 끝, 차가운 프로젝트 빌드 뒤):
 
@@ -334,7 +336,8 @@ BeaconBlockHeader 인코더는 **빠른 경로만** 증명했다. T-9 스트림(
 리뷰 t9-r1이 `154944e`를 승인했다. 세션 15가 이 브랜치에 병합했다(병합 커밋 `e56063c`).
 정리는 `E2eScal.Bh.bh_e2e_marshal_main`이다. 문장 꼴은 `cp_e2e_marshal_main`과 같다.
 범위는 빠른 경로뿐이다: `len(dst) + 112 ≤ cap(dst)`이고 세 루트의 길이가 32다.
-증명하지 않은 것: growslice 분기, 길이 거부 세 곳, morestack 경로.
+T-9 스트림이 증명하지 않은 것: growslice 분기, 길이 거부 세 곳, morestack 경로.
+길이 거부 세 곳은 ENC 스트림이 용량 전제 아래에서 증명했다(아래 ENC 문단).
 T-7은 미뤘다. `GrowsliceC`는 그대로다. "BeaconBlockHeader 인코더 완전"을 주장하지 않는다.
 T-9의 원인: 스택 가드 분기를 `simp`와 `omega`로 닫은 증명은 5 GiB 한도 아래에서 커널 검사에 실패한다.
 비용이 큰 부분 항은 프로파일하지 않았다.
@@ -348,6 +351,34 @@ Go 차분 21/21(빠른 경로 9건)은 linux/arm64 호스트에서 돌렸다. Go
 실행하지 않은 것: 링크 검사 재실행(기존 묶음 `140eb7bd…`을 쓴다), `E2eScal` 전체 콜드 빌드, 수신자의 Lean Go 값 술어.
 비용과 한계는 `scal/RESULT.json`의 `beacon_block_header_encoder_t9`에 있다.
 임시 결과는 `#print axioms` 출력에 `sorryAx`와 자기 이름이 없을 때만 닫힌 것이다(FINDINGS P-1).
+
+ENC 스트림(브랜치 `claude/ssz-fv-enc-reuse`, 기준 `dda707c`)은 재사용 블록 두 개를 더했다. 독립 리뷰는 아직 없다.
+기존 정리, 정의, 증인은 바꾸지 않았다. 기준 덤프 대비 선언 차이는 ADDED 330, CHANGED 0, REMOVED 0이다.
+관찰(FINDINGS ENC-1): 32바이트 필드를 붙이는 컴파일된 자리 6곳은 명령어 글이 모두 다르다.
+레지스터, 주소 계산(`lea` 또는 `add`), 값의 출처(레지스터 또는 프레임), `nop`이 다르다.
+그래서 여러 지시어의 템플릿은 자리마다 사례가 하나뿐이다. 공통인 것은 호출 시점의 기계 상태다.
+블록 1은 `E2eScal.enc32_call`이다. 코드 사실은 `callq runtime.memmove` 한 지시어다.
+이 블록은 호출, 반환 슬롯, 계약 적용, 프레임을 한 번 적는다. 호출 앞의 직선 구간은 자리마다 손으로 밟는다.
+사례는 5개다: BeaconBlockHeader 89, 117, 147과 Eth1Data 36, 80.
+`bh_enc_{b,c,d}_via_block`의 타입은 기존 `bh_enc_{b,c,d}`의 타입과 `rfl`로 같다.
+측정(작업 07, 파일마다 `lake env lean`, n = 2, 공유 기계): `EncBlock.lean` 1.01초와 1.04초, `BhEncBlock.lean` 3.12초와 3.09초, 손 파일 `BhEncRoots.lean` 3.43초와 3.37초.
+두 파일의 내용은 같지 않다(`bh_enc_e`와 보조정리). 속도 향상을 주장하지 않는다.
+`Eth1Data.MarshalSSZTo`는 **빠른 경로만** 증명했다: `E2eScal.E1.e1_e2e_marshal_main`. 문장 꼴은 `bh_e2e_marshal_main`과 같다.
+전제는 `len(dst) + 72 ≤ cap(dst)`, 두 루트의 길이 32, `guard + 8 < rsp`다. 스택 가드는 `lea_cmp_be_false`(N = 8)를 그대로 쓴다.
+증거: 명세 정렬 `e1_e2e_marshal_spec_k`(독립 Desc `prysmE1Desc`), 증인 `WitE1M`(Go 배치의 수신자, 접두사 둘).
+블록 2는 `E2eScal.enc_reject_tail`이다. 템플릿 `rejTail`의 매개변수는 프레임 해제(`add` 또는 `sub`), 상수, `nop` 유무다.
+거부 꼬리는 ABI 결과 레지스터를 쓴다. 그래서 템플릿 하나가 맞는다.
+BeaconBlockHeader 길이 거부 세 곳을 이 블록의 사례로 증명했다: `bh_e2e_marshal_reject{1,2,3}_main`, 증인 `WitBhMR`.
+한계: 전제가 `len + 112 ≤ cap`이다. 다시 쓴 구간 `bh_enc_a1`, `bh_enc_a2`의 전제가 그렇다. 코드는 16, 48, 80바이트만 쓴다.
+용량이 더 작은 길이 거부는 증명하지 않았다.
+거부 전에 앞 필드가 `dst[len:]`에 쓰인다. 결론이 그 바이트를 적는다(FINDINGS ENC-2, C-1과 같은 부류).
+실행 검사: 부정 시험 33건 중 32건이 설계대로다(대조 9 통과, 변이 23 정리 안 실패). `scal/negative-enc.json`에 있다.
+나머지 1건(`enc-e1-a-call`)은 통과가 아니다. 변이는 코드 사실 보조정리 `e1_call_at`에서 거부됐고 지정한 정리 밖이다. 작성자의 대상 지정 오류다.
+공리 게이트는 PASS다: 선언 3813개, 정리 3223개, 표준 공리만, `sorryAx` 0개(작업 70).
+시도 10회 중 4회가 실패했다. 진단은 3회다. gate 시간은 646초다(대기 포함). `maxHeartbeats`는 올리지 않았다.
+증명하지 않은 것: 두 인코더의 growslice 분기와 morestack 경로(T-7은 미뤘다), Eth1Data 길이 거부 두 곳, 수신자의 Lean Go 값 술어.
+실행하지 않은 것: 링크 검사 재실행(트리의 `e1/link`, `bh/link` 묶음을 쓴다), 새 경로의 Go 차분, 차가운 빌드, 독립 리뷰.
+"인코더 완전"을 주장하지 않는다. 비용과 한계는 `scal/RESULT.json`의 `enc-reuse`에 있다.
 
 아래 H2 결과와 위의 H1 결과는 SG-1 확장 전의 결과다. 바뀌지 않았고 역사적 결과로 둔다.
 홀드아웃 H2(`v1alpha1.Eth1Data`의 `UnmarshalSSZ`와 `MarshalSSZTo`)는 열렸다. 방법 고정은 H1과 같은 `56dfc27`이다.
@@ -368,8 +399,8 @@ H2 당시(역사적): 오프셋 0 변형 템플릿은 제안만 했다. 그 뒤 
 Go 차분은 arm64에서 돌렸다. Go 의미론을 보고 ELF를 보지 않는다.
 H2 당시 실행하지 않은 것: `kindcheck.py`(검사할 생성 정리가 없음), 작성 세션의 차가운 빌드.
 증명하지 않은 것: Eth1Data 수신자의 Lean Go 값 술어.
-인코더 `Eth1Data.MarshalSSZTo`는 증명하지 않았다. 시도하지 않았다. 스택 가드가 `lea -0x8(%rsp),%r12; cmp 0x10(%r14),%r12; jbe` 꼴이다.
-이것은 T-9와 같은 머리다. T-9 스트림은 이 인코더를 다루지 않았다.
+H2 당시(역사적): 인코더 `Eth1Data.MarshalSSZTo`는 시도하지 않았다. 스택 가드가 `lea -0x8(%rsp),%r12; cmp 0x10(%r14),%r12; jbe` 꼴이다.
+지금: ENC 스트림이 이 인코더의 빠른 경로를 증명했다(위 ENC 문단). 다른 경로는 증명하지 않았다.
 리뷰한 주장(리뷰 h2-r1): 리뷰어가 새 모듈 10개를 차갑게 다시 빌드했다(종료 0, 25.5초, n = 1).
 리뷰어의 측정: 손 파일의 비지 않은 줄 1064개 중 549개(52%)가 H1·P2Dec 소스 줄의 복사다.
 
@@ -523,6 +554,8 @@ python3 -I -B fv/kraken/gen/e2e/differential.py check <c.json> <o.json> prysm/go
 python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/scal/negcases-t9.json <work> prysm/go1.26.10/e2e/scal/negative-t9.json <case-id>   # 사례마다 gate 작업 하나
 python3 -I -B fv/kraken/gen/e2e/bhmdiff.py cases <c.json>; go run -overlay <overlay.json> ./fve2e/bhmcheck < <c.json> > <o.json>   # Prysm 임시 트리, Go 1.26.10; overlay가 bh/bhmcheck-main.go.txt를 main.go로 준다
 python3 -I -B fv/kraken/gen/e2e/bhmdiff.py check <c.json> <o.json> prysm/go1.26.10/e2e/bh/differential-enc.json
+# ENC 스트림: 모듈 EncBlock BhEncBlock E1EncMain E1SpecM WitE1M EncReject BhEncReject WitBhMR (lake build E2eScal.<모듈>)
+python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/scal/negcases-enc.json <work> prysm/go1.26.10/e2e/scal/negative-enc.json <case-id>   # 사례마다 gate 작업 하나
 # SG-1 확장: 모듈 P2DecZ KindZ GenE1Dec E1GenSame (lake build E2eScal.<모듈>)
 (cd fv/kraken && sh ../../.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh <file> -- sh -c "<gen/scal/gen.sh의 그 명령> > $REGEN_OUT")   # gen.sh 명령마다
 python3 -I -B fv/kraken/gen/scal/kindcheck.py --selftest; python3 -I -B fv/kraken/gen/scal/kindcheck.py fv/kraken/lean/E2eScal/Gen*.lean
