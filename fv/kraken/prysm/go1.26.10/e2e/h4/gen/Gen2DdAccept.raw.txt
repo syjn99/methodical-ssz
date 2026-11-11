@@ -1,0 +1,1 @@
+scalgen p2dec: no template match: --compose needs every field covered (3 of 4)
