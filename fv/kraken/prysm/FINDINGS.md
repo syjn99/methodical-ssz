@@ -159,6 +159,12 @@ Review verdict: REQUEST_CHANGES, documents only. M1: the T-9 record said that A1
 | P-1 | standing process rule | A scratch result is "closed" only when the `#print axioms` output of every scratch theorem it uses is free of `sorryAx` and of self-listed names (a theorem the kernel rejected is registered as an axiom and lists itself). An error-free kernel run or the absence of `sorry` text is not enough: `case` and `first` error recovery admit goals | 2026-11-11, session 12 |
 | P-2 | standing process rule | A gated job command ends with the Lean (or tool) exit code, so the gate records the real result. Jobs 382–386 ended in `echo LEAN_RC=$?` and show gate exit 0 although Lean exited 1 | 2026-11-11, session 12 |
 
+## 14. Hold-out H2 evaluation (session 13, scal generator coverage SG-1)
+
+| ID | Kind | Finding | State |
+| --- | --- | --- | --- |
+| SG-1 | method coverage (scal generator, not `sszgen/`) | `scalgen.py p2dec` and the frozen template `rootDecMid` need `add $src,%rbx` before the memmove. A 32-byte field at SSZ offset 0 (Eth1Data.DepositRoot) is read from `buf + 0`; Go 1.26.10 emits no `add`. The one H2 run stopped with exit 2 at directive 30 and emitted nothing, also not for BlockHash (offset 40, which matches). The development set had no offset-0 root field. | open; a template/generator variant is proposed, not done (`scal/CONTAMINATION.md` §7); the decoder was proved by hand |
+
 ## Checkpoint deltas
 
 (T-5 has its row in section 3 since session 3, review e2e-r2 N7.)
@@ -183,3 +189,4 @@ Review verdict: REQUEST_CHANGES, documents only. M1: the T-9 record said that A1
 - 2026-11-11 session 11 (INBOX 021, review s5-r1): should-fix S1–S5 done; NF-13 … NF-15 (section 12). `negative-holdout.json`: the weak row `hb-ser-stmt-nearmiss` is out of the totals (42/42, 36 inside; kept under `weak_not_counted`). The "proved" `unreachable_mc` wraps of session 10 are conditional skips (NF-15). No new generator or generated-code defect.
 - 2026-11-11 session 11 (INBOX 021 items 2–3): T-9 updated (kernel memory on the stack-guard branch of `BeaconBlockHeader.MarshalSSZTo`; the record said the rest of segment A closes in scratch, corrected in session 12: closure not shown). The fast path (iii) is still not proved; stopped at the T9-PLAN cap (3 diagnostics, 6 attempts, 210 gate-s). No new generator or generated-code defect.
 - 2026-11-11 session 12 (INBOX 022, review s6-r1): records only. T-9 corrected (M1: closure of A1, A2 and the composition not shown; kernel-memory localisation to A0 stands; S1 Fk guard precedent; S3 attempt shape). New section 13 (P-1, P-2). No Lean, generator or generated-code change.
+- 2026-11-11 session 13 (INBOX 023, S3 hold-out H2, after the H2 section of `scal/HOLDOUT-OPENED`): new SG-1 (section 14). Proved (kernel-checked, hand): the Eth1Data decoder accept path (`e1_e2e_accept_main`), size reject, spec alignment against an independent consensus-specs Desc (written and committed before the checker Desc was printed) with codec equality; witnesses with the IR receiver layout. The generator produced no theorem for this type (SG-1). Not attempted: the Eth1Data encoder fast path (its stack guard is the `lea`/`r12` form of T-9; budget pending a user decision). Not proved: a Lean Go-value predicate for the Eth1Data receiver. No new `sszgen/` or generated-code defect. No generator, kind, S1-lemma or template change.

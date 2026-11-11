@@ -333,5 +333,169 @@
   "no_build_E2e_E2eAd_E2eScal": "exit 0 (job 375)",
   "axioms_gate": "PASS 3125 declarations, nonstandard 0, sorryAx 0 (job 376)",
   "decl_drift_vs_job_347": "136 ADDED, 0 CHANGED, 0 REMOVED"
+ },
+ "H2": {
+  "stage": "S3 hold-out H2 (INBOX 023), evaluation session 13",
+  "opened_utc": "2026-11-11T01:59:11Z",
+  "opening_commit": "7a5ea61",
+  "method_freeze": {
+   "sha": "56dfc27a6b0c7890105bd16971e0d33bbcd9980e",
+   "Kind.lean": "3c9b95b1b37036831527396975d4232cc20174f3",
+   "scalgen.py": "78e3339bc0ff3f20b6daa9a28582c97d7df9f712"
+  },
+  "units": {
+   "eth1data_decoder": {
+    "theorems": [
+     "E2eScal.E1.e1_e2e_head",
+     "E2eScal.E1.e1_e2e_accept_main",
+     "E2eScal.E1.e1_e2e_reject_size_main",
+     "E2eScal.E1.e1_e2e_accept_spec_k",
+     "E2eScal.E1.e1_e2e_reject_size_spec",
+     "E2eScal.E1.e1_e2e_reject_complete",
+     "E2e.prysmE1Desc_serialize_checker",
+     "E2e.prysmE1Desc_deserialize_checker",
+     "E2eScal.E1.rootdec_seg0 (hand segment, not part of the method)"
+    ],
+    "generated": [],
+    "generator_runs": 1,
+    "generator_result": "job 393: exit 2, 0 bytes of output; 'no template match: directive 30: `mov $0x20,%ecx` is not add $src,%rbx'. DepositRoot is read from buf + 0 (no add), so the frozen rootDecMid template does not match and the generator stops before BlockHash. Generator coverage of this type: 0 of 2 root fields. Record: e1/gen-e1dec.raw.txt",
+    "generated_lines": 0,
+    "raw_to_accepted_diff_lines": "not applicable (no generated file)",
+    "hand_files": {
+     "lean/E2eScal/E1Code.lean": 23,
+     "lean/E2eScal/E1Desc.lean": 23,
+     "lean/E2eScal/E1Seg0.lean": 210,
+     "lean/E2eScal/E1Accept.lean": 318,
+     "lean/E2eScal/E1Reject.lean": 117,
+     "lean/E2eScal/E1Spec.lean": 161,
+     "lean/E2eScal/E1SpecK.lean": 122,
+     "lean/E2eScal/WitE1A.lean": 123,
+     "lean/E2eScal/WitE1R.lean": 71
+    },
+    "generated_files": {
+     "lean/E2eScal/E1SpecChecker.lean": "14 lines, descterm.py output (existing tool) + one header comment line"
+    },
+    "hand_files_note": "line counts by wc -l. Copied text: E1Seg0 = P2Dec.rootdec_seg statement and proof with the add step removed (script edit); E1Accept = BhHead head + BhAccept composition with Eth1Data indices, the BlockHash segment a hand instance of the frozen rootdec_seg in the GenBhDec form; E1Reject = BhReject; E1Spec = BhSpec; E1SpecK = BhSpecK; WitE1A = WitBhA (new block layout); WitE1R = WitBhR. New by hand: the E1Desc fields, the DepositCount steps 47-49, the layout numbers.",
+    "hand_desc_before_checker_desc": "yes: E1Desc.lean committed in c43359b (job 399, 02:08:53Z) before descterm.py rendered and printed the checker Desc (02:09:05Z)",
+    "tooling_after_opening": [
+     "gen/e2e/e1link.py (text of bhlink.py)",
+     "gen/e2e/e1diff.py (text of bhdiff.py) + scratch fve2e/e1check in the Prysm tree"
+    ],
+    "jobs": [
+     391,
+     392,
+     393,
+     394,
+     395,
+     396,
+     397,
+     398,
+     399,
+     400,
+     401,
+     402,
+     403,
+     404,
+     405,
+     406,
+     407,
+     408,
+     409,
+     410,
+     411,
+     412,
+     413,
+     414,
+     415,
+     416,
+     417,
+     418,
+     419,
+     420,
+     421,
+     422,
+     423,
+     424,
+     425,
+     426,
+     427,
+     428,
+     429,
+     430
+    ],
+    "lake_runs": 10,
+    "lake_run_jobs": [
+     394,
+     395,
+     396,
+     397,
+     398,
+     399,
+     400,
+     401,
+     402,
+     403
+    ],
+    "failed_lake_runs": 3,
+    "failed_runs_detail": {
+     "395": "E1Accept: head rsp goal had a Width.W64.bits atom for bv_omega; xor sets flags (missing `intro _`)",
+     "396": "E1Accept: final memory post: DepositCount bytes as toBytes(ofInt(ofBytes cnt)) (fixed with Fk.toBytes_ofInt_ofBytes); rax/rbx xor_self",
+     "402": "WitE1A: parenthesis error in the block term (WitE1R built in the same job)"
+    },
+    "other_failed_jobs": {
+     "391": "e1link data: growslice operand window too narrow (a nop before the call); script fix, not a proof run",
+     "393": "the generator run (exit 2, see generator_result)"
+    },
+    "stale_check_after_each_failure": "stale_olean.py after 395, 396, 402 (logs s13-stale-after-<job>.txt): each flagged=10 known items (GenAdDec/GenCpDec STALE by mtime, ORPHAN probe artifacts, as in session 11) plus, after 402, AFTER WitE1R.{olean,ilean} (built successfully in 402, rebuilt in 403)",
+    "cumulative_gate_s": 194.0,
+    "cumulative_gate_s_note": "jobs 391-430 by the log start/end stamps (1 s resolution): lake 60, negatives 69, axioms gate 62, link/generator/Go 3",
+    "cold_build_s": "not run",
+    "peak_rss_gib": 3.75,
+    "peak_rss_note": "axioms gate (job 430); highest lake build 1.88 GiB (job 397)",
+    "memcap_kills": 0,
+    "maxHeartbeats": "4 M in every new declaration (rootdec_seg0 copied the lemma text at 4 M, below its 16 M); WitE1A 16 M as WitBhA (copied); no raise",
+    "kernel_checked_accept_utc": "2026-11-11T02:08:04Z (job 397)",
+    "wall_clock_from_opening_to_accept_s": 533,
+    "wall_clock_from_opening_to_full_evidence_s": 1067,
+    "evidence": {
+     "statement_kind": "none: no generated theorem; kindcheck.py not run (nothing to check)",
+     "witness": "WitE1A.e1_accept_runs (3 inputs, Go-valid fresh 96-byte receiver from the IR layout, old root pointer words nil or not), WitE1R.e1_reject_runs (71, 73, 0)",
+     "link": "bundle d5cc804d (job 392)",
+     "negatives": "25 cases: 4 controls pass, 21 inside (jobs 404-428); every first error read; 0 wrong_target, 0 timeout (scal/negative-h2.json)",
+     "go_value": "Go differential e1-accept 3/3, e1-size 3/3 (job 429; Go semantics, not the ELF); no Lean Go-value predicate",
+     "axioms": "standard (job 430, 3303 declarations, hand list 184); decl_drift vs job 389: 178 ADDED only"
+    }
+   },
+   "eth1data_encoder (iii)": {
+    "state": "not attempted: same prologue as T-9, budget pending",
+    "prologue": "lea -0x8(%rsp),%r12; cmp 0x10(%r14),%r12; jbe (directives 2-4 of Eth1Data.MarshalSSZTo), the open T-9 obstruction form; INBOX 023 step 3 says do not attempt",
+    "lake_runs": 0,
+    "cumulative_gate_s": 0
+   }
+  },
+  "claims_and_limits": [
+   "One out-of-sample case (Eth1Data). No generator-superiority claim. No causal speed-up claim.",
+   "H2 was opened after H1 by a session that could read the H1 files: not independent of the H1 experience.",
+   "The generator did NOT cover this type: its one run stopped (exit 2) on the source-offset-0 field. The decoder proof is hand work (copied texts listed in hand_files_note). This is a negative result for the generator's coverage, not for the decoder.",
+   "The hand segment rootdec_seg0 is outside the frozen method; a template/generator change for offset 0 is proposed, not done (CONTAMINATION.md §7).",
+   "SizeSSZ is excluded (AU-09 exposure: Eth1Data SizeSSZ code, IR entry and generated Go were already in the repository and proved in phase1c).",
+   "No encode mode; the encoder was not attempted (T-9 prologue form). AU-07 open.",
+   "A _kind identity is not a non-vacuity witness; here there is no _kind at all. The witnesses are WitE1A, WitE1R.",
+   "The Go differential checks Go semantics, not the ELF. A timeout is a timeout (none occurred)."
+  ],
+  "not_run": [
+   "kindcheck.py (no generated theorem)",
+   "cold build of E2eScal",
+   "reviewer cold rebuild",
+   "Lean Go-value predicate for the Eth1Data receiver",
+   "Eth1Data MarshalSSZTo fast path (not attempted, T-9 prologue)"
+  ],
+  "contamination": {
+   "generator_changes_after_opening": 0,
+   "lemma_changes_after_opening": 0,
+   "kind_changes_after_opening": 0,
+   "raw_output_edits": 0,
+   "proposed_not_done": "source-offset-0 variant of rootDecMid / p2dec (CONTAMINATION.md §7)"
+  }
  }
 }
