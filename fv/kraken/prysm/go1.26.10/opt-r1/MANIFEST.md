@@ -43,3 +43,26 @@
 5. `python3 -I -B fv/kraken/gen/e2e/e2elink.py filter <link-out> <objdump> <elf> <nm>`, `conv.py --norm`, `e2elink.py data`, `link/check.py`.
 
 모든 단계는 무거운 작업 게이트 안에서 하나씩 돌았다.
+
+## 5. 정리와 검사 (Lean 모듈 `fv/kraken/lean/E2e/OptR1/`)
+
+정리는 새 ELF의 기계어에 대한 것이다. 옛 정리는 바뀌지 않았다.
+
+| 정리 | 범위 | 결론 |
+| --- | --- | --- |
+| `E2e.OptR1.cpo_marshal_main` | `len + 40 ≤ cap < 2^63` | `(dst.ptr, len + 40, cap, nil)`. `dst[len..len+40]`만 쓴다. 힙을 쓰지 않는다 |
+| `E2e.OptR1.cpo_marshal_reject_main` | 같은 범위, Root 길이 ≠ 32 | `(nil, ErrBytesLength)`. `dst[len..len+8]`만 쓴다(C-1) |
+| `E2e.OptR1.cpo_marshal_grow_main` | `len ≤ cap < len + 40` | 새 블록 하나. 호출자 배열 `pre ++ spare`는 그대로다 |
+| `E2e.OptR1.cpo_marshal_reject_grow_main` | 같은 범위, Root 길이 ≠ 32 | `(nil, ErrBytesLength)`. 새 블록 하나. 호출자 배열은 그대로다 |
+| `E2e.OptR1.cpo_marshal_spec_k` | 빠른 경로 | 기준 `cp_e2e_marshal_spec_k`와 같은 결론. 전제는 새 프레임이다 |
+| `E2e.OptR1.cpo_marshal_cover` | 모든 `len ≤ cap` | `pre ++ serialize`를 돌려준다. 두 번째 growslice 분기가 없다 |
+| `E2e.OptR1.cpo_marshal_reject_cover` | 모든 `len ≤ cap` | `(nil, ErrBytesLength)` |
+
+- 계약 가설: `GrowsliceC`, `MemmoveC`(기존 형식). `panicBounds`와 `morestack`은 분기가 안 갈림을 증명한다.
+- 새 전제 형식은 없다. 스택 검사 전제는 `guard + 24 < rsp`다(`E2eScal.lea_cmp_be_false` 형식).
+- reject 정리 둘은 `cap < 2^63`을 전제로 더 가진다. 기준 reject 정리에는 없다. 부호 있는 비교 때문이다.
+- 증인: `WitO`(빠른 경로), `WitOW`·`WitOWR`(덮개, spare 0, 7, 8, 39, 40, 41과 nil dst). 수신자 Go 값 검사가 있다.
+- 부정 시험: `negcases.json`, 결과 `negative.json`. 23개 중 21개 통과. 저장 변이 둘은 시간 초과다. 통과로 세지 않는다.
+- 공리 관문: `axioms-gate.json` PASS, 선언 3860. 선언 차이: `decl-drift.txt`, ADDED 377개, 모두 `E2e.OptR1`.
+- Go 차분(arm64, Go 의미론만): `diff/`. 벤치마크(arm64만): `bench/`.
+- 새 `.S`는 Lake 입력이 아니다. `.S`가 바뀌면 `E2e.OptR1`을 깨끗이 다시 빌드한다.
