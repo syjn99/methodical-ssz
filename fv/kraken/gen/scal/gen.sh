@@ -48,4 +48,7 @@ $G p2dec --gen3 --partial-out lean/E2eScal/Gen3AdDecPartial.lean --S $N/github.c
 # GEN3 composition: Deposit_Data (byte / inline-uint64 fields, frame 0x20) with the composed-statement kind
 # `decAcceptKind` (`_kind`) and the identity with the hand statement `H4.dd_accept_stmt`. PendingPartialWithdrawal and
 # BeaconBlockHeader (callee fields) are refused by `--compose` (exit 2): their accept theorems are hand compositions.
-$G p2dec --gen3 --compose --name dd_e2e_accept_main_g3 --same-as-prop E2eScal.H4.dd_accept_stmt --S $H4/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S --const DdUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.Deposit_Data --prefix dd_g3dec --imports E2eScal.Compose,E2eScal.Gen3DdDec,E2eScal.H4Stmt --open E2eScal.H4Code > lean/E2eScal/Gen3DdAccept.lean
+# Run 1 of this command (file Gen3DdAccept.lean) did not parse: the generator wrote a doc comment before
+# `set_option … in`. That raw output is kept as scal/gen3/Gen3DdAccept.run1-parse-error.lean.txt; the fixed generator
+# writes Gen3DdAccept2.lean.
+$G p2dec --gen3 --compose --name dd_e2e_accept_main_g3 --same-as-prop E2eScal.H4.dd_accept_stmt --S $H4/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S --const DdUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.Deposit_Data --prefix dd_g3dec --imports E2eScal.Compose,E2eScal.Gen3DdDec,E2eScal.H4Stmt --open E2eScal.H4Code > lean/E2eScal/Gen3DdAccept2.lean

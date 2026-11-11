@@ -738,7 +738,7 @@ GOOD3 = ("import E2eScal.KindCall\nimport E2eScal.SegNPad\nimport E2eScal.Kind\n
 
 COMP3 = COMP.replace("composed accept theorem; statement check: identity", "composed accept theorem (`p2dec --gen3 --compose`)").replace(
     "\n/-- Statement check: the declared type is that of the hand theorem",
-    "\n/-- Statement check: kind. -/\nset_option maxHeartbeats 200000 in\n"
+    "\n-- Statement check: kind.\nset_option maxHeartbeats 200000 in\n"
     "theorem d_kind : ∀ (h : Host), type_of% (@d h) = @E2eScal.decAcceptKind h DmUnmarshal false [.bytes 48, .bytes 32, .u64] 68 := by\n"
     "  intro h; rfl\n\n/-- Statement check: the declared type is that of the hand theorem")
 

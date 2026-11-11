@@ -68,7 +68,7 @@ GEN3 cases (unit G3-G, `p2dec --gen3`; ids `g3-*`; mutated `.S` / IR copies in <
    exit 2; 0 bytes on stdout whenever the exit code is not 0; `--summary` agrees.
  - g3-compose-*: `--gen3 --compose` refuses callee / two-directive types (PendingPartialWithdrawal,
    BeaconBlockHeader: exit 2, 0 bytes); Deposit_Data composes (exit 0) with the `decAcceptKind` `_kind` line
-   and the identity with `H4.dd_accept_stmt`; kindcheck PASS; = committed `Gen3DdAccept.lean` when it exists.
+   and the identity with `H4.dd_accept_stmt`; kindcheck PASS; = committed `Gen3DdAccept2.lean` when it exists.
 """
 import json
 import pathlib
@@ -672,7 +672,7 @@ def g3_cases(work, new):
     f = work / "g3-compose-DD.lean"
     f.write_bytes(so)
     kc = subprocess.run(KC + [str(f)], capture_output=True, text=True)
-    com = KR / "lean/E2eScal/Gen3DdAccept.lean"
+    com = KR / "lean/E2eScal/Gen3DdAccept2.lean"
     com = com.read_bytes() if com.exists() else None
     t = so.decode()
     ok = (rc == 0 and outs[0] == outs[1] and kc.returncode == 0 and "decAcceptKind" in kc.stdout

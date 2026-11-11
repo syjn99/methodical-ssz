@@ -1457,8 +1457,9 @@ def compose(args, dirs, sha, irsha, fields, found):
     if g3:
         # lemma unit L4 (`KindAccept.lean`): `rfl` at default transparency (the recursive kind must unfold); the
         # default heartbeat limit is set explicitly: a wrong parameter may not fail fast, a timeout is a FAIL
-        out += (f"\n/-- Statement check: the declared type is the composed-accept kind (fields from the IR, `jret` from "
-                f"the `.S`). -/\nset_option maxHeartbeats 200000 in\n"
+        # (a plain comment: a doc comment cannot stand before `set_option … in`; G3-G compose run 1 failed so)
+        out += (f"\n-- Statement check: the declared type is the composed-accept kind (fields from the IR, `jret` from "
+                f"the `.S`).\nset_option maxHeartbeats 200000 in\n"
                 f"theorem {name}_kind : ∀ (h : Host), type_of% (@{name} h) = @E2eScal.decAcceptKind h {C} {kst} "
                 f"[{kfields}] {ret} := by\n  intro h; rfl\n")
     if args.same_as_prop:
