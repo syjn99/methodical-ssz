@@ -160,7 +160,8 @@ theorem cp_e2e_marshal_main_s (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (
     (rsp.toBitVec - 120) (rsp.toBitVec - 120 - BitVec.ofNat 64 S) (rbx.toBitVec + rcx.toBitVec + 8) S
     (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat])
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
-    (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by bv_omega) (by bv_omega) (by bv_omega)
+    (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by bv_omega)
+    (by rw [show rsp.toBitVec - 8#64 - 104 - 8 = rsp.toBitVec - 120 by bv_omega]) (by bv_omega)
     (by have h8 : (8 : BitVec 64).toNat = 8 := rfl
         simp only [BitVec.toNat_add, UInt64.toNat_toBitVec, h8]; omega)
     root d1 l24 l32 l16 rslot scratch hroot hd1 hl24 hl32 hl16 hrs hsc _ _ _ _ rfl rfl rfl rfl rfl rfl rfl

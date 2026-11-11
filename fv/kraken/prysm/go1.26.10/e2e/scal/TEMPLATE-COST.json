@@ -524,5 +524,6 @@
    "memcap_kill": false
   }
  ],
- "note": "Lemma counts are not evidence. The in-sample files re-derive existing hand theorems with the same statement; their cost is template cost. Gate seconds exclude time spent waiting for the gate. Per-module gate_s is cumulative over all attempts, not a cold build time."
+ "note": "Lemma counts are not evidence. The in-sample files re-derive existing hand theorems with the same statement; their cost is template cost. Gate seconds exclude time spent waiting for the gate. Per-module gate_s is cumulative over all attempts, not a cold build time.",
+ "line_count_note": "2026-11-11: in_sample E2eScal/P2EncCp.lean lines 219 and code_lines 200 are the counts at measurement time. The AU-07 fix (../opt1/AU-07.json attempt 4) split one line, so the file now has 220 lines; code_lines was not recounted"
 }

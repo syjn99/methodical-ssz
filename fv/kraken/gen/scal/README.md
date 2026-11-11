@@ -20,7 +20,7 @@ and the decoder was proved by hand (`E1*.lean`, `WitE1*.lean`). Result: `prysm/g
 | `P2Enc.lean` | templates `rootEncHead` / `rootEncTail`; `rootenc_seg`: 32-byte field encode segment, fits case (length test → capacity test → spills → memmove). The growslice branch is not in the template. |
 | `P1Slot.lean` | in-sample: `sl_unmarshal_accept_main_s`, statement of `E2eAd.sl_unmarshal_accept_main` word for word, proof = one application of `u64dec_accept`; `sl_same_stmt` (`rfl`: same proposition). |
 | `P2DecAd.lean` | in-sample: `ad_e2e_root_s` = statement of `E2eAd.ad_e2e_root`; `rootdec_seg` + 3 instance directives (85 label, 112 reload into rbx, 113 jmp); `ad_root_same_stmt`. |
-| `P2EncCpAt.lean` | `cp_enc_tmpl_at`: the encode template placement in `CpMarshal` (code-negative target; `P2EncCp` builds in about 730 s, above the 300 s case limit). |
+| `P2EncCpAt.lean` | `cp_enc_tmpl_at`: the encode template placement in `CpMarshal` (code-negative target; before the AU-07 fix `P2EncCp` built in about 730 s, above the 300 s case limit; after it see `opt1/AU-07.json` attempt 4). |
 | `Kind.lean` | frozen statement kinds `u64DecAcceptKind`, `rootDecSegKind` (`abbrev`) and `*_of`: each kind proved from its lemma (review fix-r1 M2/S1). |
 | `KindAnchor.lean` | `sl_kind_anchor`, `ci_kind_anchor`: the P1 kind is the full type of the hand theorems `E2eAd.sl_unmarshal_accept_main` / `ci_unmarshal_accept_main`. |
 | `P2EncCp.lean` | in-sample: `cp_e2e_marshal_main_s` = statement of `E2e.cp_e2e_marshal_main`; directives 36–62 by `rootenc_seg`, 0–35 and 63–70 the hand text verbatim; `cp_marshal_same_stmt`. |
@@ -230,3 +230,5 @@ In-sample coverage only; no hold-out claim until H5.
 - Hold-out H5 (frozen at `6dc0e2a`; h5-r1 APPROVE): SyncCommitteeMessage 2/4, PendingConsolidation 1/2, both
   near-in-sample by field kind; `--compose` refused both. Missed forms (proposals P-H5-1..3, not done): receiver
   reloaded into rax in the 32-byte segment, call set-up with the receiver already in rax, padding `nop` after a call.
+`P2EncCp` alone, before the AU-07 fix: about 730 s in its own build (job record in `TEMPLATE-COST.json`), 986.0 s in the review fix-r1 run of the unchanged file (n = 1; `opt1/AU-07.json`).
+After the AU-07 fix: see `opt1/AU-07.json` attempt 4.
