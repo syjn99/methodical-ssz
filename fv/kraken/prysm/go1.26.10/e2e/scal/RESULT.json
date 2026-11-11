@@ -461,10 +461,13 @@
      "statement_kind": "none: no generated theorem; kindcheck.py not run (nothing to check)",
      "witness": "WitE1A.e1_accept_runs (3 inputs, Go-valid fresh 96-byte receiver from the IR layout, old root pointer words nil or not), WitE1R.e1_reject_runs (71, 73, 0)",
      "link": "bundle d5cc804d (job 392)",
-     "negatives": "25 cases: 4 controls pass, 21 inside (jobs 404-428); every first error read; 0 wrong_target, 0 timeout (scal/negative-h2.json)",
+     "negatives": "27 cases: 4 controls pass, 23 inside (jobs 404-428 session 13: 25; jobs 432-433 session 14, review h2-r1 S6: e1-rc-stmt-size, e1-witr-stmt-len); every first error read; 0 wrong_target, 0 timeout (scal/negative-h2.json)",
      "go_value": "Go differential e1-accept 3/3, e1-size 3/3 (job 429; Go semantics, not the ELF); no Lean Go-value predicate",
      "axioms": "standard (job 430, 3303 declarations, hand list 184); decl_drift vs job 389: 178 ADDED only"
-    }
+    },
+    "checker_json_source": "e1/prysm_v1alpha1.Eth1Data.desc.json was copied from the scratch copy desc/orig/ of review phase1c-r5 (another run) (outside this repository); sha256 6064a3dc1f4ed609d275943e57e1fe0c542f1fc6ac3b269f77bc491eeaaf782b = record 74 (Eth1Data, PASS) of gen/desc/results/main.result.json (review h2-r1 S3; recomputed in session 14)",
+    "raw_record_order": "e1/gen-e1dec.raw.txt was written at 02:02:50Z and committed in a9918d4 (02:04:40Z), after E1Seg0.lean was written and built (job 394, 02:04:30Z-02:04:33Z): the rule 'raw output committed before any hand fix' holds in commit order, not in work order; no effect, there is no output to edit (review h2-r1 S1)",
+    "generator_coverage_note": "matcher alone: p2dec_find accepts BlockHash (j1=50 j2=63), rejects DepositRoot: 1 of 2 root fields; generator output: 0 of 2. The inline DepositCount read (directives 47-49) has no template in the method, so the proposed offset-0 variant would cover only the two root segments (directives 13-36, 50-74) (review h2-r1 S2, NF-h2-2)"
    },
    "eth1data_encoder (iii)": {
     "state": "not attempted: same prologue as T-9, budget pending",
@@ -496,6 +499,19 @@
    "kind_changes_after_opening": 0,
    "raw_output_edits": 0,
    "proposed_not_done": "source-offset-0 variant of rootDecMid / p2dec (CONTAMINATION.md §7)"
+  },
+  "session14": {
+   "inbox": "024",
+   "review": "h2-r1 REQUEST_CHANGES (documents only)",
+   "lean_changed": false,
+   "jobs": [
+    432,
+    433
+   ],
+   "added_negatives": [
+    "e1-rc-stmt-size",
+    "e1-witr-stmt-len"
+   ]
   }
  }
 }

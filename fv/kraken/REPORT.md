@@ -17,7 +17,8 @@
 수정 3에서 닫은 것: 링크 검사 (f)(g)(h)·역할 분류·`golits.go` 삭제(Lake 입력과 ELF 데이터 include로 대체), 오류 증인의 타입 기술자와 초기화된 오류 전역, Scalars 비nil 거부, 사후조건 잔여 넷, ListC 원소 오프셋 순서 거부(첫 쌍), 게이트 표 정정.
 
 1c(phase1c, 생성기와 Prysm 목록)는 10절이다. 게이트 1c 미통과.
-prysm-e2e 스트림은 11절이다. 확장성 홀드아웃 H1(ValidatorIndex, BeaconBlockHeader)의 결과는 `prysm/go1.26.10/e2e/scal/RESULT.json`에 있다(11절 끝 문단).
+prysm-e2e 스트림은 11절이다. 확장성 홀드아웃 H1(ValidatorIndex, BeaconBlockHeader)과 H2(Eth1Data)의 결과는 `prysm/go1.26.10/e2e/scal/RESULT.json`에 있다(11절 끝 문단).
+H2에서 생성기는 루트 필드 2개 중 0개를 덮었다(SG-1). 디코더는 손으로 증명했다.
 
 수치(수정 3 끝, 차가운 프로젝트 빌드 뒤):
 
@@ -323,13 +324,45 @@ growslice 뒤의 거부(`cap < len + 8`, `len(Root) ≠ 32`)는 `cp_e2e_marshal_
 `cp_e2e_marshal_reject_cover_framed`: `len + 8 ≤ cap`이면 에폭이 호출자 배열 `dst + len`에 있다(`blk = dst`, C-1). `cap < len + 8`이면 호출자 배열은 바뀌지 않고 에폭은 새 블록 `nb`에만 있다.
 증인 `WitCpWF.covf_runs`(len 30, cap 30 + n)와 `covf_runs_nil`은 실행이 닿는 용량 범위를 결론에 적는다. (3A)/(3B)/(3C) 중 어느 것인지는 `GrowsliceC`가 용량과 남은 힙을 숨기므로 정리로 정할 수 없다(리뷰 e2e-r3 S2, 아래 조건 4).
 홀드아웃 H1(확장성 S3, 방법 고정 `56dfc27`, 연 시각 2026-11-10T17:53:24Z): 결과, 비용, 한계는 `prysm/go1.26.10/e2e/scal/RESULT.json`에 있다.
-오염 기록은 `scal/CONTAMINATION.md`, 연 기록은 `scal/HOLDOUT-OPENED`다. H2(Eth1Data)는 열지 않았다.
+오염 기록은 `scal/CONTAMINATION.md`, 연 기록은 `scal/HOLDOUT-OPENED`다.
 증명한 것: ValidatorIndex 디코더 수용과 길이 거부, BeaconBlockHeader 디코더 수용·크기 거부·명세 정렬·오류 감싸기 두 곳의 도달 불가.
 BeaconBlockHeader 인코더 빠른 경로는 증명하지 않았다. 세션 11에서 T9-PLAN 한도(진단 3회, 시도 6회)에서 멈췄다(FINDINGS T-9).
 남은 장애는 지시 4의 스택 가드 분기를 커널이 검사할 때의 메모리다.
 임시 파일에서 A1, A2, 합성은 커널 메모리 실패가 없었다. 그러나 닫힘은 보이지 않았다(리뷰 s6-r1 M1).
 A1과 A2는 `sorryAx`에 의존한다. 합성은 `sorryAx`와 커널이 거부한 `bh_enc_a0_v1`에 의존한다.
 임시 결과는 `#print axioms` 출력에 `sorryAx`와 자기 이름이 없을 때만 닫힌 것이다(FINDINGS P-1).
+
+홀드아웃 H2(`v1alpha1.Eth1Data`의 `UnmarshalSSZ`와 `MarshalSSZTo`)는 열렸다. 방법 고정은 H1과 같은 `56dfc27`이다.
+연 기록은 커밋 `7a5ea61`(2026-11-11T01:59:11Z)이다. 결과, 비용, 한계는 `scal/RESULT.json`의 `H2`에 있다.
+생성기 결과(실행 검사): 고정 `scalgen.py p2dec`를 한 번 돌렸다(작업 393).
+종료 코드는 2이고 출력은 0바이트다. 생성기 적용 범위는 루트 필드 2개 중 0개다(FINDINGS SG-1).
+원인: DepositRoot는 원본 오프셋 0에서 읽는다. 그래서 코드에 `add $src,%rbx`가 없다.
+고정 템플릿 `rootDecMid`는 이 지시어를 요구한다. 생성기는 첫 필드에서 멈추고 BlockHash도 내지 않는다.
+분류: scal 생성기 템플릿의 적용 범위 공백이다. `sszgen/`이나 생성된 Go의 결함이 아니다. 생성기는 거부했고 틀린 출력은 없다.
+오프셋 0 변형 템플릿은 제안만 했고 하지 않았다. 방법 변경이라서 사용자 승인이 필요하다.
+디코더(커널 검사, 손 증명): 머리 `e1_e2e_head`, 수용 `e1_e2e_accept_main`, 크기 거부 `e1_e2e_reject_size_main`을 증명했다.
+명세 정렬 `e1_e2e_accept_spec_k`, `e1_e2e_reject_size_spec`, `e1_e2e_reject_complete`도 증명했다.
+독립 손 Desc와 검사기 Desc의 코덱 동등은 `prysmE1Desc_serialize_checker`, `prysmE1Desc_deserialize_checker`다.
+손 구간 `rootdec_seg0`은 고정 방법 밖의 손 글이다. 생성 정리는 없다.
+증인은 `WitE1A.e1_accept_runs`(입력 3개)와 `WitE1R.e1_reject_runs`(길이 71, 73, 0)다.
+공리는 표준만이다(작업 430, 선언 3303개, `sorryAx` 0개).
+실행 검사: 링크 검사 PASS(작업 392), 부정 시험 27/27(`scal/negative-h2.json`), Go 차분 6/6.
+Go 차분은 arm64에서 돌렸다. Go 의미론을 보고 ELF를 보지 않는다.
+실행하지 않은 것: `kindcheck.py`(검사할 생성 정리가 없음), 작성 세션의 차가운 빌드.
+증명하지 않은 것: Eth1Data 수신자의 Lean Go 값 술어.
+인코더 `MarshalSSZTo`는 시도하지 않았다. 스택 가드가 `lea -0x8(%rsp),%r12; cmp 0x10(%r14),%r12; jbe` 꼴이다.
+이것은 T-9와 같은 머리다. 그 예산은 사용자 결정을 기다린다.
+리뷰한 주장(리뷰 h2-r1): 리뷰어가 새 모듈 10개를 차갑게 다시 빌드했다(종료 0, 25.5초, n = 1).
+리뷰어의 측정: 손 파일의 비지 않은 줄 1064개 중 549개(52%)가 H1·P2Dec 소스 줄의 복사다.
+
+H2의 한계:
+
+1. 형 하나의 표본 밖 사례다.
+2. H2는 H1 뒤에 열렸다. H1 파일을 읽을 수 있는 세션이 평가했다. H1 경험에서 독립이 아니다.
+3. 생성기가 손보다 낫다는 주장은 하지 않는다. 인과적 속도 향상 주장도 하지 않는다.
+4. `SizeSSZ`는 뺐다(AU-09). 그 코드, IR, 생성 Go는 이미 저장소에 있었고 phase1c에서 증명됐다.
+5. 인코드 모드는 없다. 인코더는 시도하지 않았다. AU-07은 열려 있다.
+6. 이 결과는 생성기 적용 범위에 대한 부정 결과다. 디코더에 대한 부정 결과가 아니다.
 
 조건:
 

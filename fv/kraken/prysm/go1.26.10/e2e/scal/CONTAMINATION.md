@@ -82,19 +82,29 @@
 - 생성기, 보조정리, 종류, 템플릿, 분류기는 바꾸지 않았다.
 - 생성기는 한 번 돌렸다(`p2dec`, 작업 393). 종료 코드 2, 출력 0바이트다.
 - 기록: `e1/gen-e1dec.raw.txt`(명령, 종료 코드, stderr 원문). 빈 `GenE1Dec.lean`은 라이브러리에 넣지 않았다.
+- 순서(리뷰 h2-r1 S1): 기록 파일은 02:02:50Z에 썼다. 커밋 `a9918d4`는 02:04:40Z다.
+- 그 사이에 `E1Seg0.lean`을 쓰고 빌드했다(작업 394, 02:04:30Z–02:04:33Z).
+- 그래서 "원 출력을 손 수정 전에 커밋한다" 규칙은 커밋 순서로만 지켜졌다. 작업 순서로는 지켜지지 않았다.
+- 영향은 없다. 고칠 생성 출력이 없다.
 - 원인: DepositRoot의 memmove 출처가 `buf + 0`이다. 코드에 `add $src,%rbx`가 없다.
 - 고정 템플릿 `rootDecMid`는 이 지시어를 요구한다. 생성기는 첫 필드에서 멈추고 BlockHash도 내지 않는다.
 - 제안(하지 않음): `rootDecMid`에 출처 0의 변형을 두고 `p2dec`가 `add`가 없는 블록을 받게 한다.
 - 이 제안은 방법 변경이다. 이 평가에서는 하지 않았다. 생성기 적용 범위는 이 형에서 0/2 필드다.
+- DepositCount의 인라인 읽기(지시 47–49)에는 방법의 템플릿이 없다(리뷰 h2-r1 S2).
+- 그래서 제안한 변형이 있어도 생성기는 두 루트 구간(지시 13–36, 50–74)만 덮는다.
 - 손 증명으로 대신한 부분(복사한 글):
   - `E1Seg0.lean`: `rootdec_seg`의 문장과 증명 글에서 `add` 단계를 지운 것. 고정 방법의 일부가 아니다.
   - BlockHash 구간: 고정 `rootdec_seg`를 손으로 인스턴스화했다(`GenBhDec`의 생성 글 형태를 복사).
   - `E1Accept`(`BhHead`, `BhAccept`의 글), `E1Reject`(`BhReject`), `E1Spec`(`BhSpec`), `E1SpecK`(`BhSpecK`), `WitE1A`(`WitBhA`), `WitE1R`(`WitBhR`).
 - 열린 뒤에 더한 손 파일: `E1Code`, `E1Desc`, `E1Seg0`, `E1Accept`, `E1Reject`, `E1Spec`, `E1SpecK`, `WitE1A`, `WitE1R`.
 - 생성 파일: `E1SpecChecker.lean`(`descterm.py` 출력, 머리 주석에 경로 한 줄을 더함).
+- 검사기 json `e1/prysm_v1alpha1.Eth1Data.desc.json`의 출처(리뷰 h2-r1 S3): 다른 실행의 리뷰어 임시 디렉터리에서 복사했다.
+- 그것은 리뷰 phase1c-r5의 임시 사본 `desc/orig/`다. 이 저장소 밖에 있다.
+- sha256 `6064a3dc…782b`는 `gen/desc/results/main.result.json` 기록 74(`Eth1Data`, PASS)와 같다(세션 14에서 다시 셈).
 - 손 Desc(`E1Desc.lean`, 커밋 `c43359b`)는 검사기 Desc를 만들거나 출력하기 전에 커밋했다.
 - 열린 뒤에 더한 도구: `gen/e2e/e1link.py`(`bhlink.py`의 글), `gen/e2e/e1diff.py`(`bhdiff.py`의 글), Prysm 임시 트리의 `fve2e/e1check`.
 - 열린 뒤에 더한 증거 파일: `gen/scal/negcases-h2.json`, `AxiomsScal.lean`의 손 목록 15개와 import 셋.
+- 세션 14(리뷰 h2-r1 S6)에서 부정 시험 2건을 더했다: `e1-rc-stmt-size`, `e1-witr-stmt-len`. 둘 다 정리 안에서 실패했다(작업 432, 433).
 - `kindcheck.py`는 돌리지 않았다. 검사할 생성 정리가 없다.
 - 인코더(`MarshalSSZTo`)의 스택 검사는 `lea -0x8(%rsp),%r12; cmp 0x10(%r14),%r12; jbe` 꼴이다(T-9와 같다).
 - INBOX 023 3단계에 따라 시도하지 않았다. 예산은 사용자 결정을 기다린다.
