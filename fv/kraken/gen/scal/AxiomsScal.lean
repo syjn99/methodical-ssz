@@ -34,6 +34,30 @@ import E2eScal.WitDmA
 import E2eScal.WitDmR
 import E2eScal.GenBiDec
 import E2eScal.GenDmDec
+import E2eScal.SegN
+import E2eScal.KindN
+import E2eScal.SegNRel
+import E2eScal.U64Inline
+import E2eScal.KindU64
+import E2eScal.Compose
+import E2eScal.Gen2Examples
+import E2eScal.Gen2ComposeEx
+import E2eScal.Gen2E1Dec
+import E2eScal.Gen2BiDec
+import E2eScal.Gen2DmDec
+import E2eScal.BiAcceptG2
+import E2eScal.DmAcceptG2
+import E2eScal.Gen2BiAccept
+import E2eScal.Gen2DmAccept
+import E2eScal.Gen2E1Accept
+import E2eScal.Gen2BhDecPartial
+import E2eScal.H4Stmt
+import E2eScal.Gen2DdDecPartial
+import E2eScal.DdSpecK
+import E2eScal.WitDdA
+import E2eScal.WitDdR
+import E2eScal.PwSpecK
+import E2eScal.WitPwR
 
 -- prysm-e2e scalability stage S1-S2 (INBOX 011): the segment lemmas, the in-sample re-derivations, the
 -- statement-identity checks and the generated instances. Checked with gen/e2e/axioms.py <log> <out> <this file>.
@@ -247,3 +271,138 @@ import E2eScal.GenDmDec
 #print axioms E2eScal.WitBhMR.bhr1_runs
 #print axioms E2eScal.WitBhMR.bhr2_runs
 #print axioms E2eScal.WitBhMR.bhr3_runs
+
+-- GEN2 unit G2-L (lemmas, kinds, relations, examples, composition pieces; theorems and definitions)
+#print axioms E2eScal.Gen2Ex.bi_dec_BlockRoot_seg
+#print axioms E2eScal.Gen2Ex.bi_dec_BlockRoot_seg_kind
+#print axioms E2eScal.Gen2Ex.bi_dec_Index_seg
+#print axioms E2eScal.Gen2Ex.bi_dec_Index_seg_kind
+#print axioms E2eScal.Gen2Ex.bi_e2e_accept_main_composed
+#print axioms E2eScal.Gen2Ex.bi_e2e_accept_main_composed_type
+#print axioms E2eScal.Gen2Ex.bi_lo
+#print axioms E2eScal.Gen2Ex.dm_dec_Amount_seg
+#print axioms E2eScal.Gen2Ex.dm_dec_Amount_seg_kind
+#print axioms E2eScal.Gen2Ex.dm_dec_PublicKey_seg
+#print axioms E2eScal.Gen2Ex.dm_dec_PublicKey_seg_kind
+#print axioms E2eScal.Gen2Ex.dm_dec_WithdrawalCredentials_seg
+#print axioms E2eScal.Gen2Ex.dm_dec_WithdrawalCredentials_seg_kind
+#print axioms E2eScal.Gen2Ex.e1_dec_BlockHash_seg
+#print axioms E2eScal.Gen2Ex.e1_dec_BlockHash_seg_kind
+#print axioms E2eScal.Gen2Ex.e1_dec_DepositCount_seg
+#print axioms E2eScal.Gen2Ex.e1_dec_DepositCount_seg_kind
+#print axioms E2eScal.Gen2Ex.e1_dec_DepositRoot_seg
+#print axioms E2eScal.Gen2Ex.e1_dec_DepositRoot_seg_kind
+#print axioms E2eScal.U64InlineReg
+#print axioms E2eScal.bytes48dec_seg_z_is_bytes48
+#print axioms E2eScal.bytesDecHead
+#print axioms E2eScal.bytesDecHead48_eq_bytes
+#print axioms E2eScal.bytesDecMid
+#print axioms E2eScal.bytesDecMidZ
+#print axioms E2eScal.bytesDecMidZ48_eq_bytes
+#print axioms E2eScal.bytesDecSegKind
+#print axioms E2eScal.bytesDecSegKind_of
+#print axioms E2eScal.bytesDecSegZKind
+#print axioms E2eScal.bytesDecSegZKind_of
+#print axioms E2eScal.bytesDecTailA
+#print axioms E2eScal.bytesDecTailB
+#print axioms E2eScal.bytesdec_seg
+#print axioms E2eScal.bytesdec_seg_z
+#print axioms E2eScal.bytesdec_tail_seg
+#print axioms E2eScal.decEpi
+#print axioms E2eScal.decHead
+#print axioms E2eScal.decepi_seg
+#print axioms E2eScal.dechead_seg
+#print axioms E2eScal.rootDecHead_eq_bytes
+#print axioms E2eScal.rootDecMidZ_eq_bytes
+#print axioms E2eScal.rootDecMid_eq_bytes
+#print axioms E2eScal.rootDecSegKind_eq_bytes
+#print axioms E2eScal.rootDecSegZKind_eq_bytes
+#print axioms E2eScal.rootdec_seg_is_bytes32
+#print axioms E2eScal.rootdec_seg_z_is_bytes32
+#print axioms E2eScal.u64DecInline
+#print axioms E2eScal.u64DecInlineSegKind
+#print axioms E2eScal.u64DecInlineSegKind_of
+#print axioms E2eScal.u64dec_inline_seg
+
+-- GEN2 unit G2-G (raw p2dec --gen2 segments and kinds, raw --compose accept theorems and identities, the _g2 theorems)
+#print axioms E2eScal.G2.bi_e2e_accept_main_g2
+#print axioms E2eScal.G2.bi_e2e_accept_main_g2_type
+#print axioms E2eScal.G2.dm_e2e_accept_main_g2
+#print axioms E2eScal.G2.dm_e2e_accept_main_g2_type
+#print axioms E2eScal.Gen.bi_e2e_accept_main_gc
+#print axioms E2eScal.Gen.bi_e2e_accept_main_gc_type
+#print axioms E2eScal.Gen.bi_g2dec_BlockRoot_seg
+#print axioms E2eScal.Gen.bi_g2dec_BlockRoot_seg_kind
+#print axioms E2eScal.Gen.bi_g2dec_Index_seg
+#print axioms E2eScal.Gen.bi_g2dec_Index_seg_kind
+#print axioms E2eScal.Gen.dm_e2e_accept_main_gc
+#print axioms E2eScal.Gen.dm_e2e_accept_main_gc_type
+#print axioms E2eScal.Gen.dm_g2dec_Amount_seg
+#print axioms E2eScal.Gen.dm_g2dec_Amount_seg_kind
+#print axioms E2eScal.Gen.dm_g2dec_PublicKey_seg
+#print axioms E2eScal.Gen.dm_g2dec_PublicKey_seg_kind
+#print axioms E2eScal.Gen.dm_g2dec_WithdrawalCredentials_seg
+#print axioms E2eScal.Gen.dm_g2dec_WithdrawalCredentials_seg_kind
+#print axioms E2eScal.Gen.e1_e2e_accept_main_gc
+#print axioms E2eScal.Gen.e1_e2e_accept_main_gc_type
+#print axioms E2eScal.Gen.e1_g2dec_BlockHash_seg
+#print axioms E2eScal.Gen.e1_g2dec_BlockHash_seg_kind
+#print axioms E2eScal.Gen.e1_g2dec_DepositCount_seg
+#print axioms E2eScal.Gen.e1_g2dec_DepositCount_seg_kind
+#print axioms E2eScal.Gen.e1_g2dec_DepositRoot_seg
+#print axioms E2eScal.Gen.e1_g2dec_DepositRoot_seg_kind
+-- GEN2 unit G2-F (raw p2dec --gen2 --partial-out output for BeaconBlockHeader, 3 of 5 fields)
+#print axioms E2eScal.Gen.bh_g2dec_BodyRoot_seg
+#print axioms E2eScal.Gen.bh_g2dec_BodyRoot_seg_kind
+#print axioms E2eScal.Gen.bh_g2dec_ParentRoot_seg
+#print axioms E2eScal.Gen.bh_g2dec_ParentRoot_seg_kind
+#print axioms E2eScal.Gen.bh_g2dec_StateRoot_seg
+#print axioms E2eScal.Gen.bh_g2dec_StateRoot_seg_kind
+-- H4 hold-out (Deposit_Data, PendingPartialWithdrawal UnmarshalSSZ): every new theorem (raw generated segments,
+-- hand lemma, hand accept / reject / spec / witnesses). PendingPartialWithdrawal accept: not proved (bound).
+#print axioms E2eScal.Gen.dd_g2dec_PublicKey_seg
+#print axioms E2eScal.Gen.dd_g2dec_PublicKey_seg_kind
+#print axioms E2eScal.Gen.dd_g2dec_Amount_seg
+#print axioms E2eScal.Gen.dd_g2dec_Amount_seg_kind
+#print axioms E2eScal.Gen.dd_g2dec_Signature_seg
+#print axioms E2eScal.Gen.dd_g2dec_Signature_seg_kind
+#print axioms E2eScal.H4.bytes32dec_seg_nop
+#print axioms E2eScal.H4.dd_e2e_accept_main
+#print axioms E2eScal.H4.dd_e2e_reject_size_main
+#print axioms E2eScal.H4.pw_e2e_reject_size_main
+#print axioms E2e.prysmDdDesc_checker
+#print axioms E2e.prysmDdDesc_wellFormed
+#print axioms E2e.prysmDdDesc_fixedSize
+#print axioms E2e.prysmDdDesc_serialize_checker
+#print axioms E2e.pdd_enc_size
+#print axioms E2e.pdd_toValue_fits
+#print axioms E2e.pdd_toValue_injective
+#print axioms E2e.pdd_toValue_surjective
+#print axioms E2e.pdd_serialize
+#print axioms E2e.pdd_roundtrip
+#print axioms E2e.pdd_accepted_is_enc
+#print axioms E2e.pdd_spec_accepts_iff
+#print axioms E2e.pdd_spec_rejects
+#print axioms E2e.prysmDdDesc_deserialize_checker
+#print axioms E2e.prysmPwDesc_checker
+#print axioms E2e.prysmPwDesc_wellFormed
+#print axioms E2e.prysmPwDesc_fixedSize
+#print axioms E2e.prysmPwDesc_serialize_checker
+#print axioms E2e.ppw_enc_size
+#print axioms E2e.ppw_toValue_fits
+#print axioms E2e.ppw_toValue_injective
+#print axioms E2e.ppw_toValue_surjective
+#print axioms E2e.ppw_serialize
+#print axioms E2e.ppw_roundtrip
+#print axioms E2e.ppw_accepted_is_enc
+#print axioms E2e.ppw_spec_accepts_iff
+#print axioms E2e.ppw_spec_rejects
+#print axioms E2e.prysmPwDesc_deserialize_checker
+#print axioms E2eScal.H4.dd_e2e_accept_spec_k
+#print axioms E2eScal.H4.dd_e2e_reject_size_spec
+#print axioms E2eScal.H4.dd_e2e_reject_complete
+#print axioms E2eScal.H4.pw_e2e_reject_size_spec
+#print axioms E2eScal.H4.pw_e2e_reject_complete
+#print axioms E2eScal.WitDdA.dd_accept_runs
+#print axioms E2eScal.WitDdR.dd_reject_runs
+#print axioms E2eScal.WitPwR.pw_reject_runs

@@ -77,5 +77,51 @@
   },
   "state_before_commit": "No UnmarshalSSZ/MarshalSSZTo source, .S, objdump section, IR entry or functions.json body of BlobIdentifier or DepositMessage was opened by this session before this record was committed.",
   "rule": "H3 is touched once. No generator, kind, template lemma, Fk or contract change afterwards; a needed fix is recorded in CONTAMINATION.md section 11 as 'proposed, not done' and the field is reported as not covered by the generator. Raw generator output is committed unmodified before any hand work."
+ },
+ "H4": {
+  "opened_utc": "2026-11-11T08:53:45Z",
+  "by": "separate evaluation session (fresh Opus 5.5; did not build the GEN2 generator, checker, kinds or lemmas; it can read the H1, H2, H3, SG-1, T-9 and GEN2 files, so it is not independent of that experience)",
+  "method_freeze": {
+   "sha": "eacf0fb4c03bf4b34ecf8b7a7705297998c848f7",
+   "gen/scal/scalgen.py": "bf08fbd0b1c7aa9bf88fcd3edc886ce1c641a777",
+   "gen/scal/kindcheck.py": "7fe9d9377146577516d1a23e6a60afcceaec26c2",
+   "gen/scal/gen.sh": "6ddf1237f3122b447d668ae2a43da25445a170c4",
+   "gen/scal/p2dec_test.py": "565a3a7bd2f51fe9ef0076f75016d47490d9b3ce",
+   "lean/E2eScal/Kind.lean": "3c9b95b1b37036831527396975d4232cc20174f3",
+   "lean/E2eScal/KindZ.lean": "0c790fa1882cd2e91419c285f66de0810c2b85e2",
+   "lean/E2eScal/KindN.lean": "8947c5757f522463a495ad585d3480b7c2f3830b",
+   "lean/E2eScal/KindU64.lean": "dda481f9c61fcbfc9646faef172a240a69a857d1",
+   "lean/E2eScal/SegN.lean": "4ef9c7494e421798c1766aedffa9a59066d32304",
+   "lean/E2eScal/U64Inline.lean": "712f4856eef48401cfdd48a216d538986a4087a9",
+   "lean/E2eScal/Compose.lean": "61de5fcbf4ca122908ef4dab78506a599f072f6b",
+   "lean/E2eScal/P2Dec.lean": "ed43ebffe9b743d8f8bf5b34a2fc3c92a9068e0a",
+   "lean/E2eScal/P2DecZ.lean": "a040363402bb3c8ef043abac99c0ccaf1d511ff3",
+   "lean/E2eScal/Seg.lean": "a8de91d6479ea9af975c80c7b8601fbb299a1f7a",
+   "gen/e2e/negative.py": "96dc2d17586db2e33e42aa985e28645f070716de",
+   "lean/E2eScal tree": "bef19fbb4ed681bdd7d2e591799b3f3809d4cc8c",
+   "lean/Fk tree": "50a7c8c350d4d6cccba61db659045c3431c97a9c",
+   "checked_at": "git rev-parse HEAD:<path> at the freeze SHA gives the same 15 blob ids and the same two tree ids"
+  },
+  "step0_checks": "gated lake build E2e E2eAd E2eScal exit 0 (946 jobs; 48 modules built that the moved .lake lacked: H3, OptR1, GEN2; E2eScal.P2EncCp replayed, not rebuilt; peak 2.02 GiB), then lake build --no-build E2e E2eAd E2eScal exit 0 (All targets up-to-date, 946 jobs)",
+  "selection": "curator record and controller confirmation outside this repository; rule = GEN2-PLAN section 'H4 rule' (sha256 ce38d4ea...28f95d); measurement protocol H4-PROTOCOL (sha256 b95dae86...e32eafd)",
+  "scope_H4": [
+   "v1alpha1.Deposit_Data UnmarshalSSZ (class A): result (S) segments, result (C) composed accept theorem against an independent hand statement, then accept, size reject, independent Desc, codec equality, spec alignment, witnesses, link check, negatives, Go-value differential",
+   "v1alpha1.PendingPartialWithdrawal UnmarshalSSZ (class B): same items"
+  ],
+  "excluded": [
+   "MarshalSSZTo, SizeSSZ and HashTreeRoot of both types",
+   "every other type",
+   "generator, checker, kind, lemma, Fk and contract changes"
+  ],
+  "readings": {
+   "H4-A1": "confirmed by the controller: overlay-typed uint64 fields count as uint64-like (strict reading would give PowBlock for class B; not adopted)",
+   "H4-A2": "confirmed: one pick per class",
+   "H4-A3": "confirmed: the three methods UnmarshalSSZ, MarshalSSZTo, SizeSSZ (as H3)",
+   "H4-A5": "DISCLOSED similarity, not corrected: Deposit_Data = development type DepositMessage + a 96-byte Signature; 3 of its 4 fields are near-in-sample",
+   "H4-A4": "stated exposure: SizeSSZ .S, X5 SizeSSZ code, IR entries, generated Go and desc-checker results of both types were already in the tree (AU-09)"
+  },
+  "protocol": "two results per type kept apart: (S) one p2dec --gen2 run (segments), (C) one --compose run identity-checked (--same-as-prop) against a hand statement committed BEFORE the generator runs on that type, plus a non-vacuity witness",
+  "state_before_commit": "No UnmarshalSSZ/MarshalSSZTo source, .S, objdump section, IR entry, functions.json body or generator output of Deposit_Data or PendingPartialWithdrawal was opened by this session before this record was committed.",
+  "rule": "H4 is touched once. No change to scalgen.py, kindcheck.py, Kind*.lean, lemma modules, Fk or contracts afterwards; a needed fix is recorded in CONTAMINATION.md as 'proposed, not done'. Raw generator output is committed unmodified before any hand work."
  }
 }

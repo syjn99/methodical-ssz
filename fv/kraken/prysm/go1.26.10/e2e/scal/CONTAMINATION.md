@@ -199,3 +199,94 @@
 - 병합 커밋은 `500571c`(H3)와 `c10daf9`(ENC)다. 새 증명, 생성기 변경, 문장 변경은 없다.
 - ENC는 H3 형의 코드를 쓰지 않는다. ENC 작성자는 `h3/` 파일 이름과 gate 기록 5개만 보았다(리뷰 enc-r1 S5).
 - 생성기 재실행: 통합 검사로 `regen_check.sh`를 scratch에 돌렸다. H3 평가의 생성기 실행 수(형마다 한 번)에 넣지 않는다.
+
+## 13. GEN2 보조정리 작업 (단위 G2-L) — H3 뒤, 개발 작업, 홀드아웃 아님
+
+- 이 작업은 H3 평가와 통합 INT2, INT3 뒤에 했다. 기준 커밋은 `71161fa`다.
+- BlobIdentifier와 DepositMessage는 이제 개발 자료다. 이 두 형으로 홀드아웃 주장을 하지 않는다.
+- 작성 세션은 새 Fable 세션이고 직접 작성자다. 이 세션은 생성기를 만들지 않았다.
+- 이 세션은 세 디코더의 `.S`, 손 증명, 생성 파일, H3 기록을 모두 읽었다.
+- 새 모듈만 더했다: `SegN`, `KindN`, `SegNRel`, `U64Inline`, `KindU64`, `Gen2Examples`, `Compose`, `Gen2ComposeEx`.
+- 기존 `.lean` 파일, `scalgen.py`, `kindcheck.py`, `gen.sh`, H3 생성 파일과 H3 기록은 바꾸지 않았다.
+- 증명 생성기는 그대로다. 그래서 생성기 적용 범위(SG-2)는 바뀌지 않았다.
+- `SegN.lean`과 `KindN.lean`의 글은 임시 스크립트가 `P2Dec.lean`, `P2DecZ.lean`, `Kind.lean`, `KindZ.lean`에서 만들었다.
+- 그 스크립트는 크기 `32`를 매개변수 `n`으로 바꾼다. 스크립트는 커밋하지 않았다.
+- `Gen2Examples.lean`도 임시 스크립트로 썼다. 이것은 `scalgen.py`의 출력이 아니다. 손 예시로 센다.
+- 인라인 uint64 꼴은 세 자리에서 먼저 읽었다. 임시 레지스터가 다르다: Eth1Data는 rsi, 나머지 둘은 rcx다.
+- P-H3-1의 글(§11)은 rcx만 적는다. 그 글은 H3의 두 형에만 맞다.
+- L1의 크기는 32, 48, 96뿐이다. 96바이트 자리는 개발 자료에 없다. 96은 실제 코드에서 확인하지 않았다.
+- L2의 레지스터는 12개다. 관측한 것은 rsi와 rcx 둘이다. 수신자는 rdx여야 한다.
+- L3은 조각 셋과 예시 하나다. 구간 목록을 받는 일반 결합기는 없다. 프레임은 `0x20`만 다룬다.
+- 일반성 주장은 없다. 다른 형으로 옮겨지는지는 측정하지 않았다.
+- 더한 증거 파일: `gen/scal/negcases-gen2.json`. `gen/e2e/negative.py`는 바꾸지 않았다.
+- 공리 게이트는 임시 JSON으로 돌렸다. 커밋된 `axioms-gate.json`은 바꾸지 않았다.
+- 독립 리뷰는 아직 없다.
+
+## 14. GEN2 생성기 작업 (단위 G2-G) — H3 뒤 생성기 변경, 개발 작업, 홀드아웃 아님
+
+- 이 작업은 H3 평가 뒤에 증명 생성기 `gen/scal/scalgen.py`를 바꿨다. 기준 커밋은 `6c62a49`다.
+- 작성 세션은 새 Opus 세션이다. 보조정리(단위 G2-L)는 쓰지 않았다. 리뷰도 하지 않는다.
+- 입력은 개발 자료뿐이다: Eth1Data, BlobIdentifier, DepositMessage의 `.S`, IR, 손 증명, 생성 파일.
+- BlobIdentifier와 DepositMessage는 GEN2의 표본 안 자료다. H4 전까지 홀드아웃 주장은 없다.
+- 무엇이 바뀌었나: `p2dec --gen2` 선택 모드를 더했다. 기본 모드의 출력은 글자 그대로 같다.
+- `--gen2`는 IR의 모든 필드를 분류한다. 바이트 벡터 32, 48, 96과 인라인 uint64만 덮는다.
+- 32바이트 필드는 옛 정리 글을 쓴다. 48, 96은 `bytesdec_seg(_z)`, uint64는 `u64dec_inline_seg`를 쓴다.
+- 다른 필드는 "not covered: 이유"로 보고한다. 정리를 추측하지 않는다.
+- `--gen2 --compose`도 더했다. 모든 필드가 덮이면 수용 정리 전체를 쓴다.
+- 합성 정리의 문장 검사는 손 정리와의 `_type` 항등식뿐이다. 그 정리에 대한 종류(kind)는 없다.
+- 손 정리가 없는 형(홀드아웃)에서는 합성 문장을 검사할 것이 없다. 이것은 열린 틈이다.
+- 생성기는 형마다 한 번 돌렸다(작업 05, 11). 원 출력은 손대지 않고 먼저 커밋했다.
+- 새 파일만 썼다: `Gen2E1Dec`, `Gen2BiDec`, `Gen2DmDec`, `Gen2BiAccept`, `Gen2DmAccept`, `Gen2E1Accept`.
+- H3 원 출력 `GenBiDec.lean`, `GenDmDec.lean`과 H3 기록은 바꾸지 않았다.
+- 옛 생성기 명령 8개의 출력은 바이트가 같다(`regen_check.sh` SAME, 작업 02, 17).
+- `kindcheck.py`는 새 종류 셋을 고정 blob과 함께만 받는다. `_type` 항등식은 "identity-checked"로 따로 보고한다.
+- 보조정리 모듈은 바꾸지 않았다. 리뷰 g2l-r1의 판정은 APPROVE이고 필수 수정은 없다.
+- 96바이트 필드는 개발 자료에 없다. 48바이트 add 꼴은 합성 `.S`의 글 검사만 했다. 커널 검사는 아니다.
+- 일반성 주장은 없다. 독립 리뷰는 아직 없다.
+
+## 15. GEN2 수정 작업 (단위 G2-F) — H3 뒤 두 번째 생성기 변경, H4 고정 전, 개발 작업
+
+- 리뷰 g2g-r1의 판정은 REQUEST_CHANGES다. 필수 수정 둘은 문서다. 증명 결함은 없었다.
+- 이 작업은 H3 뒤 두 번째 생성기 변경이다. H4를 위해 생성기를 고정하기 전에 했다.
+- 작성 세션은 새 Opus 세션이다. G2-G와 G2-L을 쓰지 않았다. 리뷰도 하지 않는다.
+- 14절 정정(리뷰 S4): "형마다 한 번" 앞에 scratch 시험 실행이 있었다(G2-G 작업 01, 09).
+- 커밋된 실행은 작업 05와 11이다. scratch 출력은 커밋하지 않았다.
+- 바뀐 것: `kindcheck.py`의 `_type` 규칙. 합성 정리에만 받고, 오른쪽이 생성 이름이면 거부한다.
+- 바뀐 것: `--gen2 --partial-out` 파일은 유효한 Lean 모듈이다. `kindcheck.py --partial`은 종료 3을 준다.
+- 바뀐 것: `--compose`에 `--same-as`가 없으면 `UNCHECKED STATEMENT` 표시를 쓴다. `--same-as-prop`을 더했다.
+- 입력은 개발 자료뿐이다. BeaconBlockHeader(H1 형)도 이제 GEN2의 표본 안 자료다.
+- `Gen2BhDecPartial.lean`은 생성기를 한 번 돌린 원 출력이다(작업 05). 같은 명령의 scratch 시험이 앞섰다(작업 02).
+- 기본 모드와 커밋된 생성 파일은 바뀌지 않았다: `regen_check.sh` 15/15 SAME(작업 13).
+- 일반성 주장은 없다. 독립 리뷰는 아직 없다.
+
+## 16. 홀드아웃 H4 평가 — 열린 뒤
+
+- 연 시각: `scal/HOLDOUT-OPENED`의 `H4.opened_utc`(커밋 `9d338fa`, 2026-11-11T08:53:45Z).
+- 방법 고정: 커밋 `eacf0fb`. 고정 기록의 blob 15개와 `lean/E2eScal`, `lean/Fk` 트리 id를 다시 셌다. 모두 같다.
+- 형: `v1alpha1.Deposit_Data`(A 부류), `v1alpha1.PendingPartialWithdrawal`(B 부류). 범위는 `UnmarshalSSZ`뿐이다.
+- 평가 세션은 GEN2 생성기, 검사기, 종류, 보조정리를 만들지 않았다. 이전 단위의 파일은 읽을 수 있었다.
+- 밝힌 유사성(H4-A5): Deposit_Data는 DepositMessage에 96바이트 Signature를 더한 형이다. 필드 3개는 표본에 가깝다.
+- 손 Desc(`2daf204`)는 검사기 Desc를 출력하기 전에 커밋했다.
+- 손 문장 `H4.dd_accept_stmt`, `H4.pw_accept_stmt`(`d7e3304`)는 생성기를 돌리기 전에 커밋했다.
+- 손 문장은 IR `go_fields`, SSZ 배치, `.S`의 프레임 사실, Bi/Dm/E1/Bh 손 정리의 꼴에서 썼다.
+- 링크 표는 손 문장 전에 만들었다. 문장이 `.S`의 프레임 사실을 써야 했다. 생성기는 돌리지 않았다.
+- 생성기 (S)와 (C)는 형마다 한 번씩 돌렸다(작업 12, 13, 16, 17). 다른 선택으로 다시 돌리지 않았다.
+- 원 출력 `Gen2DdDecPartial.lean`, 요약 JSON 둘, stderr 기록 셋은 손대지 않고 먼저 커밋했다(`43a0847`, `76b66ba`).
+- 손 수정 줄은 0이다. stderr 하나(Deposit_Data (S))에는 실행 디렉터리 경로가 있어 커밋하지 않았다.
+- `scalgen.py`, `kindcheck.py`, `Kind*.lean`, 보조정리 모듈, `Fk/*`, 계약, 기존 문장은 바꾸지 않았다.
+- 새 손 보조정리: `H4.bytes32dec_seg_nop`(`DdSegNop.lean`). `bytesdec_seg`(n = 32)의 글에 `nop` 한 단계를 더했다.
+- 그 글은 임시 스크립트가 `SegN.lean`에서 만들었다. 스크립트는 커밋하지 않았다. 방법의 일부가 아니다.
+- 열린 뒤 더한 도구: `gen/e2e/h4link.py`(`h3link.py`의 글), `gen/e2e/h4diff.py`(`h3diff.py`의 글), `h4/h4check-main.go.txt`.
+- 열린 뒤 더한 증거 파일: `gen/scal/negcases-h4.json`, `AxiomsScal.lean`의 import 7개와 손 목록 46개.
+- 검사기 json은 phase1c-r5 리뷰의 임시 사본에서 왔다. sha256은 `main.result.json` 기록과 같다.
+- `DdSpecChecker.lean`, `PwSpecChecker.lean`은 `descterm.py` 출력이다. 머리에 경로 한 줄을 손으로 더했다(H3와 같다).
+- 제안(하지 않음) P-H4-1: 32바이트 구간 머리에서 `callq runtime.makeslice` 앞의 `nop`을 허용한다.
+- P-H4-1이 있으면 Deposit_Data의 WithdrawalCredentials(지시 47–72)가 생성 대상이 된다.
+- 제안(하지 않음) P-H4-2: 인라인 uint64 읽기의 다른 꼴을 읽는다.
+- 그 꼴은 `mov 0x8(%rbx),%r8; mov %r8,0x10(%rax)`이다. 두 기준 레지스터를 앞의 다른 지시가 다시 읽는다.
+- 제안(하지 않음) P-H4-3: 위임 overlay 필드(호출)를 기존 함수 명세 `ViUAccC`, `EpUAccC`로 덮는 구간 템플릿.
+- 세 제안은 방법 변경이다. 그래서 해당 필드는 생성기가 덮지 않은 것으로 보고한다.
+- 도구 한계: `negative.py`의 코드 변이는 그 모듈 안의 이름만 바꾼다.
+- 문장이 다른 모듈의 `abbrev`이면 대조군도 실패한다(`dd-acc-control`, 작업 46). 그 네 사례는 철회했다.
+- 한계: `h4/link/norm`은 Lake `input_dir`가 아니다. lakefile 변경은 승인이 필요해서 하지 않았다.
+- 일반성 주장은 없다. 독립 리뷰는 아직 없다.

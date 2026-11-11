@@ -621,6 +621,326 @@
      "x86-64 hardware"
     ]
    }
+  },
+  "gen2-lemmas (GEN2 unit G2-L, fresh Fable session)": {
+   "state": "not yet reviewed",
+   "base": "71161fa95532d1151ec4e7b19608709bb77158d6",
+   "commits": "c59718f (L1, L2), 4cc0934 (L3), then the records commit",
+   "author": "fresh Fable 5.2 session, direct author; did not write the generator; read the three development decoders, the hand proofs and the H3 records (BlobIdentifier and DepositMessage are development data)",
+   "scope": "new Lean modules only; no existing .lean, scalgen.py, kindcheck.py, gen.sh, contract, statement, ELF, toolchain or lakefile change; the proof generator is unchanged, so generator coverage is unchanged (SG-2)",
+   "L1": {
+    "modules": "lean/E2eScal/SegN.lean, KindN.lean, SegNRel.lean",
+    "lemmas": [
+     "E2eScal.bytesdec_seg",
+     "E2eScal.bytesdec_seg_z"
+    ],
+    "kinds": [
+     "E2eScal.bytesDecSegKind",
+     "E2eScal.bytesDecSegZKind",
+     "E2eScal.bytesDecSegKind_of",
+     "E2eScal.bytesDecSegZKind_of"
+    ],
+    "sizes": "n = 32, 48, 96 (hypothesis hn; a case split that runs the model proof text with a literal size; another size needs one more case)",
+    "relation_to_existing": "rfl: templates (rootDecHead = bytesDecHead 32, ..., H3.bytesDecMidZ48 = bytesDecMidZ 48), kinds (rootDecSegKind = bytesDecSegKind 32, rootDecSegZKind = bytesDecSegZKind 32, with_reducible rfl), declared lemma types (rootdec_seg, rootdec_seg_z, H3.bytes48dec_seg_z = the n = 32 / 32 / 48 instances, default-transparency rfl). The existing lemmas are not re-proved from the new ones.",
+    "contracts": "MakesliceC, MemmoveC as in rootdec_seg; no new form"
+   },
+   "L2": {
+    "modules": "lean/E2eScal/U64Inline.lean, KindU64.lean",
+    "lemmas": [
+     "E2eScal.u64dec_inline_seg"
+    ],
+    "kinds": [
+     "E2eScal.u64DecInlineSegKind",
+     "E2eScal.u64DecInlineSegKind_of"
+    ],
+    "sites_read": "Eth1Data.DepositCount (directives 47-49, scratch rsi), BlobIdentifier.Index (47-49, rcx), DepositMessage.Amount (83-85, rcx); receiver rdx and the addressing forms are the same",
+    "register_shapes_observed": 2,
+    "lemmas_needed": 1,
+    "register_parameter": "rX : Reg64 with U64InlineReg rX = the 12 registers other than rdx, rsp, rbp, r14 (case split)",
+    "contracts": "none"
+   },
+   "L3": {
+    "modules": "lean/E2eScal/Compose.lean, Gen2ComposeEx.lean",
+    "lemmas": [
+     "E2eScal.dechead_seg",
+     "E2eScal.bytesdec_tail_seg",
+     "E2eScal.decepi_seg"
+    ],
+    "example": "E2eScal.Gen2Ex.bi_e2e_accept_main_composed: a chain of eventually_trans over segment theorems only; bi_e2e_accept_main_composed_type shows its declared type = the declared type of E2eScal.Bi.bi_e2e_accept_main (with_reducible rfl)",
+    "limits": "not a generic combinator over a list of segments: the frame instance of each step is written per type; frame 0x20 and spill displacements 0x30 / 0x38 are literals; DepositMessage and Eth1Data are not re-derived; no kind for the three L3 lemmas"
+   },
+   "examples": "lean/E2eScal/Gen2Examples.lean (hand-written, generator shape, each with a _kind line by with_reducible rfl): dm_dec_PublicKey_seg (48, offset-0), dm_dec_WithdrawalCredentials_seg, bi_dec_BlockRoot_seg, e1_dec_DepositRoot_seg, e1_dec_BlockHash_seg (32), bi_dec_Index_seg, dm_dec_Amount_seg, e1_dec_DepositCount_seg",
+   "executed_checks": {
+    "build": "lake build --no-build E2e E2eAd E2eScal exit 0 (928 jobs) at 4cc0934",
+    "axioms_gate": "gen/e2e/axioms_gate.py run with a scratch JSON: PASS declarations 4625 theorems 3899 nonstandard 0 sorryAx [] (the committed axioms-gate.json is not rewritten)",
+    "decl_drift": "decl_drift.py base dump (4519 rows, review int-r2) vs head dump (4625 rows): ADDED 106, CHANGED 0, REMOVED 0; planted control on a dump copy (one type hash changed, one row removed): exit 1 with 1 CHANGED, 1 REMOVED",
+    "negatives": "gen/scal/negcases-gen2.json with the unchanged gen/e2e/negative.py, one gated job per case: 17/17 (4 controls pass, 13 mutants fail inside the target: 12 statement mutants, 1 code mutant)",
+    "module_times_s": {
+     "E2eScal.SegN": 8.7,
+     "E2eScal.KindN": 0.6,
+     "E2eScal.SegNRel": 0.5,
+     "E2eScal.U64Inline": 2.5,
+     "E2eScal.KindU64": 0.6,
+     "E2eScal.Gen2Examples": 1.2,
+     "E2eScal.Compose": 2.3,
+     "E2eScal.Gen2ComposeEx": 1.6
+    },
+    "module_times_note": "Lake 'Built' times of one build each (SegN n = 3: 9.1, 8.7, 8.7); shared machine",
+    "heartbeats": "bytesdec_seg 16000000 (= rootdec_seg), bytesdec_seg_z 4000000 (= rootdec_seg_z), the other new theorems 4000000 or the default; no raise beyond a model lemma"
+   },
+   "effort": "3 diagnostics (one a scratch typo), 4 attempts of which 1 failed (the literal form of the size under with_reducible; fixed with OfNat.ofNat n), about 330 gate-seconds",
+   "incident": "the first base build job was killed after about 10 s by the author's own watcher (its pattern matched its own command line); one partial .olean without a trace was moved out; the rerun built 19 modules, exit 0; E2eScal.P2EncCp was replayed, not rebuilt",
+   "not_run": [
+    "independent review",
+    "cold build from an empty .lake",
+    "the proof generator (unchanged; unit G2-G)",
+    "kindcheck.py for the new kinds (not extended in this unit)",
+    "link checks, Go differentials, Go tests, x86-64 hardware (no ELF or Go change)",
+    "profiling (no limit was raised)",
+    "a symbolic-size proof of L1"
+   ]
+  },
+  "gen2 (GEN2 unit G2-G, fresh Opus session)": {
+   "base": "6c62a49 (unit G2-L head; review g2l-r1 APPROVE, 0 must-fix)",
+   "status": "not yet reviewed",
+   "contamination": "generator change after H3; inputs = development set only (Eth1Data, BlobIdentifier, DepositMessage); BlobIdentifier and DepositMessage are in-sample for GEN2; no hold-out claim until H4 (CONTAMINATION.md section 14)",
+   "generator": {
+    "file": "gen/scal/scalgen.py (the proof generator; sszgen/ and ssz/ untouched)",
+    "compat": "extended coverage only behind the opt-in flag --gen2; the default p2dec / p1 text is unchanged; regen_check.sh SAME for all 8 earlier commands (gen.sh 6, H3 2)",
+    "modes": [
+     "p2dec --gen2 [--summary FILE.json] [--partial-out FILE]",
+     "p2dec --gen2 --compose --name NAME [--same-as HAND_THEOREM]"
+    ],
+    "exit_codes": "0 every field covered; 3 some covered (nothing on stdout, --partial-out marks PARTIAL OUTPUT); 2 none covered, overlap, segments not in IR field order, compose shape not matched, or IR read failed"
+   },
+   "coverage": {
+    "Eth1Data": "3/3",
+    "BlobIdentifier": "2/2",
+    "DepositMessage": "3/3"
+   },
+   "coverage_shapes": {
+    "Eth1Data": {
+     "DepositRoot": "rootdec_seg_z (32)",
+     "DepositCount": "u64dec_inline_seg rsi",
+     "BlockHash": "rootdec_seg (32)"
+    },
+    "BlobIdentifier": {
+     "BlockRoot": "rootdec_seg_z (32)",
+     "Index": "u64dec_inline_seg rcx"
+    },
+    "DepositMessage": {
+     "PublicKey": "bytesdec_seg_z 48",
+     "WithdrawalCredentials": "rootdec_seg (32)",
+     "Amount": "u64dec_inline_seg rcx"
+    }
+   },
+   "generated_files": [
+    "lean/E2eScal/Gen2E1Dec.lean",
+    "lean/E2eScal/Gen2BiDec.lean",
+    "lean/E2eScal/Gen2DmDec.lean",
+    "lean/E2eScal/Gen2BiAccept.lean",
+    "lean/E2eScal/Gen2DmAccept.lean",
+    "lean/E2eScal/Gen2E1Accept.lean"
+   ],
+   "raw_output_edited_lines": 0,
+   "generator_runs": "one per type for --gen2 and one per type for --compose (gen.sh last six commands); output committed before use",
+   "accept_g2": {
+    "BlobIdentifier": {
+     "theorem": "E2eScal.G2.bi_e2e_accept_main_g2 (hand composition of generated segments)",
+     "generated": "E2eScal.Gen.bi_e2e_accept_main_gc",
+     "type_identity": "with_reducible rfl against E2eScal.Bi.bi_e2e_accept_main (both)"
+    },
+    "DepositMessage": {
+     "theorem": "E2eScal.G2.dm_e2e_accept_main_g2",
+     "generated": "E2eScal.Gen.dm_e2e_accept_main_gc",
+     "type_identity": "with_reducible rfl against E2eScal.Dm.dm_e2e_accept_main (both)"
+    },
+    "Eth1Data": {
+     "generated": "E2eScal.Gen.e1_e2e_accept_main_gc",
+     "type_identity": "with_reducible rfl against E2eScal.E1.e1_e2e_accept_main (extra check of the emitter; not required)"
+    }
+   },
+   "hand_lines": {
+    "counting_rule": "non-blank lines that are not comment lines (inside /- ... -/ blocks, doc comments included, or starting with --), over the whole hand-written module file (imports, statements, helper lemmas, proofs)",
+    "BlobIdentifier": {
+     "before": 210,
+     "before_files": "BiAccept.lean (248 file lines)",
+     "after_segments_generated_composition_by_hand": 120,
+     "after_file": "BiAcceptG2.lean",
+     "after_composition_generated": 0
+    },
+    "DepositMessage": {
+     "before": 464,
+     "before_files": "DmAccept.lean 255 (298 file lines) + DmSeg0.lean 209 (230 file lines)",
+     "after_segments_generated_composition_by_hand": 155,
+     "after_file": "DmAcceptG2.lean",
+     "after_composition_generated": 0
+    },
+    "drop_percent": {
+     "BlobIdentifier": {
+      "composition_by_hand": 42.9,
+      "composition_generated": 100.0
+     },
+     "DepositMessage": {
+      "composition_by_hand": 66.6,
+      "composition_generated": 100.0
+     }
+    },
+    "still_by_hand": "one generator command line per type (gen.sh); the hand reference theorem whose statement the _type identity checks; the type-independent lemma modules of G2-L"
+   },
+   "wording": "segments and composition generated on the development set; composed statements checked only by identity with hand theorems (in-sample). The pre-fixed < 30 % wording does not apply (drop 43 % / 67 % by hand composition, 100 % generated).",
+   "times_s": {
+    "method": "one `lake env lean E2eScal/<M>.lean` per module, wall clock, gated, shared machine, n = 2 (job 13)",
+    "BiAccept": [
+     2.47,
+     2.36
+    ],
+    "DmAccept": [
+     3.6,
+     3.53
+    ],
+    "DmSeg0": [
+     2.1,
+     2.13
+    ],
+    "BiAcceptG2": [
+     1.87,
+     1.89
+    ],
+    "DmAcceptG2": [
+     2.76,
+     2.79
+    ],
+    "Gen2BiAccept": [
+     1.88,
+     1.89
+    ],
+    "Gen2DmAccept": [
+     2.78,
+     2.82
+    ],
+    "Gen2E1Accept": [
+     2.79,
+     2.86
+    ],
+    "Gen2BiDec": [
+     1.03,
+     1.08
+    ],
+    "Gen2DmDec": [
+     1.15,
+     1.17
+    ],
+    "Gen2E1Dec": [
+     1.14,
+     1.13
+    ],
+    "E1Accept": [
+     3.78,
+     3.79
+    ]
+   },
+   "executed_checks": {
+    "kindcheck": "52/52 selftest cases; 4 broken copies (pins removed, any size, loose uint64 kind, self identity) each fail the selftest (exit 1); generated files PASS (segments kinded; composed files identity-checked, no kind)",
+    "p2dec_test": "43/43 (10 earlier, 2 compatibility, 3 GEN2 runs = committed, 19 adversarial .S / IR mutants, 1 synthetic 48-byte add form (text check only), 1 partial, 7 compose)",
+    "negatives": "gen/scal/negcases-g2g.json with the unchanged gen/e2e/negative.py, one gated job per case: 17/17 (4 controls pass; 13 mutants fail inside the target: 8 statement, 5 code); first error read for each",
+    "axioms_gate": "PASS: 4720 declarations, 3994 theorems, 170 modules, hand list 391, missing 0, nonstandard 0, sorryAx none (committed prysm/go1.26.10/e2e/axioms-gate.json)",
+    "axioms_hand_list": "gen/scal/AxiomsScal.lean + 16 imports and 76 #print axioms lines (50 G2-L, 26 G2-G; theorems and definitions); lake env lean on it: no error",
+    "decl_drift": "vs int-r2 base dump (4519 rows): ADDED 201 (G2-L 106 + G2-G 95), CHANGED 0, REMOVED 0; planted control (type hash of Bi.bi_e2e_accept_main flipped in a dump copy) exit 1 with CHANGED",
+    "regen_check": "14/14 SAME, two runs each (8 earlier commands + 3 --gen2 + 3 --compose)",
+    "no_build": "lake build --no-build E2e E2eAd E2eScal exit 0"
+   },
+   "attempts": {
+    "BiAcceptG2": 1,
+    "DmAcceptG2": 1,
+    "compose_emitter": 1,
+    "failed": 0
+   },
+   "gate_s": 384,
+   "gate_s_note": "sum of wall seconds of the 36 gated jobs of this unit, waiting for the shared lock included",
+   "heartbeats": "no raise: generated segments use the model lemma limits (16000000 byte vectors, 4000000 uint64), the compositions 4000000 as Gen2ComposeEx",
+   "not_covered_shapes": [
+    "delegated overlay fields (Slot, Epoch, ValidatorIndex: compiled as a call)",
+    "byte vectors of sizes other than 32 / 48 / 96",
+    "inline uint64 with displacement 0 (src = 0 or Go offset 0)",
+    "nested containers",
+    "lists",
+    "bitfields",
+    "bool and other uints",
+    "encoders",
+    "compose: frame other than 0x20, first field not a byte vector, receiver not in rdx"
+   ],
+   "limits": [
+    "96-byte fields: no development site, never instantiated on real code",
+    "48-byte add form: text check on a synthetic .S only",
+    "composed statements have no kind; the _type identity needs a hand theorem (development types only)",
+    "not yet reviewed; no cold build; link / Go / hardware checks not run"
+   ]
+  },
+  "gen2-fix (GEN2 unit G2-F, fresh Opus session)": {
+   "base": "cd47028",
+   "status": "not yet reviewed; fixes after review g2g-r1 (REQUEST_CHANGES, documents only), before the generator is frozen for H4",
+   "contamination": "second proof-generator change after H3 (CONTAMINATION.md section 15); development data only; BeaconBlockHeader is in-sample for GEN2 from here on",
+   "must_fix": {
+    "M1": "REPORT section 11: the hand reference theorems stay and are the only statement check of a composed theorem; G2-L lemma modules hand-written once (824 lines); exclusions stated",
+    "M2": "run-directory name removed from the kindcheck.py GEN2_PINS comment; range 71161fa..HEAD grepped for container paths, run directories, session ids: no other hit"
+   },
+   "hand_lines_added_rows": {
+    "DepositMessage_without_DmSeg0": "255 -> 155 (-39.2 %)",
+    "accept_proof_body_only": {
+     "BlobIdentifier": "80 -> 62 (-22.5 %)",
+     "DepositMessage": "120 -> 93 (-22.5 %)"
+    },
+    "g2l_hand_modules_one_time": 824,
+    "zero_means": "hand lines in the generated module only",
+    "excluded": [
+     "hand reference theorem",
+     "G2-L lemma modules",
+     "code module",
+     "Desc",
+     "spec alignment",
+     "reject",
+     "witnesses",
+     "link tables",
+     "negatives",
+     "per-type hand lemma E1.e1_lo"
+    ],
+    "source": "review g2g-r1 recount (results/16-hand-lines.txt); not recounted here"
+   },
+   "kindcheck_rules": [
+    "6a _type only for a composed theorem (proof uses dechead_seg and decepi_seg)",
+    "6b right-hand side not under E2eScal.Gen... and not declared in a Gen*.lean module",
+    "6c UNCHECKED STATEMENT marker fails",
+    "Prop form `= @X h` (--same-as-prop) under the same rules",
+    "7 --partial mode: one PARTIAL header after the imports, UNCOVERED-JSON with m - n entries; exit 3, never 0"
+   ],
+   "kindcheck_selftest": "70/70 PASS; 7 broken checker copies (one per rule) each exit 1",
+   "partial_out": {
+    "valid_lean": true,
+    "file": "lean/E2eScal/Gen2BhDecPartial.lean",
+    "coverage": "BeaconBlockHeader 3/5 (Slot, ProposerIndex: delegated overlay)",
+    "raw_output_edited_lines": 0,
+    "build_s": 1.4,
+    "kindcheck_default": "exit 1",
+    "kindcheck_partial": "exit 3, PARTIAL 3/5 fields"
+   },
+   "compose_refusals": [
+    "partial coverage (BeaconBlockHeader 3/5)",
+    "frame 0x28",
+    "non-contiguous field (nop between fields)",
+    "uint64 first field (IR order swapped)"
+   ],
+   "same_as_prop": "BlobIdentifier with a scratch abbrev fixture: kindcheck PASS, lake env lean exit 0; fixture of the DepositMessage type: Lean fails at the _type line",
+   "executed_checks": {
+    "regen_check": "15/15 SAME (8 earlier, 6 GEN2, 1 partial)",
+    "p2dec_test": "51/51",
+    "axioms_gate": "PASS 4726 declarations, 4000 theorems, 171 modules, hand list 397",
+    "decl_drift_vs_g2g_r1": "ADDED 6, CHANGED 0, REMOVED 0",
+    "no_build": "exit 0",
+    "negatives": "not run in G2-F"
+   },
+   "not_covered_consequence": "fields typed Slot / Epoch / ValidatorIndex (delegated overlay, compiled as calls) are not covered: most consensus containers are outside GEN2 as it stands",
+   "known_cosmetic": "KindN.lean header says 'four places' and lists five (g2l-r1 S4); lemma module, not edited"
   }
  },
  "contamination": {
@@ -1151,5 +1471,214 @@
    "independent review of this integration"
   ],
   "review_int_r2": "superseded by review int-r2 (APPROVE on a70492c; 0 must-fix, 6 should-fix S1-S6): the item 'independent review of this integration' in not_run is superseded on that point only. int-r2 did NOT verify: cold build from an empty .lake (115 base modules and E2eScal.P2EncCp not re-elaborated); link checks (no ELF in the tree), Go differentials, Go tests, benchmarks; x86-64 hardware; 73 of 89 negative cases (the two pilot S3 cases read from the integrator's result files only); runtime contracts, morestack paths, Kraken semantics; secret and path scans are regex based"
+ },
+ "H4": {
+  "scope": "H4 hold-out: UnmarshalSSZ of v1alpha1.Deposit_Data (class A) and v1alpha1.PendingPartialWithdrawal (class B). Encoders, SizeSSZ, HashTreeRoot: out of scope. Two types, one touch. Not yet reviewed.",
+  "method_freeze": {
+   "sha": "eacf0fb4c03bf4b34ecf8b7a7705297998c848f7",
+   "blobs_checked": "15 blob ids of the freeze record and the lean/E2eScal (bef19fbb) and lean/Fk (50a7c8c3) tree ids equal (git rev-parse HEAD:<path>)"
+  },
+  "opening": {
+   "record": "scal/HOLDOUT-OPENED H4",
+   "commit": "9d338fa",
+   "opened_utc": "2026-11-11T08:53:45Z",
+   "step0": "gated lake build E2e E2eAd E2eScal exit 0 (48 modules built that the moved .lake lacked; E2eScal.P2EncCp replayed, not rebuilt; 86.7 gate-s, recorded separately), then --no-build exit 0",
+   "state_before_commit": "no method code, .S, objdump, IR entry, functions.json body or generator output of the two types opened before the commit"
+  },
+  "evaluator": "fresh Opus 5.5 session; did not build the GEN2 generator, checker, kinds or lemmas; could read earlier unit files (not independent of that experience)",
+  "order": {
+   "hand_desc_commit": "2daf204 (before the checker Desc was rendered)",
+   "link_commit": "05f64b5 (before the hand statements: the statements use .S frame facts; no generator run)",
+   "hand_statement_commit": "d7e3304 (H4Stmt.lean: dd_accept_stmt, pw_accept_stmt; before any generator run on either type)",
+   "raw_S_commit": "43a0847",
+   "raw_C_commit": "76b66ba"
+  },
+  "similarity": "Deposit_Data = development type DepositMessage + Signature bytes96; 3 of its 4 fields are near-in-sample (H4-A5). Only the Signature field and the 4-field composition are out-of-sample evidence for type A.",
+  "types": {
+   "Deposit_Data": {
+    "layout": "protoc struct, IR go_fields: state 0, PublicKey 8, WithdrawalCredentials 32, Amount 56, Signature 64, unknownFields 88, sizeCache 112, size 120; the code's store offsets agree",
+    "S": {
+     "runs": 1,
+     "job": "12",
+     "exit": 3,
+     "covered": "3/4",
+     "covered_fields": {
+      "PublicKey": "bytesdec_seg_z 48, directives 13-36",
+      "Amount": "u64dec_inline_seg rsi, directives 83-85",
+      "Signature": "bytesdec_seg 96, directives 86-110"
+     },
+     "reasons": {
+      "WithdrawalCredentials": "field at Go offset 0x20: 0 decode segments match (expected 1) [code: nop at directive 50 before callq runtime.makeslice]"
+     },
+     "raw_file": "lean/E2eScal/Gen2DdDecPartial.lean",
+     "raw_edited_lines": 0,
+     "builds": "yes (job 14)",
+     "kindcheck": "--partial mode, exit 3 (its success code): PASS 3/4, kinds of present theorems (job 15)",
+     "near_in_sample_note": "3 of 4 fields are near-in-sample"
+    },
+    "C": {
+     "runs": 1,
+     "job": "16",
+     "result": "refused",
+     "exit": 2,
+     "reason": "--compose needs every field covered (3 of 4)",
+     "identity_check": "not run (nothing generated)",
+     "witness_of_generated": "n/a",
+     "evaluator_statement_corrections": []
+    },
+    "hand": {
+     "accept": "E2eScal.H4.dd_e2e_accept_main : H4.dd_accept_stmt (hand composition over the three raw generated segments + hand lemma H4.bytes32dec_seg_nop for WithdrawalCredentials; composition text of Gen2DmAccept)",
+     "witness": "WitDdA.dd_accept_runs: the premises of dd_accept_stmt are satisfiable (zero/nil, representative with old pointers, all-0xff), Go-layout receiver (IR go_fields)"
+    },
+    "kernel_checked": [
+     "E2eScal.Gen.dd_g2dec_PublicKey_seg (+_kind)",
+     "E2eScal.Gen.dd_g2dec_Amount_seg (+_kind)",
+     "E2eScal.Gen.dd_g2dec_Signature_seg (+_kind)",
+     "E2eScal.H4.bytes32dec_seg_nop",
+     "E2eScal.H4.dd_e2e_accept_main",
+     "E2eScal.H4.dd_e2e_reject_size_main",
+     "E2e.prysmDdDesc_checker",
+     "E2e.prysmDdDesc_serialize_checker",
+     "E2e.prysmDdDesc_deserialize_checker",
+     "E2e.pdd_spec_accepts_iff",
+     "E2e.pdd_roundtrip",
+     "E2eScal.H4.dd_e2e_accept_spec_k",
+     "E2eScal.H4.dd_e2e_reject_size_spec",
+     "E2eScal.H4.dd_e2e_reject_complete",
+     "E2eScal.WitDdA.dd_accept_runs",
+     "E2eScal.WitDdR.dd_reject_runs (184-1, 184+1, 0)"
+    ],
+    "not_proved": [
+     "morestack path (stack-guard premise)",
+     "runs with runtime.writeBarrier != 0 (premise)",
+     "runtime callees makeslice/memmove (contracts MakesliceC, MemmoveC stay hypotheses)",
+     "a Lean Go-value predicate for the receiver (Go differential only)",
+     "no witness fills the Pm premise of dd_e2e_accept_spec_k (as the H3 models)",
+     "MarshalSSZTo, SizeSSZ, HashTreeRoot (out of scope)",
+     "x86-64 hardware run"
+    ],
+    "hand_lines": {
+     "rule": "g2g rule: non-blank lines that are not comment lines (/- ... -/ blocks incl. doc comments, -- lines), whole hand module file; the script reproduces the g2g values 210/255/209/155",
+     "accept_path": 336,
+     "accept_path_files": "DdAccept.lean 148 (182 file lines) + DdSegNop.lean 188 (211 file lines)",
+     "hand_statement_H4Stmt_both_types": 112,
+     "all_hand_modules": 783,
+     "H3_for_reference_no_causal_claim": {
+      "BlobIdentifier_accept": 210,
+      "DepositMessage_accept": 464,
+      "DepositMessage_G2_hand_composition": 155
+     }
+    },
+    "attempts": {
+     "DdSegNop": 1,
+     "DdAccept": 1,
+     "DdReject": 1,
+     "DdSpec": 1,
+     "DdSpecK": 1,
+     "WitDdA": 1,
+     "WitDdR": 1,
+     "failed": 0
+    },
+    "gate_s": 294.2
+   },
+   "PendingPartialWithdrawal": {
+    "layout": "protoc struct, IR go_fields: state 0, Index 8, Amount 16, WithdrawableEpoch 24, unknownFields 32, sizeCache 56, size 64",
+    "S": {
+     "runs": 1,
+     "job": "13",
+     "exit": 2,
+     "covered": "0/3",
+     "reasons": {
+      "Index": "delegated overlay field (ValidatorIndex): compiled as a call, no template",
+      "Amount": "field at Go offset 0x10: 0 inline uint64 reads match (expected 1) [code: mov 0x8(%rbx),%r8; mov %r8,0x10(%rax) after base-register reloads]",
+      "WithdrawableEpoch": "delegated overlay field (Epoch): compiled as a call, no template"
+     },
+     "raw_file": "none written (exit 2); raw stderr prysm/go1.26.10/e2e/h4/gen/Gen2PwDec.raw.txt",
+     "raw_edited_lines": 0,
+     "kindcheck": "not run (no file)"
+    },
+    "C": {
+     "runs": 1,
+     "job": "17",
+     "result": "refused",
+     "exit": 2,
+     "reason": "no field covered (same three reasons)",
+     "identity_check": "not run",
+     "witness_of_generated": "n/a",
+     "evaluator_statement_corrections": []
+    },
+    "hand": {
+     "accept": "NOT proved (bound): 3 real attempts (jobs 21, 22, 25), diagnostics jobs 23-24 (trace_state, not attempts). Last failure: only the final frame ecancel; the callee post states the saved-rbp slot in a different term form (BitVec.toInt vs .toInt). Proposed next step (untested): the rw ... from rfl normalization of BhHead at Hm3 before the final ecancel. Text kept outside the repository."
+    },
+    "kernel_checked": [
+     "E2eScal.H4.pw_e2e_reject_size_main",
+     "E2e.prysmPwDesc_checker",
+     "E2e.prysmPwDesc_serialize_checker",
+     "E2e.prysmPwDesc_deserialize_checker",
+     "E2e.ppw_spec_accepts_iff",
+     "E2e.ppw_roundtrip",
+     "E2eScal.H4.pw_e2e_reject_size_spec",
+     "E2eScal.H4.pw_e2e_reject_complete (spec side: EthLib reject -> size != 24)",
+     "E2eScal.WitPwR.pw_reject_runs (23, 25, 0)"
+    ],
+    "not_proved": [
+     "accept path (pw_accept_stmt) and pw_e2e_accept_spec_k: attempt bound",
+     "the two callee error paths (fmt.errorf wraps)",
+     "morestack path",
+     "a Lean Go-value predicate for the receiver",
+     "no accept witness (accept not proved)",
+     "MarshalSSZTo, SizeSSZ, HashTreeRoot (out of scope)",
+     "x86-64 hardware run"
+    ],
+    "hand_lines": {
+     "accept_path_kernel_checked": 0,
+     "unproved_accept_attempt_not_committed": 199,
+     "all_committed_hand_modules": 294
+    },
+    "attempts": {
+     "PwAccept": "3 (all failed) + 2 diagnostics",
+     "PwReject": 1,
+     "PwSpec": 1,
+     "PwSpecK": 1,
+     "WitPwR": "2 (attempt 1: wrong program-length constant)",
+     "failed": 4
+    },
+    "gate_s": 36.5
+   }
+  },
+  "shared_gate_s": 224.1,
+  "base_build_gate_s": 86.7,
+  "total_gate_s": 642.1,
+  "gate_jobs": 76,
+  "gate_s_note": "includes the final axioms gate (job 81, 98.9 s) and the final --no-build (job 82, 1.0 s)",
+  "link": "check.py (a)-(f) PASS all, bundle e1d4d2e3 (job 08); ELF sha256 c6403c02...911e checked (reused local artifact)",
+  "negatives": {
+   "result": "30/32 (8 controls pass, 22 mutants fail inside the target; 0 wrong_target)",
+   "not_counted": [
+    "dd-ask-stmt-heap: killed (memcap 6 GiB per process, job 58)",
+    "dd-ask-stmt-siglen: timeout_heartbeat (job 60)"
+   ],
+   "withdrawn": "dd-acc-control (control_fail, job 46), dd-acc-code-amt/siglen/nop: negative.py renames the code constant only inside the mutated file; the statement of dd_e2e_accept_main is the abbrev in H4Stmt, so the control fails; replaced by code mutants on the generated segments",
+   "file": "scal/negative-h4.json",
+   "cases": "gen/scal/negcases-h4.json",
+   "jobs": "41-77"
+  },
+  "axioms": "PASS: 5007 declarations, 4204 theorems, 0 nonstandard, 0 sorryAx, hand list 443, missing 0 (scratch run job 79; the committed record is regenerated at the end)",
+  "drift": "vs the g2f-r1 dump at eacf0fb: 281 ADDED, 0 REMOVED, 0 CHANGED (scal/h4-drift.txt); planted CHANGED control -> exit 1",
+  "go_differential": "12/12 (job 80): Go semantics on linux/arm64, not the ELF; go run -overlay in the parked Prysm tree (git status hash unchanged); planted control -> 2 mismatches, exit 1",
+  "stale_olean": "job 78 after the killed job 58: AFTER 0; STALE mtime-only (checkout newer than the moved .lake), 6 pre-existing ORPHAN probe artifacts; lake build --no-build exit 0 at the end",
+  "contamination": "CONTAMINATION.md section 16: no generator/checker/kind/lemma/Fk/contract change; proposals P-H4-1..3 not done; new hand lemma module DdSegNop (not method)",
+  "bounds_hit": [
+   "PendingPartialWithdrawal accept: 3 attempts -> not proved (bound)"
+  ],
+  "not_run": [
+   "cold build from an empty .lake",
+   "regen_check.sh (reruns the generator; H4 allows one run per type)",
+   "kindcheck --selftest, p2dec_test.py (no generator change)",
+   "earlier negative suites",
+   "x86-64 hardware",
+   "independent review"
+  ],
+  "limits": "two types, one touch; Deposit_Data near-in-sample for 3 of 4 fields; no generality, superiority or speed-up claim; H1/H2/H3 records untouched"
  }
 }
