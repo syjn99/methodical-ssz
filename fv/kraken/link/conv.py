@@ -100,6 +100,16 @@ NORM = {"nopl (%rax)": "nop", "data16 nop": "nop", "nopw 0x0(%rax,%rax,1)": "nop
 # `%riz` (for example `0x10(%r12,%riz,1)`: base r12 needs a SIB byte). The index is zero, so the
 # address is `0x10(%r12)`. Kraken's parser has no `riz` register. Same address, same bytes (check.py (d)).
 RIZ = re.compile(r",%riz,1\)")
+# LV-1 (LV stream, user-approved fix): `go tool objdump -gnu` prints a negative 32-bit memory displacement as an
+# unsigned 8-digit hex number (`lea 0xffffff1c(%rdi),%rdx` for -228). x86-64 sign-extends disp32, but Kraken's parser
+# reads the token as +4294967068 and clang rejects it. Under --norm such a displacement (exactly 8 hex digits, top bit
+# set, directly followed by `(%`, not an immediate `$0x...`, not `%rip`) is written in its signed form `-0xe4(%rdi)`.
+# Same address, same bytes: check.py (d) reassembles the line and compares it with the ELF.
+DISP32 = re.compile(r"(?<![\w$\-])0x([89a-f][0-9a-f]{7})(?=\(%(?!rip))")
+
+
+def signed_disp32(att):
+    return DISP32.sub(lambda m: f"-0x{(1 << 32) - int(m.group(1), 16):x}", att)
 
 
 def convert(fn, syms, norm):
@@ -133,6 +143,7 @@ def convert(fn, syms, norm):
         if norm:
             att = NORM.get(att, att)
             att = RIZ.sub(")", att)
+            att = signed_disp32(att)
         body.append((addr, att))
     out = [f"{name}:"]
     for addr, att in body:
@@ -170,6 +181,15 @@ def selftest():
     riz = {"name": "pkg.r", "ins": [(0x100, 6, "mov 0x10(%r12,%riz,1),%r12"), (0x106, 1, "retq")]}
     assert "  mov 0x10(%r12),%r12\n" in convert(riz, syms, True)[1]
     assert "%riz" in convert(riz, syms, False)[1]
+    d32 = {"name": "pkg.d", "ins": [(0x100, 7, "lea 0xffffff1c(%rdi),%rdx"), (0x107, 7, "mov $0xffffff1c,%rax"),
+                                    (0x10e, 6, "mov 0x7fffffff(%rax),%rcx"), (0x114, 8, "mov %rbx,0x80000000(%rsi,%rcx,8)"),
+                                    (0x11c, 1, "retq")]}
+    t = convert(d32, syms, True)[1]
+    assert "  lea -0xe4(%rdi),%rdx\n" in t, t
+    assert "  mov $0xffffff1c,%rax\n" in t, t
+    assert "  mov 0x7fffffff(%rax),%rcx\n" in t, t
+    assert "  mov %rbx,-0x80000000(%rsi,%rcx,8)\n" in t, t
+    assert "  lea 0xffffff1c(%rdi),%rdx\n" in convert(d32, syms, False)[1]
     clean("pkg.h[uint8]")
     try:
         clean("pkg.h_uint8_")
