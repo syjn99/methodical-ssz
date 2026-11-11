@@ -252,7 +252,7 @@
     "attempt_shape": "T9-PLAN allows one split with <= 3 attempts. Attempts 1-3 unsplit; attempt 4 first split (A1/A2); attempt 5 a second split (A0 off A1); attempt 6 four A0 experiments in one run. 6 runs, inside the cap of 6 (review s6-r1 S3)",
     "gate_exit_note": "jobs 382-386 show gate exit 0 although Lean exited 1: the command ended in `echo LEAN_RC=$?`. The logs show LEAN_RC=1; failed_runs counts them as failed (review s6-r1 S2). Later job commands end with the Lean exit code"
    },
-   "superseded_note": "history of sessions 10-11 (not proved there). The fast path was kernel-checked later in the unit 'beacon_block_header_encoder_t9 (T-9 stream, fresh Fable session)'; review pending."
+   "superseded_note": "history of sessions 10-11 (not proved there). The fast path was kernel-checked later in the unit 'beacon_block_header_encoder_t9 (T-9 stream, fresh Fable session)'; review pending at the time of writing; later reviewed (t9-r1 APPROVE on 154944e, integration int-r1 APPROVE on c3c56a1)."
   },
   "decoder_completions (INBOX 020 item 2)": {
    "bbh_unreachable_mc": {
@@ -454,7 +454,7 @@
   "A timeout is a timeout; none occurred.",
   "The hand Desc prysmBhDesc was written after the checker Desc had been printed in the same session: independent of the code under test in content, not in time (review s4-r1, FINDINGS NF-10).",
   "bh_e2e_accept_main keeps the three argument-area slots in one 24-byte existential (dead stack only; FINDINGS NF-11).",
-  "Encoder (iii): fast path only was in scope, and it is not proved. No claim about the BeaconBlockHeader encoder is made."
+  "At H1 time (historical): encoder (iii): fast path only was in scope, and it was not proved; no claim about the BeaconBlockHeader encoder was made at H1 time. Later the fast path only was kernel-checked in unit 'beacon_block_header_encoder_t9 (T-9 stream, fresh Fable session)' (review t9-r1 APPROVE); the growslice branches, the length rejects and the morestack path stay not proved."
  ],
  "not_run": [
   "reviewer cold rebuild (S4)",
@@ -604,7 +604,7 @@
    },
    "eth1data_encoder (iii)": {
     "state": "not proved: not attempted (same prologue as T-9); the T-9 stream did not cover it; a budget is a user decision",
-    "prologue": "lea -0x8(%rsp),%r12; cmp 0x10(%r14),%r12; jbe (directives 2-4 of Eth1Data.MarshalSSZTo), the open T-9 obstruction form; INBOX 023 step 3 says do not attempt",
+    "prologue": "lea -0x8(%rsp),%r12; cmp 0x10(%r14),%r12; jbe (directives 2-4 of Eth1Data.MarshalSSZTo), the T-9 obstruction form, open at H2 time (historical); the guard form now has the lemma E2eScal.lea_cmp_be_false (unit 'beacon_block_header_encoder_t9 (T-9 stream, fresh Fable session)'); INBOX 023 step 3 says do not attempt",
     "lake_runs": 0,
     "cumulative_gate_s": 0
    }
@@ -613,9 +613,9 @@
    "One out-of-sample case (Eth1Data). No generator-superiority claim. No causal speed-up claim.",
    "H2 was opened after H1 by a session that could read the H1 files: not independent of the H1 experience.",
    "The generator did NOT cover this type: its one run stopped (exit 2) on the source-offset-0 field. The decoder proof is hand work (copied texts listed in hand_files_note). This is a negative result for the generator's coverage, not for the decoder.",
-   "The hand segment rootdec_seg0 is outside the frozen method; a template/generator change for offset 0 is proposed, not done (CONTAMINATION.md §7).",
+   "At H2 time (historical): the hand segment rootdec_seg0 is outside the frozen method; a template/generator change for offset 0 was proposed, not done (CONTAMINATION.md §7). Later done as development work on Eth1Data, not as a hold-out run: unit 'sg1-extension (development, not hold-out)' (review sg1-r1 APPROVE).",
    "SizeSSZ is excluded (AU-09 exposure: Eth1Data SizeSSZ code, IR entry and generated Go were already in the repository and proved in phase1c).",
-   "No encode mode; the encoder was not attempted (T-9 prologue form). AU-07 open.",
+   "At H2 time (historical): no encode mode; the encoder was not attempted (T-9 prologue form, then open). The guard form now has the lemma E2eScal.lea_cmp_be_false (unit 'beacon_block_header_encoder_t9 (T-9 stream, fresh Fable session)'); the Eth1Data encoder is still not attempted. AU-07 open.",
    "A _kind identity is not a non-vacuity witness; here there is no _kind at all. The witnesses are WitE1A, WitE1R.",
    "The Go differential checks Go semantics, not the ELF. A timeout is a timeout (none occurred)."
   ],
@@ -630,7 +630,7 @@
    "lemma_changes_after_opening": 0,
    "kind_changes_after_opening": 0,
    "raw_output_edits": 0,
-   "proposed_not_done": "source-offset-0 variant of rootDecMid / p2dec (CONTAMINATION.md §7)"
+   "proposed_not_done": "at H2 time (historical): source-offset-0 variant of rootDecMid / p2dec (CONTAMINATION.md §7); later done as development work in unit 'sg1-extension (development, not hold-out)', not a hold-out run"
   },
   "session14": {
    "inbox": "024",
