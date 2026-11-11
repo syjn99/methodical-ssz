@@ -21,3 +21,7 @@ step	utc	exit	log	command
 19-ax1	2026-11-11T16:56:40Z	0	logs/19-ax1.log	heavy.py -- lake env lean <scratch>/Ax1.lean (#print axioms: bytesdec_seg_z64, bytes96dec_seg_nop, sa/sc_e2e_reject_size_main = [propext, Classical.choice, Quot.sound])
 20-SaAccept	2026-11-11T16:57:23Z	1	logs/20-SaAccept.log	heavy.py -- lake build E2eList.SaAccept (attempt 1: final ecancel fails)
 21-SaAccept	2026-11-11T16:58:10Z	0	logs/21-SaAccept.log	heavy.py -- lake build E2eList.SaAccept (attempt 2; 7.3 s wall, module 4.7 s, peak sampled RSS 2.15 GiB)
+22-SaSpec	2026-11-11T16:59:21Z	1	logs/22-SaSpec.log	heavy.py -- lake build E2eList.SaSpec (attempt 1: psa_serialize leaves 64 + z.size < 2^32)
+23-SaSpec	2026-11-11T16:59:33Z	0	logs/23-SaSpec.log	heavy.py -- lake build E2eList.SaSpec (attempt 2; 5.2 s wall, module 3.2 s, peak sampled RSS 0.86 GiB)
+24-SaSpecK	2026-11-11T16:59:53Z	0	logs/24-SaSpecK.log	heavy.py -- lake build E2eList.SaSpecK (5.2 s wall, module 3.2 s, peak sampled RSS 0.86 GiB)
+25-SaDescEq	2026-11-11T17:00:25Z	0	logs/25-SaDescEq.log	python3 -I -B gen/e2e/lvdescterm.py (Sa, Sc) then heavy.py -- lake build E2eList.SaDescEq (8.3 s wall, peak sampled RSS 0.79 GiB)

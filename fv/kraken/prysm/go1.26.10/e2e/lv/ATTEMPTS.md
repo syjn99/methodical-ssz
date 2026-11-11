@@ -67,3 +67,15 @@
 - 원인: `bytesdec_seg_z64`의 사후조건은 `Int.toBytes 8 (OfNat.ofNat n)` 꼴이다. 문장의 `Int.toBytes 8 64`와 구문이 다르다.
 - 고침: 생성된 `Gen.dd_g2dec_PublicKey_seg`처럼 크기 64를 글자로 쓴 감싼 보조정리 `sa_bits_seg`를 더했다. 증명은 `with_reducible exact bytesdec_seg_z64 64 rfl …`이다.
 - 시도 2(로그 21): exit 0. 설정 없이 통과했다.
+
+### T1 명세 다리 `E2eList.SaSpec`와 명세 정리 셋 `SaSpecK`
+
+- 시도 1(로그 22): exit 1. `psa_serialize`에 목표 `64 + z.size < 4294967296`가 남았다. 둘째 `simp`에 `hz`가 없었다.
+- 시도 2(로그 23): exit 0. 둘째 `simp`에 `hz`를 더했다.
+- EthLib의 `packBits_unpackBits`(패딩 전제는 512 = 8·64라 비어 있다)와 `unpackBits_packBits`를 그대로 썼다.
+- `SaSpecK`(로그 24): `sa_e2e_accept_spec_k`, `sa_e2e_reject_size_spec`, `sa_e2e_reject_complete`. 시도 1에 exit 0.
+
+### T1 손 `Desc` = 생산자 `Desc` (판정 1)
+
+- 새 스크립트 `gen/e2e/lvdescterm.py`가 `lv/desc/`의 생산자 파일을 Lean으로 옮긴다(`SaSpecChecker.lean`, `ScSpecChecker.lean`).
+- `SaDescEq.lean`(로그 25): `prysmSaDesc_checker`(이름만 다름, `rfl`), `prysmSaDesc_deserialize_checker`(받는 입력과 값이 같다). 시도 1에 exit 0. 커널 검사(K)다.
