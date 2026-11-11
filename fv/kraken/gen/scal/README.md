@@ -6,7 +6,9 @@ with the same theorem statements and kernel checking? This directory holds the S
 evidence inputs. The method was developed on the development set only (Epoch, Slot, CommitteeIndex, Checkpoint,
 AttestationData decoder; `prysm/go1.26.10/e2e/scal/HOLDOUT-MARKER.json`). Hold-out H1 (ValidatorIndex,
 BeaconBlockHeader) was opened at 2026-11-10T17:53:24Z under the method freeze `56dfc27`
-(`prysm/go1.26.10/e2e/scal/HOLDOUT-OPENED`); H2 (Eth1Data) is not opened. Result: `prysm/go1.26.10/e2e/scal/RESULT.json`.
+(`prysm/go1.26.10/e2e/scal/HOLDOUT-OPENED`). H2 (Eth1Data `UnmarshalSSZ` / `MarshalSSZTo`) was opened at
+2026-11-11T01:59:11Z under the same freeze; its one `p2dec` run stopped with exit 2 (source offset 0, FINDINGS SG-1)
+and the decoder was proved by hand (`E1*.lean`, `WitE1*.lean`). Result: `prysm/go1.26.10/e2e/scal/RESULT.json`.
 
 ## S1 lemmas (`lean/E2eScal/`, library `E2eScal`, own lakefile block)
 
