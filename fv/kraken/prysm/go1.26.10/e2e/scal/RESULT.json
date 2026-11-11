@@ -191,7 +191,7 @@
    "wall_clock_s": 774,
    "wall_clock_note": "from the item-2b commit (18:46:34Z) to the end of job 373 (18:59:28Z)",
    "baseline_next_to_it": "BASELINE.json units.checkpoint_encoder: the whole Checkpoint encoder unit (fast path, reject, growslice sites, covers; 70 lake runs, 36 failed, 5550.6 gate s, 0 memcap kills, 32825 s). Its fast-path theorem cp_e2e_marshal_main alone is not separated in the baseline. Two hand proofs of unequal types and scope: no speed-up or slow-down claim.",
-   "next_step": "needs a new budget (controller / user): A0 guard branch only, e.g. a guard lemma over plain BitVec variables proved once and applied with exact, or a named simp only set; profile the kernel on A0 first",
+   "next_step": "needs a user decision on a new budget: (1) one clean run of A1 and A2 with #print axioms on every scratch theorem (closed only without sorryAx and without self-listed names); (2) A0 guard branch in the Fk idiom (Fk.cmp_be_false and a toNat_add_negN helper, as Fk/AdMarshal, BlMarshal, NeMarshal, LcMarshal); profile the kernel on A0 alone if it still fails",
    "read_only_observation": "Textual comparison (no proof attempt): the P2 encode template rootEncHead/rootEncTail (fixed registers, from Checkpoint.MarshalSSZTo) matches none of the three BBH root encode blocks. Root 1 (directives 62-89): the field pointer is loaded into rdx and the offset kept in r8 (template: r8 / rdx), a nop sits between cmpq and jne, and the three spills come in another order (rbx, r9, rdi vs rdi, r9, rbx). Root 2 (90-): the receiver is reloaded into rdx, the capacity test is `cmp %r9,%rcx; jb` with a reload from the stack. An encode mode would need a register-parametric template or several templates; this is an observation from reading the .S, not a measured cost.",
    "session9_state": "not started in session 9 (INBOX 019 end condition at (ii))",
    "session11": {
@@ -206,15 +206,23 @@
      "382": "sequential, lean -M 4500: (kernel) excessive memory consumption; parse error found",
      "383": "one-line cases: rsp bv_omega fails (2 ^ Width.W64.bits), hmem ecancel leftover, kernel memory",
      "384": "split A1 0-35 / A2 36-61 over touched atoms with a frame: kernel memory on A1 only",
-     "385": "split A0 0-4 / A1 5-35 / A2: kernel memory on A0 only; A1, A2 pass the kernel; composition closes; witness width form found",
-     "386": "witnesses in machine form; A1, A2 and composition close; 0-3 localisation passes the kernel; A0 guard variants: kernel memory (v1) or simp no progress (v4)"
+     "385": "second split: A0 0-4 / A1 5-35 / A2: kernel memory on A0 only; A1, A2 and the composition do not fail in the kernel, but hmem of A1 and A2 stops (witness width form found); closure not shown",
+     "386": "four A0 experiments in one run (localisations 0-2, 0-3; guard variants v1, v4) next to A1, A2 and composition with machine-form witnesses: no kernel-memory failure on A1, A2, composition; A1 and A2 each have one recovered error that admits a length goal (sorryAx); bh_enc_a0 takes the kernel-rejected v1; 0-3 localisation has standard axioms; A0 v1 kernel memory, v4 simp no progress"
     },
     "cause": "Lean kernel memory on the proof term of the stack-guard branch (directive 4 jbe after lea -0x20(%rsp),%r12; cmp 0x10(%r14),%r12): more than about 3 GiB above the 1.7 GiB elaboration base. Which subterm costs it is not known.",
-    "closed_in_scratch_not_committed": [
-     "A1 directives 5-35",
-     "A2 directives 36-61",
-     "bh_enc_a composition (assuming A0)"
-    ],
+    "closed_in_scratch_not_committed": [],
+    "scratch_axioms_job386": {
+     "source": "review s6-r1 job 02: #print axioms on a copy of Split3.lean (same five errors as job 386)",
+     "bh_enc_a1": "standard + sorryAx (case hu1 => rw [Int.toBytes_length]; rfl: 'No goals'; the length goal is admitted)",
+     "bh_enc_a2": "standard + sorryAx (same, case hu2)",
+     "bh_enc_a0_v1": "kernel rejected; registered as an axiom (lists itself)",
+     "bh_enc_a0_v4": "sorryAx (simp made no progress)",
+     "bh_enc_a0": "standard + bh_enc_a0_v1",
+     "bh_enc_a": "standard + sorryAx + bh_enc_a0_v1",
+     "bh_loc_a0b": "standard only (directives 0-3)",
+     "bh_loc_a0a": "sorryAx",
+     "reading": "no kernel-memory failure on A1, A2 or the composition: the kernel-memory failure is localised to A0 (taken-branch refutation at directive 4). Closure of A1, A2 or the composition is not shown. Session 11 listed them as closed in scratch; corrected in session 12 (review s6-r1 M1)"
+    },
     "jobs": [
      378,
      379,
@@ -240,7 +248,9 @@
     ],
     "maxHeartbeats": "4 M, not raised",
     "record": "diagnostic notes and scratch files kept as run artifacts outside the repository",
-    "next_step": "needs a new budget (controller / user): A0 guard branch only, e.g. a guard lemma over plain BitVec variables proved once and applied with exact, or a named simp only set; profile the kernel on A0 first"
+    "next_step": "needs a user decision on a new budget: (1) one clean run of A1 and A2 with #print axioms on every scratch theorem (closed only without sorryAx and without self-listed names); (2) A0 guard branch in the Fk idiom (Fk.cmp_be_false and a toNat_add_negN helper, as Fk/AdMarshal, BlMarshal, NeMarshal, LcMarshal); profile the kernel on A0 alone if it still fails",
+    "attempt_shape": "T9-PLAN allows one split with <= 3 attempts. Attempts 1-3 unsplit; attempt 4 first split (A1/A2); attempt 5 a second split (A0 off A1); attempt 6 four A0 experiments in one run. 6 runs, inside the cap of 6 (review s6-r1 S3)",
+    "gate_exit_note": "jobs 382-386 show gate exit 0 although Lean exited 1: the command ended in `echo LEAN_RC=$?`. The logs show LEAN_RC=1; failed_runs counts them as failed (review s6-r1 S2). Later job commands end with the Lean exit code"
    }
   },
   "decoder_completions (INBOX 020 item 2)": {
