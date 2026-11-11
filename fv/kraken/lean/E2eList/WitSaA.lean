@@ -23,7 +23,6 @@ open Fk Fk.W E2e E2eList E2eList.Code
 
 namespace E2eList.WitSaA
 
-set_option maxRecDepth 100000
 
 def dataLabels : Program :=
   [.label "runtime.fvBump", .label "pad1", .label "pad2", .label "pad3", .label "pad4", .label "pad5",
