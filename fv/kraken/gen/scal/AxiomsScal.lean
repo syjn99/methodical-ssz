@@ -18,6 +18,10 @@ import E2eScal.WitE1A
 import E2eScal.WitE1R
 import E2eScal.BhSpecM
 import E2eScal.WitBhM
+import E2eScal.BhEncBlock
+import E2eScal.E1SpecM
+import E2eScal.WitE1M
+import E2eScal.WitBhMR
 import E2eScal.P2DecZ
 import E2eScal.KindZ
 import E2eScal.GenE1Dec
@@ -120,3 +124,28 @@ import E2eScal.E1GenSame
 #print axioms E2eScal.E1Gen.rootDecMidZ_eq_hand
 #print axioms E2eScal.E1Gen.rootdec_seg_z_stmt_eq_hand
 #print axioms E2eScal.E1Gen.e1_dec_DepositRoot_seg_hand
+-- ENC stream (reuse-first encoder block; Eth1Data = development data): fast paths only
+#print axioms E2eScal.enc32_call
+#print axioms E2eScal.Bh.bh_call_at
+#print axioms E2eScal.Bh.bh_enc_b_via_block
+#print axioms E2eScal.Bh.bh_enc_c_via_block
+#print axioms E2eScal.Bh.bh_enc_d_via_block
+#print axioms E2eScal.E1.e1_call_at
+#print axioms E2eScal.E1.e1_enc_a
+#print axioms E2eScal.E1.e1_enc_m
+#print axioms E2eScal.E1.e1_enc_e
+#print axioms E2eScal.E1.e1_e2e_marshal_main
+#print axioms E2eScal.E1.e1_e2e_marshal_spec_k
+#print axioms E2eScal.WitE1M.e1m_runs_empty
+#print axioms E2eScal.WitE1M.e1m_runs_prefix
+#print axioms E2eScal.enc_reject_tail
+#print axioms E2eScal.Bh.bh_rej_at
+#print axioms E2eScal.Bh.bh_rej_b
+#print axioms E2eScal.Bh.bh_rej_c
+#print axioms E2eScal.Bh.bh_rej_d
+#print axioms E2eScal.Bh.bh_e2e_marshal_reject1_main
+#print axioms E2eScal.Bh.bh_e2e_marshal_reject2_main
+#print axioms E2eScal.Bh.bh_e2e_marshal_reject3_main
+#print axioms E2eScal.WitBhMR.bhr1_runs
+#print axioms E2eScal.WitBhMR.bhr2_runs
+#print axioms E2eScal.WitBhMR.bhr3_runs
