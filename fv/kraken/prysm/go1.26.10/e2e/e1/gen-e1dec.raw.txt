@@ -1,0 +1,7 @@
+# scalgen.py p2dec on Eth1Data.UnmarshalSSZ: the one H2 generator run (gate job 393, 2026-11-11T02:02:32Z)
+# command (repo-relative, from fv/kraken):
+python3 -I gen/scal/scalgen.py p2dec --S prysm/go1.26.10/e2e/e1/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S --const E1Unmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.Eth1Data --prefix e1_dec --imports E2eScal.P2Dec,E2eScal.E1Code --open E2eScal.E1Code > lean/E2eScal/GenE1Dec.lean
+# exit: 2
+# stdout: empty (0 bytes; lean/E2eScal/GenE1Dec.lean was written empty and is not kept in the library glob)
+# stderr (verbatim):
+scalgen p2dec: no template match: directive 30: `mov $0x20,%ecx` is not add $src,%rbx (/add \$(0x[0-9a-f]+),%rbx/)
