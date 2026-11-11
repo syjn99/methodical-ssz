@@ -108,6 +108,10 @@ Checks, per file (text only):
          no field of `UNCOVERED-JSON` is listed (its entries may carry a `miss_class`).
 11. Review g3g-r1 S2 (unit G4-G): a file in which a non-composed theorem has a GEN2 / GEN3 / GEN4 kind must
     carry the coverage header (`GEN2|GEN3|GEN4 coverage (…): n of m fields`); rule 6a also ignores string literals.
+    Exemption (unit G4-F, review g4g-r1 S2): the hand example modules listed in HAND_EXAMPLES (exact paths
+    `lean/E2eScal/Gen2Examples.lean`, `Gen3Examples.lean`) are not generator output and skip rule 11 only; every
+    other rule applies to them. `Gen4Examples.lean` is not listed: its hand field compositions fail rules 4 and 10c,
+    and no recorded command runs `kindcheck.py` on it.
     6d. Review g3g-r1 for_h5 (unit G4-G): a composed accept theorem with only the kind `decAcceptKind` (no
     identity `_type` with an independent hand statement) FAILS; `scalgen.py --gen3 --compose` without `--same-as*`
     now also marks it `UNCHECKED STATEMENT` (rule 6c).
@@ -129,6 +133,12 @@ import tempfile
 HERE = pathlib.Path(__file__).resolve().parent
 KR = HERE.parent.parent
 KIND = KR / "lean" / "E2eScal" / "Kind.lean"
+# Rule 11 exemption (unit G4-F, review g4g-r1 S2): hand-written example modules of the lemma units. They have GEN2+
+# kinds but are not generator output, so they have no coverage header. Only these exact paths (relative to
+# fv/kraken) skip rule 11; every other rule applies to them unchanged.
+# `Gen4Examples.lean` is not listed: it also fails rules 4 and 10c (hand field compositions `*_field` without a kind,
+# no FIELDS-JSON line), so an exemption from rule 11 alone would not make it pass; kindcheck is not a check of it.
+HAND_EXAMPLES = ("lean/E2eScal/Gen2Examples.lean", "lean/E2eScal/Gen3Examples.lean")
 KIND_BLOB = "3c9b95b1b37036831527396975d4232cc20174f3"  # method freeze 56dfc27 (INBOX 019)
 KINDZ = KR / "lean" / "E2eScal" / "KindZ.lean"
 KINDZ_BLOB = "0c790fa1882cd2e91419c285f66de0810c2b85e2"  # SG-1 extension (after both hold-outs were opened)
@@ -292,7 +302,7 @@ def field_stems(mains):
 
 
 def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB, gen2_blobs=None, gnames=None, partial=False, gen3_blobs=None,
-               gen4_blobs=None):
+               gen4_blobs=None, rule11=True):
     gen2_blobs = dict(GEN2_PINS) if gen2_blobs is None else gen2_blobs
     gen3_blobs = dict(GEN3_PINS) if gen3_blobs is None else gen3_blobs
     gen4_blobs = dict(GEN4_PINS) if gen4_blobs is None else gen4_blobs
@@ -470,7 +480,7 @@ def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB, gen2_blobs=None, gnames=N
     cov = [c for c in cov if c]
     fjs = [l for l in lines if l.startswith("FIELDS-JSON: ")]
     gen4 = bool(g4kind) or bool(fjs) or any(c.group(1) == "4" for c in cov)
-    if newkind and not cov:
+    if newkind and not cov and rule11:
         # rule 11 (review g3g-r1 S2, n29): a generated file with GEN2+ kinds keeps its coverage header
         errs.append("no coverage header `GEN2|GEN3|GEN4 coverage (…): n of m fields` in a file with GEN2 / GEN3 / GEN4 "
                     "kinds (a dropped header hides dropped fields)")
@@ -567,8 +577,11 @@ def main(files, partial=False):
     bad = 0
     for f in files:
         text = pathlib.Path(f).read_text()
-        errs, mains = check_text(text, kb, kzb, g2b, gn, partial, g3b, g4b)
+        hand = pathlib.Path(f).resolve() in {(KR / x).resolve() for x in HAND_EXAMPLES}
+        errs, mains = check_text(text, kb, kzb, g2b, gn, partial, g3b, g4b, rule11=not hand)
         print(("PASS" if not errs else "FAIL"), f, "theorems:", ",".join(mains))
+        if hand:
+            print("   hand example module (HAND_EXAMPLES): rule 11 not applied")
         for e in errs:
             print("  ", e)
         if partial and not errs:
@@ -675,6 +688,15 @@ def selftest():
     # review g2f-r1 S4: the exit codes of main() (`--partial`: 3 on success, 1 on failure, never 0; default: 1)
     n_exit, bad_exit = s4_exit_cases()
     bad += bad_exit
+    # unit G4-F (review g4g-r1 S2): the rule 11 exemption removes only the coverage-header error
+    nh = GOOD2.replace("GEN2 coverage (`p2dec --gen2`): 3 of 3 fields", "generated")
+    e_on, _ = check_text(nh, K, KINDZ_BLOB, None, GNAMES, False, None, None)
+    e_off, _ = check_text(nh, K, KINDZ_BLOB, None, GNAMES, False, None, None, rule11=False)
+    e_sorry, _ = check_text(nh.replace("with_reducible exact", "sorry --", 1), K, KINDZ_BLOB, None, GNAMES, False, None, None,
+                            rule11=False)
+    n_exit += 3
+    if not e_on or e_off or not e_sorry:
+        bad.append(("g4f_rule11_exemption", e_on, e_off, e_sorry))
     print("selftest", "PASS" if not bad else f"FAIL {bad}", f"({len(cases)} cases + {n_exit} exit-code cases)")
     return 1 if bad else 0
 

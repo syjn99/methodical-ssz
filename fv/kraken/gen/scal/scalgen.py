@@ -1598,28 +1598,65 @@ def _vstr(v):
 G4_HEAD_SPILL = {"rax": ("RCV", 0), "rbx": ("BF", 0), "rcx": ("LEN",), "rdi": ("CAP",)}
 
 
+class G4HeadMiss(NoMatch):
+    """The head is not the covered prologue (exit 2); `cls` is the miss class reported for every field (unit G4-F)."""
+
+    def __init__(self, why, cls):
+        super().__init__(why)
+        self.why, self.cls = why, cls
+
+
+# The prologue forms of `decPro` (`HeadN.lean`, lemma `decpro_seg`), directives 2–10 with the nops erased (G4-F M1b)
+G4_PRO = [r"cmp 0x10\(%r14\),%rsp", r"jbe \S+", r"push %rbp", r"mov %rsp,%rbp", r"sub \$(0x[0-9a-f]+),%rsp",
+          r"mov %rbx,(0x[0-9a-f]+)\(%rsp\)", r"cmp \$(0x[0-9a-f]+),%rcx", r"jne \S+"]
+
+
+def g4_slot_ok(d, F):
+    """Stack-store rule (unit G4-F, M1a): an 8-byte store `mov %r,d(%rsp)` is modelled only when `d` is a multiple
+    of 8 and lies in the frame `[0, F)` or in the caller's argument spill area `[F + 16, F + 48)` (rax, rbx, rcx,
+    rdi of the decoder's arguments). `[F, F + 16)` holds the saved rbp and the return address; everything else is
+    outside what the walk models. With every tracked slot aligned, two slots overlap only when they are equal."""
+    return d % 8 == 0 and (0 <= d < F or F + 16 <= d < F + 48)
+
+
 def g4_head(dirs):
-    """The decoder head: directives 0–10 (prologue up to `jne <size error>`), then the spills `mov %r,d(%rsp)` of
-    the argument registers, then an optional `test %al,(%rax)`. Returns (index after the head, slots)."""
+    """The decoder head: directives 0–10 must be the `decPro` prologue of `decpro_seg` (two labels; directives 2–8
+    the six instructions `cmp 0x10(%r14),%rsp; jbe; push %rbp; mov %rsp,%rbp; sub $F,%rsp; mov %rbx,dB(%rsp)` in
+    this order and one `nop`; directives 9–10 `cmp $size,%rcx; jne <size error>`), then the spills `mov %r,d(%rsp)`
+    of the argument registers rax / rbx / rcx / rdi (after the frame is set up; each under the stack-store rule),
+    then an optional `test %al,(%rax)`. Returns (index after the head, slots, F); a mismatch raises G4HeadMiss
+    (class `padding` when the head matches with its nops erased but not at the fixed positions, else `other`)."""
     if len(dirs) < 12 or label_of(dirs[0]) is None or label_of(dirs[1]) is None:
-        raise NoMatch("gen4 head: directives 0, 1 are not the two function labels")
-    if not re.fullmatch(r"cmp \$(0x[0-9a-f]+),%rcx", dirs[9]) or not re.fullmatch(r"jne \S+", dirs[10]):
-        raise NoMatch("gen4 head: directives 9–10 are not `cmp $size,%rcx; jne <size error>`")
-    slots = {}
-    for i in list(range(2, 11)):
-        m = re.fullmatch(r"mov %(rax|rbx|rcx|rdi),(0x[0-9a-f]+)\(%rsp\)", dirs[i])
-        if m:
-            slots[int(m.group(2), 16)] = G4_HEAD_SPILL[m.group(1)]
+        raise G4HeadMiss("gen4 head: directives 0, 1 are not the two function labels", "other")
+    win = [d for d in dirs[2:9] if d != "nop"]
+    ok = (len(win) == 6 and all(re.fullmatch(rx, d) for rx, d in zip(G4_PRO[:6], win))
+          and re.fullmatch(G4_PRO[6], dirs[9]) and re.fullmatch(G4_PRO[7], dirs[10]))
+    if not ok:
+        rest = [d for d in dirs[2:] if d != "nop"][:8]
+        shifted = len(rest) == 8 and all(re.fullmatch(rx, d) for rx, d in zip(G4_PRO, rest))
+        raise G4HeadMiss("gen4 head: directives 2–10 are not the prologue of `decpro_seg` (`cmp 0x10(%r14),%rsp; jbe; "
+                         "push %rbp; mov %rsp,%rbp; sub $F,%rsp; mov %rbx,dB(%rsp)` and one `nop` in 2–8, `cmp $size,%rcx; "
+                         "jne` at 9–10)" + ("; it matches with the nops erased: a `nop` moves the fixed head positions"
+                                            if shifted else ""), "padding" if shifted else "other")
+    F = int(re.fullmatch(G4_PRO[4], win[4]).group(1), 16)
+    dB = int(re.fullmatch(G4_PRO[5], win[5]).group(1), 16)
+    if F % 8 or not g4_slot_ok(dB, F):
+        raise G4HeadMiss(f"gen4 head: frame size {F:#x} / rbx spill at {dB:#x} outside the stack-store rule", "other")
+    slots = {dB: G4_HEAD_SPILL["rbx"]}
     i = 11
     while i < len(dirs):
         m = re.fullmatch(r"mov %(rax|rbx|rcx|rdi),(0x[0-9a-f]+)\(%rsp\)", dirs[i])
         if not m:
             break
-        slots[int(m.group(2), 16)] = G4_HEAD_SPILL[m.group(1)]
+        d = int(m.group(2), 16)
+        if not g4_slot_ok(d, F):
+            raise G4HeadMiss(f"gen4 head: directive {i} `{dirs[i]}`: spill displacement {d:#x} outside the stack-store "
+                             f"rule (multiple of 8, in [0, {F:#x}) or [{F + 16:#x}, {F + 48:#x}))", "other")
+        slots[d] = G4_HEAD_SPILL[m.group(1)]
         i += 1
     if i < len(dirs) and dirs[i] == "test %al,(%rax)":
         i += 1
-    return i, slots
+    return i, slots, F
 
 
 def g4_label_index(dirs, l, at):
@@ -1663,19 +1700,36 @@ class G4State:
                 self.r[r] = ("UNK",)
 
 
-def g4_walk(dirs, fields, head_end, slots0):
+def g4_walk(dirs, fields, head_end, slots0, F):
     """The dataflow walk. Returns (done, stop): done = list of (field index, [emitted units]) for the complete
     fields in IR order; stop = None or the G4Stop that ended the walk. A unit is a dict with `kind` and parameters."""
     done = []
     try:
-        _g4_walk(dirs, fields, head_end, slots0, done)
+        _g4_walk(dirs, fields, head_end, slots0, F, done)
         return done, None
     except G4Stop as e:
         return done, e
 
 
-def _g4_walk(dirs, fields, head_end, slots0, done):
+def _g4_walk(dirs, fields, head_end, slots0, F, done):
     st = G4State(slots0)
+
+    def stack_store(d, v, at, text):
+        """`mov %r,d(%rsp)` (G4-F M1a): stop unless `d` passes the stack-store rule; else every tracked slot the 8
+        bytes at `d` overlap is invalidated (with aligned slots: only `d` itself) and `d` holds `v`."""
+        if not g4_slot_ok(d, F):
+            raise G4Stop(at, f"directive {at} `{text}`: 8-byte stack store at {d:#x} outside the stack-store rule "
+                             f"(multiple of 8, in [0, {F:#x}) or [{F + 16:#x}, {F + 48:#x}))", "other")
+        for x in list(st.slot):
+            if x != d and abs(x - d) < 8:
+                st.slot[x] = ("UNK",)
+        st.slot[d] = v
+
+    def no_frame_write(rD, at, text):
+        """rbp (frame pointer) and r14 (goroutine pointer, stack guard at r14 + 16) are part of the block entry
+        states (rbp0, r140); a write to them stops the walk (G4-F)."""
+        if rD in ("rbp", "r14"):
+            raise G4Stop(at, f"directive {at} `{text}` writes {rD} (frame / goroutine register)", "other")
     cur, pend = 0, []
     seg_open = None              # byte field whose segment is emitted and whose pointer tail is pending
     i, a = head_end, head_end    # i: next directive; a: start of the next window (leading nops)
@@ -1730,11 +1784,13 @@ def _g4_walk(dirs, fields, head_end, slots0, done):
             rD, rS = op[1], op[2]
             if rD == "rsp" or rS == "rsp":
                 raise G4Stop(i, f"directive {i} `{d}` moves rsp (frame change)", "new directive form")
+            no_frame_write(rD, i, d)
             unit.update(rD=rD, rS=rS)
             st.r[rD] = st.r[rS]
             pend.append(unit)
         elif k == "movi":
             rD, imm = op[1], op[2]
+            no_frame_write(rD, i, d)
             unit.update(rD=rD, imm=imm)
             st.r[rD] = ("IMM", imm & 0xffffffff)
             pend.append(unit)
@@ -1742,6 +1798,7 @@ def _g4_walk(dirs, fields, head_end, slots0, done):
             rD, rB, disp = op[1], op[2], op[3]
             if rD == "rsp":
                 raise G4Stop(i, f"directive {i} `{d}` writes rsp", "new directive form")
+            no_frame_write(rD, i, d)
             unit.update(rD=rD, rB=rB, disp=disp)
             st.r[rD] = ("UNK",) if rB == "rsp" else _vadd(st.r[rB], disp)
             pend.append(unit)
@@ -1749,6 +1806,7 @@ def _g4_walk(dirs, fields, head_end, slots0, done):
             rD, imm = op[1], op[2]
             if rD == "rsp":
                 raise G4Stop(i, f"directive {i} `{d}` changes rsp (epilogue before every field was complete)", "other")
+            no_frame_write(rD, i, d)
             unit.update(rD=rD, imm=imm)
             st.r[rD] = _vadd(st.r[rD], imm)
             pend.append(unit)
@@ -1756,6 +1814,7 @@ def _g4_walk(dirs, fields, head_end, slots0, done):
             rD, rB, disp = op[1], op[2], op[3]
             if rD == "rsp":
                 raise G4Stop(i, f"directive {i} `{d}` writes rsp", "new directive form")
+            no_frame_write(rD, i, d)
             if rB == "rsp":
                 v = st.slot.get(disp, ("UNK",))
             elif st.r[rB][0] == "BF":
@@ -1776,7 +1835,7 @@ def _g4_walk(dirs, fields, head_end, slots0, done):
             if rB == "rsp":
                 if rS == "rsp":
                     raise G4Stop(i, f"directive {i} `{d}` stores rsp", "new directive form")
-                st.slot[disp] = v
+                stack_store(disp, v, i, d)
                 pend.append(unit)
             elif st.r[rB][0] == "RCV":
                 off = st.r[rB][1] + disp
@@ -1826,12 +1885,20 @@ def _g4_walk(dirs, fields, head_end, slots0, done):
                     # offset (a load after the add) -> set-up order; the right base, another offset -> other (offset
                     # against the IR); an unknown / other value (clobbered) -> register
                     same = st.r[r][0] == want[0]
-                    cls_ = ("register" if elsewhere else "set-up order" if same and st.r[r][1] == 0 and want[1] != 0
+                    # G4-F S1: "set-up order" only when the wanted adjustment (`add $off,%r`) ran in this field's
+                    # set-up and a later directive replaced it; the right base with another offset is "other"
+                    added = any(u.get("kind") == "add" and u.get("rD") == r and len(want) > 1 and u.get("imm") == want[1]
+                                for u in pend)
+                    cls_ = ("register" if elsewhere else "set-up order" if same and added
                             else "other" if same else "register")
                     raise G4Stop(i, why, cls_)
             unit.update(kind="callblk", fn=fn, lok=lok, jc=idx[0], j2=j2, e=j2 + 1, last=end - 1)
             st.clobber()
             st.r["rax"], st.r["rbx"] = ("IMM", 0), ("IMM", 0)
+            # the call block writes only sp + 8 of the frame (the callee's spill of rbx; `CALL_DEC_STMT`)
+            for x in list(st.slot):
+                if x != 8 and abs(x - 8) < 8 or x < 0:
+                    st.slot[x] = ("UNK",)
             st.slot[8] = ("BF", src)
             complete(unit)
             i, a = j2 + 1, j2 + 1
@@ -1897,6 +1964,8 @@ def _g4_walk(dirs, fields, head_end, slots0, done):
                 (dS not in (dR, dB), f"pointer slot {dS:#x} is a reload slot", "other"),
                 (min(dR, dB, dS) >= 0x18,
                  f"a slot below rsp + 0x18 (the makeslice / memmove argument area): {dR:#x}, {dB:#x}, {dS:#x}", "other"),
+                (g4_slot_ok(dS, F), f"pointer slot {dS:#x} outside the stack-store rule (multiple of 8, in [0, {F:#x}) "
+                 f"or [{F + 16:#x}, {F + 48:#x}))", "other"),
             ]
             for ok, why, c in checks:
                 if not ok:
@@ -1909,6 +1978,9 @@ def _g4_walk(dirs, fields, head_end, slots0, done):
             st.r[rY] = ("RCV", 0)
             for x in list(st.slot):
                 if x < 0x18:
+                    st.slot[x] = ("UNK",)
+            for x in list(st.slot):
+                if x != dS and abs(x - dS) < 8:
                     st.slot[x] = ("UNK",)
             st.slot[dS] = ("PTR", cur)
             seg_open = cur
@@ -2120,9 +2192,18 @@ def p2dec_gen4(args):
                       "chains) and none for the head / epilogue lemmas (decpro_seg, kstep_nilchk, decret_seg); a composed "
                       "theorem would have no statement check. Accept theorems over the generated chains stay hand "
                       "compositions")
-    head_end, slots = g4_head(dirs)
+    try:
+        head_end, slots, F = g4_head(dirs)
+    except G4HeadMiss as e:
+        # G4-F S1: a head miss is reported per field (class, `reached: false`) before exit 2
+        summ["head"] = dict(status="not covered", reason=e.why, miss_class=e.cls)
+        for (fname, src, fo, cls, info) in fields:
+            summ["fields"].append(dict(field=fname, ssz_offset=src, go_offset=fo, status="not covered", reached=False,
+                                       reason=f"not reached: {e.why}", miss_class=e.cls))
+        raise
+    summ["head"] = dict(status="covered", end=head_end, frame=F)
     C, pre = args.const, args.prefix
-    done, stop = g4_walk(dirs, fields, head_end, slots)
+    done, stop = g4_walk(dirs, fields, head_end, slots, F)
     body, report, ncov, used = "", [], 0, set()
     for x, (fname, src, fo, cls, info) in enumerate(fields):
         rec = dict(field=fname, ssz_offset=src, go_offset=fo)
@@ -2147,7 +2228,7 @@ def p2dec_gen4(args):
                 shape = f"byte field ({info} bytes): {sum(u['kind'] != 'seg' for u in units)} steps + segment"
             else:
                 shape = f"uint64 field: {len(units)} steps"
-            rec.update(status="covered", shape=shape, directives=[lo, hi], theorems=names)
+            rec.update(status="covered", reached=True, shape=shape, directives=[lo, hi], theorems=names)
             report.append(f"field {fname}: MATCH {shape}, directives {lo}–{hi}")
             ncov += 1
         else:
@@ -2159,7 +2240,8 @@ def p2dec_gen4(args):
                 why, mc = stop.why, stop.cls
             else:
                 why, mc = (f"not reached: the walk stopped in field {fields[len(done)][0]} ({stop.why})", "other")
-            rec.update(status="not covered", reason=why, miss_class=mc)
+            # G4-F S1: `reached` is false for every field after the one where the walk stopped (its class says nothing)
+            rec.update(status="not covered", reached=x == len(done), reason=why, miss_class=mc)
             report.append(f"field {fname}: NOT COVERED [{mc}]: {why}")
         summ["fields"].append(rec)
     if not ncov:

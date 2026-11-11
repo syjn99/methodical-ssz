@@ -86,6 +86,13 @@ GEN4 cases (unit G4-G, `p2dec --gen4`; ids `g4-*`; mutated `.S` / IR copies in <
    uncovered field: `kindcheck.py --partial` exit 3 on the partial file), 0 bytes on stdout unless exit 0; the
    summary's miss class is checked where stated. A covered mutant is a text result only (no Lean constant exists for
    mutated code): its theorems carry the mutated code's indices, never a parameter of the unmutated code.
+ - g4f-*: unit G4-F, the inputs of review g4g-r1 (`rv` edits). The seven the GEN4 walker had accepted without the
+   block entry being established (a05, a15, a29, a31, b05: an 8-byte stack store overlapping a tracked slot; b01, b02:
+   head not the `decpro_seg` prologue) and b03 must be refused; a41 (extra head `nop`) is a head miss of class
+   padding; a13 (wrong source offset) class other; stores to the return-address slot or below rsp, writes to r14 /
+   rbp refused; the eleven valid variants (a08, a14, a16, a19, a21, a27, a34, a35, a38, b04, b06) stay covered.
+   Every `--gen4` case also checks the summary flag `reached` (true up to the first uncovered field, false after it,
+   false for every field on a head miss); on exit 2 the summary lists every field.
 """
 import json
 import pathlib
@@ -836,6 +843,90 @@ G4_MUT = [
 ]
 
 
+
+def rv(eds):
+    """Edits in the form of review g4g-r1 (`tmp/exp4.py`, `exp5.py`): (1-based line, old suffix, new); new None =
+    delete, a list = replace by several, ("before", [..]) = insert before; directives indented, labels not."""
+    def fn(L):
+        L = list(L)
+        for ln, old, new in sorted(eds, key=lambda x: -x[0]):
+            assert L[ln - 1].strip().endswith(old) or L[ln - 1].strip() == old, (ln, L[ln - 1], old)
+            ind = lambda xs: ["  " + x if not x.endswith(":") else x for x in xs]
+            if new is None:
+                del L[ln - 1]
+            elif isinstance(new, tuple):
+                L[ln - 1:ln - 1] = ind(new[1])
+            elif isinstance(new, list):
+                L[ln - 1:ln] = ind(new)
+            else:
+                L[ln - 1] = "  " + new
+        return L
+    return fn
+
+
+E1F = G4["E1"]["fields"]
+SMJ = SML[:-1]
+# Unit G4-F: the inputs of review g4g-r1 (ids `g4f-<reviewer id>`). The seven inputs the GEN4 walker accepted although
+# the code does not establish the block entry (M1) must be refused; the eleven valid variants stay covered; plus
+# head-miss classes (S1) and the frame / goroutine register rule.
+G4F_MUT = [
+    ("g4f-a05", "8-byte stack store at 0x7c overlaps the buffer slot 0x78 (M1a)", "SM",
+     rv([(83, "mov 0x78(%rsp),%rbx", ("before", ["mov %rdi,0x7c(%rsp)"]))]), None, 3, SMF[:2], "other"),
+    ("g4f-a15", "a05 with nops around the store (M1a)", "SM",
+     rv([(83, "mov 0x78(%rsp),%rbx", ("before", ["nop", "mov %rdi,0x7c(%rsp)", "nop"])),
+         (88, "mov $0x8,%ecx", ("before", ["nop"]))]), None, 3, SMF[:2], "other"),
+    ("g4f-a29", "8-byte stack store at 0x3c overlaps the buffer slot 0x38 (M1a)", "E1",
+     rv([(48, "mov 0x38(%rsp),%rsi", ("before", ["mov %rdx,0x3c(%rsp)"]))]), None, 3, E1F[:1], "other"),
+    ("g4f-a31", "8-byte stack store at 0x34 overlaps the receiver slot 0x30 before the segment (M1a)", "E1",
+     rv([(51, "lea type__+387072(%rip),%rax", ("before", ["mov %rsi,0x34(%rsp)"]))]), None, 3, E1F[:2], "other"),
+    ("g4f-b05", "8-byte stack store at 0x34 overlaps the buffer slot 0x38 from below (M1a)", "E1",
+     rv([(48, "mov 0x38(%rsp),%rsi", ("before", ["mov %rdx,0x34(%rsp)"]))]), None, 3, E1F[:1], "other"),
+    ("g4f-b01", "head: receiver spilled before `push %rbp` (M1b)", "SM",
+     rv([(5, "push %rbp", ("before", ["mov %rax,0x70(%rsp)"])), (9, "nop", None), (12, "mov %rax,0x70(%rsp)", None)]),
+     None, 2, [], "other"),
+    ("g4f-b02", "head: `sub $0x60,%rsp` replaced by `nop` (frame never allocated) (M1b)", "SM",
+     rv([(7, "sub $0x60,%rsp", "nop")]), None, 2, [], "other"),
+    ("g4f-b03", "head: a spill at 0x74 and `mov %rcx,0x70(%rsp)` at directive 8 (M1b)", "SM",
+     rv([(9, "nop", "mov %rcx,0x70(%rsp)"), (12, "mov %rax,0x70(%rsp)", "mov %rax,0x74(%rsp)")]), None, 2, [], "other"),
+    ("g4f-a41", "head: an extra `nop` moves `cmp $size,%rcx` to directive 10 (S1: class padding)", "SM",
+     rv([(9, "nop", ["nop", "nop"])]), None, 2, [], "padding"),
+    ("g4f-a13", "ValidatorIndex source `add $0x0,%rbx` (S1: wrong offset is class other)", "SM",
+     rv([(84, "add $0x28,%rbx", "add $0x0,%rbx")]), None, 3, SMF[:2], "other"),
+    ("g4f-a43", "ValidatorIndex: receiver reloaded after its add (class set-up order)", "SM",
+     rv([(87, "add $0x28,%rax", ["add $0x28,%rax", "mov 0x70(%rsp),%rax"])]), None, 3, SMF[:2], "set-up order"),
+    ("g4f-store-retaddr", "ValidatorIndex: `mov %rdi,0x68(%rsp)` (the return-address slot, frame 0x60)", "SM",
+     sm_vi(VI[:2] + ["  mov %rdi,0x68(%rsp)"] + VI[2:]), None, 3, SMF[:2], "other"),
+    ("g4f-store-below-sp", "ValidatorIndex: `mov %rdi,-0x8(%rsp)` (below rsp)", "SM",
+     sm_vi(VI[:2] + ["  mov %rdi,-0x8(%rsp)"] + VI[2:]), None, 3, SMF[:2], "other"),
+    ("g4f-write-r14", "ValidatorIndex: `mov %rdx,%r14` in the set-up (goroutine register)", "SM",
+     sm_vi(VI[:2] + ["  mov %rdx,%r14"] + VI[2:]), None, 3, SMF[:2], "other"),
+    ("g4f-write-rbp", "ValidatorIndex: `lea 0x8(%rax),%rbp` in the set-up (frame pointer)", "SM",
+     sm_vi(VI[:2] + ["  lea 0x8(%rax),%rbp"] + VI[2:]), None, 3, SMF[:2], "other"),
+    # the eleven valid variants of g4g-r1 (covered)
+    ("g4f-a08", "fall-through label in the ValidatorIndex set-up", "SM",
+     rv([(87, "add $0x28,%rax", ("before", [SMJ + "_zz:"]))]), None, 0, SMF, None),
+    ("g4f-a14", "nops at 25 positions", "SM",
+     rv([(x, "", ("before", ["nop"])) for x in (16, 17, 18, 19, 20, 48, 51, 53, 62, 65, 67, 70, 73, 82, 84, 86, 88, 89, 90,
+                                                 91, 119, 126, 141, 147, 156)]), None, 0, SMF, None),
+    ("g4f-a16", "spill + reload of the receiver through 0x48(%rsp)", "SM",
+     rv([(87, "add $0x28,%rax", ("before", ["mov %rax,0x48(%rsp)", "mov 0x48(%rsp),%rax"]))]), None, 0, SMF, None),
+    ("g4f-a19", "forward jmp over a junk directive", "SM",
+     rv([(87, "add $0x28,%rax", ("before", ["jmp " + SMJ + "_yy", "xor %eax,%eax", SMJ + "_yy:"]))]), None, 0, SMF, None),
+    ("g4f-a21", "rcx = 16 - 8", "SM", rv([(88, "mov $0x8,%ecx", ["mov $0x10,%ecx", "add $-0x8,%rcx"])]), None, 0, SMF, None),
+    ("g4f-a27", "DepositCount value moved through rcx", "E1",
+     rv([(50, "mov %rsi,0x20(%rdx)", ["mov %rsi,%rcx", "nop", "mov %rcx,0x20(%rdx)"])]), None, 0, E1F, None),
+    ("g4f-a34", "store after the last field event (LIMIT: not examined)", "E1",
+     rv([(87, "xor %eax,%eax", ("before", ["mov %rsi,0x20(%rdx)"]))]), None, 0, E1F, None),
+    ("g4f-a35", "buffer reloaded from sp + 8 after the call", "PC",
+     rv([(49, "mov 0x60(%rsp),%rbx", "mov 0x8(%rsp),%rbx")]), None, 0, PCF, None),
+    ("g4f-a38", "receiver in another frame slot across the call", "PC",
+     rv([(16, "add $0x8,%rax", ("before", ["mov %rax,0x30(%rsp)"])), (53, "mov 0x58(%rsp),%rax", "mov 0x30(%rsp),%rax")]),
+     None, 0, PCF, None),
+    ("g4f-b04", "no nil check in the head", "SM", rv([(15, "test %al,(%rax)", None)]), None, 0, SMF, None),
+    ("g4f-b06", "aligned store to the neighbour slot 0x40", "E1",
+     rv([(48, "mov 0x38(%rsp),%rsi", ("before", ["mov %rdx,0x40(%rsp)"]))]), None, 0, E1F, None),
+]
+
 def g4_cases(work, new):
     """Unit G4-G: `--gen4` on the development types, compose refusal, dataflow adversarial inputs."""
     res, bad = [], 0
@@ -877,7 +968,7 @@ def g4_cases(work, new):
     res.append(dict(id="g4-compose-refuse", expect="exit 2, 0 bytes, no file, reason", exit=rc, stdout_bytes=len(so),
                     stderr=se.strip()[:300], ok=bool(ok)))
     bad |= not ok
-    for (mid, what, key, eds, irf, want, covw, mcls) in G4_MUT:
+    for (mid, what, key, eds, irf, want, covw, mcls) in G4_MUT + G4F_MUT:
         c = G4[key]
         base = (KR / c["S"]).read_text().split("\n")
         lines = eds(base) if callable(eds) else edits(base, eds)
@@ -903,8 +994,14 @@ def g4_cases(work, new):
             fo = work / f"{mid}.lean"
             fo.write_bytes(so)
             kcr = subprocess.run(KC + [str(fo)], capture_output=True, text=True).returncode
+        # G4-F: `reached` is true up to the first uncovered field and false after it (every field on a head miss)
+        fl = sm.get("fields", [])
+        x0 = next((x for x, f in enumerate(fl) if f.get("status") != "covered"), len(fl))
+        head_miss = sm.get("head", {}).get("status") == "not covered"
+        reach_ok = all(f.get("reached") == (False if head_miss else x <= x0) for x, f in enumerate(fl))
         ok = (rc == want and (so == b"") == (want != 0) and sm.get("exit") == want and cov == covw
-              and kcr == (3 if want == 3 else 0) and (mcls is None or (unc and unc[0].get("miss_class") == mcls)))
+              and kcr == {3: 3, 0: 0}.get(want) and (mcls is None or (unc and unc[0].get("miss_class") == mcls))
+              and reach_ok and (want != 2 or len(fl) == len(c["fields"])))
         res.append(dict(id=mid, what=what, expect=f"exit {want}, covered {covw}" + (f", miss class {mcls}" if mcls else ""),
                         exit=rc, stdout_bytes=len(so), covered=cov, kindcheck_exit=kcr,
                         uncovered=[(f["field"], f.get("miss_class"), f.get("reason")) for f in unc], ok=bool(ok)))
