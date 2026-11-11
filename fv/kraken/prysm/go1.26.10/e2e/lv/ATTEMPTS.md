@@ -114,3 +114,10 @@
 - 막힌 곳: `bv_omega`/`kaddr`가 `Width.W64.bits`를 풀지 못했다. `Width.bits`를 넣은 `laddr` 매크로를 썼다.
 - 막힌 곳: `MakesliceC`의 `rbx ≤ cnt`에 `decide`를 쓰면 기대형에 자유 변수가 있다고 거부된다. `Nat.le_refl _`로 닫았다.
 - 설정 없이 통과했다. `#print axioms`(로그 53): `sc_iter`, `sc_loop`, `sc_e2e_accept_main` 모두 `[propext, Classical.choice, Quot.sound]`.
+
+### T2 명세 다리 `E2eList.ScSpec`와 명세 정리 셋 `ScSpecK`, `Desc` 같음 `ScDescEq`
+
+- Vector[Bytes48, 512]는 원소마다 펼치지 않는다. 48바이트 벡터의 임의 목록에 대한 보조정리(`serializeEach_bv48`, `assemble_inline_ok`, `concatParts_v48`)를 썼다.
+- EthLib의 `headOf_inline`, `bodiesOf_inline`, `concatParts_size`, `concat_fixed_slices`를 그대로 썼다.
+- 시도 1(로그 54–56): 개발 단계 셋. 원인: `serializeEach`, `Value.allFit`의 빈 목록 경우가 `rfl`로 줄지 않았다. 덩어리 크기 증명에 `i < 512`가 없었다(`toV48`로 바꾸고 `List.map_congr_left`로 경계를 넣었다). 로그 56에서 exit 0.
+- `ScSpecK`, `ScDescEq`(로그 57): 시도 1에 exit 0.
