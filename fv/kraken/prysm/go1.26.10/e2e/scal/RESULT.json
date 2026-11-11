@@ -1646,10 +1646,11 @@
     "gate_s": 36.5
    }
   },
-  "shared_gate_s": 124.2,
+  "shared_gate_s": 224.1,
   "base_build_gate_s": 86.7,
-  "total_gate_s": 541.6,
-  "gate_jobs": 74,
+  "total_gate_s": 642.1,
+  "gate_jobs": 76,
+  "gate_s_note": "includes the final axioms gate (job 81, 98.9 s) and the final --no-build (job 82, 1.0 s)",
   "link": "check.py (a)-(f) PASS all, bundle e1d4d2e3 (job 08); ELF sha256 c6403c02...911e checked (reused local artifact)",
   "negatives": {
    "result": "30/32 (8 controls pass, 22 mutants fail inside the target; 0 wrong_target)",

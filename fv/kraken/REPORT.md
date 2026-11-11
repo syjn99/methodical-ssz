@@ -575,7 +575,7 @@ PendingPartialWithdrawal은 크기 거부, 코덱 동등, 명세의 거부 쪽, 
 실행 검사: 링크 검사 PASS(`h4/link/RESULT`), 부정 시험 30/32, Go 차분 12/12(arm64의 Go 의미, ELF 아님).
 부정 시험에서 메모리 상한 kill 1건, heartbeat 시간 초과 1건은 통과로 세지 않는다.
 공리 게이트 PASS(선언 5007개, 비표준 0), g2f-r1 덤프 대비 ADDED 281개뿐이다.
-게이트 초: Deposit_Data 294.2, PendingPartialWithdrawal 36.5, 공유 124.2, 기준 빌드 86.7이다.
+게이트 초: Deposit_Data 294.2, PendingPartialWithdrawal 36.5, 공유 224.1, 기준 빌드 86.7이다.
 H4의 한계: 두 형, 한 번이다. 일반성, 우월성, 속도 주장은 없다.
 기록: `scal/CONTAMINATION.md` 16절, `scal/RESULT.json`의 `H4`, FINDINGS SG-3.
 
