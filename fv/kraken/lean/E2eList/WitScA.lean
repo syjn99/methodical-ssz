@@ -24,7 +24,6 @@ open Fk Fk.W E2e E2eList E2eList.Code
 
 namespace E2eList.WitScA
 
-
 def dataLabels : Program :=
   [.label "runtime.fvBump", .label "pad1", .label "pad2", .label "pad3", .label "pad4", .label "pad5",
    .label "pad6", .label "pad7", .label "runtime.writeBarrier"]
@@ -89,10 +88,12 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   rw [← Std.ExtHashMap.sep_assoc] at h
   exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump]; exact hm⟩) h
 
--- Same cause and value as `WitSaA.sa_accept_runs` (profile, log 27): the memory premise is closed by `simp`
+-- Same cause as `WitSaA.sa_accept_runs` (profile, log 27): the memory premise is closed by `simp`
 -- AC-normalization of the separating conjunction (here 25 chunks). Without this option the declaration stops at `whnf`
 -- with the default 200000 heartbeats after a 2.3 s `simp` (scratch copy, log 65).
-set_option maxHeartbeats 16000000 in
+-- Thresholds measured by review r2 (reviewer runs): 200000, 400000 and 1000000 fail at `whnf`, 2000000 passes.
+-- Value 4000000 (twice the reviewer's passing value; was 16000000): passes in the implementer's run (log 97).
+set_option maxHeartbeats 4000000 in
 /-- **Non-vacuity of `sc_e2e_accept_main` (the premises of the frozen statement `sc_accept_stmt` are satisfiable).** -/
 theorem sc_accept_runs (pks : List (List UInt8)) (agg oP1 oP2 : List UInt8) (hpks : pks.length = 512)
     (hpk : ∀ e ∈ pks, e.length = 48) (hagg : agg.length = 48) (h1 : oP1.length = 8) (h2 : oP2.length = 8)
@@ -120,20 +121,16 @@ theorem sc_accept_runs (pks : List (List UInt8)) (agg oP1 oP2 : List UInt8) (hpk
     (rt_memmove 162 hk162 hf162 _))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 
--- Cause (log 87): without this option the `by simp` side goals on the 512-element list `List.replicate 512 …`
--- (its length and its elements' lengths) stop with "maximum recursion depth has been reached". Only this example
--- and the all-0xff example need it; `sc_accept_runs` and the representative example do not.
-set_option maxRecDepth 100000 in
 /-- Zero input with a fresh `&SyncCommittee{}` (nil slices); a representative input; all-0xff input. -/
 example (z' : RegZmms) (f : StatusFlags) :=
-  sc_accept_runs (List.replicate 512 (z 48)) (z 48) (z 8) (z 8) (by simp) (by simp) rfl rfl rfl z' f
+  sc_accept_runs (List.replicate 512 (z 48)) (z 48) (z 8) (z 8)
+    List.length_replicate (fun e he => by rw [List.eq_of_mem_replicate he]; exact List.length_replicate) rfl rfl rfl z' f
 example (z' : RegZmms) (f : StatusFlags) :=
   sc_accept_runs ((List.range 512).map fun i => List.replicate 48 (UInt8.ofNat i)) ((List.range 48).map UInt8.ofNat)
     (Int.toBytes 8 0x20000) (Int.toBytes 8 0x30000) (by simp) (by simp) (by simp) (by decide) (by decide) z' f
--- Same cause as the zero example (log 87).
-set_option maxRecDepth 100000 in
 example (z' : RegZmms) (f : StatusFlags) :=
   sc_accept_runs (List.replicate 512 (List.replicate 48 0xff)) (List.replicate 48 0xff) (List.replicate 8 0xff)
-    (List.replicate 8 0xff) (by simp) (by simp) rfl rfl rfl z' f
+    (List.replicate 8 0xff)
+    List.length_replicate (fun e he => by rw [List.eq_of_mem_replicate he]; exact List.length_replicate) rfl rfl rfl z' f
 
 end E2eList.WitScA
