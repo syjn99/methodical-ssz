@@ -37,3 +37,15 @@ $G p2dec --gen2 --compose --name e1_e2e_accept_main_gc --same-as E2eScal.E1.e1_e
 # writes a Lean module with the covered fields (3 of 5; Slot, ProposerIndex are delegated overlay fields) and
 # exits 3 with nothing on stdout. `kindcheck.py` rejects the file; `kindcheck.py --partial` exits 3.
 $G p2dec --gen2 --partial-out lean/E2eScal/Gen2BhDecPartial.lean --S $B/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S --const BhUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.BeaconBlockHeader --prefix bh_g2dec --imports E2eScal.P2Dec,E2eScal.BhCode --open E2eScal.BhCode || [ $? -eq 3 ]
+# GEN3 (unit G3-G; generator change after H4, CONTAMINATION.md section 19): `p2dec --gen3` on the development set
+# (PendingPartialWithdrawal, Deposit_Data, BeaconBlockHeader, AttestationData are in-sample). New files; the files
+# above stay as they are. AttestationData is partial (Source / Target are nested containers): exit 3.
+H4=prysm/go1.26.10/e2e/h4/link/norm
+$G p2dec --gen3 --S $H4/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S --const PwUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.PendingPartialWithdrawal --prefix pw_g3dec --imports E2eScal.H4Code --open E2eScal.H4Code > lean/E2eScal/Gen3PwDec.lean
+$G p2dec --gen3 --S $H4/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S --const DdUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.Deposit_Data --prefix dd_g3dec --imports E2eScal.P2Dec,E2eScal.P2DecZ,E2eScal.SegN,E2eScal.SegNPad,E2eScal.U64Inline,E2eScal.H4Code --open E2eScal.H4Code > lean/E2eScal/Gen3DdDec.lean
+$G p2dec --gen3 --S $B/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S --const BhUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.BeaconBlockHeader --prefix bh_g3dec --imports E2eScal.P2Dec,E2eScal.BhCode --open E2eScal.BhCode > lean/E2eScal/Gen3BhDec.lean
+$G p2dec --gen3 --partial-out lean/E2eScal/Gen3AdDecPartial.lean --S $N/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S --const AdUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.AttestationData --prefix ad_g3dec --imports E2eScal.P2Dec,E2eAd.Code --open E2eAd.Code || [ $? -eq 3 ]
+# GEN3 composition: Deposit_Data (byte / inline-uint64 fields, frame 0x20) with the composed-statement kind
+# `decAcceptKind` (`_kind`) and the identity with the hand statement `H4.dd_accept_stmt`. PendingPartialWithdrawal and
+# BeaconBlockHeader (callee fields) are refused by `--compose` (exit 2): their accept theorems are hand compositions.
+$G p2dec --gen3 --compose --name dd_e2e_accept_main_g3 --same-as-prop E2eScal.H4.dd_accept_stmt --S $H4/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S --const DdUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.Deposit_Data --prefix dd_g3dec --imports E2eScal.Compose,E2eScal.Gen3DdDec,E2eScal.H4Stmt --open E2eScal.H4Code > lean/E2eScal/Gen3DdAccept.lean
