@@ -699,6 +699,183 @@
     "profiling (no limit was raised)",
     "a symbolic-size proof of L1"
    ]
+  },
+  "gen2 (GEN2 unit G2-G, fresh Opus session)": {
+   "base": "6c62a49 (unit G2-L head; review g2l-r1 APPROVE, 0 must-fix)",
+   "status": "not yet reviewed",
+   "contamination": "generator change after H3; inputs = development set only (Eth1Data, BlobIdentifier, DepositMessage); BlobIdentifier and DepositMessage are in-sample for GEN2; no hold-out claim until H4 (CONTAMINATION.md section 14)",
+   "generator": {
+    "file": "gen/scal/scalgen.py (the proof generator; sszgen/ and ssz/ untouched)",
+    "compat": "extended coverage only behind the opt-in flag --gen2; the default p2dec / p1 text is unchanged; regen_check.sh SAME for all 8 earlier commands (gen.sh 6, H3 2)",
+    "modes": [
+     "p2dec --gen2 [--summary FILE.json] [--partial-out FILE]",
+     "p2dec --gen2 --compose --name NAME [--same-as HAND_THEOREM]"
+    ],
+    "exit_codes": "0 every field covered; 3 some covered (nothing on stdout, --partial-out marks PARTIAL OUTPUT); 2 none covered, overlap, segments not in IR field order, compose shape not matched, or IR read failed"
+   },
+   "coverage": {
+    "Eth1Data": "3/3",
+    "BlobIdentifier": "2/2",
+    "DepositMessage": "3/3"
+   },
+   "coverage_shapes": {
+    "Eth1Data": {
+     "DepositRoot": "rootdec_seg_z (32)",
+     "DepositCount": "u64dec_inline_seg rsi",
+     "BlockHash": "rootdec_seg (32)"
+    },
+    "BlobIdentifier": {
+     "BlockRoot": "rootdec_seg_z (32)",
+     "Index": "u64dec_inline_seg rcx"
+    },
+    "DepositMessage": {
+     "PublicKey": "bytesdec_seg_z 48",
+     "WithdrawalCredentials": "rootdec_seg (32)",
+     "Amount": "u64dec_inline_seg rcx"
+    }
+   },
+   "generated_files": [
+    "lean/E2eScal/Gen2E1Dec.lean",
+    "lean/E2eScal/Gen2BiDec.lean",
+    "lean/E2eScal/Gen2DmDec.lean",
+    "lean/E2eScal/Gen2BiAccept.lean",
+    "lean/E2eScal/Gen2DmAccept.lean",
+    "lean/E2eScal/Gen2E1Accept.lean"
+   ],
+   "raw_output_edited_lines": 0,
+   "generator_runs": "one per type for --gen2 and one per type for --compose (gen.sh last six commands); output committed before use",
+   "accept_g2": {
+    "BlobIdentifier": {
+     "theorem": "E2eScal.G2.bi_e2e_accept_main_g2 (hand composition of generated segments)",
+     "generated": "E2eScal.Gen.bi_e2e_accept_main_gc",
+     "type_identity": "with_reducible rfl against E2eScal.Bi.bi_e2e_accept_main (both)"
+    },
+    "DepositMessage": {
+     "theorem": "E2eScal.G2.dm_e2e_accept_main_g2",
+     "generated": "E2eScal.Gen.dm_e2e_accept_main_gc",
+     "type_identity": "with_reducible rfl against E2eScal.Dm.dm_e2e_accept_main (both)"
+    },
+    "Eth1Data": {
+     "generated": "E2eScal.Gen.e1_e2e_accept_main_gc",
+     "type_identity": "with_reducible rfl against E2eScal.E1.e1_e2e_accept_main (extra check of the emitter; not required)"
+    }
+   },
+   "hand_lines": {
+    "counting_rule": "non-blank lines that are not comment lines (inside /- ... -/ blocks, doc comments included, or starting with --), over the whole hand-written module file (imports, statements, helper lemmas, proofs)",
+    "BlobIdentifier": {
+     "before": 210,
+     "before_files": "BiAccept.lean (248 file lines)",
+     "after_segments_generated_composition_by_hand": 120,
+     "after_file": "BiAcceptG2.lean",
+     "after_composition_generated": 0
+    },
+    "DepositMessage": {
+     "before": 464,
+     "before_files": "DmAccept.lean 255 (298 file lines) + DmSeg0.lean 209 (230 file lines)",
+     "after_segments_generated_composition_by_hand": 155,
+     "after_file": "DmAcceptG2.lean",
+     "after_composition_generated": 0
+    },
+    "drop_percent": {
+     "BlobIdentifier": {
+      "composition_by_hand": 42.9,
+      "composition_generated": 100.0
+     },
+     "DepositMessage": {
+      "composition_by_hand": 66.6,
+      "composition_generated": 100.0
+     }
+    },
+    "still_by_hand": "one generator command line per type (gen.sh); the hand reference theorem whose statement the _type identity checks; the type-independent lemma modules of G2-L"
+   },
+   "wording": "segments and composition generated on the development set; composed statements checked only by identity with hand theorems (in-sample). The pre-fixed < 30 % wording does not apply (drop 43 % / 67 % by hand composition, 100 % generated).",
+   "times_s": {
+    "method": "one `lake env lean E2eScal/<M>.lean` per module, wall clock, gated, shared machine, n = 2 (job 13)",
+    "BiAccept": [
+     2.47,
+     2.36
+    ],
+    "DmAccept": [
+     3.6,
+     3.53
+    ],
+    "DmSeg0": [
+     2.1,
+     2.13
+    ],
+    "BiAcceptG2": [
+     1.87,
+     1.89
+    ],
+    "DmAcceptG2": [
+     2.76,
+     2.79
+    ],
+    "Gen2BiAccept": [
+     1.88,
+     1.89
+    ],
+    "Gen2DmAccept": [
+     2.78,
+     2.82
+    ],
+    "Gen2E1Accept": [
+     2.79,
+     2.86
+    ],
+    "Gen2BiDec": [
+     1.03,
+     1.08
+    ],
+    "Gen2DmDec": [
+     1.15,
+     1.17
+    ],
+    "Gen2E1Dec": [
+     1.14,
+     1.13
+    ],
+    "E1Accept": [
+     3.78,
+     3.79
+    ]
+   },
+   "executed_checks": {
+    "kindcheck": "52/52 selftest cases; 4 broken copies (pins removed, any size, loose uint64 kind, self identity) each fail the selftest (exit 1); generated files PASS (segments kinded; composed files identity-checked, no kind)",
+    "p2dec_test": "43/43 (10 earlier, 2 compatibility, 3 GEN2 runs = committed, 19 adversarial .S / IR mutants, 1 synthetic 48-byte add form (text check only), 1 partial, 7 compose)",
+    "negatives": "gen/scal/negcases-g2g.json with the unchanged gen/e2e/negative.py, one gated job per case: 17/17 (4 controls pass; 13 mutants fail inside the target: 8 statement, 5 code); first error read for each",
+    "axioms_gate": "PASS: 4720 declarations, 3994 theorems, 170 modules, hand list 391, missing 0, nonstandard 0, sorryAx none (committed prysm/go1.26.10/e2e/axioms-gate.json)",
+    "axioms_hand_list": "gen/scal/AxiomsScal.lean + 16 imports and 76 #print axioms lines (50 G2-L, 26 G2-G; theorems and definitions); lake env lean on it: no error",
+    "decl_drift": "vs int-r2 base dump (4519 rows): ADDED 201 (G2-L 106 + G2-G 95), CHANGED 0, REMOVED 0; planted control (type hash of Bi.bi_e2e_accept_main flipped in a dump copy) exit 1 with CHANGED",
+    "regen_check": "14/14 SAME, two runs each (8 earlier commands + 3 --gen2 + 3 --compose)",
+    "no_build": "lake build --no-build E2e E2eAd E2eScal exit 0"
+   },
+   "attempts": {
+    "BiAcceptG2": 1,
+    "DmAcceptG2": 1,
+    "compose_emitter": 1,
+    "failed": 0
+   },
+   "gate_s": 384,
+   "gate_s_note": "sum of wall seconds of the 36 gated jobs of this unit, waiting for the shared lock included",
+   "heartbeats": "no raise: generated segments use the model lemma limits (16000000 byte vectors, 4000000 uint64), the compositions 4000000 as Gen2ComposeEx",
+   "not_covered_shapes": [
+    "delegated overlay fields (Slot, Epoch, ValidatorIndex: compiled as a call)",
+    "byte vectors of sizes other than 32 / 48 / 96",
+    "inline uint64 with displacement 0 (src = 0 or Go offset 0)",
+    "nested containers",
+    "lists",
+    "bitfields",
+    "bool and other uints",
+    "encoders",
+    "compose: frame other than 0x20, first field not a byte vector, receiver not in rdx"
+   ],
+   "limits": [
+    "96-byte fields: no development site, never instantiated on real code",
+    "48-byte add form: text check on a synthetic .S only",
+    "composed statements have no kind; the _type identity needs a hand theorem (development types only)",
+    "not yet reviewed; no cold build; link / Go / hardware checks not run"
+   ]
   }
  },
  "contamination": {

@@ -117,3 +117,28 @@ Review fix-r1: 28/28 (6 controls, 22 inside) after 8 new statement cases; GenCi 
 Cost: `scal/TEMPLATE-COST.json` (jobs 214–247; 31 gate jobs, 24 lake runs, 13 failed, 2271 cumulative gate s — 2203 s of them the
 P2 encode in-sample — peak 1.83 GiB, no memcap kill).
 `P2EncCp` alone: about 730 s in its own build (job record in `TEMPLATE-COST.json`), 986.0 s in the review fix-r1 run of the unchanged file (n = 1; `opt1/AU-07.json`).
+
+## GEN2 (unit G2-G; development set, after H3; not yet reviewed)
+
+`scal/CONTAMINATION.md` §14. Lemmas: unit G2-L (`SegN`, `KindN`, `U64Inline`, `KindU64`, `Compose`).
+
+- Compatibility switch: the new coverage is only behind `--gen2`. Without it `p2dec` writes the S2 / SG-1 text
+  byte for byte (`regen_check.sh` SAME for the 8 earlier commands: `gen.sh` 6, H3 2).
+- `p2dec --gen2 [--summary FILE.json] [--partial-out FILE]`: every IR field is classified. Byte vectors of 32
+  bytes keep the old theorem text (`rootdec_seg` / `rootdec_seg_z`); 48 / 96 bytes use `bytesdec_seg` /
+  `bytesdec_seg_z` (kinds `bytesDecSegKind` / `bytesDecSegZKind`); `uint64` fields use `u64dec_inline_seg`
+  (kind `u64DecInlineSegKind`). Anything else is "not covered: <reason>" on stderr and in the summary JSON.
+  Exit codes as for `p2dec` (0 / 3 / 2); the covered segments must be in IR field order in the code.
+- `p2dec --gen2 --compose --name T [--same-as HAND]`: the whole accept theorem from `dechead_seg`, the generated
+  segments (module of the same `--prefix` in `--imports`), `bytesdec_tail_seg` and `decepi_seg`. Its only
+  statement check is `T_type`, the identity with the hand theorem `HAND`. Without `--same-as` the statement
+  is unchecked; the run says so and `kindcheck.py` fails the file. There is no kind for a composed statement.
+- Output (raw, unedited; `gen.sh` last six commands): `Gen2E1Dec`, `Gen2BiDec`, `Gen2DmDec` (3/3, 2/2, 3/3
+  fields), `Gen2BiAccept`, `Gen2DmAccept`, `Gen2E1Accept` (identity with `Bi.bi_e2e_accept_main`,
+  `Dm.dm_e2e_accept_main`, `E1.e1_e2e_accept_main`). Hand compositions over the generated segments:
+  `BiAcceptG2.lean`, `DmAcceptG2.lean`.
+- `kindcheck.py` accepts the three new kinds only with `KindN` / `SegN` and `KindU64` / `U64Inline` at their
+  pinned blobs, and reports a `_type` identity as "identity-checked" (not a kind). Selftest: 52 cases.
+- Tests: `p2dec_test.py` (43 cases), negatives `negcases-g2g.json` (17 cases).
+- Not covered: delegated overlay fields (compiled as a call), other vector sizes, displacement 0 for
+  uint64, nested containers, lists, bitfields, encoders; compose needs frame `0x20` and the receiver in rdx.

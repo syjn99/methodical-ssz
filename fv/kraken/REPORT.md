@@ -512,6 +512,22 @@ int-r2가 확인하지 않은 것: 빈 `.lake`에서의 콜드 빌드(기준 모
 런타임 계약, morestack 경로, Kraken 의미론도 확인하지 않았다. 비밀과 경로 검사는 정규식 기반이다.
 기록: `prysm/go1.26.10/opt-r1/MANIFEST.md`, `RESULT.json`의 `integration_int3`(`review_int_r2` 포함).
 
+GEN2 생성기 작업(단위 G2-G, 기준 `6c62a49`, 개발 작업, 아직 리뷰 없음):
+증명 생성기에 선택 모드 `p2dec --gen2`를 더했다. 기본 모드의 출력은 글자 그대로 같다.
+옛 생성기 명령 8개는 `regen_check.sh` SAME이다. 새 명령 6개도 두 번 실행이 같다.
+덮은 필드: Eth1Data 3/3, BlobIdentifier 2/2, DepositMessage 3/3이다. 원 출력은 손대지 않았다.
+48바이트 PublicKey와 인라인 uint64 필드(Index, Amount, DepositCount)도 이제 생성 정리다.
+`--compose`는 수용 정리 전체를 쓴다. 문장 검사는 손 정리와의 `_type` 항등식뿐이다.
+손 정리가 없는 형에서는 합성 문장을 검사하지 못한다. 합성 문장의 종류(kind)는 없다.
+손 합성 `G2.bi_e2e_accept_main_g2`, `G2.dm_e2e_accept_main_g2`도 생성 구간 정리만 부른다.
+손 줄 수(빈 줄과 주석 제외, 파일 전체): BlobIdentifier 210 → 120 → 0, DepositMessage 464 → 155 → 0이다.
+가운데 값은 손 합성, 마지막 값은 생성 합성이다. 남는 손 작업은 형마다 생성기 명령 한 줄이다.
+실행 검사: 공리 게이트 PASS(선언 4720개), 선언 비교 ADDED 201개뿐, 부정 시험 17/17이다.
+`p2dec_test.py` 43/43, `kindcheck.py` 자기 시험 52건 PASS, `lake build --no-build` 종료 0이다.
+한계: 96바이트 필드는 실제 코드에서 쓰지 않았다. 48바이트 add 꼴은 합성 `.S`의 글 검사뿐이다.
+BlobIdentifier와 DepositMessage는 표본 안 자료다. 전이의 증거는 H4 전까지 없다.
+기록: `scal/CONTAMINATION.md` 14절, `scal/RESULT.json`의 `gen2`, FINDINGS SG-2.
+
 조건:
 
 1. 런타임 계약 `MakesliceC`(uint8, esz 1, cnt 32), `MemmoveC`, `GrowsliceC`(uint8, esz 1, 인코더 첫 지점과 둘째 지점), `ConvT64C`, `FmtErrorfDDC`(Epoch 형식, `type:int`)는 가설이다. Go 1.26.10 소스를 다시 읽었고 바뀌지 않았다(`prysm/go1.26.10/e2e/RUNTIME-1.26.10.md`). 정교화 증명은 없다.
@@ -653,4 +669,8 @@ python3 -I -B fv/kraken/gen/e2e/e2elink.py data <link-out> && python3 -I -B fv/k
 # 모듈 11개: Code Head HeadG Main MainG Spec Tail TailR WitO WitOW WitOWR (lake build E2e.OptR1.<모듈>)
 python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/prysm/go1.26.10/opt-r1/negcases.json <work> fv/kraken/prysm/go1.26.10/opt-r1/negative.json <case-id>   # 사례마다 gate 작업 하나; WRITES 결과 파일
 # Go 차분(arm64, Go 의미론만): fv/kraken/prysm/go1.26.10/opt-r1/diff/; 벤치마크(arm64만): fv/kraken/prysm/go1.26.10/opt-r1/bench/
+# GEN2 생성기(단위 G2-G): gen.sh 마지막 명령 6개, 형마다 한 번; 모듈 Gen2E1Dec Gen2BiDec Gen2DmDec BiAcceptG2 DmAcceptG2 Gen2BiAccept Gen2DmAccept Gen2E1Accept (lake build E2eScal.<모듈>)
+(cd fv/kraken && python3 -I gen/scal/scalgen.py p2dec --gen2 --summary <s.json> --S prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S --const DmUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.DepositMessage --prefix dm_g2dec --imports E2eScal.P2Dec,E2eScal.SegN,E2eScal.U64Inline,E2eScal.H3Code --open E2eScal.H3Code)   # 다른 형과 --compose: gen.sh
+python3 -I -B fv/kraken/gen/scal/p2dec_test.py <work> <result.json>; python3 -I -B fv/kraken/gen/scal/kindcheck.py fv/kraken/lean/E2eScal/Gen2*.lean
+python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/scal/negcases-g2g.json <work> <result.json> <case-id>   # 사례마다 gate 작업 하나
 ```

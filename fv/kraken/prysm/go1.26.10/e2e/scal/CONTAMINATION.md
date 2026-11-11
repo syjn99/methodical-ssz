@@ -221,3 +221,25 @@
 - 더한 증거 파일: `gen/scal/negcases-gen2.json`. `gen/e2e/negative.py`는 바꾸지 않았다.
 - 공리 게이트는 임시 JSON으로 돌렸다. 커밋된 `axioms-gate.json`은 바꾸지 않았다.
 - 독립 리뷰는 아직 없다.
+
+## 14. GEN2 생성기 작업 (단위 G2-G) — H3 뒤 생성기 변경, 개발 작업, 홀드아웃 아님
+
+- 이 작업은 H3 평가 뒤에 증명 생성기 `gen/scal/scalgen.py`를 바꿨다. 기준 커밋은 `6c62a49`다.
+- 작성 세션은 새 Opus 세션이다. 보조정리(단위 G2-L)는 쓰지 않았다. 리뷰도 하지 않는다.
+- 입력은 개발 자료뿐이다: Eth1Data, BlobIdentifier, DepositMessage의 `.S`, IR, 손 증명, 생성 파일.
+- BlobIdentifier와 DepositMessage는 GEN2의 표본 안 자료다. H4 전까지 홀드아웃 주장은 없다.
+- 무엇이 바뀌었나: `p2dec --gen2` 선택 모드를 더했다. 기본 모드의 출력은 글자 그대로 같다.
+- `--gen2`는 IR의 모든 필드를 분류한다. 바이트 벡터 32, 48, 96과 인라인 uint64만 덮는다.
+- 32바이트 필드는 옛 정리 글을 쓴다. 48, 96은 `bytesdec_seg(_z)`, uint64는 `u64dec_inline_seg`를 쓴다.
+- 다른 필드는 "not covered: 이유"로 보고한다. 정리를 추측하지 않는다.
+- `--gen2 --compose`도 더했다. 모든 필드가 덮이면 수용 정리 전체를 쓴다.
+- 합성 정리의 문장 검사는 손 정리와의 `_type` 항등식뿐이다. 그 정리에 대한 종류(kind)는 없다.
+- 손 정리가 없는 형(홀드아웃)에서는 합성 문장을 검사할 것이 없다. 이것은 열린 틈이다.
+- 생성기는 형마다 한 번 돌렸다(작업 05, 11). 원 출력은 손대지 않고 먼저 커밋했다.
+- 새 파일만 썼다: `Gen2E1Dec`, `Gen2BiDec`, `Gen2DmDec`, `Gen2BiAccept`, `Gen2DmAccept`, `Gen2E1Accept`.
+- H3 원 출력 `GenBiDec.lean`, `GenDmDec.lean`과 H3 기록은 바꾸지 않았다.
+- 옛 생성기 명령 8개의 출력은 바이트가 같다(`regen_check.sh` SAME, 작업 02, 17).
+- `kindcheck.py`는 새 종류 셋을 고정 blob과 함께만 받는다. `_type` 항등식은 "identity-checked"로 따로 보고한다.
+- 보조정리 모듈은 바꾸지 않았다. 리뷰 g2l-r1의 판정은 APPROVE이고 필수 수정은 없다.
+- 96바이트 필드는 개발 자료에 없다. 48바이트 add 꼴은 합성 `.S`의 글 검사만 했다. 커널 검사는 아니다.
+- 일반성 주장은 없다. 독립 리뷰는 아직 없다.

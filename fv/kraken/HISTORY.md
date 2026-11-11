@@ -238,3 +238,11 @@ S2는 `fv/kraken/.gitignore` 규칙과 `TOOLS.md` "알려진 위반"으로 닫�
 S5는 REPORT 11절 재현 블록에 OPT-R1 명령과 H3 모듈 20개를 적어 닫았다. S1은 사용자 결정으로 남는다.
 S6: 병합 커밋 `500571c`에는 `Co-Authored-By` 줄이 없다. 이력 재작성은 하지 않는다.
 문서, JSON 기록, 무시 규칙만 바꿨다. `.lean`, 생성기, 고정 버전은 바꾸지 않았다. 원격에 쓰지 않았다.
+
+2026-11-11 GEN2 생성기 작업(단위 G2-G, 기준 `6c62a49`, 새 Opus 세션, 아직 리뷰 없음):
+증명 생성기 `scalgen.py`에 선택 모드 `p2dec --gen2`와 `--compose`를 더했다. 기본 모드의 출력은 같다.
+보조정리 단위 G2-L은 리뷰 g2l-r1이 승인했다. 이 작업은 보조정리 파일을 바꾸지 않았다.
+생성기는 형마다 한 번 돌았고 원 출력은 새 파일 6개다. 옛 생성 파일과 H3 기록은 그대로다.
+BlobIdentifier와 DepositMessage의 수용 정리를 생성 구간으로 다시 증명했다. 문장은 손 정리와 `rfl`로 같다.
+`AxiomsScal.lean`에 GEN2 두 단위의 이름 76개를 더했다. 커밋된 `axioms-gate.json`을 현재 트리의 출력으로 바꿨다.
+원격에 쓰지 않았다. 기록: REPORT 11절, `scal/CONTAMINATION.md` 14절, `scal/RESULT.json`의 `gen2`.
