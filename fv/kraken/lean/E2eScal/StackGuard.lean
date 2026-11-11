@@ -10,9 +10,9 @@ taken when `guard + N < rsp`. It is a thin wrapper of `Fk.cmp_be_false` (unchang
 application and a `Nat` inequality.
 
 Why a lemma (FINDINGS T-9): closing the same fact in the machine context with
-`simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h; omega` produces a proof term with
-`Int` arithmetic on the literal `2^64 - N`; the kernel check of that term exceeds 3 GiB. The reviewed
-small-frame guards (`cmp 0x10(%r14),%rsp`) have no such literal.
+`simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h; omega` fails in the kernel under
+the memory limit; the costly subterm was not profiled. After `simp` the hypothesis holds `Int` arithmetic on
+the literal `2^64 - N`; that this literal is the cost is an inference, not a measurement.
 
 Use (taken branch `h` of the `split` after the `jbe` directive):
 `rw [lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ N (by rfl) hguard] at h; exact Bool.noConfusion h`.
