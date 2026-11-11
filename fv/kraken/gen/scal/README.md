@@ -312,8 +312,10 @@ did not establish the entry state (every theorem still built); the rules below r
   `compose_read`. Else the head misses: exit 2, every field `reached: false`, class `other` (review inputs c34, d15, d16).
 - Epilogue: after the last field event the walker follows the accept path (nops, labels, forward `jmp`) and accepts
   only `mov d(%rsp),%rax|%rbx`, `xor %eax,%eax`, `xor %ebx,%ebx`, then `add $F,%rsp; pop %rbp; retq` with the head's
-  frame size F. Anything else (a store, a call, another frame size) could change a decoded field after its event:
-  exit 2, `--summary` has `epilogue.status: not covered` and every field `reached: true`, not covered, class `other`.
+  frame size F. Anything else (a store, a call, another frame size, and since G4-F3 a `jmp` to a label that is not in
+  the file) could change a decoded field after its event: exit 2, `--summary` has `epilogue.status: not covered` and
+  every field `reached: true`, not covered, class `other`. Until G4-F3 a `jmp` to a label outside the file was
+  accepted (review g4f2-r1 M4: x01, x02, x03 were reported fully covered).
   Review input a34 (a store after the last field) is now refused; it was a recorded limit before.
 - Callee vs IR field: a call block is emitted only when the callee is the IR field's own overlay callee (unchanged
   rule; now tested both ways on PendingPartialWithdrawal). The class is `set-up order` only when a later IR field
@@ -323,3 +325,25 @@ did not establish the entry state (every theorem still built); the rules below r
   claim; the walker compares the code with them, nothing compares them with the Go compiler's layout.
 - Tests: `p2dec_test.py` cases `g4f2-*` (9) and `g4f-a34` changed to "refused"; 169/169. Committed `Gen4*.lean`:
   unchanged (10/10 byte-identical; 33/33 `regen_check.sh` SAME).
+
+### G4-F3 (review g4f2-r1 M4 and fail-closed result logic; not yet reviewed)
+
+- M4: in the epilogue, a `jmp` to a label that is not in the file (`jmp runtime.abort`, `jmp *%rdx`, a tail `jmp` to
+  another decoder) is an epilogue miss: exit 2, every field not covered, `reached: true`, class `other`.
+- Fail-closed: `p2dec_gen4` returns a text (exit 0) at one place only, the `else` branch of one `try` around
+  `_p2dec_gen4`, and only when three flags are set: `head_ok` (`g4_head` returned), `fields_complete` (the walk
+  returned without a stop and the field events are 0..n-1 in IR order) and `epilogue_ok` (`g4_epilogue` returned
+  the value `G4_EPI_OK`). `NoMatch` / `Partial` keep exit 2 / 3. Any other exception of any phase (also
+  `SystemExit`; not `KeyboardInterrupt`) is exit 2 with every field not covered and `fail_closed` in the summary.
+  The epilogue is now its own phase after the walk. A run whose walk stopped has `epilogue.status: not examined`.
+- Not examined (recorded limits, review g4f2-r1): the return value (an epilogue without `xor %eax,%eax` /
+  `xor %ebx,%ebx` is covered, so the nil error is not checked); the makeslice element type is the literal
+  `lea type__+387072(%rip),%rax` of the development ELFs, and nothing in the walker says that symbol is the byte
+  type (another offset is "new directive form"); `test %al,(%rax)` in the head is optional (a decoder without the
+  nil check is covered); a duplicate label: the walker takes the first (label freshness is the premise
+  `LabelsFresh`); the head `jbe` / `jne` targets.
+- Tests: `p2dec_test.py` cases `g4f3-x01..x03` (refused) and `fc-*`: a harness monkeypatches the working-tree
+  generator and injects an unexpected exception, a plain `G4Stop` and `SystemExit(0)` in the head, at every
+  `g4_parse` / `g4_label_index` call of the walk (every field), at every theorem-text call and in the epilogue
+  (also wrong return values), plus a walk that returns every field with a stop. No injection reaches exit 0.
+  Committed `Gen4*.lean`: unchanged (33/33 `regen_check.sh` SAME).
