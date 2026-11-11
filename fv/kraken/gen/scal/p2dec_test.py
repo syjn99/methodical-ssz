@@ -30,6 +30,10 @@ GEN2 cases (unit G2-G, `p2dec --gen2`; ids `g2-*`; mutated `.S` and IR copies in
    (no development site has one): the theorem text has the add-form 48 shape and the parameters of the
    synthetic code. Text check only (no Lean code constant for a synthetic `.S`: not kernel-checked).
  - g2-partial: a mutant with `--partial-out`: the file is marked PARTIAL and `kindcheck.py` rejects it.
+ - g2c-*: `--compose` = the committed `Gen2BiAccept.lean` / `Gen2DmAccept.lean` / `Gen2E1Accept.lean` (two runs,
+   identical; kindcheck PASS "identity-checked"); without `--same-as` the run warns on stderr and kindcheck
+   rejects the file (no statement check); a field not covered, a tail store from another register and a
+   shifted epilogue give exit 2 and 0 bytes.
 """
 import json
 import pathlib
@@ -281,6 +285,54 @@ def gen2_cases(work, new):
     res.append(dict(id="g2-partial", expect="exit 3, PARTIAL file without Amount, kindcheck exit 1", exit=rc,
                     stdout_bytes=len(so), partial_first_line=pt.split("\n")[0], kindcheck_exit=kc.returncode, ok=bool(ok)))
     bad |= not ok
+    # composition (`--compose`)
+    CP = {"BI": ("bi_e2e_accept_main_gc", "E2eScal.Bi.bi_e2e_accept_main", "lean/E2eScal/Gen2BiAccept.lean",
+                 "E2eScal.Compose,E2eScal.Gen2BiDec,E2eScal.BiAccept"),
+          "DM": ("dm_e2e_accept_main_gc", "E2eScal.Dm.dm_e2e_accept_main", "lean/E2eScal/Gen2DmAccept.lean",
+                 "E2eScal.Compose,E2eScal.Gen2DmDec,E2eScal.DmAccept"),
+          "E1": ("e1_e2e_accept_main_gc", "E2eScal.E1.e1_e2e_accept_main", "lean/E2eScal/Gen2E1Accept.lean",
+                 "E2eScal.Compose,E2eScal.Gen2E1Dec,E2eScal.E1Accept")}
+
+    def cargs(key, same=True):
+        c = G2[key]
+        nm, ha, _, imps = CP[key]
+        a = list(c["args"])
+        a[a.index("--imports") + 1] = imps
+        return (["p2dec", "--gen2", "--compose", "--name", nm] + (["--same-as", ha] if same else [])
+                + ["--ir", IR, "--type", c["type"]] + a)
+
+    for key in ("BI", "DM", "E1"):
+        outs = [run(["python3", "-I", str(new)] + cargs(key) + ["--S", G2[key]["S"]], KR) for _ in range(2)]
+        com = (KR / CP[key][2]).read_bytes() if (KR / CP[key][2]).exists() else None
+        tf = work / f"g2c-{key}.lean"
+        tf.write_bytes(outs[0][1])
+        kc = subprocess.run(["python3", "-I", str(HERE / "kindcheck.py"), str(tf)], capture_output=True, text=True)
+        ok = (outs[0][0] == 0 and outs[1][0] == 0 and outs[0][1] == outs[1][1] == com and kc.returncode == 0
+              and "identity-checked" in kc.stdout)
+        res.append(dict(id=f"g2c-new-{key}", expect=f"exit 0 twice, identical, = {CP[key][2]}, kindcheck identity PASS",
+                        exit=[o[0] for o in outs], stdout_bytes=len(outs[0][1]), equals_committed=outs[0][1] == com,
+                        kindcheck_exit=kc.returncode, ok=bool(ok)))
+        bad |= not ok
+    rc, so, se = run(["python3", "-I", str(new)] + cargs("BI", same=False) + ["--S", G2["BI"]["S"]], KR)
+    tf = work / "g2c-nosame.lean"
+    tf.write_bytes(so)
+    kc = subprocess.run(["python3", "-I", str(HERE / "kindcheck.py"), str(tf)], capture_output=True, text=True)
+    ok = rc == 0 and "NOT checked" in se and "NO statement check" in so.decode() and kc.returncode == 1
+    res.append(dict(id="g2c-no-same-as", expect="exit 0, stderr says NOT checked, kindcheck exit 1", exit=rc,
+                    stdout_bytes=len(so), kindcheck_exit=kc.returncode, ok=bool(ok)))
+    bad |= not ok
+    base = (KR / G2["DM"]["S"]).read_text().split("\n")
+    for (mid, what, eds) in [
+            ("g2c-not-covered", "Amount not covered (source displacement 0x48)", [(85, "  mov 0x50(%rcx),%rcx", "  mov 0x48(%rcx),%rcx")]),
+            ("g2c-tail-reg", "PublicKey tail store from rsi instead of rdi", [(47, "  mov %rdi,(%rdx)", "  mov %rsi,(%rdx)")]),
+            ("g2c-epilogue", "epilogue frame 0x28", [(89, "  add $0x20,%rsp", "  add $0x28,%rsp")])]:
+        f = work / f"{mid}.S"
+        f.write_text("\n".join(edits(base, eds)))
+        rc, so, se = run(["python3", "-I", str(new)] + cargs("DM") + ["--S", str(f)], KR)
+        ok = rc == 2 and so == b""
+        res.append(dict(id=mid, what=what, expect="exit 2, 0 bytes", exit=rc, stdout_bytes=len(so),
+                        stderr=se.strip().split("\n")[-1:], ok=bool(ok)))
+        bad |= not ok
     return res, bad
 
 
