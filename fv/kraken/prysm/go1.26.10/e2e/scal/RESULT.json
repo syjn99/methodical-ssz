@@ -3350,6 +3350,16 @@
    "x86-64 hardware",
    "orca"
   ],
-  "claims_and_limits": "in-sample; no generality, transfer or speed claim; elaboration times are lake env lean wall times, n = 2"
+  "claims_and_limits": "in-sample; no generality, transfer or speed claim; elaboration times are lake env lean wall times, n = 2",
+  "correction_g5r1": {
+   "source": "review g5-r1 on ea6a0c6: REQUEST_CHANGES, records only (M1, M2; should-fix S1-S4); appended by unit G5-C step 0; the entries above are not rewritten",
+   "M1": "identities rfl with the hand statement: 9 (4 _same, 5 _stmt), not 10 (CONTAMINATION section 29 and commit 8192427 said 10); Checkpoint not tied, PendingPartialWithdrawal refused",
+   "M2": "'one run per type' = the committed run (gate job 04, 19:57:56Z); before it, five scratch trial runs of p2dec --gen5 (19:40:58Z PendingDeposit; 19:41:26Z all 17; 19:41:48Z SyncAggregatorSelectionData + ValidatorBalance; 19:46:46Z 15 types, elaborated in gated diagnostics D1/D2; 19:53:09Z VoluntaryExit), gen5.py / scalgen.py edited between them; scratch outputs not committed",
+   "S1": "the five trial runs were not gated (procedure deviation; Python, < 1 s each; no ungated lake / lean); no result changed (the review regenerated the 15 modules byte-equal)",
+   "S2": "open: kindcheck rule 12 does not bind the code constant C to the header .S (only Lean code facts on the accept and size-reject paths do); stated in README / REPORT; a rule-12 text or table change is a gen/scal change (frozen in G5-C)",
+   "S3": "SyncAggregatorSelectionData and ValidatorBalance are in frame class 0x38, with no hand-tied statement of that class before unit G5-C",
+   "S4": "commit 607ba61 says '32 adversarial': 28 adversarial inputs + 2 real refused types",
+   "details": "CONTAMINATION.md section 30"
+  }
  }
 }

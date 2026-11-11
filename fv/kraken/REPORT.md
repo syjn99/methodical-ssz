@@ -834,12 +834,15 @@ h6-r1 덤프 대비 선언 비교: `cp_e2e_marshal_main_s._proof_1_23` REMOVED, 
 GEN5 생성기(단위 G5-G, 기준 `94fd8a6`, 리뷰 전): `p2dec --gen5`가 평면 디코더의 승인 정리 전체를 낸다.
 낸 정리: 머리, 필드마다 하나, 에필로그, 승인, 크기 거부다. 정리마다 G5-L 종류 줄이 있다.
 결과는 실패 닫힘이다. 종료 0은 성공 표시 다섯이 모두 선 한 곳에서만 나온다.
-형마다 한 번 실행했다. 원시 출력은 고치지 않고 먼저 커밋했다(`8192427`).
+커밋한 실행은 형마다 한 번이다(게이트 작업 04). 원시 출력은 고치지 않고 먼저 커밋했다(`8192427`).
+그 앞에 scratch 시험 실행 다섯이 있었다. 다섯 모두 게이트 없이 돌았다(절차 위반, CONTAMINATION 30절).
 생성된 승인 정리: 평면 개발 형 17개 중 15개다. 모두 빌드되고 표준 공리뿐이다.
 거절: PendingPartialWithdrawal(필드가 섞임), AttestationData(중첩 필드)다.
 문장 검사: 종류 줄과 `kindcheck.py` 규칙 12다. 규칙 12는 종류 매개변수를 IR과 `.S`에서 다시 계산한다.
 손 문장이 있는 9개 형은 생성 정리가 그 손 문장과 `rfl`로 같다.
 Checkpoint는 종류 사례만이다. 함의 `cp_accept_of_kind`의 배치 `layCp`와 덩이 순서가 다르다.
+SyncAggregatorSelectionData와 ValidatorBalance의 프레임 `0x38` 꼴에는 손으로 묶은 문장이 없다.
+`kindcheck.py`는 상수 `C`를 머리의 `.S`에 묶지 않는다. `C`는 Lean 코드 사실만 고정한다.
 손 문장이 없는 5개 형(HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit)의 문장은 종류 사례다.
 이 5개는 아직 완전한 디코더 증명이 아니다. 거부 완전성, Desc, 명세, 증인은 G5-C 일이다.
 발견 SG-6: 승인 종류는 `L.frame`을 읽지 않는다. 규칙 12c가 모든 종류 줄의 `L`을 비교한다.

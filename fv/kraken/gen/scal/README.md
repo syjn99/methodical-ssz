@@ -405,3 +405,9 @@ did not establish the entry state (every theorem still built); the rules below r
   37 `g5-*` cases (28 adversarial inputs and 2 real types refused, 5 IR statement mutants among them; 2 valid variants
   generated) and 95 `g5fc-*` fault-injection groups (702 injections, 5 types): all as expected (394/394 in total).
 - In-sample (development data); statement check = kind + ties, no hold-out. Not yet reviewed.
+- Correction (review g5-r1 M1 / M2 / S1 / S2, appended by unit G5-C; the bullets above are not rewritten): the
+  committed run (gate job 04) came after five scratch trial runs of `p2dec --gen5` on development types, all
+  ungated (a procedure deviation; outputs not committed; no result changed: the review regenerated the 15 modules
+  byte-equal). Commit `8192427` says "10 types" for the identities: the tree has 9. `kindcheck.py` rule 12 does not
+  bind the code constant `C` to the `.S` named in the header; only the Lean code facts (`win … (by rfl)`) of the
+  accept and size-reject paths fix `C`. Details: `prysm/go1.26.10/e2e/scal/CONTAMINATION.md` §30.
