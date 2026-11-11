@@ -13,6 +13,9 @@ import E2eScal.WitBhA
 import E2eScal.WitBhR
 import E2eScal.WitBhU
 import E2eScal.WitViR
+import E2eScal.E1SpecK
+import E2eScal.WitE1A
+import E2eScal.WitE1R
 
 -- prysm-e2e scalability stage S1-S2 (INBOX 011): the segment lemmas, the in-sample re-derivations, the
 -- statement-identity checks and the generated instances. Checked with gen/e2e/axioms.py <log> <out> <this file>.
@@ -73,3 +76,19 @@ import E2eScal.WitViR
 #print axioms E2eScal.WitViR.vir_runs
 #print axioms E2eScal.WitViR.L9.vir_runs9
 #print axioms E2eScal.WitViR.L300.vir_runs300
+-- H2 hold-out (session 13): Eth1Data decoder; no generated theorem (the generator run emitted nothing)
+#print axioms E2eScal.E1.rootdec_seg0
+#print axioms E2eScal.E1.e1_e2e_head
+#print axioms E2eScal.E1.e1_e2e_accept_main
+#print axioms E2eScal.E1.e1_e2e_reject_size_main
+#print axioms E2e.prysmE1Desc_checker
+#print axioms E2e.prysmE1Desc_serialize_checker
+#print axioms E2e.prysmE1Desc_deserialize_checker
+#print axioms E2e.pe1_roundtrip
+#print axioms E2e.pe1_spec_accepts_iff
+#print axioms E2e.pe1_spec_rejects
+#print axioms E2eScal.E1.e1_e2e_accept_spec_k
+#print axioms E2eScal.E1.e1_e2e_reject_size_spec
+#print axioms E2eScal.E1.e1_e2e_reject_complete
+#print axioms E2eScal.WitE1A.e1_accept_runs
+#print axioms E2eScal.WitE1R.e1_reject_runs
