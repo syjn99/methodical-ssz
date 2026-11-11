@@ -1,0 +1,641 @@
+{
+ "cases": [
+  {
+   "id": "o-head-fast-control",
+   "kind": "control",
+   "module": "E2e/OptR1/Head.lean",
+   "theorem": "head_fast",
+   "range": [
+    127,
+    207
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.1,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "o-head-fast-jl",
+   "kind": "code",
+   "module": "E2e/OptR1/Head.lean",
+   "theorem": "head_fast",
+   "range": [
+    127,
+    207
+   ],
+   "error_lines": [
+    195
+   ],
+   "first_error": "<work>/o-head-fast-jl/mut.lean:195:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.9,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -13,7 +13,7 @@\n   sub %rcx,%rdi\n   nop\n   cmp $0x28,%rdi\n-  jge L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_e5\n+  jl L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_e5\n   lea 0x28(%rsp),%r8\n   movups %xmm15,(%r8)\n   movups %xmm15,0x10(%r8)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "o-head-fast-lea",
+   "kind": "code",
+   "module": "E2e/OptR1/Head.lean",
+   "theorem": "head_fast",
+   "range": [
+    127,
+    207
+   ],
+   "error_lines": [
+    162
+   ],
+   "first_error": "<work>/o-head-fast-lea/mut.lean:162:74: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.9,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -1,6 +1,6 @@\n github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo:\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_0:\n-  lea -0x18(%rsp),%r12\n+  lea -0x28(%rsp),%r12\n   cmp 0x10(%r14),%r12\n   jbe L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_20b\n   push %rbp\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "o-head-grow-control",
+   "kind": "control",
+   "module": "E2e/OptR1/HeadG.lean",
+   "theorem": "head_grow",
+   "range": [
+    14,
+    285
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 4.7,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "o-head-grow-num32",
+   "kind": "code",
+   "module": "E2e/OptR1/HeadG.lean",
+   "theorem": "head_grow",
+   "range": [
+    14,
+    285
+   ],
+   "error_lines": [
+    169,
+    170,
+    173
+   ],
+   "first_error": "<work>/o-head-grow-num32/mut.lean:169:84: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 4.7,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -24,7 +24,7 @@\n   mov %rbx,%rax\n   mov %r9,%rbx\n   mov %rdx,%rcx\n-  mov $0x28,%edi\n+  mov $0x20,%edi\n   lea type__+387072(%rip),%rsi\n   nop\n   callq runtime.growslice\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "o-head-grow-bounds",
+   "kind": "code",
+   "module": "E2e/OptR1/HeadG.lean",
+   "theorem": "head_grow",
+   "range": [
+    14,
+    285
+   ],
+   "error_lines": [
+    257
+   ],
+   "first_error": "<work>/o-head-grow-bounds/mut.lean:257:6: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 4.9,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -41,7 +41,7 @@\n   callq runtime.memmove\n   mov 0xb0(%rsp),%rbx\n   mov 0x80(%rsp),%rdx\n-  cmp %rdx,%rbx\n+  cmp %rbx,%rdx\n   ja L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_205\n   mov 0xa0(%rsp),%rax\n   mov %rbx,%rcx\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "o-head-grow-mm32",
+   "kind": "code",
+   "module": "E2e/OptR1/HeadG.lean",
+   "theorem": "head_grow",
+   "range": [
+    14,
+    285
+   ],
+   "error_lines": [
+    222
+   ],
+   "first_error": "<work>/o-head-grow-mm32/mut.lean:222:5: error: unsolved goals",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 4.9,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -37,7 +37,7 @@\n   mov %rbx,0x88(%rsp)\n   lea (%rcx,%rbx,1),%rax\n   mov %r8,%rbx\n-  mov $0x28,%ecx\n+  mov $0x20,%ecx\n   callq runtime.memmove\n   mov 0xb0(%rsp),%rbx\n   mov 0x80(%rsp),%rdx\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "o-head-grow-zout",
+   "kind": "code",
+   "module": "E2e/OptR1/HeadG.lean",
+   "theorem": "head_grow",
+   "range": [
+    14,
+    285
+   ],
+   "error_lines": [
+    136
+   ],
+   "first_error": "<work>/o-head-grow-zout/mut.lean:136:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.1,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -17,7 +17,7 @@\n   lea 0x28(%rsp),%r8\n   movups %xmm15,(%r8)\n   movups %xmm15,0x10(%r8)\n-  movups %xmm15,0x18(%r8)\n+  movups %xmm15,0x20(%r8)\n   lea 0x28(%rcx),%r9\n   cmp %r9,%rdx\n   jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_98\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "o-tail-fit-control",
+   "kind": "control",
+   "module": "E2e/OptR1/Tail.lean",
+   "theorem": "tail_fit",
+   "range": [
+    39,
+    225
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 4.2,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "o-tail-fit-len",
+   "kind": "code",
+   "module": "E2e/OptR1/Tail.lean",
+   "theorem": "tail_fit",
+   "range": [
+    39,
+    225
+   ],
+   "error_lines": [
+    139
+   ],
+   "first_error": "<work>/o-tail-fit-len/mut.lean:139:16: error: unsolved goals",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 4.3,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -74,7 +74,7 @@\n   mov 0x58(%rsp),%r9\n   mov %r9,(%rbx,%rcx,1)\n   mov 0x10(%rax),%r9\n-  cmpq $0x20,0x18(%rax)\n+  cmpq $0x21,0x18(%rax)\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_1e7\n   lea 0x20(%r8),%r10\n   cmp %r10,%rdx\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "o-tail-fit-store",
+   "kind": "code",
+   "module": "E2e/OptR1/Tail.lean",
+   "theorem": "tail_fit",
+   "range": [
+    39,
+    225
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": null,
+   "killed": false,
+   "timeout": true,
+   "timeout_reaped_pids": [
+    1046323,
+    1046324,
+    1046427
+   ],
+   "later_resource_error": null,
+   "seconds": 298.6,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -72,7 +72,7 @@\n   mov 0xa0(%rsp),%rax\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_13e:\n   mov 0x58(%rsp),%r9\n-  mov %r9,(%rbx,%rcx,1)\n+  mov %r9,0x1(%rbx,%rcx,1)\n   mov 0x10(%rax),%r9\n   cmpq $0x20,0x18(%rax)\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_1e7\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "timeout_wall",
+   "pass": false
+  },
+  {
+   "id": "o-tail-rej-control",
+   "kind": "control",
+   "module": "E2e/OptR1/TailR.lean",
+   "theorem": "tail_rej",
+   "range": [
+    16,
+    147
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 3.6,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "o-tail-rej-err",
+   "kind": "code",
+   "module": "E2e/OptR1/TailR.lean",
+   "theorem": "tail_rej",
+   "range": [
+    16,
+    147
+   ],
+   "error_lines": [
+    121,
+    147
+   ],
+   "first_error": "<work>/o-tail-rej-err/mut.lean:121:68: error: ecancel: could not automatically solve goal (Eq",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.9,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -111,7 +111,7 @@\n   retq\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_1e7:\n   mov ssz.ErrBytesLength(%rip),%rdi\n-  mov ssz.ErrBytesLength+8(%rip),%rsi\n+  mov ssz.ErrBytesLength(%rip),%rsi\n   xor %eax,%eax\n   xor %ebx,%ebx\n   mov %rbx,%rcx\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "o-main-control",
+   "kind": "control",
+   "module": "E2e/OptR1/Main.lean",
+   "theorem": "cpo_marshal_main",
+   "range": [
+    29,
+    92
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "o-main-rcx",
+   "kind": "stmt",
+   "module": "E2e/OptR1/Main.lean",
+   "theorem": "cpo_marshal_main",
+   "range": [
+    29,
+    92
+   ],
+   "error_lines": [
+    92
+   ],
+   "first_error": "<work>/o-main-rcx/mut.lean:92:44: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.2,
+   "diff": "--- orig\n+++ mut\n@@ -26,7 +26,7 @@\n     (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n-        \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 \u2227 st.data.regs.rcx = s.regs.rdi\n+        \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 \u2227 st.data.regs.rcx = s.regs.rcx\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (t u scr : List UInt8), t.length = 8 \u2227 u.length = 16 \u2227 scr.length = S \u2227\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "o-rejmain-rdi",
+   "kind": "stmt",
+   "module": "E2e/OptR1/Main.lean",
+   "theorem": "cpo_marshal_reject_main",
+   "range": [
+    96,
+    149
+   ],
+   "error_lines": [
+    149
+   ],
+   "first_error": "<work>/o-rejmain-rdi/mut.lean:149:26: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.4,
+   "diff": "--- orig\n+++ mut\n@@ -21,7 +21,7 @@\n     (hcap : s.regs.rcx.toNat + 40 \u2264 s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) :\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n-        \u2227 st.data.regs.rcx = 0 \u2227 st.data.regs.rdi = e0 \u2227 st.data.regs.rsi = e1\n+        \u2227 st.data.regs.rcx = 0 \u2227 st.data.regs.rdi = e1 \u2227 st.data.regs.rsi = e1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (t u : List UInt8), t.length = 8 \u2227 u.length = 16 \u2227\n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "o-grow-control",
+   "kind": "control",
+   "module": "E2e/OptR1/MainG.lean",
+   "theorem": "cpo_marshal_grow_main",
+   "range": [
+    18,
+    103
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.4,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "o-grow-rbx",
+   "kind": "stmt",
+   "module": "E2e/OptR1/MainG.lean",
+   "theorem": "cpo_marshal_grow_main",
+   "range": [
+    18,
+    103
+   ],
+   "error_lines": [
+    100
+   ],
+   "first_error": "<work>/o-grow-rbx/mut.lean:100:14: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.4,
+   "diff": "--- orig\n+++ mut\n@@ -30,7 +30,7 @@\n     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 40) s.regs.rdi.toNat + 8192 \u2264 avail) (hmax : avail \u2264 maxAlloc)\n     (hgs : GrowsliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 39\n         \u2227 nextSliceCap (s.regs.rcx.toNat + 40) s.regs.rdi.toNat \u2264 st.data.regs.rcx.toNat\n         \u2227 st.data.regs.rcx.toNat \u2264 2 * nextSliceCap (s.regs.rcx.toNat + 40) s.regs.rdi.toNat + 8192\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "o-grow-alias",
+   "kind": "stmt",
+   "module": "E2e/OptR1/MainG.lean",
+   "theorem": "cpo_marshal_grow_main",
+   "range": [
+    18,
+    103
+   ],
+   "error_lines": [
+    103
+   ],
+   "first_error": "<work>/o-grow-alias/mut.lean:103:2: error: ecancel: could not automatically solve goal (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At rsp.toBitVec) \u22c6",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.2,
+   "diff": "--- orig\n+++ mut\n@@ -57,7 +57,7 @@\n           \u22c6 Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 24)) \u22c6 Eq (cC.At (s.regs.rax.toBitVec + 32))\n           \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40)) \u22c6 Eq (root.At p)\n           \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (spare.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n-          \u22c6 Eq (pre.At st.data.regs.rax.toBitVec) \u22c6 Eq (e8.At (st.data.regs.rax.toBitVec + s.regs.rcx.toBitVec))\n+          \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (e8.At (st.data.regs.rax.toBitVec + s.regs.rcx.toBitVec))\n           \u22c6 Eq (root.At (st.data.regs.rax.toBitVec + s.regs.rcx.toBitVec + 8))\n           \u22c6 Eq (tail.At (st.data.regs.rax.toBitVec + s.regs.rcx.toBitVec + 40))\n           \u22c6 Heap av' \u22c6 R) st.data.dmem)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "o-rejgrow-noalloc",
+   "kind": "stmt",
+   "module": "E2e/OptR1/MainG.lean",
+   "theorem": "cpo_marshal_reject_grow_main",
+   "range": [
+    107,
+    190
+   ],
+   "error_lines": [
+    190
+   ],
+   "first_error": "<work>/o-rejgrow-noalloc/mut.lean:190:43: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.7,
+   "diff": "--- orig\n+++ mut\n@@ -39,7 +39,7 @@\n           nextSliceCap (s.regs.rcx.toNat + 40) s.regs.rdi.toNat \u2264 nc.toNat\n           \u2227 nc.toNat \u2264 2 * nextSliceCap (s.regs.rcx.toNat + 40) s.regs.rdi.toNat + 8192\n           \u2227 z.length = 40 \u2227 t.length = 8 \u2227 u.length = 16 \u2227 scr.length = S \u2227 spl'.length = 40\n-          \u2227 s.regs.rcx.toNat + 40 + tail.length = nc.toNat \u2227 av' + nc.toNat \u2264 avail \u2227\n+          \u2227 s.regs.rcx.toNat + 40 + tail.length = nc.toNat \u2227 av' = avail \u2227\n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n           \u22c6 Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))\n           \u22c6 Eq ((Int.toBytes 8 s.regs.rax.toBitVec.toInt).At (s.regs.rsp.toBitVec + 8))\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "o-cover-control",
+   "kind": "control",
+   "module": "E2e/OptR1/Spec.lean",
+   "theorem": "cpo_marshal_cover",
+   "range": [
+    73,
+    150
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.7,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "o-cover-41",
+   "kind": "stmt",
+   "module": "E2e/OptR1/Spec.lean",
+   "theorem": "cpo_marshal_cover",
+   "range": [
+    73,
+    150
+   ],
+   "error_lines": [
+    131,
+    147
+   ],
+   "first_error": "<work>/o-cover-41/mut.lean:131:32: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.7,
+   "diff": "--- orig\n+++ mut\n@@ -31,7 +31,7 @@\n     \u2203 bs, serialize prysmCpDesc g.toValue = .ok bs \u2227\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40\n-          \u2227 s.regs.rcx.toNat + 40 \u2264 st.data.regs.rcx.toNat \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n+          \u2227 s.regs.rcx.toNat + 41 \u2264 st.data.regs.rcx.toNat \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n           \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14\n           \u2227 (Eq ((pre ++ bs.toList).At st.data.regs.rax.toBitVec) \u22c6 Eq (g.root.toList.At p) \u22c6 R \u22c6 fun _ => True)\n             st.data.dmem)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "o-tail-fit-val",
+   "kind": "code",
+   "module": "E2e/OptR1/Tail.lean",
+   "theorem": "tail_fit",
+   "range": [
+    39,
+    225
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": null,
+   "killed": false,
+   "timeout": true,
+   "timeout_reaped_pids": [
+    1050271,
+    1050272,
+    1050375
+   ],
+   "later_resource_error": null,
+   "seconds": 298.2,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -72,7 +72,7 @@\n   mov 0xa0(%rsp),%rax\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_13e:\n   mov 0x58(%rsp),%r9\n-  mov %r9,(%rbx,%rcx,1)\n+  mov %r8,(%rbx,%rcx,1)\n   mov 0x10(%rax),%r9\n   cmpq $0x20,0x18(%rax)\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_1e7\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "timeout_wall",
+   "pass": false
+  }
+ ],
+ "pass": 21,
+ "total": 23,
+ "classes": {
+  "control_pass": 7,
+  "inside": 14,
+  "timeout_wall": 2
+ },
+ "case_timeout_s": 300,
+ "prechecks": [
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpWCover",
+    "E2e.CpWTail",
+    "E2e.OptR1.Code",
+    "E2e.OptR1.Head",
+    "E2e.OptR1.HeadG",
+    "E2e.OptR1.Main",
+    "E2e.OptR1.MainG",
+    "E2e.OptR1.Tail",
+    "E2e.OptR1.TailR",
+    "E2eScal.StackGuard",
+    "Fk.RtCopy"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "o-head-fast-control",
+    "o-head-fast-jl",
+    "o-head-fast-lea",
+    "o-head-grow-control",
+    "o-head-grow-num32",
+    "o-head-grow-bounds",
+    "o-head-grow-mm32",
+    "o-head-grow-zout",
+    "o-tail-fit-control",
+    "o-tail-fit-len",
+    "o-tail-fit-store",
+    "o-tail-rej-control",
+    "o-tail-rej-err",
+    "o-main-control",
+    "o-main-rcx",
+    "o-rejmain-rdi",
+    "o-grow-control",
+    "o-grow-rbx",
+    "o-grow-alias",
+    "o-rejgrow-noalloc",
+    "o-cover-control",
+    "o-cover-41"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpWTail",
+    "E2e.OptR1.Code"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "o-tail-fit-val"
+   ]
+  }
+ ]
+}
