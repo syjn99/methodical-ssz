@@ -79,3 +79,11 @@
 
 - 새 스크립트 `gen/e2e/lvdescterm.py`가 `lv/desc/`의 생산자 파일을 Lean으로 옮긴다(`SaSpecChecker.lean`, `ScSpecChecker.lean`).
 - `SaDescEq.lean`(로그 25): `prysmSaDesc_checker`(이름만 다름, `rfl`), `prysmSaDesc_deserialize_checker`(받는 입력과 값이 같다). 시도 1에 exit 0. 커널 검사(K)다.
+
+### T1 증인 `WitSaA.sa_accept_runs`
+
+- 시도 1(로그 26): exit 1. `whnf`에서 기본 한도 200000 heartbeats를 넘었다.
+- 프로파일(로그 27, scratch 사본, `profiler true`, 한도를 올려 끝까지 돌렸다): `simp` 둘이 7.03 s와 2.08 s다. 선언의 `simp` 합은 9.16 s다.
+- 원인: 메모리 전제를 닫는 `simp`가 조각 22개짜리 분리 논리식을 `sep_comm`, `sep_comm_l`로 정렬한다.
+- 조치: `set_option maxHeartbeats 16000000 in`을 `sa_accept_runs` 한 선언에만 둔다. 값은 본 증인 `WitDdA.dd_accept_runs`와 같다. 이전 값은 기본 200000이다.
+- 시도 2(로그 28): exit 0. 입력 셋(0, 대표값, 0xff)에 대한 `example` 셋도 통과했다.

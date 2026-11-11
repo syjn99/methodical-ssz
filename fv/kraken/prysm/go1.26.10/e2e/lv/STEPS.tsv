@@ -25,3 +25,6 @@ step	utc	exit	log	command
 23-SaSpec	2026-11-11T16:59:33Z	0	logs/23-SaSpec.log	heavy.py -- lake build E2eList.SaSpec (attempt 2; 5.2 s wall, module 3.2 s, peak sampled RSS 0.86 GiB)
 24-SaSpecK	2026-11-11T16:59:53Z	0	logs/24-SaSpecK.log	heavy.py -- lake build E2eList.SaSpecK (5.2 s wall, module 3.2 s, peak sampled RSS 0.86 GiB)
 25-SaDescEq	2026-11-11T17:00:25Z	0	logs/25-SaDescEq.log	python3 -I -B gen/e2e/lvdescterm.py (Sa, Sc) then heavy.py -- lake build E2eList.SaDescEq (8.3 s wall, peak sampled RSS 0.79 GiB)
+26-WitSaA	2026-11-11T17:01:45Z	1	logs/26-WitSaA.log	heavy.py -- lake build E2eList.WitSaA (attempt 1: deterministic timeout at whnf, 200000 heartbeats)
+27-WitSaA-profile	2026-11-11T17:02:02Z	0	logs/27-WitSaA-profile.log	heavy.py -- lake env lean <scratch>/WitSaAProf.lean (profiler: simp 7.03 s + 2.08 s of 9.16 s)
+28-WitSaA	2026-11-11T17:02:26Z	0	logs/28-WitSaA.log	heavy.py -- lake build E2eList.WitSaA (attempt 2, maxHeartbeats 16000000 with recorded cause; 15.7 s wall, module 12 s, peak sampled RSS 2.04 GiB)
