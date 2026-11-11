@@ -1,0 +1,331 @@
+[
+ {
+  "id": "pd-gen-control",
+  "module": "E2eScal/Gen4H6PdDec.lean",
+  "theorem": "pd_g4dec_Signature_seg",
+  "kind": "control",
+  "code_def": "PdUnmarshal",
+  "code_ns": "E2eScal.H6Code",
+  "norm": "prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pd-gen-code-siglen",
+  "module": "E2eScal/Gen4H6PdDec.lean",
+  "theorem": "pd_g4dec_Signature_seg",
+  "kind": "code",
+  "line": 107,
+  "old": "  mov $0x60,%ecx",
+  "new": "  mov $0x50,%ecx",
+  "code_def": "PdUnmarshal",
+  "code_ns": "E2eScal.H6Code",
+  "norm": "prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pd-gen-stmt-src",
+  "module": "E2eScal/Gen4H6PdDec.lean",
+  "theorem": "pd_g4dec_Signature_seg",
+  "kind": "stmt",
+  "old": "(hSrc : bf + (88 : Int64).toBitVec = aSrc)",
+  "new": "(hSrc : bf + (80 : Int64).toBitVec = aSrc)"
+ },
+ {
+  "id": "pd-gen-code-slotoff",
+  "module": "E2eScal/Gen4H6PdDec.lean",
+  "theorem": "pd_g4dec_s124",
+  "kind": "code",
+  "old": "  add $0xb8,%rbx",
+  "new": "  add $0xb0,%rbx",
+  "code_def": "PdUnmarshal",
+  "code_ns": "E2eScal.H6Code",
+  "norm": "prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pd-head-control",
+  "module": "E2eScal/PdAccept.lean",
+  "theorem": "pd_head",
+  "kind": "control",
+  "code_def": "PdUnmarshal",
+  "code_ns": "E2eScal.H6Code",
+  "norm": "prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pd-head-code-order",
+  "module": "E2eScal/PdAccept.lean",
+  "theorem": "pd_head",
+  "kind": "code",
+  "old": "  mov %rdi,0x68(%rsp)",
+  "new": "  mov %rdi,0x60(%rsp)",
+  "code_def": "PdUnmarshal",
+  "code_ns": "E2eScal.H6Code",
+  "norm": "prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pd-head-code-size",
+  "module": "E2eScal/PdAccept.lean",
+  "theorem": "pd_head",
+  "kind": "code",
+  "old": "  cmp $0xc0,%rcx",
+  "new": "  cmp $0xc8,%rcx",
+  "code_def": "PdUnmarshal",
+  "code_ns": "E2eScal.H6Code",
+  "norm": "prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pd-epi-code-frame",
+  "module": "E2eScal/PdAccept.lean",
+  "theorem": "pd_epi",
+  "kind": "code",
+  "line": 162,
+  "old": "  add $0x40,%rsp",
+  "new": "  add $0x48,%rsp",
+  "code_def": "PdUnmarshal",
+  "code_ns": "E2eScal.H6Code",
+  "norm": "prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pd-field-control",
+  "module": "E2eScal/PdAccept.lean",
+  "theorem": "pd_gg_Amount_field",
+  "kind": "control"
+ },
+ {
+  "id": "pd-field-stmt-amount",
+  "module": "E2eScal/PdAccept.lean",
+  "theorem": "pd_gg_Amount_field",
+  "kind": "stmt",
+  "old": "Eq (v.At (rcv + 56)) ⋆ F) st.data.dmem",
+  "new": "Eq (v.At (rcv + 48)) ⋆ F) st.data.dmem"
+ },
+ {
+  "id": "pd-field-stmt-slot",
+  "module": "E2eScal/PdAccept.lean",
+  "theorem": "pd_gg_Slot_field",
+  "kind": "stmt",
+  "old": "Eq (c0.At (rcv + 88)) ⋆ F),",
+  "new": "Eq (c0.At (rcv + 80)) ⋆ F),"
+ },
+ {
+  "id": "pd-rej-control",
+  "module": "E2eScal/PdReject.lean",
+  "theorem": "pd_e2e_reject_size_main",
+  "kind": "control",
+  "code_def": "PdUnmarshal",
+  "code_ns": "E2eScal.H6Code",
+  "norm": "prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pd-rej-stmt",
+  "module": "E2eScal/PdReject.lean",
+  "theorem": "pd_e2e_reject_size_main",
+  "kind": "stmt",
+  "old": "st.data.regs.rbx = e1",
+  "new": "st.data.regs.rbx = e0"
+ },
+ {
+  "id": "pd-rej-code-size",
+  "module": "E2eScal/PdReject.lean",
+  "theorem": "pd_e2e_reject_size_main",
+  "kind": "code",
+  "old": "  cmp $0xc0,%rcx",
+  "new": "  cmp $0xc8,%rcx",
+  "code_def": "PdUnmarshal",
+  "code_ns": "E2eScal.H6Code",
+  "norm": "prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pd-spec-control",
+  "module": "E2eScal/PdSpec.lean",
+  "theorem": "ppd_spec_accepts_iff",
+  "kind": "control"
+ },
+ {
+  "id": "pd-spec-stmt-size",
+  "module": "E2eScal/PdSpec.lean",
+  "theorem": "ppd_spec_accepts_iff",
+  "kind": "stmt",
+  "old": "bs.size = 192",
+  "new": "bs.size = 184"
+ },
+ {
+  "id": "pd-deser-stmt-value",
+  "module": "E2eScal/PdSpec.lean",
+  "theorem": "prysmPdDesc_deserialize_checker",
+  "kind": "stmt",
+  "old": "deserialize pdCheckerDesc bs = .ok v",
+  "new": "deserialize pdCheckerDesc bs = .ok (.seq [])"
+ },
+ {
+  "id": "pd-rc-stmt-size",
+  "module": "E2eScal/PdSpecK.lean",
+  "theorem": "pd_e2e_reject_complete",
+  "kind": "stmt",
+  "old": "bs.size ≠ 192 :=",
+  "new": "bs.size ≠ 191 :="
+ },
+ {
+  "id": "pd-wita-stmt-rax",
+  "module": "E2eScal/WitPdA.lean",
+  "theorem": "pd_accept_runs",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "pd-witr-stmt-len",
+  "module": "E2eScal/WitPdR.lean",
+  "theorem": "pd_reject_runs",
+  "kind": "stmt",
+  "old": "(hlen : len ≠ 192)",
+  "new": "(hlen : len ≠ 193)"
+ },
+ {
+  "id": "pb-gen-control",
+  "module": "E2eScal/Gen4H6PbDec.lean",
+  "theorem": "pb_g4dec_TotalDifficulty_seg",
+  "kind": "control",
+  "code_def": "PbUnmarshal",
+  "code_ns": "E2eScal.H6Code",
+  "norm": "prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pb-gen-code-len",
+  "module": "E2eScal/Gen4H6PbDec.lean",
+  "theorem": "pb_g4dec_TotalDifficulty_seg",
+  "kind": "code",
+  "line": 103,
+  "old": "  mov $0x20,%ecx",
+  "new": "  mov $0x18,%ecx",
+  "code_def": "PbUnmarshal",
+  "code_ns": "E2eScal.H6Code",
+  "norm": "prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pb-gen-stmt-src",
+  "module": "E2eScal/Gen4H6PbDec.lean",
+  "theorem": "pb_g4dec_TotalDifficulty_seg",
+  "kind": "stmt",
+  "old": "(hSrc : bf + (64 : Int64).toBitVec = aSrc)",
+  "new": "(hSrc : bf + (56 : Int64).toBitVec = aSrc)"
+ },
+ {
+  "id": "pb-gen-code-store",
+  "module": "E2eScal/Gen4H6PbDec.lean",
+  "theorem": "pb_g4dec_s118",
+  "kind": "code",
+  "old": "  mov %rsi,0x30(%rdx)",
+  "new": "  mov %rsi,0x28(%rdx)",
+  "code_def": "PbUnmarshal",
+  "code_ns": "E2eScal.H6Code",
+  "norm": "prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pb-field-control",
+  "module": "E2eScal/PbAccept.lean",
+  "theorem": "pb_gg_ParentHash_field",
+  "kind": "control"
+ },
+ {
+  "id": "pb-field-stmt-src",
+  "module": "E2eScal/PbAccept.lean",
+  "theorem": "pb_gg_ParentHash_field",
+  "kind": "stmt",
+  "old": "(hSrc : bf + (32 : Int64).toBitVec = aSrc)",
+  "new": "(hSrc : bf + (24 : Int64).toBitVec = aSrc)"
+ },
+ {
+  "id": "pb-field-stmt-end",
+  "module": "E2eScal/PbAccept.lean",
+  "theorem": "pb_gg_TotalDifficulty_field",
+  "kind": "stmt",
+  "old": "st.pc = Host.addrOf (k + 119)",
+  "new": "st.pc = Host.addrOf (k + 118)"
+ },
+ {
+  "id": "pb-rej-control",
+  "module": "E2eScal/PbReject.lean",
+  "theorem": "pb_e2e_reject_size_main",
+  "kind": "control",
+  "code_def": "PbUnmarshal",
+  "code_ns": "E2eScal.H6Code",
+  "norm": "prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pb-rej-stmt",
+  "module": "E2eScal/PbReject.lean",
+  "theorem": "pb_e2e_reject_size_main",
+  "kind": "stmt",
+  "old": "st.data.regs.rbx = e1",
+  "new": "st.data.regs.rbx = e0"
+ },
+ {
+  "id": "pb-rej-code-size",
+  "module": "E2eScal/PbReject.lean",
+  "theorem": "pb_e2e_reject_size_main",
+  "kind": "code",
+  "old": "  cmp $0x60,%rcx",
+  "new": "  cmp $0x68,%rcx",
+  "code_def": "PbUnmarshal",
+  "code_ns": "E2eScal.H6Code",
+  "norm": "prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S"
+ },
+ {
+  "id": "pb-spec-control",
+  "module": "E2eScal/PbSpec.lean",
+  "theorem": "ppb_spec_accepts_iff",
+  "kind": "control"
+ },
+ {
+  "id": "pb-spec-stmt-size",
+  "module": "E2eScal/PbSpec.lean",
+  "theorem": "ppb_spec_accepts_iff",
+  "kind": "stmt",
+  "old": "bs.size = 96",
+  "new": "bs.size = 88"
+ },
+ {
+  "id": "pb-codec-stmt-value",
+  "module": "E2eScal/PbSpec.lean",
+  "theorem": "pb_codec_checker",
+  "kind": "stmt",
+  "old": "deserialize pbCheckerDesc bs = .ok g.toValueC",
+  "new": "deserialize pbCheckerDesc bs = .ok g.toValue"
+ },
+ {
+  "id": "pb-rc-stmt-size",
+  "module": "E2eScal/PbSpecK.lean",
+  "theorem": "pb_e2e_reject_complete",
+  "kind": "stmt",
+  "old": "bs.size ≠ 96 :=",
+  "new": "bs.size ≠ 95 :="
+ },
+ {
+  "id": "pb-wita-stmt-rax",
+  "module": "E2eScal/WitPbA.lean",
+  "theorem": "pb_accept_runs",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "pb-witr-stmt-len",
+  "module": "E2eScal/WitPbR.lean",
+  "theorem": "pb_reject_runs",
+  "kind": "stmt",
+  "old": "(hlen : len ≠ 96)",
+  "new": "(hlen : len ≠ 97)"
+ }
+]
