@@ -153,3 +153,34 @@
 - `kindcheck.py`를 바꿨다(리뷰 sg1-r1 S2). `PARTIAL OUTPUT` 머리가 있는 파일을 거부한다. 읽는 쪽 검사기의 변경이다.
 - 이 변경은 생성기 출력, 종류, 보조정리를 바꾸지 않는다. 기존 생성 파일 6개는 그대로 PASS다.
 - `gen/scal/negcases-sg1.json`에 사례 8건을 더했다(리뷰 sg1-r1 S3). `rootdec_seg_z`와 BlockHash 구간을 겨눈다.
+
+## 11. 홀드아웃 H3 평가 — 열린 뒤
+
+- 연 시각: `scal/HOLDOUT-OPENED`의 `H3.opened_utc`(커밋 `782a41b`, 2026-11-11T04:26:30Z).
+- 방법 고정: 커밋 `dda707c`. 고정 기록의 blob 7개와 `lean/E2eScal` 트리 id를 다시 셌다. 모두 같다.
+- 형: `v1alpha1.BlobIdentifier`(Z 부류), `v1alpha1.DepositMessage`(N 부류). 범위는 `UnmarshalSSZ`뿐이다.
+- 평가 세션은 생성기, 종류, 템플릿 보조정리를 만들지 않았다. H1, H2, SG-1, T-9 파일은 읽을 수 있었다.
+- 생성기, `kindcheck.py`, `Kind*.lean`, 템플릿 보조정리 모듈, `Fk/*`, 계약, 기존 문장은 바꾸지 않았다.
+- 생성기는 형마다 한 번 돌렸다(작업 11, 12). 둘 다 종료 0이고 stderr는 비어 있다.
+- 원 출력 `GenBiDec.lean`, `GenDmDec.lean`은 손대지 않고 커밋했다(`936446b`). 손 수정은 0줄이다.
+- `kindcheck.py`는 두 파일 모두 PASS다(작업 13). 두 파일은 그대로 빌드됐다(작업 14).
+- 생성기 적용 범위: BlobIdentifier 필드 2개 중 1개, DepositMessage 필드 3개 중 1개.
+- 생성기는 32바이트 `[]byte` 필드만 읽는다(`scalgen.py` `ir_roots`). 그래서 48바이트 PublicKey를 보지 않는다.
+- 인라인 uint64 읽기(Index, Amount)에는 방법의 템플릿이 없다. 이것은 H3 전에 적은 한계다.
+- 손 보조정리: 새 H3 모듈 `DmSeg0.lean`(`E2eScal.H3.bytes48dec_seg_z`).
+- 그 글은 `rootDecHead`, `rootDecMidZ`, `rootdec_seg_z`의 글에서 `32`를 `48`로 바꾼 것이다. 고정 방법의 일부가 아니다.
+- 손 파일과 원본 글: `BiAccept`, `DmAccept`(`E1Accept`), `BiReject`, `DmReject`(`E1Reject`), `BiSpec`, `DmSpec`(`E1Spec`).
+- 계속: `BiSpecK`, `DmSpecK`(`E1SpecK`), `WitBiA`, `WitDmA`(`WitE1A`), `WitBiR`, `WitDmR`(`WitE1R`), `BiDesc`, `DmDesc`, `H3Code`.
+- 두 수용 정리는 생성 구간 정리를 그대로 부른다(`bi_dec_BlockRoot_seg`, `dm_dec_WithdrawalCredentials_seg`).
+- 생성 파일: `BiSpecChecker.lean`, `DmSpecChecker.lean`(`descterm.py` 출력, 머리 주석에 경로 한 줄을 더함).
+- 검사기 json의 출처: phase1c-r5 리뷰의 임시 사본 `desc/orig/`다(H2와 같다). sha256은 `main.result.json` 기록과 같다.
+- 손 Desc(`11babc9`)는 검사기 Desc를 만들거나 출력하기 전에 커밋했다.
+- 열린 뒤에 더한 도구: `gen/e2e/h3link.py`(`e1link.py`의 글), `gen/e2e/h3diff.py`(`e1diff.py`의 글), `h3/h3check-main.go.txt`.
+- 열린 뒤에 더한 증거 파일: `gen/scal/negcases-h3.json`, `AxiomsScal.lean`의 손 목록 87개와 import 8개.
+- 이 도구와 증거 파일은 방법을 바꾸지 않는다.
+- 제안(하지 않음) P-H3-1: 인라인 uint64 읽기 템플릿.
+- P-H3-1의 꼴은 `mov dB(%rsp),%rcx; mov src(%rcx),%rcx; mov %rcx,f(%rdx)`이다. 두 형에서 같다.
+- 제안(하지 않음) P-H3-2: 구간 템플릿의 크기를 매개변수로 하고 `ir_roots`가 48바이트 벡터도 읽게 한다.
+- P-H3-2가 있으면 PublicKey 구간(지시 13–36)이 생성 대상이 된다. 이 평가에서는 하지 않았다.
+- 두 제안은 방법 변경이다. 그래서 그 필드는 생성기가 덮지 않은 것으로 보고한다.
+- 한계: `h3/link/norm`은 Lake `input_dir`가 아니다. lakefile 변경은 승인이 필요해서 하지 않았다.

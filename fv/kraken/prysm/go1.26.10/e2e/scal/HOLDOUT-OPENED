@@ -43,5 +43,39 @@
   ],
   "state_before_commit": "No Eth1Data .S, objdump section, IR entry, Go source or generated code was opened by session 13 before this record was committed.",
   "rule": "H2 is touched once. No generator, kind or lemma fix afterwards; a needed fix is recorded in CONTAMINATION.md as 'proposed, not done' and the affected part is reported as not covered. Raw generator output is committed unmodified before any hand fix."
+ },
+ "H3": {
+  "opened_utc": "2026-11-11T04:26:30Z",
+  "by": "separate evaluation session (fresh Opus 5.5; did not build the generator, the kinds or the template lemmas; it can read the H1, H2, SG-1 and T-9 files, so it is not independent of that experience)",
+  "method_freeze": {
+   "sha": "dda707c77e9c2168cb778d13624b32fe87e07caa",
+   "gen/scal/scalgen.py": "ee5184a5d0cc5b6b13ab6a9580a6d42374100377",
+   "gen/scal/kindcheck.py": "47bd7b8431ed0a3d6e83fb36891142f00aaa89e7",
+   "gen/scal/gen.sh": "53007c690b4547d9705a8b532188b096f1254b27",
+   "lean/E2eScal/Kind.lean": "3c9b95b1b37036831527396975d4232cc20174f3",
+   "lean/E2eScal/KindZ.lean": "0c790fa1882cd2e91419c285f66de0810c2b85e2",
+   "lean/E2eScal/KindAnchor.lean": "85f5c930f39624d3b2837d3f1090e4d0fe753ab6",
+   "gen/e2e/negative.py": "96dc2d17586db2e33e42aa985e28645f070716de",
+   "lean/E2eScal tree": "50fb03d51b8420caf3bddc9b41fb734e0122b1d9",
+   "checked_at": "git rev-parse HEAD:<path> at the freeze SHA gives the same 7 blob ids and the same tree id"
+  },
+  "step0_checks": "lake build --no-build E2e E2eAd E2eScal exit 0 (All targets up-to-date, 834 jobs), gated, memory cap 6 GiB",
+  "selection": "curator record and controller confirmation outside this repository; rule text sha256 122a88f7...4b925",
+  "scope_H3": [
+   "v1alpha1.BlobIdentifier UnmarshalSSZ (accept, size reject, independent Desc, codec equality, spec alignment, witnesses, link check, negatives, Go-value differential)",
+   "v1alpha1.DepositMessage UnmarshalSSZ (same items)"
+  ],
+  "excluded": [
+   "MarshalSSZTo, SizeSSZ and HashTreeRoot of both types",
+   "every other type",
+   "generator, kind, template lemma, Fk and contract changes"
+  ],
+  "readings": {
+   "A1": "confirmed by the controller: excluded = a type-specific Unmarshal/Marshal .S, e2e link directory or proof module exists",
+   "A2": "stated exposure: SizeSSZ .S, IR entries, generated Go and desc-checker results of both types were already in the tree (same as AU-09); SizeSSZ is out of scope",
+   "A3": "confirmed by the controller: class N counts the type's own fields"
+  },
+  "state_before_commit": "No UnmarshalSSZ/MarshalSSZTo source, .S, objdump section, IR entry or functions.json body of BlobIdentifier or DepositMessage was opened by this session before this record was committed.",
+  "rule": "H3 is touched once. No generator, kind, template lemma, Fk or contract change afterwards; a needed fix is recorded in CONTAMINATION.md section 11 as 'proposed, not done' and the field is reported as not covered by the generator. Raw generator output is committed unmodified before any hand work."
  }
 }

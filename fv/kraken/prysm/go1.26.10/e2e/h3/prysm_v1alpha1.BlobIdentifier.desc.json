@@ -1,0 +1,45 @@
+{
+ "schema": "fvphase1c.desc/1",
+ "type": "BlobIdentifier",
+ "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+ "ssz": {
+  "k": "container",
+  "names": [
+   "BlockRoot",
+   "Index"
+  ],
+  "fields": [
+   {
+    "k": "byteVector",
+    "n": 32
+   },
+   {
+    "k": "uint",
+    "w": 8
+   }
+  ]
+ },
+ "fixed_size": 40,
+ "fixed_part_size": 40,
+ "fields": [
+  {
+   "name": "BlockRoot",
+   "index": 0,
+   "offset": 0,
+   "width": 32,
+   "variable": false,
+   "kind": "byteVector",
+   "length": 32
+  },
+  {
+   "name": "Index",
+   "index": 1,
+   "offset": 32,
+   "width": 8,
+   "variable": false,
+   "kind": "uint"
+  }
+ ],
+ "variable_order": [],
+ "reference": null
+}

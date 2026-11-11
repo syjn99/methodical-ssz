@@ -682,5 +682,226 @@
    "go test ./ssz/ ./sszgen/... ./fv/kraken/semtest/ (no Go change)",
    "independent review of the integration"
   ]
+ },
+ "H3": {
+  "scope": "H3 hold-out: UnmarshalSSZ of v1alpha1.BlobIdentifier (class Z) and v1alpha1.DepositMessage (class N). Encoders, SizeSSZ, HashTreeRoot: out of scope. Two types, one touch.",
+  "method_freeze": {
+   "sha": "dda707c77e9c2168cb778d13624b32fe87e07caa",
+   "blobs_checked": "gen/scal/scalgen.py ee5184a5, gen/scal/kindcheck.py 47bd7b84, gen/scal/gen.sh 53007c69, lean/E2eScal/Kind.lean 3c9b95b1, KindZ.lean 0c790fa1, KindAnchor.lean 85f5c930, gen/e2e/negative.py 96dc2d17; lean/E2eScal tree 50fb03d5 (git rev-parse HEAD:<path>, equal)"
+  },
+  "opening": {
+   "record": "scal/HOLDOUT-OPENED H3",
+   "commit": "782a41b",
+   "opened_utc": "2026-11-11T04:26:30Z",
+   "step0": "lake build --no-build E2e E2eAd E2eScal exit 0 before the opening",
+   "state_before_commit": "no method code, .S, objdump, IR entry or functions.json body of the two types opened before the commit"
+  },
+  "evaluator": "fresh session (Opus 5.5); did not build the generator, kinds or template lemmas; could read the H1, H2, SG-1 and T-9 files (not independent of that experience)",
+  "types": {
+   "BlobIdentifier": {
+    "layout": "protoc struct, IR go_fields: state 0, BlockRoot 8 (ptr,len,cap), Index 32, unknownFields 40, sizeCache 64, size 72",
+    "generator_runs": 1,
+    "generator_exit": 0,
+    "generator_job": "11",
+    "generator_stderr": "empty",
+    "fields_covered": "1/2",
+    "fields_detail": "BlockRoot: generated (offset-0 form, directives 13-36, GenBiDec.bi_dec_BlockRoot_seg, kind rootDecSegZKind); Index: hand (inline uint64 read, directives 47-49; the method has no template)",
+    "raw_output_edited_lines": 0,
+    "generated_lines": 67,
+    "kindcheck": "PASS (job 13)",
+    "hand_files": {
+     "lean/E2eScal/BiDesc.lean": 22,
+     "lean/E2eScal/BiAccept.lean": 248,
+     "lean/E2eScal/BiReject.lean": 116,
+     "lean/E2eScal/BiSpec.lean": 152,
+     "lean/E2eScal/BiSpecK.lean": 116,
+     "lean/E2eScal/WitBiA.lean": 119,
+     "lean/E2eScal/WitBiR.lean": 71
+    },
+    "hand_lines": 844,
+    "hand_text_source": "BiAccept = E1Accept head + composition without the second root segment, using the generated segment theorem; BiReject = E1Reject; BiSpec = E1Spec (obtain ... rfl on bs = enc g replaced by rw, see attempts); BiSpecK = E1SpecK; WitBiA = WitE1A (new block layout); WitBiR = WitE1R. New by hand: the Index steps 47-49 and the layout numbers.",
+    "kernel_checked": [
+     "E2eScal.Gen.bi_dec_BlockRoot_seg (+ _kind)",
+     "E2eScal.Bi.bi_e2e_head",
+     "E2eScal.Bi.bi_e2e_accept_main",
+     "E2eScal.Bi.bi_e2e_reject_size_main",
+     "E2e.prysmBiDesc_checker",
+     "E2e.prysmBiDesc_serialize_checker",
+     "E2e.prysmBiDesc_deserialize_checker",
+     "E2e.pbi_spec_accepts_iff",
+     "E2e.pbi_spec_rejects",
+     "E2e.pbi_roundtrip",
+     "E2eScal.Bi.bi_e2e_accept_spec_k",
+     "E2eScal.Bi.bi_e2e_reject_size_spec",
+     "E2eScal.Bi.bi_e2e_reject_complete",
+     "E2eScal.WitBiA.bi_accept_runs (inputs: zero/nil, representative with old pointer, all 0xff)",
+     "E2eScal.WitBiR.bi_reject_runs (len 39, 41, 0)"
+    ],
+    "not_proved": [
+     "morestack path (excluded by the stack-guard premise)",
+     "run with runtime.writeBarrier != 0 (premise)",
+     "runtime callees makeslice/memmove (contracts MakesliceC, MemmoveC are hypotheses)",
+     "Lean Go-value predicate for the receiver (Go differential only)",
+     "MarshalSSZTo, SizeSSZ, HashTreeRoot (out of H3 scope)",
+     "x86-64 hardware run"
+    ],
+    "attempts": {
+     "accept": 1,
+     "reject": 1,
+     "spec": 2,
+     "spec_k": 1,
+     "witness_accept": 1,
+     "witness_reject": 1
+    },
+    "attempts_total": 7,
+    "attempt_failures": [
+     "spec attempt 1 (job 17): whnf heartbeat timeout at obtain <g, rfl, rfl> (subst of bs = pbiEnc g); minimal reproduction job 18 (not an attempt): subst times out, rw closes; attempt 2 (job 19) with rw: PASS"
+    ],
+    "gate_s": 66.5,
+    "gate_s_by_obligation": {
+     "generator": 0.2,
+     "accept": 3.3,
+     "reject+spec": 5.8,
+     "spec (diagnostic)": 5.9,
+     "spec_k": 2.5,
+     "witnesses": 14.7,
+     "negatives": 34.1,
+     "total_own": 66.5
+    },
+    "desc": "independent hand Desc BiDesc.lean (consensus-specs deneb BlobIdentifier) committed 11babc9 before the checker Desc was rendered; checker desc.json sha256 944b13a1... = gen/desc/results/main.result.json record (PASS)",
+    "link": "prysm/go1.26.10/e2e/h3/link/RESULT PASS all, bundle 320a9df6 (job 10)",
+    "negatives": "15/15 (3 controls pass, 12 inside), scal/negative-h3.json",
+    "go_differential": "6/6 (3 accept, 3 size reject), Go semantics on linux/arm64"
+   },
+   "DepositMessage": {
+    "layout": "native Go struct (not protoc), IR go_fields: PublicKey 0 (ptr,len,cap), WithdrawalCredentials 24 (ptr,len,cap), Amount 48, size 56; the code agrees (stores at 0..48)",
+    "generator_runs": 1,
+    "generator_exit": 0,
+    "generator_job": "12",
+    "generator_stderr": "empty",
+    "fields_covered": "1/3",
+    "fields_detail": "WithdrawalCredentials: generated (add form, directives 47-72, GenDmDec.dm_dec_WithdrawalCredentials_seg, kind rootDecSegKind); PublicKey: hand (48-byte field at SSZ offset 0; scalgen ir_roots reads only 32-byte []byte fields, so the generator does not see it); Amount: hand (inline uint64 read, directives 83-85)",
+    "raw_output_edited_lines": 0,
+    "generated_lines": 67,
+    "kindcheck": "PASS (job 13)",
+    "hand_files": {
+     "lean/E2eScal/DmDesc.lean": 23,
+     "lean/E2eScal/DmSeg0.lean": 230,
+     "lean/E2eScal/DmAccept.lean": 298,
+     "lean/E2eScal/DmReject.lean": 116,
+     "lean/E2eScal/DmSpec.lean": 158,
+     "lean/E2eScal/DmSpecK.lean": 118,
+     "lean/E2eScal/WitDmA.lean": 123,
+     "lean/E2eScal/WitDmR.lean": 71
+    },
+    "hand_lines": 1137,
+    "hand_text_source": "DmSeg0 = rootDecHead, rootDecMidZ and rootdec_seg_z text with 32 -> 48 (new H3 module E2eScal.H3; not part of the frozen method); DmAccept = E1Accept head + composition; DmReject = E1Reject; DmSpec = BiSpec text; DmSpecK = BiSpecK text; WitDmA = WitE1A (new block layout; frame R = an untouched caller word, the receiver has no other field); WitDmR = WitE1R.",
+    "kernel_checked": [
+     "E2eScal.Gen.dm_dec_WithdrawalCredentials_seg (+ _kind)",
+     "E2eScal.H3.bytes48dec_seg_z",
+     "E2eScal.Dm.dm_e2e_head",
+     "E2eScal.Dm.dm_e2e_accept_main",
+     "E2eScal.Dm.dm_e2e_reject_size_main",
+     "E2e.prysmDmDesc_checker",
+     "E2e.prysmDmDesc_serialize_checker",
+     "E2e.prysmDmDesc_deserialize_checker",
+     "E2e.pdm_spec_accepts_iff",
+     "E2e.pdm_spec_rejects",
+     "E2e.pdm_roundtrip",
+     "E2eScal.Dm.dm_e2e_accept_spec_k",
+     "E2eScal.Dm.dm_e2e_reject_size_spec",
+     "E2eScal.Dm.dm_e2e_reject_complete",
+     "E2eScal.WitDmA.dm_accept_runs (inputs: zero/nil, representative with old pointers, all 0xff)",
+     "E2eScal.WitDmR.dm_reject_runs (len 87, 89, 0)"
+    ],
+    "not_proved": [
+     "morestack path (excluded by the stack-guard premise)",
+     "run with runtime.writeBarrier != 0 (premise)",
+     "runtime callees makeslice/memmove (contracts are hypotheses)",
+     "Lean Go-value predicate for the receiver (Go differential only)",
+     "MarshalSSZTo, SizeSSZ, HashTreeRoot (out of H3 scope)",
+     "x86-64 hardware run",
+     "generator coverage of PublicKey and Amount (proposed, not done: CONTAMINATION.md section 11)"
+    ],
+    "attempts": {
+     "accept (with DmSeg0)": 1,
+     "reject": 1,
+     "spec": 2,
+     "spec_k": 1,
+     "witness_accept": 1,
+     "witness_reject": 1
+    },
+    "attempts_total": 7,
+    "attempt_failures": [
+     "spec attempt 1 (job 17): the same whnf timeout as BiSpec, plus a text error from the evaluator substitution (bind -> dmnd); attempt 2 (job 19): PASS"
+    ],
+    "gate_s": 74.1,
+    "gate_s_by_obligation": {
+     "generator": 0.2,
+     "reject+spec": 5.8,
+     "accept (incl. DmSeg0)": 5.9,
+     "spec_k+witnesses": 16.0,
+     "negatives": 46.2,
+     "total_own": 74.1
+    },
+    "desc": "independent hand Desc DmDesc.lean (consensus-specs phase0 DepositMessage) committed 11babc9 before the checker Desc was rendered; checker desc.json sha256 e0af8dbf... = gen/desc/results/main.result.json record (PASS)",
+    "link": "prysm/go1.26.10/e2e/h3/link/RESULT PASS all, bundle 320a9df6 (job 10)",
+    "negatives": "18/18 (4 controls pass, 14 inside), scal/negative-h3.json",
+    "go_differential": "6/6 (3 accept, 3 size reject), Go semantics on linux/arm64"
+   }
+  },
+  "shared_gate_s": {
+   "lake build --no-build": 3.0,
+   "build BiDesc DmDesc": 2.1,
+   "h3link callgraph+filter": 0.6,
+   "probe echo": 0.2,
+   "conv.py norm": 0.4,
+   "h3link data + check.py": 1.0,
+   "kindcheck GenBiDec GenDmDec": 0.2,
+   "lake build GenBiDec GenDmDec": 2.7,
+   "print axioms BI accept": 1.0,
+   "axioms gate full enumeration": 75.3,
+   "Go differential h3check (native Go 1.26.10, linux/arm64)": 1.0,
+   "stale_olean after failed job 17": 0.2,
+   "re-elaborate job-17 outputs from source": 4.3,
+   "total": 92.0
+  },
+  "all_h3_gate_s": 232.4,
+  "gate_records": 61,
+  "gate_s_note": "gate seconds = end_mono - start_mono of each gate record with label prefix h3: (lock wait excluded); a job shared by both types is split evenly; shared = setup, link, kindcheck, axioms gate, Go differential, stale check",
+  "maxHeartbeats": "no raise: every new hand declaration uses 4 M (the E1Accept / rootdec_seg_z value of the same shape) or 16 M in the witness accept theorems (as WitE1A); generated files keep the generator values (16 M)",
+  "peak_rss_gib": 3.76,
+  "peak_rss_note": "axioms gate (job 25); highest lake build 1.88 GiB",
+  "memcap_kills": 0,
+  "timeouts": 0,
+  "axioms": "axioms gate PASS (job 25): 3812 declarations, 3167 theorems, 135 modules, nonstandard 0, sorryAx 0, hand list 291 (87 new H3 names), missing 0",
+  "drift": "decl_drift vs the dump at dda707c (review b1-r1, 3483 rows): 329 ADDED, 0 REMOVED, 0 CHANGED (scal/h3-drift.txt); planted control (one type hash of E2eScal.rootdec_seg_z changed in a copy) reported CHANGED, exit 1",
+  "negatives": "33/33: 7 controls pass, 26 mutants inside the designated theorem; 0 timeout, 0 wrong_target; one gated job per case (jobs 31-63); every first error read",
+  "go_differential": "12/12 match (job 64; prysm/go1.26.10/e2e/h3/differential.json); program h3check-main.go.txt run with go run -overlay in the temporary Prysm tree (tree status unchanged before/after); planted control (2 wrong expected values) gives 2 mismatches, exit 1. Go semantics on linux/arm64, not the amd64 ELF.",
+  "stale_check": "stale_olean.py --since <start of failed job 17> (job 65): exit 1; STALE rows are mtime-only (pre-existing modules; the checkout is newer than the copied .lake; lake build --no-build exit 0 in jobs 01 and 25); AFTER rows are modules built after job 17; the four modules written by job 17 were re-elaborated from source (job 66, exit 0)",
+  "contamination": "none: no change to scalgen.py, kindcheck.py, Kind*.lean, template lemma modules, Fk/*, contracts or existing statements; proposals in CONTAMINATION.md section 11 (not done)",
+  "deviations": [
+   "gate stream: the gate accepts only fixed stream names; jobs ran as stream prysm-e2e with label prefix \"h3:\"",
+   "checker desc.json files copied from the phase1c-r5 review scratch (the H2 source); sha256 equal to the checker record",
+   "Go differential uses the parked temporary Prysm tree read-only through go run -overlay (as the T-9 encoder differential)",
+   "base dump for drift = the review b1-r1 dump at dda707c (not produced by this session)"
+  ],
+  "not_run": [
+   "cold build from an empty .lake",
+   "regen_check.sh (it reruns the generator; H3 allows one run per type)",
+   "kindcheck.py --selftest, p2dec_test.py, go test ./ssz ./sszgen/... (no generator or Go change)",
+   "earlier negative suites (no existing module changed)",
+   "x86-64 hardware run",
+   "independent review of H3"
+  ],
+  "bounds_hit": [],
+  "wall_clock": "opening 04:26:30Z; all decoder theorems kernel-checked by 04:44Z (job 24); evidence complete about 04:56Z",
+  "claims_and_limits": [
+   "H3 is two types, touched once: evidence about the transfer of the frozen generator to these two types only",
+   "no superiority claim and no general-automation claim",
+   "no causal speed-up claim from comparing unlike types",
+   "the generator covered the 32-byte root field of each type (1/2, 1/3); the rest is hand work",
+   "H1/H2 records unchanged; Eth1Data stays development data"
+  ]
  }
 }

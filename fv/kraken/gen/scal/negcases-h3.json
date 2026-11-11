@@ -1,0 +1,281 @@
+[
+ {
+  "id": "bi-gen-control",
+  "module": "E2eScal/GenBiDec.lean",
+  "theorem": "bi_dec_BlockRoot_seg",
+  "kind": "control"
+ },
+ {
+  "id": "bi-gen-stmt-pc",
+  "module": "E2eScal/GenBiDec.lean",
+  "theorem": "bi_dec_BlockRoot_seg",
+  "kind": "stmt",
+  "old": "st.pc = Host.addrOf (k + 26 + 11)",
+  "new": "st.pc = Host.addrOf (k + 26 + 12)"
+ },
+ {
+  "id": "bi-acc-control",
+  "module": "E2eScal/BiAccept.lean",
+  "theorem": "bi_e2e_accept_main",
+  "kind": "control",
+  "code_def": "BiUnmarshal",
+  "code_ns": "E2eScal.H3Code",
+  "norm": "prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S"
+ },
+ {
+  "id": "bi-acc-code-idx",
+  "module": "E2eScal/BiAccept.lean",
+  "theorem": "bi_e2e_accept_main",
+  "kind": "code",
+  "old": "  mov 0x20(%rcx),%rcx",
+  "new": "  mov 0x18(%rcx),%rcx",
+  "code_def": "BiUnmarshal",
+  "code_ns": "E2eScal.H3Code",
+  "norm": "prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S"
+ },
+ {
+  "id": "bi-acc-stmt-heap",
+  "module": "E2eScal/BiAccept.lean",
+  "theorem": "bi_e2e_accept_main",
+  "kind": "stmt",
+  "old": "⋆ Heap (avail - 32)",
+  "new": "⋆ Heap (avail - 31)"
+ },
+ {
+  "id": "bi-acc-stmt-idx",
+  "module": "E2eScal/BiAccept.lean",
+  "theorem": "bi_e2e_accept_main",
+  "kind": "stmt",
+  "old": "⋆ Eq (idx.At (s.regs.rax.toBitVec + 32))",
+  "new": "⋆ Eq (idx.At (s.regs.rax.toBitVec + 24))"
+ },
+ {
+  "id": "bi-acc-stmt-weaken",
+  "module": "E2eScal/BiAccept.lean",
+  "theorem": "bi_e2e_accept_main",
+  "kind": "stmt",
+  "old": "(hav : 32 ≤ avail)",
+  "new": "(hav : True)"
+ },
+ {
+  "id": "bi-rej-control",
+  "module": "E2eScal/BiReject.lean",
+  "theorem": "bi_e2e_reject_size_main",
+  "kind": "control",
+  "code_def": "BiUnmarshal",
+  "code_ns": "E2eScal.H3Code",
+  "norm": "prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S"
+ },
+ {
+  "id": "bi-rej-stmt",
+  "module": "E2eScal/BiReject.lean",
+  "theorem": "bi_e2e_reject_size_main",
+  "kind": "stmt",
+  "old": "st.data.regs.rbx = e1",
+  "new": "st.data.regs.rbx = e0"
+ },
+ {
+  "id": "bi-spec-stmt-size",
+  "module": "E2eScal/BiSpec.lean",
+  "theorem": "pbi_spec_accepts_iff",
+  "kind": "stmt",
+  "old": "bs.size = 40",
+  "new": "bs.size = 41"
+ },
+ {
+  "id": "bi-ser-stmt-uint4",
+  "module": "E2eScal/BiSpec.lean",
+  "theorem": "prysmBiDesc_serialize_checker",
+  "kind": "stmt",
+  "old": "= serialize biCheckerDesc v :=",
+  "new": "= serialize (match biCheckerDesc with | .container ns ds => .container ns (ds.set 1 (.uint 4)) | x => x) v :="
+ },
+ {
+  "id": "bi-deser-stmt-value",
+  "module": "E2eScal/BiSpec.lean",
+  "theorem": "prysmBiDesc_deserialize_checker",
+  "kind": "stmt",
+  "old": "deserialize biCheckerDesc bs = .ok v",
+  "new": "deserialize biCheckerDesc bs = .ok (.seq [])"
+ },
+ {
+  "id": "bi-ask-stmt-weaken",
+  "module": "E2eScal/BiSpecK.lean",
+  "theorem": "bi_e2e_accept_spec_k",
+  "kind": "stmt",
+  "old": "(hav : 32 ≤ avail)",
+  "new": "(hav : True)"
+ },
+ {
+  "id": "bi-rc-stmt-size",
+  "module": "E2eScal/BiSpecK.lean",
+  "theorem": "bi_e2e_reject_complete",
+  "kind": "stmt",
+  "old": "bs.size ≠ 40 :=",
+  "new": "bs.size ≠ 39 :="
+ },
+ {
+  "id": "bi-witr-stmt-len",
+  "module": "E2eScal/WitBiR.lean",
+  "theorem": "bi_reject_runs",
+  "kind": "stmt",
+  "old": "(hlen : len ≠ 40)",
+  "new": "(hlen : len ≠ 41)"
+ },
+ {
+  "id": "dm-gen-control",
+  "module": "E2eScal/GenDmDec.lean",
+  "theorem": "dm_dec_WithdrawalCredentials_seg",
+  "kind": "control"
+ },
+ {
+  "id": "dm-gen-stmt-src",
+  "module": "E2eScal/GenDmDec.lean",
+  "theorem": "dm_dec_WithdrawalCredentials_seg",
+  "kind": "stmt",
+  "old": "(hSrc : bf + (48 : Int64).toBitVec = aSrc)",
+  "new": "(hSrc : bf + (40 : Int64).toBitVec = aSrc)"
+ },
+ {
+  "id": "dm-seg0-control",
+  "module": "E2eScal/DmSeg0.lean",
+  "theorem": "bytes48dec_seg_z",
+  "kind": "control"
+ },
+ {
+  "id": "dm-seg0-stmt-heap",
+  "module": "E2eScal/DmSeg0.lean",
+  "theorem": "bytes48dec_seg_z",
+  "kind": "stmt",
+  "old": "⋆ Heap (avail - 48)",
+  "new": "⋆ Heap (avail - 32)"
+ },
+ {
+  "id": "dm-seg0-stmt-len",
+  "module": "E2eScal/DmSeg0.lean",
+  "theorem": "bytes48dec_seg_z",
+  "kind": "stmt",
+  "old": "Eq ((Int.toBytes 8 48).At aL)",
+  "new": "Eq ((Int.toBytes 8 32).At aL)"
+ },
+ {
+  "id": "dm-acc-control",
+  "module": "E2eScal/DmAccept.lean",
+  "theorem": "dm_e2e_accept_main",
+  "kind": "control",
+  "code_def": "DmUnmarshal",
+  "code_ns": "E2eScal.H3Code",
+  "norm": "prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S"
+ },
+ {
+  "id": "dm-acc-code-amt",
+  "module": "E2eScal/DmAccept.lean",
+  "theorem": "dm_e2e_accept_main",
+  "kind": "code",
+  "old": "  mov 0x50(%rcx),%rcx",
+  "new": "  mov 0x48(%rcx),%rcx",
+  "code_def": "DmUnmarshal",
+  "code_ns": "E2eScal.H3Code",
+  "norm": "prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S"
+ },
+ {
+  "id": "dm-acc-code-pklen",
+  "module": "E2eScal/DmAccept.lean",
+  "theorem": "dm_e2e_accept_main",
+  "kind": "code",
+  "line": 31,
+  "old": "  mov $0x30,%ecx",
+  "new": "  mov $0x20,%ecx",
+  "code_def": "DmUnmarshal",
+  "code_ns": "E2eScal.H3Code",
+  "norm": "prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S"
+ },
+ {
+  "id": "dm-acc-stmt-swap",
+  "module": "E2eScal/DmAccept.lean",
+  "theorem": "dm_e2e_accept_main",
+  "kind": "stmt",
+  "old": "⋆ Eq (pk.At p1) ⋆ Eq (wc.At p2)",
+  "new": "⋆ Eq (wc.At p1) ⋆ Eq (pk.At p2)"
+ },
+ {
+  "id": "dm-acc-stmt-amt",
+  "module": "E2eScal/DmAccept.lean",
+  "theorem": "dm_e2e_accept_main",
+  "kind": "stmt",
+  "old": "⋆ Eq (amt.At (s.regs.rax.toBitVec + 48))",
+  "new": "⋆ Eq (amt.At (s.regs.rax.toBitVec + 40))"
+ },
+ {
+  "id": "dm-rej-control",
+  "module": "E2eScal/DmReject.lean",
+  "theorem": "dm_e2e_reject_size_main",
+  "kind": "control",
+  "code_def": "DmUnmarshal",
+  "code_ns": "E2eScal.H3Code",
+  "norm": "prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S"
+ },
+ {
+  "id": "dm-rej-stmt",
+  "module": "E2eScal/DmReject.lean",
+  "theorem": "dm_e2e_reject_size_main",
+  "kind": "stmt",
+  "old": "st.data.regs.rbx = e1",
+  "new": "st.data.regs.rbx = e0"
+ },
+ {
+  "id": "dm-spec-stmt-size",
+  "module": "E2eScal/DmSpec.lean",
+  "theorem": "pdm_spec_accepts_iff",
+  "kind": "stmt",
+  "old": "bs.size = 88",
+  "new": "bs.size = 89"
+ },
+ {
+  "id": "dm-ser-stmt-nearmiss",
+  "module": "E2eScal/DmSpec.lean",
+  "theorem": "prysmDmDesc_serialize_checker",
+  "kind": "stmt",
+  "old": "= serialize dmCheckerDesc v :=",
+  "new": "= serialize (match dmCheckerDesc with | .container ns ds => .container ns (ds.set 0 (.byteVector 32)) | x => x) v :="
+ },
+ {
+  "id": "dm-deser-stmt-value",
+  "module": "E2eScal/DmSpec.lean",
+  "theorem": "prysmDmDesc_deserialize_checker",
+  "kind": "stmt",
+  "old": "deserialize dmCheckerDesc bs = .ok v",
+  "new": "deserialize dmCheckerDesc bs = .ok (.seq [])"
+ },
+ {
+  "id": "dm-ask-stmt-weaken",
+  "module": "E2eScal/DmSpecK.lean",
+  "theorem": "dm_e2e_accept_spec_k",
+  "kind": "stmt",
+  "old": "(hav : 80 ≤ avail)",
+  "new": "(hav : True)"
+ },
+ {
+  "id": "dm-rc-stmt-size",
+  "module": "E2eScal/DmSpecK.lean",
+  "theorem": "dm_e2e_reject_complete",
+  "kind": "stmt",
+  "old": "bs.size ≠ 88 :=",
+  "new": "bs.size ≠ 87 :="
+ },
+ {
+  "id": "dm-witr-stmt-len",
+  "module": "E2eScal/WitDmR.lean",
+  "theorem": "dm_reject_runs",
+  "kind": "stmt",
+  "old": "(hlen : len ≠ 88)",
+  "new": "(hlen : len ≠ 89)"
+ }
+]
