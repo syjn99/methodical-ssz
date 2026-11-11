@@ -7,13 +7,41 @@
   "lean/E2eScal/Kind.lean": "3c9b95b1b37036831527396975d4232cc20174f3",
   "gen/scal/scalgen.py": "78e3339bc0ff3f20b6daa9a28582c97d7df9f712"
  },
- "step0_before_opening": ["b93e334 (N1 classifier)", "2e69e8f (N2 kindcheck.py, N3 notes)"],
+ "step0_before_opening": [
+  "b93e334 (N1 classifier)",
+  "2e69e8f (N2 kindcheck.py, N3 notes)"
+ ],
  "step0_checks": "lake build --no-build E2e E2eAd E2eScal exit 0 (gate job 297); stale_olean.py flagged GenAdDec/GenCpDec STALE by mtime only (regenerated identical sources; traces fresh per job 297) and 6 ORPHAN probe artifacts",
  "scope_H1": [
   "primitives.ValidatorIndex.UnmarshalSSZ (P1)",
   "v1alpha1.BeaconBlockHeader UnmarshalSSZ (accept, size reject, spec alignment)",
   "v1alpha1.BeaconBlockHeader MarshalSSZTo fast path (hand work; only after the two decoders are kernel-checked)"
  ],
- "excluded": ["SizeSSZ of every type (AU-09 exposure)", "H2 v1alpha1.Eth1Data stays CLOSED in this session"],
- "rule": "Any later change to the lemmas, kinds or generator is contamination and goes into CONTAMINATION.md with reason and time. Raw generator output is committed unmodified before any hand fix."
+ "excluded": [
+  "SizeSSZ of every type (AU-09 exposure)",
+  "H2 v1alpha1.Eth1Data stays CLOSED in this session"
+ ],
+ "rule": "Any later change to the lemmas, kinds or generator is contamination and goes into CONTAMINATION.md with reason and time. Raw generator output is committed unmodified before any hand fix.",
+ "H2": {
+  "opened_utc": "2026-11-11T01:59:11Z",
+  "by": "separate evaluation session 13 (did not build the S1 lemmas, the kinds or the generator; it could read the H1 files, so it is not independent of the H1 experience)",
+  "authority": "INBOX 023; user decisions INBOX 016/017 (H2 limited to UnmarshalSSZ and MarshalSSZTo)",
+  "method_freeze": {
+   "sha": "56dfc27a6b0c7890105bd16971e0d33bbcd9980e",
+   "lean/E2eScal/Kind.lean": "3c9b95b1b37036831527396975d4232cc20174f3",
+   "gen/scal/scalgen.py": "78e3339bc0ff3f20b6daa9a28582c97d7df9f712",
+   "checked_at": "69743b2 (git rev-parse HEAD:<path> gives the same blob ids)"
+  },
+  "scope_H2": [
+   "v1alpha1.Eth1Data UnmarshalSSZ (accept, size reject, spec alignment)",
+   "v1alpha1.Eth1Data MarshalSSZTo fast path (hand work; not attempted if its stack guard is the lea/r12 form of T-9)"
+  ],
+  "excluded": [
+   "SizeSSZ of Eth1Data (AU-09 exposure: its SizeSSZ code, IR entry and generated Go were already in the repository and proved in phase1c)",
+   "every other Eth1Data method",
+   "growslice branches and length rejects of the encoder (T-7 deferred)"
+  ],
+  "state_before_commit": "No Eth1Data .S, objdump section, IR entry, Go source or generated code was opened by session 13 before this record was committed.",
+  "rule": "H2 is touched once. No generator, kind or lemma fix afterwards; a needed fix is recorded in CONTAMINATION.md as 'proposed, not done' and the affected part is reported as not covered. Raw generator output is committed unmodified before any hand fix."
+ }
 }
