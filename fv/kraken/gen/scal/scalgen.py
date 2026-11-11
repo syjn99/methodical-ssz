@@ -1822,8 +1822,13 @@ def _g4_walk(dirs, fields, head_end, slots0, done):
                     elsewhere = [x for x in G4_R64 if st.r[x] == want]
                     why = (f"call at {i} ({name}): {r} = {_vstr(st.r[r])}, the call block needs {r} = {_vstr(want)}"
                            + (f" (it is in {', '.join(elsewhere)})" if elsewhere else ""))
-                    raise G4Stop(i, why, "register" if elsewhere else ("set-up order" if st.r[r][0] in ("RCV", "BF")
-                                                                       else "other"))
+                    # miss class: the wanted value in another register -> register; the right base without its
+                    # offset (a load after the add) -> set-up order; the right base, another offset -> other (offset
+                    # against the IR); an unknown / other value (clobbered) -> register
+                    same = st.r[r][0] == want[0]
+                    cls_ = ("register" if elsewhere else "set-up order" if same and st.r[r][1] == 0 and want[1] != 0
+                            else "other" if same else "register")
+                    raise G4Stop(i, why, cls_)
             unit.update(kind="callblk", fn=fn, lok=lok, jc=idx[0], j2=j2, e=j2 + 1, last=end - 1)
             st.clobber()
             st.r["rax"], st.r["rbx"] = ("IMM", 0), ("IMM", 0)
@@ -2163,12 +2168,21 @@ def p2dec_gen4(args):
     extra = (f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`); GEN4 coverage (`p2dec --gen4`): "
              f"{ncov} of {len(fields)} fields; step chain from directive {head_end} (end of the head)")
     body += "end E2eScal.Gen\n"
+    # the theorems of each covered field, machine-readable (`kindcheck.py` rule 10 counts the fields from it: a
+    # uint64 field has only step theorems, so its field is not visible in the theorem names)
+    fj = [dict(field=r["field"], theorems=r["theorems"]) for r in summ["fields"] if r["status"] == "covered"]
+    fblock = (f"/-! GEN4 fields (machine-readable, read by `kindcheck.py`):\nFIELDS-JSON: {json.dumps(fj)}\n-/\n\n")
+
+    def gheader():
+        h = header(sha, args.S, args, extra, kinds)
+        assert h.count("\nopen Fk ") == 1
+        return h.replace("\nopen Fk ", "\n" + fblock + "open Fk ")
     if ncov == len(fields):
-        return header(sha, args.S, args, extra, kinds) + body
+        return gheader() + body
     missing = [r["field"] for r in summ["fields"] if r["status"] != "covered"]
     unc = [dict(field=r["field"], reason=r["reason"].replace("-/", "- /"), miss_class=r["miss_class"])
            for r in summ["fields"] if r["status"] != "covered"]
-    full = header(sha, args.S, args, extra, kinds)
+    full = gheader()
     imps, rest = full.split("\n\n", 1)
     text = (imps + f"\n\n/-! PARTIAL OUTPUT (scalgen exit 3): {ncov} of {len(fields)} fields of `{args.type}` "
             f"(--gen4); NOT generated: {', '.join(missing)}. Not a complete p2dec output.\n"
