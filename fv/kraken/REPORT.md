@@ -831,6 +831,24 @@ h6-r1 덤프 대비 선언 비교: `cp_e2e_marshal_main_s._proof_1_23` REMOVED, 
 실행하지 않은 것(통합자): Lean 수준 심은 대조, 빈 `.lake`의 콜드 빌드, 링크 검사, Go 차분, 부정 시험, x86-64.
 기록: `scal/RESULT.json`의 `integration_int6`.
 
+GEN5 생성기(단위 G5-G, 기준 `94fd8a6`, 리뷰 전): `p2dec --gen5`가 평면 디코더의 승인 정리 전체를 낸다.
+낸 정리: 머리, 필드마다 하나, 에필로그, 승인, 크기 거부다. 정리마다 G5-L 종류 줄이 있다.
+결과는 실패 닫힘이다. 종료 0은 성공 표시 다섯이 모두 선 한 곳에서만 나온다.
+형마다 한 번 실행했다. 원시 출력은 고치지 않고 먼저 커밋했다(`8192427`).
+생성된 승인 정리: 평면 개발 형 17개 중 15개다. 모두 빌드되고 표준 공리뿐이다.
+거절: PendingPartialWithdrawal(필드가 섞임), AttestationData(중첩 필드)다.
+문장 검사: 종류 줄과 `kindcheck.py` 규칙 12다. 규칙 12는 종류 매개변수를 IR과 `.S`에서 다시 계산한다.
+손 문장이 있는 9개 형은 생성 정리가 그 손 문장과 `rfl`로 같다.
+Checkpoint는 종류 사례만이다. 함의 `cp_accept_of_kind`의 배치 `layCp`와 덩이 순서가 다르다.
+손 문장이 없는 5개 형(HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit)의 문장은 종류 사례다.
+이 5개는 아직 완전한 디코더 증명이 아니다. 거부 완전성, Desc, 명세, 증인은 G5-C 일이다.
+발견 SG-6: 승인 종류는 `L.frame`을 읽지 않는다. 규칙 12c가 모든 종류 줄의 `L`을 비교한다.
+모듈 정교화는 2.1–8.6초다(n = 2). 120초를 넘는 모듈은 없다. 속도 주장은 없다.
+`regen_check.sh` 55/55 SAME(옛 40, GEN5 15)이다. `p2dec_test.py` 394/394, `kindcheck.py` 선택 시험 PASS다.
+부정 시험 25건 중 22건이 통과다(대조 4, 정리 안 실패 18). 시간 초과 1, 오류 없음 1, 밖 오류 1은 세지 않는다.
+공리 게이트 PASS(선언 9139), 선언 비교 ADDED 1490뿐, 심은 대조는 잡혔다. `--no-build` 종료 0이다.
+실행하지 않은 것: 콜드 빌드, 링크 검사, Go 차분, x86-64. 기록: CONTAMINATION 29절, `scal/RESULT.json`의 `gen5`.
+
 조건:
 
 1. 런타임 계약 `MakesliceC`(uint8, esz 1, cnt 32), `MemmoveC`, `GrowsliceC`(uint8, esz 1, 인코더 첫 지점과 둘째 지점), `ConvT64C`, `FmtErrorfDDC`(Epoch 형식, `type:int`)는 가설이다. Go 1.26.10 소스를 다시 읽었고 바뀌지 않았다(`prysm/go1.26.10/e2e/RUNTIME-1.26.10.md`). 정교화 증명은 없다.

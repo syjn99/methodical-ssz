@@ -386,3 +386,7 @@ h6-r1 S8 기록: H6 커밋 넷은 type `spec(kraken)`, 하나는 `test(link)`를
 `regen_check.sh` 40/40 SAME, `kindcheck.py --selftest` PASS, `p2dec_test.py` 262/262다.
 작업 08은 인수 없이 돌려 종료 2(사용법)였다. 작업 09에서 인수를 넣어 다시 돌렸다.
 `.lean`, 생성기, 검사기, 고정 버전은 바꾸지 않았다. 원격에 쓰지 않았다. 기록: REPORT 11절, `scal/RESULT.json`의 `integration_int6`.
+
+2026-11-11 GEN5 생성기(단위 G5-G, 새 Opus 세션, 리뷰 전): `p2dec --gen5`를 더했다. 앞단은 GEN4 걸음이다.
+평면 개발 형 15개에 승인 정리와 크기 거부 정리를 냈다. 2개는 거절했다. 결과는 실패 닫힘이다.
+손 문장이 있는 9개 형은 `rfl`로 묶였다. Checkpoint는 묶지 않았다(배치 순서). 옛 출력 40/40은 바이트가 같다.
