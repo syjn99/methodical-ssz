@@ -1,0 +1,7 @@
+# lvSliceType: link/data.py, p1bin-amd64 bytes [0xadd6c0, 0xadd6f0)
+at type__ 337600
+bytes 18 00 00 00 00 00 00 00 08 00 00 00 00 00 00 00
+bytes 65 bf fb 7e 02 08 08 17
+word go.go 0
+word runtime.gcbits._ 0
+bytes 75 4d 00 00 80 e2 04 00
