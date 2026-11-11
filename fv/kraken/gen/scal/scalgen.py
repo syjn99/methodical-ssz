@@ -671,6 +671,10 @@ def p2dec_gen2(args):
         else:
             body += bytes_seg(c, *a)
     body += "end E2eScal.Gen\n"
+    if args.compose:
+        if len(found) != len(fields):
+            raise NoMatch(f"--compose needs every field covered ({len(found)} of {len(fields)})")
+        return compose(args, dirs, sha, irsha, fields, found)
     if len(found) == len(fields):
         return header(sha, args.S, args, extra, kinds) + body
     missing = [f for f in order if f not in {x[2] for x in found}]
@@ -678,6 +682,308 @@ def p2dec_gen2(args):
             f"NOT generated: {', '.join(missing)}. Not a complete p2dec output. -/\n"
             + header(sha, args.S, args, extra, kinds) + body)
     raise Partial(report, text)
+
+
+# ---------------------------------------------------------------- GEN2 composition (`p2dec --gen2 --compose`)
+#
+# Emits the whole accept theorem of a container decoder whose fields are ALL covered, as a chain of
+# `eventually_trans` over `E2eScal.dechead_seg`, the generated segment theorems (imported from the module
+# that `p2dec --gen2` wrote with the same `--prefix`), `E2eScal.bytesdec_tail_seg` after each byte vector and
+# `E2eScal.decepi_seg` (GEN2 L3, `lean/E2eScal/Compose.lean`). Shape accepted (else exit 2, nothing written):
+# frame 0x20 with the spills 0x30 / 0x38 (decHead), the first field a byte vector starting at directive 13,
+# every byte vector followed by `mov 0x18(%rsp),%rY; jmp L` and `L: mov %rY,fo(%rdx)`, the fields contiguous in
+# IR order, the epilogue right after the last field, and every Go field before the end of the last decoded
+# field either decoded or an opaque 8-byte slot (the `state` word of a protoc struct).
+# The statement follows the hand accept theorems (`E1Accept`, `BiAccept`, `DmAccept`): inputs per SSZ field,
+# receiver slots per 8 bytes in Go order. STATEMENT CHECK: only `--same-as HAND` gives one, the identity
+# `NAME_type : type_of% (@NAME h) = type_of% (@HAND h)` (`with_reducible rfl`). Without a hand theorem (a
+# hold-out type) the emitted statement is NOT checked against anything: the generator says so in the file
+# header and on stderr. There is no kind for the composed statement.
+
+def compose_read(dirs, found, ssz_size):
+    """Textual check of the composition shape; returns (head params, per-field steps, epilogue index)."""
+    fn = label_of(dirs[0]) or (_ for _ in ()).throw(NoMatch("compose: directive 0 is not a label"))
+    l0 = label_of(dirs[1]) or (_ for _ in ()).throw(NoMatch("compose: directive 1 is not a label"))
+    expect(dirs, 2, r"cmp 0x10\(%r14\),%rsp", "the stack guard compare")
+    lmore = expect(dirs, 3, r"jbe (\S+)", "jbe <morestack label>").group(1)
+    expect(dirs, 4, r"push %rbp", "push %rbp")
+    expect(dirs, 5, r"mov %rsp,%rbp", "mov %rsp,%rbp")
+    expect(dirs, 6, r"sub \$0x20,%rsp", "sub $0x20,%rsp (frame 0x20 only)")
+    expect(dirs, 7, r"mov %rbx,0x38\(%rsp\)", "the rbx spill 0x38")
+    expect(dirs, 8, r"nop", "nop")
+    expect(dirs, 9, rf"cmp \${ssz_size:#x},%rcx", f"cmp ${ssz_size:#x},%rcx (IR SSZ size)")
+    lerr = expect(dirs, 10, r"jne (\S+)", "jne <size error label>").group(1)
+    expect(dirs, 11, r"mov %rax,0x30\(%rsp\)", "the receiver spill 0x30")
+    expect(dirs, 12, r"mov %rbx,0x38\(%rsp\)", "the buffer spill 0x38")
+    steps, pc = [], 13
+    for (j1, last, fname, cl, a) in found:
+        if j1 != pc:
+            raise NoMatch(f"compose: field {fname} starts at directive {j1}, expected {pc} (fields not contiguous)")
+        if cl == "u64":
+            p = a[4]
+            if p["dB"] != 0x38:
+                raise NoMatch(f"compose: field {fname} reloads the buffer from {p['dB']:#x}(%rsp), not 0x38")
+            steps.append(("u64", a))
+            pc = last + 1
+            continue
+        p = a[5]
+        if (p["dR"], p["dB"], p["dS"]) != (0x30, 0x38, 0x18):
+            raise NoMatch(f"compose: field {fname} spill slots {p['dR']:#x}/{p['dB']:#x}/{p['dS']:#x}, not 0x30/0x38/0x18")
+        j3 = last + 1
+        rY = expect(dirs, j3, r"mov 0x18\(%rsp\),%(\w+)", "the pointer reload of the tail").group(1)
+        if rY not in U64_REGS:
+            raise NoMatch(f"compose: tail register {rY} is not one of {', '.join(U64_REGS)}")
+        lt = expect(dirs, j3 + 1, r"jmp (\S+)", "jmp <tail label>").group(1)
+        j4 = label_index(dirs, lt)
+        fo = a[2]
+        st = rf"mov %{rY},\(%rdx\)" if fo == 0 else rf"mov %{rY},{fo:#x}\(%rdx\)"
+        expect(dirs, j4 + 1, st, f"the pointer store of {fname} from {rY}")
+        if j4 <= j3:
+            raise NoMatch(f"compose: tail label of {fname} at {j4} is not after {j3}")
+        steps.append(("bytes", a, dict(rY=rY, lt=lt, j3=j3, j4=j4)))
+        pc = j4 + 2
+    for n, rx in enumerate([r"xor %eax,%eax", r"xor %ebx,%ebx", r"add \$0x20,%rsp", r"pop %rbp", r"retq"]):
+        expect(dirs, pc + n, rx, f"epilogue directive {n + 1}")
+    if not steps or steps[0][0] != "bytes":
+        raise NoMatch("compose: the first field is not a byte vector (no development shape)")
+    return dict(fn=fn, l0=l0, lmore=lmore, lerr=lerr), steps, pc
+
+
+def compose_layout(ir_path, tname, found):
+    """Receiver slots in Go order up to the end of the last decoded field: ("opaque", off), ("bytes", i),
+    ("u64", i) where i indexes the decoded fields (IR order)."""
+    raw = pathlib.Path(ir_path).read_bytes()
+    pkg, name = tname.rsplit(".", 1)
+    t = [t for c in json.loads(raw)["configs"] for t in c.get("types", [])
+         if t.get("name") == name and t.get("package", "").endswith("/" + pkg)][0]
+    dec = {a[0]: (i, cl) for i, (*_, cl, a) in enumerate(found)}
+    end = max(a[2] + (24 if cl == "bytes" else 8) for *_, cl, a in found)
+    slots, off = [], 0
+    for g in sorted(t["go_fields"], key=lambda g: g["offset_gc_amd64"]):
+        o, sz = g["offset_gc_amd64"], g["size_gc_amd64"]
+        if o >= end:
+            break
+        if o != off:
+            raise NoMatch(f"compose: Go field {g['name']} at {o}, expected {off} (padding not supported)")
+        if g["name"] in dec:
+            i, cl = dec[g["name"]]
+            if sz != (24 if cl == "bytes" else 8):
+                raise NoMatch(f"compose: Go field {g['name']} has size {sz}")
+            slots.append((cl, i, o))
+        elif sz == 8:
+            slots.append(("opaque", None, o))
+        else:
+            raise NoMatch(f"compose: undecoded Go field {g['name']} of size {sz} before the last decoded field")
+        off = o + sz
+    return slots
+
+
+def _a(base, off):
+    return base if off == 0 else f"({base} + {off})"
+
+
+def compose(args, dirs, sha, irsha, fields, found):
+    ssz = fields[-1][1] + (fields[-1][4] if fields[-1][3] == "bytes" else 8)
+    head, steps, jE = compose_read(dirs, found, ssz)
+    slots = compose_layout(args.ir, args.type, found)
+    C, name = args.const, args.name
+    nf = len(found)
+    X = [f"x{i + 1}" for i in range(nf)]                     # input bytes per field (SSZ order)
+    size = [(a[5]["n"] if cl == "bytes" else 8) for *_, cl, a in found]
+    src = [a[1] for *_, cl, a in found]
+    fo = [a[2] for *_, cl, a in found]
+    byt = [i for i, (*_, cl, a) in enumerate(found) if cl == "bytes"]
+    total = sum(size[i] for i in byt)
+    P = {i: f"p{k + 1}" for k, i in enumerate(byt)}
+    rsl = []                                                   # receiver lists in Go order
+    for cl, i, o in slots:
+        if cl == "opaque":
+            rsl.append((f"o{o}", o, None))
+        elif cl == "bytes":
+            rsl += [(f"g{i + 1}p", o, ("ptr", i)), (f"g{i + 1}l", o + 8, ("len", i)), (f"g{i + 1}c", o + 16, ("cap", i))]
+        else:
+            rsl.append((f"g{i + 1}n", o, ("u64", i)))
+    rbx = "s.regs.rbx.toBitVec"
+    rax = "s.regs.rax.toBitVec"
+    sp0 = "s.regs.rsp.toBitVec"
+    # ---- statement
+    L = []
+    L.append(f"theorem {name} (k : Nat) (hk : {C}.IsInfixAt Host.prog k) (hf : LabelsFresh {C} k)")
+    L.append(f"    ({' '.join(X)} : List UInt8) " + " ".join(f"(h{x} : {x}.length = {size[i]})" for i, x in enumerate(X)))
+    L.append("    (s : MachineData) (ra guard : UInt64)")
+    L.append(f"    (fp s1 s2 spl l18 rslot lo {' '.join(n for n, _, _ in rsl)} : List UInt8)")
+    L.append("    (hfp : fp.length = 8) (h1 : s1.length = 8) (h2 : s2.length = 8)")
+    L.append("    (hspl : spl.length = 24) (hl18 : l18.length = 8) (hrs : rslot.length = 8)")
+    L.append("    " + " ".join(f"(h{n} : {n}.length = 8)" for n, _, _ in rsl))
+    L.append("    (R : DataMem → Prop) (S : Nat) (hlo : lo.length = S)")
+    L.append("    (Heap : Nat → DataMem → Prop) (avail : Nat)")
+    pre = [f"Eq ((Int.toBytes 8 ra.toBitVec.toInt).At {sp0})", f"Eq (fp.At ({sp0} - 8))", f"Eq (s1.At ({sp0} + 8))",
+           f"Eq (s2.At ({sp0} + 16))", f"Eq (spl.At ({sp0} - 40))", f"Eq (l18.At ({sp0} - 16))",
+           f"Eq (rslot.At ({sp0} - 48))", f"Eq (lo.At ({sp0} - 48 - BitVec.ofNat 64 S))",
+           "Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))", "Heap avail"]
+    pre += [f"Eq ({X[i]}.At {_a(rbx, src[i])})" for i in range(nf)]
+    pre += [f"Eq ({n}.At {_a(rax, o)})" for n, o, _ in rsl]
+    pre += ["Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec)", "R"]
+    L.append("    (h_mem : s.dmem =⋆ " + "\n      ⋆ ".join(pre) + ")")
+    L.append(f"    (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = {ssz}) (hav : {total} ≤ avail)")
+    L.append("    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :")
+    L.append("    Eventually (step1 Host.exe)")
+    L.append("      (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0")
+    L.append("        ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧")
+    L.append(f"        ∃ ({' '.join(P[i] for i in byt)} : BitVec 64) (spl' lo' : List UInt8), spl'.length = 24 ∧ lo'.length = S ∧")
+    lastb = steps[[k for k, st in enumerate(steps) if st[0] == "bytes"][-1]][1]
+    lj2, lform = lastb[4], lastb[5]["form"]
+    ret = lj2 + (6 if lform == "add" else 5) + 1
+    post = [f"Eq ((Int.toBytes 8 ra.toBitVec.toInt).At {sp0})",
+            f"Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At ({sp0} - 8))",
+            f"Eq ((Int.toBytes 8 s.regs.rax.toBitVec.toInt).At ({sp0} + 8))",
+            f"Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At ({sp0} + 16))",
+            f"Eq (spl'.At ({sp0} - 40))", f"Eq ((Int.toBytes 8 {P[byt[-1]]}.toInt).At ({sp0} - 16))",
+            f"Eq ((Int.toBytes 8 (Host.addrOf (k + {ret})).toBitVec.toInt).At ({sp0} - 48))",
+            f"Eq (lo'.At ({sp0} - 48 - BitVec.ofNat 64 S))",
+            "Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))", f"Heap (avail - {total})"]
+    post += [f"Eq ({X[i]}.At {_a(rbx, src[i])})" for i in range(nf)]
+    for n, o, what in rsl:
+        if what is None:
+            post.append(f"Eq ({n}.At {_a(rax, o)})")
+        elif what[0] == "ptr":
+            post.append(f"Eq ((Int.toBytes 8 {P[what[1]]}.toInt).At {_a(rax, o)})")
+        elif what[0] in ("len", "cap"):
+            post.append(f"Eq ((Int.toBytes 8 {size[what[1]]}).At {_a(rax, o)})")
+        else:
+            post.append(f"Eq ({X[what[1]]}.At {_a(rax, o)})")
+    post += [f"Eq ({X[i]}.At {P[i]})" for i in byt]
+    post += ["Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec)", "R"]
+    L.append("        (" + "\n          ⋆ ".join(post) + ") st.data.dmem)")
+    L.append("      ⟨s, Host.addrOf k⟩ := by")
+    # ---- proof
+    Q = ["  obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s",
+         "  simp only at h_mem hguard hlen ⊢",
+         "  have hrsp_lt : rsp.toNat < 2 ^ 64 := rsp.toNat_lt_size",
+         "  -- code facts of the composition templates"]
+    code = infix_have("hH", f"E2eScal.decHead {lean_str(head['fn'])} {lean_str(head['l0'])} {lean_str(head['lmore'])} "
+                            f"{lean_str(head['lerr'])} {ssz}", 0, C)
+    for t, st in enumerate(steps):
+        if st[0] != "bytes":
+            continue
+        a, tl = st[1], st[2]
+        code += infix_have(f"hTa{t}", f"E2eScal.bytesDecTailA Reg64.{tl['rY']} {lean_str(tl['lt'])} 24", tl["j3"], C)
+        code += infix_have(f"hTb{t}", f"E2eScal.bytesDecTailB Reg64.{tl['rY']} {lean_str(tl['lt'])} {a[2]}", tl["j4"], C)
+        code += label_have(f"hlT{t}", tl["j4"], C)
+        code += f"  have hY{t} : E2eScal.U64InlineReg Reg64.{tl['rY']} := by decide\n"
+    code += infix_have("hE", "E2eScal.decEpi", jE, C)
+    Q.append(code.rstrip("\n"))
+    Q.append("  -- head: entry → directive 13")
+    Q.append(f"  refine eventually_trans _ _ _ _ (E2eScal.dechead_seg _ _ _ _ {ssz} (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _")
+    Q.append("    (by dsimp only; ecancel) hguard (by rw [hlen]; rfl)) ?_")
+    Q.append("  rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, hrax1, hrbx1, Hm1⟩")
+    Q.append("  dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1")
+    Q.append("  subst hpc1")
+    d, first, prev, avail_terms = 1, True, None, []
+    BV = "(by simp only [Int64.toBitVec_ofNat]; bv_omega)"
+    SI = "(by simp only [Int64.toBitVec_ofNat])"
+    for t, st in enumerate(steps):
+        a = st[1]
+        i = [x[2] for x in found].index(a[0])
+        seg = f"E2eScal.Gen.{args.prefix}_{a[0]}_seg"
+        if st[0] == "bytes":
+            fname, s_, f_, j1, j2, p = a
+            n = p["n"]
+            av = "avail" if not avail_terms else "(avail - " + " - ".join(str(x) for x in avail_terms) + ")"
+            if first:
+                spl, lo_, rs, ls = "spl", "lo", "rslot", "l18"
+                hsp, hlo_, hrs_, hls = "hspl", "hlo", "hrs", "hl18"
+                hrsp = f"(by rw [hrsp{d}]; first | rfl | (apply UInt64.toBitVec_inj.mp; simp))"
+                hrbp, hr14 = f"(by rw [hrbp{d}])", f"hr14{d}"
+            else:
+                spl, lo_, hsp, hlo_ = f"spl{prev['k']}", f"lo{prev['k']}", f"hspl{prev['k']}", f"hlo{prev['k']}"
+                rs = f"(Int.toBytes 8 (Host.addrOf (k + {prev['j2']} + {prev['a']} + 1)).toBitVec.toInt)"
+                ls = f"(Int.toBytes 8 {prev['p']}.toInt)"
+                hrs_ = hls = "(Int.toBytes_length 8 _)"
+                hrsp, hrbp, hr14 = f"hrsp{d}", f"hrbp{d}", f"hr14{d}"
+            gp, gl, gc = f"g{i + 1}p", f"g{i + 1}l", f"g{i + 1}c"
+            Q.append(f"  -- {fname}: generated segment ({n} bytes, {p['form']} form), {j1} → {p['last'] + 1}")
+            Q.append(f"  refine eventually_trans _ _ _ _ ({seg} k hk hf")
+            Q.append("    (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec")
+            Q.append("    (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)")
+            Q.append(f"    (rsp.toBitVec - 48 - BitVec.ofNat 64 S) {_a('rax.toBitVec', f_)} {_a('rax.toBitVec', f_ + 8)} "
+                     f"{_a('rax.toBitVec', f_ + 16)}" + (f" {_a('rbx.toBitVec', s_)}" if p["form"] == "add" else "") + " S")
+            Q.append(f"    {BV} {BV}")
+            Q.append(f"    {BV} (by bv_omega) (E2eScal.E1.e1_lo _ _)")
+            Q.append(f"    {'(by simp)' if f_ == 0 else SI} {SI}")
+            Q.append(f"    {SI}" + (f" {SI}" if p["form"] == "add" else ""))
+            Q.append(f"    (rsp - 8) r14 {X[i]} h{X[i]} {spl} {rs} {lo_} {ls} {gp} {gl} {gc} {hsp} {hrs_} {hlo_} {hls} "
+                     f"h{gp} h{gl} h{gc}")
+            Q.append(f"    _ Heap {av} (by omega) d{d}")
+            Q.append(f"    {hrsp}")
+            Q.append(f"    {hrbp} {hr14}")
+            Q.append("    (by ecancel) hms hmm) ?_")
+            kk = len([x for x in steps[:t + 1] if x[0] == "bytes"])
+            d += 1
+            Q.append(f"  rintro ⟨d{d}, pc{d}⟩ ⟨hpc{d}, hrsp{d}, hrbp{d}, hr14{d}, p{kk}, spl{kk}, lo{kk}, hspl{kk}, hlo{kk}, "
+                     f"hrdx{d}, Hm{d}⟩")
+            Q.append(f"  dsimp only at hpc{d} hrsp{d} hrbp{d} hr14{d} hrdx{d} Hm{d}")
+            Q.append(f"  subst hpc{d}")
+            tl = st[2]
+            Q.append(f"  -- pointer tail of {fname} ({tl['rY']}), {tl['j3']}–{tl['j3'] + 1} and {tl['j4']}–{tl['j4'] + 1}")
+            Q.append(f"  refine eventually_trans _ _ _ _ (E2eScal.bytesdec_tail_seg Reg64.{tl['rY']} hY{t} _ _ _ "
+                     f"(k + {tl['j3']}) (k + {tl['j4']}) hTa{t} hTb{t} hlT{t}")
+            Q.append(f"    (rsp.toBitVec - 40) rax.toBitVec p{kk} (rsp.toBitVec - 16) {_a('rax.toBitVec', f_)}")
+            Q.append(f"    {BV} {'(by simp)' if f_ == 0 else SI}")
+            Q.append(f"    (rsp - 8) r14 (Int.toBytes 8 p{kk}.toInt) (Int.toBytes_length 8 _) _ d{d} hrsp{d} hrbp{d} "
+                     f"hr14{d} hrdx{d}")
+            Q.append("    (by ecancel)) ?_")
+            d += 1
+            Q.append(f"  rintro ⟨d{d}, pc{d}⟩ ⟨hpc{d}, hrsp{d}, hrbp{d}, hr14{d}, hrdx{d}, Hm{d}⟩")
+            Q.append(f"  dsimp only at hpc{d} hrsp{d} hrbp{d} hr14{d} hrdx{d} Hm{d}")
+            Q.append(f"  subst hpc{d}")
+            first = False
+            prev = dict(k=kk, j2=j2, a=(6 if p["form"] == "add" else 5), p=f"p{kk}")
+            avail_terms.append(n)
+        else:
+            fname, s_, f_, j, p = a
+            Q.append(f"  -- {fname}: generated segment (inline uint64), {j}–{p['last']}")
+            Q.append(f"  refine eventually_trans _ _ _ _ ({seg} k hk hf")
+            Q.append(f"    (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec (rsp.toBitVec + 16) {_a('rbx.toBitVec', s_)} "
+                     f"{_a('rax.toBitVec', f_)}")
+            Q.append(f"    {BV} {SI}")
+            Q.append(f"    {SI}")
+            Q.append(f"    (rsp - 8) r14 {X[i]} g{i + 1}n h{X[i]} hg{i + 1}n _ d{d} hrsp{d} hrbp{d} hr14{d} hrdx{d} (by ecancel)) ?_")
+            d += 1
+            Q.append(f"  rintro ⟨d{d}, pc{d}⟩ ⟨hpc{d}, hrsp{d}, hrbp{d}, hr14{d}, hrdx{d}, Hm{d}⟩")
+            Q.append(f"  dsimp only at hpc{d} hrsp{d} hrbp{d} hr14{d} hrdx{d} Hm{d}")
+            Q.append(f"  subst hpc{d}")
+    Q.append(f"  -- epilogue, {jE}–{jE + 4}")
+    Q.append(f"  refine eventually_trans _ _ _ _ (E2eScal.decepi_seg (k + {jE}) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) "
+             "rsp.toBitVec")
+    Q.append(f"    (by bv_omega) (by bv_omega) rbp ra r14 _ d{d} hrsp{d} hr14{d} (by ecancel)) ?_")
+    e = d + 1
+    Q.append(f"  rintro ⟨d{e}, pc{e}⟩ ⟨hpc{e}, hrax{e}, hrbx{e}, hrsp{e}, hrbp{e}, hr14{e}, Hm{e}⟩")
+    Q.append(f"  dsimp only at hpc{e} hrax{e} hrbx{e} hrsp{e} hrbp{e} hr14{e} Hm{e}")
+    Q.append("  apply Eventually.done")
+    rws = [f"show k + {prev['j2']} + {prev['a']} + 1 = k + {ret} from rfl"]
+    if len(avail_terms) > 1:
+        rws.append(f"show avail - {' - '.join(str(x) for x in avail_terms)} = avail - {total} by omega")
+    Q.append(f"  rw [{', '.join(rws)}] at Hm{e}")
+    kb = len(byt)
+    Q.append(f"  refine ⟨hpc{e}, hrax{e}, hrbx{e}, ?_, hrbp{e}, hr14{e}, {', '.join(P[i] for i in byt)}, spl{kb}, lo{kb}, "
+             f"hspl{kb}, hlo{kb}, ?_⟩")
+    Q.append(f"  · dsimp only; rw [hrsp{e}]; apply UInt64.toBitVec_inj.mp")
+    Q.append("    simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega")
+    Q.append("  · dsimp only; ecancel")
+    chk = (f"; composed accept theorem; statement check: identity with `{args.same_as}`" if args.same_as else
+           "; composed accept theorem; NO statement check (no hand theorem given: the statement is unchecked text)")
+    out = header(sha, args.S, args, f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`){chk}", [])
+    out += "set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
+    out += f"/-- Accept path of `{args.type}.UnmarshalSSZ`, composed from the generated segment theorems `{args.prefix}_*_seg`. -/\n"
+    out += "\n".join(L) + "\n" + "\n".join(Q) + "\n"
+    if args.same_as:
+        out += (f"\n/-- Statement check: the declared type is that of the hand theorem (definitional identity). -/\n"
+                f"theorem {name}_type : ∀ (h : Host),\n    type_of% (@{name} h) = type_of% (@{args.same_as} h) := by\n"
+                f"  intro h; with_reducible rfl\n")
+    else:
+        print(f"scalgen p2dec: --compose without --same-as: the statement of {name} is NOT checked", file=sys.stderr)
+    return out + "\nend E2eScal.Gen\n"
 
 
 def main():
@@ -696,7 +1002,12 @@ def main():
     ap.add_argument("--gen2", action="store_true",
                     help="p2dec: GEN2 coverage (byte vectors of 32 / 48 / 96 bytes, inline uint64); off = S2 / SG-1 text")
     ap.add_argument("--summary", help="p2dec --gen2: write the per-field coverage report (JSON) here")
+    ap.add_argument("--compose", action="store_true",
+                    help="p2dec --gen2: emit the composed accept theorem --name (needs every field covered; the "
+                         "segment theorems come from the module of the same --prefix, listed in --imports)")
     args = ap.parse_args()
+    if args.compose and not (args.gen2 and args.name):
+        ap.error("--compose needs --gen2 and --name")
     if args.partial_out and args.mode != "p2dec":
         ap.error("--partial-out is a p2dec option")
     if (args.gen2 or args.summary) and args.mode != "p2dec":
