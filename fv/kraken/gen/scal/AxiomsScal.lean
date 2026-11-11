@@ -22,6 +22,14 @@ import E2eScal.P2DecZ
 import E2eScal.KindZ
 import E2eScal.GenE1Dec
 import E2eScal.E1GenSame
+import E2eScal.BiSpecK
+import E2eScal.WitBiA
+import E2eScal.WitBiR
+import E2eScal.DmSpecK
+import E2eScal.WitDmA
+import E2eScal.WitDmR
+import E2eScal.GenBiDec
+import E2eScal.GenDmDec
 
 -- prysm-e2e scalability stage S1-S2 (INBOX 011): the segment lemmas, the in-sample re-derivations, the
 -- statement-identity checks and the generated instances. Checked with gen/e2e/axioms.py <log> <out> <this file>.
@@ -120,3 +128,92 @@ import E2eScal.E1GenSame
 #print axioms E2eScal.E1Gen.rootDecMidZ_eq_hand
 #print axioms E2eScal.E1Gen.rootdec_seg_z_stmt_eq_hand
 #print axioms E2eScal.E1Gen.e1_dec_DepositRoot_seg_hand
+
+-- H3 hold-out (BlobIdentifier, DepositMessage UnmarshalSSZ): every new theorem.
+#print axioms E2eScal.Gen.bi_dec_BlockRoot_seg
+#print axioms E2eScal.Gen.bi_dec_BlockRoot_seg_kind
+#print axioms E2eScal.Gen.dm_dec_WithdrawalCredentials_seg
+#print axioms E2eScal.Gen.dm_dec_WithdrawalCredentials_seg_kind
+#print axioms E2eScal.Bi.bi_e2e_head
+#print axioms E2eScal.Bi.bi_e2e_accept_main
+#print axioms E2eScal.Bi.bi_e2e_reject_size_main
+#print axioms E2e.prysmBiDesc_checker
+#print axioms E2e.prysmBiDesc_wellFormed
+#print axioms E2e.prysmBiDesc_fixedSize
+#print axioms E2e.prysmBiDesc_serialize_checker
+#print axioms E2e.pbi_enc_size
+#print axioms E2e.pbi_toValue_fits
+#print axioms E2e.pbi_toValue_injective
+#print axioms E2e.pbi_toValue_surjective
+#print axioms E2e.pbi_toValue_surjective'
+#print axioms E2e.pbi_serialize
+#print axioms E2e.pbi_roundtrip
+#print axioms E2e.pbi_accepted_is_enc
+#print axioms E2e.pbi_spec_accepts_iff
+#print axioms E2e.pbi_spec_rejects
+#print axioms E2e.biChecker_wellFormed
+#print axioms E2e.pbi_serialize_checker
+#print axioms E2e.pbi_toValue_fits_checker
+#print axioms E2e.prysmBiDesc_deserialize_checker
+#print axioms E2eScal.Bi.bi_e2e_accept_spec_k
+#print axioms E2eScal.Bi.bi_e2e_reject_size_spec
+#print axioms E2eScal.Bi.bi_e2e_reject_complete
+#print axioms E2eScal.WitBiA.P_len
+#print axioms E2eScal.WitBiA.prog_eq
+#print axioms E2eScal.WitBiA.hk9
+#print axioms E2eScal.WitBiA.hk81
+#print axioms E2eScal.WitBiA.hk87
+#print axioms E2eScal.WitBiA.hf9
+#print axioms E2eScal.WitBiA.hf87
+#print axioms E2eScal.WitBiA.hf81
+#print axioms E2eScal.WitBiA.label_bump
+#print axioms E2eScal.WitBiA.label_wb
+#print axioms E2eScal.WitBiA.lift_heap
+#print axioms E2eScal.WitBiA.bi_accept_runs
+#print axioms E2eScal.WitBiR.P_len
+#print axioms E2eScal.WitBiR.hk1
+#print axioms E2eScal.WitBiR.hf1
+#print axioms E2eScal.WitBiR.label_err
+#print axioms E2eScal.WitBiR.bi_reject_runs
+#print axioms E2eScal.H3.bytes48dec_seg_z
+#print axioms E2eScal.Dm.dm_e2e_head
+#print axioms E2eScal.Dm.dm_e2e_accept_main
+#print axioms E2eScal.Dm.dm_e2e_reject_size_main
+#print axioms E2e.prysmDmDesc_checker
+#print axioms E2e.prysmDmDesc_wellFormed
+#print axioms E2e.prysmDmDesc_fixedSize
+#print axioms E2e.prysmDmDesc_serialize_checker
+#print axioms E2e.pdm_enc_size
+#print axioms E2e.pdm_toValue_fits
+#print axioms E2e.pdm_toValue_injective
+#print axioms E2e.pdm_toValue_surjective
+#print axioms E2e.pdm_toValue_surjective'
+#print axioms E2e.pdm_serialize
+#print axioms E2e.pdm_roundtrip
+#print axioms E2e.pdm_accepted_is_enc
+#print axioms E2e.pdm_spec_accepts_iff
+#print axioms E2e.pdm_spec_rejects
+#print axioms E2e.dmChecker_wellFormed
+#print axioms E2e.pdm_serialize_checker
+#print axioms E2e.pdm_toValue_fits_checker
+#print axioms E2e.prysmDmDesc_deserialize_checker
+#print axioms E2eScal.Dm.dm_e2e_accept_spec_k
+#print axioms E2eScal.Dm.dm_e2e_reject_size_spec
+#print axioms E2eScal.Dm.dm_e2e_reject_complete
+#print axioms E2eScal.WitDmA.P_len
+#print axioms E2eScal.WitDmA.prog_eq
+#print axioms E2eScal.WitDmA.hk9
+#print axioms E2eScal.WitDmA.hk118
+#print axioms E2eScal.WitDmA.hk124
+#print axioms E2eScal.WitDmA.hf9
+#print axioms E2eScal.WitDmA.hf124
+#print axioms E2eScal.WitDmA.hf118
+#print axioms E2eScal.WitDmA.label_bump
+#print axioms E2eScal.WitDmA.label_wb
+#print axioms E2eScal.WitDmA.lift_heap
+#print axioms E2eScal.WitDmA.dm_accept_runs
+#print axioms E2eScal.WitDmR.P_len
+#print axioms E2eScal.WitDmR.hk1
+#print axioms E2eScal.WitDmR.hf1
+#print axioms E2eScal.WitDmR.label_err
+#print axioms E2eScal.WitDmR.dm_reject_runs
