@@ -87,19 +87,20 @@ T1과 T2에서 시도 한도에 닿은 의무는 없다(`ATTEMPTS.md`).
 | BumpT | 1.7 s | 4.2 s | 1.97 GiB |
 | WitScA | 16 s | 18.8 s | 2.07 GiB |
 
-`maxHeartbeats`는 증인 둘(`WitSaA.sa_accept_runs`, `WitScA.sc_accept_runs`)에만 16000000이다.
+`maxHeartbeats`는 증인 둘에만 있다: `WitSaA.sa_accept_runs` 2000000, `WitScA.sc_accept_runs` 4000000.
 원인: `simp` AC 정렬(로그 27, 7.03 s + 2.08 s).
 설정이 없으면 `whnf` 시간 초과다(로그 26, 65).
-`maxRecDepth`는 `WitScA.lean`의 `example` 둘(127행, 134행)에만 100000이다(`set_option … in`).
-원인: `List.replicate 512 …`의 길이를 보이는 `by simp`가 기본 재귀 한도를 넘는다(로그 87).
-`WitSaA.lean`과 `sc_accept_runs`에는 `maxRecDepth` 설정이 없다(리뷰 r1 M1, 로그 86, 89).
+리뷰어 r2의 측정: 400000은 둘 다 실패한다. WitSaA는 1000000에서 통과한다. WitScA는 1000000에서 실패하고 2000000에서 통과한다.
+`E2eList`에는 `maxRecDepth` 설정이 없다(리뷰 r2 M1, `69f1a70`).
+`WitScA.lean`의 `example` 둘은 `by simp` 대신 항 증명(`List.length_replicate`, `List.eq_of_mem_replicate`)을 쓴다.
+위 표의 WitSaA, WitScA 값은 그 수정 뒤의 값이다(로그 96, 97).
 로그는 로컬에만 있다. 발췌는 `ATTEMPTS.md`에 있다.
 
 ## 5. 재사용과 새것
 
 재사용: `dechead_seg`, `decepi_seg`, `bytesdec_tail_seg`, `bytesdec_seg`(48), `bump_makeslice1`, `rt_memmove`, `Fv1.deserialize_enc`, `accepted_is_enc`, EthLib `packBits_unpackBits`, `unpackBits_packBits`, `headOf_inline`, `bodiesOf_inline`, `concatParts_size`, `concat_fixed_slices`.
 
-새 Lean(줄): Code 22, Include 85, Data 23, Desc 31, Defs 59, StmtSa 207, StmtSc 229, SaReject 94, ScReject 94, Seg 370, SaAccept 181, ScLemmas 122, ScLoop 313, ScAccept 270, SaSpec 96, ScSpec 173, SaSpecK 41, ScSpecK 46, Sa/ScSpecChecker 13 각각, Sa/ScDescEq 54 각각, BumpT 148(+ `.S` 16), WitSaA 126, WitScA 134.
+새 Lean(줄): Code 22, Include 85, Data 23, Desc 31, Defs 59, StmtSa 207, StmtSc 229, SaReject 94, ScReject 94, Seg 370, SaAccept 181, ScLemmas 122, ScLoop 313, ScAccept 270, SaSpec 96, ScSpec 173, SaSpecK 41, ScSpecK 46, Sa/ScSpecChecker 13 각각, Sa/ScDescEq 54 각각, BumpT 148(+ `.S` 16), WitSaA 126, WitScA 136(`69f1a70` 기준).
 
 새 스크립트: `lvlink.py`, `lvcheck_include.py`, `lvdescterm.py`, `lvaxioms_gate.py`, `AxiomsLv.lean`, `lvnegative.py`.
 기존 스크립트는 바꾸지 않았다.
@@ -112,7 +113,7 @@ T1과 T2에서 시도 한도에 닿은 의무는 없다(`ATTEMPTS.md`).
 - `BumpAllocT`는 비공허성 모델이다. 형식 단어를 비교해 24·cnt 또는 cnt를 뗀다. Go `makeslice`는 `et.Size_`를 읽는다.
 - `BumpAllocT.S`는 리뷰 r1 뒤 Lake `input_dir`(`lv_lean_S`)로 등록했다.
 - 손 `Desc`와 consensus-specs의 같음은 판단이다. 생산자 `Desc`와의 같음은 K다.
-- 기준 쪽 drift 덤프는 복제한 `.lake`를 썼다. 독립된 기준 빌드가 아니다.
+- 작성자의 기준 쪽 drift 덤프는 복제한 `.lake`를 썼다. 리뷰어 r2는 기준 트리를 따로 빌드했다. 그 덤프는 작성자의 덤프와 바이트 단위로 같다.
 
 ## 7. 검증
 
@@ -120,14 +121,14 @@ T1과 T2에서 시도 한도에 닿은 의무는 없다(`ATTEMPTS.md`).
 
 | 검사 | 결과 |
 | --- | --- |
-| `lake build E2eList` | exit 0 (리뷰 r1 뒤 683 jobs, 로그 90) |
-| `--no-build E2e E2eAd E2eScal E2eList` | exit 0, 1036 jobs (로그 91) |
-| 공리 게이트 | PASS, 5632 선언, 비표준 0, sorryAx 0 (`axioms-gate-lv.json`; 리뷰 r1 뒤 `axioms-gate-lv-r1.json`, 로그 95) |
+| `lake build E2eList` | exit 0 (리뷰 r2 수정 뒤 683 jobs, 로그 98) |
+| `--no-build E2e E2eAd E2eScal E2eList` | exit 0, 1036 jobs (로그 99) |
+| 공리 게이트 | PASS, 5632 선언, 비표준 0, sorryAx 0 (`axioms-gate-lv.json`; 리뷰 r1 뒤 `axioms-gate-lv-r1.json`. 리뷰 r2 수정 뒤 `axioms-gate-lv-r2.json`, 로그 100) |
 | 게이트 대조군(심은 `sorry`) | FAIL(기대대로) (`axioms-gate-lv-plant.json`) |
-| 선언 drift (기준 `6a78c591`, 뿌리 E2e/E2eAd/E2eScal) | 0 (`decl-drift-lv.txt`) |
+| 선언 drift (기준 `6a78c591`, 뿌리 E2e/E2eAd/E2eScal) | 0 (`decl-drift-lv.txt`. 리뷰 r2 수정 뒤 다시 0, 로그 102) |
 | drift 대조군 | CHANGED(기대대로), 되돌림 |
 | 링크 T1, T2 | PASS all |
-| 부정 시험 | 26개 중 25개 통과(control_pass 7, inside 18). `lv-sa-bitslen63`은 outside다(오류가 `sa_bits_seg`에 있다). 같은 변이를 `sa_bits_seg`에 겨눈 경우는 inside다. `Desc` 변이와 T2 크기 거부 변이를 포함한다(로그 94) |
+| 부정 시험 | 26개 중 25개 통과(control_pass 7, inside 18). `lv-sa-bitslen63`은 outside다(오류가 `sa_bits_seg`에 있다). 같은 변이를 `sa_bits_seg`에 겨눈 경우는 inside다. `Desc` 변이와 T2 크기 거부 변이를 포함한다(로그 94). `Desc` 변이 파일은 대상에서 잘린다. `prysmS*Desc_fixedSize`나 `ps*_toValue_fits`까지만 간다. `*_spec_k`를 시험하는 `Desc` 변이는 없다. 부정 시험은 리뷰 r2 수정 뒤 다시 돌리지 않았다 |
 | stale 검사 | flagged 0 |
 | Go 차분 시험 | 실행하지 않음 |
 | 하드웨어 대조 | 실행하지 않음. 호스트는 arm64다 |
@@ -151,4 +152,13 @@ T1과 T2에서 시도 한도에 닿은 의무는 없다(`ATTEMPTS.md`).
 - LV-1(열림, X, 도구 빈틈). `FINDINGS-CANDIDATES.md`를 본다.
 - 새 production 결함 후보는 없다.
 - 독립 리뷰 r1(`fbf729a`): REQUEST_CHANGES, 필수 수정 1개(M1). `REVIEW-R1.md`를 본다. 수정은 `463ec97`, `3bb6cc1`, `4a18079`, `ec75cd5`다.
-- 사용자 확인이 필요한 것: esz 24 `MakesliceC` 인스턴스(리뷰 r1 S7), 기한, Go 차분 시험.
+- 독립 리뷰 r2(`d169e4b`): REQUEST_CHANGES, 필수 수정 2개(M1, M2). `REVIEW-R2.md`를 본다. 수정은 `1ba8b41`, `69f1a70`, `252380f`와 이 파일의 커밋이다.
+- 리뷰 r3의 결과는 `REVIEW-R3.md`에 적는다.
+- 사용자 확인이 필요한 것:
+  - esz 24 `MakesliceC` 인스턴스(리뷰 r1 S7).
+  - 기한.
+  - Go 차분 시험.
+  - `3bb6cc1`의 lakefile 변경(`input_dir` 추가). 루트 `AGENTS.md`는 lakefile 변경에 승인을 요구한다.
+  - LV-1의 처리 길(`conv.py`, `check.py`, Kraken 요청).
+  - 시도 횟수 해석(3절).
+  - 원격 이름. `origin`은 OffchainLabs다.
