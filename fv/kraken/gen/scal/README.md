@@ -296,11 +296,30 @@ did not establish the entry state (every theorem still built); the rules below r
   conditional jump in the span stops; the `je` of a call / segment window is inside its lemma); a load at a
   displacement that is not a tracked slot gives `unknown`. The walker relies on the separation of frame, receiver
   and buffer that a field composition / accept statement assumes; it does not check it.
-- Not examined (S3): nothing after the last field event (the epilogue; review input a34: a later overwrite of a field
-  is not seen); the head is fixed by position (`cmp $size,%rcx` at directive 9, `jne` at 10).
+- Not examined (S3): the head is fixed by position (`cmp $size,%rcx` at directive 9, `jne` at 10). Since G4-F2 the
+  epilogue is examined (below); the `jbe` / `jne` targets of the head (stack growth, size error) are not.
 - `kindcheck.py` rule 11 (S2): the hand example modules `Gen2Examples.lean`, `Gen3Examples.lean` are exempt by exact
   path (`HAND_EXAMPLES`; rule 11 only). `Gen4Examples.lean` is not exempt: its hand field compositions fail rules 4
   and 10c; no recorded command runs `kindcheck.py` on it.
 - Tests: `p2dec_test.py` cases `g4f-*` (26): the seven unsafe review inputs refused, the eleven valid variants covered,
   head classes, frame register writes; `reached` checked on every `--gen4` case. Committed `Gen4*.lean`: unchanged
   (the fixed generator regenerates all 10 byte-identical).
+
+### G4-F2 (review g4f-r1 M3 and a systematic pass; not yet reviewed)
+
+- Head size (M3): the immediate of `cmp $size,%rcx` (directive 9) must equal the IR SSZ fixed size of the type (the
+  sum of the IR field sizes, which must equal the container's IR `fixed_size`), as the default mode checks in
+  `compose_read`. Else the head misses: exit 2, every field `reached: false`, class `other` (review inputs c34, d15, d16).
+- Epilogue: after the last field event the walker follows the accept path (nops, labels, forward `jmp`) and accepts
+  only `mov d(%rsp),%rax|%rbx`, `xor %eax,%eax`, `xor %ebx,%ebx`, then `add $F,%rsp; pop %rbp; retq` with the head's
+  frame size F. Anything else (a store, a call, another frame size) could change a decoded field after its event:
+  exit 2, `--summary` has `epilogue.status: not covered` and every field `reached: true`, not covered, class `other`.
+  Review input a34 (a store after the last field) is now refused; it was a recorded limit before.
+- Callee vs IR field: a call block is emitted only when the callee is the IR field's own overlay callee (unchanged
+  rule; now tested both ways on PendingPartialWithdrawal). The class is `set-up order` only when a later IR field
+  has that callee, else `other`.
+- The systematic table (every number / symbol the walker reads, and what it is compared with) is in the unit's
+  hand-over, not in this file. Rows that rely on the IR: Go offsets (`offset_gc_amd64`) and SSZ offsets are the IR's
+  claim; the walker compares the code with them, nothing compares them with the Go compiler's layout.
+- Tests: `p2dec_test.py` cases `g4f2-*` (9) and `g4f-a34` changed to "refused"; 169/169. Committed `Gen4*.lean`:
+  unchanged (10/10 byte-identical; 33/33 `regen_check.sh` SAME).
