@@ -678,9 +678,17 @@ def p2dec_gen2(args):
     if len(found) == len(fields):
         return header(sha, args.S, args, extra, kinds) + body
     missing = [f for f in order if f not in {x[2] for x in found}]
-    text = (f"/-! PARTIAL OUTPUT (scalgen exit 3): {len(found)} of {len(fields)} fields of `{args.type}` (--gen2); "
-            f"NOT generated: {', '.join(missing)}. Not a complete p2dec output. -/\n"
-            + header(sha, args.S, args, extra, kinds) + body)
+    # unit G2-F (review g2g-r1, for_h4 item 4): the `--partial-out` file of `--gen2` is a valid Lean module.
+    # The imports come first; the PARTIAL header is a module doc right after them, with one machine-readable
+    # line `UNCOVERED-JSON: [{"field": …, "reason": …}, …]`. `kindcheck.py` rejects the file by default and
+    # checks the kinds of the present theorems with `--partial` (exit 3, never 0). Stdout stays empty (exit 3).
+    unc = [dict(field=r["field"], reason=r["reason"].replace("-/", "- /"))
+           for r in summ["fields"] if r.get("status") != "covered"]
+    full = header(sha, args.S, args, extra, kinds)
+    imps, rest = full.split("\n\n", 1)
+    text = (imps + f"\n\n/-! PARTIAL OUTPUT (scalgen exit 3): {len(found)} of {len(fields)} fields of `{args.type}` "
+            f"(--gen2); NOT generated: {', '.join(missing)}. Not a complete p2dec output.\n"
+            f"UNCOVERED-JSON: {json.dumps(unc)}\n-/\n\n" + rest + body)
     raise Partial(report, text)
 
 
@@ -971,13 +979,23 @@ def compose(args, dirs, sha, irsha, fields, found):
     Q.append(f"  · dsimp only; rw [hrsp{e}]; apply UInt64.toBitVec_inj.mp")
     Q.append("    simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega")
     Q.append("  · dsimp only; ecancel")
-    chk = (f"; composed accept theorem; statement check: identity with `{args.same_as}`" if args.same_as else
-           "; composed accept theorem; NO statement check (no hand theorem given: the statement is unchecked text)")
+    hand = args.same_as or args.same_as_prop
+    chk = (f"; composed accept theorem; statement check: identity with `{hand}`" if hand else
+           "; composed accept theorem; NO statement check (no hand theorem given: the statement is unchecked text, "
+           "checked by nobody; `kindcheck.py` rejects this file)")
     out = header(sha, args.S, args, f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`){chk}", [])
     out += "set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
     out += f"/-- Accept path of `{args.type}.UnmarshalSSZ`, composed from the generated segment theorems `{args.prefix}_*_seg`. -/\n"
+    if not hand:
+        # unit G2-F: mark the theorem line itself (only when no hand statement is given; the committed outputs
+        # all have `--same-as`, so their text does not change)
+        L[0] += " -- UNCHECKED STATEMENT: checked by nobody"
     out += "\n".join(L) + "\n" + "\n".join(Q) + "\n"
-    if args.same_as:
+    if args.same_as_prop:
+        out += (f"\n/-- Statement check: the declared type is the hand Prop `{args.same_as_prop}` (definitional identity). -/\n"
+                f"theorem {name}_type : ∀ (h : Host),\n    type_of% (@{name} h) = @{args.same_as_prop} h := by\n"
+                f"  intro h; with_reducible rfl\n")
+    elif args.same_as:
         out += (f"\n/-- Statement check: the declared type is that of the hand theorem (definitional identity). -/\n"
                 f"theorem {name}_type : ∀ (h : Host),\n    type_of% (@{name} h) = type_of% (@{args.same_as} h) := by\n"
                 f"  intro h; with_reducible rfl\n")
@@ -992,7 +1010,11 @@ def main():
     ap.add_argument("--S", required=True)
     ap.add_argument("--const", required=True)
     ap.add_argument("--name")
-    ap.add_argument("--same-as")
+    ap.add_argument("--same-as", help="NAME must be an independently written hand statement (a theorem written by "
+                    "hand, not generated); p1: emits NAME_same; p2dec --compose: emits the identity `T_type : "
+                    "type_of% (@T h) = type_of% (@NAME h)`. A generated NAME is no statement check (kindcheck rejects it)")
+    ap.add_argument("--same-as-prop", help="p2dec --compose: NAME is a hand-written Prop-valued `abbrev NAME [Host] : "
+                    "Prop` (no proof); emits `T_type : ∀ (h : Host), type_of% (@T h) = @NAME h` (unit G2-F)")
     ap.add_argument("--ir")
     ap.add_argument("--type")
     ap.add_argument("--prefix")
@@ -1006,6 +1028,10 @@ def main():
                     help="p2dec --gen2: emit the composed accept theorem --name (needs every field covered; the "
                          "segment theorems come from the module of the same --prefix, listed in --imports)")
     args = ap.parse_args()
+    if args.same_as_prop and not args.compose:
+        ap.error("--same-as-prop is a p2dec --compose option")
+    if args.same_as_prop and args.same_as:
+        ap.error("--same-as and --same-as-prop exclude each other")
     if args.compose and not (args.gen2 and args.name):
         ap.error("--compose needs --gen2 and --name")
     if args.partial_out and args.mode != "p2dec":
