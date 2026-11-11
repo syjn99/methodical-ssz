@@ -17,6 +17,7 @@
 | 1c Go (실험 기준선) | 1.26.10, 호스트 linux/arm64에서 linux/amd64 교차 컴파일, `GOAMD64=v1 CGO_ENABLED=0 -tags purego -trimpath`. Go 1.26.3 정리는 옮기지 않는다 | `prysm/go1.26.10/build-ids.txt` |
 | 1c ELF | sha256 `c6403c02…911e`(커밋하지 않음, 재빌드 명령은 MANIFEST). 링크 표 `prysm/go1.26.10/link/RESULT` | `prysm/go1.26.10/build-ids.txt` |
 | vcgen 평가(채택 안 함) | sgraf812/kraken `a4cce2ec6d840376e4dbbf4a11a777ebdf42a3cb`, `nightly-2026-10-29` | `vcgen/` |
+| 제3자 출처 표시 | 파생 증거 파일의 출처, 상류 프로젝트, 라이선스 이름 | `THIRD-PARTY-NOTICES.md` |
 
 ## 대상 생성
 
