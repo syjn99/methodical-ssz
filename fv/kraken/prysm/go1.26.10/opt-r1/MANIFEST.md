@@ -61,8 +61,48 @@
 - 계약 가설: `GrowsliceC`, `MemmoveC`(기존 형식). `panicBounds`와 `morestack`은 분기가 안 갈림을 증명한다.
 - 새 전제 형식은 없다. 스택 검사 전제는 `guard + 24 < rsp`다(`E2eScal.lea_cmp_be_false` 형식).
 - reject 정리 둘은 `cap < 2^63`을 전제로 더 가진다. 기준 reject 정리에는 없다. 부호 있는 비교 때문이다.
+- reject 경로의 계약 의존이 바뀌었다(리뷰 opt-r1-r1 S1).
+- `8 ≤ spare < 40`에서 reject 증명은 `GrowsliceC`, `MemmoveC`, 힙 예산에 의존한다.
+- 기준 reject 정리(`spare ≥ 8`)는 계약 없이 증명된다.
+- `cpo_marshal_reject_cover`는 기준 reject 덮개에 없던 `MemmoveC`를 전제로 가진다.
+- 덮개는 틀이 없다. 두 덮개는 `⋆ True`로 끝난다(S2).
+- 기준에는 틀이 있는 덮개가 있다(`E2e/CpWCoverF.lean`). 이 집합에는 없다.
+- 주 정리 넷은 범위마다 정확하다. 넷이 함께 모든 `len ≤ cap`을 덮는다.
 - 증인: `WitO`(빠른 경로), `WitOW`·`WitOWR`(덮개, spare 0, 7, 8, 39, 40, 41과 nil dst). 수신자 Go 값 검사가 있다.
+- 직접 증인이 있는 정리는 `cpo_marshal_main`, `cpo_marshal_cover`, `cpo_marshal_reject_cover`뿐이다(S4).
+- `cpo_marshal_spec_k`, `cpo_marshal_grow_main`, `cpo_marshal_reject_main`, `cpo_marshal_reject_grow_main`은 덮개 증인을 거쳐서만 도달한다.
 - 부정 시험: `negcases.json`, 결과 `negative.json`. 23개 중 21개 통과. 저장 변이 둘은 시간 초과다. 통과로 세지 않는다.
+- 저장 변이 둘을 사례 제한 900초로 한 번씩 다시 돌렸다(S3, 통합 INT3). 세 번째 실행은 없다.
+- `o-tail-fit-store`: 분류 `outside`, 통과가 아니다. 484초에 끝났다.
+- 첫 오류는 정리 안 125행이다. 한 칸 밀린 저장 주소에서 `ecancel`이 실패한다.
+- 나중에 217행과 38행에 heartbeat 시간 초과가 있다. 38행은 정리 앞 `set_option … in` 줄이다. 범위 밖이다.
+- `o-tail-fit-val`: 분류 `timeout_heartbeat`, 통과가 아니다. 488초에 끝났다.
+- 첫 오류는 217행의 heartbeat 시간 초과다. 벽시계 시간 초과는 둘 다 없었다.
+- 따라서 `tail_fit`의 epoch 저장 민감도는 통과한 부정 시험으로 보이지 않았다.
+- `negative.json`은 300초 실행의 기록이다. 다시 돌린 결과는 `RESULT.json` `negatives.s3_rerun_int3`에 있다.
 - 공리 관문: `axioms-gate.json` PASS, 선언 3860. 선언 차이: `decl-drift.txt`, ADDED 377개, 모두 `E2e.OptR1`.
+- `axioms-gate.json`은 시험 브랜치 트리(`5821b19`)의 기록이다.
+- 통합 트리의 기록은 `../e2e/axioms-gate.json`이다. PASS, 선언 4519 = 4142 + 377.
 - Go 차분(arm64, Go 의미론만): `diff/`. 벤치마크(arm64만): `bench/`.
 - 새 `.S`는 Lake 입력이 아니다. `.S`가 바뀌면 `E2e.OptR1`을 깨끗이 다시 빌드한다.
+
+## 6. 오류 경로 효과와 벤치마크 (리뷰 opt-r1-r1 S5, S6)
+
+- 오류 경로 효과가 바뀌었다(계약 항목 6).
+- Root가 무효이고 `8 ≤ spare < 40`이면 새 코드는 블록 하나를 할당한다. 옛 코드는 할당하지 않는다.
+- 같은 경우 새 코드는 호출자의 spare를 쓰지 않는다. 옛 코드는 C-1 쓰기를 한다.
+- 돌려주는 값은 같다. `(nil, ErrBytesLength)`다.
+- 벤치마크는 linux/arm64에서만 돌았다. x86-64 결과는 없다. 수치는 `bench/bench-summary.json`에 있다.
+- B2(nil dst): 할당 2 → 1, 56 → 48 B. ns는 더 빠르다. 크기는 실행마다 다르다.
+- B3(cap 8): 기대한 2 → 1 할당이 성립하지 않았다. 둘 다 2다.
+- 이유: 옛 코드는 cap 8에서 epoch가 맞으므로 한 번만 늘린다. 탈출하는 `make`가 양쪽에 할당 하나를 더한다.
+- B5(빠른 경로 재사용): 새 코드가 느리다. 1.92 → 2.19 ns, +14 %.
+- B8(1000번 덧붙이기): 할당 18 → 17. ns는 나아지지 않았다. +3.4 %.
+- B9(무효 Root, spare 16): 할당 0 → 1, 0 → 48 B. ns도 나빠졌다.
+- `MarshalSSZ()`(B1)와 중첩 AttestationData(B7)는 바뀌지 않았다.
+- 리뷰어의 부분 재실행(B2, B5, B8, B9만, 전체 절차가 아니다)은 다음을 보였다.
+- B5 +12.6 %가 재현되었다(1.90 → 2.14 ns, 범위가 겹치지 않는다).
+- 할당 수와 B/op가 재현되었다.
+- 할당하는 경우의 ns는 회차 사이에 약 35 %까지 달라졌다. B2-new 24.96과 16.94 ns, B9-new 24.02와 15.92 ns.
+- B2-old는 26.4 ns였다(작업자 실행 38.6 ns). 그래서 B2의 고정 백분율을 적지 않는다.
+- 결론: 정확성을 지키는 재검증은 보였다. 속도 향상은 일반적으로 보이지 않았다. 결과가 섞여 있다.

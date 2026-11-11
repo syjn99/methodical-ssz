@@ -37,7 +37,10 @@
  "premises_changed_vs_baseline": [
   "stack guard guard + 24 < rsp (large-frame form)",
   "spill slots rsp+8, rsp+24 and return slot rsp-160 in the frame",
-  "reject theorems: cap < 2^63 (signed compare of the reserve test)"
+  "reject theorems: cap < 2^63 (signed compare of the reserve test)",
+  "reject path 8 <= spare < 40: the reject proof depends on GrowsliceC + MemmoveC + the heap budget; the baseline reject theorem (spare >= 8) is contract-free",
+  "cpo_marshal_reject_cover: MemmoveC is a new hypothesis compared with the baseline reject cover",
+  "covers are not framed (they end in ⋆ True); the baseline has framed covers (E2e/CpWCoverF.lean); the four main theorems are exact per range"
  ],
  "negatives": {
   "run": 23,
@@ -45,7 +48,29 @@
   "timeout_wall": [
    "o-tail-fit-store",
    "o-tail-fit-val"
-  ]
+  ],
+  "s3_rerun_int3": {
+   "case_timeout_s": 900,
+   "runs_per_case": 1,
+   "runner": "fv/kraken/gen/e2e/negative.py unchanged, CASE_TIMEOUT set to 900 by a wrapper",
+   "o-tail-fit-store": {
+    "class": "outside",
+    "pass": false,
+    "seconds": 484.0,
+    "first_error_line": 125,
+    "first_error": "ecancel: could not automatically solve goal (Eq (d0.At (rbx.toBitVec + L.toBitVec + 1)) ⋆ ?m.1346)",
+    "note": "later heartbeat timeouts at line 217 and at line 38 (the set_option ... in prefix, one line before the range [39, 225])"
+   },
+   "o-tail-fit-val": {
+    "class": "timeout_heartbeat",
+    "pass": false,
+    "seconds": 488.3,
+    "first_error_line": 217,
+    "first_error": "(deterministic) timeout at `whnf`, maximum number of heartbeats (16000000) has been reached",
+    "note": "second heartbeat timeout at line 38"
+   },
+   "conclusion": "neither case passes; no wall timeout; sensitivity of tail_fit to the epoch store is not shown by a passing negative"
+  }
  },
  "axioms_gate": {
   "verdict": "PASS",
@@ -76,5 +101,32 @@
   "exact-frame covers (covers end in ⋆ True)",
   "AttestationData encoder in the new ELF",
   "x86-64 hardware run"
- ]
+ ],
+ "witnesses_direct": {
+  "direct": [
+   "E2e.OptR1.cpo_marshal_main",
+   "E2e.OptR1.cpo_marshal_cover",
+   "E2e.OptR1.cpo_marshal_reject_cover"
+  ],
+  "through_cover_witnesses_only": [
+   "E2e.OptR1.cpo_marshal_spec_k",
+   "E2e.OptR1.cpo_marshal_grow_main",
+   "E2e.OptR1.cpo_marshal_reject_main",
+   "E2e.OptR1.cpo_marshal_reject_grow_main"
+  ]
+ },
+ "axioms_gate_merged_tree": "../e2e/axioms-gate.json on the integrated research branch: PASS, 4519 declarations = 4142 + 377 (E2e.OptR1); this directory's axioms-gate.json (3860) is the pilot branch tree",
+ "error_path_effect": "item 6: invalid Root with 8 <= spare < 40 now allocates one block and does not write the caller's spare (old: no allocation, C-1 write); returned values unchanged",
+ "benchmarks_in_words": {
+  "platform": "linux/arm64 only; no x86-64 run",
+  "B2": "allocs 2 -> 1, 56 -> 48 B; ns faster, size run-dependent (no fixed percentage)",
+  "B3": "expected 2 -> 1 allocs not held (2 = 2): old grows once at cap 8 because the epoch fits; the escaping make adds one alloc to both sides",
+  "B5": "fast path slower: 1.92 -> 2.19 ns (+14 %)",
+  "B8": "allocs 18 -> 17; ns not better (+3.4 %)",
+  "B9": "allocs 0 -> 1, 0 -> 48 B; ns worse",
+  "B1_MarshalSSZ_and_B7_AttestationData": "unchanged",
+  "reviewer_spot_rerun": "review opt-r1-r1, B2/B5/B8/B9 only, not the full protocol: B5 +12.6 % reproduced (1.90 -> 2.14 ns, disjoint ranges); allocs and B/op reproduced; ns of allocating cases varied up to ~35 % between rounds (B2-new 24.96 vs 16.94 ns, B9-new 24.02 vs 15.92 ns; B2-old 26.4 ns vs worker 38.6 ns)",
+  "conclusion": "correctness-preserving re-validation shown; speed-up not shown in general (mixed result)"
+ },
+ "review_opt_r1_r1": "APPROVE, no must-fix; should-fix S1-S6 closed in records by integration INT3 (S2 and S4 by statement, no new proofs; S3 by one 900 s rerun per case, neither passes); user decisions U1-U6 open"
 }
