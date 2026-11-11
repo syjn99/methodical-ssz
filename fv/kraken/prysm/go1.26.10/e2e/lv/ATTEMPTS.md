@@ -270,3 +270,9 @@
 - 측정(로그 124): 1024, 2048, 4096 모두 그 오류가 사라졌다. 남은 오류는 P2의 미완성 가지뿐이었다. 그래서 값은 1024다. 두 정리 각각에 `set_option maxRecDepth 1024 in`을 두고 옆에 원인을 적었다.
 - 3. P2의 `jne` 안 갈림 가지: 32비트 값 `ofInt 32 (ofBytes off)`가 228이면 `off = iaOff`다. `toBytes_ofInt_ofBytes`와 `isLt`로 닫았다(로그 125–127은 이름과 산술 정리의 개발 단계).
 - 로그 128: `lake build E2eList.IaReject` exit 0.
+
+### U2: T3 명세 다리 `IaSpec`, P1·P2 명세, 거부 경우 (시도 1)
+
+- `IaSpec.lean`: `pia_serialize`, `pia_roundtrip`, `pia_accepted_is_enc`, `iaChecks`(Go 검사 넷의 순서), `pia_spec_accepts_iff`, `pia_spec_rejects`. 목록 쪽은 Go 1.26.3 ListU64 보조정리(`serializeEach_u64`, `inl_*`, `luElems`, `u64Bytes_luElems`), 데이터 쪽은 `E2e.pad_*`, 결합은 EthLib `extract_join`을 썼다.
+- 로그 129–133: 한 전략의 개발 단계다. 막힌 곳: 목록 `assemble`의 크기 조건(`h8`), `Desc.isFixed`가 펼쳐지지 않음(`rfl` 사실 넷을 `simp`에 줌), Mathlib 없는 `set`, 배열 결합.
+- 로그 134: `IaSpecR.lean`의 `ia_e2e_reject_size_spec`, `ia_e2e_reject_offset_spec`, `ia_e2e_reject_cases` exit 0. 설정 없이 통과했다.
