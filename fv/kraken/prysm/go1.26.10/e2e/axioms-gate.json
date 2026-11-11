@@ -5,9 +5,9 @@
   "Quot.sound",
   "propext"
  ],
- "declarations": 4519,
+ "declarations": 4518,
  "kinds": {
-  "theorem": 3813,
+  "theorem": 3812,
   "def": 680,
   "inductive": 8,
   "ctor": 10,
@@ -17,9 +17,9 @@
   "propext": 271,
   "-": 1216,
   "Classical.choice,Quot.sound,propext": 947,
-  "Quot.sound,propext": 2085
+  "Quot.sound,propext": 2084
  },
- "theorems": 3813,
+ "theorems": 3812,
  "hand_list_names": 315,
  "hand_list_missing": [],
  "nonstandard": {},
