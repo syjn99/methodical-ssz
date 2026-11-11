@@ -717,7 +717,8 @@ def main():
     except NoMatch as e:
         print(f"scalgen {args.mode}: no template match: {e}", file=sys.stderr)
         if args.summary_data:
-            summary(2)  # the report says why; nothing else is written
+            args.summary_data["error"] = str(e)  # exit 2: nothing is written, whatever the per-field status says
+            summary(2)
         elif args.summary:
             args.summary_data = dict(type=args.type, fields=[], error=str(e))
             summary(2)

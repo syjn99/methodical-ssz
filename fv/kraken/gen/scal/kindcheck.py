@@ -23,6 +23,12 @@ Checks, per file (text only):
     or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.rootDecSegKind h C n1 … n9 := by
     or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.rootDecSegZKind h C n1 … n8 := by
         (SG-1 offset-0 kind; only when `lean/E2eScal/KindZ.lean` has the pinned blob KINDZ_BLOB)
+    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.bytesDecSegKind h n C n1 … n9 := by
+    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.bytesDecSegZKind h n C n1 … n8 := by
+        (GEN2 size-parametric kinds, n = 32, 48 or 96; only when `KindN.lean` and the lemma module `SegN.lean`
+        have the pinned blobs GEN2_PINS)
+    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.u64DecInlineSegKind h C n1 … n4 := by
+        (GEN2 inline uint64 kind; only when `KindU64.lean` and `U64Inline.lean` have the pinned blobs GEN2_PINS)
     with C the code constant of `t`'s `hk : C.IsInfixAt Host.prog k` binder and n1..n9 natural literals,
     and the next line is exactly `  intro h; with_reducible rfl`.
  5. Every `_kind` theorem belongs to a theorem of the file; every `_same` theorem has the form
@@ -46,6 +52,19 @@ KIND_BLOB = "3c9b95b1b37036831527396975d4232cc20174f3"  # method freeze 56dfc27 
 KINDZ = KR / "lean" / "E2eScal" / "KindZ.lean"
 KINDZ_BLOB = "0c790fa1882cd2e91419c285f66de0810c2b85e2"  # SG-1 extension (after both hold-outs were opened)
 
+# GEN2 (unit G2-G): the kind and lemma modules of the GEN2 L1 / L2 lemmas, pinned at the blobs of the lemma
+# unit's head 6c62a49 (`gen2/L` hand-over, "Pins for kindcheck.py"). A new kind is accepted only with both
+# its kind module and its lemma module at these blobs.
+GEN2_PINS = {
+    "KindN.lean": "8947c5757f522463a495ad585d3480b7c2f3830b",
+    "SegN.lean": "4ef9c7494e421798c1766aedffa9a59066d32304",
+    "KindU64.lean": "dda481f9c61fcbfc9646faef172a240a69a857d1",
+    "U64Inline.lean": "712f4856eef48401cfdd48a216d538986a4087a9",
+}
+GEN2_NEEDS = {"bytesDecSegKind": ("KindN.lean", "SegN.lean"), "bytesDecSegZKind": ("KindN.lean", "SegN.lean"),
+              "u64DecInlineSegKind": ("KindU64.lean", "U64Inline.lean")}
+SIZE = r"(?:32|48|96)"  # the sizes of the hypothesis `hn` of bytesdec_seg / bytesdec_seg_z
+
 PARTIAL = "PARTIAL OUTPUT"  # header of scalgen.py p2dec --partial-out (exit 3)
 TOP_OK = re.compile(r"^(import |open |variable |namespace |end\b|set_option \S+ \S+ in$|theorem |/-|--|$|\s)")
 BANNED = re.compile(r"\b(sorry|admit|native_decide|bv_decide|axiom)\b")
@@ -58,7 +77,8 @@ def blob(path):
     return subprocess.run(["git", "hash-object", str(path)], capture_output=True, text=True, check=True).stdout.strip()
 
 
-def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB):
+def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB, gen2_blobs=None):
+    gen2_blobs = dict(GEN2_PINS) if gen2_blobs is None else gen2_blobs
     errs = []
     if kind_blob != KIND_BLOB:
         errs.append(f"Kind.lean blob {kind_blob} != frozen {KIND_BLOB}")
@@ -101,11 +121,19 @@ def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB):
         j = pos[t + "_kind"]
         want = (rf"theorem {re.escape(t)}_kind : ∀ \(h : Host\), type_of% \(@{re.escape(t)} h\) = "
                 rf"@E2eScal\.(u64DecAcceptKind h {C}|rootDecSegKind h {C}(?: {NAT}){{9}}"
-                rf"|rootDecSegZKind h {C}(?: {NAT}){{8}}) := by")
+                rf"|rootDecSegZKind h {C}(?: {NAT}){{8}}"
+                rf"|bytesDecSegKind h {SIZE} {C}(?: {NAT}){{9}}|bytesDecSegZKind h {SIZE} {C}(?: {NAT}){{8}}"
+                rf"|u64DecInlineSegKind h {C}(?: {NAT}){{4}}) := by")
         if not re.fullmatch(want, lines[j]):
             errs.append(f"{t}_kind: header is not a frozen kind: {lines[j][:160]}")
         elif "@E2eScal.rootDecSegZKind " in lines[j] and kindz_blob != KINDZ_BLOB:
             errs.append(f"{t}_kind: KindZ.lean blob {kindz_blob} != pinned {KINDZ_BLOB}")
+        else:
+            for kn, mods in GEN2_NEEDS.items():
+                if f"@E2eScal.{kn} " in lines[j]:
+                    for m in mods:
+                        if gen2_blobs.get(m) != GEN2_PINS[m]:
+                            errs.append(f"{t}_kind: {m} blob {gen2_blobs.get(m)} != pinned {GEN2_PINS[m]}")
         if j + 1 >= len(lines) or lines[j + 1] != "  intro h; with_reducible rfl":
             errs.append(f"{t}_kind: proof line is not `  intro h; with_reducible rfl`")
     for n in names:
@@ -121,15 +149,18 @@ def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB):
 def main(files):
     kb = blob(KIND)
     kzb = blob(KINDZ) if KINDZ.exists() else "missing"
+    g2b = {m: (blob(KIND.parent / m) if (KIND.parent / m).exists() else "missing") for m in GEN2_PINS}
     bad = 0
     for f in files:
-        errs, mains = check_text(pathlib.Path(f).read_text(), kb, kzb)
+        errs, mains = check_text(pathlib.Path(f).read_text(), kb, kzb, g2b)
         print(("PASS" if not errs else "FAIL"), f, "theorems:", ",".join(mains))
         for e in errs:
             print("  ", e)
         bad |= bool(errs)
     print("Kind.lean blob", kb, "frozen" if kb == KIND_BLOB else "NOT FROZEN")
     print("KindZ.lean blob", kzb, "pinned" if kzb == KINDZ_BLOB else "NOT PINNED")
+    for m, b in g2b.items():
+        print(m, "blob", b, "pinned" if b == GEN2_PINS[m] else "NOT PINNED")
     return 1 if bad else 0
 
 
@@ -207,13 +238,99 @@ def selftest():
          K, False, True),
         ("partial_output_in_line_comment", GOOD + "-- PARTIAL OUTPUT\n", K, False, True),
     ]
+    cases = [c + (None,) for c in cases] + gen2_cases(K)
     bad = []
-    for name, text, kb, ok, zpin in cases:
-        errs, _ = check_text(text, kb, KINDZ_BLOB if zpin else "0" * 40)
+    for name, text, kb, ok, zpin, g2 in cases:
+        errs, _ = check_text(text, kb, KINDZ_BLOB if zpin else "0" * 40, g2)
         if (not errs) != ok:
             bad.append((name, errs))
     print("selftest", "PASS" if not bad else f"FAIL {bad}", f"({len(cases)} cases)")
     return 1 if bad else 0
+
+
+# GEN2 controls: one generated-shape block per new kind (headers as `scalgen.py p2dec --gen2` writes them)
+GOOD2 = """import E2eScal.SegN
+import E2eScal.Kind
+import E2eScal.KindN
+import E2eScal.KindU64
+
+/-! Generated by `gen/scal/scalgen.py p2dec`; GEN2 coverage (`p2dec --gen2`): 3 of 3 fields. -/
+
+open Fk E2eScal.H3Code
+variable [Host]
+
+namespace E2eScal.Gen
+
+set_option maxHeartbeats 16000000 in
+set_option maxRecDepth 100000 in
+/-- `PublicKey` (48 bytes, SSZ offset 0, Go offset 0): decode segment, directives 13–36. -/
+theorem a (k : Nat) (hk : DmUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DmUnmarshal k) :
+    A := by
+  with_reducible exact E2eScal.bytesdec_seg_z 48 (Or.inr (Or.inl rfl)) _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA hB hl
+theorem a_kind : ∀ (h : Host), type_of% (@a h) = @E2eScal.bytesDecSegZKind h 48 DmUnmarshal 13 26 48 56 24 0 8 16 := by
+  intro h; with_reducible rfl
+
+theorem b (k : Nat) (hk : XyUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh XyUnmarshal k) :
+    B := by
+  with_reducible exact E2eScal.bytesdec_seg 96 (Or.inr (Or.inr rfl)) _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) hA hB hl
+theorem b_kind : ∀ (h : Host), type_of% (@b h) = @E2eScal.bytesDecSegKind h 96 XyUnmarshal 47 61 48 56 24 24 32 40 48 := by
+  intro h; with_reducible rfl
+
+set_option maxHeartbeats 4000000 in
+set_option maxRecDepth 100000 in
+theorem c (k : Nat) (hk : DmUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DmUnmarshal k) :
+    C := by
+  have hX : E2eScal.U64InlineReg Reg64.rcx := by decide
+  with_reducible exact E2eScal.u64dec_inline_seg Reg64.rcx hX _ _ _ (k + 83) hA
+theorem c_kind : ∀ (h : Host), type_of% (@c h) = @E2eScal.u64DecInlineSegKind h DmUnmarshal 83 56 80 48 := by
+  intro h; with_reducible rfl
+
+end E2eScal.Gen
+"""
+
+
+def gen2_cases(K):
+    za = "= @E2eScal.bytesDecSegZKind h 48 DmUnmarshal 13 26 48 56 24 0 8 16 := by"
+    ab = "= @E2eScal.bytesDecSegKind h 96 XyUnmarshal 47 61 48 56 24 24 32 40 48 := by"
+    uc = "= @E2eScal.u64DecInlineSegKind h DmUnmarshal 83 56 80 48 := by"
+    for x in (za, ab, uc):
+        assert GOOD2.count(x) == 1
+    P = dict(GEN2_PINS)
+
+    def pins(**chg):
+        d = dict(P)
+        d.update({k.replace("_", "."): v for k, v in chg.items()})
+        return d
+    z40 = "0" * 40
+    return [
+        ("g2_good", GOOD2, K, True, True, None),
+        ("g2_kindN_blob_changed", GOOD2, K, False, True, pins(KindN_lean=z40)),
+        ("g2_segN_blob_changed", GOOD2, K, False, True, pins(SegN_lean=z40)),
+        ("g2_kindU64_blob_changed", GOOD2, K, False, True, pins(KindU64_lean=z40)),
+        ("g2_u64inline_blob_changed", GOOD2, K, False, True, pins(U64Inline_lean=z40)),
+        ("g2_no_u64_kindU64_not_needed", GOOD2.split("set_option maxHeartbeats 4000000")[0] + "end E2eScal.Gen\n",
+         K, True, True, pins(KindU64_lean=z40, U64Inline_lean=z40)),
+        ("g2_z_degenerate_self", GOOD2.replace(za, "= type_of% (@a h) := by"), K, False, True, None),
+        ("g2_z_degenerate_true", GOOD2.replace(za, "= True := by"), K, False, True, None),
+        ("g2_add_degenerate_self", GOOD2.replace(ab, "= type_of% (@b h) := by"), K, False, True, None),
+        ("g2_u64_degenerate_self", GOOD2.replace(uc, "= type_of% (@c h) := by"), K, False, True, None),
+        ("g2_u64_degenerate_true", GOOD2.replace(uc, "= True := by"), K, False, True, None),
+        ("g2_z_size_64", GOOD2.replace(za, za.replace(" h 48 ", " h 64 ")), K, False, True, None),
+        ("g2_add_size_symbolic", GOOD2.replace(ab, ab.replace(" h 96 ", " h n ")), K, False, True, None),
+        ("g2_z_size_missing", GOOD2.replace(za, za.replace(" h 48 ", " h ")), K, False, True, None),
+        ("g2_add_nine_params", GOOD2.replace(ab, ab.replace(" 40 48 :=", " 40 :=")), K, False, True, None),
+        ("g2_z_nine_params", GOOD2.replace(za, za.replace(" 8 16 :=", " 8 16 0 :=")), K, False, True, None),
+        ("g2_u64_three_params", GOOD2.replace(uc, uc.replace(" 80 48 :=", " 80 :=")), K, False, True, None),
+        ("g2_u64_register_param", GOOD2.replace(uc, uc.replace(" h DmUnmarshal", " h Reg64.rcx DmUnmarshal")),
+         K, False, True, None),
+        ("g2_u64_other_const", GOOD2.replace(uc, uc.replace("DmUnmarshal", "BiUnmarshal")), K, False, True, None),
+        ("g2_add_as_z_kind", GOOD2.replace(ab, ab.replace("bytesDecSegKind", "bytesDecSegZKind")), K, False, True, None),
+        ("g2_partial_output", GOOD2.replace("/-! Generated", "/-! PARTIAL OUTPUT (scalgen exit 3): 2 of 3 fields "
+                                            "of `v1alpha1.DepositMessage` (--gen2); NOT generated: Amount. -/\n/-! Generated"),
+         K, False, True, None),
+        ("g2_proof_not_rfl", GOOD2.replace(uc + "\n  intro h; with_reducible rfl", uc + "\n  intro h; rfl"),
+         K, False, True, None),
+    ]
 
 
 if __name__ == "__main__":
