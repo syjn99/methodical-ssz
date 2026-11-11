@@ -1837,5 +1837,138 @@
    "x86-64 hardware",
    "independent review of INT4"
   ]
+ },
+ "gen3": {
+  "what": "GEN3 unit G3-G: proof generator scalgen.py p2dec --gen3 (opt-in, implies --gen2) for the three SG-3 shapes with the G3-L lemmas; one run per development type; reuse demonstration; evidence. Development data only (in-sample); generator change after H4; no hold-out claim until H5",
+  "base": "f5c5f52",
+  "author": "fresh Opus 5.5 session (implementer)",
+  "state": "not yet reviewed",
+  "compat": "--gen3 only; default and --gen2 output byte-identical: regen_check.sh 16/16 SAME; base-vs-head differential (default, --gen2, --gen2 --compose; 10 inputs) 30/30 equal",
+  "coverage_gen3": {
+   "PendingPartialWithdrawal": "3/3",
+   "Deposit_Data": "4/4",
+   "BeaconBlockHeader": "5/5",
+   "AttestationData": "3/5 (Source, Target: nested *Checkpoint, not covered)"
+  },
+  "coverage_gen2": {
+   "PendingPartialWithdrawal": "0/3",
+   "Deposit_Data": "3/4",
+   "BeaconBlockHeader": "3/5",
+   "AttestationData": "1/5"
+  },
+  "raw_outputs": [
+   "lean/E2eScal/Gen3PwDec.lean",
+   "lean/E2eScal/Gen3DdDec.lean",
+   "lean/E2eScal/Gen3BhDec.lean",
+   "lean/E2eScal/Gen3AdDecPartial.lean",
+   "lean/E2eScal/Gen3DdAccept2.lean"
+  ],
+  "raw_output_edited_lines": 0,
+  "compose_run1": "Gen3DdAccept.lean did not parse (doc comment before set_option … in; generator bug, fixed in 4d5a7dc); kept unedited as scal/gen3/Gen3DdAccept.run1-parse-error.lean.txt",
+  "compose": "Deposit_Data composed (dd_e2e_accept_main_g3: _kind = decAcceptKind DdUnmarshal true [.bytes 48, .bytes 32, .u64, .bytes 96] 106, _type = H4.dd_accept_stmt); PendingPartialWithdrawal, BeaconBlockHeader refused (callee fields)",
+  "g3_accept": {
+   "PendingPartialWithdrawal": "H4.pw_e2e_accept_main_g3 : pw_accept_stmt (hand composition over Gen3PwDec; _type identity with pw_e2e_accept_main)",
+   "Deposit_Data": "Gen.dd_e2e_accept_main_g3 (generated composition; _type identity with H4.dd_accept_stmt)",
+   "BeaconBlockHeader": "Bh.bh_e2e_accept_main_g3 and bh_e2e_head_g3g (hand composition over Gen3BhDec; _type identities with bh_e2e_accept_main, bh_e2e_head)"
+  },
+  "counting_rule": "non-blank lines that are not comment lines (-- or /- -/ blocks), whole module file or one declaration (g2g rule)",
+  "hand_lines": {
+   "PendingPartialWithdrawal": {
+    "proof_body": "98 -> 75",
+    "module": "PwAccept 239 -> PwAcceptG3 87 + hand steps still used from PwAccept 140 = 227"
+   },
+   "BeaconBlockHeader": {
+    "proof_body_head": "159 -> 59 + hand steps bh_head0 66 + bh_spill2 15 = 140",
+    "proof_body_accept": "150 -> 150",
+    "module": "BhHead 218 + BhAccept 243 = 461 -> BhAcceptG3 336 + BhHeadG3 hand steps 131 + BhAccept helpers 22 = 489"
+   },
+   "Deposit_Data": {
+    "proof_body": "136 -> 0 (generated)",
+    "module": "DdAccept 148 + DdSegNop 188 = 336 -> 0 hand lines (Gen3DdAccept2 216 generated)"
+   },
+   "gen3_lemma_modules_one_time": "CallDec 308 + KindCall 123 + U64RR 49 + SegNPad 265 + KindAccept 132 + CallDecRel 12 + KindAcceptRel 16 = 905",
+   "excluded": "code modules, Desc, spec alignment, reject, witnesses, link tables, negatives, hand statements"
+  },
+  "module_times_s_n2": {
+   "PwAccept": [
+    2.48,
+    2.54
+   ],
+   "PwAcceptG3": [
+    1.65,
+    1.72
+   ],
+   "BhHead": [
+    4.08,
+    4.16
+   ],
+   "BhHeadG3": [
+    2.43,
+    2.47
+   ],
+   "BhAccept": [
+    5.8,
+    5.88
+   ],
+   "BhAcceptG3": [
+    5.92,
+    5.93
+   ],
+   "DdAccept": [
+    4.27,
+    4.29
+   ],
+   "DdSegNop": [
+    2.17,
+    2.2
+   ],
+   "Gen3DdAccept2": [
+    4.15,
+    4.15
+   ],
+   "Gen3PwDec": [
+    1.28,
+    1.3
+   ],
+   "Gen3DdDec": [
+    1.33,
+    1.33
+   ],
+   "Gen3BhDec": [
+    1.95,
+    1.95
+   ],
+   "Gen3AdDecPartial": [
+    1.41,
+    1.42
+   ]
+  },
+  "time_method": "lake env lean <file>, wall seconds, two rounds, one gated job; no speed claim",
+  "kindcheck": "selftest 114 cases + 4 exit-code cases PASS; 15/15 broken checker copies fail it; g2f-r1 S1-S4 implemented; committed GEN3 files PASS (partial: exit 3)",
+  "p2dec_test": "88/88 (30 GEN3 cases: 4 runs, 23 adversarial mutants, 2 compose refusals, DD compose, Eth1Data)",
+  "negatives": "17/17 (4 controls pass, 13 mutants fail inside; 0 timeout, 0 wrong_target); negative-g3g.json",
+  "axioms": "axioms gate PASS: 5463 declarations, 4536 theorems, 207 modules, hand list 582, nonstandard 0, sorryAx 0",
+  "drift": "vs int4-r1 dump (5007 rows): ADDED 456 (330 G3-L + 126 G3-G), CHANGED 0, REMOVED 0 (scal/gen3-drift.txt); planted dump control: 1 CHANGED + 1 ADDED, axioms gate FAIL (sorryAx)",
+  "regen": "16/16 old SAME; 5 new commands SAME and deterministic",
+  "no_build": "lake build --no-build E2e E2eAd E2eScal exit 0",
+  "not_covered_shapes": [
+   "argument set-up forms other than the three observed (other registers, extra or missing moves)",
+   "callees without a proved accept spec",
+   "pointer / nested-container fields",
+   "lists",
+   "bitfields",
+   "byte vector sizes other than 32 / 48 / 96",
+   "padding nop in other positions (also the observed pointer-tail nop of BeaconBlockHeader.ParentRoot / Checkpoint.Root, composition only)",
+   "offset-0 form with a padding nop",
+   "encoders",
+   "composed theorems with callee fields or frames other than 0x20"
+  ],
+  "not_run": [
+   "cold build from an empty .lake",
+   "link checks",
+   "Go differential",
+   "x86-64 hardware"
+  ],
+  "wording": "in-sample; no transfer, generality or speed claim"
  }
 }

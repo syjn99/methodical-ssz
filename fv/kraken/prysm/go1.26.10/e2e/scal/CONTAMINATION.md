@@ -340,3 +340,21 @@
 - 공리 게이트는 임시 JSON으로 돌렸다. 커밋된 `axioms-gate.json`과 `AxiomsScal.lean`은 바꾸지 않았다.
 - 제안 P-H4-1, P-H4-2, P-H4-3의 생성기 쪽은 하지 않았다. 다음 단위의 일이다.
 - 독립 리뷰는 아직 없다.
+
+## 19. GEN3 생성기 작업 (단위 G3-G) — H4 뒤 생성기 변경, 개발 작업, 홀드아웃 아님
+
+- 이 작업은 H4 평가 뒤에 증명 생성기 `gen/scal/scalgen.py`를 바꿨다. 기준 커밋은 `f5c5f52`다.
+- 작성 세션은 새 Opus 세션이다. 이 세션은 보조정리를 쓰지 않았고 리뷰하지 않는다.
+- 입력은 개발 자료뿐이다: PendingPartialWithdrawal, Deposit_Data, BeaconBlockHeader, AttestationData.
+- 이 네 형의 덮음은 표본 안이다. 옮겨짐(transfer) 주장은 하지 않는다. H5 전에는 홀드아웃 주장이 없다.
+- 새 꼴은 `--gen3` 뒤에만 있다. 기본 모드와 `--gen2` 출력은 바이트가 같다(`regen_check.sh` 16/16 SAME).
+- 이 세션은 보조정리 단위의 예시 파일 `Gen3Examples.lean`을 읽고 생성기 글을 맞췄다.
+- 생성 글 34개 중 33개가 예시와 바이트가 같다. 1개는 줄바꿈만 다르다.
+- 형마다 한 번 실행했다. 먼저 scratch 시험 실행(작업 01)이 있었다. 그 뒤 커밋할 실행(작업 06)을 했다.
+- 원 출력은 손대지 않고 빌드 전에 커밋했다(`977db81`).
+- Deposit_Data 합성 실행 1은 구문 오류였다: 생성기가 `set_option … in` 앞에 문서 주석을 썼다.
+- 그 원 출력은 `scal/gen3/Gen3DdAccept.run1-parse-error.lean.txt`로 옮겨 그대로 둔다. 고친 생성기의 실행 2가 `Gen3DdAccept2.lean`이다.
+- PendingPartialWithdrawal과 BeaconBlockHeader의 수락 정리는 손 합성이다(`PwAcceptG3`, `BhAcceptG3`). 생성된 정리를 부른다.
+- 리뷰 g3l-r1(APPROVE)의 생성기 항목: 꼬리의 `nop`(BeaconBlockHeader.ParentRoot, Checkpoint.Root)은 덮지 않음으로 적었다.
+- `kindcheck.py`에 g2f-r1 S1–S4를 넣었다. H4가 끝나서 이제 바꿀 수 있다.
+- 일반성 주장은 없다. 속도 주장도 없다. 독립 리뷰는 아직 없다.

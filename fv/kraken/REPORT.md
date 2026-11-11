@@ -613,6 +613,24 @@ h4-r1 덤프 대비 선언 비교: CHANGED 0, REMOVED 0, ADDED 0이다. 덤프 �
 실행하지 않은 것(통합자): Lean 수준 심은 대조, 콜드 빌드, 링크 검사, Go 차분, 부정 시험, x86-64.
 기록: `scal/RESULT.json`의 `integration_int4`.
 
+GEN3 단위 G3-G(기준 `f5c5f52`, 증명 생성기 변경, 개발 자료만; 아직 리뷰 없음):
+`scalgen.py p2dec --gen3`가 G3-L 보조정리의 세 꼴을 낸다. 기본 모드와 `--gen2` 출력은 그대로다.
+세 꼴: 증명된 명세가 있는 피호출 디코더의 호출 필드, 두 지시어 uint64 읽기, makeslice 앞 패딩 `nop`.
+표본 안 덮음: PendingPartialWithdrawal 3/3, Deposit_Data 4/4, BeaconBlockHeader 5/5, AttestationData 3/5이다.
+`--gen2`에서는 0/3, 3/4, 3/5, 1/5였다. 이것은 옮겨짐이 아니다. 홀드아웃 측정은 H5다.
+Deposit_Data는 합성도 생성했다(`Gen3DdAccept2.lean`). 문장 검사는 종류 `decAcceptKind`와 `H4.dd_accept_stmt` 항등이다.
+호출 필드가 있는 형은 `--compose`가 거부한다. 그 수락 정리는 생성된 정리를 부르는 손 합성이다(`PwAcceptG3`, `BhAcceptG3`).
+두 손 합성의 형은 기존 손 정리와 `rfl`로 같다. 머리, 꼬리, BeaconBlockHeader 포인터 꼬리는 손 단계다.
+손 줄(g2g 규칙: 빈 줄과 주석 줄을 뺀 줄): 증명 몸체 PendingPartialWithdrawal 98 → 75, Deposit_Data 136 → 0이다.
+BeaconBlockHeader 머리 몸체는 159 → 140(손 단계 포함), 수락 몸체는 150 → 150이다. 모듈 전체로는 줄지 않았다.
+GEN3 보조정리 모듈(손으로 한 번 씀)은 905줄이다. 속도 주장은 없다.
+합성 실행 1은 구문 오류였다(생성기 버그). 원 출력은 `scal/gen3/`에 두고 고친 실행 2를 썼다.
+실행 검사: `regen_check.sh` 옛 16/16 SAME, 새 5개 결정적이다. 기본/`--gen2` 차분 30/30 같다.
+`kindcheck.py --selftest` 114건과 종료 코드 4건 PASS, 일부러 고장 낸 검사기 15/15가 실패한다. `p2dec_test.py` 88/88이다.
+부정 시험 17/17(대조 4, 정리 안 실패 13, 시간 초과 0)이다. 공리 게이트 PASS, 선언 5463개, 비표준 0이다.
+int4-r1 덤프 대비 선언 비교는 ADDED 456뿐이다. 심은 대조는 잡혔다. `lake build --no-build` 종료 0이다.
+실행하지 않은 것: 콜드 빌드, 링크 검사, Go 차분, x86-64. 기록: CONTAMINATION 19절, `scal/RESULT.json`의 `gen3`.
+
 조건:
 
 1. 런타임 계약 `MakesliceC`(uint8, esz 1, cnt 32), `MemmoveC`, `GrowsliceC`(uint8, esz 1, 인코더 첫 지점과 둘째 지점), `ConvT64C`, `FmtErrorfDDC`(Epoch 형식, `type:int`)는 가설이다. Go 1.26.10 소스를 다시 읽었고 바뀌지 않았다(`prysm/go1.26.10/e2e/RUNTIME-1.26.10.md`). 정교화 증명은 없다.
@@ -758,6 +776,9 @@ python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/prysm/go1.26.10/opt-r1/neg
 (cd fv/kraken && python3 -I gen/scal/scalgen.py p2dec --gen2 --summary <s.json> --S prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S --const DmUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.DepositMessage --prefix dm_g2dec --imports E2eScal.P2Dec,E2eScal.SegN,E2eScal.U64Inline,E2eScal.H3Code --open E2eScal.H3Code)   # 다른 형과 --compose: gen.sh
 python3 -I -B fv/kraken/gen/scal/p2dec_test.py <work> <result.json>; python3 -I -B fv/kraken/gen/scal/kindcheck.py fv/kraken/lean/E2eScal/Gen2*Dec.lean fv/kraken/lean/E2eScal/Gen2*Accept.lean
 python3 -I -B fv/kraken/gen/scal/kindcheck.py --partial fv/kraken/lean/E2eScal/Gen2BhDecPartial.lean   # 종료 3 = 있는 정리의 kind PASS, 완전 덮음 아님
+# GEN3 생성기(단위 G3-G): gen.sh 마지막 명령 5개, 형마다 한 번; 모듈 Gen3PwDec Gen3DdDec Gen3BhDec Gen3AdDecPartial Gen3DdAccept2 PwAcceptG3 BhAcceptG3 (lake build E2eScal.<모듈>)
+python3 -I -B fv/kraken/gen/scal/kindcheck.py fv/kraken/lean/E2eScal/Gen3PwDec.lean fv/kraken/lean/E2eScal/Gen3DdDec.lean fv/kraken/lean/E2eScal/Gen3BhDec.lean fv/kraken/lean/E2eScal/Gen3DdAccept2.lean; python3 -I -B fv/kraken/gen/scal/kindcheck.py --partial fv/kraken/lean/E2eScal/Gen3AdDecPartial.lean
+python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/scal/negcases-g3g.json <work> prysm/go1.26.10/e2e/scal/negative-g3g.json <case-id>   # 사례마다 gate 작업 하나
 python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/scal/negcases-g2g.json <work> <result.json> <case-id>   # 사례마다 gate 작업 하나
 # H4 홀드아웃: 링크 표, 생성기 (S)와 (C)를 형마다 한 번, 모듈, 부정 시험, Go 차분
 python3 -I -B fv/kraken/gen/e2e/h4link.py callgraph <objdump> <out.json>; python3 -I -B fv/kraken/gen/e2e/h4link.py filter <out> <objdump> <elf> <nm>

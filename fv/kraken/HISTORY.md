@@ -274,3 +274,9 @@ H4 단락 정정(리뷰 h4-r1 S1): Deposit_Data 3/4의 덮은 필드 중 둘은 
 h4-r1 S7 기록: H4 커밋 셋은 type으로 `spec(...)`을 쓴다. `fv/AGENTS.md`에서 spec은 scope다. 이력 재작성은 하지 않는다.
 병합 트리에서 빌드, 공리 게이트(선언 5007개), 선언 비교(차이 0), `regen_check.sh` 16/16 SAME을 다시 확인했다.
 `.lean`, 생성기, 검사기, 고정 버전은 바꾸지 않았다. 원격에 쓰지 않았다. 기록: REPORT 11절, `scal/RESULT.json`의 `integration_int4`.
+
+GEN3 단위 G3-G(기준 `f5c5f52`, Opus 5.5 구현, 리뷰 전): 증명 생성기에 `p2dec --gen3`를 더했다.
+호출 필드, 두 지시어 uint64 읽기, makeslice 앞 패딩 `nop`을 G3-L 보조정리로 덮는다. 옛 출력 16개는 SAME이다.
+개발 형 덮음(표본 안): PendingPartialWithdrawal 3/3, Deposit_Data 4/4, BeaconBlockHeader 5/5, AttestationData 3/5.
+Deposit_Data 합성 실행 1은 구문 오류였다. 원 출력은 기록으로 두고 고친 실행 2를 썼다.
+`kindcheck.py`에 g2f-r1 S1–S4와 새 종류를 넣었다. 기록: REPORT 11절, `scal/RESULT.json`의 `gen3`, CONTAMINATION 19절.
