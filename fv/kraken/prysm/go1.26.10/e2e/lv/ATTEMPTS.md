@@ -147,7 +147,9 @@
 - 선언 drift: 기준 `6a78c591…`을 `git archive`로 scratch에 풀고 현재 `.lake`를 복제(APFS clone)했다. 기준 트리의 `--no-build E2e E2eAd E2eScal`이 exit 0이었다(로그 70).
 - 한계: 기준의 `.olean`은 기준 트리에서 따로 만든 것이 아니다. Lake 추적이 원천과 입력이 같다고 판단한 것이다.
 - 로그 72: `decl_drift.py`가 exit 2로 거부했다(덤프의 roots가 다르다). 로그 73–74: 같은 roots(E2e, E2eAd, E2eScal)로 현재 트리를 다시 덤프했다. drift 0, base 5007 = head 5007.
-- `E2eList` 선언은 새 root라서 drift 비교 밖이다. 게이트 덤프에서 `E2eList.` 이름은 622개다(5632 − 5007 = 625와의 차이 3은 `E2eList.` 접두사가 없는 보조 이름으로 본다. 확인하지 않았다).
+- `E2eList` 선언은 새 root라서 drift 비교 밖이다. (리뷰 r1 S3로 아래 줄을 고쳤다. 처음 쓴 "622"는 틀린 셈이었다.)
+- 다시 센 값(로그 69의 덤프와 기준 덤프의 이름 비교): 새 줄 625개, 기준에서 사라진 줄 0개. 625개 중 434개가 `E2eList.`로 시작한다. 623개가 이름에 `E2eList`를 가진다(`_private.E2eList.…`, `_aux_E2eList_…` 포함).
+- 나머지 2개는 `E2e.Data.e2eU8Type_addr.eq_1`과 `commandLv_data_include_`다. 앞의 것은 `E2eList` 모듈(`WitScA.u8_ne_slice`의 `simp only [E2e.Data.e2eU8Type_addr]`)이 `E2e.Data` 이름공간에 자동으로 만든 등식 보조정리다. 뒤의 것은 새 명령 `lv_data_include`의 구문 종류 이름이다. 둘 다 추가다. 기존 선언을 바꾸지 않는다.
 - drift 대조군(로그 75–78): scratch 기준 사본의 `E2eScal.WitBhU.s0`에 `0 + 0`을 심었다. drift exit 1, `CHANGED E2eScal.WitBhU.s0 value`. 파일을 되돌리고 그 모듈을 다시 빌드했다.
 - 스킬 `SKILL.md`는 "`decl_dump.lean`의 Kraken 트리 첫 실행은 따로 게이트된 단위"라고 적는다. 이 실행이 그 첫 실행이다. 대조군으로 검사가 실패할 수 있음을 보였다.
 - 부정 시험(로그 83–84): 새 파일 `gen/e2e/lvnegative.py`(기존 `negative.py`를 import; 문장 모듈을 펼쳐 넣고, memcap 없이 프로세스 그룹으로 시간 제한). 경우 `lv/negcases-lv.json`, 결과 `lv/negative-lv.json`.
@@ -160,3 +162,39 @@
 - 로그 66: scratch `.S`의 `lea 0xffffff1c(%rdi),%rdx`를 Kraken `include_x64_rt`로 읽고 `#print`했다. 결과 `disp := ↑4294967068`. 같은 파일의 `lea -0xe4(%rdi),%rdx`는 `disp := ↑(-228)`다.
 - 기계는 32비트 변위를 부호 확장한다(−228). 그래서 이 표기를 Kraken에 그대로 주면 다른 주소를 계산한다. 실행 증거(X)다.
 - 커밋된 다른 `.S`에는 `0xffffff..(%` 꼴이 없다(`git grep`, 결과 0).
+
+## 리뷰 r1 수정 (`fbf729a` 리뷰)
+
+### 로그
+
+- 번호 붙은 로그(`logs/NN-*.log`)와 `heavy.py` 기록(`.json`)은 로컬 작업 디렉터리에만 있다. 커밋하지 않았다.
+- 보고서가 기대는 줄을 아래에 그대로 옮긴다(경로는 줄였다).
+- 로그 08(`check.py`, T3 포함): `FAIL clang: <tmp>/re.S:738:18: error: displacement 4294967068 is not within [-2147483648, 2147483647]` 다음 줄 `  lea 0xffffff1c(%rdi),%rdx`.
+- 로그 26(`WitSaA` 시도 1): `error: E2eList/WitSaA.lean:87:0: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached`.
+- 로그 27(프로파일): `simp took 2.08s`, `simp took 7.03s`, 누계 `simp 9.16s`.
+- 로그 65(`WitScA`, 설정 없는 scratch 사본): `WitScANoHb.lean:97:0: error: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached`, 앞서 `simp took 2.3s`.
+- 로그 66(T3 변위): `disp := ↑4294967068`(`lea 0xffffff1c(%rdi),%rdx`)와 `disp := ↑(-228)`(`lea -0xe4(%rdi),%rdx`).
+
+### M1: `maxRecDepth`
+
+- 원인을 기록하지 않은 `set_option maxRecDepth 100000`이 `E2eList/WitSaA.lean:26`과 `E2eList/WitScA.lean:27`에 있었다. 증인 본(`WitDdA.lean`)에서 옮긴 줄이다.
+- `WitSaA.lean:26`의 줄을 지웠다. 로그 86: `lake build E2eList.WitSaA` exit 0.
+- `WitScA.lean:27`의 줄을 지우고 빌드했다. 로그 87: exit 1. 오류 4개는 모두 `maximum recursion depth has been reached`이고 첫 `example`(125행)과 셋째 `example`(131행)의 `by simp`에 있다. `sc_accept_runs`와 둘째 `example`은 통과했다.
+- 원인: `List.replicate 512 …`(512개 원소 목록)의 길이와 원소 길이를 `simp`로 보일 때 기본 재귀 한도를 넘는다.
+- 조치: `set_option maxRecDepth 100000 in`을 그 두 `example`에만 둔다. 파일 `E2eList/WitScA.lean`, 127행과 134행, 값 100000. 이전 값은 기본값이다. 로그 88은 docstring 앞뒤 순서 때문에 구문 오류(wrong-target)였다. 로그 89에서 exit 0.
+
+### S5: `lakefile.toml`
+
+- `input_dir` `lv_lean_S`(path `E2eList`, `.S`만)를 덧붙이고 `E2eList`의 `needs`에 더했다. `e2e_ad_lean_S`와 같은 꼴이다. 다른 항목은 바꾸지 않았다.
+- 로그 90: `lake build E2eList` exit 0, 683 jobs(`needs`가 바뀌어 라이브러리 전체를 다시 빌드했다). 로그 91: `--no-build E2e E2eAd E2eScal E2eList` exit 0, 1036 jobs.
+
+### S4: 부정 시험 추가
+
+- `gen/e2e/lvnegative.py`에 `inline`(펼칠 모듈 목록)을 더했다. `Desc.lean`과 `Defs.lean`을 펼쳐 `Desc`를 변이한다. 이전 경우는 그대로 돈다.
+- 더한 경우: `lv-sc-rej-control`, `lv-sc-rej-errword`(T2 크기 거부), `lv-sa-desc-control`, `lv-sa-desc-sig95`, `lv-sc-desc-control`, `lv-sc-desc-n511`(크기 변이, 첫 대상 `*_fixedSize`), `lv-sa-desc-kind`, `lv-sc-desc-kind`(같은 크기의 종류 변이, 대상 `psa_toValue_fits`, `psc_toValue_fits`).
+- 로그 92, 93: 더한 8개 모두 통과. 로그 94: 전체 26개를 새 실행기로 다시 돌렸다. 25개 통과(control_pass 7, inside 18), 1개 outside(`lv-sa-bitslen63`, 이전 기록과 같다).
+
+### 다시 돌린 검사
+
+- 공리 게이트(로그 95): PASS, 선언 5632, 정리 4684, 손 목록 462, 비표준 0, `sorryAx` 0. 결과 `lv/axioms-gate-lv-r1.json`. 이름 집합은 로그 69와 같다.
+- `STEPS.tsv`의 71, 76번 줄에 있던 작업 디렉터리 경로를 `<scratch base copy>`로 바꿨다(S1).
