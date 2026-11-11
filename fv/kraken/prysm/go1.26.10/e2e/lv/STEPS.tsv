@@ -1,0 +1,14 @@
+step	utc	exit	log	command
+00-elf-build	2026-11-11T16:22:20Z (log mtime)	0	logs/00-elf-build.log	ELF rebuild in Docker by the planner (prysm/go1.26.10/MANIFEST.md procedure); hashes equal build-ids.txt
+01-build	2026-11-11T16:20:07Z	0	logs/01-build.log	heavy.py -- lake build E2e E2eAd E2eScal (planner; clean .lake; 1215 s; 982 jobs)
+02-lvlink-callgraph	2026-11-11T16:28:56Z	0	logs/02-lvlink-callgraph.log	python3 -I -B gen/e2e/lvlink.py callgraph <objdump> <work>/callgraph.json (T1, T2, T3)
+03-lvlink-filter	2026-11-11T16:29:02Z	0	logs/03-lvlink-filter.log	python3 -I -B gen/e2e/lvlink.py filter <work> <objdump> <elf> <nm> (T1, T2, T3)
+04-desc-producer	2026-11-11T16:30:57Z (log mtime)	0	logs/04-desc-producer.log	python3 -I -B gen/desc/producer.py <work>/desc prysm/ir/ir-mainnet.json --types=SyncAggregate,SyncCommittee,IndexedAttestation
+05-conv	2026-11-11T16:48:23Z	1	logs/05-conv.log	heavy.py -- python3 -I -B ../link/conv.py <work>/target.objdump <work>/p1bin-amd64.nm <work>/norm --norm (wrong-target: norm/ missing)
+06-conv	2026-11-11T16:48:30Z	0	logs/06-conv.log	same as 05 after mkdir norm (T1, T2, T3)
+07-data	2026-11-11T16:48:35Z	0	logs/07-data.log	heavy.py -- python3 -I -B ../gen/e2e/lvlink.py data <work> ../prysm/go1.26.10/e2e/link ../prysm/go1.26.10/e2e/ad/link (T1, T2, T3)
+08-check	2026-11-11T16:48:48Z	1	logs/08-check.log	heavy.py -- python3 -I -B ../link/check.py <work> (T1, T2, T3): (d) FAIL, clang rejects lea 0xffffff1c(%rdi),%rdx in T3
+09-filter	2026-11-11T16:49:38Z	0	logs/09-filter.log	python3 -I -B ../gen/e2e/lvlink.py filter <work2> <objdump> <elf> <nm> (T1, T2)
+10-conv	2026-11-11T16:49:39Z	0	logs/10-conv.log	heavy.py -- python3 -I -B ../link/conv.py <work2>/target.objdump <work2>/p1bin-amd64.nm <work2>/norm --norm
+11-data	2026-11-11T16:49:40Z	0	logs/11-data.log	heavy.py -- python3 -I -B ../gen/e2e/lvlink.py data <work2> ../prysm/go1.26.10/e2e/link ../prysm/go1.26.10/e2e/ad/link
+12-check	2026-11-11T16:49:41Z	0	logs/12-check.log	heavy.py -- python3 -I -B ../link/check.py <work2> (T1, T2): PASS all; copied to lv/link

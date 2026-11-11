@@ -1,0 +1,51 @@
+{
+ "schema": "fvphase1c.desc/1",
+ "type": "SyncCommittee",
+ "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+ "ssz": {
+  "k": "container",
+  "names": [
+   "Pubkeys",
+   "AggregatePubkey"
+  ],
+  "fields": [
+   {
+    "k": "vector",
+    "elem": {
+     "k": "byteVector",
+     "n": 48
+    },
+    "n": 512
+   },
+   {
+    "k": "byteVector",
+    "n": 48
+   }
+  ]
+ },
+ "fixed_size": 24624,
+ "fixed_part_size": 24624,
+ "fields": [
+  {
+   "name": "Pubkeys",
+   "index": 0,
+   "offset": 0,
+   "width": 24576,
+   "variable": false,
+   "kind": "vector",
+   "length": 512,
+   "elem_size": 48
+  },
+  {
+   "name": "AggregatePubkey",
+   "index": 1,
+   "offset": 24576,
+   "width": 48,
+   "variable": false,
+   "kind": "byteVector",
+   "length": 48
+  }
+ ],
+ "variable_order": [],
+ "reference": null
+}
