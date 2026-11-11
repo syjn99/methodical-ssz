@@ -118,6 +118,17 @@ name = "lv_data"
 path = "../prysm/go1.26.10/e2e/lv/link/data"
 text = true
 
+# LV T3 (IndexedAttestation): the link set lv/link-t3 (after the conv.py LV-1 fix)
+[[input_dir]]
+name = "lv_t3_norm_S"
+path = "../prysm/go1.26.10/e2e/lv/link-t3/norm"
+text = true
+
+[[input_dir]]
+name = "lv_t3_data"
+path = "../prysm/go1.26.10/e2e/lv/link-t3/data"
+text = true
+
 # witness-only runtime model (LV review r1 S5): the type-dispatching bump makeslice E2eList/BumpAllocT.S
 [[input_dir]]
 name = "lv_lean_S"
@@ -128,4 +139,5 @@ filter = {extension = ["S"]}
 [[lean_lib]]
 name = "E2eList"
 globs = ["E2eList.+"]
-needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data", "lv_lean_S"]
+needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data", "lv_lean_S",
+  "lv_t3_norm_S", "lv_t3_data"]

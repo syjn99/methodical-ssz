@@ -250,3 +250,12 @@
 - (f) selftest: 위 실행마다 먼저 돌았고 통과했다.
 - T3 정규화 `.S`의 호출 집합: `fmt.errorf` 3, `AttestationData.UnmarshalSSZ` 1, `runtime.convT64` 2, `runtime.gcWriteBarrier2` 4, `runtime.makeslice` 2, `runtime.memmove` 1, `runtime.morestack_noctxt.abi0` 1, `runtime.newobject` 4, `runtime.panicBounds` 3. 279줄.
 - T3의 Lean 문장이나 증명은 시작하지 않았다.
+
+## T3 설계와 문장
+
+- 새 파일: `E2eList/IncludeIa.lean`(`lv_data_include` 글의 사본, 접두사 `lvt3`, 경로 `lv/link-t3/data`), `gen/e2e/lvt3check_include.py`(SAME 넷, exit 0), `CodeIa.lean`, `DataIa.lean`, `DefsIa.lean`, `StmtIa.lean`.
+- `lakefile.toml`: `input_dir` 둘(`lv_t3_norm_S`, `lv_t3_data`)을 덧붙이고 이 가지에서 만든 `E2eList`의 `needs`에 더했다. 다른 항목은 바꾸지 않았다. 사용자 결정 목록에 올린다.
+- 로그 114: `lake build E2eList.StmtIa` exit 1. `NewobjectC`는 `Fk.FunSpecs`에 있다(import 빠짐).
+- 로그 115, 116: exit 0. 로그 117: `lake build E2eList` exit 0, 705 jobs. 로그 118: `--no-build E2e E2eAd E2eScal E2eList` exit 0, 1048 jobs.
+- `StmtIa.lean`의 문장 글은 scratch 생성 스크립트로 썼다(같은 프레임 글을 반복하지 않게). 스크립트는 커밋하지 않았다. 결과 Lean 파일이 문장이다.
+- 새 파일에 `sorry`, `admit`, `axiom`, `native_decide`, `bv_decide`, `maxHeartbeats`, `maxRecDepth`가 없다(`grep` exit 1).

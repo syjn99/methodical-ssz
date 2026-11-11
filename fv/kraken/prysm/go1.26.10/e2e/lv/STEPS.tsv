@@ -114,3 +114,8 @@ step	utc	exit	log	command
 111-t3-check	2026-11-11T22:50:09Z	0	logs/111-t3-check.log	heavy.py -- python3 -I -B ../link/check.py <work>/link-t3-r (2.1 s wall)
 112-t3probe2	2026-11-11T22:50:25Z	0	logs/112-t3probe2.log	heavy.py -- lake env lean <work>/scratch/T3Probe2.lean (7.3 s wall)
 113-t3probe2	2026-11-11T22:50:40Z	0	logs/113-t3probe2.log	heavy.py -- lake env lean <work>/scratch/T3Probe2.lean (3.1 s wall)
+114-StmtIa	2026-11-11T23:00:33Z	1	logs/114-StmtIa.log	heavy.py -- lake build E2eList.StmtIa (11.5 s wall)
+115-StmtIa	2026-11-11T23:00:53Z	0	logs/115-StmtIa.log	heavy.py -- lake build E2eList.StmtIa (6.3 s wall)
+116-StmtIa	2026-11-11T23:01:43Z	0	logs/116-StmtIa.log	heavy.py -- lake build E2eList.StmtIa (6.3 s wall)
+117-build-E2eList	2026-11-11T23:01:52Z	0	logs/117-build-E2eList.log	heavy.py -- lake build E2eList (46.1 s wall)
+118-nobuild	2026-11-11T23:02:40Z	0	logs/118-nobuild.log	heavy.py -- lake build --no-build E2e E2eAd E2eScal E2eList (3.1 s wall)
