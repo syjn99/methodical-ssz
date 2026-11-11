@@ -87,9 +87,13 @@ T1과 T2에서 시도 한도에 닿은 의무는 없다(`ATTEMPTS.md`).
 | BumpT | 1.7 s | 4.2 s | 1.97 GiB |
 | WitScA | 16 s | 18.8 s | 2.07 GiB |
 
-`maxHeartbeats`는 증인 둘에만 16000000이다.
+`maxHeartbeats`는 증인 둘(`WitSaA.sa_accept_runs`, `WitScA.sc_accept_runs`)에만 16000000이다.
 원인: `simp` AC 정렬(로그 27, 7.03 s + 2.08 s).
 설정이 없으면 `whnf` 시간 초과다(로그 26, 65).
+`maxRecDepth`는 `WitScA.lean`의 `example` 둘(127행, 134행)에만 100000이다(`set_option … in`).
+원인: `List.replicate 512 …`의 길이를 보이는 `by simp`가 기본 재귀 한도를 넘는다(로그 87).
+`WitSaA.lean`과 `sc_accept_runs`에는 `maxRecDepth` 설정이 없다(리뷰 r1 M1, 로그 86, 89).
+로그는 로컬에만 있다. 발췌는 `ATTEMPTS.md`에 있다.
 
 ## 5. 재사용과 새것
 
@@ -106,7 +110,7 @@ T1과 T2에서 시도 한도에 닿은 의무는 없다(`ATTEMPTS.md`).
 - 이 원소 형식은 포인터를 가진다. 그래서 "호출 중 GC 없음"이 여기서 더 중요하다.
 - 신뢰 읽개 `lv_data_include`를 더했다. `E2e/Include.lean`과 같은 글이다(SAME 4개).
 - `BumpAllocT`는 비공허성 모델이다. 형식 단어를 비교해 24·cnt 또는 cnt를 뗀다. Go `makeslice`는 `et.Size_`를 읽는다.
-- `BumpAllocT.S`는 Lake `input_dir`가 아니다. 그 파일이 바뀌어도 Lake는 다시 빌드하지 않는다.
+- `BumpAllocT.S`는 리뷰 r1 뒤 Lake `input_dir`(`lv_lean_S`)로 등록했다.
 - 손 `Desc`와 consensus-specs의 같음은 판단이다. 생산자 `Desc`와의 같음은 K다.
 - 기준 쪽 drift 덤프는 복제한 `.lake`를 썼다. 독립된 기준 빌드가 아니다.
 
@@ -116,14 +120,14 @@ T1과 T2에서 시도 한도에 닿은 의무는 없다(`ATTEMPTS.md`).
 
 | 검사 | 결과 |
 | --- | --- |
-| `lake build E2eList` | exit 0 |
-| `--no-build E2e E2eAd E2eScal E2eList` | exit 0, 1035 jobs |
-| 공리 게이트 | PASS, 5632 선언, 비표준 0, sorryAx 0 (`axioms-gate-lv.json`) |
+| `lake build E2eList` | exit 0 (리뷰 r1 뒤 683 jobs, 로그 90) |
+| `--no-build E2e E2eAd E2eScal E2eList` | exit 0, 1036 jobs (로그 91) |
+| 공리 게이트 | PASS, 5632 선언, 비표준 0, sorryAx 0 (`axioms-gate-lv.json`; 리뷰 r1 뒤 `axioms-gate-lv-r1.json`, 로그 95) |
 | 게이트 대조군(심은 `sorry`) | FAIL(기대대로) (`axioms-gate-lv-plant.json`) |
 | 선언 drift (기준 `6a78c591`, 뿌리 E2e/E2eAd/E2eScal) | 0 (`decl-drift-lv.txt`) |
 | drift 대조군 | CHANGED(기대대로), 되돌림 |
 | 링크 T1, T2 | PASS all |
-| 부정 시험 | 18개 중 17개 통과. `lv-sa-bitslen63`은 outside다(오류가 `sa_bits_seg`에 있다). 기록을 남겼다 |
+| 부정 시험 | 26개 중 25개 통과(control_pass 7, inside 18). `lv-sa-bitslen63`은 outside다(오류가 `sa_bits_seg`에 있다). 같은 변이를 `sa_bits_seg`에 겨눈 경우는 inside다. `Desc` 변이와 T2 크기 거부 변이를 포함한다(로그 94) |
 | stale 검사 | flagged 0 |
 | Go 차분 시험 | 실행하지 않음 |
 | 하드웨어 대조 | 실행하지 않음. 호스트는 arm64다 |
@@ -146,4 +150,5 @@ T1과 T2에서 시도 한도에 닿은 의무는 없다(`ATTEMPTS.md`).
 
 - LV-1(열림, X, 도구 빈틈). `FINDINGS-CANDIDATES.md`를 본다.
 - 새 production 결함 후보는 없다.
-- 독립 리뷰: 이 커밋 시점에는 실행하지 않았다. 결과는 `REVIEW-*.md`에 따로 적는다.
+- 독립 리뷰 r1(`fbf729a`): REQUEST_CHANGES, 필수 수정 1개(M1). `REVIEW-R1.md`를 본다. 수정은 `463ec97`, `3bb6cc1`, `4a18079`, `ec75cd5`다.
+- 사용자 확인이 필요한 것: esz 24 `MakesliceC` 인스턴스(리뷰 r1 S7), 기한, Go 차분 시험.
