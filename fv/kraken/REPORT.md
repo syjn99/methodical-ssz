@@ -29,6 +29,7 @@ GEN2 단위의 리뷰: g2l-r1 APPROVE, g2g-r1 REQUEST_CHANGES(문서만, G2-F가
 GEN2와 H4는 통합 INT4에서 병합했다(`56e0c88`). 통합 INT4 자체의 리뷰는 아직 없다.
 홀드아웃 H5(SyncCommitteeMessage 2/4, PendingConsolidation 1/2, 합성 거부; 수용 정리는 손 합성으로 증명)는 11절에 있다. 아직 리뷰 없음.
 GEN4 생성기(단위 G4-G, 표본 안, 아직 리뷰 없음)는 11절에 있다. 개발 형 10개 중 9개를 모두 덮는다.
+홀드아웃 H6(묶음 7형 18/18 걸음 덮음; PendingDeposit, PowBlock 수용 정리는 손 합성으로 증명)는 11절에 있다. 아직 리뷰 없음.
 H4에서 GEN2의 개발 자료 결과는 그대로 옮겨지지 않았다(11절).
 BeaconBlockHeader 인코더는 빠른 경로와 길이 거부 세 곳을 증명했다. 길이 거부의 전제는 `len + 112 ≤ cap`이다(11절).
 `Eth1Data.MarshalSSZTo`는 빠른 경로만 증명했다(11절, ENC 스트림). 리뷰 enc-r1이 ENC `ad15fbc`를 승인했다.
@@ -711,6 +712,37 @@ G4-F3: 그곳은 머리, 모든 필드, 에필로그의 성공 표시 셋이 모
 G4-F3: 다른 예외는 어느 단계에서든 종료 2다. 주입 시험(`fc-*`)이 이를 확인한다.
 G4-F3: 검사하지 않는 것: 반환값(nil 오류), makeslice 형 리터럴, 선택 nil 검사, 중복 레이블, 머리 `jbe` / `jne` 대상.
 G4-F3: 리뷰 입력 50+83+89개 모두 안전하다(x35는 리뷰어가 고친 참값으로 센다). `p2dec_test.py` 262/262다.
+
+홀드아웃 H6(방법 고정 `0e775ac`, 연 기록 커밋 `dcc71a8`, 2026-11-11T17:18:33Z; 아직 리뷰 없음):
+묶음은 고정 규칙의 7개 형 전부다. 범위는 `UnmarshalSSZ`다. 이 모집단의 홀드아웃은 이제 다 썼다.
+여러 형이 필드 종류로 보면 개발 형에 가깝다(H6-A5). 그래서 알려진 종류의 컴파일러 변이만 잰다.
+손 Desc(`c7ebeee`)와 손 문장 `H6.pd_accept_stmt`, `H6.pb_accept_stmt`(`0ad71a7`)는 생성기 실행 전에 커밋했다.
+결과 (S), 형마다 `--gen4` 한 번: PendingDeposit 5/5, PowBlock 3/3, HistoricalSummary 2/2, SigningData 2/2.
+SyncAggregatorSelectionData 2/2, ValidatorBalance 2/2, VoluntaryExit 2/2다. 합계 18/18, 닿음 18/18이다.
+모든 실행이 종료 0이다. 머리와 에필로그도 덮음이다. 놓침이 없어 놓침 분류도 없다.
+원 출력은 손대지 않았다. 모두 빌드되고 `kindcheck.py` 전체 모드를 통과한다.
+"덮음"은 걸음의 주장이다. 필드 증명이 아니다. 합성은 아래 두 형에만 있다.
+결과 (C): 설계상 거부다. 고정 기록에 따라 돌리지 않았다.
+두 수용 정리를 커널 검사했다: `pd_e2e_accept_g4gen`, `pb_e2e_accept_g4gen`. 표준 공리 셋뿐이다.
+생성 사슬 8개(PendingDeposit 5, PowBlock 3)는 모두 낸 그대로 손 합성에서 닫혔다. 고침은 0이다.
+그 8개 필드에서 걸음의 "덮음" 주장을 커널이 확인했다. 나머지 10개 필드에는 합성이 없다.
+Slot의 `hC`는 `sl_uacc_holds`로 채웠다. 새 계약 꼴은 없다.
+손으로 남은 것: 필드 합성, PendingDeposit의 머리와 에필로그(`decpro_seg`, `kstep_st`, `kstep_add`, `decret_seg`에서), 이음 글.
+PowBlock의 머리와 에필로그는 기존 `dechead_seg`, `decepi_seg`다.
+크기 거부, 명세 정렬, `reject_complete`, 증인 넷도 커널 검사했다.
+PowBlock: 명세의 `total_difficulty`는 `uint256`이고 생산자 Desc는 32바이트다. 선 위 바이트는 같다.
+그래서 Desc 같음 대신 같은 수용 입력과 수 / 리틀엔디언 바이트 대응을 증명했다.
+손 줄(g2g 규칙, 모듈 / 증명 본문): PendingDeposit 470 / 262(형별 보조정리 91 포함), PowBlock 259 / 132다.
+문장 모듈 `H6Stmt.lean`은 133(두 형)이고 위 수에 없다. PendingDeposit 손 모듈은 400줄을 넘는다.
+생성 줄(코드): Gen4H6PdDec 522, Gen4H6PbDec 348이다. 참고(인과 주장 없음): SmAcceptG4gen 355 / 217.
+실행 검사: 링크 검사 PASS(묶음 `eb1d6846`, 7형). 부정 시험 36/36(대조 9, 정리 안 실패 27)이다.
+공리 게이트 PASS, 선언 7650개, 비표준 0이다. g4f-r1 덤프 대비 선언 비교는 ADDED 570뿐이다. 심은 대조는 잡혔다.
+Go 차분 12/12(Go 의미론, linux/arm64, ELF 아님)이다. 심은 대조는 불일치 2다.
+증명하지 않은 것: Slot 오류 경로, morestack, `writeBarrier ≠ 0`, Lean Go 값 술어, spec_k의 `Pm` 증인, x86-64.
+시도: 두 수용 정리 각 2회(1회째는 이음 글 오류), PbSpec 2회, 나머지 1회다. 한도에 닿지 않았다.
+게이트 초: 1부 16.5, PendingDeposit 100.4, PowBlock 60.4, 공유 265.8이다.
+한계: 한 번의 측정이다. 일반성, 우월성, 속도 주장은 없다. 이전 홀드아웃 기록은 바꾸지 않았다.
+기록: `scal/CONTAMINATION.md` 26절, `scal/RESULT.json`의 `H6`, FINDINGS SG-5.
 
 조건:
 

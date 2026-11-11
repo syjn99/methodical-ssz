@@ -487,3 +487,27 @@
 - 리뷰 입력에 맞춰 규칙을 고쳤다. 그래서 그 입력 결과는 독립 측정이 아니다.
 - 커밋된 `Gen4*.lean` 10개는 바이트가 같다. 개발 형 덮음은 그대로다(9개 전부, AttestationData 3/5).
 
+
+## 26. 홀드아웃 H6 평가 — 열린 뒤
+
+- 연 시각: `scal/HOLDOUT-OPENED`의 `H6.opened_utc`(커밋 `dcc71a8`, 2026-11-11T17:18:33Z).
+- 방법 고정: 커밋 `0e775ac`. 고정 기록의 blob 5개와 트리 id 4개를 다시 셌다. 모두 같다.
+- 묶음(S)은 고정 규칙의 7개 형 전부다: PendingDeposit, PowBlock, HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit.
+- 전체 증명 형은 PendingDeposit와 PowBlock이다. 범위는 `UnmarshalSSZ`뿐이다.
+- 평가 세션은 GEN4 생성기, 검사기, 종류, 보조정리를 만들지 않았다. 이전 단위의 파일은 읽을 수 있었다.
+- 밝힌 유사성(H6-A5): 여러 형이 필드 종류로 보면 개발 형에 가깝다. 유사성 거르기는 규칙상 없다.
+- 그래서 H6은 알려진 종류에서 컴파일러 변이를 재는 측정이다. 새 필드 종류의 증거가 아니다.
+- 손 Desc(`c7ebeee`)는 검사기 Desc를 출력하기 전에 커밋했다.
+- 링크 표(`98303d7`)는 손 문장 전에 만들었다. 문장이 `.S`의 프레임 사실을 써야 했다. 생성기는 돌리지 않았다.
+- 손 문장 `H6.pd_accept_stmt`, `H6.pb_accept_stmt`(`0ad71a7`)는 생성기를 돌리기 전에 커밋했다.
+- 생성기는 형마다 한 번 돌렸다(작업 10–16, 큐레이터 순서). 다른 선택으로 다시 돌리지 않았다.
+- 원 출력, 요약 JSON, stderr은 손대지 않고 먼저 커밋했다(`1ab614e`). 손 수정 줄은 0이다.
+- `--gen4 --compose`는 돌리지 않았다. 고정 기록이 거부를 적는다. 결과 (C)는 "설계상 거부"다.
+- makeslice 리터럴 `type__+387072`는 이 ELF에서 uint8 형 워드다. `h6link.py`가 Checkpoint 묶음과 같음을 확인했다.
+- `gen/scal/*`, 종류와 보조정리 모듈, `Fk/*`, 계약, 기존 문장은 바꾸지 않았다.
+- 그래서 `gen/scal/AxiomsScal.lean`을 늘리지 않았다. 공리 게이트는 모든 선언을 센다. 새 선언도 들어간다.
+- 음성 사례 파일은 `prysm/go1.26.10/e2e/h6/negcases-h6.json`에 두었다.
+- 제안(하지 않음): P-H6-1 필드 합성의 종류. 지금 합성은 손 글이다. 손 줄의 대부분이 이것이다.
+- 제안(하지 않음): P-H6-2 머리와 에필로그 보조정리를 생성기가 내기. PendingDeposit의 머리, 에필로그는 손 보조정리다.
+- 제안(하지 않음): P-H6-3 IR과 Prysm 형의 차이를 기록하기. PowBlock의 `total_difficulty`는 명세에서 `uint256`, Prysm에서 32바이트다.
+- 일반성 주장은 없다. 우월성, 속도 주장도 없다. 독립 리뷰는 아직 없다.
