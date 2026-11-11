@@ -1,0 +1,7 @@
+{
+ "type": "v1alpha1.SyncCommitteeMessage",
+ "mode": "gen5",
+ "accept_generated": true,
+ "reason": "",
+ "exit": 0
+}
