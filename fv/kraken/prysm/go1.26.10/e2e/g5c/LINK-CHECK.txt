@@ -1,0 +1,8 @@
+G5-C link check (verification of the H6 link tables; no re-extraction).
+Command (one gated job, cwd fv/kraken): python3 -I -B link/check.py <scratch dir>
+Scratch dir = copies of prysm/go1.26.10/e2e/h6/link/{norm,data,target.objdump} + the pinned ELF and its nm file.
+ELF sha256 c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e (= build-ids.txt); nm sha256 88ee8b9a… (= build-ids.txt).
+Result: exit 0, "PASS all", BUNDLE sha256 eb1d68461804ac6b9b5d5b2a7c3ab4aecb9b0febe71bd747a374a0198870f502.
+The written RESULT is byte-identical to prysm/go1.26.10/e2e/h6/link/RESULT (diff empty).
+It covers the decoders of HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit
+(checks (a)-(f): ELF bytes, global labels, LabelsFresh of the host program, re-assembly, data files).

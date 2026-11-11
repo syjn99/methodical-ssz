@@ -1,0 +1,2019 @@
+{
+ "cases": [
+  {
+   "id": "g5c-hs-acc-control",
+   "kind": "control",
+   "module": "E2eScal/Gen5HsDec.lean",
+   "theorem": "hs_g5dec_accept",
+   "range": [
+    727,
+    800
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 3.0,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "g5c-hs-speck-control",
+   "kind": "control",
+   "module": "E2eScal/HsSpecK.lean",
+   "theorem": "hs_e2e_accept_spec_k",
+   "range": [
+    27,
+    92
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "g5c-hs-acc-stmt-post-swap",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5HsDec.lean",
+   "theorem": "hs_g5dec_accept",
+   "range": [
+    727,
+    800
+   ],
+   "error_lines": [
+    792,
+    800
+   ],
+   "first_error": "<work>/g5c-hs-acc-stmt-post-swap/mut.lean:792:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 3.1,
+   "diff": "--- orig\n+++ mut\n@@ -51,7 +51,7 @@\n           \u22c6 Eq ((Int.toBytes 8 p2.toInt).At (s.regs.rax.toBitVec + 32))\n           \u22c6 Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 40))\n           \u22c6 Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 48))\n-          \u22c6 Eq (fv0.At p1)\n+          \u22c6 Eq (fv1.At p1)\n           \u22c6 Eq (fv1.At p2)\n           \u22c6 Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec)\n           \u22c6 R) st.data.dmem)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-hs-speck-stmt-field-swap",
+   "kind": "stmt",
+   "module": "E2eScal/HsSpecK.lean",
+   "theorem": "hs_e2e_accept_spec_k",
+   "range": [
+    27,
+    92
+   ],
+   "error_lines": [
+    92
+   ],
+   "first_error": "<work>/g5c-hs-speck-stmt-field-swap/mut.lean:92:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig\n+++ mut\n@@ -53,7 +53,7 @@\n           \u22c6 Eq ((Int.toBytes 8 p2.toInt).At (s.regs.rax.toBitVec + 32))\n           \u22c6 Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 40))\n           \u22c6 Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 48))\n-          \u22c6 Eq (g.blockSummaryRoot.toArray.toList.At p1)\n+          \u22c6 Eq (g.stateSummaryRoot.toArray.toList.At p1)\n           \u22c6 Eq (g.stateSummaryRoot.toArray.toList.At p2)\n           \u22c6 Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec)\n           \u22c6 R) st.data.dmem)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-hs-rej-stmt-size",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5HsDec.lean",
+   "theorem": "hs_g5dec_reject",
+   "range": [
+    804,
+    833
+   ],
+   "error_lines": [
+    830,
+    833
+   ],
+   "first_error": "<work>/g5c-hs-rej-stmt-size/mut.lean:830:77: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 3.2,
+   "diff": "--- orig\n+++ mut\n@@ -6,7 +6,7 @@\n       \u22c6 Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))\n       \u22c6 Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)\n       \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrSize\" + 8).toBitVec) \u22c6 R)\n-    (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 64),\n+    (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 63),\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e0 \u2227 st.data.regs.rbx = e1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-hs-rej-code-frame",
+   "kind": "code",
+   "module": "E2eScal/Gen5HsDec.lean",
+   "theorem": "hs_g5dec_reject",
+   "range": [
+    806,
+    835
+   ],
+   "error_lines": [
+    831
+   ],
+   "first_error": "<work>/g5c-hs-rej-code-frame/mut.lean:831:33: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 3.2,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -88,7 +88,7 @@\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.UnmarshalSSZ_170:\n   mov ssz.ErrSize(%rip),%rax\n   mov ssz.ErrSize+8(%rip),%rbx\n-  add $0x20,%rsp\n+  add $0x18,%rsp\n   pop %rbp\n   retq\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.UnmarshalSSZ_184:\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-hs-rejcomplete-stmt",
+   "kind": "stmt",
+   "module": "E2eScal/HsSpecK.lean",
+   "theorem": "hs_e2e_reject_complete",
+   "range": [
+    121,
+    122
+   ],
+   "error_lines": [
+    122
+   ],
+   "first_error": "<work>/g5c-hs-rejcomplete-stmt/mut.lean:122:64: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.1,
+   "diff": "--- orig\n+++ mut\n@@ -1,2 +1,2 @@\n theorem hs_e2e_reject_complete (bs : Array UInt8) (h : \u00ac \u2203 v, deserialize prysmHsDesc bs = .ok v) :\n-    bs.size \u2260 64 := fun h64 => h ((phs_spec_accepts_iff bs).mpr h64)+    bs.size \u2260 65 := fun h64 => h ((phs_spec_accepts_iff bs).mpr h64)",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-hs-witA-stmt-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitHsGA.lean",
+   "theorem": "hs_accept_runs",
+   "range": [
+    86,
+    106
+   ],
+   "error_lines": [
+    106
+   ],
+   "first_error": "<work>/g5c-hs-witA-stmt-rax/mut.lean:106:22: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 14.1,
+   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem hs_accept_runs (f0 f1 oP1 oP2 : List UInt8) (hf0 : f0.length = 32) (hf1 : f1.length = 32)\n     (h1 : oP1.length = 8) (h2 : oP2.length = 8) (zmms : RegZmms) (flags : StatusFlags) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0)\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0)\n       \u27e8cs0 f0 f1 oP1 oP2 zmms flags, Host.addrOf 9\u27e9 :=\n   eventually_mono (E2eScal.Gen.hs_g5dec_accept 9 hk9 hf9 f0 f1 hf0 hf1 (cs0 f0 f1 oP1 oP2 zmms flags)\n     0 0 (z 8) (z 8) (z 8) (z 24) (z 8) (z 8) (z 16) (z 8) oP1 (z 8) (z 8) oP2 (z 8) (z 8)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-sd-acc-control",
+   "kind": "control",
+   "module": "E2eScal/Gen5SdDec.lean",
+   "theorem": "sd_g5dec_accept",
+   "range": [
+    719,
+    790
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.9,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "g5c-sd-speck-control",
+   "kind": "control",
+   "module": "E2eScal/SdSpecK.lean",
+   "theorem": "sd_e2e_accept_spec_k",
+   "range": [
+    27,
+    90
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "g5c-sd-acc-stmt-post-swap",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5SdDec.lean",
+   "theorem": "sd_g5dec_accept",
+   "range": [
+    719,
+    790
+   ],
+   "error_lines": [
+    782,
+    790
+   ],
+   "first_error": "<work>/g5c-sd-acc-stmt-post-swap/mut.lean:782:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 3.0,
+   "diff": "--- orig\n+++ mut\n@@ -49,7 +49,7 @@\n           \u22c6 Eq ((Int.toBytes 8 p2.toInt).At (s.regs.rax.toBitVec + 24))\n           \u22c6 Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 32))\n           \u22c6 Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 40))\n-          \u22c6 Eq (fv0.At p1)\n+          \u22c6 Eq (fv1.At p1)\n           \u22c6 Eq (fv1.At p2)\n           \u22c6 Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec)\n           \u22c6 R) st.data.dmem)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-sd-speck-stmt-field-swap",
+   "kind": "stmt",
+   "module": "E2eScal/SdSpecK.lean",
+   "theorem": "sd_e2e_accept_spec_k",
+   "range": [
+    27,
+    90
+   ],
+   "error_lines": [
+    90
+   ],
+   "first_error": "<work>/g5c-sd-speck-stmt-field-swap/mut.lean:90:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig\n+++ mut\n@@ -51,7 +51,7 @@\n           \u22c6 Eq ((Int.toBytes 8 p2.toInt).At (s.regs.rax.toBitVec + 24))\n           \u22c6 Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 32))\n           \u22c6 Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 40))\n-          \u22c6 Eq (g.objectRoot.toArray.toList.At p1)\n+          \u22c6 Eq (g.domain.toArray.toList.At p1)\n           \u22c6 Eq (g.domain.toArray.toList.At p2)\n           \u22c6 Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec)\n           \u22c6 R) st.data.dmem)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-sd-rej-stmt-size",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5SdDec.lean",
+   "theorem": "sd_g5dec_reject",
+   "range": [
+    794,
+    823
+   ],
+   "error_lines": [
+    820,
+    823
+   ],
+   "first_error": "<work>/g5c-sd-rej-stmt-size/mut.lean:820:77: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 3.0,
+   "diff": "--- orig\n+++ mut\n@@ -6,7 +6,7 @@\n       \u22c6 Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))\n       \u22c6 Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)\n       \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrSize\" + 8).toBitVec) \u22c6 R)\n-    (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 64),\n+    (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 63),\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e0 \u2227 st.data.regs.rbx = e1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-sd-rej-code-frame",
+   "kind": "code",
+   "module": "E2eScal/Gen5SdDec.lean",
+   "theorem": "sd_g5dec_reject",
+   "range": [
+    796,
+    825
+   ],
+   "error_lines": [
+    821
+   ],
+   "first_error": "<work>/g5c-sd-rej-code-frame/mut.lean:821:33: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 3.1,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -89,7 +89,7 @@\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.UnmarshalSSZ_170:\n   mov ssz.ErrSize(%rip),%rax\n   mov ssz.ErrSize+8(%rip),%rbx\n-  add $0x20,%rsp\n+  add $0x18,%rsp\n   pop %rbp\n   retq\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SigningData.UnmarshalSSZ_184:\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-sd-rejcomplete-stmt",
+   "kind": "stmt",
+   "module": "E2eScal/SdSpecK.lean",
+   "theorem": "sd_e2e_reject_complete",
+   "range": [
+    119,
+    120
+   ],
+   "error_lines": [
+    120
+   ],
+   "first_error": "<work>/g5c-sd-rejcomplete-stmt/mut.lean:120:64: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.2,
+   "diff": "--- orig\n+++ mut\n@@ -1,2 +1,2 @@\n theorem sd_e2e_reject_complete (bs : Array UInt8) (h : \u00ac \u2203 v, deserialize prysmSdDesc bs = .ok v) :\n-    bs.size \u2260 64 := fun h64 => h ((psd_spec_accepts_iff bs).mpr h64)+    bs.size \u2260 65 := fun h64 => h ((psd_spec_accepts_iff bs).mpr h64)",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-sd-witA-stmt-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitSdGA.lean",
+   "theorem": "sd_accept_runs",
+   "range": [
+    86,
+    106
+   ],
+   "error_lines": [
+    106
+   ],
+   "first_error": "<work>/g5c-sd-witA-stmt-rax/mut.lean:106:22: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 12.4,
+   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem sd_accept_runs (f0 f1 oP1 oP2 : List UInt8) (hf0 : f0.length = 32) (hf1 : f1.length = 32)\n     (h1 : oP1.length = 8) (h2 : oP2.length = 8) (zmms : RegZmms) (flags : StatusFlags) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0)\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0)\n       \u27e8cs0 f0 f1 oP1 oP2 zmms flags, Host.addrOf 9\u27e9 :=\n   eventually_mono (E2eScal.Gen.sd_g5dec_accept 9 hk9 hf9 f0 f1 hf0 hf1 (cs0 f0 f1 oP1 oP2 zmms flags)\n     0 0 (z 8) (z 8) (z 8) (z 24) (z 8) (z 8) (z 16) oP1 (z 8) (z 8) oP2 (z 8) (z 8)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-sa-acc-control",
+   "kind": "control",
+   "module": "E2eScal/Gen5SaDec.lean",
+   "theorem": "sa_g5dec_accept",
+   "range": [
+    566,
+    622
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.0,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "g5c-sa-speck-control",
+   "kind": "control",
+   "module": "E2eScal/SaSpecK.lean",
+   "theorem": "sa_e2e_accept_spec_k",
+   "range": [
+    27,
+    75
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "g5c-sa-acc-stmt-post-swap",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5SaDec.lean",
+   "theorem": "sa_g5dec_accept",
+   "range": [
+    566,
+    622
+   ],
+   "error_lines": [
+    614,
+    622
+   ],
+   "first_error": "<work>/g5c-sa-acc-stmt-post-swap/mut.lean:614:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.1,
+   "diff": "--- orig\n+++ mut\n@@ -35,7 +35,7 @@\n           \u22c6 Eq (fv0.At s.regs.rbx.toBitVec)\n           \u22c6 Eq (fv1.At (s.regs.rbx.toBitVec + 8))\n           \u22c6 Eq (ast.At s.regs.rax.toBitVec)\n-          \u22c6 Eq (fv0.At (s.regs.rax.toBitVec + 8))\n+          \u22c6 Eq (fv1.At (s.regs.rax.toBitVec + 8))\n           \u22c6 Eq (fv1.At (s.regs.rax.toBitVec + 16))\n           \u22c6 R) st.data.dmem)\n       \u27e8s, Host.addrOf k\u27e9 := by\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-sa-speck-stmt-field-swap",
+   "kind": "stmt",
+   "module": "E2eScal/SaSpecK.lean",
+   "theorem": "sa_e2e_accept_spec_k",
+   "range": [
+    27,
+    75
+   ],
+   "error_lines": [
+    26
+   ],
+   "first_error": "<work>/g5c-sa-speck-stmt-field-swap/mut.lean:26:0: error: (deterministic) timeout at `whnf`, maximum number of heartbeats (4000000) has been reached",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 101.8,
+   "diff": "--- orig\n+++ mut\n@@ -37,7 +37,7 @@\n           \u22c6 Eq ((uintBytes 8 g.slot.toNat).toList.At s.regs.rbx.toBitVec)\n           \u22c6 Eq ((uintBytes 8 g.subcommitteeIndex.toNat).toList.At (s.regs.rbx.toBitVec + 8))\n           \u22c6 Eq (ast.At s.regs.rax.toBitVec)\n-          \u22c6 Eq ((uintBytes 8 g.slot.toNat).toList.At (s.regs.rax.toBitVec + 8))\n+          \u22c6 Eq ((uintBytes 8 g.subcommitteeIndex.toNat).toList.At (s.regs.rax.toBitVec + 8))\n           \u22c6 Eq ((uintBytes 8 g.subcommitteeIndex.toNat).toList.At (s.regs.rax.toBitVec + 16))\n           \u22c6 R) st.data.dmem)\n       \u27e8s, Host.addrOf k\u27e9 := by\n",
+   "heartbeat_timeout": true,
+   "recursion_limit": false,
+   "class": "timeout_heartbeat",
+   "pass": false
+  },
+  {
+   "id": "g5c-sa-rej-stmt-size",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5SaDec.lean",
+   "theorem": "sa_g5dec_reject",
+   "range": [
+    626,
+    655
+   ],
+   "error_lines": [
+    652,
+    655
+   ],
+   "first_error": "<work>/g5c-sa-rej-stmt-size/mut.lean:652:77: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.2,
+   "diff": "--- orig\n+++ mut\n@@ -6,7 +6,7 @@\n       \u22c6 Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))\n       \u22c6 Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)\n       \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrSize\" + 8).toBitVec) \u22c6 R)\n-    (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 16),\n+    (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 15),\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e0 \u2227 st.data.regs.rbx = e1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-sa-rej-code-frame",
+   "kind": "code",
+   "module": "E2eScal/Gen5SaDec.lean",
+   "theorem": "sa_g5dec_reject",
+   "range": [
+    628,
+    657
+   ],
+   "error_lines": [
+    653
+   ],
+   "first_error": "<work>/g5c-sa-rej-code-frame/mut.lean:653:33: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.2,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -56,7 +56,7 @@\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregatorSelectionData.UnmarshalSSZ_cc:\n   mov ssz.ErrSize(%rip),%rax\n   mov ssz.ErrSize+8(%rip),%rbx\n-  add $0x38,%rsp\n+  add $0x30,%rsp\n   pop %rbp\n   nop\n   retq\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-sa-rejcomplete-stmt",
+   "kind": "stmt",
+   "module": "E2eScal/SaSpecK.lean",
+   "theorem": "sa_e2e_reject_complete",
+   "range": [
+    104,
+    105
+   ],
+   "error_lines": [
+    105
+   ],
+   "first_error": "<work>/g5c-sa-rejcomplete-stmt/mut.lean:105:64: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "--- orig\n+++ mut\n@@ -1,2 +1,2 @@\n theorem sa_e2e_reject_complete (bs : Array UInt8) (h : \u00ac \u2203 v, deserialize prysmSaDesc bs = .ok v) :\n-    bs.size \u2260 16 := fun h16 => h ((psa_spec_accepts_iff bs).mpr h16)+    bs.size \u2260 17 := fun h16 => h ((psa_spec_accepts_iff bs).mpr h16)",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-sa-witA-stmt-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitSaGA.lean",
+   "theorem": "sa_accept_runs",
+   "range": [
+    62,
+    81
+   ],
+   "error_lines": [
+    81
+   ],
+   "first_error": "<work>/g5c-sa-witA-stmt-rax/mut.lean:81:22: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 7.8,
+   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem sa_accept_runs (in0 in1 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8)\n     (zmms : RegZmms) (flags : StatusFlags) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0)\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0)\n       \u27e8cs0 in0 in1 zmms flags, Host.addrOf 1\u27e9 :=\n   eventually_mono (E2eScal.Gen.sa_g5dec_accept 1 hk1 hf1 74 hk74 hf74\n     in0 in1 hin0 hin1 (cs0 in0 in1 zmms flags)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-sa-same-stmt-other",
+   "kind": "stmt",
+   "module": "E2eScal/G5CSame.lean",
+   "theorem": "sa_accept_same",
+   "range": [
+    23,
+    24
+   ],
+   "error_lines": [
+    24
+   ],
+   "first_error": "<work>/g5c-sa-same-stmt-other/mut.lean:24:11: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "--- orig\n+++ mut\n@@ -1,2 +1,2 @@\n-theorem sa_accept_same : \u2200 (h : Host), type_of% (@E2eScal.Gen.sa_g5dec_accept h) = @sa_accept_stmt h :=\n+theorem sa_accept_same : \u2200 (h : Host), type_of% (@E2eScal.Gen.sa_g5dec_accept h) = @ve_accept_stmt h :=\n   fun _ => rfl",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-vb-acc-control",
+   "kind": "control",
+   "module": "E2eScal/Gen5VbDec.lean",
+   "theorem": "vb_g5dec_accept",
+   "range": [
+    566,
+    622
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.9,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "g5c-vb-speck-control",
+   "kind": "control",
+   "module": "E2eScal/VbSpecK.lean",
+   "theorem": "vb_e2e_accept_spec_k",
+   "range": [
+    27,
+    75
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "g5c-vb-acc-stmt-post-swap",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5VbDec.lean",
+   "theorem": "vb_g5dec_accept",
+   "range": [
+    566,
+    622
+   ],
+   "error_lines": [
+    614,
+    622
+   ],
+   "first_error": "<work>/g5c-vb-acc-stmt-post-swap/mut.lean:614:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.1,
+   "diff": "--- orig\n+++ mut\n@@ -35,7 +35,7 @@\n           \u22c6 Eq (fv0.At s.regs.rbx.toBitVec)\n           \u22c6 Eq (fv1.At (s.regs.rbx.toBitVec + 8))\n           \u22c6 Eq (ast.At s.regs.rax.toBitVec)\n-          \u22c6 Eq (fv0.At (s.regs.rax.toBitVec + 8))\n+          \u22c6 Eq (fv1.At (s.regs.rax.toBitVec + 8))\n           \u22c6 Eq (fv1.At (s.regs.rax.toBitVec + 16))\n           \u22c6 R) st.data.dmem)\n       \u27e8s, Host.addrOf k\u27e9 := by\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-vb-speck-stmt-field-swap",
+   "kind": "stmt",
+   "module": "E2eScal/VbSpecK.lean",
+   "theorem": "vb_e2e_accept_spec_k",
+   "range": [
+    27,
+    75
+   ],
+   "error_lines": [
+    26
+   ],
+   "first_error": "<work>/g5c-vb-speck-stmt-field-swap/mut.lean:26:0: error: (deterministic) timeout at `whnf`, maximum number of heartbeats (4000000) has been reached",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 102.2,
+   "diff": "--- orig\n+++ mut\n@@ -37,7 +37,7 @@\n           \u22c6 Eq ((uintBytes 8 g.index.toNat).toList.At s.regs.rbx.toBitVec)\n           \u22c6 Eq ((uintBytes 8 g.balance.toNat).toList.At (s.regs.rbx.toBitVec + 8))\n           \u22c6 Eq (ast.At s.regs.rax.toBitVec)\n-          \u22c6 Eq ((uintBytes 8 g.index.toNat).toList.At (s.regs.rax.toBitVec + 8))\n+          \u22c6 Eq ((uintBytes 8 g.balance.toNat).toList.At (s.regs.rax.toBitVec + 8))\n           \u22c6 Eq ((uintBytes 8 g.balance.toNat).toList.At (s.regs.rax.toBitVec + 16))\n           \u22c6 R) st.data.dmem)\n       \u27e8s, Host.addrOf k\u27e9 := by\n",
+   "heartbeat_timeout": true,
+   "recursion_limit": false,
+   "class": "timeout_heartbeat",
+   "pass": false
+  },
+  {
+   "id": "g5c-vb-rej-stmt-size",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5VbDec.lean",
+   "theorem": "vb_g5dec_reject",
+   "range": [
+    626,
+    655
+   ],
+   "error_lines": [
+    652,
+    655
+   ],
+   "first_error": "<work>/g5c-vb-rej-stmt-size/mut.lean:652:77: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.3,
+   "diff": "--- orig\n+++ mut\n@@ -6,7 +6,7 @@\n       \u22c6 Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))\n       \u22c6 Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)\n       \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrSize\" + 8).toBitVec) \u22c6 R)\n-    (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 16),\n+    (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 15),\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e0 \u2227 st.data.regs.rbx = e1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-vb-rej-code-frame",
+   "kind": "code",
+   "module": "E2eScal/Gen5VbDec.lean",
+   "theorem": "vb_g5dec_reject",
+   "range": [
+    628,
+    657
+   ],
+   "error_lines": [
+    653
+   ],
+   "first_error": "<work>/g5c-vb-rej-code-frame/mut.lean:653:33: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.2,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -56,7 +56,7 @@\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.UnmarshalSSZ_cc:\n   mov ssz.ErrSize(%rip),%rax\n   mov ssz.ErrSize+8(%rip),%rbx\n-  add $0x38,%rsp\n+  add $0x30,%rsp\n   pop %rbp\n   nop\n   retq\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-vb-rejcomplete-stmt",
+   "kind": "stmt",
+   "module": "E2eScal/VbSpecK.lean",
+   "theorem": "vb_e2e_reject_complete",
+   "range": [
+    104,
+    105
+   ],
+   "error_lines": [
+    105
+   ],
+   "first_error": "<work>/g5c-vb-rejcomplete-stmt/mut.lean:105:64: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig\n+++ mut\n@@ -1,2 +1,2 @@\n theorem vb_e2e_reject_complete (bs : Array UInt8) (h : \u00ac \u2203 v, deserialize prysmVbDesc bs = .ok v) :\n-    bs.size \u2260 16 := fun h16 => h ((pvb_spec_accepts_iff bs).mpr h16)+    bs.size \u2260 17 := fun h16 => h ((pvb_spec_accepts_iff bs).mpr h16)",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-vb-witA-stmt-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitVbGA.lean",
+   "theorem": "vb_accept_runs",
+   "range": [
+    62,
+    81
+   ],
+   "error_lines": [
+    81
+   ],
+   "first_error": "<work>/g5c-vb-witA-stmt-rax/mut.lean:81:22: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 8.0,
+   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem vb_accept_runs (in0 in1 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8)\n     (zmms : RegZmms) (flags : StatusFlags) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0)\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0)\n       \u27e8cs0 in0 in1 zmms flags, Host.addrOf 1\u27e9 :=\n   eventually_mono (E2eScal.Gen.vb_g5dec_accept 1 hk1 hf1 74 hk74 hf74\n     in0 in1 hin0 hin1 (cs0 in0 in1 zmms flags)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-vb-same-stmt-other",
+   "kind": "stmt",
+   "module": "E2eScal/G5CSame.lean",
+   "theorem": "vb_accept_same",
+   "range": [
+    29,
+    30
+   ],
+   "error_lines": [
+    30
+   ],
+   "first_error": "<work>/g5c-vb-same-stmt-other/mut.lean:30:11: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "--- orig\n+++ mut\n@@ -1,2 +1,2 @@\n-theorem vb_accept_same : \u2200 (h : Host), type_of% (@E2eScal.Gen.vb_g5dec_accept h) = @vb_accept_stmt h :=\n+theorem vb_accept_same : \u2200 (h : Host), type_of% (@E2eScal.Gen.vb_g5dec_accept h) = @ve_accept_stmt h :=\n   fun _ => rfl",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-ve-acc-control",
+   "kind": "control",
+   "module": "E2eScal/Gen5VeDec.lean",
+   "theorem": "ve_g5dec_accept",
+   "range": [
+    676,
+    735
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.4,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "g5c-ve-speck-control",
+   "kind": "control",
+   "module": "E2eScal/VeSpecK.lean",
+   "theorem": "ve_e2e_accept_spec_k",
+   "range": [
+    27,
+    78
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "g5c-ve-acc-stmt-post-swap",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5VeDec.lean",
+   "theorem": "ve_g5dec_accept",
+   "range": [
+    676,
+    735
+   ],
+   "error_lines": [
+    727,
+    735
+   ],
+   "first_error": "<work>/g5c-ve-acc-stmt-post-swap/mut.lean:727:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.6,
+   "diff": "--- orig\n+++ mut\n@@ -38,7 +38,7 @@\n           \u22c6 Eq (fv0.At s.regs.rbx.toBitVec)\n           \u22c6 Eq (fv1.At (s.regs.rbx.toBitVec + 8))\n           \u22c6 Eq (ast.At s.regs.rax.toBitVec)\n-          \u22c6 Eq (fv0.At (s.regs.rax.toBitVec + 8))\n+          \u22c6 Eq (fv1.At (s.regs.rax.toBitVec + 8))\n           \u22c6 Eq (fv1.At (s.regs.rax.toBitVec + 16))\n           \u22c6 R) st.data.dmem)\n       \u27e8s, Host.addrOf k\u27e9 := by\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-ve-speck-stmt-field-swap",
+   "kind": "stmt",
+   "module": "E2eScal/VeSpecK.lean",
+   "theorem": "ve_e2e_accept_spec_k",
+   "range": [
+    27,
+    78
+   ],
+   "error_lines": [
+    26
+   ],
+   "first_error": "<work>/g5c-ve-speck-stmt-field-swap/mut.lean:26:0: error: (deterministic) timeout at `whnf`, maximum number of heartbeats (4000000) has been reached",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 100.8,
+   "diff": "--- orig\n+++ mut\n@@ -40,7 +40,7 @@\n           \u22c6 Eq ((uintBytes 8 g.epoch.toNat).toList.At s.regs.rbx.toBitVec)\n           \u22c6 Eq ((uintBytes 8 g.validatorIndex.toNat).toList.At (s.regs.rbx.toBitVec + 8))\n           \u22c6 Eq (ast.At s.regs.rax.toBitVec)\n-          \u22c6 Eq ((uintBytes 8 g.epoch.toNat).toList.At (s.regs.rax.toBitVec + 8))\n+          \u22c6 Eq ((uintBytes 8 g.validatorIndex.toNat).toList.At (s.regs.rax.toBitVec + 8))\n           \u22c6 Eq ((uintBytes 8 g.validatorIndex.toNat).toList.At (s.regs.rax.toBitVec + 16))\n           \u22c6 R) st.data.dmem)\n       \u27e8s, Host.addrOf k\u27e9 := by\n",
+   "heartbeat_timeout": true,
+   "recursion_limit": false,
+   "class": "timeout_heartbeat",
+   "pass": false
+  },
+  {
+   "id": "g5c-ve-rej-stmt-size",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5VeDec.lean",
+   "theorem": "ve_g5dec_reject",
+   "range": [
+    739,
+    768
+   ],
+   "error_lines": [
+    765,
+    768
+   ],
+   "first_error": "<work>/g5c-ve-rej-stmt-size/mut.lean:765:77: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.7,
+   "diff": "--- orig\n+++ mut\n@@ -6,7 +6,7 @@\n       \u22c6 Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))\n       \u22c6 Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)\n       \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrSize\" + 8).toBitVec) \u22c6 R)\n-    (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 16),\n+    (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 15),\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e0 \u2227 st.data.regs.rbx = e1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-ve-rej-code-frame",
+   "kind": "code",
+   "module": "E2eScal/Gen5VeDec.lean",
+   "theorem": "ve_g5dec_reject",
+   "range": [
+    741,
+    770
+   ],
+   "error_lines": [
+    766
+   ],
+   "first_error": "<work>/g5c-ve-rej-code-frame/mut.lean:766:33: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.7,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -90,7 +90,7 @@\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ_153:\n   mov ssz.ErrSize(%rip),%rax\n   mov ssz.ErrSize+8(%rip),%rbx\n-  add $0x48,%rsp\n+  add $0x40,%rsp\n   pop %rbp\n   retq\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ_167:\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-ve-rejcomplete-stmt",
+   "kind": "stmt",
+   "module": "E2eScal/VeSpecK.lean",
+   "theorem": "ve_e2e_reject_complete",
+   "range": [
+    107,
+    108
+   ],
+   "error_lines": [
+    108
+   ],
+   "first_error": "<work>/g5c-ve-rejcomplete-stmt/mut.lean:108:64: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig\n+++ mut\n@@ -1,2 +1,2 @@\n theorem ve_e2e_reject_complete (bs : Array UInt8) (h : \u00ac \u2203 v, deserialize prysmVeDesc bs = .ok v) :\n-    bs.size \u2260 16 := fun h16 => h ((pve_spec_accepts_iff bs).mpr h16)+    bs.size \u2260 17 := fun h16 => h ((pve_spec_accepts_iff bs).mpr h16)",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-ve-witA-stmt-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitVeGA.lean",
+   "theorem": "ve_accept_runs",
+   "range": [
+    66,
+    85
+   ],
+   "error_lines": [
+    85
+   ],
+   "first_error": "<work>/g5c-ve-witA-stmt-rax/mut.lean:85:22: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 9.9,
+   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem ve_accept_runs (in0 in1 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8)\n     (zmms : RegZmms) (flags : StatusFlags) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0)\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0)\n       \u27e8cs0 in0 in1 zmms flags, Host.addrOf 1\u27e9 :=\n   eventually_mono (E2eScal.Gen.ve_g5dec_accept 1 hk1 hf1 108 hk108 hf108 171 hk171 hf171\n     in0 in1 hin0 hin1 (cs0 in0 in1 zmms flags)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-ve-same-stmt-other",
+   "kind": "stmt",
+   "module": "E2eScal/G5CSame.lean",
+   "theorem": "ve_accept_same",
+   "range": [
+    35,
+    36
+   ],
+   "error_lines": [
+    36
+   ],
+   "first_error": "<work>/g5c-ve-same-stmt-other/mut.lean:36:11: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "--- orig\n+++ mut\n@@ -1,2 +1,2 @@\n-theorem ve_accept_same : \u2200 (h : Host), type_of% (@E2eScal.Gen.ve_g5dec_accept h) = @ve_accept_stmt h :=\n+theorem ve_accept_same : \u2200 (h : Host), type_of% (@E2eScal.Gen.ve_g5dec_accept h) = @sa_accept_stmt h :=\n   fun _ => rfl",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-sa-speck-stmt-rax",
+   "kind": "stmt",
+   "module": "E2eScal/SaSpecK.lean",
+   "theorem": "sa_e2e_accept_spec_k",
+   "range": [
+    27,
+    75
+   ],
+   "error_lines": [
+    75
+   ],
+   "first_error": "<work>/g5c-sa-speck-stmt-rax/mut.lean:75:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "--- orig\n+++ mut\n@@ -23,7 +23,7 @@\n     (hguard : guard.toNat + 72 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size),\n     \u2203 g : PSa, g.toValue = v \u2227 bsA = psaEnc g \u2227\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (x0 x1 : List UInt8), x0.length = 8 \u2227 x1.length = 8 \u2227 \n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-vb-speck-stmt-rax",
+   "kind": "stmt",
+   "module": "E2eScal/VbSpecK.lean",
+   "theorem": "vb_e2e_accept_spec_k",
+   "range": [
+    27,
+    75
+   ],
+   "error_lines": [
+    75
+   ],
+   "first_error": "<work>/g5c-vb-speck-stmt-rax/mut.lean:75:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig\n+++ mut\n@@ -23,7 +23,7 @@\n     (hguard : guard.toNat + 72 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size),\n     \u2203 g : PVb, g.toValue = v \u2227 bsA = pvbEnc g \u2227\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (x0 x1 : List UInt8), x0.length = 8 \u2227 x1.length = 8 \u2227 \n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g5c-ve-speck-stmt-rax",
+   "kind": "stmt",
+   "module": "E2eScal/VeSpecK.lean",
+   "theorem": "ve_e2e_accept_spec_k",
+   "range": [
+    27,
+    78
+   ],
+   "error_lines": [
+    78
+   ],
+   "first_error": "<work>/g5c-ve-speck-stmt-rax/mut.lean:78:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig\n+++ mut\n@@ -25,7 +25,7 @@\n     (hguard : guard.toNat + 88 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size),\n     \u2203 g : PVe, g.toValue = v \u2227 bsA = pveEnc g \u2227\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (x0 x1 : List UInt8), x0.length = 8 \u2227 x1.length = 8 \u2227 \n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  }
+ ],
+ "pass": 43,
+ "total": 46,
+ "classes": {
+  "control_pass": 10,
+  "inside": 33,
+  "timeout_heartbeat": 3
+ },
+ "case_timeout_s": 300,
+ "prechecks": [
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.FieldComp",
+    "E2eScal.H6Code",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.SegRegZ",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-hs-acc-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5HsDec",
+    "E2eScal.HsSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-hs-speck-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.FieldComp",
+    "E2eScal.H6Code",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.SegRegZ",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-hs-acc-stmt-post-swap"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5HsDec",
+    "E2eScal.HsSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-hs-speck-stmt-field-swap"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.FieldComp",
+    "E2eScal.H6Code",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.SegRegZ",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-hs-rej-stmt-size"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.FieldComp",
+    "E2eScal.H6Code",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.SegRegZ",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-hs-rej-code-frame"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5HsDec",
+    "E2eScal.HsSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-hs-rejcomplete-stmt"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5HsDec",
+    "Fk.BumpMore",
+    "Fk.RtCopy",
+    "Fk.WHost"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-hs-witA-stmt-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.FieldComp",
+    "E2eScal.H6Code",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.SegRegZ",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-sd-acc-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5SdDec",
+    "E2eScal.SdSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-sd-speck-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.FieldComp",
+    "E2eScal.H6Code",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.SegRegZ",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-sd-acc-stmt-post-swap"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5SdDec",
+    "E2eScal.SdSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-sd-speck-stmt-field-swap"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.FieldComp",
+    "E2eScal.H6Code",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.SegRegZ",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-sd-rej-stmt-size"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.FieldComp",
+    "E2eScal.H6Code",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.SegRegZ",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-sd-rej-code-frame"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5SdDec",
+    "E2eScal.SdSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-sd-rejcomplete-stmt"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5SdDec",
+    "Fk.BumpMore",
+    "Fk.RtCopy",
+    "Fk.WHost"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-sd-witA-stmt-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.FieldComp",
+    "E2eScal.H6Code",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-sa-acc-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5SaDec",
+    "E2eScal.SaSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-sa-speck-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.FieldComp",
+    "E2eScal.H6Code",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-sa-acc-stmt-post-swap"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5SaDec",
+    "E2eScal.SaSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-sa-speck-stmt-field-swap"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.FieldComp",
+    "E2eScal.H6Code",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-sa-rej-stmt-size"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.FieldComp",
+    "E2eScal.H6Code",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-sa-rej-code-frame"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5SaDec",
+    "E2eScal.SaSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-sa-rejcomplete-stmt"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5SaDec",
+    "Fk.RtCopy",
+    "Fk.WHost"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-sa-witA-stmt-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.G5CStmt",
+    "E2eScal.Gen5SaDec",
+    "E2eScal.Gen5VbDec",
+    "E2eScal.Gen5VeDec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-sa-same-stmt-other"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.FieldComp",
+    "E2eScal.H6Code",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-vb-acc-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5VbDec",
+    "E2eScal.VbSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-vb-speck-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.FieldComp",
+    "E2eScal.H6Code",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-vb-acc-stmt-post-swap"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5VbDec",
+    "E2eScal.VbSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-vb-speck-stmt-field-swap"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.FieldComp",
+    "E2eScal.H6Code",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-vb-rej-stmt-size"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.FieldComp",
+    "E2eScal.H6Code",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-vb-rej-code-frame"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5VbDec",
+    "E2eScal.VbSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-vb-rejcomplete-stmt"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5VbDec",
+    "Fk.RtCopy",
+    "Fk.WHost"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-vb-witA-stmt-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.G5CStmt",
+    "E2eScal.Gen5SaDec",
+    "E2eScal.Gen5VbDec",
+    "E2eScal.Gen5VeDec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-vb-same-stmt-other"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.FieldComp",
+    "E2eScal.H6Code",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-ve-acc-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5VeDec",
+    "E2eScal.VeSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-ve-speck-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.FieldComp",
+    "E2eScal.H6Code",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-ve-acc-stmt-post-swap"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5VeDec",
+    "E2eScal.VeSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-ve-speck-stmt-field-swap"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.FieldComp",
+    "E2eScal.H6Code",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-ve-rej-stmt-size"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.FieldComp",
+    "E2eScal.H6Code",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-ve-rej-code-frame"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5VeDec",
+    "E2eScal.VeSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-ve-rejcomplete-stmt"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5VeDec",
+    "Fk.RtCopy",
+    "Fk.WHost"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-ve-witA-stmt-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.G5CStmt",
+    "E2eScal.Gen5SaDec",
+    "E2eScal.Gen5VbDec",
+    "E2eScal.Gen5VeDec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-ve-same-stmt-other"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5SaDec",
+    "E2eScal.SaSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-sa-speck-stmt-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5VbDec",
+    "E2eScal.VbSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-vb-speck-stmt-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5VeDec",
+    "E2eScal.VeSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g5c-ve-speck-stmt-rax"
+   ]
+  }
+ ]
+}
