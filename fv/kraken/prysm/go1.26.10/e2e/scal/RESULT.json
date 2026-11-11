@@ -432,6 +432,158 @@
    ],
    "relation_to_decoder_proof": "the generated Eth1Data segments (GenE1Dec.lean) are related to, not used by, the Eth1Data decoder proof: E1Accept still uses the hand lemmas; E1GenSame.e1_dec_DepositRoot_seg_hand derives the hand rootdec_seg0 conclusion from the generated theorem (review sg1-r1)",
    "historical_results": "the H1 and H2 results above are pre-extension results under the frozen method 56dfc27 / scalgen blob 78e3339; they are unchanged and are historical; the SG-1 extension is post-hold-out development with Eth1Data in-sample"
+  },
+  "enc-reuse (ENC stream, fresh Fable session)": {
+   "state": "kernel-checked on the ENC stream branch (claude/ssz-fv-enc-reuse, base dda707c77e9c2168cb778d13624b32fe87e07caa); NOT yet reviewed by an independent session. FAST PATHS AND SUFFICIENT-CAPACITY LENGTH REJECTS ONLY; never 'encoder complete'",
+   "scope": "(1) one encode block for the memmove call of a 32-byte append that fits; (2) the three BeaconBlockHeader root blocks restated through it; (3) Eth1Data.MarshalSSZTo fast path (len + 72 <= cap, two roots of length 32); (4) one reject block and the three BeaconBlockHeader length rejects under the premise len + 112 <= cap. No growslice branch, no morestack, no generator / Kind / scalgen / Fk / contract / ELF / toolchain / lakefile change. T-7 deferred.",
+   "status_of_data": "Eth1Data and BeaconBlockHeader are development data (both hold-outs were opened before); no hold-out claim; the hidden H3 types were not read",
+   "blocks": {
+    "E2eScal.enc32_call": "lean/E2eScal/EncBlock.lean. Code fact: callMemmove ([callq runtime.memmove]) at jc. Parameters jc, sp, d, p, aRet, aLo, S, R. State premises rsp = sp, rax = d, rbx = p, rcx = 32; MemmoveC S (existing contract, hypothesis). 5 instances: BBH 89, 117, 147; Eth1Data 36, 80",
+    "E2eScal.enc_reject_tail": "lean/E2eScal/EncReject.lean. Code fact: rejTail sub nop c at j (frame release add/sub, constant c, optional nop). Proved for all four flag values. 3 semantic instances: BBH 157, 166 (nop), 176. No runtime contract",
+    "E2eScal.lea_cmp_be_false": "reused unchanged for the Eth1Data stack guard (N = 8); it was already stated over the displacement"
+   },
+   "design_finding": "FINDINGS ENC-1: six compiled root-append sites (Checkpoint, BBH x3, Eth1Data x2) have six instruction texts (registers, lea vs add, frame vs register sources, nops). A multi-directive template has one instance per site; the shared part is the machine state at the call. The straight-line steps before each call are still stepped per site",
+   "theorems": [
+    "E2eScal.enc32_call",
+    "E2eScal.Bh.bh_call_at",
+    "E2eScal.Bh.bh_enc_b_via_block",
+    "E2eScal.Bh.bh_enc_c_via_block",
+    "E2eScal.Bh.bh_enc_d_via_block",
+    "E2eScal.E1.e1_call_at",
+    "E2eScal.E1.e1_enc_a",
+    "E2eScal.E1.e1_enc_m",
+    "E2eScal.E1.e1_enc_e",
+    "E2eScal.E1.e1_e2e_marshal_main",
+    "E2eScal.E1.e1_e2e_marshal_spec_k",
+    "E2eScal.WitE1M.e1m_runs_empty",
+    "E2eScal.WitE1M.e1m_runs_prefix",
+    "E2eScal.enc_reject_tail",
+    "E2eScal.Bh.bh_rej_at",
+    "E2eScal.Bh.bh_rej_b",
+    "E2eScal.Bh.bh_rej_c",
+    "E2eScal.Bh.bh_rej_d",
+    "E2eScal.Bh.bh_e2e_marshal_reject1_main",
+    "E2eScal.Bh.bh_e2e_marshal_reject2_main",
+    "E2eScal.Bh.bh_e2e_marshal_reject3_main",
+    "E2eScal.WitBhMR.bhr1_runs",
+    "E2eScal.WitBhMR.bhr2_runs",
+    "E2eScal.WitBhMR.bhr3_runs"
+   ],
+   "bbh_reuse": {
+    "statements": "example : type_of% @bh_enc_X_via_block = type_of% @bh_enc_X := rfl for X = b, c, d (lean/E2eScal/BhEncBlock.lean); BhEncRoots.lean is not edited",
+    "what_is_shared": "the call directive, the return slot, the contract application and the frame; NOT the straight-line steps (text of the hand proofs, 28 / 28 / 30 directives)",
+    "time_block_s": {
+     "E2eScal/EncBlock.lean": [
+      1.01,
+      1.04
+     ],
+     "E2eScal/BhEncBlock.lean": [
+      3.12,
+      3.09
+     ]
+    },
+    "time_hand_s": {
+     "E2eScal/BhEncRoots.lean": [
+      3.43,
+      3.37
+     ]
+    },
+    "time_method": "one gated job (07), `lake env lean <file>` per file, wall time, two rounds, shared machine; BhEncRoots.lean also holds bh_enc_e and two helpers, BhEncBlock.lean also holds bh_call_at: the files are not the same content; no speed-up claim"
+   },
+   "eth1data_fast_path": {
+    "directives": {
+     "e1_enc_a": "0-36 + memmove",
+     "e1_enc_m": "37-80 + memmove (jumps 45 -> 54, 62 -> 73)",
+     "e1_enc_e": "81-88",
+     "not on this path": "16-28, 46-53, 63-72 (growslice), 89-107 (length rejects), 108-118 (morestack)"
+    },
+    "premises": "guard + 8 < rsp (lea/r12 guard), 144 <= rsp, len + 72 <= cap, cap < 2^63 (as in the model statement; not known to be needed), MemmoveC S",
+    "spec": "e1_e2e_marshal_spec_k: the 72 output bytes are serialize prysmE1Desc g.toValue (independent consensus-specs Desc of E1Desc.lean)",
+    "witness": "WitE1M.e1m_runs_empty / e1m_runs_prefix: Go-layout receiver (zero state, two roots len = cap = 32), every DepositCount and root contents, empty prefix cap 72 and 3-byte prefix with 5 spare bytes; RtCopy memmove model, S = 0",
+    "link_tables": "e1/link (bundle d5cc804d..., in the tree since H2); link check not re-run",
+    "not_done": "Go differential for this encoder; Lean Go-value predicate for the receiver"
+   },
+   "bbh_length_rejects": {
+    "theorems": "bh_e2e_marshal_reject{1,2,3}_main = bh_enc_a1, bh_enc_a2 (, bh_enc_b (, bh_enc_c)) unchanged + bh_rej_{b,c,d} + enc_reject_tail",
+    "premise_limit": "len + 112 <= cap, because the reused segments bh_enc_a1 / bh_enc_a2 state it; the code needs 16 / 48 / 80 bytes on these paths. A reject with a smaller capacity (a growslice branch first) is NOT proved",
+    "side_effect": "FINDINGS ENC-2: Slot and ProposerIndex (and the earlier roots) are in dst[len:] before the reject; the conclusions state these bytes",
+    "witness": "WitBhMR.bhr{1,2,3}_runs for every length word rl != 32 and every pointer / capacity word; instances: nil slice, (array, 31, 32)",
+    "template_matches_not_proved": "the same first five directives are at Checkpoint 72-76 and Eth1Data 90-94 / 99-103 (diagnostic job 40, an #eval of list equality); no rejTail instance theorem was proved for them; the Eth1Data length rejects are NOT proved"
+   },
+   "maxHeartbeats": "4 M on segments, compositions and the spec corollary, 16 M on the witnesses (as their models WitBhM / WitCpMR); no raise, no profile needed",
+   "runs": {
+    "diagnostics": 3,
+    "attempts": 10,
+    "failed_attempts": 3,
+    "attempt_detail": {
+     "03": "enc32_call: ecancel (return slot printed jc + 0 + 1)",
+     "05": "pass: enc32_call + three via_block theorems",
+     "08": "Eth1Data: named hole for sp not synthesised; recursion limit at the directive-55 store",
+     "10": "pass: Eth1Data segments + composition",
+     "11": "pass: spec corollary + witness",
+     "41": "reject block: Kraken.Directive needs a parameter (wrong type name)",
+     "42": "pass: reject block",
+     "43": "pass: three reject segments",
+     "44": "pass: three reject compositions",
+     "45": "pass: reject witnesses"
+    },
+    "diagnostic_detail": {
+     "04": "state before the contract in enc32_call",
+     "09": "state at directive 55 of e1_enc_m",
+     "40": "repr of the reject-tail directives of three functions"
+    },
+    "setup": "job 01 lake build --no-build: exit 3 (StackGuard, P2DecZ stale in the moved .lake); job 02 lake build E2eScal: exit 0, P2EncCp replayed, not rebuilt"
+   },
+   "gate": {
+    "jobs": 52,
+    "gate_s": 646,
+    "note": "wrapper wall seconds, 1 s resolution, gate waits included; of these 204 s are the 33 negative jobs; the gate rejects the stream name 'enc', the jobs ran under the stream 'prysm-e2e' with the label prefix 'enc:'"
+   },
+   "module_build_s_as_lake_reports": {
+    "EncBlock": 0.7,
+    "BhEncBlock": 3.2,
+    "E1EncMain": 4.0,
+    "E1SpecM": 2.1,
+    "WitE1M": 39,
+    "EncReject": 1.7,
+    "BhEncReject": 2.6,
+    "WitBhMR": 78
+   },
+   "peak_rss_gib": {
+    "proof_modules": 1.9,
+    "axioms_gate": 3.78
+   },
+   "memcap_kills": 0,
+   "evidence": {
+    "negatives": "scal/negative-enc.json: 33 cases, one gated job each (jobs 20-37, 50-64): 9 controls pass, 23 mutants fail inside the designated theorem, 1 mutant (enc-e1-a-call) is class 'outside' and is NOT a pass: it was rejected by the code-fact lemma e1_call_at, not by the designated e1_enc_a (author's targeting error); the same mutation with the target e1_call_at (enc-e1-callat-call) is 'inside'. 0 wrong_target, 0 timeout",
+    "axioms": "axioms gate over every declaration of E2e, E2eAd, E2eScal: PASS, 3813 declarations, 3223 theorems, 123 modules, hand list 228, non-standard 0, sorryAx 0 (job 70, axioms-gate.json)",
+    "decl_drift": "base dump = review b1-r1 dump at dda707c (3483 rows, sha256 56747353...) vs head dump of job 70 (3813 rows, sha256 399031f9...): ADDED 330, CHANGED 0, REMOVED 0 (decl_drift.py exit 1 = the ADDED rows, no allowlist used). 329 ADDED names are the new declarations and their auxiliaries; 1 is E2eScal.E1Code.E1Marshal.eq_1, the equation lemma of the existing constant E1Marshal. Planted control: one type hash changed in a copy of the TSV dump -> CHANGED, exit 1 (an edit of the dump, not a planted Lean change)",
+    "freshness": "lake build --no-build of the imports before every negative case (prechecks rc 0) and in the axioms gate (rc 0)"
+   },
+   "not_run": [
+    "link check re-run (the e1/link and bh/link bundles in the tree are used)",
+    "Go differential for Eth1Data.MarshalSSZTo and for the reject paths (the 6 BBH reject differential cases of bh/differential-enc.json predate this unit)",
+    "cold build from an empty .lake",
+    "regen_check.sh, kindcheck.py, p2dec_test.py (no generator or generated file changed)",
+    "hardware run on x86-64",
+    "independent review"
+   ],
+   "not_proved": [
+    "every runtime.growslice branch of both encoders (T-7 deferred)",
+    "morestack paths",
+    "BeaconBlockHeader length rejects with cap < len + 112",
+    "Eth1Data length rejects (2)",
+    "a Lean Go-value predicate for either receiver",
+    "runtime.memmove (MemmoveC is a hypothesis)",
+    "AttestationData.MarshalSSZTo (not started)"
+   ],
+   "generator_needs": [
+    "an encode mode must emit the per-site straight-line step script from the directive list (one line form per instruction kind: load, store, register move, lea, cmp + branch closer), not match a fixed-register template: rootEncHead / rootEncTail match 1 of 6 known sites",
+    "per site: the register roles (receiver, slice pointer, length, capacity, field pointer), the frame slots, the jump / label indices and the call index jc",
+    "the address forms Kraken prints for add (source first: `8 + v`, `-128 + (rsp - 8)`), which the block parameters aRet / aLo / aFp hide",
+    "for rejects: the three rejTail parameters (add|sub, constant, nop) and the label index",
+    "AU-07 stays open: P2EncCp was not touched"
+   ]
   }
  },
  "contamination": {
