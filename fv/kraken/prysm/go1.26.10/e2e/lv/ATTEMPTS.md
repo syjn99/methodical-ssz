@@ -32,3 +32,15 @@
 - 묶음 해시: `BUNDLE sha256 5c1666068e5d37550b3ac967e27d22c2038814a4163ee6a234cec3075a5e744f`.
 - (d)의 DIFF 6줄은 모두 padding(`nop` 정규화)이다. 그 밖의 차이는 0이다.
 - `lvSliceType.data`의 abi.Type: Size_ = 24, Kind_ = 23(slice). 바이트를 직접 읽어 확인했다.
+
+## U3 문장
+
+- 손 `Desc`(`E2eList/Desc.lean`)를 쓴 뒤에 생산자 `Desc`를 출력했다. 두 term은 필드 이름만 다르다.
+- 작업 지시가 본으로 든 `E2eScal.H5.sm_accept_stmt`는 레포에 없다(`git grep` 결과 0). 대신 `E2eScal.H4.dd_accept_stmt`를 본으로 썼다.
+- `lakefile.toml`에는 `input_dir` 둘(`lv_norm_S`, `lv_data`)과 `lean_lib` `E2eList`만 덧붙였다. 기존 항목은 바꾸지 않았다.
+- 새 데이터 읽개 `lv_data_include`(`E2eList/Include.lean`)는 `E2e/Include.lean`의 글이다. `gen/e2e/lvcheck_include.py`가 SAME 넷, exit 0을 냈다.
+- 문장 모듈 빌드(로그 13, 14): `E2eList.StmtSa` exit 0, 12.5 s, `E2eList.StmtSc` exit 0, 8.3 s. 오류 0이다.
+- `E2eList` 모듈의 경고는 쓰지 않은 변수 이름 린터와 `module` 권고뿐이다. 문장은 증명이 없는 `def … : Prop`이라 이름이 쓰이지 않는다.
+- `lake build --no-build E2e E2eAd E2eScal E2eList.StmtSa E2eList.StmtSc`(로그 15): exit 0, `All targets up-to-date (998 jobs)`.
+- `E2eList/*.lean`에 `sorry`, `admit`, `axiom`, `native_decide`, `bv_decide`, `maxHeartbeats`, `maxRecDepth`가 없다(`grep` exit 1).
+- 측정 방법: `heavy.py`의 벽시계와 1초 표본 RSS 합. n = 1.
