@@ -21,3 +21,9 @@ $G p2dec --S $B/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBloc
 # SG-1 extension (after both hold-outs were opened; Eth1Data is development data for it, CONTAMINATION.md §8).
 # The frozen generator's H2 run above stays the historical negative result. Raw output committed unedited.
 $G p2dec --S prysm/go1.26.10/e2e/e1/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S --const E1Unmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.Eth1Data --prefix e1_dec --imports E2eScal.P2Dec,E2eScal.P2DecZ,E2eScal.E1Code --open E2eScal.E1Code > lean/E2eScal/GenE1Dec.lean
+# GEN2 (unit G2-G; generator change after H3, CONTAMINATION.md section 14): `p2dec --gen2` on the development
+# set (Eth1Data, BlobIdentifier, DepositMessage are in-sample). New files; the files above stay as they are.
+H=prysm/go1.26.10/e2e/h3/link/norm
+$G p2dec --gen2 --S prysm/go1.26.10/e2e/e1/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S --const E1Unmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.Eth1Data --prefix e1_g2dec --imports E2eScal.P2Dec,E2eScal.P2DecZ,E2eScal.U64Inline,E2eScal.E1Code --open E2eScal.E1Code > lean/E2eScal/Gen2E1Dec.lean
+$G p2dec --gen2 --S $H/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S --const BiUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.BlobIdentifier --prefix bi_g2dec --imports E2eScal.P2Dec,E2eScal.P2DecZ,E2eScal.U64Inline,E2eScal.H3Code --open E2eScal.H3Code > lean/E2eScal/Gen2BiDec.lean
+$G p2dec --gen2 --S $H/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S --const DmUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.DepositMessage --prefix dm_g2dec --imports E2eScal.P2Dec,E2eScal.SegN,E2eScal.U64Inline,E2eScal.H3Code --open E2eScal.H3Code > lean/E2eScal/Gen2DmDec.lean
