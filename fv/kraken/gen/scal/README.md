@@ -80,6 +80,8 @@ theorem was emitted before its `set_option … in` lines (Lean parse error, jobs
 - `AxiomsScal.lean`: `#print axioms` of every S1/S2 theorem (checked with `gen/e2e/axioms.py`).
 - `negcases-scal.json`: code / statement mutants and controls for the in-sample and generated theorems
   (run with `gen/e2e/negative.py`).
+- `negcases-t9.json`: mutants and controls for the BeaconBlockHeader encoder fast path (T-9 hand proof;
+  `scal/negative-t9.json`, one gated job per case). Not generator output.
 - `tcost.py` → `prysm/go1.26.10/e2e/scal/TEMPLATE-COST.json` (template cost, separate from hold-out cost).
 
 ## Results

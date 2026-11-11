@@ -1,0 +1,80 @@
+// Scratch differential program (T-9, not committed in Prysm): runs the real generated
+// v1alpha1.BeaconBlockHeader.MarshalSSZTo on the cases of fv/kraken/gen/e2e/bhmdiff.py and prints the observed
+// results as JSON. Expected values are computed by that script independently (Python struct.pack), never from
+// this program. Run as package fve2e/bhmcheck of the temporary Prysm tree with `go run -overlay`.
+package main
+
+import (
+	"bytes"
+	"encoding/hex"
+	"encoding/json"
+	"errors"
+	"os"
+	"unsafe"
+
+	"github.com/OffchainLabs/methodical-ssz/ssz"
+	"github.com/OffchainLabs/prysm/v7/consensus-types/primitives"
+	ethpb "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+)
+
+type Case struct {
+	ID     string   `json:"id"`
+	Slot   uint64   `json:"slot"`
+	Prop   uint64   `json:"proposer"`
+	Roots  []string `json:"roots"`
+	Pre    string   `json:"pre"`
+	Cap    int      `json:"cap"`
+	NilDst bool     `json:"nil_dst"`
+}
+
+type Res struct {
+	ID        string `json:"id"`
+	Err       string `json:"err"`
+	ErrBL     bool   `json:"err_is_ErrBytesLength"`
+	Out       string `json:"out"`
+	OutNil    bool   `json:"out_nil"`
+	OutCap    int    `json:"out_cap"`
+	SameArray bool   `json:"same_array"`
+	RecvSame  bool   `json:"recv_unchanged"`
+}
+
+func unhex(s string) []byte {
+	b, err := hex.DecodeString(s)
+	if err != nil {
+		panic(err)
+	}
+	return b
+}
+
+func main() {
+	var cs []Case
+	if err := json.NewDecoder(os.Stdin).Decode(&cs); err != nil {
+		panic(err)
+	}
+	out := []Res{}
+	for _, c := range cs {
+		rs := [][]byte{unhex(c.Roots[0]), unhex(c.Roots[1]), unhex(c.Roots[2])}
+		h := &ethpb.BeaconBlockHeader{Slot: primitives.Slot(c.Slot), ProposerIndex: primitives.ValidatorIndex(c.Prop),
+			ParentRoot: rs[0], StateRoot: rs[1], BodyRoot: rs[2]}
+		keep := [][]byte{bytes.Clone(rs[0]), bytes.Clone(rs[1]), bytes.Clone(rs[2])}
+		var dst []byte
+		if !c.NilDst {
+			pre := unhex(c.Pre)
+			dst = make([]byte, len(pre), c.Cap)
+			copy(dst, pre)
+		}
+		o, e := h.MarshalSSZTo(dst)
+		r := Res{ID: c.ID, Out: hex.EncodeToString(o), OutNil: o == nil, OutCap: cap(o)}
+		if e != nil {
+			r.Err = e.Error()
+			r.ErrBL = errors.Is(e, ssz.ErrBytesLength)
+		}
+		if cap(dst) > 0 && cap(o) > 0 {
+			r.SameArray = unsafe.SliceData(o) == unsafe.SliceData(dst)
+		}
+		r.RecvSame = uint64(h.Slot) == c.Slot && uint64(h.ProposerIndex) == c.Prop &&
+			bytes.Equal(h.ParentRoot, keep[0]) && bytes.Equal(h.StateRoot, keep[1]) && bytes.Equal(h.BodyRoot, keep[2])
+		out = append(out, r)
+	}
+	json.NewEncoder(os.Stdout).Encode(out)
+}

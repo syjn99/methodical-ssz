@@ -109,3 +109,15 @@
 - 인코더(`MarshalSSZTo`)의 스택 검사는 `lea -0x8(%rsp),%r12; cmp 0x10(%r14),%r12; jbe` 꼴이다(T-9와 같다).
 - INBOX 023 3단계에 따라 시도하지 않았다. 예산은 사용자 결정을 기다린다.
 - 한계: `e1/link/norm`은 Lake `input_dir`가 아니다. lakefile 변경은 승인이 필요해서 하지 않았다.
+
+## 8. T-9 스트림 (사용자 지시, 2026-11-11) — 열린 뒤
+
+- 생성기, 보조정리, 종류, 템플릿은 바꾸지 않았다. `Fk/*`와 계약도 바꾸지 않았다.
+- 이 작업은 손 증명이다. 생성기 결과가 아니다. 홀드아웃 주장에 넣지 않는다.
+- 작성 세션은 H1과 H2의 파일과 T-9 기록을 읽었다. 독립 표본이 아니다.
+- 더한 Lean 파일: `StackGuard.lean`, `BhEncHead.lean`, `BhEncRoots.lean`, `BhEncMain.lean`, `BhSpecM.lean`, `WitBhM.lean`.
+- `BhEncHead.lean`의 A1, A2 본문은 세션 11의 임시 파일 `Split3.lean`에서 왔다. 가드 분기와 길이 목표 두 곳을 고쳤다.
+- `WitBhM.lean`은 `E2e/WitCpM.lean`의 글이다. `BhSpecM.lean`은 `E2e/CpSpecM.lean`의 글이다.
+- 더한 증거 파일: `gen/scal/negcases-t9.json`, `scal/negative-t9.json`, `gen/e2e/bhmdiff.py`, `bh/bhmcheck-main.go.txt`, `bh/differential-enc*.json`.
+- `AxiomsScal.lean`에 이름 11개를 더했다. `axioms-gate.json`을 현재 트리의 출력으로 바꿨다.
+- 제안(하지 않음): 인코드 템플릿을 이 세 루트 블록 꼴에 맞추는 변경. `scalgen.py`와 `Kind.lean`은 그대로다.

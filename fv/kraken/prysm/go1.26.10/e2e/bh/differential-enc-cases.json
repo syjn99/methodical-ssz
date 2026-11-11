@@ -1,0 +1,398 @@
+[
+ {
+  "id": "fast-0-0",
+  "slot": 0,
+  "proposer": 0,
+  "roots": [
+   "0000000000000000000000000000000000000000000000000000000000000000",
+   "0000000000000000000000000000000000000000000000000000000000000000",
+   "0000000000000000000000000000000000000000000000000000000000000000"
+  ],
+  "pre": "",
+  "cap": 112,
+  "nil_dst": false,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 112,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "fast-0-1",
+  "slot": 0,
+  "proposer": 0,
+  "roots": [
+   "0000000000000000000000000000000000000000000000000000000000000000",
+   "0000000000000000000000000000000000000000000000000000000000000000",
+   "0000000000000000000000000000000000000000000000000000000000000000"
+  ],
+  "pre": "aabbcc",
+  "cap": 120,
+  "nil_dst": false,
+  "exp": {
+   "err": "",
+   "out": "aabbcc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 120,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "fast-0-2",
+  "slot": 0,
+  "proposer": 0,
+  "roots": [
+   "0000000000000000000000000000000000000000000000000000000000000000",
+   "0000000000000000000000000000000000000000000000000000000000000000",
+   "0000000000000000000000000000000000000000000000000000000000000000"
+  ],
+  "pre": "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728",
+  "cap": 152,
+  "nil_dst": false,
+  "exp": {
+   "err": "",
+   "out": "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20212223242526272800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 152,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "grow-nil-0",
+  "slot": 0,
+  "proposer": 0,
+  "roots": [
+   "0000000000000000000000000000000000000000000000000000000000000000",
+   "0000000000000000000000000000000000000000000000000000000000000000",
+   "0000000000000000000000000000000000000000000000000000000000000000"
+  ],
+  "pre": "",
+  "cap": 0,
+  "nil_dst": true,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "grow-short-0",
+  "slot": 0,
+  "proposer": 0,
+  "roots": [
+   "0000000000000000000000000000000000000000000000000000000000000000",
+   "0000000000000000000000000000000000000000000000000000000000000000",
+   "0000000000000000000000000000000000000000000000000000000000000000"
+  ],
+  "pre": "aabbcc",
+  "cap": 114,
+  "nil_dst": false,
+  "exp": {
+   "err": "",
+   "out": "aabbcc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "fast-1-0",
+  "slot": 81985529216486895,
+  "proposer": 7,
+  "roots": [
+   "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+   "1111111111111111111111111111111111111111111111111111111111111111",
+   "2222222222222222222222222222222222222222222222222222222222222222"
+  ],
+  "pre": "",
+  "cap": 112,
+  "nil_dst": false,
+  "exp": {
+   "err": "",
+   "out": "efcdab89674523010700000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f11111111111111111111111111111111111111111111111111111111111111112222222222222222222222222222222222222222222222222222222222222222",
+   "same_array": true,
+   "out_cap": 112,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "fast-1-1",
+  "slot": 81985529216486895,
+  "proposer": 7,
+  "roots": [
+   "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+   "1111111111111111111111111111111111111111111111111111111111111111",
+   "2222222222222222222222222222222222222222222222222222222222222222"
+  ],
+  "pre": "aabbcc",
+  "cap": 120,
+  "nil_dst": false,
+  "exp": {
+   "err": "",
+   "out": "aabbccefcdab89674523010700000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f11111111111111111111111111111111111111111111111111111111111111112222222222222222222222222222222222222222222222222222222222222222",
+   "same_array": true,
+   "out_cap": 120,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "fast-1-2",
+  "slot": 81985529216486895,
+  "proposer": 7,
+  "roots": [
+   "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+   "1111111111111111111111111111111111111111111111111111111111111111",
+   "2222222222222222222222222222222222222222222222222222222222222222"
+  ],
+  "pre": "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728",
+  "cap": 152,
+  "nil_dst": false,
+  "exp": {
+   "err": "",
+   "out": "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728efcdab89674523010700000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f11111111111111111111111111111111111111111111111111111111111111112222222222222222222222222222222222222222222222222222222222222222",
+   "same_array": true,
+   "out_cap": 152,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "grow-nil-1",
+  "slot": 81985529216486895,
+  "proposer": 7,
+  "roots": [
+   "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+   "1111111111111111111111111111111111111111111111111111111111111111",
+   "2222222222222222222222222222222222222222222222222222222222222222"
+  ],
+  "pre": "",
+  "cap": 0,
+  "nil_dst": true,
+  "exp": {
+   "err": "",
+   "out": "efcdab89674523010700000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f11111111111111111111111111111111111111111111111111111111111111112222222222222222222222222222222222222222222222222222222222222222",
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "grow-short-1",
+  "slot": 81985529216486895,
+  "proposer": 7,
+  "roots": [
+   "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+   "1111111111111111111111111111111111111111111111111111111111111111",
+   "2222222222222222222222222222222222222222222222222222222222222222"
+  ],
+  "pre": "aabbcc",
+  "cap": 114,
+  "nil_dst": false,
+  "exp": {
+   "err": "",
+   "out": "aabbccefcdab89674523010700000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f11111111111111111111111111111111111111111111111111111111111111112222222222222222222222222222222222222222222222222222222222222222",
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "fast-2-0",
+  "slot": 18446744073709551615,
+  "proposer": 18446744073709551615,
+  "roots": [
+   "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  ],
+  "pre": "",
+  "cap": 112,
+  "nil_dst": false,
+  "exp": {
+   "err": "",
+   "out": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 112,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "fast-2-1",
+  "slot": 18446744073709551615,
+  "proposer": 18446744073709551615,
+  "roots": [
+   "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  ],
+  "pre": "aabbcc",
+  "cap": 120,
+  "nil_dst": false,
+  "exp": {
+   "err": "",
+   "out": "aabbccffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 120,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "fast-2-2",
+  "slot": 18446744073709551615,
+  "proposer": 18446744073709551615,
+  "roots": [
+   "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  ],
+  "pre": "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728",
+  "cap": 152,
+  "nil_dst": false,
+  "exp": {
+   "err": "",
+   "out": "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 152,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "grow-nil-2",
+  "slot": 18446744073709551615,
+  "proposer": 18446744073709551615,
+  "roots": [
+   "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  ],
+  "pre": "",
+  "cap": 0,
+  "nil_dst": true,
+  "exp": {
+   "err": "",
+   "out": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "grow-short-2",
+  "slot": 18446744073709551615,
+  "proposer": 18446744073709551615,
+  "roots": [
+   "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  ],
+  "pre": "aabbcc",
+  "cap": 114,
+  "nil_dst": false,
+  "exp": {
+   "err": "",
+   "out": "aabbccffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "rej-root0-len31",
+  "slot": 81985529216486895,
+  "proposer": 7,
+  "roots": [
+   "33333333333333333333333333333333333333333333333333333333333333",
+   "1111111111111111111111111111111111111111111111111111111111111111",
+   "2222222222222222222222222222222222222222222222222222222222222222"
+  ],
+  "pre": "",
+  "cap": 200,
+  "nil_dst": false,
+  "exp": {
+   "err_is_ErrBytesLength": true,
+   "out_nil": true,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "rej-root0-len33",
+  "slot": 81985529216486895,
+  "proposer": 7,
+  "roots": [
+   "333333333333333333333333333333333333333333333333333333333333333333",
+   "1111111111111111111111111111111111111111111111111111111111111111",
+   "2222222222222222222222222222222222222222222222222222222222222222"
+  ],
+  "pre": "",
+  "cap": 200,
+  "nil_dst": false,
+  "exp": {
+   "err_is_ErrBytesLength": true,
+   "out_nil": true,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "rej-root1-len31",
+  "slot": 81985529216486895,
+  "proposer": 7,
+  "roots": [
+   "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+   "33333333333333333333333333333333333333333333333333333333333333",
+   "2222222222222222222222222222222222222222222222222222222222222222"
+  ],
+  "pre": "",
+  "cap": 200,
+  "nil_dst": false,
+  "exp": {
+   "err_is_ErrBytesLength": true,
+   "out_nil": true,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "rej-root1-len33",
+  "slot": 81985529216486895,
+  "proposer": 7,
+  "roots": [
+   "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+   "333333333333333333333333333333333333333333333333333333333333333333",
+   "2222222222222222222222222222222222222222222222222222222222222222"
+  ],
+  "pre": "",
+  "cap": 200,
+  "nil_dst": false,
+  "exp": {
+   "err_is_ErrBytesLength": true,
+   "out_nil": true,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "rej-root2-len31",
+  "slot": 81985529216486895,
+  "proposer": 7,
+  "roots": [
+   "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+   "1111111111111111111111111111111111111111111111111111111111111111",
+   "33333333333333333333333333333333333333333333333333333333333333"
+  ],
+  "pre": "",
+  "cap": 200,
+  "nil_dst": false,
+  "exp": {
+   "err_is_ErrBytesLength": true,
+   "out_nil": true,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "rej-root2-len33",
+  "slot": 81985529216486895,
+  "proposer": 7,
+  "roots": [
+   "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+   "1111111111111111111111111111111111111111111111111111111111111111",
+   "333333333333333333333333333333333333333333333333333333333333333333"
+  ],
+  "pre": "",
+  "cap": 200,
+  "nil_dst": false,
+  "exp": {
+   "err_is_ErrBytesLength": true,
+   "out_nil": true,
+   "recv_unchanged": true
+  }
+ }
+]

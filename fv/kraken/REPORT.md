@@ -326,10 +326,17 @@ growslice 뒤의 거부(`cap < len + 8`, `len(Root) ≠ 32`)는 `cp_e2e_marshal_
 홀드아웃 H1(확장성 S3, 방법 고정 `56dfc27`, 연 시각 2026-11-10T17:53:24Z): 결과, 비용, 한계는 `prysm/go1.26.10/e2e/scal/RESULT.json`에 있다.
 오염 기록은 `scal/CONTAMINATION.md`, 연 기록은 `scal/HOLDOUT-OPENED`다.
 증명한 것: ValidatorIndex 디코더 수용과 길이 거부, BeaconBlockHeader 디코더 수용·크기 거부·명세 정렬·오류 감싸기 두 곳의 도달 불가.
-BeaconBlockHeader 인코더 빠른 경로는 증명하지 않았다. 세션 11에서 T9-PLAN 한도(진단 3회, 시도 6회)에서 멈췄다(FINDINGS T-9).
-남은 장애는 지시 4의 스택 가드 분기를 커널이 검사할 때의 메모리다.
-임시 파일에서 A1, A2, 합성은 커널 메모리 실패가 없었다. 그러나 닫힘은 보이지 않았다(리뷰 s6-r1 M1).
-A1과 A2는 `sorryAx`에 의존한다. 합성은 `sorryAx`와 커널이 거부한 `bh_enc_a0_v1`에 의존한다.
+BeaconBlockHeader 인코더 빠른 경로는 T-9 스트림(브랜치 `claude/ssz-fv-t9-fable`)에서 커널 검사를 통과했다. 독립 리뷰는 아직 없다.
+정리는 `E2eScal.Bh.bh_e2e_marshal_main`이다. 문장 꼴은 `cp_e2e_marshal_main`과 같다.
+범위는 빠른 경로뿐이다: `len(dst) + 112 ≤ cap(dst)`이고 세 루트의 길이가 32다.
+growslice 분기와 길이 거부 세 곳은 증명하지 않았다. "BeaconBlockHeader 인코더 완전"을 주장하지 않는다.
+T-9의 원인은 스택 가드 분기를 `simp`와 `omega`로 닫은 증명 항이다. 이 항은 리터럴 2^64 − 32의 `Int` 산술을 담는다. 커널이 이 항을 검사할 때 메모리가 넘쳤다.
+기계 문맥이 없는 `BitVec` 재현에서 같은 실패를 확인했다(FINDINGS T-9).
+해결은 보조정리 `E2eScal.lea_cmp_be_false`다. `N`에 대해 한 번 적었고 `Fk.cmp_be_false`를 그대로 쓴다. `maxHeartbeats`는 올리지 않았다.
+증거: 증인 `WitBhM`(Go 값인 수신자, 접두사 둘), 명세 정렬 `bh_e2e_marshal_spec_k`, 부정 시험 36건(대조 9 통과, 변이 27 정리 안 실패), Go 차분 21/21(빠른 경로 9건), 공리 게이트 PASS(선언 3464개, 표준 공리만).
+기준 덤프 대비 선언 차이는 ADDED 161, CHANGED 0, REMOVED 0이다. 기준 덤프는 리뷰 h2-r1이 `9df1fb2`에서 만든 것이다. `9df1fb2`와 기준 `48b74b6` 사이에 Lean과 링크 입력의 차이는 없다.
+실행하지 않은 것: 링크 검사 재실행(기존 묶음 `140eb7bd…`을 쓴다), `E2eScal` 콜드 빌드, 리뷰어 콜드 재빌드, 수신자의 Lean Go 값 술어.
+비용과 한계는 `scal/RESULT.json`의 `beacon_block_header_encoder_t9`에 있다.
 임시 결과는 `#print axioms` 출력에 `sorryAx`와 자기 이름이 없을 때만 닫힌 것이다(FINDINGS P-1).
 
 홀드아웃 H2(`v1alpha1.Eth1Data`의 `UnmarshalSSZ`와 `MarshalSSZTo`)는 열렸다. 방법 고정은 H1과 같은 `56dfc27`이다.
@@ -351,7 +358,7 @@ Go 차분은 arm64에서 돌렸다. Go 의미론을 보고 ELF를 보지 않는�
 실행하지 않은 것: `kindcheck.py`(검사할 생성 정리가 없음), 작성 세션의 차가운 빌드.
 증명하지 않은 것: Eth1Data 수신자의 Lean Go 값 술어.
 인코더 `MarshalSSZTo`는 시도하지 않았다. 스택 가드가 `lea -0x8(%rsp),%r12; cmp 0x10(%r14),%r12; jbe` 꼴이다.
-이것은 T-9와 같은 머리다. 그 예산은 사용자 결정을 기다린다.
+이것은 T-9와 같은 머리다. T-9 스트림은 이 인코더를 다루지 않았다.
 리뷰한 주장(리뷰 h2-r1): 리뷰어가 새 모듈 10개를 차갑게 다시 빌드했다(종료 0, 25.5초, n = 1).
 리뷰어의 측정: 손 파일의 비지 않은 줄 1064개 중 549개(52%)가 H1·P2Dec 소스 줄의 복사다.
 
@@ -476,4 +483,8 @@ python3 -I -B fv/kraken/gen/e2e/axioms_gate.py run prysm/go1.26.10/e2e/axioms-ga
 python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/e2e/negcases.json <work> prysm/go1.26.10/e2e/negative/result.json
 python3 -I -B fv/kraken/gen/e2e/differential.py cases <c.json>; go run ./fve2e/cpcheck <c.json> > <o.json>   # Prysm 임시 트리, Go 1.26.10
 python3 -I -B fv/kraken/gen/e2e/differential.py check <c.json> <o.json> prysm/go1.26.10/e2e/differential.json
+# T-9 (BeaconBlockHeader 인코더 빠른 경로): 모듈 StackGuard BhEncHead BhEncRoots BhEncMain BhSpecM WitBhM (lake build E2eScal.<모듈>)
+python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/scal/negcases-t9.json <work> prysm/go1.26.10/e2e/scal/negative-t9.json <case-id>   # 사례마다 gate 작업 하나
+python3 -I -B fv/kraken/gen/e2e/bhmdiff.py cases <c.json>; go run -overlay <overlay.json> ./fve2e/bhmcheck < <c.json> > <o.json>   # Prysm 임시 트리, Go 1.26.10; overlay가 bh/bhmcheck-main.go.txt를 main.go로 준다
+python3 -I -B fv/kraken/gen/e2e/bhmdiff.py check <c.json> <o.json> prysm/go1.26.10/e2e/bh/differential-enc.json
 ```

@@ -1,0 +1,1446 @@
+{
+ "cases": [
+  {
+   "id": "t9-a1-control",
+   "kind": "control",
+   "module": "E2eScal/BhEncHead.lean",
+   "theorem": "bh_enc_a1",
+   "range": [
+    40,
+    167
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.3,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "t9-a1-guard-lea",
+   "kind": "code",
+   "module": "E2eScal/BhEncHead.lean",
+   "theorem": "bh_enc_a1",
+   "range": [
+    40,
+    167
+   ],
+   "error_lines": [
+    85
+   ],
+   "first_error": "<work>/t9-a1-guard-lea/mut.lean:85:66: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.4,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -1,6 +1,6 @@\n github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo:\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo_0:\n-  lea -0x20(%rsp),%r12\n+  lea -0x28(%rsp),%r12\n   cmp 0x10(%r14),%r12\n   jbe L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo_2ff\n   push %rbp\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-a1-slot-field",
+   "kind": "code",
+   "module": "E2eScal/BhEncHead.lean",
+   "theorem": "bh_enc_a1",
+   "range": [
+    40,
+    167
+   ],
+   "error_lines": [
+    107,
+    70
+   ],
+   "first_error": "<work>/t9-a1-slot-field/mut.lean:107:37: error: ecancel: could not automatically solve goal (Eq (sl.At (rax.toBitVec + 16)) \u22c6 ?m.948)",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.3,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -9,7 +9,7 @@\n   mov %rbx,0xb0(%rsp)\n   mov %rax,0xa8(%rsp)\n   lea 0x8(%rcx),%rdx\n-  mov 0x8(%rax),%r8\n+  mov 0x10(%rax),%r8\n   nop\n   nop\n   nop\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-a1-frame",
+   "kind": "code",
+   "module": "E2eScal/BhEncHead.lean",
+   "theorem": "bh_enc_a1",
+   "range": [
+    40,
+    167
+   ],
+   "error_lines": [
+    96,
+    101,
+    116
+   ],
+   "first_error": "<work>/t9-a1-frame/mut.lean:96:63: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.6,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -5,7 +5,7 @@\n   jbe L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo_2ff\n   push %rbp\n   mov %rsp,%rbp\n-  sub $0x98,%rsp\n+  sub $0x90,%rsp\n   mov %rbx,0xb0(%rsp)\n   mov %rax,0xa8(%rsp)\n   lea 0x8(%rcx),%rdx\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-a1-stmt-guard",
+   "kind": "stmt",
+   "module": "E2eScal/BhEncHead.lean",
+   "theorem": "bh_enc_a1",
+   "range": [
+    38,
+    165
+   ],
+   "error_lines": [
+    83,
+    83
+   ],
+   "first_error": "<work>/t9-a1-stmt-guard/mut.lean:83:71: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.4,
+   "diff": "--- orig\n+++ mut\n@@ -11,7 +11,7 @@\n       \u22c6 Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))\n       \u22c6 Eq (sl.At (s.regs.rax.toBitVec + 8))\n       \u22c6 Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) \u22c6 R)\n-    (hguard : guard.toNat + 32 < s.regs.rsp.toNat) (hsp : 168 \u2264 s.regs.rsp.toNat)\n+    (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 168 \u2264 s.regs.rsp.toNat)\n     (hcap : s.regs.rcx.toNat + 112 \u2264 s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) :\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Host.addrOf (k + 36) \u2227 st.data.regs.rax = s.regs.rax \u2227 st.data.regs.rbx = s.regs.rbx\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-a1-stmt-dst-unchanged",
+   "kind": "stmt",
+   "module": "E2eScal/BhEncHead.lean",
+   "theorem": "bh_enc_a1",
+   "range": [
+    38,
+    165
+   ],
+   "error_lines": [
+    165
+   ],
+   "first_error": "<work>/t9-a1-stmt-dst-unchanged/mut.lean:165:15: error: ecancel: could not automatically solve goal (Eq ((Int.toBytes 8 rbp.toBitVec.toInt).At (rsp.toBitVec - 8)) \u22c6",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.2,
+   "diff": "--- orig\n+++ mut\n@@ -27,7 +27,7 @@\n           \u22c6 Eq (u1.At (s.regs.rsp.toBitVec - 40))\n           \u22c6 Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))\n           \u22c6 Eq (sl.At (s.regs.rax.toBitVec + 8))\n-          \u22c6 Eq (sl.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) \u22c6 R) st.data.dmem)\n+          \u22c6 Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) \u22c6 R) st.data.dmem)\n       \u27e8s, Host.addrOf k\u27e9 := by\n   obtain \u27e8\u27e8rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15\u27e9, zmms, flags, mem\u27e9 := s\n   simp only at h_mem hguard hsp hcap hcap63 \u22a2\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-a2-control",
+   "kind": "control",
+   "module": "E2eScal/BhEncHead.lean",
+   "theorem": "bh_enc_a2",
+   "range": [
+    172,
+    258
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.7,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "t9-a2-pi-field",
+   "kind": "code",
+   "module": "E2eScal/BhEncHead.lean",
+   "theorem": "bh_enc_a2",
+   "range": [
+    172,
+    258
+   ],
+   "error_lines": [
+    199
+   ],
+   "first_error": "<work>/t9-a2-pi-field/mut.lean:199:60: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.7,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -35,7 +35,7 @@\n   mov 0x68(%rsp),%r8\n   mov %r8,(%rbx,%rcx,1)\n   lea 0x8(%rdx),%r8\n-  mov 0x10(%rax),%r9\n+  mov 0x8(%rax),%r9\n   nop\n   nop\n   nop\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-a2-newlen",
+   "kind": "code",
+   "module": "E2eScal/BhEncHead.lean",
+   "theorem": "bh_enc_a2",
+   "range": [
+    172,
+    258
+   ],
+   "error_lines": [
+    251
+   ],
+   "first_error": "<work>/t9-a2-newlen/mut.lean:251:29: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.7,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -34,7 +34,7 @@\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo_88:\n   mov 0x68(%rsp),%r8\n   mov %r8,(%rbx,%rcx,1)\n-  lea 0x8(%rdx),%r8\n+  lea 0x10(%rdx),%r8\n   mov 0x10(%rax),%r9\n   nop\n   nop\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-b-control",
+   "kind": "control",
+   "module": "E2eScal/BhEncRoots.lean",
+   "theorem": "bh_enc_b",
+   "range": [
+    40,
+    126
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 3.4,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "t9-b-len33",
+   "kind": "code",
+   "module": "E2eScal/BhEncRoots.lean",
+   "theorem": "bh_enc_b",
+   "range": [
+    40,
+    126
+   ],
+   "error_lines": [
+    81
+   ],
+   "first_error": "<work>/t9-b-len33/mut.lean:81:16: error: unsolved goals",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.3,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -61,7 +61,7 @@\n   mov 0x48(%rsp),%r9\n   mov %r9,(%rbx,%rdx,1)\n   mov 0x18(%rax),%rdx\n-  cmpq $0x20,0x20(%rax)\n+  cmpq $0x21,0x20(%rax)\n   nop\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo_2e1\n   lea 0x20(%r8),%r9\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-b-root-ptr",
+   "kind": "code",
+   "module": "E2eScal/BhEncRoots.lean",
+   "theorem": "bh_enc_b",
+   "range": [
+    40,
+    126
+   ],
+   "error_lines": [
+    71
+   ],
+   "first_error": "<work>/t9-b-root-ptr/mut.lean:71:74: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.3,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -60,7 +60,7 @@\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo_e9:\n   mov 0x48(%rsp),%r9\n   mov %r9,(%rbx,%rdx,1)\n-  mov 0x18(%rax),%rdx\n+  mov 0x30(%rax),%rdx\n   cmpq $0x20,0x20(%rax)\n   nop\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo_2e1\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-b-newlen",
+   "kind": "code",
+   "module": "E2eScal/BhEncRoots.lean",
+   "theorem": "bh_enc_b",
+   "range": [
+    40,
+    126
+   ],
+   "error_lines": [
+    88,
+    126
+   ],
+   "first_error": "<work>/t9-b-newlen/mut.lean:88:102: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.3,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -64,7 +64,7 @@\n   cmpq $0x20,0x20(%rax)\n   nop\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo_2e1\n-  lea 0x20(%r8),%r9\n+  lea 0x21(%r8),%r9\n   cmp %r9,%rdi\n   jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo_14c\n   mov %rdx,0x90(%rsp)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-c-control",
+   "kind": "control",
+   "module": "E2eScal/BhEncRoots.lean",
+   "theorem": "bh_enc_c",
+   "range": [
+    131,
+    228
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.8,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "t9-c-root-ptr",
+   "kind": "code",
+   "module": "E2eScal/BhEncRoots.lean",
+   "theorem": "bh_enc_c",
+   "range": [
+    131,
+    228
+   ],
+   "error_lines": [
+    166
+   ],
+   "first_error": "<work>/t9-c-root-ptr/mut.lean:166:74: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.8,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -89,7 +89,7 @@\n   mov $0x20,%ecx\n   callq runtime.memmove\n   mov 0xa8(%rsp),%rdx\n-  mov 0x30(%rdx),%rbx\n+  mov 0x18(%rdx),%rbx\n   cmpq $0x20,0x38(%rdx)\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo_2c2\n   mov 0x40(%rsp),%r8\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-c-len31",
+   "kind": "code",
+   "module": "E2eScal/BhEncRoots.lean",
+   "theorem": "bh_enc_c",
+   "range": [
+    131,
+    228
+   ],
+   "error_lines": [
+    174
+   ],
+   "first_error": "<work>/t9-c-len31/mut.lean:174:16: error: unsolved goals",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.9,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -90,7 +90,7 @@\n   callq runtime.memmove\n   mov 0xa8(%rsp),%rdx\n   mov 0x30(%rdx),%rbx\n-  cmpq $0x20,0x38(%rdx)\n+  cmpq $0x1f,0x38(%rdx)\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo_2c2\n   mov 0x40(%rsp),%r8\n   lea 0x20(%r8),%r9\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-c-dst-off",
+   "kind": "code",
+   "module": "E2eScal/BhEncRoots.lean",
+   "theorem": "bh_enc_c",
+   "range": [
+    131,
+    228
+   ],
+   "error_lines": [
+    220,
+    228
+   ],
+   "first_error": "<work>/t9-c-dst-off/mut.lean:220:62: error: ecancel: could not automatically solve goal (Eq",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.8,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -113,7 +113,7 @@\n   mov %rcx,0x40(%rsp)\n   mov %r9,0x38(%rsp)\n   mov %rax,0x90(%rsp)\n-  add %r8,%rax\n+  add %r9,%rax\n   mov $0x20,%ecx\n   callq runtime.memmove\n   mov 0xa8(%rsp),%rdx\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-d-control",
+   "kind": "control",
+   "module": "E2eScal/BhEncRoots.lean",
+   "theorem": "bh_enc_d",
+   "range": [
+    233,
+    332
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 3.2,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "t9-d-root-ptr",
+   "kind": "code",
+   "module": "E2eScal/BhEncRoots.lean",
+   "theorem": "bh_enc_d",
+   "range": [
+    233,
+    332
+   ],
+   "error_lines": [
+    268
+   ],
+   "first_error": "<work>/t9-d-root-ptr/mut.lean:268:74: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 3.3,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -117,7 +117,7 @@\n   mov $0x20,%ecx\n   callq runtime.memmove\n   mov 0xa8(%rsp),%rdx\n-  mov 0x48(%rdx),%rbx\n+  mov 0x30(%rdx),%rbx\n   cmpq $0x20,0x50(%rdx)\n   jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo_2a4\n   mov 0x38(%rsp),%rdx\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-d-memmove31",
+   "kind": "code",
+   "module": "E2eScal/BhEncRoots.lean",
+   "theorem": "bh_enc_d",
+   "range": [
+    233,
+    332
+   ],
+   "error_lines": [
+    324
+   ],
+   "first_error": "<work>/t9-d-memmove31/mut.lean:324:18: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 4.0,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -143,7 +143,7 @@\n   mov %r8,0x38(%rsp)\n   mov %rax,0x90(%rsp)\n   add %rdx,%rax\n-  mov $0x20,%ecx\n+  mov $0x1f,%ecx\n   nop\n   callq runtime.memmove\n   mov 0x90(%rsp),%rax\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-e-control",
+   "kind": "control",
+   "module": "E2eScal/BhEncRoots.lean",
+   "theorem": "bh_enc_e",
+   "range": [
+    337,
+    392
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 3.6,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "t9-e-len-slot",
+   "kind": "code",
+   "module": "E2eScal/BhEncRoots.lean",
+   "theorem": "bh_enc_e",
+   "range": [
+    337,
+    392
+   ],
+   "error_lines": [
+    366
+   ],
+   "first_error": "<work>/t9-e-len-slot/mut.lean:366:82: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 3.4,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -147,7 +147,7 @@\n   nop\n   callq runtime.memmove\n   mov 0x90(%rsp),%rax\n-  mov 0x38(%rsp),%rbx\n+  mov 0x40(%rsp),%rbx\n   mov 0x40(%rsp),%rcx\n   xor %edi,%edi\n   xor %esi,%esi\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-e-stmt-rdi1",
+   "kind": "stmt",
+   "module": "E2eScal/BhEncRoots.lean",
+   "theorem": "bh_enc_e",
+   "range": [
+    335,
+    390
+   ],
+   "error_lines": [
+    390
+   ],
+   "first_error": "<work>/t9-e-stmt-rdi1/mut.lean:390:37: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 3.4,
+   "diff": "--- orig\n+++ mut\n@@ -9,7 +9,7 @@\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = { toBitVec := dst }\n         \u2227 st.data.regs.rbx = { toBitVec := v } \u2227 st.data.regs.rcx = { toBitVec := cap }\n-        \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n+        \u2227 st.data.regs.rdi = 1 \u2227 st.data.regs.rsi = 0\n         \u2227 st.data.regs.rsp = rsp + 8 \u2227 st.data.regs.rbp = rbp0 \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At rsp.toBitVec)\n           \u22c6 Eq ((Int.toBytes 8 rbp0.toBitVec.toInt).At (rsp.toBitVec - 8))\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-main-control",
+   "kind": "control",
+   "module": "E2eScal/BhEncMain.lean",
+   "theorem": "bh_e2e_marshal_main",
+   "range": [
+    49,
+    184
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.0,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "t9-main-stmt-len111",
+   "kind": "stmt",
+   "module": "E2eScal/BhEncMain.lean",
+   "theorem": "bh_e2e_marshal_main",
+   "range": [
+    49,
+    184
+   ],
+   "error_lines": [
+    179
+   ],
+   "first_error": "<work>/t9-main-stmt-len111/mut.lean:179:57: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.9,
+   "diff": "--- orig\n+++ mut\n@@ -39,7 +39,7 @@\n     (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n-        \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 112 \u2227 st.data.regs.rcx = s.regs.rdi\n+        \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 111 \u2227 st.data.regs.rcx = s.regs.rdi\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (t1 u1 t2 u2 scr : List UInt8), t1.length = 8 \u2227 u1.length = 16 \u2227 t2.length = 8 \u2227 u2.length = 16\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-main-stmt-cap111",
+   "kind": "stmt",
+   "module": "E2eScal/BhEncMain.lean",
+   "theorem": "bh_e2e_marshal_main",
+   "range": [
+    49,
+    184
+   ],
+   "error_lines": [
+    126,
+    132,
+    139
+   ],
+   "first_error": "<work>/t9-main-stmt-cap111/mut.lean:126:76: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.9,
+   "diff": "--- orig\n+++ mut\n@@ -35,7 +35,7 @@\n       \u22c6 Eq (d3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))\n       \u22c6 Eq (d4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 80)) \u22c6 R)\n     (hguard : guard.toNat + 32 < s.regs.rsp.toNat) (hsp : 168 \u2264 s.regs.rsp.toNat)\n-    (hcap : s.regs.rcx.toNat + 112 \u2264 s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)\n+    (hcap : s.regs.rcx.toNat + 111 \u2264 s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)\n     (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-main-stmt-swap-roots",
+   "kind": "stmt",
+   "module": "E2eScal/BhEncMain.lean",
+   "theorem": "bh_e2e_marshal_main",
+   "range": [
+    49,
+    184
+   ],
+   "error_lines": [
+    184
+   ],
+   "first_error": "<work>/t9-main-stmt-swap-roots/mut.lean:184:66: error: ecancel: could not automatically solve goal (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec) \u22c6",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.9,
+   "diff": "--- orig\n+++ mut\n@@ -70,7 +70,7 @@\n           \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (sl.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n           \u22c6 Eq (pi.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))\n           \u22c6 Eq (r1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 16))\n-          \u22c6 Eq (r2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))\n+          \u22c6 Eq (r3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))\n           \u22c6 Eq (r3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 80)) \u22c6 R) st.data.dmem)\n       \u27e8s, Host.addrOf k\u27e9 := by\n   have hC := s.regs.rdi.toNat_lt_size\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-main-stmt-small-guard",
+   "kind": "stmt",
+   "module": "E2eScal/BhEncMain.lean",
+   "theorem": "bh_e2e_marshal_main",
+   "range": [
+    49,
+    184
+   ],
+   "error_lines": [
+    132
+   ],
+   "first_error": "<work>/t9-main-stmt-small-guard/mut.lean:132:17: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.0,
+   "diff": "--- orig\n+++ mut\n@@ -34,7 +34,7 @@\n       \u22c6 Eq (d2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 16))\n       \u22c6 Eq (d3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))\n       \u22c6 Eq (d4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 80)) \u22c6 R)\n-    (hguard : guard.toNat + 32 < s.regs.rsp.toNat) (hsp : 168 \u2264 s.regs.rsp.toNat)\n+    (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 168 \u2264 s.regs.rsp.toNat)\n     (hcap : s.regs.rcx.toNat + 112 \u2264 s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)\n     (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-main-stmt-rsp16",
+   "kind": "stmt",
+   "module": "E2eScal/BhEncMain.lean",
+   "theorem": "bh_e2e_marshal_main",
+   "range": [
+    49,
+    184
+   ],
+   "error_lines": [
+    177
+   ],
+   "first_error": "<work>/t9-main-stmt-rsp16/mut.lean:177:51: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.9,
+   "diff": "--- orig\n+++ mut\n@@ -41,7 +41,7 @@\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n         \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 112 \u2227 st.data.regs.rcx = s.regs.rdi\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n-        \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n+        \u2227 st.data.regs.rsp = s.regs.rsp + 16 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (t1 u1 t2 u2 scr : List UInt8), t1.length = 8 \u2227 u1.length = 16 \u2227 t2.length = 8 \u2227 u2.length = 16\n           \u2227 scr.length = S \u2227\n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-main-stmt-dst-unchanged",
+   "kind": "stmt",
+   "module": "E2eScal/BhEncMain.lean",
+   "theorem": "bh_e2e_marshal_main",
+   "range": [
+    49,
+    184
+   ],
+   "error_lines": [
+    184
+   ],
+   "first_error": "<work>/t9-main-stmt-dst-unchanged/mut.lean:184:66: error: ecancel: could not automatically solve goal (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec) \u22c6",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.9,
+   "diff": "--- orig\n+++ mut\n@@ -71,7 +71,7 @@\n           \u22c6 Eq (pi.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))\n           \u22c6 Eq (r1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 16))\n           \u22c6 Eq (r2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))\n-          \u22c6 Eq (r3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 80)) \u22c6 R) st.data.dmem)\n+          \u22c6 Eq (d4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 80)) \u22c6 R) st.data.dmem)\n       \u27e8s, Host.addrOf k\u27e9 := by\n   have hC := s.regs.rdi.toNat_lt_size\n   simp only [UInt64.size] at hC\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-wit-control",
+   "kind": "control",
+   "module": "E2eScal/WitBhM.lean",
+   "theorem": "bhm_runs_empty",
+   "range": [
+    56,
+    82
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 55.3,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "t9-wit-stmt-root-ptr",
+   "kind": "stmt",
+   "module": "E2eScal/WitBhM.lean",
+   "theorem": "bhm_runs_empty",
+   "range": [
+    56,
+    82
+   ],
+   "error_lines": [
+    80
+   ],
+   "first_error": "<work>/t9-wit-stmt-root-ptr/mut.lean:80:6: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 56.2,
+   "diff": "--- orig\n+++ mut\n@@ -7,7 +7,7 @@\n       \u27e8cs0 sl pi r1 r2 r3 [] [] zmms flags, Host.addrOf 0\u27e9 :=\n   eventually_mono (bh_e2e_marshal_main 0 hk0 hf0 (z 8) sl pi (w 32) (w 32) (w 32) r1 r2 r3 []\n     (z 8) (z 8) (z 32) (z 32) (z 32) rfl hsl hpi rfl rfl rfl hr1 hr2 hr3 rfl rfl rfl rfl rfl\n-    0x10088 0x100a8 0x100c8 (cs0 sl pi r1 r2 r3 [] [] zmms flags) 0 0 rfl\n+    0x10088 0x100a8 0x100c9 (cs0 sl pi r1 r2 r3 [] [] zmms flags) 0 0 rfl\n     (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 16) (z 16) (z 16) (z 16) (z 8)\n     rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl\n     (Eq ((z 32).At (0x10068 : BitVec 64)) \u22c6 Eq ((z 56).At (0x100f0 : BitVec 64))\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-wit-stmt-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitBhM.lean",
+   "theorem": "bhm_runs_empty",
+   "range": [
+    56,
+    82
+   ],
+   "error_lines": [
+    82
+   ],
+   "first_error": "<work>/t9-wit-stmt-rax/mut.lean:82:22: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 56.4,
+   "diff": "--- orig\n+++ mut\n@@ -2,7 +2,7 @@\n     (hr1 : r1.length = 32) (hr2 : r2.length = 32) (hr3 : r3.length = 32)\n     (zmms : RegZmms) (flags : StatusFlags) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x101a8\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x101a9\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0)\n       \u27e8cs0 sl pi r1 r2 r3 [] [] zmms flags, Host.addrOf 0\u27e9 :=\n   eventually_mono (bh_e2e_marshal_main 0 hk0 hf0 (z 8) sl pi (w 32) (w 32) (w 32) r1 r2 r3 []\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-spec-control",
+   "kind": "control",
+   "module": "E2eScal/BhSpecM.lean",
+   "theorem": "bh_e2e_marshal_spec_k",
+   "range": [
+    37,
+    100
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.2,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "t9-spec-stmt-off8",
+   "kind": "stmt",
+   "module": "E2eScal/BhSpecM.lean",
+   "theorem": "bh_e2e_marshal_spec_k",
+   "range": [
+    37,
+    100
+   ],
+   "error_lines": [
+    100,
+    81
+   ],
+   "first_error": "<work>/t9-spec-stmt-off8/mut.lean:100:21: error: ecancel: could not automatically solve goal (Eq (pre.At s.regs.rbx.toBitVec) \u22c6",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.1,
+   "diff": "--- orig\n+++ mut\n@@ -40,7 +40,7 @@\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n         \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 112 \u2227 st.data.regs.rcx = s.regs.rdi\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n-        \u2227 (Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n+        \u2227 (Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))\n           \u22c6 fun _ => True) st.data.dmem)\n       \u27e8s, Host.addrOf k\u27e9 := by\n   refine \u27e8pbhEnc g, pbh_serialize g, ?_\u27e9\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "t9-spec-stmt-swap-recv",
+   "kind": "stmt",
+   "module": "E2eScal/BhSpecM.lean",
+   "theorem": "bh_e2e_marshal_spec_k",
+   "range": [
+    37,
+    100
+   ],
+   "error_lines": [
+    90
+   ],
+   "first_error": "<work>/t9-spec-stmt-swap-recv/mut.lean:90:70: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.3,
+   "diff": "--- orig\n+++ mut\n@@ -26,7 +26,7 @@\n       \u22c6 Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 56)) \u22c6 Eq (c2.At (s.regs.rax.toBitVec + 64))\n       \u22c6 Eq ((Int.toBytes 8 p3.toInt).At (s.regs.rax.toBitVec + 72))\n       \u22c6 Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 80)) \u22c6 Eq (c3.At (s.regs.rax.toBitVec + 88))\n-      \u22c6 Eq (g.parent.toList.At p1) \u22c6 Eq (g.state.toList.At p2) \u22c6 Eq (g.body.toList.At p3)\n+      \u22c6 Eq (g.state.toList.At p1) \u22c6 Eq (g.parent.toList.At p2) \u22c6 Eq (g.body.toList.At p3)\n       \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n       \u22c6 Eq (d1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))\n       \u22c6 Eq (d2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 16))\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  }
+ ],
+ "pass": 36,
+ "total": 36,
+ "classes": {
+  "control_pass": 9,
+  "inside": 27
+ },
+ "case_timeout_s": 300,
+ "prechecks": [
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "E2eScal.StackGuard",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-a1-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "E2eScal.StackGuard",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-a1-guard-lea"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "E2eScal.StackGuard",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-a1-slot-field"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "E2eScal.StackGuard",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-a1-frame"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "E2eScal.StackGuard",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-a1-stmt-guard"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "E2eScal.StackGuard",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-a1-stmt-dst-unchanged"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "E2eScal.StackGuard",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-a2-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "E2eScal.StackGuard",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-a2-pi-field"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "E2eScal.StackGuard",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-a2-newlen"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-b-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-b-len33"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-b-root-ptr"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-b-newlen"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-c-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-c-root-ptr"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-c-len31"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-c-dst-off"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-d-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-d-root-ptr"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-d-memmove31"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-e-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-e-len-slot"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.CpMarshal",
+    "E2eScal.BhCode",
+    "Fk.LuRejectCall"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-e-stmt-rdi1"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.BhEncHead",
+    "E2eScal.BhEncRoots"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-main-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.BhEncHead",
+    "E2eScal.BhEncRoots"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-main-stmt-len111"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.BhEncHead",
+    "E2eScal.BhEncRoots"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-main-stmt-cap111"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.BhEncHead",
+    "E2eScal.BhEncRoots"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-main-stmt-swap-roots"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.BhEncHead",
+    "E2eScal.BhEncRoots"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-main-stmt-small-guard"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.BhEncHead",
+    "E2eScal.BhEncRoots"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-main-stmt-rsp16"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.BhEncHead",
+    "E2eScal.BhEncRoots"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-main-stmt-dst-unchanged"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.BhEncMain",
+    "Fk.RtCopy",
+    "Fk.WHost"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-wit-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.BhEncMain",
+    "Fk.RtCopy",
+    "Fk.WHost"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-wit-stmt-root-ptr"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.BhEncMain",
+    "Fk.RtCopy",
+    "Fk.WHost"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-wit-stmt-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.BhEncMain",
+    "E2eScal.BhSpec",
+    "Fk.RtCopy"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-spec-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.BhEncMain",
+    "E2eScal.BhSpec",
+    "Fk.RtCopy"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-spec-stmt-off8"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.BhEncMain",
+    "E2eScal.BhSpec",
+    "Fk.RtCopy"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "t9-spec-stmt-swap-recv"
+   ]
+  }
+ ]
+}

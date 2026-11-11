@@ -16,6 +16,8 @@ import E2eScal.WitViR
 import E2eScal.E1SpecK
 import E2eScal.WitE1A
 import E2eScal.WitE1R
+import E2eScal.BhSpecM
+import E2eScal.WitBhM
 
 -- prysm-e2e scalability stage S1-S2 (INBOX 011): the segment lemmas, the in-sample re-derivations, the
 -- statement-identity checks and the generated instances. Checked with gen/e2e/axioms.py <log> <out> <this file>.
@@ -92,3 +94,15 @@ import E2eScal.WitE1R
 #print axioms E2eScal.E1.e1_e2e_reject_complete
 #print axioms E2eScal.WitE1A.e1_accept_runs
 #print axioms E2eScal.WitE1R.e1_reject_runs
+-- T-9 (fresh stream, after the H1/H2 hold-out sessions): BeaconBlockHeader encoder, fast path only (hand proof)
+#print axioms E2eScal.lea_cmp_be_false
+#print axioms E2eScal.Bh.bh_enc_a1
+#print axioms E2eScal.Bh.bh_enc_a2
+#print axioms E2eScal.Bh.bh_enc_b
+#print axioms E2eScal.Bh.bh_enc_c
+#print axioms E2eScal.Bh.bh_enc_d
+#print axioms E2eScal.Bh.bh_enc_e
+#print axioms E2eScal.Bh.bh_e2e_marshal_main
+#print axioms E2eScal.Bh.bh_e2e_marshal_spec_k
+#print axioms E2eScal.WitBhM.bhm_runs_empty
+#print axioms E2eScal.WitBhM.bhm_runs_prefix
