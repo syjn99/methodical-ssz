@@ -23,7 +23,11 @@ H2에서 고정 생성기는 루트 필드 2개 중 0개를 덮었다(SG-1). 이
 SG-1 확장은 두 홀드아웃을 연 뒤의 개발 작업이다. 그 확장에서 Eth1Data는 표본 안 자료다(11절).
 홀드아웃 H3(BlobIdentifier, DepositMessage의 `UnmarshalSSZ`)의 결과는 `scal/RESULT.json`의 `H3`에 있다(11절).
 리뷰 h3-r1이 H3 `75166e4`를 승인했다.
-홀드아웃 H4(Deposit_Data, PendingPartialWithdrawal의 `UnmarshalSSZ`)의 결과는 `scal/RESULT.json`의 `H4`에 있다(11절). 독립 리뷰는 아직 없다.
+홀드아웃 H4(Deposit_Data, PendingPartialWithdrawal의 `UnmarshalSSZ`)의 결과는 `scal/RESULT.json`의 `H4`에 있다(11절).
+리뷰 h4-r1이 H4 `fae7d6f`를 승인했다. 필수 수정 0, 고칠 항목 7이다.
+GEN2 단위의 리뷰: g2l-r1 APPROVE, g2g-r1 REQUEST_CHANGES(문서만, G2-F가 닫음), g2f-r1 APPROVE다.
+GEN2와 H4는 통합 INT4에서 병합했다(`56e0c88`). 통합 INT4 자체의 리뷰는 아직 없다.
+H4에서 GEN2의 개발 자료 결과는 그대로 옮겨지지 않았다(11절).
 BeaconBlockHeader 인코더는 빠른 경로와 길이 거부 세 곳을 증명했다. 길이 거부의 전제는 `len + 112 ≤ cap`이다(11절).
 `Eth1Data.MarshalSSZTo`는 빠른 경로만 증명했다(11절, ENC 스트림). 리뷰 enc-r1이 ENC `ad15fbc`를 승인했다.
 어느 인코더도 완전하지 않다.
@@ -503,7 +507,8 @@ H3 `75166e4`와 ENC `ad15fbc`를 병합했다(`500571c`, `c10daf9`). 새 증명�
 통합 검사(실행 검사, gate와 6 GiB 상한 안): `E2e.OptR1` 모듈 11개만 빌드했다. 다른 `.olean` 365개는 sha256이 같다.
 `lake build --no-build E2e E2eAd E2eScal` 종료 0이다. 공리 게이트 PASS, 선언 4519 = 4142 + 377이다.
 선언 비교(INT2 덤프 대비): ADDED 377, CHANGED 0, REMOVED 0이다. 덤프 수준의 심은 대조를 잡았다(종료 1).
-사용자 결정 U1–U6은 열려 있다(`prysm/BASELINE.md` 8절).
+사용자 결정(2026-11-11): 시험 OPT-R1은 채택하지 않는다. 증거는 남긴다. 선택 사항은 꺼진 채(기본값)다.
+이 결정으로 U5가 닫혔다. U1–U4, U6은 따로 결정되지 않았다(`prysm/BASELINE.md` 8절).
 실행하지 않은 것(통합자): Lean 수준 심은 대조, 콜드 빌드, 링크 검사, Go 차분, 벤치마크, x86-64.
 리뷰 int-r2가 INT2와 INT3을 함께 승인했다(`a70492c`, 필수 수정 0, 고칠 항목 6).
 int-r2는 scratch 사본에서 Lean 수준 심은 대조를 돌렸다. 게이트와 선언 비교가 둘 다 잡았다.
@@ -513,7 +518,7 @@ int-r2가 확인하지 않은 것: 빈 `.lake`에서의 콜드 빌드(기준 모
 런타임 계약, morestack 경로, Kraken 의미론도 확인하지 않았다. 비밀과 경로 검사는 정규식 기반이다.
 기록: `prysm/go1.26.10/opt-r1/MANIFEST.md`, `RESULT.json`의 `integration_int3`(`review_int_r2` 포함).
 
-GEN2 생성기 작업(단위 G2-G, 기준 `6c62a49`, 개발 작업; 리뷰 g2g-r1 REQUEST_CHANGES, 문서만; 수정 단위 G2-F, 아직 리뷰 없음):
+GEN2 생성기 작업(단위 G2-G, 기준 `6c62a49`, 개발 작업; 리뷰 g2g-r1 REQUEST_CHANGES, 문서만; 수정 단위 G2-F는 리뷰 g2f-r1 APPROVE, `eacf0fb`):
 증명 생성기에 선택 모드 `p2dec --gen2`를 더했다. 기본 모드의 출력은 글자 그대로 같다.
 옛 생성기 명령 8개는 `regen_check.sh` SAME이다. 새 명령 6개도 두 번 실행이 같다.
 덮은 필드: Eth1Data 3/3, BlobIdentifier 2/2, DepositMessage 3/3이다. 원 출력은 손대지 않았다.
@@ -551,16 +556,24 @@ PASS 줄은 "오른쪽이 독립 손 문장일 때만 문장 증거"라고 적�
 `regen_check.sh` 15/15 SAME(옛 8, GEN2 6, 부분 출력 1), `lake build --no-build` 종료 0이다.
 G2-F에서 부정 시험은 다시 돌리지 않았다.
 한계: 96바이트 필드는 실제 코드에서 쓰지 않았다. 48바이트 add 꼴은 합성 `.S`의 글 검사뿐이다.
-BlobIdentifier와 DepositMessage는 표본 안 자료다. 전이의 증거는 H4 전까지 없다.
+BlobIdentifier와 DepositMessage는 표본 안 자료다. 위 덮음 수는 모두 표본 안 결과다.
+H4 홀드아웃 결과는 다음 문단에 있다. 표본 안 결과는 그대로 옮겨지지 않았다.
+리뷰 g2l-r1(`6c62a49`)과 g2f-r1(`eacf0fb`)은 APPROVE다. g2g-r1(`cd47028`)의 필수 수정 둘은 G2-F가 닫았다.
+g2f-r1 고칠 항목 S1–S4는 검사기(`kindcheck.py`) 변경이다. 열린 제안으로 남는다. 하지 않았다.
+S1: 규칙 6a가 주석을 뺀 증명 글을 보게 한다. S2: `--partial`이 n과 정리 수를 비교한다.
+S3: 기본 모드가 n ≠ m인 `GEN2 coverage` 머리를 거부한다. S4: 그 둘의 자기 시험 대조군.
+H4 고정 뒤라 바꿀 수 없었다. 각 틈은 생성 파일의 손 수정이 있어야 열린다. `regen_check.sh`가 그 수정을 보인다.
 기록: `scal/CONTAMINATION.md` 14절, `scal/RESULT.json`의 `gen2`, FINDINGS SG-2.
 
-홀드아웃 H4(방법 고정 `eacf0fb`, 연 기록 커밋 `9d338fa`, 2026-11-11T08:53:45Z; 아직 리뷰 없음):
+홀드아웃 H4(방법 고정 `eacf0fb`, 연 기록 커밋 `9d338fa`, 2026-11-11T08:53:45Z; 리뷰 h4-r1 APPROVE, `fae7d6f`):
 범위는 `v1alpha1.Deposit_Data`(A 부류)와 `v1alpha1.PendingPartialWithdrawal`(B 부류)의 `UnmarshalSSZ`뿐이다. 두 형을 한 번 열었다.
 Deposit_Data는 표본 안 DepositMessage에 96바이트 Signature를 더한 형이다. 필드 4개 중 3개는 표본에 가깝다.
 손 문장 `H4.dd_accept_stmt`, `H4.pw_accept_stmt`(`H4Stmt.lean`)는 생성기를 돌리기 전에 커밋했다(`d7e3304`).
 결과 (S), 형마다 `p2dec --gen2` 한 번: Deposit_Data는 종료 3, 필드 4개 중 3개다.
 PublicKey(48, 0 꼴), Amount(인라인, rsi), Signature(96, add 꼴)를 덮었다. 원 출력은 손대지 않았다(`Gen2DdDecPartial.lean`).
 WithdrawalCredentials는 덮지 못했다. 코드의 `mov $0x20,%ecx`와 `callq runtime.makeslice` 사이에 `nop`이 있다(FINDINGS SG-3).
+덮은 필드 3개 중 PublicKey와 Amount는 표본에 가깝다. 표본 밖인 덮은 필드는 Signature 하나다.
+덮지 못한 필드는 같은 생성기가 DepositMessage에서 덮은 32바이트 꼴이다(리뷰 h4-r1 S1).
 `kindcheck.py --partial`은 종료 3(그 도구의 성공 코드)이다. 그 파일은 빌드된다.
 PendingPartialWithdrawal은 종료 2, 필드 3개 중 0개다. Index와 WithdrawableEpoch는 호출로 컴파일된 위임 overlay다.
 Amount는 인라인 읽기지만 3지시 꼴이 아니다(`mov 0x8(%rbx),%r8; mov %r8,0x10(%rax)`, SG-3).
@@ -570,14 +583,35 @@ Amount는 인라인 읽기지만 3지시 꼴이 아니다(`mov 0x8(%rbx),%r8; mo
 또 크기 거부, 코덱 동등, 명세 정렬, `reject_complete`, 증인 `WitDdA`(Go 배치 수신자), `WitDdR`이다.
 PendingPartialWithdrawal 수용 정리는 증명하지 못했다. 시도 3회 한도에 걸렸다(마지막 프레임 `ecancel`의 항 꼴).
 PendingPartialWithdrawal은 크기 거부, 코덱 동등, 명세의 거부 쪽, 증인 `WitPwR`만 커널 검사했다.
+`pw_e2e_reject_complete`는 명세 쪽 사실뿐이다(EthLib 거부 → 크기 ≠ 24).
+이 디코더의 다른 오류 반환 둘(호출한 디코더의 감싼 오류)은 배제하지 않았다(S4).
 손 줄(g2g 규칙): Deposit_Data 수용 경로 336(DdAccept 148, DdSegNop 188), H4Stmt 112다. H3: BlobIdentifier 210, DepositMessage 464다.
 형이 다르다. 이 줄 수에서 원인을 주장하지 않는다.
+같은 조건의 비교가 아니다. 336은 문장 모듈 `H4Stmt.lean`(112)을 빼고, H3의 210과 464는 문장을 넣는다(S3).
+도구는 어느 수에도 없다: `h4link.py` 159, `h4diff.py` 71, `h4check-main.go.txt` 74, `negcases-h4.json` 271.
 실행 검사: 링크 검사 PASS(`h4/link/RESULT`), 부정 시험 30/32, Go 차분 12/12(arm64의 Go 의미, ELF 아님).
 부정 시험에서 메모리 상한 kill 1건, heartbeat 시간 초과 1건은 통과로 세지 않는다.
+30/32에는 첫 실행 뒤 바꾼 사례가 있다(S6). `dd-segnop-stmt-ret`은 사례 글을 고친 뒤 다시 돌렸다.
+철회한 `dd-acc-*` 네 사례는 결과를 본 뒤 생성 구간의 코드 변이로 바꿨다.
 공리 게이트 PASS(선언 5007개, 비표준 0), g2f-r1 덤프 대비 ADDED 281개뿐이다.
+평가자의 선언 비교 대조는 덤프 글 수정이었다. `decl_drift.py`만 시험한다(S5).
+Lean 수준의 심은 대조는 리뷰 h4-r1이 돌렸다. 공리 게이트와 선언 비교가 둘 다 잡았다.
 게이트 초: Deposit_Data 294.2, PendingPartialWithdrawal 36.5, 공유 224.1, 기준 빌드 86.7이다.
 H4의 한계: 두 형, 한 번이다. 일반성, 우월성, 속도 주장은 없다.
-기록: `scal/CONTAMINATION.md` 16절, `scal/RESULT.json`의 `H4`, FINDINGS SG-3.
+리뷰 h4-r1: 필수 수정 0, 고칠 항목 S1–S7은 INT4에서 문서로 닫았다(`scal/RESULT.json` `H4.review_h4_r1`).
+h4-r1이 확인하지 않은 것: Go 차분, 부정 시험 32건 중 20건, 빈 `.lake`의 콜드 빌드, x86-64, 런타임 계약.
+기록: `scal/CONTAMINATION.md` 16절과 17절, `scal/RESULT.json`의 `H4`, FINDINGS SG-3.
+
+통합 INT4(`claude/ssz-fv-h4` `fae7d6f`를 병합, 병합 커밋 `56e0c88`; 아직 리뷰 없음):
+병합 트리 id는 `fae7d6f`의 트리 id와 같다. 증명 글, 문장, 생성기, 검사기는 바꾸지 않았다.
+실행 검사(gate와 6 GiB 상한 안): `lake build E2e E2eAd E2eScal` 종료 0, 새 모듈 35개만 빌드했다.
+`E2eScal.P2EncCp`는 다시 빌드하지 않았다. `lake build --no-build` 종료 0이다.
+공리 게이트 PASS, 선언 5007개다. 출력은 커밋된 `axioms-gate.json`과 바이트가 같다.
+h4-r1 덤프 대비 선언 비교: CHANGED 0, REMOVED 0, ADDED 0이다. 덤프 수준의 심은 대조를 잡았다(종료 1).
+`regen_check.sh` 16/16 SAME(옛 8, GEN2 6, 부분 출력 2)이다. H4 실행이 아니고 통합 검사다.
+`kindcheck.py --selftest` 70건 PASS, `p2dec_test.py` 51/51이다.
+실행하지 않은 것(통합자): Lean 수준 심은 대조, 콜드 빌드, 링크 검사, Go 차분, 부정 시험, x86-64.
+기록: `scal/RESULT.json`의 `integration_int4`.
 
 조건:
 

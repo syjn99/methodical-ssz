@@ -118,7 +118,7 @@ Cost: `scal/TEMPLATE-COST.json` (jobs 214–247; 31 gate jobs, 24 lake runs, 13 
 P2 encode in-sample — peak 1.83 GiB, no memcap kill).
 `P2EncCp` alone: about 730 s in its own build (job record in `TEMPLATE-COST.json`), 986.0 s in the review fix-r1 run of the unchanged file (n = 1; `opt1/AU-07.json`).
 
-## GEN2 (unit G2-G; development set, after H3; not yet reviewed)
+## GEN2 (unit G2-G; development set, after H3; review g2g-r1 REQUEST_CHANGES, documents only, closed by G2-F)
 
 `scal/CONTAMINATION.md` §14. Lemmas: unit G2-L (`SegN`, `KindN`, `U64Inline`, `KindU64`, `Compose`).
 
@@ -143,7 +143,7 @@ P2 encode in-sample — peak 1.83 GiB, no memcap kill).
 - Not covered: delegated overlay fields (compiled as a call), other vector sizes, displacement 0 for
   uint64, nested containers, lists, bitfields, encoders; compose needs frame `0x20` and the receiver in rdx.
 
-## GEN2 fixes (unit G2-F; after review g2g-r1, before the H4 freeze; not yet reviewed)
+## GEN2 fixes (unit G2-F; after review g2g-r1, before the H4 freeze; review g2f-r1 APPROVE on `eacf0fb`; g2f-r1 S1–S4 checker changes are open proposals, not done)
 
 `scal/CONTAMINATION.md` §15. Default mode and every committed output unchanged (`regen_check.sh` 15/15 SAME).
 
@@ -170,3 +170,12 @@ P2 encode in-sample — peak 1.83 GiB, no memcap kill).
   Without either, the theorem line carries `-- UNCHECKED STATEMENT: checked by nobody` (exit 0; kindcheck fails).
 - Tests: `p2dec_test.py` 51 cases (G2-F: partial module, BeaconBlockHeader partial, four compose refusals,
   the marker, a generated `--same-as`, `--same-as-prop`).
+
+## H4 hold-out with the frozen GEN2 generator (method freeze `eacf0fb`; review h4-r1 APPROVE on `fae7d6f`)
+
+- One `--gen2` run and one `--compose` run per type; raw output unedited (`h4/gen/`, `lean/E2eScal/Gen2DdDecPartial.lean`).
+- Deposit_Data: exit 3, 3 of 4 fields (PublicKey and Amount near-in-sample, Signature out-of-sample). WithdrawalCredentials
+  not covered: a padding `nop` before `callq runtime.makeslice` (FINDINGS SG-3).
+- PendingPartialWithdrawal: exit 2, 0 of 3 (two overlay-typed fields compiled as calls; an inline uint64 read with the
+  receiver in rax, interleaved). `--compose` refused both types: no generated whole proof exists for a hold-out type.
+- The development-set coverage above is in-sample; it did not transfer unchanged. Proposals P-H4-1..3 are not done.

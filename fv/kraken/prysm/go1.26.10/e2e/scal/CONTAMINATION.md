@@ -290,3 +290,22 @@
 - 문장이 다른 모듈의 `abbrev`이면 대조군도 실패한다(`dd-acc-control`, 작업 46). 그 네 사례는 철회했다.
 - 한계: `h4/link/norm`은 Lake `input_dir`가 아니다. lakefile 변경은 승인이 필요해서 하지 않았다.
 - 일반성 주장은 없다. 독립 리뷰는 아직 없다.
+
+## 17. 통합 INT4 (GEN2와 H4 병합) — 리뷰 뒤 정정
+
+- 위 절의 글은 고치지 않는다. 이 절은 덧붙인 정정이다.
+- 13–16절의 "독립 리뷰는 아직 없다"는 다음 리뷰로 대체한다.
+- g2l-r1 APPROVE(`6c62a49`), g2g-r1 REQUEST_CHANGES(`cd47028`, 문서만), g2f-r1 APPROVE(`eacf0fb`), h4-r1 APPROVE(`fae7d6f`).
+- 16절 정정(리뷰 h4-r1 S2): 평가자는 `dd_accept_stmt`를 쓰기 전에 `Gen2DmAccept.lean`을 읽었다.
+- 그 파일은 형제 개발 형 DepositMessage의 생성 합성 정리다. 다른 형의 파일이라 허용된다.
+- 결과 (C)는 두 형 모두 거부했다. 그래서 어떤 항등식 결과도 이 읽기에 의존하지 않는다.
+- 16절 정정(S1): 덮은 필드 3개 중 PublicKey와 Amount는 표본에 가깝다. 표본 밖은 Signature 하나다.
+- 덮지 못한 WithdrawalCredentials는 표본에 가까운 32바이트 꼴이다. 패딩 `nop`에서 실패했다(SG-3).
+- 15절 정정(리뷰 g2f-r1 S5): 15절의 작업 번호 01, 02, 05, 09, 11, 13은 그 세션의 gate 작업이다.
+- 그 로그는 저장소에 없다. 번호는 이름표일 뿐이다. 저장소 안의 증거는 커밋된 출력과 `regen_check.sh` 결과다.
+- 16절 정정(S7): 선택 기록의 A2 다른 읽기를 `scal/HOLDOUT-OPENED`의 `H4.review_h4_r1_correction`에 더했다.
+- 통합 검사의 `regen_check.sh`는 `Gen2DdDecPartial.lean`의 생성기 명령도 두 번 다시 돌렸다(scratch).
+- 이것은 H4 실행이 아니다. H4의 "형마다 한 번" 규칙은 평가 세션에 대한 것이다. 결과는 SAME이다.
+- 제안(하지 않음)은 그대로다: P-H4-1, P-H4-2, P-H4-3, 합성 문장의 종류(kind).
+- g2f-r1 S1–S4(`kindcheck.py` 변경)도 제안(하지 않음)이다. H4 고정 뒤라 바꾸지 않았다.
+- 일반성 주장은 없다. 통합 INT4 자체의 리뷰는 아직 없다.

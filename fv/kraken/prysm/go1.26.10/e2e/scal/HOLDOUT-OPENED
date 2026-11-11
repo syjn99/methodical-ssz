@@ -122,6 +122,11 @@
   },
   "protocol": "two results per type kept apart: (S) one p2dec --gen2 run (segments), (C) one --compose run identity-checked (--same-as-prop) against a hand statement committed BEFORE the generator runs on that type, plus a non-vacuity witness",
   "state_before_commit": "No UnmarshalSSZ/MarshalSSZTo source, .S, objdump section, IR entry, functions.json body or generator output of Deposit_Data or PendingPartialWithdrawal was opened by this session before this record was committed.",
-  "rule": "H4 is touched once. No change to scalgen.py, kindcheck.py, Kind*.lean, lemma modules, Fk or contracts afterwards; a needed fix is recorded in CONTAMINATION.md as 'proposed, not done'. Raw generator output is committed unmodified before any hand work."
+  "rule": "H4 is touched once. No change to scalgen.py, kindcheck.py, Kind*.lean, lemma modules, Fk or contracts afterwards; a needed fix is recorded in CONTAMINATION.md as 'proposed, not done'. Raw generator output is committed unmodified before any hand work.",
+  "review_h4_r1_correction": {
+   "what": "correction added at integration INT4 (review h4-r1 S7); the H4 values above are not rewritten",
+   "H4-A2_alternative": "if \"pick TWO\" meant the first two of the merged order (ascending field count, then name) instead of one pick per class, the picks would be PendingPartialWithdrawal (3) and PowBlock (3), both class B; not adopted (source: the curator selection record outside this repository)",
+   "commit_type_note": "three H4 commits use the type spec(...), which fv/AGENTS.md lists as a scope; no history rewrite"
+  }
  }
 }

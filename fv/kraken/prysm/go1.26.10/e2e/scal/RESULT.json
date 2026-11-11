@@ -698,7 +698,12 @@
     "link checks, Go differentials, Go tests, x86-64 hardware (no ELF or Go change)",
     "profiling (no limit was raised)",
     "a symbolic-size proof of L1"
-   ]
+   ],
+   "review_g2l_r1": {
+    "what": "correction entry added at integration INT4; the values above are not rewritten",
+    "review": "g2l-r1 APPROVE on 6c62a49cf7203e852c35caa51fd92163a3da8f9f (fresh Fable 5.2 reviewer); 0 must-fix; should-fix S1-S4",
+    "should_fix": "S1 BASELINE count: BASELINE section 5 has the GEN2 count row (4720) since unit G2-G. S2 hand list: gen/scal/AxiomsScal.lean was extended in unit G2-G. S3 procedure note (no kill-by-pattern watchers), no file change. S4 KindN.lean header says four places and lists five: cosmetic, lemma module, not edited (key known_cosmetic of unit gen2-fix)"
+   }
   },
   "gen2 (GEN2 unit G2-G, fresh Opus session)": {
    "base": "6c62a49 (unit G2-L head; review g2l-r1 APPROVE, 0 must-fix)",
@@ -875,7 +880,13 @@
     "48-byte add form: text check on a synthetic .S only",
     "composed statements have no kind; the _type identity needs a hand theorem (development types only)",
     "not yet reviewed; no cold build; link / Go / hardware checks not run"
-   ]
+   ],
+   "review_g2g_r1": {
+    "what": "correction entry added at integration INT4; the values above are not rewritten",
+    "state_now": "reviewed: the word 'not yet reviewed' in status and not_run of this unit is superseded by this entry",
+    "review": "g2g-r1 REQUEST_CHANGES on cd47028db20e82a8834809d526875f61998f4bb0 (fresh Fable 5.2 reviewer); must-fix M1, M2 (documents only), should-fix S1-S4; no proof defect",
+    "closed_by": "unit G2-F (eacf0fb); review g2f-r1 confirmed M1 and M2 closed and should-fix 7 of 7 closed"
+   }
   },
   "gen2-fix (GEN2 unit G2-F, fresh Opus session)": {
    "base": "cd47028",
@@ -940,7 +951,20 @@
     "negatives": "not run in G2-F"
    },
    "not_covered_consequence": "fields typed Slot / Epoch / ValidatorIndex (delegated overlay, compiled as calls) are not covered: most consensus containers are outside GEN2 as it stands",
-   "known_cosmetic": "KindN.lean header says 'four places' and lists five (g2l-r1 S4); lemma module, not edited"
+   "known_cosmetic": "KindN.lean header says 'four places' and lists five (g2l-r1 S4); lemma module, not edited",
+   "review_g2f_r1": {
+    "what": "correction entry added at integration INT4; the values above are not rewritten",
+    "state_now": "reviewed: the word 'not yet reviewed' in status and not_run of this unit is superseded by this entry",
+    "review": "g2f-r1 APPROVE on eacf0fb4c03bf4b34ecf8b7a7705297998c848f7 (fresh Fable 5.2 reviewer); 0 must-fix; should-fix S1-S5; this SHA is the H4 method freeze",
+    "open_proposals_checker": [
+     "S1 kindcheck rule 6a: match the proof text without comments",
+     "S2 kindcheck --partial: compare n with the number of segment theorems present",
+     "S3 kindcheck default mode: reject a GEN2 coverage header with n != m",
+     "S4 selftest: controls for 0 < n < m and for the --partial exit code"
+    ],
+    "open_proposals_note": "S1-S4 are checker-side (generator tooling) changes. Under the H4 protocol they could not be made after the freeze. They stay OPEN proposals, not implemented. Each gap needs a hand edit of a generated file; a byte regeneration (regen_check.sh) shows such an edit",
+    "S5_contamination_jobs": "closed by a note: CONTAMINATION.md section 15 cites job numbers 01, 02, 05, 09, 11, 13 of the G2-F and G2-G sessions. Their gate logs are not in the repository. The numbers are labels only; the repository evidence is the committed output and the regen_check.sh result (CONTAMINATION.md section 17)"
+   }
   }
  },
  "contamination": {
@@ -1679,6 +1703,44 @@
    "x86-64 hardware",
    "independent review"
   ],
-  "limits": "two types, one touch; Deposit_Data near-in-sample for 3 of 4 fields; no generality, superiority or speed-up claim; H1/H2/H3 records untouched"
+  "limits": "two types, one touch; Deposit_Data near-in-sample for 3 of 4 fields; no generality, superiority or speed-up claim; H1/H2/H3 records untouched",
+  "review_h4_r1": {
+   "what": "correction entry added at integration INT4; the values above are not rewritten",
+   "state_now": "reviewed: the words 'Not yet reviewed' in scope and 'independent review' in not_run are superseded by this entry",
+   "review": "h4-r1 APPROVE on fae7d6f1aaca534e389650eef7fb2d0192097ba0 (fresh Fable 5.2 reviewer, not the curator, evaluator, GEN2 author or an earlier reviewer); 0 must-fix; should-fix S1-S7",
+   "S1_near_in_sample": "of the 3 covered Deposit_Data fields, PublicKey and Amount are near-in-sample (DepositMessage fields); Signature is the only out-of-sample covered field. The missed field WithdrawalCredentials is a near-in-sample 32-byte field that the same generator covered in DepositMessage; it failed on a padding nop (SG-3)",
+   "S2_sibling_read": "before writing dd_accept_stmt the evaluator read lean/E2eScal/Gen2DmAccept.lean, the generated composed accept theorem of the sibling development type DepositMessage. Allowed (another type). No identity result depends on it, because result (C) refused for both types",
+   "S3_hand_lines_scope": "accept_path 336 (DdAccept 148 + DdSegNop 188) leaves out the statement module H4Stmt.lean (112 lines, both types); the H3 values 210 (BlobIdentifier) and 464 (DepositMessage) include their statements. Not like for like. Tools are outside every count: gen/e2e/h4link.py 159, gen/e2e/h4diff.py 71, e2e/h4/h4check-main.go.txt 74, gen/scal/negcases-h4.json 271",
+   "S4_pw_reject_complete": "pw_e2e_reject_complete is a spec-side fact only (EthLib rejects -> size != 24). The decoder has two more error returns (callee wraps of the ValidatorIndex and Epoch decoders); nothing proved excludes them for a 24-byte input",
+   "S5_drift_control_kind": "the evaluator's drift control was a text edit of the dump (tests decl_drift.py only). The Lean-level planted control was run by the reviewer h4-r1 (weakened dd_e2e_reject_complete and a sorry theorem in a scratch copy: axioms gate FAIL exit 1, decl_drift 1 CHANGED + 1 ADDED exit 1). INT4 ran a dump-level control only",
+   "S6_negatives_replaced": "the 30/32 negative result includes cases changed after the first run: dd-segnop-stmt-ret was rerun after a case-text fix (job 45 exit 1, then job 73); the four withdrawn dd-acc-* cases were replaced by code mutants on the generated segments after their results were seen",
+   "S7_holdout_record": "the A2 alternative pick is added to HOLDOUT-OPENED H4 (key review_h4_r1_correction). Three H4 commits use the type spec(...), which fv/AGENTS.md lists as a scope: note only, no history rewrite",
+   "reviewer_checks": "cold re-elaboration of the 18 H4 modules; own dump 5007 rows = the evaluator dump; drift vs g2f-r1 dump 0 CHANGED, 0 REMOVED, 281 ADDED; generator rerun once per type in scratch byte-identical; link check rerun PASS; 12 of 32 negatives rerun, all equal to the record",
+   "not_verified_by_review": "Go differential not rerun; 20 of 32 negatives not rerun; cold build from an empty .lake; x86-64 hardware; runtime callee contracts; Kraken and EthLib; consensus-specs text compared from memory, not fetched"
+  }
+ },
+ "integration_int4": {
+  "what": "merge of claude/ssz-fv-h4 at fae7d6f (GEN2 units G2-L, G2-G, G2-F and the H4 hold-out evaluation, linear on 71161fa) into claude/ssz-fv-prysm-e2e; integration and records only: no new proof text, no statement change, no generator or checker change",
+  "merge": "56e0c889b3b39dd335929c0117a8c059282c184d (--no-ff, no conflict); merged tree id = tree id of fae7d6f (be5dd419...), so every file equals the stream tip byte for byte",
+  "reviews": "g2l-r1 APPROVE (6c62a49); g2g-r1 REQUEST_CHANGES, documents only (cd47028), closed by G2-F; g2f-r1 APPROVE (eacf0fb, the H4 method freeze); h4-r1 APPROVE (fae7d6f)",
+  "executed": {
+   "lake build E2e E2eAd E2eScal": "exit 0, 982 jobs; built exactly 35 modules, all new E2eScal modules of the stream; E2eScal.P2EncCp not rebuilt (.olean sha256 91e82a13... unchanged); peak 2.02 GiB under the 6 GiB cap (gate job 01)",
+   "lake build --no-build E2e E2eAd E2eScal": "exit 0, All targets up-to-date (982 jobs) (job 02)",
+   "axioms gate": "PASS, 5007 declarations, 4204 theorems, 189 modules, hand list 443, non-standard 0, sorryAx 0 (job 03, scratch JSON); byte-identical to the committed prysm/go1.26.10/e2e/axioms-gate.json, so the record is not rewritten",
+   "decl drift": "decl_drift.py h4-r1 reviewer dump vs merged dump: 0 CHANGED, 0 REMOVED, 0 ADDED (the two dumps are byte-identical)",
+   "planted control": "dump level only: one type hash of E2eScal.H4.dd_e2e_reject_complete changed in a copy of the merged dump: decl_drift exit 1, 1 CHANGED. No Lean-level planted control at INT4 (h4-r1 ran one on fae7d6f)",
+   "regen_check.sh": "SAME for 16 generator commands, two scratch runs each: the 6 earlier gen.sh commands, the 2 H3 p2dec commands, the 6 GEN2 commands, the 2 partial outputs (Gen2BhDecPartial, and Gen2DdDecPartial of H4 (S), generator exit 3 mapped to 0 by || [ $? -eq 3 ]) (job 06). This is an integration regen check into scratch; it is not an H4 run and not part of the H4 one-run rule",
+   "kindcheck.py --selftest": "PASS, 70 cases (job 07)",
+   "p2dec_test.py": "51/51 as expected (job 08)"
+  },
+  "not_run": [
+   "cold build from an empty .lake",
+   "Lean-level planted control",
+   "link check",
+   "Go differential and go test",
+   "negative cases",
+   "x86-64 hardware",
+   "independent review of INT4"
+  ]
  }
 }

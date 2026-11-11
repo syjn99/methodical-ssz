@@ -265,3 +265,12 @@ Deposit_Data 수용 정리는 손 합성으로 커널 검사했다. 생성 구�
 PendingPartialWithdrawal 수용 정리는 시도 3회 한도로 증명하지 못했다.
 부정 시험 30/32, 공리 게이트 PASS, 선언 비교 ADDED 281개뿐, Go 차분 12/12다.
 원격에 쓰지 않았다. 기록: REPORT 11절, `scal/CONTAMINATION.md` 16절, `scal/RESULT.json`의 `H4`, FINDINGS SG-3.
+
+2026-11-11 통합 INT4(새 Opus 세션): `claude/ssz-fv-h4` `fae7d6f`를 병합했다(`56e0c88`, 충돌 없음).
+위 G2-G, G2-F, H4 단락의 "아직 리뷰 없음"은 다음 리뷰로 대체한다. 그 단락은 고치지 않는다.
+g2g-r1은 REQUEST_CHANGES(문서만)였고 G2-F가 닫았다. g2f-r1과 h4-r1은 APPROVE, 필수 수정 0이다.
+H4 단락 정정(리뷰 h4-r1 S1): Deposit_Data 3/4의 덮은 필드 중 둘은 표본에 가깝다.
+표본 밖인 덮은 필드는 Signature 하나다. 덮지 못한 필드는 표본에 가까운 32바이트 꼴이다.
+h4-r1 S7 기록: H4 커밋 셋은 type으로 `spec(...)`을 쓴다. `fv/AGENTS.md`에서 spec은 scope다. 이력 재작성은 하지 않는다.
+병합 트리에서 빌드, 공리 게이트(선언 5007개), 선언 비교(차이 0), `regen_check.sh` 16/16 SAME을 다시 확인했다.
+`.lean`, 생성기, 검사기, 고정 버전은 바꾸지 않았다. 원격에 쓰지 않았다. 기록: REPORT 11절, `scal/RESULT.json`의 `integration_int4`.

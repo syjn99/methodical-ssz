@@ -152,5 +152,10 @@
    "independent review of the integration"
   ],
   "review_int_r2": "superseded by review int-r2 (APPROVE on a70492c; 0 must-fix, 6 should-fix S1-S6): the item 'independent review of the integration' in not_run is superseded on that point only. Stream review: opt-r1-r1 APPROVE on 5821b19 (generator ca191bb, not merged). int-r2 did NOT verify: cold build from an empty .lake (115 base modules and E2eScal.P2EncCp not re-elaborated); link checks (no ELF in the tree), Go differentials, Go tests, benchmarks; x86-64 hardware; 73 of 89 negative cases (the two pilot S3 cases read from the integrator's result files only); runtime contracts, morestack paths, Kraken semantics; secret and path scans are regex based"
+ },
+ "user_decision_2026_11_11": {
+  "what": "correction entry added at integration INT4; the values above are not rewritten",
+  "decision": "the user decided on 2026-11-11 that the OPT-R1 pilot is NOT adopted. The evidence stays in the tree; the generator option --reserve-marshal stays off (default); generator ca191bb stays unmerged",
+  "effect": "closes U5 (keep the opt-in option). U1-U4 and U6 were not decided separately"
  }
 }
