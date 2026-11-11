@@ -1,0 +1,1 @@
+scalgen p2dec: no template match: field Index: NOT COVERED: delegated overlay field (ValidatorIndex): compiled as a call, no template; field Amount: NOT COVERED: field at Go offset 0x10: 0 inline uint64 reads match (expected 1); field WithdrawableEpoch: NOT COVERED: delegated overlay field (Epoch): compiled as a call, no template
