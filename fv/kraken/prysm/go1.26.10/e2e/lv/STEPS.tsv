@@ -17,3 +17,7 @@ step	utc	exit	log	command
 15-nobuild	2026-11-11T16:51:53Z	0	logs/15-nobuild.log	heavy.py -- lake build --no-build E2e E2eAd E2eScal E2eList.StmtSa E2eList.StmtSc: All targets up-to-date (998 jobs)
 16-SaReject	2026-11-11T16:54:14Z	0	logs/16-SaReject.log	heavy.py -- lake build E2eList.SaReject (6.3 s wall, module 4.3 s, peak sampled RSS 1.93 GiB)
 17-ScReject	2026-11-11T16:54:31Z	0	logs/17-ScReject.log	heavy.py -- lake build E2eList.ScReject (6.3 s wall, module 3.8 s, peak sampled RSS 1.98 GiB)
+18-Seg	2026-11-11T16:56:12Z	0	logs/18-Seg.log	heavy.py -- lake build E2eList.Seg (6.3 s wall, module 3.6 s, peak sampled RSS 2.17 GiB)
+19-ax1	2026-11-11T16:56:40Z	0	logs/19-ax1.log	heavy.py -- lake env lean <scratch>/Ax1.lean (#print axioms: bytesdec_seg_z64, bytes96dec_seg_nop, sa/sc_e2e_reject_size_main = [propext, Classical.choice, Quot.sound])
+20-SaAccept	2026-11-11T16:57:23Z	1	logs/20-SaAccept.log	heavy.py -- lake build E2eList.SaAccept (attempt 1: final ecancel fails)
+21-SaAccept	2026-11-11T16:58:10Z	0	logs/21-SaAccept.log	heavy.py -- lake build E2eList.SaAccept (attempt 2; 7.3 s wall, module 4.7 s, peak sampled RSS 2.15 GiB)

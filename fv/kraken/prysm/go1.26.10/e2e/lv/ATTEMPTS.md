@@ -55,3 +55,15 @@
 ### T2 크기 거부 `sc_e2e_reject_size_main : sc_reject_size_stmt`
 
 - 시도 1(로그 17): exit 0. 지시어 번호(30–35)와 틀 크기 48(`sub $0x30`)만 바꿨다. 설정 없이 통과했다.
+
+### T1 구간 보조정리 `E2eList.Seg`
+
+- 시도 1(로그 18): exit 0. `bytesdec_seg_z64`(SegN의 지역 매크로 글, n = 64)와 `bytes96dec_seg_nop`(`DdSegNop` 글, 32 → 96).
+- 본의 `set_option maxHeartbeats 16000000`/`4000000`을 옮기지 않았다. 기본 한도에서 통과했다.
+
+### T1 수용 `sa_e2e_accept_main : sa_accept_stmt`
+
+- 시도 1(로그 20): exit 1. 마지막 `ecancel`이 실패했다.
+- 원인: `bytesdec_seg_z64`의 사후조건은 `Int.toBytes 8 (OfNat.ofNat n)` 꼴이다. 문장의 `Int.toBytes 8 64`와 구문이 다르다.
+- 고침: 생성된 `Gen.dd_g2dec_PublicKey_seg`처럼 크기 64를 글자로 쓴 감싼 보조정리 `sa_bits_seg`를 더했다. 증명은 `with_reducible exact bytesdec_seg_z64 64 rfl …`이다.
+- 시도 2(로그 21): exit 0. 설정 없이 통과했다.
