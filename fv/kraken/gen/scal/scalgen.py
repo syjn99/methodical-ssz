@@ -1726,14 +1726,16 @@ class G4State:
 
 
 def g4_walk(dirs, fields, head_end, slots0, F):
-    """The dataflow walk. Returns (done, stop): done = list of (field index, [emitted units]) for the complete
-    fields in IR order; stop = None or the G4Stop that ended the walk. A unit is a dict with `kind` and parameters."""
+    """The dataflow walk. Returns (done, stop, end): done = list of (field index, [emitted units]) for the complete
+    fields in IR order; stop = None or the G4Stop that ended the walk; end = the directive after the last field
+    event (None after a stop). A unit is a dict with `kind` and parameters. Any other exception propagates
+    (`p2dec_gen4` maps it to exit 2, G4-F3)."""
     done = []
     try:
-        _g4_walk(dirs, fields, head_end, slots0, F, done)
-        return done, None
+        end = _g4_walk(dirs, fields, head_end, slots0, F, done)
     except G4Stop as e:
-        return done, e
+        return done, e, None
+    return done, None, end
 
 
 def _g4_walk(dirs, fields, head_end, slots0, F, done):
@@ -2020,15 +2022,20 @@ def _g4_walk(dirs, fields, head_end, slots0, F, done):
             raise G4Stop(i, why, "new field kind" if cls == "none" else "new directive form")
         i += 1
         a = i
-    g4_epilogue(dirs, i, F)
-    return None
+    # G4-F3: the epilogue is no longer checked here; `p2dec_gen4` checks it as its own phase from this index
+    return i
+
+
+# G4-F3: the only value of `g4_epilogue` that counts as an examined plain return (checked with `is`)
+G4_EPI_OK = object()
 
 
 def g4_epilogue(dirs, i, F):
     """G4-F2: the directives after the last field event (from `i`, following forward `jmp`s and labels) must be the
     plain return: only `nop`, labels, `mov d(%rsp),%rax|%rbx`, `xor %eax,%eax`, `xor %ebx,%ebx`, then
     `add $F,%rsp; pop %rbp; retq` with the head's frame size F. Any other directive (a store, a call, a branch)
-    could change a decoded field after its event: G4EpiMiss (class other)."""
+    could change a decoded field after its event: G4EpiMiss (class other). G4-F3 (M4): a `jmp` to a label that is
+    not in the file is a G4EpiMiss too. Returns G4_EPI_OK only after `add $F,%rsp; pop %rbp; retq`."""
     seen = set()
     while True:
         if i >= len(dirs) or i in seen:
@@ -2041,7 +2048,11 @@ def g4_epilogue(dirs, i, F):
             continue
         m = re.fullmatch(r"jmp (\S+)", d)
         if m:
-            jl = g4_label_index(dirs, m.group(1), i)
+            try:
+                jl = label_index(dirs, m.group(1))
+            except NoMatch:
+                raise G4EpiMiss(i, f"epilogue: directive {i} `{d}` jumps to a label that is not in the file (code "
+                                   f"after the last field event is unknown)", "other")
             if jl <= i:
                 raise G4EpiMiss(i, f"epilogue: directive {i} `{d}` jumps backwards", "other")
             i = jl
@@ -2049,7 +2060,7 @@ def g4_epilogue(dirs, i, F):
         if d == f"add ${F:#x},%rsp":
             rest = [x for x in dirs[i + 1:i + 6] if x != "nop"][:2]
             if rest == ["pop %rbp", "retq"]:
-                return
+                return G4_EPI_OK
             raise G4EpiMiss(i, f"epilogue: `{d}` not followed by `pop %rbp; retq`", "other")
         raise G4EpiMiss(i, f"epilogue: directive {i} `{d}` after the last field event is not part of the plain "
                            f"return (`mov d(%rsp),%rax|%rbx`, `xor`, `add ${F:#x},%rsp; pop %rbp; retq`): it could change "
@@ -2239,11 +2250,48 @@ def g4_seg_text(C, prefix, fname, ssz, u):
     return out + "\n", name
 
 
+G4_FLAGS = ("head_ok", "fields_complete", "epilogue_ok")
+
+
+def g4_fail_closed(args, why):
+    """G4-F3: the run reports no field covered (exit 2): every IR field `not covered`, class other."""
+    summ, fields = args.summary_data, getattr(args, "g4_fields", None) or []
+    if summ is not None:
+        summ["fail_closed"] = why
+        summ["fields"] = [dict(field=fname, ssz_offset=src, go_offset=fo, status="not covered", reached=False,
+                               reason=f"fail-closed: {why}", miss_class="other") for (fname, src, fo, cls, info) in fields]
+    raise NoMatch(f"gen4: {why}; no field is reported covered")
+
+
 def p2dec_gen4(args):
-    """`p2dec --gen4`: the dataflow walk; returns the text or raises NoMatch (exit 2) / Partial (exit 3)."""
+    """`p2dec --gen4`: the dataflow walk; returns the text or raises NoMatch (exit 2) / Partial (exit 3).
+    G4-F3 fail-closed: the `else` branch below is the ONLY place that returns a text (exit 0). It is reached only
+    when `_p2dec_gen4` completed normally AND set all three flags of G4_FLAGS: `head_ok` (g4_head returned),
+    `fields_complete` (the walk returned without a stop, every IR field completed in IR order) and `epilogue_ok`
+    (g4_epilogue returned G4_EPI_OK). NoMatch / Partial keep their exit 2 / 3; ANY other exception of any phase
+    (also SystemExit, but not KeyboardInterrupt) becomes exit 2 with every field not covered."""
+    flags = dict.fromkeys(G4_FLAGS, False)
+    try:
+        text = _p2dec_gen4(args, flags)
+    except (NoMatch, Partial):
+        raise
+    except KeyboardInterrupt:
+        raise
+    except BaseException as e:
+        g4_fail_closed(args, f"internal error {type(e).__name__}: {e}")
+    else:
+        if all(flags[k] is True for k in G4_FLAGS) and isinstance(text, str):
+            assert all(flags[k] is True for k in G4_FLAGS)
+            return text
+        g4_fail_closed(args, f"success flags not all set ({', '.join(k for k in G4_FLAGS if flags[k] is not True)})")
+    raise AssertionError("unreachable: g4_fail_closed raises")
+
+
+def _p2dec_gen4(args, flags):
     dirs, sha = read_S(args.S)
     fields, irsha = ir_fields(args.ir, args.type, gen3=True)
     summ = args.summary_data = dict(type=args.type, S=args.S, S_sha256=sha, ir_sha256=irsha, mode="gen4", fields=[])
+    args.g4_fields = fields
     if not fields:
         raise NoMatch(f"{args.type}: no field")
     if len({f[0] for f in fields}) != len(fields):
@@ -2254,27 +2302,45 @@ def p2dec_gen4(args):
                       "chains) and none for the head / epilogue lemmas (decpro_seg, kstep_nilchk, decret_seg); a composed "
                       "theorem would have no statement check. Accept theorems over the generated chains stay hand "
                       "compositions")
+    ssz_size = ir_ssz_size(args.ir, args.type)  # an IR error (NoMatch) here is exit 2 without a field list, as before
+    # phase 1: head. ANY exception is a head miss (exit 2); only a normal return sets head_ok
     try:
-        head_end, slots, F = g4_head(dirs, ir_ssz_size(args.ir, args.type))
-    except G4HeadMiss as e:
+        head_end, slots, F = g4_head(dirs, ssz_size)
+    except Exception as e:
+        hm = isinstance(e, G4HeadMiss)
+        why, mcls = (e.why, e.cls) if hm else (f"gen4 head: internal error {type(e).__name__}: {e}", "other")
         # G4-F S1: a head miss is reported per field (class, `reached: false`) before exit 2
-        summ["head"] = dict(status="not covered", reason=e.why, miss_class=e.cls)
+        summ["head"] = dict(status="not covered", reason=why, miss_class=mcls)
         for (fname, src, fo, cls, info) in fields:
             summ["fields"].append(dict(field=fname, ssz_offset=src, go_offset=fo, status="not covered", reached=False,
-                                       reason=f"not reached: {e.why}", miss_class=e.cls))
-        raise
+                                       reason=f"not reached: {why}", miss_class=mcls))
+        raise NoMatch(why)
+    flags["head_ok"] = True
     summ["head"] = dict(status="covered", end=head_end, frame=F)
     C, pre = args.const, args.prefix
-    done, stop = g4_walk(dirs, fields, head_end, slots, F)
-    if isinstance(stop, G4EpiMiss):
-        # G4-F2: a directive after the last field event could change any decoded field: no field is covered (exit 2)
-        summ["epilogue"] = dict(status="not covered", at=stop.at, reason=stop.why)
-        for (fname, src, fo, cls, info) in fields:
-            summ["fields"].append(dict(field=fname, ssz_offset=src, go_offset=fo, status="not covered", reached=True,
-                                       reason=f"{stop.why} (directive {stop.at})", miss_class=stop.cls))
-        raise NoMatch(f"gen4: {stop.why} (directive {stop.at}); no field is reported covered")
-    if stop is None:
-        summ["epilogue"] = dict(status="covered")
+    # phase 2: fields. Complete only when the walk returned without a stop and the field events are 0..n-1 in order
+    done, stop, end = g4_walk(dirs, fields, head_end, slots, F)
+    if stop is None and end is not None and [y for (y, _) in done] == list(range(len(fields))):
+        flags["fields_complete"] = True
+        # phase 3: epilogue. ANY exception or any return value other than G4_EPI_OK: no field is covered (exit 2)
+        try:
+            r = g4_epilogue(dirs, end, F)
+        except Exception as e:
+            r = e
+        if r is G4_EPI_OK:
+            flags["epilogue_ok"] = True
+            summ["epilogue"] = dict(status="covered")
+        else:
+            at = r.at if isinstance(r, G4Stop) else end
+            why = r.why if isinstance(r, G4Stop) else f"epilogue: no explicit success ({type(r).__name__}: {r})"
+            # G4-F2: a directive after the last field event could change any decoded field: no field is covered
+            summ["epilogue"] = dict(status="not covered", at=at, reason=why)
+            for (fname, src, fo, cls, info) in fields:
+                summ["fields"].append(dict(field=fname, ssz_offset=src, go_offset=fo, status="not covered", reached=True,
+                                           reason=f"{why} (directive {at})", miss_class="other"))
+            raise NoMatch(f"gen4: {why} (directive {at}); no field is reported covered")
+    else:
+        summ["epilogue"] = dict(status="not examined")
     body, report, ncov, used = "", [], 0, set()
     for x, (fname, src, fo, cls, info) in enumerate(fields):
         rec = dict(field=fname, ssz_offset=src, go_offset=fo)

@@ -99,6 +99,17 @@ GEN4 cases (unit G4-G, `p2dec --gen4`; ids `g4-*`; mutated `.S` / IR copies in <
    call or a wrong frame size there gives exit 2 with every field `reached` and not covered; a nop there stays covered.
    Every `--gen4` case also checks the summary flag `reached` (true up to the first uncovered field, false after it,
    false for every field on a head miss); on exit 2 the summary lists every field.
+ - g4f3-*: unit G4-F3, the inputs of review g4f2-r1 (M4): a `jmp` after the last field event to a label that is not in
+   the file (x01 `jmp runtime.abort`, x02 `jmp *%rdx`, x03 a tail `jmp` to Slot.UnmarshalSSZ): exit 2, every field not
+   covered and `reached`.
+ - fc-*: unit G4-F3, fail-closed. A harness (written to <work-dir>, run as one process per type on Eth1Data,
+   SyncCommitteeMessage, PendingPartialWithdrawal) imports the working-tree `scalgen.py`, monkeypatches it and calls
+   `main()`: an unexpected exception, a plain `G4Stop` and `SystemExit(0)` injected in the head (`g4_head`), at every
+   `g4_parse` / `g4_label_index` call of the walk (each field, by the walk's current field), at every theorem-text
+   call, in the epilogue (`g4_epilogue` raising, or returning None / True / another value than G4_EPI_OK), a walk
+   that returns every field with a stop or without an end index, and an inner run that returns a text without the
+   flags. Expected for every injection: exit 2 or 3 (exit 2 for an unexpected exception and SystemExit), 0 bytes on
+   stdout, the summary's exit equal, fewer fields covered than the IR has. Control: no injection, exit 0.
 """
 import json
 import pathlib
@@ -956,6 +967,177 @@ G4F2_MUT = [
      rv([(89, "add $0x20,%rsp", ("before", ["nop"]))]), None, 0, E1F, None),
 ]
 
+# Unit G4-F3: review g4f2-r1 M4 (an epilogue `jmp` to a label that is not in the file)
+G4F3_MUT = [
+    ("g4f3-x01", "Eth1Data: `jmp runtime.abort` in place of `xor %eax,%eax` after the last field event (M4)", "E1",
+     rv([(87, "xor %eax,%eax", "jmp runtime.abort")]), None, 2, [], "other"),
+    ("g4f3-x02", "Eth1Data: `jmp *%rdx` in place of `xor %eax,%eax` after the last field event (M4)", "E1",
+     rv([(87, "xor %eax,%eax", "jmp *%rdx")]), None, 2, [], "other"),
+    ("g4f3-x03", "SyncCommitteeMessage: a tail `jmp …Slot.UnmarshalSSZ` after the last field event (M4)", "SM",
+     rv([(157, "mov 0x28(%rsp),%rax", ("before", ["jmp " + PRIM + "Slot.UnmarshalSSZ"]))]), None, 2, [], "other"),
+]
+
+# Unit G4-F3: the fail-closed harness (written to <work-dir>; argv: scalgen.py config.json result.json; cwd = fv/kraken)
+FC_HARNESS = r'''
+import contextlib, importlib.util, io, json, pathlib, sys
+spec = importlib.util.spec_from_file_location("scalgen_fc", sys.argv[1])
+sg = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(sg)
+ARGV = list(sys.argv)  # call() replaces sys.argv
+cfg = json.loads(pathlib.Path(ARGV[2]).read_text())
+SU = pathlib.Path(cfg["summary"])
+
+
+class Boom(Exception):
+    """an exception class the generator does not know"""
+
+
+def call():
+    sys.argv = ["scalgen.py"] + cfg["argv"] + ["--summary", str(SU)]
+    SU.unlink(missing_ok=True)
+    so, se = io.StringIO(), io.StringIO()
+    with contextlib.redirect_stdout(so), contextlib.redirect_stderr(se):
+        try:
+            sg.main()
+            rc = 0
+        except SystemExit as e:
+            rc = e.code if isinstance(e.code, int) else (0 if e.code is None else 1)
+        except BaseException as e:
+            rc = "uncaught " + type(e).__name__
+    sm = json.loads(SU.read_text()) if SU.exists() else None
+    return rc, len(so.getvalue()), sm
+
+
+def fire(kind, where):
+    if kind == "unexpected":
+        raise Boom("injected at " + where)
+    if kind == "g4stop":
+        raise sg.G4Stop(0, "injected plain G4Stop at " + where, "other")
+    raise SystemExit(0)
+
+
+def patched(name, fake, f=call):
+    orig = getattr(sg, name)
+    setattr(sg, name, fake)
+    try:
+        return f()
+    finally:
+        setattr(sg, name, orig)
+
+
+res = []
+
+
+def rec(phase, kind, where, r):
+    rc, nso, sm = r
+    res.append(dict(phase=phase, kind=kind, where=where, rc=rc, stdout=nso, sm_exit=(sm or {}).get("exit"),
+                    covered=(sm or {}).get("covered"), total=(sm or {}).get("total")))
+
+
+rec("control", "none", "", call())
+for kind in ("unexpected", "g4stop", "sysexit0"):
+    rec("head", kind, "g4_head", patched("g4_head", lambda *a, k=kind: fire(k, "g4_head")))
+rec("head", "returns None", "g4_head", patched("g4_head", lambda *a: None))
+# the walk: count the g4_parse / g4_label_index calls and the current field of each (the walk's local `cur`)
+for fn in ("g4_parse", "g4_label_index"):
+    orig, seq = getattr(sg, fn), []
+
+    def counter(*a, orig=orig, seq=seq):
+        seq.append(sys._getframe(1).f_locals.get("cur"))
+        return orig(*a)
+    patched(fn, counter)
+    for kind in ("unexpected", "g4stop", "sysexit0"):
+        for n, cur in enumerate(seq):
+            if kind == "sysexit0" and cur in seq[:n]:
+                continue  # SystemExit(0): the first call of each field only
+            cnt = [0]
+
+            def inj(*a, orig=orig, n=n, kind=kind, cnt=cnt):
+                cnt[0] += 1
+                if cnt[0] == n + 1:
+                    fire(kind, f"{fn} call {n}")
+                return orig(*a)
+            rec(f"field {cur}", kind, f"{fn} call {n}", patched(fn, inj))
+# the theorem texts (after the walk): every call of the three text functions
+seqt = []
+origs = {fn: getattr(sg, fn) for fn in ("g4_step_text", "g4_call_text", "g4_seg_text")}
+for fn, o in origs.items():
+    setattr(sg, fn, lambda *a, o=o, fn=fn: (seqt.append(fn), o(*a))[1])
+call()
+for fn, o in origs.items():
+    setattr(sg, fn, o)
+for kind in ("unexpected", "sysexit0"):
+    for n in range(len(seqt)):
+        cnt = [0]
+        for fn, o in origs.items():
+            def inj(*a, o=o, fn=fn, n=n, kind=kind, cnt=cnt):
+                cnt[0] += 1
+                if cnt[0] == n + 1:
+                    fire(kind, f"text call {n}")
+                return o(*a)
+            setattr(sg, fn, inj)
+        rec("text", kind, f"text call {n} ({seqt[n]})", call())
+        for fn, o in origs.items():
+            setattr(sg, fn, o)
+for kind in ("unexpected", "g4stop", "sysexit0"):
+    rec("epilogue", kind, "g4_epilogue", patched("g4_epilogue", lambda *a, k=kind: fire(k, "g4_epilogue")))
+rec("epilogue", "G4EpiMiss", "g4_epilogue",
+    patched("g4_epilogue", lambda *a: (_ for _ in ()).throw(sg.G4EpiMiss(0, "injected", "other"))))
+for v in (None, True, "ok", 0):
+    rec("epilogue", f"returns {v!r}", "g4_epilogue", patched("g4_epilogue", lambda *a, v=v: v))
+ow = sg.g4_walk
+rec("flags", "walk: every field done, with a stop", "g4_walk",
+    patched("g4_walk", lambda *a: (lambda r: (r[0], sg.G4Stop(0, "injected", "other"), r[2]))(ow(*a))))
+rec("flags", "walk: every field done, no end index", "g4_walk",
+    patched("g4_walk", lambda *a: (lambda r: (r[0], None, None))(ow(*a))))
+oi = sg._p2dec_gen4
+rec("flags", "inner returns its full text, outer flags not set", "_p2dec_gen4",
+    patched("_p2dec_gen4", lambda args, flags: oi(args, dict(flags))))
+rec("flags", "inner sets two flags", "_p2dec_gen4",
+    patched("_p2dec_gen4", lambda args, flags: (flags.update(head_ok=True, fields_complete=True), oi(args, dict(flags)))[1]))
+pathlib.Path(ARGV[3]).write_text(json.dumps(res) + "\n")
+'''
+
+
+def fc_cases(work, new):
+    """Unit G4-F3: fail-closed injections (FC_HARNESS) on Eth1Data, SyncCommitteeMessage, PendingPartialWithdrawal."""
+    res, bad = [], 0
+    h = work / "fc_harness.py"
+    h.write_text(FC_HARNESS)
+    for key in ("E1", "SM", "PW"):
+        c = G4[key]
+        cfg, out = work / f"fc-{key}.cfg.json", work / f"fc-{key}.result.json"
+        cfg.write_text(json.dumps(dict(argv=["p2dec", "--gen4", "--S", c["S"], "--ir", IR, "--type", c["type"]] + c["args"],
+                                       summary=str(work / f"fc-{key}.summary.json"))))
+        out.unlink(missing_ok=True)
+        rc, so, se = run(["python3", "-I", "-B", str(h), str(new), str(cfg), str(out)], KR)
+        R = json.loads(out.read_text()) if rc == 0 and out.exists() else []
+        n = len(c["fields"])
+        groups = {}
+        for r in R:
+            ph = r["phase"].split()[0] if not r["phase"].startswith("field") else r["phase"]
+            groups.setdefault((ph, r["kind"].split(":")[0] if r["phase"] != "flags" else r["kind"]), []).append(r)
+        for (ph, kind), rs in sorted(groups.items(), key=lambda x: str(x[0])):
+            if ph == "control":
+                ok = all(r["rc"] == 0 and r["stdout"] > 0 and r["covered"] == n for r in rs)
+            else:
+                ok = all(r["rc"] in ((2,) if kind in ("unexpected", "sysexit0") else (2, 3)) and r["stdout"] == 0
+                         and r["sm_exit"] == r["rc"] and r["total"] == n and r["covered"] < n for r in rs)
+            res.append(dict(id=f"fc-{key}-{ph.replace(' ', '')}-{kind.replace(' ', '_')}", expect="control: exit 0, all "
+                            "covered" if ph == "control" else "exit 2 / 3 (2 for unexpected / SystemExit), 0 bytes, "
+                            "summary exit equal, covered < total", exit=sorted({str(r["rc"]) for r in rs}),
+                            stdout_bytes=sum(r["stdout"] for r in rs), injections=len(rs),
+                            bad=[r for r in rs if not ok][:3], ok=bool(ok)))
+            bad |= not ok
+        # every IR field had injections in the walk, and every phase was injected
+        fl = {r["phase"] for r in R}
+        ok = rc == 0 and all(f"field {x}" in fl for x in range(n)) and {"head", "text", "epilogue", "flags", "control"} <= fl
+        res.append(dict(id=f"fc-{key}-phases", expect=f"harness exit 0; injections in the head, fields 0..{n - 1}, "
+                        "texts, epilogue, flags", exit=rc, stdout_bytes=0, injections=len(R),
+                        phases=sorted(fl), stderr=se.strip()[-300:], ok=bool(ok)))
+        bad |= not ok
+    return res, bad
+
 
 def g4_cases(work, new):
     """Unit G4-G: `--gen4` on the development types, compose refusal, dataflow adversarial inputs."""
@@ -998,7 +1180,7 @@ def g4_cases(work, new):
     res.append(dict(id="g4-compose-refuse", expect="exit 2, 0 bytes, no file, reason", exit=rc, stdout_bytes=len(so),
                     stderr=se.strip()[:300], ok=bool(ok)))
     bad |= not ok
-    for (mid, what, key, eds, irf, want, covw, mcls) in G4_MUT + G4F_MUT + G4F2_MUT:
+    for (mid, what, key, eds, irf, want, covw, mcls) in G4_MUT + G4F_MUT + G4F2_MUT + G4F3_MUT:
         c = G4[key]
         base = (KR / c["S"]).read_text().split("\n")
         lines = eds(base) if callable(eds) else edits(base, eds)
@@ -1107,6 +1289,9 @@ def main(work, out):
     r4, b4 = g4_cases(work, new)
     res += r4
     bad |= b4
+    r5, b5 = fc_cases(work, new)
+    res += r5
+    bad |= b5
 
     out.write_text(json.dumps(dict(cases=res, passed=sum(r["ok"] for r in res), total=len(res)), indent=1) + "\n")
     print(f"p2dec_test: {sum(r['ok'] for r in res)}/{len(res)} as expected")
