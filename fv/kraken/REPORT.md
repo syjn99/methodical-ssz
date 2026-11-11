@@ -325,7 +325,8 @@ growslice 뒤의 거부(`cap < len + 8`, `len(Root) ≠ 32`)는 `cp_e2e_marshal_
 홀드아웃 H1(확장성 S3, 방법 고정 `56dfc27`, 연 시각 2026-11-10T17:53:24Z): 결과, 비용, 한계는 `prysm/go1.26.10/e2e/scal/RESULT.json`에 있다.
 오염 기록은 `scal/CONTAMINATION.md`, 연 기록은 `scal/HOLDOUT-OPENED`다. H2(Eth1Data)는 열지 않았다.
 증명한 것: ValidatorIndex 디코더 수용과 길이 거부, BeaconBlockHeader 디코더 수용·크기 거부·명세 정렬·오류 감싸기 두 곳의 도달 불가.
-BeaconBlockHeader 인코더 빠른 경로는 증명하지 않았다. 시도 한도 3회에서 멈췄다(FINDINGS T-9, memcap 종료 4회).
+BeaconBlockHeader 인코더 빠른 경로는 증명하지 않았다. 세션 11에서 T9-PLAN 한도(진단 3회, 시도 6회)에서 멈췄다(FINDINGS T-9).
+남은 장애는 지시 4의 스택 가드 분기를 커널이 검사할 때의 메모리다. 구간 A의 나머지는 임시 파일에서 닫혔지만 저장소에 넣지 않았고 리뷰도 받지 않았다.
 
 조건:
 

@@ -173,3 +173,5 @@ Epoch 디코더 수용을 함수 명세로 증명하고 Checkpoint 디코더 수
 2026-11-10 prysm-e2e 세션 5 (INBOX 010, 리뷰 e2e-r3 REQUEST_CHANGES 처리): M1 `cp_e2e_marshal_grow_any_sharp`(첫 성장 뒤: 반환, 둘째 growslice를 지나 반환, 또는 남은 힙이 예산보다 작은 둘째 호출 진입), M2 프레임을 적은 덮기 정리 2개와 증인 `WitCpWF`·`WitCpWRF`, S1 `GoValW`, S3–S6 기록 수정, FINDINGS 역사 색인, 확장성 단계 S0 기준선(`scal/BASELINE.json`)을 커밋했다. 기존 정리 문장은 바꾸지 않았다. T-7의 남은 영역은 사용자 결정 전까지 막힘(차분만)이다. S2는 부분 수행이다. A4와 S1 단계는 시작하지 않았다.
 
 2026-11-10 prysm-e2e 세션 10 (INBOX 020, 리뷰 s4-r1 APPROVE 뒤): S1–S6 문서 수정과 NF-12 부정 시험 4건을 더했다. BeaconBlockHeader 디코더의 오류 감싸기 두 곳 도달 불가와 ValidatorIndex 길이 거부를 증명했다. BeaconBlockHeader 인코더 빠른 경로는 구간 A의 메모리 사후조건을 닫지 못했다. 시도 3회 한도에서 멈췄다(T-9, memcap 종료 4회).
+
+2026-11-11 prysm-e2e 세션 11 (INBOX 021, 리뷰 s5-r1 APPROVE 뒤): S1–S5 기록 수정과 NF-13…NF-15를 더했다. T-9를 진단했다. memcap 종료의 원인은 Lean 커널의 메모리였다. 구간 A를 A0(스택 가드), A1, A2로 나누자 A1, A2, 합성이 임시 파일에서 닫혔다. A0의 커널 검사는 한도 안에서 닫지 못했다. T9-PLAN 한도(시도 6회)에서 멈췄다.

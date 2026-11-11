@@ -148,7 +148,7 @@
    }
   },
   "beacon_block_header_encoder (iii)": {
-   "state": "stopped at the attempt limit (INBOX 020 item 3: three real attempts per obstruction); no theorem stated as proved; fast path only was the scope (never 'encoder complete')",
+   "state": "stopped at the T9-PLAN cap in session 11 (after the session-10 stop at three attempts); no theorem stated as proved; fast path only was the scope (never 'encoder complete')",
    "scope": "MarshalSSZTo fast path: len(dst) + 112 <= cap(dst), three roots of length 32; growslice branches and the length reject out of scope (T-7 deferred, GrowsliceC untouched)",
    "method": "hand proof (no encode mode; the P2 encode template matches none of the three root blocks; no template, generator, Kind or S1-lemma change; no template-change proposal)",
    "plan": "segments A (entry to directive 62), B (62 to the return of memmove 1, directive 90), M2 (90 to 118), M3 (118 to return), composition bh_e2e_marshal_main in the shape of cp_e2e_marshal_main",
@@ -191,9 +191,57 @@
    "wall_clock_s": 774,
    "wall_clock_note": "from the item-2b commit (18:46:34Z) to the end of job 373 (18:59:28Z)",
    "baseline_next_to_it": "BASELINE.json units.checkpoint_encoder: the whole Checkpoint encoder unit (fast path, reject, growslice sites, covers; 70 lake runs, 36 failed, 5550.6 gate s, 0 memcap kills, 32825 s). Its fast-path theorem cp_e2e_marshal_main alone is not separated in the baseline. Two hand proofs of unequal types and scope: no speed-up or slow-down claim.",
-   "next_step": "apply the T-8 workaround (generalize the symbolic byte lists, e.g. the X15 bytes and sl/pi, before the AC sort) or close the post one atom at a time on a cleared context, to find out whether an atom is unmatched; then B, M2, M3 and the composition. A new attempt budget is the controller's decision.",
+   "next_step": "needs a new budget (controller / user): A0 guard branch only, e.g. a guard lemma over plain BitVec variables proved once and applied with exact, or a named simp only set; profile the kernel on A0 first",
    "read_only_observation": "Textual comparison (no proof attempt): the P2 encode template rootEncHead/rootEncTail (fixed registers, from Checkpoint.MarshalSSZTo) matches none of the three BBH root encode blocks. Root 1 (directives 62-89): the field pointer is loaded into rdx and the offset kept in r8 (template: r8 / rdx), a nop sits between cmpq and jne, and the three spills come in another order (rbx, r9, rdi vs rdi, r9, rbx). Root 2 (90-): the receiver is reloaded into rdx, the capacity test is `cmp %r9,%rcx; jb` with a reload from the stack. An encode mode would need a register-parametric template or several templates; this is an observation from reading the .S, not a measured cost.",
-   "session9_state": "not started in session 9 (INBOX 019 end condition at (ii))"
+   "session9_state": "not started in session 9 (INBOX 019 end condition at (ii))",
+   "session11": {
+    "bounds": "T9-PLAN.md: diagnostics <= 3 gated runs <= 300 s (not attempts); then <= 3 attempts on the named obstruction and one split of segment A with <= 3 attempts; cap 6 attempts, 1500 gate-s",
+    "diagnostics": {
+     "378": "attempt-2 text without the trailing closers: memcap kill, no message",
+     "379": "stderr markers: none printed (the frontend captures stderr into messages)",
+     "380": "file markers: last marker before the rsp closer; later found: the multi-line first block did not parse"
+    },
+    "attempts": {
+     "381": "one case per conjunct, one closer each: memcap kill (same parse error)",
+     "382": "sequential, lean -M 4500: (kernel) excessive memory consumption; parse error found",
+     "383": "one-line cases: rsp bv_omega fails (2 ^ Width.W64.bits), hmem ecancel leftover, kernel memory",
+     "384": "split A1 0-35 / A2 36-61 over touched atoms with a frame: kernel memory on A1 only",
+     "385": "split A0 0-4 / A1 5-35 / A2: kernel memory on A0 only; A1, A2 pass the kernel; composition closes; witness width form found",
+     "386": "witnesses in machine form; A1, A2 and composition close; 0-3 localisation passes the kernel; A0 guard variants: kernel memory (v1) or simp no progress (v4)"
+    },
+    "cause": "Lean kernel memory on the proof term of the stack-guard branch (directive 4 jbe after lea -0x20(%rsp),%r12; cmp 0x10(%r14),%r12): more than about 3 GiB above the 1.7 GiB elaboration base. Which subterm costs it is not known.",
+    "closed_in_scratch_not_committed": [
+     "A1 directives 5-35",
+     "A2 directives 36-61",
+     "bh_enc_a composition (assuming A0)"
+    ],
+    "jobs": [
+     378,
+     379,
+     380,
+     381,
+     382,
+     383,
+     384,
+     385,
+     386
+    ],
+    "lake_env_lean_runs": 9,
+    "failed_runs": 9,
+    "gate_s_diagnostics": 73,
+    "gate_s_attempts": 137,
+    "cumulative_gate_s": 210,
+    "peak_rss_gib": 6.01,
+    "memcap_kills": [
+     378,
+     379,
+     380,
+     381
+    ],
+    "maxHeartbeats": "4 M, not raised",
+    "record": "diagnostic notes and scratch files kept as run artifacts outside the repository",
+    "next_step": "needs a new budget (controller / user): A0 guard branch only, e.g. a guard lemma over plain BitVec variables proved once and applied with exact, or a named simp only set; profile the kernel on A0 first"
+   }
   },
   "decoder_completions (INBOX 020 item 2)": {
    "bbh_unreachable_mc": {
