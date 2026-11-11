@@ -514,7 +514,7 @@
    "runs": {
     "diagnostics": 3,
     "attempts": 10,
-    "failed_attempts": 4,
+    "failed_attempts": 3,
     "attempt_detail": {
      "03": "enc32_call: ecancel (return slot printed jc + 0 + 1)",
      "05": "pass: enc32_call + three via_block theorems",
