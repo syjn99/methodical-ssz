@@ -67,5 +67,81 @@
   "code_ns": "E2eScal.E1Code",
   "norm": "prysm/go1.26.10/e2e/e1/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S"
+ },
+ {
+  "id": "sg1-r1-z-control",
+  "kind": "control",
+  "module": "E2eScal/P2DecZ.lean",
+  "theorem": "rootdec_seg_z",
+  "why": "unmutated control (review sg1-r1 case r1-z-control, S3)"
+ },
+ {
+  "id": "sg1-r1-z-endpc",
+  "kind": "stmt",
+  "module": "E2eScal/P2DecZ.lean",
+  "theorem": "rootdec_seg_z",
+  "old": "st.pc = Host.addrOf (j2 + 11)",
+  "new": "st.pc = Host.addrOf (j2 + 12)",
+  "why": "template lemma: end pc (review sg1-r1 case r1-z-endpc, S3)"
+ },
+ {
+  "id": "sg1-r1-z-rdx",
+  "kind": "stmt",
+  "module": "E2eScal/P2DecZ.lean",
+  "theorem": "rootdec_seg_z",
+  "old": "st.data.regs.rdx.toBitVec = rcv",
+  "new": "st.data.regs.rdx.toBitVec = bf",
+  "why": "template lemma: register post (review sg1-r1 case r1-z-rdx, S3)"
+ },
+ {
+  "id": "sg1-r1-z-nohroot",
+  "kind": "stmt",
+  "module": "E2eScal/P2DecZ.lean",
+  "theorem": "rootdec_seg_z",
+  "old": "(hroot : root.length = 32)",
+  "new": "(hroot : root.length = 16)",
+  "why": "template lemma: source length hypothesis (review sg1-r1 case r1-z-nohroot, S3)"
+ },
+ {
+  "id": "sg1-r1-z-dst",
+  "kind": "stmt",
+  "module": "E2eScal/P2DecZ.lean",
+  "theorem": "rootdec_seg_z",
+  "old": "⋆ Eq ((Int.toBytes 8 32).At aC) ⋆ Eq (root.At p)",
+  "new": "⋆ Eq ((Int.toBytes 8 32).At aC) ⋆ Eq (root.At bf)",
+  "why": "template lemma: copied bytes at the wrong address (review sg1-r1 case r1-z-dst, S3)"
+ },
+ {
+  "id": "sg1-bh-control",
+  "module": "E2eScal/GenE1Dec.lean",
+  "theorem": "e1_dec_BlockHash_seg",
+  "kind": "control",
+  "code_def": "E1Unmarshal",
+  "code_ns": "E2eScal.E1Code",
+  "norm": "prysm/go1.26.10/e2e/e1/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "why": "unmutated control of the generated BlockHash (add form) segment (S3)"
+ },
+ {
+  "id": "sg1-r1-bh-src0",
+  "kind": "stmt",
+  "module": "E2eScal/GenE1Dec.lean",
+  "theorem": "e1_dec_BlockHash_seg",
+  "old": "(hSrc : bf + (40 : Int64).toBitVec = aSrc)",
+  "new": "(hSrc : bf + (0 : Int64).toBitVec = aSrc)",
+  "why": "BlockHash claimed at source offset 0 (review sg1-r1 case r1-bh-src0, S3)"
+ },
+ {
+  "id": "sg1-bh-code-src",
+  "module": "E2eScal/GenE1Dec.lean",
+  "theorem": "e1_dec_BlockHash_seg",
+  "kind": "code",
+  "code_def": "E1Unmarshal",
+  "code_ns": "E2eScal.E1Code",
+  "norm": "prysm/go1.26.10/e2e/e1/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "old": "  add $0x28,%rbx",
+  "new": "  add $0x20,%rbx",
+  "why": "code: BlockHash source offset 0x20 instead of 0x28 (S3)"
  }
 ]

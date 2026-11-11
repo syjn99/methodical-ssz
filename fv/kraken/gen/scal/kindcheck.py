@@ -9,6 +9,9 @@ usage: kindcheck.py <generated.lean>...      exit 0 = every file passes, 1 = a f
        kindcheck.py --selftest               crafted good and bad files; exit 0 = all controls behave
 
 Checks, per file (text only):
+ 0. The file is not a partial generator output: no line contains `PARTIAL OUTPUT` (the header that
+    `scalgen.py p2dec --partial-out` writes on exit 3; review sg1-r1 S2). Checked on the raw text,
+    comments included.
  1. `lean/E2eScal/Kind.lean` has the frozen git blob id KIND_BLOB (method freeze of the hold-out).
  2. Top-level lines are only: import, open, variable, namespace, end, set_option … in, theorem, doc or
     plain comments, blank lines and indented continuation lines. No def / abbrev / notation / macro /
@@ -43,6 +46,7 @@ KIND_BLOB = "3c9b95b1b37036831527396975d4232cc20174f3"  # method freeze 56dfc27 
 KINDZ = KR / "lean" / "E2eScal" / "KindZ.lean"
 KINDZ_BLOB = "0c790fa1882cd2e91419c285f66de0810c2b85e2"  # SG-1 extension (after both hold-outs were opened)
 
+PARTIAL = "PARTIAL OUTPUT"  # header of scalgen.py p2dec --partial-out (exit 3)
 TOP_OK = re.compile(r"^(import |open |variable |namespace |end\b|set_option \S+ \S+ in$|theorem |/-|--|$|\s)")
 BANNED = re.compile(r"\b(sorry|admit|native_decide|bv_decide|axiom)\b")
 THM = re.compile(r"^theorem (\S+)")
@@ -59,6 +63,9 @@ def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB):
     if kind_blob != KIND_BLOB:
         errs.append(f"Kind.lean blob {kind_blob} != frozen {KIND_BLOB}")
     lines = text.split("\n")
+    for i, l in enumerate(lines, 1):
+        if PARTIAL in l:
+            errs.append(f"line {i}: partial generator output (`{PARTIAL}` header): not a complete generated file")
     in_block = 0
     for i, l in enumerate(lines, 1):
         # skip block comments (doc and plain) for the top-level and banned-token checks
@@ -193,6 +200,12 @@ def selftest():
         ("z_as_add_kind", GOOD.replace(zk, zk.replace("rootDecSegZKind", "rootDecSegKind")), K, False, True),
         ("z_kindz_blob_changed", GOOD, K, False, False),
         ("no_z_kindz_blob_not_needed", nz, K, True, False),
+        # review sg1-r1 S2: a --partial-out file (header text as scalgen.py writes it) must fail, even if
+        # every theorem it has is well kinded
+        ("partial_output_header", GOOD.replace("/-! generated -/", "/-! PARTIAL OUTPUT (scalgen exit 3): 1 of 2 "
+                                               "32-byte fields of `v1alpha1.Eth1Data`; missing: BlockHash -/"),
+         K, False, True),
+        ("partial_output_in_line_comment", GOOD + "-- PARTIAL OUTPUT\n", K, False, True),
     ]
     bad = []
     for name, text, kb, ok, zpin in cases:
