@@ -1245,6 +1245,139 @@
     "S4": "closed: unit G3-G added the GEN3 count row to BASELINE section 5 (5463), regenerated axioms-gate.json and extended gen/scal/AxiomsScal.lean (commit 76d8fe8, review g3g-r1); INT5 adds the pointer from the BASELINE H4 summary to the GEN3 row",
     "S5": "closed by unit G3-G: kindcheck.py requires the line 'set_option maxHeartbeats 200000 in' before every decAcceptKind line (selftest cases g3c_heartbeats_raised, g3c_no_heartbeat_line), so a wrong parameter ends as a build timeout = FAIL"
    }
+  },
+  "gen5-lemmas (GEN5 unit G5-L, fresh Fable session)": {
+   "what": "GEN5 unit G5-L: a statement kind for whole accept theorems of flat fixed-size decoders in any frame (decAcceptKindN), its ties to the hand statements, boundary-state kinds and frame-parametric lemmas for generated accept proofs, a frame-parametric size-reject lemma with a kind, worked generated-style examples. Development data only (in-sample); no generator change; no transfer claim",
+   "base": "c29ebdc",
+   "author": "fresh Fable 5.2 session (direct author)",
+   "state": "not yet reviewed",
+   "L1": {
+    "kind": "E2eScal.decAcceptKindN C L fields (KindAcceptN.lean); L : DecLayout = callee programs, stack chunk binders, stack slots before / after, runtime configuration, guard addend, state word, frame; fields : List DecField (a callee field is .u64)",
+    "hand_statements_total": 11,
+    "ties_rfl": [
+     "BlobIdentifier",
+     "DepositMessage",
+     "Eth1Data",
+     "Deposit_Data",
+     "PowBlock",
+     "PendingPartialWithdrawal",
+     "PendingConsolidation",
+     "PendingDeposit",
+     "SyncCommitteeMessage",
+     "BeaconBlockHeader"
+    ],
+    "ties_implication": [
+     "Checkpoint: cp_accept_of_kind (kind instance implies the hand statement; premise 8 <= S against S + 8, binder order, zero form, receiver tail chunk in R); the converse is not proved"
+    ],
+    "not_tied": [],
+    "relation_to_decAcceptKind": "equal on the four GEN3-tied types (through the two ties; a direct rfl hit the default heartbeat limit and was replaced)",
+    "kind_does_not_check": [
+     "that L is the frame of the .S file (L is a parameter; a proof of the instance checks it)",
+     "that L.callees are the callees of the fields",
+     "which fields are callee fields"
+    ]
+   },
+   "L2": {
+    "kinds": [
+     "decHeadKindN C L fields d0",
+     "decFieldKindN C L fields d d'",
+     "decEpiKindN C L fields d"
+    ],
+    "lemmas": [
+     "g5_j3",
+     "g5_lo8",
+     "g5_lo",
+     "g5_lo0",
+     "decepi_n"
+    ],
+    "recipe": "every intermediate theorem is stated over the whole accept memory in entry-state terms (boundary state StDesc); the accept proof is head, one eventually_trans per field theorem, epilogue; no ecancel or address arithmetic at the accept level",
+    "examples": {
+     "PendingDeposit": "Gen5ExPd.lean: pd_e2e_accept_g5 (kind instance; pd_e2e_accept_g5_stmt : H6.pd_accept_stmt); frame 0x40, callee + runtime",
+     "SyncCommitteeMessage": "Gen5ExSm.lean: sm_e2e_accept_g5 (sm_e2e_accept_g5_stmt : H5.sm_accept_stmt); frame 0x60, callee + runtime",
+     "VoluntaryExit": "Gen5ExVe.lean: ve_e2e_accept_g5 (kind instance; no hand statement); frame 0x48, callee only; witness WitVeA.ve_accept_runs",
+     "PowBlock": "Gen5ExPb.lean: pb_e2e_accept_g5 (pb_e2e_accept_g5_stmt : H6.pb_accept_stmt); frame 0x20, runtime only"
+    },
+    "example_text_source": "a scratch emitter of the unit (not committed, not scalgen.py); the GEN4 chain theorems are used as emitted",
+    "pd_generated_style": {
+     "module_lines": 1054,
+     "statement_lines": 685,
+     "proof_lines": 251,
+     "kind_lines": 61,
+     "accept_proof_lines": 14,
+     "elaboration_s": [
+      5.0,
+      5.0
+     ],
+     "hand_module_PdAccept_lines": 520,
+     "note": "the generated-style text is about twice the hand module; none of it is hand text if a generator emits it; two n = 1 measurements, no speed claim"
+    }
+   },
+   "L3": {
+    "lemma": "decrej_seg (RejectN.lean): prologue window with the size branch taken, error window decErrL, then decepi_n; frame, first-spill displacement and size are parameters",
+    "kind": "decRejectKindN C sz",
+    "ties_with_reducible_rfl": 12,
+    "instances": [
+     "pd_reject_g5 (declared type of H6.pd_e2e_reject_size_main)",
+     "ve_reject_g5 (VoluntaryExit, new)"
+    ]
+   },
+   "honest_outcome_clause": "not triggered: 10 of 11 hand statements are rfl-equal to the kind instance, 1 is tied by a proved implication",
+   "negatives": {
+    "cases": "scal/negcases-gen5.json",
+    "result": "scal/negative-gen5.json",
+    "total": 37,
+    "counted": 35,
+    "control_pass": 10,
+    "inside": 25,
+    "not_counted": [
+     "g5-tie-pd-kind-jret: timeout_heartbeat",
+     "g5-tie-bh-kind-ptr: timeout_heartbeat"
+    ]
+   },
+   "axioms": "axioms gate with a scratch JSON: PASS, 8174 declarations, nonstandard 0, sorryAx 0; planted control (weakened statement + sorry theorem): exit 1",
+   "drift": "against the int6-r1 dump (7649 rows = the committed axioms-gate.json): ADDED 525, CHANGED 0, REMOVED 0; planted control: 1 CHANGED + 1 ADDED",
+   "no_build": "lake build --no-build E2e E2eAd E2eScal exit 0 at the head (1188 jobs)",
+   "module_times_s": {
+    "KindAcceptN": 0.7,
+    "AcceptTies": 4.3,
+    "FieldComp": 0.7,
+    "RejectN": 1.1,
+    "RejectTies": 0.5,
+    "Gen5ExPd": 10,
+    "Gen5ExSm": 10,
+    "Gen5ExVe": 7.4,
+    "Gen5ExPb": 8.7,
+    "Gen5ExRej": 1.5,
+    "Gen5Examples": 5.1,
+    "WitVeA": 10
+   },
+   "effort": {
+    "diagnostics": "8 of 8",
+    "attempts": "7 of 16 (2 failed: an optional relation theorem hit the default heartbeat limit; a missing import)",
+    "gate_s": 790,
+    "gated_jobs": 68,
+    "heartbeat_raise": "none beyond the model theorems' (4 M / 16 M)"
+   },
+   "not_done": [
+    "generator side (G5-G)",
+    "frame-parametric xor epilogue (only the frame 0x20 lemma decepi_seg)",
+    "worked example with interleaved fields (PendingPartialWithdrawal)",
+    "Checkpoint and BeaconBlockHeader in generated style",
+    "spec alignment, Desc, reject-complete of VoluntaryExit (G5-C)",
+    "callee error, write-barrier and morestack paths"
+   ],
+   "not_run": [
+    "cold build",
+    "generator",
+    "kindcheck.py",
+    "regen_check.sh",
+    "link check",
+    "Go differential",
+    "x86-64 hardware",
+    "stale_olean.py (no killed or capped build)",
+    "orca (not installed)"
+   ],
+   "wording": "in-sample throughout; 'generated-style' = text of the recipe a generator can emit, produced here by a scratch emitter; no hold-out and no generality claim"
   }
  },
  "contamination": {
