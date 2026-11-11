@@ -83,6 +83,9 @@
 - 공리 관문: `axioms-gate.json` PASS, 선언 3860. 선언 차이: `decl-drift.txt`, ADDED 377개, 모두 `E2e.OptR1`.
 - `axioms-gate.json`은 시험 브랜치 트리(`5821b19`)의 기록이다.
 - 통합 트리의 기록은 `../e2e/axioms-gate.json`이다. PASS, 선언 4519 = 4142 + 377.
+- 2026-11-11 덧붙임: AU-07 수정 뒤 그 파일을 다시 만들었다.
+  지금 값은 선언 4518, 정리 3812다(`../e2e/opt1/AU-07.json` 시도 4).
+  4519는 INT3 시점의 값이다.
 - Go 차분(arm64, Go 의미론만): `diff/`. 벤치마크(arm64만): `bench/`.
 - 새 `.S`는 Lake 입력이 아니다. `.S`가 바뀌면 `E2e.OptR1`을 깨끗이 다시 빌드한다.
 

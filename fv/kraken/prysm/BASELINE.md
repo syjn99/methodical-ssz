@@ -99,7 +99,11 @@ Direct witnesses exist for `cpo_marshal_main`, `cpo_marshal_cover`, `cpo_marshal
 - H3 limits: generator 1 of 2 and 1 of 3 fields; SG-2 open (no inline uint64 template, no 48-byte segment). One touch of two types; no generalisation, superiority or causal speed-up claim. No witness instantiates the `*_accept_spec_k` premise `Pm` (as for Eth1Data and BeaconBlockHeader).
 - ENC (development data, not a hold-out; enc-r1 APPROVE on `ad15fbc`): encode block `E2eScal.enc32_call` (the memmove call site) and reject block `E2eScal.enc_reject_tail`. Reuse is PARTIAL: proof lines per BeaconBlockHeader root site 56 / 66 / 68 via the block against 61 / 71 / 73 by hand, block 18 lines; the straight-line steps stay per site (FINDINGS ENC-1). `Eth1Data.MarshalSSZTo` and `BeaconBlockHeader.MarshalSSZTo`: fast path only; BeaconBlockHeader length rejects only under `len + 112 ≤ cap`. No speed-up claim (`scal/RESULT.json` unit `enc-reuse`).
 - T-9: cause = the `simp` + `omega` proof of the large-frame guard branch fails in the kernel under the memory limit (4.88 GiB under `lean -M 5000`); the costly subterm was not profiled; the `2^64 − 32` literal is an inference. Fixed by the lemma `E2eScal.lea_cmp_be_false`; then 5 attempts, 2 failed (`scal/RESULT.json` T-9 unit).
-- AU-07 (open): `E2eScal.P2EncCp` (Checkpoint encode template) costs 986.0 s for one `lake env lean` (n = 1, review fix-r1), against 4.5 s for the hand proof. Three attempts (953–973 s `omega`) gave no speed-up; the slow call was not located (`e2e/opt1/AU-07.json`).
+- AU-07 (fixed; reviewed by REVIEW-AU07, APPROVE): the slow call is the `bv_omega` of the `hLo` argument of `E2eScal.rootenc_seg` in `E2eScal/P2EncCp.lean` line 163 (task B trace, confirmed by the task-B review; records outside the repository).
+  The fix changes that one `by` block; the statement is unchanged. File check 1022.9 s before, 8.3 s after (macOS arm64, n = 1 each, separate runs; `e2e/opt1/AU-07.json` attempt 4).
+  The methods differ: before, the in-tree file without a profiler option; after, a scratch copy with `-Dprofiler=true` (see `e2e/opt1/AU-07.json`).
+  Before the fix: 986.0 s for one `lake env lean` (n = 1, review fix-r1, original machine, Linux arm64) against 4.5 s for the hand proof; three attempts (953–973 s `omega`) gave no speed-up. No same-condition comparison with the hand proof after the fix.
+  Review: independent review REVIEW-AU07 (2026-11-11), APPROVE, 0 must-fix, 7 should-fix RA-1…RA-7, on base `71161fa` with diff sha256 prefix `6b056f2a`; record outside the repository. The RA-1…RA-7 corrections are documents only and need their own check.
 - Witness-build measurement (AU-06, `e2e/opt1/AU-06.json`): four witness modules 1636.8 s → 165.3 s after the `wit_split_n` tactic.
   Measured: one gated `lake env lean` per module, same method before and after, wall time on a shared machine, n = 1 each.
   Limits: n = 1, so the run-to-run spread is not known; a per-file `lean` run is not a full build. Audit numbers from another method are not comparable. No negative case targets these modules.
@@ -113,7 +117,7 @@ The heavy-job gate and the 6 GiB memory cap used in these runs are local infrast
 Run heavy jobs one at a time and under a memory limit. Commands in `REPORT.md` §11 "재현" and `prysm/go1.26.10/MANIFEST.md` §4 are the full list.
 
 ```sh
-(cd fv/kraken/lean && lake build E2e E2eAd E2eScal)    # E2eScal.P2EncCp alone took 986 s (n = 1)
+(cd fv/kraken/lean && lake build E2e E2eAd E2eScal)    # E2eScal.P2EncCp before the AU-07 fix: 986 s (original machine) and 1022.9 s (macOS arm64); after: 4.0–7.7 s as Lake reports it (macOS arm64); n = 1 each
 (cd fv/kraken/lean && lake build --no-build E2e E2eAd E2eScal)   # expect exit 0 after the build
 python3 -I -B fv/kraken/gen/e2e/axioms_gate.py run <out.json> <dump.tsv>   # WRITES <out.json>; give a scratch path unless you mean to update the committed record
 GOROOT=$(go env GOROOT) go test -count=1 ./ssz/ ./sszgen/... ./fv/kraken/semtest/
@@ -126,9 +130,14 @@ On the ENC branch alone (enc-r1 APPROVE): `declarations` 3813, `theorems` 3223, 
 Both `axioms_gate.py run <out.json> <dump.tsv>` and `axioms_gate.py check <dump.tsv> <out.json>` overwrite the JSON argument (review b1-r1 S7). The committed record is `prysm/go1.26.10/e2e/axioms-gate.json`.
 After the integration INT2 (H3 + ENC, merge `c10daf9`): `declarations` 4142, `theorems` 3467, `modules` 143, hand list 315 (`scal/RESULT.json` `integration_int2`). Reviewed by int-r2 APPROVE on `a70492c`.
 After the integration INT3 (OPT-R1, merge `83e0b6a`): `declarations` 4519 (= 4142 + 377 `E2e.OptR1`), `theorems` 3813, `modules` 154, hand list 315 (OptR1 names are not in the hand lists). Reviewed by int-r2 APPROVE on `a70492c`.
+After the AU-07 fix (on `71161fa`; reviewed by REVIEW-AU07, APPROVE), the committed record: `declarations` 4518, `theorems` 3812, `modules` 154, hand list 315, axiom set `Quot.sound,propext` 2084 (was 2085).
+By name, the decl drift shows `E2eScal.cp_e2e_marshal_main_s._proof_1_23` REMOVED and `_proof_1_13`…`_22` CHANGED (type hash).
+By content (kind, type hash, axiom set), the base row without a head counterpart is base `_proof_1_13` (type hash `00000000e439c2be`); head `_proof_1_n` equals base `_proof_1_(n+1)` for n = 13…22 (data check of review REVIEW-AU07).
+Limit: the type hash is a 32-bit structural hash; equal hashes do not prove definitional equality. That base `_proof_1_13` belonged to the slow call is an inference from position.
 The count comes from `decl_dump.lean` (`.claude/skills/maintaining-methodical-fv/scripts/`) over the roots E2e, E2eAd, E2eScal, run by `axioms_gate.py`.
 `scal/RESULT.json` `integration_s15.executed` lists the other expected results (negatives 36/36 T9, 15/15 SG1; regen SAME 6/6; `p2dec_test.py` 10/10).
-A cold build from an empty `.lake` was not run in any reviewed unit (`scal/RESULT.json` `integration_s15.not_run`).
+A first build from an empty `.lake` ran once in task B (base `71161fa`, toolchain already installed, n = 1) on macOS 26.7.2 arm64, Apple M5 Pro, 18 cores, 48 GiB: `lake build E2e E2eAd E2eScal` exit 0, 1209.1 s, 912 jobs; gate PASS 4519 / 3813 / 315. This is an executed check on macOS arm64, not x86-64 evidence. In this tree the values are in the `HISTORY.md` 2026-11-11 paragraph. The run record and its review (REVIEW-B, accept with required fixes; RB-1…RB-10 closed in the re-check of REVIEW-AU07) are outside the repository.
+After the AU-07 fix, review REVIEW-AU07 ran a clean build of a fresh copy (empty `.lake`): `lake build E2e E2eAd E2eScal` exit 0, 489.4 s, 912 jobs (macOS arm64, n = 1); gate PASS 4518 / 3812 / 315, `DIFF []` against the changed record; 11 drift lines, all accepted; negative control exit 1. The two build times are from different trees, n = 1 each; no cause of the difference is claimed. Before task B no reviewed unit ran it (`scal/RESULT.json` `integration_s15.not_run`).
 
 Portability caveats:
 
@@ -150,7 +159,7 @@ Portability caveats:
 | SG-2 | frozen generator covers 32-byte `[]byte` vectors only: H3 coverage 1/2 and 1/3 fields; proposals P-H3-1, P-H3-2 not done |
 | SG-1 | extended after both hold-outs; no hold-out claim for the extension; DepositCount has no template |
 | AU-01 | gate lock is not FIFO; user decision: measure first |
-| AU-07 | `P2EncCp` `omega` cost not located; the encode template is net-negative in build time |
+| AU-07 | `P2EncCp` slow `omega` located (line 163, `hLo` of `rootenc_seg`) and fixed in one `by` block, 1022.9 s → 8.3 s (macOS arm64, n = 1; methods differ, see `e2e/opt1/AU-07.json`); reviewed by REVIEW-AU07, APPROVE; no same-condition comparison with the hand proof |
 | AU-14 | policy tool limits (decl_dump roots, stale_olean); deferred |
 | D1 | generator IR key for nested container fields; generator not changed |
 | K2 | Kraken parser has no `bsr`; Kraken request |

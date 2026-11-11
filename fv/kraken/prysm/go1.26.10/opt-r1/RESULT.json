@@ -116,6 +116,7 @@
   ]
  },
  "axioms_gate_merged_tree": "../e2e/axioms-gate.json on the integrated research branch: PASS, 4519 declarations = 4142 + 377 (E2e.OptR1); this directory's axioms-gate.json (3860) is the pilot branch tree",
+ "superseded_note": "2026-11-11: ../e2e/axioms-gate.json was regenerated after the AU-07 fix (../e2e/opt1/AU-07.json attempt 4): PASS, 4518 declarations, 3812 theorems. The values 4519 / 3813 in axioms_gate_merged_tree and integration_int3.executed are the INT3 values and stay unchanged",
  "error_path_effect": "item 6: invalid Root with 8 <= spare < 40 now allocates one block and does not write the caller's spare (old: no allocation, C-1 write); returned values unchanged",
  "benchmarks_in_words": {
   "platform": "linux/arm64 only; no x86-64 run",
