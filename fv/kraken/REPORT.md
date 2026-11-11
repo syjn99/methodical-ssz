@@ -26,8 +26,10 @@ SG-1 확장은 두 홀드아웃을 연 뒤의 개발 작업이다. 그 확장에
 BeaconBlockHeader 인코더는 빠른 경로와 길이 거부 세 곳을 증명했다. 길이 거부의 전제는 `len + 112 ≤ cap`이다(11절).
 `Eth1Data.MarshalSSZTo`는 빠른 경로만 증명했다(11절, ENC 스트림). 리뷰 enc-r1이 ENC `ad15fbc`를 승인했다.
 어느 인코더도 완전하지 않다.
-두 스트림은 통합 INT2에서 병합했다(`500571c`, `c10daf9`). 통합의 독립 리뷰는 아직 없다.
-최적화 시험 OPT-R1은 통합 INT3에서 병합했다(`83e0b6a`). 통합의 독립 리뷰는 아직 없다.
+두 스트림은 통합 INT2에서 병합했다(`500571c`, `c10daf9`).
+최적화 시험 OPT-R1은 통합 INT3에서 병합했다(`83e0b6a`). 리뷰 opt-r1-r1이 `5821b19`를 승인했다(생성기 `ca191bb`).
+리뷰 int-r2가 두 통합(`a70492c`)을 승인했다. 필수 수정 0, 고칠 항목 6(S1–S6)이다.
+int-r2가 확인하지 않은 것은 11절 OPT-R1 문단 끝에 있다.
 OPT-R1은 함수 하나, 바이너리 하나에 대한 시험이다(11절 끝).
 정확성을 지키는 재검증은 보였다. 속도 향상은 일반적으로 보이지 않았다. 결과가 섞여 있다.
 
@@ -482,8 +484,9 @@ H3 `75166e4`와 ENC `ad15fbc`를 병합했다(`500571c`, `c10daf9`). 새 증명�
 이것은 scratch에서 돌린 통합 검사다. H3 평가의 "형마다 한 번" 실행에 넣지 않는다.
 `kindcheck.py`: 생성 파일 8개 PASS, 자기 시험 23건 PASS(작업 05).
 부정 시험 재실행: H3 5건, ENC 5건. 10건 모두 분류와 첫 오류 줄이 기록과 같다(작업 11–20).
-실행하지 않은 것: 빈 `.lake`에서의 콜드 빌드, 링크 검사, Go 차분, Go 시험, 통합의 독립 리뷰.
-기록: `scal/RESULT.json`의 `integration_int2`.
+실행하지 않은 것: 빈 `.lake`에서의 콜드 빌드, 링크 검사, Go 차분, Go 시험.
+리뷰 int-r2가 이 통합을 승인했다(`a70492c`). 아래 OPT-R1 문단 끝을 보라.
+기록: `scal/RESULT.json`의 `integration_int2`(`review_int_r2` 포함).
 
 최적화 시험 OPT-R1 (통합 INT3, 병합 `83e0b6a`; 리뷰 opt-r1-r1이 `5821b19`를 승인, 필수 수정 없음):
 생성기 커밋 `ca191bb`(브랜치 `claude/ssz-gen-opt-r1`)는 이 브랜치에 병합하지 않았다. `sszgen/`, `ssz/`는 그대로다.
@@ -500,8 +503,14 @@ H3 `75166e4`와 ENC `ad15fbc`를 병합했다(`500571c`, `c10daf9`). 새 증명�
 `lake build --no-build E2e E2eAd E2eScal` 종료 0이다. 공리 게이트 PASS, 선언 4519 = 4142 + 377이다.
 선언 비교(INT2 덤프 대비): ADDED 377, CHANGED 0, REMOVED 0이다. 덤프 수준의 심은 대조를 잡았다(종료 1).
 사용자 결정 U1–U6은 열려 있다(`prysm/BASELINE.md` 8절).
-실행하지 않은 것: Lean 수준 심은 대조, 콜드 빌드, 링크 검사, Go 차분, 벤치마크, x86-64, 통합의 독립 리뷰.
-기록: `prysm/go1.26.10/opt-r1/MANIFEST.md`, `RESULT.json`의 `integration_int3`.
+실행하지 않은 것(통합자): Lean 수준 심은 대조, 콜드 빌드, 링크 검사, Go 차분, 벤치마크, x86-64.
+리뷰 int-r2가 INT2와 INT3을 함께 승인했다(`a70492c`, 필수 수정 0, 고칠 항목 6).
+int-r2는 scratch 사본에서 Lean 수준 심은 대조를 돌렸다. 게이트와 선언 비교가 둘 다 잡았다.
+int-r2가 확인하지 않은 것: 빈 `.lake`에서의 콜드 빌드(기준 모듈 115개와 `E2eScal.P2EncCp`는 다시 검사하지 않았다).
+또 링크 검사, Go 차분, Go 시험, 벤치마크, x86-64 하드웨어다.
+부정 시험 89건 중 73건은 다시 돌리지 않았다. 시험 S3 두 건은 통합자의 결과 파일만 읽었다.
+런타임 계약, morestack 경로, Kraken 의미론도 확인하지 않았다. 비밀과 경로 검사는 정규식 기반이다.
+기록: `prysm/go1.26.10/opt-r1/MANIFEST.md`, `RESULT.json`의 `integration_int3`(`review_int_r2` 포함).
 
 조건:
 
@@ -630,8 +639,18 @@ python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/scal/negcases-sg1.json
 python3 -I -B fv/kraken/gen/e2e/h3link.py callgraph <objdump> <out.json>; python3 -I -B fv/kraken/gen/e2e/h3link.py filter <out> <objdump> <elf> <nm>
 python3 -I -B fv/kraken/link/conv.py <out>/target.objdump <out>/p1bin-amd64.nm <out>/norm --norm; python3 -I -B fv/kraken/gen/e2e/h3link.py data <out> prysm/go1.26.10/e2e/link prysm/go1.26.10/e2e/ad/link; python3 -I -B fv/kraken/link/check.py <out>
 (cd fv/kraken && python3 -I gen/scal/scalgen.py p2dec --S prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S --const BiUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.BlobIdentifier --prefix bi_dec --imports E2eScal.P2Dec,E2eScal.P2DecZ,E2eScal.H3Code --open E2eScal.H3Code)   # DepositMessage: --const DmUnmarshal --type v1alpha1.DepositMessage --prefix dm_dec
-# 모듈: H3Code BiDesc DmDesc GenBiDec GenDmDec BiAccept BiReject BiSpec BiSpecK WitBiA WitBiR DmSeg0 DmAccept DmReject DmSpec DmSpecK WitDmA WitDmR (lake build E2eScal.<모듈>)
+# 모듈 20개: H3Code BiDesc DmDesc GenBiDec GenDmDec BiAccept BiReject BiSpec BiSpecChecker BiSpecK WitBiA WitBiR DmSeg0 DmAccept DmReject DmSpec DmSpecChecker DmSpecK WitDmA WitDmR (lake build E2eScal.<모듈>)
 python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/scal/negcases-h3.json <work> prysm/go1.26.10/e2e/scal/negative-h3.json <case-id>   # 사례마다 gate 작업 하나
 python3 -I -B fv/kraken/gen/e2e/h3diff.py cases <c.json>; go run -overlay <overlay.json> ./fve2e/h3check < <c.json> > <o.json>   # Prysm 임시 트리, Go 1.26.10; overlay가 h3/h3check-main.go.txt를 main.go로 준다
 python3 -I -B fv/kraken/gen/e2e/h3diff.py check <c.json> <o.json> prysm/go1.26.10/e2e/h3/differential.json
+# OPT-R1 시험(시험 ELF 3ef7ac89…f602; prysm/go1.26.10/opt-r1/MANIFEST.md 4절): 생성기 ca191bb를 Go 1.26.10, -trimpath로 빌드
+OPTR1_GEN=<생성기> sh fv/kraken/gen/prysm-gen.sh <prysm-tree> fv/kraken/prysm/go1.26.10/opt-r1/gen-wrap.sh <out> gen
+# <out>/gen/*/phase0*.ssz.go를 기준 임시 트리(prysm/go1.26.10/MANIFEST.md 3절)의 사본에 놓고, 위 플래그로 ./fvphase1c/p1cbin을 빌드한다
+# 객체 덤프는 fv/kraken/gen/prysm-elf.sh의 정규식과 같다
+python3 -I -B fv/kraken/gen/e2e/e2elink.py filter <link-out> <objdump> <elf> <nm>
+mkdir -p <link-out>/norm && python3 -I -B fv/kraken/link/conv.py <link-out>/target.objdump <link-out>/p1bin-amd64.nm <link-out>/norm --norm
+python3 -I -B fv/kraken/gen/e2e/e2elink.py data <link-out> && python3 -I -B fv/kraken/link/check.py <link-out>
+# 모듈 11개: Code Head HeadG Main MainG Spec Tail TailR WitO WitOW WitOWR (lake build E2e.OptR1.<모듈>)
+python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/prysm/go1.26.10/opt-r1/negcases.json <work> fv/kraken/prysm/go1.26.10/opt-r1/negative.json <case-id>   # 사례마다 gate 작업 하나; WRITES 결과 파일
+# Go 차분(arm64, Go 의미론만): fv/kraken/prysm/go1.26.10/opt-r1/diff/; 벤치마크(arm64만): fv/kraken/prysm/go1.26.10/opt-r1/bench/
 ```

@@ -8,9 +8,9 @@ Paths are relative to `fv/kraken/` unless they start with `fv/` or `.claude/`. C
 
 | Pin | Value | Read from |
 | --- | --- | --- |
-| Reviewed research state | `c3c56a1` (integration, int-r1 APPROVE); this file is in a later documents-only commit whose ancestry contains `c3c56a1` | `prysm/FINDINGS.md` checkpoint deltas (last entry), `HISTORY.md` |
+| Reviewed research state | `a70492c` (integrations INT2 + INT3, int-r2 APPROVE: 0 must-fix, 6 should-fix); this file is in a later documents-only commit (int-r2 should-fix S2–S6) whose ancestry contains `a70492c`. Earlier reviewed state: `c3c56a1` (int-r1 APPROVE) | `prysm/FINDINGS.md` checkpoint deltas (last entry), `HISTORY.md` |
 | Reviewed streams | T-9 `154944e` (t9-r1 APPROVE), SG-1 `da3f233` (sg1-r1 APPROVE), merges `e56063c`, `63ef3b9` | `prysm/go1.26.10/e2e/scal/RESULT.json` `integration_s15` |
-| Reviewed streams after this file was first written | H3 hold-out `75166e4` (h3-r1 APPROVE), ENC `ad15fbc` (enc-r1 APPROVE), both on base `dda707c`; merges `500571c`, `c10daf9` (integration INT2; the integration itself is not yet reviewed) | `scal/RESULT.json` `integration_int2` |
+| Reviewed streams after this file was first written | H3 hold-out `75166e4` (h3-r1 APPROVE), ENC `ad15fbc` (enc-r1 APPROVE), both on base `dda707c`; merges `500571c`, `c10daf9` (integration INT2; reviewed by int-r2 APPROVE on `a70492c`) | `scal/RESULT.json` `integration_int2` |
 | scal method freeze (H3) | `dda707c77e9c2168cb778d13624b32fe87e07caa` (7 blob ids and the `lean/E2eScal` tree id) | `scal/HOLDOUT-OPENED` `H3.method_freeze` |
 | Generator (`sszgen/`, `ssz/`) | `698c2025a73a296b55b95744a8408f3b03b2546b` (`syjn99/ssz-gen-fixes`, merge base `2d0150b`) | `prysm/go1.26.10/MANIFEST.md` §1, `TOOLS.md` |
 | scal method freeze (H1, H2) | `56dfc27a6b0c7890105bd16971e0d33bbcd9980e`; `scalgen.py` blob `78e3339…`; SG-1 extended it afterwards | `scal/RESULT.json` `method_freeze`, `units.sg1-extension` |
@@ -23,7 +23,7 @@ Paths are relative to `fv/kraken/` unless they start with `fv/` or `.claude/`. C
 | Kraken | `6064eecbb730a1152aa6ed891a155d3a92a4f298`, AeneasVerif/kraken main (not a PR branch) | `lean/lake-manifest.json`, `TOOLS.md` |
 | EthLib | `862185680cf23ccf54d44eb25b63b26c5020597b` | `lean/lake-manifest.json` |
 | Lean | `leanprover/lean4:nightly-2026-09-21`; dump header `lean=4.36.0-nightly-2026-09-21 githash=ca39d2bc…` | `lean/lean-toolchain`, `prysm/go1.26.10/e2e/axioms-gate.json` |
-| Pilot OPT-R1 (pilot ELF only; not the e2e baseline) | generator `ca191bb0c573830126dd017bd71a801f90038573` (branch `claude/ssz-gen-opt-r1`, parent `698c202`, NOT merged here; opt-in flag `--reserve-marshal`, default off); ELF `3ef7ac890ba1a797fb90877b84ad1a6ffe0ac283f77c10b09ffb2c8cd7b7f602`, 23486305 bytes, same Go and flags; stream `5821b19` (review opt-r1-r1 APPROVE), merge `83e0b6a` (integration INT3, not yet reviewed) | `prysm/go1.26.10/opt-r1/MANIFEST.md` §1–2, `opt-r1/build-ids.txt` |
+| Pilot OPT-R1 (pilot ELF only; not the e2e baseline) | generator `ca191bb0c573830126dd017bd71a801f90038573` (branch `claude/ssz-gen-opt-r1`, parent `698c202`, NOT merged here; opt-in flag `--reserve-marshal`, default off); ELF `3ef7ac890ba1a797fb90877b84ad1a6ffe0ac283f77c10b09ffb2c8cd7b7f602`, 23486305 bytes, same Go and flags; stream `5821b19` (review opt-r1-r1 APPROVE), merge `83e0b6a` (integration INT3; reviewed by int-r2 APPROVE on `a70492c`) | `prysm/go1.26.10/opt-r1/MANIFEST.md` §1–2, `opt-r1/build-ids.txt` |
 
 Where the binaries and link tables are:
 
@@ -94,7 +94,7 @@ Direct witnesses exist for `cpo_marshal_main`, `cpo_marshal_cover`, `cpo_marshal
 - H1 encoder: the BeaconBlockHeader fast path was not proved at H1 time; 9 attempts failed (3 in session 10, 6 in session 11) (`REPORT.md` §11, `prysm/FINDINGS.md` T-9).
 - H2 (historical, before SG-1): the frozen generator ran once on Eth1Data: exit 2, 0 bytes, 0 of 2 root fields (job 393; `scal/RESULT.json` `H2`, FINDINGS SG-1). The decoder was then proved by hand.
 - SG-1 extension: offset-0 template `rootdec_seg_z` and `scalgen.py p2dec` form, developed on Eth1Data after both hold-outs were opened. Eth1Data is in-sample and the hold-out is contaminated for it. Output 2 of 2 fields; no generalisation claim (`scal/RESULT.json` `units.sg1-extension`, `scal/CONTAMINATION.md` §8).
-- H3 (frozen method `dda707c`, opened in `782a41b`): one generator run per type, exit 0, raw output unedited; coverage 1/2 (BlobIdentifier) and 1/3 (DepositMessage) fields; the inline uint64 fields and the 48-byte PublicKey by hand (FINDINGS SG-2). Two types, one touch; no superiority, general-automation or speed-up claim (`scal/RESULT.json` `H3`, `scal/CONTAMINATION.md` §11). Independent review pending.
+- H3 (frozen method `dda707c`, opened in `782a41b`): one generator run per type, exit 0, raw output unedited; coverage 1/2 (BlobIdentifier) and 1/3 (DepositMessage) fields; the inline uint64 fields and the 48-byte PublicKey by hand (FINDINGS SG-2). Two types, one touch; no superiority, general-automation or speed-up claim (`scal/RESULT.json` `H3`, `scal/CONTAMINATION.md` §11). Reviewed: h3-r1 APPROVE on `75166e4` (next bullet); merged tree reviewed by int-r2 APPROVE on `a70492c`.
 - H3 review (correction, integration INT2): h3-r1 APPROVE on `75166e4`; the reviewer reran the generator once per type in scratch (byte-identical), 12 of 33 negatives and the link check. Reading A3 (class N counts own fields) was fixed after the candidate list was visible and before any method code was opened; under the other reading class N is `ProposerSlashing` (`scal/CONTAMINATION.md` §11).
 - H3 limits: generator 1 of 2 and 1 of 3 fields; SG-2 open (no inline uint64 template, no 48-byte segment). One touch of two types; no generalisation, superiority or causal speed-up claim. No witness instantiates the `*_accept_spec_k` premise `Pm` (as for Eth1Data and BeaconBlockHeader).
 - ENC (development data, not a hold-out; enc-r1 APPROVE on `ad15fbc`): encode block `E2eScal.enc32_call` (the memmove call site) and reject block `E2eScal.enc_reject_tail`. Reuse is PARTIAL: proof lines per BeaconBlockHeader root site 56 / 66 / 68 via the block against 61 / 71 / 73 by hand, block 18 lines; the straight-line steps stay per site (FINDINGS ENC-1). `Eth1Data.MarshalSSZTo` and `BeaconBlockHeader.MarshalSSZTo`: fast path only; BeaconBlockHeader length rejects only under `len + 112 ≤ cap`. No speed-up claim (`scal/RESULT.json` unit `enc-reuse`).
@@ -121,11 +121,11 @@ python3 -I -B fv/kraken/gen/scal/kindcheck.py --selftest
 python3 -I -B fv/kraken/gen/e2e/negative.py <negcases.json> <work> <result.json> <case-id>   # one job per case
 ```
 
-Expected at the reviewed state `c3c56a1`: `axioms-gate.json` `verdict` PASS, `declarations` 3483, `theorems` 2923, `modules` 115, `nonstandard` {}, `sorryAx` [].
+Expected at the earlier reviewed state `c3c56a1`: `axioms-gate.json` `verdict` PASS, `declarations` 3483, `theorems` 2923, `modules` 115, `nonstandard` {}, `sorryAx` [].
 On the ENC branch alone (enc-r1 APPROVE): `declarations` 3813, `theorems` 3223, `modules` 123 (`scal/RESULT.json` unit `enc-reuse`).
 Both `axioms_gate.py run <out.json> <dump.tsv>` and `axioms_gate.py check <dump.tsv> <out.json>` overwrite the JSON argument (review b1-r1 S7). The committed record is `prysm/go1.26.10/e2e/axioms-gate.json`.
-After the integration INT2 (H3 + ENC, merge `c10daf9`): `declarations` 4142, `theorems` 3467, `modules` 143, hand list 315 (`scal/RESULT.json` `integration_int2`). The integration is not yet reviewed.
-After the integration INT3 (OPT-R1, merge `83e0b6a`): `declarations` 4519 (= 4142 + 377 `E2e.OptR1`), `theorems` 3813, `modules` 154, hand list 315 (OptR1 names are not in the hand lists). The integration is not yet reviewed.
+After the integration INT2 (H3 + ENC, merge `c10daf9`): `declarations` 4142, `theorems` 3467, `modules` 143, hand list 315 (`scal/RESULT.json` `integration_int2`). Reviewed by int-r2 APPROVE on `a70492c`.
+After the integration INT3 (OPT-R1, merge `83e0b6a`): `declarations` 4519 (= 4142 + 377 `E2e.OptR1`), `theorems` 3813, `modules` 154, hand list 315 (OptR1 names are not in the hand lists). Reviewed by int-r2 APPROVE on `a70492c`.
 The count comes from `decl_dump.lean` (`.claude/skills/maintaining-methodical-fv/scripts/`) over the roots E2e, E2eAd, E2eScal, run by `axioms_gate.py`.
 `scal/RESULT.json` `integration_s15.executed` lists the other expected results (negatives 36/36 T9, 15/15 SG1; regen SAME 6/6; `p2dec_test.py` 10/10).
 A cold build from an empty `.lake` was not run in any reviewed unit (`scal/RESULT.json` `integration_s15.not_run`).
