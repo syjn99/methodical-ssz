@@ -290,3 +290,9 @@ Deposit_Data 합성 실행 1은 구문 오류였다. 원 출력은 기록으로 
 부정 시험 37/41, 공리 게이트 PASS, 선언 비교 ADDED 378개뿐, Go 차분 12/12다.
 원격에 쓰지 않았다. 기록: REPORT 11절, `scal/CONTAMINATION.md` 20절, `scal/RESULT.json`의 `H5`, FINDINGS SG-4.
 
+2026-11-11 GEN4 단위 G4-G(기준 `718e023`, Opus 5.5 구현, 리뷰 전): 증명 생성기에 `p2dec --gen4`를 더했다.
+자료 흐름 맞춤, 명령어별 단계 정리, 창 블록을 쓴다. 옛 출력 23개는 SAME이다.
+개발 형 10개 덮음(표본 안): 9개는 모두, AttestationData 3/5다. GEN3에서 SyncCommitteeMessage 2/4, PendingConsolidation 1/2였다.
+세 수용 정리를 생성 사슬로 다시 증명했다. 필드 합성은 손 글이다.
+SyncCommitteeMessage 생성 사슬은 457줄이다. 400줄 조건을 넘는다고 적었다.
+기록: REPORT 11절, `scal/RESULT.json`의 `gen4`, CONTAMINATION 22절.

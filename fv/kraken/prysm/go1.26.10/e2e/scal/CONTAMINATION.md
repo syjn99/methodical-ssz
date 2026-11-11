@@ -433,3 +433,23 @@
 - 공리 게이트는 임시 JSON으로 돌렸다. 커밋된 `axioms-gate.json`과 `AxiomsScal.lean`은 바꾸지 않았다.
 - 생성기 쪽 일(`--gen4`)은 하지 않았다. 다음 단위 G4-G의 일이다.
 - 독립 리뷰는 아직 없다.
+
+## 22. GEN4 생성기 작업 (단위 G4-G) — H5 뒤 생성기 변경, 개발 작업, 홀드아웃 아님
+
+- 기준은 `718e023`(G4-L 끝)이다. 구현자는 새 Opus 5.5 세션이다. 아직 리뷰 없음.
+- H5 뒤에 증명 생성기 `gen/scal/scalgen.py`를 바꿨다. 새 모드 `p2dec --gen4`다.
+- 입력은 개발 자료뿐이다: 개발 형 10개의 `.S`와 IR, G4-L 보조정리와 조사 표.
+- 그래서 GEN4 덮음은 모두 표본 안이다. 옮겨짐 주장은 없다. 홀드아웃 측정은 H6이다.
+- 맞춤은 다지시어 템플릿이 아니다. 작은 자료 흐름이 레지스터와 스택 칸의 값을 따라간다.
+- 블록은 자료 흐름이 입구 상태를 보일 때만 낸다. 그 밖은 "덮지 않음"과 이유와 분류다.
+- 기본, `--gen2`, `--gen3` 출력은 바이트가 같다(`regen_check.sh` 옛 명령 23/23 SAME).
+- `--gen3 --compose`에 손 문장이 없으면 이제 `UNCHECKED STATEMENT` 표시를 쓴다(리뷰 g3g-r1).
+- 커밋된 출력 중 그 경우는 없다. 그래서 바뀐 커밋 파일은 없다.
+- 형마다 한 번 실행했다(gate 작업 09). 원 출력은 쓰기 전에 고치지 않고 커밋했다(`e774d9b`).
+- 그 전에 scratch 시험 실행이 세 번 있었다(작업 01, 02, 05). 결과는 저장소에 넣지 않았다.
+- 시험 실행으로 출력 꼴과 빌드를 확인한 뒤 한 번 실행을 했다. 그래서 그 실행은 독립 측정이 아니다.
+- 덮음(GEN4, GEN3, GEN2): Checkpoint 2/2 / 2/2 / 1/2, AttestationData 3/5 / 3/5 / 1/5, BeaconBlockHeader 5/5 / 5/5 / 3/5, Eth1Data 3/3 / 3/3 / 3/3, BlobIdentifier 2/2 / 2/2 / 2/2, DepositMessage 3/3 / 3/3 / 3/3, Deposit_Data 4/4 / 4/4 / 3/4, PendingPartialWithdrawal 3/3 / 3/3 / 0/3, SyncCommitteeMessage 4/4 / 2/4 / 0/4, PendingConsolidation 2/2 / 1/2 / 0/2.
+- 덮지 않은 필드는 AttestationData의 Source, Target 둘이다. 분류는 "새 필드 종류"(중첩 컨테이너)다.
+- 세 형의 수용 정리를 생성 사슬로 다시 증명했다. 필드 합성은 손 글이다(종류 없음).
+- 형: `H5.sm_accept_stmt`, `H5.pc_accept_stmt`, `H4.pw_accept_stmt`. 문장은 그대로다.
+- 일반성, 옮겨짐, 속도 주장은 없다.

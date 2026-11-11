@@ -216,3 +216,45 @@ In-sample coverage only; no hold-out claim until H5.
   nested-container fields, lists, bitfields, sizes other than 32 / 48 / 96, a `nop` elsewhere (also the
   observed tail `nop` of BeaconBlockHeader.ParentRoot / Checkpoint.Root, which `--compose` does not read),
   the offset-0 form with a `nop`, encoders; composed theorems with callee fields or frames other than `0x20`.
+
+## GEN4 (unit G4-G; generator change after H5, development set only; not yet reviewed)
+
+`scal/CONTAMINATION.md` §22. Lemmas: unit G4-L (`NopView`, `StepK`, `KindStep`, `CallReg`, `SegReg`, `SegRegZ`,
+`KindSegReg`; review g4l-r1 APPROVE). In-sample coverage only; no hold-out claim until H6.
+
+- Compatibility switch: `--gen4` is its own code path. Default, `--gen2`, `--gen3` output unchanged:
+  `regen_check.sh` SAME for the 23 earlier commands.
+- `p2dec --gen4 [--summary FILE.json] [--partial-out FILE]`: no multi-directive set-up templates. The generator walks
+  the accept path from the end of the decoder head (prologue, spills, `test %al,(%rax)`) with a small dataflow over
+  registers and stack slots (receiver `rcv + o`, buffer `bf + o`, immediates, buffer bytes, slice pointer, unknown):
+  - step forms `mov %rS,%rD`, `mov d(%rB),%rD` (value form `kstep_ldv` for receiver / buffer / pointer / immediate
+    words, else bytes form `kstep_ldb`), `mov %rS,d(%rB)`, `lea d(%rB),%rD`, `add $i,%rD`, `mov $i,%eD`, `jmp l`,
+    `l:` → one theorem `<prefix>_s<index>` with its `_kind` (`KindStep`);
+  - `nop` → nothing; it is a leading nop of the next window (L1 window rule);
+  - `callq <Slot|CommitteeIndex|ValidatorIndex|Epoch>.UnmarshalSSZ` → the call window `nop* callq nop* test nop* je`
+    (`calldec_seg_w`, kind `callDecSegKindG4`) ONLY when rax = rcv + (IR Go offset), rbx = bf + (IR SSZ offset),
+    rcx = 8 and the field is the next IR field;
+  - `lea type__+387072(%rip),%rax` → the byte segment over two windows (`bytesdec_seg_g4` / `_z_g4`) ONLY when the
+    reload slots hold receiver / buffer, rX ∈ {rdx, rsi}, rY ∈ {rax, rcx, rdx, rsi, rdi}, n ∈ {32, 48, 96},
+    fP / src = IR, fL = fP + 8, fC = fP + 16;
+  - anything else stops the walk: the remaining fields are "not covered: <reason>" with a miss class
+    (padding / register / set-up order / new directive form / new field kind / other) in `--summary`.
+  A field is complete at its own event (call block; store of the buffer bytes at the IR SSZ offset into the IR Go offset;
+  store of the slice pointer after the segment). Events out of IR order stop the walk. The output lists its fields
+  in a `FIELDS-JSON:` line. Exit codes 0 / 3 / 2 as for `--gen2`.
+- `--gen4 --compose` refuses (exit 2): no kind for field compositions, composed GEN4 statements or the head / epilogue
+  lemmas. `--gen3 --compose` without `--same-as*` now writes `UNCHECKED STATEMENT` (review g3g-r1); `kindcheck.py`
+  rejects it, and also rejects a composed theorem with `decAcceptKind` but no hand identity (rule 6d).
+- Output (raw, unedited; `gen.sh` last block): `Gen4CpDec` 2/2, `Gen4AdDecPartial` 3/5, `Gen4BhDec` 5/5, `Gen4E1Dec`
+  3/3, `Gen4BiDec` 2/2, `Gen4DmDec` 3/3, `Gen4DdDec` 4/4, `Gen4PwDec` 3/3, `Gen4SmDec` 4/4, `Gen4PcDec` 2/2. Hand
+  compositions over them: `SmAcceptG4gen.lean`, `PcAcceptG4gen.lean`, `PwAcceptG4gen.lean` (types = `H5.sm_accept_stmt`,
+  `H5.pc_accept_stmt`, `H4.pw_accept_stmt`).
+- `kindcheck.py` rule 10: the GEN4 kinds with the G4-L modules pinned, the proof's lemma = the kind's lemma (comments
+  and strings removed), `FIELDS-JSON` coverage; rule 11 (review g3g-r1 S2): coverage header required for GEN2+ kinds,
+  string literals stripped in rule 6a. Label strings in `stepLabelKind` / `stepJmpKind` / `callDecSegKindG4` are
+  phantom parameters (review g4l-r1): not checked by the kind line. Selftest 157 + 4 cases; 14 broken copies fail it.
+- Tests: `p2dec_test.py` GEN4 cases `g4-*` (10 types, compose refusal, 35 dataflow mutants); negatives
+  `negcases-g4g.json` (17).
+- Not covered: nested containers / pointer callees, callees without a proved spec, lists, bitfields, sizes other than
+  32 / 48 / 96, receiver registers outside the lemma sets, index / rip / immediate-store operands, head and epilogue
+  emission, encoders.
