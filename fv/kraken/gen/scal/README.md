@@ -68,7 +68,7 @@ Generated (raw output, not edited): `lean/E2eScal/GenCi.lean` (CommitteeIndex ac
 `ci_unmarshal_accept_main_g_same` against the hand theorem), `GenAdDec.lean` (AttestationData
 BeaconBlockRoot segment), `GenCpDec.lean` (Checkpoint Root segment); hold-out H1 (after `HOLDOUT-OPENED`): `GenVi.lean` (ValidatorIndex
 accept, `p1`, gate job 299) and `GenBhDec.lean` (three BeaconBlockHeader root segments, `p2dec`, gate job 312).
-Driver: `gen/scal/gen.sh` (five `scalgen.py` commands, repo-relative; the last two are the hold-out command lines). Check: for each file, `.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh
+Driver: `gen/scal/gen.sh` (six `scalgen.py` commands, repo-relative; the fourth and fifth are the hold-out H1 command lines, the last is the SG-1 extension output `GenE1Dec.lean`). Check: for each file, `.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh
 <file> -- sh -c "<its scalgen.py command> > $REGEN_OUT"` (SAME for all three, gate job 294; SAME for GenVi / GenBhDec in review s4-r1).
 
 Generator changes before any hold-out input are in `prysm/go1.26.10/e2e/scal/CONTAMINATION.md`:

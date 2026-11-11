@@ -5,3 +5,6 @@ python3 -I gen/scal/scalgen.py p2dec --S prysm/go1.26.10/e2e/e1/link/norm/github
 # stdout: empty (0 bytes; lean/E2eScal/GenE1Dec.lean was written empty and is not kept in the library glob)
 # stderr (verbatim):
 scalgen p2dec: no template match: directive 30: `mov $0x20,%ecx` is not add $src,%rbx (/add \$(0x[0-9a-f]+),%rbx/)
+# NOTE (session 15, review sg1-r1 S4): this is the pre-extension record (historical). The empty file of this run was not kept.
+# After the SG-1 extension, lean/E2eScal/GenE1Dec.lean is the raw output of the extended generator and is in the E2eScal library glob
+# (gen/scal/gen.sh, last command; scal/CONTAMINATION.md section 8). The lines above are unchanged.

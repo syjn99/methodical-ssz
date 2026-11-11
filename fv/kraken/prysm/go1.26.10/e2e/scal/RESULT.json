@@ -302,7 +302,7 @@
    "note": "both are texts of reviewed development-set proofs (AdReject unreachable theorems, EpReject / WitEpR) with the code constant replaced"
   },
   "beacon_block_header_encoder_t9 (T-9 stream, fresh Fable session)": {
-   "state": "kernel-checked on the T-9 stream branch (claude/ssz-fv-t9-fable, base 48b74b63c4819ffa30c3c3748d360ca30f7d98d1); independent review pending",
+   "state": "kernel-checked on the T-9 stream branch (claude/ssz-fv-t9-fable, base 48b74b63c4819ffa30c3c3748d360ca30f7d98d1); independent review t9-r1 APPROVE on 154944e64016d21c3b2da61929bca12ddf0c9faa; merged into claude/ssz-fv-prysm-e2e (merge e56063c, session 15). FAST PATH ONLY: growslice branches, length rejects and morestack unproved; never 'encoder complete'",
    "scope": "MarshalSSZTo FAST PATH ONLY: len(dst) + 112 <= cap(dst), three roots of length 32. The growslice branches and the three length rejects are not covered (T-7 deferred, GrowsliceC untouched). Never 'encoder complete'.",
    "method": "hand proof by a fresh Fable 5.2 session as direct author (new budget by user order). No generator, Kind, S1-lemma, template, Fk/*, contract, ELF, toolchain or lakefile change.",
    "theorems": [
@@ -327,7 +327,7 @@
     "bh_enc_e": "148-155",
     "not on this path": "21-32, 47-58, 69-81, 101-110, 130-139 (growslice), 156-183 (length rejects), 184-194 (morestack)"
    },
-   "cause_of_T9": "kernel check of the simp + omega refutation of the lea/r12 stack-guard branch: the proof term holds Int arithmetic on the literal 2^64 - 32; reproduced on plain BitVec variables outside any machine context (diagnostic job 01: '(kernel) excessive memory consumption', 4.88 GiB under lean -M 5000; the cmp-%rsp form passes)",
+   "cause_of_T9": "the simp + omega refutation of the lea/r12 stack-guard branch fails in the kernel under the 5 GiB limit (diagnostic job 01: '(kernel) excessive memory consumption', 4.88 GiB under lean -M 5000; the cmp-%rsp form passes); the costly subterm was not profiled. Reproduced on plain BitVec variables outside any machine context. After simp the hypothesis holds Int arithmetic on the literal 2^64 - 32; that this literal is the cost is an inference, not a measurement (review t9-r1 should-fix 2)",
    "general_lemma": "E2eScal.lea_cmp_be_false (x d g : BitVec 64) (af of' : Bool) (N : Nat) (hd : (-d).toNat = N) (h : g.toNat + N < x.toNat): the jbe after `lea d(%x),%r; cmp g,%r` is not taken. Wrapper of Fk.cmp_be_false (unchanged).",
    "maxHeartbeats": "4 M on the six segments, the composition and the spec corollary (below the 16 M of cp_e2e_marshal_main); 16 M on the witness as in its model WitCpM; no raise, no profile needed",
    "hand_files": {
@@ -367,9 +367,9 @@
     "witness": "E2eScal.WitBhM.bhm_runs_empty / bhm_runs_prefix (Go-valid receiver: zero state, three roots len = cap = 32; every Slot, ProposerIndex and root contents; empty prefix with cap 112, 3-byte prefix with 5 spare bytes), job 04",
     "spec_alignment": "bh_e2e_marshal_spec_k: the 112 output bytes are serialize prysmBhDesc g.toValue (independent consensus-specs Desc of BhSpec.lean), job 52",
     "negatives": "36 cases, one gated job each (jobs 11-43, 60-62): 9 controls pass, 27 inside; every first error read; 0 wrong_target, 0 timeout (scal/negative-t9.json)",
-    "go_differential": "21/21 (bh/differential-enc.json, job 51, native Go 1.26.10, go run -overlay in the temporary Prysm tree, nothing written there): 9 fast-path cases (bytes, nil error, same backing array, cap unchanged, receiver unchanged); 6 growslice and 6 length-reject cases are NOT the proved path",
+    "go_differential": "21/21 (bh/differential-enc.json, job 51, native Go 1.26.10 on host linux/arm64 (Go semantics only; the amd64 machine code was not executed), go run -overlay in the temporary Prysm tree, nothing written there): 9 fast-path cases (bytes, nil error, same backing array, cap unchanged, receiver unchanged); 6 growslice and 6 length-reject cases are NOT the proved path",
     "axioms": "axioms gate over every declaration of E2e, E2eAd, E2eScal: PASS, 3464 declarations, 2906 theorems, hand list 195, non-standard 0, sorryAx 0 (job 70, axioms-gate.json)",
-    "decl_drift": "base dump = review h2-r1 dump at 9df1fb2 (3303 rows; git diff 9df1fb2..48b74b6 has no Lean or link-input change) vs head dump of job 70: ADDED 161, CHANGED 0, REMOVED 0. 160 ADDED names are the new declarations and their auxiliaries; 1 is E2eScal.BhCode.BhMarshal.eq_1, the equation lemma of the existing constant BhMarshal, first realised by the new modules. Planted control (type hash of E2e.cp_e2e_marshal_main changed in a copy): CHANGED reported, exit 1.",
+    "decl_drift": "base dump = review h2-r1 dump at 9df1fb2 (3303 rows; git diff 9df1fb2..48b74b6 has no Lean or link-input change) vs head dump of job 70: ADDED 161, CHANGED 0, REMOVED 0. 160 ADDED names are the new declarations and their auxiliaries; 1 is E2eScal.BhCode.BhMarshal.eq_1, the equation lemma of the existing constant BhMarshal, first realised by the new modules. Planted control (type hash of E2e.cp_e2e_marshal_main changed in a copy): CHANGED reported, exit 1. Dump roots E2e, E2eAd, E2eScal; Fk is not a dump root (Fk files are byte-identical to the base). The author's planted control was an edit of a copy of the TSV dump, not a planted Lean change; the reviewer's control was a real Lean plant (review t9-r1 job 60). (review t9-r1 should-fix 4)",
     "link": "existing bundle 140eb7bd (bh/link/RESULT, PASS all); not rerun in this stream"
    },
    "baseline_next_to_it": "BASELINE.json units.checkpoint_encoder (the whole Checkpoint encoder unit). Two hand proofs of unequal types and unequal scope: no speed-up claim.",
@@ -381,9 +381,9 @@
     "the stack-guard premise is guard + 32 < rsp (large-frame form), not the guard < rsp of cp_e2e_marshal_main"
    ],
    "not_run": [
-    "independent review (required before any claim stands)",
+    "independent review: done since (t9-r1 APPROVE on 154944e)",
     "cold build of E2eScal",
-    "reviewer cold rebuild",
+    "cold build of the whole E2eScal library (the t9-r1 reviewer rebuilt the six new modules only)",
     "link check rerun",
     "Lean Go-value predicate for the BeaconBlockHeader receiver",
     "growslice branches and length rejects of this encoder (out of scope)",
@@ -429,7 +429,9 @@
     "kernel-checked: rootdec_seg_z, rootDecSegZKind_of, the two generated Eth1Data segment theorems and their _kind identities, the three E1GenSame theorems",
     "executed: generator tests and regen checks; they show the stated cases only, not general coverage of other compilers or types",
     "the generalisation claim is limited to the tests above; the extension was developed on Eth1Data"
-   ]
+   ],
+   "relation_to_decoder_proof": "the generated Eth1Data segments (GenE1Dec.lean) are related to, not used by, the Eth1Data decoder proof: E1Accept still uses the hand lemmas; E1GenSame.e1_dec_DepositRoot_seg_hand derives the hand rootdec_seg0 conclusion from the generated theorem (review sg1-r1)",
+   "historical_results": "the H1 and H2 results above are pre-extension results under the frozen method 56dfc27 / scalgen blob 78e3339; they are unchanged and are historical; the SG-1 extension is post-hold-out development with Eth1Data in-sample"
   }
  },
  "contamination": {
@@ -457,7 +459,7 @@
  "not_run": [
   "reviewer cold rebuild (S4)",
   "Lean Go-value predicate for the BBH receiver",
-  "BeaconBlockHeader MarshalSSZTo fast path: kernel-checked in the T-9 stream unit; independent review not run yet"
+  "BeaconBlockHeader MarshalSSZTo fast path: kernel-checked in the T-9 stream unit and reviewed (t9-r1 APPROVE on 154944e); fast path only"
  ],
  "session10_checks": {
   "lake_build_E2eScal": "exit 0 (job 374)",
@@ -601,7 +603,7 @@
     "generator_coverage_note": "matcher alone: p2dec_find accepts BlockHash (j1=50 j2=63), rejects DepositRoot: 1 of 2 root fields; generator output: 0 of 2. The inline DepositCount read (directives 47-49) has no template in the method, so the proposed offset-0 variant would cover only the two root segments (directives 13-36, 50-74) (review h2-r1 S2, NF-h2-2)"
    },
    "eth1data_encoder (iii)": {
-    "state": "not attempted: same prologue as T-9, budget pending",
+    "state": "not proved: not attempted (same prologue as T-9); the T-9 stream did not cover it; a budget is a user decision",
     "prologue": "lea -0x8(%rsp),%r12; cmp 0x10(%r14),%r12; jbe (directives 2-4 of Eth1Data.MarshalSSZTo), the open T-9 obstruction form; INBOX 023 step 3 says do not attempt",
     "lake_runs": 0,
     "cumulative_gate_s": 0
@@ -618,11 +620,10 @@
    "The Go differential checks Go semantics, not the ELF. A timeout is a timeout (none occurred)."
   ],
   "not_run": [
-   "kindcheck.py (no generated theorem)",
+   "kindcheck.py at H2 time (no generated theorem; historical). After the SG-1 extension kindcheck.py passes GenE1Dec.lean (development data, not a hold-out run; units sg1-extension)",
    "cold build of E2eScal",
-   "reviewer cold rebuild",
    "Lean Go-value predicate for the Eth1Data receiver",
-   "Eth1Data MarshalSSZTo fast path (not attempted, T-9 prologue)"
+   "Eth1Data MarshalSSZTo: not proved (not attempted; T-9 prologue; the T-9 stream did not cover it)"
   ],
   "contamination": {
    "generator_changes_after_opening": 0,
@@ -643,6 +644,43 @@
     "e1-rc-stmt-size",
     "e1-witr-stmt-len"
    ]
-  }
+  },
+  "not_run_note": "h2-r2 N2: 'reviewer cold rebuild' removed: the h2-r1 reviewer rebuilt the ten new modules cold (exit 0, 25.5 s, n = 1), REPORT.md section 11",
+  "n1_note": "h2-r2 N1: case e1-rc-stmt-size had seconds = -0.7 (invalid). Rerun in session 15 (gate job 490): inside, first error mut.lean:120:64 (same position), 0.9 s; negative-h2.json 27/27"
+ },
+ "integration_s15": {
+  "what": "merge of the T9 stream (154944e, review t9-r1 APPROVE) and the SG1 stream (da3f233, review sg1-r1 APPROVE) into claude/ssz-fv-prysm-e2e; integration only: no new proof, no generator change",
+  "merges": [
+   "e56063c (T9, --no-ff)",
+   "63ef3b9 (SG1, --no-ff)"
+  ],
+  "byte_identity": "by program: 26 paths changed by one stream are byte-identical to that stream's blob; 6 paths changed by both (AxiomsScal.lean, README.md, FINDINGS.md, axioms-gate.json, CONTAMINATION.md, RESULT.json) are merged by keeping both sides; axioms-gate.json is regenerated by command",
+  "executed": {
+   "lake build E2eScal": "exit 0, 742 jobs, 10 new modules built (gate job 435)",
+   "lake build --no-build E2e E2eAd E2eScal": "exit 0 (jobs 436 and 493)",
+   "axioms gate": "PASS, 3483 declarations, 2923 theorems, hand list 204, non-standard 0, sorryAx 0 (job 437)",
+   "decl three-way": "merged 3483 = base 3303 + T9 161 + SG1 19; 0 CHANGED, 0 missing, 0 extra; every row equals its row in its stream dump. Base dump = job 430 (9df1fb2, = SG1 base dump byte for byte), T9 dump = T9 job 70, SG1 dump = SG1 job 15. Planted controls (changed hash, missing row, extra row) each exit 1",
+   "regen_check.sh": "SAME for all 6 gen.sh commands (jobs 438 and 491)",
+   "kindcheck.py": "selftest 23 cases PASS; 6 generated files PASS; 15 generator-written PARTIAL OUTPUT files of the sg1-r1 reviewer FAIL with the partial reason (the old checker passed them); a copy with the new check disabled fails the selftest",
+   "p2dec_test.py": "10/10 (job 492)",
+   "negatives T9": "36/36 rerun, one gated job per case (jobs 439-474): class and first-error position equal to negative-t9.json at 154944e",
+   "negatives SG1": "7/7 rerun (jobs 475-481): class and first-error position equal to negative-sg1.json at da3f233",
+   "negatives new (sg1-r1 S3)": "8 cases (jobs 482-489): 2 controls pass, 6 inside; the 5 reviewer cases fail at the reviewer's first-error positions; negative-sg1.json 15/15",
+   "negative h2-r2 N1": "job 490 (see H2.n1_note)"
+  },
+  "gate": {
+   "jobs": 59,
+   "wrapper_s_including_gate_waits": 459,
+   "peak_process_rss_gib": 3.77,
+   "memcap_kills": 0
+  },
+  "not_run": [
+   "cold build of the whole E2eScal library",
+   "link check rerun (no .S or link input change)",
+   "Go differential rerun (no Go change)",
+   "skill selftest.sh (no change to the skill scripts)",
+   "go test ./ssz/ ./sszgen/... ./fv/kraken/semtest/ (no Go change)",
+   "independent review of the integration"
+  ]
  }
 }

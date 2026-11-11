@@ -18,7 +18,9 @@
 
 1c(phase1c, 생성기와 Prysm 목록)는 10절이다. 게이트 1c 미통과.
 prysm-e2e 스트림은 11절이다. 확장성 홀드아웃 H1(ValidatorIndex, BeaconBlockHeader)과 H2(Eth1Data)의 결과는 `prysm/go1.26.10/e2e/scal/RESULT.json`에 있다(11절 끝 문단).
-H2에서 생성기는 루트 필드 2개 중 0개를 덮었다(SG-1). 디코더는 손으로 증명했다.
+H2에서 고정 생성기는 루트 필드 2개 중 0개를 덮었다(SG-1). 이것은 확장 전의 역사적 결과다. 디코더는 손으로 증명했다.
+SG-1 확장은 두 홀드아웃을 연 뒤의 개발 작업이다. 그 확장에서 Eth1Data는 표본 안 자료다(11절).
+BeaconBlockHeader 인코더는 빠른 경로만 증명했다. `Eth1Data.MarshalSSZTo`는 증명하지 않았다(11절).
 
 수치(수정 3 끝, 차가운 프로젝트 빌드 뒤):
 
@@ -326,19 +328,27 @@ growslice 뒤의 거부(`cap < len + 8`, `len(Root) ≠ 32`)는 `cp_e2e_marshal_
 홀드아웃 H1(확장성 S3, 방법 고정 `56dfc27`, 연 시각 2026-11-10T17:53:24Z): 결과, 비용, 한계는 `prysm/go1.26.10/e2e/scal/RESULT.json`에 있다.
 오염 기록은 `scal/CONTAMINATION.md`, 연 기록은 `scal/HOLDOUT-OPENED`다.
 증명한 것: ValidatorIndex 디코더 수용과 길이 거부, BeaconBlockHeader 디코더 수용·크기 거부·명세 정렬·오류 감싸기 두 곳의 도달 불가.
-BeaconBlockHeader 인코더 빠른 경로는 T-9 스트림(브랜치 `claude/ssz-fv-t9-fable`)에서 커널 검사를 통과했다. 독립 리뷰는 아직 없다.
+세션 10과 11의 시도 9회(세션 10에서 3회, 세션 11에서 6회)는 이 인코더를 닫지 못했다(FINDINGS T-9, HISTORY).
+BeaconBlockHeader 인코더는 **빠른 경로만** 증명했다. T-9 스트림(브랜치 `claude/ssz-fv-t9-fable`)에서 커널 검사를 통과했다.
+리뷰 t9-r1이 `154944e`를 승인했다. 세션 15가 이 브랜치에 병합했다(병합 커밋 `e56063c`).
 정리는 `E2eScal.Bh.bh_e2e_marshal_main`이다. 문장 꼴은 `cp_e2e_marshal_main`과 같다.
 범위는 빠른 경로뿐이다: `len(dst) + 112 ≤ cap(dst)`이고 세 루트의 길이가 32다.
-growslice 분기와 길이 거부 세 곳은 증명하지 않았다. "BeaconBlockHeader 인코더 완전"을 주장하지 않는다.
-T-9의 원인은 스택 가드 분기를 `simp`와 `omega`로 닫은 증명 항이다. 이 항은 리터럴 2^64 − 32의 `Int` 산술을 담는다. 커널이 이 항을 검사할 때 메모리가 넘쳤다.
+증명하지 않은 것: growslice 분기, 길이 거부 세 곳, morestack 경로.
+T-7은 미뤘다. `GrowsliceC`는 그대로다. "BeaconBlockHeader 인코더 완전"을 주장하지 않는다.
+T-9의 원인: 스택 가드 분기를 `simp`와 `omega`로 닫은 증명은 5 GiB 한도 아래에서 커널 검사에 실패한다.
+비용이 큰 부분 항은 프로파일하지 않았다.
+`simp` 뒤의 가설에는 리터럴 2^64 − 32의 `Int` 산술이 있다. 이 리터럴이 원인이라는 것은 추론이다.
 기계 문맥이 없는 `BitVec` 재현에서 같은 실패를 확인했다(FINDINGS T-9).
-해결은 보조정리 `E2eScal.lea_cmp_be_false`다. `N`에 대해 한 번 적었고 `Fk.cmp_be_false`를 그대로 쓴다. `maxHeartbeats`는 올리지 않았다.
-증거: 증인 `WitBhM`(Go 값인 수신자, 접두사 둘), 명세 정렬 `bh_e2e_marshal_spec_k`, 부정 시험 36건(대조 9 통과, 변이 27 정리 안 실패), Go 차분 21/21(빠른 경로 9건), 공리 게이트 PASS(선언 3464개, 표준 공리만).
-기준 덤프 대비 선언 차이는 ADDED 161, CHANGED 0, REMOVED 0이다. 기준 덤프는 리뷰 h2-r1이 `9df1fb2`에서 만든 것이다. `9df1fb2`와 기준 `48b74b6` 사이에 Lean과 링크 입력의 차이는 없다.
-실행하지 않은 것: 링크 검사 재실행(기존 묶음 `140eb7bd…`을 쓴다), `E2eScal` 콜드 빌드, 리뷰어 콜드 재빌드, 수신자의 Lean Go 값 술어.
+해결은 보조정리 `E2eScal.lea_cmp_be_false`다. `N`에 대해 한 번 적었고 `Fk.cmp_be_false`를 그대로 쓴다.
+`maxHeartbeats`는 올리지 않았다.
+증거: 증인 `WitBhM`(Go 값인 수신자, 접두사 둘), 명세 정렬 `bh_e2e_marshal_spec_k`, 부정 시험 36건(대조 9 통과, 변이 27 정리 안 실패).
+Go 차분 21/21(빠른 경로 9건)은 linux/arm64 호스트에서 돌렸다. Go 의미론만 보고 amd64 기계어는 실행하지 않았다.
+스트림 기준 덤프 대비 선언 차이는 ADDED 161, CHANGED 0, REMOVED 0이다. 기준 덤프는 리뷰 h2-r1의 `9df1fb2` 덤프다.
+실행하지 않은 것: 링크 검사 재실행(기존 묶음 `140eb7bd…`을 쓴다), `E2eScal` 전체 콜드 빌드, 수신자의 Lean Go 값 술어.
 비용과 한계는 `scal/RESULT.json`의 `beacon_block_header_encoder_t9`에 있다.
 임시 결과는 `#print axioms` 출력에 `sorryAx`와 자기 이름이 없을 때만 닫힌 것이다(FINDINGS P-1).
 
+아래 H2 결과와 위의 H1 결과는 SG-1 확장 전의 결과다. 바뀌지 않았고 역사적 결과로 둔다.
 홀드아웃 H2(`v1alpha1.Eth1Data`의 `UnmarshalSSZ`와 `MarshalSSZTo`)는 열렸다. 방법 고정은 H1과 같은 `56dfc27`이다.
 연 기록은 커밋 `7a5ea61`(2026-11-11T01:59:11Z)이다. 결과, 비용, 한계는 `scal/RESULT.json`의 `H2`에 있다.
 생성기 결과(실행 검사): 고정 `scalgen.py p2dec`를 한 번 돌렸다(작업 393).
@@ -346,7 +356,7 @@ T-9의 원인은 스택 가드 분기를 `simp`와 `omega`로 닫은 증명 항�
 원인: DepositRoot는 원본 오프셋 0에서 읽는다. 그래서 코드에 `add $src,%rbx`가 없다.
 고정 템플릿 `rootDecMid`는 이 지시어를 요구한다. 생성기는 첫 필드에서 멈추고 BlockHash도 내지 않는다.
 분류: scal 생성기 템플릿의 적용 범위 공백이다. `sszgen/`이나 생성된 Go의 결함이 아니다. 생성기는 거부했고 틀린 출력은 없다.
-오프셋 0 변형 템플릿은 제안만 했고 하지 않았다. 방법 변경이라서 사용자 승인이 필요하다.
+H2 당시(역사적): 오프셋 0 변형 템플릿은 제안만 했다. 그 뒤 SG-1 스트림이 사용자 지시로 확장했다(아래 SG-1 문단).
 디코더(커널 검사, 손 증명): 머리 `e1_e2e_head`, 수용 `e1_e2e_accept_main`, 크기 거부 `e1_e2e_reject_size_main`을 증명했다.
 명세 정렬 `e1_e2e_accept_spec_k`, `e1_e2e_reject_size_spec`, `e1_e2e_reject_complete`도 증명했다.
 독립 손 Desc와 검사기 Desc의 코덱 동등은 `prysmE1Desc_serialize_checker`, `prysmE1Desc_deserialize_checker`다.
@@ -355,9 +365,9 @@ T-9의 원인은 스택 가드 분기를 `simp`와 `omega`로 닫은 증명 항�
 공리는 표준만이다(작업 430, 선언 3303개, `sorryAx` 0개).
 실행 검사: 링크 검사 PASS(작업 392), 부정 시험 27/27(`scal/negative-h2.json`), Go 차분 6/6.
 Go 차분은 arm64에서 돌렸다. Go 의미론을 보고 ELF를 보지 않는다.
-실행하지 않은 것: `kindcheck.py`(검사할 생성 정리가 없음), 작성 세션의 차가운 빌드.
+H2 당시 실행하지 않은 것: `kindcheck.py`(검사할 생성 정리가 없음), 작성 세션의 차가운 빌드.
 증명하지 않은 것: Eth1Data 수신자의 Lean Go 값 술어.
-인코더 `MarshalSSZTo`는 시도하지 않았다. 스택 가드가 `lea -0x8(%rsp),%r12; cmp 0x10(%r14),%r12; jbe` 꼴이다.
+인코더 `Eth1Data.MarshalSSZTo`는 증명하지 않았다. 시도하지 않았다. 스택 가드가 `lea -0x8(%rsp),%r12; cmp 0x10(%r14),%r12; jbe` 꼴이다.
 이것은 T-9와 같은 머리다. T-9 스트림은 이 인코더를 다루지 않았다.
 리뷰한 주장(리뷰 h2-r1): 리뷰어가 새 모듈 10개를 차갑게 다시 빌드했다(종료 0, 25.5초, n = 1).
 리뷰어의 측정: 손 파일의 비지 않은 줄 1064개 중 549개(52%)가 H1·P2Dec 소스 줄의 복사다.
@@ -370,6 +380,31 @@ H2의 한계:
 4. `SizeSSZ`는 뺐다(AU-09). 그 코드, IR, 생성 Go는 이미 저장소에 있었고 phase1c에서 증명됐다.
 5. 인코드 모드는 없다. 인코더는 시도하지 않았다. AU-07은 열려 있다.
 6. 이 결과는 생성기 적용 범위에 대한 부정 결과다. 디코더에 대한 부정 결과가 아니다.
+7. 시간 초과는 시간 초과다. 통과가 아니다. H2에서 시간 초과는 없었다.
+8. `_kind` 동일성은 비공허성 증인이 아니다.
+
+SG-1 확장(브랜치 `claude/ssz-fv-sg1`; 리뷰 sg1-r1이 `da3f233`을 승인했고 세션 15가 병합했다):
+이것은 두 홀드아웃을 연 뒤의 개발 작업이다. 홀드아웃 결과가 아니다.
+Eth1Data는 이 확장의 개발 자료다. 그래서 확장에서 Eth1Data는 표본 안이다.
+새 템플릿 보조정리 `rootdec_seg_z`와 종류 `rootDecSegZKind`를 더했다(`P2DecZ.lean`, `KindZ.lean`).
+`scalgen.py p2dec`는 이제 오프셋 0 꼴도 받는다.
+확장된 생성기는 Eth1Data 루트 필드 2개 중 2개를 낸다(`GenE1Dec.lean`, 손대지 않은 출력, 공리 표준).
+생성된 Eth1Data 구간은 디코더 증명과 관련만 있다. 디코더 증명은 이 구간을 쓰지 않는다.
+`E1Accept`는 손 보조정리를 쓴다. `E1GenSame.e1_dec_DepositRoot_seg_hand`가 생성 정리에서 손 결론을 유도한다(커널 검사).
+DepositCount의 인라인 읽기에는 여전히 템플릿이 없다.
+`kindcheck.py`는 `PARTIAL OUTPUT` 머리가 있는 파일을 거부한다(리뷰 sg1-r1 S2, 세션 15).
+기록: `scal/CONTAMINATION.md` 8절, `scal/RESULT.json`의 `sg1-extension`, FINDINGS SG-1.
+
+병합 검사(세션 15, 실행 검사; 병합 `63ef3b9` 위, gate와 6 GiB 상한 안):
+`lake build E2eScal` 종료 0(작업 435). `lake build --no-build E2e E2eAd E2eScal` 종료 0(작업 436, 493).
+공리 게이트 PASS: 선언 3483개, 정리 2923개, 비표준 공리 0, `sorryAx` 0(작업 437).
+선언 비교: 병합 3483 = 기준 3303 + T9 161 + SG1 19이다. CHANGED 0이다.
+모든 행의 형 해시와 공리 집합은 그 스트림 덤프의 행과 같다. 심은 변경 대조 3건은 모두 잡혔다.
+`regen_check.sh`: `gen.sh` 명령 6개 모두 SAME(작업 438, 491). `p2dec_test.py` 10/10(작업 492).
+`kindcheck.py`: 생성 파일 6개 PASS, 자기 시험 23건 PASS.
+부정 시험 재실행: T9 36/36, SG1 7/7. 분류와 첫 오류 위치가 스트림 결과와 같다(작업 439–481).
+새 SG1 사례 8건: 대조 2 통과, 변이 6 정리 안 실패(작업 482–489).
+실행하지 않은 것: `E2eScal` 전체 콜드 빌드, 링크 검사, Go 차분, Go 시험(Go와 링크 입력 변경 없음). 통합의 독립 리뷰.
 
 조건:
 
@@ -487,4 +522,9 @@ python3 -I -B fv/kraken/gen/e2e/differential.py check <c.json> <o.json> prysm/go
 python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/scal/negcases-t9.json <work> prysm/go1.26.10/e2e/scal/negative-t9.json <case-id>   # 사례마다 gate 작업 하나
 python3 -I -B fv/kraken/gen/e2e/bhmdiff.py cases <c.json>; go run -overlay <overlay.json> ./fve2e/bhmcheck < <c.json> > <o.json>   # Prysm 임시 트리, Go 1.26.10; overlay가 bh/bhmcheck-main.go.txt를 main.go로 준다
 python3 -I -B fv/kraken/gen/e2e/bhmdiff.py check <c.json> <o.json> prysm/go1.26.10/e2e/bh/differential-enc.json
+# SG-1 확장: 모듈 P2DecZ KindZ GenE1Dec E1GenSame (lake build E2eScal.<모듈>)
+(cd fv/kraken && sh ../../.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh <file> -- sh -c "<gen/scal/gen.sh의 그 명령> > $REGEN_OUT")   # gen.sh 명령마다
+python3 -I -B fv/kraken/gen/scal/kindcheck.py --selftest; python3 -I -B fv/kraken/gen/scal/kindcheck.py fv/kraken/lean/E2eScal/Gen*.lean
+python3 -I -B fv/kraken/gen/scal/p2dec_test.py <work> <result.json>   # 생성기 시험, gate 작업 하나
+python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/scal/negcases-sg1.json <work> prysm/go1.26.10/e2e/scal/negative-sg1.json <case-id>   # 사례마다 gate 작업 하나
 ```

@@ -145,3 +145,11 @@
 - 더한 증거 파일: `gen/scal/negcases-t9.json`, `scal/negative-t9.json`, `gen/e2e/bhmdiff.py`, `bh/bhmcheck-main.go.txt`, `bh/differential-enc*.json`.
 - `AxiomsScal.lean`에 이름 11개를 더했다. `axioms-gate.json`을 현재 트리의 출력으로 바꿨다.
 - 제안(하지 않음): 인코드 템플릿을 이 세 루트 블록 꼴에 맞추는 변경. `scalgen.py`와 `Kind.lean`은 그대로다.
+
+## 10. 세션 15 통합 (INBOX 027) — 열린 뒤
+
+- T9 스트림과 SG1 스트림을 이 브랜치에 병합했다. 새 증명, 생성기 변경, 템플릿 변경은 없다.
+- 두 스트림이 모두 이 파일에 8절을 더했다. SG-1 Lean 주석이 8절을 가리키므로 SG-1이 8절이다. T-9는 9절이 됐다.
+- `kindcheck.py`를 바꿨다(리뷰 sg1-r1 S2). `PARTIAL OUTPUT` 머리가 있는 파일을 거부한다. 읽는 쪽 검사기의 변경이다.
+- 이 변경은 생성기 출력, 종류, 보조정리를 바꾸지 않는다. 기존 생성 파일 6개는 그대로 PASS다.
+- `gen/scal/negcases-sg1.json`에 사례 8건을 더했다(리뷰 sg1-r1 S3). `rootdec_seg_z`와 BlockHash 구간을 겨눈다.
