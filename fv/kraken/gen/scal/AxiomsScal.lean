@@ -18,6 +18,10 @@ import E2eScal.WitE1A
 import E2eScal.WitE1R
 import E2eScal.BhSpecM
 import E2eScal.WitBhM
+import E2eScal.P2DecZ
+import E2eScal.KindZ
+import E2eScal.GenE1Dec
+import E2eScal.E1GenSame
 
 -- prysm-e2e scalability stage S1-S2 (INBOX 011): the segment lemmas, the in-sample re-derivations, the
 -- statement-identity checks and the generated instances. Checked with gen/e2e/axioms.py <log> <out> <this file>.
@@ -106,3 +110,13 @@ import E2eScal.WitBhM
 #print axioms E2eScal.Bh.bh_e2e_marshal_spec_k
 #print axioms E2eScal.WitBhM.bhm_runs_empty
 #print axioms E2eScal.WitBhM.bhm_runs_prefix
+-- SG-1 extension (offset-0 form; after both hold-outs were opened, Eth1Data = development data)
+#print axioms E2eScal.rootdec_seg_z
+#print axioms E2eScal.rootDecSegZKind_of
+#print axioms E2eScal.Gen.e1_dec_DepositRoot_seg
+#print axioms E2eScal.Gen.e1_dec_DepositRoot_seg_kind
+#print axioms E2eScal.Gen.e1_dec_BlockHash_seg
+#print axioms E2eScal.Gen.e1_dec_BlockHash_seg_kind
+#print axioms E2eScal.E1Gen.rootDecMidZ_eq_hand
+#print axioms E2eScal.E1Gen.rootdec_seg_z_stmt_eq_hand
+#print axioms E2eScal.E1Gen.e1_dec_DepositRoot_seg_hand

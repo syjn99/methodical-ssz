@@ -391,6 +391,45 @@
     "stale_olean.py (lake build --no-build used instead)",
     "kindcheck.py (no generated theorem)"
    ]
+  },
+  "sg1-extension (development, not hold-out)": {
+   "what": "scalgen p2dec offset-0 form (32-byte field whose memmove source is the buffer pointer, no add $src,%rbx) + template lemma E2eScal.rootdec_seg_z + kind E2eScal.rootDecSegZKind (FINDINGS SG-1)",
+   "when": "2026-11-11, after both hold-outs were opened; base 48b74b63c4819ffa30c3c3748d360ca30f7d98d1",
+   "status_of_data": "Eth1Data is development data for this extension (CONTAMINATION.md section 8); no hold-out claim; no new hold-out type named or opened",
+   "historical_pre_extension": "frozen generator blob 78e3339 on Eth1Data: exit 2, 0 of 2 fields (a9918d4, approved 48b74b6); unchanged and reproduced by gen/scal/p2dec_test.py (case old-gen)",
+   "new_lean_files": {
+    "lean/E2eScal/P2DecZ.lean": "rootDecMidZ, rootdec_seg_z (text of E1Seg0.rootdec_seg0 with the names changed)",
+    "lean/E2eScal/KindZ.lean": "rootDecSegZKind, rootDecSegZKind_of",
+    "lean/E2eScal/GenE1Dec.lean": "raw generator output (e1_dec_DepositRoot_seg offset-0 form, e1_dec_BlockHash_seg add form, both _kind)",
+    "lean/E2eScal/E1GenSame.lean": "rootDecMidZ_eq_hand, rootdec_seg_z_stmt_eq_hand (rfl), e1_dec_DepositRoot_seg_hand (generated theorem gives the hand rootdec_seg0 conclusion)"
+   },
+   "generated": [
+    "E2eScal.Gen.e1_dec_DepositRoot_seg",
+    "E2eScal.Gen.e1_dec_BlockHash_seg"
+   ],
+   "generator_coverage_eth1data": "2 of 2 root fields (DepositCount has no template)",
+   "raw_to_accepted_diff_lines": {
+    "lean/E2eScal/GenE1Dec.lean": 0
+   },
+   "regression": "regen_check.sh SAME for GenCi, GenAdDec, GenCpDec, GenVi, GenBhDec, GenE1Dec (gate jobs sg1/02 and, on the final scalgen.py, sg1/16; two runs each)",
+   "generator_tests": "scal/sg1-gen-test.json: 10/10 as expected (job sg1/05; same result on the final scalgen.py, job sg1/17; job sg1/04 failed 4/10 on a test-driver parse bug)",
+   "negatives": "scal/negative-sg1.json: 7/7 (1 control, 6 inside; jobs sg1/06-12, one per case)",
+   "kindcheck": "selftest 21 cases PASS; 6 generated files PASS; degenerate GenE1Dec copy FAIL (not gated: pure Python)",
+   "axioms": "standard (job sg1/15, 3322 declarations, hand list 193); decl_drift vs base dump (job sg1/01): 19 ADDED only (scal/sg1-drift.txt); planted-change control on a copy of the head dump reports CHANGED",
+   "jobs": 17,
+   "lake_runs": 2,
+   "failed_lake_runs": 0,
+   "failed_jobs": 1,
+   "cumulative_gate_s": "see stream record; 145.6 s for jobs 01-15, jobs 16-17 below 1 s each",
+   "cumulative_gate_s_note": "sum of gate end_mono - start_mono over the 15 sg1 jobs; 126 s of them are the two axioms-gate dumps",
+   "peak_rss_gib": 3.75,
+   "memcap_kills": 0,
+   "maxHeartbeats": "4 M in rootdec_seg_z (copied from rootdec_seg0); 16 M in the generated theorems (generator text, as GenBhDec); no raise",
+   "claims_and_limits": [
+    "kernel-checked: rootdec_seg_z, rootDecSegZKind_of, the two generated Eth1Data segment theorems and their _kind identities, the three E1GenSame theorems",
+    "executed: generator tests and regen checks; they show the stated cases only, not general coverage of other compilers or types",
+    "the generalisation claim is limited to the tests above; the extension was developed on Eth1Data"
+   ]
   }
  },
  "contamination": {

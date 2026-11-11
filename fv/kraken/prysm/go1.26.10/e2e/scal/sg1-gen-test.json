@@ -1,0 +1,148 @@
+{
+ "cases": [
+  {
+   "id": "old-gen",
+   "expect": "exit 2, 0 bytes, stderr = record",
+   "exit": 2,
+   "stdout_bytes": 0,
+   "stderr": "scalgen p2dec: no template match: directive 30: `mov $0x20,%ecx` is not add $src,%rbx (/add \\$(0x[0-9a-f]+),%rbx/)",
+   "ok": true
+  },
+  {
+   "id": "new-gen",
+   "expect": "exit 0 twice, identical, = committed GenE1Dec.lean",
+   "exit": [
+    0,
+    0
+   ],
+   "stdout_bytes": 8442,
+   "deterministic": true,
+   "equals_committed": true,
+   "theorems": [
+    "e1_dec_DepositRoot_seg",
+    "e1_dec_DepositRoot_seg_kind",
+    "e1_dec_BlockHash_seg",
+    "e1_dec_BlockHash_seg_kind"
+   ],
+   "ok": true
+  },
+  {
+   "id": "m-len",
+   "what": "wrong length: memmove count 0x10 in the offset-0 DepositRoot block",
+   "expect": "exit 3, 0 bytes, MATCH ['BlockHash']",
+   "exit": 3,
+   "stdout_bytes": 0,
+   "matched": [
+    "BlockHash"
+   ],
+   "stderr": [
+    "scalgen p2dec: field DepositRoot: NO MATCH: directive 30: `mov $0x10,%ecx` is neither add $src,%rbx nor mov $0x20,%ecx (offset-0 form)",
+    "scalgen p2dec: field BlockHash: MATCH form add, directives 50\u201374",
+    "scalgen p2dec: incomplete: nothing on stdout (exit 3)"
+   ],
+   "ok": true
+  },
+  {
+   "id": "m-nomemmove",
+   "what": "missing memmove: the DepositRoot memmove call removed",
+   "expect": "exit 3, 0 bytes, MATCH ['BlockHash']",
+   "exit": 3,
+   "stdout_bytes": 0,
+   "matched": [
+    "BlockHash"
+   ],
+   "stderr": [
+    "scalgen p2dec: field DepositRoot: NO MATCH: directive 31: `mov 0x30(%rsp),%rdx` is not callq runtime.memmove (/callq runtime\\.memmove/)",
+    "scalgen p2dec: field BlockHash: MATCH form add, directives 49\u201373",
+    "scalgen p2dec: incomplete: nothing on stdout (exit 3)"
+   ],
+   "ok": true
+  },
+  {
+   "id": "m-addreg",
+   "what": "an add with a different register: BlockHash `add $0x28,%rsi`",
+   "expect": "exit 3, 0 bytes, MATCH ['DepositRoot']",
+   "exit": 3,
+   "stdout_bytes": 0,
+   "matched": [
+    "DepositRoot"
+   ],
+   "stderr": [
+    "scalgen p2dec: field DepositRoot: MATCH form zero, directives 13\u201336",
+    "scalgen p2dec: field BlockHash: NO MATCH: directive 67: `add $0x28,%rsi` is neither add $src,%rbx nor mov $0x20,%ecx (offset-0 form)",
+    "scalgen p2dec: incomplete: nothing on stdout (exit 3)"
+   ],
+   "ok": true
+  },
+  {
+   "id": "m-z-dest",
+   "what": "offset-0 form with a wrong destination: DepositRoot pointer stored at 0x10(%rdx)",
+   "expect": "exit 3, 0 bytes, MATCH ['BlockHash']",
+   "exit": 3,
+   "stdout_bytes": 0,
+   "matched": [
+    "BlockHash"
+   ],
+   "stderr": [
+    "scalgen p2dec: field DepositRoot: NO MATCH: directive 28: pointer at 0x10, IR field offset 0x8",
+    "scalgen p2dec: field BlockHash: MATCH form add, directives 50\u201374",
+    "scalgen p2dec: incomplete: nothing on stdout (exit 3)"
+   ],
+   "ok": true
+  },
+  {
+   "id": "m-z-nonzero",
+   "what": "offset-0 form at SSZ offset 40: the BlockHash add removed",
+   "expect": "exit 3, 0 bytes, MATCH ['DepositRoot']",
+   "exit": 3,
+   "stdout_bytes": 0,
+   "matched": [
+    "DepositRoot"
+   ],
+   "stderr": [
+    "scalgen p2dec: field DepositRoot: MATCH form zero, directives 13\u201336",
+    "scalgen p2dec: field BlockHash: NO MATCH: directive 67: no `add $src,%rbx` (source offset 0), IR SSZ offset 0x28",
+    "scalgen p2dec: incomplete: nothing on stdout (exit 3)"
+   ],
+   "ok": true
+  },
+  {
+   "id": "m-both",
+   "what": "both fields broken: DepositRoot length and the BlockHash add register",
+   "expect": "exit 2, 0 bytes",
+   "exit": 2,
+   "stdout_bytes": 0,
+   "matched": [],
+   "stderr": [
+    "scalgen p2dec: no template match: field DepositRoot: NO MATCH: directive 30: `mov $0x10,%ecx` is neither add $src,%rbx nor mov $0x20,%ecx (offset-0 form); field BlockHash: NO MATCH: directive 67: `add $0x28,%rsi` is neither add $src,%rbx nor mov $0x20,%ecx (offset-0 form)"
+   ],
+   "ok": true
+  },
+  {
+   "id": "m-z-srcreg",
+   "what": "offset-0 form with the buffer reloaded into rsi (not the memmove source register)",
+   "expect": "exit 3, 0 bytes, MATCH ['BlockHash']",
+   "exit": 3,
+   "stdout_bytes": 0,
+   "matched": [
+    "BlockHash"
+   ],
+   "stderr": [
+    "scalgen p2dec: field DepositRoot: NO MATCH: directive 29: `mov 0x38(%rsp),%rsi` is not the buffer reload (/mov (0x[0-9a-f]+)\\(%rsp\\),%rbx/)",
+    "scalgen p2dec: field BlockHash: MATCH form add, directives 50\u201374",
+    "scalgen p2dec: incomplete: nothing on stdout (exit 3)"
+   ],
+   "ok": true
+  },
+  {
+   "id": "partial",
+   "expect": "exit 3, 0 bytes on stdout, --partial-out file marked PARTIAL, DepositRoot only",
+   "exit": 3,
+   "stdout_bytes": 0,
+   "partial_first_line": "/-! PARTIAL OUTPUT (scalgen exit 3): 1 of 2 32-byte fields of `v1alpha1.Eth1Data`; NOT generated: BlockHash. Not a complete p2dec output. -/",
+   "ok": true
+  }
+ ],
+ "passed": 10,
+ "total": 10
+}
