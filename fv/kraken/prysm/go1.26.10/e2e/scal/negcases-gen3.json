@@ -1,0 +1,298 @@
+[
+ {
+  "id": "g3-calldec-control",
+  "module": "E2eScal/CallDec.lean",
+  "theorem": "calldec_seg",
+  "kind": "control"
+ },
+ {
+  "id": "g3-calldec-stmt-dst",
+  "module": "E2eScal/CallDec.lean",
+  "theorem": "calldec_seg",
+  "kind": "stmt",
+  "old": "⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem",
+  "new": "⋆ Eq (e8.At src) ⋆ Eq (c0.At dst) ⋆ F) st.data.dmem"
+ },
+ {
+  "id": "g3-calldec-stmt-guard",
+  "module": "E2eScal/CallDec.lean",
+  "theorem": "calldec_seg",
+  "kind": "stmt",
+  "old": "(hguard : guard.toNat < aRet.toNat)",
+  "new": "(hguard : guard.toNat < sp.toNat)"
+ },
+ {
+  "id": "g3-calldec-stmt-rax",
+  "module": "E2eScal/CallDec.lean",
+  "theorem": "calldec_seg",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
+  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
+ },
+ {
+  "id": "g3-calldec-stmt-spec",
+  "module": "E2eScal/CallDec.lean",
+  "theorem": "calldec_seg",
+  "kind": "stmt",
+  "old": "(hC : U64CalleeAcc fn)",
+  "new": "(hC : U64CalleeAcc lok)"
+ },
+ {
+  "id": "g3-first-control",
+  "module": "E2eScal/CallDec.lean",
+  "theorem": "callarg_first_seg",
+  "kind": "control"
+ },
+ {
+  "id": "g3-first-stmt-rcx",
+  "module": "E2eScal/CallDec.lean",
+  "theorem": "callarg_first_seg",
+  "kind": "stmt",
+  "old": "st.data.regs.rcx = 8 ∧",
+  "new": "st.data.regs.rcx = 9 ∧"
+ },
+ {
+  "id": "g3-reload-stmt-src",
+  "module": "E2eScal/CallDec.lean",
+  "theorem": "callarg_reload_seg",
+  "kind": "stmt",
+  "old": "st.data.regs.rbx.toBitVec = aSrc",
+  "new": "st.data.regs.rbx.toBitVec = bf"
+ },
+ {
+  "id": "g3-lea-stmt-rsi",
+  "module": "E2eScal/CallDec.lean",
+  "theorem": "callarg_lea_seg",
+  "kind": "stmt",
+  "old": "st.data.regs.rsi.toBitVec = aF",
+  "new": "st.data.regs.rsi.toBitVec = rcv"
+ },
+ {
+  "id": "g3-mov-stmt-swap",
+  "module": "E2eScal/CallDec.lean",
+  "theorem": "callarg_mov_seg",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = s.regs.rsi ∧ st.data.regs.rbx = s.regs.rdx",
+  "new": "st.data.regs.rax = s.regs.rdx ∧ st.data.regs.rbx = s.regs.rsi"
+ },
+ {
+  "id": "g3-u64rr-control",
+  "module": "E2eScal/U64RR.lean",
+  "theorem": "u64dec_rr_seg",
+  "kind": "control"
+ },
+ {
+  "id": "g3-u64rr-stmt-reg",
+  "module": "E2eScal/U64RR.lean",
+  "theorem": "u64dec_rr_seg",
+  "kind": "stmt",
+  "old": "(hX : U64RRReg rX)",
+  "new": "(hX : rX = Reg64.rax ∨ rX = Reg64.rcx)"
+ },
+ {
+  "id": "g3-u64rr-stmt-field",
+  "module": "E2eScal/U64RR.lean",
+  "theorem": "u64dec_rr_seg",
+  "kind": "stmt",
+  "old": "(Eq (v.At aSrc) ⋆ Eq (v.At aF) ⋆ R) st.data.dmem",
+  "new": "(Eq (v.At aSrc) ⋆ Eq (vF.At aF) ⋆ R) st.data.dmem"
+ },
+ {
+  "id": "g3-u64rr-stmt-frame",
+  "module": "E2eScal/U64RR.lean",
+  "theorem": "u64dec_rr_seg",
+  "kind": "stmt",
+  "old": "(∀ r : Reg64, r ≠ rX → st.data.regs.get64 r = s.regs.get64 r)",
+  "new": "(∀ r : Reg64, st.data.regs.get64 r = s.regs.get64 r)"
+ },
+ {
+  "id": "g3-segp-control",
+  "module": "E2eScal/SegNPad.lean",
+  "theorem": "bytesdec_seg_pad",
+  "kind": "control"
+ },
+ {
+  "id": "g3-segp-stmt-heap",
+  "module": "E2eScal/SegNPad.lean",
+  "theorem": "bytesdec_seg_pad",
+  "kind": "stmt",
+  "old": "⋆ Heap (avail - n)",
+  "new": "⋆ Heap avail"
+ },
+ {
+  "id": "g3-segp-stmt-head",
+  "module": "E2eScal/SegNPad.lean",
+  "theorem": "bytesdec_seg_pad",
+  "kind": "stmt",
+  "old": "(hA : (bytesDecHeadPad (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog j1)",
+  "new": "(hA : (bytesDecHead (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog j1)"
+ },
+ {
+  "id": "g3-pwhead-control",
+  "module": "E2eScal/PwAccept.lean",
+  "theorem": "pw_head",
+  "kind": "control"
+ },
+ {
+  "id": "g3-pwhead-stmt-len",
+  "module": "E2eScal/PwAccept.lean",
+  "theorem": "pw_head",
+  "kind": "stmt",
+  "old": "(hlen : s.regs.rcx = 24)",
+  "new": "(hlen : s.regs.rcx = 25)"
+ },
+ {
+  "id": "g3-pwhead-code-control",
+  "module": "E2eScal/PwAccept.lean",
+  "theorem": "pw_head",
+  "kind": "control",
+  "code_def": "PwUnmarshal",
+  "code_ns": "E2eScal.H4Code",
+  "norm": "prysm/go1.26.10/e2e/h4/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
+ },
+ {
+  "id": "g3-pwhead-code-spill",
+  "module": "E2eScal/PwAccept.lean",
+  "theorem": "pw_head",
+  "kind": "code",
+  "line": 13,
+  "old": "  mov %rdi,0x70(%rsp)",
+  "new": "  mov %rdi,0x68(%rsp)",
+  "code_def": "PwUnmarshal",
+  "code_ns": "E2eScal.H4Code",
+  "norm": "prysm/go1.26.10/e2e/h4/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
+ },
+ {
+  "id": "g3-pwepi-code-frame",
+  "module": "E2eScal/PwAccept.lean",
+  "theorem": "pw_epi",
+  "kind": "code",
+  "line": 90,
+  "old": "  add $0x48,%rsp",
+  "new": "  add $0x40,%rsp",
+  "code_def": "PwUnmarshal",
+  "code_ns": "E2eScal.H4Code",
+  "norm": "prysm/go1.26.10/e2e/h4/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
+ },
+ {
+  "id": "g3-pwaccept-control",
+  "module": "E2eScal/PwAccept.lean",
+  "theorem": "pw_e2e_accept_main",
+  "kind": "control"
+ },
+ {
+  "id": "g3-ex-call-control",
+  "module": "E2eScal/Gen3Examples.lean",
+  "theorem": "pw_dec_Index_call",
+  "kind": "control"
+ },
+ {
+  "id": "g3-ex-call-stmt-ret",
+  "module": "E2eScal/Gen3Examples.lean",
+  "theorem": "pw_dec_Index_call",
+  "kind": "stmt",
+  "old": "(Host.addrOf (k + 17 + 1))",
+  "new": "(Host.addrOf (k + 17 + 2))"
+ },
+ {
+  "id": "g3-ex-amt-stmt-off",
+  "module": "E2eScal/Gen3Examples.lean",
+  "theorem": "pw_dec_Amount_seg",
+  "kind": "stmt",
+  "old": "(hF : rcv + (16 : Int64).toBitVec = aF)",
+  "new": "(hF : rcv + (24 : Int64).toBitVec = aF)"
+ },
+ {
+  "id": "g3-ex-amt-code-reg",
+  "module": "E2eScal/Gen3Examples.lean",
+  "theorem": "pw_dec_Amount_seg",
+  "kind": "stmt",
+  "old": "(q := E2eScal.u64DecRR Reg64.r8 8 16)",
+  "new": "(q := E2eScal.u64DecRR Reg64.r9 8 16)"
+ },
+ {
+  "id": "g3-ex-wc-stmt-nopad",
+  "module": "E2eScal/Gen3Examples.lean",
+  "theorem": "dd_dec_WithdrawalCredentials_seg",
+  "kind": "stmt",
+  "old": "(q := E2eScal.bytesDecHeadP true 32",
+  "new": "(q := E2eScal.bytesDecHeadP false 32"
+ },
+ {
+  "id": "g3-bh-control",
+  "module": "E2eScal/BhHeadG3.lean",
+  "theorem": "bh_e2e_head_g3",
+  "kind": "control"
+ },
+ {
+  "id": "g3-bh-stmt-slot",
+  "module": "E2eScal/BhHeadG3.lean",
+  "theorem": "bh_e2e_head_g3",
+  "kind": "stmt",
+  "old": "(Host.addrOf (k + 56)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 112))",
+  "new": "(Host.addrOf (k + 57)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 112))"
+ },
+ {
+  "id": "g3-kindacc-control",
+  "module": "E2eScal/KindAccept.lean",
+  "theorem": "e1_accept_is_kind",
+  "kind": "control"
+ },
+ {
+  "id": "g3-kindacc-stmt-jret",
+  "module": "E2eScal/KindAccept.lean",
+  "theorem": "bi_accept_is_kind",
+  "kind": "stmt",
+  "old": "[.bytes 32, .u64] 32",
+  "new": "[.bytes 32, .u64] 33"
+ },
+ {
+  "id": "g3-kindacc-stmt-order",
+  "module": "E2eScal/KindAccept.lean",
+  "theorem": "dm_accept_is_kind",
+  "kind": "stmt",
+  "old": "[.bytes 48, .bytes 32, .u64] 68",
+  "new": "[.bytes 32, .bytes 48, .u64] 68"
+ },
+ {
+  "id": "g3-kindacc-stmt-state",
+  "module": "E2eScal/KindAccept.lean",
+  "theorem": "e1_accept_is_kind",
+  "kind": "stmt",
+  "old": "E2eScal.E1Code.E1Unmarshal true",
+  "new": "E2eScal.E1Code.E1Unmarshal false"
+ },
+ {
+  "id": "g3-kindacc-stmt-size",
+  "module": "E2eScal/KindAccept.lean",
+  "theorem": "dd_accept_is_kind",
+  "kind": "stmt",
+  "old": ".bytes 96] 106",
+  "new": ".bytes 48] 106"
+ },
+ {
+  "id": "g3-rel-stmt-label",
+  "module": "E2eScal/CallDecRel.lean",
+  "theorem": "slUAccC_eq",
+  "kind": "stmt",
+  "old": "E2eAd.Code.slLabel",
+  "new": "E2eAd.Code.ciLabel"
+ },
+ {
+  "id": "g3-wit-control",
+  "module": "E2eScal/WitPwA.lean",
+  "theorem": "pw_accept_runs",
+  "kind": "control"
+ },
+ {
+  "id": "g3-wit-stmt-guard",
+  "module": "E2eScal/WitPwA.lean",
+  "theorem": "pw_accept_runs",
+  "kind": "stmt",
+  "old": "0 0 (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8)",
+  "new": "0 0x10040 (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8)"
+ }
+]

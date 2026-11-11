@@ -965,6 +965,101 @@
     "open_proposals_note": "S1-S4 are checker-side (generator tooling) changes. Under the H4 protocol they could not be made after the freeze. They stay OPEN proposals, not implemented. Each gap needs a hand edit of a generated file; a byte regeneration (regen_check.sh) shows such an edit",
     "S5_contamination_jobs": "closed by a note: CONTAMINATION.md section 15 cites job numbers 01, 02, 05, 09, 11, 13 of the G2-F and G2-G sessions. Their gate logs are not in the repository. The numbers are labels only; the repository evidence is the committed output and the regen_check.sh result (CONTAMINATION.md section 17)"
    }
+  },
+  "gen3-lemmas (GEN3 unit G3-L, fresh Fable session)": {
+   "state": "not yet reviewed",
+   "base": "6a78c591e8bcd698b7b9313b1c09cb25f3986911",
+   "commits": "b270384 (L1-L3 lemmas, PwAccept), f9db106 (BhHeadG3, WitPwA), 84b1694 (Gen3Examples), 70538f7 (KindAccept, KindAcceptRel), then the records commit",
+   "author": "fresh Fable 5.2 session, direct author; did not write the generator; read the development decoders, the hand proofs, the H4 records and the uncommitted H4 attempt text (Deposit_Data and PendingPartialWithdrawal are development data)",
+   "scope": "new Lean modules only; no existing .lean, gen/scal file, contract, statement, ELF, toolchain or lakefile change; the proof generator is unchanged, so generator coverage is unchanged (SG-3)",
+   "L1": {
+    "modules": "lean/E2eScal/CallDec.lean, CallDecRel.lean, KindCall.lean, PwAccept.lean, WitPwA.lean, BhHeadG3.lean",
+    "call_sites_surveyed": 9,
+    "uint64_overlay_sites": 7,
+    "pointer_callee_sites_out_of_scope": 2,
+    "reusable_part": "E2eScal.calldec_seg: callq fn; test %rax,%rax; je lok + label lok; callee through U64CalleeAcc fn (= SlUAccC / CiUAccC / ViUAccC / EpUAccC by rfl)",
+    "setup_part": "three observed straight-line forms as lemmas: callarg_first_seg (4 sites, pad flag), callarg_reload_seg (2 sites, pad flag), callarg_lea_seg + callarg_mov_seg (1 site); any other form is not covered (partial reuse)",
+    "kinds": [
+     "callDecSegKind",
+     "callArgFirstKind",
+     "callArgReloadKind",
+     "callArgLeaKind",
+     "callArgMovKind"
+    ],
+    "pw_accept": "E2eScal.H4.pw_e2e_accept_main : H4.pw_accept_stmt (statement unchanged)",
+    "pw_witness": "E2eScal.WitPwA.pw_accept_runs (zero, representative, all-0xff inputs; IR go_fields receiver, size 64)",
+    "bh_rederived": "E2eScal.Bh.bh_e2e_head_g3 (both call sites); type identity with Bh.bh_e2e_head by with_reducible rfl",
+    "contract_form": "no new form"
+   },
+   "L2": {
+    "module": "lean/E2eScal/SegNPad.lean",
+    "byte_segments_surveyed": 13,
+    "padding_variants_observed": 1,
+    "lemmas": [
+     "E2eScal.bytesdec_seg_pad",
+     "E2eScal.bytesdec_seg_p"
+    ],
+    "kind": "existing bytesDecSegKind (bytesDecSegKind_of_p)",
+    "relation": "rfl: bytesDecHeadP false = bytesDecHead, bytesDecHeadPad 32 = H4.bytesDecHeadNop, type of bytesdec_seg_p false = type of bytesdec_seg, type of H4.bytes32dec_seg_nop = type of bytesdec_seg_pad 32 _ and of bytesdec_seg_p true 32 _",
+    "not_done": "offset-0 form with a pad (no site); sizes 48 and 96 with a pad are proved but have no site"
+   },
+   "L3": {
+    "modules": "lean/E2eScal/U64RR.lean (kind in KindCall.lean)",
+    "lemmas": [
+     "E2eScal.u64dec_rr_seg"
+    ],
+    "kind": "u64DecRRSegKind",
+    "sites": 1,
+    "registers": "bases rbx / rax fixed; scratch register over 11 registers, r8 observed"
+   },
+   "L4": {
+    "modules": "lean/E2eScal/KindAccept.lean, KindAcceptRel.lean",
+    "kind": "decAcceptKind C st fields jret (DecField = bytes n | u64; frame 0x20)",
+    "ties": "rfl at default transparency: Bi.bi_e2e_accept_main, Dm.dm_e2e_accept_main, E1.e1_e2e_accept_main, H4.dd_accept_stmt, Gen.bi/dm/e1_e2e_accept_main_gc",
+    "limit": "no kind for composed statements with callee-decoder fields; a wrong jret made the rfl check end in a heartbeat timeout (negative g3-kindacc-stmt-jret), not in a plain failure"
+   },
+   "examples": "lean/E2eScal/Gen3Examples.lean: 17 theorems + 17 _kind lines (7 call blocks, 4 first-form, 2 reload-form, 1 lea + 1 mov set-up, 1 two-directive uint64, 1 padded byte segment); hand examples written by a scratch script, not generator output",
+   "executed_checks": {
+    "no_build": "lake build --no-build E2e E2eAd E2eScal exit 0 (1004 jobs)",
+    "axioms_gate": "PASS 5337 declarations, nonstandard 0, sorryAx 0 (scratch JSON)",
+    "decl_drift_vs_int4_r1": "base dump 5007 rows; ADDED 330, CHANGED 0, REMOVED 0; planted control: gate FAIL (sorryAx), drift 1 CHANGED + 1 ADDED",
+    "negatives": "37 of 38 counted: 11 controls pass, 26 mutants fail inside the target, 1 timeout_heartbeat (not a pass); scal/negcases-gen3.json, scal/negative-gen3.json; one gated job each",
+    "module_times_s": {
+     "E2eScal.CallDec": 1.6,
+     "E2eScal.U64RR": 1.8,
+     "E2eScal.KindCall": 0.8,
+     "E2eScal.CallDecRel": 0.7,
+     "E2eScal.SegNPad": 5.1,
+     "E2eScal.PwAccept": 2.8,
+     "E2eScal.BhHeadG3": 2.6,
+     "E2eScal.WitPwA": 10,
+     "E2eScal.Gen3Examples": 1.8,
+     "E2eScal.KindAccept": 0.7,
+     "E2eScal.KindAcceptRel": 0.5
+    },
+    "heartbeats": "16000000 / 4000000 as the model modules; no raise"
+   },
+   "effort": {
+    "diagnostics": 1,
+    "attempts": 7,
+    "failed_attempts": 1,
+    "gate_s": 399,
+    "bounds_hit": "none"
+   },
+   "not_proved": [
+    "PendingPartialWithdrawal callee error returns",
+    "morestack paths",
+    "pw_e2e_accept_spec_k (not written)",
+    "a Lean Go-value predicate for the receiver",
+    "encoders"
+   ],
+   "not_run": [
+    "cold build from an empty .lake",
+    "generator, kindcheck.py, p2dec_test.py",
+    "link / Go differential / hardware checks",
+    "independent review"
+   ],
+   "wording": "development-set results are in-sample and are not transfer evidence"
   }
  },
  "contamination": {
