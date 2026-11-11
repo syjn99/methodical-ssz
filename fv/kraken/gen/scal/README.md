@@ -239,6 +239,7 @@ In-sample coverage only; no hold-out claim until H5.
     fP / src = IR, fL = fP + 8, fC = fP + 16;
   - anything else stops the walk: the remaining fields are "not covered: <reason>" with a miss class
     (padding / register / set-up order / new directive form / new field kind / other) in `--summary`.
+  "ONLY when" above is the walker's acceptance rule, not a checked fact: see "What covered means" below.
   A field is complete at its own event (call block; store of the buffer bytes at the IR SSZ offset into the IR Go offset;
   store of the slice pointer after the segment). Events out of IR order stop the walk. The output lists its fields
   in a `FIELDS-JSON:` line. Exit codes 0 / 3 / 2 as for `--gen2`.
@@ -258,3 +259,48 @@ In-sample coverage only; no hold-out claim until H5.
 - Not covered: nested containers / pointer callees, callees without a proved spec, lists, bitfields, sizes other than
   32 / 48 / 96, receiver registers outside the lemma sets, index / rip / immediate-store operands, head and epilogue
   emission, encoders.
+
+### Unit G4-F (fixes after review g4g-r1; not yet reviewed)
+
+**What "covered" means.** A field marked "covered" by `--gen4` is the GENERATOR's claim: its walker believes that
+the code before each emitted block establishes the block's entry state. Each emitted theorem is kernel-checked on its
+own (its code fact `he` by `rfl`, its `_kind` line). Its entry facts (register values, the memory fact `hm`, the call
+block's `dst` / `src`) are hypotheses. Nothing kernel-checks that the chain of steps establishes a block's entry
+state, or that a call block belongs to the IR field named in `FIELDS-JSON`. Only a field composition does that, and
+field compositions are hand text (three development types have one: SyncCommitteeMessage, PendingConsolidation,
+PendingPartialWithdrawal). So a result (S) of a hold-out counts "walker-covered + each theorem builds", not
+"field proved". Review g4g-r1 found seven inputs on which the walker of `21b8aab` said "covered" although the code
+did not establish the entry state (every theorem still built); the rules below refuse them.
+
+- Head (M1b): directives 0–10 must be the `decpro_seg` prologue (`HeadN.lean`, `decPro`): two labels; directives
+  2–8 `cmp 0x10(%r14),%rsp; jbe; push %rbp; mov %rsp,%rbp; sub $F,%rsp; mov %rbx,dB(%rsp)` in this order plus one
+  `nop`; `cmp $size,%rcx` at 9 and `jne` at 10. The head is positional. Spills of rax / rbx / rcx / rdi are read only
+  after directive 10 (after the frame is set up). A head miss exits 2, and `--summary` lists every field with
+  `reached: false`, the reason and the class (`padding` when the head matches with its nops erased, else `other`).
+- Stack-store rule (M1a): an 8-byte store `mov %r,d(%rsp)` (also a head spill and the segment's pointer slot) is
+  modelled only when `d` is a multiple of 8 and lies in `[0, F)` (frame) or `[F + 16, F + 48)` (the argument spill
+  area). Otherwise the walk stops (class `other`). A store invalidates every tracked slot it overlaps. After a call
+  block only `sp + 8` changes (the callee's spill, stated by `calldec_seg_w`); after a segment `[sp, sp + 24)` changes.
+- A write to rbp or r14 (part of every block's entry: `rbp0`, the stack guard at `r14 + 16`) stops the walk.
+- Miss classes (S1): `set-up order` only when the wanted `add $off,%r` ran in the field's set-up and a later
+  directive replaced it; the right base with another offset is `other`; `padding` is assigned only to a head miss
+  (inside the walk a `nop` is never a miss). `--summary` has `reached` per field: true up to the field where the walk
+  stopped, false after it. A field with `reached: false` was not examined; its class says nothing. Resuming the walk
+  after a miss is not done: the code of the missed field is not modelled, so no slot or register fact survives it,
+  and the receiver / buffer slots could only be trusted again through a proof the generator does not have.
+- Walker hazards checked in G4-F (each is modelled or stops the walk): partial-register writes (only `mov $i,%e..`,
+  modelled as the zero-extending write of `kstep_movi`; every other 8 / 16 / 32-bit form stops); `lea` with an index
+  or rip operand stops; a store through any base other than rsp or the receiver stops (a store through a pointer
+  derived from rsp has an unknown base); calls other than the four callees, and runtime calls outside a segment, stop;
+  after a call block all registers except rsp / rbp / r14 are unknown; flags are never read from the walk state (a
+  conditional jump in the span stops; the `je` of a call / segment window is inside its lemma); a load at a
+  displacement that is not a tracked slot gives `unknown`. The walker relies on the separation of frame, receiver
+  and buffer that a field composition / accept statement assumes; it does not check it.
+- Not examined (S3): nothing after the last field event (the epilogue; review input a34: a later overwrite of a field
+  is not seen); the head is fixed by position (`cmp $size,%rcx` at directive 9, `jne` at 10).
+- `kindcheck.py` rule 11 (S2): the hand example modules `Gen2Examples.lean`, `Gen3Examples.lean` are exempt by exact
+  path (`HAND_EXAMPLES`; rule 11 only). `Gen4Examples.lean` is not exempt: its hand field compositions fail rules 4
+  and 10c; no recorded command runs `kindcheck.py` on it.
+- Tests: `p2dec_test.py` cases `g4f-*` (26): the seven unsafe review inputs refused, the eleven valid variants covered,
+  head classes, frame register writes; `reached` checked on every `--gen4` case. Committed `Gen4*.lean`: unchanged
+  (the fixed generator regenerates all 10 byte-identical).

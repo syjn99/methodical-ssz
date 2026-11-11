@@ -296,3 +296,9 @@ Deposit_Data 합성 실행 1은 구문 오류였다. 원 출력은 기록으로 
 세 수용 정리를 생성 사슬로 다시 증명했다. 필드 합성은 손 글이다.
 SyncCommitteeMessage 생성 사슬은 457줄이다. 400줄 조건을 넘는다고 적었다.
 기록: REPORT 11절, `scal/RESULT.json`의 `gen4`, CONTAMINATION 22절.
+
+2026-11-11 GEN4 수정 G4-F(기준 `21b8aab`, Opus 5.5 구현, 리뷰 전): 리뷰 g4g-r1의 M1, M2, S1–S3을 고쳤다.
+`--gen4` 걸음은 리뷰 입력 7개에서 입구 상태 없이 "덮음"이라고 했다. 이제 거부한다.
+머리 검사, 스택 저장 규칙, rbp / r14 쓰기 멈춤, 놓침 분류, `reached` 표시를 더했다.
+커밋된 GEN4 출력 10개와 옛 출력 23개는 SAME이다. "덮음"이 생성기 주장임을 기록에 적었다.
+기록: REPORT 11절, CONTAMINATION 23절, `gen/scal/README.md`.
