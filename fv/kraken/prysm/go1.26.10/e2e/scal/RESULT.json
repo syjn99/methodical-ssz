@@ -251,7 +251,8 @@
     "next_step": "needs a user decision on a new budget: (1) one clean run of A1 and A2 with #print axioms on every scratch theorem (closed only without sorryAx and without self-listed names); (2) A0 guard branch in the Fk idiom (Fk.cmp_be_false and a toNat_add_negN helper, as Fk/AdMarshal, BlMarshal, NeMarshal, LcMarshal); profile the kernel on A0 alone if it still fails",
     "attempt_shape": "T9-PLAN allows one split with <= 3 attempts. Attempts 1-3 unsplit; attempt 4 first split (A1/A2); attempt 5 a second split (A0 off A1); attempt 6 four A0 experiments in one run. 6 runs, inside the cap of 6 (review s6-r1 S3)",
     "gate_exit_note": "jobs 382-386 show gate exit 0 although Lean exited 1: the command ended in `echo LEAN_RC=$?`. The logs show LEAN_RC=1; failed_runs counts them as failed (review s6-r1 S2). Later job commands end with the Lean exit code"
-   }
+   },
+   "superseded_note": "history of sessions 10-11 (not proved there). The fast path was kernel-checked later in the unit 'beacon_block_header_encoder_t9 (T-9 stream, fresh Fable session)'; review pending."
   },
   "decoder_completions (INBOX 020 item 2)": {
    "bbh_unreachable_mc": {
@@ -299,6 +300,97 @@
     "witness_build_note": "review s5-r1 S4: WitViR.lean was comment-edited (line 8) after its build job 360 and before commit dd988d8; the committed text was first built in job 374 (exit 0); the commit message cites job 360"
    },
    "note": "both are texts of reviewed development-set proofs (AdReject unreachable theorems, EpReject / WitEpR) with the code constant replaced"
+  },
+  "beacon_block_header_encoder_t9 (T-9 stream, fresh Fable session)": {
+   "state": "kernel-checked on the T-9 stream branch (claude/ssz-fv-t9-fable, base 48b74b63c4819ffa30c3c3748d360ca30f7d98d1); independent review pending",
+   "scope": "MarshalSSZTo FAST PATH ONLY: len(dst) + 112 <= cap(dst), three roots of length 32. The growslice branches and the three length rejects are not covered (T-7 deferred, GrowsliceC untouched). Never 'encoder complete'.",
+   "method": "hand proof by a fresh Fable 5.2 session as direct author (new budget by user order). No generator, Kind, S1-lemma, template, Fk/*, contract, ELF, toolchain or lakefile change.",
+   "theorems": [
+    "E2eScal.lea_cmp_be_false",
+    "E2eScal.Bh.bh_enc_a1",
+    "E2eScal.Bh.bh_enc_a2",
+    "E2eScal.Bh.bh_enc_b",
+    "E2eScal.Bh.bh_enc_c",
+    "E2eScal.Bh.bh_enc_d",
+    "E2eScal.Bh.bh_enc_e",
+    "E2eScal.Bh.bh_e2e_marshal_main",
+    "E2eScal.Bh.bh_e2e_marshal_spec_k",
+    "E2eScal.WitBhM.bhm_runs_empty",
+    "E2eScal.WitBhM.bhm_runs_prefix"
+   ],
+   "directives": {
+    "bh_enc_a1": "0-35",
+    "bh_enc_a2": "36-61",
+    "bh_enc_b": "62-89 + memmove",
+    "bh_enc_c": "90-117 + memmove (jumps 100 -> 111)",
+    "bh_enc_d": "118-147 + memmove (jumps 129 -> 140)",
+    "bh_enc_e": "148-155",
+    "not on this path": "21-32, 47-58, 69-81, 101-110, 130-139 (growslice), 156-183 (length rejects), 184-194 (morestack)"
+   },
+   "cause_of_T9": "kernel check of the simp + omega refutation of the lea/r12 stack-guard branch: the proof term holds Int arithmetic on the literal 2^64 - 32; reproduced on plain BitVec variables outside any machine context (diagnostic job 01: '(kernel) excessive memory consumption', 4.88 GiB under lean -M 5000; the cmp-%rsp form passes)",
+   "general_lemma": "E2eScal.lea_cmp_be_false (x d g : BitVec 64) (af of' : Bool) (N : Nat) (hd : (-d).toNat = N) (h : g.toNat + N < x.toNat): the jbe after `lea d(%x),%r; cmp g,%r` is not taken. Wrapper of Fk.cmp_be_false (unchanged).",
+   "maxHeartbeats": "4 M on the six segments, the composition and the spec corollary (below the 16 M of cp_e2e_marshal_main); 16 M on the witness as in its model WitCpM; no raise, no profile needed",
+   "hand_files": {
+    "lean/E2eScal/StackGuard.lean": 34,
+    "lean/E2eScal/BhEncHead.lean": 258,
+    "lean/E2eScal/BhEncRoots.lean": 392,
+    "lean/E2eScal/BhEncMain.lean": 186,
+    "lean/E2eScal/BhSpecM.lean": 102,
+    "lean/E2eScal/WitBhM.lean": 123
+   },
+   "hand_files_note": "line counts by wc -l. BhEncHead: A1/A2 bodies from the session-11 scratch Split3.lean (guard branch and two length goals changed). BhEncRoots C and D were written from one text with offsets as parameters. WitBhM is the text of WitCpM; BhSpecM the text of CpSpecM.",
+   "runs": {
+    "diagnostics": 1,
+    "attempts": 5,
+    "failed_attempts": 2,
+    "attempt_detail": {
+     "02": "segments + composition: 1 error (ret-address equation in bh_enc_e needs rsp < 2^64); A1, A2, B, C, D elaborated",
+     "03": "pass: six segments + composition, #print axioms standard",
+     "04": "pass: witness",
+     "50": "spec corollary: wrong associativity assumed for the separating conjunction, missing import of Fk.RtCopy (eventually_mono)",
+     "52": "pass: spec corollary"
+    },
+    "lake_runs": 5,
+    "failed_lake_runs": 2,
+    "stale_check": "lake build --no-build of the relied modules at the start of every later job (exit 0)"
+   },
+   "cumulative_job_s": 526,
+   "cumulative_job_s_note": "sum over the 44 gated jobs of the stream, wrapper start to end, 1 s resolution, INCLUDING gate waits behind the other stream: diagnostic 22, attempts 97, negatives (36 jobs) 337, Go differential 1, axioms gate 69",
+   "cold_build_s": "not run (warm .lake of the base; new modules built once: BhEncHead 3.1 s, BhEncRoots 3.3 s, BhEncMain 1.6 s, BhSpecM 2.1 s, WitBhM 74 s as lake reports)",
+   "peak_rss_gib": {
+    "proof_modules": 1.89,
+    "axioms_gate": 3.76,
+    "diagnostic_kernel_failure_reproduction": 4.88
+   },
+   "memcap_kills": 0,
+   "evidence": {
+    "witness": "E2eScal.WitBhM.bhm_runs_empty / bhm_runs_prefix (Go-valid receiver: zero state, three roots len = cap = 32; every Slot, ProposerIndex and root contents; empty prefix with cap 112, 3-byte prefix with 5 spare bytes), job 04",
+    "spec_alignment": "bh_e2e_marshal_spec_k: the 112 output bytes are serialize prysmBhDesc g.toValue (independent consensus-specs Desc of BhSpec.lean), job 52",
+    "negatives": "36 cases, one gated job each (jobs 11-43, 60-62): 9 controls pass, 27 inside; every first error read; 0 wrong_target, 0 timeout (scal/negative-t9.json)",
+    "go_differential": "21/21 (bh/differential-enc.json, job 51, native Go 1.26.10, go run -overlay in the temporary Prysm tree, nothing written there): 9 fast-path cases (bytes, nil error, same backing array, cap unchanged, receiver unchanged); 6 growslice and 6 length-reject cases are NOT the proved path",
+    "axioms": "axioms gate over every declaration of E2e, E2eAd, E2eScal: PASS, 3464 declarations, 2906 theorems, hand list 195, non-standard 0, sorryAx 0 (job 70, axioms-gate.json)",
+    "decl_drift": "base dump = review h2-r1 dump at 9df1fb2 (3303 rows; git diff 9df1fb2..48b74b6 has no Lean or link-input change) vs head dump of job 70: ADDED 161, CHANGED 0, REMOVED 0. 160 ADDED names are the new declarations and their auxiliaries; 1 is E2eScal.BhCode.BhMarshal.eq_1, the equation lemma of the existing constant BhMarshal, first realised by the new modules. Planted control (type hash of E2e.cp_e2e_marshal_main changed in a copy): CHANGED reported, exit 1.",
+    "link": "existing bundle 140eb7bd (bh/link/RESULT, PASS all); not rerun in this stream"
+   },
+   "baseline_next_to_it": "BASELINE.json units.checkpoint_encoder (the whole Checkpoint encoder unit). Two hand proofs of unequal types and unequal scope: no speed-up claim.",
+   "claims_and_limits": [
+    "fast path only",
+    "hand proof; no generator claim; not a hold-out result (the author session read the H1/H2 files and the T-9 records)",
+    "MemmoveC is a contract hypothesis (unchanged form)",
+    "X15 is not assumed zero: bytes 8-31 of both temps are existential",
+    "the stack-guard premise is guard + 32 < rsp (large-frame form), not the guard < rsp of cp_e2e_marshal_main"
+   ],
+   "not_run": [
+    "independent review (required before any claim stands)",
+    "cold build of E2eScal",
+    "reviewer cold rebuild",
+    "link check rerun",
+    "Lean Go-value predicate for the BeaconBlockHeader receiver",
+    "growslice branches and length rejects of this encoder (out of scope)",
+    "Eth1Data encoder (not in this stream)",
+    "stale_olean.py (lake build --no-build used instead)",
+    "kindcheck.py (no generated theorem)"
+   ]
   }
  },
  "contamination": {
@@ -326,7 +418,7 @@
  "not_run": [
   "reviewer cold rebuild (S4)",
   "Lean Go-value predicate for the BBH receiver",
-  "BeaconBlockHeader MarshalSSZTo fast path: not proved (stopped at the attempt limit, see units)"
+  "BeaconBlockHeader MarshalSSZTo fast path: kernel-checked in the T-9 stream unit; independent review not run yet"
  ],
  "session10_checks": {
   "lake_build_E2eScal": "exit 0 (job 374)",
