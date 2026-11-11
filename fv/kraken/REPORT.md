@@ -385,6 +385,9 @@ AttestationData 인코더(A4–A6)는 시작하지 않았다.
 | `E2e.prysmAdDesc_serialize_checker / deserialize_checker / pad_spec_accepts_iff` | spec bridge AttestationData (codec equality with the checker Desc) | done | n/a (spec level) | done | n/a | n/a | 6/6 통과 | n/a |
 | `E2e.cp_e2e_epoch_err_unreachable; E2eAd.ad_e2e_{slot,ci,source,target}_err_unreachable` | unreachable_mc (own column; not reject coverage) | done | n/a (local lemmas) | done | exact frame | done | 4/4 통과 | n/a |
 
+unreachable_mc 정리는 조건부 건너뜀을 말한다. 호출 반환 뒤 rax = 0이면 감싸기 다음 레이블에 닿고, 레지스터와 메모리는 바뀌지 않는다.
+모든 입력에서 닿지 않음은 호출 대상 명세(`EpUAccC`, `SlUAccC`, `CiUAccC`, `ViUAccC`, `CpUAccC`)와 함께일 때만 성립한다(리뷰 s5-r1).
+
 | unreachable_mc 행 | 정리 | 상태 | reject 범위에 셈 |
 | --- | --- | --- | --- |
 | phase0.ssz.go:1988 fmt.Errorf("Epoch: %w") (decoder) | E2e.cp_e2e_epoch_err_unreachable | done | 아니요 |
@@ -396,7 +399,7 @@ AttestationData 인코더(A4–A6)는 시작하지 않았다.
 | BeaconBlockHeader decoder fmt.Errorf("Slot: %w") (홀드아웃 H1) | E2eScal.Bh.bh_e2e_slot_err_unreachable (증인 WitBhU) | done | 아니요 |
 | BeaconBlockHeader decoder fmt.Errorf("ValidatorIndex: %w") (홀드아웃 H1) | E2eScal.Bh.bh_e2e_vi_err_unreachable (증인 WitBhU) | done | 아니요 |
 
-공리 전체 검사(감사 AU-10): `gen/e2e/axioms_gate.py`가 E2e, E2eAd, E2eScal의 모듈 79개를 프로그램으로 나열한다. 선언 2726개(정리 2299개)의 공리 집합이 모두 표준이고 `sorryAx`는 0개다(gate 작업 293, `axioms-gate.json`; 수는 그 명령의 출력이다). 손 목록 136개 이름은 "있어야 함" 검사로 남는다. 빠진 이름은 0개다. 부정 대조: `sorry`를 쓰는 임시 정리 `E2e.sorry_ctl'`을 더하면 FAIL이다(작업 256).
+공리 전체 검사(감사 AU-10): `gen/e2e/axioms_gate.py`가 E2e, E2eAd, E2eScal의 모듈 95개를 프로그램으로 나열한다. 선언 3125개(정리 2621개)의 공리 집합이 모두 표준이고 `sorryAx`는 0개다(커밋 `6dfc8b5`에서 gate 작업 377, `axioms-gate.json`; 수는 그 명령의 출력이다). 손 목록 169개 이름은 "있어야 함" 검사로 남는다. 빠진 이름은 0개다. 부정 대조: `sorry`를 쓰는 임시 정리 `E2e.sorry_ctl'`을 더하면 FAIL이다(작업 256).
 부정 시험 전체: 154/154 통과 (`negative/result.json`). Go 차분: 59건, 불일치 0건 (`differential.json`). 공리: 79개 이름, 판정 PASS (`axioms.json`).
 
 비용 기록(PROOF-PLAN §4): `prysm/go1.26.10/e2e/COST.json`은 `gen/e2e/cost.py`가 gate 기록(`records.jsonl`)과 작업 로그에서 만든다. 모듈과 정리마다 gate 안 벽시계 초, 실행 수, 실패한 실행 수, 프로세스 최대 RSS, memcap 종료 수다. gate 밖의 시간(생각, 편집)은 들어 있지 않다. 감사 AU-16: 모듈의 `gate_s`는 "누적 gate 초"다. 실패와 성공을 합친 모든 시도의 합이고 빌드 시간이 아니다. `last_ok_run_gate_s`는 마지막 성공 실행의 gate 초이고 통제된 냉 빌드가 아니다. 냉 빌드 초는 따로 잰 곳에만 적는다. `cost.py`와 `tcost.py`는 마지막 작업 번호를 인수로 받아 출력의 `source`에 적는다. 그래서 스트림이 진행해도 같은 출력이 나온다. `COST.json`은 상한 213(작업 212개, 15151.6초)이고, 커밋된 값과 같다. `TEMPLATE-COST.json`은 작업 214–247이다.

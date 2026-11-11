@@ -158,10 +158,10 @@
     "367": "development step to directive 4 (unsolved goals expected; showed the guard condition form); not an attempt",
     "368": "whole head (0-90) in one theorem: memcap kill at 6 GiB (6.00 GiB process); led to the A/B split (as T-1 for the decoders)",
     "369": "attempt 1: ecancel with four existential X15 witnesses: heartbeat timeout (4 M) inside ecancel (line 214), peak 1.68 GiB",
-    "370": "diagnostic (print the goal by `done`): memcap kill while the error was produced; not an attempt",
-    "371": "attempt 2: explicit X15 witnesses + ecancel: memcap kill (6.02 GiB)",
-    "372": "diagnostic (cleared hypotheses, pp.maxSteps 4000): memcap kill; not an attempt",
-    "373": "attempt 3: AC-normalise both sides (sep_assoc, sep_comm, sep_comm_l) then exact: heartbeat timeout (4 M) at exact (line 222), peak 1.68 GiB. The two AC-normal forms are not syntactically equal. Cause not known: an atom of the stated post may have no partner, or the atoms are the same and the AC order differs (FINDINGS T-8 saw that until the symbolic byte lists were generalized). Printing the goal exhausted memory twice (370, 372)."
+    "370": "diagnostic (`done` as the hmem body): killed at the 6 GiB memcap with no message; consumer not identified (review s5-r1 S2: `case` logs an error and continues, so the trailing closers also ran); not an attempt",
+    "371": "attempt 2: explicit X15 witnesses + ecancel: killed at the memcap (6.02 GiB) with no message; the log does not show whether ecancel failed; consumer not identified",
+    "372": "diagnostic (cleared hypotheses, pp.maxSteps 4000): killed at the memcap with no message; consumer not identified; not an attempt",
+    "373": "attempt 3: AC-normalise both sides (sep_assoc, sep_comm, sep_comm_l) then exact: heartbeat timeout (4 M) at exact (line 222), peak 1.68 GiB. The two AC-normal forms are not syntactically equal. Cause not known: an atom of the stated post may have no partner, or the atoms are the same and the AC order differs (FINDINGS T-8 saw that until the symbolic byte lists were generalized). The kills of 370, 371 and 372 printed nothing; their consumer is not identified (the trailing closers after `case hmem` ran in every run; review s5-r1 S2)."
    },
    "maxHeartbeats": "4 M in development (below the 16 M of cp_e2e_marshal_main); not raised (no profiled cause)",
    "hand_lines_attempted": 235,
@@ -187,7 +187,7 @@
     371,
     372
    ],
-   "stale_check_after_each_failure": "stale_olean.py after every failed build (session 10 rule); the BhEncHead draft left one orphan build file (ir/E2eScal/BhEncHead.setup.json); lake build --no-build E2e E2eAd E2eScal exit 0 afterwards (job 375)",
+   "stale_check_after_each_failure": "stale_olean.py after every failed build (session 10 rule). The seven outputs after 367-373 (logs s10-stale-after-<job>-lake-*.txt and s10-stale-after-367.txt; a first call after 367 failed with a usage error, exit 2, and was repeated) each exit 1 with flagged=12, the same 12 artifacts each time (review s5-r1 S3): STALE GenAdDec, GenCpDec (.olean/.ilean): the sources were rewritten byte-identical by the regeneration of 094e51e 15 s after their build (git shows no change since 094e51e; lake build --no-build exit 0, job 375, so the trace hash is current); STALE WitViR: a comment edit (line 8) after build job 360, rebuilt as committed in job 374; ORPHAN E2eAd/ProbeAd, E2e/ProbeWW (scratch probe modules of session 4, sources deleted, imported by no module) and Fk/SHash (source deleted in 49c6627, imported by no module). None of the 12 is read by a library module. The BhEncHead draft also left ir/E2eScal/BhEncHead.setup.json (not an olean). lake build --no-build E2e E2eAd E2eScal exit 0 afterwards (job 375)",
    "wall_clock_s": 774,
    "wall_clock_note": "from the item-2b commit (18:46:34Z) to the end of job 373 (18:59:28Z)",
    "baseline_next_to_it": "BASELINE.json units.checkpoint_encoder: the whole Checkpoint encoder unit (fast path, reject, growslice sites, covers; 70 lake runs, 36 failed, 5550.6 gate s, 0 memcap kills, 32825 s). Its fast-path theorem cp_e2e_marshal_main alone is not separated in the baseline. Two hand proofs of unequal types and scope: no speed-up or slow-down claim.",
@@ -215,7 +215,8 @@
     "failed_lake_runs": 0,
     "cumulative_gate_s": 21.0,
     "negatives": "5 (1 control, 4 inside)",
-    "peak_rss_gib": 1.76
+    "peak_rss_gib": 1.76,
+    "meaning": "conditional skip (as in the development set): after the callee returns with rax = 0 the run reaches the label after the wrap with registers and memory unchanged; unreachability for every input holds only together with the callee specs SlUAccC / ViUAccC (review s5-r1)"
    },
    "vi_length_reject": {
     "theorem": "E2eScal.vi_unmarshal_reject_len_main",
@@ -236,7 +237,8 @@
     "cumulative_gate_s": 44.0,
     "negatives": "6 (1 control, 5 inside)",
     "peak_rss_gib": 1.84,
-    "go_value": "Go differential vi-len 3/3 (job 345)"
+    "go_value": "Go differential vi-len 3/3 (job 345)",
+    "witness_build_note": "review s5-r1 S4: WitViR.lean was comment-edited (line 8) after its build job 360 and before commit dd988d8; the committed text was first built in job 374 (exit 0); the commit message cites job 360"
    },
    "note": "both are texts of reviewed development-set proofs (AdReject unreachable theorems, EpReject / WitEpR) with the code constant replaced"
   }
