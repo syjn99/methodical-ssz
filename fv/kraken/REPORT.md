@@ -27,6 +27,7 @@ SG-1 확장은 두 홀드아웃을 연 뒤의 개발 작업이다. 그 확장에
 리뷰 h4-r1이 H4 `fae7d6f`를 승인했다. 필수 수정 0, 고칠 항목 7이다.
 GEN2 단위의 리뷰: g2l-r1 APPROVE, g2g-r1 REQUEST_CHANGES(문서만, G2-F가 닫음), g2f-r1 APPROVE다.
 GEN2와 H4는 통합 INT4에서 병합했다(`56e0c88`). 통합 INT4 자체의 리뷰는 아직 없다.
+홀드아웃 H5(SyncCommitteeMessage 2/4, PendingConsolidation 1/2, 합성 거부; 수용 정리는 손 합성으로 증명)는 11절에 있다. 아직 리뷰 없음.
 H4에서 GEN2의 개발 자료 결과는 그대로 옮겨지지 않았다(11절).
 BeaconBlockHeader 인코더는 빠른 경로와 길이 거부 세 곳을 증명했다. 길이 거부의 전제는 `len + 112 ≤ cap`이다(11절).
 `Eth1Data.MarshalSSZTo`는 빠른 경로만 증명했다(11절, ENC 스트림). 리뷰 enc-r1이 ENC `ad15fbc`를 승인했다.
@@ -613,6 +614,52 @@ h4-r1 덤프 대비 선언 비교: CHANGED 0, REMOVED 0, ADDED 0이다. 덤프 �
 실행하지 않은 것(통합자): Lean 수준 심은 대조, 콜드 빌드, 링크 검사, Go 차분, 부정 시험, x86-64.
 기록: `scal/RESULT.json`의 `integration_int4`.
 
+GEN3 단위 G3-G(기준 `f5c5f52`, 증명 생성기 변경, 개발 자료만; 아직 리뷰 없음):
+`scalgen.py p2dec --gen3`가 G3-L 보조정리의 세 꼴을 낸다. 기본 모드와 `--gen2` 출력은 그대로다.
+세 꼴: 증명된 명세가 있는 피호출 디코더의 호출 필드, 두 지시어 uint64 읽기, makeslice 앞 패딩 `nop`.
+표본 안 덮음: PendingPartialWithdrawal 3/3, Deposit_Data 4/4, BeaconBlockHeader 5/5, AttestationData 3/5이다.
+`--gen2`에서는 0/3, 3/4, 3/5, 1/5였다. 이것은 옮겨짐이 아니다. 홀드아웃 측정은 H5다.
+Deposit_Data는 합성도 생성했다(`Gen3DdAccept2.lean`). 문장 검사는 종류 `decAcceptKind`와 `H4.dd_accept_stmt` 항등이다.
+호출 필드가 있는 형은 `--compose`가 거부한다. 그 수락 정리는 생성된 정리를 부르는 손 합성이다(`PwAcceptG3`, `BhAcceptG3`).
+두 손 합성의 형은 기존 손 정리와 `rfl`로 같다. 머리, 꼬리, BeaconBlockHeader 포인터 꼬리는 손 단계다.
+손 줄(g2g 규칙: 빈 줄과 주석 줄을 뺀 줄): 증명 몸체 PendingPartialWithdrawal 98 → 75, Deposit_Data 136 → 0이다.
+BeaconBlockHeader 머리 몸체는 159 → 140(손 단계 포함), 수락 몸체는 150 → 150이다. 모듈 전체로는 줄지 않았다.
+GEN3 보조정리 모듈(손으로 한 번 씀)은 905줄이다. 속도 주장은 없다.
+합성 실행 1은 구문 오류였다(생성기 버그). 원 출력은 `scal/gen3/`에 두고 고친 실행 2를 썼다.
+실행 검사: `regen_check.sh` 옛 16/16 SAME, 새 5개 결정적이다. 기본/`--gen2` 차분 30/30 같다.
+`kindcheck.py --selftest` 114건과 종료 코드 4건 PASS, 일부러 고장 낸 검사기 15/15가 실패한다. `p2dec_test.py` 88/88이다.
+부정 시험 17/17(대조 4, 정리 안 실패 13, 시간 초과 0)이다. 공리 게이트 PASS, 선언 5463개, 비표준 0이다.
+int4-r1 덤프 대비 선언 비교는 ADDED 456뿐이다. 심은 대조는 잡혔다. `lake build --no-build` 종료 0이다.
+실행하지 않은 것: 콜드 빌드, 링크 검사, Go 차분, x86-64. 기록: CONTAMINATION 19절, `scal/RESULT.json`의 `gen3`.
+
+홀드아웃 H5(방법 고정 `6dc0e2a`, 연 기록 커밋 `3762644`, 2026-11-11T11:25:14Z; 아직 리뷰 없음):
+형은 SyncCommitteeMessage(C)와 PendingConsolidation(D)의 `UnmarshalSSZ`다. 두 형, 한 번이다.
+두 형은 필드 종류로 보면 표본에 가깝다(H5-A3). 새것은 종류의 순서뿐이다.
+손 Desc(`08adf1d`)와 손 문장 `H5.sm_accept_stmt`, `H5.pc_accept_stmt`(`3c4625c`)는 생성기 실행 전에 커밋했다.
+결과 (S): SyncCommitteeMessage 2/4(종료 3; Slot, Signature), PendingConsolidation 1/2(종료 3; SourceIndex).
+덮지 못한 이유: BlockRoot는 receiver를 rax로 다시 읽는다. ValidatorIndex는 관찰되지 않은 인자 꼴이다.
+TargetIndex는 호출 뒤 `nop`이 있다. 원 출력은 손대지 않았다. `kindcheck.py --partial`은 종료 3(성공 코드)이다.
+결과 (C): 둘 다 거부(종료 2, "모든 필드가 덮여야 한다"). 고정 전에 알려진 결과다. 항등 검사는 돌지 않았다.
+생성된 `_call` 정리는 `hC : U64CalleeAcc`를 전제로 둔다. 조건부다.
+손 작업(새 H5 모듈만): 두 수용 정리를 커널 검사했다. 표준 공리 셋뿐이다.
+`sm_e2e_accept_main`은 생성 정리 셋(Slot 둘, Signature 하나)을 부른다. Slot의 `hC`는 `sl_uacc_holds`로 채웠다.
+`pc_e2e_accept_main`은 생성 정리 둘(SourceIndex)을 부른다. `hC`는 `vi_uacc_holds`로 채웠다.
+나머지는 손 보조정리(`SmSeg.lean`, `calldec_nop_seg`)와 기존 GEN3 보조정리(`calldec_seg`, `callarg_reload_seg`)다.
+크기 거부, 검사기 Desc와 코덱 같음, 명세 정렬, `reject_complete`, 증인 넷도 커널 검사했다.
+수용 증인 `WitSmA`, `WitPcA`는 손 문장의 전제가 만족 가능함을 보인다(Go 배치 receiver).
+손 줄(g2g 규칙, 모듈 전체): SyncCommitteeMessage 수용 경로 549(SmAccept 199, SmSeg 350), PendingConsolidation 271(PcAccept).
+문장 모듈 `H5Stmt.lean`은 114(두 형)이고 위 수에 없다. 증명 본문만: 188, 69다.
+참고(인과 주장 없음, 다른 형): H4 Deposit_Data 336(문장 112 별도), H3 210과 464(문장 포함), GEN3 PwAcceptG3 87.
+실행 검사: 링크 검사 PASS(묶음 `d532fc57`). 부정 시험 37/41(대조 12, 정리 안 실패 25)이다.
+4건은 하트비트 시간 초과로 끝났다(spec_k 사후조건 변이). 통과로 세지 않는다.
+공리 게이트 PASS, 선언 5841개, 비표준 0이다. g3g-r1 덤프 대비 선언 비교는 ADDED 378뿐이다. 심은 대조는 잡혔다.
+Go 차분 12/12(Go 의미론, linux/arm64, ELF 아님)이다. 심은 대조는 불일치 2다.
+증명하지 않은 것: 호출 대상 오류 경로, morestack, `writeBarrier ≠ 0`, Lean Go 값 술어, spec_k의 `Pm` 증인, x86-64.
+시도: SyncCommitteeMessage 수용 정리 3회(마지막 성공), SmSeg 2회, 거부 2회, 나머지 1회다. 한도에 닿지 않았다.
+게이트 초: SyncCommitteeMessage 364.6, PendingConsolidation 262.3, 공유 191.7, 기본 빌드 20.3이다.
+한계: 두 형, 한 번이다. 일반성, 우월성, 속도 주장은 없다. H4 기록은 바꾸지 않았다.
+기록: `scal/CONTAMINATION.md` 20절, `scal/RESULT.json`의 `H5`, FINDINGS SG-4.
+
 조건:
 
 1. 런타임 계약 `MakesliceC`(uint8, esz 1, cnt 32), `MemmoveC`, `GrowsliceC`(uint8, esz 1, 인코더 첫 지점과 둘째 지점), `ConvT64C`, `FmtErrorfDDC`(Epoch 형식, `type:int`)는 가설이다. Go 1.26.10 소스를 다시 읽었고 바뀌지 않았다(`prysm/go1.26.10/e2e/RUNTIME-1.26.10.md`). 정교화 증명은 없다.
@@ -758,6 +805,9 @@ python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/prysm/go1.26.10/opt-r1/neg
 (cd fv/kraken && python3 -I gen/scal/scalgen.py p2dec --gen2 --summary <s.json> --S prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S --const DmUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.DepositMessage --prefix dm_g2dec --imports E2eScal.P2Dec,E2eScal.SegN,E2eScal.U64Inline,E2eScal.H3Code --open E2eScal.H3Code)   # 다른 형과 --compose: gen.sh
 python3 -I -B fv/kraken/gen/scal/p2dec_test.py <work> <result.json>; python3 -I -B fv/kraken/gen/scal/kindcheck.py fv/kraken/lean/E2eScal/Gen2*Dec.lean fv/kraken/lean/E2eScal/Gen2*Accept.lean
 python3 -I -B fv/kraken/gen/scal/kindcheck.py --partial fv/kraken/lean/E2eScal/Gen2BhDecPartial.lean   # 종료 3 = 있는 정리의 kind PASS, 완전 덮음 아님
+# GEN3 생성기(단위 G3-G): gen.sh 마지막 명령 5개, 형마다 한 번; 모듈 Gen3PwDec Gen3DdDec Gen3BhDec Gen3AdDecPartial Gen3DdAccept2 PwAcceptG3 BhAcceptG3 (lake build E2eScal.<모듈>)
+python3 -I -B fv/kraken/gen/scal/kindcheck.py fv/kraken/lean/E2eScal/Gen3PwDec.lean fv/kraken/lean/E2eScal/Gen3DdDec.lean fv/kraken/lean/E2eScal/Gen3BhDec.lean fv/kraken/lean/E2eScal/Gen3DdAccept2.lean; python3 -I -B fv/kraken/gen/scal/kindcheck.py --partial fv/kraken/lean/E2eScal/Gen3AdDecPartial.lean
+python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/scal/negcases-g3g.json <work> prysm/go1.26.10/e2e/scal/negative-g3g.json <case-id>   # 사례마다 gate 작업 하나
 python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/scal/negcases-g2g.json <work> <result.json> <case-id>   # 사례마다 gate 작업 하나
 # H4 홀드아웃: 링크 표, 생성기 (S)와 (C)를 형마다 한 번, 모듈, 부정 시험, Go 차분
 python3 -I -B fv/kraken/gen/e2e/h4link.py callgraph <objdump> <out.json>; python3 -I -B fv/kraken/gen/e2e/h4link.py filter <out> <objdump> <elf> <nm>

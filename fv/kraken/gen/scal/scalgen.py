@@ -295,13 +295,16 @@ P2DECZ_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (
 """
 
 
-def p2dec_find(dirs, fo, src, n=32, gen2=False):
+def p2dec_find(dirs, fo, src, n=32, gen2=False, pad_ok=False):
     """The decode segment of the field at Go offset `fo`, SSZ offset `src`: (j1, j2, params), params["form"]
     "add" (`rootDecMid`, 12 directives) or "zero" (`rootDecMidZ`, 11 directives, SSZ offset 0).
     GEN2: `n` is the vector size (IR); every size immediate of the segment must be `n` (default 32: the
     directive texts and regular expressions are exactly the S2 / SG-1 ones, `{32:#x}` = `0x20`). Only with
     `gen2` (the `--gen2` mode) is a pointer store without displacement, `mov %rax,(%rdx)`, read as Go offset 0
-    (DepositMessage.PublicKey); the default mode keeps the S2 / SG-1 reading (such a field does not match)."""
+    (DepositMessage.PublicKey); the default mode keeps the S2 / SG-1 reading (such a field does not match).
+    GEN3 (`pad_ok`, only from `--gen3`): one padding `nop` between `mov $n,%ecx` and `callq runtime.makeslice`
+    is read (head `bytesDecHeadP true`, 10 directives; params["pad"]); add form only. Without `pad_ok` the text
+    and the regular expressions are exactly the GEN2 ones."""
     N = f"{n:#x}"
     hits = []
     for i in range(len(dirs)):
@@ -310,6 +313,8 @@ def p2dec_find(dirs, fo, src, n=32, gen2=False):
         try:
             expect(dirs, i + 1, r"xor %ebx,%ebx", "xor %ebx,%ebx")
             expect(dirs, i + 2, rf"mov \${N},%ecx", f"mov ${N},%ecx")
+            pd = 1 if (pad_ok and i + 3 < len(dirs) and dirs[i + 3] == "nop") else 0
+            i += pd  # GEN3: the head directives after the padding `nop` are read one index later
             expect(dirs, i + 3, r"callq runtime\.makeslice", "callq runtime.makeslice")
             dR = int(expect(dirs, i + 4, rf"mov ({HEX})\(%rsp\),%rdx", "the receiver reload").group(1), 16)
             fL = int(expect(dirs, i + 5, rf"movq \$0x0,({HEX})\(%rdx\)", "len = 0").group(1), 16)
@@ -351,8 +356,10 @@ def p2dec_find(dirs, fo, src, n=32, gen2=False):
         expect(dirs, j2 + 8 + a, rf"movq \${N},{fC:#x}\(%rdx\)", f"cap = {n}")
         expect(dirs, j2 + 9 + a, r"cmpl \$0x0,runtime\.writeBarrier\(%rip\)", "the write-barrier test")
         lwb = expect(dirs, j2 + 10 + a, r"jne (\S+)", "jne <barrier label>").group(1)
-        hits.append((i, j2, dict(lff=lff, lwb=lwb, dR=dR, dB=dB, dS=dS, fP=fP, fL=fL, fC=fC, src=src,
-                                 form=form, last=j2 + 10 + a, n=n)))
+        if pad_ok and pd and form != "add":
+            raise NoMatch(f"directive {i + 3 - pd}: padding nop in the offset-0 form (not covered: no lemma)")
+        hits.append((i - pd, j2, dict(lff=lff, lwb=lwb, dR=dR, dB=dB, dS=dS, fP=fP, fL=fL, fC=fC, src=src,
+                                      form=form, last=j2 + 10 + a, n=n, **({"pad": bool(pd)} if pad_ok else {}))))
     if len(hits) != 1:
         raise NoMatch(f"field at Go offset {fo:#x}: {len(hits)} decode segments match (expected 1)")
     return hits[0]
@@ -460,7 +467,7 @@ HN = {32: "Or.inl rfl", 48: "Or.inr (Or.inl rfl)", 96: "Or.inr (Or.inr rfl)"}
 U64_REGS = ("rax", "rbx", "rcx", "rsi", "rdi", "r8", "r9", "r10", "r11", "r12", "r13", "r15")
 
 
-def ir_fields(ir_path, tname):
+def ir_fields(ir_path, tname, gen3=False):
     """Every own field of the container, in IR order: (name, SSZ offset, Go offset, class, size or reason).
     class: "bytes" (fixed `[]byte` vector, size 32 / 48 / 96), "u64" (`uint64`), "none" (not covered)."""
     raw = pathlib.Path(ir_path).read_bytes()
@@ -486,6 +493,8 @@ def ir_fields(ir_path, tname):
                 cls, info = "none", f"byte vector of size {v.get('size')} (lemma sizes 32, 48, 96 only)"
         elif k == "uint" and v.get("bits") == 64 and v.get("go_type") == "uint64" and v.get("fixed_size") == 8:
             cls, info = "u64", 8
+        elif gen3 and (k == "overlay" or v.get("deleg")):
+            cls, info = gen3_callee(v)
         elif k == "overlay" or v.get("deleg"):
             cls, info = "none", f"delegated overlay field ({v.get('go_type')}): compiled as a call, no template"
         else:
@@ -614,7 +623,8 @@ def p2dec_gen2(args):
     """`p2dec --gen2`: per-field coverage (see the block comment above). Returns the text or raises
     NoMatch (exit 2) / Partial (exit 3); `args.summary_data` collects the per-field report."""
     dirs, sha = read_S(args.S)
-    fields, irsha = ir_fields(args.ir, args.type)
+    g3 = getattr(args, "gen3", False)
+    fields, irsha = ir_fields(args.ir, args.type, gen3=g3) if g3 else ir_fields(args.ir, args.type)
     summ = args.summary_data = dict(type=args.type, S=args.S, S_sha256=sha, ir_sha256=irsha, fields=[])
     if not fields:
         raise NoMatch(f"{args.type}: no field")
@@ -628,10 +638,23 @@ def p2dec_gen2(args):
             if cls == "none":
                 raise NoMatch(info)
             if cls == "bytes":
-                j1, j2, p = p2dec_find(dirs, fo, src, n=info, gen2=True)
+                j1, j2, p = (p2dec_find(dirs, fo, src, n=info, gen2=True, pad_ok=True) if g3
+                             else p2dec_find(dirs, fo, src, n=info, gen2=True))
                 shape = (f"rootdec_seg{'_z' if p['form'] == 'zero' else ''}" if info == 32
                          else f"bytesdec_seg{'_z' if p['form'] == 'zero' else ''} {info}")
+                if p.get("pad"):
+                    shape = f"bytesdec_seg_p true {info} (padding nop before makeslice)"
                 found.append((j1, p["last"], fname, "bytes", (fname, src, fo, j1, j2, p)))
+            elif cls == "call":
+                p = call_find(dirs, fo, src, info)
+                j1 = p["jm"] if p["form"] == "lea" else p["js"]
+                shape = (f"calldec_seg {info.split('.')[-2]} + callarg_{p['form']}_seg"
+                         + (" + callarg_mov_seg" if p["form"] == "lea" else "") + (" (pad)" if p["pad"] else ""))
+                found.append((j1, p["last"], fname, "call", (fname, src, fo, p)))
+            elif g3:
+                j1, p = u64_find_gen3(dirs, fo, src)
+                shape = (f"u64dec_rr_seg {p['rX']}" if p["form"] == "rr" else f"u64dec_inline_seg {p['rX']}")
+                found.append((j1, p["last"], fname, "u64rr" if p["form"] == "rr" else "u64", (fname, src, fo, j1, p)))
             else:
                 j1, p = u64_find(dirs, fo, src)
                 shape = f"u64dec_inline_seg {p['rX']}"
@@ -642,6 +665,27 @@ def p2dec_gen2(args):
             rec.update(status="not covered", reason=str(e))
             report.append(f"field {fname}: NOT COVERED: {e}")
         summ["fields"].append(rec)
+    if g3:
+        # the `lea` set-up of a callee field is split by the two-directive read of the IR field just before it
+        for x in [x for x in found if x[3] == "call" and x[4][3]["form"] == "lea"]:
+            p, fname = x[4][3], x[2]
+            prev = [f[0] for f in fields][[f[0] for f in fields].index(fname) - 1] if fname != fields[0][0] else None
+            ok = [y for y in found if y[3] == "u64rr" and y[0] == p["jr"] and y[2] == prev]
+            if not ok:
+                why = (f"lea set-up around directives {p['jr']}–{p['jr'] + 1}: not the covered two-directive read of "
+                       f"the IR field before ({prev})")
+                found.remove(x)
+                for rec in summ["fields"]:
+                    if rec["field"] == fname:
+                        rec.clear()
+                        rec.update(field=fname, ssz_offset=x[4][1], go_offset=x[4][2], status="not covered", reason=why)
+                report[:] = [r for r in report if not r.startswith(f"field {fname}: ")] + [f"field {fname}: NOT COVERED: {why}"]
+        extra_spans = [(x[4][3]["js"], x[4][3]["js"] + 5, x[2]) for x in found
+                       if x[3] == "call" and x[4][3]["form"] == "lea"]
+        allsp = sorted([(a, b, f) for (a, b, f, *_) in found] + extra_spans)
+        for (a0, a1, fa), (b0, b1, fb) in zip(allsp, allsp[1:]):
+            if b0 <= a1:
+                raise NoMatch(f"fields {fa} and {fb} claim overlapping directives {a0}–{a1} and {b0}–{b1}")
     spans = sorted(found)
     for (a0, a1, fa, *_), (b0, b1, fb, *_) in zip(spans, spans[1:]):
         if b0 <= a1:
@@ -660,12 +704,23 @@ def p2dec_gen2(args):
         kinds.append("E2eScal.KindN")
     if any(cl == "u64" for *_, cl, a in found):
         kinds.append("E2eScal.KindU64")
-    extra = (f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`); GEN2 coverage (`p2dec --gen2`): "
+    if any(cl in ("call", "u64rr") for *_, cl, a in found):
+        kinds.append("E2eScal.KindCall")
+    if any(cl == "bytes" and a[5].get("pad") for *_, cl, a in found) and "E2eScal.KindN" not in kinds:
+        kinds.append("E2eScal.KindN")
+    cov = "GEN3 coverage (`p2dec --gen3`)" if g3 else "GEN2 coverage (`p2dec --gen2`)"
+    extra = (f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`); {cov}: "
              f"{len(found)} of {len(fields)} fields")
     body = ""
     for *_, cl, a in found:
         if cl == "u64":
             body += u64_seg(c, *a)
+        elif cl == "u64rr":
+            body += u64rr_seg(c, *a)
+        elif cl == "call":
+            body += call_seg(c, *a)
+        elif a[5].get("pad"):
+            body += bytes_seg_pad(c, *a)
         elif a[5]["n"] == 32:
             body += p2dec_seg(c, *a)
         else:
@@ -674,6 +729,10 @@ def p2dec_gen2(args):
     if args.compose:
         if len(found) != len(fields):
             raise NoMatch(f"--compose needs every field covered ({len(found)} of {len(fields)})")
+        if g3 and any(cl in ("call", "u64rr") for *_, cl, a in found):
+            raise NoMatch("--compose: callee-decoder fields and two-directive uint64 reads have no composition "
+                          "template and no composed-statement kind (decAcceptKind covers byte-vector / inline-uint64 "
+                          "fields in frame 0x20 only); the accept theorem of this type stays a hand composition")
         return compose(args, dirs, sha, irsha, fields, found)
     if len(found) == len(fields):
         return header(sha, args.S, args, extra, kinds) + body
@@ -687,9 +746,400 @@ def p2dec_gen2(args):
     full = header(sha, args.S, args, extra, kinds)
     imps, rest = full.split("\n\n", 1)
     text = (imps + f"\n\n/-! PARTIAL OUTPUT (scalgen exit 3): {len(found)} of {len(fields)} fields of `{args.type}` "
-            f"(--gen2); NOT generated: {', '.join(missing)}. Not a complete p2dec output.\n"
+            f"({'--gen3' if g3 else '--gen2'}); NOT generated: {', '.join(missing)}. Not a complete p2dec output.\n"
             f"UNCOVERED-JSON: {json.dumps(unc)}\n-/\n\n" + rest + body)
     raise Partial(report, text)
+
+
+# ---------------------------------------------------------------- GEN3 (`p2dec --gen3`, implies `--gen2`)
+#
+# Compatibility switch: the GEN3 shapes are ONLY behind `--gen3`. Without it, `--gen2` and the default mode are
+# the earlier text byte for byte (`regen_check.sh` of every committed file). `--gen3` adds exactly the shapes
+# of the GEN3 lemma unit (`lean/E2eScal/{CallDec,KindCall,U64RR,SegNPad,KindAccept}.lean`):
+#   uint64-overlay field decoded by a CALL to a callee decoder with a proved accept spec (Slot, CommitteeIndex,
+#     ValidatorIndex, Epoch of `consensus-types/primitives`): the call block `calldec_seg` (`callq fn;
+#     test %rax,%rax; je lok`, label `lok:` after it) and the argument set-up before the `callq`, one of the
+#     observed straight-line templates: `callarg_first_seg pad` (SSZ offset 0), `callarg_reload_seg pad`, or the
+#     `lea` form `callarg_lea_seg` + [the two-directive uint64 read of the IR field just before] +
+#     `callarg_mov_seg`. Kinds `callDecSegKind`, `callArgFirstKind`, `callArgReloadKind`, `callArgLeaKind`,
+#     `callArgMovKind`. The callee spec stays the hypothesis `hC : U64CalleeAcc "<fn>"` of the call theorem.
+#   `uint64` field read in the two-directive form `mov src(%rbx),%rX; mov %rX,f(%rax)`: `u64dec_rr_seg`
+#     (kind `u64DecRRSegKind`, register in the kind), when the GEN2 inline form does not match.
+#   byte vector with one padding `nop` between `mov $n,%ecx` and `callq runtime.makeslice` (add form):
+#     `bytesdec_seg_p true n` (kind: the existing `bytesDecSegKind`).
+# Anything else (another set-up, a callee without a proved spec, pointer / nested-container callees, a `nop`
+# elsewhere, two `nop`s, the offset-0 form with a `nop`) is "not covered: <reason>", never a guessed theorem.
+# `--compose` with `--gen3`: callee or two-directive uint64 fields are refused (no composition template, no
+# composed-statement kind); otherwise the GEN2 composition plus the `_kind` line against `decAcceptKind`.
+
+# callee decoders with a proved accept spec (`CallDecRel.lean`: `U64CalleeAcc <label>` = `SlUAccC` / `CiUAccC` /
+# `ViUAccC` / `EpUAccC` by rfl; proved by `sl_uacc_holds` / `ci_uacc_holds` / `vi_uacc_holds` / `ep_uacc_holds`)
+PRIM_PKG = "github.com/OffchainLabs/prysm/v7/consensus-types/primitives"
+CALLEES = {n: f"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.{n}.UnmarshalSSZ"
+           for n in ("Slot", "CommitteeIndex", "ValidatorIndex", "Epoch")}
+# scratch registers of `E2eScal.U64RRReg` (every 64-bit register except rax, rbx, rsp, rbp, r14)
+RR_REGS = ("rcx", "rdx", "rsi", "rdi", "r8", "r9", "r10", "r11", "r12", "r13", "r15")
+
+
+def gen3_callee(v):
+    """IR class of a delegated field under `--gen3`: ("call", callee label) or ("none", reason)."""
+    dt, u = v.get("delegated_to") or {}, v.get("underlying") or {}
+    if v.get("k") != "overlay":
+        return "none", (f"field kind {v.get('k')} ({v.get('go_type')}, delegated to {dt.get('k')} {dt.get('name')}): "
+                        f"nested container / pointer callee, no GEN3 template")
+    if not (v.get("deleg") or {}).get("unmarshaler") or dt.get("k") != "overlay" or v.get("fixed_size") != 8 \
+            or u.get("k") != "uint" or u.get("bits") != 64:
+        return "none", f"overlay field ({v.get('go_type')}) that is not a delegated uint64 overlay"
+    if v.get("pkg") != PRIM_PKG or v.get("name") not in CALLEES or dt.get("name") != v.get("name") \
+            or dt.get("pkg") != PRIM_PKG:
+        return "none", (f"overlay callee {v.get('pkg')}.{v.get('name')}: no proved callee accept spec "
+                        f"(only {', '.join(CALLEES)} of consensus-types/primitives)")
+    return "call", CALLEES[v["name"]]
+
+
+def _hexs(s):
+    """`0x10` / `-0x10` -> int."""
+    return -int(s[1:], 16) if s.startswith("-") else int(s, 16)
+
+
+def _lit(x):
+    """Lean literal of an Int64 parameter (negative in parentheses)."""
+    return f"({x})" if x < 0 else f"{x}"
+
+
+SHX = r"-?0x[0-9a-f]+"
+
+
+def _fullmatch_at(dirs, i, rx):
+    return re.fullmatch(rx, dirs[i]) if 0 <= i < len(dirs) else None
+
+
+def rr_find(dirs, fo, src):
+    """The two-directive uint64 read of the field at Go offset `fo`, SSZ offset `src` (GEN3 L3):
+    `mov src(%rbx),%rX; mov %rX,fo(%rax)`, the same rX twice, rX in RR_REGS. Returns the list of hits."""
+    hits = []
+    for j in range(len(dirs) - 1):
+        m1 = re.fullmatch(rf"mov %(\w+),({HEX})\(%rax\)", dirs[j + 1])
+        if not m1 or int(m1.group(2), 16) != fo:
+            continue
+        rX = m1.group(1)
+        m0 = re.fullmatch(rf"mov ({HEX})\(%rbx\),%{re.escape(rX)}", dirs[j])
+        if not m0 or int(m0.group(1), 16) != src or rX not in RR_REGS:
+            continue
+        hits.append((j, dict(rX=rX, src=src, f=fo, last=j + 1)))
+    return hits
+
+
+def u64_find_gen3(dirs, fo, src):
+    """GEN2 inline form, else the GEN3 two-directive form; exactly one site of the two forms together."""
+    if src == 0 or fo == 0:
+        raise NoMatch(f"inline uint64 with displacement 0 (SSZ offset {src}, Go offset {fo}): not exercised for "
+                      f"u64dec_inline_seg / u64dec_rr_seg")
+    rr = rr_find(dirs, fo, src)
+    try:
+        j, p = u64_find(dirs, fo, src)
+    except NoMatch as e:
+        cand = [j for j in range(len(dirs)) if re.fullmatch(rf"mov %\w+,{fo:#x}\(%rdx\)", dirs[j])]
+        if cand:
+            raise NoMatch(f"{e} (GEN2 inline form at a store to {fo:#x}(%rdx))")
+        if len(rr) != 1:
+            raise NoMatch(f"field at Go offset {fo:#x}: no inline uint64 read; {len(rr)} two-directive reads "
+                          f"`mov {src:#x}(%rbx),%rX; mov %rX,{fo:#x}(%rax)` match (expected 1)")
+        j, p = rr[0]
+        p["form"] = "rr"
+        return j, p
+    if rr:
+        raise NoMatch(f"field at Go offset {fo:#x}: both the inline and the two-directive form match (ambiguous)")
+    p["form"] = "inline"
+    return j, p
+
+
+def call_find(dirs, fo, src, fn):
+    """The callee-decoder field at Go offset `fo`, SSZ offset `src`, callee label `fn`: the call block and its
+    argument set-up (forms "first", "reload", "lea"). Exactly one call site must match."""
+    hits, why = [], []
+    for j in range(len(dirs)):
+        if dirs[j] != f"callq {fn}":
+            continue
+        if not _fullmatch_at(dirs, j + 1, r"test %rax,%rax"):
+            why.append(f"directive {j + 1}: not `test %rax,%rax` after the call at {j}")
+            continue
+        mj = _fullmatch_at(dirs, j + 2, r"je (\S+)")
+        if not mj:
+            why.append(f"directive {j + 2}: not `je <label>` after the call at {j}")
+            continue
+        lok = mj.group(1)
+        try:
+            j2 = label_index(dirs, lok)
+        except NoMatch as e:
+            why.append(str(e))
+            continue
+        if j2 <= j + 2:
+            why.append(f"call at {j}: continuation label {lok} at {j2} is not after the je")
+            continue
+        found = None
+        for pad in (False, True):
+            b = j - (1 if pad else 0)  # index after the set-up proper
+            if pad and dirs[j - 1] != "nop":
+                continue
+            # (b) first field: add $f,%rax; mov $0x8,%ecx
+            m_add = _fullmatch_at(dirs, b - 2, rf"add \$({HEX}),%rax")
+            if m_add and _fullmatch_at(dirs, b - 1, r"mov \$0x8,%ecx") and int(m_add.group(1), 16) == fo:
+                # the reload form also ends with `add $f,%rax; mov $0x8,%ecx`: it is the reload form when the
+                # five directives before are those of `callArgReload`
+                r = [_fullmatch_at(dirs, b - 7, rf"mov ({HEX})\(%rsp\),%rbx"),
+                     _fullmatch_at(dirs, b - 6, rf"add \$({HEX}),%rbx"),
+                     _fullmatch_at(dirs, b - 5, rf"mov ({HEX})\(%rsp\),%rdi"),
+                     _fullmatch_at(dirs, b - 4, rf"add \$({SHX}),%rdi"),
+                     _fullmatch_at(dirs, b - 3, rf"mov ({HEX})\(%rsp\),%rax")]
+                if all(r):
+                    s_, c_ = int(r[1].group(1), 16), _hexs(r[3].group(1))
+                    if s_ != src:
+                        why.append(f"call at {j}: reload set-up source offset {s_:#x}, IR SSZ offset {src:#x}")
+                        break
+                    if c_ != -src:
+                        why.append(f"call at {j}: reload set-up adds {c_} to rdi, observed form is -{src}")
+                        break
+                    found = dict(form="reload", pad=pad, js=b - 7, dB=int(r[0].group(1), 16), src=src,
+                                 dD=int(r[2].group(1), 16), c=c_, dR=int(r[4].group(1), 16), f=fo)
+                elif any(r[3:]) or any(r[:3]):
+                    why.append(f"call at {j}: set-up neither the first-field form nor the reload form "
+                               f"(directives {b - 7}–{b - 1})")
+                    break
+                else:
+                    if src != 0:
+                        why.append(f"call at {j}: first-field set-up (buffer pointer unchanged) but IR SSZ offset {src:#x}")
+                        break
+                    found = dict(form="first", pad=pad, js=b - 2, f=fo)
+                break
+            # (d) lea form: callArgLea at b-11, the two-directive read at b-5, callArgMov at b-3 (no pad observed)
+            if not pad and _fullmatch_at(dirs, b - 3, r"mov %rsi,%rax") and _fullmatch_at(dirs, b - 2, r"mov %rdx,%rbx") \
+                    and _fullmatch_at(dirs, b - 1, r"mov \$0x8,%ecx"):
+                r = [_fullmatch_at(dirs, b - 11, rf"mov ({HEX})\(%rsp\),%rbx"),
+                     _fullmatch_at(dirs, b - 10, rf"lea ({HEX})\(%rbx\),%rdx"),
+                     _fullmatch_at(dirs, b - 9, rf"mov ({HEX})\(%rsp\),%rdi"),
+                     _fullmatch_at(dirs, b - 8, rf"add \$({SHX}),%rdi"),
+                     _fullmatch_at(dirs, b - 7, rf"mov ({HEX})\(%rsp\),%rax"),
+                     _fullmatch_at(dirs, b - 6, rf"lea ({HEX})\(%rax\),%rsi")]
+                m0 = _fullmatch_at(dirs, b - 5, rf"mov ({HEX})\(%rbx\),%(\w+)")
+                m1 = m0 and _fullmatch_at(dirs, b - 4, rf"mov %{re.escape(m0.group(2))},({HEX})\(%rax\)")
+                if not (all(r) and m1):
+                    why.append(f"call at {j}: `mov %rsi,%rax; mov %rdx,%rbx; mov $0x8,%ecx` without the observed "
+                               f"lea set-up and two-directive read before it (directives {b - 11}–{b - 4})")
+                    break
+                s_, c_, f_ = int(r[1].group(1), 16), _hexs(r[3].group(1)), int(r[5].group(1), 16)
+                if f_ != fo:
+                    why.append(f"call at {j}: lea set-up Go offset {f_:#x}, IR Go offset {fo:#x}")
+                    break
+                if s_ != src or c_ != -src:
+                    why.append(f"call at {j}: lea set-up source offset {s_:#x} / rdi {c_}, IR SSZ offset {src:#x}")
+                    break
+                if m0.group(2) in ("rdx", "rsi") or m0.group(2) not in RR_REGS:
+                    why.append(f"call at {j}: the read between the set-up parts uses {m0.group(2)} (would clobber "
+                               f"the set-up registers rdx / rsi, or not a scratch register)")
+                    break
+                found = dict(form="lea", pad=False, js=b - 11, jm=b - 3, jr=b - 5, dB=int(r[0].group(1), 16),
+                             src=src, dD=int(r[2].group(1), 16), c=c_, dR=int(r[4].group(1), 16), f=fo)
+                break
+            if not pad:
+                continue
+        if found:
+            found.update(fn=fn, j=j, lok=lok, j2=j2, last=j + 2)
+            hits.append(found)
+        elif not any(w.startswith(f"call at {j}") for w in why):
+            why.append(f"call at {j}: set-up not one of the observed forms for Go offset {fo:#x}")
+    if len(hits) != 1:
+        raise NoMatch(f"callee field at Go offset {fo:#x} ({fn}): {len(hits)} call sites match (expected 1)"
+                      + (f"; {'; '.join(why)}" if why else ""))
+    return hits[0]
+
+
+CALL_ARG_FIRST_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
+    ∀
+    (rcv aF : BitVec 64) (hF : rcv + ({f} : Int64).toBitVec = aF)
+    (s : MachineData) (hrax : s.regs.rax.toBitVec = rcv),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + {js} + 2 + padLen {padb}) ∧ st.data.regs.rsp = s.regs.rsp
+        ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧ st.data.regs.rbx = s.regs.rbx
+        ∧ st.data.regs.rax.toBitVec = aF ∧ st.data.regs.rcx = 8 ∧ st.data.dmem = s.dmem)
+      ⟨s, Host.addrOf (k + {js})⟩ := by
+"""
+
+CALL_ARG_RELOAD_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
+    ∀
+    (sp rcv bf aB aD aR aSrc aF : BitVec 64)
+    (hB' : sp + ({dB} : Int64).toBitVec = aB) (hD : sp + ({dD} : Int64).toBitVec = aD) (hR : sp + ({dR} : Int64).toBitVec = aR)
+    (hSrc : bf + ({src} : Int64).toBitVec = aSrc) (hF : rcv + ({f} : Int64).toBitVec = aF)
+    (vD : List UInt8) (hvD : vD.length = 8) (R : DataMem → Prop)
+    (s : MachineData) (hrsp : s.regs.rsp = {{ toBitVec := sp }})
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 bf.toInt).At aB) ⋆ Eq (vD.At aD)
+      ⋆ Eq ((Int.toBytes 8 rcv.toInt).At aR) ⋆ R),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + {js} + 7 + padLen {padb}) ∧ st.data.regs.rsp = s.regs.rsp
+        ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14
+        ∧ st.data.regs.rbx.toBitVec = aSrc ∧ st.data.regs.rax.toBitVec = aF ∧ st.data.regs.rcx = 8
+        ∧ st.data.dmem = s.dmem)
+      ⟨s, Host.addrOf (k + {js})⟩ := by
+"""
+
+CALL_ARG_LEA_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
+    ∀
+    (sp rcv bf aB aD aR aSrc aF : BitVec 64)
+    (hB' : sp + ({dB} : Int64).toBitVec = aB) (hD : sp + ({dD} : Int64).toBitVec = aD) (hR : sp + ({dR} : Int64).toBitVec = aR)
+    (hSrc : bf + ({src} : Int64).toBitVec = aSrc) (hF : rcv + ({f} : Int64).toBitVec = aF)
+    (vD : List UInt8) (hvD : vD.length = 8) (R : DataMem → Prop)
+    (s : MachineData) (hrsp : s.regs.rsp = {{ toBitVec := sp }})
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 bf.toInt).At aB) ⋆ Eq (vD.At aD)
+      ⋆ Eq ((Int.toBytes 8 rcv.toInt).At aR) ⋆ R),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + {js} + 6) ∧ st.data.regs.rsp = s.regs.rsp
+        ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14
+        ∧ st.data.regs.rbx.toBitVec = bf ∧ st.data.regs.rdx.toBitVec = aSrc
+        ∧ st.data.regs.rax.toBitVec = rcv ∧ st.data.regs.rsi.toBitVec = aF
+        ∧ st.data.dmem = s.dmem)
+      ⟨s, Host.addrOf (k + {js})⟩ := by
+"""
+
+CALL_ARG_MOV_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
+    ∀
+    (s : MachineData),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + {jm} + 3) ∧ st.data.regs.rsp = s.regs.rsp
+        ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14
+        ∧ st.data.regs.rax = s.regs.rsi ∧ st.data.regs.rbx = s.regs.rdx ∧ st.data.regs.rcx = 8
+        ∧ st.data.dmem = s.dmem)
+      ⟨s, Host.addrOf (k + {jm})⟩ := by
+"""
+
+CALL_DEC_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
+    ∀ (hC : U64CalleeAcc "{fn}")
+    (sp dst src aRet aFp aS2 : BitVec 64)
+    (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
+    (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 : List UInt8)
+    (he8 : e8.length = 8) (hrs : rslot.length = 8) (hfp : fp.length = 8) (hs2 : s2.length = 8)
+    (hc0 : c0.length = 8) (hguard : guard.toNat < aRet.toNat)
+    (F : DataMem → Prop)
+    (s : MachineData) (hrsp : s.regs.rsp = {{ toBitVec := sp }}) (hrbp : s.regs.rbp = rbp0)
+    (hr14 : s.regs.r14 = r140) (hrax : s.regs.rax.toBitVec = dst) (hrbx : s.regs.rbx.toBitVec = src)
+    (hrcx : s.regs.rcx = 8)
+    (h_mem : s.dmem =⋆ Eq (rslot.At aRet) ⋆ Eq (fp.At aFp) ⋆ Eq (s2.At aS2)
+      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
+      ⋆ Eq (e8.At src) ⋆ Eq (c0.At dst) ⋆ F),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + {j2} + 1) ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
+        ∧ st.data.regs.rsp = {{ toBitVec := sp }} ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
+        (Eq ((Int.toBytes 8 (Host.addrOf (k + {j} + 1)).toBitVec.toInt).At aRet)
+          ⋆ Eq ((Int.toBytes 8 rbp0.toBitVec.toInt).At aFp) ⋆ Eq ((Int.toBytes 8 src.toInt).At aS2)
+          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
+          ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
+      ⟨s, Host.addrOf (k + {j})⟩ := by
+"""
+
+U64RR_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
+    ∀
+    (bf rcv aSrc aF : BitVec 64) (hSrc : bf + ({src} : Int64).toBitVec = aSrc) (hF : rcv + ({f} : Int64).toBitVec = aF)
+    (v vF : List UInt8) (hv : v.length = 8) (hvF : vF.length = 8)
+    (R : DataMem → Prop)
+    (s : MachineData) (hrbx : s.regs.rbx.toBitVec = bf) (hrax : s.regs.rax.toBitVec = rcv)
+    (h_mem : s.dmem =⋆ Eq (v.At aSrc) ⋆ Eq (vF.At aF) ⋆ R),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + {j} + 2) ∧ st.data.regs.rsp = s.regs.rsp
+        ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14
+        ∧ st.data.regs.rax = s.regs.rax ∧ st.data.regs.rbx = s.regs.rbx
+        ∧ (∀ r : Reg64, r ≠ Reg64.{rX} → st.data.regs.get64 r = s.regs.get64 r)
+        ∧ (Eq (v.At aSrc) ⋆ Eq (v.At aF) ⋆ R) st.data.dmem)
+      ⟨s, Host.addrOf (k + {j})⟩ := by
+"""
+
+G3_OPTS = "set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
+
+
+def call_seg(c, fname, src, fo, p):
+    """GEN3 text of a callee-decoder field: set-up theorem(s) and the call-block theorem, each with its kind."""
+    k, pre = c["const"], f"{c['prefix']}_{fname}"
+    padb = "true" if p["pad"] else "false"
+    padnote = " (padding `nop`)" if p["pad"] else ""
+    out = ""
+    if p["form"] == "first":
+        name = f"{pre}_arg"
+        out += G3_OPTS + (f"/-- `{fname}` (callee decoder field, Go offset {fo}): argument set-up, first-field form, "
+                          f"directives {p['js']}–{p['j'] - 1}{padnote}. -/\n")
+        out += CALL_ARG_FIRST_STMT.format(name=name, const=k, f=fo, js=p["js"], padb=padb)
+        out += infix_have("hA", f"E2eScal.callArgFirst {padb} {fo}", p["js"], k)
+        out += f"  with_reducible exact E2eScal.callarg_first_seg {padb} _ (k + {p['js']}) hA\n"
+        out += kind_thm(name, f"E2eScal.callArgFirstKind h {k} {padb} {fo} {p['js']}") + "\n"
+    elif p["form"] == "reload":
+        name = f"{pre}_arg"
+        args = f"{p['dB']} {p['src']} {p['dD']} {_lit(p['c'])} {p['dR']} {p['f']}"
+        out += G3_OPTS + (f"/-- `{fname}` (callee decoder field, SSZ offset {src}, Go offset {fo}): argument set-up by "
+                          f"reload, directives {p['js']}–{p['j'] - 1}{padnote}. -/\n")
+        out += CALL_ARG_RELOAD_STMT.format(name=name, const=k, js=p["js"], padb=padb, **{x: p[x] for x in
+                                                                                      ("dB", "dD", "dR", "src", "f")})
+        out += infix_have("hA", f"E2eScal.callArgReload {padb} {args}", p["js"], k)
+        out += f"  with_reducible exact E2eScal.callarg_reload_seg {padb} _ _ _ _ _ _ (k + {p['js']}) hA\n"
+        out += kind_thm(name, f"E2eScal.callArgReloadKind h {k} {padb} {args} {p['js']}") + "\n"
+    else:
+        name = f"{pre}_arg1"
+        args = f"{p['dB']} {p['src']} {p['dD']} {_lit(p['c'])} {p['dR']} {p['f']}"
+        out += G3_OPTS + (f"/-- `{fname}` (callee decoder field, SSZ offset {src}, Go offset {fo}): argument set-up, "
+                          f"`lea` form, first part, directives {p['js']}–{p['js'] + 5}. -/\n")
+        out += CALL_ARG_LEA_STMT.format(name=name, const=k, js=p["js"], **{x: p[x] for x in ("dB", "dD", "dR", "src", "f")})
+        out += infix_have("hA", f"E2eScal.callArgLea {args}", p["js"], k)
+        out += f"  with_reducible exact E2eScal.callarg_lea_seg _ _ _ _ _ _ (k + {p['js']}) hA\n"
+        out += kind_thm(name, f"E2eScal.callArgLeaKind h {k} {args} {p['js']}") + "\n"
+        name = f"{pre}_arg2"
+        out += G3_OPTS + (f"/-- `{fname}`: argument set-up, `lea` form, second part, directives "
+                          f"{p['jm']}–{p['jm'] + 2}. -/\n")
+        out += CALL_ARG_MOV_STMT.format(name=name, const=k, jm=p["jm"])
+        out += infix_have("hA", "E2eScal.callArgMov", p["jm"], k)
+        out += f"  with_reducible exact E2eScal.callarg_mov_seg (k + {p['jm']}) hA\n"
+        out += kind_thm(name, f"E2eScal.callArgMovKind h {k} {p['jm']}") + "\n"
+    name = f"{pre}_call"
+    out += G3_OPTS + (f"/-- `{fname}`: call block of the callee decoder, directives {p['j']}–{p['j'] + 2}, continuation "
+                      f"label at {p['j2']}. -/\n")
+    out += CALL_DEC_STMT.format(name=name, const=k, fn=p["fn"], j=p["j"], j2=p["j2"])
+    out += infix_have("hA", f"E2eScal.callDec {lean_str(p['fn'])} {lean_str(p['lok'])}", p["j"], k)
+    out += infix_have("hB", f"E2eScal.callDecL {lean_str(p['lok'])}", p["j2"], k)
+    out += label_have("hl", p["j2"], k)
+    out += f"  with_reducible exact E2eScal.calldec_seg _ _ (k + {p['j']}) (k + {p['j2']}) hA hB hl\n"
+    out += kind_thm(name, f"E2eScal.callDecSegKind h {k} {lean_str(p['fn'])} {lean_str(p['lok'])} {p['j']} {p['j2']}") + "\n"
+    return out
+
+
+def u64rr_seg(c, fname, src, fo, j, p):
+    """GEN3 text of a two-directive uint64 read (`u64dec_rr_seg`)."""
+    name = f"{c['prefix']}_{fname}_seg"
+    k = c["const"]
+    out = G3_OPTS + (f"/-- `{fname}` (inline uint64, two-directive form, SSZ offset {src}, Go offset {fo}): decode "
+                     f"segment, directives {j}–{p['last']}, scratch register {p['rX']}. -/\n")
+    out += U64RR_STMT.format(name=name, const=k, j=j, **p)
+    out += infix_have("hA", f"E2eScal.u64DecRR Reg64.{p['rX']} {p['src']} {p['f']}", j, k)
+    out += f"  have hX : E2eScal.U64RRReg Reg64.{p['rX']} := by decide\n"
+    out += f"  with_reducible exact E2eScal.u64dec_rr_seg Reg64.{p['rX']} hX _ _ (k + {j}) hA\n"
+    out += kind_thm(name, f"E2eScal.u64DecRRSegKind h {k} Reg64.{p['rX']} {p['src']} {p['f']} {j}") + "\n"
+    return out
+
+
+def bytes_seg_pad(c, fname, src, fo, j1, j2, p):
+    """GEN3 text of a byte vector with the padding `nop` before `callq runtime.makeslice` (`bytesdec_seg_p true`)."""
+    n = p["n"]
+    name = f"{c['prefix']}_{fname}_seg"
+    k = c["const"]
+    out = "set_option maxHeartbeats 16000000 in\nset_option maxRecDepth 100000 in\n"
+    out += (f"/-- `{fname}` ({n} bytes, SSZ offset {src}, Go offset {fo}): decode segment with the padding `nop` before "
+            f"`callq runtime.makeslice`, directives {j1}–{p['last']}. -/\n")
+    out += BYTES_STMT.format(name=name, const=k, j1=j1, j2=j2, **p)
+    head = f"E2eScal.bytesDecHeadP true {n} {lean_str(p['lff'])} {p['dR']} {p['fL']} {p['fC']}"
+    out += (f"  have hA := E2eScal.infix_sub (q := {head}) {j1} hk\n"
+            f"    (by simp only [{k}, E2eScal.bytesDecHeadP, E2eScal.bytesDecHeadPad, {SIMP_INFIX}])\n")
+    out += infix_have("hB", f"E2eScal.bytesDecMid {n} {lean_str(p['lff'])} {lean_str(p['lwb'])} {p['dR']} {p['dB']} "
+                      f"{p['dS']} {p['fP']} {p['fL']} {p['fC']} {p['src']}", j2, k)
+    out += label_have("hl", j2, k)
+    out += (f"  with_reducible exact E2eScal.bytesdec_seg_p true {n} ({HN[n]}) _ _ _ _ _ _ _ _ _ (k + {j1}) (k + {j2}) "
+            f"hA hB hl\n")
+    out += kind_thm(name, f"E2eScal.bytesDecSegKind h {n} {k} {j1} {j2} {p['dR']} {p['dB']} {p['dS']} {p['fP']} "
+                          f"{p['fL']} {p['fC']} {p['src']}") + "\n"
+    return out
 
 
 # ---------------------------------------------------------------- GEN2 composition (`p2dec --gen2 --compose`)
@@ -795,6 +1245,15 @@ def compose(args, dirs, sha, irsha, fields, found):
     head, steps, jE = compose_read(dirs, found, ssz)
     slots = compose_layout(args.ir, args.type, found)
     C, name = args.const, args.name
+    g3 = getattr(args, "gen3", False)
+    if g3:
+        # GEN3 (lemma unit L4): the composed statement is checked against `decAcceptKind C st fields jret`; the kind
+        # has one optional opaque word (the protoc `state`) at Go offset 0 and contiguous fields after it
+        opq = [o for cl, _, o in slots if cl == "opaque"]
+        if opq not in ([], [0]):
+            raise NoMatch(f"--compose --gen3: opaque receiver words at Go offsets {opq}; decAcceptKind allows one at 0 only")
+        kst = "true" if opq == [0] else "false"
+        kfields = ", ".join(f".bytes {a[5]['n']}" if cl == "bytes" else ".u64" for *_, cl, a in found)
     nf = len(found)
     X = [f"x{i + 1}" for i in range(nf)]                     # input bytes per field (SSZ order)
     size = [(a[5]["n"] if cl == "bytes" else 8) for *_, cl, a in found]
@@ -983,14 +1442,26 @@ def compose(args, dirs, sha, irsha, fields, found):
     chk = (f"; composed accept theorem; statement check: identity with `{hand}`" if hand else
            "; composed accept theorem; NO statement check (no hand theorem given: the statement is unchecked text, "
            "checked by nobody; `kindcheck.py` rejects this file)")
-    out = header(sha, args.S, args, f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`){chk}", [])
+    if g3:
+        chk = ("; composed accept theorem (`p2dec --gen3 --compose`); statement check: the kind `decAcceptKind` "
+               "(`_kind`, rfl at default transparency)" + (f" and the identity with `{hand}`" if hand else ""))
+    out = header(sha, args.S, args, f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`){chk}",
+                 ["E2eScal.KindAccept"] if g3 else [])
     out += "set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
     out += f"/-- Accept path of `{args.type}.UnmarshalSSZ`, composed from the generated segment theorems `{args.prefix}_*_seg`. -/\n"
-    if not hand:
+    if not hand and not g3:
         # unit G2-F: mark the theorem line itself (only when no hand statement is given; the committed outputs
         # all have `--same-as`, so their text does not change)
         L[0] += " -- UNCHECKED STATEMENT: checked by nobody"
     out += "\n".join(L) + "\n" + "\n".join(Q) + "\n"
+    if g3:
+        # lemma unit L4 (`KindAccept.lean`): `rfl` at default transparency (the recursive kind must unfold); the
+        # default heartbeat limit is set explicitly: a wrong parameter may not fail fast, a timeout is a FAIL
+        # (a plain comment: a doc comment cannot stand before `set_option … in`; G3-G compose run 1 failed so)
+        out += (f"\n-- Statement check: the declared type is the composed-accept kind (fields from the IR, `jret` from "
+                f"the `.S`).\nset_option maxHeartbeats 200000 in\n"
+                f"theorem {name}_kind : ∀ (h : Host), type_of% (@{name} h) = @E2eScal.decAcceptKind h {C} {kst} "
+                f"[{kfields}] {ret} := by\n  intro h; rfl\n")
     if args.same_as_prop:
         out += (f"\n/-- Statement check: the declared type is the hand Prop `{args.same_as_prop}` (definitional identity). -/\n"
                 f"theorem {name}_type : ∀ (h : Host),\n    type_of% (@{name} h) = @{args.same_as_prop} h := by\n"
@@ -999,7 +1470,7 @@ def compose(args, dirs, sha, irsha, fields, found):
         out += (f"\n/-- Statement check: the declared type is that of the hand theorem (definitional identity). -/\n"
                 f"theorem {name}_type : ∀ (h : Host),\n    type_of% (@{name} h) = type_of% (@{args.same_as} h) := by\n"
                 f"  intro h; with_reducible rfl\n")
-    else:
+    elif not g3:
         print(f"scalgen p2dec: --compose without --same-as: the statement of {name} is NOT checked", file=sys.stderr)
     return out + "\nend E2eScal.Gen\n"
 
@@ -1023,11 +1494,18 @@ def main():
     ap.add_argument("--partial-out", help="p2dec: on exit 3, write the matched fields here (marked PARTIAL)")
     ap.add_argument("--gen2", action="store_true",
                     help="p2dec: GEN2 coverage (byte vectors of 32 / 48 / 96 bytes, inline uint64); off = S2 / SG-1 text")
+    ap.add_argument("--gen3", action="store_true",
+                    help="p2dec: GEN3 coverage (implies --gen2): uint64-overlay fields decoded by a call to a callee "
+                         "decoder with a proved spec, the two-directive uint64 read, the padding nop before makeslice")
     ap.add_argument("--summary", help="p2dec --gen2: write the per-field coverage report (JSON) here")
     ap.add_argument("--compose", action="store_true",
                     help="p2dec --gen2: emit the composed accept theorem --name (needs every field covered; the "
                          "segment theorems come from the module of the same --prefix, listed in --imports)")
     args = ap.parse_args()
+    if args.gen3:
+        if args.mode != "p2dec":
+            ap.error("--gen3 is a p2dec option")
+        args.gen2 = True  # GEN3 = the GEN2 shapes + the GEN3 shapes
     if args.same_as_prop and not args.compose:
         ap.error("--same-as-prop is a p2dec --compose option")
     if args.same_as_prop and args.same_as:

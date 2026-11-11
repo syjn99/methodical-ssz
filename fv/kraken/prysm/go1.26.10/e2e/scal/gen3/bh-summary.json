@@ -1,0 +1,66 @@
+{
+ "type": "v1alpha1.BeaconBlockHeader",
+ "S": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
+ "S_sha256": "e18ac244d9dcfe0a5981de56a454c197a63511a186974b38d6a8baccf55924c5",
+ "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a",
+ "fields": [
+  {
+   "field": "Slot",
+   "ssz_offset": 0,
+   "go_offset": 8,
+   "status": "covered",
+   "shape": "calldec_seg Slot + callarg_first_seg",
+   "directives": [
+    15,
+    19
+   ]
+  },
+  {
+   "field": "ProposerIndex",
+   "ssz_offset": 8,
+   "go_offset": 16,
+   "status": "covered",
+   "shape": "calldec_seg ValidatorIndex + callarg_reload_seg (pad)",
+   "directives": [
+    47,
+    57
+   ]
+  },
+  {
+   "field": "ParentRoot",
+   "ssz_offset": 16,
+   "go_offset": 24,
+   "status": "covered",
+   "shape": "rootdec_seg",
+   "directives": [
+    88,
+    112
+   ]
+  },
+  {
+   "field": "StateRoot",
+   "ssz_offset": 48,
+   "go_offset": 48,
+   "status": "covered",
+   "shape": "rootdec_seg",
+   "directives": [
+    124,
+    148
+   ]
+  },
+  {
+   "field": "BodyRoot",
+   "ssz_offset": 80,
+   "go_offset": 72,
+   "status": "covered",
+   "shape": "rootdec_seg",
+   "directives": [
+    159,
+    183
+   ]
+  }
+ ],
+ "exit": 0,
+ "covered": 5,
+ "total": 5
+}

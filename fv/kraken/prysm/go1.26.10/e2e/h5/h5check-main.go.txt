@@ -1,0 +1,74 @@
+// Scratch differential program (H5 hold-out evaluation, not committed in Prysm): runs the real generated
+// v1alpha1.SyncCommitteeMessage.UnmarshalSSZ and v1alpha1.PendingConsolidation.UnmarshalSSZ on the cases of
+// fv/kraken/gen/e2e/h5diff.py and prints the observed results as JSON. Expected values are computed by that
+// script independently (Python struct.pack), never from this program. (Text of h4check-main.go.txt.)
+package main
+
+import (
+	"encoding/hex"
+	"encoding/json"
+	"errors"
+	"os"
+
+	"github.com/OffchainLabs/methodical-ssz/ssz"
+	ethpb "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+)
+
+type Case struct {
+	ID string `json:"id"`
+	Op string `json:"op"`
+	In string `json:"in"`
+}
+
+type Res struct {
+	ID      string   `json:"id"`
+	Err     string   `json:"err"`
+	ErrSize bool     `json:"err_is_ErrSize"`
+	U64s    []uint64 `json:"u64s"`
+	Bytes   []string `json:"bytes"`
+	Lens    []int    `json:"lens"`
+	Caps    []int    `json:"caps"`
+}
+
+func put(r *Res, bs ...[]byte) {
+	for _, b := range bs {
+		r.Bytes = append(r.Bytes, hex.EncodeToString(b))
+		r.Lens = append(r.Lens, len(b))
+		r.Caps = append(r.Caps, cap(b))
+	}
+}
+
+func main() {
+	var cs []Case
+	if err := json.NewDecoder(os.Stdin).Decode(&cs); err != nil {
+		panic(err)
+	}
+	out := []Res{}
+	for _, c := range cs {
+		in, err := hex.DecodeString(c.In)
+		if err != nil {
+			panic(err)
+		}
+		r := Res{ID: c.ID}
+		var e error
+		switch c.Op {
+		case "sm_u":
+			h := &ethpb.SyncCommitteeMessage{}
+			e = h.UnmarshalSSZ(in)
+			r.U64s = []uint64{uint64(h.Slot), uint64(h.ValidatorIndex)}
+			put(&r, h.BlockRoot, h.Signature)
+		case "pc_u":
+			h := &ethpb.PendingConsolidation{}
+			e = h.UnmarshalSSZ(in)
+			r.U64s = []uint64{uint64(h.SourceIndex), uint64(h.TargetIndex)}
+		default:
+			panic(c.Op)
+		}
+		if e != nil {
+			r.Err = e.Error()
+			r.ErrSize = errors.Is(e, ssz.ErrSize)
+		}
+		out = append(out, r)
+	}
+	json.NewEncoder(os.Stdout).Encode(out)
+}

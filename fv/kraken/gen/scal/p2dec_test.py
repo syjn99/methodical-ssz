@@ -51,6 +51,24 @@ Unit G2-F cases (review g2g-r1; ids `g2f-*`):
  - g2f-same-as-prop: `--same-as-prop E2eScal.Fx.biStmt`: exit 0, the Prop identity line, kindcheck PASS; the
    test fixture `g2f-bi-prop-fixture.lean` (the output with a scratch `abbrev` equal to the type of
    `Bi.bi_e2e_accept_main`) is written to <work-dir> for a separate gated `lake env lean`.
+
+GEN3 cases (unit G3-G, `p2dec --gen3`; ids `g3-*`; mutated `.S` / IR copies in <work-dir> only):
+ - g3-new-*: `--gen3` on PendingPartialWithdrawal, Deposit_Data, BeaconBlockHeader: exit 0 twice, identical,
+   every field covered, = the committed raw files `Gen3PwDec.lean`, `Gen3DdDec.lean`, `Gen3BhDec.lean` when they
+   exist; AttestationData: exit 3, Slot / CommitteeIndex / BeaconBlockRoot covered, Source / Target not
+   (nested containers), partial file = committed `Gen3AdDecPartial.lean` when it exists; `kindcheck.py` PASS
+   (`--partial`: exit 3).
+ - adversarial `.S` / IR mutants per GEN3 shape: wrong callee symbol, callee without a proved spec (IR),
+   `test` / `je` missing, `je` to a missing or an earlier label, set-up with an extra or a missing move, `nop` in
+   an unobserved position (between `add` and `mov $0x8,%ecx`, after the `callq`, before `memmove`, before
+   `mov $n,%ecx`, in the offset-0 form), two `nop`s, the two-directive read with swapped registers, wrong
+   displacements against the IR, rdx as its register (clobbers the `lea` set-up), `lea` displacements against
+   the IR, a reload set-up with another rdi constant or register, IR order swapped (SSZ offset of a first-form
+   callee field not 0). Expected: the field is not covered (exit 3; no theorem whose name has the field) or
+   exit 2; 0 bytes on stdout whenever the exit code is not 0; `--summary` agrees.
+ - g3-compose-*: `--gen3 --compose` refuses callee / two-directive types (PendingPartialWithdrawal,
+   BeaconBlockHeader: exit 2, 0 bytes); Deposit_Data composes (exit 0) with the `decAcceptKind` `_kind` line
+   and the identity with `H4.dd_accept_stmt`; kindcheck PASS; = committed `Gen3DdAccept2.lean` when it exists.
 """
 import json
 import pathlib
@@ -468,6 +486,215 @@ def g2f_cases(work, new, cargs, CP, irt):
     return res, bad
 
 
+H4N = "prysm/go1.26.10/e2e/h4/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
+G3 = {
+    "PW": dict(S=H4N + "PendingPartialWithdrawal.UnmarshalSSZ.S", type="v1alpha1.PendingPartialWithdrawal",
+               committed="lean/E2eScal/Gen3PwDec.lean",
+               args=["--const", "PwUnmarshal", "--prefix", "pw_g3dec", "--imports", "E2eScal.H4Code", "--open", "E2eScal.H4Code"],
+               fields=["Index", "Amount", "WithdrawableEpoch"]),
+    "DD": dict(S=H4N + "Deposit_Data.UnmarshalSSZ.S", type="v1alpha1.Deposit_Data", committed="lean/E2eScal/Gen3DdDec.lean",
+               args=["--const", "DdUnmarshal", "--prefix", "dd_g3dec", "--imports",
+                     "E2eScal.P2Dec,E2eScal.P2DecZ,E2eScal.SegN,E2eScal.SegNPad,E2eScal.U64Inline,E2eScal.H4Code",
+                     "--open", "E2eScal.H4Code"],
+               fields=["PublicKey", "WithdrawalCredentials", "Amount", "Signature"]),
+    "BH": dict(S=G2["BH"]["S"], type="v1alpha1.BeaconBlockHeader", committed="lean/E2eScal/Gen3BhDec.lean",
+               args=["--const", "BhUnmarshal", "--prefix", "bh_g3dec", "--imports", "E2eScal.P2Dec,E2eScal.BhCode",
+                     "--open", "E2eScal.BhCode"],
+               fields=["Slot", "ProposerIndex", "ParentRoot", "StateRoot", "BodyRoot"]),
+    "AD": dict(S="prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
+                 "AttestationData.UnmarshalSSZ.S", type="v1alpha1.AttestationData",
+               committed="lean/E2eScal/Gen3AdDecPartial.lean",
+               args=["--const", "AdUnmarshal", "--prefix", "ad_g3dec", "--imports", "E2eScal.P2Dec,E2eAd.Code",
+                     "--open", "E2eAd.Code"],
+               fields=["Slot", "CommitteeIndex", "BeaconBlockRoot", "Source", "Target"]),
+}
+PWL = "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_"
+PRIM = "github.com_OffchainLabs_prysm_v7_consensus_types_primitives."
+
+
+def ir_overlay_name(field, name):
+    def fn(t):
+        for f in t["ir"]["fields"]:
+            if f["key"] == field:
+                f["v"]["name"] = name
+                f["v"]["delegated_to"]["name"] = name
+    return fn
+
+
+# (id, what, type key, .S edits (1-based line, old, new or None) or a function of the lines, IR edit, exit, covered)
+G3_MUT = [
+    ("g3-wrong-callee", "Index: call to Epoch.UnmarshalSSZ (IR ValidatorIndex)", "PW",
+     [(18, f"  callq {PRIM}ValidatorIndex.UnmarshalSSZ", f"  callq {PRIM}Epoch.UnmarshalSSZ")], None, 3,
+     ["Amount", "WithdrawableEpoch"]),
+    ("g3-callee-no-spec", "Index: callee Gwei.UnmarshalSSZ in code and IR (no proved callee spec)", "PW",
+     [(18, f"  callq {PRIM}ValidatorIndex.UnmarshalSSZ", f"  callq {PRIM}Gwei.UnmarshalSSZ")], ir_overlay_name("Index", "Gwei"), 3,
+     ["Amount", "WithdrawableEpoch"]),
+    ("g3-test-missing", "Index: `test %rax,%rax` after the call removed", "PW", [(19, "  test %rax,%rax", None)], None, 3,
+     ["Amount", "WithdrawableEpoch"]),
+    ("g3-je-missing", "Index: `je` after the test replaced by `jne`", "PW",
+     [(20, f"  je {PWL}b9", f"  jne {PWL}b9")], None, 3, ["Amount", "WithdrawableEpoch"]),
+    ("g3-je-no-label", "Index: `je` to a label that does not exist", "PW",
+     [(20, f"  je {PWL}b9", f"  je {PWL}zz")], None, 3, ["Amount", "WithdrawableEpoch"]),
+    ("g3-je-earlier-label", "Index: `je` to the entry label (before the call)", "PW",
+     [(20, f"  je {PWL}b9", f"  je {PWL}0")], None, 3, ["Amount", "WithdrawableEpoch"]),
+    ("g3-setup-extra-move", "Index: `mov %rax,%rdx` between `add` and `mov $0x8,%ecx`", "PW",
+     [(17, "  mov $0x8,%ecx", "  mov %rax,%rdx\n  mov $0x8,%ecx")], None, 3, ["Amount", "WithdrawableEpoch"]),
+    ("g3-setup-missing-move", "Index: `mov $0x8,%ecx` removed", "PW", [(17, "  mov $0x8,%ecx", None)], None, 3,
+     ["Amount", "WithdrawableEpoch"]),
+    ("g3-setup-nop-between", "Index: `nop` between `add $0x8,%rax` and `mov $0x8,%ecx` (unobserved position)", "PW",
+     [(17, "  mov $0x8,%ecx", "  nop\n  mov $0x8,%ecx")], None, 3, ["Amount", "WithdrawableEpoch"]),
+    ("g3-nop-after-call", "Index: `nop` between the `callq` and `test`", "PW",
+     [(19, "  test %rax,%rax", "  nop\n  test %rax,%rax")], None, 3, ["Amount", "WithdrawableEpoch"]),
+    ("g3-first-add-other-reg", "Index: `add $0x8,%rbx` instead of rax", "PW", [(16, "  add $0x8,%rax", "  add $0x8,%rbx")], None, 3,
+     ["Amount", "WithdrawableEpoch"]),
+    ("g3-rr-swapped", "Amount: `mov 0x8(%rax),%r8; mov %r8,0x10(%rbx)` (bases swapped)", "PW",
+     [(55, "  mov 0x8(%rbx),%r8", "  mov 0x8(%rax),%r8"), (56, "  mov %r8,0x10(%rax)", "  mov %r8,0x10(%rbx)")], None, 3, ["Index"]),
+    ("g3-rr-two-regs", "Amount: `mov 0x8(%rbx),%r8; mov %r9,0x10(%rax)`", "PW",
+     [(56, "  mov %r8,0x10(%rax)", "  mov %r9,0x10(%rax)")], None, 3, ["Index"]),
+    ("g3-rr-src-disp", "Amount: source displacement 0x10 against IR SSZ offset 8", "PW",
+     [(55, "  mov 0x8(%rbx),%r8", "  mov 0x10(%rbx),%r8")], None, 3, ["Index"]),
+    ("g3-rr-dst-disp", "Amount: receiver displacement 0x18 against IR Go offset 16", "PW",
+     [(56, "  mov %r8,0x10(%rax)", "  mov %r8,0x18(%rax)")], None, 3, ["Index"]),
+    ("g3-rr-reg-rdx", "Amount read through rdx (clobbers the `lea` set-up register)", "PW",
+     [(55, "  mov 0x8(%rbx),%r8", "  mov 0x8(%rbx),%rdx"), (56, "  mov %r8,0x10(%rax)", "  mov %rdx,0x10(%rax)")], None, 3,
+     ["Index", "Amount"]),
+    ("g3-rr-reg-rbp", "Amount read through rbp (not in U64RRReg)", "PW",
+     [(55, "  mov 0x8(%rbx),%r8", "  mov 0x8(%rbx),%rbp"), (56, "  mov %r8,0x10(%rax)", "  mov %rbp,0x10(%rax)")], None, 3,
+     ["Index"]),
+    ("g3-lea-src-disp", "WithdrawableEpoch: `lea 0x18(%rbx),%rdx` against IR SSZ offset 16", "PW",
+     [(50, "  lea 0x10(%rbx),%rdx", "  lea 0x18(%rbx),%rdx")], None, 3, ["Index", "Amount"]),
+    ("g3-lea-f-disp", "WithdrawableEpoch: `lea 0x20(%rax),%rsi` against IR Go offset 24", "PW",
+     [(54, "  lea 0x18(%rax),%rsi", "  lea 0x20(%rax),%rsi")], None, 3, ["Index", "Amount"]),
+    ("g3-lea-extra-move", "WithdrawableEpoch: an extra `mov %rdx,%rcx` before `mov %rsi,%rax`", "PW",
+     [(57, "  mov %rsi,%rax", "  mov %rdx,%rcx\n  mov %rsi,%rax")], None, 3, ["Index", "Amount"]),
+    ("g3-ir-swap-index-amount", "IR order Index / Amount swapped (Index at SSZ offset 8, Amount at 0)", "PW",
+     [], ir_swap("Index", "Amount"), 2, []),
+    ("g3-reload-c", "ProposerIndex: `add $-0x10,%rdi` (observed: minus the SSZ offset 8)", "BH",
+     [(51, "  add $-0x8,%rdi", "  add $-0x10,%rdi")], None, 3, ["Slot", "ParentRoot", "StateRoot", "BodyRoot"]),
+    ("g3-reload-reg", "ProposerIndex: buffer reloaded into rcx", "BH",
+     [(48, "  mov 0x78(%rsp),%rbx", "  mov 0x78(%rsp),%rcx")], None, 3, ["Slot", "ParentRoot", "StateRoot", "BodyRoot"]),
+    ("g3-two-nops-setup", "ProposerIndex: two `nop`s before the call", "BH",
+     [(55, "  nop", "  nop\n  nop")], None, 3, ["Slot", "ParentRoot", "StateRoot", "BodyRoot"]),
+    ("g3-reload-src-disp", "ProposerIndex: `add $0x10,%rbx` against IR SSZ offset 8", "BH",
+     [(49, "  add $0x8,%rbx", "  add $0x10,%rbx")], None, 3, ["Slot", "ParentRoot", "StateRoot", "BodyRoot"]),
+    ("g3-pad-two-nops", "WithdrawalCredentials: two `nop`s before makeslice", "DD",
+     [(51, "  nop", "  nop\n  nop")], None, 3, ["PublicKey", "Amount", "Signature"]),
+    ("g3-pad-before-memmove", "WithdrawalCredentials: `nop` before `callq runtime.memmove`", "DD",
+     [(68, "  callq runtime.memmove", "  nop\n  callq runtime.memmove")], None, 3, ["PublicKey", "Amount", "Signature"]),
+    ("g3-pad-before-size", "WithdrawalCredentials: `nop` before `mov $0x20,%ecx` (moved)", "DD",
+     [(50, "  mov $0x20,%ecx", "  nop"), (51, "  nop", "  mov $0x20,%ecx")], None, 3, ["PublicKey", "Amount", "Signature"]),
+    ("g3-pad-offset0", "PublicKey (offset-0 form): `nop` before makeslice", "DD",
+     [(17, "  callq runtime.makeslice", "  nop\n  callq runtime.makeslice")], None, 3,
+     ["WithdrawalCredentials", "Amount", "Signature"]),
+]
+
+
+def g3_cases(work, new):
+    """Unit G3-G: the GEN3 shapes, their adversarial inputs and the compose refusals / DD composition."""
+    res, bad = [], 0
+    irt = (KR / IR).read_text()
+    KC = ["python3", "-I", "-B", str(HERE / "kindcheck.py")]
+    G = ["python3", "-I", "-B", str(new), "p2dec", "--gen3"]
+    for key in ("PW", "DD", "BH", "AD"):
+        c = G3[key]
+        outs = []
+        for i in range(2):
+            po, su = work / f"g3-new-{key}-{i}.partial.lean", work / f"g3-new-{key}-{i}.json"
+            for q in (po, su):
+                if q.exists():
+                    q.unlink()
+            rc, so, se = run(G + ["--S", c["S"], "--ir", IR, "--type", c["type"], "--summary", str(su),
+                                  "--partial-out", str(po)] + c["args"], KR)
+            outs.append((rc, so, po.read_bytes() if po.exists() else b"", json.loads(su.read_text())))
+        rc, so, pt, sm = outs[0]
+        cov = [f["field"] for f in sm["fields"] if f["status"] == "covered"]
+        text = so if key != "AD" else pt
+        f = work / f"g3-new-{key}.lean"
+        f.write_bytes(text)
+        kc = subprocess.run(KC + (["--partial"] if key == "AD" else []) + [str(f)], capture_output=True, text=True)
+        com = (KR / c["committed"]).read_bytes() if (KR / c["committed"]).exists() else None
+        want_cov = c["fields"][:3] if key == "AD" else c["fields"]
+        ok = (rc == (3 if key == "AD" else 0) and outs[0][:3] == outs[1][:3] and cov == want_cov
+              and kc.returncode == (3 if key == "AD" else 0) and (com is None or com == text)
+              and (key != "AD" or so == b""))
+        res.append(dict(id=f"g3-new-{key}", expect=f"exit {3 if key == 'AD' else 0} twice, identical, covered {want_cov}, "
+                        f"kindcheck PASS, = committed if present", exit=rc, stdout_bytes=len(so), covered=cov,
+                        kindcheck_exit=kc.returncode, committed_present=com is not None,
+                        equals_committed=(com == text) if com is not None else None, ok=bool(ok)))
+        bad |= not ok
+    for (mid, what, key, eds, irf, want, covw) in G3_MUT:
+        c = G3[key]
+        base = (KR / c["S"]).read_text().split("\n")
+        lines = eds(base) if callable(eds) else edits(base, eds)
+        fS = work / f"{mid}.S"
+        fS.write_text("\n".join(lines))
+        irp = KR / IR
+        if irf:
+            irp = work / f"{mid}.ir.json"
+            irp.write_text(ir_edit(irt, c["type"], irf))
+        po, su = work / f"{mid}.partial.lean", work / f"{mid}.json"
+        for q in (po, su):
+            if q.exists():
+                q.unlink()
+        rc, so, se = run(G + ["--S", str(fS), "--ir", str(irp), "--type", c["type"], "--summary", str(su),
+                              "--partial-out", str(po)] + c["args"], KR)
+        sm = json.loads(su.read_text()) if su.exists() else {}
+        cov = [f["field"] for f in sm.get("fields", []) if f.get("status") == "covered"] if rc != 2 else []
+        pt = po.read_text() if po.exists() else ""
+        thm = [l.split()[1] for l in pt.split("\n") if l.startswith("theorem ")]
+        unc = [f for f in c["fields"] if f not in covw]
+        leak = [n for n in thm if any(f"_{u}_" in n for u in unc)]
+        ok = (rc == want and so == b"" and sm.get("exit") == want and (want == 2 or cov == covw) and not leak
+              and (want != 2 or not po.exists()))
+        res.append(dict(id=mid, what=what, expect=f"exit {want}, 0 bytes" + (f", covered {covw}" if want == 3 else ""),
+                        exit=rc, stdout_bytes=len(so), covered=cov, theorems_for_uncovered=leak,
+                        reasons=[f.get("reason") for f in sm.get("fields", []) if f.get("status") != "covered"],
+                        ok=bool(ok)))
+        bad |= not ok
+    # compose: refusals for callee / two-directive types, Deposit_Data composed with decAcceptKind
+    for key in ("PW", "BH"):
+        c = G3[key]
+        po = work / f"g3-compose-{key}.partial.lean"
+        if po.exists():
+            po.unlink()
+        rc, so, se = run(G + ["--compose", "--name", "x_g3", "--S", c["S"], "--ir", IR, "--type", c["type"],
+                              "--partial-out", str(po)] + c["args"], KR)
+        ok = rc == 2 and so == b"" and not po.exists() and "no composition" in se
+        res.append(dict(id=f"g3-compose-refuse-{key}", expect="exit 2, 0 bytes, no file", exit=rc, stdout_bytes=len(so),
+                        stderr=se.strip()[:300], ok=bool(ok)))
+        bad |= not ok
+    c = G3["DD"]
+    outs = [run(G + ["--compose", "--name", "dd_e2e_accept_main_g3", "--same-as-prop", "E2eScal.H4.dd_accept_stmt",
+                     "--S", c["S"], "--ir", IR, "--type", c["type"], "--const", "DdUnmarshal", "--prefix", "dd_g3dec",
+                     "--imports", "E2eScal.Compose,E2eScal.Gen3DdDec,E2eScal.H4Stmt", "--open", "E2eScal.H4Code"], KR)
+            for _ in range(2)]
+    rc, so, se = outs[0]
+    f = work / "g3-compose-DD.lean"
+    f.write_bytes(so)
+    kc = subprocess.run(KC + [str(f)], capture_output=True, text=True)
+    com = KR / "lean/E2eScal/Gen3DdAccept2.lean"
+    com = com.read_bytes() if com.exists() else None
+    t = so.decode()
+    ok = (rc == 0 and outs[0] == outs[1] and kc.returncode == 0 and "decAcceptKind" in kc.stdout
+          and "@E2eScal.decAcceptKind h DdUnmarshal true [.bytes 48, .bytes 32, .u64, .bytes 96] 106 := by" in t
+          and "set_option maxHeartbeats 200000 in\ntheorem dd_e2e_accept_main_g3_kind" in t
+          and "UNCHECKED" not in t and (com is None or com == so))
+    res.append(dict(id="g3-compose-DD", expect="exit 0 twice, identical, decAcceptKind line + Prop identity, kindcheck PASS",
+                    exit=rc, stdout_bytes=len(so), kindcheck_exit=kc.returncode, committed_present=com is not None,
+                    ok=bool(ok)))
+    bad |= not ok
+    # --gen3 without a GEN3 shape (Eth1Data) covers what --gen2 covers, with the same theorem text
+    c2 = G2["E1"]
+    rc, so, se = run(G + ["--S", c2["S"], "--ir", IR, "--type", c2["type"]] + c2["args"], KR)
+    com = (KR / c2["committed"]).read_text()
+    body = lambda s: s.split("namespace E2eScal.Gen\n", 1)[1]
+    ok = rc == 0 and body(so.decode()) == body(com)
+    res.append(dict(id="g3-e1-same-theorems-as-gen2", expect="exit 0, theorem text = committed Gen2E1Dec.lean body",
+                    exit=rc, stdout_bytes=len(so), ok=bool(ok)))
+    bad |= not ok
+    return res, bad
+
+
 def main(work, out):
     work.mkdir(parents=True, exist_ok=True)
     res, bad = [], 0
@@ -527,6 +754,9 @@ def main(work, out):
     r2, b2 = gen2_cases(work, new)
     res += r2
     bad |= b2
+    r3, b3 = g3_cases(work, new)
+    res += r3
+    bad |= b3
 
     out.write_text(json.dumps(dict(cases=res, passed=sum(r["ok"] for r in res), total=len(res)), indent=1) + "\n")
     print(f"p2dec_test: {sum(r['ok'] for r in res)}/{len(res)} as expected")

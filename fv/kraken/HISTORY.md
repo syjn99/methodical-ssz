@@ -274,3 +274,19 @@ H4 단락 정정(리뷰 h4-r1 S1): Deposit_Data 3/4의 덮은 필드 중 둘은 
 h4-r1 S7 기록: H4 커밋 셋은 type으로 `spec(...)`을 쓴다. `fv/AGENTS.md`에서 spec은 scope다. 이력 재작성은 하지 않는다.
 병합 트리에서 빌드, 공리 게이트(선언 5007개), 선언 비교(차이 0), `regen_check.sh` 16/16 SAME을 다시 확인했다.
 `.lean`, 생성기, 검사기, 고정 버전은 바꾸지 않았다. 원격에 쓰지 않았다. 기록: REPORT 11절, `scal/RESULT.json`의 `integration_int4`.
+
+GEN3 단위 G3-G(기준 `f5c5f52`, Opus 5.5 구현, 리뷰 전): 증명 생성기에 `p2dec --gen3`를 더했다.
+호출 필드, 두 지시어 uint64 읽기, makeslice 앞 패딩 `nop`을 G3-L 보조정리로 덮는다. 옛 출력 16개는 SAME이다.
+개발 형 덮음(표본 안): PendingPartialWithdrawal 3/3, Deposit_Data 4/4, BeaconBlockHeader 5/5, AttestationData 3/5.
+Deposit_Data 합성 실행 1은 구문 오류였다. 원 출력은 기록으로 두고 고친 실행 2를 썼다.
+`kindcheck.py`에 g2f-r1 S1–S4와 새 종류를 넣었다. 기록: REPORT 11절, `scal/RESULT.json`의 `gen3`, CONTAMINATION 19절.
+
+2026-11-11 홀드아웃 H5 평가(새 Opus 세션, 평가자, 아직 리뷰 없음).
+방법 고정 `6dc0e2a`의 blob 5개와 트리 id 4개를 다시 셌다. 모두 같다. 연 기록은 `3762644`다.
+손 Desc와 손 문장(`H5Stmt.lean`)을 생성기 실행 전에 커밋했다.
+결과 (S): SyncCommitteeMessage 2/4(종료 3), PendingConsolidation 1/2(종료 3). 결과 (C): 둘 다 거부(종료 2).
+두 형은 필드 종류로 보면 표본에 가깝다. 새것은 순서뿐이다.
+두 수용 정리는 생성 정리와 손 보조정리의 손 합성으로 커널 검사했다.
+부정 시험 37/41, 공리 게이트 PASS, 선언 비교 ADDED 378개뿐, Go 차분 12/12다.
+원격에 쓰지 않았다. 기록: REPORT 11절, `scal/CONTAMINATION.md` 20절, `scal/RESULT.json`의 `H5`, FINDINGS SG-4.
+

@@ -1,0 +1,51 @@
+{
+ "type": "v1alpha1.Deposit_Data",
+ "S": "prysm/go1.26.10/e2e/h4/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S",
+ "S_sha256": "f062e0f9be56aef921ad33347d21ac292c6a02f9119e0b70b0dabd22385acae6",
+ "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a",
+ "fields": [
+  {
+   "field": "PublicKey",
+   "ssz_offset": 0,
+   "go_offset": 8,
+   "status": "covered",
+   "shape": "bytesdec_seg_z 48",
+   "directives": [
+    13,
+    36
+   ]
+  },
+  {
+   "field": "WithdrawalCredentials",
+   "ssz_offset": 48,
+   "go_offset": 32,
+   "status": "not covered",
+   "reason": "field at Go offset 0x20: 0 decode segments match (expected 1)"
+  },
+  {
+   "field": "Amount",
+   "ssz_offset": 80,
+   "go_offset": 56,
+   "status": "covered",
+   "shape": "u64dec_inline_seg rsi",
+   "directives": [
+    83,
+    85
+   ]
+  },
+  {
+   "field": "Signature",
+   "ssz_offset": 88,
+   "go_offset": 64,
+   "status": "covered",
+   "shape": "bytesdec_seg 96",
+   "directives": [
+    86,
+    110
+   ]
+  }
+ ],
+ "exit": 3,
+ "covered": 3,
+ "total": 4
+}

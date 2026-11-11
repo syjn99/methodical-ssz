@@ -1,0 +1,7 @@
+scalgen p2dec: field Slot: MATCH calldec_seg Slot + callarg_first_seg, directives 15–19
+scalgen p2dec: field CommitteeIndex: MATCH calldec_seg CommitteeIndex + callarg_reload_seg, directives 48–57
+scalgen p2dec: field BeaconBlockRoot: MATCH rootdec_seg, directives 86–111
+scalgen p2dec: field Source: NOT COVERED: field kind pointer (*Checkpoint, delegated to container Checkpoint): nested container / pointer callee, no GEN3 template
+scalgen p2dec: field Target: NOT COVERED: field kind pointer (*Checkpoint, delegated to container Checkpoint): nested container / pointer callee, no GEN3 template
+scalgen p2dec: partial output (marked PARTIAL) written to lean/E2eScal/Gen3AdDecPartial.lean
+scalgen p2dec: incomplete: nothing on stdout (exit 3)

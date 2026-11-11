@@ -1,0 +1,44 @@
+{
+ "schema": "fvphase1c.desc/1",
+ "type": "PendingConsolidation",
+ "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+ "ssz": {
+  "k": "container",
+  "names": [
+   "SourceIndex",
+   "TargetIndex"
+  ],
+  "fields": [
+   {
+    "k": "uint",
+    "w": 8
+   },
+   {
+    "k": "uint",
+    "w": 8
+   }
+  ]
+ },
+ "fixed_size": 16,
+ "fixed_part_size": 16,
+ "fields": [
+  {
+   "name": "SourceIndex",
+   "index": 0,
+   "offset": 0,
+   "width": 8,
+   "variable": false,
+   "kind": "uint"
+  },
+  {
+   "name": "TargetIndex",
+   "index": 1,
+   "offset": 8,
+   "width": 8,
+   "variable": false,
+   "kind": "uint"
+  }
+ ],
+ "variable_order": [],
+ "reference": null
+}

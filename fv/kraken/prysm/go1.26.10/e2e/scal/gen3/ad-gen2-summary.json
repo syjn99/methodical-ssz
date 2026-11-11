@@ -1,0 +1,50 @@
+{
+ "type": "v1alpha1.AttestationData",
+ "S": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+ "S_sha256": "70ca7f6820ce748263b71a4fc44468ab01bd69bc9665008ad540469b2fa62081",
+ "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a",
+ "fields": [
+  {
+   "field": "Slot",
+   "ssz_offset": 0,
+   "go_offset": 8,
+   "status": "not covered",
+   "reason": "delegated overlay field (Slot): compiled as a call, no template"
+  },
+  {
+   "field": "CommitteeIndex",
+   "ssz_offset": 8,
+   "go_offset": 16,
+   "status": "not covered",
+   "reason": "delegated overlay field (CommitteeIndex): compiled as a call, no template"
+  },
+  {
+   "field": "BeaconBlockRoot",
+   "ssz_offset": 16,
+   "go_offset": 24,
+   "status": "covered",
+   "shape": "rootdec_seg",
+   "directives": [
+    86,
+    111
+   ]
+  },
+  {
+   "field": "Source",
+   "ssz_offset": 48,
+   "go_offset": 48,
+   "status": "not covered",
+   "reason": "delegated overlay field (*Checkpoint): compiled as a call, no template"
+  },
+  {
+   "field": "Target",
+   "ssz_offset": 88,
+   "go_offset": 56,
+   "status": "not covered",
+   "reason": "delegated overlay field (*Checkpoint): compiled as a call, no template"
+  }
+ ],
+ "exit": 3,
+ "covered": 1,
+ "total": 5
+}

@@ -309,3 +309,85 @@
 - 제안(하지 않음)은 그대로다: P-H4-1, P-H4-2, P-H4-3, 합성 문장의 종류(kind).
 - g2f-r1 S1–S4(`kindcheck.py` 변경)도 제안(하지 않음)이다. H4 고정 뒤라 바꾸지 않았다.
 - 일반성 주장은 없다. 통합 INT4 자체의 리뷰는 아직 없다.
+
+## 18. GEN3 보조정리 작업 (단위 G3-L) — H4 뒤, 개발 작업, 홀드아웃 아님
+
+- 이 작업은 H4 평가와 통합 INT4 뒤에 했다. 기준 커밋은 `6a78c59`다.
+- Deposit_Data와 PendingPartialWithdrawal은 이제 개발 자료다. 이 두 형으로 홀드아웃 주장을 하지 않는다.
+- 작성 세션은 새 Fable 세션이고 직접 작성자다. 이 세션은 생성기를 만들지 않았다.
+- 이 세션은 H4 기록, 리뷰 h4-r1, 평가자의 커밋하지 않은 증명 시도 글을 읽었다.
+- 이 세션은 개발 디코더의 `.S` 파일과 손 증명도 모두 읽었다.
+- 새 모듈만 더했다: `CallDec`, `CallDecRel`, `KindCall`, `U64RR`, `SegNPad`, `PwAccept`, `WitPwA`, `BhHeadG3`.
+- 예시와 종류 모듈도 새 파일이다: `Gen3Examples`, `KindAccept`, `KindAcceptRel`.
+- 기존 `.lean` 파일, `gen/scal/*`, 계약, 문장, ELF, 도구 사슬은 바꾸지 않았다.
+- `H4Stmt.lean`의 손 문장 `pw_accept_stmt`는 그대로다. 증명한 정리의 형이 그 문장이다.
+- 증명 생성기는 그대로다. 그래서 생성기 적용 범위(SG-3)는 바뀌지 않았다.
+- 호출 자리는 먼저 읽었다: 9개다. 그 중 7개가 uint64 오버레이 호출이고 2개는 포인터 필드 호출이다.
+- 호출 블록 보조정리는 7개 자리에 모두 맞다. 인자 준비는 관측한 세 꼴만 다룬다.
+- 그래서 L1은 부분 재사용이다. 새 레지스터 선택은 "덮지 않음"이다.
+- 피호출 함수는 기존 함수 명세 꼴로만 쓴다. `U64CalleeAcc`는 기존 네 명세와 `rfl`로 같다.
+- 바이트 구간은 13개를 읽었다. 패딩 변형은 1개다: makeslice 호출 앞의 `nop`.
+- `SegNPad.lean`의 증명 글은 임시 스크립트가 `SegN.lean`에서 만들었다. 스크립트는 커밋하지 않았다.
+- 패딩 꼴의 48바이트와 96바이트 자리는 개발 자료에 없다. 오프셋 0 꼴의 패딩도 없다.
+- 두 지시어 uint64 꼴은 자리가 1개다. 기준 레지스터는 rbx와 rax로 고정했다.
+- `Gen3Examples.lean`과 `KindCall.lean`도 임시 스크립트로 썼다. 이것은 `scalgen.py`의 출력이 아니다.
+- 합성 문장 종류 `decAcceptKind`는 프레임 `0x20`과 바이트/uint64 필드만 다룬다.
+- 그 종류는 생성된 합성 정리 셋과 `dd_accept_stmt`에 `rfl`로 묶인다. 넷 다 개발 자료다.
+- 호출 필드가 있는 합성 문장의 종류는 없다.
+- 일반성 주장은 없다. 다른 형으로 옮겨지는지는 측정하지 않았다.
+- 더한 증거 파일: `scal/negcases-gen3.json`, `scal/negative-gen3.json`. `gen/e2e/negative.py`는 바꾸지 않았다.
+- 부정 시험은 38건 중 37건을 센다. 종류 변이 1건은 하트비트 시간 초과로 끝났다. 통과로 세지 않는다.
+- 공리 게이트는 임시 JSON으로 돌렸다. 커밋된 `axioms-gate.json`과 `AxiomsScal.lean`은 바꾸지 않았다.
+- 제안 P-H4-1, P-H4-2, P-H4-3의 생성기 쪽은 하지 않았다. 다음 단위의 일이다.
+- 독립 리뷰는 아직 없다.
+
+## 19. GEN3 생성기 작업 (단위 G3-G) — H4 뒤 생성기 변경, 개발 작업, 홀드아웃 아님
+
+- 이 작업은 H4 평가 뒤에 증명 생성기 `gen/scal/scalgen.py`를 바꿨다. 기준 커밋은 `f5c5f52`다.
+- 작성 세션은 새 Opus 세션이다. 이 세션은 보조정리를 쓰지 않았고 리뷰하지 않는다.
+- 입력은 개발 자료뿐이다: PendingPartialWithdrawal, Deposit_Data, BeaconBlockHeader, AttestationData.
+- 이 네 형의 덮음은 표본 안이다. 옮겨짐(transfer) 주장은 하지 않는다. H5 전에는 홀드아웃 주장이 없다.
+- 새 꼴은 `--gen3` 뒤에만 있다. 기본 모드와 `--gen2` 출력은 바이트가 같다(`regen_check.sh` 16/16 SAME).
+- 이 세션은 보조정리 단위의 예시 파일 `Gen3Examples.lean`을 읽고 생성기 글을 맞췄다.
+- 생성 글 34개 중 33개가 예시와 바이트가 같다. 1개는 줄바꿈만 다르다.
+- 형마다 한 번 실행했다. 먼저 scratch 시험 실행(작업 01)이 있었다. 그 뒤 커밋할 실행(작업 06)을 했다.
+- 원 출력은 손대지 않고 빌드 전에 커밋했다(`977db81`).
+- Deposit_Data 합성 실행 1은 구문 오류였다: 생성기가 `set_option … in` 앞에 문서 주석을 썼다.
+- 그 원 출력은 `scal/gen3/Gen3DdAccept.run1-parse-error.lean.txt`로 옮겨 그대로 둔다. 고친 생성기의 실행 2가 `Gen3DdAccept2.lean`이다.
+- PendingPartialWithdrawal과 BeaconBlockHeader의 수락 정리는 손 합성이다(`PwAcceptG3`, `BhAcceptG3`). 생성된 정리를 부른다.
+- 리뷰 g3l-r1(APPROVE)의 생성기 항목: 꼬리의 `nop`(BeaconBlockHeader.ParentRoot, Checkpoint.Root)은 덮지 않음으로 적었다.
+- `kindcheck.py`에 g2f-r1 S1–S4를 넣었다. H4가 끝나서 이제 바꿀 수 있다.
+- 일반성 주장은 없다. 속도 주장도 없다. 독립 리뷰는 아직 없다.
+
+## 20. 홀드아웃 H5 평가 — 열린 뒤
+
+- 연 시각: `scal/HOLDOUT-OPENED`의 `H5.opened_utc`(커밋 `3762644`, 2026-11-11T11:25:14Z).
+- 방법 고정: 커밋 `6dc0e2a`. 고정 기록의 blob 5개와 트리 id 4개를 다시 셌다. 모두 같다.
+- 형: `v1alpha1.SyncCommitteeMessage`(C 부류), `v1alpha1.PendingConsolidation`(D 부류). 범위는 `UnmarshalSSZ`뿐이다.
+- 평가 세션은 GEN3 생성기, 검사기, 종류, 보조정리를 만들지 않았다. 이전 단위의 파일은 읽을 수 있었다.
+- 밝힌 유사성(H5-A3): 두 형은 필드 종류로 보면 표본에 가깝다. 새것은 종류의 순서뿐이다.
+- 손 Desc(`08adf1d`)는 검사기 Desc를 출력하기 전에 커밋했다.
+- 손 문장 `H5.sm_accept_stmt`, `H5.pc_accept_stmt`(`3c4625c`)는 생성기를 돌리기 전에 커밋했다.
+- 링크 표(`8f3aac7`)는 손 문장 전에 만들었다. 문장이 `.S`의 프레임 사실을 써야 했다. 생성기는 돌리지 않았다.
+- 생성기 (S)와 (C)는 형마다 한 번씩 돌렸다(작업 09, 10, 14, 15). 다른 선택으로 다시 돌리지 않았다.
+- 원 출력은 손대지 않고 먼저 커밋했다(`fe2f266`, `dea6b37`). 손 수정 줄은 0이다.
+- (S)의 stderr 둘에는 실행 디렉터리 경로가 있어 커밋하지 않았다. 요약 JSON은 커밋했다.
+- `gen/scal/*`, 종류와 보조정리 모듈, `Fk/*`, 계약, 기존 문장은 바꾸지 않았다.
+- 그래서 `gen/scal/AxiomsScal.lean`을 늘리지 않았다. 공리 게이트는 모든 선언을 센다. 새 선언도 들어간다.
+- 부정 시험 사례 파일은 `gen/scal/` 밖에 두었다: `h5/negcases-h5.json`. 실행 중에는 같은 바이트가 커밋 전 `gen/scal/`에 있었다.
+- 새 H5 모듈만 더했다: `H5Code`, `H5Stmt`, `SmDesc`, `PcDesc`, `SmSeg`, `SmAccept`, `PcAccept`, `Sm*`/`Pc*`, `Wit*`.
+- 새 손 보조정리: `bytes32dec_seg_rax`, `sm_vi_arg`, `calldec_nop_seg`. 기존 증명 글에서 지시 몇 개만 바꿨다.
+- 열린 뒤 더한 도구: `gen/e2e/h5link.py`(`h4link.py`의 글), `gen/e2e/h5diff.py`(`h4diff.py`의 글), `h5/h5check-main.go.txt`.
+- 검사기 json은 phase1c-r5 리뷰의 임시 사본에서 왔다. sha256은 `main.result.json` 기록과 같다.
+- 제안(하지 않음) P-H5-1: 32바이트 구간 둘째 블록에서 receiver를 rax로 다시 읽는 꼴을 허용한다.
+- P-H5-1이 있으면 SyncCommitteeMessage.BlockRoot(지시 47–81)가 생성 대상이 된다.
+- 제안(하지 않음) P-H5-2: receiver가 이미 rax에 있는 호출 인자 꼴을 읽는다(지시 82–87).
+- 생성기는 그 자리를 "첫 필드 꼴"로 읽고 SSZ 오프셋이 0이 아니라서 거부했다. 거부는 옳다. 꼴이 없다.
+- 제안(하지 않음) P-H5-3: `callq`와 `test %rax,%rax` 사이의 패딩 `nop`을 허용한다.
+- P-H5-3이 있으면 PendingConsolidation.TargetIndex(지시 48–58)가 생성 대상이 된다.
+- 제안(하지 않음) P-H5-4: 호출 필드가 있는 형의 합성. 고정 전에 알려진 한계다.
+- 네 제안은 방법 변경이다. 그래서 해당 필드는 생성기가 덮지 않은 것으로 보고한다.
+- 생성된 `_call` 정리는 `hC : U64CalleeAcc`를 전제로 둔다. 수용 증명이 증명된 `sl_uacc_holds`, `vi_uacc_holds`로 채웠다.
+- 한계: `h5/link/norm`은 Lake `input_dir`가 아니다. lakefile 변경은 승인이 필요해서 하지 않았다.
+- 일반성 주장은 없다. 독립 리뷰는 아직 없다.
+

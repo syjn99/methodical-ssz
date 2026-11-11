@@ -1,0 +1,2 @@
+exit 2; stdout 0 bytes; stderr:
+scalgen p2dec: no template match: --compose needs every field covered (2 of 4)
