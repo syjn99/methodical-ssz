@@ -36,6 +36,8 @@ Python 3 standard library only. Usage:
 
 GEN2 (`--gen2`, off by default): see the block comment before `ir_fields`. Without `--gen2` the output is the
 S2 / SG-1 text byte for byte (compatibility switch; `regen_check.sh` of every committed file).
+GEN4 (`p2dec --gen4 [--summary FILE.json] [--partial-out FILE]`, off by default, unit G4-G): see the block comment
+before `G4_R64`; its own code path, the default / `--gen2` / `--gen3` text is unchanged.
 """
 import argparse, hashlib, json, pathlib, re, sys
 
@@ -502,6 +504,21 @@ def ir_fields(ir_path, tname, gen3=False):
         out.append((f["key"], off, fo, cls, info))
         off += v["fixed_size"]
     return out, hashlib.sha256(raw).hexdigest()
+
+
+def ir_ssz_size(ir_path, tname):
+    """The SSZ fixed size of a fixed-size container (unit G4-F2, M3): the sum of the field sizes in the IR; it must
+    equal the container's own `fixed_size` in the IR, else NoMatch."""
+    pkg, name = tname.rsplit(".", 1)
+    ts = [t for c in json.loads(pathlib.Path(ir_path).read_bytes())["configs"] for t in c.get("types", [])
+          if t.get("name") == name and t.get("package", "").endswith("/" + pkg)]
+    if not ts:
+        raise NoMatch(f"type {tname} not in the IR")
+    ir = ts[0]["ir"]
+    total = sum(f["v"]["fixed_size"] for f in ir["fields"])
+    if ir.get("variable") or ir.get("fixed_size") != total:
+        raise NoMatch(f"type {tname}: IR fixed size {ir.get('fixed_size')} is not the sum of the field sizes {total}")
+    return total
 
 
 def u64_find(dirs, fo, src):
@@ -1445,11 +1462,16 @@ def compose(args, dirs, sha, irsha, fields, found):
     if g3:
         chk = ("; composed accept theorem (`p2dec --gen3 --compose`); statement check: the kind `decAcceptKind` "
                "(`_kind`, rfl at default transparency)" + (f" and the identity with `{hand}`" if hand else ""))
+        if not hand:
+            # unit G4-G (review g3g-r1 for_h5): without an independent hand statement the composed statement is
+            # marked UNCHECKED like the GEN2 case; `kindcheck.py` rejects the file (the kind fixes the shape only)
+            chk += ("; NO independent hand statement (`--same-as` / `--same-as-prop`): UNCHECKED STATEMENT, "
+                    "`kindcheck.py` rejects this file")
     out = header(sha, args.S, args, f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`){chk}",
                  ["E2eScal.KindAccept"] if g3 else [])
     out += "set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
     out += f"/-- Accept path of `{args.type}.UnmarshalSSZ`, composed from the generated segment theorems `{args.prefix}_*_seg`. -/\n"
-    if not hand and not g3:
+    if not hand:
         # unit G2-F: mark the theorem line itself (only when no hand statement is given; the committed outputs
         # all have `--same-as`, so their text does not change)
         L[0] += " -- UNCHECKED STATEMENT: checked by nobody"
@@ -1470,9 +1492,921 @@ def compose(args, dirs, sha, irsha, fields, found):
         out += (f"\n/-- Statement check: the declared type is that of the hand theorem (definitional identity). -/\n"
                 f"theorem {name}_type : ∀ (h : Host),\n    type_of% (@{name} h) = type_of% (@{args.same_as} h) := by\n"
                 f"  intro h; with_reducible rfl\n")
-    elif not g3:
+    else:
         print(f"scalgen p2dec: --compose without --same-as: the statement of {name} is NOT checked", file=sys.stderr)
     return out + "\nend E2eScal.Gen\n"
+
+
+# ---------------------------------------------------------------- GEN4 (`p2dec --gen4`; unit G4-G)
+#
+# Compatibility switch: GEN4 is ONLY behind `--gen4` (its own path; it does not change the default, `--gen2` or
+# `--gen3` text, `regen_check.sh` of every committed file). Lemmas: unit G4-L (`lean/E2eScal/{NopView,StepK,
+# KindStep,CallReg,SegReg,SegRegZ,KindSegReg}.lean`); the interface is the G4-L hand-over "Interface for G4-G".
+# Matching is NOT by multi-directive set-up templates. The generator walks the accept path of the decoder from the
+# end of the head (prologue, spills, nil check) and keeps a small DATAFLOW state: which register / stack slot holds
+# the receiver (`rcv + o`), the buffer (`bf + o`), an immediate, the bytes of the buffer at an offset, the new slice
+# pointer of a byte field, or something unknown. Each directive is one of:
+#   * a step form with a kinded step lemma (`mov %rS,%rD`, `mov d(%rB),%rD`, `mov %rS,d(%rB)`, `lea d(%rB),%rD`,
+#     `add $i,%rD`, `mov $i,%eD`, `jmp l`, `l:`): one theorem `<prefix>_s<index>` + `_kind` per directive;
+#   * `nop`: nothing is emitted; the nop is a leading nop of the next window (L1 window rule);
+#   * `callq <callee with a proved spec>`: the call block window `nop* callq nop* test nop* je lok` (`calldec_seg_w`,
+#     kind `callDecSegKindG4`), emitted ONLY when the dataflow shows rax = rcv + (IR Go offset), rbx = bf + (IR SSZ
+#     offset), rcx = 8 and the IR field is the next one;
+#   * `lea type__+387072(%rip),%rax`: the byte segment over two windows (`bytesdec_seg_g4` / `bytesdec_seg_z_g4`,
+#     kinds `bytesDecSegKindG4` / `bytesDecSegZKindG4`), emitted ONLY when the receiver / buffer reload slots hold
+#     the receiver / buffer, the registers are in the lemma's sets, n in {32, 48, 96}, the displacements equal the IR;
+#   * anything else (another mnemonic or width, an index / rip operand, an immediate store, a callee without a proved
+#     spec, a conditional branch): the walk stops; every field not yet complete is "not covered: <reason>".
+# A field is complete at its own event: the call block (callee field), the store of the bytes `bf + src` into
+# `rcv + f` (uint64 field), the store of the new slice pointer into `rcv + fP` after the byte segment (byte field).
+# Its theorems are the steps / blocks since the previous field. Events out of IR order stop the walk.
+# Not emitted (no kind in the hand-over): the head (`decpro_seg`, spills, `kstep_nilchk`), the epilogue
+# (`decret_seg`), field compositions. `--gen4 --compose` refuses (exit 2): there is no kind for a composed
+# statement with GEN4 blocks and none for the head / epilogue lemmas.
+# The dataflow is the generator's acceptance rule only; it is not trusted. Lean checks every emitted theorem
+# (`he` by `rfl` on the code constant) and its `_kind` line; a field composition that uses the steps re-checks the
+# entry state of each block (`rfl` / `ecancel`).
+
+G4_R64 = ("rax", "rbx", "rcx", "rdx", "rsi", "rdi", "rsp", "rbp", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15")
+G4_R32 = {"eax": "rax", "ebx": "rbx", "ecx": "rcx", "edx": "rdx", "esi": "rsi", "edi": "rdi",
+          **{f"r{i}d": f"r{i}" for i in range(8, 16)}}
+G4_RX = ("rdx", "rsi")                              # bytesdec_seg_g4: receiver register before the copy
+G4_RY = ("rax", "rcx", "rdx", "rsi", "rdi")          # ... and after it
+G4_HX = {"rdx": "Or.inl rfl", "rsi": "Or.inr rfl"}
+G4_HY = {"rax": "Or.inl rfl", "rcx": "Or.inr (Or.inl rfl)", "rdx": "Or.inr (Or.inr (Or.inl rfl))",
+         "rsi": "Or.inr (Or.inr (Or.inr (Or.inl rfl)))", "rdi": "Or.inr (Or.inr (Or.inr (Or.inr rfl)))"}
+G4_OPTS = "set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
+G4_OPTS_SEG = "set_option maxHeartbeats 16000000 in\nset_option maxRecDepth 100000 in\n"
+G4_CLASSES = ("padding", "register", "set-up order", "new directive form", "new field kind", "other")
+
+
+class G4Stop(Exception):
+    """The walk stops at directive `at`: `why` (miss class `cls`)."""
+
+    def __init__(self, at, why, cls):
+        super().__init__(why)
+        self.at, self.why, self.cls = at, why, cls
+
+
+def _g4_disp(s):
+    return 0 if s in (None, "") else _hexs(s)
+
+
+def g4_parse(d):
+    """One directive -> a tuple: ("nop",), ("label", l), ("movrr", rD, rS), ("ld", rD, rB, disp), ("st", rS, rB, disp),
+    ("lea", rD, rB, disp), ("add", rD, imm), ("movi", rD, imm), ("jmp", l), ("call", fn), ("lea_mk",) for the
+    makeslice type operand, or ("other", text). Only 64-bit registers in the register / memory forms."""
+    if d == "nop":
+        return ("nop",)
+    if label_of(d) is not None:
+        return ("label", label_of(d))
+    R = "|".join(G4_R64)
+    m = re.fullmatch(rf"mov %({R}),%({R})", d)
+    if m:
+        return ("movrr", m.group(2), m.group(1))
+    m = re.fullmatch(rf"mov ({SHX})?\(%({R})\),%({R})", d)
+    if m:
+        return ("ld", m.group(3), m.group(2), _g4_disp(m.group(1)))
+    m = re.fullmatch(rf"mov %({R}),({SHX})?\(%({R})\)", d)
+    if m:
+        return ("st", m.group(1), m.group(3), _g4_disp(m.group(2)))
+    m = re.fullmatch(rf"lea ({SHX})?\(%({R})\),%({R})", d)
+    if m:
+        return ("lea", m.group(3), m.group(2), _g4_disp(m.group(1)))
+    m = re.fullmatch(rf"add \$({SHX}),%({R})", d)
+    if m:
+        return ("add", m.group(2), _hexs(m.group(1)))
+    m = re.fullmatch(rf"mov \$({SHX}),%({'|'.join(G4_R32)})", d)
+    if m:
+        return ("movi", G4_R32[m.group(2)], _hexs(m.group(1)))
+    m = re.fullmatch(r"jmp (\S+)", d)
+    if m:
+        return ("jmp", m.group(1))
+    m = re.fullmatch(r"callq (\S+)", d)
+    if m:
+        return ("call", m.group(1))
+    if d == "lea type__+387072(%rip),%rax":
+        return ("lea_mk",)
+    return ("other", d)
+
+
+def _i64(x):
+    """Int64 literal in a statement: `(120 : Int64)` / `((-40) : Int64)`."""
+    return f"(({x}) : Int64)" if x < 0 else f"({x} : Int64)"
+
+
+def _vadd(v, x):
+    """Value `v` plus the constant `x` (a pointer plus an offset stays that pointer)."""
+    if v[0] in ("RCV", "BF"):
+        return (v[0], v[1] + x)
+    if v[0] == "IMM":
+        return ("IMM", (v[1] + x) % (1 << 64))
+    return ("UNK",)
+
+
+def _vstr(v):
+    return {"RCV": lambda: f"rcv{v[1]:+d}", "BF": lambda: f"bf{v[1]:+d}", "IMM": lambda: f"{v[1]:#x}",
+            "MEM": lambda: f"bytes(bf{v[1]:+d})", "PTR": lambda: f"ptr({v[1]})", "CAP": lambda: "cap",
+            "LEN": lambda: "len", "UNK": lambda: "unknown"}.get(v[0], lambda: str(v))()
+
+
+G4_HEAD_SPILL = {"rax": ("RCV", 0), "rbx": ("BF", 0), "rcx": ("LEN",), "rdi": ("CAP",)}
+
+
+class G4EpiMiss(G4Stop):
+    """Every field is complete but the directives after the last field event are not the plain return (G4-F2)."""
+
+
+class G4HeadMiss(NoMatch):
+    """The head is not the covered prologue (exit 2); `cls` is the miss class reported for every field (unit G4-F)."""
+
+    def __init__(self, why, cls):
+        super().__init__(why)
+        self.why, self.cls = why, cls
+
+
+# The prologue forms of `decPro` (`HeadN.lean`, lemma `decpro_seg`), directives 2–10 with the nops erased (G4-F M1b)
+G4_PRO = [r"cmp 0x10\(%r14\),%rsp", r"jbe \S+", r"push %rbp", r"mov %rsp,%rbp", r"sub \$(0x[0-9a-f]+),%rsp",
+          r"mov %rbx,(0x[0-9a-f]+)\(%rsp\)", r"cmp \$(0x[0-9a-f]+),%rcx", r"jne \S+"]
+
+
+def g4_slot_ok(d, F):
+    """Stack-store rule (unit G4-F, M1a): an 8-byte store `mov %r,d(%rsp)` is modelled only when `d` is a multiple
+    of 8 and lies in the frame `[0, F)` or in the caller's argument spill area `[F + 16, F + 48)` (rax, rbx, rcx,
+    rdi of the decoder's arguments). `[F, F + 16)` holds the saved rbp and the return address; everything else is
+    outside what the walk models. With every tracked slot aligned, two slots overlap only when they are equal."""
+    return d % 8 == 0 and (0 <= d < F or F + 16 <= d < F + 48)
+
+
+def g4_head(dirs, ssz_size):
+    """The decoder head: directives 0–10 must be the `decPro` prologue of `decpro_seg` (two labels; directives 2–8
+    the six instructions `cmp 0x10(%r14),%rsp; jbe; push %rbp; mov %rsp,%rbp; sub $F,%rsp; mov %rbx,dB(%rsp)` in
+    this order and one `nop`; directives 9–10 `cmp $size,%rcx; jne <size error>`), then the spills `mov %r,d(%rsp)`
+    of the argument registers rax / rbx / rcx / rdi (after the frame is set up; each under the stack-store rule),
+    then an optional `test %al,(%rax)`. Returns (index after the head, slots, F); a mismatch raises G4HeadMiss
+    (class `padding` when the head matches with its nops erased but not at the fixed positions, else `other`).
+    G4-F2 (M3): the immediate of `cmp $size,%rcx` must equal `ssz_size`, the IR SSZ fixed size of the type (as the
+    default mode checks in `compose_read`); else G4HeadMiss, class `other`."""
+    if len(dirs) < 12 or label_of(dirs[0]) is None or label_of(dirs[1]) is None:
+        raise G4HeadMiss("gen4 head: directives 0, 1 are not the two function labels", "other")
+    win = [d for d in dirs[2:9] if d != "nop"]
+    ok = (len(win) == 6 and all(re.fullmatch(rx, d) for rx, d in zip(G4_PRO[:6], win))
+          and re.fullmatch(G4_PRO[6], dirs[9]) and re.fullmatch(G4_PRO[7], dirs[10]))
+    if not ok:
+        rest = [d for d in dirs[2:] if d != "nop"][:8]
+        shifted = len(rest) == 8 and all(re.fullmatch(rx, d) for rx, d in zip(G4_PRO, rest))
+        raise G4HeadMiss("gen4 head: directives 2–10 are not the prologue of `decpro_seg` (`cmp 0x10(%r14),%rsp; jbe; "
+                         "push %rbp; mov %rsp,%rbp; sub $F,%rsp; mov %rbx,dB(%rsp)` and one `nop` in 2–8, `cmp $size,%rcx; "
+                         "jne` at 9–10)" + ("; it matches with the nops erased: a `nop` moves the fixed head positions"
+                                            if shifted else ""), "padding" if shifted else "other")
+    size = int(re.fullmatch(G4_PRO[6], dirs[9]).group(1), 16)
+    if size != ssz_size:
+        raise G4HeadMiss(f"gen4 head: directive 9 `{dirs[9]}`: size immediate {size:#x}, IR SSZ fixed size "
+                         f"{ssz_size:#x}", "other")
+    F = int(re.fullmatch(G4_PRO[4], win[4]).group(1), 16)
+    dB = int(re.fullmatch(G4_PRO[5], win[5]).group(1), 16)
+    if F % 8 or not g4_slot_ok(dB, F):
+        raise G4HeadMiss(f"gen4 head: frame size {F:#x} / rbx spill at {dB:#x} outside the stack-store rule", "other")
+    slots = {dB: G4_HEAD_SPILL["rbx"]}
+    i = 11
+    while i < len(dirs):
+        m = re.fullmatch(r"mov %(rax|rbx|rcx|rdi),(0x[0-9a-f]+)\(%rsp\)", dirs[i])
+        if not m:
+            break
+        d = int(m.group(2), 16)
+        if not g4_slot_ok(d, F):
+            raise G4HeadMiss(f"gen4 head: directive {i} `{dirs[i]}`: spill displacement {d:#x} outside the stack-store "
+                             f"rule (multiple of 8, in [0, {F:#x}) or [{F + 16:#x}, {F + 48:#x}))", "other")
+        slots[d] = G4_HEAD_SPILL[m.group(1)]
+        i += 1
+    if i < len(dirs) and dirs[i] == "test %al,(%rax)":
+        i += 1
+    return i, slots, F
+
+
+def g4_label_index(dirs, l, at):
+    try:
+        return label_index(dirs, l)
+    except NoMatch:
+        raise G4Stop(at, f"label {l} not found", "other")
+
+
+def g4_window(dirs, a, pattern, at, what):
+    """Window from `a`: the non-nop directives must be `len(pattern)` items matched by the regular expressions in
+    `pattern`, nops anywhere between (none after the last); no label inside except where the pattern has one.
+    Returns (end index, list of match objects, list of indices of the non-nop directives)."""
+    ms, idx, i = [], [], a
+    for rx in pattern:
+        while i < len(dirs) and dirs[i] == "nop":
+            i += 1
+        if i >= len(dirs):
+            raise G4Stop(at, f"{what}: end of file, expected /{rx}/", "other")
+        m = re.fullmatch(rx, dirs[i])
+        if not m:
+            cls = "new directive form" if label_of(dirs[i]) is None else "other"
+            if label_of(dirs[i]) is not None:
+                raise G4Stop(i, f"{what}: label `{dirs[i]}` inside the window (directive {i})", "other")
+            raise G4Stop(i, f"{what}: directive {i} `{dirs[i]}` is not /{rx}/", cls)
+        ms.append(m)
+        idx.append(i)
+        i += 1
+    return i, ms, idx
+
+
+class G4State:
+    def __init__(self, slots):
+        self.r = {r: ("UNK",) for r in G4_R64}
+        self.r.update(rax=("RCV", 0), rbx=("BF", 0), rcx=("LEN",), rdi=("CAP",))
+        self.slot = dict(slots)
+
+    def clobber(self, keep=()):
+        for r in G4_R64:
+            if r not in ("rsp", "rbp", "r14") and r not in keep:
+                self.r[r] = ("UNK",)
+
+
+def g4_walk(dirs, fields, head_end, slots0, F):
+    """The dataflow walk. Returns (done, stop, end): done = list of (field index, [emitted units]) for the complete
+    fields in IR order; stop = None or the G4Stop that ended the walk; end = the directive after the last field
+    event (None after a stop). A unit is a dict with `kind` and parameters. Any other exception propagates
+    (`p2dec_gen4` maps it to exit 2, G4-F3)."""
+    done = []
+    try:
+        end = _g4_walk(dirs, fields, head_end, slots0, F, done)
+    except G4Stop as e:
+        return done, e, None
+    return done, None, end
+
+
+def _g4_walk(dirs, fields, head_end, slots0, F, done):
+    st = G4State(slots0)
+
+    def stack_store(d, v, at, text):
+        """`mov %r,d(%rsp)` (G4-F M1a): stop unless `d` passes the stack-store rule; else every tracked slot the 8
+        bytes at `d` overlap is invalidated (with aligned slots: only `d` itself) and `d` holds `v`."""
+        if not g4_slot_ok(d, F):
+            raise G4Stop(at, f"directive {at} `{text}`: 8-byte stack store at {d:#x} outside the stack-store rule "
+                             f"(multiple of 8, in [0, {F:#x}) or [{F + 16:#x}, {F + 48:#x}))", "other")
+        for x in list(st.slot):
+            if x != d and abs(x - d) < 8:
+                st.slot[x] = ("UNK",)
+        st.slot[d] = v
+
+    def no_frame_write(rD, at, text):
+        """rbp (frame pointer) and r14 (goroutine pointer, stack guard at r14 + 16) are part of the block entry
+        states (rbp0, r140); a write to them stops the walk (G4-F)."""
+        if rD in ("rbp", "r14"):
+            raise G4Stop(at, f"directive {at} `{text}` writes {rD} (frame / goroutine register)", "other")
+    cur, pend = 0, []
+    seg_open = None              # byte field whose segment is emitted and whose pointer tail is pending
+    i, a = head_end, head_end    # i: next directive; a: start of the next window (leading nops)
+    seen = set()
+    nf = len(fields)
+
+    def fld():
+        return fields[cur]
+
+    def complete(unit=None):
+        nonlocal cur, pend
+        if unit:
+            pend.append(unit)
+        done.append((cur, pend))
+        cur, pend = cur + 1, []
+
+    def ir_event(fo_hit, what, at):
+        """A receiver write at Go offset fo_hit that is an IR field other than the current one: order error."""
+        for x, f in enumerate(fields):
+            if f[2] == fo_hit and x != cur:
+                raise G4Stop(at, f"{what} writes field {f[0]} (Go offset {fo_hit}) while field {fields[cur][0]} is "
+                                 f"the next in IR order", "set-up order")
+
+    while cur < nf:
+        if i >= len(dirs):
+            raise G4Stop(i, "end of file before every field was complete", "other")
+        if i in seen:
+            raise G4Stop(i, f"directive {i} reached twice (loop)", "other")
+        seen.add(i)
+        d = dirs[i]
+        op = g4_parse(d)
+        k = op[0]
+        name, cls, info = fld()[0], fld()[3], fld()[4]
+        if k == "nop":
+            i += 1
+            continue
+        if seg_open is not None and k in ("call", "lea_mk"):
+            raise G4Stop(i, f"block at {i} before the pointer store of byte field {fields[seg_open][0]}", "set-up order")
+        unit = dict(kind=k, j=a, e=i + 1, jd=i, text=d)
+        if k == "label":
+            unit.update(l=op[1])
+            pend.append(unit)
+        elif k == "jmp":
+            jl = g4_label_index(dirs, op[1], i)
+            if jl <= i:
+                raise G4Stop(i, f"jmp {op[1]} backwards", "other")
+            unit.update(l=op[1], jl=jl)
+            pend.append(unit)
+            i, a = jl, jl
+            continue
+        elif k == "movrr":
+            rD, rS = op[1], op[2]
+            if rD == "rsp" or rS == "rsp":
+                raise G4Stop(i, f"directive {i} `{d}` moves rsp (frame change)", "new directive form")
+            no_frame_write(rD, i, d)
+            unit.update(rD=rD, rS=rS)
+            st.r[rD] = st.r[rS]
+            pend.append(unit)
+        elif k == "movi":
+            rD, imm = op[1], op[2]
+            no_frame_write(rD, i, d)
+            unit.update(rD=rD, imm=imm)
+            st.r[rD] = ("IMM", imm & 0xffffffff)
+            pend.append(unit)
+        elif k == "lea":
+            rD, rB, disp = op[1], op[2], op[3]
+            if rD == "rsp":
+                raise G4Stop(i, f"directive {i} `{d}` writes rsp", "new directive form")
+            no_frame_write(rD, i, d)
+            unit.update(rD=rD, rB=rB, disp=disp)
+            st.r[rD] = ("UNK",) if rB == "rsp" else _vadd(st.r[rB], disp)
+            pend.append(unit)
+        elif k == "add":
+            rD, imm = op[1], op[2]
+            if rD == "rsp":
+                raise G4Stop(i, f"directive {i} `{d}` changes rsp (epilogue before every field was complete)", "other")
+            no_frame_write(rD, i, d)
+            unit.update(rD=rD, imm=imm)
+            st.r[rD] = _vadd(st.r[rD], imm)
+            pend.append(unit)
+        elif k == "ld":
+            rD, rB, disp = op[1], op[2], op[3]
+            if rD == "rsp":
+                raise G4Stop(i, f"directive {i} `{d}` writes rsp", "new directive form")
+            no_frame_write(rD, i, d)
+            if rB == "rsp":
+                v = st.slot.get(disp, ("UNK",))
+            elif st.r[rB][0] == "BF":
+                v = ("MEM", st.r[rB][1] + disp)
+            elif st.r[rB][0] == "RCV":
+                v = ("UNK",)
+            else:
+                raise G4Stop(i, f"directive {i} `{d}`: load through {rB} = {_vstr(st.r[rB])} (unknown base)", "register")
+            # value form for the words that blocks consume (receiver, buffer, slice pointer, an immediate), bytes form
+            # for everything else (the lemma `kstep_ldv` needs the memory written as `Int.toBytes 8 v`)
+            unit.update(rD=rD, rB=rB, disp=disp, form="v" if v[0] in ("RCV", "BF", "PTR", "IMM") else "b")
+            st.r[rD] = v
+            pend.append(unit)
+        elif k == "st":
+            rS, rB, disp = op[1], op[2], op[3]
+            v = st.r[rS]
+            unit.update(rS=rS, rB=rB, disp=disp)
+            if rB == "rsp":
+                if rS == "rsp":
+                    raise G4Stop(i, f"directive {i} `{d}` stores rsp", "new directive form")
+                stack_store(disp, v, i, d)
+                pend.append(unit)
+            elif st.r[rB][0] == "RCV":
+                off = st.r[rB][1] + disp
+                if seg_open is not None:
+                    fP = fields[seg_open][2]
+                    if off == fP and v == ("PTR", seg_open):
+                        seg_open = None
+                        complete(unit)
+                    else:
+                        raise G4Stop(i, f"directive {i} `{d}`: store of {_vstr(v)} at receiver offset {off} where the "
+                                        f"pointer tail of {fields[cur][0]} (ptr at {fP}) was expected", "other")
+                elif cls == "u64" and off == fld()[2]:
+                    if v != ("MEM", fld()[1]):
+                        why = (f"directive {i} `{d}`: stores {_vstr(v)} into {name} (Go offset {off}); expected the 8 "
+                               f"buffer bytes at the IR SSZ offset {fld()[1]}")
+                        raise G4Stop(i, why, "register" if v[0] == "UNK" else "other")
+                    complete(unit)
+                else:
+                    ir_event(off, f"directive {i} `{d}`", i)
+                    raise G4Stop(i, f"directive {i} `{d}`: store of {_vstr(v)} at receiver offset {off}, no event of "
+                                    f"field {name} ({cls})", "other" if cls != "none" else "new field kind")
+            else:
+                raise G4Stop(i, f"directive {i} `{d}`: store through {rB} = {_vstr(st.r[rB])} (unknown base)", "register")
+        elif k == "call":
+            fn = op[1]
+            if fn not in CALLEES.values():
+                why = (f"directive {i} `callq {fn}`: callee without a proved spec" if not fn.startswith("runtime.")
+                       else f"directive {i} `callq {fn}` outside a byte segment")
+                raise G4Stop(i, why, "new field kind" if cls == "none" else "other")
+            if cls != "call" or info != fn:
+                raise G4Stop(i, f"directive {i} `callq {fn}`: the next IR field is {name} ({cls}"
+                                f"{', callee ' + info if cls == 'call' else ''})",
+                             # G4-F2: "set-up order" only when a LATER IR field has this callee; a callee that is not the
+                             # overlay type of any later field (ValidatorIndex field calling Epoch) is "other"
+                             "set-up order" if cls == "call" and any(f[3] == "call" and f[4] == fn for f in fields[cur + 1:])
+                             else "other")
+            end, ms, idx = g4_window(dirs, a, [re.escape(f"callq {fn}"), r"test %rax,%rax", r"je (\S+)"], i,
+                                     f"call block at {i}")
+            lok = ms[2].group(1)
+            j2 = g4_label_index(dirs, lok, i)
+            if j2 < end:
+                raise G4Stop(i, f"call at {i}: continuation label {lok} at {j2} not after the je", "other")
+            src, fo = fld()[1], fld()[2]
+            need = dict(rax=("RCV", fo), rbx=("BF", src), rcx=("IMM", 8))
+            for r, want in need.items():
+                if st.r[r] != want:
+                    elsewhere = [x for x in G4_R64 if st.r[x] == want]
+                    why = (f"call at {i} ({name}): {r} = {_vstr(st.r[r])}, the call block needs {r} = {_vstr(want)}"
+                           + (f" (it is in {', '.join(elsewhere)})" if elsewhere else ""))
+                    # miss class: the wanted value in another register -> register; the right base without its
+                    # offset (a load after the add) -> set-up order; the right base, another offset -> other (offset
+                    # against the IR); an unknown / other value (clobbered) -> register
+                    same = st.r[r][0] == want[0]
+                    # G4-F S1: "set-up order" only when the wanted adjustment (`add $off,%r`) ran in this field's
+                    # set-up and a later directive replaced it; the right base with another offset is "other"
+                    added = any(u.get("kind") == "add" and u.get("rD") == r and len(want) > 1 and u.get("imm") == want[1]
+                                for u in pend)
+                    cls_ = ("register" if elsewhere else "set-up order" if same and added
+                            else "other" if same else "register")
+                    raise G4Stop(i, why, cls_)
+            unit.update(kind="callblk", fn=fn, lok=lok, jc=idx[0], j2=j2, e=j2 + 1, last=end - 1)
+            st.clobber()
+            st.r["rax"], st.r["rbx"] = ("IMM", 0), ("IMM", 0)
+            # the call block writes only sp + 8 of the frame (the callee's spill of rbx; `CALL_DEC_STMT`)
+            for x in list(st.slot):
+                if x != 8 and abs(x - 8) < 8 or x < 0:
+                    st.slot[x] = ("UNK",)
+            st.slot[8] = ("BF", src)
+            complete(unit)
+            i, a = j2 + 1, j2 + 1
+            continue
+        elif k == "lea_mk":
+            if cls != "bytes":
+                raise G4Stop(i, f"directive {i}: byte segment, the next IR field is {name} ({cls})",
+                             "set-up order" if cls != "none" else "new field kind")
+            n, N = info, f"{info:#x}"
+            endA, mA, iA = g4_window(dirs, a, [re.escape("lea type__+387072(%rip),%rax"), r"xor %ebx,%ebx",
+                                               rf"mov \$({SHX}),%ecx", r"callq runtime\.makeslice",
+                                               rf"mov ({SHX})\(%rsp\),%(\w+)", rf"movq \$0x0,({SHX})?\(%(\w+)\)",
+                                               rf"movq \$({SHX}),({SHX})?\(%(\w+)\)",
+                                               r"cmpl \$0x0,runtime\.writeBarrier\(%rip\)", r"je (\S+)"],
+                                     i, f"byte segment head at {i}")
+            sz, dR, rX = _hexs(mA[2].group(1)), _hexs(mA[4].group(1)), mA[4].group(2)
+            fL, fC = _g4_disp(mA[5].group(1)), _g4_disp(mA[6].group(2))
+            lff = mA[8].group(1)
+            jl = g4_label_index(dirs, lff, i)
+            if jl < endA:
+                raise G4Stop(i, f"byte segment at {i}: label {lff} not after the head window", "other")
+            rest = [rf"mov %rax,({SHX})\(%rsp\)", rf"mov %rax,({SHX})?\(%(\w+)\)", rf"mov ({SHX})\(%rsp\),%rbx"]
+            i3 = jl + 1
+            # the form is chosen by the directive after the buffer reload (as in GEN2): `add $X,%rbx` or not
+            _, _, ib = g4_window(dirs, i3, rest, jl, f"byte segment middle at {jl}")
+            k4 = ib[-1] + 1
+            while k4 < len(dirs) and dirs[k4] == "nop":
+                k4 += 1
+            zform = not (k4 < len(dirs) and re.fullmatch(rf"add \$({SHX}),%rbx", dirs[k4]))
+            pat = ([re.escape(f"{lff}:")] + rest + ([] if zform else [rf"add \$({SHX}),%rbx"])
+                   + [rf"mov \$({SHX}),%ecx", r"callq runtime\.memmove", rf"mov ({SHX})\(%rsp\),%(\w+)",
+                      rf"movq \$({SHX}),({SHX})?\(%(\w+)\)", rf"movq \$({SHX}),({SHX})?\(%(\w+)\)",
+                      r"cmpl \$0x0,runtime\.writeBarrier\(%rip\)", r"jne (\S+)"])
+            endB, mB, iB = g4_window(dirs, jl, pat, jl, f"byte segment middle at {jl}")
+            o = 0 if zform else 1
+            dS, fP, rX2, dB = _hexs(mB[1].group(1)), _g4_disp(mB[2].group(1)), mB[2].group(2), _hexs(mB[3].group(1))
+            src_ = 0 if zform else _hexs(mB[4].group(1))
+            sz2, dR2, rY = _hexs(mB[4 + o].group(1)), _hexs(mB[6 + o].group(1)), mB[6 + o].group(2)
+            l1, fL2, rY1 = _hexs(mB[7 + o].group(1)), _g4_disp(mB[7 + o].group(2)), mB[7 + o].group(3)
+            c1, fC2, rY2 = _hexs(mB[8 + o].group(1)), _g4_disp(mB[8 + o].group(2)), mB[8 + o].group(3)
+            lwb = mB[10 + o].group(1)
+            src, fo = fld()[1], fld()[2]
+            checks = [
+                (sz == n and sz2 == n and _hexs(mA[6].group(1)) == n and l1 == n and c1 == n,
+                 f"size immediates {sz:#x} / {sz2:#x} / {l1:#x} / {c1:#x}, IR size {N}", "other"),
+                (n in GEN2_SIZES, f"size {n} (lemma sizes 32, 48, 96)", "new field kind"),
+                (mA[5].group(2) == rX and mA[6].group(3) == rX and rX2 == rX,
+                 f"receiver register after makeslice not the same in its three uses ({rX}, {mA[5].group(2)}, "
+                 f"{mA[6].group(3)}, {rX2})", "register"),
+                (rY1 == rY and rY2 == rY, f"receiver register after memmove not the same ({rY}, {rY1}, {rY2})", "register"),
+                (rX in G4_RX, f"receiver register {rX} after makeslice (lemma: {', '.join(G4_RX)})", "register"),
+                (rY in G4_RY, f"receiver register {rY} after memmove (lemma: {', '.join(G4_RY)})", "register"),
+                (dR2 == dR, f"the two receiver reloads use different slots ({dR:#x}, {dR2:#x})", "other"),
+                (fP == fo, f"pointer store at Go offset {fP}, IR Go offset {fo}", "other"),
+                (fL == fP + 8 and fL2 == fL and fC == fP + 16 and fC2 == fC,
+                 f"len / cap stores at {fL} / {fC} (and {fL2} / {fC2}), pointer at {fP}", "other"),
+                (src_ == src, f"source offset {src_} ({'offset-0 form' if zform else 'add form'}), IR SSZ offset {src}",
+                 "other"),
+                (st.slot.get(dR) == ("RCV", 0), f"slot {dR:#x} (receiver reload) holds {_vstr(st.slot.get(dR, ('UNK',)))}, "
+                 f"not the receiver", "register"),
+                (st.slot.get(dB) == ("BF", 0), f"slot {dB:#x} (buffer reload) holds {_vstr(st.slot.get(dB, ('UNK',)))}, "
+                 f"not the buffer", "register"),
+                (dS not in (dR, dB), f"pointer slot {dS:#x} is a reload slot", "other"),
+                (min(dR, dB, dS) >= 0x18,
+                 f"a slot below rsp + 0x18 (the makeslice / memmove argument area): {dR:#x}, {dB:#x}, {dS:#x}", "other"),
+                (g4_slot_ok(dS, F), f"pointer slot {dS:#x} outside the stack-store rule (multiple of 8, in [0, {F:#x}) "
+                 f"or [{F + 16:#x}, {F + 48:#x}))", "other"),
+            ]
+            for ok, why, c in checks:
+                if not ok:
+                    raise G4Stop(i, f"byte segment at {i} ({name}): {why}", c)
+            unit.update(kind="seg", n=n, rX=rX, rY=rY, zform=zform, j1=a, nA=endA - a, j2=jl, nB=endB - jl,
+                        jm=iB[6 if not zform else 5], e=endB, lff=lff, lwb=lwb, dR=dR, dB=dB, dS=dS, fP=fP,
+                        fL=fL, fC=fC, src=src_)
+            pend.append(unit)
+            st.clobber(keep=())
+            st.r[rY] = ("RCV", 0)
+            for x in list(st.slot):
+                if x < 0x18:
+                    st.slot[x] = ("UNK",)
+            for x in list(st.slot):
+                if x != dS and abs(x - dS) < 8:
+                    st.slot[x] = ("UNK",)
+            st.slot[dS] = ("PTR", cur)
+            seg_open = cur
+            i, a = endB, endB
+            continue
+        else:
+            why = f"directive {i} `{d}`: no step lemma for this directive form"
+            raise G4Stop(i, why, "new field kind" if cls == "none" else "new directive form")
+        i += 1
+        a = i
+    # G4-F3: the epilogue is no longer checked here; `p2dec_gen4` checks it as its own phase from this index
+    return i
+
+
+# G4-F3: the only value of `g4_epilogue` that counts as an examined plain return (checked with `is`)
+G4_EPI_OK = object()
+
+
+def g4_epilogue(dirs, i, F):
+    """G4-F2: the directives after the last field event (from `i`, following forward `jmp`s and labels) must be the
+    plain return: only `nop`, labels, `mov d(%rsp),%rax|%rbx`, `xor %eax,%eax`, `xor %ebx,%ebx`, then
+    `add $F,%rsp; pop %rbp; retq` with the head's frame size F. Any other directive (a store, a call, a branch)
+    could change a decoded field after its event: G4EpiMiss (class other). G4-F3 (M4): a `jmp` to a label that is
+    not in the file is a G4EpiMiss too. Returns G4_EPI_OK only after `add $F,%rsp; pop %rbp; retq`."""
+    seen = set()
+    while True:
+        if i >= len(dirs) or i in seen:
+            raise G4EpiMiss(i, "epilogue: end of file or a loop before `add $F,%rsp; pop %rbp; retq`", "other")
+        seen.add(i)
+        d = dirs[i]
+        if d == "nop" or label_of(d) is not None or re.fullmatch(r"mov (0x[0-9a-f]+)?\(%rsp\),%(rax|rbx)", d) \
+                or d in ("xor %eax,%eax", "xor %ebx,%ebx"):
+            i += 1
+            continue
+        m = re.fullmatch(r"jmp (\S+)", d)
+        if m:
+            try:
+                jl = label_index(dirs, m.group(1))
+            except NoMatch:
+                raise G4EpiMiss(i, f"epilogue: directive {i} `{d}` jumps to a label that is not in the file (code "
+                                   f"after the last field event is unknown)", "other")
+            if jl <= i:
+                raise G4EpiMiss(i, f"epilogue: directive {i} `{d}` jumps backwards", "other")
+            i = jl
+            continue
+        if d == f"add ${F:#x},%rsp":
+            rest = [x for x in dirs[i + 1:i + 6] if x != "nop"][:2]
+            if rest == ["pop %rbp", "retq"]:
+                return G4_EPI_OK
+            raise G4EpiMiss(i, f"epilogue: `{d}` not followed by `pop %rbp; retq`", "other")
+        raise G4EpiMiss(i, f"epilogue: directive {i} `{d}` after the last field event is not part of the plain "
+                           f"return (`mov d(%rsp),%rax|%rbx`, `xor`, `add ${F:#x},%rsp; pop %rbp; retq`): it could change "
+                           f"a decoded field", "other")
+
+
+# statement texts of the step kinds (`KindStep.lean`) with the parameters in place (G4-L `Gen4Examples.lean`)
+G4_HEAD = "theorem {name} (k : Nat) (hk : {C}.IsInfixAt Host.prog k) (hf : LabelsFresh {C} k) :\n    ∀\n"
+G4_TAIL = "    Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + {j})⟩ := by\n"
+G4_FS = "    (final : MachineState → Prop) (s : MachineData)\n"
+G4_STMT = {
+    "movrr": (G4_FS + "    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.{rD} (s.regs.get64 Reg64.{rS}), "
+              "Host.addrOf (k + {e})⟩),\n"),
+    "ldv": ("    (base a v : BitVec 64) (ha : base + {D}.toBitVec = a)\n    (F : DataMem → Prop)\n" + G4_FS +
+            "    (hb : s.regs.get64 Reg64.{rB} = base) (hm : (Eq ((Int.toBytes 8 v.toInt).At a) ⋆ F) s.dmem)\n"
+            "    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.{rD} v, Host.addrOf (k + {e})⟩),\n"),
+    "ldb": ("    (base a : BitVec 64) (ha : base + {D}.toBitVec = a) (bs : List UInt8) (hbs : bs.length = 8)\n"
+            "    (F : DataMem → Prop)\n" + G4_FS +
+            "    (hb : s.regs.get64 Reg64.{rB} = base) (hm : (Eq (bs.At a) ⋆ F) s.dmem)\n"
+            "    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.{rD} (BitVec.ofInt 64 (Int.ofBytes bs)), "
+            "Host.addrOf (k + {e})⟩),\n"),
+    "st": ("    (base a : BitVec 64) (ha : base + {D}.toBitVec = a) (bs : List UInt8) (hbs : bs.length = 8)\n"
+           "    (F : DataMem → Prop)\n" + G4_FS +
+           "    (hb : s.regs.get64 Reg64.{rB} = base) (hm : (Eq (bs.At a) ⋆ F) s.dmem)\n"
+           "    (hk' : ∀ m' : DataMem, (Eq ((Int.toBytes 8 (@BitVec.toInt 64 (s.regs.get64 Reg64.{rS}))).At a) ⋆ F) m' →\n"
+           "      Eventually (step1 Host.exe) final ⟨{{ s with dmem := m' }}, Host.addrOf (k + {e})⟩),\n"),
+    "lea": (G4_FS + "    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.{rD} (s.regs.get64 Reg64.{rB} + "
+            "{D}.toBitVec), Host.addrOf (k + {e})⟩),\n"),
+    "add": (G4_FS + "    (hk' : ∀ fl : StatusFlags, Eventually (step1 Host.exe) final\n"
+            "      ⟨{{ regs := s.regs.set64 Reg64.{rD} (s.regs.get64 Reg64.{rD} + {I}.toBitVec), zmms := s.zmms, "
+            "status := fl, dmem := s.dmem }},\n        Host.addrOf (k + {e})⟩),\n"),
+    "movi": (G4_FS + "    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.{rD} (BitVec.zeroExtend 64 "
+             "(BitVec.truncate 32 {I}.toBitVec)), Host.addrOf (k + {e})⟩),\n"),
+    "jmp": G4_FS + "    (hk' : Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + {jl})⟩),\n",
+    "label": G4_FS + "    (hk' : Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + {e})⟩),\n",
+}
+G4_LEMMA = {"movrr": ("kstep_mov_rr", "stepMovRRKind"), "ldv": ("kstep_ldv", "stepLdvKind"),
+            "ldb": ("kstep_ldb", "stepLdbKind"), "st": ("kstep_st", "stepStKind"), "lea": ("kstep_lea", "stepLeaKind"),
+            "add": ("kstep_add", "stepAddKind"), "movi": ("kstep_movi", "stepMovIKind"), "jmp": ("kstep_jmp", "stepJmpKind"),
+            "label": ("kstep_label", "stepLabelKind")}
+
+
+def g4_label_have(name, j, C):
+    return (f"  have {name} := Fk.label_at' hk hf (j := {j})\n"
+            f"    (by simp only [{C}, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)\n"
+            f"    (by simp only [{C}, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)\n")
+
+
+def g4_step_text(C, prefix, u):
+    """One step theorem + `_kind` (the shape of `Gen4Examples.lean`)."""
+    k = u["kind"] if u["kind"] != "ld" else ("ldv" if u["form"] == "v" else "ldb")
+    lem, kind = G4_LEMMA[k]
+    j, e, jd = u["j"], u["e"], u["jd"]
+    n = e - j
+    name = f"{prefix}_s{jd}"
+    P = {x: u[x] for x in ("rD", "rS", "rB") if x in u}
+    if "disp" in u:
+        P["D"] = _i64(u["disp"])
+    if "imm" in u:
+        P["I"] = _i64(u["imm"])
+    win = f" (window {j}–{e - 1}, leading `nop` skipped)" if n > 1 else ""
+    out = G4_OPTS + f"/-- Directive {jd} `{u['text']}`: {kind}{win}. -/\n"
+    out += G4_HEAD.format(name=name, C=C) + G4_STMT[k].format(e=e, jl=u.get("jl"), **P) + G4_TAIL.format(j=j)
+    out += f"  have hq := E2eScal.win hk {j} {n}\n"
+    lit = lambda x: _lit(x)
+    tm = {"movrr": f"E2eScal.iMovRR Reg64.{u.get('rD')} Reg64.{u.get('rS')}",
+          "ldv": f"E2eScal.iLd Reg64.{u.get('rD')} Reg64.{u.get('rB')} {lit(u.get('disp', 0))}",
+          "ldb": f"E2eScal.iLd Reg64.{u.get('rD')} Reg64.{u.get('rB')} {lit(u.get('disp', 0))}",
+          "st": f"E2eScal.iSt Reg64.{u.get('rS')} Reg64.{u.get('rB')} {lit(u.get('disp', 0))}",
+          "lea": f"E2eScal.iLea Reg64.{u.get('rD')} Reg64.{u.get('rB')} {lit(u.get('disp', 0))}",
+          "add": f"E2eScal.iAdd Reg64.{u.get('rD')} {lit(u.get('imm', 0))}",
+          "movi": f"E2eScal.iMovI Reg64.{u.get('rD')} {lit(u.get('imm', 0))}",
+          "jmp": f"E2eScal.iJmp {lean_str(u['l']) if 'l' in u else ''}",
+          "label": f"E2eScal.iLabel {lean_str(u['l']) if 'l' in u else ''}"}[k]
+    out += f"  have he : E2eScal.eraseNop (({C}.drop {j}).take {n}) = [{tm}] := by rfl\n"
+    par = {"movrr": f"Reg64.{u.get('rD')} Reg64.{u.get('rS')}",
+           "ldv": f"Reg64.{u.get('rD')} Reg64.{u.get('rB')} {lit(u.get('disp', 0))}",
+           "ldb": f"Reg64.{u.get('rD')} Reg64.{u.get('rB')} {lit(u.get('disp', 0))}",
+           "st": f"Reg64.{u.get('rS')} Reg64.{u.get('rB')} {lit(u.get('disp', 0))}",
+           "lea": f"Reg64.{u.get('rD')} Reg64.{u.get('rB')} {lit(u.get('disp', 0))}",
+           "add": f"Reg64.{u.get('rD')} {lit(u.get('imm', 0))}", "movi": f"Reg64.{u.get('rD')} {lit(u.get('imm', 0))}",
+           "jmp": lean_str(u["l"]) if "l" in u else "", "label": lean_str(u["l"]) if "l" in u else ""}[k]
+    if k == "jmp":
+        out += g4_label_have("hl", u["jl"], C)
+        out += f"  with_reducible exact E2eScal.{lem} {par} _ (k + {j}) (k + {u['jl']}) hq he hl\n"
+        out += kind_thm(name, f"E2eScal.{kind} h {C} {par} {j} {u['jl']}")
+    else:
+        out += f"  have hend : k + {j} + (({C}.drop {j}).take {n}).length = k + {e} := by rfl\n"
+        out += f"  with_reducible exact E2eScal.{lem} {par} _ (k + {j}) (k + {e}) hq he hend\n"
+        out += kind_thm(name, f"E2eScal.{kind} h {C} {par} {j} {e}")
+    return out + "\n", name
+
+
+G4_CALL_STMT = CALL_DEC_STMT.replace("⟨s, Host.addrOf (k + {j})⟩", "⟨s, Host.addrOf (k + {ja})⟩")
+
+
+def g4_call_text(C, prefix, fname, u):
+    name = f"{prefix}_{fname}_call"
+    j, jc, j2, n = u["j"], u["jc"], u["j2"], u["last"] + 1 - u["j"]
+    out = G4_OPTS + (f"/-- `{fname}`: call block over the window {j}–{u['last']}, `callq` at {jc}, continuation label at "
+                     f"{j2}. -/\n")
+    out += G4_CALL_STMT.format(name=name, const=C, fn=u["fn"], j=jc, ja=j, j2=j2)
+    out += f"  have hq := E2eScal.win hk {j} {n}\n"
+    out += (f"  have he : E2eScal.eraseNop (({C}.drop {j}).take {n}) = E2eScal.callDec {lean_str(u['fn'])} "
+            f"{lean_str(u['lok'])} := by rfl\n")
+    out += f"  have hjc : k + {j} + E2eScal.nopPos (({C}.drop {j}).take {n}) 0 = k + {jc} := by rfl\n"
+    out += (f"  have hB := E2eScal.infix_sub (q := E2eScal.callDecL {lean_str(u['lok'])}) {j2} hk\n"
+            f"    (by simp only [{C}, E2eScal.callDecL, {SIMP_INFIX}])\n")
+    out += g4_label_have("hl", j2, C)
+    out += f"  with_reducible exact E2eScal.calldec_seg_w _ _ _ (k + {j}) (k + {jc}) (k + {j2}) hq he hjc hB hl\n"
+    out += kind_thm(name, f"E2eScal.callDecSegKindG4 h {C} {lean_str(u['fn'])} {lean_str(u['lok'])} {j} {jc} {j2}")
+    return out + "\n", name
+
+
+G4_SEG_STMT = """theorem {name} (k : Nat) (hk : {C}.IsInfixAt Host.prog k) (hf : LabelsFresh {C} k) :
+    ∀
+    (sp rcv bf aR aB aS aRet aLo aP aL aC{aS_} : BitVec 64) (St : Nat)
+    (hR : sp + {dR}.toBitVec = aR) (hB' : sp + {dB}.toBitVec = aB) (hS : sp + {dS}.toBitVec = aS)
+    (hRet : sp - 8 = aRet) (hLo : sp - 8 - BitVec.ofNat 64 St = aLo)
+    (hP : rcv + {fP}.toBitVec = aP) (hL : rcv + {fL}.toBitVec = aL) (hC : rcv + {fC}.toBitVec = aC)
+{hsrc}    (rbp0 r140 : UInt64) (root : List UInt8) (hroot : root.length = {n})
+    (spl rslot lo lS vP vL vC : List UInt8)
+    (hspl : spl.length = 24) (hrs : rslot.length = 8) (hlo : lo.length = St) (hlS : lS.length = 8)
+    (hvP : vP.length = 8) (hvL : vL.length = 8) (hvC : vC.length = 8)
+    (R : DataMem → Prop) (Heap : Nat → DataMem → Prop) (avail : Nat) (hav : {n} ≤ avail)
+    (s : MachineData) (hrsp : s.regs.rsp = {{ toBitVec := sp }}) (hrbp : s.regs.rbp = rbp0)
+    (hr14 : s.regs.r14 = r140)
+    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 rcv.toInt).At aR) ⋆ Eq ((Int.toBytes 8 bf.toInt).At aB)
+      ⋆ Eq (spl.At sp) ⋆ Eq (rslot.At aRet) ⋆ Eq (lo.At aLo) ⋆ Eq (lS.At aS)
+      ⋆ Heap avail
+      ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
+      ⋆ Eq (root.At {rsrc})
+      ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
+    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
+    Eventually (step1 Host.exe)
+      (fun st => st.pc = Host.addrOf (k + {e}) ∧ st.data.regs.rsp = {{ toBitVec := sp }}
+        ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
+        ∃ (p : BitVec 64) (spl' lo' : List UInt8), spl'.length = 24 ∧ lo'.length = St
+          ∧ st.data.regs.get64 Reg64.{rY} = rcv ∧
+        (Eq ((Int.toBytes 8 rcv.toInt).At aR) ⋆ Eq ((Int.toBytes 8 bf.toInt).At aB)
+          ⋆ Eq (spl'.At sp)
+          ⋆ Eq ((Int.toBytes 8 (Host.addrOf (k + {jm} + 1)).toBitVec.toInt).At aRet)
+          ⋆ Eq (lo'.At aLo)
+          ⋆ Eq ((Int.toBytes 8 p.toInt).At aS)
+          ⋆ Heap (avail - {n})
+          ⋆ Eq ((Int.toBytes 8 p.toInt).At aP) ⋆ Eq ((Int.toBytes 8 {n}).At aL)
+          ⋆ Eq ((Int.toBytes 8 {n}).At aC) ⋆ Eq (root.At p)
+          ⋆ Eq (root.At {rsrc})
+          ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
+      ⟨s, Host.addrOf (k + {j1})⟩ := by
+"""
+
+
+def g4_seg_text(C, prefix, fname, ssz, u):
+    name = f"{prefix}_{fname}_seg"
+    z = u["zform"]
+    n, j1, j2, nA, nB, jm, e = u["n"], u["j1"], u["j2"], u["nA"], u["nB"], u["jm"], u["e"]
+    out = G4_OPTS_SEG + (f"/-- `{fname}` ({n}-byte vector, SSZ offset {ssz}, Go offset {u['fP']}): decode segment"
+                         f"{' (offset-0 form)' if z else ''} over the windows {j1}–{j1 + nA - 1} and {j2}–{e - 1}; receiver "
+                         f"in {u['rX']} after makeslice, in {u['rY']} after memmove (`callq` at {jm}). -/\n")
+    out += G4_SEG_STMT.format(name=name, C=C, aS_="" if z else " aSrc", dR=_i64(u["dR"]), dB=_i64(u["dB"]),
+                              dS=_i64(u["dS"]), fP=_i64(u["fP"]), fL=_i64(u["fL"]), fC=_i64(u["fC"]),
+                              hsrc="" if z else f"    (hSrc : bf + {_i64(u['src'])}.toBitVec = aSrc)\n",
+                              n=n, rsrc="bf" if z else "aSrc", e=e, rY=u["rY"], jm=jm, j1=j1)
+    lff, lwb = lean_str(u["lff"]), lean_str(u["lwb"])
+    out += f"  have hqA := E2eScal.win hk {j1} {nA}\n"
+    out += (f"  have heA : E2eScal.eraseNop (({C}.drop {j1}).take {nA}) = E2eScal.bytesDecHeadR Reg64.{u['rX']} {n} {lff} "
+            f"{u['dR']} {u['fL']} {u['fC']} := by rfl\n")
+    out += f"  have hqB := E2eScal.win hk {j2} {nB}\n"
+    mid = (f"E2eScal.bytesDecMidZR Reg64.{u['rX']} Reg64.{u['rY']} {n} {lff} {lwb} {u['dR']} {u['dB']} {u['dS']} "
+           f"{u['fP']} {u['fL']} {u['fC']}" if z else
+           f"E2eScal.bytesDecMidR Reg64.{u['rX']} Reg64.{u['rY']} {n} {lff} {lwb} {u['dR']} {u['dB']} {u['dS']} "
+           f"{u['fP']} {u['fL']} {u['fC']} {u['src']}")
+    out += f"  have heB : E2eScal.eraseNop (({C}.drop {j2}).take {nB}) = {mid} := by rfl\n"
+    out += f"  have hjl : k + {j2} + E2eScal.nopPos (({C}.drop {j2}).take {nB}) 0 = k + {j2} := by rfl\n"
+    out += g4_label_have("hl", j2, C)
+    out += f"  have hjm : k + {j2} + E2eScal.nopPos (({C}.drop {j2}).take {nB}) {5 if z else 6} = k + {jm} := by rfl\n"
+    out += f"  have hend : k + {j2} + (({C}.drop {j2}).take {nB}).length = k + {e} := by rfl\n"
+    lem = "bytesdec_seg_z_g4" if z else "bytesdec_seg_g4"
+    us = " ".join(["_"] * (10 if z else 11))
+    out += (f"  with_reducible exact E2eScal.{lem} {n} ({HN[n]}) Reg64.{u['rX']} Reg64.{u['rY']} ({G4_HX[u['rX']]}) "
+            f"({G4_HY[u['rY']]}) {us} (k + {j1}) (k + {j2}) (k + {j2}) (k + {jm}) (k + {e}) hqA heA hqB heB hjl hl "
+            f"hjm hend\n")
+    kpar = (f"{n} {C} Reg64.{u['rY']} {j1} {jm} {e} {u['dR']} {u['dB']} {u['dS']} {u['fP']} {u['fL']} {u['fC']}"
+            + ("" if z else f" {u['src']}"))
+    out += kind_thm(name, f"E2eScal.{'bytesDecSegZKindG4' if z else 'bytesDecSegKindG4'} h {kpar}")
+    return out + "\n", name
+
+
+G4_FLAGS = ("head_ok", "fields_complete", "epilogue_ok")
+
+
+def g4_fail_closed(args, why):
+    """G4-F3: the run reports no field covered (exit 2): every IR field `not covered`, class other."""
+    summ, fields = args.summary_data, getattr(args, "g4_fields", None) or []
+    if summ is not None:
+        summ["fail_closed"] = why
+        summ["fields"] = [dict(field=fname, ssz_offset=src, go_offset=fo, status="not covered", reached=False,
+                               reason=f"fail-closed: {why}", miss_class="other") for (fname, src, fo, cls, info) in fields]
+    raise NoMatch(f"gen4: {why}; no field is reported covered")
+
+
+def p2dec_gen4(args):
+    """`p2dec --gen4`: the dataflow walk; returns the text or raises NoMatch (exit 2) / Partial (exit 3).
+    G4-F3 fail-closed: the `else` branch below is the ONLY place that returns a text (exit 0). It is reached only
+    when `_p2dec_gen4` completed normally AND set all three flags of G4_FLAGS: `head_ok` (g4_head returned),
+    `fields_complete` (the walk returned without a stop, every IR field completed in IR order) and `epilogue_ok`
+    (g4_epilogue returned G4_EPI_OK). NoMatch / Partial keep their exit 2 / 3; ANY other exception of any phase
+    (also SystemExit, but not KeyboardInterrupt) becomes exit 2 with every field not covered."""
+    flags = dict.fromkeys(G4_FLAGS, False)
+    try:
+        text = _p2dec_gen4(args, flags)
+    except (NoMatch, Partial):
+        raise
+    except KeyboardInterrupt:
+        raise
+    except BaseException as e:
+        g4_fail_closed(args, f"internal error {type(e).__name__}: {e}")
+    else:
+        if all(flags[k] is True for k in G4_FLAGS) and isinstance(text, str):
+            assert all(flags[k] is True for k in G4_FLAGS)
+            return text
+        g4_fail_closed(args, f"success flags not all set ({', '.join(k for k in G4_FLAGS if flags[k] is not True)})")
+    raise AssertionError("unreachable: g4_fail_closed raises")
+
+
+def _p2dec_gen4(args, flags):
+    dirs, sha = read_S(args.S)
+    fields, irsha = ir_fields(args.ir, args.type, gen3=True)
+    summ = args.summary_data = dict(type=args.type, S=args.S, S_sha256=sha, ir_sha256=irsha, mode="gen4", fields=[])
+    args.g4_fields = fields
+    if not fields:
+        raise NoMatch(f"{args.type}: no field")
+    if len({f[0] for f in fields}) != len(fields):
+        raise NoMatch(f"{args.type}: a field name repeats")
+    if args.compose:
+        raise NoMatch("--gen4 --compose: refused. The G4-L hand-over has no kind for a field composition, none for a "
+                      "composed accept statement with GEN4 blocks (call fields, register-parametric byte segments, step "
+                      "chains) and none for the head / epilogue lemmas (decpro_seg, kstep_nilchk, decret_seg); a composed "
+                      "theorem would have no statement check. Accept theorems over the generated chains stay hand "
+                      "compositions")
+    ssz_size = ir_ssz_size(args.ir, args.type)  # an IR error (NoMatch) here is exit 2 without a field list, as before
+    # phase 1: head. ANY exception is a head miss (exit 2); only a normal return sets head_ok
+    try:
+        head_end, slots, F = g4_head(dirs, ssz_size)
+    except Exception as e:
+        hm = isinstance(e, G4HeadMiss)
+        why, mcls = (e.why, e.cls) if hm else (f"gen4 head: internal error {type(e).__name__}: {e}", "other")
+        # G4-F S1: a head miss is reported per field (class, `reached: false`) before exit 2
+        summ["head"] = dict(status="not covered", reason=why, miss_class=mcls)
+        for (fname, src, fo, cls, info) in fields:
+            summ["fields"].append(dict(field=fname, ssz_offset=src, go_offset=fo, status="not covered", reached=False,
+                                       reason=f"not reached: {why}", miss_class=mcls))
+        raise NoMatch(why)
+    flags["head_ok"] = True
+    summ["head"] = dict(status="covered", end=head_end, frame=F)
+    C, pre = args.const, args.prefix
+    # phase 2: fields. Complete only when the walk returned without a stop and the field events are 0..n-1 in order
+    done, stop, end = g4_walk(dirs, fields, head_end, slots, F)
+    if stop is None and end is not None and [y for (y, _) in done] == list(range(len(fields))):
+        flags["fields_complete"] = True
+        # phase 3: epilogue. ANY exception or any return value other than G4_EPI_OK: no field is covered (exit 2)
+        try:
+            r = g4_epilogue(dirs, end, F)
+        except Exception as e:
+            r = e
+        if r is G4_EPI_OK:
+            flags["epilogue_ok"] = True
+            summ["epilogue"] = dict(status="covered")
+        else:
+            at = r.at if isinstance(r, G4Stop) else end
+            why = r.why if isinstance(r, G4Stop) else f"epilogue: no explicit success ({type(r).__name__}: {r})"
+            # G4-F2: a directive after the last field event could change any decoded field: no field is covered
+            summ["epilogue"] = dict(status="not covered", at=at, reason=why)
+            for (fname, src, fo, cls, info) in fields:
+                summ["fields"].append(dict(field=fname, ssz_offset=src, go_offset=fo, status="not covered", reached=True,
+                                           reason=f"{why} (directive {at})", miss_class="other"))
+            raise NoMatch(f"gen4: {why} (directive {at}); no field is reported covered")
+    else:
+        summ["epilogue"] = dict(status="not examined")
+    body, report, ncov, used = "", [], 0, set()
+    for x, (fname, src, fo, cls, info) in enumerate(fields):
+        rec = dict(field=fname, ssz_offset=src, go_offset=fo)
+        units = [u for (y, us) in done if y == x for u in us]
+        if any(y == x for (y, _) in done):
+            names = []
+            for u in units:
+                if u["kind"] == "callblk":
+                    t, nm = g4_call_text(C, pre, fname, u)
+                    used.add("call")
+                elif u["kind"] == "seg":
+                    t, nm = g4_seg_text(C, pre, fname, src, u)
+                    used.add("segz" if u["zform"] else "seg")
+                else:
+                    t, nm = g4_step_text(C, pre, u)
+                body += t
+                names.append(nm)
+            lo, hi = min(u["j"] for u in units), max(u["e"] for u in units) - 1
+            if cls == "call":
+                shape = f"call field ({info.split('.')[-2]}): {len(units) - 1} set-up steps + call block"
+            elif cls == "bytes":
+                shape = f"byte field ({info} bytes): {sum(u['kind'] != 'seg' for u in units)} steps + segment"
+            else:
+                shape = f"uint64 field: {len(units)} steps"
+            rec.update(status="covered", reached=True, shape=shape, directives=[lo, hi], theorems=names)
+            report.append(f"field {fname}: MATCH {shape}, directives {lo}–{hi}")
+            ncov += 1
+        else:
+            if cls == "none":
+                why, mc = info, "new field kind"
+                if stop is not None and x == len(done):
+                    why += f" (the walk stopped at directive {stop.at}: {stop.why})"
+            elif stop is not None and x == len(done):
+                why, mc = stop.why, stop.cls
+            else:
+                why, mc = (f"not reached: the walk stopped in field {fields[len(done)][0]} ({stop.why})", "other")
+            # G4-F S1: `reached` is false for every field after the one where the walk stopped (its class says nothing)
+            rec.update(status="not covered", reached=x == len(done), reason=why, miss_class=mc)
+            report.append(f"field {fname}: NOT COVERED [{mc}]: {why}")
+        summ["fields"].append(rec)
+    if not ncov:
+        raise NoMatch("; ".join(report))
+    kinds = ["E2eScal.KindStep", "E2eScal.KindSegReg", "E2eScal.CallReg"] + (["E2eScal.SegRegZ"] if "segz" in used else [])
+    extra = (f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`); GEN4 coverage (`p2dec --gen4`): "
+             f"{ncov} of {len(fields)} fields; step chain from directive {head_end} (end of the head)")
+    body += "end E2eScal.Gen\n"
+    # the theorems of each covered field, machine-readable (`kindcheck.py` rule 10 counts the fields from it: a
+    # uint64 field has only step theorems, so its field is not visible in the theorem names)
+    fj = [dict(field=r["field"], theorems=r["theorems"]) for r in summ["fields"] if r["status"] == "covered"]
+    fblock = (f"/-! GEN4 fields (machine-readable, read by `kindcheck.py`):\nFIELDS-JSON: {json.dumps(fj)}\n-/\n\n")
+
+    def gheader():
+        h = header(sha, args.S, args, extra, kinds)
+        assert h.count("\nopen Fk ") == 1
+        return h.replace("\nopen Fk ", "\n" + fblock + "open Fk ")
+    if ncov == len(fields):
+        return gheader() + body
+    missing = [r["field"] for r in summ["fields"] if r["status"] != "covered"]
+    unc = [dict(field=r["field"], reason=r["reason"].replace("-/", "- /"), miss_class=r["miss_class"])
+           for r in summ["fields"] if r["status"] != "covered"]
+    full = gheader()
+    imps, rest = full.split("\n\n", 1)
+    text = (imps + f"\n\n/-! PARTIAL OUTPUT (scalgen exit 3): {ncov} of {len(fields)} fields of `{args.type}` "
+            f"(--gen4); NOT generated: {', '.join(missing)}. Not a complete p2dec output.\n"
+            f"UNCOVERED-JSON: {json.dumps(unc)}\n-/\n\n" + rest + body)
+    raise Partial(report, text)
 
 
 def main():
@@ -1497,11 +2431,22 @@ def main():
     ap.add_argument("--gen3", action="store_true",
                     help="p2dec: GEN3 coverage (implies --gen2): uint64-overlay fields decoded by a call to a callee "
                          "decoder with a proved spec, the two-directive uint64 read, the padding nop before makeslice")
-    ap.add_argument("--summary", help="p2dec --gen2: write the per-field coverage report (JSON) here")
+    ap.add_argument("--gen4", action="store_true",
+                    help="p2dec: GEN4 coverage (unit G4-G): a dataflow walk over the accept path with kinded per-instruction "
+                         "step theorems, nop windows, register-parametric byte segments and call blocks; own path, does not "
+                         "change the default / --gen2 / --gen3 text")
+    ap.add_argument("--summary", help="p2dec --gen2 / --gen4: write the per-field coverage report (JSON) here")
     ap.add_argument("--compose", action="store_true",
                     help="p2dec --gen2: emit the composed accept theorem --name (needs every field covered; the "
                          "segment theorems come from the module of the same --prefix, listed in --imports)")
     args = ap.parse_args()
+    if args.gen4:
+        if args.mode != "p2dec":
+            ap.error("--gen4 is a p2dec option")
+        if args.gen2 or args.gen3:
+            ap.error("--gen4 excludes --gen2 / --gen3")
+        if args.same_as_prop and not args.compose:
+            ap.error("--same-as-prop is a p2dec --compose option")
     if args.gen3:
         if args.mode != "p2dec":
             ap.error("--gen3 is a p2dec option")
@@ -1510,13 +2455,13 @@ def main():
         ap.error("--same-as-prop is a p2dec --compose option")
     if args.same_as_prop and args.same_as:
         ap.error("--same-as and --same-as-prop exclude each other")
-    if args.compose and not (args.gen2 and args.name):
+    if args.compose and not ((args.gen2 or args.gen4) and args.name):
         ap.error("--compose needs --gen2 and --name")
     if args.partial_out and args.mode != "p2dec":
         ap.error("--partial-out is a p2dec option")
     if (args.gen2 or args.summary) and args.mode != "p2dec":
         ap.error("--gen2 / --summary are p2dec options")
-    if args.summary and not args.gen2:
+    if args.summary and not (args.gen2 or args.gen4):
         ap.error("--summary needs --gen2")
     args.summary_data = None
 
@@ -1528,7 +2473,8 @@ def main():
             pathlib.Path(args.summary).write_text(json.dumps(d, indent=1) + "\n")
 
     try:
-        out = p1(args) if args.mode == "p1" else (p2dec_gen2(args) if args.gen2 else p2dec(args))
+        out = (p1(args) if args.mode == "p1" else p2dec_gen4(args) if args.gen4 else
+               (p2dec_gen2(args) if args.gen2 else p2dec(args)))
     except NoMatch as e:
         print(f"scalgen {args.mode}: no template match: {e}", file=sys.stderr)
         if args.summary_data:
@@ -1547,7 +2493,7 @@ def main():
         print(f"scalgen {args.mode}: incomplete: nothing on stdout (exit 3)", file=sys.stderr)
         summary(3)
         sys.exit(3)
-    if args.gen2:
+    if args.gen2 or args.gen4:
         for f in args.summary_data["fields"]:
             print(f"scalgen {args.mode}: field {f['field']}: {f['status'].upper()} "
                   + (f"{f['shape']}, directives {f['directives'][0]}–{f['directives'][1]}" if f["status"] == "covered"

@@ -69,6 +69,47 @@ GEN3 cases (unit G3-G, `p2dec --gen3`; ids `g3-*`; mutated `.S` / IR copies in <
  - g3-compose-*: `--gen3 --compose` refuses callee / two-directive types (PendingPartialWithdrawal,
    BeaconBlockHeader: exit 2, 0 bytes); Deposit_Data composes (exit 0) with the `decAcceptKind` `_kind` line
    and the identity with `H4.dd_accept_stmt`; kindcheck PASS; = committed `Gen3DdAccept2.lean` when it exists.
+
+GEN4 cases (unit G4-G, `p2dec --gen4`; ids `g4-*`; mutated `.S` / IR copies in <work-dir> only):
+ - g4-new-*: `--gen4` on the 10 development types: exit 0 twice (AttestationData: 3), identical, the expected
+   covered fields, `kindcheck.py` PASS (`--partial`: exit 3), = the committed raw file `Gen4*.lean` when it exists.
+ - g4-compose-refuse: `--gen4 --compose` exits 2 with the reason, 0 bytes, no file.
+ - adversarial inputs for the dataflow (SyncCommitteeMessage, PendingConsolidation, PendingPartialWithdrawal,
+   Eth1Data): a receiver / argument register clobbered between set-up and block, set-up moves in another VALID order
+   (covered) and in an invalid order (refused), an extra harmless move and a fall-through label (covered), `nop` at
+   start / middle / end / doubled (covered), a `nop` replaced by `cld` (one byte, no step lemma: refused),
+   displacements off by 8 against the IR (refused), source / destination registers swapped at the call (refused),
+   an unknown callee in the code or in the IR (refused), a label inside a call / segment window (refused), field order
+   wrong in the IR or the code (refused), a receiver register outside the lemma's set, a reload from another slot,
+   the buffer slot overwritten, a store through an unknown base, an indexed / rip operand, an immediate store, an rsp
+   change. Expected: exit 0 with every field covered, or exit 3 with the stated covered fields (no theorem of an
+   uncovered field: `kindcheck.py --partial` exit 3 on the partial file), 0 bytes on stdout unless exit 0; the
+   summary's miss class is checked where stated. A covered mutant is a text result only (no Lean constant exists for
+   mutated code): its theorems carry the mutated code's indices, never a parameter of the unmutated code.
+ - g4f-*: unit G4-F, the inputs of review g4g-r1 (`rv` edits). The seven the GEN4 walker had accepted without the
+   block entry being established (a05, a15, a29, a31, b05: an 8-byte stack store overlapping a tracked slot; b01, b02:
+   head not the `decpro_seg` prologue) and b03 must be refused; a41 (extra head `nop`) is a head miss of class
+   padding; a13 (wrong source offset) class other; stores to the return-address slot or below rsp, writes to r14 /
+   rbp refused; the ten valid variants (a08, a14, a16, a19, a21, a27, a35, a38, b04, b06) stay covered. a34 (a
+   store after the last field event) is refused since unit G4-F2 (epilogue rule, exit 2).
+ - g4f2-*: unit G4-F2, the inputs of review g4f-r1 and the systematic pass. The head size immediate must equal the IR
+   SSZ fixed size (c34, d15, d16: exit 2, class other); a callee that is not the IR field's overlay type is refused
+   (ValidatorIndex field calling Epoch.UnmarshalSSZ and the reverse); after the last field event only the plain return
+   (`mov d(%rsp),%rax|%rbx`, `xor`, nops, labels, forward jmp, `add $F,%rsp; pop %rbp; retq`) is accepted: a store, a
+   call or a wrong frame size there gives exit 2 with every field `reached` and not covered; a nop there stays covered.
+   Every `--gen4` case also checks the summary flag `reached` (true up to the first uncovered field, false after it,
+   false for every field on a head miss); on exit 2 the summary lists every field.
+ - g4f3-*: unit G4-F3, the inputs of review g4f2-r1 (M4): a `jmp` after the last field event to a label that is not in
+   the file (x01 `jmp runtime.abort`, x02 `jmp *%rdx`, x03 a tail `jmp` to Slot.UnmarshalSSZ): exit 2, every field not
+   covered and `reached`.
+ - fc-*: unit G4-F3, fail-closed. A harness (written to <work-dir>, run as one process per type on Eth1Data,
+   SyncCommitteeMessage, PendingPartialWithdrawal) imports the working-tree `scalgen.py`, monkeypatches it and calls
+   `main()`: an unexpected exception, a plain `G4Stop` and `SystemExit(0)` injected in the head (`g4_head`), at every
+   `g4_parse` / `g4_label_index` call of the walk (each field, by the walk's current field), at every theorem-text
+   call, in the epilogue (`g4_epilogue` raising, or returning None / True / another value than G4_EPI_OK), a walk
+   that returns every field with a stop or without an end index, and an inner run that returns a text without the
+   flags. Expected for every injection: exit 2 or 3 (exit 2 for an unexpected exception and SystemExit), 0 bytes on
+   stdout, the summary's exit equal, fewer fields covered than the IR has. Control: no injection, exit 0.
 """
 import json
 import pathlib
@@ -695,6 +736,494 @@ def g3_cases(work, new):
     return res, bad
 
 
+H5N = "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
+PN = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
+
+
+def g4c(sdir, tname, const, mod, pre, out, fields, cov=None):
+    return dict(S=f"prysm/go1.26.10/e2e/{sdir}/{PN}{tname}.UnmarshalSSZ.S", type=f"v1alpha1.{tname}",
+                committed=f"lean/E2eScal/{out}.lean", args=["--const", const, "--prefix", f"{pre}_g4dec", "--imports", mod,
+                                                             "--open", mod],
+                fields=fields, cov=fields if cov is None else cov)
+
+
+G4 = {
+    "CP": g4c("link/norm", "Checkpoint", "CpUnmarshal", "E2e.Code", "cp", "Gen4CpDec", ["Epoch", "Root"]),
+    "AD": g4c("ad/link/norm", "AttestationData", "AdUnmarshal", "E2eAd.Code", "ad", "Gen4AdDecPartial",
+              ["Slot", "CommitteeIndex", "BeaconBlockRoot", "Source", "Target"], ["Slot", "CommitteeIndex", "BeaconBlockRoot"]),
+    "BH": g4c("bh/link/norm", "BeaconBlockHeader", "BhUnmarshal", "E2eScal.BhCode", "bh", "Gen4BhDec",
+              ["Slot", "ProposerIndex", "ParentRoot", "StateRoot", "BodyRoot"]),
+    "E1": g4c("e1/link/norm", "Eth1Data", "E1Unmarshal", "E2eScal.E1Code", "e1", "Gen4E1Dec",
+              ["DepositRoot", "DepositCount", "BlockHash"]),
+    "BI": g4c("h3/link/norm", "BlobIdentifier", "BiUnmarshal", "E2eScal.H3Code", "bi", "Gen4BiDec", ["BlockRoot", "Index"]),
+    "DM": g4c("h3/link/norm", "DepositMessage", "DmUnmarshal", "E2eScal.H3Code", "dm", "Gen4DmDec",
+              ["PublicKey", "WithdrawalCredentials", "Amount"]),
+    "DD": g4c("h4/link/norm", "Deposit_Data", "DdUnmarshal", "E2eScal.H4Code", "dd", "Gen4DdDec",
+              ["PublicKey", "WithdrawalCredentials", "Amount", "Signature"]),
+    "PW": g4c("h4/link/norm", "PendingPartialWithdrawal", "PwUnmarshal", "E2eScal.H4Code", "pw", "Gen4PwDec",
+              ["Index", "Amount", "WithdrawableEpoch"]),
+    "SM": g4c("h5/link/norm", "SyncCommitteeMessage", "SmUnmarshal", "E2eScal.H5Code", "sm", "Gen4SmDec",
+              ["Slot", "BlockRoot", "ValidatorIndex", "Signature"]),
+    "PC": g4c("h5/link/norm", "PendingConsolidation", "PcUnmarshal", "E2eScal.H5Code", "pc", "Gen4PcDec",
+              ["SourceIndex", "TargetIndex"]),
+}
+SMF, PCF, PWF = G4["SM"]["fields"], G4["PC"]["fields"], G4["PW"]["fields"]
+SML = "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_"
+
+
+def sm_vi(new):
+    """SyncCommitteeMessage.ValidatorIndex set-up (lines 83–88) replaced by the lines `new`."""
+    old = ["  mov 0x78(%rsp),%rbx", "  add $0x28,%rbx", "  mov 0x88(%rsp),%rdi", "  add $-0x28,%rdi", "  add $0x28,%rax",
+           "  mov $0x8,%ecx"]
+
+    def fn(L):
+        assert L[82:88] == old, L[82:88]
+        return L[:82] + new + L[88:]
+    return fn
+
+
+VI = ["  mov 0x78(%rsp),%rbx", "  add $0x28,%rbx", "  mov 0x88(%rsp),%rdi", "  add $-0x28,%rdi", "  add $0x28,%rax",
+      "  mov $0x8,%ecx"]
+# (id, what, type key, .S edits or function, IR edit, exit, covered, miss class of the first uncovered field or None)
+G4_MUT = [
+    ("g4-clobber-rax", "ValidatorIndex: `mov %rdx,%rax` after `add $0x28,%rax` (receiver clobbered before the call)", "SM",
+     sm_vi(VI[:5] + ["  mov %rdx,%rax"] + VI[5:]), None, 3, SMF[:2], "register"),
+    ("g4-clobber-rbx-callee-arg", "ValidatorIndex: `mov 0x88(%rsp),%rbx` after the rbx set-up (source register clobbered)", "SM",
+     sm_vi(VI[:2] + ["  mov 0x88(%rsp),%rbx"] + VI[2:]), None, 3, SMF[:2], None),
+    ("g4-order-valid", "ValidatorIndex: `add $0x28,%rax` first, then the rbx / rdi set-up (another valid order)", "SM",
+     sm_vi([VI[4]] + VI[:4] + [VI[5]]), None, 0, SMF, None),
+    ("g4-order-valid-ecx-first", "ValidatorIndex: `mov $0x8,%ecx` first (another valid order)", "SM",
+     sm_vi([VI[5]] + VI[:5]), None, 0, SMF, None),
+    ("g4-order-invalid", "ValidatorIndex: `add $0x28,%rbx` before `mov 0x78(%rsp),%rbx` (the load overwrites the add)", "SM",
+     sm_vi([VI[1], VI[0]] + VI[2:]), None, 3, SMF[:2], "set-up order"),
+    ("g4-extra-harmless", "ValidatorIndex: an extra `mov %rdi,%rsi` in the set-up", "SM",
+     sm_vi(VI[:4] + ["  mov %rdi,%rsi"] + VI[4:]), None, 0, SMF, None),
+    ("g4-label-fallthrough", "ValidatorIndex: a fall-through label between two set-up moves (label step)", "SM",
+     sm_vi(VI[:2] + [f"{SML}zz:"] + VI[2:]), None, 0, SMF, None),
+    ("g4-nop-start", "ValidatorIndex: `nop` before the first set-up move", "SM", sm_vi(["  nop"] + VI), None, 0, SMF, None),
+    ("g4-nop-middle", "ValidatorIndex: `nop` between `add $0x28,%rbx` and `mov 0x88(%rsp),%rdi`", "SM",
+     sm_vi(VI[:2] + ["  nop"] + VI[2:]), None, 0, SMF, None),
+    ("g4-nop-end", "ValidatorIndex: `nop` between `mov $0x8,%ecx` and the `callq`", "SM", sm_vi(VI + ["  nop"]), None, 0, SMF, None),
+    ("g4-nop-doubled-after-call", "ValidatorIndex: two `nop`s between the `callq` and `test`", "SM",
+     [(90, "  test %rax,%rax", "  nop\n  nop\n  test %rax,%rax")], None, 0, SMF, None),
+    ("g4-nop-in-segment", "Signature: `nop` before `callq runtime.memmove` and two before makeslice", "SM",
+     [(141, "  callq runtime.memmove", "  nop\n  callq runtime.memmove"), (124, "  nop", "  nop\n  nop")], None, 0, SMF, None),
+    ("g4-cld-for-nop-seg", "Signature: the `nop` before makeslice replaced by `cld` (one byte, no step lemma)", "SM",
+     [(124, "  nop", "  cld")], None, 3, SMF[:3], "new directive form"),
+    ("g4-cld-for-nop-call", "TargetIndex: the `nop` after the `callq` replaced by `cld`", "PC",
+     [(57, "  nop", "  cld")], None, 3, PCF[:1], "new directive form"),
+    ("g4-cld-in-setup", "TargetIndex: `cld` in the set-up (no step lemma)", "PC",
+     [(53, "  mov 0x58(%rsp),%rax", "  cld\n  mov 0x58(%rsp),%rax")], None, 3, PCF[:1], "new directive form"),
+    ("g4-disp-f-off8", "ValidatorIndex: `add $0x30,%rax` (Go offset 0x28 in the IR)", "SM",
+     sm_vi(VI[:4] + ["  add $0x30,%rax"] + VI[5:]), None, 3, SMF[:2], "other"),
+    ("g4-disp-src-off8", "ValidatorIndex: `add $0x30,%rbx` (SSZ offset 0x28 in the IR)", "SM",
+     sm_vi([VI[0], "  add $0x30,%rbx"] + VI[2:]), None, 3, SMF[:2], None),
+    ("g4-swapped-call-regs", "WithdrawableEpoch: `mov %rsi,%rbx; mov %rdx,%rax` (source / destination swapped)", "PW",
+     [(57, "  mov %rsi,%rax", "  mov %rsi,%rbx"), (58, "  mov %rdx,%rbx", "  mov %rdx,%rax")], None, 3, PWF[:2], "register"),
+    ("g4-unknown-callee-code", "TargetIndex: `callq …Gwei.UnmarshalSSZ` in the code (IR ValidatorIndex)", "PC",
+     [(56, f"  callq {PRIM}ValidatorIndex.UnmarshalSSZ", f"  callq {PRIM}Gwei.UnmarshalSSZ")], None, 3, PCF[:1], None),
+    ("g4-unknown-callee-ir", "TargetIndex: callee Gwei.UnmarshalSSZ in code and IR (no proved spec)", "PC",
+     [(56, f"  callq {PRIM}ValidatorIndex.UnmarshalSSZ", f"  callq {PRIM}Gwei.UnmarshalSSZ")],
+     ir_overlay_name("TargetIndex", "Gwei"), 3, PCF[:1], "new field kind"),
+    ("g4-label-in-call-window", "TargetIndex: the `nop` after the `callq` replaced by a label (inside the call window)", "PC",
+     [(57, "  nop", "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_zz:")],
+     None, 3, PCF[:1], "other"),
+    ("g4-label-in-seg-window", "Signature: a label between `xor %ebx,%ebx` and `mov $0x60,%ecx` (inside the segment window)", "SM",
+     [(123, "  mov $0x60,%ecx", f"{SML}zz:\n  mov $0x60,%ecx")], None, 3, SMF[:3], "other"),
+    ("g4-ir-order-swap", "IR order Amount / WithdrawableEpoch swapped (wrong field order)", "PW",
+     [], ir_swap("Amount", "WithdrawableEpoch"), 3, PWF[:1], "set-up order"),
+    ("g4-code-order-swap", "Eth1Data code: the DepositCount read moved after the BlockHash segment", "E1",
+     lambda L: L[:47] + L[50:86] + L[47:50] + L[86:], None, 3, ["DepositRoot"], "set-up order"),
+    ("g4-ry-rbx", "BlockRoot: receiver reloaded into rbx after memmove (not in the lemma's set)", "SM",
+     [(68, "  mov 0x70(%rsp),%rax", "  mov 0x70(%rsp),%rbx"), (69, "  movq $0x20,0x18(%rax)", "  movq $0x20,0x18(%rbx)"),
+      (70, "  movq $0x20,0x20(%rax)", "  movq $0x20,0x20(%rbx)")], None, 3, SMF[:1], "register"),
+    ("g4-reload-other-slot", "BlockRoot: second receiver reload from 0x68(%rsp)", "SM",
+     [(68, "  mov 0x70(%rsp),%rax", "  mov 0x68(%rsp),%rax")], None, 3, SMF[:1], "other"),
+    ("g4-buffer-slot-overwritten", "Signature: `mov %rax,0x78(%rsp)` before the segment (buffer slot overwritten)", "SM",
+     [(119, "  mov %rbx,0x30(%rsp)", "  mov %rbx,0x30(%rsp)\n  mov %rax,0x78(%rsp)")], None, 3, SMF[:3], "register"),
+    ("g4-store-unknown-base", "ValidatorIndex: `mov %rax,0x8(%rcx)` in the set-up (store through an unknown base)", "SM",
+     sm_vi(VI[:2] + ["  mov %rax,0x8(%rcx)"] + VI[2:]), None, 3, SMF[:2], "register"),
+    ("g4-indexed-operand", "Amount: `mov 0x8(%rbx,%rcx,1),%r8` (index operand)", "PW",
+     [(55, "  mov 0x8(%rbx),%r8", "  mov 0x8(%rbx,%rcx,1),%r8")], None, 3, PWF[:1], "new directive form"),
+    ("g4-imm-store", "TargetIndex: `movq $0x0,0x40(%rsp)` in the set-up (immediate store)", "PC",
+     [(53, "  mov 0x58(%rsp),%rax", "  movq $0x0,0x40(%rsp)\n  mov 0x58(%rsp),%rax")], None, 3, PCF[:1], "new directive form"),
+    ("g4-rip-load", "TargetIndex: `mov ssz.ErrSize(%rip),%rdi` in the set-up", "PC",
+     [(53, "  mov 0x58(%rsp),%rax", "  mov ssz.ErrSize(%rip),%rdi\n  mov 0x58(%rsp),%rax")], None, 3, PCF[:1], "new directive form"),
+    ("g4-rsp-change", "TargetIndex: `add $0x8,%rsp` in the set-up", "PC",
+     [(53, "  mov 0x58(%rsp),%rax", "  add $0x8,%rsp\n  mov 0x58(%rsp),%rax")], None, 3, PCF[:1], None),
+    ("g4-movi-len-16", "TargetIndex: `mov $0x10,%ecx` (rcx = 16 at the call)", "PC",
+     [(55, "  mov $0x8,%ecx", "  mov $0x10,%ecx")], None, 3, PCF[:1], None),
+    ("g4-u64-src-disp", "Amount: `mov 0x10(%rbx),%r8` (SSZ offset 8 in the IR)", "PW",
+     [(55, "  mov 0x8(%rbx),%r8", "  mov 0x10(%rbx),%r8")], None, 3, PWF[:1], "other"),
+    ("g4-u64-dst-disp", "Amount: store to 0x18(%rax), the Go offset of WithdrawableEpoch", "PW",
+     [(56, "  mov %r8,0x10(%rax)", "  mov %r8,0x18(%rax)")], None, 3, PWF[:1], "set-up order"),
+]
+
+
+
+def rv(eds):
+    """Edits in the form of review g4g-r1 (`tmp/exp4.py`, `exp5.py`): (1-based line, old suffix, new); new None =
+    delete, a list = replace by several, ("before", [..]) = insert before; directives indented, labels not."""
+    def fn(L):
+        L = list(L)
+        for ln, old, new in sorted(eds, key=lambda x: -x[0]):
+            assert L[ln - 1].strip().endswith(old) or L[ln - 1].strip() == old, (ln, L[ln - 1], old)
+            ind = lambda xs: ["  " + x if not x.endswith(":") else x for x in xs]
+            if new is None:
+                del L[ln - 1]
+            elif isinstance(new, tuple):
+                L[ln - 1:ln - 1] = ind(new[1])
+            elif isinstance(new, list):
+                L[ln - 1:ln] = ind(new)
+            else:
+                L[ln - 1] = "  " + new
+        return L
+    return fn
+
+
+E1F = G4["E1"]["fields"]
+SMJ = SML[:-1]
+# Unit G4-F: the inputs of review g4g-r1 (ids `g4f-<reviewer id>`). The seven inputs the GEN4 walker accepted although
+# the code does not establish the block entry (M1) must be refused; the eleven valid variants stay covered; plus
+# head-miss classes (S1) and the frame / goroutine register rule.
+G4F_MUT = [
+    ("g4f-a05", "8-byte stack store at 0x7c overlaps the buffer slot 0x78 (M1a)", "SM",
+     rv([(83, "mov 0x78(%rsp),%rbx", ("before", ["mov %rdi,0x7c(%rsp)"]))]), None, 3, SMF[:2], "other"),
+    ("g4f-a15", "a05 with nops around the store (M1a)", "SM",
+     rv([(83, "mov 0x78(%rsp),%rbx", ("before", ["nop", "mov %rdi,0x7c(%rsp)", "nop"])),
+         (88, "mov $0x8,%ecx", ("before", ["nop"]))]), None, 3, SMF[:2], "other"),
+    ("g4f-a29", "8-byte stack store at 0x3c overlaps the buffer slot 0x38 (M1a)", "E1",
+     rv([(48, "mov 0x38(%rsp),%rsi", ("before", ["mov %rdx,0x3c(%rsp)"]))]), None, 3, E1F[:1], "other"),
+    ("g4f-a31", "8-byte stack store at 0x34 overlaps the receiver slot 0x30 before the segment (M1a)", "E1",
+     rv([(51, "lea type__+387072(%rip),%rax", ("before", ["mov %rsi,0x34(%rsp)"]))]), None, 3, E1F[:2], "other"),
+    ("g4f-b05", "8-byte stack store at 0x34 overlaps the buffer slot 0x38 from below (M1a)", "E1",
+     rv([(48, "mov 0x38(%rsp),%rsi", ("before", ["mov %rdx,0x34(%rsp)"]))]), None, 3, E1F[:1], "other"),
+    ("g4f-b01", "head: receiver spilled before `push %rbp` (M1b)", "SM",
+     rv([(5, "push %rbp", ("before", ["mov %rax,0x70(%rsp)"])), (9, "nop", None), (12, "mov %rax,0x70(%rsp)", None)]),
+     None, 2, [], "other"),
+    ("g4f-b02", "head: `sub $0x60,%rsp` replaced by `nop` (frame never allocated) (M1b)", "SM",
+     rv([(7, "sub $0x60,%rsp", "nop")]), None, 2, [], "other"),
+    ("g4f-b03", "head: a spill at 0x74 and `mov %rcx,0x70(%rsp)` at directive 8 (M1b)", "SM",
+     rv([(9, "nop", "mov %rcx,0x70(%rsp)"), (12, "mov %rax,0x70(%rsp)", "mov %rax,0x74(%rsp)")]), None, 2, [], "other"),
+    ("g4f-a41", "head: an extra `nop` moves `cmp $size,%rcx` to directive 10 (S1: class padding)", "SM",
+     rv([(9, "nop", ["nop", "nop"])]), None, 2, [], "padding"),
+    ("g4f-a13", "ValidatorIndex source `add $0x0,%rbx` (S1: wrong offset is class other)", "SM",
+     rv([(84, "add $0x28,%rbx", "add $0x0,%rbx")]), None, 3, SMF[:2], "other"),
+    ("g4f-a43", "ValidatorIndex: receiver reloaded after its add (class set-up order)", "SM",
+     rv([(87, "add $0x28,%rax", ["add $0x28,%rax", "mov 0x70(%rsp),%rax"])]), None, 3, SMF[:2], "set-up order"),
+    ("g4f-store-retaddr", "ValidatorIndex: `mov %rdi,0x68(%rsp)` (the return-address slot, frame 0x60)", "SM",
+     sm_vi(VI[:2] + ["  mov %rdi,0x68(%rsp)"] + VI[2:]), None, 3, SMF[:2], "other"),
+    ("g4f-store-below-sp", "ValidatorIndex: `mov %rdi,-0x8(%rsp)` (below rsp)", "SM",
+     sm_vi(VI[:2] + ["  mov %rdi,-0x8(%rsp)"] + VI[2:]), None, 3, SMF[:2], "other"),
+    ("g4f-write-r14", "ValidatorIndex: `mov %rdx,%r14` in the set-up (goroutine register)", "SM",
+     sm_vi(VI[:2] + ["  mov %rdx,%r14"] + VI[2:]), None, 3, SMF[:2], "other"),
+    ("g4f-write-rbp", "ValidatorIndex: `lea 0x8(%rax),%rbp` in the set-up (frame pointer)", "SM",
+     sm_vi(VI[:2] + ["  lea 0x8(%rax),%rbp"] + VI[2:]), None, 3, SMF[:2], "other"),
+    # the eleven valid variants of g4g-r1 (covered)
+    ("g4f-a08", "fall-through label in the ValidatorIndex set-up", "SM",
+     rv([(87, "add $0x28,%rax", ("before", [SMJ + "_zz:"]))]), None, 0, SMF, None),
+    ("g4f-a14", "nops at 25 positions", "SM",
+     rv([(x, "", ("before", ["nop"])) for x in (16, 17, 18, 19, 20, 48, 51, 53, 62, 65, 67, 70, 73, 82, 84, 86, 88, 89, 90,
+                                                 91, 119, 126, 141, 147, 156)]), None, 0, SMF, None),
+    ("g4f-a16", "spill + reload of the receiver through 0x48(%rsp)", "SM",
+     rv([(87, "add $0x28,%rax", ("before", ["mov %rax,0x48(%rsp)", "mov 0x48(%rsp),%rax"]))]), None, 0, SMF, None),
+    ("g4f-a19", "forward jmp over a junk directive", "SM",
+     rv([(87, "add $0x28,%rax", ("before", ["jmp " + SMJ + "_yy", "xor %eax,%eax", SMJ + "_yy:"]))]), None, 0, SMF, None),
+    ("g4f-a21", "rcx = 16 - 8", "SM", rv([(88, "mov $0x8,%ecx", ["mov $0x10,%ecx", "add $-0x8,%rcx"])]), None, 0, SMF, None),
+    ("g4f-a27", "DepositCount value moved through rcx", "E1",
+     rv([(50, "mov %rsi,0x20(%rdx)", ["mov %rsi,%rcx", "nop", "mov %rcx,0x20(%rdx)"])]), None, 0, E1F, None),
+    ("g4f-a34", "store after the last field event (G4-F2: epilogue rule, refused)", "E1",
+     rv([(87, "xor %eax,%eax", ("before", ["mov %rsi,0x20(%rdx)"]))]), None, 2, [], "other"),
+    ("g4f-a35", "buffer reloaded from sp + 8 after the call", "PC",
+     rv([(49, "mov 0x60(%rsp),%rbx", "mov 0x8(%rsp),%rbx")]), None, 0, PCF, None),
+    ("g4f-a38", "receiver in another frame slot across the call", "PC",
+     rv([(16, "add $0x8,%rax", ("before", ["mov %rax,0x30(%rsp)"])), (53, "mov 0x58(%rsp),%rax", "mov 0x30(%rsp),%rax")]),
+     None, 0, PCF, None),
+    ("g4f-b04", "no nil check in the head", "SM", rv([(15, "test %al,(%rax)", None)]), None, 0, SMF, None),
+    ("g4f-b06", "aligned store to the neighbour slot 0x40", "E1",
+     rv([(48, "mov 0x38(%rsp),%rsi", ("before", ["mov %rdx,0x40(%rsp)"]))]), None, 0, E1F, None),
+]
+
+# Unit G4-F2: review g4f-r1 M3 (head size immediate vs the IR) and the systematic pass (callee vs the IR overlay
+# type, the directives after the last field event)
+G4F2_MUT = [
+    ("g4f2-c34", "head: `cmp $0x10,%rcx` (IR SSZ size 0x90) (M3)", "SM",
+     rv([(10, "cmp $0x90,%rcx", "cmp $0x10,%rcx")]), None, 2, [], "other"),
+    ("g4f2-d15", "head: `cmp $0x20,%rcx` (IR SSZ size 0x48) (M3)", "E1",
+     rv([(10, "cmp $0x48,%rcx", "cmp $0x20,%rcx")]), None, 2, [], "other"),
+    ("g4f2-d16", "head: `cmp $0x100,%rcx` (IR SSZ size 0x48) (M3)", "E1",
+     rv([(10, "cmp $0x48,%rcx", "cmp $0x100,%rcx")]), None, 2, [], "other"),
+    ("g4f2-callee-vi-epoch", "Index (IR ValidatorIndex): `callq …Epoch.UnmarshalSSZ` (callee not the overlay type)", "PW",
+     rv([(18, f"callq {PRIM}ValidatorIndex.UnmarshalSSZ", f"callq {PRIM}Epoch.UnmarshalSSZ")]), None, 2, [], "set-up order"),
+    ("g4f2-callee-epoch-vi", "WithdrawableEpoch (IR Epoch): `callq …ValidatorIndex.UnmarshalSSZ`", "PW",
+     rv([(60, f"callq {PRIM}Epoch.UnmarshalSSZ", f"callq {PRIM}ValidatorIndex.UnmarshalSSZ")]), None, 3, PWF[:2], "other"),
+    ("g4f2-epi-call", "a `callq …Epoch.UnmarshalSSZ` after the last field event", "E1",
+     rv([(87, "xor %eax,%eax", ("before", [f"callq {PRIM}Epoch.UnmarshalSSZ"]))]), None, 2, [], "other"),
+    ("g4f2-epi-store-rsp", "a stack store `mov %rsi,0x8(%rsp)` after the last field event", "E1",
+     rv([(87, "xor %eax,%eax", ("before", ["mov %rsi,0x8(%rsp)"]))]), None, 2, [], "other"),
+    ("g4f2-epi-frame", "`add $0x28,%rsp` (head frame 0x20) after the last field event", "E1",
+     rv([(89, "add $0x20,%rsp", "add $0x28,%rsp")]), None, 2, [], "other"),
+    ("g4f2-epi-nop-valid", "a `nop` in the epilogue (plain return: covered)", "E1",
+     rv([(89, "add $0x20,%rsp", ("before", ["nop"]))]), None, 0, E1F, None),
+]
+
+# Unit G4-F3: review g4f2-r1 M4 (an epilogue `jmp` to a label that is not in the file)
+G4F3_MUT = [
+    ("g4f3-x01", "Eth1Data: `jmp runtime.abort` in place of `xor %eax,%eax` after the last field event (M4)", "E1",
+     rv([(87, "xor %eax,%eax", "jmp runtime.abort")]), None, 2, [], "other"),
+    ("g4f3-x02", "Eth1Data: `jmp *%rdx` in place of `xor %eax,%eax` after the last field event (M4)", "E1",
+     rv([(87, "xor %eax,%eax", "jmp *%rdx")]), None, 2, [], "other"),
+    ("g4f3-x03", "SyncCommitteeMessage: a tail `jmp …Slot.UnmarshalSSZ` after the last field event (M4)", "SM",
+     rv([(157, "mov 0x28(%rsp),%rax", ("before", ["jmp " + PRIM + "Slot.UnmarshalSSZ"]))]), None, 2, [], "other"),
+]
+
+# Unit G4-F3: the fail-closed harness (written to <work-dir>; argv: scalgen.py config.json result.json; cwd = fv/kraken)
+FC_HARNESS = r'''
+import contextlib, importlib.util, io, json, pathlib, sys
+spec = importlib.util.spec_from_file_location("scalgen_fc", sys.argv[1])
+sg = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(sg)
+ARGV = list(sys.argv)  # call() replaces sys.argv
+cfg = json.loads(pathlib.Path(ARGV[2]).read_text())
+SU = pathlib.Path(cfg["summary"])
+
+
+class Boom(Exception):
+    """an exception class the generator does not know"""
+
+
+def call():
+    sys.argv = ["scalgen.py"] + cfg["argv"] + ["--summary", str(SU)]
+    SU.unlink(missing_ok=True)
+    so, se = io.StringIO(), io.StringIO()
+    with contextlib.redirect_stdout(so), contextlib.redirect_stderr(se):
+        try:
+            sg.main()
+            rc = 0
+        except SystemExit as e:
+            rc = e.code if isinstance(e.code, int) else (0 if e.code is None else 1)
+        except BaseException as e:
+            rc = "uncaught " + type(e).__name__
+    sm = json.loads(SU.read_text()) if SU.exists() else None
+    return rc, len(so.getvalue()), sm
+
+
+def fire(kind, where):
+    if kind == "unexpected":
+        raise Boom("injected at " + where)
+    if kind == "g4stop":
+        raise sg.G4Stop(0, "injected plain G4Stop at " + where, "other")
+    raise SystemExit(0)
+
+
+def patched(name, fake, f=call):
+    orig = getattr(sg, name)
+    setattr(sg, name, fake)
+    try:
+        return f()
+    finally:
+        setattr(sg, name, orig)
+
+
+res = []
+
+
+def rec(phase, kind, where, r):
+    rc, nso, sm = r
+    res.append(dict(phase=phase, kind=kind, where=where, rc=rc, stdout=nso, sm_exit=(sm or {}).get("exit"),
+                    covered=(sm or {}).get("covered"), total=(sm or {}).get("total")))
+
+
+rec("control", "none", "", call())
+for kind in ("unexpected", "g4stop", "sysexit0"):
+    rec("head", kind, "g4_head", patched("g4_head", lambda *a, k=kind: fire(k, "g4_head")))
+rec("head", "returns None", "g4_head", patched("g4_head", lambda *a: None))
+# the walk: count the g4_parse / g4_label_index calls and the current field of each (the walk's local `cur`)
+for fn in ("g4_parse", "g4_label_index"):
+    orig, seq = getattr(sg, fn), []
+
+    def counter(*a, orig=orig, seq=seq):
+        seq.append(sys._getframe(1).f_locals.get("cur"))
+        return orig(*a)
+    patched(fn, counter)
+    for kind in ("unexpected", "g4stop", "sysexit0"):
+        for n, cur in enumerate(seq):
+            if kind == "sysexit0" and cur in seq[:n]:
+                continue  # SystemExit(0): the first call of each field only
+            cnt = [0]
+
+            def inj(*a, orig=orig, n=n, kind=kind, cnt=cnt):
+                cnt[0] += 1
+                if cnt[0] == n + 1:
+                    fire(kind, f"{fn} call {n}")
+                return orig(*a)
+            rec(f"field {cur}", kind, f"{fn} call {n}", patched(fn, inj))
+# the theorem texts (after the walk): every call of the three text functions
+seqt = []
+origs = {fn: getattr(sg, fn) for fn in ("g4_step_text", "g4_call_text", "g4_seg_text")}
+for fn, o in origs.items():
+    setattr(sg, fn, lambda *a, o=o, fn=fn: (seqt.append(fn), o(*a))[1])
+call()
+for fn, o in origs.items():
+    setattr(sg, fn, o)
+for kind in ("unexpected", "sysexit0"):
+    for n in range(len(seqt)):
+        cnt = [0]
+        for fn, o in origs.items():
+            def inj(*a, o=o, fn=fn, n=n, kind=kind, cnt=cnt):
+                cnt[0] += 1
+                if cnt[0] == n + 1:
+                    fire(kind, f"text call {n}")
+                return o(*a)
+            setattr(sg, fn, inj)
+        rec("text", kind, f"text call {n} ({seqt[n]})", call())
+        for fn, o in origs.items():
+            setattr(sg, fn, o)
+for kind in ("unexpected", "g4stop", "sysexit0"):
+    rec("epilogue", kind, "g4_epilogue", patched("g4_epilogue", lambda *a, k=kind: fire(k, "g4_epilogue")))
+rec("epilogue", "G4EpiMiss", "g4_epilogue",
+    patched("g4_epilogue", lambda *a: (_ for _ in ()).throw(sg.G4EpiMiss(0, "injected", "other"))))
+for v in (None, True, "ok", 0):
+    rec("epilogue", f"returns {v!r}", "g4_epilogue", patched("g4_epilogue", lambda *a, v=v: v))
+ow = sg.g4_walk
+rec("flags", "walk: every field done, with a stop", "g4_walk",
+    patched("g4_walk", lambda *a: (lambda r: (r[0], sg.G4Stop(0, "injected", "other"), r[2]))(ow(*a))))
+rec("flags", "walk: every field done, no end index", "g4_walk",
+    patched("g4_walk", lambda *a: (lambda r: (r[0], None, None))(ow(*a))))
+oi = sg._p2dec_gen4
+rec("flags", "inner returns its full text, outer flags not set", "_p2dec_gen4",
+    patched("_p2dec_gen4", lambda args, flags: oi(args, dict(flags))))
+rec("flags", "inner sets two flags", "_p2dec_gen4",
+    patched("_p2dec_gen4", lambda args, flags: (flags.update(head_ok=True, fields_complete=True), oi(args, dict(flags)))[1]))
+pathlib.Path(ARGV[3]).write_text(json.dumps(res) + "\n")
+'''
+
+
+def fc_cases(work, new):
+    """Unit G4-F3: fail-closed injections (FC_HARNESS) on Eth1Data, SyncCommitteeMessage, PendingPartialWithdrawal."""
+    res, bad = [], 0
+    h = work / "fc_harness.py"
+    h.write_text(FC_HARNESS)
+    for key in ("E1", "SM", "PW"):
+        c = G4[key]
+        cfg, out = work / f"fc-{key}.cfg.json", work / f"fc-{key}.result.json"
+        cfg.write_text(json.dumps(dict(argv=["p2dec", "--gen4", "--S", c["S"], "--ir", IR, "--type", c["type"]] + c["args"],
+                                       summary=str(work / f"fc-{key}.summary.json"))))
+        out.unlink(missing_ok=True)
+        rc, so, se = run(["python3", "-I", "-B", str(h), str(new), str(cfg), str(out)], KR)
+        R = json.loads(out.read_text()) if rc == 0 and out.exists() else []
+        n = len(c["fields"])
+        groups = {}
+        for r in R:
+            ph = r["phase"].split()[0] if not r["phase"].startswith("field") else r["phase"]
+            groups.setdefault((ph, r["kind"].split(":")[0] if r["phase"] != "flags" else r["kind"]), []).append(r)
+        for (ph, kind), rs in sorted(groups.items(), key=lambda x: str(x[0])):
+            if ph == "control":
+                ok = all(r["rc"] == 0 and r["stdout"] > 0 and r["covered"] == n for r in rs)
+            else:
+                ok = all(r["rc"] in ((2,) if kind in ("unexpected", "sysexit0") else (2, 3)) and r["stdout"] == 0
+                         and r["sm_exit"] == r["rc"] and r["total"] == n and r["covered"] < n for r in rs)
+            res.append(dict(id=f"fc-{key}-{ph.replace(' ', '')}-{kind.replace(' ', '_')}", expect="control: exit 0, all "
+                            "covered" if ph == "control" else "exit 2 / 3 (2 for unexpected / SystemExit), 0 bytes, "
+                            "summary exit equal, covered < total", exit=sorted({str(r["rc"]) for r in rs}),
+                            stdout_bytes=sum(r["stdout"] for r in rs), injections=len(rs),
+                            bad=[r for r in rs if not ok][:3], ok=bool(ok)))
+            bad |= not ok
+        # every IR field had injections in the walk, and every phase was injected
+        fl = {r["phase"] for r in R}
+        ok = rc == 0 and all(f"field {x}" in fl for x in range(n)) and {"head", "text", "epilogue", "flags", "control"} <= fl
+        res.append(dict(id=f"fc-{key}-phases", expect=f"harness exit 0; injections in the head, fields 0..{n - 1}, "
+                        "texts, epilogue, flags", exit=rc, stdout_bytes=0, injections=len(R),
+                        phases=sorted(fl), stderr=se.strip()[-300:], ok=bool(ok)))
+        bad |= not ok
+    return res, bad
+
+
+def g4_cases(work, new):
+    """Unit G4-G: `--gen4` on the development types, compose refusal, dataflow adversarial inputs."""
+    res, bad = [], 0
+    irt = (KR / IR).read_text()
+    KC = ["python3", "-I", "-B", str(HERE / "kindcheck.py")]
+    G = ["python3", "-I", "-B", str(new), "p2dec", "--gen4"]
+    for key, c in G4.items():
+        outs = []
+        for i in range(2):
+            po, su = work / f"g4-new-{key}-{i}.partial.lean", work / f"g4-new-{key}-{i}.json"
+            for q in (po, su):
+                if q.exists():
+                    q.unlink()
+            rc, so, se = run(G + ["--S", c["S"], "--ir", IR, "--type", c["type"], "--summary", str(su),
+                                  "--partial-out", str(po)] + c["args"], KR)
+            outs.append((rc, so, po.read_bytes() if po.exists() else b"", json.loads(su.read_text())))
+        rc, so, pt, sm = outs[0]
+        part = c["cov"] != c["fields"]
+        cov = [f["field"] for f in sm["fields"] if f["status"] == "covered"]
+        text = pt if part else so
+        f = work / f"g4-new-{key}.lean"
+        f.write_bytes(text)
+        kc = subprocess.run(KC + (["--partial"] if part else []) + [str(f)], capture_output=True, text=True)
+        com = (KR / c["committed"]).read_bytes() if (KR / c["committed"]).exists() else None
+        ok = (rc == (3 if part else 0) and outs[0][:3] == outs[1][:3] and cov == c["cov"]
+              and kc.returncode == (3 if part else 0) and (com is None or com == text) and (not part or so == b""))
+        res.append(dict(id=f"g4-new-{key}", expect=f"exit {3 if part else 0} twice, identical, covered {c['cov']}, "
+                        f"kindcheck PASS, = committed if present", exit=rc, stdout_bytes=len(so), covered=cov,
+                        kindcheck_exit=kc.returncode, committed_present=com is not None,
+                        equals_committed=(com == text) if com is not None else None, ok=bool(ok)))
+        bad |= not ok
+    c = G4["SM"]
+    po = work / "g4-compose.partial.lean"
+    if po.exists():
+        po.unlink()
+    rc, so, se = run(G + ["--compose", "--name", "x_g4", "--S", c["S"], "--ir", IR, "--type", c["type"],
+                          "--partial-out", str(po)] + c["args"], KR)
+    ok = rc == 2 and so == b"" and not po.exists() and "--gen4 --compose: refused" in se
+    res.append(dict(id="g4-compose-refuse", expect="exit 2, 0 bytes, no file, reason", exit=rc, stdout_bytes=len(so),
+                    stderr=se.strip()[:300], ok=bool(ok)))
+    bad |= not ok
+    for (mid, what, key, eds, irf, want, covw, mcls) in G4_MUT + G4F_MUT + G4F2_MUT + G4F3_MUT:
+        c = G4[key]
+        base = (KR / c["S"]).read_text().split("\n")
+        lines = eds(base) if callable(eds) else edits(base, eds)
+        fS = work / f"{mid}.S"
+        fS.write_text("\n".join(lines))
+        irp = KR / IR
+        if irf:
+            irp = work / f"{mid}.ir.json"
+            irp.write_text(ir_edit(irt, c["type"], irf))
+        po, su = work / f"{mid}.partial.lean", work / f"{mid}.json"
+        for q in (po, su):
+            if q.exists():
+                q.unlink()
+        rc, so, se = run(G + ["--S", str(fS), "--ir", str(irp), "--type", c["type"], "--summary", str(su),
+                              "--partial-out", str(po)] + c["args"], KR)
+        sm = json.loads(su.read_text()) if su.exists() else {}
+        cov = [f["field"] for f in sm.get("fields", []) if f.get("status") == "covered"] if rc != 2 else []
+        unc = [f for f in sm.get("fields", []) if f.get("status") != "covered"]
+        kcr = None
+        if rc == 3:
+            kcr = subprocess.run(KC + ["--partial", str(po)], capture_output=True, text=True).returncode
+        elif rc == 0:
+            fo = work / f"{mid}.lean"
+            fo.write_bytes(so)
+            kcr = subprocess.run(KC + [str(fo)], capture_output=True, text=True).returncode
+        # G4-F: `reached` is true up to the first uncovered field and false after it (every field on a head miss)
+        fl = sm.get("fields", [])
+        x0 = next((x for x, f in enumerate(fl) if f.get("status") != "covered"), len(fl))
+        head_miss = sm.get("head", {}).get("status") == "not covered"
+        # G4-F2: on an epilogue miss every field was reached
+        epi_miss = sm.get("epilogue", {}).get("status") == "not covered"
+        reach_ok = all(f.get("reached") == (False if head_miss else True if epi_miss else x <= x0)
+                       for x, f in enumerate(fl))
+        ok = (rc == want and (so == b"") == (want != 0) and sm.get("exit") == want and cov == covw
+              and kcr == {3: 3, 0: 0}.get(want) and (mcls is None or (unc and unc[0].get("miss_class") == mcls))
+              and reach_ok and (want != 2 or len(fl) == len(c["fields"])))
+        res.append(dict(id=mid, what=what, expect=f"exit {want}, covered {covw}" + (f", miss class {mcls}" if mcls else ""),
+                        exit=rc, stdout_bytes=len(so), covered=cov, kindcheck_exit=kcr,
+                        uncovered=[(f["field"], f.get("miss_class"), f.get("reason")) for f in unc], ok=bool(ok)))
+        bad |= not ok
+    return res, bad
+
+
 def main(work, out):
     work.mkdir(parents=True, exist_ok=True)
     res, bad = [], 0
@@ -757,6 +1286,12 @@ def main(work, out):
     r3, b3 = g3_cases(work, new)
     res += r3
     bad |= b3
+    r4, b4 = g4_cases(work, new)
+    res += r4
+    bad |= b4
+    r5, b5 = fc_cases(work, new)
+    res += r5
+    bad |= b5
 
     out.write_text(json.dumps(dict(cases=res, passed=sum(r["ok"] for r in res), total=len(res)), indent=1) + "\n")
     print(f"p2dec_test: {sum(r['ok'] for r in res)}/{len(res)} as expected")

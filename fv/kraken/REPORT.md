@@ -33,6 +33,8 @@ GEN2와 H4는 통합 INT4에서 병합했다(`56e0c88`). 리뷰 int4-r1이 통�
 GEN3 단위의 리뷰: g3l-r1 APPROVE(`f5c5f52`), g3g-r1 APPROVE(`6dc0e2a`, H5 방법 고정)다.
 GEN3와 H5는 통합 INT5에서 병합했다(`2bedf6d`). 통합 INT5 자체의 리뷰는 아직 없다.
 H5에서 GEN3의 개발 자료 결과는 그대로 옮겨지지 않았다(11절).
+GEN4 생성기(단위 G4-G, 표본 안, 아직 리뷰 없음)는 11절에 있다. 개발 형 10개 중 9개를 모두 덮는다.
+홀드아웃 H6(묶음 7형 18/18 걸음 덮음; PendingDeposit, PowBlock 수용 정리는 손 합성으로 증명)는 11절에 있다. 아직 리뷰 없음.
 H4에서 GEN2의 개발 자료 결과는 그대로 옮겨지지 않았다(11절).
 BeaconBlockHeader 인코더는 빠른 경로와 길이 거부 세 곳을 증명했다. 길이 거부의 전제는 `len + 112 ≤ cap`이다(11절).
 `Eth1Data.MarshalSSZTo`는 빠른 경로만 증명했다(11절, ENC 스트림). 리뷰 enc-r1이 ENC `ad15fbc`를 승인했다.
@@ -698,6 +700,88 @@ h5-r1 덤프 대비 선언 비교: CHANGED 0, REMOVED 0, ADDED 0이다. 덤프 �
 실행하지 않은 것(통합자): Lean 수준 심은 대조, 콜드 빌드, 링크 검사, Go 차분, 부정 시험, x86-64.
 기록: `scal/RESULT.json`의 `integration_int5`. 홀드아웃 연속 결과의 표는 `prysm/BASELINE.md` 4절에 있다.
 
+GEN4 단위 G4-G(기준 `718e023`, 증명 생성기 변경, 개발 자료만; 아직 리뷰 없음):
+새 모드 `p2dec --gen4`다. 기본, `--gen2`, `--gen3` 출력은 바이트가 같다(옛 명령 23/23 SAME).
+맞춤은 템플릿이 아니고 자료 흐름이다. 블록은 생성기의 걸음이 입구 상태를 믿을 때만 낸다.
+"덮음"은 생성기의 주장이다. 아래 G4-F 단락을 본다.
+명령어마다 단계 정리 하나와 종류 줄 하나를 낸다. `nop`은 창 안에 들어간다.
+표본 안 덮음(GEN4 / GEN3): Checkpoint 2/2 / 2/2, AttestationData 3/5 / 3/5, BeaconBlockHeader 5/5 / 5/5.
+Eth1Data 3/3 / 3/3, BlobIdentifier 2/2 / 2/2, DepositMessage 3/3 / 3/3, Deposit_Data 4/4 / 4/4.
+PendingPartialWithdrawal 3/3 / 3/3, SyncCommitteeMessage 4/4 / 2/4, PendingConsolidation 2/2 / 1/2.
+덮지 않은 필드: AttestationData Source, Target이다. 분류는 "새 필드 종류"다.
+이것은 옮겨짐이 아니다. 모든 형이 개발 자료다. 홀드아웃 측정은 H6이다.
+`--gen4 --compose`는 거부한다. 필드 합성과 머리, 에필로그에 종류가 없다.
+세 수용 정리를 생성 사슬의 손 합성으로 증명했다: `sm_e2e_accept_g4gen`, `pc_e2e_accept_g4gen`, `pw_e2e_accept_main_g4gen`.
+그 형은 고정된 손 문장이다. 시도는 정리마다 1회다.
+손 줄(g2g 규칙, 모듈 / 증명 본문): SyncCommitteeMessage 355 / 217, PendingConsolidation 150 / 91, PendingPartialWithdrawal 163 / 102.
+형별 손 머리, 에필로그 보조정리는 위 수에 없다: 114, 121, 121이다. GEN4 보조정리(한 번 씀)는 1640줄이다.
+생성 줄(코드): Gen4SmDec 457, Gen4PcDec 213, Gen4PwDec 268이다.
+SyncCommitteeMessage 생성 사슬은 400줄을 넘는다. 계획의 정직 조건에 따라 문제로 적는다.
+120초를 넘는 모듈은 없다. 가장 긴 것은 3.6초다. 속도 주장은 없다.
+`kindcheck.py`: 선택 시험 157+4, 일부러 고장 낸 사본 14/14 실패다. `p2dec_test.py` 134/134다.
+부정 시험 17/17, 공리 게이트 PASS(선언 7080), 선언 비교 ADDED 1239뿐, 심은 대조는 잡혔다.
+기록: `scal/CONTAMINATION.md` 22절, `scal/RESULT.json`의 `gen4`, FINDINGS, `gen/scal/README.md`.
+
+GEN4 수정 G4-F(리뷰 g4g-r1 REQUEST_CHANGES 뒤, 기준 `21b8aab`; 아직 리뷰 없음):
+"덮음"(`--gen4`)은 생성기의 주장이다.
+낸 정리는 하나씩 커널 검사를 받는다.
+단계 사슬이 블록 입구 상태를 만드는지는 커널이 검사하지 않는다.
+호출 블록이 이름 붙은 IR 필드의 것인지도 검사하지 않는다.
+그것은 손 필드 합성만 검사한다. 합성이 있는 형은 셋이다.
+그래서 홀드아웃 결과 (S)는 "걸음이 덮음 + 정리마다 빌드됨"이다. "필드 증명됨"이 아니다.
+리뷰 입력 7개에서 이전 걸음은 입구 상태 없이 "덮음"이라고 했다. 정리는 모두 빌드됐다.
+고친 규칙: 머리 지시어 2–10은 `decpro_seg` 머리와 같아야 한다.
+스택 저장은 8의 배수이고 프레임 또는 인자 저장 칸 안이어야 한다. 아니면 걸음이 멈춘다.
+rbp, r14에 쓰면 걸음이 멈춘다.
+리뷰 입력 50개: 안전 50/50, 위험 입력 7/7 거부, 유효 변형 11/11 덮음.
+커밋된 `Gen4*.lean` 10개는 바이트가 같다. 옛 명령 23/23과 GEN4 10/10이 SAME이다.
+`p2dec_test.py` 160/160, `kindcheck.py` 선택 시험 157+7 PASS다. 선언은 늘지 않았다.
+검사하지 않는 것: 마지막 필드 사건 뒤(에필로그). 머리 위치는 고정이다(`cmp`는 9, `jne`은 10).
+놓침 뒤 필드는 `reached: false`다. 놓침 뒤 걸음 재개는 하지 않았다(건전한 근거가 없다).
+기록: `gen/scal/README.md` G4-F 절, `scal/CONTAMINATION.md` 23절.
+G4-F2(리뷰 g4f-r1 뒤, 아직 리뷰 없음): 머리 `cmp $size,%rcx` 즉시값을 IR SSZ 고정 크기와 비교한다.
+G4-F2: 에필로그를 이제 검사한다. 마지막 필드 사건 뒤 저장, 호출, 다른 프레임 크기는 거절한다(a34 거부).
+G4-F2: 위 "에필로그를 검사하지 않음"은 이 규칙으로 바뀌었다. 머리 `jbe`, `jne` 대상은 아직 보지 않는다.
+G4-F2: 리뷰 입력 83+50개 모두 안전하다. `p2dec_test.py` 169/169다. 기록: README G4-F2 절, CONTAMINATION 24절.
+G4-F2의 "에필로그를 검사한다"는 지나쳤다. 파일에 없는 레이블로 가는 `jmp`를 받아들였다(리뷰 g4f2-r1 M4).
+G4-F3(리뷰 g4f2-r1 뒤, 아직 리뷰 없음): 그 `jmp`는 이제 에필로그 놓침이다. 종료 2, 모든 필드가 덮이지 않음이다.
+G4-F3: 결과 논리는 실패 닫힘이다. 종료 0은 한 곳에서만 나온다.
+G4-F3: 그곳은 머리, 모든 필드, 에필로그의 성공 표시 셋이 모두 섰을 때만 닿는다.
+G4-F3: 다른 예외는 어느 단계에서든 종료 2다. 주입 시험(`fc-*`)이 이를 확인한다.
+G4-F3: 검사하지 않는 것: 반환값(nil 오류), makeslice 형 리터럴, 선택 nil 검사, 중복 레이블, 머리 `jbe` / `jne` 대상.
+G4-F3: 리뷰 입력 50+83+89개 모두 안전하다(x35는 리뷰어가 고친 참값으로 센다). `p2dec_test.py` 262/262다.
+
+홀드아웃 H6(방법 고정 `0e775ac`, 연 기록 커밋 `dcc71a8`, 2026-11-11T17:18:33Z; 아직 리뷰 없음):
+묶음은 고정 규칙의 7개 형 전부다. 범위는 `UnmarshalSSZ`다. 이 모집단의 홀드아웃은 이제 다 썼다.
+여러 형이 필드 종류로 보면 개발 형에 가깝다(H6-A5). 그래서 알려진 종류의 컴파일러 변이만 잰다.
+손 Desc(`c7ebeee`)와 손 문장 `H6.pd_accept_stmt`, `H6.pb_accept_stmt`(`0ad71a7`)는 생성기 실행 전에 커밋했다.
+결과 (S), 형마다 `--gen4` 한 번: PendingDeposit 5/5, PowBlock 3/3, HistoricalSummary 2/2, SigningData 2/2.
+SyncAggregatorSelectionData 2/2, ValidatorBalance 2/2, VoluntaryExit 2/2다. 합계 18/18, 닿음 18/18이다.
+모든 실행이 종료 0이다. 머리와 에필로그도 덮음이다. 놓침이 없어 놓침 분류도 없다.
+원 출력은 손대지 않았다. 모두 빌드되고 `kindcheck.py` 전체 모드를 통과한다.
+"덮음"은 걸음의 주장이다. 필드 증명이 아니다. 합성은 아래 두 형에만 있다.
+결과 (C): 설계상 거부다. 고정 기록에 따라 돌리지 않았다.
+두 수용 정리를 커널 검사했다: `pd_e2e_accept_g4gen`, `pb_e2e_accept_g4gen`. 표준 공리 셋뿐이다.
+생성 사슬 8개(PendingDeposit 5, PowBlock 3)는 모두 낸 그대로 손 합성에서 닫혔다. 고침은 0이다.
+그 8개 필드에서 걸음의 "덮음" 주장을 커널이 확인했다. 나머지 10개 필드에는 합성이 없다.
+Slot의 `hC`는 `sl_uacc_holds`로 채웠다. 새 계약 꼴은 없다.
+손으로 남은 것: 필드 합성, PendingDeposit의 머리와 에필로그(`decpro_seg`, `kstep_st`, `kstep_add`, `decret_seg`에서), 이음 글.
+PowBlock의 머리와 에필로그는 기존 `dechead_seg`, `decepi_seg`다.
+크기 거부, 명세 정렬, `reject_complete`, 증인 넷도 커널 검사했다.
+PowBlock: 명세의 `total_difficulty`는 `uint256`이고 생산자 Desc는 32바이트다. 선 위 바이트는 같다.
+그래서 Desc 같음 대신 같은 수용 입력과 수 / 리틀엔디언 바이트 대응을 증명했다.
+손 줄(g2g 규칙, 모듈 / 증명 본문): PendingDeposit 470 / 262(형별 보조정리 91 포함), PowBlock 259 / 132다.
+문장 모듈 `H6Stmt.lean`은 133(두 형)이고 위 수에 없다. PendingDeposit 손 모듈은 400줄을 넘는다.
+생성 줄(코드): Gen4H6PdDec 522, Gen4H6PbDec 348이다. 참고(인과 주장 없음): SmAcceptG4gen 355 / 217.
+실행 검사: 링크 검사 PASS(묶음 `eb1d6846`, 7형). 부정 시험 36/36(대조 9, 정리 안 실패 27)이다.
+공리 게이트 PASS, 선언 7650개, 비표준 0이다. g4f-r1 덤프 대비 선언 비교는 ADDED 570뿐이다. 심은 대조는 잡혔다.
+Go 차분 12/12(Go 의미론, linux/arm64, ELF 아님)이다. 심은 대조는 불일치 2다.
+증명하지 않은 것: Slot 오류 경로, morestack, `writeBarrier ≠ 0`, Lean Go 값 술어, spec_k의 `Pm` 증인, x86-64.
+시도: 두 수용 정리 각 2회(1회째는 이음 글 오류), PbSpec 2회, 나머지 1회다. 한도에 닿지 않았다.
+게이트 초: 1부 16.5, PendingDeposit 100.4, PowBlock 60.4, 공유 265.8이다.
+한계: 한 번의 측정이다. 일반성, 우월성, 속도 주장은 없다. 이전 홀드아웃 기록은 바꾸지 않았다.
+기록: `scal/CONTAMINATION.md` 26절, `scal/RESULT.json`의 `H6`, FINDINGS SG-5.
+
 조건:
 
 1. 런타임 계약 `MakesliceC`(uint8, esz 1, cnt 32), `MemmoveC`, `GrowsliceC`(uint8, esz 1, 인코더 첫 지점과 둘째 지점), `ConvT64C`, `FmtErrorfDDC`(Epoch 형식, `type:int`)는 가설이다. Go 1.26.10 소스를 다시 읽었고 바뀌지 않았다(`prysm/go1.26.10/e2e/RUNTIME-1.26.10.md`). 정교화 증명은 없다.
@@ -886,6 +970,10 @@ python3 -I -B fv/kraken/gen/scal/kindcheck.py --partial fv/kraken/lean/E2eScal/G
 # GEN3 생성기(단위 G3-G): gen.sh 마지막 명령 5개, 형마다 한 번; 모듈 Gen3PwDec Gen3DdDec Gen3BhDec Gen3AdDecPartial Gen3DdAccept2 PwAcceptG3 BhAcceptG3 (lake build E2eScal.<모듈>)
 python3 -I -B fv/kraken/gen/scal/kindcheck.py fv/kraken/lean/E2eScal/Gen3PwDec.lean fv/kraken/lean/E2eScal/Gen3DdDec.lean fv/kraken/lean/E2eScal/Gen3BhDec.lean fv/kraken/lean/E2eScal/Gen3DdAccept2.lean; python3 -I -B fv/kraken/gen/scal/kindcheck.py --partial fv/kraken/lean/E2eScal/Gen3AdDecPartial.lean
 python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/scal/negcases-g3g.json <work> prysm/go1.26.10/e2e/scal/negative-g3g.json <case-id>   # 사례마다 gate 작업 하나
+# GEN4 생성기(단위 G4-G): gen.sh 마지막 묶음(형마다 한 번); 모듈 Gen4CpDec Gen4AdDecPartial Gen4BhDec Gen4E1Dec Gen4BiDec Gen4DmDec Gen4DdDec Gen4PwDec Gen4SmDec Gen4PcDec SmAcceptG4gen PcAcceptG4gen PwAcceptG4gen (lake build E2eScal.<모듈>)
+python3 -I -B fv/kraken/gen/scal/kindcheck.py --selftest; python3 -I -B fv/kraken/gen/scal/kindcheck.py fv/kraken/lean/E2eScal/Gen4*Dec.lean; python3 -I -B fv/kraken/gen/scal/kindcheck.py --partial fv/kraken/lean/E2eScal/Gen4AdDecPartial.lean
+python3 -I -B fv/kraken/gen/scal/p2dec_test.py <work> <result.json>
+python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/scal/negcases-g4g.json <work> prysm/go1.26.10/e2e/scal/negative-g4g.json <case-id>   # 사례마다 gate 작업 하나
 python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/scal/negcases-g2g.json <work> <result.json> <case-id>   # 사례마다 gate 작업 하나
 # H4 홀드아웃: 링크 표, 생성기 (S)와 (C)를 형마다 한 번, 모듈, 부정 시험, Go 차분
 python3 -I -B fv/kraken/gen/e2e/h4link.py callgraph <objdump> <out.json>; python3 -I -B fv/kraken/gen/e2e/h4link.py filter <out> <objdump> <elf> <nm>

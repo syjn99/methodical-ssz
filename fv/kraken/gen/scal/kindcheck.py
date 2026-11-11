@@ -88,7 +88,38 @@ Checks, per file (text only):
     `<prefix>_<field>_seg|_arg|_arg1|_arg2|_call`; a callee field needs `_call` and `_arg` or `_arg1` + `_arg2`),
     and no field of `UNCOVERED-JSON` may have a theorem.
 
-Limits (not checked here): that the kind parameters (C, indices, displacements, offsets) are the right
+10. GEN4 (unit G4-G, `scalgen.py p2dec --gen4`): further `_kind` right-hand sides, each only when its kind
+    module and lemma modules have the pinned blobs GEN4_PINS (lemma unit G4-L, hand-over "Pins"):
+        @E2eScal.stepMovRRKind h C Reg64.rD Reg64.rS j e          @E2eScal.stepAddKind h C Reg64.rD imm j e
+        @E2eScal.stepLdvKind / stepLdbKind / stepStKind / stepLeaKind h C Reg64.r1 Reg64.r2 disp j e
+        @E2eScal.stepMovIKind h C Reg64.rD imm j e                @E2eScal.stepJmpKind h C "l" j jl
+        @E2eScal.stepLabelKind h C "l" j e                        @E2eScal.stepNopsKind h C j e
+        @E2eScal.callDecSegKindG4 h C "fn" "lok" j jc j2          (fn in CALLEES)
+        @E2eScal.bytesDecSegKindG4 h n C Reg64.rY j1 jm e dR dB dS fP fL fC src
+        @E2eScal.bytesDecSegZKindG4 h n C Reg64.rY j1 jm e dR dB dS fP fL fC
+    (n = 32 | 48 | 96; rY one of rax, rcx, rdx, rsi, rdi; registers `Reg64.<one of the 16>`).
+    10b. The proof of `t` (comments and string literals removed) uses the lemma of its kind
+         (`kstep_mov_rr`, `kstep_ldv`, …, `calldec_seg_w`, `bytesdec_seg_g4`, `bytesdec_seg_z_g4`) and no other
+         GEN4 lemma: a theorem whose proof and kind name different lemmas fails.
+    10c. A GEN4 file (header `GEN4 coverage (…): n of m fields`, or any GEN4 kind) carries exactly one line
+         `FIELDS-JSON: [{"field": F, "theorems": [...]}, …]`: every theorem with a GEN4 kind is listed in exactly
+         one field, every listed theorem is in the file, a field has at most one block theorem (`<p>_F_call` with
+         `callDecSegKindG4`, or `<p>_F_seg` with a byte kind), n = the number of listed fields; in `--partial` mode
+         no field of `UNCOVERED-JSON` is listed (its entries may carry a `miss_class`).
+11. Review g3g-r1 S2 (unit G4-G): a file in which a non-composed theorem has a GEN2 / GEN3 / GEN4 kind must
+    carry the coverage header (`GEN2|GEN3|GEN4 coverage (…): n of m fields`); rule 6a also ignores string literals.
+    Exemption (unit G4-F, review g4g-r1 S2): the hand example modules listed in HAND_EXAMPLES (exact paths
+    `lean/E2eScal/Gen2Examples.lean`, `Gen3Examples.lean`) are not generator output and skip rule 11 only; every
+    other rule applies to them. `Gen4Examples.lean` is not listed: its hand field compositions fail rules 4 and 10c,
+    and no recorded command runs `kindcheck.py` on it.
+    6d. Review g3g-r1 for_h5 (unit G4-G): a composed accept theorem with only the kind `decAcceptKind` (no
+    identity `_type` with an independent hand statement) FAILS; `scalgen.py --gen3 --compose` without `--same-as*`
+    now also marks it `UNCHECKED STATEMENT` (rule 6c).
+
+Limits (not checked here): GEN4 label strings in `stepLabelKind`, `stepJmpKind` and `callDecSegKindG4` (`lok`) are
+phantom kind parameters (review g4l-r1: they do not occur in the kind body; `stepLabelKind C l j e` is
+`stepNopsKind C j e` by `rfl`), so a label name in a kind line is NOT checked by this program or by the `_kind`
+line; the label is checked only by the proof's code fact (`he`, `hl`). Also not checked: that the kind parameters (C, indices, displacements, offsets) are the right
 ones for the Go type (a wrong one fails the proof's code facts, not this check); name resolution (the
 check reads `@E2eScal.<kind>` as text; an `open` of a namespace that declares another `E2eScal.<kind>`
 would not be seen); that the file builds. A pass is not a non-vacuity witness.
@@ -102,6 +133,12 @@ import tempfile
 HERE = pathlib.Path(__file__).resolve().parent
 KR = HERE.parent.parent
 KIND = KR / "lean" / "E2eScal" / "Kind.lean"
+# Rule 11 exemption (unit G4-F, review g4g-r1 S2): hand-written example modules of the lemma units. They have GEN2+
+# kinds but are not generator output, so they have no coverage header. Only these exact paths (relative to
+# fv/kraken) skip rule 11; every other rule applies to them unchanged.
+# `Gen4Examples.lean` is not listed: it also fails rules 4 and 10c (hand field compositions `*_field` without a kind,
+# no FIELDS-JSON line), so an exemption from rule 11 alone would not make it pass; kindcheck is not a check of it.
+HAND_EXAMPLES = ("lean/E2eScal/Gen2Examples.lean", "lean/E2eScal/Gen3Examples.lean")
 KIND_BLOB = "3c9b95b1b37036831527396975d4232cc20174f3"  # method freeze 56dfc27 (INBOX 019)
 KINDZ = KR / "lean" / "E2eScal" / "KindZ.lean"
 KINDZ_BLOB = "0c790fa1882cd2e91419c285f66de0810c2b85e2"  # SG-1 extension (after both hold-outs were opened)
@@ -136,11 +173,44 @@ GEN3_NEEDS = {"callDecSegKind": ("KindCall.lean", "CallDec.lean"), "callArgFirst
 CALLEES = tuple(f'"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.{n}.UnmarshalSSZ"'
                 for n in ("Slot", "CommitteeIndex", "ValidatorIndex", "Epoch"))
 INT = r"(?:0|[1-9][0-9]*|\(-[1-9][0-9]*\))"  # an Int64 literal as the generator writes it
+# GEN4 (unit G4-G): kind and lemma modules of the GEN4 lemma unit G4-L, pinned at its head 718e023 (hand-over "Pins")
+GEN4_PINS = {
+    "NopView.lean": "ea6c1f590fd07ae105365f8c28104b9a5a6fd00f",
+    "StepK.lean": "7cef6d18050ab1b821f915d48754a5888fe65437",
+    "KindStep.lean": "e462fe5214161f64f51a25d7f5fdeb3054812f62",
+    "CallReg.lean": "0f1711f86978495f849d0df195edc42ee5f990c1",
+    "SegReg.lean": "c8e962e6429a62f9fec4554968ef4596d03f9b70",
+    "SegRegZ.lean": "3d3f2ee6b1ad67b63029bff62fa836b54ddd7fd2",
+    "KindSegReg.lean": "3f2a3b8d1a8935dd5790e33e1603eca4bb73b652",
+}
+G4REG = r"Reg64\.(?:rax|rbx|rcx|rdx|rsi|rdi|rsp|rbp|r8|r9|r10|r11|r12|r13|r14|r15)"
+G4RY = r"Reg64\.(?:rax|rcx|rdx|rsi|rdi)"
+_G4S = ("KindStep.lean", "StepK.lean", "NopView.lean")
+# kind -> (parameter regex after `h `, with {C} for the code constant; pinned modules; lemma of the proof)
+GEN4_KINDS = {
+    "stepMovRRKind": ("{C} G4REG G4REG NAT NAT", _G4S, "kstep_mov_rr"),
+    "stepLdvKind": ("{C} G4REG G4REG INT NAT NAT", _G4S, "kstep_ldv"),
+    "stepLdbKind": ("{C} G4REG G4REG INT NAT NAT", _G4S, "kstep_ldb"),
+    "stepStKind": ("{C} G4REG G4REG INT NAT NAT", _G4S, "kstep_st"),
+    "stepLeaKind": ("{C} G4REG G4REG INT NAT NAT", _G4S, "kstep_lea"),
+    "stepAddKind": ("{C} G4REG INT NAT NAT", _G4S, "kstep_add"),
+    "stepMovIKind": ("{C} G4REG INT NAT NAT", _G4S, "kstep_movi"),
+    "stepJmpKind": ("{C} LBL NAT NAT", _G4S, "kstep_jmp"),
+    "stepLabelKind": ("{C} LBL NAT NAT", _G4S, "kstep_label"),
+    "stepNopsKind": ("{C} NAT NAT", _G4S, "kstep_nops"),
+    "callDecSegKindG4": ("{C} LBL LBL NAT NAT NAT", ("CallReg.lean", "NopView.lean"), "calldec_seg_w"),
+    "bytesDecSegKindG4": ("SIZE {C} G4RY NAT NAT NAT INT INT INT INT INT INT INT", ("KindSegReg.lean", "SegReg.lean",
+                                                                                     "NopView.lean"), "bytesdec_seg_g4"),
+    "bytesDecSegZKindG4": ("SIZE {C} G4RY NAT NAT NAT INT INT INT INT INT INT", ("SegRegZ.lean", "SegReg.lean",
+                                                                                "NopView.lean"), "bytesdec_seg_z_g4"),
+}
+G4_LEMMAS = tuple(v[2] for v in GEN4_KINDS.values())
+G4_BLOCK = {"callDecSegKindG4": "call", "bytesDecSegKindG4": "seg", "bytesDecSegZKindG4": "seg"}
 BOOL = r"(?:true|false)"
 LBL = r'"[^"\\\s]+"'
 RRREG = r"Reg64\.(?:rcx|rdx|rsi|rdi|r8|r9|r10|r11|r12|r13|r15)"
 DECF = r"\.(?:bytes (?:32|48|96)|u64)"
-COVER = re.compile(r"GEN[23] coverage \(`p2dec --gen[23]`\): (\d+) of (\d+) fields")
+COVER = re.compile(r"GEN([234]) coverage \(`p2dec --gen[234]`\): (\d+) of (\d+) fields")
 STEM = re.compile(r"^(.*)_(seg|arg|arg1|arg2|call)$")
 SIZE = r"(?:32|48|96)"  # the sizes of the hypothesis `hn` of bytesdec_seg / bytesdec_seg_z
 
@@ -185,7 +255,8 @@ def partial_header(lines):
     except ValueError as e:
         return f"UNCOVERED-JSON does not parse: {e}"
     n, tot = int(m.group(1)), int(m.group(2))
-    if not (isinstance(unc, list) and all(isinstance(u, dict) and set(u) == {"field", "reason"} for u in unc)):
+    if not (isinstance(unc, list) and all(isinstance(u, dict) and set(u) in ({"field", "reason"},
+                                                                         {"field", "reason", "miss_class"}) for u in unc)):
         return "UNCOVERED-JSON is not a list of {field, reason}"
     if not 0 < n < tot or len(unc) != tot - n:
         return f"PARTIAL {n} of {tot} fields with {len(unc)} uncovered entries"
@@ -211,6 +282,16 @@ def strip_comments(s):
     return "".join(out)
 
 
+def strip_strings(s):
+    """Rule 11 (review g3g-r1 S2): Lean text without the contents of string literals ("…", with escapes)."""
+    return re.sub(r'"(?:[^"\\]|\\.)*"', '""', s)
+
+
+def g4_param_rx(spec, C):
+    rx = spec.replace("G4REG", G4REG).replace("G4RY", G4RY).replace("INT", INT).replace("NAT", NAT)
+    return rx.replace("LBL", LBL).replace("SIZE", SIZE).replace("{C}", C)
+
+
 def field_stems(mains):
     """Rule 9: {stem: set of suffixes} of the segment theorems (composed theorems excluded by the caller)."""
     st = {}
@@ -220,9 +301,13 @@ def field_stems(mains):
     return st
 
 
-def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB, gen2_blobs=None, gnames=None, partial=False, gen3_blobs=None):
+def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB, gen2_blobs=None, gnames=None, partial=False, gen3_blobs=None,
+               gen4_blobs=None, rule11=True):
     gen2_blobs = dict(GEN2_PINS) if gen2_blobs is None else gen2_blobs
     gen3_blobs = dict(GEN3_PINS) if gen3_blobs is None else gen3_blobs
+    gen4_blobs = dict(GEN4_PINS) if gen4_blobs is None else gen4_blobs
+    g4kind = {}      # theorem -> GEN4 kind name (rule 10)
+    newkind = set()  # theorems with a GEN2 / GEN3 / GEN4 kind (rule 11)
     gnames = gen_names() if gnames is None else gnames
     errs = []
     if kind_blob != KIND_BLOB:
@@ -262,7 +347,7 @@ def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB, gen2_blobs=None, gnames=N
     composed = set()
 
     def is_composed(t, j):
-        body = strip_comments("\n".join(lines[pos[t]:j]))  # rule 9 (S1): comments do not count
+        body = strip_strings(strip_comments("\n".join(lines[pos[t]:j])))  # rules 9 / 11: comments, strings do not count
         return all(c in body for c in COMPOSED)
 
     def type_line(t):
@@ -327,6 +412,33 @@ def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB, gen2_blobs=None, gnames=N
             nx2 = [n for _, n in thms if _ > j]
             if nx2 and nx2[0] == t + "_type":
                 type_line(t)
+            else:
+                # rule 6d (review g3g-r1 for_h5): the kind alone is no independent statement check
+                errs.append(f"{t}: composed accept theorem without the identity `{t}_type` with an independent hand "
+                            f"statement (`--same-as` / `--same-as-prop`): UNCHECKED STATEMENT")
+            continue
+        g4m = re.fullmatch(rf"theorem {re.escape(t)}_kind : ∀ \(h : Host\), type_of% \(@{re.escape(t)} h\) = "
+                           rf"@E2eScal\.(\w+) h (.*) := by", lines[j])
+        if g4m and g4m.group(1) in GEN4_KINDS:
+            kn = g4m.group(1)
+            spec, mods, lem = GEN4_KINDS[kn]
+            g4kind[t] = kn
+            newkind.add(t)
+            if not re.fullmatch(g4_param_rx(spec, C), g4m.group(2)):
+                errs.append(f"{t}_kind: header is not a frozen kind: {lines[j][:160]}")
+            elif kn == "callDecSegKindG4" and g4m.group(2).split(" ")[1] not in CALLEES:
+                errs.append(f"{t}_kind: callee {g4m.group(2).split(' ')[1]} has no proved accept spec (allowed: Slot, "
+                            f"CommitteeIndex, ValidatorIndex, Epoch of consensus-types/primitives)")
+            for m in mods:
+                if gen4_blobs.get(m) != GEN4_PINS[m]:
+                    errs.append(f"{t}_kind: {m} blob {gen4_blobs.get(m)} != pinned {GEN4_PINS[m]}")
+            # rule 10b: the proof uses the lemma of the kind and no other GEN4 lemma
+            proof = strip_strings(strip_comments("\n".join(lines[i:j]).split(":= by", 1)[-1]))
+            used = {x for x in G4_LEMMAS if re.search(rf"\bE2eScal\.{x}\b", proof)}
+            if used != {lem}:
+                errs.append(f"{t}: proof uses {sorted(used) or 'no GEN4 lemma'}, its kind {kn} is the statement of {lem}")
+            if j + 1 >= len(lines) or lines[j + 1] != "  intro h; with_reducible rfl":
+                errs.append(f"{t}_kind: proof line is not `  intro h; with_reducible rfl`")
             continue
         want = (rf"theorem {re.escape(t)}_kind : ∀ \(h : Host\), type_of% \(@{re.escape(t)} h\) = "
                 rf"@E2eScal\.(u64DecAcceptKind h {C}|rootDecSegKind h {C}(?: {NAT}){{9}}"
@@ -339,6 +451,8 @@ def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB, gen2_blobs=None, gnames=N
                 rf"|callArgLeaKind h {C}(?: {INT}){{6}} {NAT}"
                 rf"|callArgMovKind h {C} {NAT}"
                 rf"|u64DecRRSegKind h {C} {RRREG}(?: {INT}){{2}} {NAT}) := by")
+        if any(f"@E2eScal.{kn} " in lines[j] for kn in list(GEN2_NEEDS) + list(GEN3_NEEDS)):
+            newkind.add(t)
         if not re.fullmatch(want, lines[j]):
             errs.append(f"{t}_kind: header is not a frozen kind: {lines[j][:160]}")
         elif "@E2eScal.callDecSegKind " in lines[j] and lines[j].split(f" h {hk.group(1)} ", 1)[1].split(" ")[0] not in CALLEES:
@@ -364,8 +478,51 @@ def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB, gen2_blobs=None, gnames=N
     # rule 9 (review g2f-r1 S2, S3): the coverage numbers agree with the theorems present
     cov = [COVER.search(l) for l in lines]
     cov = [c for c in cov if c]
-    stems = field_stems([t for t in mains if t not in composed])
-    for s, sx in stems.items():
+    fjs = [l for l in lines if l.startswith("FIELDS-JSON: ")]
+    gen4 = bool(g4kind) or bool(fjs) or any(c.group(1) == "4" for c in cov)
+    if newkind and not cov and rule11:
+        # rule 11 (review g3g-r1 S2, n29): a generated file with GEN2+ kinds keeps its coverage header
+        errs.append("no coverage header `GEN2|GEN3|GEN4 coverage (…): n of m fields` in a file with GEN2 / GEN3 / GEN4 "
+                    "kinds (a dropped header hides dropped fields)")
+    if gen4:
+        import json
+        stems = {}
+        if len(fjs) != 1:
+            errs.append(f"GEN4 file: {len(fjs)} `FIELDS-JSON:` lines (expected 1)")
+            fl = []
+        else:
+            try:
+                fl = json.loads(fjs[0][len("FIELDS-JSON: "):])
+                assert isinstance(fl, list) and all(isinstance(f, dict) and set(f) == {"field", "theorems"}
+                                                    and isinstance(f["theorems"], list) for f in fl)
+            except (ValueError, AssertionError):
+                errs.append("GEN4 file: FIELDS-JSON is not a list of {field, theorems}")
+                fl = []
+        listed = [x for f in fl for x in f["theorems"]]
+        if len(set(listed)) != len(listed):
+            errs.append("GEN4 file: a theorem is listed in two fields of FIELDS-JSON")
+        for x in listed:
+            if x not in mains:
+                errs.append(f"GEN4 file: FIELDS-JSON lists {x}, not a theorem of the file")
+        for x in mains:
+            if x not in composed and x not in listed:
+                errs.append(f"GEN4 file: theorem {x} is in no field of FIELDS-JSON")
+        if any(x not in g4kind for x in listed if x in mains):
+            errs.append("GEN4 file: a listed theorem has no GEN4 kind")
+        for f in fl:
+            blocks = [x for x in f["theorems"] if g4kind.get(x) in G4_BLOCK]
+            if len(blocks) > 1:
+                errs.append(f"GEN4 field {f['field']}: {len(blocks)} block theorems (at most 1)")
+            for x in blocks:
+                if not x.endswith(f"_{f['field']}_{G4_BLOCK[g4kind[x]]}"):
+                    errs.append(f"GEN4 field {f['field']}: block theorem {x} is not `<prefix>_{f['field']}_"
+                                f"{G4_BLOCK[g4kind[x]]}`")
+            if not f["theorems"]:
+                errs.append(f"GEN4 field {f['field']}: no theorem")
+            stems[f["field"]] = {"g4"}
+    else:
+        stems = field_stems([t for t in mains if t not in composed])
+    for s, sx in ({} if gen4 else stems).items():
         if "call" in sx and not ("arg" in sx or {"arg1", "arg2"} <= sx):
             errs.append(f"{s}: call-block theorem without its argument set-up theorem(s)")
         if sx & {"arg", "arg1", "arg2"} and "call" not in sx:
@@ -375,7 +532,7 @@ def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB, gen2_blobs=None, gnames=N
     if len(cov) > 1:
         errs.append(f"{len(cov)} coverage headers (expected at most 1)")
     elif cov:
-        cn, cm = int(cov[0].group(1)), int(cov[0].group(2))
+        cn, cm = int(cov[0].group(2)), int(cov[0].group(3))
         if not partial and cn != cm:
             errs.append(f"coverage header `{cn} of {cm} fields` with n != m in the default mode (not a complete output)")
         if cn != len(stems):
@@ -415,12 +572,16 @@ def main(files, partial=False):
     kzb = blob(KINDZ) if KINDZ.exists() else "missing"
     g2b = {m: (blob(KIND.parent / m) if (KIND.parent / m).exists() else "missing") for m in GEN2_PINS}
     g3b = {m: (blob(KIND.parent / m) if (KIND.parent / m).exists() else "missing") for m in GEN3_PINS}
+    g4b = {m: (blob(KIND.parent / m) if (KIND.parent / m).exists() else "missing") for m in GEN4_PINS}
     gn = gen_names()
     bad = 0
     for f in files:
         text = pathlib.Path(f).read_text()
-        errs, mains = check_text(text, kb, kzb, g2b, gn, partial, g3b)
+        hand = pathlib.Path(f).resolve() in {(KR / x).resolve() for x in HAND_EXAMPLES}
+        errs, mains = check_text(text, kb, kzb, g2b, gn, partial, g3b, g4b, rule11=not hand)
         print(("PASS" if not errs else "FAIL"), f, "theorems:", ",".join(mains))
+        if hand:
+            print("   hand example module (HAND_EXAMPLES): rule 11 not applied")
         for e in errs:
             print("  ", e)
         if partial and not errs:
@@ -434,6 +595,8 @@ def main(files, partial=False):
         print(m, "blob", b, "pinned" if b == GEN2_PINS[m] else "NOT PINNED")
     for m, b in g3b.items():
         print(m, "blob", b, "pinned" if b == GEN3_PINS[m] else "NOT PINNED")
+    for m, b in g4b.items():
+        print(m, "blob", b, "pinned" if b == GEN4_PINS[m] else "NOT PINNED")
     if partial:
         return 1 if bad else 3
     return 1 if bad else 0
@@ -517,13 +680,23 @@ def selftest():
     bad = []
     cases = [c + (False,) for c in cases] + g2f_cases(K)
     cases = [c + (None,) for c in cases] + g3_cases(K)
-    for name, text, kb, ok, zpin, g2, part, g3 in cases:
-        errs, _ = check_text(text, kb, KINDZ_BLOB if zpin else "0" * 40, g2, GNAMES, part, g3)
+    cases = [c + (None,) for c in cases] + g4_cases(K)
+    for name, text, kb, ok, zpin, g2, part, g3, g4 in cases:
+        errs, _ = check_text(text, kb, KINDZ_BLOB if zpin else "0" * 40, g2, GNAMES, part, g3, g4)
         if (not errs) != ok:
             bad.append((name, errs))
     # review g2f-r1 S4: the exit codes of main() (`--partial`: 3 on success, 1 on failure, never 0; default: 1)
     n_exit, bad_exit = s4_exit_cases()
     bad += bad_exit
+    # unit G4-F (review g4g-r1 S2): the rule 11 exemption removes only the coverage-header error
+    nh = GOOD2.replace("GEN2 coverage (`p2dec --gen2`): 3 of 3 fields", "generated")
+    e_on, _ = check_text(nh, K, KINDZ_BLOB, None, GNAMES, False, None, None)
+    e_off, _ = check_text(nh, K, KINDZ_BLOB, None, GNAMES, False, None, None, rule11=False)
+    e_sorry, _ = check_text(nh.replace("with_reducible exact", "sorry --", 1), K, KINDZ_BLOB, None, GNAMES, False, None, None,
+                            rule11=False)
+    n_exit += 3
+    if not e_on or e_off or not e_sorry:
+        bad.append(("g4f_rule11_exemption", e_on, e_off, e_sorry))
     print("selftest", "PASS" if not bad else f"FAIL {bad}", f"({len(cases)} cases + {n_exit} exit-code cases)")
     return 1 if bad else 0
 
@@ -810,7 +983,8 @@ def g3_cases(K):
         ("g3_arg_without_call", drop(GOOD3, "pw_Index_call"), K, False, True, None, False, None),
         ("g3_decaccept_on_segment", kchg("pw_Amount_seg", "@E2eScal.decAcceptKind h PwUnmarshal true [.u64] 54"), K, False, True, None, False, None),
         ("g3c_good_kind_and_identity", COMP3, K, True, True, None, False, None),
-        ("g3c_good_kind_only", comp_only, K, True, True, None, False, None),
+        # unit G4-G (rule 6d, review g3g-r1 for_h5): the kind alone is no independent statement check
+        ("g3c_kind_only_rejected", comp_only, K, False, True, None, False, None),
         ("g3c_kindaccept_blob_changed", COMP3, K, False, True, None, False, pins("KindAccept.lean")),
         ("g3c_heartbeats_raised", COMP3.replace("set_option maxHeartbeats 200000 in\ntheorem d_kind", "set_option maxHeartbeats 2000000 in\ntheorem d_kind"), K, False, True, None, False, None),
         ("g3c_no_heartbeat_line", COMP3.replace("set_option maxHeartbeats 200000 in\ntheorem d_kind", "theorem d_kind"), K, False, True, None, False, None),
@@ -823,6 +997,15 @@ def g3_cases(K):
          K, False, True, None, False, None),
         ("s1_k04_line_comment", k04, K, False, True, None, False, None),
         ("s1_k04_block_comment", k04b, K, False, True, None, False, None),
+        # review g3g-r1 S2 (n26b): the two composed-lemma names in a string literal do not make a composed theorem
+        ("s2_n26b_string_literal", k04.replace("  -- (E2eScal.dechead_seg x) (E2eScal.decepi_seg y)\n",
+                                               '  have s := "(E2eScal.dechead_seg x) (E2eScal.decepi_seg y)"\n')
+         .replace(" 3 of 3 fields", " 2 of 2 fields"),
+         K, False, True, None, False, None),
+        # rule 6d with the generator's new marker (`--gen3 --compose` without `--same-as*`)
+        ("g3c_kind_only_marked", comp_only.replace("(hf : LabelsFresh DmUnmarshal k)\n",
+                                                   "(hf : LabelsFresh DmUnmarshal k) -- UNCHECKED STATEMENT\n"),
+         K, False, True, None, False, None),
         ("s2_k22_theorem_removed_partial", k22, K, False, True, None, True, None),
         ("s2_k23_uncovered_entry_dropped", part.replace("3 of 5 fields of", "4 of 5 fields of").replace(unc, unc1), K, False, True, None, True, None),
         ("s2_uncovered_field_has_theorem", unc_has_thm, K, False, True, None, True, None),
@@ -831,6 +1014,125 @@ def g3_cases(K):
         ("s4_partial_n_equals_m", nm, K, False, True, None, True, None),
         ("s4_partial_n_zero", n0, K, False, True, None, True, None),
         ("s4_partial_good_0_lt_n_lt_m", part, K, True, True, None, True, None),
+    ]
+
+
+# GEN4 controls (unit G4-G): kind lines and proof lemma as `scalgen.py p2dec --gen4` writes them
+G4K = {
+    "pw_g4dec_s50": ("@E2eScal.stepLdbKind h PwUnmarshal Reg64.r8 Reg64.rbx 8 50 51", "kstep_ldb Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend"),
+    "pw_g4dec_s51": ("@E2eScal.stepStKind h PwUnmarshal Reg64.r8 Reg64.rax 16 51 52", "kstep_st Reg64.r8 Reg64.rax 16 _ (k + 51) (k + 52) hq he hend"),
+    "pw_g4dec_s52": ("@E2eScal.stepAddKind h PwUnmarshal Reg64.rdi (-16) 52 53", "kstep_add Reg64.rdi (-16) _ (k + 52) (k + 53) hq he hend"),
+    "pw_g4dec_s53": ("@E2eScal.stepMovIKind h PwUnmarshal Reg64.rcx 8 53 55", "kstep_movi Reg64.rcx 8 _ (k + 53) (k + 55) hq he hend"),
+    "pw_g4dec_Index_call": (f'@E2eScal.callDecSegKindG4 h PwUnmarshal {FN_VI} "L_pw_b9" 55 56 88',
+                            "calldec_seg_w _ _ _ (k + 55) (k + 56) (k + 88) hq he hjc hB hl"),
+    "pw_g4dec_Root_seg": ("@E2eScal.bytesDecSegKindG4 h 32 PwUnmarshal Reg64.rax 89 108 114 112 120 56 24 32 40 16",
+                          "bytesdec_seg_g4 32 (Or.inl rfl) Reg64.rdx Reg64.rax (Or.inl rfl) (Or.inl rfl) _ _ _ _ _ _ _ _ _ _ _ (k + 89) (k + 102) (k + 102) (k + 108) (k + 114) hqA heA hqB heB hjl hl hjm hend"),
+    "pw_g4dec_s115": ("@E2eScal.stepJmpKind h PwUnmarshal \"L_pw_200\" 115 130", 'kstep_jmp "L_pw_200" _ (k + 115) (k + 130) hq he hl'),
+    "pw_g4dec_s130": ("@E2eScal.stepLabelKind h PwUnmarshal \"L_pw_200\" 130 131", 'kstep_label "L_pw_200" _ (k + 130) (k + 131) hq he hend'),
+    "pw_g4dec_s131": ("@E2eScal.stepStKind h PwUnmarshal Reg64.rsi Reg64.rax 24 131 132", "kstep_st Reg64.rsi Reg64.rax 24 _ (k + 131) (k + 132) hq he hend"),
+    "pw_g4dec_Sig_seg": ("@E2eScal.bytesDecSegZKindG4 h 96 PwUnmarshal Reg64.rdx 132 150 156 112 120 56 48 56 64",
+                         "bytesdec_seg_z_g4 96 (Or.inr (Or.inr rfl)) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ (k + 132) (k + 145) (k + 145) (k + 150) (k + 156) hqA heA hqB heB hjl hl hjm hend"),
+    "pw_g4dec_s156": ("@E2eScal.stepLdvKind h PwUnmarshal Reg64.rsi Reg64.rsp 56 156 157", "kstep_ldv Reg64.rsi Reg64.rsp 56 _ (k + 156) (k + 157) hq he hend"),
+    "pw_g4dec_s157": ("@E2eScal.stepStKind h PwUnmarshal Reg64.rsi Reg64.rdx 48 157 158", "kstep_st Reg64.rsi Reg64.rdx 48 _ (k + 157) (k + 158) hq he hend"),
+}
+G4F = [("Amount", ["pw_g4dec_s50", "pw_g4dec_s51"]), ("Index", ["pw_g4dec_s52", "pw_g4dec_s53", "pw_g4dec_Index_call"]),
+       ("Root", ["pw_g4dec_Root_seg", "pw_g4dec_s115", "pw_g4dec_s130", "pw_g4dec_s131"]),
+       ("Sig", ["pw_g4dec_Sig_seg", "pw_g4dec_s156", "pw_g4dec_s157"])]
+
+
+def g4_block(t, kind, proof):
+    return ("set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
+            f"/-- Directive `x`. -/\ntheorem {t} (k : Nat) (hk : PwUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh PwUnmarshal k) :\n"
+            f"    T := by\n  have hq := E2eScal.win hk 1 1\n  with_reducible exact E2eScal.{proof}\n"
+            f"theorem {t}_kind : ∀ (h : Host), type_of% (@{t} h) = {kind} := by\n  intro h; with_reducible rfl\n\n")
+
+
+def g4_text(fields=G4F, kinds=G4K, n=None, m=None, fj=None):
+    import json
+    n = len(fields) if n is None else n
+    m = n if m is None else m
+    fj = json.dumps([dict(field=f, theorems=ts) for f, ts in fields]) if fj is None else fj
+    return ("import E2eScal.KindStep\nimport E2eScal.KindSegReg\nimport E2eScal.CallReg\nimport E2eScal.SegRegZ\n\n"
+            f"/-! Generated by `gen/scal/scalgen.py p2dec`; GEN4 coverage (`p2dec --gen4`): {n} of {m} fields. -/\n\n"
+            f"/-! GEN4 fields (machine-readable, read by `kindcheck.py`):\nFIELDS-JSON: {fj}\n-/\n\n"
+            "open Fk E2eScal.H4Code\nvariable [Host]\n\nnamespace E2eScal.Gen\n\n"
+            + "".join(g4_block(t, *kinds[t]) for _, ts in fields for t in ts) + "end E2eScal.Gen\n")
+
+
+GOOD4 = g4_text()
+
+
+def g4_cases(K):
+    """Unit G4-G controls: rules 10, 10b, 10c, 11, 6d."""
+    z40 = "0" * 40
+
+    def pins(m):
+        d = dict(GEN4_PINS)
+        d[m] = z40
+        return d
+
+    def kchg(t, new):
+        old = f"type_of% (@{t} h) = {G4K[t][0]} := by"
+        assert GOOD4.count(old) == 1, t
+        return GOOD4.replace(old, f"type_of% (@{t} h) = {new} := by")
+
+    def pchg(t, new):
+        old = f"  with_reducible exact E2eScal.{G4K[t][1]}\n"
+        assert GOOD4.count(old) == 1, t
+        return GOOD4.replace(old, new)
+    unc = json_line([("Tail", "x")])[:-1] + "]"
+    unc = 'UNCOVERED-JSON: [{"field": "Tail", "reason": "walk stopped", "miss_class": "register"}]'
+    PH = ("/-! PARTIAL OUTPUT (scalgen exit 3): 4 of 5 fields of `v1alpha1.X` (--gen4); NOT generated: Tail. "
+          "Not a complete p2dec output.\n" + unc + "\n-/\n")
+    part = g4_text(m=5).replace("\n\n/-! Generated", "\n\n" + PH + "/-! Generated", 1)
+    assert part.count(PARTIAL) == 1
+    st = G4K["pw_g4dec_s51"][0]
+    k2 = dict(G4K, pw_g4dec_Index_seg=G4K["pw_g4dec_Root_seg"])
+    two_blocks = [G4F[0], ("Index", G4F[1][1] + ["pw_g4dec_Index_seg"]), G4F[2], G4F[3]]
+    return [
+        ("g4_good", GOOD4, K, True, True, None, False, None, None),
+        *[(f"g4_{m.split('.')[0].lower()}_blob_changed", GOOD4, K, False, True, None, False, None, pins(m)) for m in GEN4_PINS],
+        ("g4_step_degenerate_self", kchg("pw_g4dec_s51", "type_of% (@pw_g4dec_s51 h)"), K, False, True, None, False, None, None),
+        ("g4_step_degenerate_true", kchg("pw_g4dec_s51", "True"), K, False, True, None, False, None, None),
+        ("g4_step_kind_missing", GOOD4.replace("theorem pw_g4dec_s51_kind", "theorem pw_g4dec_s51_kinx"), K, False, True, None, False, None, None),
+        ("g4_st_without_disp", kchg("pw_g4dec_s51", st.replace(" 16 51 52", " 51 52")), K, False, True, None, False, None, None),
+        ("g4_st_register_not_reg64", kchg("pw_g4dec_s51", st.replace("Reg64.r8", "Reg64.xmm0")), K, False, True, None, False, None, None),
+        ("g4_st_register_symbolic", kchg("pw_g4dec_s51", st.replace("Reg64.r8", "r")), K, False, True, None, False, None, None),
+        ("g4_st_other_const", kchg("pw_g4dec_s51", st.replace("PwUnmarshal", "PcUnmarshal")), K, False, True, None, False, None, None),
+        ("g4_add_extra_param", kchg("pw_g4dec_s52", G4K["pw_g4dec_s52"][0] + " 0"), K, False, True, None, False, None, None),
+        ("g4_call_two_indices", kchg("pw_g4dec_Index_call", G4K["pw_g4dec_Index_call"][0].replace(" 56 88", " 88")), K, False, True, None, False, None, None),
+        ("g4_call_callee_without_spec", kchg("pw_g4dec_Index_call", G4K["pw_g4dec_Index_call"][0].replace(
+            "consensus_types_primitives.ValidatorIndex", "proto_prysm_v1alpha1.Checkpoint")), K, False, True, None, False, None, None),
+        ("g4_seg_ry_rbx", kchg("pw_g4dec_Root_seg", G4K["pw_g4dec_Root_seg"][0].replace("Reg64.rax", "Reg64.rbx")), K, False, True, None, False, None, None),
+        ("g4_seg_size_64", kchg("pw_g4dec_Root_seg", G4K["pw_g4dec_Root_seg"][0].replace(" h 32 ", " h 64 ")), K, False, True, None, False, None, None),
+        ("g4_seg_missing_src", kchg("pw_g4dec_Root_seg", G4K["pw_g4dec_Root_seg"][0].replace(" 40 16", " 40")), K, False, True, None, False, None, None),
+        ("g4_segz_with_src", kchg("pw_g4dec_Sig_seg", G4K["pw_g4dec_Sig_seg"][0] + " 0"), K, False, True, None, False, None, None),
+        ("g4_lemma_kind_mismatch", pchg("pw_g4dec_s50", "  with_reducible exact E2eScal.kstep_ldv Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend\n"),
+         K, False, True, None, False, None, None),
+        ("g4_lemma_only_in_string", pchg("pw_g4dec_s50", '  have x := "E2eScal.kstep_ldb "\n  with_reducible exact foo\n'),
+         K, False, True, None, False, None, None),
+        ("g4_lemma_only_in_comment", pchg("pw_g4dec_s50", "  -- E2eScal.kstep_ldb\n  with_reducible exact foo\n"), K, False, True, None, False, None, None),
+        ("g4_two_lemmas", pchg("pw_g4dec_s50", "  with_reducible exact E2eScal.kstep_ldb (E2eScal.kstep_st x)\n"), K, False, True, None, False, None, None),
+        ("g4_fields_json_missing", GOOD4.replace("FIELDS-JSON: ", "FIELDS: "), K, False, True, None, False, None, None),
+        ("g4_fields_json_two_lines", GOOD4.replace("FIELDS-JSON: ", "FIELDS-JSON: []\nFIELDS-JSON: "), K, False, True, None, False, None, None),
+        ("g4_theorem_not_listed", g4_text(fj='[{"field": "Amount", "theorems": ["pw_g4dec_s50"]}, {"field": "Index", "theorems": ["pw_g4dec_s52", "pw_g4dec_s53", "pw_g4dec_Index_call"]}, {"field": "Root", "theorems": ["pw_g4dec_Root_seg", "pw_g4dec_s115", "pw_g4dec_s130", "pw_g4dec_s131"]}, {"field": "Sig", "theorems": ["pw_g4dec_Sig_seg", "pw_g4dec_s156", "pw_g4dec_s157"]}]'),
+         K, False, True, None, False, None, None),
+        ("g4_listed_theorem_absent", g4_text(fj='[{"field": "Amount", "theorems": ["pw_g4dec_s50", "pw_g4dec_s51", "pw_g4dec_s49"]}, {"field": "Index", "theorems": ["pw_g4dec_s52", "pw_g4dec_s53", "pw_g4dec_Index_call"]}, {"field": "Root", "theorems": ["pw_g4dec_Root_seg", "pw_g4dec_s115", "pw_g4dec_s130", "pw_g4dec_s131"]}, {"field": "Sig", "theorems": ["pw_g4dec_Sig_seg", "pw_g4dec_s156", "pw_g4dec_s157"]}]'),
+         K, False, True, None, False, None, None),
+        ("g4_theorem_in_two_fields", g4_text(fj='[{"field": "Amount", "theorems": ["pw_g4dec_s50", "pw_g4dec_s51"]}, {"field": "Index", "theorems": ["pw_g4dec_s51", "pw_g4dec_s52", "pw_g4dec_s53", "pw_g4dec_Index_call"]}, {"field": "Root", "theorems": ["pw_g4dec_Root_seg", "pw_g4dec_s115", "pw_g4dec_s130", "pw_g4dec_s131"]}, {"field": "Sig", "theorems": ["pw_g4dec_Sig_seg", "pw_g4dec_s156", "pw_g4dec_s157"]}]'),
+         K, False, True, None, False, None, None),
+        ("g4_two_blocks_one_field", g4_text(fields=two_blocks, kinds=k2), K, False, True, None, False, None, None),
+        ("g4_block_name_other_field", g4_text(fields=[("Amount", G4F[0][1]), ("Idx", G4F[1][1]), G4F[2], G4F[3]]), K, False, True, None, False, None, None),
+        ("g4_count_edited_dropped_field", g4_text(fields=G4F[:3], n=4), K, False, True, None, False, None, None),
+        ("g4_n_ne_m_default", g4_text(m=5), K, False, True, None, False, None, None),
+        ("s2_n29_header_removed_field_dropped", g4_text(fields=G4F[:3]).replace("GEN4 coverage (`p2dec --gen4`): 3 of 3 fields", "generated"),
+         K, False, True, None, False, None, None),
+        ("s2_n29_gen2_header_removed", GOOD2.replace("GEN2 coverage (`p2dec --gen2`): 3 of 3 fields", "generated"), K, False, True, None, False, None, None),
+        ("g4_partial_good", part, K, True, True, None, True, None, None),
+        ("g4_partial_default_rejects", part, K, False, True, None, False, None, None),
+        ("g4_partial_uncovered_listed", part.replace('"Tail"', '"Sig"').replace("NOT generated: Tail", "NOT generated: Sig"),
+         K, False, True, None, True, None, None),
+        ("g4_partial_bad_miss_key", part.replace('"miss_class"', '"class"'), K, False, True, None, True, None, None),
     ]
 
 

@@ -52,3 +52,13 @@ $G p2dec --gen3 --partial-out lean/E2eScal/Gen3AdDecPartial.lean --S $N/github.c
 # `set_option … in`. That raw output is kept as scal/gen3/Gen3DdAccept.run1-parse-error.lean.txt; the fixed generator
 # writes Gen3DdAccept2.lean.
 $G p2dec --gen3 --compose --name dd_e2e_accept_main_g3 --same-as-prop E2eScal.H4.dd_accept_stmt --S $H4/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S --const DdUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.Deposit_Data --prefix dd_g3dec --imports E2eScal.Compose,E2eScal.Gen3DdDec,E2eScal.H4Stmt --open E2eScal.H4Code > lean/E2eScal/Gen3DdAccept2.lean
+# GEN4 (unit G4-G; generator change after H5, CONTAMINATION.md section 22): `p2dec --gen4` on the 10 development types
+# (all in-sample). New files; the files above stay as they are. AttestationData is partial (Source / Target are nested
+# containers): exit 3 with --partial-out.
+P=github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1
+E=prysm/go1.26.10/e2e
+for row in "Checkpoint link/norm CpUnmarshal E2e.Code cp Gen4CpDec" "BeaconBlockHeader bh/link/norm BhUnmarshal E2eScal.BhCode bh Gen4BhDec" "Eth1Data e1/link/norm E1Unmarshal E2eScal.E1Code e1 Gen4E1Dec" "BlobIdentifier h3/link/norm BiUnmarshal E2eScal.H3Code bi Gen4BiDec" "DepositMessage h3/link/norm DmUnmarshal E2eScal.H3Code dm Gen4DmDec" "Deposit_Data h4/link/norm DdUnmarshal E2eScal.H4Code dd Gen4DdDec" "PendingPartialWithdrawal h4/link/norm PwUnmarshal E2eScal.H4Code pw Gen4PwDec" "SyncCommitteeMessage h5/link/norm SmUnmarshal E2eScal.H5Code sm Gen4SmDec" "PendingConsolidation h5/link/norm PcUnmarshal E2eScal.H5Code pc Gen4PcDec"; do
+  set -- $row
+  $G p2dec --gen4 --S $E/$2/$P.$1.UnmarshalSSZ.S --const $3 --ir prysm/ir/ir-mainnet.json --type v1alpha1.$1 --prefix $5_g4dec --imports $4 --open $4 > lean/E2eScal/$6.lean
+done
+$G p2dec --gen4 --partial-out lean/E2eScal/Gen4AdDecPartial.lean --S $N/$P.AttestationData.UnmarshalSSZ.S --const AdUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.AttestationData --prefix ad_g4dec --imports E2eAd.Code --open E2eAd.Code || [ $? -eq 3 ]

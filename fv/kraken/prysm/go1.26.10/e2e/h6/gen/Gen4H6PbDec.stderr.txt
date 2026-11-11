@@ -1,0 +1,3 @@
+scalgen p2dec: field BlockHash: COVERED byte field (32 bytes): 4 steps + segment, directives 13–46
+scalgen p2dec: field ParentHash: COVERED byte field (32 bytes): 4 steps + segment, directives 47–82
+scalgen p2dec: field TotalDifficulty: COVERED byte field (32 bytes): 4 steps + segment, directives 83–118

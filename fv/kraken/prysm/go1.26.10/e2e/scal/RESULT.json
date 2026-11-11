@@ -966,6 +966,181 @@
     "S5_contamination_jobs": "closed by a note: CONTAMINATION.md section 15 cites job numbers 01, 02, 05, 09, 11, 13 of the G2-F and G2-G sessions. Their gate logs are not in the repository. The numbers are labels only; the repository evidence is the committed output and the regen_check.sh result (CONTAMINATION.md section 17)"
    }
   },
+  "gen4-lemmas (GEN4 unit G4-L, fresh Fable session)": {
+   "what": "GEN4 unit G4-L: variation-insensitive segment mechanisms in new Lean modules (window code view that skips padding nops; per-instruction step lemmas with kinds; call block over a window; byte segment over windows with receiver registers as parameters; frame-parametric prologue / return); survey of the 10 development decoders; examples; the two H5 accept theorems re-derived. Development data only (in-sample); no generator change; no transfer claim",
+   "base": "1fec11e",
+   "author": "fresh Fable 5.2 session (direct author)",
+   "state": "not yet reviewed",
+   "survey": {
+    "file": "scal/gen4-survey.md",
+    "types": 10,
+    "nop_sites": 46,
+    "nop_sites_on_accept_paths": "head index 8 (10), before a callee callq (2), after a callee callq (1), before callq runtime.makeslice (2), in a byte tail (2)",
+    "receiver_registers": [
+     "rdx",
+     "rax"
+    ],
+    "setup_sequences_distinct": 19,
+    "callee_calls": 13,
+    "makeslice_calls": 15,
+    "memmove_calls": 15
+   },
+   "L1": {
+    "design": "window: q.IsInfixAt prog j, eraseNop q = template, j + q.length = e; positions kept in a statement by nopPos equations; no pad flag, no position parameter",
+    "modules": [
+     "NopView",
+     "CallReg",
+     "SegReg",
+     "SegRegZ",
+     "KindSegReg"
+    ],
+    "proved": true,
+    "sites_covered": "3/3 observed accept-path forms inside blocks (before makeslice, after a callee call, set-up pad) + byte-tail and head nops through the same windows",
+    "general_transfer_theorem": "none (not sound: callq pushes the address of the next directive, the nop in the real program)",
+    "gen3_pad_lemmas": "instances (bytesdec_seg_p, calldec_seg, bytesdec_seg, bytesdec_seg_z, H4.bytes32dec_seg_nop, H5.bytes32dec_seg_rax, H5.calldec_nop_seg re-proved with their committed statements from the window lemmas); the pad set-up lemmas callarg_first_seg / callarg_reload_seg re-proved from steps"
+   },
+   "L2": {
+    "modules": [
+     "StepK",
+     "KindStep"
+    ],
+    "step_lemmas": 10,
+    "step_lemma_names": [
+     "kstep_nops",
+     "kstep_label",
+     "kstep_jmp",
+     "kstep_mov_rr",
+     "kstep_ldb",
+     "kstep_ldv",
+     "kstep_st",
+     "kstep_lea",
+     "kstep_add",
+     "kstep_movi"
+    ],
+    "extra_step": "kstep_nilchk (HeadN)",
+    "proved": true,
+    "registers": "parameters, all 16 (proof without case split)",
+    "register_parametric_blocks": [
+     "bytesdec_seg_g4 n rX rY (rX in {rdx, rsi}, rY in {rax, rcx, rdx, rsi, rdi}, n in {32, 48, 96})",
+     "bytesdec_seg_z_g4 (offset-0 form, same sets)",
+     "calldec_seg_w (entry registers fixed by the Go ABI of U64CalleeAcc; window only)"
+    ],
+    "setup_templates_rederived": [
+     "callarg_first_seg",
+     "callarg_reload_seg",
+     "callarg_lea_seg",
+     "callarg_mov_seg",
+     "H5.sm_vi_arg",
+     "u64dec_rr_seg at r8"
+    ]
+   },
+   "L3": {
+    "examples_module": "Gen4Examples",
+    "kinded_theorems": 45,
+    "worked_compositions": [
+     "sm_g4_ValidatorIndex_field",
+     "pc_g4_TargetIndex_field",
+     "sm_g4_BlockRoot_field"
+    ],
+    "instances": "7/7 (SyncCommitteeMessage.BlockRoot, .ValidatorIndex, .Signature; PendingConsolidation.TargetIndex; Deposit_Data.WithdrawalCredentials; one GEN3 set-up site per form: Checkpoint.Epoch, BeaconBlockHeader.ProposerIndex, PendingPartialWithdrawal.WithdrawableEpoch)",
+    "sm_accept_g4": true,
+    "pc_accept_g4": true,
+    "statements_unchanged": "H5.sm_accept_stmt, H5.pc_accept_stmt (theorem types are the abbrevs)",
+    "h5_local_lemmas_unused": true,
+    "dependency_check": "G4DepCheck.lean (executed walk of the proof terms; controls: the H5 proofs reach the hand lemmas)",
+    "sm_accept_lines": {
+     "proof_g4": 154,
+     "proof_h5": 190,
+     "module_g4": 197,
+     "sm_step_segment_field_theorems_with_statements_and_kind_lines": 371
+    },
+    "sm_accept_time_s": [
+     5.8,
+     5.8
+    ],
+    "sm_accept_time_h5_s": 7.9,
+    "pc_accept_lines": {
+     "proof_g4": 53,
+     "proof_h5": 71
+    },
+    "pc_accept_time_s": [
+     1.2,
+     1.2
+    ]
+   },
+   "L4": {
+    "attempted": true,
+    "modules": [
+     "HeadN",
+     "HeadRel"
+    ],
+    "result": "proved: decpro_seg (frame size, spill displacement, SSZ size symbolic; window), decret_seg, kstep_nilchk; H5.sm_head0, H5.pc_head, H4.pw_head, Bh.bh_head0, H5.pc_epi, H4.pw_epi, H5.sm_spill2, Bh.bh_spill2 re-proved with their committed statements"
+   },
+   "honest_outcome_clause": {
+    "triggered": false,
+    "measure": "sm_e2e_accept_g4 154 proof lines (limit 400); largest module SegReg 25 s (limit 120 s)",
+    "widest_reading": "accept proof + every SyncCommitteeMessage step / segment / field theorem with statements and kind lines = 525 lines; stated for the reviewer"
+   },
+   "counting_rule": "non-blank lines that are not comment lines, one declaration (g2g rule); example theorems: non-blank lines from `theorem` to the next declaration",
+   "negatives": {
+    "cases": "scal/negcases-gen4.json",
+    "result": "scal/negative-gen4.json",
+    "counted": "40/41",
+    "classes": {
+     "control_pass": 12,
+     "inside": 28,
+     "timeout_heartbeat": 1
+    },
+    "not_counted": "g4-sk-st-stmt-src (wrong source register in the statement of kstep_st): heartbeat timeout, not a pass",
+    "kinds": {
+     "stmt": 24,
+     "code": 5,
+     "control": 12
+    }
+   },
+   "axioms": "axioms gate PASS, 6722 declarations, nonstandard 0, sorryAx 0 (scratch JSON; committed axioms-gate.json and AxiomsScal.lean not changed)",
+   "drift": "against the h5-r1 dump (5841 rows, equal to the committed axioms-gate.json count): ADDED 881, CHANGED 0, REMOVED 0; planted control (weakened statement + sorry in G4Rel): gate FAIL exit 1 (sorryAx), drift 1 CHANGED + 1 ADDED; file restored byte-equal and rebuilt",
+   "no_build": "lake build --no-build E2e E2eAd E2eScal exit 0 (1088 jobs) at the end",
+   "module_times_s": {
+    "NopView": 0.9,
+    "StepK": 0.7,
+    "KindStep": 0.6,
+    "CallReg": 1.0,
+    "SegReg": 25,
+    "SegRegZ": 23,
+    "KindSegReg": 0.6,
+    "G4Rel": 1.0,
+    "Gen4Examples": 2.7,
+    "SmAcceptG4": 5.8,
+    "PcAcceptG4": 1.2,
+    "G4DepCheck": 2.1,
+    "HeadN": 1.1,
+    "HeadRel": 1.5
+   },
+   "effort": {
+    "diagnostics": "5 of 8",
+    "attempts": "14 of 16 (4 failed: hypothesis argument elaborated before the state was known; two failures of the final ecancel of the byte-field example (BitVec.toInt width form, found by a reproduction); the dependency walker did not read theorem values)",
+    "bounds_hit": []
+   },
+   "not_done": [
+    "generator side (--gen4, unit G4-G)",
+    "composed-statement kind for types with callee fields",
+    "kind for the worked field compositions",
+    "test %al,(%rax) outside heads",
+    "register sets beyond rX in {rdx, rsi}, rY in {rax, rcx, rdx, rsi, rdi}",
+    "pointer-field callees (CpUAccC form)",
+    "write-barrier, morestack and callee error paths (unchanged)"
+   ],
+   "not_run": [
+    "cold build",
+    "generator",
+    "kindcheck",
+    "regen_check.sh",
+    "link / Go / hardware checks",
+    "independent review"
+   ],
+   "wording": "in-sample only; the mechanisms are not shown to transfer; H6 measures that"
+  },
   "gen3-lemmas (GEN3 unit G3-L, fresh Fable session)": {
    "state": "not yet reviewed",
    "base": "6a78c591e8bcd698b7b9313b1c09cb25f3986911",
@@ -2000,6 +2175,278 @@
    "S6_differential": "the base-vs-head differential is byte-equal for every output (stdout, stderr, partial and summary files, exit codes); the argparse usage text changed (it lists [--gen3]), so 2 of the reviewer's 54 inputs (usage errors, exit 2 in both) differ in the usage line only"
   }
  },
+ "gen4": {
+  "what": "GEN4 unit G4-G: proof generator scalgen.py p2dec --gen4 (opt-in, own code path): dataflow walk over the accept path, kinded per-instruction step theorems, call-block windows, register-parametric byte segments (G4-L lemmas); kindcheck rules 10, 11, 6d; one run per development type (10); reuse demonstration on SyncCommitteeMessage, PendingConsolidation, PendingPartialWithdrawal; evidence. Development data only (in-sample); generator change after H5; no hold-out claim until H6",
+  "base": "718e023",
+  "author": "fresh Opus 5.5 session (implementer)",
+  "state": "not yet reviewed",
+  "compat": "--gen4 only (own code path); default, --gen2, --gen3 output byte-identical: regen_check.sh 23/23 SAME (gate jobs 04, 08, 47); --gen3 --compose without --same-as* now marked UNCHECKED (no committed output affected)",
+  "coverage_gen4": {
+   "Checkpoint": "2/2",
+   "AttestationData": "3/5",
+   "BeaconBlockHeader": "5/5",
+   "Eth1Data": "3/3",
+   "BlobIdentifier": "2/2",
+   "DepositMessage": "3/3",
+   "Deposit_Data": "4/4",
+   "PendingPartialWithdrawal": "3/3",
+   "SyncCommitteeMessage": "4/4",
+   "PendingConsolidation": "2/2"
+  },
+  "coverage_gen3": {
+   "Checkpoint": "2/2",
+   "AttestationData": "3/5",
+   "BeaconBlockHeader": "5/5",
+   "Eth1Data": "3/3",
+   "BlobIdentifier": "2/2",
+   "DepositMessage": "3/3",
+   "Deposit_Data": "4/4",
+   "PendingPartialWithdrawal": "3/3",
+   "SyncCommitteeMessage": "2/4",
+   "PendingConsolidation": "1/2"
+  },
+  "coverage_gen2": {
+   "Checkpoint": "1/2",
+   "AttestationData": "1/5",
+   "BeaconBlockHeader": "3/5",
+   "Eth1Data": "3/3",
+   "BlobIdentifier": "2/2",
+   "DepositMessage": "3/3",
+   "Deposit_Data": "3/4",
+   "PendingPartialWithdrawal": "0/3",
+   "SyncCommitteeMessage": "0/4",
+   "PendingConsolidation": "0/2"
+  },
+  "not_covered": [
+   {
+    "type": "AttestationData",
+    "field": "Source",
+    "miss_class": "new field kind",
+    "reason": "nested container *Checkpoint (pointer callee), no GEN4 template"
+   },
+   {
+    "type": "AttestationData",
+    "field": "Target",
+    "miss_class": "new field kind",
+    "reason": "nested container *Checkpoint (pointer callee), no GEN4 template"
+   }
+  ],
+  "miss_classes": {
+   "new field kind": 2
+  },
+  "raw_outputs": [
+   "lean/E2eScal/Gen4CpDec.lean",
+   "lean/E2eScal/Gen4AdDecPartial.lean",
+   "lean/E2eScal/Gen4BhDec.lean",
+   "lean/E2eScal/Gen4E1Dec.lean",
+   "lean/E2eScal/Gen4BiDec.lean",
+   "lean/E2eScal/Gen4DmDec.lean",
+   "lean/E2eScal/Gen4DdDec.lean",
+   "lean/E2eScal/Gen4PwDec.lean",
+   "lean/E2eScal/Gen4SmDec.lean",
+   "lean/E2eScal/Gen4PcDec.lean"
+  ],
+  "raw_output_commit": "e774d9b",
+  "raw_output_edited_lines": 0,
+  "scratch_trial_runs_before": "3 (gate jobs 01, 02, 05; not committed)",
+  "kindcheck": "selftest 157 cases + 4 exit-code cases PASS; 14/14 deliberately broken copies fail it; 10 committed GEN4 files PASS (AttestationData --partial exit 3); 23 earlier committed generated files keep their verdicts",
+  "p2dec_test": "134/134 as expected (gate jobs 07, 48)",
+  "dataflow_adversarial": "35/35 as expected (covered: 9 valid variants; refused: 26)",
+  "compose": "--gen4 --compose refused (exit 2): no kind for field compositions, composed GEN4 statements, head / epilogue lemmas; accept theorems are hand compositions",
+  "g4_accept": {
+   "SyncCommitteeMessage": {
+    "theorem": "E2eScal.H5.sm_e2e_accept_g4gen",
+    "type": "H5.sm_accept_stmt (the theorem's type is the abbrev)",
+    "attempts": 1,
+    "time_s": [
+     3.57,
+     3.6
+    ]
+   },
+   "PendingConsolidation": {
+    "theorem": "E2eScal.H5.pc_e2e_accept_g4gen",
+    "type": "H5.pc_accept_stmt",
+    "attempts": 1,
+    "time_s": [
+     1.41,
+     1.41
+    ]
+   },
+   "PendingPartialWithdrawal": {
+    "theorem": "E2eScal.H4.pw_e2e_accept_main_g4gen",
+    "type": "H4.pw_accept_stmt",
+    "attempts": 1,
+    "time_s": [
+     1.48,
+     1.49
+    ]
+   }
+  },
+  "hand_text_remaining": "field compositions (no kind), per-type head / epilogue lemmas (sm_head0, sm_spill2, pc_head, pc_epi, pw_head, pw_epi), SyncCommitteeMessage epilogue 156-160, glue",
+  "counting_rule": "g2g rule: non-blank lines that are not comment lines (-- / block / doc comments); three views: whole module, proof bodies (lines after ':= by' of each declaration), one-time GEN4 lemma modules",
+  "hand_lines": {
+   "SyncCommitteeMessage": {
+    "module": 355,
+    "proof_bodies": 217,
+    "per_type_hand_lemmas": 114,
+    "reference": {
+     "name": "SmAcceptG4",
+     "module": 164,
+     "proof_bodies": 152
+    },
+    "reference_h5": {
+     "name": "SmAccept",
+     "module": 199,
+     "proof_bodies": 188
+    }
+   },
+   "PendingConsolidation": {
+    "module": 150,
+    "proof_bodies": 91,
+    "per_type_hand_lemmas": 121,
+    "reference": {
+     "name": "PcAcceptG4",
+     "module": 60,
+     "proof_bodies": 51
+    },
+    "reference_h5": {
+     "name": "PcAccept",
+     "module": 271,
+     "proof_bodies": 198
+    }
+   },
+   "PendingPartialWithdrawal": {
+    "module": 163,
+    "proof_bodies": 102,
+    "per_type_hand_lemmas": 121,
+    "reference": {
+     "name": "PwAcceptG3",
+     "module": 87,
+     "proof_bodies": 76
+    },
+    "reference_h5": null
+   }
+  },
+  "one_time_GEN4_lemma_lines": {
+   "NopView": 149,
+   "StepK": 158,
+   "KindStep": 118,
+   "CallReg": 102,
+   "SegReg": 428,
+   "SegRegZ": 453,
+   "KindSegReg": 58,
+   "HeadN": 174,
+   "total": 1640
+  },
+  "generated_lines": {
+   "SyncCommitteeMessage": {
+    "module": "Gen4SmDec",
+    "code_lines": 457,
+    "file_lines": 512
+   },
+   "PendingConsolidation": {
+    "module": "Gen4PcDec",
+    "code_lines": 213,
+    "file_lines": 246
+   },
+   "PendingPartialWithdrawal": {
+    "module": "Gen4PwDec",
+    "code_lines": 268,
+    "file_lines": 309
+   }
+  },
+  "module_times_s": {
+   "Gen4CpDec": [
+    1.25,
+    1.27
+   ],
+   "Gen4AdDecPartial": [
+    1.52,
+    1.56
+   ],
+   "Gen4BhDec": [
+    2.6,
+    2.64
+   ],
+   "Gen4E1Dec": [
+    1.32,
+    1.34
+   ],
+   "Gen4BiDec": [
+    1.1,
+    1.12
+   ],
+   "Gen4DmDec": [
+    1.38,
+    1.39
+   ],
+   "Gen4DdDec": [
+    1.71,
+    1.72
+   ],
+   "Gen4PwDec": [
+    1.25,
+    1.27
+   ],
+   "Gen4SmDec": [
+    2.03,
+    2.05
+   ],
+   "Gen4PcDec": [
+    1.22,
+    1.24
+   ],
+   "SmAcceptG4gen": [
+    3.57,
+    3.6
+   ],
+   "PcAcceptG4gen": [
+    1.41,
+    1.41
+   ],
+   "PwAcceptG4gen": [
+    1.48,
+    1.49
+   ],
+   "ref SmAccept (H5)": [
+    6.11,
+    6.16
+   ],
+   "ref SmAcceptG4 (G4-L)": [
+    4.6,
+    4.6
+   ],
+   "ref PcAcceptG4 (G4-L)": [
+    1.4,
+    1.43
+   ],
+   "ref PwAcceptG3": [
+    1.68,
+    1.68
+   ]
+  },
+  "time_method": "lake env lean <file>, 2 rounds, gate job 14",
+  "honest_outcome_thresholds_exceeded": [
+   "SyncCommitteeMessage: the generated chain Gen4SmDec has 457 code lines (512 file lines) > 400 (widest reading; there is no generated accept proof: --gen4 --compose refuses); the hand accept module SmAcceptG4gen has 355 code lines"
+  ],
+  "honest_outcome_not_exceeded": "no module > 120 s (largest 3.6 s); hand accept module < 400 code lines",
+  "negatives": "17/17 (5 controls pass, 12 inside; no timeout; gen/scal/negcases-g4g.json, scal/negative-g4g.json)",
+  "axioms": "gate PASS 7080 declarations, nonstandard 0, sorryAx 0, hand list 1186 present (60 H5 + 544 GEN4 theorems added to AxiomsScal.lean; axioms.py PASS 1072)",
+  "drift": "vs the h5-r1 dump (5841 rows): ADDED 1239 (G4-L 881 + G4-G 358), CHANGED 0, REMOVED 0 (scal/gen4-drift.txt); planted Lean control: gate FAIL (sorryAx), drift 1 CHANGED + 1 ADDED, restored byte-equal",
+  "no_build": "lake build --no-build E2e E2eAd E2eScal exit 0 (1114 jobs, gate job 46)",
+  "gate_s": "about 715 s wall over 48 gated jobs (incl. the two 178-180 s axioms gate runs)",
+  "not_done": [
+   "kinds for field compositions / composed GEN4 statements (none in the hand-over)",
+   "head / epilogue emission (decpro_seg, kstep_nilchk, decret_seg have no kind)",
+   "Lean build of covered adversarial mutants (no code constant for mutated .S: text checks only)"
+  ],
+  "not_run": [
+   "cold build",
+   "link / Go / hardware checks",
+   "orca (not installed)",
+   "independent review"
+  ]
+ },
  "H5": {
   "scope": "v1alpha1.SyncCommitteeMessage (class C) and v1alpha1.PendingConsolidation (class D), UnmarshalSSZ only; two types, one touch; both near-in-sample by field kind (H5-A3), new orders only",
   "method_freeze": "6dc0e2a4cf6d37cddcea9e5aa3e8eea2f1e1fe76 (5 blobs + 4 tree ids re-verified)",
@@ -2236,5 +2683,229 @@
    "x86-64 hardware",
    "independent review of INT5"
   ]
+ },
+ "H6": {
+  "scope": "result (S) over all 7 batch types of the frozen H6 rule (UnmarshalSSZ); full decoder proof for v1alpha1.PendingDeposit and v1alpha1.PowBlock; one touch; several types near-variants by field kind (H6-A5): compiler-variation robustness on known kinds, not new kinds",
+  "method_freeze": "0e775ac53b36dffbcad3a6f6e766644188fe3cdd (5 blobs + 4 tree ids re-verified)",
+  "opening": {
+   "commit": "dcc71a8244b44b0b37f3df198685a0ba7d5b24fe",
+   "opened_utc": "2026-11-11T17:18:33Z"
+  },
+  "evaluator": "fresh Opus 5.5 session; did not build the GEN4 generator, checker, kinds or lemmas; not yet reviewed",
+  "commits": {
+   "hand_desc": "c7ebeee",
+   "link": "98303d7",
+   "hand_statements_H6Stmt": "0ad71a7 (before any generator run)",
+   "raw_S": "1ab614e",
+   "PbAccept": "6e251eb",
+   "PdAccept": "922d953",
+   "reject": "8d375b1",
+   "spec": "51f1982",
+   "speck": "13f5f60",
+   "witnesses": "4aebb3d",
+   "evidence": "1cb112c"
+  },
+  "batch": {
+   "PendingDeposit": {
+    "exit": 0,
+    "covered": "5/5",
+    "reached": "5/5",
+    "summary": "exit 0, covered = total, head covered, epilogue covered, no fail_closed",
+    "misses": [],
+    "raw_edited_lines": 0,
+    "kindcheck": "full mode, exit 0, PASS"
+   },
+   "PowBlock": {
+    "exit": 0,
+    "covered": "3/3",
+    "reached": "3/3",
+    "summary": "exit 0, covered = total, head covered, epilogue covered, no fail_closed",
+    "misses": [],
+    "raw_edited_lines": 0,
+    "kindcheck": "full mode, exit 0, PASS"
+   },
+   "HistoricalSummary": {
+    "exit": 0,
+    "covered": "2/2",
+    "reached": "2/2",
+    "summary": "exit 0, covered = total, head covered, epilogue covered, no fail_closed",
+    "misses": [],
+    "raw_edited_lines": 0,
+    "kindcheck": "full mode, exit 0, PASS"
+   },
+   "SigningData": {
+    "exit": 0,
+    "covered": "2/2",
+    "reached": "2/2",
+    "summary": "exit 0, covered = total, head covered, epilogue covered, no fail_closed",
+    "misses": [],
+    "raw_edited_lines": 0,
+    "kindcheck": "full mode, exit 0, PASS"
+   },
+   "SyncAggregatorSelectionData": {
+    "exit": 0,
+    "covered": "2/2",
+    "reached": "2/2",
+    "summary": "exit 0, covered = total, head covered, epilogue covered, no fail_closed",
+    "misses": [],
+    "raw_edited_lines": 0,
+    "kindcheck": "full mode, exit 0, PASS"
+   },
+   "ValidatorBalance": {
+    "exit": 0,
+    "covered": "2/2",
+    "reached": "2/2",
+    "summary": "exit 0, covered = total, head covered, epilogue covered, no fail_closed",
+    "misses": [],
+    "raw_edited_lines": 0,
+    "kindcheck": "full mode, exit 0, PASS"
+   },
+   "VoluntaryExit": {
+    "exit": 0,
+    "covered": "2/2",
+    "reached": "2/2",
+    "summary": "exit 0, covered = total, head covered, epilogue covered, no fail_closed",
+    "misses": [],
+    "raw_edited_lines": 0,
+    "kindcheck": "full mode, exit 0, PASS"
+   }
+  },
+  "batch_total": {
+   "covered": 18,
+   "fields": 18,
+   "reached": 18,
+   "types_fully_covered": "7/7"
+  },
+  "batch_note": "(S) 'covered' = the walker's claim + each emitted theorem builds and passes its kind; NOT 'field proved'. Kernel confirmation through field composition exists only for PendingDeposit (5 chains) and PowBlock (3 chains). Makeslice literal type__+387072 = the uint8 type word of this ELF (asserted by h6link.py). No miss, so no miss class; the plan's wording for 'about half' does not apply.",
+  "C": "refused by design (freeze for_h6: --gen4 --compose refuses); no compose run made",
+  "full_proof": {
+   "PendingDeposit": {
+    "accept_proved": true,
+    "theorem": "E2eScal.H6.pd_e2e_accept_g4gen : H6.pd_accept_stmt",
+    "chains_confirmed_by_composition": "5/5",
+    "chains_used_as_emitted": "5/5 (PublicKey seg+4 steps, WithdrawalCredentials seg+4, Amount 3 steps, Signature seg+4, Slot 6 steps + call block)",
+    "corrections": [],
+    "callee": "hC : U64CalleeAcc Slot discharged by sl_uacc_holds (1/1)",
+    "hand_outside_chains": "head 0-13 (pd_head: decpro_seg + 3 kstep_st), epilogue 161-163 (pd_epi: kstep_add + decret_seg), address helpers, glue",
+    "hand_lines": {
+     "module_PdAccept": 470,
+     "proof_bodies": 262,
+     "per_type_hand_lemmas": 91,
+     "field_compositions_decl": 249,
+     "accept_theorem_decl": 106,
+     "statement_module_H6Stmt_pd": 67,
+     "reference_no_causal_claim": {
+      "SmAcceptG4gen": "355/217",
+      "H4_DdAccept": 336
+     }
+    },
+    "generated_lines": 522,
+    "attempts": {
+     "PdAccept": 2,
+     "PdReject": 1,
+     "PdSpec": 1,
+     "PdSpecK": 1,
+     "WitPdA": 1,
+     "WitPdR": 1
+    },
+    "failed_attempts": 1,
+    "failed_attempt_cause": "glue: rw of head registers in the first field's memory argument (not a chain correction)",
+    "gate_s": 100.4,
+    "kernel_checked": [
+     "pd_e2e_accept_g4gen",
+     "pd_e2e_reject_size_main",
+     "prysmPdDesc_checker/serialize_checker/deserialize_checker (codec equality)",
+     "ppd_spec_accepts_iff",
+     "pd_e2e_accept_spec_k, pd_e2e_reject_size_spec, pd_e2e_reject_complete",
+     "WitPdA.pd_accept_runs (premises satisfiable; zero / representative / all-0xff)",
+     "WitPdR.pd_reject_runs (191, 193, 0)"
+    ],
+    "not_proved": [
+     "Slot callee error return (fmt.errorf wrap)",
+     "morestack",
+     "writeBarrier != 0",
+     "runtime callees (MakesliceC / MemmoveC are hypotheses)",
+     "Lean Go-value predicate",
+     "Pm witness of spec_k",
+     "MarshalSSZTo/SizeSSZ/HashTreeRoot",
+     "x86-64 hardware"
+    ]
+   },
+   "PowBlock": {
+    "accept_proved": true,
+    "theorem": "E2eScal.H6.pb_e2e_accept_g4gen : H6.pb_accept_stmt",
+    "chains_confirmed_by_composition": "3/3",
+    "chains_used_as_emitted": "3/3 (seg + 4 tail steps each)",
+    "corrections": [],
+    "hand_outside_chains": "head dechead_seg and epilogue decepi_seg (existing Compose lemmas, frame 0x20), glue",
+    "hand_lines": {
+     "module_PbAccept": 259,
+     "proof_bodies": 132,
+     "per_type_hand_lemmas": 0,
+     "field_compositions_decl": 170,
+     "accept_theorem_decl": 73,
+     "statement_module_H6Stmt_pb": 54
+    },
+    "generated_lines": 348,
+    "attempts": {
+     "PbAccept": 2,
+     "PbReject": 1,
+     "PbSpec": 2,
+     "PbSpecK": 1,
+     "WitPbA": 1,
+     "WitPbR": 1
+    },
+    "failed_attempts": 2,
+    "failed_attempt_causes": [
+     "PbAccept a1: same glue error as PdAccept a1",
+     "PbSpec a1: omega after a goal simp had closed"
+    ],
+    "gate_s": 60.4,
+    "spec_note": "consensus-specs types total_difficulty as uint256 (.uint 32); the producer Desc has .byteVector 32. Proved instead of codec equality: pb_accepts_same (same accepted inputs) and pb_codec_checker (number vs its 32 little-endian bytes).",
+    "kernel_checked": [
+     "pb_e2e_accept_g4gen",
+     "pb_e2e_reject_size_main",
+     "prysmPbDesc_checker, pb_accepts_same, pb_codec_checker",
+     "ppb_spec_accepts_iff",
+     "pb_e2e_accept_spec_k, pb_e2e_reject_size_spec, pb_e2e_reject_complete",
+     "WitPbA.pb_accept_runs",
+     "WitPbR.pb_reject_runs (95, 97, 0)"
+    ],
+    "not_proved": [
+     "morestack",
+     "writeBarrier != 0",
+     "runtime callees (contracts are hypotheses)",
+     "Lean Go-value predicate",
+     "Pm witness of spec_k",
+     "MarshalSSZTo/SizeSSZ/HashTreeRoot",
+     "x86-64 hardware"
+    ]
+   }
+  },
+  "g4g_r1_open_question": "8 of 8 generated chains composed in the two full proofs closed with the generated theorems AS EMITTED (0 corrections): the walker's 'covered' claim was confirmed by the kernel for these 8 fields. The other 10 batch fields have no composition.",
+  "counting_rule": "g2g rule (non-blank, non-comment lines); views: whole module, proof bodies (after ':= by'), per-type hand lemmas; statement module separate",
+  "negatives": "36/36 counted (9 control_pass, 27 inside; 0 timeout, 0 wrong_target); PendingDeposit 20, PowBlock 16 (h6/negcases-h6.json, h6/negative-h6.json)",
+  "axioms": "gate PASS, 7650 declarations, 6441 theorems, hand list 1186 present, nonstandard 0, sorryAx 0 (job 87; committed record regenerated at the end)",
+  "drift": "vs the g4f-r1 dump (7080 rows): ADDED 570, CHANGED 0, REMOVED 0 (h6/h6-drift.txt); planted CHANGED on H5.sm_accept_stmt -> exit 1",
+  "go_differential": "12/12 (Go semantics on linux/arm64 via go run -overlay in the read-only Prysm tree; not the ELF); Prysm status hash unchanged; planted control 2 mismatches, exit 1",
+  "link": "check.py (a)-(f) PASS all, bundle eb1d6846, 7 decoders, ELF sha256 c6403c02...911e (reused artifact)",
+  "gate_s": {
+   "base_check": 0.7,
+   "part1": 16.5,
+   "PendingDeposit": 100.4,
+   "PowBlock": 60.4,
+   "shared": 265.8
+  },
+  "bounds_hit": [],
+  "not_run": [
+   "cold build",
+   "regen_check.sh",
+   "kindcheck --selftest",
+   "p2dec_test.py",
+   "earlier negative suites",
+   "x86-64 hardware",
+   "independent review"
+  ],
+  "wording": "n/m per type and in total, whatever it is: 18/18 walker-covered, 7/7 types; H6-A5: near-variants by kind; no generality, superiority or speed claim; earlier hold-out records untouched; this pool is used up"
  }
 }

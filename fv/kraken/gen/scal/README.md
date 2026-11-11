@@ -232,3 +232,134 @@ In-sample coverage only; no hold-out claim until H5.
   reloaded into rax in the 32-byte segment, call set-up with the receiver already in rax, padding `nop` after a call.
 `P2EncCp` alone, before the AU-07 fix: about 730 s in its own build (job record in `TEMPLATE-COST.json`), 986.0 s in the review fix-r1 run of the unchanged file (n = 1; `opt1/AU-07.json`).
 After the AU-07 fix: see `opt1/AU-07.json` attempt 4.
+
+## GEN4 (unit G4-G; generator change after H5, development set only; not yet reviewed)
+
+`scal/CONTAMINATION.md` §22. Lemmas: unit G4-L (`NopView`, `StepK`, `KindStep`, `CallReg`, `SegReg`, `SegRegZ`,
+`KindSegReg`; review g4l-r1 APPROVE). In-sample coverage only; no hold-out claim until H6.
+
+- Compatibility switch: `--gen4` is its own code path. Default, `--gen2`, `--gen3` output unchanged:
+  `regen_check.sh` SAME for the 23 earlier commands.
+- `p2dec --gen4 [--summary FILE.json] [--partial-out FILE]`: no multi-directive set-up templates. The generator walks
+  the accept path from the end of the decoder head (prologue, spills, `test %al,(%rax)`) with a small dataflow over
+  registers and stack slots (receiver `rcv + o`, buffer `bf + o`, immediates, buffer bytes, slice pointer, unknown):
+  - step forms `mov %rS,%rD`, `mov d(%rB),%rD` (value form `kstep_ldv` for receiver / buffer / pointer / immediate
+    words, else bytes form `kstep_ldb`), `mov %rS,d(%rB)`, `lea d(%rB),%rD`, `add $i,%rD`, `mov $i,%eD`, `jmp l`,
+    `l:` → one theorem `<prefix>_s<index>` with its `_kind` (`KindStep`);
+  - `nop` → nothing; it is a leading nop of the next window (L1 window rule);
+  - `callq <Slot|CommitteeIndex|ValidatorIndex|Epoch>.UnmarshalSSZ` → the call window `nop* callq nop* test nop* je`
+    (`calldec_seg_w`, kind `callDecSegKindG4`) ONLY when rax = rcv + (IR Go offset), rbx = bf + (IR SSZ offset),
+    rcx = 8 and the field is the next IR field;
+  - `lea type__+387072(%rip),%rax` → the byte segment over two windows (`bytesdec_seg_g4` / `_z_g4`) ONLY when the
+    reload slots hold receiver / buffer, rX ∈ {rdx, rsi}, rY ∈ {rax, rcx, rdx, rsi, rdi}, n ∈ {32, 48, 96},
+    fP / src = IR, fL = fP + 8, fC = fP + 16;
+  - anything else stops the walk: the remaining fields are "not covered: <reason>" with a miss class
+    (padding / register / set-up order / new directive form / new field kind / other) in `--summary`.
+  "ONLY when" above is the walker's acceptance rule, not a checked fact: see "What covered means" below.
+  A field is complete at its own event (call block; store of the buffer bytes at the IR SSZ offset into the IR Go offset;
+  store of the slice pointer after the segment). Events out of IR order stop the walk. The output lists its fields
+  in a `FIELDS-JSON:` line. Exit codes 0 / 3 / 2 as for `--gen2`.
+- `--gen4 --compose` refuses (exit 2): no kind for field compositions, composed GEN4 statements or the head / epilogue
+  lemmas. `--gen3 --compose` without `--same-as*` now writes `UNCHECKED STATEMENT` (review g3g-r1); `kindcheck.py`
+  rejects it, and also rejects a composed theorem with `decAcceptKind` but no hand identity (rule 6d).
+- Output (raw, unedited; `gen.sh` last block): `Gen4CpDec` 2/2, `Gen4AdDecPartial` 3/5, `Gen4BhDec` 5/5, `Gen4E1Dec`
+  3/3, `Gen4BiDec` 2/2, `Gen4DmDec` 3/3, `Gen4DdDec` 4/4, `Gen4PwDec` 3/3, `Gen4SmDec` 4/4, `Gen4PcDec` 2/2. Hand
+  compositions over them: `SmAcceptG4gen.lean`, `PcAcceptG4gen.lean`, `PwAcceptG4gen.lean` (types = `H5.sm_accept_stmt`,
+  `H5.pc_accept_stmt`, `H4.pw_accept_stmt`).
+- `kindcheck.py` rule 10: the GEN4 kinds with the G4-L modules pinned, the proof's lemma = the kind's lemma (comments
+  and strings removed), `FIELDS-JSON` coverage; rule 11 (review g3g-r1 S2): coverage header required for GEN2+ kinds,
+  string literals stripped in rule 6a. Label strings in `stepLabelKind` / `stepJmpKind` / `callDecSegKindG4` are
+  phantom parameters (review g4l-r1): not checked by the kind line. Selftest 157 + 4 cases; 14 broken copies fail it.
+- Tests: `p2dec_test.py` GEN4 cases `g4-*` (10 types, compose refusal, 35 dataflow mutants); negatives
+  `negcases-g4g.json` (17).
+- Not covered: nested containers / pointer callees, callees without a proved spec, lists, bitfields, sizes other than
+  32 / 48 / 96, receiver registers outside the lemma sets, index / rip / immediate-store operands, head and epilogue
+  emission, encoders.
+
+### Unit G4-F (fixes after review g4g-r1; not yet reviewed)
+
+**What "covered" means.** A field marked "covered" by `--gen4` is the GENERATOR's claim: its walker believes that
+the code before each emitted block establishes the block's entry state. Each emitted theorem is kernel-checked on its
+own (its code fact `he` by `rfl`, its `_kind` line). Its entry facts (register values, the memory fact `hm`, the call
+block's `dst` / `src`) are hypotheses. Nothing kernel-checks that the chain of steps establishes a block's entry
+state, or that a call block belongs to the IR field named in `FIELDS-JSON`. Only a field composition does that, and
+field compositions are hand text (three development types have one: SyncCommitteeMessage, PendingConsolidation,
+PendingPartialWithdrawal). So a result (S) of a hold-out counts "walker-covered + each theorem builds", not
+"field proved". Review g4g-r1 found seven inputs on which the walker of `21b8aab` said "covered" although the code
+did not establish the entry state (every theorem still built); the rules below refuse them.
+
+- Head (M1b): directives 0–10 must be the `decpro_seg` prologue (`HeadN.lean`, `decPro`): two labels; directives
+  2–8 `cmp 0x10(%r14),%rsp; jbe; push %rbp; mov %rsp,%rbp; sub $F,%rsp; mov %rbx,dB(%rsp)` in this order plus one
+  `nop`; `cmp $size,%rcx` at 9 and `jne` at 10. The head is positional. Spills of rax / rbx / rcx / rdi are read only
+  after directive 10 (after the frame is set up). A head miss exits 2, and `--summary` lists every field with
+  `reached: false`, the reason and the class (`padding` when the head matches with its nops erased, else `other`).
+- Stack-store rule (M1a): an 8-byte store `mov %r,d(%rsp)` (also a head spill and the segment's pointer slot) is
+  modelled only when `d` is a multiple of 8 and lies in `[0, F)` (frame) or `[F + 16, F + 48)` (the argument spill
+  area). Otherwise the walk stops (class `other`). A store invalidates every tracked slot it overlaps. After a call
+  block only `sp + 8` changes (the callee's spill, stated by `calldec_seg_w`); after a segment `[sp, sp + 24)` changes.
+- A write to rbp or r14 (part of every block's entry: `rbp0`, the stack guard at `r14 + 16`) stops the walk.
+- Miss classes (S1): `set-up order` only when the wanted `add $off,%r` ran in the field's set-up and a later
+  directive replaced it; the right base with another offset is `other`; `padding` is assigned only to a head miss
+  (inside the walk a `nop` is never a miss). `--summary` has `reached` per field: true up to the field where the walk
+  stopped, false after it. A field with `reached: false` was not examined; its class says nothing. Resuming the walk
+  after a miss is not done: the code of the missed field is not modelled, so no slot or register fact survives it,
+  and the receiver / buffer slots could only be trusted again through a proof the generator does not have.
+- Walker hazards checked in G4-F (each is modelled or stops the walk): partial-register writes (only `mov $i,%e..`,
+  modelled as the zero-extending write of `kstep_movi`; every other 8 / 16 / 32-bit form stops); `lea` with an index
+  or rip operand stops; a store through any base other than rsp or the receiver stops (a store through a pointer
+  derived from rsp has an unknown base); calls other than the four callees, and runtime calls outside a segment, stop;
+  after a call block all registers except rsp / rbp / r14 are unknown; flags are never read from the walk state (a
+  conditional jump in the span stops; the `je` of a call / segment window is inside its lemma); a load at a
+  displacement that is not a tracked slot gives `unknown`. The walker relies on the separation of frame, receiver
+  and buffer that a field composition / accept statement assumes; it does not check it.
+- Not examined (S3): the head is fixed by position (`cmp $size,%rcx` at directive 9, `jne` at 10). Since G4-F2 the
+  epilogue is examined (below); the `jbe` / `jne` targets of the head (stack growth, size error) are not.
+- `kindcheck.py` rule 11 (S2): the hand example modules `Gen2Examples.lean`, `Gen3Examples.lean` are exempt by exact
+  path (`HAND_EXAMPLES`; rule 11 only). `Gen4Examples.lean` is not exempt: its hand field compositions fail rules 4
+  and 10c; no recorded command runs `kindcheck.py` on it.
+- Tests: `p2dec_test.py` cases `g4f-*` (26): the seven unsafe review inputs refused, the eleven valid variants covered,
+  head classes, frame register writes; `reached` checked on every `--gen4` case. Committed `Gen4*.lean`: unchanged
+  (the fixed generator regenerates all 10 byte-identical).
+
+### G4-F2 (review g4f-r1 M3 and a systematic pass; not yet reviewed)
+
+- Head size (M3): the immediate of `cmp $size,%rcx` (directive 9) must equal the IR SSZ fixed size of the type (the
+  sum of the IR field sizes, which must equal the container's IR `fixed_size`), as the default mode checks in
+  `compose_read`. Else the head misses: exit 2, every field `reached: false`, class `other` (review inputs c34, d15, d16).
+- Epilogue: after the last field event the walker follows the accept path (nops, labels, forward `jmp`) and accepts
+  only `mov d(%rsp),%rax|%rbx`, `xor %eax,%eax`, `xor %ebx,%ebx`, then `add $F,%rsp; pop %rbp; retq` with the head's
+  frame size F. Anything else (a store, a call, another frame size, and since G4-F3 a `jmp` to a label that is not in
+  the file) could change a decoded field after its event: exit 2, `--summary` has `epilogue.status: not covered` and
+  every field `reached: true`, not covered, class `other`. Until G4-F3 a `jmp` to a label outside the file was
+  accepted (review g4f2-r1 M4: x01, x02, x03 were reported fully covered).
+  Review input a34 (a store after the last field) is now refused; it was a recorded limit before.
+- Callee vs IR field: a call block is emitted only when the callee is the IR field's own overlay callee (unchanged
+  rule; now tested both ways on PendingPartialWithdrawal). The class is `set-up order` only when a later IR field
+  has that callee, else `other`.
+- The systematic table (every number / symbol the walker reads, and what it is compared with) is in the unit's
+  hand-over, not in this file. Rows that rely on the IR: Go offsets (`offset_gc_amd64`) and SSZ offsets are the IR's
+  claim; the walker compares the code with them, nothing compares them with the Go compiler's layout.
+- Tests: `p2dec_test.py` cases `g4f2-*` (9) and `g4f-a34` changed to "refused"; 169/169. Committed `Gen4*.lean`:
+  unchanged (10/10 byte-identical; 33/33 `regen_check.sh` SAME).
+
+### G4-F3 (review g4f2-r1 M4 and fail-closed result logic; not yet reviewed)
+
+- M4: in the epilogue, a `jmp` to a label that is not in the file (`jmp runtime.abort`, `jmp *%rdx`, a tail `jmp` to
+  another decoder) is an epilogue miss: exit 2, every field not covered, `reached: true`, class `other`.
+- Fail-closed: `p2dec_gen4` returns a text (exit 0) at one place only, the `else` branch of one `try` around
+  `_p2dec_gen4`, and only when three flags are set: `head_ok` (`g4_head` returned), `fields_complete` (the walk
+  returned without a stop and the field events are 0..n-1 in IR order) and `epilogue_ok` (`g4_epilogue` returned
+  the value `G4_EPI_OK`). `NoMatch` / `Partial` keep exit 2 / 3. Any other exception of any phase (also
+  `SystemExit`; not `KeyboardInterrupt`) is exit 2 with every field not covered and `fail_closed` in the summary.
+  The epilogue is now its own phase after the walk. A run whose walk stopped has `epilogue.status: not examined`.
+- Not examined (recorded limits, review g4f2-r1): the return value (an epilogue without `xor %eax,%eax` /
+  `xor %ebx,%ebx` is covered, so the nil error is not checked); the makeslice element type is the literal
+  `lea type__+387072(%rip),%rax` of the development ELFs, and nothing in the walker says that symbol is the byte
+  type (another offset is "new directive form"); `test %al,(%rax)` in the head is optional (a decoder without the
+  nil check is covered); a duplicate label: the walker takes the first (label freshness is the premise
+  `LabelsFresh`); the head `jbe` / `jne` targets.
+- Tests: `p2dec_test.py` cases `g4f3-x01..x03` (refused) and `fc-*`: a harness monkeypatches the working-tree
+  generator and injects an unexpected exception, a plain `G4Stop` and `SystemExit(0)` in the head, at every
+  `g4_parse` / `g4_label_index` call of the walk (every field), at every theorem-text call and in the epilogue
+  (also wrong return values), plus a walk that returns every field with a stop. No injection reaches exit 0.
+  Committed `Gen4*.lean`: unchanged (33/33 `regen_check.sh` SAME).

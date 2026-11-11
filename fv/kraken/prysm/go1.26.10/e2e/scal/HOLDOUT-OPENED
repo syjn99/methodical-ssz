@@ -172,5 +172,53 @@
    "H5-A5_alternative": "if the two picks were the first two of the merged order (ascending field count, then name) instead of one pick per class, the picks would be PendingConsolidation (2) and SyncAggregatorSelectionData (2), both class D; not adopted (source: the reviewer recomputation of the curator selection; the curator record is outside this repository)",
    "commit_type_note": "four H5 commits use the type spec(...) and one test(link), which fv/AGENTS.md lists as scopes; no history rewrite"
   }
+ },
+ "H6": {
+  "opened_utc": "2026-11-11T17:18:33Z",
+  "by": "separate evaluation session (fresh Opus 5.5; did not build the GEN4 generator, checker, kinds or lemmas; it can read the H1-H5 and GEN2-GEN4 files, so it is not independent of that experience)",
+  "method_freeze": {
+   "sha": "0e775ac53b36dffbcad3a6f6e766644188fe3cdd",
+   "gen/scal/scalgen.py": "2d8c653caed056f72e18a6a858394b7ac146b316",
+   "gen/scal/kindcheck.py": "39e8ca98959d4313352de03992ad7431f02996e6",
+   "gen/scal/gen.sh": "32a603868e30608bfa415b9e730dfd817e4d5e59",
+   "gen/scal/p2dec_test.py": "e8eb2bbcc6676e2b34a95741ab667ccf8035e30b",
+   "gen/e2e/negative.py": "96dc2d17586db2e33e42aa985e28645f070716de",
+   "lean/E2eScal tree": "bece49755bdfbcf3d16ccef8c8a814f7a803a135",
+   "lean/Fk tree": "50a7c8c350d4d6cccba61db659045c3431c97a9c",
+   "lean/E2e tree": "d41c842e6fd753359c739e9d701f3bb7e8bfb56e",
+   "lean/E2eAd tree": "de5607e4489e373ed3e11901e19229be47cdd1b5",
+   "checked_at": "git rev-parse HEAD:<path> at the freeze SHA gives the same 5 blob ids and the same four tree ids"
+  },
+  "step0_checks": "gated lake build --no-build E2e E2eAd E2eScal exit 0 (All targets up-to-date, 1114 jobs); the moved .lake was fresh, so no rebuild ran (E2eScal.P2EncCp not rebuilt)",
+  "selection": "curator record and controller confirmation outside this repository; rule = GEN4-PLAN bullet 'H6 hold-out' (sha256 4bb7d07650ceea5fb56d29052f013fb6ebd0f557b5b03edce5b8f0fc87312004), frozen before GEN4 existed; measurement protocol for the two full-proof types H4-PROTOCOL (sha256 b95dae863a186cb9c5394fca09a439ed563be2dfa1b28754107f02c5be32eafd)",
+  "batch_H6": [
+   "v1alpha1.PendingDeposit",
+   "v1alpha1.PowBlock",
+   "v1alpha1.HistoricalSummary",
+   "v1alpha1.SigningData",
+   "v1alpha1.SyncAggregatorSelectionData",
+   "v1alpha1.ValidatorBalance",
+   "v1alpha1.VoluntaryExit"
+  ],
+  "scope_H6": [
+   "all 7 batch types, UnmarshalSSZ: result (S) = one p2dec --gen4 --summary --partial-out run per type, raw output committed unedited, build, kindcheck",
+   "full decoder proof (H4 protocol) for v1alpha1.PendingDeposit (5 fields) and v1alpha1.PowBlock (3 fields) only: independent Desc and hand accept statement committed BEFORE any generator run on these two types; then hand accept over the generated chains, size reject, codec equality, spec alignment, witnesses, link check, negatives, Go-value differential"
+  ],
+  "excluded": [
+   "MarshalSSZTo, SizeSSZ and HashTreeRoot of all batch types",
+   "every other type",
+   "generator, checker, kind, lemma, Fk and contract changes"
+  ],
+  "readings": {
+   "H6-A1": "confirmed: 'exists in the tree' = Unmarshal/Marshal .S, e2e link directory or proof module by file name (the H3 A1 reading)",
+   "H6-A2": "applied: enginev1 types are out ('v1alpha1'); alternative adds enginev1.DepositRequest",
+   "H6-A6": "confirmed by the controller: generator mode --gen4 (the frozen method); result (C) = 'refused by design' (--gen4 --compose refuses); the other protocol rules apply unchanged",
+   "H6-A5": "DISCLOSED, not corrected: several batch types are near-variants of development types by field kind (PendingDeposit = Deposit_Data + one Slot field); no similarity filter by rule; H6 measures compiler-variation robustness on known kinds, not new kinds",
+   "H6-A8": "stated exposure: SizeSSZ .S, IR entries, generated Go and desc-checker results of every candidate were already in the tree; HOLDOUT-OPENED names PowBlock as a not-adopted H4 alternative (no code)"
+  },
+  "known_in_advance": "--gen4 --compose refuses (freeze for_h6); result (C) of the two full-proof types is 'refused by design' and no compose run is made",
+  "state_before_commit": "No UnmarshalSSZ/MarshalSSZTo source, .S, objdump section, IR entry, functions.json body or generator output of any of the 7 batch types was opened by this session before this record was committed.",
+  "pool": "this uses up the hold-out pool of this population (v1alpha1 fixed-size types with own fields in u64 / overlay / b32 / b48 / b96); a later hold-out needs a new population",
+  "rule": "H6 is touched once. No change to gen/scal/*, lemma / kind modules, Fk or contracts afterwards; existing modules under lean/E2eScal may only be joined by NEW H6 modules; a needed fix is recorded in CONTAMINATION.md as 'proposed, not done'. Raw generator output is committed unmodified before any hand work."
  }
 }

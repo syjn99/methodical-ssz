@@ -1,0 +1,1688 @@
+{
+ "cases": [
+  {
+   "id": "g4-nv-wat-control",
+   "kind": "control",
+   "module": "E2eScal/NopView.lean",
+   "theorem": "wat",
+   "range": [
+    162,
+    163
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.2,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "g4-nv-wskip-stmt-nostep",
+   "kind": "stmt",
+   "module": "E2eScal/NopView.lean",
+   "theorem": "wskip",
+   "range": [
+    165,
+    169
+   ],
+   "error_lines": [
+    169
+   ],
+   "first_error": "<work>/g4-nv-wskip-stmt-nostep/mut.lean:169:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.2,
+   "diff": "--- orig\n+++ mut\n@@ -1,5 +1,5 @@\n theorem wskip {q t : Program} {j : Nat} (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = t) (i : Nat)\n     (hi : Nat.blt i t.length = true) {final : MachineState \u2192 Prop} {s : MachineData}\n     (hk : Eventually (step1 Host.exe) final \u27e8s, Host.addrOf (j + nopPos q (i + 1))\u27e9) :\n-    Eventually (step1 Host.exe) final \u27e8s, Host.addrOf (j + nopPos q i + 1)\u27e9 :=\n+    Eventually (step1 Host.exe) final \u27e8s, Host.addrOf (j + nopPos q i)\u27e9 :=\n   wskip_aux q j i hq (by subst he; exact Nat.le_of_ble_eq_true hi) hk",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-sk-ldv-control",
+   "kind": "control",
+   "module": "E2eScal/StepK.lean",
+   "theorem": "kstep_ldv",
+   "range": [
+    143,
+    151
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "g4-sk-ldv-stmt-reg",
+   "kind": "stmt",
+   "module": "E2eScal/StepK.lean",
+   "theorem": "kstep_ldv",
+   "range": [
+    143,
+    151
+   ],
+   "error_lines": [
+    151
+   ],
+   "first_error": "<work>/g4-sk-ldv-stmt-reg/mut.lean:151:41: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "--- orig\n+++ mut\n@@ -3,7 +3,7 @@\n     (base a v : BitVec 64) (ha : base + disp.toBitVec = a)\n     (F : DataMem \u2192 Prop) (final : MachineState \u2192 Prop) (s : MachineData)\n     (hb : s.regs.get64 rB = base) (hm : (Eq ((Int.toBytes 8 v.toInt).At a) \u22c6 F) s.dmem)\n-    (hk : Eventually (step1 Host.exe) final \u27e8setR s rD v, Host.addrOf e\u27e9) :\n+    (hk : Eventually (step1 Host.exe) final \u27e8setR s rB v, Host.addrOf e\u27e9) :\n     Eventually (step1 Host.exe) final \u27e8s, Host.addrOf j\u27e9 :=\n   kstep_ldb rD rB disp q j e hq he hend base a ha _ (Int.toBytes_length 8 _) F final s hb hm\n     (by rw [Fk.ofInt_ofBytes_toBytes64]; exact hk)",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-sk-add-stmt-op",
+   "kind": "stmt",
+   "module": "E2eScal/StepK.lean",
+   "theorem": "kstep_add",
+   "range": [
+    190,
+    203
+   ],
+   "error_lines": [
+    203
+   ],
+   "first_error": "<work>/g4-sk-add-stmt-op/mut.lean:203:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem kstep_add (rD : Reg64) (imm : Int64) (q : Program) (j e : Nat) (hq : q.IsInfixAt Host.prog j)\n     (he : eraseNop q = [iAdd rD imm]) (hend : j + q.length = e) (final : MachineState \u2192 Prop) (s : MachineData)\n     (hk : \u2200 fl : StatusFlags, Eventually (step1 Host.exe) final\n-      \u27e8{ regs := s.regs.set64 rD (s.regs.get64 rD + imm.toBitVec), zmms := s.zmms, status := fl, dmem := s.dmem },\n+      \u27e8{ regs := s.regs.set64 rD (s.regs.get64 rD - imm.toBitVec), zmms := s.zmms, status := fl, dmem := s.dmem },\n         Host.addrOf e\u27e9) :\n     Eventually (step1 Host.exe) final \u27e8s, Host.addrOf j\u27e9 := by\n   kwin hq\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-sk-st-stmt-src",
+   "kind": "stmt",
+   "module": "E2eScal/StepK.lean",
+   "theorem": "kstep_st",
+   "range": [
+    155,
+    174
+   ],
+   "error_lines": [
+    153
+   ],
+   "first_error": "<work>/g4-sk-st-stmt-src/mut.lean:153:0: error: (deterministic) timeout at `whnf`, maximum number of heartbeats (200000) has been reached",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 6.8,
+   "diff": "--- orig\n+++ mut\n@@ -3,7 +3,7 @@\n     (base a : BitVec 64) (ha : base + disp.toBitVec = a) (bs : List UInt8) (hbs : bs.length = 8)\n     (F : DataMem \u2192 Prop) (final : MachineState \u2192 Prop) (s : MachineData)\n     (hb : s.regs.get64 rB = base) (hm : (Eq (bs.At a) \u22c6 F) s.dmem)\n-    (hk : \u2200 m' : DataMem, (Eq ((Int.toBytes 8 (@BitVec.toInt 64 (s.regs.get64 rS))).At a) \u22c6 F) m' \u2192\n+    (hk : \u2200 m' : DataMem, (Eq ((Int.toBytes 8 (@BitVec.toInt 64 (s.regs.get64 rB))).At a) \u22c6 F) m' \u2192\n       Eventually (step1 Host.exe) final \u27e8{ s with dmem := m' }, Host.addrOf e\u27e9) :\n     Eventually (step1 Host.exe) final \u27e8s, Host.addrOf j\u27e9 := by\n   subst ha hb\n",
+   "heartbeat_timeout": true,
+   "recursion_limit": false,
+   "class": "timeout_heartbeat",
+   "pass": false
+  },
+  {
+   "id": "g4-sk-movi-stmt-width",
+   "kind": "stmt",
+   "module": "E2eScal/StepK.lean",
+   "theorem": "kstep_movi",
+   "range": [
+    206,
+    216
+   ],
+   "error_lines": [
+    216
+   ],
+   "first_error": "<work>/g4-sk-movi-stmt-width/mut.lean:216:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "--- orig\n+++ mut\n@@ -1,6 +1,6 @@\n theorem kstep_movi (rD : Reg64) (imm : Int64) (q : Program) (j e : Nat) (hq : q.IsInfixAt Host.prog j)\n     (he : eraseNop q = [iMovI rD imm]) (hend : j + q.length = e) (final : MachineState \u2192 Prop) (s : MachineData)\n-    (hk : Eventually (step1 Host.exe) final \u27e8setR s rD (BitVec.zeroExtend 64 (BitVec.truncate 32 imm.toBitVec)), Host.addrOf e\u27e9) :\n+    (hk : Eventually (step1 Host.exe) final \u27e8setR s rD (BitVec.zeroExtend 64 (BitVec.truncate 16 imm.toBitVec)), Host.addrOf e\u27e9) :\n     Eventually (step1 Host.exe) final \u27e8s, Host.addrOf j\u27e9 := by\n   kwin hq\n   have hd : [iMovI rD imm].IsInfixAt Host.prog (j + nopPos q 0) := wat hq he 0\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-sk-jmp-stmt-target",
+   "kind": "stmt",
+   "module": "E2eScal/StepK.lean",
+   "theorem": "kstep_jmp",
+   "range": [
+    98,
+    108
+   ],
+   "error_lines": [
+    108
+   ],
+   "first_error": "<work>/g4-sk-jmp-stmt-target/mut.lean:108:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig\n+++ mut\n@@ -1,6 +1,6 @@\n theorem kstep_jmp (l : String) (q : Program) (j jl : Nat) (hq : q.IsInfixAt Host.prog j)\n     (he : eraseNop q = [iJmp l]) (hl : label l = Host.addrOf jl) (final : MachineState \u2192 Prop) (s : MachineData)\n-    (hk : Eventually (step1 Host.exe) final \u27e8s, Host.addrOf jl\u27e9) :\n+    (hk : Eventually (step1 Host.exe) final \u27e8s, Host.addrOf (jl + 1)\u27e9) :\n     Eventually (step1 Host.exe) final \u27e8s, Host.addrOf j\u27e9 := by\n   kwin hq\n   have hd : [iJmp l].IsInfixAt Host.prog (j + nopPos q 0) := wat hq he 0\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-sk-movrr-stmt-src",
+   "kind": "stmt",
+   "module": "E2eScal/StepK.lean",
+   "theorem": "kstep_mov_rr",
+   "range": [
+    111,
+    121
+   ],
+   "error_lines": [
+    121
+   ],
+   "first_error": "<work>/g4-sk-movrr-stmt-src/mut.lean:121:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "--- orig\n+++ mut\n@@ -1,6 +1,6 @@\n theorem kstep_mov_rr (rD rS : Reg64) (q : Program) (j e : Nat) (hq : q.IsInfixAt Host.prog j)\n     (he : eraseNop q = [iMovRR rD rS]) (hend : j + q.length = e) (final : MachineState \u2192 Prop) (s : MachineData)\n-    (hk : Eventually (step1 Host.exe) final \u27e8setR s rD (s.regs.get64 rS), Host.addrOf e\u27e9) :\n+    (hk : Eventually (step1 Host.exe) final \u27e8setR s rD (s.regs.get64 rD), Host.addrOf e\u27e9) :\n     Eventually (step1 Host.exe) final \u27e8s, Host.addrOf j\u27e9 := by\n   kwin hq\n   have hd : [iMovRR rD rS].IsInfixAt Host.prog (j + nopPos q 0) := wat hq he 0\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-sk-lea-stmt-disp",
+   "kind": "stmt",
+   "module": "E2eScal/StepK.lean",
+   "theorem": "kstep_lea",
+   "range": [
+    177,
+    187
+   ],
+   "error_lines": [
+    187
+   ],
+   "first_error": "<work>/g4-sk-lea-stmt-disp/mut.lean:187:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "--- orig\n+++ mut\n@@ -1,6 +1,6 @@\n theorem kstep_lea (rD rB : Reg64) (disp : Int64) (q : Program) (j e : Nat) (hq : q.IsInfixAt Host.prog j)\n     (he : eraseNop q = [iLea rD rB disp]) (hend : j + q.length = e) (final : MachineState \u2192 Prop) (s : MachineData)\n-    (hk : Eventually (step1 Host.exe) final \u27e8setR s rD (s.regs.get64 rB + disp.toBitVec), Host.addrOf e\u27e9) :\n+    (hk : Eventually (step1 Host.exe) final \u27e8setR s rD (s.regs.get64 rB), Host.addrOf e\u27e9) :\n     Eventually (step1 Host.exe) final \u27e8s, Host.addrOf j\u27e9 := by\n   kwin hq\n   have hd : [iLea rD rB disp].IsInfixAt Host.prog (j + nopPos q 0) := wat hq he 0\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-cr-callw-control",
+   "kind": "control",
+   "module": "E2eScal/CallReg.lean",
+   "theorem": "calldec_seg_w",
+   "range": [
+    29,
+    87
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.1,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "g4-cr-callw-stmt-ret",
+   "kind": "stmt",
+   "module": "E2eScal/CallReg.lean",
+   "theorem": "calldec_seg_w",
+   "range": [
+    29,
+    87
+   ],
+   "error_lines": [
+    87
+   ],
+   "first_error": "<work>/g4-cr-callw-stmt-ret/mut.lean:87:42: error: ecancel: could not automatically solve goal (Eq ((Int.toBytes 8 (Host.addrOf (j + 1)).toBitVec.toInt).At (sp - 8)) \u22c6",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.1,
+   "diff": "--- orig\n+++ mut\n@@ -17,7 +17,7 @@\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Host.addrOf (j2 + 1) \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rsp = { toBitVec := sp } \u2227 st.data.regs.rbp = rbp0 \u2227 st.data.regs.r14 = r140 \u2227\n-        (Eq ((Int.toBytes 8 (Host.addrOf (jc + 1)).toBitVec.toInt).At aRet)\n+        (Eq ((Int.toBytes 8 (Host.addrOf (j + 1)).toBitVec.toInt).At aRet)\n           \u22c6 Eq ((Int.toBytes 8 rbp0.toBitVec.toInt).At aFp) \u22c6 Eq ((Int.toBytes 8 src.toInt).At aS2)\n           \u22c6 Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))\n           \u22c6 Eq (e8.At src) \u22c6 Eq (e8.At dst) \u22c6 F) st.data.dmem)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-cr-callw-stmt-jc",
+   "kind": "stmt",
+   "module": "E2eScal/CallReg.lean",
+   "theorem": "calldec_seg_w",
+   "range": [
+    29,
+    87
+   ],
+   "error_lines": [
+    87
+   ],
+   "first_error": "<work>/g4-cr-callw-stmt-jc/mut.lean:87:42: error: ecancel: could not automatically solve goal (Eq",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.2,
+   "diff": "--- orig\n+++ mut\n@@ -1,5 +1,5 @@\n theorem calldec_seg_w (fn lok : String) (q : Program) (j jc j2 : Nat)\n-    (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = callDec fn lok) (hjc : j + nopPos q 0 = jc)\n+    (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = callDec fn lok) (hjc : j + nopPos q 1 = jc)\n     (hB : (callDecL lok).IsInfixAt Host.prog j2)\n     (hl : label lok = Host.addrOf j2) (hC : U64CalleeAcc fn)\n     (sp dst src aRet aFp aS2 : BitVec 64)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-sr-bytes-control",
+   "kind": "control",
+   "module": "E2eScal/SegReg.lean",
+   "theorem": "bytesdec_g4_32_rdx_rax",
+   "range": [
+    275,
+    277
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.6,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "g4-sr-bytes-stmt-reg",
+   "kind": "stmt",
+   "module": "E2eScal/SegReg.lean",
+   "theorem": "bytesdec_g4_32_rdx_rax",
+   "range": [
+    275,
+    277
+   ],
+   "error_lines": [
+    277,
+    277
+   ],
+   "first_error": "<work>/g4-sr-bytes-stmt-reg/mut.lean:277:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.4,
+   "diff": "--- orig\n+++ mut\n@@ -1,3 +1,3 @@\n-theorem bytesdec_g4_32_rdx_rax : BytesDecG4 32 Reg64.rdx Reg64.rax := by\n+theorem bytesdec_g4_32_rdx_rax : BytesDecG4 32 Reg64.rdx Reg64.rdx := by\n   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm\n   bytesdec_g4c 32 Reg64.rdx Reg64.rax",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-sr-bytes-stmt-size",
+   "kind": "stmt",
+   "module": "E2eScal/SegReg.lean",
+   "theorem": "bytesdec_g4_32_rdx_rax",
+   "range": [
+    275,
+    277
+   ],
+   "error_lines": [
+    277,
+    277,
+    277
+   ],
+   "first_error": "<work>/g4-sr-bytes-stmt-size/mut.lean:277:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.3,
+   "diff": "--- orig\n+++ mut\n@@ -1,3 +1,3 @@\n-theorem bytesdec_g4_32_rdx_rax : BytesDecG4 32 Reg64.rdx Reg64.rax := by\n+theorem bytesdec_g4_32_rdx_rax : BytesDecG4 48 Reg64.rdx Reg64.rax := by\n   intro lff lwb dR dB dS fP fL fC src qA qB j1 j2 jl jm e hqA heA hqB heB hjl hl hjm hend sp rcv bf aR aB aS aRet aLo aP aL aC aSrc St hR hB' hS hRet hLo hP hL hC hSrc rbp0 r140 root hroot spl rslot lo lS vP vL vC hspl hrs hlo hlS hvP hvL hvC R Heap avail hav s hrsp hrbp hr14 h_mem hms hmm\n   bytesdec_g4c 32 Reg64.rdx Reg64.rax",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-ex-s82-control",
+   "kind": "control",
+   "module": "E2eScal/Gen4Examples.lean",
+   "theorem": "sm_g4_s82",
+   "range": [
+    40,
+    53
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "g4-ex-s82-stmt-disp",
+   "kind": "stmt",
+   "module": "E2eScal/Gen4Examples.lean",
+   "theorem": "sm_g4_s82",
+   "range": [
+    38,
+    51
+   ],
+   "error_lines": [
+    49,
+    51
+   ],
+   "first_error": "<work>/g4-ex-s82-stmt-disp/mut.lean:49:17: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "--- orig\n+++ mut\n@@ -1,6 +1,6 @@\n theorem sm_g4_s82 (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh SmUnmarshal k) :\n     \u2200\n-    (base a v : BitVec 64) (ha : base + (120 : Int64).toBitVec = a)\n+    (base a v : BitVec 64) (ha : base + (128 : Int64).toBitVec = a)\n     (F : DataMem \u2192 Prop)\n     (final : MachineState \u2192 Prop) (s : MachineData)\n     (hb : s.regs.get64 Reg64.rsp = base) (hm : (Eq ((Int.toBytes 8 v.toInt).At a) \u22c6 F) s.dmem)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-ex-s82-code-slot",
+   "kind": "code",
+   "module": "E2eScal/Gen4Examples.lean",
+   "theorem": "sm_g4_s82",
+   "range": [
+    40,
+    53
+   ],
+   "error_lines": [
+    49
+   ],
+   "first_error": "<work>/g4-ex-s82-code-slot/mut.lean:49:109: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -80,7 +80,7 @@\n   mov %rdx,0x8(%r11)\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_153:\n   mov %rsi,0x10(%rax)\n-  mov 0x78(%rsp),%rbx\n+  mov 0x70(%rsp),%rbx\n   add $0x28,%rbx\n   mov 0x88(%rsp),%rdi\n   add $-0x28,%rdi\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-ex-s86-code-reg",
+   "kind": "code",
+   "module": "E2eScal/Gen4Examples.lean",
+   "theorem": "sm_g4_s86",
+   "range": [
+    110,
+    122
+   ],
+   "error_lines": [
+    118
+   ],
+   "first_error": "<work>/g4-ex-s86-code-reg/mut.lean:118:99: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -84,7 +84,7 @@\n   add $0x28,%rbx\n   mov 0x88(%rsp),%rdi\n   add $-0x28,%rdi\n-  add $0x28,%rax\n+  add $0x28,%rdx\n   mov $0x8,%ecx\n   callq github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ\n   test %rax,%rax\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-ex-s87-code-clobber",
+   "kind": "code",
+   "module": "E2eScal/Gen4Examples.lean",
+   "theorem": "sm_g4_s87",
+   "range": [
+    127,
+    137
+   ],
+   "error_lines": [
+    133
+   ],
+   "first_error": "<work>/g4-ex-s87-code-clobber/mut.lean:133:99: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -85,7 +85,7 @@\n   mov 0x88(%rsp),%rdi\n   add $-0x28,%rdi\n   add $0x28,%rax\n-  mov $0x8,%ecx\n+  mov $0x8,%eax\n   callq github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ\n   test %rax,%rax\n   je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_1e7\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-ex-vicall-stmt-ret",
+   "kind": "stmt",
+   "module": "E2eScal/Gen4Examples.lean",
+   "theorem": "sm_g4_ValidatorIndex_call",
+   "range": [
+    140,
+    172
+   ],
+   "error_lines": [
+    170,
+    172
+   ],
+   "first_error": "<work>/g4-ex-vicall-stmt-ret/mut.lean:170:17: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.2,
+   "diff": "--- orig\n+++ mut\n@@ -15,7 +15,7 @@\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Host.addrOf (k + 117 + 1) \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rsp = { toBitVec := sp } \u2227 st.data.regs.rbp = rbp0 \u2227 st.data.regs.r14 = r140 \u2227\n-        (Eq ((Int.toBytes 8 (Host.addrOf (k + 88 + 1)).toBitVec.toInt).At aRet)\n+        (Eq ((Int.toBytes 8 (Host.addrOf (k + 89 + 1)).toBitVec.toInt).At aRet)\n           \u22c6 Eq ((Int.toBytes 8 rbp0.toBitVec.toInt).At aFp) \u22c6 Eq ((Int.toBytes 8 src.toInt).At aS2)\n           \u22c6 Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))\n           \u22c6 Eq (e8.At src) \u22c6 Eq (e8.At dst) \u22c6 F) st.data.dmem)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-ex-pccall-control",
+   "kind": "control",
+   "module": "E2eScal/Gen4Examples.lean",
+   "theorem": "pc_g4_TargetIndex_call",
+   "range": [
+    656,
+    688
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.3,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "g4-ex-pccall-stmt-ret",
+   "kind": "stmt",
+   "module": "E2eScal/Gen4Examples.lean",
+   "theorem": "pc_g4_TargetIndex_call",
+   "range": [
+    654,
+    686
+   ],
+   "error_lines": [
+    684,
+    686
+   ],
+   "first_error": "<work>/g4-ex-pccall-stmt-ret/mut.lean:684:17: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.2,
+   "diff": "--- orig\n+++ mut\n@@ -15,7 +15,7 @@\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Host.addrOf (k + 85 + 1) \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rsp = { toBitVec := sp } \u2227 st.data.regs.rbp = rbp0 \u2227 st.data.regs.r14 = r140 \u2227\n-        (Eq ((Int.toBytes 8 (Host.addrOf (k + 55 + 1)).toBitVec.toInt).At aRet)\n+        (Eq ((Int.toBytes 8 (Host.addrOf (k + 56 + 1)).toBitVec.toInt).At aRet)\n           \u22c6 Eq ((Int.toBytes 8 rbp0.toBitVec.toInt).At aFp) \u22c6 Eq ((Int.toBytes 8 src.toInt).At aS2)\n           \u22c6 Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))\n           \u22c6 Eq (e8.At src) \u22c6 Eq (e8.At dst) \u22c6 F) st.data.dmem)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-ex-pccall-code-nonop",
+   "kind": "code",
+   "module": "E2eScal/Gen4Examples.lean",
+   "theorem": "pc_g4_TargetIndex_call",
+   "range": [
+    656,
+    688
+   ],
+   "error_lines": [
+    679
+   ],
+   "first_error": "<work>/g4-ex-pccall-code-nonop/mut.lean:679:273: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.3,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -54,7 +54,7 @@\n   add $0x10,%rax\n   mov $0x8,%ecx\n   callq github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ\n-  nop\n+  mov %rdx,%rdx\n   test %rax,%rax\n   je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d\n   movups %xmm15,0x28(%rsp)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-ex-br-control",
+   "kind": "control",
+   "module": "E2eScal/Gen4Examples.lean",
+   "theorem": "sm_g4_BlockRoot_seg",
+   "range": [
+    236,
+    285
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.5,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "g4-ex-br-stmt-reg",
+   "kind": "stmt",
+   "module": "E2eScal/Gen4Examples.lean",
+   "theorem": "sm_g4_BlockRoot_seg",
+   "range": [
+    236,
+    285
+   ],
+   "error_lines": [
+    283,
+    285
+   ],
+   "first_error": "<work>/g4-ex-br-stmt-reg/mut.lean:283:17: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.4,
+   "diff": "--- orig\n+++ mut\n@@ -23,7 +23,7 @@\n       (fun st => st.pc = Host.addrOf (k + 72) \u2227 st.data.regs.rsp = { toBitVec := sp }\n         \u2227 st.data.regs.rbp = rbp0 \u2227 st.data.regs.r14 = r140 \u2227\n         \u2203 (p : BitVec 64) (spl' lo' : List UInt8), spl'.length = 24 \u2227 lo'.length = St\n-          \u2227 st.data.regs.get64 Reg64.rax = rcv \u2227\n+          \u2227 st.data.regs.get64 Reg64.rdx = rcv \u2227\n         (Eq ((Int.toBytes 8 rcv.toInt).At aR) \u22c6 Eq ((Int.toBytes 8 bf.toInt).At aB)\n           \u22c6 Eq (spl'.At sp)\n           \u22c6 Eq ((Int.toBytes 8 (Host.addrOf (k + 66 + 1)).toBitVec.toInt).At aRet)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-ex-br-code-reg",
+   "kind": "code",
+   "module": "E2eScal/Gen4Examples.lean",
+   "theorem": "sm_g4_BlockRoot_seg",
+   "range": [
+    238,
+    287
+   ],
+   "error_lines": [
+    278
+   ],
+   "first_error": "<work>/g4-ex-br-code-reg/mut.lean:278:330: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.6,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -65,7 +65,7 @@\n   add $0x8,%rbx\n   mov $0x20,%ecx\n   callq runtime.memmove\n-  mov 0x70(%rsp),%rax\n+  mov 0x70(%rsp),%rdx\n   movq $0x20,0x18(%rax)\n   movq $0x20,0x20(%rax)\n   cmpl $0x0,runtime.writeBarrier(%rip)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-ex-sig-stmt-ret",
+   "kind": "stmt",
+   "module": "E2eScal/Gen4Examples.lean",
+   "theorem": "sm_g4_Signature_seg",
+   "range": [
+    424,
+    473
+   ],
+   "error_lines": [
+    471,
+    473
+   ],
+   "first_error": "<work>/g4-ex-sig-stmt-ret/mut.lean:471:17: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.8,
+   "diff": "--- orig\n+++ mut\n@@ -26,7 +26,7 @@\n           \u2227 st.data.regs.get64 Reg64.rdx = rcv \u2227\n         (Eq ((Int.toBytes 8 rcv.toInt).At aR) \u22c6 Eq ((Int.toBytes 8 bf.toInt).At aB)\n           \u22c6 Eq (spl'.At sp)\n-          \u22c6 Eq ((Int.toBytes 8 (Host.addrOf (k + 140 + 1)).toBitVec.toInt).At aRet)\n+          \u22c6 Eq ((Int.toBytes 8 (Host.addrOf (k + 139 + 1)).toBitVec.toInt).At aRet)\n           \u22c6 Eq (lo'.At aLo)\n           \u22c6 Eq ((Int.toBytes 8 p.toInt).At aS)\n           \u22c6 Heap (avail - 96)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-ex-vifield-control",
+   "kind": "control",
+   "module": "E2eScal/Gen4Examples.lean",
+   "theorem": "sm_g4_ValidatorIndex_field",
+   "range": [
+    180,
+    229
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.4,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "g4-ex-vifield-stmt-reg",
+   "kind": "stmt",
+   "module": "E2eScal/Gen4Examples.lean",
+   "theorem": "sm_g4_ValidatorIndex_field",
+   "range": [
+    180,
+    229
+   ],
+   "error_lines": [
+    223,
+    203
+   ],
+   "first_error": "<work>/g4-ex-vifield-stmt-reg/mut.lean:223:8: error: ecancel: could not automatically solve goal (Eq (rslot.At aRet) \u22c6 Eq (fp.At aFp) \u22c6 Eq (s2.At aS2) \u22c6",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.4,
+   "diff": "--- orig\n+++ mut\n@@ -8,7 +8,7 @@\n     (hc0 : c0.length = 8) (hvD : vD.length = 8) (hguard : guard.toNat < aRet.toNat)\n     (F : DataMem \u2192 Prop)\n     (s : MachineData) (hrsp : s.regs.rsp = { toBitVec := sp }) (hrbp : s.regs.rbp = rbp0)\n-    (hr14 : s.regs.r14 = r140) (hrax : s.regs.rax.toBitVec = rcv)\n+    (hr14 : s.regs.r14 = r140) (hrax : s.regs.rdx.toBitVec = rcv)\n     (h_mem : s.dmem =\u22c6 Eq (rslot.At aRet) \u22c6 Eq (fp.At aFp) \u22c6 Eq (s2.At aS2)\n       \u22c6 Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))\n       \u22c6 Eq ((Int.toBytes 8 bf.toInt).At aB) \u22c6 Eq (vD.At aD)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-ex-vifield-stmt-off",
+   "kind": "stmt",
+   "module": "E2eScal/Gen4Examples.lean",
+   "theorem": "sm_g4_ValidatorIndex_field",
+   "range": [
+    180,
+    229
+   ],
+   "error_lines": [
+    223,
+    203
+   ],
+   "first_error": "<work>/g4-ex-vifield-stmt-off/mut.lean:223:8: error: ecancel: could not automatically solve goal (Eq (rslot.At aRet) \u22c6 Eq (fp.At aFp) \u22c6 Eq (s2.At aS2) \u22c6",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.4,
+   "diff": "--- orig\n+++ mut\n@@ -12,7 +12,7 @@\n     (h_mem : s.dmem =\u22c6 Eq (rslot.At aRet) \u22c6 Eq (fp.At aFp) \u22c6 Eq (s2.At aS2)\n       \u22c6 Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))\n       \u22c6 Eq ((Int.toBytes 8 bf.toInt).At aB) \u22c6 Eq (vD.At aD)\n-      \u22c6 Eq (e8.At (bf + 40)) \u22c6 Eq (c0.At (rcv + 40)) \u22c6 F),\n+      \u22c6 Eq (e8.At (bf + 40)) \u22c6 Eq (c0.At (rcv + 48)) \u22c6 F),\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Host.addrOf (k + 117 + 1) \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rsp = { toBitVec := sp } \u2227 st.data.regs.rbp = rbp0 \u2227 st.data.regs.r14 = r140 \u2227\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-ex-vifield-stmt-slot",
+   "kind": "stmt",
+   "module": "E2eScal/Gen4Examples.lean",
+   "theorem": "sm_g4_ValidatorIndex_field",
+   "range": [
+    180,
+    229
+   ],
+   "error_lines": [
+    209
+   ],
+   "first_error": "<work>/g4-ex-vifield-stmt-slot/mut.lean:209:35: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.4,
+   "diff": "--- orig\n+++ mut\n@@ -2,7 +2,7 @@\n     \u2200 (hC : U64CalleeAcc \"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ\")\n     (sp rcv bf aRet aFp aS2 aB aD : BitVec 64)\n     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)\n-    (hB : sp + (120 : Int64).toBitVec = aB) (hD : sp + (136 : Int64).toBitVec = aD)\n+    (hB : sp + (112 : Int64).toBitVec = aB) (hD : sp + (136 : Int64).toBitVec = aD)\n     (rbp0 r140 guard : UInt64) (e8 rslot fp s2 c0 vD : List UInt8)\n     (he8 : e8.length = 8) (hrs : rslot.length = 8) (hfp : fp.length = 8) (hs2 : s2.length = 8)\n     (hc0 : c0.length = 8) (hvD : vD.length = 8) (hguard : guard.toNat < aRet.toNat)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-ex-pcfield-stmt-src",
+   "kind": "stmt",
+   "module": "E2eScal/Gen4Examples.lean",
+   "theorem": "pc_g4_TargetIndex_field",
+   "range": [
+    694,
+    745
+   ],
+   "error_lines": [
+    739,
+    717
+   ],
+   "first_error": "<work>/g4-ex-pcfield-stmt-src/mut.lean:739:8: error: ecancel: could not automatically solve goal (Eq (rslot.At aRet) \u22c6 Eq (fp.At aFp) \u22c6 Eq (s2.At aS2) \u22c6",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.3,
+   "diff": "--- orig\n+++ mut\n@@ -12,7 +12,7 @@\n     (h_mem : s.dmem =\u22c6 Eq (rslot.At aRet) \u22c6 Eq (fp.At aFp) \u22c6 Eq (s2.At aS2)\n       \u22c6 Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))\n       \u22c6 Eq ((Int.toBytes 8 bf.toInt).At aB) \u22c6 Eq (vD.At aD) \u22c6 Eq ((Int.toBytes 8 rcv.toInt).At aR)\n-      \u22c6 Eq (e8.At (bf + 8)) \u22c6 Eq (c0.At (rcv + 16)) \u22c6 F),\n+      \u22c6 Eq (e8.At (bf + 16)) \u22c6 Eq (c0.At (rcv + 16)) \u22c6 F),\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Host.addrOf (k + 85 + 1) \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rsp = { toBitVec := sp } \u2227 st.data.regs.rbp = rbp0 \u2227 st.data.regs.r14 = r140 \u2227\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-hn-pro-control",
+   "kind": "control",
+   "module": "E2eScal/HeadN.lean",
+   "theorem": "decpro_seg",
+   "range": [
+    75,
+    146
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.3,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "g4-hn-pro-stmt-rsp",
+   "kind": "stmt",
+   "module": "E2eScal/HeadN.lean",
+   "theorem": "decpro_seg",
+   "range": [
+    75,
+    146
+   ],
+   "error_lines": [
+    142
+   ],
+   "first_error": "<work>/g4-hn-pro-stmt-rsp/mut.lean:142:4: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.3,
+   "diff": "--- orig\n+++ mut\n@@ -9,7 +9,7 @@\n       \u22c6 Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16)) \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = { toBitVec := sz.toBitVec }) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Host.addrOf e \u2227 st.data.regs.rsp = { toBitVec := sp }\n+      (fun st => st.pc = Host.addrOf e \u2227 st.data.regs.rsp = { toBitVec := sp + 8 }\n         \u2227 st.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }\n         \u2227 (\u2200 r : Reg64, r \u2260 Reg64.rsp \u2192 r \u2260 Reg64.rbp \u2192 st.data.regs.get64 r = s.regs.get64 r) \u2227\n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-hn-pro-stmt-frame",
+   "kind": "stmt",
+   "module": "E2eScal/HeadN.lean",
+   "theorem": "decpro_seg",
+   "range": [
+    75,
+    146
+   ],
+   "error_lines": [
+    128,
+    142,
+    146,
+    93
+   ],
+   "first_error": "<work>/g4-hn-pro-stmt-frame/mut.lean:128:8: error: ecancel: could not automatically solve goal (Eq (s2.At (rsp.toBitVec - 8 - F.toBitVec + dB.toBitVec)) \u22c6 ?m.588)",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.3,
+   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem decpro_seg (fn l0 lmore lerr : String) (F dB sz : Int64) (q : Program) (j e : Nat)\n     (hq : q.IsInfixAt Host.prog j) (he : eraseNop q = decPro fn l0 lmore lerr F dB sz) (hend : j + q.length = e)\n     (s : MachineData) (ra guard : UInt64) (sp aS : BitVec 64)\n-    (hsp : s.regs.rsp.toBitVec - 8 - F.toBitVec = sp) (hS : sp + dB.toBitVec = aS)\n+    (hsp : s.regs.rsp.toBitVec - F.toBitVec = sp) (hS : sp + dB.toBitVec = aS)\n     (fp s2 : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8)\n     (R : DataMem \u2192 Prop)\n     (h_mem : s.dmem =\u22c6 Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-hn-ret-stmt-rsp",
+   "kind": "stmt",
+   "module": "E2eScal/HeadN.lean",
+   "theorem": "decret_seg",
+   "range": [
+    153,
+    192
+   ],
+   "error_lines": [
+    188
+   ],
+   "first_error": "<work>/g4-hn-ret-stmt-rsp/mut.lean:188:37: error: omega could not prove the goal:",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.3,
+   "diff": "--- orig\n+++ mut\n@@ -4,7 +4,7 @@\n     (h_mem : s.dmem =\u22c6 Eq ((Int.toBytes 8 fp0.toBitVec.toInt).At sp)\n       \u22c6 Eq ((Int.toBytes 8 ra.toBitVec.toInt).At aRa) \u22c6 R) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rsp = { toBitVec := sp + 16 }\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rsp = { toBitVec := sp + 8 }\n         \u2227 st.data.regs.rbp = fp0\n         \u2227 (\u2200 r : Reg64, r \u2260 Reg64.rsp \u2192 r \u2260 Reg64.rbp \u2192 st.data.regs.get64 r = s.regs.get64 r)\n         \u2227 st.data.dmem = s.dmem)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "g4-hn-nil-control",
+   "kind": "control",
+   "module": "E2eScal/HeadN.lean",
+   "theorem": "kstep_nilchk",
+   "range": [
+    196,
+    214
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.3,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "g4-acc-sm-control",
+   "kind": "control",
+   "module": "E2eScal/SmAcceptG4.lean",
+   "theorem": "sm_e2e_accept_g4",
+   "range": [
+    34,
+    195
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 4.7,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "g4-acc-pc-control",
+   "kind": "control",
+   "module": "E2eScal/PcAcceptG4.lean",
+   "theorem": "pc_e2e_accept_g4",
+   "range": [
+    27,
+    83
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.5,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  }
+ ],
+ "pass": 40,
+ "total": 41,
+ "classes": {
+  "control_pass": 12,
+  "inside": 28,
+  "timeout_heartbeat": 1
+ },
+ "case_timeout_s": 300,
+ "prechecks": [
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Seg",
+    "Fk.Step"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-nv-wat-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Seg",
+    "Fk.Step"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-nv-wskip-stmt-nostep"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.NopView"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-sk-ldv-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.NopView"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-sk-ldv-stmt-reg"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.NopView"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-sk-add-stmt-op"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.NopView"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-sk-st-stmt-src"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.NopView"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-sk-movi-stmt-width"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.NopView"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-sk-jmp-stmt-target"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.NopView"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-sk-movrr-stmt-src"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.NopView"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-sk-lea-stmt-disp"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.KindCall",
+    "E2eScal.NopView"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-cr-callw-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.KindCall",
+    "E2eScal.NopView"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-cr-callw-stmt-ret"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.KindCall",
+    "E2eScal.NopView"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-cr-callw-stmt-jc"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.NopView",
+    "E2eScal.SegN"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-sr-bytes-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.NopView",
+    "E2eScal.SegN"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-sr-bytes-stmt-reg"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.NopView",
+    "E2eScal.SegN"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-sr-bytes-stmt-size"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Code",
+    "E2eScal.BhCode",
+    "E2eScal.CallReg",
+    "E2eScal.H4Code",
+    "E2eScal.H5Code",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-ex-s82-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Code",
+    "E2eScal.BhCode",
+    "E2eScal.CallReg",
+    "E2eScal.H4Code",
+    "E2eScal.H5Code",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-ex-s82-stmt-disp"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Code",
+    "E2eScal.BhCode",
+    "E2eScal.CallReg",
+    "E2eScal.H4Code",
+    "E2eScal.H5Code",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-ex-s82-code-slot"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Code",
+    "E2eScal.BhCode",
+    "E2eScal.CallReg",
+    "E2eScal.H4Code",
+    "E2eScal.H5Code",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-ex-s86-code-reg"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Code",
+    "E2eScal.BhCode",
+    "E2eScal.CallReg",
+    "E2eScal.H4Code",
+    "E2eScal.H5Code",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-ex-s87-code-clobber"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Code",
+    "E2eScal.BhCode",
+    "E2eScal.CallReg",
+    "E2eScal.H4Code",
+    "E2eScal.H5Code",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-ex-vicall-stmt-ret"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Code",
+    "E2eScal.BhCode",
+    "E2eScal.CallReg",
+    "E2eScal.H4Code",
+    "E2eScal.H5Code",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-ex-pccall-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Code",
+    "E2eScal.BhCode",
+    "E2eScal.CallReg",
+    "E2eScal.H4Code",
+    "E2eScal.H5Code",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-ex-pccall-stmt-ret"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Code",
+    "E2eScal.BhCode",
+    "E2eScal.CallReg",
+    "E2eScal.H4Code",
+    "E2eScal.H5Code",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-ex-pccall-code-nonop"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Code",
+    "E2eScal.BhCode",
+    "E2eScal.CallReg",
+    "E2eScal.H4Code",
+    "E2eScal.H5Code",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-ex-br-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Code",
+    "E2eScal.BhCode",
+    "E2eScal.CallReg",
+    "E2eScal.H4Code",
+    "E2eScal.H5Code",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-ex-br-stmt-reg"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Code",
+    "E2eScal.BhCode",
+    "E2eScal.CallReg",
+    "E2eScal.H4Code",
+    "E2eScal.H5Code",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-ex-br-code-reg"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Code",
+    "E2eScal.BhCode",
+    "E2eScal.CallReg",
+    "E2eScal.H4Code",
+    "E2eScal.H5Code",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-ex-sig-stmt-ret"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Code",
+    "E2eScal.BhCode",
+    "E2eScal.CallReg",
+    "E2eScal.H4Code",
+    "E2eScal.H5Code",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-ex-vifield-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Code",
+    "E2eScal.BhCode",
+    "E2eScal.CallReg",
+    "E2eScal.H4Code",
+    "E2eScal.H5Code",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-ex-vifield-stmt-reg"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Code",
+    "E2eScal.BhCode",
+    "E2eScal.CallReg",
+    "E2eScal.H4Code",
+    "E2eScal.H5Code",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-ex-vifield-stmt-off"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Code",
+    "E2eScal.BhCode",
+    "E2eScal.CallReg",
+    "E2eScal.H4Code",
+    "E2eScal.H5Code",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-ex-vifield-stmt-slot"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Code",
+    "E2eScal.BhCode",
+    "E2eScal.CallReg",
+    "E2eScal.H4Code",
+    "E2eScal.H5Code",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-ex-pcfield-stmt-src"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Compose",
+    "E2eScal.StepK"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-hn-pro-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Compose",
+    "E2eScal.StepK"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-hn-pro-stmt-rsp"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Compose",
+    "E2eScal.StepK"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-hn-pro-stmt-frame"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Compose",
+    "E2eScal.StepK"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-hn-ret-stmt-rsp"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Compose",
+    "E2eScal.StepK"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-hn-nil-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.BhAcceptG3",
+    "E2eScal.Gen3SmDecPartial",
+    "E2eScal.Gen4Examples",
+    "E2eScal.H5Stmt",
+    "E2eScal.SmSeg"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-acc-sm-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen4Examples",
+    "E2eScal.PcAccept"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "g4-acc-pc-control"
+   ]
+  }
+ ]
+}
