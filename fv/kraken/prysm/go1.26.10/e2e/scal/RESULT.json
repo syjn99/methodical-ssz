@@ -621,6 +621,84 @@
      "x86-64 hardware"
     ]
    }
+  },
+  "gen2-lemmas (GEN2 unit G2-L, fresh Fable session)": {
+   "state": "not yet reviewed",
+   "base": "71161fa95532d1151ec4e7b19608709bb77158d6",
+   "commits": "c59718f (L1, L2), 4cc0934 (L3), then the records commit",
+   "author": "fresh Fable 5.2 session, direct author; did not write the generator; read the three development decoders, the hand proofs and the H3 records (BlobIdentifier and DepositMessage are development data)",
+   "scope": "new Lean modules only; no existing .lean, scalgen.py, kindcheck.py, gen.sh, contract, statement, ELF, toolchain or lakefile change; the proof generator is unchanged, so generator coverage is unchanged (SG-2)",
+   "L1": {
+    "modules": "lean/E2eScal/SegN.lean, KindN.lean, SegNRel.lean",
+    "lemmas": [
+     "E2eScal.bytesdec_seg",
+     "E2eScal.bytesdec_seg_z"
+    ],
+    "kinds": [
+     "E2eScal.bytesDecSegKind",
+     "E2eScal.bytesDecSegZKind",
+     "E2eScal.bytesDecSegKind_of",
+     "E2eScal.bytesDecSegZKind_of"
+    ],
+    "sizes": "n = 32, 48, 96 (hypothesis hn; a case split that runs the model proof text with a literal size; another size needs one more case)",
+    "relation_to_existing": "rfl: templates (rootDecHead = bytesDecHead 32, ..., H3.bytesDecMidZ48 = bytesDecMidZ 48), kinds (rootDecSegKind = bytesDecSegKind 32, rootDecSegZKind = bytesDecSegZKind 32, with_reducible rfl), declared lemma types (rootdec_seg, rootdec_seg_z, H3.bytes48dec_seg_z = the n = 32 / 32 / 48 instances, default-transparency rfl). The existing lemmas are not re-proved from the new ones.",
+    "contracts": "MakesliceC, MemmoveC as in rootdec_seg; no new form"
+   },
+   "L2": {
+    "modules": "lean/E2eScal/U64Inline.lean, KindU64.lean",
+    "lemmas": [
+     "E2eScal.u64dec_inline_seg"
+    ],
+    "kinds": [
+     "E2eScal.u64DecInlineSegKind",
+     "E2eScal.u64DecInlineSegKind_of"
+    ],
+    "sites_read": "Eth1Data.DepositCount (directives 47-49, scratch rsi), BlobIdentifier.Index (47-49, rcx), DepositMessage.Amount (83-85, rcx); receiver rdx and the addressing forms are the same",
+    "register_shapes_observed": 2,
+    "lemmas_needed": 1,
+    "register_parameter": "rX : Reg64 with U64InlineReg rX = the 12 registers other than rdx, rsp, rbp, r14 (case split)",
+    "contracts": "none"
+   },
+   "L3": {
+    "modules": "lean/E2eScal/Compose.lean, Gen2ComposeEx.lean",
+    "lemmas": [
+     "E2eScal.dechead_seg",
+     "E2eScal.bytesdec_tail_seg",
+     "E2eScal.decepi_seg"
+    ],
+    "example": "E2eScal.Gen2Ex.bi_e2e_accept_main_composed: a chain of eventually_trans over segment theorems only; bi_e2e_accept_main_composed_type shows its declared type = the declared type of E2eScal.Bi.bi_e2e_accept_main (with_reducible rfl)",
+    "limits": "not a generic combinator over a list of segments: the frame instance of each step is written per type; frame 0x20 and spill displacements 0x30 / 0x38 are literals; DepositMessage and Eth1Data are not re-derived; no kind for the three L3 lemmas"
+   },
+   "examples": "lean/E2eScal/Gen2Examples.lean (hand-written, generator shape, each with a _kind line by with_reducible rfl): dm_dec_PublicKey_seg (48, offset-0), dm_dec_WithdrawalCredentials_seg, bi_dec_BlockRoot_seg, e1_dec_DepositRoot_seg, e1_dec_BlockHash_seg (32), bi_dec_Index_seg, dm_dec_Amount_seg, e1_dec_DepositCount_seg",
+   "executed_checks": {
+    "build": "lake build --no-build E2e E2eAd E2eScal exit 0 (928 jobs) at 4cc0934",
+    "axioms_gate": "gen/e2e/axioms_gate.py run with a scratch JSON: PASS declarations 4625 theorems 3899 nonstandard 0 sorryAx [] (the committed axioms-gate.json is not rewritten)",
+    "decl_drift": "decl_drift.py base dump (4519 rows, review int-r2) vs head dump (4625 rows): ADDED 106, CHANGED 0, REMOVED 0; planted control on a dump copy (one type hash changed, one row removed): exit 1 with 1 CHANGED, 1 REMOVED",
+    "negatives": "gen/scal/negcases-gen2.json with the unchanged gen/e2e/negative.py, one gated job per case: 17/17 (4 controls pass, 13 mutants fail inside the target: 12 statement mutants, 1 code mutant)",
+    "module_times_s": {
+     "E2eScal.SegN": 8.7,
+     "E2eScal.KindN": 0.6,
+     "E2eScal.SegNRel": 0.5,
+     "E2eScal.U64Inline": 2.5,
+     "E2eScal.KindU64": 0.6,
+     "E2eScal.Gen2Examples": 1.2,
+     "E2eScal.Compose": 2.3,
+     "E2eScal.Gen2ComposeEx": 1.6
+    },
+    "module_times_note": "Lake 'Built' times of one build each (SegN n = 3: 9.1, 8.7, 8.7); shared machine",
+    "heartbeats": "bytesdec_seg 16000000 (= rootdec_seg), bytesdec_seg_z 4000000 (= rootdec_seg_z), the other new theorems 4000000 or the default; no raise beyond a model lemma"
+   },
+   "effort": "3 diagnostics (one a scratch typo), 4 attempts of which 1 failed (the literal form of the size under with_reducible; fixed with OfNat.ofNat n), about 330 gate-seconds",
+   "incident": "the first base build job was killed after about 10 s by the author's own watcher (its pattern matched its own command line); one partial .olean without a trace was moved out; the rerun built 19 modules, exit 0; E2eScal.P2EncCp was replayed, not rebuilt",
+   "not_run": [
+    "independent review",
+    "cold build from an empty .lake",
+    "the proof generator (unchanged; unit G2-G)",
+    "kindcheck.py for the new kinds (not extended in this unit)",
+    "link checks, Go differentials, Go tests, x86-64 hardware (no ELF or Go change)",
+    "profiling (no limit was raised)",
+    "a symbolic-size proof of L1"
+   ]
   }
  },
  "contamination": {
