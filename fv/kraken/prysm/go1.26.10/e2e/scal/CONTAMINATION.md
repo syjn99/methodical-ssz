@@ -109,3 +109,27 @@
 - 인코더(`MarshalSSZTo`)의 스택 검사는 `lea -0x8(%rsp),%r12; cmp 0x10(%r14),%r12; jbe` 꼴이다(T-9와 같다).
 - INBOX 023 3단계에 따라 시도하지 않았다. 예산은 사용자 결정을 기다린다.
 - 한계: `e1/link/norm`은 Lake `input_dir`가 아니다. lakefile 변경은 승인이 필요해서 하지 않았다.
+
+## 8. SG-1 확장 (두 홀드아웃을 연 뒤) — 개발 작업, 홀드아웃 아님
+
+- 언제: 2026-11-11, 기준 커밋 `48b74b6` 뒤. H1과 H2를 모두 연 뒤다.
+- 무엇: 출처 오프셋 0의 32바이트 디코드 구간을 생성기가 받게 했다.
+- 새 Lean 파일: `P2DecZ.lean`(템플릿 `rootDecMidZ`, 보조정리 `rootdec_seg_z`), `KindZ.lean`(종류 `rootDecSegZKind`).
+- `rootdec_seg_z`는 손 파일 `E1Seg0.lean`의 글을 일반화했다. 정의와 증명 글은 이름만 다르다.
+- `Kind.lean`, `P2Dec.lean`, 기존 정리의 문장은 바꾸지 않았다. `decl_drift`는 ADDED 19개만 보인다.
+- `scalgen.py p2dec`: 버퍼 다시 읽기 다음 지시어로 꼴을 고른다. 형 이름이나 필드 이름은 보지 않는다.
+- `add $X,%rbx`면 기존 꼴이다. `mov $0x20,%ecx`면 오프셋 0 꼴이다. 다른 것은 불일치다.
+- 필드 규칙: 필드마다 따로 맞춘다. 한 필드의 실패가 뒤 필드의 검사를 막지 않는다.
+- 출력은 완전하거나 없다. 일부만 맞으면 종료 코드 3이고 stdout은 비어 있다.
+- `--partial-out`을 주면 맞은 필드만 파일에 쓴다. 파일 머리에 `PARTIAL OUTPUT`과 빠진 필드를 적는다.
+- 어느 필드도 맞지 않거나 구간이 겹치면 종료 코드 2이고 아무것도 쓰지 않는다.
+- `kindcheck.py`: `rootDecSegZKind`(인자 8개)를 받는다. `KindZ.lean`이 고정 blob일 때만 받는다.
+- 오염: Eth1Data는 이 확장의 개발 자료다. 확장은 Eth1Data의 `.S`를 보고 만들었다.
+- 그래서 Eth1Data 결과는 홀드아웃 결과가 아니다. 새 홀드아웃 형은 정하지도 열지도 않았다.
+- 위 §4–§7의 H1, H2 결과는 확장 전의 결과다. 그대로 둔다.
+- 확장 전 기록: 고정 생성기(blob `78e3339`)의 Eth1Data 실행은 종료 코드 2, 0/2 필드다(`a9918d4`, 승인 `48b74b6`).
+- 이 기록은 역사적 부정 결과로 남는다. `gen/scal/p2dec_test.py`가 같은 결과를 다시 낸다.
+- 확장 뒤: 새 생성기는 Eth1Data에서 2/2 루트 필드를 낸다(`GenE1Dec.lean`, 손대지 않은 출력).
+- DepositCount의 인라인 읽기에는 여전히 템플릿이 없다.
+- 회귀: GenCi, GenVi, GenAdDec, GenCpDec, GenBhDec를 새 생성기로 다시 만들었다. 모두 바이트가 같다.
+- 시험: `scal/sg1-gen-test.json`(10/10), `scal/negative-sg1.json`(7/7). 일반화 주장은 이 시험의 범위만이다.

@@ -38,7 +38,8 @@ included `.S` by computation (`infix_sub` + `simp`, `Fk.label_at'`). A wrong par
   offset; finds the unique decode segment whose `len` store is at Go offset + 8; checks every template
   directive and that the pointer store is at the IR Go offset and the source offset is the IR SSZ offset;
   emits one segment theorem per field (proof = the `rootdec_seg` instance) and its `_kind` check.
-  A field whose code does not match (e.g. source offset 0, no `add`) stops with exit 2.
+  Frozen generator (blob `78e3339`): a field whose code does not match (e.g. source offset 0, no `add`) stops
+  the run with exit 2. That is the H2 record (historical, pre-extension). After the SG-1 extension see below.
 - No mode for the encode segment yet (one development instance only).
 
 Statement check (review fix-r1 M2, S1). Each generated theorem `t` is followed by
@@ -74,6 +75,29 @@ Generator changes before any hold-out input are in `prysm/go1.26.10/e2e/scal/CON
 AU-08 (commit `4581b8f`: the p2dec proof became the bare lemma instance; this checks the text after the colon
 only), review fix-r1 M2/S1/S2 (the `_kind` check above, `with_reducible`). G1 — the doc comment of a p2dec
 theorem was emitted before its `set_option … in` lines (Lean parse error, jobs 229/230); fixed by emitting it after.
+
+## SG-1 extension (after both hold-outs were opened; development, not hold-out)
+
+`scal/CONTAMINATION.md` §8. Eth1Data is development data for it. No new hold-out type is named or opened.
+
+- Lean: `P2DecZ.lean` — template `rootDecMidZ` (`rootDecMid` without `add $src,%rbx`, 11 directives) and
+  `rootdec_seg_z` (text of the hand `E1Seg0.rootdec_seg0`, names changed); `KindZ.lean` — kind
+  `rootDecSegZKind` (8 parameters) and `rootDecSegZKind_of`. `Kind.lean` and `P2Dec.lean` are unchanged.
+- `p2dec` form choice, generic: the directive after the buffer reload is `add $X,%rbx` (add form; X must be
+  the IR SSZ offset) or `mov $0x20,%ecx` (offset-0 form; the IR SSZ offset must be 0); anything else is no match.
+  The header imports `E2eScal.KindZ` only when an offset-0 segment is emitted.
+- Field rule: each field is matched on its own. Exit 0 = every field, whole file on stdout. Exit 3 = some
+  fields match: nothing on stdout, one line per field on stderr; `--partial-out FILE` writes the matched
+  fields under a `PARTIAL OUTPUT` header naming the missing ones. Exit 2 = no field matches, two fields claim
+  overlapping directives, or the IR read fails: nothing is written.
+- Output: `lean/E2eScal/GenE1Dec.lean` (raw, `gen.sh` last line), DepositRoot (offset-0) and BlockHash
+  (add form). `E1GenSame.lean` shows `rootDecMidZ = E1.rootDecMid0`, the same lemma statement (`rfl`), and
+  that the generated DepositRoot theorem gives the conclusion of the hand `rootdec_seg0`.
+- `kindcheck.py` accepts `@E2eScal.rootDecSegZKind h C n1 … n8` only with `KindZ.lean` at its pinned blob.
+- Tests: `p2dec_test.py` (old generator from its git blob still exits 2 with the recorded stderr; new
+  generator output = committed; 7 crafted `.S` mutants exit 2/3 with 0 bytes on stdout; partial file marked)
+  → `scal/sg1-gen-test.json`; negatives `negcases-sg1.json` → `scal/negative-sg1.json`.
+- Not covered: the inline DepositCount read, encode mode, loops, other compilers or flags.
 
 ## Evidence files
 

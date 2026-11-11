@@ -8,7 +8,9 @@ field offsets). Emits Lean text that applies the parameterized lemmas of `lean/E
   p1     the accept path of a uint64 primitive `UnmarshalSSZ` (`E2eScal.u64dec_accept`);
          emits the whole function theorem (P1 statement kind) for the code constant.
   p2dec  for every 32-byte `[]byte` field of a container decoder, the decode segment
-         (`E2eScal.rootdec_seg`) as a theorem about the function's code constant.
+         (`E2eScal.rootdec_seg`, or `E2eScal.rootdec_seg_z` for the offset-0 form: SG-1 extension after both
+         hold-outs were opened) as a theorem about the function's code constant. Field rule in `p2dec`:
+         output complete (exit 0) or absent (exit 3 some fields failed, exit 2 none matched or wrong).
 
 Statement check (audit AU-08, review fix-r1 M2 and S1): every emitted theorem `t` is followed by
 `t_kind : ∀ (h : Host), type_of% (@t h) = <kind> h <parameters>` proved by `with_reducible rfl`. The kind
@@ -30,7 +32,7 @@ compiler variation that the template does not cover is reported, not patched.
 Python 3 standard library only. Usage:
   scalgen.py p1 --S FILE --const LEAN_CONST --name THM [--same-as HAND_THM] --imports M1,M2 [--open NS]
   scalgen.py p2dec --S FILE --const LEAN_CONST --ir IR.json --type PKGSUFFIX.TYPE --prefix NAME
-                   --imports M1,M2 [--open NS]
+                   --imports M1,M2 [--open NS] [--partial-out FILE]
 """
 import argparse, hashlib, json, pathlib, re, sys
 
