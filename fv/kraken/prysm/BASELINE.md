@@ -63,12 +63,15 @@ Module path is `lean/<Namespace>/<Module>.lean`. Sources: `prysm/go1.26.10/e2e/e
 | BeaconBlockHeader.MarshalSSZTo | every growslice branch; three length rejects; morestack | N | — (X: 6 growslice + 6 reject differential cases, not the proved path) |
 | Eth1Data.UnmarshalSSZ | accept; size reject; spec | K (hand) | `E2eScal.E1.e1_e2e_accept_main`, `e1_e2e_reject_size_main`, `e1_e2e_accept_spec_k` |
 | Eth1Data.MarshalSSZTo | all paths | N (not attempted) | — |
+| BlobIdentifier.UnmarshalSSZ (hold-out H3) | accept; size reject; spec; reject_complete | K (BlockRoot segment generated, rest hand; review pending) | `E2eScal.Bi.bi_e2e_accept_main`, `bi_e2e_reject_size_main`, `bi_e2e_accept_spec_k`, `bi_e2e_reject_complete` |
+| DepositMessage.UnmarshalSSZ (hold-out H3) | accept; size reject; spec; reject_complete | K (WithdrawalCredentials segment generated, rest hand; review pending) | `E2eScal.Dm.dm_e2e_accept_main`, `dm_e2e_reject_size_main`, `dm_e2e_accept_spec_k`, `dm_e2e_reject_complete` |
+| BlobIdentifier, DepositMessage: MarshalSSZTo, SizeSSZ, HashTreeRoot | all paths | N (out of H3 scope) | — |
 | decoder `fmt.Errorf` wraps | unreachable_mc (conditional skip, not reject coverage) | K | `E2e.cp_e2e_epoch_err_unreachable`, `E2eAd.ad_e2e_*_err_unreachable` |
 | hand-written `primitives` methods | the other 23 methods | N | `prysm/FINDINGS.md` O2 |
 | runtime callees (makeslice, memmove, growslice, convT64, newobject, fmt.errorf) | contract bodies | N (hypotheses) | `CONTRACTS.md` |
 
 Every growslice branch except the Checkpoint ones above is NOT proved. No encoder is complete; there is no full coverage claim.
-Go-value checks: a Lean predicate exists for Checkpoint only (`E2e.GoVal`); BeaconBlockHeader, Eth1Data and AttestationData receivers have none (`REPORT.md` §11).
+Go-value checks: a Lean predicate exists for Checkpoint only (`E2e.GoVal`); BeaconBlockHeader, Eth1Data, AttestationData, BlobIdentifier and DepositMessage receivers have none (`REPORT.md` §11).
 No run on x86-64 hardware (`REPORT.md` §11 condition 3).
 
 ## 4. Method evidence (as recorded)
@@ -77,6 +80,7 @@ No run on x86-64 hardware (`REPORT.md` §11 condition 3).
 - H1 encoder: the BeaconBlockHeader fast path was not proved at H1 time; 9 attempts failed (3 in session 10, 6 in session 11) (`REPORT.md` §11, `prysm/FINDINGS.md` T-9).
 - H2 (historical, before SG-1): the frozen generator ran once on Eth1Data: exit 2, 0 bytes, 0 of 2 root fields (job 393; `scal/RESULT.json` `H2`, FINDINGS SG-1). The decoder was then proved by hand.
 - SG-1 extension: offset-0 template `rootdec_seg_z` and `scalgen.py p2dec` form, developed on Eth1Data after both hold-outs were opened. Eth1Data is in-sample and the hold-out is contaminated for it. Output 2 of 2 fields; no generalisation claim (`scal/RESULT.json` `units.sg1-extension`, `scal/CONTAMINATION.md` §8).
+- H3 (frozen method `dda707c`, opened in `782a41b`): one generator run per type, exit 0, raw output unedited; coverage 1/2 (BlobIdentifier) and 1/3 (DepositMessage) fields; the inline uint64 fields and the 48-byte PublicKey by hand (FINDINGS SG-2). Two types, one touch; no superiority, general-automation or speed-up claim (`scal/RESULT.json` `H3`, `scal/CONTAMINATION.md` §11). Independent review pending.
 - T-9: cause = the `simp` + `omega` proof of the large-frame guard branch fails in the kernel under the memory limit (4.88 GiB under `lean -M 5000`); the costly subterm was not profiled; the `2^64 − 32` literal is an inference. Fixed by the lemma `E2eScal.lea_cmp_be_false`; then 5 attempts, 2 failed (`scal/RESULT.json` T-9 unit).
 - AU-07 (open): `E2eScal.P2EncCp` (Checkpoint encode template) costs 986.0 s for one `lake env lean` (n = 1, review fix-r1), against 4.5 s for the hand proof. Three attempts (953–973 s `omega`) gave no speed-up; the slow call was not located (`e2e/opt1/AU-07.json`).
 - Witness-build measurement (AU-06, `e2e/opt1/AU-06.json`): four witness modules 1636.8 s → 165.3 s after the `wit_split_n` tactic.

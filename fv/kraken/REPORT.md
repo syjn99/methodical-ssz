@@ -21,6 +21,7 @@
 prysm-e2e 스트림은 11절이다. 확장성 홀드아웃 H1(ValidatorIndex, BeaconBlockHeader)과 H2(Eth1Data)의 결과는 `prysm/go1.26.10/e2e/scal/RESULT.json`에 있다(11절 끝 문단).
 H2에서 고정 생성기는 루트 필드 2개 중 0개를 덮었다(SG-1). 이것은 확장 전의 역사적 결과다. 디코더는 손으로 증명했다.
 SG-1 확장은 두 홀드아웃을 연 뒤의 개발 작업이다. 그 확장에서 Eth1Data는 표본 안 자료다(11절).
+홀드아웃 H3(BlobIdentifier, DepositMessage의 `UnmarshalSSZ`)의 결과는 `scal/RESULT.json`의 `H3`에 있다(11절).
 BeaconBlockHeader 인코더는 빠른 경로만 증명했다. `Eth1Data.MarshalSSZTo`는 증명하지 않았다(11절).
 
 수치(수정 3 끝, 차가운 프로젝트 빌드 뒤):
@@ -396,6 +397,20 @@ DepositCount의 인라인 읽기에는 여전히 템플릿이 없다.
 `kindcheck.py`는 `PARTIAL OUTPUT` 머리가 있는 파일을 거부한다(리뷰 sg1-r1 S2, 세션 15).
 기록: `scal/CONTAMINATION.md` 8절, `scal/RESULT.json`의 `sg1-extension`, FINDINGS SG-1.
 
+홀드아웃 H3(방법 고정 `dda707c`, 연 기록 커밋 `782a41b`, 2026-11-11T04:26:30Z):
+범위는 `v1alpha1.BlobIdentifier`와 `v1alpha1.DepositMessage`의 `UnmarshalSSZ`뿐이다. 두 형을 한 번 열었다.
+고정 생성기는 형마다 한 번 돌았다. 둘 다 종료 0이고 원 출력은 손대지 않았다.
+생성기 적용 범위는 필드 2개 중 1개(BlockRoot)와 필드 3개 중 1개(WithdrawalCredentials)다(FINDINGS SG-2).
+Index, Amount(인라인 uint64)와 48바이트 PublicKey는 손으로 증명했다. PublicKey 구간은 새 H3 모듈 `DmSeg0.lean`이다.
+커널 검사(표준 공리): 두 형의 수용 경로, 크기 거부, 독립 Desc와 검사기 Desc의 코덱 동등, 명세 정렬, `reject_complete`, 증인.
+수용 정리는 생성 구간 정리를 그대로 부른다. 증인 수신자 배치는 IR `go_fields`다. DepositMessage는 protoc가 아닌 Go 구조체다.
+실행 검사: 링크 검사 PASS(`h3/link/RESULT`), 부정 시험 33/33, Go 차분 12/12(arm64의 Go 의미, ELF 아님).
+공리 게이트 PASS(선언 3812개), `dda707c` 덤프 대비 선언 변동은 ADDED 329개뿐이다.
+증명하지 않은 것: morestack 경로, 런타임 호출 대상(계약 가설), 수신자의 Lean Go 값 술어, `UnmarshalSSZ` 밖의 모든 것.
+실행하지 않은 것: 콜드 빌드, `regen_check.sh`(생성기를 다시 돌린다), x86-64 하드웨어, H3의 독립 리뷰.
+H3의 한계: 두 형, 한 번이다. 이 두 형에 대한 전이의 증거일 뿐이다. 우월성, 일반 자동화, 인과적 속도 주장은 없다.
+기록: `scal/CONTAMINATION.md` 11절, `scal/RESULT.json`의 `H3`, FINDINGS SG-2.
+
 병합 검사(세션 15, 실행 검사; 병합 `63ef3b9` 위, gate와 6 GiB 상한 안):
 `lake build E2eScal` 종료 0(작업 435). `lake build --no-build E2e E2eAd E2eScal` 종료 0(작업 436, 493).
 공리 게이트 PASS: 선언 3483개, 정리 2923개, 비표준 공리 0, `sorryAx` 0(작업 437).
@@ -528,4 +543,12 @@ python3 -I -B fv/kraken/gen/e2e/bhmdiff.py check <c.json> <o.json> prysm/go1.26.
 python3 -I -B fv/kraken/gen/scal/kindcheck.py --selftest; python3 -I -B fv/kraken/gen/scal/kindcheck.py fv/kraken/lean/E2eScal/Gen*.lean
 python3 -I -B fv/kraken/gen/scal/p2dec_test.py <work> <result.json>   # 생성기 시험, gate 작업 하나
 python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/scal/negcases-sg1.json <work> prysm/go1.26.10/e2e/scal/negative-sg1.json <case-id>   # 사례마다 gate 작업 하나
+# H3 홀드아웃: 링크 표, 생성기 한 번(형마다), 모듈, 부정 시험, Go 차분
+python3 -I -B fv/kraken/gen/e2e/h3link.py callgraph <objdump> <out.json>; python3 -I -B fv/kraken/gen/e2e/h3link.py filter <out> <objdump> <elf> <nm>
+python3 -I -B fv/kraken/link/conv.py <out>/target.objdump <out>/p1bin-amd64.nm <out>/norm --norm; python3 -I -B fv/kraken/gen/e2e/h3link.py data <out> prysm/go1.26.10/e2e/link prysm/go1.26.10/e2e/ad/link; python3 -I -B fv/kraken/link/check.py <out>
+(cd fv/kraken && python3 -I gen/scal/scalgen.py p2dec --S prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S --const BiUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.BlobIdentifier --prefix bi_dec --imports E2eScal.P2Dec,E2eScal.P2DecZ,E2eScal.H3Code --open E2eScal.H3Code)   # DepositMessage: --const DmUnmarshal --type v1alpha1.DepositMessage --prefix dm_dec
+# 모듈: H3Code BiDesc DmDesc GenBiDec GenDmDec BiAccept BiReject BiSpec BiSpecK WitBiA WitBiR DmSeg0 DmAccept DmReject DmSpec DmSpecK WitDmA WitDmR (lake build E2eScal.<모듈>)
+python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/scal/negcases-h3.json <work> prysm/go1.26.10/e2e/scal/negative-h3.json <case-id>   # 사례마다 gate 작업 하나
+python3 -I -B fv/kraken/gen/e2e/h3diff.py cases <c.json>; go run -overlay <overlay.json> ./fve2e/h3check < <c.json> > <o.json>   # Prysm 임시 트리, Go 1.26.10; overlay가 h3/h3check-main.go.txt를 main.go로 준다
+python3 -I -B fv/kraken/gen/e2e/h3diff.py check <c.json> <o.json> prysm/go1.26.10/e2e/h3/differential.json
 ```
