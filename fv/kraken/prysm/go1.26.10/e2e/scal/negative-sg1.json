@@ -1,0 +1,308 @@
+{
+ "cases": [
+  {
+   "id": "sg1-gz-control",
+   "kind": "control",
+   "module": "E2eScal/GenE1Dec.lean",
+   "theorem": "e1_dec_DepositRoot_seg",
+   "range": [
+    21,
+    67
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.1,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "sg1-gz-extra-before",
+   "kind": "stmt",
+   "module": "E2eScal/GenE1Dec.lean",
+   "theorem": "e1_dec_DepositRoot_seg",
+   "range": [
+    19,
+    65
+   ],
+   "error_lines": [
+    65
+   ],
+   "first_error": "<work>/sg1-gz-extra-before/mut.lean:65:26: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig\n+++ mut\n@@ -1,4 +1,4 @@\n-theorem e1_dec_DepositRoot_seg (k : Nat) (hk : E1Unmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh E1Unmarshal k) :\n+theorem e1_dec_DepositRoot_seg (k : Nat) (hk : E1Unmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh E1Unmarshal k) (hextra : (1 : Nat) = 2) :\n     \u2200 (sp rcv bf aR aB aS aRet aLo aP aL aC : BitVec 64) (St : Nat)\n     (hR : sp + (48 : Int64).toBitVec = aR) (hB' : sp + (56 : Int64).toBitVec = aB)\n     (hS : sp + (24 : Int64).toBitVec = aS)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "sg1-gz-extra-after",
+   "kind": "stmt",
+   "module": "E2eScal/GenE1Dec.lean",
+   "theorem": "e1_dec_DepositRoot_seg",
+   "range": [
+    19,
+    65
+   ],
+   "error_lines": [
+    63,
+    65
+   ],
+   "first_error": "<work>/sg1-gz-extra-after/mut.lean:63:17: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig\n+++ mut\n@@ -18,7 +18,7 @@\n       \u22c6 Eq (vP.At aP) \u22c6 Eq (vL.At aL) \u22c6 Eq (vC.At aC)\n       \u22c6 Eq (root.At bf)\n       \u22c6 Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec) \u22c6 R)\n-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 St) (hmm : MemmoveC St),\n+    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 St) (hmm : MemmoveC St) (hextra : (1 : Nat) = 2),\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Host.addrOf (k + 26 + 11) \u2227 st.data.regs.rsp = { toBitVec := sp }\n         \u2227 st.data.regs.rbp = rbp0 \u2227 st.data.regs.r14 = r140 \u2227\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "sg1-gz-literal",
+   "kind": "stmt",
+   "module": "E2eScal/GenE1Dec.lean",
+   "theorem": "e1_dec_DepositRoot_seg",
+   "range": [
+    19,
+    65
+   ],
+   "error_lines": [
+    63,
+    65
+   ],
+   "first_error": "<work>/sg1-gz-literal/mut.lean:63:17: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig\n+++ mut\n@@ -30,7 +30,7 @@\n           \u22c6 Eq (lo'.At aLo)\n           \u22c6 Eq ((Int.toBytes 8 p.toInt).At aS)\n           \u22c6 Heap (avail - 32)\n-          \u22c6 Eq ((Int.toBytes 8 p.toInt).At aP) \u22c6 Eq ((Int.toBytes 8 32).At aL)\n+          \u22c6 Eq ((Int.toBytes 8 p.toInt).At aP) \u22c6 Eq ((Int.toBytes 8 33).At aL)\n           \u22c6 Eq ((Int.toBytes 8 32).At aC) \u22c6 Eq (root.At p)\n           \u22c6 Eq (root.At bf)\n           \u22c6 Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec) \u22c6 R) st.data.dmem)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "sg1-gz-index",
+   "kind": "stmt",
+   "module": "E2eScal/GenE1Dec.lean",
+   "theorem": "e1_dec_DepositRoot_seg",
+   "range": [
+    19,
+    65
+   ],
+   "error_lines": [
+    63,
+    65
+   ],
+   "first_error": "<work>/sg1-gz-index/mut.lean:63:17: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig\n+++ mut\n@@ -20,7 +20,7 @@\n       \u22c6 Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec) \u22c6 R)\n     (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 St) (hmm : MemmoveC St),\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Host.addrOf (k + 26 + 11) \u2227 st.data.regs.rsp = { toBitVec := sp }\n+      (fun st => st.pc = Host.addrOf (k + 26 + 12) \u2227 st.data.regs.rsp = { toBitVec := sp }\n         \u2227 st.data.regs.rbp = rbp0 \u2227 st.data.regs.r14 = r140 \u2227\n         \u2203 (p : BitVec 64) (spl' lo' : List UInt8), spl'.length = 24 \u2227 lo'.length = St\n           \u2227 st.data.regs.rdx.toBitVec = rcv \u2227\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "sg1-gz-kind-arg",
+   "kind": "stmt",
+   "module": "E2eScal/GenE1Dec.lean",
+   "theorem": "e1_dec_DepositRoot_seg",
+   "range": [
+    19,
+    65
+   ],
+   "error_lines": [
+    65
+   ],
+   "first_error": "<work>/sg1-gz-kind-arg/mut.lean:65:26: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig\n+++ mut\n@@ -43,5 +43,5 @@\n     (by simp only [E1Unmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)\n     (by simp only [E1Unmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)\n   with_reducible exact E2eScal.rootdec_seg_z _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA hB hl\n-theorem e1_dec_DepositRoot_seg_kind : \u2200 (h : Host), type_of% (@e1_dec_DepositRoot_seg h) = @E2eScal.rootDecSegZKind h E1Unmarshal 13 26 48 56 24 8 16 24 := by\n+theorem e1_dec_DepositRoot_seg_kind : \u2200 (h : Host), type_of% (@e1_dec_DepositRoot_seg h) = @E2eScal.rootDecSegZKind h E1Unmarshal 13 26 48 56 24 8 16 32 := by\n   intro h; with_reducible rfl",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "sg1-gz-code-dest",
+   "kind": "code",
+   "module": "E2eScal/GenE1Dec.lean",
+   "theorem": "e1_dec_DepositRoot_seg",
+   "range": [
+    21,
+    67
+   ],
+   "error_lines": [
+    61
+   ],
+   "first_error": "<work>/sg1-gz-code-dest/mut.lean:61:5: error: unsolved goals",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig.S\n+++ mut.S\n@@ -26,7 +26,7 @@\n   mov %rsi,0x8(%r11)\n L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75:\n   mov %rax,0x18(%rsp)\n-  mov %rax,0x8(%rdx)\n+  mov %rax,0x10(%rdx)\n   mov 0x38(%rsp),%rbx\n   mov $0x20,%ecx\n   callq runtime.memmove\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  }
+ ],
+ "pass": 7,
+ "total": 7,
+ "classes": {
+  "control_pass": 1,
+  "inside": 6
+ },
+ "case_timeout_s": 300,
+ "prechecks": [
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.E1Code",
+    "E2eScal.Kind",
+    "E2eScal.KindZ",
+    "E2eScal.P2Dec",
+    "E2eScal.P2DecZ"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "sg1-gz-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.E1Code",
+    "E2eScal.Kind",
+    "E2eScal.KindZ",
+    "E2eScal.P2Dec",
+    "E2eScal.P2DecZ"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "sg1-gz-extra-before"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.E1Code",
+    "E2eScal.Kind",
+    "E2eScal.KindZ",
+    "E2eScal.P2Dec",
+    "E2eScal.P2DecZ"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "sg1-gz-extra-after"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.E1Code",
+    "E2eScal.Kind",
+    "E2eScal.KindZ",
+    "E2eScal.P2Dec",
+    "E2eScal.P2DecZ"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "sg1-gz-literal"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.E1Code",
+    "E2eScal.Kind",
+    "E2eScal.KindZ",
+    "E2eScal.P2Dec",
+    "E2eScal.P2DecZ"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "sg1-gz-index"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.E1Code",
+    "E2eScal.Kind",
+    "E2eScal.KindZ",
+    "E2eScal.P2Dec",
+    "E2eScal.P2DecZ"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "sg1-gz-kind-arg"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.E1Code",
+    "E2eScal.Kind",
+    "E2eScal.KindZ",
+    "E2eScal.P2Dec",
+    "E2eScal.P2DecZ"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "sg1-gz-code-dest"
+   ]
+  }
+ ]
+}
