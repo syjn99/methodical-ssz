@@ -966,6 +966,181 @@
     "S5_contamination_jobs": "closed by a note: CONTAMINATION.md section 15 cites job numbers 01, 02, 05, 09, 11, 13 of the G2-F and G2-G sessions. Their gate logs are not in the repository. The numbers are labels only; the repository evidence is the committed output and the regen_check.sh result (CONTAMINATION.md section 17)"
    }
   },
+  "gen4-lemmas (GEN4 unit G4-L, fresh Fable session)": {
+   "what": "GEN4 unit G4-L: variation-insensitive segment mechanisms in new Lean modules (window code view that skips padding nops; per-instruction step lemmas with kinds; call block over a window; byte segment over windows with receiver registers as parameters; frame-parametric prologue / return); survey of the 10 development decoders; examples; the two H5 accept theorems re-derived. Development data only (in-sample); no generator change; no transfer claim",
+   "base": "1fec11e",
+   "author": "fresh Fable 5.2 session (direct author)",
+   "state": "not yet reviewed",
+   "survey": {
+    "file": "scal/gen4-survey.md",
+    "types": 10,
+    "nop_sites": 46,
+    "nop_sites_on_accept_paths": "head index 8 (10), before a callee callq (2), after a callee callq (1), before callq runtime.makeslice (2), in a byte tail (2)",
+    "receiver_registers": [
+     "rdx",
+     "rax"
+    ],
+    "setup_sequences_distinct": 19,
+    "callee_calls": 13,
+    "makeslice_calls": 15,
+    "memmove_calls": 15
+   },
+   "L1": {
+    "design": "window: q.IsInfixAt prog j, eraseNop q = template, j + q.length = e; positions kept in a statement by nopPos equations; no pad flag, no position parameter",
+    "modules": [
+     "NopView",
+     "CallReg",
+     "SegReg",
+     "SegRegZ",
+     "KindSegReg"
+    ],
+    "proved": true,
+    "sites_covered": "3/3 observed accept-path forms inside blocks (before makeslice, after a callee call, set-up pad) + byte-tail and head nops through the same windows",
+    "general_transfer_theorem": "none (not sound: callq pushes the address of the next directive, the nop in the real program)",
+    "gen3_pad_lemmas": "instances (bytesdec_seg_p, calldec_seg, bytesdec_seg, bytesdec_seg_z, H4.bytes32dec_seg_nop, H5.bytes32dec_seg_rax, H5.calldec_nop_seg re-proved with their committed statements from the window lemmas); the pad set-up lemmas callarg_first_seg / callarg_reload_seg re-proved from steps"
+   },
+   "L2": {
+    "modules": [
+     "StepK",
+     "KindStep"
+    ],
+    "step_lemmas": 10,
+    "step_lemma_names": [
+     "kstep_nops",
+     "kstep_label",
+     "kstep_jmp",
+     "kstep_mov_rr",
+     "kstep_ldb",
+     "kstep_ldv",
+     "kstep_st",
+     "kstep_lea",
+     "kstep_add",
+     "kstep_movi"
+    ],
+    "extra_step": "kstep_nilchk (HeadN)",
+    "proved": true,
+    "registers": "parameters, all 16 (proof without case split)",
+    "register_parametric_blocks": [
+     "bytesdec_seg_g4 n rX rY (rX in {rdx, rsi}, rY in {rax, rcx, rdx, rsi, rdi}, n in {32, 48, 96})",
+     "bytesdec_seg_z_g4 (offset-0 form, same sets)",
+     "calldec_seg_w (entry registers fixed by the Go ABI of U64CalleeAcc; window only)"
+    ],
+    "setup_templates_rederived": [
+     "callarg_first_seg",
+     "callarg_reload_seg",
+     "callarg_lea_seg",
+     "callarg_mov_seg",
+     "H5.sm_vi_arg",
+     "u64dec_rr_seg at r8"
+    ]
+   },
+   "L3": {
+    "examples_module": "Gen4Examples",
+    "kinded_theorems": 45,
+    "worked_compositions": [
+     "sm_g4_ValidatorIndex_field",
+     "pc_g4_TargetIndex_field",
+     "sm_g4_BlockRoot_field"
+    ],
+    "instances": "7/7 (SyncCommitteeMessage.BlockRoot, .ValidatorIndex, .Signature; PendingConsolidation.TargetIndex; Deposit_Data.WithdrawalCredentials; one GEN3 set-up site per form: Checkpoint.Epoch, BeaconBlockHeader.ProposerIndex, PendingPartialWithdrawal.WithdrawableEpoch)",
+    "sm_accept_g4": true,
+    "pc_accept_g4": true,
+    "statements_unchanged": "H5.sm_accept_stmt, H5.pc_accept_stmt (theorem types are the abbrevs)",
+    "h5_local_lemmas_unused": true,
+    "dependency_check": "G4DepCheck.lean (executed walk of the proof terms; controls: the H5 proofs reach the hand lemmas)",
+    "sm_accept_lines": {
+     "proof_g4": 154,
+     "proof_h5": 190,
+     "module_g4": 197,
+     "sm_step_segment_field_theorems_with_statements_and_kind_lines": 371
+    },
+    "sm_accept_time_s": [
+     5.8,
+     5.8
+    ],
+    "sm_accept_time_h5_s": 7.9,
+    "pc_accept_lines": {
+     "proof_g4": 53,
+     "proof_h5": 71
+    },
+    "pc_accept_time_s": [
+     1.2,
+     1.2
+    ]
+   },
+   "L4": {
+    "attempted": true,
+    "modules": [
+     "HeadN",
+     "HeadRel"
+    ],
+    "result": "proved: decpro_seg (frame size, spill displacement, SSZ size symbolic; window), decret_seg, kstep_nilchk; H5.sm_head0, H5.pc_head, H4.pw_head, Bh.bh_head0, H5.pc_epi, H4.pw_epi, H5.sm_spill2, Bh.bh_spill2 re-proved with their committed statements"
+   },
+   "honest_outcome_clause": {
+    "triggered": false,
+    "measure": "sm_e2e_accept_g4 154 proof lines (limit 400); largest module SegReg 25 s (limit 120 s)",
+    "widest_reading": "accept proof + every SyncCommitteeMessage step / segment / field theorem with statements and kind lines = 525 lines; stated for the reviewer"
+   },
+   "counting_rule": "non-blank lines that are not comment lines, one declaration (g2g rule); example theorems: non-blank lines from `theorem` to the next declaration",
+   "negatives": {
+    "cases": "scal/negcases-gen4.json",
+    "result": "scal/negative-gen4.json",
+    "counted": "40/41",
+    "classes": {
+     "control_pass": 12,
+     "inside": 28,
+     "timeout_heartbeat": 1
+    },
+    "not_counted": "g4-sk-st-stmt-src (wrong source register in the statement of kstep_st): heartbeat timeout, not a pass",
+    "kinds": {
+     "stmt": 24,
+     "code": 5,
+     "control": 12
+    }
+   },
+   "axioms": "axioms gate PASS, 6722 declarations, nonstandard 0, sorryAx 0 (scratch JSON; committed axioms-gate.json and AxiomsScal.lean not changed)",
+   "drift": "against the h5-r1 dump (5841 rows, equal to the committed axioms-gate.json count): ADDED 881, CHANGED 0, REMOVED 0; planted control (weakened statement + sorry in G4Rel): gate FAIL exit 1 (sorryAx), drift 1 CHANGED + 1 ADDED; file restored byte-equal and rebuilt",
+   "no_build": "lake build --no-build E2e E2eAd E2eScal exit 0 (1088 jobs) at the end",
+   "module_times_s": {
+    "NopView": 0.9,
+    "StepK": 0.7,
+    "KindStep": 0.6,
+    "CallReg": 1.0,
+    "SegReg": 25,
+    "SegRegZ": 23,
+    "KindSegReg": 0.6,
+    "G4Rel": 1.0,
+    "Gen4Examples": 2.7,
+    "SmAcceptG4": 5.8,
+    "PcAcceptG4": 1.2,
+    "G4DepCheck": 2.1,
+    "HeadN": 1.1,
+    "HeadRel": 1.5
+   },
+   "effort": {
+    "diagnostics": "5 of 8",
+    "attempts": "14 of 16 (4 failed: hypothesis argument elaborated before the state was known; two failures of the final ecancel of the byte-field example (BitVec.toInt width form, found by a reproduction); the dependency walker did not read theorem values)",
+    "bounds_hit": []
+   },
+   "not_done": [
+    "generator side (--gen4, unit G4-G)",
+    "composed-statement kind for types with callee fields",
+    "kind for the worked field compositions",
+    "test %al,(%rax) outside heads",
+    "register sets beyond rX in {rdx, rsi}, rY in {rax, rcx, rdx, rsi, rdi}",
+    "pointer-field callees (CpUAccC form)",
+    "write-barrier, morestack and callee error paths (unchanged)"
+   ],
+   "not_run": [
+    "cold build",
+    "generator",
+    "kindcheck",
+    "regen_check.sh",
+    "link / Go / hardware checks",
+    "independent review"
+   ],
+   "wording": "in-sample only; the mechanisms are not shown to transfer; H6 measures that"
+  },
   "gen3-lemmas (GEN3 unit G3-L, fresh Fable session)": {
    "state": "not yet reviewed",
    "base": "6a78c591e8bcd698b7b9313b1c09cb25f3986911",
