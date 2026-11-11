@@ -96,3 +96,10 @@ step	utc	exit	log	command
 93-negative-r1	2026-11-11T18:23:49Z	0	logs/93-negative-r1.log	heavy.py -- python3 -I -B ../gen/e2e/lvnegative.py ../prysm/go1.26.10/e2e/lv/negcases-lv.json <work>/neg <work>/neg-result-r1.json lv-sa-desc-kind lv-sc-desc-kind (8.3 s wall, peak sampled RSS 0.67 GiB)
 94-negative-all	2026-11-11T18:24:05Z	1	logs/94-negative-all.log	heavy.py -- python3 -I -B ../gen/e2e/lvnegative.py ../prysm/go1.26.10/e2e/lv/negcases-lv.json <work>/neg <work>/neg-result-r1.json (120.0 s wall, peak sampled RSS 0.67 GiB)
 95-axgate-r1	2026-11-11T18:26:13Z	0	logs/95-axgate-r1.log	heavy.py -- python3 -I -B ../gen/e2e/lvaxioms_gate.py run <work>/axgate-r1.json <work>/axgate-r1-dump.tsv (95.1 s wall, peak sampled RSS 4.27 GiB)
+96-WitSaA-r2	2026-11-11T19:28:47Z	0	logs/96-WitSaA-r2.log	heavy.py -- lake build E2eList.WitSaA (17.7 s wall, peak sampled RSS 2.04 GiB)
+97-WitScA-r2	2026-11-11T19:29:07Z	0	logs/97-WitScA-r2.log	heavy.py -- lake build E2eList.WitScA (18.8 s wall, peak sampled RSS 2.06 GiB)
+98-build-E2eList	2026-11-11T19:29:47Z	0	logs/98-build-E2eList.log	heavy.py -- lake build E2eList (19.9 s wall, peak sampled RSS 3.43 GiB)
+99-nobuild	2026-11-11T19:30:10Z	0	logs/99-nobuild.log	heavy.py -- lake build --no-build E2e E2eAd E2eScal E2eList (2.1 s wall, peak sampled RSS 0.65 GiB)
+100-axgate-r2	2026-11-11T19:30:24Z	0	logs/100-axgate-r2.log	heavy.py -- python3 -I -B ../gen/e2e/lvaxioms_gate.py run <work>/axgate-r2.json <work>/axgate-r2-dump.tsv (95.1 s wall, peak sampled RSS 4.27 GiB)
+101-head-dump-r2	2026-11-11T19:32:01Z	0	logs/101-head-dump-r2.log	heavy.py -- sh -c lake env lean --run ../../../.claude/skills/maintaining-methodical-fv/scripts/decl_dump.lean --root E2e --root E2eAd --root E2eScal <214 modules> > <work>/head-dump-r2.tsv (84.7 s wall, peak sampled RSS 4.24 GiB)
+102-drift-r2	2026-11-11T19:33Z (approx.)	0	logs/102-drift-r2.log	decl_drift.py base-dump head-dump-r2 (roots E2e,E2eAd,E2eScal): SUMMARY base=5007 head=5007 drift=0

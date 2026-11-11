@@ -181,7 +181,8 @@
 - `WitSaA.lean:26`의 줄을 지웠다. 로그 86: `lake build E2eList.WitSaA` exit 0.
 - `WitScA.lean:27`의 줄을 지우고 빌드했다. 로그 87: exit 1. 오류 4개는 모두 `maximum recursion depth has been reached`이고 첫 `example`(125행)과 셋째 `example`(131행)의 `by simp`에 있다. `sc_accept_runs`와 둘째 `example`은 통과했다.
 - 원인: `List.replicate 512 …`(512개 원소 목록)의 길이와 원소 길이를 `simp`로 보일 때 기본 재귀 한도를 넘는다.
-- 조치: `set_option maxRecDepth 100000 in`을 그 두 `example`에만 둔다. 파일 `E2eList/WitScA.lean`, 127행과 134행, 값 100000. 이전 값은 기본값이다. 로그 88은 docstring 앞뒤 순서 때문에 구문 오류(wrong-target)였다. 로그 89에서 exit 0.
+- 조치(r1): `set_option maxRecDepth 100000 in`을 그 두 `example`에만 두었다. 파일 `E2eList/WitScA.lean`, 126행과 134행(r1에 "127행"이라 쓴 것은 틀렸다), 값 100000. 로그 88은 docstring 앞뒤 순서 때문에 구문 오류(wrong-target)였다. 로그 89에서 exit 0.
+- 이 조치는 리뷰 r2 M1에서 바뀌었다. 아래 "리뷰 r2 수정"을 본다. 지금 `E2eList`에는 `maxRecDepth` 설정이 없다.
 
 ### S5: `lakefile.toml`
 
@@ -198,3 +199,29 @@
 
 - 공리 게이트(로그 95): PASS, 선언 5632, 정리 4684, 손 목록 462, 비표준 0, `sorryAx` 0. 결과 `lv/axioms-gate-lv-r1.json`. 이름 집합은 로그 69와 같다.
 - `STEPS.tsv`의 71, 76번 줄에 있던 작업 디렉터리 경로를 `<scratch base copy>`로 바꿨다(S1).
+
+## 리뷰 r2 수정 (`d169e4b` 리뷰)
+
+### M1: `maxRecDepth` 제거
+
+- `WitScA.lean`의 `set_option maxRecDepth 100000 in` 두 줄(126행, 134행)과 그 원인 주석을 지웠다.
+- 첫째와 셋째 `example`의 `(by simp) (by simp)`를 항 증명으로 바꿨다: `List.length_replicate`와 `fun e he => by rw [List.eq_of_mem_replicate he]; exact List.length_replicate`. 리뷰어가 쓴 변형과 같은 생각이다.
+- 시도 1(로그 97): `lake build E2eList.WitScA` exit 0. `E2eList/*.lean`에 `maxRecDepth`가 없다(`grep`, 결과 0).
+
+### S5: 빈 줄
+
+- `WitSaA.lean`, `WitScA.lean`의 `namespace` 뒤 겹친 빈 줄을 하나로 줄였다.
+
+### S1: `maxHeartbeats` 문턱값
+
+- 리뷰어가 잰 값(리뷰 r2, 리뷰어 실행): `WitSaA.sa_accept_runs`는 200000과 400000에서 `whnf` 실패, 1000000에서 통과. `WitScA.sc_accept_runs`는 200000, 400000, 1000000에서 실패, 2000000에서 통과.
+- 값을 낮췄다: `WitSaA` 16000000 → 2000000, `WitScA` 16000000 → 4000000(리뷰어 통과 값의 두 배). 두 값은 이 작업자의 빌드에서 통과했다(로그 96, 97, 98).
+- 이 작업자는 문턱값 자체를 다시 재지 않았다. 문턱값은 리뷰어가 잰 값이다. 두 파일의 설정 옆 주석에 같은 내용을 적었다.
+
+### 다시 돌린 검사
+
+- 로그 98: `lake build E2eList` exit 0, 683 jobs, 벽시계 19.9 s(WitSaA 13 s, WitScA 17 s).
+- 로그 99: `lake build --no-build E2e E2eAd E2eScal E2eList` exit 0, 1036 jobs up to date.
+- 로그 100: 공리 게이트 PASS, 선언 5632, 정리 4684, 손 목록 462, 비표준 0, `sorryAx` 0. 결과 `lv/axioms-gate-lv-r2.json`. 게이트 덤프는 r1 덤프(로그 95)와 바이트가 같다(`cmp`).
+- 로그 101–102: 기준 roots(E2e, E2eAd, E2eScal)의 현재 덤프는 리뷰 전 덤프(로그 73)와 바이트가 같다(`cmp`). `decl_drift.py` 기준 대 현재: exit 0, `SUMMARY base=5007 head=5007 drift=0 allowed=0`.
+- 바뀐 것은 `example`과 설정과 주석뿐이다. `example`은 선언을 만들지 않는다. 그래서 덤프가 같은 것은 기대와 맞다.
