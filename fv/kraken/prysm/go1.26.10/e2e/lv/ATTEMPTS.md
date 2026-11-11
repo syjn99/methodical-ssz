@@ -87,3 +87,30 @@
 - 원인: 메모리 전제를 닫는 `simp`가 조각 22개짜리 분리 논리식을 `sep_comm`, `sep_comm_l`로 정렬한다.
 - 조치: `set_option maxHeartbeats 16000000 in`을 `sa_accept_runs` 한 선언에만 둔다. 값은 본 증인 `WitDdA.dd_accept_runs`와 같다. 이전 값은 기본 200000이다.
 - 시도 2(로그 28): exit 0. 입력 셋(0, 대표값, 0xff)에 대한 `example` 셋도 통과했다.
+
+### 시도의 셈 (판단)
+
+- 한 시도는 한 증명 전략이다. 같은 전략 안에서 오류 메시지를 보고 고친 빌드는 같은 시도의 개발 단계로 센다.
+- 그래서 빌드 로그 수와 시도 수는 다르다. 모든 빌드는 `STEPS.tsv`에 있다.
+- 증명 중간 목표를 볼 때 `sorry`를 쓰지 않았다. 증명을 덜 끝낸 채 빌드하고 오류의 미해결 목표를 읽었다.
+
+### T2 루프 보조 `E2eList.ScLemmas`
+
+- 로그 29–31: exit 1, 1, 0. 원인 1: `⋆`는 왼쪽 결합이라 `sep_assoc` 정리가 끝에 필요했다. 원인 2: `simp`가 `take ++ getElem :: drop`을 다시 `pks`로 접었다. `rw [List.flatten_append, List.flatten_cons]`로 바꿨다.
+
+### T2 한 바퀴 `sc_iter`와 루프 `sc_loop`, `sc_exit` (시도 1)
+
+- 로그 32–40: 한 전략(불변식 `ScInv i`, DESIGN 4.1)의 개발 단계다. 로그 40에서 `sc_iter`가 exit 0이 됐다.
+- 막힌 곳 1(로그 35–36): memmove 전제의 `ecancel` 실패. 원인: `pks[i]`의 경계 증명 항이 두 곳에서 구문이 달랐다. `generalize hE : pks[i] = e`로 고쳤다.
+- 막힌 곳 2(로그 38–39): 경계 검사 가지. `Int.ofBytes (Int.toBytes 8 512) = 512`를 `decide`로 넣고 `omega`로 닫았다.
+- `runtime.panicBounds` 가지(지시어 63 `jae`)는 매 바퀴 증명으로 막았다. 전제로 막지 않았다(판정 7).
+- 로그 41–42: `sc_exit`, `sc_loop`(j에 대한 귀납). `eventually_mono` 이름이 없어서 `eventually_trans`와 `Eventually.done`으로 바꿨다. exit 0.
+- 설정(`maxHeartbeats`, `maxRecDepth`) 없이 통과했다.
+
+### T2 수용 `sc_e2e_accept_main : sc_accept_stmt` (시도 1)
+
+- 로그 43: `sc_agg_seg`(크기 48을 글자로 쓴 `bytesdec_seg 48` 감쌈, src 24576). exit 0.
+- 로그 44–52: 머리(손 단계), 루프, AggregatePubkey, 포인터 꼬리, 꼬리(손 단계)의 개발 단계다. 로그 52에서 exit 0.
+- 막힌 곳: `bv_omega`/`kaddr`가 `Width.W64.bits`를 풀지 못했다. `Width.bits`를 넣은 `laddr` 매크로를 썼다.
+- 막힌 곳: `MakesliceC`의 `rbx ≤ cnt`에 `decide`를 쓰면 기대형에 자유 변수가 있다고 거부된다. `Nat.le_refl _`로 닫았다.
+- 설정 없이 통과했다. `#print axioms`(로그 53): `sc_iter`, `sc_loop`, `sc_e2e_accept_main` 모두 `[propext, Classical.choice, Quot.sound]`.
