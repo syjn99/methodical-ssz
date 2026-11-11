@@ -115,6 +115,15 @@ Checks, per file (text only):
     6d. Review g3g-r1 for_h5 (unit G4-G): a composed accept theorem with only the kind `decAcceptKind` (no
     identity `_type` with an independent hand statement) FAILS; `scalgen.py --gen3 --compose` without `--same-as*`
     now also marks it `UNCHECKED STATEMENT` (rule 6c).
+12. GEN5 (unit G5-G, `scalgen.py p2dec --gen5`): a GEN5 file is checked in two parts. The text before the GEN5
+    block (`/-! GEN5 (`p2dec --gen5`…`) by rules 1-11 as a GEN4 file; the GEN5 part by rule 12 (12a pins GEN5_PINS of
+    the G5-L kind / lemma modules; 12b the exact theorem list with the kinds decHeadKindN / decFieldKindN / decEpiKindN /
+    decAcceptKindN / decRejectKindN; 12c the kind parameters `L`, `fields`, boundary `pc` / `done` and the reject size
+    RECOMPUTED from the `.S` and the IR named in the header (sha256 checked); 12d the accept proof chains every
+    theorem; 12e the identity with a hand statement, if any, names no generated theorem). See the section `Rule 12`.
+    A file with a GEN5 kind and no GEN5 block fails (rule 12: 0 GEN5 blocks). `--partial` never accepts a GEN5 file.
+    The hand example modules `Gen5Ex*.lean` of the lemma unit are not generator output; they fail rule 12 (no GEN5
+    block) and no recorded command runs `kindcheck.py` on them.
 
 Limits (not checked here): GEN4 label strings in `stepLabelKind`, `stepJmpKind` and `callDecSegKindG4` (`lok`) are
 phantom kind parameters (review g4l-r1: they do not occur in the kind body; `stepLabelKind C l j e` is
@@ -578,7 +587,19 @@ def main(files, partial=False):
     for f in files:
         text = pathlib.Path(f).read_text()
         hand = pathlib.Path(f).resolve() in {(KR / x).resolve() for x in HAND_EXAMPLES}
-        errs, mains = check_text(text, kb, kzb, g2b, gn, partial, g3b, g4b, rule11=not hand)
+        g5 = G5_MARK in text or "GEN5-JSON" in text or any(f"@E2eScal.{k} " in text for k in (
+            "decHeadKindN", "decFieldKindN", "decEpiKindN", "decAcceptKindN", "decRejectKindN"))
+        if g5 and not partial:
+            # rule 12 (unit G5-G): the GEN4 part by rules 1-11, the GEN5 part by rule 12
+            part4 = text.split(G5_MARK, 1)[0] if text.count(G5_MARK) == 1 else text
+            errs, mains = check_text(part4, kb, kzb, g2b, gn, partial, g3b, g4b, rule11=not hand)
+            e5, info5 = check_gen5(text, g5_blobs_tree(), gn)
+            errs = errs + e5
+            mains = mains + [info5]
+        elif g5:
+            errs, mains = ["GEN5 output in --partial mode (a GEN5 file is never partial)"], []
+        else:
+            errs, mains = check_text(text, kb, kzb, g2b, gn, partial, g3b, g4b, rule11=not hand)
         print(("PASS" if not errs else "FAIL"), f, "theorems:", ",".join(mains))
         if hand:
             print("   hand example module (HAND_EXAMPLES): rule 11 not applied")
@@ -697,7 +718,11 @@ def selftest():
     n_exit += 3
     if not e_on or e_off or not e_sorry:
         bad.append(("g4f_rule11_exemption", e_on, e_off, e_sorry))
-    print("selftest", "PASS" if not bad else f"FAIL {bad}", f"({len(cases)} cases + {n_exit} exit-code cases)")
+    # unit G5-G: rule 12
+    n5, bad5 = g5_selftest()
+    n_exit += n5
+    bad += bad5
+    print("selftest", "PASS" if not bad else f"FAIL {bad}", f"({len(cases)} cases + {n_exit} exit-code / rule-12 cases)")
     return 1 if bad else 0
 
 
@@ -1156,6 +1181,574 @@ def s4_exit_cases():
         if rc != want:
             out.append((name, f"exit {rc}, expected {want}"))
     return 4, out
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# Rule 12 (unit G5-G, `scalgen.py p2dec --gen5`). A GEN5 file is a GEN4 file (checked by rules 1-11 up to the GEN5
+# block) followed by one block `/-! GEN5 (`p2dec --gen5` … GEN5-JSON: {…} -/` and the GEN5 theorems:
+#  12a. the kind and lemma modules of the G5-L hand-over have the pinned blobs GEN5_PINS;
+#  12b. the GEN5 theorems are exactly, in this order: P_head, P_f1 … P_fn, P_epi, P_accept, [P_accept_stmt |
+#       P_accept_same], P_reject (P = the GEN5-JSON prefix, n = the IR field count), each but the identity followed by
+#       its `_kind` theorem `theorem T_kind : ∀ (h : Host), type_of% (@T h)` / `    = @E2eScal.K h C …` with
+#       K = decHeadKindN / decFieldKindN / decEpiKindN / decAcceptKindN / decRejectKindN and the proof line
+#       `  intro h; rfl` (`  intro h; with_reducible rfl` for the reject kind); every `hk` binder names C;
+#  12c. the kind parameters are RECOMPUTED here, independently of the generator, from the `.S` file and the IR JSON
+#       named (with sha256) in the file header: the field list (`.bytes n` / `.u64`, IR order, IR SSZ / Go offsets
+#       equal to the kind's running sums), the layout `L` (callees in order of first `callq`, stack chunks, lengths,
+#       runtime configuration, guard addend, state word, post-state slots and existentials, frame) by the rules of the
+#       G5-L hand-over, the `pc` and `done` of every boundary state (head end, the end of each field event along the
+#       accept path), and the reject size; a file whose kind parameters differ FAILS. This is the statement check of
+#       a generated accept theorem when no hand statement exists;
+#  12d. the accept proof chains P_head, every P_f<i> and P_epi;
+#  12e. an identity `P_accept_stmt : X := P_accept` or `P_accept_same : … type_of% (@P_accept h) = type_of% (@X h)`
+#       names a hand statement X (not generated, rule 6b); without it the PASS line says "kind instance only".
+# Not checked here: the register facts, stack slots and existentials of the boundary states (the kernel checks that
+# they chain); that the file builds; that X is independent of the generator (a human confirms it).
+GEN5_PINS = {
+    "KindAcceptN.lean": "3c1c21d30367cacb2b6ff9d17e81429f6bb7823b",
+    "AcceptTies.lean": "e8e244813aa205c88bfd74987201d0d345dec4b8",
+    "FieldComp.lean": "379d395ba0e892a30cab26e5014fb2150a59475d",
+    "RejectN.lean": "b4babb15a4904cdf4fa1fc80499d9ec1fb993983",
+    "RejectTies.lean": "7f8e3e4311510a57bba24ea3f13f4306e39f305b",
+}
+G5_MARK = "/-! GEN5 (`p2dec --gen5`"
+G5_PRIM = "github.com_OffchainLabs_prysm_v7_consensus_types_primitives."
+G5_CONST = {"Slot": "E2eAd.Code.SlUnmarshal", "CommitteeIndex": "E2eAd.Code.CiUnmarshal",
+            "ValidatorIndex": "E2eScal.BhCode.ViUnmarshal", "Epoch": "E2e.Code.EpUnmarshal"}
+G5_HDR = re.compile(r"Generated by `gen/scal/scalgen\.py p2dec` from `([^`]+)`\n\(sha256 `([0-9a-f]{64})`\) and `([^`]+)` "
+                    r"\(sha256 `([0-9a-f]{64})`, type `([^`]+)`\)")
+
+
+class G5Mismatch(Exception):
+    pass
+
+
+def g5_ir(ir_text, tname):
+    """(fields, ssz size) from the IR JSON: fields = [(name, '.bytes n' | '.u64', callee or None, ssz off, go off)]."""
+    import json
+    pkg, name = tname.rsplit(".", 1)
+    ts = [t for c in json.loads(ir_text)["configs"] for t in c.get("types", [])
+          if t.get("name") == name and t.get("package", "").endswith("/" + pkg)]
+    if len(ts) != 1:
+        raise G5Mismatch(f"type {tname}: {len(ts)} IR entries")
+    t = ts[0]
+    goff = {f["name"]: f["offset_gc_amd64"] for f in t["go_fields"]}
+    out, so = [], 0
+    for f in t["ir"]["fields"]:
+        v = f["v"]
+        if v.get("k") == "vector" and v.get("elem", {}).get("k") == "byte" and v.get("go_type") == "[]byte" \
+                and v.get("size") in (32, 48, 96) and v.get("fixed_size") == v.get("size") and not v.get("variable"):
+            kd, cal = f".bytes {v['size']}", None
+        elif v.get("k") == "uint" and v.get("bits") == 64 and v.get("go_type") == "uint64" and v.get("fixed_size") == 8:
+            kd, cal = ".u64", None
+        elif v.get("k") == "overlay" and v.get("fixed_size") == 8 and (v.get("deleg") or {}).get("unmarshaler") \
+                and v.get("name") in G5_CONST and v.get("pkg", "").endswith("/consensus-types/primitives") \
+                and (v.get("underlying") or {}).get("k") == "uint" and (v.get("underlying") or {}).get("bits") == 64:
+            kd, cal = ".u64", v["name"]
+        else:
+            raise G5Mismatch(f"field {f['key']}: IR kind {v.get('k')} ({v.get('go_type')}) is not a GEN5 field kind")
+        out.append((f["key"], kd, cal, so, goff.get(f["key"])))
+        so += v["fixed_size"]
+    if t["ir"].get("fixed_size") != so:
+        raise G5Mismatch(f"IR fixed size {t['ir'].get('fixed_size')} != sum of field sizes {so}")
+    return out, so
+
+
+def g5_expect(dirs, fields, sz):
+    """Independent recomputation of the GEN5 kind parameters from the directives (`.S`, nonblank lines stripped)
+    and the IR fields. Returns dict(L=text, fields=text, pcs=[pc_0 … pc_n], sz)."""
+    lab = lambda d: d[:-1] if d.endswith(":") and " " not in d else None
+    idx = {lab(d): i for i, d in enumerate(dirs) if lab(d)}
+    m = re.fullmatch(r"sub \$(0x[0-9a-f]+),%rsp", dirs[6]) if len(dirs) > 11 else None
+    if not m or dirs[9] != f"cmp ${sz:#x},%rcx" or not dirs[10].startswith("jne "):
+        raise G5Mismatch("head: directive 6 is not `sub $F,%rsp` or directive 9 is not `cmp $size,%rcx`")
+    F = int(m.group(1), 16)
+    frame = F + 8
+    st = fields[0][4] == 8
+    so, go = 0, 8 if st else 0
+    for (n_, kd, cal, s_, g_) in fields:
+        if s_ != so or g_ != go:
+            raise G5Mismatch(f"field {n_}: IR SSZ / Go offsets {s_} / {g_}, kind running sums {so} / {go}")
+        so += int(kd.split()[1]) if kd.startswith(".bytes") else 8
+        go += 24 if kd.startswith(".bytes") else 8
+    home = {"rax": 8, "rbx": 16, "rdi": 32}
+    spills = {16: "rbx"}
+    i = 11
+    while (mm := re.fullmatch(r"mov %(rax|rbx|rdi),(0x[0-9a-f]+)\(%rsp\)", dirs[i])):
+        if int(mm.group(2), 16) - frame != home[mm.group(1)]:
+            raise G5Mismatch(f"head: spill `{dirs[i]}` not to the home slot")
+        spills[home[mm.group(1)]] = mm.group(1)
+        i += 1
+    if dirs[i] == "test %al,(%rax)":
+        i += 1
+    pcs = [i]
+    # the accept path
+    R = {}
+    written, callees, events = {}, [], {}
+    n_ms = n_mm = 0
+    last_call = None
+    has_rt = has_call = False
+    prev = None
+    seen = set()
+    r32 = {"eax": "rax", "ebx": "rbx", "ecx": "rcx", "edx": "rdx", "esi": "rsi", "edi": "rdi"}
+    while True:
+        if i >= len(dirs) or i in seen:
+            raise G5Mismatch("accept path: end of file or loop before the epilogue")
+        seen.add(i)
+        d = dirs[i]
+        if d == "nop" or lab(d):
+            i += 1
+            continue
+        if d == f"add ${F:#x},%rsp":
+            break
+        if (mm := re.fullmatch(r"jmp (\S+)", d)):
+            i = idx[mm.group(1)]
+            continue
+        if (mm := re.fullmatch(r"j(e|ne) (\S+)", d)):
+            if prev == "cmpl $0x0,runtime.writeBarrier(%rip)":
+                i = idx[mm.group(2)] if mm.group(1) == "e" else i + 1
+            elif prev == "test %rax,%rax" and mm.group(1) == "e":
+                i = idx[mm.group(2)]
+                # a callee call's continuation label: the event of the call field
+                if pend_call is None:
+                    raise G5Mismatch("accept path: `je` after `test %rax,%rax` without a callee call")
+                events[pend_call] = i + 1
+            else:
+                raise G5Mismatch(f"accept path: branch `{d}` after `{prev}`")
+            prev = d
+            continue
+        if (mm := re.fullmatch(r"callq (\S+)", d)):
+            fn = mm.group(1)
+            last_call = i
+            R = {}
+            pend_call = None
+            if fn == "runtime.makeslice":
+                has_rt = True
+                R["rax"] = ("ptr", n_ms)
+                n_ms += 1
+            elif fn == "runtime.memmove":
+                n_mm += 1
+            elif fn.startswith(G5_PRIM) and fn.endswith(".UnmarshalSSZ") and fn[len(G5_PRIM):-13] in G5_CONST:
+                has_call = True
+                c = G5_CONST[fn[len(G5_PRIM):-13]]
+                if c not in callees:
+                    callees.append(c)
+                R["rax"] = R["rbx"] = ("zero",)
+                todo = [k for k, f in enumerate(fields) if f[2] == fn[len(G5_PRIM):-13] and k not in events]
+                if not todo:
+                    raise G5Mismatch(f"accept path: call {fn} without an open IR field of that callee")
+                pend_call = todo[0]
+            else:
+                raise G5Mismatch(f"accept path: call of {fn}")
+            prev = d
+            i += 1
+            continue
+        if (mm := re.fullmatch(r"mov %(\w+),(0x[0-9a-f]+)\(%rsp\)", d)):
+            o = int(mm.group(2), 16)
+            if 0x18 <= o < F:
+                v = R.get(mm.group(1))
+                if v is None:
+                    raise G5Mismatch(f"accept path: store `{d}` of a value this check does not model")
+                written[o] = v
+            elif not (o < 0x18 and False):
+                raise G5Mismatch(f"accept path: stack store `{d}` outside the frame slots [0x18, F)")
+        elif (mm := re.fullmatch(r"mov %(\w+),(?:(0x[0-9a-f]+))?\(%(\w+)\)", d)) and mm.group(3) not in ("rsp", "r11"):
+            o = int(mm.group(2), 16) if mm.group(2) else 0
+            bi = 0
+            for k, (n_, kd, cal, s_, g_) in enumerate(fields):
+                if kd.startswith(".bytes"):
+                    if g_ == o and k not in events and n_mm >= bi + 1:
+                        events[k] = i + 1
+                    bi += 1
+                elif cal is None and g_ == o and k not in events:
+                    events[k] = i + 1
+        # a register written by this directive is no longer known
+        if not d.startswith(("test ", "cmp ", "cmpl ")) and (mm := re.search(r",%(\w+)$", d)):
+            r = r32.get(mm.group(1), mm.group(1))
+            src = re.fullmatch(r"mov %(\w+),%(\w+)", d)
+            R.pop(r, None)
+            if src and src.group(1) in R:
+                R[r] = R[src.group(1)]
+        prev = d
+        i += 1
+    if sorted(events) != list(range(len(fields))):
+        raise G5Mismatch(f"accept path: field events for {sorted(events)} of {len(fields)} fields")
+    pcs += [events[k] for k in range(len(fields))]
+    if pcs != sorted(pcs) or len(set(pcs)) != len(pcs):
+        raise G5Mismatch(f"field events not in IR order: {pcs}")
+    if last_call is None:
+        raise G5Mismatch("no call on the accept path")
+    # the layout by the rules of the G5-L hand-over
+    stack = [("at", -8)] + [("at", o) for o in sorted(spills)]
+    area = [0] if has_rt and not has_call else ([0, 8, 16] if has_rt else [8])
+    stack += [("at", -frame + a) for a in area] + [("at", -frame + o) for o in sorted(written)]
+    stack += [("at", -(frame + 8)), ("lo",) if has_rt else ("at", -(frame + 16))]
+    sl = lambda c, v: (".lo " + v) if c[0] == "lo" else f".at ({'.up' if c[1] > 0 else '.dn'} {abs(c[1])}) {v}"
+    pre = [sl(c, f"(.orig {k})") for k, c in enumerate(stack)]
+    lens = [f"({k}, {24 if (has_rt and not has_call and c == ('at', -frame)) else 8})"
+            for k, c in enumerate(stack) if c != ("lo",)]
+    rt = (f"some ⟨{'true' if has_call else 'false'}, {8 if has_call else 0}, {len(stack) - 1}, "
+          f"{frame + 8 + (8 if has_call else 0)}⟩") if has_rt else "none"
+    post = [sl(("at", -8), "(.reg .rbp)")] + [sl(("at", o), f"(.reg .{spills[o]})") for o in sorted(spills)]
+    post.append(sl(("at", -frame if has_rt else -frame + 8), "(.ex 0)"))
+    for o in sorted(written):
+        v = written[o]
+        post.append(sl(("at", -frame + o), ".zero" if v == ("zero",) else f"(.ptr {v[1]})"))
+    post += [sl(("at", -(frame + 8)), f"(.ret {last_call + 1})"), sl(stack[-1], "(.ex 1)")]
+    exs = "[.n 24, .lo]" if has_rt else "[.n 8, .n 8]"
+    L = (f"(E2eScal.DecLayout.mk [{', '.join(callees)}] {len(stack)} [{', '.join(lens)}] [{', '.join(pre)}] ({rt}) "
+         f"{frame + 8 if has_call else 0} {'true' if st else 'false'} {exs} [{', '.join(post)}] {frame})")
+    return dict(L=L, fields="[" + ", ".join(f[1] for f in fields) + "]", pcs=pcs, sz=sz)
+
+
+def g5_split_kind(lines, j):
+    """The `_kind` theorem at line j: (theorem name, kind name, parameter text, proof line) or an error string."""
+    m = re.fullmatch(r"theorem (\S+)_kind : ∀ \(h : Host\), type_of% \(@(\S+) h\)", lines[j])
+    if not m or m.group(1) != m.group(2):
+        return f"line {j + 1}: `_kind` header is not `theorem T_kind : ∀ (h : Host), type_of% (@T h)`"
+    k = j + 1
+    body = []
+    while k < len(lines) and not lines[k].endswith(" := by"):
+        body.append(lines[k])
+        k += 1
+    if k >= len(lines):
+        return f"{m.group(1)}_kind: no `:= by`"
+    body.append(lines[k][:-len(" := by")])
+    txt = " ".join(x.strip() for x in body)
+    mk = re.fullmatch(r"= @E2eScal\.(\w+) h (\S+) ?(.*)", txt)
+    if not mk:
+        return f"{m.group(1)}_kind: right-hand side is not `= @E2eScal.K h C …`"
+    return m.group(1), mk.group(1), mk.group(2), mk.group(3), (lines[k + 1] if k + 1 < len(lines) else ""), k + 1
+
+
+def g5_balanced(s, open_, close):
+    """Split `s` (starting with `open_`) into the balanced prefix and the rest."""
+    depth = 0
+    for i, ch in enumerate(s):
+        depth += ch == open_
+        depth -= ch == close
+        if depth == 0:
+            return s[:i + 1], s[i + 1:].strip()
+    return None, s
+
+
+def check_gen5(text, g5_blobs=None, gnames=frozenset(), kr=None, expect=None):
+    """Rule 12 on the GEN5 part of `text`. `expect` (for the selftest) replaces the recomputation from the files."""
+    import hashlib
+    import json
+    kr = KR if kr is None else kr
+    g5_blobs = dict(GEN5_PINS) if g5_blobs is None else g5_blobs
+    errs, info = [], ""
+    for mname, b in GEN5_PINS.items():
+        if g5_blobs.get(mname) != b:
+            errs.append(f"rule 12a: {mname} blob {g5_blobs.get(mname)} != pinned {b}")
+    if text.count(G5_MARK) != 1:
+        return errs + [f"rule 12: {text.count(G5_MARK)} GEN5 blocks (expected 1)"], info
+    head, g5 = text.split(G5_MARK, 1)
+    lines = (G5_MARK + g5).split("\n")
+    gj = [l for l in lines if l.startswith("GEN5-JSON: ")]
+    try:
+        assert len(gj) == 1
+        J = json.loads(gj[0][len("GEN5-JSON: "):])
+        P = J["accept"][:-len("_accept")]
+        assert J["accept"] == P + "_accept" and P
+    except Exception:
+        return errs + ["rule 12: no single valid `GEN5-JSON:` line with the accept theorem name"], info
+    # the inputs named in the header; the kind parameters recomputed from them
+    if expect is None:
+        hm = G5_HDR.search(head)
+        if not hm:
+            return errs + ["rule 12c: no `Generated … from `S` (sha256 …) and `IR` (sha256 …, type …)` header"], info
+        try:
+            sraw, iraw = (kr / hm.group(1)).read_bytes(), (kr / hm.group(3)).read_bytes()
+        except OSError as e:
+            return errs + [f"rule 12c: input file not readable: {e}"], info
+        if hashlib.sha256(sraw).hexdigest() != hm.group(2) or hashlib.sha256(iraw).hexdigest() != hm.group(4):
+            return errs + ["rule 12c: sha256 of the .S or IR file differs from the header"], info
+        try:
+            fields, sz = g5_ir(iraw.decode(), hm.group(5))
+            dirs = [l.strip() for l in sraw.decode("ascii").split("\n") if l.strip()]
+            expect = g5_expect(dirs, fields, sz)
+        except (G5Mismatch, KeyError, IndexError, ValueError) as e:
+            return errs + [f"rule 12c: recomputation refused: {type(e).__name__}: {e}"], info
+    n = len(expect["pcs"]) - 1
+    # rules 2 / 3 on the GEN5 part
+    in_block = 0
+    for i, l in enumerate(lines, 1):
+        if in_block or l.lstrip().startswith("/-"):
+            in_block += l.count("/-") - l.count("-/")
+            continue
+        if BANNED.search(l.split("--", 1)[0]):
+            errs.append(f"GEN5 line {i}: banned token: {l.strip()}")
+        if not TOP_OK.match(l):
+            errs.append(f"GEN5 line {i}: top-level form not allowed: {l.strip()[:80]}")
+    thms = [(i, m.group(1)) for i, l in enumerate(lines) if (m := THM.match(l))]
+    names = [t for _, t in thms]
+    kinds = [(f"{P}_head", "decHeadKindN", 1), *[(f"{P}_f{k + 1}", "decFieldKindN", 2) for k in range(n)],
+             (f"{P}_epi", "decEpiKindN", 1), (f"{P}_accept", "decAcceptKindN", 0), (f"{P}_reject", "decRejectKindN", None)]
+    ident = [x for x in names if x in (f"{P}_accept_stmt", f"{P}_accept_same")]
+    want = []
+    for t, _, _ in kinds:
+        want += [t, t + "_kind"]
+        if t == f"{P}_accept":
+            want += ident[:1]
+    if names != want or len(ident) > 1:
+        return errs + [f"rule 12b: GEN5 theorems {names}, expected {want}"], info
+    pos = {t: i for i, t in thms}
+    C = None
+    for t, kn, nd in kinds:
+        hk = HK.search(lines[pos[t]])
+        if not hk:
+            errs.append(f"rule 12b: {t}: no `(hk : C.IsInfixAt Host.prog k)` binder on its first line")
+            continue
+        C = C or hk.group(1)
+        if hk.group(1) != C:
+            errs.append(f"rule 12b: {t}: code constant {hk.group(1)} != {C}")
+        r = g5_split_kind(lines, pos[t + "_kind"])
+        if isinstance(r, str):
+            errs.append("rule 12b: " + r)
+            continue
+        _, kname, c2, rest, pl, _ = r
+        if kname != kn:
+            errs.append(f"rule 12b: {t}_kind names {kname}, expected {kn}")
+            continue
+        if c2 != C:
+            errs.append(f"rule 12b: {t}_kind: code constant {c2} != {C}")
+        if pl != ("  intro h; with_reducible rfl" if nd is None else "  intro h; rfl"):
+            errs.append(f"rule 12b: {t}_kind: proof line `{pl}`")
+        if nd is None:
+            if rest != str(expect["sz"]):
+                errs.append(f"rule 12c: {t}_kind: size {rest}, recomputed {expect['sz']}")
+            continue
+        Lt, rest = g5_balanced(rest, "(", ")")
+        if Lt is None or " ".join(Lt.split()) != " ".join(expect["L"].split()):
+            errs.append(f"rule 12c: {t}_kind: layout parameter differs from the recomputation\n      file:       "
+                        f"{' '.join((Lt or '').split())}\n      recomputed: {expect['L']}")
+        Ft, rest = g5_balanced(rest, "[", "]")
+        if Ft != expect["fields"]:
+            errs.append(f"rule 12c: {t}_kind: fields {Ft}, recomputed {expect['fields']}")
+        ds = []
+        for _ in range(nd):
+            Dt, rest = g5_balanced(rest, "⟨", "⟩")
+            dm = re.match(r"⟨(\d+), (\d+), ", Dt or "")
+            ds.append((int(dm.group(1)), int(dm.group(2))) if dm else None)
+        if rest:
+            errs.append(f"rule 12b: {t}_kind: extra parameters `{rest[:60]}`")
+        k = int(t.rsplit("_f", 1)[1]) if kn == "decFieldKindN" else None
+        exp = {"decHeadKindN": [0], "decFieldKindN": [k - 1, k] if k else [], "decEpiKindN": [n], "decAcceptKindN": []}[kn]
+        for dd, b in zip(ds, exp):
+            if dd != (expect["pcs"][b], b):
+                errs.append(f"rule 12c: {t}_kind: boundary state (pc, done) = {dd}, recomputed {(expect['pcs'][b], b)}")
+    # 12d: the accept proof is the chain
+    acc = "\n".join(lines[pos[f"{P}_accept"]:pos[f"{P}_accept_kind"]])
+    for t in [f"({P}_head "] + [f"({P}_f{k + 1} " for k in range(n)] + [f"exact {P}_epi "]:
+        if acc.count(t) != 1:
+            errs.append(f"rule 12d: the accept proof does not use `{t.strip('( ')}` exactly once")
+    # 12e: the statement identity
+    if ident:
+        l = lines[pos[ident[0]]]
+        if ident[0].endswith("_stmt"):
+            m = re.fullmatch(rf"theorem {P}_accept_stmt : (E2eScal(?:\.\w+)+) := {P}_accept", l)
+        else:
+            m = re.fullmatch(rf"theorem {P}_accept_same : ∀ \(h : Host\), type_of% \(@{P}_accept h\) = "
+                             rf"type_of% \(@(E2eScal(?:\.\w+)+) h\) := by", l)
+            if m and lines[pos[ident[0]] + 1] != "  intro h; rfl":
+                m = None
+        if not m:
+            errs.append(f"rule 12e: {ident[0]}: not the identity form")
+        elif GENNS.match(m.group(1)) or m.group(1).rsplit(".", 1)[-1] in gnames or m.group(1).rsplit(".", 1)[-1] in names:
+            errs.append(f"rule 12e: {ident[0]}: {m.group(1)} is a generated name")
+        else:
+            info = f"statement check: kind (parameters recomputed) + identity against {m.group(1)}"
+    else:
+        info = "statement check: kind instance only, parameters recomputed from the IR and the .S"
+    return errs, info
+
+
+def g5_blobs_tree():
+    return {m: (blob(KIND.parent / m) if (KIND.parent / m).exists() else "missing") for m in GEN5_PINS}
+
+
+# ---- rule 12 selftest controls (unit G5-G)
+G5_VE = ("prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S",
+         "v1alpha1.VoluntaryExit")
+# the layouts of the G5-L hand-over (`AcceptTies.lean`: layCal, layMix40, layRt, layMix60), transcribed by hand as
+# constructor text; the recomputation from the real `.S` / IR must give exactly these
+G5_HAND = {
+    "VoluntaryExit": ("h6", "(E2eScal.DecLayout.mk [E2e.Code.EpUnmarshal, E2eScal.BhCode.ViUnmarshal] 7 [(0, 8), (1, 8), (2, 8), "
+                      "(3, 8), (4, 8), (5, 8), (6, 8)] [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), "
+                      ".at (.up 32) (.orig 3), .at (.dn 72) (.orig 4), .at (.dn 88) (.orig 5), .at (.dn 96) (.orig 6)] (none) 88 "
+                      "true [.n 8, .n 8] [.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.up 32) "
+                      "(.reg .rdi), .at (.dn 72) (.ex 0), .at (.dn 88) (.ret 56), .at (.dn 96) (.ex 1)] 80)"),
+    "PendingDeposit": ("h6", "(E2eScal.DecLayout.mk [E2eAd.Code.SlUnmarshal] 10 [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), "
+                       "(6, 8), (7, 8), (8, 8)] [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.up 32) "
+                       "(.orig 3), .at (.dn 72) (.orig 4), .at (.dn 64) (.orig 5), .at (.dn 56) (.orig 6), .at (.dn 32) (.orig 7), "
+                       ".at (.dn 80) (.orig 8), .lo (.orig 9)] (some ⟨true, 8, 9, 88⟩) 80 true [.n 24, .lo] [.at (.dn 8) (.reg "
+                       ".rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.up 32) (.reg .rdi), .at (.dn 72) (.ex 0), "
+                       ".at (.dn 32) (.ptr 2), .at (.dn 80) (.ret 131), .lo (.ex 1)] 72)"),
+    "PowBlock": ("h6", "(E2eScal.DecLayout.mk [] 7 [(0, 8), (1, 8), (2, 8), (3, 24), (4, 8), (5, 8)] [.at (.dn 8) (.orig 0), "
+                 ".at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.dn 40) (.orig 3), .at (.dn 16) (.orig 4), .at (.dn 48) "
+                 "(.orig 5), .lo (.orig 6)] (some ⟨false, 0, 6, 48⟩) 0 false [.n 24, .lo] [.at (.dn 8) (.reg .rbp), .at (.up 8) "
+                 "(.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 40) (.ex 0), .at (.dn 16) (.ptr 2), .at (.dn 48) (.ret 104), "
+                 ".lo (.ex 1)] 40)"),
+    "SyncCommitteeMessage": ("h5", "(E2eScal.DecLayout.mk [E2eAd.Code.SlUnmarshal, E2eScal.BhCode.ViUnmarshal] 12 [(0, 8), (1, 8), "
+                             "(2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8), (9, 8), (10, 8)] [.at (.dn 8) (.orig 0), .at "
+                             "(.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.up 32) (.orig 3), .at (.dn 104) (.orig 4), .at (.dn "
+                             "96) (.orig 5), .at (.dn 88) (.orig 6), .at (.dn 64) (.orig 7), .at (.dn 56) (.orig 8), .at (.dn 48) "
+                             "(.orig 9), .at (.dn 112) (.orig 10), .lo (.orig 11)] (some ⟨true, 8, 11, 120⟩) 112 true [.n 24, .lo] "
+                             "[.at (.dn 8) (.reg .rbp), .at (.up 8) (.reg .rax), .at (.up 16) (.reg .rbx), .at (.up 32) (.reg .rdi), "
+                             ".at (.dn 104) (.ex 0), .at (.dn 64) .zero, .at (.dn 56) .zero, .at (.dn 48) (.ptr 1), .at (.dn 112) "
+                             "(.ret 141), .lo (.ex 1)] 104)"),
+}
+
+
+def g5_inputs(tname, sdir):
+    sp = f"prysm/go1.26.10/e2e/{sdir}/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.{tname}.UnmarshalSSZ.S"
+    sraw, iraw = (KR / sp).read_bytes(), (KR / "prysm/ir/ir-mainnet.json").read_bytes()
+    return sp, sraw, iraw
+
+
+def g5_good_text():
+    """A GEN5 file for VoluntaryExit in the generator's layout (theorem bodies abbreviated), with the kind
+    parameters from the recomputation; header with the real input paths and sha256."""
+    import hashlib
+    sp, sraw, iraw = g5_inputs("VoluntaryExit", "h6")
+    fields, sz = g5_ir(iraw.decode(), "v1alpha1.VoluntaryExit")
+    E = g5_expect([l.strip() for l in sraw.decode("ascii").split("\n") if l.strip()], fields, sz)
+    C, P, L, F = "VeUnmarshal", "ve_g5dec", E["L"], E["fields"]
+
+    def thm(t, body):
+        return (f"set_option maxRecDepth 100000 in\ntheorem {t} : ∀ (k : Nat) (hk : {C}.IsInfixAt Host.prog k) "
+                f"(hf : LabelsFresh {C} k),\n    T := by\n{body}\n")
+
+    def kd(t, k, ds, proof="  intro h; rfl"):
+        return (f"theorem {t}_kind : ∀ (h : Host), type_of% (@{t} h)\n    = @E2eScal.{k} h {C} {L} {F}"
+                + "".join(f"\n    ⟨{E['pcs'][d]}, {d}, [], [], []⟩" for d in ds) + f" := by\n{proof}\n\n")
+    n = len(E["pcs"]) - 1
+    out = (f"import E2eScal.H6Code\n\n/-! Generated by `gen/scal/scalgen.py p2dec` from `{sp}`\n(sha256 "
+           f"`{hashlib.sha256(sraw).hexdigest()}`) and `prysm/ir/ir-mainnet.json` (sha256 `{hashlib.sha256(iraw).hexdigest()}`"
+           f", type `v1alpha1.VoluntaryExit`); GEN4 coverage. -/\n\nnamespace E2eScal.Gen\nend E2eScal.Gen\n\n"
+           f"{G5_MARK}, unit G5-G): text.\nGEN5-JSON: {{\"accept\": \"{P}_accept\"}}\n-/\n\nopen E2e E2eAd E2eScal\n\n"
+           f"namespace E2eScal.Gen\n\n")
+    out += thm(f"{P}_head", "  exact x") + kd(f"{P}_head", "decHeadKindN", [0])
+    for i in range(n):
+        out += thm(f"{P}_f{i + 1}", "  exact x") + kd(f"{P}_f{i + 1}", "decFieldKindN", [i, i + 1])
+    out += thm(f"{P}_epi", "  exact x") + kd(f"{P}_epi", "decEpiKindN", [n])
+    chain = (f"  refine eventually_trans _ _ _ _ ({P}_head a) ?_\n"
+             + "".join(f"  refine eventually_trans _ _ _ _ ({P}_f{i + 1} a) ?_\n" for i in range(n)) + f"  exact {P}_epi a")
+    out += thm(f"{P}_accept", chain) + kd(f"{P}_accept", "decAcceptKindN", [])
+    out += (f"set_option maxRecDepth 100000 in\ntheorem {P}_reject : ∀ (k : Nat) (hk : {C}.IsInfixAt Host.prog k) (hf : "
+            f"LabelsFresh {C} k),\n    T := by\n  exact y\ntheorem {P}_reject_kind : ∀ (h : Host), type_of% (@{P}_reject h)\n"
+            f"    = @E2eScal.decRejectKindN h {C} {E['sz']} := by\n  intro h; with_reducible rfl\n\n")
+    return out + "end E2eScal.Gen\n"
+
+
+def g5_cases():
+    """Rule 12 controls: (id, text, blobs, expect PASS)."""
+    z = "0" * 40
+    G = g5_good_text()
+    P = "ve_g5dec"
+    stmt = G.replace(f"intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem {P}_reject ",
+                     f"intro h; rfl\n\ntheorem {P}_accept_stmt : E2eScal.H6.ve_hand_stmt := {P}_accept\n\n"
+                     f"set_option maxRecDepth 100000 in\ntheorem {P}_reject ", 1)
+    same = G.replace(f"intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem {P}_reject ",
+                     f"intro h; rfl\n\ntheorem {P}_accept_same : ∀ (h : Host), type_of% (@{P}_accept h) = type_of% "
+                     f"(@E2eScal.Ve.ve_e2e_accept_main h) := by\n  intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem "
+                     f"{P}_reject ", 1)
+    assert stmt != G and same != G
+
+    def pins(m):
+        d = dict(GEN5_PINS)
+        d[m] = z
+        return d
+    acc_k = f"theorem {P}_accept_kind : ∀ (h : Host), type_of% (@{P}_accept h)"
+    return [
+        ("g5_good", G, None, True),
+        ("g5_good_stmt", stmt, None, True),
+        ("g5_good_same", same, None, True),
+        *[(f"g5_{m.split('.')[0].lower()}_blob_changed", G, pins(m), False) for m in GEN5_PINS],
+        ("g5_accept_kind_missing", G.replace(acc_k, acc_k.replace("_accept_kind", "_accept_kinx")), None, False),
+        ("g5_field_kind_missing", G.replace(f"theorem {P}_f2_kind ", f"theorem {P}_f2_kinx "), None, False),
+        ("g5_reject_missing", G.split("set_option maxRecDepth 100000 in\ntheorem ve_g5dec_reject ")[0] + "end E2eScal.Gen\n",
+         None, False),
+        ("g5_extra_theorem", G.replace("end E2eScal.Gen\n", "theorem extra : True := trivial\n\nend E2eScal.Gen\n")[::-1].replace(
+            "end E2eScal.Gen\n"[::-1], "", 0)[::-1], None, False),
+        ("g5_kind_name_swapped", G.replace("= @E2eScal.decEpiKindN h", "= @E2eScal.decFieldKindN h", 1), None, False),
+        ("g5_kind_proof_not_rfl", G.replace("intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem ve_g5dec_f1 ",
+                                            "intro h; simp\n\nset_option maxRecDepth 100000 in\ntheorem ve_g5dec_f1 ", 1), None, False),
+        ("g5_L_frame_wrong", G.replace("(.ex 1)] 80)", "(.ex 1)] 88)"), None, False),
+        ("g5_L_gd_wrong", G.replace("(none) 88 true", "(none) 80 true"), None, False),
+        ("g5_L_callee_order", G.replace("[E2e.Code.EpUnmarshal, E2eScal.BhCode.ViUnmarshal]", "[E2eScal.BhCode.ViUnmarshal, "
+                                        "E2e.Code.EpUnmarshal]"), None, False),
+        ("g5_L_post_ret", G.replace("(.ret 56)", "(.ret 55)"), None, False),
+        ("g5_L_slot_dropped", G.replace(".at (.up 32) (.orig 3), ", ""), None, False),
+        ("g5_fields_kind", G.replace("[.u64, .u64]", "[.u64, .bytes 32]"), None, False),
+        ("g5_fields_extra", G.replace("[.u64, .u64]", "[.u64, .u64, .u64]"), None, False),
+        ("g5_pc_wrong", G.replace("⟨48, 1, ", "⟨47, 1, "), None, False),
+        ("g5_done_wrong", G.replace("⟨48, 1, ", "⟨48, 2, "), None, False),
+        ("g5_reject_size", G.replace("decRejectKindN h VeUnmarshal 16 ", "decRejectKindN h VeUnmarshal 24 "), None, False),
+        ("g5_reject_proof", G.replace("intro h; with_reducible rfl", "intro h; rfl"), None, False),
+        ("g5_const_other", G.replace("decAcceptKindN h VeUnmarshal", "decAcceptKindN h PcUnmarshal"), None, False),
+        ("g5_hk_other", G.replace(f"theorem {P}_epi : ∀ (k : Nat) (hk : VeUnmarshal", f"theorem {P}_epi : ∀ (k : Nat) (hk : PcUnmarshal"),
+         None, False),
+        ("g5_chain_skips_field", G.replace(f"  refine eventually_trans _ _ _ _ ({P}_f1 a) ?_\n", ""), None, False),
+        ("g5_stmt_generated", stmt.replace("E2eScal.H6.ve_hand_stmt", "E2eScal.Gen.ve_g4dec_s15"), None, False),
+        ("g5_same_self", same.replace("(@E2eScal.Ve.ve_e2e_accept_main h)", "(@E2eScal.Gen5.ve_e2e_accept_g5 h)"), None, False),
+        ("g5_sorry", G.replace("  exact y\n", "  sorry\n"), None, False),
+        ("g5_local_def", G.replace("namespace E2eScal.Gen\n\nset_option", "namespace E2eScal.Gen\n\ndef q := 1\n\nset_option"),
+         None, False),
+        ("g5_sha_wrong", G.replace("(sha256 `" + G.split("(sha256 `")[1][:64], "(sha256 `" + (
+            "0" if G.split("(sha256 `")[1][0] != "0" else "1") + G.split("(sha256 `")[1][1:64], 1), None, False),
+        ("g5_two_blocks", G.replace("end E2eScal.Gen\n\n" + G5_MARK, "end E2eScal.Gen\n\n" + G5_MARK + " x -/\n" + G5_MARK, 1),
+         None, False),
+    ]
+
+
+def g5_selftest():
+    """Rule 12 controls + the recomputation against the hand layouts + an IR mutant. Returns (n, bad)."""
+    import json
+    bad = []
+    cs = g5_cases()
+    for name, text, blobs, ok in cs:
+        errs, _ = check_gen5(text, blobs, GNAMES | {"ve_e2e_accept_g5"})
+        if (not errs) != ok:
+            bad.append((name, errs[:3]))
+    n = len(cs)
+    for tname, (sdir, Lh) in G5_HAND.items():
+        sp, sraw, iraw = g5_inputs(tname, sdir)
+        fields, sz = g5_ir(iraw.decode(), "v1alpha1." + tname)
+        E = g5_expect([l.strip() for l in sraw.decode("ascii").split("\n") if l.strip()], fields, sz)
+        n += 1
+        if " ".join(E["L"].split()) != " ".join(Lh.split()):
+            bad.append((f"g5_recompute_{tname}", E["L"], Lh))
+    # an IR mutant: VoluntaryExit ValidatorIndex Go offset 24 (code 16) -> the recomputation refuses
+    sp, sraw, iraw = g5_inputs("VoluntaryExit", "h6")
+    d = json.loads(iraw)
+    for c in d["configs"]:
+        for t in c.get("types", []):
+            if t.get("name") == "VoluntaryExit":
+                for f in t["go_fields"]:
+                    if f["name"] == "ValidatorIndex":
+                        f["offset_gc_amd64"] = 24
+    n += 1
+    try:
+        fields, sz = g5_ir(json.dumps(d), "v1alpha1.VoluntaryExit")
+        g5_expect([l.strip() for l in sraw.decode("ascii").split("\n") if l.strip()], fields, sz)
+        bad.append(("g5_ir_goff_mutant", "not refused"))
+    except G5Mismatch:
+        pass
+    # the code mutated: the Epoch call replaced by a ValidatorIndex call -> the recomputation refuses (no open field)
+    n += 1
+    try:
+        dirs = [l.strip().replace("Epoch.UnmarshalSSZ", "ValidatorIndex.UnmarshalSSZ") for l in sraw.decode("ascii").split("\n")
+                if l.strip()]
+        fields, sz = g5_ir(iraw.decode(), "v1alpha1.VoluntaryExit")
+        E = g5_expect(dirs, fields, sz)
+        if E["L"] == G5_HAND["VoluntaryExit"][1]:
+            bad.append(("g5_code_callee_mutant", "same layout"))
+    except G5Mismatch:
+        pass
+    return n, bad
 
 
 def json_line(pairs):

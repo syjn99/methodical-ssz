@@ -2442,12 +2442,24 @@ def p2dec_gen5(args):
     raise AssertionError("unreachable")
 
 
+_G5MOD = None
+
+
+def g5_module():
+    """`gen/scal/gen5.py`, loaded once from this file's directory (`-I` does not put it on sys.path)."""
+    global _G5MOD
+    if _G5MOD is None:
+        import importlib.util
+        sys.dont_write_bytecode = True
+        spec = importlib.util.spec_from_file_location("gen5", pathlib.Path(__file__).with_name("gen5.py"))
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        _G5MOD = mod
+    return _G5MOD
+
+
 def _p2dec_gen5(args, flags):
-    import importlib.util
-    sys.dont_write_bytecode = True
-    spec = importlib.util.spec_from_file_location("gen5", pathlib.Path(__file__).with_name("gen5.py"))
-    G5 = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(G5)
+    G5 = g5_module()
     args.imports = ",".join(args.imports.split(",") + [m for m in G5.G5_IMPORTS if m not in args.imports.split(",")])
     # phase 1: the GEN4 front end, unchanged; exit 0 of GEN4 (every field, head, epilogue) or no accept theorem
     g4 = p2dec_gen4(args)
