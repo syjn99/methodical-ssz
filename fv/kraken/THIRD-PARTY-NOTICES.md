@@ -44,7 +44,7 @@ Counts are `git ls-files` counts. Paths are relative to `fv/kraken/`.
   `github.com/prysmaticlabs/gohashtree`, `github.com/minio/sha256-simd` and `github.com/klauspost/cpuid/v2` (versions in the root `go.mod`).
 - The `.S` files in `link/out/norm/` hold only `ssz.*`, `target.*` and `target_prysm.*` functions.
 - Upstream: Go, as in family A (the BSD-3-Clause name was read from the Go 1.26.10 tree, not from a Go 1.26.3 tree).
-- The ELF build info also lists `github.com/OffchainLabs/go-bitfield`. `p1bin-amd64.nm` has no symbol of it. The licences of gohashtree, sha256-simd and cpuid were not read for this file.
+- The ELF build info also lists `github.com/OffchainLabs/go-bitfield`. `p1bin-amd64.nm` has no symbol of it. The licences of gohashtree, sha256-simd, cpuid and go-bitfield were not read for this file.
 
 ## F. Prysm field definitions in the target package
 
@@ -59,16 +59,21 @@ Counts are `git ls-files` counts. Paths are relative to `fv/kraken/`.
 - `prysm/inventory.json`, `prysm/TYPES.md` (2) and `prysm/go1.26.10/e2e/**/*.desc.json` (6): type sets, counts and SSZ descriptors made from the IR
   by `gen/inventory.py build`, `gen/types_md.py` and `gen/desc/producer.py`.
 - `prysm/go1.26.10/e2e/gcflags-m2.txt` (1): Go 1.26.10 `-gcflags=-m=2` output on the Prysm tree. It prints inlined Prysm function bodies.
-- `prysm/go1.26.10/version-m.txt` (1): `go version -m` output of the Prysm-tree ELF `p1cbin-amd64`. It lists the Prysm module and its dependencies.
+- `prysm/go1.26.10/version-m.txt` (1, sha256 `cba455e3…5b31a1`): `go version -m` output of the Prysm-tree ELF `p1cbin-amd64`, listing the Prysm module and its dependencies. It equals `go version -m` (Go 1.26.10) of a local ELF with the family A sha256 `c6403c02…911e` (checked with `cmp`).
+- `prysm/go1.26.10/e2e/callgraph.json`, `e2e/ad/callgraph.json`, `e2e/CALLGRAPH.md`, `e2e/ad/CALLGRAPH.md` (4): call graphs.
+  They quote `-m=2` lines of `gcflags-m2.txt` with five one-line Prysm `consensus-types/primitives` function bodies (cut in the `.md` files).
 - `prysm/go1.26.10/prysm-go.mod.diff` (1): a diff of Prysm `go.mod`; its context lines are Prysm text. `prysm/go1.26.10/opt-r1/generated.diff` (1):
-  a diff of generator output for Prysm `phase0` types (`698c202` against `ca191bb`). Total 14. Upstream: Prysm, as in family A.
+  a diff of generator output for Prysm `phase0` types (`698c202` against `ca191bb`). Total 18. Upstream: Prysm, as in family A.
 
 ## H. Files that only name upstream symbols
 
-- Other files under `fv/kraken/` name Prysm or Go packages, types, functions, tests or ELF addresses, or quote short instruction fragments of family A.
+- Other files under `fv/kraken/` (1126) name Prysm or Go packages, types, functions, tests or ELF addresses, or quote short instruction fragments of families A and E.
   Examples: `prysm/tests/**` (11, Prysm `go test` logs and summaries), `prysm/go1.26.10/opt-r1/bench/raw/*` (5, benchmark output),
-  `**/callgraph.json`, `prysm/go1.26.10/functions.json`, `kparse*`, negative-test case files and the reports.
-- They hold no other upstream source text or compiled code. This was found by a keyword scan, not by a full read of each file.
+  `e2e/{bh,e1,h3}/callgraph.json`, `prysm/go1.26.10/functions.json`, `kparse*`, negative-test case files and the reports.
+- A program scan of these files for Go source fragments (`func `, `return `, `{ return`, `inline call to`, `can inline`) found these quotes:
+  - doc comments in `lean/E2e*/` quote short excerpts of family B methods and of Prysm `consensus-types/primitives` (`lean/E2e/Epoch.lean` lines 9-11, `lean/E2eScal/P1.lean` lines 7-8);
+  - `prysm/go1.26.10/e2e/runtime-diff.json` holds 57 diff lines of Go runtime source (Go 1.26.3 against 1.26.10). Upstream: Go, as in family A.
+- The other hits are this project's own tool code or prose. The `.py`, `.go` and `.sh` hits were not each read. The files were not each read in full.
 - `lean/**/*.S` (9) are stubs written for this project under Go runtime and `ssz` symbol names. They are not disassembly.
 
 ## I. Lean dependencies and skill material
