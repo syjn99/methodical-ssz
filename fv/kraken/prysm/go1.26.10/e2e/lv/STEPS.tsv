@@ -103,3 +103,14 @@ step	utc	exit	log	command
 100-axgate-r2	2026-11-11T19:30:24Z	0	logs/100-axgate-r2.log	heavy.py -- python3 -I -B ../gen/e2e/lvaxioms_gate.py run <work>/axgate-r2.json <work>/axgate-r2-dump.tsv (95.1 s wall, peak sampled RSS 4.27 GiB)
 101-head-dump-r2	2026-11-11T19:32:01Z	0	logs/101-head-dump-r2.log	heavy.py -- sh -c lake env lean --run ../../../.claude/skills/maintaining-methodical-fv/scripts/decl_dump.lean --root E2e --root E2eAd --root E2eScal <214 modules> > <work>/head-dump-r2.tsv (84.7 s wall, peak sampled RSS 4.24 GiB)
 102-drift-r2	2026-11-11T19:33Z (approx.)	0	logs/102-drift-r2.log	decl_drift.py base-dump head-dump-r2 (roots E2e,E2eAd,E2eScal): SUMMARY base=5007 head=5007 drift=0
+103-conv-old	2026-11-11T22:46:57Z	0	logs/103-conv-old.log	heavy.py -- python3 -I -B <work>/convold/conv.py <work>/elf/p1cbin-amd64.objdump <work>/elf/p1cbin-amd64.nm <work>/conv-old-out --norm (42.6 s wall)
+104-conv-new	2026-11-11T22:47:42Z	0	logs/104-conv-new.log	heavy.py -- python3 -I -B ../link/conv.py <work>/elf/p1cbin-amd64.objdump <work>/elf/p1cbin-amd64.nm <work>/conv-new-out --norm (43.7 s wall)
+105-conv-diff	2026-11-11T20:0xZ (approx.)	0	logs/105-conv-diff.log	python3 aggregate diff old vs new conv.py --norm output: 641 files, changed_files 104, changed_lines 161, non_token_diffs 0, wrapped_old 161, wrapped_new 0
+106-regen-sets	2026-11-11T22:49:22Z	0	logs/106-regen-sets.log	heavy.py -- sh <work>/scratch/regen_sets.sh fv/kraken <work>/regen <work>/elf/p1cbin-amd64.nm (2.1 s wall)
+107-linknorm-cmp	2026-11-11T20:1xZ (approx.)	0	logs/107-linknorm-cmp.log	python3 compare prysm/go1.26.10/link/norm with the new conversion: 136 per-function files identical, all.S 136 blocks identical
+108-t3-filter	2026-11-11T20:1xZ (approx.)	0	logs/108-t3-filter.log	python3 -I -B gen/e2e/lvlink.py filter <work>/link-t3-r <objdump> <elf> <nm> --t3: functions 3 missing []
+109-t3-conv	2026-11-11T22:50:02Z	0	logs/109-t3-conv.log	heavy.py -- python3 -I -B ../link/conv.py <work>/link-t3-r/target.objdump <work>/link-t3-r/p1bin-amd64.nm <work>/link-t3-r/norm --norm (1.0 s wall)
+110-t3-data	2026-11-11T22:50:05Z	0	logs/110-t3-data.log	heavy.py -- python3 -I -B ../gen/e2e/lvlink.py data <work>/link-t3-r ../prysm/go1.26.10/e2e/link ../prysm/go1.26.10/e2e/ad/link --t3 (1.0 s wall)
+111-t3-check	2026-11-11T22:50:09Z	0	logs/111-t3-check.log	heavy.py -- python3 -I -B ../link/check.py <work>/link-t3-r (2.1 s wall)
+112-t3probe2	2026-11-11T22:50:25Z	0	logs/112-t3probe2.log	heavy.py -- lake env lean <work>/scratch/T3Probe2.lean (7.3 s wall)
+113-t3probe2	2026-11-11T22:50:40Z	0	logs/113-t3probe2.log	heavy.py -- lake env lean <work>/scratch/T3Probe2.lean (3.1 s wall)

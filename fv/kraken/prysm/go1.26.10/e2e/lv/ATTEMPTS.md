@@ -225,3 +225,28 @@
 - 로그 100: 공리 게이트 PASS, 선언 5632, 정리 4684, 손 목록 462, 비표준 0, `sorryAx` 0. 결과 `lv/axioms-gate-lv-r2.json`. 게이트 덤프는 r1 덤프(로그 95)와 바이트가 같다(`cmp`).
 - 로그 101–102: 기준 roots(E2e, E2eAd, E2eScal)의 현재 덤프는 리뷰 전 덤프(로그 73)와 바이트가 같다(`cmp`). `decl_drift.py` 기준 대 현재: exit 0, `SUMMARY base=5007 head=5007 drift=0 allowed=0`.
 - 바뀐 것은 `example`과 설정과 주석뿐이다. `example`은 선언을 만들지 않는다. 그래서 덤프가 같은 것은 기대와 맞다.
+
+## LV-1 수정 (사용자 승인, `link/conv.py`만)
+
+- 변경(`93b3f2a`): `--norm`에서 메모리 변위가 정확히 8자리 16진수이고 최상위 비트가 켜져 있고 바로 뒤에 `(%`가 오면 부호 있는 꼴로 쓴다. 예: `0xffffff1c(%rdi)` → `-0xe4(%rdi)`.
+- 즉치값(`$0x…`), 분기 대상, `%rip` 피연산자는 바꾸지 않는다. 기본+색인 꼴 `(%r,%r,s)`도 덮는다.
+- `selftest()`에 경우 다섯을 더했다: `--norm`에서 바꿈, `--norm` 없이 안 바꿈, `$0xffffff1c` 즉치값 안 바꿈, 양수 `0x7fffffff(%rax)` 안 바꿈, 기본+색인 꼴 `0x80000000(%rsi,%rcx,8)` 바꿈. `conv.py`는 실행할 때마다 selftest를 먼저 돈다. 로그 104, 109, 106의 실행이 모두 exit 0이다.
+- 시도 1에 통과했다.
+
+### 검증
+
+- (a) 로그 103(옛 `conv.py`, `29683a8`), 104(새 `conv.py`): 전체 objdump와 nm을 scratch 두 곳에 `--norm`으로 바꿨다. 둘 다 exit 0, 함수 파일 641개와 `all.S`.
+- 로그 105(집계만, `.S` 내용은 열지 않았다): 바뀐 파일 104개, 바뀐 줄 161개. 바뀐 모든 줄은 변위 토큰만 다르다(스크립트로 옛 줄에 같은 치환을 해서 새 줄과 비교, 불일치 0).
+- (b) 새 출력에 감싼 꼴(`0x[89a-f][0-9a-f]{7}\(%`)은 0개다. 옛 출력은 161개다.
+- (c) 로그 106: 이 ELF에서 `--norm`으로 만든 커밋된 셋 7개(`e2e/link`, `e2e/ad/link`, `e2e/bh/link`, `e2e/e1/link`, `e2e/h3/link`, `e2e/h4/link`, `e2e/lv/link`)를 커밋된 `target.objdump`에서 새 `conv.py`로 scratch에 다시 만들었다. 37개 파일(`all.S` 포함)이 커밋된 파일과 바이트가 같다.
+- 로그 107: `target.objdump`가 커밋되지 않은 `prysm/go1.26.10/link/norm`은 전체 변환과 비교했다. 함수 파일 136개가 같고, `all.S`의 함수 블록 136개가 같다.
+- `opt-r1/link`은 다른 ELF(`3ef7ac89…`)라서 비교하지 않았다.
+- 보류 평가 타입의 `.S`는 열거나 출력하지 않았다. 스크립트의 바이트 비교와 개수만 셌다.
+- (d) T3 링크(로그 108–111, scratch): `lvlink.py filter --t3` exit 0, `conv.py --norm` exit 0, `lvlink.py data --t3` exit 0, `check.py` exit 0.
+- `check.py` 결과: (a) 함수 3개 PASS(T3 253 명령어, 1197바이트). (b) 28줄 PASS. (c) PASS(레이블 49개). (d) PASS: 473 명령어, 461개 바이트 같음, encoding 0, padding 12. (e) PASS(522 지시어). (f) 9개 파일 PASS. `PASS all`, 묶음 해시 `393eade69a88fd79e6b6a6a50a09387cb3e5892ebe8777e8933b5f6742954e0d`.
+- T3을 `lv/link`에 넣으면 그 디렉터리의 `RESULT`, `all.S`, `target.objdump`가 바뀐다. 그래서 새 형제 디렉터리 `lv/link-t3/`에 커밋했다(`dc7bd56`). `git diff dfc8b93 -- lv/link`은 비어 있다.
+- `lv/link-t3/`의 T1, T2 `.S`와 데이터 파일은 `lv/link`의 것과 같다. T3 `.S`는 이전 시도(로그 06)의 것과 19행의 변위 토큰만 다르다.
+- (e) 로그 113: 새 T3 `.S` 19행 `lea -0xe4(%rdi),%rdx`를 Kraken `include_x64_rt`로 읽고 `#print`했다. `disp := ↑(-228)`. 로그 112는 내가 20행을 잘못 골라서 비교 대상이 아니었다(wrong-target).
+- (f) selftest: 위 실행마다 먼저 돌았고 통과했다.
+- T3 정규화 `.S`의 호출 집합: `fmt.errorf` 3, `AttestationData.UnmarshalSSZ` 1, `runtime.convT64` 2, `runtime.gcWriteBarrier2` 4, `runtime.makeslice` 2, `runtime.memmove` 1, `runtime.morestack_noctxt.abi0` 1, `runtime.newobject` 4, `runtime.panicBounds` 3. 279줄.
+- T3의 Lean 문장이나 증명은 시작하지 않았다.
