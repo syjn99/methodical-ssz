@@ -5,11 +5,12 @@
 조건:
 
 1. 독립 리뷰를 받지 않았다. 아래의 K는 작성자 빌드의 커널 검사 결과다.
-2. 원소 루프의 일반화는 원소 32바이트의 코드 꼴에만 있다. 48바이트 꼴(T2)은 일반화하지 않았다(4절).
-3. Deposit은 크기 거부와 수용 기계 정리만 있다. 명세 짝, 증인, 부정 시험은 N이다.
+2. 원소 루프는 두 코드 꼴이다: 32바이트 꼴(`v32_*`)과 `3·2^k` 꼴(`vtri_*`, w ∈ {24, 48, 96}). 다른 꼴은 일반화하지 않았다(4절).
+3. `vtri_*`의 w = 24, 96 인스턴스는 틀에 대해서만 증명했다. 이 ELF에 그 크기의 실제 코드가 없어 틀과 실제 코드의 같음은 확인하지 못했다.
 4. 런타임 호출은 계약 가설이다. 새 계약 꼴과 새 인스턴스 꼴은 없다. 새 인스턴스 값은 `NewobjectC … depDataType_addr 120`이다.
 
 먼저 한 일(1부)은 `CHECKS-HB.md`에 있다: 선언 drift 0, 부정 시험 10/10, HbLoop2 시간의 원인.
+2차 작업(Deposit 마감, T2 루프 일반화, 원소 크기 매개변수)은 3절, 1절, 2절, 7절에 반영했다.
 
 ## 1. 일반화한 것 (K)
 
@@ -19,6 +20,8 @@
 | `E2eSeg/SegG.lean` | `bytesdec_seg_g`, `bytesdec_seg_z_g`, `bytesdec_seg_nop_g` | 고정 바이트 필드 크기 n | `n < 2^31` |
 | `E2eSeg/V32.lean`, `V32Loop.lean` | `v32_iter`, `v32_exit`, `v32_loop` | 개수 n, 스택 칸 다섯, 수신자 오프셋 둘, 레이블, 원천 오프셋, `nop` 자리 넷 | `n < 2^31`, 원소 32바이트 |
 | `E2eSeg/RejG.lean` | `rej_size_g` | 틀 크기 F, 크기 sz, 레이블, `nop` 하나 | `F < 2^31`, `sz < 2^31` |
+| `E2eSeg/VTri.lean`, `VTriLoop.lean` | `vtri_iter`, `vtri_exit`, `vtri_loop` | 개수 n, 스택 칸 다섯, 수신자 오프셋 둘, 레이블, 원천 오프셋, 틈, 원소 크기 (k, w) | `n < 2^31`, `TriSize k w`(w = 3·2^k, k ∈ {3, 4, 5}) |
+| `E2eSeg/SpecG.lean` | `vN_flatten_length`, `vN_serialize`, `vN_of_bytes` | `Vector[Bytes32, n]`의 n | `32 * n < 2^32` |
 
 - SegN의 `hn : n = 32 ∨ 48 ∨ 96`은 증명 방식의 한계였다. 리터럴 크기를 계산하는 자리가 셋이었다.
 - 그 셋을 보조정리로 바꿨다: makeslice 수, memmove 수(32비트 즉시값), 저장한 len·cap 단어(64비트 즉시값).
@@ -38,19 +41,32 @@
 | `E2eHb.hb_loop1` | `hb_loop1_g` | 약 70줄: 블록·틈 사실 읽기, 레이블, 출구 레이블 한 단계 |
 | `E2eHb.hb_loop2` | `hb_loop2_g` | 약 65줄 |
 | 고정 문장 `sc_reject_size_stmt` (T2) | `sc_reject_size_g` | `rej_size_g` 한 번 적용 |
+| `E2eList.sc_loop` (T2) | `sc_loop_g` | `vtri_loop`(k = 4, w = 48) 적용, 약 80줄, 첫 빌드 통과 |
+| `E2eHb.v32_serialize`, `v32_flatten_length`, `v32_of_bytes` | `example` 셋 | 한 줄 (`SpecG`) |
 | 고정 문장 `hb_reject_size_stmt` | `hb_reject_size_g` | `rej_size_g` 한 번 적용 |
 
 - 루프 인스턴스가 한 줄이 아닌 이유: 블록 여섯과 틈 다섯의 위치를 실제 프로그램에서 읽어야 한다.
 - 그 사실들은 `infix_sub`와 `simp`로 닫는다. 지시어 수에 따라 줄이 늘지 않는다.
 - `hb_loop2_g` 모듈은 6.2 s다. 손 `HbLoop2`는 22.8 s였다(`CHECKS-HB.md` 3절의 상수 262144 문제가 없다).
 
-## 2. 생성한 것 (b): 없음
+## 2. 생성한 것 (b)와 원소 크기
 
-- 생성기 `gen/e2e/lvseggen.py`는 만들지 않았다. 범위 안의 반복은 모두 일반화로 닫혔다.
-- 일반화하지 않은 것과 이유(시도하지 않았다, 실패 로그 없음):
-  - 원소 48바이트 루프(T2 `ScLoop`). 컴파일러가 다른 명령어 열을 낸다(`lea (x,x,2)`, `shl $4`). 매개변수가 아니라 다른 꼴이다.
-  - 원소 크기를 shift 수로 매개화하는 것. `kshl64`는 리터럴 shift 수를 요구한다. 이 가족의 원소는 모두 32바이트다(4절).
-- 다른 꼴이 필요하면 같은 방법(블록 틀과 틈)으로 그 꼴의 일반 정리를 한 번 쓰면 된다. 판단이다.
+생성기는 만들지 않았다. 남은 반복은 모두 일반화와 리터럴 가족으로 닫혔다.
+
+T2의 48바이트 루프: 두 명령어 열을 한 문장으로 덮지 않았다.
+32바이트 꼴은 넘침 검사(`jb`)와 지역 칸 넷이 있다. `3·2^k` 꼴은 넘침 검사가 없고 `3i`를 저장한 뒤 `shl $k`한다.
+블록의 길이와 레지스터가 달라서 틀 하나로 쓸 수 없다. 그래서 두 번째 일반 루프(`vtri_*`)를 썼다.
+그 루프로 `sc_loop`를 다시 유도했다(`sc_loop_g`, K).
+
+원소 크기를 매개변수로 두는 일: `kshl64`가 요구하는 것은 다음 둘이다.
+
+- shift 수가 숫자 리터럴이어야 한다. `count == 0` 분기를 `decide`로 정한다.
+- `(BitVec.extractLsb' 0 8 (k : BitVec 64)).toNat &&& 63 = k`를 `decide`로 다시 쓴다.
+
+또 크기 w가 단계 안에 숫자로 들어간다: makeslice·memmove 수(`by rfl`), len·cap 저장 값(`decide`), 원천 주소 `buf + w·i`(`omega`).
+변수 k, w로 하면 `i * 2^k` 꼴의 비선형 식이 생겨 `omega`가 닫지 못한다. 시도하지 않았다(판단).
+그래서 `3·2^k` 꼴은 리터럴 가족 `TriSize`(w ∈ {24, 48, 96})로 문장 하나, 증명 글 하나(`vtri_iter_body`)를 쓴다.
+32바이트 꼴은 w = 32 하나다. 이 ELF의 같은 가족 타입은 모두 32바이트다.
 
 ## 3. 증명 사용: Deposit (c)
 
@@ -65,9 +81,16 @@ Deposit의 포인터 필드(Deposit_Data)는 디코더 증명(`E2eScal.H4.dd_e2e
 | 고정 문장 | 커밋 `57316a9` | `E2eDep/Stmt.lean`: `dep_reject_size_stmt`, `dep_accept_stmt` |
 | 크기 거부 | K | `dep_e2e_reject_size_main`, `rej_size_g` 한 번 적용, 첫 빌드 통과 |
 | 수용 | K | `dep_e2e_accept_main`: 루프는 `v32_loop`(n = 33), Deposit_Data는 `dd_e2e_accept_main` |
-| 명세 다리, 명세 짝, Desc 같음 | N | 하지 않음 |
-| 수용 증인 | N | 하지 않음 |
-| 부정 시험 | N | 하지 않음 |
+| 손 Desc, 고정 명세 문장 | 커밋 `bf2ebe7` | `E2eDep/SpecStmt.lean`: `prysmDepDesc`(생산자 Desc 출력 전에 작성), `dep_accept_spec_stmt`, `dep_reject_size_spec_stmt`, `dep_reject_complete_stmt` |
+| 명세 다리 | K | `dep_serialize`, `dep_roundtrip`, `dep_accepted_is_enc`, `dep_spec_accepts_iff` (`E2eDep/Spec.lean`) |
+| 명세 짝 | K | `dep_e2e_accept_spec_k`, `dep_e2e_reject_size_spec`, `dep_e2e_reject_complete` |
+| 손 Desc = 생산자 Desc | K | `prysmDepDesc_deserialize_checker` (생산자 파일 sha256 `cd4b71f0…` = 검사기 기록) |
+| 증인 | K | `WitR.dep_reject_runs`(길이 1239, 1241, 0), `WitA.dep_accept_runs`(0, 대표, 0xff). 새 증인 모델 `BumpNew120` |
+| 부정 시험 | X | `negcases-dep.json` 9/9: 대조 2, 변이 7(문장·코드 크기, 루프 상한, 원소 크기, Data 오프셋·길이, 힙 양) |
+| `depDataType_addr` 검사 | X | `gen/e2e/depcheck_data.py`: SAME. 자체 시험(심은 오프셋)은 기대대로 다름 |
+
+`WitA`의 설정: `maxRecDepth` 2000(512 실패, 1000 통과), `maxHeartbeats` 4000000(1000000 실패, 2000000 통과). 원인은 `simp` 정렬 20.1 s다(로그 115–122).
+루프·원소 크기 변이는 블록 사실(`infix_sub`의 `decide`)에서 실패한다. 루프 증명은 일반 정리라서 변이 대상이 아니다.
 
 수용 정리의 `maxHeartbeats`는 800000이다. 200000은 실패, 400000과 800000은 통과(로그 95–97).
 원인(로그 98): 한 선언의 길이다. 전술 실행 3.37 s, `simp` 1.11 s, 커널 검사 1.58 s다.
@@ -108,8 +131,8 @@ Deposit의 포인터 필드(Deposit_Data)는 디코더 증명(`E2eScal.H4.dd_e2e
 - 함수 머리(크기 확인 뒤 배열 makeslice, 헤더 저장)와 꼬리. 필드 수와 수신자 배치에 따라 명령어 열이 다르다. 다음 후보는 `rejHead` 같은 머리 틀이다(하지 않음).
 - 위임 호출과 피호출자 틀의 배치(Deposit 약 120줄). T3와 같은 일이다. 일반화하지 않았다.
 - 문장(`Stmt`). 수신자와 틀의 칸 목록은 타입마다 다르다. IR과 `.S`에서 낼 수 있다고 본다(판단).
-- 명세 쪽(`HbSpec` 꼴). `ListG`처럼 폭으로 매개화할 수 있다고 본다. 하지 않았다.
-- 원소 48바이트 루프(2절).
+- 명세 쪽의 container 조립(`dep_serialize`, `dep_toValue_surjective`). 필드 꼴이 타입마다 다르다. 벡터 필드 부분은 `SpecG`로 일반화했다.
+- 32바이트 꼴의 다른 원소 크기, 그리고 두 꼴 밖의 루프 꼴(2절).
 
 ## 5. 검증
 
@@ -122,13 +145,42 @@ Deposit의 포인터 필드(Deposit_Data)는 디코더 증명(`E2eScal.H4.dd_e2e
 | 금지 낱말 | `E2eDep/Accept.lean`의 측정된 `maxHeartbeats` 한 줄만 |
 | 홈 경로 | 새 파일에 0 |
 | 선언 drift(1부) | 기준 `6a78c591`, drift 0 (`decl-drift-hb.txt`). 그 뒤 커밋은 E2e·E2eAd·E2eScal을 바꾸지 않았다 |
+| 2차: `--no-build` 8개 라이브러리(E2eDepW 포함) | exit 0, 1150 jobs (로그 135) |
+| 2차: 공리 게이트 `gen/e2e/seg2axioms_gate.py` | PASS, 선언 6851, 손 목록 517, 비표준 0, sorryAx 0 (로그 136, `axioms-gate-seg2.json`) |
+| 2차: 게이트 대조군(심은 `E2eDep.Planted`) | FAIL(기대대로), sorryAx `E2eDep.Planted.planted_sorry` (로그 138, `axioms-gate-seg2-plant.json`) |
+| 2차: 선언 drift (기준 `6a78c591`, 뿌리 E2e·E2eAd·E2eScal) | drift 0. 대조군(덤프 사본의 해시 하나) drift 1 (로그 139–141, `decl-drift-seg.txt`) |
 | Go 차분 시험, 하드웨어 대조 | 실행하지 않음 |
 
 명령과 종료 코드는 `STEPS-SEG.tsv`에 있다. 로그는 로컬에만 있다.
 
 ## 6. 신뢰 항목과 한계
 
-- `depDataType_addr`는 손으로 쓴 정의다. 값은 `link-dep/data/depDataType.data`의 `at` 줄이고 형식은 LV 읽개의 형식이다. 읽개의 도움 함수가 모듈 밖에 보이지 않아서다. 그 데이터 파일은 `check.py` (f)가 ELF와 대조했다.
+- `depDataType_addr`는 손으로 쓴 정의다. 값은 `link-dep/data/depDataType.data`의 `at` 줄이고 형식은 LV 읽개의 형식이다. 읽개의 도움 함수가 모듈 밖에 보이지 않아서다. `gen/e2e/depcheck_data.py`가 둘의 같음을 검사한다(SAME). 그 데이터 파일은 `check.py` (f)가 ELF와 대조했다.
 - 블록 틀이 실제 코드와 같음은 각 인스턴스에서 `infix_sub`로 검사된다. 틀 자체는 신뢰 대상이 아니다.
 - `lakefile.toml`은 덧붙이기만 했다(`lean_lib` E2eSeg, `input_dir` 둘, `lean_lib` E2eDep).
 - 줄 분류는 줄 단위이고 순서를 보지 않는다(`hbreuse.py`의 한계).
+
+## 7. 같은 가족의 다음 타입에 드는 손 줄
+
+Deposit에서 쓴 손 코드 줄을 부분별로 쟀다(`gen/e2e/segcost.py`, 로그 142). 주석과 빈 줄은 뺐다. 측정은 한 타입이다.
+
+| 부분 | 코드 줄 |
+| --- | --- |
+| 문장(기계) | 109 |
+| 문장(명세) + 손 Desc | 113 |
+| 크기 거부 증명 | 22 |
+| 수용: 보조(scratch·객체 나누기) | 42 |
+| 수용: 머리 단계(지시어 0–40) | 113 |
+| 수용: 루프 사용(블록 사실, `v32_loop` 적용) | 60 |
+| 수용: Data 객체, 위임 호출, 끝 | 166 |
+| 명세 다리 + 짝 + Desc 같음 | 150 |
+| 증인(거부, 수용) + newobject 모델 | 201 |
+| 코드 포함 | 8 |
+| 링크 스크립트 | 85 |
+| 합계 | 1069 |
+
+- 루프 증명과 거부 증명에 드는 줄은 각각 약 60, 22다. 일반 정리 이전에는 루프 하나가 약 300줄이었다.
+- 위임 호출(166)과 증인(201)이 가장 크다. 둘 다 타입마다 다른 틀 배치와 메모리 배치를 손으로 적는다.
+- 문장(222)은 IR과 `.S`에서 낼 수 있다고 본다(판단, 시험하지 않음).
+- 링크 스크립트는 앞 스크립트의 사본이다(85줄 중 새 줄 9, 3.1절).
+
