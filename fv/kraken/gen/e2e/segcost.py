@@ -5,8 +5,10 @@ Usage: python3 -I -B gen/e2e/segcost.py      (cwd = fv/kraken; Python 3 stdlib o
 The accept proof is cut at its own section comments: helpers (before `theorem dep_e2e_accept_main`), head (to
 `-- the Proof loop`), loop use (to `-- 84–86`), Data object and delegate call (the rest).
 """
+import os
 import pathlib
 import sys
+import tempfile
 
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -19,12 +21,11 @@ def code_lines(p, lo=None, hi=None):
     text = (KR / p).read_text().split("\n")
     a = 0 if lo is None else next(i for i, l in enumerate(text) if lo in l)
     b = len(text) if hi is None else next(i for i, l in enumerate(text) if hi in l)
-    tmp = KR / "gen" / "e2e" / ".segcost.tmp.lean"
-    tmp.write_text("\n".join(text[a:b]))
-    try:
-        return sum(1 for _, c in h.lines(str(tmp.relative_to(KR))) if not c)
-    finally:
-        tmp.unlink()
+    # review r5 S9: the slice goes to a temporary directory outside the repository
+    with tempfile.TemporaryDirectory() as d:
+        tmp = pathlib.Path(d) / "slice.lean"
+        tmp.write_text("\n".join(text[a:b]))
+        return sum(1 for _, c in h.lines(str(tmp)) if not c)
 
 
 ACC = "lean/E2eDep/Accept.lean"
@@ -48,6 +49,8 @@ PARTS = [
 
 
 def main():
+    print("Scope: hand code lines (not blank, not comment) of the Deposit port, all files written for it; "
+          "reference: none (absolute counts, not a diff).")
     print("| part | code lines |")
     print("| --- | --- |")
     tot = 0

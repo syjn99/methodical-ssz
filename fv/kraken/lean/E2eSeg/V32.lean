@@ -18,7 +18,8 @@ two blocks is empty or one `nop`, `GlueSrc` that it is empty (src = 0) or the `l
 The element size is fixed at 32: other sizes compile to other sequences (48: `lea (x,x,2)` then `shl $4`), and
 `shl $5` is stepped with `kshl64 5` (a literal count).
 The templates are the Kraken terms of `lv/link-hb` directives 36–77 (printed with `repr`) with the varying
-operands replaced by parameters; the instances show the equality by `rfl` (`E2eSeg/V32Inst.lean`).
+operands replaced by parameters; each use shows the equality with the real program by `infix_sub` and
+`rfl`/`decide` (`E2eSeg/V32Hb.lean`, `E2eDep/Accept.lean`).
 -/
 
 open Fk E2eList E2eHb

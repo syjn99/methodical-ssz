@@ -7,7 +7,7 @@
 1. 런타임 호출은 계약 가설이다(`MakesliceC` 둘, `MemmoveC`). Go 런타임 기계어의 정교화 증명은 없다.
 2. 전제 `writeBarrier = 0`과 `guard < rsp`가 경로를 고정한다. 쓰기 장벽 경로와 morestack 경로는 증명하지 않았다.
 3. Go 차분 시험과 x86-64 실행 대조는 하지 않았다.
-4. 독립 리뷰를 받지 않았다. 아래의 K는 작성자 빌드의 커널 검사 결과다.
+4. 아래의 K는 작성자 빌드의 커널 검사 결과다. 독립 리뷰 r5는 빌드와 검사를 재현했고 기록과 증인 하나를 고치라고 했다(REQUEST_CHANGES). 그 수정 뒤의 상태를 적는다. 수정은 다시 리뷰받지 않았다.
 
 ## 1. 핀
 
@@ -39,12 +39,13 @@
 | 거부 완전성 | K | `hb_e2e_reject_complete : hb_reject_complete_stmt` | `E2eHb/HbSpecK.lean` |
 | 손 `Desc` = 생산자 `Desc` | K | `prysmHbDesc_deserialize_checker` | `E2eHb/HbDescEq.lean` |
 | 수용 증인 | K | `WitHbA.hb_accept_runs` 와 구체 입력 셋(0, 대표, 0xff) | `E2eHb/WitHbA.lean` |
+| 크기 거부 증인 | K | `WitHbR.hb_reject_runs` (길이 524287, 524289, 0; 리뷰 r5 M3) | `E2eHb/WitHbR.lean` |
 | 공리 게이트 | X | PASS, 비표준 0, sorryAx 0 | `lv/axioms-gate-hb.json` |
 | 게이트 대조군(심은 `sorry`) | X | FAIL(기대대로) | `lv/axioms-gate-hb-plant.json` |
 | MarshalSSZTo, SizeSSZ, HashTreeRoot | N | 범위 밖 | |
 | morestack, 쓰기 장벽 켜짐 | N | 전제가 막는다 | |
-| 부정 시험(변이) | N | 실행하지 않음 | |
-| 선언 drift 검사 | N | 실행하지 않음. 기존 파일을 바꾸지 않았다(lakefile 덧붙임 제외) | |
+| 부정 시험(변이) | X | `negcases-hb.json` 10/10 (대조 3, 변이 7). 명세 짝과 거부 완전성의 변이는 `negcases-spec.json` | `CHECKS-HB.md` 2절, `negative-hb.json`, `negative-spec.json` |
+| 선언 drift 검사 | X | 기준 `6a78c591`, 뿌리 E2e·E2eAd·E2eScal: drift 0, 심은 대조군 drift 1 | `decl-drift-hb.txt`, `decl-drift-seg.txt` |
 
 고정 문장은 `b3cb1ca`에서 커밋했다. 그 뒤로 바꾸지 않았다. N으로 바꾼 문장은 없다.
 `hb_iter2`, `hb_loop2`는 고정 문장이 아니다. 작성 중에 반환 칸 값을 결론에 더했다(5절).
@@ -143,7 +144,8 @@
 | HbSpecK, HbDescEq | 3.5 s, 3.3 s | 8.3 s | 0.91 GiB |
 | WitHbA | 15 s | 17.7 s | 2.07 GiB |
 
-HbLoop2는 HbLoop1의 약 3배다. 원인은 측정하지 않았다.
+HbLoop2는 HbLoop1의 약 3배다. 원인은 상수 262144가 든 주소식 하나의 `laddr`(omega) 증명의 커널 검사다(12.2 s, `CHECKS-HB.md` 3절).
+일반 루프로 다시 유도한 `hb_loop2_g`(`E2eSeg/V32Hb.lean`)는 그 상수를 변수로 두어 모듈이 6.2 s다(`REPORT-SEG.md` 1.1절).
 T2(ScLoop 6.3 s, WitScA 16 s)와 비교하면 루프 1과 증인은 비슷하다.
 8192회 루프도 펼치지 않는다. 귀납 증명이라 반복 수가 시간에 영향을 주지 않았다.
 
@@ -192,7 +194,8 @@ T2(ScLoop 6.3 s, WitScA 16 s)와 비교하면 루프 1과 증인은 비슷하다
 | 금지 낱말 | `grep -rnE "sorry|admit|axiom |native_decide|bv_decide|maxRecDepth|maxHeartbeats" lean/E2eHb gen/e2e/hb* gen/e2e/AxiomsHb.lean` | `WitHbA.lean`의 측정된 `maxHeartbeats` 한 줄과 주석 한 줄만 |
 | 홈 경로 | `grep -rnE "Users/|/home/|lv-work"` (새 파일) | 0 |
 | 재사용 측정 | `python3 -I -B gen/e2e/hbreuse.py` | exit 0 (로그 37) |
-| 부정 시험 | | 실행하지 않음 |
+| 부정 시험 | `lvnegative.py ../prysm/go1.26.10/e2e/lv/negcases-hb.json …` | exit 0, 10/10 (`CHECKS-HB.md` 2절). 명세 쪽은 `negcases-spec.json` (`REPORT-SEG.md` 5절) |
+| 선언 drift | `decl_dump.lean` + `decl_drift.py` | drift 0 (`decl-drift-hb.txt`, `decl-drift-seg.txt`) |
 | Go 차분 시험, 하드웨어 대조 | | 실행하지 않음. 호스트는 arm64다 |
 
 명령과 종료 코드의 표는 `STEPS-HB.tsv`에 있다. 로그는 로컬에만 있다.

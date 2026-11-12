@@ -27,23 +27,16 @@ open Fk Fk.W E2e E2eList E2eDep E2eDep.Code E2eScal.H4Code E2eDepW
 
 namespace E2eDepW.WitA
 
--- Measured on this module (logs 115, 117–119, one run each): the default recursion depth (512) stops the
--- `P_len` / `LabelsFresh` checks over the 356-directive host; 1000, 2000, 5000 and 20000 pass. Value 2000 = twice
--- the lowest passing value.
-set_option maxRecDepth 2000
-
-
-
-
-
-
-
 def dataLabels : Program :=
   [.label "runtime.fvBump", .label "pad1", .label "pad2", .label "pad3", .label "pad4", .label "pad5",
    .label "pad6", .label "pad7", .label "runtime.writeBarrier"]
 
 def P : Program := dataLabels ++ DepUnmarshal ++ DdUnmarshal ++ BumpAllocT ++ BumpNew120 ++ RtCopy
 
+-- `maxRecDepth` (logs 115, 117–119, one run each; scoped per declaration in review r5 S2): the default (512)
+-- stops these list computations over the 356-directive host; 1000, 2000, 5000 and 20000 pass (measured with the
+-- option file-wide). Value 2000 = twice the lowest passing value. Only `P_len`, `hk308`, `hk324`, `hk330` need it.
+set_option maxRecDepth 2000 in
 theorem P_len : P.length = 356 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
@@ -56,12 +49,15 @@ theorem hk9 : DepUnmarshal.IsInfixAt Host.prog 9 :=
 theorem hk165 : DdUnmarshal.IsInfixAt Host.prog 165 :=
   infixAt_of (dataLabels ++ DepUnmarshal) (BumpAllocT ++ BumpNew120 ++ RtCopy)
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
+set_option maxRecDepth 2000 in
 theorem hk308 : BumpAllocT.IsInfixAt Host.prog 308 :=
   infixAt_of (dataLabels ++ DepUnmarshal ++ DdUnmarshal) (BumpNew120 ++ RtCopy)
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
+set_option maxRecDepth 2000 in
 theorem hk324 : BumpNew120.IsInfixAt Host.prog 324 :=
   infixAt_of (dataLabels ++ DepUnmarshal ++ DdUnmarshal ++ BumpAllocT) RtCopy
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
+set_option maxRecDepth 2000 in
 theorem hk330 : RtCopy.IsInfixAt Host.prog 330 :=
   infixAt_of (dataLabels ++ DepUnmarshal ++ DdUnmarshal ++ BumpAllocT ++ BumpNew120) []
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)

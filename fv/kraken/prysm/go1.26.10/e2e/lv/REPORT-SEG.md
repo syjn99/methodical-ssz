@@ -27,7 +27,8 @@
 - 그 셋을 보조정리로 바꿨다: makeslice 수, memmove 수(32비트 즉시값), 저장한 len·cap 단어(64비트 즉시값).
 - 루프 몸은 블록 여섯과 틈으로 나눴다. `Glue`는 틈이 비었거나 `nop` 하나임을 말한다. `GlueSrc`는 비었거나 `lea src(%rbx),%rbx`임을 말한다.
 - 블록 틀은 `lv/link-hb` 지시어 36–77의 Kraken 항이다. 변하는 피연산자만 매개변수로 바꿨다.
-- 일반 파일들은 `maxHeartbeats` 설정 없이 빌드된다. SegN은 16000000이 필요했다.
+- `ListG`, `SegG`, `V32`, `V32Loop`, `RejG`, `SpecG`는 설정 없이 빌드된다. SegN은 `maxHeartbeats` 16000000이 필요했다.
+- `VTriLoop`의 `vtri_iter`에는 `maxHeartbeats` 800000이 있다(옵션 목록은 5.1절).
 
 ### 1.1 고정 인스턴스를 다시 유도함 (K)
 
@@ -84,7 +85,7 @@ Deposit의 포인터 필드(Deposit_Data)는 디코더 증명(`E2eScal.H4.dd_e2e
 | 손 Desc, 고정 명세 문장 | 커밋 `bf2ebe7` | `E2eDep/SpecStmt.lean`: `prysmDepDesc`(생산자 Desc 출력 전에 작성), `dep_accept_spec_stmt`, `dep_reject_size_spec_stmt`, `dep_reject_complete_stmt` |
 | 명세 다리 | K | `dep_serialize`, `dep_roundtrip`, `dep_accepted_is_enc`, `dep_spec_accepts_iff` (`E2eDep/Spec.lean`) |
 | 명세 짝 | K | `dep_e2e_accept_spec_k`, `dep_e2e_reject_size_spec`, `dep_e2e_reject_complete` |
-| 손 Desc = 생산자 Desc | K | `prysmDepDesc_deserialize_checker` (생산자 파일 sha256 `cd4b71f0…` = 검사기 기록) |
+| 손 Desc와 생산자 Desc의 codec 같음 | K | `prysmDepDesc_deserialize_checker`: 모든 bs, v에 대해 `deserialize prysmDepDesc bs = .ok v ↔ deserialize depCheckerDesc bs = .ok v`. 두 Desc는 필드 이름만 다르다(중첩 container 포함). 생산자 파일 sha256 `cd4b71f0…` = 검사기 기록 |
 | 증인 | K | `WitR.dep_reject_runs`(길이 1239, 1241, 0), `WitA.dep_accept_runs`(0, 대표, 0xff). 새 증인 모델 `BumpNew120` |
 | 부정 시험 | X | `negcases-dep.json` 9/9: 대조 2, 변이 7(문장·코드 크기, 루프 상한, 원소 크기, Data 오프셋·길이, 힙 양) |
 | `depDataType_addr` 검사 | X | `gen/e2e/depcheck_data.py`: SAME. 자체 시험(심은 오프셋)은 기대대로 다름 |
@@ -106,11 +107,25 @@ Deposit의 포인터 필드(Deposit_Data)는 디코더 증명(`E2eScal.H4.dd_e2e
 | `gen/e2e/deplink.py` | `gen/e2e/hblink.py` | 54 | 4 | 9 | 18 |
 | 합계 | | 241 | 110 | 236 | 90 |
 
-- HB의 새 줄은 346이었다(`REPORT-HB.md` 3.2). Deposit은 236이다.
-- 루프 증명을 위해 새로 쓴 줄은 0이다. 루프 사용은 `v32_loop` 적용과 블록·틈 사실 약 45줄이다.
-- HB에서 루프 둘은 손으로 610줄(HbLoop1 302, HbLoop2 308)이었다.
-- 크기 거부는 16줄이다(HB 80줄의 손 증명).
-- 새 줄의 대부분은 이 가족 밖의 일이다: `new(Deposit_Data)`, 위임 호출, 피호출자 틀을 우리 scratch로 나누기(약 120줄), 문장의 피호출자 필드.
+범위: 위 표는 Deposit 파일 다섯을 HB 원본과 비교했다(이름 바꾸기 HB → Deposit, `segreuse.py` 1부).
+`REPORT-HB.md` 3.2의 346은 다른 범위다: HB 파일 16개를 T2 원본과 비교했다(이름 바꾸기 T2 → HB).
+같은 범위(같은 파일 종류)로 맞춘 수는 다음과 같다(`segreuse.py` 3부, 로그 151).
+
+| 범위 | HB new (참조 T2) | Deposit new (참조 HB) |
+| --- | --- | --- |
+| 코드 포함 | 1 | 4 |
+| 기계 문장 | 26 | 53 |
+| 크기 거부 | 1 | 16 |
+| 루프 1 | 63 | 0 (일반 정리, 파일 없음) |
+| 루프 2 | 67 | 0 (일반 정리, 파일 없음) |
+| 수용 | 34 | 154 |
+| 링크 스크립트 | 27 | 9 |
+| 합계 | 219 | 236 |
+
+- 참조와 이름 바꾸기 표가 다르다. 두 수는 "앞 타입에서 옮겨지지 않은 줄"만 말한다.
+- 루프의 새 줄은 0이 되었다. HB는 루프 둘에 130줄이었다. Deposit의 루프 사용(블록 사실과 적용, 약 60줄)은 수용 154줄 안에 있다.
+- 크기 거부는 HB 1줄(80줄 사본의 이름 바꾸기)에서 Deposit 16줄(일반 정리 한 번 적용)이 되었다. 거부 증명 전체는 80줄에서 22줄이 되었다.
+- 같은 범위의 새 줄 합계는 줄지 않았다(219 → 236). 늘어난 곳은 수용(위임 호출, 약 120줄)과 문장(피호출자 필드)이다. 둘 다 HB에 없던 일이다.
 
 ### 3.2 HB에서 없어질 줄
 
@@ -140,9 +155,9 @@ Deposit의 포인터 필드(Deposit_Data)는 디코더 증명(`E2eScal.H4.dd_e2e
 | --- | --- |
 | `lake build E2eHb E2eSeg E2eDep` | exit 0, 730 jobs (로그 100) |
 | `lake build --no-build E2e E2eAd E2eScal E2eList E2eHb E2eSeg E2eDep` | exit 0, `All targets up-to-date (1124 jobs)` (로그 101) |
-| 공리 게이트 `gen/e2e/segaxioms_gate.py` | exit 0, PASS, 선언 6627, 손 목록 502, 비표준 0, sorryAx 0 (로그 102, `axioms-gate-seg.json`) |
+| 공리 게이트 `gen/e2e/segaxioms_gate.py` | exit 0, PASS, 선언 6627, 손 목록 502, 비표준 0, sorryAx 0 (로그 102, `axioms-gate-seg.json`). 이 json은 `axioms-gate-seg2.json`과 리뷰 r5 뒤의 `axioms-gate-seg2-r5.json`이 대체한다. 옛 파일은 고치지 않았다 |
 | 게이트 대조군 | 이 스크립트로는 다시 돌리지 않았다. 같은 게이트 코드의 대조군은 `axioms-gate-hb-plant.json`(FAIL, 기대대로) |
-| 금지 낱말 | `E2eDep/Accept.lean`의 측정된 `maxHeartbeats` 한 줄만 |
+| 금지 낱말 | `sorry`, `admit`, 새 `axiom`, `native_decide`, `bv_decide`: 0. 측정된 옵션 넷만 있다(5.1절) |
 | 홈 경로 | 새 파일에 0 |
 | 선언 drift(1부) | 기준 `6a78c591`, drift 0 (`decl-drift-hb.txt`). 그 뒤 커밋은 E2e·E2eAd·E2eScal을 바꾸지 않았다 |
 | 2차: `--no-build` 8개 라이브러리(E2eDepW 포함) | exit 0, 1150 jobs (로그 135) |
@@ -152,6 +167,37 @@ Deposit의 포인터 필드(Deposit_Data)는 디코더 증명(`E2eScal.H4.dd_e2e
 | Go 차분 시험, 하드웨어 대조 | 실행하지 않음 |
 
 명령과 종료 코드는 `STEPS-SEG.tsv`에 있다. 로그는 로컬에만 있다.
+
+### 5.1 측정된 옵션 (전부)
+
+| 위치 | 옵션 | 값 | 측정(실패 / 통과) | 원인 |
+| --- | --- | --- | --- | --- |
+| `E2eDep/Accept.lean`, `dep_e2e_accept_main` | `maxHeartbeats` | 800000 | 200000 실패 / 400000, 800000 통과 (로그 95–97) | 한 선언의 길이: 전술 3.37 s, `simp` 1.11 s, 커널 1.58 s (로그 98) |
+| `E2eSeg/VTriLoop.lean`, `vtri_iter` | `maxHeartbeats` | 800000 | 200000 실패(셋째 경우) / 400000, 800000 통과 (로그 130–132) | 경우 나누기가 증명 글을 크기마다 한 번, 모두 세 번 돈다 |
+| `E2eDepW/WitA.lean`, `dep_accept_runs` | `maxHeartbeats` | 4000000 | 200000, 1000000 실패 / 2000000, 4000000 통과 (로그 115, 120, 121) | `simp` AC 정렬 20.1 s (로그 122) |
+| `E2eDepW/WitA.lean`, `P_len`, `hk308`, `hk324`, `hk330` | `maxRecDepth` | 2000 | 512(기본) 실패 / 1000, 2000, 5000, 20000 통과 (로그 115, 117–119, 파일 전체 설정으로 잼) | 356 지시어 Host 위의 목록 계산. 리뷰 r5 S2 뒤 선언마다 둔다(로그 145) |
+| `E2eHb/WitHbA.lean`, `hb_accept_runs` (HB 작업) | `maxHeartbeats` | 2000000 | 200000, 400000 실패 / 1000000 통과 | `REPORT-HB.md` 4절 |
+
+### 5.2 시도 기록 (리뷰 r5 S5)
+
+| 단위 | 빌드(실패 / 통과) | 전략 수 | 사실 |
+| --- | --- | --- | --- |
+| `SegG` + `ListG` | 3 / 2 (로그 48, 52–55) | 1 | `omega`의 비선형 항, 남은 `rfl`, `type_of%` 인스턴스 바인더 |
+| `V32` | 2 / 1 (로그 56–58) | 1 | `Directive` 형 이름, `nop` 단계의 `whnf` |
+| `V32Loop` | 1 / 2 (로그 59–61) | 1 | 출구의 플래그 식 |
+| `V32Hb` | 3 / 2 (로그 62–66) | 2 | 전략 1: 루프 1. 전략 2: 루프 2(`lea` 틈 읽기, 반환 칸 값) |
+| `RejG` | 4 / 1 (로그 68–72) | 1 | `open` 오류, 주소식의 `OfNat` 원자, 마지막 rsp 식 |
+| `E2eDep.Accept` | 11 / 1 (로그 83–94; 93은 탐침) | 1 | 단계별로 증명을 늘렸다. 실패는 탐침(`done`), 이름 충돌, 인수 수, 주소 식이다 |
+| `VTriLoop` | 3 / 1 (로그 128–130, 133) + 옵션 측정 (131, 132) | 1 | 저장 값의 `OfNat` 꼴, `maxHeartbeats` |
+
+- 탐침 빌드 둘(로그 93, 129)은 목표의 꼴을 보려고 파일을 잠시 바꿨다. 로그 129의 탐침은 두 경우를 `sorry`로 두었다. 그 상태는 커밋하지 않았고 어떤 주장의 근거도 아니다. 빌드 뒤 바로 되돌렸다.
+- 한 전략 안의 컴파일 반복은 시도 한 번으로 셌다. LV와 HB와 같은 해석이다.
+- 이 해석에서 3전략 한도에 닿은 단위는 없다. 빌드 횟수로 세면 `RejG`와 `E2eDep.Accept`가 3을 넘는다.
+
+### 5.3 기록만 (리뷰 r5 S3)
+
+- Lake `input_dir` `lv_dep_data`는 선언했지만 그것을 읽는 Lean 파일이 없다. `depDataType_addr`는 손 정의다(6절).
+- 객체 크기 120은 데이터 파일(`Size_ = 0x78`)을 읽어서 정했다. Lean 정리는 이 값을 데이터 파일에 묶지 않는다. `NewobjectC … 120`은 문장의 가설이다.
 
 ## 6. 신뢰 항목과 한계
 
@@ -183,4 +229,11 @@ Deposit에서 쓴 손 코드 줄을 부분별로 쟀다(`gen/e2e/segcost.py`, �
 - 위임 호출(166)과 증인(201)이 가장 크다. 둘 다 타입마다 다른 틀 배치와 메모리 배치를 손으로 적는다.
 - 문장(222)은 IR과 `.S`에서 낼 수 있다고 본다(판단, 시험하지 않음).
 - 링크 스크립트는 앞 스크립트의 사본이다(85줄 중 새 줄 9, 3.1절).
+
+## 8. 사용자를 위한 것
+
+- `lakefile.toml`에 덧붙였다: `lean_lib` 넷(E2eHb, E2eSeg, E2eDep, E2eDepW), `input_dir` 넷(`lv_hb_norm_S`, `lv_dep_norm_S`, `lv_dep_data`, `lv_dep_lean_S`). 루트 `AGENTS.md`는 lakefile 변경에 승인을 요구한다.
+- 새 인스턴스 값: `NewobjectC Heap depDataType_addr 120`(기존 꼴). 증인 모델 `BumpNew120`(`E2eDepW/BumpNew120.S`)을 더했다.
+- 이 브랜치의 기점 `1b5f524`는 LV 브랜치의 리뷰 r4 수정보다 앞선다. 합치기 전에 병합이 필요하다.
+- 같은 가족의 다음 타입 비용은 7절의 1069줄(한 타입 측정)이다.
 
