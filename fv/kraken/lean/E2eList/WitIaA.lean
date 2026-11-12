@@ -27,10 +27,6 @@ open Fk Fk.W E2e E2eList E2eList.Code
 
 namespace E2eList.WitIaA
 
--- Measured cause (logs 191, 212): `rfl` / `decide` on the 884-directive host program (`P_len`, the prefix lengths of
--- `hk…`, the label facts `hf…`, `hn…`) stop with "maximum recursion depth" at the default (512) and at 1024; 2048
--- passes (logs 210, 211).
-set_option maxRecDepth 2048
 
 theorem iaOff_length : iaOff.length = 4 := rfl
 
@@ -41,6 +37,10 @@ def dataLabels : Program :=
 def P : Program := dataLabels ++ IaUnmarshal ++ E2eAd.Code.AdUnmarshal ++ E2eAd.Code.SlUnmarshal
   ++ E2eAd.Code.CiUnmarshal ++ E2e.Code.CpUnmarshal ++ E2e.Code.EpUnmarshal ++ BumpAllocT3 ++ RtCopy ++ BumpNewT3
 
+-- Measured cause (logs 260, 261): `rfl` on the 884-directive host program stops with "maximum recursion depth" at
+-- the default (512) in `P_len` and the prefix-length facts `hk288` … `hk869` only. `hk288` passes at 1024; `P_len`
+-- and `hk531` … `hk869` fail at 1024 (log 261) and pass at 2048 (log 262). The other host facts need no option.
+set_option maxRecDepth 2048 in
 theorem P_len : P.length = 884 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
@@ -51,29 +51,37 @@ theorem hk9 : IaUnmarshal.IsInfixAt Host.prog 9 :=
   infixAt_of dataLabels (E2eAd.Code.AdUnmarshal ++ E2eAd.Code.SlUnmarshal ++ E2eAd.Code.CiUnmarshal
     ++ E2e.Code.CpUnmarshal ++ E2e.Code.EpUnmarshal ++ BumpAllocT3 ++ RtCopy ++ BumpNewT3)
     (by simp [prog_eq, P, List.append_assoc]) rfl
+set_option maxRecDepth 1024 in
 theorem hk288 : E2eAd.Code.AdUnmarshal.IsInfixAt Host.prog 288 :=
   infixAt_of (dataLabels ++ IaUnmarshal) (E2eAd.Code.SlUnmarshal ++ E2eAd.Code.CiUnmarshal ++ E2e.Code.CpUnmarshal
     ++ E2e.Code.EpUnmarshal ++ BumpAllocT3 ++ RtCopy ++ BumpNewT3) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
+set_option maxRecDepth 2048 in
 theorem hk531 : E2eAd.Code.SlUnmarshal.IsInfixAt Host.prog 531 :=
   infixAt_of (dataLabels ++ IaUnmarshal ++ E2eAd.Code.AdUnmarshal) (E2eAd.Code.CiUnmarshal ++ E2e.Code.CpUnmarshal
     ++ E2e.Code.EpUnmarshal ++ BumpAllocT3 ++ RtCopy ++ BumpNewT3) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
+set_option maxRecDepth 2048 in
 theorem hk594 : E2eAd.Code.CiUnmarshal.IsInfixAt Host.prog 594 :=
   infixAt_of (dataLabels ++ IaUnmarshal ++ E2eAd.Code.AdUnmarshal ++ E2eAd.Code.SlUnmarshal) (E2e.Code.CpUnmarshal
     ++ E2e.Code.EpUnmarshal ++ BumpAllocT3 ++ RtCopy ++ BumpNewT3) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
+set_option maxRecDepth 2048 in
 theorem hk657 : E2e.Code.CpUnmarshal.IsInfixAt Host.prog 657 :=
   infixAt_of (dataLabels ++ IaUnmarshal ++ E2eAd.Code.AdUnmarshal ++ E2eAd.Code.SlUnmarshal ++ E2eAd.Code.CiUnmarshal)
     (E2e.Code.EpUnmarshal ++ BumpAllocT3 ++ RtCopy ++ BumpNewT3) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
+set_option maxRecDepth 2048 in
 theorem hk765 : E2e.Code.EpUnmarshal.IsInfixAt Host.prog 765 :=
   infixAt_of (dataLabels ++ IaUnmarshal ++ E2eAd.Code.AdUnmarshal ++ E2eAd.Code.SlUnmarshal ++ E2eAd.Code.CiUnmarshal
     ++ E2e.Code.CpUnmarshal) (BumpAllocT3 ++ RtCopy ++ BumpNewT3) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
+set_option maxRecDepth 2048 in
 theorem hk828 : BumpAllocT3.IsInfixAt Host.prog 828 :=
   infixAt_of (dataLabels ++ IaUnmarshal ++ E2eAd.Code.AdUnmarshal ++ E2eAd.Code.SlUnmarshal ++ E2eAd.Code.CiUnmarshal
     ++ E2e.Code.CpUnmarshal ++ E2e.Code.EpUnmarshal) (RtCopy ++ BumpNewT3) (by simp [prog_eq, P, List.append_assoc])
     (by rfl)
+set_option maxRecDepth 2048 in
 theorem hk843 : RtCopy.IsInfixAt Host.prog 843 :=
   infixAt_of (dataLabels ++ IaUnmarshal ++ E2eAd.Code.AdUnmarshal ++ E2eAd.Code.SlUnmarshal ++ E2eAd.Code.CiUnmarshal
     ++ E2e.Code.CpUnmarshal ++ E2e.Code.EpUnmarshal ++ BumpAllocT3) BumpNewT3 (by simp [prog_eq, P, List.append_assoc])
     (by rfl)
+set_option maxRecDepth 2048 in
 theorem hk869 : BumpNewT3.IsInfixAt Host.prog 869 :=
   infixAt_of (dataLabels ++ IaUnmarshal ++ E2eAd.Code.AdUnmarshal ++ E2eAd.Code.SlUnmarshal ++ E2eAd.Code.CiUnmarshal
     ++ E2e.Code.CpUnmarshal ++ E2e.Code.EpUnmarshal ++ BumpAllocT3 ++ RtCopy) [] (by simp [prog_eq, P, List.append_assoc])

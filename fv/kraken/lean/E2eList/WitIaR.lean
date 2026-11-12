@@ -25,9 +25,6 @@ open Fk Fk.W E2eList E2eList.Code
 
 namespace E2eList.WitIaR
 
--- Measured cause (log 245): `rfl` / `decide` on the 348-directive host program (`P_len`, `hk284`, the label facts)
--- stop with "maximum recursion depth" at the default (512); 1024 passes (logs 245, 246).
-set_option maxRecDepth 1024
 
 def dataLabels : Program :=
   [.label "runtime.writeBarrier", .label "go_string._", .label "pad2", .label "pad3", .label "runtime.fvBump"]
@@ -36,6 +33,9 @@ def tailLabels : Program := [.label "go_itab._errors.errorString_error", .label 
 
 def P : Program := dataLabels ++ IaUnmarshal ++ RtErr ++ tailLabels
 
+-- Measured cause (log 260): `rfl` on the 348-directive host program stops with "maximum recursion depth" at
+-- the default (512) in `P_len` and `hk284` only; 1024 passes (log 261). The other host facts need no option.
+set_option maxRecDepth 1024 in
 theorem P_len : P.length = 348 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
@@ -44,6 +44,7 @@ theorem prog_eq : Host.prog = P := rfl
 
 theorem hk5 : IaUnmarshal.IsInfixAt Host.prog 5 :=
   infixAt_of dataLabels (RtErr ++ tailLabels) (by simp [prog_eq, P, List.append_assoc]) rfl
+set_option maxRecDepth 1024 in
 theorem hk284 : RtErr.IsInfixAt Host.prog 284 :=
   infixAt_of (dataLabels ++ IaUnmarshal) tailLabels (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 
