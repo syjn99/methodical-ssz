@@ -1,5 +1,5 @@
 import E2eScal.EncTies
-import E2eScal.EncFieldN
+import E2eScal.EncFrameTest
 import E2eScal.E1Code
 
 /-!
