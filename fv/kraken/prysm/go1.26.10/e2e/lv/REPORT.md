@@ -172,7 +172,7 @@ T3의 옵션(원인과 문턱은 옵션 옆에 있다. 구현 담당의 측정�
 | T3 선언 drift | 0, 5007 = 5007 (`decl-drift-lv-t3.txt`, 로그 250) |
 | T3 링크 | PASS all (`lv/link-t3/RESULT`). U8에서 다시 돌리지 않았다 |
 | T3 부정 시험 | 8개 모두 통과: 대조군 2, inside 6 (`negative-lv-t3.json`, 로그 253) |
-| T3, 리뷰 r4 수정 뒤 | 빌드 exit 0(로그 265), `--no-build` exit 0, 1082 jobs(로그 266), 게이트 PASS 선언 6451(`axioms-gate-lv-t3-r4.json`, 로그 267), drift 0(로그 268), 부정 시험 14개 모두 통과: 대조군 5, inside 9(로그 264) |
+| T3, 리뷰 r4 수정 뒤 | 빌드 exit 0(로그 265), `--no-build` exit 0, 1082 jobs(로그 266), 게이트 PASS 선언 6451(`axioms-gate-lv-t3-r4.json`, 로그 267), drift 0(로그 268), 부정 시험 14개 모두 통과: 대조군 5, inside 9(로그 264). 리뷰 r5 뒤 16개 모두 통과: 대조군 5, inside 11(`64974ac`, 로그 270, 리뷰 전) |
 | T3 게이트 대조군, drift 대조군, stale 검사 | 실행하지 않음 |
 | Go 차분 시험 | 실행하지 않음 |
 | 하드웨어 대조 | 실행하지 않음. 호스트는 arm64다 |
