@@ -12,7 +12,6 @@ import E2eEnc.Defs
 Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
 Statement shape: `E2e/CpMarshal.lean`, `E2e/CpMarshalG.lean`, `E2e/CpSpecM.lean` (Checkpoint encoder) and
 `E2eList/StmtIa.lean` (exact caller frame `R`, contracts as hypotheses, receiver and input kept).
-Design, paths and the frame table: `prysm/go1.26.10/e2e/lv/DESIGN-ENC.md`.
 
     func (c *DataColumnsByRootIdentifier) MarshalSSZTo(dst []byte) ([]byte, error) {   // fulu.ssz.go:1754
         if len(c.BlockRoot) != 32 { return nil, ssz.ErrBytesLength }                     // bytes-length reject

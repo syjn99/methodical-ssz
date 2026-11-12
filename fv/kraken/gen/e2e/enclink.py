@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Call graph and link set of the real v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo on the
-Go 1.26.10 ELF (sha256 c6403c02...911e), the first variable-length encoder hand proof (lv/SELECTION-ENC.md).
+Go 1.26.10 ELF (sha256 c6403c02...911e), the first variable-length encoder hand proof (selected: one variable-length field, a uint64 list, and no call to
+another generated method).
 A new file in the pattern of `lvlink.py`. Existing scripts are not changed.
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
@@ -31,7 +32,8 @@ import lvlink  # noqa: E402
 
 V1A1 = "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
 TARGET = f"{V1A1}.(*DataColumnsByRootIdentifier).MarshalSSZTo"
-# candidates read for the selection (SELECTION-ENC.md); only TARGET is linked
+# candidates read for the selection (DataColumnSidecarsByRangeRequest: reserve, same form; IndexedAttestation:
+# excluded, it calls AttestationData.MarshalSSZTo); only TARGET is linked
 CANDS = [TARGET, f"{V1A1}.(*DataColumnSidecarsByRangeRequest).MarshalSSZTo",
          f"{V1A1}.(*IndexedAttestation).MarshalSSZTo"]
 CLASS = dict(lvlink.CLASS)

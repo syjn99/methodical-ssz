@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """H4 hold-out: call graph and link tables of the real v1alpha1.Deposit_Data and v1alpha1.PendingPartialWithdrawal
 UnmarshalSSZ on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/e2e/link; written after the
-H4 section of `scal/HOLDOUT-OPENED`; the text of `h3link.py` with the function set and the data items changed).
+H4 hold-out was opened at 2026-11-11T08:53:45Z; the text of `h3link.py` with the function set and the data items changed).
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   h4link.py callgraph <objdump> <out.json>          call targets with contract class

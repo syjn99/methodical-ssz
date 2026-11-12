@@ -6,7 +6,7 @@ import E2e.Data
 /-!
 # Any-site grow path: the Columns loop when any iteration may grow the block
 
-Loop head `L_13a` (directive 82). The invariant (`DESIGN-ENC2.md`): rax = block pointer `bp`, rbx = L + 8i, rcx = the
+Loop head `L_13a` (directive 82). The invariant: rax = block pointer `bp`, rbx = L + 8i, rcx = the
 block capacity `cp`, rdx = pc, rsi = i, r8 = n, rsp = x − 136; the block holds `Pfx ‖ cb.take (8i) ‖ tail` with
 `|Pfx| = L` and `|tail| = cp − (L + 8i)`; the slots x − 24 (pc) and x − 40 (n) that the growth branch reloads; the
 growth-only slots x − 48, x − 72, the 40-byte spill area x − 136, the return slot x − 144, scratch; the garbage frame

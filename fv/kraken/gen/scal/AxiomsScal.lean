@@ -339,7 +339,7 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.Gen.ci_unmarshal_accept_main_g_kind
 #print axioms E2eScal.Gen.ad_dec_BeaconBlockRoot_seg_kind
 #print axioms E2eScal.Gen.cp_dec_Root_seg_kind
--- Hold-out ValidatorIndex and BeaconBlockHeader set (after scal/HOLDOUT-OPENED)
+-- Hold-out ValidatorIndex and BeaconBlockHeader set (after the hold-out was opened, 2026-11-10T17:53:24Z)
 #print axioms E2eScal.Gen.vi_unmarshal_accept_main_g
 #print axioms E2eScal.Gen.vi_unmarshal_accept_main_g_kind
 #print axioms E2eScal.vi_uacc_holds

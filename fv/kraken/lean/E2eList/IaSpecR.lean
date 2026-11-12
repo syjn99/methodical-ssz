@@ -5,7 +5,8 @@ import E2eList.IaSpec
 # Spec alignment of the IndexedAttestation decoder's size and offset rejects, and the reject cases
 
 The statements are the frozen `ia_reject_size_spec_stmt`, `ia_reject_offset_spec_stmt` and `ia_reject_cases_stmt`
-(`StmtIa.lean`). `ia_e2e_reject_cases` is about EthLib only (`DESIGN-T3.md` §6).
+(`StmtIa.lean`). `ia_e2e_reject_cases` is about EthLib only. It gives reject completeness of the machine code only for the reject
+paths with a machine theorem (the alignment and overflow rejects only under `e0 ≠ 0`, `StmtIaNz.lean`).
 -/
 
 open Fk E2e EthLib.Serialization.Ssz E2eList.Code

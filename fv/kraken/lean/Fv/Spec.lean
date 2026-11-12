@@ -191,6 +191,6 @@ theorem deserialize_fixed_err_matches (bs : Array UInt8) (h : bs.size ≠ 40) :
 The machine-level nil rules are not stated in this file. In fv/kraken each
 theorem names the memory chunks it reads and writes (separation logic over
 Kraken's partial data memory), so a receiver without a chunk is outside its
-precondition. See fv/kraken/REPORT.md. -/
+precondition. -/
 
 end Fv

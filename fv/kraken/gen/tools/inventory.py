@@ -4,7 +4,7 @@
   inventory.py names <names.txt>
       write the theorem names of the FIXED mapping table below (input of `inventory_decls.lean`)
   inventory.py methods <p1cbin-amd64.nm> [<out.json>]
-      read the `go tool nm` listing of the pinned ELF (not committed, 2 MB; MANIFEST section 2), check its sha256
+      read the `go tool nm` listing of the pinned ELF (not committed, 2 MB), check its sha256
       against the `nm sha256` line of `prysm/go1.26.10/build-ids.txt`, and write the list of SSZ methods of the target
       (default `prysm/go1.26.10/ssz-methods.json`). This list is the denominator of the inventory.
   inventory.py run <decls.tsv> <INVENTORY.md> <INVENTORY.json>
@@ -75,7 +75,7 @@ FLAT16 = ["Checkpoint", "BeaconBlockHeader", "Eth1Data", "BlobIdentifier", "Depo
 NESTED = ["AttestationData"]
 # Refusal class of the flat-type hold-out (H7) per flat type outside FLAT16 and generator (wording only, no state rule).
 # Source: the one-shot runs of the flat-type hold-out (`p2dec --gen5`, `p2enc --gen6`), classes read at the stop directive of the `.S`;
-# recorded per type in `prysm/go1.26.10/e2e/scal/RESULT.json` (`flat24.part1.per_type`). A type or method missing
+# the per-type run record is in git history only. A type or method missing
 # here was generated (exit 0) by that run. The class is a field kind or a callee the generators do not support.
 F24_REFUSED = {
     "v1.BuilderExitRequest": dict(decoder="byte vector 20", encoder="byte vector 20"),

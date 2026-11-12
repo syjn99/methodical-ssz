@@ -10,7 +10,7 @@ The decoder accept path needs `MakesliceC` with esz 1 (uint8 type word) and esz 
 `E2eDec/BumpAllocDc.S` is the text of the model `E2eList/BumpAllocT3.S` (branch `claude/ssz-fv-list-vector-20261112`,
 commit `a1c5d0d`, not in this branch's base) with the label renamed: it bumps by 8·cnt for `type__+387456` and by cnt
 otherwise. The two theorems below are the text of `E2eList.bump_makeslice_t3_1` / `t3_8` of that commit (`BumpT3.lean`)
-with the names changed. Abstract model for non-vacuity only (`CONTRACTS.md` §3), not a Go refinement. The `.S` file is in
+with the names changed. Abstract model for non-vacuity only, not a Go refinement. The `.S` file is in
 the Lake `input_dir` `dcd_lean_S`.
 -/
 

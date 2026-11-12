@@ -4,7 +4,7 @@ import E2eEnc.StmtEnc
 # Frozen STATEMENTS of the encoder for every capacity (any-site grow path: growslice at any site, any number of times)
 
 Statements only. Frozen at their commit; a later change needs a new name and a reason.
-Design: `prysm/go1.26.10/e2e/lv/DESIGN-ENC2.md`, section "Any-site grow path". The fast path and the first-site grow path (site 1 only) of
+The fast path and the first-site grow path (site 1 only) of
 `StmtEnc.lean` are the special cases with no growth and with one growth at site 1.
 
 - `dst` is `(dp, len, cap)` with the old block `pre ‖ spare` (`len + |spare| = cap`).

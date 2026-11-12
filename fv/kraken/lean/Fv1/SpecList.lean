@@ -10,7 +10,7 @@ import Fv1.SpecScalars
 
 The brief writes the Desc as `.list (.uint 64) 16`. EthLib's `Desc.uint`
 takes a byte width (`[1, 2, 4, 8, 16, 32]`), so uint64 is `.uint 8` and
-`.uint 64` is not well formed (REPORT.md disagreement).
+`.uint 64` is not well formed (a disagreement with the brief).
 -/
 
 namespace Fv1

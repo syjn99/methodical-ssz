@@ -2,7 +2,7 @@ import Fk.Step
 
 /-! Branch-condition lemmas stated once, so the kernel does not re-check
 arithmetic on 64-bit literals at every use (`simp` + `omega` proof terms with
-literals near 2^64 make the kernel report deep recursion; see TOOLS.md). -/
+literals near 2^64 make the kernel report deep recursion). -/
 
 namespace Fk
 

@@ -2,7 +2,7 @@
 """Classify the outputs of gen/prysm-tests.sh against the known failures.
 
 Usage: prysm_tests_classify.py <out-dir> <result.json>
-Known failures (cited from the prysm-fv-pin-smoke run, REPORT section 6; GENERATOR-FINDINGS 2 and 3):
+Known failures (from the prysm-fv-pin-smoke run, outside this repository):
 - KNOWN_SUBTESTS: three error-text subtests of consensus-types/blocks (cause: generator 280b752),
   in the mainnet runs that include that package.
 - KNOWN_MINIMAL: under -tags minimal, consensus-types/blocks test files do not build and

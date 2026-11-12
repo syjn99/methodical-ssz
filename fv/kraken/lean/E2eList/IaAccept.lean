@@ -57,7 +57,7 @@ theorem ia_mask_zero :
 
 omit [Host] in
 /-- `c − 228` as a natural number (stated without `simp` on the negative literal: `simp [BitVec.toNat_add]` on
-`c + -228` makes a proof term the kernel rejects with "deep recursion" after minutes and 16 GiB, logs 147–153). -/
+`c + -228` makes a proof term the kernel rejects with "deep recursion" after minutes and 16 GiB). -/
 theorem ia_sub228 (c : BitVec 64) (h : 228 ≤ c.toNat) : (c + -228).toNat = c.toNat - 228 := by
   rw [← BitVec.sub_eq_add_neg, BitVec.toNat_sub_of_le]
   · rfl
@@ -167,7 +167,7 @@ theorem ia_obj96 (p : BitVec 64) :
     at_app _ _ (b := p + 56) (by simp; bv_omega) (by simp), at_app _ _ (b := p + 64) (by simp; bv_omega) (by simp)]
   simp only [Std.ExtHashMap.sep_assoc]
 
--- Measured causes (logs 167, 184, 185):
+-- Measured causes:
 -- * heartbeats: the whole proof (about 230 `kat` steps, 3 runtime calls, the loop and the AttestationData call) stops
 --   with a `whnf` timeout at the default (200000) and at 400000; 800000 passes; the value is twice that;
 -- * recursion depth: without the option the first `kat` (directive 0) stops with "maximum recursion depth", as in
@@ -276,7 +276,7 @@ theorem ia_e2e_accept_main : ia_accept_stmt := by
   split
   case isTrue h => exfalso; rw [ia_jg2048_false _ _ (by omega)] at h; exact Bool.noConfusion h
   simp only [Effects.All]
-  -- name the computed values (AC normalization in `ecancel` does not stop on the raw `sar`/`and` term, log 160)
+  -- name the computed values (AC normalization in `ecancel` does not stop on the raw `sar`/`and` term)
   have hPib := ia_p0 ib n hib rbx.toBitVec rdi.toBitVec (by rw [UInt64.toNat_toBitVec]; omega)
     (by rw [UInt64.toNat_toBitVec]; omega)
   have hC := ia_sub228 rdi.toBitVec (by rw [UInt64.toNat_toBitVec]; omega)

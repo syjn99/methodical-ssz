@@ -21,7 +21,7 @@ elab "include_x64_rt" path:str : term => do
 
 /-!
 `data_include id`: the ELF data item `id` (`link/data.py`, format in
-`TOOLS.md`). Reads `../link/out/data/<id>.data` (relative to `fv/kraken/lean`,
+`link/README.md` section 5). Reads `../link/out/data/<id>.data` (relative to `fv/kraken/lean`,
 as `include_x64_rt`) and elaborates, in the current namespace,
 
 - `def <id>_addr [Host] : BitVec 64 := (label "<label>" + <off>).toBitVec`

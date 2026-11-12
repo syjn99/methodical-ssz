@@ -33,8 +33,8 @@ def tailLabels : Program := [.label "go_itab._errors.errorString_error", .label 
 
 def P : Program := dataLabels ++ IaUnmarshal ++ RtErr ++ tailLabels
 
--- Measured cause (log 260): `rfl` on the 348-directive host program stops with "maximum recursion depth" at
--- the default (512) in `P_len` and `hk284` only; 1024 passes (log 261). The other host facts need no option.
+-- Measured cause: `rfl` on the 348-directive host program stops with "maximum recursion depth" at
+-- the default (512) in `P_len` and `hk284` only; 1024 passes. The other host facts need no option.
 set_option maxRecDepth 1024 in
 theorem P_len : P.length = 348 := by rfl
 

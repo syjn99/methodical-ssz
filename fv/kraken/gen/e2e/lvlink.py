@@ -15,8 +15,8 @@ Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` a
                                                     write <outdir>/data/*.data (link/data.py's code)
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/e2e/lv/link (SyncAggregate, SyncCommittee only).
 IndexedAttestation is linked only with --t3: its .S has `lea 0xffffff1c(%rdi),%rdx` (GNU objdump spelling of the
-displacement -228), which Apple clang 21 rejects in check (d) (ATTEMPTS.md).
-Encoders, SizeSSZ and HashTreeRoot are not in the set (out of the list/vector scope, SELECTION.md section 4).
+displacement -228), which Apple clang 21 rejects in check (d).
+Encoders, SizeSSZ and HashTreeRoot are not in the set (out of the list/vector scope).
 
 Every data item is located from the converted code (the operand that the proofs read), not written by hand.
 Operands that equal an item of the Checkpoint / Epoch link set (`e2elink.py`) are asserted equal and get no

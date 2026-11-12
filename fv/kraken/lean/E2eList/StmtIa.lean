@@ -17,7 +17,6 @@ import E2eList.DefsIa
 Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
 Statement shape: `StmtSa.lean` / `StmtSc.lean` (exact frame, contracts as hypotheses, input and receiver kept) and, for
 the two `fmt.errorf` rejects, the contract forms `ConvT64C` and `FmtErrorfDWC` (`Fk/Contracts.lean`).
-Design and the call-site tables: `prysm/go1.26.10/e2e/lv/DESIGN-T3.md`.
 
     func (c *IndexedAttestation) UnmarshalSSZ(buf []byte) error {        // phase0.ssz.go:2819
         if size < 228 { return ssz.ErrSize }                                                  // size reject
@@ -646,7 +645,7 @@ def ia_accept_spec_stmt : Prop :=
 /-- **Reject cases (spec, pure).** Every input that EthLib rejects meets one of the four reject conditions of the
 decoder: size < 228 (size reject), offset ≠ 228 (offset reject), misaligned (alignment reject), more than 2048 elements (overflow reject). This is a statement about
 EthLib only. It is a reject-completeness statement for the machine code only for those disjuncts whose machine path is
-proved (`DESIGN-T3.md` §6). The delegate's error is not a disjunct: EthLib accepts every 128-byte `data`. -/
+proved (the alignment and overflow rejects only under `e0 ≠ 0`, `StmtIaNz.lean`). The delegate's error is not a disjunct: EthLib accepts every 128-byte `data`. -/
 def ia_reject_cases_stmt : Prop :=
   ∀ bs : Array UInt8, (¬ ∃ v, deserialize prysmIaDesc bs = .ok v) →
     bs.size < 228 ∨ (228 ≤ bs.size ∧ bs.toList.take 4 ≠ iaOff)

@@ -5,7 +5,6 @@ Usage: callgraph.py <objdump> <out.json> [<gcflags-m2.log>]
   <objdump>   `go tool objdump -gnu` of the Go 1.26.10 ELF (c6403c02...911e)
   <gcflags-m2.log>  optional: output of the gated `go build -gcflags=<pkg>=-m=2` (inlining evidence)
 Reads only these files. Python 3 standard library only. Writes <out.json>; prints a summary.
-Every count in CALLGRAPH.md comes from <out.json>.
 """
 import json
 import re
@@ -18,7 +17,8 @@ FUNCS = [f"{V1A1}.(*Checkpoint).{m}" for m in ("SizeSSZ", "MarshalSSZTo", "Unmar
 SCOPE = {FUNCS[0]: "in", FUNCS[1]: "in", FUNCS[2]: "in", FUNCS[3]: "in (callee, function spec E2)",
          FUNCS[4]: "record only (inlined into Checkpoint.MarshalSSZTo; out-of-line body unused by it)",
          FUNCS[5]: "record only (inlined)", FUNCS[6]: "record only (inlined)"}
-# contract class of every call target (fv/kraken/CONTRACTS.md classes a/b/c)
+# contract class of every call target: a = proof target (run with the Kraken semantics), b = contract (a theorem
+# hypothesis), c = path excluded by a theorem premise
 CLASS = {
     "runtime.morestack_noctxt.abi0": ("c", "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"),
     "runtime.makeslice": ("b", "MakesliceC (esz 1, uint8 type word)"),

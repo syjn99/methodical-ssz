@@ -2,7 +2,7 @@
 """Survey of the MarshalSSZTo `.S` of the 16 flat development types.
 
 Usage (Python 3 standard library only; python3 -I -B; reads committed `.S` files only, no ELF, no tool):
-  enc2survey.py <out.md>      run from fv/kraken; writes the survey (prysm/go1.26.10/e2e/scal/enc2-survey.md)
+  enc2survey.py <out.md>      run from fv/kraken; writes the survey to <out.md>
 
 Line numbers are 1-based lines of the `.S` file (line 1 = the function label). Field blocks are found by the
 growslice sites: every field has exactly one `callq runtime.growslice` (asserted against the IR field count).

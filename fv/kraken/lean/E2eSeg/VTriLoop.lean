@@ -209,7 +209,7 @@ local macro "vtri_iter_body " k:num w:num : tactic => `(tactic| (
     simp only [hE]
     ecancel))
 
--- Threshold (logs 130–132): 200000 fails at `whnf` in the third case; 400000 and 800000 pass. Value 800000 = twice the
+-- Threshold (builds of `E2eSeg.VTriLoop`, one run each): 200000 fails at `whnf` in the third case; 400000 and 800000 pass. Value 800000 = twice the
 -- lowest passing value. Cause: the case split runs the proof text three times in one declaration (one per size).
 set_option maxHeartbeats 800000 in
 /-- **One iteration** of the `3·2^k` element loop (`i < n`), from the loop head `jH` back to `jH`. -/

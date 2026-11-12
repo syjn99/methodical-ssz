@@ -9,7 +9,7 @@ stopped with exit 2 on this field: its memmove source is `buf + 0`, so the code 
 and does not match the frozen template `rootDecMid`. This file is NOT part of the frozen method
 (`Kind.lean`, `scalgen.py`, the uint64 decoder and 32-byte field segment lemmas are unchanged): `rootDecMid0` is `rootDecMid` without the
 `add` directive, and `rootdec_seg0` is the statement and proof text of `E2eScal.rootdec_seg`
-(`P2Dec.lean`) with the `add` step removed (copied text, the Eth1Data hold-out section of `scal/CONTAMINATION.md`).
+(`P2Dec.lean`) with the `add` step removed (copied text, written after the Eth1Data hold-out was opened).
 -/
 
 open Fk

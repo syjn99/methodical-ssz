@@ -46,8 +46,8 @@ theorem ia_jg2048_true (a : BitVec 64) (af : Bool) (h : 2048 < a.toNat) (h62 : a
   refine ⟨hz, ?_⟩
   rw [show (a - 2048#64) = a - 2048 from rfl, hm, Int.bmod_eq_of_le (by omega) (by omega)]; simp
 
--- Measured cause (log 233): without this option the first `kat` (directive 0) stops with "maximum recursion depth", as in
--- `IaReject.lean`; 1024 passes (logs 231, 232).
+-- Measured cause: without this option the first `kat` (directive 0) stops with "maximum recursion depth", as in
+-- `IaReject.lean`; 1024 passes.
 set_option maxRecDepth 1024 in
 theorem ia_e2e_reject_misaligned_nz : ia_reject_misaligned_nz_stmt := by
   intro k hk hf s ra guard e0 e1 esp msg ity he0 he0nz hity fp s2 aw spl rslot lo hfp h2 haw hspl hrs S hlo
@@ -300,8 +300,8 @@ theorem ia_e2e_reject_misaligned_nz : ia_reject_misaligned_nz_stmt := by
        done)
     | (apply UInt64.toBitVec_inj.mp; iaaddr)
 
--- Measured cause (log 233): without this option the first `kat` (directive 0) stops with "maximum recursion depth", as in
--- `IaReject.lean`; 1024 passes (logs 231, 232).
+-- Measured cause: without this option the first `kat` (directive 0) stops with "maximum recursion depth", as in
+-- `IaReject.lean`; 1024 passes.
 set_option maxRecDepth 1024 in
 theorem ia_e2e_reject_toobig_nz : ia_reject_toobig_nz_stmt := by
   intro k hk hf s ra guard e0 e1 esp msg ity he0 he0nz hity fp s2 aw spl rslot lo hfp h2 haw hspl hrs S hlo

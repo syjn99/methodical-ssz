@@ -2,7 +2,7 @@
 """H6 hold-out: call graph and link tables of the real UnmarshalSSZ of the seven H6 batch types (v1alpha1
 PendingDeposit, PowBlock, HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance,
 VoluntaryExit) on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/e2e/link; written after the
-H6 section of `scal/HOLDOUT-OPENED`; the text of `h5link.py` with the function set and the data items changed).
+H6 hold-out was opened at 2026-11-11T17:18:33Z; the text of `h5link.py` with the function set and the data items changed).
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   h6link.py callgraph <objdump> <out.json>          call targets with contract class

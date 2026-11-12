@@ -10,7 +10,7 @@ it bumps by 24·cnt (`lea (%rcx,%rcx,2)`, `lea (%rdx,%rsi,8)`), otherwise by cnt
 `runtime.makeslice`; the SyncCommittee decoder needs `MakesliceC … lvSliceType_addr 24 S` and `MakesliceC … e2eU8Type_addr 1 S`
 together, so a model of esz 24 alone (the shape of `Fk.bump_makeslice`) cannot sit in the same witness Host as
 `bump_makeslice1`. The real Go `makeslice` reads `et.Size_` from the type descriptor; this model compares the type
-word with one address. It is an abstract model for non-vacuity only (`CONTRACTS.md` §3), not a Go refinement.
+word with one address. It is an abstract model for non-vacuity only, not a Go refinement.
 Proof text: `Fk.bump_makeslice1` with the dispatch steps added. The `.S` file is the Lake `input_dir` `lv_lean_S`
 of the `E2eList` library, so Lake rebuilds the library when it changes.
 -/

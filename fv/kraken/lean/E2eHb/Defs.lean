@@ -13,7 +13,7 @@ The slice objects `E2eList.lvHdrs` and `E2eList.lvElems` are imported from the S
           block_roots: Vector[Root, SLOTS_PER_HISTORICAL_ROOT]   # Root = Bytes32
           state_roots: Vector[Root, SLOTS_PER_HISTORICAL_ROOT]
 
-  The producer's Desc file was printed before this term was written (`lv/DESIGN-HB.md` §6).
+  The producer's Desc file was printed before this term was written (less independent than SyncCommittee).
 - `PHb`: the SSZ content of a Go `v1alpha1.HistoricalBatch` whose byte fields have the spec lengths
   (8192 × 32 each). `toValue` is the EthLib `Value`, `phbEnc` the 524288 bytes of the SSZ encoding.
 -/

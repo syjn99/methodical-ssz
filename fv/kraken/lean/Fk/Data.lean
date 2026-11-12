@@ -8,7 +8,7 @@ Every definition here is elaborated from a file of `link/out/data/` by
 `data_include` (`Fk/Include.lean`); `link/data.py` writes the files from the
 ELF, `link/check.py` compares them with the ELF, and the files are Lake inputs
 of the `Fk` library. No byte and no offset below is written by hand.
-Interface (names, file format, item table): `TOOLS.md`, "ELF data include".
+Interface and file format: `link/README.md` sections 5 and 6; item table: `ITEMS` in `link/data.py`.
 
 The theorems keep their premises in the form `Eq (bytes.At addr)`; `bytes` and
 `addr` come from here. Kraken's data memory is separate from the code: these

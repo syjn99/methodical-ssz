@@ -91,7 +91,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump]; exact hm⟩) h
 
 -- Measured: 200000 and 1000000 fail at `whnf`, 4000000 passes. The time is the `simp` AC-normalization
--- of the memory premise (the cause of `WitF`, logs 26, 27 of `lv/STEPS.tsv`).
+-- of the memory premise (the cause of `WitF`).
 set_option maxHeartbeats 4000000 in
 /-- **Non-vacuity of `dcd_e2e_accept_main`** for every `n ≤ 128`, every input and every old receiver word. -/
 theorem dcd_accept_runs (n : Nat) (hn : n ≤ 128) (root ib aP1 aL1 aC1 aP2 aL2 aC2 : List UInt8)

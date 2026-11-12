@@ -88,11 +88,11 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   rw [← Std.ExtHashMap.sep_assoc] at h
   exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump]; exact hm⟩) h
 
--- Same cause as `WitSaA.sa_accept_runs` (profile, log 27): the memory premise is closed by `simp`
+-- Same cause as `WitSaA.sa_accept_runs` (profile): the memory premise is closed by `simp`
 -- AC-normalization of the separating conjunction (here 25 chunks). Without this option the declaration stops at `whnf`
--- with the default 200000 heartbeats after a 2.3 s `simp` (scratch copy, log 65).
+-- with the default 200000 heartbeats after a 2.3 s `simp` (scratch copy).
 -- Thresholds measured in independent reviewer runs: 200000, 400000 and 1000000 fail at `whnf`, 2000000 passes.
--- Value 4000000 (twice the reviewer's passing value; was 16000000): passes in the implementer's run (log 97).
+-- Value 4000000 (twice the reviewer's passing value; was 16000000): passes in the implementer's run.
 set_option maxHeartbeats 4000000 in
 /-- **Non-vacuity of `sc_e2e_accept_main` (the premises of the frozen statement `sc_accept_stmt` are satisfiable).** -/
 theorem sc_accept_runs (pks : List (List UInt8)) (agg oP1 oP2 : List UInt8) (hpks : pks.length = 512)

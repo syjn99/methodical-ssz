@@ -9,7 +9,8 @@ Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/e2e/lv/link/nor
 written by `gen/e2e/lvlink.py filter` and `conv.py`; `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/e2e/lv/link/RESULT`).
 The directory is a Lake `input_dir` of the `E2eList` library (`lakefile.toml`), so Lake rebuilds
 these modules when a `.S` file changes. `IndexedAttestation` is not in the committed set
-(`lv/ATTEMPTS.md`: link check (d) failed on this host's clang).
+(link check (d) failed on this host's clang: Apple clang 21 rejects the GNU objdump spelling
+`0xffffff1c(%rdi)` of the displacement -228).
 -/
 
 namespace E2eList.Code

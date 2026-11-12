@@ -105,7 +105,7 @@ def mem (root : List UInt8) (nb : BitVec 64) : DataMem := (block root nb).At (0x
 def cs0 (root : List UInt8) (nb : BitVec 64) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0x10018, 0x10110, 0, 0, 0, 36, 0x100f8, 0, 0, 0, 0, 0, 0, 0, 0x10000, 0⟩, zmms, flags, mem root nb⟩
 
--- Measured (logs 49, 50, 51 of `lv/STEPS-ENC.tsv`): 200000 and 1000000 fail (`whnf` timeout); 4000000 passes. Profile (log 51): `simp`
+-- Measured (three builds of `E2eEnc.WitR`): 200000 and 1000000 fail (`whnf` timeout); 4000000 passes. Profile (the 4000000 build): `simp`
 -- 2.49 s in the declaration; the `whnf` part that uses the heartbeats was not broken down further.
 set_option maxHeartbeats 4000000 in
 /-- **Non-vacuity of `dc_e2e_reject_toobig_main`**, n = 129. -/

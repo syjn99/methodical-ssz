@@ -21,7 +21,7 @@ type-word load and passes 0 where `FmtErrorfDWC` needs `ity`. The Kraken Host pl
 may be 0 and the frozen statements cannot refute that branch. The precondition is stronger than the frozen one (not
 equivalent). The originals in `StmtIa.lean` stay unchanged and unproved. Precedent: `Fk.lu_reject_misaligned_main`
 (`Fk/LuRejectCall.lean`, Go 1.26.3) has the same two premises `e0 = itab` and `e0 ≠ 0`. In the real ELF `e0` is the
-itab address (`STATEMENTS-T3.md`).
+itab address `0xd28520` (check (b) of `lv/link-t3/RESULT` binds `go_itab._errors.errorString_error` to it).
 -/
 
 open Fk E2e EthLib.Serialization.Ssz E2eList.Code

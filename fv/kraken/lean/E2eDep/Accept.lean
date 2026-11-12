@@ -62,8 +62,8 @@ theorem dep_obj120 (p : BitVec 64) :
 
 abbrev depL (s : String) : String := "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ_" ++ s
 
--- Threshold measured on this declaration (logs 95–97, one run each): 200000 (default) fails at `whnf`; 400000 and
--- 800000 pass. Value 800000 = twice the lowest passing value. Cause (profiler, log 98): the length of the one
+-- Threshold measured on this declaration (one run each): 200000 (default) fails at `whnf`; 400000 and
+-- 800000 pass. Value 800000 = twice the lowest passing value. Cause (profiler): the length of the one
 -- declaration (about 100 directive steps, two runtime calls and the Deposit_Data call): tactic execution 3.37 s,
 -- `simp` 1.11 s, no single step above 200 ms except the kernel check (1.58 s).
 set_option maxHeartbeats 800000 in

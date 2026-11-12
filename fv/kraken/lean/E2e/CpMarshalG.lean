@@ -8,7 +8,7 @@ directives 17–18, fails), so the inlined `append(dst, epoch bytes...)` calls
 `runtime.growslice(old = dst.ptr, newLen = len + 8, oldCap = cap, num = 8,
 et = uint8)` (directives 19–27, contract `GrowsliceC Heap e2eU8Type_addr 1 S`,
 an existing contract form; instance esz 1, Go 1.26.10 `growslice` /
-`nextslicecap` byte-identical to 1.26.3, `RUNTIME-1.26.10.md`). With the
+`nextslicecap` byte-identical to 1.26.3 in the runtime source). With the
 premise `len + 40 ≤ nextSliceCap (len + 8) cap` the new capacity is enough for
 the root, so the second site (directives 39–41) does not grow. The code
 continues at `L_7b` (directive 33) on the new block: the 8 epoch bytes at

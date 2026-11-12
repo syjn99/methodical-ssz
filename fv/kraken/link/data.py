@@ -5,7 +5,7 @@ Usage: data.py <outdir>          (outdir = fv/kraken/link/out, after build.sh)
        data.py --check <outdir>  (regeneration equality, exit 1 on a difference)
 
 For every item of ITEMS, reads `length` bytes of p1bin-amd64 at the item's
-label + offset and writes <outdir>/data/<id>.data (format in TOOLS.md):
+label + offset and writes <outdir>/data/<id>.data (format in link/README.md section 5):
 
     at <label> <off>          the item's address (label = conv.py's clean name)
     bytes <hh> <hh> ...       raw bytes (at most 16 per line)

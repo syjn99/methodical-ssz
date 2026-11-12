@@ -20,7 +20,7 @@ variable [Host]
 
 namespace E2eList
 
--- Measured cause (logs 135, 136): as in `IaReject.lean`, `kat` unfolds the 279-directive program literal
+-- Measured cause: as in `IaReject.lean`, `kat` unfolds the 279-directive program literal
 -- `IaUnmarshal`; without this option the first `kat` (directive 147) fails with "maximum recursion depth"; 1024 passes.
 set_option maxRecDepth 1024 in
 theorem ia_iter (k : Nat) (hk : IaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh IaUnmarshal k)
@@ -120,7 +120,7 @@ theorem ia_iter (k : Nat) (hk : IaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsF
     (try simp only [BitVec.ofNat_eq_ofNat] at H1 ⊢)
     ecancel
 
--- Measured cause (log 139): as for `ia_iter`; without this option the first `kat` fails with "maximum recursion depth".
+-- Measured cause: as for `ia_iter`; without this option the first `kat` fails with "maximum recursion depth".
 set_option maxRecDepth 1024 in
 theorem ia_exit (k : Nat) (hk : IaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh IaUnmarshal k)
     (ib : List UInt8) (n : Nat) (hib : ib.length = 8 * n) (_hn : n ≤ 2048)

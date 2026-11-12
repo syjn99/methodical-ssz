@@ -15,7 +15,9 @@ Independent hand `Desc`, written from consensus-specs phase0 (`specs/phase0/beac
         target: Checkpoint
 
 with `Checkpoint` = `E2e.prysmCpDesc` (consensus-specs `Checkpoint(epoch: Epoch, root: Root)`).
-The evidence table to the Prysm Go fields is in `prysm/go1.26.10/e2e/ad/SPEC-BRIDGE.md`.
+The Prysm Go fields (`attestation.pb.go`, Prysm `ab15ff70`) are `Slot` (offset 8), `CommitteeIndex` (16),
+`BeaconBlockRoot` (24, slice header), `Source` (48) and `Target` (56), both `*Checkpoint`; `state` (0), `unknownFields` (64)
+and `sizeCache` (88) have no SSZ value (size 96; offsets from `prysm/ir/ir-mainnet.json`).
 `adCheckerDesc` (generated) is the Desc checker's Desc of `(v1alpha1, AttestationData)`;
 `prysmAdDesc_checker` shows the same kinds in the same order (only the names differ) and
 `prysmAdDesc_serialize_checker` the equality of `serialize` (every value) and `prysmAdDesc_deserialize_checker`

@@ -13,8 +13,9 @@ Independent hand `Desc`, written from consensus-specs phase0 (`specs/phase0/beac
         root: Root        # Root = Bytes32
 
 Field order epoch, root; SSZ kinds `uint64` (8-byte little endian) and `Bytes32`
-(EthLib `byteVector 32`). The evidence table to the Prysm Go fields is in
-`prysm/go1.26.10/e2e/SPEC-BRIDGE.md`. `cpCheckerDesc` (generated) is the Desc
+(EthLib `byteVector 32`). The Prysm Go fields (`attestation.pb.go`, Prysm `ab15ff70`) are
+`Epoch` at offset 8 and `Root` (`[]byte`, `ssz-size:"32"`) at offset 16, in this order; `state`, `unknownFields`
+and `sizeCache` have no SSZ value (Go size 72; gc amd64 layout from `prysm/ir/ir-mainnet.json`). `cpCheckerDesc` (generated) is the Desc
 checker's Desc of `(v1alpha1, Checkpoint)`; `prysmCpDesc_checker` shows that the
 two differ only in the field names (spec names vs Go names). The theorems of
 this namespace use `prysmCpDesc`.

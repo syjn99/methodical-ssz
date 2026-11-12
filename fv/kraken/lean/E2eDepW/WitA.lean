@@ -33,7 +33,7 @@ def dataLabels : Program :=
 
 def P : Program := dataLabels ++ DepUnmarshal ++ DdUnmarshal ++ BumpAllocT ++ BumpNew120 ++ RtCopy
 
--- `maxRecDepth` (logs 115, 117–119 of `lv/STEPS-SEG2.tsv`, one run each; scoped per declaration): the default (512)
+-- `maxRecDepth` (builds of `E2eDepW.WitA`, one run each; scoped per declaration): the default (512)
 -- stops these list computations over the 356-directive host; 1000, 2000, 5000 and 20000 pass (measured with the
 -- option file-wide). Value 2000 = twice the lowest passing value. Only `P_len`, `hk308`, `hk324`, `hk330` need it.
 set_option maxRecDepth 2000 in
@@ -112,8 +112,8 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   rw [← Std.ExtHashMap.sep_assoc] at h
   exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump]; exact hm⟩) h
 
--- Threshold (logs 115, 120, 121): 200000 and 1000000 fail at `whnf`; 2000000 and 4000000 pass. Value 4000000 =
--- twice the lowest passing value. Cause (profiler, log 122): `simp` 20.1 s (15.1 s and 4.89 s), the AC-normalization
+-- Threshold (builds of `E2eDepW.WitA`, one run each): 200000 and 1000000 fail at `whnf`; 2000000 and 4000000 pass. Value 4000000 =
+-- twice the lowest passing value. Cause (profiler): `simp` 20.1 s (15.1 s and 4.89 s), the AC-normalization
 -- of the separating conjunction (33 chunks), as in `WitHbA` / `WitScA`.
 set_option maxHeartbeats 4000000 in
 /-- **Non-vacuity of `dep_e2e_accept_main` (the premises of the frozen statement `dep_accept_stmt` are

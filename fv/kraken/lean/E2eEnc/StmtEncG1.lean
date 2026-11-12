@@ -13,7 +13,7 @@ import E2eEnc.StmtEncG
 Reason (attempt 1 of `LoopG.lean`): `GrowsliceC` bounds the heap after a call only from above
 (`avail' + esz·newCap ≤ avail`). After one growth nothing bounds the remaining heap from below, so the budget premise of
 a second `growslice` call cannot be discharged: `dc_marshal_any_stmt` does not follow from the contract forms of
-`CONTRACTS.md` (a form with a lower bound, e.g. `avail' + esz·newCap = avail`, is missing; a new form needs user
+`Fk/Contracts.lean` (a form with a lower bound, e.g. `avail' + esz·newCap = avail`, is missing; a new form needs user
 approval). The originals stay unchanged and unproved (N). The new premises are not implied by the old ones and the old
 ones are not implied by the new ones (the new statement allows a smaller heap and forbids a second growth).
 -/

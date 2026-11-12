@@ -26,7 +26,7 @@ macro "dcaddr" : tactic => `(tactic| (
     UInt64.toNat_toBitVec, UInt64.toBitVec_add, UInt64.toBitVec_ofNat, Width.bits, Nat.reducePow]
   all_goals omega))
 
--- Measured cause (logs 123, 124): `kat` unfolds the program literal (`IaUnmarshal`, 279 directives) with `simp`; at the
+-- Measured cause (`E2eList.IaReject` builds): `kat` unfolds the program literal (`IaUnmarshal`, 279 directives) with `simp`; at the
 -- default `maxRecDepth` (512) that `simp` stops with "maximum recursion depth has been reached"; 1024 passes.
 -- Measured again for `DcUnmarshal` (229 directives): the default fails at the `klabel` (174, 168), 1024 passes.
 set_option maxRecDepth 1024 in
@@ -98,7 +98,7 @@ theorem dcd_e2e_reject_size_main : dcd_reject_size_stmt := by
        done)
     | (apply UInt64.toBitVec_inj.mp; dcaddr)
 
--- Same measured cause and value as `ia_e2e_reject_size_main` (logs 123, 124).
+-- Same measured cause and value as `ia_e2e_reject_size_main`.
 set_option maxRecDepth 1024 in
 theorem dcd_e2e_reject_offset_main : dcd_reject_offset_stmt := by
   intro k hk hf s ra guard e0 e1 fp s2 hfp h2 off hoff4 hoff R h_mem hguard hlen

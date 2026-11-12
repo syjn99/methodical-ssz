@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Hand code lines (not blank, not comment) per part of the Deposit port, for REPORT-SEG.md §7.
+"""Hand code lines (not blank, not comment) per part of the Deposit port (its cost table).
 
 Usage: python3 -I -B gen/e2e/segcost.py      (cwd = fv/kraken; Python 3 stdlib only; imports hbreuse.py, unchanged)
 The accept proof is cut at its own section comments: helpers (before `theorem dep_e2e_accept_main`), head (to

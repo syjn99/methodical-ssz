@@ -37,9 +37,9 @@ def dataLabels : Program :=
 def P : Program := dataLabels ++ IaUnmarshal ++ E2eAd.Code.AdUnmarshal ++ E2eAd.Code.SlUnmarshal
   ++ E2eAd.Code.CiUnmarshal ++ E2e.Code.CpUnmarshal ++ E2e.Code.EpUnmarshal ++ BumpAllocT3 ++ RtCopy ++ BumpNewT3
 
--- Measured cause (logs 260, 261): `rfl` on the 884-directive host program stops with "maximum recursion depth" at
+-- Measured cause: `rfl` on the 884-directive host program stops with "maximum recursion depth" at
 -- the default (512) in `P_len` and the prefix-length facts `hk288` … `hk869` only. `hk288` passes at 1024; `P_len`
--- and `hk531` … `hk869` fail at 1024 (log 261) and pass at 2048 (log 262). The other host facts need no option.
+-- and `hk531` … `hk869` fail at 1024 and pass at 2048. The other host facts need no option.
 set_option maxRecDepth 2048 in
 theorem P_len : P.length = 884 := by rfl
 
@@ -147,10 +147,10 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   rw [← Std.ExtHashMap.sep_assoc] at h
   exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump]; exact hm⟩) h
 
--- Measured cause (logs 192–211): the memory premise is closed by `simp` AC-normalization of the separating
--- conjunction (38 chunks, as in `WitScA.sc_accept_runs`). The `ecancel` alternative fails on this goal (log 204–208,
--- 56 internal PANIC messages of the tactic). Thresholds: 3000000 and 4000000 fail at `whnf` (log 211), 5000000
--- passes (log 211), also 6000000, 8000000, 12000000, 16000000 (logs 209, 210). Value: twice the passing value.
+-- Measured cause: the memory premise is closed by `simp` AC-normalization of the separating
+-- conjunction (38 chunks, as in `WitScA.sc_accept_runs`). The `ecancel` alternative fails on this goal (56 internal
+-- PANIC messages of the tactic). Thresholds: 3000000 and 4000000 fail at `whnf`, 5000000
+-- passes, also 6000000, 8000000, 12000000, 16000000. Value: twice the passing value.
 set_option maxHeartbeats 10000000 in
 /-- **Non-vacuity of `ia_e2e_accept_main` (the premises of the frozen statement `ia_accept_stmt` are satisfiable)**,
 for every `n ≤ 2048`, every input and every old pointer word. -/
@@ -173,7 +173,7 @@ theorem ia_accept_runs (n : Nat) (hn : n ≤ 2048) (in0 in1 root se sroot te tro
       have H : Eq ((block in0 in1 root se sroot te troot sig oP1 oD oP2 ++ ib).At (0x10000 : BitVec 64))
         (mem in0 in1 root se sroot te troot sig ib oP1 oD oP2) := rfl
       -- `ib` (symbolic length) is split off first: `wit_split` on a block with a non-literal last length makes the
-      -- elaborator reduce `literal + L` by unfolding (logs 192–197); the rest of the block has literal lengths only
+      -- elaborator reduce `literal + L` by unfolding; the rest of the block has literal lengths only
       have hbl : (block in0 in1 root se sroot te troot sig oP1 oD oP2).length = 17616 := by
         simp only [block, List.length_append, List.length_replicate, Int.toBytes_length, List.length_cons,
           List.length_nil, iaOff_length, hin0, hin1, hroot, hse, hsroot, hte, htroot, hsig, h1, hD, h2]

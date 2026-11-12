@@ -23,7 +23,7 @@ variable [Host]
 namespace E2eList
 
 
--- Measured cause (logs 123, 124): `kat` unfolds the 279-directive program literal `IaUnmarshal` with `simp`; at the
+-- Measured cause: `kat` unfolds the 279-directive program literal `IaUnmarshal` with `simp`; at the
 -- default `maxRecDepth` (512) that `simp` stops with "maximum recursion depth has been reached"; 1024 passes.
 set_option maxRecDepth 1024 in
 theorem ia_e2e_reject_size_main : ia_reject_size_stmt := by
@@ -94,7 +94,7 @@ theorem ia_e2e_reject_size_main : ia_reject_size_stmt := by
        done)
     | (apply UInt64.toBitVec_inj.mp; iaaddr)
 
--- Same measured cause and value as `ia_e2e_reject_size_main` (logs 123, 124).
+-- Same measured cause and value as `ia_e2e_reject_size_main`.
 set_option maxRecDepth 1024 in
 theorem ia_e2e_reject_offset_main : ia_reject_offset_stmt := by
   intro k hk hf s ra guard e0 e1 fp s2 hfp h2 off hoff4 hoff R h_mem hguard hlen

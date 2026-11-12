@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Line counts for REPORT-SEG.md. Python 3 stdlib only; cwd = fv/kraken.
+"""Line counts of the Deposit port (reuse and cost tables). Python 3 stdlib only; cwd = fv/kraken.
 
 Usage: python3 -I -B gen/e2e/segreuse.py
 

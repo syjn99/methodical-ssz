@@ -12,7 +12,7 @@ import E2eDec.Data
 # Hand STATEMENTS of the round-trip decoder `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ`
 
 Statements only. Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
-Statement shape: `E2eList/StmtIa.lean`. Design: `prysm/go1.26.10/e2e/lv/DESIGN-DEC.md`.
+Statement shape: `E2eList/StmtIa.lean`.
 
     func (c *DataColumnsByRootIdentifier) UnmarshalSSZ(buf []byte) error {              // fulu.ssz.go:1778
         if size < 36 { return ssz.ErrSize }                                              // size reject

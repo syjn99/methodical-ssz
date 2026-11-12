@@ -91,9 +91,9 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   rw [← Std.ExtHashMap.sep_assoc] at h
   exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump]; exact hm⟩) h
 
--- Threshold measured on this module (logs 23–26, one run each): 200000 (default) and 400000 fail at `whnf`;
+-- Threshold measured on this module (one run each): 200000 (default) and 400000 fail at `whnf`;
 -- 1000000 and 2000000 pass. Value 2000000 = twice the lowest passing value (the margin of `WitScA`).
--- Cause (profiler, log 27): `simp` 11.8 s of the declaration (two calls, 9.5 s and 2.23 s): the memory premise is
+-- Cause (profiler): `simp` 11.8 s of the declaration (two calls, 9.5 s and 2.23 s): the memory premise is
 -- closed by `simp` AC-normalization of the separating conjunction (24 chunks), as in `WitScA.sc_accept_runs`.
 set_option maxHeartbeats 2000000 in
 /-- **Non-vacuity of `hb_e2e_accept_main` (the premises of the frozen statement `hb_accept_stmt` are satisfiable).** -/

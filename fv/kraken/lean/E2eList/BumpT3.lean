@@ -13,7 +13,7 @@ one `runtime.makeslice` and one `runtime.newobject`, so each model dispatches on
 `E2eList/BumpAllocT3.S` bumps by 8·cnt for `type__+387456` and by cnt otherwise; `E2eList/BumpNewT3.S` bumps by 96
 for `type__+1464512` and by 72 otherwise. The offsets are those of `lv/link-t3/data/lvU64Type.data` and
 `lvAdType.data`. The proof texts are `E2eList.bump_makeslice_t1` / `t24` (`BumpT.lean`) and `E2eAd.bump_newobject72`
-with the dispatch steps. Abstract models for non-vacuity only (`CONTRACTS.md` §3), not a Go refinement. Both `.S`
+with the dispatch steps. Abstract models for non-vacuity only, not a Go refinement. Both `.S`
 files are in the Lake `input_dir` `lv_lean_S` (all `.S` files of `E2eList/`).
 -/
 

@@ -28,8 +28,8 @@ def dataLabels : Program :=
 
 def P : Program := dataLabels ++ IaUnmarshal
 
--- Measured cause (log 259): `rfl` on the length of the 296-directive program stops with "maximum recursion depth"
--- at the default (512); 1024 passes (log 260). The other host facts need no option (log 259).
+-- Measured cause: `rfl` on the length of the 296-directive program stops with "maximum recursion depth"
+-- at the default (512); 1024 passes. The other host facts need no option.
 set_option maxRecDepth 1024 in
 theorem P_len : P.length = 296 := by rfl
 
