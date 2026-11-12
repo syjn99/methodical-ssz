@@ -411,7 +411,7 @@ did not establish the entry state (every theorem still built); the rules below r
   byte-equal). Commit `8192427` says "10 types" for the identities: the tree has 9. `kindcheck.py` rule 12 does not
   bind the code constant `C` to the `.S` named in the header; only the Lean code facts (`win … (by rfl)`) of the
   accept and size-reject paths fix `C`. Details: `prysm/go1.26.10/e2e/scal/CONTAMINATION.md` §30.
-### GEN6 (unit E2-G): `p2enc --gen6` — generated encoder fast-path theorems (NOT yet reviewed)
+### GEN6 (unit E2-G): `p2enc --gen6` — generated encoder fast-path theorems (reviewed: e2g-r1 APPROVE on `dcc6e80`; e2g-r1 S2–S5 open)
 
 - `p2enc --gen6 --S F.S --const C --ir IR --type T --prefix P --imports M --open M [--hand-layout NAME
   --hand-layout-src FILE] [--same-as X [--same-as-via LEMMA] | --same-as-prop X] [--summary S.json]`: one module

@@ -3631,7 +3631,18 @@
    "x86-64 hardware"
   ],
   "claims_and_limits": "decoders complete 17 of the 211 UnmarshalSSZ of the target in the defined sense; the 16-type flat development population 16/16; 24 of the 40 flat fixed-size types of the target (committed IR rule) not started; encoders fast path only (3 of 211); no hash-tree-root theorem; list / vector work of another machine is not in this tree; pilot not adopted; T-7 deferred; no 'all codecs', 'generator complete', general, transfer or speed-up claim",
-  "state": "not yet reviewed"
+  "state": "not yet reviewed",
+  "review_int7_r1": {
+   "decision": "APPROVE on 93dae89, must-fix 0",
+   "state_after_review": "reviewed (supersedes state 'not yet reviewed')",
+   "should_fix": {
+    "S1": "closed at INT8: REPORT section 0 states the published state and the exclusions of 'complete'",
+    "S2": "closed at INT8: BASELINE says 17 development types = 16 flat + nested AttestationData",
+    "S3": "closed at INT8: INT7 'not yet reviewed' texts superseded by appended entries naming int7-r1",
+    "S4": "OPEN: INVENTORY.md denominator 1 sentence is script output; the script is not changed at INT8",
+    "S5": "notes: INT8 merge subject also uses merge(kraken); refs/remotes/offchainlabs/main untouched"
+   }
+  }
  },
  "enc2-prep": {
   "unit": "ENC2 unit E2-P (fresh Opus session; preparation, no proof)",
@@ -3690,7 +3701,8 @@
    "proofs (out of scope of E2-P)",
    "regen_check.sh (no generator or generated file changed)",
    "selftest of link/check.py (link/ not changed)"
-  ]
+  ],
+  "review_e2l_r1": "APPROVE on d1e30ca (E2-P reviewed together with E2-L): own link re-extraction from the pinned ELF byte-identical to the committed copy; survey rerun byte-identical; no finding on unit P"
  },
  "enc2-lemmas": {
   "unit": "ENC2 unit E2-L (fresh Fable 5.2 session, direct author)",
@@ -3807,7 +3819,20 @@
    "generator mode (unit E2-G)",
    "a frame-test lemma for frames other than 0x50",
    "growslice branches, length rejects, morestack"
-  ]
+  ],
+  "review_e2l_r1": {
+   "decision": "APPROVE on d1e30ca, must-fix 0",
+   "drift": "base 9758 rows: 0 changed, 0 removed, 570 added (13 P + 557 L), standard axioms, sorryAx 0",
+   "should_fix": {
+    "S1": "closed: the stale e2e/axioms-gate.json was regenerated in E2-C; INT8 found it equal to a fresh gate run",
+    "S2": "recorded: WitVbM.lean sets maxHeartbeats 16000000 on two theorems (the value of the model WitE1M); no profile recorded",
+    "S3": "OPEN: macro eb is declared at root level (tacticEb, EncFieldN.lean); needs a .lean edit",
+    "S4": "recorded: see correction_e2l_r1_S4",
+    "S5": "closed by E2-C: WitE2cDm, WitE2cHs",
+    "S6": "recorded: attempt A5 (ValidatorBalance) was a third attempt on one item without a separate reproduction run"
+   }
+  },
+  "correction_e2l_r1_S4": "L2.moveSliceNoCapNoScan reads as proved for three types; at E2-L only HistoricalSummary was proved (EncFrameTest.lean, Enc2ExHs); PowBlock and SigningData were shown not taken by the E2-C fast-path theorems (INVENTORY.md NOT proved cells); the branch itself is not proved for any type"
  },
  "enc2-gen": {
   "unit": "E2-G",
@@ -4034,7 +4059,17 @@
    "x86-64",
    "witnesses and spec corollaries of the generated theorems (unit E2-C)"
   ],
-  "correction_e2g_r1_S1": "\"252 fault injections\" = 252 fault-injection rows: 225 injections reached and refused, 18 rows patch a phase the type does not reach, 4 controls, 5 harness rows (unit E2-C)"
+  "correction_e2g_r1_S1": "\"252 fault injections\" = 252 fault-injection rows: 225 injections reached and refused, 18 rows patch a phase the type does not reach, 4 controls, 5 harness rows (unit E2-C)",
+  "review_e2g_r1": {
+   "decision": "APPROVE on dcc6e80, must-fix 0 (11011 declarations; 0 changed)",
+   "should_fix": {
+    "S1": "closed: fault-injection count corrected (225 injections, 18 unreached-phase rows, 4 controls, 5 harness rows)",
+    "S2": "OPEN (checker): rule 13 does not check the .S label against ir_type and does not restrict import / open lines",
+    "S3": "OPEN (checker / test): brokencheck6 copy 13b fails by a KeyError; g6_ir accepts any untagged 8-byte field as u64",
+    "S4": "OPEN (test): IR-vs-code negatives change one theorem; no whole-file mutants",
+    "S5": "OPEN (test): adversarial refusals reported first by the liveness scan"
+   }
+  }
  },
  "enc2-close": {
   "unit": "E2-C",
@@ -4520,6 +4555,49 @@
     "e2g-r1 S2-S5 (checker / test code)",
     "growslice branches, length rejects, morestack, moveSliceNoCapNoScan branch, frame-separation premise for every Go caller (proof work, not this unit)"
    ]
+  },
+  "review_e2c_r1": {
+   "decision": "REQUEST_CHANGES on 5072b63, records only (M1 inventory cell); every proof gate passed (0 changed, 1166 added; witnesses 16/16; corollaries 16/16)",
+   "M1": "fixed by E2-C2 (fix_e2c2)",
+   "should_fix": "S1, S2, S4 applied in E2-C2; S3 partly (reproduction line; gate-script wiring OPEN)",
+   "for_integration": "spec corollaries drop the frame (cite the fast-path theorem for frame claims); witnesses use rt_memmove with S = 0 on a two-function host (satisfiability, not the linked ELF layout); every statement assumes cap < 2^63 and separation of fields / receiver / stack / dst[len:cap]"
+  },
+  "review_e2c2_r1": {
+   "decision": "APPROVE on eec1d4f, must-fix 0 (16/16 cells right; numbers reproduced)",
+   "N1": "OPEN (inventory script): the Checkpoint T-7 residual wording rests on E2e.cp_e2e_marshal_grow_any_sharp, which the script does not check",
+   "N2": "closed at INT8 (documents): REPORT section 11 and BASELINE list length rejects only for the 9 of the 14 types with byte fields",
+   "N3": "OPEN (inventory script output text): cell text '1 byte fields'"
   }
+ },
+ "integration_int8": {
+  "what": "merge of claude/ssz-fv-enc2 at eec1d4f (ENC2 units E2-P, E2-L, E2-G, E2-C, E2-C2; linear on 93dae89) into claude/ssz-fv-prysm-e2e at 93dae89 (reviewed INT7 head); integration and records only: no new proof text, no statement change, no generator, checker or inventory-script change",
+  "merge": "e70492d2bae99d09618a8c64385f3316b482ead7 (--no-ff); no conflict; merged tree id = tree id of eec1d4f (46f89d92)",
+  "reviews": "e2l-r1 APPROVE (d1e30ca, E2-P + E2-L); e2g-r1 APPROVE (dcc6e80); e2c-r1 REQUEST_CHANGES (5072b63, one inventory cell, fixed in E2-C2); e2c2-r1 APPROVE (eec1d4f); int7-r1 APPROVE (93dae89)",
+  "executed": {
+   "lake build E2e E2eAd E2eScal": "exit 0, 1412 jobs, 296.3 s gate wall (job 01); built 64 modules = the 64 new lean/ modules of the stream; peak 2.22 GiB per process, 3.59 GiB session, under the 6 GiB cap",
+   "E2eScal.P2EncCp": "not rebuilt: .olean sha256 ad8cf5c0... before = after",
+   "lake build --no-build E2e E2eAd E2eScal": "exit 0 (job 02)",
+   "axioms gate": "PASS, 12177 declarations, 10199 theorems, 404 modules, hand list 2891, non-standard 0, sorryAx 0 (job 03, scratch JSON); byte-equal to the committed prysm/go1.26.10/e2e/axioms-gate.json, not rewritten",
+   "decl drift": "decl_drift.py e2c-r1 reviewer dump vs merged dump: 0 CHANGED, 0 REMOVED, 0 ADDED",
+   "planted control": "dump level: type hash of E2eScal.E2c.pw_e2c_spec_k changed in a copy of the merged dump: decl_drift exit 1, 1 CHANGED",
+   "regen_check.sh": "SAME for 71 generator commands, two scratch runs each: the 55 INT7 commands and the 16 GEN6 gen.sh commands (job 06); integration regen, not a new generator result",
+   "kindcheck.py --selftest": "PASS, 157 cases + 85 exit-code / rule-12 / rule-13 cases (job 07)",
+   "p2dec_test.py": "394/394 (job 08)",
+   "p2enc_test.py": "322/322 (job 09)",
+   "own_layout_e2g_r1.py": "16/16 OK, 0 layouts differ from the reviewer's recomputation or are not disjoint (job 10)",
+   "inventory rerun": "inventory.py names; inventory_decls.lean on the built merged tree (job 11); inventory.py run (job 12): INVENTORY.md and INVENTORY.json byte-equal to the committed files; inventory.py methods on the pinned nm listing (job 13): byte-equal to the committed ssz-methods.json"
+  },
+  "inventory_rerun_equal": true,
+  "inventory_totals_source": "prysm/INVENTORY.md / INVENTORY.json (gen/tools/inventory.py) only",
+  "claims_and_limits": "decoders complete 17 of the 211 UnmarshalSSZ methods, partial 4; encoders fast-path complete 16 of 211 MarshalSSZTo (premise len + SizeSSZ <= cap, exact field lengths), no encoder complete: growslice branches (T-7 deferred), length rejects, morestack not proved (per type in INVENTORY.md; Checkpoint and BeaconBlockHeader have extra proved paths); hash tree root none; flat fixed-size types of the target 40 = 16 development + 24 not started; AttestationData encoder: another machine's task, not in this tree; list / vector work of the other machine not in this tree and not claimed; pilot OPT-R1 not adopted; no 'all codecs', 'encoder complete', 'generator complete', generality or speed-up claim",
+  "not_run": [
+   "Lean-level planted control",
+   "cold build from an empty .lake",
+   "link check",
+   "Go differential",
+   "negative cases",
+   "x86-64 hardware"
+  ],
+  "state": "not yet reviewed"
  }
 }

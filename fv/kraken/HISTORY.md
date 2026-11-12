@@ -434,3 +434,13 @@ growslice 분기는 증명하지 않았다. 기존 `.lean`과 생성기는 바�
 2026-11-12 단위 E2-C2(새 Opus 세션, 리뷰 전): 리뷰 e2c-r1이 REQUEST_CHANGES였다(M1, 기록만).
 목록 스크립트의 NOT proved 칸을 형별 규칙으로 바꿨다. BeaconBlockHeader 칸이 `cap < len + 112`인 길이 거부를 빠뜨렸었다.
 다섯 형의 칸이 바뀌었다. 대조 24/24, 두 실행이 같다. 새 선언은 0이다. 기록: `scal/RESULT.json`의 `enc2-close.fix_e2c2`.
+
+2026-11-12 리뷰 e2c2-r1(새 Fable, 대상 `eec1d4f`): APPROVE, 필수 수정 0이다. 목록 16칸을 덤프와 대조해 같았다.
+2026-11-12 통합 INT8(새 Opus 세션): `claude/ssz-fv-enc2` `eec1d4f`를 `93dae89` 위에 병합했다(`e70492d`). 충돌은 없었다.
+위 E2-P, E2-L, E2-G, E2-C, E2-C2 단락의 "리뷰 전"은 다음 리뷰로 대체한다. 그 단락은 고치지 않는다.
+e2l-r1(E2-P와 E2-L), e2g-r1은 APPROVE였다. e2c-r1은 목록 칸 하나만의 REQUEST_CHANGES였다.
+통합 INT7은 int7-r1이 APPROVE했다.
+`lake build` 종료 0, 새 모듈 64개를 빌드했다. `P2EncCp`는 다시 빌드되지 않았다.
+공리 게이트 PASS, 선언 12177이다. 커밋된 기록과 바이트가 같아 다시 쓰지 않았다.
+e2c-r1 덤프 대비 선언 비교는 0 / 0 / 0이다. `regen_check.sh` 71/71 SAME이다. 목록 스크립트 출력은 커밋본과 바이트가 같다.
+`.lean`, 생성기, 검사기, 목록 스크립트, 고정 버전은 바꾸지 않았다. 원격에 쓰지 않았다. 기록: REPORT 11절, `scal/RESULT.json`의 `integration_int8`.

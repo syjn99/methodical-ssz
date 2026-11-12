@@ -43,12 +43,30 @@ GEN4와 H6은 통합 INT6에서 병합했다(ARM-B 병합 `3e1cedc` 위). 리뷰
 GEN5(보조정리 G5-L, 생성기 G5-G, 마무리 G5-C, 목록 수정 G5-C2)는 11절에 있다. 모두 개발 자료이고 표본 안이다.
 GEN5 리뷰: g5-r1 REQUEST_CHANGES(`ea6a0c6`, 기록만, 기술 검사 통과), g5c-r1 REQUEST_CHANGES(`c4e1d74`, 목록만)다.
 G5-C2 뒤 리뷰 g5c2-r1이 `be21280`을 승인했다. 필수 수정 0이다.
-GEN5는 통합 INT7에서 병합했다(`03cf086`). 통합 INT7 자체의 리뷰는 아직 없다.
+GEN5는 통합 INT7에서 병합했다(`03cf086`). 리뷰 int7-r1이 통합 INT7(`93dae89`)을 승인했다.
+ENC2(준비 E2-P, 보조정리 E2-L, 생성기 E2-G, 닫기 E2-C, 목록 수정 E2-C2)는 11절에 있다.
+ENC2는 모두 개발 자료이고 표본 안이다.
+ENC2 리뷰: e2l-r1 APPROVE(`d1e30ca`, E2-P 포함), e2g-r1 APPROVE(`dcc6e80`)다.
+e2c-r1은 `5072b63`에서 REQUEST_CHANGES였다. 목록 칸 하나만이고, 증명 검사는 모두 통과했다.
+E2-C2 뒤 리뷰 e2c2-r1이 `eec1d4f`를 승인했다. 필수 수정 0이다.
+ENC2는 통합 INT8에서 병합했다(`e70492d`). 통합 INT8 자체의 리뷰는 아직 없다.
+공개된 상태는 `6a78c59`와 고정 핀 `71161fa`뿐이다. 그 뒤의 커밋은 이 기계에만 있다.
 검증 목록의 수는 `gen/tools/inventory.py`의 출력 `prysm/INVENTORY.md`만 출처로 쓴다(11절).
+분모는 고정 ELF의 SSZ 메서드다. 각 줄은 메서드 종류의 대상 수(211, 10, 6)를 쓴다.
 디코더: 대상 `UnmarshalSSZ` 211개 중 17개가 목록의 정의로 완전하다. 부분 4, 없음 190이다.
-GEN5 개발 모집단 평면 16형의 디코더는 16/16 완전이다. 대상의 평면 고정 크기 형 40개 중 24개는 시작하지 않았다.
-인코더는 3형의 빠른 경로뿐이다. HashTreeRoot 계열의 정리는 없다.
-"모든 코덱", "생성기 완성", 일반성, 속도 주장은 없다.
+디코더의 "완전"에 빠진 것: morestack, `writeBarrier ≠ 0`, 런타임 피호출자 본문(계약)이다.
+또 빠진 것: 피호출자 오류 반환, growslice / T-7, x86-64다.
+인코더: `MarshalSSZTo` 211개 중 16개가 빠른 경로 완료다. 완전한 인코더는 없다.
+빠른 경로의 전제는 `len + SizeSSZ ≤ cap`과 필드의 정확한 길이다.
+증명하지 않은 것: growslice 분기(T-7은 미룸), 길이 거부, morestack이다.
+형마다의 목록은 `INVENTORY.md`의 NOT proved 칸이다. Checkpoint와 BeaconBlockHeader는 기록된 경로를 더 증명했다.
+HashTreeRoot 계열의 정리는 없다.
+대상의 평면 고정 크기 형은 40개다. 개발 16, 시작 안 함 24다.
+개발 형은 17개다: 평면 16과 중첩 AttestationData다.
+AttestationData 인코더는 다른 기계의 일이다. 이 트리에 없다.
+다른 기계의 리스트·벡터 작업도 이 트리에 없다. 여기서 주장하지 않는다.
+OPT-R1 시범은 채택하지 않았다.
+"모든 코덱", "인코더 완전", "생성기 완성", 일반성, 속도 주장은 없다.
 H4에서 GEN2의 개발 자료 결과는 그대로 옮겨지지 않았다(11절).
 BeaconBlockHeader 인코더는 빠른 경로와 길이 거부 세 곳을 증명했다. 길이 거부의 전제는 `len + 112 ≤ cap`이다(11절).
 `Eth1Data.MarshalSSZTo`는 빠른 경로만 증명했다(11절, ENC 스트림). 리뷰 enc-r1이 ENC `ad15fbc`를 승인했다.
@@ -932,7 +950,7 @@ N3: 실제로 각 줄은 메서드 종류의 대상 수(211, 10, 6)를 쓴다. `
 N4(여기서 닫음): 목록의 평면 규칙은 홀드아웃 모집단 규칙보다 넓다. 모든 uint, bool, 모든 길이의 바이트 벡터를 넣는다.
 N4: 좁은 규칙(uint64 그대로 또는 덧씌움, 바이트 벡터 32 / 48 / 96)으로는 평면 형 24개, 개발 16, 시작 안 함 8이다.
 
-통합 INT7(`claude/ssz-fv-gen5` `be21280`을 `c29ebdc` 위에 병합, 병합 커밋 `03cf086`; 아직 리뷰 없음):
+통합 INT7(`claude/ssz-fv-gen5` `be21280`을 `c29ebdc` 위에 병합, 병합 커밋 `03cf086`; 리뷰 int7-r1 APPROVE, `93dae89`):
 스트림은 `c29ebdc` 위에 일직선이다. 충돌은 없었다. 병합 트리 id는 `be21280`의 트리 id와 같다.
 증명 글, 문장, 생성기, 검사기, 목록 스크립트, 고정 버전은 바꾸지 않았다.
 실행 검사(gate와 6 GiB 상한 안): `lake build E2e E2eAd E2eScal` 종료 0, 1284 jobs, 80.0초다.
@@ -958,7 +976,7 @@ S5 기록: 커밋 형 `merge`는 형 목록에 없다. INT7 병합도 앞 통합
 다른 기계의 리스트·벡터 작업은 이 트리에 없다. 여기서 주장하지 않는다.
 OPT-R1 시범은 채택하지 않았다. T-7은 미뤘다. 기록: `scal/RESULT.json`의 `integration_int7`.
 
-GEN6 인코더 생성기(단위 E2-G, 기준 `d1e30ca`, 리뷰 전): `p2enc --gen6`이 평면 인코더의 빠른 경로 정리를 낸다.
+GEN6 인코더 생성기(단위 E2-G, 기준 `d1e30ca`; 리뷰 e2g-r1 APPROVE, `dcc6e80`): `p2enc --gen6`이 평면 인코더의 빠른 경로 정리를 낸다.
 전제는 `len + SizeSSZ ≤ cap`과 바이트 벡터 필드의 정확한 길이다. 완전한 인코더 결과가 아니다.
 growslice 분기, 길이 거부, morestack은 증명하지 않았다. growslice 지시문은 밟지 않는다.
 모듈 하나에 머리, 필드마다 정리 하나, 에필로그, 빠른 경로 정리가 있다. 정리마다 `_kind` 줄이 있다.
@@ -982,7 +1000,7 @@ int7-r1 덤프(9758행) 대비 ADDED 1253, CHANGED 0, REMOVED 0이다. 심은 �
 모든 형이 개발 자료다(표본 안). 기록: `scal/RESULT.json`의 `enc2-gen`, `scal/CONTAMINATION.md` 35절.
 
 
-ENC2 닫기(단위 E2-C, 기준 `dcc6e80` = e2g-r1 APPROVE, 리뷰 전): 평면 16형의 인코더 빠른 경로를 닫았다.
+ENC2 닫기(단위 E2-C, 기준 `dcc6e80` = e2g-r1 APPROVE; 리뷰 e2c-r1 REQUEST_CHANGES 목록만, E2-C2가 고침, e2c2-r1 APPROVE `eec1d4f`): 평면 16형의 인코더 빠른 경로를 닫았다.
 전제는 언제나 `len + SizeSSZ ≤ cap`과 바이트 필드의 정확한 길이다. 완전한 인코더는 하나도 없다.
 독립 손 문장 넷(`E2eScal/E2cStmt.lean`)을 생성 정리를 읽기 전에 커밋했다(`0d25193`).
 그 넷은 PowBlock(프레임 시험), SyncCommitteeMessage(overlay uint64, 96바이트, 큰 가드), PendingPartialWithdrawal, Deposit_Data(48과 96바이트)다.
@@ -1005,7 +1023,9 @@ e2g-r1 덤프 대비 ADDED 1166, CHANGED 0, REMOVED 0이다.
 빠른 경로 완료 = 빠른 경로 정리 + 명세 따름 정리 + 증인이다. 디코더 완료는 17 / 211이다.
 목록 스크립트의 실패 대조 24/24가 기대대로다(예전 15, 인코더 5, 형별 규칙 4; 단위 E2-C2).
 증명하지 않은 경로는 형마다 `INVENTORY.md`의 NOT proved 칸에 있다(형별 규칙, 단위 E2-C2).
-모든 형: morestack. 거부 정리가 없는 형: 모든 growslice 분기와 모든 길이 거부.
+모든 형: morestack. 거부 정리가 없는 14형: 모든 growslice 분기다.
+그 14형 중 바이트 필드가 있는 9형: 모든 길이 거부다. 목록 칸도 그 9형에만 길이 거부를 적는다(e2c2-r1 N2).
+바이트 필드가 없는 5형: PendingConsolidation, PendingPartialWithdrawal, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit다.
 BeaconBlockHeader: growslice 분기, 그리고 `cap < len + 112`인 길이 거부다.
 BeaconBlockHeader의 거부 정리 셋은 모두 `len + 112 ≤ cap`을 전제한다.
 Checkpoint: `GrowsliceC`·`MemmoveC` 계약과 힙 예산 밖의 경로, 그리고 T-7 잔여 경로다.
@@ -1015,8 +1035,65 @@ PowBlock, HistoricalSummary, SigningData: 에필로그 프레임 시험의 `move
 T-7은 미뤘다. AttestationData 인코더는 이 트리에 없다(다른 작업).
 모든 형이 개발 자료다(표본 안). 기록: `scal/RESULT.json`의 `enc2-close`, `scal/CONTAMINATION.md` 36절.
 리뷰 e2c-r1(`5072b63`): REQUEST_CHANGES, 기록만이다. 증명 검사는 모두 통과했다.
-e2c-r1 M1은 단위 E2-C2가 고쳤다(목록 스크립트와 기록만, 리뷰 전). 기록: `enc2-close`의 `fix_e2c2`.
+e2c-r1 M1은 단위 E2-C2가 고쳤다(목록 스크립트와 기록만; 리뷰 e2c2-r1 APPROVE, `eec1d4f`). 기록: `enc2-close`의 `fix_e2c2`.
 e2c-r1 S1, S2, S4는 적용했다. S3은 부분이다: 재현 줄은 위에 있다. 게이트 스크립트 연결은 열림이다.
+
+ENC2 리뷰 결과(통합 INT8에서 덧붙임):
+E2-P(`e1fd7c0`)는 E2-L과 함께 리뷰 e2l-r1이 보았다. 링크 다시 뽑기와 조사 다시 실행은 바이트가 같았다.
+e2l-r1(`d1e30ca`): APPROVE, 필수 수정 0이다. 선언 비교는 ADDED 570, CHANGED 0, REMOVED 0이다.
+e2l-r1 S1(E2-L 머리의 낡은 `axioms-gate.json`)은 E2-C가 기록을 다시 만들어 닫았다. INT8 게이트가 확인했다.
+e2l-r1 S2: `WitVbM.lean`은 정리 둘에 `maxHeartbeats 16000000`을 쓴다.
+S2: 그 값은 모델 `WitE1M`의 값이다. 올림의 프로파일 기록은 없다.
+e2l-r1 S3은 열림이다. 매크로 `eb`가 최상위 이름 `tacticEb`로 선언된다(`EncFieldN.lean`, `.lean` 수정).
+e2l-r1 S4: `scal/RESULT.json`의 `enc2-lemmas.L2.moveSliceNoCapNoScan`은 세 형을 말한다.
+S4: E2-L이 증명한 것은 HistoricalSummary뿐이다. PowBlock과 SigningData는 E2-C의 빠른 경로 정리가 보였다.
+S4의 정정은 `enc2-lemmas.correction_e2l_r1_S4` 키에 있다. 원래 값은 고치지 않았다.
+e2l-r1 S5(DepositMessage, HistoricalSummary의 증인)는 E2-C가 닫았다(`WitE2cDm`, `WitE2cHs`).
+e2l-r1 S6: ValidatorBalance의 시도 A5는 한 항목의 셋째 시도였다. 그 전에 따로 재현 실행을 하지 않았다.
+e2g-r1(`dcc6e80`): APPROVE, 필수 수정 0이다. S1(결함 주입 수 252)은 위 E2-G 단락이 고쳤다.
+e2g-r1 S2–S5는 열림이다(검사기와 시험 코드).
+S2: 규칙 13은 `.S` 레이블을 `ir_type`에 묶지 않는다. import와 open 줄도 제한하지 않는다.
+S3: 깨뜨린 사본 하나는 KeyError로 실패한다. `g6_ir`은 표시 없는 8바이트 필드를 u64로 받는다.
+S4: IR 대 코드 부정 시험은 정리 하나만 바꾼다. 파일 전체 변이가 없다.
+S5: 적대 입력의 거부 이유를 생존 검사가 먼저 보고한다.
+e2c-r1(`5072b63`): REQUEST_CHANGES, 목록 칸 하나만이다(M1). 증명 검사는 모두 통과했다.
+e2c-r1이 통합에 넘긴 것: 명세 따름 정리는 프레임을 버린다(`⋆ True`). 프레임 주장은 빠른 경로 정리를 인용한다.
+증인은 두 함수 호스트에서 `rt_memmove`와 `S = 0`을 쓴다. 만족 가능성이고, 링크된 ELF 배치가 아니다.
+모든 문장은 `cap < 2^63`을 전제한다. 필드, 수신자, 스택, `dst[len:cap]`의 분리도 전제한다.
+e2c-r1 S3의 게이트 스크립트 연결은 열림이다. INT8은 그 스크립트를 게이트 작업으로 한 번 돌렸다.
+e2c2-r1(`eec1d4f`): APPROVE, 필수 수정 0이다. 16칸을 덤프와 대조했고, 수를 다시 만들어 같았다.
+e2c2-r1 N1은 열림이다(스크립트). Checkpoint 칸의 T-7 잔여 글은 `E2e.cp_e2e_marshal_grow_any_sharp`에 기댄다.
+N1: 스크립트는 그 이름을 검사하지 않는다.
+e2c2-r1 N2는 여기서 닫았다. 위 "거부 정리가 없는 14형" 줄과 BASELINE 칸을 바이트 필드 기준으로 고쳤다.
+e2c2-r1 N3은 열림이다(스크립트 글). 칸 글 "1 byte fields"는 스크립트 출력이다.
+
+통합 INT8(`claude/ssz-fv-enc2` `eec1d4f`를 `93dae89` 위에 병합, 병합 커밋 `e70492d`; 아직 리뷰 없음):
+스트림은 `93dae89` 위에 일직선이다. 충돌은 없었다. 병합 트리 id는 `eec1d4f`의 트리 id와 같다.
+증명 글, 문장, 생성기, 검사기, 목록 스크립트, 고정 버전은 바꾸지 않았다.
+실행 검사(gate와 6 GiB 상한 안): `lake build E2e E2eAd E2eScal` 종료 0, 1412 jobs, 296.3초다.
+빌드한 모듈은 64개다. 스트림이 더한 `lean/` 모듈 64개와 같다.
+`E2eScal.P2EncCp`는 다시 빌드되지 않았다. `.olean` sha256이 빌드 전후 같다.
+최대 메모리는 빌드 전체의 값이다: 프로세스 2.22 GiB, 세션 3.59 GiB다. `lake build --no-build` 종료 0이다.
+공리 게이트 PASS: 선언 12177, 정리 10199, 모듈 404, 손 목록 2891, 비표준 0, sorryAx 0이다.
+새 게이트 JSON은 커밋된 `axioms-gate.json`과 바이트가 같다. 그래서 기록을 다시 쓰지 않았다.
+e2c-r1 덤프 대비 선언 비교: 0 CHANGED, 0 REMOVED, 0 ADDED다. E2-C2는 선언을 바꾸지 않았다.
+심은 대조(덤프 수준): `E2eScal.E2c.pw_e2c_spec_k`의 형 해시를 바꾼 사본은 종료 1, CHANGED 1이다.
+`regen_check.sh` 71/71 SAME(앞의 55, GEN6 16)이다. 통합 검사이고, 새 생성기 결과가 아니다.
+`kindcheck.py --selftest` PASS, `p2dec_test.py` 394/394, `p2enc_test.py` 322/322다.
+비작성자 레이아웃 재계산 `own_layout_e2g_r1.py`: 16/16 OK, 0 layouts differ from the reviewer's recomputation or are not disjoint.
+목록 다시 실행: `inventory.py methods`의 출력은 커밋된 `ssz-methods.json`과 바이트가 같다.
+`inventory_decls.lean`(게이트 안)과 `inventory.py run`의 출력은 커밋된 `INVENTORY.md`, `INVENTORY.json`과 바이트가 같다.
+실행하지 않은 것(통합자): Lean 수준 심은 대조, 빈 `.lake`의 콜드 빌드, 링크 검사, Go 차분, 부정 시험, x86-64.
+int7-r1(`93dae89`, APPROVE) 고칠 항목:
+S1은 0절에 공개 상태와 "완전"의 제외를 적어 닫았다.
+S2는 BASELINE의 "15 of 17 flat"을 "개발 형 17 = 평면 16 + 중첩 AttestationData"로 고쳐 닫았다.
+S3은 INT7의 "리뷰 전" 글을 int7-r1로 대체해 닫았다. 날짜 붙은 글은 고치지 않았다.
+S4는 열림이다. `INVENTORY.md` 분모 1의 글은 스크립트 출력이다. 이 단위는 스크립트를 바꾸지 않는다.
+S5 기록: INT8 병합도 `merge(kraken)`을 썼다. 로컬 참조 `refs/remotes/offchainlabs/main`은 건드리지 않았다.
+남은 일: 인코더의 growslice 분기, 길이 거부, morestack이다. 그리고 중첩 컨테이너, 리스트·벡터·비트필드, 해시 트리 루트다.
+대상의 평면 고정 크기 형 24개는 시작하지 않았다. AttestationData 인코더는 다른 기계의 일이다.
+다른 기계의 리스트·벡터 작업은 이 트리에 없다. 여기서 주장하지 않는다.
+OPT-R1 시범은 채택하지 않았다. T-7은 미뤘다. 기록: `scal/RESULT.json`의 `integration_int8`.
 
 조건:
 
