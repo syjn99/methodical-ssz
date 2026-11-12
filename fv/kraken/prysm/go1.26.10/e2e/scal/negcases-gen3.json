@@ -278,8 +278,8 @@
   "module": "E2eScal/CallDecRel.lean",
   "theorem": "slUAccC_eq",
   "kind": "stmt",
-  "old": "E2eAd.Code.slLabel",
-  "new": "E2eAd.Code.ciLabel"
+  "old": "Prysm.AttestationData.Code.slotUnmarshalLabel",
+  "new": "Prysm.AttestationData.Code.committeeIndexUnmarshalLabel"
  },
  {
   "id": "g3-wit-control",

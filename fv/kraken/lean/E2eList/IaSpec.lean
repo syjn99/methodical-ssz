@@ -1,6 +1,6 @@
 import Prysm.Checkpoint.Spec
 import Prysm.Checkpoint.SpecEquivalence
-import E2eAd.Spec
+import Prysm.AttestationData.Spec
 import TestTarget.ListU64RejectSpec
 import EthLib.Serialization.Proofs.Ssz.Codec.Table
 import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
@@ -22,10 +22,10 @@ theorem prysmIaDesc_wellFormed : prysmIaDesc.wellFormed = .ok () := by rfl
 theorem iaOff_toArray : iaOff.toArray = uintBytes 4 228 := by decide
 
 theorem pia_enc_size (g : PIa) : (piaEnc g).size = 228 + 8 * g.idx.length := by
-  simp [piaEnc, iaOff, E2e.pad_enc_size, u64Bytes_size]; omega
+  simp [piaEnc, iaOff, Prysm.AttestationData.SszValue.enc_size, u64Bytes_size]; omega
 
 theorem pia_toValue_fits (g : PIa) : Value.fits prysmIaDesc g.toValue = true := by
-  have h1 := E2e.pad_toValue_fits g.data
+  have h1 := Prysm.AttestationData.SszValue.toValue_fits g.data
   have h2 := g.hidx
   simp only [prysmIaDesc, PIa.toValue, Value.fits, Value.fieldsFit] at *
   simp [h1, allFit_u64, h2]
@@ -40,7 +40,7 @@ theorem pia_toValue_surjective (v : Value) (h : Value.fits prysmIaDesc v = true)
     obtain ⟨es, rfl, hlen, hall⟩ : ∃ es, v0 = .seq es ∧ es.length ≤ 2048 ∧ Value.allFit (.uint 8) es = true := by
       cases v0 <;> simp [Value.fits] at h0 ⊢; exact h0
     obtain ⟨l, rfl⟩ := allFit_u64_inv es hall
-    obtain ⟨d, rfl⟩ := E2e.pad_toValue_surjective v1 h1
+    obtain ⟨d, rfl⟩ := Prysm.AttestationData.SszValue.toValue_surjective v1 h1
     obtain ⟨z, rfl, hz⟩ : ∃ d, v2 = .bytes d ∧ d.size = 96 := by
       cases v2 <;> simp [Value.fits] at h2 ⊢; exact h2
     exact ⟨⟨l, by simpa using hlen, d, ⟨z, hz⟩⟩, rfl⟩
@@ -48,8 +48,8 @@ theorem pia_toValue_surjective (v : Value) (h : Value.fits prysmIaDesc v = true)
 /-- **`serialize g = offset 228 ‖ data ‖ signature ‖ indices`.** -/
 theorem pia_serialize (g : PIa) : serialize prysmIaDesc g.toValue = .ok (piaEnc g) := by
   obtain ⟨l, hl, d, ⟨z, hz⟩⟩ := g
-  have hd := E2e.pad_serialize d
-  have hds := E2e.pad_enc_size d
+  have hd := Prysm.AttestationData.SszValue.serialize_eq d
+  have hds := Prysm.AttestationData.SszValue.enc_size d
   have h32 : 228 + 8 * l.length < 2 ^ (8 * bytesPerOffset) := by simp [bytesPerOffset]; omega
   simp only [prysmIaDesc, PIa.toValue, serialize, serializeStruct, serializeFields, serializeSequence,
     List.length_map, hl, decide_true, if_true, serializeEach_u64, Vector.toArray_mk, hz]
@@ -63,7 +63,7 @@ theorem pia_serialize (g : PIa) : serialize prysmIaDesc g.toValue = .ok (piaEnc 
       [Desc.uint 8, Desc.uint 8, Desc.byteVector 32, Desc.container ["epoch", "root"] [Desc.uint 8, Desc.byteVector 32],
         Desc.container ["epoch", "root"] [Desc.uint 8, Desc.byteVector 32]]).isFixed = true := rfl
   have f3 : (Desc.byteVector 96).isFixed = true := rfl
-  have f4 : E2e.prysmAdDesc.isFixed = true := rfl
+  have f4 : Prysm.AttestationData.desc.isFixed = true := rfl
   simp (config := {decide := true}) [bodyWidth, headOf, bodiesOf, headWidth, u64Bytes_size, h4, h8, bytesPerOffset,
     piaEnc, hds, hz, iaOff_toArray, Array.append_assoc, f1, f2, f3, f4]
 
@@ -91,8 +91,8 @@ theorem ia_checks_enc (bs : Array UInt8) (h : iaChecks bs) : ∃ g : PIa, bs = p
   obtain ⟨h228, hoff, hmod, hn⟩ := h
   obtain ⟨n, hndef⟩ : ∃ n, n = (bs.size - 228) / 8 := ⟨_, rfl⟩
   have hsz : bs.size = 228 + 8 * n := by omega
-  obtain ⟨vd, hvd⟩ := (E2e.pad_spec_accepts_iff (bs.extract 4 132)).mpr (by simp; omega)
-  obtain ⟨d, -, hd⟩ := E2e.pad_accepted_is_enc hvd
+  obtain ⟨vd, hvd⟩ := (Prysm.AttestationData.SszValue.spec_accepts_iff (bs.extract 4 132)).mpr (by simp; omega)
+  obtain ⟨d, -, hd⟩ := Prysm.AttestationData.SszValue.accepted_is_encoding hvd
   refine ⟨⟨luElems bs 228 n, by simp [luElems_length]; omega, d, ⟨bs.extract 132 228, by simp; omega⟩⟩, ?_⟩
   have h4 : bs.extract 0 4 = iaOff.toArray := by
     apply Array.toList_inj.mp

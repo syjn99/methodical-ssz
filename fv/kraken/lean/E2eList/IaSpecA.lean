@@ -6,10 +6,10 @@ import E2eList.IaSpec
 
 `ia_e2e_accept_spec : ia_accept_spec_stmt` (frozen, `StmtIa.lean`): an input that EthLib accepts against
 `prysmIaDesc` is `piaEnc g` for a `g : PIa` with `g.toValue = v` (`pia_accepted_is_enc`), and the machine code
-decodes it into `g` (`ia_e2e_accept_main` with `n = g.idx.length`). The text of `E2eAd/AdSpecK.lean`.
+decodes it into `g` (`ia_e2e_accept_main` with `n = g.idx.length`). The text of `Prysm/AttestationData/DecodeSpec.lean`.
 -/
 
-open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz E2eList.Code
+open Machine Runtime TestTarget EthLib.Serialization.Ssz E2eList.Code
 variable [Host]
 
 namespace E2eList

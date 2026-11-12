@@ -1,9 +1,9 @@
-import E2eAd.AdReject
+import Prysm.AttestationData.DecodeRejectSize
 import Runtime.CopyModel
 import Machine.WitnessHost
 
 /-!
-# Witness of `ad_e2e_reject_size_main`
+# Witness of `Decode.reject_size`
 
 Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10
 `(*v1alpha1.AttestationData).UnmarshalSSZ` (index 1). The text of `Prysm/Checkpoint/WitnessDecodeRejectSize.lean` with the
@@ -15,21 +15,21 @@ unused rax spill slot (the frame `R`) and the rbx spill slot. For every length
 `≠ 128` (instances 127, 129, 0) the decoder returns the two words.
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2eAd E2eAd.Code
+open Machine Runtime TestTarget Machine.Witness Prysm.AttestationData.Code
 
-namespace E2eAd.WitAdR
+namespace Prysm.AttestationData.Witness.DecodeRejectSize
 
 set_option maxRecDepth 100000
 
-def P : Program := [.label "ssz.ErrSize"] ++ AdUnmarshal
+def P : Program := [.label "ssz.ErrSize"] ++ unmarshalSSZ
 
 theorem P_len : P.length = 244 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
 
-theorem hk1 : AdUnmarshal.IsInfixAt Host.prog 1 := infixAt_of [.label "ssz.ErrSize"] [] (by simp [Host.prog, mkHost, P]) rfl
+theorem hk1 : unmarshalSSZ.IsInfixAt Host.prog 1 := infixAt_of [.label "ssz.ErrSize"] [] (by simp [Host.prog, mkHost, P]) rfl
 
-theorem hf1 : LabelsFresh AdUnmarshal 1 := labelsFresh_of (by decide)
+theorem hf1 : LabelsFresh unmarshalSSZ 1 := labelsFresh_of (by decide)
 
 theorem label_err : label "ssz.ErrSize" = 0x10000 :=
   mk_label P _ 0 _ (by simp [P]) (by simp [labs])
@@ -48,13 +48,13 @@ def cs0 (len : UInt64) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
 def R0 : DataMem → Prop := Eq ((z 8).At (0x10028 : BitVec 64))
 
 set_option maxHeartbeats 4000000 in
-/-- **Non-vacuity of `ad_e2e_reject_size_main`.** -/
-theorem ad_reject_runs (len : UInt64) (hlen : len ≠ 128) (zmms : RegZmms) (flags : StatusFlags) :
+/-- **Non-vacuity of `Decode.reject_size`.** -/
+theorem runs (len : UInt64) (hlen : len ≠ 128) (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0x10e8
         ∧ st.data.regs.rbx = 0x2a)
       ⟨cs0 len zmms flags, Host.addrOf 1⟩ :=
-  eventually_mono (ad_e2e_reject_size_main 1 hk1 hf1 (cs0 len zmms flags) 0 0 0x10e8 0x2a (z 8) (z 8) rfl rfl R0
+  eventually_mono (Decode.reject_size 1 hk1 hf1 (cs0 len zmms flags) 0 0 0x10e8 0x2a (z 8) (z 8) rfl rfl R0
     (by
       have H : Eq (block.At (0x10000 : BitVec 64)) mem := rfl
       wit_split []
@@ -66,8 +66,8 @@ theorem ad_reject_runs (len : UInt64) (hlen : len ≠ 128) (zmms : RegZmms) (fla
     (by simp [cs0]) hlen)
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 
-example (z' : RegZmms) (f : StatusFlags) := ad_reject_runs 127 (by decide) z' f
-example (z' : RegZmms) (f : StatusFlags) := ad_reject_runs 129 (by decide) z' f
-example (z' : RegZmms) (f : StatusFlags) := ad_reject_runs 0 (by decide) z' f
+example (z' : RegZmms) (f : StatusFlags) := runs 127 (by decide) z' f
+example (z' : RegZmms) (f : StatusFlags) := runs 129 (by decide) z' f
+example (z' : RegZmms) (f : StatusFlags) := runs 0 (by decide) z' f
 
-end E2eAd.WitAdR
+end Prysm.AttestationData.Witness.DecodeRejectSize

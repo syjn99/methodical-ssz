@@ -1,38 +1,38 @@
 import Machine.Step
 import Machine.Labels
 import Machine.Bytes
-import E2eAd.Code
+import Prysm.AttestationData.Code
 import Prysm.ElfData.CheckpointAndEpoch
 import Prysm.Checkpoint.DecodeRejectSize
 
 /-!
 # Real Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`: size reject and the four unreachable error wraps
 
-`ad_e2e_reject_size_main` (`len(buf) ≠ 128`, Go source `return ssz.ErrSize`): directives
+`Decode.reject_size` (`len(buf) ≠ 128`, Go source `return ssz.ErrSize`): directives
 2–7 (guard, prologue, rbx spill), 9–10 `cmp $0x80,%rcx; jne L_3ad` taken, 226 `L_3ad`,
 227–228 load the two words of `ssz.ErrSize` (`ElfData.CheckpointAndEpoch.e2eErrSize_addr`, the same ELF symbol
 as the Checkpoint decoder's; `adlink.py` asserts the operand), 229–231 epilogue. The two words
-`e0`, `e1` are the global's value after package init (premise, as in `cp_e2e_reject_size_main`).
+`e0`, `e1` are the global's value after package init (premise, as in `Prysm.Checkpoint.Decode.reject_size`).
 
 **`unreachable_mc` rows** (own column, never reject coverage): after each callee returns with
 `rax = 0` the code jumps over its `fmt.errorf` wrap with registers and memory unchanged:
 Slot (directive 18 → 47, skips 20–46, "Slot: %w"), CommitteeIndex (56 → 85, skips 58–84,
 "CommitteeIndex: %w"), Source (143 → 172, skips 145–171, "Source: %w"), Target (193 → 222,
-skips 195–221, "Target: %w"). `SlUAccC`, `CiUAccC` and `CpUAccC` give `rax = 0` for the calls
-that `ad_e2e_accept_main` makes with `len(buf) = 128` (rcx = 8, 8, 40, 40); that theorem
+skips 195–221, "Target: %w"). `Prysm.Slot.Decode.accept_function_spec`, `Prysm.CommitteeIndex.Decode.accept_function_spec` and `Prysm.Checkpoint.Decode.accept_function_spec` give `rax = 0` for the calls
+that `Decode.accept` makes with `len(buf) = 128` (rcx = 8, 8, 40, 40); that theorem
 passes through exactly these steps, so the wraps are absent from every execution with a
 128-byte input.
 -/
 
-open Machine TestTarget E2eAd.Code
+open Machine TestTarget Prysm.AttestationData.Code
 variable [Host]
 
-namespace E2eAd
+namespace Prysm.AttestationData
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-theorem ad_e2e_reject_size_main (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k)
-    (hf : LabelsFresh AdUnmarshal k)
+theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh unmarshalSSZ k)
     (s : MachineData) (ra guard e0 e1 : UInt64) (fp s2 : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8)
     (R : DataMem → Prop)
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
@@ -54,12 +54,12 @@ theorem ad_e2e_reject_size_main (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog 
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only [Prysm.Checkpoint.Decode.errSize_addr_eq] at h_mem hguard hlen ⊢
   have := rsp.toNat_lt_size; have := guard.toNat_lt_size; have := rcx.toNat_lt_size; simp only [UInt64.size] at *
-  kat hk AdUnmarshal 0
-  kat hk AdUnmarshal 1
-  kat hk AdUnmarshal 2
+  kat hk unmarshalSSZ 0
+  kat hk unmarshalSSZ 1
+  kat hk unmarshalSSZ 2
   apply load_step _ _ _ _ (Int.toBytes 8 guard.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
-  kat hk AdUnmarshal 3
+  kat hk unmarshalSSZ 3
   split
   · rename_i h; exfalso
     simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
@@ -67,41 +67,41 @@ theorem ad_e2e_reject_size_main (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog 
     · apply h; omega
     · have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this; omega
   simp only [Effects.All]
-  kat hk AdUnmarshal 4
+  kat hk unmarshalSSZ 4
   apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by bv_omega) (by ecancel) (by exact hfp)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
   kunfold
-  kat hk AdUnmarshal 5
-  kat hk AdUnmarshal 6
-  kat hk AdUnmarshal 7
+  kat hk unmarshalSSZ 5
+  kat hk unmarshalSSZ 6
+  kat hk unmarshalSSZ 7
   apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by bv_omega) (by ecancel) (by exact h2)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
   kunfold
-  kat hk AdUnmarshal 8
-  kat hk AdUnmarshal 9
-  kat hk AdUnmarshal 10
+  kat hk unmarshalSSZ 8
+  kat hk unmarshalSSZ 9
+  kat hk unmarshalSSZ 10
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
     apply hlen; apply UInt64.toBitVec_inj.mp; apply BitVec.eq_of_toNat_eq
     have := congrArg BitVec.toNat h; simp [BitVec.toNat_sub] at this ⊢; omega
   simp only [Effects.All]
-  klabel hk hf AdUnmarshal 226
-  kat hk AdUnmarshal 226
-  kat hk AdUnmarshal 227
+  klabel hk hf unmarshalSSZ 226
+  kat hk unmarshalSSZ 226
+  kat hk unmarshalSSZ 227
   apply load_step _ _ _ _ (Int.toBytes 8 e0.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
-  kat hk AdUnmarshal 228
+  kat hk unmarshalSSZ 228
   apply load_step _ _ _ _ (Int.toBytes 8 e1.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
-  kat hk AdUnmarshal 229
-  kat hk AdUnmarshal 230
+  kat hk unmarshalSSZ 229
+  kat hk unmarshalSSZ 230
   rw [show (112 : BitVec 64) + (rsp.toBitVec - 8#64 - 112) = rsp.toBitVec - 8 by bv_omega]
   apply load_step _ _ _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
-  kat hk AdUnmarshal 231
+  kat hk unmarshalSSZ 231
   rw [show rsp.toBitVec - 8 + 8#64 = rsp.toBitVec by bv_omega]
   apply load_step _ _ _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by ecancel) (by exact Int.toBytes_length 8 _)
   kunfold
@@ -125,81 +125,81 @@ theorem ad_e2e_reject_size_main (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- **`unreachable_mc`: the `fmt.errorf("Slot: %w")` path** (directives 20–46). -/
-theorem ad_e2e_slot_err_unreachable (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k)
-    (hf : LabelsFresh AdUnmarshal k) (s : MachineData) (h0 : s.regs.rax = 0) :
+theorem Decode.slot_err_unreachable (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh unmarshalSSZ k) (s : MachineData) (h0 : s.regs.rax = 0) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 47) ∧ st.data.regs = s.regs ∧ st.data.dmem = s.dmem)
       ⟨s, Host.addrOf (k + 18)⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h0 ⊢
   subst h0
-  kat hk AdUnmarshal 18
+  kat hk unmarshalSSZ 18
   intro _
-  kat hk AdUnmarshal 19
+  kat hk unmarshalSSZ 19
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
-  klabel hk hf AdUnmarshal 47
+  klabel hk hf unmarshalSSZ 47
   exact Eventually.done _ ⟨rfl, rfl, rfl⟩
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- **`unreachable_mc`: the `fmt.errorf("CommitteeIndex: %w")` path** (directives 58–84). -/
-theorem ad_e2e_ci_err_unreachable (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k)
-    (hf : LabelsFresh AdUnmarshal k) (s : MachineData) (h0 : s.regs.rax = 0) :
+theorem Decode.committee_index_err_unreachable (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh unmarshalSSZ k) (s : MachineData) (h0 : s.regs.rax = 0) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 85) ∧ st.data.regs = s.regs ∧ st.data.dmem = s.dmem)
       ⟨s, Host.addrOf (k + 56)⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h0 ⊢
   subst h0
-  kat hk AdUnmarshal 56
+  kat hk unmarshalSSZ 56
   intro _
-  kat hk AdUnmarshal 57
+  kat hk unmarshalSSZ 57
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
-  klabel hk hf AdUnmarshal 85
+  klabel hk hf unmarshalSSZ 85
   exact Eventually.done _ ⟨rfl, rfl, rfl⟩
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- **`unreachable_mc`: the `fmt.errorf("Source: %w")` path** (directives 145–171). -/
-theorem ad_e2e_source_err_unreachable (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k)
-    (hf : LabelsFresh AdUnmarshal k) (s : MachineData) (h0 : s.regs.rax = 0) :
+theorem Decode.source_err_unreachable (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh unmarshalSSZ k) (s : MachineData) (h0 : s.regs.rax = 0) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 172) ∧ st.data.regs = s.regs ∧ st.data.dmem = s.dmem)
       ⟨s, Host.addrOf (k + 143)⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h0 ⊢
   subst h0
-  kat hk AdUnmarshal 143
+  kat hk unmarshalSSZ 143
   intro _
-  kat hk AdUnmarshal 144
+  kat hk unmarshalSSZ 144
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
-  klabel hk hf AdUnmarshal 172
+  klabel hk hf unmarshalSSZ 172
   exact Eventually.done _ ⟨rfl, rfl, rfl⟩
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- **`unreachable_mc`: the `fmt.errorf("Target: %w")` path** (directives 195–221). -/
-theorem ad_e2e_target_err_unreachable (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k)
-    (hf : LabelsFresh AdUnmarshal k) (s : MachineData) (h0 : s.regs.rax = 0) :
+theorem Decode.target_err_unreachable (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
+    (hf : LabelsFresh unmarshalSSZ k) (s : MachineData) (h0 : s.regs.rax = 0) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 222) ∧ st.data.regs = s.regs ∧ st.data.dmem = s.dmem)
       ⟨s, Host.addrOf (k + 193)⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h0 ⊢
   subst h0
-  kat hk AdUnmarshal 193
+  kat hk unmarshalSSZ 193
   intro _
-  kat hk AdUnmarshal 194
+  kat hk unmarshalSSZ 194
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
-  klabel hk hf AdUnmarshal 222
+  klabel hk hf unmarshalSSZ 222
   exact Eventually.done _ ⟨rfl, rfl, rfl⟩
 
-end E2eAd
+end Prysm.AttestationData

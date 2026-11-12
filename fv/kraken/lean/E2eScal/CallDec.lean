@@ -1,7 +1,7 @@
 import Codec.Bytes32Decode
 import E2eScal.ViSpec
 import Prysm.Epoch.DecodeAccept
-import E2eAd.Prims
+import Prysm.Slot.DecodeAccept
 
 /-!
 # GEN3 L1: a field decoded by a call to another type's `UnmarshalSSZ` (uint64 overlay callee)
@@ -14,7 +14,7 @@ CommitteeIndex, ValidatorIndex, Epoch) to an argument set-up, then
     test %rax,%rax
     je L            -- nil error: continue at L
 
-`U64CalleeAcc fn` is the text of the four existing function specifications `E2eAd.SlUAccC`, `E2eAd.CiUAccC`,
+`U64CalleeAcc fn` is the text of the four existing function specifications `Prysm.Slot.Decode.accept_function_spec`, `Prysm.CommitteeIndex.Decode.accept_function_spec`,
 `E2eScal.ViUAccC`, `Prysm.Epoch.Decode.accept_function_spec` with the callee label as a parameter. It is the existing spec-hypothesis
 form (`CallDecRel.lean`: each existing spec is `U64CalleeAcc <its label>` by `rfl`); the proved theorems
 `sl_uacc_holds`, `ci_uacc_holds`, `vi_uacc_holds`, `ep_uacc_holds` discharge it. No runtime contract is used.

@@ -8,12 +8,12 @@ import E2eScal.CallDec
 `bh_e2e_head_g3_type`: the two declared types are equal by `rfl`. Proof: `bh_head0` (hand steps, directives
 0–14, frame `sub $0x60`), then for `Slot` `callarg_first_seg` (15–16) + `calldec_seg` (17–19, label 46), for
 `ProposerIndex` `callarg_reload_seg` with the padding `nop` (47–54) + `calldec_seg` (55–57, label 85), then
-`bh_spill2` (hand steps, 86–87: the two nil-error spills). The existing hypotheses `SlUAccC` / `ViUAccC` are
+`bh_spill2` (hand steps, 86–87: the two nil-error spills). The existing hypotheses `Prysm.Slot.Decode.accept_function_spec` / `ViUAccC` are
 used as `U64CalleeAcc` (the same propositions, `CallDecRel.lean`). Hand-written example; the existing theorem
 is unchanged.
 -/
 
-open Machine Runtime TestTarget E2eAd E2eAd.Code E2eScal.BhCode E2eScal Codec
+open Machine Runtime TestTarget Prysm.AttestationData.Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.Bh
@@ -149,7 +149,7 @@ set_option maxRecDepth 100000 in
 /-- Segment 1 of the BeaconBlockHeader decoder accept path, re-derived with the call-site lemmas
 (statement text of `bh_e2e_head`). -/
 theorem bh_e2e_head_g3 (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh BhUnmarshal k)
-    (hsl : SlUAccC) (hvi : ViUAccC)
+    (hsl : Prysm.Slot.Decode.accept_function_spec) (hvi : ViUAccC)
     (in0 in1 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 s4 sp1 rslot lf ast a8 a16 s28 s30 : List UInt8)
@@ -187,7 +187,7 @@ theorem bh_e2e_head_g3 (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (hf : 
           ⋆ Eq (ast.At s.regs.rax.toBitVec) ⋆ Eq (in0.At (s.regs.rax.toBitVec + 8))
           ⋆ Eq (in1.At (s.regs.rax.toBitVec + 16)) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
-  have hsl' : U64CalleeAcc slLabel := hsl
+  have hsl' : U64CalleeAcc slotUnmarshalLabel := hsl
   have hvi' : U64CalleeAcc viLabel := hvi
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢

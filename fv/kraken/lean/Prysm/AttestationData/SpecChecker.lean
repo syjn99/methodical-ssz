@@ -5,9 +5,9 @@ import EthLib.Serialization.Ssz
 `(github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1, AttestationData)` that the Desc checker accepted
 (`gen/desc/results/main.result.json`, same sha256). Do not edit. -/
 
-namespace E2e
+namespace Prysm.AttestationData
 open EthLib.Serialization.Ssz
 
-def adCheckerDesc : Desc := .container ["Slot", "CommitteeIndex", "BeaconBlockRoot", "Source", "Target"] [.uint 8, .uint 8, .byteVector 32, .container ["Epoch", "Root"] [.uint 8, .byteVector 32], .container ["Epoch", "Root"] [.uint 8, .byteVector 32]]
+def checkerDesc : Desc := .container ["Slot", "CommitteeIndex", "BeaconBlockRoot", "Source", "Target"] [.uint 8, .uint 8, .byteVector 32, .container ["Epoch", "Root"] [.uint 8, .byteVector 32], .container ["Epoch", "Root"] [.uint 8, .byteVector 32]]
 
-end E2e
+end Prysm.AttestationData

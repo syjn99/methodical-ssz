@@ -1,4 +1,4 @@
-import E2eAd.AdSrc
+import Prysm.AttestationData.DecodeAcceptSource
 
 /-!
 # `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, segment 4
@@ -7,7 +7,7 @@ import E2eAd.AdSrc
     if err = a.Target.UnmarshalSSZ(buf[88:128]); err != nil { return fmt.Errorf("Target: %w", err) }
     return err
 
-Directive indices of `E2eAd.Code.AdUnmarshal`: 172 `L_2d9`, 173–174 `lea type:Checkpoint;
+Directive indices of `Prysm.AttestationData.Code.unmarshalSSZ`: 172 `L_2d9`, 173–174 `lea type:Checkpoint;
 callq runtime.newobject`, 175–176 writeBarrier test (`jne`, not taken), 177–178 reload the
 receiver, `jmp L_310`, 185 `L_310`, 186 store `Target`, 187–192 arguments (rbx = buf + 88,
 rdi = cap − 88, rcx = 40) and `callq Checkpoint.UnmarshalSSZ`, 193–194 `test %rax,%rax;
@@ -15,16 +15,16 @@ je L_3a7`, 222 `L_3a7`, 223–225 epilogue and `retq` with the callee's nil erro
 The text is segment 3's with the Target offsets and the epilogue.
 -/
 
-open Machine Runtime TestTarget E2eAd.Code
+open Machine Runtime TestTarget Prysm.AttestationData.Code
 variable [Host]
 
-namespace E2eAd
+namespace Prysm.AttestationData
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- Segment 4: from `L_2d9` (directive 172) to the return: a new Target object
-(`NewobjectC`), the Target decoder through `CpUAccC`, and the epilogue. -/
-theorem ad_e2e_tgt (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh AdUnmarshal k)
+(`NewobjectC`), the Target decoder through `Prysm.Checkpoint.Decode.accept_function_spec`, and the epilogue. -/
+theorem Decode.target (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (rsp0 r140 guard ra rbp0 : UInt64) (rcv bf : BitVec 64) (se sroot : List UInt8) (hse : se.length = 8)
     (hsroot : sroot.length = 32)
     (s4 q0 q1 rslot lo aT : List UInt8)
@@ -46,7 +46,7 @@ theorem ad_e2e_tgt (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : Labe
       ⋆ Eq (se.At (bf + 88)) ⋆ Eq (sroot.At (bf + 96))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat + 224 < rsp0.toNat)
-    (hno : NewobjectC Heap E2eAd.Data.adCpType_addr 72 (S + 96)) (hcp : CpUAccC Heap S) :
+    (hno : NewobjectC Heap ElfData.AttestationData.adCpType_addr 72 (S + 96)) (hcp : Prysm.Checkpoint.Decode.accept_function_spec Heap S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = rsp0 + 8 ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -73,67 +73,67 @@ theorem ad_e2e_tgt (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : Labe
   simp only at hrsp hrbp hr14 h_mem ⊢
   subst rsp rbp r14
   have := rsp0.toNat_lt_size; have := guard.toNat_lt_size; simp only [UInt64.size] at *
-  kat hk AdUnmarshal 172
-  kat hk AdUnmarshal 173
-  kat hk AdUnmarshal 174
-  apply store_step_at _ _ (rsp0.toBitVec - 128) _ _ _ rslot _ _ (ada_call _) (by ecancel) (by exact hrs)
+  kat hk unmarshalSSZ 172
+  kat hk unmarshalSSZ 173
+  kat hk unmarshalSSZ 174
+  apply store_step_at _ _ (rsp0.toBitVec - 128) _ _ _ rslot _ _ (Decode.accept_call _) (by ecancel) (by exact hrs)
   intro m2' H2
   simp only [Width.bytes, Width.bits] at H2
   kunfold
-  rw [ada_call] at *
+  rw [Decode.accept_call] at *
   refine eventually_trans _ _ _ _ (hno _ (Host.addrOf (k + 174 + 1)) avail lo q0 _ rfl (by omega) hlo hq0
-    (by dsimp only; rw [ada_lo _ _ hS, show rsp0.toBitVec - 128 + 8 = rsp0.toBitVec - 120 by bv_omega]; ecancel)) ?_
+    (by dsimp only; rw [Decode.accept_lo _ _ hS, show rsp0.toBitVec - 128 + 8 = rsp0.toBitVec - 120 by bv_omega]; ecancel)) ?_
   rintro ⟨d3, pc3⟩ ⟨hpc3, hrsp3, hr143, hrbp3, stk3, sp3, hstk3, hsp3, Hm3⟩
   dsimp only at hpc3 hrsp3 hr143 hrbp3 Hm3
   subst hpc3
   obtain ⟨⟨rax3, rbx3, rcx3, rdx3, rsi3, rdi3, rsp3, rbp3, r83, r93, r103, r113, r123, r133, r143, r153⟩,
     zmms3, flags3, mem3⟩ := d3
   simp only at hrsp3 hr143 hrbp3 Hm3
-  rw [ada_ret] at hrsp3
+  rw [Decode.accept_ret] at hrsp3
   subst hrsp3 hr143 hrbp3
-  rw [ada_lo _ _ hS, show rsp0.toBitVec - 128 + 8 = rsp0.toBitVec - 120 by bv_omega, ada_obj72] at Hm3
-  kat hk AdUnmarshal 175
+  rw [Decode.accept_lo _ _ hS, show rsp0.toBitVec - 128 + 8 = rsp0.toBitVec - 120 by bv_omega, Decode.accept_obj72] at Hm3
+  kat hk unmarshalSSZ 175
   apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
   simp only [show Int.ofBytes [0, 0, 0, 0] = 0 by simp [Int.ofBytes]]
   kunfold
-  kat hk AdUnmarshal 176
+  kat hk unmarshalSSZ 176
   split
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
-  kat hk AdUnmarshal 177
+  kat hk unmarshalSSZ 177
   apply load_step_at _ _ (rsp0.toBitVec + 8) _ _ (Int.toBytes 8 rcv.toInt) _ _ (by adaddr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
-  kat hk AdUnmarshal 178
-  klabel hk hf AdUnmarshal 185
-  kat hk AdUnmarshal 185
-  kat hk AdUnmarshal 186
+  kat hk unmarshalSSZ 178
+  klabel hk hf unmarshalSSZ 185
+  kat hk unmarshalSSZ 185
+  kat hk unmarshalSSZ 186
   apply store_step_at _ _ (rcv + 56) _ _ _ aT _ _ (by adaddr) (by ecancel) (by exact haT)
   intro m3' H3
   simp only [Width.bytes, Width.bits] at H3
   kunfold
-  kat hk AdUnmarshal 187
+  kat hk unmarshalSSZ 187
   apply load_step_at _ _ (rsp0.toBitVec + 16) _ _ (Int.toBytes 8 bf.toInt) _ _ (by adaddr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
-  kat hk AdUnmarshal 188
-  kat hk AdUnmarshal 189
+  kat hk unmarshalSSZ 188
+  kat hk unmarshalSSZ 189
   apply load_step_at _ _ (rsp0.toBitVec + 32) _ _ s4 _ _ (by adaddr) (by ecancel) (by exact h4)
   kunfold
-  kat hk AdUnmarshal 190
-  kat hk AdUnmarshal 191
-  kat hk AdUnmarshal 192
+  kat hk unmarshalSSZ 190
+  kat hk unmarshalSSZ 191
+  kat hk unmarshalSSZ 192
   apply store_step_at _ _ (rsp0.toBitVec - 128) _ _ _ (Int.toBytes 8 (Host.addrOf (k + 174 + 1)).toBitVec.toInt) _ _
-    (ada_call _) (by ecancel) (by exact Int.toBytes_length 8 _)
+    (Decode.accept_call _) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m4' H4
   simp only [Width.bytes, Width.bits] at H4
   kunfold
-  rw [ada_call] at *
+  rw [Decode.accept_call] at *
   -- the callee frame in the S + 96 stack bytes
-  obtain ⟨l0, l1, l2, l3, l4, l5, l6, l7, l8⟩ := adFrame_lens stk3 S hstk3
-  rw [adFrame_slices stk3 S] at H4
+  obtain ⟨l0, l1, l2, l3, l4, l5, l6, l7, l8⟩ := Decode.frame_lens stk3 S hstk3
+  rw [Decode.frame_slices stk3 S] at H4
   try dsimp only at H4
-  rw [adFrame_sep _ S hS _ _ _ _ _ _ _ _ _ l0 l1 l2 l3 l4 l5 l6 l7 l8, ada_mm3 _ _ l2] at H4
+  rw [Decode.frame_sep _ S hS _ _ _ _ _ _ _ _ _ l0 l1 l2 l3 l4 l5 l6 l7 l8, Decode.accept_mm3 _ _ l2] at H4
   rw [show (88 : BitVec 64) + bf = bf + 88 from BitVec.add_comm _ _]
   rw [show bf + 96 = bf + 88 + 8 by bv_omega] at H4
   refine eventually_trans _ _ _ _ (hcp _ (Host.addrOf (k + 192 + 1)) guard (avail - 72) se sroot _ sp3 q1 _ _ _
@@ -143,7 +143,7 @@ theorem ad_e2e_tgt (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : Labe
     (List.replicate 32 0) _ _
     hse hsroot l8 hsp3 hq1 l6 l5 l4 (by simp [hstk3]) (by simp [hstk3]) (by simp [hstk3]) l1
     (by simp) (by simp) (by simp) (by simp) (by simp) (by simp) hS8 hS l0
-    (ada_guard96 _ _ hguard) rfl (by omega)
+    (Decode.accept_guard96 _ _ hguard) rfl (by omega)
     (by dsimp only
         rw [show rsp0.toBitVec - 128 - 8 = rsp0.toBitVec - 136 by bv_omega,
           show rsp0.toBitVec - 128 + 8 = rsp0.toBitVec - 120 by bv_omega,
@@ -162,7 +162,7 @@ theorem ad_e2e_tgt (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : Labe
   obtain ⟨⟨rax5, rbx5, rcx5, rdx5, rsi5, rdi5, rsp5, rbp5, r85, r95, r105, r115, r125, r135, r145, r155⟩,
     zmms5, flags5, mem5⟩ := d5
   simp only at hrax5 hrbx5 hrsp5 hrbp5 hr145 Hm5
-  rw [ada_ret] at hrsp5
+  rw [Decode.accept_ret] at hrsp5
   subst rax5 rbx5 rsp5 rbp5 r145
   try dsimp only at Hm5
   rw [show rsp0.toBitVec - 128 - 8 = rsp0.toBitVec - 136 by bv_omega,
@@ -174,20 +174,20 @@ theorem ad_e2e_tgt (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : Labe
     show rsp0.toBitVec - 128 - 88 = rsp0.toBitVec - 216 by bv_omega,
     show rsp0.toBitVec - 128 - 96 = rsp0.toBitVec - 224 by bv_omega,
     show bf + 88 + 8 = bf + 96 by bv_omega] at Hm5
-  kat hk AdUnmarshal 193
+  kat hk unmarshalSSZ 193
   intro _
-  kat hk AdUnmarshal 194
+  kat hk unmarshalSSZ 194
   split
   case isFalse h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
-  klabel hk hf AdUnmarshal 222
-  kat hk AdUnmarshal 222
-  kat hk AdUnmarshal 223
-  kat hk AdUnmarshal 224
+  klabel hk hf unmarshalSSZ 222
+  kat hk unmarshalSSZ 222
+  kat hk unmarshalSSZ 223
+  kat hk unmarshalSSZ 224
   apply load_step_at _ _ (rsp0.toBitVec - 8) _ _ (Int.toBytes 8 rbp0.toBitVec.toInt) _ _ (by adaddr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
-  kat hk AdUnmarshal 225
+  kat hk unmarshalSSZ 225
   apply load_step_at _ _ rsp0.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by adaddr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
@@ -195,11 +195,11 @@ theorem ad_e2e_tgt (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : Labe
   simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
   rw [show k + 192 + 1 = k + 193 from rfl] at Hm5
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, rax3.toBitVec, p1,
-    adFrame scr rs' mm _ (Int.toBytes 8 0) (Int.toBytes 8 0) (Int.toBytes 8 p1.toInt) _ (Int.toBytes 8 (rsp0.toBitVec - 8#64).toInt),
-    adFrame_length _ _ _ _ _ _ _ _ _ S hscr hrs' hmm l3 (Int.toBytes_length 8 _) (Int.toBytes_length 8 _)
+    Decode.frame scr rs' mm _ (Int.toBytes 8 0) (Int.toBytes 8 0) (Int.toBytes 8 p1.toInt) _ (Int.toBytes 8 (rsp0.toBitVec - 8#64).toInt),
+    Decode.frame_length _ _ _ _ _ _ _ _ _ S hscr hrs' hmm l3 (Int.toBytes_length 8 _) (Int.toBytes_length 8 _)
       (Int.toBytes_length 8 _) l7 (Int.toBytes_length 8 _), ?_⟩
   rotate_right
-  · rw [adFrame_sep _ S hS _ _ _ _ _ _ _ _ _ hscr hrs' hmm l3 (Int.toBytes_length 8 _) (Int.toBytes_length 8 _)
+  · rw [Decode.frame_sep _ S hS _ _ _ _ _ _ _ _ _ hscr hrs' hmm l3 (Int.toBytes_length 8 _) (Int.toBytes_length 8 _)
         (Int.toBytes_length 8 _) l7 (Int.toBytes_length 8 _)]
     ecancel
   all_goals first
@@ -210,4 +210,4 @@ theorem ad_e2e_tgt (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : Labe
        done)
     | (apply UInt64.toBitVec_inj.mp; adaddr)
 
-end E2eAd
+end Prysm.AttestationData

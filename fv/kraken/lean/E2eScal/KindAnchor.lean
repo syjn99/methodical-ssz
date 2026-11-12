@@ -1,26 +1,26 @@
 import Codec.Kind.FieldPatterns
-import E2eAd.Prims
+import Prysm.Slot.DecodeAccept
 
 /-!
 # Anchors of the P1 statement kind (review fix-r1 S1)
 
-The P1 kind `Codec.u64DecAcceptKind C` is, for `C = SlUnmarshal` and `C = CiUnmarshal`, the full declared
+The P1 kind `Codec.u64DecAcceptKind C` is, for `C = slotUnmarshalSSZ` and `C = committeeIndexUnmarshalSSZ`, the full declared
 type of the reviewed hand theorem (binders before the colon included). So the frozen kind is the hand
 statement kind, not new text. P2 decode has no hand theorem of the segment shape; its kind is tied to the
 lemma by `Codec.rootDecSegKind_of` only.
 -/
 
-open Machine Runtime TestTarget E2eAd.Code
+open Machine Runtime TestTarget Prysm.AttestationData.Code
 
 open Codec
 namespace E2eScal
 
-theorem sl_kind_anchor : ∀ (h : Host), type_of% (@E2eAd.sl_unmarshal_accept_main h)
-    = @u64DecAcceptKind h SlUnmarshal := by
+theorem sl_kind_anchor : ∀ (h : Host), type_of% (@Prysm.Slot.Decode.accept h)
+    = @u64DecAcceptKind h slotUnmarshalSSZ := by
   intro h; with_reducible rfl
 
-theorem ci_kind_anchor : ∀ (h : Host), type_of% (@E2eAd.ci_unmarshal_accept_main h)
-    = @u64DecAcceptKind h CiUnmarshal := by
+theorem ci_kind_anchor : ∀ (h : Host), type_of% (@Prysm.CommitteeIndex.Decode.accept h)
+    = @u64DecAcceptKind h committeeIndexUnmarshalSSZ := by
   intro h; with_reducible rfl
 
 end E2eScal

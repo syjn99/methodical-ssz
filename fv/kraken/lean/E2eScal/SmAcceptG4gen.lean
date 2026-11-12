@@ -18,7 +18,7 @@ generated steps 118 / 119 are not used), the epilogue 156–160 and the accept p
 data); no transfer claim.
 -/
 
-open Machine Runtime TestTarget E2eAd E2eAd.Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec E2eScal.Bh
+open Machine Runtime TestTarget Prysm.AttestationData.Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec E2eScal.Bh
 variable [Host]
 
 namespace E2eScal.H5
@@ -256,7 +256,7 @@ theorem sm_e2e_accept_g4gen : sm_accept_stmt := by
     fp s1 s2 s4 sp0 sp1 sp2 s28 s30 l38 rslot lo ast a8 aP1 aL1 aC1 a40 aP2 aL2 aC2
     hfp h1 h2 h4 hsp0 hsp1 hsp2 hs28 hs30 hl38 hrs hast ha8 haP1 haL1 haC1 ha40 haP2 haL2 haC2
     R S hS hlo Heap avail h_mem hguard hlen hav hms hmm
-  have hsl : U64CalleeAcc slLabel := sl_uacc_holds kS hkS hfS
+  have hsl : U64CalleeAcc slotUnmarshalLabel := Prysm.Slot.Decode.accept_function_spec_holds kS hkS hfS
   have hvi : U64CalleeAcc viLabel := vi_uacc_holds kV hkV hfV
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢

@@ -31,7 +31,7 @@ SCOPE = {FUNCS[0]: "in (H5 decoder)", FUNCS[1]: "in (H5 decoder)"}
 CLASS = dict(adlink.CLASS)
 CLASS.update({
     f"{PRIM}.(*ValidatorIndex).UnmarshalSSZ": ("a", "function spec E2eScal.ViUAccC, proved from machine code (H1)"),
-    f"{PRIM}.(*Slot).UnmarshalSSZ": ("a", "function spec SlUAccC, proved from machine code (E2eAd)"),
+    f"{PRIM}.(*Slot).UnmarshalSSZ": ("a", "function spec Prysm.Slot.Decode.accept_function_spec, proved from machine code (E2eAd)"),
     "fmt.errorf": ("b", "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"),
     "runtime.newobject": ("b", "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"),
 })

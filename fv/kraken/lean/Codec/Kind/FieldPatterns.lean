@@ -15,7 +15,7 @@ body is kernel-checked against the lemma conclusion. They are `abbrev`s: `with_r
 them, but not `Int.toBytes` or other semireducible definitions. A wrong literal fails fast and does not run
 into a long unfolding (review fix-r1 S2).
 The anchors in `E2eScal/KindAnchor.lean` show that the P1 kind is the statement of the reviewed hand
-theorems `E2eAd.sl_unmarshal_accept_main` and `E2eAd.ci_unmarshal_accept_main`.
+theorems `Prysm.Slot.Decode.accept` and `Prysm.CommitteeIndex.Decode.accept`.
 -/
 
 open Machine Runtime TestTarget
@@ -26,7 +26,7 @@ variable [Host]
 
 set_option linter.unusedVariables false in
 /-- P1 statement kind: the accept path of a uint64 primitive `UnmarshalSSZ` whose code constant is `C`.
-The text is the statement of `E2eAd.sl_unmarshal_accept_main` with `SlUnmarshal` replaced by `C` and
+The text is the statement of `Prysm.Slot.Decode.accept` with `SlUnmarshal` replaced by `C` and
 every binder after the colon. -/
 abbrev u64DecAcceptKind (C : Program) : Prop :=
   ∀ (k : Nat) (hk : C.IsInfixAt Host.prog k) (hf : LabelsFresh C k)

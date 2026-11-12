@@ -370,7 +370,7 @@
    ]
   },
   {
-   "name": "E2eAd.sl_unmarshal_accept_main + sl_uacc_holds (SlUAccC)",
+   "name": "Prysm.Slot.Decode.accept + Prysm.Slot.Decode.accept_function_spec_holds (Prysm.Slot.Decode.accept_function_spec)",
    "kind": "callee accept primitives.Slot (function spec source)",
    "function": "unmarshal",
    "statement": "done",
@@ -384,7 +384,7 @@
    ]
   },
   {
-   "name": "E2eAd.ci_unmarshal_accept_main + ci_uacc_holds (CiUAccC)",
+   "name": "Prysm.CommitteeIndex.Decode.accept + Prysm.CommitteeIndex.Decode.accept_function_spec_holds (Prysm.CommitteeIndex.Decode.accept_function_spec)",
    "kind": "callee accept primitives.CommitteeIndex (function spec source)",
    "function": "unmarshal",
    "statement": "done",
@@ -398,7 +398,7 @@
    ]
   },
   {
-   "name": "E2eAd.ad_e2e_head / ad_e2e_root / ad_e2e_src / ad_e2e_tgt",
+   "name": "Prysm.AttestationData.Decode.head / Prysm.AttestationData.Decode.block_root / Prysm.AttestationData.Decode.source / Prysm.AttestationData.Decode.target",
    "kind": "segment lemmas of the AttestationData decoder (size test, Slot, CommitteeIndex, Root, Source, Target)",
    "function": "unmarshal",
    "statement": "done",
@@ -415,8 +415,8 @@
    ]
   },
   {
-   "name": "E2eAd.ad_e2e_accept_main",
-   "kind": "accept v1alpha1.AttestationData (callees via sl/ci/cp_uacc_holds; Source/Target always new)",
+   "name": "Prysm.AttestationData.Decode.accept",
+   "kind": "accept v1alpha1.AttestationData (callees via sl/ci/Prysm.Checkpoint.Decode.accept_function_spec_holds; Source/Target always new)",
    "function": "unmarshal",
    "statement": "done",
    "witness": "done (WitAdA, 3 inputs)",
@@ -429,7 +429,7 @@
    ]
   },
   {
-   "name": "E2eAd.ad_e2e_reject_size_main",
+   "name": "Prysm.AttestationData.Decode.reject_size",
    "kind": "reject (ssz.ErrSize)",
    "function": "unmarshal",
    "statement": "done",
@@ -443,7 +443,7 @@
    ]
   },
   {
-   "name": "E2eAd.ad_e2e_accept_spec_k (+ reject_size_spec, reject_complete)",
+   "name": "Prysm.AttestationData.Decode.accept_spec (+ reject_size_spec, reject_complete)",
    "kind": "accept / reject against EthLib",
    "function": "unmarshal",
    "statement": "done",
@@ -451,13 +451,13 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "via ad_e2e_accept_main",
+   "go_value": "via Prysm.AttestationData.Decode.accept",
    "neg_ids": [
     "ada-k-"
    ]
   },
   {
-   "name": "E2e.prysmAdDesc_serialize_checker / deserialize_checker / pad_spec_accepts_iff",
+   "name": "Prysm.AttestationData.desc_serialize_checker / deserialize_checker / Prysm.AttestationData.SszValue.spec_accepts_iff",
    "kind": "spec bridge AttestationData (codec equality with the checker Desc)",
    "function": "spec",
    "statement": "done",
@@ -501,25 +501,25 @@
   },
   {
    "site": "AttestationData decoder fmt.Errorf(\"Slot: %w\") wrap",
-   "theorem": "E2eAd.ad_e2e_slot_err_unreachable",
+   "theorem": "Prysm.AttestationData.Decode.slot_err_unreachable",
    "status": "done",
    "counts_as_reject": false
   },
   {
    "site": "AttestationData decoder fmt.Errorf(\"CommitteeIndex: %w\") wrap",
-   "theorem": "E2eAd.ad_e2e_ci_err_unreachable",
+   "theorem": "Prysm.AttestationData.Decode.committee_index_err_unreachable",
    "status": "done",
    "counts_as_reject": false
   },
   {
    "site": "AttestationData decoder fmt.Errorf(\"Source: %w\") wrap",
-   "theorem": "E2eAd.ad_e2e_source_err_unreachable",
+   "theorem": "Prysm.AttestationData.Decode.source_err_unreachable",
    "status": "done",
    "counts_as_reject": false
   },
   {
    "site": "AttestationData decoder fmt.Errorf(\"Target: %w\") wrap",
-   "theorem": "E2eAd.ad_e2e_target_err_unreachable",
+   "theorem": "Prysm.AttestationData.Decode.target_err_unreachable",
    "status": "done",
    "counts_as_reject": false
   }
@@ -529,9 +529,9 @@
   "lean/Prysm/ElfData/CheckpointAndEpoch.lean": "3be0b30a4d71d726d67dbcbbb85afe88b7a741f3f8b2fdaf8bd0c42d7f7de4af",
   "lean/Prysm/ElfData/CheckpointAndEpochReader.lean": "1f3517fe642186c9212ada0ddf2d16a50860e69eac4e0df4fd1517dc6b57c5e1",
   "prysm/go1.26.10/e2e/AXIOMS.txt": "8779ae6005e5b384cd89d57b6b56a28f3650e3a06897cc4cc9e6ffa23e37bd4c",
-  "lean/E2eAd/Code.lean": "f22dd87781c1242503df3864b1e5c59c56968dd2291b927c0bef610d36ec8c08",
-  "lean/E2eAd/Data.lean": "e621939c00d64035918cf4d216451e22e0c10208ac519de4816bac41b65fc7d1",
-  "lean/E2eAd/Include.lean": "66e6fd12fe31214b302413b91d03402b865e45f6d08746c9a170ca4e0d2a9846",
+  "lean/Prysm/AttestationData/Code.lean": "f22dd87781c1242503df3864b1e5c59c56968dd2291b927c0bef610d36ec8c08",
+  "lean/Prysm/ElfData/AttestationData.lean": "e621939c00d64035918cf4d216451e22e0c10208ac519de4816bac41b65fc7d1",
+  "lean/Prysm/ElfData/AttestationDataReader.lean": "66e6fd12fe31214b302413b91d03402b865e45f6d08746c9a170ca4e0d2a9846",
   "prysm/go1.26.10/e2e/ad/AXIOMS.txt": "8514bcddb73383c9efd5f3fb9b9c02fc08f604648ee1111fa5cf9b61f2698b6b",
   "note": "The link bundle hash covers lean/TestTarget/Code.lean and the Go 1.26.3 AXIOMS.txt (check.py unchanged). The hashes in this object are the E2e include files and the E2e axioms list. AXIOMS.txt was rehashed after job 213 (79 lines). The E2eAd include files and ad/AXIOMS.txt were also added."
  },

@@ -13,7 +13,7 @@ The statement text is `pw_accept_stmt` (`H4Stmt.lean`, unchanged) with the input
 `g`. Not stated here: that the two callee error paths (`fmt.errorf` wraps) are unreachable when `size = 24`.
 -/
 
-open Machine Runtime TestTarget E2e E2eAd.Code E2eScal.H4Code E2eScal.BhCode E2eScal Codec EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e Prysm.AttestationData.Code E2eScal.H4Code E2eScal.BhCode E2eScal Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.H4

@@ -14,7 +14,7 @@ instance directives between the roots and the epilogue stay hand steps. Both dec
 hand theorems by `rfl` (`_type`). In-sample (development data).
 -/
 
-open Machine Runtime TestTarget E2eAd E2eAd.Code E2eScal.BhCode E2eScal Codec
+open Machine Runtime TestTarget Prysm.AttestationData.Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.Bh
@@ -24,7 +24,7 @@ set_option maxRecDepth 100000 in
 /-- Segment 1 of the BeaconBlockHeader decoder accept path from the GENERATED call-field theorems
 (statement text of `bh_e2e_head`). -/
 theorem bh_e2e_head_g3g (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh BhUnmarshal k)
-    (hsl : SlUAccC) (hvi : ViUAccC)
+    (hsl : Prysm.Slot.Decode.accept_function_spec) (hvi : ViUAccC)
     (in0 in1 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 s4 sp1 rslot lf ast a8 a16 s28 s30 : List UInt8)
@@ -62,7 +62,7 @@ theorem bh_e2e_head_g3g (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (hf :
           ⋆ Eq (ast.At s.regs.rax.toBitVec) ⋆ Eq (in0.At (s.regs.rax.toBitVec + 8))
           ⋆ Eq (in1.At (s.regs.rax.toBitVec + 16)) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
-  have hsl' : U64CalleeAcc slLabel := hsl
+  have hsl' : U64CalleeAcc slotUnmarshalLabel := hsl
   have hvi' : U64CalleeAcc viLabel := hvi
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
@@ -138,7 +138,7 @@ set_option maxRecDepth 100000 in
 /-- Accept path of `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ` from the GENERATED `p2dec --gen3` theorems (all five
 fields); statement text of `bh_e2e_accept_main`. -/
 theorem bh_e2e_accept_main_g3 (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh BhUnmarshal k)
-    (kS : Nat) (hkS : SlUnmarshal.IsInfixAt Host.prog kS) (hfS : LabelsFresh SlUnmarshal kS)
+    (kS : Nat) (hkS : slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh slotUnmarshalSSZ kS)
     (kV : Nat) (hkV : ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh ViUnmarshal kV)
     (in0 in1 r1 r2 r3 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8)
     (hr1 : r1.length = 32) (hr2 : r2.length = 32) (hr3 : r3.length = 32)
@@ -208,7 +208,7 @@ theorem bh_e2e_accept_main_g3 (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k)
           ⋆ Eq (r1.At p1) ⋆ Eq (r2.At p2) ⋆ Eq (r3.At p3)
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
-  have hsl : SlUAccC := sl_uacc_holds kS hkS hfS
+  have hsl : Prysm.Slot.Decode.accept_function_spec := Prysm.Slot.Decode.accept_function_spec_holds kS hkS hfS
   have hvi : ViUAccC := vi_uacc_holds kV hkV hfV
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢

@@ -81,14 +81,9 @@ name = "e2e_data"
 path = "../prysm/go1.26.10/e2e/link/data"
 text = true
 
-[[lean_lib]]
-name = "Prysm"
-globs = ["Prysm.+"]
-needs = ["e2e_norm_S", "e2e_data"]
-
-# Real v1alpha1.AttestationData and the
-# primitives.Slot / CommitteeIndex decoders on the same Go 1.26.10 ELF. Own library so that the reviewed Prysm
-# modules and their traces do not change; E2eAd modules import Prysm modules. Build one module at a time.
+# The link set prysm/go1.26.10/e2e/ad/link (v1alpha1.AttestationData and the primitives.Slot and CommitteeIndex
+# decoders on the same Go 1.26.10 ELF) and the witness-only runtime model Prysm/AttestationData/BumpNew72.S are
+# inputs of the Prysm library too.
 [[input_dir]]
 name = "e2e_ad_norm_S"
 path = "../prysm/go1.26.10/e2e/ad/link/norm"
@@ -99,16 +94,16 @@ name = "e2e_ad_data"
 path = "../prysm/go1.26.10/e2e/ad/link/data"
 text = true
 
-# witness-only runtime model: the 72-byte bump newobject E2eAd/BumpNew72.S
+# witness-only runtime model: the 72-byte bump newobject Prysm/AttestationData/BumpNew72.S
 [[input_dir]]
 name = "e2e_ad_lean_S"
-path = "E2eAd"
+path = "Prysm/AttestationData"
 text = true
 filter = {extension = ["S"]}
 
 [[lean_lib]]
-name = "E2eAd"
-globs = ["E2eAd.+"]
+name = "Prysm"
+globs = ["Prysm.+"]
 needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S"]
 
 # Generated and hand proofs of the flat fixed-size types: their segment instances, accept and reject theorems,
@@ -119,7 +114,7 @@ globs = ["E2eScal.+"]
 needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S"]
 
 # List/vector hand proofs: real v1alpha1.SyncAggregate and v1alpha1.SyncCommittee decoders on the
-# same Go 1.26.10 ELF. Own library: the Prysm / E2eAd / E2eScal modules do not change. Build one module at a time,
+# same Go 1.26.10 ELF. Own library: the Prysm / E2eScal modules do not change. Build one module at a time,
 # e.g. `lake build E2eList.StmtSa`. The .S and data files of prysm/go1.26.10/e2e/lv/link are inputs.
 [[input_dir]]
 name = "lv_norm_S"
@@ -199,7 +194,7 @@ needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_
   "lv_t3_norm_S", "lv_t3_data", "lv_hb_norm_S", "lv_dep_norm_S", "lv_dep_data", "lv_dep_lean_S"]
 
 # First variable-length encoder hand proof: real v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo on
-# the same Go 1.26.10 ELF. Own library: the E2e / E2eAd / E2eScal / E2eList modules do not change. Build one module
+# the same Go 1.26.10 ELF. Own library: the Prysm / E2eScal / E2eList modules do not change. Build one module
 # at a time, e.g. `lake build E2eEnc.StmtEnc`. The .S files of prysm/go1.26.10/e2e/lv/link-enc are inputs.
 [[input_dir]]
 name = "enc_norm_S"

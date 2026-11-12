@@ -7,7 +7,7 @@ import Machine.WitnessHost
 
 Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10
 `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ` (index 1). Hand-written: the text of
-`E2eAd/WitAdR.lean` with the BeaconBlockHeader decoder. Memory at `0x10000`: the two
+`Prysm/AttestationData/WitnessDecodeRejectSize.lean` with the BeaconBlockHeader decoder. Memory at `0x10000`: the two
 words of `ssz.ErrSize` after package init (a non-zero itab word `0x10e8` and a
 data word `0x2a`, stand-ins: the real values are set by the runtime's init and
 are not read from the ELF), the guard word, saved-rbp slot, return slot, the

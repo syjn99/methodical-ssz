@@ -50,7 +50,7 @@ CLASS.update({
                                "fmt.errorf: the nil-result branch, excluded by rax != 0"),
     "fmt.errorf": ("b", "IndexedAttestation only: FmtErrorfDWC (two '%d ... %w' formats), FmtErrorfWC "
                         "('Data: %w')"),
-    f"{V1A1}.(*AttestationData).UnmarshalSSZ": ("a", "machine code in the host (E2eAd.ad_e2e_accept_main); "
+    f"{V1A1}.(*AttestationData).UnmarshalSSZ": ("a", "machine code in the host (Prysm.AttestationData.Decode.accept); "
                                                     "no AttestationData function-spec form exists"),
 })
 

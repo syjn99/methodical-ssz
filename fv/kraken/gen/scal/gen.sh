@@ -7,8 +7,8 @@ set -e
 cd "$(dirname "$0")/../.."
 G="python3 -I gen/scal/scalgen.py"
 N=prysm/go1.26.10/e2e/ad/link/norm
-$G p1 --S $N/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S --const CiUnmarshal --name ci_unmarshal_accept_main_g --same-as E2eAd.ci_unmarshal_accept_main --imports Codec.Uint64Decoder,E2eAd.Prims --open E2eAd.Code > lean/E2eScal/GenCi.lean
-$G p2dec --S $N/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S --const AdUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.AttestationData --prefix ad_dec --imports Codec.Bytes32Decode,E2eAd.Code --open E2eAd.Code > lean/E2eScal/GenAdDec.lean
+$G p1 --S $N/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S --const committeeIndexUnmarshalSSZ --name ci_unmarshal_accept_main_g --same-as Prysm.CommitteeIndex.Decode.accept --imports Codec.Uint64Decoder,Prysm.Slot.DecodeAccept --open Prysm.AttestationData.Code > lean/E2eScal/GenCi.lean
+$G p2dec --S $N/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.AttestationData --prefix ad_dec --imports Codec.Bytes32Decode,Prysm.AttestationData.Code --open Prysm.AttestationData.Code > lean/E2eScal/GenAdDec.lean
 $G p2dec --S prysm/go1.26.10/e2e/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.Checkpoint --prefix cp_dec --imports Codec.Bytes32Decode,Prysm.Checkpoint.Code --open Prysm.Checkpoint.Code > lean/E2eScal/GenCpDec.lean
 # BeaconBlockHeader hold-out: ValidatorIndex and BeaconBlockHeader (opened 2026-11-10T17:53:24Z under the method freeze 56dfc27; raw output committed unedited).
 B=prysm/go1.26.10/e2e/bh/link/norm
@@ -44,7 +44,7 @@ H4=prysm/go1.26.10/e2e/h4/link/norm
 $G p2dec --gen3 --S $H4/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S --const PwUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.PendingPartialWithdrawal --prefix pw_g3dec --imports E2eScal.H4Code --open E2eScal.H4Code > lean/E2eScal/Gen3PwDec.lean
 $G p2dec --gen3 --S $H4/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ.S --const DdUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.Deposit_Data --prefix dd_g3dec --imports Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Codec.FixedBytesDecode,E2eScal.SegNPad,Codec.InlineUint64,E2eScal.H4Code --open E2eScal.H4Code > lean/E2eScal/Gen3DdDec.lean
 $G p2dec --gen3 --S $B/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S --const BhUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.BeaconBlockHeader --prefix bh_g3dec --imports Codec.Bytes32Decode,E2eScal.BhCode --open E2eScal.BhCode > lean/E2eScal/Gen3BhDec.lean
-$G p2dec --gen3 --partial-out lean/E2eScal/Gen3AdDecPartial.lean --S $N/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S --const AdUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.AttestationData --prefix ad_g3dec --imports Codec.Bytes32Decode,E2eAd.Code --open E2eAd.Code || [ $? -eq 3 ]
+$G p2dec --gen3 --partial-out lean/E2eScal/Gen3AdDecPartial.lean --S $N/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.AttestationData --prefix ad_g3dec --imports Codec.Bytes32Decode,Prysm.AttestationData.Code --open Prysm.AttestationData.Code || [ $? -eq 3 ]
 # GEN3 composition: Deposit_Data (byte / inline-uint64 fields, frame 0x20) with the composed-statement kind
 # `decAcceptKind` (`_kind`) and the identity with the hand statement `H4.dd_accept_stmt`. PendingPartialWithdrawal and
 # BeaconBlockHeader (callee fields) are refused by `--compose` (exit 2): their accept theorems are hand compositions.
@@ -61,7 +61,7 @@ for row in "Checkpoint link/norm unmarshalSSZ Prysm.Checkpoint.Code cp Gen4CpDec
   set -- $row
   $G p2dec --gen4 --S $E/$2/$P.$1.UnmarshalSSZ.S --const $3 --ir prysm/ir/ir-mainnet.json --type v1alpha1.$1 --prefix $5_g4dec --imports $4 --open $4 > lean/E2eScal/$6.lean
 done
-$G p2dec --gen4 --partial-out lean/E2eScal/Gen4AdDecPartial.lean --S $N/$P.AttestationData.UnmarshalSSZ.S --const AdUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.AttestationData --prefix ad_g4dec --imports E2eAd.Code --open E2eAd.Code || [ $? -eq 3 ]
+$G p2dec --gen4 --partial-out lean/E2eScal/Gen4AdDecPartial.lean --S $N/$P.AttestationData.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.AttestationData --prefix ad_g4dec --imports Prysm.AttestationData.Code --open Prysm.AttestationData.Code || [ $? -eq 3 ]
 # Generator change after the H6 hold-out (development work): `p2dec --gen5` on the flat development types
 # (all in-sample). One run per type; raw output committed unedited. The statement check is the kind (parameters
 # recomputed by kindcheck.py rule 12) and, where a hand statement exists, the identity `_stmt` / `_same`. Checkpoint:
@@ -74,7 +74,7 @@ for row in "Checkpoint link/norm unmarshalSSZ Prysm.Checkpoint.Code cp Gen5CpDec
 done
 # refused by design (exit 2, nothing on stdout): kept as comments so that `set -e` does not stop this script
 # $G p2dec --gen5 --S $E/h4/link/norm/$P.PendingPartialWithdrawal.UnmarshalSSZ.S --const PwUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.PendingPartialWithdrawal --prefix pw_g5dec --imports E2eScal.H4Code --open E2eScal.H4Code --same-as-prop=E2eScal.H4.pw_accept_stmt
-# $G p2dec --gen5 --S $N/$P.AttestationData.UnmarshalSSZ.S --const AdUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.AttestationData --prefix ad_g5dec --imports E2eAd.Code --open E2eAd.Code
+# $G p2dec --gen5 --S $N/$P.AttestationData.UnmarshalSSZ.S --const unmarshalSSZ --ir prysm/ir/ir-mainnet.json --type v1alpha1.AttestationData --prefix ad_g5dec --imports Prysm.AttestationData.Code --open Prysm.AttestationData.Code
 # Generator change after the H6 hold-out (development work): `p2enc --gen6` on the 16 flat development
 # types (all in-sample). One run per type; raw output committed unedited. Encoder FAST PATH only (premises
 # len + SizeSSZ <= cap, byte-vector fields of exact length). Statement check: the kind (kindcheck.py rule 13 recomputes

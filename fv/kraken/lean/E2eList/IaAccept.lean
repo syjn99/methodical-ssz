@@ -1,4 +1,4 @@
-import E2eAd.AdAccept
+import Prysm.AttestationData.DecodeAccept
 import Codec.StackGuard
 import E2eList.IaAddr
 import E2eList.StmtIa
@@ -12,7 +12,7 @@ import E2eList.IaLoop
   (`MakesliceC Heap lvU64Type_addr 8 (Sd + 224)`, cnt n), len = cap = n, writeBarrier = 0, ptr, rax = 0, `jmp L_28a`;
 * element loop 147–165, 143–146: `ia_loop` (each iteration proves the three panicBounds branches not taken);
 * Data 166–189: `newobject` (`NewobjectC Heap lvAdType_addr 96 (Sd + 224)`), the pointer store, the call of
-  `AttestationData.UnmarshalSSZ` on buf[4:132] discharged by `E2eAd.ad_e2e_accept_main` (its entry rsp = x − 184,
+  `AttestationData.UnmarshalSSZ` on buf[4:132] discharged by `Prysm.AttestationData.Decode.accept` (its entry rsp = x − 184,
   scratch `Sd`), `je L_39c` taken (rax = 0);
 * Signature 217–260: `makeslice` (esz 1, cap 96), the header stores, `memmove` of buf[132:228], the epilogue.
 Statement: the frozen `E2eList.ia_accept_stmt`.
@@ -493,7 +493,7 @@ theorem ia_e2e_accept_main : ia_accept_stmt := by
   simp only [List.length_append] at hstk5 hr1 hr2 hr3 hr4 hr5 hr6 hff
   rw [ia_lo8 rsp.toBitVec (rsp.toBitVec - 184) Sd hSd rfl fa fb fc0 fc1 fc2 fd fe ff hfa hfb hfc0 hfc1 hfc2 hfd hfe
     (by omega)] at H15
-  refine eventually_trans _ _ _ _ (E2eAd.ad_e2e_accept_main kA hkA hfA kS hkS hfS kI hkI hfI kC hkC hfC kE hkE hfE
+  refine eventually_trans _ _ _ _ (Prysm.AttestationData.Decode.accept kA hkA hfA kS hkS hfS kI hkI hfI kC hkC hfC kE hkE hfE
     in0 in1 root se sroot te troot hin0 hin1 hroot hse hsroot hte htroot _
     (UInt64.ofBitVec (Host.addrOf (k + 187 + 1)).toBitVec) guard
     ff spm5 q1 ((spl.drop 24).take 8) fc0 fc1 fc2 fe fb fa

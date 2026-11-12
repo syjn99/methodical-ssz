@@ -22,7 +22,7 @@ every old pointer word every premise holds and the decoder returns nil. The rece
 `v1alpha1.PendingDeposit`.
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2eAd E2eAd.Code E2eScal Codec E2eScal.H6Code E2eScal.H6
+open Machine Runtime TestTarget Machine.Witness Prysm.AttestationData.Code E2eScal Codec E2eScal.H6Code E2eScal.H6
 
 namespace E2eScal.WitPdA
 
@@ -32,7 +32,7 @@ def dataLabels : Program :=
   [.label "runtime.fvBump", .label "pad1", .label "pad2", .label "pad3", .label "pad4", .label "pad5",
    .label "pad6", .label "pad7", .label "runtime.writeBarrier"]
 
-def P : Program := dataLabels ++ PdUnmarshal ++ SlUnmarshal ++ BumpAlloc1 ++ RtCopy
+def P : Program := dataLabels ++ PdUnmarshal ++ slotUnmarshalSSZ ++ BumpAlloc1 ++ RtCopy
 
 theorem P_len : P.length = 286 := by rfl
 
@@ -41,19 +41,19 @@ instance host : Host := mkHost P (by rw [P_len]; decide)
 theorem prog_eq : Host.prog = P := rfl
 
 theorem hk9 : PdUnmarshal.IsInfixAt Host.prog 9 :=
-  infixAt_of dataLabels (SlUnmarshal ++ BumpAlloc1 ++ RtCopy) (by simp [prog_eq, P, List.append_assoc]) rfl
-theorem hk191 : SlUnmarshal.IsInfixAt Host.prog 191 :=
+  infixAt_of dataLabels (slotUnmarshalSSZ ++ BumpAlloc1 ++ RtCopy) (by simp [prog_eq, P, List.append_assoc]) rfl
+theorem hk191 : slotUnmarshalSSZ.IsInfixAt Host.prog 191 :=
   infixAt_of (dataLabels ++ PdUnmarshal) (BumpAlloc1 ++ RtCopy)
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk254 : BumpAlloc1.IsInfixAt Host.prog 254 :=
-  infixAt_of (dataLabels ++ PdUnmarshal ++ SlUnmarshal) RtCopy
+  infixAt_of (dataLabels ++ PdUnmarshal ++ slotUnmarshalSSZ) RtCopy
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk260 : RtCopy.IsInfixAt Host.prog 260 :=
-  infixAt_of (dataLabels ++ PdUnmarshal ++ SlUnmarshal ++ BumpAlloc1) []
+  infixAt_of (dataLabels ++ PdUnmarshal ++ slotUnmarshalSSZ ++ BumpAlloc1) []
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 
 theorem hf9 : LabelsFresh PdUnmarshal 9 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hf191 : LabelsFresh SlUnmarshal 191 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf191 : LabelsFresh slotUnmarshalSSZ 191 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf260 : LabelsFresh RtCopy 260 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf254 : ∀ i < 254, Host.prog[i]? ≠ some (.label "runtime.makeslice") :=
   notLabel_of (by rw [prog_eq]; decide)

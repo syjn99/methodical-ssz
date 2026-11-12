@@ -1,10 +1,10 @@
 import Codec.Bytes32Decode
-import E2eAd.AdRoot
+import Prysm.AttestationData.DecodeAcceptBlockRoot
 
 /-!
 # In-sample check of the 32-byte field pattern (decode): `AttestationData.BeaconBlockRoot` from `rootdec_seg`
 
-`ad_e2e_root_s` has the statement of `E2eAd.ad_e2e_root` (`E2eAd/AdRoot.lean`) word for word.
+`ad_e2e_root_s` has the statement of `Prysm.AttestationData.Decode.block_root` (`Prysm/AttestationData/DecodeAcceptBlockRoot.lean`) word for word.
 Its proof steps the label `L_167` (directive 85), applies `Codec.rootdec_seg` with the
 AttestationData parameters (head block at k + 86, second block at k + 100 = `L_1ac`,
 `lwb` = `L_1f3`; receiver spill 0x80, buffer spill 0x88, pointer slot 0x68; field offsets
@@ -13,7 +13,7 @@ directives by hand: 112 `mov 0x68(%rsp),%rbx`, 113 `jmp L_208`, then `L_208` (di
 `ad_root_same_stmt` checks that the statements are the same proposition.
 -/
 
-open Machine Runtime TestTarget E2eAd.Code
+open Machine Runtime TestTarget Prysm.AttestationData.Code
 variable [Host]
 
 open Codec
@@ -21,7 +21,7 @@ namespace E2eScal
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-theorem ad_e2e_root_s (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh AdUnmarshal k)
+theorem ad_e2e_root_s (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
     (rsp0 r140 : UInt64) (rcv bf : BitVec 64) (root : List UInt8) (hroot : root.length = 32)
     (spl rslot lo l68 aP aL aC : List UInt8)
     (hspl : spl.length = 24) (hrs : rslot.length = 8) (hl68 : l68.length = 8)
@@ -58,28 +58,28 @@ theorem ad_e2e_root_s (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : L
       ⟨s, Host.addrOf (k + 85)⟩ := by
   have hA := infix_sub (q := rootDecHead
     "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1ac" 128 32 40) 86 hk
-    (by simp only [AdUnmarshal, rootDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons,
+    (by simp only [unmarshalSSZ, rootDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons,
       List.length_nil, List.take_succ_cons, List.take_zero])
   have hB := infix_sub (q := rootDecMid
     "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1ac"
     "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1f3"
     128 136 104 24 32 40 16) 100 hk
-    (by simp only [AdUnmarshal, rootDecMid, List.drop_succ_cons, List.drop_zero, List.length_cons,
+    (by simp only [unmarshalSSZ, rootDecMid, List.drop_succ_cons, List.drop_zero, List.length_cons,
       List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 100)
-    (by simp only [AdUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
-    (by simp only [AdUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
+    (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
+    (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at hrsp hrbp hr14 h_mem ⊢
   subst rsp rbp r14
-  kat hk AdUnmarshal 85
+  kat hk unmarshalSSZ 85
   refine eventually_trans _ _ _ _ (rootdec_seg _ _ 128 136 104 24 32 40 16 (k + 86) (k + 100) hA hB hl
     (rsp0.toBitVec - 120) rcv bf (rsp0.toBitVec + 8) (rsp0.toBitVec + 16) (rsp0.toBitVec - 16)
     (rsp0.toBitVec - 128) (rsp0.toBitVec - 224 - BitVec.ofNat 64 S) (rcv + 24) (rcv + 32) (rcv + 40) (bf + 16)
     (S + 96)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat]; bv_omega)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by bv_omega)
-    (by rw [show rsp0.toBitVec - 120 - 8 = rsp0.toBitVec - 128 by bv_omega]; exact E2eAd.ada_lo _ _ hS)
+    (by rw [show rsp0.toBitVec - 120 - 8 = rsp0.toBitVec - 128 by bv_omega]; exact Prysm.AttestationData.Decode.accept_lo _ _ hS)
     (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat])
     (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat])
     { toBitVec := rsp0.toBitVec - 8#64 } r140 root hroot spl rslot lo l68 aP aL aC hspl hrs hlo hl68 haP haL haC
@@ -92,19 +92,19 @@ theorem ad_e2e_root_s (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : L
   simp only at hrsp3 hr143 hrbp3 hrdx3 Hm3
   subst hrsp3 hr143 hrbp3
   have hl208 := Machine.label_at' hk hf (j := 120)
-    (by simp only [AdUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
-    (by simp only [AdUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  kat hk AdUnmarshal 112
+    (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
+    (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
+  kat hk unmarshalSSZ 112
   apply load_step_at _ _ (rsp0.toBitVec - 16) _ _ (Int.toBytes 8 p.toInt) _ _ (by adaddr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
-  kat hk AdUnmarshal 113
+  kat hk unmarshalSSZ 113
   rw [hl208]
   apply Eventually.done
   rw [show k + 100 + 6 + 1 = k + 107 from rfl] at Hm3
   exact ⟨rfl, rfl, rfl, rfl, p, spl', lo', hspl', hlo', rfl, hrdx3, by ecancel⟩
 
 /-- The in-sample statement is the hand statement (same proposition). -/
-theorem ad_root_same_stmt : @E2eAd.ad_e2e_root = @ad_e2e_root_s := rfl
+theorem ad_root_same_stmt : @Prysm.AttestationData.Decode.block_root = @ad_e2e_root_s := rfl
 
 end E2eScal

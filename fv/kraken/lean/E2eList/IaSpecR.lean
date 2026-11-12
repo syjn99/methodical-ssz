@@ -9,7 +9,7 @@ The statements are the frozen `ia_reject_size_spec_stmt`, `ia_reject_offset_spec
 paths with a machine theorem (the alignment and overflow rejects only under `e0 ≠ 0`, `StmtIaNz.lean`).
 -/
 
-open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz E2eList.Code
+open Machine Runtime TestTarget EthLib.Serialization.Ssz E2eList.Code
 variable [Host]
 
 namespace E2eList

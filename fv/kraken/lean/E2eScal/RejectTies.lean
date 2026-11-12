@@ -8,7 +8,7 @@ import E2eScal.SmReject
 import E2eScal.PcReject
 import E2eScal.PdReject
 import E2eScal.PbReject
-import E2eAd.AdReject
+import Prysm.AttestationData.DecodeRejectSize
 import E2eScal.RejectN
 
 /-!
@@ -67,8 +67,8 @@ theorem cp_reject_is_kindN : ∀ (h : Host), type_of% (@Prysm.Checkpoint.Decode.
     = @decRejectKindN h Prysm.Checkpoint.Code.unmarshalSSZ 40 := by
   intro h; with_reducible rfl
 
-theorem ad_reject_is_kindN : ∀ (h : Host), type_of% (@E2eAd.ad_e2e_reject_size_main h)
-    = @decRejectKindN h E2eAd.Code.AdUnmarshal 128 := by
+theorem ad_reject_is_kindN : ∀ (h : Host), type_of% (@Prysm.AttestationData.Decode.reject_size h)
+    = @decRejectKindN h Prysm.AttestationData.Code.unmarshalSSZ 128 := by
   intro h; with_reducible rfl
 
 end E2eScal

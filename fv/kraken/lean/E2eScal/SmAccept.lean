@@ -12,7 +12,7 @@ statement is the independent hand statement `E2eScal.H5.sm_accept_stmt` (`H5Stmt
 
 * `sm_head0` (hand, 0–14),
 * `Gen.sm_g3dec_Slot_arg` (15–16) and `Gen.sm_g3dec_Slot_call` (17–19, label 46): GENERATED
-  (`Gen3SmDecPartial.lean`, raw); `hC` discharged by the proved `sl_uacc_holds`,
+  (`Gen3SmDecPartial.lean`, raw); `hC` discharged by the proved `Prysm.Slot.Decode.accept_function_spec_holds`,
 * `bytes32dec_seg_rax` (hand lemma, BlockRoot 47–71) and hand steps 72–73, label 80, 81,
 * `sm_vi_arg` (hand lemma, 82–87) and `E2eScal.calldec_seg` (existing lemma applied by hand, 88–90,
   label 117; callee ValidatorIndex, `vi_uacc_holds`),
@@ -24,7 +24,7 @@ Stack (rsp = entry rsp): frame `sub $0x60` as BeaconBlockHeader; the helper lemm
 `Bh.bh_j3`, `Bh.bhg_guard` and the tactic `bhaddr` are reused. No contract, no new hypothesis form.
 -/
 
-open Machine Runtime TestTarget E2eAd E2eAd.Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec E2eScal.Bh
+open Machine Runtime TestTarget Prysm.AttestationData.Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec E2eScal.Bh
 variable [Host]
 
 namespace E2eScal.H5
@@ -38,7 +38,7 @@ theorem sm_e2e_accept_main : sm_accept_stmt := by
     fp s1 s2 s4 sp0 sp1 sp2 s28 s30 l38 rslot lo ast a8 aP1 aL1 aC1 a40 aP2 aL2 aC2
     hfp h1 h2 h4 hsp0 hsp1 hsp2 hs28 hs30 hl38 hrs hast ha8 haP1 haL1 haC1 ha40 haP2 haL2 haC2
     R S hS hlo Heap avail h_mem hguard hlen hav hms hmm
-  have hsl : U64CalleeAcc slLabel := sl_uacc_holds kS hkS hfS
+  have hsl : U64CalleeAcc slotUnmarshalLabel := Prysm.Slot.Decode.accept_function_spec_holds kS hkS hfS
   have hvi : U64CalleeAcc viLabel := vi_uacc_holds kV hkV hfV
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
@@ -78,7 +78,7 @@ theorem sm_e2e_accept_main : sm_accept_stmt := by
   rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hrbp2, hr142, hrbx2, hrax2, hrcx2, hmem2⟩
   dsimp only at hpc2 hrsp2 hrbp2 hr142 hrbx2 hrax2 hrcx2 hmem2
   subst hpc2
-  -- Slot: call block 17–19, label 46 (generated; hC discharged by sl_uacc_holds)
+  -- Slot: call block 17–19, label 46 (generated; hC discharged by Prysm.Slot.Decode.accept_function_spec_holds)
   refine eventually_trans _ _ _ _ (Gen.sm_g3dec_Slot_call k hk hf hsl
     (rsp.toBitVec - 104) (rax.toBitVec + 8) rbx.toBitVec (rsp.toBitVec - 112) (rsp.toBitVec - 120) (rsp.toBitVec - 96)
     (by bv_omega) (by bv_omega) (by bv_omega)

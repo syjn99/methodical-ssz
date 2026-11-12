@@ -30,17 +30,23 @@ Some Prysm proofs use a few of its declarations (for example `TestTarget.Data.st
 
 **`Prysm`.** One directory for each Prysm type, `Prysm/<GoTypeName>/<Role>.lean`, namespace `Prysm.<GoTypeName>`.
 The full name of a main theorem is the name of the work, for example `Prysm.Checkpoint.Decode.reject_size`.
-`../gen/restructure/maps/checkpoint-and-epoch/files.tsv` gives the earlier path of each module and a one-line meaning.
+The files `files.tsv` of `../gen/restructure/maps/checkpoint-and-epoch/` and `../gen/restructure/maps/attestation-data/` give the earlier path of each module and a one-line meaning.
 - `Prysm/Checkpoint/`: the `v1alpha1.Checkpoint` decoder, encoder and `SizeSSZ`, the hand specification (`Spec.lean`),
   the Go value predicate (`GoValue.lean`) and the decoder-then-encoder composition (`DecodeThenEncode.lean`).
   The files `CapacityReserved*.lean` hold proofs about a separate test ELF of a generator option that is not adopted
   (the encoder reserves 40 bytes of capacity first; namespace `Prysm.Checkpoint.CapacityReserved`).
 - `Prysm/Epoch/`: the decoder of the hand-written `primitives.Epoch` method and its function specification.
   Its program constant is in `Prysm/Checkpoint/Code.lean` (shared module, declared as `Prysm.Epoch.Code.unmarshalSSZ`).
+- `Prysm/AttestationData/`: the `v1alpha1.AttestationData` decoder (accept path in four parts, size reject, EthLib
+  alignment), its hand specification and witnesses. `Code.lean` also holds the programs of the Slot and
+  CommitteeIndex decoders (shared module).
+- `Prysm/Slot/` and `Prysm/CommitteeIndex/`: the decoders of the hand-written `primitives.Slot` and
+  `primitives.CommitteeIndex` methods and their function specifications. `Prysm/Slot/DecodeAccept.lean` holds both
+  types (one namespace block each; shared module).
+- `Prysm/Checkpoint/*AsNestedField.lean`: the function specifications of the Checkpoint decoder and encoder for a
+  caller that holds Checkpoint as a nested field (AttestationData), and their checks on the Checkpoint witness hosts.
 - `Prysm/ElfData/`: the ELF data of a link set and the command that reads it, namespace `ElfData.<SetName>`.
   The root `ElfData` keeps the order of the constant names that some `simp` proofs depend on (see `../gen/restructure/README.md`).
-
-**`E2eAd`.** The `v1alpha1.AttestationData` decoder and the decoders of the hand-written `primitives.Slot` and `primitives.CommitteeIndex` methods.
 
 **`E2eScal`.** Generated and hand proofs for the flat fixed-size types. A flat type has only fixed-size fields and no nested container.
 The generated files are `Gen*.lean`. They use the patterns and kinds of `Codec`.
@@ -61,7 +67,7 @@ The import graph has this order:
 
 ```text
 EthLib -> Spec -> Machine -> Runtime -> TestTarget -> Codec (except Codec/Segment/)
-       -> Prysm -> E2eAd -> E2eScal -> E2eList -> E2eHb -> Codec/Segment/ -> E2eDep -> E2eDepW
+       -> Prysm -> E2eScal -> E2eList -> E2eHb -> Codec/Segment/ -> E2eDep -> E2eDepW
                                      E2eList -> E2eEnc -> E2eDec
 ```
 
@@ -148,7 +154,7 @@ The forms are in `Runtime/Contracts.lean` (runtime functions) and `TestTarget/Fu
 | `FmtErrorfNilC`, `FmtErrorfWC`, `FmtErrorfDWC`, `FmtErrorfDDC` | `fmt.Errorf` with no argument, `%w`, `%d %w` and `%d %d` |
 
 A hand-written callee, for example `(*primitives.Epoch).UnmarshalSSZ`, gets a function specification of the same form.
-Examples are `Prysm.Epoch.Decode.accept_function_spec` and `E2eAd.SlUAccC`. A theorem about the callee code (`*_holds`) proves the specification.
+Examples are `Prysm.Epoch.Decode.accept_function_spec` and `Prysm.Slot.Decode.accept_function_spec`. A theorem about the callee code (`*_holds`) proves the specification.
 
 A contract is a hypothesis because no proof covers the compiled Go runtime.
 The proof uses the contract at each call site and continues from any state that satisfies its conclusion.
@@ -233,4 +239,4 @@ Some abbreviations have two or three meanings. The namespace decides the meaning
 | `Sa` | two meanings: `v1alpha1.SyncAggregatorSelectionData` in `E2eScal`, and `v1alpha1.SyncAggregate` in `E2eList` |
 | `Fv` | the test type `FixedVec` in `TestTarget` declaration names |
 | `epr` | two meanings: `ExecutionPayloadEnvelopesByRangeRequest`, and the Epoch reject witness `Prysm.Epoch.Witness.DecodeRejectSize.runs` |
-| `pad` | the encoder `padEnc` of `E2e.PAd` (AttestationData, in `E2eAd/Spec.lean`). The generator scripts use `Pad` for `v1alpha1.PayloadAttestationData` |
+| `Pad` | `v1alpha1.PayloadAttestationData` in the generator scripts |

@@ -1,5 +1,5 @@
 import Codec.Bytes32Decode
-import E2eAd.Code
+import Prysm.AttestationData.Code
 import Codec.Kind.FieldPatterns
 import E2eScal.KindCall
 
@@ -11,7 +11,7 @@ UNCOVERED-JSON: [{"field": "Source", "reason": "field kind pointer (*Checkpoint,
 (sha256 `70ca7f6820ce748263b71a4fc44468ab01bd69bc9665008ad540469b2fa62081`) and `prysm/ir/ir-mainnet.json` (sha256 `c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a`, type `v1alpha1.AttestationData`); GEN3 coverage (`p2dec --gen3`): 3 of 5 fields. Untrusted generator: this file is checked by Lean like any other.
 Do not edit by hand (manual edits are measured against the committed raw output). -/
 
-open Machine Runtime TestTarget E2eAd.Code
+open Machine Runtime TestTarget Prysm.AttestationData.Code
 variable [Host]
 
 open Codec
@@ -20,7 +20,7 @@ namespace E2eScal.Gen
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `Slot` (callee decoder field, Go offset 8): argument set-up, first-field form, directives 15–16. -/
-theorem ad_g3dec_Slot_arg (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh AdUnmarshal k) :
+theorem ad_g3dec_Slot_arg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (rcv aF : BitVec 64) (hF : rcv + (8 : Int64).toBitVec = aF)
     (s : MachineData) (hrax : s.regs.rax.toBitVec = rcv),
@@ -30,15 +30,15 @@ theorem ad_g3dec_Slot_arg (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf
         ∧ st.data.regs.rax.toBitVec = aF ∧ st.data.regs.rcx = 8 ∧ st.data.dmem = s.dmem)
       ⟨s, Host.addrOf (k + 15)⟩ := by
   have hA := Codec.infix_sub (q := E2eScal.callArgFirst false 8) 15 hk
-    (by simp only [AdUnmarshal, E2eScal.callArgFirst, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+    (by simp only [unmarshalSSZ, E2eScal.callArgFirst, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   with_reducible exact E2eScal.callarg_first_seg false _ (k + 15) hA
-theorem ad_g3dec_Slot_arg_kind : ∀ (h : Host), type_of% (@ad_g3dec_Slot_arg h) = @E2eScal.callArgFirstKind h AdUnmarshal false 8 15 := by
+theorem ad_g3dec_Slot_arg_kind : ∀ (h : Host), type_of% (@ad_g3dec_Slot_arg h) = @E2eScal.callArgFirstKind h unmarshalSSZ false 8 15 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `Slot`: call block of the callee decoder, directives 17–19, continuation label at 47. -/
-theorem ad_g3dec_Slot_call (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh AdUnmarshal k) :
+theorem ad_g3dec_Slot_call (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀ (hC : U64CalleeAcc "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ")
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
@@ -61,20 +61,20 @@ theorem ad_g3dec_Slot_call (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (h
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 17)⟩ := by
   have hA := Codec.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_c7") 17 hk
-    (by simp only [AdUnmarshal, E2eScal.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+    (by simp only [unmarshalSSZ, E2eScal.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hB := Codec.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_c7") 47 hk
-    (by simp only [AdUnmarshal, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+    (by simp only [unmarshalSSZ, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 47)
-    (by simp only [AdUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
-    (by simp only [AdUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
+    (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
+    (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact E2eScal.calldec_seg _ _ (k + 17) (k + 47) hA hB hl
-theorem ad_g3dec_Slot_call_kind : ∀ (h : Host), type_of% (@ad_g3dec_Slot_call h) = @E2eScal.callDecSegKind h AdUnmarshal "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_c7" 17 47 := by
+theorem ad_g3dec_Slot_call_kind : ∀ (h : Host), type_of% (@ad_g3dec_Slot_call h) = @E2eScal.callDecSegKind h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_c7" 17 47 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `CommitteeIndex` (callee decoder field, SSZ offset 8, Go offset 16): argument set-up by reload, directives 48–54. -/
-theorem ad_g3dec_CommitteeIndex_arg (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh AdUnmarshal k) :
+theorem ad_g3dec_CommitteeIndex_arg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀
     (sp rcv bf aB aD aR aSrc aF : BitVec 64)
     (hB' : sp + (136 : Int64).toBitVec = aB) (hD : sp + (152 : Int64).toBitVec = aD) (hR : sp + (128 : Int64).toBitVec = aR)
@@ -90,15 +90,15 @@ theorem ad_g3dec_CommitteeIndex_arg (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.p
         ∧ st.data.dmem = s.dmem)
       ⟨s, Host.addrOf (k + 48)⟩ := by
   have hA := Codec.infix_sub (q := E2eScal.callArgReload false 136 8 152 (-8) 128 16) 48 hk
-    (by simp only [AdUnmarshal, E2eScal.callArgReload, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+    (by simp only [unmarshalSSZ, E2eScal.callArgReload, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   with_reducible exact E2eScal.callarg_reload_seg false _ _ _ _ _ _ (k + 48) hA
-theorem ad_g3dec_CommitteeIndex_arg_kind : ∀ (h : Host), type_of% (@ad_g3dec_CommitteeIndex_arg h) = @E2eScal.callArgReloadKind h AdUnmarshal false 136 8 152 (-8) 128 16 48 := by
+theorem ad_g3dec_CommitteeIndex_arg_kind : ∀ (h : Host), type_of% (@ad_g3dec_CommitteeIndex_arg h) = @E2eScal.callArgReloadKind h unmarshalSSZ false 136 8 152 (-8) 128 16 48 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `CommitteeIndex`: call block of the callee decoder, directives 55–57, continuation label at 85. -/
-theorem ad_g3dec_CommitteeIndex_call (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh AdUnmarshal k) :
+theorem ad_g3dec_CommitteeIndex_call (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀ (hC : U64CalleeAcc "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ")
     (sp dst src aRet aFp aS2 : BitVec 64)
     (hRet : sp - 8 = aRet) (hFp : sp - 16 = aFp) (hS2 : sp + 8 = aS2)
@@ -121,20 +121,20 @@ theorem ad_g3dec_CommitteeIndex_call (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 55)⟩ := by
   have hA := Codec.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_167") 55 hk
-    (by simp only [AdUnmarshal, E2eScal.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+    (by simp only [unmarshalSSZ, E2eScal.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hB := Codec.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_167") 85 hk
-    (by simp only [AdUnmarshal, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+    (by simp only [unmarshalSSZ, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 85)
-    (by simp only [AdUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
-    (by simp only [AdUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
+    (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
+    (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact E2eScal.calldec_seg _ _ (k + 55) (k + 85) hA hB hl
-theorem ad_g3dec_CommitteeIndex_call_kind : ∀ (h : Host), type_of% (@ad_g3dec_CommitteeIndex_call h) = @E2eScal.callDecSegKind h AdUnmarshal "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_167" 55 85 := by
+theorem ad_g3dec_CommitteeIndex_call_kind : ∀ (h : Host), type_of% (@ad_g3dec_CommitteeIndex_call h) = @E2eScal.callDecSegKind h unmarshalSSZ "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_167" 55 85 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `BeaconBlockRoot` (SSZ offset 16, Go offset 24): decode segment, directives 86–111. -/
-theorem ad_g3dec_BeaconBlockRoot_seg (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh AdUnmarshal k) :
+theorem ad_g3dec_BeaconBlockRoot_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀ (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + (128 : Int64).toBitVec = aR) (hB' : sp + (136 : Int64).toBitVec = aB)
     (hS : sp + (104 : Int64).toBitVec = aS)
@@ -173,14 +173,14 @@ theorem ad_g3dec_BeaconBlockRoot_seg (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 86)⟩ := by
   have hA := Codec.infix_sub (q := Codec.rootDecHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1ac" 128 32 40) 86 hk
-    (by simp only [AdUnmarshal, Codec.rootDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+    (by simp only [unmarshalSSZ, Codec.rootDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hB := Codec.infix_sub (q := Codec.rootDecMid "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1ac" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_1f3" 128 136 104 24 32 40 16) 100 hk
-    (by simp only [AdUnmarshal, Codec.rootDecMid, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+    (by simp only [unmarshalSSZ, Codec.rootDecMid, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   have hl := Machine.label_at' hk hf (j := 100)
-    (by simp only [AdUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
-    (by simp only [AdUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
+    (by simp only [unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
+    (by simp only [unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact Codec.rootdec_seg _ _ _ _ _ _ _ _ _ (k + 86) (k + 100) hA hB hl
-theorem ad_g3dec_BeaconBlockRoot_seg_kind : ∀ (h : Host), type_of% (@ad_g3dec_BeaconBlockRoot_seg h) = @Codec.rootDecSegKind h AdUnmarshal 86 100 128 136 104 24 32 40 16 := by
+theorem ad_g3dec_BeaconBlockRoot_seg_kind : ∀ (h : Host), type_of% (@ad_g3dec_BeaconBlockRoot_seg h) = @Codec.rootDecSegKind h unmarshalSSZ 86 100 128 136 104 24 32 40 16 := by
   intro h; with_reducible rfl
 
 end E2eScal.Gen

@@ -5,7 +5,7 @@ import TestTarget.FunctionSpecs
 /-!
 # Bump-allocator model of `runtime.newobject` for one 72-byte object (witness only)
 
-`BumpNew72` (`E2eAd/BumpNew72.S`) is `Runtime/BumpNew32.S` with the object size 0x48; the theorem
+`BumpNew72` (`Prysm/AttestationData/BumpNew72.S`) is `Runtime/BumpNew32.S` with the object size 0x48; the theorem
 is the text of `Runtime.bump_newobject32` with 32 replaced by 72. It discharges
 `NewobjectC bumpHeap ty 72 S` in the AttestationData witnesses (the Checkpoint object of the
 Go 1.26.10 ELF is 72 bytes, `adCpType` Size_ = 0x48). It is a model in a witness host, not a
@@ -14,9 +14,9 @@ claim about the Go runtime.
 
 open Machine Runtime TestTarget
 
-namespace E2eAd
+namespace Prysm.AttestationData
 
-def BumpNew72 : Program := include_x64_rt "E2eAd/BumpNew72.S"
+def BumpNew72 : Program := include_x64_rt "Prysm/AttestationData/BumpNew72.S"
 
 variable [Host]
 
@@ -68,4 +68,4 @@ theorem bump_newobject72 (j : Nat) (hj : BumpNew72.IsInfixAt Host.prog j)
   refine ⟨by simp, ?_, rfl, rfl, stk, spill, hstk, hsp, ?_⟩
   · apply UInt64.toBitVec_inj.mp; simp
   · dsimp only; ecancel
-end E2eAd
+end Prysm.AttestationData

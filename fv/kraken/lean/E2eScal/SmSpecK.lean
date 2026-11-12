@@ -14,7 +14,7 @@ Hand-written: the text of `DdSpecK.lean` / `PwSpecK.lean`, with the statement
 Not stated here: that the callee error paths (`fmt.errorf` wraps) are unreachable when `size = 144`.
 -/
 
-open Machine Runtime TestTarget E2e E2eAd.Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e Prysm.AttestationData.Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.H5
@@ -23,7 +23,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Accept side: the hand statement `sm_accept_stmt` for the input chunks of the `g` that EthLib decodes. -/
 theorem sm_e2e_accept_spec_k (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh SmUnmarshal k)
-    (kS : Nat) (hkS : SlUnmarshal.IsInfixAt Host.prog kS) (hfS : LabelsFresh SlUnmarshal kS)
+    (kS : Nat) (hkS : slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh slotUnmarshalSSZ kS)
     (kV : Nat) (hkV : ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh ViUnmarshal kV)
     (bsA : Array UInt8) (v : Value) (hd : deserialize prysmSmDesc bsA = .ok v)
     (s : MachineData) (ra guard : UInt64)

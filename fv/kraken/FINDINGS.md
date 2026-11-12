@@ -79,7 +79,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 - What: the decoder allocates a new `Source` and `Target`, also when the receiver already has them. This is the same as the Go source.
 - Where: `(*v1alpha1.AttestationData).UnmarshalSSZ`.
-- How it shows: `E2eAd.ad_e2e_accept_main` states the new pointers for every old receiver.
+- How it shows: `Prysm.AttestationData.Decode.accept` states the new pointers for every old receiver.
 - State: known behavior, proved.
 
 ### Error paths with `%d` allocate
@@ -252,7 +252,7 @@ How to handle a new finding is in `../README.md` section 7.
 ### Unreachable error wraps hold only with the callee specifications
 
 - What: the theorems of an unreachable error wrap state a conditional skip: if the callee returns `rax = 0`, the code skips the wrap.
-  Unreachability for every input holds only together with the callee specifications, such as `E2eAd.SlUAccC` and `E2eScal.ViUAccC`.
+  Unreachability for every input holds only together with the callee specifications, such as `Prysm.Slot.Decode.accept_function_spec` and `E2eScal.ViUAccC`.
 - State: recorded. The theorems are not changed.
 
 ### Hand `Desc` is independent in content, not always in time
