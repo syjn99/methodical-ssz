@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Prysm Fulu type inventory from the sszgen 698c202 IR.
 
-  inventory.py reduce <raw-ir.json> <out-ir.json>
+  type_inventory.py reduce <raw-ir.json> <out-ir.json>
       Cut the raw invtool dump: a field whose type delegates (the generated
       code calls that type's own SSZ methods) keeps only its name, package,
       sizes and delegation flags. The result is committed under
       fv/kraken/prysm/ir/ and is the only input of `build`.
-  inventory.py build <prysm-dir>
+  type_inventory.py build <prysm-dir>
       Read <prysm-dir>/ir/ir-{mainnet,minimal}.json and write
       <prysm-dir>/inventory.json. Every count in TYPES.md comes from there.
 

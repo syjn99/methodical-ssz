@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Provisional scope classification of the Prysm inventory for X5.
+"""Provisional scope classification of the Prysm types of the inventory.
 
-Usage: scope6.py <kraken-dir>     writes prysm/SCOPE-P6.json and prysm/SCOPE-P6.md
+Usage: type_scope.py <kraken-dir>     writes prysm/type-scope.json and prysm/type-scope.md
 
 PROVISIONAL. Nothing here is proved or attempted. For every type of the inventory:
 - patterns: the field shapes mapped to the existing hand proof patterns; shapes with no hand
@@ -117,10 +117,10 @@ def main():
             classes.append("new pattern (automation)")
         if not classes:
             classes.append("none known")
-        rows.append({"type": t["name"], "package": t["package"], "in_B": t["in_B"], "p1_scope": t["scope"],
+        rows.append({"type": t["name"], "package": t["package"], "fulu_reachable": t["in_B"], "scope": t["scope"],
                      "kind": t["kind"], "fields": t["field_count"], "shapes": shapes,
                      "hand_patterns": sorted(pats), "new_patterns": sorted(new), "missing_contracts": sorted(set(missing)),
-                     "fmt_shapes": dict(sh), "calls": dict(calls), "kraken_parse_M_S_U": parse,
+                     "fmt_shapes": dict(sh), "calls": dict(calls), "kraken_parse_marshal_size_unmarshal": parse,
                      "max_instructions": maxins, "size_band": band, "expected_failure_classes": classes,
                      "first_class": min(classes, key=ORDER.index)})
     # a type is only as complete as its generated callees: worst class over the callee closure
@@ -137,7 +137,7 @@ def main():
         r["callee_closure"] = len(seen) - 1
         r["first_class_transitive"] = min((by[x]["first_class"] for x in seen), key=ORDER.index)
     cnt = lambda key: dict(sorted(Counter(key(r) for r in rows).items()))
-    rin = [r for r in rows if r["p1_scope"] == "in"]
+    rin = [r for r in rows if r["scope"] == "in"]
     split = {
         "types": len(rin),
         "calls_hand_written": sum(1 for r in rin if any(x.startswith("hand-written") for x in r["missing_contracts"])),
@@ -147,25 +147,25 @@ def main():
         "list_container_fixed_elements_new": sum(1 for r in rin if "list of fixed-size containers" in r["new_patterns"]),
         "vector_of_container_forms": sum(1 for r in rin if any(s.startswith("vector[") and s not in ("vector[uint64]", "vector[bytesN]") for s in r["shapes"])),
         "vector_of_byte_slices": sum(1 for r in rin if "vector[bytesN]" in r["shapes"]),
-        "three_functions_parse": sum(1 for r in rin if all(p == "OK" for p in r["kraken_parse_M_S_U"])),
-        "some_function_does_not_parse": sum(1 for r in rin if any(p != "OK" for p in r["kraken_parse_M_S_U"])),
+        "three_functions_parse": sum(1 for r in rin if all(p == "OK" for p in r["kraken_parse_marshal_size_unmarshal"])),
+        "some_function_does_not_parse": sum(1 for r in rin if any(p != "OK" for p in r["kraken_parse_marshal_size_unmarshal"])),
     }
-    res = {"schema": "fvphase1c.scope-p6/1", "status": "PROVISIONAL (classification, no proof attempted)",
+    res = {"schema": "type-scope/1", "status": "PROVISIONAL (classification, no proof attempted)",
            "hand_max_instructions": hand_max, "types": len(rows),
            "counts": {"first_class": cnt(lambda r: r["first_class"]),
                       "first_class_transitive": cnt(lambda r: r["first_class_transitive"]),
-                      "first_class_transitive_in_B": dict(sorted(Counter(r["first_class_transitive"] for r in rows if r["in_B"]).items())),
-                      "first_class_p1_in_only": dict(sorted(Counter(r["first_class"] for r in rows if r["p1_scope"] == "in").items())),
+                      "first_class_transitive_fulu_reachable": dict(sorted(Counter(r["first_class_transitive"] for r in rows if r["fulu_reachable"]).items())),
+                      "first_class_scope_in_only": dict(sorted(Counter(r["first_class"] for r in rows if r["scope"] == "in").items())),
                       "has_class": {c: sum(1 for r in rows if c in r["expected_failure_classes"]) for c in ORDER},
                       "size_band": cnt(lambda r: r["size_band"]),
                       "missing_contract_kinds": dict(sorted(Counter(m for r in rows for m in r["missing_contracts"]).items())),
                       "new_pattern_kinds": dict(sorted(Counter(m for r in rows for m in r["new_patterns"]).items())),
-                      "p1_in_split": split,
-                      "in_B_first_class": dict(sorted(Counter(r["first_class"] for r in rows if r["in_B"]).items()))},
+                      "scope_in_split": split,
+                      "fulu_reachable_first_class": dict(sorted(Counter(r["first_class"] for r in rows if r["fulu_reachable"]).items()))},
            "rows": rows}
-    json.dump(res, open(f"{k}/prysm/SCOPE-P6.json", "w"), indent=1)
-    L = ["# SCOPE-P6: provisional classification for X5 (phase1c P6)", "",
-         "**It is provisional.** We did not try proofs. This table does not say whether a proof is possible. `gen/scope6.py` makes it from JSON.", "",
+    json.dump(res, open(f"{k}/prysm/type-scope.json", "w"), indent=1)
+    L = ["# Type scope: provisional classification of the Prysm types", "",
+         "**It is provisional.** We did not try proofs. This table does not say whether a proof is possible. `gen/type_scope.py` makes it from JSON.", "",
          "Failure reason classes (in the order in which they apply first): tool gap (`%riz`) > missing contract > new pattern (automation) > none known.",
          "\"Including callees\" is the first class that applies in the type and the closure of its generated callees. If the type alone is \"none known\" but a callee blocks it, the type is blocked.",
          "123 of the 135 Prysm types are protobuf structs. Their Go layout is different from the reduced types of the hand case (`ir/*.json` `go_fields`).",
@@ -176,14 +176,14 @@ def main():
     for kk, v in res["counts"].items():
         L.append(f"| `{kk}` | {json.dumps(v, ensure_ascii=False)} |")
     L += ["", "## 2. Type table", "",
-          "| Type | B | P1 scope | First failure class | First class including callees | All classes | Hand patterns | New patterns | Missing contracts | Parser M/S/U | Max instructions |",
+          "| Type | Fulu-reachable | Scope | First failure class | First class including callees | All classes | Hand patterns | New patterns | Missing contracts | Parser (MarshalSSZTo/SizeSSZ/UnmarshalSSZ) | Max instructions |",
           "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |"]
     for r in sorted(rows, key=lambda r: (ORDER.index(r["first_class"]), r["type"])):
-        L.append(f"| `{r['type']}` | {'B' if r['in_B'] else ''} | {r['p1_scope']} | {r['first_class']} | {r['first_class_transitive']} | "
+        L.append(f"| `{r['type']}` | {'yes' if r['fulu_reachable'] else ''} | {r['scope']} | {r['first_class']} | {r['first_class_transitive']} | "
                  f"{', '.join(r['expected_failure_classes'])} | {', '.join(r['hand_patterns']) or '-'} | "
                  f"{', '.join(r['new_patterns']) or '-'} | {', '.join(r['missing_contracts']) or '-'} | "
-                 f"{'/'.join(r['kraken_parse_M_S_U'])} | {r['max_instructions']} |")
-    open(f"{k}/prysm/SCOPE-P6.md", "w").write("\n".join(L) + "\n")
+                 f"{'/'.join(r['kraken_parse_marshal_size_unmarshal'])} | {r['max_instructions']} |")
+    open(f"{k}/prysm/type-scope.md", "w").write("\n".join(L) + "\n")
     print(json.dumps(res["counts"], indent=1, ensure_ascii=False))
 
 

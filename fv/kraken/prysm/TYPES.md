@@ -1,7 +1,7 @@
-# TYPES: Prysm Fulu type list (phase1c X1)
+# Prysm Fulu type list
 
-`fv/kraken/gen/types_md.py` makes this file from the saved JSON. Do not change it by hand.
-The program counts all numbers. The scope classification is a first pass (provisional). It is not a proof. Gate 1c is not passed.
+`fv/kraken/gen/type_list_document.py` makes this file from the saved JSON. Do not change it by hand.
+The program counts all numbers. The scope classification is a first pass (provisional). It is not a proof.
 
 ## 1. Summary
 
@@ -9,8 +9,8 @@ The program counts all numbers. The scope classification is a first pass (provis
 - In scope: 132, out of scope: 3 (provisional). Reasons for out of scope: deep nesting 3.
 - For B only: in scope 44, out of scope 1.
 - "In scope" means that the first-pass rules did not remove the type. It does not mean that a proof is possible. It also does not mean that the type fits the hand proof patterns.
-  It is wider than the first-pass Gist list: it contains 46 `vector[bytesN]` fields, 31 `list[bytesN]` fields and 7 `vector[uint64]` fields. The depth is the inline depth (it does not follow delegation).
-  The classification by what the proofs need is in `SCOPE-P6.md`.
+  The in-scope rule accepts these field shapes. The types of I together have 46 `vector[bytesN]` fields, 31 `list[bytesN]` fields and 7 `vector[uint64]` fields. The depth is the inline depth (it does not follow delegation).
+  The classification by what the proofs need is in `type-scope.md`.
 - Hand-written delegate targets (`consensus-types/primitives`): 5. Types that call them: 52.
 - Generated functions: 405 (types × 3), instructions: 116889, maximum for each function: 2890.
 - Mnemonic level: 405/405 generated functions use only names that the Kraken runtime parser accepts.
@@ -27,7 +27,7 @@ The program counts all numbers. The scope classification is a first pass (provis
 | Generator and runtime | `698c2025a73a296b55b95744a8408f3b03b2546b` |
 | Target compilation | Cross-compiled for linux/amd64 with `go version go1.26.10 linux/arm64` (host binary), `GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 go build -p 2 -tags purego -trimpath` |
 | Host | Linux aarch64 (generation is arm64 native. No x86-64 hardware) |
-| ELF | sha256 `c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e`, 23486009 bytes. Not committed (`go1.26.10/MANIFEST.md`) |
+| ELF | sha256 `c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e`, 23486009 bytes. Not committed (`../README.md` section 3 tells how to build it again) |
 | Reproducibility | Second build with an empty GOCACHE: sha256 `c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e` |
 | Kraken / EthLib / Lean | `6064eec` / `8621856` / `nightly-2026-09-21` |
 
@@ -37,8 +37,8 @@ Go 1.26.10 is a new experiment baseline. The 55 theorems for the Go 1.26.3 ELF `
 
 1. `gen/prysm-gen.sh` runs the generator in a temporary Prysm tree. The flags are the same as in Prysm `build/gen/ssz.go`.
 2. The same script uses `gen/invtool` to extract the IR of the front end of the generator itself (`config`, `TypeDefs`, `ParseTypeDef`, delegate interface set) as JSON.
-3. `gen/inventory.py reduce` cuts the parts below delegated fields and makes `ir/ir-{mainnet,minimal}.json`.
-4. `gen/inventory.py build` writes the sets, kinds, depths and scopes to `inventory.json`.
+3. `gen/type_inventory.py reduce` cuts the parts below delegated fields and makes `ir/ir-{mainnet,minimal}.json`.
+4. `gen/type_inventory.py build` writes the sets, kinds, depths and scopes to `inventory.json`.
 5. `gen/prysm-elf.sh` builds the ELF two times and extracts objdump and nm. `gen/keepalive.py` makes `main`.
 6. `gen/mnemonics.py` counts the instructions, mnemonics and call kinds for each function (`go1.26.10/functions.json`).
 7. `link/conv.py --norm` (read only) makes the `.S` files, and `gen/kparse/KParse.lean` runs the Kraken runtime parser (`go1.26.10/kparse.json`).
@@ -124,7 +124,7 @@ Parser ERR list:
 - `proto/prysm/v1alpha1.(*BeaconState).MarshalSSZTo` (inventory): line 1417: unknown register: riz
 
 `%riz` is the spelling that GNU objdump uses for a SIB byte without an index (when `%r12` is the base register). The address is the same as `(%r12)`.
-It is not a generator defect. It is a gap in the converter or in the Kraken parser (`GENERATOR-FINDINGS.md` section 4).
+It is not a generator defect. It is a gap in the converter or in the Kraken parser (`../FINDINGS.md`, entry "Kraken cannot parse some operand and instruction forms").
 
 Mnemonic frequency of the generated functions (I only):
 

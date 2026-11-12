@@ -56,7 +56,7 @@ How to handle a new finding is in `../README.md` section 7.
 - Where: 24 functions, called by 52 generated types.
 - Effect: each needs its own specification and proof. A generated decoder that calls one depends on it.
 - State: the records give proofs of the `Epoch` decoder accept path (function specification `E2e.EpUAccC`) and its length reject. They give the other methods as not proved.
-  The generated table `prysm/INVENTORY.md` lists the theorems that exist now for each primitive method.
+  The generated table `prysm/proof-inventory.md` lists the theorems that exist now for each primitive method.
 
 ### Encoders write into the caller array before a later length reject
 
@@ -271,7 +271,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Inventory script trusts its method list
 
-- What: `gen/tools/inventory.py run` trusts `prysm/go1.26.10/ssz-methods.json` for methods without a converted `.S` file. Only the `methods` mode and a `cmp` bind that file to the ELF.
+- What: `gen/tools/proof_inventory.py run` trusts `prysm/go1.26.10/ssz-methods.json` for methods without a converted `.S` file. Only the `methods` mode and a `cmp` bind that file to the ELF.
   A development type without a mapping row ends in a `KeyError`, not in a FAIL line.
   19 mapped names are not in the `#print axioms` hand list `gen/scal/AxiomsScal.lean`. `gen/tools/inventory_decls.lean` checks their axioms on every run.
 - State: open.
@@ -291,7 +291,7 @@ How to handle a new finding is in `../README.md` section 7.
 - The encoder growth branches (see the growslice entry), the length rejects with a small capacity, and the `moveSliceNoCapNoScan` branch of `PowBlock`, `HistoricalSummary` and `SigningData`.
 - The frame separation premise of the encoders is not justified for every Go caller.
 - The `IndexedAttestation` alignment and overflow rejects are proved only with the added premise that the error word is not zero.
-- State: open. `prysm/INVENTORY.md` lists the paths not proved for each method.
+- State: open. `prysm/proof-inventory.md` lists the paths not proved for each method.
 
 ### Recursion depth limits without a located cause
 
@@ -332,13 +332,13 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Absolute paths in committed records
 
-- What: some generated records contain absolute paths of the original machine, for example `prysm/go1.26.10/e2e/negative/result.json` and `prysm/go1.26.10/e2e/COST.json`.
+- What: some generated records contain absolute paths of the original machine, for example `prysm/go1.26.10/e2e/negative/result.json`.
   Two Python bytecode files in git history contain container paths. They are not in the current tree.
 - How it shows: `git grep -nE "/workspace|fve2e-" -- fv/kraken ':!fv/kraken/lean/.lake'`.
 - State: open. The user decides how to treat the history before publication.
 
 ### Two tracked files differ only in case
 
-- What: `prysm/INVENTORY.json` and `prysm/inventory.json` are both tracked.
+- What: `prysm/INVENTORY.json` and `prysm/inventory.json` were both tracked.
 - Effect: on a file system that ignores case, only one exists, and `git status` shows a change that is not real.
-- State: open.
+- State: fixed. The per-method table is now `prysm/proof-inventory.json` and `prysm/proof-inventory.md`.

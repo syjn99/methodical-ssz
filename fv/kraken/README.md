@@ -4,7 +4,7 @@ This project proves that the x86-64 machine code of the SSZ methods that `sszgen
 Prysm is an Ethereum consensus client. Kraken is a Lean 4 model of x86-64 instructions.
 The design principles are in `../README.md`. The rules are in `../AGENTS.md`.
 
-The per-method state of the proofs is the generated table `prysm/INVENTORY.md`.
+The per-method state of the proofs is the generated table `prysm/proof-inventory.md`.
 Do not copy its numbers into other documents. Run the inventory again instead (section 5).
 
 ## 1. Targets
@@ -55,16 +55,17 @@ Run heavy jobs one at a time, under a memory limit.
 
 The IR (intermediate representation) is the type description that the generator reads.
 The generator binary is built from the pinned generator commit with Go 1.26.10 and `-trimpath`.
-After step 2, these commands make the IR, the inventory, the function list and the parser record again:
+After step 2, these commands make the IR, the inventory, the function list, the parser record and the type documents again:
 
 ```sh
-python3 -I fv/kraken/gen/inventory.py reduce <out>/ir-mainnet.json fv/kraken/prysm/ir/ir-mainnet.json   # the same for minimal
-python3 -I fv/kraken/gen/inventory.py build fv/kraken/prysm
+python3 -I fv/kraken/gen/type_inventory.py reduce <out>/ir-mainnet.json fv/kraken/prysm/ir/ir-mainnet.json   # the same for minimal
+python3 -I fv/kraken/gen/type_inventory.py build fv/kraken/prysm
 python3 -I fv/kraken/gen/mnemonics.py <elf-out>/p1cbin-amd64.objdump fv/kraken/lean/.lake/packages/Kraken/Kraken/X64/Parser/Basic.lean fv/kraken/link/conv.py fv/kraken/prysm/inventory.json fv/kraken/prysm/go1.26.10/functions.json
 python3 -I fv/kraken/link/conv.py <elf-out>/p1cbin-amd64.objdump <elf-out>/p1cbin-amd64.nm <norm-out> --norm
 cd fv/kraken/lean && KPARSE_LIST=<.S list> lake env lean ../gen/kparse/KParse.lean
 python3 -I fv/kraken/gen/kparse/summ.py <kparse log> fv/kraken/prysm/go1.26.10/functions.json fv/kraken/prysm/go1.26.10/kparse.json
-python3 -I fv/kraken/gen/types_md.py fv/kraken/prysm
+python3 -I fv/kraken/gen/type_list_document.py fv/kraken/prysm
+python3 -I fv/kraken/gen/type_scope.py fv/kraken
 ```
 
 The tracked file `prysm/go1.26.10/kparse-log.txt` is the parser log of the pinned ELF. `kparse/summ.py` makes `kparse.json` from it.
@@ -133,7 +134,7 @@ python3 -B fv/kraken/link/check.py --selftest fv/kraken/link/out
 **The Prysm target ELF.** You must build it first (section 3). Then these checks can run:
 
 - The link check of each Prysm link set. The `gen/e2e/*link.py` scripts filter the disassembly and write the data files. Then `link/check.py` runs on the set.
-- The method list of the inventory: `python3 -I -B fv/kraken/gen/tools/inventory.py methods <nm-listing> <scratch>/ssz-methods.json`. Compare the output with `prysm/go1.26.10/ssz-methods.json`.
+- The method list of the inventory: `python3 -I -B fv/kraken/gen/tools/proof_inventory.py methods <nm-listing> <scratch>/ssz-methods.json`. Compare the output with `prysm/go1.26.10/ssz-methods.json`.
 
 **A Prysm tree and Go 1.26.10.** The Go differential scripts `gen/e2e/*diff.py` write test cases. A Go program in a temporary Prysm tree runs them.
 These runs check Go semantics on the host. They do not run the amd64 machine code.

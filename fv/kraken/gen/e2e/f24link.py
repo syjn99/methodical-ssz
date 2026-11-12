@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Flat-type hold-out (H7): call graph and link tables of the real UnmarshalSSZ and MarshalSSZTo of the 24 flat fixed-size
-types outside the development population (fv/kraken/prysm/INVENTORY.md at the FLAT24 freeze) on the Go 1.26.10
+types outside the development population (fv/kraken/prysm/proof-inventory.md at the FLAT24 freeze) on the Go 1.26.10
 ELF (the same ELF as prysm/go1.26.10/e2e/link; written after the H7 hold-out was opened at 2026-11-12T05:59:42Z;
 the text of `h6link.py` + `enc2link.py` with the function set changed and the data items made per function).
 

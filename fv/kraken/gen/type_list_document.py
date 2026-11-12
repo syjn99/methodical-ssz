@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Write fv/kraken/prysm/TYPES.md from the saved JSON. No number is typed by hand.
 
-Usage: types_md.py <prysm-dir>
+Usage: type_list_document.py <prysm-dir>
 Inputs: inventory.json, go1.26.10/functions.json, go1.26.10/kparse.json,
 go1.26.10/kparse-riz-diag.json, diff/gendiff.json, go1.26.10/build-ids.txt.
 Python 3 standard library only. Run with python3 -I.
@@ -36,10 +36,10 @@ def main():
     funcs = {(f["package"], f["type"], f["method"]): f for f in fn["functions"]}
     L = []
     w = L.append
-    w("# TYPES: Prysm Fulu type list (phase1c X1)")
+    w("# Prysm Fulu type list")
     w("")
-    w("`fv/kraken/gen/types_md.py` makes this file from the saved JSON. Do not change it by hand.")
-    w("The program counts all numbers. The scope classification is a first pass (provisional). It is not a proof. Gate 1c is not passed.")
+    w("`fv/kraken/gen/type_list_document.py` makes this file from the saved JSON. Do not change it by hand.")
+    w("The program counts all numbers. The scope classification is a first pass (provisional). It is not a proof.")
     w("")
     w("## 1. Summary")
     w("")
@@ -49,9 +49,9 @@ def main():
     w(f"- For B only: in scope {c['B_scope_in']}, out of scope {c['B_scope_out']}.")
     fsh = c["field_shape"]
     w("- \"In scope\" means that the first-pass rules did not remove the type. It does not mean that a proof is possible. It also does not mean that the type fits the hand proof patterns.")
-    w(f"  It is wider than the first-pass Gist list: it contains {fsh.get('vector[bytesN]', 0)} `vector[bytesN]` fields, {fsh.get('list[bytesN]', 0)} `list[bytesN]` fields "
+    w(f"  The in-scope rule accepts these field shapes. The types of I together have {fsh.get('vector[bytesN]', 0)} `vector[bytesN]` fields, {fsh.get('list[bytesN]', 0)} `list[bytesN]` fields "
       f"and {fsh.get('vector[uint64]', 0)} `vector[uint64]` fields. The depth is the inline depth (it does not follow delegation).")
-    w("  The classification by what the proofs need is in `SCOPE-P6.md`.")
+    w("  The classification by what the proofs need is in `type-scope.md`.")
     w(f"- Hand-written delegate targets (`consensus-types/primitives`): {c['I_hand_written']}. Types that call them: {c['types_calling_hand_written']}.")
     w(f"- Generated functions: {fc['generated_functions_inventory']} (types × 3), instructions: {fc['generated_instructions']}, maximum for each function: {fc['max_instructions']}.")
     w(f"- Mnemonic level: {fc['generated_functions_all_supported']}/{fc['generated_functions_inventory']} generated functions use only names that the Kraken runtime parser accepts.")
@@ -70,7 +70,7 @@ def main():
     w("| Generator and runtime | `698c2025a73a296b55b95744a8408f3b03b2546b` |")
     w(f"| Target compilation | Cross-compiled for linux/amd64 with `{bid['go']}` (host binary), `{bid['target']}` |")
     w(f"| Host | {bid['host']} (generation is arm64 native. No x86-64 hardware) |")
-    w(f"| ELF | sha256 `{bid['elf sha256']}`, {bid['elf size']} bytes. Not committed (`go1.26.10/MANIFEST.md`) |")
+    w(f"| ELF | sha256 `{bid['elf sha256']}`, {bid['elf size']} bytes. Not committed (`../README.md` section 3 tells how to build it again) |")
     w(f"| Reproducibility | Second build with an empty GOCACHE: sha256 `{bid['elf b2 sha256']}` |")
     w("| Kraken / EthLib / Lean | `6064eec` / `8621856` / `nightly-2026-09-21` |")
     w("")
@@ -80,8 +80,8 @@ def main():
     w("")
     w("1. `gen/prysm-gen.sh` runs the generator in a temporary Prysm tree. The flags are the same as in Prysm `build/gen/ssz.go`.")
     w("2. The same script uses `gen/invtool` to extract the IR of the front end of the generator itself (`config`, `TypeDefs`, `ParseTypeDef`, delegate interface set) as JSON.")
-    w("3. `gen/inventory.py reduce` cuts the parts below delegated fields and makes `ir/ir-{mainnet,minimal}.json`.")
-    w("4. `gen/inventory.py build` writes the sets, kinds, depths and scopes to `inventory.json`.")
+    w("3. `gen/type_inventory.py reduce` cuts the parts below delegated fields and makes `ir/ir-{mainnet,minimal}.json`.")
+    w("4. `gen/type_inventory.py build` writes the sets, kinds, depths and scopes to `inventory.json`.")
     w("5. `gen/prysm-elf.sh` builds the ELF two times and extracts objdump and nm. `gen/keepalive.py` makes `main`.")
     w("6. `gen/mnemonics.py` counts the instructions, mnemonics and call kinds for each function (`go1.26.10/functions.json`).")
     w("7. `link/conv.py --norm` (read only) makes the `.S` files, and `gen/kparse/KParse.lean` runs the Kraken runtime parser (`go1.26.10/kparse.json`).")
@@ -115,7 +115,7 @@ def main():
         w(f"- `{short(r['symbol'])}` ({r['group']}): {r['error']}")
     w("")
     w("`%riz` is the spelling that GNU objdump uses for a SIB byte without an index (when `%r12` is the base register). The address is the same as `(%r12)`.")
-    w("It is not a generator defect. It is a gap in the converter or in the Kraken parser (`GENERATOR-FINDINGS.md` section 4).")
+    w("It is not a generator defect. It is a gap in the converter or in the Kraken parser (`../FINDINGS.md`, entry \"Kraken cannot parse some operand and instruction forms\").")
     w("")
     w("Mnemonic frequency of the generated functions (I only):")
     w("")

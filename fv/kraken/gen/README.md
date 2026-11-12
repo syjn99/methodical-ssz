@@ -24,12 +24,12 @@ The design principles are in `../../README.md`.
 | `e2e/descterm.py`, `e2e/lvdescterm.py` | A `Desc` JSON file that the checker accepted | `*SpecChecker.lean`: the checker `Desc` as Lean |
 | `e2e/layout.py`, `e2e/adlayout.py` | `prysm/ir/ir-mainnet.json` | `lean/E2e/Layout.lean`, `lean/E2eAd/Layout.lean` |
 | `desc/producer.py` | The reduced IR | One `Desc` JSON file for each type |
-| `inventory.py` | The raw IR of the generator | `prysm/ir/*.json` (`reduce`) and `prysm/inventory.json` (`build`) |
-| `types_md.py`, `scope6.py` | `prysm/inventory.json` | `prysm/TYPES.md`, `prysm/SCOPE-P6.json`, `prysm/SCOPE-P6.md` |
+| `type_inventory.py` | The raw IR of the generator | `prysm/ir/*.json` (`reduce`) and `prysm/inventory.json` (`build`) |
+| `type_list_document.py`, `type_scope.py` | `prysm/inventory.json` | `prysm/TYPES.md`, `prysm/type-scope.json`, `prysm/type-scope.md` |
 | `keepalive.py` | `prysm/inventory.json` | The `main.go` of the Prysm target |
-| `tools/inventory.py` | The symbol listing of the ELF and a declaration list from Lean | `prysm/go1.26.10/ssz-methods.json`, `prysm/INVENTORY.md`, `prysm/INVENTORY.json` |
+| `tools/proof_inventory.py` | The symbol listing of the ELF and a declaration list from Lean | `prysm/go1.26.10/ssz-methods.json`, `prysm/proof-inventory.md`, `prysm/proof-inventory.json` |
 | `e2e/*link.py` | The Prysm ELF, its disassembly and symbol listing | One link set: the filtered disassembly and the data files |
-| `e2e/callgraph.py` and the `callgraph` mode of `e2e/*link.py` | A filtered disassembly | `callgraph*.json` files |
+| `e2e/callgraph.py` and the `callgraph` mode of `e2e/*link.py` | A filtered disassembly | `callgraph*.json` files. The tree holds none of them. `e2e/e2elink.py` imports the function list of `e2e/callgraph.py` |
 | `e2e/*diff.py` | Nothing, or a Go output file | Go differential cases, and their comparison with the Go output |
 | `frozen/build_lists.py` | The inventory and the generated Go | `frozen/THEOREMS.json`, `frozen/ASSUMPTIONS.json` |
 | `kparse/summ.py` | A log of `kparse/KParse.lean` | `prysm/go1.26.10/kparse.json`: which functions the Kraken parser reads |
@@ -89,10 +89,10 @@ Thus the Prysm theorems use a hand `Desc` written from consensus-specs, and a th
 
 These run without Lean, Go or the Prysm ELF:
 
-- `scal/kindcheck.py`, and the `--selftest` mode of `e2e/axioms_gate.py` and the other gate scripts.
+- `scal/kindcheck.py`, and the `--selftest` mode of `e2e/axioms_gate.py` and the other gate scripts. `e2e/encaxioms_gate.py` and `e2e/encaxioms_gate2.py` have no `--selftest` mode.
 - `python3 -B fv/kraken/link/data.py --check fv/kraken/link/out`.
 - `regen_check.sh` with `scal/scalgen.py`, `e2e/descterm.py`, `e2e/lvdescterm.py`, `e2e/layout.py` and `e2e/adlayout.py`.
-- `inventory.py reduce` and `build`, `types_md.py`, `scope6.py`, `keepalive.py`, `kparse/summ.py`.
+- `type_inventory.py reduce` and `build`, `type_list_document.py`, `type_scope.py`, `keepalive.py`, `kparse/summ.py`.
 - `frozen/test_frozen.py <repo-root> <scratch>`, which runs `frozen/build_lists.py` and compares the two frozen lists.
 - `desc/test_desc.py prepare` writes the `Desc` files. The checker run after it needs Lean.
 
@@ -101,7 +101,7 @@ These need more than Python:
 - `e2e/negative.py` and the axioms gates need Lean.
 - The link checks need the ELF and the LLVM tools.
 - The differential checks need Go and a Prysm tree.
-- `tools/inventory.py` needs the symbol listing of the Prysm ELF and Lean.
+- `tools/proof_inventory.py` needs the symbol listing of the Prysm ELF and Lean.
 
 ## 7. Known limits
 
@@ -109,7 +109,6 @@ These generated outputs do not reproduce from the tracked tree today:
 
 - `frozen/ASSUMPTIONS.json`: the file has a hand edit. `frozen/test_frozen.py` exits 1.
 - 11 of the 18 files that `e2e/descterm.py` writes have hand-added or edited header lines.
-- 2 of the 14 call graphs (`e2e/callgraph.py` and the `callgraph` mode of `e2e/*link.py`): one needs a compiler log that is not tracked, and one needs the full ELF disassembly.
 
 Other limits:
 

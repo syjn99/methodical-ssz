@@ -1,6 +1,6 @@
 {
  "schema": "fvkraken.inventory/2",
- "source": "gen/tools/inventory.py",
+ "source": "gen/tools/proof_inventory.py",
  "decls_header": "# inventory_decls v1 lean=4.36.0-nightly-2026-09-21 githash=ca39d2bc730f0382e4897ce314b93a4f168ff15e",
  "methods_source": {
   "file": "prysm/go1.26.10/ssz-methods.json",
@@ -32,7 +32,7 @@
   "denominators": {
    "target_ssz_methods": "prysm/go1.26.10/ssz-methods.json (from the nm listing of the pinned ELF, sha256 88ee8b9afe7d5265982e869fc33a2fe7b69acc38d52f4efd173326d1db4140ac)",
    "dumped_functions": "prysm/go1.26.10/functions.json (functions with a `.S` text)",
-   "development_population": "FLAT16 of gen/tools/inventory.py (the 16 flat types opened by the GEN5 line)"
+   "development_population": "FLAT16 of gen/tools/proof_inventory.py (the 16 flat types opened by the GEN5 line)"
   },
   "target_ssz_methods": 1292,
   "target_types": 211,

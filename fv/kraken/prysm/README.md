@@ -9,10 +9,10 @@ How to build the target ELF again is in `../README.md` section 3.
 
 | Path | Content | Written by |
 | --- | --- | --- |
-| `ir/ir-mainnet.json`, `ir/ir-minimal.json` | The reduced generator IR (intermediate representation) of each type, with the Go field layout `go_fields` | `gen/inventory.py reduce` |
-| `inventory.json` | The type inventory: every generated type, its fields and its delegations | `gen/inventory.py build` |
-| `TYPES.md`, `SCOPE-P6.json`, `SCOPE-P6.md` | Type lists and a scope classification of the inventory | `gen/types_md.py`, `gen/scope6.py` |
-| `INVENTORY.md`, `INVENTORY.json` | The per-method table of theorems, witnesses and paths not proved | `gen/tools/inventory.py run` |
+| `ir/ir-mainnet.json`, `ir/ir-minimal.json` | The reduced generator IR (intermediate representation) of each type, with the Go field layout `go_fields` | `gen/type_inventory.py reduce` |
+| `inventory.json` | The type inventory: every generated type, its fields and its delegations | `gen/type_inventory.py build` |
+| `TYPES.md`, `type-scope.json`, `type-scope.md` | Type lists and a scope classification of the inventory | `gen/type_list_document.py`, `gen/type_scope.py` |
+| `proof-inventory.md`, `proof-inventory.json` | The per-method table of theorems, witnesses and paths not proved | `gen/tools/proof_inventory.py run` |
 | `_generated/` | The Go files that the pinned generator wrote for Prysm, with `SHA256SUMS` | `gen/prysm-gen.sh` |
 | `diff/` | A classification of the differences between these files and the Prysm files | `gen/gendiff.py` |
 | `go1.26.10/` | The target namespace of the Go 1.26.10 ELF (section 2) | |
@@ -53,7 +53,7 @@ The subdirectory names are short labels. This table says what each one holds.
 | `scal/` | The negative case lists of the generated proofs, the encoder specification emitter `e2c/e2cemit.py` and two check scripts |
 
 Other files in `e2e/`: `axioms-gate.json` is the record of the axioms gate. `e2e.json` binds the include files and the link inputs by sha256.
-`axioms.json`, `differential.json` and `negative/result.json` are the inputs of `gen/e2e/table.py`. `AXIOMS.txt` is the input of `gen/e2e/axioms.py`.
+`gen/e2e/axioms.py` writes `axioms.json` from `AXIOMS.txt`. `gen/e2e/differential.py check` writes `differential.json`. `gen/e2e/negative.py` writes `negative/result.json`.
 
 ## 4. Files that are inputs of checks
 
@@ -63,9 +63,6 @@ Do not edit these files by hand. Make them again with their generator.
 - `ir/*.json` and `inventory.json`. The generators, the `Desc` checker and the frozen lists read them. `gen/frozen/THEOREMS.json` pins the sha256 of `inventory.json`.
 - The `*.desc.json` files. The `Desc` checker accepted them, and the header of each `*SpecChecker.lean` gives their sha256.
 - The negative case lists `negcases*.json`. The negative test scripts read them.
-- `go1.26.10/build-ids.txt` and `go1.26.10/ssz-methods.json`. `gen/tools/inventory.py` reads them. It checks the symbol listing against the sha256 in `build-ids.txt`.
+- `go1.26.10/build-ids.txt` and `go1.26.10/ssz-methods.json`. `gen/tools/proof_inventory.py` reads them. It checks the symbol listing against the sha256 in `build-ids.txt`.
 
 The other JSON files and the `RESULT` files are records of check runs. A new run writes them again. Do not edit them to change a result.
-
-`INVENTORY.json` and `inventory.json` differ only in case. On a file system that ignores case, only one of them can exist.
-Then `git status` shows a change that is not real. Do not commit that change.
