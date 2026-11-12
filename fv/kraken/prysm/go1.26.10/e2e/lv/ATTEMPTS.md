@@ -276,3 +276,33 @@
 - `IaSpec.lean`: `pia_serialize`, `pia_roundtrip`, `pia_accepted_is_enc`, `iaChecks`(Go 검사 넷의 순서), `pia_spec_accepts_iff`, `pia_spec_rejects`. 목록 쪽은 Go 1.26.3 ListU64 보조정리(`serializeEach_u64`, `inl_*`, `luElems`, `u64Bytes_luElems`), 데이터 쪽은 `E2e.pad_*`, 결합은 EthLib `extract_join`을 썼다.
 - 로그 129–133: 한 전략의 개발 단계다. 막힌 곳: 목록 `assemble`의 크기 조건(`h8`), `Desc.isFixed`가 펼쳐지지 않음(`rfl` 사실 넷을 `simp`에 줌), Mathlib 없는 `set`, 배열 결합.
 - 로그 134: `IaSpecR.lean`의 `ia_e2e_reject_size_spec`, `ia_e2e_reject_offset_spec`, `ia_e2e_reject_cases` exit 0. 설정 없이 통과했다.
+
+### U3: P4, P5 (멈춤)
+
+- 증명을 시작하지 않았다.
+- 고정 문장 `ia_reject_misaligned_stmt`, `ia_reject_toobig_stmt`에 전제 `e0 ≠ 0`이 없다.
+- 지시어 103–106(P4)과 66–69(P5)는 `test %rcx,%rcx; je`다. e0 = 0이면 itab+8을 읽지 않고 인수 단어가 0이다. `FmtErrorfDWC`는 그 단어가 `ity`이기를 요구한다.
+- Kraken `Host` 배치는 임의라서 itab 레이블이 0일 수 있다. 그래서 문장 그대로는 증명할 수 없다고 판단했다.
+- 계획 담당에게 보고했다. 새 이름과 판정을 기다린다.
+
+### U4: P3 수락 `ia_e2e_accept_main` (시도 1)
+
+- 새 파일: `E2eList/IaLoop.lean`(`ia_iter`, `ia_exit`, `ia_loop`), `E2eList/IaAccept.lean`(보조정리 12개와 `ia_e2e_accept_main : ia_accept_stmt`).
+- `ia_iter`는 한 바퀴다. panicBounds 셋(155 `ja`, 159 `jb`, 164 `jb` 안 갈림 → 165)이 안 갈림을 증명한다. 가정하지 않는다.
+- `ia_loop`는 남은 바퀴 수 `j`에 대한 재귀다(`i + j = n`). n = 0은 `j = 0, i = 0`이다.
+- 데이터 호출은 `E2eAd.ad_e2e_accept_main`으로 닫았다. 피호출자 진입 rsp는 x − 184, scratch는 `Sd`다.
+- 로그 135–140: `IaLoop`. 첫 빌드부터 통과했다. `maxRecDepth`를 빼면 `ia_iter`(로그 136), `ia_exit`(로그 139)의 첫 `kat`이 재귀 한도에서 멈춘다. 그래서 둘 다 1024를 두고 원인을 적었다.
+- 로그 141–145, 152, 155–183: `IaAccept`의 개발 단계다. 한 전략(손 단계 + 계약 + 루프 + 피호출자)이다. 막힌 곳은 아래와 같다.
+- 1. `sar $0x3f`는 미정의 플래그를 남긴다. `kshl64 63`으로 닫았다. `and`의 AF는 `intro _`로 닫았다.
+- 2. 로그 147, 148, 152, 153: `c + -228`에 `simp [BitVec.toNat_add]; omega`를 쓰면 커널이 "deep recursion"으로 멈춘다. 각 실행은 235–309 s, 표본 RSS 16–20 GiB였다. 로그 153은 그 한 줄만으로 90 s 시간 초과다(exit 124).
+- 그래서 `ia_sub228`(`BitVec.sub_eq_add_neg`, `toNat_sub_of_le`)로 바꿨다. 3.1 s다(로그 154). 상수 둘은 `toNat` simp 집합으로 증명했다(로그 151). `decide`는 쓰지 않았다.
+- 3. 로그 158–160: 지시어 35 뒤 `ecancel`이 "maximum recursion depth"로 멈췄다. 2048과 8192에서도 같았다. 그래서 한도 문제가 아니라고 판단했다.
+- 원인 추정: 지시어 34가 메모리에 쓴 원시 `sar`/`and` 식에서 AC 정규화가 끝나지 않는다. 그 식을 `generalize`로 이름 `P`, `C`, `Q`로 바꾸자 사라졌다(로그 161). 한도는 1024로 되돌렸다.
+- 4. 로그 172–174: 피호출자 사후조건의 단어 둘(저장된 rbp, rdi 스필)이 내가 쓴 같은 꼴의 항과 구조적으로 맞지 않았다. 원자별 시험(로그 173)으로 찾았다. `generalize`로 이름 `vb`, `v4`를 붙였다. 둘 다 존재 양화된 프레임 안에만 남는다.
+- 5. 로그 175, 176: `makeslice` 사후조건의 `replicate (1 * 96)`. `Nat.one_mul`로 닫았다. 옛 값을 `_`로 둔 저장 둘이 하트비트를 다 썼다. 명시 값으로 바꿨다.
+- 6. 로그 181, 182: 최종 메모리. `memmove` 사후조건의 원본 주소가 `132 + rbx`다. 원자별 시험으로 찾았다.
+- 로그 183: exit 0.
+- 측정(로그 184, 185): `maxRecDepth`를 빼면 지시어 0의 `kat`이 멈춘다. `maxHeartbeats` 400000은 `whnf` 시간 초과, 800000과 1200000은 통과다. 값은 통과 값의 두 배인 1600000이다. 옵션 옆에 원인과 문턱을 적었다.
+- 로그 186, 187: `lake build E2eList.IaLoop E2eList.IaAccept` exit 0. 로그 187은 `ia_exit`의 쓰지 않는 이름을 `_hn`으로 바꾼 뒤다.
+- 두 파일에 `sorry`, `admit`, `axiom`, `native_decide`, `bv_decide`가 없다(`grep` 결과 없음).
+- 로그 147, 148은 scratch 파일(`lake env lean`)이다. 그 RSS 값은 이 커밋의 증명과 관계없다.
