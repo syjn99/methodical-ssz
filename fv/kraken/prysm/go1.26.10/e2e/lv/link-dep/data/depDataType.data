@@ -1,0 +1,7 @@
+# depDataType: link/data.py, p1bin-amd64 bytes [0xbe6280, 0xbe62b0)
+at type__ 1421952
+bytes 78 00 00 00 00 00 00 00 60 00 00 00 00 00 00 00
+bytes 35 2a 84 5f 07 08 08 19
+word go.go 0
+word runtime.gcbits._ 216
+bytes 9e 4c 01 00 80 69 17 00
