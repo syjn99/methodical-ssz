@@ -1,0 +1,5 @@
+# decl_drift base 6a78c591e8bcd698b7b9313b1c09cb25f3986911 vs head (roots E2e,E2eAd,E2eScal; dumps: logs 71, 73)
+SUMMARY base=5007 head=5007 drift=0 allowed=0
+# planted control (E2eScal.WitBhU.s0 changed in a scratch base copy; logs 75-78)
+CHANGED	E2eScal.WitBhU.s0	value: 000000007595a1bc -> 0000000001c5e496
+SUMMARY base=5007 head=5007 drift=1 allowed=0

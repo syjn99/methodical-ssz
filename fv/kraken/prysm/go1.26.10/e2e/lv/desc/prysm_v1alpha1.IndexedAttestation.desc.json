@@ -1,0 +1,120 @@
+{
+ "schema": "fvphase1c.desc/1",
+ "type": "IndexedAttestation",
+ "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+ "ssz": {
+  "k": "container",
+  "names": [
+   "AttestingIndices",
+   "Data",
+   "Signature"
+  ],
+  "fields": [
+   {
+    "k": "list",
+    "elem": {
+     "k": "uint",
+     "w": 8
+    },
+    "limit": 2048
+   },
+   {
+    "k": "container",
+    "names": [
+     "Slot",
+     "CommitteeIndex",
+     "BeaconBlockRoot",
+     "Source",
+     "Target"
+    ],
+    "fields": [
+     {
+      "k": "uint",
+      "w": 8
+     },
+     {
+      "k": "uint",
+      "w": 8
+     },
+     {
+      "k": "byteVector",
+      "n": 32
+     },
+     {
+      "k": "container",
+      "names": [
+       "Epoch",
+       "Root"
+      ],
+      "fields": [
+       {
+        "k": "uint",
+        "w": 8
+       },
+       {
+        "k": "byteVector",
+        "n": 32
+       }
+      ]
+     },
+     {
+      "k": "container",
+      "names": [
+       "Epoch",
+       "Root"
+      ],
+      "fields": [
+       {
+        "k": "uint",
+        "w": 8
+       },
+       {
+        "k": "byteVector",
+        "n": 32
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "k": "byteVector",
+    "n": 96
+   }
+  ]
+ },
+ "fixed_size": null,
+ "fixed_part_size": 228,
+ "fields": [
+  {
+   "name": "AttestingIndices",
+   "index": 0,
+   "offset": 0,
+   "width": 4,
+   "variable": true,
+   "kind": "list",
+   "limit": 2048,
+   "elem_size": 8
+  },
+  {
+   "name": "Data",
+   "index": 1,
+   "offset": 4,
+   "width": 128,
+   "variable": false,
+   "kind": "container"
+  },
+  {
+   "name": "Signature",
+   "index": 2,
+   "offset": 132,
+   "width": 96,
+   "variable": false,
+   "kind": "byteVector",
+   "length": 96
+  }
+ ],
+ "variable_order": [
+  0
+ ],
+ "reference": null
+}

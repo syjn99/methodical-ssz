@@ -104,3 +104,40 @@ needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_
 name = "E2eScal"
 globs = ["E2eScal.+"]
 needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S"]
+
+# LV stream (list/vector hand proofs): real v1alpha1.SyncAggregate and v1alpha1.SyncCommittee decoders on the
+# same Go 1.26.10 ELF. Own library: the E2e / E2eAd / E2eScal modules do not change. Build one module at a time,
+# e.g. `lake build E2eList.StmtSa`. The .S and data files of prysm/go1.26.10/e2e/lv/link are inputs.
+[[input_dir]]
+name = "lv_norm_S"
+path = "../prysm/go1.26.10/e2e/lv/link/norm"
+text = true
+
+[[input_dir]]
+name = "lv_data"
+path = "../prysm/go1.26.10/e2e/lv/link/data"
+text = true
+
+# LV T3 (IndexedAttestation): the link set lv/link-t3 (after the conv.py LV-1 fix)
+[[input_dir]]
+name = "lv_t3_norm_S"
+path = "../prysm/go1.26.10/e2e/lv/link-t3/norm"
+text = true
+
+[[input_dir]]
+name = "lv_t3_data"
+path = "../prysm/go1.26.10/e2e/lv/link-t3/data"
+text = true
+
+# witness-only runtime model (LV review r1 S5): the type-dispatching bump makeslice E2eList/BumpAllocT.S
+[[input_dir]]
+name = "lv_lean_S"
+path = "E2eList"
+text = true
+filter = {extension = ["S"]}
+
+[[lean_lib]]
+name = "E2eList"
+globs = ["E2eList.+"]
+needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data", "lv_lean_S",
+  "lv_t3_norm_S", "lv_t3_data"]

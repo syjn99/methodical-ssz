@@ -1,0 +1,4 @@
+# decl_drift base 6a78c591e8bcd698b7b9313b1c09cb25f3986911 vs head (roots E2e,E2eAd,E2eScal; dumps: base log 71, head log 250)
+SUMMARY base=5007 head=5007 drift=0 allowed=0
+# review r4 rerun: decl_drift base 6a78c591e8bcd698b7b9313b1c09cb25f3986911 vs head (roots E2e,E2eAd,E2eScal; dumps: base log 71, head log 268)
+SUMMARY base=5007 head=5007 drift=0 allowed=0
