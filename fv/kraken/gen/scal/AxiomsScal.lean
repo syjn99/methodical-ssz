@@ -151,6 +151,39 @@ import E2eScal.Gen5SdDec
 import E2eScal.Gen5SaDec
 import E2eScal.Gen5VbDec
 import E2eScal.Gen5VeDec
+import E2eScal.G5CStmt
+import E2eScal.G5CSame
+import E2eScal.HsDesc
+import E2eScal.SdDesc
+import E2eScal.SaDesc
+import E2eScal.VbDesc
+import E2eScal.VeDesc
+import E2eScal.HsSpecChecker
+import E2eScal.SdSpecChecker
+import E2eScal.SaSpecChecker
+import E2eScal.VbSpecChecker
+import E2eScal.VeSpecChecker
+import E2eScal.HsSpec
+import E2eScal.SdSpec
+import E2eScal.SaSpec
+import E2eScal.VbSpec
+import E2eScal.VeSpec
+import E2eScal.HsSpecK
+import E2eScal.SdSpecK
+import E2eScal.SaSpecK
+import E2eScal.VbSpecK
+import E2eScal.VeSpecK
+import E2eScal.PwSpecKA
+import E2eScal.WitHsGA
+import E2eScal.WitHsGR
+import E2eScal.WitSdGA
+import E2eScal.WitSdGR
+import E2eScal.WitSaGA
+import E2eScal.WitSaGR
+import E2eScal.WitVbGA
+import E2eScal.WitVbGR
+import E2eScal.WitVeGA
+import E2eScal.WitVeGR
 
 -- prysm-e2e scalability stage S1-S2 (INBOX 011): the segment lemmas, the in-sample re-derivations, the
 -- statement-identity checks and the generated instances. Checked with gen/e2e/axioms.py <log> <out> <this file>.
@@ -2080,3 +2113,187 @@ import E2eScal.Gen5VeDec
 #print axioms E2eScal.sLt
 #print axioms E2eScal.sm_accept_is_kindN
 #print axioms E2eScal.sm_reject_is_kindN
+#print axioms E2e.hsChecker_wellFormed
+#print axioms E2e.phs_accepted_is_enc
+#print axioms E2e.phs_enc_size
+#print axioms E2e.phs_roundtrip
+#print axioms E2e.phs_serialize
+#print axioms E2e.phs_serialize_checker
+#print axioms E2e.phs_spec_accepts_iff
+#print axioms E2e.phs_spec_rejects
+#print axioms E2e.phs_toValue_fits
+#print axioms E2e.phs_toValue_fits_checker
+#print axioms E2e.phs_toValue_injective
+#print axioms E2e.phs_toValue_surjective
+#print axioms E2e.phs_toValue_surjective'
+#print axioms E2e.prysmHsDesc_checker
+#print axioms E2e.prysmHsDesc_deserialize_checker
+#print axioms E2e.prysmHsDesc_fixedSize
+#print axioms E2e.prysmHsDesc_serialize_checker
+#print axioms E2e.prysmHsDesc_wellFormed
+#print axioms E2e.prysmSaDesc_checker
+#print axioms E2e.prysmSaDesc_deserialize_checker
+#print axioms E2e.prysmSaDesc_fixedSize
+#print axioms E2e.prysmSaDesc_serialize_checker
+#print axioms E2e.prysmSaDesc_wellFormed
+#print axioms E2e.prysmSdDesc_checker
+#print axioms E2e.prysmSdDesc_deserialize_checker
+#print axioms E2e.prysmSdDesc_fixedSize
+#print axioms E2e.prysmSdDesc_serialize_checker
+#print axioms E2e.prysmSdDesc_wellFormed
+#print axioms E2e.prysmVbDesc_checker
+#print axioms E2e.prysmVbDesc_deserialize_checker
+#print axioms E2e.prysmVbDesc_fixedSize
+#print axioms E2e.prysmVbDesc_serialize_checker
+#print axioms E2e.prysmVbDesc_wellFormed
+#print axioms E2e.prysmVeDesc_checker
+#print axioms E2e.prysmVeDesc_deserialize_checker
+#print axioms E2e.prysmVeDesc_fixedSize
+#print axioms E2e.prysmVeDesc_serialize_checker
+#print axioms E2e.prysmVeDesc_wellFormed
+#print axioms E2e.psa_accepted_is_enc
+#print axioms E2e.psa_enc_size
+#print axioms E2e.psa_roundtrip
+#print axioms E2e.psa_serialize
+#print axioms E2e.psa_serialize_checker
+#print axioms E2e.psa_spec_accepts_iff
+#print axioms E2e.psa_spec_rejects
+#print axioms E2e.psa_toValue_fits
+#print axioms E2e.psa_toValue_fits_checker
+#print axioms E2e.psa_toValue_injective
+#print axioms E2e.psa_toValue_surjective
+#print axioms E2e.psa_toValue_surjective'
+#print axioms E2e.psd_accepted_is_enc
+#print axioms E2e.psd_enc_size
+#print axioms E2e.psd_roundtrip
+#print axioms E2e.psd_serialize
+#print axioms E2e.psd_serialize_checker
+#print axioms E2e.psd_spec_accepts_iff
+#print axioms E2e.psd_spec_rejects
+#print axioms E2e.psd_toValue_fits
+#print axioms E2e.psd_toValue_fits_checker
+#print axioms E2e.psd_toValue_injective
+#print axioms E2e.psd_toValue_surjective
+#print axioms E2e.psd_toValue_surjective'
+#print axioms E2e.pvb_accepted_is_enc
+#print axioms E2e.pvb_enc_size
+#print axioms E2e.pvb_roundtrip
+#print axioms E2e.pvb_serialize
+#print axioms E2e.pvb_serialize_checker
+#print axioms E2e.pvb_spec_accepts_iff
+#print axioms E2e.pvb_spec_rejects
+#print axioms E2e.pvb_toValue_fits
+#print axioms E2e.pvb_toValue_fits_checker
+#print axioms E2e.pvb_toValue_injective
+#print axioms E2e.pvb_toValue_surjective
+#print axioms E2e.pvb_toValue_surjective'
+#print axioms E2e.pve_accepted_is_enc
+#print axioms E2e.pve_enc_size
+#print axioms E2e.pve_roundtrip
+#print axioms E2e.pve_serialize
+#print axioms E2e.pve_serialize_checker
+#print axioms E2e.pve_spec_accepts_iff
+#print axioms E2e.pve_spec_rejects
+#print axioms E2e.pve_toValue_fits
+#print axioms E2e.pve_toValue_fits_checker
+#print axioms E2e.pve_toValue_injective
+#print axioms E2e.pve_toValue_surjective
+#print axioms E2e.pve_toValue_surjective'
+#print axioms E2e.saChecker_wellFormed
+#print axioms E2e.sdChecker_wellFormed
+#print axioms E2e.vbChecker_wellFormed
+#print axioms E2e.veChecker_wellFormed
+#print axioms E2eScal.G5C.hs_e2e_accept_spec_k
+#print axioms E2eScal.G5C.hs_e2e_reject_complete
+#print axioms E2eScal.G5C.hs_e2e_reject_size_spec
+#print axioms E2eScal.G5C.sa_accept_hand
+#print axioms E2eScal.G5C.sa_accept_same
+#print axioms E2eScal.G5C.sa_e2e_accept_spec_k
+#print axioms E2eScal.G5C.sa_e2e_reject_complete
+#print axioms E2eScal.G5C.sa_e2e_reject_size_spec
+#print axioms E2eScal.G5C.sd_e2e_accept_spec_k
+#print axioms E2eScal.G5C.sd_e2e_reject_complete
+#print axioms E2eScal.G5C.sd_e2e_reject_size_spec
+#print axioms E2eScal.G5C.vb_accept_hand
+#print axioms E2eScal.G5C.vb_accept_same
+#print axioms E2eScal.G5C.vb_e2e_accept_spec_k
+#print axioms E2eScal.G5C.vb_e2e_reject_complete
+#print axioms E2eScal.G5C.vb_e2e_reject_size_spec
+#print axioms E2eScal.G5C.ve_accept_hand
+#print axioms E2eScal.G5C.ve_accept_same
+#print axioms E2eScal.G5C.ve_e2e_accept_spec_k
+#print axioms E2eScal.G5C.ve_e2e_reject_complete
+#print axioms E2eScal.G5C.ve_e2e_reject_size_spec
+#print axioms E2eScal.H4.pw_e2e_accept_spec_k
+#print axioms E2eScal.WitHsGA.P_len
+#print axioms E2eScal.WitHsGA.hf113
+#print axioms E2eScal.WitHsGA.hf119
+#print axioms E2eScal.WitHsGA.hf9
+#print axioms E2eScal.WitHsGA.hk113
+#print axioms E2eScal.WitHsGA.hk119
+#print axioms E2eScal.WitHsGA.hk9
+#print axioms E2eScal.WitHsGA.hs_accept_runs
+#print axioms E2eScal.WitHsGA.label_bump
+#print axioms E2eScal.WitHsGA.label_wb
+#print axioms E2eScal.WitHsGA.lift_heap
+#print axioms E2eScal.WitHsGA.prog_eq
+#print axioms E2eScal.WitHsGR.P_len
+#print axioms E2eScal.WitHsGR.hf1
+#print axioms E2eScal.WitHsGR.hk1
+#print axioms E2eScal.WitHsGR.hs_reject_runs
+#print axioms E2eScal.WitHsGR.label_err
+#print axioms E2eScal.WitSaGA.P_len
+#print axioms E2eScal.WitSaGA.hf1
+#print axioms E2eScal.WitSaGA.hf74
+#print axioms E2eScal.WitSaGA.hk1
+#print axioms E2eScal.WitSaGA.hk74
+#print axioms E2eScal.WitSaGA.prog_eq
+#print axioms E2eScal.WitSaGA.sa_accept_runs
+#print axioms E2eScal.WitSaGR.P_len
+#print axioms E2eScal.WitSaGR.hf1
+#print axioms E2eScal.WitSaGR.hk1
+#print axioms E2eScal.WitSaGR.label_err
+#print axioms E2eScal.WitSaGR.sa_reject_runs
+#print axioms E2eScal.WitSdGA.P_len
+#print axioms E2eScal.WitSdGA.hf114
+#print axioms E2eScal.WitSdGA.hf120
+#print axioms E2eScal.WitSdGA.hf9
+#print axioms E2eScal.WitSdGA.hk114
+#print axioms E2eScal.WitSdGA.hk120
+#print axioms E2eScal.WitSdGA.hk9
+#print axioms E2eScal.WitSdGA.label_bump
+#print axioms E2eScal.WitSdGA.label_wb
+#print axioms E2eScal.WitSdGA.lift_heap
+#print axioms E2eScal.WitSdGA.prog_eq
+#print axioms E2eScal.WitSdGA.sd_accept_runs
+#print axioms E2eScal.WitSdGR.P_len
+#print axioms E2eScal.WitSdGR.hf1
+#print axioms E2eScal.WitSdGR.hk1
+#print axioms E2eScal.WitSdGR.label_err
+#print axioms E2eScal.WitSdGR.sd_reject_runs
+#print axioms E2eScal.WitVbGA.P_len
+#print axioms E2eScal.WitVbGA.hf1
+#print axioms E2eScal.WitVbGA.hf74
+#print axioms E2eScal.WitVbGA.hk1
+#print axioms E2eScal.WitVbGA.hk74
+#print axioms E2eScal.WitVbGA.prog_eq
+#print axioms E2eScal.WitVbGA.vb_accept_runs
+#print axioms E2eScal.WitVbGR.P_len
+#print axioms E2eScal.WitVbGR.hf1
+#print axioms E2eScal.WitVbGR.hk1
+#print axioms E2eScal.WitVbGR.label_err
+#print axioms E2eScal.WitVbGR.vb_reject_runs
+#print axioms E2eScal.WitVeGA.P_len
+#print axioms E2eScal.WitVeGA.hf1
+#print axioms E2eScal.WitVeGA.hf108
+#print axioms E2eScal.WitVeGA.hf171
+#print axioms E2eScal.WitVeGA.hk1
+#print axioms E2eScal.WitVeGA.hk108
+#print axioms E2eScal.WitVeGA.hk171
+#print axioms E2eScal.WitVeGA.prog_eq
+#print axioms E2eScal.WitVeGA.ve_accept_runs
+#print axioms E2eScal.WitVeGR.P_len
+#print axioms E2eScal.WitVeGR.hf1
+#print axioms E2eScal.WitVeGR.hk1
+#print axioms E2eScal.WitVeGR.label_err
+#print axioms E2eScal.WitVeGR.ve_reject_runs
