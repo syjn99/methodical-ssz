@@ -1,28 +1,52 @@
 #!/usr/bin/env python3
-"""Verified inventory of the pinned target's SSZ functions (unit G5-C). Python 3 standard library only.
+"""Inventory of the pinned target's SSZ methods (units G5-C, G5-C2). Python 3 standard library only.
 
   inventory.py names <names.txt>
       write the theorem names of the FIXED mapping table below (input of `inventory_decls.lean`)
+  inventory.py methods <p1cbin-amd64.nm> [<out.json>]
+      read the `go tool nm` listing of the pinned ELF (not committed, 2 MB; MANIFEST section 2), check its sha256
+      against the `nm sha256` line of `prysm/go1.26.10/build-ids.txt`, and write the list of SSZ methods of the target
+      (default `prysm/go1.26.10/ssz-methods.json`). This list is the denominator of the inventory.
   inventory.py run <decls.tsv> <INVENTORY.md> <INVENTORY.json>
-      read `prysm/go1.26.10/functions.json` (every function of the pinned target), the committed axioms gate record
-      `prysm/go1.26.10/e2e/axioms-gate.json`, the code constants of `lean/{E2e,E2eAd,E2eScal}` (`def X : Program :=
-      include_x64_rt "…S"`) and <decls.tsv> (output of `gen/tools/inventory_decls.lean` for the names above, run on the
-      built tree), and write the table.
+      read `prysm/go1.26.10/ssz-methods.json` (every SSZ method of the pinned target), `prysm/go1.26.10/functions.json`
+      (the DUMPED subset: the functions with a `.S` text), `prysm/ir/ir-mainnet.json` (field shapes, for the flat
+      population), the committed axioms gate record `prysm/go1.26.10/e2e/axioms-gate.json`, the code constants of
+      `lean/{E2e,E2eAd,E2eScal}/**` (`def X : Program := include_x64_rt "…S"`) and <decls.tsv> (output of
+      `gen/tools/inventory_decls.lean` for the names above, run on the built tree of the same commit), and write the
+      table.
   (cwd = fv/kraken)
+
+Three denominators are kept apart: (1) the SSZ methods of the target (`ssz-methods.json`, per method kind);
+(2) the dumped functions (`functions.json`); (3) the 16-type flat DEVELOPMENT population of the GEN5 line (`FLAT16`).
+The flat fixed-size types of the target are computed from the IR by `FLAT_RULE`; those outside `FLAT16` are listed.
 
 Rule. A function's state comes ONLY from the mapping table and the declarations in <decls.tsv>:
   * every theorem named in the table must exist (kind `theorem`) and have only the standard axioms
-    (`propext`, `Classical.choice`, `Quot.sound`); otherwise the script FAILS (exit 1) - the table cannot overstate;
-  * the accept / reject / spec theorems of a row must have, in their TYPE, the code constant whose included `.S` is
-    that function of the target (review g5-r1: key on the code constant, not on a file name or header); else FAIL;
+    (`propext`, `Classical.choice`, `Quot.sound`); otherwise the script FAILS (exit 1);
+  * the accept / reject / spec_k / reject_size_spec theorems of a decoder row, and the theorems of an encoder or
+    SizeSSZ row, must have, in their TYPE, the code constant whose included `.S` is that function of the target, and
+    that function must be the SUBJECT: the only one of the theorem's target code constants that no other of them calls
+    (call graph = `call_targets` of `functions.json`); a constant counts only if its `.S` is in a link table of the
+    pinned ELF (`../prysm/go1.26.10/e2e/[<unit>/]link/norm/<function>.S`); else FAIL;
   * a witness must use (in its proof) the row's accept / reject theorem, and `accept_spec_k` the accept theorem,
     `reject_size_spec` the reject theorem; else FAIL;
   * a decoder is "complete" (in this sense only) when accept, size reject, spec alignment (spec_k, reject_size_spec,
     reject_complete), codec equality / correspondence of the Desc, accept witness and reject witness are all present
     under these checks; "partial" when some are; "none" when the type has no row or no theorem.
   * an encoder has a "fast path" theorem when its row names one; growslice paths and encoder rejects are listed.
-Types of `functions.json` without a row are "not started". Exit 0 = table written, 1 = a check failed (nothing
-written), 2 = usage.
+Types without a row are "not started". Exit 0 = table written, 1 = a check failed (nothing written), 2 = usage.
+
+Limits (what the checks do NOT detect; also written into INVENTORY.md):
+  * `codec` and `reject_complete` are checked for existence, kind and axioms only. Their types hold no code constant
+    and their proofs use no mapped theorem, so a row that names ANOTHER type's codec or reject_complete theorem passes
+    (review g5c-r1 controls m03, m04). Keying them (e.g. to the row's Desc constant) needs a new column in
+    `inventory_decls.lean`; not done.
+  * The subject rule uses the call graph of `functions.json`; a theorem whose type holds two target code constants
+    where neither calls the other fails (no subject), it is not resolved.
+  * The mapping table itself is hand-written: the script checks the named theorems, not that the theorem's statement
+    says what its part name means (that is the review of the statement).
+  * <decls.tsv> carries the Lean version but no commit id; that it was made on the built tree of the same commit is
+    a procedure step, not a check.
 """
 import json
 import pathlib
@@ -126,6 +150,17 @@ WHAT_COMPLETE_EXCLUDES = [
     "growslice / T-7 (encoder capacity growth beyond the listed theorems)",
     "x86-64 hardware execution (semantics = Kraken's model of the amd64 instructions; no hardware run)",
 ]
+CANNOT_DETECT = [
+    "a row whose `codec` or `reject_complete` names ANOTHER type's theorem: these two parts are checked for existence, "
+    "kind and axioms only (their types hold no code constant, their proofs use no mapped theorem; review g5c-r1 m03, "
+    "m04). Keying them to the row's Desc constant needs a new column in `inventory_decls.lean`; not done",
+    "that a theorem's statement says what its part name means (accept, reject, spec): the mapping table is "
+    "hand-written; the statements are checked by review and by the kinds, not by this script",
+    "a theorem with two target code constants of which neither calls the other (it fails: no single subject)",
+    "that <decls.tsv> was made on the built tree of the same commit (its header has the Lean version, no commit id)",
+    "methods outside `github.com/OffchainLabs/prysm/v7/` (e.g. `github.com/holiman/uint256`) and SSZ methods with "
+    "names outside the listed kinds",
+]
 
 
 def names():
@@ -140,18 +175,109 @@ def names():
     return list(dict.fromkeys(out))
 
 
+PIN_S = re.compile(r"^\.\./prysm/go1\.26\.10/e2e/(?:\w+/)?link/norm/([^/]+)\.S$")
+
+
 def code_constants():
-    """Lean code constant (full name) -> normalized function key `pkg_with_underscores.Type.Method`."""
-    m = {}
+    """Lean code constant (full name) -> normalized function key `pkg_with_underscores.Type.Method`, for constants
+    whose `.S` is in a link table of the pinned ELF (review g5c-r1 S1); other constants -> None (not a target
+    function: local stand-ins, other builds such as `opt-r1`). Scans the three trees recursively; a constant name
+    defined twice is a failure (returned in the second value)."""
+    m, dup = {}, []
     pat = re.compile(r'^def (\w+) : Program := include_x64_rt "([^"]+)"', re.M)
     for d in ("E2e", "E2eAd", "E2eScal"):
-        for f in sorted((KR / "lean" / d).glob("*.lean")):
+        for f in sorted((KR / "lean" / d).rglob("*.lean")):
             t = f.read_text()
             ns = re.search(r"^namespace ([\w.]+)", t, re.M)
             for name, path in pat.findall(t):
                 full = (ns.group(1) + "." if ns else "") + name
-                m[full] = pathlib.Path(path).name[:-2] if path.endswith(".S") else pathlib.Path(path).name
-    return m
+                if full in m:
+                    dup.append(full)
+                hit = PIN_S.match(path)
+                m[full] = hit.group(1) if hit else None
+    return m, dup
+
+
+# ---------------------------------------------------------------- denominator (1): SSZ methods of the target
+SSZ_KINDS = ["UnmarshalSSZ", "MarshalSSZTo", "MarshalSSZ", "SizeSSZ", "HashTreeRoot", "HashTreeRootWith",
+             "ProgressiveHashTreeRoot", "ProgressiveHashTreeRootWith", "MaxSizeSSZ"]
+SCOPE = "github.com/OffchainLabs/prysm/v7/"
+NM_SYM = re.compile(r"^((?:[\w.-]+/)*[\w-]+)\.(?:\(\*(\w+)\)|(\w+))\.(\w+)$")
+METHODS_JSON = "prysm/go1.26.10/ssz-methods.json"
+
+
+def build_ids():
+    out = {}
+    for line in open(KR / "prysm/go1.26.10/build-ids.txt"):
+        k, _, v = line.partition(":")
+        out[k.strip()] = v.strip()
+    return out
+
+
+def methods(nm_p, out_p):
+    import hashlib
+    bid = build_ids()
+    h = hashlib.sha256(open(nm_p, "rb").read()).hexdigest()
+    if h != bid.get("nm sha256"):
+        print(f"FAIL {nm_p}: sha256 {h} != build-ids.txt nm sha256 {bid.get('nm sha256')}")
+        return 1
+    meth, other = {}, {}
+    for line in open(nm_p):
+        parts = line.split(None, 3)
+        if len(parts) != 4 or parts[2] not in ("T", "t"):
+            continue
+        m = NM_SYM.match(parts[3].strip())
+        if not m or m.group(4) not in SSZ_KINDS:
+            continue
+        pkg, typ, kind = m.group(1), m.group(2) or m.group(3), m.group(4)
+        if not pkg.startswith(SCOPE):
+            other[pkg] = other.get(pkg, 0) + 1
+            continue
+        meth.setdefault((pkg, typ, kind), []).append(parts[3].strip())
+    rows = [dict(package=p, type=t, method=k, symbols=sorted(s)) for (p, t, k), s in sorted(meth.items())]
+    out = dict(schema="fvkraken.ssz-methods/1", source="`go tool nm` listing of the pinned ELF (not committed)",
+               nm_sha256=h, elf_sha256=bid.get("elf sha256"),
+               rule=f"text symbols (nm type T or t) `<pkg>.<Type>.<Method>` or `<pkg>.(*<Type>).<Method>` with "
+                    f"<pkg> under `{SCOPE}` and <Method> in {SSZ_KINDS}; one row per (package, type, method); "
+                    "`symbols` lists the receiver forms present (a value-receiver method also has its compiler "
+                    "pointer wrapper)",
+               out_of_scope_symbols=dict(sorted(other.items())), methods=rows)
+    head = {k: v for k, v in out.items() if k != "methods"}
+    txt = json.dumps(head, indent=1)[:-2] + ',\n "methods": [\n'
+    txt += ",\n".join("  " + json.dumps(r) for r in rows) + "\n ]\n}\n"
+    open(out_p, "w").write(txt)
+    print(json.dumps({k: sum(r["method"] == k for r in rows) for k in SSZ_KINDS}))
+    return 0
+
+
+# ---------------------------------------------------------------- flat fixed-size types of the target (IR)
+FLAT_RULE = ("IR record `ir` of `prysm/ir/ir-mainnet.json` (the ELF is built without the `minimal` tag): "
+             "`variable` false, and every field is a byte vector (`k` vector of `byte`), an unsigned integer "
+             "(`k` uint), a bool (`k` bool) or a uint overlay (`k` overlay of a uint, not a bitfield); "
+             "no nested container, no list, no bitfield, no vector of non-bytes")
+
+
+def field_flat(v):
+    k = v.get("k")
+    if k in ("uint", "bool"):
+        return True
+    if k == "vector":
+        return (v.get("elem") or {}).get("k") == "byte"
+    if k == "overlay":
+        return (v.get("underlying") or {}).get("k") == "uint" and not v.get("bitfield")
+    return False
+
+
+def ir_types():
+    d = json.load(open(KR / "prysm/ir/ir-mainnet.json"))
+    out, bad = {}, []
+    for c in d["configs"]:
+        for t in c.get("types") or []:
+            key = (t["package"], t["name"])
+            if key in out and out[key] != t.get("ir"):
+                bad.append(key)
+            out.setdefault(key, t.get("ir"))
+    return out, bad
 
 
 def run(decls_p, md_p, json_p):
@@ -180,8 +306,12 @@ def run(decls_p, md_p, json_p):
             ax = set() if D[n]["axioms"] == "-" else set(D[n]["axioms"].split(","))
             if not ax <= STD:
                 fails.append(f"{n}: non-standard axioms {sorted(ax - STD)}")
-    cc = code_constants()
+    cc, dup = code_constants()
+    for n in dup:
+        fails.append(f"code constant {n} is defined twice under lean/")
     fn_by_key = {re.sub(r"\(\*?(\w+)\)", r"\1", f["symbol"]).replace("/", "_").replace("-", "_"): f for f in funcs}
+    sym_key = {f["symbol"]: k for k, f in fn_by_key.items()}
+    callees = {k: {sym_key[c] for c in f.get("call_targets", {}) if c in sym_key} for k, f in fn_by_key.items()}
 
     def progs(n):
         p = D.get(n, {}).get("programs", "-")
@@ -199,7 +329,14 @@ def run(decls_p, md_p, json_p):
         hits = [c for c in progs(n) if cc.get(c) == k]
         if not hits:
             fails.append(f"{n}: no code constant of {k} in its type (programs: {progs(n)})")
-        return bool(hits)
+            return False
+        # subject: the target functions of the theorem's code constants that no other of them calls
+        fs = {cc[c] for c in progs(n) if cc.get(c) in fn_by_key}
+        roots = sorted(f for f in fs if not any(f in callees[g] for g in fs if g != f))
+        if roots != [k]:
+            fails.append(f"{n}: subject {roots} is not {k} (programs: {progs(n)}; a callee's code is not the subject)")
+            return False
+        return True
 
     rows = {}
     for (pkg, typ), r in DECODERS.items():
@@ -229,9 +366,38 @@ def run(decls_p, md_p, json_p):
             if n in D:
                 code_ok(n, pkg, typ, "SizeSSZ")
         rows[(pkg, typ, "SizeSSZ")] = dict(state="proved", missing=[], theorems=r, note="")
+    # ---------------------------------------------------------------- denominators
+    bid = build_ids()
+    sm = json.load(open(KR / METHODS_JSON))
+    if sm.get("nm_sha256") != bid.get("nm sha256") or sm.get("elf_sha256") != bid.get("elf sha256"):
+        fails.append(f"{METHODS_JSON}: nm / elf sha256 differ from build-ids.txt")
+    target = {(r["package"], r["type"], r["method"]): r for r in sm["methods"]}
+    dumped = {(f["package"], f["type"], f["method"]): f for f in funcs if f["type"] is not None}
+    for key in dumped:
+        if key not in target:
+            fails.append(f"functions.json {'.'.join(key)}: not an SSZ method of {METHODS_JSON}")
     for (pkg, typ, meth) in rows:
         if symkey(pkg, typ, meth) not in fn_by_key:
             fails.append(f"mapping row {pkg}.{typ}.{meth}: no such function in functions.json")
+        if (pkg, typ, meth) not in target:
+            fails.append(f"mapping row {pkg}.{typ}.{meth}: not an SSZ method of the target")
+    ir, ir_bad = ir_types()
+    for key in ir_bad:
+        fails.append(f"IR: two different records for {'.'.join(key)}")
+    target_types = sorted({(p, t) for (p, t, _) in target})
+    flat_target, no_ir = [], []
+    for key in target_types:
+        rec = ir.get(key)
+        if rec is None:
+            no_ir.append(key)
+        elif rec.get("variable") is False and rec.get("fields") and all(field_flat(f["v"]) for f in rec["fields"]):
+            flat_target.append(key)
+    for t in FLAT16:
+        if (V1A, t) not in flat_target:
+            fails.append(f"FLAT16 type {t}: not a flat fixed-size type of the target by FLAT_RULE")
+    for t in NESTED:
+        if (V1A, t) in flat_target:
+            fails.append(f"NESTED type {t}: flat by FLAT_RULE")
     if gate.get("verdict") != "PASS":
         fails.append(f"committed axioms gate verdict {gate.get('verdict')}")
     if fails:
@@ -239,76 +405,123 @@ def run(decls_p, md_p, json_p):
             print("FAIL", f)
         return 1
 
-    # ---------------------------------------------------------------- totals
-    meths = {}
-    for f in funcs:
-        meths.setdefault(f["method"], []).append(f)
+    # ---------------------------------------------------------------- table and totals
     table = []
     started_types = {(p, t) for (p, t, _) in rows}
-    for f in funcs:
-        if f["type"] is None:
-            continue
-        key = (f["package"], f["type"], f["method"])
+    for key in sorted(target):
+        pkg, typ, meth = key
         r = rows.get(key)
         if r is None:
-            state = "not started" if (f["package"], f["type"]) not in started_types else "none"
+            state = "not started" if (pkg, typ) not in started_types else "none"
             r = dict(state=state, missing=[], theorems={}, note="")
-        table.append(dict(symbol=f["symbol"], package=f["package"], type=f["type"], method=f["method"],
-                          kind=f["kind"], **r))
-    dec_rows = [t for t in table if t["method"] == "UnmarshalSSZ"]
+        f = dumped.get(key)
+        table.append(dict(symbols=target[key]["symbols"], package=pkg, type=typ, method=meth,
+                          dumped=f is not None, kind=f["kind"] if f else None, **r))
+    kinds = [k for k in SSZ_KINDS if any(t["method"] == k for t in table)]
+    by_kind = {}
+    for k in kinds:
+        tk = [t for t in table if t["method"] == k]
+        mapped = [t for t in tk if t["theorems"]]
+        if k == "UnmarshalSSZ":
+            comp = sum(t["state"] == "complete" for t in tk)
+            part = sum(t["state"] == "partial" for t in tk)
+        else:  # no done-contract is defined for this kind here: a mapped function is "partial"
+            comp, part = 0, len(mapped)
+        by_kind[k] = dict(target=len(tk), functions_json=sum(t["dumped"] for t in tk), mapped=len(mapped),
+                          complete=comp, partial=part)
+    runtime = [f["symbol"] for f in funcs if f["type"] is None]
+    dev = {t: rows[(V1A, t, "UnmarshalSSZ")]["state"] for t in FLAT16}
+    flat_ns = [k for k in flat_target if k not in {(V1A, t) for t in FLAT16}]
+    flat_ns_state = {f"{p.rsplit('/', 1)[-1]}.{t}": ("not started" if (p, t) not in started_types else "started")
+                     for p, t in flat_ns}
     tot = dict(
-        functions_total=len(funcs),
-        by_method={m: len(v) for m, v in sorted(meths.items())},
-        hash_tree_root_functions_in_target=sum(1 for f in funcs if f["method"].startswith("HashTreeRoot")),
-        decoders=dict(complete=sum(t["state"] == "complete" for t in dec_rows),
-                      partial=sum(t["state"] == "partial" for t in dec_rows),
-                      none=sum(t["state"] in ("none", "not started") for t in dec_rows)),
-        encoders=dict(fast_path=sum(t["method"] == "MarshalSSZTo" and t["state"] == "fast path" for t in table),
-                      none=sum(t["method"] == "MarshalSSZTo" and t["state"] != "fast path" for t in table)),
-        marshal_ssz=dict(proved=0, none=len(meths.get("MarshalSSZ", []))),
-        size_ssz=dict(proved=sum(t["method"] == "SizeSSZ" and t["state"] == "proved" for t in table),
-                      none=sum(t["method"] == "SizeSSZ" and t["state"] != "proved" for t in table)),
-        hash_tree_root=dict(proved=0),
+        denominators={
+            "target_ssz_methods": f"{METHODS_JSON} (from the nm listing of the pinned ELF, sha256 {sm['nm_sha256']})",
+            "dumped_functions": "prysm/go1.26.10/functions.json (functions with a `.S` text)",
+            "development_population": "FLAT16 of gen/tools/inventory.py (the 16 flat types opened by the GEN5 line)"},
+        target_ssz_methods=len(target), target_types=len(target_types),
+        functions_json_total=len(funcs), functions_json_runtime_helpers=runtime,
+        by_kind=by_kind,
+        types_not_started=sum(1 for p, t in target_types if (p, t) not in started_types),
+        development_population=FLAT16,
+        development_population_decoders_complete=f"{sum(v == 'complete' for v in dev.values())}/{len(FLAT16)}",
+        development_population_not_complete={t: rows[(V1A, t, "UnmarshalSSZ")]["missing"]
+                                             for t, v in dev.items() if v != "complete"},
+        flat_rule=FLAT_RULE,
+        flat_fixed_types_in_target=len(flat_target),
+        flat_outside_development_population=flat_ns_state,
+        target_types_without_ir=[f"{p.rsplit('/', 1)[-1]}.{t}" for p, t in no_ir],
+        nested={t: rows[(V1A, t, "UnmarshalSSZ")]["state"] for t in NESTED},
     )
-    flat = {t: rows[(V1A, t, "UnmarshalSSZ")]["state"] for t in FLAT16}
-    tot["flat_population"] = FLAT16
-    tot["flat_population_decoders_complete"] = f"{sum(v == 'complete' for v in flat.values())}/{len(FLAT16)}"
-    tot["flat_population_not_complete"] = {t: rows[(V1A, t, "UnmarshalSSZ")]["missing"] for t, v in flat.items()
-                                           if v != "complete"}
-    tot["m_flat_dec_reached"] = all(v == "complete" for v in flat.values())
-    tot["nested"] = {t: rows[(V1A, t, "UnmarshalSSZ")]["state"] for t in NESTED}
-    out = dict(schema="fvkraken.inventory/1", source="gen/tools/inventory.py", decls_header=header,
+    out = dict(schema="fvkraken.inventory/2", source="gen/tools/inventory.py", decls_header=header,
+               methods_source=dict(file=METHODS_JSON, nm_sha256=sm["nm_sha256"], elf_sha256=sm["elf_sha256"]),
                axioms_gate=dict(verdict=gate["verdict"], declarations=gate["declarations"]),
                definition_complete="decoder: accept + size reject + spec alignment (accept_spec_k, reject_size_spec, "
                "reject_complete) + Desc codec equality / correspondence + accept witness + reject witness, all "
-               "kernel-checked theorems with standard axioms; accept / reject / spec theorems keyed to the function by "
-               "the code constant in their type; witnesses and spec theorems use the mapped accept / reject theorem",
-               complete_does_not_include=WHAT_COMPLETE_EXCLUDES, totals=tot, functions=table)
+               "kernel-checked theorems with standard axioms; accept / reject / spec_k / reject_size_spec theorems "
+               "keyed to the function by the code constant in their type (the function is the subject: no other "
+               "target code constant of the theorem calls it); witnesses and spec theorems use the mapped accept / "
+               "reject theorem",
+               complete_does_not_include=WHAT_COMPLETE_EXCLUDES, cannot_detect=CANNOT_DETECT, totals=tot,
+               functions=table)
     json.dump(out, open(json_p, "w"), indent=1)
-    md = ["# Verified inventory of the pinned target's SSZ functions", "",
-          "Generated by `gen/tools/inventory.py` (do not edit); input: `prysm/go1.26.10/functions.json`, the "
-          "committed axioms gate record, the code constants of `lean/`, and the output of "
-          "`gen/tools/inventory_decls.lean` on the built tree. Target: the Go 1.26.10 ELF of `prysm/go1.26.10/` "
-          "(sha256 in `build-ids.txt`). The Go 1.26.3 phase work is a different binary and is not counted here.", "",
+    bk = by_kind
+    ud = bk["UnmarshalSSZ"]
+    ns_names = ", ".join(n for n, s in flat_ns_state.items() if s == "not started")
+    md = ["# Inventory of the pinned target's SSZ methods", "",
+          "Generated by `gen/tools/inventory.py` (do not edit). Target: the Go 1.26.10 ELF of `prysm/go1.26.10/` "
+          f"(sha256 `{sm['elf_sha256']}`, `build-ids.txt`). The Go 1.26.3 phase work is a different binary and is "
+          "not counted here.", "",
+          f"Inputs: `{METHODS_JSON}` (made by `inventory.py methods` from the `go tool nm` listing of the ELF, "
+          f"sha256 `{sm['nm_sha256']}`; the listing is not committed), `prysm/go1.26.10/functions.json`, "
+          "`prysm/ir/ir-mainnet.json`, the committed axioms gate record, the code constants of `lean/`, and the output "
+          "of `gen/tools/inventory_decls.lean` on the built tree.", "",
           f"Declarations header: `{header}`. Axioms gate: {gate['verdict']}, {gate['declarations']} declarations.", "",
-          "## Totals", "",
-          f"- Functions in the target (`functions.json`): {tot['functions_total']} "
-          f"({', '.join(f'{m} {n}' for m, n in tot['by_method'].items())}).",
-          f"- Decoders (`UnmarshalSSZ`): complete {tot['decoders']['complete']}, partial {tot['decoders']['partial']}, "
-          f"none {tot['decoders']['none']}.",
-          f"- Encoders (`MarshalSSZTo`): with a fast-path theorem {tot['encoders']['fast_path']}, none "
-          f"{tot['encoders']['none']}. `MarshalSSZ`: none of {tot['marshal_ssz']['none']}.",
-          f"- `SizeSSZ`: proved {tot['size_ssz']['proved']}, none {tot['size_ssz']['none']}.",
-          f"- `HashTreeRoot*`: none proved; {tot['hash_tree_root_functions_in_target']} such functions are in "
-          "`functions.json` (the dumped function set of the target).",
-          f"- Flat fixed-size population (GEN5 plan, {len(FLAT16)} types): decoders complete "
-          f"{tot['flat_population_decoders_complete']}; M-flat-dec reached: {tot['m_flat_dec_reached']}.",
-          ]
-    for t, miss in tot["flat_population_not_complete"].items():
+          "## Denominators", "",
+          f"1. SSZ methods of the target: {len(target)} methods of {len(target_types)} types (`{METHODS_JSON}`). "
+          "This is the total in every line below.",
+          f"2. Dumped functions (`functions.json`, a `.S` text exists): {len(funcs)}, of which "
+          f"{len(funcs) - len(runtime)} are SSZ methods and {len(runtime)} are runtime helpers "
+          f"({', '.join(r.rsplit('.', 1)[-1] for r in runtime)}). A theorem needs a dumped function.",
+          f"3. Development population of the GEN5 line: the {len(FLAT16)} flat types of `FLAT16`. "
+          "It is not the set of flat fixed-size types of the target (see the flat types below).", "",
+          "## Totals by method kind", "",
+          "| method kind | in the target | in `functions.json` | with a mapping row | complete | partial |",
+          "| --- | --- | --- | --- | --- | --- |"]
+    for k, v in bk.items():
+        md.append(f"| `{k}` | {v['target']} | {v['functions_json']} | {v['mapped']} | {v['complete']} | "
+                  f"{v['partial']} |")
+    md += ["", "\"complete\" is defined for `UnmarshalSSZ` only (below). For the other kinds no done-contract is "
+           "defined here: a function with at least one mapped theorem is \"partial\".", "",
+           "## Summary", "",
+           f"- Decoders: complete {ud['complete']} of the {ud['target']} `UnmarshalSSZ` methods of the target "
+           f"({ud['functions_json']} dumped); partial {ud['partial']}; none {ud['target'] - ud['complete'] - ud['partial']}.",
+           f"- Encoders `MarshalSSZTo`: a fast-path theorem for {bk['MarshalSSZTo']['partial']} of "
+           f"{bk['MarshalSSZTo']['target']}. `MarshalSSZ`: none of {bk['MarshalSSZ']['target']} "
+           f"({bk['MarshalSSZ']['functions_json']} dumped).",
+           f"- `SizeSSZ`: a theorem for {bk['SizeSSZ']['partial']} of {bk['SizeSSZ']['target']}."]
+    htr = [k for k in bk if "HashTreeRoot" in k]
+    md.append("- Hash tree root: no theorem. " + "; ".join(
+        f"`{k}` {bk[k]['target']} in the target, {bk[k]['functions_json']} dumped" for k in htr) + ".")
+    other = [k for k in bk if k not in ("UnmarshalSSZ", "MarshalSSZTo", "MarshalSSZ", "SizeSSZ") and k not in htr]
+    if other:
+        md.append("- Other: " + "; ".join(f"`{k}` {bk[k]['target']} in the target, none proved" for k in other) + ".")
+    md += [f"- Types with no mapping row (\"not started\", every method): {tot['types_not_started']} of "
+           f"{len(target_types)}.",
+           f"- Decoders of the {len(FLAT16)}-type development population: "
+           f"{tot['development_population_decoders_complete']} complete (defined sense)."]
+    for t, miss in tot["development_population_not_complete"].items():
         md.append(f"  - {t}: missing {', '.join(miss)}.")
-    md += [f"- Nested: {', '.join(f'{t} {s}' for t, s in tot['nested'].items())} (not in the flat population).", "",
+    md += [f"- Flat fixed-size types of the target (rule below): {len(flat_target)}. Outside the development "
+           f"population: {len(flat_ns)}; not started: "
+           f"{sum(s == 'not started' for s in flat_ns_state.values())} ({ns_names}).",
+           f"- Nested: {', '.join(f'{t} {s}' for t, s in tot['nested'].items())} (not flat)."]
+    if no_ir:
+        md.append(f"- Target types without an IR record (not classified): {', '.join(tot['target_types_without_ir'])}.")
+    md += ["", f"Flat rule: {FLAT_RULE}.", "",
            "## What \"complete\" means here", "", out["definition_complete"] + ".", "",
            "It does NOT include:", ""] + [f"- {x}" for x in WHAT_COMPLETE_EXCLUDES] + [
+           "", "## What this table cannot detect", ""] + [f"- {x}" for x in CANNOT_DETECT] + [
            "", "## Functions with at least one theorem", "",
            "| function | state | missing | theorems |", "| --- | --- | --- | --- |"]
     for t in table:
@@ -322,8 +535,9 @@ def run(decls_p, md_p, json_p):
     md += ["", f"## Not started ({len(ns)} types, every method)", "",
            ", ".join(f"{p}.{t}" for p, t in ns), ""]
     open(md_p, "w").write("\n".join(md))
-    print(json.dumps({k: tot[k] for k in ("functions_total", "decoders", "encoders", "size_ssz",
-                                         "flat_population_decoders_complete", "m_flat_dec_reached")}))
+    print(json.dumps(dict(target_ssz_methods=len(target), by_kind=by_kind,
+                          development_population=tot["development_population_decoders_complete"],
+                          flat_fixed_types_in_target=len(flat_target), flat_outside=len(flat_ns))))
     return 0
 
 
@@ -332,6 +546,8 @@ if __name__ == "__main__":
     if len(sys.argv) == 3 and sys.argv[1] == "names":
         open(sys.argv[2], "w").write("\n".join(names()) + "\n")
         sys.exit(0)
+    if len(sys.argv) in (3, 4) and sys.argv[1] == "methods":
+        sys.exit(methods(sys.argv[2], sys.argv[3] if len(sys.argv) == 4 else KR / METHODS_JSON))
     if len(sys.argv) == 5 and sys.argv[1] == "run":
         sys.exit(run(*sys.argv[2:5]))
     print(__doc__)
