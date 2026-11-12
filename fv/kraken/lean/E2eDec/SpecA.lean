@@ -6,7 +6,7 @@ import E2eEnc.SpecD
 
 An input that EthLib accepts against `prysmDcDesc` is `pdcEnc g` for a `g : PDc` with `g.toValue = v`
 (`pdc_accepted_is_enc`); its bytes are `root ‖ dcOff ‖ u64Bytes cols` (`pdc_enc_toList`), and the machine code decodes it
-into `g` (`dcd_e2e_accept_main` with `n = g.cols.length`). The text of `E2eList/IaSpecA.lean`.
+into `g` (`dcd_e2e_accept_main` with `n = g.cols.length`). The text of `Prysm/IndexedAttestation/DecodeSpecAccept.lean`.
 -/
 
 open Machine Runtime TestTarget EthLib.Serialization.Ssz E2eDec.Code E2eEnc

@@ -10,7 +10,7 @@ the completeness property then no longer hold for that size, so the proof must f
 (`lv/negcases-spec.json`). The `example`s lie after the theorems; the negative runner cuts the module at the target.
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz E2eList E2eHb.Code
+open Machine Runtime TestTarget EthLib.Serialization.Ssz E2eHb.Code
 variable [Host]
 
 namespace E2eHb.NegSpec

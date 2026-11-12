@@ -1,0 +1,51 @@
+# old path	new path	meaning (paths are relative to the repository root)
+# Step sync-and-indexed-attestation: the library E2eList (SyncAggregate, SyncCommittee and IndexedAttestation decoders).
+fv/kraken/lean/E2eList/BumpT.lean	fv/kraken/lean/Prysm/RuntimeModel/BumpAllocatorByteSliceDispatch.lean	witness-only runtime.makeslice model that bumps by 24 per element for the []uint8 element type word of a [][]byte backing array and by 1 otherwise (SyncCommittee, HistoricalBatch and Deposit witnesses use it)
+fv/kraken/lean/E2eList/BumpT3.lean	fv/kraken/lean/Prysm/RuntimeModel/BumpAllocatorUint64AndStructDispatch.lean	witness-only models: runtime.makeslice that bumps by 8 per element for the uint64 type word and by 1 otherwise, runtime.newobject that bumps by 96 for the AttestationData struct type word and by 72 otherwise (IndexedAttestation witness host)
+fv/kraken/lean/E2eList/BumpAllocT.S	fv/kraken/lean/Prysm/RuntimeModel/BumpAllocT.S	assembly of the 24-or-1 bump makeslice model (file name kept: .S files are not renamed)
+fv/kraken/lean/E2eList/BumpAllocT3.S	fv/kraken/lean/Prysm/RuntimeModel/BumpAllocT3.S	assembly of the 8-or-1 bump makeslice model (file name kept)
+fv/kraken/lean/E2eList/BumpNewT3.S	fv/kraken/lean/Prysm/RuntimeModel/BumpNewT3.S	assembly of the 96-or-72 bump newobject model (file name kept)
+fv/kraken/lean/E2eList/Code.lean	fv/kraken/lean/Prysm/SyncAggregate/Code.lean	program constants of SyncAggregate.UnmarshalSSZ and SyncCommittee.UnmarshalSSZ from link set lv/link (shared, needs a split; tie, first type of the header)
+fv/kraken/lean/E2eList/CodeIa.lean	fv/kraken/lean/Prysm/IndexedAttestation/Code.lean	program constant of IndexedAttestation.UnmarshalSSZ from link set lv/link-t3
+fv/kraken/lean/E2eList/Data.lean	fv/kraken/lean/Prysm/ElfData/SyncAggregateAndSyncCommittee.lean	ELF data definitions of link set lv/link (SyncAggregate and SyncCommittee decoders): the []uint8 type word
+fv/kraken/lean/E2eList/DataIa.lean	fv/kraken/lean/Prysm/ElfData/IndexedAttestation.lean	ELF data definitions of link set lv/link-t3 that the IndexedAttestation statements read (type words, format strings, error globals)
+fv/kraken/lean/E2eList/Include.lean	fv/kraken/lean/Prysm/ElfData/SyncAggregateAndSyncCommitteeReader.lean	the command lv_data_include that reads the data files of link set lv/link (trusted reader, text of the Checkpoint reader)
+fv/kraken/lean/E2eList/IncludeIa.lean	fv/kraken/lean/Prysm/ElfData/IndexedAttestationReader.lean	the command lvt3_data_include that reads the data files of link set lv/link-t3 (trusted reader)
+fv/kraken/lean/E2eList/Defs.lean	fv/kraken/lean/Prysm/SyncCommittee/SpecDefinitions.lean	SSZ content structures, toValue and encoding of SyncAggregate and SyncCommittee, and the [][]byte element and header predicates (shared, needs a split; SyncCommittee owns 6 of 9 declarations)
+fv/kraken/lean/E2eList/DefsIa.lean	fv/kraken/lean/Prysm/IndexedAttestation/SpecDefinitions.lean	hand Desc, SSZ content structure, toValue, offset bytes and encoding of IndexedAttestation
+fv/kraken/lean/E2eList/Desc.lean	fv/kraken/lean/Prysm/SyncAggregate/SpecDescription.lean	hand Desc of SyncAggregate and SyncCommittee from consensus-specs altair (shared, needs a split; tie, first type of the header)
+fv/kraken/lean/E2eList/IaAccept.lean	fv/kraken/lean/Prysm/IndexedAttestation/DecodeAccept.lean	IndexedAttestation decoder accept path and its arithmetic and memory helper lemmas
+fv/kraken/lean/E2eList/IaAddr.lean	fv/kraken/lean/Prysm/IndexedAttestation/AddressTactic.lean	the address tactic iaaddr of the IndexedAttestation proofs (role not in the table)
+fv/kraken/lean/E2eList/IaDescEq.lean	fv/kraken/lean/Prysm/IndexedAttestation/SpecEquivalence.lean	hand Desc and Desc-checker Desc of IndexedAttestation give the same serialize and deserialize
+fv/kraken/lean/E2eList/IaLoop.lean	fv/kraken/lean/Prysm/IndexedAttestation/DecodeLoop.lean	IndexedAttestation decoder: the AttestingIndices element loop
+fv/kraken/lean/E2eList/IaReject.lean	fv/kraken/lean/Prysm/IndexedAttestation/DecodeRejectSize.lean	IndexedAttestation decoder: size reject and offset reject (mixed roles: named by the first)
+fv/kraken/lean/E2eList/IaRejectCall.lean	fv/kraken/lean/Prysm/IndexedAttestation/DecodeRejectAlignment.lean	IndexedAttestation decoder: alignment reject and overflow reject through fmt.Errorf, proved with the added premise error word nonzero (mixed roles: named by the first)
+fv/kraken/lean/E2eList/IaSpec.lean	fv/kraken/lean/Prysm/IndexedAttestation/Spec.lean	IndexedAttestation bridge lemmas to EthLib (fits, surjective, serialize, decoder checks)
+fv/kraken/lean/E2eList/IaSpecA.lean	fv/kraken/lean/Prysm/IndexedAttestation/DecodeSpecAccept.lean	IndexedAttestation decoder accept path against EthLib
+fv/kraken/lean/E2eList/IaSpecChecker.lean	fv/kraken/lean/Prysm/IndexedAttestation/SpecChecker.lean	generated Desc-checker Desc of IndexedAttestation (gen/e2e/lvdescterm.py)
+fv/kraken/lean/E2eList/IaSpecR.lean	fv/kraken/lean/Prysm/IndexedAttestation/DecodeSpecReject.lean	IndexedAttestation decoder size and offset rejects against EthLib, and the EthLib reject cases
+fv/kraken/lean/E2eList/IaSpecRNz.lean	fv/kraken/lean/Prysm/IndexedAttestation/DecodeSpecRejectErrorWordNonzero.lean	IndexedAttestation decoder alignment and overflow rejects against EthLib, with the added premise error word nonzero
+fv/kraken/lean/E2eList/SaAccept.lean	fv/kraken/lean/Prysm/SyncAggregate/DecodeAccept.lean	SyncAggregate decoder accept path
+fv/kraken/lean/E2eList/SaDescEq.lean	fv/kraken/lean/Prysm/SyncAggregate/SpecEquivalence.lean	hand Desc and Desc-checker Desc of SyncAggregate give the same serialize and deserialize
+fv/kraken/lean/E2eList/SaReject.lean	fv/kraken/lean/Prysm/SyncAggregate/DecodeRejectSize.lean	SyncAggregate decoder size reject
+fv/kraken/lean/E2eList/SaSpec.lean	fv/kraken/lean/Prysm/SyncAggregate/Spec.lean	SyncAggregate bridge lemmas to EthLib
+fv/kraken/lean/E2eList/SaSpecChecker.lean	fv/kraken/lean/Prysm/SyncAggregate/SpecChecker.lean	generated Desc-checker Desc of SyncAggregate (gen/e2e/lvdescterm.py)
+fv/kraken/lean/E2eList/SaSpecK.lean	fv/kraken/lean/Prysm/SyncAggregate/DecodeSpec.lean	SyncAggregate decoder against EthLib: accept, size reject, reject completeness
+fv/kraken/lean/E2eList/ScAccept.lean	fv/kraken/lean/Prysm/SyncCommittee/DecodeAccept.lean	SyncCommittee decoder accept path
+fv/kraken/lean/E2eList/ScDescEq.lean	fv/kraken/lean/Prysm/SyncCommittee/SpecEquivalence.lean	hand Desc and Desc-checker Desc of SyncCommittee give the same serialize and deserialize
+fv/kraken/lean/E2eList/ScLemmas.lean	fv/kraken/lean/Prysm/SyncCommittee/DecodeLoopLemmas.lean	list and memory-chunk lemmas of the SyncCommittee element loop (shared, needs a split: IndexedAttestation, HistoricalBatch, Deposit, DataColumnsByRootIdentifier and Codec/Segment use them; role not in the table)
+fv/kraken/lean/E2eList/ScLoop.lean	fv/kraken/lean/Prysm/SyncCommittee/DecodeLoop.lean	SyncCommittee decoder: the 512-iteration element loop, and the tactic laddr
+fv/kraken/lean/E2eList/ScReject.lean	fv/kraken/lean/Prysm/SyncCommittee/DecodeRejectSize.lean	SyncCommittee decoder size reject
+fv/kraken/lean/E2eList/ScSpec.lean	fv/kraken/lean/Prysm/SyncCommittee/Spec.lean	SyncCommittee bridge lemmas to EthLib
+fv/kraken/lean/E2eList/ScSpecChecker.lean	fv/kraken/lean/Prysm/SyncCommittee/SpecChecker.lean	generated Desc-checker Desc of SyncCommittee (gen/e2e/lvdescterm.py)
+fv/kraken/lean/E2eList/ScSpecK.lean	fv/kraken/lean/Prysm/SyncCommittee/DecodeSpec.lean	SyncCommittee decoder against EthLib: accept, size reject, reject completeness
+fv/kraken/lean/E2eList/Seg.lean	fv/kraken/lean/Prysm/SyncAggregate/DecodeFieldSegments.lean	segment lemmas of the SyncAggregate field widths 64 and 96 (role not in the table; Codec/Segment uses them)
+fv/kraken/lean/E2eList/StmtIa.lean	fv/kraken/lean/Prysm/IndexedAttestation/Statements.lean	frozen statements of the IndexedAttestation decoder (the original alignment and overflow statements stay unproved)
+fv/kraken/lean/E2eList/StmtIaNz.lean	fv/kraken/lean/Prysm/IndexedAttestation/StatementsErrorWordNonzero.lean	corrected IndexedAttestation alignment and overflow statements with the added premise error word nonzero
+fv/kraken/lean/E2eList/StmtSa.lean	fv/kraken/lean/Prysm/SyncAggregate/Statements.lean	frozen statements of the SyncAggregate decoder
+fv/kraken/lean/E2eList/StmtSc.lean	fv/kraken/lean/Prysm/SyncCommittee/Statements.lean	frozen statements of the SyncCommittee decoder
+fv/kraken/lean/E2eList/WitIaA.lean	fv/kraken/lean/Prysm/IndexedAttestation/WitnessDecodeAccept.lean	witness of the IndexedAttestation decoder accept path for every n <= 2048
+fv/kraken/lean/E2eList/WitIaR.lean	fv/kraken/lean/Prysm/IndexedAttestation/WitnessDecodeRejectAlignment.lean	witnesses of the IndexedAttestation alignment and overflow rejects (error word nonzero)
+fv/kraken/lean/E2eList/WitIaR2.lean	fv/kraken/lean/Prysm/IndexedAttestation/WitnessDecodeRejectSize.lean	witnesses of the IndexedAttestation size and offset rejects
+fv/kraken/lean/E2eList/WitSaA.lean	fv/kraken/lean/Prysm/SyncAggregate/WitnessDecodeAccept.lean	witness of the SyncAggregate decoder accept path
+fv/kraken/lean/E2eList/WitScA.lean	fv/kraken/lean/Prysm/SyncCommittee/WitnessDecodeAccept.lean	witness of the SyncCommittee decoder accept path

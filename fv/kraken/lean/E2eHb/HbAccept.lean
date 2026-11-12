@@ -12,12 +12,12 @@ import E2eHb.StmtHb
   rax = 0, `jmp L_1c0`;
 * StateRoots loop 108–153, 104–107: `hb_loop2`;
 * epilogue 155–159 (hand steps, `add $0x38`).
-Proof text: `E2eList.sc_e2e_accept_main` (`ScAccept.lean`): its head and epilogue steps with the frame size and the
+Proof text: `Prysm.SyncCommittee.Decode.accept` (`ScAccept.lean`): its head and epilogue steps with the frame size and the
 receiver offsets changed; the middle is a second copy of the head steps; there is no tail field segment.
 Statement: the frozen `E2eHb.hb_accept_stmt`.
 -/
 
-open Machine Runtime TestTarget E2eList E2eHb.Code
+open Machine Runtime TestTarget E2eHb.Code
 variable [Host]
 
 namespace E2eHb
@@ -145,8 +145,8 @@ theorem hb_e2e_accept_main : hb_accept_stmt := by
         show rsp.toBitVec - 64 + 24 = rsp.toBitVec - 40 by laddr, show rsp.toBitVec - 64 + 32 = rsp.toBitVec - 32 by laddr,
         show rsp.toBitVec - 64 + 40 = rsp.toBitVec - 24 by laddr, show rsp.toBitVec - 64 + 48 = rsp.toBitVec - 16 by laddr,
         show rsp.toBitVec - 64 - 8 = rsp.toBitVec - 72 by laddr]
-      simp only [show lvHdrs 32 [] ++ zz (24 * (8192 - 0)) = List.replicate (24 * 8192) 0 from rfl, List.take_zero,
-        show lvElems [] ([] : List (List UInt8)) = Std.ExtHashMap.emp from rfl, Std.ExtHashMap.sep_emp]
+      simp only [show Prysm.SyncCommittee.sliceHeaders 32 [] ++ Prysm.SyncCommittee.zz (24 * (8192 - 0)) = List.replicate (24 * 8192) 0 from rfl, List.take_zero,
+        show Prysm.SyncCommittee.elementBlocks [] ([] : List (List UInt8)) = Std.ExtHashMap.emp from rfl, Std.ExtHashMap.sep_emp]
       ecancel)) ?_
   rintro ⟨d4, pc4⟩ ⟨hpc4, hrsp4, hrbp4, hr144, ps1, l18', l20', l28', l30', spl', rslot', lo', hps1, g18, g20, g28,
     g30, gspl, grs, glo, Hm4⟩
@@ -223,8 +223,8 @@ theorem hb_e2e_accept_main : hb_accept_stmt := by
     rfl rfl rfl
     (by
       dsimp only
-      simp only [show lvHdrs 32 [] ++ zz (24 * (8192 - 0)) = List.replicate (24 * 8192) 0 from rfl, List.take_zero,
-        show lvElems [] ([] : List (List UInt8)) = Std.ExtHashMap.emp from rfl, Std.ExtHashMap.sep_emp]
+      simp only [show Prysm.SyncCommittee.sliceHeaders 32 [] ++ Prysm.SyncCommittee.zz (24 * (8192 - 0)) = List.replicate (24 * 8192) 0 from rfl, List.take_zero,
+        show Prysm.SyncCommittee.elementBlocks [] ([] : List (List UInt8)) = Std.ExtHashMap.emp from rfl, Std.ExtHashMap.sep_emp]
       ecancel)) ?_
   rintro ⟨d6, pc6⟩ ⟨hpc6, hrsp6, hrbp6, hr146, ps2, m18, m20, m28, m30, mspl, mlo, hps2, q18, q20, q28, q30, qspl,
     qlo, Hm6⟩
@@ -255,7 +255,7 @@ theorem hb_e2e_accept_main : hb_accept_stmt := by
     show rsp.toBitVec - 64 + 40 = rsp.toBitVec - 24 by laddr, show rsp.toBitVec - 64 + 48 = rsp.toBitVec - 16 by laddr,
     show rsp.toBitVec - 64 - 8 = rsp.toBitVec - 72 by laddr,
     show avail - 24 * 8192 - 32 * 8192 - 24 * 8192 - 32 * 8192 = avail - 917504 by omega,
-    show zz (24 * (8192 - 8192)) = [] from rfl, List.append_nil, List.append_nil,
+    show Prysm.SyncCommittee.zz (24 * (8192 - 8192)) = [] from rfl, List.append_nil, List.append_nil,
     List.take_of_length_le (by omega : brs.length ≤ 8192), List.take_of_length_le (by omega : srs.length ≤ 8192)]
     at Hm6
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, rax3.toBitVec, rax5.toBitVec, ps1, ps2, m18, m20, m28, m30, mspl, mlo, hps1, hps2,

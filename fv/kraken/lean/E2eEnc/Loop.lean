@@ -2,7 +2,7 @@ import Machine.Block
 import Machine.Labels
 import Machine.Frame
 import E2eEnc.Code
-import E2eList.ScLemmas
+import Prysm.SyncCommittee.DecodeLoopLemmas
 import Runtime.CopyModel
 import TestTarget.FixedVecEncode
 
@@ -16,7 +16,7 @@ sufficient, so growslice 94 is not reached), 79 `L_132`, 80 `mov %r9,-0x8(%rbx,%
 
 Registers: rax = block pointer `bp`, rbx = L + 8i (bytes written so far, L = len + 36), rcx = capacity `cp`,
 rdx = column pointer `pc`, rsi = i, r8 = n. The block from `bp + L` holds `cb.take (8i) ++ w.drop (8i)`: the first
-8i column bytes, then the 8(n − i) bytes not written yet. The shape of `E2eList.ia_iter` / `ia_exit` / `ia_loop`.
+8i column bytes, then the 8(n − i) bytes not written yet. The shape of `Prysm.IndexedAttestation.Decode.iter` / `ia_exit` / `ia_loop`.
 -/
 
 open Machine Runtime TestTarget E2eEnc.Code
@@ -112,7 +112,7 @@ theorem dc_iter (k : Nat) (hk : DcMarshal.IsInfixAt Host.prog k) (hf : LabelsFre
   split
   case isTrue h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
-    exact E2eList.jge_false512 _ _ (by simp; omega) (by simp; omega) h
+    exact Prysm.SyncCommittee.jge_false512 _ _ (by simp; omega) (by simp; omega) h
   simp only [Effects.All]
   kat hk DcMarshal 85
   kat hk DcMarshal 86

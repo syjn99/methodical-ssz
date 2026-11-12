@@ -1,17 +1,17 @@
 import Codec.Segment.SizeReject
 import Codec.Segment.Bytes32LoopHistoricalBatch
-import E2eList.StmtSc
+import Prysm.SyncCommittee.Statements
 import E2eHb.StmtHb
 
 /-!
 # The SyncCommittee and HistoricalBatch size-reject statements re-derived from `Codec.Segment.rej_size_g`
 
-Each theorem has the frozen statement as its type (`sc_reject_size_stmt`, `hb_reject_size_stmt`); the proof is one
+Each theorem has the frozen statement as its type (`Prysm.SyncCommittee.Decode.reject_size_statement`, `hb_reject_size_stmt`); the proof is one
 application of the general lemma with the block facts read from the real program. The hand proofs
 (`ScReject.lean`, `HbReject.lean`) are unchanged.
 -/
 
-open Machine Runtime TestTarget E2eList E2eHb E2eList.Code E2eHb.Code
+open Machine Runtime TestTarget E2eHb E2eHb.Code
 
 namespace Codec.Segment
 
@@ -24,15 +24,15 @@ macro "rej_infix" hk:term:max prog:ident a:num tmpl:ident : term => `(Codec.infi
   (by simp only [$prog:ident, $tmpl:ident, scN, hbN, List.drop_succ_cons, List.drop_zero, List.length_cons,
     List.length_nil, List.take_succ_cons, List.take_zero, Nat.reduceAdd] <;> first | rfl | decide))
 
-theorem sc_reject_size_g : sc_reject_size_stmt := by
+theorem sc_reject_size_g : Prysm.SyncCommittee.Decode.reject_size_statement := by
   intro k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard hlen
   have hle := Machine.label_at' hk hf (j := 30)
-    (by simp only [ScUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
-    (by simp only [ScUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
+    (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
+    (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   exact rej_size_g 48 24624 (by decide) (by decide) (scN "") ("L_" ++ scN "_0") ("L_" ++ scN "_206")
-    ("L_" ++ scN "_7d") k (k + 9) (k + 30) (rej_infix hk ScUnmarshal 0 rejHead)
-    (glue_of hk (a := 8) (by simp only [ScUnmarshal, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero]))
-    (rej_infix hk ScUnmarshal 9 rejCmp) (rej_infix hk ScUnmarshal 30 rejErr) hle s ra guard e0 e1 fp s2 hfp h2 R
+    ("L_" ++ scN "_7d") k (k + 9) (k + 30) (rej_infix hk Prysm.SyncCommittee.Code.unmarshalSSZ 0 rejHead)
+    (glue_of hk (a := 8) (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero]))
+    (rej_infix hk Prysm.SyncCommittee.Code.unmarshalSSZ 9 rejCmp) (rej_infix hk Prysm.SyncCommittee.Code.unmarshalSSZ 30 rejErr) hle s ra guard e0 e1 fp s2 hfp h2 R
     h_mem hguard (fun h => hlen (UInt64.toNat_inj.mp (by rw [h]; rfl)))
 
 theorem hb_reject_size_g : hb_reject_size_stmt := by

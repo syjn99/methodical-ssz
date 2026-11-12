@@ -14,7 +14,7 @@ Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` a
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/e2e/lv/link-enc.
 
 Data items are located from the converted code. The Lean statements use the existing names
-`ElfData.CheckpointAndEpoch.e2eU8Type_addr`, `ElfData.CheckpointAndEpoch.e2eErrBytesLength_addr` and `E2eList.Data.lvErrListTooBig_addr`;
+`ElfData.CheckpointAndEpoch.e2eU8Type_addr`, `ElfData.CheckpointAndEpoch.e2eErrBytesLength_addr` and `ElfData.IndexedAttestation.lvErrListTooBig_addr`;
 `data` asserts that the operands of this .S are those items (same label and offset) and writes the
 items again under the `enc` prefix so that check (f) binds them to the ELF in this directory.
 """

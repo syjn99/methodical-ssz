@@ -3,7 +3,7 @@ import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
 import Prysm.ElfData.CheckpointAndEpoch
-import E2eList.DataIa
+import Prysm.ElfData.IndexedAttestation
 import E2eEnc.Defs
 import E2eDec.Code
 import E2eDec.Data
@@ -12,7 +12,7 @@ import E2eDec.Data
 # Hand STATEMENTS of the round-trip decoder `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ`
 
 Statements only. Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
-Statement shape: `E2eList/StmtIa.lean`.
+Statement shape: `Prysm/IndexedAttestation/Statements.lean`.
 
     func (c *DataColumnsByRootIdentifier) UnmarshalSSZ(buf []byte) error {              // fulu.ssz.go:1778
         if size < 36 { return ssz.ErrSize }                                              // size reject
@@ -72,7 +72,7 @@ def dcd_reject_offset_stmt : Prop :=
       ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Eq (off.At (s.regs.rbx.toBitVec + 32))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2eList.Data.lvErrInvalidVariableOffset_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.IndexedAttestation.lvErrInvalidVariableOffset_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrInvalidVariableOffset" + 8).toBitVec)
       ⋆ R)
     (hguard : guard.toNat + 16 < s.regs.rsp.toNat) (hlen : 36 ≤ s.regs.rcx.toNat),
@@ -84,7 +84,7 @@ def dcd_reject_offset_stmt : Prop :=
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
           ⋆ Eq (off.At (s.regs.rbx.toBitVec + 32))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2eList.Data.lvErrInvalidVariableOffset_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.IndexedAttestation.lvErrInvalidVariableOffset_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrInvalidVariableOffset" + 8).toBitVec)
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
@@ -118,7 +118,7 @@ def dcd_accept_stmt : Prop :=
       ⋆ R)
     (hguard : guard.toNat + 16 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = 36 + 8 * n)
     (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hav : 32 + 8 * n ≤ avail)
-    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmsU : MakesliceC Heap E2eList.Data.lvU64Type_addr 8 S)
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmsU : MakesliceC Heap ElfData.IndexedAttestation.lvU64Type_addr 8 S)
     (hmm : MemmoveC S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
@@ -178,7 +178,7 @@ def dcd_accept_spec_stmt : Prop :=
     (hguard : guard.toNat + 16 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size)
     (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63)
     (hav : 32 + 8 * ((bsA.size - 36) / 8) ≤ avail)
-    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmsU : MakesliceC Heap E2eList.Data.lvU64Type_addr 8 S)
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmsU : MakesliceC Heap ElfData.IndexedAttestation.lvU64Type_addr 8 S)
     (hmm : MemmoveC S),
     ∃ g : PDc, g.toValue = v ∧ bsA = pdcEnc g ∧
     Eventually (step1 Host.exe)

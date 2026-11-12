@@ -13,7 +13,7 @@ Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/e2e/lv/li
 
 Every operand that the HistoricalBatch proofs read equals an item of an existing link set: the uint8 type word and
 ssz.ErrSize (Checkpoint set, `Prysm.ElfData.CheckpointAndEpoch`) and the `[]uint8` element type word of the `[][]byte` backing array
-(SyncCommittee, `E2eList.Data.lvSliceType`). The script asserts these equalities. It writes the one
+(SyncCommittee, `ElfData.SyncAggregateAndSyncCommittee.lvSliceType`). The script asserts these equalities. It writes the one
 data file `lvSliceType.data` again, so that check (f) compares it with the ELF in this link set too.
 """
 import json

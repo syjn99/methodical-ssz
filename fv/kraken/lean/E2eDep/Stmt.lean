@@ -4,8 +4,8 @@ import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
 import Prysm.ElfData.CheckpointAndEpoch
-import E2eList.Data
-import E2eList.Defs
+import Prysm.ElfData.SyncAggregateAndSyncCommittee
+import Prysm.SyncCommittee.SpecDefinitions
 import E2eScal.H4Code
 import E2eDep.Code
 
@@ -40,7 +40,7 @@ Error paths not on the accept path: `fmt.errorf` wrap (Deposit_Data accepts ever
 Size reject: directives 2–10, `cmp $0x4d8,%rcx; jne L_85` taken, 31–36.
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz E2eList E2eDep.Code
+open Machine Runtime TestTarget EthLib.Serialization.Ssz E2eDep.Code
 variable [Host]
 
 namespace E2eDep
@@ -106,7 +106,7 @@ def dep_accept_stmt : Prop :=
       ⋆ Eq (aC.At (s.regs.rax.toBitVec + 24)) ⋆ Eq (aD.At (s.regs.rax.toBitVec + 32))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat + 104 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 1240) (hav : 2144 ≤ avail)
-    (hmsA : MakesliceC Heap E2eList.Data.lvSliceType_addr 24 (Sd + 48))
+    (hmsA : MakesliceC Heap ElfData.SyncAggregateAndSyncCommittee.lvSliceType_addr 24 (Sd + 48))
     (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (Sd + 48)) (hmm : MemmoveC (Sd + 48))
     (hno : NewobjectC Heap depDataType_addr 120 (Sd + 48))
     (hmsD : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 Sd) (hmmD : MemmoveC Sd),
@@ -135,7 +135,7 @@ def dep_accept_stmt : Prop :=
           ⋆ Eq ((Int.toBytes 8 A.toInt).At (s.regs.rax.toBitVec + 8))
           ⋆ Eq ((Int.toBytes 8 33).At (s.regs.rax.toBitVec + 16)) ⋆ Eq ((Int.toBytes 8 33).At (s.regs.rax.toBitVec + 24))
           ⋆ Eq ((Int.toBytes 8 po.toInt).At (s.regs.rax.toBitVec + 32))
-          ⋆ Eq ((lvHdrs 32 ps).At A) ⋆ lvElems ps proofs
+          ⋆ Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps).At A) ⋆ Prysm.SyncCommittee.elementBlocks ps proofs
           ⋆ Eq ((List.replicate 8 0).At po)
           ⋆ Eq ((Int.toBytes 8 p1.toInt).At (po + 8))
           ⋆ Eq ((Int.toBytes 8 48).At (po + 16)) ⋆ Eq ((Int.toBytes 8 48).At (po + 24))

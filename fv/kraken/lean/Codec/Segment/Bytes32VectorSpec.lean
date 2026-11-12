@@ -9,7 +9,7 @@ The element lemmas (`toV32`, `allFit_bv32`, `serializeEach_bv32`, `concatParts_v
 -/
 
 namespace Codec.Segment
-open EthLib.Serialization.Ssz Spec TestTarget E2eList E2eHb
+open EthLib.Serialization.Ssz Spec TestTarget E2eHb
 
 theorem vN_flatten_length (n : Nat) (v : Vector (Vector UInt8 32) n) :
     (v.toList.map (·.toList)).flatten.length = 32 * n := by
@@ -26,7 +26,7 @@ theorem vN_serialize (n : Nat) (hn : 32 * n < 2 ^ 32) (v : Vector (Vector UInt8 
     serializeEach_bv32, bind, Except.bind]
   rw [show (v.toList.map (·.toArray)).map (fun _ => Desc.isFixed (.byteVector 32))
       = (v.toList.map (·.toArray)).map (fun _ => true) from rfl,
-    assemble_inline_ok _ (by rw [hs]; simp; omega), concatParts_v32]
+    Prysm.SyncCommittee.assemble_inline_ok _ (by rw [hs]; simp; omega), concatParts_v32]
 
 /-- Every `32 n`-byte array is the end-to-end layout of some `Vector[Bytes32, n]`. -/
 theorem vN_of_bytes (n : Nat) (d : Array UInt8) (hd : d.size = 32 * n) :

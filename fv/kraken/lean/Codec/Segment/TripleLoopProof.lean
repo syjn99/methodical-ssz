@@ -4,7 +4,7 @@ import Codec.Segment.Bytes32LoopProof
 /-!
 # Element loop of the `3·2^k` shape: one iteration, the exit and the whole loop, for any count `n < 2^31`
 
-Generalized once from `E2eList.sc_iter` / `sc_exit` / `sc_loop`: the directive indices are block offsets, the
+Generalized once from `Prysm.SyncCommittee.Decode.iter` / `Prysm.SyncCommittee.Decode.exit` / `Prysm.SyncCommittee.Decode.loop`: the directive indices are block offsets, the
 frame slots and receiver words are parameters with address equations, the input is at `bfs`, the gaps are `Glue`
 (`nop`) and `GlueSrc` (`lea src(%rbx),%rbx`). The return slot keeps the last `memmove` return address (`jS + 2`).
 
@@ -16,7 +16,7 @@ k ∈ {3, 4, 5} (w ∈ {24, 48, 96}), and the proof is one text (`vtri_iter_body
 `Codec.FixedBytesDecode`. The count `n`, the frame and the labels stay variables.
 -/
 
-open Machine Runtime TestTarget E2eList E2eHb
+open Machine Runtime TestTarget E2eHb
 
 namespace Codec.Segment
 
@@ -43,7 +43,7 @@ local macro "vtri_iter_body " k:num w:num : tactic => `(tactic| (
   split
   case isTrue h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned, BitVec.signed] at h
-    exact jge_false512 _ _ (by simp; omega) (by simp; omega) h
+    exact Prysm.SyncCommittee.jge_false512 _ _ (by simp; omega) (by simp; omega) h
   simp only [Effects.All]
   kat hB1 tHead 3
   apply store_step_at _ _ aI _ _ _ lI _ _ (by rw [← haI]) (by ecancel) (by exact hlI)
@@ -159,12 +159,12 @@ local macro "vtri_iter_body " k:num w:num : tactic => `(tactic| (
   kunfold
   try simp only [ofInt_ofBytes_toBytes64]
   kat hB4 tHdr 4
-  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 8) _ _ _ (zz 8) _ _ (by laddr) (by ecancel) (by rfl)
+  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 8) _ _ _ (Prysm.SyncCommittee.zz 8) _ _ (by laddr) (by ecancel) (by rfl)
   intro m7 H7
   simp only [Width.bytes, Width.bits] at H7
   kunfold
   kat hB4 tHdr 5
-  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 16) _ _ _ (zz 8) _ _ (by laddr) (by ecancel) (by rfl)
+  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 16) _ _ _ (Prysm.SyncCommittee.zz 8) _ _ (by laddr) (by ecancel) (by rfl)
   intro m8 H8
   simp only [Width.bytes, Width.bits] at H8
   kunfold
@@ -188,7 +188,7 @@ local macro "vtri_iter_body " k:num w:num : tactic => `(tactic| (
   -- back block: label, pointer word of header i, rax = i + 1
   kat hB6 tBack 0
   kat hB6 tBack 1
-  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i)) _ _ _ (zz 8) _ _ (by laddr) (by ecancel) (by rfl)
+  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i)) _ _ _ (Prysm.SyncCommittee.zz 8) _ _ (by laddr) (by ecancel) (by rfl)
   intro m9 H9
   simp only [Width.bytes, Width.bits] at H9
   kunfold
@@ -205,7 +205,7 @@ local macro "vtri_iter_body " k:num w:num : tactic => `(tactic| (
     simp [BitVec.toNat_add]; omega
   · dsimp only
     rw [in_split $w n (by omega) bfs pks hpks hpk i hi, arr_join n (by omega) _ A rax3.toBitVec ps i hi hps,
-      List.take_succ_eq_append_getElem hlt, lvElems_snoc ps (List.take i pks) _ _ (by simp [hps]; omega)]
+      List.take_succ_eq_append_getElem hlt, Prysm.SyncCommittee.elementBlocks_snoc ps (List.take i pks) _ _ (by simp [hps]; omega)]
     simp only [hE]
     ecancel))
 
@@ -240,7 +240,7 @@ theorem vtri_iter (k w : Nat) (hkw : TriSize k w) (n : Nat) (hn : n < 2 ^ 31) (l
       ⋆ Eq (spl.At sp) ⋆ Eq (rslot.At (sp - 8)) ⋆ Eq (lo.At (sp - 8 - BitVec.ofNat 64 S)) ⋆ Heap avail
       ⋆ Eq (pks.flatten.At bfs)
       ⋆ Eq ((Int.toBytes 8 A.toInt).At aA) ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 n).toInt).At aL)
-      ⋆ Eq ((lvHdrs (OfNat.ofNat w) ps ++ zz (24 * (n - i))).At A) ⋆ lvElems ps (pks.take i)
+      ⋆ Eq ((Prysm.SyncCommittee.sliceHeaders (OfNat.ofNat w) ps ++ Prysm.SyncCommittee.zz (24 * (n - i))).At A) ⋆ Prysm.SyncCommittee.elementBlocks ps (pks.take i)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
     Eventually (step1 Host.exe)
@@ -254,8 +254,8 @@ theorem vtri_iter (k w : Nat) (hkw : TriSize k w) (n : Nat) (hn : n < 2 ^ 31) (l
           ⋆ Eq (lo'.At (sp - 8 - BitVec.ofNat 64 S)) ⋆ Heap (avail - w)
           ⋆ Eq (pks.flatten.At bfs)
           ⋆ Eq ((Int.toBytes 8 A.toInt).At aA) ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 n).toInt).At aL)
-          ⋆ Eq ((lvHdrs (OfNat.ofNat w) (ps ++ [p]) ++ zz (24 * (n - (i + 1)))).At A)
-          ⋆ lvElems (ps ++ [p]) (pks.take (i + 1))
+          ⋆ Eq ((Prysm.SyncCommittee.sliceHeaders (OfNat.ofNat w) (ps ++ [p]) ++ Prysm.SyncCommittee.zz (24 * (n - (i + 1)))).At A)
+          ⋆ Prysm.SyncCommittee.elementBlocks (ps ++ [p]) (pks.take (i + 1))
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf jH⟩ := by
   rcases hkw with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩
@@ -312,7 +312,7 @@ theorem vtri_loop (k w : Nat) (hkw : TriSize k w) (n : Nat) (hn : n < 2 ^ 31) (l
       ⋆ Eq (spl.At sp) ⋆ Eq (rslot.At (sp - 8)) ⋆ Eq (lo.At (sp - 8 - BitVec.ofNat 64 S)) ⋆ Heap avail
       ⋆ Eq (pks.flatten.At bfs)
       ⋆ Eq ((Int.toBytes 8 A.toInt).At aA) ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 n).toInt).At aL)
-      ⋆ Eq ((lvHdrs (OfNat.ofNat w) ps ++ zz (24 * (n - i))).At A) ⋆ lvElems ps (pks.take i)
+      ⋆ Eq ((Prysm.SyncCommittee.sliceHeaders (OfNat.ofNat w) ps ++ Prysm.SyncCommittee.zz (24 * (n - i))).At A) ⋆ Prysm.SyncCommittee.elementBlocks ps (pks.take i)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) →
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf jE ∧ st.data.regs.rsp = { toBitVec := sp } ∧ st.data.regs.rbp = rbp0
@@ -324,7 +324,7 @@ theorem vtri_loop (k w : Nat) (hkw : TriSize k w) (n : Nat) (hn : n < 2 ^ 31) (l
       ⋆ Eq (spl'.At sp) ⋆ Eq ((Int.toBytes 8 (Host.addrOf (jS + 1 + 1)).toBitVec.toInt).At (sp - 8)) ⋆ Eq (lo'.At (sp - 8 - BitVec.ofNat 64 S)) ⋆ Heap (avail - w * j)
       ⋆ Eq (pks.flatten.At bfs)
       ⋆ Eq ((Int.toBytes 8 A.toInt).At aA) ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 n).toInt).At aL)
-      ⋆ Eq ((lvHdrs (OfNat.ofNat w) ps' ++ zz (24 * (n - n))).At A) ⋆ lvElems ps' (pks.take n)
+      ⋆ Eq ((Prysm.SyncCommittee.sliceHeaders (OfNat.ofNat w) ps' ++ Prysm.SyncCommittee.zz (24 * (n - n))).At A) ⋆ Prysm.SyncCommittee.elementBlocks ps' (pks.take n)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf jH⟩ := by
   intro j

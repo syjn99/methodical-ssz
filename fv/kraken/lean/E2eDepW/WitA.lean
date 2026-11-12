@@ -1,5 +1,5 @@
 import E2eDep.Accept
-import E2eList.BumpT
+import Prysm.RuntimeModel.BumpAllocatorByteSliceDispatch
 import E2eDepW.BumpNew120
 import Runtime.CopyModel
 import Machine.WitnessHost
@@ -9,10 +9,10 @@ import Machine.WitnessHost
 
 The text of `E2eHb.WitHbA` with the Deposit host and layout. It shows that the premises of the frozen statement
 `E2eDep.dep_accept_stmt` are satisfiable, the six contract hypotheses included: both `MakesliceC` instances of the
-Deposit decoder and the one of the Deposit_Data decoder from `E2eList.BumpAllocT`, `NewobjectC … 120` from
+Deposit decoder and the one of the Deposit_Data decoder from `Prysm.RuntimeModel.BumpAllocByteSliceDispatch`, `NewobjectC … 120` from
 `BumpNew120`, both `MemmoveC` from `RtCopy`.
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.Deposit).UnmarshalSSZ` (index 9) and
-`(*v1alpha1.Deposit_Data).UnmarshalSSZ` (165), `BumpAllocT` (308), `BumpNew120` (324), `RtCopy` (330).
+`(*v1alpha1.Deposit_Data).UnmarshalSSZ` (165), `Prysm.RuntimeModel.BumpAllocByteSliceDispatch` (308), `BumpNew120` (324), `RtCopy` (330).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 2144-byte heap, guard word, the 1240 input
 bytes, the 72-byte receiver (protoc struct, `prysm/ir/ir-mainnet.json` gc amd64 layout, size 72: `state` 0, Proof
 header 8 with old pointer word `oP` and len = cap = 0, Data pointer 32 (`oD`), `unknownFields` 40 and `sizeCache`
@@ -23,7 +23,7 @@ For every input of 33 blocks of 32 bytes and a Deposit_Data, and every old point
 decoder returns nil.
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2eList E2eDep E2eDep.Code E2eScal.H4Code E2eDepW
+open Machine Runtime TestTarget Machine.Witness E2eDep E2eDep.Code E2eScal.H4Code E2eDepW
 
 namespace E2eDepW.WitA
 
@@ -31,7 +31,7 @@ def dataLabels : Program :=
   [.label "runtime.fvBump", .label "pad1", .label "pad2", .label "pad3", .label "pad4", .label "pad5",
    .label "pad6", .label "pad7", .label "runtime.writeBarrier"]
 
-def P : Program := dataLabels ++ DepUnmarshal ++ DdUnmarshal ++ BumpAllocT ++ BumpNew120 ++ RtCopy
+def P : Program := dataLabels ++ DepUnmarshal ++ DdUnmarshal ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch ++ BumpNew120 ++ RtCopy
 
 -- `maxRecDepth` (builds of `E2eDepW.WitA`, one run each; scoped per declaration): the default (512)
 -- stops these list computations over the 356-directive host; 1000, 2000, 5000 and 20000 pass (measured with the
@@ -44,27 +44,27 @@ instance host : Host := mkHost P (by rw [P_len]; decide)
 theorem prog_eq : Host.prog = P := rfl
 
 theorem hk9 : DepUnmarshal.IsInfixAt Host.prog 9 :=
-  infixAt_of dataLabels (DdUnmarshal ++ BumpAllocT ++ BumpNew120 ++ RtCopy)
+  infixAt_of dataLabels (DdUnmarshal ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch ++ BumpNew120 ++ RtCopy)
     (by simp [prog_eq, P, List.append_assoc]) rfl
 theorem hk165 : DdUnmarshal.IsInfixAt Host.prog 165 :=
-  infixAt_of (dataLabels ++ DepUnmarshal) (BumpAllocT ++ BumpNew120 ++ RtCopy)
+  infixAt_of (dataLabels ++ DepUnmarshal) (Prysm.RuntimeModel.BumpAllocByteSliceDispatch ++ BumpNew120 ++ RtCopy)
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 set_option maxRecDepth 2000 in
-theorem hk308 : BumpAllocT.IsInfixAt Host.prog 308 :=
+theorem hk308 : Prysm.RuntimeModel.BumpAllocByteSliceDispatch.IsInfixAt Host.prog 308 :=
   infixAt_of (dataLabels ++ DepUnmarshal ++ DdUnmarshal) (BumpNew120 ++ RtCopy)
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 set_option maxRecDepth 2000 in
 theorem hk324 : BumpNew120.IsInfixAt Host.prog 324 :=
-  infixAt_of (dataLabels ++ DepUnmarshal ++ DdUnmarshal ++ BumpAllocT) RtCopy
+  infixAt_of (dataLabels ++ DepUnmarshal ++ DdUnmarshal ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch) RtCopy
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 set_option maxRecDepth 2000 in
 theorem hk330 : RtCopy.IsInfixAt Host.prog 330 :=
-  infixAt_of (dataLabels ++ DepUnmarshal ++ DdUnmarshal ++ BumpAllocT ++ BumpNew120) []
+  infixAt_of (dataLabels ++ DepUnmarshal ++ DdUnmarshal ++ Prysm.RuntimeModel.BumpAllocByteSliceDispatch ++ BumpNew120) []
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 
 theorem hf9 : LabelsFresh DepUnmarshal 9 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf165 : LabelsFresh DdUnmarshal 165 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hf308 : LabelsFresh BumpAllocT 308 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf308 : LabelsFresh Prysm.RuntimeModel.BumpAllocByteSliceDispatch 308 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf330 : LabelsFresh RtCopy 330 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hn308 : ∀ i < 308, Host.prog[i]? ≠ some (.label "runtime.makeslice") :=
   notLabel_of (by rw [prog_eq]; decide)
@@ -77,9 +77,9 @@ theorem label_bump : label "runtime.fvBump" = 0x10000 :=
 theorem label_wb : label "runtime.writeBarrier" = 0x10008 :=
   mk_label P _ 8 _ (by simp [P, dataLabels]) (by decide)
 
-/-- The text of `E2eList.WitScA.u8_ne_slice` (that module declares its own `Host` instance). -/
-theorem u8_ne_slice : ElfData.CheckpointAndEpoch.e2eU8Type_addr ≠ E2eList.Data.lvSliceType_addr := by
-  simp only [ElfData.CheckpointAndEpoch.e2eU8Type_addr, E2eList.Data.lvSliceType_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
+/-- The text of `Prysm.SyncCommittee.Witness.DecodeAccept.u8_ne_slice` (that module declares its own `Host` instance). -/
+theorem u8_ne_slice : ElfData.CheckpointAndEpoch.e2eU8Type_addr ≠ ElfData.SyncAggregateAndSyncCommittee.lvSliceType_addr := by
+  simp only [ElfData.CheckpointAndEpoch.e2eU8Type_addr, ElfData.SyncAggregateAndSyncCommittee.lvSliceType_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
   bv_omega
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
@@ -142,9 +142,9 @@ theorem dep_accept_runs (proofs : List (List UInt8)) (pk wc amt sig oP oD : List
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
       exact H2)
     (by simp [cs0]) rfl (Nat.le_refl _)
-    (bump_makeslice_t24 308 hk308 hn308 hf308) (bump_makeslice_t1 308 hk308 hn308 _ u8_ne_slice)
+    (Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size24 308 hk308 hn308 hf308) (Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size1 308 hk308 hn308 _ u8_ne_slice)
     (rt_memmove 330 hk330 hf330 _) (bump_newobject120 324 hk324 hn324 _)
-    (bump_makeslice_t1 308 hk308 hn308 _ u8_ne_slice) (rt_memmove 330 hk330 hf330 _))
+    (Prysm.RuntimeModel.bump_makeslice_byte_slice_dispatch_size1 308 hk308 hn308 _ u8_ne_slice) (rt_memmove 330 hk330 hf330 _))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1⟩)
 
 /-- Zero input with a fresh `&Deposit{}`; a representative input; all-0xff input. -/

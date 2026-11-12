@@ -1,5 +1,5 @@
 import Codec.StackGuard
-import E2eList.IaAccept
+import Prysm.IndexedAttestation.DecodeAccept
 import E2eEnc.Tail
 import E2eDec.Reject
 import E2eDec.Loop
@@ -7,7 +7,7 @@ import E2eDec.Loop
 /-!
 # Decoder `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ`, accept path (Go 1.26.10 machine code)
 
-The order of `E2eList/IaAccept.lean` (IndexedAttestation accept path): guard and prologue 0–8, size and offset checks 9–15, spills 16–19,
+The order of `Prysm/IndexedAttestation/DecodeAccept.lean` (IndexedAttestation accept path): guard and prologue 0–8, size and offset checks 9–15, spills 16–19,
 BlockRoot `makeslice` 20–23 (`MakesliceC Heap e2eU8Type_addr 1 S`, len 0, cap 32), header stores 24–26, the
 `buf[36:]` pointer 27–35 (the mask of `IaAccept.lean` 18–24 with 36), `writeBarrier = 0` (36–37 `je` taken), 43–47 the pointer store
 and `memmove(pb, buf, 32)`, 48–63 len/cap 32 and the barrier branch, 64–71 alignment and bound checks, 72–75 Columns
@@ -30,7 +30,7 @@ theorem dcd_mask_ones :
     Nat.reduceSub, Nat.reduceMod, Nat.reduceAnd]
 
 omit [Host] in
-/-- `c − 36` as a natural number (the form of `E2eList.ia_sub228`: no `simp` on the negative literal). -/
+/-- `c − 36` as a natural number (the form of `Prysm.IndexedAttestation.Decode.sub228`: no `simp` on the negative literal). -/
 theorem dcd_sub36 (c : BitVec 64) (h : 36 ≤ c.toNat) : (-36 + c).toNat = c.toNat - 36 := by
   rw [BitVec.add_comm, ← BitVec.sub_eq_add_neg, BitVec.toNat_sub_of_le]
   · rfl
@@ -38,7 +38,7 @@ theorem dcd_sub36 (c : BitVec 64) (h : 36 ≤ c.toNat) : (-36 + c).toNat = c.toN
 
 omit [Host] in
 /-- The `buf[36:]` pointer of directives 27–34 (`rbx + (cap − 36 > 0 ? 36 : 0)`) addresses the element bytes: when
-cap = 36 the list is empty. Uses `cap < 2⁶³` (the `sar` sign test). The text of `E2eList.ia_p0`. -/
+cap = 36 the list is empty. Uses `cap < 2⁶³` (the `sar` sign test). The text of `Prysm.IndexedAttestation.Decode.input_pointer_mask`. -/
 theorem dcd_p0 (ib : List UInt8) (n : Nat) (hib : ib.length = 8 * n) (b c : BitVec 64) (hc : 36 + 8 * n ≤ c.toNat)
     (h63 : c.toNat < 2 ^ 63) :
     Eq (ib.At (b + BitVec.zeroExtend 64 (BitVec.extractLsb' 0 32 (BitVec.sshiftRight (-(-36 + c)) 63)
@@ -50,7 +50,7 @@ theorem dcd_p0 (ib : List UInt8) (n : Nat) (hib : ib.length = 8 * n) (b c : BitV
     subst this
     simp only [List.At, List.mapIdx_nil]
   · have hd := dcd_sub36 c (by omega)
-    rw [E2eList.ia_sar63 _ (by omega) (by omega), dcd_mask_ones]
+    rw [Prysm.IndexedAttestation.Decode.sar63 _ (by omega) (by omega), dcd_mask_ones]
 
 -- Measured: heartbeats: the default 200000 fails (`whnf` timeout at the loop call), 400000 passes;
 -- recursion depth: the default fails at `klabel` (directive 185, the `simp` that unfolds the program literal), 1024 passes.
@@ -203,7 +203,7 @@ theorem dcd_e2e_accept_main : dcd_accept_stmt := by
   kunfold
   try simp only [ofInt_ofBytes_toBytes64]
   kat hk DcUnmarshal 34
-  -- name the computed values (as in `E2eList/IaAccept.lean`)
+  -- name the computed values (as in `Prysm/IndexedAttestation/DecodeAccept.lean`)
   have hPib := dcd_p0 ib n hib rbx.toBitVec rdi.toBitVec (by rw [UInt64.toNat_toBitVec]; omega)
     (by rw [UInt64.toNat_toBitVec]; omega)
   have hC := dcd_sub36 rdi.toBitVec (by rw [UInt64.toNat_toBitVec]; omega)

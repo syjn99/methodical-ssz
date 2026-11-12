@@ -8,7 +8,7 @@ Each hand lemma's statement is proved from the general lemma by one `exact` (new
 `HbLemmas.lean` are unchanged). This is the check that the general statements cover the copied ones.
 -/
 
-open Machine Runtime TestTarget E2eList
+open Machine Runtime TestTarget
 
 namespace Codec.Segment
 
@@ -29,38 +29,38 @@ theorem hbIn_split' (bf : BitVec 64) (pks : List (List UInt8)) (hpks : pks.lengt
   in_split 32 8192 (by decide) bf pks hpks hpk i hi
 
 theorem scA_split' (A : BitVec 64) (ps : List (BitVec 64)) (i : Nat) (hi : i < 512) (hps : ps.length = i) :
-    Eq ((lvHdrs 48 ps ++ zz (24 * (512 - i))).At A) = Eq ((lvHdrs 48 ps).At A)
-      ⋆ Eq ((zz 8).At (A + BitVec.ofNat 64 (24 * i))) ⋆ Eq ((zz 8).At (A + BitVec.ofNat 64 (24 * i) + 8))
-      ⋆ Eq ((zz 8).At (A + BitVec.ofNat 64 (24 * i) + 16))
-      ⋆ Eq ((zz (24 * (512 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) :=
+    Eq ((Prysm.SyncCommittee.sliceHeaders 48 ps ++ Prysm.SyncCommittee.zz (24 * (512 - i))).At A) = Eq ((Prysm.SyncCommittee.sliceHeaders 48 ps).At A)
+      ⋆ Eq ((Prysm.SyncCommittee.zz 8).At (A + BitVec.ofNat 64 (24 * i))) ⋆ Eq ((Prysm.SyncCommittee.zz 8).At (A + BitVec.ofNat 64 (24 * i) + 8))
+      ⋆ Eq ((Prysm.SyncCommittee.zz 8).At (A + BitVec.ofNat 64 (24 * i) + 16))
+      ⋆ Eq ((Prysm.SyncCommittee.zz (24 * (512 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) :=
   arr_split 512 (by decide) 48 A ps i hi hps
 theorem hbA_split' (A : BitVec 64) (ps : List (BitVec 64)) (i : Nat) (hi : i < 8192) (hps : ps.length = i) :
-    Eq ((lvHdrs 32 ps ++ zz (24 * (8192 - i))).At A) = Eq ((lvHdrs 32 ps).At A)
-      ⋆ Eq ((zz 8).At (A + BitVec.ofNat 64 (24 * i))) ⋆ Eq ((zz 8).At (A + BitVec.ofNat 64 (24 * i) + 8))
-      ⋆ Eq ((zz 8).At (A + BitVec.ofNat 64 (24 * i) + 16))
-      ⋆ Eq ((zz (24 * (8192 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) :=
+    Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps ++ Prysm.SyncCommittee.zz (24 * (8192 - i))).At A) = Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps).At A)
+      ⋆ Eq ((Prysm.SyncCommittee.zz 8).At (A + BitVec.ofNat 64 (24 * i))) ⋆ Eq ((Prysm.SyncCommittee.zz 8).At (A + BitVec.ofNat 64 (24 * i) + 8))
+      ⋆ Eq ((Prysm.SyncCommittee.zz 8).At (A + BitVec.ofNat 64 (24 * i) + 16))
+      ⋆ Eq ((Prysm.SyncCommittee.zz (24 * (8192 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) :=
   arr_split 8192 (by decide) 32 A ps i hi hps
 
 theorem scA_join' (A p : BitVec 64) (ps : List (BitVec 64)) (i : Nat) (hi : i < 512) (hps : ps.length = i) :
-    Eq ((lvHdrs 48 (ps ++ [p]) ++ zz (24 * (512 - (i + 1)))).At A) = Eq ((lvHdrs 48 ps).At A)
+    Eq ((Prysm.SyncCommittee.sliceHeaders 48 (ps ++ [p]) ++ Prysm.SyncCommittee.zz (24 * (512 - (i + 1)))).At A) = Eq ((Prysm.SyncCommittee.sliceHeaders 48 ps).At A)
       ⋆ Eq ((Int.toBytes 8 p.toInt).At (A + BitVec.ofNat 64 (24 * i)))
       ⋆ Eq ((Int.toBytes 8 48).At (A + BitVec.ofNat 64 (24 * i) + 8))
       ⋆ Eq ((Int.toBytes 8 48).At (A + BitVec.ofNat 64 (24 * i) + 16))
-      ⋆ Eq ((zz (24 * (512 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) :=
+      ⋆ Eq ((Prysm.SyncCommittee.zz (24 * (512 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) :=
   arr_join 512 (by decide) 48 A p ps i hi hps
 theorem hbA_join' (A p : BitVec 64) (ps : List (BitVec 64)) (i : Nat) (hi : i < 8192) (hps : ps.length = i) :
-    Eq ((lvHdrs 32 (ps ++ [p]) ++ zz (24 * (8192 - (i + 1)))).At A) = Eq ((lvHdrs 32 ps).At A)
+    Eq ((Prysm.SyncCommittee.sliceHeaders 32 (ps ++ [p]) ++ Prysm.SyncCommittee.zz (24 * (8192 - (i + 1)))).At A) = Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps).At A)
       ⋆ Eq ((Int.toBytes 8 p.toInt).At (A + BitVec.ofNat 64 (24 * i)))
       ⋆ Eq ((Int.toBytes 8 32).At (A + BitVec.ofNat 64 (24 * i) + 8))
       ⋆ Eq ((Int.toBytes 8 32).At (A + BitVec.ofNat 64 (24 * i) + 16))
-      ⋆ Eq ((zz (24 * (8192 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) :=
+      ⋆ Eq ((Prysm.SyncCommittee.zz (24 * (8192 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) :=
   arr_join 8192 (by decide) 32 A p ps i hi hps
 
 /-- The statements are the hand ones: each hand lemma follows from its instance by `exact`. -/
-example : @E2eList.scIn_split = @scIn_split' := rfl
+example : @Prysm.SyncCommittee.Decode.input_split = @scIn_split' := rfl
 example : @E2eHb.hbIn_split = @hbIn_split' := rfl
-example : @E2eList.scA_split = @scA_split' := rfl
-example : @E2eList.scA_join = @scA_join' := rfl
+example : @Prysm.SyncCommittee.Decode.array_split = @scA_split' := rfl
+example : @Prysm.SyncCommittee.Decode.array_join = @scA_join' := rfl
 example : @E2eHb.hbA_split = @hbA_split' := rfl
 example : @E2eHb.hbA_join = @hbA_join' := rfl
 

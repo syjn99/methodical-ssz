@@ -13,7 +13,7 @@ open Machine Runtime TestTarget E2eScal Codec
 
 namespace Codec.Segment
 
-theorem headNop96_eq : E2eList.bytesDecHeadNop96 = bytesDecHeadNopG 96 := rfl
+theorem headNop96_eq : Prysm.SyncAggregate.bytesDecHeadNop96 = bytesDecHeadNopG 96 := rfl
 theorem headNop32_eq : E2eScal.H4.bytesDecHeadNop = bytesDecHeadNopG 32 := rfl
 
 /-- `Codec.bytesdec_seg` (n ∈ {32, 48, 96}). -/
@@ -22,11 +22,11 @@ theorem bytesdec_seg_inst : type_of% @Codec.bytesdec_seg :=
 /-- `Codec.bytesdec_seg_z` (n ∈ {32, 48, 96}). -/
 theorem bytesdec_seg_z_inst : type_of% @Codec.bytesdec_seg_z :=
   fun n hn => bytesdec_seg_z_g n (by rcases hn with h | h | h <;> omega)
-/-- `E2eList.bytesdec_seg_z64` (n = 64, SyncAggregate.SyncCommitteeBits). -/
-theorem bytesdec_seg_z64_inst : type_of% @E2eList.bytesdec_seg_z64 :=
+/-- `Prysm.SyncAggregate.bytesdec_seg_z64` (n = 64, SyncAggregate.SyncCommitteeBits). -/
+theorem bytesdec_seg_z64_inst : type_of% @Prysm.SyncAggregate.bytesdec_seg_z64 :=
   fun n hn => bytesdec_seg_z_g n (by omega)
-/-- `E2eList.bytes96dec_seg_nop` (SyncAggregate.SyncCommitteeSignature). -/
-theorem bytes96dec_seg_nop_inst : type_of% @E2eList.bytes96dec_seg_nop :=
+/-- `Prysm.SyncAggregate.bytes96dec_seg_nop` (SyncAggregate.SyncCommitteeSignature). -/
+theorem bytes96dec_seg_nop_inst : type_of% @Prysm.SyncAggregate.bytes96dec_seg_nop :=
   by exact bytesdec_seg_nop_g 96 (by decide)
 /-- `E2eScal.H4.bytes32dec_seg_nop` (Deposit_Data WithdrawalCredentials). -/
 theorem bytes32dec_seg_nop_inst : type_of% @E2eScal.H4.bytes32dec_seg_nop :=

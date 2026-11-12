@@ -26,7 +26,7 @@ It also has the function specifications of the test target callees (`TestTarget/
 Some Prysm proofs use a few of its declarations (for example `TestTarget.Data.staticuint64s_addr`, `store_avx_step`, `TestTarget.luElems`).
 
 **`Codec`.** Lemmas that do not depend on one Prysm type: the `uint64` decoder pattern (`Codec/Uint64Decoder.lean`), the fixed-bytes field decoder and encoder patterns (`Codec/Bytes32*.lean`, `Codec/FixedBytesDecode*.lean`), the encoder step lemmas (`Codec/Encode*.lean`) and the statement kinds of the generated proofs (`Codec/Kind/`).
-`Codec/Segment/` holds segment and loop lemmas stated once for any size or element count, with the fixed instances of `E2eList` and `E2eHb` as corollaries.
+`Codec/Segment/` holds segment and loop lemmas stated once for any size or element count, with the fixed instances of `Prysm/SyncAggregate/`, `Prysm/SyncCommittee/` and `E2eHb` as corollaries.
 
 **`Prysm`.** One directory for each Prysm type, `Prysm/<GoTypeName>/<Role>.lean`, namespace `Prysm.<GoTypeName>`.
 The full name of a main theorem is the name of the work, for example `Prysm.Checkpoint.Decode.reject_size`.
@@ -45,15 +45,19 @@ The files `files.tsv` of `../gen/restructure/maps/checkpoint-and-epoch/` and `..
   types (one namespace block each; shared module).
 - `Prysm/Checkpoint/*AsNestedField.lean`: the function specifications of the Checkpoint decoder and encoder for a
   caller that holds Checkpoint as a nested field (AttestationData), and their checks on the Checkpoint witness hosts.
+- `Prysm/SyncAggregate/`, `Prysm/SyncCommittee/`, `Prysm/IndexedAttestation/`: the decoders of these types.
+  They have byte vectors, a vector of byte vectors and a variable-size list.
+  `../gen/restructure/maps/sync-and-indexed-attestation/files.tsv` gives the earlier path of each module.
+  Three modules hold declarations of two types and need a split: `Prysm/SyncAggregate/Code.lean`,
+  `Prysm/SyncAggregate/SpecDescription.lean` and `Prysm/SyncCommittee/SpecDefinitions.lean`.
+- `Prysm/RuntimeModel/`: witness-only models of runtime functions that read ELF data of a link set
+  (bump allocators that dispatch on a type word). The library `Runtime` does not import `Prysm`.
 - `Prysm/ElfData/`: the ELF data of a link set and the command that reads it, namespace `ElfData.<SetName>`.
   The root `ElfData` keeps the order of the constant names that some `simp` proofs depend on (see `../gen/restructure/README.md`).
 
 **`E2eScal`.** Generated and hand proofs for the flat fixed-size types. A flat type has only fixed-size fields and no nested container.
 The generated files are `Gen*.lean`. They use the patterns and kinds of `Codec`.
 The statement kinds of the composed accept theorems, of the callee calls and of the encoder fast path are still here (`KindAccept*.lean`, `KindCall.lean`, `KindEncN.lean`): their modules import modules of single types (see `../gen/README.md`).
-
-**`E2eList`.** The decoders of `v1alpha1.SyncAggregate`, `v1alpha1.SyncCommittee` and `v1alpha1.IndexedAttestation`.
-These types have byte vectors, a vector of byte vectors and a variable-size list.
 
 **`E2eHb`.** The `v1alpha1.HistoricalBatch` decoder.
 
@@ -67,8 +71,8 @@ The import graph has this order:
 
 ```text
 EthLib -> Spec -> Machine -> Runtime -> TestTarget -> Codec (except Codec/Segment/)
-       -> Prysm -> E2eScal -> E2eList -> E2eHb -> Codec/Segment/ -> E2eDep -> E2eDepW
-                                     E2eList -> E2eEnc -> E2eDec
+       -> Prysm -> E2eScal -> Prysm (list types) -> E2eHb -> Codec/Segment/ -> E2eDep -> E2eDepW
+                                     Prysm (list types) -> E2eEnc -> E2eDec
 ```
 
 The arrows give the order of the libraries in the import graph. A library imports only libraries to its left.
@@ -80,7 +84,7 @@ A new type gets its own library or modules. Do not change a reviewed module to a
 ## 2. How machine code enters Lean
 
 1. `../link/conv.py` converts the disassembly of one function into a labeled `.S` file.
-2. `include_x64_rt "<path>.S"` (`Machine/Include.lean`) parses the file with the Kraken parser when Lean elaborates it. The result is a `Program` constant, for example `E2eList.Code.SaUnmarshal`.
+2. `include_x64_rt "<path>.S"` (`Machine/Include.lean`) parses the file with the Kraken parser when Lean elaborates it. The result is a `Program` constant, for example `Prysm.SyncAggregate.Code.unmarshalSSZ`.
 3. A data file holds the bytes or the address of one ELF data item, for example a format string or a type descriptor.
    `data_include <id>` (`Machine/Include.lean`) and its copies for other directories define `<id> : List UInt8` and `<id>_addr : BitVec 64`. No byte or offset is written by hand.
 4. `../link/check.py` compares the `.S` files and the data files with the ELF.
@@ -93,11 +97,11 @@ When you add a code directory, add it as an `input_dir` of the library. A `lakef
 ## 3. Shape of a main theorem
 
 The statement is a `def` of type `Prop`, committed before its proof. The theorem then has that type.
-This example is the size reject of the SyncAggregate decoder (`E2eList/StmtSa.lean`).
-Its proof is `E2eList.sa_e2e_reject_size_main` in `E2eList/SaReject.lean`.
+This example is the size reject of the SyncAggregate decoder (`Prysm/SyncAggregate/Statements.lean`).
+Its proof is `Prysm.SyncAggregate.Decode.reject_size` in `Prysm/SyncAggregate/DecodeRejectSize.lean`.
 
 ```lean
-def sa_reject_size_stmt : Prop :=
+def Prysm.SyncAggregate.Decode.reject_size_statement : Prop :=
   ∀ (k : Nat) (hk : SaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh SaUnmarshal k)
     (s : MachineData) (ra guard e0 e1 : UInt64) (fp s2 : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8)
     (R : DataMem → Prop)
@@ -134,7 +138,7 @@ Line by line:
   `rsp` is entry `rsp + 8`, and `rbp` and `r14` are unchanged.
 - The final memory names every fragment of the premise again. Only the two stack slots changed. `R` is unchanged, and there is no `⋆ True`.
 
-A specification theorem extends a machine theorem. For example, `sa_reject_size_spec_stmt` adds the premise `rcx = bs.size` and the conclusion that EthLib `deserialize` returns an error.
+A specification theorem extends a machine theorem. For example, `Prysm.SyncAggregate.Decode.reject_size_spec_statement` adds the premise `rcx = bs.size` and the conclusion that EthLib `deserialize` returns an error.
 An accept theorem adds the contract hypotheses (for example `MakesliceC`, `MemmoveC`), the heap budget `Heap avail`, the receiver fragments and a stack window `S` for the callees.
 
 ## 4. Contracts and function specifications
@@ -185,7 +189,7 @@ The connection to EthLib has three theorem forms:
 A witness file (`Wit*.lean`) builds one concrete `Host` with `Machine.Witness.mkHost` (`Machine/WitnessHost.lean`).
 The program is the data labels, the real converted function and the runtime models.
 A theorem `*_runs` applies the main theorem to a concrete memory block and discharges every premise.
-The runtime models discharge the contract hypotheses. Example: `E2eList.WitSaA.sa_accept_runs`.
+The runtime models discharge the contract hypotheses. Example: `Prysm.SyncAggregate.Witness.DecodeAccept.runs`.
 For a variable length, the witnesses cover the empty value, one element and the maximum.
 The receiver in a witness must be a Go value of the type. `Prysm/Checkpoint/GoValue.lean` gives a Lean predicate for this check.
 Use one witness host for each file. Two `Host` instances in one file make instance resolution choose the wrong host.
@@ -195,7 +199,7 @@ Use one witness host for each file. Two `Host` instances in one file make instan
 - Do not use `sorry`, `admit`, a new `axiom`, `native_decide` or `bv_decide`.
 - Do not change a committed statement. Add a new statement with a new name and a reason.
 - Keep `maxHeartbeats` and `maxRecDepth` at the default. If a proof needs more, profile the declaration first.
-  Then write the measured cause in words in a comment above the `set_option` line. `E2eList/IaAccept.lean` has an example.
+  Then write the measured cause in words in a comment above the `set_option` line. `Prysm/IndexedAttestation/DecodeAccept.lean` has an example.
 - Many files have limit options without such a comment. Do not copy them as a model for new work.
 - Use `Machine.cmp_be_false` or `Codec.lea_cmp_be_false` for the stack guard branch. A `simp` and `omega` proof of that branch can use too much kernel memory.
 - Split a long straight-line proof into segments over the fragments that each segment touches, then compose them.
@@ -235,8 +239,8 @@ Some abbreviations have two or three meanings. The namespace decides the meaning
 | `Pdc`, `Vid`, `Bpf` | `v1alpha1.PartialDataColumnGroupID`, `ValidatorIdentity`, `BuilderPreferences` |
 | `Ep`, `Sl`, `Ci`, `Vi` | `primitives.Epoch`, `Slot`, `CommitteeIndex`, `ValidatorIndex` (hand-written methods) |
 | `Lu`, `Lc`, `Bl`, `Bv` | test types `ListU64`, `ListC`, `BitL`, `BitVec` in `../target/` |
-| `Sc` | three meanings: `v1alpha1.SyncCommitteeMessage` in `E2eScal` encoder names such as `Gen6ScEnc`, `v1alpha1.SyncCommittee` in `E2eList`, and the test type `Scalars` in `TestTarget` |
-| `Sa` | two meanings: `v1alpha1.SyncAggregatorSelectionData` in `E2eScal`, and `v1alpha1.SyncAggregate` in `E2eList` |
+| `Sc` | three meanings: `v1alpha1.SyncCommitteeMessage` in `E2eScal` encoder names such as `Gen6ScEnc`, `v1alpha1.SyncCommittee` in the old library `E2eList`, and the test type `Scalars` in `TestTarget` |
+| `Sa` | two meanings: `v1alpha1.SyncAggregatorSelectionData` in `E2eScal`, and `v1alpha1.SyncAggregate` in the old library `E2eList` |
 | `Fv` | the test type `FixedVec` in `TestTarget` declaration names |
 | `epr` | two meanings: `ExecutionPayloadEnvelopesByRangeRequest`, and the Epoch reject witness `Prysm.Epoch.Witness.DecodeRejectSize.runs` |
 | `Pad` | `v1alpha1.PayloadAttestationData` in the generator scripts |

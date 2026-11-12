@@ -12,7 +12,7 @@ Go 1.26.10 compiles `if uint64(len(buf)) != sz { return ssz.ErrSize }` at the to
 `UnmarshalSSZ` to: guard check, `push %rbp; mov %rsp,%rbp; sub $F,%rsp; mov %rbx,F+24(%rsp)`, an optional `nop`,
 `cmp $sz,%rcx; jne L_err`, and the error block `mov ssz.ErrSize, ssz.ErrSize+8; add $F,%rsp; pop %rbp; ret`.
 The templates are the Kraken terms of `lv/link-hb` directives 0–10 and 30–35 with F, sz and the labels as
-parameters. Proof text: `E2eList.sc_e2e_reject_size_main` with the literal frame size replaced (address
+parameters. Proof text: `Prysm.SyncCommittee.Decode.reject_size` with the literal frame size replaced (address
 equations by `bv_omega`) and the jne condition read for any `sz`. The fixed instances (SyncCommittee, HistoricalBatch) are re-derived in
 `Codec/Segment/SizeRejectInstances.lean`.
 -/

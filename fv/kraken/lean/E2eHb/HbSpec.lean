@@ -1,10 +1,10 @@
-import E2eList.ScSpec
+import Prysm.SyncCommittee.Spec
 import E2eHb.Defs
 
 /-!
 # Spec bridge for the real Prysm `v1alpha1.HistoricalBatch`
 
-The order of `E2eList.ScSpec`. Imported from it as is: `assemble_inline_ok` (any list of inline parts),
+The order of `Prysm.SyncCommittee.Spec`. Imported from it as is: `assemble_inline_ok` (any list of inline parts),
 `headWidth_inline`, `bodyWidth_inline`, and EthLib's `concatParts_size`, `concat_fixed_slices`, `deserialize_enc`,
 `accepted_is_enc` (through `Fv1`). New here: the SyncCommittee lemmas whose statements fix 48-byte elements (`toV48`,
 `allFit_bv48`, `allFit_map_bv48`, `serializeEach_bv48`, `concatParts_v48`) with 32, a vector lemma stated once and
@@ -12,7 +12,7 @@ used for both fields (`v32_serialize`, `v32_of_bytes`), and the container lemmas
 -/
 
 namespace E2eHb
-open EthLib.Serialization.Ssz Spec TestTarget E2eList
+open EthLib.Serialization.Ssz Spec TestTarget
 
 theorem prysmHbDesc_wellFormed : prysmHbDesc.wellFormed = .ok () := by rfl
 theorem prysmHbDesc_fixedSize : prysmHbDesc.fixedSize = some 524288 := by rfl
@@ -66,7 +66,7 @@ theorem v32_serialize (v : Vector (Vector UInt8 32) 8192) :
     serializeEach_bv32, bind, Except.bind]
   rw [show (v.toList.map (·.toArray)).map (fun _ => Desc.isFixed (.byteVector 32))
       = (v.toList.map (·.toArray)).map (fun _ => true) from rfl,
-    assemble_inline_ok _ (by rw [hs]; simp), concatParts_v32]
+    Prysm.SyncCommittee.assemble_inline_ok _ (by rw [hs]; simp), concatParts_v32]
 
 /-- Every 262144-byte array is the end-to-end layout of some `Vector[Bytes32, 8192]`. -/
 theorem v32_of_bytes (d : Array UInt8) (hd : d.size = 262144) :
