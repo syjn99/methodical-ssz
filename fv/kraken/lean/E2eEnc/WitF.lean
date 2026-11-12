@@ -104,9 +104,10 @@ theorem dcf_runs_n1 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.
 -- Measured (ENC logs 40, 41, 42): 200000 and 1000000 fail (`whnf` timeout); 4000000 passes. Profile (log 41):
 -- `simp` 12.3 s of the declaration, the `sep_comm` sort of the 26-chunk memory premise (cause as LV logs 26, 27).
 set_option maxHeartbeats 4000000 in
--- maxRecDepth (ENC logs 60, 61, 62): the default 512 and 2000 fail ("maximum recursion depth"), 20000 passes;
--- `dcf_runs_n128` only (n = 0, 1 pass at the default). Cause not profiled further; the long literal lists (`z k`) of the memory block are the suspect.
-set_option maxRecDepth 20000 in
+-- maxRecDepth (ENC logs 60–62, 75): 512 and 2000 fail; WitF n = 128 passes at 4000, WitG fails at 4000 and passes
+-- at 8000 ("maximum recursion depth" at the declaration). Replacing `simp [cs0]` by `dsimp only [cs0]; decide`
+-- did not remove it (log 76); the cause is not located. `dcf_runs_n128` only (n = 0, 1 pass at the default).
+set_option maxRecDepth 4000 in
 /-- n = 128: `cap = 36 + 8n = 1060`, Columns at 0x10524. -/
 theorem dcf_runs_n128 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length = 1024)
     (zmms : RegZmms) (flags : StatusFlags) :

@@ -68,9 +68,10 @@ theorem nsc : nextSliceCap 3353 3352 = 4382 := by decide
 -- Measured (ENC logs 44, 45, 46): 1000000 fails (`whnf` timeout); 4000000 passes. Profile (log 46): `simp` 10.2 s of
 -- the declaration, the `sep_comm` sort of the memory premise (the cause of `WitF`).
 set_option maxHeartbeats 4000000 in
--- maxRecDepth (ENC logs 60, 61, 62): the default 512 and 2000 fail ("maximum recursion depth"), 20000 passes;
--- all three witnesses. Cause not profiled further; the long literal lists (`z k`) of the memory block are the suspect.
-set_option maxRecDepth 20000 in
+-- maxRecDepth (ENC logs 60–62, 75): 512 and 2000 fail; WitF n = 128 passes at 4000, WitG fails at 4000 and passes
+-- at 8000 ("maximum recursion depth" at the declaration). Replacing `simp [cs0]` by `dsimp only [cs0]; decide`
+-- did not remove it (log 76); the cause is not located. all three witnesses.
+set_option maxRecDepth 8000 in
 /-- n = 0: growslice runs at site 1; the encoder returns `rbx = 3321 + 36 + 8·0` and a capacity ≥ 4382. -/
 theorem dcg_runs_n0 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length = 0)
     (zmms : RegZmms) (flags : StatusFlags) :
@@ -105,9 +106,10 @@ theorem dcg_runs_n0 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.
 -- Measured (ENC logs 44, 45, 46): 1000000 fails (`whnf` timeout); 4000000 passes. Profile (log 46): `simp` 10.2 s of
 -- the declaration, the `sep_comm` sort of the memory premise (the cause of `WitF`).
 set_option maxHeartbeats 4000000 in
--- maxRecDepth (ENC logs 60, 61, 62): the default 512 and 2000 fail ("maximum recursion depth"), 20000 passes;
--- all three witnesses. Cause not profiled further; the long literal lists (`z k`) of the memory block are the suspect.
-set_option maxRecDepth 20000 in
+-- maxRecDepth (ENC logs 60–62, 75): 512 and 2000 fail; WitF n = 128 passes at 4000, WitG fails at 4000 and passes
+-- at 8000 ("maximum recursion depth" at the declaration). Replacing `simp [cs0]` by `dsimp only [cs0]; decide`
+-- did not remove it (log 76); the cause is not located. all three witnesses.
+set_option maxRecDepth 8000 in
 /-- n = 1: growslice runs at site 1; the encoder returns `rbx = 3321 + 36 + 8·1` and a capacity ≥ 4382. -/
 theorem dcg_runs_n1 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length = 8)
     (zmms : RegZmms) (flags : StatusFlags) :
@@ -142,9 +144,10 @@ theorem dcg_runs_n1 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.
 -- Measured (ENC logs 44, 45, 46): 1000000 fails (`whnf` timeout); 4000000 passes. Profile (log 46): `simp` 10.2 s of
 -- the declaration, the `sep_comm` sort of the memory premise (the cause of `WitF`).
 set_option maxHeartbeats 4000000 in
--- maxRecDepth (ENC logs 60, 61, 62): the default 512 and 2000 fail ("maximum recursion depth"), 20000 passes;
--- all three witnesses. Cause not profiled further; the long literal lists (`z k`) of the memory block are the suspect.
-set_option maxRecDepth 20000 in
+-- maxRecDepth (ENC logs 60–62, 75): 512 and 2000 fail; WitF n = 128 passes at 4000, WitG fails at 4000 and passes
+-- at 8000 ("maximum recursion depth" at the declaration). Replacing `simp [cs0]` by `dsimp only [cs0]; decide`
+-- did not remove it (log 76); the cause is not located. all three witnesses.
+set_option maxRecDepth 8000 in
 /-- n = 128: growslice runs at site 1; the encoder returns `rbx = 3321 + 36 + 8·128` and a capacity ≥ 4382. -/
 theorem dcg_runs_n128 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length = 1024)
     (zmms : RegZmms) (flags : StatusFlags) :
