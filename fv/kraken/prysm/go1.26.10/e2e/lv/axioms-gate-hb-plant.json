@@ -1,0 +1,48 @@
+{
+ "header": "# decl_dump v1 lean=4.36.0-nightly-2026-09-21 githash=ca39d2bc730f0382e4897ce314b93a4f168ff15e roots=E2e,E2eAd,E2eScal,E2eList,E2eHb",
+ "allowed": [
+  "Classical.choice",
+  "Quot.sound",
+  "propext"
+ ],
+ "declarations": 6365,
+ "kinds": {
+  "theorem": 5277,
+  "def": 1044,
+  "inductive": 14,
+  "ctor": 16,
+  "recursor": 14
+ },
+ "axiom_sets": {
+  "propext": 409,
+  "-": 1754,
+  "Classical.choice,Quot.sound,propext": 1409,
+  "Quot.sound,propext": 2792,
+  "sorryAx": 1
+ },
+ "theorems": 5277,
+ "hand_list_names": 476,
+ "hand_list_missing": [],
+ "nonstandard": {
+  "E2eHb.Planted.planted_sorry": [
+   "sorryAx"
+  ]
+ },
+ "sorryAx": [
+  "E2eHb.Planted.planted_sorry"
+ ],
+ "verdict": "FAIL",
+ "modules": 240,
+ "precheck": {
+  "argv": "lake build --no-build <modules>",
+  "rc": 0,
+  "failures": []
+ },
+ "extra_modules": [
+  "E2eHb.Planted"
+ ],
+ "dump": {
+  "rc": 0,
+  "stderr_tail": ""
+ }
+}
