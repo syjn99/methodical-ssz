@@ -270,3 +270,19 @@ step	utc	exit	log	command
 254-nobuild	2026-11-12T04:45:55Z	0	logs/254-nobuild.log	heavy.py -- lake build --no-build E2e E2eAd E2eScal E2eList (2.1 s wall, peak sampled RSS 0.65 GiB)
 255-axgate-t3	2026-11-12T04:45:58Z	0	logs/255-axgate-t3.log	heavy.py -- python3 -I -B ../gen/e2e/lvt3axioms_gate.py run <work>/axgate-t3.json <work>/axgate-t3-dump.tsv (107.2 s wall, peak sampled RSS 4.35 GiB)
 256-drift-t3	(after log 250)	0	-	decl_drift.py base-dump head-dump-t3 (roots E2e,E2eAd,E2eScal): SUMMARY base=5007 head=5007 drift=0
+257-WitIaR2	2026-11-12T05:57:20Z	1	logs/257-WitIaR2.log	heavy.py -- lake build E2eList.WitIaR2 (6.2 s wall, peak sampled RSS 0.93 GiB)
+258-WitIaR2	2026-11-12T05:58:23Z	0	logs/258-WitIaR2.log	heavy.py -- lake build E2eList.WitIaR2 (10.4 s wall, peak sampled RSS 2.09 GiB)
+259-WitIaR2-norec	2026-11-12T05:58:47Z	1	logs/259-WitIaR2-norec.log	heavy.py -- lake build E2eList.WitIaR2 (9.4 s wall, peak sampled RSS 2.09 GiB)
+260-wit-s3-norec	2026-11-12T05:59:12Z	1	logs/260-wit-s3-norec.log	heavy.py -- lake build E2eList.WitIaR2 E2eList.WitIaR E2eList.WitIaA (71.0 s wall, peak sampled RSS 7.65 GiB)
+261-wit-s3	2026-11-12T06:00:37Z	1	logs/261-wit-s3.log	heavy.py -- lake build E2eList.WitIaR2 E2eList.WitIaR E2eList.WitIaA (71.9 s wall, peak sampled RSS 7.62 GiB)
+262-wit-s3	2026-11-12T06:02:01Z	0	logs/262-wit-s3.log	heavy.py -- lake build E2eList.WitIaR2 E2eList.WitIaR E2eList.WitIaA (68.8 s wall, peak sampled RSS 2.76 GiB)
+263-negative-t3	2026-11-12T06:06:08Z	1	logs/263-negative-t3.log	heavy.py -- python3 -I -B ../gen/e2e/lvnegative.py ../prysm/go1.26.10/e2e/lv/negcases-lv-t3.json <work>/neg-t3 <work>/neg-result-t3.json (232.5 s wall, peak sampled RSS 0.69 GiB)
+264-negative-t3	2026-11-12T06:10:40Z	0	logs/264-negative-t3.log	heavy.py -- python3 -I -B ../gen/e2e/lvnegative.py ../prysm/go1.26.10/e2e/lv/negcases-lv-t3.json <work>/neg-t3 <work>/neg-result-t3.json (226.5 s wall, peak sampled RSS 0.67 GiB)
+265-build-E2eList	2026-11-12T06:14:58Z	0	logs/265-build-E2eList.log	heavy.py -- lake build E2eList (3.1 s wall, peak sampled RSS 0.66 GiB)
+266-nobuild	2026-11-12T06:15:01Z	0	logs/266-nobuild.log	heavy.py -- lake build --no-build E2e E2eAd E2eScal E2eList (2.1 s wall, peak sampled RSS 0.65 GiB)
+267-axgate-t3-r4	2026-11-12T06:15:04Z	0	logs/267-axgate-t3-r4.log	heavy.py -- python3 -I -B ../gen/e2e/lvt3axioms_gate.py run <work>/axgate-t3-r4.json <work>/axgate-t3-r4-dump.tsv (105.2 s wall, peak sampled RSS 4.36 GiB)
+268-head-dump-t3-r4	2026-11-12T06:16:49Z	0	logs/268-head-dump-t3-r4.log	heavy.py -- sh -c decl_dump.lean --root E2e --root E2eAd --root E2eScal <235 modules> > <work>/head-dump-t3-r4.tsv (82.4 s wall, peak sampled RSS 4.25 GiB)
+269-drift-t3-r4	(after log 268)	0	-	decl_drift.py base-dump head-dump-t3-r4 (roots E2e,E2eAd,E2eScal): SUMMARY base=5007 head=5007 drift=0
+105-conv-diff-utc-correction	2026-11-11T22:48:35Z	-	logs/105-conv-diff.log	correction (review r4 S5): the utc of row 105-conv-diff is the log mtime 2026-11-11T22:48:35Z; the row's value (approx.) is wrong. The row is kept unchanged.
+107-linknorm-cmp-utc-correction	2026-11-11T22:49:32Z	-	logs/107-linknorm-cmp.log	correction (review r4 S5): the utc of row 107-linknorm-cmp is the log mtime 2026-11-11T22:49:32Z; the row's value (approx.) is wrong. The row is kept unchanged.
+108-t3-filter-utc-correction	2026-11-11T22:50:02Z	-	logs/108-t3-filter.log	correction (review r4 S5): the utc of row 108-t3-filter is the log mtime 2026-11-11T22:50:02Z; the row's value (approx.) is wrong. The row is kept unchanged.

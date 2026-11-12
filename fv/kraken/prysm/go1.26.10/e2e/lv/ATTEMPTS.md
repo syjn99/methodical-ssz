@@ -377,3 +377,24 @@
 - 경우: 크기 문장 227/228(`< 229`), 크기 코드(`cmp $0xe5,%rcx`), 오프셋 바이트(`cmp $0xe5,%rdx`), 정렬(`test $0xf`), 2048 한계(`cmp $0x7ff`), 수락 사후조건(`Heap (avail - (8 * n + 431))`).
 - 링크: `git diff dc7bd56 -- lv/link-t3 lv/link`는 비어 있다. 링크 검사는 다시 돌리지 않았다(입력이 같다).
 - 실행하지 않은 것: 기준 트리의 별도 빌드, 게이트 대조군, drift 대조군, `stale_olean.py`, Go 차분 시험, 하드웨어 대조.
+
+### 리뷰 r4 권장 수정 (S1, S3, S4, S5, S8)
+
+- S1: 새 파일 `E2eList/WitIaR2.lean`. `ia_size_runs`(모든 len < 228, 예시 0, 227)와 `ia_offset_runs`(모든 len ≥ 228, 오프셋 바이트 `e5 00 00 00`, 예시 228, 228 + 8 · 2049). `E2e/WitCpR.lean`의 글이다.
+- S1의 호스트: `WitIaR` 호스트에는 `ssz.ErrSize`, `ssz.ErrInvalidVariableOffset` 레이블이 없다. 없는 레이블의 주소를 주는 보조정리도 없다. 그래서 두 레이블과 실제 T3 디코더로 된 작은 호스트를 따로 두었다.
+- S1 측정: `maxRecDepth`가 없으면 `P_len`만 멈춘다(로그 259). `P_len`에만 1024를 둔다(로그 260, 262 통과). 하트비트 설정은 없다.
+- S3: 옵션 없이 빌드하면 WitIaR은 `P_len`, `hk284`, WitIaA는 `P_len`, `hk288` … `hk869`만 멈춘다(로그 260).
+- WitIaA의 `hk288`은 1024로 통과한다. `P_len`, `hk531` … `hk869`는 1024에서 멈추고(로그 261) 2048에서 통과한다(로그 262). 옵션은 그 선언에만 둔다.
+- S4: 결과 파일은 실행기가 이어 쓴다. 그래서 옛 결과를 지운 뒤 한 번 돌렸다(로그 264). `prechecks` 항목은 하나다.
+- S8: 경우 6개를 더했다(대조군 3, 변이 3).
+  - (a) `_nz` misaligned 문장에서 `he0nz`를 뺌 → `ia_e2e_reject_misaligned_nz` 안의 `intro`에서 실패.
+  - (b) P2 명세 문장의 오프셋 상수(`≠ iaOff` → `≠ [0xe5, 0, 0, 0]`) → `ia_e2e_reject_offset_spec` 안에서 실패.
+  - (c) `ia_accept_spec_stmt`의 힙 예산(`+ 432` → `+ 431`) → `ia_e2e_accept_spec` 안의 `omega`에서 실패.
+- (b), (c)는 실행기의 `inline`으로 의존 모듈을 펼쳤다(`StmtIa`, `IaReject` / `StmtIa`, `IaLoop`, `IaAccept`). 펼치지 않으면 `StmtIa`가 두 번 들어온다(로그 251과 같은 원인).
+- (b)는 코드 변이가 아니라 문장 변이다. 코드 변이는 펼친 `IaReject`의 증명에서 먼저 실패한다(지정 정리 밖).
+- 로그 263: (c)의 첫 변이(사후조건의 `Heap … + 431`)는 지정 정리 안에서 실패했지만 재귀 한도 오류였다. 실행기는 이것을 자원 오류로 분류한다(FAIL). 그래서 전제 `hav`로 바꿨다.
+- 로그 264: 14개 모두 통과(대조군 5, inside 9). 결과: `negative-lv-t3.json`.
+- S5: 105, 107, 108행의 시각은 틀렸다. 행은 고치지 않고 정정 행 셋을 덧붙였다(로그 파일 수정 시각).
+- 재실행: 로그 265 `lake build E2eList` exit 0(767 jobs, 이미 최신). 로그 266 `--no-build` 네 라이브러리 exit 0(1082 jobs).
+- 로그 267: 게이트 PASS, 선언 6451, 정리 5378, 손 목록 487, 비표준 0, `sorryAx` 0. 결과: `axioms-gate-lv-t3-r4.json`.
+- 로그 268: drift 0(5007 = 5007). `decl-drift-lv-t3.txt`에 덧붙였다.
