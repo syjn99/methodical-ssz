@@ -4033,6 +4033,385 @@
    "Go differential",
    "x86-64",
    "witnesses and spec corollaries of the generated theorems (unit E2-C)"
-  ]
+  ],
+  "correction_e2g_r1_S1": "\"252 fault injections\" = 252 fault-injection rows: 225 injections reached and refused, 18 rows patch a phase the type does not reach, 4 controls, 5 harness rows (unit E2-C)"
+ },
+ "enc2-close": {
+  "unit": "E2-C",
+  "base": "dcc6e8088ea2ed2d3f8e5d92b19e291190ff1967 (e2g-r1 APPROVE)",
+  "author": "fresh Opus 5.5 session",
+  "reviewed": false,
+  "in_sample": true,
+  "scope": "encoder fast path only (premise: len + SizeSSZ <= cap, exact field lengths); no growslice branch, length reject or morestack; no encoder is complete; T-7 deferred; AttestationData encoder = separate task, not in this tree",
+  "types": {
+   "Checkpoint": {
+    "fast_path": "generated (kind) + hand statement by implication (cp_marshal_of_kind)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 57,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.cp_g6e_fast",
+     "spec": "E2eScal.E2c.cp_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cCp.cp_e2c_wit_empty",
+      "E2eScal.WitE2cCp.cp_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "morestack",
+     "growslice branches only under the recorded GrowsliceC contract (hand theorems, earlier units)"
+    ]
+   },
+   "BeaconBlockHeader": {
+    "fast_path": "generated (kind) + hand statement rfl (E2-G _stmt)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 145,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.bh_g6e_fast",
+     "spec": "E2eScal.E2c.bh_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cBh.bh_e2c_wit_empty",
+      "E2eScal.WitE2cBh.bh_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "length rejects with a capacity below len + 112",
+     "morestack"
+    ]
+   },
+   "Eth1Data": {
+    "fast_path": "generated (kind) + hand statement rfl (E2-G _stmt)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 89,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.e1_g6e_fast",
+     "spec": "E2eScal.E2c.e1_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cE1.e1_e2c_wit_empty",
+      "E2eScal.WitE2cE1.e1_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "length rejects",
+     "morestack"
+    ]
+   },
+   "BlobIdentifier": {
+    "fast_path": "generated (kind)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 3,
+    "gate_s": 102,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.bi_g6e_fast",
+     "spec": "E2eScal.E2c.bi_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cBi.bi_e2c_wit_empty",
+      "E2eScal.WitE2cBi.bi_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "length rejects",
+     "morestack"
+    ]
+   },
+   "DepositMessage": {
+    "fast_path": "generated (kind)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 76,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.dm_g6e_fast",
+     "spec": "E2eScal.E2c.dm_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cDm.dm_e2c_wit_empty",
+      "E2eScal.WitE2cDm.dm_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "length rejects",
+     "morestack"
+    ]
+   },
+   "Deposit_Data": {
+    "fast_path": "generated + independent statement rfl",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 819,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.dd_g6e_fast",
+     "spec": "E2eScal.E2c.dd_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cDd.dd_e2c_wit_empty",
+      "E2eScal.WitE2cDd.dd_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "length rejects",
+     "morestack"
+    ]
+   },
+   "PendingPartialWithdrawal": {
+    "fast_path": "generated + independent statement rfl",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 400,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.pw_g6e_fast",
+     "spec": "E2eScal.E2c.pw_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cPw.pw_e2c_wit_empty",
+      "E2eScal.WitE2cPw.pw_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "morestack"
+    ]
+   },
+   "SyncCommitteeMessage": {
+    "fast_path": "generated + independent statement rfl",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 132,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.sc_g6e_fast",
+     "spec": "E2eScal.E2c.sc_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cSc.sc_e2c_wit_empty",
+      "E2eScal.WitE2cSc.sc_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "length rejects",
+     "morestack"
+    ]
+   },
+   "PendingConsolidation": {
+    "fast_path": "generated (kind)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 40,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.pc_g6e_fast",
+     "spec": "E2eScal.E2c.pc_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cPc.pc_e2c_wit_empty",
+      "E2eScal.WitE2cPc.pc_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "morestack"
+    ]
+   },
+   "PendingDeposit": {
+    "fast_path": "generated (kind)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 199,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.pd_g6e_fast",
+     "spec": "E2eScal.E2c.pd_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cPd.pd_e2c_wit_empty",
+      "E2eScal.WitE2cPd.pd_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "length rejects",
+     "morestack"
+    ]
+   },
+   "PowBlock": {
+    "fast_path": "generated + independent statement rfl",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 75,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.pb_g6e_fast",
+     "spec": "E2eScal.E2c.pb_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cPb.pb_e2c_wit_empty",
+      "E2eScal.WitE2cPb.pb_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "length rejects",
+     "morestack"
+    ]
+   },
+   "HistoricalSummary": {
+    "fast_path": "generated (kind)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 63,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.hs_g6e_fast",
+     "spec": "E2eScal.E2c.hs_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cHs.hs_e2c_wit_empty",
+      "E2eScal.WitE2cHs.hs_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "length rejects",
+     "morestack"
+    ]
+   },
+   "SigningData": {
+    "fast_path": "generated (kind)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 54,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.sd_g6e_fast",
+     "spec": "E2eScal.E2c.sd_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cSd.sd_e2c_wit_empty",
+      "E2eScal.WitE2cSd.sd_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "length rejects",
+     "morestack"
+    ]
+   },
+   "SyncAggregatorSelectionData": {
+    "fast_path": "generated (kind)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 34,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.sa_g6e_fast",
+     "spec": "E2eScal.E2c.sa_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cSa.sa_e2c_wit_empty",
+      "E2eScal.WitE2cSa.sa_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "morestack"
+    ]
+   },
+   "ValidatorBalance": {
+    "fast_path": "generated (kind)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 3,
+    "gate_s": 45,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.vb_g6e_fast",
+     "spec": "E2eScal.E2c.vb_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cVb.vb_e2c_wit_empty",
+      "E2eScal.WitE2cVb.vb_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "morestack"
+    ]
+   },
+   "VoluntaryExit": {
+    "fast_path": "generated (kind)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 39,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.ve_g6e_fast",
+     "spec": "E2eScal.E2c.ve_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cVe.ve_e2c_wit_empty",
+      "E2eScal.WitE2cVe.ve_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "morestack"
+    ]
+   }
+  },
+  "independent_statement_identities": {
+   "PowBlock": "rfl (E2eScal.E2c.pb_same)",
+   "SyncCommitteeMessage": "rfl (E2eScal.E2c.sc_same)",
+   "PendingPartialWithdrawal": "rfl (E2eScal.E2c.pw_same)",
+   "Deposit_Data": "rfl (E2eScal.E2c.dd_same)",
+   "note": "E2cStmt.lean committed (0d25193) before Gen6{Pb,Sc,Pw,Dd}Enc.lean were opened; first build, no edit"
+  },
+  "decode_encode_consistency": "not attempted (optional item)",
+  "inventory": {
+   "script": "fv/kraken/gen/tools/inventory.py",
+   "encoders_fast_path_complete": 16,
+   "of": 211,
+   "decoders_complete": 17,
+   "summary": "fast-path complete 16 of 211 (premise: len + SizeSSZ <= cap, exact field lengths); no encoder is complete",
+   "controls": "20/20 as expected (15 earlier + 5 encoder)",
+   "deterministic": true,
+   "recount": "equal"
+  },
+  "negatives": "96/96 as expected (32 controls); timeouts: none",
+  "axioms": "PASS 12177 declarations, 10199 theorems, nonstandard 0, sorryAx 0; committed record regenerated; AxiomsScal +270 names",
+  "drift": "vs reviews/e2g-r1/results/04-dump-head.tsv (11011 rows): ADDED 1166, CHANGED 0, REMOVED 0; planted control on ONE scratch copy (weakened vb_e2c_spec_k + sorry theorem): gate exit 1, drift exit 1 (CHANGED 1, ADDED 1, REMOVED 2 auxiliaries); copy deleted",
+  "link": "enc2 bundle (13 MarshalSSZTo tables of E2-P) PASS all on the pinned ELF c6403c02...911e, RESULT byte-identical, BUNDLE c08ac537...; Cp / Bh / E1 tables not rerun",
+  "go_differential": "192/192 (16 types x 3 value sets x prefix 0/7 x capacity exact/+5; Go 1.26.10 linux/arm64, Go semantics, not the ELF); planted 2 mismatches -> exit 1; Prysm tree status unchanged",
+  "non_author_layout_recomputation": "reviews/e2g-r1/own_layout.py rerun on the tree: 16/16 equal, disjoint (copied to scal/e2c/own_layout_e2g_r1.py)",
+  "all_runs_gated": true,
+  "gate_s_total": 3588,
+  "bounds_hit": [
+   "wall-time count incl. lock waits: Deposit_Data 819 > 600 gate-s (waits behind own jobs 11-13; Lean time 107 s)"
+  ],
+  "not_run": [
+   "cold build",
+   "x86-64 hardware",
+   "regen_check.sh and kindcheck.py (generator and generated files unchanged)",
+   "decode o encode consistency (optional, not attempted)",
+   "orca (not installed)",
+   "link check rerun of the Cp / Bh / E1 encoder tables"
+  ],
+  "gate_s_note": "gate_s per type = wrapper wall time incl. lock waits (cases + share of build jobs). Deposit_Data 819 and PendingPartialWithdrawal 400 include 5 negative cases that waited about 350 s each for the heavy lock held by this unit's own jobs 11, 12, 13 ('waiting for heavy lock' in logs/neg-*.out). Lean time of the 6 Deposit_Data cases: 107 s. The per-type bound (600) is exceeded only in the wall-time count with waits; no job of a type ran longer than 60 s of Lean time."
  }
 }

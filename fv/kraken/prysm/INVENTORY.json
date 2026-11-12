@@ -9,7 +9,7 @@
  },
  "axioms_gate": {
   "verdict": "PASS",
-  "declarations": 11011
+  "declarations": 12177
  },
  "definition_complete": "decoder: accept + size reject + spec alignment (accept_spec_k, reject_size_spec, reject_complete) + Desc codec equality / correspondence + accept witness + reject witness, all kernel-checked theorems with standard axioms; accept / reject / spec_k / reject_size_spec theorems keyed to the function by the code constant in their type (the function is the subject: no other target code constant of the theorem calls it); witnesses and spec theorems use the mapped accept / reject theorem",
  "complete_does_not_include": [

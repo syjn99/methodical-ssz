@@ -972,13 +972,40 @@ Checkpoint는 함의 `cp_marshal_of_kind`를 거친다. 나머지 13형의 문�
 다시 계산하는 것: 필드 목록, 레이아웃 9개 칸, 모든 경계 상태. 코드 상수가 그 `.S`를 포함하는지도 본다.
 엘래버레이션 시간(파일마다, n = 2)은 2.2 s에서 9.2 s다(PendingDeposit). 속도 주장은 없다.
 `kindcheck.py` 16/16 PASS, 선택 시험 PASS(157건과 85건), 깨뜨린 사본 12개 모두 실패한다.
-`p2enc_test.py` 322/322: 적대 입력 50(모두 거부, 표준 출력 0바이트), 유효 변형 4(덮음), 결함 주입 252다.
+`p2enc_test.py` 322/322: 적대 입력 50(모두 거부, 표준 출력 0바이트), 유효 변형 4(덮음), 결함 주입 행 252다.
+결함 주입 행 252의 내역(리뷰 e2g-r1 S1): 닿아서 거부된 주입 225, 닿지 않는 단계 18, 대조 4, 하네스 행 5다.
 부정 시험 20/20이다: 대조 4, 대상 정리 안 실패 16(문장 5, IR 대 코드 문장 3, 종류 매개변수 4, 코드 4).
 공리 게이트 PASS: 선언 11011, 비표준 0, sorryAx 0이다. 손 목록에 E2-P, E2-L, E2-G의 새 선언 421개를 더했다.
 int7-r1 덤프(9758행) 대비 ADDED 1253, CHANGED 0, REMOVED 0이다. 심은 대조는 잡혔다(게이트 종료 1, CHANGED 1, ADDED 1).
 `regen_check.sh` 71/71 SAME(옛 55, 새 16)이다. `lake build --no-build E2e E2eAd E2eScal` 종료 0이다.
 실행하지 않은 것: 콜드 빌드, 링크 검사, Go 차분, x86-64, 생성 정리의 증인, 명세 따름 정리(단위 E2-C의 일).
 모든 형이 개발 자료다(표본 안). 기록: `scal/RESULT.json`의 `enc2-gen`, `scal/CONTAMINATION.md` 35절.
+
+
+ENC2 닫기(단위 E2-C, 기준 `dcc6e80` = e2g-r1 APPROVE, 리뷰 전): 평면 16형의 인코더 빠른 경로를 닫았다.
+전제는 언제나 `len + SizeSSZ ≤ cap`과 바이트 필드의 정확한 길이다. 완전한 인코더는 하나도 없다.
+독립 손 문장 넷(`E2eScal/E2cStmt.lean`)을 생성 정리를 읽기 전에 커밋했다(`0d25193`).
+그 넷은 PowBlock(프레임 시험), SyncCommitteeMessage(overlay uint64, 96바이트, 큰 가드), PendingPartialWithdrawal, Deposit_Data(48과 96바이트)다.
+생성 정리의 형 = 손 문장이 넷 모두 `rfl`로 닫혔다(`E2cSame.lean`, 첫 시도).
+증인(`WitE2c<X>.lean`): 16형 모두 생성 빠른 경로 정리 자체에 묶였다. 수신자는 IR의 Go 배치다.
+증인마다 두 경우가 있다: 빈 접두사와 `cap = SizeSSZ`, 3바이트 접두사와 여유 5바이트.
+명세 따름 정리(`E2cSpec<X>.lean`, `<x>_e2c_spec_k`): 출력 = 접두사 ++ 독립 Desc의 `serialize`다.
+Desc는 디코더 명세 따름이 쓰는 것이다. ValidatorBalance의 Desc는 Prysm proto에서 왔다.
+증인과 명세 따름 글은 단위의 증거 도구 `scal/e2c/e2cemit.py`가 냈다. 생성기가 아니다.
+디코드 ∘ 인코드 일관성(선택 항목)은 시도하지 않았다.
+부정 시험 96/96이 기대대로다(형마다 6: 대조 2, 빠른 경로 문장 1, 명세 따름 2, 증인 1). 시간 초과는 세지 않았다.
+링크 검사: enc2 묶음 PASS all, RESULT 바이트 같음(`scal/e2c/LINK-CHECK.txt`).
+Go 차분 192/192다(Go 의미론, linux/arm64, ELF 실행이 아님). 심은 불일치 2건을 잡았다.
+리뷰어의 `own_layout.py`(비작성자 재계산)를 다시 돌렸다: 16/16 같다.
+공리 게이트 PASS: 선언 12177, 비표준 0, sorryAx 0이다. 기록을 다시 만들었고 손 목록에 270개를 더했다.
+e2g-r1 덤프 대비 ADDED 1166, CHANGED 0, REMOVED 0이다.
+심은 대조는 scratch 사본에서 잡혔다: 게이트 종료 1, CHANGED 1, ADDED 1이다. 사본은 지웠다.
+목록(`prysm/INVENTORY.md`, 출처 `gen/tools/inventory.py`): 인코더 빠른 경로 완료 16 / 211이다.
+빠른 경로 완료 = 빠른 경로 정리 + 명세 따름 정리 + 증인이다. 디코더 완료는 17 / 211이다.
+목록 스크립트의 실패 대조 20/20이 기대대로다(예전 15, 인코더 5).
+증명하지 않은 것: growslice 분기, 길이 거부, morestack, 모든 Go 호출자에 대한 프레임 분리 전제의 정당성이다.
+T-7은 미뤘다. AttestationData 인코더는 이 트리에 없다(다른 작업).
+모든 형이 개발 자료다(표본 안). 기록: `scal/RESULT.json`의 `enc2-close`, `scal/CONTAMINATION.md` 36절.
 
 조건:
 
