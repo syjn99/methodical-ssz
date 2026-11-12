@@ -1,0 +1,90 @@
+{
+ "pass_": 20,
+ "total": 20,
+ "classes": {
+  "control_pass": 4,
+  "inside": 16
+ },
+ "cases": [
+  {
+   "id": "g6-vb-fast-control",
+   "cls": "control_pass"
+  },
+  {
+   "id": "g6-cp-stmt-control",
+   "cls": "control_pass"
+  },
+  {
+   "id": "g6-hs-epi-control",
+   "cls": "control_pass"
+  },
+  {
+   "id": "g6-dm-f0-control",
+   "cls": "control_pass"
+  },
+  {
+   "id": "g6-vb-fast-stmt-hcap",
+   "cls": "inside"
+  },
+  {
+   "id": "g6-dm-f0-stmt-len",
+   "cls": "inside"
+  },
+  {
+   "id": "g6-hs-epi-stmt-size",
+   "cls": "inside"
+  },
+  {
+   "id": "g6-pd-fast-stmt-rsp",
+   "cls": "inside"
+  },
+  {
+   "id": "g6-e1-stmt-other-hand",
+   "cls": "inside"
+  },
+  {
+   "id": "g6-ir-vb-goff",
+   "cls": "inside"
+  },
+  {
+   "id": "g6-ir-dm-ssz-off",
+   "cls": "inside"
+  },
+  {
+   "id": "g6-ir-pw-order",
+   "cls": "inside"
+  },
+  {
+   "id": "g6-vb-kind-fields",
+   "cls": "inside"
+  },
+  {
+   "id": "g6-vb-kind-pc",
+   "cls": "inside"
+  },
+  {
+   "id": "g6-cp-kind-layout",
+   "cls": "inside"
+  },
+  {
+   "id": "g6-bh-kind-fields",
+   "cls": "inside"
+  },
+  {
+   "id": "g6-vb-f1-code-store",
+   "cls": "inside"
+  },
+  {
+   "id": "g6-dm-f0-code-len",
+   "cls": "inside"
+  },
+  {
+   "id": "g6-hs-epi-code-ft",
+   "cls": "inside"
+  },
+  {
+   "id": "g6-dd-f3-code-size",
+   "cls": "inside"
+  }
+ ]
+}

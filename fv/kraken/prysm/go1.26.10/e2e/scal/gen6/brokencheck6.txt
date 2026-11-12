@@ -1,0 +1,13 @@
+OK  13a-pins-ignored: selftest exit 1: selftest FAIL [('g6_pin_changed', [])] (157 cases + 85 exit-code / rule-12 / rule-13 cases)
+OK  13b-banned-ignored: selftest exit 1: selftest FAIL [('g6_sorry', [])] (157 cases + 85 exit-code / rule-12 / rule-13 cases)
+OK  13b-theorem-list-ignored: selftest exit 1: (no stdout) stderr: KeyError: 'vb_g6e_f1_kind'
+OK  13b-set-option-ignored: selftest exit 1: selftest FAIL [('g6_heartbeats', [])] (157 cases + 85 exit-code / rule-12 / rule-13 cases)
+OK  13c-kind-line-ignored: selftest exit 1: selftest FAIL [('g6_fields_param', []), ('g6_boundary_pc', []), ('g6_boundary_done', []), ('g6_boundary_reg_dropped', []), ('g6_kind_name_swapped', []), ('g6_kind_const', []), ('g6_bh_state_slot', [])] (157 cases + 85 ex
+OK  13c-layout-ignored: selftest exit 1: selftest FAIL [('g6_layout_frame', []), ('g6_layout_gd', []), ('g6_layout_pre_order', []), ('g6_layout_exs', []), ('g6_layout_post_fld', []), ('g6_layout_lens', []), ('g6_hs_frame_state', [])] (157 cases + 85 exit-code /
+OK  13c-binding-ignored: selftest exit 1: selftest FAIL [('g6_const_unbound', [])] (157 cases + 85 exit-code / rule-12 / rule-13 cases)
+OK  13c-sha-ignored: selftest exit 1: selftest FAIL [('g6_json_sha', [])] (157 cases + 85 exit-code / rule-12 / rule-13 cases)
+OK  13c-recompute-wrong-order: selftest exit 1: selftest FAIL [('g6_good_hs_frametest', ["rule 13c: layout pre = '[.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.dn 32) (.orig 3), .at (.dn 40) (.orig 4), .at (.dn 16) (.orig 5), .at (.dn 96
+OK  13d-chain-ignored: selftest exit 1: selftest FAIL [('g6_fast_skips_f0', [])] (157 cases + 85 exit-code / rule-12 / rule-13 cases)
+OK  13e-generated-name-ignored: selftest exit 1: selftest FAIL [('g6_stmt_generated', [])] (157 cases + 85 exit-code / rule-12 / rule-13 cases)
+OK  13e-via-ignored: selftest exit 1: selftest FAIL [('g6_stmt_via_unknown', [])] (157 cases + 85 exit-code / rule-12 / rule-13 cases)
+brokencheck6: PASS (every broken copy fails its selftest)

@@ -1,0 +1,48 @@
+build E2eScal.Gen6CpEnc rc=0 secs=4.04
+elab E2eScal.Gen6CpEnc run1 rc=0 secs=3.14
+elab E2eScal.Gen6CpEnc run2 rc=0 secs=3.08
+build E2eScal.Gen6BhEnc rc=0 secs=9.42
+elab E2eScal.Gen6BhEnc run1 rc=0 secs=8.64
+elab E2eScal.Gen6BhEnc run2 rc=0 secs=8.52
+build E2eScal.Gen6E1Enc rc=0 secs=5.11
+elab E2eScal.Gen6E1Enc run1 rc=0 secs=4.51
+elab E2eScal.Gen6E1Enc run2 rc=0 secs=4.67
+build E2eScal.Gen6BiEnc rc=0 secs=3.45
+elab E2eScal.Gen6BiEnc run1 rc=0 secs=2.91
+elab E2eScal.Gen6BiEnc run2 rc=0 secs=2.87
+build E2eScal.Gen6DmEnc rc=0 secs=5.18
+elab E2eScal.Gen6DmEnc run1 rc=0 secs=4.44
+elab E2eScal.Gen6DmEnc run2 rc=0 secs=4.47
+build E2eScal.Gen6DdEnc rc=0 secs=7.14
+elab E2eScal.Gen6DdEnc run1 rc=0 secs=6.45
+elab E2eScal.Gen6DdEnc run2 rc=0 secs=6.4
+build E2eScal.Gen6PwEnc rc=0 secs=3.67
+elab E2eScal.Gen6PwEnc run1 rc=0 secs=3.18
+elab E2eScal.Gen6PwEnc run2 rc=0 secs=3.23
+build E2eScal.Gen6ScEnc rc=0 secs=7.76
+elab E2eScal.Gen6ScEnc run1 rc=0 secs=7.0
+elab E2eScal.Gen6ScEnc run2 rc=0 secs=6.96
+build E2eScal.Gen6PcEnc rc=0 secs=2.86
+elab E2eScal.Gen6PcEnc run1 rc=0 secs=2.42
+elab E2eScal.Gen6PcEnc run2 rc=0 secs=2.56
+build E2eScal.Gen6PdEnc rc=0 secs=10.58
+elab E2eScal.Gen6PdEnc run1 rc=0 secs=9.04
+elab E2eScal.Gen6PdEnc run2 rc=0 secs=9.17
+build E2eScal.Gen6PbEnc rc=0 secs=5.71
+elab E2eScal.Gen6PbEnc run1 rc=0 secs=5.19
+elab E2eScal.Gen6PbEnc run2 rc=0 secs=5.02
+build E2eScal.Gen6HsEnc rc=0 secs=4.18
+elab E2eScal.Gen6HsEnc run1 rc=0 secs=3.69
+elab E2eScal.Gen6HsEnc run2 rc=0 secs=3.72
+build E2eScal.Gen6SdEnc rc=0 secs=4.01
+elab E2eScal.Gen6SdEnc run1 rc=0 secs=3.57
+elab E2eScal.Gen6SdEnc run2 rc=0 secs=3.53
+build E2eScal.Gen6SaEnc rc=0 secs=2.62
+elab E2eScal.Gen6SaEnc run1 rc=0 secs=2.28
+elab E2eScal.Gen6SaEnc run2 rc=0 secs=2.28
+build E2eScal.Gen6VbEnc rc=0 secs=2.42
+elab E2eScal.Gen6VbEnc run1 rc=0 secs=2.21
+elab E2eScal.Gen6VbEnc run2 rc=0 secs=2.2
+build E2eScal.Gen6VeEnc rc=0 secs=2.81
+elab E2eScal.Gen6VeEnc run1 rc=0 secs=2.38
+elab E2eScal.Gen6VeEnc run2 rc=0 secs=2.53

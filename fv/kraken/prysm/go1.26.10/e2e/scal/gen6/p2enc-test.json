@@ -1,0 +1,429 @@
+{
+ "total": 322,
+ "ok": 322,
+ "adversarial": 50,
+ "valid_variants": 4,
+ "fc": 252,
+ "cases": [
+  {
+   "id": "e6-real-cp",
+   "ok": true,
+   "exit": 0,
+   "reason": ""
+  },
+  {
+   "id": "e6-real-bh",
+   "ok": true,
+   "exit": 0,
+   "reason": ""
+  },
+  {
+   "id": "e6-real-e1",
+   "ok": true,
+   "exit": 0,
+   "reason": ""
+  },
+  {
+   "id": "e6-real-bi",
+   "ok": true,
+   "exit": 0,
+   "reason": ""
+  },
+  {
+   "id": "e6-real-dm",
+   "ok": true,
+   "exit": 0,
+   "reason": ""
+  },
+  {
+   "id": "e6-real-dd",
+   "ok": true,
+   "exit": 0,
+   "reason": ""
+  },
+  {
+   "id": "e6-real-pw",
+   "ok": true,
+   "exit": 0,
+   "reason": ""
+  },
+  {
+   "id": "e6-real-sc",
+   "ok": true,
+   "exit": 0,
+   "reason": ""
+  },
+  {
+   "id": "e6-real-pc",
+   "ok": true,
+   "exit": 0,
+   "reason": ""
+  },
+  {
+   "id": "e6-real-pd",
+   "ok": true,
+   "exit": 0,
+   "reason": ""
+  },
+  {
+   "id": "e6-real-pb",
+   "ok": true,
+   "exit": 0,
+   "reason": ""
+  },
+  {
+   "id": "e6-real-hs",
+   "ok": true,
+   "exit": 0,
+   "reason": ""
+  },
+  {
+   "id": "e6-real-sd",
+   "ok": true,
+   "exit": 0,
+   "reason": ""
+  },
+  {
+   "id": "e6-real-sa",
+   "ok": true,
+   "exit": 0,
+   "reason": ""
+  },
+  {
+   "id": "e6-real-vb",
+   "ok": true,
+   "exit": 0,
+   "reason": ""
+  },
+  {
+   "id": "e6-real-ve",
+   "ok": true,
+   "exit": 0,
+   "reason": ""
+  },
+  {
+   "id": "e6-adv-cap-jae-deleted",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: liveness scan: directive 24 `lea type__+387072(%rip),%rsi` has no use / def rule"
+  },
+  {
+   "id": "e6-adv-cap-jae-to-jb",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: liveness scan: directive 25 `lea type__+387072(%rip),%rsi` has no use / def rule"
+  },
+  {
+   "id": "e6-adv-cap-operands-swapped",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: capacity test not provably passed: cmp rdi=('cap',), rdx=('len', 8) (need len + 8)"
+  },
+  {
+   "id": "e6-adv-cap-short",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: capacity test not provably passed: cmp rdx=('len', 7), rdi=('cap',) (need len + 8)"
+  },
+  {
+   "id": "e6-adv-cap-jae-to-growslice",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: capacity test skips no growslice site"
+  },
+  {
+   "id": "e6-adv-cap-missing-dm",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: liveness scan: directive 20 `lea type__+387072(%rip),%rsi` has no use / def rule"
+  },
+  {
+   "id": "e6-adv-len-imm",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: length test is not the current field's length word against its IR size"
+  },
+  {
+   "id": "e6-adv-len-word",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: length test is not the current field's length word against its IR size"
+  },
+  {
+   "id": "e6-adv-len-missing",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: memmove of field 0 without its length test"
+  },
+  {
+   "id": "e6-adv-len-je",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: liveness scan: directive 11 `je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.MarshalSSZTo_183` has no use / def rule"
+  },
+  {
+   "id": "e6-adv-store-offset",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: indexed store is not the current uint64 field at its SSZ offset (0, ('fval', 'v1', 1))"
+  },
+  {
+   "id": "e6-adv-store-offset-first",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: indexed store is not the current uint64 field at its SSZ offset (8, ('fval', 'v0', 0))"
+  },
+  {
+   "id": "e6-adv-extra-store",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: live register r8 = ('fval', 'v1', 1) at a boundary"
+  },
+  {
+   "id": "e6-adv-store-wrong-value",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: indexed store is not the current uint64 field at its SSZ offset (8, ('fval', 'v0', 0))"
+  },
+  {
+   "id": "e6-adv-fields-out-of-order",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: first Go offset 16 (covered: 0, 8)"
+  },
+  {
+   "id": "e6-adv-code-fields-swapped",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: indexed store is not the current uint64 field at its SSZ offset (0, ('fval', 'v1', 1))"
+  },
+  {
+   "id": "e6-adv-ir-goff",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: Go offsets are not the running sum (field Balance: 24, expected 16)"
+  },
+  {
+   "id": "e6-adv-ir-size",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: length test is not the current field's length word against its IR size"
+  },
+  {
+   "id": "e6-adv-ir-size-only-tag",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: field PublicKey: ssz-size tag but not a []byte vector of that size"
+  },
+  {
+   "id": "e6-adv-ir-missing-type",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: type v1alpha1.NoSuchType: 0 IR entries (need exactly 1)"
+  },
+  {
+   "id": "e6-adv-clobber-len",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: indexed store base / index ('ptr',) ('imm', 0)"
+  },
+  {
+   "id": "e6-adv-clobber-dst",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: indexed store base / index ('imm', 0) ('len', 0)"
+  },
+  {
+   "id": "e6-adv-clobber-rcv",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: live register rcx = None at a boundary"
+  },
+  {
+   "id": "e6-adv-memmove-swapped",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: memmove arguments (('fptr', 'p0', 0), ('dst', 0), ('imm', 48))"
+  },
+  {
+   "id": "e6-adv-memmove-size",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: memmove arguments (('dst', 0), ('fptr', 'p0', 0), ('imm', 32))"
+  },
+  {
+   "id": "e6-adv-memmove-other-callee",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: call of runtime.memclrNoHeapPointers on the walked path (callee encoder without a proved theorem)"
+  },
+  {
+   "id": "e6-adv-ft-jae",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: frame test form unknown (only the frame 0x50 form with >= 64 output bytes is covered)"
+  },
+  {
+   "id": "e6-adv-ft-imm",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: frame test form unknown (only the frame 0x50 form with >= 64 output bytes is covered)"
+  },
+  {
+   "id": "e6-adv-ft-target",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: frame test branch target is not the moveSlice block"
+  },
+  {
+   "id": "e6-adv-ft-sub",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: live register rsi = None at a boundary"
+  },
+  {
+   "id": "e6-adv-epi-no-xor",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: live register rsi = None at a boundary"
+  },
+  {
+   "id": "e6-adv-epi-rbx",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: result registers at the return: {'rbx': ('len', 0), 'rcx': ('cap',), 'rdi': ('imm', 0), 'rsp': ('stk', -8), 'rax': ('ptr',), 'rsi': ('imm', 0)}"
+  },
+  {
+   "id": "e6-adv-epi-no-ret",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: return form (pop %rbp; retq)"
+  },
+  {
+   "id": "e6-adv-epi-frame",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: rsp changed other than by the frame release after the last field"
+  },
+  {
+   "id": "e6-adv-truncated",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: jump to a label not in the file: L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.MarshalSSZTo_d6"
+  },
+  {
+   "id": "e6-adv-blank-line",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: blank line inside the .S file (index = line - 1 would not hold)"
+  },
+  {
+   "id": "e6-adv-dup-label",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: label L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.MarshalSSZTo_7b defined twice"
+  },
+  {
+   "id": "e6-adv-unknown-directive",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: liveness scan: directive 16 `movq %r8,0x48(%rsp)` has no use / def rule"
+  },
+  {
+   "id": "e6-adv-unknown-label",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: jump to a label not in the file: L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.MarshalSSZTo_zz"
+  },
+  {
+   "id": "e6-adv-backward-jmp",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: liveness scan: directive 2 `cmp 0x10(%r14),%rsp` has no use / def rule"
+  },
+  {
+   "id": "e6-adv-store-saved-rbp",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: stack access at -8 (size 8) outside the frame / home slots"
+  },
+  {
+   "id": "e6-adv-store-ret-addr",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: stack access at 0 (size 8) outside the frame / home slots"
+  },
+  {
+   "id": "e6-adv-store-below-frame",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: stack access at -120 (size 8) outside the frame / home slots"
+  },
+  {
+   "id": "e6-adv-movups-dst",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: memory operand base rbx = ('ptr',) (only the frame or the receiver)"
+  },
+  {
+   "id": "e6-adv-overlap",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: 8-byte store at -36 into an unknown chunk"
+  },
+  {
+   "id": "e6-adv-head-no-push",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: prologue form (push %rbp; mov %rsp,%rbp)"
+  },
+  {
+   "id": "e6-adv-head-guard",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: prologue guard form"
+  },
+  {
+   "id": "e6-adv-head-frame",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: frame allocation form"
+  },
+  {
+   "id": "e6-adv-hand-layout-other",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: hand layout E2eScal.layEncE1: slots [-144, -56, -48, -40, -32, -24, -16, -8, 8, 16] != walked [-168, -104, -96, -88, -72, -56, -40, -16, -8, 8, 16]"
+  },
+  {
+   "id": "e6-adv-hand-layout-missing",
+   "ok": true,
+   "exit": 2,
+   "reason": "G6Refuse: hand layout E2eScal.layEncZz not found in lean/E2eScal/EncTies.lean"
+  },
+  {
+   "id": "e6-ok-nops",
+   "ok": true,
+   "exit": 0,
+   "reason": ""
+  },
+  {
+   "id": "e6-ok-nops-call",
+   "ok": true,
+   "exit": 0,
+   "reason": ""
+  },
+  {
+   "id": "e6-ok-extra-move",
+   "ok": true,
+   "exit": 0,
+   "reason": ""
+  },
+  {
+   "id": "e6-ok-rename",
+   "ok": true,
+   "exit": 0,
+   "reason": ""
+  }
+ ]
+}
