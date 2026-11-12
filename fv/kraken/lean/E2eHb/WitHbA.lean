@@ -4,12 +4,12 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Witness of `hb_e2e_accept_main` (HistoricalBatch decoder accept path, HB)
+# Witness of `hb_e2e_accept_main` (HistoricalBatch decoder accept path)
 
-The text of `E2eList.WitScA` (T2) with the HistoricalBatch host and layout. It shows that the premises of the frozen
+The text of `E2eList.WitScA` with the HistoricalBatch host and layout. It shows that the premises of the frozen
 statement `E2eHb.hb_accept_stmt` are satisfiable, the three contract hypotheses included. The contract models are the
-T2 ones, imported as they are: `E2eList.BumpAllocT` (`bump_makeslice_t1`, `bump_makeslice_t24`; the type word of the
-HB backing arrays is the T2 one) and `RtCopy` (`rt_memmove`).
+SyncCommittee ones, imported as they are: `E2eList.BumpAllocT` (`bump_makeslice_t1`, `bump_makeslice_t24`; the type word of the
+HistoricalBatch backing arrays is the SyncCommittee one) and `RtCopy` (`rt_memmove`).
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.HistoricalBatch).UnmarshalSSZ` (index 9), `BumpAllocT` (191) and
 `RtCopy` (207).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 917504-byte heap, guard word, the 524288 input

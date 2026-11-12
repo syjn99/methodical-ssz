@@ -1,7 +1,7 @@
 import E2eDec.StmtComp
 
 /-!
-# Corrected round-trip statement: a bound on the scratch size (ENC, added after the freeze of `StmtComp.lean`)
+# Corrected round-trip statement: a bound on the scratch size (added after the freeze of `StmtComp.lean`)
 
 `dc_unmarshal_then_marshal_s_stmt` is the frozen text of `dc_unmarshal_then_marshal_stmt` with one added premise
 `(hS : S < 2 ^ 60)`; nothing else differs. Reason: the encoder's scratch is the decoder's scratch and return slot

@@ -8,9 +8,9 @@ identical flags) and run natively on linux/arm64 with Go 1.26.10. It checks Go s
 Expected values are computed here, independently of the code under test:
  - returned value (contract items 1-2): ok -> prefix ++ struct.pack('<Q', epoch) ++ root; len(root) != 32 ->
    (nil, ssz.ErrBytesLength); old and new must agree byte for byte.
- - caller's backing array and allocations (items 4-6, written in the pilot protocol before the change):
+ - caller's backing array and allocations (written before the change):
    old: valid root writes [L, L+8) when 8 <= spare < 40 and [L, L+40) when spare >= 40; invalid root writes
-   [L, L+8) when spare >= 8 (C-1); 0 allocations when nothing grows.
+   [L, L+8) when spare >= 8 (the epoch is written before the root length test); 0 allocations when nothing grows.
    new: [L, L+40) (valid) or [L, L+8) (invalid) only when spare >= 40, else the caller's array is unchanged;
    allocations 0 when spare >= 40, else exactly 1.
  - receiver and root unchanged; a nil receiver panics in both (the panic text must be equal).

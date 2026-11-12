@@ -2,7 +2,7 @@ import E2e.WitCpR
 import E2e.CpSpecK
 
 /-!
-# Review e2e-r1 S6: witness of `cp_e2e_reject_size_spec` on concrete input arrays
+# Witness of `cp_e2e_reject_size_spec` on concrete input arrays
 
 Same Host and memory as `E2e.WitCpR`. The input arrays are concrete (`39`, `41`
 and `0` bytes of `0x11`); EthLib rejects each (`∃ e, deserialize … = .error e`)

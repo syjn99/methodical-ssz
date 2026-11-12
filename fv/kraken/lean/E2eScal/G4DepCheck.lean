@@ -3,12 +3,12 @@ import E2eScal.PcAcceptG4
 import E2eScal.SmAccept
 
 /-!
-# GEN4: executed dependency check of the two re-derived H5 accept theorems
+# Executed dependency check of the two re-derived accept theorems (SyncCommitteeMessage, PendingConsolidation)
 
 A program (not a proof) walks the constants that the proof terms of `H5.sm_e2e_accept_g4` and
 `H5.pc_e2e_accept_g4` reach inside the project namespaces (`E2eScal`, `E2e`, `E2eAd`, `Fk`) and fails the build
-if one of the H5-local hand lemmas `bytes32dec_seg_rax`, `sm_vi_arg`, `calldec_nop_seg` is among them.
-Controls: the same walk from the H5 theorems `sm_e2e_accept_main` / `pc_e2e_accept_main` must reach them.
+if one of the hold-out hand lemmas `bytes32dec_seg_rax`, `sm_vi_arg`, `calldec_nop_seg` is among them.
+Controls: the same walk from the hold-out theorems `sm_e2e_accept_main` / `pc_e2e_accept_main` must reach them.
 Executable evidence only.
 -/
 
@@ -57,7 +57,7 @@ elab "#g4_dep_check" : command => do
     for b in banned do
       if r.contains b then throwError "g4 dependency check FAILED: {root} reaches {b}"
     logInfo m!"g4 dependency check PASS: {root} reaches {r.size} project constants, none of {banned}"
-  -- controls: the H5 proofs must reach the hand lemmas (the walk can fail)
+  -- controls: the hold-out proofs must reach the hand lemmas (the walk can fail)
   let r1 := reach env `E2eScal.H5.sm_e2e_accept_main
   unless r1.contains `E2eScal.H5.bytes32dec_seg_rax && r1.contains `E2eScal.H5.sm_vi_arg do
     throwError "g4 dependency check: control failed (sm_e2e_accept_main does not reach the hand lemmas)"

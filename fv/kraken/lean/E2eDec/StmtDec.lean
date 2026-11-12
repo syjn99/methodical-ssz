@@ -9,26 +9,26 @@ import E2eDec.Code
 import E2eDec.Data
 
 /-!
-# Hand STATEMENTS of the ENC round-trip decoder `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ`
+# Hand STATEMENTS of the round-trip decoder `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ`
 
 Statements only. Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
-Statement shape: `E2eList/StmtIa.lean` (T3). Design: `prysm/go1.26.10/e2e/lv/DESIGN-DEC.md`.
+Statement shape: `E2eList/StmtIa.lean`. Design: `prysm/go1.26.10/e2e/lv/DESIGN-DEC.md`.
 
     func (c *DataColumnsByRootIdentifier) UnmarshalSSZ(buf []byte) error {              // fulu.ssz.go:1778
-        if size < 36 { return ssz.ErrSize }                                              // D1
-        if ReadOffset(buf[32:36]) != 36 { return ssz.ErrInvalidVariableOffset }          // D2
+        if size < 36 { return ssz.ErrSize }                                              // size reject
+        if ReadOffset(buf[32:36]) != 36 { return ssz.ErrInvalidVariableOffset }          // offset reject
         c.BlockRoot = append(make([]byte, 0, 32), buf[0:32]...)                          // makeslice + memmove
-        if len(buf[36:]) % 8 != 0 { return fmt.Errorf("misaligned bytes: … %d … %w", …) }    // D4
-        if numElem > 128 { return fmt.Errorf("ssz-max exceeded: … %d … %w", …) }            // D5
-        c.Columns = make([]uint64, numElem); for i … { c.Columns[i] = LE64(buf[36+8i:]) }    // D3
+        if len(buf[36:]) % 8 != 0 { return fmt.Errorf("misaligned bytes: … %d … %w", …) }    // alignment reject
+        if numElem > 128 { return fmt.Errorf("ssz-max exceeded: … %d … %w", …) }            // overflow reject
+        c.Columns = make([]uint64, numElem); for i … { c.Columns[i] = LE64(buf[36+8i:]) }    // accept
         return err }
 
 Receiver (IR `go_fields`, size 88): `state` 0, `BlockRoot` 8 (ptr, len, cap), `Columns` 32 (ptr, len, cap). The accept
 path writes c + 8 … c + 55. Frame (x = entry rsp): guard `lea -0x10(%rsp),%r12` (`guard + 16 < x`); `push %rbp`;
 `sub $0x88` (rsp = x − 144). Spills: x + 8 (rax), x + 16 (rbx), x + 24 (rcx), x + 32 (rdi). Locals: x − 104
 (cap − 36), x − 96 (n), x − 88 (buf[36:] pointer), x − 80 (BlockRoot pointer). Callee spill area x − 144 (40 bytes),
-runtime call return slot x − 152, scratch `S` below it. The last call on D3 is the Columns `makeslice` (directive 75).
-D4 and D5 run after the BlockRoot allocation and stores; their statements are not in this file.
+runtime call return slot x − 152, scratch `S` below it. The last call on the accept path is the Columns `makeslice` (directive 75).
+The alignment reject and the overflow reject run after the BlockRoot allocation and stores; their statements are not in this file.
 -/
 
 open Fk EthLib.Serialization.Ssz E2eDec.Code E2eEnc
@@ -36,7 +36,7 @@ variable [Host]
 
 namespace E2eDec
 
-/-- **D1 size reject (machine).** `len(buf) < 36`: the decoder returns the two words of `ssz.ErrSize`. -/
+/-- **Size reject (machine).** `len(buf) < 36`: the decoder returns the two words of `ssz.ErrSize`. -/
 def dcd_reject_size_stmt : Prop :=
   ∀ (k : Nat) (hk : DcUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DcUnmarshal k)
     (s : MachineData) (ra guard e0 e1 : UInt64) (fp s2 : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8)
@@ -61,7 +61,7 @@ def dcd_reject_size_stmt : Prop :=
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **D2 offset reject (machine).** `len(buf) ≥ 36` and the 4 bytes `off` at buf[32:36] are not 36: the decoder returns the two words of `ssz.ErrInvalidVariableOffset`. -/
+/-- **Offset reject (machine).** `len(buf) ≥ 36` and the 4 bytes `off` at buf[32:36] are not 36: the decoder returns the two words of `ssz.ErrInvalidVariableOffset`. -/
 def dcd_reject_offset_stmt : Prop :=
   ∀ (k : Nat) (hk : DcUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DcUnmarshal k)
     (s : MachineData) (ra guard e0 e1 : UInt64) (fp s2 : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8)
@@ -89,7 +89,7 @@ def dcd_reject_offset_stmt : Prop :=
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **D3 accept (machine).** `len(buf) = 36 + 8n`, `n ≤ 128`, offset 36: two `makeslice` calls (BlockRoot 32 bytes, Columns 8n bytes), one `memmove` of the root, the element loop; the decoder returns nil and the receiver holds BlockRoot = (pb, 32, 32) with the root bytes and Columns = (A, n, n) with the input element bytes. `writeBarrier = 0`: the barrier branches are not taken. -/
+/-- **Accept (machine).** `len(buf) = 36 + 8n`, `n ≤ 128`, offset 36: two `makeslice` calls (BlockRoot 32 bytes, Columns 8n bytes), one `memmove` of the root, the element loop; the decoder returns nil and the receiver holds BlockRoot = (pb, 32, 32) with the root bytes and Columns = (A, n, n) with the input element bytes. `writeBarrier = 0`: the barrier branches are not taken. -/
 def dcd_accept_stmt : Prop :=
   ∀ (k : Nat) (hk : DcUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DcUnmarshal k)
     (n : Nat) (hn : n ≤ 128) (root ib : List UInt8) (hroot : root.length = 32) (hib : ib.length = 8 * n)
@@ -149,7 +149,7 @@ def dcd_accept_stmt : Prop :=
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **D3 (spec).** If EthLib accepts `bsA` as `v`, there is `g : PDc` with `g.toValue = v` and `bsA = pdcEnc g`, and the machine code decodes `bsA` into `g`. -/
+/-- **Accept (spec).** If EthLib accepts `bsA` as `v`, there is `g : PDc` with `g.toValue = v` and `bsA = pdcEnc g`, and the machine code decodes `bsA` into `g`. -/
 def dcd_accept_spec_stmt : Prop :=
   ∀ (k : Nat) (hk : DcUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DcUnmarshal k)
     (bsA : Array UInt8) (v : Value) (hd : deserialize prysmDcDesc bsA = .ok v)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""prysm-e2e axioms gate over EVERY declaration of the E2e, E2eAd and E2eScal libraries (audit AU-10, AU-05).
+"""Axioms gate over EVERY declaration of the E2e, E2eAd and E2eScal libraries.
 
 Usage (one gated job, Lean env; the cwd does not matter):
   axioms_gate.py run <out.json> <dump.tsv> [--extra-lean-path DIR --extra-module M]...
@@ -8,7 +8,7 @@ Usage (one gated job, Lean env; the cwd does not matter):
 
 run:
  1. Module list by program: every *.lean file under fv/kraken/lean/{E2e,E2eAd,E2eScal}.
- 2. Freshness precheck (AU-05): `lake build --no-build <all modules>` must exit 0; else exit 2, nothing else runs.
+ 2. Freshness precheck: `lake build --no-build <all modules>` must exit 0; else exit 2, nothing else runs.
     `lake env lean` itself does no trace check.
  3. `lake env lean --run <decl_dump.lean> --root E2e --root E2eAd --root E2eScal <modules>` writes one row per
     declaration (name, kind, type hash, value hash, sorted Lean.collectAxioms set) to <dump.tsv>. decl_dump.lean is

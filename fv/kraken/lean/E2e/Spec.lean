@@ -4,7 +4,7 @@ import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
 import E2e.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.Checkpoint` (prysm-e2e E1.3)
+# Spec bridge for the real Prysm `v1alpha1.Checkpoint`
 
 Independent hand `Desc`, written from consensus-specs phase0 (`specs/phase0/beacon-chain.md`):
 

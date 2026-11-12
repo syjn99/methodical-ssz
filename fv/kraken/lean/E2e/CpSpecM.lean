@@ -3,7 +3,7 @@ import E2e.Spec
 import Fk.RtCopy
 
 /-!
-# Encoder against EthLib, and SizeSSZ (prysm-e2e, INBOX 004 item 2)
+# Encoder against EthLib, and SizeSSZ
 
 - `cp_e2e_marshal_spec_k`: for a receiver holding the Go layout of `g : PCp`
   (`Epoch` = `uintBytes 8 g.epoch`, `Root` = `(p, 32, cap)` with `g.root` at `p`),

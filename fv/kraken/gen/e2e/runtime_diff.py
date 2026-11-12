@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""prysm-e2e E1.4: compare the Go 1.26.3 and Go 1.26.10 sources of the runtime functions behind the contracts.
+"""Compare the Go 1.26.3 and Go 1.26.10 sources of the runtime functions behind the contracts.
 
 Usage: runtime_diff.py <goroot-1.26.3> <goroot-1.26.10> <out.json>
 For every contract (or excluded path) the function bodies it rests on are extracted (from `\nfunc <name>(`

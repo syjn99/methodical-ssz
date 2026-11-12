@@ -4,9 +4,9 @@ import E2eScal.DmDesc
 import E2eScal.DmSpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.DepositMessage` (H3 hold-out)
+# Spec bridge for the real Prysm `v1alpha1.DepositMessage` (hold-out)
 
-Hand-written by the H3 evaluation session (the text of `E1Spec.lean`; `obtain … rfl` on `bs = enc g` is `rw` here:
+Hand-written (the text of `E1Spec.lean`; `obtain … rfl` on `bs = enc g` is `rw` here:
 `subst` of that equation timed out in `whnf` (job 18, minimal reproduction); with the DepositMessage fields).
 `prysmDmDesc` (`DmDesc.lean`) is the independent hand `Desc` from consensus-specs phase0; it was committed
 before `dmCheckerDesc` was rendered and printed.

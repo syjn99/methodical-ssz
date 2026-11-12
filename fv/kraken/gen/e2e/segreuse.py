@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""SEG stream: line counts for REPORT-SEG.md. Python 3 stdlib only; cwd = fv/kraken.
+"""Line counts for REPORT-SEG.md. Python 3 stdlib only; cwd = fv/kraken.
 
 Usage: python3 -I -B gen/e2e/segreuse.py
 
-1. The Deposit files (proof of use) against their HB sources, with `hbreuse.py`'s classification (verbatim,
+1. The Deposit files (proof of use) against their HistoricalBatch sources, with `hbreuse.py`'s classification (verbatim,
    mechanical after renames and numerals, new; comment/doc lines apart). `hbreuse.py` is imported, not changed.
 2. Code lines (not blank, not comment) of the general files and of the hand files they replace.
-3. Equal scope (review r5 M2): the "new" lines of the same file kinds (code include, machine statement, size reject,
-   element loop(s), accept, link script) for HB (reference: T2 sources, rename map T2 -> HB) and for Deposit
-   (reference: HB sources and the general lemmas' instance file, rename map HB -> Deposit). The references and the
+3. Equal scope: the "new" lines of the same file kinds (code include, machine statement, size reject,
+   element loop(s), accept, link script) for HistoricalBatch (reference: SyncCommittee sources, rename map SyncCommittee -> HistoricalBatch) and for Deposit
+   (reference: HistoricalBatch sources and the general lemmas' instance file, rename map HistoricalBatch -> Deposit). The references and the
    rename maps differ, so the two numbers measure "lines not carried over from the previous type", nothing more.
 """
 import pathlib
@@ -18,7 +18,7 @@ HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import hbreuse as h  # noqa: E402
 
-HB_RENAME = list(h.RENAME)  # T2 -> HB (hbreuse.py)
+HB_RENAME = list(h.RENAME)  # SyncCommittee -> HistoricalBatch (hbreuse.py)
 DEP_RENAME = [("HbUnmarshal", "DepUnmarshal"), ("HistoricalBatch", "Deposit"), ("E2eHb", "E2eDep"),
             ("hb_e2e_", "dep_e2e_"), ("hb_accept", "dep_accept"), ("hb_reject", "dep_reject"), ("hbL", "depL"),
             ("hbN", "depN"), ("StmtHb", "Stmt"), ("hblink", "deplink")]
@@ -57,7 +57,7 @@ HB_SCOPE = [
 
 def equal_scope():
     print()
-    print("| scope | HB new (ref. T2) | Deposit new (ref. HB) |")
+    print("| Scope | HistoricalBatch new (reference SyncCommittee) | Deposit new (reference HistoricalBatch) |")
     print("| --- | --- | --- |")
     h.RENAME = HB_RENAME
     hb = {k: h.measure(f, srcs)[2] for k, f, srcs in HB_SCOPE}

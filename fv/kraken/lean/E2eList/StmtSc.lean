@@ -8,7 +8,7 @@ import E2eList.Data
 import E2eList.Defs
 
 /-!
-# Hand STATEMENTS of the LV target T2 `(*v1alpha1.SyncCommittee).UnmarshalSSZ` (statements only, no proof)
+# Hand STATEMENTS of the target `(*v1alpha1.SyncCommittee).UnmarshalSSZ` (statements only, no proof)
 
 Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
 Statement shape: as `StmtSa.lean` (`E2eScal.H4.dd_accept_stmt` and its spec companions), with a 512-element
@@ -47,7 +47,7 @@ variable [Host]
 
 namespace E2eList
 
-/-- **T2 accept (machine).** On a 24624-byte input `pks.flatten ++ agg` (512 blocks of 48 bytes, then 48 bytes)
+/-- **Accept (machine).** On a 24624-byte input `pks.flatten ++ agg` (512 blocks of 48 bytes, then 48 bytes)
 the decoder returns nil; the receiver holds a fresh `[][]byte` Pubkeys of len = cap = 512 whose backing array
 at `A` has the headers `(ps[i], 48, 48)` and whose element i at `ps[i]` equals `pks[i]`, and a fresh
 AggregatePubkey (48, len = cap) equal to `agg`; input, `state`, the spills, the caller's frame `R` and the stack
@@ -110,7 +110,7 @@ def sc_accept_stmt : Prop :=
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **T2 size reject (machine).** `len(buf) ≠ 24624`: the decoder returns the two words `e0`, `e1` of
+/-- **Size reject (machine).** `len(buf) ≠ 24624`: the decoder returns the two words `e0`, `e1` of
 `ssz.ErrSize`; the rbx spill slot holds rbx, the caller's frame `R` (the receiver and the input included) and
 the global are unchanged. -/
 def sc_reject_size_stmt : Prop :=
@@ -134,7 +134,7 @@ def sc_reject_size_stmt : Prop :=
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **T2 accept (spec).** If EthLib accepts `bsA` against `prysmScDesc` as `v`, there is `g : PSc` with
+/-- **Accept (spec).** If EthLib accepts `bsA` against `prysmScDesc` as `v`, there is `g : PSc` with
 `g.toValue = v` and `bsA = pscEnc g`; with the input chunks of that `g` the machine code returns nil and the
 receiver holds `g` (postcondition of `sc_accept_stmt` with `pks = g.pks`, `agg = g.aggregatePubkey`). -/
 def sc_accept_spec_stmt : Prop :=
@@ -196,7 +196,7 @@ def sc_accept_spec_stmt : Prop :=
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **T2 size reject (spec).** `bs.size ≠ 24624`: EthLib rejects, and the machine code returns the two words of
+/-- **Size reject (spec).** `bs.size ≠ 24624`: EthLib rejects, and the machine code returns the two words of
 `ssz.ErrSize` (postcondition of `sc_reject_size_stmt`). -/
 def sc_reject_size_spec_stmt : Prop :=
   ∀ (k : Nat) (hk : ScUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh ScUnmarshal k)
@@ -221,7 +221,7 @@ def sc_reject_size_spec_stmt : Prop :=
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **T2 reject completeness (spec).** Every input that EthLib rejects has `size ≠ 24624`: the path condition of
+/-- **Reject completeness (spec).** Every input that EthLib rejects has `size ≠ 24624`: the path condition of
 the decoder's one reject site (`runtime.panicBounds` is not an error return; it is to be proved unreachable). -/
 def sc_reject_complete_stmt : Prop :=
   ∀ bs : Array UInt8, (¬ ∃ v, deserialize prysmScDesc bs = .ok v) → bs.size ≠ 24624

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""SEG stream: the prysm-e2e axioms gate (`axioms_gate.py`, not changed) over E2e, E2eAd, E2eScal, E2eList, E2eHb, E2eSeg AND E2eDep.
+"""The axioms gate (`axioms_gate.py`, not changed) over E2e, E2eAd, E2eScal, E2eList, E2eHb, E2eSeg AND E2eDep.
 
 Usage (one gated job, Lean env; the cwd does not matter):
   hbaxioms_gate.py run <out.json> <dump.tsv> [--extra-lean-path DIR --extra-module M]...
@@ -7,7 +7,7 @@ Usage (one gated job, Lean env; the cwd does not matter):
   hbaxioms_gate.py --selftest
 The text of `hbaxioms_gate.py` (not changed): it imports `axioms_gate.py` and only widens two module constants before
 the call: ROOTS gets "E2eList", "E2eHb", "E2eSeg" and "E2eDep" (module list, precheck `lake build --no-build`, `decl_dump.lean --root`) and
-LISTS gets the LV, HB and SEG hand lists. Every
+LISTS gets the list/vector, HistoricalBatch and segment-lemma hand lists. Every
 other line of the gate is the existing code. Python 3 stdlib only.
 """
 import pathlib

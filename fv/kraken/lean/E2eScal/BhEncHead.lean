@@ -4,7 +4,7 @@ import E2eScal.BhCode
 import E2eScal.StackGuard
 
 /-!
-# Real Prysm `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo`, fast path, head segments (H1 hold-out (iii))
+# Real Prysm `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo`, fast path, head segments (hold-out)
 
 Hand proof. The generator has no encode mode; no template lemma is used.
 
@@ -34,7 +34,7 @@ namespace E2eScal.Bh
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- Segment A1: entry to directive 36 (stack guard passed, frame set up, Slot bytes stored). -/
+/-- Slot segment: entry to directive 36 (stack guard passed, frame set up, Slot bytes stored). -/
 theorem bh_enc_a1 (k : Nat) (hk : BhMarshal.IsInfixAt Host.prog k) (hf : LabelsFresh BhMarshal k)
     (sl d0 : List UInt8) (hsl : sl.length = 8) (hd0 : d0.length = 8)
     (s : MachineData) (guard : UInt64)
@@ -166,7 +166,7 @@ theorem bh_enc_a1 (k : Nat) (hk : BhMarshal.IsInfixAt Host.prog k) (hf : LabelsF
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- Segment A2: directive 36 to directive 62 (ProposerIndex bytes stored). Only the atoms it touches. -/
+/-- ProposerIndex segment: directive 36 to directive 62 (ProposerIndex bytes stored). Only the atoms it touches. -/
 theorem bh_enc_a2 (k : Nat) (hk : BhMarshal.IsInfixAt Host.prog k) (hf : LabelsFresh BhMarshal k)
     (pi d1 : List UInt8) (hpi : pi.length = 8) (hd1 : d1.length = 8)
     (s : MachineData) (rsp : UInt64) (t2a t2b : List UInt8)

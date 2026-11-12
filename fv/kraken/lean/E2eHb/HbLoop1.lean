@@ -7,7 +7,7 @@ import E2eHb.Code
 import E2eHb.HbLemmas
 
 /-!
-# HB `(*v1alpha1.HistoricalBatch).UnmarshalSSZ`: the BlockRoots loop (8192 iterations)
+# `(*v1alpha1.HistoricalBatch).UnmarshalSSZ`: the BlockRoots loop (8192 iterations)
 
 Loop head `L_a0` (directive 40). `sp` is the rsp of the body (`entry rsp − 64`). Frame slots relative to `sp`:
 `sp + 72` receiver spill, `sp + 80` buf spill, `sp + 24` i + 1, `sp + 32` 32i, `sp + 40` i, `sp + 48` element
@@ -20,7 +20,7 @@ pointer, `sp` the 24-byte spill area of the callees, `sp − 8` the runtime call
 receiver (8192): not taken; 69–72 len and cap words of header i; 73–75 writeBarrier = 0; 76–77, 36–39 the pointer
 word of header i, `rax = i + 1` (loaded from `sp + 24`).
 Proof order: `E2eList.sc_iter`, `sc_exit`, `sc_loop` (`ScLoop.lean`); the step sequence is this decoder's own.
-The macro `laddr` and the lemmas `jge_false512`, `lvElems_snoc` are imported from T2.
+The macro `laddr` and the lemmas `jge_false512`, `lvElems_snoc` are imported from the SyncCommittee proof.
 -/
 
 open Fk E2eList E2eHb.Code

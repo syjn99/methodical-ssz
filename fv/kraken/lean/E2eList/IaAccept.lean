@@ -5,7 +5,7 @@ import E2eList.StmtIa
 import E2eList.IaLoop
 
 /-!
-# T3 `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`, accept path P3, Go 1.26.10 machine code (LV)
+# `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`, accept path, Go 1.26.10 machine code
 
 * head 0–56 (hand steps): guard, prologue (`sub $0xa8`), size check, offset check, slice header of `buf[228:]`
   (18–24, the pointer mask), alignment and bound checks, spills, `makeslice` of AttestingIndices
@@ -174,7 +174,7 @@ theorem ia_obj96 (p : BitVec 64) :
 --   `IaReject.lean`; 1024 passes.
 set_option maxHeartbeats 1600000 in
 set_option maxRecDepth 1024 in
-/-- **Accept path P3 of the real `(*v1alpha1.IndexedAttestation).UnmarshalSSZ` (Go 1.26.10)**; statement = the frozen
+/-- **Accept path of the real `(*v1alpha1.IndexedAttestation).UnmarshalSSZ` (Go 1.26.10)**; statement = the frozen
 `ia_accept_stmt`. -/
 theorem ia_e2e_accept_main : ia_accept_stmt := by
   intro k hk hf kA hkA hfA kS hkS hfS kI hkI hfI kC hkC hfC kE hkE hfE n hn in0 in1 root se sroot te troot sig ib

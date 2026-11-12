@@ -1,10 +1,10 @@
 import E2e.Spec
 
 /-!
-# Independent hand `Desc` of `v1alpha1.Eth1Data` (H2 hold-out)
+# Independent hand `Desc` of `v1alpha1.Eth1Data` (hold-out)
 
-Hand-written by evaluation session 13 from consensus-specs phase0 (`specs/phase0/beacon-chain.md`),
-BEFORE the Desc checker's Desc of `(v1alpha1, Eth1Data)` was generated or printed (H1 finding NF:
+Hand-written from consensus-specs phase0 (`specs/phase0/beacon-chain.md`),
+BEFORE the Desc checker's Desc of `(v1alpha1, Eth1Data)` was generated or printed (rule:
 independence in time). This file is committed before `E1SpecChecker.lean` exists.
 
     class Eth1Data(Container):

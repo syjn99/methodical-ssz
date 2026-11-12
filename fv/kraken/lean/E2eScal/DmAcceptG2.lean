@@ -3,7 +3,7 @@ import E2eScal.Gen2DmDec
 import E2eScal.DmAccept
 
 /-!
-# GEN2 reuse demonstration: the DepositMessage accept path from the GENERATED segment theorems
+# Reuse demonstration: the DepositMessage accept path from the GENERATED segment theorems
 
 `dm_e2e_accept_main_g2` has the statement text of `E2eScal.Dm.dm_e2e_accept_main`; `dm_e2e_accept_main_g2_type`
 proves that the two declared types are equal (`with_reducible rfl`). The proof is a chain of

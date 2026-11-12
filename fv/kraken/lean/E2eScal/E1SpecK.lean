@@ -3,9 +3,9 @@ import E2eScal.E1Reject
 import E2eScal.E1Spec
 
 /-!
-# Spec alignment of the real Eth1Data decoder (H2 hold-out)
+# Spec alignment of the real Eth1Data decoder (hold-out)
 
-Hand-written by evaluation session 13 (the text of `BhSpecK.lean` with the Eth1Data statement).
+Hand-written (the text of `BhSpecK.lean` with the Eth1Data statement).
 - `e1_e2e_accept_spec_k`: if EthLib accepts `bsA` (`prysmE1Desc`, the independent consensus-specs Desc)
   as `v`, there is `g : PE1` with `g.toValue = v` and `bsA = pe1Enc g`; with the input chunks of that `g`
   the machine code returns nil and the receiver holds `g` (the two roots at fresh `p1 p2` with

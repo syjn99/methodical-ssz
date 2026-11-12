@@ -4,9 +4,9 @@ import E2eScal.Gen3SmDecPartial
 import E2eScal.H5Stmt
 
 /-!
-# Real Prysm `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`, accept path, Go 1.26.10 (H5 hold-out, class C)
+# Real Prysm `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`, accept path, Go 1.26.10 (hold-out, class C)
 
-Hand composition of the H5 evaluation session, written AFTER the raw generator output was committed. The
+Hand composition, written AFTER the raw generator output was committed. The
 statement is the independent hand statement `E2eScal.H5.sm_accept_stmt` (`H5Stmt.lean`, unchanged). Chain of
 `eventually_trans` over
 
@@ -14,7 +14,7 @@ statement is the independent hand statement `E2eScal.H5.sm_accept_stmt` (`H5Stmt
 * `Gen.sm_g3dec_Slot_arg` (15–16) and `Gen.sm_g3dec_Slot_call` (17–19, label 46): GENERATED
   (`Gen3SmDecPartial.lean`, raw); `hC` discharged by the proved `sl_uacc_holds`,
 * `bytes32dec_seg_rax` (hand lemma, BlockRoot 47–71) and hand steps 72–73, label 80, 81,
-* `sm_vi_arg` (hand lemma, 82–87) and `E2eScal.calldec_seg` (existing GEN3 lemma applied by hand, 88–90,
+* `sm_vi_arg` (hand lemma, 82–87) and `E2eScal.calldec_seg` (existing lemma applied by hand, 88–90,
   label 117; callee ValidatorIndex, `vi_uacc_holds`),
 * `sm_spill2` (hand, 118–119),
 * `Gen.sm_g3dec_Signature_seg` (120–145): GENERATED,

@@ -6,9 +6,9 @@ import E2eScal.GenDmDec
 import E2eScal.DmSeg0
 
 /-!
-# Real Prysm `(*v1alpha1.DepositMessage).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (H3 hold-out)
+# Real Prysm `(*v1alpha1.DepositMessage).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (hold-out)
 
-Hand-written by the H3 evaluation session after the H3 opening. The WithdrawalCredentials segment is the
+Hand-written after the hold-out was opened. The WithdrawalCredentials segment is the
 raw generator theorem `E2eScal.Gen.dm_dec_WithdrawalCredentials_seg` (`GenDmDec.lean`, unedited). The
 PublicKey segment (48 bytes, source offset 0) is the hand lemma `E2eScal.H3.bytes48dec_seg_z` (`DmSeg0.lean`):
 the generator does not read 48-byte fields. Amount (inline uint64) is by hand. The head and the composition

@@ -4,7 +4,7 @@ import Fk.LuSpec
 import Fk.Frame
 
 /-!
-# Function specifications for composition (C20)
+# Function specifications for composition
 
 A caller (Nested, ListC) uses each callee through a specification of the same
 shape as a runtime contract: a hypothesis about the code at the callee's label,

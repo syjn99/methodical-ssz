@@ -1,7 +1,7 @@
 import E2e.CpWGrowAny
 
 /-!
-# `(*v1alpha1.Checkpoint).MarshalSSZTo`: first growth, then the sharp case split of the second call (INBOX 010 M1)
+# `(*v1alpha1.Checkpoint).MarshalSSZTo`: first growth, then the sharp case split of the second call
 
 `cp_e2e_marshal_grow_any_sharp` has exactly the premises of `cp_e2e_marshal_grow_any_main` (`len(Root) = 32`,
 `cap < len + 8`, nil / cap 0 `dst` included; no new premise, no new contract form: `GrowsliceC` esz 1 and
@@ -19,8 +19,8 @@ import E2e.CpWGrowAny
 
 Only (C) is not a return. It is the one state that the existing form cannot continue: `GrowsliceC`
 gives the remaining heap of the first call only as an upper bound (`av' + C1 ≤ avail`), so the budget
-premise of the second call is not derivable (FINDINGS T-7). The return in (C) is differential only.
-Idea of the proof: reviewer e2e-r3 probe `r3_grow_any_sharp` (registers only); re-proved here with the frame.
+premise of the second call is not derivable. The return in (C) is differential only.
+Idea of the proof: the probe `r3_grow_any_sharp` (registers only); re-proved here with the frame.
 -/
 
 open Fk E2e.Code

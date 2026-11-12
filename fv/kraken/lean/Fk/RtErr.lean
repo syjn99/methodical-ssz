@@ -97,7 +97,7 @@ theorem rt_errorf_dw (j : Nat) (hj : RtErr.IsInfixAt Host.prog j) (hf : LabelsFr
   · intro h; have := congrArg UInt64.toNat h; simp only [] at this; revert this; decide
 
 set_option maxHeartbeats 4000000 in
-/-- The same code meets `FmtErrorfDDC` (fix 3 X5). -/
+/-- The same code meets `FmtErrorfDDC`. -/
 theorem rt_errorf_dd (j : Nat) (hj : RtErr.IsInfixAt Host.prog j) (hf : LabelsFresh RtErr j)
     (Heap : Nat → DataMem → Prop) (fs : List UInt8) (tw : BitVec 64) (S : Nat) : FmtErrorfDDC Heap fs tw S := by
   intro st ret avail hb1 hb2 stk spill bx1 v1 bx2 v2 F _hrbx hrdi _hrsi _hb1 _hb2 hstk hsp _hav hmem

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""SEG: hand code lines (not blank, not comment) per part of the Deposit port, for REPORT-SEG.md §7.
+"""Hand code lines (not blank, not comment) per part of the Deposit port, for REPORT-SEG.md §7.
 
 Usage: python3 -I -B gen/e2e/segcost.py      (cwd = fv/kraken; Python 3 stdlib only; imports hbreuse.py, unchanged)
 The accept proof is cut at its own section comments: helpers (before `theorem dep_e2e_accept_main`), head (to
@@ -21,7 +21,7 @@ def code_lines(p, lo=None, hi=None):
     text = (KR / p).read_text().split("\n")
     a = 0 if lo is None else next(i for i, l in enumerate(text) if lo in l)
     b = len(text) if hi is None else next(i for i, l in enumerate(text) if hi in l)
-    # review r5 S9: the slice goes to a temporary directory outside the repository
+    # the slice goes to a temporary directory outside the repository
     with tempfile.TemporaryDirectory() as d:
         tmp = pathlib.Path(d) / "slice.lean"
         tmp.write_text("\n".join(text[a:b]))

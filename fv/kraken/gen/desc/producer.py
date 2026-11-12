@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generator-side Desc producer (P3). Input: reduced sszgen IR. Output: one Desc JSON per type.
+"""Generator-side Desc producer. Input: reduced sszgen IR. Output: one Desc JSON per type.
 
 Usage: producer.py <out-dir> <reduced-ir.json>... [--types T1,pkg.T2] [--refs refs.json]
 

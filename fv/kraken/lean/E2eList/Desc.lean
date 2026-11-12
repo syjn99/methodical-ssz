@@ -1,9 +1,9 @@
 import E2e.Spec
 
 /-!
-# Independent hand `Desc` of `v1alpha1.SyncAggregate` and `v1alpha1.SyncCommittee` (LV stream)
+# Independent hand `Desc` of `v1alpha1.SyncAggregate` and `v1alpha1.SyncCommittee`
 
-Hand-written by the LV implementer session from the consensus-specs altair container definitions
+Hand-written from the consensus-specs altair container definitions
 (`specs/altair/beacon-chain.md`; the repository has no local copy of that file), BEFORE the Desc producer's
 output for these two types was printed. The producer's Desc files (`e2e/lv/desc/*.desc.json`, sha256 equal to
 the checker records in `gen/desc/results/main.result.json`) are compared with these terms in a later unit.

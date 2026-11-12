@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""LV T3: the prysm-e2e axioms gate with the LV and the LV T3 hand lists.
+"""IndexedAttestation: the axioms gate with the list/vector and the IndexedAttestation hand lists.
 
 The text of `lvaxioms_gate.py` (not changed): it imports `axioms_gate.py` (not changed) and widens two module
 constants before the call: ROOTS gets "E2eList", LISTS gets `gen/e2e/AxiomsLv.lean` and `gen/e2e/AxiomsLvT3.lean`.

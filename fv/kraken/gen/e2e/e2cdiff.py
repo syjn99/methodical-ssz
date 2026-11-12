@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""E2-C Go differential of the 16 flat development ENCODERS, fast path (Python 3 standard library only).
+"""Go differential of the 16 flat development ENCODERS, fast path (Python 3 standard library only).
 
   e2cdiff.py cases <cases.json>                      write the cases
   e2cdiff.py check <cases.json> <go-out.json> <result.json>

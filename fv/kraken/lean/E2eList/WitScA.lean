@@ -4,7 +4,7 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Witness of `sc_e2e_accept_main` (SyncCommittee decoder accept path, LV T2)
+# Witness of `sc_e2e_accept_main` (SyncCommittee decoder accept path)
 
 The text of `WitSaA.lean` with the SyncCommittee host and layout. It shows that the premises of the frozen statement
 `E2eList.sc_accept_stmt` are satisfiable, the three contract hypotheses included: both `MakesliceC` instances come from
@@ -91,7 +91,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
 -- Same cause as `WitSaA.sa_accept_runs` (profile, log 27): the memory premise is closed by `simp`
 -- AC-normalization of the separating conjunction (here 25 chunks). Without this option the declaration stops at `whnf`
 -- with the default 200000 heartbeats after a 2.3 s `simp` (scratch copy, log 65).
--- Thresholds measured by review r2 (reviewer runs): 200000, 400000 and 1000000 fail at `whnf`, 2000000 passes.
+-- Thresholds measured in independent reviewer runs: 200000, 400000 and 1000000 fail at `whnf`, 2000000 passes.
 -- Value 4000000 (twice the reviewer's passing value; was 16000000): passes in the implementer's run (log 97).
 set_option maxHeartbeats 4000000 in
 /-- **Non-vacuity of `sc_e2e_accept_main` (the premises of the frozen statement `sc_accept_stmt` are satisfiable).** -/

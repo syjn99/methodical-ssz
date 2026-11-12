@@ -3,7 +3,7 @@ import E2eList.ScReject
 import E2eList.ScSpec
 
 /-!
-# Spec alignment of the real SyncCommittee decoder (LV T2)
+# Spec alignment of the real SyncCommittee decoder
 
 The text of `SaSpecK.lean` with the SyncCommittee statement. The statements are the frozen `sc_accept_spec_stmt`,
 `sc_reject_size_spec_stmt` and `sc_reject_complete_stmt` (`StmtSc.lean`).

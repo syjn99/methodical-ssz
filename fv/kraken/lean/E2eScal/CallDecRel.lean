@@ -1,7 +1,7 @@
 import E2eScal.CallDec
 
 /-!
-# GEN3 L1: `U64CalleeAcc` is the existing function-specification form
+# `U64CalleeAcc` is the existing function-specification form
 
 The four existing accept specifications of the `uint64`-overlay decoders are `U64CalleeAcc` at their label,
 by `rfl` (the definitions unfold to the same text). So `calldec_seg` takes its callee hypothesis in the

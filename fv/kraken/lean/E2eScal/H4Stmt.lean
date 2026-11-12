@@ -8,10 +8,10 @@ import E2eScal.BhCode
 import E2eScal.H4Code
 
 /-!
-# Independent hand STATEMENTS of the two H4 accept theorems (H4 hold-out; statements only, no proof)
+# Independent hand STATEMENTS of the two accept theorems (hold-out; statements only, no proof)
 
-Hand-written by the H4 evaluation session BEFORE the proof generator (`gen/scal/scalgen.py`) was run on
-either type and before any generator output for them was read (`gen2/H4-PROTOCOL.md` item 2).
+Hand-written BEFORE the proof generator (`gen/scal/scalgen.py`) was run on
+either type and before any generator output for them was read.
 Sources: the Go receiver layout (IR `go_fields` in `prysm/ir/ir-mainnet.json`), the SSZ layout
 (consensus-specs; `DdDesc.lean`, `PwDesc.lean`), the frame facts of the two `.S` files
 (`prysm/go1.26.10/e2e/h4/link/norm`), and the statement shape of the earlier hand accept theorems

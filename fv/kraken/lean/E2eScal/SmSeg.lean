@@ -3,9 +3,9 @@ import E2eScal.SegN
 import E2eScal.H5Code
 
 /-!
-# SyncCommitteeMessage hand lemmas (H5 hold-out, class C; hand work after the raw generator output)
+# SyncCommitteeMessage hand lemmas (hold-out, class C; hand work after the raw generator output)
 
-Hand-written by the H5 evaluation session for the directives of `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`
+Hand-written for the directives of `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`
 that the generator did not cover (`Gen3SmDecPartial.lean`: Slot and Signature covered; BlockRoot and
 ValidatorIndex not). No contract, no new hypothesis form; the runtime callees use `MakesliceC` / `MemmoveC` as
 in `SegN.lean`.

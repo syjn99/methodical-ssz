@@ -5,9 +5,9 @@ import E2eScal.E1Accept
 import E2eScal.GenBiDec
 
 /-!
-# Real Prysm `(*v1alpha1.BlobIdentifier).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (H3 hold-out)
+# Real Prysm `(*v1alpha1.BlobIdentifier).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (hold-out)
 
-Hand-written by the H3 evaluation session after the H3 opening. The BlockRoot segment is the raw
+Hand-written after the hold-out was opened. The BlockRoot segment is the raw
 generator theorem `E2eScal.Gen.bi_dec_BlockRoot_seg` (`GenBiDec.lean`, unedited). The head and the
 composition are the text of `E1Accept.lean` with the BlobIdentifier indices and without the second root
 segment; `e1addr` and `e1_lo` are reused from `E1Accept`.

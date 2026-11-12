@@ -9,11 +9,11 @@ import E2eScal.Gen6F24PdcEnc
 import E2eScal.Gen6F24VidEnc
 
 /-!
-# FLAT24 / H7: identity of four generated decoder accept theorems and four generated encoder fast-path theorems
+# Identity of four generated decoder accept theorems and four generated encoder fast-path theorems
 with the independent hand statements of `F24Stmt.lean`
 
 `F24Stmt.lean` was committed before this session opened the generated modules imported here. Each line type-checks
-only if the type of the generated theorem (`p2dec --gen5` / `p2enc --gen6`, raw output of the FLAT24 one-shot runs) is
+only if the type of the generated theorem (`p2dec --gen5` / `p2enc --gen6`, raw output of the one-shot runs on the 24 flat types) is
 definitionally the hand statement. Neither side is edited for this check. `maxHeartbeats 4000000` = the value of the
 model identity files (`E2cSame.lean`).
 -/

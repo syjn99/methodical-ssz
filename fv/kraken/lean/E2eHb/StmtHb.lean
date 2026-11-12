@@ -8,10 +8,10 @@ import E2eHb.Code
 import E2eHb.Defs
 
 /-!
-# Hand STATEMENTS of the HB target `(*v1alpha1.HistoricalBatch).UnmarshalSSZ` (statements only, no proof)
+# Hand STATEMENTS of the target `(*v1alpha1.HistoricalBatch).UnmarshalSSZ` (statements only, no proof)
 
 Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
-Statement shape: `E2eList.StmtSc` (T2) with two 8192-element `[][]byte` fields and no tail field.
+Statement shape: `E2eList.StmtSc` with two 8192-element `[][]byte` fields and no tail field.
 
     func (c *HistoricalBatch) UnmarshalSSZ(buf []byte) error {
         if uint64(len(buf)) != 524288 { return ssz.ErrSize }
@@ -24,7 +24,7 @@ Statement shape: `E2eList.StmtSc` (T2) with two 8192-element `[][]byte` fields a
         return err }
 
 Receiver: native struct, IR `go_fields` (`prysm/ir/ir-mainnet.json`, size 48): `BlockRoots` 0 (ptr, len, cap),
-`StateRoots` 24 (ptr, len, cap). There is no `state`, `unknownFields` or `sizeCache` field (T2 had them).
+`StateRoots` 24 (ptr, len, cap). There is no `state`, `unknownFields` or `sizeCache` field (SyncCommittee had them).
 The loops read `BlockRoots.len` / `StateRoots.len` (bounds checks, directives 65, 134) and the backing array
 pointer (70, 140) from the receiver in every iteration.
 
@@ -33,7 +33,7 @@ also written at directive 7 before the size check); loop locals `0x18(%rsp)` = x
 (32i), `0x28(%rsp)` = x − 24 (i), `0x30(%rsp)` = x − 16 (element pointer); `0x0…0x17(%rsp)` = x − 64 (24 bytes,
 `spl`, makeslice's spill area); runtime call return slot x − 72; `lo` = the `S` scratch bytes below it.
 Calls: makeslice of each backing array (`E2eList.Data.lvSliceType_addr`, esz 24, len = cap = 8192; the same type
-word as T2, asserted by `gen/e2e/hblink.py data`), 2 × 8192 uint8 makeslice (len 0, cap 32) + memmove (32) pairs.
+word as SyncCommittee, asserted by `gen/e2e/hblink.py data`), 2 × 8192 uint8 makeslice (len 0, cap 32) + memmove (32) pairs.
 Heap: 2 · (24·8192 + 32·8192) = 917504 bytes. The last runtime call is the memmove at directive 132, so the
 return slot holds directive 133 at the end. The four loop locals are dead after the loops; the postcondition owns
 them with unnamed 8-byte values.
@@ -46,7 +46,7 @@ variable [Host]
 
 namespace E2eHb
 
-/-- **HB accept (machine).** On a 524288-byte input `brs.flatten ++ srs.flatten` (2 × 8192 blocks of 32 bytes)
+/-- **Accept (machine).** On a 524288-byte input `brs.flatten ++ srs.flatten` (2 × 8192 blocks of 32 bytes)
 the decoder returns nil; the receiver holds two fresh `[][]byte` of len = cap = 8192 whose backing arrays at `A1`,
 `A2` have the headers `(ps1[i], 32, 32)`, `(ps2[i], 32, 32)` and whose elements equal `brs[i]`, `srs[i]`; the
 input, the spills, the caller's frame `R` and the stack guard are unchanged; 917504 heap bytes are used. -/
@@ -106,7 +106,7 @@ def hb_accept_stmt : Prop :=
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **HB size reject (machine).** `len(buf) ≠ 524288`: the decoder returns the two words `e0`, `e1` of
+/-- **Size reject (machine).** `len(buf) ≠ 524288`: the decoder returns the two words `e0`, `e1` of
 `ssz.ErrSize`; the rbx spill slot holds rbx, the caller's frame `R` (the receiver and the input included) and
 the global are unchanged. -/
 def hb_reject_size_stmt : Prop :=
@@ -130,7 +130,7 @@ def hb_reject_size_stmt : Prop :=
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **HB accept (spec).** If EthLib accepts `bsA` against `prysmHbDesc` as `v`, there is `g : PHb` with
+/-- **Accept (spec).** If EthLib accepts `bsA` against `prysmHbDesc` as `v`, there is `g : PHb` with
 `g.toValue = v` and `bsA = phbEnc g`; with the input chunks of that `g` the machine code returns nil and the
 receiver holds `g` (postcondition of `hb_accept_stmt` with `brs = g.brs`, `srs = g.srs`). -/
 def hb_accept_spec_stmt : Prop :=
@@ -190,7 +190,7 @@ def hb_accept_spec_stmt : Prop :=
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **HB size reject (spec).** `bs.size ≠ 524288`: EthLib rejects, and the machine code returns the two words of
+/-- **Size reject (spec).** `bs.size ≠ 524288`: EthLib rejects, and the machine code returns the two words of
 `ssz.ErrSize` (postcondition of `hb_reject_size_stmt`). -/
 def hb_reject_size_spec_stmt : Prop :=
   ∀ (k : Nat) (hk : HbUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh HbUnmarshal k)
@@ -215,7 +215,7 @@ def hb_reject_size_spec_stmt : Prop :=
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **HB reject completeness (spec).** Every input that EthLib rejects has `size ≠ 524288`: the path condition of
+/-- **Reject completeness (spec).** Every input that EthLib rejects has `size ≠ 524288`: the path condition of
 the decoder's one reject site (`runtime.panicBounds` is not an error return; it is to be proved unreachable). -/
 def hb_reject_complete_stmt : Prop :=
   ∀ bs : Array UInt8, (¬ ∃ v, deserialize prysmHbDesc bs = .ok v) → bs.size ≠ 524288

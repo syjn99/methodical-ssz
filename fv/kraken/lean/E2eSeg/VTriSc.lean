@@ -3,10 +3,10 @@ import E2eSeg.V32Hb
 import E2eList.ScLoop
 
 /-!
-# The T2 SyncCommittee loop `E2eList.sc_loop` re-derived from the general loop `E2eSeg.vtri_loop`
+# The SyncCommittee loop `E2eList.sc_loop` re-derived from the general loop `E2eSeg.vtri_loop`
 
 The theorem has the type of the hand lemma `sc_loop` (`type_of%`); its proof instantiates `vtri_loop` (k = 4, w = 48,
-n = 512, the T2 frame slots, receiver offsets 8 and 16, src = 0) and steps the exit label (directive 80). Block facts
+n = 512, the SyncCommittee frame slots, receiver offsets 8 and 16, src = 0) and steps the exit label (directive 80). Block facts
 by `infix_sub` on the real program; gaps read from the `nop` directives 39, 47 and 61.
 -/
 

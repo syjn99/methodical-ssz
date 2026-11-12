@@ -62,7 +62,7 @@ theorem bl_accepted_size (bs : Array UInt8) (v : Value) (hd : deserialize blDesc
 /-- 258 bytes: 257 zero bytes, then 0x01 (delimiter at bit 2056, over 2048). -/
 def blOverlong : Array UInt8 := Array.replicate 257 0 ++ #[1]
 
-/-- EthLib rejects `offset 4 ‖ blOverlong` (finding F2, EthLib side). -/
+/-- EthLib rejects `offset 4 ‖ blOverlong` (EthLib side of the fixed generator defect: the Bitlist encoder checked the length in bytes, not in bits). -/
 theorem bl_spec_rejects_overlong : ∃ e, deserialize blDesc (#[4, 0, 0, 0] ++ blOverlong) = .error e := by
   cases hd : deserialize blDesc (#[4, 0, 0, 0] ++ blOverlong) with
   | error e => exact ⟨e, rfl⟩

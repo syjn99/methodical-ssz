@@ -7,17 +7,17 @@ import E2eScal.SmSeg
 import E2eScal.PcAccept
 
 /-!
-# GEN4: the earlier per-shape lemmas are instances of the GEN4 mechanisms
+# The earlier per-shape lemmas are instances of the window and step mechanisms
 
 Each theorem below has the TYPE of an earlier lemma (`type_of%`, so the statement is the committed one) and
-is proved from the GEN4 lemmas only. No earlier proof is used.
+is proved from the window and step lemmas only. No earlier proof is used.
 
-* Window mechanism (L1): `bytesdec_seg` (GEN2, dense), `bytesdec_seg_p` (GEN3, `pad` flag: the SG-3 `nop`
-  before `callq runtime.makeslice`), `H4.bytes32dec_seg_nop` (H4 hand lemma), `H5.bytes32dec_seg_rax` (H5 hand
-  lemma, receiver in rax after the copy), `H5.calldec_nop_seg` (H5 hand lemma, `nop` after the callee call):
+* Window mechanism: `bytesdec_seg` (dense), `bytesdec_seg_p` (`pad` flag: the padding `nop`
+  before `callq runtime.makeslice`), `H4.bytes32dec_seg_nop` (hand lemma), `H5.bytes32dec_seg_rax` (hand
+  lemma, receiver in rax after the copy), `H5.calldec_nop_seg` (hand lemma, `nop` after the callee call):
   each is `bytesdec_seg_g4` / `calldec_seg_w` at one window (`q :=` the dense template; `he` by `rfl`).
-* Step mechanism (L2): the GEN3 set-up lemmas `callarg_first_seg`, `callarg_reload_seg` (both with their `pad`
-  flag), `callarg_lea_seg`, `callarg_mov_seg`, the two-directive read `u64dec_rr_seg` at r8, and the H5 hand
+* Step mechanism: the set-up lemmas `callarg_first_seg`, `callarg_reload_seg` (both with their `pad`
+  flag), `callarg_lea_seg`, `callarg_mov_seg`, the two-directive read `u64dec_rr_seg` at r8, and the hand
   set-up `H5.sm_vi_arg`: each is a sequence of `kstep_*` applications.
 (`calldec_seg` itself: `calldec_seg_dense` in `CallReg.lean`.)
 -/
@@ -30,13 +30,13 @@ open E2eScal
 
 variable [Host]
 
-/-- `bytesdec_seg` (GEN2) from the window lemma. -/
+/-- `bytesdec_seg` from the window lemma. -/
 theorem bytesdec_seg_inst : type_of% (@bytesdec_seg ‹Host›) := by
   intro n hn lff lwb dR dB dS fP fL fC src j1 j2 hA hB hl
   exact bytesdec_seg_g4 n hn Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl)))
     lff lwb dR dB dS fP fL fC src _ _ j1 j2 j2 (j2 + 6) (j2 + 12) hA rfl hB rfl rfl hl rfl rfl
 
-/-- `bytesdec_seg_p` (GEN3, `pad` flag) from the window lemma: the pad is a nop of the first window. -/
+/-- `bytesdec_seg_p` (`pad` flag) from the window lemma: the pad is a nop of the first window. -/
 theorem bytesdec_seg_p_inst : type_of% (@bytesdec_seg_p ‹Host›) := by
   intro pad n hn lff lwb dR dB dS fP fL fC src j1 j2 hA hB hl
   cases pad
@@ -45,26 +45,26 @@ theorem bytesdec_seg_p_inst : type_of% (@bytesdec_seg_p ‹Host›) := by
   · exact bytesdec_seg_g4 n hn Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl)))
       lff lwb dR dB dS fP fL fC src _ _ j1 j2 j2 (j2 + 6) (j2 + 12) hA rfl hB rfl rfl hl rfl rfl
 
-/-- `H4.bytes32dec_seg_nop` (H4 hand lemma) from the window lemma. -/
+/-- `H4.bytes32dec_seg_nop` (hand lemma) from the window lemma. -/
 theorem bytes32dec_seg_nop_inst : type_of% (@H4.bytes32dec_seg_nop ‹Host›) := by
   intro lff lwb dR dB dS fP fL fC src j1 j2 hA hB hl
   exact bytesdec_seg_g4 32 (Or.inl rfl) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl)))
     lff lwb dR dB dS fP fL fC src _ _ j1 j2 j2 (j2 + 6) (j2 + 12) hA rfl hB rfl rfl hl rfl rfl
 
-/-- `H5.bytes32dec_seg_rax` (H5 hand lemma) from the window lemma: `rY = rax`. -/
+/-- `H5.bytes32dec_seg_rax` (hand lemma) from the window lemma: `rY = rax`. -/
 theorem bytes32dec_seg_rax_inst : type_of% (@H5.bytes32dec_seg_rax ‹Host›) := by
   intro lff lwb dR dB dS fP fL fC src j1 j2 hA hB hl
   exact bytesdec_seg_g4 32 (Or.inl rfl) Reg64.rdx Reg64.rax (Or.inl rfl) (Or.inl rfl)
     lff lwb dR dB dS fP fL fC src _ _ j1 j2 j2 (j2 + 6) (j2 + 12) hA rfl hB rfl rfl hl rfl rfl
 
-/-- `H5.calldec_nop_seg` (H5 hand lemma) from the window lemma: the nop is in the window. -/
+/-- `H5.calldec_nop_seg` (hand lemma) from the window lemma: the nop is in the window. -/
 theorem calldec_nop_seg_inst : type_of% (@H5.calldec_nop_seg ‹Host›) := by
   intro fn lok j j2 hA hB hl hC
   exact calldec_seg_w fn lok _ j j j2 hA rfl rfl hB hl hC
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- `callarg_first_seg` (GEN3, `pad` flag) from the step lemmas. -/
+/-- `callarg_first_seg` (`pad` flag) from the step lemmas. -/
 theorem callarg_first_seg_inst : type_of% (@callarg_first_seg ‹Host›) := by
   intro pad f j hA rcv aF hF s hrax
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
@@ -87,7 +87,7 @@ theorem callarg_first_seg_inst : type_of% (@callarg_first_seg ‹Host›) := by
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- `callarg_reload_seg` (GEN3, `pad` flag) from the step lemmas. -/
+/-- `callarg_reload_seg` (`pad` flag) from the step lemmas. -/
 theorem callarg_reload_seg_inst : type_of% (@callarg_reload_seg ‹Host›) := by
   intro pad dB src dD c dR f j hA sp rcv bf aB aD aR aSrc aF hB' hD hR hSrc hF vD hvD R s hrsp h_mem
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
@@ -130,7 +130,7 @@ theorem callarg_reload_seg_inst : type_of% (@callarg_reload_seg ‹Host›) := b
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- `callarg_lea_seg` (GEN3) from the step lemmas. -/
+/-- `callarg_lea_seg` from the step lemmas. -/
 theorem callarg_lea_seg_inst : type_of% (@callarg_lea_seg ‹Host›) := by
   intro dB src dD c dR f j hA sp rcv bf aB aD aR aSrc aF hB' hD hR hSrc hF vD hvD R s hrsp h_mem
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
@@ -153,7 +153,7 @@ theorem callarg_lea_seg_inst : type_of% (@callarg_lea_seg ‹Host›) := by
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- `callarg_mov_seg` (GEN3) from the step lemmas. -/
+/-- `callarg_mov_seg` from the step lemmas. -/
 theorem callarg_mov_seg_inst : type_of% (@callarg_mov_seg ‹Host›) := by
   intro j hA s
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
@@ -169,7 +169,7 @@ theorem callarg_mov_seg_inst : type_of% (@callarg_mov_seg ‹Host›) := by
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- `H5.sm_vi_arg` (H5 hand set-up: the receiver is already in rax) from the step lemmas. -/
+/-- `H5.sm_vi_arg` (hand set-up: the receiver is already in rax) from the step lemmas. -/
 theorem sm_vi_arg_inst : type_of% (@H5.sm_vi_arg ‹Host›) := by
   intro k hk sp rcv bf aB aD aSrc aF hB' hD hSrc hF vD hvD R s hrsp hrax h_mem
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
@@ -192,7 +192,7 @@ theorem sm_vi_arg_inst : type_of% (@H5.sm_vi_arg ‹Host›) := by
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- The two-directive inline uint64 read `u64dec_rr_seg` (GEN3 L3) at its development register r8, from the
+/-- The two-directive inline uint64 read `u64dec_rr_seg` at its development register r8, from the
 load and store steps. The step lemmas hold for every base / scratch register. -/
 theorem u64dec_rr_seg_r8_inst (src f : Int64) (j : Nat)
     (hA : (u64DecRR Reg64.r8 src f).IsInfixAt Host.prog j)

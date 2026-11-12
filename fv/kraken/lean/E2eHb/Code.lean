@@ -2,7 +2,7 @@ import Kraken.X64.Parser
 import Fk.Include
 
 /-!
-# Code of the HB function (Go 1.26.10 ELF `c6403c02…911e`)
+# Code of the HistoricalBatch decoder (Go 1.26.10 ELF `c6403c02…911e`)
 
 `HbUnmarshal` includes the `.S` file of `fv/kraken/prysm/go1.26.10/e2e/lv/link-hb/norm`
 (`gen/e2e/hblink.py filter`, `link/conv.py --norm`, `hblink.py data`; `link/check.py` (a)–(f) PASS in

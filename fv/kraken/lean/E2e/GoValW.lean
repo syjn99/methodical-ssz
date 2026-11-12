@@ -3,7 +3,7 @@ import E2e.WitCpW
 import E2e.WitCpWR
 
 /-!
-# Go-value element for the INBOX 009 encoder witnesses (review e2e-r3 S1)
+# Go-value element for the encoder cover witnesses
 
 `WitCpW` (cover witness): the receiver is at offset 9016 of the block (rax = 0x12338),
 `Root` = (0x12380, 32, 32). `WitCpWR` (reject cover witness): the receiver is at offset 9032

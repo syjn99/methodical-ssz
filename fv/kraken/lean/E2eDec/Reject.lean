@@ -6,11 +6,11 @@ import E2eScal.StackGuard
 import E2eDec.StmtDec
 
 /-!
-# ENC decoder `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ`: size reject (D1) and offset reject (D2)
+# Decoder `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ`: size reject and offset reject
 
-The text of `E2eList/IaReject.lean` (T3 P1, P2) with this function's directive indices: guard 2–4
+The text of `E2eList/IaReject.lean` (IndexedAttestation size and offset rejects) with this function's directive indices: guard 2–4
 (`lea -0x10(%rsp),%r12`, `E2eScal.lea_cmp_be_false` with N = 16), prologue 5–8 (`sub $0x88`, rbx spill to x + 16),
-D1: 9–10 `cmp $0x24,%rcx; jb L_2f9` taken, 174–179; D2: 11 the 32-bit load of buf[32:36], 14–15
+Size reject: 9–10 `cmp $0x24,%rcx; jb L_2f9` taken, 174–179; offset reject: 11 the 32-bit load of buf[32:36], 14–15
 `cmp $0x24,%rdx; jne L_2e2` taken, 168–173.
 -/
 
@@ -26,9 +26,9 @@ macro "dcaddr" : tactic => `(tactic| (
     UInt64.toNat_toBitVec, UInt64.toBitVec_add, UInt64.toBitVec_ofNat, Width.bits, Nat.reducePow]
   all_goals omega))
 
--- Measured cause (logs 123, 124): `kat` unfolds the program literal (T3: `IaUnmarshal`, 279 directives) with `simp`; at the
+-- Measured cause (logs 123, 124): `kat` unfolds the program literal (`IaUnmarshal`, 279 directives) with `simp`; at the
 -- default `maxRecDepth` (512) that `simp` stops with "maximum recursion depth has been reached"; 1024 passes.
--- Measured again for `DcUnmarshal` (229 directives, ENC logs 83, 84): the default fails at the `klabel` (174, 168), 1024 passes.
+-- Measured again for `DcUnmarshal` (229 directives): the default fails at the `klabel` (174, 168), 1024 passes.
 set_option maxRecDepth 1024 in
 theorem dcd_e2e_reject_size_main : dcd_reject_size_stmt := by
   intro k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard hlen

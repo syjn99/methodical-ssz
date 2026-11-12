@@ -1,4 +1,4 @@
-// Package target holds the phase 1a verification targets.
+// Package target holds the verification targets.
 package target
 
 // Scalars is a fixed-size container of the five scalar kinds. Size 16.

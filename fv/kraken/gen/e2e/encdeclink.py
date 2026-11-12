@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ENC round trip: link set of the real v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ (Go 1.26.10 ELF
+"""Link set of the real v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ (Go 1.26.10 ELF
 c6403c02...911e). A new file in the pattern of `lvlink.py` / `enclink.py`; existing scripts are not changed.
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
@@ -8,7 +8,7 @@ Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` a
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/e2e/lv/link-dec.
 
 Data items are located from the converted code. Items equal to an item of the Checkpoint set (`e2elink.py`) or of
-the LV T3 set (`lvlink.py --t3`) are asserted equal (same label and offset) and written again under the `dcd`
+the IndexedAttestation set (`lvlink.py --t3`) are asserted equal (same label and offset) and written again under the `dcd`
 prefix so that check (f) binds them to the ELF in this directory; the Lean statements read the `dcd` names through
 their own reader.
 """

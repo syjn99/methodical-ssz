@@ -3,9 +3,9 @@ import E2e.SpecEq
 import E2eScal.BhSpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.BeaconBlockHeader` (H1 hold-out (ii))
+# Spec bridge for the real Prysm `v1alpha1.BeaconBlockHeader` (hold-out)
 
-Hand-written by the evaluation session. Independent hand `Desc`, written from consensus-specs phase0
+Hand-written. Independent hand `Desc`, written from consensus-specs phase0
 (`specs/phase0/beacon-chain.md`):
 
     class BeaconBlockHeader(Container):

@@ -1,7 +1,7 @@
 import Fk.WHost
 
 /-!
-# `wit_split_n`: E2e-side variant of `Fk.W.wit_split` (audit AU-06)
+# `wit_split_n`: E2e-side variant of `Fk.W.wit_split`
 
 Same macro as `Fk.W.wit_split` (`Fk/WHost.lean`, unchanged). The only change: the simp set of the
 side goal of `Mem.At_append_sep` (`l1`) also has `← Nat.add_assoc` and `Nat.reduceAdd`. Then the

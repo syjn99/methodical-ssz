@@ -1,4 +1,4 @@
-# Unit E2-G: one deliberately broken copy of kindcheck.py per sub-rule of rule 13; each copy's selftest must FAIL.
+# One deliberately broken copy of kindcheck.py per sub-rule of rule 13; each copy's selftest must FAIL.
 # usage (cwd = fv/kraken): python3 -I -B brokencheck6.py   -> one line per copy, exit 0 iff every copy fails
 import pathlib, subprocess, sys
 K = pathlib.Path("gen/scal/kindcheck.py")

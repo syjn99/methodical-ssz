@@ -5,11 +5,11 @@ import E2eDec.Reject
 import E2eDec.Loop
 
 /-!
-# ENC decoder `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ`, accept path D3 (Go 1.26.10 machine code)
+# Decoder `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ`, accept path (Go 1.26.10 machine code)
 
-The order of `E2eList/IaAccept.lean` (T3 P3): guard and prologue 0–8, size and offset checks 9–15, spills 16–19,
+The order of `E2eList/IaAccept.lean` (IndexedAttestation accept path): guard and prologue 0–8, size and offset checks 9–15, spills 16–19,
 BlockRoot `makeslice` 20–23 (`MakesliceC Heap e2eU8Type_addr 1 S`, len 0, cap 32), header stores 24–26, the
-`buf[36:]` pointer 27–35 (the mask of T3 18–24 with 36), `writeBarrier = 0` (36–37 `je` taken), 43–47 the pointer store
+`buf[36:]` pointer 27–35 (the mask of `IaAccept.lean` 18–24 with 36), `writeBarrier = 0` (36–37 `je` taken), 43–47 the pointer store
 and `memmove(pb, buf, 32)`, 48–63 len/cap 32 and the barrier branch, 64–71 alignment and bound checks, 72–75 Columns
 `makeslice` (`MakesliceC Heap lvU64Type_addr 8 S`, len = cap = n), 76–93 the header and pointer stores, `jmp L_320`,
 the element loop `dcd_loop` (185 → 204), 204–209 nil and the epilogue. Statement: the frozen `dcd_accept_stmt`.
@@ -52,7 +52,7 @@ theorem dcd_p0 (ib : List UInt8) (n : Nat) (hib : ib.length = 8 * n) (b c : BitV
   · have hd := dcd_sub36 c (by omega)
     rw [E2eList.ia_sar63 _ (by omega) (by omega), dcd_mask_ones]
 
--- Measured (ENC logs 105–108): heartbeats: the default 200000 fails (`whnf` timeout at the loop call), 400000 passes;
+-- Measured: heartbeats: the default 200000 fails (`whnf` timeout at the loop call), 400000 passes;
 -- recursion depth: the default fails at `klabel` (directive 185, the `simp` that unfolds the program literal), 1024 passes.
 set_option maxHeartbeats 400000 in
 set_option maxRecDepth 1024 in
@@ -203,7 +203,7 @@ theorem dcd_e2e_accept_main : dcd_accept_stmt := by
   kunfold
   try simp only [ofInt_ofBytes_toBytes64]
   kat hk DcUnmarshal 34
-  -- name the computed values (as T3, log 160 there)
+  -- name the computed values (as in `E2eList/IaAccept.lean`)
   have hPib := dcd_p0 ib n hib rbx.toBitVec rdi.toBitVec (by rw [UInt64.toNat_toBitVec]; omega)
     (by rw [UInt64.toNat_toBitVec]; omega)
   have hC := dcd_sub36 rdi.toBitVec (by rw [UInt64.toNat_toBitVec]; omega)

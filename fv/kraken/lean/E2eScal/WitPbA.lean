@@ -4,9 +4,9 @@ import Fk.BumpMore
 import Fk.WHost
 
 /-!
-# Witness of `pb_e2e_accept_g4gen` (PowBlock decoder accept path, H6 hold-out, full-proof type)
+# Witness of `pb_e2e_accept_g4gen` (PowBlock decoder accept path, hold-out, full-proof type)
 
-Hand-written by the H6 evaluation session (the text of `WitDdA.lean` with the PowBlock host and layout).
+Hand-written (the text of `WitDdA.lean` with the PowBlock host and layout).
 It shows that the premises of the independent hand statement `E2eScal.H6.pb_accept_stmt` are satisfiable.
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.PowBlock).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (150, `bump_makeslice1`) and `RtCopy` (156, `rt_memmove`).

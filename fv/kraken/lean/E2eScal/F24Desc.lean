@@ -1,12 +1,12 @@
 import E2e.Spec
 
 /-!
-# FLAT24 / H7: independent hand `Desc` of the eight types with a generated theorem
+# Independent hand `Desc` of the eight types with a generated theorem
 
-Hand-written by the FLAT24 evaluator from the Prysm proto definitions (the Prysm source tree that the Go differential
+Hand-written from the Prysm proto definitions (the Prysm source tree that the Go differential
 uses, read only; `proto/engine/v1/electra.proto`, `proto/engine/v1/gloas.proto`, `proto/prysm/v1alpha1/p2p_messages.proto`,
 `p2p_messages_gloas.proto`, `partial_data_columns.proto`, `validator.proto`, `gloas_builder_api.proto`), BEFORE the
-Desc checker's Desc of any of these types was printed or copied into this tree (FINDINGS NF-10).
+Desc checker's Desc of any of these types was printed or copied into this tree (so that the hand Desc is independent of the checker output in time, not only in content).
 No consensus-specs clone is in this session's reach (other worktrees are out of bounds), so every Desc here comes from
 the producer's own source tree: it is independent of the Desc checker's output only, not of the producer's source
 (as `VbDesc.lean`). Where the proto cites a spec definition, the comment is quoted.

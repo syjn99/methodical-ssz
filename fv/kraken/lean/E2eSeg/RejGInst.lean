@@ -4,7 +4,7 @@ import E2eList.StmtSc
 import E2eHb.StmtHb
 
 /-!
-# The T2 and HB size-reject statements re-derived from `E2eSeg.rej_size_g`
+# The SyncCommittee and HistoricalBatch size-reject statements re-derived from `E2eSeg.rej_size_g`
 
 Each theorem has the frozen statement as its type (`sc_reject_size_stmt`, `hb_reject_size_stmt`); the proof is one
 application of the general lemma with the block facts read from the real program. The hand proofs

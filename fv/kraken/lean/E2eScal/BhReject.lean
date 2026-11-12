@@ -6,9 +6,9 @@ import E2e.Data
 import E2e.CpReject
 
 /-!
-# Real Prysm `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`: size reject (H1 hold-out (ii))
+# Real Prysm `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`: size reject (hold-out)
 
-Hand-written by the evaluation session: the text of `E2eAd.ad_e2e_reject_size_main` with the
+Hand-written: the text of `E2eAd.ad_e2e_reject_size_main` with the
 BeaconBlockHeader indices. `bh_e2e_reject_size_main` (`len(buf) ≠ 112`, Go source `return ssz.ErrSize`):
 directives 2–7 (guard, prologue `sub $0x60`, rbx spill), 9–10 `cmp $0x70,%rcx; jne L_345` taken,
 200 `L_345`, 201–202 load the two words of `ssz.ErrSize` (`E2e.Data.e2eErrSize_addr`, the same ELF symbol
@@ -19,7 +19,7 @@ The `fmt.errorf` wraps after the Slot call (directives 20–45) and the Validato
 reached on a 112-byte input: `bh_e2e_accept_main` passes from directive 19 to 46 and from 57 to 85 under
 `SlUAccC` / `ViUAccC` (rax = 0). Not a reject row.
 
-**`unreachable_mc` rows** (session 10, review s4-r1; the form of `E2eAd.ad_e2e_slot_err_unreachable`):
+**`unreachable_mc` rows** (the form of `E2eAd.ad_e2e_slot_err_unreachable`):
 `bh_e2e_slot_err_unreachable` (directive 18 → 46, skips 20–45, "Slot: %w") and
 `bh_e2e_vi_err_unreachable` (56 → 85, skips 58–84, "ValidatorIndex: %w"): with `rax = 0` after the callee
 the code jumps over the wrap with registers and memory unchanged.

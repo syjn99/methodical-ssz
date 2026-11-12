@@ -9,16 +9,16 @@ import E2eScal.BhCode
 import E2eScal.H6Code
 
 /-!
-# Independent hand STATEMENTS of three GEN5 accept theorems (unit G5-C; statements only, no proof)
+# Independent hand STATEMENTS of three `p2dec --gen5` accept theorems (statements only, no proof)
 
-Hand-written by the G5-C session (Opus 5.5) BEFORE it opened the generated modules `Gen5SaDec.lean`,
-`Gen5VbDec.lean`, `Gen5VeDec.lean` or their kind lines. These generated files were already committed by unit G5-G.
-This session did not read them, did not print their statements, and did not read the G5-L example `Gen5ExVe.lean`.
+Hand-written BEFORE the author opened the generated modules `Gen5SaDec.lean`,
+`Gen5VbDec.lean`, `Gen5VeDec.lean` or their kind lines. These generated files were already committed.
+This session did not read them, did not print their statements, and did not read the worked example `Gen5ExVe.lean`.
 Sources: the Go receiver layout (IR `go_fields` in `prysm/ir/ir-mainnet.json`), the SSZ layout (two 8-byte fields),
-the frame facts of the three `.S` files (`prysm/go1.26.10/e2e/h6/link/norm`, opened in H6), the first directives of
+the frame facts of the three `.S` files (`prysm/go1.26.10/e2e/h6/link/norm`, opened in an earlier hold-out), the first directives of
 the callee `.S` files, and the statement shape of the earlier hand statement `E2eScal.H5.pc_accept_stmt`
 (two callee fields, frame `0x48`). The identity with the generated accept theorem is checked in a later commit.
-Review g5-r1 asked for SyncAggregatorSelectionData and ValidatorBalance (frame `0x38`, no hand statement of that
+A review asked for SyncAggregatorSelectionData and ValidatorBalance (frame `0x38`, no hand statement of that
 frame class). The brief also names VoluntaryExit. Its frame class (`0x48`) is already tied by hand statements.
 
 ## `sa_accept_stmt` — `(*v1alpha1.SyncAggregatorSelectionData).UnmarshalSSZ`

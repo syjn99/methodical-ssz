@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Cross-check of the include adapter with the real fix3 data files and Fk.Data (INBOX 009 step 2).
+"""Cross-check of the include adapter with the real data files and Fk.Data.
 
 Usage:
   test_include.py prepare <work-dir>                     Python checks + <work>/IncludeCheck.lean

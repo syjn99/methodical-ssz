@@ -1,5 +1,5 @@
 #!/bin/bash
-# Prysm tests on the temporary tree with the 698c202 outputs (P1 / review phase1c-r1 S7).
+# Prysm tests on the temporary tree with the 698c202 outputs.
 # Run inside the heavy-job gate with Go 1.26.10. go test -p 1. Output is not truncated.
 # Exit status: that of gen/prysm_tests_classify.py (0 = only the known failures).
 # Usage: prysm-tests.sh <prysm-tree> <out-dir>

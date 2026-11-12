@@ -6,7 +6,7 @@ import E2eEnc.StmtEnc
 import E2eEnc.Tail
 
 /-!
-# ENC `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo`: grow path at site 1 (G)
+# `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo`: first-site grow path (one grow at site 1 only)
 
 `dc_e2e_marshal_grow_main : dc_marshal_grow_stmt`. Directives 2–14 as the fast path; 15 `jae L_7c` not taken
 (cap < len + 32); 16–17 rcx to x + 24, rdx (BlockRoot pointer) to x − 16; 18–23

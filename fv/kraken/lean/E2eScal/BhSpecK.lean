@@ -3,9 +3,9 @@ import E2eScal.BhReject
 import E2eScal.BhSpec
 
 /-!
-# Spec alignment of the real BeaconBlockHeader decoder (H1 hold-out (ii))
+# Spec alignment of the real BeaconBlockHeader decoder (hold-out)
 
-Hand-written by the evaluation session (the text of `E2eAd/AdSpecK.lean` with the BeaconBlockHeader
+Hand-written (the text of `E2eAd/AdSpecK.lean` with the BeaconBlockHeader
 statement).
 - `bh_e2e_accept_spec_k`: if EthLib accepts `bsA` (`prysmBhDesc`, the independent consensus-specs Desc)
   as `v`, there is `g : PBh` with `g.toValue = v` and `bsA = pbhEnc g`; with the input chunks of that `g`

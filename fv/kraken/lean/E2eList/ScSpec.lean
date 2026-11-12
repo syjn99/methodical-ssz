@@ -5,7 +5,7 @@ import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
 import E2eList.Defs
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.SyncCommittee` (LV T2)
+# Spec bridge for the real Prysm `v1alpha1.SyncCommittee`
 
 The order of `E2eScal`'s `DdSpec.lean`. The Vector[Bytes48, 512] field is not unfolded element by element: the
 lemmas below are stated for any list of 48-byte vectors (`serializeEach_bv48`, `assemble_inline_ok`,

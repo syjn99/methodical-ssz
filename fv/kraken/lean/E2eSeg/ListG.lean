@@ -7,8 +7,8 @@ import E2eList.ScLemmas
 
 Generalized once from `E2eList.ScLemmas` (w = 48, n = 512) and `E2eHb.HbLemmas` (w = 32, n = 8192).
 Side conditions: the input bytes and the backing array fit in the address space (`w * n ≤ 2^64`,
-`24 * n ≤ 2^64`); the T2/HB instances discharge them by `decide`/`omega`. The fixed instances are re-derived in
-`E2eSeg/ListGInst.lean`. The size-free T2 lemmas (`lvElems_snoc`, `lvHdrs_length`, `lvHdrs_snoc`,
+`24 * n ≤ 2^64`); the SyncCommittee / HistoricalBatch instances discharge them by `decide`/`omega`. The fixed instances are re-derived in
+`E2eSeg/ListGInst.lean`. The size-free SyncCommittee lemmas (`lvElems_snoc`, `lvHdrs_length`, `lvHdrs_snoc`,
 `lv_flatten_split`) are imported, not restated.
 -/
 

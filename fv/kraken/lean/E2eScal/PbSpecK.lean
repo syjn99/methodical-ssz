@@ -3,9 +3,9 @@ import E2eScal.PbReject
 import E2eScal.PbSpec
 
 /-!
-# Spec alignment of the real PowBlock decoder (H6 hold-out, full-proof type)
+# Spec alignment of the real PowBlock decoder (hold-out, full-proof type)
 
-Hand-written by the H6 evaluation session: the shape of `DdSpecK.lean` (H4) with the PowBlock statement
+Hand-written: the shape of `DdSpecK.lean` with the PowBlock statement
 (`H6.pb_accept_stmt`, `H6Stmt.lean`; the input chunks are those of the `g` that EthLib decodes).
 - `pb_e2e_accept_spec_k`: if EthLib accepts `bsA` (`prysmPbDesc`) as `v`, there is `g : PPb` with `g.toValue = v`
   and `bsA = ppbEnc g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.

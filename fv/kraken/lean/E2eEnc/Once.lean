@@ -4,10 +4,10 @@ import E2eEnc.Grow
 import E2eEnc.TailG
 
 /-!
-# ENC G1* main: growth at any one site (`dc_marshal_once_stmt`)
+# One-growth path, main theorem: growth at any one site (`dc_marshal_once_stmt`)
 
 Directives 2–14 as the fast path; 15 `jae L_7c`: taken (site 1 fits: `dcg_tail` on the old block `pre ‖ spare`,
-garbage empty) or not taken (16–28 as the grow path G, `growslice` of site 1; the new capacity holds the output by
+garbage empty) or not taken (16–28 as the first-site grow path, `growslice` of site 1; the new capacity holds the output by
 `hone`; the old block joins the garbage frame), then `dcg_tail` (sites 2 and 3 fit or grow, `TailG.lean`).
 -/
 

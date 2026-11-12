@@ -5,7 +5,7 @@ Usage: obligations.py sites <file.ssz.go>...      -> JSON on stdout
 
 A reject path is one `return` with a non-nil error in UnmarshalSSZ or
 MarshalSSZTo (the final `return err` / `return dst, err` is the accept path).
-This is the counting rule of REPORT.md section 2 ("Go 소스 기준"). The site
+This is the counting rule of REPORT.md section 2 ("Go source basis"). The site
 kind is read from the guarding `if` line and the returned error.
 This program does not share code with the generator. It reads gofmt'ed
 generator output only. Python 3 standard library only. Run with python3 -I.

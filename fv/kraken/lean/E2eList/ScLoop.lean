@@ -6,7 +6,7 @@ import E2eList.Code
 import E2eList.ScLemmas
 
 /-!
-# T2 `(*v1alpha1.SyncCommittee).UnmarshalSSZ`: the 512-iteration element loop (LV)
+# `(*v1alpha1.SyncCommittee).UnmarshalSSZ`: the 512-iteration element loop
 
 Loop head `L_a0` (directive 40). `sp` is the rsp of the body (`entry rsp − 56`). Frame slots relative to `sp`:
 `sp + 64` receiver spill, `sp + 72` buf spill, `sp + 24` i, `sp + 32` 3i, `sp + 40` element pointer, `sp` the 24-byte

@@ -4,9 +4,9 @@ import E2eScal.SmDesc
 import E2eScal.SmSpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.SyncCommitteeMessage` (H5 hold-out, class C)
+# Spec bridge for the real Prysm `v1alpha1.SyncCommitteeMessage` (hold-out, class C)
 
-Hand-written by the H5 evaluation session: the text of `DdSpec.lean` with the fields
+Hand-written: the text of `DdSpec.lean` with the fields
 `[uint64, Bytes32, uint64, Bytes96]`.
 `prysmSmDesc` (`SmDesc.lean`) is the independent hand `Desc` from consensus-specs altair; it was committed
 before `smCheckerDesc` was rendered and printed.

@@ -80,7 +80,7 @@ theorem ep_accept_runs (e8 old : List UInt8) (he8 : e8.length = 8) (hold : old.l
       exact sep_true (P := Eq (e8.At (0x10010 : BitVec 64))) (by ecancel)⟩)
 
 /-- The specification `EpUAccC` holds on this host (from the machine code). This is a spec instance, not premise
-satisfiability; the non-vacuity witness is the run theorem above (audit AU-12). -/
+satisfiability; the non-vacuity witness is the run theorem above. -/
 theorem ep_spec_here : EpUAccC := ep_uacc_holds 0 hk0 hf0
 
 /-- epoch 0, a representative value (0x0123456789abcdef), and 2^64 − 1. -/

@@ -6,7 +6,7 @@ import E2eEnc.StmtEnc
 import E2eEnc.Tail
 
 /-!
-# ENC `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo`: the two rejects
+# `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo`: the two rejects
 
 - `dc_e2e_reject_bytes_main : dc_reject_bytes_stmt`: directives 2–9 as the fast path, 10–11
   `cmpq $0x20,0x10(%rax); jne L_117` taken (`len(BlockRoot) ≠ 32`), 70–78 the two words of `ssz.ErrBytesLength`,

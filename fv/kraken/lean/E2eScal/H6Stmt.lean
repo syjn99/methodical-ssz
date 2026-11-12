@@ -8,10 +8,10 @@ import E2eAd.Code
 import E2eScal.H6Code
 
 /-!
-# Independent hand STATEMENTS of the two H6 accept theorems (H6 hold-out; statements only, no proof)
+# Independent hand STATEMENTS of the two accept theorems (hold-out; statements only, no proof)
 
-Hand-written by the H6 evaluation session BEFORE the proof generator (`gen/scal/scalgen.py`) was run on
-either type and before any generator output for them was read (`gen2/H4-PROTOCOL.md` item 2).
+Hand-written BEFORE the proof generator (`gen/scal/scalgen.py`) was run on
+either type and before any generator output for them was read.
 Sources: the Go receiver layout (IR `go_fields` in `prysm/ir/ir-mainnet.json`), the SSZ layout
 (consensus-specs; `PdDesc.lean`, `PbDesc.lean`), the frame facts of the two `.S` files
 (`prysm/go1.26.10/e2e/h6/link/norm`), and the statement shape of the earlier hand accept theorems

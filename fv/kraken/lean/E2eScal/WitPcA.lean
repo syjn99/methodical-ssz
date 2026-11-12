@@ -3,9 +3,9 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Witness of `pc_e2e_accept_main` (PendingConsolidation decoder accept path; H5 hold-out, class D)
+# Witness of `pc_e2e_accept_main` (PendingConsolidation decoder accept path; hold-out, class D)
 
-Hand-written by the H5 evaluation session (the text of `WitPwA.lean` with the PendingConsolidation host and
+Hand-written (the text of `WitPwA.lean` with the PendingConsolidation host and
 layout). It shows that the premises of the independent hand statement `E2eScal.H5.pc_accept_stmt` are
 satisfiable. Host: one label, the real Go 1.26.10 `(*v1alpha1.PendingConsolidation).UnmarshalSSZ` (index 1)
 and `(*primitives.ValidatorIndex).UnmarshalSSZ` (108).

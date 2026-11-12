@@ -2,7 +2,7 @@ import E2eScal.P2Dec
 import E2eAd.AdRoot
 
 /-!
-# S1 in-sample check of P2 (decode): `AttestationData.BeaconBlockRoot` from `rootdec_seg`
+# In-sample check of the 32-byte field pattern (decode): `AttestationData.BeaconBlockRoot` from `rootdec_seg`
 
 `ad_e2e_root_s` has the statement of `E2eAd.ad_e2e_root` (`E2eAd/AdRoot.lean`) word for word.
 Its proof steps the label `L_167` (directive 85), applies `E2eScal.rootdec_seg` with the

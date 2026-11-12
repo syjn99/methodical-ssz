@@ -3,9 +3,9 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Witness of `pw_e2e_accept_main` (PendingPartialWithdrawal decoder accept path; GEN3 L1)
+# Witness of `pw_e2e_accept_main` (PendingPartialWithdrawal decoder accept path)
 
-Hand-written by the GEN3 lemma unit (the text of `WitBhA.lean` without heap and runtime callees). It shows that
+Hand-written (the text of `WitBhA.lean` without heap and runtime callees). It shows that
 the premises of the independent hand statement `E2eScal.H4.pw_accept_stmt` are satisfiable.
 Host: one label, the real Go 1.26.10 `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ` (index 1),
 `(*primitives.ValidatorIndex).UnmarshalSSZ` (110) and `(*primitives.Epoch).UnmarshalSSZ` (173).

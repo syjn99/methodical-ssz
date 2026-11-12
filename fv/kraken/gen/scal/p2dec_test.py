@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generator tests for the SG-1 extension of `scalgen.py p2dec` (offset-0 form). Tests that can fail.
+"""Generator tests for the extension of `scalgen.py p2dec` to a 32-byte field at SSZ offset 0 (offset-0 form). Tests that can fail.
 
 usage: p2dec_test.py <work-dir> <result.json>      (run from anywhere; one gated job; Python 3 stdlib + git)
 exit 0 = every case has its expected exit code and output; 1 = a case differs; 2 = usage
@@ -16,9 +16,9 @@ Cases (all on the committed Eth1Data `.S` and IR; mutants are written to <work-d
  - partial: one mutant again with `--partial-out`: the file starts with `/-! PARTIAL OUTPUT` and names the
    missing field; stdout stays empty.
 
-GEN2 cases (unit G2-G, `p2dec --gen2`; ids `g2-*`; mutated `.S` and IR copies in <work-dir> only):
+GEN2 cases (`p2dec --gen2`; ids `g2-*`; mutated `.S` and IR copies in <work-dir> only):
  - g2-compat-*: the default mode (no `--gen2`) on BlobIdentifier / DepositMessage still prints the committed
-   H3 files `GenBiDec.lean` / `GenDmDec.lean` byte for byte.
+   files of hold-out set H3, `GenBiDec.lean` / `GenDmDec.lean` byte for byte.
  - g2-new-*: `--gen2` on Eth1Data, BlobIdentifier, DepositMessage: exit 0 twice, identical, = the committed
    raw files `Gen2E1Dec.lean`, `Gen2BiDec.lean`, `Gen2DmDec.lean`, with every field covered.
  - adversarial `.S` / IR mutants: wrong size immediates, a size other than 32 / 48 / 96, mismatched registers
@@ -35,7 +35,7 @@ GEN2 cases (unit G2-G, `p2dec --gen2`; ids `g2-*`; mutated `.S` and IR copies in
    rejects the file (no statement check); a field not covered, a tail store from another register and a
    shifted epilogue give exit 2 and 0 bytes.
 
-Unit G2-F cases (review g2g-r1; ids `g2f-*`):
+GEN2 fix cases (ids `g2f-*`):
  - g2-partial (changed): the `--gen2 --partial-out` file is a Lean module: imports first, then the PARTIAL header
    with an `UNCOVERED-JSON:` line; `kindcheck.py` exit 1 by default, exit 3 with `--partial`.
  - g2f-bh-partial: real BeaconBlockHeader (Slot, ProposerIndex are delegated overlay fields): exit 3, 0 bytes on
@@ -47,12 +47,12 @@ Unit G2-F cases (review g2g-r1; ids `g2f-*`):
  - g2f-no-same-as-marker: `--compose` without `--same-as` still exits 0; the theorem line carries
    `-- UNCHECKED STATEMENT` and the header says the statement is checked by nobody; kindcheck exit 1.
  - g2f-same-as-generated: `--same-as E2eScal.Gen.bi_e2e_accept_main_gc` (a generated theorem): exit 0, kindcheck
-   exit 1 (review g2g-r1 case (ii)).
+   exit 1.
  - g2f-same-as-prop: `--same-as-prop E2eScal.Fx.biStmt`: exit 0, the Prop identity line, kindcheck PASS; the
    test fixture `g2f-bi-prop-fixture.lean` (the output with a scratch `abbrev` equal to the type of
    `Bi.bi_e2e_accept_main`) is written to <work-dir> for a separate gated `lake env lean`.
 
-GEN3 cases (unit G3-G, `p2dec --gen3`; ids `g3-*`; mutated `.S` / IR copies in <work-dir> only):
+GEN3 cases (`p2dec --gen3`; ids `g3-*`; mutated `.S` / IR copies in <work-dir> only):
  - g3-new-*: `--gen3` on PendingPartialWithdrawal, Deposit_Data, BeaconBlockHeader: exit 0 twice, identical,
    every field covered, = the committed raw files `Gen3PwDec.lean`, `Gen3DdDec.lean`, `Gen3BhDec.lean` when they
    exist; AttestationData: exit 3, Slot / CommitteeIndex / BeaconBlockRoot covered, Source / Target not
@@ -70,7 +70,7 @@ GEN3 cases (unit G3-G, `p2dec --gen3`; ids `g3-*`; mutated `.S` / IR copies in <
    BeaconBlockHeader: exit 2, 0 bytes); Deposit_Data composes (exit 0) with the `decAcceptKind` `_kind` line
    and the identity with `H4.dd_accept_stmt`; kindcheck PASS; = committed `Gen3DdAccept2.lean` when it exists.
 
-GEN4 cases (unit G4-G, `p2dec --gen4`; ids `g4-*`; mutated `.S` / IR copies in <work-dir> only):
+GEN4 cases (`p2dec --gen4`; ids `g4-*`; mutated `.S` / IR copies in <work-dir> only):
  - g4-new-*: `--gen4` on the 10 development types: exit 0 twice (AttestationData: 3), identical, the expected
    covered fields, `kindcheck.py` PASS (`--partial`: exit 3), = the committed raw file `Gen4*.lean` when it exists.
  - g4-compose-refuse: `--gen4 --compose` exits 2 with the reason, 0 bytes, no file.
@@ -86,23 +86,23 @@ GEN4 cases (unit G4-G, `p2dec --gen4`; ids `g4-*`; mutated `.S` / IR copies in <
    uncovered field: `kindcheck.py --partial` exit 3 on the partial file), 0 bytes on stdout unless exit 0; the
    summary's miss class is checked where stated. A covered mutant is a text result only (no Lean constant exists for
    mutated code): its theorems carry the mutated code's indices, never a parameter of the unmutated code.
- - g4f-*: unit G4-F, the inputs of review g4g-r1 (`rv` edits). The seven the GEN4 walker had accepted without the
+ - g4f-*: the reviewer's inputs (`rv` edits). The seven the GEN4 walker had accepted without the
    block entry being established (a05, a15, a29, a31, b05: an 8-byte stack store overlapping a tracked slot; b01, b02:
    head not the `decpro_seg` prologue) and b03 must be refused; a41 (extra head `nop`) is a head miss of class
    padding; a13 (wrong source offset) class other; stores to the return-address slot or below rsp, writes to r14 /
    rbp refused; the ten valid variants (a08, a14, a16, a19, a21, a27, a35, a38, b04, b06) stay covered. a34 (a
-   store after the last field event) is refused since unit G4-F2 (epilogue rule, exit 2).
- - g4f2-*: unit G4-F2, the inputs of review g4f-r1 and the systematic pass. The head size immediate must equal the IR
+   store after the last field event) is refused by the epilogue rule (exit 2).
+ - g4f2-*: the reviewer's inputs and the systematic pass. The head size immediate must equal the IR
    SSZ fixed size (c34, d15, d16: exit 2, class other); a callee that is not the IR field's overlay type is refused
    (ValidatorIndex field calling Epoch.UnmarshalSSZ and the reverse); after the last field event only the plain return
    (`mov d(%rsp),%rax|%rbx`, `xor`, nops, labels, forward jmp, `add $F,%rsp; pop %rbp; retq`) is accepted: a store, a
    call or a wrong frame size there gives exit 2 with every field `reached` and not covered; a nop there stays covered.
    Every `--gen4` case also checks the summary flag `reached` (true up to the first uncovered field, false after it,
    false for every field on a head miss); on exit 2 the summary lists every field.
- - g4f3-*: unit G4-F3, the inputs of review g4f2-r1 (M4): a `jmp` after the last field event to a label that is not in
+ - g4f3-*: the reviewer's inputs: a `jmp` after the last field event to a label that is not in
    the file (x01 `jmp runtime.abort`, x02 `jmp *%rdx`, x03 a tail `jmp` to Slot.UnmarshalSSZ): exit 2, every field not
    covered and `reached`.
- - fc-*: unit G4-F3, fail-closed. A harness (written to <work-dir>, run as one process per type on Eth1Data,
+ - fc-*: fail-closed. A harness (written to <work-dir>, run as one process per type on Eth1Data,
    SyncCommitteeMessage, PendingPartialWithdrawal) imports the working-tree `scalgen.py`, monkeypatches it and calls
    `main()`: an unexpected exception, a plain `G4Stop` and `SystemExit(0)` injected in the head (`g4_head`), at every
    `g4_parse` / `g4_label_index` call of the walk (each field, by the walk's current field), at every theorem-text
@@ -110,7 +110,7 @@ GEN4 cases (unit G4-G, `p2dec --gen4`; ids `g4-*`; mutated `.S` / IR copies in <
    that returns every field with a stop or without an end index, and an inner run that returns a text without the
    flags. Expected for every injection: exit 2 or 3 (exit 2 for an unexpected exception and SystemExit), 0 bytes on
    stdout, the summary's exit equal, fewer fields covered than the IR has. Control: no injection, exit 0.
-GEN5 cases (unit G5-G, `p2dec --gen5`; ids `g5-*`; mutated `.S` / IR copies in <work-dir> only):
+GEN5 cases (`p2dec --gen5`; ids `g5-*`; mutated `.S` / IR copies in <work-dir> only):
  - g5-new-*: `--gen5` on PendingDeposit, SyncCommitteeMessage, VoluntaryExit, PowBlock, ValidatorBalance: exit 0 twice,
    identical, every GEN5 theorem with its kind line, `kindcheck.py` PASS (rule 12: kind parameters recomputed from the
    IR and the `.S`); PendingPartialWithdrawal (interleaved fields) and AttestationData (nested fields): exit 2, 0 bytes.
@@ -288,7 +288,7 @@ G2_MUT = [
 def gen2_cases(work, new):
     res, bad = [], 0
     irt = (KR / IR).read_text()
-    # compatibility: default mode = committed H3 files
+    # compatibility: default mode = committed files of hold-out set H3
     for key in ("BI", "DM"):
         c = G2[key]
         rc, so, se = run(["python3", "-I", str(new), "p2dec", "--S", c["S"], "--ir", IR, "--type", c["type"]]
@@ -440,7 +440,7 @@ GEN2_BH_PARTIAL = "lean/E2eScal/Gen2BhDecPartial.lean"
 
 
 def g2f_cases(work, new, cargs, CP, irt):
-    """Unit G2-F (review g2g-r1): partial output as a Lean module, compose refusals, statement markers."""
+    """GEN2 fix cases: partial output as a Lean module, compose refusals, statement markers."""
     res, bad = [], 0
     KC = ["python3", "-I", "-B", str(HERE / "kindcheck.py")]
     c = G2["BH"]
@@ -509,7 +509,7 @@ def g2f_cases(work, new, cargs, CP, irt):
                     exit=rc, stdout_bytes=len(so), theorem_line_end=th[0][-45:] if th else None,
                     kindcheck_exit=kc.returncode, ok=bool(ok)))
     bad |= not ok
-    # --same-as a generated theorem (review g2g-r1 case (ii))
+    # --same-as a generated theorem
     a = cargs("BI")
     a[a.index("--same-as") + 1] = "E2eScal.Gen.bi_e2e_accept_main_gc"
     a[a.index("--name") + 1] = "bi_selfgen_gc"  # the reviewer's case: another name, right-hand side generated
@@ -649,7 +649,7 @@ G3_MUT = [
 
 
 def g3_cases(work, new):
-    """Unit G3-G: the GEN3 shapes, their adversarial inputs and the compose refusals / DD composition."""
+    """The GEN3 shapes, their adversarial inputs and the compose refusals / Deposit_Data (`DD`) composition."""
     res, bad = [], 0
     irt = (KR / IR).read_text()
     KC = ["python3", "-I", "-B", str(HERE / "kindcheck.py")]
@@ -880,7 +880,7 @@ G4_MUT = [
 
 
 def rv(eds):
-    """Edits in the form of review g4g-r1 (`tmp/exp4.py`, `exp5.py`): (1-based line, old suffix, new); new None =
+    """Edits in the form of the reviewer's scripts (`tmp/exp4.py`, `exp5.py`): (1-based line, old suffix, new); new None =
     delete, a list = replace by several, ("before", [..]) = insert before; directives indented, labels not."""
     def fn(L):
         L = list(L)
@@ -901,9 +901,9 @@ def rv(eds):
 
 E1F = G4["E1"]["fields"]
 SMJ = SML[:-1]
-# Unit G4-F: the inputs of review g4g-r1 (ids `g4f-<reviewer id>`). The seven inputs the GEN4 walker accepted although
-# the code does not establish the block entry (M1) must be refused; the eleven valid variants stay covered; plus
-# head-miss classes (S1) and the frame / goroutine register rule.
+# The reviewer's inputs (ids `g4f-<reviewer id>`). The seven inputs the GEN4 walker accepted although
+# the code does not establish the block entry must be refused; the eleven valid variants stay covered; plus
+# head-miss classes and the frame / goroutine register rule.
 G4F_MUT = [
     ("g4f-a05", "8-byte stack store at 0x7c overlaps the buffer slot 0x78 (M1a)", "SM",
      rv([(83, "mov 0x78(%rsp),%rbx", ("before", ["mov %rdi,0x7c(%rsp)"]))]), None, 3, SMF[:2], "other"),
@@ -937,7 +937,7 @@ G4F_MUT = [
      sm_vi(VI[:2] + ["  mov %rdx,%r14"] + VI[2:]), None, 3, SMF[:2], "other"),
     ("g4f-write-rbp", "ValidatorIndex: `lea 0x8(%rax),%rbp` in the set-up (frame pointer)", "SM",
      sm_vi(VI[:2] + ["  lea 0x8(%rax),%rbp"] + VI[2:]), None, 3, SMF[:2], "other"),
-    # the eleven valid variants of g4g-r1 (covered)
+    # the eleven valid variants of the reviewer (covered)
     ("g4f-a08", "fall-through label in the ValidatorIndex set-up", "SM",
      rv([(87, "add $0x28,%rax", ("before", [SMJ + "_zz:"]))]), None, 0, SMF, None),
     ("g4f-a14", "nops at 25 positions", "SM",
@@ -962,7 +962,7 @@ G4F_MUT = [
      rv([(48, "mov 0x38(%rsp),%rsi", ("before", ["mov %rdx,0x40(%rsp)"]))]), None, 0, E1F, None),
 ]
 
-# Unit G4-F2: review g4f-r1 M3 (head size immediate vs the IR) and the systematic pass (callee vs the IR overlay
+# Head size immediate vs the IR, and the systematic pass (callee vs the IR overlay
 # type, the directives after the last field event)
 G4F2_MUT = [
     ("g4f2-c34", "head: `cmp $0x10,%rcx` (IR SSZ size 0x90) (M3)", "SM",
@@ -985,7 +985,7 @@ G4F2_MUT = [
      rv([(89, "add $0x20,%rsp", ("before", ["nop"]))]), None, 0, E1F, None),
 ]
 
-# Unit G4-F3: review g4f2-r1 M4 (an epilogue `jmp` to a label that is not in the file)
+# An epilogue `jmp` to a label that is not in the file
 G4F3_MUT = [
     ("g4f3-x01", "Eth1Data: `jmp runtime.abort` in place of `xor %eax,%eax` after the last field event (M4)", "E1",
      rv([(87, "xor %eax,%eax", "jmp runtime.abort")]), None, 2, [], "other"),
@@ -995,7 +995,7 @@ G4F3_MUT = [
      rv([(157, "mov 0x28(%rsp),%rax", ("before", ["jmp " + PRIM + "Slot.UnmarshalSSZ"]))]), None, 2, [], "other"),
 ]
 
-# Unit G4-F3: the fail-closed harness (written to <work-dir>; argv: scalgen.py config.json result.json; cwd = fv/kraken)
+# The fail-closed harness (written to <work-dir>; argv: scalgen.py config.json result.json; cwd = fv/kraken)
 FC_HARNESS = r'''
 import contextlib, importlib.util, io, json, pathlib, sys
 spec = importlib.util.spec_from_file_location("scalgen_fc", sys.argv[1])
@@ -1118,7 +1118,7 @@ pathlib.Path(ARGV[3]).write_text(json.dumps(res) + "\n")
 
 
 def fc_cases(work, new):
-    """Unit G4-F3: fail-closed injections (FC_HARNESS) on Eth1Data, SyncCommitteeMessage, PendingPartialWithdrawal."""
+    """Fail-closed injections (FC_HARNESS) on Eth1Data, SyncCommitteeMessage, PendingPartialWithdrawal."""
     res, bad = [], 0
     h = work / "fc_harness.py"
     h.write_text(FC_HARNESS)
@@ -1158,7 +1158,7 @@ def fc_cases(work, new):
 
 
 def g4_cases(work, new):
-    """Unit G4-G: `--gen4` on the development types, compose refusal, dataflow adversarial inputs."""
+    """`--gen4` on the development types, compose refusal, dataflow adversarial inputs."""
     res, bad = [], 0
     irt = (KR / IR).read_text()
     KC = ["python3", "-I", "-B", str(HERE / "kindcheck.py")]
@@ -1224,11 +1224,11 @@ def g4_cases(work, new):
             fo = work / f"{mid}.lean"
             fo.write_bytes(so)
             kcr = subprocess.run(KC + [str(fo)], capture_output=True, text=True).returncode
-        # G4-F: `reached` is true up to the first uncovered field and false after it (every field on a head miss)
+        # `reached` is true up to the first uncovered field and false after it (every field on a head miss)
         fl = sm.get("fields", [])
         x0 = next((x for x, f in enumerate(fl) if f.get("status") != "covered"), len(fl))
         head_miss = sm.get("head", {}).get("status") == "not covered"
-        # G4-F2: on an epilogue miss every field was reached
+        # on an epilogue miss every field was reached
         epi_miss = sm.get("epilogue", {}).get("status") == "not covered"
         reach_ok = all(f.get("reached") == (False if head_miss else True if epi_miss else x <= x0)
                        for x, f in enumerate(fl))
@@ -1242,7 +1242,7 @@ def g4_cases(work, new):
     return res, bad
 
 
-# ---------------------------------------------------------------------------------------------- GEN5 (unit G5-G)
+# ---------------------------------------------------------------------------------------------- GEN5
 
 def g5c(sdir, tname, const, mod, pre, extra=()):
     return dict(S=f"prysm/go1.26.10/e2e/{sdir}/{PN}{tname}.UnmarshalSSZ.S", type=f"v1alpha1.{tname}",
@@ -1341,7 +1341,7 @@ def g5_run(work, new, mid, c, S=None, ir=None, extra=()):
 
 
 def g5_cases(work, new):
-    """Unit G5-G: `--gen5` on real types, adversarial inputs, valid variants."""
+    """`--gen5` on real types, adversarial inputs, valid variants."""
     res, bad = [], 0
     KC = ["python3", "-I", "-B", str(HERE / "kindcheck.py")]
     irt = (KR / IR).read_text()

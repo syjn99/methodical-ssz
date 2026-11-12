@@ -1,9 +1,9 @@
 import E2eScal.SegN
 
 /-!
-# H4 hand lemma: 32-byte add-form decode segment with a `nop` before `callq runtime.makeslice`
+# Hand lemma: 32-byte add-form decode segment with a `nop` before `callq runtime.makeslice`
 
-Hand-written by the H4 evaluation session AFTER the raw generator output was committed (result (S)).
+Hand-written AFTER the raw generator output was committed (result (S)).
 In `(*v1alpha1.Deposit_Data).UnmarshalSSZ` the WithdrawalCredentials segment (directives 47–72) has a `nop`
 (alignment padding, directive 50) between `mov $0x20,%ecx` and `callq runtime.makeslice`; the frozen
 generator reports the field "not covered: 0 decode segments match". This module is NOT part of the frozen

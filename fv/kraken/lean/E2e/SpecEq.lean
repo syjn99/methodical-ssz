@@ -1,14 +1,14 @@
 import E2e.Spec
 
 /-!
-# Review e2e-r1 S1: the hand Desc and the checker Desc have the same codec
+# The hand Desc and the checker Desc have the same codec
 
 `prysmCpDesc` (consensus-specs names `epoch`, `root`) and the Desc checker's
 `cpCheckerDesc` (Go names `Epoch`, `Root`) differ only in the field names.
 EthLib's `serialize` and `deserialize` ignore the names of a container
 (`| .container _ fields, …`), so the two Descs encode and decode every value and
 every byte array the same way. With `prysmCpDesc_checker` this is the equality
-that PROOF-PLAN E1.3 asks for, stated on the codec.
+of the spec bridge, stated on the codec.
 -/
 
 namespace E2e

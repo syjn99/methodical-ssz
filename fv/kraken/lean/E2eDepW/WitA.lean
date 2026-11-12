@@ -5,7 +5,7 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Witness of `dep_e2e_accept_main` (Deposit decoder accept path, SEG proof of use)
+# Witness of `dep_e2e_accept_main` (Deposit decoder accept path)
 
 The text of `E2eHb.WitHbA` with the Deposit host and layout. It shows that the premises of the frozen statement
 `E2eDep.dep_accept_stmt` are satisfiable, the six contract hypotheses included: both `MakesliceC` instances of the
@@ -33,7 +33,7 @@ def dataLabels : Program :=
 
 def P : Program := dataLabels ++ DepUnmarshal ++ DdUnmarshal ++ BumpAllocT ++ BumpNew120 ++ RtCopy
 
--- `maxRecDepth` (logs 115, 117–119, one run each; scoped per declaration in review r5 S2): the default (512)
+-- `maxRecDepth` (logs 115, 117–119 of `lv/STEPS-SEG2.tsv`, one run each; scoped per declaration): the default (512)
 -- stops these list computations over the 356-directive host; 1000, 2000, 5000 and 20000 pass (measured with the
 -- option file-wide). Value 2000 = twice the lowest passing value. Only `P_len`, `hk308`, `hk324`, `hk330` need it.
 set_option maxRecDepth 2000 in

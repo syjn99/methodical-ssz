@@ -6,7 +6,7 @@ import E2eDepW.WitR
 import E2eDepW.WitA
 import E2eHb.WitHbR
 
-/-! SEG round-2 hand list for `gen/e2e/seg2axioms_gate.py` ("must exist" names; every name gets the axiom check). -/
+/-! Hand list for `gen/e2e/seg2axioms_gate.py` ("must exist" names; every name gets the axiom check). -/
 
 #print axioms E2eSeg.vN_serialize
 #print axioms E2eSeg.vN_of_bytes

@@ -1,5 +1,5 @@
-"""Append FLAT24 names to gen/scal/AxiomsScal.lean (imports after the last import; #print axioms lines at the end).
-Names: every declaration of the dump whose name lies in a FLAT24 module namespace or carries a FLAT24 prefix."""
+"""Append the names of the F24 types (`X` below) to gen/scal/AxiomsScal.lean (imports after the last import;
+#print axioms lines at the end). Names: every declaration of the dump that matches a pattern of `pats` below."""
 import re, sys
 dump, axs, lean = sys.argv[1:4]
 X = ['Dpr', 'Bdr', 'Bbr', 'Bsr', 'Epr', 'Pdc', 'Vid', 'Bpf']

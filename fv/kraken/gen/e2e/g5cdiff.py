@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""G5-C Go differential of the v1alpha1.HistoricalSummary, SigningData, SyncAggregatorSelectionData,
-ValidatorBalance and VoluntaryExit decoders (Python 3 standard library only; the text of h6diff.py with the
-G5-C cases).
+"""Go differential of the v1alpha1.HistoricalSummary, SigningData, SyncAggregatorSelectionData,
+ValidatorBalance and VoluntaryExit decoders (Python 3 standard library only; the text of h6diff.py with these
+cases).
 
   g5cdiff.py cases <cases.json>                      write the cases
   g5cdiff.py check <cases.json> <go-out.json> <result.json>

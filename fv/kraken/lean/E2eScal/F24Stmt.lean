@@ -10,18 +10,18 @@ import E2eScal.KindEncN
 import E2eScal.F24Code
 
 /-!
-# FLAT24 / H7: independent hand STATEMENTS of four decoder accept paths and four encoder fast paths
+# Independent hand STATEMENTS of four decoder accept paths and four encoder fast paths
 (statements only, no proof)
 
-Hand-written by the FLAT24 evaluator (Opus 5.5) BEFORE it opened the generated modules
+Hand-written BEFORE the author opened the generated modules
 `Gen5F24{Bbr,Dpr,Pdc,Vid}Dec.lean` and `Gen6F24{Bbr,Bpf,Pdc,Vid}Enc.lean` or their kind lines. These generated files
-were committed unedited (one-shot runs of Part 1); this session built and kind-checked them without printing them.
+were committed unedited (one-shot runs); this session built and kind-checked them without printing them.
 Sources: the Go receiver layout (IR `go_fields` of `prysm/ir/ir-mainnet.json`, gc amd64 offsets), the SSZ layout
 (field sizes in IR order), the `.S` files of `prysm/go1.26.10/e2e/f24/link/norm/` (frame, guard, spills, stack slots
 touched on the path and their contents at the return, the directive of the last call), the statement shape of the
 committed hand statements `E2eScal.H4.dd_accept_stmt`, `E2eScal.G5C.sa_accept_stmt`, `E2eScal.H6.pd_accept_stmt`,
 `E2eScal.H5.sm_accept_stmt` (decoders), `E2eScal.E2c.pw_hand_fast`, `E2eScal.E2c.sc_hand_fast`,
-`E2eScal.E2c.pb_hand_fast` (encoders), and the E2-L interface text (chunk order: saved rbp, home slots ascending,
+`E2eScal.E2c.pb_hand_fast` (encoders), and the interface text of `enc2/L/OUT.md` (chunk order: saved rbp, home slots ascending,
 other slots by first touch, the return slot; existentials in creation order). Independence limit: the layout
 rules come from that interface text and the earlier hand statements; the parameters are read from the `.S` by hand.
 

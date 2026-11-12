@@ -7,7 +7,7 @@ import Fk.Labels
 When `dst` has room (`len + 16 ≤ cap`), the function appends the 16 receiver
 bytes to `dst` and returns `(ptr, len + 16, cap, nil)`. No `growslice` call is
 taken. Go ABIInternal amd64: rax = c, (rbx, rcx, rdi) = dst, r14 = g (kept:
-the result names it, fix 3 X4).
+the result names it).
 -/
 
 open Fk Fk.Code

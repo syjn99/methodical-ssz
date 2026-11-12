@@ -2,7 +2,7 @@ import E2eScal.RejectTies
 import E2eScal.Gen4H6PdDec
 
 /-!
-# GEN5 L3 worked examples: size-reject theorems in generated style
+# Worked examples: size-reject theorems in generated style
 
 `pd_reject_g5`: PendingDeposit (frame `0x40`), with the declared type of the committed hand theorem
 `H6.pd_e2e_reject_size_main`. `ve_reject_g5`: VoluntaryExit (frame `0x48`), no hand theorem; statement =

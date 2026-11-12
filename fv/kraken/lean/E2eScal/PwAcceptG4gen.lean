@@ -2,7 +2,7 @@ import E2eScal.PwAccept
 import E2eScal.Gen4PwDec
 
 /-!
-# PendingPartialWithdrawal accept path from the GENERATED GEN4 chains (unit G4-G, step 4)
+# PendingPartialWithdrawal accept path from the GENERATED `p2dec --gen4` chains
 
 `pw_e2e_accept_main_g4gen : H4.pw_accept_stmt` (the hand statement, `H4Stmt.lean`, unchanged). HAND field
 compositions over the GENERATED theorems of `Gen4PwDec.lean` (`p2dec --gen4`, raw output): Index = generated steps 15,
@@ -131,7 +131,7 @@ theorem pw_gg_Amount_WithdrawableEpoch_fields (k : Nat) (hk : PwUnmarshal.IsInfi
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- Accept path of `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ` from the GENERATED GEN4 chains;
+/-- Accept path of `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ` from the GENERATED `p2dec --gen4` chains;
 statement = the hand statement `pw_accept_stmt` (unchanged). -/
 theorem pw_e2e_accept_main_g4gen : pw_accept_stmt := by
   intro k hk hf kV hkV hfV kE hkE hfE in0 in1 in2 hin0 hin1 hin2 s ra guard

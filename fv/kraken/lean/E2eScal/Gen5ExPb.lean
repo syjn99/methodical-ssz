@@ -7,12 +7,12 @@ import E2eScal.Compose
 import E2eScal.Gen4H6PbDec
 
 /-!
-# GEN5 worked example: `(*v1alpha1.PowBlock).UnmarshalSSZ`, accept theorem in generated style
+# Worked example: `(*v1alpha1.PowBlock).UnmarshalSSZ`, accept theorem in generated style
 
 Text produced from one description of the type (frame facts, field list, boundary states, chain theorem names)
-by the recipe of the G5-L hand-over; every theorem has a `_kind` line (`decHeadKindN`, `decFieldKindN`,
-`decEpiKindN`, `decAcceptKindN`). The GEN4 chain theorems (`E2eScal.Gen.*`) are used as emitted.
-Frame `0x20`: the epilogue (`xor`, `xor`, `add $0x20`, `pop`, `retq`) is the GEN2 lemma `decepi_seg`.
+by the recipe of the lemma hand-over; every theorem has a `_kind` line (`decHeadKindN`, `decFieldKindN`,
+`decEpiKindN`, `decAcceptKindN`). The `p2dec --gen4` chain theorems (`E2eScal.Gen.*`) are used as emitted.
+Frame `0x20`: the epilogue (`xor`, `xor`, `add $0x20`, `pop`, `retq`) is the lemma `decepi_seg`.
 -/
 
 open Fk E2e E2eAd E2eAd.Code E2eScal.H6Code E2eScal.H5Code E2eScal.BhCode E2eScal

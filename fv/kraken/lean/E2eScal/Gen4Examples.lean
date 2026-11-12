@@ -7,7 +7,7 @@ import E2eScal.BhCode
 import E2e.Code
 
 /-!
-# GEN4: example instances of the window and step mechanisms on the development sites
+# Example instances of the window and step mechanisms on the development sites
 
 One theorem and one `_kind` line per emitted unit, in the shape a generated theorem is to have (the idiom of
 `Gen3Examples.lean`). Examples for the generator unit; not generator output (the text was produced by a
@@ -30,7 +30,7 @@ variable [Host]
 
 namespace E2eScal.Gen4Ex
 
-/-! ## SyncCommitteeMessage.ValidatorIndex — set-up with the receiver already in rax (H5 miss P-H5-2): six steps, call block, whole field -/
+/-! ## SyncCommitteeMessage.ValidatorIndex — set-up with the receiver already in rax (missed by the hold-out run): six steps, call block, whole field -/
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
@@ -174,7 +174,7 @@ theorem sm_g4_ValidatorIndex_call_kind : ∀ (h : Host), type_of% (@sm_g4_Valida
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `ValidatorIndex` (callee decoder field, Go offset 40, SSZ offset 40): the WHOLE call field 82–117, composed from the
-step theorems of its set-up and the call-block theorem (worked example of the GEN4 emission recipe). The entry
+step theorems of its set-up and the call-block theorem (worked example of the `p2dec --gen4` emission recipe). The entry
 conditions of the call block (rax = `rcv + 40`, rbx = `bf + 40`, rcx = 8) are closed by `rfl` on the state
 that the steps computed. -/
 theorem sm_g4_ValidatorIndex_field (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh SmUnmarshal k) :
@@ -228,7 +228,7 @@ theorem sm_g4_ValidatorIndex_field (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.pr
   dsimp only
   ecancel
 
-/-! ## SyncCommitteeMessage.BlockRoot — byte segment with the receiver reloaded into rax (H5 miss P-H5-1), its tail as steps, whole field -/
+/-! ## SyncCommitteeMessage.BlockRoot — byte segment with the receiver reloaded into rax (missed by the hold-out run), its tail as steps, whole field -/
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
@@ -356,7 +356,7 @@ theorem sm_g4_s81_kind : ∀ (h : Host), type_of% (@sm_g4_s81 h) = @E2eScal.step
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `BlockRoot`: the WHOLE byte field 47–81 (segment, then the tail `mov 0x38(%rsp),%rsi; jmp; label; mov %rsi,0x10(%rax)`
-as four steps): worked example of the GEN4 emission recipe for a byte field. Statement = the segment statement
+as four steps): worked example of the `p2dec --gen4` emission recipe for a byte field. Statement = the segment statement
 with the end at directive 82. -/
 theorem sm_g4_BlockRoot_field (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh SmUnmarshal k) :
     ∀
@@ -416,7 +416,7 @@ theorem sm_g4_BlockRoot_field (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k)
   dsimp only
   ecancel
 
-/-! ## SyncCommitteeMessage.Signature and Deposit_Data.WithdrawalCredentials — `nop` before `callq runtime.makeslice` (finding SG-3) -/
+/-! ## SyncCommitteeMessage.Signature and Deposit_Data.WithdrawalCredentials — `nop` before `callq runtime.makeslice` -/
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
@@ -526,7 +526,7 @@ theorem dd_g4_WithdrawalCredentials_seg (k : Nat) (hk : DdUnmarshal.IsInfixAt Ho
 theorem dd_g4_WithdrawalCredentials_seg_kind : ∀ (h : Host), type_of% (@dd_g4_WithdrawalCredentials_seg h) = @E2eScal.bytesDecSegKindG4 h 32 DdUnmarshal Reg64.rdx 47 67 73 48 56 24 32 40 48 48 := by
   intro h; with_reducible rfl
 
-/-! ## PendingConsolidation.TargetIndex — `nop` after the callee call (H5 miss P-H5-3): reload set-up as steps, call window, whole field -/
+/-! ## PendingConsolidation.TargetIndex — `nop` after the callee call (missed by the hold-out run): reload set-up as steps, call window, whole field -/
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
@@ -688,7 +688,7 @@ theorem pc_g4_TargetIndex_call_kind : ∀ (h : Host), type_of% (@pc_g4_TargetInd
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `TargetIndex` (callee decoder field, Go offset 16, SSZ offset 8): the WHOLE call field 48–85, composed from the
-step theorems of its set-up and the call-block theorem (worked example of the GEN4 emission recipe). The entry
+step theorems of its set-up and the call-block theorem (worked example of the `p2dec --gen4` emission recipe). The entry
 conditions of the call block (rax = `rcv + 16`, rbx = `bf + 8`, rcx = 8) are closed by `rfl` on the state
 that the steps computed. -/
 theorem pc_g4_TargetIndex_field (k : Nat) (hk : PcUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh PcUnmarshal k) :
@@ -744,7 +744,7 @@ theorem pc_g4_TargetIndex_field (k : Nat) (hk : PcUnmarshal.IsInfixAt Host.prog 
   dsimp only
   ecancel
 
-/-! ## GEN3 set-up forms as steps: first-field form with pad (Checkpoint.Epoch), reload form with pad (BeaconBlockHeader.ProposerIndex), `lea` form with the interleaved uint64 read (PendingPartialWithdrawal.WithdrawableEpoch) -/
+/-! ## `p2dec --gen3` set-up forms as steps: first-field form with pad (Checkpoint.Epoch), reload form with pad (BeaconBlockHeader.ProposerIndex), `lea` form with the interleaved uint64 read (PendingPartialWithdrawal.WithdrawableEpoch) -/
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in

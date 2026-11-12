@@ -2,7 +2,7 @@ import E2e.CpWHead
 import Fk.RtCopy
 
 /-!
-# `(*v1alpha1.Checkpoint).MarshalSSZTo`: the remaining capacity cases and the reject after growth (INBOX 009)
+# `(*v1alpha1.Checkpoint).MarshalSSZTo`: the remaining capacity cases and the reject after growth
 
 Each theorem is a prefix of `E2e.CpWHead` followed by a tail of `E2e.CpWTail` / `E2e.CpWTailG`
 (directive indices of the Go 1.26.10 `.S`, `E2e.Code.CpMarshal`):
@@ -17,7 +17,7 @@ Each theorem is a prefix of `E2e.CpWHead` followed by a tail of `E2e.CpWTail` / 
   proved, see `CpWGrowAny.lean`).
 - `cp_e2e_marshal_reject_grow_main` — `cap < len + 8` and `len(Root) ≠ 32`: `cpw_head_grow` +
   `cpw_tail_rej`. The result is `(nil, ssz.ErrBytesLength words)`; the epoch bytes are at
-  `new[len..len+8]` of the block that growslice returned (C-1 form for the new block); the old
+  `new[len..len+8]` of the block that growslice returned (written before the root length test, here in the new block); the old
   block is unchanged; the new block is not returned (its pointer is in the dead frame slot only).
 
 The error words `e0`, `e1` are the global's value as it is; that they are non-nil is not proved here

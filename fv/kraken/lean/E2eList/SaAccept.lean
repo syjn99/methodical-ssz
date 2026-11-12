@@ -4,7 +4,7 @@ import E2eList.Seg
 import E2eList.StmtSa
 
 /-!
-# T1 `(*v1alpha1.SyncAggregate).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (LV)
+# `(*v1alpha1.SyncAggregate).UnmarshalSSZ`, accept path, Go 1.26.10 machine code
 
 Hand composition with the text of `E2eScal.H4.dd_e2e_accept_main` (`DdAccept.lean`):
 

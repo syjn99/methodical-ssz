@@ -5,7 +5,7 @@ import E2e.CpReject
 import E2eHb.StmtHb
 
 /-!
-# HB `(*v1alpha1.HistoricalBatch).UnmarshalSSZ`: size reject
+# `(*v1alpha1.HistoricalBatch).UnmarshalSSZ`: size reject
 
 Directives 2–7 (guard, prologue `sub $0x38`, rbx spill), 9–10 `cmp $0x80000,%rcx; jne L_7b` taken,
 `L_7b` (30), the two loads of `ssz.ErrSize` (31–32), epilogue 33–35 (`add $0x38`).
@@ -18,7 +18,7 @@ variable [Host]
 
 namespace E2eHb
 
-/-- **HB size reject (machine)**; statement = the frozen `hb_reject_size_stmt`. -/
+/-- **Size reject (machine)**; statement = the frozen `hb_reject_size_stmt`. -/
 theorem hb_e2e_reject_size_main : hb_reject_size_stmt := by
   intro k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard hlen
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s

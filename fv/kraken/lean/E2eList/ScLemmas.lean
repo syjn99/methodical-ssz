@@ -3,7 +3,7 @@ import Fk.Block
 import E2eList.Defs
 
 /-!
-# List and memory-chunk lemmas for the T2 element loop (LV)
+# List and memory-chunk lemmas for the SyncCommittee element loop
 
 - `lvElems_snoc`, `lvHdrs_length`, `lvHdrs_snoc`: the two loop objects of `Defs.lean` grow by one element.
 - `lv_flatten_length`, `lv_flatten_split`: the input `pks.flatten` (512 blocks of 48 bytes) around block i.

@@ -5,7 +5,7 @@ import E2eScal.Gen5ExPb
 import E2eScal.Gen5ExRej
 
 /-!
-# GEN5 L2: worked examples of generated-style accept theorems, one per frame / field-mix class
+# Worked examples of generated-style accept theorems, one per frame / field-mix class
 
 | module | type | class | frame | fields | statement |
 | --- | --- | --- | --- | --- | --- |
@@ -22,7 +22,7 @@ The texts were produced from one description per type by a scratch emitter of th
 repository; it is not the generator). They are development data (in-sample). The independent checks of
 the statements are the `rfl` ties of `AcceptTies.lean`.
 
-`Gen5ExRej` (L3): size-reject theorems of PendingDeposit and VoluntaryExit from `decrej_seg`
+`Gen5ExRej`: size-reject theorems of PendingDeposit and VoluntaryExit from `decrej_seg`
 (`decRejectKindN`).
 
 `g5_examples_accept` collects the four accept theorems under their kinds.

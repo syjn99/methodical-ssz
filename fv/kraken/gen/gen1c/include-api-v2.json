@@ -10,7 +10,7 @@
  ],
  "owner_of_content": "fix3 stream",
  "owner_of_this_file": "orchestrator (promotes fix3's streams/fix3/INCLUDE-API.next.json after checking it against the fix3 commit)",
- "origin": "fix3 first commit 427708e (TOOLS.md section 'ELF 데이터 include'). Changes from v0 listed in changes_from_v0.",
+ "origin": "fix3 first commit 427708e (TOOLS.md section 'ELF data include'). Changes from v0 listed in changes_from_v0.",
  "frozen_for_phase1c": true,
  "frozen_note": "Approved by independent review reviews/fix3-r2 (Claude Fable, verdict APPROVE, scope: fix3 stage A / interface) at d9cdb40f861e3e49f017928ade26bc936829ff8f. phase1c may rebase onto exactly this SHA. Names, file format and the 22 items are immutable for phase1c. Later fix3 commits (stage B, M4) may only ADD items (announced as api_version 3); they are not approved yet.",
  "fix3_commit": "d9cdb40f861e3e49f017928ade26bc936829ff8f",

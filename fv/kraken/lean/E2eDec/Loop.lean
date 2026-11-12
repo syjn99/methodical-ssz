@@ -4,11 +4,11 @@ import E2eDec.Code
 import E2eList.ScLemmas
 
 /-!
-# ENC decoder: the element loop (the text of `E2eList/IaLoop.lean`, T3)
+# Decoder: the element loop (the text of `E2eList/IaLoop.lean`)
 
-Loop head `L_320` (directive 185). The same instruction order as T3 `ia_iter` (147–165, 143–146) with this
+Loop head `L_320` (directive 185). The same instruction order as `ia_iter` (147–165, 143–146) with this
 function's registers and slots: rax = i, rdx = n, rcx = cap − 36, rdi = the input pointer `p0` (buf + 36), rsi = the
-receiver `c`; the receiver's Columns words at `c + 32` (pointer A) and `c + 40` (len). Index map T3 → here:
+receiver `c`; the receiver's Columns words at `c + 32` (pointer A) and `c + 40` (len). Index map `IaLoop.lean` → here:
 147–152 → 185–190, 154–157 → 191–194 (195 nop), 158–164 → 196–202, 143–146 → 180–183 (184 nop), exit 166 → 204.
 -/
 
@@ -17,8 +17,8 @@ variable [Host]
 
 namespace E2eDec
 
--- Measured (ENC logs 86, 87): without this option `klabel` (directive 180) stops with "maximum recursion depth" (the
--- `simp` that unfolds the program literal, as in T3 `IaLoop.lean`); 1024 passes.
+-- Measured: without this option `klabel` (directive 180) stops with "maximum recursion depth" (the
+-- `simp` that unfolds the program literal, as in `E2eList/IaLoop.lean`); 1024 passes.
 set_option maxRecDepth 1024 in
 theorem dcd_iter (k : Nat) (hk : DcUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DcUnmarshal k)
     (ib : List UInt8) (n i : Nat) (hib : ib.length = 8 * n) (hn : n ≤ 128) (hi : i < n)
@@ -118,7 +118,7 @@ theorem dcd_iter (k : Nat) (hk : DcUnmarshal.IsInfixAt Host.prog k) (hf : Labels
     (try simp only [BitVec.ofNat_eq_ofNat] at H1 ⊢)
     ecancel
 
--- Measured (ENC logs 86, 87): without this option `klabel` (directive 204) stops with "maximum recursion depth"; 1024 passes.
+-- Measured: without this option `klabel` (directive 204) stops with "maximum recursion depth"; 1024 passes.
 set_option maxRecDepth 1024 in
 theorem dcd_exit (k : Nat) (hk : DcUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DcUnmarshal k)
     (ib : List UInt8) (n : Nat) (hib : ib.length = 8 * n) (_hn : n ≤ 128)

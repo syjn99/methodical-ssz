@@ -3,9 +3,9 @@ import E2e.CpSpecK
 import Fk.RtCopy
 
 /-!
-# Encoder on a decoded-form receiver (NOT the E5 composition)
+# Encoder on a decoded-form receiver (NOT the machine-level composition)
 
-Review e2e-r1 M1 (FINDINGS R-1): this theorem starts at the encoder entry and
+This theorem starts at the encoder entry and
 does not run the decoder; it is not `compose_hupd`. The machine-level
 composition (decoder entry → `cp_e2e_accept_main` → encoder call) is
 `cp_e2e_unmarshal_then_marshal` in `E2e.CpCompose`, not this file.

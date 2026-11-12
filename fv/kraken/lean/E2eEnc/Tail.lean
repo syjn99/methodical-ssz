@@ -4,7 +4,7 @@ import E2eEnc.Defs
 import E2eEnc.Loop
 
 /-!
-# ENC: from `L_7c` (directive 29) to the return, sites 2 and 3 do not grow
+# From `L_7c` (directive 29) to the return, sites 2 and 3 do not grow
 
 Shared by the fast path (`dc_marshal_fast_main`, from directive 15 `jae L_7c`) and the grow path at site 1
 (`dc_marshal_grow_main`, after the growslice of directive 23). At `L_7c` the block is `bp` with capacity `cp`,

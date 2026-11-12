@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""ENC2 preparation (unit E2-P): call graph and link tables of the real MarshalSSZTo of the thirteen flat
+"""Call graph and link tables of the real MarshalSSZTo of the thirteen flat
 development types that had no encoder link table (v1alpha1 BlobIdentifier, DepositMessage, Deposit_Data,
 PendingPartialWithdrawal, SyncCommitteeMessage, PendingConsolidation, PendingDeposit, PowBlock,
 HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit) on the Go 1.26.10
-ELF (the same ELF as prysm-e2e; the text of `h6link.py` with the function set and the data items changed).
+ELF (the same ELF as prysm/go1.26.10/e2e/link; the text of `h6link.py` with the function set and the data items changed).
 Checkpoint, BeaconBlockHeader and Eth1Data have their encoder tables in e2e/link, e2e/bh/link and e2e/e1/link.
 No primitives MarshalSSZTo is called by these functions (the call graph lists every call target), so no callee
 encoder is in the set.

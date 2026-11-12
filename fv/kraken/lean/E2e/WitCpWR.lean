@@ -4,7 +4,7 @@ import Fk.WHost
 import E2e.WitSplit
 
 /-!
-# Witness of `cp_e2e_marshal_reject_cover` (INBOX 009): `len(Root) ≠ 32`, every capacity range
+# Witness of `cp_e2e_marshal_reject_cover`: `len(Root) ≠ 32`, every capacity range
 
 Host: data labels (the bump pointer, `ssz.ErrBytesLength` at 0x10008), the real Go 1.26.10
 `(*v1alpha1.Checkpoint).MarshalSSZTo` (index 9) and `RtCopy` (index 100: `rt_growslice` — new capacity `2·newLen + 192` from the bump heap — and `rt_memmove`,

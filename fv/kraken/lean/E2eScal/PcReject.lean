@@ -6,9 +6,9 @@ import E2e.Data
 import E2e.CpReject
 
 /-!
-# Real Prysm `(*v1alpha1.PendingConsolidation).UnmarshalSSZ`: size reject (H5 hold-out, class D)
+# Real Prysm `(*v1alpha1.PendingConsolidation).UnmarshalSSZ`: size reject (hold-out, class D)
 
-Hand-written by the H5 evaluation session: the text of `PwReject.lean` with the PendingConsolidation indices
+Hand-written: the text of `PwReject.lean` with the PendingConsolidation indices
 (frame `sub $0x48` as PendingPartialWithdrawal). `pc_e2e_reject_size_main` (`len(buf) ≠ 16`, `return ssz.ErrSize`):
 directives 2–7, 9–10 `cmp $0x10,%rcx; jne L_153` taken, `L_153` (89), loads of `ssz.ErrSize` (90–91), epilogue 92–94.
 Not covered here: the two callee error paths (`fmt.errorf` wraps); under `len(buf) = 16` each callee gets 8 bytes.

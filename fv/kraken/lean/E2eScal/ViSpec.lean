@@ -1,9 +1,9 @@
 import E2eScal.GenVi
 
 /-!
-# `ViUAccC`: function specification of `(*primitives.ValidatorIndex).UnmarshalSSZ`, accept path (H1)
+# `ViUAccC`: function specification of `(*primitives.ValidatorIndex).UnmarshalSSZ`, accept path
 
-Hand-written by the evaluation session (not generator output). The text of `E2eAd.CiUAccC` with the
+Hand-written (not generator output). The text of `E2eAd.CiUAccC` with the
 label `ciLabel` replaced by `E2eScal.BhCode.viLabel`. `vi_uacc_holds` proves it from the generated machine
 theorem `E2eScal.Gen.vi_unmarshal_accept_main_g` (the proof text of `E2eAd.ci_uacc_holds`). The
 BeaconBlockHeader decoder uses the callee only through this specification (no contract).

@@ -12,7 +12,7 @@ import E2eList.DataIa
 import E2eList.DefsIa
 
 /-!
-# Hand STATEMENTS of the LV target T3 `(*v1alpha1.IndexedAttestation).UnmarshalSSZ` (statements only, no proof)
+# Hand STATEMENTS of the target `(*v1alpha1.IndexedAttestation).UnmarshalSSZ` (statements only, no proof)
 
 Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
 Statement shape: `StmtSa.lean` / `StmtSc.lean` (exact frame, contracts as hypotheses, input and receiver kept) and, for
@@ -20,14 +20,14 @@ the two `fmt.errorf` rejects, the contract forms `ConvT64C` and `FmtErrorfDWC` (
 Design and the call-site tables: `prysm/go1.26.10/e2e/lv/DESIGN-T3.md`.
 
     func (c *IndexedAttestation) UnmarshalSSZ(buf []byte) error {        // phase0.ssz.go:2819
-        if size < 228 { return ssz.ErrSize }                                                  // P1
-        sszVarOffset0 := ssz.ReadOffset(buf[0:4]); if sszVarOffset0 != 228 { return ssz.ErrInvalidVariableOffset } // P2
-        if len(sszSlice0)%8 != 0 { return fmt.Errorf("misaligned bytes: … %d … %w", …, ssz.ErrIncorrectListSize) } // P4
+        if size < 228 { return ssz.ErrSize }                                                  // size reject
+        sszVarOffset0 := ssz.ReadOffset(buf[0:4]); if sszVarOffset0 != 228 { return ssz.ErrInvalidVariableOffset } // offset reject
+        if len(sszSlice0)%8 != 0 { return fmt.Errorf("misaligned bytes: … %d … %w", …, ssz.ErrIncorrectListSize) } // alignment reject
         numElem := len(sszSlice0) / 8
-        if numElem > 2048 { return fmt.Errorf("ssz-max exceeded: … %d … %w", numElem, ssz.ErrListTooBig) }         // P5
+        if numElem > 2048 { return fmt.Errorf("ssz-max exceeded: … %d … %w", numElem, ssz.ErrListTooBig) }         // overflow reject
         c.AttestingIndices = make([]uint64, numElem); for i … { c.AttestingIndices[i] = LE64(sszSlice0[i*8:(1+i)*8]) }
-        c.Data = new(AttestationData); if err = c.Data.UnmarshalSSZ(buf[4:132]); err != nil { return fmt.Errorf("Data: %w", err) } // P6
-        c.Signature = append(make([]byte, 0, 96), buf[132:228]...); return err }                              // P3
+        c.Data = new(AttestationData); if err = c.Data.UnmarshalSSZ(buf[4:132]); err != nil { return fmt.Errorf("Data: %w", err) } // delegate error
+        c.Signature = append(make([]byte, 0, 96), buf[132:228]...); return err }                              // accept
 
 Receiver: protoc struct, IR `go_fields` (`prysm/ir/ir-mainnet.json`, size 96): `state` 0, `AttestingIndices` 8 (ptr, len,
 cap), `Data` 32 (pointer), `Signature` 40 (ptr, len, cap), `unknownFields` 64 (24), `sizeCache` 88 (4) (the last two and
@@ -36,12 +36,12 @@ the padding in `R`).
 Frame (`.S`, x = entry rsp): guard `lea -0x30(%rsp),%r12; cmp 0x10(%r14),%r12; jbe` (so `guard + 48 < x`); `sub $0xa8`;
 spills `0xb8` = x + 8 (rax), `0xc0` = x + 16 (rbx, written at directive 8 before the size check), `0xd0` = x + 32 (rdi);
 locals `0x28` = x − 136 (numElem), `0x30` = x − 128, `0x38` = x − 120 (cap − 228), `0x40` = x − 112 (buf[228:] pointer),
-`0x48` = x − 104, `0xa0` = x − 16 (Signature pointer); errorf argument arrays `0x50` = x − 96 (16, P6), `0x60` = x − 80
-(32, P5), `0x80` = x − 48 (32, P4); callee spill area `0x0…0x27` = x − 176 (40 bytes; errorf spills 40, makeslice 24,
+`0x48` = x − 104, `0xa0` = x − 16 (Signature pointer); errorf argument arrays `0x50` = x − 96 (16 bytes, delegate error), `0x60` = x − 80
+(32 bytes, overflow reject), `0x80` = x − 48 (32 bytes, alignment reject); callee spill area `0x0…0x27` = x − 176 (40 bytes; errorf spills 40, makeslice 24,
 newobject / convT64 8; the AttestationData callee spills its rax, rbx, rdi at x − 176, x − 168, x − 152); runtime call
-return slot x − 184; scratch `S` below it. On P3 the AttestationData callee's whole stack (its entry rsp = x − 184,
+return slot x − 184; scratch `S` below it. On the accept path the AttestationData callee's whole stack (its entry rsp = x − 184,
 `ad_e2e_accept_main` with scratch `Sd`) lies in our scratch: `S = Sd + 224`.
-Return addresses at the end: P4 errorf call 116 → `k + 117`; P5 errorf call 79 → `k + 80`; P3 last memmove 240 → `k + 241`.
+Return addresses at the end: alignment reject errorf call 116 → `k + 117`; overflow reject errorf call 79 → `k + 80`; accept last memmove 240 → `k + 241`.
 -/
 
 open Fk E2e EthLib.Serialization.Ssz E2eList.Code
@@ -49,7 +49,7 @@ variable [Host]
 
 namespace E2eList
 
-/-- **P1 size reject (machine).** `len(buf) < 228`: the decoder returns the two words `e0`, `e1` of `ssz.ErrSize`; the rbx spill slot holds rbx; the input, the receiver and the caller's frame (all in `R`) and the global are unchanged. -/
+/-- **Size reject (machine).** `len(buf) < 228`: the decoder returns the two words `e0`, `e1` of `ssz.ErrSize`; the rbx spill slot holds rbx; the input, the receiver and the caller's frame (all in `R`) and the global are unchanged. -/
 def ia_reject_size_stmt : Prop :=
   ∀ (k : Nat) (hk : IaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh IaUnmarshal k)
     (s : MachineData) (ra guard e0 e1 : UInt64) (fp s2 : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8)
@@ -74,7 +74,7 @@ def ia_reject_size_stmt : Prop :=
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **P2 offset reject (machine).** `len(buf) ≥ 228` and the first offset (the 4 bytes `off` at buf[0:4]) is not 228: the decoder returns the two words of `ssz.ErrInvalidVariableOffset`; `off` and `R` are unchanged. -/
+/-- **Offset reject (machine).** `len(buf) ≥ 228` and the first offset (the 4 bytes `off` at buf[0:4]) is not 228: the decoder returns the two words of `ssz.ErrInvalidVariableOffset`; `off` and `R` are unchanged. -/
 def ia_reject_offset_stmt : Prop :=
   ∀ (k : Nat) (hk : IaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh IaUnmarshal k)
     (s : MachineData) (ra guard e0 e1 : UInt64) (fp s2 : List UInt8) (hfp : fp.length = 8) (h2 : s2.length = 8)
@@ -102,7 +102,7 @@ def ia_reject_offset_stmt : Prop :=
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **P4 misaligned reject (machine).** `len(buf) ≥ 228`, offset 228, `(len − 228) mod 8 ≠ 0`: `convT64(len − 228)` and `fmt.errorf("misaligned bytes: … %d … %w", len − 228, ssz.ErrIncorrectListSize)`; the decoder returns that error (rax ≠ 0). The 32-byte argument array at rsp − 48 holds `type:int`, the box, the error's type word and data word. Exact frame; the heap shrinks by at most the box and the errorf allocation. -/
+/-- **Alignment reject (machine).** `len(buf) ≥ 228`, offset 228, `(len − 228) mod 8 ≠ 0`: `convT64(len − 228)` and `fmt.errorf("misaligned bytes: … %d … %w", len − 228, ssz.ErrIncorrectListSize)`; the decoder returns that error (rax ≠ 0). The 32-byte argument array at rsp − 48 holds `type:int`, the box, the error's type word and data word. Exact frame; the heap shrinks by at most the box and the errorf allocation. -/
 def ia_reject_misaligned_stmt : Prop :=
   ∀ (k : Nat) (hk : IaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh IaUnmarshal k)
     (s : MachineData) (ra guard e0 e1 : UInt64) (esp : BitVec 64) (msg ity : List UInt8)
@@ -155,7 +155,7 @@ def ia_reject_misaligned_stmt : Prop :=
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **P5 too-big reject (machine).** `len(buf) ≥ 228`, offset 228, `(len − 228) mod 8 = 0`, `numElem = (len − 228)/8 > 2048`: `convT64(numElem)` and `fmt.errorf("ssz-max exceeded: … %d … %w", numElem, ssz.ErrListTooBig)`; the decoder returns that error (rax ≠ 0). Argument array at rsp − 80. -/
+/-- **Overflow reject (machine).** `len(buf) ≥ 228`, offset 228, `(len − 228) mod 8 = 0`, `numElem = (len − 228)/8 > 2048`: `convT64(numElem)` and `fmt.errorf("ssz-max exceeded: … %d … %w", numElem, ssz.ErrListTooBig)`; the decoder returns that error (rax ≠ 0). Argument array at rsp − 80. -/
 def ia_reject_toobig_stmt : Prop :=
   ∀ (k : Nat) (hk : IaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh IaUnmarshal k)
     (s : MachineData) (ra guard e0 e1 : UInt64) (esp : BitVec 64) (msg ity : List UInt8)
@@ -208,7 +208,7 @@ def ia_reject_toobig_stmt : Prop :=
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **P3 accept (machine).** For every `n ≤ 2048`, on the input `off(228) ‖ data(128) ‖ sig(96) ‖ ib(8n)` the decoder returns nil; the receiver holds AttestingIndices = (A, n, n) with `ib` at A, Data = a fresh 96-byte AttestationData object `pd` decoded by the real `AttestationData.UnmarshalSSZ` (placed in the host, discharged by `E2eAd.ad_e2e_accept_main`; its Source / Target objects as in that theorem), Signature = (psig, 96, 96) = sig. The three panicBounds branches of the element loop are not on the path (to be proved, not assumed). Exact frame, input, `state` and `R` unchanged; heap `8n + 432` bytes. -/
+/-- **Accept (machine).** For every `n ≤ 2048`, on the input `off(228) ‖ data(128) ‖ sig(96) ‖ ib(8n)` the decoder returns nil; the receiver holds AttestingIndices = (A, n, n) with `ib` at A, Data = a fresh 96-byte AttestationData object `pd` decoded by the real `AttestationData.UnmarshalSSZ` (placed in the host, discharged by `E2eAd.ad_e2e_accept_main`; its Source / Target objects as in that theorem), Signature = (psig, 96, 96) = sig. The three panicBounds branches of the element loop are not on the path (to be proved, not assumed). Exact frame, input, `state` and `R` unchanged; heap `8n + 432` bytes. -/
 def ia_accept_stmt : Prop :=
   ∀ (k : Nat) (hk : IaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh IaUnmarshal k)
     (kA : Nat) (hkA : E2eAd.Code.AdUnmarshal.IsInfixAt Host.prog kA) (hfA : LabelsFresh E2eAd.Code.AdUnmarshal kA)
@@ -343,7 +343,7 @@ def ia_accept_stmt : Prop :=
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **P1 (spec).** `bs.size < 228`: EthLib rejects, and the machine code returns `ssz.ErrSize` (postcondition of `ia_reject_size_stmt`). -/
+/-- **Size reject (spec).** `bs.size < 228`: EthLib rejects, and the machine code returns `ssz.ErrSize` (postcondition of `ia_reject_size_stmt`). -/
 def ia_reject_size_spec_stmt : Prop :=
   ∀ (k : Nat) (hk : IaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh IaUnmarshal k)
     (bs : Array UInt8) (hbs : bs.size < 228)
@@ -370,7 +370,7 @@ def ia_reject_size_spec_stmt : Prop :=
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **P2 (spec).** `bs.size ≥ 228` and `bs[0:4] ≠ iaOff`: EthLib rejects, and the machine code returns `ssz.ErrInvalidVariableOffset`. -/
+/-- **Offset reject (spec).** `bs.size ≥ 228` and `bs[0:4] ≠ iaOff`: EthLib rejects, and the machine code returns `ssz.ErrInvalidVariableOffset`. -/
 def ia_reject_offset_spec_stmt : Prop :=
   ∀ (k : Nat) (hk : IaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh IaUnmarshal k)
     (bs : Array UInt8) (hbs : 228 ≤ bs.size) (hoff : bs.toList.take 4 ≠ iaOff)
@@ -399,7 +399,7 @@ def ia_reject_offset_spec_stmt : Prop :=
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **P4 (spec).** `bs.size ≥ 228`, `bs[0:4] = iaOff`, `(bs.size − 228) mod 8 ≠ 0`: EthLib rejects, and the machine code returns the `fmt.errorf` error (postcondition of `ia_reject_misaligned_stmt`). -/
+/-- **Alignment reject (spec).** `bs.size ≥ 228`, `bs[0:4] = iaOff`, `(bs.size − 228) mod 8 ≠ 0`: EthLib rejects, and the machine code returns the `fmt.errorf` error (postcondition of `ia_reject_misaligned_stmt`). -/
 def ia_reject_misaligned_spec_stmt : Prop :=
   ∀ (k : Nat) (hk : IaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh IaUnmarshal k)
     (bs : Array UInt8) (hbs : 228 ≤ bs.size) (hoff : bs.toList.take 4 = iaOff) (hmis : (bs.size - 228) % 8 ≠ 0)
@@ -454,7 +454,7 @@ def ia_reject_misaligned_spec_stmt : Prop :=
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **P5 (spec).** `bs.size ≥ 228`, `bs[0:4] = iaOff`, `(bs.size − 228) mod 8 = 0`, `(bs.size − 228)/8 > 2048`: EthLib rejects, and the machine code returns the `fmt.errorf` error (postcondition of `ia_reject_toobig_stmt`). -/
+/-- **Overflow reject (spec).** `bs.size ≥ 228`, `bs[0:4] = iaOff`, `(bs.size − 228) mod 8 = 0`, `(bs.size − 228)/8 > 2048`: EthLib rejects, and the machine code returns the `fmt.errorf` error (postcondition of `ia_reject_toobig_stmt`). -/
 def ia_reject_toobig_spec_stmt : Prop :=
   ∀ (k : Nat) (hk : IaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh IaUnmarshal k)
     (bs : Array UInt8) (hbs : 228 ≤ bs.size) (hoff : bs.toList.take 4 = iaOff) (hal : (bs.size - 228) % 8 = 0) (hbig : 2048 < (bs.size - 228) / 8)
@@ -509,7 +509,7 @@ def ia_reject_toobig_spec_stmt : Prop :=
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **P3 (spec).** If EthLib accepts `bsA` against `prysmIaDesc` as `v`, there is `g : PIa` with `g.toValue = v` and `bsA = piaEnc g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g` (postcondition of `ia_accept_stmt` with `n = g.idx.length`). -/
+/-- **Accept (spec).** If EthLib accepts `bsA` against `prysmIaDesc` as `v`, there is `g : PIa` with `g.toValue = v` and `bsA = piaEnc g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g` (postcondition of `ia_accept_stmt` with `n = g.idx.length`). -/
 def ia_accept_spec_stmt : Prop :=
   ∀ (k : Nat) (hk : IaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh IaUnmarshal k)
     (kA : Nat) (hkA : E2eAd.Code.AdUnmarshal.IsInfixAt Host.prog kA) (hfA : LabelsFresh E2eAd.Code.AdUnmarshal kA)
@@ -644,9 +644,9 @@ def ia_accept_spec_stmt : Prop :=
       ⟨s, Host.addrOf k⟩
 
 /-- **Reject cases (spec, pure).** Every input that EthLib rejects meets one of the four reject conditions of the
-decoder: size < 228 (P1), offset ≠ 228 (P2), misaligned (P4), more than 2048 elements (P5). This is a statement about
+decoder: size < 228 (size reject), offset ≠ 228 (offset reject), misaligned (alignment reject), more than 2048 elements (overflow reject). This is a statement about
 EthLib only. It is a reject-completeness statement for the machine code only for those disjuncts whose machine path is
-proved (`DESIGN-T3.md` §6). The delegate's error (P6) is not a disjunct: EthLib accepts every 128-byte `data`. -/
+proved (`DESIGN-T3.md` §6). The delegate's error is not a disjunct: EthLib accepts every 128-byte `data`. -/
 def ia_reject_cases_stmt : Prop :=
   ∀ bs : Array UInt8, (¬ ∃ v, deserialize prysmIaDesc bs = .ok v) →
     bs.size < 228 ∨ (228 ≤ bs.size ∧ bs.toList.take 4 ≠ iaOff)

@@ -2,13 +2,13 @@ import E2eAd.CpSpecs
 import E2e.WitCpM
 
 /-!
-# `CpMAccC` holds on a concrete host (prysm-e2e A2)
+# `CpMAccC` holds on a concrete host
 
 On the Checkpoint witness hosts of `E2e.WitCpA` (decoder, Epoch decoder, bump makeslice model,
 memmove model) and `E2e.WitCpM` (encoder, memmove model), the function specifications hold:
 their hypotheses (`MakesliceC`, `MemmoveC`) are discharged by the runtime models. Together with the
 witnesses `cp_accept_runs` / `cpm_runs_*` (which run the code on concrete states) this shows the
-specifications are not vacuous. Audit AU-12 (A-06): `*_spec_here` shows that the specification holds as an
+specifications are not vacuous. `*_spec_here` shows that the specification holds as an
 instance on this host; it does not by itself show that the premises of a main theorem are satisfiable. That
 (non-vacuity) comes from the run witnesses.
 -/

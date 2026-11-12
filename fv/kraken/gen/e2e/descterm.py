@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""prysm-e2e E1.3: render the `ssz` term of a Desc-checker input file (schema fvphase1c.desc/1) as Lean.
+"""Render the `ssz` term of a Desc-checker input file (schema fvphase1c.desc/1) as Lean.
 
 Usage: descterm.py <desc.json> <lean-name> > lean/E2e/SpecChecker.lean
 The file is the producer's Desc for (v1alpha1, Checkpoint) that the Desc checker accepted

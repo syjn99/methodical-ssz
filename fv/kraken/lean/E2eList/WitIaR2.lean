@@ -3,17 +3,17 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Witnesses of `ia_e2e_reject_size_main` (P1) and `ia_e2e_reject_offset_main` (P2) (LV T3)
+# Witnesses of `ia_e2e_reject_size_main` (size reject) and `ia_e2e_reject_offset_main` (offset reject)
 
 The text of `E2e/WitCpR.lean`. The premises of the frozen statements `ia_reject_size_stmt` and
 `ia_reject_offset_stmt` (`StmtIa.lean`) are satisfiable. Host: the labels `ssz.ErrSize` (index 0, 0x10000) and
 `ssz.ErrInvalidVariableOffset` (index 16, 0x10010) with pad labels between, then the real Go 1.26.10
-`(*v1alpha1.IndexedAttestation).UnmarshalSSZ` (index 17). (The P4/P5 host `WitIaR` has neither label.)
+`(*v1alpha1.IndexedAttestation).UnmarshalSSZ` (index 17). (The host of the alignment and overflow rejects, `WitIaR` has neither label.)
 Memory at 0x10000: the two words of `ssz.ErrSize` (stand-ins `0x10e8`, `0x2a`: the real values are set by the
 runtime's package init), the two words of `ssz.ErrInvalidVariableOffset` (stand-ins `0x10f0`, `0x2b`), the guard
 word (r14 = 0x10010), the saved-rbp slot, the return slot (rsp = 0x10030), the caller's word at rsp + 8, the rbx
 spill slot and the 4 offset bytes of the input (rbx = 0x10048). The frame `R` holds the chunks that a statement does
-not name. P1: every len < 228 (instances 0, 227). P2: every len ≥ 228 with offset bytes `e5 00 00 00` ≠ 228
+not name. Size reject: every len < 228 (instances 0, 227). Offset reject: every len ≥ 228 with offset bytes `e5 00 00 00` ≠ 228
 (instances 228, 228 + 8 · 2049).
 -/
 
@@ -60,17 +60,17 @@ def mem : DataMem := block.At (0x10000 : BitVec 64)
 def cs0 (len : UInt64) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0x10100, 0x10048, len, 0, 0, len, 0x10030, 0, 0, 0, 0, 0, 0, 0, 0x10010, 0⟩, zmms, flags, mem⟩
 
-/-- P1 frame: the ErrInvalidVariableOffset words, the caller's word and the offset bytes. -/
+/-- Size reject frame: the ErrInvalidVariableOffset words, the caller's word and the offset bytes. -/
 def R1 : DataMem → Prop :=
   Eq ((w 0x10f0).At (0x10010 : BitVec 64)) ⋆ Eq ((w 0x2b).At (0x10018 : BitVec 64))
     ⋆ Eq ((z 8).At (0x10038 : BitVec 64)) ⋆ Eq (([0xe5, 0, 0, 0] : List UInt8).At (0x10048 : BitVec 64))
 
-/-- P2 frame: the ErrSize words and the caller's word. -/
+/-- Offset reject frame: the ErrSize words and the caller's word. -/
 def R2 : DataMem → Prop :=
   Eq ((w 0x10e8).At (0x10000 : BitVec 64)) ⋆ Eq ((w 0x2a).At (0x10008 : BitVec 64))
     ⋆ Eq ((z 8).At (0x10038 : BitVec 64))
 
-/-- **Non-vacuity of `ia_e2e_reject_size_main` (P1)** for every len < 228. -/
+/-- **Non-vacuity of `ia_e2e_reject_size_main` (size reject)** for every len < 228. -/
 theorem ia_size_runs (len : UInt64) (hlen : len.toNat < 228) (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0x10e8
@@ -91,7 +91,7 @@ theorem ia_size_runs (len : UInt64) (hlen : len.toNat < 228) (zmms : RegZmms) (f
 example (z' : RegZmms) (f : StatusFlags) := ia_size_runs 0 (by decide) z' f
 example (z' : RegZmms) (f : StatusFlags) := ia_size_runs 227 (by decide) z' f
 
-/-- **Non-vacuity of `ia_e2e_reject_offset_main` (P2)** for every len ≥ 228 (offset bytes `e5 00 00 00`). -/
+/-- **Non-vacuity of `ia_e2e_reject_offset_main` (offset reject)** for every len ≥ 228 (offset bytes `e5 00 00 00`). -/
 theorem ia_offset_runs (len : UInt64) (hlen : 228 ≤ len.toNat) (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0x10f0

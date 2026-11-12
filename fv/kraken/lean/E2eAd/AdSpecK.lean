@@ -3,10 +3,10 @@ import E2eAd.AdReject
 import E2eAd.Spec
 
 /-!
-# Spec alignment of the real AttestationData decoder (prysm-e2e A3)
+# Spec alignment of the real AttestationData decoder
 
 - `ad_e2e_accept_spec_k`: if EthLib accepts `bsA` (`prysmAdDesc`, the independent
-  consensus-specs Desc of A1) as `v`, there is `g : PAd` with `g.toValue = v` and
+  consensus-specs Desc) as `v`, there is `g : PAd` with `g.toValue = v` and
   `bsA = padEnc g`; with the input chunks of that `g` the machine code returns nil and
   the receiver holds `g` (Slot / CommitteeIndex = `uintBytes 8`, BeaconBlockRoot = `g.root`
   at the fresh `p`, Source / Target = fresh objects holding `g.source` / `g.target`).

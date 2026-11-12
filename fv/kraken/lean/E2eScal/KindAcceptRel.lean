@@ -4,7 +4,7 @@ import E2eScal.Gen2DmAccept
 import E2eScal.Gen2E1Accept
 
 /-!
-# GEN3 L4: the three generated composed accept theorems have the kind `decAcceptKind`
+# The three generated composed accept theorems have the kind `decAcceptKind`
 
 The declared type of each in-sample generated composed theorem (`Gen2BiAccept.lean`, `Gen2DmAccept.lean`,
 `Gen2E1Accept.lean`; generator output, unchanged) is `decAcceptKind` at the parameters of its type, by `rfl`

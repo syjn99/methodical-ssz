@@ -75,7 +75,7 @@ example (z' : RegZmms) (f : StatusFlags) := cpmr_runs (Int.toBytes 8 7) (by deci
 example (z' : RegZmms) (f : StatusFlags) := cpmr_runs (Int.toBytes 8 (2 ^ 64 - 1)) (by decide) 33 (by decide) z' f
 example (z' : RegZmms) (f : StatusFlags) := cpmr_runs (Int.toBytes 8 0) (by decide) 0 (by decide) z' f
 
-/-! ## Non-empty prefix (review e2e-r2 N5)
+/-! ## Non-empty prefix
 
 Same Host and layout; `dst` at 0x100b8 has `len = 5` (prefix bytes 1..5), `cap = 48`; `d0` at 0x100bd,
 frame `dst[13:48]`. -/

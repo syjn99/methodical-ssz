@@ -2,13 +2,13 @@ import Kraken.X64.Parser
 import Fk.Include
 
 /-!
-# Code of the FLAT24 set (H7; Go 1.26.10 ELF `c6403c02…911e`)
+# Code of the set of 24 flat types (Go 1.26.10 ELF `c6403c02…911e`)
 
 Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/e2e/f24/link/norm`
 (`link/conv.py --norm` of the same ELF as `E2e.Code`, `E2eScal.H6Code` and `E2eScal.Enc2Code`;
 `link/check.py` (a)–(f) PASS in `../RESULT`, bundle `942b10be…`). The decoder and the encoder of each of the
 24 flat fixed-size types outside the development population.
-Code constants only: no theorem, no contract. Hand-written include file of the FLAT24 evaluator (not generator
+Code constants only: no theorem, no contract. Hand-written include file (not generator
 output; the text of `Enc2Code.lean` with the function set changed).
 Limit: the directory `f24/link/norm` is not a Lake `input_dir` of the `E2eScal` library (a lakefile change
 needs approval), so Lake does not rebuild these modules when a `.S` file changes. The `.S` files are

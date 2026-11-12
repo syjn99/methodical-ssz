@@ -3,9 +3,9 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Witness of `ve_e2e_accept_g5` (VoluntaryExit decoder accept path; GEN5 L2 worked example)
+# Witness of `ve_e2e_accept_g5` (VoluntaryExit decoder accept path; worked example)
 
-Hand-written by the GEN5 lemma unit (the text of `WitPwA.lean` with two fields). It shows that the premises of
+Hand-written (the text of `WitPwA.lean` with two fields). It shows that the premises of
 the kind instance `decAcceptKindN VeUnmarshal (layCal [EpUnmarshal, ViUnmarshal] 56) [.u64, .u64]` are
 satisfiable. Host: one label, the real Go 1.26.10 `(*v1alpha1.VoluntaryExit).UnmarshalSSZ` (index 1),
 `(*primitives.Epoch).UnmarshalSSZ` (108) and `(*primitives.ValidatorIndex).UnmarshalSSZ` (171).

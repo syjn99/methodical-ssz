@@ -2,7 +2,7 @@ import E2eDec.StmtDec
 import E2eEnc.Code
 
 /-!
-# Frozen STATEMENT of the ENC round trip: decoder entry → accept → encoder fast path
+# Frozen STATEMENT of the round trip: decoder entry → accept → encoder fast path
 
 The shape of `E2e.cp_e2e_unmarshal_then_marshal` (`E2e/CpCompose.lean`). Start at the entry of
 `(*DataColumnsByRootIdentifier).UnmarshalSSZ` with the premises of `dcd_accept_stmt`; the decoder returns nil to `ra`.

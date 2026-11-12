@@ -5,21 +5,21 @@ import E2eScal.Gen4Examples
 import E2eScal.H5Stmt
 
 /-!
-# `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`, accept path, re-derived with the GEN4 mechanisms
+# `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`, accept path, re-derived with the window and step mechanisms
 
 `sm_e2e_accept_g4 : H5.sm_accept_stmt` (the pre-committed hand statement, `H5Stmt.lean`, unchanged). The text of
-`SmAccept.lean` with the two fields that the H5 hold-out missed taken from the GEN4 mechanisms:
+`SmAccept.lean` with the two fields that the hold-out run missed taken from the window and step mechanisms:
 
 * BlockRoot 47–81: `Gen4Ex.sm_g4_BlockRoot_field` (byte segment over windows with the receiver register
-  `rY = rax`, then the tail as four steps) instead of the H5 hand lemma `bytes32dec_seg_rax` and hand steps;
+  `rY = rax`, then the tail as four steps) instead of the hand lemma `bytes32dec_seg_rax` and hand steps;
 * ValidatorIndex 82–117: `Gen4Ex.sm_g4_ValidatorIndex_field` (six step theorems and the call-block window)
-  instead of the H5 hand lemma `sm_vi_arg` and a hand-applied `calldec_seg`;
-* Signature 120–145: `Gen4Ex.sm_g4_Signature_seg` (window; the SG-3 `nop` is inside it) instead of the GEN3
+  instead of the hand lemma `sm_vi_arg` and a hand-applied `calldec_seg`;
+* Signature 120–145: `Gen4Ex.sm_g4_Signature_seg` (window; the padding `nop` before `callq runtime.makeslice` is inside it) instead of the `p2dec --gen3`
   `pad` instance.
 Unchanged: `sm_head0` and `sm_spill2` (hand, `SmSeg.lean`), the generated Slot theorems (`Gen3SmDecPartial.lean`),
 the hand steps 146–160. `SmSeg.lean` is imported for `sm_head0` / `sm_spill2` only; `G4DepCheck.lean` checks by
 program that this proof does not reach `bytes32dec_seg_rax`, `sm_vi_arg` or `calldec_nop_seg`.
-In-sample (the type is development data since H5); no transfer claim.
+In-sample (the type is development data since its hold-out evaluation); no transfer claim.
 -/
 
 open Fk E2e E2eAd E2eAd.Code E2eScal.H5Code E2eScal.BhCode E2eScal E2eScal.Bh
@@ -30,7 +30,7 @@ namespace E2eScal.H5
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- **Accept path of the real `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ` (Go 1.26.10), re-derived with the
-GEN4 mechanisms**; statement = the hand statement `sm_accept_stmt` (unchanged). -/
+window and step mechanisms**; statement = the hand statement `sm_accept_stmt` (unchanged). -/
 theorem sm_e2e_accept_g4 : sm_accept_stmt := by
   intro k hk hf kS hkS hfS kV hkV hfV in0 rt in1 sig hin0 hrt hin1 hsig s ra guard
     fp s1 s2 s4 sp0 sp1 sp2 s28 s30 l38 rslot lo ast a8 aP1 aL1 aC1 a40 aP2 aL2 aC2
@@ -71,7 +71,7 @@ theorem sm_e2e_accept_g4 : sm_accept_stmt := by
   rintro ⟨d3, pc3⟩ ⟨hpc3, hrax3, hrbx3, hrsp3, hrbp3, hr143, Hm3⟩
   dsimp only at hpc3 hrax3 hrbx3 hrsp3 hrbp3 hr143 Hm3
   subst hpc3
-  -- BlockRoot: 47 → 82 (GEN4 worked byte field: window segment with rY = rax, then the tail as steps)
+  -- BlockRoot: 47 → 82 (worked byte field: window segment with rY = rax, then the tail as steps)
   refine eventually_trans _ _ _ _ (E2eScal.Gen4Ex.sm_g4_BlockRoot_field k hk hf
     (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 48) (rsp.toBitVec - 112)
@@ -102,7 +102,7 @@ theorem sm_e2e_accept_g4 : sm_accept_stmt := by
     rw [List.take_append_drop, List.take_append_drop]
   have hlo3 : lo1 = lo1.take S ++ lo1.drop S := (List.take_append_drop S lo1).symm
   rw [hsp3, hlo3, bh_j3 _ _ _ _ hq0 hq1 hq2, bh_lo8 _ S hS _ _ hlS1 hl81] at Hm4
-  -- ValidatorIndex: 82 → 118 (GEN4 worked call field: six steps and the call block; hC = vi_uacc_holds)
+  -- ValidatorIndex: 82 → 118 (worked call field: six steps and the call block; hC = vi_uacc_holds)
   refine eventually_trans _ _ _ _ (E2eScal.Gen4Ex.sm_g4_ValidatorIndex_field k hk hf hvi
     (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec (rsp.toBitVec - 112) (rsp.toBitVec - 120) (rsp.toBitVec - 96)
     (rsp.toBitVec + 16) (rsp.toBitVec + 32) (by bv_omega) (by bv_omega) (by bv_omega)
@@ -122,7 +122,7 @@ theorem sm_e2e_accept_g4 : sm_accept_stmt := by
   dsimp only at hpc7 hrsp7 hrbp7 hr147 Hm7
   subst hpc7
   rw [hrax6, hrbx6] at Hm7
-  -- Signature: 120 → 146 (GEN4 window segment: the nop before makeslice is inside the first window)
+  -- Signature: 120 → 146 (window segment: the nop before makeslice is inside the first window)
   refine eventually_trans _ _ _ _ (E2eScal.Gen4Ex.sm_g4_Signature_seg k hk hf (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 48) (rsp.toBitVec - 112)
     (rsp.toBitVec - 120 - BitVec.ofNat 64 S) (rax.toBitVec + 48) (rax.toBitVec + 56) (rax.toBitVec + 64)

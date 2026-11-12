@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""prysm-e2e E1.2: link tables of the Checkpoint / Epoch SSZ functions in the Go 1.26.10 namespace.
+"""Link tables of the Checkpoint / Epoch SSZ functions in the Go 1.26.10 namespace.
 
 Usage (Python 3 standard library only; run with python3 -I -B; the steps after `filter` are gated):
   e2elink.py filter <outdir> <objdump> <elf> <nm>   write <outdir>/target.objdump (the 7 functions of

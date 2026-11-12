@@ -4,7 +4,7 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Witness of `dcd_e2e_accept_main` (ENC decoder accept path D3)
+# Witness of `dcd_e2e_accept_main` (decoder accept path)
 
 The text of `E2eList/WitIaA.lean` (branch `claude/ssz-fv-list-vector-20261112`, commit `a1c5d0d`) with this host and
 layout. The premises of the frozen `dcd_accept_stmt` are satisfiable for every `n ≤ 128`, the three contract hypotheses
@@ -27,7 +27,7 @@ def dataLabels : Program :=
 
 def P : Program := dataLabels ++ DcUnmarshal ++ BumpAllocDc ++ RtCopy
 
--- Measured (ENC logs 116, 117, 119): `rfl` on the 279-directive host program stops with "maximum recursion depth" at
+-- Measured: `rfl` on the 279-directive host program stops with "maximum recursion depth" at
 -- the default in `P_len` and `hk253`; 1024 passes.
 set_option maxRecDepth 1024 in
 theorem P_len : P.length = 279 := by rfl
@@ -90,8 +90,8 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   rw [← Std.ExtHashMap.sep_assoc] at h
   exact sep_mono_left (fun m hm => ⟨0x1000c, by decide, by rw [label_bump]; exact hm⟩) h
 
--- Measured (ENC log 118): 200000 and 1000000 fail at `whnf`, 4000000 passes. The time is the `simp` AC-normalization
--- of the memory premise (the cause of `WitF`, LV logs 26, 27).
+-- Measured: 200000 and 1000000 fail at `whnf`, 4000000 passes. The time is the `simp` AC-normalization
+-- of the memory premise (the cause of `WitF`, logs 26, 27 of `lv/STEPS.tsv`).
 set_option maxHeartbeats 4000000 in
 /-- **Non-vacuity of `dcd_e2e_accept_main`** for every `n ≤ 128`, every input and every old receiver word. -/
 theorem dcd_accept_runs (n : Nat) (hn : n ≤ 128) (root ib aP1 aL1 aC1 aP2 aL2 aC2 : List UInt8)

@@ -4,9 +4,9 @@ import E2eAd.Prims
 import E2eScal.ViSpec
 
 /-!
-# Real Prysm `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`, accept path, segment 1 (H1 hold-out (ii))
+# Real Prysm `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`, accept path, segment 1 (hold-out)
 
-Hand-written by the evaluation session: the text of `E2eAd/AdHead.lean` with the Go 1.26.10
+Hand-written: the text of `E2eAd/AdHead.lean` with the Go 1.26.10
 BeaconBlockHeader indices and stack offsets (frame `sub $0x60`, so every frame address is 16 bytes higher
 than in AttestationData). Not generator output.
 

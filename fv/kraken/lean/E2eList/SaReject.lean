@@ -5,7 +5,7 @@ import E2e.CpReject
 import E2eList.StmtSa
 
 /-!
-# T1 `(*v1alpha1.SyncAggregate).UnmarshalSSZ`: size reject (LV)
+# `(*v1alpha1.SyncAggregate).UnmarshalSSZ`: size reject
 
 Directives 2–7 (guard, prologue, rbx spill), 9–10 `cmp $0xa0,%rcx; jne L_177` taken, `L_177` (88),
 the two loads of `ssz.ErrSize` (89–90), epilogue 91–93 (`add $0x20`).
@@ -18,7 +18,7 @@ variable [Host]
 
 namespace E2eList
 
-/-- **T1 size reject (machine)**; statement = the frozen `sa_reject_size_stmt`. -/
+/-- **Size reject (machine)**; statement = the frozen `sa_reject_size_stmt`. -/
 theorem sa_e2e_reject_size_main : sa_reject_size_stmt := by
   intro k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard hlen
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s

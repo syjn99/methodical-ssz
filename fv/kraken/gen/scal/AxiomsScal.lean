@@ -314,7 +314,7 @@ import E2eScal.WitPdcGR
 import E2eScal.WitVidGA
 import E2eScal.WitVidGR
 
--- prysm-e2e scalability stage S1-S2 (INBOX 011): the segment lemmas, the in-sample re-derivations, the
+-- Scalability: the segment lemmas, the in-sample re-derivations, the
 -- statement-identity checks and the generated instances. Checked with gen/e2e/axioms.py <log> <out> <this file>.
 #print axioms E2eScal.infix_sub
 #print axioms E2eScal.u64dec_accept
@@ -331,7 +331,7 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.Gen.ci_unmarshal_accept_main_g_same
 #print axioms E2eScal.Gen.ad_dec_BeaconBlockRoot_seg
 #print axioms E2eScal.Gen.cp_dec_Root_seg
--- review fix-r1 M2/S1: frozen statement kinds, their lemma ties and anchors, and the generated `_kind` identities
+-- Frozen statement kinds, their lemma ties and anchors, and the generated `_kind` identities
 #print axioms E2eScal.u64DecAcceptKind_of
 #print axioms E2eScal.rootDecSegKind_of
 #print axioms E2eScal.sl_kind_anchor
@@ -339,7 +339,7 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.Gen.ci_unmarshal_accept_main_g_kind
 #print axioms E2eScal.Gen.ad_dec_BeaconBlockRoot_seg_kind
 #print axioms E2eScal.Gen.cp_dec_Root_seg_kind
--- S3 hold-out H1 (evaluation session, after scal/HOLDOUT-OPENED)
+-- Hold-out ValidatorIndex and BeaconBlockHeader set (after scal/HOLDOUT-OPENED)
 #print axioms E2eScal.Gen.vi_unmarshal_accept_main_g
 #print axioms E2eScal.Gen.vi_unmarshal_accept_main_g_kind
 #print axioms E2eScal.vi_uacc_holds
@@ -373,7 +373,7 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.WitViR.vir_runs
 #print axioms E2eScal.WitViR.L9.vir_runs9
 #print axioms E2eScal.WitViR.L300.vir_runs300
--- H2 hold-out (session 13): Eth1Data decoder; no generated theorem (the generator run emitted nothing)
+-- Hold-out Eth1Data decoder; no generated theorem (the generator run emitted nothing)
 #print axioms E2eScal.E1.rootdec_seg0
 #print axioms E2eScal.E1.e1_e2e_head
 #print axioms E2eScal.E1.e1_e2e_accept_main
@@ -389,7 +389,7 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.E1.e1_e2e_reject_complete
 #print axioms E2eScal.WitE1A.e1_accept_runs
 #print axioms E2eScal.WitE1R.e1_reject_runs
--- T-9 (fresh stream, after the H1/H2 hold-out sessions): BeaconBlockHeader encoder, fast path only (hand proof)
+-- After the first two hold-outs: BeaconBlockHeader encoder, fast path only (hand proof)
 #print axioms E2eScal.lea_cmp_be_false
 #print axioms E2eScal.Bh.bh_enc_a1
 #print axioms E2eScal.Bh.bh_enc_a2
@@ -401,7 +401,7 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.Bh.bh_e2e_marshal_spec_k
 #print axioms E2eScal.WitBhM.bhm_runs_empty
 #print axioms E2eScal.WitBhM.bhm_runs_prefix
--- SG-1 extension (offset-0 form; after both hold-outs were opened, Eth1Data = development data)
+-- Generator extension for a 32-byte field at SSZ offset 0 (offset-0 form; after both hold-outs were opened, Eth1Data = development data)
 #print axioms E2eScal.rootdec_seg_z
 #print axioms E2eScal.rootDecSegZKind_of
 #print axioms E2eScal.Gen.e1_dec_DepositRoot_seg
@@ -412,7 +412,7 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.E1Gen.rootdec_seg_z_stmt_eq_hand
 #print axioms E2eScal.E1Gen.e1_dec_DepositRoot_seg_hand
 
--- H3 hold-out (BlobIdentifier, DepositMessage UnmarshalSSZ): every new theorem.
+-- Hold-out (BlobIdentifier, DepositMessage UnmarshalSSZ): every new theorem.
 #print axioms E2eScal.Gen.bi_dec_BlockRoot_seg
 #print axioms E2eScal.Gen.bi_dec_BlockRoot_seg_kind
 #print axioms E2eScal.Gen.dm_dec_WithdrawalCredentials_seg
@@ -501,7 +501,7 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.WitDmR.label_err
 #print axioms E2eScal.WitDmR.dm_reject_runs
 
--- ENC stream (reuse-first encoder block; Eth1Data = development data): fast paths only
+-- Encoder block (reuse first; Eth1Data = development data): fast paths only
 #print axioms E2eScal.enc32_call
 #print axioms E2eScal.Bh.bh_call_at
 #print axioms E2eScal.Bh.bh_enc_b_via_block
@@ -527,7 +527,7 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.WitBhMR.bhr2_runs
 #print axioms E2eScal.WitBhMR.bhr3_runs
 
--- GEN2 unit G2-L (lemmas, kinds, relations, examples, composition pieces; theorems and definitions)
+-- Lemmas for `p2dec --gen2` (lemmas, kinds, relations, examples, composition pieces; theorems and definitions)
 #print axioms E2eScal.Gen2Ex.bi_dec_BlockRoot_seg
 #print axioms E2eScal.Gen2Ex.bi_dec_BlockRoot_seg_kind
 #print axioms E2eScal.Gen2Ex.bi_dec_Index_seg
@@ -579,7 +579,7 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.u64DecInlineSegKind_of
 #print axioms E2eScal.u64dec_inline_seg
 
--- GEN2 unit G2-G (raw p2dec --gen2 segments and kinds, raw --compose accept theorems and identities, the _g2 theorems)
+-- Generator output of `p2dec --gen2` (raw p2dec --gen2 segments and kinds, raw --compose accept theorems and identities, the _g2 theorems)
 #print axioms E2eScal.G2.bi_e2e_accept_main_g2
 #print axioms E2eScal.G2.bi_e2e_accept_main_g2_type
 #print axioms E2eScal.G2.dm_e2e_accept_main_g2
@@ -606,14 +606,14 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.Gen.e1_g2dec_DepositCount_seg_kind
 #print axioms E2eScal.Gen.e1_g2dec_DepositRoot_seg
 #print axioms E2eScal.Gen.e1_g2dec_DepositRoot_seg_kind
--- GEN2 unit G2-F (raw p2dec --gen2 --partial-out output for BeaconBlockHeader, 3 of 5 fields)
+-- Partial output of `p2dec --gen2` (raw p2dec --gen2 --partial-out output for BeaconBlockHeader, 3 of 5 fields)
 #print axioms E2eScal.Gen.bh_g2dec_BodyRoot_seg
 #print axioms E2eScal.Gen.bh_g2dec_BodyRoot_seg_kind
 #print axioms E2eScal.Gen.bh_g2dec_ParentRoot_seg
 #print axioms E2eScal.Gen.bh_g2dec_ParentRoot_seg_kind
 #print axioms E2eScal.Gen.bh_g2dec_StateRoot_seg
 #print axioms E2eScal.Gen.bh_g2dec_StateRoot_seg_kind
--- H4 hold-out (Deposit_Data, PendingPartialWithdrawal UnmarshalSSZ): every new theorem (raw generated segments,
+-- Hold-out (Deposit_Data, PendingPartialWithdrawal UnmarshalSSZ): every new theorem (raw generated segments,
 -- hand lemma, hand accept / reject / spec / witnesses). PendingPartialWithdrawal accept: not proved (bound).
 #print axioms E2eScal.Gen.dd_g2dec_PublicKey_seg
 #print axioms E2eScal.Gen.dd_g2dec_PublicKey_seg_kind
@@ -661,7 +661,7 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.WitDdA.dd_accept_runs
 #print axioms E2eScal.WitDdR.dd_reject_runs
 #print axioms E2eScal.WitPwR.pw_reject_runs
--- GEN3 (units G3-L and G3-G): every new theorem of the GEN3 lemma, example, generated and composition modules
+-- `p2dec --gen3`: every new theorem of the lemma, example, generated and composition modules
 #print axioms E2eScal.Bh.bh_e2e_accept_main_g3
 #print axioms E2eScal.Bh.bh_e2e_accept_main_g3_type
 #print axioms E2eScal.Bh.bh_e2e_head_g3
@@ -802,8 +802,8 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.u64dec_rr_seg
 #print axioms E2eScal.viUAccC_eq
 
--- H5 hold-out (SyncCommitteeMessage, PendingConsolidation UnmarshalSSZ): every new theorem (added by unit G4-G;
--- the H5 evaluator left this file unchanged, the directory was frozen)
+-- Hold-out (SyncCommitteeMessage, PendingConsolidation UnmarshalSSZ): every new theorem (added with the `p2dec --gen4` generator;
+-- the hold-out evaluation left this file unchanged, the directory was frozen)
 #print axioms E2eScal.Gen.pc_g3dec_SourceIndex_arg
 #print axioms E2eScal.Gen.pc_g3dec_SourceIndex_arg_kind
 #print axioms E2eScal.Gen.pc_g3dec_SourceIndex_call
@@ -865,7 +865,7 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.WitSmR.label_err
 #print axioms E2eScal.WitSmR.sm_reject_runs
 
--- GEN4 (units G4-L and G4-G): every new theorem of the GEN4 lemma, example, relation, generated (`p2dec --gen4`, raw)
+-- `p2dec --gen4`: every new theorem of the lemma, example, relation, generated (`p2dec --gen4`, raw)
 -- and accept modules
 #print axioms E2eScal.G4Rel.bytes32dec_seg_nop_inst
 #print axioms E2eScal.G4Rel.bytes32dec_seg_rax_inst
@@ -1411,7 +1411,7 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.wskip
 #print axioms E2eScal.wskip0
 #print axioms E2eScal.wskip_aux
--- GEN5 (units G5-L and G5-G): every new declaration (theorems and definitions; compiler auxiliaries omitted)
+-- `p2dec --gen5`: every new declaration (theorems and definitions; compiler auxiliaries omitted)
 #print axioms E2eScal.AllPlaced
 #print axioms E2eScal.AndL
 #print axioms E2eScal.DecLayout
@@ -2426,7 +2426,7 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.WitVeGR.hk1
 #print axioms E2eScal.WitVeGR.label_err
 #print axioms E2eScal.WitVeGR.ve_reject_runs
--- ENC2 units E2-P, E2-L and E2-G (encoder fast path; compiler auxiliaries omitted)
+-- Encoder fast path (code, lemmas and `p2enc --gen6` theorems; compiler auxiliaries omitted)
 #print axioms E2eScal.AllBV
 #print axioms E2eScal.ERV
 #print axioms E2eScal.ERV.cap
@@ -2848,7 +2848,7 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.xsU
 #print axioms _aux_E2eScal_EncFieldN___macroRules_tacticEb_1
 #print axioms tacticEb
--- ENC2 unit E2-C (independent hand statements and their rfl identities, spec corollaries, witnesses of the
+-- Encoder fast path (independent hand statements and their rfl identities, spec corollaries, witnesses of the
 -- generated encoder fast-path theorems; compiler auxiliaries omitted)
 #print axioms E2eScal.E2c.bh_e2c_enc_toList
 #print axioms E2eScal.E2c.bh_e2c_spec_k

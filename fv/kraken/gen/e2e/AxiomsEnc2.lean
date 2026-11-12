@@ -9,7 +9,7 @@ import E2eDec.Compose
 import E2eDec.WitA
 import E2eDec.WitR
 
-/-! ENC2 hand list for `gen/e2e/encaxioms_gate2.py` ("must exist" names; every name also gets the axiom check). -/
+/-! Hand list for `gen/e2e/encaxioms_gate2.py` ("must exist" names; every name also gets the axiom check). -/
 
 #print axioms E2eEnc.dc_e2e_spec_roundtrip
 #print axioms E2eEnc.dc_e2e_spec_roundtrip'

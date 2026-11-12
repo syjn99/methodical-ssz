@@ -2,14 +2,14 @@ import E2eScal.P2Dec
 import E2eScal.E1Code
 
 /-!
-# DepositRoot decode segment of the real `(*v1alpha1.Eth1Data).UnmarshalSSZ` (H2 hold-out, hand)
+# DepositRoot decode segment of the real `(*v1alpha1.Eth1Data).UnmarshalSSZ` (hold-out, hand)
 
-Hand text of evaluation session 13, written after the H2 opening. The one generator run (gate job 393)
+Hand text, written after the hold-out was opened. The one generator run
 stopped with exit 2 on this field: its memmove source is `buf + 0`, so the code has no `add $src,%rbx`
 and does not match the frozen template `rootDecMid`. This file is NOT part of the frozen method
-(`Kind.lean`, `scalgen.py`, the S1 lemmas are unchanged): `rootDecMid0` is `rootDecMid` without the
+(`Kind.lean`, `scalgen.py`, the uint64 decoder and 32-byte field segment lemmas are unchanged): `rootDecMid0` is `rootDecMid` without the
 `add` directive, and `rootdec_seg0` is the statement and proof text of `E2eScal.rootdec_seg`
-(`P2Dec.lean`) with the `add` step removed (copied text, `scal/CONTAMINATION.md` §H2).
+(`P2Dec.lean`) with the `add` step removed (copied text, the Eth1Data hold-out section of `scal/CONTAMINATION.md`).
 -/
 
 open Fk
@@ -19,7 +19,7 @@ namespace E2eScal.E1
 open E2eScal
 
 /-- Second block of the DepositRoot decode segment (from `lff:` to `jne lwb`): `rootDecMid` without the
-`add $src,%rbx` (the source offset is 0). Hand text of session 13; not a frozen template. -/
+`add $src,%rbx` (the source offset is 0). Hand text; not a frozen template. -/
 def rootDecMid0 (lff lwb : String) (dR dB dS fP fL fC : Int64) : Program :=
   [Kraken.Directive.label lff,
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64

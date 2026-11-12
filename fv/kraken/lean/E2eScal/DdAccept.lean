@@ -5,9 +5,9 @@ import E2eScal.E1Accept
 import E2eScal.H4Stmt
 
 /-!
-# Real Prysm `(*v1alpha1.Deposit_Data).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (H4 hold-out, type A)
+# Real Prysm `(*v1alpha1.Deposit_Data).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (hold-out, type A)
 
-Hand-written by the H4 evaluation session AFTER the raw generator outputs were committed (results (S), (C)).
+Hand-written AFTER the raw generator outputs were committed (results (S), (C)).
 Result (C) was "refused" (`--compose needs every field covered (3 of 4)`), so the accept theorem is this hand
 composition. Its statement is the independent hand statement `E2eScal.H4.dd_accept_stmt` (`H4Stmt.lean`,
 committed before the generator ran). Proof text: the composition text of `Gen2DmAccept.lean` (generated for

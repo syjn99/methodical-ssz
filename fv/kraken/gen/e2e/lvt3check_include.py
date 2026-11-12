@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""LV stream (T3): lean/E2eList/IncludeIa.lean's data reader is the text of lean/E2eList/Include.lean's reader.
+"""IndexedAttestation: lean/E2eList/IncludeIa.lean's data reader is the text of lean/E2eList/Include.lean's reader.
 
 Usage: lvt3check_include.py      (from any cwd; Python 3 standard library only)
 A new file with the method of `lvcheck_include.py` (not changed): compares the bodies of lvHexByte?,

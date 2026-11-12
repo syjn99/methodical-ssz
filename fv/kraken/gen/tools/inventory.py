@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Inventory of the pinned target's SSZ methods (units G5-C, G5-C2). Python 3 standard library only.
+"""Inventory of the pinned target's SSZ methods. Python 3 standard library only.
 
   inventory.py names <names.txt>
       write the theorem names of the FIXED mapping table below (input of `inventory_decls.lean`)
@@ -33,12 +33,12 @@ Rule. A function's state comes ONLY from the mapping table and the declarations 
   * a decoder is "complete" (in this sense only) when accept, size reject, spec alignment (spec_k, reject_size_spec,
     reject_complete), codec equality / correspondence of the Desc, accept witness and reject witness are all present
     under these checks; "partial" when some are; "none" when the type has no row or no theorem.
-  * an encoder `MarshalSSZTo` counts "fast path complete" (unit E2-C) when its row names a fast-path theorem, a spec
+  * an encoder `MarshalSSZTo` counts "fast path complete" when its row names a fast-path theorem, a spec
     corollary and a witness, all present under these checks: fast and spec keyed to the function by the code
     constant (subject rule), the spec corollary and every witness use the row's fast-path theorem; "fast path
     partial" when some are. The fast path has the premise `len(dst) + SizeSSZ <= cap(dst)` and exact byte-field
-    lengths. The paths outside it are listed per type as NOT proved by a per-type rule (unit E2-C2, review e2c-r1
-    M1): the path classes come from `functions.json` (growslice calls = capacity tests, `moveSliceNoCapNoScan` =
+    lengths. The paths outside it are listed per type as NOT proved by a per-type rule:
+    the path classes come from `functions.json` (growslice calls = capacity tests, `moveSliceNoCapNoScan` =
     epilogue frame test, morestack) and the IR (byte fields = length rejects); a class with no mapped theorem is
     listed in full; a class with mapped theorems needs a premise text per theorem and a row text of what stays NOT
     proved, and the cell prints both (else FAIL); a theorem mapped to a class the function lacks FAILS. No encoder
@@ -47,8 +47,8 @@ Types without a row are "not started". Exit 0 = table written, 1 = a check faile
 
 Limits (what the checks do NOT detect; also written into INVENTORY.md):
   * `codec` and `reject_complete` are checked for existence, kind and axioms only. Their types hold no code constant
-    and their proofs use no mapped theorem, so a row that names ANOTHER type's codec or reject_complete theorem passes
-    (review g5c-r1 controls m03, m04). Keying them (e.g. to the row's Desc constant) needs a new column in
+    and their proofs use no mapped theorem, so a row that names ANOTHER type's codec or reject_complete theorem passes.
+    Keying them (e.g. to the row's Desc constant) needs a new column in
     `inventory_decls.lean`; not done.
   * The subject rule uses the call graph of `functions.json`; a theorem whose type holds two target code constants
     where neither calls the other fails (no subject), it is not resolved.
@@ -73,8 +73,8 @@ FLAT16 = ["Checkpoint", "BeaconBlockHeader", "Eth1Data", "BlobIdentifier", "Depo
           "PendingPartialWithdrawal", "SyncCommitteeMessage", "PendingConsolidation", "PendingDeposit", "PowBlock",
           "HistoricalSummary", "SigningData", "SyncAggregatorSelectionData", "ValidatorBalance", "VoluntaryExit"]
 NESTED = ["AttestationData"]
-# FLAT24 / H7 refusal class per flat type outside FLAT16 and generator (review f24-r1 S4; wording only, no state rule).
-# Source: the one-shot runs of H7 (`p2dec --gen5`, `p2enc --gen6`), classes read at the stop directive of the `.S`;
+# Refusal class of the flat-type hold-out (H7) per flat type outside FLAT16 and generator (wording only, no state rule).
+# Source: the one-shot runs of the flat-type hold-out (`p2dec --gen5`, `p2enc --gen6`), classes read at the stop directive of the `.S`;
 # recorded per type in `prysm/go1.26.10/e2e/scal/RESULT.json` (`flat24.part1.per_type`). A type or method missing
 # here was generated (exit 0) by that run. The class is a field kind or a callee the generators do not support.
 F24_REFUSED = {
@@ -121,7 +121,7 @@ def g5c(p, P, extra=""):
 
 
 def f24dec(p, P, codec):
-    """FLAT24 / H7 row: generated accept / size-reject (`Gen5F24<P>Dec`), spec alignment `F24<P>SpecK`, witnesses
+    """Row of the flat-type hold-out (H7): generated accept / size-reject (`Gen5F24<P>Dec`), spec alignment `F24<P>SpecK`, witnesses
     `Wit<P>GA` / `Wit<P>GR`; codec None = no Desc-checker record for the type (the row stays partial)."""
     return dec(f"E2eScal.Gen.{p}_g5dec_accept", f"E2eScal.Gen.{p}_g5dec_reject", f"E2eScal.F24.{p}_e2e_accept_spec_k",
                f"E2eScal.F24.{p}_e2e_reject_size_spec", f"E2eScal.F24.{p}_e2e_reject_complete", codec,
@@ -155,7 +155,7 @@ DECODERS = {
     (V1A, "SyncAggregatorSelectionData"): g5c("sa", "Sa"),
     (V1A, "ValidatorBalance"): g5c("vb", "Vb", "; spec Desc from the Prysm proto: consensus-specs has no such container"),
     (V1A, "VoluntaryExit"): g5c("ve", "Ve"),
-    # FLAT24 / H7 (Part 3): the seven flat types outside FLAT16 whose decoder `p2dec --gen5` generated (one-shot runs);
+    # Flat-type hold-out (H7): the seven flat types outside FLAT16 whose decoder `p2dec --gen5` generated (one-shot runs);
     # spec Desc from the Prysm proto; codec equality only where a Desc-checker record exists (DepositRequest).
     (V1E, "DepositRequest"): f24dec("dpr", "Dpr", ["E2e.prysmDprDesc_deserialize_checker"]),
     (V1E, "BuilderDepositRequest"): f24dec("bdr", "Bdr", None),
@@ -175,9 +175,9 @@ DECODERS = {
                                   None, None, None, None, "E2eScal.WitVi.vi_accept_runs", "E2eScal.WitViR.vir_runs"),
 }
 def enc(x, p, hand=(), rejects=(), grow=(), other_witness=(), left=None):
-    """Unit E2-C row: the generated fast-path theorem `<p>_g6e_fast`, its spec corollary against the independent
+    """Encoder row: the generated fast-path theorem `<p>_g6e_fast`, its spec corollary against the independent
     Desc and its witness (two instances); hand theorems of the three hand-proved types kept as recorded.
-    Unit E2-C2 (review e2c-r1 M1): `rejects` and `grow` are pairs (theorem, premise text: the premise under which
+    `rejects` and `grow` are pairs (theorem, premise text: the premise under which
     that theorem holds, beyond the fast path's frame premises); `left` maps the path class ("length rejects",
     "growslice branches") to the text of what stays NOT proved in that class although theorems are mapped."""
     return dict(fast=[f"E2eScal.Gen6Enc.{p}_g6e_fast"], spec=[f"E2eScal.E2c.{p}_e2c_spec_k"],
@@ -228,7 +228,7 @@ ENCODERS = {  # MarshalSSZTo: fast path (theorem + spec corollary + witness), ha
     (V1A, "SyncAggregatorSelectionData"): enc("Sa", "sa"),
     (V1A, "ValidatorBalance"): enc("Vb", "vb"),
     (V1A, "VoluntaryExit"): enc("Ve", "ve"),
-    # FLAT24 / H7 (Part 3): the eight flat types outside FLAT16 whose encoder `p2enc --gen6` generated (one-shot runs)
+    # Flat-type hold-out (H7): the eight flat types outside FLAT16 whose encoder `p2enc --gen6` generated (one-shot runs)
     (V1E, "DepositRequest"): enc("Dpr", "dpr"),
     (V1E, "BuilderDepositRequest"): enc("Bdr", "bdr"),
     (V1A, "BeaconBlocksByRangeRequest"): enc("Bbr", "bbr"),
@@ -288,7 +288,7 @@ PIN_S = re.compile(r"^\.\./prysm/go1\.26\.10/e2e/(?:\w+/)?link/norm/([^/]+)\.S$"
 
 def code_constants():
     """Lean code constant (full name) -> normalized function key `pkg_with_underscores.Type.Method`, for constants
-    whose `.S` is in a link table of the pinned ELF (review g5c-r1 S1); other constants -> None (not a target
+    whose `.S` is in a link table of the pinned ELF; other constants -> None (not a target
     function: local stand-ins, other builds such as `opt-r1`). Scans the three trees recursively; a constant name
     defined twice is a failure (returned in the second value)."""
     m, dup = {}, []
@@ -479,7 +479,7 @@ def run(decls_p, md_p, json_p):
         nbytes = sum(1 for f in flds if (f["v"].get("k") == "vector"))
         ct = (fn_by_key.get(symkey(pkg, typ, "MarshalSSZTo")) or {}).get("call_targets", {})
         ngrow = ct.get("runtime.growslice", 0)
-        # per-type rule (unit E2-C2, review e2c-r1 M1): every path class of the function is listed; a class with no
+        # per-type rule: every path class of the function is listed; a class with no
         # mapped theorem is NOT proved in full; a class with mapped theorems lists each theorem with its premise
         # text and the row's text of what stays NOT proved (both required); a class the function lacks cannot be
         # mapped.
@@ -685,7 +685,7 @@ def run(decls_p, md_p, json_p):
            f"- Nested: {', '.join(f'{t} {s}' for t, s in tot['nested'].items())} (not flat)."]
     fs_ = tot["flat_outside_development_population_states"]
     started_ = {k: v for k, v in fs_.items() if flat_ns_state.get(k) == "started"}
-    if started_:   # FLAT24 / H7 (Part 3): per flat type outside FLAT16 with a mapping row
+    if started_:   # flat-type hold-out (H7): per flat type outside FLAT16 with a mapping row
         md.append(f"- Flat types outside the development population with a mapping row: {len(started_)}; decoders "
                   f"complete {sum(v['decoder'] == 'complete' for v in started_.values())}, encoders fast-path complete "
                   f"{sum(v['encoder'] == 'fast path complete' for v in started_.values())}.")
@@ -695,7 +695,7 @@ def run(decls_p, md_p, json_p):
                       + (f"; H7 run refused: {v['decoder_refused_h7']}" if "decoder_refused_h7" in v else "")
                       + f"; encoder {v['encoder']}.")
     refused_ = {k: v for k, v in fs_.items() if flat_ns_state.get(k) == "not started"}
-    if refused_:   # review f24-r1 S4: refusal class of the H7 one-shot run per not-started flat type (wording only)
+    if refused_:   # refusal class of the flat-type hold-out (H7) one-shot run per not-started flat type (wording only)
         md.append(f"- Flat types outside the development population without a mapping row: {len(refused_)}; "
                   "refusal class of the H7 one-shot run (`p2dec --gen5` / `p2enc --gen6`), a field kind or callee "
                   "the generators do not support:")

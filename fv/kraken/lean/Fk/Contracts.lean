@@ -243,7 +243,7 @@ def FmtErrorfDWC (Heap : Nat → DataMem → Prop) (fs : List UInt8) (tw : BitVe
           ⋆ Heap avail' ⋆ F) st'.data.dmem)
       ⟨st, label "fmt.errorf"⟩
 
-/-- `FmtErrorfDDC Heap fs tw S` (fix 3 X5): the internal `fmt.errorf` for one fixed
+/-- `FmtErrorfDDC Heap fs tw S`: the internal `fmt.errorf` for one fixed
 format `fs` with two `%d` verbs (the ListC offset-order format `Fk.Data.lcFmtOrder`)
 and two arguments: two `uint64` boxes (type word `tw` each, the theorems fix it to
 `Fk.Data.uint64Type_addr`; data words `bx1`, `bx2`, the `convT64` boxes of `v1`,

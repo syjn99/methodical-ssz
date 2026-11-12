@@ -3,9 +3,9 @@ import E2eScal.PdReject
 import E2eScal.PdSpec
 
 /-!
-# Spec alignment of the real PendingDeposit decoder (H6 hold-out, full-proof type)
+# Spec alignment of the real PendingDeposit decoder (hold-out, full-proof type)
 
-Hand-written by the H6 evaluation session: the shape of `DdSpecK.lean` (H4) with the PendingDeposit statement
+Hand-written: the shape of `DdSpecK.lean` with the PendingDeposit statement
 (`H6.pd_accept_stmt`, `H6Stmt.lean`; the input chunks are those of the `g` that EthLib decodes).
 - `pd_e2e_accept_spec_k`: if EthLib accepts `bsA` (`prysmPdDesc`) as `v`, there is `g : PPd` with `g.toValue = v`
   and `bsA = ppdEnc g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.

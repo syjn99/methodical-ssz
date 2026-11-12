@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""SEG (Deposit): lean/E2eDep/Code.lean's hand definition `depDataType_addr` equals the address that the LV data
+"""lean/E2eDep/Code.lean's hand definition `depDataType_addr` equals the address that the list/vector data
 reader would produce from prysm/go1.26.10/e2e/lv/link-dep/data/depDataType.data.
 
 Usage: depcheck_data.py [--selftest]      (from any cwd; Python 3 standard library only)

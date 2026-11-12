@@ -2,7 +2,7 @@ import Kraken.X64.WP
 import E2eList.IncludeIa
 
 /-!
-# ELF data of the LV T3 set that the T3 statements read
+# ELF data of the IndexedAttestation set that its statements read
 
 Every definition is elaborated from a file of `fv/kraken/prysm/go1.26.10/e2e/lv/link-t3/data/` by
 `lvt3_data_include`; the files are written by `gen/e2e/lvlink.py data --t3` (with `link/data.py`'s code)

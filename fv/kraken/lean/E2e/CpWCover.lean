@@ -2,7 +2,7 @@ import E2e.CpWGrowAny
 import E2e.CpSpecM
 
 /-!
-# `(*v1alpha1.Checkpoint).MarshalSSZTo`: case cover over every capacity, against EthLib (INBOX 009)
+# `(*v1alpha1.Checkpoint).MarshalSSZTo`: case cover over every capacity, against EthLib
 
 `cp_e2e_marshal_cover` (`len(Root) = 32`): for every `len ≤ cap` (one premise shape: the caller's
 backing array `pre ++ spare`, `len(pre) = len`, `len + len(spare) = cap`) the code takes one of three
@@ -17,12 +17,12 @@ proved paths, by the code's own capacity tests:
 The conclusion is the disjunction "returned with `pre ++ serialize prysmCpDesc g.toValue` at the
 returned pointer (frame `R` and the root unchanged, the rest `⋆ True`; the exact frame accounting is in
 the three theorems)" or "at the entry of the second `runtime.growslice` call" — the run after that call
-is not proved (the `GrowsliceC` contract form does not chain two calls: FINDINGS T-7).
+is not proved (the `GrowsliceC` contract form does not chain two calls: it bounds the remaining heap only from above).
 
 `cp_e2e_marshal_reject_cover` (`len(Root) ≠ 32`): for every `len ≤ cap`, `cp_e2e_marshal_reject_main`
 (`len + 8 ≤ cap`) or `cp_e2e_marshal_reject_grow_main` (`cap < len + 8`): the result is
 `(nil, ErrBytesLength words)`, and some block (the caller's or the growslice one) holds
-`pre ++ epoch` (C-1 form). Heap budget for both: `4·len + 8736 ≤ avail` (covers the one growslice call
+`pre ++ epoch` (the epoch bytes are written before the root length test). Heap budget for both: `4·len + 8736 ≤ avail` (covers the one growslice call
 of every proved path).
 -/
 

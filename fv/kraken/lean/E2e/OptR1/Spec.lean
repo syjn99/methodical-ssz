@@ -9,7 +9,7 @@ import E2e.CpWCover
   rsp + 8 / + 24, return slot rsp − 160, large-frame guard `guard + 24 < rsp`).
 - `cpo_marshal_cover` (`len(Root) = 32`): for every `L ≤ C` (caller array `pre ++ spare`), the code returns
   `pre ++ serialize prysmCpDesc g.toValue` at the returned pointer. One disjunct only: unlike the baseline
-  `E2e.cp_e2e_marshal_cover` there is no "reaches the second growslice call" case (T-7 path (C)).
+  `E2e.cp_e2e_marshal_cover` there is no "reaches the second growslice call" case (the case where the heap left after the first growth is below the second call's budget).
 - `cpo_marshal_reject_cover` (`len(Root) ≠ 32`): for every `L ≤ C`, `(nil, ErrBytesLength)` and some block
   holds `pre ++ epoch`.
 Heap budget of both covers: `4·len + 8736 ≤ avail` (the baseline covers' premise).

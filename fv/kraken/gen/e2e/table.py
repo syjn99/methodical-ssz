@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""prysm-e2e: the six-element table and the totals line, from saved JSON only.
+"""Prysm end-to-end proofs: the six-element table and the totals line, from saved JSON only.
 
 Usage: table.py <e2e-dir> [<markdown-file>...]
 <e2e-dir> = fv/kraken/prysm/go1.26.10/e2e (e2e.json, negative/result.json, differential.json, axioms.json).
 Prints the table. For each markdown file, replaces the table that starts with the header line below
-(up to the next blank line) and the line that starts with "부정 시험 전체:". Python 3 stdlib only.
-Column "나머지" (audit AU-11): read by program from the theorem statements in fv/kraken/lean/{E2e,E2eAd}:
+(up to the next blank line) and the line that starts with "Negative tests total:". Python 3 stdlib only.
+Column "Remainder" (so that every `⋆ True` remainder is shown): read by program from the theorem statements in fv/kraken/lean/{E2e,E2eAd}:
 "`⋆ True`" when the statement contains `⋆ fun _ => True` (or `⋆ True`), "exact frame" for another machine
 theorem (`Eventually` / `step1` in the statement), "n/a" otherwise; a row with several theorems lists each class.
 """
@@ -14,8 +14,8 @@ import pathlib
 import re
 import sys
 
-HEAD = "| 정리 | 의무 | 문장 | 증인 | 기계어 정리 | 나머지 | 링크 | 부정 시험 | Go 값 |"
-OLD_HEADS = ["| 정리 | 의무 | 문장 | 증인 | 기계어 정리 | 링크 | 부정 시험 | Go 값 |"]
+HEAD = "| Theorem | Obligation | Statement | Witness | Machine-code theorem | Remainder | Link | Negative tests | Go value |"
+OLD_HEADS = ["| Theorem | Obligation | Statement | Witness | Machine-code theorem | Link | Negative tests | Go value |"]
 LEAN = pathlib.Path(__file__).resolve().parent.parent.parent / "lean"
 TRUE_REM = re.compile(r"⋆\s*(fun _ => True|True)\b")
 
@@ -63,12 +63,12 @@ def build(d):
         n = t["negative"]
         if n == "done":
             cs = [c for c in neg if any(c["id"].startswith(p) for p in t["neg_ids"])]
-            n = f"{sum(c['pass'] for c in cs)}/{len(cs)} 통과"
+            n = f"{sum(c['pass'] for c in cs)}/{len(cs)} passed"
         rows.append(f"| `{t['name']}` | {t['kind']} | {t['statement']} | {t['witness']} | {t['theorem']} | "
                     f"{remainder(t['name'], src)} | {t['link']} | {n} | {t['go_value']} |")
-    tot = (f"부정 시험 전체: {sum(c['pass'] for c in neg)}/{len(neg)} 통과 (`negative/result.json`). "
-           f"Go 차분: {dif['cases']}건, 불일치 {dif['mismatches']}건 (`differential.json`). "
-           f"공리: {ax['count']}개 이름, 판정 {ax['verdict']} (`axioms.json`).")
+    tot = (f"Negative tests total: {sum(c['pass'] for c in neg)}/{len(neg)} passed (`negative/result.json`). "
+           f"Go differential: {dif['cases']} cases, {dif['mismatches']} mismatches (`differential.json`). "
+           f"Axioms: {ax['count']} names, verdict {ax['verdict']} (`axioms.json`).")
     return rows, tot
 
 
@@ -79,7 +79,7 @@ def patch(md, rows, tot):
     while j < len(lines) and lines[j].strip():
         j += 1
     lines[i:j] = rows
-    k = next(n for n, l in enumerate(lines) if l.startswith("부정 시험 전체:"))
+    k = next(n for n, l in enumerate(lines) if l.startswith("Negative tests total:"))
     lines[k] = tot
     md.write_text("\n".join(lines))
 

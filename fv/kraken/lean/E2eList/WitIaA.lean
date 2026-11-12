@@ -4,9 +4,9 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Witness of `ia_e2e_accept_main` (IndexedAttestation decoder accept path P3, LV T3)
+# Witness of `ia_e2e_accept_main` (IndexedAttestation decoder accept path)
 
-The text of `WitScA.lean` and `E2eAd/WitAdA.lean` with the T3 host and layout. It shows that the premises of the
+The text of `WitScA.lean` and `E2eAd/WitAdA.lean` with the IndexedAttestation host and layout. It shows that the premises of the
 frozen statement `E2eList.ia_accept_stmt` are satisfiable for every `n ≤ 2048`, the nine contract hypotheses
 included: the four `MakesliceC` instances come from the type-dispatching model `BumpAllocT3` (`bump_makeslice_t3_8`,
 `bump_makeslice_t3_1`), the two `NewobjectC` instances from `BumpNewT3` (`bump_newobject_t3_96`,

@@ -2,12 +2,12 @@ import Kraken.X64.Parser
 import Fk.Include
 
 /-!
-# Code of the ENC2 encoder set (unit E2-P; Go 1.26.10 ELF `c6403c02…911e`)
+# Code of the flat encoder set (Go 1.26.10 ELF `c6403c02…911e`)
 
 Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/e2e/enc2/link/norm`
 (`link/conv.py --norm` of the same ELF as `E2e.Code`, `E2eAd.Code`, `E2eScal.BhCode`, `E2eScal.E1Code` and
 `E2eScal.H6Code`; `link/check.py` (a)–(f) PASS in `../RESULT`, bundle `c08ac537…`).
-Code constants only: no theorem, no contract. Hand-written include file of unit E2-P (not generator output;
+Code constants only: no theorem, no contract. Hand-written include file (not generator output;
 the text of `H6Code.lean` with the function set changed).
 Limit: the directory `enc2/link/norm` is not a Lake `input_dir` of the `E2eScal` library (a lakefile change
 needs approval), so Lake does not rebuild these modules when a `.S` file changes. The `.S` files are

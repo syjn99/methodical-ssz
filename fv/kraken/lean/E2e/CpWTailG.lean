@@ -1,7 +1,7 @@
 import E2e.CpWTail
 
 /-!
-# `(*v1alpha1.Checkpoint).MarshalSSZTo` from `L_7b`: the second growslice site (INBOX 009 (a))
+# `(*v1alpha1.Checkpoint).MarshalSSZTo` from `L_7b`: the second growslice site
 
 `cpw_tail_grow`: `len(Root) = 32` and `len + 8 ≤ C < len + 40` (the block holds the epoch bytes,
 the root does not fit). Directives 33–41 (`jae L_cf` not taken), 42–43 save `len + 8` at rsp0 − 72

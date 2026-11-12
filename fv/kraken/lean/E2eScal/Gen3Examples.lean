@@ -6,7 +6,7 @@ import E2eAd.Code
 import E2e.Code
 
 /-!
-# GEN3: hand-written example instances of the L1 / L2 / L3 lemmas on the development sites
+# Hand-written example instances of the `p2dec --gen3` lemmas on the development sites
 
 One theorem and one `_kind` line per lemma per site, in the shape a generated theorem is to have (the idiom
 of `Gen2Examples.lean`). Examples for the generator unit; not generator output (the text was produced by a

@@ -1,10 +1,10 @@
 import E2eEnc.StmtEnc
 
 /-!
-# Frozen STATEMENTS of the ENC encoder for every capacity (G*: growslice at any site, any number of times)
+# Frozen STATEMENTS of the encoder for every capacity (any-site grow path: growslice at any site, any number of times)
 
 Statements only. Frozen at their commit; a later change needs a new name and a reason.
-Design: `prysm/go1.26.10/e2e/lv/DESIGN-ENC2.md` §G*. The fast path F and the grow path G (site 1 only) of
+Design: `prysm/go1.26.10/e2e/lv/DESIGN-ENC2.md`, section "Any-site grow path". The fast path and the first-site grow path (site 1 only) of
 `StmtEnc.lean` are the special cases with no growth and with one growth at site 1.
 
 - `dst` is `(dp, len, cap)` with the old block `pre ‖ spare` (`len + |spare| = cap`).
@@ -24,7 +24,7 @@ variable [Host]
 
 namespace E2eEnc
 
-/-- **G*: every capacity (machine).** -/
+/-- **Any-site grow path: every capacity (machine).** -/
 def dc_marshal_any_stmt : Prop :=
   ∀ (k : Nat) (hk : DcMarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DcMarshal k)
     (s : MachineData) (ra guard : UInt64) (pr pc nb : BitVec 64) (n : Nat) (hnb : nb.toNat = n) (hn : n ≤ 128)
@@ -93,7 +93,7 @@ def dc_marshal_any_stmt : Prop :=
           ⋆ G ⋆ Heap av' ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **G* against EthLib.** -/
+/-- **Any-site grow path against EthLib.** -/
 def dc_marshal_any_spec_stmt : Prop :=
   ∀ (k : Nat) (hk : DcMarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DcMarshal k)
     (s : MachineData) (ra guard : UInt64) (pr pc nb : BitVec 64) (g : PDc) (hnb : nb.toNat = g.cols.length)

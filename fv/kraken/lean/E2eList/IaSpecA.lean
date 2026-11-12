@@ -2,7 +2,7 @@ import E2eList.IaAccept
 import E2eList.IaSpec
 
 /-!
-# T3 `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: accept path against EthLib (LV)
+# `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: accept path against EthLib
 
 `ia_e2e_accept_spec : ia_accept_spec_stmt` (frozen, `StmtIa.lean`): an input that EthLib accepts against
 `prysmIaDesc` is `piaEnc g` for a `g : PIa` with `g.toValue = v` (`pia_accepted_is_enc`), and the machine code

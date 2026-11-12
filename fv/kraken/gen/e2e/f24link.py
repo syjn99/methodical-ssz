@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""FLAT24 / H7: call graph and link tables of the real UnmarshalSSZ and MarshalSSZTo of the 24 flat fixed-size
+"""Flat-type hold-out (H7): call graph and link tables of the real UnmarshalSSZ and MarshalSSZTo of the 24 flat fixed-size
 types outside the development population (fv/kraken/prysm/INVENTORY.md at the FLAT24 freeze) on the Go 1.26.10
-ELF (the same ELF as prysm-e2e; written by the FLAT24 evaluator after the H7 section of `scal/HOLDOUT-OPENED`;
+ELF (the same ELF as prysm/go1.26.10/e2e/link; written after the H7 section of `scal/HOLDOUT-OPENED`;
 the text of `h6link.py` + `enc2link.py` with the function set changed and the data items made per function).
 
 Usage (Python 3 standard library only; python3 -I -B; every step runs gated):

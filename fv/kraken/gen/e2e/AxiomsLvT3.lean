@@ -11,7 +11,7 @@ import E2eList.IaSpecRNz
 import E2eList.WitIaR
 import E2eList.WitIaR2
 
-/-! LV T3 hand list for `gen/e2e/lvt3axioms_gate.py` ("must exist" names; every name also gets the axiom check). -/
+/-! Hand list for `gen/e2e/lvt3axioms_gate.py` ("must exist" names; every name also gets the axiom check). -/
 
 #print axioms E2eList.ia_e2e_reject_size_main
 #print axioms E2eList.ia_e2e_reject_offset_main

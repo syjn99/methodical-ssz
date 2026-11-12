@@ -3,9 +3,9 @@ import E2eAd.CpSpecs
 import Fk.FunSpecs
 
 /-!
-# `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, segment 3 (A3)
+# `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, segment 3
 
-    a.Source = new(Checkpoint)                      // always (N-3): the old pointer is overwritten
+    a.Source = new(Checkpoint)                      // always: the old pointer is overwritten
     if err = a.Source.UnmarshalSSZ(buf[48:88]); err != nil { return fmt.Errorf("Source: %w", err) }
 
 Directive indices of `E2eAd.Code.AdUnmarshal`: 120 `L_208`, 121 store `Root.ptr` (rbx) through

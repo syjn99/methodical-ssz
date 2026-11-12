@@ -3,9 +3,9 @@ import E2eScal.BiReject
 import E2eScal.BiSpec
 
 /-!
-# Spec alignment of the real BlobIdentifier decoder (H3 hold-out)
+# Spec alignment of the real BlobIdentifier decoder (hold-out)
 
-Hand-written by the H3 evaluation session (the text of `E1SpecK.lean` with the BlobIdentifier statement;
+Hand-written (the text of `E1SpecK.lean` with the BlobIdentifier statement;
 the equation `bsA = pbiEnc g` is kept as a hypothesis `hb` instead of `subst`, see `BiSpec.lean`).
 - `bi_e2e_accept_spec_k`: if EthLib accepts `bsA` (`prysmBiDesc`, the independent consensus-specs Desc)
   as `v`, there is `g : PBi` with `g.toValue = v` and `bsA = pbiEnc g`; with the input chunks of that `g`

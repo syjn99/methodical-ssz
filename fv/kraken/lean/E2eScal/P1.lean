@@ -1,7 +1,7 @@
 import E2eScal.Seg
 
 /-!
-# S1 pattern P1: the uint64 primitive decoder body, accept path (parameterized)
+# uint64 decoder pattern: the uint64 primitive decoder body, accept path (parameterized)
 
 The Go 1.26.10 code of a hand-written Prysm `uint64` primitive `UnmarshalSSZ`
 (`primitives.Epoch`, `Slot`, `CommitteeIndex`: `if len(buf) != 8 { return fmt.Errorf(...) };
@@ -29,7 +29,7 @@ open Fk
 
 namespace E2eScal
 
-/-- Head block of P1 (directives 0–10 of the dev instances). -/
+/-- Head block of the uint64 decoder pattern (directives 0–10 of the dev instances). -/
 def u64DecHead (fn l0 lcc lbb : String) (fs dsp : Int64) : Program :=
   [Kraken.Directive.label fn,
    Kraken.Directive.label l0,
@@ -52,7 +52,7 @@ def u64DecHead (fn l0 lcc lbb : String) (fs dsp : Int64) : Program :=
      (Operation.cmp (RegOrMem.reg (Reg.low Reg64.rcx Width.W64)) (Operand.imm (ConstExpr.int64 8)))),
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64 (Operation.jcc CondCode.z lbb))]
 
-/-- Tail block of P1 (from the label `lbb`). -/
+/-- Tail block of the uint64 decoder pattern (from the label `lbb`). -/
 def u64DecTail (lbb : String) (fs : Int64) : Program :=
   [Kraken.Directive.label lbb,
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
@@ -78,7 +78,7 @@ variable [Host]
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- **P1 segment lemma**: accept path of a uint64 primitive decoder whose head and tail
+/-- **uint64 decoder segment lemma**: accept path of a uint64 primitive decoder whose head and tail
 blocks are the templates at `j` and `jb` (`label lbb = Host.addrOf jb`), for any frame
 size `fs` with the spill displacement `dsp = fs + 24`. -/
 theorem u64dec_accept (fn l0 lcc lbb : String) (fs dsp : Int64)

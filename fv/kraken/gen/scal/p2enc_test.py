@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generator tests for `scalgen.py p2enc --gen6` (unit E2-G). Tests that can fail.
+"""Generator tests for `scalgen.py p2enc --gen6`. Tests that can fail.
 
 usage: p2enc_test.py <work-dir> <result.json>     (cwd = fv/kraken; one gated job; Python 3 stdlib only)
 exit 0 = every case has its expected outcome; 1 = a case differs; 2 = usage

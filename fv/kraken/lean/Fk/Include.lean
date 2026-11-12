@@ -20,7 +20,7 @@ elab "include_x64_rt" path:str : term => do
   | .error e => throwError "Kraken runtime parser: {e}"
 
 /-!
-`data_include id`: the ELF data item `id` (fix 3 X2, `link/data.py`, format in
+`data_include id`: the ELF data item `id` (`link/data.py`, format in
 `TOOLS.md`). Reads `../link/out/data/<id>.data` (relative to `fv/kraken/lean`,
 as `include_x64_rt`) and elaborates, in the current namespace,
 

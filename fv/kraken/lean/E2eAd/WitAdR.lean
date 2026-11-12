@@ -3,7 +3,7 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Witness of `ad_e2e_reject_size_main` (A3)
+# Witness of `ad_e2e_reject_size_main`
 
 Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10
 `(*v1alpha1.AttestationData).UnmarshalSSZ` (index 1). The text of `E2e/WitCpR.lean` with the

@@ -4,13 +4,13 @@ import Fk.Bytes
 import E2eAd.Code
 
 /-!
-# `(*primitives.Slot).UnmarshalSSZ` and `(*primitives.CommitteeIndex).UnmarshalSSZ`, accept path (A2)
+# `(*primitives.Slot).UnmarshalSSZ` and `(*primitives.CommitteeIndex).UnmarshalSSZ`, accept path
 
 Hand-written Prysm methods (`consensus-types/primitives/slot.go:183`,
 `committee_index.go:28`), not generated. Their Go 1.26.10 machine code is the
 code of `(*primitives.Epoch).UnmarshalSSZ` with another name (Slot: identical
 after the label rename; CommitteeIndex: also the reject format string differs,
-`go_string._+110097`; checked by `diff` in A1). The theorems below are the text
+`go_string._+110097`; checked by `diff`). The theorems below are the text
 of `E2e/Epoch.lean` with the names renamed, and they are proved again here on
 the included Slot and CommitteeIndex code (`E2eAd.Code.SlUnmarshal`,
 `E2eAd.Code.CiUnmarshal`): directive indices 0–1 labels, 2–3 stack guard, 4–7

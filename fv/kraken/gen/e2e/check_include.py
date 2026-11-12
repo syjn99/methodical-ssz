@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""prysm-e2e: lean/E2e/Include.lean's data reader is the text of lean/Fk/Include.lean's reader.
+"""lean/E2e/Include.lean's data reader is the text of lean/Fk/Include.lean's reader.
 
 Usage: check_include.py      (from any cwd; Python 3 standard library only)
 Also compares lean/E2eAd/Include.lean (prefix `ad`, AttestationData data directory) with E2e's reader.
@@ -39,7 +39,7 @@ x = x.replace("data_include", "e2e_data_include").replace("dataSource", "e2eData
 same = x == y
 ok &= same
 print(("SAME" if same else "DIFF"), "elab e2e_data_include")
-# E2eAd/Include.lean (AttestationData set, A1): the E2e reader with the prefix `ad`
+# E2eAd/Include.lean (AttestationData link set): the E2e reader with the prefix `ad`
 ad = (L / "E2eAd" / "Include.lean").read_text()
 for a, b in (("meta def e2eHexByte?", "meta def adHexByte?"), ("meta def e2eLabelTerm", "meta def adLabelTerm"),
              ("meta def e2eDataSource", "meta def adDataSource")):

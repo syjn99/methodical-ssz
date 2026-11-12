@@ -65,10 +65,10 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
 
 theorem nsc : nextSliceCap 3353 3352 = 4382 := by decide
 
--- Measured (ENC logs 44, 45, 46): 1000000 fails (`whnf` timeout); 4000000 passes. Profile (log 46): `simp` 10.2 s of
+-- Measured (logs 44, 45, 46 of `lv/STEPS-ENC.tsv`): 1000000 fails (`whnf` timeout); 4000000 passes. Profile (log 46): `simp` 10.2 s of
 -- the declaration, the `sep_comm` sort of the memory premise (the cause of `WitF`).
 set_option maxHeartbeats 4000000 in
--- maxRecDepth (ENC logs 60–62, 75): 512 and 2000 fail; WitF n = 128 passes at 4000, WitG fails at 4000 and passes
+-- maxRecDepth (logs 60–62 of `lv/STEPS-ENC.tsv` and a later run): 512 and 2000 fail; WitF n = 128 passes at 4000, WitG fails at 4000 and passes
 -- at 8000 ("maximum recursion depth" at the declaration). Replacing `simp [cs0]` by `dsimp only [cs0]; decide`
 -- did not remove it (log 76); the cause is not located. all three witnesses.
 set_option maxRecDepth 8000 in
@@ -103,10 +103,10 @@ theorem dcg_runs_n0 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.
       have := h.2.2.1; omega,
       h.2.2.2.1, h.2.2.2.2.1⟩)
 
--- Measured (ENC logs 44, 45, 46): 1000000 fails (`whnf` timeout); 4000000 passes. Profile (log 46): `simp` 10.2 s of
+-- Measured (logs 44, 45, 46 of `lv/STEPS-ENC.tsv`): 1000000 fails (`whnf` timeout); 4000000 passes. Profile (log 46): `simp` 10.2 s of
 -- the declaration, the `sep_comm` sort of the memory premise (the cause of `WitF`).
 set_option maxHeartbeats 4000000 in
--- maxRecDepth (ENC logs 60–62, 75): 512 and 2000 fail; WitF n = 128 passes at 4000, WitG fails at 4000 and passes
+-- maxRecDepth (logs 60–62 of `lv/STEPS-ENC.tsv` and a later run): 512 and 2000 fail; WitF n = 128 passes at 4000, WitG fails at 4000 and passes
 -- at 8000 ("maximum recursion depth" at the declaration). Replacing `simp [cs0]` by `dsimp only [cs0]; decide`
 -- did not remove it (log 76); the cause is not located. all three witnesses.
 set_option maxRecDepth 8000 in
@@ -141,10 +141,10 @@ theorem dcg_runs_n1 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.
       have := h.2.2.1; omega,
       h.2.2.2.1, h.2.2.2.2.1⟩)
 
--- Measured (ENC logs 44, 45, 46): 1000000 fails (`whnf` timeout); 4000000 passes. Profile (log 46): `simp` 10.2 s of
+-- Measured (logs 44, 45, 46 of `lv/STEPS-ENC.tsv`): 1000000 fails (`whnf` timeout); 4000000 passes. Profile (log 46): `simp` 10.2 s of
 -- the declaration, the `sep_comm` sort of the memory premise (the cause of `WitF`).
 set_option maxHeartbeats 4000000 in
--- maxRecDepth (ENC logs 60–62, 75): 512 and 2000 fail; WitF n = 128 passes at 4000, WitG fails at 4000 and passes
+-- maxRecDepth (logs 60–62 of `lv/STEPS-ENC.tsv` and a later run): 512 and 2000 fail; WitF n = 128 passes at 4000, WitG fails at 4000 and passes
 -- at 8000 ("maximum recursion depth" at the declaration). Replacing `simp [cs0]` by `dsimp only [cs0]; decide`
 -- did not remove it (log 76); the cause is not located. all three witnesses.
 set_option maxRecDepth 8000 in

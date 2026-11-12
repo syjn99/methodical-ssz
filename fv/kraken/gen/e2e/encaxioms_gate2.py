@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ENC round trip: the prysm-e2e axioms gate (`axioms_gate.py`, not changed) over E2e, E2eAd, E2eScal, E2eList, E2eEnc
+"""The axioms gate (`axioms_gate.py`, not changed) over E2e, E2eAd, E2eScal, E2eList, E2eEnc
 AND E2eDec. Imports `encaxioms_gate.py` (which widens ROOTS / LISTS for E2eList and E2eEnc) and widens them again:
 ROOTS gets "E2eDec", LISTS gets `gen/e2e/AxiomsEnc2.lean`. Usage as `encaxioms_gate.py`. Python 3 stdlib only.
 """

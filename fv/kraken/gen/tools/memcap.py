@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""phase1c copy of the fix3 memory watchdog (streams/fix3/tools/memcap.py of run
-fvpar-20261109T150658Z-f1d44da4, copied by review r7 S1; fix3's file is not edited).
+"""Copy of the memory watchdog streams/fix3/tools/memcap.py (that file is not edited).
 Change against the original: a per-process trigger no longer inflates the reported
 session peak (it used to set total = cap + 1 and add the other processes); it sets
 its own flag and the reported peak_session_rss is the true anonymous session sum.

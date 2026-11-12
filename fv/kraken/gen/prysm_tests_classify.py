@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Classify the outputs of gen/prysm-tests.sh against the known failures (review phase1c-r2 N4).
+"""Classify the outputs of gen/prysm-tests.sh against the known failures.
 
 Usage: prysm_tests_classify.py <out-dir> <result.json>
 Known failures (cited from the prysm-fv-pin-smoke run, REPORT section 6; GENERATOR-FINDINGS 2 and 3):
@@ -18,7 +18,7 @@ import sys
 KNOWN_SUBTESTS = {"TestMarshalPartsMetadata/available_too_large", "TestMarshalPartsMetadata/requests_too_large",
                   "TestPartialDataColumn_PartsMetadata/marshal_error_due_max_bitlist_size"}
 KNOWN_PARENTS = {"TestMarshalPartsMetadata", "TestPartialDataColumn_PartsMetadata"}
-# the one panic of the known minimal detect TestByState failure (review phase1c-r4 R4-S6: no other panic is masked)
+# the one panic of the known minimal detect TestByState failure (no other panic is masked)
 KNOWN_PANIC = "panic: runtime error: index out of range [64] with length 64 [recovered, repanicked]"
 
 

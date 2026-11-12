@@ -1,6 +1,6 @@
-"""FLAT24 evidence tool (not part of gen/scal): write lean/E2eScal/F24<X>SpecK.lean from the generated accept statement
+"""Evidence tool (not part of gen/scal): write lean/E2eScal/F24<X>SpecK.lean from the generated accept statement
 text of Gen5F24<X>Dec.lean (statement copied, input chunks replaced by the encoding of the EthLib-decoded value): the
-text of the G5-C script `mkspeck.py` generalised to n fields of uint64 / byte vectors.
+text of the script `mkspeck.py` generalised to n fields of uint64 / byte vectors.
 usage: python3 -I -B f24speck.py <fv/kraken/lean/E2eScal> [X ...]"""
 import os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))

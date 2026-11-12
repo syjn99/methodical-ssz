@@ -3,7 +3,7 @@ import E2e.SpecEq
 import E2eAd.SpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.AttestationData` (prysm-e2e A1)
+# Spec bridge for the real Prysm `v1alpha1.AttestationData`
 
 Independent hand `Desc`, written from consensus-specs phase0 (`specs/phase0/beacon-chain.md`):
 

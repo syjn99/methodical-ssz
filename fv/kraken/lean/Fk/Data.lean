@@ -2,13 +2,13 @@ import Kraken.X64.WP
 import Fk.Include
 
 /-!
-# ELF data that the proofs read (fix 3 X2)
+# ELF data that the proofs read
 
 Every definition here is elaborated from a file of `link/out/data/` by
 `data_include` (`Fk/Include.lean`); `link/data.py` writes the files from the
 ELF, `link/check.py` compares them with the ELF, and the files are Lake inputs
 of the `Fk` library. No byte and no offset below is written by hand.
-Interface (names, file format, item table): `TOOLS.md`, "ELF 데이터 include".
+Interface (names, file format, item table): `TOOLS.md`, "ELF data include".
 
 The theorems keep their premises in the form `Eq (bytes.At addr)`; `bytes` and
 `addr` come from here. Kraken's data memory is separate from the code: these

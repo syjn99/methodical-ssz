@@ -3,11 +3,11 @@ import Fk.Block
 import E2eList.ScLemmas
 
 /-!
-# List and memory-chunk lemmas for the HB element loops
+# List and memory-chunk lemmas for the HistoricalBatch element loops
 
-Imported from T2 as is (`E2eList.ScLemmas`): `lvElems_snoc`, `lvHdrs_length`, `lvHdrs_snoc`, `lv_flatten_split`,
+Imported from the SyncCommittee proof as is (`E2eList.ScLemmas`): `lvElems_snoc`, `lvHdrs_length`, `lvHdrs_snoc`, `lv_flatten_split`,
 `jge_false512` (its bound is 2^62, so it covers `cmp $0x2000`), `zz`.
-New here: the T2 lemmas whose statements fix 48-byte blocks and 512 elements, with 32 and 8192.
+New here: the SyncCommittee lemmas whose statements fix 48-byte blocks and 512 elements, with 32 and 8192.
 Proof text: `E2eList.ScLemmas` with the two constants changed.
 -/
 

@@ -3,7 +3,7 @@ import E2eScal.Gen4PcDec
 import E2eScal.H5Stmt
 
 /-!
-# `(*v1alpha1.PendingConsolidation).UnmarshalSSZ`, accept path from the GENERATED GEN4 chains (unit G4-G, step 4)
+# `(*v1alpha1.PendingConsolidation).UnmarshalSSZ`, accept path from the GENERATED `p2dec --gen4` chains
 
 `pc_e2e_accept_g4gen : H5.pc_accept_stmt` (the pre-committed hand statement, unchanged). Both fields are HAND field
 compositions (`pc_gg_*_field`; no kind exists for a field composition) over the GENERATED theorems of
@@ -63,7 +63,7 @@ theorem pc_gg_SourceIndex_field (k : Nat) (hk : PcUnmarshal.IsInfixAt Host.prog 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `TargetIndex` (callee decoder field, Go offset 16, SSZ offset 8): the WHOLE call field 48–85, composed from the
-step theorems of its set-up and the call-block theorem (worked example of the GEN4 emission recipe). The entry
+step theorems of its set-up and the call-block theorem (worked example of the `p2dec --gen4` emission recipe). The entry
 conditions of the call block (rax = `rcv + 16`, rbx = `bf + 8`, rcx = 8) are closed by `rfl` on the state
 that the steps computed. -/
 theorem pc_gg_TargetIndex_field (k : Nat) (hk : PcUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh PcUnmarshal k) :
@@ -121,7 +121,7 @@ theorem pc_gg_TargetIndex_field (k : Nat) (hk : PcUnmarshal.IsInfixAt Host.prog 
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-/-- **Accept path of the real `(*v1alpha1.PendingConsolidation).UnmarshalSSZ` (Go 1.26.10) from the generated GEN4
+/-- **Accept path of the real `(*v1alpha1.PendingConsolidation).UnmarshalSSZ` (Go 1.26.10) from the generated `p2dec --gen4`
 chains**; statement = the hand statement `pc_accept_stmt` (unchanged). -/
 theorem pc_e2e_accept_g4gen : pc_accept_stmt := by
   intro k hk hf kV hkV hfV in0 in1 hin0 hin1 s ra guard

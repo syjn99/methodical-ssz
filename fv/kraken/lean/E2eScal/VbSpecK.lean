@@ -2,13 +2,13 @@ import E2eScal.Gen5VbDec
 import E2eScal.VbSpec
 
 /-!
-# Spec alignment of the real ValidatorBalance decoder (unit G5-C)
+# Spec alignment of the real ValidatorBalance decoder
 
-Built on the GENERATED theorems of `Gen5VbDec.lean` (`p2dec --gen5`, unit G5-G; raw output, not edited):
+Built on the GENERATED theorems of `Gen5VbDec.lean` (`p2dec --gen5`; raw output, not edited):
 - `vb_e2e_accept_spec_k`: if EthLib accepts `bsA` (`prysmVbDesc`) as `v`, there is `g : PVb` with `g.toValue = v`
   and `bsA = pvbEnc g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.
   The statement is the generated accept statement (kind instance) with the input chunks replaced by the
-  encoding of `g` (text written by the G5-C script `mkspeck.py` from the generated statement; then checked by Lean
+  encoding of `g` (text written by the script `mkspeck.py` from the generated statement; then checked by Lean
   against `E2eScal.Gen.vb_g5dec_accept`).
 - `vb_e2e_reject_size_spec`: `bs.size ≠ 16` → EthLib rejects, and the machine code returns `ssz.ErrSize`
   (generated `vb_g5dec_reject`).

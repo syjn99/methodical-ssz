@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""prysm-e2e A1: call graph, inlining record and link tables of the real v1alpha1.AttestationData SSZ
-functions and their primitives callees on the Go 1.26.10 ELF (PROOF-PLAN §4).
+"""Call graph, inlining record and link tables of the real v1alpha1.AttestationData SSZ
+functions and their primitives callees on the Go 1.26.10 ELF.
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   adlink.py callgraph <objdump> <out.json> <m2.log>  call targets with contract class + inlining lines

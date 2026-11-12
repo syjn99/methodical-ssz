@@ -1,7 +1,7 @@
 import E2eAd.AdTgt
 
 /-!
-# Real Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (A3)
+# Real Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, Go 1.26.10 machine code
 
     func (a *AttestationData) UnmarshalSSZ(buf []byte) error {        // phase0.ssz.go:273
         if uint64(len(buf)) != 128 { return ssz.ErrSize }
@@ -17,7 +17,7 @@ Receiver: the protoc struct (`attestation.pb.go`, gc amd64 layout `E2e.adGoField
 `sizeCache` are not touched on this path (in `R`).
 
 **Case covered.** One theorem covers every receiver: the code has no branch on `Source` /
-`Target` (finding N-3): it always allocates both Checkpoint objects through `runtime.newobject`
+`Target`: it always allocates both Checkpoint objects through `runtime.newobject`
 and overwrites the old pointers (`aS`, `aT` are arbitrary bytes, nil or not). The conclusion
 states the new pointers `ps`, `pt` and the full 72-byte content of each new object
 (`state` = 0, `Epoch`, `Root` header, `unknownFields` / `sizeCache` = 0).
@@ -31,7 +31,7 @@ function's own `MakesliceC … (S + 96)`, `MemmoveC (S + 96)`, `NewobjectC adCpT
 (its runtime calls get the `S + 96` stack bytes below their return slot, which contain the
 Checkpoint callee's frame and its own `S` scratch bytes).
 
-**Proof.** Four segment lemmas (T-1): `ad_e2e_head` (entry → `L_167`), `ad_e2e_root`
+**Proof.** Four segment lemmas (one proof of the whole function made a Lean process exceed the 6 GiB memory cap): `ad_e2e_head` (entry → `L_167`), `ad_e2e_root`
 (→ `L_208`), `ad_e2e_src` (→ `L_2d9`), `ad_e2e_tgt` (→ return); every directive index was
 re-derived from the Go 1.26.10 `.S`. The hand `Fk/AdAccept.lean` (Go 1.26.3, Checkpoint inlined,
 different frame) was not reused: only its proof style.

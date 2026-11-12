@@ -2,7 +2,7 @@ import E2e.CpWSharp
 import E2e.CpWCover
 
 /-!
-# `(*v1alpha1.Checkpoint).MarshalSSZTo`: case covers with the exact frame (INBOX 010 M2)
+# `(*v1alpha1.Checkpoint).MarshalSSZTo`: case covers with the exact frame
 
 The covers `cp_e2e_marshal_cover` and `cp_e2e_marshal_reject_cover` (`E2e/CpWCover.lean`) stay as they
 are. These two theorems have the same premises (the epoch bytes are named `e8` with
@@ -15,18 +15,18 @@ block, the guard word, `Heap`, `R`).
 
 | disjunct | range | member | caller's array after |
 | (1) | `len + 40 ≤ cap` | `cp_e2e_marshal_main` | `pre ++ serialize ++ spare[40:]` (written in place, returned) |
-| (2) | `len + 8 ≤ cap < len + 40` | `cp_e2e_marshal_grow2_main` | `pre ++ epoch ++ spare[8:]` (C-1 form); new block returned |
+| (2) | `len + 8 ≤ cap < len + 40` | `cp_e2e_marshal_grow2_main` | `pre ++ epoch ++ spare[8:]` (epoch written before the root test); new block returned |
 | (3A) | `cap < len + 8`, `C1 ≥ len + 40` | `cp_e2e_marshal_grow_any_sharp` (A) | unchanged `pre ++ spare` |
 | (3B) | `cap < len + 8`, `C1 < len + 40`, heap left ≥ budget | `cp_e2e_marshal_grow_any_sharp` (B) | unchanged |
 | (3C) | `cap < len + 8`, `C1 < len + 40`, heap left < budget | `cp_e2e_marshal_grow_any_sharp` (C) | unchanged; **not a return** |
 
 (3C) is the entry of the second `runtime.growslice` call with the remaining heap below that call's
-budget premise: the existing `GrowsliceC` form gives no lower bound on the remaining heap (FINDINGS T-7).
+budget premise: the existing `GrowsliceC` form gives no lower bound on the remaining heap.
 Its return is differential only. In (1), (2), (3A), (3B) the returned block is `pre ++ bs` with
 `serialize prysmCpDesc g.toValue = .ok bs` (EthLib).
 
 `cp_e2e_marshal_reject_cover_framed` (`len(Root) ≠ 32`): `len + 8 ≤ cap`: the epoch bytes are in the
-caller's array (`blk = dst`, C-1); `cap < len + 8`: the caller's array `pre ++ spare` is unchanged and the
+caller's array (`blk = dst`, written before the root length test); `cap < len + 8`: the caller's array `pre ++ spare` is unchanged and the
 epoch bytes are in the new block `nb` from growslice only.
 -/
 
@@ -324,7 +324,7 @@ theorem cp_e2e_marshal_reject_cover_framed (k : Nat) (hk : CpMarshal.IsInfixAt H
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi = e0 ∧ st.data.regs.rsi = e1
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
-        -- len + 8 ≤ cap: the epoch bytes are in the caller's array (blk = dst, C-1); no runtime call
+        -- len + 8 ≤ cap: the epoch bytes are in the caller's array (blk = dst, written before the root length test); no runtime call
         ((s.regs.rcx.toNat + 8 ≤ s.regs.rdi.toNat ∧ ∃ (t u : List UInt8), t.length = 8 ∧ u.length = 16 ∧
           (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
             ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))

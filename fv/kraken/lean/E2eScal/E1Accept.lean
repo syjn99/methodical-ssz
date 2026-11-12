@@ -4,10 +4,10 @@ import Fk.Bytes
 import E2eScal.E1Seg0
 
 /-!
-# Real Prysm `(*v1alpha1.Eth1Data).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (H2 hold-out)
+# Real Prysm `(*v1alpha1.Eth1Data).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (hold-out)
 
-Hand-written by evaluation session 13 after the H2 opening (not generator output: the one generator run,
-gate job 393, emitted nothing). The head is the text of `BhHead.lean` without the callees; the composition
+Hand-written after the hold-out was opened (not generator output: the one generator run,
+emitted nothing). The head is the text of `BhHead.lean` without the callees; the composition
 is the text of `BhAccept.lean` with the Eth1Data indices, offsets and two segments.
 
     func (e *Eth1Data) UnmarshalSSZ(buf []byte) error {

@@ -3,10 +3,10 @@ import E2e.WitCpW
 import E2e.WitSplit
 
 /-!
-# Witness of `cp_e2e_marshal_cover_framed` (INBOX 010 M2): every capacity range on the `WitCpW` host
+# Witness of `cp_e2e_marshal_cover_framed`: every capacity range on the `WitCpW` host
 
 Same host, block, registers and instances as `E2e/WitCpW.lean` (the `WitCpW` Host is the only one in
-scope: T-6): len 30, cap 30 + n (n ≤ 64), and nil `dst`. The witness conclusion names the capacity range
+scope, because two `Host` instances in one file make instance resolution unfold both programs): len 30, cap 30 + n (n ≤ 64), and nil `dst`. The witness conclusion names the capacity range
 that the run takes (the range conjunct of each disjunct of the framed cover decides it):
 n ≥ 40: disjunct (1), returned in place (`rax = dst`, `rcx = cap`); 8 ≤ n < 40: disjunct (2), returned
 with `nextSliceCap 70 (30+n) ≤ rcx`; n < 8 and nil: disjunct (3A)/(3B) (return) or (3C) (entry of
@@ -15,7 +15,7 @@ the second growslice call).
 Which of (3A)/(3B)/(3C) the run takes is not decidable through the contract: `GrowsliceC` hides the
 capacity and the remaining heap that the runtime returns (it gives only bounds). With the witness model
 `rt_growslice` (capacity `2·newLen + 192`) the real run takes (3A); this is a property of the model, not
-of the theorem. The second-growth path (3B) on real Go 1.26.10 is differential only (review e2e-r3 S2).
+of the theorem. The second-growth path (3B) on real Go 1.26.10 is differential only.
 -/
 
 open Fk Fk.W E2e E2e.Code EthLib.Serialization.Ssz

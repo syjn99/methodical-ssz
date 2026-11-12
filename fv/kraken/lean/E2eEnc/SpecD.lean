@@ -7,7 +7,7 @@ import E2eList.IaSpec
 import E2eEnc.Spec
 
 /-!
-# Decoder-side spec bridge for `DataColumnsByRootIdentifier` (ENC round trip)
+# Decoder-side spec bridge for `DataColumnsByRootIdentifier` (round trip)
 
 The text of `E2eList/IaSpec.lean` (`pia_*`, `iaChecks`) for `PDc`: `toValue` fits, every fitting value is a `PDc`,
 the EthLib round trip, accepted inputs are encodings, and the three checks of the Go decoder in its order

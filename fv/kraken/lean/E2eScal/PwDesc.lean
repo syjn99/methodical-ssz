@@ -1,10 +1,10 @@
 import E2e.Spec
 
 /-!
-# Independent hand `Desc` of `v1alpha1.PendingPartialWithdrawal` (H4 hold-out, class B)
+# Independent hand `Desc` of `v1alpha1.PendingPartialWithdrawal` (hold-out, class B)
 
-Hand-written by the H4 evaluation session from consensus-specs electra (`specs/electra/beacon-chain.md`),
-BEFORE the Desc checker's Desc of `(v1alpha1, PendingPartialWithdrawal)` was generated or printed (FINDINGS NF-10).
+Hand-written from consensus-specs electra (`specs/electra/beacon-chain.md`),
+BEFORE the Desc checker's Desc of `(v1alpha1, PendingPartialWithdrawal)` was generated or printed (so that the hand Desc is independent of the checker output in time, not only in content).
 This file is committed before `PwSpecChecker.lean` exists.
 
     class PendingPartialWithdrawal(Container):

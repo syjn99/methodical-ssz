@@ -3,9 +3,9 @@ import E2eScal.GenBhDec
 import E2eAd.AdAccept
 
 /-!
-# Real Prysm `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (H1 (ii))
+# Real Prysm `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (hold-out)
 
-Hand-written by the evaluation session (composition; not generator output).
+Hand-written (composition; not generator output).
 
     func (b *BeaconBlockHeader) UnmarshalSSZ(buf []byte) error {
         if uint64(len(buf)) != 112 { return ssz.ErrSize }

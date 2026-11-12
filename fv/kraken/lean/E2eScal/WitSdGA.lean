@@ -4,9 +4,9 @@ import Fk.BumpMore
 import Fk.WHost
 
 /-!
-# Witness of the generated `sd_g5dec_accept` (SigningData decoder accept path; unit G5-C)
+# Witness of the generated `sd_g5dec_accept` (SigningData decoder accept path)
 
-Written by the G5-C session: the text of `WitPbA.lean` (H6) with the SigningData host and layout (two 32-byte fields).
+The text of `WitPbA.lean` with the SigningData host and layout (two 32-byte fields).
 It shows that the premises of the generated accept theorem (statement = kind instance) are satisfiable.
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.SigningData).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (114, `bump_makeslice1`) and `RtCopy` (120, `rt_memmove`).

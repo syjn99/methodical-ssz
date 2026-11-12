@@ -6,9 +6,9 @@ import E2e.Data
 import E2e.CpReject
 
 /-!
-# Real Prysm `(*v1alpha1.DepositMessage).UnmarshalSSZ`: size reject (H3 hold-out)
+# Real Prysm `(*v1alpha1.DepositMessage).UnmarshalSSZ`: size reject (hold-out)
 
-Hand-written by the H3 evaluation session: the text of `E1Reject.lean` with the DepositMessage indices.
+Hand-written: the text of `E1Reject.lean` with the DepositMessage indices.
 `dm_e2e_reject_size_main` (`len(buf) ≠ 88`, Go source `return ssz.ErrSize`): directives 2–7 (guard,
 prologue, rbx spill), 9–10 `cmp $0x58,%rcx; jne L_17d` taken, L_17d and the two loads of `ssz.ErrSize`
 (`E2e.Data.e2eErrSize_addr`, the same ELF symbol as the Checkpoint decoder's; `h3link.py` asserts the operand),

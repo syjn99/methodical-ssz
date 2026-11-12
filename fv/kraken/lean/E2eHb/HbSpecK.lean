@@ -3,9 +3,9 @@ import E2eHb.HbReject
 import E2eHb.HbSpec
 
 /-!
-# Spec alignment of the real HistoricalBatch decoder (HB)
+# Spec alignment of the real HistoricalBatch decoder
 
-The text of `E2eList.ScSpecK` (T2) with the HistoricalBatch statement. The statements are the frozen
+The text of `E2eList.ScSpecK` with the HistoricalBatch statement. The statements are the frozen
 `hb_accept_spec_stmt`, `hb_reject_size_spec_stmt` and `hb_reject_complete_stmt` (`StmtHb.lean`).
 -/
 

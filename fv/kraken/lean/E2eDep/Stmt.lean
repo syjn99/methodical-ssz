@@ -10,10 +10,10 @@ import E2eScal.H4Code
 import E2eDep.Code
 
 /-!
-# Hand STATEMENTS of `(*v1alpha1.Deposit).UnmarshalSSZ` (statements only, no proof; SEG proof of use)
+# Hand STATEMENTS of `(*v1alpha1.Deposit).UnmarshalSSZ` (statements only, no proof)
 
 Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
-Selection (SEG §5): the same family as HB (a `Vector[Bytes32, N]` field as `[][]byte`), not forbidden, no
+Selection: the same family as HistoricalBatch (a `Vector[Bytes32, N]` field as `[][]byte`), not forbidden, no
 existing proof. The only such types without a pointer field are HistoricalBatch and SyncCommittee; Deposit has the
 one pointer field whose decoder already has a proof (`E2eScal.H4.dd_e2e_accept_main`, Deposit_Data).
 

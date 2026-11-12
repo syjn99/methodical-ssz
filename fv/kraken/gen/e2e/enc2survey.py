@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ENC2 preparation (unit E2-P): survey of the MarshalSSZTo `.S` of the 16 flat development types.
+"""Survey of the MarshalSSZTo `.S` of the 16 flat development types.
 
 Usage (Python 3 standard library only; python3 -I -B; reads committed `.S` files only, no ELF, no tool):
   enc2survey.py <out.md>      run from fv/kraken; writes the survey (prysm/go1.26.10/e2e/scal/enc2-survey.md)

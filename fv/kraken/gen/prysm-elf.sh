@@ -1,5 +1,5 @@
 #!/bin/sh
-# Build the phase1c Go 1.26.10 target ELF twice and dump its SSZ functions.
+# Build the Go 1.26.10 target ELF twice and dump its SSZ functions.
 # Run inside the heavy-job gate, with Go 1.26.10 (env-go12610.sh) on PATH,
 # from the temporary Prysm tree that already holds the 698c202 outputs and
 # fvphase1c/p1cbin/main.go (fv/kraken/gen/keepalive.py).

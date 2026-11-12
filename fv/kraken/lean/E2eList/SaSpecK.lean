@@ -3,7 +3,7 @@ import E2eList.SaReject
 import E2eList.SaSpec
 
 /-!
-# Spec alignment of the real SyncAggregate decoder (LV T1)
+# Spec alignment of the real SyncAggregate decoder
 
 The text of `E2eScal`'s `DdSpecK.lean` with the SyncAggregate statement. The statements are the frozen
 `sa_accept_spec_stmt`, `sa_reject_size_spec_stmt` and `sa_reject_complete_stmt` (`StmtSa.lean`).

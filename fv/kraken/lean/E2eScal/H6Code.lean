@@ -2,12 +2,12 @@ import Kraken.X64.Parser
 import Fk.Include
 
 /-!
-# Code of the H6 hold-out function set (Go 1.26.10 ELF `c6403c02…911e`)
+# Code of the hold-out function set (Go 1.26.10 ELF `c6403c02…911e`)
 
 Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/e2e/h6/link/norm`
 (`link/conv.py --norm` of the same ELF as `E2e.Code`, `E2eAd.Code`, `E2eScal.BhCode`, `E2eScal.E1Code`,
 `E2eScal.H3Code`, `E2eScal.H4Code` and `E2eScal.H5Code`; `link/check.py` (a)–(f) PASS in `../RESULT`,
-bundle `eb1d6846…`). Hand-written include file of the H6 evaluation session (not generator output; the text of
+bundle `eb1d6846…`). Hand-written include file (not generator output; the text of
 `H5Code.lean` with the function set changed).
 Limit: the directory `h6/link/norm` is not a Lake `input_dir` of the `E2eScal` library (a lakefile change
 needs approval), so Lake does not rebuild these modules when a `.S` file changes. The `.S` files are

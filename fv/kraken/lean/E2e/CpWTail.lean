@@ -2,7 +2,7 @@ import E2e.CpMarshalG
 import E2e.CpMarshalR
 
 /-!
-# `(*v1alpha1.Checkpoint).MarshalSSZTo` from `L_7b` (directive 33): the three tails (INBOX 009)
+# `(*v1alpha1.Checkpoint).MarshalSSZTo` from `L_7b` (directive 33): the three tails
 
 At `L_7b` the inlined Epoch append has its block: `rbx` = block pointer `b`, `rcx` = `len`,
 `rdx` = `len + 8`, `rdi` = block capacity `C` (the caller's `dst` when the first capacity test
@@ -18,7 +18,7 @@ From here the code is the same for both prefixes. Three tails, by the code's bra
   50–54 restore, 55–70 memmove into the new block and return `(nb, len + 40, C2, nil)`. The old
   block keeps `pre ++ epoch` (it is the growslice source).
 - `cpw_tail_rej` (`len(Root) ≠ 32`): directives 33–38 (`jne L_108` taken), 71–79: the two words of
-  `ssz.ErrBytesLength`, `rax = rbx = rcx = 0`. The epoch bytes are in `b[len..len+8]` (C-1 form).
+  `ssz.ErrBytesLength`, `rax = rbx = rcx = 0`. The epoch bytes are in `b[len..len+8]` (written before the root length test).
 
 `rsp0`, `rbp0`, `r140` are rsp, rbp, r14 at the entry of `MarshalSSZTo`; the frame is rsp0 − 112 …
 rsp0 − 8. Every directive index is the Go 1.26.10 `.S`'s (`E2e.Code.CpMarshal`).
@@ -186,7 +186,7 @@ theorem cpw_tail_fit (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (hf : Labe
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- Tail from `L_7b`, `len(Root) ≠ 32`: `(nil, ssz.ErrBytesLength)`; the epoch bytes are already in
-`b[len..len+8]` (C-1 form for the current block). -/
+`b[len..len+8]` (written before the root length test, in the current block). -/
 theorem cpw_tail_rej (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (hf : LabelsFresh CpMarshal k)
     (rsp0 r140 rbp0 ra L C e0 e1 rl : UInt64) (hrl : rl ≠ 32) (rcv b p : BitVec 64)
     (e8 pre d0 : List UInt8) (he8 : e8.length = 8) (hd0 : d0.length = 8) (R : DataMem → Prop)

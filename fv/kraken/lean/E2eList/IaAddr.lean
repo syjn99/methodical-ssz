@@ -1,6 +1,6 @@
 import Fk.Step
 
-/-! The address tactic of the T3 proofs (moved from `IaReject.lean`, so that `IaAccept.lean` does not import the
+/-! The address tactic of the IndexedAttestation proofs (moved from `IaReject.lean`, so that `IaAccept.lean` does not import the
 reject module; `gen/e2e/lvnegative.py` inlines `StmtIa.lean` into a mutant and needs it imported only once). -/
 
 namespace E2eList

@@ -47,8 +47,8 @@ def cs0 (root cb : List UInt8) (pc nb : BitVec 64) (dl : Nat) (zmms : RegZmms) (
   ⟨⟨0x10008, 0x10100, 0, 0, 0, UInt64.ofNat dl, 0x100e8, 0, 0, 0, 0, 0, 0, 0, 0xfff0, 0⟩, zmms, flags,
     mem root cb pc nb dl⟩
 
--- Measured (ENC logs 40, 41, 42): 200000 and 1000000 fail (`whnf` timeout); 4000000 passes. Profile (log 41):
--- `simp` 12.3 s of the declaration, the `sep_comm` sort of the 26-chunk memory premise (cause as LV logs 26, 27).
+-- Measured (logs 40, 41, 42 of `lv/STEPS-ENC.tsv`): 200000 and 1000000 fail (`whnf` timeout); 4000000 passes. Profile (log 41):
+-- `simp` 12.3 s of the declaration, the `sep_comm` sort of the 26-chunk memory premise (cause as logs 26, 27 of `lv/STEPS.tsv`).
 set_option maxHeartbeats 4000000 in
 /-- n = 0: `cap = 36 + 8n = 36`, Columns at 0x10124. -/
 theorem dcf_runs_n0 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length = 0)
@@ -74,8 +74,8 @@ theorem dcf_runs_n0 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.
     (by simp [cs0]) (by simp [cs0]) (rt_memmove 118 hk118 hf118 0))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1, h.2.2.2.2.1, h.2.2.2.2.2.1⟩)
 
--- Measured (ENC logs 40, 41, 42): 200000 and 1000000 fail (`whnf` timeout); 4000000 passes. Profile (log 41):
--- `simp` 12.3 s of the declaration, the `sep_comm` sort of the 26-chunk memory premise (cause as LV logs 26, 27).
+-- Measured (logs 40, 41, 42 of `lv/STEPS-ENC.tsv`): 200000 and 1000000 fail (`whnf` timeout); 4000000 passes. Profile (log 41):
+-- `simp` 12.3 s of the declaration, the `sep_comm` sort of the 26-chunk memory premise (cause as logs 26, 27 of `lv/STEPS.tsv`).
 set_option maxHeartbeats 4000000 in
 /-- n = 1: `cap = 36 + 8n = 44`, Columns at 0x1012c. -/
 theorem dcf_runs_n1 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length = 8)
@@ -101,10 +101,10 @@ theorem dcf_runs_n1 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.
     (by simp [cs0]) (by simp [cs0]) (rt_memmove 118 hk118 hf118 0))
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1, h.2.2.2.2.1, h.2.2.2.2.2.1⟩)
 
--- Measured (ENC logs 40, 41, 42): 200000 and 1000000 fail (`whnf` timeout); 4000000 passes. Profile (log 41):
--- `simp` 12.3 s of the declaration, the `sep_comm` sort of the 26-chunk memory premise (cause as LV logs 26, 27).
+-- Measured (logs 40, 41, 42 of `lv/STEPS-ENC.tsv`): 200000 and 1000000 fail (`whnf` timeout); 4000000 passes. Profile (log 41):
+-- `simp` 12.3 s of the declaration, the `sep_comm` sort of the 26-chunk memory premise (cause as logs 26, 27 of `lv/STEPS.tsv`).
 set_option maxHeartbeats 4000000 in
--- maxRecDepth (ENC logs 60–62, 75): 512 and 2000 fail; WitF n = 128 passes at 4000, WitG fails at 4000 and passes
+-- maxRecDepth (logs 60–62 of `lv/STEPS-ENC.tsv` and a later run): 512 and 2000 fail; WitF n = 128 passes at 4000, WitG fails at 4000 and passes
 -- at 8000 ("maximum recursion depth" at the declaration). Replacing `simp [cs0]` by `dsimp only [cs0]; decide`
 -- did not remove it (log 76); the cause is not located. `dcf_runs_n128` only (n = 0, 1 pass at the default).
 set_option maxRecDepth 4000 in

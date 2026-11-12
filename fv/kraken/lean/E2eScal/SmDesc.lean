@@ -1,10 +1,10 @@
 import E2e.Spec
 
 /-!
-# Independent hand `Desc` of `v1alpha1.SyncCommitteeMessage` (H5 hold-out, class C)
+# Independent hand `Desc` of `v1alpha1.SyncCommitteeMessage` (hold-out, class C)
 
-Hand-written by the H5 evaluation session from consensus-specs altair (`specs/altair/validator.md`),
-BEFORE the Desc checker's Desc of `(v1alpha1, SyncCommitteeMessage)` was generated or printed (FINDINGS NF-10).
+Hand-written from consensus-specs altair (`specs/altair/validator.md`),
+BEFORE the Desc checker's Desc of `(v1alpha1, SyncCommitteeMessage)` was generated or printed (so that the hand Desc is independent of the checker output in time, not only in content).
 This file is committed before `SmSpecChecker.lean` exists.
 
     class SyncCommitteeMessage(Container):

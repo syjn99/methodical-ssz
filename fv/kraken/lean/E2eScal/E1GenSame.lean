@@ -2,9 +2,9 @@ import E2eScal.E1Seg0
 import E2eScal.GenE1Dec
 
 /-!
-# The generated offset-0 segment gives what the hand lemma gives (SG-1 extension)
+# The generated offset-0 segment gives what the hand lemma gives (generator extension for a 32-byte field at SSZ offset 0)
 
-`E1Seg0.lean` (session 13, hand) proved the DepositRoot segment of `Eth1Data.UnmarshalSSZ` with
+`E1Seg0.lean` (hand) proved the DepositRoot segment of `Eth1Data.UnmarshalSSZ` with
 `E2eScal.E1.rootdec_seg0`. `GenE1Dec.lean` is raw output of the extended generator (`rootdec_seg_z`).
 Kernel-checked here: the template definition and the template lemma statement are the hand ones
 (`rfl`), and the generated DepositRoot theorem yields, at the instance of `E1Accept.lean` (blocks at
@@ -16,7 +16,7 @@ open Fk E2eScal.E1Code
 
 namespace E2eScal.E1Gen
 
-/-- The offset-0 template block is the hand block of session 13. -/
+/-- The offset-0 template block is the hand block of `E1Seg0.lean`. -/
 theorem rootDecMidZ_eq_hand : @E2eScal.rootDecMidZ = @E2eScal.E1.rootDecMid0 := rfl
 
 /-- The offset-0 template lemma has the statement of the hand lemma. -/

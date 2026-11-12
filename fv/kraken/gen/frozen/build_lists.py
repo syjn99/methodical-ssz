@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-"""One-time builder of the two frozen lists (P2). Not part of the generator.
+"""One-time builder of the two frozen lists. Not part of the generator.
 
 Usage: build_lists.py <repo-root> [--out DIR]
 Writes fv/kraken/gen/frozen/THEOREMS.json and fv/kraken/gen/frozen/ASSUMPTIONS.json.
 
 After the commit that adds them, the two JSON files are frozen:
 - a change is a separate commit, with the reason in the run OUTBOX;
-- the generator (fv/kraken/gen/**, P4 on) never writes them and never imports
+- the generator (fv/kraken/gen/**) never writes them and never imports
   this file; gen/tests check that the generator output directory is not here.
 Inputs: the generated Go of the 9 hand-made types (fv/kraken/target), the
 698c202 Prysm outputs (fv/kraken/prysm/_generated/mainnet), the inventory
 (fv/kraken/prysm/inventory.json) and the hand mapping below (read from
-AXIOMS.txt names and theorem doc comments; P5 recomputes links from resolved
+AXIOMS.txt names and theorem doc comments; a later step recomputes links from resolved
 Lean declarations). Python 3 standard library only. Run with python3 -I.
 """
 import hashlib
@@ -157,7 +157,7 @@ HAND = {
     ("AttestationData", "SizeSSZ", "size"): ["ad_size_main"],
 }
 CALLEE_SPECS = {"ssz.ValidateBitvector": ["vbv_accept_main", "vbv_reject_pad_main"]}
-# Go-source sites with no counterpart in the machine code (P5 COMPARE.md: the decoder does not reference
+# Go-source sites with no counterpart in the machine code (COMPARE.md: the decoder does not reference
 # "Source: %w" / "Target: %w"; Checkpoint.UnmarshalSSZ is inlined and fails only on size, which the caller fixes).
 UNREACHABLE_MC = {("AttestationData", "UnmarshalSSZ", 2): "c.Source.UnmarshalSSZ(sszSlice3) on an exact 40-byte slice; inlined, no error path",
                   ("AttestationData", "UnmarshalSSZ", 3): "c.Target.UnmarshalSSZ(sszSlice4) on an exact 40-byte slice; inlined, no error path"}

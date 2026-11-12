@@ -1,4 +1,4 @@
-// Command p1bin links the generated phase 1a methods into an ELF (fv/kraken: amd64).
+// Command p1bin links the generated methods into an ELF (fv/kraken: amd64).
 // It calls them through interfaces held in package variables, so the
 // compiler keeps each method as a standalone symbol and does not inline it.
 //

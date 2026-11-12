@@ -7,7 +7,7 @@ import E2eList.Code
 import E2eList.Defs
 
 /-!
-# Hand STATEMENTS of the LV target T1 `(*v1alpha1.SyncAggregate).UnmarshalSSZ` (statements only, no proof)
+# Hand STATEMENTS of the target `(*v1alpha1.SyncAggregate).UnmarshalSSZ` (statements only, no proof)
 
 Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
 Statement shape: `E2eScal.H4.dd_accept_stmt` (Deposit_Data, the same makeslice + memmove field idiom),
@@ -40,7 +40,7 @@ variable [Host]
 
 namespace E2eList
 
-/-- **T1 accept (machine).** On a 160-byte input the decoder returns nil; the receiver holds fresh
+/-- **Accept (machine).** On a 160-byte input the decoder returns nil; the receiver holds fresh
 SyncCommitteeBits (64) / SyncCommitteeSignature (96) slices equal to buf[0:64] / buf[64:160] (len = cap);
 input, `state`, the spills, the caller's frame `R` and the stack guard are unchanged; 160 heap bytes are used. -/
 def sa_accept_stmt : Prop :=
@@ -94,7 +94,7 @@ def sa_accept_stmt : Prop :=
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **T1 size reject (machine).** `len(buf) ≠ 160`: the decoder returns the two words `e0`, `e1` of
+/-- **Size reject (machine).** `len(buf) ≠ 160`: the decoder returns the two words `e0`, `e1` of
 `ssz.ErrSize`; the rbx spill slot holds rbx, the caller's frame `R` (the receiver and the input included) and
 the global are unchanged. -/
 def sa_reject_size_stmt : Prop :=
@@ -118,7 +118,7 @@ def sa_reject_size_stmt : Prop :=
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **T1 accept (spec).** If EthLib accepts `bsA` against `prysmSaDesc` as `v`, there is `g : PSa` with
+/-- **Accept (spec).** If EthLib accepts `bsA` against `prysmSaDesc` as `v`, there is `g : PSa` with
 `g.toValue = v` and `bsA = psaEnc g`; with the input chunks of that `g` the machine code returns nil and the
 receiver holds `g` (postcondition of `sa_accept_stmt` with `bits = g.bits`, `sig = g.signature`). -/
 def sa_accept_spec_stmt : Prop :=
@@ -174,7 +174,7 @@ def sa_accept_spec_stmt : Prop :=
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **T1 size reject (spec).** `bs.size ≠ 160`: EthLib rejects, and the machine code returns the two words of
+/-- **Size reject (spec).** `bs.size ≠ 160`: EthLib rejects, and the machine code returns the two words of
 `ssz.ErrSize` (postcondition of `sa_reject_size_stmt`). -/
 def sa_reject_size_spec_stmt : Prop :=
   ∀ (k : Nat) (hk : SaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh SaUnmarshal k)
@@ -199,7 +199,7 @@ def sa_reject_size_spec_stmt : Prop :=
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **T1 reject completeness (spec).** Every input that EthLib rejects has `size ≠ 160`: the path condition of
+/-- **Reject completeness (spec).** Every input that EthLib rejects has `size ≠ 160`: the path condition of
 the decoder's one reject site (it has no callee that can fail). -/
 def sa_reject_complete_stmt : Prop :=
   ∀ bs : Array UInt8, (¬ ∃ v, deserialize prysmSaDesc bs = .ok v) → bs.size ≠ 160

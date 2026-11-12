@@ -4,9 +4,9 @@ import Fk.BumpMore
 import Fk.WHost
 
 /-!
-# Witness of `dd_e2e_accept_main` (Deposit_Data decoder accept path, H4 hold-out, type A)
+# Witness of `dd_e2e_accept_main` (Deposit_Data decoder accept path, hold-out, type A)
 
-Hand-written by the H4 evaluation session (the text of `WitDmA.lean` with the Deposit_Data host and layout).
+Hand-written (the text of `WitDmA.lean` with the Deposit_Data host and layout).
 It shows that the premises of the independent hand statement `E2eScal.H4.dd_accept_stmt` are satisfiable.
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.Deposit_Data).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (152, `bump_makeslice1`) and `RtCopy` (158, `rt_memmove`).

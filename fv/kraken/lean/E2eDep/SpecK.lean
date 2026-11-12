@@ -3,7 +3,7 @@ import E2eDep.Reject
 import E2eDep.Spec
 
 /-!
-# Spec alignment of the real Deposit decoder (SEG proof of use)
+# Spec alignment of the real Deposit decoder
 
 The text of `E2eHb.HbSpecK` with the Deposit statement. The statements are the frozen `dep_accept_spec_stmt`,
 `dep_reject_size_spec_stmt` and `dep_reject_complete_stmt` (`SpecStmt.lean`).

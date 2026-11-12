@@ -5,12 +5,12 @@ import Fk.RtCopy
 /-!
 # OPT-R1 reserve encoder `(*v1alpha1.Checkpoint).MarshalSSZTo`: the four main theorems
 
-Contract of the pilot protocol §3, items 1–6, for the new ELF `3ef7ac89…f602`
+Contract of the pilot for the new ELF `3ef7ac89…f602`
 (`L = len(dst)`, `C = cap(dst)`, `spare = C − L`):
 
 | theorem                        | range              | result (exact frame)                                        |
 | `cpo_marshal_main`             | `L + 40 ≤ C`       | `(dst.ptr, L + 40, C, nil)`; writes `dst[L..L+40]` only; no heap |
-| `cpo_marshal_reject_main`      | `L + 40 ≤ C`, root length ≠ 32 | `(nil, ErrBytesLength)`; writes `dst[L..L+8]` (C-1)  |
+| `cpo_marshal_reject_main`      | `L + 40 ≤ C`, root length ≠ 32 | `(nil, ErrBytesLength)`; writes `dst[L..L+8]` (epoch written before the root test)  |
 | `cpo_marshal_grow_main`        | `L ≤ C < L + 40`   | `(new, L + 40, newCap, nil)`; one heap block of `newCap ≥ nextSliceCap (L+40) C` bytes; the caller's `pre ++ spare` unchanged |
 | `cpo_marshal_reject_grow_main` | `L ≤ C < L + 40`, root length ≠ 32 | `(nil, ErrBytesLength)`; one heap block (not returned); the caller's array unchanged |
 

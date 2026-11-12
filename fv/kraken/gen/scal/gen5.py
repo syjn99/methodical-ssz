@@ -1,5 +1,5 @@
-# gen5.py -- `scalgen.py p2dec --gen5` (unit G5-G): the whole accept theorem (and the size-reject theorem) of a
-# flat fixed-size decoder, emitted from the GEN4 walk (front end) with the statement kinds of the G5-L hand-over
+# gen5.py -- `scalgen.py p2dec --gen5`: the whole accept theorem (and the size-reject theorem) of a
+# flat fixed-size decoder, emitted from the GEN4 walk (front end) with the statement kinds of the GEN5 lemma unit's hand-over
 # (`KindAcceptN.lean`: decHeadKindN, decFieldKindN, decEpiKindN, decAcceptKindN; `RejectN.lean`: decRejectKindN).
 #
 # Untrusted generator: every emitted theorem is checked by Lean; every statement has a `_kind` line; the kind
@@ -7,7 +7,7 @@
 #
 # FAIL-CLOSED: `g5_derive` and the renderers raise `G5Refuse` (or any other exception) on every input they do not
 # model; `p2dec_gen5` in `scalgen.py` returns a text at ONE place only, after all success flags are set.
-# The proof recipes are the ones of the G5-L hand-over (`Gen5Ex*.lean`, section "Interface for G5-G").
+# The proof recipes are the ones of the GEN5 lemma unit's hand-over (`Gen5Ex*.lean`).
 import re
 
 REGS16 = 'rax rbx rcx rdx rsi rdi rsp rbp r8 r9 r10 r11 r12 r13 r14 r15'.split()
@@ -16,7 +16,7 @@ ADDR = '(by simp only [Int64.toBitVec_ofNat] <;> bv_omega)'
 ADDR0 = '(by simp only [Int64.toBitVec_ofNat]; exact BitVec.add_zero _)'
 RVT = {'rcv': 's.regs.rax.toBitVec', 'bf': 's.regs.rbx.toBitVec', 'zero': '0'}
 PRIM = 'github.com_OffchainLabs_prysm_v7_consensus_types_primitives.'
-# callee symbol -> (code constant, binder suffix, proved spec theorem); the four proved callees (G5-L interface)
+# callee symbol -> (code constant, binder suffix, proved spec theorem); the four proved callees (interface of the GEN5 lemma unit)
 G5_CALLEES = {PRIM + 'Slot.UnmarshalSSZ': ('E2eAd.Code.SlUnmarshal', 'S', 'sl_uacc_holds'),
               PRIM + 'CommitteeIndex.UnmarshalSSZ': ('E2eAd.Code.CiUnmarshal', 'C', 'ci_uacc_holds'),
               PRIM + 'ValidatorIndex.UnmarshalSSZ': ('E2eScal.BhCode.ViUnmarshal', 'V', 'vi_uacc_holds'),
@@ -24,7 +24,7 @@ G5_CALLEES = {PRIM + 'Slot.UnmarshalSSZ': ('E2eAd.Code.SlUnmarshal', 'S', 'sl_ua
 G5_IMPORTS = ['E2eScal.AcceptTies', 'E2eScal.FieldComp', 'E2eScal.ViSpec', 'E2e.Epoch', 'E2eAd.Prims',
               'E2eScal.Compose', 'E2eScal.RejectTies']
 G5_OPENS = 'E2e E2eAd E2eScal'
-# the statement kinds of the G5-L hand-over (kindcheck.py pins their modules)
+# the statement kinds of the GEN5 lemma unit's hand-over (kindcheck.py pins their modules)
 G5_KINDS = ('decHeadKindN', 'decFieldKindN', 'decEpiKindN', 'decAcceptKindN', 'decRejectKindN')
 
 
@@ -527,7 +527,7 @@ class T:
                   f"theorem {name}_same : ∀ (h : Host), type_of% (@{name} h) = type_of% (@{self.same_as} h) := by\n  intro h; rfl\n\n")
         return s
 
-    # ---- size reject (L3)
+    # ---- size reject
     def reject(self):
         r = self.rejspec
         name = f'{self.ns}_reject'
@@ -629,7 +629,7 @@ def g5_head_spec(dirs, head_end, F, st):
 
 
 def g5_reject_spec(dirs, head, label_index):
-    """L3: the `jne` target of directive 10 must be the error block `lerr: mov ssz.ErrSize(%rip),%rax;
+    """The `jne` target of directive 10 must be the error block `lerr: mov ssz.ErrSize(%rip),%rax;
     mov ssz.ErrSize+8(%rip),%rbx; add $F,%rsp; pop %rbp; retq` (no nop inside)."""
     F = head['F']
     jl = label_index(dirs, head['jne'])

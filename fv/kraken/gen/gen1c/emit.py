@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""phase1c proof generator skeleton (P4): emits per-type files into a scratch directory.
+"""Proof generator skeleton: emits per-type files into a scratch directory.
 
 Usage:
   emit.py --out DIR --desc-dir DIR --go F.ssz.go[,F2...] --elf ELF --nm NM --norm DIR
@@ -122,7 +122,7 @@ INVENTORY_PIN_KEY = "fv/kraken/prysm/inventory.json"
 
 
 def check_desc_shape(path, d):
-    """Shape of a Desc read here (R4-S4): every top-level key present, fixed_size an integer or null."""
+    """Shape of a Desc read here: every top-level key present, fixed_size an integer or null."""
     if not isinstance(d, dict):
         raise SystemExit(f"{path}: not a JSON object")
     miss = [k for k in DESC_KEYS if k not in d]
@@ -141,7 +141,7 @@ def pkg_ok(p):
 
 
 def accept(result_path, desc_dir, types, mode, th):
-    """The emit boundary. Any malformed input ends in SystemExit, never in another exception (R4-S4)."""
+    """The emit boundary. Any malformed input ends in SystemExit, never in another exception."""
     try:
         return _accept(result_path, desc_dir, types, mode, th)
     except (KeyError, TypeError, AttributeError, ValueError, IndexError, UnicodeError) as e:
@@ -170,7 +170,7 @@ def _accept(result_path, desc_dir, types, mode, th):
     if any(lst.get(k) for k in ("missing", "extra", "unkeyed", "duplicate_keys", "duplicate_paths", "failed_originals")) \
             or lst.get("table_self_check") is not True:
         raise SystemExit(f"{result_path}: list-level findings in an OK result: {lst}")
-    # R4-S1: the result, the working-tree inventory and the pin in the frozen list must agree
+    # the result, the working-tree inventory and the pin in the frozen list must agree
     inv_sha = hashlib.sha256(open(INVENTORY, "rb").read()).hexdigest()
     pin = th["sources_sha256"].get(INVENTORY_PIN_KEY)
     if res.get("inventory", {}).get("sha256") != inv_sha or inv_sha != pin:
@@ -190,7 +190,7 @@ def _accept(result_path, desc_dir, types, mode, th):
     files = {}
     for fn in sorted(os.listdir(desc_dir)):
         path = os.path.join(desc_dir, fn)
-        # R4-S5: read once; the bytes that are hashed are the bytes that are parsed
+        # read once; the bytes that are hashed are the bytes that are parsed
         try:
             raw = open(path, "rb").read()
             d = strict_parse(raw)
@@ -246,7 +246,7 @@ def code_name(t, pkg, prefixes):
 
 
 def lean_namespace(mode, pkg, t):
-    """R4-S5: hand types and Prysm types never share a namespace (Gen1c.Hand.T vs Gen1c.Prysm.<pkg>.T)."""
+    """Hand types and Prysm types never share a namespace (Gen1c.Hand.T vs Gen1c.Prysm.<pkg>.T)."""
     if mode == "hand_case":
         return f"Gen1c.Hand.{t}"
     seg = "_".join(pkg.split("/")[-2:])

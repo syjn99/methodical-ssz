@@ -2,7 +2,7 @@ import E2eEnc.Once
 import E2eEnc.Spec
 
 /-!
-# ENC G1* against EthLib (`dc_marshal_once_spec_stmt`)
+# One-growth path (growth at any one site) against EthLib (`dc_marshal_once_spec_stmt`)
 
 From `dc_e2e_marshal_once_main`: the result block starts with `pre ‖ serialize prysmDcDesc g.toValue`.
 -/

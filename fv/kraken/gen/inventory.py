@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prysm Fulu type inventory from the sszgen 698c202 IR (X1).
+"""Prysm Fulu type inventory from the sszgen 698c202 IR.
 
   inventory.py reduce <raw-ir.json> <out-ir.json>
       Cut the raw invtool dump: a field whose type delegates (the generated

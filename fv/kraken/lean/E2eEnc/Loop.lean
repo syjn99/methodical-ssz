@@ -7,7 +7,7 @@ import Fk.RtCopy
 import Fk.FvMarshal
 
 /-!
-# ENC `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo`: the Columns loop (capacity sufficient)
+# `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo`: the Columns loop (capacity sufficient)
 
 Loop head `L_13a` (directive 82). One iteration: 83–84 `cmp %r8,%rsi; jge` not taken (i < n), 85 rbx += 8,
 86 `mov (%rdx,%rsi,8),%r9` (8 bytes of the column backing array), 88–89 `cmp %rbx,%rcx; jae L_132` taken (capacity

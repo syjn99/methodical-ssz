@@ -4,7 +4,7 @@ import Fk.BumpMore
 import Fk.WHost
 
 /-!
-# Witness of `sa_e2e_accept_main` (SyncAggregate decoder accept path, LV T1)
+# Witness of `sa_e2e_accept_main` (SyncAggregate decoder accept path)
 
 The text of `E2eScal`'s `WitDdA.lean` with the SyncAggregate host and layout. It shows that the premises of the frozen
 statement `E2eList.sa_accept_stmt` are satisfiable.
@@ -85,7 +85,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
 -- Profiled cause (scratch copy, `profiler true`, log 27): the memory premise is closed by `simp` AC-normalization of
 -- the 22-chunk separating conjunction (`sep_comm`, `sep_comm_l`: 7.03 s; the address `simp`: 2.08 s; simp total
 -- 9.16 s of the declaration). The default 200000 heartbeats stop at `whnf` (log 26).
--- Thresholds measured by review r2 (reviewer runs): 200000 and 400000 fail at `whnf`, 1000000 passes.
+-- Thresholds measured in independent reviewer runs: 200000 and 400000 fail at `whnf`, 1000000 passes.
 -- Value 2000000 (twice the reviewer's passing value; was 16000000, the value of `WitDdA.dd_accept_runs`):
 -- passes in the implementer's run (log 96).
 set_option maxHeartbeats 2000000 in

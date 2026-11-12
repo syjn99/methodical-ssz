@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""prysm-e2e E1.1: call graph of the Checkpoint / Epoch SSZ functions in the Go 1.26.10 ELF.
+"""Call graph of the Checkpoint / Epoch SSZ functions in the Go 1.26.10 ELF.
 
 Usage: callgraph.py <objdump> <out.json> [<gcflags-m2.log>]
   <objdump>   `go tool objdump -gnu` of the Go 1.26.10 ELF (c6403c02...911e)

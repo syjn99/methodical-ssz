@@ -4,7 +4,7 @@ import E2e.WitCpM
 import E2e.WitCpMR
 
 /-!
-# Go-value element (prysm-e2e, INBOX 004 item 5)
+# Go-value element
 
 `cp_layout`: the offsets that the machine theorems use for the receiver (state 0,
 Epoch 8, Root 16/24/32, unknownFields 40, sizeCache 64, size 72) are the
@@ -49,7 +49,7 @@ open WitCpA in
 theorem witCpA_recv_pre : cpGoValue (recvAt (WitCpA.block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)) 0x5c)
     = true := by decide
 
-/-! After the decoder (review e2e-r2 N4). The receiver bytes are not written by hand: `cpAfterDecode b e8 p`
+/-! After the decoder. The receiver bytes are not written by hand: `cpAfterDecode b e8 p`
 is the list of the receiver fragments that the conclusion of `cp_e2e_accept_main` names at
 `rax .. rax + 72` (`cst` = the before bytes 0..8, `e8` at +8, `p` at +16, 32 at +24 and +32, `ctl` = the
 before bytes 40..72). `cp_after_decode_goValue` holds for every before receiver that is a Go value, every

@@ -2,7 +2,7 @@ import E2eScal.PwAccept
 import E2eScal.Gen3PwDec
 
 /-!
-# PendingPartialWithdrawal accept path from the GENERATED GEN3 segments (unit G3-G, reuse demonstration)
+# PendingPartialWithdrawal accept path from the GENERATED `p2dec --gen3` segments (reuse demonstration)
 
 Hand composition (not generator output): the chain of `PwAccept.lean` with every lemma instance replaced by
 the generated theorem of `Gen3PwDec.lean` (`p2dec --gen3`, raw output) whose declared type is that instance
@@ -19,7 +19,7 @@ namespace E2eScal.H4
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- Accept path of `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ` from the GENERATED GEN3 segments;
+/-- Accept path of `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ` from the GENERATED `p2dec --gen3` segments;
 statement = the hand statement `pw_accept_stmt` (unchanged). -/
 theorem pw_e2e_accept_main_g3 : pw_accept_stmt := by
   intro k hk hf kV hkV hfV kE hkE hfE in0 in1 in2 hin0 hin1 hin2 s ra guard

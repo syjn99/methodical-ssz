@@ -7,7 +7,7 @@ import E2eEnc.Code
 import E2eEnc.Defs
 
 /-!
-# Hand STATEMENTS of the ENC target `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo` (statements only)
+# Hand STATEMENTS of the encoder target `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo` (statements only)
 
 Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
 Statement shape: `E2e/CpMarshal.lean`, `E2e/CpMarshalG.lean`, `E2e/CpSpecM.lean` (Checkpoint encoder) and
@@ -15,10 +15,10 @@ Statement shape: `E2e/CpMarshal.lean`, `E2e/CpMarshalG.lean`, `E2e/CpSpecM.lean`
 Design, paths and the frame table: `prysm/go1.26.10/e2e/lv/DESIGN-ENC.md`.
 
     func (c *DataColumnsByRootIdentifier) MarshalSSZTo(dst []byte) ([]byte, error) {   // fulu.ssz.go:1754
-        if len(c.BlockRoot) != 32 { return nil, ssz.ErrBytesLength }                     // RB
+        if len(c.BlockRoot) != 32 { return nil, ssz.ErrBytesLength }                     // bytes-length reject
         dst = append(dst, c.BlockRoot...)                                                // site 1 (growslice 23)
         dst = ssz.WriteOffset(dst, 36)                                                   // site 2 (growslice 49)
-        if len(c.Columns) > 128 { return nil, ssz.ErrListTooBig }                        // RT
+        if len(c.Columns) > 128 { return nil, ssz.ErrListTooBig }                        // too-big reject
         for _, o := range c.Columns { dst = binary.LittleEndian.AppendUint64(dst, o) }   // site 3 (growslice 94)
         return dst, err }
 
@@ -38,7 +38,7 @@ variable [Host]
 
 namespace E2eEnc
 
-/-- **F: capacity-sufficient path (machine).** `len(BlockRoot) = 32`, `n = len(Columns) ≤ 128` and
+/-- **Fast path, capacity sufficient (machine).** `len(BlockRoot) = 32`, `n = len(Columns) ≤ 128` and
 `len + 36 + 8n ≤ cap`: no growslice site is taken; the encoder writes `root ‖ offset 36 ‖ cb` at `dst.ptr + len`
 (the 36 + 8n bytes `d` are overwritten) and returns `(dst.ptr, len + 36 + 8n, cap, nil)`. The receiver words, the
 root and column bytes, the guard word and the caller's frame `R` are unchanged; the spill slots hold rax and rbx. -/
@@ -94,7 +94,7 @@ def dc_marshal_fast_stmt : Prop :=
           ⋆ Eq ((pre ++ root ++ dcOff ++ cb).At s.regs.rbx.toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **G: grow path at site 1 (machine).** `len ≤ cap < len + 32`: `append(dst, BlockRoot...)` calls
+/-- **First-site grow path: one grow at site 1 only (machine).** `len ≤ cap < len + 32`: `append(dst, BlockRoot...)` calls
 `growslice(dst.ptr, len + 32, cap, 32, uint8)` (contract `GrowsliceC Heap e2eU8Type_addr 1 S`). The premise
 `len + 36 + 8n ≤ nextSliceCap (len + 32) cap` makes the new capacity enough for sites 2 and 3, so they do not grow.
 The encoder returns `(new, len + 36 + 8n, newCap, nil)`; the new block starts with `pre ‖ root ‖ offset 36 ‖ cb`
@@ -164,7 +164,7 @@ def dc_marshal_grow_stmt : Prop :=
           ⋆ Heap av' ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **RB: BlockRoot length reject (machine).** `len(BlockRoot) = bl ≠ 32`: the encoder returns
+/-- **Bytes-length reject: BlockRoot length (machine).** `len(BlockRoot) = bl ≠ 32`: the encoder returns
 `(nil, 0, 0, ssz.ErrBytesLength)` (the two words `e0`, `e1` of the global); only the saved rbp and the rbx spill slot
 change. -/
 def dc_reject_bytes_stmt : Prop :=
@@ -193,7 +193,7 @@ def dc_reject_bytes_stmt : Prop :=
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrBytesLength" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **RT: Columns too long (machine).** `len(BlockRoot) = 32`, `len + 36 ≤ cap` (sites 1 and 2 do not grow) and
+/-- **Too-big reject: Columns too long (machine).** `len(BlockRoot) = 32`, `len + 36 ≤ cap` (sites 1 and 2 do not grow) and
 `128 < n < 2^63` (Go's `len > 128`, signed `jg`): the encoder has written `root ‖ offset 36` at `dst.ptr + len` and
 returns `(nil, 0, 0, ssz.ErrListTooBig)`. The column bytes are not read. -/
 def dc_reject_toobig_stmt : Prop :=
@@ -246,7 +246,7 @@ def dc_reject_toobig_stmt : Prop :=
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrListTooBig" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **F against EthLib (spec companion, shape of `E2e.cp_e2e_marshal_spec_k`).** For a receiver holding the Go
+/-- **Fast path against EthLib (spec companion, shape of `E2e.cp_e2e_marshal_spec_k`).** For a receiver holding the Go
 layout of `g : PDc` (BlockRoot bytes `g.root`, Columns backing bytes `u64Bytes g.cols`), the fast path returns
 `len + |bs|` and `dst[0 : len + |bs|] = pre ‖ bs`, where `bs = serialize prysmDcDesc g.toValue`. The full frame
 accounting is `dc_marshal_fast_stmt`. -/
@@ -284,7 +284,7 @@ def dc_marshal_spec_stmt : Prop :=
         ∧ (Eq ((pre ++ bs.toList).At s.regs.rbx.toBitVec) ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **G against EthLib.** The grow path at site 1 returns `len + |bs|` with `len + |bs| ≤ newCap`, and the new block
+/-- **First-site grow path against EthLib.** The grow path at site 1 returns `len + |bs|` with `len + |bs| ≤ newCap`, and the new block
 starts with `pre ‖ bs`, where `bs = serialize prysmDcDesc g.toValue`. The full accounting is `dc_marshal_grow_stmt`. -/
 def dc_marshal_grow_spec_stmt : Prop :=
   ∀ (k : Nat) (hk : DcMarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DcMarshal k)
@@ -326,11 +326,11 @@ def dc_marshal_grow_spec_stmt : Prop :=
           ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **RB against EthLib.** EthLib refuses a BlockRoot of any length other than 32. -/
+/-- **Bytes-length reject against EthLib.** EthLib refuses a BlockRoot of any length other than 32. -/
 def dc_spec_reject_bytes_stmt : Prop :=
   ∀ (r : Array UInt8) (cols : List UInt64), r.size ≠ 32 → ∃ e, serialize prysmDcDesc (dcValue r cols) = .error e
 
-/-- **RT against EthLib.** EthLib refuses more than 128 columns. -/
+/-- **Too-big reject against EthLib.** EthLib refuses more than 128 columns. -/
 def dc_spec_reject_toobig_stmt : Prop :=
   ∀ (r : Vector UInt8 32) (cols : List UInt64), 128 < cols.length →
     ∃ e, serialize prysmDcDesc (dcValue r.toArray cols) = .error e

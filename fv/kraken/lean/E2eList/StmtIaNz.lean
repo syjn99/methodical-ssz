@@ -12,10 +12,10 @@ import E2eList.DataIa
 import E2eList.DefsIa
 
 /-!
-# Corrected T3 statements for P4 and P5: the itab word is non-zero (LV, user-approved correction after the freeze)
+# Corrected IndexedAttestation statements for the alignment reject and the overflow reject: the itab word is non-zero (user-approved correction after the freeze)
 
 The four defs below are the frozen texts of `StmtIa.lean` with one added premise `(he0nz : e0 ≠ 0)` and the suffix
-`_nz` in the name; nothing else differs. Reason: directives 103–106 (P4) and 66–69 (P5) are
+`_nz` in the name; nothing else differs. Reason: directives 103–106 (alignment reject) and 66–69 (overflow reject) are
 `mov ssz.Err…(%rip),%rcx; test %rcx,%rcx; je …; mov 0x8(%rcx),%rcx`; when the error's itab word is 0 the code skips the
 type-word load and passes 0 where `FmtErrorfDWC` needs `ity`. The Kraken Host places labels anywhere, so the itab label
 may be 0 and the frozen statements cannot refute that branch. The precondition is stronger than the frozen one (not
@@ -29,7 +29,7 @@ variable [Host]
 
 namespace E2eList
 
-/-- **P4 misaligned reject (machine).** `len(buf) ≥ 228`, offset 228, `(len − 228) mod 8 ≠ 0`: `convT64(len − 228)` and `fmt.errorf("misaligned bytes: … %d … %w", len − 228, ssz.ErrIncorrectListSize)`; the decoder returns that error (rax ≠ 0). The 32-byte argument array at rsp − 48 holds `type:int`, the box, the error's type word and data word. Exact frame; the heap shrinks by at most the box and the errorf allocation. -/
+/-- **Alignment reject (machine).** `len(buf) ≥ 228`, offset 228, `(len − 228) mod 8 ≠ 0`: `convT64(len − 228)` and `fmt.errorf("misaligned bytes: … %d … %w", len − 228, ssz.ErrIncorrectListSize)`; the decoder returns that error (rax ≠ 0). The 32-byte argument array at rsp − 48 holds `type:int`, the box, the error's type word and data word. Exact frame; the heap shrinks by at most the box and the errorf allocation. -/
 def ia_reject_misaligned_nz_stmt : Prop :=
   ∀ (k : Nat) (hk : IaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh IaUnmarshal k)
     (s : MachineData) (ra guard e0 e1 : UInt64) (esp : BitVec 64) (msg ity : List UInt8)
@@ -83,7 +83,7 @@ def ia_reject_misaligned_nz_stmt : Prop :=
       ⟨s, Host.addrOf k⟩
 
 
-/-- **P5 too-big reject (machine).** `len(buf) ≥ 228`, offset 228, `(len − 228) mod 8 = 0`, `numElem = (len − 228)/8 > 2048`: `convT64(numElem)` and `fmt.errorf("ssz-max exceeded: … %d … %w", numElem, ssz.ErrListTooBig)`; the decoder returns that error (rax ≠ 0). Argument array at rsp − 80. -/
+/-- **Overflow reject (machine).** `len(buf) ≥ 228`, offset 228, `(len − 228) mod 8 = 0`, `numElem = (len − 228)/8 > 2048`: `convT64(numElem)` and `fmt.errorf("ssz-max exceeded: … %d … %w", numElem, ssz.ErrListTooBig)`; the decoder returns that error (rax ≠ 0). Argument array at rsp − 80. -/
 def ia_reject_toobig_nz_stmt : Prop :=
   ∀ (k : Nat) (hk : IaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh IaUnmarshal k)
     (s : MachineData) (ra guard e0 e1 : UInt64) (esp : BitVec 64) (msg ity : List UInt8)
@@ -137,7 +137,7 @@ def ia_reject_toobig_nz_stmt : Prop :=
       ⟨s, Host.addrOf k⟩
 
 
-/-- **P4 (spec).** `bs.size ≥ 228`, `bs[0:4] = iaOff`, `(bs.size − 228) mod 8 ≠ 0`: EthLib rejects, and the machine code returns the `fmt.errorf` error (postcondition of `ia_reject_misaligned_stmt`). -/
+/-- **Alignment reject (spec).** `bs.size ≥ 228`, `bs[0:4] = iaOff`, `(bs.size − 228) mod 8 ≠ 0`: EthLib rejects, and the machine code returns the `fmt.errorf` error (postcondition of `ia_reject_misaligned_stmt`). -/
 def ia_reject_misaligned_spec_nz_stmt : Prop :=
   ∀ (k : Nat) (hk : IaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh IaUnmarshal k)
     (bs : Array UInt8) (hbs : 228 ≤ bs.size) (hoff : bs.toList.take 4 = iaOff) (hmis : (bs.size - 228) % 8 ≠ 0)
@@ -193,7 +193,7 @@ def ia_reject_misaligned_spec_nz_stmt : Prop :=
       ⟨s, Host.addrOf k⟩
 
 
-/-- **P5 (spec).** `bs.size ≥ 228`, `bs[0:4] = iaOff`, `(bs.size − 228) mod 8 = 0`, `(bs.size − 228)/8 > 2048`: EthLib rejects, and the machine code returns the `fmt.errorf` error (postcondition of `ia_reject_toobig_stmt`). -/
+/-- **Overflow reject (spec).** `bs.size ≥ 228`, `bs[0:4] = iaOff`, `(bs.size − 228) mod 8 = 0`, `(bs.size − 228)/8 > 2048`: EthLib rejects, and the machine code returns the `fmt.errorf` error (postcondition of `ia_reject_toobig_stmt`). -/
 def ia_reject_toobig_spec_nz_stmt : Prop :=
   ∀ (k : Nat) (hk : IaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh IaUnmarshal k)
     (bs : Array UInt8) (hbs : 228 ≤ bs.size) (hoff : bs.toList.take 4 = iaOff) (hal : (bs.size - 228) % 8 = 0) (hbig : 2048 < (bs.size - 228) / 8)

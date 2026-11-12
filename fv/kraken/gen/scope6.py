@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""P6: provisional scope classification of the Prysm inventory for X5.
+"""Provisional scope classification of the Prysm inventory for X5.
 
 Usage: scope6.py <kraken-dir>     writes prysm/SCOPE-P6.json and prysm/SCOPE-P6.md
 
@@ -164,19 +164,19 @@ def main():
                       "in_B_first_class": dict(sorted(Counter(r["first_class"] for r in rows if r["in_B"]).items()))},
            "rows": rows}
     json.dump(res, open(f"{k}/prysm/SCOPE-P6.json", "w"), indent=1)
-    L = ["# SCOPE-P6: X5를 위한 잠정 분류 (phase1c P6)", "",
-         "**잠정이다.** 증명을 시도하지 않았다. 이 표는 증명 가능성을 말하지 않는다. `gen/scope6.py`가 JSON에서 만든다.", "",
-         "실패 이유 종류(먼저 걸리는 순서): 도구 빈틈(`%riz`) > 계약 부재 > 새 패턴(자동화) > 알려진 것 없음.",
-         "\"피호출 포함\"은 타입과 그 생성 피호출자 폐포 중 가장 먼저 걸리는 종류다. 타입 혼자 \"알려진 것 없음\"이어도 피호출자가 막으면 막힌다.",
-         "Prysm 타입 135개 중 123개는 protobuf 구조체다. 손 사례의 축약 타입과 Go 배치가 다르다(`ir/*.json` `go_fields`).",
-         "생성기 결함은 종류에 있지만 출력 코드 결함이 알려지지 않아 해당 타입이 없다.",
-         "\"알려진 것 없음\"은 계약 인스턴스(esz, sz, 형식 문자열·인수 타입)마다의 모델과, Go 1.26.10 런타임 소스에 대한 계약 재확인을 세지 않는다(`gen/frozen/ASSUMPTIONS.json` 개정 2). 그래서 막힘이 없다는 뜻이 아니다.",
-         f"손 사례의 가장 큰 함수는 명령어 {hand_max}개다. 크기 띠는 그 기준이다(시간을 외삽하지 않는다).", "",
-         "## 1. 수치", "", "| 항목 | 값 |", "| --- | --- |"]
+    L = ["# SCOPE-P6: provisional classification for X5 (phase1c P6)", "",
+         "**It is provisional.** We did not try proofs. This table does not say whether a proof is possible. `gen/scope6.py` makes it from JSON.", "",
+         "Failure reason classes (in the order in which they apply first): tool gap (`%riz`) > missing contract > new pattern (automation) > none known.",
+         "\"Including callees\" is the first class that applies in the type and the closure of its generated callees. If the type alone is \"none known\" but a callee blocks it, the type is blocked.",
+         "123 of the 135 Prysm types are protobuf structs. Their Go layout is different from the reduced types of the hand case (`ir/*.json` `go_fields`).",
+         "Generator defect is one of the classes, but no output code defect is known, so no type has that class.",
+         "\"None known\" does not count the models for each contract instance (esz, sz, format string and argument types) or the contract recheck against the Go 1.26.10 runtime source (`gen/frozen/ASSUMPTIONS.json` revision 2). Thus it does not mean that nothing blocks the type.",
+         f"The largest function of the hand case has {hand_max} instructions. The size bands use it as the reference (we do not extrapolate time).", "",
+         "## 1. Numbers", "", "| Item | Value |", "| --- | --- |"]
     for kk, v in res["counts"].items():
         L.append(f"| `{kk}` | {json.dumps(v, ensure_ascii=False)} |")
-    L += ["", "## 2. 타입 표", "",
-          "| 타입 | B | P1 범위 | 첫 실패 종류 | 피호출 포함 첫 종류 | 모든 종류 | 손 패턴 | 새 패턴 | 없는 계약 | 파서 M/S/U | 최대 명령어 |",
+    L += ["", "## 2. Type table", "",
+          "| Type | B | P1 scope | First failure class | First class including callees | All classes | Hand patterns | New patterns | Missing contracts | Parser M/S/U | Max instructions |",
           "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |"]
     for r in sorted(rows, key=lambda r: (ORDER.index(r["first_class"]), r["type"])):
         L.append(f"| `{r['type']}` | {'B' if r['in_B'] else ''} | {r['p1_scope']} | {r['first_class']} | {r['first_class_transitive']} | "

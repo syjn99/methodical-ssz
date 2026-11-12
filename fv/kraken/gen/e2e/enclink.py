@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ENC stream: call graph and link set of the real v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo on the
+"""Call graph and link set of the real v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo on the
 Go 1.26.10 ELF (sha256 c6403c02...911e), the first variable-length encoder hand proof (lv/SELECTION-ENC.md).
 A new file in the pattern of `lvlink.py`. Existing scripts are not changed.
 

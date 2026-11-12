@@ -6,7 +6,7 @@ import E2eEnc.StmtEnc
 import E2eEnc.Tail
 
 /-!
-# ENC `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo`: capacity-sufficient path F
+# `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo`: fast path (capacity sufficient)
 
 `dc_marshal_fast_main : dc_marshal_fast_stmt`. Directives 2–4 large-frame guard `lea -0x8(%rsp),%r12` (closed with
 `E2eScal.lea_cmp_be_false`, N = 8), 5–7 prologue (`push %rbp`, `add $-0x80`), 8 rbx spill to x + 16, 9 BlockRoot

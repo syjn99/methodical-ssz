@@ -1,8 +1,8 @@
-# e2g-r1 reviewer script (review e2g-r1, own_layout.py), copied unchanged by unit E2-C as the non-author
+# Reviewer script (own_layout.py), copied unchanged as the non-author
 # recomputation of frame, gd, rt and the first-touch stack regions (pre) of every Gen6*Enc layout. Run from fv/kraken:
 #   python3 -I -B prysm/go1.26.10/e2e/scal/e2c/own_layout_e2g_r1.py
 
-"""e2g-r1: third, reviewer-written recomputation of the free layout parameters (G1) from the `.S` and the directive windows
+"""Third, reviewer-written recomputation of the free layout parameters (G1) from the `.S` and the directive windows
 that the Lean proofs step (`win hk a n`): frame, gd, rt, and the set of first-touch stack regions (pre) with sizes.
 Reads the layout def of the generated file or the pinned hand layout. No import of generator or kindcheck."""
 import json, re, glob, pathlib

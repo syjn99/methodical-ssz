@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""prysm-e2e cost record (PROOF-PLAN §4): gate wall-clock, runs, failed runs and peak memory per
+"""Cost record: gate wall-clock, runs, failed runs and peak memory per
 Lean module and per theorem, from the gate records and the job logs only.
 
 Usage: cost.py <records.jsonl> <logs-dir> <COST.json> <last-job-number>
 - Jobs: every `exit` record of stream `prysm-e2e` whose `log` lies in <logs-dir> and whose job number is at most
-  <last-job-number> (audit AU-16: without this upper bound the output changed when the stream advanced). The bound
+  <last-job-number> (without this upper bound the output changed when the stream advanced). The bound
   and the job range found are written to "source".
-- Column meaning (audit AU-16): per-module `gate_s` is the CUMULATIVE gate seconds of all attempts (failed and
+- Column meaning: per-module `gate_s` is the CUMULATIVE gate seconds of all attempts (failed and
   passed runs, probes); it is not a build time. `last_ok_run_gate_s` is the gate seconds of the module's last exit-0
   single-module run (dependencies may or may not have been rebuilt in it); it is not a controlled cold build either.
 - Job name = log file stem `NN-<kind>[-<target>]`. Kind `lake` + target `E2e.X` -> module E2e.X.

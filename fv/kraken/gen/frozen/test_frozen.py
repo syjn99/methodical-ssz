@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The frozen lists must be reproducible from the repository by program (review phase1c-r2 N1).
+"""The frozen lists must be reproducible from the repository by program.
 
 Usage: test_frozen.py <repo-root> <scratch-dir>
 Runs build_lists.py with --out <scratch-dir> and compares the two files byte by byte with

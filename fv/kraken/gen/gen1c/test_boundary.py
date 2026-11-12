@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Emit-boundary tests (review phase1c-r3 R3-M1, R3-M2, INBOX 008 item 4).
+"""Emit-boundary tests.
 
 Usage: test_boundary.py <desc-work-dir> <out.json>
 <desc-work-dir> is a gen/desc/test_desc.py work directory after the gated checker run
@@ -13,7 +13,7 @@ Cases:
   next to the originals, and in place of its base): the scenario's result with a desc dir of
   exactly its list; hand_case for the 9 hand keys, and prysm for the mutant's own key when it
   is a non-hand key; all must be refused.
-- review r3 E1-E7, rebuilt for the result-file protocol.
+- the reviewer's cases E1-E7, rebuilt for the result-file protocol.
 - own escapes x01-x14 against the result file and its binding, the expected-set source,
   the exception list and path handling.
 Python 3 standard library only. Run with python3 -I.
@@ -40,7 +40,7 @@ PV1 = "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
 
 
 def try_accept(result, ddir, types, mode, th, work=""):
-    """Paths under the work dir are stripped before the reason is cut (R4-S6: byte-reproducible output)."""
+    """Paths under the work dir are stripped before the reason is cut (byte-reproducible output)."""
     err = io.StringIO()
     cut = lambda s: (s.replace(work + "/", "") if work else s)[:300]
     try:
@@ -49,7 +49,7 @@ def try_accept(result, ddir, types, mode, th, work=""):
         return {"accepted": True, "n": len(got), "reason": ""}
     except SystemExit as e:
         return {"accepted": False, "n": 0, "reason": cut(str(e))}
-    except Exception as e:   # R4-S4: any other exception is an uncontrolled crash, never "refused"
+    except Exception as e:   # any other exception is an uncontrolled crash, never "refused"
         return {"accepted": None, "n": 0, "reason": cut(f"CRASH {type(e).__name__}: {e}")}
 
 
@@ -107,7 +107,7 @@ def main():
         case(f"{sid}/hand", "boundary", f"{sc['what']}: hand_case, 9 hand keys", "refused", res, dd, HAND, "hand_case")
         if mkey and isinstance(mkey, str) and not any(mkey.startswith(p + ".") for p in emit.HAND_PACKAGES) and "/" in mkey:
             case(f"{sid}/prysm", "boundary", f"{sc['what']}: prysm, the mutant's own key {mkey}", "refused", res, dd, [mkey], "prysm")
-    # review r3 E1-E7 rebuilt for the result protocol
+    # the reviewer's cases E1-E7, rebuilt for the result protocol
     r3 = f"{W}/replay/r3"
     scen_res = lambda sid: exp["scenarios"][sid]["result"]
     if "t12-forge" in exp["scenarios"]:
@@ -194,7 +194,7 @@ def main():
     t = open(main_res).read().replace('"expected_key_count": 144', '"expected_key_count": 144.0', 1)
     open(f"{tmp}/x16.result.json", "w").write(t)
     case("x16", "own", "result text with expected_key_count 144.0", "refused", f"{tmp}/x16.result.json", odir, HAND, "hand_case")
-    # review phase1c-r4: R4-S1 (inventory pin), R4-S4 (malformed input ends in SystemExit), R4-S5 (hashed = parsed bytes)
+    # inventory pin, malformed input ends in SystemExit, hashed = parsed bytes
     th_pin = copy.deepcopy(th)
     th_pin["sources_sha256"]["fv/kraken/prysm/inventory.json"] = "0" * 64
     case("x17", "own", "frozen-list inventory pin differs from the committed inventory (result and file agree)", "refused",

@@ -3,7 +3,7 @@ import E2e.CpReject
 import E2e.Spec
 
 /-!
-# Spec alignment of the real Checkpoint decoder (prysm-e2e E3)
+# Spec alignment of the real Checkpoint decoder
 
 - `cp_e2e_accept_spec_k`: if EthLib accepts `bsA` (`prysmCpDesc`) as `v`, there is
   `g : PCp` with `g.toValue = v` and `bsA = pcpEnc g`; with the input chunks of

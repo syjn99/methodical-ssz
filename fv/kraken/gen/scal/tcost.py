@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Scalability stage S1-S2 template cost (INBOX 011 item 4), from the gate records and job logs only.
+"""Template cost (segment lemmas and generator), from the gate records and job logs only.
 
 Usage: tcost.py <records.jsonl> <logs-dir> <first-job-number> <session-start-utc> <out.json> <last-job-number>
 - Jobs: `exit` records of stream `prysm-e2e` whose log is `<logs-dir>/NN-*.log` with
-  first-job-number <= NN <= last-job-number (audit AU-16: explicit upper bound, written to "source").
+  first-job-number <= NN <= last-job-number (explicit upper bound, written to "source").
 - Per-module gate_s is the CUMULATIVE gate seconds of all attempts, not a build time.
 - Kind from the log stem `NN-<kind>[-<target>]`: `lake` + target `E2eScal.X` -> module run of E2eScal.X
   (failed if exit != 0); `scalgen` -> generator run; anything else -> `other`.
@@ -14,8 +14,8 @@ Usage: tcost.py <records.jsonl> <logs-dir> <first-job-number> <session-start-utc
 - Lines: of the lemma files (E2eScal/Seg, P1, P2Dec, P2Enc), the in-sample files (P1Slot, P2DecAd, P2EncCp),
   the generated files (Gen*) and the generator (gen/scal/*.py); `code` = without blank and `--` lines and
   without `/- ... -/` blocks.
-- Agent wall-clock: session-start-utc (the INBOX 011 acknowledgement) to the end of the last counted job.
-This is template cost (S1+S2); it is reported separately from any hold-out cost. Python 3 stdlib only.
+- Agent wall-clock: session-start-utc to the end of the last counted job.
+This is template cost (segment lemmas and generator); it is reported separately from any hold-out cost. Python 3 stdlib only.
 """
 import datetime, json, pathlib, re, sys
 

@@ -3,7 +3,7 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Witnesses of `dc_e2e_marshal_once_main` (G1*: growth at any one site)
+# Witnesses of `dc_e2e_marshal_once_main` (one-growth path: growth at any one site)
 
 One instance per growth site (see each namespace): site 1, site 2 and the loop. In each case the first growth gives
 `nextSliceCap ≥ len + 36 + 8n` (`hone`: the doubling rule `nsc_dbl` below 256, one round of `growLoop` `nsc_one`
@@ -74,7 +74,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   rw [← Std.ExtHashMap.sep_assoc] at h
   exact sep_mono_left (fun m hm => ⟨0x10008, by decide, by rw [label_bump]; exact hm⟩) h
 
--- Measured (ENC logs 153–156): maxHeartbeats 1000000 fails at `whnf` (the `simp` sort of the memory premise), 4000000
+-- Measured: maxHeartbeats 1000000 fails at `whnf` (the `simp` sort of the memory premise), 4000000
 -- passes; maxRecDepth 8000 passes here except for `loop128` (8000 fails, 32000 passes; 16000 not decided).
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 8000 in
@@ -129,7 +129,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   rw [← Std.ExtHashMap.sep_assoc] at h
   exact sep_mono_left (fun m hm => ⟨0x10008, by decide, by rw [label_bump]; exact hm⟩) h
 
--- Measured (ENC logs 153–156): maxHeartbeats 1000000 fails at `whnf` (the `simp` sort of the memory premise), 4000000
+-- Measured: maxHeartbeats 1000000 fails at `whnf` (the `simp` sort of the memory premise), 4000000
 -- passes; maxRecDepth 8000 passes here except for `loop128` (8000 fails, 32000 passes; 16000 not decided).
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 8000 in
@@ -184,7 +184,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   rw [← Std.ExtHashMap.sep_assoc] at h
   exact sep_mono_left (fun m hm => ⟨0x10008, by decide, by rw [label_bump]; exact hm⟩) h
 
--- Measured (ENC logs 153–156): maxHeartbeats 1000000 fails at `whnf` (the `simp` sort of the memory premise), 4000000
+-- Measured: maxHeartbeats 1000000 fails at `whnf` (the `simp` sort of the memory premise), 4000000
 -- passes; maxRecDepth 8000 passes here except for `loop128` (8000 fails, 32000 passes; 16000 not decided).
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 8000 in
@@ -239,7 +239,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   rw [← Std.ExtHashMap.sep_assoc] at h
   exact sep_mono_left (fun m hm => ⟨0x10008, by decide, by rw [label_bump]; exact hm⟩) h
 
--- Measured (ENC logs 153–156): maxHeartbeats 1000000 fails at `whnf` (the `simp` sort of the memory premise), 4000000
+-- Measured: maxHeartbeats 1000000 fails at `whnf` (the `simp` sort of the memory premise), 4000000
 -- passes; maxRecDepth 8000 passes here except for `loop128` (8000 fails, 32000 passes; 16000 not decided).
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 32000 in

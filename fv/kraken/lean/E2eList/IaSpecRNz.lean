@@ -2,7 +2,7 @@ import E2eList.IaRejectCall
 import E2eList.IaSpec
 
 /-!
-# Spec alignment of the T3 misaligned (P4) and too-big (P5) rejects (LV T3)
+# Spec alignment of the IndexedAttestation alignment reject and overflow reject
 
 Statements: the corrected `ia_reject_misaligned_spec_nz_stmt` and `ia_reject_toobig_spec_nz_stmt` (`StmtIaNz.lean`):
 EthLib rejects (`pia_spec_rejects`: the Go check that fails is one of `iaChecks`) and the machine code returns the

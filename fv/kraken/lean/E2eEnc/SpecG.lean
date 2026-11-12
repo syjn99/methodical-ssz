@@ -3,7 +3,7 @@ import E2eEnc.Spec
 import Fk.RtCopy
 
 /-!
-# ENC grow path at site 1 against EthLib (`dc_marshal_grow_spec_stmt`)
+# Grow path at site 1 against EthLib (`dc_marshal_grow_spec_stmt`)
 
 From `dc_e2e_marshal_grow_main`: the new block starts with `pre ‖ serialize prysmDcDesc g.toValue`.
 -/

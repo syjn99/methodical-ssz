@@ -6,9 +6,9 @@ import E2e.Data
 import E2e.CpReject
 
 /-!
-# Real Prysm `(*v1alpha1.PowBlock).UnmarshalSSZ`: size reject (H6 hold-out, full-proof type)
+# Real Prysm `(*v1alpha1.PowBlock).UnmarshalSSZ`: size reject (hold-out, full-proof type)
 
-Hand-written by the H6 evaluation session: the text of `DdReject.lean` (H4) with the PowBlock indices and frame.
+Hand-written: the text of `DdReject.lean` with the PowBlock indices and frame.
 `pb_e2e_reject_size_main` (`len(buf) ≠ 96`, Go source `return ssz.ErrSize`): directives 2–7, 9–10
 `cmp $0x60,%rcx; jne L_210` taken, `L_210` (124) and the two loads of `ssz.ErrSize` (125–126; the same ELF
 symbol as the Checkpoint decoder's, asserted by `h6link.py`), epilogue 127–129. `e0`, `e1`: the global's value

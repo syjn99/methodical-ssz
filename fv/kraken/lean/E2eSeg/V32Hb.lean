@@ -3,10 +3,10 @@ import E2eHb.HbLoop2
 import E2eScal.Seg
 
 /-!
-# The HB BlockRoots loop `E2eHb.hb_loop1` re-derived from the general loop `E2eSeg.v32_loop`
+# The HistoricalBatch BlockRoots loop `E2eHb.hb_loop1` re-derived from the general loop `E2eSeg.v32_loop`
 
 The theorem below has the type of the hand lemma `hb_loop1` (`type_of%`); its proof instantiates `v32_loop`
-(n = 8192, the HB frame slots, receiver offsets 0 and 8, src = 0) and steps the exit label (directive 85).
+(n = 8192, the HistoricalBatch frame slots, receiver offsets 0 and 8, src = 0) and steps the exit label (directive 85).
 The block facts come from the real program by `infix_sub` (the templates equal the `.S` directives), the glue
 facts by reading the `nop` directives 39 and 48. This is the check that the general loop covers the hand loop.
 -/

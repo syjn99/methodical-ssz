@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""LV stream: render the `ssz` term of a Desc-checker input file (schema fvphase1c.desc/1) as Lean.
+"""Render the `ssz` term of a Desc-checker input file (schema fvphase1c.desc/1) as Lean.
 
 A new file with the method of `descterm.py` (not changed); it also renders `bitVector`, `vector` and `list`.
 Usage: lvdescterm.py <desc.json> <lean-name> > lean/E2eList/<X>SpecChecker.lean

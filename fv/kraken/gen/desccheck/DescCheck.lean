@@ -11,7 +11,7 @@ import Fv1.SpecPrysm
 import Fv1.SpecBitList
 
 /-!
-# Independent `Desc` checker (phase1c P3; closed-world design after review phase1c-r3)
+# Independent `Desc` checker (closed-world design)
 
 Inputs (environment):
 * `DESC_LIST`       the originals, one path per line
@@ -285,7 +285,7 @@ partial def scanVal (cs : Array Char) (i0 : Nat) (path : String) (errs : Array S
       failure
   else failure
 
-/-- Input bounds (R4-S2): a Desc is a few KB; the largest original is far below these. -/
+/-- Input bounds: a Desc is a few KB; the largest original is far below these. -/
 def maxFileBytes : Nat := 1048576
 def maxNesting : Nat := 64
 
@@ -499,7 +499,7 @@ def fieldContainer : Desc → Option Desc
   | _ => none
 
 /-- Bind a container term to an inventory entry, and every delegated container field (or element)
-recursively to its callee's entry (review phase1c-r4 R4-S3). Returns the mismatches. -/
+recursively to its callee's entry. Returns the mismatches. -/
 partial def invMatch (inv : List ((String × String) × InvType)) (key : String × String) (d : Desc) (fuel : Nat) : List String :=
   if fuel == 0 then [s!"{key.2}: nesting deeper than the bound"] else
   match inv.lookup key, d with
@@ -523,7 +523,7 @@ def checkFile (ctx : Ctx) (path : String) : IO FileRes := do
     | .error e => return { path, sha := "", key := none, status := "NONE", lines := [("read", false, s!"{e}")] }
   let sha := sha256Hex bytes
   let some txt := String.fromUTF8? bytes | return { path, sha, key := none, status := "NONE", lines := [("utf8", false, "not UTF-8")] }
-  -- bounds before any parsing (review phase1c-r4 R4-S2): size and bracket nesting depth
+  -- bounds before any parsing: size and bracket nesting depth
   let depth := maxDepth txt
   if bytes.size > maxFileBytes || depth > maxNesting then
     return { path, sha, key := none, status := "NONE",

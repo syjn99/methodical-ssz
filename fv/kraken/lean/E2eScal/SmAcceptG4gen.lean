@@ -4,7 +4,7 @@ import E2eScal.Gen4SmDec
 import E2eScal.H5Stmt
 
 /-!
-# `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`, accept path from the GENERATED GEN4 chains (unit G4-G, step 4)
+# `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`, accept path from the GENERATED `p2dec --gen4` chains
 
 `sm_e2e_accept_g4gen : H5.sm_accept_stmt` (the pre-committed hand statement, `H5Stmt.lean`, unchanged). Every field
 is a HAND field composition (`sm_gg_*_field`; no kind exists for a field composition, so its statement is checked
@@ -12,7 +12,7 @@ only through this accept theorem) over the GENERATED theorems of `Gen4SmDec.lean
 * Slot 15–46: generated steps 15, 16 + generated call block (`Gen.sm_g4dec_Slot_call`);
 * BlockRoot 47–81: generated segment (`Gen.sm_g4dec_BlockRoot_seg`, rY = rax) + generated tail steps 72, 73, 80, 81;
 * ValidatorIndex 82–117: generated steps 82–87 + generated call block;
-* Signature 120–155: generated segment (the SG-3 `nop` inside its window) + generated tail steps 146, 147, 154, 155.
+* Signature 120–155: generated segment (the padding `nop` inside its window) + generated tail steps 146, 147, 154, 155.
 Hand text that remains: the field compositions, the head `sm_head0` and the spills `sm_spill2` (`SmSeg.lean`; the
 generated steps 118 / 119 are not used), the epilogue 156–160 and the accept proof's glue. In-sample (development
 data); no transfer claim.
@@ -69,7 +69,7 @@ theorem sm_gg_Slot_field (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- `BlockRoot`: the WHOLE byte field 47–81 (segment, then the tail `mov 0x38(%rsp),%rsi; jmp; label; mov %rsi,0x10(%rax)`
-as four steps): worked example of the GEN4 emission recipe for a byte field. Statement = the segment statement
+as four steps): worked example of the `p2dec --gen4` emission recipe for a byte field. Statement = the segment statement
 with the end at directive 82. -/
 theorem sm_gg_BlockRoot_field (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh SmUnmarshal k) :
     ∀
@@ -132,7 +132,7 @@ theorem sm_gg_BlockRoot_field (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k)
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- `ValidatorIndex` (callee decoder field, Go offset 40, SSZ offset 40): the WHOLE call field 82–117, composed from the
-step theorems of its set-up and the call-block theorem (worked example of the GEN4 emission recipe). The entry
+step theorems of its set-up and the call-block theorem (worked example of the `p2dec --gen4` emission recipe). The entry
 conditions of the call block (rax = `rcv + 40`, rbx = `bf + 40`, rcx = 8) are closed by `rfl` on the state
 that the steps computed. -/
 theorem sm_gg_ValidatorIndex_field (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh SmUnmarshal k) :
@@ -249,7 +249,7 @@ theorem sm_gg_Signature_field (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k)
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-/-- **Accept path of the real `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ` (Go 1.26.10) from the generated GEN4
+/-- **Accept path of the real `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ` (Go 1.26.10) from the generated `p2dec --gen4`
 chains**; statement = the hand statement `sm_accept_stmt` (unchanged). -/
 theorem sm_e2e_accept_g4gen : sm_accept_stmt := by
   intro k hk hf kS hkS hfS kV hkV hfV in0 rt in1 sig hin0 hrt hin1 hsig s ra guard

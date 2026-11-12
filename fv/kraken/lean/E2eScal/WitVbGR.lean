@@ -3,10 +3,10 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Witness of the generated `vb_g5dec_reject` (unit G5-C)
+# Witness of the generated `vb_g5dec_reject`
 
 Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*v1alpha1.ValidatorBalance).UnmarshalSSZ` (index 1).
-Written by the G5-C session: the text of `WitPcR.lean` (H5) with the ValidatorBalance decoder and the generated
+The text of `WitPcR.lean` with the ValidatorBalance decoder and the generated
 size-reject theorem of `Gen5VbDec.lean`. Memory at `0x10000`: the two words of `ssz.ErrSize` after package init
 (a non-zero itab word `0x10e8` and a data word `0x2a`, stand-ins: the real values are set by the runtime's init
 and are not read from the ELF), the guard word, saved-rbp slot, return slot, the unused rax spill slot (the frame

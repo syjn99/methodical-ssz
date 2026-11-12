@@ -1,7 +1,7 @@
 import E2eScal.P2Dec
 
 /-!
-# S1 pattern P2, encode segment: `if len(f) != 32 { reject }; dst = append(dst, f...)` (fits case)
+# 32-byte field pattern, encode segment: `if len(f) != 32 { reject }; dst = append(dst, f...)` (fits case)
 
 Go 1.26.10 compiles the 32-byte field encode of a protoc container (`Checkpoint.Root`) to two
 code blocks (the growslice block between them is not taken when the field fits):
@@ -24,7 +24,7 @@ open Fk
 
 namespace E2eScal
 
-/-- First block of the P2 encode segment (length test, capacity test). -/
+/-- First block of the 32-byte field encode segment (length test, capacity test). -/
 def rootEncHead (lrej lcf : String) (fP fL : Int64) : Program :=
   [Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
      (Operation.mov (RegOrMem.reg (Reg.low Reg64.r8 Width.W64))
@@ -40,7 +40,7 @@ def rootEncHead (lrej lcf : String) (fP fL : Int64) : Program :=
        (Operand.regOrMem (RegOrMem.reg (Reg.low Reg64.r9 Width.W64))))),
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64 (Operation.jcc CondCode.nc lcf))]
 
-/-- Second block of the P2 encode segment (from `lcf:` to the `memmove` call). -/
+/-- Second block of the 32-byte field encode segment (from `lcf:` to the `memmove` call). -/
 def rootEncTail (lcf : String) (dCap dLen dPtr : Int64) : Program :=
   [Kraken.Directive.label lcf,
    Kraken.Directive.instr (Instr.regular Width.W64 Width.W64
@@ -69,7 +69,7 @@ theorem penc_mul (x y : BitVec 64) : x + y * 1#64 = x + y := by rw [BitVec.mul_o
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-/-- **P2 encode segment lemma** (the field fits: `off + 32 ≤ cap`): `len(f) = 32` is read, the
+/-- **32-byte field encode segment lemma** (the field fits: `off + 32 ≤ cap`): `len(f) = 32` is read, the
 capacity, new length and base are spilled, and `memmove` copies the 32 bytes at the field
 pointer `p` to `dstp + off`. Ends at the return of `memmove`. -/
 theorem rootenc_seg (lrej lcf : String) (fP fL dCap dLen dPtr : Int64) (j1 j2 : Nat)

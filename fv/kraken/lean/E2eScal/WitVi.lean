@@ -14,7 +14,7 @@ return slot (rsp = 0x10020, return address 0), the unused spill slot rsp + 8
 8-byte input this state meets every premise (`vi_wit_mem`), and the function
 returns nil with the receiver = the input (`vi_accept_runs`); three values
 below (0, a representative value, 2^64 − 1).
-Hand-written by the evaluation session (not generator output): the text of `E2eAd/WitCi.lean` with the
+Hand-written (not generator output): the text of `E2eAd/WitCi.lean` with the
 names replaced (`sed`); the machine theorem used is the generated `vi_unmarshal_accept_main_g`.
 -/
 
@@ -82,7 +82,7 @@ theorem vi_accept_runs (e8 old : List UInt8) (he8 : e8.length = 8) (hold : old.l
       exact sep_true (P := Eq (e8.At (0x10010 : BitVec 64))) (by ecancel)⟩)
 
 /-- The specification `ViUAccC` holds on this host (from the machine code). This is a spec instance, not premise
-satisfiability; the non-vacuity witness is the run theorem above (audit AU-12). -/
+satisfiability; the non-vacuity witness is the run theorem above. -/
 theorem vi_spec_here : ViUAccC := vi_uacc_holds 0 hk0 hf0
 
 /-- value 0, a representative value (0x0123456789abcdef), and 2^64 − 1. -/

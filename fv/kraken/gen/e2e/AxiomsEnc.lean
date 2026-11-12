@@ -7,7 +7,7 @@ import E2eEnc.WitF
 import E2eEnc.WitG
 import E2eEnc.WitR
 
-/-! ENC hand list for `gen/e2e/encaxioms_gate.py` ("must exist" names; every name also gets the axiom check). -/
+/-! Hand list for `gen/e2e/encaxioms_gate.py` ("must exist" names; every name also gets the axiom check). -/
 
 #print axioms E2eEnc.dc_e2e_marshal_fast_main
 #print axioms E2eEnc.dc_e2e_marshal_grow_main

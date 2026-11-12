@@ -4,9 +4,9 @@ import E2eScal.BiDesc
 import E2eScal.BiSpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.BlobIdentifier` (H3 hold-out)
+# Spec bridge for the real Prysm `v1alpha1.BlobIdentifier` (hold-out)
 
-Hand-written by the H3 evaluation session (the text of `E1Spec.lean`; `obtain … rfl` on `bs = enc g` is `rw` here:
+Hand-written (the text of `E1Spec.lean`; `obtain … rfl` on `bs = enc g` is `rw` here:
 `subst` of that equation timed out in `whnf` (job 18, minimal reproduction); with the BlobIdentifier fields).
 `prysmBiDesc` (`BiDesc.lean`) is the independent hand `Desc` from consensus-specs deneb; it was committed
 before `biCheckerDesc` was rendered and printed.

@@ -2,7 +2,7 @@ import E2e.WitCpA
 import E2e.CpSpecK
 
 /-!
-# Review e2e-r1 S6: witness of `cp_e2e_accept_spec_k` on a concrete input array
+# Witness of `cp_e2e_accept_spec_k` on a concrete input array
 
 Same Host and memory as `E2e.WitCpA` (decoder, Epoch callee, bump makeslice,
 RtCopy). The input array is `pcpEnc g0` (the consensus-specs encoding of `g0`),

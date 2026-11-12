@@ -2,7 +2,7 @@ import E2eScal.P2Enc
 import E2e.Code
 
 /-!
-# Code placement of the P2 encode template in the Checkpoint encoder (negative-test target)
+# Code placement of the 32-byte field encode template in the Checkpoint encoder (negative-test target)
 
 `cp_enc_tmpl_at` is the template check that `cp_e2e_marshal_main_s` (`P2EncCp.lean`) does inside its
 proof: the two blocks of `rootEncHead` / `rootEncTail` with the Checkpoint parameters are directives

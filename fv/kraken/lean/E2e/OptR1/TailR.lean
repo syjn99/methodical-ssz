@@ -10,7 +10,7 @@ namespace E2e.OptR1
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- Tail from `L_e5`, `len(Root) ≠ 32`, `L + 8 ≤ C`: `(nil, ssz.ErrBytesLength)`; the epoch bytes are in
-`b[L..L+8]` (C-1 form for the current block). -/
+`b[L..L+8]` (written before the root length test, in the current block). -/
 theorem tail_rej (k : Nat) (hk : CpMarshalO.IsInfixAt Host.prog k) (hf : LabelsFresh CpMarshalO k)
     (rsp0 r140 rbp0 ra L C e0 e1 rl : UInt64) (hrl : rl ≠ 32) (rcv b p : BitVec 64)
     (e8 pre d0 t40 t30 : List UInt8) (he8 : e8.length = 8) (hd0 : d0.length = 8) (ht40 : t40.length = 16)

@@ -1,9 +1,9 @@
 import E2eAd.AdSrc
 
 /-!
-# `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, segment 4 (A3)
+# `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, segment 4
 
-    a.Target = new(Checkpoint)                      // always (N-3): the old pointer is overwritten
+    a.Target = new(Checkpoint)                      // always: the old pointer is overwritten
     if err = a.Target.UnmarshalSSZ(buf[88:128]); err != nil { return fmt.Errorf("Target: %w", err) }
     return err
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""prysm-e2e E6 Go differential check (Python 3 standard library only).
+"""Go differential check (Python 3 standard library only).
 
   differential.py cases <cases.json>                write the cases
   differential.py check <cases.json> <go-out.json> <result.json>
@@ -38,7 +38,7 @@ def cases():
     for n in (0, 31, 33):
         cs.append({"id": f"enc-rootlen{n}", "op": "marshal", "epoch": 7, "root": (b"\x22" * n).hex(), "prefix": "", "spare": 48,
                    "exp": {"ok": False, "ErrBytesLength": True, "not_ErrSize": True, "out_nil": True,
-                           # C-1: the 8 epoch bytes are already in the caller's spare capacity
+                           # the encoder writes the epoch before it tests the root length: the 8 epoch bytes are already in the caller's spare capacity
                            "backing": (struct.pack("<Q", 7) + bytes(40)).hex()}})
     cs.append({"id": "enc-grow-cap0", "op": "marshal", "epoch": 5, "root": bytes(range(32)).hex(), "prefix": "", "spare": 0,
                "exp": {"ok": True, "out": enc(5, bytes(range(32))).hex(), "path": "growslice"}})
@@ -47,7 +47,7 @@ def cases():
     cs.append({"id": "enc-grow-len30-cap36", "op": "marshal", "epoch": 0x0123456789ABCDEF, "root": (b"\xff" * 32).hex(),
                "prefix": pre30.hex(), "spare": 6,
                "exp": {"ok": True, "out": (pre30 + enc(0x0123456789ABCDEF, b"\xff" * 32)).hex(), "path": "growslice"}})
-    # INBOX 009: every capacity range of the encoder (prefix 30 bytes, cap = 30 + spare) and the reject after growth
+    # every capacity range of the encoder (prefix 30 bytes, cap = 30 + spare) and the reject after growth
     rp = bytes(range(32))
     for sp, path in ((0, "cap = len: growslice, then (real Go: 64 < 70) a second growslice"),
                      (3, "cap < len + 8: growslice, then a second growslice"),

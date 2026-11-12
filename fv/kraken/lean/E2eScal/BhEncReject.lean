@@ -17,7 +17,7 @@ and `L_2a4` (156; body 157–164). Each tail is one instance of the reject block
 * `bh_e2e_marshal_reject{1,2,3}_main`: the function from its entry, by composition with the unchanged
   fast-path segments `bh_enc_a1`, `bh_enc_a2`, `bh_enc_b`, `bh_enc_c`. The code writes Slot and
   ProposerIndex (and the earlier roots) to `dst[len:]` before it finds the bad length; the conclusions
-  state these bytes (the behaviour of FINDINGS C-1 for this type). The returned slice is nil.
+  state these bytes (the encoder writes the earlier fields into the caller's spare capacity before it tests a root length). The returned slice is nil.
 
 Limits. No `runtime.growslice` branch: the premise is `len(dst) + 112 ≤ cap(dst)`, which is what the reused
 segments `bh_enc_a1` / `bh_enc_a2` state; the code needs less on these paths (16, 48 and 80 bytes). A reject
@@ -271,13 +271,13 @@ theorem bh_e2e_marshal_reject1_main (k : Nat) (hk : BhMarshal.IsInfixAt Host.pro
           ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At (label "ssz.ErrBytesLength").toBitVec)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrBytesLength" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
-  -- A1: 0–35
+  -- Slot segment, directives 0–35
   refine eventually_trans _ _ _ _ (bh_enc_a1 k hk hf sl d0 hsl hd0 s guard fp s1 s2 t1a t1b hfp h1 h2 ht1a ht1b _
     (by ecancel) hguard hsp hcap hcap63) ?_
   rintro ⟨x1, pc1⟩ ⟨hpc1, hrax1, hrbx1, hrcx1, hrdx1, hrdi1, hrsp1, hrbp1, hr141, t1, u1, ht1, hu1, Hm1⟩
   dsimp only at hpc1 hrax1 hrbx1 hrcx1 hrdx1 hrdi1 hrsp1 hrbp1 hr141 Hm1
   subst hpc1
-  -- A2: 36–61
+  -- ProposerIndex segment, directives 36–61
   refine eventually_trans _ _ _ _ (bh_enc_a2 k hk hf pi d1 hpi hd1 x1 s.regs.rsp t2a t2b ht2a ht2b _
     hrsp1 (by rw [hrdx1, hrcx1]) (by rw [hrax1, hrbx1, hrcx1]; ecancel)
     (by rw [hrcx1, hrdi1]; exact hcap) (by rw [hrdi1]; exact hcap63)) ?_
@@ -373,13 +373,13 @@ theorem bh_e2e_marshal_reject2_main (k : Nat) (hk : BhMarshal.IsInfixAt Host.pro
   obtain ⟨hcB, hcC, hcD⟩ := bhm_cap s.regs.rcx.toBitVec s.regs.rdi.toBitVec hcap hcap63
   have hc63 : s.regs.rdi.toBitVec.toNat < 2 ^ 63 := hcap63
   rw [bhm_o16 s.regs.rbx.toBitVec s.regs.rcx.toBitVec] at h_mem
-  -- A1: 0–35
+  -- Slot segment, directives 0–35
   refine eventually_trans _ _ _ _ (bh_enc_a1 k hk hf sl d0 hsl hd0 s guard fp s1 s2 t1a t1b hfp h1 h2 ht1a ht1b _
     (by ecancel) hguard hsp hcap hcap63) ?_
   rintro ⟨x1, pc1⟩ ⟨hpc1, hrax1, hrbx1, hrcx1, hrdx1, hrdi1, hrsp1, hrbp1, hr141, t1, u1, ht1, hu1, Hm1⟩
   dsimp only at hpc1 hrax1 hrbx1 hrcx1 hrdx1 hrdi1 hrsp1 hrbp1 hr141 Hm1
   subst hpc1
-  -- A2: 36–61
+  -- ProposerIndex segment, directives 36–61
   refine eventually_trans _ _ _ _ (bh_enc_a2 k hk hf pi d1 hpi hd1 x1 s.regs.rsp t2a t2b ht2a ht2b _
     hrsp1 (by rw [hrdx1, hrcx1]) (by rw [hrax1, hrbx1, hrcx1]; ecancel)
     (by rw [hrcx1, hrdi1]; exact hcap) (by rw [hrdi1]; exact hcap63)) ?_
@@ -389,7 +389,7 @@ theorem bh_e2e_marshal_reject2_main (k : Nat) (hk : BhMarshal.IsInfixAt Host.pro
   rw [hrax1, hrbx1, hrcx1] at Hm2
   have hr8' : x2.regs.r8 = { toBitVec := s.regs.rcx.toBitVec + 8 + 8 } := by
     apply UInt64.toBitVec_inj.mp; rw [hr82, hrcx1]
-  -- B: 62–89, memmove
+  -- ParentRoot segment, directives 62–89, memmove
   refine eventually_trans _ _ _ _ (bh_enc_b k hk hf r1 d2 hr1 hd2 x2 s.regs.rsp s.regs.rax.toBitVec
     s.regs.rbx.toBitVec (s.regs.rcx.toBitVec + 8 + 8) s.regs.rdi.toBitVec p1 l16 l96 l104 rslot scratch
     hl16 hl96 hl104 hrs S hsc _ (hrsp2.trans hrsp1) (hrax2.trans hrax1) (hrbx2.trans hrbx1) hr8'
@@ -495,13 +495,13 @@ theorem bh_e2e_marshal_reject3_main (k : Nat) (hk : BhMarshal.IsInfixAt Host.pro
   obtain ⟨hcB, hcC, hcD⟩ := bhm_cap s.regs.rcx.toBitVec s.regs.rdi.toBitVec hcap hcap63
   have hc63 : s.regs.rdi.toBitVec.toNat < 2 ^ 63 := hcap63
   rw [bhm_o16 s.regs.rbx.toBitVec s.regs.rcx.toBitVec, bhm_o48 s.regs.rbx.toBitVec s.regs.rcx.toBitVec] at h_mem
-  -- A1: 0–35
+  -- Slot segment, directives 0–35
   refine eventually_trans _ _ _ _ (bh_enc_a1 k hk hf sl d0 hsl hd0 s guard fp s1 s2 t1a t1b hfp h1 h2 ht1a ht1b _
     (by ecancel) hguard hsp hcap hcap63) ?_
   rintro ⟨x1, pc1⟩ ⟨hpc1, hrax1, hrbx1, hrcx1, hrdx1, hrdi1, hrsp1, hrbp1, hr141, t1, u1, ht1, hu1, Hm1⟩
   dsimp only at hpc1 hrax1 hrbx1 hrcx1 hrdx1 hrdi1 hrsp1 hrbp1 hr141 Hm1
   subst hpc1
-  -- A2: 36–61
+  -- ProposerIndex segment, directives 36–61
   refine eventually_trans _ _ _ _ (bh_enc_a2 k hk hf pi d1 hpi hd1 x1 s.regs.rsp t2a t2b ht2a ht2b _
     hrsp1 (by rw [hrdx1, hrcx1]) (by rw [hrax1, hrbx1, hrcx1]; ecancel)
     (by rw [hrcx1, hrdi1]; exact hcap) (by rw [hrdi1]; exact hcap63)) ?_
@@ -511,7 +511,7 @@ theorem bh_e2e_marshal_reject3_main (k : Nat) (hk : BhMarshal.IsInfixAt Host.pro
   rw [hrax1, hrbx1, hrcx1] at Hm2
   have hr8' : x2.regs.r8 = { toBitVec := s.regs.rcx.toBitVec + 8 + 8 } := by
     apply UInt64.toBitVec_inj.mp; rw [hr82, hrcx1]
-  -- B: 62–89, memmove
+  -- ParentRoot segment, directives 62–89, memmove
   refine eventually_trans _ _ _ _ (bh_enc_b k hk hf r1 d2 hr1 hd2 x2 s.regs.rsp s.regs.rax.toBitVec
     s.regs.rbx.toBitVec (s.regs.rcx.toBitVec + 8 + 8) s.regs.rdi.toBitVec p1 l16 l96 l104 rslot scratch
     hl16 hl96 hl104 hrs S hsc _ (hrsp2.trans hrsp1) (hrax2.trans hrax1) (hrbx2.trans hrbx1) hr8'
@@ -519,7 +519,7 @@ theorem bh_e2e_marshal_reject3_main (k : Nat) (hk : BhMarshal.IsInfixAt Host.pro
   rintro ⟨x3, pc3⟩ ⟨hpc3, hrsp3, hrbp3, hr143, scr1, hscr1, Hm3⟩
   dsimp only at hpc3 hrsp3 hrbp3 hr143 Hm3
   subst hpc3
-  -- C: 90–117, memmove
+  -- StateRoot segment, directives 90–117, memmove
   refine eventually_trans _ _ _ _ (bh_enc_c k hk hf r2 d3 hr2 hd3 x3 s.regs.rsp s.regs.rax.toBitVec
     s.regs.rbx.toBitVec (s.regs.rcx.toBitVec + 8 + 8 + 32) s.regs.rdi.toBitVec p2
     (Int.toBytes 8 (Host.addrOf (k + 90)).toBitVec.toInt) scr1 (Int.toBytes_length 8 _) S hscr1 _

@@ -2,7 +2,7 @@ import E2e.EpReject
 import E2eScal.BhCode
 
 /-!
-# `(*primitives.ValidatorIndex).UnmarshalSSZ`, reject `len(buf) ≠ 8` (Go 1.26.10 machine code; session 10)
+# `(*primitives.ValidatorIndex).UnmarshalSSZ`, reject `len(buf) ≠ 8` (Go 1.26.10 machine code)
 
     return fmt.Errorf("expected buffer of length %d received %d", v.SizeSSZ(), len(buf))
 

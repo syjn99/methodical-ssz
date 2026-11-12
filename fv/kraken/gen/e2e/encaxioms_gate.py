@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""ENC stream: the prysm-e2e axioms gate (`axioms_gate.py`, not changed) over E2e, E2eAd, E2eScal, E2eList AND
+"""The axioms gate (`axioms_gate.py`, not changed) over E2e, E2eAd, E2eScal, E2eList AND
 E2eEnc.
 
 Usage (one gated job, Lean env; the cwd does not matter):
   encaxioms_gate.py run <out.json> <dump.tsv> [--extra-lean-path DIR --extra-module M]...
   encaxioms_gate.py check <dump.tsv> <out.json>
 It imports `lvaxioms_gate.py` (which widens ROOTS with "E2eList" and LISTS with `AxiomsLv.lean`) and widens the
-same two constants again: ROOTS gets "E2eEnc", LISTS gets `gen/e2e/AxiomsEnc.lean` (hand list of the ENC theorems).
+same two constants again: ROOTS gets "E2eEnc", LISTS gets `gen/e2e/AxiomsEnc.lean` (hand list of the DataColumnsByRootIdentifier encoder theorems).
 Every other line of the gate is the existing code. Python 3 stdlib only.
 """
 import pathlib

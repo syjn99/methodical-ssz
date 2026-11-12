@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""LV stream: the prysm-e2e axioms gate (`axioms_gate.py`, not changed) over E2e, E2eAd, E2eScal AND E2eList.
+"""The axioms gate (`axioms_gate.py`, not changed) over E2e, E2eAd, E2eScal AND E2eList.
 
 Usage (one gated job, Lean env; the cwd does not matter):
   lvaxioms_gate.py run <out.json> <dump.tsv> [--extra-lean-path DIR --extra-module M]...
@@ -7,7 +7,7 @@ Usage (one gated job, Lean env; the cwd does not matter):
   lvaxioms_gate.py --selftest
 It imports `axioms_gate.py` and only widens two module constants before the call: ROOTS gets "E2eList" (module
 list, precheck `lake build --no-build`, `decl_dump.lean --root`) and LISTS gets `gen/e2e/AxiomsLv.lean` (hand list of
-the LV main theorems). Every other line of the gate is the existing code. Python 3 stdlib only.
+the list/vector main theorems). Every other line of the gate is the existing code. Python 3 stdlib only.
 """
 import pathlib
 import sys

@@ -10,7 +10,7 @@ import E2eList.ScDescEq
 import E2eList.BumpT
 import E2eList.WitScA
 
-/-! LV hand list for `gen/e2e/lvaxioms_gate.py` ("must exist" names; every name also gets the axiom check). -/
+/-! Hand list for `gen/e2e/lvaxioms_gate.py` ("must exist" names; every name also gets the axiom check). -/
 
 #print axioms E2eList.sa_e2e_reject_size_main
 #print axioms E2eList.sa_e2e_accept_main

@@ -139,7 +139,7 @@ theorem rejo_runs_nil (e8 : List UInt8) (he8 : e8.length = 8) (rl : UInt64) (hrl
   rintro st ⟨f1, f2, f3, f4, f5, f6, -⟩
   exact ⟨f1, f2, f3, f4, f5, f6⟩
 
-/-- spare ∈ {0, 7, 8, 39} (grow path: the new allocation of item 6 for 8 ≤ spare < 40), {40, 41} (fast path);
+/-- spare ∈ {0, 7, 8, 39} (grow path: on an invalid Root with 8 ≤ spare < 40 the new code allocates one block), {40, 41} (fast path);
 nil dst; rl = 31, 0, 33. -/
 example (z' : RegZmms) (f : StatusFlags) := rejo_runs (Int.toBytes 8 7) rfl 31 (by decide) 0 (by decide) z' f
 example (z' : RegZmms) (f : StatusFlags) := rejo_runs (Int.toBytes 8 7) rfl 0 (by decide) 7 (by decide) z' f

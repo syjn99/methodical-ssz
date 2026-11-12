@@ -4,7 +4,7 @@ import E2eScal.E1Code
 import E2eScal.H3Code
 
 /-!
-# GEN2: hand-written example instances of the L1 / L2 lemmas on the development sites
+# Hand-written example instances of the `p2dec --gen2` lemmas on the development sites
 
 One theorem and one `_kind` line per site, in the shape a generated theorem is to have (the text of
 `GenE1Dec.lean` with the new lemma, template and kind names). Hand-written examples for the generator unit;

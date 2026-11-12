@@ -2,11 +2,11 @@ import E2eList.ScSpec
 import E2eHb.Defs
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.HistoricalBatch` (HB)
+# Spec bridge for the real Prysm `v1alpha1.HistoricalBatch`
 
-The order of `E2eList.ScSpec` (T2). Imported from T2 as is: `assemble_inline_ok` (any list of inline parts),
+The order of `E2eList.ScSpec`. Imported from it as is: `assemble_inline_ok` (any list of inline parts),
 `headWidth_inline`, `bodyWidth_inline`, and EthLib's `concatParts_size`, `concat_fixed_slices`, `deserialize_enc`,
-`accepted_is_enc` (through `Fv1`). New here: the T2 lemmas whose statements fix 48-byte elements (`toV48`,
+`accepted_is_enc` (through `Fv1`). New here: the SyncCommittee lemmas whose statements fix 48-byte elements (`toV48`,
 `allFit_bv48`, `allFit_map_bv48`, `serializeEach_bv48`, `concatParts_v48`) with 32, a vector lemma stated once and
 used for both fields (`v32_serialize`, `v32_of_bytes`), and the container lemmas for two vector fields.
 -/

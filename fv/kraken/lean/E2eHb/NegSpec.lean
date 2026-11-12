@@ -1,7 +1,7 @@
 import E2eHb.HbSpecK
 
 /-!
-# Negative-suite targets for the spec companions of the E2eHb decoder (review r5 S6)
+# Negative-suite targets for the spec companions of the E2eHb decoder
 
 `spec_prop` and `complete_prop` are copies of the frozen `hb_reject_size_spec_stmt` and `hb_reject_complete_stmt`
 (equal by `rfl`, the `example`s at the end). `spec_chk` and `complete_chk` prove them again from the spec lemmas with

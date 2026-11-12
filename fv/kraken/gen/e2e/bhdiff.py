@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""S3 hold-out H1 Go differential (Python 3 standard library only).
+"""Go differential of the BeaconBlockHeader hold-out (BeaconBlockHeader, ValidatorIndex) (Python 3 standard library only).
 
   bhdiff.py cases <cases.json>                      write the cases
   bhdiff.py check <cases.json> <go-out.json> <result.json>

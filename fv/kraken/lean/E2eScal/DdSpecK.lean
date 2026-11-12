@@ -3,9 +3,9 @@ import E2eScal.DdReject
 import E2eScal.DdSpec
 
 /-!
-# Spec alignment of the real Deposit_Data decoder (H4 hold-out, type A)
+# Spec alignment of the real Deposit_Data decoder (hold-out, type A)
 
-Hand-written by the H4 evaluation session: the text of `DmSpecK.lean` with the Deposit_Data statement
+Hand-written: the text of `DmSpecK.lean` with the Deposit_Data statement
 (receiver `state` word `ast` and the fourth field Signature).
 - `dd_e2e_accept_spec_k`: if EthLib accepts `bsA` (`prysmDdDesc`) as `v`, there is `g : PDd` with `g.toValue = v`
   and `bsA = pddEnc g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.

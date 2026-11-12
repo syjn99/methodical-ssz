@@ -12,7 +12,7 @@ Frozen at their commit. The hand `Desc` below is written from consensus-specs ph
         proof: Vector[Bytes32, DEPOSIT_CONTRACT_TREE_DEPTH + 1]   # 33
         data: DepositData
 
-`DepositData` is the H4 hand `Desc` `E2e.prysmDdDesc` (imported). `PDep` is the SSZ content of a Go
+`DepositData` is the hand `Desc` `E2e.prysmDdDesc` (imported). `PDep` is the SSZ content of a Go
 `v1alpha1.Deposit` whose byte fields have the spec lengths; `depEnc` is its 1240-byte SSZ encoding.
 Shapes: `E2eHb.hb_accept_spec_stmt`, `hb_reject_size_spec_stmt`, `hb_reject_complete_stmt`.
 -/

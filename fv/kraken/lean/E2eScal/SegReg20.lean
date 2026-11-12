@@ -2,7 +2,7 @@ import E2eScal.SegRegZ
 import E2eScal.KindSegReg
 
 /-!
-# GEN7 K1: the fixed-bytes decode segment over windows for a 20-byte vector (new module)
+# The fixed-bytes decode segment over windows for a 20-byte vector (new module)
 
 `f = append(make([]byte, 0, 20), buf[src:src+20]...)` (Ethereum execution addresses: SourceAddress,
 ToExecutionAddress, FeeRecipient, …). The code shape is that of the 32 / 48 / 96-byte fields with the size

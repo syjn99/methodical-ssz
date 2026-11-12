@@ -4,7 +4,7 @@ import E2eScal.KindZ
 import E2eScal.DmSeg0
 
 /-!
-# GEN2 L1: the existing 32-byte / 48-byte lemmas and kinds are instances of the size-parametric ones
+# The existing 32-byte / 48-byte lemmas and kinds are instances of the size-parametric ones
 
 Every theorem here is a definitional identity (`rfl`); none is a stated equivalence. The existing files
 (`P2Dec.lean`, `P2DecZ.lean`, `DmSeg0.lean`, `Kind.lean`, `KindZ.lean`) are unchanged and their lemmas are not

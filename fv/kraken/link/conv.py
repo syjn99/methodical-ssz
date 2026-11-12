@@ -96,11 +96,11 @@ RIP = re.compile(r"(-?0x[0-9a-f]+|-?\d+)\(%rip\)")
 NORM = {"nopl (%rax)": "nop", "data16 nop": "nop", "nopw 0x0(%rax,%rax,1)": "nop",
         "nopw (%rax,%rax,1)": "nop", "nopl 0x0(%rax)": "nop", "nopl 0x0(%rax,%rax,1)": "nop", "nopl (%rax,%rax,1)": "nop",
         "nopw %cs:0x0(%rax,%rax,1)": "nop", "data16 nopw %cs:0x0(%rax,%rax,1)": "nop", "xchg %ax,%ax": "nop"}
-# `%riz` (phase1c, Go 1.26.10): GNU objdump prints a SIB byte without an index register as index
+# `%riz` (Go 1.26.10): GNU objdump prints a SIB byte without an index register as index
 # `%riz` (for example `0x10(%r12,%riz,1)`: base r12 needs a SIB byte). The index is zero, so the
 # address is `0x10(%r12)`. Kraken's parser has no `riz` register. Same address, same bytes (check.py (d)).
 RIZ = re.compile(r",%riz,1\)")
-# LV-1 (LV stream, user-approved fix): `go tool objdump -gnu` prints a negative 32-bit memory displacement as an
+# User-approved fix: `go tool objdump -gnu` prints a negative 32-bit memory displacement as an
 # unsigned 8-digit hex number (`lea 0xffffff1c(%rdi),%rdx` for -228). x86-64 sign-extends disp32, but Kraken's parser
 # reads the token as +4294967068 and clang rejects it. Under --norm such a displacement (exactly 8 hex digits, top bit
 # set, directly followed by `(%`, not an immediate `$0x...`, not `%rip`) is written in its signed form `-0xe4(%rdi)`.

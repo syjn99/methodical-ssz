@@ -1,4 +1,4 @@
-"""FLAT24: write prysm/go1.26.10/e2e/f24/negcases-f24.json (cases for gen/e2e/negative.py).
+"""Write prysm/go1.26.10/e2e/f24/negcases-f24.json (cases for gen/e2e/negative.py).
 Per decoder type: spec_k control; mutants of the generated accept theorem (post rax), the generated size-reject
 theorem (post rax), spec_k (hlen + 1), the accept witness (post rax). Per encoder type: spec control; mutants of the
 generated fast-path theorem (post rax), the spec corollary (hcap weakened by 8), the witness (post rax)."""

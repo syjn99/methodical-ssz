@@ -1,7 +1,7 @@
 import E2e.CpWGrow
 
 /-!
-# `(*v1alpha1.Checkpoint).MarshalSSZTo`: first growth in every case, and the reject after the first growth (INBOX 009)
+# `(*v1alpha1.Checkpoint).MarshalSSZTo`: first growth in every case, and the reject after the first growth
 
 See `E2e/CpWGrow.lean` for the case map. `cp_e2e_marshal_grow_any_main` has no premise on
 `nextSliceCap`: the code branches on the capacity that `growslice` returned, and the conclusion is the
@@ -11,7 +11,7 @@ exact disjunction of the two branches. Left: the block from the first growth hol
 block `pre ++ epoch ++ mid`, `rbx = len + 40`, `rcx = C1 < len + 40`, `rdi = 32`). **The run after that
 call is not proved**: `GrowsliceC`'s result gives only `avail' + newCap ≤ avail` for the remaining heap
 (an upper bound), so the budget premise of a second `GrowsliceC` application cannot be derived; the
-existing contract form does not chain two growslice calls (FINDINGS T-7). `cpw_tail_grow` proves the
+existing contract form does not chain two growslice calls. `cpw_tail_grow` proves the
 second call and the rest when the caller supplies its budget (first append fitted:
 `cp_e2e_marshal_grow2_main`).
 -/

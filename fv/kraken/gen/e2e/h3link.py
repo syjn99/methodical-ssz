@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """H3 hold-out: call graph and link tables of the real v1alpha1.BlobIdentifier and v1alpha1.DepositMessage
-UnmarshalSSZ on the Go 1.26.10 ELF (the same ELF as prysm-e2e; written by the H3 evaluation session after the
+UnmarshalSSZ on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/e2e/link; written after the
 H3 section of `scal/HOLDOUT-OPENED`; the text of `e1link.py` with the function set and the data items changed).
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):

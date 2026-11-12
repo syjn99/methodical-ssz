@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
-"""LV stream: call graph and link tables of the real v1alpha1.SyncAggregate, v1alpha1.SyncCommittee and
-v1alpha1.IndexedAttestation UnmarshalSSZ on the Go 1.26.10 ELF (the same ELF as prysm-e2e, sha256 c6403c02...911e).
+"""Call graph and link tables of the real v1alpha1.SyncAggregate, v1alpha1.SyncCommittee and
+v1alpha1.IndexedAttestation UnmarshalSSZ on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/e2e/link, sha256 c6403c02...911e).
 A new file with the text of `h4link.py`: the function set and the data items changed. Existing scripts
 (`e2elink.py`, `adlink.py`, `h4link.py`, `link/conv.py`, `link/data.py`, `link/check.py`) are not changed.
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   lvlink.py callgraph <objdump> <out.json>          call targets with contract class
   lvlink.py filter <outdir> <objdump> <elf> <nm> [--t3]
-                                                    <outdir>/target.objdump of T1, T2 (with --t3: and T3)
+                                                    <outdir>/target.objdump of SyncAggregate, SyncCommittee (with --t3: and IndexedAttestation)
                                                     (+ ELF/nm links)
   lvlink.py data <outdir> <cp-linkdir> <ad-linkdir> [--t3]
                                                     after `conv.py <outdir>/target.objdump
                                                     <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
-Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/e2e/lv/link (T1, T2 only).
-T3 is linked only with --t3: its .S has `lea 0xffffff1c(%rdi),%rdx` (GNU objdump spelling of the
-displacement -228), which the Apple clang 21 of the LV host rejects in check (d) (ATTEMPTS.md).
-Encoders, SizeSSZ and HashTreeRoot are not in the set (out of LV scope, SELECTION.md section 4).
+Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/e2e/lv/link (SyncAggregate, SyncCommittee only).
+IndexedAttestation is linked only with --t3: its .S has `lea 0xffffff1c(%rdi),%rdx` (GNU objdump spelling of the
+displacement -228), which Apple clang 21 rejects in check (d) (ATTEMPTS.md).
+Encoders, SizeSSZ and HashTreeRoot are not in the set (out of the list/vector scope, SELECTION.md section 4).
 
 Every data item is located from the converted code (the operand that the proofs read), not written by hand.
 Operands that equal an item of the Checkpoint / Epoch link set (`e2elink.py`) are asserted equal and get no
@@ -143,13 +143,13 @@ def items(outdir, cpdir, addir, t3=False):
         assert not any(l in [f"callq {n}" for n in names] for l in lines), names
 
     its = []
-    # SyncAggregate (T1)
+    # SyncAggregate
     assert mk_types(sa) == [u8, u8], mk_types(sa)
     assert sum(l == "callq runtime.memmove" for l in sa) == 2
     no_calls(sa, ["fmt.errorf", "runtime.newobject", "runtime.growslice", "runtime.panicBounds"])
     assert e2elink.operand(sa, r"mov ([A-Za-z0-9_.]+)\(%rip\),%rax()") == esz
     assert e2elink.operand(sa, wb) == e2elink.operand(au, wb)
-    # SyncCommittee (T2): the first makeslice has its own type word ([]byte element of [][]byte)
+    # SyncCommittee: the first makeslice has its own type word ([]byte element of [][]byte)
     st = mk_types(sc)
     assert len(st) == 3 and st[0] != u8 and st[1:] == [u8, u8], st
     assert sum(l == "callq runtime.memmove" for l in sc) == 2
@@ -160,7 +160,7 @@ def items(outdir, cpdir, addir, t3=False):
     its.append(("lvSliceType", st[0][0], st[0][1], 48, data.ABI_TYPE_WORDS))
     if not t3:
         return data, its
-    # IndexedAttestation (T3)
+    # IndexedAttestation
     ia = e2elink.ins(outdir, f"{V}.IndexedAttestation.UnmarshalSSZ")
     it = mk_types(ia)
     assert len(it) == 2 and it[0] != u8 and it[1] == u8, it

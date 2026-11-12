@@ -4,7 +4,7 @@ import Fk.WHost
 import E2e.WitSplit
 
 /-!
-# Witness of `cp_e2e_marshal_cover` (INBOX 009): every capacity range on one host
+# Witness of `cp_e2e_marshal_cover`: every capacity range on one host
 
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.Checkpoint).MarshalSSZTo` (index 8) and `RtCopy`
 (index 99: `rt_growslice` — new capacity `2·newLen + 192` from the bump heap — and `rt_memmove`,

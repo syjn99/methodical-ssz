@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-"""HB stream: line-level reuse of the T2 (SyncCommittee) proof files in the HB (HistoricalBatch) files.
+"""Line-level reuse of the SyncCommittee proof files in the HistoricalBatch files.
 
 Usage: python3 -I -B gen/e2e/hbreuse.py            (cwd = fv/kraken; Python 3 stdlib only; prints a Markdown table)
 
-For each HB file and its T2 source file(s), every non-blank HB line is put in one class:
-  verbatim    the stripped line occurs in the T2 source(s) as is;
-  mechanical  not verbatim, but equal to a T2 line after the normalization below (renames and numerals);
+For each HistoricalBatch file and its SyncCommittee source file(s), every non-blank HistoricalBatch line is put in one class:
+  verbatim    the stripped line occurs in the SyncCommittee source(s) as is;
+  mechanical  not verbatim, but equal to a SyncCommittee line after the normalization below (renames and numerals);
   new         neither.
-Normalization: the rename map RENAME (T2 name -> HB name, applied to the T2 side), then every decimal or hex
+Normalization: the rename map RENAME (SyncCommittee name -> HistoricalBatch name, applied to the SyncCommittee side), then every decimal or hex
 numeral -> '#', then whitespace collapsed. Comment lines (starting with '--', '/-', '-/' or inside a /- -/ block)
 are counted in their own column and not classified. A line match is per line, without order: it shows how much
-text was carried over, not that the proof structure is the same. "Imported" counts the T2 lines of the
-declarations that HB uses by `import` (not copied); they are not in the HB files.
+text was carried over, not that the proof structure is the same. "Imported" counts the SyncCommittee lines of the
+declarations that HistoricalBatch uses by `import` (not copied); they are not in the HistoricalBatch files.
 """
 import pathlib
 import re
@@ -99,7 +99,7 @@ def measure(hb, srcs):
 
 
 def main():
-    print("| HB file | T2 source | verbatim | mechanical | new | comment/doc |")
+    print("| HistoricalBatch file | SyncCommittee source | verbatim | mechanical | new | comment/doc |")
     print("| --- | --- | --- | --- | --- | --- |")
     tot = [0, 0, 0, 0]
     for hb, srcs in PAIRS:
@@ -107,7 +107,7 @@ def main():
         tot = [a + b for a, b in zip(tot, r)]
         print(f"| `{hb}` | {', '.join('`' + s + '`' for s in srcs)} | {r[0]} | {r[1]} | {r[2]} | {r[3]} |")
     print(f"| total | | {tot[0]} | {tot[1]} | {tot[2]} | {tot[3]} |")
-    # second loop against the first HB loop (its actual source; not in the total)
+    # second loop against the first HistoricalBatch loop (its actual source; not in the total)
     r = measure("lean/E2eHb/HbLoop2.lean", ["lean/E2eHb/HbLoop1.lean"])
     print(f"| `lean/E2eHb/HbLoop2.lean` | `lean/E2eHb/HbLoop1.lean` (not in total) | {r[0]} | {r[1]} | {r[2]} | {r[3]} |")
 

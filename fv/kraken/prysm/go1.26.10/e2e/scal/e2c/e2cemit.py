@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Unit E2-C emitter (evidence tool, not part of gen/scal): per generated encoder fast-path theorem
+"""Emitter (evidence tool, not part of gen/scal): per generated encoder fast-path theorem
 `<p>_g6e_fast`, emit a witness module (WitE2c<X>.lean) and a spec-corollary module (E2cSpec<X>.lean).
 
 Reads the committed Gen6<X>Enc.lean (statement text, GEN6-JSON header) and the IR (Go struct size).
@@ -154,7 +154,7 @@ def classify(info):
     lists = [b for b in B if b[1] == 'List UInt8']
     xs = lists[0][0]
     st = info['st']
-    if st is None:   # hand layouts (Cp, Bh, E1) live in EncTies: decide from the binder count
+    if st is None:   # hand layouts (Checkpoint, BeaconBlockHeader, Eth1Data) live in EncTies: decide from the binder count
         st = len(xs) == 1 + nU + 2 * nB + 1 + len(fields)
     exp = (1 if st else 0) + nU + 2 * nB + 1 + len(fields)
     if len(xs) != exp:

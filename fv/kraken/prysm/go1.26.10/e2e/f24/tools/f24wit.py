@@ -1,5 +1,5 @@
-"""FLAT24 evidence tool (not part of gen/scal): write the decoder witness modules Wit<X>GA / Wit<X>GR of the seven
-generated decoders (non-vacuity of the generated accept / size-reject theorems). Texts follow the G5-C script
+"""Evidence tool (not part of gen/scal): write the decoder witness modules Wit<X>GA / Wit<X>GR of the seven
+generated decoders (non-vacuity of the generated accept / size-reject theorems). Texts follow the script
 `mkwit.py` (reject; callee frame 0x38) and the hand witnesses `WitDdA.lean` (frame 0x20 bytes) and `WitPdA.lean`
 (frame with slices and callees); the memory block of each type is laid out here from the frame facts of its `.S`
 (the same facts as `F24Stmt.lean`), with the addresses computed below.

@@ -6,9 +6,9 @@ import E2e.Data
 import E2e.CpReject
 
 /-!
-# Real Prysm `(*v1alpha1.BlobIdentifier).UnmarshalSSZ`: size reject (H3 hold-out)
+# Real Prysm `(*v1alpha1.BlobIdentifier).UnmarshalSSZ`: size reject (hold-out)
 
-Hand-written by the H3 evaluation session: the text of `E1Reject.lean` with the BlobIdentifier indices.
+Hand-written: the text of `E1Reject.lean` with the BlobIdentifier indices.
 `bi_e2e_reject_size_main` (`len(buf) ≠ 40`, Go source `return ssz.ErrSize`): directives 2–7 (guard,
 prologue, rbx spill), 9–10 `cmp $0x28,%rcx; jne L_e2` taken, L_e2 and the two loads of `ssz.ErrSize`
 (`E2e.Data.e2eErrSize_addr`, the same ELF symbol as the Checkpoint decoder's; `h3link.py` asserts the operand),

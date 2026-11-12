@@ -7,10 +7,10 @@ import E2eScal.CallDec
 import E2eScal.U64RR
 
 /-!
-# Real Prysm `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ`, accept path, Go 1.26.10 (GEN3 L1, first instance)
+# Real Prysm `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ`, accept path, Go 1.26.10 (first instance of the call-site lemmas)
 
-Hand-written by the GEN3 lemma unit (after the H4 hold-out; the type is development data now). The statement is
-the independent hand statement `E2eScal.H4.pw_accept_stmt` (`H4Stmt.lean`), unchanged. The H4 evaluation did
+Hand-written (after the hold-out; the type is development data now). The statement is
+the independent hand statement `E2eScal.H4.pw_accept_stmt` (`H4Stmt.lean`), unchanged. The hold-out evaluation did
 not prove it (three attempts). Proof: a chain of `eventually_trans` over
 
 * `pw_head` (hand steps, directives 0–14: stack guard, prologue `sub $0x48`, length check, three spills, nil check),

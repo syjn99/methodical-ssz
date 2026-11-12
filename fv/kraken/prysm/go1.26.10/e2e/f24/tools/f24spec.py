@@ -1,4 +1,4 @@
-"""FLAT24 evidence tool (not part of gen/scal): write lean/E2eScal/F24<X>Spec.lean, the spec bridge of each type
+"""Evidence tool (not part of gen/scal): write lean/E2eScal/F24<X>Spec.lean, the spec bridge of each type
 (the text of SmSpec.lean / SaSpec.lean generalised to a field list: P structure, encoding, serialize, roundtrip,
 accepts-iff-size, spec reject; codec equality with the checker Desc where a Desc-checker record exists).
 usage: python3 -I -B f24spec.py <fv/kraken/lean/E2eScal>"""
@@ -166,7 +166,7 @@ def emit(X, ty, fs, chk):
     s1 = ', '.join([f'UInt64.toNat_ofNat_of_lt\' r{i}' for i, f in enumerate(fs) if f[1] == 'u']
                    + [f'uintBytes_readUint_slice bs {offs[i]} 8 (by omega)' for i, f in enumerate(fs) if f[1] == 'u'])
     w(f'      simp only [g, {pe}, {s1}]')
-    t = 'try ' if n == 1 else ''   # one field: no append to merge (FLAT24 attempt 2, BuilderPreferences)
+    t = 'try ' if n == 1 else ''   # one field: no append to merge (BuilderPreferences)
     w(f'      {t}simp only [Nat.zero_add, Nat.reduceAdd]')
     w(f'      {t}simp (config := {{decide := true}}) only [Array.extract_append_extract, Nat.min_def, Nat.max_def, ↓reduceIte]')
     w('      rw [← h]; simp')

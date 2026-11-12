@@ -3,9 +3,9 @@ import E2eScal.SmReject
 import E2eScal.SmSpec
 
 /-!
-# Spec alignment of the real SyncCommitteeMessage decoder (H5 hold-out, class C)
+# Spec alignment of the real SyncCommitteeMessage decoder (hold-out, class C)
 
-Hand-written by the H5 evaluation session: the text of `DdSpecK.lean` / `PwSpecK.lean`, with the statement
+Hand-written: the text of `DdSpecK.lean` / `PwSpecK.lean`, with the statement
 `sm_accept_stmt` (`H5Stmt.lean`) and the input chunks of `g`.
 - `sm_e2e_accept_spec_k`: if EthLib accepts `bsA` (`prysmSmDesc`) as `v`, there is `g : PSm` with `g.toValue = v`
   and `bsA = psmEnc g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.

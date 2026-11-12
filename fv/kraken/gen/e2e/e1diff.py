@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""S3 hold-out H2 Go differential of the v1alpha1.Eth1Data decoder (Python 3 standard library only).
+"""Eth1Data hold-out: Go differential of the v1alpha1.Eth1Data decoder (Python 3 standard library only).
 
   e1diff.py cases <cases.json>                      write the cases
   e1diff.py check <cases.json> <go-out.json> <result.json>

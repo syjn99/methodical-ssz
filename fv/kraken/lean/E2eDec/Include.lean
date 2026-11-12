@@ -3,7 +3,7 @@ public import Kraken.X64.Syntax
 public meta import Lean
 
 /-!
-# `dcd_data_include id`: ELF data of the ENC decoder set (`lv/link-dec`, DataColumnsByRootIdentifier)
+# `dcd_data_include id`: ELF data of the decoder set (`lv/link-dec`, DataColumnsByRootIdentifier)
 
 The same reader as `lv_data_include` (`E2eList/Include.lean`, the text of `E2e/Include.lean`, itself the text of
 `Fk/Include.lean`'s `data_include`), for the data directory

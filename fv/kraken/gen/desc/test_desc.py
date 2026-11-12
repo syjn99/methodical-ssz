@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tests of the Desc producer and the closed-world checker (P3; reviews phase1c-r1, r2, r3).
+"""Tests of the Desc producer and the closed-world checker.
 
   test_desc.py prepare <work-dir>
       Produce the 144 originals (9 hand types + the 135 types of the Prysm inventory), then
@@ -73,7 +73,7 @@ def _swap(i, k):
 
 
 def _swap01(d):
-    """Swap fields 0 and 1 with consistent offsets (review r1 mutant r6)."""
+    """Swap fields 0 and 1 with consistent offsets (mutant r6 of review/r1_mutants.py)."""
     s = d["ssz"]
     s["names"][0], s["names"][1] = s["names"][1], s["names"][0]
     s["fields"][0], s["fields"][1] = s["fields"][1], s["fields"][0]
@@ -107,7 +107,6 @@ MUTANTS = [
     ("m-kind-claim", "prysm_v1alpha1.StatusV2", "wrong kind claim (field 0 byteVector -> byteList)", "kind[0]",
      _set(["fields", 0, "kind"], "byteList")),
     ("m-offset-prysm", "prysm_v1alpha1.StatusV2", "wrong field offset (field 3: 44 -> 45)", "offset[3]", _set(["fields", 3, "offset"], 45)),
-    # review phase1c-r1
     ("r1-ref-dropped", "ListU64", "limit 16 -> 17 in term and claim, reference set to null", "ref-claim",
      _both(_limit17, _set(["reference"], None))),
     ("r2-ref-key-removed", "BitL", "bitList -> byteList in term and claim, reference key deleted", "ref-claim",
@@ -122,7 +121,7 @@ MUTANTS = [
      _set(["fields", 0, "elem_variable"], False)),
     ("r10-callee", "AttestationData", "claim key callee (removed from the format) put back", "claim-keys[3]",
      _set(["fields", 3, "callee"], "github.com/x/y.Other")),
-    # review phase1c-r2: escapes of the table key (per file)
+    # escapes of the table key (per file)
     ("n01-esc-pkg-slash", "ListU64", "limit 16 -> 17, package gets a trailing '/', reference null", "package",
      _both(_limit17, _set(["package"], lambda p: p + "/"), _set(["reference"], None))),
     ("n02-esc-type-missing", "BitL", "bitList -> byteList, type key deleted, reference null", "type",
@@ -134,12 +133,12 @@ MUTANTS = [
      _both(_set(["ssz", "fields", 1, "n"], 5), _set(["fields", 1, "length"], 5), _set(["fields", 1, "width"], 40),
            _set(["fixed_size"], 72), _set(["fixed_part_size"], 72), _set(["type"], "FixedVec​"),
            _set(["reference"], None))),
-    # review phase1c-r2: reordered / renamed fields of equal shape (table types)
+    # reordered / renamed fields of equal shape (table types)
     ("n11-ad-swap-slot-index", "AttestationData", "Slot and CommitteeIndex swapped in term, names and claims", "go-names", _swap(0, 1)),
     ("n12-ad-swap-source-target", "AttestationData", "Source and Target swapped in term, names and claims", "go-names", _swap(3, 4)),
     ("n14-cp-names-crossed", "Checkpoint", "uint64 field named Root, bytes32 field named Epoch (term and claims)", "go-names",
      _both(_set(["ssz", "names"], ["Root", "Epoch"]), _set(["fields", 0, "name"], "Root"), _set(["fields", 1, "name"], "Epoch"))),
-    # own escapes against this fix (review phase1c-r2: "try at least 5 further escapes")
+    # own escapes against this fix
     ("e1-nested-inner-names", "Nested", "inner Scalars field names B and C swapped inside Nested (claims cover only the top)", "go-names",
      _set(["ssz", "fields", 1, "names"], ["A", "C", "B", "D", "E"])),
     ("e2-hand-type-other-hand-pkg", "ListU64", "hand ListU64 under the hand prysm package (a known package)", "hand-name",
@@ -183,7 +182,7 @@ MUTANTS += [
     ("r3-prysm-bool-uint8", "prysm_v1alpha1.Validator", "Slashed bool -> uint8 (claims follow): the inventory kind binding sees it",
      "inventory", _both(_set(["ssz", "fields", 3], {"k": "uint", "w": 1}), _set(["fields", 3, "kind"], "uint"))),
     ("y6-claim-limit-on-uint", "Scalars", "uint claim carries limit (a key of another kind)", "claim-keys[0]", _set(["fields", 0, "limit"], 16)),
-    # review phase1c-r4: R4-S3 (delegated containers bound recursively; r17 was a known pass), R4-S4 (fixed_size required)
+    # delegated containers bound recursively (r17 was a known pass), and fixed_size required
     ("r17-prysm-inner-kind", "prysm_v1alpha1.Attestation", "inner AttestationData.Slot uint64 -> byteVector 8 (inside a delegated container)",
      "inventory", _set(["ssz", "fields", 1, "fields", 0], {"k": "byteVector", "n": 8})),
     ("z3-no-fixed-size", "Scalars", "top-level key fixed_size removed", "required-keys", _del(["fixed_size"])),
@@ -196,7 +195,7 @@ TEXT_MUTANTS = [   # raw-text mutants: (id, base, what, designated, text transfo
      lambda t: t.replace('"type": "ListU64",', '"type": "ListU64",\n "type": "ListU64",', 1)),
     ("y8-int-as-exponent", "Checkpoint", "fixed_size written 4e1", "strict-json", lambda t: t.replace('"fixed_size": 40', '"fixed_size": 4e1', 1)),
     ("y9-leading-zero", "Checkpoint", "fixed_size written 040", "strict-json", lambda t: t.replace('"fixed_size": 40', '"fixed_size": 040', 1)),
-    # review phase1c-r4 R4-S2: bounds before parsing (small depth only; the 200000-level probe is not replayed)
+    # bounds before parsing (small depth only; the 200000-level probe is not replayed)
     ("z1-depth-100", "ListU64", "an extra key holding arrays nested 100 deep", "bounds",
      lambda t: t.replace('"type": "ListU64",', '"type": "ListU64",\n "x": ' + "[" * 100 + "]" * 100 + ",", 1)),
     ("z2-size-1100000", "ListU64", "1100000 bytes of trailing white space (valid JSON)", "bounds", lambda t: t + " " * 1100000),
@@ -288,7 +287,7 @@ def prepare(work):
         exp["replay"][m["file"]] = {"review": "r3", "id": m["id"], "base": m["base"], "what": m["what"],
                                    "reviewer_expects": m["sound_checker_should"]}
     batch = []
-    # reviewer r3 list scenarios t01-t13 (their lists name files under replay/)
+    # list scenarios t01-t13 of review/r3_mutants.py (their lists name files under replay/)
     for sc in r3["scenarios"]:
         exp["scenarios"][sc["id"]] = {"source": "r3", "what": sc["what"], "list": sc["list"], "expect": "FAIL"}
     # my scenarios

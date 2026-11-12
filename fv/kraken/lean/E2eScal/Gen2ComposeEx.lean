@@ -3,7 +3,7 @@ import E2eScal.Gen2Examples
 import E2eScal.BiAccept
 
 /-!
-# GEN2 L3 example: the BlobIdentifier accept path composed from segment theorems only
+# Example: the BlobIdentifier accept path composed from segment theorems only
 
 `bi_e2e_accept_main_composed` has the statement text of `E2eScal.Bi.bi_e2e_accept_main`
 (`bi_e2e_accept_main_composed_type`: the two declared types are equal by `rfl`). Its proof steps no

@@ -7,7 +7,7 @@ import E2eList.StmtIa
 import E2eList.IaAddr
 
 /-!
-# T3 `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: size reject (P1) and offset reject (P2) (LV)
+# `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: size reject and offset reject
 
 - `ia_e2e_reject_size_main : ia_reject_size_stmt`: directives 2–4 (large-frame guard `lea -0x30(%rsp),%r12`, closed
   with `E2eScal.lea_cmp_be_false`, N = 48), 5–8 prologue (`sub $0xa8`, rbx spill to rsp + 16), 9–10

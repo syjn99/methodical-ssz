@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""prysm-e2e item 5: write lean/E2e/Layout.lean from prysm/ir/ir-mainnet.json (go_fields of
+"""Write lean/E2e/Layout.lean from prysm/ir/ir-mainnet.json (go_fields of
 v1alpha1.Checkpoint: go/types gc amd64 sizes and offsets). The ELF has no named type symbol for the
 struct (the abi.Type is not reachable from the included code), so the layout is the IR's; trust note in
 the generated file. Usage: layout.py > lean/E2e/Layout.lean. Python 3 standard library only."""

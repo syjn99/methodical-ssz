@@ -6,11 +6,11 @@ import E2eAd.Prims
 import E2eScal.Gen4H6VeDec
 
 /-!
-# GEN5 worked example: `(*v1alpha1.VoluntaryExit).UnmarshalSSZ`, accept theorem in generated style
+# Worked example: `(*v1alpha1.VoluntaryExit).UnmarshalSSZ`, accept theorem in generated style
 
 Text produced from one description of the type (frame facts, field list, boundary states, chain theorem names)
-by the recipe of the G5-L hand-over; every theorem has a `_kind` line (`decHeadKindN`, `decFieldKindN`,
-`decEpiKindN`, `decAcceptKindN`). The GEN4 chain theorems (`E2eScal.Gen.*`) are used as emitted.
+by the recipe of the lemma hand-over; every theorem has a `_kind` line (`decHeadKindN`, `decFieldKindN`,
+`decEpiKindN`, `decAcceptKindN`). The `p2dec --gen4` chain theorems (`E2eScal.Gen.*`) are used as emitted.
 This type has no hand accept statement: the statement is the kind instance of the frame class of
 PendingConsolidation / PendingPartialWithdrawal (`layCal`), whose two hand statements are `rfl`-tied.
 -/

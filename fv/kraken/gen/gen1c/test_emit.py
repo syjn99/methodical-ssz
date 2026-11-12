@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tests of the generator skeleton (P4).
+"""Tests of the generator skeleton.
 
   test_emit.py prepare <work-dir> <desc-work-dir>
       Take the Descs and the checker result of a gen/desc/test_desc.py run
@@ -64,7 +64,7 @@ def run_emit(out, desc_dir, result, types=None, extra=()):
 
 def prepare(work, dwork):
     import shutil
-    # absolute paths: the symlinks and emit runs below must not depend on the cwd (review r5 S6)
+    # absolute paths: the symlinks and emit runs below must not depend on the cwd
     work, dwork = os.path.abspath(work), os.path.abspath(dwork)
     if os.path.exists(work):
         shutil.rmtree(work)
@@ -93,7 +93,7 @@ def prepare(work, dwork):
     t1 = run_emit(f"{work}/out-tampered", tam, log)
     res["checks"].append(("emit refuses a Desc changed after the check (copied tree, sha256)",
                           t1.returncode != 0 and "sha256" in t1.stderr + t1.stdout))
-    # control: the escaped hand ListU64 (review r2 n01: package + '/') in place of the original,
+    # control: the escaped hand ListU64 (mutant n01: package + '/') in place of the original,
     # selected by bare name: its record is a FAIL mutant -> refused
     esc = f"{work}/escaped"
     os.makedirs(esc)
@@ -117,7 +117,7 @@ def prepare(work, dwork):
         open(orig_nested, "wb").write(keep)
     res["checks"].append(("emit refuses a checked file changed in place after the check (sha256)",
                           t4.returncode != 0 and "sha256" in t4.stderr + t4.stdout))
-    # control (R4-S5): a second run into the non-empty output directory is refused, nothing merged
+    # control: a second run into the non-empty output directory is refused, nothing merged
     before_out = sorted(os.listdir(f"{work}/out"))
     t5 = run_emit(f"{work}/out", desc_dir, log)
     res["checks"].append(("emit refuses a non-empty --out (no merge)", t5.returncode != 0 and "not an empty directory" in t5.stderr + t5.stdout

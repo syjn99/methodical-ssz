@@ -3,7 +3,7 @@ import E2e.Spec
 import E2eList.Desc
 
 /-!
-# Definitions that the LV statements use (LV stream, U3)
+# Definitions that the SyncAggregate and SyncCommittee statements use
 
 These definitions are part of the frozen statements (`StmtSa.lean`, `StmtSc.lean`). A later change needs a
 new name and a reason; the original stays.

@@ -4,7 +4,7 @@ import E2eHb.HbSpecK
 import E2eHb.HbDescEq
 import E2eHb.WitHbA
 
-/-! HB hand list for `gen/e2e/hbaxioms_gate.py` ("must exist" names; every name also gets the axiom check). -/
+/-! Hand list for `gen/e2e/hbaxioms_gate.py` ("must exist" names; every name also gets the axiom check). -/
 
 #print axioms E2eHb.hb_e2e_reject_size_main
 #print axioms E2eHb.hb_iter1

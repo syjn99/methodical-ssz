@@ -4,9 +4,9 @@ import Fk.BumpMore
 import Fk.WHost
 
 /-!
-# Witness of `dm_e2e_accept_main` (DepositMessage decoder accept path, H3 hold-out)
+# Witness of `dm_e2e_accept_main` (DepositMessage decoder accept path, hold-out)
 
-Hand-written by the H3 evaluation session (the text of `WitE1A.lean` with the DepositMessage host and layout).
+Hand-written (the text of `WitE1A.lean` with the DepositMessage host and layout).
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.DepositMessage).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (118, `bump_makeslice1`) and `RtCopy` (124, `rt_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 80-byte heap, guard word, the 88 input

@@ -5,7 +5,7 @@ import E2eScal.Gen6PwEnc
 import E2eScal.Gen6DdEnc
 
 /-!
-# ENC2 unit E2-C: identities of the generated encoder fast-path theorems with the independent hand statements
+# Identities of the generated encoder fast-path theorems with the independent hand statements
 
 `E2cStmt.lean` was committed before the generated theorems were read. Each identity is `rfl` at default
 transparency; a failed identity is recorded, not forced. Encoder fast path only.

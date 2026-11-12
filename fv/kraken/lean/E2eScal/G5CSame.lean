@@ -4,11 +4,11 @@ import E2eScal.Gen5VbDec
 import E2eScal.Gen5VeDec
 
 /-!
-# Identity of three generated accept theorems with independent hand statements (unit G5-C)
+# Identity of three generated accept theorems with independent hand statements
 
 The hand statements `E2eScal.G5C.{sa,vb,ve}_accept_stmt` (`G5CStmt.lean`) were committed before this session
 opened the generated modules. Each line below type-checks only if the type of the generated accept theorem
-(`p2dec --gen5`, unit G5-G; statement = kind instance `decAcceptKindN`) is definitionally the hand statement.
+(`p2dec --gen5`; statement = kind instance `decAcceptKindN`) is definitionally the hand statement.
 Neither side is edited for this check.
 -/
 

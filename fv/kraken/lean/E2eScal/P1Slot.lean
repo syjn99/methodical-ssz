@@ -2,7 +2,7 @@ import E2eScal.P1
 import E2eAd.Prims
 
 /-!
-# S1 in-sample check of P1: the Slot decoder accept path from `u64dec_accept`
+# In-sample check of the uint64 decoder pattern: the Slot decoder accept path from `u64dec_accept`
 
 `sl_unmarshal_accept_main_s` has the statement of `E2eAd.sl_unmarshal_accept_main`
 (`E2eAd/Prims.lean`) word for word; its proof only instantiates `E2eScal.u64dec_accept`

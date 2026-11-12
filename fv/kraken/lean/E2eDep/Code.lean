@@ -17,7 +17,7 @@ namespace E2eDep.Code
 def DepUnmarshal : Program := include_x64_rt "../prysm/go1.26.10/e2e/lv/link-dep/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S"
 
 /-- The abi.Type of `v1alpha1.Deposit_Data` (Size_ 0x78 = 120): the `new(Deposit_Data)` type word.
-The value is the `at type__ 1421952` line of `lv/link-dep/data/depDataType.data` in the form of the LV data reader
+The value is the `at type__ 1421952` line of `lv/link-dep/data/depDataType.data` in the form of the data reader of `E2eList/Include.lean`
 (`lvLabelTerm`). It is written here because the reader's helpers are private to `E2eList/Include.lean`; the operand
 is also the `.S` operand of directive 85 (`link/check.py` (b)), which the accept proof steps through. -/
 def depDataType_addr [Host] : BitVec 64 := (label "type__" + 1421952).toBitVec

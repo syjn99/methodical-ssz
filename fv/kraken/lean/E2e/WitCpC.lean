@@ -5,7 +5,7 @@ import Fk.WHost
 import E2e.GoVal
 
 /-!
-# Witness of `cp_e2e_unmarshal_then_marshal` (E5, one Host for decoder and encoder)
+# Witness of `cp_e2e_unmarshal_then_marshal` (machine-level composition, one Host for decoder and encoder)
 
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.Checkpoint).UnmarshalSSZ`
 (index 9), the real `(*primitives.Epoch).UnmarshalSSZ` (index 117), the 1-byte
@@ -148,7 +148,7 @@ example (z' : RegZmms) (f : StatusFlags) :=
 
 /-- Go-value element: the receiver of this witness (offset 0x5c of the block) is a zero `Checkpoint`
 before the decoder; the receiver that the encoder reads is the decoder conclusion's fragments
-`cpAfterDecode` over it, a Go value for every `p ≠ 0` (review e2e-r2 N4). Layout: `E2e.cpGoFields`
+`cpAfterDecode` over it, a Go value for every `p ≠ 0`. Layout: `E2e.cpGoFields`
 (IR; trust note in `E2e.GoVal`). -/
 theorem witCpC_recv (p : BitVec 64) (hp : p ≠ 0) :
     cpGoValue (recvAt (block (Int.toBytes 8 0x0123456789abcdef) (List.replicate 32 0xff)) 0x5c) = true

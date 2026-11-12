@@ -2,7 +2,7 @@ import E2eScal.P2Enc
 import E2e.CpMarshal
 
 /-!
-# S1 in-sample check of P2 (encode): the Checkpoint encoder fast path through `rootenc_seg`
+# In-sample check of the 32-byte field pattern (encode): the Checkpoint encoder fast path through `rootenc_seg`
 
 `cp_e2e_marshal_main_s` has the statement of `E2e.cp_e2e_marshal_main` (`E2e/CpMarshal.lean`)
 word for word. Its proof is the hand proof with directives 36–62 (the `Root` length test,
@@ -10,7 +10,7 @@ the capacity test, the spills and `memmove`) replaced by one application of
 `E2eScal.rootenc_seg` (head block at k + 36, `lrej` = `L_108`, tail block at k + 55 = `L_cf`;
 field displacements 16 / 24; spills 0x58 / 0x50 / 0x60). Directives 0–35 (guard, prologue,
 the inlined Epoch encoder) and 63–70 (return) are the hand text unchanged (verbatim share;
-they are not part of pattern P2). `cp_marshal_same_stmt` checks that the statements are the
+they are not part of the 32-byte field pattern). `cp_marshal_same_stmt` checks that the statements are the
 same proposition.
 -/
 

@@ -10,7 +10,7 @@
  ],
  "owner_of_content": "fix3 stream",
  "owner_of_this_file": "orchestrator (promotes fix3's streams/fix3/INCLUDE-API.next.json after checking it against the fix3 commit)",
- "origin": "fix3 first commit 427708e (TOOLS.md section 'ELF 데이터 include'). Changes from v0 listed in changes_from_v0.",
+ "origin": "fix3 first commit 427708e (TOOLS.md section 'ELF data include'). Changes from v0 listed in changes_from_v0.",
  "frozen_for_phase1c": false,
  "frozen_note": "phase1c may reference these names through one adapter module in its generator. phase1c must not generate lean/Fk or link/ code against this API until status = approved and it has rebased onto the reviewed fix3 SHA.",
  "fix3_commit": "427708eeaf00c77a6dac4faf4c92fd8f7a8c88ff",

@@ -2,7 +2,7 @@ import E2eAd.AdHead
 import E2e.Data
 
 /-!
-# `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, segment 2 (A3)
+# `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, segment 2
 
     a.BeaconBlockRoot = make([]byte, 0, 32)
     a.BeaconBlockRoot = append(a.BeaconBlockRoot, buf[16:48]...)

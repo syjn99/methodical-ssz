@@ -4,7 +4,7 @@ import E2eAd.Prims
 import E2eAd.Data
 
 /-!
-# Real Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, segment 1 (A3)
+# Real Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, segment 1
 
     func (a *AttestationData) UnmarshalSSZ(buf []byte) error {        // phase0.ssz.go:273
         if uint64(len(buf)) != 128 { return ssz.ErrSize }

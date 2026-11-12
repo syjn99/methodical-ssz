@@ -1,7 +1,7 @@
 import Lean
 
 /-!
-# inventory_decls: facts about named declarations for `inventory.py` (core `Lean` only; unit G5-C)
+# inventory_decls: facts about named declarations for `inventory.py` (core `Lean` only)
 
 Usage (`lean` is a heavy command: run it through the heavy-job gate, cwd `fv/kraken/lean`):
 

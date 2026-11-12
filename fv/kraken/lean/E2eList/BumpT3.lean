@@ -5,9 +5,9 @@ import E2eList.DataIa
 import E2eAd.Data
 
 /-!
-# Type-dispatching bump models of `runtime.makeslice` and `runtime.newobject` for the T3 witness host (LV T3)
+# Type-dispatching bump models of `runtime.makeslice` and `runtime.newobject` for the IndexedAttestation witness host
 
-The T3 accept path needs four `MakesliceC` instances (esz 8 for `lvU64Type_addr`, esz 1 for the uint8 type word, at
+The IndexedAttestation accept path needs four `MakesliceC` instances (esz 8 for `lvU64Type_addr`, esz 1 for the uint8 type word, at
 three stack sizes) and two `NewobjectC` instances (96 bytes for `lvAdType_addr`, 72 for `adCpType_addr`). A Host has
 one `runtime.makeslice` and one `runtime.newobject`, so each model dispatches on the type word in rax:
 `E2eList/BumpAllocT3.S` bumps by 8·cnt for `type__+387456` and by cnt otherwise; `E2eList/BumpNewT3.S` bumps by 96

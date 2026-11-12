@@ -2,7 +2,7 @@ import Kraken.X64.Parser
 import Fk.Include
 
 /-!
-# Code of the ENC decoder (Go 1.26.10 ELF `c6403c02…911e`)
+# Code of the `DataColumnsByRootIdentifier` decoder (Go 1.26.10 ELF `c6403c02…911e`)
 
 `DcUnmarshal` includes the `.S` file of `fv/kraken/prysm/go1.26.10/e2e/lv/link-dec/norm`
 (`link/conv.py --norm`; `gen/e2e/encdeclink.py filter/data`;

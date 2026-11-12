@@ -2,12 +2,12 @@ import E2eScal.PwReject
 import E2eScal.PwSpec
 
 /-!
-# Spec alignment of the real PendingPartialWithdrawal decoder, reject side (H4 hold-out, type B)
+# Spec alignment of the real PendingPartialWithdrawal decoder, reject side (hold-out, type B)
 
-Hand-written by the H4 evaluation session: the reject part of `DmSpecK.lean` for PendingPartialWithdrawal.
+Hand-written: the reject part of `DmSpecK.lean` for PendingPartialWithdrawal.
 - `pw_e2e_reject_size_spec`: `bs.size ≠ 24` → EthLib rejects, and the machine code returns `ssz.ErrSize`.
 - `pw_e2e_reject_complete`: every input that EthLib rejects has `size ≠ 24` (the path condition of the size reject).
-NOT here: the accept side (`pw_e2e_accept_spec_k`): the accept theorem is not proved (H4 attempt bound).
+NOT here: the accept side (`pw_e2e_accept_spec_k`): the accept theorem is not proved (attempt bound).
 Not stated here: that the two callee error paths (`fmt.errorf` wraps) are unreachable when `size = 24`.
 -/
 

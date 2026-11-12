@@ -4,7 +4,7 @@ import E2eList.CodeIa
 import E2eList.ScLemmas
 
 /-!
-# T3 `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: the element loop (LV)
+# `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: the element loop
 
 Loop head `L_28a` (directive 147). The text of the Go 1.26.3 `lu_iter` / `lu_exit` / `lu_loop` (`Fk/LuLoop.lean`) with
 this function's registers: rax = i, rdx = n, rcx = cap − 228 (bytes), rbx = the input pointer `p0` (buf + 228),

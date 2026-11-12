@@ -3,7 +3,7 @@ public import Kraken.X64.Syntax
 public meta import Lean
 
 /-!
-# `lv_data_include id`: ELF data of the LV set (SyncAggregate, SyncCommittee, IndexedAttestation)
+# `lv_data_include id`: ELF data of the set (SyncAggregate, SyncCommittee, IndexedAttestation)
 
 The same reader as `e2e_data_include` (`E2e/Include.lean`, itself the text of
 `Fk/Include.lean`'s `data_include`), for the data directory

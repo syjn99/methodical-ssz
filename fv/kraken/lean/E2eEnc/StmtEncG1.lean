@@ -1,7 +1,7 @@
 import E2eEnc.StmtEncG
 
 /-!
-# Corrected G* statements: growth at any one site (ENC, added after the freeze of `StmtEncG.lean`)
+# Corrected any-site grow path statements (one-growth path): growth at any one site (added after the freeze of `StmtEncG.lean`)
 
 `dc_marshal_once_stmt` / `dc_marshal_once_spec_stmt` are the frozen texts of `dc_marshal_any_stmt` /
 `dc_marshal_any_spec_stmt` with the heap premise `(n + 2)·K ≤ avail` replaced by two premises:
@@ -10,7 +10,7 @@ import E2eEnc.StmtEncG
 - `hone`: for every new length `m ≤ L` above `cap`, `L ≤ nextSliceCap m cap` (L = len + 36 + 8n). So the first site that
   grows (any of the n + 2) gets a capacity that holds the whole output, and no second growth happens.
 
-Reason (attempt 1 of `LoopG.lean`, ENC log 130): `GrowsliceC` bounds the heap after a call only from above
+Reason (attempt 1 of `LoopG.lean`): `GrowsliceC` bounds the heap after a call only from above
 (`avail' + esz·newCap ≤ avail`). After one growth nothing bounds the remaining heap from below, so the budget premise of
 a second `growslice` call cannot be discharged: `dc_marshal_any_stmt` does not follow from the contract forms of
 `CONTRACTS.md` (a form with a lower bound, e.g. `avail' + esz·newCap = avail`, is missing; a new form needs user
@@ -23,7 +23,7 @@ variable [Host]
 
 namespace E2eEnc
 
-/-- **G1*: growth at any one site (machine).** -/
+/-- **One-growth path: growth at any one site (machine).** -/
 def dc_marshal_once_stmt : Prop :=
   ∀ (k : Nat) (hk : DcMarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DcMarshal k)
     (s : MachineData) (ra guard : UInt64) (pr pc nb : BitVec 64) (n : Nat) (hnb : nb.toNat = n) (hn : n ≤ 128)
@@ -94,7 +94,7 @@ def dc_marshal_once_stmt : Prop :=
           ⋆ G ⋆ Heap av' ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **G1* against EthLib.** -/
+/-- **One-growth path against EthLib.** -/
 def dc_marshal_once_spec_stmt : Prop :=
   ∀ (k : Nat) (hk : DcMarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DcMarshal k)
     (s : MachineData) (ra guard : UInt64) (pr pc nb : BitVec 64) (g : PDc) (hnb : nb.toNat = g.cols.length)

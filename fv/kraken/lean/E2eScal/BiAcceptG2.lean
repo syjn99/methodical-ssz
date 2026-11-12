@@ -3,11 +3,11 @@ import E2eScal.Gen2BiDec
 import E2eScal.BiAccept
 
 /-!
-# GEN2 reuse demonstration: the BlobIdentifier accept path from the GENERATED segment theorems
+# Reuse demonstration: the BlobIdentifier accept path from the GENERATED segment theorems
 
 `bi_e2e_accept_main_g2` has the statement text of `E2eScal.Bi.bi_e2e_accept_main`; `bi_e2e_accept_main_g2_type`
 proves that the two declared types are equal (`with_reducible rfl`). The proof is a chain of
-`eventually_trans` over `dechead_seg` (GEN2 L3), the generated BlockRoot segment
+`eventually_trans` over `dechead_seg`, the generated BlockRoot segment
 `E2eScal.Gen.bi_g2dec_BlockRoot_seg` (`Gen2BiDec.lean`, raw `scalgen.py p2dec --gen2` output),
 `bytesdec_tail_seg`, the generated Index segment `E2eScal.Gen.bi_g2dec_Index_seg` and `decepi_seg`.
 Model: `Gen2ComposeEx.lean` (the same chain over hand-written example segments). By hand here: the

@@ -26,7 +26,7 @@ Checks:
      LLVM decodes both byte strings to the same text, "padding" if it is a
      normalized nop, else FAIL. At a padding position the .S instruction must
      be `nop`, its new byte must be 0x90, and LLVM must decode the original
-     bytes as a nop (1b-fix X6: a `retq` there used to pass).
+     bytes as a nop (a `retq` there used to pass).
  (e) all.S has the same directives as the per-function .S files, in order
      (instructions included, not only labels).
  (f) every data file data/<id>.data that Lean includes (Fk/Data.lean,
@@ -35,7 +35,7 @@ Checks:
      8-byte little-endian value address(s) + o at its position; every byte
      of the file is printable ASCII or a newline (the rule of data_include).
      This replaced the checks of hand-written Lean constants and of Go source
-     literals (fix 3 X2). This checker does not read Lean sources (only the
+     literals. This checker does not read Lean sources (only the
      hashes of Code.lean and AXIOMS.txt): which definitions a theorem uses is
      read from the theorem statements, not checked here. Items that the
      proven code addresses with `lea` (the format strings, the int and uint64
@@ -134,7 +134,7 @@ def llvm_decode(elf, lo, hi):
     out = {}
     for line in text.splitlines():
         # `addr: bytes<TAB>text`; a 10-byte instruction fills the byte column, so its last byte is
-        # followed by the tab, not by a space (phase1c X5: movabs in the Go 1.26.10 ELF)
+        # followed by the tab, not by a space (movabs in the Go 1.26.10 ELF)
         m = re.match(r"\s*([0-9a-f]+):\s((?:[0-9a-f]{2} ?)+?) *\t(.*)$", line)
         if m:
             out[int(m[1], 16)] = (bytes.fromhex(m[2].replace(" ", "")), re.sub(r"\s+", " ", m[3]).split(" <")[0].strip())
@@ -268,7 +268,7 @@ def run(outdir, log):
          next((f" (first at directive {i}: {x} vs {y})" for i, (x, y) in enumerate(zip(allS, want)) if x != y),
               f" (lengths {len(allS)} vs {len(want)})"))
     log(f"PASS (e) all.S: {len(allS)} directives equal the {len(per_fn)} function files in order")
-    # (f) data files = ELF bytes (fix 3 X2)
+    # (f) data files = ELF bytes
     datas = sorted((outdir / "data").glob("*.data"))
     need(datas, "(f) no data files in data/")
     for p in datas:
@@ -446,7 +446,7 @@ def selftest(outdir):
         t = copy(); p = t / "norm" / "target.Scalars.UnmarshalSSZ.S"
         p.write_text(p.read_text().replace("ssz.ErrSize+8(%rip)", "ssz.ErrSize(%rip)", 1))
         cases.append(("wrong global offset", t, False))
-        # 6. a padding nop becomes retq in the function file and in all.S (1b-fix X6)
+        # 6. a padding nop becomes retq in the function file and in all.S
         t = copy(); p = t / "norm" / "target.BitVec.UnmarshalSSZ.S"
         ls = p.read_text().split("\n"); assert ls[8] == "  nop"; ls[8] = "  retq"; p.write_text("\n".join(ls))
         p = t / "norm" / "all.S"
@@ -457,12 +457,12 @@ def selftest(outdir):
         t = copy(); p = t / "norm" / "all.S"
         p.write_text(p.read_text().replace("cmp $0x10,%rcx", "cmp $0x11,%rcx", 1))
         cases.append(("all.S instruction changed", t, False))
-        # 8. a data file byte: blFmtB "B: %w" -> "C: %w" (fix 3 X2)
+        # 8. a data file byte: blFmtB "B: %w" -> "C: %w"
         t = copy(); p = t / "data" / "blFmtB.data"
         s = p.read_text(); assert "bytes 42 3a 20 25 77" in s; p.write_text(s.replace("bytes 42 3a", "bytes 43 3a"))
         cases.append(("data file byte changed", t, False))
         # 9. the ELF range of a data file: the errorString itab's type word points to
-        #    another *uint64 descriptor (0x4cbf00; astra reprove-fix2 itab-wrong-pointee)
+        #    another *uint64 descriptor (0x4cbf00)
         t = copy(); p = t / "p1bin-amd64"
         e = bytearray(p.read_bytes()); _, es, sy = read_elf(p)
         ia = sy["go:itab.*errors.errorString,error"][0] + 8

@@ -8,7 +8,7 @@ import E2eAd.AdSpecK
 import E2eAd.WitAdA
 import E2eAd.WitAdR
 
--- prysm-e2e AttestationData set (A1-A6): every theorem of the E2eAd closure that the report names.
+-- AttestationData set: every theorem of the E2eAd closure that the report names.
 #print axioms E2e.prysmAdDesc_checker
 #print axioms E2e.prysmAdDesc_serialize_checker
 #print axioms E2e.prysmAdDesc_deserialize_checker

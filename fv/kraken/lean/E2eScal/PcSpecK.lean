@@ -3,9 +3,9 @@ import E2eScal.PcReject
 import E2eScal.PcSpec
 
 /-!
-# Spec alignment of the real PendingConsolidation decoder (H5 hold-out, class D)
+# Spec alignment of the real PendingConsolidation decoder (hold-out, class D)
 
-Hand-written by the H5 evaluation session: the text of `DdSpecK.lean` / `PwSpecK.lean`, with the statement
+Hand-written: the text of `DdSpecK.lean` / `PwSpecK.lean`, with the statement
 `pc_accept_stmt` (`H5Stmt.lean`) and the input chunks of `g`.
 - `pc_e2e_accept_spec_k`: if EthLib accepts `bsA` (`prysmPcDesc`) as `v`, there is `g : PPc` with `g.toValue = v`
   and `bsA = ppcEnc g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.

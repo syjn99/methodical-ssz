@@ -3,10 +3,10 @@ import E2e.WitCpWR
 import E2e.WitSplit
 
 /-!
-# Witness of `cp_e2e_marshal_reject_cover_framed` (INBOX 010 M2): `len(Root) ≠ 32`, every capacity range
+# Witness of `cp_e2e_marshal_reject_cover_framed`: `len(Root) ≠ 32`, every capacity range
 
 Same host, block, registers and instances as `E2e/WitCpWR.lean` (the `WitCpWR` Host is the only one in
-scope: T-6): len 30, cap 30 + n (n ≤ 64), nil `dst`, any `rl ≠ 32` (a Go value only for `rl ≤ 48`:
+scope, because two `Host` instances in one file make instance resolution unfold both programs): len 30, cap 30 + n (n ≤ 64), nil `dst`, any `rl ≠ 32` (a Go value only for `rl ≤ 48`:
 `E2e.witCpWR_recv`, `E2e.witCpWR_recv_bad`).
 -/
 

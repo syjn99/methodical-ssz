@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Instruction and runtime-call classification of the phase1c ELF (X1 step 5).
+"""Instruction and runtime-call classification of the target ELF.
 
 Usage: mnemonics.py <objdump> <kraken Parser/Basic.lean> <conv.py> <inventory.json> <out.json>
 

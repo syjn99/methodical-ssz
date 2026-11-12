@@ -1,7 +1,7 @@
 import E2e.CpWTailG
 
 /-!
-# `(*v1alpha1.Checkpoint).MarshalSSZTo`: the two prefixes up to `L_7b` (directive 33) (INBOX 009)
+# `(*v1alpha1.Checkpoint).MarshalSSZTo`: the two prefixes up to `L_7b` (directive 33)
 
 - `cpw_head_fit`: `len + 8 ≤ cap`: directives 0–18 (`jae L_7b` taken): guard, prologue, the
   inlined Epoch encoder's stack temp (rsp0 − 64 … rsp0 − 33; X15 is not assumed zero), the block

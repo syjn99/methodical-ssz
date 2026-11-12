@@ -4,9 +4,9 @@ import Fk.BumpMore
 import Fk.WHost
 
 /-!
-# Witness of `sm_e2e_accept_main` (SyncCommitteeMessage decoder accept path; H5 hold-out, class C)
+# Witness of `sm_e2e_accept_main` (SyncCommitteeMessage decoder accept path; hold-out, class C)
 
-Hand-written by the H5 evaluation session (the text of `WitBhA.lean` with the SyncCommitteeMessage host and
+Hand-written (the text of `WitBhA.lean` with the SyncCommitteeMessage host and
 layout). It shows that the premises of the independent hand statement `E2eScal.H5.sm_accept_stmt` are
 satisfiable. Host: data labels, the real Go 1.26.10 `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ` (index 9),
 `(*primitives.Slot).UnmarshalSSZ` (188), `(*primitives.ValidatorIndex).UnmarshalSSZ` (251), the 1-byte bump

@@ -5,7 +5,7 @@ import EthLib.Serialization.Proofs.Ssz.Codec.RoundTripScalar
 import E2eList.Defs
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.SyncAggregate` (LV T1)
+# Spec bridge for the real Prysm `v1alpha1.SyncAggregate`
 
 The text of `E2eScal`'s `DdSpec.lean` with the two SyncAggregate fields. The Bitvector[512] field uses two EthLib
 theorems: `unpackBits_packBits` (bits → bytes → bits) and `packBits_unpackBits` (bytes → bits → bytes; the

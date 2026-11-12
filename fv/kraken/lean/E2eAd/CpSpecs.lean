@@ -4,7 +4,7 @@ import E2eAd.Code
 import Fk.RtCopy
 
 /-!
-# Function specifications of the Checkpoint decoder and encoder (prysm-e2e A2)
+# Function specifications of the Checkpoint decoder and encoder
 
 `CpUAccC Heap S` is the statement of `E2e.cp_e2e_accept_main` as a hypothesis-shaped property of
 the code at the label `(*Checkpoint).UnmarshalSSZ` (the form of `Fk.ScUAccC` / `E2e.EpUAccC`): for

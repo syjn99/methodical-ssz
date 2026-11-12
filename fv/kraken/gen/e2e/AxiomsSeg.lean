@@ -5,7 +5,7 @@ import E2eSeg.RejGInst
 import E2eDep.Reject
 import E2eDep.Accept
 
-/-! SEG hand list for `gen/e2e/segaxioms_gate.py` ("must exist" names; every name also gets the axiom check). -/
+/-! Hand list for `gen/e2e/segaxioms_gate.py` ("must exist" names; every name also gets the axiom check). -/
 
 #print axioms E2eSeg.flat_len
 #print axioms E2eSeg.in_split

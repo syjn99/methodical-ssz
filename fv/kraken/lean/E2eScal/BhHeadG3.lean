@@ -2,7 +2,7 @@ import E2eScal.BhHead
 import E2eScal.CallDec
 
 /-!
-# GEN3 L1, second instance: `bh_e2e_head` re-derived with the call-site lemmas
+# Second instance of the call-site lemmas: `bh_e2e_head` re-derived with the call-site lemmas
 
 `bh_e2e_head_g3` has the statement text of `E2eScal.Bh.bh_e2e_head` (`BhHead.lean`, unchanged);
 `bh_e2e_head_g3_type`: the two declared types are equal by `rfl`. Proof: `bh_head0` (hand steps, directives
@@ -146,7 +146,7 @@ theorem bhg_guard (x : BitVec 64) (g : Nat) (h : g + 112 < x.toNat) : g < (x - 1
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-/-- Segment 1 of the BeaconBlockHeader decoder accept path, re-derived with the GEN3 call-site lemmas
+/-- Segment 1 of the BeaconBlockHeader decoder accept path, re-derived with the call-site lemmas
 (statement text of `bh_e2e_head`). -/
 theorem bh_e2e_head_g3 (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh BhUnmarshal k)
     (hsl : SlUAccC) (hvi : ViUAccC)

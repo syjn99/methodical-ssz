@@ -6,7 +6,7 @@ import E2eScal.Enc2ExDm
 import E2eScal.Enc2ExHs
 
 /-!
-# ENC2 L2: worked examples of generated-style encoder fast-path theorems, one per frame / field-mix class
+# Worked examples of generated-style encoder fast-path theorems, one per frame / field-mix class
 
 | module | type | guard | frame | fields | epilogue | statement |
 | --- | --- | --- | --- | --- | --- | --- |

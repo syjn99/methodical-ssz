@@ -34,7 +34,7 @@ theorem bhm_ret (x : BitVec 64) : ({ toBitVec := x - 168 } + 8 : UInt64) = { toB
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- Segment B: directive 62 to the return of the first `memmove` (directive 90): ParentRoot appended. -/
+/-- ParentRoot segment: directive 62 to the return of the first `memmove` (directive 90): ParentRoot appended. -/
 theorem bh_enc_b (k : Nat) (hk : BhMarshal.IsInfixAt Host.prog k) (hf : LabelsFresh BhMarshal k)
     (r1 e1 : List UInt8) (hr1 : r1.length = 32) (he1 : e1.length = 32)
     (s : MachineData) (rsp : UInt64) (recv dst v cap p1 : BitVec 64)
@@ -125,7 +125,7 @@ theorem bh_enc_b (k : Nat) (hk : BhMarshal.IsInfixAt Host.prog k) (hf : LabelsFr
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- Segment C: directive 90 to the return of the second `memmove` (directive 118): StateRoot appended. On entry the length is at rsp − 96 and the capacity at rsp − 104; on exit they are swapped. -/
+/-- StateRoot segment: directive 90 to the return of the second `memmove` (directive 118): StateRoot appended. On entry the length is at rsp − 96 and the capacity at rsp − 104; on exit they are swapped. -/
 theorem bh_enc_c (k : Nat) (hk : BhMarshal.IsInfixAt Host.prog k) (hf : LabelsFresh BhMarshal k)
     (rr ee : List UInt8) (hrr : rr.length = 32) (hee : ee.length = 32)
     (s : MachineData) (rsp : UInt64) (recv dst v cap p2 : BitVec 64)
@@ -227,7 +227,7 @@ theorem bh_enc_c (k : Nat) (hk : BhMarshal.IsInfixAt Host.prog k) (hf : LabelsFr
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- Segment D: directive 118 to the return of the third `memmove` (directive 148): BodyRoot appended. On entry the length is at rsp − 104 and the capacity at rsp − 96; they stay there. -/
+/-- BodyRoot segment: directive 118 to the return of the third `memmove` (directive 148): BodyRoot appended. On entry the length is at rsp − 104 and the capacity at rsp − 96; they stay there. -/
 theorem bh_enc_d (k : Nat) (hk : BhMarshal.IsInfixAt Host.prog k) (hf : LabelsFresh BhMarshal k)
     (rr ee : List UInt8) (hrr : rr.length = 32) (hee : ee.length = 32)
     (s : MachineData) (rsp : UInt64) (recv dst v cap p3 : BitVec 64)
@@ -331,7 +331,7 @@ theorem bh_enc_d (k : Nat) (hk : BhMarshal.IsInfixAt Host.prog k) (hf : LabelsFr
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- Segment E: directive 148 to the return (`retq`, directive 155). Memory unchanged. -/
+/-- Return segment: directive 148 to the return (`retq`, directive 155). Memory unchanged. -/
 theorem bh_enc_e (k : Nat) (hk : BhMarshal.IsInfixAt Host.prog k)
     (s : MachineData) (rsp ra rbp0 : UInt64) (dst v cap : BitVec 64) (R : DataMem → Prop)
     (hrsp : s.regs.rsp = { toBitVec := rsp.toBitVec - 8#64 - 152 })

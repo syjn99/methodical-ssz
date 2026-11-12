@@ -4,7 +4,7 @@ import Fk.BumpMore
 import Fk.WHost
 
 /-!
-# Witnesses of `ia_e2e_reject_misaligned_nz` (P4) and `ia_e2e_reject_toobig_nz` (P5) (LV T3)
+# Witnesses of `ia_e2e_reject_misaligned_nz` (alignment reject) and `ia_e2e_reject_toobig_nz` (overflow reject)
 
 The premises of the corrected statements (`StmtIaNz.lean`) are satisfiable, `e0 ≠ 0` included, with a concrete
 non-zero itab word. The text of `Fk/WitLuMa.lean` (the witness of the precedent `lu_reject_misaligned_main`).
@@ -17,7 +17,7 @@ error globals (itab, `e1` = 0x10170), the static entry of 1, the errorString obj
 (rsp = 0x10300, `S = 8`), the guard word, the 4 offset bytes of the input (the decoder reads no more bytes on these
 paths), the 8320-byte heap, and the two format strings at `go_string._ + 163839` and `go_string._ + 171319`. The
 frame `R` is `fun _ => True` (every other byte of the block).
-P4: len = 229 (len − 228 = 1, misaligned; the box of 1 is the static entry). P5: len = 228 + 8 · 2049 (2049 > 2048
+Alignment reject: len = 229 (len − 228 = 1, misaligned; the box of 1 is the static entry). Overflow reject: len = 228 + 8 · 2049 (2049 > 2048
 elements; the box is on the heap).
 -/
 
@@ -74,7 +74,7 @@ def mem : DataMem := block.At (0x10000 : BitVec 64)
 def s0 (len : Nat) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0, 0x10330, UInt64.ofNat len, 0, 0, UInt64.ofNat len, 0x10300, 0, 0, 0, 0, 0, 0, 0, 0x10310, 0⟩, zmms, flags, mem⟩
 
-/-- **Non-vacuity of `ia_e2e_reject_misaligned_nz` (P4)**, len = 229, `e0` = the itab address 0x1012b (≠ 0). -/
+/-- **Non-vacuity of `ia_e2e_reject_misaligned_nz` (alignment reject)**, len = 229, `e0` = the itab address 0x1012b (≠ 0). -/
 theorem ia_misaligned_runs (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax ≠ 0)
@@ -104,7 +104,7 @@ theorem ia_misaligned_runs (zmms : RegZmms) (flags : StatusFlags) :
     (fun _ h => ⟨h.1, h.2.1⟩)
 
 
-/-- **Non-vacuity of `ia_e2e_reject_toobig_nz` (P5)**, len = 228 + 8 · 2049, `e0` = the itab address 0x1012b (≠ 0). -/
+/-- **Non-vacuity of `ia_e2e_reject_toobig_nz` (overflow reject)**, len = 228 + 8 · 2049, `e0` = the itab address 0x1012b (≠ 0). -/
 theorem ia_toobig_runs (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax ≠ 0)

@@ -1,9 +1,9 @@
 import Fv1.SpecList
 
 /-!
-# Definitions that the ENC statements use (DataColumnsByRootIdentifier)
+# Definitions that the encoder statements use (DataColumnsByRootIdentifier)
 
-These definitions are part of the frozen ENC statements (`StmtEnc.lean`). A later change needs a new name and a reason.
+These definitions are part of the frozen encoder statements (`StmtEnc.lean`). A later change needs a new name and a reason.
 
 - `prysmDcDesc`: hand `Desc` from consensus-specs fulu (p2p-interface; no local copy of the spec text):
 

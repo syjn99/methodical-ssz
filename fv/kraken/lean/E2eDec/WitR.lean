@@ -3,12 +3,12 @@ import Fk.WHost
 import Fk.RtCopy
 
 /-!
-# Witnesses of the ENC decoder rejects D1 (size) and D2 (offset)
+# Witnesses of the decoder size reject and offset reject
 
 The text of `E2e/WitCpMR.lean` with this host and layout. Host: the error label (index 0) and the real Go 1.26.10
 `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ` (index 1). Memory at `0x10000`: the two error words (stand-in
 values: the real ones are set by the runtime's init), the guard word (r14 = 0x10000), the stack window rsp − 8 …
-rsp + 24 (rsp = 0x10020); D2 adds the 4 offset bytes at buf + 32 (0x10038). Frame `R`: the rax spill slot.
+rsp + 24 (rsp = 0x10020); the offset reject adds the 4 offset bytes at buf + 32 (0x10038). Frame `R`: the rax spill slot.
 -/
 
 open Fk Fk.W E2eEnc E2eDec E2eDec.Code

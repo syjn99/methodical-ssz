@@ -3,7 +3,7 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Witness of `dep_e2e_reject_size_main` (Deposit size reject, SEG proof of use)
+# Witness of `dep_e2e_reject_size_main` (Deposit size reject)
 
 Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10 `(*v1alpha1.Deposit).UnmarshalSSZ`
 (index 1). The text of `E2eScal/WitDdR.lean` with the Deposit decoder.

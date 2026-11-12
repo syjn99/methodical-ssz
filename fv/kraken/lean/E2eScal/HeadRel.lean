@@ -5,7 +5,7 @@ import E2eScal.PwAccept
 import E2eScal.BhHeadG3
 
 /-!
-# GEN4 L4: the per-type hand head / epilogue / spill lemmas are instances of the frame-parametric mechanism
+# The per-type hand head / epilogue / spill lemmas are instances of the frame-parametric mechanism
 
 Each theorem has the TYPE of a per-type hand lemma (`type_of%`: the committed statement) and is proved from
 `decpro_seg`, `decret_seg`, `kstep_nilchk` (`HeadN.lean`) and the step lemmas (`StepK.lean`) only:

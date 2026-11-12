@@ -6,11 +6,11 @@ import E2eAd.Prims
 import E2eScal.Gen4SmDec
 
 /-!
-# GEN5 worked example: `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`, accept theorem in generated style
+# Worked example: `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`, accept theorem in generated style
 
 Text produced from one description of the type (frame facts, field list, boundary states, chain theorem names)
-by the recipe of the G5-L hand-over; every theorem has a `_kind` line (`decHeadKindN`, `decFieldKindN`,
-`decEpiKindN`, `decAcceptKindN`). The GEN4 chain theorems (`E2eScal.Gen.*`) are used as emitted.
+by the recipe of the lemma hand-over; every theorem has a `_kind` line (`decHeadKindN`, `decFieldKindN`,
+`decEpiKindN`, `decAcceptKindN`). The `p2dec --gen4` chain theorems (`E2eScal.Gen.*`) are used as emitted.
 -/
 
 open Fk E2e E2eAd E2eAd.Code E2eScal.H6Code E2eScal.H5Code E2eScal.BhCode E2eScal

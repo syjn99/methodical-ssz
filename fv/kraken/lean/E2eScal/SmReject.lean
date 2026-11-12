@@ -6,9 +6,9 @@ import E2e.Data
 import E2e.CpReject
 
 /-!
-# Real Prysm `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`: size reject (H5 hold-out, class C)
+# Real Prysm `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`: size reject (hold-out, class C)
 
-Hand-written by the H5 evaluation session: the text of `BhReject.lean` (`bh_e2e_reject_size_main`) with the
+Hand-written: the text of `BhReject.lean` (`bh_e2e_reject_size_main`) with the
 SyncCommitteeMessage indices (frame `sub $0x60` as BeaconBlockHeader). `sm_e2e_reject_size_main`
 (`len(buf) ≠ 144`, `return ssz.ErrSize`): directives 2–7, 9–10 `cmp $0x90,%rcx; jne L_29d` taken, `L_29d` (161),
 loads of `ssz.ErrSize` (162–163), epilogue 164–166. Not covered here: the two callee error paths.

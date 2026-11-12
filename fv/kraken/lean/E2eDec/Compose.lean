@@ -3,7 +3,7 @@ import E2eDec.StmtCompS
 import E2eEnc.Fast
 
 /-!
-# ENC round trip (machine): decoder entry → `dcd_e2e_accept_main` → (caller: `hupd`) → `dc_e2e_marshal_fast_main`
+# Round trip (machine): decoder entry → `dcd_e2e_accept_main` → (caller: `hupd`) → `dc_e2e_marshal_fast_main`
 
 The order of `E2e.cp_e2e_unmarshal_then_marshal` (`E2e/CpCompose.lean`). Statement: the corrected
 `dc_unmarshal_then_marshal_s_stmt` (`StmtCompS.lean`, the frozen text plus `S < 2^60`). Frame mapping (x = rsp at both entries):

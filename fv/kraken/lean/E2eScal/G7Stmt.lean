@@ -8,16 +8,16 @@ import E2eScal.KindEncN
 import E2eScal.F24Code
 
 /-!
-# GEN7 / K1: independent hand STATEMENTS of two decoder accept paths and two encoder fast paths with a
+# Independent hand STATEMENTS of two decoder accept paths and two encoder fast paths with a
 20-byte vector field (statements only, no proof)
 
-Hand-written by the K1 implementer (Opus 5.5) BEFORE the generators were changed for the 20-byte kind, so before any
-generated theorem of these four functions existed (the FLAT24 one-shot runs refused all four: "new field kind (b20)").
+Hand-written BEFORE the generators were changed for the 20-byte kind, so before any
+generated theorem of these four functions existed (the one-shot runs on the 24 flat types refused all four: "new field kind (b20)").
 Sources: the Go receiver layout (IR `go_fields` of `prysm/ir/ir-mainnet.json`, gc amd64 offsets), the SSZ layout
 (field sizes in IR order), the `.S` files of `prysm/go1.26.10/e2e/f24/link/norm/` (frame, guard, spills, stack slots
 touched on the path and their contents at the return, the directive of the last call), the statement shape of the
 committed hand statements `E2eScal.F24.dpr_accept_stmt` (decoders, frame `0x20`, no callee) and
-`E2eScal.E2c.dd_hand_fast`, `E2eScal.F24.vid_hand_fast` (encoders), and the E2-L interface text (chunk order: saved
+`E2eScal.E2c.dd_hand_fast`, `E2eScal.F24.vid_hand_fast` (encoders), and the interface text of `enc2/L/OUT.md` (chunk order: saved
 rbp, home slots ascending, other slots by first touch, the return slot; existentials in creation order).
 Independence limit: the layout rules come from that interface text and the earlier hand statements; the parameters
 are read from the `.S` by hand. Development data, no hold-out.

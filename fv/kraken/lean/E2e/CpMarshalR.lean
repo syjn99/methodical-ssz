@@ -12,7 +12,7 @@ find `len(Root) ≠ 32`. Directives 71–79: `rdi, rsi` = the two words of
 `ssz.ErrBytesLength` (address = data item `e2eErrBytesLength_addr`),
 `rax = rbx = rcx = 0` (nil slice), epilogue.
 
-The conclusion states the side effect exactly (FINDINGS C-1): `dst[len:len+8]`
+The conclusion states the side effect exactly (the epoch bytes are written before the root length test): `dst[len:len+8]`
 holds the epoch bytes, everything else of `dst` is unchanged, the returned
 slice is nil. The 32-byte stack temp is named as in the fast path.
 -/

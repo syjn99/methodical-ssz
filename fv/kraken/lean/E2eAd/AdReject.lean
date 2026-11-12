@@ -6,7 +6,7 @@ import E2e.Data
 import E2e.CpReject
 
 /-!
-# Real Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`: size reject and the four unreachable error wraps (A3)
+# Real Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`: size reject and the four unreachable error wraps
 
 `ad_e2e_reject_size_main` (`len(buf) ≠ 128`, Go source `return ssz.ErrSize`): directives
 2–7 (guard, prologue, rbx spill), 9–10 `cmp $0x80,%rcx; jne L_3ad` taken, 226 `L_3ad`,

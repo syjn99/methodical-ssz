@@ -4,9 +4,9 @@ import Fk.BumpMore
 import Fk.WHost
 
 /-!
-# Witness of `bi_e2e_accept_main` (BlobIdentifier decoder accept path, H3 hold-out)
+# Witness of `bi_e2e_accept_main` (BlobIdentifier decoder accept path, hold-out)
 
-Hand-written by the H3 evaluation session (the text of `WitE1A.lean` with the BlobIdentifier host and layout).
+Hand-written (the text of `WitE1A.lean` with the BlobIdentifier host and layout).
 Host: data labels, the real Go 1.26.10 `(*v1alpha1.BlobIdentifier).UnmarshalSSZ` (index 9), the 1-byte bump
 `runtime.makeslice` (81, `bump_makeslice1`) and `RtCopy` (87, `rt_memmove`).
 One memory block at `0x10000`: bump pointer, writeBarrier word, the 32-byte heap, guard word, the 40 input

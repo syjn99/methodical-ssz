@@ -1,11 +1,11 @@
 import E2eScal.P2Dec
 
 /-!
-# 48-byte decode segment, source offset 0 (H3 hold-out, hand helper; not part of the frozen method)
+# 48-byte decode segment, source offset 0 (hold-out, hand helper; not part of the frozen method)
 
-Hand-written by the H3 evaluation session for `DepositMessage.PublicKey` (`bytes48` at SSZ offset 0, Go
+Hand-written for `DepositMessage.PublicKey` (`bytes48` at SSZ offset 0, Go
 offset 0). The frozen generator reads only 32-byte `[]byte` fields (`scalgen.py` `ir_roots`), so it does not
-see this field. The Go 1.26.10 code of the field is the offset-0 form of SG-1 with the size 48:
+see this field. The Go 1.26.10 code of the field is the offset-0 form (memmove source at the buffer pointer itself) with the size 48:
 `bytesDecHead48` = the text of `E2eScal.rootDecHead` with `32` → `48`; `bytesDecMidZ48` = the text of
 `E2eScal.rootDecMidZ` with `32` → `48`; `bytes48dec_seg_z` = the statement and proof text of
 `E2eScal.rootdec_seg_z` with every `32` → `48`. `P2Dec.lean`, `P2DecZ.lean`, `Kind*.lean` are unchanged.

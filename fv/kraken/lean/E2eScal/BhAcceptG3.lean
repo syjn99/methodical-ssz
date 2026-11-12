@@ -3,13 +3,13 @@ import E2eScal.BhHeadG3
 import E2eScal.Gen3BhDec
 
 /-!
-# BeaconBlockHeader accept path from the GENERATED GEN3 theorems (unit G3-G, reuse demonstration)
+# BeaconBlockHeader accept path from the GENERATED `p2dec --gen3` theorems (reuse demonstration)
 
 Hand composition (not generator output). `bh_e2e_head_g3g`: the chain of `BhHeadG3.lean` with the four
 call-site lemma instances replaced by the generated theorems of `Gen3BhDec.lean` (`p2dec --gen3`, raw output):
 `bh_g3dec_Slot_arg` / `_call`, `bh_g3dec_ProposerIndex_arg` / `_call`; `bh_head0` (0–14) and `bh_spill2`
 (86–87) stay hand steps. `bh_e2e_accept_main_g3`: the proof text of `BhAccept.lean` with `bh_e2e_head` replaced
-by `bh_e2e_head_g3g` and the three H1 root segments by the GEN3 ones (`bh_g3dec_*_seg`, same statements); the
+by `bh_e2e_head_g3g` and the three hand root segments by the generated ones (`bh_g3dec_*_seg`, same statements); the
 instance directives between the roots and the epilogue stay hand steps. Both declared types equal the existing
 hand theorems by `rfl` (`_type`). In-sample (development data).
 -/
@@ -135,7 +135,7 @@ theorem bh_e2e_head_g3g_type : ∀ (h : Host),
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- Accept path of `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ` from the GENERATED GEN3 theorems (all five
+/-- Accept path of `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ` from the GENERATED `p2dec --gen3` theorems (all five
 fields); statement text of `bh_e2e_accept_main`. -/
 theorem bh_e2e_accept_main_g3 (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh BhUnmarshal k)
     (kS : Nat) (hkS : SlUnmarshal.IsInfixAt Host.prog kS) (hfS : LabelsFresh SlUnmarshal kS)

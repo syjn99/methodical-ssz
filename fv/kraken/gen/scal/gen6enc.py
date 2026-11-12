@@ -1,6 +1,6 @@
-"""GEN6 (unit E2-G): `scalgen.py p2enc --gen6`, generated fast-path theorems for flat encoders (`MarshalSSZTo`).
+"""GEN6: `scalgen.py p2enc --gen6`, generated fast-path theorems for flat encoders (`MarshalSSZTo`).
 
-Interface: the E2-L hand-over ("Interface for E2-G"); the reference texts are `lean/E2eScal/Enc2Ex*.lean`. A symbolic
+Interface: the encoder lemma unit's hand-over; the reference texts are `lean/E2eScal/Enc2Ex*.lean`. A symbolic
 dataflow walk over the fast path of the `.S` file (head; per IR field its length test not taken, its capacity test
 passed with the growslice site SKIPPED, never stepped; the store / `memmove` commit; the epilogue with the frame
 test where present) produces ONE module: the head theorem, one theorem per IR field, the epilogue theorem, the

@@ -2,13 +2,13 @@ import E2eScal.Gen5HsDec
 import E2eScal.HsSpec
 
 /-!
-# Spec alignment of the real HistoricalSummary decoder (unit G5-C)
+# Spec alignment of the real HistoricalSummary decoder
 
-Built on the GENERATED theorems of `Gen5HsDec.lean` (`p2dec --gen5`, unit G5-G; raw output, not edited):
+Built on the GENERATED theorems of `Gen5HsDec.lean` (`p2dec --gen5`; raw output, not edited):
 - `hs_e2e_accept_spec_k`: if EthLib accepts `bsA` (`prysmHsDesc`) as `v`, there is `g : PHs` with `g.toValue = v`
   and `bsA = phsEnc g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.
   The statement is the generated accept statement (kind instance) with the input chunks replaced by the
-  encoding of `g` (text written by the G5-C script `mkspeck.py` from the generated statement; then checked by Lean
+  encoding of `g` (text written by the script `mkspeck.py` from the generated statement; then checked by Lean
   against `E2eScal.Gen.hs_g5dec_accept`).
 - `hs_e2e_reject_size_spec`: `bs.size ≠ 64` → EthLib rejects, and the machine code returns `ssz.ErrSize`
   (generated `hs_g5dec_reject`).

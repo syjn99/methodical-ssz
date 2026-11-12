@@ -2,7 +2,7 @@ import Kraken.X64.WP
 import E2eList.Include
 
 /-!
-# ELF data of the LV set that the LV statements read
+# ELF data of the SyncAggregate and SyncCommittee set that their statements read
 
 Every definition is elaborated from a file of `fv/kraken/prysm/go1.26.10/e2e/lv/link/data/` by
 `lv_data_include`; the files are written by `gen/e2e/lvlink.py data` (with `link/data.py`'s code)

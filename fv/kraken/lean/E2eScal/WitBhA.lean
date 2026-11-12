@@ -4,9 +4,9 @@ import Fk.BumpMore
 import Fk.WHost
 
 /-!
-# Witness of `bh_e2e_accept_main` (BeaconBlockHeader decoder accept path, H1 hold-out (ii))
+# Witness of `bh_e2e_accept_main` (BeaconBlockHeader decoder accept path, hold-out)
 
-Hand-written by the evaluation session (the text of `E2eAd/WitAdA.lean` with the BeaconBlockHeader host
+Hand-written (the text of `E2eAd/WitAdA.lean` with the BeaconBlockHeader host
 and layout). Host: data labels, the real Go 1.26.10 `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`
 (index 9), `(*primitives.Slot).UnmarshalSSZ` (226), `(*primitives.ValidatorIndex).UnmarshalSSZ` (289),
 the 1-byte bump `runtime.makeslice` (352, `bump_makeslice1`) and `RtCopy` (358, `rt_memmove`).

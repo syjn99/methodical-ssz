@@ -4,7 +4,7 @@ import E2eSeg.V32Loop
 /-!
 # Element loop of the `3·2^k` shape: one iteration, the exit and the whole loop, for any count `n < 2^31`
 
-Generalized once from `E2eList.sc_iter` / `sc_exit` / `sc_loop` (T2): the directive indices are block offsets, the
+Generalized once from `E2eList.sc_iter` / `sc_exit` / `sc_loop`: the directive indices are block offsets, the
 frame slots and receiver words are parameters with address equations, the input is at `bfs`, the gaps are `Glue`
 (`nop`) and `GlueSrc` (`lea src(%rbx),%rbx`). The return slot keeps the last `memmove` return address (`jS + 2`).
 

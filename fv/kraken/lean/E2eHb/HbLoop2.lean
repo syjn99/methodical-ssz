@@ -7,7 +7,7 @@ import E2eHb.Code
 import E2eHb.HbLoop1
 
 /-!
-# HB `(*v1alpha1.HistoricalBatch).UnmarshalSSZ`: the StateRoots loop (8192 iterations)
+# `(*v1alpha1.HistoricalBatch).UnmarshalSSZ`: the StateRoots loop (8192 iterations)
 
 Loop head `L_1c0` (directive 108). The frame is the one of `HbLoop1.lean`. `hb_iter2` covers directives 108–146
 and 104–107. Differences from the BlockRoots loop: the receiver words are `StateRoots` (`recv + 24` pointer,

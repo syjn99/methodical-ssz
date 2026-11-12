@@ -3,7 +3,7 @@
  "elf": "c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e",
  "link_bundle": "96298a344d6f093c1aec60d6722936476276ae9d7914e77969207a2e4b7bed39",
  "link_check_inputs": {
-  "note": "audit AU-17: the link check (e2elink.py filter, conv.py, check.py) reads the ELF and its nm symbol table as files; they are not committed (size). Their sha256 is recorded here.",
+  "note": "The link check (e2elink.py filter, conv.py, check.py) reads the ELF and its nm symbol table as files. These files are not committed (size). Their sha256 is recorded here.",
   "elf": {
    "name": "p1bin-amd64 (Go 1.26.10 ELF)",
    "sha256": "c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e"
@@ -74,7 +74,7 @@
    "kind": "reject_complete / reject_spec",
    "function": "v1alpha1.(*Checkpoint).UnmarshalSSZ",
    "statement": "done",
-   "witness": "done (WitCpRS.cp_reject_spec_runs on Array.replicate n 0x11, n = 39, 41, 0; review e2e-r1 S6)",
+   "witness": "done (WitCpRS.cp_reject_spec_runs on Array.replicate n 0x11, n = 39, 41, 0)",
    "theorem": "done",
    "link": "n/a",
    "negative": "done",
@@ -88,7 +88,7 @@
    "kind": "accept against EthLib",
    "function": "v1alpha1.(*Checkpoint).UnmarshalSSZ",
    "statement": "done",
-   "witness": "done (WitCpAS.cp_accept_spec_runs on pcpEnc g0 for 3 closed g0; review e2e-r1 S6)",
+   "witness": "done (WitCpAS.cp_accept_spec_runs on pcpEnc g0 for 3 closed g0)",
    "theorem": "done",
    "link": "done",
    "negative": "done",
@@ -113,10 +113,10 @@
   },
   {
    "name": "E2e.cp_e2e_marshal_decoded_receiver",
-   "kind": "encoder on a decoded-form receiver (not compose_hupd; review e2e-r1 M1)",
+   "kind": "encoder on a decoded-form receiver (not compose_hupd)",
    "function": "UnmarshalSSZ;MarshalSSZTo",
    "statement": "done",
-   "witness": "corollary; no own witness (WitCpM runs cp_e2e_marshal_main on a decoded-form receiver; audit AU-12)",
+   "witness": "corollary with no own witness (WitCpM runs cp_e2e_marshal_main on a decoded-form receiver)",
    "theorem": "done",
    "link": "done",
    "negative": "done",
@@ -130,7 +130,7 @@
    "kind": "marshal_reject",
    "function": "v1alpha1.(*Checkpoint).MarshalSSZTo",
    "statement": "done",
-   "witness": "done (WitCpMR: empty prefix rl 31/33/0; P5: 5-byte prefix rl 31/0; review e2e-r2 N5)",
+   "witness": "done (WitCpMR: empty prefix rl 31/33/0, WitCpMR.P5: 5-byte prefix rl 31/0)",
    "theorem": "done",
    "link": "done",
    "negative": "done",
@@ -158,7 +158,7 @@
    "kind": "callee reject (standalone)",
    "function": "primitives.(*Epoch).UnmarshalSSZ",
    "statement": "done",
-   "witness": "done (WitEpR: len 7 and 9 static box, len 300 heap box; review e2e-r2 N5)",
+   "witness": "done (WitEpR: len 7 and 9 static box, len 300 heap box)",
    "theorem": "done",
    "link": "done",
    "negative": "done",
@@ -213,7 +213,7 @@
   },
   {
    "name": "E2e.prysmCpDesc_serialize_checker / deserialize_checker",
-   "kind": "spec bridge: codec equality with the checker Desc (review e2e-r1 S1)",
+   "kind": "spec bridge: codec equality with the checker Desc",
    "function": "spec",
    "statement": "done",
    "witness": "n/a (spec level)",
@@ -266,49 +266,49 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "differential (enc-w-len30-spare8/20/39); witness receiver: GoValW.witCpW_recv (review e2e-r3 S1)",
+   "go_value": "differential (enc-w-len30-spare8/20/39); witness receiver: GoValW.witCpW_recv",
    "neg_ids": [
     "cpw-g2-"
    ]
   },
   {
    "name": "E2e.cp_e2e_marshal_grow_any_main",
-   "kind": "marshal: first append grows, every cap < len + 8 (no nextSliceCap premise); left: returns; right: reaches the 2nd growslice call — the run after it is NOT proved (GrowsliceC does not chain, T-7)",
+   "kind": "marshal: first append grows, every cap < len + 8 (no nextSliceCap premise); left: returns; right: reaches the 2nd growslice call — the run after it is NOT proved (GrowsliceC does not chain)",
    "function": "marshal",
    "statement": "done",
    "witness": "done (WitCpW.cov_runs n = 0, 3 and cov_runs_nil: left disjunct; right disjunct not exercised by the model)",
    "theorem": "done (partial: right disjunct ends at the call)",
    "link": "done",
    "negative": "done",
-   "go_value": "differential (enc-w-len30-spare0/3, enc-w-len10-spare0, enc-grow-cap0); witness receiver: GoValW.witCpW_recv (review e2e-r3 S1)",
+   "go_value": "differential (enc-w-len30-spare0/3, enc-w-len10-spare0, enc-grow-cap0); witness receiver: GoValW.witCpW_recv",
    "neg_ids": [
     "cpw-ga-"
    ]
   },
   {
    "name": "E2e.cp_e2e_marshal_grow_any_sharp",
-   "kind": "marshal: first append grows, every cap < len + 8 (same premises as grow_any_main; GrowsliceC esz 1, MemmoveC). (A) returns through the first block; (B) returns through the second growslice when the heap left av1 ≥ 2·nextSliceCap(len+40, C1) + 8192; (C) entry of the second call with Heap av1 and av1 below that budget — the run after (C) is NOT proved (no lower bound on the remaining heap in GrowsliceC, T-7; blocked / differential only pending a user decision)",
+   "kind": "marshal: first append grows, every cap < len + 8 (same premises as grow_any_main; GrowsliceC esz 1, MemmoveC). (A) returns through the first block; (B) returns through the second growslice when the heap left av1 ≥ 2·nextSliceCap(len+40, C1) + 8192; (C) entry of the second call with Heap av1 and av1 below that budget — the run after (C) is NOT proved (no lower bound on the remaining heap in GrowsliceC, blocked / differential only pending a user decision)",
    "function": "marshal",
    "statement": "done",
    "witness": "premises: WitCpW / WitCpWF (n = 0, 3, nil dst) through the covers; which of (A)/(B)/(C) a run takes is not decidable through GrowsliceC (it hides the returned capacity and heap); the witness model takes (A)",
    "theorem": "done (partial: (C) ends at the call)",
    "link": "done",
    "negative": "done",
-   "go_value": "differential (enc-w-len30-spare0/3, enc-w-len10-spare0, enc-grow-cap0); witness receiver: GoValW.witCpW_recv (review e2e-r3 S1)",
+   "go_value": "differential (enc-w-len30-spare0/3, enc-w-len10-spare0, enc-grow-cap0); witness receiver: GoValW.witCpW_recv",
    "neg_ids": [
     "cpw-sh-"
    ]
   },
   {
    "name": "E2e.cp_e2e_marshal_reject_grow_main",
-   "kind": "marshal_reject after the first growslice (cap < len + 8, len(Root) ≠ 32; C-1 form on the new block)",
+   "kind": "marshal_reject after the first growslice (cap < len + 8, len(Root) ≠ 32, epoch bytes written to the new block before the reject)",
    "function": "marshal",
    "statement": "done",
    "witness": "done (WitCpWR.rej_runs n = 0, 3; rej_runs_nil)",
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "differential (enc-w-rej-len30-spare0/3: caller array unchanged); witness receivers: GoValW.witCpWR_recv (rl 0/31/33/48), rl 49 not a Go value (witCpWR_recv_bad); rej_runs allows any rl ≠ 32, a Go caller only rl ≤ 48 (review e2e-r3 S1)",
+   "go_value": "differential (enc-w-rej-len30-spare0/3: caller array unchanged); witness receivers: GoValW.witCpWR_recv (rl 0/31/33/48), rl 49 not a Go value (witCpWR_recv_bad); rej_runs allows any rl ≠ 32, a Go caller only rl ≤ 48",
    "neg_ids": [
     "cpw-rg-"
    ]
@@ -322,7 +322,7 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "differential; witness receiver: GoValW.witCpW_recv (review e2e-r3 S1)",
+   "go_value": "differential; witness receiver: GoValW.witCpW_recv",
    "neg_ids": [
     "cpw-cv-"
    ]
@@ -336,35 +336,35 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "differential; witness receivers: GoValW.witCpWR_recv (rl 0/31/33/48), rl 49 not a Go value (witCpWR_recv_bad); rej_runs allows any rl ≠ 32, a Go caller only rl ≤ 48 (review e2e-r3 S1)",
+   "go_value": "differential; witness receivers: GoValW.witCpWR_recv (rl 0/31/33/48), rl 49 not a Go value (witCpWR_recv_bad); rej_runs allows any rl ≠ 32, a Go caller only rl ≤ 48",
    "neg_ids": [
     "cpw-rc-"
    ]
   },
   {
    "name": "E2e.cp_e2e_marshal_cover_framed",
-   "kind": "case cover len(Root) = 32 × every len ≤ cap with the exact frame (no ⋆ True): disjunction of the member postconditions (1) cp_e2e_marshal_main, (2) cp_e2e_marshal_grow2_main, (3A)/(3B)/(3C) cp_e2e_marshal_grow_any_sharp; returned block pre ++ bs with serialize = .ok bs (EthLib); (3C) is the entry of the second growslice call (T-7)",
+   "kind": "case cover len(Root) = 32 × every len ≤ cap with the exact frame (no ⋆ True): disjunction of the member postconditions (1) cp_e2e_marshal_main, (2) cp_e2e_marshal_grow2_main, (3A)/(3B)/(3C) cp_e2e_marshal_grow_any_sharp; returned block pre ++ bs with serialize = .ok bs (EthLib); (3C) is the entry of the second growslice call",
    "function": "marshal",
    "statement": "done",
    "witness": "done (WitCpWF.covf_runs: cap = len, len+3, len+8, len+39, len+40 with the reached capacity range in the conclusion; covf_runs_nil)",
    "theorem": "done (partial: (3C) ends at the call)",
    "link": "done",
    "negative": "done",
-   "go_value": "differential (accept cases); witness receiver: GoValW.witCpW_recv (review e2e-r3 S1)",
+   "go_value": "differential (accept cases); witness receiver: GoValW.witCpW_recv",
    "neg_ids": [
     "cpw-cf-"
    ]
   },
   {
    "name": "E2e.cp_e2e_marshal_reject_cover_framed",
-   "kind": "case cover len(Root) ≠ 32 × every len ≤ cap with the exact frame: len + 8 ≤ cap: epoch in the caller's array (blk = dst, C-1); cap < len + 8: caller's array pre ++ spare unchanged, epoch in the new block only",
+   "kind": "case cover len(Root) ≠ 32 × every len ≤ cap with the exact frame: len + 8 ≤ cap: epoch in the caller's array (blk = dst); cap < len + 8: caller's array pre ++ spare unchanged, epoch in the new block only",
    "function": "marshal",
    "statement": "done",
    "witness": "done (WitCpWRF.rejf_runs: cap = len, len+3, len+8, len+40, nil dst; rl 31/0/33/48)",
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "differential (reject cases); witness receivers: GoValW.witCpWR_recv (rl 0/31/33/48), rl 49 not a Go value (witCpWR_recv_bad); rej_runs allows any rl ≠ 32, a Go caller only rl ≤ 48 (review e2e-r3 S1)",
+   "go_value": "differential (reject cases); witness receivers: GoValW.witCpWR_recv (rl 0/31/33/48), rl 49 not a Go value (witCpWR_recv_bad); rej_runs allows any rl ≠ 32, a Go caller only rl ≤ 48",
    "neg_ids": [
     "cpw-rf-"
    ]
@@ -416,7 +416,7 @@
   },
   {
    "name": "E2eAd.ad_e2e_accept_main",
-   "kind": "accept v1alpha1.AttestationData (callees via sl/ci/cp_uacc_holds; Source/Target always new, N-3)",
+   "kind": "accept v1alpha1.AttestationData (callees via sl/ci/cp_uacc_holds; Source/Target always new)",
    "function": "unmarshal",
    "statement": "done",
    "witness": "done (WitAdA, 3 inputs)",
@@ -533,10 +533,10 @@
   "lean/E2eAd/Data.lean": "e621939c00d64035918cf4d216451e22e0c10208ac519de4816bac41b65fc7d1",
   "lean/E2eAd/Include.lean": "66e6fd12fe31214b302413b91d03402b865e45f6d08746c9a170ca4e0d2a9846",
   "prysm/go1.26.10/e2e/ad/AXIOMS.txt": "8514bcddb73383c9efd5f3fb9b9c02fc08f604648ee1111fa5cf9b61f2698b6b",
-  "note": "review e2e-r1 S3: the link bundle hash covers lean/Fk/Code.lean and the Go 1.26.3 AXIOMS.txt (check.py unchanged); these are the E2e include files and the E2e axioms list. Session 5 (review e2e-r3 S3): AXIOMS.txt rehashed after job 213 (79 lines); the E2eAd include files and ad/AXIOMS.txt added."
+  "note": "The link bundle hash covers lean/Fk/Code.lean and the Go 1.26.3 AXIOMS.txt (check.py unchanged). The hashes in this object are the E2e include files and the E2e axioms list. AXIOMS.txt was rehashed after job 213 (79 lines). The E2eAd include files and ad/AXIOMS.txt were also added."
  },
  "negative_suite": {
-  "run": "merged result file: gate job 139 (session 3 full suite at 300 s, 73 cases) + the jobs that added or re-ran cases since: 144, 150 (A2), 177, 178 (A3), 202, 203 (INBOX 009), 211, 212, 213 (INBOX 010). Every case ran at the 300 s per-case limit; negative.py merges by id. No single run covers all cases (≤ 20 min of gate time per run).",
+  "run": "merged result file: gate job 139 (full suite at 300 s, 73 cases) + the jobs that added or re-ran cases since: 144, 150, 177, 178, 202, 203, 211, 212, 213. Every case ran at the 300 s per-case limit, and negative.py merges by id. No single run covers all cases (≤ 20 min of gate time per run).",
   "pass": 154,
   "total": 154,
   "classes": {
@@ -579,7 +579,7 @@
    "epr-control-addr",
    "gv-stmt-after-nil",
    "gv-control-after",
-   "ci-load8 (S4: replayed in job 213, inside)",
+   "ci-load8 (replayed in job 213, inside)",
    "cpw-sh-* (4)",
    "cpw-cf-* (4)",
    "cpw-rf-* (3)",

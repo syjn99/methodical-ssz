@@ -3,9 +3,9 @@ import E2eAd.Spec
 import Fv1.SpecList
 
 /-!
-# Definitions that the LV T3 statements use (IndexedAttestation)
+# Definitions that the IndexedAttestation statements use (IndexedAttestation)
 
-These definitions are part of the frozen T3 statements (`StmtIa.lean`). A later change needs a new name and a reason.
+These definitions are part of the frozen IndexedAttestation statements (`StmtIa.lean`). A later change needs a new name and a reason.
 
 - `prysmIaDesc`: hand `Desc` from consensus-specs phase0 (no local copy of the spec text):
 

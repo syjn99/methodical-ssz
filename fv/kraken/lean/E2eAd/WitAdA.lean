@@ -5,9 +5,9 @@ import Fk.BumpMore
 import Fk.WHost
 
 /-!
-# Witness of `ad_e2e_accept_main` (AttestationData decoder accept path, A3)
+# Witness of `ad_e2e_accept_main` (AttestationData decoder accept path)
 
-Host (one per file, T-6): data labels, the real Go 1.26.10
+Host (one per file: two `Host` instances in one file make instance resolution unfold both programs): data labels, the real Go 1.26.10
 `(*v1alpha1.AttestationData).UnmarshalSSZ` (index 9), `(*primitives.Slot).UnmarshalSSZ` (252),
 `(*primitives.CommitteeIndex).UnmarshalSSZ` (315), `(*v1alpha1.Checkpoint).UnmarshalSSZ` (378),
 `(*primitives.Epoch).UnmarshalSSZ` (486), the 1-byte bump `runtime.makeslice` (549,

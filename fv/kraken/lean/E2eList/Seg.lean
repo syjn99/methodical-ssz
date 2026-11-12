@@ -2,7 +2,7 @@ import E2eScal.SegN
 import E2eScal.DdSegNop
 
 /-!
-# LV segment lemmas for the T1 field widths (new file; `SegN.lean` and `DdSegNop.lean` are unchanged)
+# Segment lemmas for the SyncAggregate field widths (new file; `SegN.lean` and `DdSegNop.lean` are unchanged)
 
 - `bytesdec_seg_z64`: the statement of `E2eScal.bytesdec_seg_z` with `hn : n = 64` (SyncCommitteeBits, offset 0).
   `SegN.lean` covers n ∈ {32, 48, 96}; its `hn` is a limit of the proof method (literal immediates).

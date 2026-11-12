@@ -2,7 +2,7 @@ import E2eDec.Accept
 import E2eEnc.SpecD
 
 /-!
-# ENC decoder accept path against EthLib (`dcd_accept_spec_stmt`)
+# Decoder accept path against EthLib (`dcd_accept_spec_stmt`)
 
 An input that EthLib accepts against `prysmDcDesc` is `pdcEnc g` for a `g : PDc` with `g.toValue = v`
 (`pdc_accepted_is_enc`); its bytes are `root ‖ dcOff ‖ u64Bytes cols` (`pdc_enc_toList`), and the machine code decodes it

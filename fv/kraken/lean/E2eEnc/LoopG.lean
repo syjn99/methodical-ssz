@@ -4,7 +4,7 @@ import E2eEnc.Tail
 import E2e.Data
 
 /-!
-# ENC G*: the Columns loop when any iteration may grow the block
+# Any-site grow path: the Columns loop when any iteration may grow the block
 
 Loop head `L_13a` (directive 82). The invariant (`DESIGN-ENC2.md`): rax = block pointer `bp`, rbx = L + 8i, rcx = the
 block capacity `cp`, rdx = pc, rsi = i, r8 = n, rsp = x − 136; the block holds `Pfx ‖ cb.take (8i) ‖ tail` with

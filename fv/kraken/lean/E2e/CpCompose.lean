@@ -3,9 +3,9 @@ import E2e.CpMarshal
 import E2e.Compose
 
 /-!
-# E5: machine-level composition decoder → encoder (real Go 1.26.10 code)
+# Machine-level composition decoder → encoder (real Go 1.26.10 code)
 
-`cp_e2e_unmarshal_then_marshal` (review e2e-r1 M1, fix (a)): start at the
+`cp_e2e_unmarshal_then_marshal` (it runs the decoder; the older theorem now in `Compose.lean` did not): start at the
 **entry of `(*Checkpoint).UnmarshalSSZ`** with the premises of
 `cp_e2e_accept_main` (40 input bytes `e8 ++ root`, any receiver contents). The
 decoder runs (with the real `(*primitives.Epoch).UnmarshalSSZ` through
@@ -58,7 +58,7 @@ theorem cpc_t30 (x : BitVec 64) :
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-/-- **E5.** Decoder entry → `cp_e2e_accept_main` → (caller: `hupd`) →
+/-- **Machine-level composition.** Decoder entry → `cp_e2e_accept_main` → (caller: `hupd`) →
 `cp_e2e_marshal_main` → encoder return; output = `dst ++ (e8 ++ root)`, the 40
 input bytes. -/
 theorem cp_e2e_unmarshal_then_marshal (kd : Nat) (hkd : CpUnmarshal.IsInfixAt Host.prog kd)

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Reader-side check of the `_kind` lines of a generated scal file (review fix-r2 N2).
+"""Reader-side check of the `_kind` lines of a generated scal file.
 
 The `_kind` line is generator output. Lean checks it (`with_reducible rfl`), but Lean does not check WHICH
 kind it names: a degenerate right-hand side (for example `type_of% (@t h)` itself, or `True`) also compiles.
 This program is run by the evaluator on every generated file. It does not change the generator.
 
 usage: kindcheck.py <generated.lean>...      exit 0 = every file passes, 1 = a file fails, 2 = usage
-       kindcheck.py --partial <partial.lean>  a `p2dec --gen2 --partial-out` file (unit G2-F): exit 3 = the
+       kindcheck.py --partial <partial.lean>  a `p2dec --gen2 --partial-out` file: exit 3 = the
                                              kinds of the theorems that are present pass, printed together with
                                              `PARTIAL n/m fields: kinds of present theorems checked; NOT a
                                              full-coverage result`; 1 = the file fails; 2 = usage. Never 0.
@@ -14,7 +14,7 @@ usage: kindcheck.py <generated.lean>...      exit 0 = every file passes, 1 = a f
 
 Checks, per file (text only):
  0. The file is not a partial generator output: no line contains `PARTIAL OUTPUT` (the header that
-    `scalgen.py p2dec --partial-out` writes on exit 3; review sg1-r1 S2). Checked on the raw text,
+    `scalgen.py p2dec --partial-out` writes on exit 3). Checked on the raw text,
     comments included.
  1. `lean/E2eScal/Kind.lean` has the frozen git blob id KIND_BLOB (method freeze of the hold-out).
  2. Top-level lines are only: import, open, variable, namespace, end, set_option … in, theorem, doc or
@@ -26,7 +26,7 @@ Checks, per file (text only):
         theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.u64DecAcceptKind h C := by
     or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.rootDecSegKind h C n1 … n9 := by
     or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.rootDecSegZKind h C n1 … n8 := by
-        (SG-1 offset-0 kind; only when `lean/E2eScal/KindZ.lean` has the pinned blob KINDZ_BLOB)
+        (offset-0 kind of the generator extension; only when `lean/E2eScal/KindZ.lean` has the pinned blob KINDZ_BLOB)
     or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.bytesDecSegKind h n C n1 … n9 := by
     or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.bytesDecSegZKind h n C n1 … n8 := by
         (GEN2 size-parametric kinds, n = 32, 48 or 96; only when `KindN.lean` and the lemma module `SegN.lean`
@@ -43,12 +43,12 @@ Checks, per file (text only):
             type_of% (@t h) = type_of% (@X h) := by
           intro h; with_reducible rfl
     with X a dotted name under `E2eScal.` that is not `t` and not declared in the file (a hand theorem), or
-    (`--same-as-prop`, unit G2-F) the Prop form
+    (`--same-as-prop`) the Prop form
         theorem t_type : ∀ (h : Host),
             type_of% (@t h) = @X h := by
           intro h; with_reducible rfl
-    with X a Prop-valued `abbrev` written by hand. This is an identity, NOT a kind. Unit G2-F (review g2g-r1
-    S1) restricts it:
+    with X a Prop-valued `abbrev` written by hand. This is an identity, NOT a kind. These rules
+    restrict it:
      6a. `_type` is accepted ONLY for a composed theorem: its proof (the lines up to the next theorem) uses
          both `E2eScal.dechead_seg` and `E2eScal.decepi_seg`. A segment theorem needs its `_kind`; a `_type`
          in place of a `_kind` fails.
@@ -59,11 +59,11 @@ Checks, per file (text only):
     The PASS line names X: "identity against X — statement evidence only if X is an independent hand
     statement". Whether X is independent is NOT checked here (a human must confirm it). A composed theorem
     of a type without a hand statement (no `_type`) FAILS. There is no kind for a composed statement.
- 7. `--partial` mode (unit G2-F): the file must carry exactly one `PARTIAL OUTPUT` header, after the imports,
+ 7. `--partial` mode: the file must carry exactly one `PARTIAL OUTPUT` header, after the imports,
     with `n of m fields`, and one line `UNCOVERED-JSON: [...]` (a JSON list of {field, reason}) whose length
     is m - n; the theorems present are checked by rules 1-6 as usual (no composed theorem allowed). The
     default mode rejects every partial file (rule 0, unchanged).
- 8. GEN3 (unit G3-G, `scalgen.py p2dec --gen3`): further `_kind` right-hand sides, each only when its kind
+ 8. GEN3 (`scalgen.py p2dec --gen3`): further `_kind` right-hand sides, each only when its kind
     module and lemma module have the pinned blobs GEN3_PINS:
         @E2eScal.callDecSegKind h C "fn" "lok" j j2      fn one of the four callee labels with a proved accept
                                                          spec (CALLEES: Slot, CommitteeIndex, ValidatorIndex,
@@ -75,21 +75,21 @@ Checks, per file (text only):
         @E2eScal.u64DecRRSegKind h C Reg64.rX src f j    rX one of the registers of `U64RRReg`
     (KindCall.lean + CallDec.lean, or KindCall.lean + U64RR.lean for the last). A `bytesDecSegKind` theorem
     whose proof uses `E2eScal.bytesdec_seg_p` needs SegNPad.lean pinned as well. A composed accept theorem
-    (rule 6a) may instead carry the composed-statement kind (lemma unit L4, KindAccept.lean pinned):
+    (rule 6a) may instead carry the composed-statement kind (KindAccept.lean pinned):
         set_option maxHeartbeats 200000 in
         theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.decAcceptKind h C st [f, …] jret := by
           intro h; rfl
     with st = true | false, f = `.bytes 32|48|96` or `.u64`; `rfl` at default transparency (the recursive kind
     must unfold) under the default heartbeat limit written out (a timeout is a FAIL). An identity `t_type`
     (rule 6) may follow the `t_kind` of a composed theorem. A segment theorem cannot carry `decAcceptKind`.
- 9. Hardening (review g2f-r1 S1-S3, unit G3-G): rule 6a is read on the proof text WITHOUT comments; a file
+ 9. Hardening: rule 6a is read on the proof text WITHOUT comments; a file
     with a coverage header `GEN2|GEN3 coverage (…): n of m fields` fails in the default mode when n != m;
     in both modes n must equal the number of fields with theorems present (theorem names
     `<prefix>_<field>_seg|_arg|_arg1|_arg2|_call`; a callee field needs `_call` and `_arg` or `_arg1` + `_arg2`),
     and no field of `UNCOVERED-JSON` may have a theorem.
 
-10. GEN4 (unit G4-G, `scalgen.py p2dec --gen4`): further `_kind` right-hand sides, each only when its kind
-    module and lemma modules have the pinned blobs GEN4_PINS (lemma unit G4-L, hand-over "Pins"):
+10. GEN4 (`scalgen.py p2dec --gen4`): further `_kind` right-hand sides, each only when its kind
+    module and lemma modules have the pinned blobs GEN4_PINS:
         @E2eScal.stepMovRRKind h C Reg64.rD Reg64.rS j e          @E2eScal.stepAddKind h C Reg64.rD imm j e
         @E2eScal.stepLdvKind / stepLdbKind / stepStKind / stepLeaKind h C Reg64.r1 Reg64.r2 disp j e
         @E2eScal.stepMovIKind h C Reg64.rD imm j e                @E2eScal.stepJmpKind h C "l" j jl
@@ -106,23 +106,23 @@ Checks, per file (text only):
          one field, every listed theorem is in the file, a field has at most one block theorem (`<p>_F_call` with
          `callDecSegKindG4`, or `<p>_F_seg` with a byte kind), n = the number of listed fields; in `--partial` mode
          no field of `UNCOVERED-JSON` is listed (its entries may carry a `miss_class`).
-11. Review g3g-r1 S2 (unit G4-G): a file in which a non-composed theorem has a GEN2 / GEN3 / GEN4 kind must
+11. A file in which a non-composed theorem has a GEN2 / GEN3 / GEN4 kind must
     carry the coverage header (`GEN2|GEN3|GEN4 coverage (…): n of m fields`); rule 6a also ignores string literals.
-    Exemption (unit G4-F, review g4g-r1 S2): the hand example modules listed in HAND_EXAMPLES (exact paths
+    Exemption: the hand example modules listed in HAND_EXAMPLES (exact paths
     `lean/E2eScal/Gen2Examples.lean`, `Gen3Examples.lean`) are not generator output and skip rule 11 only; every
     other rule applies to them. `Gen4Examples.lean` is not listed: its hand field compositions fail rules 4 and 10c,
     and no recorded command runs `kindcheck.py` on it.
-    6d. Review g3g-r1 for_h5 (unit G4-G): a composed accept theorem with only the kind `decAcceptKind` (no
+    6d. A composed accept theorem with only the kind `decAcceptKind` (no
     identity `_type` with an independent hand statement) FAILS; `scalgen.py --gen3 --compose` without `--same-as*`
     now also marks it `UNCHECKED STATEMENT` (rule 6c).
-12. GEN5 (unit G5-G, `scalgen.py p2dec --gen5`): a GEN5 file is checked in two parts. The text before the GEN5
+12. GEN5 (`scalgen.py p2dec --gen5`): a GEN5 file is checked in two parts. The text before the GEN5
     block (`/-! GEN5 (`p2dec --gen5`…`) by rules 1-11 as a GEN4 file; the GEN5 part by rule 12 (12a pins GEN5_PINS of
-    the G5-L kind / lemma modules; 12b the exact theorem list with the kinds decHeadKindN / decFieldKindN / decEpiKindN /
+    the GEN5 kind / lemma modules; 12b the exact theorem list with the kinds decHeadKindN / decFieldKindN / decEpiKindN /
     decAcceptKindN / decRejectKindN; 12c the kind parameters `L`, `fields`, boundary `pc` / `done` and the reject size
     RECOMPUTED from the `.S` and the IR named in the header (sha256 checked); 12d the accept proof chains every
     theorem; 12e the identity with a hand statement, if any, names no generated theorem). See the section `Rule 12`.
     A file with a GEN5 kind and no GEN5 block fails (rule 12: 0 GEN5 blocks). `--partial` never accepts a GEN5 file.
-13. GEN6 (unit E2-G, `scalgen.py p2enc --gen6`, encoder fast path): a file with `GEN6-JSON:` or an encoder kind
+13. GEN6 (`scalgen.py p2enc --gen6`, encoder fast path): a file with `GEN6-JSON:` or an encoder kind
     (encHeadKindN / encFieldKindN / encEpiKindN / encFastKindN) is checked by rule 13 only: 13a pins GEN6_PINS; 13b
     structure (one layout def or a pinned hand layout; the exact theorem list, each with its kind; the code constant);
     13c every kind line equals, as whole text, the line rendered from an OWN recomputation (this file's interpreter,
@@ -134,7 +134,7 @@ Checks, per file (text only):
     block) and no recorded command runs `kindcheck.py` on them.
 
 Limits (not checked here): GEN4 label strings in `stepLabelKind`, `stepJmpKind` and `callDecSegKindG4` (`lok`) are
-phantom kind parameters (review g4l-r1: they do not occur in the kind body; `stepLabelKind C l j e` is
+phantom kind parameters (they do not occur in the kind body; `stepLabelKind C l j e` is
 `stepNopsKind C j e` by `rfl`), so a label name in a kind line is NOT checked by this program or by the `_kind`
 line; the label is checked only by the proof's code fact (`he`, `hl`). Also not checked: that the kind parameters (C, indices, displacements, offsets) are the right
 ones for the Go type (a wrong one fails the proof's code facts, not this check); name resolution (the
@@ -150,22 +150,22 @@ import tempfile
 HERE = pathlib.Path(__file__).resolve().parent
 KR = HERE.parent.parent
 KIND = KR / "lean" / "E2eScal" / "Kind.lean"
-# Rule 11 exemption (unit G4-F, review g4g-r1 S2): hand-written example modules of the lemma units. They have GEN2+
+# Rule 11 exemption: hand-written example modules of the lemma units. They have GEN2+
 # kinds but are not generator output, so they have no coverage header. Only these exact paths (relative to
 # fv/kraken) skip rule 11; every other rule applies to them unchanged.
 # `Gen4Examples.lean` is not listed: it also fails rules 4 and 10c (hand field compositions `*_field` without a kind,
 # no FIELDS-JSON line), so an exemption from rule 11 alone would not make it pass; kindcheck is not a check of it.
 HAND_EXAMPLES = ("lean/E2eScal/Gen2Examples.lean", "lean/E2eScal/Gen3Examples.lean")
-KIND_BLOB = "3c9b95b1b37036831527396975d4232cc20174f3"  # method freeze 56dfc27 (INBOX 019)
+KIND_BLOB = "3c9b95b1b37036831527396975d4232cc20174f3"  # method freeze 56dfc27
 KINDZ = KR / "lean" / "E2eScal" / "KindZ.lean"
-KINDZ_BLOB = "0c790fa1882cd2e91419c285f66de0810c2b85e2"  # SG-1 extension (after both hold-outs were opened)
+KINDZ_BLOB = "0c790fa1882cd2e91419c285f66de0810c2b85e2"  # generator extension for a field at SSZ offset 0 (after both hold-outs were opened)
 GENNS = re.compile(r"^E2eScal\.Gen\w*\.")  # rule 6b: generated namespaces (E2eScal.Gen, E2eScal.Gen2Ex, ...)
 DECL = re.compile(r"^(?:private |protected |noncomputable )*(?:theorem|lemma|def|abbrev) (\S+)")
 COMPOSED = ("(E2eScal.dechead_seg ", "(E2eScal.decepi_seg ")  # rule 6a
 UNCHECKED = "UNCHECKED STATEMENT"  # rule 6c
 
-# GEN2 (unit G2-G): the kind and lemma modules of the GEN2 L1 / L2 lemmas, pinned at the blobs of the lemma
-# unit's head 6c62a49 (the lemma unit's hand-over, "Pins for kindcheck.py"). A new kind is accepted only with both
+# GEN2: the kind and lemma modules of the GEN2 lemmas, pinned at the blobs of the lemma
+# unit's head 6c62a49. A new kind is accepted only with both
 # its kind module and its lemma module at these blobs.
 GEN2_PINS = {
     "KindN.lean": "8947c5757f522463a495ad585d3480b7c2f3830b",
@@ -175,7 +175,7 @@ GEN2_PINS = {
 }
 GEN2_NEEDS = {"bytesDecSegKind": ("KindN.lean", "SegN.lean"), "bytesDecSegZKind": ("KindN.lean", "SegN.lean"),
               "u64DecInlineSegKind": ("KindU64.lean", "U64Inline.lean")}
-# GEN3 (unit G3-G): kind and lemma modules of the GEN3 lemma unit, pinned at its head f5c5f52 (hand-over "Pins")
+# GEN3: kind and lemma modules of the GEN3 lemma unit, pinned at its head f5c5f52
 GEN3_PINS = {
     "KindCall.lean": "02b006726b77166dd07783aae20d6b4c02a3953e",
     "CallDec.lean": "1401e7bc860375c16240b34d80f00aba294f83f2",
@@ -190,7 +190,7 @@ GEN3_NEEDS = {"callDecSegKind": ("KindCall.lean", "CallDec.lean"), "callArgFirst
 CALLEES = tuple(f'"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.{n}.UnmarshalSSZ"'
                 for n in ("Slot", "CommitteeIndex", "ValidatorIndex", "Epoch"))
 INT = r"(?:0|[1-9][0-9]*|\(-[1-9][0-9]*\))"  # an Int64 literal as the generator writes it
-# GEN4 (unit G4-G): kind and lemma modules of the GEN4 lemma unit G4-L, pinned at its head 718e023 (hand-over "Pins")
+# GEN4: kind and lemma modules of the GEN4 lemma unit, pinned at its head 718e023
 GEN4_PINS = {
     "NopView.lean": "ea6c1f590fd07ae105365f8c28104b9a5a6fd00f",
     "StepK.lean": "7cef6d18050ab1b821f915d48754a5888fe65437",
@@ -281,7 +281,7 @@ def partial_header(lines):
 
 
 def strip_comments(s):
-    """Rule 9 (review g2f-r1 S1): Lean text without `--` line comments and `/- … -/` block comments (nested)."""
+    """Rule 9: Lean text without `--` line comments and `/- … -/` block comments (nested)."""
     out, i, depth = [], 0, 0
     while i < len(s):
         if s.startswith("/-", i):
@@ -300,7 +300,7 @@ def strip_comments(s):
 
 
 def strip_strings(s):
-    """Rule 11 (review g3g-r1 S2): Lean text without the contents of string literals ("…", with escapes)."""
+    """Rule 11: Lean text without the contents of string literals ("…", with escapes)."""
     return re.sub(r'"(?:[^"\\]|\\.)*"', '""', s)
 
 
@@ -430,7 +430,7 @@ def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB, gen2_blobs=None, gnames=N
             if nx2 and nx2[0] == t + "_type":
                 type_line(t)
             else:
-                # rule 6d (review g3g-r1 for_h5): the kind alone is no independent statement check
+                # rule 6d: the kind alone is no independent statement check
                 errs.append(f"{t}: composed accept theorem without the identity `{t}_type` with an independent hand "
                             f"statement (`--same-as` / `--same-as-prop`): UNCHECKED STATEMENT")
             continue
@@ -492,13 +492,13 @@ def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB, gen2_blobs=None, gnames=N
                         errs.append(f"{t}_kind: {m} blob {gen3_blobs.get(m)} != pinned {GEN3_PINS[m]}")
         if j + 1 >= len(lines) or lines[j + 1] != "  intro h; with_reducible rfl":
             errs.append(f"{t}_kind: proof line is not `  intro h; with_reducible rfl`")
-    # rule 9 (review g2f-r1 S2, S3): the coverage numbers agree with the theorems present
+    # rule 9: the coverage numbers agree with the theorems present
     cov = [COVER.search(l) for l in lines]
     cov = [c for c in cov if c]
     fjs = [l for l in lines if l.startswith("FIELDS-JSON: ")]
     gen4 = bool(g4kind) or bool(fjs) or any(c.group(1) == "4" for c in cov)
     if newkind and not cov and rule11:
-        # rule 11 (review g3g-r1 S2, n29): a generated file with GEN2+ kinds keeps its coverage header
+        # rule 11: a generated file with GEN2+ kinds keeps its coverage header
         errs.append("no coverage header `GEN2|GEN3|GEN4 coverage (…): n of m fields` in a file with GEN2 / GEN3 / GEN4 "
                     "kinds (a dropped header hides dropped fields)")
     if gen4:
@@ -599,7 +599,7 @@ def main(files, partial=False):
             "decHeadKindN", "decFieldKindN", "decEpiKindN", "decAcceptKindN", "decRejectKindN"))
         g6 = "GEN6-JSON" in text or any(f"@E2eScal.{k} " in text for k in GEN6_KINDS)
         if g6 and not partial:
-            # rule 13 (unit E2-G): a GEN6 file is checked by rule 13 only; a GEN5 / older kind in it fails 13c
+            # rule 13: a GEN6 file is checked by rule 13 only; a GEN5 / older kind in it fails 13c
             errs, info6 = check_gen6(text, g6_blobs_tree(), gn)
             if g5:
                 errs.append("rule 13: a GEN6 file with a GEN5 kind or block")
@@ -607,7 +607,7 @@ def main(files, partial=False):
         elif g6:
             errs, mains = ["GEN6 output in --partial mode (a GEN6 file is never partial)"], []
         elif g5 and not partial:
-            # rule 12 (unit G5-G): the GEN4 part by rules 1-11, the GEN5 part by rule 12
+            # rule 12: the GEN4 part by rules 1-11, the GEN5 part by rule 12
             part4 = text.split(G5_MARK, 1)[0] if text.count(G5_MARK) == 1 else text
             errs, mains = check_text(part4, kb, kzb, g2b, gn, partial, g3b, g4b, rule11=not hand)
             e5, info5 = check_gen5(text, g5_blobs_tree(), gn)
@@ -696,7 +696,7 @@ def selftest():
         ("same_not_identity", GOOD.replace("@E2eAd.x = @t := rfl", "True := trivial"), K, False),
         ("orphan_kind", GOOD + "theorem q_kind : True := trivial\n", K, False),
     ]
-    # SG-1 offset-0 kind (rootDecSegZKind, 8 parameters, KindZ.lean pinned); the 5th field: KindZ blob pinned?
+    # offset-0 kind of the generator extension (rootDecSegZKind, 8 parameters, KindZ.lean pinned); the 5th field: KindZ blob pinned?
     zk = "= @E2eScal.rootDecSegZKind h E1Unmarshal 13 26 48 56 24 8 16 24 := by"
     assert zk in GOOD
     nz = GOOD.split("theorem z (k")[0] + "theorem t_same" + GOOD.split("theorem t_same")[1]
@@ -709,7 +709,7 @@ def selftest():
         ("z_as_add_kind", GOOD.replace(zk, zk.replace("rootDecSegZKind", "rootDecSegKind")), K, False, True),
         ("z_kindz_blob_changed", GOOD, K, False, False),
         ("no_z_kindz_blob_not_needed", nz, K, True, False),
-        # review sg1-r1 S2: a --partial-out file (header text as scalgen.py writes it) must fail, even if
+        # a --partial-out file (header text as scalgen.py writes it) must fail, even if
         # every theorem it has is well kinded
         ("partial_output_header", GOOD.replace("/-! generated -/", "/-! PARTIAL OUTPUT (scalgen exit 3): 1 of 2 "
                                                "32-byte fields of `v1alpha1.Eth1Data`; missing: BlockHash -/"),
@@ -725,10 +725,10 @@ def selftest():
         errs, _ = check_text(text, kb, KINDZ_BLOB if zpin else "0" * 40, g2, GNAMES, part, g3, g4)
         if (not errs) != ok:
             bad.append((name, errs))
-    # review g2f-r1 S4: the exit codes of main() (`--partial`: 3 on success, 1 on failure, never 0; default: 1)
+    # the exit codes of main() (`--partial`: 3 on success, 1 on failure, never 0; default: 1)
     n_exit, bad_exit = s4_exit_cases()
     bad += bad_exit
-    # unit G4-F (review g4g-r1 S2): the rule 11 exemption removes only the coverage-header error
+    # the rule 11 exemption removes only the coverage-header error
     nh = GOOD2.replace("GEN2 coverage (`p2dec --gen2`): 3 of 3 fields", "generated")
     e_on, _ = check_text(nh, K, KINDZ_BLOB, None, GNAMES, False, None, None)
     e_off, _ = check_text(nh, K, KINDZ_BLOB, None, GNAMES, False, None, None, rule11=False)
@@ -737,11 +737,11 @@ def selftest():
     n_exit += 3
     if not e_on or e_off or not e_sorry:
         bad.append(("g4f_rule11_exemption", e_on, e_off, e_sorry))
-    # unit G5-G: rule 12
+    # rule 12
     n5, bad5 = g5_selftest()
     n_exit += n5
     bad += bad5
-    # unit E2-G: rule 13
+    # rule 13
     n6, bad6 = g6_selftest()
     n_exit += n6
     bad += bad6
@@ -879,7 +879,7 @@ GNAMES = {"gen_seg_x", "bi_e2e_accept_main_gc", "bi_e2e_accept_main_composed"}
 
 
 def g2f_cases(K):
-    """Unit G2-F controls: rules 6a-6c and 7 (review g2g-r1 S1, for_h4 items 2 and 4)."""
+    """Controls of rules 6a-6c and 7."""
     ty = ("theorem {t}_type : ∀ (h : Host),\n    type_of% (@{t} h) = type_of% (@E2eScal.Dm.dm_e2e_accept_main h) := by\n"
           "  intro h; with_reducible rfl\n")
     uc = "theorem c_kind : ∀ (h : Host), type_of% (@c h) = @E2eScal.u64DecInlineSegKind h DmUnmarshal 83 56 80 48 := by\n  intro h; with_reducible rfl\n"
@@ -927,7 +927,7 @@ def g2f_cases(K):
     ]
 
 
-# GEN3 controls (unit G3-G): generated-shape blocks with the kind lines as `scalgen.py p2dec --gen3` writes them
+# GEN3 controls: generated-shape blocks with the kind lines as `scalgen.py p2dec --gen3` writes them
 FN_VI = '"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ"'
 FN_EP = '"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ"'
 G3K = {
@@ -965,7 +965,7 @@ COMP3 = COMP.replace("composed accept theorem; statement check: identity", "comp
 
 
 def g3_cases(K):
-    """Unit G3-G controls: rule 8 (GEN3 kinds, pins, callee list, decAcceptKind) and rule 9 (g2f-r1 S1-S3)."""
+    """Controls of rule 8 (GEN3 kinds, pins, callee list, decAcceptKind) and rule 9."""
     z40 = "0" * 40
     P3 = dict(GEN3_PINS)
 
@@ -986,7 +986,7 @@ def g3_cases(K):
     comp_kind = "@E2eScal.decAcceptKind h DmUnmarshal false [.bytes 48, .bytes 32, .u64] 68 := by"
     assert COMP3.count(comp_kind) == 1
     comp_only = COMP3.split("\n/-- Statement check: the declared type")[0] + "\nend E2eScal.Gen\n"
-    # g2f-r1 k04: `_type` in place of a segment `_kind`, the two composed lemma names only in a comment
+    # k04: `_type` in place of a segment `_kind`, the two composed lemma names only in a comment
     uc = "theorem c_kind : ∀ (h : Host), type_of% (@c h) = @E2eScal.u64DecInlineSegKind h DmUnmarshal 83 56 80 48 := by\n  intro h; with_reducible rfl\n"
     ty = ("theorem c_type : ∀ (h : Host),\n    type_of% (@c h) = type_of% (@E2eScal.Dm.dm_e2e_accept_main h) := by\n"
           "  intro h; with_reducible rfl\n")
@@ -994,7 +994,7 @@ def g3_cases(K):
                                         "  -- (E2eScal.dechead_seg x) (E2eScal.decepi_seg y)\n"
                                         "  with_reducible exact E2eScal.u64dec_inline_seg Reg64.rcx hX _ _ _ (k + 83) hA\n")
     k04b = k04.replace("  -- (E2eScal.dechead_seg x) (E2eScal.decepi_seg y)\n", "  /- (E2eScal.dechead_seg x) (E2eScal.decepi_seg y) -/\n")
-    # g2f-r1 k22-k24 and S4 (partial / coverage counts)
+    # k22-k24 (partial / coverage counts)
     unc = json_line([("Slot", "delegated overlay field"), ("ProposerIndex", "delegated overlay field")])
     PH = ("/-! PARTIAL OUTPUT (scalgen exit 3): 3 of 5 fields of `v1alpha1.BeaconBlockHeader` (--gen2); NOT "
           "generated: Slot, ProposerIndex. Not a complete p2dec output.\n" + unc + "\n-/\n")
@@ -1031,7 +1031,7 @@ def g3_cases(K):
         ("g3_arg_without_call", drop(GOOD3, "pw_Index_call"), K, False, True, None, False, None),
         ("g3_decaccept_on_segment", kchg("pw_Amount_seg", "@E2eScal.decAcceptKind h PwUnmarshal true [.u64] 54"), K, False, True, None, False, None),
         ("g3c_good_kind_and_identity", COMP3, K, True, True, None, False, None),
-        # unit G4-G (rule 6d, review g3g-r1 for_h5): the kind alone is no independent statement check
+        # rule 6d: the kind alone is no independent statement check
         ("g3c_kind_only_rejected", comp_only, K, False, True, None, False, None),
         ("g3c_kindaccept_blob_changed", COMP3, K, False, True, None, False, pins("KindAccept.lean")),
         ("g3c_heartbeats_raised", COMP3.replace("set_option maxHeartbeats 200000 in\ntheorem d_kind", "set_option maxHeartbeats 2000000 in\ntheorem d_kind"), K, False, True, None, False, None),
@@ -1045,7 +1045,7 @@ def g3_cases(K):
          K, False, True, None, False, None),
         ("s1_k04_line_comment", k04, K, False, True, None, False, None),
         ("s1_k04_block_comment", k04b, K, False, True, None, False, None),
-        # review g3g-r1 S2 (n26b): the two composed-lemma names in a string literal do not make a composed theorem
+        # the two composed-lemma names in a string literal do not make a composed theorem
         ("s2_n26b_string_literal", k04.replace("  -- (E2eScal.dechead_seg x) (E2eScal.decepi_seg y)\n",
                                                '  have s := "(E2eScal.dechead_seg x) (E2eScal.decepi_seg y)"\n')
          .replace(" 3 of 3 fields", " 2 of 2 fields"),
@@ -1065,7 +1065,7 @@ def g3_cases(K):
     ]
 
 
-# GEN4 controls (unit G4-G): kind lines and proof lemma as `scalgen.py p2dec --gen4` writes them
+# GEN4 controls: kind lines and proof lemma as `scalgen.py p2dec --gen4` writes them
 G4K = {
     "pw_g4dec_s50": ("@E2eScal.stepLdbKind h PwUnmarshal Reg64.r8 Reg64.rbx 8 50 51", "kstep_ldb Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend"),
     "pw_g4dec_s51": ("@E2eScal.stepStKind h PwUnmarshal Reg64.r8 Reg64.rax 16 51 52", "kstep_st Reg64.r8 Reg64.rax 16 _ (k + 51) (k + 52) hq he hend"),
@@ -1111,7 +1111,7 @@ GOOD4 = g4_text()
 
 
 def g4_cases(K):
-    """Unit G4-G controls: rules 10, 10b, 10c, 11, 6d."""
+    """Controls of rules 10, 10b, 10c, 11, 6d."""
     z40 = "0" * 40
 
     def pins(m):
@@ -1185,7 +1185,7 @@ def g4_cases(K):
 
 
 def s4_exit_cases():
-    """Review g2f-r1 S4: main() exit codes on a temporary partial file (pins read from the tree)."""
+    """main() exit codes on a temporary partial file (pins read from the tree)."""
     import contextlib, io, os
     unc = json_line([("Slot", "delegated overlay field"), ("ProposerIndex", "delegated overlay field")])
     PH = ("/-! PARTIAL OUTPUT (scalgen exit 3): 3 of 5 fields of `v1alpha1.BeaconBlockHeader` (--gen2); NOT "
@@ -1207,9 +1207,9 @@ def s4_exit_cases():
 
 
 # ------------------------------------------------------------------------------------------------------------------
-# Rule 12 (unit G5-G, `scalgen.py p2dec --gen5`). A GEN5 file is a GEN4 file (checked by rules 1-11 up to the GEN5
+# Rule 12 (`scalgen.py p2dec --gen5`). A GEN5 file is a GEN4 file (checked by rules 1-11 up to the GEN5
 # block) followed by one block `/-! GEN5 (`p2dec --gen5` … GEN5-JSON: {…} -/` and the GEN5 theorems:
-#  12a. the kind and lemma modules of the G5-L hand-over have the pinned blobs GEN5_PINS;
+#  12a. the kind and lemma modules of the GEN5 lemma unit's hand-over have the pinned blobs GEN5_PINS;
 #  12b. the GEN5 theorems are exactly, in this order: P_head, P_f1 … P_fn, P_epi, P_accept, [P_accept_stmt |
 #       P_accept_same], P_reject (P = the GEN5-JSON prefix, n = the IR field count), each but the identity followed by
 #       its `_kind` theorem `theorem T_kind : ∀ (h : Host), type_of% (@T h)` / `    = @E2eScal.K h C …` with
@@ -1219,7 +1219,7 @@ def s4_exit_cases():
 #       named (with sha256) in the file header: the field list (`.bytes n` / `.u64`, IR order, IR SSZ / Go offsets
 #       equal to the kind's running sums), the layout `L` (callees in order of first `callq`, stack chunks, lengths,
 #       runtime configuration, guard addend, state word, post-state slots and existentials, frame) by the rules of the
-#       G5-L hand-over, the `pc` and `done` of every boundary state (head end, the end of each field event along the
+#       GEN5 lemma unit's hand-over, the `pc` and `done` of every boundary state (head end, the end of each field event along the
 #       accept path), and the reject size; a file whose kind parameters differ FAILS. This is the statement check of
 #       a generated accept theorem when no hand statement exists;
 #  12d. the accept proof chains P_head, every P_f<i> and P_epi;
@@ -1401,7 +1401,7 @@ def g5_expect(dirs, fields, sz):
         raise G5Mismatch(f"field events not in IR order: {pcs}")
     if last_call is None:
         raise G5Mismatch("no call on the accept path")
-    # the layout by the rules of the G5-L hand-over
+    # the layout by the rules of the GEN5 lemma unit's hand-over
     stack = [("at", -8)] + [("at", o) for o in sorted(spills)]
     area = [0] if has_rt and not has_call else ([0, 8, 16] if has_rt else [8])
     stack += [("at", -frame + a) for a in area] + [("at", -frame + o) for o in sorted(written)]
@@ -1592,10 +1592,10 @@ def g5_blobs_tree():
     return {m: (blob(KIND.parent / m) if (KIND.parent / m).exists() else "missing") for m in GEN5_PINS}
 
 
-# ---- rule 12 selftest controls (unit G5-G)
+# ---- rule 12 selftest controls
 G5_VE = ("prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S",
          "v1alpha1.VoluntaryExit")
-# the layouts of the G5-L hand-over (`AcceptTies.lean`: layCal, layMix40, layRt, layMix60), transcribed by hand as
+# the layouts of the GEN5 lemma unit's hand-over (`AcceptTies.lean`: layCal, layMix40, layRt, layMix60), transcribed by hand as
 # constructor text; the recomputation from the real `.S` / IR must give exactly these
 G5_HAND = {
     "VoluntaryExit": ("h6", "(E2eScal.DecLayout.mk [E2e.Code.EpUnmarshal, E2eScal.BhCode.ViUnmarshal] 7 [(0, 8), (1, 8), (2, 8), "
@@ -1774,10 +1774,10 @@ def g5_selftest():
     return n, bad
 
 
-# ---------------------------------------------------------------- rule 13: GEN6 (unit E2-G, `scalgen.py p2enc --gen6`)
+# ---------------------------------------------------------------- rule 13: GEN6 (`scalgen.py p2enc --gen6`)
 # A GEN6 file (header `GEN6-JSON:`, or any of the four encoder kinds) is checked by rule 13 ONLY (it has a `def` of its
 # layout, which rule 2 forbids for the older files):
-#  13a. The kind / lemma modules of the E2-L hand-over have the pinned blobs GEN6_PINS.
+#  13a. The kind / lemma modules of the encoder lemma unit's hand-over have the pinned blobs GEN6_PINS.
 #  13b. Structure: top-level lines as rule 2 plus exactly one `def <P>_layout : EncLayout where` (none when a hand
 #       layout of GEN6_HAND is named); no banned token (rule 3, comments and strings removed); the theorems are exactly
 #       P_head, P_f0 … P_f(n-1), P_epi, P_fast, each followed by its `_kind` (encHeadKindN / encFieldKindN /
@@ -1793,7 +1793,7 @@ def g5_selftest():
 #  13d. P_fast's proof uses P_head, every P_fi and P_epi exactly once.
 #  13e. P_stmt, if present, is `theorem P_stmt : type_of% (@X ‹Host›) :=` + `  [V ]P_fast` with X not generated and V
 #       empty or in GEN6_VIA, or `theorem P_stmt : X :=` + `  P_fast` (hand Prop).
-# Limits: the kind fixes the statement only up to what the kind reads (E2-L: `hcap63` is a fixed premise; an extra
+# Limits: the kind fixes the statement only up to what the kind reads (`hcap63` is a fixed premise; an extra
 # chunk in L.pre would be a stronger premise, and the recomputation would reject it); that the code walk is the
 # function's whole fast path is the generator's claim, checked by the proofs, not here.
 import hashlib as _g6hash
@@ -2373,10 +2373,10 @@ def check_gen6(text, blobs=None, gnames=frozenset(), kr=None):
     return errs, info
 
 
-# ---- rule 13 selftest controls (unit E2-G): mutants of the committed raw GEN6 outputs (a missing file is a FAIL)
+# ---- rule 13 selftest controls: mutants of the committed raw GEN6 outputs (a missing file is a FAIL)
 G6_SELFTEST = {"vb": "lean/E2eScal/Gen6VbEnc.lean", "cp": "lean/E2eScal/Gen6CpEnc.lean",
                "hs": "lean/E2eScal/Gen6HsEnc.lean", "bh": "lean/E2eScal/Gen6BhEnc.lean"}
-# the lemma unit's own layouts (`Enc2Ex*.lean`, scratch emitter of E2-L): the recomputation must give them too
+# the lemma unit's own layouts (`Enc2Ex*.lean`, scratch emitter of the encoder lemma unit): the recomputation must give them too
 G6_L_LAYOUTS = {"ValidatorBalance": ("lean/E2eScal/Enc2ExVb.lean", "layEncVb"),
                 "DepositMessage": ("lean/E2eScal/Enc2ExDm.lean", "layEncDm"),
                 "HistoricalSummary": ("lean/E2eScal/Enc2ExHs.lean", "layEncHs")}
@@ -2439,7 +2439,7 @@ def g6_cases(T):
 
 
 def g6_selftest():
-    """Rule 13 controls + the recomputation against the hand layouts of EncTies and the E2-L example layouts.
+    """Rule 13 controls + the recomputation against the hand layouts of EncTies and the example layouts of the encoder lemma unit.
     Returns (n, bad)."""
     bad, n = [], 0
     try:

@@ -2,7 +2,7 @@ import E2eList.IaReject
 import E2eList.IaSpec
 
 /-!
-# Spec alignment of the T3 decoder's size and offset rejects, and the reject cases (LV T3)
+# Spec alignment of the IndexedAttestation decoder's size and offset rejects, and the reject cases
 
 The statements are the frozen `ia_reject_size_spec_stmt`, `ia_reject_offset_spec_stmt` and `ia_reject_cases_stmt`
 (`StmtIa.lean`). `ia_e2e_reject_cases` is about EthLib only (`DESIGN-T3.md` §6).

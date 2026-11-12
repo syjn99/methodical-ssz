@@ -3,13 +3,13 @@ import E2eList.StmtIaNz
 import E2eList.IaAccept
 
 /-!
-# T3 `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: misaligned reject (P4) and too-big reject (P5) (LV)
+# `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: alignment reject and overflow reject
 
 Statements: the corrected `ia_reject_misaligned_nz_stmt` and `ia_reject_toobig_nz_stmt` (`StmtIaNz.lean`, the frozen
-texts plus `e0 ≠ 0`). The text of `Fk.lu_reject_misaligned_main` (`Fk/LuRejectCall.lean`, Go 1.26.3) with the T3
-directive indices: the head 0–26 of `IaAccept.lean`; P4: `jne L_1a2` taken (94), the 32-byte argument array at
+texts plus `e0 ≠ 0`). The text of `Fk.lu_reject_misaligned_main` (`Fk/LuRejectCall.lean`, Go 1.26.3) with the IndexedAttestation
+directive indices: the head 0–26 of `IaAccept.lean`; alignment reject: `jne L_1a2` taken (94), the 32-byte argument array at
 rsp − 48 (two `movups`), `convT64(len − 228)` (`ConvT64C`), the itab word (103–106, `e0 ≠ 0`), `fmt.errorf`
-(`FmtErrorfDWC`), `jne L_248` taken (rax ≠ 0), epilogue 128–130. P5: `jg L_105` taken (57), the array at rsp − 80,
+(`FmtErrorfDWC`), `jne L_248` taken (rax ≠ 0), epilogue 128–130. Overflow reject: `jg L_105` taken (57), the array at rsp − 80,
 `convT64(numElem)`, 66–69, `fmt.errorf`, `jne L_199`, epilogue 91–93.
 -/
 

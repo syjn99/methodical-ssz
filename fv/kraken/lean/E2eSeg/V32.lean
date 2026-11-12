@@ -12,7 +12,7 @@ Go 1.26.10 compiles `c.F = make([][]byte, n); for i := 0; i < n; i++ { tmp := ma
 tmp = append(tmp, buf[src+i*32 : src+(1+i)*32]...); c.F[i] = tmp }` to the same instruction sequence for
 HistoricalBatch (two loops, n = 8192) and Deposit (n = 33). Only these vary between the instances:
 the count `n`, the five stack slots, the two receiver field offsets, the labels, the source offset `src`
-(an extra `lea src(%rbx),%rbx`, HB StateRoots), and `nop` padding at four places.
+(an extra `lea src(%rbx),%rbx`, HistoricalBatch.StateRoots), and `nop` padding at four places.
 The loop body is cut into six blocks at those places (`v32Head` … `v32Back`); `Glue a b` says that the gap between
 two blocks is empty or one `nop`, `GlueSrc` that it is empty (src = 0) or the `lea`.
 The element size is fixed at 32: other sizes compile to other sequences (48: `lea (x,x,2)` then `shl $4`), and
@@ -81,7 +81,7 @@ def v32Back (lback : String) (dI1 : Int64) : Program :=
 def v32Nop : Directive :=
   Kraken.Directive.instr (Instr.regular (Width.W64) (Width.W64) (Operation.nop 1))
 
-/-- `lea src(%rbx),%rbx`: the field offset added to the source pointer (HB StateRoots). -/
+/-- `lea src(%rbx),%rbx`: the field offset added to the source pointer (HistoricalBatch.StateRoots). -/
 def v32LeaSrc (src : Int64) : Directive :=
   Kraken.Directive.instr (Instr.regular (Width.W64) (Width.W64) (Operation.lea (Reg.low (Reg64.rbx) (Width.W64)) { base := some (RegOrRip.reg (Reg64.rbx)), idx := none, disp := ConstExpr.int64 src }))
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""T-9 Go differential of the BeaconBlockHeader ENCODER (Python 3 standard library only).
+"""Go differential of the BeaconBlockHeader ENCODER (Python 3 standard library only).
 
   bhmdiff.py cases <cases.json>                      write the cases
   bhmdiff.py check <cases.json> <go-out.json> <result.json>

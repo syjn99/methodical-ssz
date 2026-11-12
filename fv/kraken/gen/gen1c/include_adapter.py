@@ -1,8 +1,8 @@
-"""The one adapter between the phase1c generator and the fix3 data-include API.
+"""The one adapter between the gen1c generator and the data-include API.
 
 Every name and syntax of the include interface lives here and nowhere else.
-Built against INCLUDE-API api_version 3, status "approved (final, stage B)", fix3 f9e2bc3
-(review fix3-r3; snapshot include-api-v3.json = $RUN/shared/INCLUDE-API.json). v3 = the 22 items
+Built against INCLUDE-API api_version 3, status "approved (final, stage B)", commit f9e2bc3
+(snapshot include-api-v3.json = $RUN/shared/INCLUDE-API.json). v3 = the 22 items
 of v2 unchanged + lcFmtItems ("Items: %w"). include-api-v2.json (d9cdb40) and v1 are history.
 v1 -> v2: names and file format unchanged; an address term at offset 0 has no `+ 0`.
 An api_version change touches this file only.
@@ -15,9 +15,9 @@ API_STATUS = "approved (final, stage B)"
 API_FIX3_COMMIT = "f9e2bc3dc02ed3521e33b04b4bdaeb9c1fa5f3fe"
 SNAPSHOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "include-api-v3.json")
 
-DATA_DIR_IN_REPO = "fv/kraken/link/out/data/"   # where fix3 keeps data files (we never write there)
+DATA_DIR_IN_REPO = "fv/kraken/link/out/data/"   # where the data files are kept (we never write there)
 LEAN_NAMESPACE = "Fk.Data"
-LEAN_INCLUDE = "data_include {id}"              # Lean command, Fk/Include.lean (fix3)
+LEAN_INCLUDE = "data_include {id}"              # Lean command, Fk/Include.lean
 
 # Labels are conv.py-cleaned symbol names (API data_files.format).
 RODATA_SYMBOL = "go:string.*"                   # ELF group symbol of Go string data

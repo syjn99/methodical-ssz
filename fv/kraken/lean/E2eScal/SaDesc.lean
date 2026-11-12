@@ -1,10 +1,10 @@
 import E2e.Spec
 
 /-!
-# Independent hand `Desc` of `v1alpha1.SyncAggregatorSelectionData` (unit G5-C)
+# Independent hand `Desc` of `v1alpha1.SyncAggregatorSelectionData`
 
-Hand-written by the G5-C session from consensus-specs altair (`specs/altair/validator.md`, local clone at commit `aa16bb4`),
-BEFORE the Desc checker's Desc of `(v1alpha1, SyncAggregatorSelectionData)` was printed or copied into this tree (FINDINGS NF-10).
+Hand-written from consensus-specs altair (`specs/altair/validator.md`, local clone at commit `aa16bb4`),
+BEFORE the Desc checker's Desc of `(v1alpha1, SyncAggregatorSelectionData)` was printed or copied into this tree (so that the hand Desc is independent of the checker output in time, not only in content).
 This file is committed before `SaSpecChecker.lean` exists.
 
     class SyncAggregatorSelectionData(Container):

@@ -3,17 +3,17 @@ import E2eScal.Gen3PcDecPartial
 import E2eScal.H5Stmt
 
 /-!
-# Real Prysm `(*v1alpha1.PendingConsolidation).UnmarshalSSZ`, accept path, Go 1.26.10 (H5 hold-out, class D)
+# Real Prysm `(*v1alpha1.PendingConsolidation).UnmarshalSSZ`, accept path, Go 1.26.10 (hold-out, class D)
 
-Hand composition of the H5 evaluation session, written AFTER the raw generator output was committed. The
+Hand composition, written AFTER the raw generator output was committed. The
 statement is the independent hand statement `E2eScal.H5.pc_accept_stmt` (`H5Stmt.lean`, unchanged). Chain of
 `eventually_trans` over
 
-* `pc_head` (hand steps, directives 0–14; the text of `pw_head` with the two spills at 12 / 13 in PC order),
+* `pc_head` (hand steps, directives 0–14; the text of `pw_head` with the two spills at 12 / 13 in the PendingConsolidation order),
 * `Gen.pc_g3dec_SourceIndex_arg` (15–16) and `Gen.pc_g3dec_SourceIndex_call` (17–19, label 47): GENERATED
   (`Gen3PcDecPartial.lean`, raw); the `_call` theorem is conditional on `hC : U64CalleeAcc`, discharged here by
   the proved `vi_uacc_holds`,
-* `E2eScal.callarg_reload_seg false 96 8 112 (-8) 88 16` (48–54; existing GEN3 lemma, applied by hand: the
+* `E2eScal.callarg_reload_seg false 96 8 112 (-8) 88 16` (48–54; existing lemma, applied by hand: the
   generator did not emit TargetIndex),
 * `calldec_nop_seg` (hand lemma below, 55–58 + label 85: the call block with a `nop` between `callq` and
   `test`, the reason the generator gave for TargetIndex),

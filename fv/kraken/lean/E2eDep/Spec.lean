@@ -2,7 +2,7 @@ import E2eSeg.SpecG
 import E2eDep.SpecStmt
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.Deposit` (SEG proof of use)
+# Spec bridge for the real Prysm `v1alpha1.Deposit`
 
 The order of `E2eHb.HbSpec`. Imported, not copied: the `Vector[Bytes32, n]` lemmas for any n (`E2eSeg.SpecG`), the
 32-byte element lemmas (`E2eHb.HbSpec`), the Deposit_Data spec bridge (`E2e.pdd_*`, `E2eScal/DdSpec.lean`). New here:

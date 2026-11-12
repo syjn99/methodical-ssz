@@ -3,9 +3,9 @@ import E2eScal.DmReject
 import E2eScal.DmSpec
 
 /-!
-# Spec alignment of the real DepositMessage decoder (H3 hold-out)
+# Spec alignment of the real DepositMessage decoder (hold-out)
 
-Hand-written by the H3 evaluation session (the text of `E1SpecK.lean` with the DepositMessage statement;
+Hand-written (the text of `E1SpecK.lean` with the DepositMessage statement;
 the equation `bsA = pdmEnc g` is kept as a hypothesis `hb` instead of `subst`, see `DmSpec.lean`).
 - `dm_e2e_accept_spec_k`: if EthLib accepts `bsA` (`prysmDmDesc`, the independent consensus-specs Desc)
   as `v`, there is `g : PDm` with `g.toValue = v` and `bsA = pdmEnc g`; with the input chunks of that `g`

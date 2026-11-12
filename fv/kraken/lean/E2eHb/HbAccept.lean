@@ -2,7 +2,7 @@ import E2eHb.HbLoop2
 import E2eHb.StmtHb
 
 /-!
-# HB `(*v1alpha1.HistoricalBatch).UnmarshalSSZ`, accept path, Go 1.26.10 machine code
+# `(*v1alpha1.HistoricalBatch).UnmarshalSSZ`, accept path, Go 1.26.10 machine code
 
 * head 0–29 (hand steps): guard, prologue (`sub $0x38`), size check, spills, `makeslice` of the BlockRoots backing
   array (`MakesliceC Heap lvSliceType_addr 24 S`, cnt 8192), len = cap = 8192, writeBarrier = 0, ptr, rax = 0,

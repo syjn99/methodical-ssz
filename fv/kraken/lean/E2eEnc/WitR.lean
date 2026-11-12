@@ -3,7 +3,7 @@ import Fk.RtCopy
 import Fk.WHost
 
 /-!
-# Witnesses of the two ENC rejects
+# Witnesses of the two encoder rejects
 
 - `RB`: Host `[label ssz.ErrBytesLength] ++ DcMarshal`. Memory at `0x10000`: the two words of `ssz.ErrBytesLength`
   (stand-in values: the real ones are set by the runtime's init), the guard word (r14 = 0x10000), the receiver window
@@ -105,7 +105,7 @@ def mem (root : List UInt8) (nb : BitVec 64) : DataMem := (block root nb).At (0x
 def cs0 (root : List UInt8) (nb : BitVec 64) (zmms : RegZmms) (flags : StatusFlags) : MachineData :=
   ⟨⟨0x10018, 0x10110, 0, 0, 0, 36, 0x100f8, 0, 0, 0, 0, 0, 0, 0, 0x10000, 0⟩, zmms, flags, mem root nb⟩
 
--- Measured (ENC logs 49, 50, 51): 200000 and 1000000 fail (`whnf` timeout); 4000000 passes. Profile (log 51): `simp`
+-- Measured (logs 49, 50, 51 of `lv/STEPS-ENC.tsv`): 200000 and 1000000 fail (`whnf` timeout); 4000000 passes. Profile (log 51): `simp`
 -- 2.49 s in the declaration; the `whnf` part that uses the heartbeats was not broken down further.
 set_option maxHeartbeats 4000000 in
 /-- **Non-vacuity of `dc_e2e_reject_toobig_main`**, n = 129. -/

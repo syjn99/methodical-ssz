@@ -2,10 +2,10 @@ import E2eScal.PwAccept
 import E2eScal.PwSpec
 
 /-!
-# Spec alignment of the real PendingPartialWithdrawal decoder, accept side (unit G5-C)
+# Spec alignment of the real PendingPartialWithdrawal decoder, accept side
 
-Written by the G5-C session: the accept part of `PcSpecK.lean` (H5) for PendingPartialWithdrawal, which
-`PwSpecK.lean` (H4) left out because the accept theorem was not proved then (H4 attempt bound). The accept theorem
+The accept part of `PcSpecK.lean` for PendingPartialWithdrawal, which
+`PwSpecK.lean` left out because the accept theorem was not proved then (attempt bound). The accept theorem
 `pw_e2e_accept_main : pw_accept_stmt` was proved later (`PwAccept.lean`). This module adds only:
 - `pw_e2e_accept_spec_k`: if EthLib accepts `bsA` (`prysmPwDesc`) as `v`, there is `g : PPw` with `g.toValue = v`
   and `bsA = ppwEnc g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g`.

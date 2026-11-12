@@ -2,17 +2,17 @@ import E2eScal.PcAccept
 import E2eScal.Gen4Examples
 
 /-!
-# `(*v1alpha1.PendingConsolidation).UnmarshalSSZ`, accept path, re-derived with the GEN4 mechanisms
+# `(*v1alpha1.PendingConsolidation).UnmarshalSSZ`, accept path, re-derived with the window and step mechanisms
 
 `pc_e2e_accept_g4 : H5.pc_accept_stmt` (the pre-committed hand statement, `H5Stmt.lean`, unchanged). The text of
-`PcAccept.lean` with the field that the H5 hold-out missed taken from the GEN4 mechanisms:
+`PcAccept.lean` with the field that the hold-out run missed taken from the window and step mechanisms:
 
 * TargetIndex 48–85: `Gen4Ex.pc_g4_TargetIndex_field` (seven step theorems, then the call-block WINDOW
-  `callq; nop; test; je`) instead of a hand-applied `callarg_reload_seg` and the H5 hand lemma `calldec_nop_seg`.
+  `callq; nop; test; je`) instead of a hand-applied `callarg_reload_seg` and the hand lemma `calldec_nop_seg`.
 Unchanged: `pc_head`, `pc_epi` (hand, `PcAccept.lean`), the generated SourceIndex theorems
 (`Gen3PcDecPartial.lean`). `PcAccept.lean` is imported for `pc_head` / `pc_epi` only; `G4DepCheck.lean` checks by
 program that this proof does not reach `calldec_nop_seg`, `bytes32dec_seg_rax` or `sm_vi_arg`.
-In-sample (the type is development data since H5); no transfer claim.
+In-sample (the type is development data since its hold-out evaluation); no transfer claim.
 -/
 
 open Fk E2e E2eScal.H5Code E2eScal.BhCode E2eScal
@@ -23,7 +23,7 @@ namespace E2eScal.H5
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
 /-- **Accept path of the real `(*v1alpha1.PendingConsolidation).UnmarshalSSZ` (Go 1.26.10), re-derived with the
-GEN4 mechanisms**; statement = the hand statement `pc_accept_stmt` (unchanged). -/
+window and step mechanisms**; statement = the hand statement `pc_accept_stmt` (unchanged). -/
 theorem pc_e2e_accept_g4 : pc_accept_stmt := by
   intro k hk hf kV hkV hfV in0 in1 hin0 hin1 s ra guard
     fp s1 s2 s4 sp1 rslot lo ast a8 a16 hfp h1 h2 h4 hsp1 hrs hlo hast ha8 ha16 R h_mem hguard hlen
@@ -53,7 +53,7 @@ theorem pc_e2e_accept_g4 : pc_accept_stmt := by
   rintro ⟨d3, pc3⟩ ⟨hpc3, hrax3, hrbx3, hrsp3, hrbp3, hr143, Hm3⟩
   dsimp only at hpc3 hrax3 hrbx3 hrsp3 hrbp3 hr143 Hm3
   subst hpc3
-  -- TargetIndex: 48 → 86 (GEN4 worked call field: seven steps and the call-block window with the nop)
+  -- TargetIndex: 48 → 86 (worked call field: seven steps and the call-block window with the nop)
   refine eventually_trans _ _ _ _ (E2eScal.Gen4Ex.pc_g4_TargetIndex_field k hk hf hvi
     (rsp.toBitVec - 80) rax.toBitVec rbx.toBitVec (rsp.toBitVec - 88) (rsp.toBitVec - 96) (rsp.toBitVec - 72)
     (rsp.toBitVec + 16) (rsp.toBitVec + 32) (rsp.toBitVec + 8)

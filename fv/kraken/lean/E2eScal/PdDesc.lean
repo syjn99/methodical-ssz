@@ -1,10 +1,10 @@
 import E2e.Spec
 
 /-!
-# Independent hand `Desc` of `v1alpha1.PendingDeposit` (H6 hold-out, full-proof type)
+# Independent hand `Desc` of `v1alpha1.PendingDeposit` (hold-out, full-proof type)
 
-Hand-written by the H6 evaluation session from consensus-specs electra (`specs/electra/beacon-chain.md`),
-BEFORE the Desc checker's Desc of `(v1alpha1, PendingDeposit)` was generated or printed (FINDINGS NF-10).
+Hand-written from consensus-specs electra (`specs/electra/beacon-chain.md`),
+BEFORE the Desc checker's Desc of `(v1alpha1, PendingDeposit)` was generated or printed (so that the hand Desc is independent of the checker output in time, not only in content).
 This file is committed before `PdSpecChecker.lean` exists.
 
     class PendingDeposit(Container):

@@ -2,7 +2,7 @@ import E2eSeg.ListG
 import E2eHb.HbLemmas
 
 /-!
-# The fixed list lemmas of T2 and HB as instances of `E2eSeg.ListG`
+# The fixed list lemmas of SyncCommittee and HistoricalBatch as instances of `E2eSeg.ListG`
 
 Each hand lemma's statement is proved from the general lemma by one `exact` (new names; `ScLemmas.lean` and
 `HbLemmas.lean` are unchanged). This is the check that the general statements cover the copied ones.

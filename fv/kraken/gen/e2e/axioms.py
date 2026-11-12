@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""prysm-e2e: parse `lake env lean gen/e2e/Axioms.lean` output into JSON; allowed axioms: propext,
+"""Parse `lake env lean gen/e2e/Axioms.lean` output into JSON; allowed axioms: propext,
 Classical.choice, Quot.sound. Usage: axioms.py <log> <out.json> [<names.lean>] (default: the Axioms.lean next
 to this file; the AttestationData set passes gen/e2e/AxiomsAd.lean). Exit 1 if any theorem uses another axiom,
 if a theorem is missing from the output, or if `sorryAx` appears.
 axioms.py run <names.lean> <out.json> [<log>]: first `lake build --no-build <imports of names.lean>` in
-fv/kraken/lean (audit AU-05: `lake env lean` does no trace check); exit 2 if it fails, else run
+fv/kraken/lean (`lake env lean` does no trace check); exit 2 if it fails, else run
 `lake env lean <names.lean>` and parse as above. The precheck exit code is recorded in <out.json>.
-This hand list is the "must exist" list of the full gate gen/e2e/axioms_gate.py (audit AU-10)."""
+This hand list is the "must exist" list of the full gate gen/e2e/axioms_gate.py."""
 import json, pathlib, re, subprocess, sys
 
 LEAN = pathlib.Path(__file__).resolve().parent.parent.parent / "lean"
@@ -16,7 +16,7 @@ def parse(log, src, out, extra=None):
     want = re.findall(r"^#print axioms (\S+)\s*$", open(src).read(), re.M)
     ok = {"propext", "Classical.choice", "Quot.sound"}
     res = {}
-    # names may contain `'` (audit AU-10): match the whole quoted name up to the message text
+    # names may contain `'`: match the whole quoted name up to the message text
     for m in re.finditer(r"^'(.+)' depends on axioms: \[([^\]]*)\]", log, re.M):
         res[m[1]] = [a.strip() for a in m[2].split(",") if a.strip()]
     for m in re.finditer(r"^'(.+)' does not depend on any axioms", log, re.M):

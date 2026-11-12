@@ -4,9 +4,9 @@ import E2eScal.PbDesc
 import E2eScal.PbSpecChecker
 
 /-!
-# Spec bridge for the real Prysm `v1alpha1.PowBlock` (H6 hold-out, full-proof type)
+# Spec bridge for the real Prysm `v1alpha1.PowBlock` (hold-out, full-proof type)
 
-Hand-written by the H6 evaluation session (the shape of `DdSpec.lean`, H4).
+Hand-written (the shape of `DdSpec.lean`).
 `prysmPbDesc` (`PbDesc.lean`) is the independent hand `Desc` from consensus-specs bellatrix; it was committed
 before `pbCheckerDesc` was rendered and printed. The two Descs DIFFER in one field kind:
 consensus-specs `total_difficulty: uint256` (`.uint 32`), the producer (Prysm, `TotalDifficulty []byte`,

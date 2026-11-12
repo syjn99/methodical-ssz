@@ -50,7 +50,7 @@ theorem e1_call_at (k : Nat) (hk : E1Marshal.IsInfixAt Host.prog k) :
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- Segment A: entry to the return of the first `memmove` (directive 37): stack guard passed, frame set
+/-- DepositRoot segment: entry to the return of the first `memmove` (directive 37): stack guard passed, frame set
 up, DepositRoot appended. -/
 theorem e1_enc_a (k : Nat) (hk : E1Marshal.IsInfixAt Host.prog k) (hf : LabelsFresh E1Marshal k)
     (r1 d0 : List UInt8) (hr1 : r1.length = 32) (hd0 : d0.length = 32) (p1 : BitVec 64)
@@ -184,7 +184,7 @@ theorem e1m_n40 (x : BitVec 64) : 8 + x + 32 = x + 40 := by bv_omega
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- Segment M: directive 37 to the return of the second `memmove` (directive 81): DepositCount stored at
+/-- DepositCount and BlockHash segment: directive 37 to the return of the second `memmove` (directive 81): DepositCount stored at
 `dst + v`, BlockHash appended at `dst + v + 8`. `v` is the length after DepositRoot. -/
 theorem e1_enc_m (k : Nat) (hk : E1Marshal.IsInfixAt Host.prog k) (hf : LabelsFresh E1Marshal k)
     (dc r2 d1 d2 : List UInt8) (hdc : dc.length = 8) (hr2 : r2.length = 32) (hd1 : d1.length = 8)
@@ -311,7 +311,7 @@ theorem e1_enc_m (k : Nat) (hk : E1Marshal.IsInfixAt Host.prog k) (hf : LabelsFr
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
-/-- Segment E: directive 81 to the return (`retq`, directive 88). Memory unchanged. -/
+/-- Return segment: directive 81 to the return (`retq`, directive 88). Memory unchanged. -/
 theorem e1_enc_e (k : Nat) (hk : E1Marshal.IsInfixAt Host.prog k)
     (s : MachineData) (rsp ra rbp0 : UInt64) (dst v cap : BitVec 64) (R : DataMem → Prop)
     (hrsp : s.regs.rsp = { toBitVec := rsp.toBitVec - 136 })
@@ -455,13 +455,13 @@ theorem e1_e2e_marshal_main (k : Nat) (hk : E1Marshal.IsInfixAt Host.prog k) (hf
   have hcM := e1m_cap s.regs.rcx.toBitVec s.regs.rdi.toBitVec hcap
   have hc63 : s.regs.rdi.toBitVec.toNat < 2 ^ 63 := hcap63
   rw [e1m_o32 s.regs.rbx.toBitVec s.regs.rcx.toBitVec, e1m_o40 s.regs.rbx.toBitVec s.regs.rcx.toBitVec] at h_mem
-  -- A: 0–36, memmove
+  -- DepositRoot segment, directives 0–36, memmove
   refine eventually_trans _ _ _ _ (e1_enc_a k hk hf r1 d0 hr1 hd0 p1 s guard fp s1 s2 l24 l48 l56 rslot scratch
     hfp h1 h2 hl24 hl48 hl56 hrs S hsc _ (by ecancel) hguard hsp (by omega) hcap63 hmm) ?_
   rintro ⟨e1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, scr1, hscr1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrbp1 hr141 Hm1
   subst hpc1
-  -- M: 37–80, memmove
+  -- DepositCount and BlockHash segment, directives 37–80, memmove
   refine eventually_trans _ _ _ _ (e1_enc_m k hk hf dc r2 d1 d2 hdc hr2 hd1 hd2 e1 s.regs.rsp
     s.regs.rax.toBitVec s.regs.rbx.toBitVec (s.regs.rcx.toBitVec + 32) s.regs.rdi.toBitVec p2
     l16 l32 l40 (Int.toBytes 8 (Host.addrOf (k + 37)).toBitVec.toInt) scr1 hl16 hl32 hl40
@@ -469,7 +469,7 @@ theorem e1_e2e_marshal_main (k : Nat) (hk : E1Marshal.IsInfixAt Host.prog k) (hf
   rintro ⟨e2, pc2⟩ ⟨hpc2, hrsp2, hrbp2, hr142, scr2, hscr2, Hm2⟩
   dsimp only at hpc2 hrsp2 hrbp2 hr142 Hm2
   subst hpc2
-  -- E: 81–88
+  -- Return segment, directives 81–88
   refine eventually_trans _ _ _ _ (e1_enc_e k hk e2 s.regs.rsp ra s.regs.rbp s.regs.rbx.toBitVec
     (s.regs.rcx.toBitVec + 32 + 40) s.regs.rdi.toBitVec _ (hrsp2.trans hrsp1) (by ecancel)) ?_
   rintro ⟨e3, pc3⟩ ⟨hpc3, hrax3, hrbx3, hrcx3, hrdi3, hrsi3, hrsp3, hrbp3, hr143, Hm3⟩

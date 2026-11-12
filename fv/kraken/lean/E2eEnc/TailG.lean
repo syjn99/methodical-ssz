@@ -1,7 +1,7 @@
 import E2eEnc.LoopG
 
 /-!
-# ENC G1*: from `L_7c` (directive 29) to the return when site 2 or the loop may grow
+# One-growth path: from `L_7c` (directive 29) to the return when site 2 or the loop may grow
 
 `dcg_tail50` starts at `L_cd` (directive 50) with a block `P2 ‖ t` (`P2 = pre ‖ root`) of capacity `cp ≥ len + 36`:
 51 writes the offset 36, 52–60 as `dc_tail`, then `dcg_loop` (82 → 100) and the epilogue 100–105.

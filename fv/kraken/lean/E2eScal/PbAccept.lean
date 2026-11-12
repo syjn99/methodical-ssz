@@ -4,9 +4,9 @@ import E2eScal.E1Accept
 import E2eScal.H6Stmt
 
 /-!
-# `(*v1alpha1.PowBlock).UnmarshalSSZ`, accept path from the GENERATED GEN4 chains (H6 hold-out, full-proof type)
+# `(*v1alpha1.PowBlock).UnmarshalSSZ`, accept path from the GENERATED `p2dec --gen4` chains (hold-out, full-proof type)
 
-Hand-written by the H6 evaluation session AFTER the raw generator output (`Gen4H6PbDec.lean`, `p2dec --gen4`, exit 0,
+Hand-written AFTER the raw generator output (`Gen4H6PbDec.lean`, `p2dec --gen4`, exit 0,
 3/3 walker-covered) was committed. Statement = the pre-committed hand statement `E2eScal.H6.pb_accept_stmt`
 (`H6Stmt.lean`, unchanged). `--gen4 --compose` refuses by design, so every field composition is HAND text
 (`pb_gg_*_field`) over the GENERATED theorems, used as emitted:
@@ -206,7 +206,7 @@ theorem pb_gg_TotalDifficulty_field (k : Nat) (hk : PbUnmarshal.IsInfixAt Host.p
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
-/-- **Accept path of the real `(*v1alpha1.PowBlock).UnmarshalSSZ` (Go 1.26.10) from the generated GEN4 chains**;
+/-- **Accept path of the real `(*v1alpha1.PowBlock).UnmarshalSSZ` (Go 1.26.10) from the generated `p2dec --gen4` chains**;
 statement = the hand statement `pb_accept_stmt` (unchanged). -/
 theorem pb_e2e_accept_g4gen : pb_accept_stmt := by
   intro k hk hf bh ph td hbh hph htd s ra guard

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""FLAT24 copy of the unit E2-C emitter `scal/e2c/e2cemit.py` (evidence tool, not part of gen/scal; only the type
-table and the module names Gen6F24<X>Enc changed). Unit E2-C emitter: per generated encoder fast-path theorem
+"""Copy of the emitter `scal/e2c/e2cemit.py` (evidence tool, not part of gen/scal; only the type
+table and the module names Gen6F24<X>Enc changed). Emitter: per generated encoder fast-path theorem
 `<p>_g6e_fast`, emit a witness module (WitE2c<X>.lean) and a spec-corollary module (E2cSpec<X>.lean).
 
 Reads the committed Gen6<X>Enc.lean (statement text, GEN6-JSON header) and the IR (Go struct size).
@@ -9,7 +9,7 @@ usage: e2cemit.py <lean dir> <out dir> [X ...]
 import json, re, sys, os
 
 TYPES = {
-    # FLAT24: X: (spec module, P structure, enc, serialize lemma, Desc, [(field accessor kind, expr)])
+    # X: (spec module, P structure, enc, serialize lemma, Desc, [(field accessor kind, expr)])
     'Bbr': ('E2eScal.F24BbrSpec', 'PBbr', 'pbbrEnc', 'pbbr_serialize', 'prysmBbrDesc', ['u:startSlot', 'u:count', 'u:step']),
     'Bdr': ('E2eScal.F24BdrSpec', 'PBdr', 'pbdrEnc', 'pbdr_serialize', 'prysmBdrDesc',
             ['b:pubkey', 'b:withdrawalCredentials', 'u:amount', 'b:signature']),
@@ -141,7 +141,7 @@ def classify(info):
     lists = [b for b in B if b[1] == 'List UInt8']
     xs = lists[0][0]
     st = info['st']
-    if st is None:   # hand layouts (Cp, Bh, E1) live in EncTies: decide from the binder count
+    if st is None:   # hand layouts (Checkpoint, BeaconBlockHeader, Eth1Data) live in EncTies: decide from the binder count
         st = len(xs) == 1 + nU + 2 * nB + 1 + len(fields)
     exp = (1 if st else 0) + nU + 2 * nB + 1 + len(fields)
     if len(xs) != exp:

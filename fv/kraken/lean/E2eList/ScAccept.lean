@@ -4,7 +4,7 @@ import E2eList.ScLoop
 import E2eList.StmtSc
 
 /-!
-# T2 `(*v1alpha1.SyncCommittee).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (LV)
+# `(*v1alpha1.SyncCommittee).UnmarshalSSZ`, accept path, Go 1.26.10 machine code
 
 * head 0–29 (hand steps): guard, prologue (`sub $0x30`), size check, spills, `makeslice` of the `[][]byte` backing
   array (`MakesliceC Heap lvSliceType_addr 24 S`, cnt 512), Pubkeys len = cap = 512, writeBarrier = 0, Pubkeys ptr,

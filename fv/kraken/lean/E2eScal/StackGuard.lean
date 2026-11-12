@@ -9,7 +9,7 @@ two's-complement displacement (`d = -N`). The lemma below states once, over `N`,
 taken when `guard + N < rsp`. It is a thin wrapper of `Fk.cmp_be_false` (unchanged): the kernel checks one
 application and a `Nat` inequality.
 
-Why a lemma (FINDINGS T-9): closing the same fact in the machine context with
+Why a lemma: closing the same fact in the machine context with
 `simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h; omega` fails in the kernel under
 the memory limit; the costly subterm was not profiled. After `simp` the hypothesis holds `Int` arithmetic on
 the literal `2^64 - N`; that this literal is the cost is an inference, not a measurement.

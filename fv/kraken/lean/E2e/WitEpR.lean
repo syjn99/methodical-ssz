@@ -101,7 +101,7 @@ theorem epr_runs (zmms : RegZmms) (flags : StatusFlags) :
     (rt_errorf_dd 67 hk67 hf67 bumpHeap E2e.Data.e2eEpFmt E2e.Data.e2eIntType_addr 0))
     (fun _ h => ⟨h.1, h.2.1⟩)
 
-/-! ## len 9 and len 300 (review e2e-r2 N5)
+/-! ## len 9 and len 300
 
 Same Host and layout. len 9: the static entries 8 and 9 at 0x10042 and 0x1004a. len 300 (≥ 256):
 `StaticBox 300` is empty and `convT64` takes the heap-box branch (`BoxIn` right disjunct: an 8-byte
