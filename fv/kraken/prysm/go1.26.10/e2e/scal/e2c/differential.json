@@ -1,0 +1,841 @@
+{
+ "cases": 192,
+ "match": 192,
+ "mismatch": 0,
+ "types": {
+  "Checkpoint": {
+   "cases": 12,
+   "match": 12
+  },
+  "BeaconBlockHeader": {
+   "cases": 12,
+   "match": 12
+  },
+  "Eth1Data": {
+   "cases": 12,
+   "match": 12
+  },
+  "BlobIdentifier": {
+   "cases": 12,
+   "match": 12
+  },
+  "DepositMessage": {
+   "cases": 12,
+   "match": 12
+  },
+  "Deposit_Data": {
+   "cases": 12,
+   "match": 12
+  },
+  "PendingPartialWithdrawal": {
+   "cases": 12,
+   "match": 12
+  },
+  "SyncCommitteeMessage": {
+   "cases": 12,
+   "match": 12
+  },
+  "PendingConsolidation": {
+   "cases": 12,
+   "match": 12
+  },
+  "PendingDeposit": {
+   "cases": 12,
+   "match": 12
+  },
+  "PowBlock": {
+   "cases": 12,
+   "match": 12
+  },
+  "HistoricalSummary": {
+   "cases": 12,
+   "match": 12
+  },
+  "SigningData": {
+   "cases": 12,
+   "match": 12
+  },
+  "SyncAggregatorSelectionData": {
+   "cases": 12,
+   "match": 12
+  },
+  "ValidatorBalance": {
+   "cases": 12,
+   "match": 12
+  },
+  "VoluntaryExit": {
+   "cases": 12,
+   "match": 12
+  }
+ },
+ "rows": [
+  {
+   "id": "Checkpoint-v0-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "Checkpoint-v0-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "Checkpoint-v0-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "Checkpoint-v0-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "Checkpoint-v1-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "Checkpoint-v1-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "Checkpoint-v1-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "Checkpoint-v1-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "Checkpoint-v2-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "Checkpoint-v2-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "Checkpoint-v2-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "Checkpoint-v2-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "BeaconBlockHeader-v0-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "BeaconBlockHeader-v0-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "BeaconBlockHeader-v0-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "BeaconBlockHeader-v0-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "BeaconBlockHeader-v1-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "BeaconBlockHeader-v1-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "BeaconBlockHeader-v1-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "BeaconBlockHeader-v1-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "BeaconBlockHeader-v2-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "BeaconBlockHeader-v2-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "BeaconBlockHeader-v2-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "BeaconBlockHeader-v2-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "Eth1Data-v0-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "Eth1Data-v0-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "Eth1Data-v0-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "Eth1Data-v0-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "Eth1Data-v1-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "Eth1Data-v1-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "Eth1Data-v1-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "Eth1Data-v1-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "Eth1Data-v2-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "Eth1Data-v2-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "Eth1Data-v2-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "Eth1Data-v2-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "BlobIdentifier-v0-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "BlobIdentifier-v0-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "BlobIdentifier-v0-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "BlobIdentifier-v0-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "BlobIdentifier-v1-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "BlobIdentifier-v1-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "BlobIdentifier-v1-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "BlobIdentifier-v1-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "BlobIdentifier-v2-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "BlobIdentifier-v2-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "BlobIdentifier-v2-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "BlobIdentifier-v2-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "DepositMessage-v0-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "DepositMessage-v0-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "DepositMessage-v0-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "DepositMessage-v0-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "DepositMessage-v1-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "DepositMessage-v1-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "DepositMessage-v1-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "DepositMessage-v1-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "DepositMessage-v2-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "DepositMessage-v2-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "DepositMessage-v2-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "DepositMessage-v2-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "Deposit_Data-v0-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "Deposit_Data-v0-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "Deposit_Data-v0-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "Deposit_Data-v0-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "Deposit_Data-v1-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "Deposit_Data-v1-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "Deposit_Data-v1-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "Deposit_Data-v1-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "Deposit_Data-v2-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "Deposit_Data-v2-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "Deposit_Data-v2-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "Deposit_Data-v2-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "PendingPartialWithdrawal-v0-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "PendingPartialWithdrawal-v0-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "PendingPartialWithdrawal-v0-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "PendingPartialWithdrawal-v0-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "PendingPartialWithdrawal-v1-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "PendingPartialWithdrawal-v1-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "PendingPartialWithdrawal-v1-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "PendingPartialWithdrawal-v1-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "PendingPartialWithdrawal-v2-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "PendingPartialWithdrawal-v2-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "PendingPartialWithdrawal-v2-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "PendingPartialWithdrawal-v2-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "SyncCommitteeMessage-v0-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "SyncCommitteeMessage-v0-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "SyncCommitteeMessage-v0-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "SyncCommitteeMessage-v0-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "SyncCommitteeMessage-v1-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "SyncCommitteeMessage-v1-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "SyncCommitteeMessage-v1-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "SyncCommitteeMessage-v1-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "SyncCommitteeMessage-v2-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "SyncCommitteeMessage-v2-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "SyncCommitteeMessage-v2-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "SyncCommitteeMessage-v2-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "PendingConsolidation-v0-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "PendingConsolidation-v0-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "PendingConsolidation-v0-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "PendingConsolidation-v0-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "PendingConsolidation-v1-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "PendingConsolidation-v1-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "PendingConsolidation-v1-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "PendingConsolidation-v1-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "PendingConsolidation-v2-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "PendingConsolidation-v2-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "PendingConsolidation-v2-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "PendingConsolidation-v2-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "PendingDeposit-v0-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "PendingDeposit-v0-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "PendingDeposit-v0-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "PendingDeposit-v0-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "PendingDeposit-v1-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "PendingDeposit-v1-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "PendingDeposit-v1-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "PendingDeposit-v1-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "PendingDeposit-v2-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "PendingDeposit-v2-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "PendingDeposit-v2-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "PendingDeposit-v2-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "PowBlock-v0-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "PowBlock-v0-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "PowBlock-v0-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "PowBlock-v0-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "PowBlock-v1-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "PowBlock-v1-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "PowBlock-v1-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "PowBlock-v1-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "PowBlock-v2-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "PowBlock-v2-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "PowBlock-v2-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "PowBlock-v2-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "HistoricalSummary-v0-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "HistoricalSummary-v0-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "HistoricalSummary-v0-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "HistoricalSummary-v0-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "HistoricalSummary-v1-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "HistoricalSummary-v1-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "HistoricalSummary-v1-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "HistoricalSummary-v1-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "HistoricalSummary-v2-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "HistoricalSummary-v2-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "HistoricalSummary-v2-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "HistoricalSummary-v2-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "SigningData-v0-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "SigningData-v0-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "SigningData-v0-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "SigningData-v0-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "SigningData-v1-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "SigningData-v1-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "SigningData-v1-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "SigningData-v1-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "SigningData-v2-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "SigningData-v2-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "SigningData-v2-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "SigningData-v2-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "SyncAggregatorSelectionData-v0-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "SyncAggregatorSelectionData-v0-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "SyncAggregatorSelectionData-v0-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "SyncAggregatorSelectionData-v0-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "SyncAggregatorSelectionData-v1-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "SyncAggregatorSelectionData-v1-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "SyncAggregatorSelectionData-v1-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "SyncAggregatorSelectionData-v1-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "SyncAggregatorSelectionData-v2-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "SyncAggregatorSelectionData-v2-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "SyncAggregatorSelectionData-v2-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "SyncAggregatorSelectionData-v2-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "ValidatorBalance-v0-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "ValidatorBalance-v0-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "ValidatorBalance-v0-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "ValidatorBalance-v0-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "ValidatorBalance-v1-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "ValidatorBalance-v1-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "ValidatorBalance-v1-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "ValidatorBalance-v1-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "ValidatorBalance-v2-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "ValidatorBalance-v2-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "ValidatorBalance-v2-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "ValidatorBalance-v2-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "VoluntaryExit-v0-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "VoluntaryExit-v0-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "VoluntaryExit-v0-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "VoluntaryExit-v0-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "VoluntaryExit-v1-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "VoluntaryExit-v1-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "VoluntaryExit-v1-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "VoluntaryExit-v1-pre7-spare5",
+   "ok": true
+  },
+  {
+   "id": "VoluntaryExit-v2-pre0-spare0",
+   "ok": true
+  },
+  {
+   "id": "VoluntaryExit-v2-pre0-spare5",
+   "ok": true
+  },
+  {
+   "id": "VoluntaryExit-v2-pre7-spare0",
+   "ok": true
+  },
+  {
+   "id": "VoluntaryExit-v2-pre7-spare5",
+   "ok": true
+  }
+ ]
+}

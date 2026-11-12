@@ -1,0 +1,9 @@
+E2-C link check (verification of the E2-P encoder link tables; no re-extraction).
+Command (one gated job e2c 08, cwd fv/kraken): python3 -I -B link/check.py <scratch dir>
+Scratch dir = copies of prysm/go1.26.10/e2e/enc2/link/{norm,data,target.objdump} + the pinned ELF and its nm file.
+ELF sha256 c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e (= build-ids.txt); nm sha256 88ee8b9a… (= build-ids.txt).
+Result: exit 0, "PASS all", BUNDLE sha256 c08ac5371b0ba595e9d67f1830d5c31fcbec6ac296f6b8068a2f2ae5b8f9d882.
+The written RESULT is byte-identical to prysm/go1.26.10/e2e/enc2/link/RESULT (diff empty).
+It covers MarshalSSZTo of the 13 flat types of the enc2 bundle (checks (a)-(f): ELF bytes, global labels,
+LabelsFresh of the host program, re-assembly, data files). Checkpoint, BeaconBlockHeader and Eth1Data encoder
+tables (e2e/link, e2e/bh/link, e2e/e1/link) were checked by earlier units and not rerun here.

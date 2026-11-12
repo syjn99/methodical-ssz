@@ -1,0 +1,5642 @@
+[
+ {
+  "id": "Checkpoint-v0-pre0-spare0",
+  "type": "Checkpoint",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Root",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "",
+  "cap": 40,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 40,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Checkpoint-v0-pre0-spare5",
+  "type": "Checkpoint",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Root",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "",
+  "cap": 45,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 45,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Checkpoint-v0-pre7-spare0",
+  "type": "Checkpoint",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Root",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 47,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 47,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Checkpoint-v0-pre7-spare5",
+  "type": "Checkpoint",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Root",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 52,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 52,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Checkpoint-v1-pre0-spare0",
+  "type": "Checkpoint",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "Root",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   }
+  ],
+  "pre": "",
+  "cap": 40,
+  "exp": {
+   "err": "",
+   "out": "efcdab8967452301020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db",
+   "same_array": true,
+   "out_cap": 40,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Checkpoint-v1-pre0-spare5",
+  "type": "Checkpoint",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "Root",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   }
+  ],
+  "pre": "",
+  "cap": 45,
+  "exp": {
+   "err": "",
+   "out": "efcdab8967452301020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db",
+   "same_array": true,
+   "out_cap": 45,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Checkpoint-v1-pre7-spare0",
+  "type": "Checkpoint",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "Root",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 47,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6efcdab8967452301020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db",
+   "same_array": true,
+   "out_cap": 47,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Checkpoint-v1-pre7-spare5",
+  "type": "Checkpoint",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "Root",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 52,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6efcdab8967452301020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db",
+   "same_array": true,
+   "out_cap": 52,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Checkpoint-v2-pre0-spare0",
+  "type": "Checkpoint",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "Root",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   }
+  ],
+  "pre": "",
+  "cap": 40,
+  "exp": {
+   "err": "",
+   "out": "ffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+   "same_array": true,
+   "out_cap": 40,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Checkpoint-v2-pre0-spare5",
+  "type": "Checkpoint",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "Root",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   }
+  ],
+  "pre": "",
+  "cap": 45,
+  "exp": {
+   "err": "",
+   "out": "ffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+   "same_array": true,
+   "out_cap": 45,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Checkpoint-v2-pre7-spare0",
+  "type": "Checkpoint",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "Root",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 47,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+   "same_array": true,
+   "out_cap": 47,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Checkpoint-v2-pre7-spare5",
+  "type": "Checkpoint",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "Root",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 52,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+   "same_array": true,
+   "out_cap": 52,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BeaconBlockHeader-v0-pre0-spare0",
+  "type": "BeaconBlockHeader",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "ProposerIndex",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "ParentRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "StateRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "BodyRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "",
+  "cap": 112,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 112,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BeaconBlockHeader-v0-pre0-spare5",
+  "type": "BeaconBlockHeader",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "ProposerIndex",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "ParentRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "StateRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "BodyRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "",
+  "cap": 117,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 117,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BeaconBlockHeader-v0-pre7-spare0",
+  "type": "BeaconBlockHeader",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "ProposerIndex",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "ParentRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "StateRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "BodyRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 119,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 119,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BeaconBlockHeader-v0-pre7-spare5",
+  "type": "BeaconBlockHeader",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "ProposerIndex",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "ParentRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "StateRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "BodyRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 124,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 124,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BeaconBlockHeader-v1-pre0-spare0",
+  "type": "BeaconBlockHeader",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "ProposerIndex",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "ParentRoot",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "StateRoot",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd"
+   },
+   {
+    "name": "BodyRoot",
+    "u": 0,
+    "b": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7de"
+   }
+  ],
+  "pre": "",
+  "cap": 112,
+  "exp": {
+   "err": "",
+   "out": "efcdab8967452301ffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7de",
+   "same_array": true,
+   "out_cap": 112,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BeaconBlockHeader-v1-pre0-spare5",
+  "type": "BeaconBlockHeader",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "ProposerIndex",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "ParentRoot",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "StateRoot",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd"
+   },
+   {
+    "name": "BodyRoot",
+    "u": 0,
+    "b": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7de"
+   }
+  ],
+  "pre": "",
+  "cap": 117,
+  "exp": {
+   "err": "",
+   "out": "efcdab8967452301ffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7de",
+   "same_array": true,
+   "out_cap": 117,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BeaconBlockHeader-v1-pre7-spare0",
+  "type": "BeaconBlockHeader",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "ProposerIndex",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "ParentRoot",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "StateRoot",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd"
+   },
+   {
+    "name": "BodyRoot",
+    "u": 0,
+    "b": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7de"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 119,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6efcdab8967452301ffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7de",
+   "same_array": true,
+   "out_cap": 119,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BeaconBlockHeader-v1-pre7-spare5",
+  "type": "BeaconBlockHeader",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "ProposerIndex",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "ParentRoot",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "StateRoot",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd"
+   },
+   {
+    "name": "BodyRoot",
+    "u": 0,
+    "b": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7de"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 124,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6efcdab8967452301ffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7de",
+   "same_array": true,
+   "out_cap": 124,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BeaconBlockHeader-v2-pre0-spare0",
+  "type": "BeaconBlockHeader",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "ProposerIndex",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "ParentRoot",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd"
+   },
+   {
+    "name": "StateRoot",
+    "u": 0,
+    "b": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7de"
+   },
+   {
+    "name": "BodyRoot",
+    "u": 0,
+    "b": "060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8df"
+   }
+  ],
+  "pre": "",
+  "cap": 112,
+  "exp": {
+   "err": "",
+   "out": "ffffffffffffffff0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7de060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8df",
+   "same_array": true,
+   "out_cap": 112,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BeaconBlockHeader-v2-pre0-spare5",
+  "type": "BeaconBlockHeader",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "ProposerIndex",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "ParentRoot",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd"
+   },
+   {
+    "name": "StateRoot",
+    "u": 0,
+    "b": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7de"
+   },
+   {
+    "name": "BodyRoot",
+    "u": 0,
+    "b": "060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8df"
+   }
+  ],
+  "pre": "",
+  "cap": 117,
+  "exp": {
+   "err": "",
+   "out": "ffffffffffffffff0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7de060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8df",
+   "same_array": true,
+   "out_cap": 117,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BeaconBlockHeader-v2-pre7-spare0",
+  "type": "BeaconBlockHeader",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "ProposerIndex",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "ParentRoot",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd"
+   },
+   {
+    "name": "StateRoot",
+    "u": 0,
+    "b": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7de"
+   },
+   {
+    "name": "BodyRoot",
+    "u": 0,
+    "b": "060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8df"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 119,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7de060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8df",
+   "same_array": true,
+   "out_cap": 119,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BeaconBlockHeader-v2-pre7-spare5",
+  "type": "BeaconBlockHeader",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "ProposerIndex",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "ParentRoot",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd"
+   },
+   {
+    "name": "StateRoot",
+    "u": 0,
+    "b": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7de"
+   },
+   {
+    "name": "BodyRoot",
+    "u": 0,
+    "b": "060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8df"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 124,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7de060d141b222930373e454c535a61686f767d848b9299a0a7aeb5bcc3cad1d8df",
+   "same_array": true,
+   "out_cap": 124,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Eth1Data-v0-pre0-spare0",
+  "type": "Eth1Data",
+  "fields": [
+   {
+    "name": "DepositRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "DepositCount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "",
+  "cap": 72,
+  "exp": {
+   "err": "",
+   "out": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 72,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Eth1Data-v0-pre0-spare5",
+  "type": "Eth1Data",
+  "fields": [
+   {
+    "name": "DepositRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "DepositCount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "",
+  "cap": 77,
+  "exp": {
+   "err": "",
+   "out": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 77,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Eth1Data-v0-pre7-spare0",
+  "type": "Eth1Data",
+  "fields": [
+   {
+    "name": "DepositRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "DepositCount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 79,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 79,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Eth1Data-v0-pre7-spare5",
+  "type": "Eth1Data",
+  "fields": [
+   {
+    "name": "DepositRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "DepositCount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 84,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 84,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Eth1Data-v1-pre0-spare0",
+  "type": "Eth1Data",
+  "fields": [
+   {
+    "name": "DepositRoot",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "DepositCount",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   }
+  ],
+  "pre": "",
+  "cap": 72,
+  "exp": {
+   "err": "",
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3daffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+   "same_array": true,
+   "out_cap": 72,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Eth1Data-v1-pre0-spare5",
+  "type": "Eth1Data",
+  "fields": [
+   {
+    "name": "DepositRoot",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "DepositCount",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   }
+  ],
+  "pre": "",
+  "cap": 77,
+  "exp": {
+   "err": "",
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3daffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+   "same_array": true,
+   "out_cap": 77,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Eth1Data-v1-pre7-spare0",
+  "type": "Eth1Data",
+  "fields": [
+   {
+    "name": "DepositRoot",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "DepositCount",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 79,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3daffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+   "same_array": true,
+   "out_cap": 79,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Eth1Data-v1-pre7-spare5",
+  "type": "Eth1Data",
+  "fields": [
+   {
+    "name": "DepositRoot",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "DepositCount",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 84,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3daffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+   "same_array": true,
+   "out_cap": 84,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Eth1Data-v2-pre0-spare0",
+  "type": "Eth1Data",
+  "fields": [
+   {
+    "name": "DepositRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "DepositCount",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd"
+   }
+  ],
+  "pre": "",
+  "cap": 72,
+  "exp": {
+   "err": "",
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd",
+   "same_array": true,
+   "out_cap": 72,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Eth1Data-v2-pre0-spare5",
+  "type": "Eth1Data",
+  "fields": [
+   {
+    "name": "DepositRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "DepositCount",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd"
+   }
+  ],
+  "pre": "",
+  "cap": 77,
+  "exp": {
+   "err": "",
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd",
+   "same_array": true,
+   "out_cap": 77,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Eth1Data-v2-pre7-spare0",
+  "type": "Eth1Data",
+  "fields": [
+   {
+    "name": "DepositRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "DepositCount",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 79,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd",
+   "same_array": true,
+   "out_cap": 79,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Eth1Data-v2-pre7-spare5",
+  "type": "Eth1Data",
+  "fields": [
+   {
+    "name": "DepositRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "DepositCount",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 84,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dd",
+   "same_array": true,
+   "out_cap": 84,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BlobIdentifier-v0-pre0-spare0",
+  "type": "BlobIdentifier",
+  "fields": [
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Index",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 40,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 40,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BlobIdentifier-v0-pre0-spare5",
+  "type": "BlobIdentifier",
+  "fields": [
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Index",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 45,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 45,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BlobIdentifier-v0-pre7-spare0",
+  "type": "BlobIdentifier",
+  "fields": [
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Index",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 47,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 47,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BlobIdentifier-v0-pre7-spare5",
+  "type": "BlobIdentifier",
+  "fields": [
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Index",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 52,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 52,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BlobIdentifier-v1-pre0-spare0",
+  "type": "BlobIdentifier",
+  "fields": [
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "Index",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 40,
+  "exp": {
+   "err": "",
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3daffffffffffffffff",
+   "same_array": true,
+   "out_cap": 40,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BlobIdentifier-v1-pre0-spare5",
+  "type": "BlobIdentifier",
+  "fields": [
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "Index",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 45,
+  "exp": {
+   "err": "",
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3daffffffffffffffff",
+   "same_array": true,
+   "out_cap": 45,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BlobIdentifier-v1-pre7-spare0",
+  "type": "BlobIdentifier",
+  "fields": [
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "Index",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 47,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3daffffffffffffffff",
+   "same_array": true,
+   "out_cap": 47,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BlobIdentifier-v1-pre7-spare5",
+  "type": "BlobIdentifier",
+  "fields": [
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "Index",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 52,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3daffffffffffffffff",
+   "same_array": true,
+   "out_cap": 52,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BlobIdentifier-v2-pre0-spare0",
+  "type": "BlobIdentifier",
+  "fields": [
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Index",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 40,
+  "exp": {
+   "err": "",
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000",
+   "same_array": true,
+   "out_cap": 40,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BlobIdentifier-v2-pre0-spare5",
+  "type": "BlobIdentifier",
+  "fields": [
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Index",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 45,
+  "exp": {
+   "err": "",
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000",
+   "same_array": true,
+   "out_cap": 45,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BlobIdentifier-v2-pre7-spare0",
+  "type": "BlobIdentifier",
+  "fields": [
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Index",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 47,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000",
+   "same_array": true,
+   "out_cap": 47,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "BlobIdentifier-v2-pre7-spare5",
+  "type": "BlobIdentifier",
+  "fields": [
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Index",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 52,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000",
+   "same_array": true,
+   "out_cap": 52,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "DepositMessage-v0-pre0-spare0",
+  "type": "DepositMessage",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 88,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 88,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "DepositMessage-v0-pre0-spare5",
+  "type": "DepositMessage",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 93,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 93,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "DepositMessage-v0-pre7-spare0",
+  "type": "DepositMessage",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 95,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 95,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "DepositMessage-v0-pre7-spare5",
+  "type": "DepositMessage",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 100,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 100,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "DepositMessage-v1-pre0-spare0",
+  "type": "DepositMessage",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Amount",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 88,
+  "exp": {
+   "err": "",
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000",
+   "same_array": true,
+   "out_cap": 88,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "DepositMessage-v1-pre0-spare5",
+  "type": "DepositMessage",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Amount",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 93,
+  "exp": {
+   "err": "",
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000",
+   "same_array": true,
+   "out_cap": 93,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "DepositMessage-v1-pre7-spare0",
+  "type": "DepositMessage",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Amount",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 95,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000",
+   "same_array": true,
+   "out_cap": 95,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "DepositMessage-v1-pre7-spare5",
+  "type": "DepositMessage",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Amount",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 100,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000",
+   "same_array": true,
+   "out_cap": 100,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "DepositMessage-v2-pre0-spare0",
+  "type": "DepositMessage",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 88,
+  "exp": {
+   "err": "",
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000",
+   "same_array": true,
+   "out_cap": 88,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "DepositMessage-v2-pre0-spare5",
+  "type": "DepositMessage",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 93,
+  "exp": {
+   "err": "",
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000",
+   "same_array": true,
+   "out_cap": 93,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "DepositMessage-v2-pre7-spare0",
+  "type": "DepositMessage",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 95,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000",
+   "same_array": true,
+   "out_cap": 95,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "DepositMessage-v2-pre7-spare5",
+  "type": "DepositMessage",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 100,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000",
+   "same_array": true,
+   "out_cap": 100,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Deposit_Data-v0-pre0-spare0",
+  "type": "Deposit_Data",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "",
+  "cap": 184,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 184,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Deposit_Data-v0-pre0-spare5",
+  "type": "Deposit_Data",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "",
+  "cap": 189,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 189,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Deposit_Data-v0-pre7-spare0",
+  "type": "Deposit_Data",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 191,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 191,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Deposit_Data-v0-pre7-spare5",
+  "type": "Deposit_Data",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 196,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 196,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Deposit_Data-v1-pre0-spare0",
+  "type": "Deposit_Data",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Amount",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d"
+   }
+  ],
+  "pre": "",
+  "cap": 184,
+  "exp": {
+   "err": "",
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d",
+   "same_array": true,
+   "out_cap": 184,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Deposit_Data-v1-pre0-spare5",
+  "type": "Deposit_Data",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Amount",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d"
+   }
+  ],
+  "pre": "",
+  "cap": 189,
+  "exp": {
+   "err": "",
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d",
+   "same_array": true,
+   "out_cap": 189,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Deposit_Data-v1-pre7-spare0",
+  "type": "Deposit_Data",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Amount",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 191,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d",
+   "same_array": true,
+   "out_cap": 191,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Deposit_Data-v1-pre7-spare5",
+  "type": "Deposit_Data",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Amount",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 196,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d",
+   "same_array": true,
+   "out_cap": 196,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Deposit_Data-v2-pre0-spare0",
+  "type": "Deposit_Data",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e"
+   }
+  ],
+  "pre": "",
+  "cap": 184,
+  "exp": {
+   "err": "",
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e",
+   "same_array": true,
+   "out_cap": 184,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Deposit_Data-v2-pre0-spare5",
+  "type": "Deposit_Data",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e"
+   }
+  ],
+  "pre": "",
+  "cap": 189,
+  "exp": {
+   "err": "",
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e",
+   "same_array": true,
+   "out_cap": 189,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Deposit_Data-v2-pre7-spare0",
+  "type": "Deposit_Data",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 191,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e",
+   "same_array": true,
+   "out_cap": 191,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "Deposit_Data-v2-pre7-spare5",
+  "type": "Deposit_Data",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 196,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e",
+   "same_array": true,
+   "out_cap": 196,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingPartialWithdrawal-v0-pre0-spare0",
+  "type": "PendingPartialWithdrawal",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 24,
+  "exp": {
+   "err": "",
+   "out": "000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 24,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingPartialWithdrawal-v0-pre0-spare5",
+  "type": "PendingPartialWithdrawal",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 29,
+  "exp": {
+   "err": "",
+   "out": "000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 29,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingPartialWithdrawal-v0-pre7-spare0",
+  "type": "PendingPartialWithdrawal",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 31,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 31,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingPartialWithdrawal-v0-pre7-spare5",
+  "type": "PendingPartialWithdrawal",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 36,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 36,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingPartialWithdrawal-v1-pre0-spare0",
+  "type": "PendingPartialWithdrawal",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "Amount",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 24,
+  "exp": {
+   "err": "",
+   "out": "efcdab8967452301ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 24,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingPartialWithdrawal-v1-pre0-spare5",
+  "type": "PendingPartialWithdrawal",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "Amount",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 29,
+  "exp": {
+   "err": "",
+   "out": "efcdab8967452301ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 29,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingPartialWithdrawal-v1-pre7-spare0",
+  "type": "PendingPartialWithdrawal",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "Amount",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 31,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6efcdab8967452301ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 31,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingPartialWithdrawal-v1-pre7-spare5",
+  "type": "PendingPartialWithdrawal",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "Amount",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 36,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6efcdab8967452301ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 36,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingPartialWithdrawal-v2-pre0-spare0",
+  "type": "PendingPartialWithdrawal",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "Amount",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 24,
+  "exp": {
+   "err": "",
+   "out": "ffffffffffffffff07000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 24,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingPartialWithdrawal-v2-pre0-spare5",
+  "type": "PendingPartialWithdrawal",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "Amount",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 29,
+  "exp": {
+   "err": "",
+   "out": "ffffffffffffffff07000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 29,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingPartialWithdrawal-v2-pre7-spare0",
+  "type": "PendingPartialWithdrawal",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "Amount",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 31,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff07000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 31,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingPartialWithdrawal-v2-pre7-spare5",
+  "type": "PendingPartialWithdrawal",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "Amount",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "WithdrawableEpoch",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 36,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff07000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 36,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncCommitteeMessage-v0-pre0-spare0",
+  "type": "SyncCommitteeMessage",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "",
+  "cap": 144,
+  "exp": {
+   "err": "",
+   "out": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 144,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncCommitteeMessage-v0-pre0-spare5",
+  "type": "SyncCommitteeMessage",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "",
+  "cap": 149,
+  "exp": {
+   "err": "",
+   "out": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 149,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncCommitteeMessage-v0-pre7-spare0",
+  "type": "SyncCommitteeMessage",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 151,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 151,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncCommitteeMessage-v0-pre7-spare5",
+  "type": "SyncCommitteeMessage",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 156,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 156,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncCommitteeMessage-v1-pre0-spare0",
+  "type": "SyncCommitteeMessage",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d"
+   }
+  ],
+  "pre": "",
+  "cap": 144,
+  "exp": {
+   "err": "",
+   "out": "efcdab8967452301020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d",
+   "same_array": true,
+   "out_cap": 144,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncCommitteeMessage-v1-pre0-spare5",
+  "type": "SyncCommitteeMessage",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d"
+   }
+  ],
+  "pre": "",
+  "cap": 149,
+  "exp": {
+   "err": "",
+   "out": "efcdab8967452301020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d",
+   "same_array": true,
+   "out_cap": 149,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncCommitteeMessage-v1-pre7-spare0",
+  "type": "SyncCommitteeMessage",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 151,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6efcdab8967452301020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d",
+   "same_array": true,
+   "out_cap": 151,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncCommitteeMessage-v1-pre7-spare5",
+  "type": "SyncCommitteeMessage",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 156,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6efcdab8967452301020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d",
+   "same_array": true,
+   "out_cap": 156,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncCommitteeMessage-v2-pre0-spare0",
+  "type": "SyncCommitteeMessage",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e"
+   }
+  ],
+  "pre": "",
+  "cap": 144,
+  "exp": {
+   "err": "",
+   "out": "ffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e",
+   "same_array": true,
+   "out_cap": 144,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncCommitteeMessage-v2-pre0-spare5",
+  "type": "SyncCommitteeMessage",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e"
+   }
+  ],
+  "pre": "",
+  "cap": 149,
+  "exp": {
+   "err": "",
+   "out": "ffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e",
+   "same_array": true,
+   "out_cap": 149,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncCommitteeMessage-v2-pre7-spare0",
+  "type": "SyncCommitteeMessage",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 151,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e",
+   "same_array": true,
+   "out_cap": 151,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncCommitteeMessage-v2-pre7-spare5",
+  "type": "SyncCommitteeMessage",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "BlockRoot",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 156,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e",
+   "same_array": true,
+   "out_cap": 156,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingConsolidation-v0-pre0-spare0",
+  "type": "PendingConsolidation",
+  "fields": [
+   {
+    "name": "SourceIndex",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "TargetIndex",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 16,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 16,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingConsolidation-v0-pre0-spare5",
+  "type": "PendingConsolidation",
+  "fields": [
+   {
+    "name": "SourceIndex",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "TargetIndex",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 21,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 21,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingConsolidation-v0-pre7-spare0",
+  "type": "PendingConsolidation",
+  "fields": [
+   {
+    "name": "SourceIndex",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "TargetIndex",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 23,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 23,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingConsolidation-v0-pre7-spare5",
+  "type": "PendingConsolidation",
+  "fields": [
+   {
+    "name": "SourceIndex",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "TargetIndex",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 28,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 28,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingConsolidation-v1-pre0-spare0",
+  "type": "PendingConsolidation",
+  "fields": [
+   {
+    "name": "SourceIndex",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "TargetIndex",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 16,
+  "exp": {
+   "err": "",
+   "out": "efcdab8967452301ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 16,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingConsolidation-v1-pre0-spare5",
+  "type": "PendingConsolidation",
+  "fields": [
+   {
+    "name": "SourceIndex",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "TargetIndex",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 21,
+  "exp": {
+   "err": "",
+   "out": "efcdab8967452301ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 21,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingConsolidation-v1-pre7-spare0",
+  "type": "PendingConsolidation",
+  "fields": [
+   {
+    "name": "SourceIndex",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "TargetIndex",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 23,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6efcdab8967452301ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 23,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingConsolidation-v1-pre7-spare5",
+  "type": "PendingConsolidation",
+  "fields": [
+   {
+    "name": "SourceIndex",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "TargetIndex",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 28,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6efcdab8967452301ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 28,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingConsolidation-v2-pre0-spare0",
+  "type": "PendingConsolidation",
+  "fields": [
+   {
+    "name": "SourceIndex",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "TargetIndex",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 16,
+  "exp": {
+   "err": "",
+   "out": "ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 16,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingConsolidation-v2-pre0-spare5",
+  "type": "PendingConsolidation",
+  "fields": [
+   {
+    "name": "SourceIndex",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "TargetIndex",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 21,
+  "exp": {
+   "err": "",
+   "out": "ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 21,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingConsolidation-v2-pre7-spare0",
+  "type": "PendingConsolidation",
+  "fields": [
+   {
+    "name": "SourceIndex",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "TargetIndex",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 23,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 23,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingConsolidation-v2-pre7-spare5",
+  "type": "PendingConsolidation",
+  "fields": [
+   {
+    "name": "SourceIndex",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "TargetIndex",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 28,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 28,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingDeposit-v0-pre0-spare0",
+  "type": "PendingDeposit",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Slot",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 192,
+  "exp": {
+   "err": "",
+   "out": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 192,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingDeposit-v0-pre0-spare5",
+  "type": "PendingDeposit",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Slot",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 197,
+  "exp": {
+   "err": "",
+   "out": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 197,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingDeposit-v0-pre7-spare0",
+  "type": "PendingDeposit",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Slot",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 199,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 199,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingDeposit-v0-pre7-spare5",
+  "type": "PendingDeposit",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Slot",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 204,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 204,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingDeposit-v1-pre0-spare0",
+  "type": "PendingDeposit",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Amount",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d"
+   },
+   {
+    "name": "Slot",
+    "u": 81985529216486895,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 192,
+  "exp": {
+   "err": "",
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969defcdab8967452301",
+   "same_array": true,
+   "out_cap": 192,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingDeposit-v1-pre0-spare5",
+  "type": "PendingDeposit",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Amount",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d"
+   },
+   {
+    "name": "Slot",
+    "u": 81985529216486895,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 197,
+  "exp": {
+   "err": "",
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969defcdab8967452301",
+   "same_array": true,
+   "out_cap": 197,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingDeposit-v1-pre7-spare0",
+  "type": "PendingDeposit",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Amount",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d"
+   },
+   {
+    "name": "Slot",
+    "u": 81985529216486895,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 199,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969defcdab8967452301",
+   "same_array": true,
+   "out_cap": 199,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingDeposit-v1-pre7-spare5",
+  "type": "PendingDeposit",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Amount",
+    "u": 7,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969d"
+   },
+   {
+    "name": "Slot",
+    "u": 81985529216486895,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 204,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db0700000000000000040b121920272e353c434a51585f666d747b828990979ea5acb3bac1c8cfd6dde4ebf2f900070e151c232a31383f464d545b626970777e858c939aa1a8afb6bdc4cbd2d9e0e7eef5fc030a11181f262d343b424950575e656c737a81888f969defcdab8967452301",
+   "same_array": true,
+   "out_cap": 204,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingDeposit-v2-pre0-spare0",
+  "type": "PendingDeposit",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e"
+   },
+   {
+    "name": "Slot",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 192,
+  "exp": {
+   "err": "",
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979effffffffffffffff",
+   "same_array": true,
+   "out_cap": 192,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingDeposit-v2-pre0-spare5",
+  "type": "PendingDeposit",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e"
+   },
+   {
+    "name": "Slot",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 197,
+  "exp": {
+   "err": "",
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979effffffffffffffff",
+   "same_array": true,
+   "out_cap": 197,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingDeposit-v2-pre7-spare0",
+  "type": "PendingDeposit",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e"
+   },
+   {
+    "name": "Slot",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 199,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979effffffffffffffff",
+   "same_array": true,
+   "out_cap": 199,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PendingDeposit-v2-pre7-spare5",
+  "type": "PendingDeposit",
+  "fields": [
+   {
+    "name": "PublicKey",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b"
+   },
+   {
+    "name": "WithdrawalCredentials",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "Amount",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Signature",
+    "u": 0,
+    "b": "050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979e"
+   },
+   {
+    "name": "Slot",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 204,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4dbe2e9f0f7fe050c131a21282f363d444b030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc0000000000000000050c131a21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3dae1e8eff6fd040b121920272e353c434a51585f666d747b828990979effffffffffffffff",
+   "same_array": true,
+   "out_cap": 204,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PowBlock-v0-pre0-spare0",
+  "type": "PowBlock",
+  "fields": [
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "ParentHash",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "TotalDifficulty",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "",
+  "cap": 96,
+  "exp": {
+   "err": "",
+   "out": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 96,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PowBlock-v0-pre0-spare5",
+  "type": "PowBlock",
+  "fields": [
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "ParentHash",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "TotalDifficulty",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "",
+  "cap": 101,
+  "exp": {
+   "err": "",
+   "out": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 101,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PowBlock-v0-pre7-spare0",
+  "type": "PowBlock",
+  "fields": [
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "ParentHash",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "TotalDifficulty",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 103,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 103,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PowBlock-v0-pre7-spare5",
+  "type": "PowBlock",
+  "fields": [
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "ParentHash",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "TotalDifficulty",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 108,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 108,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PowBlock-v1-pre0-spare0",
+  "type": "PowBlock",
+  "fields": [
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "ParentHash",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "TotalDifficulty",
+    "u": 0,
+    "b": "000000000000000000000000f0debc9a78563412000000000000000000000000"
+   }
+  ],
+  "pre": "",
+  "cap": 96,
+  "exp": {
+   "err": "",
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db000000000000000000000000f0debc9a78563412000000000000000000000000",
+   "same_array": true,
+   "out_cap": 96,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PowBlock-v1-pre0-spare5",
+  "type": "PowBlock",
+  "fields": [
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "ParentHash",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "TotalDifficulty",
+    "u": 0,
+    "b": "000000000000000000000000f0debc9a78563412000000000000000000000000"
+   }
+  ],
+  "pre": "",
+  "cap": 101,
+  "exp": {
+   "err": "",
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db000000000000000000000000f0debc9a78563412000000000000000000000000",
+   "same_array": true,
+   "out_cap": 101,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PowBlock-v1-pre7-spare0",
+  "type": "PowBlock",
+  "fields": [
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "ParentHash",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "TotalDifficulty",
+    "u": 0,
+    "b": "000000000000000000000000f0debc9a78563412000000000000000000000000"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 103,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db000000000000000000000000f0debc9a78563412000000000000000000000000",
+   "same_array": true,
+   "out_cap": 103,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PowBlock-v1-pre7-spare5",
+  "type": "PowBlock",
+  "fields": [
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "ParentHash",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "TotalDifficulty",
+    "u": 0,
+    "b": "000000000000000000000000f0debc9a78563412000000000000000000000000"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 108,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db000000000000000000000000f0debc9a78563412000000000000000000000000",
+   "same_array": true,
+   "out_cap": 108,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PowBlock-v2-pre0-spare0",
+  "type": "PowBlock",
+  "fields": [
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "ParentHash",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "TotalDifficulty",
+    "u": 0,
+    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   }
+  ],
+  "pre": "",
+  "cap": 96,
+  "exp": {
+   "err": "",
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dcffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 96,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PowBlock-v2-pre0-spare5",
+  "type": "PowBlock",
+  "fields": [
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "ParentHash",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "TotalDifficulty",
+    "u": 0,
+    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   }
+  ],
+  "pre": "",
+  "cap": 101,
+  "exp": {
+   "err": "",
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dcffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 101,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PowBlock-v2-pre7-spare0",
+  "type": "PowBlock",
+  "fields": [
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "ParentHash",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "TotalDifficulty",
+    "u": 0,
+    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 103,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dcffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 103,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "PowBlock-v2-pre7-spare5",
+  "type": "PowBlock",
+  "fields": [
+   {
+    "name": "BlockHash",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "ParentHash",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   },
+   {
+    "name": "TotalDifficulty",
+    "u": 0,
+    "b": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 108,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dcffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+   "same_array": true,
+   "out_cap": 108,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "HistoricalSummary-v0-pre0-spare0",
+  "type": "HistoricalSummary",
+  "fields": [
+   {
+    "name": "BlockSummaryRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "StateSummaryRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "",
+  "cap": 64,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 64,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "HistoricalSummary-v0-pre0-spare5",
+  "type": "HistoricalSummary",
+  "fields": [
+   {
+    "name": "BlockSummaryRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "StateSummaryRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "",
+  "cap": 69,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 69,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "HistoricalSummary-v0-pre7-spare0",
+  "type": "HistoricalSummary",
+  "fields": [
+   {
+    "name": "BlockSummaryRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "StateSummaryRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 71,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 71,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "HistoricalSummary-v0-pre7-spare5",
+  "type": "HistoricalSummary",
+  "fields": [
+   {
+    "name": "BlockSummaryRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "StateSummaryRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 76,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 76,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "HistoricalSummary-v1-pre0-spare0",
+  "type": "HistoricalSummary",
+  "fields": [
+   {
+    "name": "BlockSummaryRoot",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "StateSummaryRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   }
+  ],
+  "pre": "",
+  "cap": 64,
+  "exp": {
+   "err": "",
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db",
+   "same_array": true,
+   "out_cap": 64,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "HistoricalSummary-v1-pre0-spare5",
+  "type": "HistoricalSummary",
+  "fields": [
+   {
+    "name": "BlockSummaryRoot",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "StateSummaryRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   }
+  ],
+  "pre": "",
+  "cap": 69,
+  "exp": {
+   "err": "",
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db",
+   "same_array": true,
+   "out_cap": 69,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "HistoricalSummary-v1-pre7-spare0",
+  "type": "HistoricalSummary",
+  "fields": [
+   {
+    "name": "BlockSummaryRoot",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "StateSummaryRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 71,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db",
+   "same_array": true,
+   "out_cap": 71,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "HistoricalSummary-v1-pre7-spare5",
+  "type": "HistoricalSummary",
+  "fields": [
+   {
+    "name": "BlockSummaryRoot",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "StateSummaryRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 76,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db",
+   "same_array": true,
+   "out_cap": 76,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "HistoricalSummary-v2-pre0-spare0",
+  "type": "HistoricalSummary",
+  "fields": [
+   {
+    "name": "BlockSummaryRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "StateSummaryRoot",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   }
+  ],
+  "pre": "",
+  "cap": 64,
+  "exp": {
+   "err": "",
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+   "same_array": true,
+   "out_cap": 64,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "HistoricalSummary-v2-pre0-spare5",
+  "type": "HistoricalSummary",
+  "fields": [
+   {
+    "name": "BlockSummaryRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "StateSummaryRoot",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   }
+  ],
+  "pre": "",
+  "cap": 69,
+  "exp": {
+   "err": "",
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+   "same_array": true,
+   "out_cap": 69,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "HistoricalSummary-v2-pre7-spare0",
+  "type": "HistoricalSummary",
+  "fields": [
+   {
+    "name": "BlockSummaryRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "StateSummaryRoot",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 71,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+   "same_array": true,
+   "out_cap": 71,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "HistoricalSummary-v2-pre7-spare5",
+  "type": "HistoricalSummary",
+  "fields": [
+   {
+    "name": "BlockSummaryRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "StateSummaryRoot",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 76,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+   "same_array": true,
+   "out_cap": 76,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SigningData-v0-pre0-spare0",
+  "type": "SigningData",
+  "fields": [
+   {
+    "name": "ObjectRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Domain",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "",
+  "cap": 64,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 64,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SigningData-v0-pre0-spare5",
+  "type": "SigningData",
+  "fields": [
+   {
+    "name": "ObjectRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Domain",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "",
+  "cap": 69,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 69,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SigningData-v0-pre7-spare0",
+  "type": "SigningData",
+  "fields": [
+   {
+    "name": "ObjectRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Domain",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 71,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 71,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SigningData-v0-pre7-spare5",
+  "type": "SigningData",
+  "fields": [
+   {
+    "name": "ObjectRoot",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   {
+    "name": "Domain",
+    "u": 0,
+    "b": "0000000000000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 76,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 76,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SigningData-v1-pre0-spare0",
+  "type": "SigningData",
+  "fields": [
+   {
+    "name": "ObjectRoot",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "Domain",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   }
+  ],
+  "pre": "",
+  "cap": 64,
+  "exp": {
+   "err": "",
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db",
+   "same_array": true,
+   "out_cap": 64,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SigningData-v1-pre0-spare5",
+  "type": "SigningData",
+  "fields": [
+   {
+    "name": "ObjectRoot",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "Domain",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   }
+  ],
+  "pre": "",
+  "cap": 69,
+  "exp": {
+   "err": "",
+   "out": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db",
+   "same_array": true,
+   "out_cap": 69,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SigningData-v1-pre7-spare0",
+  "type": "SigningData",
+  "fields": [
+   {
+    "name": "ObjectRoot",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "Domain",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 71,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db",
+   "same_array": true,
+   "out_cap": 71,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SigningData-v1-pre7-spare5",
+  "type": "SigningData",
+  "fields": [
+   {
+    "name": "ObjectRoot",
+    "u": 0,
+    "b": "01080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da"
+   },
+   {
+    "name": "Domain",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 76,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a601080f161d242b323940474e555c636a71787f868d949ba2a9b0b7bec5ccd3da020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db",
+   "same_array": true,
+   "out_cap": 76,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SigningData-v2-pre0-spare0",
+  "type": "SigningData",
+  "fields": [
+   {
+    "name": "ObjectRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Domain",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   }
+  ],
+  "pre": "",
+  "cap": 64,
+  "exp": {
+   "err": "",
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+   "same_array": true,
+   "out_cap": 64,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SigningData-v2-pre0-spare5",
+  "type": "SigningData",
+  "fields": [
+   {
+    "name": "ObjectRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Domain",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   }
+  ],
+  "pre": "",
+  "cap": 69,
+  "exp": {
+   "err": "",
+   "out": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+   "same_array": true,
+   "out_cap": 69,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SigningData-v2-pre7-spare0",
+  "type": "SigningData",
+  "fields": [
+   {
+    "name": "ObjectRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Domain",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 71,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+   "same_array": true,
+   "out_cap": 71,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SigningData-v2-pre7-spare5",
+  "type": "SigningData",
+  "fields": [
+   {
+    "name": "ObjectRoot",
+    "u": 0,
+    "b": "020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db"
+   },
+   {
+    "name": "Domain",
+    "u": 0,
+    "b": "030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc"
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 76,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6020910171e252c333a41484f565d646b727980878e959ca3aab1b8bfc6cdd4db030a11181f262d343b424950575e656c737a81888f969da4abb2b9c0c7ced5dc",
+   "same_array": true,
+   "out_cap": 76,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncAggregatorSelectionData-v0-pre0-spare0",
+  "type": "SyncAggregatorSelectionData",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "SubcommitteeIndex",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 16,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 16,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncAggregatorSelectionData-v0-pre0-spare5",
+  "type": "SyncAggregatorSelectionData",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "SubcommitteeIndex",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 21,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 21,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncAggregatorSelectionData-v0-pre7-spare0",
+  "type": "SyncAggregatorSelectionData",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "SubcommitteeIndex",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 23,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 23,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncAggregatorSelectionData-v0-pre7-spare5",
+  "type": "SyncAggregatorSelectionData",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "SubcommitteeIndex",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 28,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 28,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncAggregatorSelectionData-v1-pre0-spare0",
+  "type": "SyncAggregatorSelectionData",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "SubcommitteeIndex",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 16,
+  "exp": {
+   "err": "",
+   "out": "efcdab8967452301ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 16,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncAggregatorSelectionData-v1-pre0-spare5",
+  "type": "SyncAggregatorSelectionData",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "SubcommitteeIndex",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 21,
+  "exp": {
+   "err": "",
+   "out": "efcdab8967452301ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 21,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncAggregatorSelectionData-v1-pre7-spare0",
+  "type": "SyncAggregatorSelectionData",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "SubcommitteeIndex",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 23,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6efcdab8967452301ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 23,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncAggregatorSelectionData-v1-pre7-spare5",
+  "type": "SyncAggregatorSelectionData",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "SubcommitteeIndex",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 28,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6efcdab8967452301ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 28,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncAggregatorSelectionData-v2-pre0-spare0",
+  "type": "SyncAggregatorSelectionData",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "SubcommitteeIndex",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 16,
+  "exp": {
+   "err": "",
+   "out": "ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 16,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncAggregatorSelectionData-v2-pre0-spare5",
+  "type": "SyncAggregatorSelectionData",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "SubcommitteeIndex",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 21,
+  "exp": {
+   "err": "",
+   "out": "ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 21,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncAggregatorSelectionData-v2-pre7-spare0",
+  "type": "SyncAggregatorSelectionData",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "SubcommitteeIndex",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 23,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 23,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "SyncAggregatorSelectionData-v2-pre7-spare5",
+  "type": "SyncAggregatorSelectionData",
+  "fields": [
+   {
+    "name": "Slot",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "SubcommitteeIndex",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 28,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 28,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "ValidatorBalance-v0-pre0-spare0",
+  "type": "ValidatorBalance",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Balance",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 16,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 16,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "ValidatorBalance-v0-pre0-spare5",
+  "type": "ValidatorBalance",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Balance",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 21,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 21,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "ValidatorBalance-v0-pre7-spare0",
+  "type": "ValidatorBalance",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Balance",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 23,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 23,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "ValidatorBalance-v0-pre7-spare5",
+  "type": "ValidatorBalance",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "Balance",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 28,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 28,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "ValidatorBalance-v1-pre0-spare0",
+  "type": "ValidatorBalance",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "Balance",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 16,
+  "exp": {
+   "err": "",
+   "out": "efcdab8967452301ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 16,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "ValidatorBalance-v1-pre0-spare5",
+  "type": "ValidatorBalance",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "Balance",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 21,
+  "exp": {
+   "err": "",
+   "out": "efcdab8967452301ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 21,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "ValidatorBalance-v1-pre7-spare0",
+  "type": "ValidatorBalance",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "Balance",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 23,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6efcdab8967452301ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 23,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "ValidatorBalance-v1-pre7-spare5",
+  "type": "ValidatorBalance",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "Balance",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 28,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6efcdab8967452301ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 28,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "ValidatorBalance-v2-pre0-spare0",
+  "type": "ValidatorBalance",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "Balance",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 16,
+  "exp": {
+   "err": "",
+   "out": "ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 16,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "ValidatorBalance-v2-pre0-spare5",
+  "type": "ValidatorBalance",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "Balance",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 21,
+  "exp": {
+   "err": "",
+   "out": "ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 21,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "ValidatorBalance-v2-pre7-spare0",
+  "type": "ValidatorBalance",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "Balance",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 23,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 23,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "ValidatorBalance-v2-pre7-spare5",
+  "type": "ValidatorBalance",
+  "fields": [
+   {
+    "name": "Index",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "Balance",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 28,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 28,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "VoluntaryExit-v0-pre0-spare0",
+  "type": "VoluntaryExit",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 16,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 16,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "VoluntaryExit-v0-pre0-spare5",
+  "type": "VoluntaryExit",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 21,
+  "exp": {
+   "err": "",
+   "out": "00000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 21,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "VoluntaryExit-v0-pre7-spare0",
+  "type": "VoluntaryExit",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 23,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 23,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "VoluntaryExit-v0-pre7-spare5",
+  "type": "VoluntaryExit",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 0,
+    "b": ""
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 0,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 28,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a600000000000000000000000000000000",
+   "same_array": true,
+   "out_cap": 28,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "VoluntaryExit-v1-pre0-spare0",
+  "type": "VoluntaryExit",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 16,
+  "exp": {
+   "err": "",
+   "out": "efcdab8967452301ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 16,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "VoluntaryExit-v1-pre0-spare5",
+  "type": "VoluntaryExit",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 21,
+  "exp": {
+   "err": "",
+   "out": "efcdab8967452301ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 21,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "VoluntaryExit-v1-pre7-spare0",
+  "type": "VoluntaryExit",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 23,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6efcdab8967452301ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 23,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "VoluntaryExit-v1-pre7-spare5",
+  "type": "VoluntaryExit",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 81985529216486895,
+    "b": ""
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 18446744073709551615,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 28,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6efcdab8967452301ffffffffffffffff",
+   "same_array": true,
+   "out_cap": 28,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "VoluntaryExit-v2-pre0-spare0",
+  "type": "VoluntaryExit",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 16,
+  "exp": {
+   "err": "",
+   "out": "ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 16,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "VoluntaryExit-v2-pre0-spare5",
+  "type": "VoluntaryExit",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "",
+  "cap": 21,
+  "exp": {
+   "err": "",
+   "out": "ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 21,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "VoluntaryExit-v2-pre7-spare0",
+  "type": "VoluntaryExit",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 23,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 23,
+   "recv_unchanged": true
+  }
+ },
+ {
+  "id": "VoluntaryExit-v2-pre7-spare5",
+  "type": "VoluntaryExit",
+  "fields": [
+   {
+    "name": "Epoch",
+    "u": 18446744073709551615,
+    "b": ""
+   },
+   {
+    "name": "ValidatorIndex",
+    "u": 7,
+    "b": ""
+   }
+  ],
+  "pre": "a0a1a2a3a4a5a6",
+  "cap": 28,
+  "exp": {
+   "err": "",
+   "out": "a0a1a2a3a4a5a6ffffffffffffffff0700000000000000",
+   "same_array": true,
+   "out_cap": 28,
+   "recv_unchanged": true
+  }
+ }
+]

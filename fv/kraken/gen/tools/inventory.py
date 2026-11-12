@@ -33,7 +33,12 @@ Rule. A function's state comes ONLY from the mapping table and the declarations 
   * a decoder is "complete" (in this sense only) when accept, size reject, spec alignment (spec_k, reject_size_spec,
     reject_complete), codec equality / correspondence of the Desc, accept witness and reject witness are all present
     under these checks; "partial" when some are; "none" when the type has no row or no theorem.
-  * an encoder has a "fast path" theorem when its row names one; growslice paths and encoder rejects are listed.
+  * an encoder `MarshalSSZTo` counts "fast path complete" (unit E2-C) when its row names a fast-path theorem, a spec
+    corollary and a witness, all present under these checks: fast and spec keyed to the function by the code
+    constant (subject rule), the spec corollary and every witness use the row's fast-path theorem; "fast path
+    partial" when some are. The fast path has the premise `len(dst) + SizeSSZ <= cap(dst)` and exact byte-field
+    lengths. The paths outside it (growslice branches, length rejects, morestack) are listed per type as NOT proved
+    unless the row names theorems for them (Checkpoint, BeaconBlockHeader: as recorded). No encoder is complete.
 Types without a row are "not started". Exit 0 = table written, 1 = a check failed (nothing written), 2 = usage.
 
 Limits (what the checks do NOT detect; also written into INVENTORY.md):
@@ -122,20 +127,45 @@ DECODERS = {
     (PRIM, "ValidatorIndex"): dec("E2eScal.Gen.vi_unmarshal_accept_main_g", "E2eScal.vi_unmarshal_reject_len_main",
                                   None, None, None, None, "E2eScal.WitVi.vi_accept_runs", "E2eScal.WitViR.vir_runs"),
 }
-ENCODERS = {  # MarshalSSZTo: sufficient-capacity fast path, rejects, growslice paths, witnesses
-    (V1A, "Checkpoint"): dict(fast=["E2e.cp_e2e_marshal_main"],
-                              rejects=["E2e.cp_e2e_marshal_reject_main", "E2e.cp_e2e_marshal_reject_cover"],
-                              grow=["E2e.cp_e2e_marshal_grow_main", "E2e.cp_e2e_marshal_grow2_main",
-                                    "E2e.cp_e2e_marshal_grow_any_main"],
-                              witness=["E2e.WitCpM.cpm_runs_empty", "E2e.WitCpMR.cpmr_runs", "E2e.WitCpG.cpg_runs"]),
-    (V1A, "BeaconBlockHeader"): dict(fast=["E2eScal.Bh.bh_e2e_marshal_main"],
-                                     rejects=["E2eScal.Bh.bh_e2e_marshal_reject1_main",
-                                              "E2eScal.Bh.bh_e2e_marshal_reject2_main",
-                                              "E2eScal.Bh.bh_e2e_marshal_reject3_main"],
-                                     grow=[], witness=["E2eScal.WitBhM.bhm_runs_empty"]),
-    (V1A, "Eth1Data"): dict(fast=["E2eScal.E1.e1_e2e_marshal_main"], rejects=[], grow=[],
-                            witness=["E2eScal.WitE1M.e1m_runs_empty"]),
+def enc(x, p, hand=(), rejects=(), grow=(), other_witness=()):
+    """Unit E2-C row: the generated fast-path theorem `<p>_g6e_fast`, its spec corollary against the independent
+    Desc and its witness (two instances); hand theorems of the three hand-proved types kept as recorded."""
+    return dict(fast=[f"E2eScal.Gen6Enc.{p}_g6e_fast"], spec=[f"E2eScal.E2c.{p}_e2c_spec_k"],
+                witness=[f"E2eScal.WitE2c{x}.{p}_e2c_wit_empty", f"E2eScal.WitE2c{x}.{p}_e2c_wit_prefix"],
+                hand=list(hand), rejects=list(rejects), grow=list(grow), other_witness=list(other_witness))
+
+
+ENC_PARTS = ["fast", "spec", "witness", "hand", "rejects", "grow", "other_witness"]
+ENCODERS = {  # MarshalSSZTo: fast path (theorem + spec corollary + witness), hand theorems, rejects, growslice paths
+    (V1A, "Checkpoint"): enc("Cp", "cp", hand=["E2e.cp_e2e_marshal_main", "E2e.cp_e2e_marshal_spec_k"],
+                             rejects=["E2e.cp_e2e_marshal_reject_main", "E2e.cp_e2e_marshal_reject_cover"],
+                             grow=["E2e.cp_e2e_marshal_grow_main", "E2e.cp_e2e_marshal_grow2_main",
+                                   "E2e.cp_e2e_marshal_grow_any_main"],
+                             other_witness=["E2e.WitCpM.cpm_runs_empty", "E2e.WitCpMR.cpmr_runs",
+                                            "E2e.WitCpG.cpg_runs"]),
+    (V1A, "BeaconBlockHeader"): enc("Bh", "bh", hand=["E2eScal.Bh.bh_e2e_marshal_main",
+                                                      "E2eScal.Bh.bh_e2e_marshal_spec_k"],
+                                    rejects=["E2eScal.Bh.bh_e2e_marshal_reject1_main",
+                                             "E2eScal.Bh.bh_e2e_marshal_reject2_main",
+                                             "E2eScal.Bh.bh_e2e_marshal_reject3_main"],
+                                    other_witness=["E2eScal.WitBhM.bhm_runs_empty"]),
+    (V1A, "Eth1Data"): enc("E1", "e1", hand=["E2eScal.E1.e1_e2e_marshal_main", "E2eScal.E1.e1_e2e_marshal_spec_k"],
+                           other_witness=["E2eScal.WitE1M.e1m_runs_empty"]),
+    (V1A, "BlobIdentifier"): enc("Bi", "bi"),
+    (V1A, "DepositMessage"): enc("Dm", "dm"),
+    (V1A, "Deposit_Data"): enc("Dd", "dd"),
+    (V1A, "PendingPartialWithdrawal"): enc("Pw", "pw"),
+    (V1A, "SyncCommitteeMessage"): enc("Sc", "sc"),
+    (V1A, "PendingConsolidation"): enc("Pc", "pc"),
+    (V1A, "PendingDeposit"): enc("Pd", "pd"),
+    (V1A, "PowBlock"): enc("Pb", "pb"),
+    (V1A, "HistoricalSummary"): enc("Hs", "hs"),
+    (V1A, "SigningData"): enc("Sd", "sd"),
+    (V1A, "SyncAggregatorSelectionData"): enc("Sa", "sa"),
+    (V1A, "ValidatorBalance"): enc("Vb", "vb"),
+    (V1A, "VoluntaryExit"): enc("Ve", "ve"),
 }
+ENC_PREMISE = "premise: len + SizeSSZ <= cap, exact field lengths"
 SIZERS = {(V1A, "Checkpoint"): dict(main=["E2e.cp_e2e_size_main"], witness=["E2e.WitCpS.cps_runs"])}
 
 DEC_PARTS = ["accept", "reject", "spec_k", "reject_size_spec", "reject_complete", "codec", "witness_accept",
@@ -169,7 +199,10 @@ def names():
         for k in DEC_PARTS:
             v = row[k]
             out += v if isinstance(v, list) else ([v] if v else [])
-    for row in list(ENCODERS.values()) + list(SIZERS.values()):
+    for row in ENCODERS.values():
+        for k in ENC_PARTS:
+            out += row[k]
+    for row in SIZERS.values():
         for v in row.values():
             out += v
     return list(dict.fromkeys(out))
@@ -355,12 +388,29 @@ def run(decls_p, md_p, json_p):
         state = "complete" if not missing else ("partial" if len(missing) < len(DEC_PARTS) else "none")
         rows[(pkg, typ, "UnmarshalSSZ")] = dict(state=state, missing=missing,
                                                 theorems={p: r[p] for p in DEC_PARTS if r[p]}, note=r["note"])
+    ir_rec, _ = ir_types()
     for (pkg, typ), r in ENCODERS.items():
-        for n in r["fast"] + r["rejects"] + r["grow"]:
+        for n in r["fast"] + r["spec"] + r["hand"] + r["rejects"] + r["grow"]:
             if n in D:
                 code_ok(n, pkg, typ, "MarshalSSZTo")
-        rows[(pkg, typ, "MarshalSSZTo")] = dict(state="fast path" if r["fast"] else "none", missing=[],
-                                                theorems=r, note="")
+        for n in r["spec"] + r["witness"]:
+            if n in D and not any(f in refs(n) for f in r["fast"]):
+                fails.append(f"{n}: does not use the fast-path theorem {r['fast']} (refs: {refs(n)})")
+        missing = [p for p in ("fast", "spec", "witness") if not r[p]]
+        state = ("fast path complete" if not missing else
+                 "fast path partial" if len(missing) < 3 else "none")
+        rec = ir_rec.get((pkg, typ)) or {}
+        flds = rec.get("fields") or []
+        nbytes = sum(1 for f in flds if (f["v"].get("k") == "vector"))
+        not_proved = []
+        if not r["grow"]:
+            not_proved.append(f"growslice branches ({len(flds)} capacity tests)")
+        if nbytes and not r["rejects"]:
+            not_proved.append(f"length rejects ({nbytes} byte fields)")
+        not_proved.append("morestack")
+        rows[(pkg, typ, "MarshalSSZTo")] = dict(state=state, missing=missing,
+                                                theorems={k: v for k, v in r.items() if v}, note=ENC_PREMISE,
+                                                witness=bool(r["witness"]), not_proved=not_proved)
     for (pkg, typ), r in SIZERS.items():
         for n in r["main"]:
             if n in D:
@@ -429,6 +479,9 @@ def run(decls_p, md_p, json_p):
             comp, part = 0, len(mapped)
         by_kind[k] = dict(target=len(tk), functions_json=sum(t["dumped"] for t in tk), mapped=len(mapped),
                           complete=comp, partial=part)
+        if k == "MarshalSSZTo":
+            by_kind[k]["fast_path_complete"] = sum(t["state"] == "fast path complete" for t in tk)
+            by_kind[k]["fast_path_partial"] = sum(t["state"] == "fast path partial" for t in tk)
     runtime = [f["symbol"] for f in funcs if f["type"] is None]
     dev = {t: rows[(V1A, t, "UnmarshalSSZ")]["state"] for t in FLAT16}
     flat_ns = [k for k in flat_target if k not in {(V1A, t) for t in FLAT16}]
@@ -496,9 +549,13 @@ def run(decls_p, md_p, json_p):
            "## Summary", "",
            f"- Decoders: complete {ud['complete']} of the {ud['target']} `UnmarshalSSZ` methods of the target "
            f"({ud['functions_json']} dumped); partial {ud['partial']}; none {ud['target'] - ud['complete'] - ud['partial']}.",
-           f"- Encoders `MarshalSSZTo`: a fast-path theorem for {bk['MarshalSSZTo']['partial']} of "
-           f"{bk['MarshalSSZTo']['target']}. `MarshalSSZ`: none of {bk['MarshalSSZ']['target']} "
-           f"({bk['MarshalSSZ']['functions_json']} dumped).",
+           f"- Encoders `MarshalSSZTo`: fast-path complete {bk['MarshalSSZTo']['fast_path_complete']} of "
+           f"{bk['MarshalSSZTo']['target']} ({ENC_PREMISE.replace('<=', '≤')}); no encoder is complete. "
+           f"Fast path complete = fast-path theorem + spec corollary + witness. Fast path partial: "
+           f"{bk['MarshalSSZTo']['fast_path_partial']}. Not proved per type: the growslice branches, the length "
+           "rejects and the morestack path (Checkpoint and BeaconBlockHeader: the reject / growslice theorems "
+           "listed in their rows). `MarshalSSZ`: none of "
+           f"{bk['MarshalSSZ']['target']} ({bk['MarshalSSZ']['functions_json']} dumped).",
            f"- `SizeSSZ`: a theorem for {bk['SizeSSZ']['partial']} of {bk['SizeSSZ']['target']}."]
     htr = [k for k in bk if "HashTreeRoot" in k]
     md.append("- Hash tree root: no theorem. " + "; ".join(
@@ -524,6 +581,7 @@ def run(decls_p, md_p, json_p):
            "", "## What this table cannot detect", ""] + [f"- {x}" for x in CANNOT_DETECT] + [
            "", "## Functions with at least one theorem", "",
            "| function | state | missing | theorems |", "| --- | --- | --- | --- |"]
+    enc_rows = [t for t in table if t["method"] == "MarshalSSZTo" and t["theorems"]]
     for t in table:
         if t["state"] in ("not started", "none") and not t["theorems"]:
             continue
@@ -531,6 +589,13 @@ def run(decls_p, md_p, json_p):
         note = f" ({t['note']})" if t.get("note") else ""
         md.append(f"| `{t['type']}.{t['method']}` ({t['package'].rsplit('/', 1)[-1]}) | {t['state']}{note} | "
                   f"{', '.join(t['missing']) or '-'} | {th} |")
+    md += ["", f"## Encoders `MarshalSSZTo`: fast path per type ({ENC_PREMISE.replace('<=', '≤')})", "",
+           "| type | state | fast-path theorem | spec corollary | witness | NOT proved |", "| --- | --- | --- | --- | --- | --- |"]
+    for t in enc_rows:
+        th = t["theorems"]
+        md.append(f"| {t['type']} | {t['state']} | {', '.join(th.get('fast', [])) or '-'} | "
+                  f"{', '.join(th.get('spec', [])) or '-'} | {'yes' if t.get('witness') else 'no'} | "
+                  f"{'; '.join(t.get('not_proved', []))} |")
     ns = sorted({(t["package"].rsplit("/", 1)[-1], t["type"]) for t in table if t["state"] == "not started"})
     md += ["", f"## Not started ({len(ns)} types, every method)", "",
            ", ".join(f"{p}.{t}" for p, t in ns), ""]

@@ -1,0 +1,3 @@
+recount MarshalSSZTo target 211 fast+spec+witness 16 witness yes 16
+UnmarshalSSZ complete 17
+{'target': 211, 'functions_json': 211, 'mapped': 16, 'complete': 0, 'partial': 16, 'fast_path_complete': 16, 'fast_path_partial': 0}

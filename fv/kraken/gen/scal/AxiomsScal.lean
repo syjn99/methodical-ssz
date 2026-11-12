@@ -214,6 +214,40 @@ import E2eScal.Gen6VbEnc
 import E2eScal.Gen6VeEnc
 import E2eScal.KindEncN
 import E2eScal.WitVbM
+import E2eScal.E2cStmt
+import E2eScal.E2cSame
+import E2eScal.E2cSpecCp
+import E2eScal.E2cSpecBh
+import E2eScal.E2cSpecE1
+import E2eScal.E2cSpecBi
+import E2eScal.E2cSpecDm
+import E2eScal.E2cSpecDd
+import E2eScal.E2cSpecPw
+import E2eScal.E2cSpecSc
+import E2eScal.E2cSpecPc
+import E2eScal.E2cSpecPd
+import E2eScal.E2cSpecPb
+import E2eScal.E2cSpecHs
+import E2eScal.E2cSpecSd
+import E2eScal.E2cSpecSa
+import E2eScal.E2cSpecVb
+import E2eScal.E2cSpecVe
+import E2eScal.WitE2cCp
+import E2eScal.WitE2cBh
+import E2eScal.WitE2cE1
+import E2eScal.WitE2cBi
+import E2eScal.WitE2cDm
+import E2eScal.WitE2cDd
+import E2eScal.WitE2cPw
+import E2eScal.WitE2cSc
+import E2eScal.WitE2cPc
+import E2eScal.WitE2cPd
+import E2eScal.WitE2cPb
+import E2eScal.WitE2cHs
+import E2eScal.WitE2cSd
+import E2eScal.WitE2cSa
+import E2eScal.WitE2cVb
+import E2eScal.WitE2cVe
 
 -- prysm-e2e scalability stage S1-S2 (INBOX 011): the segment lemmas, the in-sample re-derivations, the
 -- statement-identity checks and the generated instances. Checked with gen/e2e/axioms.py <log> <out> <this file>.
@@ -2749,3 +2783,275 @@ import E2eScal.WitVbM
 #print axioms E2eScal.xsU
 #print axioms _aux_E2eScal_EncFieldN___macroRules_tacticEb_1
 #print axioms tacticEb
+-- ENC2 unit E2-C (independent hand statements and their rfl identities, spec corollaries, witnesses of the
+-- generated encoder fast-path theorems; compiler auxiliaries omitted)
+#print axioms E2eScal.E2c.bh_e2c_enc_toList
+#print axioms E2eScal.E2c.bh_e2c_spec_k
+#print axioms E2eScal.E2c.bh_e2c_split
+#print axioms E2eScal.E2c.bi_e2c_enc_toList
+#print axioms E2eScal.E2c.bi_e2c_spec_k
+#print axioms E2eScal.E2c.bi_e2c_split
+#print axioms E2eScal.E2c.cp_e2c_enc_toList
+#print axioms E2eScal.E2c.cp_e2c_spec_k
+#print axioms E2eScal.E2c.cp_e2c_split
+#print axioms E2eScal.E2c.dd_e2c_enc_toList
+#print axioms E2eScal.E2c.dd_e2c_spec_k
+#print axioms E2eScal.E2c.dd_e2c_split
+#print axioms E2eScal.E2c.dd_hand_fast
+#print axioms E2eScal.E2c.dd_same
+#print axioms E2eScal.E2c.dm_e2c_enc_toList
+#print axioms E2eScal.E2c.dm_e2c_spec_k
+#print axioms E2eScal.E2c.dm_e2c_split
+#print axioms E2eScal.E2c.e1_e2c_enc_toList
+#print axioms E2eScal.E2c.e1_e2c_spec_k
+#print axioms E2eScal.E2c.e1_e2c_split
+#print axioms E2eScal.E2c.hs_e2c_enc_toList
+#print axioms E2eScal.E2c.hs_e2c_spec_k
+#print axioms E2eScal.E2c.hs_e2c_split
+#print axioms E2eScal.E2c.pb_e2c_enc_toList
+#print axioms E2eScal.E2c.pb_e2c_spec_k
+#print axioms E2eScal.E2c.pb_e2c_split
+#print axioms E2eScal.E2c.pb_hand_fast
+#print axioms E2eScal.E2c.pb_same
+#print axioms E2eScal.E2c.pc_e2c_enc_toList
+#print axioms E2eScal.E2c.pc_e2c_spec_k
+#print axioms E2eScal.E2c.pc_e2c_split
+#print axioms E2eScal.E2c.pd_e2c_enc_toList
+#print axioms E2eScal.E2c.pd_e2c_spec_k
+#print axioms E2eScal.E2c.pd_e2c_split
+#print axioms E2eScal.E2c.pw_e2c_enc_toList
+#print axioms E2eScal.E2c.pw_e2c_spec_k
+#print axioms E2eScal.E2c.pw_e2c_split
+#print axioms E2eScal.E2c.pw_hand_fast
+#print axioms E2eScal.E2c.pw_same
+#print axioms E2eScal.E2c.sa_e2c_enc_toList
+#print axioms E2eScal.E2c.sa_e2c_spec_k
+#print axioms E2eScal.E2c.sa_e2c_split
+#print axioms E2eScal.E2c.sc_e2c_enc_toList
+#print axioms E2eScal.E2c.sc_e2c_spec_k
+#print axioms E2eScal.E2c.sc_e2c_split
+#print axioms E2eScal.E2c.sc_hand_fast
+#print axioms E2eScal.E2c.sc_same
+#print axioms E2eScal.E2c.sd_e2c_enc_toList
+#print axioms E2eScal.E2c.sd_e2c_spec_k
+#print axioms E2eScal.E2c.sd_e2c_split
+#print axioms E2eScal.E2c.vb_e2c_enc_toList
+#print axioms E2eScal.E2c.vb_e2c_spec_k
+#print axioms E2eScal.E2c.vb_e2c_split
+#print axioms E2eScal.E2c.ve_e2c_enc_toList
+#print axioms E2eScal.E2c.ve_e2c_spec_k
+#print axioms E2eScal.E2c.ve_e2c_split
+#print axioms E2eScal.WitE2cBh.P
+#print axioms E2eScal.WitE2cBh.P_len
+#print axioms E2eScal.WitE2cBh.bh_e2c_wit_empty
+#print axioms E2eScal.WitE2cBh.bh_e2c_wit_prefix
+#print axioms E2eScal.WitE2cBh.block
+#print axioms E2eScal.WitE2cBh.cs0
+#print axioms E2eScal.WitE2cBh.hf0
+#print axioms E2eScal.WitE2cBh.hfR
+#print axioms E2eScal.WitE2cBh.hk0
+#print axioms E2eScal.WitE2cBh.hkR
+#print axioms E2eScal.WitE2cBh.host
+#print axioms E2eScal.WitE2cBh.mem
+#print axioms E2eScal.WitE2cBh.w
+#print axioms E2eScal.WitE2cBh.z
+#print axioms E2eScal.WitE2cBi.P
+#print axioms E2eScal.WitE2cBi.P_len
+#print axioms E2eScal.WitE2cBi.bi_e2c_wit_empty
+#print axioms E2eScal.WitE2cBi.bi_e2c_wit_prefix
+#print axioms E2eScal.WitE2cBi.block
+#print axioms E2eScal.WitE2cBi.cs0
+#print axioms E2eScal.WitE2cBi.hf0
+#print axioms E2eScal.WitE2cBi.hfR
+#print axioms E2eScal.WitE2cBi.hk0
+#print axioms E2eScal.WitE2cBi.hkR
+#print axioms E2eScal.WitE2cBi.host
+#print axioms E2eScal.WitE2cBi.mem
+#print axioms E2eScal.WitE2cBi.w
+#print axioms E2eScal.WitE2cBi.z
+#print axioms E2eScal.WitE2cCp.P
+#print axioms E2eScal.WitE2cCp.P_len
+#print axioms E2eScal.WitE2cCp.block
+#print axioms E2eScal.WitE2cCp.cp_e2c_wit_empty
+#print axioms E2eScal.WitE2cCp.cp_e2c_wit_prefix
+#print axioms E2eScal.WitE2cCp.cs0
+#print axioms E2eScal.WitE2cCp.hf0
+#print axioms E2eScal.WitE2cCp.hfR
+#print axioms E2eScal.WitE2cCp.hk0
+#print axioms E2eScal.WitE2cCp.hkR
+#print axioms E2eScal.WitE2cCp.host
+#print axioms E2eScal.WitE2cCp.mem
+#print axioms E2eScal.WitE2cCp.w
+#print axioms E2eScal.WitE2cCp.z
+#print axioms E2eScal.WitE2cDd.P
+#print axioms E2eScal.WitE2cDd.P_len
+#print axioms E2eScal.WitE2cDd.block
+#print axioms E2eScal.WitE2cDd.cs0
+#print axioms E2eScal.WitE2cDd.dd_e2c_wit_empty
+#print axioms E2eScal.WitE2cDd.dd_e2c_wit_prefix
+#print axioms E2eScal.WitE2cDd.hf0
+#print axioms E2eScal.WitE2cDd.hfR
+#print axioms E2eScal.WitE2cDd.hk0
+#print axioms E2eScal.WitE2cDd.hkR
+#print axioms E2eScal.WitE2cDd.host
+#print axioms E2eScal.WitE2cDd.mem
+#print axioms E2eScal.WitE2cDd.w
+#print axioms E2eScal.WitE2cDd.z
+#print axioms E2eScal.WitE2cDm.P
+#print axioms E2eScal.WitE2cDm.P_len
+#print axioms E2eScal.WitE2cDm.block
+#print axioms E2eScal.WitE2cDm.cs0
+#print axioms E2eScal.WitE2cDm.dm_e2c_wit_empty
+#print axioms E2eScal.WitE2cDm.dm_e2c_wit_prefix
+#print axioms E2eScal.WitE2cDm.hf0
+#print axioms E2eScal.WitE2cDm.hfR
+#print axioms E2eScal.WitE2cDm.hk0
+#print axioms E2eScal.WitE2cDm.hkR
+#print axioms E2eScal.WitE2cDm.host
+#print axioms E2eScal.WitE2cDm.mem
+#print axioms E2eScal.WitE2cDm.w
+#print axioms E2eScal.WitE2cDm.z
+#print axioms E2eScal.WitE2cE1.P
+#print axioms E2eScal.WitE2cE1.P_len
+#print axioms E2eScal.WitE2cE1.block
+#print axioms E2eScal.WitE2cE1.cs0
+#print axioms E2eScal.WitE2cE1.e1_e2c_wit_empty
+#print axioms E2eScal.WitE2cE1.e1_e2c_wit_prefix
+#print axioms E2eScal.WitE2cE1.hf0
+#print axioms E2eScal.WitE2cE1.hfR
+#print axioms E2eScal.WitE2cE1.hk0
+#print axioms E2eScal.WitE2cE1.hkR
+#print axioms E2eScal.WitE2cE1.host
+#print axioms E2eScal.WitE2cE1.mem
+#print axioms E2eScal.WitE2cE1.w
+#print axioms E2eScal.WitE2cE1.z
+#print axioms E2eScal.WitE2cHs.P
+#print axioms E2eScal.WitE2cHs.P_len
+#print axioms E2eScal.WitE2cHs.block
+#print axioms E2eScal.WitE2cHs.cs0
+#print axioms E2eScal.WitE2cHs.hf0
+#print axioms E2eScal.WitE2cHs.hfR
+#print axioms E2eScal.WitE2cHs.hk0
+#print axioms E2eScal.WitE2cHs.hkR
+#print axioms E2eScal.WitE2cHs.host
+#print axioms E2eScal.WitE2cHs.hs_e2c_wit_empty
+#print axioms E2eScal.WitE2cHs.hs_e2c_wit_prefix
+#print axioms E2eScal.WitE2cHs.mem
+#print axioms E2eScal.WitE2cHs.w
+#print axioms E2eScal.WitE2cHs.z
+#print axioms E2eScal.WitE2cPb.P
+#print axioms E2eScal.WitE2cPb.P_len
+#print axioms E2eScal.WitE2cPb.block
+#print axioms E2eScal.WitE2cPb.cs0
+#print axioms E2eScal.WitE2cPb.hf0
+#print axioms E2eScal.WitE2cPb.hfR
+#print axioms E2eScal.WitE2cPb.hk0
+#print axioms E2eScal.WitE2cPb.hkR
+#print axioms E2eScal.WitE2cPb.host
+#print axioms E2eScal.WitE2cPb.mem
+#print axioms E2eScal.WitE2cPb.pb_e2c_wit_empty
+#print axioms E2eScal.WitE2cPb.pb_e2c_wit_prefix
+#print axioms E2eScal.WitE2cPb.w
+#print axioms E2eScal.WitE2cPb.z
+#print axioms E2eScal.WitE2cPc.P
+#print axioms E2eScal.WitE2cPc.P_len
+#print axioms E2eScal.WitE2cPc.block
+#print axioms E2eScal.WitE2cPc.cs0
+#print axioms E2eScal.WitE2cPc.hf0
+#print axioms E2eScal.WitE2cPc.hk0
+#print axioms E2eScal.WitE2cPc.host
+#print axioms E2eScal.WitE2cPc.mem
+#print axioms E2eScal.WitE2cPc.pc_e2c_wit_empty
+#print axioms E2eScal.WitE2cPc.pc_e2c_wit_prefix
+#print axioms E2eScal.WitE2cPc.w
+#print axioms E2eScal.WitE2cPc.z
+#print axioms E2eScal.WitE2cPd.P
+#print axioms E2eScal.WitE2cPd.P_len
+#print axioms E2eScal.WitE2cPd.block
+#print axioms E2eScal.WitE2cPd.cs0
+#print axioms E2eScal.WitE2cPd.hf0
+#print axioms E2eScal.WitE2cPd.hfR
+#print axioms E2eScal.WitE2cPd.hk0
+#print axioms E2eScal.WitE2cPd.hkR
+#print axioms E2eScal.WitE2cPd.host
+#print axioms E2eScal.WitE2cPd.mem
+#print axioms E2eScal.WitE2cPd.pd_e2c_wit_empty
+#print axioms E2eScal.WitE2cPd.pd_e2c_wit_prefix
+#print axioms E2eScal.WitE2cPd.w
+#print axioms E2eScal.WitE2cPd.z
+#print axioms E2eScal.WitE2cPw.P
+#print axioms E2eScal.WitE2cPw.P_len
+#print axioms E2eScal.WitE2cPw.block
+#print axioms E2eScal.WitE2cPw.cs0
+#print axioms E2eScal.WitE2cPw.hf0
+#print axioms E2eScal.WitE2cPw.hk0
+#print axioms E2eScal.WitE2cPw.host
+#print axioms E2eScal.WitE2cPw.mem
+#print axioms E2eScal.WitE2cPw.pw_e2c_wit_empty
+#print axioms E2eScal.WitE2cPw.pw_e2c_wit_prefix
+#print axioms E2eScal.WitE2cPw.w
+#print axioms E2eScal.WitE2cPw.z
+#print axioms E2eScal.WitE2cSa.P
+#print axioms E2eScal.WitE2cSa.P_len
+#print axioms E2eScal.WitE2cSa.block
+#print axioms E2eScal.WitE2cSa.cs0
+#print axioms E2eScal.WitE2cSa.hf0
+#print axioms E2eScal.WitE2cSa.hk0
+#print axioms E2eScal.WitE2cSa.host
+#print axioms E2eScal.WitE2cSa.mem
+#print axioms E2eScal.WitE2cSa.sa_e2c_wit_empty
+#print axioms E2eScal.WitE2cSa.sa_e2c_wit_prefix
+#print axioms E2eScal.WitE2cSa.w
+#print axioms E2eScal.WitE2cSa.z
+#print axioms E2eScal.WitE2cSc.P
+#print axioms E2eScal.WitE2cSc.P_len
+#print axioms E2eScal.WitE2cSc.block
+#print axioms E2eScal.WitE2cSc.cs0
+#print axioms E2eScal.WitE2cSc.hf0
+#print axioms E2eScal.WitE2cSc.hfR
+#print axioms E2eScal.WitE2cSc.hk0
+#print axioms E2eScal.WitE2cSc.hkR
+#print axioms E2eScal.WitE2cSc.host
+#print axioms E2eScal.WitE2cSc.mem
+#print axioms E2eScal.WitE2cSc.sc_e2c_wit_empty
+#print axioms E2eScal.WitE2cSc.sc_e2c_wit_prefix
+#print axioms E2eScal.WitE2cSc.w
+#print axioms E2eScal.WitE2cSc.z
+#print axioms E2eScal.WitE2cSd.P
+#print axioms E2eScal.WitE2cSd.P_len
+#print axioms E2eScal.WitE2cSd.block
+#print axioms E2eScal.WitE2cSd.cs0
+#print axioms E2eScal.WitE2cSd.hf0
+#print axioms E2eScal.WitE2cSd.hfR
+#print axioms E2eScal.WitE2cSd.hk0
+#print axioms E2eScal.WitE2cSd.hkR
+#print axioms E2eScal.WitE2cSd.host
+#print axioms E2eScal.WitE2cSd.mem
+#print axioms E2eScal.WitE2cSd.sd_e2c_wit_empty
+#print axioms E2eScal.WitE2cSd.sd_e2c_wit_prefix
+#print axioms E2eScal.WitE2cSd.w
+#print axioms E2eScal.WitE2cSd.z
+#print axioms E2eScal.WitE2cVb.P
+#print axioms E2eScal.WitE2cVb.P_len
+#print axioms E2eScal.WitE2cVb.block
+#print axioms E2eScal.WitE2cVb.cs0
+#print axioms E2eScal.WitE2cVb.hf0
+#print axioms E2eScal.WitE2cVb.hk0
+#print axioms E2eScal.WitE2cVb.host
+#print axioms E2eScal.WitE2cVb.mem
+#print axioms E2eScal.WitE2cVb.vb_e2c_wit_empty
+#print axioms E2eScal.WitE2cVb.vb_e2c_wit_prefix
+#print axioms E2eScal.WitE2cVb.w
+#print axioms E2eScal.WitE2cVb.z
+#print axioms E2eScal.WitE2cVe.P
+#print axioms E2eScal.WitE2cVe.P_len
+#print axioms E2eScal.WitE2cVe.block
+#print axioms E2eScal.WitE2cVe.cs0
+#print axioms E2eScal.WitE2cVe.hf0
+#print axioms E2eScal.WitE2cVe.hk0
+#print axioms E2eScal.WitE2cVe.host
+#print axioms E2eScal.WitE2cVe.mem
+#print axioms E2eScal.WitE2cVe.ve_e2c_wit_empty
+#print axioms E2eScal.WitE2cVe.ve_e2c_wit_prefix
+#print axioms E2eScal.WitE2cVe.w
+#print axioms E2eScal.WitE2cVe.z
