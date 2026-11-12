@@ -324,3 +324,22 @@
 - 계획 담당이 `_nz` 문장을 승인했다. 사용자도 명시적으로 동의했다(계획 담당의 전달).
 - 빈틈, 선례(`Fk/LuRejectCall.lean`의 `lu_reject_misaligned_main`, 전제 `e0 ≠ 0`과 `e0 = itab`), 실제 ELF 값(`0xd28520`, `lv/link-t3/RESULT` 검사 (b))은 `STATEMENTS-T3.md` 5절에 적었다.
 - 정정된 전제는 고정 문장보다 강하다. 원래 넷은 N이다(쓴 그대로는 증명할 수 없다).
+
+### U7: P3 증인 `WitIaA.ia_accept_runs` (모든 n ≤ 2048)
+
+- 새 파일: `E2eList/BumpAllocT3.S`, `E2eList/BumpNewT3.S`, `E2eList/BumpT3.lean`, `E2eList/WitIaA.lean`.
+- `BumpAllocT3`는 형 단어로 갈린다. `type__+387456`(uint64)이면 8·cnt, 아니면 cnt만큼 늘린다. `BumpNewT3`는 `type__+1464512`(AttestationData)이면 96, 아니면 72다. 오프셋은 `lv/link-t3/data`의 파일에서 왔다.
+- 두 `.S`는 기존 Lake `input_dir` `lv_lean_S`(`E2eList/`의 모든 `.S`)에 든다. lakefile은 바꾸지 않았다.
+- 로그 190: `BumpT3` exit 0. 정리 넷(`bump_makeslice_t3_1`, `_t3_8`, `bump_newobject_t3_72`, `_t3_96`)은 설정 없이 통과했다.
+- 메모리 배치: 입력을 블록의 끝에 두었다. 그래서 `ib`의 길이가 다른 주소를 바꾸지 않는다. 힙은 16816바이트(8·2048 + 432)로 고정했다.
+- 전략 1(로그 191, 192): `WitScA` 글 그대로. 로그 192는 실패다. `maxHeartbeats 64000000`에서 `whnf` 시간 초과, 1471 s, 표본 RSS 2.75 GiB. 계획 담당 판정: 이 값을 다시 올리지 않는다.
+- 진단(로그 193–197): `wit_split`만으로 기본 한도에서 멈춘다(로그 193). `ib = []`이면 통과한다. 기호 길이 `ib`(또는 불투명 `L`)이면 멈춘다(로그 194, 196). `iaOff` 펼침은 관계없다. 진단 출력(로그 195)은 Nat `HAdd`/`HMul` 펼침 약 392000회를 보인다.
+- 전략 2(로그 196): 길이를 변수 `L`로 일반화했다. 실패.
+- 전략 3(로그 198–214): `ib`를 먼저 명시 재작성 하나로 떼어 낸다. 그 측면 조건은 `block.length = 17616`과 `hib`로 직접 증명한다. 나머지 블록에는 리터럴 길이만 남는다. 분할은 18 s가 되었다.
+- 레지스터 사실 넷은 `simp [cs0]` 대신 `show`와 `UInt64.toNat_ofNat_of_lt'`로 증명했다(로그 202, 205).
+- 닫는 단계로 `ecancel`을 시도했다(로그 204–208). 원자 36개를 하나씩 시험하면 모두 맞는다(로그 207). 전체는 실패하고 전술 내부 PANIC 56개가 나온다. 깊이 8192도 같다(로그 208). Kraken은 고치지 않는다(도구 경계). 그래서 `WitScA`의 AC `simp` + `exact`로 돌아갔다.
+- 측정: `maxHeartbeats` 3000000, 4000000 실패(로그 211). 5000000 통과(로그 211). 6000000, 8000000, 12000000, 16000000 통과(로그 209, 210). 값은 통과 값의 두 배인 10000000이다.
+- 측정: 파일 수준 `maxRecDepth`. 기본값과 1024는 호스트 사실(884개 지시어 프로그램의 `rfl`/`decide`)에서 멈춘다(로그 212). 2048은 통과한다.
+- 예시 셋: n = 0(`ib = []`), n = 1, n = 2048(`List.replicate (8 * 2048) 0xff`). 길이 증명은 `List.length_replicate` 항이다. `decide`와 큰 리터럴은 쓰지 않았다.
+- 로그 214: `lake build E2eList.WitIaA` exit 0, 68.8 s, 표본 RSS 2.73 GiB(파일 전체, n = 2048 예시 포함).
+- 판정: 일반 n 증인은 K다. 대체 경로(구체 n 증인만)는 쓰지 않았다.
