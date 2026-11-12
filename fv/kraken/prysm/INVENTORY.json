@@ -168,12 +168,16 @@
    "v1.BuilderExitRequest": {
     "decoder": "not started",
     "decoder_missing": [],
-    "encoder": "not started"
+    "encoder": "not started",
+    "decoder_refused_h7": "byte vector 20",
+    "encoder_refused_h7": "byte vector 20"
    },
    "v1.ConsolidationRequest": {
     "decoder": "not started",
     "decoder_missing": [],
-    "encoder": "not started"
+    "encoder": "not started",
+    "decoder_refused_h7": "byte vector 20",
+    "encoder_refused_h7": "byte vector 20"
    },
    "v1.DepositRequest": {
     "decoder": "complete",
@@ -183,17 +187,23 @@
    "v1.Withdrawal": {
     "decoder": "not started",
     "decoder_missing": [],
-    "encoder": "not started"
+    "encoder": "not started",
+    "decoder_refused_h7": "byte vector 20",
+    "encoder_refused_h7": "byte vector 20"
    },
    "v1.WithdrawalRequest": {
     "decoder": "not started",
     "decoder_missing": [],
-    "encoder": "not started"
+    "encoder": "not started",
+    "decoder_refused_h7": "byte vector 20",
+    "encoder_refused_h7": "byte vector 20"
    },
    "v1alpha1.BLSToExecutionChange": {
     "decoder": "not started",
     "decoder_missing": [],
-    "encoder": "not started"
+    "encoder": "not started",
+    "decoder_refused_h7": "byte vector 20",
+    "encoder_refused_h7": "byte vector 20"
    },
    "v1alpha1.BeaconBlocksByRangeRequest": {
     "decoder": "partial",
@@ -212,22 +222,29 @@
    "v1alpha1.Builder": {
     "decoder": "not started",
     "decoder_missing": [],
-    "encoder": "not started"
+    "encoder": "not started",
+    "decoder_refused_h7": "byte vector 1",
+    "encoder_refused_h7": "byte vector 1"
    },
    "v1alpha1.BuilderPendingWithdrawal": {
     "decoder": "not started",
     "decoder_missing": [],
-    "encoder": "not started"
+    "encoder": "not started",
+    "decoder_refused_h7": "byte vector 20",
+    "encoder_refused_h7": "byte vector 20"
    },
    "v1alpha1.BuilderPreferences": {
     "decoder": "not started",
     "decoder_missing": [],
-    "encoder": "fast path complete"
+    "encoder": "fast path complete",
+    "decoder_refused_h7": "callee primitives.Gwei.UnmarshalSSZ"
    },
    "v1alpha1.ENRForkID": {
     "decoder": "not started",
     "decoder_missing": [],
-    "encoder": "not started"
+    "encoder": "not started",
+    "decoder_refused_h7": "byte vector 4",
+    "encoder_refused_h7": "byte vector 4"
    },
    "v1alpha1.ExecutionPayloadEnvelopesByRangeRequest": {
     "decoder": "partial",
@@ -239,12 +256,16 @@
    "v1alpha1.Fork": {
     "decoder": "not started",
     "decoder_missing": [],
-    "encoder": "not started"
+    "encoder": "not started",
+    "decoder_refused_h7": "byte vector 4",
+    "encoder_refused_h7": "byte vector 4"
    },
    "v1alpha1.ForkData": {
     "decoder": "not started",
     "decoder_missing": [],
-    "encoder": "not started"
+    "encoder": "not started",
+    "decoder_refused_h7": "byte vector 4",
+    "encoder_refused_h7": "byte vector 4"
    },
    "v1alpha1.PartialDataColumnGroupID": {
     "decoder": "partial",
@@ -256,27 +277,37 @@
    "v1alpha1.PayloadAttestationData": {
     "decoder": "not started",
     "decoder_missing": [],
-    "encoder": "not started"
+    "encoder": "not started",
+    "decoder_refused_h7": "bool",
+    "encoder_refused_h7": "bool"
    },
    "v1alpha1.ProposerPreferences": {
     "decoder": "not started",
     "decoder_missing": [],
-    "encoder": "not started"
+    "encoder": "not started",
+    "decoder_refused_h7": "byte vector 20",
+    "encoder_refused_h7": "byte vector 20"
    },
    "v1alpha1.Status": {
     "decoder": "not started",
     "decoder_missing": [],
-    "encoder": "not started"
+    "encoder": "not started",
+    "decoder_refused_h7": "byte vector 4",
+    "encoder_refused_h7": "byte vector 4"
    },
    "v1alpha1.StatusV2": {
     "decoder": "not started",
     "decoder_missing": [],
-    "encoder": "not started"
+    "encoder": "not started",
+    "decoder_refused_h7": "byte vector 4",
+    "encoder_refused_h7": "byte vector 4"
    },
    "v1alpha1.Validator": {
     "decoder": "not started",
     "decoder_missing": [],
-    "encoder": "not started"
+    "encoder": "not started",
+    "decoder_refused_h7": "bool",
+    "encoder_refused_h7": "bool"
    },
    "v1alpha1.ValidatorIdentity": {
     "decoder": "partial",
@@ -288,7 +319,9 @@
    "v1alpha1.ValidatorRegistrationV1": {
     "decoder": "not started",
     "decoder_missing": [],
-    "encoder": "not started"
+    "encoder": "not started",
+    "decoder_refused_h7": "byte vector 20",
+    "encoder_refused_h7": "byte vector 20"
    }
   },
   "target_types_without_ir": [

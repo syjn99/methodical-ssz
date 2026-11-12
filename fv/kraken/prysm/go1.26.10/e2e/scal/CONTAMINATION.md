@@ -787,3 +787,25 @@
 - Desc 검사기 기록은 DepositRequest에만 있다. 나머지 6 디코더는 codec 동등을 하지 않았다(제안, 하지 않음).
 - 거부된 형은 손으로 증명하지 않았다. 덮을 제안은 "제안, 하지 않음"으로 OUT과 RESULT에 적었다.
 - 일반성, 이전, 속도 주장은 없다. 이 24형은 이제 열렸다. 홀드아웃이 아니다. 리뷰는 아직 없다.
+
+## 40. 통합 INT9 (FLAT24 병합) — 리뷰 뒤 정정
+
+- 39절의 "리뷰는 아직 없다"는 다음 리뷰로 대체한다: f24-r1 APPROVE(`6f20eef`)다. 그 절은 고치지 않는다.
+- 38절의 "통합 INT8 자체의 리뷰는 아직 없다"도 대체한다: int8-r1 APPROVE(`0923998`)다.
+- S1: 생성된 형 중 셋은 개발 형의 가까운 변형이다. 리뷰어가 자기 `.S` 비교로 확인했다.
+- BuilderDepositRequest의 디코더와 인코더는 Deposit_Data와 같다(레이블 정규화 뒤 다른 줄 0).
+- BlobSidecarsByRangeRequest와 ExecutionPayloadEnvelopesByRangeRequest의 인코더는 SyncAggregatorSelectionData와 같다.
+- 두 형의 디코더는 오류 경로의 2줄(오류 문자열 길이)만 다르다.
+- 그래서 생성 디코더 7개 중 3개, 생성 인코더 8개 중 3개는 표본에 가깝다. 일반성 주장은 없다.
+- S3: 34/86은 멈춘 뒤의 하한이다. 덮기 비율이 아니다. 13은 내보낸 정리가 없는 걸음의 주장이다.
+- S5: 문장 커밋(`2735379`) 전 작성자는 kindcheck 기록 한 줄을 봤다.
+- 그 줄은 BeaconBlocksByRange(디코더, 인코더)의 걸음 정리 이름만 나열한다. 문장 글은 없다.
+- S6: DepositRequest `desc.json`은 다른 작업의 scratch에서 복사했다. 내용 sha256 `489fe67a…`는 커밋된 검사기 기록과 같다.
+- 검사기 기록은 `gen/desc/results/main.result.json`(이 단위 전에 커밋됨)에 있다. 결과 PASS다.
+- `F24DprSpecChecker.lean` 머리는 `prysm/go1.26.10/e2e/engine_v1.DepositRequest.desc.json`을 적는다. `f24/`가 빠졌다.
+- 실제 파일은 `prysm/go1.26.10/e2e/f24/engine_v1.DepositRequest.desc.json`이다. 생성 파일의 글이라 고치지 않았다.
+- S7: 통합자가 부정 시험 12개를 더했다. 결과: 12/12 기대대로(대조군 4 통과, 변이 8이 대상 정리 안에서 실패; 시간 초과 0, 잘못된 대상 0).
+- 통합 검사의 `regen_check.sh`는 FLAT24 생성 명령 15개를 scratch에 두 번씩 다시 돌렸다. 결과는 SAME이다.
+- 이것은 새 H7 실행이 아니다. 거부된 33 실행(종료 2)은 파일이 없어 다시 돌리지 않았다.
+- 다른 기계의 리스트·벡터 작업과 AttestationData 인코더는 이 트리에 없다.
+- 일반성, 이전, 속도, 완전한 인코더 주장은 없다. H3–H7 사이의 추세도 주장하지 않는다. 통합 INT9 자체의 리뷰는 아직 없다.

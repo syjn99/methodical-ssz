@@ -73,6 +73,29 @@ FLAT16 = ["Checkpoint", "BeaconBlockHeader", "Eth1Data", "BlobIdentifier", "Depo
           "PendingPartialWithdrawal", "SyncCommitteeMessage", "PendingConsolidation", "PendingDeposit", "PowBlock",
           "HistoricalSummary", "SigningData", "SyncAggregatorSelectionData", "ValidatorBalance", "VoluntaryExit"]
 NESTED = ["AttestationData"]
+# FLAT24 / H7 refusal class per flat type outside FLAT16 and generator (review f24-r1 S4; wording only, no state rule).
+# Source: the one-shot runs of H7 (`p2dec --gen5`, `p2enc --gen6`), classes read at the stop directive of the `.S`;
+# recorded per type in `prysm/go1.26.10/e2e/scal/RESULT.json` (`flat24.part1.per_type`). A type or method missing
+# here was generated (exit 0) by that run. The class is a field kind or a callee the generators do not support.
+F24_REFUSED = {
+    "v1.BuilderExitRequest": dict(decoder="byte vector 20", encoder="byte vector 20"),
+    "v1.ConsolidationRequest": dict(decoder="byte vector 20", encoder="byte vector 20"),
+    "v1.Withdrawal": dict(decoder="byte vector 20", encoder="byte vector 20"),
+    "v1.WithdrawalRequest": dict(decoder="byte vector 20", encoder="byte vector 20"),
+    "v1alpha1.BLSToExecutionChange": dict(decoder="byte vector 20", encoder="byte vector 20"),
+    "v1alpha1.BuilderPendingWithdrawal": dict(decoder="byte vector 20", encoder="byte vector 20"),
+    "v1alpha1.ProposerPreferences": dict(decoder="byte vector 20", encoder="byte vector 20"),
+    "v1alpha1.ValidatorRegistrationV1": dict(decoder="byte vector 20", encoder="byte vector 20"),
+    "v1alpha1.ENRForkID": dict(decoder="byte vector 4", encoder="byte vector 4"),
+    "v1alpha1.Fork": dict(decoder="byte vector 4", encoder="byte vector 4"),
+    "v1alpha1.ForkData": dict(decoder="byte vector 4", encoder="byte vector 4"),
+    "v1alpha1.Status": dict(decoder="byte vector 4", encoder="byte vector 4"),
+    "v1alpha1.StatusV2": dict(decoder="byte vector 4", encoder="byte vector 4"),
+    "v1alpha1.Builder": dict(decoder="byte vector 1", encoder="byte vector 1"),
+    "v1alpha1.PayloadAttestationData": dict(decoder="bool", encoder="bool"),
+    "v1alpha1.Validator": dict(decoder="bool", encoder="bool"),
+    "v1alpha1.BuilderPreferences": dict(decoder="callee primitives.Gwei.UnmarshalSSZ"),
+}
 
 
 def dec(accept, reject, spec_k, reject_spec, reject_complete, codec, wit_a, wit_r, note=""):
@@ -586,7 +609,8 @@ def run(decls_p, md_p, json_p):
             f"{p.rsplit('/', 1)[-1]}.{t}": dict(
                 decoder=rows.get((p, t, "UnmarshalSSZ"), {}).get("state", "not started"),
                 decoder_missing=rows.get((p, t, "UnmarshalSSZ"), {}).get("missing", []),
-                encoder=rows.get((p, t, "MarshalSSZTo"), {}).get("state", "not started"))
+                encoder=rows.get((p, t, "MarshalSSZTo"), {}).get("state", "not started"),
+                **{f"{m}_refused_h7": c for m, c in F24_REFUSED.get(f"{p.rsplit('/', 1)[-1]}.{t}", {}).items()})
             for p, t in flat_ns},
         target_types_without_ir=[f"{p.rsplit('/', 1)[-1]}.{t}" for p, t in no_ir],
         nested={t: rows[(V1A, t, "UnmarshalSSZ")]["state"] for t in NESTED},
@@ -668,7 +692,16 @@ def run(decls_p, md_p, json_p):
         for k, v in started_.items():
             md.append(f"  - {k}: decoder {v['decoder']}"
                       + (f" (missing {', '.join(v['decoder_missing'])})" if v["decoder_missing"] else "")
+                      + (f"; H7 run refused: {v['decoder_refused_h7']}" if "decoder_refused_h7" in v else "")
                       + f"; encoder {v['encoder']}.")
+    refused_ = {k: v for k, v in fs_.items() if flat_ns_state.get(k) == "not started"}
+    if refused_:   # review f24-r1 S4: refusal class of the H7 one-shot run per not-started flat type (wording only)
+        md.append(f"- Flat types outside the development population without a mapping row: {len(refused_)}; "
+                  "refusal class of the H7 one-shot run (`p2dec --gen5` / `p2enc --gen6`), a field kind or callee "
+                  "the generators do not support:")
+        for k, v in refused_.items():
+            md.append(f"  - {k}: decoder refused ({v.get('decoder_refused_h7', 'no H7 record')}); encoder refused "
+                      f"({v.get('encoder_refused_h7', 'no H7 record')}).")
     if no_ir:
         md.append(f"- Target types without an IR record (not classified): {', '.join(tot['target_types_without_ir'])}.")
     md += ["", f"Flat rule: {FLAT_RULE}.", "",

@@ -49,19 +49,33 @@ ENC2는 모두 개발 자료이고 표본 안이다.
 ENC2 리뷰: e2l-r1 APPROVE(`d1e30ca`, E2-P 포함), e2g-r1 APPROVE(`dcc6e80`)다.
 e2c-r1은 `5072b63`에서 REQUEST_CHANGES였다. 목록 칸 하나만이고, 증명 검사는 모두 통과했다.
 E2-C2 뒤 리뷰 e2c2-r1이 `eec1d4f`를 승인했다. 필수 수정 0이다.
-ENC2는 통합 INT8에서 병합했다(`e70492d`). 통합 INT8 자체의 리뷰는 아직 없다.
+ENC2는 통합 INT8에서 병합했다(`e70492d`). 리뷰 int8-r1이 통합 INT8(`0923998`)을 승인했다.
+FLAT24 / H7은 11절에 있다. 리뷰 f24-r1이 `6f20eef`를 승인했다. 필수 수정 0, 고칠 항목 7이다.
+FLAT24는 통합 INT9에서 병합했다(`e6b46fd`). 통합 INT9 자체의 리뷰는 아직 없다.
+검토된 로컬 상태는 INT8 머리 `0923998`과 FLAT24 머리 `6f20eef`다.
+H7: 전에 연 적 없는 평면 24형에 형마다, 생성기마다 한 번 돌렸다.
+디코더는 24형 중 7형, 인코더는 24형 중 8형이 생성됐다.
+거부는 모두 생성기가 지원하지 않는 필드 종류나 피호출자 때문이다.
+분류: byte vector 20이 8형, byte vector 4가 5형, byte vector 1이 1형, bool이 2형, Gwei 피호출자가 디코더 1형이다.
+생성된 형 중 셋은 개발 형의 가까운 변형이다: BuilderDepositRequest(디코더와 인코더가 Deposit_Data와 같은 코드), BlobSidecarsByRangeRequest와 ExecutionPayloadEnvelopesByRangeRequest(인코더는 SyncAggregatorSelectionData와 같은 코드, 디코더는 오류 경로 2줄만 다름).
+일반성 주장은 없다. H3–H7 사이의 추세도 주장하지 않는다.
 공개된 상태는 `6a78c59`와 고정 핀 `71161fa`뿐이다. 그 뒤의 커밋은 이 기계에만 있다.
 검증 목록의 수는 `gen/tools/inventory.py`의 출력 `prysm/INVENTORY.md`만 출처로 쓴다(11절).
 분모는 고정 ELF의 SSZ 메서드다. 각 줄은 메서드 종류의 대상 수(211, 10, 6)를 쓴다.
-디코더: 대상 `UnmarshalSSZ` 211개 중 17개가 목록의 정의로 완전하다. 부분 4, 없음 190이다.
+디코더: 대상 `UnmarshalSSZ` 211개 중 18개가 목록의 정의로 완전하다.
+부분 10(원시형 4, codec 동등이 없는 FLAT24 6), 없음 183이다.
 디코더의 "완전"에 빠진 것: morestack, `writeBarrier ≠ 0`, 런타임 피호출자 본문(계약)이다.
 또 빠진 것: 피호출자 오류 반환, growslice / T-7, x86-64다.
-인코더: `MarshalSSZTo` 211개 중 16개가 빠른 경로 완료다. 완전한 인코더는 없다.
+인코더: `MarshalSSZTo` 211개 중 24개가 빠른 경로 완료다. 완전한 인코더는 없다.
 빠른 경로의 전제는 `len + SizeSSZ ≤ cap`과 필드의 정확한 길이다.
 증명하지 않은 것: growslice 분기(T-7은 미룸), 길이 거부, morestack이다.
+또 증명하지 않은 것: `moveSliceNoCapNoScan` 분기(PowBlock, HistoricalSummary, SigningData)다.
+모든 Go 호출자에 대한 프레임 분리 전제도 정당화하지 않았다(리뷰 int8-r1 S2).
 형마다의 목록은 `INVENTORY.md`의 NOT proved 칸이다. Checkpoint와 BeaconBlockHeader는 기록된 경로를 더 증명했다.
 HashTreeRoot 계열의 정리는 없다.
-대상의 평면 고정 크기 형은 40개다. 개발 16, 시작 안 함 24다.
+대상의 평면 고정 크기 형은 40개다. 개발 16, 목록 행이 있는 FLAT24 8, 시작 안 함 16이다.
+FLAT24 8형: 디코더 완료 1(DepositRequest), 인코더 빠른 경로 완료 8이다.
+시작 안 함 16형의 거부 분류는 `INVENTORY.md`에 형마다 있다(리뷰 f24-r1 S4).
 개발 형은 17개다: 평면 16과 중첩 AttestationData다.
 AttestationData 인코더는 다른 기계의 일이다. 이 트리에 없다.
 다른 기계의 리스트·벡터 작업도 이 트리에 없다. 여기서 주장하지 않는다.
@@ -1067,7 +1081,7 @@ N1: 스크립트는 그 이름을 검사하지 않는다.
 e2c2-r1 N2는 여기서 닫았다. 위 "거부 정리가 없는 14형" 줄과 BASELINE 칸을 바이트 필드 기준으로 고쳤다.
 e2c2-r1 N3은 열림이다(스크립트 글). 칸 글 "1 byte fields"는 스크립트 출력이다.
 
-통합 INT8(`claude/ssz-fv-enc2` `eec1d4f`를 `93dae89` 위에 병합, 병합 커밋 `e70492d`; 아직 리뷰 없음):
+통합 INT8(`claude/ssz-fv-enc2` `eec1d4f`를 `93dae89` 위에 병합, 병합 커밋 `e70492d`; 리뷰 int8-r1 APPROVE, `0923998`):
 스트림은 `93dae89` 위에 일직선이다. 충돌은 없었다. 병합 트리 id는 `eec1d4f`의 트리 id와 같다.
 증명 글, 문장, 생성기, 검사기, 목록 스크립트, 고정 버전은 바꾸지 않았다.
 실행 검사(gate와 6 GiB 상한 안): `lake build E2e E2eAd E2eScal` 종료 0, 1412 jobs, 296.3초다.
@@ -1091,7 +1105,7 @@ S3은 INT7의 "리뷰 전" 글을 int7-r1로 대체해 닫았다. 날짜 붙은 
 S4는 열림이다. `INVENTORY.md` 분모 1의 글은 스크립트 출력이다. 이 단위는 스크립트를 바꾸지 않는다.
 S5 기록: INT8 병합도 `merge(kraken)`을 썼다. 로컬 참조 `refs/remotes/offchainlabs/main`은 건드리지 않았다.
 남은 일: 인코더의 growslice 분기, 길이 거부, morestack이다. 그리고 중첩 컨테이너, 리스트·벡터·비트필드, 해시 트리 루트다.
-대상의 평면 고정 크기 형 24개는 시작하지 않았다. AttestationData 인코더는 다른 기계의 일이다.
+대상의 평면 고정 크기 형 24개는 INT8 때 시작하지 않았다(FLAT24가 뒤에 8형을 열었다). AttestationData 인코더는 다른 기계의 일이다.
 다른 기계의 리스트·벡터 작업은 이 트리에 없다. 여기서 주장하지 않는다.
 OPT-R1 시범은 채택하지 않았다. T-7은 미뤘다. 기록: `scal/RESULT.json`의 `integration_int8`.
 
@@ -1302,7 +1316,7 @@ python3 -I -B fv/kraken/gen/e2e/h4diff.py cases <c.json>; go run -overlay <overl
 python3 -I -B fv/kraken/gen/e2e/h4diff.py check <c.json> <o.json> prysm/go1.26.10/e2e/h4/differential.json
 ```
 
-FLAT24 / H7(브랜치 `claude/ssz-fv-flat24`, 리뷰 전): 개발 모집단 밖의 평면 고정 크기 24형을 한 번 측정했다.
+FLAT24 / H7(브랜치 `claude/ssz-fv-flat24`, 리뷰 f24-r1 APPROVE, `6f20eef`): 개발 모집단 밖의 평면 고정 크기 24형을 한 번 측정했다.
 생성기는 고치지 않았다. 디코더 7/24, 인코더 8/24가 생성되고 빌드되고 종류 검사를 통과했다.
 나머지는 새 필드 종류(byte20 8형, byte4 5형, byte1 1형, bool 2형)와 새 피호출자(Gwei 1형)로 거부됐다.
 생성된 형은 같은 단위에서 닫았다. 목록 스크립트(`gen/tools/inventory.py`) 기준 숫자다.
@@ -1310,3 +1324,42 @@ FLAT24 / H7(브랜치 `claude/ssz-fv-flat24`, 리뷰 전): 개발 모집단 밖�
 DepositRequest 디코더만 완료다. 다른 6 디코더는 Desc 검사기 기록이 없어 codec이 빠졌다.
 증거: 부정 시험 67/67, Go 차분 138/138(linux/arm64의 Go 의미, ELF 실행 아님), 공리 게이트 PASS 14415다.
 기록: `scal/RESULT.json`의 `flat24`, `scal/CONTAMINATION.md` 39절, `prysm/go1.26.10/e2e/f24/`.
+
+FLAT24 리뷰 결과와 고칠 항목(통합 INT9에서 덧붙임):
+f24-r1(`6f20eef`, APPROVE): 필수 수정 0, 고칠 항목 7이다. 숫자를 바꾸는 항목은 없다.
+S1: 생성된 형 중 셋은 개발 형의 가까운 변형이다: BuilderDepositRequest(디코더와 인코더가 Deposit_Data와 같은 코드), BlobSidecarsByRangeRequest와 ExecutionPayloadEnvelopesByRangeRequest(인코더는 SyncAggregatorSelectionData와 같은 코드, 디코더는 오류 경로 2줄만 다름).
+그래서 생성 디코더 7개 중 3개, 생성 인코더 8개 중 3개가 가까운 변형이다.
+나머지(DepositRequest, BeaconBlocksByRangeRequest, PartialDataColumnGroupID, ValidatorIdentity, BuilderPreferences 인코더)는 같은 종류의 개발 형이 없다.
+S2: 커밋된 `axioms-gate.json`을 `run` 형식(`modules`, `precheck`, `dump` 포함)으로 바꿨다. 공유 키 11개는 값이 같다.
+S3: 필드 덮기 34/86은 멈춘 뒤의 하한이다. 덮기 비율이 아니다. 34 중 13은 내보낸 정리가 없는 걸음의 주장이다.
+S4: 목록 스크립트에 H7 거부 분류 표를 더했다(글과 칸만, 상태 규칙과 합계는 같다). BuilderPreferences 디코더 = 거부(Gwei 피호출자)다.
+S5: 문장 커밋 전 작성자는 kindcheck 기록 한 줄을 봤다. 그 줄은 BeaconBlocksByRange 걸음 정리의 이름만 나열한다. 문장 글은 없다.
+S6: DepositRequest `desc.json`은 다른 작업의 scratch에서 복사했다. sha256 `489fe67a…`는 커밋된 검사기 기록(`gen/desc/results/main.result.json`)과 같다.
+S6: `F24DprSpecChecker.lean` 머리의 경로에 `f24/`가 빠졌다. 실제 파일은 `prysm/go1.26.10/e2e/f24/engine_v1.DepositRequest.desc.json`이다. 생성 파일이라 고치지 않았다.
+S7: 부정 시험 12개를 더했다(`f24/negcases-f24-int9.json`, `f24/negative-f24-int9.json`). 결과: 12/12 기대대로(대조군 4 통과, 변이 8이 대상 정리 안에서 실패; 시간 초과 0, 잘못된 대상 0).
+대상: `reject_size_spec`(DepositRequest, BeaconBlocksByRange), `reject_complete`(같은 두 형), 인코더 명세 따름의 Desc와 길이(같은 두 형)다.
+
+통합 INT9(`claude/ssz-fv-flat24` `6f20eef`를 `0923998` 위에 병합, 병합 커밋 `e6b46fd`; 아직 리뷰 없음):
+스트림은 `0923998` 위에 일직선이다. 충돌은 없었다. 병합 트리 id는 `6f20eef`의 트리 id와 같다.
+증명 글, 문장, 생성기, 검사기, 보조정리, 고정 버전은 바꾸지 않았다. 바꾼 것은 목록 스크립트의 글(S4)과 새 부정 시험(S7)이다.
+실행 검사(gate와 6 GiB 상한 안): `lake build E2e E2eAd E2eScal` 종료 0, 1542 jobs, 211.7초다.
+빌드한 모듈은 65개다. 스트림이 더한 `lean/` 모듈 65개와 같다. 기존 `.olean`은 하나도 바뀌지 않았다.
+`E2eScal.P2EncCp`는 다시 빌드되지 않았다. 최대 메모리: 프로세스 2.15 GiB, 세션 2.94 GiB다. `lake build --no-build` 종료 0이다.
+공리 게이트 PASS: 선언 14415, 정리 12020, 모듈 469, 손 목록 5085, 비표준 0, sorryAx 0이다.
+f24-r1 덤프 대비 선언 비교: 0 CHANGED, 0 REMOVED, 0 ADDED다.
+심은 대조(덤프 수준): `E2eScal.F24.dpr_e2e_reject_size_spec`의 형 해시를 바꾼 사본은 종료 1, CHANGED 1이다.
+`regen_check.sh` 86/86 SAME(앞의 71, FLAT24 생성 파일 15)이다. 통합 검사이고, 새 생성기 결과가 아니다.
+`kindcheck.py --selftest` PASS, `p2dec_test.py` 394/394, `p2enc_test.py` 322/322, `own_layout_e2g_r1.py` 16/16 OK다.
+목록 다시 실행(S4 전): `INVENTORY.md`, `INVENTORY.json`, `ssz-methods.json`이 커밋본과 바이트가 같다.
+S4 뒤 다시 실행했다. 합계는 같다. 심은 대조 6/6 종료 1, 깨끗한 입력 종료 0이다.
+목록 수(스크립트 출력): 디코더 완료 18/211, 부분 10, 없음 183이다. 인코더 빠른 경로 완료 24/211, 완전 0이다.
+HashTreeRoot 계열 0이다. 시작 안 한 형 182/211이다.
+int8-r1(`0923998`, APPROVE) 고칠 항목:
+S1은 FINDINGS의 INT8 줄과 BASELINE 3절 목록 칸에 전제를 덧붙여 닫았다.
+S2는 0절에 `moveSliceNoCapNoScan` 분기와 프레임 분리 전제를 적어 닫았다.
+S3은 열림이다. 한계 선택지(`maxHeartbeats 16000000`, `4000000`, `maxRecDepth 100000`)의 프로파일 원인은 기록이 없다. BASELINE 6절에 수를 적었다.
+S4는 "INT8 리뷰 없음" 글을 int8-r1로 대체해 닫았다. 날짜 붙은 글은 고치지 않았다.
+S5 기록: 이 병합은 `chore(kraken)`을 썼다. 로컬 참조 `refs/remotes/offchainlabs/main`은 건드리지 않았다.
+실행하지 않은 것(통합자): Lean 수준 심은 대조, 빈 `.lake`의 콜드 빌드, 링크 검사, Go 차분, 기존 부정 시험 67개, x86-64.
+AttestationData 인코더는 다른 기계의 일이다. 다른 기계의 리스트·벡터 작업은 이 트리에 없다. 여기서 주장하지 않는다.
+OPT-R1 시범은 채택하지 않았다. T-7은 미뤘다. 기록: `scal/RESULT.json`의 `integration_int9`.

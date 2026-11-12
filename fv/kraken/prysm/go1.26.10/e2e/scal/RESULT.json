@@ -4598,7 +4598,8 @@
    "negative cases",
    "x86-64 hardware"
   ],
-  "state": "not yet reviewed"
+  "state": "not yet reviewed",
+  "review_int8_r1": "APPROVE on 0923998 (must-fix 0; S1, S2, S4 closed at INT9 as documents; S3 open; S5 notes); supersedes state 'not reviewed'"
  },
  "flat24": {
   "opening_commit": "be127917ff1dccfc1c01ac431f2efdd76b68a9b5",
@@ -5001,7 +5002,13 @@
    },
    "builds": "15/15 exit 0",
    "kindcheck": "15/15 PASS",
-   "gate_s": 94.1
+   "gate_s": 94.1,
+   "correction_f24r1_S3": "fields_covered 34/86 is a lower bound after a stop, not a coverage rate: 21 fields of the 7 generated decoders + 13 walker MATCH claims of 6 refused decoders with no emitted theorem",
+   "near_variants_f24r1_S1": {
+    "v1.BuilderDepositRequest": "decoder and encoder code identical to Deposit_Data (0 differing lines after label normalisation)",
+    "v1alpha1.BlobSidecarsByRangeRequest": "encoder identical to SyncAggregatorSelectionData; decoder differs in 2 error-path lines",
+    "v1alpha1.ExecutionPayloadEnvelopesByRangeRequest": "encoder identical to SyncAggregatorSelectionData; decoder differs in 2 error-path lines"
+   }
   },
   "part2": {
    "per_type": {
@@ -5346,7 +5353,76 @@
     "v1alpha1.Validator",
     "v1alpha1.ValidatorRegistrationV1"
    ],
-   "controls": "3/3 exit 1"
+   "controls": "3/3 exit 1",
+   "flat_not_closed_refusal_class_f24r1_S4": {
+    "v1.BuilderExitRequest": {
+     "decoder": "byte vector 20",
+     "encoder": "byte vector 20"
+    },
+    "v1.ConsolidationRequest": {
+     "decoder": "byte vector 20",
+     "encoder": "byte vector 20"
+    },
+    "v1.Withdrawal": {
+     "decoder": "byte vector 20",
+     "encoder": "byte vector 20"
+    },
+    "v1.WithdrawalRequest": {
+     "decoder": "byte vector 20",
+     "encoder": "byte vector 20"
+    },
+    "v1alpha1.BLSToExecutionChange": {
+     "decoder": "byte vector 20",
+     "encoder": "byte vector 20"
+    },
+    "v1alpha1.Builder": {
+     "decoder": "byte vector 1",
+     "encoder": "byte vector 1"
+    },
+    "v1alpha1.BuilderPendingWithdrawal": {
+     "decoder": "byte vector 20",
+     "encoder": "byte vector 20"
+    },
+    "v1alpha1.BuilderPreferences": {
+     "decoder": "callee primitives.Gwei.UnmarshalSSZ"
+    },
+    "v1alpha1.ENRForkID": {
+     "decoder": "byte vector 4",
+     "encoder": "byte vector 4"
+    },
+    "v1alpha1.Fork": {
+     "decoder": "byte vector 4",
+     "encoder": "byte vector 4"
+    },
+    "v1alpha1.ForkData": {
+     "decoder": "byte vector 4",
+     "encoder": "byte vector 4"
+    },
+    "v1alpha1.PayloadAttestationData": {
+     "decoder": "bool",
+     "encoder": "bool"
+    },
+    "v1alpha1.ProposerPreferences": {
+     "decoder": "byte vector 20",
+     "encoder": "byte vector 20"
+    },
+    "v1alpha1.Status": {
+     "decoder": "byte vector 4",
+     "encoder": "byte vector 4"
+    },
+    "v1alpha1.StatusV2": {
+     "decoder": "byte vector 4",
+     "encoder": "byte vector 4"
+    },
+    "v1alpha1.Validator": {
+     "decoder": "bool",
+     "encoder": "bool"
+    },
+    "v1alpha1.ValidatorRegistrationV1": {
+     "decoder": "byte vector 20",
+     "encoder": "byte vector 20"
+    }
+   }
   },
   "axioms": "PASS 14415 declarations, nonstandard 0, sorryAx 0 (job 99 dump; committed record by axioms_gate.py check after hand-list +2194); planted (dump-level sorryAx) FAIL exit 1",
   "drift": "vs int8-r1 dump: ADDED 2238, CHANGED 0, REMOVED 0; planted (dump-level) CHANGED 1 exit 1; Lean-level planted control not run",
@@ -5363,6 +5439,47 @@
    "orca (not installed)"
   ],
   "state": "not reviewed",
-  "wording": "H7 numbers as they are; no generality claim; the 24 types are now opened (no longer a hold-out)"
+  "wording": "H7 numbers as they are; no generality claim; the 24 types are now opened (no longer a hold-out)",
+  "review_f24_r1": "APPROVE on 6f20eef (must-fix 0, should-fix S1-S7 for integration; none changes a number); supersedes state 'not reviewed'",
+  "correction_f24r1_S5": "before the statement commit 2735379 the author saw one kindcheck log line listing the step-theorem names of BeaconBlocksByRange (decoder, encoder); no statement text",
+  "correction_f24r1_S6": "engine_v1.DepositRequest.desc.json was copied from another campaign's scratch directory; content sha256 489fe67a... equals the committed checker record (gen/desc/results/main.result.json, PASS); the header of F24DprSpecChecker.lean names prysm/go1.26.10/e2e/engine_v1.DepositRequest.desc.json, the file is at prysm/go1.26.10/e2e/f24/; generated text, not edited",
+  "negatives_int9_f24r1_S7": "12/12 as expected (4 controls pass, 8 mutants fail inside: reject_size_spec x2, reject_complete x2, encoder spec corollary Desc x2 and length x2 on DepositRequest and BeaconBlocksByRangeRequest; 0 timeouts, 0 wrong-target; one gated job each)"
+ },
+ "integration_int9": {
+  "what": "merge of claude/ssz-fv-flat24 at 6f20eef (FLAT24 / H7, f24-r1 APPROVE; linear on 0923998) into claude/ssz-fv-prysm-e2e at 0923998 (reviewed INT8 head, int8-r1 APPROVE); integration and records; no new proof text, no statement, generator, checker or lemma change; changed: inventory-script wording (f24-r1 S4), run-form axioms-gate.json (S2), 12 new negatives (S7)",
+  "merge": "e6b46fd4e1e838209eeca2b765a5a3735ea9fa2c (--no-ff, subject type chore); no conflict; merged tree id = tree id of 6f20eef (200d3e63)",
+  "executed": {
+   "lake build E2e E2eAd E2eScal": "exit 0, 1542 jobs, 211.7 s gate wall (job 01); built 65 modules = the 65 new lean/ modules of the stream; no existing .olean changed; peak 2.15 GiB per process, 2.94 GiB session",
+   "E2eScal.P2EncCp": "not rebuilt: .olean sha256 ad8cf5c0... before = after",
+   "lake build --no-build E2e E2eAd E2eScal": "exit 0 (job 02)",
+   "axioms gate": "PASS, 14415 declarations, 12020 theorems, 469 modules, hand list 5085, non-standard 0, sorryAx 0 (job 03); the 11 keys shared with the committed check-form record equal; committed record replaced by the run form (modules, precheck, dump; f24-r1 S2)",
+   "decl drift": "decl_drift.py f24-r1 reviewer dump vs merged dump: 0 CHANGED, 0 REMOVED, 0 ADDED",
+   "planted control": "dump level: type hash of E2eScal.F24.dpr_e2e_reject_size_spec changed in a copy: decl_drift exit 1, 1 CHANGED",
+   "regen_check.sh": "SAME for 86 generator commands, two scratch runs each: the 71 INT8 commands and the 15 FLAT24 exit-0 commands (p2dec --gen5 x7, p2enc --gen6 x8; argv as review f24-r1) (job 06); integration regen, not a new H7 run; the 33 exit-2 runs emit no file and were not rerun",
+   "kindcheck.py --selftest": "PASS, 157 cases + 85 exit-code / rule-12 / rule-13 cases (job 07)",
+   "p2dec_test.py": "394/394 (job 08)",
+   "p2enc_test.py": "322/322 (job 09)",
+   "own_layout_e2g_r1.py": "16/16 OK (job 10)",
+   "inventory rerun before S4": "inventory.py names; inventory_decls.lean (job 11); inventory.py run (job 12): INVENTORY.md and INVENTORY.json byte-equal to the committed files; inventory.py methods (job 13): byte-equal to ssz-methods.json",
+   "inventory after S4": "inventory.py run (job 14): totals unchanged; only per-type *_refused_h7 fields and Markdown wording added; planted controls (job 15): 6/6 exit 1 (missing spec_k, missing witness, missing codec, sorryAx, wrong code constant, wrong kind), clean exit 0 and equal output",
+   "negatives (f24-r1 S7)": "12/12 as expected (4 controls pass, 8 mutants fail inside: reject_size_spec x2, reject_complete x2, encoder spec corollary Desc x2 and length x2 on DepositRequest and BeaconBlocksByRangeRequest; 0 timeouts, 0 wrong-target; one gated job each)"
+  },
+  "inventory_rerun_equal": true,
+  "inventory_totals_source": "prysm/INVENTORY.md / INVENTORY.json (gen/tools/inventory.py) only",
+  "claims_and_limits": "decoders complete 18 of 211 UnmarshalSSZ + 10 partial (4 primitives + 6 FLAT24 without codec equality), none 183; encoders fast-path complete 24 of 211 MarshalSSZTo (premise len + SizeSSZ <= cap and exact field lengths); NO encoder is complete; growslice (T-7 deferred), length rejects, morestack not proved; hash-tree-root family 0; flat fixed-size 40 = 16 development + 8 with a row (1 decoder complete, 8 encoder fast paths) + 16 not started (refused, class per type); H7: decoders generated 7 of 24, encoders 8 of 24, every refusal = a field kind or callee the generators do not support (byte vector 20: 8 types, byte vector 4: 5, byte vector 1: 1, bool: 2, Gwei callee: 1 decoder); three generated types are near-variants of development types; no generality claim; no trend across H3-H7; AttestationData encoder = another machine's task; the other machine's list / vector work is not in this tree and not claimed; pilot NOT adopted",
+  "should_fix": {
+   "f24-r1": "S1-S7 closed (S2 run-form record, S4 inventory wording, S7 12 negatives; S1, S3, S5, S6 documents)",
+   "int8-r1": "S1, S2, S4 closed as documents; S3 open (limit options without a profiled cause); S5 notes"
+  },
+  "published": "6a78c59 and the handoff pin 71161fa only; nothing newer is published",
+  "not_run": [
+   "Lean-level planted control",
+   "cold build from an empty .lake",
+   "link check",
+   "Go differential",
+   "the 67 FLAT24 author negatives",
+   "x86-64 hardware"
+  ],
+  "state": "not reviewed"
  }
 }

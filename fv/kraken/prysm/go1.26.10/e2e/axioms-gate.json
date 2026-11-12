@@ -24,5 +24,15 @@
  "hand_list_missing": [],
  "nonstandard": {},
  "sorryAx": [],
- "verdict": "PASS"
+ "verdict": "PASS",
+ "modules": 469,
+ "precheck": {
+  "argv": "lake build --no-build <modules>",
+  "rc": 0,
+  "failures": []
+ },
+ "dump": {
+  "rc": 0,
+  "stderr_tail": ""
+ }
 }

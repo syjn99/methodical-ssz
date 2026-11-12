@@ -44,10 +44,27 @@ Declarations header: `# inventory_decls v1 lean=4.36.0-nightly-2026-09-21 githas
   - v1.DepositRequest: decoder complete; encoder fast path complete.
   - v1alpha1.BeaconBlocksByRangeRequest: decoder partial (missing codec); encoder fast path complete.
   - v1alpha1.BlobSidecarsByRangeRequest: decoder partial (missing codec); encoder fast path complete.
-  - v1alpha1.BuilderPreferences: decoder not started; encoder fast path complete.
+  - v1alpha1.BuilderPreferences: decoder not started; H7 run refused: callee primitives.Gwei.UnmarshalSSZ; encoder fast path complete.
   - v1alpha1.ExecutionPayloadEnvelopesByRangeRequest: decoder partial (missing codec); encoder fast path complete.
   - v1alpha1.PartialDataColumnGroupID: decoder partial (missing codec); encoder fast path complete.
   - v1alpha1.ValidatorIdentity: decoder partial (missing codec); encoder fast path complete.
+- Flat types outside the development population without a mapping row: 16; refusal class of the H7 one-shot run (`p2dec --gen5` / `p2enc --gen6`), a field kind or callee the generators do not support:
+  - v1.BuilderExitRequest: decoder refused (byte vector 20); encoder refused (byte vector 20).
+  - v1.ConsolidationRequest: decoder refused (byte vector 20); encoder refused (byte vector 20).
+  - v1.Withdrawal: decoder refused (byte vector 20); encoder refused (byte vector 20).
+  - v1.WithdrawalRequest: decoder refused (byte vector 20); encoder refused (byte vector 20).
+  - v1alpha1.BLSToExecutionChange: decoder refused (byte vector 20); encoder refused (byte vector 20).
+  - v1alpha1.Builder: decoder refused (byte vector 1); encoder refused (byte vector 1).
+  - v1alpha1.BuilderPendingWithdrawal: decoder refused (byte vector 20); encoder refused (byte vector 20).
+  - v1alpha1.ENRForkID: decoder refused (byte vector 4); encoder refused (byte vector 4).
+  - v1alpha1.Fork: decoder refused (byte vector 4); encoder refused (byte vector 4).
+  - v1alpha1.ForkData: decoder refused (byte vector 4); encoder refused (byte vector 4).
+  - v1alpha1.PayloadAttestationData: decoder refused (bool); encoder refused (bool).
+  - v1alpha1.ProposerPreferences: decoder refused (byte vector 20); encoder refused (byte vector 20).
+  - v1alpha1.Status: decoder refused (byte vector 4); encoder refused (byte vector 4).
+  - v1alpha1.StatusV2: decoder refused (byte vector 4); encoder refused (byte vector 4).
+  - v1alpha1.Validator: decoder refused (bool); encoder refused (bool).
+  - v1alpha1.ValidatorRegistrationV1: decoder refused (byte vector 20); encoder refused (byte vector 20).
 - Target types without an IR record (not classified): primitives.BuilderIndex, primitives.CommitteeIndex, primitives.Epoch, primitives.Gwei, primitives.Slot, primitives.ValidatorIndex, v1.ProgressiveTransactionList.
 
 Flat rule: IR record `ir` of `prysm/ir/ir-mainnet.json` (the ELF is built without the `minimal` tag): `variable` false, and every field is a byte vector (`k` vector of `byte`), an unsigned integer (`k` uint), a bool (`k` bool) or a uint overlay (`k` overlay of a uint, not a bitfield); no nested container, no list, no bitfield, no vector of non-bytes.
