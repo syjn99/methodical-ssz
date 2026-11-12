@@ -4,6 +4,7 @@ import E2eDep.SpecK
 import E2eDep.DescEq
 import E2eDepW.WitR
 import E2eDepW.WitA
+import E2eHb.WitHbR
 
 /-! SEG round-2 hand list for `gen/e2e/seg2axioms_gate.py` ("must exist" names; every name gets the axiom check). -/
 
@@ -22,3 +23,4 @@ import E2eDepW.WitA
 #print axioms E2eDepW.bump_newobject120
 #print axioms E2eDepW.WitR.dep_reject_runs
 #print axioms E2eDepW.WitA.dep_accept_runs
+#print axioms E2eHb.WitHbR.hb_reject_runs
