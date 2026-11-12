@@ -863,11 +863,39 @@ PendingPartialWithdrawal의 `pw_e2e_accept_spec_k`를 더했다.
 Go 차분 30/30이다(linux/arm64의 Go 의미론, ELF 실행 아님). 심은 대조는 잡혔다.
 링크 검사 PASS다. RESULT는 H6 기록과 바이트가 같다.
 공리 게이트 PASS(선언 9758), 선언 비교 ADDED 619뿐이다. 심은 대조는 잡혔다. `--no-build` 종료 0이다.
-검증 목록(`prysm/INVENTORY.md`, 출처 `gen/tools/inventory.py`): 대상 함수 641개다.
-디코더는 완전 17, 부분 4, 없음 190이다. 완전은 목록에 정의된 뜻이다.
-인코더 빠른 경로 정리는 3개, `SizeSSZ`는 1개다. HashTreeRoot는 없다.
-평면 16형의 디코더는 16/16 완전이다. 표본 안이고 리뷰 전이다.
-실행하지 않은 것: 콜드 빌드, x86-64, `regen_check.sh`(생성기 변경 없음). 기록: CONTAMINATION 31절, `scal/RESULT.json`의 `gen5-close`.
+검증 목록은 `prysm/INVENTORY.md`다. 출처는 `gen/tools/inventory.py`다(단위 G5-C2가 리뷰 g5c-r1 M1–M3을 고쳤다).
+분모는 셋이다. 서로 섞지 않는다.
+(1) 대상의 SSZ 메서드: 211형의 1292개다. 출처는 `prysm/go1.26.10/ssz-methods.json`이다.
+이 파일은 고정 ELF의 nm 목록에서 만든다. nm sha256은 `build-ids.txt`와 같다. nm 목록은 커밋하지 않는다.
+(2) 덤프한 함수(`functions.json`): 641개다. SSZ 메서드 639개와 런타임 도우미 2개다.
+(3) GEN5 개발 모집단: 평면 16형(`FLAT16`)이다. 대상의 평면 고정 크기 형 전체가 아니다.
+| 메서드 | 대상 | `functions.json` | 대응 행 | 완전 | 부분 |
+| --- | --- | --- | --- | --- | --- |
+| `UnmarshalSSZ` | 211 | 211 | 21 | 17 | 4 |
+| `MarshalSSZTo` | 211 | 211 | 3 | 0 | 3 |
+| `MarshalSSZ` | 211 | 6 | 0 | 0 | 0 |
+| `SizeSSZ` | 211 | 211 | 1 | 0 | 1 |
+| `HashTreeRoot` | 211 | 0 | 0 | 0 | 0 |
+| `HashTreeRootWith` | 211 | 0 | 0 | 0 | 0 |
+| `ProgressiveHashTreeRoot`, `…With` | 10, 10 | 0 | 0 | 0 | 0 |
+| `MaxSizeSSZ` | 6 | 0 | 0 | 0 | 0 |
+"완전"은 `UnmarshalSSZ`에만 정의했다. 다른 메서드는 정리가 하나라도 있으면 "부분"이다.
+디코더는 대상 `UnmarshalSSZ` 211개 중 17개가 완전이다. 완전은 목록에 정의된 뜻이다.
+HashTreeRoot, HashTreeRootWith, MarshalSSZ는 대상에 있다. 정리는 없다. HashTreeRoot 계열은 덤프하지 않았다.
+개발 모집단 16형의 디코더는 16/16 완전이다(정의된 뜻). 표본 안이다.
+대상의 평면 고정 크기 형은 IR 규칙으로 40개다. 그중 24개는 시작하지 않았다. 이름은 `INVENTORY.md`에 있다.
+목록이 잡지 못하는 것은 `INVENTORY.md` "What this table cannot detect"에 있다.
+`codec`과 `reject_complete`는 행의 형에 묶이지 않는다. 존재, 종류, 공리만 검사한다.
+재현(`fv/kraken`에서; `$NM`은 ELF의 nm 목록, `$O`는 빈 디렉터리; lean은 게이트 안에서):
+
+```sh
+python3 -I -B gen/tools/inventory.py methods "$NM" "$O/ssz-methods.json" && cmp "$O/ssz-methods.json" prysm/go1.26.10/ssz-methods.json
+python3 -I -B gen/tools/inventory.py names "$O/names.txt"
+(cd lean && lake env lean --run ../gen/tools/inventory_decls.lean "$O/names.txt" $(ls E2e/*.lean E2eAd/*.lean E2eScal/*.lean | sed 's/\.lean$//; s#/#.#g')) > "$O/decls.tsv"
+python3 -I -B gen/tools/inventory.py run "$O/decls.tsv" "$O/I.md" "$O/I.json" && cmp "$O/I.md" prysm/INVENTORY.md
+```
+
+실행하지 않은 것: 콜드 빌드, x86-64, `regen_check.sh`(생성기 변경 없음). 기록: CONTAMINATION 31절과 32절, `scal/RESULT.json`의 `gen5-close`.
 
 조건:
 

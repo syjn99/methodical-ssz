@@ -3363,7 +3363,7 @@
   }
  },
  "gen5-close": {
-  "what": "GEN5 unit G5-C: close the five H6-only flat decoders (HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit) on the generated accept / size-reject theorems, and the first verified inventory of the pinned target's functions. In-sample (opened in H6 as (S)-only types); no hold-out claim",
+  "what": "GEN5 unit G5-C: close the five H6-only flat decoders (HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit) on the generated accept / size-reject theorems, and the first inventory of the pinned target's SSZ methods (denominators corrected in unit G5-C2: see correction_g5cr1). In-sample (opened in H6 as (S)-only types); no hold-out claim",
   "base": "ea6a0c6 (step 0 records: 55e4cec)",
   "state": "not yet reviewed",
   "commits": {
@@ -3439,24 +3439,84 @@
   "axioms": "PASS 9758 declarations, 8134 theorems, hand list 2200, nonstandard 0, sorryAx 0; committed record regenerated",
   "drift": "vs g5-r1 dump (9139): ADDED 619, CHANGED 0, REMOVED 0; Lean-level planted control in-tree (weakened witness + sorry theorem): gate exit 1, drift 1 CHANGED + 1 ADDED; restored byte-equal, rebuilt",
   "inventory": {
-   "script": "gen/tools/inventory.py + gen/tools/inventory_decls.lean",
-   "functions_total": 641,
-   "decoders": {
-    "complete": 17,
-    "partial": 4,
-    "none": 190
+   "script": "gen/tools/inventory.py (methods + run) + gen/tools/inventory_decls.lean",
+   "denominators": {
+    "target_ssz_methods": "1292 methods of 211 types, prysm/go1.26.10/ssz-methods.json (from the nm listing of the pinned ELF; nm sha256 = build-ids.txt)",
+    "dumped_functions": "641 in functions.json (639 SSZ methods + 2 runtime helpers)",
+    "development_population": "16 flat types (FLAT16 of the script)"
    },
-   "encoders": {
-    "fast_path": 3,
-    "none": 208
+   "by_kind": {
+    "UnmarshalSSZ": {
+     "target": 211,
+     "functions_json": 211,
+     "mapped": 21,
+     "complete": 17,
+     "partial": 4
+    },
+    "MarshalSSZTo": {
+     "target": 211,
+     "functions_json": 211,
+     "mapped": 3,
+     "complete": 0,
+     "partial": 3
+    },
+    "MarshalSSZ": {
+     "target": 211,
+     "functions_json": 6,
+     "mapped": 0,
+     "complete": 0,
+     "partial": 0
+    },
+    "SizeSSZ": {
+     "target": 211,
+     "functions_json": 211,
+     "mapped": 1,
+     "complete": 0,
+     "partial": 1
+    },
+    "HashTreeRoot": {
+     "target": 211,
+     "functions_json": 0,
+     "mapped": 0,
+     "complete": 0,
+     "partial": 0
+    },
+    "HashTreeRootWith": {
+     "target": 211,
+     "functions_json": 0,
+     "mapped": 0,
+     "complete": 0,
+     "partial": 0
+    },
+    "ProgressiveHashTreeRoot": {
+     "target": 10,
+     "functions_json": 0,
+     "mapped": 0,
+     "complete": 0,
+     "partial": 0
+    },
+    "ProgressiveHashTreeRootWith": {
+     "target": 10,
+     "functions_json": 0,
+     "mapped": 0,
+     "complete": 0,
+     "partial": 0
+    },
+    "MaxSizeSSZ": {
+     "target": 6,
+     "functions_json": 0,
+     "mapped": 0,
+     "complete": 0,
+     "partial": 0
+    }
    },
-   "size_ssz": {
-    "proved": 1,
-    "none": 210
-   },
-   "flat_population_decoders_complete": "16/16",
-   "m_flat_dec_reached_by_script": true,
-   "controls": "3 planted mapping errors (absent name, wrong accept for a witness, wrong code constant) each exit 1"
+   "complete_defined_for": "UnmarshalSSZ only; other kinds: a mapped theorem = partial",
+   "development_population_decoders_complete": "16/16 (defined sense)",
+   "flat_fixed_types_in_target": 40,
+   "flat_not_started": 24,
+   "flat_rule": "IR ir-mainnet.json: not variable; every field a byte vector, uint, bool or uint overlay (no bitfield)",
+   "cannot_detect": "codec / reject_complete of another type (existence and axioms only); see INVENTORY.md",
+   "controls": "unit G5-C2: 15/15 as expected (13 exit 1 incl. missing theorem, sorryAx, new axiom, another type's accept, callee-only constant x3, unpinned .S path; 2 documented limits exit 0)"
   },
   "no_build": "lake build --no-build E2e E2eAd E2eScal exit 0",
   "not_run": [
@@ -3466,6 +3526,40 @@
    "kindcheck.py (generated files unchanged)",
    "orca (not installed)"
   ],
-  "claims_and_limits": "in-sample; 'complete' only in the inventory's defined sense; M-flat-dec only after an independent review; no 'all codecs', 'generator complete' or speed claim"
+  "claims_and_limits": "in-sample; 'complete' only in the inventory's defined sense and only for UnmarshalSSZ; the 16/16 is the development population, not the 40 flat fixed-size types of the target; no 'all codecs', 'generator complete' or speed claim",
+  "correction_g5cr1": {
+   "source": "review g5c-r1 on c4e1d74: REQUEST_CHANGES, inventory wording and script limits only (M1-M3; S1-S4); fixed by unit G5-C2",
+   "M1": "the denominator was the dumped set functions.json (641), worded as 'every function of the pinned target'; the target also holds HashTreeRoot / HashTreeRootWith (211 each), MarshalSSZ (205 more than dumped), 10 + 10 progressive hash-tree-root and 6 MaxSizeSSZ methods; now counted from ssz-methods.json, none proved",
+   "M2": "'flat 16/16' and 'M-flat-dec reached' named the 16-type development population; by the IR rule the target has 40 flat fixed-size types, 24 not started",
+   "M3": "the code key now requires the row's function to be the subject (callee-only constants fail); codec / reject_complete stay unkeyed (needs an inventory_decls.lean column) and are stated as a limit; 'cannot overstate' dropped",
+   "S1": "applied: code constants count only if their .S is in a pinned-ELF link table (recursive scan; duplicates fail)",
+   "S2": "open (Lean source comment): the ValidatorBalance proto was read from the primary Prysm checkout c4e939f; the message text is identical in the pinned tree ab15ff7 (review hash compare); recorded in CONTAMINATION section 32",
+   "S3": "open: 19 mapped names are not in the #print axioms hand lists (gen/scal/AxiomsScal.lean, frozen); inventory_decls.lean checks their axioms on every run",
+   "S4": "recorded: the session scripts mkspeck.py and mkwit.py are not in the repository (CONTAMINATION section 32)",
+   "replaced": {
+    "what": "GEN5 unit G5-C: close the five H6-only flat decoders (HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit) on the generated accept / size-reject theorems, and the first verified inventory of the pinned target's functions. In-sample (opened in H6 as (S)-only types); no hold-out claim",
+    "inventory": {
+     "script": "gen/tools/inventory.py + gen/tools/inventory_decls.lean",
+     "functions_total": 641,
+     "decoders": {
+      "complete": 17,
+      "partial": 4,
+      "none": 190
+     },
+     "encoders": {
+      "fast_path": 3,
+      "none": 208
+     },
+     "size_ssz": {
+      "proved": 1,
+      "none": 210
+     },
+     "flat_population_decoders_complete": "16/16",
+     "m_flat_dec_reached_by_script": true,
+     "controls": "3 planted mapping errors (absent name, wrong accept for a witness, wrong code constant) each exit 1"
+    },
+    "claims_and_limits": "in-sample; 'complete' only in the inventory's defined sense; M-flat-dec only after an independent review; no 'all codecs', 'generator complete' or speed claim"
+   }
+  }
  }
 }
