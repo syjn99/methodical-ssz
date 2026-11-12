@@ -75,8 +75,8 @@ T3의 주 정리는 `e13053a`(`StmtIa.lean`)와 `714989f`(`StmtIaNz.lean`)의 �
 T3의 P4, P5는 오류 값에 대해 `rax ≠ 0`만 말한다.
 T3의 행은 리뷰 r4(`9e2272b`)가 확인했다.
 T3의 P1, P2 증인은 리뷰 r4 뒤에 더했다(S1). 자체 Host를 쓴다. `WitIaR`의 Host에는 `ssz.ErrSize` 레이블이 없다.
-리뷰 r4 뒤의 변경(`d3f4856`, `e0bbac7`, `c478e87`)은 리뷰받지 않았다.
-공리는 게이트 결과 `lv/axioms-gate-lv.json`과 `lv/axioms-gate-lv-t3.json`에 있다.
+리뷰 r4 뒤의 변경(`d3f4856`, `e0bbac7`, `c478e87`)은 리뷰 r5가 승인했다(`REVIEW-R5.md`).
+공리는 게이트 결과 `lv/axioms-gate-lv.json`과 `lv/axioms-gate-lv-t3-r4.json`에 있다.
 
 ## 3. 막힌 의무
 
@@ -203,6 +203,7 @@ T3의 옵션(원인과 문턱은 옵션 옆에 있다. 구현 담당의 측정�
 - 독립 리뷰 r2(`d169e4b`): REQUEST_CHANGES, 필수 수정 2개(M1, M2). `REVIEW-R2.md`를 본다. 수정은 `1ba8b41`, `69f1a70`, `252380f`와 이 파일의 커밋이다.
 - 독립 리뷰 r3(`650b1f5`): APPROVE, 필수 수정 없음. `REVIEW-R3.md`를 본다. 그 뒤의 문서 커밋(N1, N2, `REVIEW-R3.md`)은 리뷰받지 않았다.
 - 독립 리뷰 r4(`9e2272b`, 범위 `conv.py` 수정과 T3): APPROVE, 필수 수정 없음, 권장 수정 9개. `REVIEW-R4.md`를 본다.
+- 독립 리뷰 r5(`4d42634`, 범위 r4 권장 수정): APPROVE. 같은 리뷰가 브랜치 `syjn99/ssz-fv-hb`(`a1c5191`)에는 REQUEST_CHANGES를 냈다. `REVIEW-R5.md`를 본다.
 - 사용자 확인이 필요한 것:
   - esz 24 `MakesliceC` 인스턴스(리뷰 r1 S7).
   - 기한.
