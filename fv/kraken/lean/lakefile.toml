@@ -48,12 +48,6 @@ filter = {extension = ["S"]}
 name = "Fk"
 needs = ["fk_norm_S", "fk_data", "fk_lean_S"]
 
-# phase1c (X4): generated statements and proofs, written by fv/kraken/gen/x4 into Gen1cX4/.
-# Not a default target; build with `lake build Gen1cX4`.
-[[lean_lib]]
-name = "Gen1cX4"
-globs = ["Gen1cX4.+"]
-
 # prysm-e2e (run fve2e-20261110T010000Z-2dd40dab): real v1alpha1.Checkpoint encoder/decoder and the
 # primitives.Epoch decoder on the Go 1.26.10 ELF. Not a default target; build one module at a time,
 # e.g. `lake build E2e.Epoch`. The .S and data files of this namespace are inputs of every E2e module.
