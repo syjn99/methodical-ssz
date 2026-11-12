@@ -64,7 +64,7 @@
 | T3 | P6 | N | 도달할 수 없는 경로로 기록했다. 별도 정리는 없다 |
 | T3 | EthLib 거부 사례 | K | `ia_e2e_reject_cases` (기계 정리가 아니다) |
 | T3 | 손 `Desc` = 생산자 `Desc` | K | `prysmIaDesc_deserialize_checker` |
-| T3 | 증인 | K | `WitIaA.ia_accept_runs`(모든 n ≤ 2048, 예 0, 1, 2048), `WitIaR.ia_misaligned_runs`, `WitIaR.ia_toobig_runs` |
+| T3 | 증인 | K | `WitIaA.ia_accept_runs`(모든 n ≤ 2048, 예 0, 1, 2048), `WitIaR.ia_misaligned_runs`, `WitIaR.ia_toobig_runs`, `WitIaR2.ia_size_runs`, `WitIaR2.ia_offset_runs`(리뷰 r4 뒤, `d3f4856`) |
 | T3 | 링크 검사 | X | `lv/link-t3/RESULT` |
 | T3 | 부정 시험 | X | `lv/negative-lv-t3.json` |
 | T1–T3 | MarshalSSZTo, SizeSSZ, HashTreeRoot | N | 범위 밖 |
@@ -74,7 +74,8 @@ T1, T2의 주 정리는 `dfc8b93`의 고정 문장 def를 형으로 가진다.
 T3의 주 정리는 `e13053a`(`StmtIa.lean`)와 `714989f`(`StmtIaNz.lean`)의 고정 문장 def를 형으로 가진다.
 T3의 P4, P5는 오류 값에 대해 `rax ≠ 0`만 말한다.
 T3의 행은 리뷰 r4(`9e2272b`)가 확인했다.
-T3의 P1, P2 주 정리는 `9e2272b`에서 증인이 없다(리뷰 r4 S1).
+T3의 P1, P2 증인은 리뷰 r4 뒤에 더했다(S1). 자체 Host를 쓴다. `WitIaR`의 Host에는 `ssz.ErrSize` 레이블이 없다.
+리뷰 r4 뒤의 변경(`d3f4856`, `e0bbac7`, `c478e87`)은 리뷰받지 않았다.
 공리는 게이트 결과 `lv/axioms-gate-lv.json`과 `lv/axioms-gate-lv-t3.json`에 있다.
 
 ## 3. 막힌 의무
@@ -121,8 +122,8 @@ T3의 옵션(원인과 문턱은 옵션 옆에 있다. 구현 담당의 측정�
 
 - `maxRecDepth 1024`: `ia_e2e_reject_size_main`, `ia_e2e_reject_offset_main`(로그 123, 124), `ia_iter`, `ia_exit`, `ia_e2e_accept_main`, `_nz` 증명 둘. 없으면 첫 `kat`가 멈춘다(로그 136, 139, 184, 233).
 - `maxHeartbeats 1600000`: `ia_e2e_accept_main`. 400000은 실패하고 800000은 통과한다(로그 185).
-- `WitIaA`: 파일 수준 `maxRecDepth 2048`(기본값과 1024는 실패한다, 로그 212). `ia_accept_runs`에 `maxHeartbeats 10000000`(4000000은 실패하고 5000000은 통과한다, 로그 211).
-- `WitIaR`: 파일 수준 `maxRecDepth 1024`(기본값은 실패한다, 로그 245).
+- `WitIaA`: 선언별 `maxRecDepth`(리뷰 r4 S3, `e0bbac7`). `hk288`은 1024, `P_len`과 `hk531`…`hk869`는 2048이다(1024는 실패한다, 로그 261, 262). `ia_accept_runs`에 `maxHeartbeats 10000000`(4000000은 실패하고 5000000은 통과한다, 로그 211).
+- `WitIaR`: `P_len`과 `hk284`에만 `maxRecDepth 1024`(없으면 그 둘만 실패한다, 로그 260). `WitIaR2`: `P_len`에만 1024(로그 259).
 - `lake build E2eList`: 765 jobs, 100 s, 표본 RSS 7.71 GiB(로그 252).
 
 ## 5. 재사용과 새것
@@ -171,6 +172,7 @@ T3의 옵션(원인과 문턱은 옵션 옆에 있다. 구현 담당의 측정�
 | T3 선언 drift | 0, 5007 = 5007 (`decl-drift-lv-t3.txt`, 로그 250) |
 | T3 링크 | PASS all (`lv/link-t3/RESULT`). U8에서 다시 돌리지 않았다 |
 | T3 부정 시험 | 8개 모두 통과: 대조군 2, inside 6 (`negative-lv-t3.json`, 로그 253) |
+| T3, 리뷰 r4 수정 뒤 | 빌드 exit 0(로그 265), `--no-build` exit 0, 1082 jobs(로그 266), 게이트 PASS 선언 6451(`axioms-gate-lv-t3-r4.json`, 로그 267), drift 0(로그 268), 부정 시험 14개 모두 통과: 대조군 5, inside 9(로그 264) |
 | T3 게이트 대조군, drift 대조군, stale 검사 | 실행하지 않음 |
 | Go 차분 시험 | 실행하지 않음 |
 | 하드웨어 대조 | 실행하지 않음. 호스트는 arm64다 |
