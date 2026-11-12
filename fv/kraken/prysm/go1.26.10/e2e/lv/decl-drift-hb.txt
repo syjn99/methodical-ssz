@@ -1,0 +1,3 @@
+# decl_drift base 6a78c591e8bcd698b7b9313b1c09cb25f3986911 vs head syjn99/ssz-fv-hb (roots E2e,E2eAd,E2eScal; base dump: the LV base dump, sha256 96f2fb34…; head dump: log 38, 240 modules incl. E2eList, E2eHb)
+SUMMARY base=5007 head=5007 drift=0 allowed=0
+# control: one type hash planted in a copy of the head dump (log 40): exit 1, CHANGED BitVec.drop.eq_1, drift=1
