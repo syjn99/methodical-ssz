@@ -1,7 +1,7 @@
 import E2eScal.E1Accept
-import Fk.RtCopy
-import Fk.BumpMore
-import Fk.WHost
+import Runtime.CopyModel
+import Runtime.BumpAllocatorVariants
+import Machine.WitnessHost
 
 /-!
 # Witness of `e1_e2e_accept_main` (Eth1Data decoder accept path, hold-out)
@@ -20,7 +20,7 @@ the decoder returns nil. The receiver is a Go value of `v1alpha1.Eth1Data` (zero
 slices, zero DepositCount).
 -/
 
-open Fk Fk.W E2e E2eScal E2eScal.E1Code E2eScal.E1
+open Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.E1Code E2eScal.E1
 
 namespace E2eScal.WitE1A
 

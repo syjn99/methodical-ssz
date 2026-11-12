@@ -15,7 +15,7 @@ import E2e.CpWCover
 Heap budget of both covers: `4·len + 8736 ≤ avail` (the baseline covers' premise).
 -/
 
-open Fk E2e.OptR1.Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e.OptR1.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2e.OptR1
@@ -56,7 +56,7 @@ theorem cpo_marshal_spec_k (k : Nat) (hk : CpMarshalO.IsInfixAt Host.prog k) (hf
           ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   refine ⟨pcpEnc g, pcp_serialize g, ?_⟩
-  have he8 : (uintBytes 8 g.epoch.toNat).toList.length = 8 := by simp [Fv.uintBytes_size]
+  have he8 : (uintBytes 8 g.epoch.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
   have hroot : g.root.toList.length = 32 := by simp
   refine eventually_mono (cpo_marshal_main k hk hf cst _ cC ctl _ pre d0 d1 hcst he8 hcC hctl hroot hd0 hd1 p s ra
     guard hpre fp s1 s2 s3 l16 l24 l32 t40 t30 rslot hfp h1 h2 h3 hl16 hl24 hl32 ht40 ht30 hrs R S scratch hsc h_mem
@@ -110,7 +110,7 @@ theorem cpo_marshal_cover (k : Nat) (hk : CpMarshalO.IsInfixAt Host.prog k) (hf 
       ⟨s, Host.addrOf k⟩ := by
   refine ⟨pcpEnc g, pcp_serialize g, ?_⟩
   rw [pcp_enc_toList]
-  have he8 : (uintBytes 8 g.epoch.toNat).toList.length = 8 := by simp [Fv.uintBytes_size]
+  have he8 : (uintBytes 8 g.epoch.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
   have hroot : g.root.toList.length = 32 := by simp
   generalize (uintBytes 8 g.epoch.toNat).toList = e8 at *
   generalize g.root.toList = root at *

@@ -1,10 +1,10 @@
-import Fk.Contracts
-import Fk.Frame
+import Runtime.Contracts
+import Machine.Frame
 import E2e.Epoch
 import E2eScal.ViSpec
 import E2eScal.H4Stmt
 import E2eScal.CallDec
-import E2eScal.U64RR
+import Codec.InlineUint64RegisterBase
 
 /-!
 # Real Prysm `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ`, accept path, Go 1.26.10 (first instance of the call-site lemmas)
@@ -24,7 +24,7 @@ The callees are used only through `U64CalleeAcc` (= the existing `ViUAccC` / `Ep
 Stack (rsp = entry rsp): callee return slot rsp − 88, callee saved rbp rsp − 96, callee rbx spill rsp − 72.
 -/
 
-open Fk E2e E2eScal.H4Code E2eScal.BhCode E2eScal
+open Machine Runtime TestTarget E2e E2eScal.H4Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.H4
@@ -175,27 +175,27 @@ theorem pw_e2e_accept_main : pw_accept_stmt := by
   simp only at h_mem hguard hlen ⊢
   have hg : guard.toNat < (rsp.toBitVec - 88).toNat := pwa_guard _ _ hguard
   -- code facts
-  have hF1 := E2eScal.infix_sub (q := E2eScal.callArgFirst false 8) 15 hk
+  have hF1 := Codec.infix_sub (q := E2eScal.callArgFirst false 8) 15 hk
     (by simp only [PwUnmarshal, E2eScal.callArgFirst, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hC1 := E2eScal.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_b9") 17 hk
+  have hC1 := Codec.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_b9") 17 hk
     (by simp only [PwUnmarshal, E2eScal.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hL1 := E2eScal.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_b9") 47 hk
+  have hL1 := Codec.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_b9") 47 hk
     (by simp only [PwUnmarshal, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl1 := Fk.label_at' hk hf (j := 47)
+  have hl1 := Machine.label_at' hk hf (j := 47)
     (by simp only [PwUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [PwUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hLea := E2eScal.infix_sub (q := E2eScal.callArgLea 96 16 112 (-16) 88 24) 48 hk
+  have hLea := Codec.infix_sub (q := E2eScal.callArgLea 96 16 112 (-16) 88 24) 48 hk
     (by simp only [PwUnmarshal, E2eScal.callArgLea, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hRR := E2eScal.infix_sub (q := E2eScal.u64DecRR Reg64.r8 8 16) 54 hk
-    (by simp only [PwUnmarshal, E2eScal.u64DecRR, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hX : E2eScal.U64RRReg Reg64.r8 := by decide
-  have hMov := E2eScal.infix_sub (q := E2eScal.callArgMov) 56 hk
+  have hRR := Codec.infix_sub (q := Codec.u64DecRR Reg64.r8 8 16) 54 hk
+    (by simp only [PwUnmarshal, Codec.u64DecRR, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hX : Codec.U64RRReg Reg64.r8 := by decide
+  have hMov := Codec.infix_sub (q := E2eScal.callArgMov) 56 hk
     (by simp only [PwUnmarshal, E2eScal.callArgMov, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hC2 := E2eScal.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159") 59 hk
+  have hC2 := Codec.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159") 59 hk
     (by simp only [PwUnmarshal, E2eScal.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hL2 := E2eScal.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159") 88 hk
+  have hL2 := Codec.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159") 88 hk
     (by simp only [PwUnmarshal, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl2 := Fk.label_at' hk hf (j := 88)
+  have hl2 := Machine.label_at' hk hf (j := 88)
     (by simp only [PwUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [PwUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   -- head: entry → directive 15
@@ -232,7 +232,7 @@ theorem pw_e2e_accept_main : pw_accept_stmt := by
   dsimp only at hpc4 hrsp4 hrbp4 hr144 hrbx4 hrdx4 hrax4 hrsi4 hmem4
   subst hpc4
   -- Amount: 54–55
-  refine eventually_trans _ _ _ _ (E2eScal.u64dec_rr_seg Reg64.r8 hX 8 16 (k + 54) hRR
+  refine eventually_trans _ _ _ _ (Codec.u64dec_rr_seg Reg64.r8 hX 8 16 (k + 54) hRR
     rbx.toBitVec rax.toBitVec (rbx.toBitVec + 8) (rax.toBitVec + 16)
     (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat])
     in1 a16 hin1 ha16 _ d4 hrbx4 hrax4 (by rw [hmem4]; ecancel)) ?_

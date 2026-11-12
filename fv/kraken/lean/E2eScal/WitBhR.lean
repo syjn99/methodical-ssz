@@ -1,6 +1,6 @@
 import E2eScal.BhReject
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of `bh_e2e_reject_size_main`
@@ -15,7 +15,7 @@ unused rax spill slot (the frame `R`) and the rbx spill slot. For every length
 `≠ 112` (instances 111, 113, 0) the decoder returns the two words.
 -/
 
-open Fk Fk.W E2e E2eScal.BhCode E2eScal.Bh
+open Machine Runtime TestTarget Machine.Witness E2e E2eScal.BhCode E2eScal.Bh
 
 namespace E2eScal.WitBhR
 

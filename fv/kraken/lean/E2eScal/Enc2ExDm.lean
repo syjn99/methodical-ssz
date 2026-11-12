@@ -1,5 +1,5 @@
 import E2eScal.EncTies
-import E2eScal.EncFrameTest
+import Codec.EncodeFrameTest
 import E2eScal.Enc2Code
 
 /-!
@@ -14,7 +14,7 @@ theorem has a `_kind` line (`encHeadKindN`, `encFieldKindN`, `encEpiKindN`, `enc
 growslice branches, the length rejects, the morestack path.
 -/
 
-open Fk E2eScal E2eScal.Enc2Code
+open Machine Runtime TestTarget E2eScal Codec E2eScal.Enc2Code
 variable [Host]
 
 namespace E2eScal.Gen6
@@ -236,7 +236,7 @@ theorem dm_g6_f0 : ∀ (k : Nat) (hk : DmMarshal.IsInfixAt Host.prog k) (hf : La
   kn
   apply kreg_eq Reg64.r8 (rcx.toBitVec + 48) _ _ _ (by show (rcx.toBitVec + 48 : BitVec 64) = (rcx.toBitVec + 48); bv_omega)
   kn
-  have hl29 := Fk.label_at' hk hf (j := 29)
+  have hl29 := Machine.label_at' hk hf (j := 29)
     (by simp only [DmMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [DmMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_cmp_jae_t Reg64.rdi Reg64.r8 _ _ (k + 14) (k + 29) (win hk 14 2) (by rfl) hl29 _ _ (by show ((rcx.toBitVec + 48) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
@@ -262,7 +262,7 @@ theorem dm_g6_f0 : ∀ (k : Nat) (hk : DmMarshal.IsInfixAt Host.prog k) (hf : La
   apply kreg_eq Reg64.rcx 48 _ _ _ (by show (BitVec.zeroExtend 64 (BitVec.truncate 32 (48 : BitVec 64)) : BitVec 64) = 48; decide)
   kn
   refine eventually_trans _ _ _ _ (encn_call (k + 36) (win hk 36 1) (rsp.toBitVec - 136) (rbx.toBitVec + rcx.toBitVec) p0
-    (rsp.toBitVec - 144) (rsp.toBitVec - 144 - BitVec.ofNat 64 S) S (by bv_omega) (E2eScal.g5_lo0 rsp.toBitVec 136 144 S (by decide))
+    (rsp.toBitVec - 144) (rsp.toBitVec - 144 - BitVec.ofNat 64 S) S (by bv_omega) (Codec.frame_lo0 rsp.toBitVec 136 144 S (by decide))
     b0 d0 rslot scratch (by rw [hd0, hb0]) hrslot hsc
     _ _ (by rfl) (by rfl) (by rfl) (by rw [hb0]; rfl) (by first | ecancel | (dsimp only; ecancel)) hmm) ?_
   rintro ⟨e1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, scr1, hscr1, Hc1⟩
@@ -395,7 +395,7 @@ theorem dm_g6_f1 : ∀ (k : Nat) (hk : DmMarshal.IsInfixAt Host.prog k) (hf : La
   apply kstep_ldv Reg64.rax Reg64.rsp 120 _ (k + 46) (k + 47) (win hk 46 1) (by rfl) (by rfl)
     (rsp.toBitVec - 136) (rsp.toBitVec - 16) rbx.toBitVec (by eb) _ _ _ (by rfl) (by ecancel)
   kn
-  have hl58 := Fk.label_at' hk hf (j := 58)
+  have hl58 := Machine.label_at' hk hf (j := 58)
     (by simp only [DmMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [DmMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_jmp _ _ (k + 47) (k + 58) (win hk 47 1) (by rfl) hl58
@@ -418,7 +418,7 @@ theorem dm_g6_f1 : ∀ (k : Nat) (hk : DmMarshal.IsInfixAt Host.prog k) (hf : La
   apply kreg_eq Reg64.rcx 32 _ _ _ (by show (BitVec.zeroExtend 64 (BitVec.truncate 32 (32 : BitVec 64)) : BitVec 64) = 32; decide)
   kn
   refine eventually_trans _ _ _ _ (encn_call (k + 64) (win hk 64 1) (rsp.toBitVec - 136) (rbx.toBitVec + rcx.toBitVec + 48) p1
-    (rsp.toBitVec - 144) (rsp.toBitVec - 144 - BitVec.ofNat 64 S) S (by bv_omega) (E2eScal.g5_lo0 rsp.toBitVec 136 144 S (by decide))
+    (rsp.toBitVec - 144) (rsp.toBitVec - 144 - BitVec.ofNat 64 S) S (by bv_omega) (Codec.frame_lo0 rsp.toBitVec 136 144 S (by decide))
     b1 d1 (Int.toBytes 8 (Host.addrOf (k + 37)).toBitVec.toInt) x0 (by rw [hd1, hb1]) (Int.toBytes_length 8 _) hx0
     _ _ (by rfl) (by rfl) (by rfl) (by rw [hb1]; rfl) (by first | ecancel | (dsimp only; ecancel)) hmm) ?_
   rintro ⟨e2, pc2⟩ ⟨hpc2, hrsp2, hrbp2, hr142, scr2, hscr2, Hc2⟩
@@ -551,7 +551,7 @@ theorem dm_g6_f2 : ∀ (k : Nat) (hk : DmMarshal.IsInfixAt Host.prog k) (hf : La
   apply kstep_ldv Reg64.rax Reg64.rsp 104 _ (k + 72) (k + 73) (win hk 72 1) (by rfl) (by rfl)
     (rsp.toBitVec - 136) (rsp.toBitVec - 32) rbx.toBitVec (by eb) _ _ _ (by rfl) (by ecancel)
   kn
-  have hl81 := Fk.label_at' hk hf (j := 81)
+  have hl81 := Machine.label_at' hk hf (j := 81)
     (by simp only [DmMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [DmMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_jmp _ _ (k + 73) (k + 81) (win hk 73 1) (by rfl) hl81

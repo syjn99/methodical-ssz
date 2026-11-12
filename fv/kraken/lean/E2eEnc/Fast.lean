@@ -1,7 +1,7 @@
-import Fk.Contracts
-import Fk.Step
-import Fk.Labels
-import E2eScal.StackGuard
+import Runtime.Contracts
+import Machine.Step
+import Machine.Labels
+import Codec.StackGuard
 import E2eEnc.StmtEnc
 import E2eEnc.Tail
 
@@ -9,12 +9,12 @@ import E2eEnc.Tail
 # `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo`: fast path (capacity sufficient)
 
 `dc_marshal_fast_main : dc_marshal_fast_stmt`. Directives 2–4 large-frame guard `lea -0x8(%rsp),%r12` (closed with
-`E2eScal.lea_cmp_be_false`, N = 8), 5–7 prologue (`push %rbp`, `add $-0x80`), 8 rbx spill to x + 16, 9 BlockRoot
+`Codec.lea_cmp_be_false`, N = 8), 5–7 prologue (`push %rbp`, `add $-0x80`), 8 rbx spill to x + 16, 9 BlockRoot
 pointer, 10–11 `cmpq $0x20,0x10(%rax); jne` not taken, 12 rax spill to x + 8, 13–15 `len + 32 ≤ cap`: `jae L_7c`
 taken, then `dc_tail` (directive 29 to the return).
 -/
 
-open Fk E2eEnc.Code
+open Machine Runtime TestTarget E2eEnc.Code
 variable [Host]
 
 namespace E2eEnc
@@ -37,7 +37,7 @@ theorem dc_e2e_marshal_fast_main : dc_marshal_fast_stmt := by
   split
   case isTrue h =>
     exfalso
-    rw [E2eScal.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 8 (by rfl) hguard] at h
+    rw [Codec.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 8 (by rfl) hguard] at h
     exact Bool.noConfusion h
   simp only [Effects.All]
   kat hk DcMarshal 5

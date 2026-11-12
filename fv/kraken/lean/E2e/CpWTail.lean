@@ -24,7 +24,7 @@ From here the code is the same for both prefixes. Three tails, by the code's bra
 rsp0 − 8. Every directive index is the Go 1.26.10 `.S`'s (`E2e.Code.CpMarshal`).
 -/
 
-open Fk E2e.Code
+open Machine Runtime TestTarget E2e.Code
 variable [Host]
 
 namespace E2e

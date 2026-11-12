@@ -1,6 +1,6 @@
-import Fk.Step
-import Fk.Labels
-import Fk.Bytes
+import Machine.Step
+import Machine.Labels
+import Machine.Bytes
 import E2eAd.Code
 import E2e.Data
 import E2e.CpReject
@@ -24,7 +24,7 @@ passes through exactly these steps, so the wraps are absent from every execution
 128-byte input.
 -/
 
-open Fk E2eAd.Code
+open Machine TestTarget E2eAd.Code
 variable [Host]
 
 namespace E2eAd

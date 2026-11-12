@@ -1,9 +1,9 @@
 import E2eScal.AcceptTies
-import E2eScal.FieldComp
+import Codec.FieldFrame
 import E2eScal.ViSpec
 import E2e.Epoch
 import E2eAd.Prims
-import E2eScal.Compose
+import Codec.DecoderHeadEpilogue
 import E2eScal.Gen4H6PbDec
 
 /-!
@@ -15,7 +15,7 @@ by the recipe of the lemma hand-over; every theorem has a `_kind` line (`decHead
 Frame `0x20`: the epilogue (`xor`, `xor`, `add $0x20`, `pop`, `retq`) is the lemma `decepi_seg`.
 -/
 
-open Fk E2e E2eAd E2eAd.Code E2eScal.H6Code E2eScal.H5Code E2eScal.BhCode E2eScal
+open Machine Runtime TestTarget E2e E2eAd E2eAd.Code E2eScal.H6Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.Gen5
@@ -204,7 +204,7 @@ theorem pb_g5_f1 : ∀ (k : Nat) (hk : PbUnmarshal.IsInfixAt Host.prog k) (hf : 
   refine eventually_trans _ _ _ _ (Gen.pb_g4dec_BlockHash_seg k hk hf (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)
     (rsp.toBitVec - 48 - BitVec.ofNat 64 S) rax.toBitVec (rax.toBitVec + 8) (rax.toBitVec + 16) S
-    (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by bv_omega) (g5_lo0 _ 40 48 S (by decide))
+    (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by bv_omega) (frame_lo0 _ 40 48 S (by decide))
     (by simp only [Int64.toBitVec_ofNat]; exact BitVec.add_zero _) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega)
     { toBitVec := rsp.toBitVec - 8#64 } r14 bh hbh
     spl rslot lo l18 aP0 aL0 aC0
@@ -325,7 +325,7 @@ theorem pb_g5_f2 : ∀ (k : Nat) (hk : PbUnmarshal.IsInfixAt Host.prog k) (hf : 
   refine eventually_trans _ _ _ _ (Gen.pb_g4dec_ParentHash_seg k hk hf (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)
     (rsp.toBitVec - 48 - BitVec.ofNat 64 S) (rax.toBitVec + 24) (rax.toBitVec + 32) (rax.toBitVec + 40) (rbx.toBitVec + 32) S
-    (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by bv_omega) (g5_lo0 _ 40 48 S (by decide))
+    (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by bv_omega) (frame_lo0 _ 40 48 S (by decide))
     (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega)
     { toBitVec := rsp.toBitVec - 8#64 } r14 ph hph
     x0 (Int.toBytes 8 (Host.addrOf (k + 32)).toBitVec.toInt) x1 (Int.toBytes 8 p1.toInt) aP1 aL1 aC1
@@ -449,7 +449,7 @@ theorem pb_g5_f3 : ∀ (k : Nat) (hk : PbUnmarshal.IsInfixAt Host.prog k) (hf : 
   refine eventually_trans _ _ _ _ (Gen.pb_g4dec_TotalDifficulty_seg k hk hf (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)
     (rsp.toBitVec - 48 - BitVec.ofNat 64 S) (rax.toBitVec + 48) (rax.toBitVec + 56) (rax.toBitVec + 64) (rbx.toBitVec + 64) S
-    (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by bv_omega) (g5_lo0 _ 40 48 S (by decide))
+    (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by bv_omega) (frame_lo0 _ 40 48 S (by decide))
     (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega)
     { toBitVec := rsp.toBitVec - 8#64 } r14 td htd
     x0 (Int.toBytes 8 (Host.addrOf (k + 68)).toBitVec.toInt) x1 (Int.toBytes 8 p2.toInt) aP2 aL2 aC2
@@ -568,9 +568,9 @@ theorem pb_g5_epi : ∀ (k : Nat) (hk : PbUnmarshal.IsInfixAt Host.prog k) (hf :
   rintro ⟨d, pc⟩ ⟨hpc, hrsp, hrbp, hr14, p1, p2, p3, x0, x1, hx0, hx1, Hm⟩
   dsimp only at hpc hrsp hrbp hr14  Hm
   subst hpc
-  have hE := E2eScal.infix_sub (q := E2eScal.decEpi) 119 hk
-    (by simp only [PbUnmarshal, E2eScal.decEpi, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  refine eventually_trans _ _ _ _ (E2eScal.decepi_seg (k + 119) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
+  have hE := Codec.infix_sub (q := Codec.decEpi) 119 hk
+    (by simp only [PbUnmarshal, Codec.decEpi, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  refine eventually_trans _ _ _ _ (Codec.decepi_seg (k + 119) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
     (by bv_omega) (by bv_omega) rbp ra r14 _ d hrsp hr14 (by ecancel)) ?_
   rintro ⟨d', pc'⟩ ⟨hpc', hrax', hrbx', hrsp', hrbp', hr14', hmem'⟩
   dsimp only at hpc' hrax' hrbx' hrsp' hrbp' hr14' hmem'

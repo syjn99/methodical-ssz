@@ -1,7 +1,7 @@
 import Kraken.X64.Parser
-import Fk.Include
+import Machine.Include
 import Kraken.X64.WP
-import Fk.Labels
+import Machine.Labels
 
 /-!
 # Code and data of the Deposit decoder (Go 1.26.10 ELF `c6403c02…911e`)

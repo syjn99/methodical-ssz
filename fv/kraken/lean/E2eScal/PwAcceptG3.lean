@@ -12,7 +12,7 @@ the generated theorem of `Gen3PwDec.lean` (`p2dec --gen3`, raw output) whose dec
 statement is the hand statement `pw_accept_stmt` (`H4Stmt.lean`, unchanged). In-sample (development data).
 -/
 
-open Fk E2e E2eScal.H4Code E2eScal.BhCode E2eScal
+open Machine Runtime TestTarget E2e E2eScal.H4Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.H4

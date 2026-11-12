@@ -18,7 +18,7 @@ import E2eAd.Spec
   (`AdReject.lean`); they are not needed for the join and are not reject coverage.
 -/
 
-open Fk E2e E2eAd.Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eAd.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eAd
@@ -102,8 +102,8 @@ theorem ad_e2e_accept_spec_k (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) 
   have h128 : s.regs.rcx = 128 := by
     apply UInt64.toNat_inj.mp; rw [hlen, pad_enc_size]; rfl
   exact ad_e2e_accept_main k hk hf kS hkS hfS kI hkI hfI kC hkC hfC kE hkE hfE _ _ _ _ _ _ _
-    (by simp [Fv.uintBytes_size]) (by simp [Fv.uintBytes_size]) (by simp) (by simp [Fv.uintBytes_size]) (by simp)
-    (by simp [Fv.uintBytes_size]) (by simp) s ra guard
+    (by simp [Spec.uintBytes_size]) (by simp [Spec.uintBytes_size]) (by simp) (by simp [Spec.uintBytes_size]) (by simp)
+    (by simp [Spec.uintBytes_size]) (by simp) s ra guard
     fp s1 s2 s4 sp0 sp1 sp2 l68 rslot lo ast a8 a16 aP aL aC aS aT hfp h1 h2 h4 hsp0 hsp1 hsp2 hl68 hrs hast ha8
     ha16 haP haL haC haS haT R S hS8 hS hlo Heap avail (Pm g rfl) hguard h128 hav hms hmm hms' hmm' hno
 

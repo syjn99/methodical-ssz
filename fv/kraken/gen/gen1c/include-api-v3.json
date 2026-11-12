@@ -15,24 +15,24 @@
  "frozen_note": "Approved by independent reviews: reviews/fix3-r2 (stage A, d9cdb40f861e3e49f017928ade26bc936829ff8f) and reviews/fix3-r3 (stage B / final, f9e2bc3dc02ed3521e33b04b4bdaeb9c1fa5f3fe). 23 items (22 of stage A unchanged + lcFmtItems added). phase1c rebases onto the fix3 final SHA named in its INBOX. Immutable.",
  "fix3_commit": "f9e2bc3dc02ed3521e33b04b4bdaeb9c1fa5f3fe",
  "lean": {
-  "module": "Fk.Data",
-  "file": "fv/kraken/lean/Fk/Data.lean",
-  "namespace": "Fk.Data",
-  "include_command": "data_include <id>  (defined in fv/kraken/lean/Fk/Include.lean; reads ../link/out/data/<id>.data relative to fv/kraken/lean)",
-  "bytes_decl": "Fk.Data.<id> : List UInt8  (items with `word` entries depend on [Host]: Fk.Data.<id> [Host] : List UInt8)",
-  "addr_decl": "Fk.Data.<id>_addr [Host] : BitVec 64 := (label \"<label>\" + <off>).toBitVec; for off = 0 exactly (label \"<label>\").toBitVec (no `+ 0`)",
-  "addr_only_items": "only Fk.Data.<id>_addr is defined",
-  "premise_shape": "Theorem premises keep the shape `Eq (bytes.At addr)`. Only `bytes` and `addr` come from Fk.Data. Kraken data memory is separate from code (con-agua DESIGN `ldc`).",
+  "module": "TestTarget.Data",
+  "file": "fv/kraken/lean/TestTarget/Data.lean",
+  "namespace": "TestTarget.Data",
+  "include_command": "data_include <id>  (defined in fv/kraken/lean/Machine/Include.lean; reads ../link/out/data/<id>.data relative to fv/kraken/lean)",
+  "bytes_decl": "TestTarget.Data.<id> : List UInt8  (items with `word` entries depend on [Host]: TestTarget.Data.<id> [Host] : List UInt8)",
+  "addr_decl": "TestTarget.Data.<id>_addr [Host] : BitVec 64 := (label \"<label>\" + <off>).toBitVec; for off = 0 exactly (label \"<label>\").toBitVec (no `+ 0`)",
+  "addr_only_items": "only TestTarget.Data.<id>_addr is defined",
+  "premise_shape": "Theorem premises keep the shape `Eq (bytes.At addr)`. Only `bytes` and `addr` come from TestTarget.Data. Kraken data memory is separate from code (con-agua DESIGN `ldc`).",
   "word_term": "a `word <s> <o>` line is the 8 bytes Int.toBytes 8 (label \"<s>\" + <o>).toBitVec.toInt (no `+ 0` for o = 0)",
   "aliases": "namespace Fk exports the rodata items, their _addr, intType_addr, uint64Type_addr (export aliases, no new constants), so theorems write blFmtB / blFmtB_addr",
   "lemmas": [
-   "Fk.Data.intType_size_kind",
-   "Fk.Data.uint64Type_size_kind",
-   "Fk.Data.errorStringPtrType_shape",
-   "Fk.Data.errorStringItab_shape",
-   "Fk.Data.staticuint64s_table",
-   "Fk.staticuint64s_entry",
-   "Fk.staticBox_of_lt"
+   "TestTarget.Data.intType_size_kind",
+   "TestTarget.Data.uint64Type_size_kind",
+   "TestTarget.Data.errorStringPtrType_shape",
+   "TestTarget.Data.errorStringItab_shape",
+   "TestTarget.Data.staticuint64s_table",
+   "Runtime.staticuint64s_entry",
+   "Runtime.staticBox_of_lt"
   ]
  },
  "data_files": {
@@ -146,7 +146,7 @@
    "length": 56,
    "kind": "rodata-string",
    "host_dependent": false,
-   "replaces": "Fk/LuRejectCall.lean luFmtTooBig"
+   "replaces": "TestTarget/ListU64DecodeRejectCall.lean luFmtTooBig"
   },
   {
    "id": "luFmtMis",
@@ -156,7 +156,7 @@
    "length": 68,
    "kind": "rodata-string",
    "host_dependent": false,
-   "replaces": "Fk/LuRejectCall.lean luFmtMis"
+   "replaces": "TestTarget/ListU64DecodeRejectCall.lean luFmtMis"
   },
   {
    "id": "lcFmtItems",
@@ -196,7 +196,7 @@
    "length": 48,
    "kind": "abi.Type of int",
    "host_dependent": true,
-   "replaces": "Fk/LuRejectCall.lean luTW, check (h)"
+   "replaces": "TestTarget/ListU64DecodeRejectCall.lean luTW, check (h)"
   },
   {
    "id": "uint64Type",
@@ -216,7 +216,7 @@
    "length": 2048,
    "kind": "table uint64 0..255",
    "host_dependent": false,
-   "replaces": "Fk/Contracts.lean StaticBox, check (h)"
+   "replaces": "Runtime/Contracts.lean StaticBox, check (h)"
   },
   {
    "id": "ErrSize",
@@ -286,7 +286,7 @@
   "errGlobals split into one id per global: ErrSize, ErrInvalidSerialization, ErrInvalidVariableOffset, ErrListTooBig, ErrBytesLength, ErrIncorrectListSize",
   "errorStringPtrType is the 56-byte abi.PtrType (Elem word included)",
   "data file format decided (text, at/bytes/word)",
-  "include command data_include in Fk/Include.lean",
+  "include command data_include in Machine/Include.lean",
   "items with pointer words are [Host]-dependent"
  ],
  "changes_from_v1": [

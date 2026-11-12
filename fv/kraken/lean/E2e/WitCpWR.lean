@@ -1,7 +1,7 @@
 import E2e.CpWCover
-import Fk.RtCopy
-import Fk.WHost
-import E2e.WitSplit
+import Runtime.CopyModel
+import Machine.WitnessHost
+import Machine.WitnessSplit
 
 /-!
 # Witness of `cp_e2e_marshal_reject_cover`: `len(Root) ≠ 32`, every capacity range
@@ -16,7 +16,7 @@ bytes. Frame `R` = `emp`. Instances: n = 0 (cap = len: first growslice, then the
 (cap = len + 8: no growth), 40; nil `dst`.
 -/
 
-open Fk Fk.W E2e E2e.Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget Machine.Witness E2e E2e.Code EthLib.Serialization.Ssz
 
 namespace E2e.WitCpWR
 

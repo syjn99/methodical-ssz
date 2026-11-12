@@ -1,4 +1,4 @@
-import E2eScal.FieldComp
+import Codec.FieldFrame
 import E2e.CpReject
 
 /-!
@@ -13,8 +13,9 @@ spill displacement `dB = F + 24`, the size `sz` and the labels differ.
 Not covered: callee error returns (`fmt.errorf`), `morestack`.
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
+open Codec
 namespace E2eScal
 
 /-- The error block of the size check, first part: `lerr:`, then the two words of `ssz.ErrSize` into rax and

@@ -18,8 +18,9 @@ The declared type of each committed theorem `*_e2e_reject_size_main` (the 11 fla
 AttestationData) is the kind instance; `with_reducible rfl` (the kind is an `abbrev` and the text is the same).
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
+open Codec
 namespace E2eScal
 
 theorem bi_reject_is_kindN : ∀ (h : Host), type_of% (@E2eScal.Bi.bi_e2e_reject_size_main h)

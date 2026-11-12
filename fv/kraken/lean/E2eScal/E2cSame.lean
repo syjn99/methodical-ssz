@@ -11,7 +11,7 @@ import E2eScal.Gen6DdEnc
 transparency; a failed identity is recorded, not forced. Encoder fast path only.
 -/
 
-open Fk E2eScal
+open Machine Runtime TestTarget E2eScal Codec
 
 namespace E2eScal.E2c
 

@@ -21,7 +21,7 @@ X15 is not assumed zero (bytes 8–31 of the temp are existential). Directive in
 `E2e.OptR1.Code.CpMarshalO`.
 -/
 
-open Fk E2e.OptR1.Code
+open Machine Runtime TestTarget E2e.OptR1.Code
 variable [Host]
 
 namespace E2e.OptR1

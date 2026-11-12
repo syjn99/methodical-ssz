@@ -6,7 +6,7 @@ public meta import Lean
 # `ad_data_include id`: ELF data of the AttestationData set (prysm-e2e A1)
 
 The same reader as `e2e_data_include` (`E2e/Include.lean`, itself the text of
-`Fk/Include.lean`'s `data_include`), for the data directory
+`Machine/Include.lean`'s `data_include`), for the data directory
 `../prysm/go1.26.10/e2e/ad/link/data/<id>.data` (relative to `fv/kraken/lean`).
 `E2e/Include.lean` keeps its helpers private to its module and is not changed;
 the helpers below are its text with the `e2e` prefix replaced by `ad`

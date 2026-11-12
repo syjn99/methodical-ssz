@@ -1,6 +1,6 @@
 import E2eDep.Reject
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of `dep_e2e_reject_size_main` (Deposit size reject)
@@ -13,7 +13,7 @@ the guard word, saved-rbp slot, return slot, the unused rax spill slot (the fram
 slot. For every length `≠ 1240` (instances 1239, 1241, 0) the decoder returns the two words.
 -/
 
-open Fk Fk.W E2e E2eDep E2eDep.Code
+open Machine Runtime TestTarget Machine.Witness E2e E2eDep E2eDep.Code
 
 namespace E2eDepW.WitR
 

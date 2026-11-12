@@ -1,6 +1,6 @@
 import E2eList.IaReject
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witnesses of `ia_e2e_reject_size_main` (size reject) and `ia_e2e_reject_offset_main` (offset reject)
@@ -17,7 +17,7 @@ not name. Size reject: every len < 228 (instances 0, 227). Offset reject: every 
 (instances 228, 228 + 8 · 2049).
 -/
 
-open Fk Fk.W E2eList E2eList.Code
+open Machine Runtime TestTarget Machine.Witness E2eList E2eList.Code
 
 namespace E2eList.WitIaR2
 

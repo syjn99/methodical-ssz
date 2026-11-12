@@ -1,4 +1,4 @@
-import E2eScal.P2Dec
+import Codec.Bytes32Decode
 import E2eScal.ViSpec
 import E2e.Epoch
 import E2eAd.Prims
@@ -27,8 +27,9 @@ form (`CallDecRel.lean`: each existing spec is `U64CalleeAcc <its label>` by `rf
 Not covered: any other register choice; pointer-field callees (`CpUAccC`, a different specification form).
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
+open Codec
 namespace E2eScal
 
 variable [Host]

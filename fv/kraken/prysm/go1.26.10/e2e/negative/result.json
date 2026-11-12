@@ -1057,7 +1057,7 @@
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "seconds": 0.9,
-   "diff": "--- orig\n+++ mut\n@@ -1 +1 @@\n-theorem ep_static_addr : E2e.Data.e2eStaticuint64s_addr = Fk.Data.staticuint64s_addr := rfl+theorem ep_static_addr : E2e.Data.e2eStaticuint64s_addr = Fk.Data.staticuint64s_addr + 8 := rfl",
+   "diff": "--- orig\n+++ mut\n@@ -1 +1 @@\n-theorem ep_static_addr : E2e.Data.e2eStaticuint64s_addr = TestTarget.Data.staticuint64s_addr := rfl+theorem ep_static_addr : E2e.Data.e2eStaticuint64s_addr = TestTarget.Data.staticuint64s_addr + 8 := rfl",
    "class": "inside",
    "pass": true,
    "later_resource_error": null
@@ -3675,7 +3675,7 @@
     "E2e.CpAccept",
     "E2e.CpMarshal",
     "E2eAd.Code",
-    "Fk.RtCopy"
+    "Runtime.CopyModel"
    ],
    "rc": 0,
    "failures": [],
@@ -3691,7 +3691,7 @@
     "E2e.CpAccept",
     "E2e.CpMarshal",
     "E2eAd.Code",
-    "Fk.RtCopy"
+    "Runtime.CopyModel"
    ],
    "rc": 0,
    "failures": [],

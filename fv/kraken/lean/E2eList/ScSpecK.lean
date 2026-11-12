@@ -9,7 +9,7 @@ The text of `SaSpecK.lean` with the SyncCommittee statement. The statements are 
 `sc_reject_size_spec_stmt` and `sc_reject_complete_stmt` (`StmtSc.lean`).
 -/
 
-open Fk E2e EthLib.Serialization.Ssz E2eList.Code
+open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz E2eList.Code
 variable [Host]
 
 namespace E2eList

@@ -1,7 +1,7 @@
-import Fk.Contracts
-import Fk.Frame
-import Fk.Bytes
-import Fk.Labels
+import Runtime.Contracts
+import Machine.Frame
+import Machine.Bytes
+import Machine.Labels
 import E2e.Data
 import E2eList.Code
 import E2eList.Data
@@ -42,7 +42,7 @@ the loop; the postcondition owns them with unnamed 8-byte values (`l18'`, `l20'`
 Size reject: directives 2–10, `cmp $0x6030,%rcx; jne L_7d` taken, 30–35.
 -/
 
-open Fk E2e EthLib.Serialization.Ssz E2eList.Code
+open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz E2eList.Code
 variable [Host]
 
 namespace E2eList

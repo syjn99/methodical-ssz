@@ -1,7 +1,7 @@
 import E2e.OptR1.Main
-import Fk.RtCopy
-import Fk.WHost
-import E2e.WitSplit
+import Runtime.CopyModel
+import Machine.WitnessHost
+import Machine.WitnessSplit
 import E2e.GoVal
 
 /-!
@@ -16,7 +16,7 @@ Instances: empty prefix with `cap = 40` (spare exactly 40), a 3-byte prefix with
 `witO_recv`: the receiver bytes are a Go value of `v1alpha1.Checkpoint` (`E2e.cpGoValue`).
 -/
 
-open Fk Fk.W E2e E2e.OptR1 E2e.OptR1.Code
+open Machine Runtime TestTarget Machine.Witness E2e E2e.OptR1 E2e.OptR1.Code
 
 namespace E2e.OptR1.WitO
 

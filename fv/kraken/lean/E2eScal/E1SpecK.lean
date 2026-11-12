@@ -16,7 +16,7 @@ Hand-written (the text of `BhSpecK.lean` with the Eth1Data statement).
   reject site of the decoder (it has no other error return).
 -/
 
-open Fk E2e E2eScal.E1Code E2eScal EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eScal.E1Code E2eScal Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.E1
@@ -84,7 +84,7 @@ theorem e1_e2e_accept_spec_k (k : Nat) (hk : E1Unmarshal.IsInfixAt Host.prog k) 
   refine ⟨g, rfl, rfl, ?_⟩
   have h72 : s.regs.rcx = 72 := by
     apply UInt64.toNat_inj.mp; rw [hlen, pe1_enc_size]; rfl
-  exact e1_e2e_accept_main k hk hf _ _ _ (by simp) (by simp [Fv.uintBytes_size]) (by simp) s ra guard
+  exact e1_e2e_accept_main k hk hf _ _ _ (by simp) (by simp [Spec.uintBytes_size]) (by simp) s ra guard
     fp s1 s2 spl l18 rslot lo ast aP1 aL1 aC1 aN aP2 aL2 aC2
     hfp h1 h2 hspl hl18 hrs hast haP1 haL1 haC1 haN haP2 haL2 haC2
     R S hlo Heap avail (Pm g rfl) hguard h72 hav hms hmm

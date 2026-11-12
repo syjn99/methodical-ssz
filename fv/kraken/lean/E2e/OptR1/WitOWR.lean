@@ -1,7 +1,7 @@
 import E2e.OptR1.Spec
-import Fk.RtCopy
-import Fk.WHost
-import E2e.WitSplit
+import Runtime.CopyModel
+import Machine.WitnessHost
+import Machine.WitnessSplit
 
 /-!
 # OPT-R1 witness of `cpo_marshal_reject_cover` (`len(Root) ≠ 32`, every capacity range; instantiates
@@ -15,7 +15,7 @@ and `dst` at 0x12450 = a 30-byte prefix and `n` spare bytes. Frame `R`: the 8-by
 rsp − 32. Instances: n = 0, 7, 8, 39 (grow path), 40, 41 (fast path); nil `dst`.
 -/
 
-open Fk Fk.W E2e E2e.OptR1 E2e.OptR1.Code
+open Machine Runtime TestTarget Machine.Witness E2e E2e.OptR1 E2e.OptR1.Code
 
 namespace E2e.OptR1.WitOWR
 

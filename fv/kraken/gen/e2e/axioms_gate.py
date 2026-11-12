@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Axioms gate over EVERY declaration of the E2e, E2eAd and E2eScal libraries.
+"""Axioms gate over EVERY declaration of the shared libraries (Machine, Runtime, Codec, Spec, TestTarget) and of the
+E2e, E2eAd and E2eScal libraries.
 
 Usage (one gated job, Lean env; the cwd does not matter):
   axioms_gate.py run <out.json> <dump.tsv> [--extra-lean-path DIR --extra-module M]...
@@ -7,10 +8,10 @@ Usage (one gated job, Lean env; the cwd does not matter):
   axioms_gate.py --selftest                       (crafted dumps, no Lean)
 
 run:
- 1. Module list by program: every *.lean file under fv/kraken/lean/{E2e,E2eAd,E2eScal}.
+ 1. Module list by program: every *.lean file under fv/kraken/lean/{Machine,Runtime,Codec,Spec,TestTarget,E2e,E2eAd,E2eScal}.
  2. Freshness precheck: `lake build --no-build <all modules>` must exit 0; else exit 2, nothing else runs.
     `lake env lean` itself does no trace check.
- 3. `lake env lean --run <decl_dump.lean> --root E2e --root E2eAd --root E2eScal <modules>` writes one row per
+ 3. `lake env lean --run <decl_dump.lean> --root Machine … --root E2eScal <modules>` (every root of ROOTS) writes one row per
     declaration (name, kind, type hash, value hash, sorted Lean.collectAxioms set) to <dump.tsv>. decl_dump.lean is
     the maintaining-methodical-fv skill script (read only). --extra-* adds a scratch .olean (negative control only).
  4. check: every row's axiom set is a subset of {propext, Classical.choice, Quot.sound}; no sorryAx; every name of
@@ -30,7 +31,7 @@ KR = HERE.parent.parent
 LEAN = KR / "lean"
 REPO = KR.parent.parent
 DUMP = REPO / ".claude" / "skills" / "maintaining-methodical-fv" / "scripts" / "decl_dump.lean"
-ROOTS = ["E2e", "E2eAd", "E2eScal"]
+ROOTS = ["Machine", "Runtime", "Codec", "Spec", "TestTarget", "E2e", "E2eAd", "E2eScal"]
 LISTS = [HERE / "Axioms.lean", HERE / "AxiomsAd.lean", KR / "gen" / "scal" / "AxiomsScal.lean"]
 ALLOWED = {"propext", "Classical.choice", "Quot.sound"}
 

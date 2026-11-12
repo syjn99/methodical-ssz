@@ -1,5 +1,5 @@
-import E2eScal.KindStep
-import E2eScal.KindSegReg
+import Codec.Kind.WindowSteps
+import Codec.Kind.FixedBytesDecodeWindow
 import E2eScal.CallReg
 import E2eScal.H5Code
 import E2eScal.H4Code
@@ -18,16 +18,17 @@ without their namespaces (`open` below), as in the generated modules, so that th
 * a call-block theorem per callee field (`…_call`, `callDecSegKindG4`); the window starts where the set-up
   steps end, so a padding `nop` before the `callq` (Checkpoint, BeaconBlockHeader) or after it
   (PendingConsolidation) is inside the window;
-* a byte-segment theorem (`…_seg`, `bytesDecSegKindG4`) over two windows;
+* a byte-segment theorem (`…_seg`, `bytesDecSegKindWindow`) over two windows;
 * the two fully worked compositions: a whole call field (`sm_g4_ValidatorIndex_field`, `pc_g4_TargetIndex_field`)
   and a whole byte field (`sm_g4_BlockRoot_field`). These have no kind: they only apply kinded theorems, and
   their statements are checked by the accept proofs that use them (`SmAcceptG4.lean`, `PcAcceptG4.lean`).
 The callee specification stays a hypothesis `U64CalleeAcc "<callee label>"` of each call-block theorem.
 -/
 
-open Fk E2eScal.H5Code E2eScal.H4Code E2eScal.BhCode E2e.Code
+open Machine Runtime TestTarget E2eScal.H5Code E2eScal.H4Code E2eScal.BhCode E2e.Code
 variable [Host]
 
+open Codec
 namespace E2eScal.Gen4Ex
 
 /-! ## SyncCommitteeMessage.ValidatorIndex — set-up with the receiver already in rax (missed by the hold-out run): six steps, call block, whole field -/
@@ -41,13 +42,13 @@ theorem sm_g4_s82 (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : Label
     (F : DataMem → Prop)
     (final : MachineState → Prop) (s : MachineData)
     (hb : s.regs.get64 Reg64.rsp = base) (hm : (Eq ((Int.toBytes 8 v.toInt).At a) ⋆ F) s.dmem)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.rbx v, Host.addrOf (k + 83)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rbx v, Host.addrOf (k + 83)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 82)⟩ := by
-  have hq := E2eScal.win hk 82 1
-  have he : E2eScal.eraseNop ((SmUnmarshal.drop 82).take 1) = [E2eScal.iLd Reg64.rbx Reg64.rsp 120] := by rfl
+  have hq := Codec.win hk 82 1
+  have he : Codec.eraseNop ((SmUnmarshal.drop 82).take 1) = [Codec.iLd Reg64.rbx Reg64.rsp 120] := by rfl
   have hend : k + 82 + ((SmUnmarshal.drop 82).take 1).length = k + 83 := by rfl
-  with_reducible exact E2eScal.kstep_ldv Reg64.rbx Reg64.rsp 120 _ (k + 82) (k + 83) hq he hend
-theorem sm_g4_s82_kind : ∀ (h : Host), type_of% (@sm_g4_s82 h) = @E2eScal.stepLdvKind h SmUnmarshal Reg64.rbx Reg64.rsp 120 82 83 := by
+  with_reducible exact Codec.kstep_ldv Reg64.rbx Reg64.rsp 120 _ (k + 82) (k + 83) hq he hend
+theorem sm_g4_s82_kind : ∀ (h : Host), type_of% (@sm_g4_s82 h) = @Codec.stepLdvKind h SmUnmarshal Reg64.rbx Reg64.rsp 120 82 83 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -60,11 +61,11 @@ theorem sm_g4_s83 (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : Label
       ⟨{ regs := s.regs.set64 Reg64.rbx (s.regs.get64 Reg64.rbx + (40 : Int64).toBitVec), zmms := s.zmms, status := fl, dmem := s.dmem },
         Host.addrOf (k + 84)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 83)⟩ := by
-  have hq := E2eScal.win hk 83 1
-  have he : E2eScal.eraseNop ((SmUnmarshal.drop 83).take 1) = [E2eScal.iAdd Reg64.rbx 40] := by rfl
+  have hq := Codec.win hk 83 1
+  have he : Codec.eraseNop ((SmUnmarshal.drop 83).take 1) = [Codec.iAdd Reg64.rbx 40] := by rfl
   have hend : k + 83 + ((SmUnmarshal.drop 83).take 1).length = k + 84 := by rfl
-  with_reducible exact E2eScal.kstep_add Reg64.rbx 40 _ (k + 83) (k + 84) hq he hend
-theorem sm_g4_s83_kind : ∀ (h : Host), type_of% (@sm_g4_s83 h) = @E2eScal.stepAddKind h SmUnmarshal Reg64.rbx 40 83 84 := by
+  with_reducible exact Codec.kstep_add Reg64.rbx 40 _ (k + 83) (k + 84) hq he hend
+theorem sm_g4_s83_kind : ∀ (h : Host), type_of% (@sm_g4_s83 h) = @Codec.stepAddKind h SmUnmarshal Reg64.rbx 40 83 84 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -76,13 +77,13 @@ theorem sm_g4_s84 (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : Label
     (F : DataMem → Prop)
     (final : MachineState → Prop) (s : MachineData)
     (hb : s.regs.get64 Reg64.rsp = base) (hm : (Eq (bs.At a) ⋆ F) s.dmem)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.rdi (BitVec.ofInt 64 (Int.ofBytes bs)), Host.addrOf (k + 85)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rdi (BitVec.ofInt 64 (Int.ofBytes bs)), Host.addrOf (k + 85)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 84)⟩ := by
-  have hq := E2eScal.win hk 84 1
-  have he : E2eScal.eraseNop ((SmUnmarshal.drop 84).take 1) = [E2eScal.iLd Reg64.rdi Reg64.rsp 136] := by rfl
+  have hq := Codec.win hk 84 1
+  have he : Codec.eraseNop ((SmUnmarshal.drop 84).take 1) = [Codec.iLd Reg64.rdi Reg64.rsp 136] := by rfl
   have hend : k + 84 + ((SmUnmarshal.drop 84).take 1).length = k + 85 := by rfl
-  with_reducible exact E2eScal.kstep_ldb Reg64.rdi Reg64.rsp 136 _ (k + 84) (k + 85) hq he hend
-theorem sm_g4_s84_kind : ∀ (h : Host), type_of% (@sm_g4_s84 h) = @E2eScal.stepLdbKind h SmUnmarshal Reg64.rdi Reg64.rsp 136 84 85 := by
+  with_reducible exact Codec.kstep_ldb Reg64.rdi Reg64.rsp 136 _ (k + 84) (k + 85) hq he hend
+theorem sm_g4_s84_kind : ∀ (h : Host), type_of% (@sm_g4_s84 h) = @Codec.stepLdbKind h SmUnmarshal Reg64.rdi Reg64.rsp 136 84 85 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -95,11 +96,11 @@ theorem sm_g4_s85 (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : Label
       ⟨{ regs := s.regs.set64 Reg64.rdi (s.regs.get64 Reg64.rdi + ((-40) : Int64).toBitVec), zmms := s.zmms, status := fl, dmem := s.dmem },
         Host.addrOf (k + 86)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 85)⟩ := by
-  have hq := E2eScal.win hk 85 1
-  have he : E2eScal.eraseNop ((SmUnmarshal.drop 85).take 1) = [E2eScal.iAdd Reg64.rdi (-40)] := by rfl
+  have hq := Codec.win hk 85 1
+  have he : Codec.eraseNop ((SmUnmarshal.drop 85).take 1) = [Codec.iAdd Reg64.rdi (-40)] := by rfl
   have hend : k + 85 + ((SmUnmarshal.drop 85).take 1).length = k + 86 := by rfl
-  with_reducible exact E2eScal.kstep_add Reg64.rdi (-40) _ (k + 85) (k + 86) hq he hend
-theorem sm_g4_s85_kind : ∀ (h : Host), type_of% (@sm_g4_s85 h) = @E2eScal.stepAddKind h SmUnmarshal Reg64.rdi (-40) 85 86 := by
+  with_reducible exact Codec.kstep_add Reg64.rdi (-40) _ (k + 85) (k + 86) hq he hend
+theorem sm_g4_s85_kind : ∀ (h : Host), type_of% (@sm_g4_s85 h) = @Codec.stepAddKind h SmUnmarshal Reg64.rdi (-40) 85 86 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -112,11 +113,11 @@ theorem sm_g4_s86 (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : Label
       ⟨{ regs := s.regs.set64 Reg64.rax (s.regs.get64 Reg64.rax + (40 : Int64).toBitVec), zmms := s.zmms, status := fl, dmem := s.dmem },
         Host.addrOf (k + 87)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 86)⟩ := by
-  have hq := E2eScal.win hk 86 1
-  have he : E2eScal.eraseNop ((SmUnmarshal.drop 86).take 1) = [E2eScal.iAdd Reg64.rax 40] := by rfl
+  have hq := Codec.win hk 86 1
+  have he : Codec.eraseNop ((SmUnmarshal.drop 86).take 1) = [Codec.iAdd Reg64.rax 40] := by rfl
   have hend : k + 86 + ((SmUnmarshal.drop 86).take 1).length = k + 87 := by rfl
-  with_reducible exact E2eScal.kstep_add Reg64.rax 40 _ (k + 86) (k + 87) hq he hend
-theorem sm_g4_s86_kind : ∀ (h : Host), type_of% (@sm_g4_s86 h) = @E2eScal.stepAddKind h SmUnmarshal Reg64.rax 40 86 87 := by
+  with_reducible exact Codec.kstep_add Reg64.rax 40 _ (k + 86) (k + 87) hq he hend
+theorem sm_g4_s86_kind : ∀ (h : Host), type_of% (@sm_g4_s86 h) = @Codec.stepAddKind h SmUnmarshal Reg64.rax 40 86 87 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -125,13 +126,13 @@ set_option maxRecDepth 100000 in
 theorem sm_g4_s87 (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh SmUnmarshal k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.rcx (BitVec.zeroExtend 64 (BitVec.truncate 32 (8 : Int64).toBitVec)), Host.addrOf (k + 88)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rcx (BitVec.zeroExtend 64 (BitVec.truncate 32 (8 : Int64).toBitVec)), Host.addrOf (k + 88)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 87)⟩ := by
-  have hq := E2eScal.win hk 87 1
-  have he : E2eScal.eraseNop ((SmUnmarshal.drop 87).take 1) = [E2eScal.iMovI Reg64.rcx 8] := by rfl
+  have hq := Codec.win hk 87 1
+  have he : Codec.eraseNop ((SmUnmarshal.drop 87).take 1) = [Codec.iMovI Reg64.rcx 8] := by rfl
   have hend : k + 87 + ((SmUnmarshal.drop 87).take 1).length = k + 88 := by rfl
-  with_reducible exact E2eScal.kstep_movi Reg64.rcx 8 _ (k + 87) (k + 88) hq he hend
-theorem sm_g4_s87_kind : ∀ (h : Host), type_of% (@sm_g4_s87 h) = @E2eScal.stepMovIKind h SmUnmarshal Reg64.rcx 8 87 88 := by
+  with_reducible exact Codec.kstep_movi Reg64.rcx 8 _ (k + 87) (k + 88) hq he hend
+theorem sm_g4_s87_kind : ∀ (h : Host), type_of% (@sm_g4_s87 h) = @Codec.stepMovIKind h SmUnmarshal Reg64.rcx 8 87 88 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -159,12 +160,12 @@ theorem sm_g4_ValidatorIndex_call (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.pro
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 88)⟩ := by
-  have hq := E2eScal.win hk 88 3
-  have he : E2eScal.eraseNop ((SmUnmarshal.drop 88).take 3) = E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_1e7" := by rfl
-  have hjc : k + 88 + E2eScal.nopPos ((SmUnmarshal.drop 88).take 3) 0 = k + 88 := by rfl
-  have hB := E2eScal.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_1e7") 117 hk
+  have hq := Codec.win hk 88 3
+  have he : Codec.eraseNop ((SmUnmarshal.drop 88).take 3) = E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_1e7" := by rfl
+  have hjc : k + 88 + Codec.nopPos ((SmUnmarshal.drop 88).take 3) 0 = k + 88 := by rfl
+  have hB := Codec.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_1e7") 117 hk
     (by simp only [SmUnmarshal, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl := Fk.label_at' hk hf (j := 117)
+  have hl := Machine.label_at' hk hf (j := 117)
     (by simp only [SmUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [SmUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact E2eScal.calldec_seg_w _ _ _ (k + 88) (k + 88) (k + 117) hq he hjc hB hl
@@ -270,18 +271,18 @@ theorem sm_g4_BlockRoot_seg (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (
           ⋆ Eq (root.At aSrc)
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 47)⟩ := by
-  have hqA := E2eScal.win hk 47 9
-  have heA : E2eScal.eraseNop ((SmUnmarshal.drop 47).take 9) = E2eScal.bytesDecHeadR Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_fd" 112 24 32 := by rfl
-  have hqB := E2eScal.win hk 60 12
-  have heB : E2eScal.eraseNop ((SmUnmarshal.drop 60).take 12) = E2eScal.bytesDecMidR Reg64.rdx Reg64.rax 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_fd" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_13e" 112 120 56 16 24 32 8 := by rfl
-  have hjl : k + 60 + E2eScal.nopPos ((SmUnmarshal.drop 60).take 12) 0 = k + 60 := by rfl
-  have hl := Fk.label_at' hk hf (j := 60)
+  have hqA := Codec.win hk 47 9
+  have heA : Codec.eraseNop ((SmUnmarshal.drop 47).take 9) = Codec.bytesDecHeadR Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_fd" 112 24 32 := by rfl
+  have hqB := Codec.win hk 60 12
+  have heB : Codec.eraseNop ((SmUnmarshal.drop 60).take 12) = Codec.bytesDecMidR Reg64.rdx Reg64.rax 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_fd" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_13e" 112 120 56 16 24 32 8 := by rfl
+  have hjl : k + 60 + Codec.nopPos ((SmUnmarshal.drop 60).take 12) 0 = k + 60 := by rfl
+  have hl := Machine.label_at' hk hf (j := 60)
     (by simp only [SmUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [SmUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hjm : k + 60 + E2eScal.nopPos ((SmUnmarshal.drop 60).take 12) 6 = k + 66 := by rfl
+  have hjm : k + 60 + Codec.nopPos ((SmUnmarshal.drop 60).take 12) 6 = k + 66 := by rfl
   have hend : k + 60 + ((SmUnmarshal.drop 60).take 12).length = k + 72 := by rfl
-  with_reducible exact E2eScal.bytesdec_seg_g4 32 (Or.inl rfl) Reg64.rdx Reg64.rax (Or.inl rfl) (Or.inl rfl) _ _ _ _ _ _ _ _ _ _ _ (k + 47) (k + 60) (k + 60) (k + 66) (k + 72) hqA heA hqB heB hjl hl hjm hend
-theorem sm_g4_BlockRoot_seg_kind : ∀ (h : Host), type_of% (@sm_g4_BlockRoot_seg h) = @E2eScal.bytesDecSegKindG4 h 32 SmUnmarshal Reg64.rax 47 66 72 112 120 56 16 24 32 8 := by
+  with_reducible exact Codec.bytesdec_seg_window 32 (Or.inl rfl) Reg64.rdx Reg64.rax (Or.inl rfl) (Or.inl rfl) _ _ _ _ _ _ _ _ _ _ _ (k + 47) (k + 60) (k + 60) (k + 66) (k + 72) hqA heA hqB heB hjl hl hjm hend
+theorem sm_g4_BlockRoot_seg_kind : ∀ (h : Host), type_of% (@sm_g4_BlockRoot_seg h) = @Codec.bytesDecSegKindWindow h 32 SmUnmarshal Reg64.rax 47 66 72 112 120 56 16 24 32 8 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -293,13 +294,13 @@ theorem sm_g4_s72 (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : Label
     (F : DataMem → Prop)
     (final : MachineState → Prop) (s : MachineData)
     (hb : s.regs.get64 Reg64.rsp = base) (hm : (Eq ((Int.toBytes 8 v.toInt).At a) ⋆ F) s.dmem)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.rsi v, Host.addrOf (k + 73)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rsi v, Host.addrOf (k + 73)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 72)⟩ := by
-  have hq := E2eScal.win hk 72 1
-  have he : E2eScal.eraseNop ((SmUnmarshal.drop 72).take 1) = [E2eScal.iLd Reg64.rsi Reg64.rsp 56] := by rfl
+  have hq := Codec.win hk 72 1
+  have he : Codec.eraseNop ((SmUnmarshal.drop 72).take 1) = [Codec.iLd Reg64.rsi Reg64.rsp 56] := by rfl
   have hend : k + 72 + ((SmUnmarshal.drop 72).take 1).length = k + 73 := by rfl
-  with_reducible exact E2eScal.kstep_ldv Reg64.rsi Reg64.rsp 56 _ (k + 72) (k + 73) hq he hend
-theorem sm_g4_s72_kind : ∀ (h : Host), type_of% (@sm_g4_s72 h) = @E2eScal.stepLdvKind h SmUnmarshal Reg64.rsi Reg64.rsp 56 72 73 := by
+  with_reducible exact Codec.kstep_ldv Reg64.rsi Reg64.rsp 56 _ (k + 72) (k + 73) hq he hend
+theorem sm_g4_s72_kind : ∀ (h : Host), type_of% (@sm_g4_s72 h) = @Codec.stepLdvKind h SmUnmarshal Reg64.rsi Reg64.rsp 56 72 73 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -310,13 +311,13 @@ theorem sm_g4_s73 (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : Label
     (final : MachineState → Prop) (s : MachineData)
     (hk' : Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 80)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 73)⟩ := by
-  have hq := E2eScal.win hk 73 1
-  have he : E2eScal.eraseNop ((SmUnmarshal.drop 73).take 1) = [E2eScal.iJmp "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_153"] := by rfl
-  have hl := Fk.label_at' hk hf (j := 80)
+  have hq := Codec.win hk 73 1
+  have he : Codec.eraseNop ((SmUnmarshal.drop 73).take 1) = [Codec.iJmp "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_153"] := by rfl
+  have hl := Machine.label_at' hk hf (j := 80)
     (by simp only [SmUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [SmUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  with_reducible exact E2eScal.kstep_jmp "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_153" _ (k + 73) (k + 80) hq he hl
-theorem sm_g4_s73_kind : ∀ (h : Host), type_of% (@sm_g4_s73 h) = @E2eScal.stepJmpKind h SmUnmarshal "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_153" 73 80 := by
+  with_reducible exact Codec.kstep_jmp "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_153" _ (k + 73) (k + 80) hq he hl
+theorem sm_g4_s73_kind : ∀ (h : Host), type_of% (@sm_g4_s73 h) = @Codec.stepJmpKind h SmUnmarshal "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_153" 73 80 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -327,11 +328,11 @@ theorem sm_g4_s80 (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : Label
     (final : MachineState → Prop) (s : MachineData)
     (hk' : Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 81)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 80)⟩ := by
-  have hq := E2eScal.win hk 80 1
-  have he : E2eScal.eraseNop ((SmUnmarshal.drop 80).take 1) = [E2eScal.iLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_153"] := by rfl
+  have hq := Codec.win hk 80 1
+  have he : Codec.eraseNop ((SmUnmarshal.drop 80).take 1) = [Codec.iLabel "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_153"] := by rfl
   have hend : k + 80 + ((SmUnmarshal.drop 80).take 1).length = k + 81 := by rfl
-  with_reducible exact E2eScal.kstep_label "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_153" _ (k + 80) (k + 81) hq he hend
-theorem sm_g4_s80_kind : ∀ (h : Host), type_of% (@sm_g4_s80 h) = @E2eScal.stepLabelKind h SmUnmarshal "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_153" 80 81 := by
+  with_reducible exact Codec.kstep_label "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_153" _ (k + 80) (k + 81) hq he hend
+theorem sm_g4_s80_kind : ∀ (h : Host), type_of% (@sm_g4_s80 h) = @Codec.stepLabelKind h SmUnmarshal "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_153" 80 81 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -346,11 +347,11 @@ theorem sm_g4_s81 (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : Label
     (hk' : ∀ m' : DataMem, (Eq ((Int.toBytes 8 (@BitVec.toInt 64 (s.regs.get64 Reg64.rsi))).At a) ⋆ F) m' →
       Eventually (step1 Host.exe) final ⟨{ s with dmem := m' }, Host.addrOf (k + 82)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 81)⟩ := by
-  have hq := E2eScal.win hk 81 1
-  have he : E2eScal.eraseNop ((SmUnmarshal.drop 81).take 1) = [E2eScal.iSt Reg64.rsi Reg64.rax 16] := by rfl
+  have hq := Codec.win hk 81 1
+  have he : Codec.eraseNop ((SmUnmarshal.drop 81).take 1) = [Codec.iSt Reg64.rsi Reg64.rax 16] := by rfl
   have hend : k + 81 + ((SmUnmarshal.drop 81).take 1).length = k + 82 := by rfl
-  with_reducible exact E2eScal.kstep_st Reg64.rsi Reg64.rax 16 _ (k + 81) (k + 82) hq he hend
-theorem sm_g4_s81_kind : ∀ (h : Host), type_of% (@sm_g4_s81 h) = @E2eScal.stepStKind h SmUnmarshal Reg64.rsi Reg64.rax 16 81 82 := by
+  with_reducible exact Codec.kstep_st Reg64.rsi Reg64.rax 16 _ (k + 81) (k + 82) hq he hend
+theorem sm_g4_s81_kind : ∀ (h : Host), type_of% (@sm_g4_s81 h) = @Codec.stepStKind h SmUnmarshal Reg64.rsi Reg64.rax 16 81 82 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 16000000 in
@@ -458,18 +459,18 @@ theorem sm_g4_Signature_seg (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (
           ⋆ Eq (root.At aSrc)
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 120)⟩ := by
-  have hqA := E2eScal.win hk 120 10
-  have heA : E2eScal.eraseNop ((SmUnmarshal.drop 120).take 10) = E2eScal.bytesDecHeadR Reg64.rdx 96 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_233" 112 56 64 := by rfl
-  have hqB := E2eScal.win hk 134 12
-  have heB : E2eScal.eraseNop ((SmUnmarshal.drop 134).take 12) = E2eScal.bytesDecMidR Reg64.rdx Reg64.rdx 96 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_233" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_274" 112 120 56 48 56 64 48 := by rfl
-  have hjl : k + 134 + E2eScal.nopPos ((SmUnmarshal.drop 134).take 12) 0 = k + 134 := by rfl
-  have hl := Fk.label_at' hk hf (j := 134)
+  have hqA := Codec.win hk 120 10
+  have heA : Codec.eraseNop ((SmUnmarshal.drop 120).take 10) = Codec.bytesDecHeadR Reg64.rdx 96 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_233" 112 56 64 := by rfl
+  have hqB := Codec.win hk 134 12
+  have heB : Codec.eraseNop ((SmUnmarshal.drop 134).take 12) = Codec.bytesDecMidR Reg64.rdx Reg64.rdx 96 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_233" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_274" 112 120 56 48 56 64 48 := by rfl
+  have hjl : k + 134 + Codec.nopPos ((SmUnmarshal.drop 134).take 12) 0 = k + 134 := by rfl
+  have hl := Machine.label_at' hk hf (j := 134)
     (by simp only [SmUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [SmUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hjm : k + 134 + E2eScal.nopPos ((SmUnmarshal.drop 134).take 12) 6 = k + 140 := by rfl
+  have hjm : k + 134 + Codec.nopPos ((SmUnmarshal.drop 134).take 12) 6 = k + 140 := by rfl
   have hend : k + 134 + ((SmUnmarshal.drop 134).take 12).length = k + 146 := by rfl
-  with_reducible exact E2eScal.bytesdec_seg_g4 96 (Or.inr (Or.inr rfl)) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ _ (k + 120) (k + 134) (k + 134) (k + 140) (k + 146) hqA heA hqB heB hjl hl hjm hend
-theorem sm_g4_Signature_seg_kind : ∀ (h : Host), type_of% (@sm_g4_Signature_seg h) = @E2eScal.bytesDecSegKindG4 h 96 SmUnmarshal Reg64.rdx 120 140 146 112 120 56 48 56 64 48 := by
+  with_reducible exact Codec.bytesdec_seg_window 96 (Or.inr (Or.inr rfl)) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ _ (k + 120) (k + 134) (k + 134) (k + 140) (k + 146) hqA heA hqB heB hjl hl hjm hend
+theorem sm_g4_Signature_seg_kind : ∀ (h : Host), type_of% (@sm_g4_Signature_seg h) = @Codec.bytesDecSegKindWindow h 96 SmUnmarshal Reg64.rdx 120 140 146 112 120 56 48 56 64 48 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 16000000 in
@@ -512,18 +513,18 @@ theorem dd_g4_WithdrawalCredentials_seg (k : Nat) (hk : DdUnmarshal.IsInfixAt Ho
           ⋆ Eq (root.At aSrc)
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 47)⟩ := by
-  have hqA := E2eScal.win hk 47 10
-  have heA : E2eScal.eraseNop ((DdUnmarshal.drop 47).take 10) = E2eScal.bytesDecHeadR Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" 48 40 48 := by rfl
-  have hqB := E2eScal.win hk 61 12
-  have heB : E2eScal.eraseNop ((DdUnmarshal.drop 61).take 12) = E2eScal.bytesDecMidR Reg64.rdx Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_154" 48 56 24 32 40 48 48 := by rfl
-  have hjl : k + 61 + E2eScal.nopPos ((DdUnmarshal.drop 61).take 12) 0 = k + 61 := by rfl
-  have hl := Fk.label_at' hk hf (j := 61)
+  have hqA := Codec.win hk 47 10
+  have heA : Codec.eraseNop ((DdUnmarshal.drop 47).take 10) = Codec.bytesDecHeadR Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" 48 40 48 := by rfl
+  have hqB := Codec.win hk 61 12
+  have heB : Codec.eraseNop ((DdUnmarshal.drop 61).take 12) = Codec.bytesDecMidR Reg64.rdx Reg64.rdx 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_154" 48 56 24 32 40 48 48 := by rfl
+  have hjl : k + 61 + Codec.nopPos ((DdUnmarshal.drop 61).take 12) 0 = k + 61 := by rfl
+  have hl := Machine.label_at' hk hf (j := 61)
     (by simp only [DdUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [DdUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hjm : k + 61 + E2eScal.nopPos ((DdUnmarshal.drop 61).take 12) 6 = k + 67 := by rfl
+  have hjm : k + 61 + Codec.nopPos ((DdUnmarshal.drop 61).take 12) 6 = k + 67 := by rfl
   have hend : k + 61 + ((DdUnmarshal.drop 61).take 12).length = k + 73 := by rfl
-  with_reducible exact E2eScal.bytesdec_seg_g4 32 (Or.inl rfl) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) (k + 61) (k + 67) (k + 73) hqA heA hqB heB hjl hl hjm hend
-theorem dd_g4_WithdrawalCredentials_seg_kind : ∀ (h : Host), type_of% (@dd_g4_WithdrawalCredentials_seg h) = @E2eScal.bytesDecSegKindG4 h 32 DdUnmarshal Reg64.rdx 47 67 73 48 56 24 32 40 48 48 := by
+  with_reducible exact Codec.bytesdec_seg_window 32 (Or.inl rfl) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) (k + 61) (k + 67) (k + 73) hqA heA hqB heB hjl hl hjm hend
+theorem dd_g4_WithdrawalCredentials_seg_kind : ∀ (h : Host), type_of% (@dd_g4_WithdrawalCredentials_seg h) = @Codec.bytesDecSegKindWindow h 32 DdUnmarshal Reg64.rdx 47 67 73 48 56 24 32 40 48 48 := by
   intro h; with_reducible rfl
 
 /-! ## PendingConsolidation.TargetIndex — `nop` after the callee call (missed by the hold-out run): reload set-up as steps, call window, whole field -/
@@ -537,13 +538,13 @@ theorem pc_g4_s48 (k : Nat) (hk : PcUnmarshal.IsInfixAt Host.prog k) (hf : Label
     (F : DataMem → Prop)
     (final : MachineState → Prop) (s : MachineData)
     (hb : s.regs.get64 Reg64.rsp = base) (hm : (Eq ((Int.toBytes 8 v.toInt).At a) ⋆ F) s.dmem)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.rbx v, Host.addrOf (k + 49)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rbx v, Host.addrOf (k + 49)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 48)⟩ := by
-  have hq := E2eScal.win hk 48 1
-  have he : E2eScal.eraseNop ((PcUnmarshal.drop 48).take 1) = [E2eScal.iLd Reg64.rbx Reg64.rsp 96] := by rfl
+  have hq := Codec.win hk 48 1
+  have he : Codec.eraseNop ((PcUnmarshal.drop 48).take 1) = [Codec.iLd Reg64.rbx Reg64.rsp 96] := by rfl
   have hend : k + 48 + ((PcUnmarshal.drop 48).take 1).length = k + 49 := by rfl
-  with_reducible exact E2eScal.kstep_ldv Reg64.rbx Reg64.rsp 96 _ (k + 48) (k + 49) hq he hend
-theorem pc_g4_s48_kind : ∀ (h : Host), type_of% (@pc_g4_s48 h) = @E2eScal.stepLdvKind h PcUnmarshal Reg64.rbx Reg64.rsp 96 48 49 := by
+  with_reducible exact Codec.kstep_ldv Reg64.rbx Reg64.rsp 96 _ (k + 48) (k + 49) hq he hend
+theorem pc_g4_s48_kind : ∀ (h : Host), type_of% (@pc_g4_s48 h) = @Codec.stepLdvKind h PcUnmarshal Reg64.rbx Reg64.rsp 96 48 49 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -556,11 +557,11 @@ theorem pc_g4_s49 (k : Nat) (hk : PcUnmarshal.IsInfixAt Host.prog k) (hf : Label
       ⟨{ regs := s.regs.set64 Reg64.rbx (s.regs.get64 Reg64.rbx + (8 : Int64).toBitVec), zmms := s.zmms, status := fl, dmem := s.dmem },
         Host.addrOf (k + 50)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 49)⟩ := by
-  have hq := E2eScal.win hk 49 1
-  have he : E2eScal.eraseNop ((PcUnmarshal.drop 49).take 1) = [E2eScal.iAdd Reg64.rbx 8] := by rfl
+  have hq := Codec.win hk 49 1
+  have he : Codec.eraseNop ((PcUnmarshal.drop 49).take 1) = [Codec.iAdd Reg64.rbx 8] := by rfl
   have hend : k + 49 + ((PcUnmarshal.drop 49).take 1).length = k + 50 := by rfl
-  with_reducible exact E2eScal.kstep_add Reg64.rbx 8 _ (k + 49) (k + 50) hq he hend
-theorem pc_g4_s49_kind : ∀ (h : Host), type_of% (@pc_g4_s49 h) = @E2eScal.stepAddKind h PcUnmarshal Reg64.rbx 8 49 50 := by
+  with_reducible exact Codec.kstep_add Reg64.rbx 8 _ (k + 49) (k + 50) hq he hend
+theorem pc_g4_s49_kind : ∀ (h : Host), type_of% (@pc_g4_s49 h) = @Codec.stepAddKind h PcUnmarshal Reg64.rbx 8 49 50 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -572,13 +573,13 @@ theorem pc_g4_s50 (k : Nat) (hk : PcUnmarshal.IsInfixAt Host.prog k) (hf : Label
     (F : DataMem → Prop)
     (final : MachineState → Prop) (s : MachineData)
     (hb : s.regs.get64 Reg64.rsp = base) (hm : (Eq (bs.At a) ⋆ F) s.dmem)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.rdi (BitVec.ofInt 64 (Int.ofBytes bs)), Host.addrOf (k + 51)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rdi (BitVec.ofInt 64 (Int.ofBytes bs)), Host.addrOf (k + 51)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 50)⟩ := by
-  have hq := E2eScal.win hk 50 1
-  have he : E2eScal.eraseNop ((PcUnmarshal.drop 50).take 1) = [E2eScal.iLd Reg64.rdi Reg64.rsp 112] := by rfl
+  have hq := Codec.win hk 50 1
+  have he : Codec.eraseNop ((PcUnmarshal.drop 50).take 1) = [Codec.iLd Reg64.rdi Reg64.rsp 112] := by rfl
   have hend : k + 50 + ((PcUnmarshal.drop 50).take 1).length = k + 51 := by rfl
-  with_reducible exact E2eScal.kstep_ldb Reg64.rdi Reg64.rsp 112 _ (k + 50) (k + 51) hq he hend
-theorem pc_g4_s50_kind : ∀ (h : Host), type_of% (@pc_g4_s50 h) = @E2eScal.stepLdbKind h PcUnmarshal Reg64.rdi Reg64.rsp 112 50 51 := by
+  with_reducible exact Codec.kstep_ldb Reg64.rdi Reg64.rsp 112 _ (k + 50) (k + 51) hq he hend
+theorem pc_g4_s50_kind : ∀ (h : Host), type_of% (@pc_g4_s50 h) = @Codec.stepLdbKind h PcUnmarshal Reg64.rdi Reg64.rsp 112 50 51 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -591,11 +592,11 @@ theorem pc_g4_s51 (k : Nat) (hk : PcUnmarshal.IsInfixAt Host.prog k) (hf : Label
       ⟨{ regs := s.regs.set64 Reg64.rdi (s.regs.get64 Reg64.rdi + ((-8) : Int64).toBitVec), zmms := s.zmms, status := fl, dmem := s.dmem },
         Host.addrOf (k + 52)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 51)⟩ := by
-  have hq := E2eScal.win hk 51 1
-  have he : E2eScal.eraseNop ((PcUnmarshal.drop 51).take 1) = [E2eScal.iAdd Reg64.rdi (-8)] := by rfl
+  have hq := Codec.win hk 51 1
+  have he : Codec.eraseNop ((PcUnmarshal.drop 51).take 1) = [Codec.iAdd Reg64.rdi (-8)] := by rfl
   have hend : k + 51 + ((PcUnmarshal.drop 51).take 1).length = k + 52 := by rfl
-  with_reducible exact E2eScal.kstep_add Reg64.rdi (-8) _ (k + 51) (k + 52) hq he hend
-theorem pc_g4_s51_kind : ∀ (h : Host), type_of% (@pc_g4_s51 h) = @E2eScal.stepAddKind h PcUnmarshal Reg64.rdi (-8) 51 52 := by
+  with_reducible exact Codec.kstep_add Reg64.rdi (-8) _ (k + 51) (k + 52) hq he hend
+theorem pc_g4_s51_kind : ∀ (h : Host), type_of% (@pc_g4_s51 h) = @Codec.stepAddKind h PcUnmarshal Reg64.rdi (-8) 51 52 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -607,13 +608,13 @@ theorem pc_g4_s52 (k : Nat) (hk : PcUnmarshal.IsInfixAt Host.prog k) (hf : Label
     (F : DataMem → Prop)
     (final : MachineState → Prop) (s : MachineData)
     (hb : s.regs.get64 Reg64.rsp = base) (hm : (Eq ((Int.toBytes 8 v.toInt).At a) ⋆ F) s.dmem)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.rax v, Host.addrOf (k + 53)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rax v, Host.addrOf (k + 53)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 52)⟩ := by
-  have hq := E2eScal.win hk 52 1
-  have he : E2eScal.eraseNop ((PcUnmarshal.drop 52).take 1) = [E2eScal.iLd Reg64.rax Reg64.rsp 88] := by rfl
+  have hq := Codec.win hk 52 1
+  have he : Codec.eraseNop ((PcUnmarshal.drop 52).take 1) = [Codec.iLd Reg64.rax Reg64.rsp 88] := by rfl
   have hend : k + 52 + ((PcUnmarshal.drop 52).take 1).length = k + 53 := by rfl
-  with_reducible exact E2eScal.kstep_ldv Reg64.rax Reg64.rsp 88 _ (k + 52) (k + 53) hq he hend
-theorem pc_g4_s52_kind : ∀ (h : Host), type_of% (@pc_g4_s52 h) = @E2eScal.stepLdvKind h PcUnmarshal Reg64.rax Reg64.rsp 88 52 53 := by
+  with_reducible exact Codec.kstep_ldv Reg64.rax Reg64.rsp 88 _ (k + 52) (k + 53) hq he hend
+theorem pc_g4_s52_kind : ∀ (h : Host), type_of% (@pc_g4_s52 h) = @Codec.stepLdvKind h PcUnmarshal Reg64.rax Reg64.rsp 88 52 53 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -626,11 +627,11 @@ theorem pc_g4_s53 (k : Nat) (hk : PcUnmarshal.IsInfixAt Host.prog k) (hf : Label
       ⟨{ regs := s.regs.set64 Reg64.rax (s.regs.get64 Reg64.rax + (16 : Int64).toBitVec), zmms := s.zmms, status := fl, dmem := s.dmem },
         Host.addrOf (k + 54)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 53)⟩ := by
-  have hq := E2eScal.win hk 53 1
-  have he : E2eScal.eraseNop ((PcUnmarshal.drop 53).take 1) = [E2eScal.iAdd Reg64.rax 16] := by rfl
+  have hq := Codec.win hk 53 1
+  have he : Codec.eraseNop ((PcUnmarshal.drop 53).take 1) = [Codec.iAdd Reg64.rax 16] := by rfl
   have hend : k + 53 + ((PcUnmarshal.drop 53).take 1).length = k + 54 := by rfl
-  with_reducible exact E2eScal.kstep_add Reg64.rax 16 _ (k + 53) (k + 54) hq he hend
-theorem pc_g4_s53_kind : ∀ (h : Host), type_of% (@pc_g4_s53 h) = @E2eScal.stepAddKind h PcUnmarshal Reg64.rax 16 53 54 := by
+  with_reducible exact Codec.kstep_add Reg64.rax 16 _ (k + 53) (k + 54) hq he hend
+theorem pc_g4_s53_kind : ∀ (h : Host), type_of% (@pc_g4_s53 h) = @Codec.stepAddKind h PcUnmarshal Reg64.rax 16 53 54 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -639,13 +640,13 @@ set_option maxRecDepth 100000 in
 theorem pc_g4_s54 (k : Nat) (hk : PcUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh PcUnmarshal k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.rcx (BitVec.zeroExtend 64 (BitVec.truncate 32 (8 : Int64).toBitVec)), Host.addrOf (k + 55)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rcx (BitVec.zeroExtend 64 (BitVec.truncate 32 (8 : Int64).toBitVec)), Host.addrOf (k + 55)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 54)⟩ := by
-  have hq := E2eScal.win hk 54 1
-  have he : E2eScal.eraseNop ((PcUnmarshal.drop 54).take 1) = [E2eScal.iMovI Reg64.rcx 8] := by rfl
+  have hq := Codec.win hk 54 1
+  have he : Codec.eraseNop ((PcUnmarshal.drop 54).take 1) = [Codec.iMovI Reg64.rcx 8] := by rfl
   have hend : k + 54 + ((PcUnmarshal.drop 54).take 1).length = k + 55 := by rfl
-  with_reducible exact E2eScal.kstep_movi Reg64.rcx 8 _ (k + 54) (k + 55) hq he hend
-theorem pc_g4_s54_kind : ∀ (h : Host), type_of% (@pc_g4_s54 h) = @E2eScal.stepMovIKind h PcUnmarshal Reg64.rcx 8 54 55 := by
+  with_reducible exact Codec.kstep_movi Reg64.rcx 8 _ (k + 54) (k + 55) hq he hend
+theorem pc_g4_s54_kind : ∀ (h : Host), type_of% (@pc_g4_s54 h) = @Codec.stepMovIKind h PcUnmarshal Reg64.rcx 8 54 55 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -673,12 +674,12 @@ theorem pc_g4_TargetIndex_call (k : Nat) (hk : PcUnmarshal.IsInfixAt Host.prog k
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 55)⟩ := by
-  have hq := E2eScal.win hk 55 4
-  have he : E2eScal.eraseNop ((PcUnmarshal.drop 55).take 4) = E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d" := by rfl
-  have hjc : k + 55 + E2eScal.nopPos ((PcUnmarshal.drop 55).take 4) 0 = k + 55 := by rfl
-  have hB := E2eScal.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d") 85 hk
+  have hq := Codec.win hk 55 4
+  have he : Codec.eraseNop ((PcUnmarshal.drop 55).take 4) = E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d" := by rfl
+  have hjc : k + 55 + Codec.nopPos ((PcUnmarshal.drop 55).take 4) 0 = k + 55 := by rfl
+  have hB := Codec.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d") 85 hk
     (by simp only [PcUnmarshal, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl := Fk.label_at' hk hf (j := 85)
+  have hl := Machine.label_at' hk hf (j := 85)
     (by simp only [PcUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [PcUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact E2eScal.calldec_seg_w _ _ _ (k + 55) (k + 55) (k + 85) hq he hjc hB hl
@@ -756,11 +757,11 @@ theorem cp_g4_s14 (k : Nat) (hk : CpUnmarshal.IsInfixAt Host.prog k) (hf : Label
       ⟨{ regs := s.regs.set64 Reg64.rax (s.regs.get64 Reg64.rax + (8 : Int64).toBitVec), zmms := s.zmms, status := fl, dmem := s.dmem },
         Host.addrOf (k + 15)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 14)⟩ := by
-  have hq := E2eScal.win hk 14 1
-  have he : E2eScal.eraseNop ((CpUnmarshal.drop 14).take 1) = [E2eScal.iAdd Reg64.rax 8] := by rfl
+  have hq := Codec.win hk 14 1
+  have he : Codec.eraseNop ((CpUnmarshal.drop 14).take 1) = [Codec.iAdd Reg64.rax 8] := by rfl
   have hend : k + 14 + ((CpUnmarshal.drop 14).take 1).length = k + 15 := by rfl
-  with_reducible exact E2eScal.kstep_add Reg64.rax 8 _ (k + 14) (k + 15) hq he hend
-theorem cp_g4_s14_kind : ∀ (h : Host), type_of% (@cp_g4_s14 h) = @E2eScal.stepAddKind h CpUnmarshal Reg64.rax 8 14 15 := by
+  with_reducible exact Codec.kstep_add Reg64.rax 8 _ (k + 14) (k + 15) hq he hend
+theorem cp_g4_s14_kind : ∀ (h : Host), type_of% (@cp_g4_s14 h) = @Codec.stepAddKind h CpUnmarshal Reg64.rax 8 14 15 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -769,13 +770,13 @@ set_option maxRecDepth 100000 in
 theorem cp_g4_s15 (k : Nat) (hk : CpUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh CpUnmarshal k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.rcx (BitVec.zeroExtend 64 (BitVec.truncate 32 (8 : Int64).toBitVec)), Host.addrOf (k + 16)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rcx (BitVec.zeroExtend 64 (BitVec.truncate 32 (8 : Int64).toBitVec)), Host.addrOf (k + 16)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 15)⟩ := by
-  have hq := E2eScal.win hk 15 1
-  have he : E2eScal.eraseNop ((CpUnmarshal.drop 15).take 1) = [E2eScal.iMovI Reg64.rcx 8] := by rfl
+  have hq := Codec.win hk 15 1
+  have he : Codec.eraseNop ((CpUnmarshal.drop 15).take 1) = [Codec.iMovI Reg64.rcx 8] := by rfl
   have hend : k + 15 + ((CpUnmarshal.drop 15).take 1).length = k + 16 := by rfl
-  with_reducible exact E2eScal.kstep_movi Reg64.rcx 8 _ (k + 15) (k + 16) hq he hend
-theorem cp_g4_s15_kind : ∀ (h : Host), type_of% (@cp_g4_s15 h) = @E2eScal.stepMovIKind h CpUnmarshal Reg64.rcx 8 15 16 := by
+  with_reducible exact Codec.kstep_movi Reg64.rcx 8 _ (k + 15) (k + 16) hq he hend
+theorem cp_g4_s15_kind : ∀ (h : Host), type_of% (@cp_g4_s15 h) = @Codec.stepMovIKind h CpUnmarshal Reg64.rcx 8 15 16 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -803,12 +804,12 @@ theorem cp_g4_Epoch_call (k : Nat) (hk : CpUnmarshal.IsInfixAt Host.prog k) (hf 
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 16)⟩ := by
-  have hq := E2eScal.win hk 16 4
-  have he : E2eScal.eraseNop ((CpUnmarshal.drop 16).take 4) = E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4" := by rfl
-  have hjc : k + 16 + E2eScal.nopPos ((CpUnmarshal.drop 16).take 4) 0 = k + 17 := by rfl
-  have hB := E2eScal.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4") 47 hk
+  have hq := Codec.win hk 16 4
+  have he : Codec.eraseNop ((CpUnmarshal.drop 16).take 4) = E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4" := by rfl
+  have hjc : k + 16 + Codec.nopPos ((CpUnmarshal.drop 16).take 4) 0 = k + 17 := by rfl
+  have hB := Codec.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4") 47 hk
     (by simp only [CpUnmarshal, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl := Fk.label_at' hk hf (j := 47)
+  have hl := Machine.label_at' hk hf (j := 47)
     (by simp only [CpUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [CpUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact E2eScal.calldec_seg_w _ _ _ (k + 16) (k + 17) (k + 47) hq he hjc hB hl
@@ -824,13 +825,13 @@ theorem bh_g4_s47 (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (hf : Label
     (F : DataMem → Prop)
     (final : MachineState → Prop) (s : MachineData)
     (hb : s.regs.get64 Reg64.rsp = base) (hm : (Eq ((Int.toBytes 8 v.toInt).At a) ⋆ F) s.dmem)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.rbx v, Host.addrOf (k + 48)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rbx v, Host.addrOf (k + 48)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 47)⟩ := by
-  have hq := E2eScal.win hk 47 1
-  have he : E2eScal.eraseNop ((BhUnmarshal.drop 47).take 1) = [E2eScal.iLd Reg64.rbx Reg64.rsp 120] := by rfl
+  have hq := Codec.win hk 47 1
+  have he : Codec.eraseNop ((BhUnmarshal.drop 47).take 1) = [Codec.iLd Reg64.rbx Reg64.rsp 120] := by rfl
   have hend : k + 47 + ((BhUnmarshal.drop 47).take 1).length = k + 48 := by rfl
-  with_reducible exact E2eScal.kstep_ldv Reg64.rbx Reg64.rsp 120 _ (k + 47) (k + 48) hq he hend
-theorem bh_g4_s47_kind : ∀ (h : Host), type_of% (@bh_g4_s47 h) = @E2eScal.stepLdvKind h BhUnmarshal Reg64.rbx Reg64.rsp 120 47 48 := by
+  with_reducible exact Codec.kstep_ldv Reg64.rbx Reg64.rsp 120 _ (k + 47) (k + 48) hq he hend
+theorem bh_g4_s47_kind : ∀ (h : Host), type_of% (@bh_g4_s47 h) = @Codec.stepLdvKind h BhUnmarshal Reg64.rbx Reg64.rsp 120 47 48 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -843,11 +844,11 @@ theorem bh_g4_s48 (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (hf : Label
       ⟨{ regs := s.regs.set64 Reg64.rbx (s.regs.get64 Reg64.rbx + (8 : Int64).toBitVec), zmms := s.zmms, status := fl, dmem := s.dmem },
         Host.addrOf (k + 49)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 48)⟩ := by
-  have hq := E2eScal.win hk 48 1
-  have he : E2eScal.eraseNop ((BhUnmarshal.drop 48).take 1) = [E2eScal.iAdd Reg64.rbx 8] := by rfl
+  have hq := Codec.win hk 48 1
+  have he : Codec.eraseNop ((BhUnmarshal.drop 48).take 1) = [Codec.iAdd Reg64.rbx 8] := by rfl
   have hend : k + 48 + ((BhUnmarshal.drop 48).take 1).length = k + 49 := by rfl
-  with_reducible exact E2eScal.kstep_add Reg64.rbx 8 _ (k + 48) (k + 49) hq he hend
-theorem bh_g4_s48_kind : ∀ (h : Host), type_of% (@bh_g4_s48 h) = @E2eScal.stepAddKind h BhUnmarshal Reg64.rbx 8 48 49 := by
+  with_reducible exact Codec.kstep_add Reg64.rbx 8 _ (k + 48) (k + 49) hq he hend
+theorem bh_g4_s48_kind : ∀ (h : Host), type_of% (@bh_g4_s48 h) = @Codec.stepAddKind h BhUnmarshal Reg64.rbx 8 48 49 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -859,13 +860,13 @@ theorem bh_g4_s49 (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (hf : Label
     (F : DataMem → Prop)
     (final : MachineState → Prop) (s : MachineData)
     (hb : s.regs.get64 Reg64.rsp = base) (hm : (Eq (bs.At a) ⋆ F) s.dmem)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.rdi (BitVec.ofInt 64 (Int.ofBytes bs)), Host.addrOf (k + 50)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rdi (BitVec.ofInt 64 (Int.ofBytes bs)), Host.addrOf (k + 50)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 49)⟩ := by
-  have hq := E2eScal.win hk 49 1
-  have he : E2eScal.eraseNop ((BhUnmarshal.drop 49).take 1) = [E2eScal.iLd Reg64.rdi Reg64.rsp 136] := by rfl
+  have hq := Codec.win hk 49 1
+  have he : Codec.eraseNop ((BhUnmarshal.drop 49).take 1) = [Codec.iLd Reg64.rdi Reg64.rsp 136] := by rfl
   have hend : k + 49 + ((BhUnmarshal.drop 49).take 1).length = k + 50 := by rfl
-  with_reducible exact E2eScal.kstep_ldb Reg64.rdi Reg64.rsp 136 _ (k + 49) (k + 50) hq he hend
-theorem bh_g4_s49_kind : ∀ (h : Host), type_of% (@bh_g4_s49 h) = @E2eScal.stepLdbKind h BhUnmarshal Reg64.rdi Reg64.rsp 136 49 50 := by
+  with_reducible exact Codec.kstep_ldb Reg64.rdi Reg64.rsp 136 _ (k + 49) (k + 50) hq he hend
+theorem bh_g4_s49_kind : ∀ (h : Host), type_of% (@bh_g4_s49 h) = @Codec.stepLdbKind h BhUnmarshal Reg64.rdi Reg64.rsp 136 49 50 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -878,11 +879,11 @@ theorem bh_g4_s50 (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (hf : Label
       ⟨{ regs := s.regs.set64 Reg64.rdi (s.regs.get64 Reg64.rdi + ((-8) : Int64).toBitVec), zmms := s.zmms, status := fl, dmem := s.dmem },
         Host.addrOf (k + 51)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 50)⟩ := by
-  have hq := E2eScal.win hk 50 1
-  have he : E2eScal.eraseNop ((BhUnmarshal.drop 50).take 1) = [E2eScal.iAdd Reg64.rdi (-8)] := by rfl
+  have hq := Codec.win hk 50 1
+  have he : Codec.eraseNop ((BhUnmarshal.drop 50).take 1) = [Codec.iAdd Reg64.rdi (-8)] := by rfl
   have hend : k + 50 + ((BhUnmarshal.drop 50).take 1).length = k + 51 := by rfl
-  with_reducible exact E2eScal.kstep_add Reg64.rdi (-8) _ (k + 50) (k + 51) hq he hend
-theorem bh_g4_s50_kind : ∀ (h : Host), type_of% (@bh_g4_s50 h) = @E2eScal.stepAddKind h BhUnmarshal Reg64.rdi (-8) 50 51 := by
+  with_reducible exact Codec.kstep_add Reg64.rdi (-8) _ (k + 50) (k + 51) hq he hend
+theorem bh_g4_s50_kind : ∀ (h : Host), type_of% (@bh_g4_s50 h) = @Codec.stepAddKind h BhUnmarshal Reg64.rdi (-8) 50 51 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -894,13 +895,13 @@ theorem bh_g4_s51 (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (hf : Label
     (F : DataMem → Prop)
     (final : MachineState → Prop) (s : MachineData)
     (hb : s.regs.get64 Reg64.rsp = base) (hm : (Eq ((Int.toBytes 8 v.toInt).At a) ⋆ F) s.dmem)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.rax v, Host.addrOf (k + 52)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rax v, Host.addrOf (k + 52)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 51)⟩ := by
-  have hq := E2eScal.win hk 51 1
-  have he : E2eScal.eraseNop ((BhUnmarshal.drop 51).take 1) = [E2eScal.iLd Reg64.rax Reg64.rsp 112] := by rfl
+  have hq := Codec.win hk 51 1
+  have he : Codec.eraseNop ((BhUnmarshal.drop 51).take 1) = [Codec.iLd Reg64.rax Reg64.rsp 112] := by rfl
   have hend : k + 51 + ((BhUnmarshal.drop 51).take 1).length = k + 52 := by rfl
-  with_reducible exact E2eScal.kstep_ldv Reg64.rax Reg64.rsp 112 _ (k + 51) (k + 52) hq he hend
-theorem bh_g4_s51_kind : ∀ (h : Host), type_of% (@bh_g4_s51 h) = @E2eScal.stepLdvKind h BhUnmarshal Reg64.rax Reg64.rsp 112 51 52 := by
+  with_reducible exact Codec.kstep_ldv Reg64.rax Reg64.rsp 112 _ (k + 51) (k + 52) hq he hend
+theorem bh_g4_s51_kind : ∀ (h : Host), type_of% (@bh_g4_s51 h) = @Codec.stepLdvKind h BhUnmarshal Reg64.rax Reg64.rsp 112 51 52 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -913,11 +914,11 @@ theorem bh_g4_s52 (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (hf : Label
       ⟨{ regs := s.regs.set64 Reg64.rax (s.regs.get64 Reg64.rax + (16 : Int64).toBitVec), zmms := s.zmms, status := fl, dmem := s.dmem },
         Host.addrOf (k + 53)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 52)⟩ := by
-  have hq := E2eScal.win hk 52 1
-  have he : E2eScal.eraseNop ((BhUnmarshal.drop 52).take 1) = [E2eScal.iAdd Reg64.rax 16] := by rfl
+  have hq := Codec.win hk 52 1
+  have he : Codec.eraseNop ((BhUnmarshal.drop 52).take 1) = [Codec.iAdd Reg64.rax 16] := by rfl
   have hend : k + 52 + ((BhUnmarshal.drop 52).take 1).length = k + 53 := by rfl
-  with_reducible exact E2eScal.kstep_add Reg64.rax 16 _ (k + 52) (k + 53) hq he hend
-theorem bh_g4_s52_kind : ∀ (h : Host), type_of% (@bh_g4_s52 h) = @E2eScal.stepAddKind h BhUnmarshal Reg64.rax 16 52 53 := by
+  with_reducible exact Codec.kstep_add Reg64.rax 16 _ (k + 52) (k + 53) hq he hend
+theorem bh_g4_s52_kind : ∀ (h : Host), type_of% (@bh_g4_s52 h) = @Codec.stepAddKind h BhUnmarshal Reg64.rax 16 52 53 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -926,13 +927,13 @@ set_option maxRecDepth 100000 in
 theorem bh_g4_s53 (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh BhUnmarshal k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.rcx (BitVec.zeroExtend 64 (BitVec.truncate 32 (8 : Int64).toBitVec)), Host.addrOf (k + 54)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rcx (BitVec.zeroExtend 64 (BitVec.truncate 32 (8 : Int64).toBitVec)), Host.addrOf (k + 54)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 53)⟩ := by
-  have hq := E2eScal.win hk 53 1
-  have he : E2eScal.eraseNop ((BhUnmarshal.drop 53).take 1) = [E2eScal.iMovI Reg64.rcx 8] := by rfl
+  have hq := Codec.win hk 53 1
+  have he : Codec.eraseNop ((BhUnmarshal.drop 53).take 1) = [Codec.iMovI Reg64.rcx 8] := by rfl
   have hend : k + 53 + ((BhUnmarshal.drop 53).take 1).length = k + 54 := by rfl
-  with_reducible exact E2eScal.kstep_movi Reg64.rcx 8 _ (k + 53) (k + 54) hq he hend
-theorem bh_g4_s53_kind : ∀ (h : Host), type_of% (@bh_g4_s53 h) = @E2eScal.stepMovIKind h BhUnmarshal Reg64.rcx 8 53 54 := by
+  with_reducible exact Codec.kstep_movi Reg64.rcx 8 _ (k + 53) (k + 54) hq he hend
+theorem bh_g4_s53_kind : ∀ (h : Host), type_of% (@bh_g4_s53 h) = @Codec.stepMovIKind h BhUnmarshal Reg64.rcx 8 53 54 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -960,12 +961,12 @@ theorem bh_g4_ProposerIndex_call (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 54)⟩ := by
-  have hq := E2eScal.win hk 54 4
-  have he : E2eScal.eraseNop ((BhUnmarshal.drop 54).take 4) = E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154" := by rfl
-  have hjc : k + 54 + E2eScal.nopPos ((BhUnmarshal.drop 54).take 4) 0 = k + 55 := by rfl
-  have hB := E2eScal.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 85 hk
+  have hq := Codec.win hk 54 4
+  have he : Codec.eraseNop ((BhUnmarshal.drop 54).take 4) = E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154" := by rfl
+  have hjc : k + 54 + Codec.nopPos ((BhUnmarshal.drop 54).take 4) 0 = k + 55 := by rfl
+  have hB := Codec.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 85 hk
     (by simp only [BhUnmarshal, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl := Fk.label_at' hk hf (j := 85)
+  have hl := Machine.label_at' hk hf (j := 85)
     (by simp only [BhUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [BhUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact E2eScal.calldec_seg_w _ _ _ (k + 54) (k + 55) (k + 85) hq he hjc hB hl
@@ -981,13 +982,13 @@ theorem pw_g4_s48 (k : Nat) (hk : PwUnmarshal.IsInfixAt Host.prog k) (hf : Label
     (F : DataMem → Prop)
     (final : MachineState → Prop) (s : MachineData)
     (hb : s.regs.get64 Reg64.rsp = base) (hm : (Eq ((Int.toBytes 8 v.toInt).At a) ⋆ F) s.dmem)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.rbx v, Host.addrOf (k + 49)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rbx v, Host.addrOf (k + 49)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 48)⟩ := by
-  have hq := E2eScal.win hk 48 1
-  have he : E2eScal.eraseNop ((PwUnmarshal.drop 48).take 1) = [E2eScal.iLd Reg64.rbx Reg64.rsp 96] := by rfl
+  have hq := Codec.win hk 48 1
+  have he : Codec.eraseNop ((PwUnmarshal.drop 48).take 1) = [Codec.iLd Reg64.rbx Reg64.rsp 96] := by rfl
   have hend : k + 48 + ((PwUnmarshal.drop 48).take 1).length = k + 49 := by rfl
-  with_reducible exact E2eScal.kstep_ldv Reg64.rbx Reg64.rsp 96 _ (k + 48) (k + 49) hq he hend
-theorem pw_g4_s48_kind : ∀ (h : Host), type_of% (@pw_g4_s48 h) = @E2eScal.stepLdvKind h PwUnmarshal Reg64.rbx Reg64.rsp 96 48 49 := by
+  with_reducible exact Codec.kstep_ldv Reg64.rbx Reg64.rsp 96 _ (k + 48) (k + 49) hq he hend
+theorem pw_g4_s48_kind : ∀ (h : Host), type_of% (@pw_g4_s48 h) = @Codec.stepLdvKind h PwUnmarshal Reg64.rbx Reg64.rsp 96 48 49 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -996,13 +997,13 @@ set_option maxRecDepth 100000 in
 theorem pw_g4_s49 (k : Nat) (hk : PwUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh PwUnmarshal k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.rdx (s.regs.get64 Reg64.rbx + (16 : Int64).toBitVec), Host.addrOf (k + 50)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rdx (s.regs.get64 Reg64.rbx + (16 : Int64).toBitVec), Host.addrOf (k + 50)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 49)⟩ := by
-  have hq := E2eScal.win hk 49 1
-  have he : E2eScal.eraseNop ((PwUnmarshal.drop 49).take 1) = [E2eScal.iLea Reg64.rdx Reg64.rbx 16] := by rfl
+  have hq := Codec.win hk 49 1
+  have he : Codec.eraseNop ((PwUnmarshal.drop 49).take 1) = [Codec.iLea Reg64.rdx Reg64.rbx 16] := by rfl
   have hend : k + 49 + ((PwUnmarshal.drop 49).take 1).length = k + 50 := by rfl
-  with_reducible exact E2eScal.kstep_lea Reg64.rdx Reg64.rbx 16 _ (k + 49) (k + 50) hq he hend
-theorem pw_g4_s49_kind : ∀ (h : Host), type_of% (@pw_g4_s49 h) = @E2eScal.stepLeaKind h PwUnmarshal Reg64.rdx Reg64.rbx 16 49 50 := by
+  with_reducible exact Codec.kstep_lea Reg64.rdx Reg64.rbx 16 _ (k + 49) (k + 50) hq he hend
+theorem pw_g4_s49_kind : ∀ (h : Host), type_of% (@pw_g4_s49 h) = @Codec.stepLeaKind h PwUnmarshal Reg64.rdx Reg64.rbx 16 49 50 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -1014,13 +1015,13 @@ theorem pw_g4_s50 (k : Nat) (hk : PwUnmarshal.IsInfixAt Host.prog k) (hf : Label
     (F : DataMem → Prop)
     (final : MachineState → Prop) (s : MachineData)
     (hb : s.regs.get64 Reg64.rsp = base) (hm : (Eq (bs.At a) ⋆ F) s.dmem)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.rdi (BitVec.ofInt 64 (Int.ofBytes bs)), Host.addrOf (k + 51)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rdi (BitVec.ofInt 64 (Int.ofBytes bs)), Host.addrOf (k + 51)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 50)⟩ := by
-  have hq := E2eScal.win hk 50 1
-  have he : E2eScal.eraseNop ((PwUnmarshal.drop 50).take 1) = [E2eScal.iLd Reg64.rdi Reg64.rsp 112] := by rfl
+  have hq := Codec.win hk 50 1
+  have he : Codec.eraseNop ((PwUnmarshal.drop 50).take 1) = [Codec.iLd Reg64.rdi Reg64.rsp 112] := by rfl
   have hend : k + 50 + ((PwUnmarshal.drop 50).take 1).length = k + 51 := by rfl
-  with_reducible exact E2eScal.kstep_ldb Reg64.rdi Reg64.rsp 112 _ (k + 50) (k + 51) hq he hend
-theorem pw_g4_s50_kind : ∀ (h : Host), type_of% (@pw_g4_s50 h) = @E2eScal.stepLdbKind h PwUnmarshal Reg64.rdi Reg64.rsp 112 50 51 := by
+  with_reducible exact Codec.kstep_ldb Reg64.rdi Reg64.rsp 112 _ (k + 50) (k + 51) hq he hend
+theorem pw_g4_s50_kind : ∀ (h : Host), type_of% (@pw_g4_s50 h) = @Codec.stepLdbKind h PwUnmarshal Reg64.rdi Reg64.rsp 112 50 51 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -1033,11 +1034,11 @@ theorem pw_g4_s51 (k : Nat) (hk : PwUnmarshal.IsInfixAt Host.prog k) (hf : Label
       ⟨{ regs := s.regs.set64 Reg64.rdi (s.regs.get64 Reg64.rdi + ((-16) : Int64).toBitVec), zmms := s.zmms, status := fl, dmem := s.dmem },
         Host.addrOf (k + 52)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 51)⟩ := by
-  have hq := E2eScal.win hk 51 1
-  have he : E2eScal.eraseNop ((PwUnmarshal.drop 51).take 1) = [E2eScal.iAdd Reg64.rdi (-16)] := by rfl
+  have hq := Codec.win hk 51 1
+  have he : Codec.eraseNop ((PwUnmarshal.drop 51).take 1) = [Codec.iAdd Reg64.rdi (-16)] := by rfl
   have hend : k + 51 + ((PwUnmarshal.drop 51).take 1).length = k + 52 := by rfl
-  with_reducible exact E2eScal.kstep_add Reg64.rdi (-16) _ (k + 51) (k + 52) hq he hend
-theorem pw_g4_s51_kind : ∀ (h : Host), type_of% (@pw_g4_s51 h) = @E2eScal.stepAddKind h PwUnmarshal Reg64.rdi (-16) 51 52 := by
+  with_reducible exact Codec.kstep_add Reg64.rdi (-16) _ (k + 51) (k + 52) hq he hend
+theorem pw_g4_s51_kind : ∀ (h : Host), type_of% (@pw_g4_s51 h) = @Codec.stepAddKind h PwUnmarshal Reg64.rdi (-16) 51 52 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -1049,13 +1050,13 @@ theorem pw_g4_s52 (k : Nat) (hk : PwUnmarshal.IsInfixAt Host.prog k) (hf : Label
     (F : DataMem → Prop)
     (final : MachineState → Prop) (s : MachineData)
     (hb : s.regs.get64 Reg64.rsp = base) (hm : (Eq ((Int.toBytes 8 v.toInt).At a) ⋆ F) s.dmem)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.rax v, Host.addrOf (k + 53)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rax v, Host.addrOf (k + 53)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 52)⟩ := by
-  have hq := E2eScal.win hk 52 1
-  have he : E2eScal.eraseNop ((PwUnmarshal.drop 52).take 1) = [E2eScal.iLd Reg64.rax Reg64.rsp 88] := by rfl
+  have hq := Codec.win hk 52 1
+  have he : Codec.eraseNop ((PwUnmarshal.drop 52).take 1) = [Codec.iLd Reg64.rax Reg64.rsp 88] := by rfl
   have hend : k + 52 + ((PwUnmarshal.drop 52).take 1).length = k + 53 := by rfl
-  with_reducible exact E2eScal.kstep_ldv Reg64.rax Reg64.rsp 88 _ (k + 52) (k + 53) hq he hend
-theorem pw_g4_s52_kind : ∀ (h : Host), type_of% (@pw_g4_s52 h) = @E2eScal.stepLdvKind h PwUnmarshal Reg64.rax Reg64.rsp 88 52 53 := by
+  with_reducible exact Codec.kstep_ldv Reg64.rax Reg64.rsp 88 _ (k + 52) (k + 53) hq he hend
+theorem pw_g4_s52_kind : ∀ (h : Host), type_of% (@pw_g4_s52 h) = @Codec.stepLdvKind h PwUnmarshal Reg64.rax Reg64.rsp 88 52 53 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -1064,13 +1065,13 @@ set_option maxRecDepth 100000 in
 theorem pw_g4_s53 (k : Nat) (hk : PwUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh PwUnmarshal k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.rsi (s.regs.get64 Reg64.rax + (24 : Int64).toBitVec), Host.addrOf (k + 54)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rsi (s.regs.get64 Reg64.rax + (24 : Int64).toBitVec), Host.addrOf (k + 54)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 53)⟩ := by
-  have hq := E2eScal.win hk 53 1
-  have he : E2eScal.eraseNop ((PwUnmarshal.drop 53).take 1) = [E2eScal.iLea Reg64.rsi Reg64.rax 24] := by rfl
+  have hq := Codec.win hk 53 1
+  have he : Codec.eraseNop ((PwUnmarshal.drop 53).take 1) = [Codec.iLea Reg64.rsi Reg64.rax 24] := by rfl
   have hend : k + 53 + ((PwUnmarshal.drop 53).take 1).length = k + 54 := by rfl
-  with_reducible exact E2eScal.kstep_lea Reg64.rsi Reg64.rax 24 _ (k + 53) (k + 54) hq he hend
-theorem pw_g4_s53_kind : ∀ (h : Host), type_of% (@pw_g4_s53 h) = @E2eScal.stepLeaKind h PwUnmarshal Reg64.rsi Reg64.rax 24 53 54 := by
+  with_reducible exact Codec.kstep_lea Reg64.rsi Reg64.rax 24 _ (k + 53) (k + 54) hq he hend
+theorem pw_g4_s53_kind : ∀ (h : Host), type_of% (@pw_g4_s53 h) = @Codec.stepLeaKind h PwUnmarshal Reg64.rsi Reg64.rax 24 53 54 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -1082,13 +1083,13 @@ theorem pw_g4_s54 (k : Nat) (hk : PwUnmarshal.IsInfixAt Host.prog k) (hf : Label
     (F : DataMem → Prop)
     (final : MachineState → Prop) (s : MachineData)
     (hb : s.regs.get64 Reg64.rbx = base) (hm : (Eq (bs.At a) ⋆ F) s.dmem)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.r8 (BitVec.ofInt 64 (Int.ofBytes bs)), Host.addrOf (k + 55)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.r8 (BitVec.ofInt 64 (Int.ofBytes bs)), Host.addrOf (k + 55)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 54)⟩ := by
-  have hq := E2eScal.win hk 54 1
-  have he : E2eScal.eraseNop ((PwUnmarshal.drop 54).take 1) = [E2eScal.iLd Reg64.r8 Reg64.rbx 8] := by rfl
+  have hq := Codec.win hk 54 1
+  have he : Codec.eraseNop ((PwUnmarshal.drop 54).take 1) = [Codec.iLd Reg64.r8 Reg64.rbx 8] := by rfl
   have hend : k + 54 + ((PwUnmarshal.drop 54).take 1).length = k + 55 := by rfl
-  with_reducible exact E2eScal.kstep_ldb Reg64.r8 Reg64.rbx 8 _ (k + 54) (k + 55) hq he hend
-theorem pw_g4_s54_kind : ∀ (h : Host), type_of% (@pw_g4_s54 h) = @E2eScal.stepLdbKind h PwUnmarshal Reg64.r8 Reg64.rbx 8 54 55 := by
+  with_reducible exact Codec.kstep_ldb Reg64.r8 Reg64.rbx 8 _ (k + 54) (k + 55) hq he hend
+theorem pw_g4_s54_kind : ∀ (h : Host), type_of% (@pw_g4_s54 h) = @Codec.stepLdbKind h PwUnmarshal Reg64.r8 Reg64.rbx 8 54 55 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -1103,11 +1104,11 @@ theorem pw_g4_s55 (k : Nat) (hk : PwUnmarshal.IsInfixAt Host.prog k) (hf : Label
     (hk' : ∀ m' : DataMem, (Eq ((Int.toBytes 8 (@BitVec.toInt 64 (s.regs.get64 Reg64.r8))).At a) ⋆ F) m' →
       Eventually (step1 Host.exe) final ⟨{ s with dmem := m' }, Host.addrOf (k + 56)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 55)⟩ := by
-  have hq := E2eScal.win hk 55 1
-  have he : E2eScal.eraseNop ((PwUnmarshal.drop 55).take 1) = [E2eScal.iSt Reg64.r8 Reg64.rax 16] := by rfl
+  have hq := Codec.win hk 55 1
+  have he : Codec.eraseNop ((PwUnmarshal.drop 55).take 1) = [Codec.iSt Reg64.r8 Reg64.rax 16] := by rfl
   have hend : k + 55 + ((PwUnmarshal.drop 55).take 1).length = k + 56 := by rfl
-  with_reducible exact E2eScal.kstep_st Reg64.r8 Reg64.rax 16 _ (k + 55) (k + 56) hq he hend
-theorem pw_g4_s55_kind : ∀ (h : Host), type_of% (@pw_g4_s55 h) = @E2eScal.stepStKind h PwUnmarshal Reg64.r8 Reg64.rax 16 55 56 := by
+  with_reducible exact Codec.kstep_st Reg64.r8 Reg64.rax 16 _ (k + 55) (k + 56) hq he hend
+theorem pw_g4_s55_kind : ∀ (h : Host), type_of% (@pw_g4_s55 h) = @Codec.stepStKind h PwUnmarshal Reg64.r8 Reg64.rax 16 55 56 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -1116,13 +1117,13 @@ set_option maxRecDepth 100000 in
 theorem pw_g4_s56 (k : Nat) (hk : PwUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh PwUnmarshal k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.rax (s.regs.get64 Reg64.rsi), Host.addrOf (k + 57)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rax (s.regs.get64 Reg64.rsi), Host.addrOf (k + 57)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 56)⟩ := by
-  have hq := E2eScal.win hk 56 1
-  have he : E2eScal.eraseNop ((PwUnmarshal.drop 56).take 1) = [E2eScal.iMovRR Reg64.rax Reg64.rsi] := by rfl
+  have hq := Codec.win hk 56 1
+  have he : Codec.eraseNop ((PwUnmarshal.drop 56).take 1) = [Codec.iMovRR Reg64.rax Reg64.rsi] := by rfl
   have hend : k + 56 + ((PwUnmarshal.drop 56).take 1).length = k + 57 := by rfl
-  with_reducible exact E2eScal.kstep_mov_rr Reg64.rax Reg64.rsi _ (k + 56) (k + 57) hq he hend
-theorem pw_g4_s56_kind : ∀ (h : Host), type_of% (@pw_g4_s56 h) = @E2eScal.stepMovRRKind h PwUnmarshal Reg64.rax Reg64.rsi 56 57 := by
+  with_reducible exact Codec.kstep_mov_rr Reg64.rax Reg64.rsi _ (k + 56) (k + 57) hq he hend
+theorem pw_g4_s56_kind : ∀ (h : Host), type_of% (@pw_g4_s56 h) = @Codec.stepMovRRKind h PwUnmarshal Reg64.rax Reg64.rsi 56 57 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -1131,13 +1132,13 @@ set_option maxRecDepth 100000 in
 theorem pw_g4_s57 (k : Nat) (hk : PwUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh PwUnmarshal k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.rbx (s.regs.get64 Reg64.rdx), Host.addrOf (k + 58)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rbx (s.regs.get64 Reg64.rdx), Host.addrOf (k + 58)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 57)⟩ := by
-  have hq := E2eScal.win hk 57 1
-  have he : E2eScal.eraseNop ((PwUnmarshal.drop 57).take 1) = [E2eScal.iMovRR Reg64.rbx Reg64.rdx] := by rfl
+  have hq := Codec.win hk 57 1
+  have he : Codec.eraseNop ((PwUnmarshal.drop 57).take 1) = [Codec.iMovRR Reg64.rbx Reg64.rdx] := by rfl
   have hend : k + 57 + ((PwUnmarshal.drop 57).take 1).length = k + 58 := by rfl
-  with_reducible exact E2eScal.kstep_mov_rr Reg64.rbx Reg64.rdx _ (k + 57) (k + 58) hq he hend
-theorem pw_g4_s57_kind : ∀ (h : Host), type_of% (@pw_g4_s57 h) = @E2eScal.stepMovRRKind h PwUnmarshal Reg64.rbx Reg64.rdx 57 58 := by
+  with_reducible exact Codec.kstep_mov_rr Reg64.rbx Reg64.rdx _ (k + 57) (k + 58) hq he hend
+theorem pw_g4_s57_kind : ∀ (h : Host), type_of% (@pw_g4_s57 h) = @Codec.stepMovRRKind h PwUnmarshal Reg64.rbx Reg64.rdx 57 58 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -1146,13 +1147,13 @@ set_option maxRecDepth 100000 in
 theorem pw_g4_s58 (k : Nat) (hk : PwUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh PwUnmarshal k) :
     ∀
     (final : MachineState → Prop) (s : MachineData)
-    (hk' : Eventually (step1 Host.exe) final ⟨E2eScal.setR s Reg64.rcx (BitVec.zeroExtend 64 (BitVec.truncate 32 (8 : Int64).toBitVec)), Host.addrOf (k + 59)⟩),
+    (hk' : Eventually (step1 Host.exe) final ⟨Codec.setR s Reg64.rcx (BitVec.zeroExtend 64 (BitVec.truncate 32 (8 : Int64).toBitVec)), Host.addrOf (k + 59)⟩),
     Eventually (step1 Host.exe) final ⟨s, Host.addrOf (k + 58)⟩ := by
-  have hq := E2eScal.win hk 58 1
-  have he : E2eScal.eraseNop ((PwUnmarshal.drop 58).take 1) = [E2eScal.iMovI Reg64.rcx 8] := by rfl
+  have hq := Codec.win hk 58 1
+  have he : Codec.eraseNop ((PwUnmarshal.drop 58).take 1) = [Codec.iMovI Reg64.rcx 8] := by rfl
   have hend : k + 58 + ((PwUnmarshal.drop 58).take 1).length = k + 59 := by rfl
-  with_reducible exact E2eScal.kstep_movi Reg64.rcx 8 _ (k + 58) (k + 59) hq he hend
-theorem pw_g4_s58_kind : ∀ (h : Host), type_of% (@pw_g4_s58 h) = @E2eScal.stepMovIKind h PwUnmarshal Reg64.rcx 8 58 59 := by
+  with_reducible exact Codec.kstep_movi Reg64.rcx 8 _ (k + 58) (k + 59) hq he hend
+theorem pw_g4_s58_kind : ∀ (h : Host), type_of% (@pw_g4_s58 h) = @Codec.stepMovIKind h PwUnmarshal Reg64.rcx 8 58 59 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
@@ -1180,12 +1181,12 @@ theorem pw_g4_WithdrawableEpoch_call (k : Nat) (hk : PwUnmarshal.IsInfixAt Host.
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 59)⟩ := by
-  have hq := E2eScal.win hk 59 3
-  have he : E2eScal.eraseNop ((PwUnmarshal.drop 59).take 3) = E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159" := by rfl
-  have hjc : k + 59 + E2eScal.nopPos ((PwUnmarshal.drop 59).take 3) 0 = k + 59 := by rfl
-  have hB := E2eScal.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159") 88 hk
+  have hq := Codec.win hk 59 3
+  have he : Codec.eraseNop ((PwUnmarshal.drop 59).take 3) = E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159" := by rfl
+  have hjc : k + 59 + Codec.nopPos ((PwUnmarshal.drop 59).take 3) 0 = k + 59 := by rfl
+  have hB := Codec.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159") 88 hk
     (by simp only [PwUnmarshal, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl := Fk.label_at' hk hf (j := 88)
+  have hl := Machine.label_at' hk hf (j := 88)
     (by simp only [PwUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [PwUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact E2eScal.calldec_seg_w _ _ _ (k + 59) (k + 59) (k + 88) hq he hjc hB hl

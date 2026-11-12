@@ -2,7 +2,7 @@ import E2e.OptR1.Tail
 
 /-! # OPT-R1 reserve encoder from `L_e5`: the reject tail (`len(Root) ≠ 32`). See `E2e.OptR1.Tail`. -/
 
-open Fk E2e.OptR1.Code
+open Machine Runtime TestTarget E2e.OptR1.Code
 variable [Host]
 
 namespace E2e.OptR1

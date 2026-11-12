@@ -1,5 +1,5 @@
 import E2eScal.CallDec
-import E2eScal.U64RR
+import Codec.InlineUint64RegisterBase
 
 /-!
 # GEN3 L1 / L3: statement kinds of the callee-decoder call block, its argument set-ups and the two-directive
@@ -13,8 +13,9 @@ proved `*_uacc_holds` theorems). The scratch register of the uint64 read is in i
 the statement (the register clause).
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
+open Codec
 namespace E2eScal
 
 variable [Host]

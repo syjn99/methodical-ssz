@@ -1,5 +1,5 @@
-import Fk.Contracts
-import Fk.Frame
+import Runtime.Contracts
+import Machine.Frame
 import E2eAd.Prims
 import E2eScal.ViSpec
 
@@ -30,7 +30,7 @@ rsp − 112; their saved rbp at rsp − 120 and their rbx spill at rsp − 96 (t
 0x8(%rsp) of this function).
 -/
 
-open Fk E2eAd E2eAd.Code E2eScal.BhCode E2eScal
+open Machine Runtime TestTarget E2eAd E2eAd.Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.Bh

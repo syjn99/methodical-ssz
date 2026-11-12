@@ -1,6 +1,6 @@
 import E2e.Epoch
-import Fk.WHost
-import Fk.RtCopy
+import Machine.WitnessHost
+import Runtime.CopyModel
 
 /-!
 # Witness of `ep_unmarshal_accept_main` and `ep_uacc_holds`
@@ -16,7 +16,7 @@ returns nil with the receiver = the input (`ep_accept_runs`); three epoch values
 below (0, a representative value, 2^64 − 1).
 -/
 
-open Fk Fk.W E2e E2e.Code
+open Machine Runtime TestTarget Machine.Witness E2e E2e.Code
 
 namespace E2e.WitEp
 

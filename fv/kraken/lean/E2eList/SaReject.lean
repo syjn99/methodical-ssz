@@ -1,6 +1,6 @@
-import Fk.Step
-import Fk.Labels
-import Fk.Bytes
+import Machine.Step
+import Machine.Labels
+import Machine.Bytes
 import E2e.CpReject
 import E2eList.StmtSa
 
@@ -13,7 +13,7 @@ Proof text: `E2eScal.H4.dd_e2e_reject_size_main` (`DdReject.lean`) with this dec
 and frame size. The statement is the frozen `sa_reject_size_stmt`.
 -/
 
-open Fk E2eList.Code
+open Machine Runtime TestTarget E2eList.Code
 variable [Host]
 
 namespace E2eList

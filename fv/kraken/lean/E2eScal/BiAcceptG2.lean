@@ -1,4 +1,4 @@
-import E2eScal.Compose
+import Codec.DecoderHeadEpilogue
 import E2eScal.Gen2BiDec
 import E2eScal.BiAccept
 
@@ -14,7 +14,7 @@ Model: `Gen2ComposeEx.lean` (the same chain over hand-written example segments).
 statement copy, the code facts of the head / tail / epilogue templates and the frame instance of each step.
 -/
 
-open Fk E2e E2eScal E2eScal.H3Code E2eScal.E1
+open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.H3Code E2eScal.E1
 variable [Host]
 
 namespace E2eScal.G2
@@ -72,20 +72,20 @@ theorem bi_e2e_accept_main_g2 (k : Nat) (hk : BiUnmarshal.IsInfixAt Host.prog k)
   simp only at h_mem hguard hlen ⊢
   have hrsp_lt : rsp.toNat < 2 ^ 64 := rsp.toNat_lt_size
   -- code facts of the composition templates
-  have hH := E2eScal.infix_sub (q := E2eScal.decHead "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_0" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_f6" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_e2" 40) 0 hk
-    (by simp only [BiUnmarshal, E2eScal.decHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hT1 := E2eScal.infix_sub (q := E2eScal.bytesDecTailA Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_c7" 24) 37 hk
-    (by simp only [BiUnmarshal, E2eScal.bytesDecTailA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hT2 := E2eScal.infix_sub (q := E2eScal.bytesDecTailB Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_c7" 8) 45 hk
-    (by simp only [BiUnmarshal, E2eScal.bytesDecTailB, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hlT := Fk.label_at' hk hf (j := 45)
+  have hH := Codec.infix_sub (q := Codec.decHead "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_0" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_f6" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_e2" 40) 0 hk
+    (by simp only [BiUnmarshal, Codec.decHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hT1 := Codec.infix_sub (q := Codec.bytesDecTailA Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_c7" 24) 37 hk
+    (by simp only [BiUnmarshal, Codec.bytesDecTailA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hT2 := Codec.infix_sub (q := Codec.bytesDecTailB Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ_c7" 8) 45 hk
+    (by simp only [BiUnmarshal, Codec.bytesDecTailB, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hlT := Machine.label_at' hk hf (j := 45)
     (by simp only [BiUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [BiUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hE := E2eScal.infix_sub (q := E2eScal.decEpi) 50 hk
-    (by simp only [BiUnmarshal, E2eScal.decEpi, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hY : E2eScal.U64InlineReg Reg64.rsi := by decide
+  have hE := Codec.infix_sub (q := Codec.decEpi) 50 hk
+    (by simp only [BiUnmarshal, Codec.decEpi, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hY : Codec.U64InlineReg Reg64.rsi := by decide
   -- head: entry → directive 13
-  refine eventually_trans _ _ _ _ (E2eScal.dechead_seg _ _ _ _ 40 (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _
+  refine eventually_trans _ _ _ _ (Codec.dechead_seg _ _ _ _ 40 (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _
     (by dsimp only; ecancel) hguard (by rw [hlen]; rfl)) ?_
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, hrax1, hrbx1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
@@ -108,7 +108,7 @@ theorem bi_e2e_accept_main_g2 (k : Nat) (hk : BiUnmarshal.IsInfixAt Host.prog k)
   dsimp only at hpc2 hrsp2 hrbp2 hr142 hrdx2 Hm2
   subst hpc2
   -- pointer tail, 37–38 and 45–46
-  refine eventually_trans _ _ _ _ (E2eScal.bytesdec_tail_seg Reg64.rsi hY _ _ _ (k + 37) (k + 45) hT1 hT2 hlT
+  refine eventually_trans _ _ _ _ (Codec.bytesdec_tail_seg Reg64.rsi hY _ _ _ (k + 37) (k + 45) hT1 hT2 hlT
     (rsp.toBitVec - 40) rax.toBitVec p1 (rsp.toBitVec - 16) (rax.toBitVec + 8)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat])
     (rsp - 8) r14 (Int.toBytes 8 p1.toInt) (Int.toBytes_length 8 _) _ d2 hrsp2 hrbp2 hr142 hrdx2
@@ -126,7 +126,7 @@ theorem bi_e2e_accept_main_g2 (k : Nat) (hk : BiUnmarshal.IsInfixAt Host.prog k)
   dsimp only at hpc4 hrsp4 hrbp4 hr144 hrdx4 Hm4
   subst hpc4
   -- epilogue, 50–54
-  refine eventually_trans _ _ _ _ (E2eScal.decepi_seg (k + 50) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
+  refine eventually_trans _ _ _ _ (Codec.decepi_seg (k + 50) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
     (by bv_omega) (by bv_omega) rbp ra r14 _ d4 hrsp4 hr144 (by ecancel)) ?_
   rintro ⟨d5, pc5⟩ ⟨hpc5, hrax5, hrbx5, hrsp5, hrbp5, hr145, Hm5⟩
   dsimp only at hpc5 hrax5 hrbx5 hrsp5 hrbp5 hr145 Hm5

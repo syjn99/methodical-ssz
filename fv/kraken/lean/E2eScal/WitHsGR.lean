@@ -1,6 +1,6 @@
 import E2eScal.Gen5HsDec
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of the generated `hs_g5dec_reject`
@@ -13,8 +13,9 @@ and are not read from the ELF), the guard word, saved-rbp slot, return slot, the
 `R`) and the rbx spill slot. For every length `≠ 64` (instances 63, 65, 0) the decoder returns the two words.
 -/
 
-open Fk Fk.W E2e E2eScal.H6Code
+open Machine Runtime TestTarget Machine.Witness E2e E2eScal.H6Code
 
+open Codec
 namespace E2eScal.WitHsGR
 
 set_option maxRecDepth 100000

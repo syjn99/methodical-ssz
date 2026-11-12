@@ -21,7 +21,7 @@ def emit(d, X):
     stmt = src[i + len(f'theorem {x}_g5dec_accept : '):j]
     intro = re.search(r'\n  intro (k hk hf [^\n]*)\n', src[j:]).group(1).split()
     ex = [f'(uintBytes 8 g.{f[0]}.toNat).toList' if f[1] == 'u' else f'g.{f[0]}.toArray.toList' for f in fs]
-    lp = ['(by simp [Fv.uintBytes_size])' if f[1] == 'u' else '(by simp)' for f in fs]
+    lp = ['(by simp [Spec.uintBytes_size])' if f[1] == 'u' else '(by simp)' for f in fs]
     fvs = ' '.join(f'fv{k}' for k in range(n))
     hyps = ' '.join(rf'\(hfv{k} : fv{k}\.length = \d+\)' for k in range(n))
     line = re.search(rf'\n    \({fvs} : List UInt8\) {hyps}\n', stmt)
@@ -75,7 +75,7 @@ edited):
 Not stated here: that the callee error paths (`fmt.errorf` wraps) are unreachable when `size = {N}`.
 -/
 
-open Fk E2e E2eScal E2eScal.F24Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.F24Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.F24

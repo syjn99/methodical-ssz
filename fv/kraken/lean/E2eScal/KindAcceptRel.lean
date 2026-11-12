@@ -12,8 +12,9 @@ at default transparency. This is the `_kind` line a generated composed theorem o
 instead of the identity with a hand theorem.
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
+open Codec
 namespace E2eScal
 
 theorem bi_accept_gc_kind : ∀ (h : Host), type_of% (@E2eScal.Gen.bi_e2e_accept_main_gc h)

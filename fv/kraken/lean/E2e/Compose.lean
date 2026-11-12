@@ -1,6 +1,6 @@
 import E2e.CpMarshal
 import E2e.CpSpecK
-import Fk.RtCopy
+import Runtime.CopyModel
 
 /-!
 # Encoder on a decoded-form receiver (NOT the machine-level composition)
@@ -24,7 +24,7 @@ the bytes the decoder read. The full frame accounting of the encoder call is
 single witness host for decoder and encoder. Spec level: `cp_e2e_spec_roundtrip`.
 -/
 
-open Fk E2e.Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2e

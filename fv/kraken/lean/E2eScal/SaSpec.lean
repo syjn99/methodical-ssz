@@ -15,7 +15,8 @@ sha256; copy in `prysm/go1.26.10/e2e/g5c/`).
 -/
 
 namespace E2e
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz
+open Spec hiding readUint_lt
 
 /-- The checker's Desc has the same kinds in the same order; only the names differ. -/
 theorem prysmSaDesc_checker :
@@ -46,7 +47,7 @@ def psaEnc (g : PSa) : Array UInt8 :=
   uintBytes 8 g.slot.toNat ++ uintBytes 8 g.subcommitteeIndex.toNat
 
 theorem psa_enc_size (g : PSa) : (psaEnc g).size = 16 := by
-  simp [psaEnc, Fv.uintBytes_size]
+  simp [psaEnc, Spec.uintBytes_size]
 
 theorem psa_toValue_fits (g : PSa) : Value.fits prysmSaDesc g.toValue = true := by
   have := g.slot.toNat_lt; have := g.subcommitteeIndex.toNat_lt
@@ -88,7 +89,7 @@ theorem psa_serialize (g : PSa) : serialize prysmSaDesc g.toValue = .ok (psaEnc 
   have := a0.toNat_lt; have := a1.toNat_lt
   simp only [prysmSaDesc, PSa.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Fv.uintBytes_size, bytesPerOffset, psaEnc,
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, psaEnc,
     Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- **Spec roundtrip.** -/

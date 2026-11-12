@@ -2,7 +2,7 @@ import E2e.OptR1.Main
 
 /-! # OPT-R1 reserve encoder: the grow path (`len ≤ cap < len + 40`), valid and invalid root. See `E2e.OptR1.Main`. -/
 
-open Fk E2e.OptR1.Code
+open Machine Runtime TestTarget E2e.OptR1.Code
 variable [Host]
 
 namespace E2e.OptR1

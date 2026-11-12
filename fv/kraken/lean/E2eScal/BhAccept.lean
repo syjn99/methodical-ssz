@@ -33,7 +33,7 @@ path (in `R`); callee return slot rsp − 112; `lo` = the `S + 8` bytes below it
 its top word). Runtime calls get `S + 8` stack bytes below their return slot.
 -/
 
-open Fk E2e E2eAd E2eAd.Code E2eScal.BhCode E2eScal
+open Machine Runtime TestTarget E2e E2eAd E2eAd.Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.Bh

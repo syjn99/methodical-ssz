@@ -1,7 +1,7 @@
 import E2e.OptR1.Spec
-import Fk.RtCopy
-import Fk.WHost
-import E2e.WitSplit
+import Runtime.CopyModel
+import Machine.WitnessHost
+import Machine.WitnessSplit
 import E2e.GoVal
 
 /-!
@@ -17,7 +17,7 @@ rsp − 160 … rsp + 32 (rsp = 0x12440) and `dst` at 0x12460 = a 30-byte prefix
 one growslice for newLen = 70), 40, 41 (fast path); `covo_runs_nil`: nil `dst` (rbx = 0, len = cap = 0).
 -/
 
-open Fk Fk.W E2e E2e.OptR1 E2e.OptR1.Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget Machine.Witness E2e E2e.OptR1 E2e.OptR1.Code EthLib.Serialization.Ssz
 
 namespace E2e.OptR1.WitOW
 
@@ -78,7 +78,7 @@ theorem covo_runs (g : PCp) (n : Nat) (hn : n ≤ 64) (zmms : RegZmms) (flags : 
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rbx.toNat = 30 + 40)
       ⟨cs0 (uintBytes 8 g.epoch.toNat).toList g.root.toList (pre30 ++ z n) 0x12460 30 (UInt64.ofNat (30 + n))
         zmms flags, Host.addrOf 8⟩ := by
-  have he8 : (uintBytes 8 g.epoch.toNat).toList.length = 8 := by simp [Fv.uintBytes_size]
+  have he8 : (uintBytes 8 g.epoch.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
   have hroot : g.root.toList.length = 32 := by simp
   have hc : (UInt64.ofNat (30 + n)).toNat = 30 + n := by simp; omega
   obtain ⟨bs, hs, he⟩ := cpo_marshal_cover 8 hk8 hf8 g (z 8) (w 32) (z 32) pre30 (z n) rfl rfl rfl
@@ -111,7 +111,7 @@ theorem covo_runs_nil (g : PCp) (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rbx.toNat = 0 + 40)
       ⟨cs0 (uintBytes 8 g.epoch.toNat).toList g.root.toList [] 0 0 0 zmms flags, Host.addrOf 8⟩ := by
-  have he8 : (uintBytes 8 g.epoch.toNat).toList.length = 8 := by simp [Fv.uintBytes_size]
+  have he8 : (uintBytes 8 g.epoch.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
   have hroot : g.root.toList.length = 32 := by simp
   obtain ⟨bs, hs, he⟩ := cpo_marshal_cover 8 hk8 hf8 g (z 8) (w 32) (z 32) [] [] rfl rfl rfl
     0x12380 (cs0 (uintBytes 8 g.epoch.toNat).toList g.root.toList [] 0 0 0 zmms flags) 0 0 rfl rfl

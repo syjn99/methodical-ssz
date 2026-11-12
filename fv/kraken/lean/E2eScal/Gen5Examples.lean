@@ -28,8 +28,9 @@ the statements are the `rfl` ties of `AcceptTies.lean`.
 `g5_examples_accept` collects the four accept theorems under their kinds.
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
+open Codec
 namespace E2eScal.Gen5
 
 variable [Host]

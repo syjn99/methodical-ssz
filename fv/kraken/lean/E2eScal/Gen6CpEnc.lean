@@ -1,5 +1,5 @@
 import E2eScal.EncTies
-import E2eScal.EncFrameTest
+import Codec.EncodeFrameTest
 import E2e.Code
 
 /-!
@@ -15,7 +15,7 @@ The statement implies the committed hand statement `E2e.cp_e2e_marshal_main` thr
 GEN6-JSON: {"type": "Checkpoint", "const": "CpMarshal", "prefix": "cp_g6e", "size": 40, "frame": 104, "gd": 0, "rt": true, "fields": [["Epoch", "u", 8], ["Root", "b", 32]], "boundaries": [8, 36, 63], "layout": "E2eScal.layEncCp", "S_sha256": "c4345527c651c0a3ff8319af3f35df1e375b8c58a6a45054762da0a0dcef1b1d", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "same E2e.cp_e2e_marshal_main via E2eScal.cp_marshal_of_kind", "S": "prysm/go1.26.10/e2e/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.Checkpoint", "kinds": [{"theorem": "cp_g6e_head", "kind": "encHeadKindN"}, {"theorem": "cp_g6e_f0", "kind": "encFieldKindN"}, {"theorem": "cp_g6e_f1", "kind": "encFieldKindN"}, {"theorem": "cp_g6e_epi", "kind": "encEpiKindN"}, {"theorem": "cp_g6e_fast", "kind": "encFastKindN"}]}
 -/
 
-open Fk E2eScal E2e.Code
+open Machine Runtime TestTarget E2eScal Codec E2e.Code
 variable [Host]
 
 namespace E2eScal.Gen6Enc
@@ -213,7 +213,7 @@ theorem cp_g6e_f0 : ∀ (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (hf : L
     (rsp.toBitVec - 112) (rsp.toBitVec - 64) (by eb) ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) (by rw [List.length_take, Int.toBytes_length]; rfl) _ _ _ (by rfl) (by ecancel)
   intro m5 H5; kn; simp only [Reg64s.get64] at H5
   simp only [toBytes_ofInt_ofBytes 64 8 rfl v0 hv0] at H5
-  have hl33 := Fk.label_at' hk hf (j := 33)
+  have hl33 := Machine.label_at' hk hf (j := 33)
     (by simp only [CpMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [CpMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_cmp_jae_t Reg64.rdi Reg64.rdx _ _ (k + 17) (k + 33) (win hk 17 2) (by rfl) hl33 _ _ (by show ((rcx.toBitVec + 8) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
@@ -333,7 +333,7 @@ theorem cp_g6e_f1 : ∀ (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (hf : L
   kn
   apply kreg_eq Reg64.r9 (rcx.toBitVec + 40) _ _ _ (by show ((rcx.toBitVec + 8) + 32 : BitVec 64) = (rcx.toBitVec + 40); bv_omega)
   kn
-  have hl55 := Fk.label_at' hk hf (j := 55)
+  have hl55 := Machine.label_at' hk hf (j := 55)
     (by simp only [CpMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [CpMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_cmp_jae_t Reg64.rdi Reg64.r9 _ _ (k + 40) (k + 55) (win hk 40 2) (by rfl) hl55 _ _ (by show ((rcx.toBitVec + 40) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
@@ -359,7 +359,7 @@ theorem cp_g6e_f1 : ∀ (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (hf : L
   apply kreg_eq Reg64.rcx 32 _ _ _ (by show (BitVec.zeroExtend 64 (BitVec.truncate 32 (32 : BitVec 64)) : BitVec 64) = 32; decide)
   kn
   refine eventually_trans _ _ _ _ (encn_call (k + 62) (win hk 62 1) (rsp.toBitVec - 112) (rbx.toBitVec + rcx.toBitVec + 8) p1
-    (rsp.toBitVec - 120) (rsp.toBitVec - 120 - BitVec.ofNat 64 S) S (by bv_omega) (E2eScal.g5_lo0 rsp.toBitVec 112 120 S (by decide))
+    (rsp.toBitVec - 120) (rsp.toBitVec - 120 - BitVec.ofNat 64 S) S (by bv_omega) (Codec.frame_lo0 rsp.toBitVec 112 120 S (by decide))
     b1 d1 rslot scratch (by rw [hd1, hb1]) hrslot hsc
     _ _ (by rfl) (by rfl) (by rfl) (by rw [hb1]; rfl) (by first | ecancel | (dsimp only; ecancel)) hmm) ?_
   rintro ⟨e1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, scr1, hscr1, Hc1⟩

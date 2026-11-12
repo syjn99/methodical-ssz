@@ -1,6 +1,6 @@
 import E2eScal.Gen6BiEnc
 import E2eScal.BiSpec
-import Fk.RtCopy
+import Runtime.CopyModel
 
 /-!
 # BlobIdentifier encoder fast path (generated theorem) against the independent Desc (unit E2-C)
@@ -12,7 +12,7 @@ Shape of `E2eScal.Bh.bh_e2e_marshal_spec_k`. Encoder fast path only (`len + 40 �
 lengths). Emitted by the unit's evidence tool `e2cemit.py`, then built and kernel-checked.
 -/
 
-open Fk E2e E2eScal E2eScal.Gen6Enc E2eScal.Enc2Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.Gen6Enc E2eScal.Enc2Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.E2c
@@ -85,7 +85,7 @@ theorem bi_e2c_spec_k (k : Nat)
       ⟨s, Host.addrOf k⟩ := by
   refine ⟨pbiEnc g, pbi_serialize g, ?_⟩
   have hF0 : g.blockRoot.toList.length = 32 := by simp
-  have hF1 : (uintBytes 8 g.index.toNat).toList.length = 8 := by simp [Fv.uintBytes_size]
+  have hF1 : (uintBytes 8 g.index.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
   refine eventually_mono (bi_g6e_fast k hk hf ast (uintBytes 8 g.index.toNat).toList c0 (g.blockRoot.toList) pre d0 d1 hast hF1 hc0 hF0 hd0 hd1 p0 s ra guard hpre fp s1 s2 l24 l40 l32 rslot hfp hs1 hs2 hl24 hl40 hl32 hrslot R S scratch hsc h_mem hguard hsp hcap hcap63 hmm)
     (fun st ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, _, _, _, _, _, hm⟩ =>
       ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, ?_⟩)

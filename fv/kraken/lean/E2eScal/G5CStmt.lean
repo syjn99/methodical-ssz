@@ -1,7 +1,7 @@
-import Fk.Contracts
-import Fk.Frame
-import Fk.Bytes
-import Fk.Labels
+import Runtime.Contracts
+import Machine.Frame
+import Machine.Bytes
+import Machine.Labels
 import E2e.Data
 import E2e.Code
 import E2eAd.Code
@@ -60,7 +60,7 @@ rsp − 88, so it holds directive 56 at the end; callee rbp at − 96 (`lo`), ca
 `guard + 88 < rsp`.
 -/
 
-open Fk E2e E2e.Code E2eAd.Code E2eScal.H6Code E2eScal.BhCode
+open Machine Runtime TestTarget E2e E2e.Code E2eAd.Code E2eScal.H6Code E2eScal.BhCode
 variable [Host]
 
 namespace E2eScal.G5C

@@ -1,6 +1,6 @@
 import E2eScal.Gen6E1Enc
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of `e1_g6e_fast` (Eth1Data encoder fast path, generated theorem; unit E2-C)
@@ -15,7 +15,7 @@ Two instances: empty prefix with `cap = 72`; prefix `[0xaa, 0xbb, 0xcc]` with 5 
 field value of the stated lengths every premise of `e1_g6e_fast` holds (non-vacuity of the fast path).
 -/
 
-open Fk Fk.W E2eScal E2eScal.Gen6Enc E2eScal.E1Code
+open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.Gen6Enc E2eScal.E1Code
 
 namespace E2eScal.WitE2cE1
 

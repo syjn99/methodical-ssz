@@ -1,4 +1,4 @@
-import E2eScal.P2Enc
+import Codec.Bytes32Encode
 import E2e.Code
 
 /-!
@@ -10,9 +10,10 @@ proof: the two blocks of `rootEncHead` / `rootEncTail` with the Checkpoint param
 the encode template run inside the negative suite's 300 s case limit (`P2EncCp` builds in about 730 s).
 -/
 
-open Fk E2e.Code
+open Machine Runtime TestTarget E2e.Code
 variable [Host]
 
+open Codec
 namespace E2eScal
 
 set_option maxRecDepth 100000 in
@@ -24,7 +25,7 @@ theorem cp_enc_tmpl_at (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (hf : La
       88 80 96).IsInfixAt Host.prog (k + 55)
     ∧ label "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf"
       = Host.addrOf (k + 55) := by
-  refine ⟨infix_sub 36 hk ?_, infix_sub 55 hk ?_, Fk.label_at' hk hf (j := 55) ?_ ?_⟩
+  refine ⟨infix_sub 36 hk ?_, infix_sub 55 hk ?_, Machine.label_at' hk hf (j := 55) ?_ ?_⟩
   · simp only [CpMarshal, rootEncHead, List.drop_succ_cons, List.drop_zero, List.length_cons,
       List.length_nil, List.take_succ_cons, List.take_zero]
   · simp only [CpMarshal, rootEncTail, List.drop_succ_cons, List.drop_zero, List.length_cons,

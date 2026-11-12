@@ -1,6 +1,6 @@
-import Fk.Contracts
-import Fk.Step
-import Fk.Labels
+import Runtime.Contracts
+import Machine.Step
+import Machine.Labels
 import E2e.Data
 import E2eList.ScLoop
 import E2eHb.Code
@@ -18,7 +18,7 @@ The return slot: the last runtime call is the memmove of the last iteration (dir
 `hb_loop2` keep its value `k + 133` (`hb_loop1` leaves it unnamed; the accept statement needs it).
 -/
 
-open Fk E2eList E2eHb.Code
+open Machine Runtime TestTarget E2eList E2eHb.Code
 variable [Host]
 
 namespace E2eHb

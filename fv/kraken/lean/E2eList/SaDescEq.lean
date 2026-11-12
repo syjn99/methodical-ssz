@@ -11,7 +11,7 @@ same inputs with the same values.
 -/
 
 namespace E2eList
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz Spec TestTarget
 
 theorem prysmSaDesc_checker :
     prysmSaDesc = .container ["sync_committee_bits", "sync_committee_signature"] [.bitVector 512, .byteVector 96]

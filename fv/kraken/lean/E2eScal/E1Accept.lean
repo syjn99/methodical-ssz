@@ -1,6 +1,6 @@
-import Fk.Contracts
-import Fk.Frame
-import Fk.Bytes
+import Runtime.Contracts
+import Machine.Frame
+import Machine.Bytes
 import E2eScal.E1Seg0
 
 /-!
@@ -33,7 +33,7 @@ rsp + 16 (buf.ptr); frame rsp − 40 … rsp − 9: argument area rsp − 40 …
 rsp − 16 (`l18`); the runtime callees' return slot rsp − 48 and their `S` stack bytes below it (`lo`).
 -/
 
-open Fk E2e E2eScal E2eScal.E1Code E2eScal.E1
+open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.E1Code E2eScal.E1
 variable [Host]
 
 namespace E2eScal.E1
@@ -192,11 +192,11 @@ theorem e1_e2e_accept_main (k : Nat) (hk : E1Unmarshal.IsInfixAt Host.prog k) (h
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
   subst hpc1
   -- DepositRoot (hand, source offset 0), 13 → 37
-  have hA1 := E2eScal.infix_sub (q := E2eScal.rootDecHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75" 48 16 24) 13 hk
-    (by simp only [E1Unmarshal, E2eScal.rootDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB1 := E2eScal.infix_sub (q := rootDecMid0 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_b2" 48 56 24 8 16 24) 26 hk
+  have hA1 := Codec.infix_sub (q := Codec.rootDecHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75" 48 16 24) 13 hk
+    (by simp only [E1Unmarshal, Codec.rootDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB1 := Codec.infix_sub (q := rootDecMid0 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_b2" 48 56 24 8 16 24) 26 hk
     (by simp only [E1Unmarshal, rootDecMid0, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl1 := Fk.label_at' hk hf (j := 26)
+  have hl1 := Machine.label_at' hk hf (j := 26)
     (by simp only [E1Unmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [E1Unmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   refine eventually_trans _ _ _ _ (rootdec_seg0 _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA1 hB1 hl1
@@ -247,14 +247,14 @@ theorem e1_e2e_accept_main (k : Nat) (hk : E1Unmarshal.IsInfixAt Host.prog k) (h
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl cnt hcnt] at H4
   kunfold
   -- BlockHash (frozen rootdec_seg, hand instance), 50 → 75
-  have hA2 := E2eScal.infix_sub (q := E2eScal.rootDecHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_119" 48 48 56) 50 hk
-    (by simp only [E1Unmarshal, E2eScal.rootDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB2 := E2eScal.infix_sub (q := E2eScal.rootDecMid "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_119" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_15a" 48 56 24 40 48 56 40) 63 hk
-    (by simp only [E1Unmarshal, E2eScal.rootDecMid, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl2 := Fk.label_at' hk hf (j := 63)
+  have hA2 := Codec.infix_sub (q := Codec.rootDecHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_119" 48 48 56) 50 hk
+    (by simp only [E1Unmarshal, Codec.rootDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB2 := Codec.infix_sub (q := Codec.rootDecMid "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_119" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_15a" 48 56 24 40 48 56 40) 63 hk
+    (by simp only [E1Unmarshal, Codec.rootDecMid, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hl2 := Machine.label_at' hk hf (j := 63)
     (by simp only [E1Unmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [E1Unmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  refine eventually_trans _ _ _ _ (E2eScal.rootdec_seg _ _ _ _ _ _ _ _ _ (k + 50) (k + 63) hA2 hB2 hl2
+  refine eventually_trans _ _ _ _ (Codec.rootdec_seg _ _ _ _ _ _ _ _ _ (k + 50) (k + 63) hA2 hB2 hl2
     (rsp.toBitVec - 40) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 16) (rsp.toBitVec - 48)
     (rsp.toBitVec - 48 - BitVec.ofNat 64 S) (rax.toBitVec + 40) (rax.toBitVec + 48) (rax.toBitVec + 56)

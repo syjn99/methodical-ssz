@@ -1,4 +1,4 @@
-import E2eScal.Compose
+import Codec.DecoderHeadEpilogue
 import E2eScal.Gen2DmDec
 import E2eScal.DmAccept
 
@@ -14,7 +14,7 @@ two `bytesdec_tail_seg` steps (rdi, then rsi) and `decepi_seg`. No directive is 
 tail / epilogue templates and the frame instance of each step.
 -/
 
-open Fk E2e E2eScal E2eScal.H3Code E2eScal.E1
+open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.H3Code E2eScal.E1
 variable [Host]
 
 namespace E2eScal.G2
@@ -76,28 +76,28 @@ theorem dm_e2e_accept_main_g2 (k : Nat) (hk : DmUnmarshal.IsInfixAt Host.prog k)
   simp only at h_mem hguard hlen ⊢
   have hrsp_lt : rsp.toNat < 2 ^ 64 := rsp.toNat_lt_size
   -- code facts of the composition templates
-  have hH := E2eScal.infix_sub (q := E2eScal.decHead "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_0" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_191" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_17d" 88) 0 hk
-    (by simp only [DmUnmarshal, E2eScal.decHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hT1 := E2eScal.infix_sub (q := E2eScal.bytesDecTailA Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_c4" 24) 37 hk
-    (by simp only [DmUnmarshal, E2eScal.bytesDecTailA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hT2 := E2eScal.infix_sub (q := E2eScal.bytesDecTailB Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_c4" 0) 45 hk
-    (by simp only [DmUnmarshal, E2eScal.bytesDecTailB, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hlT := Fk.label_at' hk hf (j := 45)
+  have hH := Codec.infix_sub (q := Codec.decHead "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_0" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_191" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_17d" 88) 0 hk
+    (by simp only [DmUnmarshal, Codec.decHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hT1 := Codec.infix_sub (q := Codec.bytesDecTailA Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_c4" 24) 37 hk
+    (by simp only [DmUnmarshal, Codec.bytesDecTailA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hT2 := Codec.infix_sub (q := Codec.bytesDecTailB Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_c4" 0) 45 hk
+    (by simp only [DmUnmarshal, Codec.bytesDecTailB, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hlT := Machine.label_at' hk hf (j := 45)
     (by simp only [DmUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [DmUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hT3 := E2eScal.infix_sub (q := E2eScal.bytesDecTailA Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_162" 24) 73 hk
-    (by simp only [DmUnmarshal, E2eScal.bytesDecTailA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hT4 := E2eScal.infix_sub (q := E2eScal.bytesDecTailB Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_162" 24) 81 hk
-    (by simp only [DmUnmarshal, E2eScal.bytesDecTailB, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hlT2 := Fk.label_at' hk hf (j := 81)
+  have hT3 := Codec.infix_sub (q := Codec.bytesDecTailA Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_162" 24) 73 hk
+    (by simp only [DmUnmarshal, Codec.bytesDecTailA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hT4 := Codec.infix_sub (q := Codec.bytesDecTailB Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_162" 24) 81 hk
+    (by simp only [DmUnmarshal, Codec.bytesDecTailB, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hlT2 := Machine.label_at' hk hf (j := 81)
     (by simp only [DmUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [DmUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hE := E2eScal.infix_sub (q := E2eScal.decEpi) 86 hk
-    (by simp only [DmUnmarshal, E2eScal.decEpi, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hY1 : E2eScal.U64InlineReg Reg64.rdi := by decide
-  have hY2 : E2eScal.U64InlineReg Reg64.rsi := by decide
+  have hE := Codec.infix_sub (q := Codec.decEpi) 86 hk
+    (by simp only [DmUnmarshal, Codec.decEpi, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hY1 : Codec.U64InlineReg Reg64.rdi := by decide
+  have hY2 : Codec.U64InlineReg Reg64.rsi := by decide
   -- head: entry → directive 13
-  refine eventually_trans _ _ _ _ (E2eScal.dechead_seg _ _ _ _ 88 (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _
+  refine eventually_trans _ _ _ _ (Codec.dechead_seg _ _ _ _ 88 (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _
     (by dsimp only; ecancel) hguard (by rw [hlen]; rfl)) ?_
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, hrax1, hrbx1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
@@ -120,7 +120,7 @@ theorem dm_e2e_accept_main_g2 (k : Nat) (hk : DmUnmarshal.IsInfixAt Host.prog k)
   dsimp only at hpc2 hrsp2 hrbp2 hr142 hrdx2 Hm2
   subst hpc2
   -- pointer tail of PublicKey (rdi), 37–38 and 45–46
-  refine eventually_trans _ _ _ _ (E2eScal.bytesdec_tail_seg Reg64.rdi hY1 _ _ _ (k + 37) (k + 45) hT1 hT2 hlT
+  refine eventually_trans _ _ _ _ (Codec.bytesdec_tail_seg Reg64.rdi hY1 _ _ _ (k + 37) (k + 45) hT1 hT2 hlT
     (rsp.toBitVec - 40) rax.toBitVec p1 (rsp.toBitVec - 16) rax.toBitVec
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp)
     (rsp - 8) r14 (Int.toBytes 8 p1.toInt) (Int.toBytes_length 8 _) _ d2 hrsp2 hrbp2 hr142 hrdx2
@@ -145,7 +145,7 @@ theorem dm_e2e_accept_main_g2 (k : Nat) (hk : DmUnmarshal.IsInfixAt Host.prog k)
   dsimp only at hpc4 hrsp4 hrbp4 hr144 hrdx4 Hm4
   subst hpc4
   -- pointer tail of WithdrawalCredentials (rsi), 73–74 and 81–82
-  refine eventually_trans _ _ _ _ (E2eScal.bytesdec_tail_seg Reg64.rsi hY2 _ _ _ (k + 73) (k + 81) hT3 hT4 hlT2
+  refine eventually_trans _ _ _ _ (Codec.bytesdec_tail_seg Reg64.rsi hY2 _ _ _ (k + 73) (k + 81) hT3 hT4 hlT2
     (rsp.toBitVec - 40) rax.toBitVec p2 (rsp.toBitVec - 16) (rax.toBitVec + 24)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat])
     (rsp - 8) r14 (Int.toBytes 8 p2.toInt) (Int.toBytes_length 8 _) _ d4 hrsp4 hrbp4 hr144 hrdx4
@@ -163,7 +163,7 @@ theorem dm_e2e_accept_main_g2 (k : Nat) (hk : DmUnmarshal.IsInfixAt Host.prog k)
   dsimp only at hpc6 hrsp6 hrbp6 hr146 hrdx6 Hm6
   subst hpc6
   -- epilogue, 86–90
-  refine eventually_trans _ _ _ _ (E2eScal.decepi_seg (k + 86) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
+  refine eventually_trans _ _ _ _ (Codec.decepi_seg (k + 86) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
     (by bv_omega) (by bv_omega) rbp ra r14 _ d6 hrsp6 hr146 (by ecancel)) ?_
   rintro ⟨d7, pc7⟩ ⟨hpc7, hrax7, hrbx7, hrsp7, hrbp7, hr147, Hm7⟩
   dsimp only at hpc7 hrax7 hrbx7 hrsp7 hrbp7 hr147 Hm7

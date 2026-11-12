@@ -15,7 +15,8 @@ before `pcCheckerDesc` was rendered and printed.
 -/
 
 namespace E2e
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz
+open Spec hiding readUint_lt
 
 /-- The checker's Desc has the same kinds in the same order; only the names differ. -/
 theorem prysmPcDesc_checker :
@@ -46,7 +47,7 @@ def ppcEnc (g : PPc) : Array UInt8 :=
   uintBytes 8 g.sourceIndex.toNat ++ uintBytes 8 g.targetIndex.toNat
 
 theorem ppc_enc_size (g : PPc) : (ppcEnc g).size = 16 := by
-  simp [ppcEnc, Fv.uintBytes_size]
+  simp [ppcEnc, Spec.uintBytes_size]
 
 theorem ppc_toValue_fits (g : PPc) : Value.fits prysmPcDesc g.toValue = true := by
   have := g.sourceIndex.toNat_lt; have := g.targetIndex.toNat_lt
@@ -88,7 +89,7 @@ theorem ppc_serialize (g : PPc) : serialize prysmPcDesc g.toValue = .ok (ppcEnc 
   have := a0.toNat_lt; have := a1.toNat_lt
   simp only [prysmPcDesc, PPc.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Fv.uintBytes_size, bytesPerOffset, ppcEnc,
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, ppcEnc,
     Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- **Spec roundtrip.** -/

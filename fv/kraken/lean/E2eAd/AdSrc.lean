@@ -1,6 +1,6 @@
 import E2eAd.AdRoot
 import E2eAd.CpSpecs
-import Fk.FunSpecs
+import TestTarget.FunctionSpecs
 
 /-!
 # `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, segment 3
@@ -20,7 +20,7 @@ The Checkpoint callee is used only through `CpUAccC Heap S` (hypothesis of this 
 slot, argument area (24), two untouched 16-byte gaps, three locals and its saved rbp.
 -/
 
-open Fk E2eAd.Code
+open Machine Runtime TestTarget E2eAd.Code
 variable [Host]
 
 namespace E2eAd

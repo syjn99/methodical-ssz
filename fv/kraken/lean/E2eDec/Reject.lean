@@ -1,20 +1,20 @@
-import Fk.Step
-import Fk.Labels
-import Fk.Bytes
+import Machine.Step
+import Machine.Labels
+import Machine.Bytes
 import E2e.CpReject
-import E2eScal.StackGuard
+import Codec.StackGuard
 import E2eDec.StmtDec
 
 /-!
 # Decoder `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ`: size reject and offset reject
 
 The text of `E2eList/IaReject.lean` (IndexedAttestation size and offset rejects) with this function's directive indices: guard 2–4
-(`lea -0x10(%rsp),%r12`, `E2eScal.lea_cmp_be_false` with N = 16), prologue 5–8 (`sub $0x88`, rbx spill to x + 16),
+(`lea -0x10(%rsp),%r12`, `Codec.lea_cmp_be_false` with N = 16), prologue 5–8 (`sub $0x88`, rbx spill to x + 16),
 Size reject: 9–10 `cmp $0x24,%rcx; jb L_2f9` taken, 174–179; offset reject: 11 the 32-bit load of buf[32:36], 14–15
 `cmp $0x24,%rdx; jne L_2e2` taken, 168–173.
 -/
 
-open Fk E2eDec.Code
+open Machine Runtime TestTarget E2eDec.Code
 variable [Host]
 
 namespace E2eDec
@@ -47,7 +47,7 @@ theorem dcd_e2e_reject_size_main : dcd_reject_size_stmt := by
   split
   case isTrue h =>
     exfalso
-    rw [E2eScal.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 16 (by rfl) hguard] at h
+    rw [Codec.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 16 (by rfl) hguard] at h
     exact Bool.noConfusion h
   simp only [Effects.All]
   kat hk DcUnmarshal 5
@@ -117,7 +117,7 @@ theorem dcd_e2e_reject_offset_main : dcd_reject_offset_stmt := by
   split
   case isTrue h =>
     exfalso
-    rw [E2eScal.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 16 (by rfl) hguard] at h
+    rw [Codec.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 16 (by rfl) hguard] at h
     exact Bool.noConfusion h
   simp only [Effects.All]
   kat hk DcUnmarshal 5

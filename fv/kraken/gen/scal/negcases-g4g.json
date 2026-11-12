@@ -74,8 +74,8 @@
   "module": "E2eScal/Gen4PwDec.lean",
   "theorem": "pw_g4dec_s54",
   "kind": "stmt",
-  "old": "E2eScal.setR s Reg64.r8 (BitVec.ofInt",
-  "new": "E2eScal.setR s Reg64.r9 (BitVec.ofInt"
+  "old": "Codec.setR s Reg64.r8 (BitVec.ofInt",
+  "new": "Codec.setR s Reg64.r9 (BitVec.ofInt"
  },
  {
   "id": "g4g-smgg-slot-stmt-pc",

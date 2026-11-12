@@ -1,10 +1,10 @@
-import Fk.Block
-import Fk.Labels
-import Fk.Frame
+import Machine.Block
+import Machine.Labels
+import Machine.Frame
 import E2eEnc.Code
 import E2eList.ScLemmas
-import Fk.RtCopy
-import Fk.FvMarshal
+import Runtime.CopyModel
+import TestTarget.FixedVecEncode
 
 /-!
 # `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo`: the Columns loop (capacity sufficient)
@@ -19,7 +19,7 @@ rdx = column pointer `pc`, rsi = i, r8 = n. The block from `bp + L` holds `cb.ta
 8i column bytes, then the 8(n − i) bytes not written yet. The shape of `E2eList.ia_iter` / `ia_exit` / `ia_loop`.
 -/
 
-open Fk E2eEnc.Code
+open Machine Runtime TestTarget E2eEnc.Code
 variable [Host]
 
 namespace E2eEnc

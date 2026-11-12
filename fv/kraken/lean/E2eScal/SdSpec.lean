@@ -15,7 +15,7 @@ the Desc checker's Desc of `(v1alpha1, SigningData)` (producer output = the chec
 -/
 
 namespace E2e
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz Spec
 
 /-- The checker's Desc has the same kinds in the same order; only the names differ. -/
 theorem prysmSdDesc_checker :

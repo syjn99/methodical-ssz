@@ -1,6 +1,6 @@
-import Fk.Contracts
-import Fk.Step
-import Fk.Labels
+import Runtime.Contracts
+import Machine.Step
+import Machine.Labels
 import E2e.Data
 import E2eList.ScLoop
 import E2eHb.Code
@@ -23,7 +23,7 @@ Proof order: `E2eList.sc_iter`, `sc_exit`, `sc_loop` (`ScLoop.lean`); the step s
 The macro `laddr` and the lemmas `jge_false512`, `lvElems_snoc` are imported from the SyncCommittee proof.
 -/
 
-open Fk E2eList E2eHb.Code
+open Machine Runtime TestTarget E2eList E2eHb.Code
 variable [Host]
 
 namespace E2eHb

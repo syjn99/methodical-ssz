@@ -15,7 +15,8 @@ before `pwCheckerDesc` was rendered and printed.
 -/
 
 namespace E2e
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz
+open Spec hiding readUint_lt
 
 /-- The checker's Desc has the same kinds in the same order; only the names differ. -/
 theorem prysmPwDesc_checker :
@@ -47,7 +48,7 @@ def ppwEnc (g : PPw) : Array UInt8 :=
   uintBytes 8 g.index.toNat ++ uintBytes 8 g.amount.toNat ++ uintBytes 8 g.withdrawableEpoch.toNat
 
 theorem ppw_enc_size (g : PPw) : (ppwEnc g).size = 24 := by
-  simp [ppwEnc, Fv.uintBytes_size]
+  simp [ppwEnc, Spec.uintBytes_size]
 
 theorem ppw_toValue_fits (g : PPw) : Value.fits prysmPwDesc g.toValue = true := by
   have := g.index.toNat_lt; have := g.amount.toNat_lt; have := g.withdrawableEpoch.toNat_lt
@@ -90,7 +91,7 @@ theorem ppw_serialize (g : PPw) : serialize prysmPwDesc g.toValue = .ok (ppwEnc 
   have := a0.toNat_lt; have := a1.toNat_lt; have := a2.toNat_lt
   simp only [prysmPwDesc, PPw.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Fv.uintBytes_size, bytesPerOffset, ppwEnc,
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, ppwEnc,
     Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- **Spec roundtrip.** -/

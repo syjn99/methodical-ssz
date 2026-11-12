@@ -1,5 +1,5 @@
-import E2eSeg.V32Hb
-import E2eSeg.RejGInst
+import Codec.Segment.Bytes32LoopHistoricalBatch
+import Codec.Segment.SizeRejectInstances
 import E2eScal.DdAccept
 import E2eDep.Stmt
 
@@ -7,7 +7,7 @@ import E2eDep.Stmt
 # Deposit accept path (Go 1.26.10 machine code), proved with the E2eSeg general lemmas
 
 * head 0–30 (hand steps; the text of `E2eHb.hb_e2e_accept_main` 0–29 with this frame);
-* Proof loop 40–76, 37–39: `E2eSeg.v32_loop` (n = 33), block and gap facts read from the program;
+* Proof loop 40–76, 37–39: `Codec.Segment.v32_loop` (n = 33), block and gap facts read from the program;
 * 84–105 (hand steps): exit label, `new(Deposit_Data)` (`NewobjectC`), the Data pointer, the arguments
   buf[1056:1240], the call;
 * the Deposit_Data decoder: `E2eScal.H4.dd_e2e_accept_main` (machine code in the host, our scratch as its frame);
@@ -15,7 +15,7 @@ import E2eDep.Stmt
 Statement: the frozen `E2eDep.dep_accept_stmt`.
 -/
 
-open Fk E2eList E2eHb E2eSeg E2eDep.Code
+open Machine Runtime TestTarget E2eList E2eHb Codec.Segment E2eDep.Code
 
 namespace E2eDep
 
@@ -183,29 +183,29 @@ theorem dep_e2e_accept_main : dep_accept_stmt := by
   simp only [e33] at H8
   -- the Proof loop: L_a2 (40) → exit label L_166 (84), by the general loop
   have hB1 : (v32Head (OfNat.ofNat 33) (depL "a2") (depL "166")).IsInfixAt Host.prog (k + 40) :=
-    E2eScal.infix_sub 40 hk (by simp only [DepUnmarshal, v32Head, depL, List.drop_succ_cons, List.drop_zero,
+    Codec.infix_sub 40 hk (by simp only [DepUnmarshal, v32Head, depL, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
   have hB2 : (v32Mid (depL "23f") 56 48 40 64 112).IsInfixAt Host.prog (k + 49) :=
-    E2eScal.infix_sub 49 hk (by simp only [DepUnmarshal, v32Mid, depL, List.drop_succ_cons, List.drop_zero,
+    Codec.infix_sub 49 hk (by simp only [DepUnmarshal, v32Mid, depL, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
   have hB3 : (v32Mm 104 16 56).IsInfixAt Host.prog (k + 62) :=
-    E2eScal.infix_sub 62 hk (by simp only [DepUnmarshal, v32Mm, List.drop_succ_cons, List.drop_zero,
+    Codec.infix_sub 62 hk (by simp only [DepUnmarshal, v32Mm, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
   have hB4 : (v32Hdr (depL "23a") 8).IsInfixAt Host.prog (k + 67) :=
-    E2eScal.infix_sub 67 hk (by simp only [DepUnmarshal, v32Hdr, depL, List.drop_succ_cons, List.drop_zero,
+    Codec.infix_sub 67 hk (by simp only [DepUnmarshal, v32Hdr, depL, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
   have hB5 : (v32Tail (depL "14c") (depL "99") 64).IsInfixAt Host.prog (k + 74) :=
-    E2eScal.infix_sub 74 hk (by simp only [DepUnmarshal, v32Tail, depL, List.drop_succ_cons, List.drop_zero,
+    Codec.infix_sub 74 hk (by simp only [DepUnmarshal, v32Tail, depL, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
   have hB6 : (v32Back (depL "99") 40).IsInfixAt Host.prog (k + 37) :=
-    E2eScal.infix_sub 37 hk (by simp only [DepUnmarshal, v32Back, depL, List.drop_succ_cons, List.drop_zero,
+    Codec.infix_sub 37 hk (by simp only [DepUnmarshal, v32Back, depL, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
   have g1 : Glue (k + 40 + 8) (k + 49) := glue_of hk (a := 48)
     (by simp only [DepUnmarshal, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])
-  have hlb := Fk.label_at' hk hf (j := 37)
+  have hlb := Machine.label_at' hk hf (j := 37)
     (by simp only [DepUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [DepUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hle := Fk.label_at' hk hf (j := 84)
+  have hle := Machine.label_at' hk hf (j := 84)
     (by simp only [DepUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [DepUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   refine eventually_trans _ _ _ _ (v32_loop 33 (by decide) (depL "a2") (depL "166") (depL "23f") (depL "23a")

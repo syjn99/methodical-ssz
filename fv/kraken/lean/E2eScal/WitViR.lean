@@ -1,6 +1,6 @@
 import E2eScal.ViReject
-import Fk.RtErr
-import Fk.WHost
+import Runtime.ErrorModel
+import Machine.WitnessHost
 
 /-!
 # Witnesses of `E2eScal.vi_unmarshal_reject_len_main` (len 7, 9 and 300)
@@ -19,7 +19,7 @@ bytes `e2eEpFmt`; the fillers between them and the unused rax spill slot are the
 frame `R`. With `len(buf) = 7` the decoder returns a non-nil error.
 -/
 
-open Fk Fk.W E2e E2e.Code E2eScal E2eScal.BhCode
+open Machine Runtime TestTarget Machine.Witness E2e E2e.Code E2eScal E2eScal.BhCode
 
 namespace E2eScal.WitViR
 
@@ -93,7 +93,7 @@ theorem vir_runs (zmms : RegZmms) (flags : StatusFlags) :
         Std.ExtHashMap.sep_comm_l (Eq ((z 47).At _)) (Eq ((z 8280).At _))] at H
       have H2 := lift_heap H
       rw [staticBox_of_lt (v := 8) (by decide), staticBox_of_lt (v := (cs0 zmms flags).regs.rcx.toBitVec) (by simp [cs0])]
-      simp only [cs0, R0, w, Fk.Data.staticuint64s_addr, E2e.Data.e2eEpFmt_addr, E2e.Data.e2eEight_addr, label_gs,
+      simp only [cs0, R0, w, TestTarget.Data.staticuint64s_addr, E2e.Data.e2eEpFmt_addr, E2e.Data.e2eEight_addr, label_gs,
         label_gc, label_st, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         BitVec.reduceMul] at H2 ⊢
@@ -147,7 +147,7 @@ theorem vir_runs9 (zmms : RegZmms) (flags : StatusFlags) :
         Std.ExtHashMap.sep_comm_l (Eq ((z 55).At _)) (Eq ((z 8280).At _))] at H
       have H2 := lift_heap H
       rw [staticBox_of_lt (v := 8) (by decide), staticBox_of_lt (v := (cs0 zmms flags).regs.rcx.toBitVec) (by simp [cs0])]
-      simp only [cs0, R0, w, Fk.Data.staticuint64s_addr, E2e.Data.e2eEpFmt_addr, E2e.Data.e2eEight_addr, label_gs,
+      simp only [cs0, R0, w, TestTarget.Data.staticuint64s_addr, E2e.Data.e2eEpFmt_addr, E2e.Data.e2eEight_addr, label_gs,
         label_gc, label_st, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         BitVec.reduceMul] at H2 ⊢
@@ -193,7 +193,7 @@ theorem vir_runs300 (zmms : RegZmms) (flags : StatusFlags) :
         Std.ExtHashMap.sep_comm_l (Eq ((z 55).At _)) (Eq ((z 8280).At _))] at H
       have H2 := lift_heap H
       rw [staticBox_of_lt (v := 8) (by decide), staticBox_big (cs0 zmms flags).regs.rcx.toBitVec (by simp [cs0])]
-      simp only [cs0, R0, w, Fk.Data.staticuint64s_addr, E2e.Data.e2eEpFmt_addr, E2e.Data.e2eEight_addr, label_gs,
+      simp only [cs0, R0, w, TestTarget.Data.staticuint64s_addr, E2e.Data.e2eEpFmt_addr, E2e.Data.e2eEight_addr, label_gs,
         label_gc, label_st, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         BitVec.reduceMul] at H2 ⊢

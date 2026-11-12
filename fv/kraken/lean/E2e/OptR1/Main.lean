@@ -1,6 +1,6 @@
 import E2e.OptR1.HeadG
 import E2e.OptR1.TailR
-import Fk.RtCopy
+import Runtime.CopyModel
 
 /-!
 # OPT-R1 reserve encoder `(*v1alpha1.Checkpoint).MarshalSSZTo`: the four main theorems
@@ -19,7 +19,7 @@ reject path, `z'` = bytes 8–39 of the zeroed `z`, existential because X15 is n
 reaches the two `growslice` calls of the original appends (directives 66 and 88).
 -/
 
-open Fk E2e.OptR1.Code
+open Machine Runtime TestTarget E2e.OptR1.Code
 variable [Host]
 
 namespace E2e.OptR1

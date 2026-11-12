@@ -16,23 +16,22 @@ Checks, per file (text only):
  0. The file is not a partial generator output: no line contains `PARTIAL OUTPUT` (the header that
     `scalgen.py p2dec --partial-out` writes on exit 3). Checked on the raw text,
     comments included.
- 1. `lean/E2eScal/Kind.lean` has the frozen git blob id KIND_BLOB (method freeze of the hold-out).
+ 1. (Removed: git-blob pins of the kind and lemma modules. They were the method freeze of an experiment that ended.)
  2. Top-level lines are only: import, open, variable, namespace, end, set_option … in, theorem, doc or
     plain comments, blank lines and indented continuation lines. No def / abbrev / notation / macro /
     axiom / instance / attribute etc. (a local definition could shadow the kind name).
  3. No `sorry`, `admit`, `native_decide`, `bv_decide`, `axiom` token anywhere.
  4. Every theorem `t` whose name does not end in `_kind` or `_same` is followed by exactly one theorem
     `t_kind` whose whole header is
-        theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.u64DecAcceptKind h C := by
-    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.rootDecSegKind h C n1 … n9 := by
-    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.rootDecSegZKind h C n1 … n8 := by
-        (offset-0 kind of the generator extension; only when `lean/E2eScal/KindZ.lean` has the pinned blob KINDZ_BLOB)
-    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.bytesDecSegKind h n C n1 … n9 := by
-    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.bytesDecSegZKind h n C n1 … n8 := by
-        (GEN2 size-parametric kinds, n = 32, 48 or 96; only when `KindN.lean` and the lemma module `SegN.lean`
-        have the pinned blobs GEN2_PINS)
-    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.u64DecInlineSegKind h C n1 … n4 := by
-        (GEN2 inline uint64 kind; only when `KindU64.lean` and `U64Inline.lean` have the pinned blobs GEN2_PINS)
+        theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.u64DecAcceptKind h C := by
+    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.rootDecSegKind h C n1 … n9 := by
+    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.rootDecSegZKind h C n1 … n8 := by
+        (offset-0 kind of the generator extension, `lean/Codec/Kind/Bytes32DecodeOffsetZero.lean`)
+    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.bytesDecSegKind h n C n1 … n9 := by
+    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.bytesDecSegZKind h n C n1 … n8 := by
+        (GEN2 size-parametric kinds, n = 32, 48 or 96)
+    or  theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.u64DecInlineSegKind h C n1 … n4 := by
+        (GEN2 inline uint64 kind)
     with C the code constant of `t`'s `hk : C.IsInfixAt Host.prog k` binder and n1..n9 natural literals,
     and the next line is exactly `  intro h; with_reducible rfl`.
  5. Every `_kind` theorem belongs to a theorem of the file; every `_same` theorem has the form
@@ -50,7 +49,7 @@ Checks, per file (text only):
     with X a Prop-valued `abbrev` written by hand. This is an identity, NOT a kind. These rules
     restrict it:
      6a. `_type` is accepted ONLY for a composed theorem: its proof (the lines up to the next theorem) uses
-         both `E2eScal.dechead_seg` and `E2eScal.decepi_seg`. A segment theorem needs its `_kind`; a `_type`
+         both `Codec.dechead_seg` and `Codec.decepi_seg`. A segment theorem needs its `_kind`; a `_type`
          in place of a `_kind` fails.
      6b. X must not be a generated name: not under a namespace `E2eScal.Gen…` (`Gen`, `Gen2Ex`, …) and not a
          name declared in a module `lean/E2eScal/Gen*.lean` (compared by the last name component). A
@@ -63,8 +62,7 @@ Checks, per file (text only):
     with `n of m fields`, and one line `UNCOVERED-JSON: [...]` (a JSON list of {field, reason}) whose length
     is m - n; the theorems present are checked by rules 1-6 as usual (no composed theorem allowed). The
     default mode rejects every partial file (rule 0, unchanged).
- 8. GEN3 (`scalgen.py p2dec --gen3`): further `_kind` right-hand sides, each only when its kind
-    module and lemma module have the pinned blobs GEN3_PINS:
+ 8. GEN3 (`scalgen.py p2dec --gen3`): further `_kind` right-hand sides:
         @E2eScal.callDecSegKind h C "fn" "lok" j j2      fn one of the four callee labels with a proved accept
                                                          spec (CALLEES: Slot, CommitteeIndex, ValidatorIndex,
                                                          Epoch of consensus-types/primitives)
@@ -73,9 +71,8 @@ Checks, per file (text only):
         @E2eScal.callArgLeaKind h C dB src dD c dR f j
         @E2eScal.callArgMovKind h C j
         @E2eScal.u64DecRRSegKind h C Reg64.rX src f j    rX one of the registers of `U64RRReg`
-    (KindCall.lean + CallDec.lean, or KindCall.lean + U64RR.lean for the last). A `bytesDecSegKind` theorem
-    whose proof uses `E2eScal.bytesdec_seg_p` needs SegNPad.lean pinned as well. A composed accept theorem
-    (rule 6a) may instead carry the composed-statement kind (KindAccept.lean pinned):
+    (kinds of `lean/E2eScal/KindCall.lean`). A composed accept theorem
+    (rule 6a) may instead carry the composed-statement kind of `lean/E2eScal/KindAccept.lean`:
         set_option maxHeartbeats 200000 in
         theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.decAcceptKind h C st [f, …] jret := by
           intro h; rfl
@@ -88,18 +85,17 @@ Checks, per file (text only):
     `<prefix>_<field>_seg|_arg|_arg1|_arg2|_call`; a callee field needs `_call` and `_arg` or `_arg1` + `_arg2`),
     and no field of `UNCOVERED-JSON` may have a theorem.
 
-10. GEN4 (`scalgen.py p2dec --gen4`): further `_kind` right-hand sides, each only when its kind
-    module and lemma modules have the pinned blobs GEN4_PINS:
-        @E2eScal.stepMovRRKind h C Reg64.rD Reg64.rS j e          @E2eScal.stepAddKind h C Reg64.rD imm j e
-        @E2eScal.stepLdvKind / stepLdbKind / stepStKind / stepLeaKind h C Reg64.r1 Reg64.r2 disp j e
-        @E2eScal.stepMovIKind h C Reg64.rD imm j e                @E2eScal.stepJmpKind h C "l" j jl
-        @E2eScal.stepLabelKind h C "l" j e                        @E2eScal.stepNopsKind h C j e
-        @E2eScal.callDecSegKindG4 h C "fn" "lok" j jc j2          (fn in CALLEES)
-        @E2eScal.bytesDecSegKindG4 h n C Reg64.rY j1 jm e dR dB dS fP fL fC src
-        @E2eScal.bytesDecSegZKindG4 h n C Reg64.rY j1 jm e dR dB dS fP fL fC
+10. GEN4 (`scalgen.py p2dec --gen4`): further `_kind` right-hand sides:
+        @Codec.stepMovRRKind h C Reg64.rD Reg64.rS j e          @Codec.stepAddKind h C Reg64.rD imm j e
+        @Codec.stepLdvKind / stepLdbKind / stepStKind / stepLeaKind h C Reg64.r1 Reg64.r2 disp j e
+        @Codec.stepMovIKind h C Reg64.rD imm j e                @Codec.stepJmpKind h C "l" j jl
+        @Codec.stepLabelKind h C "l" j e                        @Codec.stepNopsKind h C j e
+        @E2eScal.callDecSegKindG4 h C "fn" "lok" j jc j2         (fn in CALLEES)
+        @Codec.bytesDecSegKindWindow h n C Reg64.rY j1 jm e dR dB dS fP fL fC src
+        @Codec.bytesDecSegZKindWindow h n C Reg64.rY j1 jm e dR dB dS fP fL fC
     (n = 32 | 48 | 96; rY one of rax, rcx, rdx, rsi, rdi; registers `Reg64.<one of the 16>`).
     10b. The proof of `t` (comments and string literals removed) uses the lemma of its kind
-         (`kstep_mov_rr`, `kstep_ldv`, …, `calldec_seg_w`, `bytesdec_seg_g4`, `bytesdec_seg_z_g4`) and no other
+         (`kstep_mov_rr`, `kstep_ldv`, …, `calldec_seg_w`, `bytesdec_seg_window`, `bytesdec_seg_z_window`) and no other
          GEN4 lemma: a theorem whose proof and kind name different lemmas fails.
     10c. A GEN4 file (header `GEN4 coverage (…): n of m fields`, or any GEN4 kind) carries exactly one line
          `FIELDS-JSON: [{"field": F, "theorems": [...]}, …]`: every theorem with a GEN4 kind is listed in exactly
@@ -116,14 +112,14 @@ Checks, per file (text only):
     identity `_type` with an independent hand statement) FAILS; `scalgen.py --gen3 --compose` without `--same-as*`
     now also marks it `UNCHECKED STATEMENT` (rule 6c).
 12. GEN5 (`scalgen.py p2dec --gen5`): a GEN5 file is checked in two parts. The text before the GEN5
-    block (`/-! GEN5 (`p2dec --gen5`…`) by rules 1-11 as a GEN4 file; the GEN5 part by rule 12 (12a pins GEN5_PINS of
-    the GEN5 kind / lemma modules; 12b the exact theorem list with the kinds decHeadKindN / decFieldKindN / decEpiKindN /
+    block (`/-! GEN5 (`p2dec --gen5`…`) by rules 1-11 as a GEN4 file; the GEN5 part by rule 12 (12a removed: it was
+    a git-blob pin; 12b the exact theorem list with the kinds decHeadKindN / decFieldKindN / decEpiKindN /
     decAcceptKindN / decRejectKindN; 12c the kind parameters `L`, `fields`, boundary `pc` / `done` and the reject size
     RECOMPUTED from the `.S` and the IR named in the header (sha256 checked); 12d the accept proof chains every
     theorem; 12e the identity with a hand statement, if any, names no generated theorem). See the section `Rule 12`.
     A file with a GEN5 kind and no GEN5 block fails (rule 12: 0 GEN5 blocks). `--partial` never accepts a GEN5 file.
 13. GEN6 (`scalgen.py p2enc --gen6`, encoder fast path): a file with `GEN6-JSON:` or an encoder kind
-    (encHeadKindN / encFieldKindN / encEpiKindN / encFastKindN) is checked by rule 13 only: 13a pins GEN6_PINS; 13b
+    (encHeadKindN / encFieldKindN / encEpiKindN / encFastKindN) is checked by rule 13 only: 13a removed (a git-blob pin); 13b
     structure (one layout def or a pinned hand layout; the exact theorem list, each with its kind; the code constant);
     13c every kind line equals, as whole text, the line rendered from an OWN recomputation (this file's interpreter,
     not the generator) of the fields, the layout and every boundary state from the `.S` and the IR named in GEN6-JSON
@@ -138,91 +134,61 @@ phantom kind parameters (they do not occur in the kind body; `stepLabelKind C l 
 `stepNopsKind C j e` by `rfl`), so a label name in a kind line is NOT checked by this program or by the `_kind`
 line; the label is checked only by the proof's code fact (`he`, `hl`). Also not checked: that the kind parameters (C, indices, displacements, offsets) are the right
 ones for the Go type (a wrong one fails the proof's code facts, not this check); name resolution (the
-check reads `@E2eScal.<kind>` as text; an `open` of a namespace that declares another `E2eScal.<kind>`
-would not be seen); that the file builds. A pass is not a non-vacuity witness.
+check reads `@Codec.<kind>` and `@E2eScal.<kind>` as text; an `open` of a namespace that declares another
+`Codec.<kind>` or `E2eScal.<kind>` would not be seen); that the kind and lemma modules are unchanged (the pins
+were removed); that the file builds. A pass is not a non-vacuity witness.
 """
 import re
-import subprocess
 import sys
 import pathlib
 import tempfile
 
 HERE = pathlib.Path(__file__).resolve().parent
 KR = HERE.parent.parent
-KIND = KR / "lean" / "E2eScal" / "Kind.lean"
+E2ESCAL = KR / "lean" / "E2eScal"   # rule 6b: the directory of the Gen*.lean modules
 # Rule 11 exemption: hand-written example modules of the lemma units. They have GEN2+
 # kinds but are not generator output, so they have no coverage header. Only these exact paths (relative to
 # fv/kraken) skip rule 11; every other rule applies to them unchanged.
 # `Gen4Examples.lean` is not listed: it also fails rules 4 and 10c (hand field compositions `*_field` without a kind,
 # no FIELDS-JSON line), so an exemption from rule 11 alone would not make it pass; kindcheck is not a check of it.
 HAND_EXAMPLES = ("lean/E2eScal/Gen2Examples.lean", "lean/E2eScal/Gen3Examples.lean")
-KIND_BLOB = "3c9b95b1b37036831527396975d4232cc20174f3"  # method freeze 56dfc27
-KINDZ = KR / "lean" / "E2eScal" / "KindZ.lean"
-KINDZ_BLOB = "0c790fa1882cd2e91419c285f66de0810c2b85e2"  # generator extension for a field at SSZ offset 0 (after both hold-outs were opened)
 GENNS = re.compile(r"^E2eScal\.Gen\w*\.")  # rule 6b: generated namespaces (E2eScal.Gen, E2eScal.Gen2Ex, ...)
 DECL = re.compile(r"^(?:private |protected |noncomputable )*(?:theorem|lemma|def|abbrev) (\S+)")
-COMPOSED = ("(E2eScal.dechead_seg ", "(E2eScal.decepi_seg ")  # rule 6a
+COMPOSED = ("(Codec.dechead_seg ", "(Codec.decepi_seg ")  # rule 6a
 UNCHECKED = "UNCHECKED STATEMENT"  # rule 6c
 
-# GEN2: the kind and lemma modules of the GEN2 lemmas, pinned at the blobs of the lemma
-# unit's head 6c62a49. A new kind is accepted only with both
-# its kind module and its lemma module at these blobs.
-GEN2_PINS = {
-    "KindN.lean": "8947c5757f522463a495ad585d3480b7c2f3830b",
-    "SegN.lean": "4ef9c7494e421798c1766aedffa9a59066d32304",
-    "KindU64.lean": "dda481f9c61fcbfc9646faef172a240a69a857d1",
-    "U64Inline.lean": "712f4856eef48401cfdd48a216d538986a4087a9",
-}
-GEN2_NEEDS = {"bytesDecSegKind": ("KindN.lean", "SegN.lean"), "bytesDecSegZKind": ("KindN.lean", "SegN.lean"),
-              "u64DecInlineSegKind": ("KindU64.lean", "U64Inline.lean")}
-# GEN3: kind and lemma modules of the GEN3 lemma unit, pinned at its head f5c5f52
-GEN3_PINS = {
-    "KindCall.lean": "02b006726b77166dd07783aae20d6b4c02a3953e",
-    "CallDec.lean": "1401e7bc860375c16240b34d80f00aba294f83f2",
-    "U64RR.lean": "59d7b31e8b32fe6ffae52d194124adb12edf885c",
-    "SegNPad.lean": "289199f2ab3fe19da34737ccd75d4e3b6f1d047f",
-    "KindAccept.lean": "0752ed7f7e856bb766479e445e81eb06ac47d2e4",
-}
-GEN3_NEEDS = {"callDecSegKind": ("KindCall.lean", "CallDec.lean"), "callArgFirstKind": ("KindCall.lean", "CallDec.lean"),
-              "callArgReloadKind": ("KindCall.lean", "CallDec.lean"), "callArgLeaKind": ("KindCall.lean", "CallDec.lean"),
-              "callArgMovKind": ("KindCall.lean", "CallDec.lean"), "u64DecRRSegKind": ("KindCall.lean", "U64RR.lean"),
-              "decAcceptKind": ("KindAccept.lean",)}
+# GEN2 kinds (`lean/Codec/Kind/FixedBytesDecode.lean`, `lean/Codec/Kind/InlineUint64.lean`)
+GEN2_KINDS = ("bytesDecSegKind", "bytesDecSegZKind", "u64DecInlineSegKind")
+# GEN3 kinds (`lean/E2eScal/KindCall.lean`, `lean/E2eScal/KindAccept.lean`)
+GEN3_KINDS = ("callDecSegKind", "callArgFirstKind", "callArgReloadKind", "callArgLeaKind", "callArgMovKind",
+              "u64DecRRSegKind", "decAcceptKind")
 CALLEES = tuple(f'"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.{n}.UnmarshalSSZ"'
                 for n in ("Slot", "CommitteeIndex", "ValidatorIndex", "Epoch"))
 INT = r"(?:0|[1-9][0-9]*|\(-[1-9][0-9]*\))"  # an Int64 literal as the generator writes it
-# GEN4: kind and lemma modules of the GEN4 lemma unit, pinned at its head 718e023
-GEN4_PINS = {
-    "NopView.lean": "ea6c1f590fd07ae105365f8c28104b9a5a6fd00f",
-    "StepK.lean": "7cef6d18050ab1b821f915d48754a5888fe65437",
-    "KindStep.lean": "e462fe5214161f64f51a25d7f5fdeb3054812f62",
-    "CallReg.lean": "0f1711f86978495f849d0df195edc42ee5f990c1",
-    "SegReg.lean": "c8e962e6429a62f9fec4554968ef4596d03f9b70",
-    "SegRegZ.lean": "3d3f2ee6b1ad67b63029bff62fa836b54ddd7fd2",
-    "KindSegReg.lean": "3f2a3b8d1a8935dd5790e33e1603eca4bb73b652",
-}
 G4REG = r"Reg64\.(?:rax|rbx|rcx|rdx|rsi|rdi|rsp|rbp|r8|r9|r10|r11|r12|r13|r14|r15)"
 G4RY = r"Reg64\.(?:rax|rcx|rdx|rsi|rdi)"
-_G4S = ("KindStep.lean", "StepK.lean", "NopView.lean")
-# kind -> (parameter regex after `h `, with {C} for the code constant; pinned modules; lemma of the proof)
+# kind -> (parameter regex after `h `, with {C} for the code constant; namespace of the kind and of its lemma; lemma
+# of the proof). The step kinds and the fixed-bytes window kinds are in Codec (`lean/Codec/Kind/WindowSteps.lean`,
+# `lean/Codec/Kind/FixedBytesDecodeWindow.lean`, lemma modules `lean/Codec/WindowSteps.lean`,
+# `lean/Codec/FixedBytesDecodeWindow*.lean`); the call-block kind is in E2eScal (`lean/E2eScal/KindCall.lean`,
+# `lean/E2eScal/CallReg.lean`).
 GEN4_KINDS = {
-    "stepMovRRKind": ("{C} G4REG G4REG NAT NAT", _G4S, "kstep_mov_rr"),
-    "stepLdvKind": ("{C} G4REG G4REG INT NAT NAT", _G4S, "kstep_ldv"),
-    "stepLdbKind": ("{C} G4REG G4REG INT NAT NAT", _G4S, "kstep_ldb"),
-    "stepStKind": ("{C} G4REG G4REG INT NAT NAT", _G4S, "kstep_st"),
-    "stepLeaKind": ("{C} G4REG G4REG INT NAT NAT", _G4S, "kstep_lea"),
-    "stepAddKind": ("{C} G4REG INT NAT NAT", _G4S, "kstep_add"),
-    "stepMovIKind": ("{C} G4REG INT NAT NAT", _G4S, "kstep_movi"),
-    "stepJmpKind": ("{C} LBL NAT NAT", _G4S, "kstep_jmp"),
-    "stepLabelKind": ("{C} LBL NAT NAT", _G4S, "kstep_label"),
-    "stepNopsKind": ("{C} NAT NAT", _G4S, "kstep_nops"),
-    "callDecSegKindG4": ("{C} LBL LBL NAT NAT NAT", ("CallReg.lean", "NopView.lean"), "calldec_seg_w"),
-    "bytesDecSegKindG4": ("SIZE {C} G4RY NAT NAT NAT INT INT INT INT INT INT INT", ("KindSegReg.lean", "SegReg.lean",
-                                                                                     "NopView.lean"), "bytesdec_seg_g4"),
-    "bytesDecSegZKindG4": ("SIZE {C} G4RY NAT NAT NAT INT INT INT INT INT INT", ("SegRegZ.lean", "SegReg.lean",
-                                                                                "NopView.lean"), "bytesdec_seg_z_g4"),
+    "stepMovRRKind": ("{C} G4REG G4REG NAT NAT", "Codec", "kstep_mov_rr"),
+    "stepLdvKind": ("{C} G4REG G4REG INT NAT NAT", "Codec", "kstep_ldv"),
+    "stepLdbKind": ("{C} G4REG G4REG INT NAT NAT", "Codec", "kstep_ldb"),
+    "stepStKind": ("{C} G4REG G4REG INT NAT NAT", "Codec", "kstep_st"),
+    "stepLeaKind": ("{C} G4REG G4REG INT NAT NAT", "Codec", "kstep_lea"),
+    "stepAddKind": ("{C} G4REG INT NAT NAT", "Codec", "kstep_add"),
+    "stepMovIKind": ("{C} G4REG INT NAT NAT", "Codec", "kstep_movi"),
+    "stepJmpKind": ("{C} LBL NAT NAT", "Codec", "kstep_jmp"),
+    "stepLabelKind": ("{C} LBL NAT NAT", "Codec", "kstep_label"),
+    "stepNopsKind": ("{C} NAT NAT", "Codec", "kstep_nops"),
+    "callDecSegKindG4": ("{C} LBL LBL NAT NAT NAT", "E2eScal", "calldec_seg_w"),
+    "bytesDecSegKindWindow": ("SIZE {C} G4RY NAT NAT NAT INT INT INT INT INT INT INT", "Codec", "bytesdec_seg_window"),
+    "bytesDecSegZKindWindow": ("SIZE {C} G4RY NAT NAT NAT INT INT INT INT INT INT", "Codec", "bytesdec_seg_z_window"),
 }
-G4_LEMMAS = tuple(v[2] for v in GEN4_KINDS.values())
-G4_BLOCK = {"callDecSegKindG4": "call", "bytesDecSegKindG4": "seg", "bytesDecSegZKindG4": "seg"}
+G4_LEMMAS = {v[2]: v[1] for v in GEN4_KINDS.values()}   # lemma -> namespace
+G4_BLOCK = {"callDecSegKindG4": "call", "bytesDecSegKindWindow": "seg", "bytesDecSegZKindWindow": "seg"}
 BOOL = r"(?:true|false)"
 LBL = r'"[^"\\\s]+"'
 RRREG = r"Reg64\.(?:rcx|rdx|rsi|rdi|r8|r9|r10|r11|r12|r13|r15)"
@@ -239,11 +205,7 @@ HK = re.compile(r"\(hk : (\S+)\.IsInfixAt Host\.prog k\)")
 NAT = r"(?:0|[1-9][0-9]*)"
 
 
-def blob(path):
-    return subprocess.run(["git", "hash-object", str(path)], capture_output=True, text=True, check=True).stdout.strip()
-
-
-def gen_names(lean_dir=KIND.parent):
+def gen_names(lean_dir=E2ESCAL):
     """Rule 6b: last name components of every declaration in a module `Gen*.lean` (generated or example)."""
     out = set()
     for f in sorted(lean_dir.glob("Gen*.lean")):
@@ -318,17 +280,11 @@ def field_stems(mains):
     return st
 
 
-def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB, gen2_blobs=None, gnames=None, partial=False, gen3_blobs=None,
-               gen4_blobs=None, rule11=True):
-    gen2_blobs = dict(GEN2_PINS) if gen2_blobs is None else gen2_blobs
-    gen3_blobs = dict(GEN3_PINS) if gen3_blobs is None else gen3_blobs
-    gen4_blobs = dict(GEN4_PINS) if gen4_blobs is None else gen4_blobs
+def check_text(text, gnames=None, partial=False, rule11=True):
     g4kind = {}      # theorem -> GEN4 kind name (rule 10)
     newkind = set()  # theorems with a GEN2 / GEN3 / GEN4 kind (rule 11)
     gnames = gen_names() if gnames is None else gnames
     errs = []
-    if kind_blob != KIND_BLOB:
-        errs.append(f"Kind.lean blob {kind_blob} != frozen {KIND_BLOB}")
     lines = text.split("\n")
     if partial:
         ph = partial_header(lines)
@@ -401,7 +357,7 @@ def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB, gen2_blobs=None, gnames=N
             type_line(t)
             if not is_composed(t, j):
                 errs.append(f"{t}_type: {t} is not a composed accept theorem (its proof does not use "
-                            f"E2eScal.dechead_seg and E2eScal.decepi_seg): a segment theorem needs its `_kind`")
+                            f"Codec.dechead_seg and Codec.decepi_seg): a segment theorem needs its `_kind`")
             elif partial:
                 errs.append(f"{t}: composed theorem in a partial file")
             composed.add(t)
@@ -423,9 +379,6 @@ def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB, gen2_blobs=None, gnames=N
                 errs.append(f"{t}_kind: the line before is not `set_option maxHeartbeats 200000 in`")
             if j + 1 >= len(lines) or lines[j + 1] != "  intro h; rfl":
                 errs.append(f"{t}_kind: proof line is not `  intro h; rfl`")
-            if gen3_blobs.get("KindAccept.lean") != GEN3_PINS["KindAccept.lean"]:
-                errs.append(f"{t}_kind: KindAccept.lean blob {gen3_blobs.get('KindAccept.lean')} != pinned "
-                            f"{GEN3_PINS['KindAccept.lean']}")
             nx2 = [n for _, n in thms if _ > j]
             if nx2 and nx2[0] == t + "_type":
                 type_line(t)
@@ -435,61 +388,43 @@ def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB, gen2_blobs=None, gnames=N
                             f"statement (`--same-as` / `--same-as-prop`): UNCHECKED STATEMENT")
             continue
         g4m = re.fullmatch(rf"theorem {re.escape(t)}_kind : ∀ \(h : Host\), type_of% \(@{re.escape(t)} h\) = "
-                           rf"@E2eScal\.(\w+) h (.*) := by", lines[j])
-        if g4m and g4m.group(1) in GEN4_KINDS:
-            kn = g4m.group(1)
-            spec, mods, lem = GEN4_KINDS[kn]
+                           rf"@(Codec|E2eScal)\.(\w+) h (.*) := by", lines[j])
+        if g4m and g4m.group(2) in GEN4_KINDS:
+            kn = g4m.group(2)
+            spec, kns, lem = GEN4_KINDS[kn]
             g4kind[t] = kn
             newkind.add(t)
-            if not re.fullmatch(g4_param_rx(spec, C), g4m.group(2)):
+            if g4m.group(1) != kns or not re.fullmatch(g4_param_rx(spec, C), g4m.group(3)):
                 errs.append(f"{t}_kind: header is not a frozen kind: {lines[j][:160]}")
-            elif kn == "callDecSegKindG4" and g4m.group(2).split(" ")[1] not in CALLEES:
-                errs.append(f"{t}_kind: callee {g4m.group(2).split(' ')[1]} has no proved accept spec (allowed: Slot, "
+            elif kn == "callDecSegKindG4" and g4m.group(3).split(" ")[1] not in CALLEES:
+                errs.append(f"{t}_kind: callee {g4m.group(3).split(' ')[1]} has no proved accept spec (allowed: Slot, "
                             f"CommitteeIndex, ValidatorIndex, Epoch of consensus-types/primitives)")
-            for m in mods:
-                if gen4_blobs.get(m) != GEN4_PINS[m]:
-                    errs.append(f"{t}_kind: {m} blob {gen4_blobs.get(m)} != pinned {GEN4_PINS[m]}")
             # rule 10b: the proof uses the lemma of the kind and no other GEN4 lemma
             proof = strip_strings(strip_comments("\n".join(lines[i:j]).split(":= by", 1)[-1]))
-            used = {x for x in G4_LEMMAS if re.search(rf"\bE2eScal\.{x}\b", proof)}
+            used = {x for x, xns in G4_LEMMAS.items() if re.search(rf"\b{xns}\.{x}\b", proof)}
             if used != {lem}:
                 errs.append(f"{t}: proof uses {sorted(used) or 'no GEN4 lemma'}, its kind {kn} is the statement of {lem}")
             if j + 1 >= len(lines) or lines[j + 1] != "  intro h; with_reducible rfl":
                 errs.append(f"{t}_kind: proof line is not `  intro h; with_reducible rfl`")
             continue
         want = (rf"theorem {re.escape(t)}_kind : ∀ \(h : Host\), type_of% \(@{re.escape(t)} h\) = "
-                rf"@E2eScal\.(u64DecAcceptKind h {C}|rootDecSegKind h {C}(?: {NAT}){{9}}"
+                rf"(?:@Codec\.(?:u64DecAcceptKind h {C}|rootDecSegKind h {C}(?: {NAT}){{9}}"
                 rf"|rootDecSegZKind h {C}(?: {NAT}){{8}}"
                 rf"|bytesDecSegKind h {SIZE} {C}(?: {NAT}){{9}}|bytesDecSegZKind h {SIZE} {C}(?: {NAT}){{8}}"
-                rf"|u64DecInlineSegKind h {C}(?: {NAT}){{4}}"
-                rf"|callDecSegKind h {C} {LBL} {LBL} {NAT} {NAT}"
+                rf"|u64DecInlineSegKind h {C}(?: {NAT}){{4}})"
+                rf"|@E2eScal\.(?:callDecSegKind h {C} {LBL} {LBL} {NAT} {NAT}"
                 rf"|callArgFirstKind h {C} {BOOL} {INT} {NAT}"
                 rf"|callArgReloadKind h {C} {BOOL}(?: {INT}){{6}} {NAT}"
                 rf"|callArgLeaKind h {C}(?: {INT}){{6}} {NAT}"
                 rf"|callArgMovKind h {C} {NAT}"
-                rf"|u64DecRRSegKind h {C} {RRREG}(?: {INT}){{2}} {NAT}) := by")
-        if any(f"@E2eScal.{kn} " in lines[j] for kn in list(GEN2_NEEDS) + list(GEN3_NEEDS)):
+                rf"|u64DecRRSegKind h {C} {RRREG}(?: {INT}){{2}} {NAT})) := by")
+        if any(f"@Codec.{kn} " in lines[j] for kn in GEN2_KINDS) or any(f"@E2eScal.{kn} " in lines[j] for kn in GEN3_KINDS):
             newkind.add(t)
         if not re.fullmatch(want, lines[j]):
             errs.append(f"{t}_kind: header is not a frozen kind: {lines[j][:160]}")
         elif "@E2eScal.callDecSegKind " in lines[j] and lines[j].split(f" h {hk.group(1)} ", 1)[1].split(" ")[0] not in CALLEES:
             errs.append(f"{t}_kind: callee {lines[j].split(f' h {hk.group(1)} ', 1)[1].split(' ')[0]} has no proved "
                         f"accept spec (allowed: Slot, CommitteeIndex, ValidatorIndex, Epoch of consensus-types/primitives)")
-        elif "@E2eScal.rootDecSegZKind " in lines[j] and kindz_blob != KINDZ_BLOB:
-            errs.append(f"{t}_kind: KindZ.lean blob {kindz_blob} != pinned {KINDZ_BLOB}")
-        else:
-            for kn, mods in GEN2_NEEDS.items():
-                if f"@E2eScal.{kn} " in lines[j]:
-                    for m in mods:
-                        if gen2_blobs.get(m) != GEN2_PINS[m]:
-                            errs.append(f"{t}_kind: {m} blob {gen2_blobs.get(m)} != pinned {GEN2_PINS[m]}")
-            needs = [mods for kn, mods in GEN3_NEEDS.items() if f"@E2eScal.{kn} " in lines[j]]
-            if "@E2eScal.bytesDecSegKind " in lines[j] and "E2eScal.bytesdec_seg_p " in strip_comments("\n".join(lines[i:j])):
-                needs.append(("SegNPad.lean",))
-            for mods in needs:
-                for m in mods:
-                    if gen3_blobs.get(m) != GEN3_PINS[m]:
-                        errs.append(f"{t}_kind: {m} blob {gen3_blobs.get(m)} != pinned {GEN3_PINS[m]}")
         if j + 1 >= len(lines) or lines[j + 1] != "  intro h; with_reducible rfl":
             errs.append(f"{t}_kind: proof line is not `  intro h; with_reducible rfl`")
     # rule 9: the coverage numbers agree with the theorems present
@@ -585,11 +520,6 @@ def check_text(text, kind_blob, kindz_blob=KINDZ_BLOB, gen2_blobs=None, gnames=N
 
 
 def main(files, partial=False):
-    kb = blob(KIND)
-    kzb = blob(KINDZ) if KINDZ.exists() else "missing"
-    g2b = {m: (blob(KIND.parent / m) if (KIND.parent / m).exists() else "missing") for m in GEN2_PINS}
-    g3b = {m: (blob(KIND.parent / m) if (KIND.parent / m).exists() else "missing") for m in GEN3_PINS}
-    g4b = {m: (blob(KIND.parent / m) if (KIND.parent / m).exists() else "missing") for m in GEN4_PINS}
     gn = gen_names()
     bad = 0
     for f in files:
@@ -600,7 +530,7 @@ def main(files, partial=False):
         g6 = "GEN6-JSON" in text or any(f"@E2eScal.{k} " in text for k in GEN6_KINDS)
         if g6 and not partial:
             # rule 13: a GEN6 file is checked by rule 13 only; a GEN5 / older kind in it fails 13c
-            errs, info6 = check_gen6(text, g6_blobs_tree(), gn)
+            errs, info6 = check_gen6(text, gn)
             if g5:
                 errs.append("rule 13: a GEN6 file with a GEN5 kind or block")
             mains = [info6]
@@ -609,14 +539,14 @@ def main(files, partial=False):
         elif g5 and not partial:
             # rule 12: the GEN4 part by rules 1-11, the GEN5 part by rule 12
             part4 = text.split(G5_MARK, 1)[0] if text.count(G5_MARK) == 1 else text
-            errs, mains = check_text(part4, kb, kzb, g2b, gn, partial, g3b, g4b, rule11=not hand)
-            e5, info5 = check_gen5(text, g5_blobs_tree(), gn)
+            errs, mains = check_text(part4, gn, partial, rule11=not hand)
+            e5, info5 = check_gen5(text, gn)
             errs = errs + e5
             mains = mains + [info5]
         elif g5:
             errs, mains = ["GEN5 output in --partial mode (a GEN5 file is never partial)"], []
         else:
-            errs, mains = check_text(text, kb, kzb, g2b, gn, partial, g3b, g4b, rule11=not hand)
+            errs, mains = check_text(text, gn, partial, rule11=not hand)
         print(("PASS" if not errs else "FAIL"), f, "theorems:", ",".join(mains))
         if hand:
             print("   hand example module (HAND_EXAMPLES): rule 11 not applied")
@@ -627,49 +557,40 @@ def main(files, partial=False):
             print(f"PARTIAL {n}/{tot} fields: kinds of present theorems checked; NOT a full-coverage result "
                   f"(uncovered: {', '.join(u['field'] for u in unc)})")
         bad |= bool(errs)
-    print("Kind.lean blob", kb, "frozen" if kb == KIND_BLOB else "NOT FROZEN")
-    print("KindZ.lean blob", kzb, "pinned" if kzb == KINDZ_BLOB else "NOT PINNED")
-    for m, b in g2b.items():
-        print(m, "blob", b, "pinned" if b == GEN2_PINS[m] else "NOT PINNED")
-    for m, b in g3b.items():
-        print(m, "blob", b, "pinned" if b == GEN3_PINS[m] else "NOT PINNED")
-    for m, b in g4b.items():
-        print(m, "blob", b, "pinned" if b == GEN4_PINS[m] else "NOT PINNED")
-    for m, b in g6_blobs_tree().items():
-        print(m, "blob", b, "pinned" if b == GEN6_PINS[m] else "NOT PINNED")
     if partial:
         return 1 if bad else 3
     return 1 if bad else 0
 
 
-GOOD = """import E2eScal.P1
-import E2eScal.Kind
+GOOD = """import Codec.Uint64Decoder
+import Codec.Kind.FieldPatterns
 
 /-! generated -/
 
-open Fk E2eAd.Code
+open Machine Runtime TestTarget E2eAd.Code
 variable [Host]
 
+open Codec
 namespace E2eScal.Gen
 
 set_option maxRecDepth 100000 in
 theorem t (k : Nat) (hk : VxUnmarshal.IsInfixAt Host.prog k)
     (hf : LabelsFresh VxUnmarshal k) : P := by
   with_reducible exact foo
-theorem t_kind : ∀ (h : Host), type_of% (@t h) = @E2eScal.u64DecAcceptKind h VxUnmarshal := by
+theorem t_kind : ∀ (h : Host), type_of% (@t h) = @Codec.u64DecAcceptKind h VxUnmarshal := by
   intro h; with_reducible rfl
 
 /-- doc -/
 theorem s (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh BhUnmarshal k) :
     Q := by
   exact bar
-theorem s_kind : ∀ (h : Host), type_of% (@s h) = @E2eScal.rootDecSegKind h BhUnmarshal 86 100 128 136 104 24 32 40 16 := by
+theorem s_kind : ∀ (h : Host), type_of% (@s h) = @Codec.rootDecSegKind h BhUnmarshal 86 100 128 136 104 24 32 40 16 := by
   intro h; with_reducible rfl
 
 theorem z (k : Nat) (hk : E1Unmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh E1Unmarshal k) :
     Z := by
   with_reducible exact baz
-theorem z_kind : ∀ (h : Host), type_of% (@z h) = @E2eScal.rootDecSegZKind h E1Unmarshal 13 26 48 56 24 8 16 24 := by
+theorem z_kind : ∀ (h : Host), type_of% (@z h) = @Codec.rootDecSegZKind h E1Unmarshal 13 26 48 56 24 8 16 24 := by
   intro h; with_reducible rfl
 
 theorem t_same : @E2eAd.x = @t := rfl
@@ -679,50 +600,42 @@ end E2eScal.Gen
 
 
 def selftest():
-    K = KIND_BLOB
-    deg = GOOD.replace("= @E2eScal.u64DecAcceptKind h VxUnmarshal := by", "= type_of% (@t h) := by")
+    deg = GOOD.replace("= @Codec.u64DecAcceptKind h VxUnmarshal := by", "= type_of% (@t h) := by")
     cases = [
-        ("good", GOOD, K, True),
-        ("kind_blob_changed", GOOD, "0" * 40, False),
-        ("degenerate_rhs_self", deg, K, False),
-        ("degenerate_rhs_true", GOOD.replace("= @E2eScal.u64DecAcceptKind h VxUnmarshal := by", "= True := by"), K, False),
-        ("other_kind_const", GOOD.replace("u64DecAcceptKind h VxUnmarshal", "u64DecAcceptKind h CiUnmarshal"), K, False),
-        ("eight_params", GOOD.replace(" 128 136 104 24 32 40 16", " 128 136 104 24 32 40"), K, False),
-        ("missing_kind", GOOD.replace("theorem t_kind", "theorem t_kinx"), K, False),
-        ("kind_not_next", GOOD.replace("theorem t_kind :", "theorem zz (hk : VxUnmarshal.IsInfixAt Host.prog k) : True := trivial\ntheorem t_kind :"), K, False),
-        ("proof_not_rfl", GOOD.replace("intro h; with_reducible rfl\n\n/--", "intro h; simp\n\n/--"), K, False),
-        ("local_abbrev", GOOD.replace("namespace E2eScal.Gen\n", "namespace E2eScal.Gen\nabbrev E2eScal.u64DecAcceptKind := True\n"), K, False),
-        ("sorry", GOOD.replace("with_reducible exact foo", "sorry"), K, False),
-        ("same_not_identity", GOOD.replace("@E2eAd.x = @t := rfl", "True := trivial"), K, False),
-        ("orphan_kind", GOOD + "theorem q_kind : True := trivial\n", K, False),
+        ("good", GOOD, True),
+        ("degenerate_rhs_self", deg, False),
+        ("degenerate_rhs_true", GOOD.replace("= @Codec.u64DecAcceptKind h VxUnmarshal := by", "= True := by"), False),
+        ("other_kind_const", GOOD.replace("u64DecAcceptKind h VxUnmarshal", "u64DecAcceptKind h CiUnmarshal"), False),
+        ("eight_params", GOOD.replace(" 128 136 104 24 32 40 16", " 128 136 104 24 32 40"), False),
+        ("missing_kind", GOOD.replace("theorem t_kind", "theorem t_kinx"), False),
+        ("kind_not_next", GOOD.replace("theorem t_kind :", "theorem zz (hk : VxUnmarshal.IsInfixAt Host.prog k) : True := trivial\ntheorem t_kind :"), False),
+        ("proof_not_rfl", GOOD.replace("intro h; with_reducible rfl\n\n/--", "intro h; simp\n\n/--"), False),
+        ("local_abbrev", GOOD.replace("namespace E2eScal.Gen\n", "namespace E2eScal.Gen\nabbrev Codec.u64DecAcceptKind := True\n"), False),
+        ("sorry", GOOD.replace("with_reducible exact foo", "sorry"), False),
+        ("kind_other_namespace", GOOD.replace("@Codec.u64DecAcceptKind", "@E2eScal.u64DecAcceptKind"), False),
+        ("same_not_identity", GOOD.replace("@E2eAd.x = @t := rfl", "True := trivial"), False),
+        ("orphan_kind", GOOD + "theorem q_kind : True := trivial\n", False),
     ]
-    # offset-0 kind of the generator extension (rootDecSegZKind, 8 parameters, KindZ.lean pinned); the 5th field: KindZ blob pinned?
-    zk = "= @E2eScal.rootDecSegZKind h E1Unmarshal 13 26 48 56 24 8 16 24 := by"
+    # offset-0 kind of the generator extension (rootDecSegZKind, 8 parameters)
+    zk = "= @Codec.rootDecSegZKind h E1Unmarshal 13 26 48 56 24 8 16 24 := by"
     assert zk in GOOD
-    nz = GOOD.split("theorem z (k")[0] + "theorem t_same" + GOOD.split("theorem t_same")[1]
-    cases = [c + (True,) for c in cases] + [
-        ("z_degenerate_rhs_self", GOOD.replace(zk, "= type_of% (@z h) := by"), K, False, True),
-        ("z_degenerate_rhs_true", GOOD.replace(zk, "= True := by"), K, False, True),
-        ("z_nine_params", GOOD.replace(zk, zk.replace(" 16 24 :=", " 16 24 0 :=")), K, False, True),
-        ("z_seven_params", GOOD.replace(zk, zk.replace(" 16 24 :=", " 16 :=")), K, False, True),
-        ("z_other_const", GOOD.replace(zk, zk.replace("E1Unmarshal", "BhUnmarshal")), K, False, True),
-        ("z_as_add_kind", GOOD.replace(zk, zk.replace("rootDecSegZKind", "rootDecSegKind")), K, False, True),
-        ("z_kindz_blob_changed", GOOD, K, False, False),
-        ("no_z_kindz_blob_not_needed", nz, K, True, False),
+    cases = cases + [
+        ("z_degenerate_rhs_self", GOOD.replace(zk, "= type_of% (@z h) := by"), False),
+        ("z_degenerate_rhs_true", GOOD.replace(zk, "= True := by"), False),
+        ("z_nine_params", GOOD.replace(zk, zk.replace(" 16 24 :=", " 16 24 0 :=")), False),
+        ("z_seven_params", GOOD.replace(zk, zk.replace(" 16 24 :=", " 16 :=")), False),
+        ("z_other_const", GOOD.replace(zk, zk.replace("E1Unmarshal", "BhUnmarshal")), False),
+        ("z_as_add_kind", GOOD.replace(zk, zk.replace("rootDecSegZKind", "rootDecSegKind")), False),
         # a --partial-out file (header text as scalgen.py writes it) must fail, even if
         # every theorem it has is well kinded
         ("partial_output_header", GOOD.replace("/-! generated -/", "/-! PARTIAL OUTPUT (scalgen exit 3): 1 of 2 "
-                                               "32-byte fields of `v1alpha1.Eth1Data`; missing: BlockHash -/"),
-         K, False, True),
-        ("partial_output_in_line_comment", GOOD + "-- PARTIAL OUTPUT\n", K, False, True),
+                                               "32-byte fields of `v1alpha1.Eth1Data`; missing: BlockHash -/"), False),
+        ("partial_output_in_line_comment", GOOD + "-- PARTIAL OUTPUT\n", False),
     ]
-    cases = [c + (None,) for c in cases] + gen2_cases(K)
+    cases = [c + (False,) for c in cases] + gen2_cases() + g2f_cases() + g3_cases() + g4_cases()
     bad = []
-    cases = [c + (False,) for c in cases] + g2f_cases(K)
-    cases = [c + (None,) for c in cases] + g3_cases(K)
-    cases = [c + (None,) for c in cases] + g4_cases(K)
-    for name, text, kb, ok, zpin, g2, part, g3, g4 in cases:
-        errs, _ = check_text(text, kb, KINDZ_BLOB if zpin else "0" * 40, g2, GNAMES, part, g3, g4)
+    for name, text, ok, part in cases:
+        errs, _ = check_text(text, GNAMES, part)
         if (not errs) != ok:
             bad.append((name, errs))
     # the exit codes of main() (`--partial`: 3 on success, 1 on failure, never 0; default: 1)
@@ -730,10 +643,9 @@ def selftest():
     bad += bad_exit
     # the rule 11 exemption removes only the coverage-header error
     nh = GOOD2.replace("GEN2 coverage (`p2dec --gen2`): 3 of 3 fields", "generated")
-    e_on, _ = check_text(nh, K, KINDZ_BLOB, None, GNAMES, False, None, None)
-    e_off, _ = check_text(nh, K, KINDZ_BLOB, None, GNAMES, False, None, None, rule11=False)
-    e_sorry, _ = check_text(nh.replace("with_reducible exact", "sorry --", 1), K, KINDZ_BLOB, None, GNAMES, False, None, None,
-                            rule11=False)
+    e_on, _ = check_text(nh, GNAMES, False)
+    e_off, _ = check_text(nh, GNAMES, False, rule11=False)
+    e_sorry, _ = check_text(nh.replace("with_reducible exact", "sorry --", 1), GNAMES, False, rule11=False)
     n_exit += 3
     if not e_on or e_off or not e_sorry:
         bad.append(("g4f_rule11_exemption", e_on, e_off, e_sorry))
@@ -750,16 +662,17 @@ def selftest():
 
 
 # GEN2 controls: one generated-shape block per new kind (headers as `scalgen.py p2dec --gen2` writes them)
-GOOD2 = """import E2eScal.SegN
-import E2eScal.Kind
-import E2eScal.KindN
-import E2eScal.KindU64
+GOOD2 = """import Codec.FixedBytesDecode
+import Codec.Kind.FieldPatterns
+import Codec.Kind.FixedBytesDecode
+import Codec.Kind.InlineUint64
 
 /-! Generated by `gen/scal/scalgen.py p2dec`; GEN2 coverage (`p2dec --gen2`): 3 of 3 fields. -/
 
-open Fk E2eScal.H3Code
+open Machine Runtime TestTarget E2eScal.H3Code
 variable [Host]
 
+open Codec
 namespace E2eScal.Gen
 
 set_option maxHeartbeats 16000000 in
@@ -767,37 +680,38 @@ set_option maxRecDepth 100000 in
 /-- `PublicKey` (48 bytes, SSZ offset 0, Go offset 0): decode segment, directives 13–36. -/
 theorem a (k : Nat) (hk : DmUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DmUnmarshal k) :
     A := by
-  with_reducible exact E2eScal.bytesdec_seg_z 48 (Or.inr (Or.inl rfl)) _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA hB hl
-theorem a_kind : ∀ (h : Host), type_of% (@a h) = @E2eScal.bytesDecSegZKind h 48 DmUnmarshal 13 26 48 56 24 0 8 16 := by
+  with_reducible exact Codec.bytesdec_seg_z 48 (Or.inr (Or.inl rfl)) _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA hB hl
+theorem a_kind : ∀ (h : Host), type_of% (@a h) = @Codec.bytesDecSegZKind h 48 DmUnmarshal 13 26 48 56 24 0 8 16 := by
   intro h; with_reducible rfl
 
 theorem b (k : Nat) (hk : XyUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh XyUnmarshal k) :
     B := by
-  with_reducible exact E2eScal.bytesdec_seg 96 (Or.inr (Or.inr rfl)) _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) hA hB hl
-theorem b_kind : ∀ (h : Host), type_of% (@b h) = @E2eScal.bytesDecSegKind h 96 XyUnmarshal 47 61 48 56 24 24 32 40 48 := by
+  with_reducible exact Codec.bytesdec_seg 96 (Or.inr (Or.inr rfl)) _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) hA hB hl
+theorem b_kind : ∀ (h : Host), type_of% (@b h) = @Codec.bytesDecSegKind h 96 XyUnmarshal 47 61 48 56 24 24 32 40 48 := by
   intro h; with_reducible rfl
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 theorem c (k : Nat) (hk : DmUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DmUnmarshal k) :
     C := by
-  have hX : E2eScal.U64InlineReg Reg64.rcx := by decide
-  with_reducible exact E2eScal.u64dec_inline_seg Reg64.rcx hX _ _ _ (k + 83) hA
-theorem c_kind : ∀ (h : Host), type_of% (@c h) = @E2eScal.u64DecInlineSegKind h DmUnmarshal 83 56 80 48 := by
+  have hX : Codec.U64InlineReg Reg64.rcx := by decide
+  with_reducible exact Codec.u64dec_inline_seg Reg64.rcx hX _ _ _ (k + 83) hA
+theorem c_kind : ∀ (h : Host), type_of% (@c h) = @Codec.u64DecInlineSegKind h DmUnmarshal 83 56 80 48 := by
   intro h; with_reducible rfl
 
 end E2eScal.Gen
 """
 
 
-COMP = """import E2eScal.Compose
-import E2eScal.Kind
+COMP = """import Codec.DecoderHeadEpilogue
+import Codec.Kind.FieldPatterns
 
 /-! Generated by `gen/scal/scalgen.py p2dec`; composed accept theorem; statement check: identity. -/
 
-open Fk E2eScal.H3Code
+open Machine Runtime TestTarget E2eScal.H3Code
 variable [Host]
 
+open Codec
 namespace E2eScal.Gen
 
 set_option maxHeartbeats 4000000 in
@@ -805,9 +719,9 @@ set_option maxRecDepth 100000 in
 theorem d (k : Nat) (hk : DmUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DmUnmarshal k)
     (x1 : List UInt8) :
     D := by
-  refine eventually_trans _ _ _ _ (E2eScal.dechead_seg _ _ _ _ 88 (k + 0) hH) ?_
+  refine eventually_trans _ _ _ _ (Codec.dechead_seg _ _ _ _ 88 (k + 0) hH) ?_
   refine eventually_trans _ _ _ _ (E2eScal.Gen.dm_g2dec_Amount_seg k hk hf) ?_
-  refine eventually_trans _ _ _ _ (E2eScal.decepi_seg (k + 86) hE) ?_
+  refine eventually_trans _ _ _ _ (Codec.decepi_seg (k + 86) hE) ?_
 
 /-- Statement check: the declared type is that of the hand theorem (definitional identity). -/
 theorem d_type : ∀ (h : Host),
@@ -818,58 +732,39 @@ end E2eScal.Gen
 """
 
 
-def gen2_cases(K):
-    za = "= @E2eScal.bytesDecSegZKind h 48 DmUnmarshal 13 26 48 56 24 0 8 16 := by"
-    ab = "= @E2eScal.bytesDecSegKind h 96 XyUnmarshal 47 61 48 56 24 24 32 40 48 := by"
-    uc = "= @E2eScal.u64DecInlineSegKind h DmUnmarshal 83 56 80 48 := by"
+def gen2_cases():
+    za = "= @Codec.bytesDecSegZKind h 48 DmUnmarshal 13 26 48 56 24 0 8 16 := by"
+    ab = "= @Codec.bytesDecSegKind h 96 XyUnmarshal 47 61 48 56 24 24 32 40 48 := by"
+    uc = "= @Codec.u64DecInlineSegKind h DmUnmarshal 83 56 80 48 := by"
     for x in (za, ab, uc):
         assert GOOD2.count(x) == 1
-    P = dict(GEN2_PINS)
-
-    def pins(**chg):
-        d = dict(P)
-        d.update({k.replace("_", "."): v for k, v in chg.items()})
-        return d
-    z40 = "0" * 40
     return [
-        ("g2_good", GOOD2, K, True, True, None),
-        ("g2_kindN_blob_changed", GOOD2, K, False, True, pins(KindN_lean=z40)),
-        ("g2_segN_blob_changed", GOOD2, K, False, True, pins(SegN_lean=z40)),
-        ("g2_kindU64_blob_changed", GOOD2, K, False, True, pins(KindU64_lean=z40)),
-        ("g2_u64inline_blob_changed", GOOD2, K, False, True, pins(U64Inline_lean=z40)),
-        ("g2_no_u64_kindU64_not_needed", GOOD2.split("set_option maxHeartbeats 4000000")[0].replace(" 3 of 3 fields", " 2 of 2 fields") + "end E2eScal.Gen\n",
-         K, True, True, pins(KindU64_lean=z40, U64Inline_lean=z40)),
-        ("g2_z_degenerate_self", GOOD2.replace(za, "= type_of% (@a h) := by"), K, False, True, None),
-        ("g2_z_degenerate_true", GOOD2.replace(za, "= True := by"), K, False, True, None),
-        ("g2_add_degenerate_self", GOOD2.replace(ab, "= type_of% (@b h) := by"), K, False, True, None),
-        ("g2_u64_degenerate_self", GOOD2.replace(uc, "= type_of% (@c h) := by"), K, False, True, None),
-        ("g2_u64_degenerate_true", GOOD2.replace(uc, "= True := by"), K, False, True, None),
-        ("g2_z_size_64", GOOD2.replace(za, za.replace(" h 48 ", " h 64 ")), K, False, True, None),
-        ("g2_add_size_symbolic", GOOD2.replace(ab, ab.replace(" h 96 ", " h n ")), K, False, True, None),
-        ("g2_z_size_missing", GOOD2.replace(za, za.replace(" h 48 ", " h ")), K, False, True, None),
-        ("g2_add_nine_params", GOOD2.replace(ab, ab.replace(" 40 48 :=", " 40 :=")), K, False, True, None),
-        ("g2_z_nine_params", GOOD2.replace(za, za.replace(" 8 16 :=", " 8 16 0 :=")), K, False, True, None),
-        ("g2_u64_three_params", GOOD2.replace(uc, uc.replace(" 80 48 :=", " 80 :=")), K, False, True, None),
-        ("g2_u64_register_param", GOOD2.replace(uc, uc.replace(" h DmUnmarshal", " h Reg64.rcx DmUnmarshal")),
-         K, False, True, None),
-        ("g2_u64_other_const", GOOD2.replace(uc, uc.replace("DmUnmarshal", "BiUnmarshal")), K, False, True, None),
-        ("g2_add_as_z_kind", GOOD2.replace(ab, ab.replace("bytesDecSegKind", "bytesDecSegZKind")), K, False, True, None),
+        ("g2_good", GOOD2, True, False),
+        ("g2_z_degenerate_self", GOOD2.replace(za, "= type_of% (@a h) := by"), False, False),
+        ("g2_z_degenerate_true", GOOD2.replace(za, "= True := by"), False, False),
+        ("g2_add_degenerate_self", GOOD2.replace(ab, "= type_of% (@b h) := by"), False, False),
+        ("g2_u64_degenerate_self", GOOD2.replace(uc, "= type_of% (@c h) := by"), False, False),
+        ("g2_u64_degenerate_true", GOOD2.replace(uc, "= True := by"), False, False),
+        ("g2_z_size_64", GOOD2.replace(za, za.replace(" h 48 ", " h 64 ")), False, False),
+        ("g2_add_size_symbolic", GOOD2.replace(ab, ab.replace(" h 96 ", " h n ")), False, False),
+        ("g2_z_size_missing", GOOD2.replace(za, za.replace(" h 48 ", " h ")), False, False),
+        ("g2_add_nine_params", GOOD2.replace(ab, ab.replace(" 40 48 :=", " 40 :=")), False, False),
+        ("g2_z_nine_params", GOOD2.replace(za, za.replace(" 8 16 :=", " 8 16 0 :=")), False, False),
+        ("g2_u64_three_params", GOOD2.replace(uc, uc.replace(" 80 48 :=", " 80 :=")), False, False),
+        ("g2_u64_register_param", GOOD2.replace(uc, uc.replace(" h DmUnmarshal", " h Reg64.rcx DmUnmarshal")), False, False),
+        ("g2_u64_other_const", GOOD2.replace(uc, uc.replace("DmUnmarshal", "BiUnmarshal")), False, False),
+        ("g2_add_as_z_kind", GOOD2.replace(ab, ab.replace("bytesDecSegKind", "bytesDecSegZKind")), False, False),
         ("g2_partial_output", GOOD2.replace("/-! Generated", "/-! PARTIAL OUTPUT (scalgen exit 3): 2 of 3 fields "
-                                            "of `v1alpha1.DepositMessage` (--gen2); NOT generated: Amount. -/\n/-! Generated"),
-         K, False, True, None),
-        ("g2_proof_not_rfl", GOOD2.replace(uc + "\n  intro h; with_reducible rfl", uc + "\n  intro h; rfl"),
-         K, False, True, None),
-        ("g2c_good_identity", COMP, K, True, True, None),
-        ("g2c_no_identity", COMP.split("\n/-- Statement check")[0] + "\nend E2eScal.Gen\n", K, False, True, None),
-        ("g2c_degenerate_self", COMP.replace("type_of% (@E2eScal.Dm.dm_e2e_accept_main h)", "type_of% (@d h)"),
-         K, False, True, None),
-        ("g2c_rhs_declared_here", COMP.replace("@E2eScal.Dm.dm_e2e_accept_main h", "@E2eScal.Gen.d h"),
-         K, False, True, None),
-        ("g2c_rhs_true", COMP.replace("type_of% (@E2eScal.Dm.dm_e2e_accept_main h) := by", "True := by"),
-         K, False, True, None),
-        ("g2c_proof_not_rfl", COMP.replace("  intro h; with_reducible rfl", "  intro h; rfl"), K, False, True, None),
+                                            "of `v1alpha1.DepositMessage` (--gen2); NOT generated: Amount. -/\n/-! Generated"), False, False),
+        ("g2_proof_not_rfl", GOOD2.replace(uc + "\n  intro h; with_reducible rfl", uc + "\n  intro h; rfl"), False, False),
+        ("g2c_good_identity", COMP, True, False),
+        ("g2c_no_identity", COMP.split("\n/-- Statement check")[0] + "\nend E2eScal.Gen\n", False, False),
+        ("g2c_degenerate_self", COMP.replace("type_of% (@E2eScal.Dm.dm_e2e_accept_main h)", "type_of% (@d h)"), False, False),
+        ("g2c_rhs_declared_here", COMP.replace("@E2eScal.Dm.dm_e2e_accept_main h", "@E2eScal.Gen.d h"), False, False),
+        ("g2c_rhs_true", COMP.replace("type_of% (@E2eScal.Dm.dm_e2e_accept_main h) := by", "True := by"), False, False),
+        ("g2c_proof_not_rfl", COMP.replace("  intro h; with_reducible rfl", "  intro h; rfl"), False, False),
         ("g2c_orphan_type", GOOD2 + "theorem q_type : ∀ (h : Host),\n    type_of% (@q h) = type_of% (@E2eScal.X h) := by\n"
-                                     "  intro h; with_reducible rfl\n", K, False, True, None),
+                                     "  intro h; with_reducible rfl\n", False, False),
     ]
 
 
@@ -878,11 +773,11 @@ def gen2_cases(K):
 GNAMES = {"gen_seg_x", "bi_e2e_accept_main_gc", "bi_e2e_accept_main_composed"}
 
 
-def g2f_cases(K):
+def g2f_cases():
     """Controls of rules 6a-6c and 7."""
     ty = ("theorem {t}_type : ∀ (h : Host),\n    type_of% (@{t} h) = type_of% (@E2eScal.Dm.dm_e2e_accept_main h) := by\n"
           "  intro h; with_reducible rfl\n")
-    uc = "theorem c_kind : ∀ (h : Host), type_of% (@c h) = @E2eScal.u64DecInlineSegKind h DmUnmarshal 83 56 80 48 := by\n  intro h; with_reducible rfl\n"
+    uc = "theorem c_kind : ∀ (h : Host), type_of% (@c h) = @Codec.u64DecInlineSegKind h DmUnmarshal 83 56 80 48 := by\n  intro h; with_reducible rfl\n"
     assert GOOD2.count(uc) == 1
     seg_type = GOOD2.replace(uc, ty.format(t="c"))           # reviewer case (i): `_type` in place of a segment kind
     rhs = "type_of% (@E2eScal.Dm.dm_e2e_accept_main h)"
@@ -895,35 +790,27 @@ def g2f_cases(K):
     part = GOOD2.replace("\n/-! Generated", "\n" + PH + "/-! Generated").replace(" 3 of 3 fields", " 3 of 5 fields")
     assert part.count(PARTIAL) == 1
     return [
-        ("g2f_segment_type_instead_of_kind", seg_type, K, False, True, None, False),
-        ("g2f_rhs_generated_namespace", gen_rhs, K, False, True, None, False),
-        ("g2f_rhs_gen2ex_namespace", COMP.replace(rhs, "type_of% (@E2eScal.Gen2Ex.bi_e2e_accept_main_composed h)"),
-         K, False, True, None, False),
-        ("g2f_rhs_generated_namespace_fresh_name", COMP.replace(rhs, "type_of% (@E2eScal.Gen.zz_fresh h)"),
-         K, False, True, None, False),
+        ("g2f_segment_type_instead_of_kind", seg_type, False, False),
+        ("g2f_rhs_generated_namespace", gen_rhs, False, False),
+        ("g2f_rhs_gen2ex_namespace", COMP.replace(rhs, "type_of% (@E2eScal.Gen2Ex.bi_e2e_accept_main_composed h)"), False, False),
+        ("g2f_rhs_generated_namespace_fresh_name", COMP.replace(rhs, "type_of% (@E2eScal.Gen.zz_fresh h)"), False, False),
         ("g2f_unchecked_marker_with_identity", COMP.replace(
-            "(hf : LabelsFresh DmUnmarshal k)\n", "(hf : LabelsFresh DmUnmarshal k) -- UNCHECKED STATEMENT\n"),
-         K, False, True, None, False),
-        ("g2f_rhs_declared_in_gen_module", COMP.replace(rhs, "type_of% (@E2eScal.Other.gen_seg_x h)"),
-         K, False, True, None, False),
-        ("g2f_composed_without_decepi", COMP.replace("E2eScal.decepi_seg", "E2eScal.decepi_sex"), K, False, True, None, False),
-        ("g2f_prop_identity_good", prop, K, True, True, None, False),
-        ("g2f_prop_identity_generated_rhs", COMP.replace(rhs, "@E2eScal.Gen.bi_e2e_accept_main_gc h"),
-         K, False, True, None, False),
-        ("g2f_prop_identity_on_segment", GOOD2.replace(uc, ty.format(t="c").replace(rhs, "@E2eScal.Fx.dmStmt h")),
-         K, False, True, None, False),
+            "(hf : LabelsFresh DmUnmarshal k)\n", "(hf : LabelsFresh DmUnmarshal k) -- UNCHECKED STATEMENT\n"), False, False),
+        ("g2f_rhs_declared_in_gen_module", COMP.replace(rhs, "type_of% (@E2eScal.Other.gen_seg_x h)"), False, False),
+        ("g2f_composed_without_decepi", COMP.replace("Codec.decepi_seg", "E2eScal.decepi_sex"), False, False),
+        ("g2f_prop_identity_good", prop, True, False),
+        ("g2f_prop_identity_generated_rhs", COMP.replace(rhs, "@E2eScal.Gen.bi_e2e_accept_main_gc h"), False, False),
+        ("g2f_prop_identity_on_segment", GOOD2.replace(uc, ty.format(t="c").replace(rhs, "@E2eScal.Fx.dmStmt h")), False, False),
         ("g2f_unchecked_marker", COMP.split("\n/-- Statement check")[0].replace(
             "(hf : LabelsFresh DmUnmarshal k)\n", "(hf : LabelsFresh DmUnmarshal k) -- UNCHECKED STATEMENT\n")
-         + "\nend E2eScal.Gen\n", K, False, True, None, False),
-        ("g2f_partial_default_rejects", part, K, False, True, None, False),
-        ("g2f_partial_mode_good", part, K, True, True, None, True),
-        ("g2f_partial_mode_complete_file", GOOD2, K, False, True, None, True),
-        ("g2f_partial_mode_header_before_imports", PH + GOOD2.replace(" 3 of 3 fields", " 3 of 5 fields"),
-         K, False, True, None, True),
-        ("g2f_partial_mode_count_mismatch", part.replace(unc, json_line([("Slot", "x")])), K, False, True, None, True),
-        ("g2f_partial_mode_bad_kind", part.replace(" 83 56 80 48 := by", " 83 56 80 := by"), K, False, True, None, True),
-        ("g2f_partial_mode_composed", COMP.replace("\n/-! Generated", "\n" + PH + "/-! Generated"),
-         K, False, True, None, True),
+         + "\nend E2eScal.Gen\n", False, False),
+        ("g2f_partial_default_rejects", part, False, False),
+        ("g2f_partial_mode_good", part, True, True),
+        ("g2f_partial_mode_complete_file", GOOD2, False, True),
+        ("g2f_partial_mode_header_before_imports", PH + GOOD2.replace(" 3 of 3 fields", " 3 of 5 fields"), False, True),
+        ("g2f_partial_mode_count_mismatch", part.replace(unc, json_line([("Slot", "x")])), False, True),
+        ("g2f_partial_mode_bad_kind", part.replace(" 83 56 80 48 := by", " 83 56 80 := by"), False, True),
+        ("g2f_partial_mode_composed", COMP.replace("\n/-! Generated", "\n" + PH + "/-! Generated"), False, True),
     ]
 
 
@@ -939,9 +826,9 @@ G3K = {
     "pw_WithdrawableEpoch_call": f'@E2eScal.callDecSegKind h PwUnmarshal {FN_EP} "L_pw_159" 59 88',
     "bh_ProposerIndex_arg": "@E2eScal.callArgReloadKind h PwUnmarshal true 120 8 136 (-8) 112 16 47",
     "bh_ProposerIndex_call": f'@E2eScal.callDecSegKind h PwUnmarshal {FN_VI} "L_bh_154" 55 85',
-    "dd_WithdrawalCredentials_seg": "@E2eScal.bytesDecSegKind h 32 PwUnmarshal 47 61 48 56 24 32 40 48 48",
+    "dd_WithdrawalCredentials_seg": "@Codec.bytesDecSegKind h 32 PwUnmarshal 47 61 48 56 24 32 40 48 48",
 }
-G3PROOF = {"pw_Amount_seg": "  have hX : E2eScal.U64RRReg Reg64.r8 := by decide\n  with_reducible exact E2eScal.u64dec_rr_seg Reg64.r8 hX _ _ (k + 54) hA\n",
+G3PROOF = {"pw_Amount_seg": "  have hX : Codec.U64RRReg Reg64.r8 := by decide\n  with_reducible exact Codec.u64dec_rr_seg Reg64.r8 hX _ _ (k + 54) hA\n",
            "dd_WithdrawalCredentials_seg": "  with_reducible exact E2eScal.bytesdec_seg_p true 32 (Or.inl rfl) _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) hA hB hl\n"}
 
 
@@ -952,9 +839,9 @@ def g3_block(t, kind):
             + f"theorem {t}_kind : ∀ (h : Host), type_of% (@{t} h) = {kind} := by\n  intro h; with_reducible rfl\n\n")
 
 
-GOOD3 = ("import E2eScal.KindCall\nimport E2eScal.SegNPad\nimport E2eScal.Kind\nimport E2eScal.KindN\n\n"
+GOOD3 = ("import E2eScal.KindCall\nimport E2eScal.SegNPad\nimport Codec.Kind.FieldPatterns\nimport Codec.Kind.FixedBytesDecode\n\n"
          "/-! Generated by `gen/scal/scalgen.py p2dec`; GEN3 coverage (`p2dec --gen3`): 5 of 5 fields. -/\n\n"
-         "open Fk E2eScal.H4Code\nvariable [Host]\n\nnamespace E2eScal.Gen\n\n"
+         "open Machine Runtime TestTarget E2eScal.H4Code\nvariable [Host]\n\nopen Codec\nnamespace E2eScal.Gen\n\n"
          + "".join(g3_block(t, k) for t, k in G3K.items()) + "end E2eScal.Gen\n")
 
 COMP3 = COMP.replace("composed accept theorem; statement check: identity", "composed accept theorem (`p2dec --gen3 --compose`)").replace(
@@ -964,15 +851,8 @@ COMP3 = COMP.replace("composed accept theorem; statement check: identity", "comp
     "  intro h; rfl\n\n/-- Statement check: the declared type is that of the hand theorem")
 
 
-def g3_cases(K):
-    """Controls of rule 8 (GEN3 kinds, pins, callee list, decAcceptKind) and rule 9."""
-    z40 = "0" * 40
-    P3 = dict(GEN3_PINS)
-
-    def pins(m):
-        d = dict(P3)
-        d[m] = z40
-        return d
+def g3_cases():
+    """Controls of rule 8 (GEN3 kinds, callee list, decAcceptKind) and rule 9."""
 
     def kchg(t, new):
         old = f"type_of% (@{t} h) = {G3K[t]} := by"
@@ -987,13 +867,13 @@ def g3_cases(K):
     assert COMP3.count(comp_kind) == 1
     comp_only = COMP3.split("\n/-- Statement check: the declared type")[0] + "\nend E2eScal.Gen\n"
     # k04: `_type` in place of a segment `_kind`, the two composed lemma names only in a comment
-    uc = "theorem c_kind : ∀ (h : Host), type_of% (@c h) = @E2eScal.u64DecInlineSegKind h DmUnmarshal 83 56 80 48 := by\n  intro h; with_reducible rfl\n"
+    uc = "theorem c_kind : ∀ (h : Host), type_of% (@c h) = @Codec.u64DecInlineSegKind h DmUnmarshal 83 56 80 48 := by\n  intro h; with_reducible rfl\n"
     ty = ("theorem c_type : ∀ (h : Host),\n    type_of% (@c h) = type_of% (@E2eScal.Dm.dm_e2e_accept_main h) := by\n"
           "  intro h; with_reducible rfl\n")
-    k04 = GOOD2.replace(uc, ty).replace("  with_reducible exact E2eScal.u64dec_inline_seg Reg64.rcx hX _ _ _ (k + 83) hA\n",
-                                        "  -- (E2eScal.dechead_seg x) (E2eScal.decepi_seg y)\n"
-                                        "  with_reducible exact E2eScal.u64dec_inline_seg Reg64.rcx hX _ _ _ (k + 83) hA\n")
-    k04b = k04.replace("  -- (E2eScal.dechead_seg x) (E2eScal.decepi_seg y)\n", "  /- (E2eScal.dechead_seg x) (E2eScal.decepi_seg y) -/\n")
+    k04 = GOOD2.replace(uc, ty).replace("  with_reducible exact Codec.u64dec_inline_seg Reg64.rcx hX _ _ _ (k + 83) hA\n",
+                                        "  -- (Codec.dechead_seg x) (Codec.decepi_seg y)\n"
+                                        "  with_reducible exact Codec.u64dec_inline_seg Reg64.rcx hX _ _ _ (k + 83) hA\n")
+    k04b = k04.replace("  -- (Codec.dechead_seg x) (Codec.decepi_seg y)\n", "  /- (Codec.dechead_seg x) (Codec.decepi_seg y) -/\n")
     # k22-k24 (partial / coverage counts)
     unc = json_line([("Slot", "delegated overlay field"), ("ProposerIndex", "delegated overlay field")])
     PH = ("/-! PARTIAL OUTPUT (scalgen exit 3): 3 of 5 fields of `v1alpha1.BeaconBlockHeader` (--gen2); NOT "
@@ -1006,82 +886,72 @@ def g3_cases(K):
     n0 = part.replace("3 of 5 fields of", "0 of 5 fields of")
     unc_has_thm = part.replace(unc, json_line([("c", "x"), ("Slot", "y")]))
     return [
-        ("g3_good", GOOD3, K, True, True, None, False, None),
-        ("g3_kindcall_blob_changed", GOOD3, K, False, True, None, False, pins("KindCall.lean")),
-        ("g3_calldec_blob_changed", GOOD3, K, False, True, None, False, pins("CallDec.lean")),
-        ("g3_u64rr_blob_changed", GOOD3, K, False, True, None, False, pins("U64RR.lean")),
-        ("g3_segnpad_blob_changed", GOOD3, K, False, True, None, False, pins("SegNPad.lean")),
-        ("g3_segnpad_not_needed_without_pad", GOOD2, K, True, True, None, False, pins("SegNPad.lean")),
-        ("g3_kindaccept_not_needed_for_segments", GOOD3, K, True, True, None, False, pins("KindAccept.lean")),
+        ("g3_good", GOOD3, True, False),
         ("g3_callee_without_spec", kchg("pw_Index_call", G3K["pw_Index_call"].replace(
-            "consensus_types_primitives.ValidatorIndex", "proto_prysm_v1alpha1.Checkpoint")), K, False, True, None, False, None),
-        ("g3_call_degenerate_self", kchg("pw_Index_call", "type_of% (@pw_Index_call h)"), K, False, True, None, False, None),
-        ("g3_call_degenerate_true", kchg("pw_Index_call", "True"), K, False, True, None, False, None),
-        ("g3_call_one_index", kchg("pw_Index_call", G3K["pw_Index_call"].replace(" 17 47", " 17")), K, False, True, None, False, None),
-        ("g3_first_pad_not_bool", kchg("pw_Index_arg", G3K["pw_Index_arg"].replace(" false ", " 1 ")), K, False, True, None, False, None),
-        ("g3_first_negative_index", kchg("pw_Index_arg", G3K["pw_Index_arg"].replace(" 15", " (-15)")), K, False, True, None, False, None),
-        ("g3_reload_five_ints", kchg("bh_ProposerIndex_arg", G3K["bh_ProposerIndex_arg"].replace(" (-8)", "")), K, False, True, None, False, None),
-        ("g3_lea_seven_ints", kchg("pw_WithdrawableEpoch_arg1", G3K["pw_WithdrawableEpoch_arg1"].replace(" 24 48", " 24 0 48")), K, False, True, None, False, None),
-        ("g3_mov_extra_param", kchg("pw_WithdrawableEpoch_arg2", G3K["pw_WithdrawableEpoch_arg2"] + " 0"), K, False, True, None, False, None),
-        ("g3_rr_register_rax", kchg("pw_Amount_seg", G3K["pw_Amount_seg"].replace("Reg64.r8", "Reg64.rax")), K, False, True, None, False, None),
-        ("g3_rr_register_missing", kchg("pw_Amount_seg", G3K["pw_Amount_seg"].replace("Reg64.r8 ", "")), K, False, True, None, False, None),
-        ("g3_rr_as_inline_kind", kchg("pw_Amount_seg", "@E2eScal.u64DecInlineSegKind h PwUnmarshal 54 8 8 16"), K, True, True, None, False, None),
-        ("g3_call_without_arg", drop(GOOD3, "pw_Index_arg"), K, False, True, None, False, None),
-        ("g3_lea_without_arg2", drop(GOOD3, "pw_WithdrawableEpoch_arg2"), K, False, True, None, False, None),
-        ("g3_arg_without_call", drop(GOOD3, "pw_Index_call"), K, False, True, None, False, None),
-        ("g3_decaccept_on_segment", kchg("pw_Amount_seg", "@E2eScal.decAcceptKind h PwUnmarshal true [.u64] 54"), K, False, True, None, False, None),
-        ("g3c_good_kind_and_identity", COMP3, K, True, True, None, False, None),
+            "consensus_types_primitives.ValidatorIndex", "proto_prysm_v1alpha1.Checkpoint")), False, False),
+        ("g3_call_degenerate_self", kchg("pw_Index_call", "type_of% (@pw_Index_call h)"), False, False),
+        ("g3_call_degenerate_true", kchg("pw_Index_call", "True"), False, False),
+        ("g3_call_one_index", kchg("pw_Index_call", G3K["pw_Index_call"].replace(" 17 47", " 17")), False, False),
+        ("g3_first_pad_not_bool", kchg("pw_Index_arg", G3K["pw_Index_arg"].replace(" false ", " 1 ")), False, False),
+        ("g3_first_negative_index", kchg("pw_Index_arg", G3K["pw_Index_arg"].replace(" 15", " (-15)")), False, False),
+        ("g3_reload_five_ints", kchg("bh_ProposerIndex_arg", G3K["bh_ProposerIndex_arg"].replace(" (-8)", "")), False, False),
+        ("g3_lea_seven_ints", kchg("pw_WithdrawableEpoch_arg1", G3K["pw_WithdrawableEpoch_arg1"].replace(" 24 48", " 24 0 48")), False, False),
+        ("g3_mov_extra_param", kchg("pw_WithdrawableEpoch_arg2", G3K["pw_WithdrawableEpoch_arg2"] + " 0"), False, False),
+        ("g3_rr_register_rax", kchg("pw_Amount_seg", G3K["pw_Amount_seg"].replace("Reg64.r8", "Reg64.rax")), False, False),
+        ("g3_rr_register_missing", kchg("pw_Amount_seg", G3K["pw_Amount_seg"].replace("Reg64.r8 ", "")), False, False),
+        ("g3_rr_as_inline_kind", kchg("pw_Amount_seg", "@Codec.u64DecInlineSegKind h PwUnmarshal 54 8 8 16"), True, False),
+        ("g3_call_without_arg", drop(GOOD3, "pw_Index_arg"), False, False),
+        ("g3_lea_without_arg2", drop(GOOD3, "pw_WithdrawableEpoch_arg2"), False, False),
+        ("g3_arg_without_call", drop(GOOD3, "pw_Index_call"), False, False),
+        ("g3_decaccept_on_segment", kchg("pw_Amount_seg", "@E2eScal.decAcceptKind h PwUnmarshal true [.u64] 54"), False, False),
+        ("g3c_good_kind_and_identity", COMP3, True, False),
         # rule 6d: the kind alone is no independent statement check
-        ("g3c_kind_only_rejected", comp_only, K, False, True, None, False, None),
-        ("g3c_kindaccept_blob_changed", COMP3, K, False, True, None, False, pins("KindAccept.lean")),
-        ("g3c_heartbeats_raised", COMP3.replace("set_option maxHeartbeats 200000 in\ntheorem d_kind", "set_option maxHeartbeats 2000000 in\ntheorem d_kind"), K, False, True, None, False, None),
-        ("g3c_no_heartbeat_line", COMP3.replace("set_option maxHeartbeats 200000 in\ntheorem d_kind", "theorem d_kind"), K, False, True, None, False, None),
-        ("g3c_with_reducible", COMP3.replace("  intro h; rfl\n", "  intro h; with_reducible rfl\n"), K, False, True, None, False, None),
-        ("g3c_field_size_64", COMP3.replace(comp_kind, comp_kind.replace(".bytes 48", ".bytes 64")), K, False, True, None, False, None),
-        ("g3c_empty_fields", COMP3.replace(comp_kind, comp_kind.replace("[.bytes 48, .bytes 32, .u64]", "[]")), K, False, True, None, False, None),
-        ("g3c_st_not_bool", COMP3.replace(comp_kind, comp_kind.replace(" false [", " 0 [")), K, False, True, None, False, None),
-        ("g3c_other_const", COMP3.replace(comp_kind, comp_kind.replace("DmUnmarshal", "BiUnmarshal")), K, False, True, None, False, None),
-        ("g3c_not_composed_comment_only", comp_only.replace("(E2eScal.decepi_seg (k + 86) hE)", "foo -- (E2eScal.decepi_seg "),
-         K, False, True, None, False, None),
-        ("s1_k04_line_comment", k04, K, False, True, None, False, None),
-        ("s1_k04_block_comment", k04b, K, False, True, None, False, None),
+        ("g3c_kind_only_rejected", comp_only, False, False),
+        ("g3c_heartbeats_raised", COMP3.replace("set_option maxHeartbeats 200000 in\ntheorem d_kind", "set_option maxHeartbeats 2000000 in\ntheorem d_kind"), False, False),
+        ("g3c_no_heartbeat_line", COMP3.replace("set_option maxHeartbeats 200000 in\ntheorem d_kind", "theorem d_kind"), False, False),
+        ("g3c_with_reducible", COMP3.replace("  intro h; rfl\n", "  intro h; with_reducible rfl\n"), False, False),
+        ("g3c_field_size_64", COMP3.replace(comp_kind, comp_kind.replace(".bytes 48", ".bytes 64")), False, False),
+        ("g3c_empty_fields", COMP3.replace(comp_kind, comp_kind.replace("[.bytes 48, .bytes 32, .u64]", "[]")), False, False),
+        ("g3c_st_not_bool", COMP3.replace(comp_kind, comp_kind.replace(" false [", " 0 [")), False, False),
+        ("g3c_other_const", COMP3.replace(comp_kind, comp_kind.replace("DmUnmarshal", "BiUnmarshal")), False, False),
+        ("g3c_not_composed_comment_only", comp_only.replace("(Codec.decepi_seg (k + 86) hE)", "foo -- (Codec.decepi_seg "), False, False),
+        ("s1_k04_line_comment", k04, False, False),
+        ("s1_k04_block_comment", k04b, False, False),
         # the two composed-lemma names in a string literal do not make a composed theorem
-        ("s2_n26b_string_literal", k04.replace("  -- (E2eScal.dechead_seg x) (E2eScal.decepi_seg y)\n",
-                                               '  have s := "(E2eScal.dechead_seg x) (E2eScal.decepi_seg y)"\n')
-         .replace(" 3 of 3 fields", " 2 of 2 fields"),
-         K, False, True, None, False, None),
+        ("s2_n26b_string_literal", k04.replace("  -- (Codec.dechead_seg x) (Codec.decepi_seg y)\n",
+                                               '  have s := "(Codec.dechead_seg x) (Codec.decepi_seg y)"\n')
+         .replace(" 3 of 3 fields", " 2 of 2 fields"), False, False),
         # rule 6d with the generator's new marker (`--gen3 --compose` without `--same-as*`)
         ("g3c_kind_only_marked", comp_only.replace("(hf : LabelsFresh DmUnmarshal k)\n",
-                                                   "(hf : LabelsFresh DmUnmarshal k) -- UNCHECKED STATEMENT\n"),
-         K, False, True, None, False, None),
-        ("s2_k22_theorem_removed_partial", k22, K, False, True, None, True, None),
-        ("s2_k23_uncovered_entry_dropped", part.replace("3 of 5 fields of", "4 of 5 fields of").replace(unc, unc1), K, False, True, None, True, None),
-        ("s2_uncovered_field_has_theorem", unc_has_thm, K, False, True, None, True, None),
-        ("s3_k24_partial_block_deleted", k24, K, False, True, None, False, None),
-        ("s3_header_count_mismatch_full", GOOD2.replace(" 3 of 3 fields", " 4 of 4 fields"), K, False, True, None, False, None),
-        ("s4_partial_n_equals_m", nm, K, False, True, None, True, None),
-        ("s4_partial_n_zero", n0, K, False, True, None, True, None),
-        ("s4_partial_good_0_lt_n_lt_m", part, K, True, True, None, True, None),
+                                                   "(hf : LabelsFresh DmUnmarshal k) -- UNCHECKED STATEMENT\n"), False, False),
+        ("s2_k22_theorem_removed_partial", k22, False, True),
+        ("s2_k23_uncovered_entry_dropped", part.replace("3 of 5 fields of", "4 of 5 fields of").replace(unc, unc1), False, True),
+        ("s2_uncovered_field_has_theorem", unc_has_thm, False, True),
+        ("s3_k24_partial_block_deleted", k24, False, False),
+        ("s3_header_count_mismatch_full", GOOD2.replace(" 3 of 3 fields", " 4 of 4 fields"), False, False),
+        ("s4_partial_n_equals_m", nm, False, True),
+        ("s4_partial_n_zero", n0, False, True),
+        ("s4_partial_good_0_lt_n_lt_m", part, True, True),
     ]
 
 
 # GEN4 controls: kind lines and proof lemma as `scalgen.py p2dec --gen4` writes them
 G4K = {
-    "pw_g4dec_s50": ("@E2eScal.stepLdbKind h PwUnmarshal Reg64.r8 Reg64.rbx 8 50 51", "kstep_ldb Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend"),
-    "pw_g4dec_s51": ("@E2eScal.stepStKind h PwUnmarshal Reg64.r8 Reg64.rax 16 51 52", "kstep_st Reg64.r8 Reg64.rax 16 _ (k + 51) (k + 52) hq he hend"),
-    "pw_g4dec_s52": ("@E2eScal.stepAddKind h PwUnmarshal Reg64.rdi (-16) 52 53", "kstep_add Reg64.rdi (-16) _ (k + 52) (k + 53) hq he hend"),
-    "pw_g4dec_s53": ("@E2eScal.stepMovIKind h PwUnmarshal Reg64.rcx 8 53 55", "kstep_movi Reg64.rcx 8 _ (k + 53) (k + 55) hq he hend"),
+    "pw_g4dec_s50": ("@Codec.stepLdbKind h PwUnmarshal Reg64.r8 Reg64.rbx 8 50 51", "kstep_ldb Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend"),
+    "pw_g4dec_s51": ("@Codec.stepStKind h PwUnmarshal Reg64.r8 Reg64.rax 16 51 52", "kstep_st Reg64.r8 Reg64.rax 16 _ (k + 51) (k + 52) hq he hend"),
+    "pw_g4dec_s52": ("@Codec.stepAddKind h PwUnmarshal Reg64.rdi (-16) 52 53", "kstep_add Reg64.rdi (-16) _ (k + 52) (k + 53) hq he hend"),
+    "pw_g4dec_s53": ("@Codec.stepMovIKind h PwUnmarshal Reg64.rcx 8 53 55", "kstep_movi Reg64.rcx 8 _ (k + 53) (k + 55) hq he hend"),
     "pw_g4dec_Index_call": (f'@E2eScal.callDecSegKindG4 h PwUnmarshal {FN_VI} "L_pw_b9" 55 56 88',
                             "calldec_seg_w _ _ _ (k + 55) (k + 56) (k + 88) hq he hjc hB hl"),
-    "pw_g4dec_Root_seg": ("@E2eScal.bytesDecSegKindG4 h 32 PwUnmarshal Reg64.rax 89 108 114 112 120 56 24 32 40 16",
-                          "bytesdec_seg_g4 32 (Or.inl rfl) Reg64.rdx Reg64.rax (Or.inl rfl) (Or.inl rfl) _ _ _ _ _ _ _ _ _ _ _ (k + 89) (k + 102) (k + 102) (k + 108) (k + 114) hqA heA hqB heB hjl hl hjm hend"),
-    "pw_g4dec_s115": ("@E2eScal.stepJmpKind h PwUnmarshal \"L_pw_200\" 115 130", 'kstep_jmp "L_pw_200" _ (k + 115) (k + 130) hq he hl'),
-    "pw_g4dec_s130": ("@E2eScal.stepLabelKind h PwUnmarshal \"L_pw_200\" 130 131", 'kstep_label "L_pw_200" _ (k + 130) (k + 131) hq he hend'),
-    "pw_g4dec_s131": ("@E2eScal.stepStKind h PwUnmarshal Reg64.rsi Reg64.rax 24 131 132", "kstep_st Reg64.rsi Reg64.rax 24 _ (k + 131) (k + 132) hq he hend"),
-    "pw_g4dec_Sig_seg": ("@E2eScal.bytesDecSegZKindG4 h 96 PwUnmarshal Reg64.rdx 132 150 156 112 120 56 48 56 64",
-                         "bytesdec_seg_z_g4 96 (Or.inr (Or.inr rfl)) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ (k + 132) (k + 145) (k + 145) (k + 150) (k + 156) hqA heA hqB heB hjl hl hjm hend"),
-    "pw_g4dec_s156": ("@E2eScal.stepLdvKind h PwUnmarshal Reg64.rsi Reg64.rsp 56 156 157", "kstep_ldv Reg64.rsi Reg64.rsp 56 _ (k + 156) (k + 157) hq he hend"),
-    "pw_g4dec_s157": ("@E2eScal.stepStKind h PwUnmarshal Reg64.rsi Reg64.rdx 48 157 158", "kstep_st Reg64.rsi Reg64.rdx 48 _ (k + 157) (k + 158) hq he hend"),
+    "pw_g4dec_Root_seg": ("@Codec.bytesDecSegKindWindow h 32 PwUnmarshal Reg64.rax 89 108 114 112 120 56 24 32 40 16",
+                          "bytesdec_seg_window 32 (Or.inl rfl) Reg64.rdx Reg64.rax (Or.inl rfl) (Or.inl rfl) _ _ _ _ _ _ _ _ _ _ _ (k + 89) (k + 102) (k + 102) (k + 108) (k + 114) hqA heA hqB heB hjl hl hjm hend"),
+    "pw_g4dec_s115": ("@Codec.stepJmpKind h PwUnmarshal \"L_pw_200\" 115 130", 'kstep_jmp "L_pw_200" _ (k + 115) (k + 130) hq he hl'),
+    "pw_g4dec_s130": ("@Codec.stepLabelKind h PwUnmarshal \"L_pw_200\" 130 131", 'kstep_label "L_pw_200" _ (k + 130) (k + 131) hq he hend'),
+    "pw_g4dec_s131": ("@Codec.stepStKind h PwUnmarshal Reg64.rsi Reg64.rax 24 131 132", "kstep_st Reg64.rsi Reg64.rax 24 _ (k + 131) (k + 132) hq he hend"),
+    "pw_g4dec_Sig_seg": ("@Codec.bytesDecSegZKindWindow h 96 PwUnmarshal Reg64.rdx 132 150 156 112 120 56 48 56 64",
+                         "bytesdec_seg_z_window 96 (Or.inr (Or.inr rfl)) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl))) _ _ _ _ _ _ _ _ _ _ (k + 132) (k + 145) (k + 145) (k + 150) (k + 156) hqA heA hqB heB hjl hl hjm hend"),
+    "pw_g4dec_s156": ("@Codec.stepLdvKind h PwUnmarshal Reg64.rsi Reg64.rsp 56 156 157", "kstep_ldv Reg64.rsi Reg64.rsp 56 _ (k + 156) (k + 157) hq he hend"),
+    "pw_g4dec_s157": ("@Codec.stepStKind h PwUnmarshal Reg64.rsi Reg64.rdx 48 157 158", "kstep_st Reg64.rsi Reg64.rdx 48 _ (k + 157) (k + 158) hq he hend"),
 }
 G4F = [("Amount", ["pw_g4dec_s50", "pw_g4dec_s51"]), ("Index", ["pw_g4dec_s52", "pw_g4dec_s53", "pw_g4dec_Index_call"]),
        ("Root", ["pw_g4dec_Root_seg", "pw_g4dec_s115", "pw_g4dec_s130", "pw_g4dec_s131"]),
@@ -1091,7 +961,7 @@ G4F = [("Amount", ["pw_g4dec_s50", "pw_g4dec_s51"]), ("Index", ["pw_g4dec_s52", 
 def g4_block(t, kind, proof):
     return ("set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
             f"/-- Directive `x`. -/\ntheorem {t} (k : Nat) (hk : PwUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh PwUnmarshal k) :\n"
-            f"    T := by\n  have hq := E2eScal.win hk 1 1\n  with_reducible exact E2eScal.{proof}\n"
+            f"    T := by\n  have hq := Codec.win hk 1 1\n  with_reducible exact {G4_LEMMAS[proof.split()[0]]}.{proof}\n"
             f"theorem {t}_kind : ∀ (h : Host), type_of% (@{t} h) = {kind} := by\n  intro h; with_reducible rfl\n\n")
 
 
@@ -1100,24 +970,18 @@ def g4_text(fields=G4F, kinds=G4K, n=None, m=None, fj=None):
     n = len(fields) if n is None else n
     m = n if m is None else m
     fj = json.dumps([dict(field=f, theorems=ts) for f, ts in fields]) if fj is None else fj
-    return ("import E2eScal.KindStep\nimport E2eScal.KindSegReg\nimport E2eScal.CallReg\nimport E2eScal.SegRegZ\n\n"
+    return ("import Codec.Kind.WindowSteps\nimport Codec.Kind.FixedBytesDecodeWindow\nimport E2eScal.CallReg\nimport Codec.FixedBytesDecodeWindowOffsetZero\n\n"
             f"/-! Generated by `gen/scal/scalgen.py p2dec`; GEN4 coverage (`p2dec --gen4`): {n} of {m} fields. -/\n\n"
             f"/-! GEN4 fields (machine-readable, read by `kindcheck.py`):\nFIELDS-JSON: {fj}\n-/\n\n"
-            "open Fk E2eScal.H4Code\nvariable [Host]\n\nnamespace E2eScal.Gen\n\n"
+            "open Machine Runtime TestTarget E2eScal.H4Code\nvariable [Host]\n\nopen Codec\nnamespace E2eScal.Gen\n\n"
             + "".join(g4_block(t, *kinds[t]) for _, ts in fields for t in ts) + "end E2eScal.Gen\n")
 
 
 GOOD4 = g4_text()
 
 
-def g4_cases(K):
+def g4_cases():
     """Controls of rules 10, 10b, 10c, 11, 6d."""
-    z40 = "0" * 40
-
-    def pins(m):
-        d = dict(GEN4_PINS)
-        d[m] = z40
-        return d
 
     def kchg(t, new):
         old = f"type_of% (@{t} h) = {G4K[t][0]} := by"
@@ -1125,7 +989,7 @@ def g4_cases(K):
         return GOOD4.replace(old, f"type_of% (@{t} h) = {new} := by")
 
     def pchg(t, new):
-        old = f"  with_reducible exact E2eScal.{G4K[t][1]}\n"
+        old = f"  with_reducible exact {G4_LEMMAS[G4K[t][1].split()[0]]}.{G4K[t][1]}\n"
         assert GOOD4.count(old) == 1, t
         return GOOD4.replace(old, new)
     unc = json_line([("Tail", "x")])[:-1] + "]"
@@ -1138,49 +1002,42 @@ def g4_cases(K):
     k2 = dict(G4K, pw_g4dec_Index_seg=G4K["pw_g4dec_Root_seg"])
     two_blocks = [G4F[0], ("Index", G4F[1][1] + ["pw_g4dec_Index_seg"]), G4F[2], G4F[3]]
     return [
-        ("g4_good", GOOD4, K, True, True, None, False, None, None),
-        *[(f"g4_{m.split('.')[0].lower()}_blob_changed", GOOD4, K, False, True, None, False, None, pins(m)) for m in GEN4_PINS],
-        ("g4_step_degenerate_self", kchg("pw_g4dec_s51", "type_of% (@pw_g4dec_s51 h)"), K, False, True, None, False, None, None),
-        ("g4_step_degenerate_true", kchg("pw_g4dec_s51", "True"), K, False, True, None, False, None, None),
-        ("g4_step_kind_missing", GOOD4.replace("theorem pw_g4dec_s51_kind", "theorem pw_g4dec_s51_kinx"), K, False, True, None, False, None, None),
-        ("g4_st_without_disp", kchg("pw_g4dec_s51", st.replace(" 16 51 52", " 51 52")), K, False, True, None, False, None, None),
-        ("g4_st_register_not_reg64", kchg("pw_g4dec_s51", st.replace("Reg64.r8", "Reg64.xmm0")), K, False, True, None, False, None, None),
-        ("g4_st_register_symbolic", kchg("pw_g4dec_s51", st.replace("Reg64.r8", "r")), K, False, True, None, False, None, None),
-        ("g4_st_other_const", kchg("pw_g4dec_s51", st.replace("PwUnmarshal", "PcUnmarshal")), K, False, True, None, False, None, None),
-        ("g4_add_extra_param", kchg("pw_g4dec_s52", G4K["pw_g4dec_s52"][0] + " 0"), K, False, True, None, False, None, None),
-        ("g4_call_two_indices", kchg("pw_g4dec_Index_call", G4K["pw_g4dec_Index_call"][0].replace(" 56 88", " 88")), K, False, True, None, False, None, None),
+        ("g4_good", GOOD4, True, False),
+        ("g4_step_degenerate_self", kchg("pw_g4dec_s51", "type_of% (@pw_g4dec_s51 h)"), False, False),
+        ("g4_step_kind_other_namespace", kchg("pw_g4dec_s51", st.replace("@Codec.", "@E2eScal.")), False, False),
+        ("g4_step_degenerate_true", kchg("pw_g4dec_s51", "True"), False, False),
+        ("g4_step_kind_missing", GOOD4.replace("theorem pw_g4dec_s51_kind", "theorem pw_g4dec_s51_kinx"), False, False),
+        ("g4_st_without_disp", kchg("pw_g4dec_s51", st.replace(" 16 51 52", " 51 52")), False, False),
+        ("g4_st_register_not_reg64", kchg("pw_g4dec_s51", st.replace("Reg64.r8", "Reg64.xmm0")), False, False),
+        ("g4_st_register_symbolic", kchg("pw_g4dec_s51", st.replace("Reg64.r8", "r")), False, False),
+        ("g4_st_other_const", kchg("pw_g4dec_s51", st.replace("PwUnmarshal", "PcUnmarshal")), False, False),
+        ("g4_add_extra_param", kchg("pw_g4dec_s52", G4K["pw_g4dec_s52"][0] + " 0"), False, False),
+        ("g4_call_two_indices", kchg("pw_g4dec_Index_call", G4K["pw_g4dec_Index_call"][0].replace(" 56 88", " 88")), False, False),
         ("g4_call_callee_without_spec", kchg("pw_g4dec_Index_call", G4K["pw_g4dec_Index_call"][0].replace(
-            "consensus_types_primitives.ValidatorIndex", "proto_prysm_v1alpha1.Checkpoint")), K, False, True, None, False, None, None),
-        ("g4_seg_ry_rbx", kchg("pw_g4dec_Root_seg", G4K["pw_g4dec_Root_seg"][0].replace("Reg64.rax", "Reg64.rbx")), K, False, True, None, False, None, None),
-        ("g4_seg_size_64", kchg("pw_g4dec_Root_seg", G4K["pw_g4dec_Root_seg"][0].replace(" h 32 ", " h 64 ")), K, False, True, None, False, None, None),
-        ("g4_seg_missing_src", kchg("pw_g4dec_Root_seg", G4K["pw_g4dec_Root_seg"][0].replace(" 40 16", " 40")), K, False, True, None, False, None, None),
-        ("g4_segz_with_src", kchg("pw_g4dec_Sig_seg", G4K["pw_g4dec_Sig_seg"][0] + " 0"), K, False, True, None, False, None, None),
-        ("g4_lemma_kind_mismatch", pchg("pw_g4dec_s50", "  with_reducible exact E2eScal.kstep_ldv Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend\n"),
-         K, False, True, None, False, None, None),
-        ("g4_lemma_only_in_string", pchg("pw_g4dec_s50", '  have x := "E2eScal.kstep_ldb "\n  with_reducible exact foo\n'),
-         K, False, True, None, False, None, None),
-        ("g4_lemma_only_in_comment", pchg("pw_g4dec_s50", "  -- E2eScal.kstep_ldb\n  with_reducible exact foo\n"), K, False, True, None, False, None, None),
-        ("g4_two_lemmas", pchg("pw_g4dec_s50", "  with_reducible exact E2eScal.kstep_ldb (E2eScal.kstep_st x)\n"), K, False, True, None, False, None, None),
-        ("g4_fields_json_missing", GOOD4.replace("FIELDS-JSON: ", "FIELDS: "), K, False, True, None, False, None, None),
-        ("g4_fields_json_two_lines", GOOD4.replace("FIELDS-JSON: ", "FIELDS-JSON: []\nFIELDS-JSON: "), K, False, True, None, False, None, None),
-        ("g4_theorem_not_listed", g4_text(fj='[{"field": "Amount", "theorems": ["pw_g4dec_s50"]}, {"field": "Index", "theorems": ["pw_g4dec_s52", "pw_g4dec_s53", "pw_g4dec_Index_call"]}, {"field": "Root", "theorems": ["pw_g4dec_Root_seg", "pw_g4dec_s115", "pw_g4dec_s130", "pw_g4dec_s131"]}, {"field": "Sig", "theorems": ["pw_g4dec_Sig_seg", "pw_g4dec_s156", "pw_g4dec_s157"]}]'),
-         K, False, True, None, False, None, None),
-        ("g4_listed_theorem_absent", g4_text(fj='[{"field": "Amount", "theorems": ["pw_g4dec_s50", "pw_g4dec_s51", "pw_g4dec_s49"]}, {"field": "Index", "theorems": ["pw_g4dec_s52", "pw_g4dec_s53", "pw_g4dec_Index_call"]}, {"field": "Root", "theorems": ["pw_g4dec_Root_seg", "pw_g4dec_s115", "pw_g4dec_s130", "pw_g4dec_s131"]}, {"field": "Sig", "theorems": ["pw_g4dec_Sig_seg", "pw_g4dec_s156", "pw_g4dec_s157"]}]'),
-         K, False, True, None, False, None, None),
-        ("g4_theorem_in_two_fields", g4_text(fj='[{"field": "Amount", "theorems": ["pw_g4dec_s50", "pw_g4dec_s51"]}, {"field": "Index", "theorems": ["pw_g4dec_s51", "pw_g4dec_s52", "pw_g4dec_s53", "pw_g4dec_Index_call"]}, {"field": "Root", "theorems": ["pw_g4dec_Root_seg", "pw_g4dec_s115", "pw_g4dec_s130", "pw_g4dec_s131"]}, {"field": "Sig", "theorems": ["pw_g4dec_Sig_seg", "pw_g4dec_s156", "pw_g4dec_s157"]}]'),
-         K, False, True, None, False, None, None),
-        ("g4_two_blocks_one_field", g4_text(fields=two_blocks, kinds=k2), K, False, True, None, False, None, None),
-        ("g4_block_name_other_field", g4_text(fields=[("Amount", G4F[0][1]), ("Idx", G4F[1][1]), G4F[2], G4F[3]]), K, False, True, None, False, None, None),
-        ("g4_count_edited_dropped_field", g4_text(fields=G4F[:3], n=4), K, False, True, None, False, None, None),
-        ("g4_n_ne_m_default", g4_text(m=5), K, False, True, None, False, None, None),
-        ("s2_n29_header_removed_field_dropped", g4_text(fields=G4F[:3]).replace("GEN4 coverage (`p2dec --gen4`): 3 of 3 fields", "generated"),
-         K, False, True, None, False, None, None),
-        ("s2_n29_gen2_header_removed", GOOD2.replace("GEN2 coverage (`p2dec --gen2`): 3 of 3 fields", "generated"), K, False, True, None, False, None, None),
-        ("g4_partial_good", part, K, True, True, None, True, None, None),
-        ("g4_partial_default_rejects", part, K, False, True, None, False, None, None),
-        ("g4_partial_uncovered_listed", part.replace('"Tail"', '"Sig"').replace("NOT generated: Tail", "NOT generated: Sig"),
-         K, False, True, None, True, None, None),
-        ("g4_partial_bad_miss_key", part.replace('"miss_class"', '"class"'), K, False, True, None, True, None, None),
+            "consensus_types_primitives.ValidatorIndex", "proto_prysm_v1alpha1.Checkpoint")), False, False),
+        ("g4_seg_ry_rbx", kchg("pw_g4dec_Root_seg", G4K["pw_g4dec_Root_seg"][0].replace("Reg64.rax", "Reg64.rbx")), False, False),
+        ("g4_seg_size_64", kchg("pw_g4dec_Root_seg", G4K["pw_g4dec_Root_seg"][0].replace(" h 32 ", " h 64 ")), False, False),
+        ("g4_seg_missing_src", kchg("pw_g4dec_Root_seg", G4K["pw_g4dec_Root_seg"][0].replace(" 40 16", " 40")), False, False),
+        ("g4_segz_with_src", kchg("pw_g4dec_Sig_seg", G4K["pw_g4dec_Sig_seg"][0] + " 0"), False, False),
+        ("g4_lemma_kind_mismatch", pchg("pw_g4dec_s50", "  with_reducible exact Codec.kstep_ldv Reg64.r8 Reg64.rbx 8 _ (k + 50) (k + 51) hq he hend\n"), False, False),
+        ("g4_lemma_only_in_string", pchg("pw_g4dec_s50", '  have x := "Codec.kstep_ldb "\n  with_reducible exact foo\n'), False, False),
+        ("g4_lemma_only_in_comment", pchg("pw_g4dec_s50", "  -- Codec.kstep_ldb\n  with_reducible exact foo\n"), False, False),
+        ("g4_two_lemmas", pchg("pw_g4dec_s50", "  with_reducible exact Codec.kstep_ldb (Codec.kstep_st x)\n"), False, False),
+        ("g4_fields_json_missing", GOOD4.replace("FIELDS-JSON: ", "FIELDS: "), False, False),
+        ("g4_fields_json_two_lines", GOOD4.replace("FIELDS-JSON: ", "FIELDS-JSON: []\nFIELDS-JSON: "), False, False),
+        ("g4_theorem_not_listed", g4_text(fj='[{"field": "Amount", "theorems": ["pw_g4dec_s50"]}, {"field": "Index", "theorems": ["pw_g4dec_s52", "pw_g4dec_s53", "pw_g4dec_Index_call"]}, {"field": "Root", "theorems": ["pw_g4dec_Root_seg", "pw_g4dec_s115", "pw_g4dec_s130", "pw_g4dec_s131"]}, {"field": "Sig", "theorems": ["pw_g4dec_Sig_seg", "pw_g4dec_s156", "pw_g4dec_s157"]}]'), False, False),
+        ("g4_listed_theorem_absent", g4_text(fj='[{"field": "Amount", "theorems": ["pw_g4dec_s50", "pw_g4dec_s51", "pw_g4dec_s49"]}, {"field": "Index", "theorems": ["pw_g4dec_s52", "pw_g4dec_s53", "pw_g4dec_Index_call"]}, {"field": "Root", "theorems": ["pw_g4dec_Root_seg", "pw_g4dec_s115", "pw_g4dec_s130", "pw_g4dec_s131"]}, {"field": "Sig", "theorems": ["pw_g4dec_Sig_seg", "pw_g4dec_s156", "pw_g4dec_s157"]}]'), False, False),
+        ("g4_theorem_in_two_fields", g4_text(fj='[{"field": "Amount", "theorems": ["pw_g4dec_s50", "pw_g4dec_s51"]}, {"field": "Index", "theorems": ["pw_g4dec_s51", "pw_g4dec_s52", "pw_g4dec_s53", "pw_g4dec_Index_call"]}, {"field": "Root", "theorems": ["pw_g4dec_Root_seg", "pw_g4dec_s115", "pw_g4dec_s130", "pw_g4dec_s131"]}, {"field": "Sig", "theorems": ["pw_g4dec_Sig_seg", "pw_g4dec_s156", "pw_g4dec_s157"]}]'), False, False),
+        ("g4_two_blocks_one_field", g4_text(fields=two_blocks, kinds=k2), False, False),
+        ("g4_block_name_other_field", g4_text(fields=[("Amount", G4F[0][1]), ("Idx", G4F[1][1]), G4F[2], G4F[3]]), False, False),
+        ("g4_count_edited_dropped_field", g4_text(fields=G4F[:3], n=4), False, False),
+        ("g4_n_ne_m_default", g4_text(m=5), False, False),
+        ("s2_n29_header_removed_field_dropped", g4_text(fields=G4F[:3]).replace("GEN4 coverage (`p2dec --gen4`): 3 of 3 fields", "generated"), False, False),
+        ("s2_n29_gen2_header_removed", GOOD2.replace("GEN2 coverage (`p2dec --gen2`): 3 of 3 fields", "generated"), False, False),
+        ("g4_partial_good", part, True, True),
+        ("g4_partial_default_rejects", part, False, False),
+        ("g4_partial_uncovered_listed", part.replace('"Tail"', '"Sig"').replace("NOT generated: Tail", "NOT generated: Sig"), False, True),
+        ("g4_partial_bad_miss_key", part.replace('"miss_class"', '"class"'), False, True),
     ]
 
 
@@ -1209,7 +1066,7 @@ def s4_exit_cases():
 # ------------------------------------------------------------------------------------------------------------------
 # Rule 12 (`scalgen.py p2dec --gen5`). A GEN5 file is a GEN4 file (checked by rules 1-11 up to the GEN5
 # block) followed by one block `/-! GEN5 (`p2dec --gen5` … GEN5-JSON: {…} -/` and the GEN5 theorems:
-#  12a. the kind and lemma modules of the GEN5 lemma unit's hand-over have the pinned blobs GEN5_PINS;
+#  12a. (removed: a git-blob pin of the kind and lemma modules);
 #  12b. the GEN5 theorems are exactly, in this order: P_head, P_f1 … P_fn, P_epi, P_accept, [P_accept_stmt |
 #       P_accept_same], P_reject (P = the GEN5-JSON prefix, n = the IR field count), each but the identity followed by
 #       its `_kind` theorem `theorem T_kind : ∀ (h : Host), type_of% (@T h)` / `    = @E2eScal.K h C …` with
@@ -1227,13 +1084,6 @@ def s4_exit_cases():
 #       names a hand statement X (not generated, rule 6b); without it the PASS line says "kind instance only".
 # Not checked here: the register facts, stack slots and existentials of the boundary states (the kernel checks that
 # they chain); that the file builds; that X is independent of the generator (a human confirms it).
-GEN5_PINS = {
-    "KindAcceptN.lean": "3c1c21d30367cacb2b6ff9d17e81429f6bb7823b",
-    "AcceptTies.lean": "e8e244813aa205c88bfd74987201d0d345dec4b8",
-    "FieldComp.lean": "379d395ba0e892a30cab26e5014fb2150a59475d",
-    "RejectN.lean": "b4babb15a4904cdf4fa1fc80499d9ec1fb993983",
-    "RejectTies.lean": "7f8e3e4311510a57bba24ea3f13f4306e39f305b",
-}
 G5_MARK = "/-! GEN5 (`p2dec --gen5`"
 G5_PRIM = "github.com_OffchainLabs_prysm_v7_consensus_types_primitives."
 G5_CONST = {"Slot": "E2eAd.Code.SlUnmarshal", "CommitteeIndex": "E2eAd.Code.CiUnmarshal",
@@ -1455,16 +1305,12 @@ def g5_balanced(s, open_, close):
     return None, s
 
 
-def check_gen5(text, g5_blobs=None, gnames=frozenset(), kr=None, expect=None):
+def check_gen5(text, gnames=frozenset(), kr=None, expect=None):
     """Rule 12 on the GEN5 part of `text`. `expect` (for the selftest) replaces the recomputation from the files."""
     import hashlib
     import json
     kr = KR if kr is None else kr
-    g5_blobs = dict(GEN5_PINS) if g5_blobs is None else g5_blobs
     errs, info = [], ""
-    for mname, b in GEN5_PINS.items():
-        if g5_blobs.get(mname) != b:
-            errs.append(f"rule 12a: {mname} blob {g5_blobs.get(mname)} != pinned {b}")
     if text.count(G5_MARK) != 1:
         return errs + [f"rule 12: {text.count(G5_MARK)} GEN5 blocks (expected 1)"], info
     head, g5 = text.split(G5_MARK, 1)
@@ -1588,10 +1434,6 @@ def check_gen5(text, g5_blobs=None, gnames=frozenset(), kr=None, expect=None):
     return errs, info
 
 
-def g5_blobs_tree():
-    return {m: (blob(KIND.parent / m) if (KIND.parent / m).exists() else "missing") for m in GEN5_PINS}
-
-
 # ---- rule 12 selftest controls
 G5_VE = ("prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S",
          "v1alpha1.VoluntaryExit")
@@ -1651,7 +1493,7 @@ def g5_good_text():
     out = (f"import E2eScal.H6Code\n\n/-! Generated by `gen/scal/scalgen.py p2dec` from `{sp}`\n(sha256 "
            f"`{hashlib.sha256(sraw).hexdigest()}`) and `prysm/ir/ir-mainnet.json` (sha256 `{hashlib.sha256(iraw).hexdigest()}`"
            f", type `v1alpha1.VoluntaryExit`); GEN4 coverage. -/\n\nnamespace E2eScal.Gen\nend E2eScal.Gen\n\n"
-           f"{G5_MARK}, unit G5-G): text.\nGEN5-JSON: {{\"accept\": \"{P}_accept\"}}\n-/\n\nopen E2e E2eAd E2eScal\n\n"
+           f"{G5_MARK}, unit G5-G): text.\nGEN5-JSON: {{\"accept\": \"{P}_accept\"}}\n-/\n\nopen E2e E2eAd E2eScal Codec\n\n"
            f"namespace E2eScal.Gen\n\n")
     out += thm(f"{P}_head", "  exact x") + kd(f"{P}_head", "decHeadKindN", [0])
     for i in range(n):
@@ -1667,8 +1509,7 @@ def g5_good_text():
 
 
 def g5_cases():
-    """Rule 12 controls: (id, text, blobs, expect PASS)."""
-    z = "0" * 40
+    """Rule 12 controls: (id, text, expect PASS)."""
     G = g5_good_text()
     P = "ve_g5dec"
     stmt = G.replace(f"intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem {P}_reject ",
@@ -1679,51 +1520,45 @@ def g5_cases():
                      f"(@E2eScal.Ve.ve_e2e_accept_main h) := by\n  intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem "
                      f"{P}_reject ", 1)
     assert stmt != G and same != G
-
-    def pins(m):
-        d = dict(GEN5_PINS)
-        d[m] = z
-        return d
     acc_k = f"theorem {P}_accept_kind : ∀ (h : Host), type_of% (@{P}_accept h)"
     return [
-        ("g5_good", G, None, True),
-        ("g5_good_stmt", stmt, None, True),
-        ("g5_good_same", same, None, True),
-        *[(f"g5_{m.split('.')[0].lower()}_blob_changed", G, pins(m), False) for m in GEN5_PINS],
-        ("g5_accept_kind_missing", G.replace(acc_k, acc_k.replace("_accept_kind", "_accept_kinx")), None, False),
-        ("g5_field_kind_missing", G.replace(f"theorem {P}_f2_kind ", f"theorem {P}_f2_kinx "), None, False),
+        ("g5_good", G, True),
+        ("g5_good_stmt", stmt, True),
+        ("g5_good_same", same, True),
+        ("g5_accept_kind_missing", G.replace(acc_k, acc_k.replace("_accept_kind", "_accept_kinx")), False),
+        ("g5_field_kind_missing", G.replace(f"theorem {P}_f2_kind ", f"theorem {P}_f2_kinx "), False),
         ("g5_reject_missing", G.split("set_option maxRecDepth 100000 in\ntheorem ve_g5dec_reject ")[0] + "end E2eScal.Gen\n",
-         None, False),
+         False),
         ("g5_extra_theorem", G.replace("end E2eScal.Gen\n", "theorem extra : True := trivial\n\nend E2eScal.Gen\n")[::-1].replace(
-            "end E2eScal.Gen\n"[::-1], "", 0)[::-1], None, False),
-        ("g5_kind_name_swapped", G.replace("= @E2eScal.decEpiKindN h", "= @E2eScal.decFieldKindN h", 1), None, False),
+            "end E2eScal.Gen\n"[::-1], "", 0)[::-1], False),
+        ("g5_kind_name_swapped", G.replace("= @E2eScal.decEpiKindN h", "= @E2eScal.decFieldKindN h", 1), False),
         ("g5_kind_proof_not_rfl", G.replace("intro h; rfl\n\nset_option maxRecDepth 100000 in\ntheorem ve_g5dec_f1 ",
-                                            "intro h; simp\n\nset_option maxRecDepth 100000 in\ntheorem ve_g5dec_f1 ", 1), None, False),
-        ("g5_L_frame_wrong", G.replace("(.ex 1)] 80)", "(.ex 1)] 88)"), None, False),
-        ("g5_L_gd_wrong", G.replace("(none) 88 true", "(none) 80 true"), None, False),
+                                            "intro h; simp\n\nset_option maxRecDepth 100000 in\ntheorem ve_g5dec_f1 ", 1), False),
+        ("g5_L_frame_wrong", G.replace("(.ex 1)] 80)", "(.ex 1)] 88)"), False),
+        ("g5_L_gd_wrong", G.replace("(none) 88 true", "(none) 80 true"), False),
         ("g5_L_callee_order", G.replace("[E2e.Code.EpUnmarshal, E2eScal.BhCode.ViUnmarshal]", "[E2eScal.BhCode.ViUnmarshal, "
-                                        "E2e.Code.EpUnmarshal]"), None, False),
-        ("g5_L_post_ret", G.replace("(.ret 56)", "(.ret 55)"), None, False),
-        ("g5_L_slot_dropped", G.replace(".at (.up 32) (.orig 3), ", ""), None, False),
-        ("g5_fields_kind", G.replace("[.u64, .u64]", "[.u64, .bytes 32]"), None, False),
-        ("g5_fields_extra", G.replace("[.u64, .u64]", "[.u64, .u64, .u64]"), None, False),
-        ("g5_pc_wrong", G.replace("⟨48, 1, ", "⟨47, 1, "), None, False),
-        ("g5_done_wrong", G.replace("⟨48, 1, ", "⟨48, 2, "), None, False),
-        ("g5_reject_size", G.replace("decRejectKindN h VeUnmarshal 16 ", "decRejectKindN h VeUnmarshal 24 "), None, False),
-        ("g5_reject_proof", G.replace("intro h; with_reducible rfl", "intro h; rfl"), None, False),
-        ("g5_const_other", G.replace("decAcceptKindN h VeUnmarshal", "decAcceptKindN h PcUnmarshal"), None, False),
+                                        "E2e.Code.EpUnmarshal]"), False),
+        ("g5_L_post_ret", G.replace("(.ret 56)", "(.ret 55)"), False),
+        ("g5_L_slot_dropped", G.replace(".at (.up 32) (.orig 3), ", ""), False),
+        ("g5_fields_kind", G.replace("[.u64, .u64]", "[.u64, .bytes 32]"), False),
+        ("g5_fields_extra", G.replace("[.u64, .u64]", "[.u64, .u64, .u64]"), False),
+        ("g5_pc_wrong", G.replace("⟨48, 1, ", "⟨47, 1, "), False),
+        ("g5_done_wrong", G.replace("⟨48, 1, ", "⟨48, 2, "), False),
+        ("g5_reject_size", G.replace("decRejectKindN h VeUnmarshal 16 ", "decRejectKindN h VeUnmarshal 24 "), False),
+        ("g5_reject_proof", G.replace("intro h; with_reducible rfl", "intro h; rfl"), False),
+        ("g5_const_other", G.replace("decAcceptKindN h VeUnmarshal", "decAcceptKindN h PcUnmarshal"), False),
         ("g5_hk_other", G.replace(f"theorem {P}_epi : ∀ (k : Nat) (hk : VeUnmarshal", f"theorem {P}_epi : ∀ (k : Nat) (hk : PcUnmarshal"),
-         None, False),
-        ("g5_chain_skips_field", G.replace(f"  refine eventually_trans _ _ _ _ ({P}_f1 a) ?_\n", ""), None, False),
-        ("g5_stmt_generated", stmt.replace("E2eScal.H6.ve_hand_stmt", "E2eScal.Gen.ve_g4dec_s15"), None, False),
-        ("g5_same_self", same.replace("(@E2eScal.Ve.ve_e2e_accept_main h)", "(@E2eScal.Gen5.ve_e2e_accept_g5 h)"), None, False),
-        ("g5_sorry", G.replace("  exact y\n", "  sorry\n"), None, False),
+         False),
+        ("g5_chain_skips_field", G.replace(f"  refine eventually_trans _ _ _ _ ({P}_f1 a) ?_\n", ""), False),
+        ("g5_stmt_generated", stmt.replace("E2eScal.H6.ve_hand_stmt", "E2eScal.Gen.ve_g4dec_s15"), False),
+        ("g5_same_self", same.replace("(@E2eScal.Ve.ve_e2e_accept_main h)", "(@E2eScal.Gen5.ve_e2e_accept_g5 h)"), False),
+        ("g5_sorry", G.replace("  exact y\n", "  sorry\n"), False),
         ("g5_local_def", G.replace("namespace E2eScal.Gen\n\nset_option", "namespace E2eScal.Gen\n\ndef q := 1\n\nset_option"),
-         None, False),
+         False),
         ("g5_sha_wrong", G.replace("(sha256 `" + G.split("(sha256 `")[1][:64], "(sha256 `" + (
-            "0" if G.split("(sha256 `")[1][0] != "0" else "1") + G.split("(sha256 `")[1][1:64], 1), None, False),
+            "0" if G.split("(sha256 `")[1][0] != "0" else "1") + G.split("(sha256 `")[1][1:64], 1), False),
         ("g5_two_blocks", G.replace("end E2eScal.Gen\n\n" + G5_MARK, "end E2eScal.Gen\n\n" + G5_MARK + " x -/\n" + G5_MARK, 1),
-         None, False),
+         False),
     ]
 
 
@@ -1732,8 +1567,8 @@ def g5_selftest():
     import json
     bad = []
     cs = g5_cases()
-    for name, text, blobs, ok in cs:
-        errs, _ = check_gen5(text, blobs, GNAMES | {"ve_e2e_accept_g5"})
+    for name, text, ok in cs:
+        errs, _ = check_gen5(text, GNAMES | {"ve_e2e_accept_g5"})
         if (not errs) != ok:
             bad.append((name, errs[:3]))
     n = len(cs)
@@ -1777,7 +1612,7 @@ def g5_selftest():
 # ---------------------------------------------------------------- rule 13: GEN6 (`scalgen.py p2enc --gen6`)
 # A GEN6 file (header `GEN6-JSON:`, or any of the four encoder kinds) is checked by rule 13 ONLY (it has a `def` of its
 # layout, which rule 2 forbids for the older files):
-#  13a. The kind / lemma modules of the encoder lemma unit's hand-over have the pinned blobs GEN6_PINS.
+#  13a. (Removed: a git-blob pin of the kind and lemma modules of the encoder lemma unit's hand-over.)
 #  13b. Structure: top-level lines as rule 2 plus exactly one `def <P>_layout : EncLayout where` (none when a hand
 #       layout of GEN6_HAND is named); no banned token (rule 3, comments and strings removed); the theorems are exactly
 #       P_head, P_f0 … P_f(n-1), P_epi, P_fast, each followed by its `_kind` (encHeadKindN / encFieldKindN /
@@ -1787,7 +1622,7 @@ def g5_selftest():
 #       GEN6-JSON (sha256 checked) this program recomputes the fields list, the layout (st, frame, gd, rt, nstk, lens,
 #       pre, exs, post) and every boundary state (pc, done, live registers, stack slots, existential sizes); every
 #       kind line must equal, as whole normalised text, the line rendered from the recomputation. A hand layout name
-#       (GEN6_HAND, in the pinned `EncTies.lean`) is accepted only if its def equals the recomputation in its own
+#       (GEN6_HAND, in `EncTies.lean`) is accepted only if its def equals the recomputation in its own
 #       chunk order. C is bound to the `.S`: an imported code module of the file must define
 #       `def C : Program := include_x64_rt "../<S of GEN6-JSON>"`.
 #  13d. P_fast's proof uses P_head, every P_fi and P_epi exactly once.
@@ -1799,13 +1634,6 @@ def g5_selftest():
 import hashlib as _g6hash
 import json as _g6json
 
-GEN6_PINS = {
-    "KindEncN.lean": "c4629d67d6dc70f8ceb0ae9021145efa168fd931",
-    "EncTies.lean": "fe03479343fef60edb004e556ef4e7d9d7f85e9f",
-    "EncSteps.lean": "8e2cfac273647c4f0f32cb3cdcbbf978e76b85cf",
-    "EncFieldN.lean": "6d637fed87a1834c19c5be08f0379a30a0b2787c",
-    "EncFrameTest.lean": "7f6da38589bcf8c6cf2f01919d2e112f4a7a2821",
-}
 GEN6_KINDS = ("encHeadKindN", "encFieldKindN", "encEpiKindN", "encFastKindN")
 GEN6_HAND = ("E2eScal.layEncBh", "E2eScal.layEncE1", "E2eScal.layEncCp")
 GEN6_VIA = ("E2eScal.cp_marshal_of_kind",)
@@ -1816,10 +1644,6 @@ G6_LAYF = ("st", "frame", "gd", "rt", "nstk", "lens", "pre", "exs", "post")
 
 class G6Mismatch(Exception):
     pass
-
-
-def g6_blobs_tree():
-    return {m: (blob(KIND.parent / m) if (KIND.parent / m).exists() else "missing") for m in GEN6_PINS}
 
 
 def g6_ir(ir_text, tname):
@@ -2227,14 +2051,10 @@ def g6_norm(s):
     return " ".join(s.split())
 
 
-def check_gen6(text, blobs=None, gnames=frozenset(), kr=None):
+def check_gen6(text, gnames=frozenset(), kr=None):
     """Rule 13. Returns (errors, info)."""
     kr = kr or KR
     errs, info = [], "gen6"
-    blobs = blobs if blobs is not None else g6_blobs_tree()
-    for m, b in GEN6_PINS.items():
-        if blobs.get(m) != b:
-            errs.append(f"rule 13a: {m} blob {blobs.get(m)} != pinned {b}")
     lines = text.split("\n")
     gj = [l for l in lines if l.startswith("GEN6-JSON: ")]
     try:
@@ -2383,10 +2203,8 @@ G6_L_LAYOUTS = {"ValidatorBalance": ("lean/E2eScal/Enc2ExVb.lean", "layEncVb"),
 
 
 def g6_cases(T):
-    """(name, text, blobs, ok) on the committed files T = {key: text}."""
+    """(name, text, ok) on the committed files T = {key: text}."""
     V, Cp, H, B = T["vb"], T["cp"], T["hs"], T["bh"]
-    pins = dict(GEN6_PINS)
-    badpin = dict(pins, **{"EncSteps.lean": "0" * 40})
 
     def r(t, a, b, n=1):
         if t.count(a) < n:
@@ -2394,47 +2212,46 @@ def g6_cases(T):
         return t.replace(a, b, n)
     sha = V.split('"S_sha256": "')[1][:64]
     return [
-        ("g6_good_vb", V, pins, True), ("g6_good_cp_hand_via", Cp, pins, True), ("g6_good_hs_frametest", H, pins, True),
-        ("g6_good_bh_hand", B, pins, True),
-        ("g6_pin_changed", V, badpin, False),
-        ("g6_layout_frame", r(V, "  frame := 104\n", "  frame := 112\n"), pins, False),
-        ("g6_layout_gd", r(V, "  gd := 0\n", "  gd := 8\n"), pins, False),
+        ("g6_good_vb", V, True), ("g6_good_cp_hand_via", Cp, True), ("g6_good_hs_frametest", H, True),
+        ("g6_good_bh_hand", B, True),
+        ("g6_layout_frame", r(V, "  frame := 104\n", "  frame := 112\n"), False),
+        ("g6_layout_gd", r(V, "  gd := 0\n", "  gd := 8\n"), False),
         ("g6_layout_pre_order", r(V, ".at (.dn 40) (.orig 2), .at (.dn 24) (.orig 3)]\n  exs",
-                                  ".at (.dn 24) (.orig 3), .at (.dn 40) (.orig 2)]\n  exs"), pins, False),
-        ("g6_layout_exs", r(V, "  exs := [.n 8, .n 16]\n", "  exs := [.n 16, .n 8]\n"), pins, False),
+                                  ".at (.dn 24) (.orig 3), .at (.dn 40) (.orig 2)]\n  exs"), False),
+        ("g6_layout_exs", r(V, "  exs := [.n 8, .n 16]\n", "  exs := [.n 16, .n 8]\n"), False),
         ("g6_layout_post_fld", r(V, "(.fld 0), .at (.dn 32) (.ex 0), .at (.dn 24) (.ex 1)]\n\n",
-                                 "(.fld 1), .at (.dn 32) (.ex 0), .at (.dn 24) (.ex 1)]\n\n"), pins, False),
-        ("g6_layout_lens", r(V, "(2, 16), (3, 16)]", "(2, 8), (3, 16)]"), pins, False),
+                                 "(.fld 1), .at (.dn 32) (.ex 0), .at (.dn 24) (.ex 1)]\n\n"), False),
+        ("g6_layout_lens", r(V, "(2, 16), (3, 16)]", "(2, 8), (3, 16)]"), False),
         ("g6_fields_param", r(V, "vb_g6e_f0 h)\n    = @E2eScal.encFieldKindN h VbMarshal E2eScal.Gen6Enc.vb_g6e_layout [.u64, .u64]",
                               "vb_g6e_f0 h)\n    = @E2eScal.encFieldKindN h VbMarshal E2eScal.Gen6Enc.vb_g6e_layout [.u64, .bytes 32]"),
-         pins, False),
-        ("g6_boundary_pc", r(V, "[.u64, .u64]\n    ⟨8, 0,", "[.u64, .u64]\n    ⟨9, 0,"), pins, False),
-        ("g6_boundary_done", r(V, "[.u64, .u64]\n    ⟨8, 0,", "[.u64, .u64]\n    ⟨8, 1,"), pins, False),
-        ("g6_boundary_reg_dropped", r(V, "[.u64, .u64]\n    ⟨8, 0, [(.rax, .rcv), ", "[.u64, .u64]\n    ⟨8, 0, ["), pins, False),
-        ("g6_kind_name_swapped", r(V, "= @E2eScal.encEpiKindN h", "= @E2eScal.encHeadKindN h"), pins, False),
-        ("g6_kind_line_missing", r(V, "theorem vb_g6e_f1_kind :", "theorem vb_g6e_f1_kinx :"), pins, False),
-        ("g6_kind_const", r(V, "= @E2eScal.encFastKindN h VbMarshal", "= @E2eScal.encFastKindN h SaMarshal"), pins, False),
-        ("g6_kind_proof", r(V, "  intro h; rfl\n", "  intro h; exact rfl\n"), pins, False),
+         False),
+        ("g6_boundary_pc", r(V, "[.u64, .u64]\n    ⟨8, 0,", "[.u64, .u64]\n    ⟨9, 0,"), False),
+        ("g6_boundary_done", r(V, "[.u64, .u64]\n    ⟨8, 0,", "[.u64, .u64]\n    ⟨8, 1,"), False),
+        ("g6_boundary_reg_dropped", r(V, "[.u64, .u64]\n    ⟨8, 0, [(.rax, .rcv), ", "[.u64, .u64]\n    ⟨8, 0, ["), False),
+        ("g6_kind_name_swapped", r(V, "= @E2eScal.encEpiKindN h", "= @E2eScal.encHeadKindN h"), False),
+        ("g6_kind_line_missing", r(V, "theorem vb_g6e_f1_kind :", "theorem vb_g6e_f1_kinx :"), False),
+        ("g6_kind_const", r(V, "= @E2eScal.encFastKindN h VbMarshal", "= @E2eScal.encFastKindN h SaMarshal"), False),
+        ("g6_kind_proof", r(V, "  intro h; rfl\n", "  intro h; exact rfl\n"), False),
         ("g6_hk_const", r(V, "theorem vb_g6e_f1 : ∀ (k : Nat) (hk : VbMarshal.IsInfixAt",
-                          "theorem vb_g6e_f1 : ∀ (k : Nat) (hk : SaMarshal.IsInfixAt"), pins, False),
-        ("g6_extra_def", r(V, "namespace E2eScal.Gen6Enc\n", "namespace E2eScal.Gen6Enc\n\ndef foo : Nat := 1\n"), pins, False),
-        ("g6_sorry", r(V, "  apply Eventually.done\n", "  sorry\n"), pins, False),
-        ("g6_heartbeats", r(V, "set_option maxHeartbeats 4000000 in", "set_option maxHeartbeats 8000000 in"), pins, False),
-        ("g6_fast_skips_f0", r(V, "(vb_g6e_f0 k hk", "(vb_g6e_f1 k hk"), pins, False),
+                          "theorem vb_g6e_f1 : ∀ (k : Nat) (hk : SaMarshal.IsInfixAt"), False),
+        ("g6_extra_def", r(V, "namespace E2eScal.Gen6Enc\n", "namespace E2eScal.Gen6Enc\n\ndef foo : Nat := 1\n"), False),
+        ("g6_sorry", r(V, "  apply Eventually.done\n", "  sorry\n"), False),
+        ("g6_heartbeats", r(V, "set_option maxHeartbeats 4000000 in", "set_option maxHeartbeats 8000000 in"), False),
+        ("g6_fast_skips_f0", r(V, "(vb_g6e_f0 k hk", "(vb_g6e_f1 k hk"), False),
         ("g6_extra_theorem", r(V, "\nend E2eScal.Gen6Enc", "\ntheorem vb_extra : True := trivial\n\nend E2eScal.Gen6Enc"),
-         pins, False),
-        ("g6_json_sha", r(V, sha, ("0" if sha[0] != "0" else "1") + sha[1:]), pins, False),
-        ("g6_json_missing", r(V, "GEN6-JSON: ", "GEN6-JSOX: "), pins, False),
-        ("g6_layout_named_hand", V.replace("E2eScal.Gen6Enc.vb_g6e_layout", "E2eScal.layEncBh"), pins, False),
-        ("g6_const_unbound", V.replace("VbMarshal", "SaMarshal"), pins, False),
+         False),
+        ("g6_json_sha", r(V, sha, ("0" if sha[0] != "0" else "1") + sha[1:]), False),
+        ("g6_json_missing", r(V, "GEN6-JSON: ", "GEN6-JSOX: "), False),
+        ("g6_layout_named_hand", V.replace("E2eScal.Gen6Enc.vb_g6e_layout", "E2eScal.layEncBh"), False),
+        ("g6_const_unbound", V.replace("VbMarshal", "SaMarshal"), False),
         ("g6_stmt_generated", r(Cp, "type_of% (@E2e.cp_e2e_marshal_main ‹Host›)",
-                                "type_of% (@E2eScal.Gen6Enc.cp_g6e_fast ‹Host›)"), pins, False),
-        ("g6_stmt_via_unknown", r(Cp, "  E2eScal.cp_marshal_of_kind cp_g6e_fast", "  E2eScal.foo cp_g6e_fast"), pins, False),
+                                "type_of% (@E2eScal.Gen6Enc.cp_g6e_fast ‹Host›)"), False),
+        ("g6_stmt_via_unknown", r(Cp, "  E2eScal.cp_marshal_of_kind cp_g6e_fast", "  E2eScal.foo cp_g6e_fast"), False),
         ("g6_hand_with_def", r(B, "namespace E2eScal.Gen6Enc\n", "namespace E2eScal.Gen6Enc\n\ndef bh_g6e_layout : EncLayout where\n  st := true\n"),
-         pins, False),
-        ("g6_hs_frame_state", r(H, "  frame := 80\n", "  frame := 88\n"), pins, False),
+         False),
+        ("g6_hs_frame_state", r(H, "  frame := 80\n", "  frame := 88\n"), False),
         ("g6_bh_state_slot", r(B, "(.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 16) (.orig 3)",
-                               "(.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 16) (.reg .rbx)"), pins, False),
+                               "(.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 16) (.reg .rbx)"), False),
     ]
 
 
@@ -2447,9 +2264,9 @@ def g6_selftest():
         cs = g6_cases(T)
     except Exception as e:
         return 1, [("g6_fixtures", f"{type(e).__name__}: {e}")]
-    for name, text, blobs, ok in cs:
+    for name, text, ok in cs:
         n += 1
-        errs, _ = check_gen6(text, blobs, GNAMES)
+        errs, _ = check_gen6(text, GNAMES)
         if (not errs) != ok:
             bad.append((name, errs[:3]))
     for tname, (src, short) in G6_L_LAYOUTS.items():

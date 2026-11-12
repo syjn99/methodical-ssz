@@ -16,7 +16,7 @@ Built on the GENERATED theorems of `Gen5SdDec.lean` (`p2dec --gen5`; raw output,
 Not stated here: that the callee error paths (`fmt.errorf` wraps) are unreachable when `size = 64`.
 -/
 
-open Fk E2e E2eScal E2eScal.H6Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.H6Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.G5C

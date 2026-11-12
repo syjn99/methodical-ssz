@@ -1,5 +1,5 @@
-import Fk.Contracts
-import Fk.Step
+import Runtime.Contracts
+import Machine.Step
 import E2eEnc.Defs
 import E2eEnc.Loop
 
@@ -16,7 +16,7 @@ at bp + len + 32); 52–55 n from c + 40, `jg` not taken (n ≤ 128); 56–60 n 
 rsi = 0, `jmp L_13a`; the loop (`dc_loop`); 100–105 rdi = rsi = 0, epilogue, `ret`.
 -/
 
-open Fk E2eEnc.Code
+open Machine Runtime TestTarget E2eEnc.Code
 variable [Host]
 
 namespace E2eEnc

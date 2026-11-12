@@ -14,7 +14,7 @@ them (`g24 … g64`) with `dst`. The encoder's return slot x − 144 is the firs
 area; its scratch is the decoder's scratch and return slot (`S + 8` bytes).
 -/
 
-open Fk EthLib.Serialization.Ssz E2eDec.Code E2eEnc
+open Machine Runtime TestTarget EthLib.Serialization.Ssz E2eDec.Code E2eEnc
 variable [Host]
 
 namespace E2eDec

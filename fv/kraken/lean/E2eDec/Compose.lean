@@ -14,7 +14,7 @@ decoder's scratch and the decoder's runtime-call return slot. The receiver words
 encoder's receiver premises with `nb = BitVec.ofNat 64 n`.
 -/
 
-open Fk EthLib.Serialization.Ssz E2eDec.Code E2eEnc
+open Machine Runtime TestTarget EthLib.Serialization.Ssz E2eDec.Code E2eEnc
 variable [Host]
 
 namespace E2eDec

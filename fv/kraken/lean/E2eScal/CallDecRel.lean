@@ -8,8 +8,9 @@ by `rfl` (the definitions unfold to the same text). So `calldec_seg` takes its c
 existing form; the proved theorems `sl_uacc_holds`, `ci_uacc_holds`, `vi_uacc_holds`, `ep_uacc_holds` give it.
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
+open Codec
 namespace E2eScal
 
 theorem slUAccC_eq : ∀ (h : Host), @E2eAd.SlUAccC h = @U64CalleeAcc h E2eAd.Code.slLabel := by

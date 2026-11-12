@@ -25,12 +25,13 @@ the same accepted inputs with the same values (EthLib error values are not compa
 
 `PAd` is the SSZ content of a Go `v1alpha1.AttestationData` with `len(BeaconBlockRoot) = 32`
 and non-nil `Source`/`Target` whose `Root`s have length 32. The proofs of the spec lemmas follow
-`Fv1/SpecPrysm.lean` and `Fk/AdSpec.lean` (their text, with the names of this namespace); they
+`Spec/ReducedPrysm.lean` and `Fk/AdSpec.lean` (their text, with the names of this namespace); they
 read EthLib and `E2e.Spec` only.
 -/
 
 namespace E2e
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz
+open Spec hiding encode readUint_lt
 
 /-- consensus-specs phase0 `AttestationData`. -/
 def prysmAdDesc : Desc := .container ["slot", "index", "beacon_block_root", "source", "target"]
@@ -46,8 +47,8 @@ theorem prysmAdDesc_checker :
         .container ["Epoch", "Root"] [.uint 8, .byteVector 32]] :=
   ⟨rfl, rfl⟩
 
-/-- The reduced hand case `Fv1.adDesc` is the same term (cited, not used). -/
-theorem prysmAdDesc_eq_hand : prysmAdDesc = Fv1.adDesc := rfl
+/-- The reduced hand case `Spec.adDesc` is the same term (cited, not used). -/
+theorem prysmAdDesc_eq_hand : prysmAdDesc = Spec.adDesc := rfl
 
 theorem prysmAdDesc_wellFormed : prysmAdDesc.wellFormed = .ok () := by rfl
 theorem prysmAdDesc_fixedSize : prysmAdDesc.fixedSize = some 128 := by rfl
@@ -97,7 +98,7 @@ def padEnc (g : PAd) : Array UInt8 :=
   uintBytes 8 g.slot.toNat ++ uintBytes 8 g.index.toNat ++ g.root.toArray ++ pcpEnc g.source ++ pcpEnc g.target
 
 theorem pad_enc_size (g : PAd) : (padEnc g).size = 128 := by
-  simp [padEnc, Fv.uintBytes_size, pcp_enc_size]
+  simp [padEnc, Spec.uintBytes_size, pcp_enc_size]
 
 theorem pcp_toValue_injective (g h : PCp) (e : g.toValue = h.toValue) : g = h := by
   obtain ⟨a, r⟩ := g; obtain ⟨a', r'⟩ := h
@@ -147,7 +148,7 @@ theorem pad_serialize (g : PAd) : serialize prysmAdDesc g.toValue = .ok (padEnc 
   simp only [prysmAdDesc, PAd.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk, hr]
   rw [hs, ht]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Fv.uintBytes_size, bytesPerOffset, padEnc, prysmCpDesc,
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, padEnc, prysmCpDesc,
     pcp_enc_size, Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- **Spec roundtrip.** -/

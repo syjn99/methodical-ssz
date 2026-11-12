@@ -12,7 +12,8 @@ No Desc-checker record exists for this type (`gen/desc/results/main.result.json`
 -/
 
 namespace E2e
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz
+open Spec hiding readUint_lt
 
 theorem prysmPdcDesc_kinds : prysmPdcDesc = .container ["beacon_block_root", "slot"]
       [.byteVector 32, .uint 8] := rfl
@@ -32,7 +33,7 @@ def ppdcEnc (g : PPdc) : Array UInt8 :=
   g.beaconBlockRoot.toArray ++ uintBytes 8 g.slot.toNat
 
 theorem ppdc_enc_size (g : PPdc) : (ppdcEnc g).size = 40 := by
-  simp [ppdcEnc, Fv.uintBytes_size]
+  simp [ppdcEnc, Spec.uintBytes_size]
 
 theorem ppdc_toValue_fits (g : PPdc) : Value.fits prysmPdcDesc g.toValue = true := by
   have := g.slot.toNat_lt
@@ -65,7 +66,7 @@ theorem ppdc_serialize (g : PPdc) : serialize prysmPdcDesc g.toValue = .ok (ppdc
   have := a1.toNat_lt
   simp only [prysmPdcDesc, PPdc.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk, hr0]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Fv.uintBytes_size, bytesPerOffset, ppdcEnc,
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, ppdcEnc,
     Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- **Spec roundtrip.** -/

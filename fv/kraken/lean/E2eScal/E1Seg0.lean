@@ -1,4 +1,4 @@
-import E2eScal.P2Dec
+import Codec.Bytes32Decode
 import E2eScal.E1Code
 
 /-!
@@ -8,15 +8,16 @@ Hand text, written after the hold-out was opened. The one generator run
 stopped with exit 2 on this field: its memmove source is `buf + 0`, so the code has no `add $src,%rbx`
 and does not match the frozen template `rootDecMid`. This file is NOT part of the frozen method
 (`Kind.lean`, `scalgen.py`, the uint64 decoder and 32-byte field segment lemmas are unchanged): `rootDecMid0` is `rootDecMid` without the
-`add` directive, and `rootdec_seg0` is the statement and proof text of `E2eScal.rootdec_seg`
+`add` directive, and `rootdec_seg0` is the statement and proof text of `Codec.rootdec_seg`
 (`P2Dec.lean`) with the `add` step removed (copied text, written after the Eth1Data hold-out was opened).
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
+open Codec
 namespace E2eScal.E1
 
-open E2eScal
+open E2eScal Codec
 
 /-- Second block of the DepositRoot decode segment (from `lff:` to `jne lwb`): `rootDecMid` without the
 `add $src,%rbx` (the source offset is 0). Hand text; not a frozen template. -/
@@ -54,7 +55,7 @@ variable [Host]
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- DepositRoot decode segment of `Eth1Data.UnmarshalSSZ` (source offset 0): the statement of
-`E2eScal.rootdec_seg` with `rootDecMid0` and `aSrc = bf`; the proof is the text of `rootdec_seg` with the
+`Codec.rootdec_seg` with `rootDecMid0` and `aSrc = bf`; the proof is the text of `rootdec_seg` with the
 `add` step removed and the later `rootDecMid` indices lowered by one. -/
 theorem rootdec_seg0 (lff lwb : String) (dR dB dS fP fL fC : Int64) (j1 j2 : Nat)
     (hA : (rootDecHead lff dR fL fC).IsInfixAt Host.prog j1)

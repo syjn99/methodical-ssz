@@ -1,8 +1,8 @@
-import Fk.Contracts
-import Fk.FunSpecs
-import Fk.Frame
-import Fk.Bytes
-import Fk.Labels
+import Runtime.Contracts
+import TestTarget.FunctionSpecs
+import Machine.Frame
+import Machine.Bytes
+import Machine.Labels
 import E2e.Data
 import E2e.Code
 import E2eAd.Code
@@ -20,11 +20,11 @@ The four defs below are the frozen texts of `StmtIa.lean` with one added premise
 type-word load and passes 0 where `FmtErrorfDWC` needs `ity`. The Kraken Host places labels anywhere, so the itab label
 may be 0 and the frozen statements cannot refute that branch. The precondition is stronger than the frozen one (not
 equivalent). The originals in `StmtIa.lean` stay unchanged and unproved. Precedent: `Fk.lu_reject_misaligned_main`
-(`Fk/LuRejectCall.lean`, Go 1.26.3) has the same two premises `e0 = itab` and `e0 ≠ 0`. In the real ELF `e0` is the
+(`TestTarget/ListU64DecodeRejectCall.lean`, Go 1.26.3) has the same two premises `e0 = itab` and `e0 ≠ 0`. In the real ELF `e0` is the
 itab address `0xd28520` (check (b) of `lv/link-t3/RESULT` binds `go_itab._errors.errorString_error` to it).
 -/
 
-open Fk E2e EthLib.Serialization.Ssz E2eList.Code
+open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz E2eList.Code
 variable [Host]
 
 namespace E2eList

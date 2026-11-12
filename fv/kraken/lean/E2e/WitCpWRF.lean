@@ -1,6 +1,6 @@
 import E2e.CpWCoverF
 import E2e.WitCpWR
-import E2e.WitSplit
+import Machine.WitnessSplit
 
 /-!
 # Witness of `cp_e2e_marshal_reject_cover_framed`: `len(Root) ≠ 32`, every capacity range
@@ -10,7 +10,7 @@ scope, because two `Host` instances in one file make instance resolution unfold 
 `E2e.witCpWR_recv`, `E2e.witCpWR_recv_bad`).
 -/
 
-open Fk Fk.W E2e E2e.Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget Machine.Witness E2e E2e.Code EthLib.Serialization.Ssz
 
 namespace E2e.WitCpWRF
 

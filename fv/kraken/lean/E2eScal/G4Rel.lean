@@ -1,6 +1,6 @@
-import E2eScal.KindSegReg
+import Codec.Kind.FixedBytesDecodeWindow
 import E2eScal.CallReg
-import E2eScal.KindStep
+import Codec.Kind.WindowSteps
 import E2eScal.SegNPad
 import E2eScal.DdSegNop
 import E2eScal.SmSeg
@@ -15,46 +15,47 @@ is proved from the window and step lemmas only. No earlier proof is used.
 * Window mechanism: `bytesdec_seg` (dense), `bytesdec_seg_p` (`pad` flag: the padding `nop`
   before `callq runtime.makeslice`), `H4.bytes32dec_seg_nop` (hand lemma), `H5.bytes32dec_seg_rax` (hand
   lemma, receiver in rax after the copy), `H5.calldec_nop_seg` (hand lemma, `nop` after the callee call):
-  each is `bytesdec_seg_g4` / `calldec_seg_w` at one window (`q :=` the dense template; `he` by `rfl`).
+  each is `bytesdec_seg_window` / `calldec_seg_w` at one window (`q :=` the dense template; `he` by `rfl`).
 * Step mechanism: the set-up lemmas `callarg_first_seg`, `callarg_reload_seg` (both with their `pad`
   flag), `callarg_lea_seg`, `callarg_mov_seg`, the two-directive read `u64dec_rr_seg` at r8, and the hand
   set-up `H5.sm_vi_arg`: each is a sequence of `kstep_*` applications.
 (`calldec_seg` itself: `calldec_seg_dense` in `CallReg.lean`.)
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
+open Codec
 namespace E2eScal.G4Rel
 
-open E2eScal
+open E2eScal Codec
 
 variable [Host]
 
 /-- `bytesdec_seg` from the window lemma. -/
 theorem bytesdec_seg_inst : type_of% (@bytesdec_seg ‹Host›) := by
   intro n hn lff lwb dR dB dS fP fL fC src j1 j2 hA hB hl
-  exact bytesdec_seg_g4 n hn Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl)))
+  exact bytesdec_seg_window n hn Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl)))
     lff lwb dR dB dS fP fL fC src _ _ j1 j2 j2 (j2 + 6) (j2 + 12) hA rfl hB rfl rfl hl rfl rfl
 
 /-- `bytesdec_seg_p` (`pad` flag) from the window lemma: the pad is a nop of the first window. -/
 theorem bytesdec_seg_p_inst : type_of% (@bytesdec_seg_p ‹Host›) := by
   intro pad n hn lff lwb dR dB dS fP fL fC src j1 j2 hA hB hl
   cases pad
-  · exact bytesdec_seg_g4 n hn Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl)))
+  · exact bytesdec_seg_window n hn Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl)))
       lff lwb dR dB dS fP fL fC src _ _ j1 j2 j2 (j2 + 6) (j2 + 12) hA rfl hB rfl rfl hl rfl rfl
-  · exact bytesdec_seg_g4 n hn Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl)))
+  · exact bytesdec_seg_window n hn Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl)))
       lff lwb dR dB dS fP fL fC src _ _ j1 j2 j2 (j2 + 6) (j2 + 12) hA rfl hB rfl rfl hl rfl rfl
 
 /-- `H4.bytes32dec_seg_nop` (hand lemma) from the window lemma. -/
 theorem bytes32dec_seg_nop_inst : type_of% (@H4.bytes32dec_seg_nop ‹Host›) := by
   intro lff lwb dR dB dS fP fL fC src j1 j2 hA hB hl
-  exact bytesdec_seg_g4 32 (Or.inl rfl) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl)))
+  exact bytesdec_seg_window 32 (Or.inl rfl) Reg64.rdx Reg64.rdx (Or.inl rfl) (Or.inr (Or.inr (Or.inl rfl)))
     lff lwb dR dB dS fP fL fC src _ _ j1 j2 j2 (j2 + 6) (j2 + 12) hA rfl hB rfl rfl hl rfl rfl
 
 /-- `H5.bytes32dec_seg_rax` (hand lemma) from the window lemma: `rY = rax`. -/
 theorem bytes32dec_seg_rax_inst : type_of% (@H5.bytes32dec_seg_rax ‹Host›) := by
   intro lff lwb dR dB dS fP fL fC src j1 j2 hA hB hl
-  exact bytesdec_seg_g4 32 (Or.inl rfl) Reg64.rdx Reg64.rax (Or.inl rfl) (Or.inl rfl)
+  exact bytesdec_seg_window 32 (Or.inl rfl) Reg64.rdx Reg64.rax (Or.inl rfl) (Or.inl rfl)
     lff lwb dR dB dS fP fL fC src _ _ j1 j2 j2 (j2 + 6) (j2 + 12) hA rfl hB rfl rfl hl rfl rfl
 
 /-- `H5.calldec_nop_seg` (hand lemma) from the window lemma: the nop is in the window. -/

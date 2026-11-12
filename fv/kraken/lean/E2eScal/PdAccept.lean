@@ -1,4 +1,4 @@
-import E2eScal.HeadN
+import Codec.DecoderPrologue
 import E2eScal.Gen4H6PdDec
 import E2eScal.BhAcceptG3
 import E2eScal.H6Stmt
@@ -19,7 +19,7 @@ Hand-written AFTER the raw generator output (`Gen4H6PdDec.lean`, `p2dec --gen4`,
 * epilogue 161–163: `pd_epi` (hand; `kstep_add` and `decret_seg`).
 -/
 
-open Fk E2e E2eAd E2eAd.Code E2eScal.H6Code E2eScal
+open Machine Runtime TestTarget E2e E2eAd E2eAd.Code E2eScal.H6Code E2eScal Codec
 variable [Host]
 
 namespace E2eScal.H6

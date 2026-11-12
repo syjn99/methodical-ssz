@@ -37,13 +37,13 @@
  },
  {
   "id": "e2-st-jae-control",
-  "module": "E2eScal/EncSteps.lean",
+  "module": "Codec/EncodeSteps.lean",
   "theorem": "kstep_cmp_jae_t",
   "kind": "control"
  },
  {
   "id": "e2-st-jae-stmt-le",
-  "module": "E2eScal/EncSteps.lean",
+  "module": "Codec/EncodeSteps.lean",
   "theorem": "kstep_cmp_jae_t",
   "kind": "stmt",
   "old": "(hle : (s.regs.get64 rN).toNat ≤ (s.regs.get64 rC).toNat)",
@@ -51,7 +51,7 @@
  },
  {
   "id": "e2-st-jb-stmt-le",
-  "module": "E2eScal/EncSteps.lean",
+  "module": "Codec/EncodeSteps.lean",
   "theorem": "kstep_cmp_jb_f",
   "kind": "stmt",
   "old": "(hle : (s.regs.get64 rN).toNat ≤ (s.regs.get64 rC).toNat)",
@@ -59,7 +59,7 @@
  },
  {
   "id": "e2-st-len-stmt-val",
-  "module": "E2eScal/EncSteps.lean",
+  "module": "Codec/EncodeSteps.lean",
   "theorem": "kstep_lenchk",
   "kind": "stmt",
   "old": "(hv : BitVec.ofInt 64 (Int.ofBytes bs) = imm.toBitVec)",
@@ -67,13 +67,13 @@
  },
  {
   "id": "e2-st-call-control",
-  "module": "E2eScal/EncSteps.lean",
+  "module": "Codec/EncodeSteps.lean",
   "theorem": "encn_call",
   "kind": "control"
  },
  {
   "id": "e2-st-call-stmt-len",
-  "module": "E2eScal/EncSteps.lean",
+  "module": "Codec/EncodeSteps.lean",
   "theorem": "encn_call",
   "kind": "stmt",
   "old": "(hrcx : s.regs.rcx.toNat = src.length)",
@@ -81,13 +81,13 @@
  },
  {
   "id": "e2-ft-control",
-  "module": "E2eScal/EncFrameTest.lean",
+  "module": "Codec/EncodeFrameTest.lean",
   "theorem": "frame50_ptr_far",
   "kind": "control"
  },
  {
   "id": "e2-ft-stmt-len",
-  "module": "E2eScal/EncFrameTest.lean",
+  "module": "Codec/EncodeFrameTest.lean",
   "theorem": "frame50_ptr_far",
   "kind": "stmt",
   "old": "(ho : 64 ≤ o.length)",
@@ -95,7 +95,7 @@
  },
  {
   "id": "e2-ft-far-stmt",
-  "module": "E2eScal/EncFrameTest.lean",
+  "module": "Codec/EncodeFrameTest.lean",
   "theorem": "sep_at_far",
   "kind": "stmt",
   "old": "ys.length ≤ (a - b).toNat ∧",

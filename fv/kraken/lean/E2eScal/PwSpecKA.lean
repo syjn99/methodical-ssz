@@ -13,7 +13,7 @@ The statement text is `pw_accept_stmt` (`H4Stmt.lean`, unchanged) with the input
 `g`. Not stated here: that the two callee error paths (`fmt.errorf` wraps) are unreachable when `size = 24`.
 -/
 
-open Fk E2e E2eAd.Code E2eScal.H4Code E2eScal.BhCode E2eScal EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eAd.Code E2eScal.H4Code E2eScal.BhCode E2eScal Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.H4
@@ -68,8 +68,8 @@ theorem pw_e2e_accept_spec_k : ∀ (k : Nat) (hk : PwUnmarshal.IsInfixAt Host.pr
   refine ⟨g, rfl, hb, ?_⟩
   have hn : s.regs.rcx = 24 := by
     apply UInt64.toNat_inj.mp; rw [hlen, hb, ppw_enc_size]; rfl
-  exact pw_e2e_accept_main k hk hf kV hkV hfV kE hkE hfE _ _ _ (by simp [Fv.uintBytes_size])
-    (by simp [Fv.uintBytes_size]) (by simp [Fv.uintBytes_size]) s ra guard
+  exact pw_e2e_accept_main k hk hf kV hkV hfV kE hkE hfE _ _ _ (by simp [Spec.uintBytes_size])
+    (by simp [Spec.uintBytes_size]) (by simp [Spec.uintBytes_size]) s ra guard
     fp s1 s2 s4 sp1 rslot lo ast a8 a16 a24 hfp h1 h2 h4 hsp1 hrs hlo hast ha8 ha16 ha24 R (Pm g hb) hguard hn
 
 end E2eScal.H4

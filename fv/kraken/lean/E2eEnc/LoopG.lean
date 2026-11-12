@@ -1,4 +1,4 @@
-import Fk.Contracts
+import Runtime.Contracts
 import E2eEnc.Loop
 import E2eEnc.Tail
 import E2e.Data
@@ -17,7 +17,7 @@ otherwise 90–94 spill i and the word and call `growslice(bp, L + 8(i+1), cp, 8
 and `jmp L_132`, 79–81 store into the new block. The old block (the copied prefix and the old tail) joins `G`.
 -/
 
-open Fk E2eEnc.Code
+open Machine Runtime TestTarget E2eEnc.Code
 variable [Host]
 
 namespace E2eEnc

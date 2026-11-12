@@ -1,6 +1,6 @@
-import Fk.Contracts
-import Fk.Frame
-import Fk.Bytes
+import Runtime.Contracts
+import Machine.Frame
+import Machine.Bytes
 import E2eScal.E1Accept
 import E2eScal.GenDmDec
 import E2eScal.DmSeg0
@@ -32,7 +32,7 @@ Directive indices of `E2eScal.H3Code.DmUnmarshal` (index = line − 1 of the `.S
 Stack as in `E1Accept.lean`.
 -/
 
-open Fk E2e E2eScal E2eScal.H3Code E2eScal.E1
+open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.H3Code E2eScal.E1
 variable [Host]
 
 namespace E2eScal.Dm
@@ -178,11 +178,11 @@ theorem dm_e2e_accept_main (k : Nat) (hk : DmUnmarshal.IsInfixAt Host.prog k) (h
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
   subst hpc1
   -- PublicKey (hand: 48-byte offset-0 segment, DmSeg0), 13 → 37
-  have hA1 := E2eScal.infix_sub (q := E2eScal.H3.bytesDecHead48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_74" 48 8 16) 13 hk
+  have hA1 := Codec.infix_sub (q := E2eScal.H3.bytesDecHead48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_74" 48 8 16) 13 hk
     (by simp only [DmUnmarshal, E2eScal.H3.bytesDecHead48, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB1 := E2eScal.infix_sub (q := E2eScal.H3.bytesDecMidZ48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_74" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_b0" 48 56 24 0 8 16) 26 hk
+  have hB1 := Codec.infix_sub (q := E2eScal.H3.bytesDecMidZ48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_74" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ_b0" 48 56 24 0 8 16) 26 hk
     (by simp only [DmUnmarshal, E2eScal.H3.bytesDecMidZ48, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl1 := Fk.label_at' hk hf (j := 26)
+  have hl1 := Machine.label_at' hk hf (j := 26)
     (by simp only [DmUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [DmUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   refine eventually_trans _ _ _ _ (E2eScal.H3.bytes48dec_seg_z _ _ _ _ _ _ _ _ (k + 13) (k + 26) hA1 hB1 hl1

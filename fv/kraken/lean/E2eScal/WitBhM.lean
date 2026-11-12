@@ -1,6 +1,6 @@
 import E2eScal.BhEncMain
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of `bh_e2e_marshal_main` (BeaconBlockHeader encoder, fast path only)
@@ -19,7 +19,7 @@ Two instances: empty prefix with `cap = 112`, and a 3-byte prefix with 5 spare b
 ProposerIndex and root contents every premise of the theorem holds.
 -/
 
-open Fk Fk.W E2eScal E2eScal.BhCode E2eScal.Bh
+open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.BhCode E2eScal.Bh
 
 namespace E2eScal.WitBhM
 

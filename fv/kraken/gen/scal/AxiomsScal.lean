@@ -5,7 +5,7 @@ import E2eScal.GenCi
 import E2eScal.GenAdDec
 import E2eScal.GenCpDec
 import E2eScal.P2EncCpAt
-import E2eScal.Kind
+import Codec.Kind.FieldPatterns
 import E2eScal.KindAnchor
 import E2eScal.WitVi
 import E2eScal.BhSpecK
@@ -22,8 +22,8 @@ import E2eScal.BhEncBlock
 import E2eScal.E1SpecM
 import E2eScal.WitE1M
 import E2eScal.WitBhMR
-import E2eScal.P2DecZ
-import E2eScal.KindZ
+import Codec.Bytes32DecodeOffsetZero
+import Codec.Kind.Bytes32DecodeOffsetZero
 import E2eScal.GenE1Dec
 import E2eScal.E1GenSame
 import E2eScal.BiSpecK
@@ -34,12 +34,12 @@ import E2eScal.WitDmA
 import E2eScal.WitDmR
 import E2eScal.GenBiDec
 import E2eScal.GenDmDec
-import E2eScal.SegN
-import E2eScal.KindN
+import Codec.FixedBytesDecode
+import Codec.Kind.FixedBytesDecode
 import E2eScal.SegNRel
-import E2eScal.U64Inline
-import E2eScal.KindU64
-import E2eScal.Compose
+import Codec.InlineUint64
+import Codec.Kind.InlineUint64
+import Codec.DecoderHeadEpilogue
 import E2eScal.Gen2Examples
 import E2eScal.Gen2ComposeEx
 import E2eScal.Gen2E1Dec
@@ -61,7 +61,7 @@ import E2eScal.WitPwR
 import E2eScal.CallDec
 import E2eScal.CallDecRel
 import E2eScal.KindCall
-import E2eScal.U64RR
+import Codec.InlineUint64RegisterBase
 import E2eScal.SegNPad
 import E2eScal.KindAccept
 import E2eScal.KindAcceptRel
@@ -97,19 +97,19 @@ import E2eScal.WitPcA
 import E2eScal.WitPcR
 import E2eScal.WitSmA
 import E2eScal.WitSmR
-import E2eScal.NopView
-import E2eScal.StepK
-import E2eScal.KindStep
+import Codec.NopWindow
+import Codec.WindowSteps
+import Codec.Kind.WindowSteps
 import E2eScal.CallReg
-import E2eScal.SegReg
-import E2eScal.SegRegZ
-import E2eScal.KindSegReg
+import Codec.FixedBytesDecodeWindow
+import Codec.FixedBytesDecodeWindowOffsetZero
+import Codec.Kind.FixedBytesDecodeWindow
 import E2eScal.G4Rel
 import E2eScal.Gen4Examples
 import E2eScal.SmAcceptG4
 import E2eScal.PcAcceptG4
 import E2eScal.G4DepCheck
-import E2eScal.HeadN
+import Codec.DecoderPrologue
 import E2eScal.HeadRel
 import E2eScal.Gen4CpDec
 import E2eScal.Gen4AdDecPartial
@@ -126,7 +126,7 @@ import E2eScal.PcAcceptG4gen
 import E2eScal.PwAcceptG4gen
 import E2eScal.KindAcceptN
 import E2eScal.AcceptTies
-import E2eScal.FieldComp
+import Codec.FieldFrame
 import E2eScal.RejectN
 import E2eScal.RejectTies
 import E2eScal.Gen5ExPd
@@ -192,9 +192,9 @@ import E2eScal.Enc2ExE1
 import E2eScal.Enc2ExHs
 import E2eScal.Enc2ExVb
 import E2eScal.Enc2Examples
-import E2eScal.EncFieldN
-import E2eScal.EncFrameTest
-import E2eScal.EncSteps
+import Codec.EncodeFieldHelpers
+import Codec.EncodeFrameTest
+import Codec.EncodeSteps
 import E2eScal.EncTies
 import E2eScal.Gen6BhEnc
 import E2eScal.Gen6BiEnc
@@ -316,10 +316,10 @@ import E2eScal.WitVidGR
 
 -- Scalability: the segment lemmas, the in-sample re-derivations, the
 -- statement-identity checks and the generated instances. Checked with gen/e2e/axioms.py <log> <out> <this file>.
-#print axioms E2eScal.infix_sub
-#print axioms E2eScal.u64dec_accept
-#print axioms E2eScal.rootdec_seg
-#print axioms E2eScal.rootenc_seg
+#print axioms Codec.infix_sub
+#print axioms Codec.u64dec_accept
+#print axioms Codec.rootdec_seg
+#print axioms Codec.rootenc_seg
 #print axioms E2eScal.sl_unmarshal_accept_main_s
 #print axioms E2eScal.sl_same_stmt
 #print axioms E2eScal.ad_e2e_root_s
@@ -332,8 +332,8 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.Gen.ad_dec_BeaconBlockRoot_seg
 #print axioms E2eScal.Gen.cp_dec_Root_seg
 -- Frozen statement kinds, their lemma ties and anchors, and the generated `_kind` identities
-#print axioms E2eScal.u64DecAcceptKind_of
-#print axioms E2eScal.rootDecSegKind_of
+#print axioms Codec.u64DecAcceptKind_of
+#print axioms Codec.rootDecSegKind_of
 #print axioms E2eScal.sl_kind_anchor
 #print axioms E2eScal.ci_kind_anchor
 #print axioms E2eScal.Gen.ci_unmarshal_accept_main_g_kind
@@ -390,7 +390,7 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.WitE1A.e1_accept_runs
 #print axioms E2eScal.WitE1R.e1_reject_runs
 -- After the first two hold-outs: BeaconBlockHeader encoder, fast path only (hand proof)
-#print axioms E2eScal.lea_cmp_be_false
+#print axioms Codec.lea_cmp_be_false
 #print axioms E2eScal.Bh.bh_enc_a1
 #print axioms E2eScal.Bh.bh_enc_a2
 #print axioms E2eScal.Bh.bh_enc_b
@@ -402,8 +402,8 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.WitBhM.bhm_runs_empty
 #print axioms E2eScal.WitBhM.bhm_runs_prefix
 -- Generator extension for a 32-byte field at SSZ offset 0 (offset-0 form; after both hold-outs were opened, Eth1Data = development data)
-#print axioms E2eScal.rootdec_seg_z
-#print axioms E2eScal.rootDecSegZKind_of
+#print axioms Codec.rootdec_seg_z
+#print axioms Codec.rootDecSegZKind_of
 #print axioms E2eScal.Gen.e1_dec_DepositRoot_seg
 #print axioms E2eScal.Gen.e1_dec_DepositRoot_seg_kind
 #print axioms E2eScal.Gen.e1_dec_BlockHash_seg
@@ -502,7 +502,7 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.WitDmR.dm_reject_runs
 
 -- Encoder block (reuse first; Eth1Data = development data): fast paths only
-#print axioms E2eScal.enc32_call
+#print axioms Codec.enc32_call
 #print axioms E2eScal.Bh.bh_call_at
 #print axioms E2eScal.Bh.bh_enc_b_via_block
 #print axioms E2eScal.Bh.bh_enc_c_via_block
@@ -515,7 +515,7 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.E1.e1_e2e_marshal_spec_k
 #print axioms E2eScal.WitE1M.e1m_runs_empty
 #print axioms E2eScal.WitE1M.e1m_runs_prefix
-#print axioms E2eScal.enc_reject_tail
+#print axioms Codec.enc_reject_tail
 #print axioms E2eScal.Bh.bh_rej_at
 #print axioms E2eScal.Bh.bh_rej_b
 #print axioms E2eScal.Bh.bh_rej_c
@@ -547,26 +547,26 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.Gen2Ex.e1_dec_DepositCount_seg_kind
 #print axioms E2eScal.Gen2Ex.e1_dec_DepositRoot_seg
 #print axioms E2eScal.Gen2Ex.e1_dec_DepositRoot_seg_kind
-#print axioms E2eScal.U64InlineReg
+#print axioms Codec.U64InlineReg
 #print axioms E2eScal.bytes48dec_seg_z_is_bytes48
-#print axioms E2eScal.bytesDecHead
+#print axioms Codec.bytesDecHead
 #print axioms E2eScal.bytesDecHead48_eq_bytes
-#print axioms E2eScal.bytesDecMid
-#print axioms E2eScal.bytesDecMidZ
+#print axioms Codec.bytesDecMid
+#print axioms Codec.bytesDecMidZ
 #print axioms E2eScal.bytesDecMidZ48_eq_bytes
-#print axioms E2eScal.bytesDecSegKind
-#print axioms E2eScal.bytesDecSegKind_of
-#print axioms E2eScal.bytesDecSegZKind
-#print axioms E2eScal.bytesDecSegZKind_of
-#print axioms E2eScal.bytesDecTailA
-#print axioms E2eScal.bytesDecTailB
-#print axioms E2eScal.bytesdec_seg
-#print axioms E2eScal.bytesdec_seg_z
-#print axioms E2eScal.bytesdec_tail_seg
-#print axioms E2eScal.decEpi
-#print axioms E2eScal.decHead
-#print axioms E2eScal.decepi_seg
-#print axioms E2eScal.dechead_seg
+#print axioms Codec.bytesDecSegKind
+#print axioms Codec.bytesDecSegKind_of
+#print axioms Codec.bytesDecSegZKind
+#print axioms Codec.bytesDecSegZKind_of
+#print axioms Codec.bytesDecTailA
+#print axioms Codec.bytesDecTailB
+#print axioms Codec.bytesdec_seg
+#print axioms Codec.bytesdec_seg_z
+#print axioms Codec.bytesdec_tail_seg
+#print axioms Codec.decEpi
+#print axioms Codec.decHead
+#print axioms Codec.decepi_seg
+#print axioms Codec.dechead_seg
 #print axioms E2eScal.rootDecHead_eq_bytes
 #print axioms E2eScal.rootDecMidZ_eq_bytes
 #print axioms E2eScal.rootDecMid_eq_bytes
@@ -574,10 +574,10 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.rootDecSegZKind_eq_bytes
 #print axioms E2eScal.rootdec_seg_is_bytes32
 #print axioms E2eScal.rootdec_seg_z_is_bytes32
-#print axioms E2eScal.u64DecInline
-#print axioms E2eScal.u64DecInlineSegKind
-#print axioms E2eScal.u64DecInlineSegKind_of
-#print axioms E2eScal.u64dec_inline_seg
+#print axioms Codec.u64DecInline
+#print axioms Codec.u64DecInlineSegKind
+#print axioms Codec.u64DecInlineSegKind_of
+#print axioms Codec.u64dec_inline_seg
 
 -- Generator output of `p2dec --gen2` (raw p2dec --gen2 segments and kinds, raw --compose accept theorems and identities, the _g2 theorems)
 #print axioms E2eScal.G2.bi_e2e_accept_main_g2
@@ -799,7 +799,7 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.epUAccC_eq
 #print axioms E2eScal.slUAccC_eq
 #print axioms E2eScal.u64DecRRSegKind_of
-#print axioms E2eScal.u64dec_rr_seg
+#print axioms Codec.u64dec_rr_seg
 #print axioms E2eScal.viUAccC_eq
 
 -- Hold-out (SyncCommitteeMessage, PendingConsolidation UnmarshalSSZ): every new theorem (added with the `p2dec --gen4` generator;
@@ -1300,117 +1300,117 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.HeadRel.pw_head_inst
 #print axioms E2eScal.HeadRel.sm_head0_inst
 #print axioms E2eScal.HeadRel.sm_spill2_inst
-#print axioms E2eScal.bytesDecSegKindG4_of
-#print axioms E2eScal.bytesDecSegZKindG4_of
-#print axioms E2eScal.bytesdec_g4_32_rdx_rax
-#print axioms E2eScal.bytesdec_g4_32_rdx_rcx
-#print axioms E2eScal.bytesdec_g4_32_rdx_rdi
-#print axioms E2eScal.bytesdec_g4_32_rdx_rdx
-#print axioms E2eScal.bytesdec_g4_32_rdx_rsi
-#print axioms E2eScal.bytesdec_g4_32_rsi_rax
-#print axioms E2eScal.bytesdec_g4_32_rsi_rcx
-#print axioms E2eScal.bytesdec_g4_32_rsi_rdi
-#print axioms E2eScal.bytesdec_g4_32_rsi_rdx
-#print axioms E2eScal.bytesdec_g4_32_rsi_rsi
-#print axioms E2eScal.bytesdec_g4_48_rdx_rax
-#print axioms E2eScal.bytesdec_g4_48_rdx_rcx
-#print axioms E2eScal.bytesdec_g4_48_rdx_rdi
-#print axioms E2eScal.bytesdec_g4_48_rdx_rdx
-#print axioms E2eScal.bytesdec_g4_48_rdx_rsi
-#print axioms E2eScal.bytesdec_g4_48_rsi_rax
-#print axioms E2eScal.bytesdec_g4_48_rsi_rcx
-#print axioms E2eScal.bytesdec_g4_48_rsi_rdi
-#print axioms E2eScal.bytesdec_g4_48_rsi_rdx
-#print axioms E2eScal.bytesdec_g4_48_rsi_rsi
-#print axioms E2eScal.bytesdec_g4_96_rdx_rax
-#print axioms E2eScal.bytesdec_g4_96_rdx_rcx
-#print axioms E2eScal.bytesdec_g4_96_rdx_rdi
-#print axioms E2eScal.bytesdec_g4_96_rdx_rdx
-#print axioms E2eScal.bytesdec_g4_96_rdx_rsi
-#print axioms E2eScal.bytesdec_g4_96_rsi_rax
-#print axioms E2eScal.bytesdec_g4_96_rsi_rcx
-#print axioms E2eScal.bytesdec_g4_96_rsi_rdi
-#print axioms E2eScal.bytesdec_g4_96_rsi_rdx
-#print axioms E2eScal.bytesdec_g4_96_rsi_rsi
-#print axioms E2eScal.bytesdec_g4z_32_rdx_rax
-#print axioms E2eScal.bytesdec_g4z_32_rdx_rcx
-#print axioms E2eScal.bytesdec_g4z_32_rdx_rdi
-#print axioms E2eScal.bytesdec_g4z_32_rdx_rdx
-#print axioms E2eScal.bytesdec_g4z_32_rdx_rsi
-#print axioms E2eScal.bytesdec_g4z_32_rsi_rax
-#print axioms E2eScal.bytesdec_g4z_32_rsi_rcx
-#print axioms E2eScal.bytesdec_g4z_32_rsi_rdi
-#print axioms E2eScal.bytesdec_g4z_32_rsi_rdx
-#print axioms E2eScal.bytesdec_g4z_32_rsi_rsi
-#print axioms E2eScal.bytesdec_g4z_48_rdx_rax
-#print axioms E2eScal.bytesdec_g4z_48_rdx_rcx
-#print axioms E2eScal.bytesdec_g4z_48_rdx_rdi
-#print axioms E2eScal.bytesdec_g4z_48_rdx_rdx
-#print axioms E2eScal.bytesdec_g4z_48_rdx_rsi
-#print axioms E2eScal.bytesdec_g4z_48_rsi_rax
-#print axioms E2eScal.bytesdec_g4z_48_rsi_rcx
-#print axioms E2eScal.bytesdec_g4z_48_rsi_rdi
-#print axioms E2eScal.bytesdec_g4z_48_rsi_rdx
-#print axioms E2eScal.bytesdec_g4z_48_rsi_rsi
-#print axioms E2eScal.bytesdec_g4z_96_rdx_rax
-#print axioms E2eScal.bytesdec_g4z_96_rdx_rcx
-#print axioms E2eScal.bytesdec_g4z_96_rdx_rdi
-#print axioms E2eScal.bytesdec_g4z_96_rdx_rdx
-#print axioms E2eScal.bytesdec_g4z_96_rdx_rsi
-#print axioms E2eScal.bytesdec_g4z_96_rsi_rax
-#print axioms E2eScal.bytesdec_g4z_96_rsi_rcx
-#print axioms E2eScal.bytesdec_g4z_96_rsi_rdi
-#print axioms E2eScal.bytesdec_g4z_96_rsi_rdx
-#print axioms E2eScal.bytesdec_g4z_96_rsi_rsi
-#print axioms E2eScal.bytesdec_seg_g4
-#print axioms E2eScal.bytesdec_seg_z_g4
-#print axioms E2eScal.bytesdec_seg_z_inst
+#print axioms Codec.bytesDecSegKindWindow_of
+#print axioms Codec.bytesDecSegZKindWindow_of
+#print axioms Codec.bytesdec_window_32_rdx_rax
+#print axioms Codec.bytesdec_window_32_rdx_rcx
+#print axioms Codec.bytesdec_window_32_rdx_rdi
+#print axioms Codec.bytesdec_window_32_rdx_rdx
+#print axioms Codec.bytesdec_window_32_rdx_rsi
+#print axioms Codec.bytesdec_window_32_rsi_rax
+#print axioms Codec.bytesdec_window_32_rsi_rcx
+#print axioms Codec.bytesdec_window_32_rsi_rdi
+#print axioms Codec.bytesdec_window_32_rsi_rdx
+#print axioms Codec.bytesdec_window_32_rsi_rsi
+#print axioms Codec.bytesdec_window_48_rdx_rax
+#print axioms Codec.bytesdec_window_48_rdx_rcx
+#print axioms Codec.bytesdec_window_48_rdx_rdi
+#print axioms Codec.bytesdec_window_48_rdx_rdx
+#print axioms Codec.bytesdec_window_48_rdx_rsi
+#print axioms Codec.bytesdec_window_48_rsi_rax
+#print axioms Codec.bytesdec_window_48_rsi_rcx
+#print axioms Codec.bytesdec_window_48_rsi_rdi
+#print axioms Codec.bytesdec_window_48_rsi_rdx
+#print axioms Codec.bytesdec_window_48_rsi_rsi
+#print axioms Codec.bytesdec_window_96_rdx_rax
+#print axioms Codec.bytesdec_window_96_rdx_rcx
+#print axioms Codec.bytesdec_window_96_rdx_rdi
+#print axioms Codec.bytesdec_window_96_rdx_rdx
+#print axioms Codec.bytesdec_window_96_rdx_rsi
+#print axioms Codec.bytesdec_window_96_rsi_rax
+#print axioms Codec.bytesdec_window_96_rsi_rcx
+#print axioms Codec.bytesdec_window_96_rsi_rdi
+#print axioms Codec.bytesdec_window_96_rsi_rdx
+#print axioms Codec.bytesdec_window_96_rsi_rsi
+#print axioms Codec.bytesdec_window_z_32_rdx_rax
+#print axioms Codec.bytesdec_window_z_32_rdx_rcx
+#print axioms Codec.bytesdec_window_z_32_rdx_rdi
+#print axioms Codec.bytesdec_window_z_32_rdx_rdx
+#print axioms Codec.bytesdec_window_z_32_rdx_rsi
+#print axioms Codec.bytesdec_window_z_32_rsi_rax
+#print axioms Codec.bytesdec_window_z_32_rsi_rcx
+#print axioms Codec.bytesdec_window_z_32_rsi_rdi
+#print axioms Codec.bytesdec_window_z_32_rsi_rdx
+#print axioms Codec.bytesdec_window_z_32_rsi_rsi
+#print axioms Codec.bytesdec_window_z_48_rdx_rax
+#print axioms Codec.bytesdec_window_z_48_rdx_rcx
+#print axioms Codec.bytesdec_window_z_48_rdx_rdi
+#print axioms Codec.bytesdec_window_z_48_rdx_rdx
+#print axioms Codec.bytesdec_window_z_48_rdx_rsi
+#print axioms Codec.bytesdec_window_z_48_rsi_rax
+#print axioms Codec.bytesdec_window_z_48_rsi_rcx
+#print axioms Codec.bytesdec_window_z_48_rsi_rdi
+#print axioms Codec.bytesdec_window_z_48_rsi_rdx
+#print axioms Codec.bytesdec_window_z_48_rsi_rsi
+#print axioms Codec.bytesdec_window_z_96_rdx_rax
+#print axioms Codec.bytesdec_window_z_96_rdx_rcx
+#print axioms Codec.bytesdec_window_z_96_rdx_rdi
+#print axioms Codec.bytesdec_window_z_96_rdx_rdx
+#print axioms Codec.bytesdec_window_z_96_rdx_rsi
+#print axioms Codec.bytesdec_window_z_96_rsi_rax
+#print axioms Codec.bytesdec_window_z_96_rsi_rcx
+#print axioms Codec.bytesdec_window_z_96_rsi_rdi
+#print axioms Codec.bytesdec_window_z_96_rsi_rdx
+#print axioms Codec.bytesdec_window_z_96_rsi_rsi
+#print axioms Codec.bytesdec_seg_window
+#print axioms Codec.bytesdec_seg_z_window
+#print axioms Codec.bytesdec_seg_z_inst
 #print axioms E2eScal.callDecSegKindG4_of
 #print axioms E2eScal.callDecSegKind_eq_G4
 #print axioms E2eScal.calldec_seg_dense
 #print axioms E2eScal.calldec_seg_w
-#print axioms E2eScal.decpro_seg
-#print axioms E2eScal.decret_seg
-#print axioms E2eScal.eraseNop_cons
-#print axioms E2eScal.eraseNop_cons_nop
-#print axioms E2eScal.ev_pc
-#print axioms E2eScal.infix_head
-#print axioms E2eScal.infix_tail
-#print axioms E2eScal.kstep_add
-#print axioms E2eScal.kstep_jmp
-#print axioms E2eScal.kstep_label
-#print axioms E2eScal.kstep_ldb
-#print axioms E2eScal.kstep_ldv
-#print axioms E2eScal.kstep_lea
-#print axioms E2eScal.kstep_mov_rr
-#print axioms E2eScal.kstep_movi
-#print axioms E2eScal.kstep_nilchk
-#print axioms E2eScal.kstep_nops
-#print axioms E2eScal.kstep_st
-#print axioms E2eScal.nil_infix
-#print axioms E2eScal.nopPos_cons_nop
-#print axioms E2eScal.nopPos_cons_succ
-#print axioms E2eScal.nopPos_cons_zero
-#print axioms E2eScal.nopPos_len
-#print axioms E2eScal.nop_step
-#print axioms E2eScal.stepAddKind_of
-#print axioms E2eScal.stepJmpKind_of
-#print axioms E2eScal.stepLabelKind_of
-#print axioms E2eScal.stepLdbKind_of
-#print axioms E2eScal.stepLdvKind_of
-#print axioms E2eScal.stepLeaKind_of
-#print axioms E2eScal.stepMovIKind_of
-#print axioms E2eScal.stepMovRRKind_of
-#print axioms E2eScal.stepNopsKind_of
-#print axioms E2eScal.stepStKind_of
-#print axioms E2eScal.wat
-#print axioms E2eScal.wat_aux
-#print axioms E2eScal.win
-#print axioms E2eScal.wlast
-#print axioms E2eScal.wnops
-#print axioms E2eScal.wskip
-#print axioms E2eScal.wskip0
-#print axioms E2eScal.wskip_aux
+#print axioms Codec.decpro_seg
+#print axioms Codec.decret_seg
+#print axioms Codec.eraseNop_cons
+#print axioms Codec.eraseNop_cons_nop
+#print axioms Codec.ev_pc
+#print axioms Codec.infix_head
+#print axioms Codec.infix_tail
+#print axioms Codec.kstep_add
+#print axioms Codec.kstep_jmp
+#print axioms Codec.kstep_label
+#print axioms Codec.kstep_ldb
+#print axioms Codec.kstep_ldv
+#print axioms Codec.kstep_lea
+#print axioms Codec.kstep_mov_rr
+#print axioms Codec.kstep_movi
+#print axioms Codec.kstep_nilchk
+#print axioms Codec.kstep_nops
+#print axioms Codec.kstep_st
+#print axioms Codec.nil_infix
+#print axioms Codec.nopPos_cons_nop
+#print axioms Codec.nopPos_cons_succ
+#print axioms Codec.nopPos_cons_zero
+#print axioms Codec.nopPos_len
+#print axioms Codec.nop_step
+#print axioms Codec.stepAddKind_of
+#print axioms Codec.stepJmpKind_of
+#print axioms Codec.stepLabelKind_of
+#print axioms Codec.stepLdbKind_of
+#print axioms Codec.stepLdvKind_of
+#print axioms Codec.stepLeaKind_of
+#print axioms Codec.stepMovIKind_of
+#print axioms Codec.stepMovRRKind_of
+#print axioms Codec.stepNopsKind_of
+#print axioms Codec.stepStKind_of
+#print axioms Codec.wat
+#print axioms Codec.wat_aux
+#print axioms Codec.win
+#print axioms Codec.wlast
+#print axioms Codec.wnops
+#print axioms Codec.wskip
+#print axioms Codec.wskip0
+#print axioms Codec.wskip_aux
 -- `p2dec --gen5`: every new declaration (theorems and definitions; compiler auxiliaries omitted)
 #print axioms E2eScal.AllPlaced
 #print axioms E2eScal.AndL
@@ -2211,7 +2211,7 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.decMem
 #print axioms E2eScal.decRejectKindN
 #print axioms E2eScal.decStP
-#print axioms E2eScal.decepi_n
+#print axioms Codec.decepi_n
 #print axioms E2eScal.decrej_seg
 #print axioms E2eScal.dm_accept_is_kindN
 #print axioms E2eScal.dm_kindN_is_kind
@@ -2220,10 +2220,10 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.e1_kindN_is_kind
 #print axioms E2eScal.e1_reject_is_kindN
 #print axioms E2eScal.exLens
-#print axioms E2eScal.g5_j3
-#print axioms E2eScal.g5_lo
-#print axioms E2eScal.g5_lo0
-#print axioms E2eScal.g5_lo8
+#print axioms Codec.frame_j3
+#print axioms Codec.frame_lo
+#print axioms Codec.frame_lo0
+#print axioms Codec.frame_lo8
 #print axioms E2eScal.layCal
 #print axioms E2eScal.layCp
 #print axioms E2eScal.layMix40
@@ -2786,9 +2786,9 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.WitVbM.w
 #print axioms E2eScal.WitVbM.z
 #print axioms E2eScal.bh_marshal_is_kindN
-#print axioms E2eScal.cmp_c_false
-#print axioms E2eScal.cmp_nc_true
-#print axioms E2eScal.cmp_nz_false
+#print axioms Codec.cmp_c_false
+#print axioms Codec.cmp_nc_true
+#print axioms Codec.cmp_nz_false
 #print axioms E2eScal.contLens
 #print axioms E2eScal.cp_marshal_of_kind
 #print axioms E2eScal.e1_marshal_is_kindN
@@ -2803,50 +2803,50 @@ import E2eScal.WitVidGR
 #print axioms E2eScal.encMem
 #print axioms E2eScal.encNx
 #print axioms E2eScal.encOut
-#print axioms E2eScal.encProL
-#print axioms E2eScal.encProS
+#print axioms Codec.encProL
+#print axioms Codec.encProS
 #print axioms E2eScal.encRcv
 #print axioms E2eScal.encRt
 #print axioms E2eScal.encStP
-#print axioms E2eScal.encn_call
-#print axioms E2eScal.encpro_l
-#print axioms E2eScal.encpro_s
+#print axioms Codec.encn_call
+#print axioms Codec.encpro_l
+#print axioms Codec.encpro_s
 #print axioms E2eScal.eregFacts
 #print axioms E2eScal.fldVals
-#print axioms E2eScal.frame50_ptr_far
-#print axioms E2eScal.i64_neg_bv
-#print axioms E2eScal.iAddRR
-#print axioms E2eScal.iCmpMI
-#print axioms E2eScal.iCmpRR
-#print axioms E2eScal.iJcc
-#print axioms E2eScal.iLeaIdx
-#print axioms E2eScal.iMovups15
-#print axioms E2eScal.iStIdx
-#print axioms E2eScal.iSubI
-#print axioms E2eScal.iSubRR
-#print axioms E2eScal.iXor32
-#print axioms E2eScal.kreg_eq
-#print axioms E2eScal.kstep_add_rr
-#print axioms E2eScal.kstep_cmp_jae_t
-#print axioms E2eScal.kstep_cmp_jb_f
-#print axioms E2eScal.kstep_lea_idx
-#print axioms E2eScal.kstep_lenchk
-#print axioms E2eScal.kstep_movups15
-#print axioms E2eScal.kstep_st_idx
-#print axioms E2eScal.kstep_sub_i
-#print axioms E2eScal.kstep_sub_rr
-#print axioms E2eScal.kstep_xor32
+#print axioms Codec.frame50_ptr_far
+#print axioms Codec.i64_neg_bv
+#print axioms Codec.iAddRR
+#print axioms Codec.iCmpMI
+#print axioms Codec.iCmpRR
+#print axioms Codec.iJcc
+#print axioms Codec.iLeaIdx
+#print axioms Codec.iMovups15
+#print axioms Codec.iStIdx
+#print axioms Codec.iSubI
+#print axioms Codec.iSubRR
+#print axioms Codec.iXor32
+#print axioms Codec.kreg_eq
+#print axioms Codec.kstep_add_rr
+#print axioms Codec.kstep_cmp_jae_t
+#print axioms Codec.kstep_cmp_jb_f
+#print axioms Codec.kstep_lea_idx
+#print axioms Codec.kstep_lenchk
+#print axioms Codec.kstep_movups15
+#print axioms Codec.kstep_st_idx
+#print axioms Codec.kstep_sub_i
+#print axioms Codec.kstep_sub_rr
+#print axioms Codec.kstep_xor32
 #print axioms E2eScal.layEncBh
 #print axioms E2eScal.layEncCp
 #print axioms E2eScal.layEncE1
 #print axioms E2eScal.nU64
-#print axioms E2eScal.sep_at_far
+#print axioms Codec.sep_at_far
 #print axioms E2eScal.xsCap
 #print axioms E2eScal.xsCont
 #print axioms E2eScal.xsD
 #print axioms E2eScal.xsPre
 #print axioms E2eScal.xsU
-#print axioms _aux_E2eScal_EncFieldN___macroRules_tacticEb_1
+#print axioms _aux_Codec_EncodeFieldHelpers___macroRules_tacticEb_1
 #print axioms tacticEb
 -- Encoder fast path (independent hand statements and their rfl identities, spec corollaries, witnesses of the
 -- generated encoder fast-path theorems; compiler auxiliaries omitted)

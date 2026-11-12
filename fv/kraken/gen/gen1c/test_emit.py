@@ -150,7 +150,7 @@ def prepare(work, dwork):
     # Lean comparison file
     stm = "\n".join(open(f"{work}/out/{outdir(t)}/statements.lean").read() for t in ["Checkpoint", "AttestationData", "BitVec", "FixedVec", "Scalars"])
     pairs = ", ".join(f'(``{a}, ``{b})' for a, b, _, _ in COMPARE)
-    lean = "\n".join([f"import {i}" for i in IMPORTS] + ["", "open Fk Fk.Code", "variable [Host]", "", stm, "",
+    lean = "\n".join([f"import {i}" for i in IMPORTS] + ["", "open Fk TestTarget.Code", "variable [Host]", "", stm, "",
         "open Lean Meta in",
         "#eval show MetaM Unit from do",
         f"  for (g, h) in [{pairs}] do",

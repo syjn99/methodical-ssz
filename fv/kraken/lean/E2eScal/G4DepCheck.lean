@@ -14,6 +14,7 @@ Executable evidence only.
 
 open Lean Elab Command
 
+open Codec
 namespace E2eScal.G4DepCheck
 
 /-- The project constants reached from `root` through types and values. -/

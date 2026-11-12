@@ -1,6 +1,6 @@
-import Fk.Step
-import Fk.Labels
-import Fk.Bytes
+import Machine.Step
+import Machine.Labels
+import Machine.Bytes
 import E2eScal.H5Code
 import E2e.Data
 import E2e.CpReject
@@ -14,7 +14,7 @@ directives 2–7, 9–10 `cmp $0x10,%rcx; jne L_153` taken, `L_153` (89), loads 
 Not covered here: the two callee error paths (`fmt.errorf` wraps); under `len(buf) = 16` each callee gets 8 bytes.
 -/
 
-open Fk E2eScal.H5Code
+open Machine TestTarget E2eScal.H5Code
 variable [Host]
 
 namespace E2eScal.H5

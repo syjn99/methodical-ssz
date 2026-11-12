@@ -6,7 +6,7 @@ public meta import Lean
 # `dcd_data_include id`: ELF data of the decoder set (`lv/link-dec`, DataColumnsByRootIdentifier)
 
 The same reader as `lv_data_include` (`E2eList/Include.lean`, the text of `E2e/Include.lean`, itself the text of
-`Fk/Include.lean`'s `data_include`), for the data directory
+`Machine/Include.lean`'s `data_include`), for the data directory
 `../prysm/go1.26.10/e2e/lv/link-dec/data/<id>.data` (relative to `fv/kraken/lean`).
 `E2eList/Include.lean` and `E2eList/IncludeIa.lean` are not changed;
 the helpers below are the text of `IncludeIa.lean` with the `lvt3` prefix replaced by `dcd` (a `sed` of that file; the

@@ -1,7 +1,7 @@
 import E2eScal.PdAccept
-import Fk.RtCopy
-import Fk.BumpMore
-import Fk.WHost
+import Runtime.CopyModel
+import Runtime.BumpAllocatorVariants
+import Machine.WitnessHost
 
 /-!
 # Witness of `pd_e2e_accept_g4gen` (PendingDeposit decoder accept path; hold-out, full-proof type)
@@ -22,7 +22,7 @@ every old pointer word every premise holds and the decoder returns nil. The rece
 `v1alpha1.PendingDeposit`.
 -/
 
-open Fk Fk.W E2e E2eAd E2eAd.Code E2eScal E2eScal.H6Code E2eScal.H6
+open Machine Runtime TestTarget Machine.Witness E2e E2eAd E2eAd.Code E2eScal Codec E2eScal.H6Code E2eScal.H6
 
 namespace E2eScal.WitPdA
 

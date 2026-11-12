@@ -1,6 +1,6 @@
 import E2eEnc.Fast
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witnesses of `dc_e2e_marshal_fast_main` (encoder fast path): n = 0, 1, 128
@@ -14,7 +14,7 @@ zero), and the 8n column bytes at pc = 0x10124 + 8n. Frame `R`: the receiver wor
 The root and column bytes are arbitrary lists of the right length; the `example`s instantiate them.
 -/
 
-open Fk Fk.W E2eEnc E2eEnc.Code
+open Machine Runtime TestTarget Machine.Witness E2eEnc E2eEnc.Code
 
 namespace E2eEnc.WitF
 

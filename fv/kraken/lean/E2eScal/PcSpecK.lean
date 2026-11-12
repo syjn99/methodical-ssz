@@ -14,7 +14,7 @@ Hand-written: the text of `DdSpecK.lean` / `PwSpecK.lean`, with the statement
 Not stated here: that the callee error paths (`fmt.errorf` wraps) are unreachable when `size = 16`.
 -/
 
-open Fk E2e E2eAd.Code E2eScal.H5Code E2eScal.BhCode E2eScal EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eAd.Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.H5
@@ -64,7 +64,7 @@ theorem pc_e2e_accept_spec_k (k : Nat) (hk : PcUnmarshal.IsInfixAt Host.prog k) 
   refine ⟨g, rfl, hb, ?_⟩
   have hn : s.regs.rcx = 16 := by
     apply UInt64.toNat_inj.mp; rw [hlen, hb, ppc_enc_size]; rfl
-  exact pc_e2e_accept_main k hk hf kV hkV hfV _ _ (by simp [Fv.uintBytes_size]) (by simp [Fv.uintBytes_size])
+  exact pc_e2e_accept_main k hk hf kV hkV hfV _ _ (by simp [Spec.uintBytes_size]) (by simp [Spec.uintBytes_size])
     s ra guard fp s1 s2 s4 sp1 rslot lo ast a8 a16 hfp h1 h2 h4 hsp1 hrs hlo hast ha8 ha16
     R (Pm g hb) hguard hn
 

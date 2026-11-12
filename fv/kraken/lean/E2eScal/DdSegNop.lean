@@ -1,4 +1,4 @@
-import E2eScal.SegN
+import Codec.FixedBytesDecode
 
 /-!
 # Hand lemma: 32-byte add-form decode segment with a `nop` before `callq runtime.makeslice`
@@ -14,11 +14,12 @@ head indices ≥ 3 shifted by one, one extra `kat` step for the `nop`, and the m
 `j1 + 4 + 1`. Contracts: `MakesliceC`, `MemmoveC` as in `bytesdec_seg`.
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
+open Codec
 namespace E2eScal.H4
 
-open E2eScal
+open Codec
 
 /-- `bytesDecHead 32` with a `nop` after `mov $0x20,%ecx` (10 directives). -/
 def bytesDecHeadNop (lff : String) (dR fL fC : Int64) : Program :=

@@ -1,7 +1,7 @@
-import Fk.Contracts
-import Fk.Step
-import Fk.Labels
-import E2eScal.StackGuard
+import Runtime.Contracts
+import Machine.Step
+import Machine.Labels
+import Codec.StackGuard
 import E2eEnc.StmtEnc
 import E2eEnc.Tail
 
@@ -15,7 +15,7 @@ import E2eEnc.Tail
   `dc_tail` with this frame), 55 `jg L_fc` taken (`128 < n < 2^63`), 61–69 the two words of `ssz.ErrListTooBig`.
 -/
 
-open Fk E2eEnc.Code
+open Machine Runtime TestTarget E2eEnc.Code
 variable [Host]
 
 namespace E2eEnc
@@ -68,7 +68,7 @@ theorem dc_e2e_reject_bytes_main : dc_reject_bytes_stmt := by
   split
   case isTrue h =>
     exfalso
-    rw [E2eScal.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 8 (by rfl) hguard] at h
+    rw [Codec.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 8 (by rfl) hguard] at h
     exact Bool.noConfusion h
   simp only [Effects.All]
   kat hk DcMarshal 5
@@ -148,7 +148,7 @@ theorem dc_e2e_reject_toobig_main : dc_reject_toobig_stmt := by
   split
   case isTrue h =>
     exfalso
-    rw [E2eScal.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 8 (by rfl) hguard] at h
+    rw [Codec.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 8 (by rfl) hguard] at h
     exact Bool.noConfusion h
   simp only [Effects.All]
   kat hk DcMarshal 5

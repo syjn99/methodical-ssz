@@ -19,7 +19,7 @@ runtime calls get the 24-byte argument area at rsp0 − 120 and the `S + 96` sta
 `lo` below their return slot rsp0 − 128 (`MakesliceC` / `MemmoveC` with stack `S + 96`).
 -/
 
-open Fk E2eAd.Code
+open Machine Runtime TestTarget E2eAd.Code
 variable [Host]
 
 namespace E2eAd

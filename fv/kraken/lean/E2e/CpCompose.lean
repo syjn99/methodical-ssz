@@ -27,7 +27,7 @@ spill block at x − 88, its return slot x − 96 and 16 scratch bytes at x − 
 are frame of the encoder call.
 -/
 
-open Fk E2e.Code
+open Machine Runtime TestTarget E2e.Code
 variable [Host]
 
 namespace E2e

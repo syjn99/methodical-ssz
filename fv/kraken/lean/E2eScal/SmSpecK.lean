@@ -14,7 +14,7 @@ Hand-written: the text of `DdSpecK.lean` / `PwSpecK.lean`, with the statement
 Not stated here: that the callee error paths (`fmt.errorf` wraps) are unreachable when `size = 144`.
 -/
 
-open Fk E2e E2eAd.Code E2eScal.H5Code E2eScal.BhCode E2eScal EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eAd.Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.H5
@@ -90,7 +90,7 @@ theorem sm_e2e_accept_spec_k (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) 
   refine ⟨g, rfl, hb, ?_⟩
   have hn : s.regs.rcx = 144 := by
     apply UInt64.toNat_inj.mp; rw [hlen, hb, psm_enc_size]; rfl
-  exact sm_e2e_accept_main k hk hf kS hkS hfS kV hkV hfV _ _ _ _ (by simp [Fv.uintBytes_size]) (by simp) (by simp [Fv.uintBytes_size]) (by simp)
+  exact sm_e2e_accept_main k hk hf kS hkS hfS kV hkV hfV _ _ _ _ (by simp [Spec.uintBytes_size]) (by simp) (by simp [Spec.uintBytes_size]) (by simp)
     s ra guard fp s1 s2 s4 sp0 sp1 sp2 s28 s30 l38 rslot lo ast a8 aP1 aL1 aC1 a40 aP2 aL2 aC2
     hfp h1 h2 h4 hsp0 hsp1 hsp2 hs28 hs30 hl38 hrs hast ha8 haP1 haL1 haC1 ha40 haP2 haL2 haC2
     R S hS hlo Heap avail (Pm g hb) hguard hn hav hms hmm

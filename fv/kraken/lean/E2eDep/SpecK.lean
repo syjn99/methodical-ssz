@@ -9,7 +9,7 @@ The text of `E2eHb.HbSpecK` with the Deposit statement. The statements are the f
 `dep_reject_size_spec_stmt` and `dep_reject_complete_stmt` (`SpecStmt.lean`).
 -/
 
-open Fk E2e EthLib.Serialization.Ssz E2eList E2eDep.Code
+open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz E2eList E2eDep.Code
 variable [Host]
 
 namespace E2eDep
@@ -32,7 +32,7 @@ theorem dep_e2e_accept_spec_k : dep_accept_spec_stmt := by
     apply UInt64.toNat_inj.mp; rw [hlen, hb, dep_enc_size]; rfl
   exact dep_e2e_accept_main k hk hf kd hkd hfd g.proofs (dep_proofs_length g) (dep_proofs_elem g)
     g.data.pubkey.toList g.data.withdrawalCredentials.toList (uintBytes 8 g.data.amount.toNat).toList
-    g.data.signature.toList (by simp) (by simp) (by simp [Fv.uintBytes_size]) (by simp)
+    g.data.signature.toList (by simp) (by simp) (by simp [Spec.uintBytes_size]) (by simp)
     s ra guard fp s1 s2 s4 lI1 lD lI lP spl rslot lo ast aP aL aC aD
     hfp h1 h2 h4 hlI1 hlD hlI hlP hspl hrs hast haP haL haC haD R Sd hSd hlo Heap avail (Pm g hb) hguard hsz hav
     hmsA hms hmm hno hmsD hmmD

@@ -1,4 +1,4 @@
-import Fk.LuRejectCall
+import TestTarget.ListU64DecodeRejectCall
 import E2eList.StmtIaNz
 import E2eList.IaAccept
 
@@ -6,14 +6,14 @@ import E2eList.IaAccept
 # `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: alignment reject and overflow reject
 
 Statements: the corrected `ia_reject_misaligned_nz_stmt` and `ia_reject_toobig_nz_stmt` (`StmtIaNz.lean`, the frozen
-texts plus `e0 ≠ 0`). The text of `Fk.lu_reject_misaligned_main` (`Fk/LuRejectCall.lean`, Go 1.26.3) with the IndexedAttestation
+texts plus `e0 ≠ 0`). The text of `Fk.lu_reject_misaligned_main` (`TestTarget/ListU64DecodeRejectCall.lean`, Go 1.26.3) with the IndexedAttestation
 directive indices: the head 0–26 of `IaAccept.lean`; alignment reject: `jne L_1a2` taken (94), the 32-byte argument array at
 rsp − 48 (two `movups`), `convT64(len − 228)` (`ConvT64C`), the itab word (103–106, `e0 ≠ 0`), `fmt.errorf`
 (`FmtErrorfDWC`), `jne L_248` taken (rax ≠ 0), epilogue 128–130. Overflow reject: `jg L_105` taken (57), the array at rsp − 80,
 `convT64(numElem)`, 66–69, `fmt.errorf`, `jne L_199`, epilogue 91–93.
 -/
 
-open Fk E2eList.Code
+open Machine Runtime TestTarget E2eList.Code
 variable [Host]
 
 namespace E2eList
@@ -75,7 +75,7 @@ theorem ia_e2e_reject_misaligned_nz : ia_reject_misaligned_nz_stmt := by
   split
   case isTrue h =>
     exfalso
-    rw [E2eScal.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 48 (by rfl)
+    rw [Codec.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 48 (by rfl)
       (by rw [UInt64.toNat_toBitVec, UInt64.toNat_toBitVec]; omega)] at h
     exact Bool.noConfusion h
   simp only [Effects.All]
@@ -329,7 +329,7 @@ theorem ia_e2e_reject_toobig_nz : ia_reject_toobig_nz_stmt := by
   split
   case isTrue h =>
     exfalso
-    rw [E2eScal.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 48 (by rfl)
+    rw [Codec.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 48 (by rfl)
       (by rw [UInt64.toNat_toBitVec, UInt64.toNat_toBitVec]; omega)] at h
     exact Bool.noConfusion h
   simp only [Effects.All]

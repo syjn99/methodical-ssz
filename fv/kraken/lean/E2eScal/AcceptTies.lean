@@ -23,8 +23,9 @@ Checkpoint (`E2e.cp_e2e_accept_main`) is not `rfl`: see `cp_accept_of_kind` (the
 hand statement; the converse does not hold).
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
+open Codec
 namespace E2eScal
 
 /-- Frame `0x20`, runtime calls only. `nb` = number of byte fields (the pointer save slot holds the last

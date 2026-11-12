@@ -1,5 +1,5 @@
-import Fk.Block
-import Fk.Labels
+import Machine.Block
+import Machine.Labels
 import E2eDec.Code
 import E2eList.ScLemmas
 
@@ -12,7 +12,7 @@ receiver `c`; the receiver's Columns words at `c + 32` (pointer A) and `c + 40` 
 147–152 → 185–190, 154–157 → 191–194 (195 nop), 158–164 → 196–202, 143–146 → 180–183 (184 nop), exit 166 → 204.
 -/
 
-open Fk E2eDec.Code
+open Machine Runtime TestTarget E2eDec.Code
 variable [Host]
 
 namespace E2eDec

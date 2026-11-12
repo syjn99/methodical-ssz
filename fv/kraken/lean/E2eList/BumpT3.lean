@@ -1,6 +1,6 @@
-import Fk.Bump
-import Fk.BumpMore
-import Fk.FunSpecs
+import Runtime.BumpAllocator
+import Runtime.BumpAllocatorVariants
+import TestTarget.FunctionSpecs
 import E2eList.DataIa
 import E2eAd.Data
 
@@ -17,7 +17,7 @@ with the dispatch steps. Abstract models for non-vacuity only, not a Go refineme
 files are in the Lake `input_dir` `lv_lean_S` (all `.S` files of `E2eList/`).
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
 namespace E2eList
 

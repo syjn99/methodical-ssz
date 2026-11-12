@@ -31,8 +31,9 @@ A boundary state `EncSt` gives the directive index, the number of encoded fields
 stack slots; `encStP` renders it. Ties to the hand statements: `EncTies.lean`.
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
+open Codec
 namespace E2eScal
 
 /-- The content of a stack slot of an encoder state: an original chunk (`cs` index), the bytes of an entry

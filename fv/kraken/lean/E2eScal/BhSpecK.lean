@@ -17,7 +17,7 @@ statement).
   reachable reject site. The two `fmt.Errorf` wraps are not reached on 112-byte inputs (`BhReject.lean`).
 -/
 
-open Fk E2e E2eAd E2eAd.Code E2eScal.BhCode E2eScal EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eAd E2eAd.Code E2eScal.BhCode E2eScal Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.Bh
@@ -103,7 +103,7 @@ theorem bh_e2e_accept_spec_k (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) 
   have h112 : s.regs.rcx = 112 := by
     apply UInt64.toNat_inj.mp; rw [hlen, pbh_enc_size]; rfl
   exact bh_e2e_accept_main k hk hf kS hkS hfS kV hkV hfV _ _ _ _ _
-    (by simp [Fv.uintBytes_size]) (by simp [Fv.uintBytes_size]) (by simp) (by simp) (by simp) s ra guard
+    (by simp [Spec.uintBytes_size]) (by simp [Spec.uintBytes_size]) (by simp) (by simp) (by simp) s ra guard
     fp s1 s2 s4 sp0 sp1 sp2 s28 s30 l38 rslot lo ast a8 a16 aP1 aL1 aC1 aP2 aL2 aC2 aP3 aL3 aC3
     hfp h1 h2 h4 hsp0 hsp1 hsp2 hs28 hs30 hl38 hrs hast ha8 ha16 haP1 haL1 haC1 haP2 haL2 haC2 haP3 haL3 haC3
     R S hS hlo Heap avail (Pm g rfl) hguard h112 hav hms hmm

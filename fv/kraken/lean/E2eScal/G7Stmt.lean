@@ -1,7 +1,7 @@
-import Fk.Contracts
-import Fk.Frame
-import Fk.Bytes
-import Fk.Labels
+import Runtime.Contracts
+import Machine.Frame
+import Machine.Bytes
+import Machine.Labels
 import E2e.Data
 import E2e.Code
 import E2eScal.KindEncN
@@ -54,9 +54,10 @@ are read from the `.S` by hand. Development data, no hold-out.
   Timestamp 40, Pubkey 48 / 56 / 64. Output: buf[0:20], buf[20:28], buf[28:36], buf[36:84].
 -/
 
-open Fk E2e E2e.Code E2eScal.F24Code
+open Machine Runtime TestTarget E2e E2e.Code E2eScal.F24Code
 variable [Host]
 
+open Codec
 namespace E2eScal.G7
 
 /-- Hand statement of the accept path of `(*v1.BuilderExitRequest).UnmarshalSSZ`: on a 68-byte input it returns nil

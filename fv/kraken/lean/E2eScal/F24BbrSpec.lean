@@ -12,7 +12,8 @@ No Desc-checker record exists for this type (`gen/desc/results/main.result.json`
 -/
 
 namespace E2e
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz
+open Spec hiding readUint_lt
 
 theorem prysmBbrDesc_kinds : prysmBbrDesc = .container ["start_slot", "count", "step"]
       [.uint 8, .uint 8, .uint 8] := rfl
@@ -33,7 +34,7 @@ def pbbrEnc (g : PBbr) : Array UInt8 :=
   uintBytes 8 g.startSlot.toNat ++ uintBytes 8 g.count.toNat ++ uintBytes 8 g.step.toNat
 
 theorem pbbr_enc_size (g : PBbr) : (pbbrEnc g).size = 24 := by
-  simp [pbbrEnc, Fv.uintBytes_size]
+  simp [pbbrEnc, Spec.uintBytes_size]
 
 theorem pbbr_toValue_fits (g : PBbr) : Value.fits prysmBbrDesc g.toValue = true := by
   have := g.startSlot.toNat_lt; have := g.count.toNat_lt; have := g.step.toNat_lt
@@ -66,7 +67,7 @@ theorem pbbr_serialize (g : PBbr) : serialize prysmBbrDesc g.toValue = .ok (pbbr
   have := a0.toNat_lt; have := a1.toNat_lt; have := a2.toNat_lt
   simp only [prysmBbrDesc, PBbr.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Fv.uintBytes_size, bytesPerOffset, pbbrEnc,
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, pbbrEnc,
     Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- **Spec roundtrip.** -/

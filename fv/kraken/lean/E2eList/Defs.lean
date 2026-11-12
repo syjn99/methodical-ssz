@@ -1,4 +1,4 @@
-import Fk.Contracts
+import Runtime.Contracts
 import E2e.Spec
 import E2eList.Desc
 
@@ -17,7 +17,7 @@ new name and a reason; the original stays.
   `psaEnc` / `pscEnc` the 160 / 24624 bytes of the SSZ encoding (fixed-size container: the fields in order).
 -/
 
-open Fk EthLib.Serialization.Ssz
+open Machine Runtime TestTarget EthLib.Serialization.Ssz
 
 namespace E2eList
 

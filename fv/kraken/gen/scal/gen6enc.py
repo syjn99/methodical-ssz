@@ -15,7 +15,7 @@ one guarded success point (see there). This module never writes to stdout.
 """
 import hashlib, json, pathlib, re
 
-G6_IMPORTS = ["E2eScal.EncTies", "E2eScal.EncFrameTest"]
+G6_IMPORTS = ["E2eScal.EncTies", "Codec.EncodeFrameTest"]
 G6_NS = "E2eScal.Gen6Enc"
 R64 = "rax rbx rcx rdx rsi rdi rsp rbp r8 r9 r10 r11 r12 r13 r14 r15".split()
 R32 = {"eax": "rax", "ebx": "rbx", "ecx": "rcx", "edx": "rdx", "esi": "rsi", "edi": "rdi"}
@@ -354,7 +354,7 @@ class Gen6:
     def label_hyp(self, j):
         if j not in self.hl:
             self.hl.add(j)
-            self.E(f"have hl{j} := Fk.label_at' hk hf (j := {j})")
+            self.E(f"have hl{j} := Machine.label_at' hk hf (j := {j})")
             self.E(f"  (by simp only [{self.C}, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)")
             self.E(f"  (by simp only [{self.C}, List.take_succ_cons, List.take_zero, List.contains_cons, "
                    "List.contains_nil]; decide)")
@@ -883,7 +883,7 @@ class Gen6:
             E(f"refine eventually_trans _ _ _ _ (encn_call (k + {i}) (win hk {i} 1) {stk(-(F + 8))} "
               f"{s_pf(('dst', self.soff[fi]))} {self.pn[fi]}")
             E(f"  {stk(rs)} ({stk(rs)[1:-1]} - BitVec.ofNat 64 S) S (by bv_omega) "
-              f"(E2eScal.g5_lo0 rsp.toBitVec {F + 8} {F + 16} S (by decide))")
+              f"(Codec.frame_lo0 rsp.toBitVec {F + 8} {F + 16} S (by decide))")
             E(f"  {self.vn[fi]} d{fi} {v_pf(old)} {v_pf(lo)} (by rw [hd{fi}, h{self.vn[fi]}]) {v_len(old)} {v_len(lo)}")
             E(f"  _ _ (by rfl) (by rfl) (by rfl) (by rw [h{self.vn[fi]}]; rfl) (by first | ecancel | (dsimp only; ecancel)) hmm) ?_")
             E(f"rintro ⟨e{c}, pc{c}⟩ ⟨hpc{c}, hrsp{c}, hrbp{c}, hr14{c}, scr{c}, hscr{c}, Hc{c}⟩")

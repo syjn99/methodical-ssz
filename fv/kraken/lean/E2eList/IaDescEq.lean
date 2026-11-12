@@ -12,7 +12,7 @@ the checker section of `E2eAd/Spec.lean`.
 -/
 
 namespace E2eList
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz Spec TestTarget
 
 theorem prysmIaDesc_checker :
     prysmIaDesc = .container ["attesting_indices", "data", "signature"]

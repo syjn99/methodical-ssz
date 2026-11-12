@@ -13,7 +13,7 @@ padding premise is empty because 512 = 8 · 64).
 -/
 
 namespace E2eList
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz Spec TestTarget
 
 theorem prysmSaDesc_wellFormed : prysmSaDesc.wellFormed = .ok () := by rfl
 theorem prysmSaDesc_fixedSize : prysmSaDesc.fixedSize = some 160 := by rfl

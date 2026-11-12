@@ -1,18 +1,18 @@
-import Fk.Bump
-import Fk.BumpMore
-import Fk.FunSpecs
+import Runtime.BumpAllocator
+import Runtime.BumpAllocatorVariants
+import TestTarget.FunctionSpecs
 
 /-!
 # Bump-allocator model of `runtime.newobject` for one 72-byte object (witness only)
 
-`BumpNew72` (`E2eAd/BumpNew72.S`) is `Fk/BumpNew32.S` with the object size 0x48; the theorem
-is the text of `Fk.bump_newobject32` with 32 replaced by 72. It discharges
+`BumpNew72` (`E2eAd/BumpNew72.S`) is `Runtime/BumpNew32.S` with the object size 0x48; the theorem
+is the text of `Runtime.bump_newobject32` with 32 replaced by 72. It discharges
 `NewobjectC bumpHeap ty 72 S` in the AttestationData witnesses (the Checkpoint object of the
 Go 1.26.10 ELF is 72 bytes, `adCpType` Size_ = 0x48). It is a model in a witness host, not a
 claim about the Go runtime.
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
 namespace E2eAd
 

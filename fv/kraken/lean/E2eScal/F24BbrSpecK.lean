@@ -17,7 +17,7 @@ edited):
 Not stated here: that the callee error paths (`fmt.errorf` wraps) are unreachable when `size = 24`.
 -/
 
-open Fk E2e E2eScal E2eScal.F24Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.F24Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.F24
@@ -77,7 +77,7 @@ theorem bbr_e2e_accept_spec_k : ∀ (k : Nat) (hk : BbrUnmarshal.IsInfixAt Host.
   refine ⟨g, rfl, hb, ?_⟩
   have hn : s.regs.rcx = 24 := by
     apply UInt64.toNat_inj.mp; rw [hlen, hb, pbbr_enc_size]; rfl
-  exact E2eScal.Gen.bbr_g5dec_accept k hk hf kS hkS hfS _ _ _ (by simp [Fv.uintBytes_size]) (by simp [Fv.uintBytes_size]) (by simp [Fv.uintBytes_size]) s ra guard fp s1 s2 sp1 rslot lo ast aN0 aN1 aN2 hfp hs1 hs2 hsp1 hrslot hlo hast haN0 haN1 haN2 R (Pm g hb) hguard hn
+  exact E2eScal.Gen.bbr_g5dec_accept k hk hf kS hkS hfS _ _ _ (by simp [Spec.uintBytes_size]) (by simp [Spec.uintBytes_size]) (by simp [Spec.uintBytes_size]) s ra guard fp s1 s2 sp1 rslot lo ast aN0 aN1 aN2 hfp hs1 hs2 hsp1 hrslot hlo hast haN0 haN1 haN2 R (Pm g hb) hguard hn
 
 /-- `len(buf) ≠ 24`: EthLib rejects, and the machine code returns the two words of `ssz.ErrSize`. -/
 theorem bbr_e2e_reject_size_spec (k : Nat) (hk : BbrUnmarshal.IsInfixAt Host.prog k)

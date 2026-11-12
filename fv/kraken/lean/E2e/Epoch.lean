@@ -1,6 +1,6 @@
-import Fk.Step
-import Fk.Labels
-import Fk.Bytes
+import Machine.Step
+import Machine.Labels
+import Machine.Bytes
 import E2e.Code
 
 /-!
@@ -23,7 +23,7 @@ The rest of the frame (rsp − 0x50 … rsp − 9) and the other spill slots are
 touched on this path; they stay in the frame `R`.
 -/
 
-open Fk E2e.Code
+open Machine TestTarget E2e.Code
 variable [Host]
 
 namespace E2e
@@ -119,7 +119,7 @@ theorem ep_unmarshal_accept_main (k : Nat) (hk : EpUnmarshal.IsInfixAt Host.prog
     | (apply UInt64.toBitVec_inj.mp; simp; bv_omega)
 
 /-- **Function specification of `(*primitives.Epoch).UnmarshalSSZ`, accept path**
-(`len(buf) = 8`), in the shape of `Fk.ScUAccC`: a hypothesis-shaped statement
+(`len(buf) = 8`), in the shape of `TestTarget.ScUAccC`: a hypothesis-shaped statement
 about the code at the Epoch label, for every machine state, return address and
 frame `F`. `ep_uacc_holds` proves it from the machine code; the Checkpoint
 decoder uses the callee only through this specification (no contract). -/

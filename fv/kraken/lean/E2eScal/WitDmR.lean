@@ -1,6 +1,6 @@
 import E2eScal.DmReject
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of `dm_e2e_reject_size_main` (hold-out)
@@ -13,7 +13,7 @@ the guard word, saved-rbp slot, return slot, the unused rax spill slot (the fram
 slot. For every length `≠ 88` (instances 87, 89, 0) the decoder returns the two words.
 -/
 
-open Fk Fk.W E2e E2eScal.H3Code E2eScal.Dm
+open Machine Runtime TestTarget Machine.Witness E2e E2eScal.H3Code E2eScal.Dm
 
 namespace E2eScal.WitDmR
 

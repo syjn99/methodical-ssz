@@ -1,6 +1,6 @@
-import Fk.Step
-import Fk.Labels
-import Fk.Bytes
+import Machine.Step
+import Machine.Labels
+import Machine.Bytes
 import E2eScal.H3Code
 import E2e.Data
 import E2e.CpReject
@@ -16,7 +16,7 @@ epilogue. The two words `e0`, `e1` are the global's value after package init (pr
 The decoder has no `fmt.errorf` wrap and no callee error path: the size check is its only reject.
 -/
 
-open Fk E2eScal.H3Code
+open Machine TestTarget E2eScal.H3Code
 variable [Host]
 
 namespace E2eScal.Dm

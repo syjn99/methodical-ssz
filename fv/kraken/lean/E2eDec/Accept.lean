@@ -1,4 +1,4 @@
-import E2eScal.StackGuard
+import Codec.StackGuard
 import E2eList.IaAccept
 import E2eEnc.Tail
 import E2eDec.Reject
@@ -15,7 +15,7 @@ and `memmove(pb, buf, 32)`, 48–63 len/cap 32 and the barrier branch, 64–71 a
 the element loop `dcd_loop` (185 → 204), 204–209 nil and the epilogue. Statement: the frozen `dcd_accept_stmt`.
 -/
 
-open Fk E2eDec.Code
+open Machine Runtime TestTarget E2eDec.Code
 variable [Host]
 
 namespace E2eDec
@@ -80,7 +80,7 @@ theorem dcd_e2e_accept_main : dcd_accept_stmt := by
   split
   case isTrue h =>
     exfalso
-    rw [E2eScal.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 16 (by rfl)
+    rw [Codec.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 16 (by rfl)
       (by rw [UInt64.toNat_toBitVec, UInt64.toNat_toBitVec]; omega)] at h
     exact Bool.noConfusion h
   simp only [Effects.All]

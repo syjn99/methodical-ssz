@@ -1,6 +1,6 @@
 import E2eScal.PwAccept
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of `pw_e2e_accept_main` (PendingPartialWithdrawal decoder accept path)
@@ -19,7 +19,7 @@ two untouched frame ranges and the unused slot. For every 24-byte input every pr
 returns nil. The receiver is a Go value of `v1alpha1.PendingPartialWithdrawal` (all fields zero).
 -/
 
-open Fk Fk.W E2e E2eScal E2eScal.H4Code E2eScal.BhCode E2eScal.H4
+open Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.H4Code E2eScal.BhCode E2eScal.H4
 
 namespace E2eScal.WitPwA
 

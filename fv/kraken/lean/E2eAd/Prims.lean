@@ -1,6 +1,6 @@
-import Fk.Step
-import Fk.Labels
-import Fk.Bytes
+import Machine.Step
+import Machine.Labels
+import Machine.Bytes
 import E2eAd.Code
 
 /-!
@@ -20,7 +20,7 @@ prologue, 9–10 `cmp $0x8,%rcx; je L_bb`, 43 `L_bb`, 44 load, 46 store, 47–48
 through them.
 -/
 
-open Fk E2eAd.Code
+open Machine TestTarget E2eAd.Code
 variable [Host]
 
 namespace E2eAd
@@ -116,7 +116,7 @@ theorem sl_unmarshal_accept_main (k : Nat) (hk : SlUnmarshal.IsInfixAt Host.prog
     | (apply UInt64.toBitVec_inj.mp; simp; bv_omega)
 
 /-- **Function specification of `(*primitives.Slot).UnmarshalSSZ`, accept path**
-(`len(buf) = 8`), in the shape of `Fk.ScUAccC`: a hypothesis-shaped statement
+(`len(buf) = 8`), in the shape of `TestTarget.ScUAccC`: a hypothesis-shaped statement
 about the code at the Slot label, for every machine state, return address and
 frame `F`. `sl_uacc_holds` proves it from the machine code; the AttestationData
 decoder uses the callee only through this specification (no contract). -/
@@ -243,7 +243,7 @@ theorem ci_unmarshal_accept_main (k : Nat) (hk : CiUnmarshal.IsInfixAt Host.prog
     | (apply UInt64.toBitVec_inj.mp; simp; bv_omega)
 
 /-- **Function specification of `(*primitives.CommitteeIndex).UnmarshalSSZ`, accept path**
-(`len(buf) = 8`), in the shape of `Fk.ScUAccC`: a hypothesis-shaped statement
+(`len(buf) = 8`), in the shape of `TestTarget.ScUAccC`: a hypothesis-shaped statement
 about the code at the CommitteeIndex label, for every machine state, return address and
 frame `F`. `ci_uacc_holds` proves it from the machine code; the AttestationData
 decoder uses the callee only through this specification (no contract). -/

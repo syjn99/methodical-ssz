@@ -1,8 +1,8 @@
-import Fk.Contracts
-import Fk.FunSpecs
-import Fk.Frame
-import Fk.Bytes
-import Fk.Labels
+import Runtime.Contracts
+import TestTarget.FunctionSpecs
+import Machine.Frame
+import Machine.Bytes
+import Machine.Labels
 import E2e.Data
 import E2e.Code
 import E2eAd.Code
@@ -16,7 +16,7 @@ import E2eList.DefsIa
 
 Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
 Statement shape: `StmtSa.lean` / `StmtSc.lean` (exact frame, contracts as hypotheses, input and receiver kept) and, for
-the two `fmt.errorf` rejects, the contract forms `ConvT64C` and `FmtErrorfDWC` (`Fk/Contracts.lean`).
+the two `fmt.errorf` rejects, the contract forms `ConvT64C` and `FmtErrorfDWC` (`Runtime/Contracts.lean`).
 
     func (c *IndexedAttestation) UnmarshalSSZ(buf []byte) error {        // phase0.ssz.go:2819
         if size < 228 { return ssz.ErrSize }                                                  // size reject
@@ -43,7 +43,7 @@ return slot x − 184; scratch `S` below it. On the accept path the AttestationD
 Return addresses at the end: alignment reject errorf call 116 → `k + 117`; overflow reject errorf call 79 → `k + 80`; accept last memmove 240 → `k + 241`.
 -/
 
-open Fk E2e EthLib.Serialization.Ssz E2eList.Code
+open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz E2eList.Code
 variable [Host]
 
 namespace E2eList
@@ -552,7 +552,7 @@ def ia_accept_spec_stmt : Prop :=
       ⋆ Eq ((uintBytes 8 g.data.target.epoch.toNat).toList.At (s.regs.rbx.toBitVec + 92))
       ⋆ Eq (g.data.target.root.toList.At (s.regs.rbx.toBitVec + 100))
       ⋆ Eq (g.signature.toList.At (s.regs.rbx.toBitVec + 132))
-      ⋆ Eq ((Fv1.u64Bytes g.idx).toList.At (s.regs.rbx.toBitVec + 228))
+      ⋆ Eq ((Spec.u64Bytes g.idx).toList.At (s.regs.rbx.toBitVec + 228))
       ⋆ Eq (ast.At s.regs.rax.toBitVec)
       ⋆ Eq (aP1.At (s.regs.rax.toBitVec + 8))
       ⋆ Eq (aL1.At (s.regs.rax.toBitVec + 16))
@@ -603,7 +603,7 @@ def ia_accept_spec_stmt : Prop :=
           ⋆ Eq ((uintBytes 8 g.data.target.epoch.toNat).toList.At (s.regs.rbx.toBitVec + 92))
           ⋆ Eq (g.data.target.root.toList.At (s.regs.rbx.toBitVec + 100))
           ⋆ Eq (g.signature.toList.At (s.regs.rbx.toBitVec + 132))
-          ⋆ Eq ((Fv1.u64Bytes g.idx).toList.At (s.regs.rbx.toBitVec + 228))
+          ⋆ Eq ((Spec.u64Bytes g.idx).toList.At (s.regs.rbx.toBitVec + 228))
           ⋆ Eq (ast.At s.regs.rax.toBitVec)
           ⋆ Eq ((Int.toBytes 8 A.toInt).At (s.regs.rax.toBitVec + 8))
           ⋆ Eq ((Int.toBytes 8 (g.idx.length : Int)).At (s.regs.rax.toBitVec + 16))
@@ -612,7 +612,7 @@ def ia_accept_spec_stmt : Prop :=
           ⋆ Eq ((Int.toBytes 8 psig.toInt).At (s.regs.rax.toBitVec + 40))
           ⋆ Eq ((Int.toBytes 8 96).At (s.regs.rax.toBitVec + 48))
           ⋆ Eq ((Int.toBytes 8 96).At (s.regs.rax.toBitVec + 56))
-          ⋆ Eq ((Fv1.u64Bytes g.idx).toList.At A)
+          ⋆ Eq ((Spec.u64Bytes g.idx).toList.At A)
           ⋆ Eq ((List.replicate 8 0).At pd)
           ⋆ Eq ((uintBytes 8 g.data.slot.toNat).toList.At (pd + 8))
           ⋆ Eq ((uintBytes 8 g.data.index.toNat).toList.At (pd + 16))

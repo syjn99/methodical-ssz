@@ -24,7 +24,7 @@ The project has two target binaries. Their proofs are separate, because a proof 
 
 - The Go types are in `target/`. The `main` package is `cmd/p1bin/`.
 - The ELF, its symbol listing and its disassembly are in `link/out/`. Their sha256 values are in `link/out/build-ids.txt`.
-- The `Fk` Lean library proves some theorems on this binary. Some of its definitions are also used by the Prysm proofs.
+- The `TestTarget` Lean library proves some theorems on this binary. The Prysm proofs also use some of its declarations.
 - `link/build.sh` builds this ELF again from the repository root.
 
 ## 2. Pinned versions
@@ -90,11 +90,11 @@ Each item says what the command needs.
 **Lean only.** Lake fetches Kraken and EthLib at the pinned commits on the first run.
 
 ```sh
-cd fv/kraken/lean && lake build Fv Fv1 Fk E2e E2eAd E2eScal E2eList E2eHb E2eSeg E2eDep E2eDepW E2eEnc E2eDec
+cd fv/kraken/lean && lake build Machine Runtime Codec Spec TestTarget E2e E2eAd E2eScal E2eList E2eHb E2eDep E2eDepW E2eEnc E2eDec
 cd fv/kraken/lean && lake build E2eList.SaReject    # one module
 ```
 
-`lake build` without arguments builds only the default libraries `Fv`, `Fv1` and `Fk`.
+`lake build` without arguments builds only the default libraries `Spec`, `Machine`, `Runtime` and `TestTarget`.
 After a build, `lake build --no-build <libraries>` must exit 0. `lake env lean` does not check that the build is current.
 
 **Lean and Python.** These scripts call Lean through Lake.
@@ -107,7 +107,7 @@ python3 -I -B .claude/skills/maintaining-methodical-fv/scripts/decl_drift.py <ba
 ```
 
 - The two axioms gates write a declaration dump and check that every declaration uses only the three standard axioms.
-  Each gate script names the libraries that it covers in its first lines. The two gates together cover all Prysm libraries.
+  Each gate script names the libraries that it covers in its first lines. The two gates together cover all libraries.
 - A gate overwrites its JSON argument. Give a scratch path, unless you intend to update a committed record.
 - The negative test files are `gen/e2e/negcases.json`, `gen/scal/negcases-*.json` and the `negcases-*.json` files under `prysm/go1.26.10/e2e/`.
   Run one case per job. The E2eList cases use `gen/e2e/lvnegative.py` with the same arguments.

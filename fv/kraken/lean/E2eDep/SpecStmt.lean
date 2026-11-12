@@ -17,7 +17,7 @@ Frozen at their commit. The hand `Desc` below is written from consensus-specs ph
 Shapes: `E2eHb.hb_accept_spec_stmt`, `hb_reject_size_spec_stmt`, `hb_reject_complete_stmt`.
 -/
 
-open Fk E2e EthLib.Serialization.Ssz E2eList E2eDep.Code
+open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz E2eList E2eDep.Code
 variable [Host]
 
 namespace E2eDep

@@ -1,7 +1,7 @@
 import E2eList.ScAccept
 import E2eList.BumpT
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of `sc_e2e_accept_main` (SyncCommittee decoder accept path)
@@ -20,7 +20,7 @@ rsp + 24. The frame `R` is the receiver's last 32 bytes and that word. For every
 every old pointer word every premise holds and the decoder returns nil.
 -/
 
-open Fk Fk.W E2e E2eList E2eList.Code
+open Machine Runtime TestTarget Machine.Witness E2e E2eList E2eList.Code
 
 namespace E2eList.WitScA
 

@@ -1,6 +1,6 @@
 import E2eScal.Gen6ScEnc
 import E2eScal.SmSpec
-import Fk.RtCopy
+import Runtime.CopyModel
 
 /-!
 # SyncCommitteeMessage encoder fast path (generated theorem) against the independent Desc (unit E2-C)
@@ -12,7 +12,7 @@ Shape of `E2eScal.Bh.bh_e2e_marshal_spec_k`. Encoder fast path only (`len + 144 
 lengths). Emitted by the unit's evidence tool `e2cemit.py`, then built and kernel-checked.
 -/
 
-open Fk E2e E2eScal E2eScal.Gen6Enc E2eScal.Enc2Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.Gen6Enc E2eScal.Enc2Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.E2c
@@ -112,9 +112,9 @@ theorem sc_e2c_spec_k (k : Nat)
           ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   refine ⟨psmEnc g, psm_serialize g, ?_⟩
-  have hF0 : (uintBytes 8 g.slot.toNat).toList.length = 8 := by simp [Fv.uintBytes_size]
+  have hF0 : (uintBytes 8 g.slot.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
   have hF1 : g.blockRoot.toList.length = 32 := by simp
-  have hF2 : (uintBytes 8 g.validatorIndex.toNat).toList.length = 8 := by simp [Fv.uintBytes_size]
+  have hF2 : (uintBytes 8 g.validatorIndex.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
   have hF3 : g.signature.toList.length = 96 := by simp
   refine eventually_mono (sc_g6e_fast k hk hf ast (uintBytes 8 g.slot.toNat).toList (uintBytes 8 g.validatorIndex.toNat).toList c1 c3 (g.blockRoot.toList) (g.signature.toList) pre d0 d1 d2 d3 hast hF0 hF2 hc1 hc3 hF1 hF3 hd0 hd1 hd2 hd3 p1 p3 s ra guard hpre fp s1 s2 t56 t40 l112 l120 l24 t88 t72 l16 l96 l104 rslot hfp hs1 hs2 ht56 ht40 hl112 hl120 hl24 ht88 ht72 hl16 hl96 hl104 hrslot R S scratch hsc h_mem hguard hsp hcap hcap63 hmm)
     (fun st ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, _, _, _, _, _, _, _, _, _, _, _, _, _, hm⟩ =>

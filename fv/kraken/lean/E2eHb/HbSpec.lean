@@ -12,7 +12,7 @@ used for both fields (`v32_serialize`, `v32_of_bytes`), and the container lemmas
 -/
 
 namespace E2eHb
-open EthLib.Serialization.Ssz Fv1 E2eList
+open EthLib.Serialization.Ssz Spec TestTarget E2eList
 
 theorem prysmHbDesc_wellFormed : prysmHbDesc.wellFormed = .ok () := by rfl
 theorem prysmHbDesc_fixedSize : prysmHbDesc.fixedSize = some 524288 := by rfl

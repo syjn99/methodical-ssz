@@ -1,7 +1,7 @@
-import Fk.Contracts
-import Fk.Frame
-import Fk.Bytes
-import Fk.Labels
+import Runtime.Contracts
+import Machine.Frame
+import Machine.Bytes
+import Machine.Labels
 import E2e.Data
 import E2e.Code
 import E2eAd.Code
@@ -71,9 +71,10 @@ Choice (classes with no independently tied statement before this unit):
   (ActivationEpoch at − 88).
 -/
 
-open Fk E2e E2e.Code E2eAd.Code E2eScal.BhCode E2eScal.F24Code
+open Machine Runtime TestTarget E2e E2e.Code E2eAd.Code E2eScal.BhCode E2eScal.F24Code
 variable [Host]
 
+open Codec
 namespace E2eScal.F24
 
 /-- Hand statement of the accept path of `(*v1.DepositRequest).UnmarshalSSZ`: on a 192-byte input it returns nil

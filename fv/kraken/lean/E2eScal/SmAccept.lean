@@ -24,7 +24,7 @@ Stack (rsp = entry rsp): frame `sub $0x60` as BeaconBlockHeader; the helper lemm
 `Bh.bh_j3`, `Bh.bhg_guard` and the tactic `bhaddr` are reused. No contract, no new hypothesis form.
 -/
 
-open Fk E2e E2eAd E2eAd.Code E2eScal.H5Code E2eScal.BhCode E2eScal E2eScal.Bh
+open Machine Runtime TestTarget E2e E2eAd E2eAd.Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec E2eScal.Bh
 variable [Host]
 
 namespace E2eScal.H5
@@ -52,18 +52,18 @@ theorem sm_e2e_accept_main : sm_accept_stmt := by
     exact bh_lo8 _ S hS _ _ hlS hl8
   rw [hlos] at h_mem
   -- code facts of the hand-applied blocks
-  have hRA := E2eScal.infix_sub (q := E2eScal.bytesDecHead 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_fd" 112 24 32) 47 hk
-    (by simp only [SmUnmarshal, E2eScal.bytesDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hRB := E2eScal.infix_sub (q := bytesDecMidA 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_fd" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_13e" 112 120 56 16 24 32 8) 60 hk
+  have hRA := Codec.infix_sub (q := Codec.bytesDecHead 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_fd" 112 24 32) 47 hk
+    (by simp only [SmUnmarshal, Codec.bytesDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hRB := Codec.infix_sub (q := bytesDecMidA 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_fd" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_13e" 112 120 56 16 24 32 8) 60 hk
     (by simp only [SmUnmarshal, bytesDecMidA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hRl := Fk.label_at' hk hf (j := 60)
+  have hRl := Machine.label_at' hk hf (j := 60)
     (by simp only [SmUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [SmUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hC2 := E2eScal.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_1e7") 88 hk
+  have hC2 := Codec.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_1e7") 88 hk
     (by simp only [SmUnmarshal, E2eScal.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hL2 := E2eScal.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_1e7") 117 hk
+  have hL2 := Codec.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_1e7") 117 hk
     (by simp only [SmUnmarshal, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl2 := Fk.label_at' hk hf (j := 117)
+  have hl2 := Machine.label_at' hk hf (j := 117)
     (by simp only [SmUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [SmUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   -- head: entry → directive 15

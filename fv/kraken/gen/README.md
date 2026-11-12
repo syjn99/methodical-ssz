@@ -11,7 +11,7 @@ The design principles are in `../../README.md`.
 - The statement of a generated theorem is checked separately, by a frozen kind (section 4) or by an identity with a hand statement.
 - A generated Lean file must be equal to the output of its generator. Do not edit a generated file by hand.
   The header comment of a generated file names its generator. Some headers also give the sha256 of the inputs.
-- A generator does not write to `lean/Fk`, `link/` or `gen/frozen/`.
+- A generator does not write to the shared libraries (`lean/Spec`, `lean/Machine`, `lean/Runtime`, `lean/TestTarget`, `lean/Codec`), `link/` or `gen/frozen/`.
 - The Python programs use only the standard library. Run them with `python3 -I`.
 - A generator refuses an input that it does not match. It writes nothing, or it marks a partial output as partial.
 
@@ -44,7 +44,7 @@ Use `regen_check.sh` of the project skill. It runs the generator two times into 
 Exit 0 means the same bytes. Run it from `fv/kraken`:
 
 ```sh
-sh ../../.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh lean/E2eScal/GenCi.lean -- sh -c 'python3 -I gen/scal/scalgen.py p1 --S prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S --const CiUnmarshal --name ci_unmarshal_accept_main_g --same-as E2eAd.ci_unmarshal_accept_main --imports E2eScal.P1,E2eAd.Prims --open E2eAd.Code > "$REGEN_OUT"'
+sh ../../.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh lean/E2eScal/GenCi.lean -- sh -c 'python3 -I gen/scal/scalgen.py p1 --S prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S --const CiUnmarshal --name ci_unmarshal_accept_main_g --same-as E2eAd.ci_unmarshal_accept_main --imports Codec.Uint64Decoder,E2eAd.Prims --open E2eAd.Code > "$REGEN_OUT"'
 ```
 
 For the other files, take the command from `scal/gen.sh` or from the file header. Replace the output redirect with `> "$REGEN_OUT"`.
@@ -54,12 +54,12 @@ The check compares bytes only. It does not show that the output is correct.
 
 A generated theorem `t` is followed by a line `t_kind`.
 It states that the full type of `t`, with all hypotheses, is equal to a frozen kind with parameters.
-The kinds are hand text in `lean/E2eScal/Kind*.lean`. Each kind has a proof from its lemma.
+The kinds are hand text in `lean/Codec/Kind/*.lean` and `lean/E2eScal/Kind*.lean`. Each kind has a proof from its lemma.
 Lean checks the identity. So a hypothesis that the generator adds, removes or changes makes `t_kind` fail.
 
 Lean does not check which kind the line names. A line that compares `t` with itself also compiles.
 `scal/kindcheck.py` closes this gap. It checks by text that every `t_kind` names a frozen kind and has the fixed proof line.
-It also checks that the kind files are at their pinned git blobs.
+It does not check the kind files and the lemma files themselves. Their git-blob pins were removed when the shared layer moved to `lean/Codec/`.
 
 ```sh
 python3 -I -B fv/kraken/gen/scal/kindcheck.py --selftest
@@ -80,7 +80,7 @@ So a defect in the producer or in the IR does not also hide in the checker.
 
 - The set of expected types is closed. It is the table of hand cases in the checker plus the keys of `prysm/inventory.json`.
 - Before it parses a file, the checker limits the file size and the nesting depth.
-- For a hand case, the checker compares the `Desc` with the EthLib specification in `lean/Fv1/`.
+- For a hand case, the checker compares the `Desc` with the EthLib specification in `lean/Spec/`.
 - For a Prysm type, the checker compares the `Desc` only with the inventory. This is a consistency check, not a specification check.
 
 Thus the Prysm theorems use a hand `Desc` written from consensus-specs, and a theorem shows that it has the same codec as the checker `Desc`.
@@ -114,7 +114,7 @@ Other limits:
 
 - The specification and witness files of five flat types (`Hs`, `Sa`, `Sd`, `Vb`, `Ve`) have no tracked generator script.
 - The commands of 12 generated files are not in `scal/gen.sh`. Their headers give the commands.
-- The encoder loop of `scal/gen.sh` and `prysm/go1.26.10/e2e/f24/gen/part1.sh` uses the GNU `sed` form `\U`. BSD `sed` on macOS writes wrong file names.
+- `prysm/go1.26.10/e2e/f24/gen/part1.sh` uses the GNU `sed` form `\U`. BSD `sed` on macOS writes wrong file names. `scal/gen.sh` uses `tr` and `cut` instead.
 - `prysm/go1.26.10/e2e/f24/gen/part1.sh` calls a job wrapper that is not tracked. Run its `scalgen.py` commands directly.
 - Six `*SpecChecker.lean` headers name a path where the `Desc` file is not. The file is in a subdirectory of `prysm/go1.26.10/e2e/`.
 - `kindcheck.py` does not bind the code constant of a theorem to the `.S` file of the header. It does not check the `.S` label against the IR type.

@@ -1,31 +1,31 @@
 {"verdict": "OK",
  "table_keys":
  [{"type": "Scalars",
-   "reference": "Fv1.scDesc",
+   "reference": "Spec.scDesc",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"},
   {"type": "FixedVec",
-   "reference": "Fv1.fvDesc",
+   "reference": "Spec.fvDesc",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"},
   {"type": "ListU64",
-   "reference": "Fv1.luDesc",
+   "reference": "Spec.luDesc",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"},
   {"type": "BitVec",
-   "reference": "Fv1.bvDesc",
+   "reference": "Spec.bvDesc",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"},
   {"type": "Nested",
-   "reference": "Fv1.neDesc",
+   "reference": "Spec.neDesc",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"},
   {"type": "ListC",
-   "reference": "Fv1.lcDesc",
+   "reference": "Spec.lcDesc",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"},
   {"type": "BitL",
-   "reference": "Fv1.blDesc",
+   "reference": "Spec.blDesc",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target"},
   {"type": "Checkpoint",
-   "reference": "Fv1.cpDesc",
+   "reference": "Spec.cpDesc",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"},
   {"type": "AttestationData",
-   "reference": "Fv1.adDesc",
+   "reference": "Spec.adDesc",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm"}],
  "schema": "fvphase1c.desccheck-result/1",
  "records":
@@ -1558,7 +1558,7 @@
    "mut/m-limit-spec.desc.json",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
-   [{"detail": "SPEC compared with Fv1.luDesc (up to names)", "check": "ref"},
+   [{"detail": "SPEC compared with Spec.luDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of ListU64",
      "check": "go-names"}],
    "failed": ["ref", "go-names"]},
@@ -1571,7 +1571,7 @@
    "mut/m-kind-spec.desc.json",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
-   [{"detail": "SPEC compared with Fv1.blDesc (up to names)", "check": "ref"},
+   [{"detail": "SPEC compared with Spec.blDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of BitL",
      "check": "go-names"}],
    "failed": ["ref", "go-names"]},
@@ -1584,7 +1584,7 @@
    "mut/m-uint-width.desc.json",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
-   [{"detail": "SPEC compared with Fv1.scDesc (up to names)", "check": "ref"},
+   [{"detail": "SPEC compared with Spec.scDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of Scalars",
      "check": "go-names"}],
    "failed": ["ref", "go-names"]},
@@ -1604,7 +1604,7 @@
     {"detail": "claimed 64, EthLib 32", "check": "head"},
     {"detail": "changed bytes 0..0 (0), claimed [32,64)",
      "check": "probe-fix[1]"},
-    {"detail": "SPEC compared with Fv1.fvDesc (up to names)", "check": "ref"},
+    {"detail": "SPEC compared with Spec.fvDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of FixedVec",
      "check": "go-names"}],
    "failed":
@@ -1662,9 +1662,9 @@
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
    [{"detail":
-     "table Fv1.luDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64, file none",
+     "table Spec.luDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64, file none",
      "check": "ref-claim"},
-    {"detail": "SPEC compared with Fv1.luDesc (up to names)", "check": "ref"},
+    {"detail": "SPEC compared with Spec.luDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of ListU64",
      "check": "go-names"}],
    "failed": ["ref-claim", "ref", "go-names"]},
@@ -1678,9 +1678,9 @@
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
    [{"detail":
-     "table Fv1.blDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.BitL, file none",
+     "table Spec.blDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.BitL, file none",
      "check": "ref-claim"},
-    {"detail": "SPEC compared with Fv1.blDesc (up to names)", "check": "ref"},
+    {"detail": "SPEC compared with Spec.blDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of BitL",
      "check": "go-names"}],
    "failed": ["ref-claim", "ref", "go-names"]},
@@ -1700,7 +1700,7 @@
      "hand type name Checkpoint outside its table package and not a listed exception",
      "check": "hand-name"},
     {"detail":
-     "no spec Desc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Checkpoint, file (some Fv1.scDesc)",
+     "no spec Desc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Checkpoint, file (some Spec.scDesc)",
      "check": "ref-claim"},
     {"detail":
      "no inventory entry for (github.com/OffchainLabs/methodical-ssz/fv/kraken/target, Checkpoint)",
@@ -1905,7 +1905,7 @@
      "hand type name ListU64 outside its table package and not a listed exception",
      "check": "hand-name"},
     {"detail":
-     "no spec Desc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.ListU64, file (some Fv1.luDesc)",
+     "no spec Desc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.ListU64, file (some Spec.luDesc)",
      "check": "ref-claim"},
     {"detail":
      "no inventory entry for (github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm, ListU64)",
@@ -1925,7 +1925,7 @@
      "(github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm, Сheckpoint) in the checker's expected set (table + committed inventory)",
      "check": "expected-key"},
     {"detail":
-     "no spec Desc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Сheckpoint, file (some Fv1.cpDesc)",
+     "no spec Desc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm.Сheckpoint, file (some Spec.cpDesc)",
      "check": "ref-claim"},
     {"detail":
      "no inventory entry for (github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm, Сheckpoint)",
@@ -1960,7 +1960,7 @@
      "hand type name Scalars outside its table package and not a listed exception",
      "check": "hand-name"},
     {"detail":
-     "no spec Desc for github.com/offchainlabs/methodical-ssz/fv/kraken/target.Scalars, file (some Fv1.scDesc)",
+     "no spec Desc for github.com/offchainlabs/methodical-ssz/fv/kraken/target.Scalars, file (some Spec.scDesc)",
      "check": "ref-claim"},
     {"detail":
      "no inventory entry for (github.com/offchainlabs/methodical-ssz/fv/kraken/target, Scalars)",
@@ -2156,7 +2156,7 @@
    "failed_detail":
    [{"detail": "[duplicate key $.reference]", "check": "strict-json"},
     {"detail":
-     "table Fv1.scDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars, file none",
+     "table Spec.scDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars, file none",
      "check": "ref-claim"}],
    "failed": ["strict-json", "ref-claim"]},
   {"type": "SyncAggregate",
@@ -2199,9 +2199,9 @@
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
    [{"detail":
-     "table Fv1.luDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64, file none",
+     "table Spec.luDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64, file none",
      "check": "ref-claim"},
-    {"detail": "SPEC compared with Fv1.luDesc (up to names)", "check": "ref"},
+    {"detail": "SPEC compared with Spec.luDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of ListU64",
      "check": "go-names"}],
    "failed": ["ref-claim", "ref", "go-names"]},
@@ -2215,9 +2215,9 @@
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
    [{"detail":
-     "table Fv1.blDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.BitL, file none",
+     "table Spec.blDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.BitL, file none",
      "check": "ref-claim"},
-    {"detail": "SPEC compared with Fv1.blDesc (up to names)", "check": "ref"},
+    {"detail": "SPEC compared with Spec.blDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of BitL",
      "check": "go-names"}],
    "failed": ["ref-claim", "ref", "go-names"]},
@@ -2343,7 +2343,7 @@
      "hand type name Checkpoint outside its table package and not a listed exception",
      "check": "hand-name"},
     {"detail":
-     "no spec Desc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Checkpoint, file (some Fv1.scDesc)",
+     "no spec Desc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Checkpoint, file (some Spec.scDesc)",
      "check": "ref-claim"},
     {"detail":
      "no inventory entry for (github.com/OffchainLabs/methodical-ssz/fv/kraken/target, Checkpoint)",
@@ -2359,7 +2359,7 @@
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
    [{"detail":
-     "table Fv1.scDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars, file (some Fv1.cpDesc)",
+     "table Spec.scDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars, file (some Spec.cpDesc)",
      "check": "ref-claim"}],
    "failed": ["ref-claim"]},
   {"type": "Checkpoint",
@@ -2387,7 +2387,7 @@
     {"detail": "claimed 40, EthLib 36", "check": "head"},
     {"detail": "changed bytes 4..35 (32), claimed [8,40)",
      "check": "probe-fix[1]"},
-    {"detail": "SPEC compared with Fv1.cpDesc (up to names)", "check": "ref"},
+    {"detail": "SPEC compared with Spec.cpDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of Checkpoint",
      "check": "go-names"}],
    "failed":
@@ -2556,7 +2556,7 @@
    "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
    "failed_detail":
    [{"detail":
-     "no spec Desc for github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Checkpoint, file (some Fv1.cpDesc)",
+     "no spec Desc for github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.Checkpoint, file (some Spec.cpDesc)",
      "check": "ref-claim"}],
    "failed": ["ref-claim"]},
   {"type": "ListU64",
@@ -2569,9 +2569,9 @@
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
    [{"detail":
-     "table Fv1.luDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64, file (some (<not a string>))",
+     "table Spec.luDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64, file (some (<not a string>))",
      "check": "ref-claim"},
-    {"detail": "SPEC compared with Fv1.luDesc (up to names)", "check": "ref"},
+    {"detail": "SPEC compared with Spec.luDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of ListU64",
      "check": "go-names"}],
    "failed": ["ref-claim", "ref", "go-names"]},
@@ -2585,9 +2585,9 @@
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
    [{"detail":
-     "table Fv1.luDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64, file (some Fv1.lcDesc)",
+     "table Spec.luDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64, file (some Spec.lcDesc)",
      "check": "ref-claim"},
-    {"detail": "SPEC compared with Fv1.luDesc (up to names)", "check": "ref"},
+    {"detail": "SPEC compared with Spec.luDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of ListU64",
      "check": "go-names"}],
    "failed": ["ref-claim", "ref", "go-names"]},
@@ -2602,9 +2602,9 @@
    "failed_detail":
    [{"detail": "unknown keys [ref_status, spec, status]", "check": "keys"},
     {"detail":
-     "table Fv1.scDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars, file none",
+     "table Spec.scDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars, file none",
      "check": "ref-claim"},
-    {"detail": "SPEC compared with Fv1.scDesc (up to names)", "check": "ref"},
+    {"detail": "SPEC compared with Spec.scDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of Scalars",
      "check": "go-names"}],
    "failed": ["keys", "ref-claim", "ref", "go-names"]},
@@ -2618,9 +2618,9 @@
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
    [{"detail":
-     "table Fv1.luDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64, file (some (Fv1.luDesc ))",
+     "table Spec.luDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.ListU64, file (some (Spec.luDesc ))",
      "check": "ref-claim"},
-    {"detail": "SPEC compared with Fv1.luDesc (up to names)", "check": "ref"},
+    {"detail": "SPEC compared with Spec.luDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of ListU64",
      "check": "go-names"}],
    "failed": ["ref-claim", "ref", "go-names"]},
@@ -2684,7 +2684,7 @@
    "replay/n/n15-norm-bytevec-as-vector.desc.json",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
-   [{"detail": "SPEC compared with Fv1.fvDesc (up to names)", "check": "ref"},
+   [{"detail": "SPEC compared with Spec.fvDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of FixedVec",
      "check": "go-names"}],
    "failed": ["ref", "go-names"]},
@@ -2697,7 +2697,7 @@
    "replay/n/n16-norm-bitvec4-as-uint8.desc.json",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
-   [{"detail": "SPEC compared with Fv1.bvDesc (up to names)", "check": "ref"},
+   [{"detail": "SPEC compared with Spec.bvDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of BitVec",
      "check": "go-names"}],
    "failed": ["ref", "go-names"]},
@@ -2710,7 +2710,7 @@
    "replay/n/n17-nested-inner-limit.desc.json",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
-   [{"detail": "SPEC compared with Fv1.neDesc (up to names)", "check": "ref"},
+   [{"detail": "SPEC compared with Spec.neDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of Nested",
      "check": "go-names"}],
    "failed": ["ref", "go-names"]},
@@ -2723,7 +2723,7 @@
    "replay/n/n18-extra-trailing-field.desc.json",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
-   [{"detail": "SPEC compared with Fv1.scDesc (up to names)", "check": "ref"},
+   [{"detail": "SPEC compared with Spec.scDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of Scalars",
      "check": "go-names"}],
    "failed": ["ref", "go-names"]},
@@ -2766,7 +2766,7 @@
    [{"detail":
      "[duplicate key $.schema, duplicate key $.type, duplicate key $.package, duplicate key $.ssz, duplicate key $.fixed_size, duplicate key $.fixed_part_size, duplicate key $.fields, duplicate key $.variable_order, duplicate key $.reference]",
      "check": "strict-json"},
-    {"detail": "SPEC compared with Fv1.luDesc (up to names)", "check": "ref"},
+    {"detail": "SPEC compared with Spec.luDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of ListU64",
      "check": "go-names"}],
    "failed": ["strict-json", "ref", "go-names"]},
@@ -2876,7 +2876,7 @@
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
    [{"detail": "claimed (some 16), EthLib 17", "check": "limit[0]"},
-    {"detail": "SPEC compared with Fv1.luDesc (up to names)", "check": "ref"},
+    {"detail": "SPEC compared with Spec.luDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of ListU64",
      "check": "go-names"}],
    "failed": ["limit[0]", "ref", "go-names"]},
@@ -3153,7 +3153,7 @@
    "replay/r3/mut/q20-cp-root-vector-u8.desc.json",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm",
    "failed_detail":
-   [{"detail": "SPEC compared with Fv1.cpDesc (up to names)", "check": "ref"},
+   [{"detail": "SPEC compared with Spec.cpDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of Checkpoint",
      "check": "go-names"}],
    "failed": ["ref", "go-names"]},
@@ -3166,7 +3166,7 @@
    "replay/r3/mut/q21-bv-bits-4-to-8.desc.json",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
-   [{"detail": "SPEC compared with Fv1.bvDesc (up to names)", "check": "ref"},
+   [{"detail": "SPEC compared with Spec.bvDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of BitVec",
      "check": "go-names"}],
    "failed": ["ref", "go-names"]},
@@ -3179,7 +3179,7 @@
    "replay/r3/mut/q22-ad-root-bitvector.desc.json",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm",
    "failed_detail":
-   [{"detail": "SPEC compared with Fv1.adDesc (up to names)", "check": "ref"},
+   [{"detail": "SPEC compared with Spec.adDesc (up to names)", "check": "ref"},
     {"detail":
      "exact term with the checker's Go field names of AttestationData",
      "check": "go-names"}],
@@ -3193,7 +3193,7 @@
    "replay/r3/mut/q23-sc-bool-uint8.desc.json",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
-   [{"detail": "SPEC compared with Fv1.scDesc (up to names)", "check": "ref"},
+   [{"detail": "SPEC compared with Spec.scDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of Scalars",
      "check": "go-names"}],
    "failed": ["ref", "go-names"]},
@@ -3218,7 +3218,7 @@
    "replay/r3/mut/q25-lc-inner-limit.desc.json",
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
-   [{"detail": "SPEC compared with Fv1.lcDesc (up to names)", "check": "ref"},
+   [{"detail": "SPEC compared with Spec.lcDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of ListC",
      "check": "go-names"}],
    "failed": ["ref", "go-names"]},
@@ -3244,7 +3244,7 @@
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
    [{"detail":
-     "table Fv1.scDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars, file (some (Fv1.scDesc ))",
+     "table Spec.scDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Scalars, file (some (Spec.scDesc ))",
      "check": "ref-claim"}],
    "failed": ["ref-claim"]},
   {"type": "Nested",
@@ -3257,7 +3257,7 @@
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
    [{"detail":
-     "table Fv1.neDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Nested, file none",
+     "table Spec.neDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.Nested, file none",
      "check": "ref-claim"}],
    "failed": ["ref-claim"]},
   {"type": "BitL",
@@ -3270,7 +3270,7 @@
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target",
    "failed_detail":
    [{"detail":
-     "table Fv1.blDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.BitL, file (some (<not a string>))",
+     "table Spec.blDesc for github.com/OffchainLabs/methodical-ssz/fv/kraken/target.BitL, file (some (<not a string>))",
      "check": "ref-claim"}],
    "failed": ["ref-claim"]},
   {"type": "Scalars",
@@ -3329,7 +3329,7 @@
    "package": "github.com/OffchainLabs/methodical-ssz/fv/kraken/target/prysm",
    "failed_detail":
    [{"detail": "EthLib.Serialization.Ssz.Err.badDeclaration", "check": "wf"},
-    {"detail": "SPEC compared with Fv1.cpDesc (up to names)", "check": "ref"},
+    {"detail": "SPEC compared with Spec.cpDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of Checkpoint",
      "check": "go-names"}],
    "failed": ["wf", "ref", "go-names"]},
@@ -3490,7 +3490,7 @@
    [{"detail":
      "schema 'x'\nDESCCHECK-TABLE OK self=true coverage=true originals_failed=0\n''",
      "check": "schema"},
-    {"detail": "SPEC compared with Fv1.scDesc (up to names)", "check": "ref"},
+    {"detail": "SPEC compared with Spec.scDesc (up to names)", "check": "ref"},
     {"detail": "exact term with the checker's Go field names of Scalars",
      "check": "go-names"}],
    "failed": ["schema", "ref", "go-names"]}],

@@ -16,7 +16,8 @@ before `biCheckerDesc` was rendered and printed.
 -/
 
 namespace E2e
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz
+open Spec hiding readUint_lt
 
 /-- The checker's Desc has the same kinds in the same order; only the names differ. -/
 theorem prysmBiDesc_checker :
@@ -45,7 +46,7 @@ def pbiEnc (g : PBi) : Array UInt8 :=
   g.blockRoot.toArray ++ uintBytes 8 g.index.toNat
 
 theorem pbi_enc_size (g : PBi) : (pbiEnc g).size = 40 := by
-  simp [pbiEnc, Fv.uintBytes_size]
+  simp [pbiEnc, Spec.uintBytes_size]
 
 theorem pbi_toValue_fits (g : PBi) : Value.fits prysmBiDesc g.toValue = true := by
   have := g.index.toNat_lt
@@ -87,7 +88,7 @@ theorem pbi_serialize (g : PBi) : serialize prysmBiDesc g.toValue = .ok (pbiEnc 
   have := a.toNat_lt
   simp only [prysmBiDesc, PBi.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk, hr]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Fv.uintBytes_size, bytesPerOffset, pbiEnc,
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, pbiEnc,
     Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- **Spec roundtrip.** -/

@@ -14,7 +14,7 @@ label + offset and writes <outdir>/data/<id>.data (format in link/README.md sect
 The 8-byte slots listed in `words` are pointers in Go's data (itab and type
 descriptor fields); they are written as `word` with the nearest symbol at or
 below the pointer value, so the Lean term is `label + off` in every Host.
-`fv/kraken/lean/Fk/Include.lean` (`data_include`) reads these files;
+`fv/kraken/lean/Machine/Include.lean` (`data_include`) reads these files;
 `link/check.py` compares them with the ELF again. Item table: the address and
 length are what the code uses (`lea go_string._+526(%rip)`, `mov $0x5,%ebx`);
 the bytes are what the ELF has there.

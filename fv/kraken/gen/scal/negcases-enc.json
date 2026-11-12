@@ -1,13 +1,13 @@
 [
  {
   "id": "enc-block-control",
-  "module": "E2eScal/EncBlock.lean",
+  "module": "Codec/EncodeMemmove.lean",
   "theorem": "enc32_call",
   "kind": "control"
  },
  {
   "id": "enc-block-stmt-rcx",
-  "module": "E2eScal/EncBlock.lean",
+  "module": "Codec/EncodeMemmove.lean",
   "theorem": "enc32_call",
   "kind": "stmt",
   "old": "(hrcx : s.regs.rcx.toNat = 32)",
@@ -15,7 +15,7 @@
  },
  {
   "id": "enc-block-stmt-dst-unchanged",
-  "module": "E2eScal/EncBlock.lean",
+  "module": "Codec/EncodeMemmove.lean",
   "theorem": "enc32_call",
   "kind": "stmt",
   "old": "⋆ Eq (root.At p) ⋆ Eq (root.At d) ⋆ R) st.data.dmem)",
@@ -23,7 +23,7 @@
  },
  {
   "id": "enc-block-stmt-no-src",
-  "module": "E2eScal/EncBlock.lean",
+  "module": "Codec/EncodeMemmove.lean",
   "theorem": "enc32_call",
   "kind": "stmt",
   "old": "(h_mem : s.dmem =⋆ Eq (rslot.At aRet) ⋆ Eq (scratch.At aLo) ⋆ Eq (root.At p) ⋆ Eq (e.At d) ⋆ R)",
@@ -183,13 +183,13 @@
  },
  {
   "id": "enc-rej-block-control",
-  "module": "E2eScal/EncReject.lean",
+  "module": "Codec/EncodeRejectTail.lean",
   "theorem": "enc_reject_tail",
   "kind": "control"
  },
  {
   "id": "enc-rej-block-stmt-err-swap",
-  "module": "E2eScal/EncReject.lean",
+  "module": "Codec/EncodeRejectTail.lean",
   "theorem": "enc_reject_tail",
   "kind": "stmt",
   "old": "∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi = e0 ∧ st.data.regs.rsi = e1",
@@ -197,7 +197,7 @@
  },
  {
   "id": "enc-rej-block-stmt-rsp",
-  "module": "E2eScal/EncReject.lean",
+  "module": "Codec/EncodeRejectTail.lean",
   "theorem": "enc_reject_tail",
   "kind": "stmt",
   "old": "∧ st.data.regs.rsp.toBitVec = aRa + 8 ∧",
@@ -205,7 +205,7 @@
  },
  {
   "id": "enc-rej-block-stmt-fp",
-  "module": "E2eScal/EncReject.lean",
+  "module": "Codec/EncodeRejectTail.lean",
   "theorem": "enc_reject_tail",
   "kind": "stmt",
   "old": "(hFp : relAddr sub c sp = aFp) (hRa : aFp + 8 = aRa)",

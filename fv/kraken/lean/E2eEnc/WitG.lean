@@ -1,6 +1,6 @@
 import E2eEnc.Grow
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witnesses of `dc_e2e_marshal_grow_main` (grow at site 1): n = 0, 1, 128
@@ -14,7 +14,7 @@ Host: data labels, the real Go 1.26.10 `(*v1alpha1.DataColumnsByRootIdentifier).
 Frame `R`: the receiver words not read, the stack gaps at rsp − 96 (32 bytes) and rsp − 48, and the spare bytes.
 -/
 
-open Fk Fk.W E2eEnc E2eEnc.Code
+open Machine Runtime TestTarget Machine.Witness E2eEnc E2eEnc.Code
 
 namespace E2eEnc.WitG
 

@@ -1,5 +1,5 @@
 import E2eScal.AcceptTies
-import E2eScal.FieldComp
+import Codec.FieldFrame
 import E2eScal.ViSpec
 import E2e.Epoch
 import E2eAd.Prims
@@ -15,7 +15,7 @@ This type has no hand accept statement: the statement is the kind instance of th
 PendingConsolidation / PendingPartialWithdrawal (`layCal`), whose two hand statements are `rfl`-tied.
 -/
 
-open Fk E2e E2eAd E2eAd.Code E2eScal.H6Code E2eScal.H5Code E2eScal.BhCode E2eScal
+open Machine Runtime TestTarget E2e E2eAd E2eAd.Code E2eScal.H6Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.Gen5

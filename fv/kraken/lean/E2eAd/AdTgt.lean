@@ -15,7 +15,7 @@ je L_3a7`, 222 `L_3a7`, 223–225 epilogue and `retq` with the callee's nil erro
 The text is segment 3's with the Target offsets and the epilogue.
 -/
 
-open Fk E2eAd.Code
+open Machine Runtime TestTarget E2eAd.Code
 variable [Host]
 
 namespace E2eAd

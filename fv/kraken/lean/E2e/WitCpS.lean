@@ -1,9 +1,9 @@
 import E2e.CpSpecM
-import Fk.WHost
+import Machine.WitnessHost
 
 /-! # Witness of `cp_e2e_size_main`: the real SizeSSZ code alone; memory = the return slot. -/
 
-open Fk Fk.W E2e E2e.Code
+open Machine Runtime TestTarget Machine.Witness E2e E2e.Code
 
 namespace E2e.WitCpS
 

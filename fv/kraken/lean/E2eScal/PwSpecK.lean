@@ -11,7 +11,7 @@ NOT here: the accept side (`pw_e2e_accept_spec_k`): the accept theorem is not pr
 Not stated here: that the two callee error paths (`fmt.errorf` wraps) are unreachable when `size = 24`.
 -/
 
-open Fk E2e E2eScal.H4Code E2eScal EthLib.Serialization.Ssz
+open Machine TestTarget E2e E2eScal.H4Code E2eScal EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.H4

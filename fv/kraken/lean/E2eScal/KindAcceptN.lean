@@ -28,8 +28,9 @@ stack slots; `decStP` renders it. The accept proof chains the theorems with `eve
 Ties to the hand statements: `AcceptTies.lean`.
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
+open Codec
 namespace E2eScal
 
 /-- A stack offset from the entry rsp: `rsp + n` or `rsp - n`. -/

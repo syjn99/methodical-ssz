@@ -14,7 +14,7 @@ closed `g0`; a byte-literal equality is not stated: `decide` does not reduce
 `uintBytes`/`Vector.ofFn`, and `native_decide` is not allowed).
 -/
 
-open Fk Fk.W E2e E2e.Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget Machine.Witness E2e E2e.Code EthLib.Serialization.Ssz
 
 namespace E2e.WitCpA
 
@@ -47,7 +47,7 @@ theorem cp_accept_spec_runs (g0 : PCp) (zmms : RegZmms) (flags : StatusFlags) :
       subst hgg
       generalize hE : (uintBytes 8 g.epoch.toNat).toList = e8
       generalize hR : g.root.toList = root
-      have he8 : e8.length = 8 := by rw [← hE, Array.length_toList, Fv.uintBytes_size]
+      have he8 : e8.length = 8 := by rw [← hE, Array.length_toList, Spec.uintBytes_size]
       have hroot : root.length = 32 := by rw [← hR]; simp
       have H : Eq ((block e8 root).At (0x10000 : BitVec 64)) (mem e8 root) := rfl
       wit_split [he8, hroot]

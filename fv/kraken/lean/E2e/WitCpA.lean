@@ -1,7 +1,7 @@
 import E2e.CpAccept
-import Fk.RtCopy
-import Fk.BumpMore
-import Fk.WHost
+import Runtime.CopyModel
+import Runtime.BumpAllocatorVariants
+import Machine.WitnessHost
 
 /-!
 # Witness of `cp_e2e_accept_main` (decoder accept path)
@@ -19,7 +19,7 @@ word and root, every premise holds and the decoder returns nil with the
 receiver's `Epoch` = the 8 input bytes.
 -/
 
-open Fk Fk.W E2e E2e.Code
+open Machine Runtime TestTarget Machine.Witness E2e E2e.Code
 
 namespace E2e.WitCpA
 

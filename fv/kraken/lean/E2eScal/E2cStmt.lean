@@ -24,7 +24,7 @@ No growslice branch, no length reject, no morestack path. Not a complete encoder
 Each statement is an `abbrev … : Prop`; `E2cSame.lean` proves `type_of% generated = this` by `rfl`.
 -/
 
-open Fk E2eScal E2eScal.Enc2Code
+open Machine Runtime TestTarget E2eScal Codec E2eScal.Enc2Code
 variable [Host]
 
 namespace E2eScal.E2c

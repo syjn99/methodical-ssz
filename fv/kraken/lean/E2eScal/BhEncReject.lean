@@ -1,10 +1,10 @@
 import E2eScal.BhEncMain
-import E2eScal.EncReject
+import Codec.EncodeRejectTail
 import E2e.CpMarshalR
-import Fk.RtCopy
+import Runtime.CopyModel
 
 /-!
-# Length rejects of `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo` through `E2eScal.enc_reject_tail`
+# Length rejects of `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo` through `Codec.enc_reject_tail`
 
 Go source: `if size := len(b.ParentRoot); size != 32 { return nil, ssz.ErrBytesLength }` (the same for
 StateRoot and BodyRoot). Directive indices of `E2eScal.BhCode.BhMarshal`: the three `jne` are 65, 93 and
@@ -25,9 +25,10 @@ with a smaller capacity is NOT covered. The morestack path is not covered. The t
 premise (initialised `ssz.ErrBytesLength`).
 -/
 
-open Fk E2eScal.BhCode
+open Machine Runtime TestTarget E2eScal.BhCode
 variable [Host]
 
+open Codec
 namespace E2eScal.Bh
 
 set_option maxRecDepth 100000 in

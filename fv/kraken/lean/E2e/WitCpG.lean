@@ -1,6 +1,6 @@
 import E2e.CpMarshalG
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 import E2e.GoVal
 
 /-!
@@ -17,7 +17,7 @@ window (rsp = 0x12180) and `dst` at 0x121a0 = a 30-byte prefix with capacity 36
 `R`: the 8-byte frame gap at rsp − 72 and the 6 spare bytes.
 -/
 
-open Fk Fk.W E2e E2e.Code
+open Machine Runtime TestTarget Machine.Witness E2e E2e.Code
 
 namespace E2e.WitCpG
 

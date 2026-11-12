@@ -1,7 +1,7 @@
-import Fk.Contracts
-import Fk.Frame
-import Fk.Bytes
-import Fk.Labels
+import Runtime.Contracts
+import Machine.Frame
+import Machine.Bytes
+import Machine.Labels
 import E2e.Data
 import E2e.Code
 import E2eAd.Code
@@ -57,7 +57,7 @@ The callee checks the stack guard at entry rsp − 88, hence `guard + 88 < rsp`.
 so the return slot holds directive 56 at the end. Error-path frame slots are untouched on this path (in `R`).
 -/
 
-open Fk E2e E2eAd.Code E2eScal.H5Code E2eScal.BhCode
+open Machine Runtime TestTarget E2e E2eAd.Code E2eScal.H5Code E2eScal.BhCode
 variable [Host]
 
 namespace E2eScal.H5

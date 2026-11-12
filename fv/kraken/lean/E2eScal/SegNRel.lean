@@ -1,6 +1,6 @@
-import E2eScal.KindN
-import E2eScal.Kind
-import E2eScal.KindZ
+import Codec.Kind.FixedBytesDecode
+import Codec.Kind.FieldPatterns
+import Codec.Kind.Bytes32DecodeOffsetZero
 import E2eScal.DmSeg0
 
 /-!
@@ -19,8 +19,9 @@ re-proved from the new ones: the new lemmas run the same proof text again.
   transparency: the template definitions unfold).
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
+open Codec
 namespace E2eScal
 
 theorem rootDecHead_eq_bytes : rootDecHead = bytesDecHead 32 := rfl

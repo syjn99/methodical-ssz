@@ -83,7 +83,7 @@ An item with only an `at` line gives only an address. The error globals `ssz.Err
 
 ## 6. The include interface
 
-`data_include <id>` (`lean/Fk/Include.lean`) reads `link/out/data/<id>.data` and defines:
+`data_include <id>` (`lean/Machine/Include.lean`) reads `link/out/data/<id>.data` and defines:
 
 - `<id> : List UInt8`: the bytes of the item. A `word` line gives the 8 bytes of `(label "<label>" + <offset>)`. Then the definition depends on the `Host`.
 - `<id>_addr : BitVec 64`: `(label "<label>" + <offset>).toBitVec`, without `+ 0` for offset 0.

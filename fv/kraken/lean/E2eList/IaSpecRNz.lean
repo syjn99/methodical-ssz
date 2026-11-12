@@ -9,7 +9,7 @@ EthLib rejects (`pia_spec_rejects`: the Go check that fails is one of `iaChecks`
 `fmt.errorf` error (`ia_e2e_reject_misaligned_nz`, `ia_e2e_reject_toobig_nz`). The text of `IaSpecR.lean`.
 -/
 
-open Fk E2e EthLib.Serialization.Ssz E2eList.Code
+open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz E2eList.Code
 variable [Host]
 
 namespace E2eList

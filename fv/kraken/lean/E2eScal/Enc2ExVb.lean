@@ -1,5 +1,5 @@
 import E2eScal.EncTies
-import E2eScal.EncFrameTest
+import Codec.EncodeFrameTest
 import E2eScal.Enc2Code
 
 /-!
@@ -14,7 +14,7 @@ theorem has a `_kind` line (`encHeadKindN`, `encFieldKindN`, `encEpiKindN`, `enc
 growslice branches, the length rejects, the morestack path.
 -/
 
-open Fk E2eScal E2eScal.Enc2Code
+open Machine Runtime TestTarget E2eScal Codec E2eScal.Enc2Code
 variable [Host]
 
 namespace E2eScal.Gen6
@@ -194,7 +194,7 @@ theorem vb_g6_f0 : ∀ (k : Nat) (hk : VbMarshal.IsInfixAt Host.prog k) (hf : La
     (rsp.toBitVec - 112) (rsp.toBitVec - 40) (by eb) ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) (by rw [List.length_take, Int.toBytes_length]; rfl) _ _ _ (by rfl) (by ecancel)
   intro m5 H5; kn; simp only [Reg64s.get64] at H5
   simp only [toBytes_ofInt_ofBytes 64 8 rfl v0 hv0] at H5
-  have hl33 := Fk.label_at' hk hf (j := 33)
+  have hl33 := Machine.label_at' hk hf (j := 33)
     (by simp only [VbMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [VbMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_cmp_jae_t Reg64.rdi Reg64.rdx _ _ (k + 17) (k + 33) (win hk 17 2) (by rfl) hl33 _ _ (by show ((rcx.toBitVec + 8) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
@@ -298,7 +298,7 @@ theorem vb_g6_f1 : ∀ (k : Nat) (hk : VbMarshal.IsInfixAt Host.prog k) (hf : La
   apply kstep_ldb Reg64.r8 Reg64.rax 16 _ (k + 37) (k + 38) (win hk 37 1) (by rfl) (by rfl)
     rax.toBitVec (rax.toBitVec + 16) (by eb) v1 hv1 _ _ _ (by rfl) (by ecancel)
   kn
-  have hl51 := Fk.label_at' hk hf (j := 51)
+  have hl51 := Machine.label_at' hk hf (j := 51)
     (by simp only [VbMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [VbMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_cmp_jae_t Reg64.rdi Reg64.rdx _ _ (k + 38) (k + 51) (win hk 38 2) (by rfl) hl51 _ _ (by show ((rcx.toBitVec + 16) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)

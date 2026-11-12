@@ -1,6 +1,6 @@
 import E2eScal.BhEncReject
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witnesses of `bh_e2e_marshal_reject{1,2,3}_main` (BeaconBlockHeader encoder, length rejects)
@@ -19,7 +19,7 @@ receiver need not be a Go value (the theorem does not read the capacity word or 
 The frame `R` is every piece of the block that the theorem does not name.
 -/
 
-open Fk Fk.W E2eScal E2eScal.BhCode E2eScal.Bh
+open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.BhCode E2eScal.Bh
 
 namespace E2eScal.WitBhMR
 

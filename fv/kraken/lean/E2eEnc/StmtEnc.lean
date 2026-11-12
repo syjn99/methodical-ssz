@@ -1,7 +1,7 @@
-import Fk.Contracts
-import Fk.Frame
-import Fk.Bytes
-import Fk.Labels
+import Runtime.Contracts
+import Machine.Frame
+import Machine.Bytes
+import Machine.Labels
 import E2e.Data
 import E2eEnc.Code
 import E2eEnc.Defs
@@ -32,7 +32,7 @@ directive 16, grow site 1 only). Locals: x − 16 (root pointer, grow site 1 onl
 only). Callee spill area: x − 136 (40 bytes, growslice). Runtime call return slot x − 144; scratch `S` below it.
 -/
 
-open Fk EthLib.Serialization.Ssz E2eEnc.Code
+open Machine Runtime TestTarget EthLib.Serialization.Ssz E2eEnc.Code
 variable [Host]
 
 namespace E2eEnc
@@ -270,7 +270,7 @@ def dc_marshal_spec_stmt : Prop :=
       ⋆ Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 pc.toInt).At (s.regs.rax.toBitVec + 32))
       ⋆ Eq ((Int.toBytes 8 nb.toInt).At (s.regs.rax.toBitVec + 40))
-      ⋆ Eq (g.root.toList.At pr) ⋆ Eq ((Fv1.u64Bytes g.cols).toList.At pc)
+      ⋆ Eq (g.root.toList.At pr) ⋆ Eq ((Spec.u64Bytes g.cols).toList.At pc)
       ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (d.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) ⋆ R)
     (hguard : guard.toNat + 8 < s.regs.rsp.toNat)
     (hcap : s.regs.rcx.toNat + 36 + 8 * g.cols.length ≤ s.regs.rdi.toNat)
@@ -309,7 +309,7 @@ def dc_marshal_grow_spec_stmt : Prop :=
       ⋆ Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 pc.toInt).At (s.regs.rax.toBitVec + 32))
       ⋆ Eq ((Int.toBytes 8 nb.toInt).At (s.regs.rax.toBitVec + 40))
-      ⋆ Eq (g.root.toList.At pr) ⋆ Eq ((Fv1.u64Bytes g.cols).toList.At pc)
+      ⋆ Eq (g.root.toList.At pr) ⋆ Eq ((Spec.u64Bytes g.cols).toList.At pc)
       ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Heap avail ⋆ R)
     (hguard : guard.toNat + 8 < s.regs.rsp.toNat)
     (hlc : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 32)

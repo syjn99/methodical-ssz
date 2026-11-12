@@ -1,6 +1,6 @@
-import Fk.Step
-import Fk.Labels
-import Fk.Bytes
+import Machine.Step
+import Machine.Labels
+import Machine.Bytes
 import E2eScal.E1Code
 import E2e.Data
 import E2e.CpReject
@@ -17,7 +17,7 @@ are the global's value after package init (premise, as in `cp_e2e_reject_size_ma
 The decoder has no `fmt.errorf` wrap and no callee error path: the size check is its only reject.
 -/
 
-open Fk E2eScal.E1Code
+open Machine TestTarget E2eScal.E1Code
 variable [Host]
 
 namespace E2eScal.E1

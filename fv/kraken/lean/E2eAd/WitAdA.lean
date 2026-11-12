@@ -1,8 +1,8 @@
 import E2eAd.AdAccept
 import E2eAd.BumpNew72
-import Fk.RtCopy
-import Fk.BumpMore
-import Fk.WHost
+import Runtime.CopyModel
+import Runtime.BumpAllocatorVariants
+import Machine.WitnessHost
 
 /-!
 # Witness of `ad_e2e_accept_main` (AttestationData decoder accept path)
@@ -22,7 +22,7 @@ old Source / Target word (nil = zero, or any other bytes) every premise holds an
 returns nil.
 -/
 
-open Fk Fk.W E2e E2eAd E2eAd.Code
+open Machine Runtime TestTarget Machine.Witness E2e E2eAd E2eAd.Code
 
 namespace E2eAd.WitAdA
 

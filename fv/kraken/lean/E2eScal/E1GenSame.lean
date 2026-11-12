@@ -12,15 +12,16 @@ Kernel-checked here: the template definition and the template lemma statement ar
 `E1Accept.lean` is not changed.
 -/
 
-open Fk E2eScal.E1Code
+open Machine Runtime TestTarget E2eScal.E1Code
 
+open Codec
 namespace E2eScal.E1Gen
 
 /-- The offset-0 template block is the hand block of `E1Seg0.lean`. -/
-theorem rootDecMidZ_eq_hand : @E2eScal.rootDecMidZ = @E2eScal.E1.rootDecMid0 := rfl
+theorem rootDecMidZ_eq_hand : @Codec.rootDecMidZ = @E2eScal.E1.rootDecMid0 := rfl
 
 /-- The offset-0 template lemma has the statement of the hand lemma. -/
-theorem rootdec_seg_z_stmt_eq_hand : type_of% @E2eScal.rootdec_seg_z = type_of% @E2eScal.E1.rootdec_seg0 := rfl
+theorem rootdec_seg_z_stmt_eq_hand : type_of% @Codec.rootdec_seg_z = type_of% @E2eScal.E1.rootdec_seg0 := rfl
 
 variable [Host]
 
@@ -29,7 +30,7 @@ set_option linter.unusedVariables false in
 instance used by `E1Accept.e1_e2e_accept_main` (`k + 13`, `k + 26`, parameters 48 56 24 8 16 24). -/
 theorem e1_dec_DepositRoot_seg_hand (k : Nat) (hk : E1Unmarshal.IsInfixAt Host.prog k)
     (hf : LabelsFresh E1Unmarshal k)
-    (hA : (E2eScal.rootDecHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75" 48 16 24).IsInfixAt Host.prog (k + 13))
+    (hA : (Codec.rootDecHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75" 48 16 24).IsInfixAt Host.prog (k + 13))
     (hB : (E2eScal.E1.rootDecMid0 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_b2" 48 56 24 8 16 24).IsInfixAt Host.prog (k + 26))
     (hl : label "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75" = Host.addrOf (k + 26)) :
     type_of% (E2eScal.E1.rootdec_seg0 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_75" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ_b2" 48 56 24 8 16 24 (k + 13) (k + 26) hA hB hl) :=

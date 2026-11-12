@@ -21,9 +21,9 @@ G5_CALLEES = {PRIM + 'Slot.UnmarshalSSZ': ('E2eAd.Code.SlUnmarshal', 'S', 'sl_ua
               PRIM + 'CommitteeIndex.UnmarshalSSZ': ('E2eAd.Code.CiUnmarshal', 'C', 'ci_uacc_holds'),
               PRIM + 'ValidatorIndex.UnmarshalSSZ': ('E2eScal.BhCode.ViUnmarshal', 'V', 'vi_uacc_holds'),
               PRIM + 'Epoch.UnmarshalSSZ': ('E2e.Code.EpUnmarshal', 'E', 'ep_uacc_holds')}
-G5_IMPORTS = ['E2eScal.AcceptTies', 'E2eScal.FieldComp', 'E2eScal.ViSpec', 'E2e.Epoch', 'E2eAd.Prims',
-              'E2eScal.Compose', 'E2eScal.RejectTies']
-G5_OPENS = 'E2e E2eAd E2eScal'
+G5_IMPORTS = ['E2eScal.AcceptTies', 'Codec.FieldFrame', 'E2eScal.ViSpec', 'E2e.Epoch', 'E2eAd.Prims',
+              'Codec.DecoderHeadEpilogue', 'E2eScal.RejectTies']
+G5_OPENS = 'E2e E2eAd E2eScal Codec'
 # the statement kinds of the GEN5 lemma unit's hand-over (kindcheck.py pins their modules)
 G5_KINDS = ('decHeadKindN', 'decFieldKindN', 'decEpiKindN', 'decAcceptKindN', 'decRejectKindN')
 
@@ -359,12 +359,12 @@ class T:
             tr = [self.vterm(self.slot_at(d, -fr + 8 * j), xs) for j in range(3)]
             spl = f'({tr[0][0]} ++ ({tr[1][0]} ++ {tr[2][0]}))'
             hspl = '(by simp only [List.length_append, Int.toBytes_length, ' + ', '.join(h for _, h in tr if h != LEN) + '])'
-            memp = (f"(by rw [g5_j3 {soff(-fr)} {soff(-fr + 8)} {soff(-fr + 16)} _ _ _ {tr[0][1]} {tr[1][1]} {tr[2][1]} (by bv_omega) (by bv_omega)]; ecancel)")
+            memp = (f"(by rw [frame_j3 {soff(-fr)} {soff(-fr + 8)} {soff(-fr + 16)} _ _ _ {tr[0][1]} {tr[1][1]} {tr[2][1]} (by bv_omega) (by bv_omega)]; ecancel)")
         rs, hrs = self.vterm(self.slot_at(d, aret), xs)
         lo, hlo = self.vterm(self.lo_val(d), xs)
         ls, hls = self.vterm(self.slot_at(d, f['dS'] - fr), xs)
         x = self.rt['x']
-        hLo = f"(g5_lo _ {fr} {self.rt['loB']} S (by decide))" if x == 8 else f"(g5_lo0 _ {fr} {self.rt['loB']} S (by decide))"
+        hLo = f"(frame_lo _ {fr} {self.rt['loB']} S (by decide))" if x == 8 else f"(frame_lo0 _ {fr} {self.rt['loB']} S (by decide))"
         St = '(S + 8)' if x == 8 else 'S'
         h0 = self.heap(i)
         av = 'avail' if h0 == 0 else f'(avail - {h0})'
@@ -433,8 +433,8 @@ class T:
             s += (f"  have hlS : ({lo}.take S).length = S := by simp [{hlo}]\n"
                   f"  have hl8 : ({lo}.drop S).length = 8 := by simp [{hlo}]\n"
                   f"  have hLs : {lo} = {lo}.take S ++ {lo}.drop S := (List.take_append_drop S {lo}).symm\n")
-            j3 = P(f"g5_j3 {soff(-fr)} {soff(-fr + 8)} {soff(-fr + 16)} _ _ _")
-            lo8 = P(f"g5_lo8 (s.regs.rsp.toBitVec - {self.rt['loB']}) S hS _ _")
+            j3 = P(f"frame_j3 {soff(-fr)} {soff(-fr + 8)} {soff(-fr + 16)} _ _ _")
+            lo8 = P(f"frame_lo8 (s.regs.rsp.toBitVec - {self.rt['loB']}) S hS _ _")
             if merged:
                 s += f"  rw [hXs, hLs, {j3} hq0 hq1 hq2 (by bv_omega) (by bv_omega), {lo8} hlS hl8] at Hm\n"
                 post_x.append((f"({X}.take 8 ++ (Int.toBytes 8 {src}.toInt ++ ({X}.drop 8).drop 8))",
@@ -490,9 +490,9 @@ class T:
         a = e['add']
         if e['form'] == 'e20':
             s += self.prefix(d, '', destructure=False)
-            s += (f"  have hE := E2eScal.infix_sub (q := E2eScal.decEpi) {a} hk\n"
-                  f"    (by simp only [{self.Cq}, E2eScal.decEpi, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])\n")
-            s += P(f"  refine eventually_trans _ _ _ _ (E2eScal.decepi_seg (k + {a}) hE (s.regs.rsp.toBitVec - {fr}) (s.regs.rsp.toBitVec - 8) s.regs.rsp.toBitVec\n"
+            s += (f"  have hE := Codec.infix_sub (q := Codec.decEpi) {a} hk\n"
+                  f"    (by simp only [{self.Cq}, Codec.decEpi, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])\n")
+            s += P(f"  refine eventually_trans _ _ _ _ (Codec.decepi_seg (k + {a}) hE (s.regs.rsp.toBitVec - {fr}) (s.regs.rsp.toBitVec - 8) s.regs.rsp.toBitVec\n"
                    "    (by bv_omega) (by bv_omega) rbp ra r14 _ d hrsp hr14 (by ecancel)) ?_\n")
             s += tail + "  · dsimp only; ecancel\n"
         else:
@@ -554,7 +554,7 @@ class T:
              "          ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrSize\" + 8).toBitVec) ⋆ R) st.data.dmem)\n"
              "      ⟨s, Host.addrOf k⟩ := by\n"
              "  intro k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard hlen\n"
-             f"  have hl := Fk.label_at' hk hf (j := {r['jl']})\n"
+             f"  have hl := Machine.label_at' hk hf (j := {r['jl']})\n"
              f"    (by simp only [{C}, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)\n"
              f"    (by simp only [{C}, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)\n"
              f"  exact decrej_seg _ _ _ _ {r['F']} {r['dB']} {self.ssz()} _ k (win hk 0 11) (by rfl) (by decide)\n"

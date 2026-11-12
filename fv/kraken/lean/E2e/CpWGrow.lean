@@ -1,5 +1,5 @@
 import E2e.CpWHead
-import Fk.RtCopy
+import Runtime.CopyModel
 
 /-!
 # `(*v1alpha1.Checkpoint).MarshalSSZTo`: the remaining capacity cases and the reject after growth
@@ -24,7 +24,7 @@ The error words `e0`, `e1` are the global's value as it is; that they are non-ni
 (no premise gives it): differential only.
 -/
 
-open Fk E2e.Code
+open Machine Runtime TestTarget E2e.Code
 variable [Host]
 
 namespace E2e

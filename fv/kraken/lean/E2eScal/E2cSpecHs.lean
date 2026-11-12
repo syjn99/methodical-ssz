@@ -1,6 +1,6 @@
 import E2eScal.Gen6HsEnc
 import E2eScal.HsSpec
-import Fk.RtCopy
+import Runtime.CopyModel
 
 /-!
 # HistoricalSummary encoder fast path (generated theorem) against the independent Desc (unit E2-C)
@@ -12,7 +12,7 @@ Shape of `E2eScal.Bh.bh_e2e_marshal_spec_k`. Encoder fast path only (`len + 64 â
 lengths). Emitted by the unit's evidence tool `e2cemit.py`, then built and kernel-checked.
 -/
 
-open Fk E2e E2eScal E2eScal.Gen6Enc E2eScal.Enc2Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.Gen6Enc E2eScal.Enc2Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.E2c

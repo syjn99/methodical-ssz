@@ -14,7 +14,7 @@ instance directives between the roots and the epilogue stay hand steps. Both dec
 hand theorems by `rfl` (`_type`). In-sample (development data).
 -/
 
-open Fk E2e E2eAd E2eAd.Code E2eScal.BhCode E2eScal
+open Machine Runtime TestTarget E2e E2eAd E2eAd.Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.Bh

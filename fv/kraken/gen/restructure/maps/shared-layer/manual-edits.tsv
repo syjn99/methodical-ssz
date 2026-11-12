@@ -1,0 +1,3 @@
+# new path (repository-relative)	line	text after the automatic rewrite	final text (a path built from components that the path rule cannot see)
+fv/kraken/gen/e2e/check_include.py	15	fk = (L / "Fk" / "Include.lean").read_text()	fk = (L / "Machine" / "Include.lean").read_text()
+fv/kraken/link/check.py	407	    for p in [lean / "Fk" / "Code.lean", HERE.parent / "AXIOMS.txt"]:	    for p in [lean / "TestTarget" / "Code.lean", HERE.parent / "AXIOMS.txt"]:

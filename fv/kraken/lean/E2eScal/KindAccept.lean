@@ -24,8 +24,9 @@ statement-checked against `decAcceptKind` with parameters read from the IR, with
 Not covered: callee-decoder fields, other frames, a first field that is not at Go offset 0 or 8.
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
+open Codec
 namespace E2eScal
 
 /-- A field of a composed decoder: a fixed byte vector of `n` bytes, or an inline `uint64`. -/

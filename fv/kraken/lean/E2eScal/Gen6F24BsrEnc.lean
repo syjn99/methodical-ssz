@@ -1,5 +1,5 @@
 import E2eScal.EncTies
-import E2eScal.EncFrameTest
+import Codec.EncodeFrameTest
 import E2eScal.F24Code
 
 /-!
@@ -14,7 +14,7 @@ growslice branches, the length rejects, the morestack path. Not a complete encod
 GEN6-JSON: {"type": "BlobSidecarsByRangeRequest", "const": "BsrMarshal", "prefix": "bsr_g6e", "size": 16, "frame": 104, "gd": 0, "rt": false, "fields": [["StartSlot", "u", 8], ["Count", "u", 8]], "boundaries": [8, 36, 53], "layout": "E2eScal.Gen6Enc.bsr_g6e_layout", "S_sha256": "ae16635f5634b6326b9d74327a59a6b73ab1356a6ead9e13259ecf82b3c8350f", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "S": "prysm/go1.26.10/e2e/f24/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobSidecarsByRangeRequest.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.BlobSidecarsByRangeRequest", "kinds": [{"theorem": "bsr_g6e_head", "kind": "encHeadKindN"}, {"theorem": "bsr_g6e_f0", "kind": "encFieldKindN"}, {"theorem": "bsr_g6e_f1", "kind": "encFieldKindN"}, {"theorem": "bsr_g6e_epi", "kind": "encEpiKindN"}, {"theorem": "bsr_g6e_fast", "kind": "encFastKindN"}]}
 -/
 
-open Fk E2eScal E2eScal.F24Code
+open Machine Runtime TestTarget E2eScal Codec E2eScal.F24Code
 variable [Host]
 
 namespace E2eScal.Gen6Enc
@@ -194,7 +194,7 @@ theorem bsr_g6e_f0 : ∀ (k : Nat) (hk : BsrMarshal.IsInfixAt Host.prog k) (hf :
     (rsp.toBitVec - 112) (rsp.toBitVec - 40) (by eb) ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) (by rw [List.length_take, Int.toBytes_length]; rfl) _ _ _ (by rfl) (by ecancel)
   intro m5 H5; kn; simp only [Reg64s.get64] at H5
   simp only [toBytes_ofInt_ofBytes 64 8 rfl v0 hv0] at H5
-  have hl33 := Fk.label_at' hk hf (j := 33)
+  have hl33 := Machine.label_at' hk hf (j := 33)
     (by simp only [BsrMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [BsrMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_cmp_jae_t Reg64.rdi Reg64.rdx _ _ (k + 17) (k + 33) (win hk 17 2) (by rfl) hl33 _ _ (by show ((rcx.toBitVec + 8) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
@@ -298,7 +298,7 @@ theorem bsr_g6e_f1 : ∀ (k : Nat) (hk : BsrMarshal.IsInfixAt Host.prog k) (hf :
   apply kstep_ldb Reg64.r8 Reg64.rax 16 _ (k + 37) (k + 38) (win hk 37 1) (by rfl) (by rfl)
     rax.toBitVec (rax.toBitVec + 16) (by eb) v1 hv1 _ _ _ (by rfl) (by ecancel)
   kn
-  have hl51 := Fk.label_at' hk hf (j := 51)
+  have hl51 := Machine.label_at' hk hf (j := 51)
     (by simp only [BsrMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [BsrMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_cmp_jae_t Reg64.rdi Reg64.rdx _ _ (k + 38) (k + 51) (win hk 38 2) (by rfl) hl51 _ _ (by show ((rcx.toBitVec + 16) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)

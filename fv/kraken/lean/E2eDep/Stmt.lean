@@ -1,8 +1,8 @@
-import Fk.Contracts
-import Fk.FunSpecs
-import Fk.Frame
-import Fk.Bytes
-import Fk.Labels
+import Runtime.Contracts
+import TestTarget.FunctionSpecs
+import Machine.Frame
+import Machine.Bytes
+import Machine.Labels
 import E2e.Data
 import E2eList.Data
 import E2eList.Defs
@@ -40,7 +40,7 @@ Error paths not on the accept path: `fmt.errorf` wrap (Deposit_Data accepts ever
 Size reject: directives 2–10, `cmp $0x4d8,%rcx; jne L_85` taken, 31–36.
 -/
 
-open Fk E2e EthLib.Serialization.Ssz E2eList E2eDep.Code
+open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz E2eList E2eDep.Code
 variable [Host]
 
 namespace E2eDep

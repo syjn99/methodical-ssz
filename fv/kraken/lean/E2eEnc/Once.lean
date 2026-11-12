@@ -11,7 +11,7 @@ garbage empty) or not taken (16–28 as the first-site grow path, `growslice` of
 `hone`; the old block joins the garbage frame), then `dcg_tail` (sites 2 and 3 fit or grow, `TailG.lean`).
 -/
 
-open Fk E2eEnc.Code
+open Machine Runtime TestTarget E2eEnc.Code
 variable [Host]
 
 namespace E2eEnc
@@ -35,7 +35,7 @@ theorem dc_e2e_marshal_once_main : dc_marshal_once_stmt := by
   split
   case isTrue h =>
     exfalso
-    rw [E2eScal.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 8 (by rfl) hguard] at h
+    rw [Codec.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 8 (by rfl) hguard] at h
     exact Bool.noConfusion h
   simp only [Effects.All]
   kat hk DcMarshal 5

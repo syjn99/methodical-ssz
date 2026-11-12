@@ -1,20 +1,21 @@
-import E2eScal.P1
+import Codec.Uint64Decoder
 import E2eAd.Prims
 
 /-!
 # In-sample check of the uint64 decoder pattern: the Slot decoder accept path from `u64dec_accept`
 
 `sl_unmarshal_accept_main_s` has the statement of `E2eAd.sl_unmarshal_accept_main`
-(`E2eAd/Prims.lean`) word for word; its proof only instantiates `E2eScal.u64dec_accept`
+(`E2eAd/Prims.lean`) word for word; its proof only instantiates `Codec.u64dec_accept`
 (labels of the Slot `.S`, frame size 0x48, spill displacement 0x60, head block at k,
 tail block at k + 43). `sl_same_stmt` checks that the two statements are the same
 proposition (proof irrelevance: `rfl` succeeds only if the types are definitionally equal).
 The hand theorem stays in the tree, unchanged.
 -/
 
-open Fk E2eAd.Code
+open Machine TestTarget E2eAd.Code
 variable [Host]
 
+open Codec
 namespace E2eScal
 
 set_option maxRecDepth 100000 in
@@ -48,7 +49,7 @@ theorem sl_unmarshal_accept_main_s (k : Nat) (hk : SlUnmarshal.IsInfixAt Host.pr
     "L_github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ_bb" 72) 43 hk
     (by simp only [SlUnmarshal, u64DecTail, List.drop_succ_cons, List.drop_zero, List.length_cons,
       List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl := Fk.label_at' hk hf (j := 43)
+  have hl := Machine.label_at' hk hf (j := 43)
     (by simp only [SlUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [SlUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   exact u64dec_accept _ _ _ _ 72 96 (by decide) k (k + 43) hA hB hl e8 he8 s ra guard fp s2 c0 hfp h2 hc0 R

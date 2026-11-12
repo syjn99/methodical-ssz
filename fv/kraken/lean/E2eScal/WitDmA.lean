@@ -1,7 +1,7 @@
 import E2eScal.DmAccept
-import Fk.RtCopy
-import Fk.BumpMore
-import Fk.WHost
+import Runtime.CopyModel
+import Runtime.BumpAllocatorVariants
+import Machine.WitnessHost
 
 /-!
 # Witness of `dm_e2e_accept_main` (DepositMessage decoder accept path, hold-out)
@@ -20,7 +20,7 @@ For every input and every old pointer word every premise holds and the decoder r
 The receiver is a Go value of `v1alpha1.DepositMessage` (zero-length slices, zero Amount).
 -/
 
-open Fk Fk.W E2e E2eScal E2eScal.H3Code E2eScal.Dm
+open Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.H3Code E2eScal.Dm
 
 namespace E2eScal.WitDmA
 

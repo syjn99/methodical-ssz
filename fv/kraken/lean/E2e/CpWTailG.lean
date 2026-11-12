@@ -13,7 +13,7 @@ with `nextSliceCap (len + 40) C ≤ C2`. The old block is unchanged (it keeps `p
 new block is `pre ++ epoch ++ root ++ rest`.
 -/
 
-open Fk E2e.Code
+open Machine Runtime TestTarget E2e.Code
 variable [Host]
 
 namespace E2e

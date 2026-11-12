@@ -1,7 +1,7 @@
 import Lean
 
 /-!
-# inventory_decls: facts about named declarations for `inventory.py` (core `Lean` only)
+# inventory_decls: facts about named declarations for `proof_inventory.py` (core `Lean` only)
 
 Usage (`lean` is a heavy command: run it through the heavy-job gate, cwd `fv/kraken/lean`):
 
@@ -17,7 +17,7 @@ skipped) it prints one tab-separated line:
 * `programs`: the constants that occur in the declared TYPE (also inside definitions of type `Prop` that it
   names, e.g. a statement `abbrev`) and whose own type is a constant named `Program`
   (the included machine-code constants, e.g. `E2eScal.H6Code.SaUnmarshal`), sorted, comma separated, `-` if none.
-  This is how `inventory.py` keys a theorem to a function of the target: by the code constant in its type,
+  This is how `proof_inventory.py` keys a theorem to a function of the target: by the code constant in its type,
   not by a file name or a header.
 * `refs`: the names of `<names.txt>` that occur in the VALUE of the declaration (for a theorem: its proof term),
   following auxiliary declarations whose name extends the declaration's name (`thm._proof_1`, …), sorted, `-` if

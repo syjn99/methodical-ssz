@@ -120,7 +120,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 - What: the Kraken parser rejects the SIB index `%riz` and multi-byte padding `nop` forms. The `include_x64` elaborator rejects some condition codes.
 - Where: 13 generated functions had `%riz`.
-- State: worked around. `link/conv.py --norm` drops `%riz` and writes padding as `nop`. `include_x64_rt` (`lean/Fk/Include.lean`) uses the runtime parser.
+- State: worked around. `link/conv.py --norm` drops `%riz` and writes padding as `nop`. `include_x64_rt` (`lean/Machine/Include.lean`) uses the runtime parser.
 
 ### Converter wrote a negative 32-bit displacement as a large positive number
 
@@ -135,12 +135,12 @@ How to handle a new finding is in `../README.md` section 7.
 - What: a `simp` and `omega` proof that the stack growth branch is not taken fails in the Lean kernel on memory, for the form `lea -N(%rsp),%r12; cmp 0x10(%r14),%r12; jbe`.
 - Where: `BeaconBlockHeader.MarshalSSZTo` and other encoders with a large frame.
 - How it shows: a pure `BitVec` reproduction fails under a 5 GiB limit. The costly subterm is not profiled.
-- State: fixed by the lemma `E2eScal.lea_cmp_be_false` (`lean/E2eScal/StackGuard.lean`), with no heartbeat increase. The docstring of that file gives a different memory value than the measurement.
+- State: fixed by the lemma `Codec.lea_cmp_be_false` (`lean/Codec/StackGuard.lean`), with no heartbeat increase. The docstring of that file gives a different memory value than the measurement.
 
 ### Growslice contract gives no lower bound on the remaining heap
 
 - What: `GrowsliceC` gives the remaining heap only as an upper bound. A second growth call needs a lower bound as its budget premise.
-- Where: `lean/Fk/Contracts.lean`. It affects every encoder growth path.
+- Where: `lean/Runtime/Contracts.lean`. It affects every encoder growth path.
 - How it shows: in `E2e.cp_e2e_marshal_grow_any_sharp`, one case ends at the entry of the second growth call. The run after that state is not proved.
 - State: blocked until a user decision on a new contract form. That case has only Go differential checks. The growth branches of the other encoders are not proved.
 
@@ -151,11 +151,11 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Other tactic gaps
 
-- `kaddr` (`lean/Fk/Step.lean`) does not reduce `Width.W64.bits`. The local macro `eaddr` is used instead.
+- `kaddr` (`lean/Machine/Step.lean`) does not reduce `Width.W64.bits`. The local macro `eaddr` is used instead.
 - A `grind` timeout inside `kstep` cannot be caught. `load_step` and `store_step` are used instead.
 - Closing register goals with symbolic `BitVec` by `trivial` or `rfl` inside `first` used more than 6 GiB. The decoder proof is split, and the goals close with `exact trivial`, `with_reducible rfl` or `toBitVec_inj`.
 - Two witness `Host` instances in one file make instance resolution choose the wrong host. Each file has one witness host.
-- `lean/Fk/Include.lean` keeps the data reader private. Other libraries copy it, and `gen/e2e/check_include.py` compares the copies.
+- `lean/Machine/Include.lean` keeps the data reader private. Other libraries copy it, and `gen/e2e/check_include.py` compares the copies.
 - State: worked around in each case.
 
 ### Format string content is not checked
@@ -228,8 +228,8 @@ How to handle a new finding is in `../README.md` section 7.
 ### Slow proof steps
 
 - What: two proofs spent most of their time in one `omega` side goal each.
-- Where: the `bv_omega` of the argument `hLo` of `E2eScal.rootenc_seg` in `lean/E2eScal/P2EncCp.lean`. The `wit_split` side goals of the Checkpoint cover witnesses.
-- State: fixed. `lean/E2e/WitSplit.lean` has `wit_split_n` (commit `301300f`). The `P2EncCp` step is a constant-only rewrite (commit `ab43cbb`).
+- Where: the `bv_omega` of the argument `hLo` of `Codec.rootenc_seg` in `lean/E2eScal/P2EncCp.lean`. The `wit_split` side goals of the Checkpoint cover witnesses.
+- State: fixed. `lean/Machine/WitnessSplit.lean` has `wit_split_n` (commit `301300f`). The `P2EncCp` step is a constant-only rewrite (commit `ab43cbb`).
 
 ### Limit options without a profiled cause
 
@@ -278,7 +278,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Open checker items of the flat encoder generator
 
-- The macro `eb` is declared at the root level (`lean/E2eScal/EncFieldN.lean`).
+- The macro `eb` is declared at the root level (`lean/Codec/EncodeFieldHelpers.lean`).
 - A broken checker copy fails with a `KeyError`, not with a check result.
 - The IR reader of the encoder generator accepts any untagged 8-byte field as `uint64`.
 - The negative tests that compare the IR with the code change one theorem only. There are no whole-file mutants.

@@ -1,6 +1,6 @@
 import E2eScal.Gen6BhEnc
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of `bh_g6e_fast` (BeaconBlockHeader encoder fast path, generated theorem; unit E2-C)
@@ -15,7 +15,7 @@ Two instances: empty prefix with `cap = 112`; prefix `[0xaa, 0xbb, 0xcc]` with 5
 field value of the stated lengths every premise of `bh_g6e_fast` holds (non-vacuity of the fast path).
 -/
 
-open Fk Fk.W E2eScal E2eScal.Gen6Enc E2eScal.BhCode
+open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.Gen6Enc E2eScal.BhCode
 
 namespace E2eScal.WitE2cBh
 

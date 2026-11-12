@@ -1,5 +1,5 @@
 import Kraken.X64.Parser
-import Fk.Include
+import Machine.Include
 
 /-!
 # Code of the prysm-e2e function set (Go 1.26.10 ELF `c6403c02…911e`)
@@ -7,7 +7,7 @@ import Fk.Include
 Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/e2e/link/norm`
 (`link/conv.py --norm` of the Go 1.26.10 ELF; `link/check.py` (a)–(e) PASS in
 `../RESULT`). The files are Lake inputs of the `E2e` library (`lakefile.toml`).
-Nothing of the Go 1.26.3 code (`Fk.Code`) is used.
+Nothing of the Go 1.26.3 code (`TestTarget.Code`) is used.
 -/
 
 namespace E2e.Code

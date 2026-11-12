@@ -1,6 +1,6 @@
 import E2eScal.Gen6F24BdrEnc
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of `bdr_g6e_fast` (BuilderDepositRequest encoder fast path, generated theorem; FLAT24 / H7, text of the unit E2-C emitter)
@@ -15,7 +15,7 @@ Two instances: empty prefix with `cap = 184`; prefix `[0xaa, 0xbb, 0xcc]` with 5
 field value of the stated lengths every premise of `bdr_g6e_fast` holds (non-vacuity of the fast path).
 -/
 
-open Fk Fk.W E2eScal E2eScal.Gen6Enc E2eScal.F24Code
+open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.Gen6Enc E2eScal.F24Code
 
 namespace E2eScal.WitE2cBdr
 

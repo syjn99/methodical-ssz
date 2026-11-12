@@ -71,14 +71,14 @@
  {
   "id": "sg1-r1-z-control",
   "kind": "control",
-  "module": "E2eScal/P2DecZ.lean",
+  "module": "Codec/Bytes32DecodeOffsetZero.lean",
   "theorem": "rootdec_seg_z",
   "why": "unmutated control (review sg1-r1 case r1-z-control, S3)"
  },
  {
   "id": "sg1-r1-z-endpc",
   "kind": "stmt",
-  "module": "E2eScal/P2DecZ.lean",
+  "module": "Codec/Bytes32DecodeOffsetZero.lean",
   "theorem": "rootdec_seg_z",
   "old": "st.pc = Host.addrOf (j2 + 11)",
   "new": "st.pc = Host.addrOf (j2 + 12)",
@@ -87,7 +87,7 @@
  {
   "id": "sg1-r1-z-rdx",
   "kind": "stmt",
-  "module": "E2eScal/P2DecZ.lean",
+  "module": "Codec/Bytes32DecodeOffsetZero.lean",
   "theorem": "rootdec_seg_z",
   "old": "st.data.regs.rdx.toBitVec = rcv",
   "new": "st.data.regs.rdx.toBitVec = bf",
@@ -96,7 +96,7 @@
  {
   "id": "sg1-r1-z-nohroot",
   "kind": "stmt",
-  "module": "E2eScal/P2DecZ.lean",
+  "module": "Codec/Bytes32DecodeOffsetZero.lean",
   "theorem": "rootdec_seg_z",
   "old": "(hroot : root.length = 32)",
   "new": "(hroot : root.length = 16)",
@@ -105,7 +105,7 @@
  {
   "id": "sg1-r1-z-dst",
   "kind": "stmt",
-  "module": "E2eScal/P2DecZ.lean",
+  "module": "Codec/Bytes32DecodeOffsetZero.lean",
   "theorem": "rootdec_seg_z",
   "old": "⋆ Eq ((Int.toBytes 8 32).At aC) ⋆ Eq (root.At p)",
   "new": "⋆ Eq ((Int.toBytes 8 32).At aC) ⋆ Eq (root.At bf)",

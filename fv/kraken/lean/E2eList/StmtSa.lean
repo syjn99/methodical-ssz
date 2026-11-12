@@ -1,7 +1,7 @@
-import Fk.Contracts
-import Fk.Frame
-import Fk.Bytes
-import Fk.Labels
+import Runtime.Contracts
+import Machine.Frame
+import Machine.Bytes
+import Machine.Labels
 import E2e.Data
 import E2eList.Code
 import E2eList.Defs
@@ -35,7 +35,7 @@ slot holds directive 68 at the end. Size reject: directives 2–10, `cmp $0xa0,%
 88–93 (`ssz.ErrSize` words, epilogue).
 -/
 
-open Fk E2e EthLib.Serialization.Ssz E2eList.Code
+open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz E2eList.Code
 variable [Host]
 
 namespace E2eList

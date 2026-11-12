@@ -1,6 +1,6 @@
 import E2eDec.Reject
-import Fk.WHost
-import Fk.RtCopy
+import Machine.WitnessHost
+import Runtime.CopyModel
 
 /-!
 # Witnesses of the decoder size reject and offset reject
@@ -11,7 +11,7 @@ values: the real ones are set by the runtime's init), the guard word (r14 = 0x10
 rsp + 24 (rsp = 0x10020); the offset reject adds the 4 offset bytes at buf + 32 (0x10038). Frame `R`: the rax spill slot.
 -/
 
-open Fk Fk.W E2eEnc E2eDec E2eDec.Code
+open Machine Runtime TestTarget Machine.Witness E2eEnc E2eDec E2eDec.Code
 
 namespace E2eDec.WitR
 

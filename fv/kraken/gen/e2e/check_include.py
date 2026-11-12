@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""lean/E2e/Include.lean's data reader is the text of lean/Fk/Include.lean's reader.
+"""lean/E2e/Include.lean's data reader is the text of lean/Machine/Include.lean's reader.
 
 Usage: check_include.py      (from any cwd; Python 3 standard library only)
 Also compares lean/E2eAd/Include.lean (prefix `ad`, AttestationData data directory) with E2e's reader.
@@ -12,7 +12,7 @@ import re
 import sys
 
 L = pathlib.Path(__file__).resolve().parents[2] / "lean"
-fk = (L / "Fk" / "Include.lean").read_text()
+fk = (L / "Machine" / "Include.lean").read_text()
 e2 = (L / "E2e" / "Include.lean").read_text()
 
 

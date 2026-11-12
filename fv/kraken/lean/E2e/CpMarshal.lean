@@ -1,8 +1,8 @@
-import Fk.Contracts
-import Fk.Frame
+import Runtime.Contracts
+import Machine.Frame
 import E2e.Code
 import E2e.CpAccept
-import Fk.LuRejectCall
+import TestTarget.ListU64DecodeRejectCall
 
 /-!
 # Real Prysm `(*v1alpha1.Checkpoint).MarshalSSZTo`, fast path, Go 1.26.10 machine code
@@ -27,7 +27,7 @@ bytes, 36 load `Root.ptr`, 37–38 `cmpq $0x20,0x18(%rax); jne` (`len(Root)`),
 Root.ptr, 32)`, 63–70 return `(dst, len+40, cap, nil)`.
 -/
 
-open Fk E2e.Code
+open Machine Runtime TestTarget E2e.Code
 variable [Host]
 
 namespace E2e

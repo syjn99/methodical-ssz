@@ -1,13 +1,13 @@
 [
  {
   "id": "g2-segn-control",
-  "module": "E2eScal/SegN.lean",
+  "module": "Codec/FixedBytesDecode.lean",
   "theorem": "bytesdec_seg",
   "kind": "control"
  },
  {
   "id": "g2-segn-stmt-heap",
-  "module": "E2eScal/SegN.lean",
+  "module": "Codec/FixedBytesDecode.lean",
   "theorem": "bytesdec_seg",
   "kind": "stmt",
   "old": "⋆ Heap (avail - n)",
@@ -15,7 +15,7 @@
  },
  {
   "id": "g2-segn-stmt-sizes",
-  "module": "E2eScal/SegN.lean",
+  "module": "Codec/FixedBytesDecode.lean",
   "theorem": "bytesdec_seg",
   "kind": "stmt",
   "old": "(hn : n = 32 ∨ n = 48 ∨ n = 96)",
@@ -23,7 +23,7 @@
  },
  {
   "id": "g2-segnz-stmt-len",
-  "module": "E2eScal/SegN.lean",
+  "module": "Codec/FixedBytesDecode.lean",
   "theorem": "bytesdec_seg_z",
   "kind": "stmt",
   "old": "Eq ((Int.toBytes 8 (OfNat.ofNat n)).At aL)",
@@ -31,13 +31,13 @@
  },
  {
   "id": "g2-u64-control",
-  "module": "E2eScal/U64Inline.lean",
+  "module": "Codec/InlineUint64.lean",
   "theorem": "u64dec_inline_seg",
   "kind": "control"
  },
  {
   "id": "g2-u64-stmt-field",
-  "module": "E2eScal/U64Inline.lean",
+  "module": "Codec/InlineUint64.lean",
   "theorem": "u64dec_inline_seg",
   "kind": "stmt",
   "old": "⋆ Eq (v.At aF) ⋆ R) st.data.dmem",
@@ -45,7 +45,7 @@
  },
  {
   "id": "g2-u64-stmt-reg-rdx",
-  "module": "E2eScal/U64Inline.lean",
+  "module": "Codec/InlineUint64.lean",
   "theorem": "u64dec_inline_seg",
   "kind": "stmt",
   "old": "(hX : U64InlineReg rX)",
@@ -53,7 +53,7 @@
  },
  {
   "id": "g2-kindn-of-stmt-swap",
-  "module": "E2eScal/KindN.lean",
+  "module": "Codec/Kind/FixedBytesDecode.lean",
   "theorem": "bytesDecSegKind_of",
   "kind": "stmt",
   "old": "bytesDecSegKind n C j1 j2 dR dB dS fP fL fC src :=",
@@ -61,7 +61,7 @@
  },
  {
   "id": "g2-kindu64-of-stmt-off",
-  "module": "E2eScal/KindU64.lean",
+  "module": "Codec/Kind/InlineUint64.lean",
   "theorem": "u64DecInlineSegKind_of",
   "kind": "stmt",
   "old": "u64DecInlineSegKind C j dB src f :=",
@@ -103,7 +103,7 @@
  },
  {
   "id": "g2-head-stmt-len",
-  "module": "E2eScal/Compose.lean",
+  "module": "Codec/DecoderHeadEpilogue.lean",
   "theorem": "dechead_seg",
   "kind": "stmt",
   "old": "(hlen : s.regs.rcx = { toBitVec := sz.toBitVec })",
@@ -111,7 +111,7 @@
  },
  {
   "id": "g2-epi-stmt-rsp",
-  "module": "E2eScal/Compose.lean",
+  "module": "Codec/DecoderHeadEpilogue.lean",
   "theorem": "decepi_seg",
   "kind": "stmt",
   "old": "st.data.regs.rsp = { toBitVec := sp + 48 }",
@@ -119,7 +119,7 @@
  },
  {
   "id": "g2-tail-stmt-ptr",
-  "module": "E2eScal/Compose.lean",
+  "module": "Codec/DecoderHeadEpilogue.lean",
   "theorem": "bytesdec_tail_seg",
   "kind": "stmt",
   "old": "⋆ Eq ((Int.toBytes 8 p.toInt).At aP) ⋆ R) st.data.dmem",

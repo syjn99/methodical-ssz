@@ -14,7 +14,7 @@ Hand-written: the shape of `DdSpecK.lean` with the PendingDeposit statement
   size reject site. The Slot callee's error return (fmt.errorf wrap) is not modelled: the Slot decoder accepts every 8-byte input.
 -/
 
-open Fk E2e E2eAd.Code E2eScal.H6Code E2eScal EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eAd.Code E2eScal.H6Code E2eScal Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.H6
@@ -93,7 +93,7 @@ theorem pd_e2e_accept_spec_k (k : Nat) (hk : PdUnmarshal.IsInfixAt Host.prog k) 
   refine ⟨g, rfl, hb, ?_⟩
   have hn : s.regs.rcx = 192 := by
     apply UInt64.toNat_inj.mp; rw [hlen, hb, ppd_enc_size]; rfl
-  exact pd_e2e_accept_g4gen k hk hf kS hkS hfS _ _ _ _ _ (by simp) (by simp) (by simp [Fv.uintBytes_size]) (by simp) (by simp [Fv.uintBytes_size]) s ra guard
+  exact pd_e2e_accept_g4gen k hk hf kS hkS hfS _ _ _ _ _ (by simp) (by simp) (by simp [Spec.uintBytes_size]) (by simp) (by simp [Spec.uintBytes_size]) s ra guard
     fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aP1 aL1 aC1 aP2 aL2 aC2 aN aP3 aL3 aC3 aS
     hfp h1 h2 h4 hsp0 hsp1 hsp2 hl28 hrs hast haP1 haL1 haC1 haP2 haL2 haC2 haN haP3 haL3 haC3 haS
     R S hS hlo Heap avail (Pm g hb) hguard hn hav hms hmm

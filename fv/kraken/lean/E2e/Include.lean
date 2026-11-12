@@ -5,9 +5,9 @@ public meta import Lean
 /-!
 # `e2e_data_include id`: ELF data of the Go 1.26.10 namespace (prysm-e2e)
 
-The same reader as `data_include` (`Fk/Include.lean`), for the data directory of
+The same reader as `data_include` (`Machine/Include.lean`), for the data directory of
 this namespace: `../prysm/go1.26.10/e2e/link/data/<id>.data` (relative to
-`fv/kraken/lean`). `Fk/Include.lean` keeps its helpers private to its module
+`fv/kraken/lean`). `Machine/Include.lean` keeps its helpers private to its module
 and is not changed; the three helpers below are its text with an `e2e` prefix
 on the names (`gen/e2e/check_include.py` compares the bodies). TRUSTED like
 `data_include`: this reader. That the file is the ELF's bytes is

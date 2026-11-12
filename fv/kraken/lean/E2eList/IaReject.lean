@@ -1,8 +1,8 @@
-import Fk.Step
-import Fk.Labels
-import Fk.Bytes
+import Machine.Step
+import Machine.Labels
+import Machine.Bytes
 import E2e.CpReject
-import E2eScal.StackGuard
+import Codec.StackGuard
 import E2eList.StmtIa
 import E2eList.IaAddr
 
@@ -10,14 +10,14 @@ import E2eList.IaAddr
 # `(*v1alpha1.IndexedAttestation).UnmarshalSSZ`: size reject and offset reject
 
 - `ia_e2e_reject_size_main : ia_reject_size_stmt`: directives 2–4 (large-frame guard `lea -0x30(%rsp),%r12`, closed
-  with `E2eScal.lea_cmp_be_false`, N = 48), 5–8 prologue (`sub $0xa8`, rbx spill to rsp + 16), 9–10
+  with `Codec.lea_cmp_be_false`, N = 48), 5–8 prologue (`sub $0xa8`, rbx spill to rsp + 16), 9–10
   `cmp $0xe4,%rcx; jb L_268` taken, `L_268` (137), the two loads of `ssz.ErrSize` (138–139), epilogue 140–142.
 - `ia_e2e_reject_offset_main : ia_reject_offset_stmt`: 9–10 not taken, 11 `mov (%rbx),%edx` (32-bit load of `off`),
   16–17 `cmp $0xe4,%rdx; jne L_251` taken, `L_251` (131), the two loads of `ssz.ErrInvalidVariableOffset` (132–133),
   epilogue 134–136.
 -/
 
-open Fk E2eList.Code
+open Machine Runtime TestTarget E2eList.Code
 variable [Host]
 
 namespace E2eList
@@ -43,7 +43,7 @@ theorem ia_e2e_reject_size_main : ia_reject_size_stmt := by
   split
   case isTrue h =>
     exfalso
-    rw [E2eScal.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 48 (by rfl) hguard] at h
+    rw [Codec.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 48 (by rfl) hguard] at h
     exact Bool.noConfusion h
   simp only [Effects.All]
   kat hk IaUnmarshal 5
@@ -113,7 +113,7 @@ theorem ia_e2e_reject_offset_main : ia_reject_offset_stmt := by
   split
   case isTrue h =>
     exfalso
-    rw [E2eScal.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 48 (by rfl) hguard] at h
+    rw [Codec.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 48 (by rfl) hguard] at h
     exact Bool.noConfusion h
   simp only [Effects.All]
   kat hk IaUnmarshal 5

@@ -19,9 +19,10 @@ frame is not touched on this path (in `R`); `memmove` return slot rsp − 168 an
 The stack guard is the large-frame form (`lea -0x20(%rsp),%r12`): premise `guard + 32 < rsp`.
 -/
 
-open Fk E2eScal.BhCode
+open Machine Runtime TestTarget E2eScal.BhCode
 variable [Host]
 
+open Codec
 namespace E2eScal.Bh
 
 theorem bhm_o16 (x y : BitVec 64) : x + y + 16 = x + (y + 8 + 8) := by bv_omega

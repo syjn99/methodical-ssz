@@ -11,7 +11,7 @@ same inputs with the same values.
 -/
 
 namespace E2eHb
-open EthLib.Serialization.Ssz Fv1 E2eList
+open EthLib.Serialization.Ssz Spec TestTarget E2eList
 
 theorem prysmHbDesc_checker :
     prysmHbDesc = .container ["block_roots", "state_roots"] [.vector (.byteVector 32) 8192, .vector (.byteVector 32) 8192]

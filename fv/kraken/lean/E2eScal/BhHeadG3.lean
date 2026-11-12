@@ -13,7 +13,7 @@ used as `U64CalleeAcc` (the same propositions, `CallDecRel.lean`). Hand-written 
 is unchanged.
 -/
 
-open Fk E2eAd E2eAd.Code E2eScal.BhCode E2eScal
+open Machine Runtime TestTarget E2eAd E2eAd.Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.Bh
@@ -193,22 +193,22 @@ theorem bh_e2e_head_g3 (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (hf : 
   simp only at h_mem hguard hlen ⊢
   have hg : guard.toNat < (rsp.toBitVec - 112).toNat := bhg_guard _ _ hguard
   -- code facts
-  have hF1 := E2eScal.infix_sub (q := E2eScal.callArgFirst false 8) 15 hk
+  have hF1 := Codec.infix_sub (q := E2eScal.callArgFirst false 8) 15 hk
     (by simp only [BhUnmarshal, E2eScal.callArgFirst, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hC1 := E2eScal.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9") 17 hk
+  have hC1 := Codec.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9") 17 hk
     (by simp only [BhUnmarshal, E2eScal.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hL1 := E2eScal.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9") 46 hk
+  have hL1 := Codec.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9") 46 hk
     (by simp only [BhUnmarshal, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl1 := Fk.label_at' hk hf (j := 46)
+  have hl1 := Machine.label_at' hk hf (j := 46)
     (by simp only [BhUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [BhUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hRl := E2eScal.infix_sub (q := E2eScal.callArgReload true 120 8 136 (-8) 112 16) 47 hk
+  have hRl := Codec.infix_sub (q := E2eScal.callArgReload true 120 8 136 (-8) 112 16) 47 hk
     (by simp only [BhUnmarshal, E2eScal.callArgReload, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hC2 := E2eScal.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 55 hk
+  have hC2 := Codec.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 55 hk
     (by simp only [BhUnmarshal, E2eScal.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hL2 := E2eScal.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 85 hk
+  have hL2 := Codec.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 85 hk
     (by simp only [BhUnmarshal, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl2 := Fk.label_at' hk hf (j := 85)
+  have hl2 := Machine.label_at' hk hf (j := 85)
     (by simp only [BhUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [BhUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   -- head: entry → directive 15

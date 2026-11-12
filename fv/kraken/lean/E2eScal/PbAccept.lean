@@ -1,4 +1,4 @@
-import E2eScal.Compose
+import Codec.DecoderHeadEpilogue
 import E2eScal.Gen4H6PbDec
 import E2eScal.E1Accept
 import E2eScal.H6Stmt
@@ -17,7 +17,7 @@ Hand-written AFTER the raw generator output (`Gen4H6PbDec.lean`, `p2dec --gen4`,
 * epilogue 119–123: `decepi_seg` (`Compose.lean`).
 -/
 
-open Fk E2eScal.H6Code E2eScal
+open Machine Runtime TestTarget E2eScal.H6Code E2eScal Codec
 variable [Host]
 
 namespace E2eScal.H6
@@ -216,12 +216,12 @@ theorem pb_e2e_accept_g4gen : pb_accept_stmt := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hrsp_lt : rsp.toNat < 2 ^ 64 := rsp.toNat_lt_size
-  have hH := E2eScal.infix_sub (q := E2eScal.decHead "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ_0" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ_224" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ_210" 96) 0 hk
-    (by simp only [PbUnmarshal, E2eScal.decHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hE := E2eScal.infix_sub (q := E2eScal.decEpi) 119 hk
-    (by simp only [PbUnmarshal, E2eScal.decEpi, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hH := Codec.infix_sub (q := Codec.decHead "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ_0" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ_224" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ_210" 96) 0 hk
+    (by simp only [PbUnmarshal, Codec.decHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hE := Codec.infix_sub (q := Codec.decEpi) 119 hk
+    (by simp only [PbUnmarshal, Codec.decEpi, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   -- head: entry → directive 13
-  refine eventually_trans _ _ _ _ (E2eScal.dechead_seg _ _ _ _ 96 (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _
+  refine eventually_trans _ _ _ _ (Codec.dechead_seg _ _ _ _ 96 (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _
     (by dsimp only; ecancel) hguard (by rw [hlen]; rfl)) ?_
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, hrax1, hrbx1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
@@ -276,7 +276,7 @@ theorem pb_e2e_accept_g4gen : pb_accept_stmt := by
   dsimp only at hpc4 hrsp4 hrbp4 hr144 hrdx4 Hm4
   subst hpc4
   -- epilogue 119–123
-  refine eventually_trans _ _ _ _ (E2eScal.decepi_seg (k + 119) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
+  refine eventually_trans _ _ _ _ (Codec.decepi_seg (k + 119) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
     (by bv_omega) (by bv_omega) rbp ra r14 _ d4 hrsp4 hr144 (by ecancel)) ?_
   rintro ⟨d5, pc5⟩ ⟨hpc5, hrax5, hrbx5, hrsp5, hrbp5, hr145, Hm5⟩
   dsimp only at hpc5 hrax5 hrbx5 hrsp5 hrbp5 hr145 Hm5

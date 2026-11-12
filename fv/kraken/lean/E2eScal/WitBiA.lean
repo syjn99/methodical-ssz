@@ -1,7 +1,7 @@
 import E2eScal.BiAccept
-import Fk.RtCopy
-import Fk.BumpMore
-import Fk.WHost
+import Runtime.CopyModel
+import Runtime.BumpAllocatorVariants
+import Machine.WitnessHost
 
 /-!
 # Witness of `bi_e2e_accept_main` (BlobIdentifier decoder accept path, hold-out)
@@ -19,7 +19,7 @@ For every input and every old root pointer word every premise holds and the deco
 The receiver is a Go value of `v1alpha1.BlobIdentifier` (zero `state`, zero-length root slice, zero Index).
 -/
 
-open Fk Fk.W E2e E2eScal E2eScal.H3Code E2eScal.Bi
+open Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.H3Code E2eScal.Bi
 
 namespace E2eScal.WitBiA
 

@@ -18,9 +18,10 @@ the two-directive inline uint64 read (PendingPartialWithdrawal `Amount`) and the
 The callee specification stays a hypothesis `U64CalleeAcc "<callee label>"` of each call-block theorem.
 -/
 
-open Fk
+open Machine Runtime TestTarget
 variable [Host]
 
+open Codec
 namespace E2eScal.Gen3Ex
 
 set_option maxHeartbeats 4000000 in
@@ -35,7 +36,7 @@ theorem pw_dec_Index_arg (k : Nat) (hk : E2eScal.H4Code.PwUnmarshal.IsInfixAt Ho
         ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧ st.data.regs.rbx = s.regs.rbx
         ∧ st.data.regs.rax.toBitVec = aF ∧ st.data.regs.rcx = 8 ∧ st.data.dmem = s.dmem)
       ⟨s, Host.addrOf (k + 15)⟩ := by
-  have hA := E2eScal.infix_sub (q := E2eScal.callArgFirst false 8) 15 hk
+  have hA := Codec.infix_sub (q := E2eScal.callArgFirst false 8) 15 hk
     (by simp only [E2eScal.H4Code.PwUnmarshal, E2eScal.callArgFirst, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   with_reducible exact E2eScal.callarg_first_seg false _ (k + 15) hA
 theorem pw_dec_Index_arg_kind : ∀ (h : Host), type_of% (@pw_dec_Index_arg h) = @E2eScal.callArgFirstKind h E2eScal.H4Code.PwUnmarshal false 8 15 := by
@@ -66,11 +67,11 @@ theorem pw_dec_Index_call (k : Nat) (hk : E2eScal.H4Code.PwUnmarshal.IsInfixAt H
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 17)⟩ := by
-  have hA := E2eScal.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_b9") 17 hk
+  have hA := Codec.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_b9") 17 hk
     (by simp only [E2eScal.H4Code.PwUnmarshal, E2eScal.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := E2eScal.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_b9") 47 hk
+  have hB := Codec.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_b9") 47 hk
     (by simp only [E2eScal.H4Code.PwUnmarshal, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl := Fk.label_at' hk hf (j := 47)
+  have hl := Machine.label_at' hk hf (j := 47)
     (by simp only [E2eScal.H4Code.PwUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [E2eScal.H4Code.PwUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact E2eScal.calldec_seg _ _ (k + 17) (k + 47) hA hB hl
@@ -96,7 +97,7 @@ theorem pw_dec_WithdrawableEpoch_arg1 (k : Nat) (hk : E2eScal.H4Code.PwUnmarshal
         ∧ st.data.regs.rax.toBitVec = rcv ∧ st.data.regs.rsi.toBitVec = aF
         ∧ st.data.dmem = s.dmem)
       ⟨s, Host.addrOf (k + 48)⟩ := by
-  have hA := E2eScal.infix_sub (q := E2eScal.callArgLea 96 16 112 (-16) 88 24) 48 hk
+  have hA := Codec.infix_sub (q := E2eScal.callArgLea 96 16 112 (-16) 88 24) 48 hk
     (by simp only [E2eScal.H4Code.PwUnmarshal, E2eScal.callArgLea, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   with_reducible exact E2eScal.callarg_lea_seg _ _ _ _ _ _ (k + 48) hA
 theorem pw_dec_WithdrawableEpoch_arg1_kind : ∀ (h : Host), type_of% (@pw_dec_WithdrawableEpoch_arg1 h) = @E2eScal.callArgLeaKind h E2eScal.H4Code.PwUnmarshal 96 16 112 (-16) 88 24 48 := by
@@ -119,10 +120,10 @@ theorem pw_dec_Amount_seg (k : Nat) (hk : E2eScal.H4Code.PwUnmarshal.IsInfixAt H
         ∧ (∀ r : Reg64, r ≠ Reg64.r8 → st.data.regs.get64 r = s.regs.get64 r)
         ∧ (Eq (v.At aSrc) ⋆ Eq (v.At aF) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 54)⟩ := by
-  have hA := E2eScal.infix_sub (q := E2eScal.u64DecRR Reg64.r8 8 16) 54 hk
-    (by simp only [E2eScal.H4Code.PwUnmarshal, E2eScal.u64DecRR, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hX : E2eScal.U64RRReg Reg64.r8 := by decide
-  with_reducible exact E2eScal.u64dec_rr_seg Reg64.r8 hX _ _ (k + 54) hA
+  have hA := Codec.infix_sub (q := Codec.u64DecRR Reg64.r8 8 16) 54 hk
+    (by simp only [E2eScal.H4Code.PwUnmarshal, Codec.u64DecRR, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hX : Codec.U64RRReg Reg64.r8 := by decide
+  with_reducible exact Codec.u64dec_rr_seg Reg64.r8 hX _ _ (k + 54) hA
 theorem pw_dec_Amount_seg_kind : ∀ (h : Host), type_of% (@pw_dec_Amount_seg h) = @E2eScal.u64DecRRSegKind h E2eScal.H4Code.PwUnmarshal Reg64.r8 8 16 54 := by
   intro h; with_reducible rfl
 
@@ -138,7 +139,7 @@ theorem pw_dec_WithdrawableEpoch_arg2 (k : Nat) (hk : E2eScal.H4Code.PwUnmarshal
         ∧ st.data.regs.rax = s.regs.rsi ∧ st.data.regs.rbx = s.regs.rdx ∧ st.data.regs.rcx = 8
         ∧ st.data.dmem = s.dmem)
       ⟨s, Host.addrOf (k + 56)⟩ := by
-  have hA := E2eScal.infix_sub (q := E2eScal.callArgMov) 56 hk
+  have hA := Codec.infix_sub (q := E2eScal.callArgMov) 56 hk
     (by simp only [E2eScal.H4Code.PwUnmarshal, E2eScal.callArgMov, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   with_reducible exact E2eScal.callarg_mov_seg (k + 56) hA
 theorem pw_dec_WithdrawableEpoch_arg2_kind : ∀ (h : Host), type_of% (@pw_dec_WithdrawableEpoch_arg2 h) = @E2eScal.callArgMovKind h E2eScal.H4Code.PwUnmarshal 56 := by
@@ -169,11 +170,11 @@ theorem pw_dec_WithdrawableEpoch_call (k : Nat) (hk : E2eScal.H4Code.PwUnmarshal
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 59)⟩ := by
-  have hA := E2eScal.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159") 59 hk
+  have hA := Codec.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159") 59 hk
     (by simp only [E2eScal.H4Code.PwUnmarshal, E2eScal.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := E2eScal.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159") 88 hk
+  have hB := Codec.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_159") 88 hk
     (by simp only [E2eScal.H4Code.PwUnmarshal, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl := Fk.label_at' hk hf (j := 88)
+  have hl := Machine.label_at' hk hf (j := 88)
     (by simp only [E2eScal.H4Code.PwUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [E2eScal.H4Code.PwUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact E2eScal.calldec_seg _ _ (k + 59) (k + 88) hA hB hl
@@ -192,7 +193,7 @@ theorem bh_dec_Slot_arg (k : Nat) (hk : E2eScal.BhCode.BhUnmarshal.IsInfixAt Hos
         ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧ st.data.regs.rbx = s.regs.rbx
         ∧ st.data.regs.rax.toBitVec = aF ∧ st.data.regs.rcx = 8 ∧ st.data.dmem = s.dmem)
       ⟨s, Host.addrOf (k + 15)⟩ := by
-  have hA := E2eScal.infix_sub (q := E2eScal.callArgFirst false 8) 15 hk
+  have hA := Codec.infix_sub (q := E2eScal.callArgFirst false 8) 15 hk
     (by simp only [E2eScal.BhCode.BhUnmarshal, E2eScal.callArgFirst, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   with_reducible exact E2eScal.callarg_first_seg false _ (k + 15) hA
 theorem bh_dec_Slot_arg_kind : ∀ (h : Host), type_of% (@bh_dec_Slot_arg h) = @E2eScal.callArgFirstKind h E2eScal.BhCode.BhUnmarshal false 8 15 := by
@@ -223,11 +224,11 @@ theorem bh_dec_Slot_call (k : Nat) (hk : E2eScal.BhCode.BhUnmarshal.IsInfixAt Ho
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 17)⟩ := by
-  have hA := E2eScal.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9") 17 hk
+  have hA := Codec.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9") 17 hk
     (by simp only [E2eScal.BhCode.BhUnmarshal, E2eScal.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := E2eScal.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9") 46 hk
+  have hB := Codec.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9") 46 hk
     (by simp only [E2eScal.BhCode.BhUnmarshal, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl := Fk.label_at' hk hf (j := 46)
+  have hl := Machine.label_at' hk hf (j := 46)
     (by simp only [E2eScal.BhCode.BhUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [E2eScal.BhCode.BhUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact E2eScal.calldec_seg _ _ (k + 17) (k + 46) hA hB hl
@@ -252,7 +253,7 @@ theorem bh_dec_ProposerIndex_arg (k : Nat) (hk : E2eScal.BhCode.BhUnmarshal.IsIn
         ∧ st.data.regs.rbx.toBitVec = aSrc ∧ st.data.regs.rax.toBitVec = aF ∧ st.data.regs.rcx = 8
         ∧ st.data.dmem = s.dmem)
       ⟨s, Host.addrOf (k + 47)⟩ := by
-  have hA := E2eScal.infix_sub (q := E2eScal.callArgReload true 120 8 136 (-8) 112 16) 47 hk
+  have hA := Codec.infix_sub (q := E2eScal.callArgReload true 120 8 136 (-8) 112 16) 47 hk
     (by simp only [E2eScal.BhCode.BhUnmarshal, E2eScal.callArgReload, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   with_reducible exact E2eScal.callarg_reload_seg true _ _ _ _ _ _ (k + 47) hA
 theorem bh_dec_ProposerIndex_arg_kind : ∀ (h : Host), type_of% (@bh_dec_ProposerIndex_arg h) = @E2eScal.callArgReloadKind h E2eScal.BhCode.BhUnmarshal true 120 8 136 (-8) 112 16 47 := by
@@ -283,11 +284,11 @@ theorem bh_dec_ProposerIndex_call (k : Nat) (hk : E2eScal.BhCode.BhUnmarshal.IsI
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 55)⟩ := by
-  have hA := E2eScal.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 55 hk
+  have hA := Codec.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 55 hk
     (by simp only [E2eScal.BhCode.BhUnmarshal, E2eScal.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := E2eScal.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 85 hk
+  have hB := Codec.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154") 85 hk
     (by simp only [E2eScal.BhCode.BhUnmarshal, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl := Fk.label_at' hk hf (j := 85)
+  have hl := Machine.label_at' hk hf (j := 85)
     (by simp only [E2eScal.BhCode.BhUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [E2eScal.BhCode.BhUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact E2eScal.calldec_seg _ _ (k + 55) (k + 85) hA hB hl
@@ -306,7 +307,7 @@ theorem ad_dec_Slot_arg (k : Nat) (hk : E2eAd.Code.AdUnmarshal.IsInfixAt Host.pr
         ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧ st.data.regs.rbx = s.regs.rbx
         ∧ st.data.regs.rax.toBitVec = aF ∧ st.data.regs.rcx = 8 ∧ st.data.dmem = s.dmem)
       ⟨s, Host.addrOf (k + 15)⟩ := by
-  have hA := E2eScal.infix_sub (q := E2eScal.callArgFirst false 8) 15 hk
+  have hA := Codec.infix_sub (q := E2eScal.callArgFirst false 8) 15 hk
     (by simp only [E2eAd.Code.AdUnmarshal, E2eScal.callArgFirst, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   with_reducible exact E2eScal.callarg_first_seg false _ (k + 15) hA
 theorem ad_dec_Slot_arg_kind : ∀ (h : Host), type_of% (@ad_dec_Slot_arg h) = @E2eScal.callArgFirstKind h E2eAd.Code.AdUnmarshal false 8 15 := by
@@ -337,11 +338,11 @@ theorem ad_dec_Slot_call (k : Nat) (hk : E2eAd.Code.AdUnmarshal.IsInfixAt Host.p
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 17)⟩ := by
-  have hA := E2eScal.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_c7") 17 hk
+  have hA := Codec.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_c7") 17 hk
     (by simp only [E2eAd.Code.AdUnmarshal, E2eScal.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := E2eScal.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_c7") 47 hk
+  have hB := Codec.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_c7") 47 hk
     (by simp only [E2eAd.Code.AdUnmarshal, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl := Fk.label_at' hk hf (j := 47)
+  have hl := Machine.label_at' hk hf (j := 47)
     (by simp only [E2eAd.Code.AdUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [E2eAd.Code.AdUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact E2eScal.calldec_seg _ _ (k + 17) (k + 47) hA hB hl
@@ -366,7 +367,7 @@ theorem ad_dec_CommitteeIndex_arg (k : Nat) (hk : E2eAd.Code.AdUnmarshal.IsInfix
         ∧ st.data.regs.rbx.toBitVec = aSrc ∧ st.data.regs.rax.toBitVec = aF ∧ st.data.regs.rcx = 8
         ∧ st.data.dmem = s.dmem)
       ⟨s, Host.addrOf (k + 48)⟩ := by
-  have hA := E2eScal.infix_sub (q := E2eScal.callArgReload false 136 8 152 (-8) 128 16) 48 hk
+  have hA := Codec.infix_sub (q := E2eScal.callArgReload false 136 8 152 (-8) 128 16) 48 hk
     (by simp only [E2eAd.Code.AdUnmarshal, E2eScal.callArgReload, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   with_reducible exact E2eScal.callarg_reload_seg false _ _ _ _ _ _ (k + 48) hA
 theorem ad_dec_CommitteeIndex_arg_kind : ∀ (h : Host), type_of% (@ad_dec_CommitteeIndex_arg h) = @E2eScal.callArgReloadKind h E2eAd.Code.AdUnmarshal false 136 8 152 (-8) 128 16 48 := by
@@ -397,11 +398,11 @@ theorem ad_dec_CommitteeIndex_call (k : Nat) (hk : E2eAd.Code.AdUnmarshal.IsInfi
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 55)⟩ := by
-  have hA := E2eScal.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_167") 55 hk
+  have hA := Codec.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_167") 55 hk
     (by simp only [E2eAd.Code.AdUnmarshal, E2eScal.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := E2eScal.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_167") 85 hk
+  have hB := Codec.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_167") 85 hk
     (by simp only [E2eAd.Code.AdUnmarshal, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl := Fk.label_at' hk hf (j := 85)
+  have hl := Machine.label_at' hk hf (j := 85)
     (by simp only [E2eAd.Code.AdUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [E2eAd.Code.AdUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact E2eScal.calldec_seg _ _ (k + 55) (k + 85) hA hB hl
@@ -420,7 +421,7 @@ theorem cp_dec_Epoch_arg (k : Nat) (hk : E2e.Code.CpUnmarshal.IsInfixAt Host.pro
         ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧ st.data.regs.rbx = s.regs.rbx
         ∧ st.data.regs.rax.toBitVec = aF ∧ st.data.regs.rcx = 8 ∧ st.data.dmem = s.dmem)
       ⟨s, Host.addrOf (k + 14)⟩ := by
-  have hA := E2eScal.infix_sub (q := E2eScal.callArgFirst true 8) 14 hk
+  have hA := Codec.infix_sub (q := E2eScal.callArgFirst true 8) 14 hk
     (by simp only [E2e.Code.CpUnmarshal, E2eScal.callArgFirst, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   with_reducible exact E2eScal.callarg_first_seg true _ (k + 14) hA
 theorem cp_dec_Epoch_arg_kind : ∀ (h : Host), type_of% (@cp_dec_Epoch_arg h) = @E2eScal.callArgFirstKind h E2e.Code.CpUnmarshal true 8 14 := by
@@ -451,11 +452,11 @@ theorem cp_dec_Epoch_call (k : Nat) (hk : E2e.Code.CpUnmarshal.IsInfixAt Host.pr
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 17)⟩ := by
-  have hA := E2eScal.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4") 17 hk
+  have hA := Codec.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4") 17 hk
     (by simp only [E2e.Code.CpUnmarshal, E2eScal.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := E2eScal.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4") 47 hk
+  have hB := Codec.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4") 47 hk
     (by simp only [E2e.Code.CpUnmarshal, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl := Fk.label_at' hk hf (j := 47)
+  have hl := Machine.label_at' hk hf (j := 47)
     (by simp only [E2e.Code.CpUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [E2e.Code.CpUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact E2eScal.calldec_seg _ _ (k + 17) (k + 47) hA hB hl
@@ -502,15 +503,15 @@ theorem dd_dec_WithdrawalCredentials_seg (k : Nat) (hk : E2eScal.H4Code.DdUnmars
           ⋆ Eq (root.At aSrc)
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 47)⟩ := by
-  have hA := E2eScal.infix_sub (q := E2eScal.bytesDecHeadP true 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" 48 40 48) 47 hk
+  have hA := Codec.infix_sub (q := E2eScal.bytesDecHeadP true 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" 48 40 48) 47 hk
     (by simp only [E2eScal.H4Code.DdUnmarshal, E2eScal.bytesDecHeadP, E2eScal.bytesDecHeadPad, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := E2eScal.infix_sub (q := E2eScal.bytesDecMid 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_154" 48 56 24 32 40 48 48) 61 hk
-    (by simp only [E2eScal.H4Code.DdUnmarshal, E2eScal.bytesDecMid, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl := Fk.label_at' hk hf (j := 61)
+  have hB := Codec.infix_sub (q := Codec.bytesDecMid 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_154" 48 56 24 32 40 48 48) 61 hk
+    (by simp only [E2eScal.H4Code.DdUnmarshal, Codec.bytesDecMid, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hl := Machine.label_at' hk hf (j := 61)
     (by simp only [E2eScal.H4Code.DdUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [E2eScal.H4Code.DdUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact E2eScal.bytesdec_seg_p true 32 (Or.inl rfl) _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) hA hB hl
-theorem dd_dec_WithdrawalCredentials_seg_kind : ∀ (h : Host), type_of% (@dd_dec_WithdrawalCredentials_seg h) = @E2eScal.bytesDecSegKind h 32 E2eScal.H4Code.DdUnmarshal 47 61 48 56 24 32 40 48 48 := by
+theorem dd_dec_WithdrawalCredentials_seg_kind : ∀ (h : Host), type_of% (@dd_dec_WithdrawalCredentials_seg h) = @Codec.bytesDecSegKind h 32 E2eScal.H4Code.DdUnmarshal 47 61 48 56 24 32 40 48 48 := by
   intro h; with_reducible rfl
 
 end E2eScal.Gen3Ex

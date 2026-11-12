@@ -42,8 +42,8 @@ def reject(X, n):
     N = sum(f[2] for f in fs)
     L = 1 + n
     return f'''import E2eScal.Gen5F24{X}Dec
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of the generated `{x}_g5dec_reject` (FLAT24 / H7)
@@ -57,8 +57,9 @@ slot, return slot, the unused rax spill slot (the frame `R`) and the rbx spill s
 (instances {N - 1}, {N + 1}, 0) the decoder returns the two words.
 -/
 
-open Fk Fk.W E2e E2eScal.F24Code
+open Machine Runtime TestTarget Machine.Witness E2e E2eScal.F24Code
 
+open Codec
 namespace E2eScal.Wit{X}GR
 
 set_option maxRecDepth 100000
@@ -150,8 +151,8 @@ def acc38(X, n):
     decs = ' '.join(['(by decide)'] * nf)
     ffs = ' '.join(['(List.replicate 8 0xff)'] * nf)
     return f'''import E2eScal.Gen5F24{X}Dec
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of the generated `{x}_g5dec_accept` (`{ty}` decoder accept path; FLAT24 / H7)
@@ -168,7 +169,7 @@ at rax = 0x10020 (protoc struct, `prysm/ir/ir-mainnet.json` gc amd64 layout: `st
 returns nil. The receiver is a Go value of `{ty}` (all zero).
 -/
 
-open Fk Fk.W E2e E2eScal E2eScal.F24Code
+open Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.F24Code
 
 namespace E2eScal.Wit{X}GA
 
@@ -346,12 +347,12 @@ def accbytes(X, n, frame):
                    + [('(by decide)' if f[1] == 'u' else 'rfl') for f in fs] + ['(by decide)'] * nb)
     ex2 = ' '.join([f'(List.replicate {f[2]} 0xff)' for f in fs] + ['(List.replicate 8 0xff)'] * nb
                    + ['rfl'] * (len(fs) + nb))
-    opens = 'Fk Fk.W E2e E2eScal E2eScal.F24Code'
+    opens = 'Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.F24Code'
     cdoc = ', '.join(f'`{CALLEE[c][1]}` UnmarshalSSZ' for c in callees)
     return f'''import E2eScal.Gen5F24{X}Dec
-import Fk.RtCopy
-import Fk.BumpMore
-import Fk.WHost
+import Runtime.CopyModel
+import Runtime.BumpAllocatorVariants
+import Machine.WitnessHost
 
 /-!
 # Witness of the generated `{x}_g5dec_accept` (`{ty}` decoder accept path; FLAT24 / H7)

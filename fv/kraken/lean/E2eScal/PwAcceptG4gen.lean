@@ -11,7 +11,7 @@ compositions over the GENERATED theorems of `Gen4PwDec.lean` (`p2dec --gen4`, ra
 (`PwAccept.lean`, frame `0x48`) and the glue. In-sample (development data); no transfer claim.
 -/
 
-open Fk E2e E2eScal.H4Code E2eScal.BhCode E2eScal
+open Machine Runtime TestTarget E2e E2eScal.H4Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.H4

@@ -9,7 +9,7 @@ freshness and `rax = 0`. `cs0 112 …` with `rax` replaced by 0 satisfies all of
 The run starts at directive 18 or 56 (after the callee's return), not at the function entry.
 -/
 
-open Fk E2eScal.Bh E2eScal.WitBhR
+open Machine Runtime TestTarget E2eScal.Bh E2eScal.WitBhR
 
 namespace E2eScal.WitBhU
 

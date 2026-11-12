@@ -1,6 +1,6 @@
 import E2eScal.Gen5VeDec
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of the generated `ve_g5dec_accept` (VoluntaryExit decoder accept path)
@@ -16,7 +16,7 @@ frame-pointer slot (rsp − 96) · callee return slot (rsp − 88) · 8 untouche
 input every premise holds and the decoder returns nil. The receiver is a Go value of `v1alpha1.VoluntaryExit` (all zero).
 -/
 
-open Fk Fk.W E2e E2eScal E2eScal.H6Code
+open Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.H6Code
 
 namespace E2eScal.WitVeGA
 

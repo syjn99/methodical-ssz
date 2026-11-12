@@ -1,6 +1,6 @@
 import E2eScal.E1EncMain
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of `e1_e2e_marshal_main` (Eth1Data encoder, fast path only)
@@ -19,7 +19,7 @@ Two instances: empty prefix with `cap = 72`, and a 3-byte prefix with 5 spare by
 DepositCount and root contents every premise of the theorem holds.
 -/
 
-open Fk Fk.W E2eScal E2eScal.E1Code E2eScal.E1
+open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.E1Code E2eScal.E1
 
 namespace E2eScal.WitE1M
 

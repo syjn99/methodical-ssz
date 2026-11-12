@@ -1,6 +1,6 @@
 import E2eScal.Gen6PdEnc
 import E2eScal.PdSpec
-import Fk.RtCopy
+import Runtime.CopyModel
 
 /-!
 # PendingDeposit encoder fast path (generated theorem) against the independent Desc (unit E2-C)
@@ -12,7 +12,7 @@ Shape of `E2eScal.Bh.bh_e2e_marshal_spec_k`. Encoder fast path only (`len + 192 
 lengths). Emitted by the unit's evidence tool `e2cemit.py`, then built and kernel-checked.
 -/
 
-open Fk E2e E2eScal E2eScal.Gen6Enc E2eScal.Enc2Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.Gen6Enc E2eScal.Enc2Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.E2c
@@ -124,9 +124,9 @@ theorem pd_e2c_spec_k (k : Nat)
   refine ⟨ppdEnc g, ppd_serialize g, ?_⟩
   have hF0 : g.pubkey.toList.length = 48 := by simp
   have hF1 : g.withdrawalCredentials.toList.length = 32 := by simp
-  have hF2 : (uintBytes 8 g.amount.toNat).toList.length = 8 := by simp [Fv.uintBytes_size]
+  have hF2 : (uintBytes 8 g.amount.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
   have hF3 : g.signature.toList.length = 96 := by simp
-  have hF4 : (uintBytes 8 g.slot.toNat).toList.length = 8 := by simp [Fv.uintBytes_size]
+  have hF4 : (uintBytes 8 g.slot.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
   refine eventually_mono (pd_g6e_fast k hk hf ast (uintBytes 8 g.amount.toNat).toList (uintBytes 8 g.slot.toNat).toList c0 c1 c3 (g.pubkey.toList) (g.withdrawalCredentials.toList) (g.signature.toList) pre d0 d1 d2 d3 d4 hast hF2 hF4 hc0 hc1 hc3 hF0 hF1 hF3 hd0 hd1 hd2 hd3 hd4 p0 p1 p3 s ra guard hpre fp s1 s2 l48 l56 l16 l96 l104 l32 l120 l40 l112 t88 t72 rslot hfp hs1 hs2 hl48 hl56 hl16 hl96 hl104 hl32 hl120 hl40 hl112 ht88 ht72 hrslot R S scratch hsc h_mem hguard hsp hcap hcap63 hmm)
     (fun st ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, _, _, _, _, _, _, _, _, _, hm⟩ =>
       ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, ?_⟩)

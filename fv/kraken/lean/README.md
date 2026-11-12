@@ -6,14 +6,27 @@ The design principles are in `../../README.md`. The build commands are in `../RE
 
 ## 1. Libraries
 
-**`Fv` and `Fv1`.** EthLib specifications of the small test types, and of two reduced Prysm types.
-They import only EthLib and each other. `Fv1/Transfer.lean` holds a general lemma: if `serialize` of every Go value gives `enc g`, then every input that EthLib accepts is `enc g` of one value.
+The libraries `Spec`, `Machine`, `Runtime`, `TestTarget` and `Codec` are the shared layer.
+The other libraries hold the proofs of Prysm types (one library or a group of modules for each type).
+`../gen/restructure/maps/shared-layer/files.tsv` gives the earlier path of each shared module and a one-line meaning.
+
+**`Spec`.** EthLib specifications that several types share, and the ones that the `Desc` checker imports (`../gen/desccheck/`).
+They are the specifications of the small test types (`Spec/Test*.lean`) and of two reduced Prysm types (`Spec/ReducedPrysm.lean`).
+They import only EthLib and each other. `Spec/DeserializeOfSerialize.lean` holds a general lemma: if `serialize` of every Go value gives `enc g`, then every input that EthLib accepts is `enc g` of one value.
 So a machine proof only has to say what the code does on `enc g`, and that the code rejects every other input.
 
-**`Fk`.** The base layer on Kraken. It has the code include (`Fk/Include.lean`, `Fk/Code.lean`), the data include (`Fk/Data.lean`) and the one-instruction step lemmas (`Fk/Step.lean`).
-It also has the stack frame and flag lemmas, the runtime contracts (`Fk/Contracts.lean`) and the function specifications (`Fk/FunSpecs.lean`).
-The runtime models are small assembly programs (`*.S`) with theorems that they satisfy the contracts. Examples are a bump allocator, a memory copy and error formatting.
-The witness host builder is `Fk/WHost.lean`. Some modules prove theorems about the test target, for example `Fk/ScAccept.lean` and `Fk/LuReject.lean`.
+**`Machine`.** Helpers on the Kraken machine model: the one-instruction step lemmas and tactics (`Machine/Step.lean`), the stack frame, byte, label and flag lemmas.
+It also has the commands that read code and data files (`Machine/Include.lean`) and the witness host builder and tactics (`Machine/WitnessHost.lean`, `Machine/WitnessSplit.lean`).
+
+**`Runtime`.** The contracts of the Go runtime callees (`Runtime/Contracts.lean`) and their models.
+A model is a small assembly program (`Runtime/*.S`) with theorems that it satisfies its contract. Examples are a bump allocator, a memory copy and error formatting.
+
+**`TestTarget`.** Code, data and proofs of the small test target (Go 1.26.3, `../link/out/`), for example `TestTarget/ScalarsDecodeAccept.lean` and `TestTarget/ListU64DecodeReject.lean`.
+It also has the function specifications of the test target callees (`TestTarget/FunctionSpecs.lean`) and the contract form `NewobjectC`.
+Some Prysm proofs use a few of its declarations (for example `TestTarget.Data.staticuint64s_addr`, `store_avx_step`, `TestTarget.luElems`).
+
+**`Codec`.** Lemmas that do not depend on one Prysm type: the `uint64` decoder pattern (`Codec/Uint64Decoder.lean`), the fixed-bytes field decoder and encoder patterns (`Codec/Bytes32*.lean`, `Codec/FixedBytesDecode*.lean`), the encoder step lemmas (`Codec/Encode*.lean`) and the statement kinds of the generated proofs (`Codec/Kind/`).
+`Codec/Segment/` holds segment and loop lemmas stated once for any size or element count, with the fixed instances of `E2eList` and `E2eHb` as corollaries.
 
 **`E2e`.** The Prysm `v1alpha1.Checkpoint` decoder, encoder and `SizeSSZ`, and the `primitives.Epoch` decoder.
 It also has the hand specification, the Go value predicate (`E2e/GoVal.lean`) and the decoder-then-encoder composition (`E2e/CpCompose.lean`).
@@ -21,18 +34,16 @@ It also has the hand specification, the Go value predicate (`E2e/GoVal.lean`) an
 
 **`E2eAd`.** The `v1alpha1.AttestationData` decoder and the decoders of the hand-written `primitives.Slot` and `primitives.CommitteeIndex` methods.
 
-**`E2eScal`.** Lemmas and generated proofs for the flat fixed-size types. A flat type has only fixed-size fields and no nested container.
-The two base patterns are the `uint64` decoder and the 32-byte field segment. The generated files are `Gen*.lean`.
-`Kind*.lean` holds the frozen statement kinds that the generated theorems must match (see `../gen/README.md`).
+**`E2eScal`.** Generated and hand proofs for the flat fixed-size types. A flat type has only fixed-size fields and no nested container.
+The generated files are `Gen*.lean`. They use the patterns and kinds of `Codec`.
+The statement kinds of the composed accept theorems, of the callee calls and of the encoder fast path are still here (`KindAccept*.lean`, `KindCall.lean`, `KindEncN.lean`): their modules import modules of single types (see `../gen/README.md`).
 
 **`E2eList`.** The decoders of `v1alpha1.SyncAggregate`, `v1alpha1.SyncCommittee` and `v1alpha1.IndexedAttestation`.
 These types have byte vectors, a vector of byte vectors and a variable-size list.
 
 **`E2eHb`.** The `v1alpha1.HistoricalBatch` decoder.
 
-**`E2eSeg`.** Segment and loop lemmas stated once for any size or element count, with the fixed instances as corollaries.
-
-**`E2eDep` and `E2eDepW`.** The `v1alpha1.Deposit` decoder, proved with the `E2eSeg` lemmas, and its witnesses.
+**`E2eDep` and `E2eDepW`.** The `v1alpha1.Deposit` decoder, proved with the lemmas of `Codec/Segment/`, and its witnesses.
 
 **`E2eEnc` and `E2eDec`.** The `v1alpha1.DataColumnsByRootIdentifier` encoder and decoder, and their composition at the machine level.
 
@@ -41,19 +52,23 @@ These types have byte vectors, a vector of byte vectors and a variable-size list
 The import graph has this order:
 
 ```text
-EthLib -> Fv -> Fv1 -> Fk -> E2e -> E2eAd -> E2eScal -> E2eList -> E2eHb -> E2eSeg -> E2eDep -> E2eDepW
-                                                          E2eList -> E2eEnc -> E2eDec
+EthLib -> Spec -> Machine -> Runtime -> TestTarget -> Codec (except Codec/Segment/)
+       -> E2e -> E2eAd -> E2eScal -> E2eList -> E2eHb -> Codec/Segment/ -> E2eDep -> E2eDepW
+                                     E2eList -> E2eEnc -> E2eDec
 ```
 
-Two exceptions: `E2e/OptR1/` imports `E2eScal`, and `E2eHb` does not import `E2eScal`.
+The arrows give the order of the libraries in the import graph. A library imports only libraries to its left.
+Exceptions: `Machine/Step.lean` imports `TestTarget/Code.lean`, `Runtime/Contracts.lean` imports `TestTarget/Data.lean`,
+`Runtime/BumpAllocatorVariants.lean` imports `TestTarget/FunctionSpecs.lean`, and `Codec/Bytes32Decode.lean` imports `E2e/Data.lean`.
+`E2e/OptR1/` imports `E2eScal`, and `E2eHb` does not import `E2eScal`.
 A new type gets its own library or modules. Do not change a reviewed module to add a new type.
 
 ## 2. How machine code enters Lean
 
 1. `../link/conv.py` converts the disassembly of one function into a labeled `.S` file.
-2. `include_x64_rt "<path>.S"` (`Fk/Include.lean`) parses the file with the Kraken parser when Lean elaborates it. The result is a `Program` constant, for example `E2eList.Code.SaUnmarshal`.
+2. `include_x64_rt "<path>.S"` (`Machine/Include.lean`) parses the file with the Kraken parser when Lean elaborates it. The result is a `Program` constant, for example `E2eList.Code.SaUnmarshal`.
 3. A data file holds the bytes or the address of one ELF data item, for example a format string or a type descriptor.
-   `data_include <id>` (`Fk/Include.lean`) and its copies for other directories define `<id> : List UInt8` and `<id>_addr : BitVec 64`. No byte or offset is written by hand.
+   `data_include <id>` (`Machine/Include.lean`) and its copies for other directories define `<id> : List UInt8` and `<id>_addr : BitVec 64`. No byte or offset is written by hand.
 4. `../link/check.py` compares the `.S` files and the data files with the ELF.
 
 The `.S` and data files are not Lean imports. So `lakefile.toml` declares their directories as `input_dir` entries in the `needs` of each library.
@@ -113,7 +128,7 @@ An accept theorem adds the contract hypotheses (for example `MakesliceC`, `Memmo
 A contract describes a callee at its label, for every machine state, return address and frame `F`.
 It gives the argument registers, the stack window of `S` scratch bytes below the return slot, and the spill slots that the callee can write.
 It also gives the heap budget and the conclusion: the result, the kept registers `rsp + 8`, `r14`, `rbp`, and an unchanged `F`.
-The forms are in `Fk/Contracts.lean` (runtime functions) and `Fk/FunSpecs.lean` (generated callees).
+The forms are in `Runtime/Contracts.lean` (runtime functions) and `TestTarget/FunctionSpecs.lean` (generated callees).
 
 | Contract | Callee |
 | --- | --- |
@@ -153,7 +168,7 @@ The connection to EthLib has three theorem forms:
 
 ## 6. Witnesses
 
-A witness file (`Wit*.lean`) builds one concrete `Host` with `Fk.W.mkHost` (`Fk/WHost.lean`).
+A witness file (`Wit*.lean`) builds one concrete `Host` with `Machine.Witness.mkHost` (`Machine/WitnessHost.lean`).
 The program is the data labels, the real converted function and the runtime models.
 A theorem `*_runs` applies the main theorem to a concrete memory block and discharges every premise.
 The runtime models discharge the contract hypotheses. Example: `E2eList.WitSaA.sa_accept_runs`.
@@ -168,7 +183,7 @@ Use one witness host for each file. Two `Host` instances in one file make instan
 - Keep `maxHeartbeats` and `maxRecDepth` at the default. If a proof needs more, profile the declaration first.
   Then write the measured cause in words in a comment above the `set_option` line. `E2eList/IaAccept.lean` has an example.
 - Many files have limit options without such a comment. Do not copy them as a model for new work.
-- Use `Fk.cmp_be_false` or `E2eScal.lea_cmp_be_false` for the stack guard branch. A `simp` and `omega` proof of that branch can use too much kernel memory.
+- Use `Machine.cmp_be_false` or `Codec.lea_cmp_be_false` for the stack guard branch. A `simp` and `omega` proof of that branch can use too much kernel memory.
 - Split a long straight-line proof into segments over the fragments that each segment touches, then compose them.
 - A scratch result is closed only when `#print axioms` of every theorem that it uses has no `sorryAx` and does not list the theorem itself.
 - Build one heavy job at a time. After a failed build, run `lake build --no-build` before you trust any `.olean`.
@@ -206,8 +221,8 @@ Some abbreviations have two or three meanings. The namespace decides the meaning
 | `Pdc`, `Vid`, `Bpf` | `v1alpha1.PartialDataColumnGroupID`, `ValidatorIdentity`, `BuilderPreferences` |
 | `Ep`, `Sl`, `Ci`, `Vi` | `primitives.Epoch`, `Slot`, `CommitteeIndex`, `ValidatorIndex` (hand-written methods) |
 | `Lu`, `Lc`, `Bl`, `Bv` | test types `ListU64`, `ListC`, `BitL`, `BitVec` in `../target/` |
-| `Sc` | three meanings: `v1alpha1.SyncCommitteeMessage` in `E2eScal` encoder names such as `Gen6ScEnc`, `v1alpha1.SyncCommittee` in `E2eList`, and the test type `Scalars` in `Fk` |
+| `Sc` | three meanings: `v1alpha1.SyncCommitteeMessage` in `E2eScal` encoder names such as `Gen6ScEnc`, `v1alpha1.SyncCommittee` in `E2eList`, and the test type `Scalars` in `TestTarget` |
 | `Sa` | two meanings: `v1alpha1.SyncAggregatorSelectionData` in `E2eScal`, and `v1alpha1.SyncAggregate` in `E2eList` |
-| `Fv` | two meanings: the test type `FixedVec` in `Fk` names, and the library `Fv` |
+| `Fv` | the test type `FixedVec` in `TestTarget` declaration names |
 | `epr` | two meanings: `ExecutionPayloadEnvelopesByRangeRequest`, and the Epoch reject witness `E2e.WitEpR.epr_runs` |
 | `pad` | the encoder `padEnc` of `E2e.PAd` (AttestationData, in `E2eAd/Spec.lean`). The generator scripts use `Pad` for `v1alpha1.PayloadAttestationData` |

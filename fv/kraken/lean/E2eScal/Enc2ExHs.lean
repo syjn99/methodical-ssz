@@ -1,5 +1,5 @@
 import E2eScal.EncTies
-import E2eScal.EncFrameTest
+import Codec.EncodeFrameTest
 import E2eScal.Enc2Code
 
 /-!
@@ -14,7 +14,7 @@ theorem has a `_kind` line (`encHeadKindN`, `encFieldKindN`, `encEpiKindN`, `enc
 growslice branches, the length rejects, the morestack path.
 -/
 
-open Fk E2eScal E2eScal.Enc2Code
+open Machine Runtime TestTarget E2eScal Codec E2eScal.Enc2Code
 variable [Host]
 
 namespace E2eScal.Gen6
@@ -220,7 +220,7 @@ theorem hs_g6_f0 : ∀ (k : Nat) (hk : HsMarshal.IsInfixAt Host.prog k) (hf : La
   kn
   apply kreg_eq Reg64.r8 (rcx.toBitVec + 32) _ _ _ (by show (rcx.toBitVec + 32 : BitVec 64) = (rcx.toBitVec + 32); bv_omega)
   kn
-  have hl28 := Fk.label_at' hk hf (j := 28)
+  have hl28 := Machine.label_at' hk hf (j := 28)
     (by simp only [HsMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [HsMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_cmp_jae_t Reg64.rdi Reg64.r8 _ _ (k + 13) (k + 28) (win hk 13 2) (by rfl) hl28 _ _ (by show ((rcx.toBitVec + 32) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
@@ -246,7 +246,7 @@ theorem hs_g6_f0 : ∀ (k : Nat) (hk : HsMarshal.IsInfixAt Host.prog k) (hf : La
   apply kreg_eq Reg64.rcx 32 _ _ _ (by show (BitVec.zeroExtend 64 (BitVec.truncate 32 (32 : BitVec 64)) : BitVec 64) = 32; decide)
   kn
   refine eventually_trans _ _ _ _ (encn_call (k + 35) (win hk 35 1) (rsp.toBitVec - 88) (rbx.toBitVec + rcx.toBitVec) p0
-    (rsp.toBitVec - 96) (rsp.toBitVec - 96 - BitVec.ofNat 64 S) S (by bv_omega) (E2eScal.g5_lo0 rsp.toBitVec 88 96 S (by decide))
+    (rsp.toBitVec - 96) (rsp.toBitVec - 96 - BitVec.ofNat 64 S) S (by bv_omega) (Codec.frame_lo0 rsp.toBitVec 88 96 S (by decide))
     b0 d0 rslot scratch (by rw [hd0, hb0]) hrslot hsc
     _ _ (by rfl) (by rfl) (by rfl) (by rw [hb0]; rfl) (by first | ecancel | (dsimp only; ecancel)) hmm) ?_
   rintro ⟨e1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, scr1, hscr1, Hc1⟩
@@ -371,7 +371,7 @@ theorem hs_g6_f1 : ∀ (k : Nat) (hk : HsMarshal.IsInfixAt Host.prog k) (hf : La
   apply kstep_ldv Reg64.rax Reg64.rsp 72 _ (k + 45) (k + 46) (win hk 45 1) (by rfl) (by rfl)
     (rsp.toBitVec - 88) (rsp.toBitVec - 16) rbx.toBitVec (by eb) _ _ _ (by rfl) (by ecancel)
   kn
-  have hl57 := Fk.label_at' hk hf (j := 57)
+  have hl57 := Machine.label_at' hk hf (j := 57)
     (by simp only [HsMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [HsMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_jmp _ _ (k + 46) (k + 57) (win hk 46 1) (by rfl) hl57
@@ -395,7 +395,7 @@ theorem hs_g6_f1 : ∀ (k : Nat) (hk : HsMarshal.IsInfixAt Host.prog k) (hf : La
   kn
   apply kstep_nops _ (k + 63) (k + 64) (win hk 63 1) (by rfl) (by rfl)
   refine eventually_trans _ _ _ _ (encn_call (k + 64) (win hk 64 1) (rsp.toBitVec - 88) (rbx.toBitVec + rcx.toBitVec + 32) p1
-    (rsp.toBitVec - 96) (rsp.toBitVec - 96 - BitVec.ofNat 64 S) S (by bv_omega) (E2eScal.g5_lo0 rsp.toBitVec 88 96 S (by decide))
+    (rsp.toBitVec - 96) (rsp.toBitVec - 96 - BitVec.ofNat 64 S) S (by bv_omega) (Codec.frame_lo0 rsp.toBitVec 88 96 S (by decide))
     b1 d1 (Int.toBytes 8 (Host.addrOf (k + 36)).toBitVec.toInt) x0 (by rw [hd1, hb1]) (Int.toBytes_length 8 _) hx0
     _ _ (by rfl) (by rfl) (by rfl) (by rw [hb1]; rfl) (by first | ecancel | (dsimp only; ecancel)) hmm) ?_
   rintro ⟨e2, pc2⟩ ⟨hpc2, hrsp2, hrbp2, hr142, scr2, hscr2, Hc2⟩
@@ -540,7 +540,7 @@ theorem hs_g6_epi : ∀ (k : Nat) (hk : HsMarshal.IsInfixAt Host.prog k) (hf : L
   apply kstep_ldv Reg64.rax Reg64.rsp 72 _ (k + 74) (k + 75) (win hk 74 1) (by rfl) (by rfl)
     (rsp.toBitVec - 88) (rsp.toBitVec - 16) rbx.toBitVec (by eb) _ _ _ (by rfl) (by ecancel)
   kn
-  have hl80 := Fk.label_at' hk hf (j := 80)
+  have hl80 := Machine.label_at' hk hf (j := 80)
     (by simp only [HsMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [HsMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_jmp _ _ (k + 75) (k + 80) (win hk 75 1) (by rfl) hl80

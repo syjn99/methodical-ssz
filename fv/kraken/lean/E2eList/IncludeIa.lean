@@ -6,7 +6,7 @@ public meta import Lean
 # `lvt3_data_include id`: ELF data of the IndexedAttestation set (`lv/link-t3`)
 
 The same reader as `lv_data_include` (`E2eList/Include.lean`, the text of `E2e/Include.lean`, itself the text of
-`Fk/Include.lean`'s `data_include`), for the data directory
+`Machine/Include.lean`'s `data_include`), for the data directory
 `../prysm/go1.26.10/e2e/lv/link-t3/data/<id>.data` (relative to `fv/kraken/lean`).
 `E2eList/Include.lean` is not changed;
 the helpers below are its text with the `lv` prefix replaced by `lvt3`

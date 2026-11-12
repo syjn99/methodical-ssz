@@ -16,7 +16,8 @@ before `smCheckerDesc` was rendered and printed.
 -/
 
 namespace E2e
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz
+open Spec hiding readUint_lt
 
 /-- The checker's Desc has the same kinds in the same order; only the names differ. -/
 theorem prysmSmDesc_checker :
@@ -49,7 +50,7 @@ def psmEnc (g : PSm) : Array UInt8 :=
   uintBytes 8 g.slot.toNat ++ g.blockRoot.toArray ++ uintBytes 8 g.validatorIndex.toNat ++ g.signature.toArray
 
 theorem psm_enc_size (g : PSm) : (psmEnc g).size = 144 := by
-  simp [psmEnc, Fv.uintBytes_size]
+  simp [psmEnc, Spec.uintBytes_size]
 
 theorem psm_toValue_fits (g : PSm) : Value.fits prysmSmDesc g.toValue = true := by
   have := g.slot.toNat_lt; have := g.validatorIndex.toNat_lt
@@ -95,7 +96,7 @@ theorem psm_serialize (g : PSm) : serialize prysmSmDesc g.toValue = .ok (psmEnc 
   have := a0.toNat_lt; have := a.toNat_lt
   simp only [prysmSmDesc, PSm.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk, hr, hz]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Fv.uintBytes_size, bytesPerOffset, psmEnc,
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, psmEnc,
     Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- **Spec roundtrip.** -/

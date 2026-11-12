@@ -69,27 +69,27 @@
  },
  {
   "id": "g5-fc-j3-control",
-  "module": "E2eScal/FieldComp.lean",
-  "theorem": "g5_j3",
+  "module": "Codec/FieldFrame.lean",
+  "theorem": "frame_j3",
   "kind": "control"
  },
  {
   "id": "g5-fc-j3-stmt-off",
-  "module": "E2eScal/FieldComp.lean",
-  "theorem": "g5_j3",
+  "module": "Codec/FieldFrame.lean",
+  "theorem": "frame_j3",
   "kind": "stmt",
   "old": "(hz : x + 16 = z)",
   "new": "(hz : x + 24 = z)"
  },
  {
   "id": "g5-fc-epi-control",
-  "module": "E2eScal/FieldComp.lean",
+  "module": "Codec/FieldFrame.lean",
   "theorem": "decepi_n",
   "kind": "control"
  },
  {
   "id": "g5-fc-epi-stmt-ra",
-  "module": "E2eScal/FieldComp.lean",
+  "module": "Codec/FieldFrame.lean",
   "theorem": "decepi_n",
   "kind": "stmt",
   "old": "(hRa : aFp + 8 = aRa)",

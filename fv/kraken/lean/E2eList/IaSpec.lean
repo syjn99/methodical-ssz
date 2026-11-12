@@ -1,7 +1,7 @@
 import E2e.Spec
 import E2e.SpecEq
 import E2eAd.Spec
-import Fk.LuErr
+import TestTarget.ListU64RejectSpec
 import EthLib.Serialization.Proofs.Ssz.Codec.Table
 import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
 import E2eList.DefsIa
@@ -10,12 +10,12 @@ import E2eList.DefsIa
 # Spec bridge for the real Prysm `v1alpha1.IndexedAttestation`
 
 The order of `DdSpec.lean` / `SaSpec.lean` with one variable field. The list part reuses the Go 1.26.3 ListU64 lemmas
-(`Fv1.serializeEach_u64`, `Fv1.inl_*`, `Fv1.luElems`, `Fv1.u64Bytes_luElems`, `Fv1.allFit_u64(_inv)`); the data part
+(`Spec.serializeEach_u64`, `Fv1.inl_*`, `TestTarget.luElems`, `TestTarget.u64Bytes_luElems`, `Spec.allFit_u64(_inv)`); the data part
 reuses `E2e.pad_*` (AttestationData). `iaChecks` are the four checks of the Go decoder in its order.
 -/
 
 namespace E2eList
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz Spec TestTarget
 
 theorem prysmIaDesc_wellFormed : prysmIaDesc.wellFormed = .ok () := by rfl
 

@@ -1,7 +1,7 @@
-import Fk.Contracts
-import Fk.Frame
-import Fk.Bytes
-import Fk.Labels
+import Runtime.Contracts
+import Machine.Frame
+import Machine.Bytes
+import Machine.Labels
 import E2e.Data
 import E2eList.DataIa
 import E2eEnc.Defs
@@ -31,7 +31,7 @@ runtime call return slot x − 152, scratch `S` below it. The last call on the a
 The alignment reject and the overflow reject run after the BlockRoot allocation and stores; their statements are not in this file.
 -/
 
-open Fk EthLib.Serialization.Ssz E2eDec.Code E2eEnc
+open Machine Runtime TestTarget EthLib.Serialization.Ssz E2eDec.Code E2eEnc
 variable [Host]
 
 namespace E2eDec
@@ -190,7 +190,7 @@ def dcd_accept_spec_stmt : Prop :=
           ⋆ Eq ((Int.toBytes 8 A.toInt).At (s.regs.rax.toBitVec + 32))
           ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 g.cols.length).toInt).At (s.regs.rax.toBitVec + 40))
           ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 g.cols.length).toInt).At (s.regs.rax.toBitVec + 48))
-          ⋆ Eq (g.root.toList.At pb) ⋆ Eq ((Fv1.u64Bytes g.cols).toList.At A)
+          ⋆ Eq (g.root.toList.At pb) ⋆ Eq ((Spec.u64Bytes g.cols).toList.At A)
           ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 

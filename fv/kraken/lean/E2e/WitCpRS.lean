@@ -9,7 +9,7 @@ and `0` bytes of `0x11`); EthLib rejects each (`∃ e, deserialize … = .error 
 and the machine code returns the two `ssz.ErrSize` words.
 -/
 
-open Fk Fk.W E2e E2e.Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget Machine.Witness E2e E2e.Code EthLib.Serialization.Ssz
 
 namespace E2e.WitCpR
 

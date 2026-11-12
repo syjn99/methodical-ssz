@@ -13,7 +13,7 @@ instance on this host; it does not by itself show that the premises of a main th
 (non-vacuity) comes from the run witnesses.
 -/
 
-open Fk Fk.W E2e E2e.Code E2eAd
+open Machine Runtime TestTarget Machine.Witness E2e E2e.Code E2eAd
 
 namespace E2eAd.WitCpMS
 

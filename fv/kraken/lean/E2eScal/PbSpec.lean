@@ -18,7 +18,8 @@ the 32 little-endian bytes of `n` (`pb_codec_checker`). The machine code stores 
 -/
 
 namespace E2e
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz
+open Spec hiding readUint_lt
 
 /-- The two Descs: same names order and widths; the third kind differs (`uint 32` vs `byteVector 32`). -/
 theorem prysmPbDesc_checker :
@@ -52,14 +53,14 @@ def ppbEnc (g : PPb) : Array UInt8 :=
   g.blockHash.toArray ++ g.parentHash.toArray ++ uintBytes 32 g.totalDifficulty.val
 
 theorem ppb_enc_size (g : PPb) : (ppbEnc g).size = 96 := by
-  simp [ppbEnc, Fv.uintBytes_size]
+  simp [ppbEnc, Spec.uintBytes_size]
 
 theorem ppb_toValue_fits (g : PPb) : Value.fits prysmPbDesc g.toValue = true := by
   have := g.totalDifficulty.isLt
   simp [prysmPbDesc, PPb.toValue, Value.fits, Value.fieldsFit]
 
 theorem ppb_toValueC_fits (g : PPb) : Value.fits pbCheckerDesc g.toValueC = true := by
-  simp [pbCheckerDesc, PPb.toValueC, Value.fits, Value.fieldsFit, Fv.uintBytes_size]
+  simp [pbCheckerDesc, PPb.toValueC, Value.fits, Value.fieldsFit, Spec.uintBytes_size]
 
 theorem ppb_toValue_injective (g h : PPb) (e : g.toValue = h.toValue) : g = h := by
   obtain ⟨p, r, a⟩ := g; obtain ⟨p', r', a'⟩ := h
@@ -117,7 +118,7 @@ theorem ppb_serialize (g : PPb) : serialize prysmPbDesc g.toValue = .ok (ppbEnc 
   have := a.isLt
   simp only [prysmPbDesc, PPb.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk, hq, hr]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Fv.uintBytes_size, bytesPerOffset, ppbEnc,
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, ppbEnc,
     Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- The same bytes under the checker Desc. -/
@@ -125,7 +126,7 @@ theorem ppb_serialize_checker (g : PPb) : serialize pbCheckerDesc g.toValueC = .
   obtain ⟨⟨q, hq⟩, ⟨r, hr⟩, a⟩ := g
   simp only [pbCheckerDesc, PPb.toValueC, serialize, serializeStruct, serializeFields, Vector.toArray_mk, hq, hr]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Fv.uintBytes_size, bytesPerOffset, ppbEnc,
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, ppbEnc,
     Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- **Spec roundtrip.** -/

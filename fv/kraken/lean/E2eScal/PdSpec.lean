@@ -16,7 +16,8 @@ lengths 48, 32 and 96.
 -/
 
 namespace E2e
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz
+open Spec hiding readUint_lt
 
 /-- The checker's Desc has the same kinds in the same order; only the names differ. -/
 theorem prysmPdDesc_checker :
@@ -52,7 +53,7 @@ def ppdEnc (g : PPd) : Array UInt8 :=
     ++ uintBytes 8 g.slot.toNat
 
 theorem ppd_enc_size (g : PPd) : (ppdEnc g).size = 192 := by
-  simp [ppdEnc, Fv.uintBytes_size]
+  simp [ppdEnc, Spec.uintBytes_size]
 
 theorem ppd_toValue_fits (g : PPd) : Value.fits prysmPdDesc g.toValue = true := by
   have := g.amount.toNat_lt
@@ -103,7 +104,7 @@ theorem ppd_serialize (g : PPd) : serialize prysmPdDesc g.toValue = .ok (ppdEnc 
   have := l.toNat_lt
   simp only [prysmPdDesc, PPd.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk, hq, hr, hz]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Fv.uintBytes_size, bytesPerOffset, ppdEnc,
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, ppdEnc,
     Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- **Spec roundtrip.** -/

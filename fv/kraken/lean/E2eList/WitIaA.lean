@@ -1,7 +1,7 @@
 import E2eList.IaAccept
 import E2eList.BumpT3
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of `ia_e2e_accept_main` (IndexedAttestation decoder accept path)
@@ -23,7 +23,7 @@ return slot, the frame (rsp = 0x143c4), the caller's slots and the caller's word
 (32 bytes), the untouched frame bytes rsp − 96 … rsp − 17 (80) and the caller's word.
 -/
 
-open Fk Fk.W E2e E2eList E2eList.Code
+open Machine Runtime TestTarget Machine.Witness E2e E2eList E2eList.Code
 
 namespace E2eList.WitIaA
 

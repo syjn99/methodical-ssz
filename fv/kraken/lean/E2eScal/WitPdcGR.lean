@@ -1,6 +1,6 @@
 import E2eScal.Gen5F24PdcDec
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of the generated `pdc_g5dec_reject` (FLAT24 / H7)
@@ -14,8 +14,9 @@ slot, return slot, the unused rax spill slot (the frame `R`) and the rbx spill s
 (instances 39, 41, 0) the decoder returns the two words.
 -/
 
-open Fk Fk.W E2e E2eScal.F24Code
+open Machine Runtime TestTarget Machine.Witness E2e E2eScal.F24Code
 
+open Codec
 namespace E2eScal.WitPdcGR
 
 set_option maxRecDepth 100000

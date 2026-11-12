@@ -29,7 +29,7 @@ Checks:
      bytes as a nop (a `retq` there used to pass).
  (e) all.S has the same directives as the per-function .S files, in order
      (instructions included, not only labels).
- (f) every data file data/<id>.data that Lean includes (Fk/Data.lean,
+ (f) every data file data/<id>.data that Lean includes (TestTarget/Data.lean,
      `data_include`): its `at <label> <off>` names one ELF symbol; the file's
      `bytes` are the ELF file bytes there, and each `word <s> <o>` is the
      8-byte little-endian value address(s) + o at its position; every byte
@@ -404,7 +404,7 @@ def main(outdir):
         log(f"S sha256 {sha(p)} {p.name}")
     for p in sorted((outdir / "data").glob("*.data")):
         log(f"data sha256 {sha(p)} {p.name}")
-    for p in [lean / "Fk" / "Code.lean", HERE.parent / "AXIOMS.txt"]:
+    for p in [lean / "TestTarget" / "Code.lean", HERE.parent / "AXIOMS.txt"]:
         if p.exists():
             log(f"file sha256 {sha(p)} {p.relative_to(HERE.parent)}")
     log("PASS all")

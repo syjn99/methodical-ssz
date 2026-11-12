@@ -1,6 +1,6 @@
 import E2e.CpMarshal
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of `cp_e2e_marshal_main` (encoder fast path)
@@ -15,7 +15,7 @@ the 144-byte stack window (rsp = 0x100e8) and `dst` at 0x10100: the prefix,
 empty prefix with `cap = 40`, and a 3-byte prefix with 5 spare bytes.
 -/
 
-open Fk Fk.W E2e E2e.Code
+open Machine Runtime TestTarget Machine.Witness E2e E2e.Code
 
 namespace E2e.WitCpM
 

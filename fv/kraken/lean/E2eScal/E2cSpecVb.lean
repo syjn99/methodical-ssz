@@ -1,6 +1,6 @@
 import E2eScal.Gen6VbEnc
 import E2eScal.VbSpec
-import Fk.RtCopy
+import Runtime.CopyModel
 
 /-!
 # ValidatorBalance encoder fast path (generated theorem) against the independent Desc (unit E2-C)
@@ -12,7 +12,7 @@ Shape of `E2eScal.Bh.bh_e2e_marshal_spec_k`. Encoder fast path only (`len + 16 �
 lengths). Emitted by the unit's evidence tool `e2cemit.py`, then built and kernel-checked.
 -/
 
-open Fk E2e E2eScal E2eScal.Gen6Enc E2eScal.Enc2Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.Gen6Enc E2eScal.Enc2Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.E2c
@@ -68,8 +68,8 @@ theorem vb_e2c_spec_k (k : Nat)
           ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   refine ⟨pvbEnc g, pvb_serialize g, ?_⟩
-  have hF0 : (uintBytes 8 g.index.toNat).toList.length = 8 := by simp [Fv.uintBytes_size]
-  have hF1 : (uintBytes 8 g.balance.toNat).toList.length = 8 := by simp [Fv.uintBytes_size]
+  have hF0 : (uintBytes 8 g.index.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
+  have hF1 : (uintBytes 8 g.balance.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
   refine eventually_mono (vb_g6e_fast k hk hf ast (uintBytes 8 g.index.toNat).toList (uintBytes 8 g.balance.toNat).toList pre d0 d1 hast hF0 hF1 hd0 hd1 s ra guard hpre fp s2 t40 t24 hfp hs2 ht40 ht24 R h_mem hguard hsp hcap hcap63)
     (fun st ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, _, _, _, _, _, _, _, hm⟩ =>
       ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, ?_⟩)

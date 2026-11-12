@@ -9,7 +9,7 @@ An input that EthLib accepts against `prysmDcDesc` is `pdcEnc g` for a `g : PDc`
 into `g` (`dcd_e2e_accept_main` with `n = g.cols.length`). The text of `E2eList/IaSpecA.lean`.
 -/
 
-open Fk EthLib.Serialization.Ssz E2eDec.Code E2eEnc
+open Machine Runtime TestTarget EthLib.Serialization.Ssz E2eDec.Code E2eEnc
 variable [Host]
 
 namespace E2eDec
@@ -29,7 +29,7 @@ theorem dcd_e2e_accept_spec : dcd_accept_spec_stmt := by
   refine ⟨g, rfl, hb, ?_⟩
   have hsz := pdc_enc_size g
   have hn := g.hcols
-  have hcb : (Fv1.u64Bytes g.cols).toList.length = 8 * g.cols.length := by simp [Fv1.u64Bytes_size]
+  have hcb : (Spec.u64Bytes g.cols).toList.length = 8 * g.cols.length := by simp [Spec.u64Bytes_size]
   have hroot : g.root.toList.length = 32 := by simp
   rw [hb, hsz] at hlen hav
   rw [hb, pdc_enc_toList, dcd_in_split _ _ _ hroot (by rw [hcb]; omega)] at h_mem

@@ -18,7 +18,7 @@ generated steps 118 / 119 are not used), the epilogue 156–160 and the accept p
 data); no transfer claim.
 -/
 
-open Fk E2e E2eAd E2eAd.Code E2eScal.H5Code E2eScal.BhCode E2eScal E2eScal.Bh
+open Machine Runtime TestTarget E2e E2eAd E2eAd.Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec E2eScal.Bh
 variable [Host]
 
 namespace E2eScal.H5

@@ -1,4 +1,4 @@
-import Fv1.SpecList
+import Spec.TestListU64
 
 /-!
 # Definitions that the encoder statements use (DataColumnsByRootIdentifier)
@@ -16,7 +16,7 @@ These definitions are part of the frozen encoder statements (`StmtEnc.lean`). A 
 - `dcValue`: the `Value` of a Go receiver with any BlockRoot bytes and any Columns (for the reject specs).
 - `dcOff`: the 4 bytes of the offset 36.
 - `pdcEnc`: block_root (32) ‖ offset 36 (4) ‖ the columns as 8-byte little-endian words.
-The backing array of `[]uint64` is one contiguous block; its bytes are `Fv1.u64Bytes cols`.
+The backing array of `[]uint64` is one contiguous block; its bytes are `Spec.u64Bytes cols`.
 -/
 
 open EthLib.Serialization.Ssz
@@ -42,6 +42,6 @@ def PDc.toValue (g : PDc) : Value := dcValue g.root.toArray g.cols
 def dcOff : List UInt8 := [0x24, 0, 0, 0]
 
 /-- `block_root ‖ offset 36 ‖ columns`. -/
-def pdcEnc (g : PDc) : Array UInt8 := g.root.toArray ++ dcOff.toArray ++ Fv1.u64Bytes g.cols
+def pdcEnc (g : PDc) : Array UInt8 := g.root.toArray ++ dcOff.toArray ++ Spec.u64Bytes g.cols
 
 end E2eEnc

@@ -1,5 +1,5 @@
 import E2eScal.EncTies
-import E2eScal.EncFrameTest
+import Codec.EncodeFrameTest
 import E2eScal.F24Code
 
 /-!
@@ -14,7 +14,7 @@ growslice branches, the length rejects, the morestack path. Not a complete encod
 GEN6-JSON: {"type": "BeaconBlocksByRangeRequest", "const": "BbrMarshal", "prefix": "bbr_g6e", "size": 24, "frame": 112, "gd": 0, "rt": false, "fields": [["StartSlot", "u", 8], ["Count", "u", 8], ["Step", "u", 8]], "boundaries": [9, 35, 53, 70], "layout": "E2eScal.Gen6Enc.bbr_g6e_layout", "S_sha256": "6599236ed7c2489476a9f2a9fadeff055e7a0edbf4e848d316d20bb3dc6fc9a4", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "S": "prysm/go1.26.10/e2e/f24/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlocksByRangeRequest.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.BeaconBlocksByRangeRequest", "kinds": [{"theorem": "bbr_g6e_head", "kind": "encHeadKindN"}, {"theorem": "bbr_g6e_f0", "kind": "encFieldKindN"}, {"theorem": "bbr_g6e_f1", "kind": "encFieldKindN"}, {"theorem": "bbr_g6e_f2", "kind": "encFieldKindN"}, {"theorem": "bbr_g6e_epi", "kind": "encEpiKindN"}, {"theorem": "bbr_g6e_fast", "kind": "encFastKindN"}]}
 -/
 
-open Fk E2eScal E2eScal.F24Code
+open Machine Runtime TestTarget E2eScal Codec E2eScal.F24Code
 variable [Host]
 
 namespace E2eScal.Gen6Enc
@@ -209,7 +209,7 @@ theorem bbr_g6e_f0 : ∀ (k : Nat) (hk : BbrMarshal.IsInfixAt Host.prog k) (hf :
     (rsp.toBitVec - 120) (rsp.toBitVec - 40) (by eb) ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) (by rw [List.length_take, Int.toBytes_length]; rfl) _ _ _ (by rfl) (by ecancel)
   intro m6 H6; kn; simp only [Reg64s.get64] at H6
   simp only [toBytes_ofInt_ofBytes 64 8 rfl v0 hv0] at H6
-  have hl32 := Fk.label_at' hk hf (j := 32)
+  have hl32 := Machine.label_at' hk hf (j := 32)
     (by simp only [BbrMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [BbrMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_cmp_jae_t Reg64.rdi Reg64.rdx _ _ (k + 18) (k + 32) (win hk 18 2) (by rfl) hl32 _ _ (by show ((rcx.toBitVec + 8) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
@@ -320,7 +320,7 @@ theorem bbr_g6e_f1 : ∀ (k : Nat) (hk : BbrMarshal.IsInfixAt Host.prog k) (hf :
   apply kstep_ldb Reg64.r8 Reg64.rax 16 _ (k + 36) (k + 37) (win hk 36 1) (by rfl) (by rfl)
     rax.toBitVec (rax.toBitVec + 16) (by eb) v1 hv1 _ _ _ (by rfl) (by ecancel)
   kn
-  have hl51 := Fk.label_at' hk hf (j := 51)
+  have hl51 := Machine.label_at' hk hf (j := 51)
     (by simp only [BbrMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [BbrMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_cmp_jae_t Reg64.rdi Reg64.rdx _ _ (k + 37) (k + 51) (win hk 37 2) (by rfl) hl51 _ _ (by show ((rcx.toBitVec + 16) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
@@ -427,7 +427,7 @@ theorem bbr_g6e_f2 : ∀ (k : Nat) (hk : BbrMarshal.IsInfixAt Host.prog k) (hf :
   apply kstep_ldb Reg64.r8 Reg64.rax 24 _ (k + 54) (k + 55) (win hk 54 1) (by rfl) (by rfl)
     rax.toBitVec (rax.toBitVec + 24) (by eb) v2 hv2 _ _ _ (by rfl) (by ecancel)
   kn
-  have hl68 := Fk.label_at' hk hf (j := 68)
+  have hl68 := Machine.label_at' hk hf (j := 68)
     (by simp only [BbrMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [BbrMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_cmp_jae_t Reg64.rdi Reg64.rdx _ _ (k + 55) (k + 68) (win hk 55 2) (by rfl) hl68 _ _ (by show ((rcx.toBitVec + 24) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)

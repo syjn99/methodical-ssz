@@ -1,5 +1,5 @@
 import E2eScal.AcceptTies
-import E2eScal.FieldComp
+import Codec.FieldFrame
 import E2eScal.ViSpec
 import E2e.Epoch
 import E2eAd.Prims
@@ -13,7 +13,7 @@ by the recipe of the lemma hand-over; every theorem has a `_kind` line (`decHead
 `decEpiKindN`, `decAcceptKindN`). The `p2dec --gen4` chain theorems (`E2eScal.Gen.*`) are used as emitted.
 -/
 
-open Fk E2e E2eAd E2eAd.Code E2eScal.H6Code E2eScal.H5Code E2eScal.BhCode E2eScal
+open Machine Runtime TestTarget E2e E2eAd E2eAd.Code E2eScal.H6Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.Gen5
@@ -255,7 +255,7 @@ theorem sm_g5_f1 : ∀ (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : 
   have hlS : (lo.take S).length = S := by simp [hlo]
   have hl8 : (lo.drop S).length = 8 := by simp [hlo]
   have hLs : lo = lo.take S ++ lo.drop S := (List.take_append_drop S lo).symm
-  rw [hLs, g5_lo8 (rsp.toBitVec - 120) S hS _ _ hlS hl8] at Hm
+  rw [hLs, frame_lo8 (rsp.toBitVec - 120) S hS _ _ hlS hl8] at Hm
   apply Gen.sm_g4dec_s15 k hk hf
   intro fl15; kn
   apply Gen.sm_g4dec_s16 k hk hf
@@ -271,7 +271,7 @@ theorem sm_g5_f1 : ∀ (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : 
   refine ⟨hpc', hrsp', hrbp', hr14', (Int.toBytes 8 rbx.toBitVec.toInt), (lo.take S ++ Int.toBytes 8 (rsp.toBitVec - 8#64).toInt),
     (Int.toBytes_length 8 _), (by simp only [List.length_append, hlS, Int.toBytes_length]), ?_⟩
   dsimp only
-  rw [g5_lo8 (rsp.toBitVec - 120) S hS _ _ hlS (Int.toBytes_length 8 _)]
+  rw [frame_lo8 (rsp.toBitVec - 120) S hS _ _ hlS (Int.toBytes_length 8 _)]
   rw [show k + 17 + 1 = k + 18 from rfl] at Hm'
   ecancel
 theorem sm_g5_f1_kind : ∀ (h : Host), type_of% (@sm_g5_f1 h)
@@ -379,13 +379,13 @@ theorem sm_g5_f2 : ∀ (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : 
   refine eventually_trans _ _ _ _ (Gen.sm_g4dec_BlockRoot_seg k hk hf (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 48) (rsp.toBitVec - 112)
     (rsp.toBitVec - 120 - BitVec.ofNat 64 S) (rax.toBitVec + 16) (rax.toBitVec + 24) (rax.toBitVec + 32) (rbx.toBitVec + 8) (S + 8)
-    (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by bv_omega) (g5_lo _ 104 120 S (by decide))
+    (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by bv_omega) (frame_lo _ 104 120 S (by decide))
     (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega)
     { toBitVec := rsp.toBitVec - 8#64 } r14 rt hrt
     (sp0 ++ (x0 ++ sp2)) (Int.toBytes 8 (Host.addrOf (k + 18)).toBitVec.toInt) x1 l38 aP1 aL1 aC1
     (by simp only [List.length_append, Int.toBytes_length, hsp0, hx0, hsp2]) (Int.toBytes_length 8 _) hx1 hl38 haP1 haL1 haC1
     _ Heap avail (by omega) d hrsp hrbp hr14
-      (by rw [g5_j3 (rsp.toBitVec - 104) (rsp.toBitVec - 96) (rsp.toBitVec - 88) _ _ _ hsp0 hx0 hsp2 (by bv_omega) (by bv_omega)]; ecancel) hms hmm) ?_
+      (by rw [frame_j3 (rsp.toBitVec - 104) (rsp.toBitVec - 96) (rsp.toBitVec - 88) _ _ _ hsp0 hx0 hsp2 (by bv_omega) (by bv_omega)]; ecancel) hms hmm) ?_
   rintro ⟨d', pc'⟩ ⟨hpc', hrsp', hrbp', hr14', p1, spl', lo', hspl', hlo', hrY, Hm'⟩
   dsimp only at hpc' hrsp' hrbp' hr14' hrY Hm'
   subst hpc'
@@ -525,7 +525,7 @@ theorem sm_g5_f3 : ∀ (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : 
   have hlS : (x1.take S).length = S := by simp [hx1]
   have hl8 : (x1.drop S).length = 8 := by simp [hx1]
   have hLs : x1 = x1.take S ++ x1.drop S := (List.take_append_drop S x1).symm
-  rw [hXs, hLs, g5_j3 (rsp.toBitVec - 104) (rsp.toBitVec - 96) (rsp.toBitVec - 88) _ _ _ hq0 hq1 hq2 (by bv_omega) (by bv_omega), g5_lo8 (rsp.toBitVec - 120) S hS _ _ hlS hl8] at Hm
+  rw [hXs, hLs, frame_j3 (rsp.toBitVec - 104) (rsp.toBitVec - 96) (rsp.toBitVec - 88) _ _ _ hq0 hq1 hq2 (by bv_omega) (by bv_omega), frame_lo8 (rsp.toBitVec - 120) S hS _ _ hlS hl8] at Hm
   apply Gen.sm_g4dec_s82 k hk hf (rsp.toBitVec - 104) (rsp.toBitVec + 16) rbx.toBitVec (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) _ _ _ (by rfl) (by ecancel)
   kn
   apply Gen.sm_g4dec_s83 k hk hf
@@ -549,7 +549,7 @@ theorem sm_g5_f3 : ∀ (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : 
   refine ⟨hpc', hrsp', hrbp', hr14', (congrArg UInt64.toBitVec hrax'), (congrArg UInt64.toBitVec hrbx'), p1, (x0.take 8 ++ (Int.toBytes 8 (rbx.toBitVec + 40).toInt ++ (x0.drop 8).drop 8)), (x1.take S ++ Int.toBytes 8 (rsp.toBitVec - 8#64).toInt),
     (by simp only [List.length_append, hq0, hq2, Int.toBytes_length]), (by simp only [List.length_append, hlS, Int.toBytes_length]), ?_⟩
   dsimp only
-  rw [g5_j3 (rsp.toBitVec - 104) (rsp.toBitVec - 96) (rsp.toBitVec - 88) _ _ _ hq0 (Int.toBytes_length 8 _) hq2 (by bv_omega) (by bv_omega), g5_lo8 (rsp.toBitVec - 120) S hS _ _ hlS (Int.toBytes_length 8 _)]
+  rw [frame_j3 (rsp.toBitVec - 104) (rsp.toBitVec - 96) (rsp.toBitVec - 88) _ _ _ hq0 (Int.toBytes_length 8 _) hq2 (by bv_omega) (by bv_omega), frame_lo8 (rsp.toBitVec - 120) S hS _ _ hlS (Int.toBytes_length 8 _)]
   rw [show k + 88 + 1 = k + 89 from rfl] at Hm'
   ecancel
 theorem sm_g5_f3_kind : ∀ (h : Host), type_of% (@sm_g5_f3 h)
@@ -667,7 +667,7 @@ theorem sm_g5_f4 : ∀ (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : 
   refine eventually_trans _ _ _ _ (Gen.sm_g4dec_Signature_seg k hk hf (rsp.toBitVec - 104) rax.toBitVec rbx.toBitVec
     (rsp.toBitVec + 8) (rsp.toBitVec + 16) (rsp.toBitVec - 48) (rsp.toBitVec - 112)
     (rsp.toBitVec - 120 - BitVec.ofNat 64 S) (rax.toBitVec + 48) (rax.toBitVec + 56) (rax.toBitVec + 64) (rbx.toBitVec + 48) (S + 8)
-    (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by bv_omega) (g5_lo _ 104 120 S (by decide))
+    (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by bv_omega) (frame_lo _ 104 120 S (by decide))
     (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega) (by simp only [Int64.toBitVec_ofNat] <;> bv_omega)
     { toBitVec := rsp.toBitVec - 8#64 } r14 sig hsig
     x0 (Int.toBytes 8 (Host.addrOf (k + 89)).toBitVec.toInt) x1 (Int.toBytes 8 p1.toInt) aP3 aL3 aC3

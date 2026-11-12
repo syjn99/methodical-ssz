@@ -1,7 +1,7 @@
-import Fk.Contracts
-import Fk.Step
-import Fk.Labels
-import E2eScal.StackGuard
+import Runtime.Contracts
+import Machine.Step
+import Machine.Labels
+import Codec.StackGuard
 import E2eEnc.StmtEnc
 import E2eEnc.Tail
 
@@ -15,7 +15,7 @@ slot x − 144); 24–28 restore rdx, rdi = newCap, r8 = len + 32, rcx = len, rb
 new block (premise `hfit`: sites 2 and 3 do not grow).
 -/
 
-open Fk E2eEnc.Code
+open Machine Runtime TestTarget E2eEnc.Code
 variable [Host]
 
 namespace E2eEnc
@@ -65,7 +65,7 @@ theorem dc_e2e_marshal_grow_main : dc_marshal_grow_stmt := by
   split
   case isTrue h =>
     exfalso
-    rw [E2eScal.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 8 (by rfl) hguard] at h
+    rw [Codec.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 8 (by rfl) hguard] at h
     exact Bool.noConfusion h
   simp only [Effects.All]
   kat hk DcMarshal 5

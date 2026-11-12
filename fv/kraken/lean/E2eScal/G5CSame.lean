@@ -12,9 +12,10 @@ opened the generated modules. Each line below type-checks only if the type of th
 Neither side is edited for this check.
 -/
 
-open Fk
+open Machine Runtime TestTarget
 variable [Host]
 
+open Codec
 namespace E2eScal.G5C
 
 /-- The generated accept theorem of SyncAggregatorSelectionData proves the independent hand statement. -/

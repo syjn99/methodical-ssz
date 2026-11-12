@@ -1,8 +1,8 @@
-import Fk.LuRejectCall
+import TestTarget.ListU64DecodeRejectCall
 import E2e.CpMarshal
 import E2eScal.E1Code
-import E2eScal.StackGuard
-import E2eScal.EncBlock
+import Codec.StackGuard
+import Codec.EncodeMemmove
 
 /-!
 # Real Prysm `(*v1alpha1.Eth1Data).MarshalSSZTo`, fast path, Go 1.26.10 machine code
@@ -21,7 +21,7 @@ branches (directives 16–28, 46–53, 63–72), the two length rejects (89–10
 (108–118) are not covered. Directive indices of `E2eScal.E1Code.E1Marshal`:
 
 * `e1_enc_a` 0–36 + `runtime.memmove`: 2–4 stack guard (`lea -0x8(%rsp),%r12; cmp 0x10(%r14),%r12; jbe`,
-  closed with `E2eScal.lea_cmp_be_false`, N = 8), 5–8 prologue (`add $-0x80,%rsp`, rbx spill to rsp + 16),
+  closed with `Codec.lea_cmp_be_false`, N = 8), 5–8 prologue (`add $-0x80,%rsp`, rbx spill to rsp + 16),
   9–11 `len(DepositRoot)`, 12 receiver spill to rsp + 8, 13–15 capacity (`jae` taken), 29–35 spills of the
   slice pointer (rsp − 24), the new length (rsp − 56) and the capacity (rsp − 48), 36 the call.
 * `e1_enc_m` 37–80 + `runtime.memmove`: 37–45 reload, DepositCount load (receiver + 32), capacity (`jb` not
@@ -29,15 +29,16 @@ branches (directives 16–28, 46–53, 63–72), the two length rejects (89–10
   73–79 spills (pointer rsp − 16, new length `v + 40` rsp − 32, capacity rsp − 40), 80 the call.
 * `e1_enc_e` 81–88: reload of the result slice, `xor`, `sub $-0x80,%rsp`, `pop %rbp`, `retq`.
 
-Both calls (36, 80) are one application of the block `E2eScal.enc32_call` each; the straight-line steps
+Both calls (36, 80) are one application of the block `Codec.enc32_call` each; the straight-line steps
 before them are stepped here (they differ per site). Receiver (gc amd64 layout, `prysm/ir/ir-mainnet.json`):
 `state` 0, `DepositRoot` 8 (ptr, len, cap), `DepositCount` 32, `BlockHash` 40 (ptr, len, cap). `rsp` is the
 entry rsp; the frame base is rsp − 136; the `memmove` return slot is rsp − 144.
 -/
 
-open Fk E2eScal.E1Code
+open Machine Runtime TestTarget E2eScal.E1Code
 variable [Host]
 
+open Codec
 namespace E2eScal.E1
 
 set_option maxRecDepth 100000 in

@@ -1,11 +1,11 @@
-import E2eScal.P2Dec
+import Codec.Bytes32Decode
 import E2eAd.AdRoot
 
 /-!
 # In-sample check of the 32-byte field pattern (decode): `AttestationData.BeaconBlockRoot` from `rootdec_seg`
 
 `ad_e2e_root_s` has the statement of `E2eAd.ad_e2e_root` (`E2eAd/AdRoot.lean`) word for word.
-Its proof steps the label `L_167` (directive 85), applies `E2eScal.rootdec_seg` with the
+Its proof steps the label `L_167` (directive 85), applies `Codec.rootdec_seg` with the
 AttestationData parameters (head block at k + 86, second block at k + 100 = `L_1ac`,
 `lwb` = `L_1f3`; receiver spill 0x80, buffer spill 0x88, pointer slot 0x68; field offsets
 24 / 32 / 40; source offset 16; callee stack `S + 96`), and does the two instance-specific
@@ -13,9 +13,10 @@ directives by hand: 112 `mov 0x68(%rsp),%rbx`, 113 `jmp L_208`, then `L_208` (di
 `ad_root_same_stmt` checks that the statements are the same proposition.
 -/
 
-open Fk E2eAd.Code
+open Machine Runtime TestTarget E2eAd.Code
 variable [Host]
 
+open Codec
 namespace E2eScal
 
 set_option maxHeartbeats 16000000 in
@@ -65,7 +66,7 @@ theorem ad_e2e_root_s (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : L
     128 136 104 24 32 40 16) 100 hk
     (by simp only [AdUnmarshal, rootDecMid, List.drop_succ_cons, List.drop_zero, List.length_cons,
       List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl := Fk.label_at' hk hf (j := 100)
+  have hl := Machine.label_at' hk hf (j := 100)
     (by simp only [AdUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [AdUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
@@ -90,7 +91,7 @@ theorem ad_e2e_root_s (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : L
     zmms3, flags3, mem3⟩ := d3
   simp only at hrsp3 hr143 hrbp3 hrdx3 Hm3
   subst hrsp3 hr143 hrbp3
-  have hl208 := Fk.label_at' hk hf (j := 120)
+  have hl208 := Machine.label_at' hk hf (j := 120)
     (by simp only [AdUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [AdUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   kat hk AdUnmarshal 112

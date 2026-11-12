@@ -17,7 +17,7 @@ edited):
 Not stated here: that the callee error paths (`fmt.errorf` wraps) are unreachable when `size = 184`.
 -/
 
-open Fk E2e E2eScal E2eScal.F24Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.F24Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.F24
@@ -103,7 +103,7 @@ theorem bdr_e2e_accept_spec_k : ∀ (k : Nat) (hk : BdrUnmarshal.IsInfixAt Host.
   refine ⟨g, rfl, hb, ?_⟩
   have hn : s.regs.rcx = 184 := by
     apply UInt64.toNat_inj.mp; rw [hlen, hb, pbdr_enc_size]; rfl
-  exact E2eScal.Gen.bdr_g5dec_accept k hk hf _ _ _ _ (by simp) (by simp) (by simp [Fv.uintBytes_size]) (by simp) s ra guard fp s1 s2 spl l18 rslot lo ast aP0 aL0 aC0 aP1 aL1 aC1 aN2 aP3 aL3 aC3 hfp hs1 hs2 hspl hl18 hrslot hast haP0 haL0 haC0 haP1 haL1 haC1 haN2 haP3 haL3 haC3 R S hlo Heap avail (Pm g hb) hguard hn hav hms hmm
+  exact E2eScal.Gen.bdr_g5dec_accept k hk hf _ _ _ _ (by simp) (by simp) (by simp [Spec.uintBytes_size]) (by simp) s ra guard fp s1 s2 spl l18 rslot lo ast aP0 aL0 aC0 aP1 aL1 aC1 aN2 aP3 aL3 aC3 hfp hs1 hs2 hspl hl18 hrslot hast haP0 haL0 haC0 haP1 haL1 haC1 haN2 haP3 haL3 haC3 R S hlo Heap avail (Pm g hb) hguard hn hav hms hmm
 
 /-- `len(buf) ≠ 184`: EthLib rejects, and the machine code returns the two words of `ssz.ErrSize`. -/
 theorem bdr_e2e_reject_size_spec (k : Nat) (hk : BdrUnmarshal.IsInfixAt Host.prog k)

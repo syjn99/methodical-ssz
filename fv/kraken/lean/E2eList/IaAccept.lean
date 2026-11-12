@@ -1,5 +1,5 @@
 import E2eAd.AdAccept
-import E2eScal.StackGuard
+import Codec.StackGuard
 import E2eList.IaAddr
 import E2eList.StmtIa
 import E2eList.IaLoop
@@ -18,7 +18,7 @@ import E2eList.IaLoop
 Statement: the frozen `E2eList.ia_accept_stmt`.
 -/
 
-open Fk E2eList.Code
+open Machine Runtime TestTarget E2eList.Code
 variable [Host]
 
 namespace E2eList
@@ -80,7 +80,7 @@ theorem ia_p0 (ib : List UInt8) (n : Nat) (hib : ib.length = 8 * n) (b c : BitVe
     rw [ia_sar63 _ (by omega) (by omega), ia_mask_ones]
 
 omit [Host] in
-/-- `cmp $0x800, a; jg` is not taken when `a ≤ 2048` (the text of `Fk.jg16_false`). -/
+/-- `cmp $0x800, a; jg` is not taken when `a ≤ 2048` (the text of `Machine.jg16_false`). -/
 theorem ia_jg2048_false (a : BitVec 64) (af : Bool) (h : a.toNat ≤ 2048) :
     CondCode.g.interp (StatusFlags.from_result (a - 2048)
       { cf := BitVec.unsigned (a - 2048) != a.unsigned - BitVec.unsigned (2048 : BitVec 64), af := af,
@@ -207,7 +207,7 @@ theorem ia_e2e_accept_main : ia_accept_stmt := by
   split
   case isTrue h =>
     exfalso
-    rw [E2eScal.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 48 (by rfl)
+    rw [Codec.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 48 (by rfl)
       (by rw [UInt64.toNat_toBitVec, UInt64.toNat_toBitVec]; omega)] at h
     exact Bool.noConfusion h
   simp only [Effects.All]

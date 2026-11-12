@@ -1,13 +1,13 @@
 [
  {
   "id": "g4-nv-wat-control",
-  "module": "E2eScal/NopView.lean",
+  "module": "Codec/NopWindow.lean",
   "theorem": "wat",
   "kind": "control"
  },
  {
   "id": "g4-nv-wskip-stmt-nostep",
-  "module": "E2eScal/NopView.lean",
+  "module": "Codec/NopWindow.lean",
   "theorem": "wskip",
   "kind": "stmt",
   "old": "⟨s, Host.addrOf (j + nopPos q i + 1)⟩",
@@ -15,13 +15,13 @@
  },
  {
   "id": "g4-sk-ldv-control",
-  "module": "E2eScal/StepK.lean",
+  "module": "Codec/WindowSteps.lean",
   "theorem": "kstep_ldv",
   "kind": "control"
  },
  {
   "id": "g4-sk-ldv-stmt-reg",
-  "module": "E2eScal/StepK.lean",
+  "module": "Codec/WindowSteps.lean",
   "theorem": "kstep_ldv",
   "kind": "stmt",
   "old": "⟨setR s rD v, Host.addrOf e⟩",
@@ -29,7 +29,7 @@
  },
  {
   "id": "g4-sk-add-stmt-op",
-  "module": "E2eScal/StepK.lean",
+  "module": "Codec/WindowSteps.lean",
   "theorem": "kstep_add",
   "kind": "stmt",
   "old": "(s.regs.get64 rD + imm.toBitVec), zmms",
@@ -37,7 +37,7 @@
  },
  {
   "id": "g4-sk-st-stmt-src",
-  "module": "E2eScal/StepK.lean",
+  "module": "Codec/WindowSteps.lean",
   "theorem": "kstep_st",
   "kind": "stmt",
   "old": "(@BitVec.toInt 64 (s.regs.get64 rS))",
@@ -45,7 +45,7 @@
  },
  {
   "id": "g4-sk-movi-stmt-width",
-  "module": "E2eScal/StepK.lean",
+  "module": "Codec/WindowSteps.lean",
   "theorem": "kstep_movi",
   "kind": "stmt",
   "old": "BitVec.truncate 32 imm.toBitVec",
@@ -53,7 +53,7 @@
  },
  {
   "id": "g4-sk-jmp-stmt-target",
-  "module": "E2eScal/StepK.lean",
+  "module": "Codec/WindowSteps.lean",
   "theorem": "kstep_jmp",
   "kind": "stmt",
   "old": "(hk : Eventually (step1 Host.exe) final ⟨s, Host.addrOf jl⟩)",
@@ -61,7 +61,7 @@
  },
  {
   "id": "g4-sk-movrr-stmt-src",
-  "module": "E2eScal/StepK.lean",
+  "module": "Codec/WindowSteps.lean",
   "theorem": "kstep_mov_rr",
   "kind": "stmt",
   "old": "⟨setR s rD (s.regs.get64 rS), Host.addrOf e⟩",
@@ -69,7 +69,7 @@
  },
  {
   "id": "g4-sk-lea-stmt-disp",
-  "module": "E2eScal/StepK.lean",
+  "module": "Codec/WindowSteps.lean",
   "theorem": "kstep_lea",
   "kind": "stmt",
   "old": "(s.regs.get64 rB + disp.toBitVec)",
@@ -99,25 +99,25 @@
  },
  {
   "id": "g4-sr-bytes-control",
-  "module": "E2eScal/SegReg.lean",
-  "theorem": "bytesdec_g4_32_rdx_rax",
+  "module": "Codec/FixedBytesDecodeWindow.lean",
+  "theorem": "bytesdec_window_32_rdx_rax",
   "kind": "control"
  },
  {
   "id": "g4-sr-bytes-stmt-reg",
-  "module": "E2eScal/SegReg.lean",
-  "theorem": "bytesdec_g4_32_rdx_rax",
+  "module": "Codec/FixedBytesDecodeWindow.lean",
+  "theorem": "bytesdec_window_32_rdx_rax",
   "kind": "stmt",
-  "old": "BytesDecG4 32 Reg64.rdx Reg64.rax",
-  "new": "BytesDecG4 32 Reg64.rdx Reg64.rdx"
+  "old": "BytesDecWindow 32 Reg64.rdx Reg64.rax",
+  "new": "BytesDecWindow 32 Reg64.rdx Reg64.rdx"
  },
  {
   "id": "g4-sr-bytes-stmt-size",
-  "module": "E2eScal/SegReg.lean",
-  "theorem": "bytesdec_g4_32_rdx_rax",
+  "module": "Codec/FixedBytesDecodeWindow.lean",
+  "theorem": "bytesdec_window_32_rdx_rax",
   "kind": "stmt",
-  "old": "BytesDecG4 32 Reg64.rdx Reg64.rax",
-  "new": "BytesDecG4 48 Reg64.rdx Reg64.rax"
+  "old": "BytesDecWindow 32 Reg64.rdx Reg64.rax",
+  "new": "BytesDecWindow 48 Reg64.rdx Reg64.rax"
  },
  {
   "id": "g4-ex-s82-control",
@@ -290,13 +290,13 @@
  },
  {
   "id": "g4-hn-pro-control",
-  "module": "E2eScal/HeadN.lean",
+  "module": "Codec/DecoderPrologue.lean",
   "theorem": "decpro_seg",
   "kind": "control"
  },
  {
   "id": "g4-hn-pro-stmt-rsp",
-  "module": "E2eScal/HeadN.lean",
+  "module": "Codec/DecoderPrologue.lean",
   "theorem": "decpro_seg",
   "kind": "stmt",
   "old": "st.data.regs.rsp = { toBitVec := sp }",
@@ -304,7 +304,7 @@
  },
  {
   "id": "g4-hn-pro-stmt-frame",
-  "module": "E2eScal/HeadN.lean",
+  "module": "Codec/DecoderPrologue.lean",
   "theorem": "decpro_seg",
   "kind": "stmt",
   "old": "(hsp : s.regs.rsp.toBitVec - 8 - F.toBitVec = sp)",
@@ -312,7 +312,7 @@
  },
  {
   "id": "g4-hn-ret-stmt-rsp",
-  "module": "E2eScal/HeadN.lean",
+  "module": "Codec/DecoderPrologue.lean",
   "theorem": "decret_seg",
   "kind": "stmt",
   "old": "st.data.regs.rsp = { toBitVec := sp + 16 }",
@@ -320,7 +320,7 @@
  },
  {
   "id": "g4-hn-nil-control",
-  "module": "E2eScal/HeadN.lean",
+  "module": "Codec/DecoderPrologue.lean",
   "theorem": "kstep_nilchk",
   "kind": "control"
  },

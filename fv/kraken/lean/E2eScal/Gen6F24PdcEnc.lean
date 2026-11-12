@@ -1,5 +1,5 @@
 import E2eScal.EncTies
-import E2eScal.EncFrameTest
+import Codec.EncodeFrameTest
 import E2eScal.F24Code
 
 /-!
@@ -14,7 +14,7 @@ growslice branches, the length rejects, the morestack path. Not a complete encod
 GEN6-JSON: {"type": "PartialDataColumnGroupID", "const": "PdcMarshal", "prefix": "pdc_g6e", "size": 40, "frame": 104, "gd": 0, "rt": true, "fields": [["BeaconBlockRoot", "b", 32], ["Slot", "u", 8]], "boundaries": [8, 36, 63], "layout": "E2eScal.Gen6Enc.pdc_g6e_layout", "S_sha256": "e1331a1bb0344f6d900049a91a8e4a3fd8acea7de21cd25546dd82bc47509d4f", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "S": "prysm/go1.26.10/e2e/f24/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PartialDataColumnGroupID.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.PartialDataColumnGroupID", "kinds": [{"theorem": "pdc_g6e_head", "kind": "encHeadKindN"}, {"theorem": "pdc_g6e_f0", "kind": "encFieldKindN"}, {"theorem": "pdc_g6e_f1", "kind": "encFieldKindN"}, {"theorem": "pdc_g6e_epi", "kind": "encEpiKindN"}, {"theorem": "pdc_g6e_fast", "kind": "encFastKindN"}]}
 -/
 
-open Fk E2eScal E2eScal.F24Code
+open Machine Runtime TestTarget E2eScal Codec E2eScal.F24Code
 variable [Host]
 
 namespace E2eScal.Gen6Enc
@@ -216,7 +216,7 @@ theorem pdc_g6e_f0 : ∀ (k : Nat) (hk : PdcMarshal.IsInfixAt Host.prog k) (hf :
   kn
   apply kreg_eq Reg64.r8 (rcx.toBitVec + 32) _ _ _ (by show (rcx.toBitVec + 32 : BitVec 64) = (rcx.toBitVec + 32); bv_omega)
   kn
-  have hl28 := Fk.label_at' hk hf (j := 28)
+  have hl28 := Machine.label_at' hk hf (j := 28)
     (by simp only [PdcMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [PdcMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_cmp_jae_t Reg64.rdi Reg64.r8 _ _ (k + 13) (k + 28) (win hk 13 2) (by rfl) hl28 _ _ (by show ((rcx.toBitVec + 32) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
@@ -242,7 +242,7 @@ theorem pdc_g6e_f0 : ∀ (k : Nat) (hk : PdcMarshal.IsInfixAt Host.prog k) (hf :
   apply kreg_eq Reg64.rcx 32 _ _ _ (by show (BitVec.zeroExtend 64 (BitVec.truncate 32 (32 : BitVec 64)) : BitVec 64) = 32; decide)
   kn
   refine eventually_trans _ _ _ _ (encn_call (k + 35) (win hk 35 1) (rsp.toBitVec - 112) (rbx.toBitVec + rcx.toBitVec) p0
-    (rsp.toBitVec - 120) (rsp.toBitVec - 120 - BitVec.ofNat 64 S) S (by bv_omega) (E2eScal.g5_lo0 rsp.toBitVec 112 120 S (by decide))
+    (rsp.toBitVec - 120) (rsp.toBitVec - 120 - BitVec.ofNat 64 S) S (by bv_omega) (Codec.frame_lo0 rsp.toBitVec 112 120 S (by decide))
     b0 d0 rslot scratch (by rw [hd0, hb0]) hrslot hsc
     _ _ (by rfl) (by rfl) (by rfl) (by rw [hb0]; rfl) (by first | ecancel | (dsimp only; ecancel)) hmm) ?_
   rintro ⟨e1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, scr1, hscr1, Hc1⟩
@@ -381,7 +381,7 @@ theorem pdc_g6e_f1 : ∀ (k : Nat) (hk : PdcMarshal.IsInfixAt Host.prog k) (hf :
   apply kstep_ldv Reg64.rax Reg64.rsp 88 _ (k + 50) (k + 51) (win hk 50 1) (by rfl) (by rfl)
     (rsp.toBitVec - 112) (rsp.toBitVec - 24) rbx.toBitVec (by eb) _ _ _ (by rfl) (by ecancel)
   kn
-  have hl60 := Fk.label_at' hk hf (j := 60)
+  have hl60 := Machine.label_at' hk hf (j := 60)
     (by simp only [PdcMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [PdcMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_jmp _ _ (k + 51) (k + 60) (win hk 51 1) (by rfl) hl60

@@ -1,7 +1,7 @@
 import E2eScal.Gen5SdDec
-import Fk.RtCopy
-import Fk.BumpMore
-import Fk.WHost
+import Runtime.CopyModel
+import Runtime.BumpAllocatorVariants
+import Machine.WitnessHost
 
 /-!
 # Witness of the generated `sd_g5dec_accept` (SigningData decoder accept path)
@@ -19,7 +19,7 @@ For every input and every old pointer word every premise holds and the decoder r
 The receiver is a Go value of `v1alpha1.SigningData` (zero-length slices).
 -/
 
-open Fk Fk.W E2e E2eScal E2eScal.H6Code
+open Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.H6Code
 
 namespace E2eScal.WitSdGA
 

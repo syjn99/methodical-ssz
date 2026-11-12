@@ -1,7 +1,7 @@
 import E2eList.SaAccept
-import Fk.RtCopy
-import Fk.BumpMore
-import Fk.WHost
+import Runtime.CopyModel
+import Runtime.BumpAllocatorVariants
+import Machine.WitnessHost
 
 /-!
 # Witness of `sa_e2e_accept_main` (SyncAggregate decoder accept path)
@@ -19,7 +19,7 @@ area, the pointer save, the saved rbp, the caller's slots (rsp = 0x101ec) and th
 the decoder returns nil. The receiver is a Go value of `v1alpha1.SyncAggregate` (zero `state`, zero-length slices).
 -/
 
-open Fk Fk.W E2e E2eList E2eList.Code
+open Machine Runtime TestTarget Machine.Witness E2e E2eList E2eList.Code
 
 namespace E2eList.WitSaA
 

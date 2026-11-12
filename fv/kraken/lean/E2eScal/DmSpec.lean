@@ -16,7 +16,8 @@ before `dmCheckerDesc` was rendered and printed.
 -/
 
 namespace E2e
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz
+open Spec hiding readUint_lt
 
 /-- The checker's Desc has the same kinds in the same order; only the names differ. -/
 theorem prysmDmDesc_checker :
@@ -48,7 +49,7 @@ def pdmEnc (g : PDm) : Array UInt8 :=
   g.pubkey.toArray ++ g.withdrawalCredentials.toArray ++ uintBytes 8 g.amount.toNat
 
 theorem pdm_enc_size (g : PDm) : (pdmEnc g).size = 88 := by
-  simp [pdmEnc, Fv.uintBytes_size]
+  simp [pdmEnc, Spec.uintBytes_size]
 
 theorem pdm_toValue_fits (g : PDm) : Value.fits prysmDmDesc g.toValue = true := by
   have := g.amount.toNat_lt
@@ -92,7 +93,7 @@ theorem pdm_serialize (g : PDm) : serialize prysmDmDesc g.toValue = .ok (pdmEnc 
   have := a.toNat_lt
   simp only [prysmDmDesc, PDm.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk, hq, hr]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Fv.uintBytes_size, bytesPerOffset, pdmEnc,
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, pdmEnc,
     Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- **Spec roundtrip.** -/

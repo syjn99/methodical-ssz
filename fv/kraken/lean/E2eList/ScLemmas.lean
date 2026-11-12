@@ -1,5 +1,5 @@
-import Fk.Frame
-import Fk.Block
+import Machine.Frame
+import Machine.Block
 import E2eList.Defs
 
 /-!
@@ -10,10 +10,10 @@ import E2eList.Defs
 - `scIn_split`: the input chunk as (blocks < i) ⋆ block i ⋆ (blocks > i).
 - `scA_split`, `scA_join`: the backing array (headers of the first i elements, then zeros) around element i,
   before (three zero words) and after (the header `(p, 48, 48)`) the three stores of iteration i.
-- `jge_false512`: `cmp $0x200, a; jge` is not taken when a < 512 (the text of `Fk.jge_false` with a wider bound).
+- `jge_false512`: `cmp $0x200, a; jge` is not taken when a < 512 (the text of `Machine.jge_false` with a wider bound).
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
 namespace E2eList
 
@@ -105,7 +105,7 @@ theorem scA_join (A p : BitVec 64) (ps : List (BitVec 64)) (i : Nat) (hi : i < 5
       (by simp [Int.toBytes_length]; omega)]
   simp only [Std.ExtHashMap.sep_assoc]
 
-/-- `cmp b, a; jge` is not taken when `a < b < 2^62` (the text of `Fk.jge_false`, bound 2^62 instead of 16). -/
+/-- `cmp b, a; jge` is not taken when `a < b < 2^62` (the text of `Machine.jge_false`, bound 2^62 instead of 16). -/
 theorem jge_false512 (a b : BitVec 64) (hb : b.toNat < 2 ^ 62) (hab : a.toNat < b.toNat)
     (h : (a - b).msb = ((a.toInt - b.toInt).bmod 18446744073709551616 != a.toInt - b.toInt)) : False := by
   have ta : a.toInt = a.toNat := BitVec.toInt_eq_toNat_of_lt (by omega)

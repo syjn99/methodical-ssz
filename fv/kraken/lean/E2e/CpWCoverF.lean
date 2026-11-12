@@ -30,7 +30,7 @@ caller's array (`blk = dst`, written before the root length test); `cap < len + 
 epoch bytes are in the new block `nb` from growslice only.
 -/
 
-open Fk E2e.Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2e
@@ -225,7 +225,7 @@ theorem cp_e2e_marshal_cover_framed (k : Nat) (hk : CpMarshal.IsInfixAt Host.pro
       ⟨s, Host.addrOf k⟩ := by
   refine ⟨pcpEnc g, pcp_serialize g, by rw [pcp_enc_toList, he8g], ?_⟩
   rw [pcp_enc_toList, ← he8g]
-  have he8 : e8.length = 8 := by rw [he8g]; simp [Fv.uintBytes_size]
+  have he8 : e8.length = 8 := by rw [he8g]; simp [Spec.uintBytes_size]
   have hroot : g.root.toList.length = 32 := by simp
   generalize g.root.toList = root at *
   clear he8g

@@ -1,6 +1,6 @@
-import Fk.Bump
-import Fk.BumpMore
-import Fk.FunSpecs
+import Runtime.BumpAllocator
+import Runtime.BumpAllocatorVariants
+import TestTarget.FunctionSpecs
 
 /-!
 # Bump-allocator model of `runtime.newobject` for one 120-byte object (witness only)
@@ -11,7 +11,7 @@ Deposit witness (the Deposit_Data object of the Go 1.26.10 ELF is 120 bytes, `de
 model in a witness host, not a claim about the Go runtime.
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
 namespace E2eDepW
 

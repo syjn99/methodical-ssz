@@ -1,7 +1,7 @@
 import E2eScal.SmAccept
-import Fk.RtCopy
-import Fk.BumpMore
-import Fk.WHost
+import Runtime.CopyModel
+import Runtime.BumpAllocatorVariants
+import Machine.WitnessHost
 
 /-!
 # Witness of `sm_e2e_accept_main` (SyncCommitteeMessage decoder accept path; hold-out, class C)
@@ -21,7 +21,7 @@ the untouched receiver tail (32 bytes), the untouched frame bytes rsp − 80 …
 decoder returns nil. The receiver is a Go value of `v1alpha1.SyncCommitteeMessage`.
 -/
 
-open Fk Fk.W E2e E2eAd E2eAd.Code E2eScal E2eScal.H5Code E2eScal.BhCode E2eScal.H5
+open Machine Runtime TestTarget Machine.Witness E2e E2eAd E2eAd.Code E2eScal Codec E2eScal.H5Code E2eScal.BhCode E2eScal.H5
 
 namespace E2eScal.WitSmA
 

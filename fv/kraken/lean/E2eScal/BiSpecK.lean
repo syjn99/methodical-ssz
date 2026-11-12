@@ -17,7 +17,7 @@ the equation `bsA = pbiEnc g` is kept as a hypothesis `hb` instead of `subst`, s
   reject site of the decoder (it has no other error return).
 -/
 
-open Fk E2e E2eScal.H3Code E2eScal EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eScal.H3Code E2eScal Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.Bi
@@ -78,7 +78,7 @@ theorem bi_e2e_accept_spec_k (k : Nat) (hk : BiUnmarshal.IsInfixAt Host.prog k) 
   refine ⟨g, rfl, hb, ?_⟩
   have h40 : s.regs.rcx = 40 := by
     apply UInt64.toNat_inj.mp; rw [hlen, hb, pbi_enc_size]; rfl
-  exact bi_e2e_accept_main k hk hf _ _ (by simp) (by simp [Fv.uintBytes_size]) s ra guard
+  exact bi_e2e_accept_main k hk hf _ _ (by simp) (by simp [Spec.uintBytes_size]) s ra guard
     fp s1 s2 spl l18 rslot lo ast aP1 aL1 aC1 aN
     hfp h1 h2 hspl hl18 hrs hast haP1 haL1 haC1 haN
     R S hlo Heap avail (Pm g hb) hguard h40 hav hms hmm

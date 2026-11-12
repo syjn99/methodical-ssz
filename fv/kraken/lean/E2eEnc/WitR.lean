@@ -1,6 +1,6 @@
 import E2eEnc.Reject
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witnesses of the two encoder rejects
@@ -15,7 +15,7 @@ import Fk.WHost
   stack slots this path does not write.
 -/
 
-open Fk Fk.W E2eEnc E2eEnc.Code
+open Machine Runtime TestTarget Machine.Witness E2eEnc E2eEnc.Code
 
 namespace E2eEnc.WitR
 

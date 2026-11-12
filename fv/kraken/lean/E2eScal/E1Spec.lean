@@ -18,7 +18,8 @@ the same accepted inputs with the same values (EthLib error values are not compa
 -/
 
 namespace E2e
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz
+open Spec hiding encode readUint_lt
 
 /-- The checker's Desc has the same kinds in the same order; only the names differ. -/
 theorem prysmE1Desc_checker :
@@ -51,7 +52,7 @@ def pe1Enc (g : PE1) : Array UInt8 :=
   g.depositRoot.toArray ++ uintBytes 8 g.depositCount.toNat ++ g.blockHash.toArray
 
 theorem pe1_enc_size (g : PE1) : (pe1Enc g).size = 72 := by
-  simp [pe1Enc, Fv.uintBytes_size]
+  simp [pe1Enc, Spec.uintBytes_size]
 
 theorem pe1_toValue_fits (g : PE1) : Value.fits prysmE1Desc g.toValue = true := by
   have := g.depositCount.toNat_lt
@@ -95,7 +96,7 @@ theorem pe1_serialize (g : PE1) : serialize prysmE1Desc g.toValue = .ok (pe1Enc 
   have := a.toNat_lt
   simp only [prysmE1Desc, PE1.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk, hr, ht]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Fv.uintBytes_size, bytesPerOffset, pe1Enc,
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, pe1Enc,
     Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- **Spec roundtrip.** -/

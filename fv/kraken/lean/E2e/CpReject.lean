@@ -1,6 +1,6 @@
-import Fk.Step
-import Fk.Labels
-import Fk.Bytes
+import Machine.Step
+import Machine.Labels
+import Machine.Bytes
 import E2e.Code
 import E2e.Data
 
@@ -26,7 +26,7 @@ through exactly this step). The Go-source reject site stays in the list; this
 row does not count as reject coverage.
 -/
 
-open Fk E2e.Code
+open Machine TestTarget E2e.Code
 variable [Host]
 
 namespace E2e

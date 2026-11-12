@@ -1,4 +1,4 @@
-import E2eScal.HeadN
+import Codec.DecoderPrologue
 import E2eScal.PcAccept
 import E2eScal.SmSeg
 import E2eScal.PwAccept
@@ -15,11 +15,12 @@ The proof texts were produced by a scratch script from the `.S` files (directive
 per-type data are `F`, `dB`, `sz`, the spill order and the directive indices.
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
+open Codec
 namespace E2eScal.HeadRel
 
-open E2eScal
+open E2eScal Codec
 
 variable [Host]
 

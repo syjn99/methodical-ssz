@@ -9,7 +9,7 @@ The text of `E2eList.ScSpecK` with the HistoricalBatch statement. The statements
 `hb_accept_spec_stmt`, `hb_reject_size_spec_stmt` and `hb_reject_complete_stmt` (`StmtHb.lean`).
 -/
 
-open Fk E2e EthLib.Serialization.Ssz E2eList E2eHb.Code
+open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz E2eList E2eHb.Code
 variable [Host]
 
 namespace E2eHb

@@ -1,16 +1,16 @@
-import E2eSeg.SpecG
+import Codec.Segment.Bytes32VectorSpec
 import E2eDep.SpecStmt
 
 /-!
 # Spec bridge for the real Prysm `v1alpha1.Deposit`
 
-The order of `E2eHb.HbSpec`. Imported, not copied: the `Vector[Bytes32, n]` lemmas for any n (`E2eSeg.SpecG`), the
+The order of `E2eHb.HbSpec`. Imported, not copied: the `Vector[Bytes32, n]` lemmas for any n (`Codec.Segment.Bytes32VectorSpec`), the
 32-byte element lemmas (`E2eHb.HbSpec`), the Deposit_Data spec bridge (`E2e.pdd_*`, `E2eScal/DdSpec.lean`). New here:
 the two-field container lemmas (one vector field, one nested container field).
 -/
 
 namespace E2eDep
-open EthLib.Serialization.Ssz Fv1 E2e E2eList E2eHb E2eSeg
+open EthLib.Serialization.Ssz Spec TestTarget E2e E2eList E2eHb Codec.Segment
 
 theorem prysmDepDesc_wellFormed : prysmDepDesc.wellFormed = .ok () := by rfl
 theorem prysmDepDesc_fixedSize : prysmDepDesc.fixedSize = some 1240 := by rfl

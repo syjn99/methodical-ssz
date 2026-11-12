@@ -1,5 +1,5 @@
 import E2eScal.BhHeadG3
-import E2eScal.SegN
+import Codec.FixedBytesDecode
 import E2eScal.H5Code
 
 /-!
@@ -19,7 +19,7 @@ in `SegN.lean`.
 * `sm_spill2`: the two nil-error spills 118–119 (the text of `Bh.bh_spill2`).
 -/
 
-open Fk E2eScal.H5Code E2eScal
+open Machine Runtime TestTarget E2eScal.H5Code E2eScal Codec
 
 namespace E2eScal.H5
 

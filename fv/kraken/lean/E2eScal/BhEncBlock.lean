@@ -1,8 +1,8 @@
 import E2eScal.BhEncRoots
-import E2eScal.EncBlock
+import Codec.EncodeMemmove
 
 /-!
-# The three root blocks of `BeaconBlockHeader.MarshalSSZTo` through `E2eScal.enc32_call`
+# The three root blocks of `BeaconBlockHeader.MarshalSSZTo` through `Codec.enc32_call`
 
 `bh_enc_b_via_block`, `bh_enc_c_via_block`, `bh_enc_d_via_block` have the statements of `bh_enc_b`,
 `bh_enc_c`, `bh_enc_d` (`E2eScal/BhEncRoots.lean`, unchanged); the `example`s after each theorem check
@@ -11,9 +11,10 @@ the text of the hand proof (they differ per site); the call, the return and the 
 application of the block `enc32_call`. Fast path only.
 -/
 
-open Fk E2eScal.BhCode
+open Machine Runtime TestTarget E2eScal.BhCode
 variable [Host]
 
+open Codec
 namespace E2eScal.Bh
 
 set_option maxRecDepth 100000 in

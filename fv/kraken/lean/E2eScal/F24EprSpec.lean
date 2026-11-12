@@ -12,7 +12,8 @@ No Desc-checker record exists for this type (`gen/desc/results/main.result.json`
 -/
 
 namespace E2e
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz
+open Spec hiding readUint_lt
 
 theorem prysmEprDesc_kinds : prysmEprDesc = .container ["start_slot", "count"]
       [.uint 8, .uint 8] := rfl
@@ -32,7 +33,7 @@ def peprEnc (g : PEpr) : Array UInt8 :=
   uintBytes 8 g.startSlot.toNat ++ uintBytes 8 g.count.toNat
 
 theorem pepr_enc_size (g : PEpr) : (peprEnc g).size = 16 := by
-  simp [peprEnc, Fv.uintBytes_size]
+  simp [peprEnc, Spec.uintBytes_size]
 
 theorem pepr_toValue_fits (g : PEpr) : Value.fits prysmEprDesc g.toValue = true := by
   have := g.startSlot.toNat_lt; have := g.count.toNat_lt
@@ -64,7 +65,7 @@ theorem pepr_serialize (g : PEpr) : serialize prysmEprDesc g.toValue = .ok (pepr
   have := a0.toNat_lt; have := a1.toNat_lt
   simp only [prysmEprDesc, PEpr.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Fv.uintBytes_size, bytesPerOffset, peprEnc,
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, peprEnc,
     Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- **Spec roundtrip.** -/

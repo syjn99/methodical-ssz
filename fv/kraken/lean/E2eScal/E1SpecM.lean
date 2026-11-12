@@ -1,6 +1,6 @@
 import E2eScal.E1EncMain
 import E2eScal.E1Spec
-import Fk.RtCopy
+import Runtime.CopyModel
 
 /-!
 # Eth1Data encoder (fast path) against EthLib
@@ -13,9 +13,10 @@ theorem states the output (`⋆ True` remainder of that conclusion), in the form
 `E2eScal.Bh.bh_e2e_marshal_spec_k`. Fast path only (`len + 72 ≤ cap`, roots of length 32).
 -/
 
-open Fk E2e E2eScal.E1Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eScal.E1Code EthLib.Serialization.Ssz
 variable [Host]
 
+open Codec
 namespace E2eScal.E1
 
 theorem pe1_enc_toList (g : PE1) : (pe1Enc g).toList = g.depositRoot.toList
@@ -71,7 +72,7 @@ theorem e1_e2e_marshal_spec_k (k : Nat) (hk : E1Marshal.IsInfixAt Host.prog k) (
           ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   refine ⟨pe1Enc g, pe1_serialize g, ?_⟩
-  have hdc : (uintBytes 8 g.depositCount.toNat).toList.length = 8 := by simp [Fv.uintBytes_size]
+  have hdc : (uintBytes 8 g.depositCount.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
   have hr1 : g.depositRoot.toList.length = 32 := by simp
   have hr2 : g.blockHash.toList.length = 32 := by simp
   refine eventually_mono (e1_e2e_marshal_main k hk hf ast _ c1 c2 _ _ pre d0 d1 d2 hast hdc hc1 hc2

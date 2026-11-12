@@ -1,7 +1,7 @@
-import Fk.Contracts
-import Fk.Frame
-import Fk.Bytes
-import Fk.Labels
+import Runtime.Contracts
+import Machine.Frame
+import Machine.Bytes
+import Machine.Labels
 import E2e.Data
 import E2e.Code
 import E2eAd.Code
@@ -60,7 +60,7 @@ runtime call return slot entry rsp − 48; `lo` = the `S` bytes below it. Three 
 directive 104. The epilogue sets rax = rbx = 0 (`xor`).
 -/
 
-open Fk E2e E2eAd.Code E2eScal.H6Code
+open Machine Runtime TestTarget E2e E2eAd.Code E2eScal.H6Code
 variable [Host]
 
 namespace E2eScal.H6

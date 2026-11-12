@@ -1,5 +1,5 @@
 import E2eScal.H5Code
-import E2eScal.Kind
+import Codec.Kind.FieldPatterns
 import E2eScal.KindCall
 
 /-! PARTIAL OUTPUT (scalgen exit 3): 1 of 2 fields of `v1alpha1.PendingConsolidation` (--gen3); NOT generated: TargetIndex. Not a complete p2dec output.
@@ -10,9 +10,10 @@ UNCOVERED-JSON: [{"field": "TargetIndex", "reason": "callee field at Go offset 0
 (sha256 `2abcd12970d381d6f9d70627cebf313eab4ec852b93aa89bfc942115f365f381`) and `prysm/ir/ir-mainnet.json` (sha256 `c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a`, type `v1alpha1.PendingConsolidation`); GEN3 coverage (`p2dec --gen3`): 1 of 2 fields. Untrusted generator: this file is checked by Lean like any other.
 Do not edit by hand (manual edits are measured against the committed raw output). -/
 
-open Fk E2eScal.H5Code
+open Machine Runtime TestTarget E2eScal.H5Code
 variable [Host]
 
+open Codec
 namespace E2eScal.Gen
 
 set_option maxHeartbeats 4000000 in
@@ -27,7 +28,7 @@ theorem pc_g3dec_SourceIndex_arg (k : Nat) (hk : PcUnmarshal.IsInfixAt Host.prog
         ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧ st.data.regs.rbx = s.regs.rbx
         ∧ st.data.regs.rax.toBitVec = aF ∧ st.data.regs.rcx = 8 ∧ st.data.dmem = s.dmem)
       ⟨s, Host.addrOf (k + 15)⟩ := by
-  have hA := E2eScal.infix_sub (q := E2eScal.callArgFirst false 8) 15 hk
+  have hA := Codec.infix_sub (q := E2eScal.callArgFirst false 8) 15 hk
     (by simp only [PcUnmarshal, E2eScal.callArgFirst, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   with_reducible exact E2eScal.callarg_first_seg false _ (k + 15) hA
 theorem pc_g3dec_SourceIndex_arg_kind : ∀ (h : Host), type_of% (@pc_g3dec_SourceIndex_arg h) = @E2eScal.callArgFirstKind h PcUnmarshal false 8 15 := by
@@ -58,11 +59,11 @@ theorem pc_g3dec_SourceIndex_call (k : Nat) (hk : PcUnmarshal.IsInfixAt Host.pro
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (r140.toBitVec + 16))
           ⋆ Eq (e8.At src) ⋆ Eq (e8.At dst) ⋆ F) st.data.dmem)
       ⟨s, Host.addrOf (k + 17)⟩ := by
-  have hA := E2eScal.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_b9") 17 hk
+  have hA := Codec.infix_sub (q := E2eScal.callDec "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_b9") 17 hk
     (by simp only [PcUnmarshal, E2eScal.callDec, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := E2eScal.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_b9") 47 hk
+  have hB := Codec.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_b9") 47 hk
     (by simp only [PcUnmarshal, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl := Fk.label_at' hk hf (j := 47)
+  have hl := Machine.label_at' hk hf (j := 47)
     (by simp only [PcUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [PcUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   with_reducible exact E2eScal.calldec_seg _ _ (k + 17) (k + 47) hA hB hl

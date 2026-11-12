@@ -1,6 +1,6 @@
-import Fk.Step
-import Fk.Labels
-import Fk.Bytes
+import Machine.Step
+import Machine.Labels
+import Machine.Bytes
 import E2eScal.H6Code
 import E2e.Data
 import E2e.CpReject
@@ -15,7 +15,7 @@ symbol as the Checkpoint decoder's, asserted by `h6link.py`), epilogue 127–129
 (premise). The decoder has no `fmt.errorf` wrap and no callee: the size check is its only reject.
 -/
 
-open Fk E2eScal.H6Code
+open Machine TestTarget E2eScal.H6Code
 variable [Host]
 
 namespace E2eScal.H6

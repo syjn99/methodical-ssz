@@ -1,14 +1,14 @@
 import Lean.Data.Json
 import EthLib.Serialization.Ssz
 import EthLib.Cryptography.Hash.Sha256
-import Fv1.SpecScalars
-import Fv1.SpecList
-import Fv1.SpecFixedVec
-import Fv1.SpecBitVec
-import Fv1.SpecNested
-import Fv1.SpecListC
-import Fv1.SpecPrysm
-import Fv1.SpecBitList
+import Spec.TestScalars
+import Spec.TestListU64
+import Spec.TestFixedVec
+import Spec.TestBitVec
+import Spec.TestNested
+import Spec.TestListC
+import Spec.ReducedPrysm
+import Spec.TestBitList
 
 /-!
 # Independent `Desc` checker (closed-world design)
@@ -112,30 +112,30 @@ def rn (ns : List String) : Desc → Desc
 /-! Checker-owned Go field names of the 9 hand types (21 names). The Go-named terms
 are the Fv1 spec terms with the Go field names at every container level; a self-check
 in `main` requires them to equal the Fv1 terms up to names. -/
-def scGo : Desc := rn ["A", "B", "C", "D", "E"] Fv1.scDesc
-def luGo : Desc := rn ["L"] Fv1.luDesc
-def fvGo : Desc := rn ["R", "W"] Fv1.fvDesc
-def bvGo : Desc := rn ["J"] Fv1.bvDesc
-def blGo : Desc := rn ["B"] Fv1.blDesc
-def cpGo : Desc := rn ["Epoch", "Root"] Fv1.cpDesc
-def neGo : Desc := match Fv1.neDesc with
+def scGo : Desc := rn ["A", "B", "C", "D", "E"] Spec.scDesc
+def luGo : Desc := rn ["L"] Spec.luDesc
+def fvGo : Desc := rn ["R", "W"] Spec.fvDesc
+def bvGo : Desc := rn ["J"] Spec.bvDesc
+def blGo : Desc := rn ["B"] Spec.blDesc
+def cpGo : Desc := rn ["Epoch", "Root"] Spec.cpDesc
+def neGo : Desc := match Spec.neDesc with
   | .container _ [a, _, _] => .container ["A", "S", "L"] [a, scGo, luGo]
   | d => d
-def lcGo : Desc := match Fv1.lcDesc with
+def lcGo : Desc := match Spec.lcDesc with
   | .container _ [.list _ n] => .container ["Items"] [.list luGo n]
   | d => d
-def adGo : Desc := match Fv1.adDesc with
+def adGo : Desc := match Spec.adDesc with
   | .container _ [a, b, c, _, _] =>
     .container ["Slot", "CommitteeIndex", "BeaconBlockRoot", "Source", "Target"] [a, b, c, cpGo, cpGo]
   | d => d
 
 /-- Checker-owned spec table: (package, type) -> (reference name, Fv1 spec Desc, Go-named Desc). -/
 def refs : List ((String × String) × (String × Desc × Desc)) :=
-  [((tgt, "Scalars"), ("Fv1.scDesc", Fv1.scDesc, scGo)), ((tgt, "FixedVec"), ("Fv1.fvDesc", Fv1.fvDesc, fvGo)),
-   ((tgt, "ListU64"), ("Fv1.luDesc", Fv1.luDesc, luGo)), ((tgt, "BitVec"), ("Fv1.bvDesc", Fv1.bvDesc, bvGo)),
-   ((tgt, "Nested"), ("Fv1.neDesc", Fv1.neDesc, neGo)), ((tgt, "ListC"), ("Fv1.lcDesc", Fv1.lcDesc, lcGo)),
-   ((tgt, "BitL"), ("Fv1.blDesc", Fv1.blDesc, blGo)), ((tgtPrysm, "Checkpoint"), ("Fv1.cpDesc", Fv1.cpDesc, cpGo)),
-   ((tgtPrysm, "AttestationData"), ("Fv1.adDesc", Fv1.adDesc, adGo))]
+  [((tgt, "Scalars"), ("Spec.scDesc", Spec.scDesc, scGo)), ((tgt, "FixedVec"), ("Spec.fvDesc", Spec.fvDesc, fvGo)),
+   ((tgt, "ListU64"), ("Spec.luDesc", Spec.luDesc, luGo)), ((tgt, "BitVec"), ("Spec.bvDesc", Spec.bvDesc, bvGo)),
+   ((tgt, "Nested"), ("Spec.neDesc", Spec.neDesc, neGo)), ((tgt, "ListC"), ("Spec.lcDesc", Spec.lcDesc, lcGo)),
+   ((tgt, "BitL"), ("Spec.blDesc", Spec.blDesc, blGo)), ((tgtPrysm, "Checkpoint"), ("Spec.cpDesc", Spec.cpDesc, cpGo)),
+   ((tgtPrysm, "AttestationData"), ("Spec.adDesc", Spec.adDesc, adGo))]
 
 def handPackages : List String := [tgt, tgtPrysm]
 def handTypeNames : List String := refs.map (·.1.2)

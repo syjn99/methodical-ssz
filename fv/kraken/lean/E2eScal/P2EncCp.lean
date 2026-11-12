@@ -1,4 +1,4 @@
-import E2eScal.P2Enc
+import Codec.Bytes32Encode
 import E2e.CpMarshal
 
 /-!
@@ -7,16 +7,17 @@ import E2e.CpMarshal
 `cp_e2e_marshal_main_s` has the statement of `E2e.cp_e2e_marshal_main` (`E2e/CpMarshal.lean`)
 word for word. Its proof is the hand proof with directives 36–62 (the `Root` length test,
 the capacity test, the spills and `memmove`) replaced by one application of
-`E2eScal.rootenc_seg` (head block at k + 36, `lrej` = `L_108`, tail block at k + 55 = `L_cf`;
+`Codec.rootenc_seg` (head block at k + 36, `lrej` = `L_108`, tail block at k + 55 = `L_cf`;
 field displacements 16 / 24; spills 0x58 / 0x50 / 0x60). Directives 0–35 (guard, prologue,
 the inlined Epoch encoder) and 63–70 (return) are the hand text unchanged (verbatim share;
 they are not part of the 32-byte field pattern). `cp_marshal_same_stmt` checks that the statements are the
 same proposition.
 -/
 
-open Fk E2e E2e.Code
+open Machine Runtime TestTarget E2e E2e.Code
 variable [Host]
 
+open Codec
 namespace E2eScal
 
 set_option maxHeartbeats 64000000 in
@@ -69,13 +70,13 @@ theorem cp_e2e_marshal_main_s (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (
           ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))
           ⋆ Eq (root.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8)) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
-  have hA := E2eScal.infix_sub (q := E2eScal.rootEncHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf" 16 24) 36 hk
-    (by simp only [CpMarshal, E2eScal.rootEncHead, List.drop_succ_cons, List.drop_zero, List.length_cons,
+  have hA := Codec.infix_sub (q := Codec.rootEncHead "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf" 16 24) 36 hk
+    (by simp only [CpMarshal, Codec.rootEncHead, List.drop_succ_cons, List.drop_zero, List.length_cons,
       List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := E2eScal.infix_sub (q := E2eScal.rootEncTail "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf" 88 80 96) 55 hk
-    (by simp only [CpMarshal, E2eScal.rootEncTail, List.drop_succ_cons, List.drop_zero, List.length_cons,
+  have hB := Codec.infix_sub (q := Codec.rootEncTail "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf" 88 80 96) 55 hk
+    (by simp only [CpMarshal, Codec.rootEncTail, List.drop_succ_cons, List.drop_zero, List.length_cons,
       List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl := Fk.label_at' hk hf (j := 55)
+  have hl := Machine.label_at' hk hf (j := 55)
     (by simp only [CpMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [CpMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
@@ -154,7 +155,7 @@ theorem cp_e2e_marshal_main_s (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (
   intro m6 H6
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl e8 he8] at H6
   kunfold
-  refine eventually_trans _ _ _ _ (E2eScal.rootenc_seg _ _ 16 24 88 80 96 (k + 36) (k + 55) hA hB hl
+  refine eventually_trans _ _ _ _ (Codec.rootenc_seg _ _ 16 24 88 80 96 (k + 36) (k + 55) hA hB hl
     (rsp.toBitVec - 8#64 - 104) rax.toBitVec (rcx.toBitVec + 8) rbx.toBitVec rdi.toBitVec p
     (rax.toBitVec + 16) (rax.toBitVec + 24) (rsp.toBitVec - 24) (rsp.toBitVec - 32) (rsp.toBitVec - 16)
     (rsp.toBitVec - 120) (rsp.toBitVec - 120 - BitVec.ofNat 64 S) (rbx.toBitVec + rcx.toBitVec + 8) S

@@ -13,12 +13,12 @@ import E2eEnc.StmtEncG
 Reason (attempt 1 of `LoopG.lean`): `GrowsliceC` bounds the heap after a call only from above
 (`avail' + esz·newCap ≤ avail`). After one growth nothing bounds the remaining heap from below, so the budget premise of
 a second `growslice` call cannot be discharged: `dc_marshal_any_stmt` does not follow from the contract forms of
-`Fk/Contracts.lean` (a form with a lower bound, e.g. `avail' + esz·newCap = avail`, is missing; a new form needs user
+`Runtime/Contracts.lean` (a form with a lower bound, e.g. `avail' + esz·newCap = avail`, is missing; a new form needs user
 approval). The originals stay unchanged and unproved (N). The new premises are not implied by the old ones and the old
 ones are not implied by the new ones (the new statement allows a smaller heap and forbids a second growth).
 -/
 
-open Fk EthLib.Serialization.Ssz E2eEnc.Code
+open Machine Runtime TestTarget EthLib.Serialization.Ssz E2eEnc.Code
 variable [Host]
 
 namespace E2eEnc
@@ -123,7 +123,7 @@ def dc_marshal_once_spec_stmt : Prop :=
       ⋆ Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 pc.toInt).At (s.regs.rax.toBitVec + 32))
       ⋆ Eq ((Int.toBytes 8 nb.toInt).At (s.regs.rax.toBitVec + 40))
-      ⋆ Eq (g.root.toList.At pr) ⋆ Eq ((Fv1.u64Bytes g.cols).toList.At pc)
+      ⋆ Eq (g.root.toList.At pr) ⋆ Eq ((Spec.u64Bytes g.cols).toList.At pc)
       ⋆ Eq ((pre ++ spare).At s.regs.rbx.toBitVec) ⋆ Heap avail ⋆ R)
     (hguard : guard.toNat + 8 < s.regs.rsp.toNat)
     (hbud : 4 * (s.regs.rcx.toNat + 36 + 8 * g.cols.length) + 8576 ≤ avail)

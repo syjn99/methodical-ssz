@@ -13,7 +13,7 @@ lemmas below are stated for any list of 48-byte vectors (`serializeEach_bv48`, `
 -/
 
 namespace E2eList
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz Spec TestTarget
 
 theorem prysmScDesc_wellFormed : prysmScDesc.wellFormed = .ok () := by rfl
 theorem prysmScDesc_fixedSize : prysmScDesc.fixedSize = some 24624 := by rfl

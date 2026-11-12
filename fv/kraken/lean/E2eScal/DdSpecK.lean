@@ -14,7 +14,7 @@ Hand-written: the text of `DmSpecK.lean` with the Deposit_Data statement
   reject site of the decoder (it has no other error return).
 -/
 
-open Fk E2e E2eScal.H4Code E2eScal EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eScal.H4Code E2eScal Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.H4
@@ -87,7 +87,7 @@ theorem dd_e2e_accept_spec_k (k : Nat) (hk : DdUnmarshal.IsInfixAt Host.prog k) 
   refine ⟨g, rfl, hb, ?_⟩
   have h88 : s.regs.rcx = 184 := by
     apply UInt64.toNat_inj.mp; rw [hlen, hb, pdd_enc_size]; rfl
-  exact dd_e2e_accept_main k hk hf _ _ _ _ (by simp) (by simp) (by simp [Fv.uintBytes_size]) (by simp) s ra guard
+  exact dd_e2e_accept_main k hk hf _ _ _ _ (by simp) (by simp) (by simp [Spec.uintBytes_size]) (by simp) s ra guard
     fp s1 s2 spl l18 rslot lo ast aP1 aL1 aC1 aP2 aL2 aC2 aN aP3 aL3 aC3
     hfp h1 h2 hspl hl18 hrs hast haP1 haL1 haC1 haP2 haL2 haC2 haN haP3 haL3 haC3
     R S hlo Heap avail (Pm g hb) hguard h88 hav hms hmm

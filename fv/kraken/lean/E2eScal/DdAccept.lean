@@ -1,4 +1,4 @@
-import E2eScal.Compose
+import Codec.DecoderHeadEpilogue
 import E2eScal.Gen2DdDecPartial
 import E2eScal.DdSegNop
 import E2eScal.E1Accept
@@ -22,9 +22,10 @@ the in-sample DepositMessage) with the Deposit_Data indices, offsets and one mor
 * epilogue 121–125: `decepi_seg`.
 -/
 
-open Fk E2eScal.H4Code
+open Machine Runtime TestTarget E2eScal.H4Code
 variable [Host]
 
+open Codec
 namespace E2eScal.H4
 
 set_option maxHeartbeats 4000000 in
@@ -40,42 +41,42 @@ theorem dd_e2e_accept_main : dd_accept_stmt := by
   simp only at h_mem hguard hlen ⊢
   have hrsp_lt : rsp.toNat < 2 ^ 64 := rsp.toNat_lt_size
   -- code facts
-  have hH := E2eScal.infix_sub (q := E2eScal.decHead "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_0" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_233" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_21f" 184) 0 hk
-    (by simp only [DdUnmarshal, E2eScal.decHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hTa0 := E2eScal.infix_sub (q := E2eScal.bytesDecTailA Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_ca" 24) 37 hk
-    (by simp only [DdUnmarshal, E2eScal.bytesDecTailA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hTb0 := E2eScal.infix_sub (q := E2eScal.bytesDecTailB Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_ca" 8) 45 hk
-    (by simp only [DdUnmarshal, E2eScal.bytesDecTailB, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hlT0 := Fk.label_at' hk hf (j := 45)
+  have hH := Codec.infix_sub (q := Codec.decHead "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_0" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_233" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_21f" 184) 0 hk
+    (by simp only [DdUnmarshal, Codec.decHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hTa0 := Codec.infix_sub (q := Codec.bytesDecTailA Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_ca" 24) 37 hk
+    (by simp only [DdUnmarshal, Codec.bytesDecTailA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hTb0 := Codec.infix_sub (q := Codec.bytesDecTailB Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_ca" 8) 45 hk
+    (by simp only [DdUnmarshal, Codec.bytesDecTailB, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hlT0 := Machine.label_at' hk hf (j := 45)
     (by simp only [DdUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [DdUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hYdi : E2eScal.U64InlineReg Reg64.rdi := by decide
-  have hWa := E2eScal.infix_sub (q := E2eScal.H4.bytesDecHeadNop "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" 48 40 48) 47 hk
+  have hYdi : Codec.U64InlineReg Reg64.rdi := by decide
+  have hWa := Codec.infix_sub (q := E2eScal.H4.bytesDecHeadNop "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" 48 40 48) 47 hk
     (by simp only [DdUnmarshal, E2eScal.H4.bytesDecHeadNop, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hWb := E2eScal.infix_sub (q := E2eScal.bytesDecMid 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_154" 48 56 24 32 40 48 48) 61 hk
-    (by simp only [DdUnmarshal, E2eScal.bytesDecMid, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hlW := Fk.label_at' hk hf (j := 61)
+  have hWb := Codec.infix_sub (q := Codec.bytesDecMid 32 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_113" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_154" 48 56 24 32 40 48 48) 61 hk
+    (by simp only [DdUnmarshal, Codec.bytesDecMid, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hlW := Machine.label_at' hk hf (j := 61)
     (by simp only [DdUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [DdUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hTa1 := E2eScal.infix_sub (q := E2eScal.bytesDecTailA Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_169" 24) 73 hk
-    (by simp only [DdUnmarshal, E2eScal.bytesDecTailA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hTb1 := E2eScal.infix_sub (q := E2eScal.bytesDecTailB Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_169" 32) 81 hk
-    (by simp only [DdUnmarshal, E2eScal.bytesDecTailB, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hlT1 := Fk.label_at' hk hf (j := 81)
+  have hTa1 := Codec.infix_sub (q := Codec.bytesDecTailA Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_169" 24) 73 hk
+    (by simp only [DdUnmarshal, Codec.bytesDecTailA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hTb1 := Codec.infix_sub (q := Codec.bytesDecTailB Reg64.rdi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_169" 32) 81 hk
+    (by simp only [DdUnmarshal, Codec.bytesDecTailB, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hlT1 := Machine.label_at' hk hf (j := 81)
     (by simp only [DdUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [DdUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hTa2 := E2eScal.infix_sub (q := E2eScal.bytesDecTailA Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_211" 24) 111 hk
-    (by simp only [DdUnmarshal, E2eScal.bytesDecTailA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hTb2 := E2eScal.infix_sub (q := E2eScal.bytesDecTailB Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_211" 64) 119 hk
-    (by simp only [DdUnmarshal, E2eScal.bytesDecTailB, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hlT2 := Fk.label_at' hk hf (j := 119)
+  have hTa2 := Codec.infix_sub (q := Codec.bytesDecTailA Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_211" 24) 111 hk
+    (by simp only [DdUnmarshal, Codec.bytesDecTailA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hTb2 := Codec.infix_sub (q := Codec.bytesDecTailB Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ_211" 64) 119 hk
+    (by simp only [DdUnmarshal, Codec.bytesDecTailB, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hlT2 := Machine.label_at' hk hf (j := 119)
     (by simp only [DdUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [DdUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hYsi : E2eScal.U64InlineReg Reg64.rsi := by decide
-  have hE := E2eScal.infix_sub (q := E2eScal.decEpi) 121 hk
-    (by simp only [DdUnmarshal, E2eScal.decEpi, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hYsi : Codec.U64InlineReg Reg64.rsi := by decide
+  have hE := Codec.infix_sub (q := Codec.decEpi) 121 hk
+    (by simp only [DdUnmarshal, Codec.decEpi, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
   -- head: entry → directive 13
-  refine eventually_trans _ _ _ _ (E2eScal.dechead_seg _ _ _ _ 184 (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _
+  refine eventually_trans _ _ _ _ (Codec.dechead_seg _ _ _ _ 184 (k + 0) hH _ ra guard fp s1 s2 hfp h1 h2 _
     (by dsimp only; ecancel) hguard (by rw [hlen]; rfl)) ?_
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, hrax1, hrbx1, Hm1⟩
   dsimp only at hpc1 hrsp1 hrbp1 hr141 hrax1 hrbx1 Hm1
@@ -98,7 +99,7 @@ theorem dd_e2e_accept_main : dd_accept_stmt := by
   dsimp only at hpc2 hrsp2 hrbp2 hr142 hrdx2 Hm2
   subst hpc2
   -- pointer tail of PublicKey (rdi), 37–38 and 45–46
-  refine eventually_trans _ _ _ _ (E2eScal.bytesdec_tail_seg Reg64.rdi hYdi _ _ _ (k + 37) (k + 45) hTa0 hTb0 hlT0
+  refine eventually_trans _ _ _ _ (Codec.bytesdec_tail_seg Reg64.rdi hYdi _ _ _ (k + 37) (k + 45) hTa0 hTb0 hlT0
     (rsp.toBitVec - 40) rax.toBitVec p1 (rsp.toBitVec - 16) (rax.toBitVec + 8)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat])
     (rsp - 8) r14 (Int.toBytes 8 p1.toInt) (Int.toBytes_length 8 _) _ d2 hrsp2 hrbp2 hr142 hrdx2
@@ -124,7 +125,7 @@ theorem dd_e2e_accept_main : dd_accept_stmt := by
   dsimp only at hpc4 hrsp4 hrbp4 hr144 hrdx4 Hm4
   subst hpc4
   -- pointer tail of WithdrawalCredentials (rdi), 73–74 and 81–82
-  refine eventually_trans _ _ _ _ (E2eScal.bytesdec_tail_seg Reg64.rdi hYdi _ _ _ (k + 73) (k + 81) hTa1 hTb1 hlT1
+  refine eventually_trans _ _ _ _ (Codec.bytesdec_tail_seg Reg64.rdi hYdi _ _ _ (k + 73) (k + 81) hTa1 hTb1 hlT1
     (rsp.toBitVec - 40) rax.toBitVec p2 (rsp.toBitVec - 16) (rax.toBitVec + 32)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat])
     (rsp - 8) r14 (Int.toBytes 8 p2.toInt) (Int.toBytes_length 8 _) _ d4 hrsp4 hrbp4 hr144 hrdx4
@@ -159,7 +160,7 @@ theorem dd_e2e_accept_main : dd_accept_stmt := by
   dsimp only at hpc7 hrsp7 hrbp7 hr147 hrdx7 Hm7
   subst hpc7
   -- pointer tail of Signature (rsi), 111–112 and 119–120
-  refine eventually_trans _ _ _ _ (E2eScal.bytesdec_tail_seg Reg64.rsi hYsi _ _ _ (k + 111) (k + 119) hTa2 hTb2 hlT2
+  refine eventually_trans _ _ _ _ (Codec.bytesdec_tail_seg Reg64.rsi hYsi _ _ _ (k + 111) (k + 119) hTa2 hTb2 hlT2
     (rsp.toBitVec - 40) rax.toBitVec p3 (rsp.toBitVec - 16) (rax.toBitVec + 64)
     (by simp only [Int64.toBitVec_ofNat]; bv_omega) (by simp only [Int64.toBitVec_ofNat])
     (rsp - 8) r14 (Int.toBytes 8 p3.toInt) (Int.toBytes_length 8 _) _ d7 hrsp7 hrbp7 hr147 hrdx7
@@ -168,7 +169,7 @@ theorem dd_e2e_accept_main : dd_accept_stmt := by
   dsimp only at hpc8 hrsp8 hrbp8 hr148 hrdx8 Hm8
   subst hpc8
   -- epilogue, 121–125
-  refine eventually_trans _ _ _ _ (E2eScal.decepi_seg (k + 121) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
+  refine eventually_trans _ _ _ _ (Codec.decepi_seg (k + 121) hE (rsp.toBitVec - 40) (rsp.toBitVec - 8) rsp.toBitVec
     (by bv_omega) (by bv_omega) rbp ra r14 _ d8 hrsp8 hr148 (by ecancel)) ?_
   rintro ⟨d9, pc9⟩ ⟨hpc9, hrax9, hrbx9, hrsp9, hrbp9, hr149, Hm9⟩
   dsimp only at hpc9 hrax9 hrbx9 hrsp9 hrbp9 hr149 Hm9

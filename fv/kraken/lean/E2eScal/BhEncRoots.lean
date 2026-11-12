@@ -1,4 +1,4 @@
-import Fk.LuRejectCall
+import TestTarget.ListU64DecodeRejectCall
 import E2e.CpMarshal
 import E2eScal.BhCode
 
@@ -21,7 +21,7 @@ only the memory it touches; the rest is the frame `R`. `rsp` is the entry rsp of
 `recv` (receiver), `dst` (slice pointer), `v` (length before the block) and `cap` are parameters.
 -/
 
-open Fk E2eScal.BhCode
+open Machine Runtime TestTarget E2eScal.BhCode
 variable [Host]
 
 namespace E2eScal.Bh

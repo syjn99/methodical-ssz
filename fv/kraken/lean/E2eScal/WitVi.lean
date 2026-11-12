@@ -1,6 +1,6 @@
 import E2eScal.ViSpec
-import Fk.WHost
-import Fk.RtCopy
+import Machine.WitnessHost
+import Runtime.CopyModel
 
 /-!
 # Witness of `vi_unmarshal_accept_main_g` and `vi_uacc_holds`
@@ -18,7 +18,7 @@ Hand-written (not generator output): the text of `E2eAd/WitCi.lean` with the
 names replaced (`sed`); the machine theorem used is the generated `vi_unmarshal_accept_main_g`.
 -/
 
-open Fk Fk.W E2eScal E2eScal.BhCode E2eScal.Gen
+open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.BhCode E2eScal.Gen
 
 namespace E2eScal.WitVi
 

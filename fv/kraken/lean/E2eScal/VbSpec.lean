@@ -15,7 +15,8 @@ sha256; copy in `prysm/go1.26.10/e2e/g5c/`).
 -/
 
 namespace E2e
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz
+open Spec hiding readUint_lt
 
 /-- The checker's Desc has the same kinds in the same order; only the names differ. -/
 theorem prysmVbDesc_checker :
@@ -46,7 +47,7 @@ def pvbEnc (g : PVb) : Array UInt8 :=
   uintBytes 8 g.index.toNat ++ uintBytes 8 g.balance.toNat
 
 theorem pvb_enc_size (g : PVb) : (pvbEnc g).size = 16 := by
-  simp [pvbEnc, Fv.uintBytes_size]
+  simp [pvbEnc, Spec.uintBytes_size]
 
 theorem pvb_toValue_fits (g : PVb) : Value.fits prysmVbDesc g.toValue = true := by
   have := g.index.toNat_lt; have := g.balance.toNat_lt
@@ -88,7 +89,7 @@ theorem pvb_serialize (g : PVb) : serialize prysmVbDesc g.toValue = .ok (pvbEnc 
   have := a0.toNat_lt; have := a1.toNat_lt
   simp only [prysmVbDesc, PVb.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Fv.uintBytes_size, bytesPerOffset, pvbEnc,
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, pvbEnc,
     Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- **Spec roundtrip.** -/

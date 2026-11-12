@@ -1,6 +1,6 @@
-import Fk.Step
-import Fk.Labels
-import Fk.Bytes
+import Machine.Step
+import Machine.Labels
+import Machine.Bytes
 import E2eScal.H4Code
 import E2e.Data
 import E2e.CpReject
@@ -14,7 +14,7 @@ and frame (`sub $0x48`). `pw_e2e_reject_size_main` (`len(buf) ≠ 24`, `return s
 Not covered here: the two callee error paths (`fmt.errorf` wraps); under `len(buf) = 24` each callee gets 8 bytes.
 -/
 
-open Fk E2eScal.H4Code
+open Machine TestTarget E2eScal.H4Code
 variable [Host]
 
 namespace E2eScal.H4

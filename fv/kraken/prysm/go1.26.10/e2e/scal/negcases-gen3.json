@@ -77,13 +77,13 @@
  },
  {
   "id": "g3-u64rr-control",
-  "module": "E2eScal/U64RR.lean",
+  "module": "Codec/InlineUint64RegisterBase.lean",
   "theorem": "u64dec_rr_seg",
   "kind": "control"
  },
  {
   "id": "g3-u64rr-stmt-reg",
-  "module": "E2eScal/U64RR.lean",
+  "module": "Codec/InlineUint64RegisterBase.lean",
   "theorem": "u64dec_rr_seg",
   "kind": "stmt",
   "old": "(hX : U64RRReg rX)",
@@ -91,7 +91,7 @@
  },
  {
   "id": "g3-u64rr-stmt-field",
-  "module": "E2eScal/U64RR.lean",
+  "module": "Codec/InlineUint64RegisterBase.lean",
   "theorem": "u64dec_rr_seg",
   "kind": "stmt",
   "old": "(Eq (v.At aSrc) ⋆ Eq (v.At aF) ⋆ R) st.data.dmem",
@@ -99,7 +99,7 @@
  },
  {
   "id": "g3-u64rr-stmt-frame",
-  "module": "E2eScal/U64RR.lean",
+  "module": "Codec/InlineUint64RegisterBase.lean",
   "theorem": "u64dec_rr_seg",
   "kind": "stmt",
   "old": "(∀ r : Reg64, r ≠ rX → st.data.regs.get64 r = s.regs.get64 r)",
@@ -210,8 +210,8 @@
   "module": "E2eScal/Gen3Examples.lean",
   "theorem": "pw_dec_Amount_seg",
   "kind": "stmt",
-  "old": "(q := E2eScal.u64DecRR Reg64.r8 8 16)",
-  "new": "(q := E2eScal.u64DecRR Reg64.r9 8 16)"
+  "old": "(q := Codec.u64DecRR Reg64.r8 8 16)",
+  "new": "(q := Codec.u64DecRR Reg64.r9 8 16)"
  },
  {
   "id": "g3-ex-wc-stmt-nopad",

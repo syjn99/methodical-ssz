@@ -1,7 +1,7 @@
 import E2eDec.Accept
 import E2eDec.BumpDc
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of `dcd_e2e_accept_main` (decoder accept path)
@@ -17,7 +17,7 @@ the input `root ‖ dcOff ‖ ib` (so that no address depends on `n`). cap = len
 frame bytes rsp − 72 … rsp − 9 (64).
 -/
 
-open Fk Fk.W E2eEnc E2eDec E2eDec.Code
+open Machine Runtime TestTarget Machine.Witness E2eEnc E2eDec E2eDec.Code
 
 namespace E2eDec.WitA
 

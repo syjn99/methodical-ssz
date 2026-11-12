@@ -1,5 +1,5 @@
-import Fk.Contracts
-import Fk.Frame
+import Runtime.Contracts
+import Machine.Frame
 import E2eAd.Prims
 import E2eAd.Data
 
@@ -28,7 +28,7 @@ rsp − 128; their saved rbp at rsp − 136 and their rbx spill at rsp − 112 (
 0x8(%rsp) of this function).
 -/
 
-open Fk E2eAd.Code
+open Machine Runtime TestTarget E2eAd.Code
 variable [Host]
 
 namespace E2eAd

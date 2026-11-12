@@ -18,8 +18,9 @@ import E2e.CpMarshal
 The hand statements and theorems are used as committed.
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
+open Codec
 namespace E2eScal
 
 /-- BeaconBlockHeader `MarshalSSZTo`: frame `0x98`, large-frame guard (`lea -0x20(%rsp),%r12`). Stack chunks

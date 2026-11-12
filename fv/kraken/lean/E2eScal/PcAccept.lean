@@ -23,7 +23,7 @@ The callee is used only through `U64CalleeAcc` (= the existing `ViUAccC`, proved
 contract, no new hypothesis form.
 -/
 
-open Fk E2e E2eScal.H5Code E2eScal.BhCode E2eScal
+open Machine Runtime TestTarget E2e E2eScal.H5Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.H5
@@ -239,13 +239,13 @@ theorem pc_e2e_accept_main : pc_accept_stmt := by
   simp only at h_mem hguard hlen ⊢
   have hg : guard.toNat < (rsp.toBitVec - 88).toNat := E2eScal.H4.pwa_guard _ _ hguard
   -- code facts of the hand-applied blocks
-  have hRl := E2eScal.infix_sub (q := E2eScal.callArgReload false 96 8 112 (-8) 88 16) 48 hk
+  have hRl := Codec.infix_sub (q := E2eScal.callArgReload false 96 8 112 (-8) 88 16) 48 hk
     (by simp only [PcUnmarshal, E2eScal.callArgReload, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hC2 := E2eScal.infix_sub (q := callDecNop "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d") 55 hk
+  have hC2 := Codec.infix_sub (q := callDecNop "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d") 55 hk
     (by simp only [PcUnmarshal, callDecNop, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hL2 := E2eScal.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d") 85 hk
+  have hL2 := Codec.infix_sub (q := E2eScal.callDecL "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ_14d") 85 hk
     (by simp only [PcUnmarshal, E2eScal.callDecL, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl2 := Fk.label_at' hk hf (j := 85)
+  have hl2 := Machine.label_at' hk hf (j := 85)
     (by simp only [PcUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [PcUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   -- head: entry → directive 15

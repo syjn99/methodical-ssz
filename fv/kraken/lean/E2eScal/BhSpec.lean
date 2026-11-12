@@ -25,7 +25,8 @@ The proofs are the text of `E2eAd/Spec.lean` (AttestationData) with the nested C
 -/
 
 namespace E2e
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz
+open Spec hiding encode readUint_lt
 
 /-- consensus-specs phase0 `BeaconBlockHeader`. -/
 def prysmBhDesc : Desc := .container ["slot", "proposer_index", "parent_root", "state_root", "body_root"]
@@ -65,7 +66,7 @@ def pbhEnc (g : PBh) : Array UInt8 :=
   uintBytes 8 g.slot.toNat ++ uintBytes 8 g.proposer.toNat ++ g.parent.toArray ++ g.state.toArray ++ g.body.toArray
 
 theorem pbh_enc_size (g : PBh) : (pbhEnc g).size = 112 := by
-  simp [pbhEnc, Fv.uintBytes_size]
+  simp [pbhEnc, Spec.uintBytes_size]
 
 theorem pbh_toValue_fits (g : PBh) : Value.fits prysmBhDesc g.toValue = true := by
   have := g.slot.toNat_lt; have := g.proposer.toNat_lt
@@ -114,7 +115,7 @@ theorem pbh_serialize (g : PBh) : serialize prysmBhDesc g.toValue = .ok (pbhEnc 
   have := a.toNat_lt; have := b.toNat_lt
   simp only [prysmBhDesc, PBh.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk, hr, hs, ht]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Fv.uintBytes_size, bytesPerOffset, pbhEnc,
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, pbhEnc,
     Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- **Spec roundtrip.** -/

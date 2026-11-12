@@ -1,6 +1,6 @@
 import E2eScal.Gen6PbEnc
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of `pb_g6e_fast` (PowBlock encoder fast path, generated theorem; unit E2-C)
@@ -15,7 +15,7 @@ Two instances: empty prefix with `cap = 96`; prefix `[0xaa, 0xbb, 0xcc]` with 5 
 field value of the stated lengths every premise of `pb_g6e_fast` holds (non-vacuity of the fast path).
 -/
 
-open Fk Fk.W E2eScal E2eScal.Gen6Enc E2eScal.Enc2Code
+open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.Gen6Enc E2eScal.Enc2Code
 
 namespace E2eScal.WitE2cPb
 

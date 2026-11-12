@@ -16,8 +16,8 @@ API_FIX3_COMMIT = "f9e2bc3dc02ed3521e33b04b4bdaeb9c1fa5f3fe"
 SNAPSHOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "include-api-v3.json")
 
 DATA_DIR_IN_REPO = "fv/kraken/link/out/data/"   # where the data files are kept (we never write there)
-LEAN_NAMESPACE = "Fk.Data"
-LEAN_INCLUDE = "data_include {id}"              # Lean command, Fk/Include.lean
+LEAN_NAMESPACE = "TestTarget.Data"
+LEAN_INCLUDE = "data_include {id}"              # Lean command, Machine/Include.lean
 
 # Labels are conv.py-cleaned symbol names (API data_files.format).
 RODATA_SYMBOL = "go:string.*"                   # ELF group symbol of Go string data

@@ -335,8 +335,8 @@ def emit_wit(X, info, cl, gsize):
     L = []
     w = L.append
     w('import %s' % info['module'])
-    w('import Fk.RtCopy')
-    w('import Fk.WHost')
+    w('import Runtime.CopyModel')
+    w('import Machine.WitnessHost')
     w('')
     w('/-!')
     w('# Witness of `%s_fast` (%s encoder fast path, generated theorem; unit E2-C)' % (p, hdr['type']))
@@ -352,7 +352,7 @@ def emit_wit(X, info, cl, gsize):
     w('field value of the stated lengths every premise of `%s_fast` holds (non-vacuity of the fast path).' % p)
     w('-/')
     w('')
-    w('open Fk Fk.W E2eScal E2eScal.Gen6Enc %s' % ' '.join(info['open'].split()[2:]))
+    w('open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.Gen6Enc %s' % ' '.join(info['open'].split()[5:]))
     w('')
     w('namespace E2eScal.WitE2c%s' % X)
     w('')
@@ -577,7 +577,7 @@ def emit_spec(X, info, cl):
     w = L.append
     w('import %s' % info['module'])
     w('import %s' % smod)
-    w('import Fk.RtCopy')
+    w('import Runtime.CopyModel')
     w('')
     w('/-!')
     w('# %s encoder fast path (generated theorem) against the independent Desc (unit E2-C)' % hdr['type'])
@@ -589,7 +589,7 @@ def emit_spec(X, info, cl):
     w('lengths). Emitted by the unit\'s evidence tool `e2cemit.py`, then built and kernel-checked.')
     w('-/')
     w('')
-    w('open Fk E2e E2eScal E2eScal.Gen6Enc %s EthLib.Serialization.Ssz' % ' '.join(info['open'].split()[2:]))
+    w('open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.Gen6Enc %s EthLib.Serialization.Ssz' % ' '.join(info['open'].split()[5:]))
     w('variable [Host]')
     w('')
     w('namespace E2eScal.E2c')
@@ -627,7 +627,7 @@ def emit_spec(X, info, cl):
     w('      ⟨s, Host.addrOf k⟩ := by')
     w('  refine ⟨%s g, %s g, ?_⟩' % (enc, ser))
     for k, fe in enumerate(fexpr):
-        tac = 'simp [Fv.uintBytes_size]' if fe[2] in ('u', 'n') else 'simp'
+        tac = 'simp [Spec.uintBytes_size]' if fe[2] in ('u', 'n') else 'simp'
         w('  have hF%d : %s.length = %d := by %s' % (k, fe[0], fe[1], tac))
     w('  refine eventually_mono (%s_fast %s)' % (p, ' '.join(args)))
     w('    (fun st ⟨%s⟩ =>' % pat)

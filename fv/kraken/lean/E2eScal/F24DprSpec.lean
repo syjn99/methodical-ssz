@@ -14,7 +14,8 @@ generalised to a field list). `prysmDprDesc` (`F24Desc.lean`) is the independent
 -/
 
 namespace E2e
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz
+open Spec hiding readUint_lt
 
 theorem prysmDprDesc_kinds : prysmDprDesc = .container ["pubkey", "withdrawal_credentials", "amount", "signature", "index"]
       [.byteVector 48, .byteVector 32, .uint 8, .byteVector 96, .uint 8] := rfl
@@ -42,7 +43,7 @@ def pdprEnc (g : PDpr) : Array UInt8 :=
   g.pubkey.toArray ++ g.withdrawalCredentials.toArray ++ uintBytes 8 g.amount.toNat ++ g.signature.toArray ++ uintBytes 8 g.index.toNat
 
 theorem pdpr_enc_size (g : PDpr) : (pdprEnc g).size = 192 := by
-  simp [pdprEnc, Fv.uintBytes_size]
+  simp [pdprEnc, Spec.uintBytes_size]
 
 theorem pdpr_toValue_fits (g : PDpr) : Value.fits prysmDprDesc g.toValue = true := by
   have := g.amount.toNat_lt; have := g.index.toNat_lt
@@ -80,7 +81,7 @@ theorem pdpr_serialize (g : PDpr) : serialize prysmDprDesc g.toValue = .ok (pdpr
   have := a2.toNat_lt; have := a4.toNat_lt
   simp only [prysmDprDesc, PDpr.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk, hr0, hr1, hr3]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Fv.uintBytes_size, bytesPerOffset, pdprEnc,
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, pdprEnc,
     Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- **Spec roundtrip.** -/

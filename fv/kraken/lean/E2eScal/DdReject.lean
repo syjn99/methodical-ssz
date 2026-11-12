@@ -1,6 +1,6 @@
-import Fk.Step
-import Fk.Labels
-import Fk.Bytes
+import Machine.Step
+import Machine.Labels
+import Machine.Bytes
 import E2eScal.H4Code
 import E2e.Data
 import E2e.CpReject
@@ -15,7 +15,7 @@ as the Checkpoint decoder's, asserted by `h4link.py`), epilogue 129–131. `e0`,
 The decoder has no `fmt.errorf` wrap and no callee: the size check is its only reject.
 -/
 
-open Fk E2eScal.H4Code
+open Machine TestTarget E2eScal.H4Code
 variable [Host]
 
 namespace E2eScal.H4

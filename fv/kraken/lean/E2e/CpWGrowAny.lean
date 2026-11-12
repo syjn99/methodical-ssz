@@ -16,7 +16,7 @@ second call and the rest when the caller supplies its budget (first append fitte
 `cp_e2e_marshal_grow2_main`).
 -/
 
-open Fk E2e.Code
+open Machine Runtime TestTarget E2e.Code
 variable [Host]
 
 namespace E2e

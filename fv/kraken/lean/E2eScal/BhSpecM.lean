@@ -1,6 +1,6 @@
 import E2eScal.BhEncMain
 import E2eScal.BhSpec
-import Fk.RtCopy
+import Runtime.CopyModel
 
 /-!
 # BeaconBlockHeader encoder (fast path) against EthLib
@@ -13,9 +13,10 @@ independent consensus-specs Desc of `E2eScal/BhSpec.lean`). The full frame accou
 of `E2e.cp_e2e_marshal_spec_k`. Fast path only (`len + 112 ≤ cap`, roots of length 32).
 -/
 
-open Fk E2e E2eScal.BhCode EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eScal.BhCode EthLib.Serialization.Ssz
 variable [Host]
 
+open Codec
 namespace E2eScal.Bh
 
 theorem pbh_enc_toList (g : PBh) : (pbhEnc g).toList = (uintBytes 8 g.slot.toNat).toList
@@ -80,8 +81,8 @@ theorem bh_e2e_marshal_spec_k (k : Nat) (hk : BhMarshal.IsInfixAt Host.prog k) (
           ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   refine ⟨pbhEnc g, pbh_serialize g, ?_⟩
-  have hsl : (uintBytes 8 g.slot.toNat).toList.length = 8 := by simp [Fv.uintBytes_size]
-  have hpi : (uintBytes 8 g.proposer.toNat).toList.length = 8 := by simp [Fv.uintBytes_size]
+  have hsl : (uintBytes 8 g.slot.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
+  have hpi : (uintBytes 8 g.proposer.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
   have hr1 : g.parent.toList.length = 32 := by simp
   have hr2 : g.state.toList.length = 32 := by simp
   have hr3 : g.body.toList.length = 32 := by simp

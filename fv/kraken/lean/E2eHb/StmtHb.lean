@@ -1,7 +1,7 @@
-import Fk.Contracts
-import Fk.Frame
-import Fk.Bytes
-import Fk.Labels
+import Runtime.Contracts
+import Machine.Frame
+import Machine.Bytes
+import Machine.Labels
 import E2e.Data
 import E2eList.Data
 import E2eHb.Code
@@ -41,7 +41,7 @@ them with unnamed 8-byte values.
 Size reject: directives 2–10, `cmp $0x80000,%rcx; jne L_7b` taken, 30–35.
 -/
 
-open Fk E2e EthLib.Serialization.Ssz E2eList E2eHb.Code
+open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz E2eList E2eHb.Code
 variable [Host]
 
 namespace E2eHb

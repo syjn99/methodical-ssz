@@ -1,5 +1,5 @@
 import E2eScal.EncTies
-import E2eScal.EncFrameTest
+import Codec.EncodeFrameTest
 import E2eScal.Enc2Code
 
 /-!
@@ -14,7 +14,7 @@ growslice branches, the length rejects, the morestack path. Not a complete encod
 GEN6-JSON: {"type": "SyncCommitteeMessage", "const": "ScMarshal", "prefix": "sc_g6e", "size": 144, "frame": 168, "gd": 48, "rt": true, "fields": [["Slot", "u", 8], ["BlockRoot", "b", 32], ["ValidatorIndex", "u", 8], ["Signature", "b", 96]], "boundaries": [10, 36, 64, 93, 115], "layout": "E2eScal.Gen6Enc.sc_g6e_layout", "S_sha256": "7f8d9761a2459f5065669cac92bf6a420d6b28539c7e07449f8158882dcf7ea5", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "S": "prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.SyncCommitteeMessage", "kinds": [{"theorem": "sc_g6e_head", "kind": "encHeadKindN"}, {"theorem": "sc_g6e_f0", "kind": "encFieldKindN"}, {"theorem": "sc_g6e_f1", "kind": "encFieldKindN"}, {"theorem": "sc_g6e_f2", "kind": "encFieldKindN"}, {"theorem": "sc_g6e_f3", "kind": "encFieldKindN"}, {"theorem": "sc_g6e_epi", "kind": "encEpiKindN"}, {"theorem": "sc_g6e_fast", "kind": "encFastKindN"}]}
 -/
 
-open Fk E2eScal E2eScal.Enc2Code
+open Machine Runtime TestTarget E2eScal Codec E2eScal.Enc2Code
 variable [Host]
 
 namespace E2eScal.Gen6Enc
@@ -281,7 +281,7 @@ theorem sc_g6e_f0 : ∀ (k : Nat) (hk : ScMarshal.IsInfixAt Host.prog k) (hf : L
     (rsp.toBitVec - 176) (rsp.toBitVec - 56) (by eb) ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) (by rw [List.length_take, Int.toBytes_length]; rfl) _ _ _ (by rfl) (by ecancel)
   intro m6 H6; kn; simp only [Reg64s.get64] at H6
   simp only [toBytes_ofInt_ofBytes 64 8 rfl v0 hv0] at H6
-  have hl33 := Fk.label_at' hk hf (j := 33)
+  have hl33 := Machine.label_at' hk hf (j := 33)
     (by simp only [ScMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [ScMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_cmp_jae_t Reg64.rdi Reg64.rdx _ _ (k + 19) (k + 33) (win hk 19 2) (by rfl) hl33 _ _ (by show ((rcx.toBitVec + 8) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
@@ -427,7 +427,7 @@ theorem sc_g6e_f1 : ∀ (k : Nat) (hk : ScMarshal.IsInfixAt Host.prog k) (hf : L
   kn
   apply kreg_eq Reg64.r9 (rcx.toBitVec + 40) _ _ _ (by show ((rcx.toBitVec + 8) + 32 : BitVec 64) = (rcx.toBitVec + 40); bv_omega)
   kn
-  have hl56 := Fk.label_at' hk hf (j := 56)
+  have hl56 := Machine.label_at' hk hf (j := 56)
     (by simp only [ScMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [ScMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_cmp_jae_t Reg64.rdi Reg64.r9 _ _ (k + 41) (k + 56) (win hk 41 2) (by rfl) hl56 _ _ (by show ((rcx.toBitVec + 40) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
@@ -453,7 +453,7 @@ theorem sc_g6e_f1 : ∀ (k : Nat) (hk : ScMarshal.IsInfixAt Host.prog k) (hf : L
   apply kreg_eq Reg64.rcx 32 _ _ _ (by show (BitVec.zeroExtend 64 (BitVec.truncate 32 (32 : BitVec 64)) : BitVec 64) = 32; decide)
   kn
   refine eventually_trans _ _ _ _ (encn_call (k + 63) (win hk 63 1) (rsp.toBitVec - 176) (rbx.toBitVec + rcx.toBitVec + 8) p1
-    (rsp.toBitVec - 184) (rsp.toBitVec - 184 - BitVec.ofNat 64 S) S (by bv_omega) (E2eScal.g5_lo0 rsp.toBitVec 176 184 S (by decide))
+    (rsp.toBitVec - 184) (rsp.toBitVec - 184 - BitVec.ofNat 64 S) S (by bv_omega) (Codec.frame_lo0 rsp.toBitVec 176 184 S (by decide))
     b1 d1 rslot scratch (by rw [hd1, hb1]) hrslot hsc
     _ _ (by rfl) (by rfl) (by rfl) (by rw [hb1]; rfl) (by first | ecancel | (dsimp only; ecancel)) hmm) ?_
   rintro ⟨e1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, scr1, hscr1, Hc1⟩
@@ -619,7 +619,7 @@ theorem sc_g6e_f2 : ∀ (k : Nat) (hk : ScMarshal.IsInfixAt Host.prog k) (hf : L
   apply kstep_ldv Reg64.rax Reg64.rsp 152 _ (k + 79) (k + 80) (win hk 79 1) (by rfl) (by rfl)
     (rsp.toBitVec - 176) (rsp.toBitVec - 24) rbx.toBitVec (by eb) _ _ _ (by rfl) (by ecancel)
   kn
-  have hl90 := Fk.label_at' hk hf (j := 90)
+  have hl90 := Machine.label_at' hk hf (j := 90)
     (by simp only [ScMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [ScMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_jmp _ _ (k + 80) (k + 90) (win hk 80 1) (by rfl) hl90
@@ -766,7 +766,7 @@ theorem sc_g6e_f3 : ∀ (k : Nat) (hk : ScMarshal.IsInfixAt Host.prog k) (hf : L
   kn
   apply kreg_eq Reg64.r8 (rcx.toBitVec + 144) _ _ _ (by show ((rcx.toBitVec + 48) + 96 : BitVec 64) = (rcx.toBitVec + 144); bv_omega)
   kn
-  have hl108 := Fk.label_at' hk hf (j := 108)
+  have hl108 := Machine.label_at' hk hf (j := 108)
     (by simp only [ScMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [ScMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_cmp_jae_t Reg64.rcx Reg64.r8 _ _ (k + 97) (k + 108) (win hk 97 2) (by rfl) hl108 _ _ (by show ((rcx.toBitVec + 144) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
@@ -790,7 +790,7 @@ theorem sc_g6e_f3 : ∀ (k : Nat) (hk : ScMarshal.IsInfixAt Host.prog k) (hf : L
   apply kreg_eq Reg64.rcx 96 _ _ _ (by show (BitVec.zeroExtend 64 (BitVec.truncate 32 (96 : BitVec 64)) : BitVec 64) = 96; decide)
   kn
   refine eventually_trans _ _ _ _ (encn_call (k + 114) (win hk 114 1) (rsp.toBitVec - 176) (rbx.toBitVec + rcx.toBitVec + 48) p3
-    (rsp.toBitVec - 184) (rsp.toBitVec - 184 - BitVec.ofNat 64 S) S (by bv_omega) (E2eScal.g5_lo0 rsp.toBitVec 176 184 S (by decide))
+    (rsp.toBitVec - 184) (rsp.toBitVec - 184 - BitVec.ofNat 64 S) S (by bv_omega) (Codec.frame_lo0 rsp.toBitVec 176 184 S (by decide))
     b3 d3 (Int.toBytes 8 (Host.addrOf (k + 64)).toBitVec.toInt) x2 (by rw [hd3, hb3]) (Int.toBytes_length 8 _) hx2
     _ _ (by rfl) (by rfl) (by rfl) (by rw [hb3]; rfl) (by first | ecancel | (dsimp only; ecancel)) hmm) ?_
   rintro ⟨e2, pc2⟩ ⟨hpc2, hrsp2, hrbp2, hr142, scr2, hscr2, Hc2⟩

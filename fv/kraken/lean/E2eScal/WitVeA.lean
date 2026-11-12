@@ -1,6 +1,6 @@
 import E2eScal.Gen5ExVe
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of `ve_e2e_accept_g5` (VoluntaryExit decoder accept path; worked example)
@@ -19,7 +19,7 @@ bytes, the unused bytes and the untouched frame ranges. For every 16-byte input 
 decoder returns nil. The receiver is a Go value of `v1alpha1.VoluntaryExit` (all fields zero).
 -/
 
-open Fk Fk.W E2e E2eScal E2eScal.H6Code E2eScal.BhCode E2eScal.Gen5
+open Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.H6Code E2eScal.BhCode E2eScal.Gen5
 
 namespace E2eScal.WitVeA
 

@@ -1,6 +1,6 @@
 import E2eEnc.Once
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witnesses of `dc_e2e_marshal_once_main` (one-growth path: growth at any one site)
@@ -12,7 +12,7 @@ above). Host: data labels, the real Go 1.26.10 `(*v1alpha1.DataColumnsByRootIden
 old block `pre ‖ spare`. Frame `R`: the receiver words the code does not read and the 24-byte gap at rsp − 96.
 -/
 
-open Fk Fk.W E2eEnc E2eEnc.Code
+open Machine Runtime TestTarget Machine.Witness E2eEnc E2eEnc.Code
 
 namespace E2eEnc.WitG1
 

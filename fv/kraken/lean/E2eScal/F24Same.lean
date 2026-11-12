@@ -18,9 +18,10 @@ definitionally the hand statement. Neither side is edited for this check. `maxHe
 model identity files (`E2cSame.lean`).
 -/
 
-open Fk
+open Machine Runtime TestTarget
 variable [Host]
 
+open Codec
 namespace E2eScal.F24
 
 set_option maxHeartbeats 4000000 in

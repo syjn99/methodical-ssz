@@ -16,7 +16,7 @@ Both end at `L_7b` in the register and stack state that the tails of `E2e.CpWTai
 `E2e.CpWTailG` take.
 -/
 
-open Fk E2e.Code
+open Machine Runtime TestTarget E2e.Code
 variable [Host]
 
 namespace E2e

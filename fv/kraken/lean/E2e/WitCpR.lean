@@ -1,6 +1,6 @@
 import E2e.CpReject
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of `cp_e2e_reject_size_main`
@@ -14,7 +14,7 @@ unused rax spill slot (the frame `R`) and the rbx spill slot. For every length
 `≠ 40` (instances 39, 41, 0) the decoder returns the two words.
 -/
 
-open Fk Fk.W E2e E2e.Code
+open Machine Runtime TestTarget Machine.Witness E2e E2e.Code
 
 namespace E2e.WitCpR
 

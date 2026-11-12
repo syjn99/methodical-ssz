@@ -1,6 +1,6 @@
 import E2eScal.Gen6BhEnc
 import E2eScal.BhSpec
-import Fk.RtCopy
+import Runtime.CopyModel
 
 /-!
 # BeaconBlockHeader encoder fast path (generated theorem) against the independent Desc (unit E2-C)
@@ -12,7 +12,7 @@ Shape of `E2eScal.Bh.bh_e2e_marshal_spec_k`. Encoder fast path only (`len + 112 
 lengths). Emitted by the unit's evidence tool `e2cemit.py`, then built and kernel-checked.
 -/
 
-open Fk E2e E2eScal E2eScal.Gen6Enc E2eScal.BhCode EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.Gen6Enc E2eScal.BhCode EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.E2c
@@ -114,8 +114,8 @@ theorem bh_e2c_spec_k (k : Nat)
           ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   refine ⟨pbhEnc g, pbh_serialize g, ?_⟩
-  have hF0 : (uintBytes 8 g.slot.toNat).toList.length = 8 := by simp [Fv.uintBytes_size]
-  have hF1 : (uintBytes 8 g.proposer.toNat).toList.length = 8 := by simp [Fv.uintBytes_size]
+  have hF0 : (uintBytes 8 g.slot.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
+  have hF1 : (uintBytes 8 g.proposer.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
   have hF2 : g.parent.toList.length = 32 := by simp
   have hF3 : g.state.toList.length = 32 := by simp
   have hF4 : g.body.toList.length = 32 := by simp

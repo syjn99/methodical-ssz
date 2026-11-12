@@ -1,6 +1,6 @@
 import E2eAd.Prims
-import Fk.WHost
-import Fk.RtCopy
+import Machine.WitnessHost
+import Runtime.CopyModel
 
 /-!
 # Witness of `ci_unmarshal_accept_main` and `ci_uacc_holds`
@@ -16,7 +16,7 @@ returns nil with the receiver = the input (`ci_accept_runs`); three values
 below (0, a representative value, 2^64 − 1).
 -/
 
-open Fk Fk.W E2eAd E2eAd.Code
+open Machine Runtime TestTarget Machine.Witness E2eAd E2eAd.Code
 
 namespace E2eAd.WitCi
 

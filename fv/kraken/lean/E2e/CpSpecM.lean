@@ -1,6 +1,6 @@
 import E2e.CpMarshal
 import E2e.Spec
-import Fk.RtCopy
+import Runtime.CopyModel
 
 /-!
 # Encoder against EthLib, and SizeSSZ
@@ -16,7 +16,7 @@ import Fk.RtCopy
   of `serialize prysmCpDesc g.toValue`.
 -/
 
-open Fk E2e.Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2e
@@ -58,7 +58,7 @@ theorem cp_e2e_marshal_spec_k (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (
           ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   refine ⟨pcpEnc g, pcp_serialize g, ?_⟩
-  have he8 : (uintBytes 8 g.epoch.toNat).toList.length = 8 := by simp [Fv.uintBytes_size]
+  have he8 : (uintBytes 8 g.epoch.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
   have hroot : g.root.toList.length = 32 := by simp
   refine eventually_mono (cp_e2e_marshal_main k hk hf cst _ cC ctl _ pre d0 d1 hcst he8 hcC hctl hroot hd0 hd1 p s ra
     guard hpre fp s2 l16 l24 l32 t40 t30 rslot hfp h2 hl16 hl24 hl32 ht40 ht30 hrs R S scratch hsc h_mem hguard hsp hcap

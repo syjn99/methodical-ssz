@@ -1,6 +1,6 @@
-import Fk.Step
-import Fk.Labels
-import Fk.Bytes
+import Machine.Step
+import Machine.Labels
+import Machine.Bytes
 import E2eScal.H5Code
 import E2e.Data
 import E2e.CpReject
@@ -14,7 +14,7 @@ SyncCommitteeMessage indices (frame `sub $0x60` as BeaconBlockHeader). `sm_e2e_r
 loads of `ssz.ErrSize` (162–163), epilogue 164–166. Not covered here: the two callee error paths.
 -/
 
-open Fk E2eScal.H5Code
+open Machine TestTarget E2eScal.H5Code
 variable [Host]
 
 namespace E2eScal.H5

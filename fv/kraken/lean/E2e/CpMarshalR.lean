@@ -17,7 +17,7 @@ holds the epoch bytes, everything else of `dst` is unchanged, the returned
 slice is nil. The 32-byte stack temp is named as in the fast path.
 -/
 
-open Fk E2e.Code
+open Machine Runtime TestTarget E2e.Code
 variable [Host]
 
 namespace E2e

@@ -10,7 +10,7 @@ import E2eEnc.LoopG
 `GrowsliceC`; the old block joins the garbage frame `G`), then `dcg_tail50`.
 -/
 
-open Fk E2eEnc.Code
+open Machine Runtime TestTarget E2eEnc.Code
 variable [Host]
 
 namespace E2eEnc

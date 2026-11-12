@@ -1,11 +1,11 @@
 import E2e.OptR1.Tail
-import E2eScal.StackGuard
+import Codec.StackGuard
 
 /-!
 # OPT-R1 reserve encoder: the two prefixes up to `L_e5` (directive 48)
 
 - `head_fast` (`len + 40 ≤ cap`, `cap < 2^63`): directives 0–15: large-frame stack guard
-  (`lea -0x18(%rsp),%r12`, premise `guard + 24 < rsp`, lemma `E2eScal.lea_cmp_be_false`), prologue
+  (`lea -0x18(%rsp),%r12`, premise `guard + 24 < rsp`, lemma `Codec.lea_cmp_be_false`), prologue
   (`sub $0x90`, spills of rbx, rax, rcx to rsp + 16, + 8, + 24), `rdx := cap`, `rdi := cap − len`,
   `cmp $0x28,%rdi; jge L_e5` taken (signed; `o_ge`). Nothing else is written.
 - `head_grow` (`len ≤ cap < len + 40`): directives 0–47: the reserve. `z` (40 bytes at rsp0 − 112) is
@@ -18,7 +18,7 @@ import E2eScal.StackGuard
   `pre ++ z ++ tail`.
 -/
 
-open Fk E2e.OptR1.Code
+open Machine Runtime TestTarget E2e.OptR1.Code
 variable [Host]
 
 namespace E2e.OptR1
@@ -157,7 +157,7 @@ theorem head_fast (k : Nat) (hk : CpMarshalO.IsInfixAt Host.prog k) (hf : Labels
   split
   case isTrue h =>
     exfalso
-    rw [E2eScal.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 24 (by rfl) hguard] at h
+    rw [Codec.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 24 (by rfl) hguard] at h
     exact Bool.noConfusion h
   simp only [Effects.All]
   kat hk CpMarshalO 5

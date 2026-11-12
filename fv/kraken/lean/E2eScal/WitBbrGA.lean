@@ -1,6 +1,6 @@
 import E2eScal.Gen5F24BbrDec
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of the generated `bbr_g5dec_accept` (`v1alpha1.BeaconBlocksByRangeRequest` decoder accept path; FLAT24 / H7)
@@ -17,7 +17,7 @@ at rax = 0x10020 (protoc struct, `prysm/ir/ir-mainnet.json` gc amd64 layout: `st
 returns nil. The receiver is a Go value of `v1alpha1.BeaconBlocksByRangeRequest` (all zero).
 -/
 
-open Fk Fk.W E2e E2eScal E2eScal.F24Code
+open Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.F24Code
 
 namespace E2eScal.WitBbrGA
 

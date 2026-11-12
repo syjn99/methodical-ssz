@@ -11,7 +11,7 @@ names, so the two `Desc`s accept the same inputs with the same values.
 -/
 
 namespace E2eDep
-open EthLib.Serialization.Ssz Fv1 E2e E2eList E2eHb E2eSeg
+open EthLib.Serialization.Ssz Spec TestTarget E2e E2eList E2eHb Codec.Segment
 
 theorem prysmDepDesc_checker :
     prysmDepDesc = .container ["proof", "data"] [.vector (.byteVector 32) 33, .container

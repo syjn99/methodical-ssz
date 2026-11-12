@@ -9,9 +9,10 @@ theorem `E2eScal.Gen.vi_unmarshal_accept_main_g` (the proof text of `E2eAd.ci_ua
 BeaconBlockHeader decoder uses the callee only through this specification (no contract).
 -/
 
-open Fk E2eScal.BhCode
+open Machine Runtime TestTarget E2eScal.BhCode
 variable [Host]
 
+open Codec
 namespace E2eScal
 
 /-- **Function specification of `(*primitives.ValidatorIndex).UnmarshalSSZ`, accept path** (`len(buf) = 8`). -/

@@ -17,7 +17,7 @@ edited):
 Not stated here: that the callee error paths (`fmt.errorf` wraps) are unreachable when `size = 64`.
 -/
 
-open Fk E2e E2eScal E2eScal.F24Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.F24Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.F24
@@ -95,7 +95,7 @@ theorem vid_e2e_accept_spec_k : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.
   refine ⟨g, rfl, hb, ?_⟩
   have hn : s.regs.rcx = 64 := by
     apply UInt64.toNat_inj.mp; rw [hlen, hb, pvid_enc_size]; rfl
-  exact E2eScal.Gen.vid_g5dec_accept k hk hf kV hkV hfV kE hkE hfE _ _ _ (by simp [Fv.uintBytes_size]) (by simp) (by simp [Fv.uintBytes_size]) s ra guard fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aN0 aP1 aL1 aC1 aN2 hfp hs1 hs2 hs4 hsp0 hsp1 hsp2 hl28 hrslot hast haN0 haP1 haL1 haC1 haN2 R S hS hlo Heap avail (Pm g hb) hguard hn hav hms hmm
+  exact E2eScal.Gen.vid_g5dec_accept k hk hf kV hkV hfV kE hkE hfE _ _ _ (by simp [Spec.uintBytes_size]) (by simp) (by simp [Spec.uintBytes_size]) s ra guard fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aN0 aP1 aL1 aC1 aN2 hfp hs1 hs2 hs4 hsp0 hsp1 hsp2 hl28 hrslot hast haN0 haP1 haL1 haC1 haN2 R S hS hlo Heap avail (Pm g hb) hguard hn hav hms hmm
 
 /-- `len(buf) ≠ 64`: EthLib rejects, and the machine code returns the two words of `ssz.ErrSize`. -/
 theorem vid_e2e_reject_size_spec (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog k)

@@ -11,7 +11,7 @@ same inputs with the same values.
 -/
 
 namespace E2eList
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz Spec TestTarget
 
 theorem prysmScDesc_checker :
     prysmScDesc = .container ["pubkeys", "aggregate_pubkey"] [.vector (.byteVector 48) 512, .byteVector 48]

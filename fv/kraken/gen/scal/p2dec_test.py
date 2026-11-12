@@ -141,9 +141,9 @@ S = "prysm/go1.26.10/e2e/e1/link/norm/github.com_OffchainLabs_prysm_v7_proto_pry
 RECORD = "prysm/go1.26.10/e2e/e1/gen-e1dec.raw.txt"
 COMMITTED = "lean/E2eScal/GenE1Dec.lean"
 ARGS = ["--const", "E1Unmarshal", "--ir", "prysm/ir/ir-mainnet.json", "--type", "v1alpha1.Eth1Data",
-        "--prefix", "e1_dec", "--imports", "E2eScal.P2Dec,E2eScal.P2DecZ,E2eScal.E1Code", "--open", "E2eScal.E1Code"]
+        "--prefix", "e1_dec", "--imports", "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,E2eScal.E1Code", "--open", "E2eScal.E1Code"]
 OLD_ARGS = ["--const", "E1Unmarshal", "--ir", "prysm/ir/ir-mainnet.json", "--type", "v1alpha1.Eth1Data",
-            "--prefix", "e1_dec", "--imports", "E2eScal.P2Dec,E2eScal.E1Code", "--open", "E2eScal.E1Code"]
+            "--prefix", "e1_dec", "--imports", "Codec.Bytes32Decode,E2eScal.E1Code", "--open", "E2eScal.E1Code"]
 
 # (id, what, 1-based line, old text, new text or None = delete, expected exit, expected MATCH fields)
 MUTANTS = [
@@ -181,26 +181,26 @@ IR = "prysm/ir/ir-mainnet.json"
 G2 = {
     "E1": dict(S=E1S, type="v1alpha1.Eth1Data", committed="lean/E2eScal/Gen2E1Dec.lean",
                args=["--const", "E1Unmarshal", "--prefix", "e1_g2dec", "--imports",
-                     "E2eScal.P2Dec,E2eScal.P2DecZ,E2eScal.U64Inline,E2eScal.E1Code", "--open", "E2eScal.E1Code"],
+                     "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Codec.InlineUint64,E2eScal.E1Code", "--open", "E2eScal.E1Code"],
                fields=["DepositRoot", "DepositCount", "BlockHash"]),
     "BI": dict(S=H3N + "BlobIdentifier.UnmarshalSSZ.S", type="v1alpha1.BlobIdentifier",
                committed="lean/E2eScal/Gen2BiDec.lean", old="lean/E2eScal/GenBiDec.lean",
                args=["--const", "BiUnmarshal", "--prefix", "bi_g2dec", "--imports",
-                     "E2eScal.P2Dec,E2eScal.P2DecZ,E2eScal.U64Inline,E2eScal.H3Code", "--open", "E2eScal.H3Code"],
+                     "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Codec.InlineUint64,E2eScal.H3Code", "--open", "E2eScal.H3Code"],
                old_args=["--const", "BiUnmarshal", "--prefix", "bi_dec", "--imports",
-                         "E2eScal.P2Dec,E2eScal.P2DecZ,E2eScal.H3Code", "--open", "E2eScal.H3Code"],
+                         "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,E2eScal.H3Code", "--open", "E2eScal.H3Code"],
                fields=["BlockRoot", "Index"]),
     "DM": dict(S=H3N + "DepositMessage.UnmarshalSSZ.S", type="v1alpha1.DepositMessage",
                committed="lean/E2eScal/Gen2DmDec.lean", old="lean/E2eScal/GenDmDec.lean",
                args=["--const", "DmUnmarshal", "--prefix", "dm_g2dec", "--imports",
-                     "E2eScal.P2Dec,E2eScal.SegN,E2eScal.U64Inline,E2eScal.H3Code", "--open", "E2eScal.H3Code"],
+                     "Codec.Bytes32Decode,Codec.FixedBytesDecode,Codec.InlineUint64,E2eScal.H3Code", "--open", "E2eScal.H3Code"],
                old_args=["--const", "DmUnmarshal", "--prefix", "dm_dec", "--imports",
-                         "E2eScal.P2Dec,E2eScal.P2DecZ,E2eScal.H3Code", "--open", "E2eScal.H3Code"],
+                         "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,E2eScal.H3Code", "--open", "E2eScal.H3Code"],
                fields=["PublicKey", "WithdrawalCredentials", "Amount"]),
     "BH": dict(S="prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
                  "BeaconBlockHeader.UnmarshalSSZ.S", type="v1alpha1.BeaconBlockHeader",
                args=["--const", "BhUnmarshal", "--prefix", "bh_g2dec", "--imports",
-                     "E2eScal.P2Dec,E2eScal.BhCode", "--open", "E2eScal.BhCode"],
+                     "Codec.Bytes32Decode,E2eScal.BhCode", "--open", "E2eScal.BhCode"],
                fields=["Slot", "ProposerIndex", "ParentRoot", "StateRoot", "BodyRoot"]),
 }
 
@@ -354,11 +354,11 @@ def gen2_cases(work, new):
     rc, so, se = run(["python3", "-I", str(new), "p2dec", "--gen2", "--S", str(f), "--ir", str(irf), "--type", c["type"]]
                      + c["args"], KR)
     t = so.decode()
-    want = ["@E2eScal.bytesDecSegKind h 48 DmUnmarshal 47 61 48 56 24 24 32 40 48 := by",
-            "with_reducible exact E2eScal.bytesdec_seg 48 (Or.inr (Or.inl rfl)) _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) hA hB hl",
+    want = ["@Codec.bytesDecSegKind h 48 DmUnmarshal 47 61 48 56 24 24 32 40 48 := by",
+            "with_reducible exact Codec.bytesdec_seg 48 (Or.inr (Or.inl rfl)) _ _ _ _ _ _ _ _ _ (k + 47) (k + 61) hA hB hl",
             "(hroot : root.length = 48)", "(hav : 48 ≤ avail)", "⋆ Heap (avail - 48)", "Eq ((Int.toBytes 8 48).At aL)",
             "Eq ((Int.toBytes 8 48).At aC)", "(hSrc : bf + (48 : Int64).toBitVec = aSrc)",
-            "@E2eScal.u64DecInlineSegKind h DmUnmarshal 83 56 96 48 := by"]
+            "@Codec.u64DecInlineSegKind h DmUnmarshal 83 56 96 48 := by"]
     miss = [w for w in want if w not in t]
     ok = rc == 0 and not miss and "length = 32" not in t.split("dm_g2dec_WithdrawalCredentials_seg")[1].split("theorem")[0]
     res.append(dict(id="g2-syn48-add", what="synthetic 48-byte add-form field (text check only, not kernel-checked)",
@@ -386,11 +386,11 @@ def gen2_cases(work, new):
     bad |= not ok
     # composition (`--compose`)
     CP = {"BI": ("bi_e2e_accept_main_gc", "E2eScal.Bi.bi_e2e_accept_main", "lean/E2eScal/Gen2BiAccept.lean",
-                 "E2eScal.Compose,E2eScal.Gen2BiDec,E2eScal.BiAccept"),
+                 "Codec.DecoderHeadEpilogue,E2eScal.Gen2BiDec,E2eScal.BiAccept"),
           "DM": ("dm_e2e_accept_main_gc", "E2eScal.Dm.dm_e2e_accept_main", "lean/E2eScal/Gen2DmAccept.lean",
-                 "E2eScal.Compose,E2eScal.Gen2DmDec,E2eScal.DmAccept"),
+                 "Codec.DecoderHeadEpilogue,E2eScal.Gen2DmDec,E2eScal.DmAccept"),
           "E1": ("e1_e2e_accept_main_gc", "E2eScal.E1.e1_e2e_accept_main", "lean/E2eScal/Gen2E1Accept.lean",
-                 "E2eScal.Compose,E2eScal.Gen2E1Dec,E2eScal.E1Accept")}
+                 "Codec.DecoderHeadEpilogue,E2eScal.Gen2E1Dec,E2eScal.E1Accept")}
 
     def cargs(key, same=True):
         c = G2[key]
@@ -553,17 +553,17 @@ G3 = {
                fields=["Index", "Amount", "WithdrawableEpoch"]),
     "DD": dict(S=H4N + "Deposit_Data.UnmarshalSSZ.S", type="v1alpha1.Deposit_Data", committed="lean/E2eScal/Gen3DdDec.lean",
                args=["--const", "DdUnmarshal", "--prefix", "dd_g3dec", "--imports",
-                     "E2eScal.P2Dec,E2eScal.P2DecZ,E2eScal.SegN,E2eScal.SegNPad,E2eScal.U64Inline,E2eScal.H4Code",
+                     "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Codec.FixedBytesDecode,E2eScal.SegNPad,Codec.InlineUint64,E2eScal.H4Code",
                      "--open", "E2eScal.H4Code"],
                fields=["PublicKey", "WithdrawalCredentials", "Amount", "Signature"]),
     "BH": dict(S=G2["BH"]["S"], type="v1alpha1.BeaconBlockHeader", committed="lean/E2eScal/Gen3BhDec.lean",
-               args=["--const", "BhUnmarshal", "--prefix", "bh_g3dec", "--imports", "E2eScal.P2Dec,E2eScal.BhCode",
+               args=["--const", "BhUnmarshal", "--prefix", "bh_g3dec", "--imports", "Codec.Bytes32Decode,E2eScal.BhCode",
                      "--open", "E2eScal.BhCode"],
                fields=["Slot", "ProposerIndex", "ParentRoot", "StateRoot", "BodyRoot"]),
     "AD": dict(S="prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
                  "AttestationData.UnmarshalSSZ.S", type="v1alpha1.AttestationData",
                committed="lean/E2eScal/Gen3AdDecPartial.lean",
-               args=["--const", "AdUnmarshal", "--prefix", "ad_g3dec", "--imports", "E2eScal.P2Dec,E2eAd.Code",
+               args=["--const", "AdUnmarshal", "--prefix", "ad_g3dec", "--imports", "Codec.Bytes32Decode,E2eAd.Code",
                      "--open", "E2eAd.Code"],
                fields=["Slot", "CommitteeIndex", "BeaconBlockRoot", "Source", "Target"]),
 }
@@ -725,7 +725,7 @@ def g3_cases(work, new):
     c = G3["DD"]
     outs = [run(G + ["--compose", "--name", "dd_e2e_accept_main_g3", "--same-as-prop", "E2eScal.H4.dd_accept_stmt",
                      "--S", c["S"], "--ir", IR, "--type", c["type"], "--const", "DdUnmarshal", "--prefix", "dd_g3dec",
-                     "--imports", "E2eScal.Compose,E2eScal.Gen3DdDec,E2eScal.H4Stmt", "--open", "E2eScal.H4Code"], KR)
+                     "--imports", "Codec.DecoderHeadEpilogue,E2eScal.Gen3DdDec,E2eScal.H4Stmt", "--open", "E2eScal.H4Code"], KR)
             for _ in range(2)]
     rc, so, se = outs[0]
     f = work / "g3-compose-DD.lean"

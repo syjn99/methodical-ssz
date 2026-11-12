@@ -1,6 +1,6 @@
-import Fk.Step
-import Fk.Labels
-import Fk.Bytes
+import Machine.Step
+import Machine.Labels
+import Machine.Bytes
 import E2eScal.BhCode
 import E2e.Data
 import E2e.CpReject
@@ -25,7 +25,7 @@ reached on a 112-byte input: `bh_e2e_accept_main` passes from directive 19 to 46
 the code jumps over the wrap with registers and memory unchanged.
 -/
 
-open Fk E2eScal.BhCode
+open Machine TestTarget E2eScal.BhCode
 variable [Host]
 
 namespace E2eScal.Bh

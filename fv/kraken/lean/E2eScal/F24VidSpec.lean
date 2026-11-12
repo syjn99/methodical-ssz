@@ -12,7 +12,8 @@ No Desc-checker record exists for this type (`gen/desc/results/main.result.json`
 -/
 
 namespace E2e
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz
+open Spec hiding readUint_lt
 
 theorem prysmVidDesc_kinds : prysmVidDesc = .container ["index", "pubkey", "activation_epoch"]
       [.uint 8, .byteVector 48, .uint 8] := rfl
@@ -33,7 +34,7 @@ def pvidEnc (g : PVid) : Array UInt8 :=
   uintBytes 8 g.index.toNat ++ g.pubkey.toArray ++ uintBytes 8 g.activationEpoch.toNat
 
 theorem pvid_enc_size (g : PVid) : (pvidEnc g).size = 64 := by
-  simp [pvidEnc, Fv.uintBytes_size]
+  simp [pvidEnc, Spec.uintBytes_size]
 
 theorem pvid_toValue_fits (g : PVid) : Value.fits prysmVidDesc g.toValue = true := by
   have := g.index.toNat_lt; have := g.activationEpoch.toNat_lt
@@ -67,7 +68,7 @@ theorem pvid_serialize (g : PVid) : serialize prysmVidDesc g.toValue = .ok (pvid
   have := a0.toNat_lt; have := a2.toNat_lt
   simp only [prysmVidDesc, PVid.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk, hr1]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Fv.uintBytes_size, bytesPerOffset, pvidEnc,
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, pvidEnc,
     Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- **Spec roundtrip.** -/

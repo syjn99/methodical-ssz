@@ -1,5 +1,5 @@
-import Fk.Contracts
-import Fk.Frame
+import Runtime.Contracts
+import Machine.Frame
 import E2e.Epoch
 import E2e.Data
 
@@ -38,7 +38,7 @@ top 8 bytes). Untouched on this path, so in `R`: rsp − 24 … rsp − 9 and rs
 … rsp − 49.
 -/
 
-open Fk E2e.Code
+open Machine Runtime TestTarget E2e.Code
 variable [Host]
 
 namespace E2e

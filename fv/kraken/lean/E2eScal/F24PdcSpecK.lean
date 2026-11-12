@@ -17,7 +17,7 @@ edited):
 Not stated here: that the callee error paths (`fmt.errorf` wraps) are unreachable when `size = 40`.
 -/
 
-open Fk E2e E2eScal E2eScal.F24Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.F24Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.F24
@@ -90,7 +90,7 @@ theorem pdc_e2e_accept_spec_k : ∀ (k : Nat) (hk : PdcUnmarshal.IsInfixAt Host.
   refine ⟨g, rfl, hb, ?_⟩
   have hn : s.regs.rcx = 40 := by
     apply UInt64.toNat_inj.mp; rw [hlen, hb, ppdc_enc_size]; rfl
-  exact E2eScal.Gen.pdc_g5dec_accept k hk hf kS hkS hfS _ _ (by simp) (by simp [Fv.uintBytes_size]) s ra guard fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aP0 aL0 aC0 aN1 hfp hs1 hs2 hs4 hsp0 hsp1 hsp2 hl28 hrslot hast haP0 haL0 haC0 haN1 R S hS hlo Heap avail (Pm g hb) hguard hn hav hms hmm
+  exact E2eScal.Gen.pdc_g5dec_accept k hk hf kS hkS hfS _ _ (by simp) (by simp [Spec.uintBytes_size]) s ra guard fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aP0 aL0 aC0 aN1 hfp hs1 hs2 hs4 hsp0 hsp1 hsp2 hl28 hrslot hast haP0 haL0 haC0 haN1 R S hS hlo Heap avail (Pm g hb) hguard hn hav hms hmm
 
 /-- `len(buf) ≠ 40`: EthLib rejects, and the machine code returns the two words of `ssz.ErrSize`. -/
 theorem pdc_e2e_reject_size_spec (k : Nat) (hk : PdcUnmarshal.IsInfixAt Host.prog k)

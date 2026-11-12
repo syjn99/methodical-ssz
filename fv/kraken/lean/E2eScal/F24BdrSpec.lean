@@ -12,7 +12,8 @@ No Desc-checker record exists for this type (`gen/desc/results/main.result.json`
 -/
 
 namespace E2e
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz
+open Spec hiding readUint_lt
 
 theorem prysmBdrDesc_kinds : prysmBdrDesc = .container ["pubkey", "withdrawal_credentials", "amount", "signature"]
       [.byteVector 48, .byteVector 32, .uint 8, .byteVector 96] := rfl
@@ -34,7 +35,7 @@ def pbdrEnc (g : PBdr) : Array UInt8 :=
   g.pubkey.toArray ++ g.withdrawalCredentials.toArray ++ uintBytes 8 g.amount.toNat ++ g.signature.toArray
 
 theorem pbdr_enc_size (g : PBdr) : (pbdrEnc g).size = 184 := by
-  simp [pbdrEnc, Fv.uintBytes_size]
+  simp [pbdrEnc, Spec.uintBytes_size]
 
 theorem pbdr_toValue_fits (g : PBdr) : Value.fits prysmBdrDesc g.toValue = true := by
   have := g.amount.toNat_lt
@@ -71,7 +72,7 @@ theorem pbdr_serialize (g : PBdr) : serialize prysmBdrDesc g.toValue = .ok (pbdr
   have := a2.toNat_lt
   simp only [prysmBdrDesc, PBdr.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk, hr0, hr1, hr3]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Fv.uintBytes_size, bytesPerOffset, pbdrEnc,
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, pbdrEnc,
     Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- **Spec roundtrip.** -/

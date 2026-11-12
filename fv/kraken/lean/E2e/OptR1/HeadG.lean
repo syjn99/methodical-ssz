@@ -2,7 +2,7 @@ import E2e.OptR1.Head
 
 /-! # OPT-R1 reserve encoder: the grow prefix (`cap − len < 40`), directives 0–47. See `E2e.OptR1.Head`. -/
 
-open Fk E2e.OptR1.Code
+open Machine Runtime TestTarget E2e.OptR1.Code
 variable [Host]
 
 namespace E2e.OptR1
@@ -72,7 +72,7 @@ theorem head_grow (k : Nat) (hk : CpMarshalO.IsInfixAt Host.prog k) (hf : Labels
   split
   case isTrue h =>
     exfalso
-    rw [E2eScal.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 24 (by rfl) hguard] at h
+    rw [Codec.lea_cmp_be_false rsp.toBitVec _ guard.toBitVec _ _ 24 (by rfl) hguard] at h
     exact Bool.noConfusion h
   simp only [Effects.All]
   kat hk CpMarshalO 5

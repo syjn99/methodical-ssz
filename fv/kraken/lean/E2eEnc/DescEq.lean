@@ -11,7 +11,7 @@ alike and accept the same inputs with the same values. The text of `E2eList/IaDe
 -/
 
 namespace E2eEnc
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz Spec TestTarget
 
 theorem prysmDcDesc_checker :
     prysmDcDesc = .container ["block_root", "columns"] [.byteVector 32, .list (.uint 8) 128]

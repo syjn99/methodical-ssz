@@ -1,5 +1,5 @@
 import E2eScal.EncTies
-import E2eScal.EncFrameTest
+import Codec.EncodeFrameTest
 import E2eScal.F24Code
 
 /-!
@@ -14,7 +14,7 @@ growslice branches, the length rejects, the morestack path. Not a complete encod
 GEN6-JSON: {"type": "ValidatorIdentity", "const": "VidMarshal", "prefix": "vid_g6e", "size": 64, "frame": 144, "gd": 24, "rt": true, "fields": [["Index", "u", 8], ["Pubkey", "b", 48], ["ActivationEpoch", "u", 8]], "boundaries": [10, 36, 64, 92], "layout": "E2eScal.Gen6Enc.vid_g6e_layout", "S_sha256": "cdfd21b3d578e12dc28267992dc650230ca9c15b2e3ec1a13b66fccd337e77f7", "ir_sha256": "c1586d32018abd182c16d50f6a7a76e38814cab08cf4a7a42105fe30342a5d2a", "statement_check": "kind instance only", "S": "prysm/go1.26.10/e2e/f24/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorIdentity.MarshalSSZTo.S", "ir": "prysm/ir/ir-mainnet.json", "ir_type": "v1alpha1.ValidatorIdentity", "kinds": [{"theorem": "vid_g6e_head", "kind": "encHeadKindN"}, {"theorem": "vid_g6e_f0", "kind": "encFieldKindN"}, {"theorem": "vid_g6e_f1", "kind": "encFieldKindN"}, {"theorem": "vid_g6e_f2", "kind": "encFieldKindN"}, {"theorem": "vid_g6e_epi", "kind": "encEpiKindN"}, {"theorem": "vid_g6e_fast", "kind": "encFastKindN"}]}
 -/
 
-open Fk E2eScal E2eScal.F24Code
+open Machine Runtime TestTarget E2eScal Codec E2eScal.F24Code
 variable [Host]
 
 namespace E2eScal.Gen6Enc
@@ -249,7 +249,7 @@ theorem vid_g6e_f0 : ∀ (k : Nat) (hk : VidMarshal.IsInfixAt Host.prog k) (hf :
     (rsp.toBitVec - 152) (rsp.toBitVec - 56) (by eb) ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).take 8) (by rw [List.length_take, Int.toBytes_length]; rfl) _ _ _ (by rfl) (by ecancel)
   intro m6 H6; kn; simp only [Reg64s.get64] at H6
   simp only [toBytes_ofInt_ofBytes 64 8 rfl v0 hv0] at H6
-  have hl33 := Fk.label_at' hk hf (j := 33)
+  have hl33 := Machine.label_at' hk hf (j := 33)
     (by simp only [VidMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [VidMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_cmp_jae_t Reg64.rdi Reg64.rdx _ _ (k + 19) (k + 33) (win hk 19 2) (by rfl) hl33 _ _ (by show ((rcx.toBitVec + 8) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
@@ -379,7 +379,7 @@ theorem vid_g6e_f1 : ∀ (k : Nat) (hk : VidMarshal.IsInfixAt Host.prog k) (hf :
   kn
   apply kreg_eq Reg64.r9 (rcx.toBitVec + 56) _ _ _ (by show ((rcx.toBitVec + 8) + 48 : BitVec 64) = (rcx.toBitVec + 56); bv_omega)
   kn
-  have hl56 := Fk.label_at' hk hf (j := 56)
+  have hl56 := Machine.label_at' hk hf (j := 56)
     (by simp only [VidMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [VidMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_cmp_jae_t Reg64.rdi Reg64.r9 _ _ (k + 41) (k + 56) (win hk 41 2) (by rfl) hl56 _ _ (by show ((rcx.toBitVec + 56) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
@@ -405,7 +405,7 @@ theorem vid_g6e_f1 : ∀ (k : Nat) (hk : VidMarshal.IsInfixAt Host.prog k) (hf :
   apply kreg_eq Reg64.rcx 48 _ _ _ (by show (BitVec.zeroExtend 64 (BitVec.truncate 32 (48 : BitVec 64)) : BitVec 64) = 48; decide)
   kn
   refine eventually_trans _ _ _ _ (encn_call (k + 63) (win hk 63 1) (rsp.toBitVec - 152) (rbx.toBitVec + rcx.toBitVec + 8) p1
-    (rsp.toBitVec - 160) (rsp.toBitVec - 160 - BitVec.ofNat 64 S) S (by bv_omega) (E2eScal.g5_lo0 rsp.toBitVec 152 160 S (by decide))
+    (rsp.toBitVec - 160) (rsp.toBitVec - 160 - BitVec.ofNat 64 S) S (by bv_omega) (Codec.frame_lo0 rsp.toBitVec 152 160 S (by decide))
     b1 d1 rslot scratch (by rw [hd1, hb1]) hrslot hsc
     _ _ (by rfl) (by rfl) (by rfl) (by rw [hb1]; rfl) (by first | ecancel | (dsimp only; ecancel)) hmm) ?_
   rintro ⟨e1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, scr1, hscr1, Hc1⟩
@@ -554,7 +554,7 @@ theorem vid_g6e_f2 : ∀ (k : Nat) (hk : VidMarshal.IsInfixAt Host.prog k) (hf :
   apply kstep_ldv Reg64.rax Reg64.rsp 128 _ (k + 79) (k + 80) (win hk 79 1) (by rfl) (by rfl)
     (rsp.toBitVec - 152) (rsp.toBitVec - 24) rbx.toBitVec (by eb) _ _ _ (by rfl) (by ecancel)
   kn
-  have hl89 := Fk.label_at' hk hf (j := 89)
+  have hl89 := Machine.label_at' hk hf (j := 89)
     (by simp only [VidMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [VidMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_jmp _ _ (k + 80) (k + 89) (win hk 80 1) (by rfl) hl89

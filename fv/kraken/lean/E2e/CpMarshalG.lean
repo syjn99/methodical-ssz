@@ -20,7 +20,7 @@ named. The spill slots that only this path writes: rax at rsp + 8 (directive
 rsp − 112.
 -/
 
-open Fk E2e.Code
+open Machine Runtime TestTarget E2e.Code
 variable [Host]
 
 namespace E2e

@@ -17,7 +17,7 @@ the equation `bsA = pdmEnc g` is kept as a hypothesis `hb` instead of `subst`, s
   reject site of the decoder (it has no other error return).
 -/
 
-open Fk E2e E2eScal.H3Code E2eScal EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eScal.H3Code E2eScal Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.Dm
@@ -80,7 +80,7 @@ theorem dm_e2e_accept_spec_k (k : Nat) (hk : DmUnmarshal.IsInfixAt Host.prog k) 
   refine ⟨g, rfl, hb, ?_⟩
   have h88 : s.regs.rcx = 88 := by
     apply UInt64.toNat_inj.mp; rw [hlen, hb, pdm_enc_size]; rfl
-  exact dm_e2e_accept_main k hk hf _ _ _ (by simp) (by simp) (by simp [Fv.uintBytes_size]) s ra guard
+  exact dm_e2e_accept_main k hk hf _ _ _ (by simp) (by simp) (by simp [Spec.uintBytes_size]) s ra guard
     fp s1 s2 spl l18 rslot lo aP1 aL1 aC1 aP2 aL2 aC2 aN
     hfp h1 h2 hspl hl18 hrs haP1 haL1 haC1 haP2 haL2 haC2 haN
     R S hlo Heap avail (Pm g hb) hguard h88 hav hms hmm

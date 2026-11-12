@@ -1,7 +1,7 @@
 import E2e.CpCompose
-import Fk.RtCopy
-import Fk.BumpMore
-import Fk.WHost
+import Runtime.CopyModel
+import Runtime.BumpAllocatorVariants
+import Machine.WitnessHost
 import E2e.GoVal
 
 /-!
@@ -21,7 +21,7 @@ encoder's return address (`ra2 = 0`) stored into the return slot
 (`Mem.storeInt`).
 -/
 
-open Fk Fk.W E2e E2e.Code
+open Machine Runtime TestTarget Machine.Witness E2e E2e.Code
 
 namespace E2e.WitCpC
 

@@ -21,7 +21,7 @@ import E2e.Spec
   needed for the join and is not counted as reject coverage.
 -/
 
-open Fk E2e.Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2e
@@ -86,7 +86,7 @@ theorem cp_e2e_accept_spec_k (k : Nat) (hk : CpUnmarshal.IsInfixAt Host.prog k) 
   refine ⟨g, rfl, rfl, ?_⟩
   have h40 : s.regs.rcx = 40 := by
     apply UInt64.toNat_inj.mp; rw [hlen, pcp_enc_size]; rfl
-  exact cp_e2e_accept_main k hk hf kE hkE hfE _ _ (by simp [Fv.uintBytes_size]) (by simp) s ra guard
+  exact cp_e2e_accept_main k hk hf kE hkE hfE _ _ (by simp [Spec.uintBytes_size]) (by simp) s ra guard
     fp s1 s2 l20 l28 l30 m0 m1 m2 rslot cst c0 cP cL cC ctl hfp h1 h2 hl20 hl28 hl30 hm0 hm1 hm2 hrs hcst hc0 hcP
     hcL hcC hctl R S hS8 hS scratch hsc Heap avail (Pm g rfl) hguard h40 hav hms hmm
 

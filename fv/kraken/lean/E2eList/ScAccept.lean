@@ -1,5 +1,5 @@
-import E2eScal.Compose
-import E2eScal.SegN
+import Codec.DecoderHeadEpilogue
+import Codec.FixedBytesDecode
 import E2eList.ScLoop
 import E2eList.StmtSc
 
@@ -10,13 +10,13 @@ import E2eList.StmtSc
   array (`MakesliceC Heap lvSliceType_addr 24 S`, cnt 512), Pubkeys len = cap = 512, writeBarrier = 0, Pubkeys ptr,
   rax = 0, `jmp L_a0`;
 * element loop 40–79, 36–39: `E2eList.sc_loop` (512 iterations; each proves the `panicBounds` branch not taken);
-* AggregatePubkey 81–105: `sc_agg_seg` (the literal-size statement of `E2eScal.bytesdec_seg 48`, src 24576);
+* AggregatePubkey 81–105: `sc_agg_seg` (the literal-size statement of `Codec.bytesdec_seg 48`, src 24576);
   pointer tail 106–107, 115–116 (rsi);
 * epilogue 117–121 (hand steps, `add $0x30`).
 Statement: the frozen `E2eList.sc_accept_stmt`.
 -/
 
-open Fk E2eList.Code
+open Machine Runtime TestTarget E2eList.Code
 variable [Host]
 
 namespace E2eList
@@ -60,14 +60,14 @@ theorem sc_agg_seg (k : Nat) (hk : ScUnmarshal.IsInfixAt Host.prog k) (hf : Labe
           ⋆ Eq (root.At aSrc)
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf (k + 81)⟩ := by
-  have hA := E2eScal.infix_sub (q := E2eScal.bytesDecHead 48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ_197" 64 40 48) 81 hk
-    (by simp only [ScUnmarshal, E2eScal.bytesDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hB := E2eScal.infix_sub (q := E2eScal.bytesDecMid 48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ_197" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ_1db" 64 72 40 32 40 48 24576) 94 hk
-    (by simp only [ScUnmarshal, E2eScal.bytesDecMid, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hl := Fk.label_at' hk hf (j := 94)
+  have hA := Codec.infix_sub (q := Codec.bytesDecHead 48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ_197" 64 40 48) 81 hk
+    (by simp only [ScUnmarshal, Codec.bytesDecHead, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hB := Codec.infix_sub (q := Codec.bytesDecMid 48 "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ_197" "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ_1db" 64 72 40 32 40 48 24576) 94 hk
+    (by simp only [ScUnmarshal, Codec.bytesDecMid, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hl := Machine.label_at' hk hf (j := 94)
     (by simp only [ScUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [ScUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  with_reducible exact E2eScal.bytesdec_seg 48 (Or.inr (Or.inl rfl)) _ _ _ _ _ _ _ _ _ (k + 81) (k + 94) hA hB hl
+  with_reducible exact Codec.bytesdec_seg 48 (Or.inr (Or.inl rfl)) _ _ _ _ _ _ _ _ _ (k + 81) (k + 94) hA hB hl
 
 /-- **Accept path of the real `(*v1alpha1.SyncCommittee).UnmarshalSSZ` (Go 1.26.10)**; statement = the frozen
 `sc_accept_stmt`. -/
@@ -213,15 +213,15 @@ theorem sc_e2e_accept_main : sc_accept_stmt := by
   dsimp only at hpc5 hrsp5 hrbp5 hr145 hrdx5 Hm5
   subst hpc5
   -- pointer tail of AggregatePubkey (rsi), 106–107 and 115–116
-  have hTa := E2eScal.infix_sub (q := E2eScal.bytesDecTailA Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ_1f1" 40) 106 hk
-    (by simp only [ScUnmarshal, E2eScal.bytesDecTailA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hTb := E2eScal.infix_sub (q := E2eScal.bytesDecTailB Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ_1f1" 32) 115 hk
-    (by simp only [ScUnmarshal, E2eScal.bytesDecTailB, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
-  have hlT := Fk.label_at' hk hf (j := 115)
+  have hTa := Codec.infix_sub (q := Codec.bytesDecTailA Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ_1f1" 40) 106 hk
+    (by simp only [ScUnmarshal, Codec.bytesDecTailA, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hTb := Codec.infix_sub (q := Codec.bytesDecTailB Reg64.rsi "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ_1f1" 32) 115 hk
+    (by simp only [ScUnmarshal, Codec.bytesDecTailB, List.drop_succ_cons, List.drop_zero, List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero])
+  have hlT := Machine.label_at' hk hf (j := 115)
     (by simp only [ScUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [ScUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
-  have hYsi : E2eScal.U64InlineReg Reg64.rsi := by decide
-  refine eventually_trans _ _ _ _ (E2eScal.bytesdec_tail_seg Reg64.rsi hYsi _ _ _ (k + 106) (k + 115) hTa hTb hlT
+  have hYsi : Codec.U64InlineReg Reg64.rsi := by decide
+  refine eventually_trans _ _ _ _ (Codec.bytesdec_tail_seg Reg64.rsi hYsi _ _ _ (k + 106) (k + 115) hTa hTb hlT
     (rsp.toBitVec - 56) rax.toBitVec pA (rsp.toBitVec - 56 + 40) (rax.toBitVec + 32)
     (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat])
     _ _ (Int.toBytes 8 pA.toInt) (Int.toBytes_length 8 _) _ d5 hrsp5 hrbp5 hr145 hrdx5

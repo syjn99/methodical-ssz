@@ -1,5 +1,5 @@
-import Fv1.SpecPrysm
-import Fv1.Transfer
+import Spec.ReducedPrysm
+import Spec.DeserializeOfSerialize
 import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
 import E2e.SpecChecker
 
@@ -23,12 +23,13 @@ this namespace use `prysmCpDesc`.
 `PCp` is the SSZ content of a Go `v1alpha1.Checkpoint` in the EthLib domain
 (`len(Root) = 32`): the other Go fields (`state`, `unknownFields`, `sizeCache`)
 carry no SSZ value. The proofs of the spec lemmas below follow
-`Fv1/SpecPrysm.lean` and `Fk/CpSpec.lean` (their text, with the names of this
+`Spec/ReducedPrysm.lean` and `Fk/CpSpec.lean` (their text, with the names of this
 namespace); they read EthLib only.
 -/
 
 namespace E2e
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz
+open Spec hiding readUint_lt
 
 /-- consensus-specs phase0 `Checkpoint`. -/
 def prysmCpDesc : Desc := .container ["epoch", "root"] [.uint 8, .byteVector 32]
@@ -38,8 +39,8 @@ theorem prysmCpDesc_checker :
     ∃ fs, prysmCpDesc = .container ["epoch", "root"] fs ∧ cpCheckerDesc = .container ["Epoch", "Root"] fs :=
   ⟨_, rfl, rfl⟩
 
-/-- The reduced hand case `Fv1.cpDesc` is structurally the same term (cited, not used). -/
-theorem prysmCpDesc_eq_hand : prysmCpDesc = Fv1.cpDesc := rfl
+/-- The reduced hand case `Spec.cpDesc` is structurally the same term (cited, not used). -/
+theorem prysmCpDesc_eq_hand : prysmCpDesc = Spec.cpDesc := rfl
 
 theorem prysmCpDesc_wellFormed : prysmCpDesc.wellFormed = .ok () := by rfl
 theorem prysmCpDesc_fixedSize : prysmCpDesc.fixedSize = some 40 := by rfl
@@ -55,7 +56,7 @@ def PCp.toValue (g : PCp) : Value := .seq [.uint g.epoch.toNat, .bytes g.root.to
 def pcpEnc (g : PCp) : Array UInt8 := uintBytes 8 g.epoch.toNat ++ g.root.toArray
 
 theorem pcp_enc_size (g : PCp) : (pcpEnc g).size = 40 := by
-  simp [pcpEnc, Fv.uintBytes_size]
+  simp [pcpEnc, Spec.uintBytes_size]
 
 theorem pcp_toValue_fits (g : PCp) : Value.fits prysmCpDesc g.toValue = true := by
   have := g.epoch.toNat_lt
@@ -81,7 +82,7 @@ theorem pcp_serialize (g : PCp) : serialize prysmCpDesc g.toValue = .ok (pcpEnc 
   have := a.toNat_lt
   simp only [prysmCpDesc, PCp.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk, hr]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Fv.uintBytes_size, bytesPerOffset, pcpEnc]
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, pcpEnc]
 
 theorem pcp_toValue_surjective' (v : Value) (h : Value.fits prysmCpDesc v = true) : ∃ g : PCp, g.toValue = v :=
   pcp_toValue_surjective v h

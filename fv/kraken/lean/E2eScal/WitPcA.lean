@@ -1,6 +1,6 @@
 import E2eScal.PcAccept
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of `pc_e2e_accept_main` (PendingConsolidation decoder accept path; hold-out, class D)
@@ -19,7 +19,7 @@ two untouched frame ranges and the unused slot. For every 16-byte input every pr
 returns nil. The receiver is a Go value of `v1alpha1.PendingConsolidation` (all fields zero).
 -/
 
-open Fk Fk.W E2e E2eScal E2eScal.H5Code E2eScal.BhCode E2eScal.H5
+open Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.H5Code E2eScal.BhCode E2eScal.H5
 
 namespace E2eScal.WitPcA
 

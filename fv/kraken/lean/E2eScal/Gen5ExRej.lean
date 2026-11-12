@@ -10,16 +10,17 @@ import E2eScal.Gen4H6PdDec
 `F`, `dB`, `sz` and the directive indices of `lerr:`, `add`, `pop` from the `.S` file.
 -/
 
-open Fk E2eScal.H6Code
+open Machine Runtime TestTarget E2eScal.H6Code
 variable [Host]
 
+open Codec
 namespace E2eScal.Gen5
 
 set_option maxRecDepth 100000 in
 /-- PendingDeposit: the committed size-reject statement, re-derived from `decrej_seg` (frame `0x40`). -/
 theorem pd_reject_g5 : type_of% (@E2eScal.H6.pd_e2e_reject_size_main ‹Host›) := by
   intro k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard hlen
-  have hl := Fk.label_at' hk hf (j := 164)
+  have hl := Machine.label_at' hk hf (j := 164)
     (by simp only [PdUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [PdUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   exact decrej_seg _ _ _ _ 64 88 192 _ k (win hk 0 11) (by rfl) (by decide)
@@ -49,7 +50,7 @@ theorem ve_reject_g5 : ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k) (h
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   intro k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard hlen
-  have hl := Fk.label_at' hk hf (j := 89)
+  have hl := Machine.label_at' hk hf (j := 89)
     (by simp only [VeUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
     (by simp only [VeUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   exact decrej_seg _ _ _ _ 72 96 16 _ k (win hk 0 11) (by rfl) (by decide)

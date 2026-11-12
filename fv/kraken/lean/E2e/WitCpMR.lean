@@ -1,6 +1,6 @@
 import E2e.CpMarshalR
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of `cp_e2e_marshal_reject_main`
@@ -15,7 +15,7 @@ the rax spill slot and `dst[8:48]`. For every `rl ≠ 32` (instances 31, 33, 0)
 the encoder returns the error words and a nil slice.
 -/
 
-open Fk Fk.W E2e E2e.Code
+open Machine Runtime TestTarget Machine.Witness E2e E2e.Code
 
 namespace E2e.WitCpMR
 

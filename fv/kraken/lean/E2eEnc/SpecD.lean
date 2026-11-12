@@ -1,6 +1,6 @@
 import E2e.Spec
 import E2e.SpecEq
-import Fk.LuErr
+import TestTarget.ListU64RejectSpec
 import EthLib.Serialization.Proofs.Ssz.Codec.Table
 import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
 import E2eList.IaSpec
@@ -15,7 +15,7 @@ the EthLib round trip, accepted inputs are encodings, and the three checks of th
 -/
 
 namespace E2eEnc
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz Spec TestTarget
 
 theorem prysmDcDesc_wellFormed : prysmDcDesc.wellFormed = .ok () := by rfl
 

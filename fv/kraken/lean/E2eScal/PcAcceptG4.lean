@@ -15,7 +15,7 @@ program that this proof does not reach `calldec_nop_seg`, `bytes32dec_seg_rax` o
 In-sample (the type is development data since its hold-out evaluation); no transfer claim.
 -/
 
-open Fk E2e E2eScal.H5Code E2eScal.BhCode E2eScal
+open Machine Runtime TestTarget E2e E2eScal.H5Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.H5

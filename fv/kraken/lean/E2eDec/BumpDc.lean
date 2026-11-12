@@ -1,6 +1,6 @@
-import Fk.Bump
-import Fk.BumpMore
-import Fk.FunSpecs
+import Runtime.BumpAllocator
+import Runtime.BumpAllocatorVariants
+import TestTarget.FunctionSpecs
 import E2eList.DataIa
 
 /-!
@@ -14,7 +14,7 @@ with the names changed. Abstract model for non-vacuity only, not a Go refinement
 the Lake `input_dir` `dcd_lean_S`.
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
 namespace E2eDec
 

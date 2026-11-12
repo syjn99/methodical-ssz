@@ -1,0 +1,89 @@
+# old path	new path	meaning (paths are relative to the repository root)
+fv/kraken/lean/Fk/Step.lean	fv/kraken/lean/Machine/Step.lean	one-directive step lemmas inside a Host and the step tactics (kaddr, kat, kshl64, kunfold)
+fv/kraken/lean/Fk/Frame.lean	fv/kraken/lean/Machine/Frame.lean	a stack frame as one block of bytes, for function specifications
+fv/kraken/lean/Fk/Bytes.lean	fv/kraken/lean/Machine/Bytes.lean	byte facts about the stored values (little-endian bytes of 64-bit words)
+fv/kraken/lean/Fk/Labels.lean	fv/kraken/lean/Machine/Labels.lean	label resolution in a Host: the first label directive gives the address (LabelsFresh, label_eq_addrOf)
+fv/kraken/lean/Fk/Flags.lean	fv/kraken/lean/Machine/Flags.lean	branch-condition lemmas stated once, so the kernel does not recheck 64-bit literal arithmetic
+fv/kraken/lean/Fk/Block.lean	fv/kraken/lean/Machine/Block.lean	splitting a byte block around an 8-byte element, for loops over arrays
+fv/kraken/lean/Fk/Include.lean	fv/kraken/lean/Machine/Include.lean	the commands that read code and data files: include_x64_rt and data_include
+fv/kraken/lean/Fk/WHost.lean	fv/kraken/lean/Machine/WitnessHost.lean	witness hosts: mkHost, label checks and the wit_split tactic
+fv/kraken/lean/E2e/WitSplit.lean	fv/kraken/lean/Machine/WitnessSplit.lean	the wit_split_n tactic: wit_split with sums of literals normalized in the side goal
+fv/kraken/lean/Fk/Contracts.lean	fv/kraken/lean/Runtime/Contracts.lean	contracts of Go runtime functions as Kraken hypotheses (MakesliceC, GrowsliceC, MemmoveC, ConvT64C, FmtErrorf*C)
+fv/kraken/lean/Fk/Bump.lean	fv/kraken/lean/Runtime/BumpAllocator.lean	a bump allocator model of runtime.makeslice that satisfies MakesliceC
+fv/kraken/lean/Fk/BumpMore.lean	fv/kraken/lean/Runtime/BumpAllocatorVariants.lean	more bump allocator models: makeslice for 1-byte elements, newobject for 16, 24 and 32 bytes
+fv/kraken/lean/Fk/RtCopy.lean	fv/kraken/lean/Runtime/CopyModel.lean	models of runtime.memmove and runtime.growslice that satisfy their contracts
+fv/kraken/lean/Fk/RtErr.lean	fv/kraken/lean/Runtime/ErrorModel.lean	models of fmt.errorf and runtime.convT64 that satisfy their contracts
+fv/kraken/lean/Fk/BumpAlloc.S	fv/kraken/lean/Runtime/BumpAlloc.S	assembly of the bump makeslice model (file name kept: the name of its Program constant)
+fv/kraken/lean/Fk/BumpAlloc1.S	fv/kraken/lean/Runtime/BumpAlloc1.S	assembly of the 1-byte bump makeslice model (file name kept)
+fv/kraken/lean/Fk/BumpNew16.S	fv/kraken/lean/Runtime/BumpNew16.S	assembly of the 16-byte bump newobject model (file name kept)
+fv/kraken/lean/Fk/BumpNew24.S	fv/kraken/lean/Runtime/BumpNew24.S	assembly of the 24-byte bump newobject model (file name kept)
+fv/kraken/lean/Fk/BumpNew32.S	fv/kraken/lean/Runtime/BumpNew32.S	assembly of the 32-byte bump newobject model (file name kept)
+fv/kraken/lean/Fk/RtCopy.S	fv/kraken/lean/Runtime/RtCopy.S	assembly of the memmove and growslice models (file name kept: the name of its Program constant)
+fv/kraken/lean/Fk/RtErr.S	fv/kraken/lean/Runtime/RtErr.S	assembly of the fmt.errorf and convT64 models (file name kept: the name of its Program constant)
+fv/kraken/lean/Fk/Code.lean	fv/kraken/lean/TestTarget/Code.lean	code constants of the Go 1.26.3 test target ELF (link/out/norm)
+fv/kraken/lean/Fk/Data.lean	fv/kraken/lean/TestTarget/Data.lean	data constants of the Go 1.26.3 test target ELF (link/out/data) and facts about them
+fv/kraken/lean/Fk/FunSpecs.lean	fv/kraken/lean/TestTarget/FunctionSpecs.lean	function specifications of the test target callees for composition, and the NewobjectC contract form
+fv/kraken/lean/Fk/ScAccept.lean	fv/kraken/lean/TestTarget/ScalarsDecodeAccept.lean	Scalars.UnmarshalSSZ accept path on the test target
+fv/kraken/lean/Fk/ScMarshal.lean	fv/kraken/lean/TestTarget/ScalarsEncode.lean	Scalars.MarshalSSZTo fast path on the test target
+fv/kraken/lean/Fk/ScSpec.lean	fv/kraken/lean/TestTarget/ScalarsSpec.lean	Scalars decoder and encoder theorems against EthLib
+fv/kraken/lean/Fk/LuAccept.lean	fv/kraken/lean/TestTarget/ListU64DecodeAccept.lean	ListU64.UnmarshalSSZ accept path on the test target
+fv/kraken/lean/Fk/LuLoop.lean	fv/kraken/lean/TestTarget/ListU64DecodeLoop.lean	ListU64.UnmarshalSSZ element loop on the test target
+fv/kraken/lean/Fk/LuReject.lean	fv/kraken/lean/TestTarget/ListU64DecodeReject.lean	ListU64.UnmarshalSSZ reject paths without calls
+fv/kraken/lean/Fk/LuRejectCall.lean	fv/kraken/lean/TestTarget/ListU64DecodeRejectCall.lean	ListU64.UnmarshalSSZ reject paths through fmt.errorf, and store step lemmas
+fv/kraken/lean/Fk/LuErr.lean	fv/kraken/lean/TestTarget/ListU64RejectSpec.lean	ListU64 reject correspondence with EthLib
+fv/kraken/lean/Fk/LuSpec.lean	fv/kraken/lean/TestTarget/ListU64AcceptSpec.lean	ListU64.UnmarshalSSZ accept path against EthLib
+fv/kraken/lean/Fk/FvAccept.lean	fv/kraken/lean/TestTarget/FixedVecDecodeAccept.lean	FixedVec.UnmarshalSSZ accept path on the test target
+fv/kraken/lean/Fk/FvLoop.lean	fv/kraken/lean/TestTarget/FixedVecDecodeLoop.lean	FixedVec.UnmarshalSSZ element loop on the test target
+fv/kraken/lean/Fk/FvMarshal.lean	fv/kraken/lean/TestTarget/FixedVecEncode.lean	FixedVec.MarshalSSZTo fast path on the test target
+fv/kraken/lean/Fv/Spec.lean	fv/kraken/lean/Spec/TestFixed.lean	EthLib specification of the test type Fixed, and the uint byte lemmas that other specifications use
+fv/kraken/lean/Fv1/SpecScalars.lean	fv/kraken/lean/Spec/TestScalars.lean	EthLib specification of the test type Scalars
+fv/kraken/lean/Fv1/SpecList.lean	fv/kraken/lean/Spec/TestListU64.lean	EthLib specification of the test type ListU64
+fv/kraken/lean/Fv1/SpecFixedVec.lean	fv/kraken/lean/Spec/TestFixedVec.lean	EthLib specification of the test type FixedVec
+fv/kraken/lean/Fv1/SpecBitVec.lean	fv/kraken/lean/Spec/TestBitVec.lean	EthLib specification of the test type BitVec
+fv/kraken/lean/Fv1/SpecNested.lean	fv/kraken/lean/Spec/TestNested.lean	EthLib specification of the test type Nested
+fv/kraken/lean/Fv1/SpecListC.lean	fv/kraken/lean/Spec/TestListC.lean	EthLib specification of the test type ListC
+fv/kraken/lean/Fv1/SpecPrysm.lean	fv/kraken/lean/Spec/ReducedPrysm.lean	EthLib specifications of the two reduced Prysm types Checkpoint and AttestationData
+fv/kraken/lean/Fv1/SpecBitList.lean	fv/kraken/lean/Spec/TestBitList.lean	EthLib specification of the test type BitL
+fv/kraken/lean/Fv1/Transfer.lean	fv/kraken/lean/Spec/DeserializeOfSerialize.lean	from a serialize characterization to deserialize: every accepted input is enc g of one value
+fv/kraken/lean/E2eSeg/ListG.lean	fv/kraken/lean/Codec/Segment/ByteSliceList.lean	list and memory-chunk lemmas of [][]byte element loops, for any element width and count
+fv/kraken/lean/E2eSeg/ListGInst.lean	fv/kraken/lean/Codec/Segment/ByteSliceListInstances.lean	the fixed SyncCommittee and HistoricalBatch list lemmas as instances of the general ones
+fv/kraken/lean/E2eSeg/RejG.lean	fv/kraken/lean/Codec/Segment/SizeReject.lean	size reject of a fixed-size decoder, for any frame size and any size
+fv/kraken/lean/E2eSeg/RejGInst.lean	fv/kraken/lean/Codec/Segment/SizeRejectInstances.lean	the SyncCommittee and HistoricalBatch size-reject statements from the general lemma
+fv/kraken/lean/E2eSeg/SegG.lean	fv/kraken/lean/Codec/Segment/FixedBytesAnySize.lean	fixed-bytes decode segments for any size below 2^31
+fv/kraken/lean/E2eSeg/SegGInst.lean	fv/kraken/lean/Codec/Segment/FixedBytesAnySizeInstances.lean	the fixed-size segment lemmas as instances of the any-size lemmas
+fv/kraken/lean/E2eSeg/SpecG.lean	fv/kraken/lean/Codec/Segment/Bytes32VectorSpec.lean	specification lemmas of a Vector[Bytes32, n] field, for any count
+fv/kraken/lean/E2eSeg/V32.lean	fv/kraken/lean/Codec/Segment/Bytes32Loop.lean	the [][]byte element loop with 32-byte elements: code templates and blocks, any count and frame
+fv/kraken/lean/E2eSeg/V32Loop.lean	fv/kraken/lean/Codec/Segment/Bytes32LoopProof.lean	the 32-byte element loop: one iteration, the exit and the whole loop
+fv/kraken/lean/E2eSeg/V32Hb.lean	fv/kraken/lean/Codec/Segment/Bytes32LoopHistoricalBatch.lean	the HistoricalBatch loop re-derived from the general 32-byte element loop
+fv/kraken/lean/E2eSeg/VTri.lean	fv/kraken/lean/Codec/Segment/TripleLoop.lean	the [][]byte element loop of element size 3*2^k: code templates and blocks
+fv/kraken/lean/E2eSeg/VTriLoop.lean	fv/kraken/lean/Codec/Segment/TripleLoopProof.lean	the 3*2^k element loop: one iteration, the exit and the whole loop
+fv/kraken/lean/E2eSeg/VTriSc.lean	fv/kraken/lean/Codec/Segment/TripleLoopSyncCommittee.lean	the SyncCommittee loop re-derived from the general 3*2^k element loop
+fv/kraken/lean/E2eScal/Seg.lean	fv/kraken/lean/Codec/SegmentTemplate.lean	the glue of the segment lemmas: a code template at an index of the host program (infix_sub)
+fv/kraken/lean/E2eScal/P1.lean	fv/kraken/lean/Codec/Uint64Decoder.lean	the uint64 decoder pattern: accept path of a uint64 primitive UnmarshalSSZ
+fv/kraken/lean/E2eScal/P2Dec.lean	fv/kraken/lean/Codec/Bytes32Decode.lean	the fixed-bytes field decoder pattern for a 32-byte field (make, then append from the buffer)
+fv/kraken/lean/E2eScal/P2DecZ.lean	fv/kraken/lean/Codec/Bytes32DecodeOffsetZero.lean	the 32-byte field decoder pattern for a field at SSZ offset 0
+fv/kraken/lean/E2eScal/P2Enc.lean	fv/kraken/lean/Codec/Bytes32Encode.lean	the fixed-bytes field encoder pattern for a 32-byte field (length test, then append)
+fv/kraken/lean/E2eScal/Kind.lean	fv/kraken/lean/Codec/Kind/FieldPatterns.lean	frozen statement kinds of the uint64 decoder and the 32-byte field decode segment
+fv/kraken/lean/E2eScal/KindZ.lean	fv/kraken/lean/Codec/Kind/Bytes32DecodeOffsetZero.lean	frozen statement kind of the offset-0 32-byte decode segment
+fv/kraken/lean/E2eScal/U64Inline.lean	fv/kraken/lean/Codec/InlineUint64.lean	inline uint64 decode segment of a container decoder
+fv/kraken/lean/E2eScal/U64RR.lean	fv/kraken/lean/Codec/InlineUint64RegisterBase.lean	inline uint64 decode, two-directive form (register base, receiver in rax)
+fv/kraken/lean/E2eScal/KindU64.lean	fv/kraken/lean/Codec/Kind/InlineUint64.lean	statement kind of the inline uint64 decode segments
+fv/kraken/lean/E2eScal/Compose.lean	fv/kraken/lean/Codec/DecoderHeadEpilogue.lean	the container decoder head, the byte-vector pointer tail and the epilogue segments
+fv/kraken/lean/E2eScal/NopView.lean	fv/kraken/lean/Codec/NopWindow.lean	a code view that skips padding nop directives (eraseNop, nopPos, windows)
+fv/kraken/lean/E2eScal/StepK.lean	fv/kraken/lean/Codec/WindowSteps.lean	per-instruction step lemmas over a window, with the registers as parameters
+fv/kraken/lean/E2eScal/KindStep.lean	fv/kraken/lean/Codec/Kind/WindowSteps.lean	statement kinds of the per-instruction step lemmas
+fv/kraken/lean/E2eScal/HeadN.lean	fv/kraken/lean/Codec/DecoderPrologue.lean	frame-parametric decoder prologue, return and nil-check step
+fv/kraken/lean/E2eScal/SegN.lean	fv/kraken/lean/Codec/FixedBytesDecode.lean	size-parametric fixed-bytes decode segments (32, 48 or 96 bytes)
+fv/kraken/lean/E2eScal/KindN.lean	fv/kraken/lean/Codec/Kind/FixedBytesDecode.lean	statement kinds of the size-parametric fixed-bytes decode segments
+fv/kraken/lean/E2eScal/SegReg.lean	fv/kraken/lean/Codec/FixedBytesDecodeWindow.lean	the fixed-bytes decode segment over windows, with the receiver registers as parameters
+fv/kraken/lean/E2eScal/SegRegZ.lean	fv/kraken/lean/Codec/FixedBytesDecodeWindowOffsetZero.lean	the fixed-bytes decode segment over windows, offset-0 form
+fv/kraken/lean/E2eScal/KindSegReg.lean	fv/kraken/lean/Codec/Kind/FixedBytesDecodeWindow.lean	statement kind of the fixed-bytes decode segment over windows
+fv/kraken/lean/E2eScal/SegReg20.lean	fv/kraken/lean/Codec/FixedBytesDecodeWindow20.lean	the fixed-bytes decode segment over windows for a 20-byte vector
+fv/kraken/lean/E2eScal/StackGuard.lean	fv/kraken/lean/Codec/StackGuard.lean	the large-frame stack guard: the jbe after lea -N(%rsp) is not taken
+fv/kraken/lean/E2eScal/EncBlock.lean	fv/kraken/lean/Codec/EncodeMemmove.lean	the runtime.memmove call block that appends a 32-byte field which fits
+fv/kraken/lean/E2eScal/EncReject.lean	fv/kraken/lean/Codec/EncodeRejectTail.lean	the return nil, ssz.ErrBytesLength tail of a generated MarshalSSZTo
+fv/kraken/lean/E2eScal/FieldComp.lean	fv/kraken/lean/Codec/FieldFrame.lean	frame-parametric lemmas for the field theorems of generated accept proofs
+fv/kraken/lean/E2eScal/EncSteps.lean	fv/kraken/lean/Codec/EncodeSteps.lean	step lemmas for the encoder fast path (window form, registers as parameters)
+fv/kraken/lean/E2eScal/EncFieldN.lean	fv/kraken/lean/Codec/EncodeFieldHelpers.lean	helpers of the generated field proofs of encoders (kreg_eq, eb)
+fv/kraken/lean/E2eScal/EncFrameTest.lean	fv/kraken/lean/Codec/EncodeFrameTest.lean	the frame test in the epilogue of three encoders is not taken on the fast path
+fv/kraken/lean/Fk.lean	fv/kraken/gen/restructure/maps/shared-layer/removed/Fk.lean	root module of the removed Fk library (the new libraries use globs); kept here so that the inverse mode can restore it

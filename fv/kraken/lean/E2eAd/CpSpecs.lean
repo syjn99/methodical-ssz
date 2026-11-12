@@ -1,13 +1,13 @@
 import E2e.CpAccept
 import E2e.CpMarshal
 import E2eAd.Code
-import Fk.RtCopy
+import Runtime.CopyModel
 
 /-!
 # Function specifications of the Checkpoint decoder and encoder
 
 `CpUAccC Heap S` is the statement of `E2e.cp_e2e_accept_main` as a hypothesis-shaped property of
-the code at the label `(*Checkpoint).UnmarshalSSZ` (the form of `Fk.ScUAccC` / `E2e.EpUAccC`): for
+the code at the label `(*Checkpoint).UnmarshalSSZ` (the form of `TestTarget.ScUAccC` / `E2e.EpUAccC`): for
 every machine state, return address and frame `F`. The only change to the statement is that the
 callee's own `makeslice` return-slot word at rsp − 96 (`Host.addrOf (k + 70)` in the theorem) is an
 existential `rs'` of 8 bytes, so that the specification does not name the callee's place.
@@ -17,7 +17,7 @@ hypotheses of `cp_uacc_holds`, so they stay visible in every caller's statement.
 assumed. `CpMAccC` (encoder) follows the same rule (below).
 -/
 
-open Fk E2e E2e.Code E2eAd.Code
+open Machine Runtime TestTarget E2e E2e.Code E2eAd.Code
 variable [Host]
 
 namespace E2eAd

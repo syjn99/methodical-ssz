@@ -32,8 +32,9 @@ statements are the ties of `EncTies.lean`.
 `enc32_call` (statement as committed) follows from `encn_call`.
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
+open Codec
 namespace E2eScal.Gen6
 
 variable [Host]
@@ -50,7 +51,7 @@ theorem g6_examples_fast :
     hs_e2e_marshal_g6⟩
 
 /-- The committed 32-byte call block has the statement of the `n`-byte block at `n = 32`. -/
-theorem enc32_call_of_n : type_of% (@E2eScal.enc32_call ‹Host›) := by
+theorem enc32_call_of_n : type_of% (@Codec.enc32_call ‹Host›) := by
   intro jc hc sp d p aRet aLo S hRet hLo root e rslot scratch hroot he hrs hsc R s hrsp hrax hrbx hrcx h_mem hmm
   exact encn_call jc hc sp d p aRet aLo S hRet hLo root e rslot scratch (by rw [he, hroot]) hrs hsc R s hrsp hrax
     hrbx (by rw [hroot]; exact hrcx) h_mem hmm

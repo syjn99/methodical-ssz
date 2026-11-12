@@ -11,7 +11,7 @@ proved here). The precondition is stronger than the frozen one. The original sta
 Precedent: `E2e.cp_e2e_unmarshal_then_marshal` has the same premise `hS : S < 2 ^ 60`.
 -/
 
-open Fk EthLib.Serialization.Ssz E2eDec.Code E2eEnc
+open Machine Runtime TestTarget EthLib.Serialization.Ssz E2eDec.Code E2eEnc
 variable [Host]
 
 namespace E2eDec

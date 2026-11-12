@@ -1,13 +1,13 @@
 import E2eScal.Enc2ExVb
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of `vb_e2e_marshal_g6` (ValidatorBalance encoder, fast path only; generated-style theorem)
 
 Hand-written (the text of `E2eScal/WitE1M.lean` with the ValidatorBalance host and layout).
 Host: the real Go 1.26.10 `(*v1alpha1.ValidatorBalance).MarshalSSZTo` (index 0). The function calls no
-runtime function on the fast path (`Fk.RtCopy` is imported for `eventually_mono` only). One memory block at `0x10000`: guard word (r14 = 0xfff0), the receiver at
+runtime function on the fast path (`Runtime.CopyModel` is imported for `eventually_mono` only). One memory block at `0x10000`: guard word (r14 = 0xfff0), the receiver at
 0x10008 (`prysm/ir/ir-mainnet.json` gc amd64 layout: `state` 0, Index 8, Balance 16), the stack window
 (rsp = 0x10048: the two 16-byte halves of the stack temp at rsp − 40 and rsp − 24, saved rbp, return slot,
 the receiver spill slot, the pointer spill slot) and `dst` at 0x10060: the prefix, 8 + 8 bytes of old
@@ -17,7 +17,7 @@ Two instances: empty prefix with `cap = 16`, and a 3-byte prefix with 5 spare by
 Balance every premise of the kind instance `encFastKindN VbMarshal layEncVb [.u64, .u64]` holds.
 -/
 
-open Fk Fk.W E2eScal E2eScal.Enc2Code E2eScal.Gen6
+open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.Enc2Code E2eScal.Gen6
 
 namespace E2eScal.WitVbM
 

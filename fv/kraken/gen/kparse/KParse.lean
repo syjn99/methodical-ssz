@@ -2,7 +2,7 @@ import Kraken.X64.Parser
 
 /-!
 Run the pinned Kraken runtime x64 parser (the one behind `include_x64_rt` in
-`Fk/Include.lean`) on every `.S` file listed in `$KPARSE_LIST`, one path per
+`Machine/Include.lean`) on every `.S` file listed in `$KPARSE_LIST`, one path per
 line. Prints `KPARSE OK <path> <directives>` or `KPARSE ERR <path> <message>`,
 then `KPARSE DONE <ok> <err>`. Read-only; no declaration is added.
 

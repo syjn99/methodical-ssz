@@ -1,6 +1,6 @@
 import E2eScal.Gen6CpEnc
 import E2e.Spec
-import Fk.RtCopy
+import Runtime.CopyModel
 
 /-!
 # Checkpoint encoder fast path (generated theorem) against the independent Desc (unit E2-C)
@@ -12,7 +12,7 @@ Shape of `E2eScal.Bh.bh_e2e_marshal_spec_k`. Encoder fast path only (`len + 40 �
 lengths). Emitted by the unit's evidence tool `e2cemit.py`, then built and kernel-checked.
 -/
 
-open Fk E2e E2eScal E2eScal.Gen6Enc E2e.Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.Gen6Enc E2e.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.E2c
@@ -86,7 +86,7 @@ theorem cp_e2c_spec_k (k : Nat)
           ⋆ fun _ => True) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   refine ⟨pcpEnc g, pcp_serialize g, ?_⟩
-  have hF0 : (uintBytes 8 g.epoch.toNat).toList.length = 8 := by simp [Fv.uintBytes_size]
+  have hF0 : (uintBytes 8 g.epoch.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
   have hF1 : g.root.toList.length = 32 := by simp
   refine eventually_mono (cp_g6e_fast k hk hf ast (uintBytes 8 g.epoch.toNat).toList c1 (g.root.toList) pre d0 d1 hast hF0 hc1 hF1 hd0 hd1 p1 s ra guard hpre fp s2 l16 l24 l32 t64 t48 rslot hfp hs2 hl16 hl24 hl32 ht64 ht48 hrslot R S scratch hsc h_mem hguard hsp hcap hcap63 hmm)
     (fun st ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, _, _, _, _, _, _, _, _, _, hm⟩ =>

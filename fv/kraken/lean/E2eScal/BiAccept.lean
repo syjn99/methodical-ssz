@@ -1,6 +1,6 @@
-import Fk.Contracts
-import Fk.Frame
-import Fk.Bytes
+import Runtime.Contracts
+import Machine.Frame
+import Machine.Bytes
 import E2eScal.E1Accept
 import E2eScal.GenBiDec
 
@@ -28,7 +28,7 @@ Directive indices of `E2eScal.H3Code.BiUnmarshal` (index = line − 1 of the `.S
 epilogue 50–54. Stack as in `E1Accept.lean`.
 -/
 
-open Fk E2e E2eScal E2eScal.H3Code E2eScal.E1
+open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.H3Code E2eScal.E1
 variable [Host]
 
 namespace E2eScal.Bi

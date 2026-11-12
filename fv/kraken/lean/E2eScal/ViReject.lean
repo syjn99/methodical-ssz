@@ -13,7 +13,7 @@ Hand text: `E2e.ep_unmarshal_reject_len_main` with the code constant `EpUnmarsha
 No new contract form. The helper lemmas `E2e.epr_*` and `E2e.ep_eight_bytes` / `ep_fmt_len` are reused.
 -/
 
-open Fk E2e E2eScal.BhCode
+open Machine Runtime TestTarget E2e E2eScal.BhCode
 variable [Host]
 
 namespace E2eScal

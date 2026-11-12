@@ -1,5 +1,5 @@
-import Fk.Frame
-import Fk.Block
+import Machine.Frame
+import Machine.Block
 import E2eList.ScLemmas
 
 /-!
@@ -11,7 +11,7 @@ New here: the SyncCommittee lemmas whose statements fix 48-byte blocks and 512 e
 Proof text: `E2eList.ScLemmas` with the two constants changed.
 -/
 
-open Fk E2eList
+open Machine Runtime TestTarget E2eList
 
 namespace E2eHb
 

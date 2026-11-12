@@ -26,7 +26,7 @@ is not proved (the `GrowsliceC` contract form does not chain two calls: it bound
 of every proved path).
 -/
 
-open Fk E2e.Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e.Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2e
@@ -86,7 +86,7 @@ theorem cp_e2e_marshal_cover (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (h
       ⟨s, Host.addrOf k⟩ := by
   refine ⟨pcpEnc g, pcp_serialize g, ?_⟩
   rw [pcp_enc_toList]
-  have he8 : (uintBytes 8 g.epoch.toNat).toList.length = 8 := by simp [Fv.uintBytes_size]
+  have he8 : (uintBytes 8 g.epoch.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
   have hroot : g.root.toList.length = 32 := by simp
   generalize (uintBytes 8 g.epoch.toNat).toList = e8 at *
   generalize g.root.toList = root at *

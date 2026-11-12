@@ -73,7 +73,7 @@ theorem toBytes8_ne_zero (p : BitVec 64) (hp : p ≠ 0) : u64le (Int.toBytes 8 p
   have e := u64le_eq_zero _ h
   rw [Int.toBytes_length] at e
   apply hp
-  rw [← Fk.ofInt_ofBytes_toBytes64 p, e]
+  rw [← Machine.ofInt_ofBytes_toBytes64 p, e]
   decide
 
 /-- The receiver after the decoder, as the fragments of `cp_e2e_accept_main`'s conclusion name it:

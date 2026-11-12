@@ -1,5 +1,5 @@
 import E2eScal.KindCall
-import E2eScal.NopView
+import Codec.NopWindow
 
 /-!
 # GEN4: the callee-decoder call block over a window (padding anywhere)
@@ -15,8 +15,9 @@ set-up that establishes them is free (`StepK.lean`).
 `calldec_seg_dense`: the GEN3 lemma `calldec_seg` is the instance `q := callDec fn lok` (statement equal).
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
+open Codec
 namespace E2eScal
 
 variable [Host]

@@ -1,6 +1,6 @@
 import E2eScal.Gen6F24PdcEnc
 import E2eScal.F24PdcSpec
-import Fk.RtCopy
+import Runtime.CopyModel
 
 /-!
 # PartialDataColumnGroupID encoder fast path (generated theorem) against the independent Desc (FLAT24 / H7, text of the unit E2-C emitter)
@@ -12,7 +12,7 @@ Shape of `E2eScal.Bh.bh_e2e_marshal_spec_k`. Encoder fast path only (`len + 40 �
 lengths). Emitted by the unit's evidence tool `e2cemit.py`, then built and kernel-checked.
 -/
 
-open Fk E2e E2eScal E2eScal.Gen6Enc E2eScal.F24Code EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.Gen6Enc E2eScal.F24Code EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.E2c
@@ -89,7 +89,7 @@ theorem pdc_e2c_spec_k (k : Nat)
       ⟨s, Host.addrOf k⟩ := by
   refine ⟨ppdcEnc g, ppdc_serialize g, ?_⟩
   have hF0 : g.beaconBlockRoot.toList.length = 32 := by simp
-  have hF1 : (uintBytes 8 g.slot.toNat).toList.length = 8 := by simp [Fv.uintBytes_size]
+  have hF1 : (uintBytes 8 g.slot.toNat).toList.length = 8 := by simp [Spec.uintBytes_size]
   refine eventually_mono (pdc_g6e_fast k hk hf ast (uintBytes 8 g.slot.toNat).toList c0 (g.beaconBlockRoot.toList) pre d0 d1 hast hF1 hc0 hF0 hd0 hd1 p0 s ra guard hpre fp s1 s2 l24 l64 l72 t56 t40 rslot hfp hs1 hs2 hl24 hl64 hl72 ht56 ht40 hrslot R S scratch hsc h_mem hguard hsp hcap hcap63 hmm)
     (fun st ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, _, _, _, _, _, _, _, _, _, hm⟩ =>
       ⟨hpc, hrax, hrbx, hrcx, hrdi, hrsi, ?_⟩)

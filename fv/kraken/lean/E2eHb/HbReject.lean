@@ -1,6 +1,6 @@
-import Fk.Step
-import Fk.Labels
-import Fk.Bytes
+import Machine.Step
+import Machine.Labels
+import Machine.Bytes
 import E2e.CpReject
 import E2eHb.StmtHb
 
@@ -13,7 +13,7 @@ Proof text: `E2eList.sc_e2e_reject_size_main` (`ScReject.lean`) with the program
 changed (the directive indices are the same). The statement is the frozen `hb_reject_size_stmt`.
 -/
 
-open Fk E2eHb.Code
+open Machine Runtime TestTarget E2eHb.Code
 variable [Host]
 
 namespace E2eHb

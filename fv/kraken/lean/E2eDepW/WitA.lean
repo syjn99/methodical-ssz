@@ -1,8 +1,8 @@
 import E2eDep.Accept
 import E2eList.BumpT
 import E2eDepW.BumpNew120
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of `dep_e2e_accept_main` (Deposit decoder accept path)
@@ -23,7 +23,7 @@ For every input of 33 blocks of 32 bytes and a Deposit_Data, and every old point
 decoder returns nil.
 -/
 
-open Fk Fk.W E2e E2eList E2eDep E2eDep.Code E2eScal.H4Code E2eDepW
+open Machine Runtime TestTarget Machine.Witness E2e E2eList E2eDep E2eDep.Code E2eScal.H4Code E2eDepW
 
 namespace E2eDepW.WitA
 
@@ -124,7 +124,7 @@ theorem dep_accept_runs (proofs : List (List UInt8)) (pk wc amt sig oP oD : List
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0)
       ⟨cs0 proofs.flatten pk wc amt sig oP oD zmms flags, Host.addrOf 9⟩ := by
-  have hfl : proofs.flatten.length = 1056 := by rw [E2eSeg.flat_len 32 proofs hp, hps]
+  have hfl : proofs.flatten.length = 1056 := by rw [Codec.Segment.flat_len 32 proofs hp, hps]
   exact eventually_mono (dep_e2e_accept_main 9 hk9 hf9 165 hk165 hf165 proofs hps hp pk wc amt sig hpk hwc hamt hsig
     (cs0 proofs.flatten pk wc amt sig oP oD zmms flags)
     0 0 (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 24) (z 8) (z 64) (z 8) oP (z 8) (z 8) oD

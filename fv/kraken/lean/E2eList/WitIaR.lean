@@ -1,7 +1,7 @@
 import E2eList.IaRejectCall
-import Fk.RtErr
-import Fk.BumpMore
-import Fk.WHost
+import Runtime.ErrorModel
+import Runtime.BumpAllocatorVariants
+import Machine.WitnessHost
 
 /-!
 # Witnesses of `ia_e2e_reject_misaligned_nz` (alignment reject) and `ia_e2e_reject_toobig_nz` (overflow reject)
@@ -21,7 +21,7 @@ Alignment reject: len = 229 (len − 228 = 1, misaligned; the box of 1 is the st
 elements; the box is on the heap).
 -/
 
-open Fk Fk.W E2eList E2eList.Code
+open Machine Runtime TestTarget Machine.Witness E2eList E2eList.Code
 
 namespace E2eList.WitIaR
 

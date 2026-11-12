@@ -1,6 +1,6 @@
-import Fk.Contracts
+import Runtime.Contracts
 import E2eAd.Spec
-import Fv1.SpecList
+import Spec.TestListU64
 
 /-!
 # Definitions that the IndexedAttestation statements use (IndexedAttestation)
@@ -23,7 +23,7 @@ The element backing array of `[]uint64` is one contiguous block equal to the inp
 state it as one byte list of length `8 · n` with `n ≤ 2048`, so no per-element predicate (and not `lvElems`) is used.
 -/
 
-open Fk EthLib.Serialization.Ssz
+open Machine Runtime TestTarget EthLib.Serialization.Ssz
 
 namespace E2eList
 
@@ -46,6 +46,6 @@ def iaOff : List UInt8 := [0xe4, 0, 0, 0]
 
 /-- `offset 228 ‖ data ‖ signature ‖ indices`. -/
 def piaEnc (g : PIa) : Array UInt8 :=
-  iaOff.toArray ++ E2e.padEnc g.data ++ g.signature.toArray ++ Fv1.u64Bytes g.idx
+  iaOff.toArray ++ E2e.padEnc g.data ++ g.signature.toArray ++ Spec.u64Bytes g.idx
 
 end E2eList

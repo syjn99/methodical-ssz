@@ -1,7 +1,7 @@
 import E2eScal.Gen5F24PdcDec
-import Fk.RtCopy
-import Fk.BumpMore
-import Fk.WHost
+import Runtime.CopyModel
+import Runtime.BumpAllocatorVariants
+import Machine.WitnessHost
 
 /-!
 # Witness of the generated `pdc_g5dec_accept` (`v1alpha1.PartialDataColumnGroupID` decoder accept path; FLAT24 / H7)
@@ -19,7 +19,7 @@ caller's word at rsp + 24. For every input and every old pointer word every prem
 nil. The receiver is a Go value of `v1alpha1.PartialDataColumnGroupID` (zero `state`, zero-length slices, zero integers).
 -/
 
-open Fk Fk.W E2e E2eScal E2eScal.F24Code
+open Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.F24Code
 
 namespace E2eScal.WitPdcGA
 

@@ -1,4 +1,4 @@
-import E2eScal.KindN
+import Codec.Kind.FixedBytesDecode
 import E2eScal.DdSegNop
 
 /-!
@@ -23,8 +23,9 @@ offset-0 form was observed, so only this position has a parameter.
 Contracts: `MakesliceC`, `MemmoveC` as in `bytesdec_seg`. Not done: offset-0 form with a pad (no site).
 -/
 
-open Fk
+open Machine Runtime TestTarget
 
+open Codec
 namespace E2eScal
 
 /-- `bytesDecHead n` with a `nop` after `mov $n,%ecx` (10 directives). -/

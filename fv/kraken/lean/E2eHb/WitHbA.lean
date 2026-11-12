@@ -1,7 +1,7 @@
 import E2eHb.HbAccept
 import E2eList.BumpT
-import Fk.RtCopy
-import Fk.WHost
+import Runtime.CopyModel
+import Machine.WitnessHost
 
 /-!
 # Witness of `hb_e2e_accept_main` (HistoricalBatch decoder accept path)
@@ -21,7 +21,7 @@ For every input of 2 × 8192 blocks of 32 bytes and every old pointer word every
 returns nil.
 -/
 
-open Fk Fk.W E2e E2eList E2eHb E2eHb.Code
+open Machine Runtime TestTarget Machine.Witness E2e E2eList E2eHb E2eHb.Code
 
 namespace E2eHb.WitHbA
 

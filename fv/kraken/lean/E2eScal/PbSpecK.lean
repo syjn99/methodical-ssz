@@ -14,7 +14,7 @@ Hand-written: the shape of `DdSpecK.lean` with the PowBlock statement
   size reject site. The decoder has no other error return.
 -/
 
-open Fk E2e E2eAd.Code E2eScal.H6Code E2eScal EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e E2eAd.Code E2eScal.H6Code E2eScal Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.H6
@@ -81,7 +81,7 @@ theorem pb_e2e_accept_spec_k (k : Nat) (hk : PbUnmarshal.IsInfixAt Host.prog k) 
   refine ⟨g, rfl, hb, ?_⟩
   have hn : s.regs.rcx = 96 := by
     apply UInt64.toNat_inj.mp; rw [hlen, hb, ppb_enc_size]; rfl
-  exact pb_e2e_accept_g4gen k hk hf _ _ _ (by simp) (by simp) (by simp [Fv.uintBytes_size]) s ra guard
+  exact pb_e2e_accept_g4gen k hk hf _ _ _ (by simp) (by simp) (by simp [Spec.uintBytes_size]) s ra guard
     fp s1 s2 spl l18 rslot lo aP1 aL1 aC1 aP2 aL2 aC2 aP3 aL3 aC3
     hfp h1 h2 hspl hl18 hrs haP1 haL1 haC1 haP2 haL2 haC2 haP3 haL3 haC3
     R S hlo Heap avail (Pm g hb) hguard hn hav hms hmm

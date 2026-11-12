@@ -17,7 +17,7 @@ receiver offsets changed; the middle is a second copy of the head steps; there i
 Statement: the frozen `E2eHb.hb_accept_stmt`.
 -/
 
-open Fk E2eList E2eHb.Code
+open Machine Runtime TestTarget E2eList E2eHb.Code
 variable [Host]
 
 namespace E2eHb

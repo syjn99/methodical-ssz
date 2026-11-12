@@ -1,7 +1,7 @@
-import Fk.LuRejectCall
+import TestTarget.ListU64DecodeRejectCall
 import E2e.CpMarshal
 import E2eScal.BhCode
-import E2eScal.StackGuard
+import Codec.StackGuard
 
 /-!
 # Real Prysm `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo`, fast path, head segments (hold-out)
@@ -19,7 +19,7 @@ Hand proof. The generator has no encode mode; no template lemma is used.
 
 Directive indices of `E2eScal.BhCode.BhMarshal` on the fast path (`len(dst) + 112 ≤ cap(dst)`, all three
 roots of length 32). This module: 2–4 stack guard (`lea -0x20(%rsp),%r12; cmp 0x10(%r14),%r12; jbe`, closed
-with `E2eScal.lea_cmp_be_false`), 5–9 prologue (`sub $0x98`, rbx and rax spills to rsp + 16 and rsp + 8),
+with `Codec.lea_cmp_be_false`), 5–9 prologue (`sub $0x98`, rbx and rax spills to rsp + 16 and rsp + 8),
 10 `lea 0x8(%rcx),%rdx`, 11 Slot load, 15–18 the first 32-byte stack temp (two `movups %xmm15`, Slot word at
 rsp − 56), 19–20 capacity, 33–35 store the Slot bytes (`bh_enc_a1`, 0–35); 36–44 the ProposerIndex temp at
 rsp − 88, 45–46 capacity, 59–61 store (`bh_enc_a2`, 36–61). Each segment names only the memory it touches;
@@ -27,9 +27,10 @@ the rest is the frame `R`. X15 is not assumed to be zero: the bytes 8–31 of ea
 the conclusions. `rsp` below is the entry rsp.
 -/
 
-open Fk E2eScal.BhCode
+open Machine Runtime TestTarget E2eScal.BhCode
 variable [Host]
 
+open Codec
 namespace E2eScal.Bh
 
 set_option maxHeartbeats 4000000 in

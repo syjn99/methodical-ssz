@@ -1,6 +1,6 @@
-import Fk.Contracts
-import Fk.Step
-import Fk.Labels
+import Runtime.Contracts
+import Machine.Step
+import Machine.Labels
 import E2e.Data
 import E2eList.Code
 import E2eList.ScLemmas
@@ -20,7 +20,7 @@ taken; 64–67 the len and cap words of header i; 68–69 writeBarrier = 0; 70�
 `rax = i + 1`.
 -/
 
-open Fk E2eList.Code
+open Machine Runtime TestTarget E2eList.Code
 variable [Host]
 
 namespace E2eList

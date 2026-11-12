@@ -12,7 +12,8 @@ No Desc-checker record exists for this type (`gen/desc/results/main.result.json`
 -/
 
 namespace E2e
-open EthLib.Serialization.Ssz Fv1
+open EthLib.Serialization.Ssz
+open Spec hiding readUint_lt
 
 theorem prysmBpfDesc_kinds : prysmBpfDesc = .container ["max_execution_payment"]
       [.uint 8] := rfl
@@ -31,7 +32,7 @@ def pbpfEnc (g : PBpf) : Array UInt8 :=
   uintBytes 8 g.maxExecutionPayment.toNat
 
 theorem pbpf_enc_size (g : PBpf) : (pbpfEnc g).size = 8 := by
-  simp [pbpfEnc, Fv.uintBytes_size]
+  simp [pbpfEnc, Spec.uintBytes_size]
 
 theorem pbpf_toValue_fits (g : PBpf) : Value.fits prysmBpfDesc g.toValue = true := by
   have := g.maxExecutionPayment.toNat_lt
@@ -61,7 +62,7 @@ theorem pbpf_serialize (g : PBpf) : serialize prysmBpfDesc g.toValue = .ok (pbpf
   have := a0.toNat_lt
   simp only [prysmBpfDesc, PBpf.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Fv.uintBytes_size, bytesPerOffset, pbpfEnc,
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, pbpfEnc,
     Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- **Spec roundtrip.** -/

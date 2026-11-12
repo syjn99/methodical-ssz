@@ -1,6 +1,6 @@
-import Fk.Step
-import Fk.Labels
-import Fk.Bytes
+import Machine.Step
+import Machine.Labels
+import Machine.Bytes
 import E2eScal.H6Code
 import E2e.Data
 import E2e.CpReject
@@ -15,7 +15,7 @@ symbol as the Checkpoint decoder's, asserted by `h6link.py`), epilogue 167–169
 (premise). The Slot callee error path (`fmt.errorf` wrap) is not covered here.
 -/
 
-open Fk E2eScal.H6Code
+open Machine TestTarget E2eScal.H6Code
 variable [Host]
 
 namespace E2eScal.H6
