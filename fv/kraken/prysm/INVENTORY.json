@@ -25,6 +25,7 @@
   "that a theorem's statement says what its part name means (accept, reject, spec): the mapping table is hand-written; the statements are checked by review and by the kinds, not by this script",
   "a theorem with two target code constants of which neither calls the other (it fails: no single subject)",
   "that <decls.tsv> was made on the built tree of the same commit (its header has the Lean version, no commit id)",
+  "that an encoder row's premise text and NOT-proved text say what the mapped reject / growslice theorems assume (hand-written per row, unit E2-C2; checked by review against the theorem statements, not by this script)",
   "methods outside `github.com/OffchainLabs/prysm/v7/` (e.g. `github.com/holiman/uint256`) and SSZ methods with names outside the listed kinds"
  ],
  "totals": {
@@ -5242,6 +5243,7 @@
    "witness": true,
    "not_proved": [
     "growslice branches (5 capacity tests)",
+    "length rejects with cap < len + 112 (with len + 16 \u2264 cap < len + 112 a ParentRoot reject is reached without a growslice call) [3 byte fields; proved only: bh_e2e_marshal_reject1_main (len + 112 \u2264 cap), bh_e2e_marshal_reject2_main (len + 112 \u2264 cap, MemmoveC), bh_e2e_marshal_reject3_main (len + 112 \u2264 cap, MemmoveC)]",
     "morestack"
    ]
   },
@@ -8450,6 +8452,8 @@
    "note": "premise: len + SizeSSZ <= cap, exact field lengths",
    "witness": true,
    "not_proved": [
+    "growslice branches outside the GrowsliceC / MemmoveC contracts and the heap budget, and the run after the second growslice call when the heap left by the first call is below the second call's budget (T-7 residual, FINDINGS T-7, differential only) [2 capacity tests; proved only: cp_e2e_marshal_grow_main (cap < len + 8, len + 40 \u2264 nextSliceCap(len + 8, cap), GrowsliceC + MemmoveC contracts + heap budget), cp_e2e_marshal_grow2_main (len + 8 \u2264 cap < len + 40, GrowsliceC + MemmoveC contracts + heap budget), cp_e2e_marshal_grow_any_main (cap < len + 8, GrowsliceC + MemmoveC contracts + heap budget: returns or reaches the second growslice call)]",
+    "length rejects with cap < len + 8 outside the GrowsliceC contract or the heap budget [1 byte fields; proved only: cp_e2e_marshal_reject_main (len + 8 \u2264 cap), cp_e2e_marshal_reject_cover (every cap, GrowsliceC contract + heap budget 4\u00b7len + 8736 \u2264 avail \u2264 maxAlloc)]",
     "morestack"
    ]
   },
@@ -10284,6 +10288,7 @@
    "not_proved": [
     "growslice branches (2 capacity tests)",
     "length rejects (2 byte fields)",
+    "the `runtime.moveSliceNoCapNoScan` branch of the epilogue frame test (shown not taken under the fast-path premises: dst separate from the frame; the branch itself is not proved)",
     "morestack"
    ]
   },
@@ -14146,6 +14151,7 @@
    "not_proved": [
     "growslice branches (3 capacity tests)",
     "length rejects (3 byte fields)",
+    "the `runtime.moveSliceNoCapNoScan` branch of the epilogue frame test (shown not taken under the fast-path premises: dst separate from the frame; the branch itself is not proved)",
     "morestack"
    ]
   },
@@ -17535,6 +17541,7 @@
    "not_proved": [
     "growslice branches (2 capacity tests)",
     "length rejects (2 byte fields)",
+    "the `runtime.moveSliceNoCapNoScan` branch of the epilogue frame test (shown not taken under the fast-path premises: dst separate from the frame; the branch itself is not proved)",
     "morestack"
    ]
   },

@@ -37,8 +37,12 @@ Rule. A function's state comes ONLY from the mapping table and the declarations 
     corollary and a witness, all present under these checks: fast and spec keyed to the function by the code
     constant (subject rule), the spec corollary and every witness use the row's fast-path theorem; "fast path
     partial" when some are. The fast path has the premise `len(dst) + SizeSSZ <= cap(dst)` and exact byte-field
-    lengths. The paths outside it (growslice branches, length rejects, morestack) are listed per type as NOT proved
-    unless the row names theorems for them (Checkpoint, BeaconBlockHeader: as recorded). No encoder is complete.
+    lengths. The paths outside it are listed per type as NOT proved by a per-type rule (unit E2-C2, review e2c-r1
+    M1): the path classes come from `functions.json` (growslice calls = capacity tests, `moveSliceNoCapNoScan` =
+    epilogue frame test, morestack) and the IR (byte fields = length rejects); a class with no mapped theorem is
+    listed in full; a class with mapped theorems needs a premise text per theorem and a row text of what stays NOT
+    proved, and the cell prints both (else FAIL); a theorem mapped to a class the function lacks FAILS. No encoder
+    is complete.
 Types without a row are "not started". Exit 0 = table written, 1 = a check failed (nothing written), 2 = usage.
 
 Limits (what the checks do NOT detect; also written into INVENTORY.md):
@@ -127,28 +131,45 @@ DECODERS = {
     (PRIM, "ValidatorIndex"): dec("E2eScal.Gen.vi_unmarshal_accept_main_g", "E2eScal.vi_unmarshal_reject_len_main",
                                   None, None, None, None, "E2eScal.WitVi.vi_accept_runs", "E2eScal.WitViR.vir_runs"),
 }
-def enc(x, p, hand=(), rejects=(), grow=(), other_witness=()):
+def enc(x, p, hand=(), rejects=(), grow=(), other_witness=(), left=None):
     """Unit E2-C row: the generated fast-path theorem `<p>_g6e_fast`, its spec corollary against the independent
-    Desc and its witness (two instances); hand theorems of the three hand-proved types kept as recorded."""
+    Desc and its witness (two instances); hand theorems of the three hand-proved types kept as recorded.
+    Unit E2-C2 (review e2c-r1 M1): `rejects` and `grow` are pairs (theorem, premise text: the premise under which
+    that theorem holds, beyond the fast path's frame premises); `left` maps the path class ("length rejects",
+    "growslice branches") to the text of what stays NOT proved in that class although theorems are mapped."""
     return dict(fast=[f"E2eScal.Gen6Enc.{p}_g6e_fast"], spec=[f"E2eScal.E2c.{p}_e2c_spec_k"],
                 witness=[f"E2eScal.WitE2c{x}.{p}_e2c_wit_empty", f"E2eScal.WitE2c{x}.{p}_e2c_wit_prefix"],
-                hand=list(hand), rejects=list(rejects), grow=list(grow), other_witness=list(other_witness))
+                hand=list(hand), rejects=[n for n, _ in rejects], grow=[n for n, _ in grow],
+                other_witness=list(other_witness),
+                premise={n: t for n, t in list(rejects) + list(grow)}, left=dict(left or {}))
 
 
 ENC_PARTS = ["fast", "spec", "witness", "hand", "rejects", "grow", "other_witness"]
+CP_GROW = "GrowsliceC + MemmoveC contracts + heap budget"
 ENCODERS = {  # MarshalSSZTo: fast path (theorem + spec corollary + witness), hand theorems, rejects, growslice paths
-    (V1A, "Checkpoint"): enc("Cp", "cp", hand=["E2e.cp_e2e_marshal_main", "E2e.cp_e2e_marshal_spec_k"],
-                             rejects=["E2e.cp_e2e_marshal_reject_main", "E2e.cp_e2e_marshal_reject_cover"],
-                             grow=["E2e.cp_e2e_marshal_grow_main", "E2e.cp_e2e_marshal_grow2_main",
-                                   "E2e.cp_e2e_marshal_grow_any_main"],
-                             other_witness=["E2e.WitCpM.cpm_runs_empty", "E2e.WitCpMR.cpmr_runs",
-                                            "E2e.WitCpG.cpg_runs"]),
-    (V1A, "BeaconBlockHeader"): enc("Bh", "bh", hand=["E2eScal.Bh.bh_e2e_marshal_main",
-                                                      "E2eScal.Bh.bh_e2e_marshal_spec_k"],
-                                    rejects=["E2eScal.Bh.bh_e2e_marshal_reject1_main",
-                                             "E2eScal.Bh.bh_e2e_marshal_reject2_main",
-                                             "E2eScal.Bh.bh_e2e_marshal_reject3_main"],
-                                    other_witness=["E2eScal.WitBhM.bhm_runs_empty"]),
+    (V1A, "Checkpoint"): enc(
+        "Cp", "cp", hand=["E2e.cp_e2e_marshal_main", "E2e.cp_e2e_marshal_spec_k"],
+        rejects=[("E2e.cp_e2e_marshal_reject_main", "len + 8 ≤ cap"),
+                 ("E2e.cp_e2e_marshal_reject_cover",
+                  "every cap, GrowsliceC contract + heap budget 4·len + 8736 ≤ avail ≤ maxAlloc")],
+        grow=[("E2e.cp_e2e_marshal_grow_main", f"cap < len + 8, len + 40 ≤ nextSliceCap(len + 8, cap), {CP_GROW}"),
+              ("E2e.cp_e2e_marshal_grow2_main", f"len + 8 ≤ cap < len + 40, {CP_GROW}"),
+              ("E2e.cp_e2e_marshal_grow_any_main",
+               f"cap < len + 8, {CP_GROW}: returns or reaches the second growslice call")],
+        other_witness=["E2e.WitCpM.cpm_runs_empty", "E2e.WitCpMR.cpmr_runs", "E2e.WitCpG.cpg_runs"],
+        left={"length rejects": "with cap < len + 8 outside the GrowsliceC contract or the heap budget",
+              "growslice branches": "outside the GrowsliceC / MemmoveC contracts and the heap budget, and the run after "
+                                    "the second growslice call when the heap left by the first call is below the "
+                                    "second call's budget (T-7 residual, FINDINGS T-7, differential "
+                                    "only)"}),
+    (V1A, "BeaconBlockHeader"): enc(
+        "Bh", "bh", hand=["E2eScal.Bh.bh_e2e_marshal_main", "E2eScal.Bh.bh_e2e_marshal_spec_k"],
+        rejects=[("E2eScal.Bh.bh_e2e_marshal_reject1_main", "len + 112 ≤ cap"),
+                 ("E2eScal.Bh.bh_e2e_marshal_reject2_main", "len + 112 ≤ cap, MemmoveC"),
+                 ("E2eScal.Bh.bh_e2e_marshal_reject3_main", "len + 112 ≤ cap, MemmoveC")],
+        other_witness=["E2eScal.WitBhM.bhm_runs_empty"],
+        left={"length rejects": "with cap < len + 112 (with len + 16 ≤ cap < len + 112 a ParentRoot reject is "
+                                "reached without a growslice call)"}),
     (V1A, "Eth1Data"): enc("E1", "e1", hand=["E2eScal.E1.e1_e2e_marshal_main", "E2eScal.E1.e1_e2e_marshal_spec_k"],
                            other_witness=["E2eScal.WitE1M.e1m_runs_empty"]),
     (V1A, "BlobIdentifier"): enc("Bi", "bi"),
@@ -188,6 +209,8 @@ CANNOT_DETECT = [
     "hand-written; the statements are checked by review and by the kinds, not by this script",
     "a theorem with two target code constants of which neither calls the other (it fails: no single subject)",
     "that <decls.tsv> was made on the built tree of the same commit (its header has the Lean version, no commit id)",
+    "that an encoder row's premise text and NOT-proved text say what the mapped reject / growslice theorems assume "
+    "(hand-written per row, unit E2-C2; checked by review against the theorem statements, not by this script)",
     "methods outside `github.com/OffchainLabs/prysm/v7/` (e.g. `github.com/holiman/uint256`) and SSZ methods with "
     "names outside the listed kinds",
 ]
@@ -402,14 +425,41 @@ def run(decls_p, md_p, json_p):
         rec = ir_rec.get((pkg, typ)) or {}
         flds = rec.get("fields") or []
         nbytes = sum(1 for f in flds if (f["v"].get("k") == "vector"))
+        ct = (fn_by_key.get(symkey(pkg, typ, "MarshalSSZTo")) or {}).get("call_targets", {})
+        ngrow = ct.get("runtime.growslice", 0)
+        # per-type rule (unit E2-C2, review e2c-r1 M1): every path class of the function is listed; a class with no
+        # mapped theorem is NOT proved in full; a class with mapped theorems lists each theorem with its premise
+        # text and the row's text of what stays NOT proved (both required); a class the function lacks cannot be
+        # mapped.
         not_proved = []
-        if not r["grow"]:
-            not_proved.append(f"growslice branches ({len(flds)} capacity tests)")
-        if nbytes and not r["rejects"]:
-            not_proved.append(f"length rejects ({nbytes} byte fields)")
-        not_proved.append("morestack")
+        for cls, names_, count in (("growslice branches", r["grow"], f"{ngrow} capacity tests"),
+                                   ("length rejects", r["rejects"], f"{nbytes} byte fields")):
+            n_cls = ngrow if cls == "growslice branches" else nbytes
+            if names_ and not n_cls:
+                fails.append(f"encoder row {typ}: {cls} theorems mapped but the function has no {cls}")
+            if not n_cls:
+                continue
+            if not names_:
+                if cls in r["left"]:
+                    fails.append(f"encoder row {typ}: NOT-proved text for {cls} but no theorem mapped")
+                not_proved.append(f"{cls} ({count})")
+                continue
+            miss = [n for n in names_ if not r["premise"].get(n, "").strip()]
+            if miss:
+                fails.append(f"encoder row {typ}: {cls} theorem(s) {miss} without premise text")
+            if not r["left"].get(cls, "").strip():
+                fails.append(f"encoder row {typ}: {cls} theorems mapped but no text of what stays NOT proved")
+            proved = ", ".join(f"{n.rsplit('.', 1)[-1]} ({r['premise'].get(n, '')})" for n in names_)
+            not_proved.append(f"{cls} {r['left'].get(cls, '')} [{count}; proved only: {proved}]")
+        if "runtime.moveSliceNoCapNoScan" in ct:
+            not_proved.append("the `runtime.moveSliceNoCapNoScan` branch of the epilogue frame test (shown not taken "
+                              "under the fast-path premises: dst separate from the frame; the branch itself is not "
+                              "proved)")
+        if "runtime.morestack_noctxt.abi0" in ct:
+            not_proved.append("morestack")
         rows[(pkg, typ, "MarshalSSZTo")] = dict(state=state, missing=missing,
-                                                theorems={k: v for k, v in r.items() if v}, note=ENC_PREMISE,
+                                                theorems={k: v for k, v in r.items()
+                                                          if v and k in ENC_PARTS}, note=ENC_PREMISE,
                                                 witness=bool(r["witness"]), not_proved=not_proved)
     for (pkg, typ), r in SIZERS.items():
         for n in r["main"]:
@@ -552,9 +602,10 @@ def run(decls_p, md_p, json_p):
            f"- Encoders `MarshalSSZTo`: fast-path complete {bk['MarshalSSZTo']['fast_path_complete']} of "
            f"{bk['MarshalSSZTo']['target']} ({ENC_PREMISE.replace('<=', '≤')}); no encoder is complete. "
            f"Fast path complete = fast-path theorem + spec corollary + witness. Fast path partial: "
-           f"{bk['MarshalSSZTo']['fast_path_partial']}. Not proved per type: the growslice branches, the length "
-           "rejects and the morestack path (Checkpoint and BeaconBlockHeader: the reject / growslice theorems "
-           "listed in their rows). `MarshalSSZ`: none of "
+           f"{bk['MarshalSSZTo']['fast_path_partial']}. Not proved per type (column NOT proved below, per-type "
+           "rule): the growslice branches, the length rejects, the morestack path and, for the frame-test types, "
+           "the `moveSliceNoCapNoScan` branch; Checkpoint and BeaconBlockHeader: the reject / growslice theorems "
+           "of their rows with the premise of each and what stays not proved. `MarshalSSZ`: none of "
            f"{bk['MarshalSSZ']['target']} ({bk['MarshalSSZ']['functions_json']} dumped).",
            f"- `SizeSSZ`: a theorem for {bk['SizeSSZ']['partial']} of {bk['SizeSSZ']['target']}."]
     htr = [k for k in bk if "HashTreeRoot" in k]

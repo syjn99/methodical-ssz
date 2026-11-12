@@ -31,7 +31,7 @@ Declarations header: `# inventory_decls v1 lean=4.36.0-nightly-2026-09-21 githas
 ## Summary
 
 - Decoders: complete 17 of the 211 `UnmarshalSSZ` methods of the target (211 dumped); partial 4; none 190.
-- Encoders `MarshalSSZTo`: fast-path complete 16 of 211 (premise: len + SizeSSZ ≤ cap, exact field lengths); no encoder is complete. Fast path complete = fast-path theorem + spec corollary + witness. Fast path partial: 0. Not proved per type: the growslice branches, the length rejects and the morestack path (Checkpoint and BeaconBlockHeader: the reject / growslice theorems listed in their rows). `MarshalSSZ`: none of 211 (6 dumped).
+- Encoders `MarshalSSZTo`: fast-path complete 16 of 211 (premise: len + SizeSSZ ≤ cap, exact field lengths); no encoder is complete. Fast path complete = fast-path theorem + spec corollary + witness. Fast path partial: 0. Not proved per type (column NOT proved below, per-type rule): the growslice branches, the length rejects, the morestack path and, for the frame-test types, the `moveSliceNoCapNoScan` branch; Checkpoint and BeaconBlockHeader: the reject / growslice theorems of their rows with the premise of each and what stays not proved. `MarshalSSZ`: none of 211 (6 dumped).
 - `SizeSSZ`: a theorem for 1 of 211.
 - Hash tree root: no theorem. `HashTreeRoot` 211 in the target, 0 dumped; `HashTreeRootWith` 211 in the target, 0 dumped; `ProgressiveHashTreeRoot` 10 in the target, 0 dumped; `ProgressiveHashTreeRootWith` 10 in the target, 0 dumped.
 - Other: `MaxSizeSSZ` 6 in the target, none proved.
@@ -62,6 +62,7 @@ It does NOT include:
 - that a theorem's statement says what its part name means (accept, reject, spec): the mapping table is hand-written; the statements are checked by review and by the kinds, not by this script
 - a theorem with two target code constants of which neither calls the other (it fails: no single subject)
 - that <decls.tsv> was made on the built tree of the same commit (its header has the Lean version, no commit id)
+- that an encoder row's premise text and NOT-proved text say what the mapped reject / growslice theorems assume (hand-written per row, unit E2-C2; checked by review against the theorem statements, not by this script)
 - methods outside `github.com/OffchainLabs/prysm/v7/` (e.g. `github.com/holiman/uint256`) and SSZ methods with names outside the listed kinds
 
 ## Functions with at least one theorem
@@ -111,18 +112,18 @@ It does NOT include:
 
 | type | state | fast-path theorem | spec corollary | witness | NOT proved |
 | --- | --- | --- | --- | --- | --- |
-| BeaconBlockHeader | fast path complete | E2eScal.Gen6Enc.bh_g6e_fast | E2eScal.E2c.bh_e2c_spec_k | yes | growslice branches (5 capacity tests); morestack |
+| BeaconBlockHeader | fast path complete | E2eScal.Gen6Enc.bh_g6e_fast | E2eScal.E2c.bh_e2c_spec_k | yes | growslice branches (5 capacity tests); length rejects with cap < len + 112 (with len + 16 ≤ cap < len + 112 a ParentRoot reject is reached without a growslice call) [3 byte fields; proved only: bh_e2e_marshal_reject1_main (len + 112 ≤ cap), bh_e2e_marshal_reject2_main (len + 112 ≤ cap, MemmoveC), bh_e2e_marshal_reject3_main (len + 112 ≤ cap, MemmoveC)]; morestack |
 | BlobIdentifier | fast path complete | E2eScal.Gen6Enc.bi_g6e_fast | E2eScal.E2c.bi_e2c_spec_k | yes | growslice branches (2 capacity tests); length rejects (1 byte fields); morestack |
-| Checkpoint | fast path complete | E2eScal.Gen6Enc.cp_g6e_fast | E2eScal.E2c.cp_e2c_spec_k | yes | morestack |
+| Checkpoint | fast path complete | E2eScal.Gen6Enc.cp_g6e_fast | E2eScal.E2c.cp_e2c_spec_k | yes | growslice branches outside the GrowsliceC / MemmoveC contracts and the heap budget, and the run after the second growslice call when the heap left by the first call is below the second call's budget (T-7 residual, FINDINGS T-7, differential only) [2 capacity tests; proved only: cp_e2e_marshal_grow_main (cap < len + 8, len + 40 ≤ nextSliceCap(len + 8, cap), GrowsliceC + MemmoveC contracts + heap budget), cp_e2e_marshal_grow2_main (len + 8 ≤ cap < len + 40, GrowsliceC + MemmoveC contracts + heap budget), cp_e2e_marshal_grow_any_main (cap < len + 8, GrowsliceC + MemmoveC contracts + heap budget: returns or reaches the second growslice call)]; length rejects with cap < len + 8 outside the GrowsliceC contract or the heap budget [1 byte fields; proved only: cp_e2e_marshal_reject_main (len + 8 ≤ cap), cp_e2e_marshal_reject_cover (every cap, GrowsliceC contract + heap budget 4·len + 8736 ≤ avail ≤ maxAlloc)]; morestack |
 | DepositMessage | fast path complete | E2eScal.Gen6Enc.dm_g6e_fast | E2eScal.E2c.dm_e2c_spec_k | yes | growslice branches (3 capacity tests); length rejects (2 byte fields); morestack |
 | Deposit_Data | fast path complete | E2eScal.Gen6Enc.dd_g6e_fast | E2eScal.E2c.dd_e2c_spec_k | yes | growslice branches (4 capacity tests); length rejects (3 byte fields); morestack |
 | Eth1Data | fast path complete | E2eScal.Gen6Enc.e1_g6e_fast | E2eScal.E2c.e1_e2c_spec_k | yes | growslice branches (3 capacity tests); length rejects (2 byte fields); morestack |
-| HistoricalSummary | fast path complete | E2eScal.Gen6Enc.hs_g6e_fast | E2eScal.E2c.hs_e2c_spec_k | yes | growslice branches (2 capacity tests); length rejects (2 byte fields); morestack |
+| HistoricalSummary | fast path complete | E2eScal.Gen6Enc.hs_g6e_fast | E2eScal.E2c.hs_e2c_spec_k | yes | growslice branches (2 capacity tests); length rejects (2 byte fields); the `runtime.moveSliceNoCapNoScan` branch of the epilogue frame test (shown not taken under the fast-path premises: dst separate from the frame; the branch itself is not proved); morestack |
 | PendingConsolidation | fast path complete | E2eScal.Gen6Enc.pc_g6e_fast | E2eScal.E2c.pc_e2c_spec_k | yes | growslice branches (2 capacity tests); morestack |
 | PendingDeposit | fast path complete | E2eScal.Gen6Enc.pd_g6e_fast | E2eScal.E2c.pd_e2c_spec_k | yes | growslice branches (5 capacity tests); length rejects (3 byte fields); morestack |
 | PendingPartialWithdrawal | fast path complete | E2eScal.Gen6Enc.pw_g6e_fast | E2eScal.E2c.pw_e2c_spec_k | yes | growslice branches (3 capacity tests); morestack |
-| PowBlock | fast path complete | E2eScal.Gen6Enc.pb_g6e_fast | E2eScal.E2c.pb_e2c_spec_k | yes | growslice branches (3 capacity tests); length rejects (3 byte fields); morestack |
-| SigningData | fast path complete | E2eScal.Gen6Enc.sd_g6e_fast | E2eScal.E2c.sd_e2c_spec_k | yes | growslice branches (2 capacity tests); length rejects (2 byte fields); morestack |
+| PowBlock | fast path complete | E2eScal.Gen6Enc.pb_g6e_fast | E2eScal.E2c.pb_e2c_spec_k | yes | growslice branches (3 capacity tests); length rejects (3 byte fields); the `runtime.moveSliceNoCapNoScan` branch of the epilogue frame test (shown not taken under the fast-path premises: dst separate from the frame; the branch itself is not proved); morestack |
+| SigningData | fast path complete | E2eScal.Gen6Enc.sd_g6e_fast | E2eScal.E2c.sd_e2c_spec_k | yes | growslice branches (2 capacity tests); length rejects (2 byte fields); the `runtime.moveSliceNoCapNoScan` branch of the epilogue frame test (shown not taken under the fast-path premises: dst separate from the frame; the branch itself is not proved); morestack |
 | SyncAggregatorSelectionData | fast path complete | E2eScal.Gen6Enc.sa_g6e_fast | E2eScal.E2c.sa_e2c_spec_k | yes | growslice branches (2 capacity tests); morestack |
 | SyncCommitteeMessage | fast path complete | E2eScal.Gen6Enc.sc_g6e_fast | E2eScal.E2c.sc_e2c_spec_k | yes | growslice branches (4 capacity tests); length rejects (2 byte fields); morestack |
 | ValidatorBalance | fast path complete | E2eScal.Gen6Enc.vb_g6e_fast | E2eScal.E2c.vb_e2c_spec_k | yes | growslice branches (2 capacity tests); morestack |
