@@ -353,3 +353,13 @@
 - 로그 216–231: 한 전략의 개발 단계다. 막힌 곳: `movups` 주소 꼴, `at_app`의 기준 주소를 명시해야 함, `Int.toBytes_length`가 기본 `simp` 집합에 없음, `StaticBox C`를 `SB`로 되돌리기.
 - 측정(로그 233): 두 정리에서 `maxRecDepth`를 빼면 첫 `kat`이 멈춘다. 1024는 통과한다(로그 231, 232).
 - 로그 234: `lake build E2eList.IaRejectCall E2eList.IaSpecRNz` exit 0. 하트비트 설정은 없다.
+
+### U3 증인: `WitIaR.ia_misaligned_runs`(P4), `WitIaR.ia_toobig_runs`(P5) (시도 1)
+
+- 새 파일: `E2eList/WitIaR.lean`. `Fk/WitLuMa.lean`의 글이다. 그 파일을 만든 생성기는 저장소에 없다. 배치는 scratch 스크립트로 계산했다(커밋하지 않음).
+- `e0`는 itab 레이블 주소 0x1012b다(0이 아님). `he0`는 `label_itab`으로, `he0nz`는 `decide`로 보였다.
+- 계약은 `Fk.RtErr`의 `rt_convT64`, `rt_errorf_dw`로 닫았다. 틀 `R`은 `fun _ => True`다(`sep_true`, 선례와 같음).
+- P4: len = 229(상자는 정적 표의 1). P5: len = 228 + 8 · 2049(상자는 힙).
+- 막힌 곳(로그 236–243): 기호 꼴 차이(`66560#64`), `zmms`가 든 `decide` 목표, `bumpHeap`을 만든 뒤 한 가설에 모든 원자가 없음(선례처럼 명시 목록 `H2`를 `ecancel`로 증명), `sep_emp` 재작성이 `sep_true`의 틀 변수를 `emp`로 묶음.
+- 측정(로그 245): `maxRecDepth`가 없으면 호스트 사실에서 멈춘다. 1024는 통과한다. 하트비트 설정은 없다.
+- 로그 246: `lake build E2eList.WitIaR` exit 0, 26.0 s, 표본 RSS 5.56 GiB.
