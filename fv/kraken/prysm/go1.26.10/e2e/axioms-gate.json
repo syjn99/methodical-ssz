@@ -5,17 +5,17 @@
   "Quot.sound",
   "propext"
  ],
- "declarations": 9758,
+ "declarations": 9771,
  "kinds": {
   "theorem": 8134,
-  "def": 1527,
+  "def": 1540,
   "inductive": 28,
   "ctor": 41,
   "recursor": 28
  },
  "axiom_sets": {
   "propext": 446,
-  "-": 2280,
+  "-": 2293,
   "Classical.choice,Quot.sound,propext": 3450,
   "Quot.sound,propext": 3582
  },
@@ -25,7 +25,7 @@
  "nonstandard": {},
  "sorryAx": [],
  "verdict": "PASS",
- "modules": 340,
+ "modules": 341,
  "precheck": {
   "argv": "lake build --no-build <modules>",
   "rc": 0,

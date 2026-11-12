@@ -3632,5 +3632,64 @@
   ],
   "claims_and_limits": "decoders complete 17 of the 211 UnmarshalSSZ of the target in the defined sense; the 16-type flat development population 16/16; 24 of the 40 flat fixed-size types of the target (committed IR rule) not started; encoders fast path only (3 of 211); no hash-tree-root theorem; list / vector work of another machine is not in this tree; pilot not adopted; T-7 deferred; no 'all codecs', 'generator complete', general, transfer or speed-up claim",
   "state": "not yet reviewed"
+ },
+ "enc2-prep": {
+  "unit": "ENC2 unit E2-P (fresh Opus session; preparation, no proof)",
+  "state": "not reviewed",
+  "base": "93dae89ff84d7c89a909d665c886d658b7be84c8",
+  "elf_sha256": "c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e (checked on the local artifact before extraction; no new ELF)",
+  "link": {
+   "dir": "prysm/go1.26.10/e2e/enc2/link",
+   "script": "gen/e2e/enc2link.py (text of h6link.py; function set = MarshalSSZTo of 13 types; data items = address-only ssz.ErrBytesLength per type that loads it)",
+   "types": [
+    "BlobIdentifier",
+    "DepositMessage",
+    "Deposit_Data",
+    "PendingPartialWithdrawal",
+    "SyncCommitteeMessage",
+    "PendingConsolidation",
+    "PendingDeposit",
+    "PowBlock",
+    "HistoricalSummary",
+    "SigningData",
+    "SyncAggregatorSelectionData",
+    "ValidatorBalance",
+    "VoluntaryExit"
+   ],
+   "already_linked": {
+    "Checkpoint": "e2e/link",
+    "BeaconBlockHeader": "e2e/bh/link",
+    "Eth1Data": "e2e/e1/link"
+   },
+   "callees_extracted": [],
+   "callee_note": "no MarshalSSZTo of a primitive is called (e2e/enc2/callgraph.json: 'an encoder calls a MarshalSSZTo' = false); runtime callees growslice, memmove, morestack_noctxt.abi0, moveSliceNoCapNoScan are external labels checked by link/check.py (b)",
+   "check": "link/check.py (a)-(f) PASS all: 1359 instructions, 1350 byte-identical, 9 padding; 112 labels; 8 data files",
+   "bundle": "c08ac5371b0ba595e9d67f1830d5c31fcbec6ac296f6b8068a2f2ae5b8f9d882"
+  },
+  "code_module": "lean/E2eScal/Enc2Code.lean: 13 code constants (BiMarshal .. VeMarshal), definitions only; lake build E2eScal.Enc2Code exit 0; lake build --no-build E2e E2eAd E2eScal exit 0 afterwards",
+  "survey": {
+   "file": "prysm/go1.26.10/e2e/scal/enc2-survey.md",
+   "script": "gen/e2e/enc2survey.py (reads committed .S files and prysm/ir/ir-mainnet.json only; two runs byte-identical)",
+   "types": 16,
+   "fields": {
+    "uint64_store": 22,
+    "byte_append": 24
+   },
+   "distinct_forms": {
+    "uint64_store": 9,
+    "byte_append": 5,
+    "overlay": "inline"
+   },
+   "form_definition": "mnemonic sequence of the field block (nop removed); register and displacement differences are not counted",
+   "moveSliceNoCapNoScan": "present in PowBlock, HistoricalSummary, SigningData: in-line in the epilogue behind 'cmp %rsi,%rdx; jb' (dst ptr - rsp vs frame end - rsp); no contract in the tree"
+  },
+  "axioms_gate": "axioms_gate.py run (one gated job): PASS, declarations 9771 (= 9758 + 13 defs), theorems 8134, modules 341, nonstandard 0, sorryAx 0; committed prysm/go1.26.10/e2e/axioms-gate.json rewritten",
+  "decl_drift": "decl_drift.py int7-r1 reviewer dump (9758 rows) vs this dump (9771): ADDED 13 (E2eScal.Enc2Code.*Marshal, kind def, axioms none), 0 CHANGED, 0 REMOVED (scal/enc2p-drift.txt); planted control (one type hash of E2eScal.G5C.vb_e2e_reject_complete changed in a copy): exit 1, 1 CHANGED",
+  "not_changed": "no existing .lean, gen/scal/*, statement, contract, generator, ELF, toolchain or lakefile change; AttestationData encoder not touched",
+  "not_run": [
+   "proofs (out of scope of E2-P)",
+   "regen_check.sh (no generator or generated file changed)",
+   "selftest of link/check.py (link/ not changed)"
+  ]
  }
 }

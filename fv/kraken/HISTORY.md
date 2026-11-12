@@ -412,3 +412,7 @@ g5-r1은 G5-L과 G5-G를 함께 리뷰했다. 기술 검사는 통과, 판정은
 공리 게이트 PASS, 선언 9758이다. 커밋된 기록과 바이트가 같아 다시 쓰지 않았다.
 g5c-r1 덤프 대비 선언 비교는 0 / 0 / 0이다. `regen_check.sh` 55/55 SAME이다. 목록 스크립트 출력은 커밋본과 바이트가 같다.
 `.lean`, 생성기, 검사기, 목록 스크립트, 고정 버전은 바꾸지 않았다. 원격에 쓰지 않았다. 기록: REPORT 11절, `scal/RESULT.json`의 `integration_int7`.
+
+2026-11-12 ENC2 준비(단위 E2-P, 새 Opus 세션, 리뷰 전): 증명은 없다.
+평면 13형 `MarshalSSZTo`의 링크 표 `e2e/enc2/link`를 더했다. 검사는 PASS, 묶음은 `c08ac537…`이다.
+코드 상수 13개는 `E2eScal/Enc2Code.lean`, 16형 조사는 `scal/enc2-survey.md`다. 기록: `scal/RESULT.json`의 `enc2-prep`.
