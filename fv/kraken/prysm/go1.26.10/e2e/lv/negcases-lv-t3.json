@@ -161,5 +161,29 @@
   ],
   "module": "E2eList/IaSpecA.lean",
   "theorem": "ia_e2e_accept_spec"
+ },
+ {
+  "code_def": "IaUnmarshal",
+  "norm": "prysm/go1.26.10/e2e/lv/link-t3/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
+  "id": "lv-ia-nz-mis-he0nz-trivial",
+  "kind": "stmt",
+  "stmt_def": "ia_reject_misaligned_nz_stmt",
+  "old": "(he0nz : e0 \u2260 0)",
+  "new": "(he0nz : e0 = e0)",
+  "stmt_module": "E2eList/StmtIaNz.lean",
+  "module": "E2eList/IaRejectCall.lean",
+  "theorem": "ia_e2e_reject_misaligned_nz"
+ },
+ {
+  "code_def": "IaUnmarshal",
+  "norm": "prysm/go1.26.10/e2e/lv/link-t3/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
+  "id": "lv-ia-stmt-offset229",
+  "kind": "stmt",
+  "stmt_def": "ia_reject_offset_stmt",
+  "old": "(hoff : off \u2260 iaOff)",
+  "new": "(hoff : off \u2260 [0xe5, 0, 0, 0])",
+  "stmt_module": "E2eList/StmtIa.lean",
+  "module": "E2eList/IaReject.lean",
+  "theorem": "ia_e2e_reject_offset_main"
  }
 ]

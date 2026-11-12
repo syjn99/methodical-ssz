@@ -398,3 +398,10 @@
 - 재실행: 로그 265 `lake build E2eList` exit 0(767 jobs, 이미 최신). 로그 266 `--no-build` 네 라이브러리 exit 0(1082 jobs).
 - 로그 267: 게이트 PASS, 선언 6451, 정리 5378, 손 목록 487, 비표준 0, `sorryAx` 0. 결과: `axioms-gate-lv-t3-r4.json`.
 - 로그 268: drift 0(5007 = 5007). `decl-drift-lv-t3.txt`에 덧붙였다.
+
+### 리뷰 r5 권장 수정 (T2-S1, T2-S2)
+
+- T2-S1: `lv-ia-nz-mis-no-he0nz`는 binder 수 때문에 `intro`에서 실패한다. 그래서 `e0 ≠ 0`이 필요함을 시험하지 않는다. 그 경우는 두고 새 경우를 더했다.
+- 새 경우 `lv-ia-nz-mis-he0nz-trivial`: `(he0nz : e0 ≠ 0)`를 참이지만 쓸모없는 같은 꼴의 전제 `(he0nz : e0 = e0)`로 바꾼다. `ia_e2e_reject_misaligned_nz`에서 `je`를 반박하는 `exact he0nz …`(변이 파일 460행)에서 실패한다.
+- T2-S2: 새 경우 `lv-ia-stmt-offset229`: `ia_reject_offset_stmt`의 `(hoff : off ≠ iaOff)`를 `≠ [0xe5, 0, 0, 0]`로 바꾼다. `ia_e2e_reject_offset_main` 안의 `decide`(변이 파일 820행)에서 실패한다.
+- 로그 270: 옛 결과를 지우고 한 번 돌렸다. 16개 모두 통과(대조군 5, inside 11). `prechecks` 항목은 하나다. 결과: `negative-lv-t3.json`.
