@@ -1,0 +1,2490 @@
+{
+ "cases": [
+  {
+   "id": "f24-dpr-speck-control",
+   "kind": "control",
+   "module": "E2eScal/F24DprSpecK.lean",
+   "theorem": "dpr_e2e_accept_spec_k",
+   "range": [
+    28,
+    110
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": -1.0,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "f24-dpr-accept-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5F24DprDec.lean",
+   "theorem": "dpr_g5dec_accept",
+   "range": [
+    1419,
+    1515
+   ],
+   "error_lines": [
+    1507,
+    1515
+   ],
+   "first_error": "<work>/f24-dpr-accept-rax/mut.lean:1507:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 5.2,
+   "diff": "--- orig\n+++ mut\n@@ -37,7 +37,7 @@\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 192) (hav : 176 \u2264 avail)\n     (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S),\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (p1 p2 p3 : BitVec 64) (x0 x1 : List UInt8), x0.length = 24 \u2227 x1.length = S \u2227 \n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-dpr-reject-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5F24DprDec.lean",
+   "theorem": "dpr_g5dec_reject",
+   "range": [
+    1519,
+    1548
+   ],
+   "error_lines": [
+    1542,
+    1548
+   ],
+   "first_error": "<work>/f24-dpr-reject-rax/mut.lean:1542:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 5.2,
+   "diff": "--- orig\n+++ mut\n@@ -8,7 +8,7 @@\n       \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrSize\" + 8).toBitVec) \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 192),\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e0 \u2227 st.data.regs.rbx = e1\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e1 \u2227 st.data.regs.rbx = e1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14\n         \u2227 (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n           \u22c6 Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-dpr-speck-hlen",
+   "kind": "stmt",
+   "module": "E2eScal/F24DprSpecK.lean",
+   "theorem": "dpr_e2e_accept_spec_k",
+   "range": [
+    28,
+    110
+   ],
+   "error_lines": [
+    109
+   ],
+   "first_error": "<work>/f24-dpr-speck-hlen/mut.lean:109:61: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "--- orig\n+++ mut\n@@ -35,7 +35,7 @@\n       \u22c6 Eq (aN4.At (s.regs.rax.toBitVec + 88))\n       \u22c6 Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec)\n       \u22c6 R)\n-    (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size) (hav : 176 \u2264 avail)\n+    (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size + 1) (hav : 176 \u2264 avail)\n     (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S),\n     \u2203 g : PDpr, g.toValue = v \u2227 bsA = pdprEnc g \u2227\n     Eventually (step1 Host.exe)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-dpr-wita-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitDprGA.lean",
+   "theorem": "dpr_accept_runs",
+   "range": [
+    86,
+    107
+   ],
+   "error_lines": [
+    107
+   ],
+   "first_error": "<work>/f24-dpr-wita-rax/mut.lean:107:22: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 38.3,
+   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem dpr_accept_runs (f0 f1 f2 f3 f4 oP1 oP2 oP3 : List UInt8) (hf0 : f0.length = 48) (hf1 : f1.length = 32) (hf2 : f2.length = 8) (hf3 : f3.length = 96) (hf4 : f4.length = 8) (h1 : oP1.length = 8) (h2 : oP2.length = 8) (h3 : oP3.length = 8)\n     (zmms : RegZmms) (flags : StatusFlags) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0)\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0)\n       \u27e8cs0 f0 f1 f2 f3 f4 oP1 oP2 oP3 zmms flags, Host.addrOf 9\u27e9 :=\n   eventually_mono (E2eScal.Gen.dpr_g5dec_accept 9 hk9 hf9 \n     f0 f1 f2 f3 f4 hf0 hf1 hf2 hf3 hf4 (cs0 f0 f1 f2 f3 f4 oP1 oP2 oP3 zmms flags)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bdr-speck-control",
+   "kind": "control",
+   "module": "E2eScal/F24BdrSpecK.lean",
+   "theorem": "bdr_e2e_accept_spec_k",
+   "range": [
+    28,
+    106
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.1,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "f24-bdr-accept-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5F24BdrDec.lean",
+   "theorem": "bdr_g5dec_accept",
+   "range": [
+    1212,
+    1302
+   ],
+   "error_lines": [
+    1294,
+    1302
+   ],
+   "first_error": "<work>/f24-bdr-accept-rax/mut.lean:1294:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 4.7,
+   "diff": "--- orig\n+++ mut\n@@ -35,7 +35,7 @@\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 184) (hav : 176 \u2264 avail)\n     (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S),\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (p1 p2 p3 : BitVec 64) (x0 x1 : List UInt8), x0.length = 24 \u2227 x1.length = S \u2227 \n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bdr-reject-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5F24BdrDec.lean",
+   "theorem": "bdr_g5dec_reject",
+   "range": [
+    1306,
+    1335
+   ],
+   "error_lines": [
+    1329,
+    1335
+   ],
+   "first_error": "<work>/f24-bdr-reject-rax/mut.lean:1329:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 4.8,
+   "diff": "--- orig\n+++ mut\n@@ -8,7 +8,7 @@\n       \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrSize\" + 8).toBitVec) \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 184),\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e0 \u2227 st.data.regs.rbx = e1\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e1 \u2227 st.data.regs.rbx = e1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14\n         \u2227 (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n           \u22c6 Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bdr-speck-hlen",
+   "kind": "stmt",
+   "module": "E2eScal/F24BdrSpecK.lean",
+   "theorem": "bdr_e2e_accept_spec_k",
+   "range": [
+    28,
+    106
+   ],
+   "error_lines": [
+    105
+   ],
+   "first_error": "<work>/f24-bdr-speck-hlen/mut.lean:105:61: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig\n+++ mut\n@@ -33,7 +33,7 @@\n       \u22c6 Eq (aC3.At (s.regs.rax.toBitVec + 80))\n       \u22c6 Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec)\n       \u22c6 R)\n-    (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size) (hav : 176 \u2264 avail)\n+    (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size + 1) (hav : 176 \u2264 avail)\n     (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S),\n     \u2203 g : PBdr, g.toValue = v \u2227 bsA = pbdrEnc g \u2227\n     Eventually (step1 Host.exe)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bdr-wita-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitBdrGA.lean",
+   "theorem": "bdr_accept_runs",
+   "range": [
+    86,
+    107
+   ],
+   "error_lines": [
+    107
+   ],
+   "first_error": "<work>/f24-bdr-wita-rax/mut.lean:107:22: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 26.0,
+   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem bdr_accept_runs (f0 f1 f2 f3 oP1 oP2 oP3 : List UInt8) (hf0 : f0.length = 48) (hf1 : f1.length = 32) (hf2 : f2.length = 8) (hf3 : f3.length = 96) (h1 : oP1.length = 8) (h2 : oP2.length = 8) (h3 : oP3.length = 8)\n     (zmms : RegZmms) (flags : StatusFlags) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0)\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0)\n       \u27e8cs0 f0 f1 f2 f3 oP1 oP2 oP3 zmms flags, Host.addrOf 9\u27e9 :=\n   eventually_mono (E2eScal.Gen.bdr_g5dec_accept 9 hk9 hf9 \n     f0 f1 f2 f3 hf0 hf1 hf2 hf3 (cs0 f0 f1 f2 f3 oP1 oP2 oP3 zmms flags)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bbr-speck-control",
+   "kind": "control",
+   "module": "E2eScal/F24BbrSpecK.lean",
+   "theorem": "bbr_e2e_accept_spec_k",
+   "range": [
+    28,
+    80
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "f24-bbr-accept-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5F24BbrDec.lean",
+   "theorem": "bbr_g5dec_accept",
+   "range": [
+    721,
+    783
+   ],
+   "error_lines": [
+    775,
+    783
+   ],
+   "first_error": "<work>/f24-bbr-accept-rax/mut.lean:775:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.2,
+   "diff": "--- orig\n+++ mut\n@@ -23,7 +23,7 @@\n       \u22c6 R)\n     (hguard : guard.toNat + 72 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 24),\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (x0 x1 : List UInt8), x0.length = 8 \u2227 x1.length = 8 \u2227 \n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bbr-reject-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5F24BbrDec.lean",
+   "theorem": "bbr_g5dec_reject",
+   "range": [
+    787,
+    816
+   ],
+   "error_lines": [
+    810,
+    816
+   ],
+   "first_error": "<work>/f24-bbr-reject-rax/mut.lean:810:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.2,
+   "diff": "--- orig\n+++ mut\n@@ -8,7 +8,7 @@\n       \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrSize\" + 8).toBitVec) \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 24),\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e0 \u2227 st.data.regs.rbx = e1\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e1 \u2227 st.data.regs.rbx = e1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14\n         \u2227 (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n           \u22c6 Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bbr-speck-hlen",
+   "kind": "stmt",
+   "module": "E2eScal/F24BbrSpecK.lean",
+   "theorem": "bbr_e2e_accept_spec_k",
+   "range": [
+    28,
+    80
+   ],
+   "error_lines": [
+    79
+   ],
+   "first_error": "<work>/f24-bbr-speck-hlen/mut.lean:79:61: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "--- orig\n+++ mut\n@@ -22,7 +22,7 @@\n       \u22c6 Eq (aN1.At (s.regs.rax.toBitVec + 16))\n       \u22c6 Eq (aN2.At (s.regs.rax.toBitVec + 24))\n       \u22c6 R)\n-    (hguard : guard.toNat + 72 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size),\n+    (hguard : guard.toNat + 72 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size + 1),\n     \u2203 g : PBbr, g.toValue = v \u2227 bsA = pbbrEnc g \u2227\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bbr-wita-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitBbrGA.lean",
+   "theorem": "bbr_accept_runs",
+   "range": [
+    60,
+    79
+   ],
+   "error_lines": [
+    79
+   ],
+   "first_error": "<work>/f24-bbr-wita-rax/mut.lean:79:22: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 8.7,
+   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem bbr_accept_runs (in0 in1 in2 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8) (hin2 : in2.length = 8)\n     (zmms : RegZmms) (flags : StatusFlags) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0)\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0)\n       \u27e8cs0 in0 in1 in2 zmms flags, Host.addrOf 1\u27e9 :=\n   eventually_mono (E2eScal.Gen.bbr_g5dec_accept 1 hk1 hf1 76 hk76 hf76\n     in0 in1 in2 hin0 hin1 hin2 (cs0 in0 in1 in2 zmms flags)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bsr-speck-control",
+   "kind": "control",
+   "module": "E2eScal/F24BsrSpecK.lean",
+   "theorem": "bsr_e2e_accept_spec_k",
+   "range": [
+    28,
+    76
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "f24-bsr-accept-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5F24BsrDec.lean",
+   "theorem": "bsr_g5dec_accept",
+   "range": [
+    566,
+    622
+   ],
+   "error_lines": [
+    614,
+    622
+   ],
+   "first_error": "<work>/f24-bsr-accept-rax/mut.lean:614:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.0,
+   "diff": "--- orig\n+++ mut\n@@ -21,7 +21,7 @@\n       \u22c6 R)\n     (hguard : guard.toNat + 72 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 16),\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (x0 x1 : List UInt8), x0.length = 8 \u2227 x1.length = 8 \u2227 \n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bsr-reject-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5F24BsrDec.lean",
+   "theorem": "bsr_g5dec_reject",
+   "range": [
+    626,
+    655
+   ],
+   "error_lines": [
+    649,
+    655
+   ],
+   "first_error": "<work>/f24-bsr-reject-rax/mut.lean:649:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.1,
+   "diff": "--- orig\n+++ mut\n@@ -8,7 +8,7 @@\n       \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrSize\" + 8).toBitVec) \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 16),\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e0 \u2227 st.data.regs.rbx = e1\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e1 \u2227 st.data.regs.rbx = e1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14\n         \u2227 (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n           \u22c6 Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bsr-speck-hlen",
+   "kind": "stmt",
+   "module": "E2eScal/F24BsrSpecK.lean",
+   "theorem": "bsr_e2e_accept_spec_k",
+   "range": [
+    28,
+    76
+   ],
+   "error_lines": [
+    75
+   ],
+   "first_error": "<work>/f24-bsr-speck-hlen/mut.lean:75:61: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "--- orig\n+++ mut\n@@ -20,7 +20,7 @@\n       \u22c6 Eq (aN0.At (s.regs.rax.toBitVec + 8))\n       \u22c6 Eq (aN1.At (s.regs.rax.toBitVec + 16))\n       \u22c6 R)\n-    (hguard : guard.toNat + 72 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size),\n+    (hguard : guard.toNat + 72 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size + 1),\n     \u2203 g : PBsr, g.toValue = v \u2227 bsA = pbsrEnc g \u2227\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bsr-wita-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitBsrGA.lean",
+   "theorem": "bsr_accept_runs",
+   "range": [
+    60,
+    79
+   ],
+   "error_lines": [
+    79
+   ],
+   "first_error": "<work>/f24-bsr-wita-rax/mut.lean:79:22: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 7.8,
+   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem bsr_accept_runs (in0 in1 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8)\n     (zmms : RegZmms) (flags : StatusFlags) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0)\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0)\n       \u27e8cs0 in0 in1 zmms flags, Host.addrOf 1\u27e9 :=\n   eventually_mono (E2eScal.Gen.bsr_g5dec_accept 1 hk1 hf1 74 hk74 hf74\n     in0 in1 hin0 hin1 (cs0 in0 in1 zmms flags)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-epr-speck-control",
+   "kind": "control",
+   "module": "E2eScal/F24EprSpecK.lean",
+   "theorem": "epr_e2e_accept_spec_k",
+   "range": [
+    28,
+    76
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "f24-epr-accept-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5F24EprDec.lean",
+   "theorem": "epr_g5dec_accept",
+   "range": [
+    566,
+    622
+   ],
+   "error_lines": [
+    614,
+    622
+   ],
+   "first_error": "<work>/f24-epr-accept-rax/mut.lean:614:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.0,
+   "diff": "--- orig\n+++ mut\n@@ -21,7 +21,7 @@\n       \u22c6 R)\n     (hguard : guard.toNat + 72 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 16),\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (x0 x1 : List UInt8), x0.length = 8 \u2227 x1.length = 8 \u2227 \n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-epr-reject-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5F24EprDec.lean",
+   "theorem": "epr_g5dec_reject",
+   "range": [
+    626,
+    655
+   ],
+   "error_lines": [
+    649,
+    655
+   ],
+   "first_error": "<work>/f24-epr-reject-rax/mut.lean:649:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.1,
+   "diff": "--- orig\n+++ mut\n@@ -8,7 +8,7 @@\n       \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrSize\" + 8).toBitVec) \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 16),\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e0 \u2227 st.data.regs.rbx = e1\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e1 \u2227 st.data.regs.rbx = e1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14\n         \u2227 (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n           \u22c6 Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-epr-speck-hlen",
+   "kind": "stmt",
+   "module": "E2eScal/F24EprSpecK.lean",
+   "theorem": "epr_e2e_accept_spec_k",
+   "range": [
+    28,
+    76
+   ],
+   "error_lines": [
+    75
+   ],
+   "first_error": "<work>/f24-epr-speck-hlen/mut.lean:75:61: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "--- orig\n+++ mut\n@@ -20,7 +20,7 @@\n       \u22c6 Eq (aN0.At (s.regs.rax.toBitVec + 8))\n       \u22c6 Eq (aN1.At (s.regs.rax.toBitVec + 16))\n       \u22c6 R)\n-    (hguard : guard.toNat + 72 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size),\n+    (hguard : guard.toNat + 72 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size + 1),\n     \u2203 g : PEpr, g.toValue = v \u2227 bsA = peprEnc g \u2227\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-epr-wita-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitEprGA.lean",
+   "theorem": "epr_accept_runs",
+   "range": [
+    60,
+    79
+   ],
+   "error_lines": [
+    79
+   ],
+   "first_error": "<work>/f24-epr-wita-rax/mut.lean:79:22: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 8.0,
+   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem epr_accept_runs (in0 in1 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8)\n     (zmms : RegZmms) (flags : StatusFlags) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0)\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0)\n       \u27e8cs0 in0 in1 zmms flags, Host.addrOf 1\u27e9 :=\n   eventually_mono (E2eScal.Gen.epr_g5dec_accept 1 hk1 hf1 74 hk74 hf74\n     in0 in1 hin0 hin1 (cs0 in0 in1 zmms flags)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-pdc-speck-control",
+   "kind": "control",
+   "module": "E2eScal/F24PdcSpecK.lean",
+   "theorem": "pdc_e2e_accept_spec_k",
+   "range": [
+    28,
+    93
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.9,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "f24-pdc-accept-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5F24PdcDec.lean",
+   "theorem": "pdc_g5dec_accept",
+   "range": [
+    768,
+    841
+   ],
+   "error_lines": [
+    833,
+    841
+   ],
+   "first_error": "<work>/f24-pdc-accept-rax/mut.lean:833:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 3.2,
+   "diff": "--- orig\n+++ mut\n@@ -31,7 +31,7 @@\n     (hguard : guard.toNat + 80 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 40) (hav : 32 \u2264 avail)\n     (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (p1 : BitVec 64) (x0 x1 : List UInt8), x0.length = 24 \u2227 x1.length = S + 8 \u2227 \n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-pdc-reject-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5F24PdcDec.lean",
+   "theorem": "pdc_g5dec_reject",
+   "range": [
+    845,
+    874
+   ],
+   "error_lines": [
+    868,
+    874
+   ],
+   "first_error": "<work>/f24-pdc-reject-rax/mut.lean:868:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 3.4,
+   "diff": "--- orig\n+++ mut\n@@ -8,7 +8,7 @@\n       \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrSize\" + 8).toBitVec) \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 40),\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e0 \u2227 st.data.regs.rbx = e1\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e1 \u2227 st.data.regs.rbx = e1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14\n         \u2227 (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n           \u22c6 Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-pdc-speck-hlen",
+   "kind": "stmt",
+   "module": "E2eScal/F24PdcSpecK.lean",
+   "theorem": "pdc_e2e_accept_spec_k",
+   "range": [
+    28,
+    93
+   ],
+   "error_lines": [
+    92
+   ],
+   "first_error": "<work>/f24-pdc-speck-hlen/mut.lean:92:61: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "--- orig\n+++ mut\n@@ -29,7 +29,7 @@\n       \u22c6 Eq (aN1.At (s.regs.rax.toBitVec + 32))\n       \u22c6 Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec)\n       \u22c6 R)\n-    (hguard : guard.toNat + 80 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size) (hav : 32 \u2264 avail)\n+    (hguard : guard.toNat + 80 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size + 1) (hav : 32 \u2264 avail)\n     (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),\n     \u2203 g : PPdc, g.toValue = v \u2227 bsA = ppdcEnc g \u2227\n     Eventually (step1 Host.exe)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-pdc-wita-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitPdcGA.lean",
+   "theorem": "pdc_accept_runs",
+   "range": [
+    90,
+    111
+   ],
+   "error_lines": [
+    111
+   ],
+   "first_error": "<work>/f24-pdc-wita-rax/mut.lean:111:22: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 21.2,
+   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem pdc_accept_runs (f0 f1 oP1 : List UInt8) (hf0 : f0.length = 32) (hf1 : f1.length = 8) (h1 : oP1.length = 8)\n     (zmms : RegZmms) (flags : StatusFlags) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0)\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0)\n       \u27e8cs0 f0 f1 oP1 zmms flags, Host.addrOf 9\u27e9 :=\n   eventually_mono (E2eScal.Gen.pdc_g5dec_accept 9 hk9 hf9 115 hk115 hf115\n     f0 f1 hf0 hf1 (cs0 f0 f1 oP1 zmms flags)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-vid-speck-control",
+   "kind": "control",
+   "module": "E2eScal/F24VidSpecK.lean",
+   "theorem": "vid_e2e_accept_spec_k",
+   "range": [
+    28,
+    98
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.6,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "f24-vid-accept-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5F24VidDec.lean",
+   "theorem": "vid_g5dec_accept",
+   "range": [
+    996,
+    1076
+   ],
+   "error_lines": [
+    1068,
+    1076
+   ],
+   "first_error": "<work>/f24-vid-accept-rax/mut.lean:1068:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 4.1,
+   "diff": "--- orig\n+++ mut\n@@ -34,7 +34,7 @@\n     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 64) (hav : 48 \u2264 avail)\n     (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (p1 : BitVec 64) (x0 x1 : List UInt8), x0.length = 24 \u2227 x1.length = S + 8 \u2227 \n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-vid-reject-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen5F24VidDec.lean",
+   "theorem": "vid_g5dec_reject",
+   "range": [
+    1080,
+    1109
+   ],
+   "error_lines": [
+    1103,
+    1109
+   ],
+   "first_error": "<work>/f24-vid-reject-rax/mut.lean:1103:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 6.2,
+   "diff": "--- orig\n+++ mut\n@@ -8,7 +8,7 @@\n       \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrSize\" + 8).toBitVec) \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 64),\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e0 \u2227 st.data.regs.rbx = e1\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = e1 \u2227 st.data.regs.rbx = e1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14\n         \u2227 (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n           \u22c6 Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-vid-speck-hlen",
+   "kind": "stmt",
+   "module": "E2eScal/F24VidSpecK.lean",
+   "theorem": "vid_e2e_accept_spec_k",
+   "range": [
+    28,
+    98
+   ],
+   "error_lines": [
+    97
+   ],
+   "first_error": "<work>/f24-vid-speck-hlen/mut.lean:97:61: error: Tactic `rfl` failed: The left-hand side",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig\n+++ mut\n@@ -32,7 +32,7 @@\n       \u22c6 Eq (aN2.At (s.regs.rax.toBitVec + 40))\n       \u22c6 Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec)\n       \u22c6 R)\n-    (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size) (hav : 48 \u2264 avail)\n+    (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size + 1) (hav : 48 \u2264 avail)\n     (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),\n     \u2203 g : PVid, g.toValue = v \u2227 bsA = pvidEnc g \u2227\n     Eventually (step1 Host.exe)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-vid-wita-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitVidGA.lean",
+   "theorem": "vid_accept_runs",
+   "range": [
+    94,
+    115
+   ],
+   "error_lines": [
+    115
+   ],
+   "first_error": "<work>/f24-vid-wita-rax/mut.lean:115:22: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 26.4,
+   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem vid_accept_runs (f0 f1 f2 oP1 : List UInt8) (hf0 : f0.length = 8) (hf1 : f1.length = 48) (hf2 : f2.length = 8) (h1 : oP1.length = 8)\n     (zmms : RegZmms) (flags : StatusFlags) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0)\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0)\n       \u27e8cs0 f0 f1 f2 oP1 zmms flags, Host.addrOf 9\u27e9 :=\n   eventually_mono (E2eScal.Gen.vid_g5dec_accept 9 hk9 hf9 150 hk150 hf150 213 hk213 hf213\n     f0 f1 f2 hf0 hf1 hf2 (cs0 f0 f1 f2 oP1 zmms flags)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bbr-espec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecBbr.lean",
+   "theorem": "bbr_e2c_spec_k",
+   "range": [
+    31,
+    90
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.3,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "f24-bbr-fast-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6F24BbrEnc.lean",
+   "theorem": "bbr_g6e_fast",
+   "range": [
+    574,
+    638
+   ],
+   "error_lines": [
+    635,
+    638
+   ],
+   "first_error": "<work>/f24-bbr-fast-rax/mut.lean:635:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 3.2,
+   "diff": "--- orig\n+++ mut\n@@ -23,7 +23,7 @@\n     (hcap : s.regs.rcx.toNat + 24 \u2264 s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63),\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec\n-        \u2227 st.data.regs.rax = s.regs.rbx\n+        \u2227 st.data.regs.rax = s.regs.rcx\n         \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 24\n         \u2227 st.data.regs.rcx = s.regs.rdi\n         \u2227 st.data.regs.rdi = 0\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bbr-espec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecBbr.lean",
+   "theorem": "bbr_e2c_spec_k",
+   "range": [
+    31,
+    90
+   ],
+   "error_lines": [
+    82
+   ],
+   "first_error": "<work>/f24-bbr-espec-hcap/mut.lean:82:275: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.1,
+   "diff": "--- orig\n+++ mut\n@@ -35,7 +35,7 @@\n       \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat)\n     (hsp : 128 \u2264 s.regs.rsp.toNat)\n-    (hcap : s.regs.rcx.toNat + 24 \u2264 s.regs.rdi.toNat)\n+    (hcap : s.regs.rcx.toNat + 16 \u2264 s.regs.rdi.toNat)\n     (hcap63 : s.regs.rdi.toNat < 2 ^ 63) :\n     \u2203 bs, serialize prysmBbrDesc g.toValue = .ok bs \u2227\n     Eventually (step1 Host.exe)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bbr-ewit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cBbr.lean",
+   "theorem": "bbr_e2c_wit_empty",
+   "range": [
+    47,
+    66
+   ],
+   "error_lines": [
+    66
+   ],
+   "first_error": "<work>/f24-bbr-ewit-rax/mut.lean:66:22: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 6.1,
+   "diff": "--- orig\n+++ mut\n@@ -2,7 +2,7 @@\n     (h_v0 : v0.length = 8) (h_v1 : v1.length = 8) (h_v2 : v2.length = 8)\n     (zmms : RegZmms) (flags : StatusFlags) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x100e0\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x8\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0)\n       \u27e8cs0 v0 v1 v2 [] [] zmms flags, Host.addrOf 0\u27e9 :=\n   eventually_mono (bbr_g6e_fast 0 hk0 hf0 (z 8) v0 v1 v2 [] (z 8) (z 8) (z 8) rfl h_v0 h_v1 h_v2 rfl rfl rfl (cs0 v0 v1 v2 [] [] zmms flags) 0 0 rfl (z 8) (z 8) (z 8) (z 16) (z 16) rfl rfl rfl rfl rfl (Eq ((z 32).At (0x10028 : BitVec 64)) \u22c6 Eq ((z 88).At (0x10048 : BitVec 64))) \n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bdr-espec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecBdr.lean",
+   "theorem": "bdr_e2c_spec_k",
+   "range": [
+    32,
+    124
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.2,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "f24-bdr-fast-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6F24BdrEnc.lean",
+   "theorem": "bdr_g6e_fast",
+   "range": [
+    940,
+    1039
+   ],
+   "error_lines": [
+    1036,
+    1039
+   ],
+   "first_error": "<work>/f24-bdr-fast-rax/mut.lean:1036:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 6.8,
+   "diff": "--- orig\n+++ mut\n@@ -40,7 +40,7 @@\n     (hcap : s.regs.rcx.toNat + 184 \u2264 s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveC S),\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec\n-        \u2227 st.data.regs.rax = s.regs.rbx\n+        \u2227 st.data.regs.rax = s.regs.rcx\n         \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 184\n         \u2227 st.data.regs.rcx = s.regs.rdi\n         \u2227 st.data.regs.rdi = 0\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bdr-espec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecBdr.lean",
+   "theorem": "bdr_e2c_spec_k",
+   "range": [
+    32,
+    124
+   ],
+   "error_lines": [
+    115
+   ],
+   "first_error": "<work>/f24-bdr-espec-hcap/mut.lean:115:379: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.1,
+   "diff": "--- orig\n+++ mut\n@@ -65,7 +65,7 @@\n       \u22c6 R)\n     (hguard : guard.toNat + 16 < s.regs.rsp.toNat)\n     (hsp : 152 \u2264 s.regs.rsp.toNat)\n-    (hcap : s.regs.rcx.toNat + 184 \u2264 s.regs.rdi.toNat)\n+    (hcap : s.regs.rcx.toNat + 176 \u2264 s.regs.rdi.toNat)\n     (hcap63 : s.regs.rdi.toNat < 2 ^ 63)\n     (hmm : MemmoveC S) :\n     \u2203 bs, serialize prysmBdrDesc g.toValue = .ok bs \u2227\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bdr-ewit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cBdr.lean",
+   "theorem": "bdr_e2c_wit_empty",
+   "range": [
+    49,
+    68
+   ],
+   "error_lines": [
+    68
+   ],
+   "first_error": "<work>/f24-bdr-ewit-rax/mut.lean:68:22: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 47.6,
+   "diff": "--- orig\n+++ mut\n@@ -2,7 +2,7 @@\n     (h_v2 : v2.length = 8) (h_b0 : b0.length = 48) (h_b1 : b1.length = 32) (h_b3 : b3.length = 96)\n     (zmms : RegZmms) (flags : StatusFlags) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x101e0\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x8\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0)\n       \u27e8cs0 v2 b0 b1 b3 [] [] zmms flags, Host.addrOf 0\u27e9 :=\n   eventually_mono (bdr_g6e_fast 0 hk0 hf0 (z 8) v2 (w 48) (w 32) (w 96) b0 b1 b3 [] (z 48) (z 32) (z 8) (z 96) rfl h_v2 rfl rfl rfl h_b0 h_b1 h_b3 rfl rfl rfl rfl (0x10080 : BitVec 64) (0x100b0 : BitVec 64) (0x100d0 : BitVec 64) (cs0 v2 b0 b1 b3 [] [] zmms flags) 0 0 rfl (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl (Eq ((z 32).At (0x10060 : BitVec 64)) \u22c6 Eq ((z 80).At (0x10138 : BitVec 64)) \u22c6 Eq ((z 8).At (0x101b0 : BitVec 64))) 0 [] rfl \n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bpf-espec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecBpf.lean",
+   "theorem": "bpf_e2c_spec_k",
+   "range": [
+    28,
+    75
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "f24-bpf-fast-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6F24BpfEnc.lean",
+   "theorem": "bpf_g6e_fast",
+   "range": [
+    325,
+    375
+   ],
+   "error_lines": [
+    372,
+    375
+   ],
+   "first_error": "<work>/f24-bpf-fast-rax/mut.lean:372:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.0,
+   "diff": "--- orig\n+++ mut\n@@ -18,7 +18,7 @@\n     (hcap : s.regs.rcx.toNat + 8 \u2264 s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63),\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec\n-        \u2227 st.data.regs.rax = s.regs.rbx\n+        \u2227 st.data.regs.rax = s.regs.rcx\n         \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 8\n         \u2227 st.data.regs.rcx = s.regs.rdi\n         \u2227 st.data.regs.rdi = 0\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bpf-espec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecBpf.lean",
+   "theorem": "bpf_e2c_spec_k",
+   "range": [
+    28,
+    75
+   ],
+   "error_lines": [
+    69
+   ],
+   "first_error": "<work>/f24-bpf-espec-hcap/mut.lean:69:187: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 0.9,
+   "diff": "--- orig\n+++ mut\n@@ -27,7 +27,7 @@\n       \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat)\n     (hsp : 88 \u2264 s.regs.rsp.toNat)\n-    (hcap : s.regs.rcx.toNat + 8 \u2264 s.regs.rdi.toNat)\n+    (hcap : s.regs.rcx.toNat + 0 \u2264 s.regs.rdi.toNat)\n     (hcap63 : s.regs.rdi.toNat < 2 ^ 63) :\n     \u2203 bs, serialize prysmBpfDesc g.toValue = .ok bs \u2227\n     Eventually (step1 Host.exe)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bpf-ewit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cBpf.lean",
+   "theorem": "bpf_e2c_wit_empty",
+   "range": [
+    47,
+    66
+   ],
+   "error_lines": [
+    66
+   ],
+   "first_error": "<work>/f24-bpf-ewit-rax/mut.lean:66:22: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 3.7,
+   "diff": "--- orig\n+++ mut\n@@ -2,7 +2,7 @@\n     (h_v0 : v0.length = 8)\n     (zmms : RegZmms) (flags : StatusFlags) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x100a8\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x8\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0)\n       \u27e8cs0 v0 [] [] zmms flags, Host.addrOf 0\u27e9 :=\n   eventually_mono (bpf_g6e_fast 0 hk0 hf0 (z 8) v0 [] (z 8) rfl h_v0 rfl (cs0 v0 [] [] zmms flags) 0 0 rfl (z 8) (z 8) (z 16) (z 16) rfl rfl rfl rfl (Eq ((z 32).At (0x10018 : BitVec 64)) \u22c6 Eq ((z 48).At (0x10038 : BitVec 64)) \u22c6 Eq ((z 8).At (0x10098 : BitVec 64))) \n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bsr-espec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecBsr.lean",
+   "theorem": "bsr_e2c_spec_k",
+   "range": [
+    28,
+    80
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "f24-bsr-fast-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6F24BsrEnc.lean",
+   "theorem": "bsr_g6e_fast",
+   "range": [
+    439,
+    495
+   ],
+   "error_lines": [
+    492,
+    495
+   ],
+   "first_error": "<work>/f24-bsr-fast-rax/mut.lean:492:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 2.4,
+   "diff": "--- orig\n+++ mut\n@@ -20,7 +20,7 @@\n     (hcap : s.regs.rcx.toNat + 16 \u2264 s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63),\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec\n-        \u2227 st.data.regs.rax = s.regs.rbx\n+        \u2227 st.data.regs.rax = s.regs.rcx\n         \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 16\n         \u2227 st.data.regs.rcx = s.regs.rdi\n         \u2227 st.data.regs.rdi = 0\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bsr-espec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecBsr.lean",
+   "theorem": "bsr_e2c_spec_k",
+   "range": [
+    28,
+    80
+   ],
+   "error_lines": [
+    73
+   ],
+   "first_error": "<work>/f24-bsr-espec-hcap/mut.lean:73:223: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig\n+++ mut\n@@ -30,7 +30,7 @@\n       \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat)\n     (hsp : 120 \u2264 s.regs.rsp.toNat)\n-    (hcap : s.regs.rcx.toNat + 16 \u2264 s.regs.rdi.toNat)\n+    (hcap : s.regs.rcx.toNat + 8 \u2264 s.regs.rdi.toNat)\n     (hcap63 : s.regs.rdi.toNat < 2 ^ 63) :\n     \u2203 bs, serialize prysmBsrDesc g.toValue = .ok bs \u2227\n     Eventually (step1 Host.exe)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-bsr-ewit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cBsr.lean",
+   "theorem": "bsr_e2c_wit_empty",
+   "range": [
+    47,
+    66
+   ],
+   "error_lines": [
+    66
+   ],
+   "first_error": "<work>/f24-bsr-ewit-rax/mut.lean:66:22: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 4.9,
+   "diff": "--- orig\n+++ mut\n@@ -2,7 +2,7 @@\n     (h_v0 : v0.length = 8) (h_v1 : v1.length = 8)\n     (zmms : RegZmms) (flags : StatusFlags) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x100d0\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x8\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0)\n       \u27e8cs0 v0 v1 [] [] zmms flags, Host.addrOf 0\u27e9 :=\n   eventually_mono (bsr_g6e_fast 0 hk0 hf0 (z 8) v0 v1 [] (z 8) (z 8) rfl h_v0 h_v1 rfl rfl (cs0 v0 v1 [] [] zmms flags) 0 0 rfl (z 8) (z 8) (z 16) (z 16) rfl rfl rfl rfl (Eq ((z 32).At (0x10020 : BitVec 64)) \u22c6 Eq ((z 80).At (0x10040 : BitVec 64)) \u22c6 Eq ((z 8).At (0x100c0 : BitVec 64))) \n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-dpr-espec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecDpr.lean",
+   "theorem": "dpr_e2c_spec_k",
+   "range": [
+    33,
+    136
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.2,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "f24-dpr-fast-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6F24DprEnc.lean",
+   "theorem": "dpr_g6e_fast",
+   "range": [
+    1152,
+    1263
+   ],
+   "error_lines": [
+    1260,
+    1263
+   ],
+   "first_error": "<work>/f24-dpr-fast-rax/mut.lean:1260:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 8.2,
+   "diff": "--- orig\n+++ mut\n@@ -45,7 +45,7 @@\n     (hcap : s.regs.rcx.toNat + 192 \u2264 s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveC S),\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec\n-        \u2227 st.data.regs.rax = s.regs.rbx\n+        \u2227 st.data.regs.rax = s.regs.rcx\n         \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 192\n         \u2227 st.data.regs.rcx = s.regs.rdi\n         \u2227 st.data.regs.rdi = 0\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-dpr-espec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecDpr.lean",
+   "theorem": "dpr_e2c_spec_k",
+   "range": [
+    33,
+    136
+   ],
+   "error_lines": [
+    126
+   ],
+   "first_error": "<work>/f24-dpr-espec-hcap/mut.lean:126:452: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.2,
+   "diff": "--- orig\n+++ mut\n@@ -74,7 +74,7 @@\n       \u22c6 R)\n     (hguard : guard.toNat + 48 < s.regs.rsp.toNat)\n     (hsp : 184 \u2264 s.regs.rsp.toNat)\n-    (hcap : s.regs.rcx.toNat + 192 \u2264 s.regs.rdi.toNat)\n+    (hcap : s.regs.rcx.toNat + 184 \u2264 s.regs.rdi.toNat)\n     (hcap63 : s.regs.rdi.toNat < 2 ^ 63)\n     (hmm : MemmoveC S) :\n     \u2203 bs, serialize prysmDprDesc g.toValue = .ok bs \u2227\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-dpr-ewit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cDpr.lean",
+   "theorem": "dpr_e2c_wit_empty",
+   "range": [
+    49,
+    68
+   ],
+   "error_lines": [
+    68
+   ],
+   "first_error": "<work>/f24-dpr-ewit-rax/mut.lean:68:22: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 67.8,
+   "diff": "--- orig\n+++ mut\n@@ -2,7 +2,7 @@\n     (h_v2 : v2.length = 8) (h_v4 : v4.length = 8) (h_b0 : b0.length = 48) (h_b1 : b1.length = 32) (h_b3 : b3.length = 96)\n     (zmms : RegZmms) (flags : StatusFlags) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x10208\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x8\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0)\n       \u27e8cs0 v2 v4 b0 b1 b3 [] [] zmms flags, Host.addrOf 0\u27e9 :=\n   eventually_mono (dpr_g6e_fast 0 hk0 hf0 (z 8) v2 v4 (w 48) (w 32) (w 96) b0 b1 b3 [] (z 48) (z 32) (z 8) (z 96) (z 8) rfl h_v2 h_v4 rfl rfl rfl h_b0 h_b1 h_b3 rfl rfl rfl rfl rfl (0x10088 : BitVec 64) (0x100b8 : BitVec 64) (0x100d8 : BitVec 64) (cs0 v2 v4 b0 b1 b3 [] [] zmms flags) 0 0 rfl (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl (Eq ((z 32).At (0x10068 : BitVec 64)) \u22c6 Eq ((z 88).At (0x10140 : BitVec 64)) \u22c6 Eq ((z 8).At (0x101d8 : BitVec 64))) 0 [] rfl \n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-epr-espec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecEpr.lean",
+   "theorem": "epr_e2c_spec_k",
+   "range": [
+    28,
+    80
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.1,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "f24-epr-fast-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6F24EprEnc.lean",
+   "theorem": "epr_g6e_fast",
+   "range": [
+    439,
+    495
+   ],
+   "error_lines": [
+    492,
+    495
+   ],
+   "first_error": "<work>/f24-epr-fast-rax/mut.lean:492:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 4.5,
+   "diff": "--- orig\n+++ mut\n@@ -20,7 +20,7 @@\n     (hcap : s.regs.rcx.toNat + 16 \u2264 s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63),\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec\n-        \u2227 st.data.regs.rax = s.regs.rbx\n+        \u2227 st.data.regs.rax = s.regs.rcx\n         \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 16\n         \u2227 st.data.regs.rcx = s.regs.rdi\n         \u2227 st.data.regs.rdi = 0\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-epr-espec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecEpr.lean",
+   "theorem": "epr_e2c_spec_k",
+   "range": [
+    28,
+    80
+   ],
+   "error_lines": [
+    73
+   ],
+   "first_error": "<work>/f24-epr-espec-hcap/mut.lean:73:223: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig\n+++ mut\n@@ -30,7 +30,7 @@\n       \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat)\n     (hsp : 120 \u2264 s.regs.rsp.toNat)\n-    (hcap : s.regs.rcx.toNat + 16 \u2264 s.regs.rdi.toNat)\n+    (hcap : s.regs.rcx.toNat + 8 \u2264 s.regs.rdi.toNat)\n     (hcap63 : s.regs.rdi.toNat < 2 ^ 63) :\n     \u2203 bs, serialize prysmEprDesc g.toValue = .ok bs \u2227\n     Eventually (step1 Host.exe)\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-epr-ewit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cEpr.lean",
+   "theorem": "epr_e2c_wit_empty",
+   "range": [
+    47,
+    66
+   ],
+   "error_lines": [
+    66
+   ],
+   "first_error": "<work>/f24-epr-ewit-rax/mut.lean:66:22: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 5.5,
+   "diff": "--- orig\n+++ mut\n@@ -2,7 +2,7 @@\n     (h_v0 : v0.length = 8) (h_v1 : v1.length = 8)\n     (zmms : RegZmms) (flags : StatusFlags) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x100d0\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x8\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0)\n       \u27e8cs0 v0 v1 [] [] zmms flags, Host.addrOf 0\u27e9 :=\n   eventually_mono (epr_g6e_fast 0 hk0 hf0 (z 8) v0 v1 [] (z 8) (z 8) rfl h_v0 h_v1 rfl rfl (cs0 v0 v1 [] [] zmms flags) 0 0 rfl (z 8) (z 8) (z 16) (z 16) rfl rfl rfl rfl (Eq ((z 32).At (0x10020 : BitVec 64)) \u22c6 Eq ((z 80).At (0x10040 : BitVec 64)) \u22c6 Eq ((z 8).At (0x100c0 : BitVec 64))) \n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-pdc-espec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecPdc.lean",
+   "theorem": "pdc_e2c_spec_k",
+   "range": [
+    28,
+    100
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.1,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "f24-pdc-fast-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6F24PdcEnc.lean",
+   "theorem": "pdc_g6e_fast",
+   "range": [
+    538,
+    612
+   ],
+   "error_lines": [
+    609,
+    612
+   ],
+   "first_error": "<work>/f24-pdc-fast-rax/mut.lean:609:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 3.6,
+   "diff": "--- orig\n+++ mut\n@@ -29,7 +29,7 @@\n     (hcap : s.regs.rcx.toNat + 40 \u2264 s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveC S),\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec\n-        \u2227 st.data.regs.rax = s.regs.rbx\n+        \u2227 st.data.regs.rax = s.regs.rcx\n         \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40\n         \u2227 st.data.regs.rcx = s.regs.rdi\n         \u2227 st.data.regs.rdi = 0\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-pdc-espec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecPdc.lean",
+   "theorem": "pdc_e2c_spec_k",
+   "range": [
+    28,
+    100
+   ],
+   "error_lines": [
+    93
+   ],
+   "first_error": "<work>/f24-pdc-espec-hcap/mut.lean:93:281: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.0,
+   "diff": "--- orig\n+++ mut\n@@ -49,7 +49,7 @@\n       \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat)\n     (hsp : 120 \u2264 s.regs.rsp.toNat)\n-    (hcap : s.regs.rcx.toNat + 40 \u2264 s.regs.rdi.toNat)\n+    (hcap : s.regs.rcx.toNat + 32 \u2264 s.regs.rdi.toNat)\n     (hcap63 : s.regs.rdi.toNat < 2 ^ 63)\n     (hmm : MemmoveC S) :\n     \u2203 bs, serialize prysmPdcDesc g.toValue = .ok bs \u2227\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-pdc-ewit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cPdc.lean",
+   "theorem": "pdc_e2c_wit_empty",
+   "range": [
+    49,
+    68
+   ],
+   "error_lines": [
+    68
+   ],
+   "first_error": "<work>/f24-pdc-ewit-rax/mut.lean:68:22: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 16.4,
+   "diff": "--- orig\n+++ mut\n@@ -2,7 +2,7 @@\n     (h_v1 : v1.length = 8) (h_b0 : b0.length = 32)\n     (zmms : RegZmms) (flags : StatusFlags) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x10100\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x8\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0)\n       \u27e8cs0 v1 b0 [] [] zmms flags, Host.addrOf 0\u27e9 :=\n   eventually_mono (pdc_g6e_fast 0 hk0 hf0 (z 8) v1 (w 32) b0 [] (z 32) (z 8) rfl h_v1 rfl h_b0 rfl rfl (0x10050 : BitVec 64) (cs0 v1 b0 [] [] zmms flags) 0 0 rfl (z 8) (z 8) (z 8) (z 8) (z 8) (z 8) (z 16) (z 16) (z 8) rfl rfl rfl rfl rfl rfl rfl rfl rfl (Eq ((z 32).At (0x10030 : BitVec 64)) \u22c6 Eq ((z 40).At (0x10078 : BitVec 64)) \u22c6 Eq ((z 8).At (0x100d8 : BitVec 64))) 0 [] rfl \n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-vid-espec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecVid.lean",
+   "theorem": "vid_e2c_spec_k",
+   "range": [
+    31,
+    112
+   ],
+   "error_lines": [],
+   "first_error": null,
+   "rc": 0,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 3.1,
+   "diff": "",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "control_pass",
+   "pass": true
+  },
+  {
+   "id": "f24-vid-fast-rax",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6F24VidEnc.lean",
+   "theorem": "vid_g6e_fast",
+   "range": [
+    721,
+    806
+   ],
+   "error_lines": [
+    803,
+    806
+   ],
+   "first_error": "<work>/f24-vid-fast-rax/mut.lean:803:2: error: Type mismatch",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 4.8,
+   "diff": "--- orig\n+++ mut\n@@ -33,7 +33,7 @@\n     (hcap : s.regs.rcx.toNat + 64 \u2264 s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hmm : MemmoveC S),\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec\n-        \u2227 st.data.regs.rax = s.regs.rbx\n+        \u2227 st.data.regs.rax = s.regs.rcx\n         \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 64\n         \u2227 st.data.regs.rcx = s.regs.rdi\n         \u2227 st.data.regs.rdi = 0\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-vid-espec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecVid.lean",
+   "theorem": "vid_e2c_spec_k",
+   "range": [
+    31,
+    112
+   ],
+   "error_lines": [
+    104
+   ],
+   "first_error": "<work>/f24-vid-espec-hcap/mut.lean:104:349: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 1.2,
+   "diff": "--- orig\n+++ mut\n@@ -56,7 +56,7 @@\n       \u22c6 R)\n     (hguard : guard.toNat + 24 < s.regs.rsp.toNat)\n     (hsp : 160 \u2264 s.regs.rsp.toNat)\n-    (hcap : s.regs.rcx.toNat + 64 \u2264 s.regs.rdi.toNat)\n+    (hcap : s.regs.rcx.toNat + 56 \u2264 s.regs.rdi.toNat)\n     (hcap63 : s.regs.rdi.toNat < 2 ^ 63)\n     (hmm : MemmoveC S) :\n     \u2203 bs, serialize prysmVidDesc g.toValue = .ok bs \u2227\n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  },
+  {
+   "id": "f24-vid-ewit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cVid.lean",
+   "theorem": "vid_e2c_wit_empty",
+   "range": [
+    49,
+    68
+   ],
+   "error_lines": [
+    68
+   ],
+   "first_error": "<work>/f24-vid-ewit-rax/mut.lean:68:22: error: Application type mismatch: The argument",
+   "rc": 1,
+   "killed": false,
+   "timeout": false,
+   "timeout_reaped_pids": [],
+   "later_resource_error": null,
+   "seconds": 25.6,
+   "diff": "--- orig\n+++ mut\n@@ -2,7 +2,7 @@\n     (h_v0 : v0.length = 8) (h_v2 : v2.length = 8) (h_b1 : b1.length = 48)\n     (zmms : RegZmms) (flags : StatusFlags) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x10140\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x8\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0)\n       \u27e8cs0 v0 v2 b1 [] [] zmms flags, Host.addrOf 0\u27e9 :=\n   eventually_mono (vid_g6e_fast 0 hk0 hf0 (z 8) v0 v2 (w 48) b1 [] (z 8) (z 48) (z 8) rfl h_v0 h_v2 rfl h_b1 rfl rfl rfl (0x10058 : BitVec 64) (cs0 v0 v2 b1 [] [] zmms flags) 0 0 rfl (z 8) (z 8) (z 8) (z 16) (z 16) (z 8) (z 8) (z 8) (z 16) (z 16) (z 8) rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl rfl (Eq ((z 32).At (0x10038 : BitVec 64)) \u22c6 Eq ((z 48).At (0x10090 : BitVec 64)) \u22c6 Eq ((z 8).At (0x10118 : BitVec 64))) 0 [] rfl \n",
+   "heartbeat_timeout": false,
+   "recursion_limit": false,
+   "class": "inside",
+   "pass": true
+  }
+ ],
+ "pass": 67,
+ "total": 67,
+ "classes": {
+  "control_pass": 15,
+  "inside": 52
+ },
+ "case_timeout_s": 300,
+ "prechecks": [
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.F24Code",
+    "E2eScal.FieldComp",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-bsr-reject-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24BsrSpec",
+    "E2eScal.Gen5F24BsrDec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-bsr-speck-hlen"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5F24BsrDec",
+    "Fk.RtCopy",
+    "Fk.WHost"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-bsr-wita-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24EprSpec",
+    "E2eScal.Gen5F24EprDec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-epr-speck-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.F24Code",
+    "E2eScal.FieldComp",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-epr-accept-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.F24Code",
+    "E2eScal.FieldComp",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-epr-reject-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24EprSpec",
+    "E2eScal.Gen5F24EprDec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-epr-speck-hlen"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5F24EprDec",
+    "Fk.RtCopy",
+    "Fk.WHost"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-epr-wita-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24PdcSpec",
+    "E2eScal.Gen5F24PdcDec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-pdc-speck-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.F24Code",
+    "E2eScal.FieldComp",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.SegRegZ",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-pdc-accept-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.F24Code",
+    "E2eScal.FieldComp",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.SegRegZ",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-pdc-reject-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24PdcSpec",
+    "E2eScal.Gen5F24PdcDec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-pdc-speck-hlen"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5F24PdcDec",
+    "Fk.BumpMore",
+    "Fk.RtCopy",
+    "Fk.WHost"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-pdc-wita-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24VidSpec",
+    "E2eScal.Gen5F24VidDec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-vid-speck-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.F24Code",
+    "E2eScal.FieldComp",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-vid-accept-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2e.Epoch",
+    "E2eAd.Prims",
+    "E2eScal.AcceptTies",
+    "E2eScal.CallReg",
+    "E2eScal.Compose",
+    "E2eScal.F24Code",
+    "E2eScal.FieldComp",
+    "E2eScal.Kind",
+    "E2eScal.KindSegReg",
+    "E2eScal.KindStep",
+    "E2eScal.RejectTies",
+    "E2eScal.ViSpec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-vid-reject-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24VidSpec",
+    "E2eScal.Gen5F24VidDec"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-vid-speck-hlen"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen5F24VidDec",
+    "Fk.BumpMore",
+    "Fk.RtCopy",
+    "Fk.WHost"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-vid-wita-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24BbrSpec",
+    "E2eScal.Gen6F24BbrEnc",
+    "Fk.RtCopy"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-bbr-espec-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.EncFrameTest",
+    "E2eScal.EncTies",
+    "E2eScal.F24Code"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-bbr-fast-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24BbrSpec",
+    "E2eScal.Gen6F24BbrEnc",
+    "Fk.RtCopy"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-bbr-espec-hcap"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen6F24BbrEnc",
+    "Fk.RtCopy",
+    "Fk.WHost"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-bbr-ewit-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24BdrSpec",
+    "E2eScal.Gen6F24BdrEnc",
+    "Fk.RtCopy"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-bdr-espec-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.EncFrameTest",
+    "E2eScal.EncTies",
+    "E2eScal.F24Code"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-bdr-fast-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24BdrSpec",
+    "E2eScal.Gen6F24BdrEnc",
+    "Fk.RtCopy"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-bdr-espec-hcap"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen6F24BdrEnc",
+    "Fk.RtCopy",
+    "Fk.WHost"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-bdr-ewit-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24BpfSpec",
+    "E2eScal.Gen6F24BpfEnc",
+    "Fk.RtCopy"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-bpf-espec-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.EncFrameTest",
+    "E2eScal.EncTies",
+    "E2eScal.F24Code"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-bpf-fast-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24BpfSpec",
+    "E2eScal.Gen6F24BpfEnc",
+    "Fk.RtCopy"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-bpf-espec-hcap"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen6F24BpfEnc",
+    "Fk.RtCopy",
+    "Fk.WHost"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-bpf-ewit-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24BsrSpec",
+    "E2eScal.Gen6F24BsrEnc",
+    "Fk.RtCopy"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-bsr-espec-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.EncFrameTest",
+    "E2eScal.EncTies",
+    "E2eScal.F24Code"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-bsr-fast-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24BsrSpec",
+    "E2eScal.Gen6F24BsrEnc",
+    "Fk.RtCopy"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-bsr-espec-hcap"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen6F24BsrEnc",
+    "Fk.RtCopy",
+    "Fk.WHost"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-bsr-ewit-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24DprSpec",
+    "E2eScal.Gen6F24DprEnc",
+    "Fk.RtCopy"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-dpr-espec-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.EncFrameTest",
+    "E2eScal.EncTies",
+    "E2eScal.F24Code"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-dpr-fast-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24DprSpec",
+    "E2eScal.Gen6F24DprEnc",
+    "Fk.RtCopy"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-dpr-espec-hcap"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen6F24DprEnc",
+    "Fk.RtCopy",
+    "Fk.WHost"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-dpr-ewit-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24EprSpec",
+    "E2eScal.Gen6F24EprEnc",
+    "Fk.RtCopy"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-epr-espec-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.EncFrameTest",
+    "E2eScal.EncTies",
+    "E2eScal.F24Code"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-epr-fast-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24EprSpec",
+    "E2eScal.Gen6F24EprEnc",
+    "Fk.RtCopy"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-epr-espec-hcap"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen6F24EprEnc",
+    "Fk.RtCopy",
+    "Fk.WHost"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-epr-ewit-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24PdcSpec",
+    "E2eScal.Gen6F24PdcEnc",
+    "Fk.RtCopy"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-pdc-espec-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.EncFrameTest",
+    "E2eScal.EncTies",
+    "E2eScal.F24Code"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-pdc-fast-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24PdcSpec",
+    "E2eScal.Gen6F24PdcEnc",
+    "Fk.RtCopy"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-pdc-espec-hcap"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen6F24PdcEnc",
+    "Fk.RtCopy",
+    "Fk.WHost"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-pdc-ewit-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24VidSpec",
+    "E2eScal.Gen6F24VidEnc",
+    "Fk.RtCopy"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-vid-espec-control"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.EncFrameTest",
+    "E2eScal.EncTies",
+    "E2eScal.F24Code"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-vid-fast-rax"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.F24VidSpec",
+    "E2eScal.Gen6F24VidEnc",
+    "Fk.RtCopy"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-vid-espec-hcap"
+   ]
+  },
+  {
+   "argv": [
+    "lake",
+    "build",
+    "--no-build",
+    "E2eScal.Gen6F24VidEnc",
+    "Fk.RtCopy",
+    "Fk.WHost"
+   ],
+   "rc": 0,
+   "failures": [],
+   "cases": [
+    "f24-vid-ewit-rax"
+   ]
+  }
+ ]
+}
