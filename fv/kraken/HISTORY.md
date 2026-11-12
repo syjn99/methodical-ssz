@@ -430,3 +430,7 @@ growslice 분기는 증명하지 않았다. 기존 `.lean`과 생성기는 바�
 2026-11-12 ENC2 닫기(단위 E2-C, 새 Opus 세션, 리뷰 전): 평면 16형의 인코더 빠른 경로를 닫았다(전제 `len + SizeSSZ ≤ cap`).
 독립 손 문장 넷이 생성 정리와 `rfl`로 같다. 16형 모두 증인과 명세 따름 정리가 생성 정리에 묶였다.
 목록: 인코더 빠른 경로 완료 16 / 211, 완전한 인코더는 없다. 기록: `scal/RESULT.json`의 `enc2-close`.
+
+2026-11-12 단위 E2-C2(새 Opus 세션, 리뷰 전): 리뷰 e2c-r1이 REQUEST_CHANGES였다(M1, 기록만).
+목록 스크립트의 NOT proved 칸을 형별 규칙으로 바꿨다. BeaconBlockHeader 칸이 `cap < len + 112`인 길이 거부를 빠뜨렸었다.
+다섯 형의 칸이 바뀌었다. 대조 24/24, 두 실행이 같다. 새 선언은 0이다. 기록: `scal/RESULT.json`의 `enc2-close.fix_e2c2`.

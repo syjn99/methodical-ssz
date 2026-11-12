@@ -996,16 +996,27 @@ Desc는 디코더 명세 따름이 쓰는 것이다. ValidatorBalance의 Desc는
 부정 시험 96/96이 기대대로다(형마다 6: 대조 2, 빠른 경로 문장 1, 명세 따름 2, 증인 1). 시간 초과는 세지 않았다.
 링크 검사: enc2 묶음 PASS all, RESULT 바이트 같음(`scal/e2c/LINK-CHECK.txt`).
 Go 차분 192/192다(Go 의미론, linux/arm64, ELF 실행이 아님). 심은 불일치 2건을 잡았다.
-리뷰어의 `own_layout.py`(비작성자 재계산)를 다시 돌렸다: 16/16 같다.
+리뷰 e2g-r1의 비작성자 재계산 스크립트를 다시 돌렸다: 16/16 같다.
+재현: `python3 -I -B prysm/go1.26.10/e2e/scal/e2c/own_layout_e2g_r1.py`(`fv/kraken`에서, 순수 Python).
 공리 게이트 PASS: 선언 12177, 비표준 0, sorryAx 0이다. 기록을 다시 만들었고 손 목록에 270개를 더했다.
 e2g-r1 덤프 대비 ADDED 1166, CHANGED 0, REMOVED 0이다.
-심은 대조는 scratch 사본에서 잡혔다: 게이트 종료 1, CHANGED 1, ADDED 1이다. 사본은 지웠다.
+심은 대조는 scratch 사본에서 잡혔다: 게이트 종료 1, CHANGED 1, ADDED 1, REMOVED 2(보조 선언)다. 사본은 지웠다.
 목록(`prysm/INVENTORY.md`, 출처 `gen/tools/inventory.py`): 인코더 빠른 경로 완료 16 / 211이다.
 빠른 경로 완료 = 빠른 경로 정리 + 명세 따름 정리 + 증인이다. 디코더 완료는 17 / 211이다.
-목록 스크립트의 실패 대조 20/20이 기대대로다(예전 15, 인코더 5).
-증명하지 않은 것: growslice 분기, 길이 거부, morestack, 모든 Go 호출자에 대한 프레임 분리 전제의 정당성이다.
+목록 스크립트의 실패 대조 24/24가 기대대로다(예전 15, 인코더 5, 형별 규칙 4; 단위 E2-C2).
+증명하지 않은 경로는 형마다 `INVENTORY.md`의 NOT proved 칸에 있다(형별 규칙, 단위 E2-C2).
+모든 형: morestack. 거부 정리가 없는 형: 모든 growslice 분기와 모든 길이 거부.
+BeaconBlockHeader: growslice 분기, 그리고 `cap < len + 112`인 길이 거부다.
+BeaconBlockHeader의 거부 정리 셋은 모두 `len + 112 ≤ cap`을 전제한다.
+Checkpoint: `GrowsliceC`·`MemmoveC` 계약과 힙 예산 밖의 경로, 그리고 T-7 잔여 경로다.
+PowBlock, HistoricalSummary, SigningData: 에필로그 프레임 시험의 `moveSliceNoCapNoScan` 분기다.
+그 분기는 빠른 경로 전제 아래에서 타지 않음을 보였다. 분기 자체는 증명하지 않았다.
+또 증명하지 않은 것: 모든 Go 호출자에 대한 프레임 분리 전제의 정당성이다.
 T-7은 미뤘다. AttestationData 인코더는 이 트리에 없다(다른 작업).
 모든 형이 개발 자료다(표본 안). 기록: `scal/RESULT.json`의 `enc2-close`, `scal/CONTAMINATION.md` 36절.
+리뷰 e2c-r1(`5072b63`): REQUEST_CHANGES, 기록만이다. 증명 검사는 모두 통과했다.
+e2c-r1 M1은 단위 E2-C2가 고쳤다(목록 스크립트와 기록만, 리뷰 전). 기록: `enc2-close`의 `fix_e2c2`.
+e2c-r1 S1, S2, S4는 적용했다. S3은 부분이다: 재현 줄은 위에 있다. 게이트 스크립트 연결은 열림이다.
 
 조건:
 

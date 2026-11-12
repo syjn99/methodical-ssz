@@ -1,4 +1,4 @@
-# e2g-r1 reviewer script (reviews/e2g-r1/own_layout.py), copied unchanged by unit E2-C as the non-author
+# e2g-r1 reviewer script (review e2g-r1, own_layout.py), copied unchanged by unit E2-C as the non-author
 # recomputation of frame, gd, rt and the first-touch stack regions (pre) of every Gen6*Enc layout. Run from fv/kraken:
 #   python3 -I -B prysm/go1.26.10/e2e/scal/e2c/own_layout_e2g_r1.py
 

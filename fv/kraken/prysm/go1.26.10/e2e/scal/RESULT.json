@@ -4395,10 +4395,10 @@
   },
   "negatives": "96/96 as expected (32 controls); timeouts: none",
   "axioms": "PASS 12177 declarations, 10199 theorems, nonstandard 0, sorryAx 0; committed record regenerated; AxiomsScal +270 names",
-  "drift": "vs reviews/e2g-r1/results/04-dump-head.tsv (11011 rows): ADDED 1166, CHANGED 0, REMOVED 0; planted control on ONE scratch copy (weakened vb_e2c_spec_k + sorry theorem): gate exit 1, drift exit 1 (CHANGED 1, ADDED 1, REMOVED 2 auxiliaries); copy deleted",
+  "drift": "vs the declaration dump of review e2g-r1 (its results, 04-dump-head.tsv; 11011 rows): ADDED 1166, CHANGED 0, REMOVED 0; planted control on ONE scratch copy (weakened vb_e2c_spec_k + sorry theorem): gate exit 1, drift exit 1 (CHANGED 1, ADDED 1, REMOVED 2 auxiliaries); copy deleted",
   "link": "enc2 bundle (13 MarshalSSZTo tables of E2-P) PASS all on the pinned ELF c6403c02...911e, RESULT byte-identical, BUNDLE c08ac537...; Cp / Bh / E1 tables not rerun",
   "go_differential": "192/192 (16 types x 3 value sets x prefix 0/7 x capacity exact/+5; Go 1.26.10 linux/arm64, Go semantics, not the ELF); planted 2 mismatches -> exit 1; Prysm tree status unchanged",
-  "non_author_layout_recomputation": "reviews/e2g-r1/own_layout.py rerun on the tree: 16/16 equal, disjoint (copied to scal/e2c/own_layout_e2g_r1.py)",
+  "non_author_layout_recomputation": "the reviewer script of review e2g-r1 (own_layout.py) rerun on the tree: 16/16 equal, disjoint (copied to scal/e2c/own_layout_e2g_r1.py)",
   "all_runs_gated": true,
   "gate_s_total": 3588,
   "bounds_hit": [
@@ -4412,6 +4412,114 @@
    "orca (not installed)",
    "link check rerun of the Cp / Bh / E1 encoder tables"
   ],
-  "gate_s_note": "gate_s per type = wrapper wall time incl. lock waits (cases + share of build jobs). Deposit_Data 819 and PendingPartialWithdrawal 400 include 5 negative cases that waited about 350 s each for the heavy lock held by this unit's own jobs 11, 12, 13 ('waiting for heavy lock' in logs/neg-*.out). Lean time of the 6 Deposit_Data cases: 107 s. The per-type bound (600) is exceeded only in the wall-time count with waits; no job of a type ran longer than 60 s of Lean time."
+  "gate_s_note": "gate_s per type = wrapper wall time incl. lock waits (cases + share of build jobs). Deposit_Data 819 and PendingPartialWithdrawal 400 include 5 negative cases that waited about 350 s each for the heavy lock held by this unit's own jobs 11, 12, 13 ('waiting for heavy lock' in logs/neg-*.out). Lean time of the 6 Deposit_Data cases: 107 s. The per-type bound (600) is exceeded only in the wall-time count with waits; no job of a type ran longer than 60 s of Lean time.",
+  "fix_e2c2": {
+   "unit": "E2-C2 (after review e2c-r1 REQUEST_CHANGES; fresh Opus 5.5 session; NOT yet reviewed)",
+   "scope": "inventory script, regenerated INVENTORY.md / .json and records only; no proof, statement, generator, checker, lemma or generated-file change; declarations added 0",
+   "m1": "fixed: inventory.py lists the NOT-proved paths by a per-type rule (path classes from functions.json call_targets and the IR; a class without a mapped theorem is listed in full; a mapped reject / growslice theorem carries its premise text and the row the text of what stays not proved, else FAIL). BeaconBlockHeader now lists the length rejects with cap < len + 112",
+   "rows_changed": [
+    "BeaconBlockHeader",
+    "Checkpoint",
+    "HistoricalSummary",
+    "PowBlock",
+    "SigningData"
+   ],
+   "not_proved_by_inventory": {
+    "BeaconBlockHeader": [
+     "growslice branches (5 capacity tests)",
+     "length rejects with cap < len + 112 (with len + 16 ≤ cap < len + 112 a ParentRoot reject is reached without a growslice call) [3 byte fields; proved only: bh_e2e_marshal_reject1_main (len + 112 ≤ cap), bh_e2e_marshal_reject2_main (len + 112 ≤ cap, MemmoveC), bh_e2e_marshal_reject3_main (len + 112 ≤ cap, MemmoveC)]",
+     "morestack"
+    ],
+    "BlobIdentifier": [
+     "growslice branches (2 capacity tests)",
+     "length rejects (1 byte fields)",
+     "morestack"
+    ],
+    "Checkpoint": [
+     "growslice branches outside the GrowsliceC / MemmoveC contracts and the heap budget, and the run after the second growslice call when the heap left by the first call is below the second call's budget (T-7 residual, FINDINGS T-7, differential only) [2 capacity tests; proved only: cp_e2e_marshal_grow_main (cap < len + 8, len + 40 ≤ nextSliceCap(len + 8, cap), GrowsliceC + MemmoveC contracts + heap budget), cp_e2e_marshal_grow2_main (len + 8 ≤ cap < len + 40, GrowsliceC + MemmoveC contracts + heap budget), cp_e2e_marshal_grow_any_main (cap < len + 8, GrowsliceC + MemmoveC contracts + heap budget: returns or reaches the second growslice call)]",
+     "length rejects with cap < len + 8 outside the GrowsliceC contract or the heap budget [1 byte fields; proved only: cp_e2e_marshal_reject_main (len + 8 ≤ cap), cp_e2e_marshal_reject_cover (every cap, GrowsliceC contract + heap budget 4·len + 8736 ≤ avail ≤ maxAlloc)]",
+     "morestack"
+    ],
+    "DepositMessage": [
+     "growslice branches (3 capacity tests)",
+     "length rejects (2 byte fields)",
+     "morestack"
+    ],
+    "Deposit_Data": [
+     "growslice branches (4 capacity tests)",
+     "length rejects (3 byte fields)",
+     "morestack"
+    ],
+    "Eth1Data": [
+     "growslice branches (3 capacity tests)",
+     "length rejects (2 byte fields)",
+     "morestack"
+    ],
+    "HistoricalSummary": [
+     "growslice branches (2 capacity tests)",
+     "length rejects (2 byte fields)",
+     "the `runtime.moveSliceNoCapNoScan` branch of the epilogue frame test (shown not taken under the fast-path premises: dst separate from the frame; the branch itself is not proved)",
+     "morestack"
+    ],
+    "PendingConsolidation": [
+     "growslice branches (2 capacity tests)",
+     "morestack"
+    ],
+    "PendingDeposit": [
+     "growslice branches (5 capacity tests)",
+     "length rejects (3 byte fields)",
+     "morestack"
+    ],
+    "PendingPartialWithdrawal": [
+     "growslice branches (3 capacity tests)",
+     "morestack"
+    ],
+    "PowBlock": [
+     "growslice branches (3 capacity tests)",
+     "length rejects (3 byte fields)",
+     "the `runtime.moveSliceNoCapNoScan` branch of the epilogue frame test (shown not taken under the fast-path premises: dst separate from the frame; the branch itself is not proved)",
+     "morestack"
+    ],
+    "SigningData": [
+     "growslice branches (2 capacity tests)",
+     "length rejects (2 byte fields)",
+     "the `runtime.moveSliceNoCapNoScan` branch of the epilogue frame test (shown not taken under the fast-path premises: dst separate from the frame; the branch itself is not proved)",
+     "morestack"
+    ],
+    "SyncAggregatorSelectionData": [
+     "growslice branches (2 capacity tests)",
+     "morestack"
+    ],
+    "SyncCommitteeMessage": [
+     "growslice branches (4 capacity tests)",
+     "length rejects (2 byte fields)",
+     "morestack"
+    ],
+    "ValidatorBalance": [
+     "growslice branches (2 capacity tests)",
+     "morestack"
+    ],
+    "VoluntaryExit": [
+     "growslice branches (2 capacity tests)",
+     "morestack"
+    ]
+   },
+   "correction_types_not_proved": "the per-type not_proved lists above in this unit are superseded by not_proved_by_inventory: Checkpoint adds the length rejects with cap < len + 8 outside the GrowsliceC contract / heap budget and the T-7 residual; PowBlock, HistoricalSummary, SigningData add the moveSliceNoCapNoScan branch of the epilogue frame test (shown not taken under the fast-path premises, the branch itself not proved)",
+   "inventory_controls": "24/24 as expected (the 20 earlier controls with the same exit code and failure lines + e06 reject theorem without premise text, e07 rejects mapped without NOT-proved text, e08 length-reject theorem on a type without byte fields: exit 1; e09 BeaconBlockHeader rejects unmapped: exit 0, cell lists 'length rejects (3 byte fields)')",
+   "deterministic": "two runs byte-identical; decls dump byte-identical to the E2-C dump",
+   "no_build": "lake build --no-build E2e E2eAd E2eScal exit 0 (gated job e2c2 01)",
+   "axioms_gate_record": "untouched",
+   "should_fix": {
+    "S1": "applied: CONTAMINATION section 37 adds scal/enc2-survey.md to the files read before the independent statements",
+    "S2": "applied: Checkpoint cell names the GrowsliceC contract, the heap budget and the T-7 residual",
+    "S3": "partly: the reviewer script is in the REPORT section 11 reproduction line; run-directory paths in this unit's record and the script header replaced by the review name; not a step of a gate script (gate scripts frozen: open)",
+    "S4": "applied: REPORT gives the planted control as CHANGED 1, ADDED 1, REMOVED 2 (auxiliaries); the bound line: the per-type 600 gate-s bound is exceeded only in the wall-time count with lock waits (Deposit_Data 819, Lean time 107 s), as bounds_hit says; the run note 'no bound hit' meant Lean time"
+   },
+   "open": [
+    "S3 gate-script wiring of own_layout_e2g_r1.py (gate scripts frozen)",
+    "e2g-r1 S2-S5 (checker / test code)",
+    "growslice branches, length rejects, morestack, moveSliceNoCapNoScan branch, frame-separation premise for every Go caller (proof work, not this unit)"
+   ]
+  }
  }
 }
