@@ -1,0 +1,62 @@
+[
+ {
+  "module": "E2eHb/NegSpec.lean",
+  "id": "hb-spec-control",
+  "kind": "control",
+  "theorem": "spec_chk"
+ },
+ {
+  "module": "E2eHb/NegSpec.lean",
+  "id": "hb-complete-control",
+  "kind": "control",
+  "theorem": "complete_chk"
+ },
+ {
+  "module": "E2eHb/NegSpec.lean",
+  "id": "hb-spec-size524287",
+  "kind": "stmt",
+  "theorem": "spec_chk",
+  "stmt_def": "spec_prop",
+  "old": "(hbs : bs.size ≠ 524288)",
+  "new": "(hbs : bs.size ≠ 524287)"
+ },
+ {
+  "module": "E2eHb/NegSpec.lean",
+  "id": "hb-complete-524287",
+  "kind": "stmt",
+  "theorem": "complete_chk",
+  "stmt_def": "complete_prop",
+  "old": "bs.size ≠ 524288",
+  "new": "bs.size ≠ 524287"
+ },
+ {
+  "module": "E2eDep/NegSpec.lean",
+  "id": "dep-spec-control",
+  "kind": "control",
+  "theorem": "spec_chk"
+ },
+ {
+  "module": "E2eDep/NegSpec.lean",
+  "id": "dep-complete-control",
+  "kind": "control",
+  "theorem": "complete_chk"
+ },
+ {
+  "module": "E2eDep/NegSpec.lean",
+  "id": "dep-spec-size1239",
+  "kind": "stmt",
+  "theorem": "spec_chk",
+  "stmt_def": "spec_prop",
+  "old": "(hbs : bs.size ≠ 1240)",
+  "new": "(hbs : bs.size ≠ 1239)"
+ },
+ {
+  "module": "E2eDep/NegSpec.lean",
+  "id": "dep-complete-1239",
+  "kind": "stmt",
+  "theorem": "complete_chk",
+  "stmt_def": "complete_prop",
+  "old": "bs.size ≠ 1240",
+  "new": "bs.size ≠ 1239"
+ }
+]

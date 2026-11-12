@@ -141,3 +141,54 @@ name = "E2eList"
 globs = ["E2eList.+"]
 needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data", "lv_lean_S",
   "lv_t3_norm_S", "lv_t3_data"]
+
+# HB stream: port of the LV T2 proof to the real v1alpha1.HistoricalBatch decoder (same Go 1.26.10 ELF).
+# Own library; it imports E2eList and does not change it. The .S file of prysm/go1.26.10/e2e/lv/link-hb is an input.
+[[input_dir]]
+name = "lv_hb_norm_S"
+path = "../prysm/go1.26.10/e2e/lv/link-hb/norm"
+text = true
+
+[[lean_lib]]
+name = "E2eHb"
+globs = ["E2eHb.+"]
+needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data", "lv_lean_S",
+  "lv_t3_norm_S", "lv_t3_data", "lv_hb_norm_S"]
+
+# SEG stream: segment and list lemmas stated for a variable size / count (generalized once), their fixed instances
+# as corollaries, and the next decoder ported with them. Own library; it imports E2eList / E2eScal / E2eHb.
+[[lean_lib]]
+name = "E2eSeg"
+globs = ["E2eSeg.+"]
+needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data", "lv_lean_S",
+  "lv_t3_norm_S", "lv_t3_data", "lv_hb_norm_S"]
+
+# SEG proof of use: the real v1alpha1.Deposit decoder, proved with the E2eSeg general lemmas.
+[[input_dir]]
+name = "lv_dep_norm_S"
+path = "../prysm/go1.26.10/e2e/lv/link-dep/norm"
+text = true
+
+[[input_dir]]
+name = "lv_dep_data"
+path = "../prysm/go1.26.10/e2e/lv/link-dep/data"
+text = true
+
+[[lean_lib]]
+name = "E2eDep"
+globs = ["E2eDep.+"]
+needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data", "lv_lean_S",
+  "lv_t3_norm_S", "lv_t3_data", "lv_hb_norm_S", "lv_dep_norm_S", "lv_dep_data"]
+
+# SEG Deposit witnesses and their runtime model (the 120-byte bump newobject E2eDepW/BumpNew120.S)
+[[input_dir]]
+name = "lv_dep_lean_S"
+path = "E2eDepW"
+text = true
+filter = {extension = ["S"]}
+
+[[lean_lib]]
+name = "E2eDepW"
+globs = ["E2eDepW.+"]
+needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data", "lv_lean_S",
+  "lv_t3_norm_S", "lv_t3_data", "lv_hb_norm_S", "lv_dep_norm_S", "lv_dep_data", "lv_dep_lean_S"]

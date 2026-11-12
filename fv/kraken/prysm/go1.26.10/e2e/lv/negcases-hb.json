@@ -1,0 +1,109 @@
+[
+ {
+  "code_def": "HbUnmarshal",
+  "code_ns": "E2eHb.Code",
+  "norm": "prysm/go1.26.10/e2e/lv/link-hb/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ.S",
+  "stmt_module": "E2eHb/StmtHb.lean",
+  "module": "E2eHb/HbReject.lean",
+  "theorem": "hb_e2e_reject_size_main",
+  "id": "hb-control-reject",
+  "kind": "control"
+ },
+ {
+  "code_def": "HbUnmarshal",
+  "code_ns": "E2eHb.Code",
+  "norm": "prysm/go1.26.10/e2e/lv/link-hb/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ.S",
+  "module": "E2eHb/HbLoop1.lean",
+  "theorem": "hb_iter1",
+  "id": "hb-control-iter1",
+  "kind": "control"
+ },
+ {
+  "stmt_module": "E2eHb/StmtHb.lean",
+  "module": "E2eHb/HbAccept.lean",
+  "theorem": "hb_e2e_accept_main",
+  "id": "hb-control-accept",
+  "kind": "control"
+ },
+ {
+  "code_def": "HbUnmarshal",
+  "code_ns": "E2eHb.Code",
+  "norm": "prysm/go1.26.10/e2e/lv/link-hb/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ.S",
+  "stmt_module": "E2eHb/StmtHb.lean",
+  "module": "E2eHb/HbReject.lean",
+  "theorem": "hb_e2e_reject_size_main",
+  "id": "hb-stmt-size524289",
+  "kind": "stmt",
+  "stmt_def": "hb_reject_size_stmt",
+  "old": "(hlen : s.regs.rcx ≠ 524288)",
+  "new": "(hlen : s.regs.rcx ≠ 524289)"
+ },
+ {
+  "code_def": "HbUnmarshal",
+  "code_ns": "E2eHb.Code",
+  "norm": "prysm/go1.26.10/e2e/lv/link-hb/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ.S",
+  "stmt_module": "E2eHb/StmtHb.lean",
+  "module": "E2eHb/HbReject.lean",
+  "theorem": "hb_e2e_reject_size_main",
+  "id": "hb-size524289",
+  "kind": "code",
+  "old": "  cmp $0x80000,%rcx",
+  "new": "  cmp $0x80001,%rcx"
+ },
+ {
+  "code_def": "HbUnmarshal",
+  "code_ns": "E2eHb.Code",
+  "norm": "prysm/go1.26.10/e2e/lv/link-hb/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ.S",
+  "module": "E2eHb/HbLoop1.lean",
+  "theorem": "hb_iter1",
+  "id": "hb-loopbound8191",
+  "kind": "code",
+  "line": 42,
+  "old": "  cmp $0x2000,%rax",
+  "new": "  cmp $0x1fff,%rax"
+ },
+ {
+  "code_def": "HbUnmarshal",
+  "code_ns": "E2eHb.Code",
+  "norm": "prysm/go1.26.10/e2e/lv/link-hb/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ.S",
+  "module": "E2eHb/HbLoop1.lean",
+  "theorem": "hb_iter1",
+  "id": "hb-elem31",
+  "kind": "code",
+  "line": 63,
+  "old": "  mov $0x20,%ecx",
+  "new": "  mov $0x1f,%ecx"
+ },
+ {
+  "code_def": "HbUnmarshal",
+  "code_ns": "E2eHb.Code",
+  "norm": "prysm/go1.26.10/e2e/lv/link-hb/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalBatch.UnmarshalSSZ.S",
+  "module": "E2eHb/HbLoop1.lean",
+  "theorem": "hb_iter1",
+  "id": "hb-shl6",
+  "kind": "code",
+  "line": 45,
+  "old": "  shl $0x5,%rax",
+  "new": "  shl $0x6,%rax"
+ },
+ {
+  "stmt_module": "E2eHb/StmtHb.lean",
+  "module": "E2eHb/HbAccept.lean",
+  "theorem": "hb_e2e_accept_main",
+  "id": "hb-stmt-heap",
+  "kind": "stmt",
+  "stmt_def": "hb_accept_stmt",
+  "old": "Heap (avail - 917504)",
+  "new": "Heap (avail - 917503)"
+ },
+ {
+  "stmt_module": "E2eHb/StmtHb.lean",
+  "module": "E2eHb/HbAccept.lean",
+  "theorem": "hb_e2e_accept_main",
+  "id": "hb-stmt-len8191",
+  "kind": "stmt",
+  "stmt_def": "hb_accept_stmt",
+  "old": "Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 8))",
+  "new": "Eq ((Int.toBytes 8 8191).At (s.regs.rax.toBitVec + 8))"
+ }
+]

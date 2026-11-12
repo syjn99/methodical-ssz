@@ -1,0 +1,103 @@
+{
+ "functions": {
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Deposit).UnmarshalSSZ": {
+   "addr": "0xa1e6e0",
+   "instructions": 140,
+   "calls": [
+    {
+     "site": "0xa1e72a",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC: esz 1 (uint8 type word, cnt 48/64/96), esz 24 (SyncCommittee [][]byte, cnt 512), esz 8 (IndexedAttestation []uint64, cnt = numElem)"
+    },
+    {
+     "site": "0xa1e751",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa1e7c6",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC: esz 1 (uint8 type word, cnt 48/64/96), esz 24 (SyncCommittee [][]byte, cnt 512), esz 8 (IndexedAttestation []uint64, cnt = numElem)"
+    },
+    {
+     "site": "0xa1e7e3",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 48, 64, 96)"
+    },
+    {
+     "site": "0xa1e830",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa1e84d",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC: IndexedAttestation Data (AttestationData type word); after fmt.errorf: the nil-result branch, excluded by rax != 0"
+    },
+    {
+     "site": "0xa1e86b",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa1e8a0",
+     "target": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Deposit_Data).UnmarshalSSZ",
+     "class": "a",
+     "how": "machine code in the host (E2eScal.H4.dd_e2e_accept_main)"
+    },
+    {
+     "site": "0xa1e8d9",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "IndexedAttestation only: FmtErrorfDWC (two '%d ... %w' formats), FmtErrorfWC ('Data: %w')"
+    },
+    {
+     "site": "0xa1e8ed",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC: IndexedAttestation Data (AttestationData type word); after fmt.errorf: the nil-result branch, excluded by rax != 0"
+    },
+    {
+     "site": "0xa1e91a",
+     "target": "runtime.panicBounds",
+     "class": "a",
+     "how": "bounds check proved not taken in every loop iteration (fv_iter / lu_iter idiom)"
+    },
+    {
+     "site": "0xa1e920",
+     "target": "runtime.panicBounds",
+     "class": "a",
+     "how": "bounds check proved not taken in every loop iteration (fv_iter / lu_iter idiom)"
+    },
+    {
+     "site": "0xa1e93a",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (Deposit decoder)"
+  }
+ },
+ "call_counts": {
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Deposit).UnmarshalSSZ": {
+   "runtime.makeslice": 2,
+   "runtime.gcWriteBarrier2": 3,
+   "runtime.memmove": 1,
+   "runtime.newobject": 2,
+   "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Deposit_Data).UnmarshalSSZ": 1,
+   "fmt.errorf": 1,
+   "runtime.panicBounds": 2,
+   "runtime.morestack_noctxt.abi0": 1
+  }
+ },
+ "unclassified_in_scope": [],
+ "missing": []
+}

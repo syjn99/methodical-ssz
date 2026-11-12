@@ -1,0 +1,39 @@
+step	utc	exit	wall_s	peak_rss_gib	command
+00-build-E2eList	2026-11-12T03:35:55Z	0	50.9	4.91	heavy.py -- lake build E2eList
+03-hb-conv	2026-11-12T03:38:48Z	0	1.0	0.0	heavy.py -- python3 -I -B link/conv.py <work>/link-hb/target.objdump <work>/link-hb/p1bin-amd64.nm <work>/link-hb/norm --norm
+04-hb-data	2026-11-12T03:41:50Z	0	1.0	0.01	heavy.py -- python3 -I -B gen/e2e/hblink.py data <work>/link-hb prysm/go1.26.10/e2e/link prysm/go1.26.10/e2e/lv/link
+06-hb-check	2026-11-12T03:41:51Z	0	1.0	0.01	heavy.py -- python3 -I -B link/check.py <work>/link-hb
+07-StmtHb	2026-11-12T03:43:46Z	0	9.3	1.96	heavy.py -- lake build E2eHb.StmtHb
+08-HbReject-Lemmas	2026-11-12T03:44:37Z	0	6.2	3.25	heavy.py -- lake build E2eHb.HbReject E2eHb.HbLemmas
+09-HbLoop1-a1	2026-11-12T03:46:06Z	1	8.3	2.11	heavy.py -- lake build E2eHb.HbLoop1
+10-probe1	2026-11-12T03:54:50Z	0	4.2	1.95	heavy.py -- lake env lean <work>/scratch/Probe1.lean
+11-HbLoop1-a1	2026-11-12T04:02:51Z	1	8.3	2.23	heavy.py -- lake build E2eHb.HbLoop1
+12-HbLoop1-a1	2026-11-12T04:06:11Z	0	9.4	2.34	heavy.py -- lake build E2eHb.HbLoop1
+13-HbLoop1-a1	2026-11-12T04:06:46Z	0	9.4	2.1	heavy.py -- lake build E2eHb.HbLoop1
+14-HbLoop2-a1	2026-11-12T04:07:40Z	1	7.3	2.07	heavy.py -- lake build E2eHb.HbLoop2
+15-HbLoop2-a2	2026-11-12T04:15:24Z	0	21.8	5.77	heavy.py -- lake build E2eHb.HbLoop2
+16-HbLoop2-a2	2026-11-12T04:21:19Z	1	21.8	5.74	heavy.py -- lake build E2eHb.HbLoop2
+17-HbLoop2-a2	2026-11-12T04:21:48Z	0	22.8	5.76	heavy.py -- lake build E2eHb.HbLoop2
+18-HbAccept-a1	2026-11-12T04:25:22Z	0	10.4	2.52	heavy.py -- lake build E2eHb.HbAccept
+19-HbSpec-a1	2026-11-12T04:28:12Z	1	5.2	0.96	heavy.py -- lake build E2eHb.HbSpec
+20-HbSpec-a1	2026-11-12T04:28:22Z	0	5.2	0.94	heavy.py -- lake build E2eHb.HbSpec
+22-SpecK-DescEq-a1	2026-11-12T04:30:21Z	0	8.3	0.91	heavy.py -- lake build E2eHb.HbSpecK E2eHb.HbDescEq
+23-WitHbA-a1-default	2026-11-12T04:33:04Z	1	8.3	2.08	heavy.py -- lake build E2eHb.WitHbA
+24-WitHbA-a2-2M	2026-11-12T04:33:22Z	0	17.7	2.08	heavy.py -- lake build E2eHb.WitHbA
+25-WitHbA-a3-1M	2026-11-12T04:33:45Z	0	17.7	2.07	heavy.py -- lake build E2eHb.WitHbA
+26-WitHbA-a4-400k	2026-11-12T04:37:07Z	1	10.4	2.09	heavy.py -- lake build E2eHb.WitHbA
+27-WitHbA-profile	2026-11-12T04:38:56Z	0	15.6	2.05	heavy.py -- lake env lean <work>/scratch/WitHbAProf.lean
+28-WitHbA-final	2026-11-12T04:42:21Z	0	17.7	2.07	heavy.py -- lake build E2eHb.WitHbA
+29-build-E2eHb	2026-11-12T04:49:05Z	0	2.1	0.65	heavy.py -- lake build E2eHb
+30-nobuild-all	2026-11-12T04:50:46Z	0	2.1	0.65	heavy.py -- lake build --no-build E2e E2eAd E2eScal E2eList E2eHb
+31-axgate	2026-11-12T04:50:48Z	0	105.1	4.36	heavy.py -- python3 -I -B ../gen/e2e/hbaxioms_gate.py run <work>/axgate.json <work>/axgate-dump.tsv
+32-plant-compile	2026-11-12T04:52:47Z	1	2.1	0.65	heavy.py -- lake env lean -o <work>/scratch/plantolean/E2eHb/Planted.olean <work>/scratch/plantsrc/Planted.lean
+33-axgate-plant	2026-11-12T04:52:49Z	2	6.3	3.21	heavy.py -- python3 -I -B ../gen/e2e/hbaxioms_gate.py run <work>/axgate-plant.json <work>/axgate-plant-dump.tsv --extra-lean-path <work>/scratch/plantolean --extra-module E2eHb.Planted
+34-plant-compile2	2026-11-12T04:53:09Z	0	2.1	0.65	heavy.py -- lake env lean -o .lake/build/lib/lean/E2eHb/Planted.olean E2eHb/Planted.lean
+35-axgate-plant2	2026-11-12T04:53:12Z	1	108.2	4.36	heavy.py -- python3 -I -B ../gen/e2e/hbaxioms_gate.py run <work>/axgate-plant.json <work>/axgate-plant-dump2.tsv --extra-lean-path <work>/scratch/emptypath --extra-module E2eHb.Planted
+01-hb-callgraph	(log mtime)	0	-	-	python3 -I -B (not gated; see REPORT-HB.md §7)
+02-hb-filter	(log mtime)	0	-	-	python3 -I -B (not gated; see REPORT-HB.md §7)
+04-desc-producer	(log mtime)	0	-	-	python3 -I -B (not gated; see REPORT-HB.md §7)
+21-lvdescterm	(log mtime)	0	-	-	python3 -I -B (not gated; see REPORT-HB.md §7)
+36-hbreuse	(log mtime)	0	-	-	python3 -I -B (not gated; see REPORT-HB.md §7)
+37-hbreuse	(log mtime)	0	-	-	python3 -I -B (not gated; see REPORT-HB.md §7)
