@@ -1,0 +1,7 @@
+{
+ "type": "v1alpha1.PayloadAttestationData",
+ "mode": "gen5",
+ "accept_generated": false,
+ "reason": "Partial: the GEN4 front end covers only some fields (exit 3): field BeaconBlockRoot: MATCH byte field (32 bytes): 4 steps + segment, directives 14\u201348; field Slot: MATCH call field (Slot): 6 set-up steps + call block, directives 49\u201385; field PayloadPresent: NOT COVERED [new field kind]: field kind bool (bool): no GEN2 template (nested containers, lists, bitfields, bool, other uints) (the walk stopped at directive 87: directive 87 `movzbl 0x28(%rcx),%edx`: no step lemma for this directive form); field BlobDataAvailable: NOT COVERED [new field kind]: field kind bool (bool): no GEN2 template (nested containers, lists, bitfields, bool, other uints)",
+ "exit": 2
+}

@@ -1301,3 +1301,12 @@ python3 -I -B fv/kraken/gen/e2e/negative.py fv/kraken/gen/scal/negcases-h4.json 
 python3 -I -B fv/kraken/gen/e2e/h4diff.py cases <c.json>; go run -overlay <overlay.json> ./fve2e/h4check < <c.json> > <o.json>   # Prysm 임시 트리, Go 1.26.10; overlay가 h4/h4check-main.go.txt를 main.go로 준다
 python3 -I -B fv/kraken/gen/e2e/h4diff.py check <c.json> <o.json> prysm/go1.26.10/e2e/h4/differential.json
 ```
+
+FLAT24 / H7(브랜치 `claude/ssz-fv-flat24`, 리뷰 전): 개발 모집단 밖의 평면 고정 크기 24형을 한 번 측정했다.
+생성기는 고치지 않았다. 디코더 7/24, 인코더 8/24가 생성되고 빌드되고 종류 검사를 통과했다.
+나머지는 새 필드 종류(byte20 8형, byte4 5형, byte1 1형, bool 2형)와 새 피호출자(Gwei 1형)로 거부됐다.
+생성된 형은 같은 단위에서 닫았다. 목록 스크립트(`gen/tools/inventory.py`) 기준 숫자다.
+디코더 완료 18/211, 부분 10이다. 인코더 빠른 경로 완료 24/211이다(전제: len + SizeSSZ ≤ cap, 정확한 필드 길이).
+DepositRequest 디코더만 완료다. 다른 6 디코더는 Desc 검사기 기록이 없어 codec이 빠졌다.
+증거: 부정 시험 67/67, Go 차분 138/138(linux/arm64의 Go 의미, ELF 실행 아님), 공리 게이트 PASS 14415다.
+기록: `scal/RESULT.json`의 `flat24`, `scal/CONTAMINATION.md` 39절, `prysm/go1.26.10/e2e/f24/`.

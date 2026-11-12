@@ -220,5 +220,57 @@
   "state_before_commit": "No UnmarshalSSZ/MarshalSSZTo source, .S, objdump section, IR entry, functions.json body or generator output of any of the 7 batch types was opened by this session before this record was committed.",
   "pool": "this uses up the hold-out pool of this population (v1alpha1 fixed-size types with own fields in u64 / overlay / b32 / b48 / b96); a later hold-out needs a new population",
   "rule": "H6 is touched once. No change to gen/scal/*, lemma / kind modules, Fk or contracts afterwards; existing modules under lean/E2eScal may only be joined by NEW H6 modules; a needed fix is recorded in CONTAMINATION.md as 'proposed, not done'. Raw generator output is committed unmodified before any hand work."
+ },
+ "H7": {
+  "opened_utc": "2026-11-12T05:59:42Z",
+  "by": "FLAT24 evaluator (fresh Opus session; did not build the generators, the checker, the kinds or the lemmas)",
+  "method_freeze": {
+   "sha": "09239983cefe7a0b0765060d8c0dd9afd73662fa",
+   "checked_at": "git rev-parse HEAD:<path> at the freeze SHA gives the 10 blob ids and the four lean tree ids of the controller's freeze record (E2eScal 490a0eb8, Fk 50a7c8c3, E2e d41c842e, E2eAd de5607e4)",
+   "plan_sha256": "ce313dad36c34287511e4bee411b7f1dea1bd0d5a2ffee38bf1322d868e48709"
+  },
+  "step0_checks": "gated lake build --no-build E2e E2eAd E2eScal exit 0 (All targets up-to-date, 1412 jobs); no rebuild ran (E2eScal.P2EncCp not rebuilt); pinned ELF sha256 c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e checked",
+  "population": "the 24 flat fixed-size types listed as 'not started' in fv/kraken/prysm/INVENTORY.md at the freeze SHA (script-computed flat rule; outside the 16-type development population)",
+  "batch_H7": [
+   "v1.BuilderDepositRequest",
+   "v1.BuilderExitRequest",
+   "v1.ConsolidationRequest",
+   "v1.DepositRequest",
+   "v1.Withdrawal",
+   "v1.WithdrawalRequest",
+   "v1alpha1.BLSToExecutionChange",
+   "v1alpha1.BeaconBlocksByRangeRequest",
+   "v1alpha1.BlobSidecarsByRangeRequest",
+   "v1alpha1.Builder",
+   "v1alpha1.BuilderPendingWithdrawal",
+   "v1alpha1.BuilderPreferences",
+   "v1alpha1.ENRForkID",
+   "v1alpha1.ExecutionPayloadEnvelopesByRangeRequest",
+   "v1alpha1.Fork",
+   "v1alpha1.ForkData",
+   "v1alpha1.PartialDataColumnGroupID",
+   "v1alpha1.PayloadAttestationData",
+   "v1alpha1.ProposerPreferences",
+   "v1alpha1.Status",
+   "v1alpha1.StatusV2",
+   "v1alpha1.Validator",
+   "v1alpha1.ValidatorIdentity",
+   "v1alpha1.ValidatorRegistrationV1"
+  ],
+  "scope_H7": [
+   "Part 1 (S): link tables for UnmarshalSSZ and MarshalSSZTo of all 24 from the pinned ELF (one bundle); ONE p2dec --gen5 run and ONE p2enc --gen6 run per type (48 runs, gated, no trial or rerun, no option change); raw outputs + summaries committed unedited; build each output; kindcheck.py",
+   "Part 2: close what was generated (size reject, independent Desc committed before any checker Desc, codec equality, spec alignment, reject-complete, witnesses; encoder fast-path witness and spec corollary); independent hand statements for at least four decoders and four encoders written before reading the generated theorem of that type",
+   "Part 3: mapping rows in gen/tools/inventory.py for the newly closed types; totals only from the script"
+  ],
+  "excluded": [
+   "types refused by a generator are not hand-proved in this unit",
+   "growslice / T-7, SizeSSZ, MarshalSSZ, HashTreeRoot",
+   "AttestationData's encoder; lists / vectors / bitfields / nested containers",
+   "generator, checker, kind, lemma, Fk and contract changes"
+  ],
+  "known_in_advance": "the inventory flat rule admits field kinds the generators were not built for (e.g. bool, other byte-vector lengths, other uint widths, other overlay callees); refusals are results. These types are NOT near-variants by construction of any filter; a similarity note per type is given in Part 1.",
+  "state_before_commit": "No UnmarshalSSZ/MarshalSSZTo source, .S, objdump section, IR entry, functions.json body, Prysm proto definition, consensus-specs container text or generator output of any of the 24 types was opened by this session before this record was committed. Read so far: their names in INVENTORY.md and the flat rule text.",
+  "pool": "this touches the 24 flat fixed-size types once; after this they are opened and no longer a hold-out",
+  "rule": "H7 is touched once. No change to gen/scal/* (except appending names to the AxiomsScal.lean hand list), lemma / kind modules, Fk or contracts; new modules only; a needed fix is recorded as 'proposed, not done'. Raw generator output is committed unmodified before any hand work."
  }
 }

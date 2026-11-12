@@ -9,7 +9,7 @@
  },
  "axioms_gate": {
   "verdict": "PASS",
-  "declarations": 12177
+  "declarations": 14415
  },
  "definition_complete": "decoder: accept + size reject + spec alignment (accept_spec_k, reject_size_spec, reject_complete) + Desc codec equality / correspondence + accept witness + reject witness, all kernel-checked theorems with standard axioms; accept / reject / spec_k / reject_size_spec theorems keyed to the function by the code constant in their type (the function is the subject: no other target code constant of the theorem calls it); witnesses and spec theorems use the mapped accept / reject theorem",
  "complete_does_not_include": [
@@ -45,17 +45,17 @@
    "UnmarshalSSZ": {
     "target": 211,
     "functions_json": 211,
-    "mapped": 21,
-    "complete": 17,
-    "partial": 4
+    "mapped": 28,
+    "complete": 18,
+    "partial": 10
    },
    "MarshalSSZTo": {
     "target": 211,
     "functions_json": 211,
-    "mapped": 16,
+    "mapped": 24,
     "complete": 0,
-    "partial": 16,
-    "fast_path_complete": 16,
+    "partial": 24,
+    "fast_path_complete": 24,
     "fast_path_partial": 0
    },
    "MarshalSSZ": {
@@ -108,7 +108,7 @@
     "partial": 0
    }
   },
-  "types_not_started": 190,
+  "types_not_started": 182,
   "development_population": [
    "Checkpoint",
    "BeaconBlockHeader",
@@ -132,30 +132,164 @@
   "flat_rule": "IR record `ir` of `prysm/ir/ir-mainnet.json` (the ELF is built without the `minimal` tag): `variable` false, and every field is a byte vector (`k` vector of `byte`), an unsigned integer (`k` uint), a bool (`k` bool) or a uint overlay (`k` overlay of a uint, not a bitfield); no nested container, no list, no bitfield, no vector of non-bytes",
   "flat_fixed_types_in_target": 40,
   "flat_outside_development_population": {
-   "v1.BuilderDepositRequest": "not started",
+   "v1.BuilderDepositRequest": "started",
    "v1.BuilderExitRequest": "not started",
    "v1.ConsolidationRequest": "not started",
-   "v1.DepositRequest": "not started",
+   "v1.DepositRequest": "started",
    "v1.Withdrawal": "not started",
    "v1.WithdrawalRequest": "not started",
    "v1alpha1.BLSToExecutionChange": "not started",
-   "v1alpha1.BeaconBlocksByRangeRequest": "not started",
-   "v1alpha1.BlobSidecarsByRangeRequest": "not started",
+   "v1alpha1.BeaconBlocksByRangeRequest": "started",
+   "v1alpha1.BlobSidecarsByRangeRequest": "started",
    "v1alpha1.Builder": "not started",
    "v1alpha1.BuilderPendingWithdrawal": "not started",
-   "v1alpha1.BuilderPreferences": "not started",
+   "v1alpha1.BuilderPreferences": "started",
    "v1alpha1.ENRForkID": "not started",
-   "v1alpha1.ExecutionPayloadEnvelopesByRangeRequest": "not started",
+   "v1alpha1.ExecutionPayloadEnvelopesByRangeRequest": "started",
    "v1alpha1.Fork": "not started",
    "v1alpha1.ForkData": "not started",
-   "v1alpha1.PartialDataColumnGroupID": "not started",
+   "v1alpha1.PartialDataColumnGroupID": "started",
    "v1alpha1.PayloadAttestationData": "not started",
    "v1alpha1.ProposerPreferences": "not started",
    "v1alpha1.Status": "not started",
    "v1alpha1.StatusV2": "not started",
    "v1alpha1.Validator": "not started",
-   "v1alpha1.ValidatorIdentity": "not started",
+   "v1alpha1.ValidatorIdentity": "started",
    "v1alpha1.ValidatorRegistrationV1": "not started"
+  },
+  "flat_outside_development_population_states": {
+   "v1.BuilderDepositRequest": {
+    "decoder": "partial",
+    "decoder_missing": [
+     "codec"
+    ],
+    "encoder": "fast path complete"
+   },
+   "v1.BuilderExitRequest": {
+    "decoder": "not started",
+    "decoder_missing": [],
+    "encoder": "not started"
+   },
+   "v1.ConsolidationRequest": {
+    "decoder": "not started",
+    "decoder_missing": [],
+    "encoder": "not started"
+   },
+   "v1.DepositRequest": {
+    "decoder": "complete",
+    "decoder_missing": [],
+    "encoder": "fast path complete"
+   },
+   "v1.Withdrawal": {
+    "decoder": "not started",
+    "decoder_missing": [],
+    "encoder": "not started"
+   },
+   "v1.WithdrawalRequest": {
+    "decoder": "not started",
+    "decoder_missing": [],
+    "encoder": "not started"
+   },
+   "v1alpha1.BLSToExecutionChange": {
+    "decoder": "not started",
+    "decoder_missing": [],
+    "encoder": "not started"
+   },
+   "v1alpha1.BeaconBlocksByRangeRequest": {
+    "decoder": "partial",
+    "decoder_missing": [
+     "codec"
+    ],
+    "encoder": "fast path complete"
+   },
+   "v1alpha1.BlobSidecarsByRangeRequest": {
+    "decoder": "partial",
+    "decoder_missing": [
+     "codec"
+    ],
+    "encoder": "fast path complete"
+   },
+   "v1alpha1.Builder": {
+    "decoder": "not started",
+    "decoder_missing": [],
+    "encoder": "not started"
+   },
+   "v1alpha1.BuilderPendingWithdrawal": {
+    "decoder": "not started",
+    "decoder_missing": [],
+    "encoder": "not started"
+   },
+   "v1alpha1.BuilderPreferences": {
+    "decoder": "not started",
+    "decoder_missing": [],
+    "encoder": "fast path complete"
+   },
+   "v1alpha1.ENRForkID": {
+    "decoder": "not started",
+    "decoder_missing": [],
+    "encoder": "not started"
+   },
+   "v1alpha1.ExecutionPayloadEnvelopesByRangeRequest": {
+    "decoder": "partial",
+    "decoder_missing": [
+     "codec"
+    ],
+    "encoder": "fast path complete"
+   },
+   "v1alpha1.Fork": {
+    "decoder": "not started",
+    "decoder_missing": [],
+    "encoder": "not started"
+   },
+   "v1alpha1.ForkData": {
+    "decoder": "not started",
+    "decoder_missing": [],
+    "encoder": "not started"
+   },
+   "v1alpha1.PartialDataColumnGroupID": {
+    "decoder": "partial",
+    "decoder_missing": [
+     "codec"
+    ],
+    "encoder": "fast path complete"
+   },
+   "v1alpha1.PayloadAttestationData": {
+    "decoder": "not started",
+    "decoder_missing": [],
+    "encoder": "not started"
+   },
+   "v1alpha1.ProposerPreferences": {
+    "decoder": "not started",
+    "decoder_missing": [],
+    "encoder": "not started"
+   },
+   "v1alpha1.Status": {
+    "decoder": "not started",
+    "decoder_missing": [],
+    "encoder": "not started"
+   },
+   "v1alpha1.StatusV2": {
+    "decoder": "not started",
+    "decoder_missing": [],
+    "encoder": "not started"
+   },
+   "v1alpha1.Validator": {
+    "decoder": "not started",
+    "decoder_missing": [],
+    "encoder": "not started"
+   },
+   "v1alpha1.ValidatorIdentity": {
+    "decoder": "partial",
+    "decoder_missing": [
+     "codec"
+    ],
+    "encoder": "fast path complete"
+   },
+   "v1alpha1.ValidatorRegistrationV1": {
+    "decoder": "not started",
+    "decoder_missing": [],
+    "encoder": "not started"
+   }
   },
   "target_types_without_ir": [
    "primitives.BuilderIndex",
@@ -904,7 +1038,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -918,7 +1052,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -932,7 +1066,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -946,10 +1080,27 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "E2eScal.Gen6Enc.bdr_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.bdr_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cBdr.bdr_e2c_wit_empty",
+     "E2eScal.WitE2cBdr.bdr_e2c_wit_prefix"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (4 capacity tests)",
+    "length rejects (3 byte fields)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -960,7 +1111,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -974,10 +1125,20 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "partial",
+   "missing": [
+    "codec"
+   ],
+   "theorems": {
+    "accept": "E2eScal.Gen.bdr_g5dec_accept",
+    "reject": "E2eScal.Gen.bdr_g5dec_reject",
+    "spec_k": "E2eScal.F24.bdr_e2e_accept_spec_k",
+    "reject_size_spec": "E2eScal.F24.bdr_e2e_reject_size_spec",
+    "reject_complete": "E2eScal.F24.bdr_e2e_reject_complete",
+    "witness_accept": "E2eScal.WitBdrGA.bdr_accept_runs",
+    "witness_reject": "E2eScal.WitBdrGR.bdr_reject_runs"
+   },
+   "note": "FLAT24 / H7: generated accept / size-reject theorems (p2dec --gen5, one-shot run); spec Desc from the Prysm proto; codec: no Desc-checker record for this type"
   },
   {
    "symbols": [
@@ -1156,7 +1317,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -1170,7 +1331,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -1184,7 +1345,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -1198,10 +1359,27 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "E2eScal.Gen6Enc.dpr_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.dpr_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cDpr.dpr_e2c_wit_empty",
+     "E2eScal.WitE2cDpr.dpr_e2c_wit_prefix"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (5 capacity tests)",
+    "length rejects (3 byte fields)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -1212,7 +1390,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -1226,10 +1404,21 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "accept": "E2eScal.Gen.dpr_g5dec_accept",
+    "reject": "E2eScal.Gen.dpr_g5dec_reject",
+    "spec_k": "E2eScal.F24.dpr_e2e_accept_spec_k",
+    "reject_size_spec": "E2eScal.F24.dpr_e2e_reject_size_spec",
+    "reject_complete": "E2eScal.F24.dpr_e2e_reject_complete",
+    "codec": [
+     "E2e.prysmDprDesc_deserialize_checker"
+    ],
+    "witness_accept": "E2eScal.WitDprGA.dpr_accept_runs",
+    "witness_reject": "E2eScal.WitDprGR.dpr_reject_runs"
+   },
+   "note": "FLAT24 / H7: generated accept / size-reject theorems (p2dec --gen5, one-shot run); spec Desc from the Prysm proto"
   },
   {
    "symbols": [
@@ -5379,7 +5568,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -5393,7 +5582,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -5407,7 +5596,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -5421,10 +5610,26 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "E2eScal.Gen6Enc.bbr_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.bbr_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cBbr.bbr_e2c_wit_empty",
+     "E2eScal.WitE2cBbr.bbr_e2c_wit_prefix"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (3 capacity tests)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -5435,7 +5640,7 @@
    "method": "MaxSizeSSZ",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -5449,7 +5654,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -5463,10 +5668,20 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "partial",
+   "missing": [
+    "codec"
+   ],
+   "theorems": {
+    "accept": "E2eScal.Gen.bbr_g5dec_accept",
+    "reject": "E2eScal.Gen.bbr_g5dec_reject",
+    "spec_k": "E2eScal.F24.bbr_e2e_accept_spec_k",
+    "reject_size_spec": "E2eScal.F24.bbr_e2e_reject_size_spec",
+    "reject_complete": "E2eScal.F24.bbr_e2e_reject_complete",
+    "witness_accept": "E2eScal.WitBbrGA.bbr_accept_runs",
+    "witness_reject": "E2eScal.WitBbrGR.bbr_reject_runs"
+   },
+   "note": "FLAT24 / H7: generated accept / size-reject theorems (p2dec --gen5, one-shot run); spec Desc from the Prysm proto; codec: no Desc-checker record for this type"
   },
   {
    "symbols": [
@@ -7185,7 +7400,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -7199,7 +7414,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -7213,7 +7428,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -7227,10 +7442,26 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "E2eScal.Gen6Enc.bsr_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.bsr_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cBsr.bsr_e2c_wit_empty",
+     "E2eScal.WitE2cBsr.bsr_e2c_wit_prefix"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (2 capacity tests)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -7241,7 +7472,7 @@
    "method": "MaxSizeSSZ",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -7255,7 +7486,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -7269,10 +7500,20 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "partial",
+   "missing": [
+    "codec"
+   ],
+   "theorems": {
+    "accept": "E2eScal.Gen.bsr_g5dec_accept",
+    "reject": "E2eScal.Gen.bsr_g5dec_reject",
+    "spec_k": "E2eScal.F24.bsr_e2e_accept_spec_k",
+    "reject_size_spec": "E2eScal.F24.bsr_e2e_reject_size_spec",
+    "reject_complete": "E2eScal.F24.bsr_e2e_reject_complete",
+    "witness_accept": "E2eScal.WitBsrGA.bsr_accept_runs",
+    "witness_reject": "E2eScal.WitBsrGR.bsr_reject_runs"
+   },
+   "note": "FLAT24 / H7: generated accept / size-reject theorems (p2dec --gen5, one-shot run); spec Desc from the Prysm proto; codec: no Desc-checker record for this type"
   },
   {
    "symbols": [
@@ -8039,7 +8280,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -8053,7 +8294,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -8067,7 +8308,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -8081,10 +8322,26 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "E2eScal.Gen6Enc.bpf_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.bpf_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cBpf.bpf_e2c_wit_empty",
+     "E2eScal.WitE2cBpf.bpf_e2c_wit_prefix"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (1 capacity tests)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -8095,7 +8352,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -8109,7 +8366,7 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -9877,7 +10134,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -9891,7 +10148,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -9905,7 +10162,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -9919,10 +10176,26 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "E2eScal.Gen6Enc.epr_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.epr_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cEpr.epr_e2c_wit_empty",
+     "E2eScal.WitE2cEpr.epr_e2c_wit_prefix"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (2 capacity tests)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -9933,7 +10206,7 @@
    "method": "MaxSizeSSZ",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -9947,7 +10220,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -9961,10 +10234,20 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "partial",
+   "missing": [
+    "codec"
+   ],
+   "theorems": {
+    "accept": "E2eScal.Gen.epr_g5dec_accept",
+    "reject": "E2eScal.Gen.epr_g5dec_reject",
+    "spec_k": "E2eScal.F24.epr_e2e_accept_spec_k",
+    "reject_size_spec": "E2eScal.F24.epr_e2e_reject_size_spec",
+    "reject_complete": "E2eScal.F24.epr_e2e_reject_complete",
+    "witness_accept": "E2eScal.WitEprGA.epr_accept_runs",
+    "witness_reject": "E2eScal.WitEprGR.epr_reject_runs"
+   },
+   "note": "FLAT24 / H7: generated accept / size-reject theorems (p2dec --gen5, one-shot run); spec Desc from the Prysm proto; codec: no Desc-checker record for this type"
   },
   {
    "symbols": [
@@ -12972,7 +13255,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -12986,7 +13269,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -13000,7 +13283,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -13014,10 +13297,27 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "E2eScal.Gen6Enc.pdc_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.pdc_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cPdc.pdc_e2c_wit_empty",
+     "E2eScal.WitE2cPdc.pdc_e2c_wit_prefix"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (2 capacity tests)",
+    "length rejects (1 byte fields)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -13028,7 +13328,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -13042,10 +13342,20 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "partial",
+   "missing": [
+    "codec"
+   ],
+   "theorems": {
+    "accept": "E2eScal.Gen.pdc_g5dec_accept",
+    "reject": "E2eScal.Gen.pdc_g5dec_reject",
+    "spec_k": "E2eScal.F24.pdc_e2e_accept_spec_k",
+    "reject_size_spec": "E2eScal.F24.pdc_e2e_reject_size_spec",
+    "reject_complete": "E2eScal.F24.pdc_e2e_reject_complete",
+    "witness_accept": "E2eScal.WitPdcGA.pdc_accept_runs",
+    "witness_reject": "E2eScal.WitPdcGR.pdc_reject_runs"
+   },
+   "note": "FLAT24 / H7: generated accept / size-reject theorems (p2dec --gen5, one-shot run); spec Desc from the Prysm proto; codec: no Desc-checker record for this type"
   },
   {
    "symbols": [
@@ -18543,7 +18853,7 @@
    "method": "HashTreeRoot",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18557,7 +18867,7 @@
    "method": "HashTreeRootWith",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18571,7 +18881,7 @@
    "method": "MarshalSSZ",
    "dumped": false,
    "kind": null,
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18585,10 +18895,27 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "E2eScal.Gen6Enc.vid_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.vid_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cVid.vid_e2c_wit_empty",
+     "E2eScal.WitE2cVid.vid_e2c_wit_prefix"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (3 capacity tests)",
+    "length rejects (1 byte fields)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -18599,7 +18926,7 @@
    "method": "SizeSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
+   "state": "none",
    "missing": [],
    "theorems": {},
    "note": ""
@@ -18613,10 +18940,20 @@
    "method": "UnmarshalSSZ",
    "dumped": true,
    "kind": "generated",
-   "state": "not started",
-   "missing": [],
-   "theorems": {},
-   "note": ""
+   "state": "partial",
+   "missing": [
+    "codec"
+   ],
+   "theorems": {
+    "accept": "E2eScal.Gen.vid_g5dec_accept",
+    "reject": "E2eScal.Gen.vid_g5dec_reject",
+    "spec_k": "E2eScal.F24.vid_e2e_accept_spec_k",
+    "reject_size_spec": "E2eScal.F24.vid_e2e_reject_size_spec",
+    "reject_complete": "E2eScal.F24.vid_e2e_reject_complete",
+    "witness_accept": "E2eScal.WitVidGA.vid_accept_runs",
+    "witness_reject": "E2eScal.WitVidGR.vid_reject_runs"
+   },
+   "note": "FLAT24 / H7: generated accept / size-reject theorems (p2dec --gen5, one-shot run); spec Desc from the Prysm proto; codec: no Desc-checker record for this type"
   },
   {
    "symbols": [

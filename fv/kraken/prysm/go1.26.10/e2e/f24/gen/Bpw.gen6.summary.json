@@ -1,0 +1,7 @@
+{
+ "type": "v1alpha1.BuilderPendingWithdrawal",
+ "mode": "gen6",
+ "generated": false,
+ "reason": "G6Refuse: field FeeRecipient: byte vector of 20 bytes (covered: 32, 48, 96)",
+ "exit": 2
+}
