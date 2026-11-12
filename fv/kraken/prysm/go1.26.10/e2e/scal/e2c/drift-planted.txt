@@ -1,5 +1,0 @@
-ADDED	E2eScal.E2c.vb_e2c_planted	kind=theorem axioms=Classical.choice,Quot.sound,propext,sorryAx
-CHANGED	E2eScal.E2c.vb_e2c_spec_k	type: 00000000e2f3847d -> 0000000028208847
-REMOVED	E2eScal.E2c.vb_e2c_spec_k._simp_1_3	
-REMOVED	E2eScal.E2c.vb_e2c_spec_k.match_1_1	
-SUMMARY base=12177 head=12176 drift=4 allowed=0

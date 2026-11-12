@@ -1,7 +1,0 @@
-{
- "type": "v1alpha1.ForkData",
- "mode": "gen6",
- "generated": false,
- "reason": "G6Refuse: field CurrentVersion: byte vector of 4 bytes (covered: 32, 48, 96)",
- "exit": 2
-}

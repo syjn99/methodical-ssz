@@ -1,7 +1,0 @@
-t1 rc=0 tags=[] run=[Fulu|PartialDataColumns] pkgs=./proto/prysm/v1alpha1
-t2 rc=0 tags=[minimal] run=[Fulu|PartialDataColumns] pkgs=./proto/prysm/v1alpha1
-t3 rc=1 tags=[] run=[DataColumn|PartsMetadata|PartialColumn|DecodePartialColumnSidecar] pkgs=./consensus-types/blocks
-t4 rc=1 tags=[minimal] run=[DataColumn|PartsMetadata|PartialColumn|DecodePartialColumnSidecar] pkgs=./consensus-types/blocks
-t5 rc=0 tags=[] run=[TestSlotFromBlock|TestByState|TestUnmarshalState|TestDetectAndUnmarshalBlock] pkgs=./encoding/ssz/detect
-t6 rc=1 tags=[minimal] run=[TestSlotFromBlock|TestByState|TestUnmarshalState|TestDetectAndUnmarshalBlock] pkgs=./encoding/ssz/detect
-t7 rc=1 tags=[] run=[] pkgs=./proto/prysm/v1alpha1 ./proto/engine/v1 ./consensus-types/blocks ./encoding/ssz/detect

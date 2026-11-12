@@ -1,1 +1,0 @@
-SUMMARY base=5007 head=5007 drift=0 allowed=0

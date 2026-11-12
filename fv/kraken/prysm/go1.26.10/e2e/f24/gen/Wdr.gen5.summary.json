@@ -1,7 +1,0 @@
-{
- "type": "v1.WithdrawalRequest",
- "mode": "gen5",
- "accept_generated": false,
- "reason": "NoMatch: field SourceAddress: NOT COVERED [new field kind]: byte vector of size 20 (lemma sizes 32, 48, 96 only) (the walk stopped at directive 13: directive 13: byte segment, the next IR field is SourceAddress (none)); field ValidatorPubkey: NOT COVERED [other]: not reached: the walk stopped in field SourceAddress (directive 13: byte segment, the next IR field is SourceAddress (none)); field Amount: NOT COVERED [other]: not reached: the walk stopped in field SourceAddress (directive 13: byte segment, the next IR field is SourceAddress (none))",
- "exit": 2
-}

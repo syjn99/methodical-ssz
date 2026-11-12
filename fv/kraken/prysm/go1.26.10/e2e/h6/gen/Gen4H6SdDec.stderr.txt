@@ -1,2 +1,0 @@
-scalgen p2dec: field ObjectRoot: COVERED byte field (32 bytes): 4 steps + segment, directives 13–46
-scalgen p2dec: field Domain: COVERED byte field (32 bytes): 4 steps + segment, directives 47–82

@@ -1,7 +1,0 @@
-{
- "type": "v1alpha1.PendingPartialWithdrawal",
- "mode": "gen5",
- "accept_generated": false,
- "reason": "G5Refuse: gen5: field 3 reads rdx = ('BF', 16), not the receiver / buffer / zero at the boundary (interleaved or unexpressible boundary state)",
- "exit": 2
-}

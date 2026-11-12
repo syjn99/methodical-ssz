@@ -1,7 +1,0 @@
-{
- "type": "v1.WithdrawalRequest",
- "mode": "gen6",
- "generated": false,
- "reason": "G6Refuse: field SourceAddress: byte vector of 20 bytes (covered: 32, 48, 96)",
- "exit": 2
-}

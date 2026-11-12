@@ -1,2 +1,0 @@
-scalgen p2dec: field BlockSummaryRoot: COVERED byte field (32 bytes): 4 steps + segment, directives 13–46
-scalgen p2dec: field StateSummaryRoot: COVERED byte field (32 bytes): 4 steps + segment, directives 47–81

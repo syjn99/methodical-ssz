@@ -8,8 +8,8 @@ A claim is about one exact set of inputs. Record all of them before work starts 
 | --- | --- |
 | Reviewed base commit (full SHA) | the review that accepted it; `git rev-parse <sha>^{commit}` |
 | Target ELF sha256 | `link/out/build-ids.txt` or the project's `build-ids.txt` |
-| Generator commit (`sszgen/`, `ssz/`) | the commit recorded in `fv/kraken/TOOLS.md`. `link/out/build-ids.txt` records only the `ssz/` tree id (`ssz tree:`, the value of `git rev-parse HEAD:ssz`); a tree id is not a commit, record it only as "`ssz/` tree id" |
-| Go version and build flags | `build-ids.txt`, `TOOLS.md` |
+| Generator commit (`sszgen/`, `ssz/`) | the commit recorded in `fv/kraken/README.md`. `link/out/build-ids.txt` records only the `ssz/` tree id (`ssz tree:`, the value of `git rev-parse HEAD:ssz`); a tree id is not a commit, record it only as "`ssz/` tree id" |
+| Go version and build flags | `build-ids.txt`, `fv/kraken/README.md` |
 | Kraken commit | `lean/lake-manifest.json` |
 | Lean toolchain | `lean/lean-toolchain` |
 
@@ -46,7 +46,7 @@ Steps:
 5. Give the reviewer the drift output, the allowlist and both SHAs.
 
 An axiom-set change is drift even when every axiom is on the allowed policy list (`propext`, `Classical.choice`, `Quot.sound`).
-`lean/tools/axioms.sh` checks the policy. It does not detect a theorem that now uses `Classical.choice` and did not before.
+The axioms gate (`fv/kraken/gen/e2e/axioms_gate.py`) checks the policy. It does not detect a theorem that now uses `Classical.choice` and did not before.
 
 ### Negative controls
 

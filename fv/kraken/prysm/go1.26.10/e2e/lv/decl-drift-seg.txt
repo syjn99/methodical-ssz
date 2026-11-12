@@ -1,3 +1,0 @@
-# decl_drift base 6a78c591e8bcd698b7b9313b1c09cb25f3986911 vs head syjn99/ssz-fv-hb after SEG round 2 (roots E2e,E2eAd,E2eScal; base dump: the LV base dump, sha256 96f2fb34…; head dump: log 139, 265 modules incl. E2eList, E2eHb, E2eSeg, E2eDep, E2eDepW)
-SUMMARY base=5007 head=5007 drift=0 allowed=0
-# control: one type hash planted in a copy of the head dump (log 141): exit 1, drift=1

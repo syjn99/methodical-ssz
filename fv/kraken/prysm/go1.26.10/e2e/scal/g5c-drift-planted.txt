@@ -1,3 +1,0 @@
-ADDED	E2eScal.WitSaGA.planted_sorry	kind=theorem axioms=sorryAx
-CHANGED	E2eScal.WitSaGA.sa_accept_runs	type: 000000004d1daa9a -> 000000009e62fd7a
-SUMMARY base=9758 head=9759 drift=2 allowed=0

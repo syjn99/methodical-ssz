@@ -1,6 +1,0 @@
-COMPARE Gen1c.Checkpoint.size_stmt cp_size_main SAME
-COMPARE Gen1c.AttestationData.size_stmt ad_size_main SAME
-COMPARE Gen1c.BitVec.size_stmt bv_size_main SAME
-COMPARE Gen1c.FixedVec.size_stmt fv_size_main SAME
-COMPARE Gen1c.Scalars.size_stmt sc_size_main DIFF
-COMPARE Gen1c.Checkpoint.size_stmt ad_size_main DIFF

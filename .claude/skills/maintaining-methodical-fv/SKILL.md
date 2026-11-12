@@ -49,7 +49,7 @@ Each procedure has limits. State them in the report.
 
 1. **Pins** (`references/pins-and-drift.md`).
    Record the reviewed base SHA, target ELF sha256, generator commit, Go version and flags, Kraken commit, Lean toolchain.
-   Read them from the files named in `fv/kraken/TOOLS.md`, not from memory. A claim is tied to these pins only.
+   Read them from the files named in `fv/kraken/README.md`, not from memory. A claim is tied to these pins only.
 2. **Preserved statements and drift** (`references/pins-and-drift.md`).
    Theorem statements, every definition they reference, and the meaning of each witness stay as reviewed.
    Run `decl_drift.py` base vs head; every drift is either fixed or allowlisted by name with a reason.

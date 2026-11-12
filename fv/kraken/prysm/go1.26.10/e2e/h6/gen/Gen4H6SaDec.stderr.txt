@@ -1,2 +1,0 @@
-scalgen p2dec: field Slot: COVERED call field (Slot): 2 set-up steps + call block, directives 14–47
-scalgen p2dec: field SubcommitteeIndex: COVERED uint64 field: 4 steps, directives 48–51

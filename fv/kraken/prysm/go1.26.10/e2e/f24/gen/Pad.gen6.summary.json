@@ -1,7 +1,0 @@
-{
- "type": "v1alpha1.PayloadAttestationData",
- "mode": "gen6",
- "generated": false,
- "reason": "G6Refuse: field PayloadPresent: not an 8-byte uint64 or uint64 overlay (field kind not covered)",
- "exit": 2
-}

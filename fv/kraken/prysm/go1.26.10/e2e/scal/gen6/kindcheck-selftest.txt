@@ -1,1 +1,0 @@
-selftest PASS (157 cases + 85 exit-code / rule-12 / rule-13 cases)

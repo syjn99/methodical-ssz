@@ -33,7 +33,7 @@ Keep them in separate sections of every report. Never present one as another.
 - Each finding gets an ID once (for example `F1`, `F2`). Never rename or reuse an ID, also after it is closed or withdrawn.
 - Each entry: ID, first seen (commit), state (open, fixed, withdrawn, accepted), evidence kind, short text.
 - Each checkpoint report lists the delta: new IDs, state changes, and IDs whose evidence changed.
-- A withdrawn finding stays in the ledger with the reason. The history goes to `HISTORY.md`, per `fv/AGENTS.md`.
+- A withdrawn finding stays in `FINDINGS.md` with the reason. Git history and the PR hold the history, per `fv/AGENTS.md`.
 
 ## 9. Bug loop
 

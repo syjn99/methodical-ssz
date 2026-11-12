@@ -1,7 +1,0 @@
-{
- "type": "v1alpha1.Builder",
- "mode": "gen5",
- "accept_generated": false,
- "reason": "Partial: the GEN4 front end covers only some fields (exit 3): field Pubkey: MATCH byte field (48 bytes): 4 steps + segment, directives 14\u201348; field Version: NOT COVERED [new field kind]: byte vector of size 1 (lemma sizes 32, 48, 96 only) (the walk stopped at directive 49: directive 49: byte segment, the next IR field is Version (none)); field ExecutionAddress: NOT COVERED [new field kind]: byte vector of size 20 (lemma sizes 32, 48, 96 only); field Balance: NOT COVERED [new field kind]: overlay callee github.com/OffchainLabs/prysm/v7/consensus-types/primitives.Gwei: no proved callee accept spec (only Slot, CommitteeIndex, ValidatorIndex, Epoch of consensus-types/primitives); field DepositEpoch: NOT COVERED [other]: not reached: the walk stopped in field Version (directive 49: byte segment, the next IR field is Version (none)); field WithdrawableEpoch: NOT COVERED [other]: not reached: the walk stopped in field Version (directive 49: byte segment, the next IR field is Version (none))",
- "exit": 2
-}

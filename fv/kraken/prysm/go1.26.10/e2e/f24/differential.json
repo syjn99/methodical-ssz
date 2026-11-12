@@ -1,6 +1,0 @@
-{
- "cases": 138,
- "pass": 138,
- "mismatches": [],
- "note": "Go semantics on linux/arm64 (go run -overlay, Go 1.26.10), not the amd64 ELF"
-}

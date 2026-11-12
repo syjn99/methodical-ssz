@@ -1,7 +1,0 @@
-{
- "type": "v1alpha1.Fork",
- "mode": "gen5",
- "accept_generated": false,
- "reason": "NoMatch: field PreviousVersion: NOT COVERED [new field kind]: byte vector of size 4 (lemma sizes 32, 48, 96 only) (the walk stopped at directive 14: directive 14: byte segment, the next IR field is PreviousVersion (none)); field CurrentVersion: NOT COVERED [new field kind]: byte vector of size 4 (lemma sizes 32, 48, 96 only); field Epoch: NOT COVERED [other]: not reached: the walk stopped in field PreviousVersion (directive 14: byte segment, the next IR field is PreviousVersion (none))",
- "exit": 2
-}

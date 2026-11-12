@@ -1,7 +1,0 @@
-{
- "type": "v1alpha1.Validator",
- "mode": "gen5",
- "accept_generated": false,
- "reason": "Partial: the GEN4 front end covers only some fields (exit 3): field PublicKey: MATCH byte field (48 bytes): 4 steps + segment, directives 14\u201348; field WithdrawalCredentials: MATCH byte field (32 bytes): 4 steps + segment, directives 49\u201384; field EffectiveBalance: MATCH uint64 field: 3 steps, directives 85\u201387; field Slashed: NOT COVERED [new field kind]: field kind bool (bool): no GEN2 template (nested containers, lists, bitfields, bool, other uints) (the walk stopped at directive 88: directive 88 `movzbl 0x58(%rbx),%edx`: no step lemma for this directive form); field ActivationEligibilityEpoch: NOT COVERED [other]: not reached: the walk stopped in field Slashed (directive 88 `movzbl 0x58(%rbx),%edx`: no step lemma for this directive form); field ActivationEpoch: NOT COVERED [other]: not reached: the walk stopped in field Slashed (directive 88 `movzbl 0x58(%rbx),%edx`: no step lemma for this directive form); field ExitEpoch: NOT COVERED [other]: not reached: the walk stopped in field Slashed (directive 88 `movzbl 0x58(%rbx),%edx`: no step lemma for this directive form); field WithdrawableEpoch: NOT COVERED [other]: not reached: the walk stopped in field Slashed (directive 88 `movzbl 0x58(%rbx),%edx`: no step lemma for this directive form)",
- "exit": 2
-}
