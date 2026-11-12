@@ -18,7 +18,6 @@ open Fk Fk.W E2eEnc E2eEnc.Code
 
 namespace E2eEnc.WitG
 
-set_option maxRecDepth 100000
 
 def dataLabels : Program :=
   [.label "runtime.fvBump", .label "pad1", .label "pad2", .label "pad3", .label "pad4", .label "pad5",
@@ -69,6 +68,9 @@ theorem nsc : nextSliceCap 3353 3352 = 4382 := by decide
 -- Measured (ENC logs 44, 45, 46): 1000000 fails (`whnf` timeout); 4000000 passes. Profile (log 46): `simp` 10.2 s of
 -- the declaration, the `sep_comm` sort of the memory premise (the cause of `WitF`).
 set_option maxHeartbeats 4000000 in
+-- maxRecDepth (ENC logs 60, 61, 62): the default 512 and 2000 fail ("maximum recursion depth"), 20000 passes;
+-- all three witnesses. Cause not profiled further; the long literal lists (`z k`) of the memory block are the suspect.
+set_option maxRecDepth 20000 in
 /-- n = 0: growslice runs at site 1; the encoder returns `rbx = 3321 + 36 + 8·0` and a capacity ≥ 4382. -/
 theorem dcg_runs_n0 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length = 0)
     (zmms : RegZmms) (flags : StatusFlags) :
@@ -103,6 +105,9 @@ theorem dcg_runs_n0 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.
 -- Measured (ENC logs 44, 45, 46): 1000000 fails (`whnf` timeout); 4000000 passes. Profile (log 46): `simp` 10.2 s of
 -- the declaration, the `sep_comm` sort of the memory premise (the cause of `WitF`).
 set_option maxHeartbeats 4000000 in
+-- maxRecDepth (ENC logs 60, 61, 62): the default 512 and 2000 fail ("maximum recursion depth"), 20000 passes;
+-- all three witnesses. Cause not profiled further; the long literal lists (`z k`) of the memory block are the suspect.
+set_option maxRecDepth 20000 in
 /-- n = 1: growslice runs at site 1; the encoder returns `rbx = 3321 + 36 + 8·1` and a capacity ≥ 4382. -/
 theorem dcg_runs_n1 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length = 8)
     (zmms : RegZmms) (flags : StatusFlags) :
@@ -137,6 +142,9 @@ theorem dcg_runs_n1 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.
 -- Measured (ENC logs 44, 45, 46): 1000000 fails (`whnf` timeout); 4000000 passes. Profile (log 46): `simp` 10.2 s of
 -- the declaration, the `sep_comm` sort of the memory premise (the cause of `WitF`).
 set_option maxHeartbeats 4000000 in
+-- maxRecDepth (ENC logs 60, 61, 62): the default 512 and 2000 fail ("maximum recursion depth"), 20000 passes;
+-- all three witnesses. Cause not profiled further; the long literal lists (`z k`) of the memory block are the suspect.
+set_option maxRecDepth 20000 in
 /-- n = 128: growslice runs at site 1; the encoder returns `rbx = 3321 + 36 + 8·128` and a capacity ≥ 4382. -/
 theorem dcg_runs_n128 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length = 1024)
     (zmms : RegZmms) (flags : StatusFlags) :
@@ -172,6 +180,6 @@ example (z' : RegZmms) (f : StatusFlags) := dcg_runs_n0 (z 32) [] rfl rfl z' f
 example (z' : RegZmms) (f : StatusFlags) :=
   dcg_runs_n1 ((List.range 32).map (fun i => UInt8.ofNat i)) (Int.toBytes 8 0x0123456789abcdef) (by decide) rfl z' f
 example (z' : RegZmms) (f : StatusFlags) :=
-  dcg_runs_n128 (List.replicate 32 0xff) (List.replicate 1024 0xff) (by decide) (by simp) z' f
+  dcg_runs_n128 (List.replicate 32 0xff) (List.replicate 1024 0xff) (by decide) List.length_replicate z' f
 
 end E2eEnc.WitG

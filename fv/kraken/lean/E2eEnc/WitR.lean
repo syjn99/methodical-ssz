@@ -19,7 +19,6 @@ open Fk Fk.W E2eEnc E2eEnc.Code
 
 namespace E2eEnc.WitR
 
-set_option maxRecDepth 100000
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 abbrev bw (v : BitVec 64) : List UInt8 := Int.toBytes 8 v.toInt

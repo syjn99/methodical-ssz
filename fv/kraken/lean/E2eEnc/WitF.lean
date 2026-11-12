@@ -18,7 +18,6 @@ open Fk Fk.W E2eEnc E2eEnc.Code
 
 namespace E2eEnc.WitF
 
-set_option maxRecDepth 100000
 
 def P : Program := DcMarshal ++ RtCopy
 
@@ -105,6 +104,9 @@ theorem dcf_runs_n1 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.
 -- Measured (ENC logs 40, 41, 42): 200000 and 1000000 fail (`whnf` timeout); 4000000 passes. Profile (log 41):
 -- `simp` 12.3 s of the declaration, the `sep_comm` sort of the 26-chunk memory premise (cause as LV logs 26, 27).
 set_option maxHeartbeats 4000000 in
+-- maxRecDepth (ENC logs 60, 61, 62): the default 512 and 2000 fail ("maximum recursion depth"), 20000 passes;
+-- `dcf_runs_n128` only (n = 0, 1 pass at the default). Cause not profiled further; the long literal lists (`z k`) of the memory block are the suspect.
+set_option maxRecDepth 20000 in
 /-- n = 128: `cap = 36 + 8n = 1060`, Columns at 0x10524. -/
 theorem dcf_runs_n128 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length = 1024)
     (zmms : RegZmms) (flags : StatusFlags) :
@@ -133,6 +135,6 @@ example (z' : RegZmms) (f : StatusFlags) := dcf_runs_n0 (z 32) [] rfl rfl z' f
 example (z' : RegZmms) (f : StatusFlags) :=
   dcf_runs_n1 ((List.range 32).map (fun i => UInt8.ofNat i)) (Int.toBytes 8 0x0123456789abcdef) (by decide) rfl z' f
 example (z' : RegZmms) (f : StatusFlags) :=
-  dcf_runs_n128 (List.replicate 32 0xff) (List.replicate 1024 0xff) (by decide) (by simp) z' f
+  dcf_runs_n128 (List.replicate 32 0xff) (List.replicate 1024 0xff) (by decide) List.length_replicate z' f
 
 end E2eEnc.WitF
