@@ -374,7 +374,7 @@ did not establish the entry state (every theorem still built); the rules below r
   written) and S9 (a stale `--partial-out` file stays on exit 0 / 2; no summary on `KeyboardInterrupt`) need a
   generator change: open, not done.
 
-### GEN5 (unit G5-G): `p2dec --gen5` — generated whole accept and size-reject theorems
+### GEN5 (unit G5-G): `p2dec --gen5` — generated whole accept and size-reject theorems (reviewed with G5-L by g5-r1 on `ea6a0c6`: technical gates passed, REQUEST_CHANGES records only, closed in G5-C step 0; g5-r1 S2 open)
 
 - `p2dec --gen5 --S F.S --const C --ir IR --type T --prefix P --imports M --open M [--same-as-prop X | --same-as X]
   [--summary S.json]`: one module = the GEN4 output of the same type (front end, unchanged; prefix `P`) + a GEN5 block:
@@ -404,7 +404,7 @@ did not establish the entry state (every theorem still built); the rules below r
   `AcceptTies.lean`); one deliberately broken checker copy per sub-rule fails it (9/9, evidence script); `p2dec_test.py`
   37 `g5-*` cases (28 adversarial inputs and 2 real types refused, 5 IR statement mutants among them; 2 valid variants
   generated) and 95 `g5fc-*` fault-injection groups (702 injections, 5 types): all as expected (394/394 in total).
-- In-sample (development data); statement check = kind + ties, no hold-out. Not yet reviewed.
+- In-sample (development data); statement check = kind + ties, no hold-out. Review: g5-r1 (see the heading).
 - Correction (review g5-r1 M1 / M2 / S1 / S2, appended by unit G5-C; the bullets above are not rewritten): the
   committed run (gate job 04) came after five scratch trial runs of `p2dec --gen5` on development types, all
   ungated (a procedure deviation; outputs not committed; no result changed: the review regenerated the 15 modules

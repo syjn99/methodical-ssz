@@ -1377,7 +1377,12 @@
     "stale_olean.py (no killed or capped build)",
     "orca (not installed)"
    ],
-   "wording": "in-sample throughout; 'generated-style' = text of the recipe a generator can emit, produced here by a scratch emitter; no hold-out and no generality claim"
+   "wording": "in-sample throughout; 'generated-style' = text of the recipe a generator can emit, produced here by a scratch emitter; no hold-out and no generality claim",
+   "review_g5_r1": {
+    "state_now": "reviewed: 'not yet reviewed' in state is superseded by this entry (appended at INT7)",
+    "review": "g5-r1 (fresh Fable 5.2; G5-L and G5-G together) on ea6a0c6: REQUEST_CHANGES, records only (M1, M2 of unit G); unit L section D passed: boundary chain exact, entries discharged by the kernel, no limit raise, 10 rfl ties + the Checkpoint implication, 12 reject ties",
+    "g5l_r1": "an earlier review g5l-r1 ended at a usage limit with a partial verdict; not a result"
+   }
   }
  },
  "contamination": {
@@ -3111,7 +3116,16 @@
    "negative cases",
    "x86-64 hardware",
    "independent review of INT6"
-  ]
+  ],
+  "review_int6_r1": {
+   "state_now": "reviewed: 'not yet reviewed' texts of INT6 are superseded by this entry (appended at INT7)",
+   "verdict": "APPROVE on c29ebdc, 0 must-fix",
+   "S1": "closed at INT7: dated note appended to opt-r1/MANIFEST.md and key note_2026_11_12_int7 in opt-r1/RESULT.json",
+   "S2": "closed at INT7 (REPORT 0 / 11, BASELINE pins and section 5, CONTAMINATION 33, FINDINGS INT7 delta, this entry)",
+   "S3": "note: the two '## 21.' headings of CONTAMINATION stay (disclosed in section 27)",
+   "S4": "still open by design: h6-r1 S6, g4f3-r1 S6 and S9, int5-r1 S4",
+   "S5": "note: merge subject type 'merge' is not in the commit type list (INT7's merge uses it too, as earlier integrations; no history rewrite); a record text names a system temporary directory"
+  }
  },
  "gen5": {
   "what": "GEN5 unit G5-G: proof generator scalgen.py p2dec --gen5 (gen/scal/gen5.py; GEN4 walk as front end): head, field, epilogue, accept and size-reject theorems with G5-L kind lines; kindcheck rule 12; one run per flat development type; evidence. Development data only (in-sample); generator change after H6; no hold-out claim",
@@ -3360,6 +3374,17 @@
    "S3": "SyncAggregatorSelectionData and ValidatorBalance are in frame class 0x38, with no hand-tied statement of that class before unit G5-C",
    "S4": "commit 607ba61 says '32 adversarial': 28 adversarial inputs + 2 real refused types",
    "details": "CONTAMINATION.md section 30"
+  },
+  "reviews": {
+   "state_now": "reviewed: 'not yet reviewed' in state is superseded by this entry (appended at INT7)",
+   "g5_r1": "REQUEST_CHANGES on ea6a0c6, records only; every technical gate passed (statement trust, fail-closed, preservation, unit L)",
+   "must_fix": "M1 (9 rfl identities, not 10), M2 (scratch trial runs before the committed run): closed in G5-C step 0 (correction_g5r1; CONTAMINATION section 30); closure confirmed by g5c-r1",
+   "should_fix": {
+    "S1": "recorded (five ungated generator runs)",
+    "S2": "open: kindcheck rule 12 does not bind C to the header .S (checker change, approval needed)",
+    "S3": "closed by G5-C: independent hand statements of SA, VB, VE, rfl-equal to the generated accept theorems",
+    "S4": "recorded (commit 607ba61 '32 adversarial' = 28 + 2)"
+   }
   }
  },
  "gen5-close": {
@@ -3560,6 +3585,52 @@
     },
     "claims_and_limits": "in-sample; 'complete' only in the inventory's defined sense; M-flat-dec only after an independent review; no 'all codecs', 'generator complete' or speed claim"
    }
+  },
+  "reviews": {
+   "state_now": "reviewed: 'not yet reviewed' in state is superseded by this entry (appended at INT7)",
+   "g5c_r1": "REQUEST_CHANGES on c4e1d74, inventory wording and script limits only (M1-M3); every proof gate passed (drift ADDED 619 only, 5 decoder statements right, SA / VB / VE independent statements rfl)",
+   "g5c2_r1": "APPROVE on be212804fab83529c2e6501daef5abec89f3437d (G5-C2): numbers reproduced (1292 methods / 211 types; decoders 17 complete, 4 partial; flat 40 = 16 + 24); 0 must-fix",
+   "g5c_r1_should_fix": {
+    "S1": "applied in G5-C2",
+    "S2": "open (.lean comment of VbDesc.lean)",
+    "S3": "open (19 mapped names not in the AxiomsScal.lean hand lists)",
+    "S4": "recorded"
+   },
+   "g5c2_r1_should_fix": {
+    "N1": "open (script): run trusts ssz-methods.json for undumped methods; only 'methods' + cmp bind it",
+    "N2": "open (script): a FLAT16 type without a mapping row ends in a KeyError (exit 1, nothing written) instead of a FAIL line",
+    "N3": "open (script text): INVENTORY.md denominator 1 says 1292 is the total in every line; the lines use per-kind totals; stated in REPORT section 11 and BASELINE section 4",
+    "N4": "closed (documents): the committed flat rule is wider than the hold-out population rule; under the narrower rule 24 flat, 16 development, 8 not started (REPORT section 11, BASELINE section 4)"
+   }
   }
+ },
+ "integration_int7": {
+  "what": "merge of claude/ssz-fv-gen5 at be21280 (GEN5 units G5-L, G5-G, G5-C with step 0, G5-C2; linear on c29ebdc) into claude/ssz-fv-prysm-e2e at c29ebdc (reviewed INT6 head); integration and records only: no new proof text, no statement change, no generator, checker or inventory-script change",
+  "merge": "03cf086b978434da2b45e5d7e9bca8743a9fcc4f (--no-ff); no conflict; merged tree id = tree id of be21280 (7e18a28a)",
+  "reviews": "g5-r1 REQUEST_CHANGES (ea6a0c6, records only, closed in G5-C step 0); g5c-r1 REQUEST_CHANGES (c4e1d74, inventory only, fixed in G5-C2); g5c2-r1 APPROVE (be21280); int6-r1 APPROVE (c29ebdc)",
+  "executed": {
+   "lake build E2e E2eAd E2eScal": "exit 0, 1284 jobs, 80.0 s wall (gate job 01); built 60 modules = the 60 new lean/ modules of the stream; peak over the whole build 2.09 GiB per process, 2.73 GiB session, under the 6 GiB cap",
+   "E2eScal.P2EncCp": "not rebuilt: .olean sha256 ad8cf5c0... before = after",
+   "lake build --no-build E2e E2eAd E2eScal": "exit 0 (job 02)",
+   "axioms gate": "PASS, 9758 declarations, 8134 theorems, 340 modules, hand list 2200, non-standard 0, sorryAx 0 (job 03, scratch JSON); byte-equal to the committed prysm/go1.26.10/e2e/axioms-gate.json, not rewritten",
+   "decl drift": "decl_drift.py g5c-r1 reviewer dump (9758 rows) vs merged dump: 0 CHANGED, 0 REMOVED, 0 ADDED; the two dumps are byte-identical",
+   "planted control": "dump level: type hash of E2eScal.G5C.vb_e2e_reject_complete changed in a copy of the merged dump: decl_drift exit 1, 1 CHANGED",
+   "regen_check.sh": "SAME for 55 generator commands, two scratch runs each: the 40 INT6 commands and the 15 GEN5 gen.sh commands (job 06); integration regen, not a new generator result",
+   "kindcheck.py --selftest": "PASS, 157 cases + 47 exit-code / rule-12 cases (job 07)",
+   "p2dec_test.py": "394/394 as expected (job 08)",
+   "inventory rerun": "inventory.py names; inventory_decls.lean on the built merged tree (job 11; table byte-equal to the g5c2-r1 table); inventory.py run (job 12): INVENTORY.md and INVENTORY.json byte-equal to the committed files; inventory.py methods on the pinned nm listing (job 13): byte-equal to the committed ssz-methods.json"
+  },
+  "inventory_rerun_equal": true,
+  "inventory_totals_source": "prysm/INVENTORY.md / INVENTORY.json (gen/tools/inventory.py) only",
+  "not_run": [
+   "Lean-level planted control",
+   "cold build from an empty .lake",
+   "link check",
+   "Go differential",
+   "negative cases",
+   "x86-64 hardware"
+  ],
+  "claims_and_limits": "decoders complete 17 of the 211 UnmarshalSSZ of the target in the defined sense; the 16-type flat development population 16/16; 24 of the 40 flat fixed-size types of the target (committed IR rule) not started; encoders fast path only (3 of 211); no hash-tree-root theorem; list / vector work of another machine is not in this tree; pilot not adopted; T-7 deferred; no 'all codecs', 'generator complete', general, transfer or speed-up claim",
+  "state": "not yet reviewed"
  }
 }

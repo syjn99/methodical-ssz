@@ -157,5 +157,10 @@
   "what": "correction entry added at integration INT4; the values above are not rewritten",
   "decision": "the user decided on 2026-11-11 that the OPT-R1 pilot is NOT adopted. The evidence stays in the tree; the generator option --reserve-marshal stays off (default); generator ca191bb stays unmerged",
   "effect": "closes U5 (keep the opt-in option). U1-U4 and U6 were not decided separately"
+ },
+ "note_2026_11_12_int7": {
+  "what": "appended at integration INT7 (review int6-r1 S1); axioms_gate_merged_tree above is the INT3 value and is not rewritten",
+  "current_integrated_record": "../e2e/axioms-gate.json: PASS, 9758 declarations after INT7 (E2e.OptR1 declarations included)",
+  "pilot_tree_record": "this directory's axioms-gate.json (3860) stays the record of the pilot branch tree"
  }
 }

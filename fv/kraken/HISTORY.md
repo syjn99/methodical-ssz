@@ -402,3 +402,13 @@ h6-r1 S8 기록: H6 커밋 넷은 type `spec(kraken)`, 하나는 `test(link)`를
 단위 G5-C2(새 Opus 세션)가 목록 스크립트와 기록을 고쳤다. 위 G5-C 단락의 "평면 16형 디코더가 완전하다"는 개발 모집단 16형의 말이다.
 대상의 SSZ 메서드는 1292개다. 디코더는 `UnmarshalSSZ` 211개 중 17개가 완전이다. 대상의 평면 고정 크기 형 40개 중 24개는 시작하지 않았다.
 기록: CONTAMINATION 32절, `scal/RESULT.json`의 `gen5-close.correction_g5cr1`.
+
+2026-11-12 리뷰 g5c2-r1(새 Fable, 대상 `be21280`): APPROVE, 필수 수정 0이다. 목록의 수를 다시 만들어 같았다.
+2026-11-12 통합 INT7(새 Opus 세션): `claude/ssz-fv-gen5` `be21280`을 `c29ebdc` 위에 병합했다(`03cf086`). 충돌은 없었다.
+위 G5-G, G5-C 단락의 "리뷰 전"은 다음 리뷰로 대체한다. 그 단락은 고치지 않는다.
+g5-r1은 G5-L과 G5-G를 함께 리뷰했다. 기술 검사는 통과, 판정은 기록만의 REQUEST_CHANGES였다. g5c-r1은 목록만의 REQUEST_CHANGES였다.
+통합 INT6은 int6-r1이 APPROVE했다.
+`lake build` 종료 0, 새 모듈 60개를 빌드했다. `P2EncCp`는 다시 빌드되지 않았다.
+공리 게이트 PASS, 선언 9758이다. 커밋된 기록과 바이트가 같아 다시 쓰지 않았다.
+g5c-r1 덤프 대비 선언 비교는 0 / 0 / 0이다. `regen_check.sh` 55/55 SAME이다. 목록 스크립트 출력은 커밋본과 바이트가 같다.
+`.lean`, 생성기, 검사기, 목록 스크립트, 고정 버전은 바꾸지 않았다. 원격에 쓰지 않았다. 기록: REPORT 11절, `scal/RESULT.json`의 `integration_int7`.

@@ -39,7 +39,16 @@ GEN4 리뷰: g4l-r1 APPROVE, g4g-r1 / g4f-r1 / g4f2-r1 REQUEST_CHANGES, g4f3-r1 
 H6의 (S) 18/18은 걸음의 주장이다. 형들은 개발 형에 가깝다(H6-A5). 유사성 거르기는 없다(리뷰 h6-r1 S1).
 H3–H6의 수는 모집단과 거르기가 다르다. 추세로 읽지 않는다(리뷰 h6-r1 S2, 11절).
 리뷰 h6-r1이 H6 `8ce5dda`를 승인했다. 필수 수정 0, 고칠 항목 9다.
-GEN4와 H6은 통합 INT6에서 병합했다(ARM-B 병합 `3e1cedc` 위). 통합 INT6 자체의 리뷰는 아직 없다.
+GEN4와 H6은 통합 INT6에서 병합했다(ARM-B 병합 `3e1cedc` 위). 리뷰 int6-r1이 통합 INT6(`c29ebdc`)을 승인했다.
+GEN5(보조정리 G5-L, 생성기 G5-G, 마무리 G5-C, 목록 수정 G5-C2)는 11절에 있다. 모두 개발 자료이고 표본 안이다.
+GEN5 리뷰: g5-r1 REQUEST_CHANGES(`ea6a0c6`, 기록만, 기술 검사 통과), g5c-r1 REQUEST_CHANGES(`c4e1d74`, 목록만)다.
+G5-C2 뒤 리뷰 g5c2-r1이 `be21280`을 승인했다. 필수 수정 0이다.
+GEN5는 통합 INT7에서 병합했다(`03cf086`). 통합 INT7 자체의 리뷰는 아직 없다.
+검증 목록의 수는 `gen/tools/inventory.py`의 출력 `prysm/INVENTORY.md`만 출처로 쓴다(11절).
+디코더: 대상 `UnmarshalSSZ` 211개 중 17개가 목록의 정의로 완전하다. 부분 4, 없음 190이다.
+GEN5 개발 모집단 평면 16형의 디코더는 16/16 완전이다. 대상의 평면 고정 크기 형 40개 중 24개는 시작하지 않았다.
+인코더는 3형의 빠른 경로뿐이다. HashTreeRoot 계열의 정리는 없다.
+"모든 코덱", "생성기 완성", 일반성, 속도 주장은 없다.
 H4에서 GEN2의 개발 자료 결과는 그대로 옮겨지지 않았다(11절).
 BeaconBlockHeader 인코더는 빠른 경로와 길이 거부 세 곳을 증명했다. 길이 거부의 전제는 `len + 112 ≤ cap`이다(11절).
 `Eth1Data.MarshalSSZTo`는 빠른 경로만 증명했다(11절, ENC 스트림). 리뷰 enc-r1이 ENC `ad15fbc`를 승인했다.
@@ -812,7 +821,7 @@ S7: 평가자의 선언 비교 대조는 덤프 글의 수정이었다. 리뷰�
 S8: 커밋 형 `spec(kraken)` 넷, `test(link)` 하나는 범위 이름이다. 기록만 한다. S9: 큐레이터 임시 스크립트가 `/tmp`에 있었다. 기록만 한다.
 h6-r1이 확인하지 않은 것: Go 차분 재실행, 부정 시험 36건 중 21건, 빈 `.lake`의 콜드 빌드, (S)만 있는 10필드의 커널 합성, x86-64.
 
-통합 INT6(`claude/ssz-fv-h6` `8ce5dda`를 `3e1cedc` 위에 병합, 병합 커밋 `9d8aaf9`; 아직 리뷰 없음):
+통합 INT6(`claude/ssz-fv-h6` `8ce5dda`를 `3e1cedc` 위에 병합, 병합 커밋 `9d8aaf9`; 리뷰 int6-r1 APPROVE, `c29ebdc`):
 충돌은 기록 파일 8개, 각 한 덩이였다. 두 쪽을 모두 남겼다(우리 쪽 먼저). 수는 바꾸지 않았다.
 모든 `.lean` 파일은 `8ce5dda`와 같다. 예외는 `E2eScal/P2EncCp.lean`이고 `74cc9ca`와 같다.
 이것이 ARM-B 수정을 담은 트리의 첫 빌드다. 증명 글, 문장, 생성기, 검사기는 바꾸지 않았다.
@@ -831,7 +840,7 @@ h6-r1 덤프 대비 선언 비교: `cp_e2e_marshal_main_s._proof_1_23` REMOVED, 
 실행하지 않은 것(통합자): Lean 수준 심은 대조, 빈 `.lake`의 콜드 빌드, 링크 검사, Go 차분, 부정 시험, x86-64.
 기록: `scal/RESULT.json`의 `integration_int6`.
 
-GEN5 생성기(단위 G5-G, 기준 `94fd8a6`, 리뷰 전): `p2dec --gen5`가 평면 디코더의 승인 정리 전체를 낸다.
+GEN5 생성기(단위 G5-G, 기준 `94fd8a6`; 리뷰 g5-r1 REQUEST_CHANGES, 기록만, G5-C 0단계가 닫음): `p2dec --gen5`가 평면 디코더의 승인 정리 전체를 낸다.
 낸 정리: 머리, 필드마다 하나, 에필로그, 승인, 크기 거부다. 정리마다 G5-L 종류 줄이 있다.
 결과는 실패 닫힘이다. 종료 0은 성공 표시 다섯이 모두 선 한 곳에서만 나온다.
 커밋한 실행은 형마다 한 번이다(게이트 작업 04). 원시 출력은 고치지 않고 먼저 커밋했다(`8192427`).
@@ -841,10 +850,11 @@ GEN5 생성기(단위 G5-G, 기준 `94fd8a6`, 리뷰 전): `p2dec --gen5`가 평
 문장 검사: 종류 줄과 `kindcheck.py` 규칙 12다. 규칙 12는 종류 매개변수를 IR과 `.S`에서 다시 계산한다.
 손 문장이 있는 9개 형은 생성 정리가 그 손 문장과 `rfl`로 같다.
 Checkpoint는 종류 사례만이다. 함의 `cp_accept_of_kind`의 배치 `layCp`와 덩이 순서가 다르다.
-SyncAggregatorSelectionData와 ValidatorBalance의 프레임 `0x38` 꼴에는 손으로 묶은 문장이 없다.
+SyncAggregatorSelectionData와 ValidatorBalance의 프레임 `0x38` 꼴에는 G5-G 때 손으로 묶은 문장이 없었다.
+G5-C의 독립 손 문장 둘이 생성 승인 정리와 `rfl`로 같다(아래).
 `kindcheck.py`는 상수 `C`를 머리의 `.S`에 묶지 않는다. `C`는 Lean 코드 사실만 고정한다.
 손 문장이 없는 5개 형(HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit)의 문장은 종류 사례다.
-이 5개는 아직 완전한 디코더 증명이 아니다. 거부 완전성, Desc, 명세, 증인은 G5-C 일이다.
+G5-G만으로는 이 5개가 완전한 디코더 증명이 아니었다. G5-C가 거부 완전성, Desc, 명세, 증인을 더했다(아래).
 발견 SG-6: 승인 종류는 `L.frame`을 읽지 않는다. 규칙 12c가 모든 종류 줄의 `L`을 비교한다.
 모듈 정교화는 2.1–8.6초다(n = 2). 120초를 넘는 모듈은 없다. 속도 주장은 없다.
 `regen_check.sh` 55/55 SAME(옛 40, GEN5 15)이다. `p2dec_test.py` 394/394, `kindcheck.py` 선택 시험 PASS다.
@@ -852,7 +862,7 @@ SyncAggregatorSelectionData와 ValidatorBalance의 프레임 `0x38` 꼴에는 �
 공리 게이트 PASS(선언 9139), 선언 비교 ADDED 1490뿐, 심은 대조는 잡혔다. `--no-build` 종료 0이다.
 실행하지 않은 것: 콜드 빌드, 링크 검사, Go 차분, x86-64. 기록: CONTAMINATION 29절, `scal/RESULT.json`의 `gen5`.
 
-남은 평면 디코더 다섯의 마무리(단위 G5-C, 기준 `ea6a0c6`, 리뷰 전): HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit다.
+남은 평면 디코더 다섯의 마무리(단위 G5-C, 기준 `ea6a0c6`; 리뷰 g5c-r1 REQUEST_CHANGES, 목록만, 증명 검사 통과): HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit다.
 승인과 크기 거부는 G5-G의 생성 정리다. 다른 것은 새 모듈이다.
 독립 손 문장 셋(SA, VB, VE)은 생성 승인 정리와 `rfl`로 같다. 손 문장은 생성 파일을 열기 전에 커밋했다.
 형마다 증명된 것: 손 Desc와 검사기 Desc의 코덱 같음, `accept_spec_k`, `reject_size_spec`, `reject_complete`, 승인 증인, 거부 증인이다.
@@ -864,6 +874,7 @@ Go 차분 30/30이다(linux/arm64의 Go 의미론, ELF 실행 아님). 심은 �
 링크 검사 PASS다. RESULT는 H6 기록과 바이트가 같다.
 공리 게이트 PASS(선언 9758), 선언 비교 ADDED 619뿐이다. 심은 대조는 잡혔다. `--no-build` 종료 0이다.
 검증 목록은 `prysm/INVENTORY.md`다. 출처는 `gen/tools/inventory.py`다(단위 G5-C2가 리뷰 g5c-r1 M1–M3을 고쳤다).
+리뷰 g5c2-r1이 G5-C2(`be21280`)를 승인했다. 아래 수는 그 리뷰가 다시 만들어 같았다.
 분모는 셋이다. 서로 섞지 않는다.
 (1) 대상의 SSZ 메서드: 211형의 1292개다. 출처는 `prysm/go1.26.10/ssz-methods.json`이다.
 이 파일은 고정 ELF의 nm 목록에서 만든다. nm sha256은 `build-ids.txt`와 같다. nm 목록은 커밋하지 않는다.
@@ -886,6 +897,9 @@ HashTreeRoot, HashTreeRootWith, MarshalSSZ는 대상에 있다. 정리는 없다
 대상의 평면 고정 크기 형은 IR 규칙으로 40개다. 그중 24개는 시작하지 않았다. 이름은 `INVENTORY.md`에 있다.
 목록이 잡지 못하는 것은 `INVENTORY.md` "What this table cannot detect"에 있다.
 `codec`과 `reject_complete`는 행의 형에 묶이지 않는다. 존재, 종류, 공리만 검사한다.
+표의 각 줄은 메서드 종류의 대상 수를 분모로 쓴다. 1292는 모든 종류의 합이다(g5c2-r1 N3).
+"완전"에 빠진 것: morestack, `writeBarrier ≠ 0`, 런타임 피호출자 본문(계약), 피호출자 오류 반환, growslice / T-7, x86-64다.
+Go 1.26.3 단계의 작업은 다른 바이너리다. 이 목록에 세지 않는다.
 재현(`fv/kraken`에서; `$NM`은 ELF의 nm 목록, `$O`는 빈 디렉터리; lean은 게이트 안에서):
 
 ```sh
@@ -896,6 +910,53 @@ python3 -I -B gen/tools/inventory.py run "$O/decls.tsv" "$O/I.md" "$O/I.json" &&
 ```
 
 실행하지 않은 것: 콜드 빌드, x86-64, `regen_check.sh`(생성기 변경 없음). 기록: CONTAMINATION 31절과 32절, `scal/RESULT.json`의 `gen5-close`.
+
+GEN5 리뷰 결과(통합 INT7에서 덧붙임):
+g5-r1은 G5-L(`94fd8a6`)과 G5-G(`ea6a0c6`)를 함께 리뷰했다. 판정은 REQUEST_CHANGES이고 기록만이다.
+문장 신뢰, 실패 닫힘, 보존, G5-L 검사(경계 사슬, 한도 올림 없음, 묶음)는 모두 통과했다.
+앞선 리뷰 g5l-r1은 사용 한도로 중간에 끝났다. 그 부분 판정은 결과로 쓰지 않는다.
+g5-r1 M1, M2는 G5-C 0단계가 닫았다(CONTAMINATION 30절). g5c-r1이 그 닫힘을 확인했다.
+g5-r1 고칠 항목: S1, S4는 기록했다. S3은 G5-C의 독립 손 문장이 닫았다.
+g5-r1 S2는 열림이다. `kindcheck.py` 규칙 12가 `C`를 머리의 `.S`에 묶지 않는다. 검사기 변경이 필요하다.
+g5c-r1(`c4e1d74`): REQUEST_CHANGES, 목록 문구와 스크립트 한계만이다. 증명 검사는 모두 통과했다.
+g5c-r1 M1–M3은 G5-C2가 고쳤다. g5c2-r1이 `be21280`을 승인했다. 수를 다시 만들어 같았다.
+g5c-r1 고칠 항목: S1은 G5-C2가 적용했다. S4는 기록했다.
+g5c-r1 S2는 열림이다(`VbDesc.lean` 주석, `.lean` 수정).
+g5c-r1 S3은 열림이다. 대응 이름 19개가 `AxiomsScal.lean` 손 목록에 없다. `inventory_decls.lean`이 실행마다 공리를 본다.
+g5c2-r1 고칠 항목 N1–N4:
+N1(열림, 스크립트): `inventory.py run`은 덤프하지 않은 메서드에 대해 `ssz-methods.json`을 믿는다.
+N1: 그 파일의 줄을 지워도 sha 칸이 그대로면 종료 0이다. `methods` 실행과 `cmp`만 그 목록을 묶는다.
+N2(열림, 스크립트): 대응 행이 없는 FLAT16 형은 FAIL 줄이 아니라 KeyError로 끝난다. 종료 1이고 쓴 파일은 없다.
+N3(열림, 스크립트 글): `INVENTORY.md` 분모 1은 "1292가 아래 모든 줄의 합계"라고 쓴다.
+N3: 실제로 각 줄은 메서드 종류의 대상 수(211, 10, 6)를 쓴다. `INVENTORY.md`는 스크립트 출력이라 고치지 않았다.
+N4(여기서 닫음): 목록의 평면 규칙은 홀드아웃 모집단 규칙보다 넓다. 모든 uint, bool, 모든 길이의 바이트 벡터를 넣는다.
+N4: 좁은 규칙(uint64 그대로 또는 덧씌움, 바이트 벡터 32 / 48 / 96)으로는 평면 형 24개, 개발 16, 시작 안 함 8이다.
+
+통합 INT7(`claude/ssz-fv-gen5` `be21280`을 `c29ebdc` 위에 병합, 병합 커밋 `03cf086`; 아직 리뷰 없음):
+스트림은 `c29ebdc` 위에 일직선이다. 충돌은 없었다. 병합 트리 id는 `be21280`의 트리 id와 같다.
+증명 글, 문장, 생성기, 검사기, 목록 스크립트, 고정 버전은 바꾸지 않았다.
+실행 검사(gate와 6 GiB 상한 안): `lake build E2e E2eAd E2eScal` 종료 0, 1284 jobs, 80.0초다.
+빌드한 모듈은 60개다. 스트림이 더한 `lean/` 모듈 60개와 같다.
+`E2eScal.P2EncCp`는 다시 빌드되지 않았다. `.olean` sha256이 빌드 전후 같다.
+최대 메모리는 빌드 전체의 값이다: 프로세스 2.09 GiB, 세션 2.73 GiB다. `lake build --no-build` 종료 0이다.
+공리 게이트 PASS: 선언 9758, 정리 8134, 모듈 340, 손 목록 2200, 비표준 0, sorryAx 0이다.
+새 게이트 JSON은 커밋된 `axioms-gate.json`과 바이트가 같다. 그래서 기록을 다시 쓰지 않았다.
+g5c-r1 덤프 대비 선언 비교: 0 CHANGED, 0 REMOVED, 0 ADDED다. 두 덤프는 바이트가 같다.
+심은 대조(덤프 수준): `G5C.vb_e2e_reject_complete`의 형 해시를 바꾼 사본은 종료 1, CHANGED 1이다.
+`regen_check.sh` 55/55 SAME(앞의 40, GEN5 15)이다. 통합 검사이고 새 생성기 결과가 아니다.
+`kindcheck.py --selftest` PASS(157건과 규칙 12 등 47건), `p2dec_test.py` 394/394다.
+목록 다시 실행: `inventory.py methods`의 출력은 커밋된 `ssz-methods.json`과 바이트가 같다.
+`inventory_decls.lean`(게이트 안)과 `inventory.py run`의 출력은 커밋된 `INVENTORY.md`, `INVENTORY.json`과 바이트가 같다.
+그 선언 표는 리뷰 g5c2-r1의 표와도 바이트가 같다.
+실행하지 않은 것(통합자): Lean 수준 심은 대조, 빈 `.lake`의 콜드 빌드, 링크 검사, Go 차분, 부정 시험, x86-64.
+int6-r1(`c29ebdc`, APPROVE) 고칠 항목: S2는 INT6 상태 칸을 바꿔 닫았다.
+S1은 `opt-r1/MANIFEST.md`와 `opt-r1/RESULT.json`에 날짜 붙은 글을 덧붙여 닫았다.
+S3(CONTAMINATION의 "21." 절 둘)은 27절에 밝혔다. 번호는 바꾸지 않는다.
+S4는 그대로 열림이다: h6-r1 S6, g4f3-r1 S6과 S9, int5-r1 S4다.
+S5 기록: 커밋 형 `merge`는 형 목록에 없다. INT7 병합도 앞 통합처럼 `merge(kraken)`을 썼다. 이력 재작성은 하지 않는다.
+남은 일(이 트리에서 시작하지 않았거나 부분): 평면 형의 인코더, 중첩 컨테이너, 리스트·벡터·비트필드, growslice와 T-7, 해시 트리 루트다.
+다른 기계의 리스트·벡터 작업은 이 트리에 없다. 여기서 주장하지 않는다.
+OPT-R1 시범은 채택하지 않았다. T-7은 미뤘다. 기록: `scal/RESULT.json`의 `integration_int7`.
 
 조건:
 
