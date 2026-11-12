@@ -1,7 +1,0 @@
-$ GOROOT=$(go env GOROOT) go test ./fv/kraken/semtest/  (cwd repo root)
---- PASS: TestF1BitvectorPadding (0.00s)
---- PASS: TestF2BitlistByteLimit (0.00s)
-PASS
-ok  	github.com/OffchainLabs/methodical-ssz/fv/kraken/semtest	0.376s
-exit(pipe last): 0
-exit: 0

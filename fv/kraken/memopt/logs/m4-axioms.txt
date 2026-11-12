@@ -1,6 +1,0 @@
-$ sh tools/axioms.sh  (cwd fv/kraken/lean)
-exit: 0
-TOTAL 1571 NONSTANDARD 0
-ALL-DECLARATIONS TOTAL 7975 NONSTANDARD 0
-$ git diff --stat -- ../AXIOMS.txt ../AXIOMS-ALL.txt
-(end)

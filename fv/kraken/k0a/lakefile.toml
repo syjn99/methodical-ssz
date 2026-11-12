@@ -1,7 +1,0 @@
-name = "k0a"
-[[require]]
-name = "Kraken"
-git = "https://github.com/AeneasVerif/kraken"
-rev = "6064eecbb730a1152aa6ed891a155d3a92a4f298"
-[[lean_lib]]
-name = "K0a"

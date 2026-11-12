@@ -1,7 +1,0 @@
-n el_s total_kb max_kb max_comm nproc
-0 0 6704 6704 lake 1
-1 0 684416 678032 lake 2
-2 1 682352 682320 lake 2
-3 1 776336 682448 lake 2
-4 2 959984 682448 lake 2
-5 3 2126256 1443808 lean 2
