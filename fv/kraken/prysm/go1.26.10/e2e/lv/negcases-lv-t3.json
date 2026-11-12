@@ -1,0 +1,88 @@
+[
+ {
+  "code_def": "IaUnmarshal",
+  "norm": "prysm/go1.26.10/e2e/lv/link-t3/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
+  "stmt_module": "E2eList/StmtIa.lean",
+  "id": "lv-ia-control-size",
+  "kind": "control",
+  "module": "E2eList/IaReject.lean",
+  "theorem": "ia_e2e_reject_size_main"
+ },
+ {
+  "code_def": "IaUnmarshal",
+  "norm": "prysm/go1.26.10/e2e/lv/link-t3/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
+  "stmt_module": "E2eList/StmtIa.lean",
+  "id": "lv-ia-control-accept",
+  "kind": "control",
+  "module": "E2eList/IaAccept.lean",
+  "theorem": "ia_e2e_accept_main"
+ },
+ {
+  "code_def": "IaUnmarshal",
+  "norm": "prysm/go1.26.10/e2e/lv/link-t3/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
+  "stmt_module": "E2eList/StmtIa.lean",
+  "id": "lv-ia-stmt-size229",
+  "kind": "stmt",
+  "stmt_def": "ia_reject_size_stmt",
+  "old": "(hlen : s.regs.rcx.toNat < 228)",
+  "new": "(hlen : s.regs.rcx.toNat < 229)",
+  "module": "E2eList/IaReject.lean",
+  "theorem": "ia_e2e_reject_size_main"
+ },
+ {
+  "code_def": "IaUnmarshal",
+  "norm": "prysm/go1.26.10/e2e/lv/link-t3/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
+  "stmt_module": "E2eList/StmtIa.lean",
+  "id": "lv-ia-size229",
+  "kind": "code",
+  "old": "  cmp $0xe4,%rcx",
+  "new": "  cmp $0xe5,%rcx",
+  "module": "E2eList/IaAccept.lean",
+  "theorem": "ia_e2e_accept_main"
+ },
+ {
+  "code_def": "IaUnmarshal",
+  "norm": "prysm/go1.26.10/e2e/lv/link-t3/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
+  "stmt_module": "E2eList/StmtIa.lean",
+  "id": "lv-ia-offset229",
+  "kind": "code",
+  "old": "  cmp $0xe4,%rdx",
+  "new": "  cmp $0xe5,%rdx",
+  "module": "E2eList/IaAccept.lean",
+  "theorem": "ia_e2e_accept_main"
+ },
+ {
+  "code_def": "IaUnmarshal",
+  "norm": "prysm/go1.26.10/e2e/lv/link-t3/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
+  "stmt_module": "E2eList/StmtIa.lean",
+  "id": "lv-ia-align16",
+  "kind": "code",
+  "old": "  test $0x7,%rcx",
+  "new": "  test $0xf,%rcx",
+  "module": "E2eList/IaAccept.lean",
+  "theorem": "ia_e2e_accept_main"
+ },
+ {
+  "code_def": "IaUnmarshal",
+  "norm": "prysm/go1.26.10/e2e/lv/link-t3/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
+  "stmt_module": "E2eList/StmtIa.lean",
+  "id": "lv-ia-max2047",
+  "kind": "code",
+  "old": "  cmp $0x800,%rcx",
+  "new": "  cmp $0x7ff,%rcx",
+  "module": "E2eList/IaAccept.lean",
+  "theorem": "ia_e2e_accept_main"
+ },
+ {
+  "code_def": "IaUnmarshal",
+  "norm": "prysm/go1.26.10/e2e/lv/link-t3/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.IndexedAttestation.UnmarshalSSZ.S",
+  "stmt_module": "E2eList/StmtIa.lean",
+  "id": "lv-ia-stmt-heap",
+  "kind": "stmt",
+  "stmt_def": "ia_accept_stmt",
+  "old": "Heap (avail - (8 * n + 432))",
+  "new": "Heap (avail - (8 * n + 431))",
+  "module": "E2eList/IaAccept.lean",
+  "theorem": "ia_e2e_accept_main"
+ }
+]

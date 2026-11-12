@@ -363,3 +363,17 @@
 - 막힌 곳(로그 236–243): 기호 꼴 차이(`66560#64`), `zmms`가 든 `decide` 목표, `bumpHeap`을 만든 뒤 한 가설에 모든 원자가 없음(선례처럼 명시 목록 `H2`를 `ecancel`로 증명), `sep_emp` 재작성이 `sep_true`의 틀 변수를 `emp`로 묶음.
 - 측정(로그 245): `maxRecDepth`가 없으면 호스트 사실에서 멈춘다. 1024는 통과한다. 하트비트 설정은 없다.
 - 로그 246: `lake build E2eList.WitIaR` exit 0, 26.0 s, 표본 RSS 5.56 GiB.
+
+### U8: T3 검증
+
+- 로그 247, 252: `lake build E2eList` exit 0(252는 765 jobs, 100.1 s, 표본 RSS 7.71 GiB. T3 모듈이 다시 빌드됨).
+- 로그 248, 254: `lake build --no-build E2e E2eAd E2eScal E2eList` exit 0(254는 1080 jobs).
+- 공리 게이트: 새 손 목록 `gen/e2e/AxiomsLvT3.lean`(T3 이름 23개)과 새 감싸개 `gen/e2e/lvt3axioms_gate.py`(`lvaxioms_gate.py`의 글, `LISTS`에 두 목록). selftest PASS, 손 목록 이름 485.
+- 로그 249, 255: PASS. 선언 6402, 정리 5341, 손 목록 485, 빠짐 0, 비표준 0, `sorryAx` 0. 결과: `axioms-gate-lv-t3.json`(로그 255).
+- 선언 drift(로그 250, 기준 `6a78c591`, 뿌리 E2e, E2eAd, E2eScal): 0 (5007 = 5007). 결과: `decl-drift-lv-t3.txt`.
+- 부정 시험: `negcases-lv-t3.json`의 8개. 로그 251은 대조군 하나가 실패했다. `IaAccept`가 `IaReject`를 통해 `StmtIa`를 두 번 가져와서다(실행기가 문장 모듈을 펼친다).
+- 그래서 `iaaddr` 매크로를 새 모듈 `E2eList/IaAddr.lean`으로 옮겼다. `IaAccept`는 `IaAddr`와 `StmtIa`를 직접 가져온다. 정리 문장은 바뀌지 않았다.
+- 로그 253: 8개 모두 통과(대조군 2, inside 6). 결과: `negative-lv-t3.json`.
+- 경우: 크기 문장 227/228(`< 229`), 크기 코드(`cmp $0xe5,%rcx`), 오프셋 바이트(`cmp $0xe5,%rdx`), 정렬(`test $0xf`), 2048 한계(`cmp $0x7ff`), 수락 사후조건(`Heap (avail - (8 * n + 431))`).
+- 링크: `git diff dc7bd56 -- lv/link-t3 lv/link`는 비어 있다. 링크 검사는 다시 돌리지 않았다(입력이 같다).
+- 실행하지 않은 것: 기준 트리의 별도 빌드, 게이트 대조군, drift 대조군, `stale_olean.py`, Go 차분 시험, 하드웨어 대조.

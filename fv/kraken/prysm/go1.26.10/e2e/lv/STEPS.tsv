@@ -260,3 +260,13 @@ step	utc	exit	log	command
 245-WitIaR-rdkeep	2026-11-12T04:31:16Z	1	logs/245-WitIaR-rdkeep.log	heavy.py -- lake build E2eList.WitIaR (16.6 s wall, peak sampled RSS 5.51 GiB)
 245-WitIaR-rdnone	2026-11-12T04:31:32Z	1	logs/245-WitIaR-rdnone.log	heavy.py -- lake build E2eList.WitIaR (16.7 s wall, peak sampled RSS 5.52 GiB)
 246-WitIaR	2026-11-12T04:32:23Z	0	logs/246-WitIaR.log	heavy.py -- lake build E2eList.WitIaR (26.0 s wall, peak sampled RSS 5.56 GiB)
+247-build-E2eList	2026-11-12T04:34:07Z	0	logs/247-build-E2eList.log	heavy.py -- lake build E2eList (39.7 s wall, peak sampled RSS 5.31 GiB)
+248-nobuild	2026-11-12T04:34:46Z	0	logs/248-nobuild.log	heavy.py -- lake build --no-build E2e E2eAd E2eScal E2eList (2.1 s wall, peak sampled RSS 0.65 GiB)
+249-axgate-t3	2026-11-12T04:34:59Z	0	logs/249-axgate-t3.log	heavy.py -- python3 -I -B ../gen/e2e/lvt3axioms_gate.py run <work>/axgate-t3.json <work>/axgate-t3-dump.tsv (106.2 s wall, peak sampled RSS 4.36 GiB)
+250-head-dump-t3	2026-11-12T04:37:25Z	0	logs/250-head-dump-t3.log	heavy.py -- sh -c decl_dump.lean --root E2e --root E2eAd --root E2eScal <233 modules> > <work>/head-dump-t3.tsv (86.4 s wall, peak sampled RSS 4.25 GiB)
+251-negative-t3	2026-11-12T04:39:20Z	1	logs/251-negative-t3.log	heavy.py -- python3 -I -B ../gen/e2e/lvnegative.py ../prysm/go1.26.10/e2e/lv/negcases-lv-t3.json <work>/neg-t3 <work>/neg-result-t3.json (32.2 s wall, peak sampled RSS 0.66 GiB)
+252-build-E2eList	2026-11-12T04:40:25Z	0	logs/252-build-E2eList.log	heavy.py -- lake build E2eList (100.1 s wall, peak sampled RSS 7.71 GiB)
+253-negative-t3	2026-11-12T04:42:47Z	0	logs/253-negative-t3.log	heavy.py -- python3 -I -B ../gen/e2e/lvnegative.py ../prysm/go1.26.10/e2e/lv/negcases-lv-t3.json <work>/neg-t3 <work>/neg-result-t3.json (156.2 s wall, peak sampled RSS 0.67 GiB)
+254-nobuild	2026-11-12T04:45:55Z	0	logs/254-nobuild.log	heavy.py -- lake build --no-build E2e E2eAd E2eScal E2eList (2.1 s wall, peak sampled RSS 0.65 GiB)
+255-axgate-t3	2026-11-12T04:45:58Z	0	logs/255-axgate-t3.log	heavy.py -- python3 -I -B ../gen/e2e/lvt3axioms_gate.py run <work>/axgate-t3.json <work>/axgate-t3-dump.tsv (107.2 s wall, peak sampled RSS 4.35 GiB)
+256-drift-t3	(after log 250)	0	-	decl_drift.py base-dump head-dump-t3 (roots E2e,E2eAd,E2eScal): SUMMARY base=5007 head=5007 drift=0
