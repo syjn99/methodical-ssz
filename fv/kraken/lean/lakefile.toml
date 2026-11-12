@@ -141,3 +141,16 @@ name = "E2eList"
 globs = ["E2eList.+"]
 needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data", "lv_lean_S",
   "lv_t3_norm_S", "lv_t3_data"]
+
+# HB stream: port of the LV T2 proof to the real v1alpha1.HistoricalBatch decoder (same Go 1.26.10 ELF).
+# Own library; it imports E2eList and does not change it. The .S file of prysm/go1.26.10/e2e/lv/link-hb is an input.
+[[input_dir]]
+name = "lv_hb_norm_S"
+path = "../prysm/go1.26.10/e2e/lv/link-hb/norm"
+text = true
+
+[[lean_lib]]
+name = "E2eHb"
+globs = ["E2eHb.+"]
+needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data", "lv_lean_S",
+  "lv_t3_norm_S", "lv_t3_data", "lv_hb_norm_S"]
