@@ -17,13 +17,13 @@ ADDR0 = '(by simp only [Int64.toBitVec_ofNat]; exact BitVec.add_zero _)'
 RVT = {'rcv': 's.regs.rax.toBitVec', 'bf': 's.regs.rbx.toBitVec', 'zero': '0'}
 PRIM = 'github.com_OffchainLabs_prysm_v7_consensus_types_primitives.'
 # callee symbol -> (code constant, binder suffix, proved spec theorem); the four proved callees (interface of the GEN5 lemma unit)
-G5_CALLEES = {PRIM + 'Slot.UnmarshalSSZ': ('E2eAd.Code.SlUnmarshal', 'S', 'sl_uacc_holds'),
-              PRIM + 'CommitteeIndex.UnmarshalSSZ': ('E2eAd.Code.CiUnmarshal', 'C', 'ci_uacc_holds'),
+G5_CALLEES = {PRIM + 'Slot.UnmarshalSSZ': ('Prysm.AttestationData.Code.slotUnmarshalSSZ', 'S', 'Prysm.Slot.Decode.accept_function_spec_holds'),
+              PRIM + 'CommitteeIndex.UnmarshalSSZ': ('Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ', 'C', 'Prysm.CommitteeIndex.Decode.accept_function_spec_holds'),
               PRIM + 'ValidatorIndex.UnmarshalSSZ': ('E2eScal.BhCode.ViUnmarshal', 'V', 'vi_uacc_holds'),
               PRIM + 'Epoch.UnmarshalSSZ': ('Prysm.Epoch.Code.unmarshalSSZ', 'E', 'Prysm.Epoch.Decode.accept_function_spec_holds')}
-G5_IMPORTS = ['E2eScal.AcceptTies', 'Codec.FieldFrame', 'E2eScal.ViSpec', 'Prysm.Epoch.DecodeAccept', 'E2eAd.Prims',
+G5_IMPORTS = ['E2eScal.AcceptTies', 'Codec.FieldFrame', 'E2eScal.ViSpec', 'Prysm.Epoch.DecodeAccept', 'Prysm.Slot.DecodeAccept',
               'Codec.DecoderHeadEpilogue', 'E2eScal.RejectTies']
-G5_OPENS = 'E2eAd E2eScal Codec'
+G5_OPENS = 'E2eScal Codec'
 # the statement kinds of the GEN5 lemma unit's hand-over (kindcheck.py pins their modules)
 G5_KINDS = ('decHeadKindN', 'decFieldKindN', 'decEpiKindN', 'decAcceptKindN', 'decRejectKindN')
 

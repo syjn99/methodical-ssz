@@ -2,7 +2,7 @@ import E2eScal.AcceptTies
 import Codec.FieldFrame
 import E2eScal.ViSpec
 import Prysm.Epoch.DecodeAccept
-import E2eAd.Prims
+import Prysm.Slot.DecodeAccept
 import E2eScal.Gen4H6VeDec
 
 /-!
@@ -15,7 +15,7 @@ This type has no hand accept statement: the statement is the kind instance of th
 PendingConsolidation / PendingPartialWithdrawal (`layCal`), whose two hand statements are `rfl`-tied.
 -/
 
-open Machine Runtime TestTarget E2eAd E2eAd.Code E2eScal.H6Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec
+open Machine Runtime TestTarget Prysm.AttestationData.Code E2eScal.H6Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.Gen5

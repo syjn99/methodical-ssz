@@ -1264,7 +1264,10 @@ def forward_ref(maps, root):
         if t is not None:
             texts[rel] = t
     # 1. inverse safety: no new full name, module or path occurs in the old text
-    newkeys = set(maps.inv_tok) | set(getattr(maps, "inv_tok_extra", {}))
+    # A new namespace of a namespace or open row that the old tree already declares (declared.txt), for example
+    # Prysm.Checkpoint when a later map moves more modules into it, is not new: the rule-based inverse does not use
+    # these rows, and step 7 checks the inverse of every line.
+    newkeys = set(maps.inv_tok) | {k for k in getattr(maps, "inv_tok_extra", {}) if k not in maps.declared}
     bad = []
     for rel, text in texts.items():
         for mt in TOKEN.finditer(text):

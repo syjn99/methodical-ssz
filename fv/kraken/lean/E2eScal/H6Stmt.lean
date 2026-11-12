@@ -4,7 +4,7 @@ import Machine.Bytes
 import Machine.Labels
 import Prysm.ElfData.CheckpointAndEpoch
 import Prysm.Checkpoint.Code
-import E2eAd.Code
+import Prysm.AttestationData.Code
 import E2eScal.H6Code
 
 /-!
@@ -60,7 +60,7 @@ runtime call return slot entry rsp − 48; `lo` = the `S` bytes below it. Three 
 directive 104. The epilogue sets rax = rbx = 0 (`xor`).
 -/
 
-open Machine Runtime TestTarget E2eAd.Code E2eScal.H6Code
+open Machine Runtime TestTarget Prysm.AttestationData.Code E2eScal.H6Code
 variable [Host]
 
 namespace E2eScal.H6
@@ -69,10 +69,10 @@ namespace E2eScal.H6
 returns nil and the receiver holds fresh PublicKey (48) / WithdrawalCredentials (32) / Signature (96) slices
 equal to buf[0:48] / buf[48:80] / buf[88:184] (len = cap), Amount = buf[80:88] and Slot = buf[184:192]; input,
 `state`, the spills, the caller's frame `R` and the stack guard are unchanged; 176 heap bytes are used. The
-delegated field goes through the callee's code (`SlUnmarshal` placed in the host). -/
+delegated field goes through the callee's code (`slotUnmarshalSSZ` placed in the host). -/
 abbrev pd_accept_stmt : Prop :=
   ∀ (k : Nat) (hk : PdUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh PdUnmarshal k)
-    (kS : Nat) (hkS : SlUnmarshal.IsInfixAt Host.prog kS) (hfS : LabelsFresh SlUnmarshal kS)
+    (kS : Nat) (hkS : slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh slotUnmarshalSSZ kS)
     (pk wc amt sig sl : List UInt8) (hpk : pk.length = 48) (hwc : wc.length = 32) (hamt : amt.length = 8)
     (hsig : sig.length = 96) (hsl : sl.length = 8)
     (s : MachineData) (ra guard : UInt64)

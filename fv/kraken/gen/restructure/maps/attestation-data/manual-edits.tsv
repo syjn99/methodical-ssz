@@ -1,0 +1,11 @@
+# new path (repository-relative)	line	text after the automatic rewrite	final text (a string literal, a path built from
+# components, or a comment that names a deleted file or a name of an earlier map)
+fv/kraken/gen/e2e/check_include.py	43	ad = (L / "E2eAd" / "Include.lean").read_text()	ad = (L / "Prysm" / "ElfData" / "AttestationDataReader.lean").read_text()
+fv/kraken/lean/Prysm/AttestationData/WitnessBumpAllocator.lean	19	def BumpNew72 : Program := include_x64_rt "E2eAd/BumpNew72.S"	def BumpNew72 : Program := include_x64_rt "Prysm/AttestationData/BumpNew72.S"
+fv/kraken/lean/Prysm/AttestationData/Spec.lean	28	`Spec/ReducedPrysm.lean` and `Fk/AdSpec.lean` (their text, with the names of this namespace); they	`Spec/ReducedPrysm.lean` (its text, with the names of this namespace); they
+fv/kraken/lean/Prysm/AttestationData/DecodeAccept.lean	36	re-derived from the Go 1.26.10 `.S`. The hand `Fk/AdAccept.lean` (Go 1.26.3, Checkpoint inlined,	re-derived from the Go 1.26.10 `.S`. An earlier hand proof on the Go 1.26.3 test target (Checkpoint inlined,
+fv/kraken/lean/Prysm/AttestationData/DecodeRejectSize.lean	15	`e0`, `e1` are the global's value after package init (premise, as in `cp_e2e_reject_size_main`).	`e0`, `e1` are the global's value after package init (premise, as in `Prysm.Checkpoint.Decode.reject_size`).
+fv/kraken/gen/e2e/negcases.json	794	  "old": "(hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) : accept_function_spec Heap S",	  "old": "(hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) : Decode.accept_function_spec Heap S",
+fv/kraken/gen/e2e/negcases.json	795	  "new": "(hms : True) (hmm : MemmoveC S) : accept_function_spec Heap S",	  "new": "(hms : True) (hmm : MemmoveC S) : Decode.accept_function_spec Heap S",
+fv/kraken/gen/e2e/negcases.json	809	  "old": "(S : Nat) (hmm : MemmoveC S) : fast_path_function_spec S",	  "old": "(S : Nat) (hmm : MemmoveC S) : Encode.fast_path_function_spec S",
+fv/kraken/gen/e2e/negcases.json	810	  "new": "(S : Nat) (hmm : True) : fast_path_function_spec S",	  "new": "(S : Nat) (hmm : True) : Encode.fast_path_function_spec S",

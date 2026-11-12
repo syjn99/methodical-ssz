@@ -129,19 +129,19 @@ theorem pc_accept_is_kindN : ∀ (h : Host), @E2eScal.H5.pc_accept_stmt h
 /-! ## Class C: frames `0x40`, `0x60` -/
 
 theorem pd_accept_is_kindN : ∀ (h : Host), @E2eScal.H6.pd_accept_stmt h
-    = @decAcceptKindN h E2eScal.H6Code.PdUnmarshal (layMix40 [E2eAd.Code.SlUnmarshal] 131 2)
+    = @decAcceptKindN h E2eScal.H6Code.PdUnmarshal (layMix40 [Prysm.AttestationData.Code.slotUnmarshalSSZ] 131 2)
         [.bytes 48, .bytes 32, .u64, .bytes 96, .u64] := by
   intro h; rfl
 
 theorem sm_accept_is_kindN : ∀ (h : Host), @E2eScal.H5.sm_accept_stmt h
     = @decAcceptKindN h E2eScal.H5Code.SmUnmarshal
-        (layMix60 [E2eAd.Code.SlUnmarshal, E2eScal.BhCode.ViUnmarshal] 141 1)
+        (layMix60 [Prysm.AttestationData.Code.slotUnmarshalSSZ, E2eScal.BhCode.ViUnmarshal] 141 1)
         [.u64, .bytes 32, .u64, .bytes 96] := by
   intro h; rfl
 
 theorem bh_accept_is_kindN : ∀ (h : Host), type_of% (@E2eScal.Bh.bh_e2e_accept_main h)
     = @decAcceptKindN h E2eScal.BhCode.BhUnmarshal
-        (layMix60 [E2eAd.Code.SlUnmarshal, E2eScal.BhCode.ViUnmarshal] 179 2)
+        (layMix60 [Prysm.AttestationData.Code.slotUnmarshalSSZ, E2eScal.BhCode.ViUnmarshal] 179 2)
         [.u64, .u64, .bytes 32, .bytes 32, .bytes 32] := by
   intro h; rfl
 

@@ -1,5 +1,5 @@
 import Runtime.Contracts
-import E2eAd.Spec
+import Prysm.AttestationData.Spec
 import Spec.TestListU64
 
 /-!
@@ -14,7 +14,7 @@ These definitions are part of the frozen IndexedAttestation statements (`StmtIa.
           data: AttestationData
           signature: BLSSignature                                                # Bytes96
 
-  `data` reuses the existing hand `E2e.prysmAdDesc`.
+  `data` reuses the existing hand `Prysm.AttestationData.desc`.
 - `PIa`: the SSZ content of a Go `v1alpha1.IndexedAttestation` whose Signature has 96 bytes and whose AttestingIndices
   has at most 2048 elements (the field `hidx` keeps the length condition explicit).
 - `piaEnc`: offset 228 (4 bytes) ‖ data (128) ‖ signature (96) ‖ the indices as 8-byte little-endian words.
@@ -29,13 +29,13 @@ namespace E2eList
 
 /-- consensus-specs phase0 `IndexedAttestation` (mainnet). -/
 def prysmIaDesc : Desc := .container ["attesting_indices", "data", "signature"]
-  [.list (.uint 8) 2048, E2e.prysmAdDesc, .byteVector 96]
+  [.list (.uint 8) 2048, Prysm.AttestationData.desc, .byteVector 96]
 
 /-- SSZ content of a Go `v1alpha1.IndexedAttestation` (at most 2048 indices, Data, 96-byte Signature). -/
 structure PIa where
   idx : List UInt64
   hidx : idx.length ≤ 2048
-  data : E2e.PAd
+  data : Prysm.AttestationData.SszValue
   signature : Vector UInt8 96
 
 def PIa.toValue (g : PIa) : Value :=
@@ -46,6 +46,6 @@ def iaOff : List UInt8 := [0xe4, 0, 0, 0]
 
 /-- `offset 228 ‖ data ‖ signature ‖ indices`. -/
 def piaEnc (g : PIa) : Array UInt8 :=
-  iaOff.toArray ++ E2e.padEnc g.data ++ g.signature.toArray ++ Spec.u64Bytes g.idx
+  iaOff.toArray ++ Prysm.AttestationData.SszValue.encode g.data ++ g.signature.toArray ++ Spec.u64Bytes g.idx
 
 end E2eList

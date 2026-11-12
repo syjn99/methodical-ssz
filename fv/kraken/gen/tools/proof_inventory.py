@@ -167,10 +167,10 @@ DECODERS = {
     # primitives (hand-written methods; overlay uint64; no Desc / spec module): accept, length reject, witnesses
     (PRIM, "Epoch"): dec("Prysm.Epoch.Decode.accept", "Prysm.Epoch.Decode.reject_size", None, None, None, None,
                          "Prysm.Epoch.Witness.DecodeAccept.runs", "Prysm.Epoch.Witness.DecodeRejectSize.runs"),
-    (PRIM, "Slot"): dec("E2eAd.sl_unmarshal_accept_main", None, None, None, None, None, "E2eAd.WitSl.sl_accept_runs",
+    (PRIM, "Slot"): dec("Prysm.Slot.Decode.accept", None, None, None, None, None, "Prysm.Slot.Witness.DecodeAccept.runs",
                         None),
-    (PRIM, "CommitteeIndex"): dec("E2eAd.ci_unmarshal_accept_main", None, None, None, None, None,
-                                  "E2eAd.WitCi.ci_accept_runs", None),
+    (PRIM, "CommitteeIndex"): dec("Prysm.CommitteeIndex.Decode.accept", None, None, None, None, None,
+                                  "Prysm.CommitteeIndex.Witness.DecodeAccept.runs", None),
     (PRIM, "ValidatorIndex"): dec("E2eScal.Gen.vi_unmarshal_accept_main_g", "E2eScal.vi_unmarshal_reject_len_main",
                                   None, None, None, None, "E2eScal.WitVi.vi_accept_runs", "E2eScal.WitViR.vir_runs"),
 }

@@ -4,7 +4,7 @@ import Machine.Bytes
 import Machine.Labels
 import Prysm.ElfData.CheckpointAndEpoch
 import Prysm.Checkpoint.Code
-import E2eAd.Code
+import Prysm.AttestationData.Code
 import E2eScal.BhCode
 import E2eScal.KindEncN
 import E2eScal.F24Code
@@ -71,7 +71,7 @@ Choice (classes with no independently tied statement before this unit):
   (ActivationEpoch at − 88).
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.Code E2eAd.Code E2eScal.BhCode E2eScal.F24Code
+open Machine Runtime TestTarget Prysm.Checkpoint.Code Prysm.AttestationData.Code E2eScal.BhCode E2eScal.F24Code
 variable [Host]
 
 open Codec
@@ -146,11 +146,11 @@ abbrev dpr_accept_stmt : Prop :=
       ⟨s, Host.addrOf k⟩
 
 /-- Hand statement of the accept path of `(*v1alpha1.BeaconBlocksByRangeRequest).UnmarshalSSZ`: on a 24-byte input
-it returns nil and the receiver holds StartSlot = buf[0:8] (through the callee `SlUnmarshal`), Count = buf[8:16] and
+it returns nil and the receiver holds StartSlot = buf[0:8] (through the callee `slotUnmarshalSSZ`), Count = buf[8:16] and
 Step = buf[16:24]; input, `state`, the spills, the caller's frame `R` and the stack guard are unchanged. -/
 abbrev bbr_accept_stmt : Prop :=
   ∀ (k : Nat) (hk : BbrUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh BbrUnmarshal k)
-    (kS : Nat) (hkS : SlUnmarshal.IsInfixAt Host.prog kS) (hfS : LabelsFresh SlUnmarshal kS)
+    (kS : Nat) (hkS : slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh slotUnmarshalSSZ kS)
     (in0 in1 in2 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8) (hin2 : in2.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 sp1 rslot lo ast a8 a16 a24 : List UInt8)
@@ -189,11 +189,11 @@ abbrev bbr_accept_stmt : Prop :=
 
 /-- Hand statement of the accept path of `(*v1alpha1.PartialDataColumnGroupID).UnmarshalSSZ`: on a 40-byte input it
 returns nil and the receiver holds a fresh BeaconBlockRoot slice equal to buf[0:32] (len = cap = 32) and Slot =
-buf[32:40] (through the callee `SlUnmarshal`); input, `state`, the spills, the caller's frame `R` and the stack guard
+buf[32:40] (through the callee `slotUnmarshalSSZ`); input, `state`, the spills, the caller's frame `R` and the stack guard
 are unchanged; 32 heap bytes are used. -/
 abbrev pdc_accept_stmt : Prop :=
   ∀ (k : Nat) (hk : PdcUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh PdcUnmarshal k)
-    (kS : Nat) (hkS : SlUnmarshal.IsInfixAt Host.prog kS) (hfS : LabelsFresh SlUnmarshal kS)
+    (kS : Nat) (hkS : slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh slotUnmarshalSSZ kS)
     (rt sl : List UInt8) (hrt : rt.length = 32) (hsl : sl.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aP1 aL1 aC1 aS : List UInt8)

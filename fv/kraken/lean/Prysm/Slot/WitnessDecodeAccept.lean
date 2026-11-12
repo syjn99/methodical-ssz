@@ -1,9 +1,9 @@
-import E2eAd.Prims
+import Prysm.Slot.DecodeAccept
 import Machine.WitnessHost
 import Runtime.CopyModel
 
 /-!
-# Witness of `sl_unmarshal_accept_main` and `sl_uacc_holds`
+# Witness of `Decode.accept` and `Decode.accept_function_spec_holds`
 
 Host: the real Go 1.26.10 `(*primitives.Slot).UnmarshalSSZ` alone, at index 0
 (directive `i` at `0x10000 + i`). Memory: one 56-byte block at `0x10000`:
@@ -11,26 +11,26 @@ guard word (r14 + 16, r14 = 0xfff0), the 8 input bytes (rbx = 0x10008), the
 8-byte receiver `*Slot` (rax = 0x10010), the saved-rbp slot (rsp − 8), the
 return slot (rsp = 0x10020, return address 0), the unused spill slot rsp + 8
 (the frame `R`, exactly these bytes) and the rbx spill slot rsp + 16. For every
-8-byte input this state meets every premise (`sl_wit_mem`), and the function
-returns nil with the receiver = the input (`sl_accept_runs`); three values
+8-byte input this state meets every premise (`witness_mem`), and the function
+returns nil with the receiver = the input (`runs`); three values
 below (0, a representative value, 2^64 − 1).
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2eAd E2eAd.Code
+open Machine Runtime TestTarget Machine.Witness Prysm.AttestationData.Code
 
-namespace E2eAd.WitSl
+namespace Prysm.Slot.Witness.DecodeAccept
 
 set_option maxRecDepth 100000
 
-def P : Program := SlUnmarshal
+def P : Program := slotUnmarshalSSZ
 
 theorem P_len : P.length = 63 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
 
-theorem hk0 : SlUnmarshal.IsInfixAt Host.prog 0 := ⟨[], by simp [Host.prog, mkHost, P]⟩
+theorem hk0 : slotUnmarshalSSZ.IsInfixAt Host.prog 0 := ⟨[], by simp [Host.prog, mkHost, P]⟩
 
-theorem hf0 : LabelsFresh SlUnmarshal 0 := fun i hi => absurd hi (Nat.not_lt_zero _)
+theorem hf0 : LabelsFresh slotUnmarshalSSZ 0 := fun i hi => absurd hi (Nat.not_lt_zero _)
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 
@@ -48,7 +48,7 @@ def cs0 (e8 old : List UInt8) (zmms : RegZmms) (flags : StatusFlags) : MachineDa
 def R0 : DataMem → Prop := Eq ((z 8).At (0x10028 : BitVec 64))
 
 set_option maxHeartbeats 4000000 in
-theorem sl_wit_mem (e8 old : List UInt8) (he8 : e8.length = 8) (hold : old.length = 8)
+theorem witness_mem (e8 old : List UInt8) (he8 : e8.length = 8) (hold : old.length = 8)
     (zmms : RegZmms) (flags : StatusFlags) :
     let s := cs0 e8 old zmms flags
     s.dmem =⋆ Eq ((Int.toBytes 8 (0 : UInt64).toBitVec.toInt).At s.regs.rsp.toBitVec)
@@ -63,29 +63,29 @@ theorem sl_wit_mem (e8 old : List UInt8) (he8 : e8.length = 8) (hold : old.lengt
   simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
   exact H
 
-/-- **Non-vacuity of `sl_unmarshal_accept_main`**: on the concrete host and
+/-- **Non-vacuity of `Decode.accept`**: on the concrete host and
 state, for every 8-byte input, the Slot decoder returns nil and the receiver
 holds the input bytes. -/
-theorem sl_accept_runs (e8 old : List UInt8) (he8 : e8.length = 8) (hold : old.length = 8)
+theorem runs (e8 old : List UInt8) (he8 : e8.length = 8) (hold : old.length = 8)
     (zmms : RegZmms) (flags : StatusFlags) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ (Eq (e8.At (0x10010 : BitVec 64)) ⋆ fun _ => True) st.data.dmem)
       ⟨cs0 e8 old zmms flags, Host.addrOf 0⟩ :=
-  eventually_mono (sl_unmarshal_accept_main 0 hk0 hf0 e8 he8 (cs0 e8 old zmms flags) 0 0 (z 8) (z 8) old
-    rfl rfl hold R0 (sl_wit_mem e8 old he8 hold zmms flags) (by simp [cs0]) rfl)
+  eventually_mono (Decode.accept 0 hk0 hf0 e8 he8 (cs0 e8 old zmms flags) 0 0 (z 8) (z 8) old
+    rfl rfl hold R0 (witness_mem e8 old he8 hold zmms flags) (by simp [cs0]) rfl)
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1, by
       have hm := h.2.2.2.2.2.2
       rw [show (cs0 e8 old zmms flags).regs.rax.toBitVec = (0x10010 : BitVec 64) from rfl] at hm
       exact sep_true (P := Eq (e8.At (0x10010 : BitVec 64))) (by ecancel)⟩)
 
-/-- The specification `SlUAccC` holds on this host (from the machine code). This is a spec instance, not premise
+/-- The specification `Decode.accept_function_spec` holds on this host (from the machine code). This is a spec instance, not premise
 satisfiability; the non-vacuity witness is the run theorem above. -/
-theorem sl_spec_here : SlUAccC := sl_uacc_holds 0 hk0 hf0
+theorem runs_function_spec : Decode.accept_function_spec := Decode.accept_function_spec_holds 0 hk0 hf0
 
 /-- value 0, a representative value (0x0123456789abcdef), and 2^64 − 1. -/
-example (z' : RegZmms) (f : StatusFlags) := sl_accept_runs (Int.toBytes 8 0) (z 8) (by decide) rfl z' f
-example (z' : RegZmms) (f : StatusFlags) := sl_accept_runs (Int.toBytes 8 0x0123456789abcdef) (z 8) (by decide) rfl z' f
-example (z' : RegZmms) (f : StatusFlags) := sl_accept_runs (Int.toBytes 8 (2 ^ 64 - 1)) (z 8) (by decide) rfl z' f
+example (z' : RegZmms) (f : StatusFlags) := runs (Int.toBytes 8 0) (z 8) (by decide) rfl z' f
+example (z' : RegZmms) (f : StatusFlags) := runs (Int.toBytes 8 0x0123456789abcdef) (z 8) (by decide) rfl z' f
+example (z' : RegZmms) (f : StatusFlags) := runs (Int.toBytes 8 (2 ^ 64 - 1)) (z 8) (by decide) rfl z' f
 
-end E2eAd.WitSl
+end Prysm.Slot.Witness.DecodeAccept

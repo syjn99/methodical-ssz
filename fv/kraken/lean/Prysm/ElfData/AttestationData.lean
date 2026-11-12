@@ -1,5 +1,5 @@
 import Kraken.X64.WP
-import E2eAd.Include
+import Prysm.ElfData.AttestationDataReader
 
 /-!
 # ELF data of the AttestationData set (Go 1.26.10)
@@ -11,7 +11,7 @@ type are the Checkpoint set's items (`Prysm.ElfData.CheckpointAndEpoch`): `adlin
 code uses the same operands.
 -/
 
-namespace E2eAd.Data
+namespace ElfData.AttestationData
 
 -- the Checkpoint abi.Type word passed to runtime.newobject (decoder Source/Target, encoder nil fields)
 ad_data_include adCpType
@@ -21,4 +21,4 @@ ad_data_include adFmtCi
 ad_data_include adFmtSource
 ad_data_include adFmtTarget
 
-end E2eAd.Data
+end ElfData.AttestationData

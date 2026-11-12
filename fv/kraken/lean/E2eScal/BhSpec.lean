@@ -21,7 +21,7 @@ Hand-written. Independent hand `Desc`, written from consensus-specs phase0
 `prysmBhDesc_serialize_checker`: equal `serialize` on every value; `prysmBhDesc_deserialize_checker`:
 the same accepted inputs with the same values (EthLib error values are not compared).
 `PBh` is the SSZ content of a Go `v1alpha1.BeaconBlockHeader` whose three roots have length 32.
-The proofs are the text of `E2eAd/Spec.lean` (AttestationData) with the nested Checkpoints removed.
+The proofs are the text of `Prysm/AttestationData/Spec.lean` (AttestationData) with the nested Checkpoints removed.
 -/
 
 namespace E2e

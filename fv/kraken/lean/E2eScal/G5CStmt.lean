@@ -4,7 +4,7 @@ import Machine.Bytes
 import Machine.Labels
 import Prysm.ElfData.CheckpointAndEpoch
 import Prysm.Checkpoint.Code
-import E2eAd.Code
+import Prysm.AttestationData.Code
 import E2eScal.BhCode
 import E2eScal.H6Code
 
@@ -60,18 +60,18 @@ rsp − 88, so it holds directive 56 at the end; callee rbp at − 96 (`lo`), ca
 `guard + 88 < rsp`.
 -/
 
-open Machine Runtime TestTarget Prysm.Checkpoint.Code E2eAd.Code E2eScal.H6Code E2eScal.BhCode
+open Machine Runtime TestTarget Prysm.Checkpoint.Code Prysm.AttestationData.Code E2eScal.H6Code E2eScal.BhCode
 variable [Host]
 
 namespace E2eScal.G5C
 
 /-- Hand statement of the accept path of `(*v1alpha1.SyncAggregatorSelectionData).UnmarshalSSZ`: on a 16-byte
-input it returns nil and the receiver holds Slot = buf[0:8] (through the callee `SlUnmarshal`) and
+input it returns nil and the receiver holds Slot = buf[0:8] (through the callee `slotUnmarshalSSZ`) and
 SubcommitteeIndex = buf[8:16]; input, `state`, the spills, the caller's frame `R` and the stack guard are
 unchanged. -/
 abbrev sa_accept_stmt : Prop :=
   ∀ (k : Nat) (hk : SaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh SaUnmarshal k)
-    (kS : Nat) (hkS : SlUnmarshal.IsInfixAt Host.prog kS) (hfS : LabelsFresh SlUnmarshal kS)
+    (kS : Nat) (hkS : slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh slotUnmarshalSSZ kS)
     (in0 in1 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 sp1 rslot lo ast a8 a16 : List UInt8)

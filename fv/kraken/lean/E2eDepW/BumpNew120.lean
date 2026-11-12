@@ -5,8 +5,8 @@ import TestTarget.FunctionSpecs
 /-!
 # Bump-allocator model of `runtime.newobject` for one 120-byte object (witness only)
 
-`BumpNew120` (`E2eDepW/BumpNew120.S`) is `E2eAd/BumpNew72.S` with the object size 0x78; the theorem is
-the text of `E2eAd.bump_newobject72` with 72 replaced by 120. It discharges `NewobjectC bumpHeap ty 120 S` in the
+`BumpNew120` (`E2eDepW/BumpNew120.S`) is `Prysm/AttestationData/BumpNew72.S` with the object size 0x78; the theorem is
+the text of `Prysm.AttestationData.bump_newobject72` with 72 replaced by 120. It discharges `NewobjectC bumpHeap ty 120 S` in the
 Deposit witness (the Deposit_Data object of the Go 1.26.10 ELF is 120 bytes, `depDataType` Size_ = 0x78). It is a
 model in a witness host, not a claim about the Go runtime.
 -/

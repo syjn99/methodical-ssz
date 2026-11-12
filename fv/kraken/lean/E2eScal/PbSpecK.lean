@@ -14,7 +14,7 @@ Hand-written: the shape of `DdSpecK.lean` with the PowBlock statement
   size reject site. The decoder has no other error return.
 -/
 
-open Machine Runtime TestTarget E2e E2eAd.Code E2eScal.H6Code E2eScal Codec EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e Prysm.AttestationData.Code E2eScal.H6Code E2eScal Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.H6

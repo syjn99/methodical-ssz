@@ -1,12 +1,12 @@
 import Runtime.Contracts
 import Machine.Frame
-import E2eAd.Prims
+import Prysm.Slot.DecodeAccept
 import E2eScal.ViSpec
 
 /-!
 # Real Prysm `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`, accept path, segment 1 (hold-out)
 
-Hand-written: the text of `E2eAd/AdHead.lean` with the Go 1.26.10
+Hand-written: the text of `Prysm/AttestationData/DecodeAcceptHead.lean` with the Go 1.26.10
 BeaconBlockHeader indices and stack offsets (frame `sub $0x60`, so every frame address is 16 bytes higher
 than in AttestationData). Not generator output.
 
@@ -23,14 +23,14 @@ Directive indices of `E2eScal.BhCode.BhUnmarshal` (index = line − 1 of the `.S
 18–19 `test %rax,%rax; je L_b9`, 46 `L_b9`, 47–55 arguments (54 `nop`) and
 `callq ValidatorIndex.UnmarshalSSZ`, 56–57 `test; je L_154`, 85 `L_154`, 86–87 spills of rbx, rax (both 0) at rsp − 56, rsp − 64; ends at 88.
 
-The callees are used only through `SlUAccC` / `ViUAccC`.
+The callees are used only through `Prysm.Slot.Decode.accept_function_spec` / `ViUAccC`.
 Stack (rsp = s.regs.rsp at entry): return slot; saved rbp at rsp − 8; argument spills at
 rsp + 8 (receiver), rsp + 16 (buf.ptr), rsp + 32 (buf.cap); the callees' return slot at
 rsp − 112; their saved rbp at rsp − 120 and their rbx spill at rsp − 96 (the frame word
 0x8(%rsp) of this function).
 -/
 
-open Machine Runtime TestTarget E2eAd E2eAd.Code E2eScal.BhCode E2eScal Codec
+open Machine Runtime TestTarget Prysm.AttestationData.Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.Bh
@@ -56,7 +56,7 @@ set_option maxRecDepth 100000 in
 /-- Segment 1: from the entry through `L_154` (directive 85) and the two spills 86–87 to directive 88, through the length check and
 the Slot and ValidatorIndex callees. -/
 theorem bh_e2e_head (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh BhUnmarshal k)
-    (hsl : SlUAccC) (hvi : ViUAccC)
+    (hsl : Prysm.Slot.Decode.accept_function_spec) (hvi : ViUAccC)
     (in0 in1 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 s4 sp1 rslot lf ast a8 a16 s28 s30 : List UInt8)

@@ -14,7 +14,7 @@ Hand-written: the shape of `DdSpecK.lean` with the PendingDeposit statement
   size reject site. The Slot callee's error return (fmt.errorf wrap) is not modelled: the Slot decoder accepts every 8-byte input.
 -/
 
-open Machine Runtime TestTarget E2e E2eAd.Code E2eScal.H6Code E2eScal Codec EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e Prysm.AttestationData.Code E2eScal.H6Code E2eScal Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.H6
@@ -23,7 +23,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Accept side: the hand statement `pd_accept_stmt` for the input chunks of the `g` that EthLib decodes. -/
 theorem pd_e2e_accept_spec_k (k : Nat) (hk : PdUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh PdUnmarshal k)
-    (kS : Nat) (hkS : SlUnmarshal.IsInfixAt Host.prog kS) (hfS : LabelsFresh SlUnmarshal kS)
+    (kS : Nat) (hkS : slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh slotUnmarshalSSZ kS)
     (bsA : Array UInt8) (v : Value) (hd : deserialize prysmPdDesc bsA = .ok v)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aP1 aL1 aC1 aP2 aL2 aC2 aN aP3 aL3 aC3 aS : List UInt8)

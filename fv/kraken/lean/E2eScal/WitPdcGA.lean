@@ -29,7 +29,7 @@ def dataLabels : Program :=
   [.label "runtime.fvBump", .label "pad1", .label "pad2", .label "pad3", .label "pad4", .label "pad5",
    .label "pad6", .label "pad7", .label "runtime.writeBarrier"]
 
-def P : Program := dataLabels ++ PdcUnmarshal ++ E2eAd.Code.SlUnmarshal ++ BumpAlloc1 ++ RtCopy
+def P : Program := dataLabels ++ PdcUnmarshal ++ Prysm.AttestationData.Code.slotUnmarshalSSZ ++ BumpAlloc1 ++ RtCopy
 
 theorem P_len : P.length = 210 := by rfl
 
@@ -38,16 +38,16 @@ instance host : Host := mkHost P (by rw [P_len]; decide)
 theorem prog_eq : Host.prog = P := rfl
 
 theorem hk9 : PdcUnmarshal.IsInfixAt Host.prog 9 :=
-  infixAt_of dataLabels (E2eAd.Code.SlUnmarshal ++ BumpAlloc1 ++ RtCopy) (by simp [prog_eq, P, List.append_assoc]) rfl
-theorem hk115 : E2eAd.Code.SlUnmarshal.IsInfixAt Host.prog 115 :=
+  infixAt_of dataLabels (Prysm.AttestationData.Code.slotUnmarshalSSZ ++ BumpAlloc1 ++ RtCopy) (by simp [prog_eq, P, List.append_assoc]) rfl
+theorem hk115 : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog 115 :=
   infixAt_of (dataLabels ++ PdcUnmarshal) (BumpAlloc1 ++ RtCopy)
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
-theorem hf115 : LabelsFresh E2eAd.Code.SlUnmarshal 115 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf115 : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ 115 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hk178 : BumpAlloc1.IsInfixAt Host.prog 178 :=
-  infixAt_of (dataLabels ++ PdcUnmarshal ++ E2eAd.Code.SlUnmarshal) RtCopy
+  infixAt_of (dataLabels ++ PdcUnmarshal ++ Prysm.AttestationData.Code.slotUnmarshalSSZ) RtCopy
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk184 : RtCopy.IsInfixAt Host.prog 184 :=
-  infixAt_of (dataLabels ++ PdcUnmarshal ++ E2eAd.Code.SlUnmarshal ++ BumpAlloc1) []
+  infixAt_of (dataLabels ++ PdcUnmarshal ++ Prysm.AttestationData.Code.slotUnmarshalSSZ ++ BumpAlloc1) []
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 
 theorem hf9 : LabelsFresh PdcUnmarshal 9 := labelsFresh_of (by rw [prog_eq]; decide)

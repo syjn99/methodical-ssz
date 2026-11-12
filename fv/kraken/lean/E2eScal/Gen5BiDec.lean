@@ -3,7 +3,7 @@ import E2eScal.AcceptTies
 import Codec.FieldFrame
 import E2eScal.ViSpec
 import Prysm.Epoch.DecodeAccept
-import E2eAd.Prims
+import Prysm.Slot.DecodeAccept
 import Codec.DecoderHeadEpilogue
 import E2eScal.RejectTies
 import Codec.Kind.FieldPatterns
@@ -211,7 +211,7 @@ reject. Every statement has a `_kind` line against the G5-L kinds. In-sample (de
 GEN5-JSON: {"accept": "bi_g5dec_accept", "kinds": [{"theorem": "bi_g5dec_head", "kind": "decHeadKindN"}, {"theorem": "bi_g5dec_f1", "kind": "decFieldKindN"}, {"theorem": "bi_g5dec_f2", "kind": "decFieldKindN"}, {"theorem": "bi_g5dec_epi", "kind": "decEpiKindN"}, {"theorem": "bi_g5dec_accept", "kind": "decAcceptKindN"}, {"theorem": "bi_g5dec_reject", "kind": "decRejectKindN"}], "fields": "[.bytes 32, .u64]", "frame": 40, "statement_check": "same E2eScal.Bi.bi_e2e_accept_main"}
 -/
 
-open E2eAd E2eScal Codec
+open E2eScal Codec
 
 namespace E2eScal.Gen
 

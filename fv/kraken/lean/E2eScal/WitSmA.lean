@@ -21,7 +21,7 @@ the untouched receiver tail (32 bytes), the untouched frame bytes rsp − 80 …
 decoder returns nil. The receiver is a Go value of `v1alpha1.SyncCommitteeMessage`.
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2eAd E2eAd.Code E2eScal Codec E2eScal.H5Code E2eScal.BhCode E2eScal.H5
+open Machine Runtime TestTarget Machine.Witness Prysm.AttestationData.Code E2eScal Codec E2eScal.H5Code E2eScal.BhCode E2eScal.H5
 
 namespace E2eScal.WitSmA
 
@@ -31,7 +31,7 @@ def dataLabels : Program :=
   [.label "runtime.fvBump", .label "pad1", .label "pad2", .label "pad3", .label "pad4", .label "pad5",
    .label "pad6", .label "pad7", .label "runtime.writeBarrier"]
 
-def P : Program := dataLabels ++ SmUnmarshal ++ SlUnmarshal ++ ViUnmarshal ++ BumpAlloc1 ++ RtCopy
+def P : Program := dataLabels ++ SmUnmarshal ++ slotUnmarshalSSZ ++ ViUnmarshal ++ BumpAlloc1 ++ RtCopy
 
 theorem P_len : P.length = 346 := by rfl
 
@@ -40,22 +40,22 @@ instance host : Host := mkHost P (by rw [P_len]; decide)
 theorem prog_eq : Host.prog = P := rfl
 
 theorem hk9 : SmUnmarshal.IsInfixAt Host.prog 9 :=
-  infixAt_of dataLabels (SlUnmarshal ++ ViUnmarshal ++ BumpAlloc1 ++ RtCopy) (by simp [prog_eq, P, List.append_assoc]) rfl
-theorem hk188 : SlUnmarshal.IsInfixAt Host.prog 188 :=
+  infixAt_of dataLabels (slotUnmarshalSSZ ++ ViUnmarshal ++ BumpAlloc1 ++ RtCopy) (by simp [prog_eq, P, List.append_assoc]) rfl
+theorem hk188 : slotUnmarshalSSZ.IsInfixAt Host.prog 188 :=
   infixAt_of (dataLabels ++ SmUnmarshal) (ViUnmarshal ++ BumpAlloc1 ++ RtCopy)
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk251 : ViUnmarshal.IsInfixAt Host.prog 251 :=
-  infixAt_of (dataLabels ++ SmUnmarshal ++ SlUnmarshal) (BumpAlloc1 ++ RtCopy)
+  infixAt_of (dataLabels ++ SmUnmarshal ++ slotUnmarshalSSZ) (BumpAlloc1 ++ RtCopy)
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk314 : BumpAlloc1.IsInfixAt Host.prog 314 :=
-  infixAt_of (dataLabels ++ SmUnmarshal ++ SlUnmarshal ++ ViUnmarshal) RtCopy
+  infixAt_of (dataLabels ++ SmUnmarshal ++ slotUnmarshalSSZ ++ ViUnmarshal) RtCopy
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk320 : RtCopy.IsInfixAt Host.prog 320 :=
-  infixAt_of (dataLabels ++ SmUnmarshal ++ SlUnmarshal ++ ViUnmarshal ++ BumpAlloc1) []
+  infixAt_of (dataLabels ++ SmUnmarshal ++ slotUnmarshalSSZ ++ ViUnmarshal ++ BumpAlloc1) []
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 
 theorem hf9 : LabelsFresh SmUnmarshal 9 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hf188 : LabelsFresh SlUnmarshal 188 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf188 : LabelsFresh slotUnmarshalSSZ 188 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf251 : LabelsFresh ViUnmarshal 251 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf320 : LabelsFresh RtCopy 320 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf314 : ∀ i < 314, Host.prog[i]? ≠ some (.label "runtime.makeslice") :=

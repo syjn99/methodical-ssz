@@ -5,8 +5,8 @@ import Machine.Bytes
 import Machine.Labels
 import Prysm.ElfData.CheckpointAndEpoch
 import Prysm.Checkpoint.Code
-import E2eAd.Code
-import E2eAd.Data
+import Prysm.AttestationData.Code
+import Prysm.ElfData.AttestationData
 import E2eList.CodeIa
 import E2eList.DataIa
 import E2eList.DefsIa
@@ -43,7 +43,7 @@ return slot x − 184; scratch `S` below it. On the accept path the AttestationD
 Return addresses at the end: alignment reject errorf call 116 → `k + 117`; overflow reject errorf call 79 → `k + 80`; accept last memmove 240 → `k + 241`.
 -/
 
-open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz E2eList.Code
+open Machine Runtime TestTarget EthLib.Serialization.Ssz E2eList.Code
 variable [Host]
 
 namespace E2eList
@@ -207,12 +207,12 @@ def ia_reject_toobig_stmt : Prop :=
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **Accept (machine).** For every `n ≤ 2048`, on the input `off(228) ‖ data(128) ‖ sig(96) ‖ ib(8n)` the decoder returns nil; the receiver holds AttestingIndices = (A, n, n) with `ib` at A, Data = a fresh 96-byte AttestationData object `pd` decoded by the real `AttestationData.UnmarshalSSZ` (placed in the host, discharged by `E2eAd.ad_e2e_accept_main`; its Source / Target objects as in that theorem), Signature = (psig, 96, 96) = sig. The three panicBounds branches of the element loop are not on the path (to be proved, not assumed). Exact frame, input, `state` and `R` unchanged; heap `8n + 432` bytes. -/
+/-- **Accept (machine).** For every `n ≤ 2048`, on the input `off(228) ‖ data(128) ‖ sig(96) ‖ ib(8n)` the decoder returns nil; the receiver holds AttestingIndices = (A, n, n) with `ib` at A, Data = a fresh 96-byte AttestationData object `pd` decoded by the real `AttestationData.UnmarshalSSZ` (placed in the host, discharged by `Prysm.AttestationData.Decode.accept`; its Source / Target objects as in that theorem), Signature = (psig, 96, 96) = sig. The three panicBounds branches of the element loop are not on the path (to be proved, not assumed). Exact frame, input, `state` and `R` unchanged; heap `8n + 432` bytes. -/
 def ia_accept_stmt : Prop :=
   ∀ (k : Nat) (hk : IaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh IaUnmarshal k)
-    (kA : Nat) (hkA : E2eAd.Code.AdUnmarshal.IsInfixAt Host.prog kA) (hfA : LabelsFresh E2eAd.Code.AdUnmarshal kA)
-    (kS : Nat) (hkS : E2eAd.Code.SlUnmarshal.IsInfixAt Host.prog kS) (hfS : LabelsFresh E2eAd.Code.SlUnmarshal kS)
-    (kI : Nat) (hkI : E2eAd.Code.CiUnmarshal.IsInfixAt Host.prog kI) (hfI : LabelsFresh E2eAd.Code.CiUnmarshal kI)
+    (kA : Nat) (hkA : Prysm.AttestationData.Code.unmarshalSSZ.IsInfixAt Host.prog kA) (hfA : LabelsFresh Prysm.AttestationData.Code.unmarshalSSZ kA)
+    (kS : Nat) (hkS : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ kS)
+    (kI : Nat) (hkI : Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ.IsInfixAt Host.prog kI) (hfI : LabelsFresh Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ kI)
     (kC : Nat) (hkC : Prysm.Checkpoint.Code.unmarshalSSZ.IsInfixAt Host.prog kC) (hfC : LabelsFresh Prysm.Checkpoint.Code.unmarshalSSZ kC)
     (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (n : Nat) (hn : n ≤ 2048) (in0 in1 root se sroot te troot sig ib : List UInt8)
@@ -271,7 +271,7 @@ def ia_accept_stmt : Prop :=
     (hno : NewobjectC Heap E2eList.Data.lvAdType_addr 96 (Sd + 224))
     (hmsD : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 Sd) (hmmD : MemmoveC Sd)
     (hmsD' : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (Sd + 96)) (hmmD' : MemmoveC (Sd + 96))
-    (hnoD : NewobjectC Heap E2eAd.Data.adCpType_addr 72 (Sd + 96)),
+    (hnoD : NewobjectC Heap ElfData.AttestationData.adCpType_addr 72 (Sd + 96)),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -511,9 +511,9 @@ def ia_reject_toobig_spec_stmt : Prop :=
 /-- **Accept (spec).** If EthLib accepts `bsA` against `prysmIaDesc` as `v`, there is `g : PIa` with `g.toValue = v` and `bsA = piaEnc g`; with the input chunks of that `g` the machine code returns nil and the receiver holds `g` (postcondition of `ia_accept_stmt` with `n = g.idx.length`). -/
 def ia_accept_spec_stmt : Prop :=
   ∀ (k : Nat) (hk : IaUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh IaUnmarshal k)
-    (kA : Nat) (hkA : E2eAd.Code.AdUnmarshal.IsInfixAt Host.prog kA) (hfA : LabelsFresh E2eAd.Code.AdUnmarshal kA)
-    (kS : Nat) (hkS : E2eAd.Code.SlUnmarshal.IsInfixAt Host.prog kS) (hfS : LabelsFresh E2eAd.Code.SlUnmarshal kS)
-    (kI : Nat) (hkI : E2eAd.Code.CiUnmarshal.IsInfixAt Host.prog kI) (hfI : LabelsFresh E2eAd.Code.CiUnmarshal kI)
+    (kA : Nat) (hkA : Prysm.AttestationData.Code.unmarshalSSZ.IsInfixAt Host.prog kA) (hfA : LabelsFresh Prysm.AttestationData.Code.unmarshalSSZ kA)
+    (kS : Nat) (hkS : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ kS)
+    (kI : Nat) (hkI : Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ.IsInfixAt Host.prog kI) (hfI : LabelsFresh Prysm.AttestationData.Code.committeeIndexUnmarshalSSZ kI)
     (kC : Nat) (hkC : Prysm.Checkpoint.Code.unmarshalSSZ.IsInfixAt Host.prog kC) (hfC : LabelsFresh Prysm.Checkpoint.Code.unmarshalSSZ kC)
     (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (bsA : Array UInt8) (v : Value) (hd : deserialize prysmIaDesc bsA = .ok v)
@@ -570,7 +570,7 @@ def ia_accept_spec_stmt : Prop :=
     (hno : NewobjectC Heap E2eList.Data.lvAdType_addr 96 (Sd + 224))
     (hmsD : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 Sd) (hmmD : MemmoveC Sd)
     (hmsD' : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (Sd + 96)) (hmmD' : MemmoveC (Sd + 96))
-    (hnoD : NewobjectC Heap E2eAd.Data.adCpType_addr 72 (Sd + 96)),
+    (hnoD : NewobjectC Heap ElfData.AttestationData.adCpType_addr 72 (Sd + 96)),
     ∃ g : PIa, g.toValue = v ∧ bsA = piaEnc g ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0

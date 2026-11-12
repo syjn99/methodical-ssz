@@ -5,7 +5,7 @@ import E2eScal.BhSpec
 /-!
 # Spec alignment of the real BeaconBlockHeader decoder (hold-out)
 
-Hand-written (the text of `E2eAd/AdSpecK.lean` with the BeaconBlockHeader
+Hand-written (the text of `Prysm/AttestationData/DecodeSpec.lean` with the BeaconBlockHeader
 statement).
 - `bh_e2e_accept_spec_k`: if EthLib accepts `bsA` (`prysmBhDesc`, the independent consensus-specs Desc)
   as `v`, there is `g : PBh` with `g.toValue = v` and `bsA = pbhEnc g`; with the input chunks of that `g`
@@ -17,7 +17,7 @@ statement).
   reachable reject site. The two `fmt.Errorf` wraps are not reached on 112-byte inputs (`BhReject.lean`).
 -/
 
-open Machine Runtime TestTarget E2e E2eAd E2eAd.Code E2eScal.BhCode E2eScal Codec EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e Prysm.AttestationData.Code E2eScal.BhCode E2eScal Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.Bh
@@ -25,7 +25,7 @@ namespace E2eScal.Bh
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 theorem bh_e2e_accept_spec_k (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh BhUnmarshal k)
-    (kS : Nat) (hkS : SlUnmarshal.IsInfixAt Host.prog kS) (hfS : LabelsFresh SlUnmarshal kS)
+    (kS : Nat) (hkS : slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh slotUnmarshalSSZ kS)
     (kV : Nat) (hkV : ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh ViUnmarshal kV)
     (bsA : Array UInt8) (v : Value) (hd : deserialize prysmBhDesc bsA = .ok v)
     (s : MachineData) (ra guard : UInt64)

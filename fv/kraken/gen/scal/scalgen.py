@@ -789,8 +789,8 @@ def p2dec_gen2(args):
 # `--compose` with `--gen3`: callee or two-directive uint64 fields are refused (no composition template, no
 # composed-statement kind); otherwise the GEN2 composition plus the `_kind` line against `decAcceptKind`.
 
-# callee decoders with a proved accept spec (`CallDecRel.lean`: `U64CalleeAcc <label>` = `SlUAccC` / `CiUAccC` /
-# `ViUAccC` / `Prysm.Epoch.Decode.accept_function_spec` by rfl; proved by `sl_uacc_holds` / `ci_uacc_holds` / `vi_uacc_holds` / `Prysm.Epoch.Decode.accept_function_spec_holds`)
+# callee decoders with a proved accept spec (`CallDecRel.lean`: `U64CalleeAcc <label>` = `Prysm.Slot.Decode.accept_function_spec` / `Prysm.CommitteeIndex.Decode.accept_function_spec` /
+# `ViUAccC` / `Prysm.Epoch.Decode.accept_function_spec` by rfl; proved by `Prysm.Slot.Decode.accept_function_spec_holds` / `Prysm.CommitteeIndex.Decode.accept_function_spec_holds` / `vi_uacc_holds` / `Prysm.Epoch.Decode.accept_function_spec_holds`)
 PRIM_PKG = "github.com/OffchainLabs/prysm/v7/consensus-types/primitives"
 CALLEES = {n: f"github.com_OffchainLabs_prysm_v7_consensus_types_primitives.{n}.UnmarshalSSZ"
            for n in ("Slot", "CommitteeIndex", "ValidatorIndex", "Epoch")}

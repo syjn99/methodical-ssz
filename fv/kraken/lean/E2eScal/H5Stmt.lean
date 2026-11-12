@@ -4,7 +4,7 @@ import Machine.Bytes
 import Machine.Labels
 import Prysm.ElfData.CheckpointAndEpoch
 import Prysm.Checkpoint.Code
-import E2eAd.Code
+import Prysm.AttestationData.Code
 import E2eScal.BhCode
 import E2eScal.H5Code
 
@@ -57,7 +57,7 @@ The callee checks the stack guard at entry rsp − 88, hence `guard + 88 < rsp`.
 so the return slot holds directive 56 at the end. Error-path frame slots are untouched on this path (in `R`).
 -/
 
-open Machine Runtime TestTarget E2eAd.Code E2eScal.H5Code E2eScal.BhCode
+open Machine Runtime TestTarget Prysm.AttestationData.Code E2eScal.H5Code E2eScal.BhCode
 variable [Host]
 
 namespace E2eScal.H5
@@ -66,10 +66,10 @@ namespace E2eScal.H5
 it returns nil and the receiver holds Slot = buf[0:8], a fresh BlockRoot slice equal to buf[8:40] (len = cap = 32),
 ValidatorIndex = buf[40:48] and a fresh Signature slice equal to buf[48:144] (len = cap = 96); input, `state`,
 the spills, the caller's frame `R` and the stack guard are unchanged; 128 heap bytes are used. The two delegated
-fields go through the callees' code (`SlUnmarshal`, `ViUnmarshal` placed in the host). -/
+fields go through the callees' code (`slotUnmarshalSSZ`, `ViUnmarshal` placed in the host). -/
 abbrev sm_accept_stmt : Prop :=
   ∀ (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh SmUnmarshal k)
-    (kS : Nat) (hkS : SlUnmarshal.IsInfixAt Host.prog kS) (hfS : LabelsFresh SlUnmarshal kS)
+    (kS : Nat) (hkS : slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh slotUnmarshalSSZ kS)
     (kV : Nat) (hkV : ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh ViUnmarshal kV)
     (in0 rt in1 sig : List UInt8) (hin0 : in0.length = 8) (hrt : rt.length = 32) (hin1 : in1.length = 8)
     (hsig : sig.length = 96)

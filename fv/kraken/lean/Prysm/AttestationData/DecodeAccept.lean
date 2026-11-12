@@ -1,4 +1,4 @@
-import E2eAd.AdTgt
+import Prysm.AttestationData.DecodeAcceptTarget
 
 /-!
 # Real Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, Go 1.26.10 machine code
@@ -11,7 +11,7 @@ import E2eAd.AdTgt
         a.Target = new(Checkpoint); a.Target.UnmarshalSSZ(buf[88:128])
         return err }
 
-Receiver: the protoc struct (`attestation.pb.go`, gc amd64 layout `E2e.adGoFields`): `state` 0,
+Receiver: the protoc struct (`attestation.pb.go`, gc amd64 layout `Prysm.AttestationData.goFields`): `state` 0,
 `Slot` 8, `CommitteeIndex` 16, `BeaconBlockRoot` 24 (ptr, len, cap), `Source` 48, `Target` 56,
 `unknownFields` 64 (24), `sizeCache` 88 (4) + 4 bytes padding. Size 96. `unknownFields` and
 `sizeCache` are not touched on this path (in `R`).
@@ -23,17 +23,17 @@ states the new pointers `ps`, `pt` and the full 72-byte content of each new obje
 (`state` = 0, `Epoch`, `Root` header, `unknownFields` / `sizeCache` = 0).
 
 **Callees.** Slot, CommitteeIndex and both Checkpoint calls are discharged through the proved
-function specifications `sl_uacc_holds`, `ci_uacc_holds`, `cp_uacc_holds` (the code places
+function specifications `Prysm.Slot.Decode.accept_function_spec_holds`, `Prysm.CommitteeIndex.Decode.accept_function_spec_holds`, `Prysm.Checkpoint.Decode.accept_function_spec_holds` (the code places
 `kS`, `kI`, `kC`, `kE` in the host); the statement has no hypothesis about their behaviour.
 The runtime contract forms (`Runtime/Contracts.lean`, `TestTarget/FunctionSpecs.lean`) stay visible: the
-Checkpoint callee's `MakesliceC … S` / `MemmoveC S` (what `cp_uacc_holds` needs) and this
+Checkpoint callee's `MakesliceC … S` / `MemmoveC S` (what `Prysm.Checkpoint.Decode.accept_function_spec_holds` needs) and this
 function's own `MakesliceC … (S + 96)`, `MemmoveC (S + 96)`, `NewobjectC adCpType 72 (S + 96)`
 (its runtime calls get the `S + 96` stack bytes below their return slot, which contain the
 Checkpoint callee's frame and its own `S` scratch bytes).
 
-**Proof.** Four segment lemmas (one proof of the whole function made a Lean process exceed the 6 GiB memory cap): `ad_e2e_head` (entry → `L_167`), `ad_e2e_root`
-(→ `L_208`), `ad_e2e_src` (→ `L_2d9`), `ad_e2e_tgt` (→ return); every directive index was
-re-derived from the Go 1.26.10 `.S`. The hand `Fk/AdAccept.lean` (Go 1.26.3, Checkpoint inlined,
+**Proof.** Four segment lemmas (one proof of the whole function made a Lean process exceed the 6 GiB memory cap): `Decode.head` (entry → `L_167`), `Decode.block_root`
+(→ `L_208`), `Decode.source` (→ `L_2d9`), `Decode.target` (→ return); every directive index was
+re-derived from the Go 1.26.10 `.S`. An earlier hand proof on the Go 1.26.3 test target (Checkpoint inlined,
 different frame) was not reused: only its proof style.
 
 Stack (rsp = s.regs.rsp at entry): return slot; saved rbp at rsp − 8; argument spills at
@@ -43,12 +43,12 @@ untouched on this path (in `R`); callee return slot rsp − 128; `lo` = the `S +
 below it.
 -/
 
-open Machine Runtime TestTarget E2eAd.Code
+open Machine Runtime TestTarget Prysm.AttestationData.Code
 variable [Host]
 
-namespace E2eAd
+namespace Prysm.AttestationData
 
-theorem ada_lo88 (x : BitVec 64) (S : Nat) (hS : S < 2 ^ 60) (a f : List UInt8) (ha : a.length = S + 88)
+theorem Decode.accept_lo88 (x : BitVec 64) (S : Nat) (hS : S < 2 ^ 60) (a f : List UInt8) (ha : a.length = S + 88)
     (hf : f.length = 8) :
     Eq ((a ++ f).At (x - 224 - BitVec.ofNat 64 S)) = Eq (a.At (x - 224 - BitVec.ofNat 64 S)) ⋆ Eq (f.At (x - 136)) := by
   refine at_app _ _ ?_ (by simp only [ha, hf]; omega)
@@ -56,20 +56,20 @@ theorem ada_lo88 (x : BitVec 64) (S : Nat) (hS : S < 2 ^ 60) (a f : List UInt8) 
   have : BitVec.ofNat 64 (S + 88) = BitVec.ofNat 64 S + 88 := by apply BitVec.eq_of_toNat_eq; simp
   rw [this]; bv_omega
 
-theorem ada_j3 (x : BitVec 64) (a b c : List UInt8) (ha : a.length = 8) (hb : b.length = 8) (hc : c.length = 8) :
+theorem Decode.accept_j3 (x : BitVec 64) (a b c : List UInt8) (ha : a.length = 8) (hb : b.length = 8) (hc : c.length = 8) :
     Eq ((a ++ (b ++ c)).At (x - 120)) = Eq (a.At (x - 120)) ⋆ Eq (b.At (x - 112)) ⋆ Eq (c.At (x - 104)) := by
   rw [at_app _ _ (b := x - 112) (by rw [ha]; bv_omega) (by simp [ha, hb, hc]),
     at_app _ _ (b := x - 104) (by rw [hb]; bv_omega) (by simp [hb, hc])]
   simp only [Std.ExtHashMap.sep_assoc]
 
-theorem ada_s3 (x : BitVec 64) (w : List UInt8) (h : w.length = 24) :
+theorem Decode.accept_s3 (x : BitVec 64) (w : List UInt8) (h : w.length = 24) :
     Eq (w.At (x - 120)) = Eq ((w.take 8).At (x - 120)) ⋆ Eq (((w.drop 8).take 8).At (x - 112))
       ⋆ Eq ((w.drop 16).At (x - 104)) := by
   have e : w = w.take 8 ++ (((w.drop 8).take 8) ++ w.drop 16) := by
     conv => lhs; rw [← List.take_append_drop 8 w, ← List.take_append_drop 8 (w.drop 8)]
     simp only [List.drop_drop]
   conv => lhs; rw [e]
-  exact ada_j3 x _ _ _ (by simp [h]) (by simp [h]) (by simp [h])
+  exact Decode.accept_j3 x _ _ _ (by simp [h]) (by simp [h]) (by simp [h])
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in
@@ -78,9 +78,9 @@ on a 128-byte input it returns nil and the receiver holds Slot = buf[0:8], Commi
 buf[8:16], a fresh 32-byte BeaconBlockRoot = buf[16:48], and fresh Source / Target objects
 decoded from buf[48:88] / buf[88:128]; the input, `state`, `unknownFields`, `sizeCache`, the
 caller's frame `R` and the stack guard are unchanged; 240 heap bytes are used. -/
-theorem ad_e2e_accept_main (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh AdUnmarshal k)
-    (kS : Nat) (hkS : SlUnmarshal.IsInfixAt Host.prog kS) (hfS : LabelsFresh SlUnmarshal kS)
-    (kI : Nat) (hkI : CiUnmarshal.IsInfixAt Host.prog kI) (hfI : LabelsFresh CiUnmarshal kI)
+theorem Decode.accept (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
+    (kS : Nat) (hkS : slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh slotUnmarshalSSZ kS)
+    (kI : Nat) (hkI : committeeIndexUnmarshalSSZ.IsInfixAt Host.prog kI) (hfI : LabelsFresh committeeIndexUnmarshalSSZ kI)
     (kC : Nat) (hkC : Prysm.Checkpoint.Code.unmarshalSSZ.IsInfixAt Host.prog kC) (hfC : LabelsFresh Prysm.Checkpoint.Code.unmarshalSSZ kC)
     (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (in0 in1 root se sroot te troot : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8)
@@ -114,7 +114,7 @@ theorem ad_e2e_accept_main (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (h
     (hguard : guard.toNat + 224 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 128) (hav : 240 ≤ avail)
     (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S)
     (hms' : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 96)) (hmm' : MemmoveC (S + 96))
-    (hno : NewobjectC Heap E2eAd.Data.adCpType_addr 72 (S + 96)) :
+    (hno : NewobjectC Heap ElfData.AttestationData.adCpType_addr 72 (S + 96)) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -150,9 +150,9 @@ theorem ad_e2e_accept_main (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (h
           ⋆ Eq ((Int.toBytes 8 32).At (pt + 32)) ⋆ Eq ((List.replicate 32 0).At (pt + 40)) ⋆ Eq (troot.At p2)
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
-  have hsl : SlUAccC := sl_uacc_holds kS hkS hfS
-  have hci : CiUAccC := ci_uacc_holds kI hkI hfI
-  have hcp : CpUAccC Heap S := cp_uacc_holds kC hkC hfC kE hkE hfE Heap S hms hmm
+  have hsl : Prysm.Slot.Decode.accept_function_spec := Prysm.Slot.Decode.accept_function_spec_holds kS hkS hfS
+  have hci : Prysm.CommitteeIndex.Decode.accept_function_spec := Prysm.CommitteeIndex.Decode.accept_function_spec_holds kI hkI hfI
+  have hcp : Prysm.Checkpoint.Decode.accept_function_spec Heap S := Prysm.Checkpoint.Decode.accept_function_spec_holds kC hkC hfC kE hkE hfE Heap S hms hmm
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hl88 : (lo.take (S + 88)).length = S + 88 := by simp [hlo]
@@ -160,30 +160,30 @@ theorem ad_e2e_accept_main (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (h
   have hlos : Eq (lo.At (rsp.toBitVec - 224 - BitVec.ofNat 64 S)) =
       Eq ((lo.take (S + 88)).At (rsp.toBitVec - 224 - BitVec.ofNat 64 S)) ⋆ Eq ((lo.drop (S + 88)).At (rsp.toBitVec - 136)) := by
     conv => lhs; rw [← List.take_append_drop (S + 88) lo]
-    exact ada_lo88 _ S hS _ _ hl88 hl8
+    exact Decode.accept_lo88 _ S hS _ _ hl88 hl8
   rw [hlos] at h_mem
   -- segment 1: entry → L_167 (Slot, CommitteeIndex)
-  refine eventually_trans _ _ _ _ (ad_e2e_head k hk hf hsl hci in0 in1 hin0 hin1 _ ra guard fp s1 s2 s4 sp1 rslot
+  refine eventually_trans _ _ _ _ (Decode.head k hk hf hsl hci in0 in1 hin0 hin1 _ ra guard fp s1 s2 s4 sp1 rslot
     (lo.drop (S + 88)) ast a8 a16 hfp h1 h2 h4 hsp1 hrs hl8 hast ha8 ha16 _ (by dsimp only; ecancel) hguard hlen) ?_
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hrbp1, hr141, Hm1⟩
   dsimp only at hpc1 hrsp1 hrbp1 hr141 Hm1
   subst hpc1
   -- segment 2: L_167 → L_208 (BeaconBlockRoot)
-  refine eventually_trans _ _ _ _ (ad_e2e_root k hk hf rsp r14 rax.toBitVec rbx.toBitVec root hroot
+  refine eventually_trans _ _ _ _ (Decode.block_root k hk hf rsp r14 rax.toBitVec rbx.toBitVec root hroot
     (sp0 ++ (Int.toBytes 8 (rbx.toBitVec + 8).toInt ++ sp2)) (Int.toBytes 8 (Host.addrOf (k + 56)).toBitVec.toInt)
     (lo.take (S + 88) ++ Int.toBytes 8 (rsp.toBitVec - 8#64).toInt) l68 aP aL aC
     (by simp only [List.length_append, hsp0, hsp2, Int.toBytes_length]) (Int.toBytes_length 8 _) hl68 haP haL haC _ S hS
     (by simp only [List.length_append, hl88, Int.toBytes_length]) Heap avail (by omega)
     d1 (by rw [hrsp1]; first | rfl | (apply UInt64.toBitVec_inj.mp; simp))
     (by rw [hrbp1]; first | rfl | (apply UInt64.toBitVec_inj.mp; simp)) hr141
-    (by rw [ada_j3 _ _ _ _ hsp0 (Int.toBytes_length 8 _) hsp2, ada_lo88 _ S hS _ _ hl88 (Int.toBytes_length 8 _)]
+    (by rw [Decode.accept_j3 _ _ _ _ hsp0 (Int.toBytes_length 8 _) hsp2, Decode.accept_lo88 _ S hS _ _ hl88 (Int.toBytes_length 8 _)]
         ecancel) hms' hmm') ?_
   rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hrbp2, hr142, p, spl, lo2, hspl, hlo2, hrbx2, hrdx2, Hm2⟩
   dsimp only at hpc2 hrsp2 hrbp2 hr142 hrbx2 hrdx2 Hm2
   subst hpc2
-  rw [ada_s3 _ _ hspl] at Hm2
+  rw [Decode.accept_s3 _ _ hspl] at Hm2
   -- segment 3: L_208 → L_2d9 (Source)
-  refine eventually_trans _ _ _ _ (ad_e2e_src k hk hf rsp r14 guard rax.toBitVec rbx.toBitVec p se sroot hse hsroot
+  refine eventually_trans _ _ _ _ (Decode.source k hk hf rsp r14 guard rax.toBitVec rbx.toBitVec p se sroot hse hsroot
     (Int.toBytes 8 rdi.toBitVec.toInt) (spl.take 8) ((spl.drop 8).take 8)
     (Int.toBytes 8 (Host.addrOf (k + 107)).toBitVec.toInt) lo2 (Int.toBytes 8 p.toInt) aS
     (Int.toBytes_length 8 _) (by simp [hspl]) (by simp [hspl]) (Int.toBytes_length 8 _) (Int.toBytes_length 8 _) haS
@@ -192,7 +192,7 @@ theorem ad_e2e_accept_main (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (h
   dsimp only at hpc3 hrsp3 hrbp3 hr143 Hm3
   subst hpc3
   -- segment 4: L_2d9 → return (Target)
-  refine eventually_mono (ad_e2e_tgt k hk hf rsp r14 guard ra rbp rax.toBitVec rbx.toBitVec te troot hte htroot
+  refine eventually_mono (Decode.target k hk hf rsp r14 guard ra rbp rax.toBitVec rbx.toBitVec te troot hte htroot
     (Int.toBytes 8 rdi.toBitVec.toInt) (Int.toBytes 8 ps.toInt) (Int.toBytes 8 (rbx.toBitVec + 48).toInt)
     (Int.toBytes 8 (Host.addrOf (k + 143)).toBitVec.toInt) lo3 aT
     (Int.toBytes_length 8 _) (Int.toBytes_length 8 _) (Int.toBytes_length 8 _) (Int.toBytes_length 8 _) haT
@@ -201,4 +201,4 @@ theorem ad_e2e_accept_main (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (h
   rw [show avail - 32 - 72 - 32 - 72 - 32 = avail - 240 by omega] at Hm4
   exact ⟨e1, e2, e3, e4, e5, e6, p, ps, pt, p1, p2, (spl.drop 16), lo4, by simp [hspl], hlo4, by ecancel⟩
 
-end E2eAd
+end Prysm.AttestationData

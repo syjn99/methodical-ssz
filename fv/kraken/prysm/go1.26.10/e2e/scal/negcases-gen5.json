@@ -10,8 +10,8 @@
   "module": "E2eScal/AcceptTies.lean",
   "theorem": "pd_accept_is_kindN",
   "kind": "stmt",
-  "old": "(layMix40 [E2eAd.Code.SlUnmarshal] 131 2)",
-  "new": "(layMix40 [E2eAd.Code.SlUnmarshal] 130 2)"
+  "old": "(layMix40 [Prysm.AttestationData.Code.slotUnmarshalSSZ] 131 2)",
+  "new": "(layMix40 [Prysm.AttestationData.Code.slotUnmarshalSSZ] 130 2)"
  },
  {
   "id": "g5-tie-pd-kind-size",
@@ -26,16 +26,16 @@
   "module": "E2eScal/AcceptTies.lean",
   "theorem": "sm_accept_is_kindN",
   "kind": "stmt",
-  "old": "[E2eAd.Code.SlUnmarshal, E2eScal.BhCode.ViUnmarshal] 141 1",
-  "new": "[E2eScal.BhCode.ViUnmarshal, E2eAd.Code.SlUnmarshal] 141 1"
+  "old": "[Prysm.AttestationData.Code.slotUnmarshalSSZ, E2eScal.BhCode.ViUnmarshal] 141 1",
+  "new": "[E2eScal.BhCode.ViUnmarshal, Prysm.AttestationData.Code.slotUnmarshalSSZ] 141 1"
  },
  {
   "id": "g5-tie-bh-kind-ptr",
   "module": "E2eScal/AcceptTies.lean",
   "theorem": "bh_accept_is_kindN",
   "kind": "stmt",
-  "old": "[E2eAd.Code.SlUnmarshal, E2eScal.BhCode.ViUnmarshal] 179 2",
-  "new": "[E2eAd.Code.SlUnmarshal, E2eScal.BhCode.ViUnmarshal] 179 1"
+  "old": "[Prysm.AttestationData.Code.slotUnmarshalSSZ, E2eScal.BhCode.ViUnmarshal] 179 2",
+  "new": "[Prysm.AttestationData.Code.slotUnmarshalSSZ, E2eScal.BhCode.ViUnmarshal] 179 1"
  },
  {
   "id": "g5-tie-pb-kind-state",

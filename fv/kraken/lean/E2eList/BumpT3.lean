@@ -2,7 +2,7 @@ import Runtime.BumpAllocator
 import Runtime.BumpAllocatorVariants
 import TestTarget.FunctionSpecs
 import E2eList.DataIa
-import E2eAd.Data
+import Prysm.ElfData.AttestationData
 
 /-!
 # Type-dispatching bump models of `runtime.makeslice` and `runtime.newobject` for the IndexedAttestation witness host
@@ -12,7 +12,7 @@ three stack sizes) and two `NewobjectC` instances (96 bytes for `lvAdType_addr`,
 one `runtime.makeslice` and one `runtime.newobject`, so each model dispatches on the type word in rax:
 `E2eList/BumpAllocT3.S` bumps by 8·cnt for `type__+387456` and by cnt otherwise; `E2eList/BumpNewT3.S` bumps by 96
 for `type__+1464512` and by 72 otherwise. The offsets are those of `lv/link-t3/data/lvU64Type.data` and
-`lvAdType.data`. The proof texts are `E2eList.bump_makeslice_t1` / `t24` (`BumpT.lean`) and `E2eAd.bump_newobject72`
+`lvAdType.data`. The proof texts are `E2eList.bump_makeslice_t1` / `t24` (`BumpT.lean`) and `Prysm.AttestationData.bump_newobject72`
 with the dispatch steps. Abstract models for non-vacuity only, not a Go refinement. Both `.S`
 files are in the Lake `input_dir` `lv_lean_S` (all `.S` files of `E2eList/`).
 -/

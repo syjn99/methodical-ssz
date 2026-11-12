@@ -13,10 +13,10 @@ open Machine Runtime TestTarget
 open Codec
 namespace E2eScal
 
-theorem slUAccC_eq : ∀ (h : Host), @E2eAd.SlUAccC h = @U64CalleeAcc h E2eAd.Code.slLabel := by
+theorem slUAccC_eq : ∀ (h : Host), @Prysm.Slot.Decode.accept_function_spec h = @U64CalleeAcc h Prysm.AttestationData.Code.slotUnmarshalLabel := by
   intro h; rfl
 
-theorem ciUAccC_eq : ∀ (h : Host), @E2eAd.CiUAccC h = @U64CalleeAcc h E2eAd.Code.ciLabel := by
+theorem ciUAccC_eq : ∀ (h : Host), @Prysm.CommitteeIndex.Decode.accept_function_spec h = @U64CalleeAcc h Prysm.AttestationData.Code.committeeIndexUnmarshalLabel := by
   intro h; rfl
 
 theorem viUAccC_eq : ∀ (h : Host), @E2eScal.ViUAccC h = @U64CalleeAcc h E2eScal.BhCode.viLabel := by

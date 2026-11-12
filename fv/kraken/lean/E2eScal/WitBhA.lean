@@ -6,7 +6,7 @@ import Machine.WitnessHost
 /-!
 # Witness of `bh_e2e_accept_main` (BeaconBlockHeader decoder accept path, hold-out)
 
-Hand-written (the text of `E2eAd/WitAdA.lean` with the BeaconBlockHeader host
+Hand-written (the text of `Prysm/AttestationData/WitnessDecodeAccept.lean` with the BeaconBlockHeader host
 and layout). Host: data labels, the real Go 1.26.10 `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`
 (index 9), `(*primitives.Slot).UnmarshalSSZ` (226), `(*primitives.ValidatorIndex).UnmarshalSSZ` (289),
 the 1-byte bump `runtime.makeslice` (352, `bump_makeslice1`) and `RtCopy` (358, `rt_memmove`).
@@ -20,7 +20,7 @@ every old root pointer word (nil = zero, or any other bytes) every premise holds
 The receiver is a Go value of `v1alpha1.BeaconBlockHeader` (zero `state`, zero-length root slices).
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2eAd E2eAd.Code E2eScal Codec E2eScal.BhCode E2eScal.Bh
+open Machine Runtime TestTarget Machine.Witness Prysm.AttestationData.Code E2eScal Codec E2eScal.BhCode E2eScal.Bh
 
 namespace E2eScal.WitBhA
 
@@ -30,7 +30,7 @@ def dataLabels : Program :=
   [.label "runtime.fvBump", .label "pad1", .label "pad2", .label "pad3", .label "pad4", .label "pad5",
    .label "pad6", .label "pad7", .label "runtime.writeBarrier"]
 
-def P : Program := dataLabels ++ BhUnmarshal ++ SlUnmarshal ++ ViUnmarshal ++ BumpAlloc1 ++ RtCopy
+def P : Program := dataLabels ++ BhUnmarshal ++ slotUnmarshalSSZ ++ ViUnmarshal ++ BumpAlloc1 ++ RtCopy
 
 theorem P_len : P.length = 384 := by rfl
 
@@ -39,22 +39,22 @@ instance host : Host := mkHost P (by rw [P_len]; decide)
 theorem prog_eq : Host.prog = P := rfl
 
 theorem hk9 : BhUnmarshal.IsInfixAt Host.prog 9 :=
-  infixAt_of dataLabels (SlUnmarshal ++ ViUnmarshal ++ BumpAlloc1 ++ RtCopy) (by simp [prog_eq, P, List.append_assoc]) rfl
-theorem hk226 : SlUnmarshal.IsInfixAt Host.prog 226 :=
+  infixAt_of dataLabels (slotUnmarshalSSZ ++ ViUnmarshal ++ BumpAlloc1 ++ RtCopy) (by simp [prog_eq, P, List.append_assoc]) rfl
+theorem hk226 : slotUnmarshalSSZ.IsInfixAt Host.prog 226 :=
   infixAt_of (dataLabels ++ BhUnmarshal) (ViUnmarshal ++ BumpAlloc1 ++ RtCopy)
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk289 : ViUnmarshal.IsInfixAt Host.prog 289 :=
-  infixAt_of (dataLabels ++ BhUnmarshal ++ SlUnmarshal) (BumpAlloc1 ++ RtCopy)
+  infixAt_of (dataLabels ++ BhUnmarshal ++ slotUnmarshalSSZ) (BumpAlloc1 ++ RtCopy)
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk352 : BumpAlloc1.IsInfixAt Host.prog 352 :=
-  infixAt_of (dataLabels ++ BhUnmarshal ++ SlUnmarshal ++ ViUnmarshal) RtCopy
+  infixAt_of (dataLabels ++ BhUnmarshal ++ slotUnmarshalSSZ ++ ViUnmarshal) RtCopy
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk358 : RtCopy.IsInfixAt Host.prog 358 :=
-  infixAt_of (dataLabels ++ BhUnmarshal ++ SlUnmarshal ++ ViUnmarshal ++ BumpAlloc1) []
+  infixAt_of (dataLabels ++ BhUnmarshal ++ slotUnmarshalSSZ ++ ViUnmarshal ++ BumpAlloc1) []
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 
 theorem hf9 : LabelsFresh BhUnmarshal 9 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hf226 : LabelsFresh SlUnmarshal 226 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf226 : LabelsFresh slotUnmarshalSSZ 226 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf289 : LabelsFresh ViUnmarshal 289 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf358 : LabelsFresh RtCopy 358 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf352 : ∀ i < 352, Host.prog[i]? ≠ some (.label "runtime.makeslice") :=

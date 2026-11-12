@@ -1,6 +1,6 @@
 import E2eScal.BhHead
 import E2eScal.GenBhDec
-import E2eAd.AdAccept
+import Prysm.AttestationData.DecodeAccept
 
 /-!
 # Real Prysm `(*v1alpha1.BeaconBlockHeader).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (hold-out)
@@ -20,7 +20,7 @@ offsets 24 / 48 / 72 from it): `state` 0, `Slot` 8, `ProposerIndex` 16, `ParentR
 `BodyRoot` 72 (ptr, len, cap each). `unknownFields` and `sizeCache` are not touched on this path (in `R`).
 
 **Proof.** `bh_e2e_head` (entry → directive 88: length check, Slot and ValidatorIndex callees through
-`SlUAccC` / `ViUAccC`, spills of their nil errors), then the three GENERATED segment theorems
+`Prysm.Slot.Decode.accept_function_spec` / `ViUAccC`, spills of their nil errors), then the three GENERATED segment theorems
 `Gen.bh_dec_ParentRoot_seg` (88–112), `Gen.bh_dec_StateRoot_seg` (124–148), `Gen.bh_dec_BodyRoot_seg`
 (159–183), with the instance directives between them by hand: 113–115 + `L_1f7` 122–123, 149–150 +
 `L_292` 157–158, 184–185 + `L_331` 193–194 (reload of the slice pointer from rsp − 48 and its store), and
@@ -33,7 +33,7 @@ path (in `R`); callee return slot rsp − 112; `lo` = the `S + 8` bytes below it
 its top word). Runtime calls get `S + 8` stack bytes below their return slot.
 -/
 
-open Machine Runtime TestTarget E2eAd E2eAd.Code E2eScal.BhCode E2eScal Codec
+open Machine Runtime TestTarget Prysm.AttestationData.Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.Bh
@@ -61,7 +61,7 @@ input it returns nil and the receiver holds Slot = buf[0:8], ProposerIndex = buf
 ParentRoot / StateRoot / BodyRoot = buf[16:48] / buf[48:80] / buf[80:112] (len = cap = 32 each); the input,
 `state`, the caller's frame `R` and the stack guard are unchanged; 96 heap bytes are used. -/
 theorem bh_e2e_accept_main (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh BhUnmarshal k)
-    (kS : Nat) (hkS : SlUnmarshal.IsInfixAt Host.prog kS) (hfS : LabelsFresh SlUnmarshal kS)
+    (kS : Nat) (hkS : slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh slotUnmarshalSSZ kS)
     (kV : Nat) (hkV : ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh ViUnmarshal kV)
     (in0 in1 r1 r2 r3 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8)
     (hr1 : r1.length = 32) (hr2 : r2.length = 32) (hr3 : r3.length = 32)
@@ -131,7 +131,7 @@ theorem bh_e2e_accept_main (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (h
           ⋆ Eq (r1.At p1) ⋆ Eq (r2.At p2) ⋆ Eq (r3.At p3)
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
-  have hsl : SlUAccC := sl_uacc_holds kS hkS hfS
+  have hsl : Prysm.Slot.Decode.accept_function_spec := Prysm.Slot.Decode.accept_function_spec_holds kS hkS hfS
   have hvi : ViUAccC := vi_uacc_holds kV hkV hfV
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢

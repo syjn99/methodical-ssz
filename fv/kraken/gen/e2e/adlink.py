@@ -31,7 +31,7 @@ PM = ("UnmarshalSSZ", "MarshalSSZTo", "MarshalSSZ", "SizeSSZ")
 FUNCS = [f"{V1A1}.(*AttestationData).{m}" for m in AD_M] + \
         [f"{PRIM}.(*Slot).{m}" for m in PM] + [f"{PRIM}.(*CommitteeIndex).{m}" for m in PM]
 SCOPE = {FUNCS[0]: "in (A4 size)", FUNCS[1]: "in (A4 encoder)", FUNCS[2]: "in (A3 decoder)",
-         FUNCS[3]: "in (callee, function spec SlUAccC, A2)", FUNCS[7]: "in (callee, function spec CiUAccC, A2)"}
+         FUNCS[3]: "in (callee, function spec Prysm.Slot.Decode.accept_function_spec, A2)", FUNCS[7]: "in (callee, function spec Prysm.CommitteeIndex.Decode.accept_function_spec, A2)"}
 for i in (4, 5, 6, 8, 9, 10):
     SCOPE[FUNCS[i]] = "record only (inlined into AttestationData.MarshalSSZTo or unused; out-of-line body unused)"
 CP_U = f"{V1A1}.(*Checkpoint).UnmarshalSSZ"
@@ -48,10 +48,10 @@ CLASS = {
     "fmt.errorf": ("b", "FmtErrorfWC (field wraps 'Slot: %w', 'CommitteeIndex: %w', 'Source: %w', 'Target: %w'); "
                         "decoder: unreachable_mc under the callee specs; encoder Source/Target: reachable when "
                         "a child Root has len != 32"),
-    f"{PRIM}.(*Slot).UnmarshalSSZ": ("a", "function spec SlUAccC, proved from machine code"),
-    f"{PRIM}.(*CommitteeIndex).UnmarshalSSZ": ("a", "function spec CiUAccC, proved from machine code"),
-    CP_U: ("a", "function spec CpUAccC = Prysm.Checkpoint.Decode.accept (its runtime contracts stay hypotheses)"),
-    CP_M: ("a", "function spec CpMAccC = Prysm.Checkpoint.Encode.fast_path (its runtime contracts stay hypotheses)"),
+    f"{PRIM}.(*Slot).UnmarshalSSZ": ("a", "function spec Prysm.Slot.Decode.accept_function_spec, proved from machine code"),
+    f"{PRIM}.(*CommitteeIndex).UnmarshalSSZ": ("a", "function spec Prysm.CommitteeIndex.Decode.accept_function_spec, proved from machine code"),
+    CP_U: ("a", "function spec Prysm.Checkpoint.Decode.accept_function_spec = Prysm.Checkpoint.Decode.accept (its runtime contracts stay hypotheses)"),
+    CP_M: ("a", "function spec Prysm.Checkpoint.Encode.fast_path_function_spec = Prysm.Checkpoint.Encode.fast_path (its runtime contracts stay hypotheses)"),
 }
 INL = {
     "cannot_inline_Slot_UnmarshalSSZ": r"slot\.go:\d+:\d+: cannot inline \(\*Slot\)\.UnmarshalSSZ",

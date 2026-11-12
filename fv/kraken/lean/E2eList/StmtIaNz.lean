@@ -5,8 +5,8 @@ import Machine.Bytes
 import Machine.Labels
 import Prysm.ElfData.CheckpointAndEpoch
 import Prysm.Checkpoint.Code
-import E2eAd.Code
-import E2eAd.Data
+import Prysm.AttestationData.Code
+import Prysm.ElfData.AttestationData
 import E2eList.CodeIa
 import E2eList.DataIa
 import E2eList.DefsIa
@@ -24,7 +24,7 @@ equivalent). The originals in `StmtIa.lean` stay unchanged and unproved. Precede
 itab address `0xd28520` (check (b) of `lv/link-t3/RESULT` binds `go_itab._errors.errorString_error` to it).
 -/
 
-open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz E2eList.Code
+open Machine Runtime TestTarget EthLib.Serialization.Ssz E2eList.Code
 variable [Host]
 
 namespace E2eList

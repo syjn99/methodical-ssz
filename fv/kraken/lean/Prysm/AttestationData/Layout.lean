@@ -2,11 +2,11 @@
 the gc amd64 layout of `v1alpha1.AttestationData` (`go_fields`, go/types sizes). TRUST: the IR's go/types layout, not
 the ELF's abi.Type bytes (no named type symbol of the struct in the ELF). Do not edit. -/
 
-namespace E2e
+namespace Prysm.AttestationData
 
 /-- (field, offset, size) of the Go struct, in declaration order. -/
-def adGoFields : List (String × Nat × Nat) := [("state", 0, 8), ("Slot", 8, 8), ("CommitteeIndex", 16, 8), ("BeaconBlockRoot", 24, 24), ("Source", 48, 8), ("Target", 56, 8), ("unknownFields", 64, 24), ("sizeCache", 88, 4)]
-def adGoSize : Nat := 96
-def adGoAlign : Nat := 8
+def goFields : List (String × Nat × Nat) := [("state", 0, 8), ("Slot", 8, 8), ("CommitteeIndex", 16, 8), ("BeaconBlockRoot", 24, 24), ("Source", 48, 8), ("Target", 56, 8), ("unknownFields", 64, 24), ("sizeCache", 88, 4)]
+def goSize : Nat := 96
+def goAlign : Nat := 8
 
-end E2e
+end Prysm.AttestationData

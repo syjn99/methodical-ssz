@@ -14,7 +14,7 @@ return slot (rsp = 0x10020, return address 0), the unused spill slot rsp + 8
 8-byte input this state meets every premise (`vi_wit_mem`), and the function
 returns nil with the receiver = the input (`vi_accept_runs`); three values
 below (0, a representative value, 2^64 − 1).
-Hand-written (not generator output): the text of `E2eAd/WitCi.lean` with the
+Hand-written (not generator output): the text of `Prysm/CommitteeIndex/WitnessDecodeAccept.lean` with the
 names replaced (`sed`); the machine theorem used is the generated `vi_unmarshal_accept_main_g`.
 -/
 

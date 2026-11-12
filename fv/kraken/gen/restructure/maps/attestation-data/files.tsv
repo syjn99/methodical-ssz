@@ -1,0 +1,24 @@
+# old path	new path	meaning (paths are relative to the repository root)
+fv/kraken/lean/E2eAd/Code.lean	fv/kraken/lean/Prysm/AttestationData/Code.lean	program constants of the AttestationData link set: AttestationData UnmarshalSSZ, MarshalSSZTo and SizeSSZ, the Slot and CommitteeIndex UnmarshalSSZ, and the labels of the Checkpoint callees (shared with Slot and CommitteeIndex, needs a split)
+fv/kraken/lean/E2eAd/Include.lean	fv/kraken/lean/Prysm/ElfData/AttestationDataReader.lean	the command ad_data_include that reads the data files of the AttestationData link set (the Checkpoint and Epoch reader with the set prefix ad)
+fv/kraken/lean/E2eAd/Data.lean	fv/kraken/lean/Prysm/ElfData/AttestationData.lean	ELF data of the link set prysm/go1.26.10/e2e/ad/link: the Checkpoint abi.Type word and the four field error format strings
+fv/kraken/lean/E2eAd/Layout.lean	fv/kraken/lean/Prysm/AttestationData/Layout.lean	generated Go struct layout of v1alpha1.AttestationData (field offsets and sizes)
+fv/kraken/lean/E2eAd/SpecChecker.lean	fv/kraken/lean/Prysm/AttestationData/SpecChecker.lean	generated description of v1alpha1.AttestationData for the description checker
+fv/kraken/lean/E2eAd/Spec.lean	fv/kraken/lean/Prysm/AttestationData/Spec.lean	EthLib description of v1alpha1.AttestationData, the SSZ value structure and the bridge lemmas; also the equality with the checker description (mixed module, main role Spec)
+fv/kraken/lean/E2eAd/Prims.lean	fv/kraken/lean/Prysm/Slot/DecodeAccept.lean	decoder accept path of the hand-written primitives.Slot and primitives.CommitteeIndex UnmarshalSSZ and their function specifications (shared with CommitteeIndex, needs a split)
+fv/kraken/lean/E2eAd/AdHead.lean	fv/kraken/lean/Prysm/AttestationData/DecodeAcceptHead.lean	decoder accept path, part 1: the length check and the Slot and CommitteeIndex calls
+fv/kraken/lean/E2eAd/AdRoot.lean	fv/kraken/lean/Prysm/AttestationData/DecodeAcceptBlockRoot.lean	decoder accept path, part 2: the BeaconBlockRoot slice (makeslice and memmove)
+fv/kraken/lean/E2eAd/AdSrc.lean	fv/kraken/lean/Prysm/AttestationData/DecodeAcceptSource.lean	decoder accept path, part 3: the new Source object and the Checkpoint call, and the callee frame lemmas
+fv/kraken/lean/E2eAd/AdTgt.lean	fv/kraken/lean/Prysm/AttestationData/DecodeAcceptTarget.lean	decoder accept path, part 4: the new Target object, the Checkpoint call and the return
+fv/kraken/lean/E2eAd/AdAccept.lean	fv/kraken/lean/Prysm/AttestationData/DecodeAccept.lean	decoder accept path: the composition of the four parts
+fv/kraken/lean/E2eAd/AdReject.lean	fv/kraken/lean/Prysm/AttestationData/DecodeRejectSize.lean	decoder size reject, and the four error wraps that no 128-byte input reaches (mixed module, main role size reject)
+fv/kraken/lean/E2eAd/AdSpecK.lean	fv/kraken/lean/Prysm/AttestationData/DecodeSpec.lean	decoder against EthLib: accept, size reject and reject completeness
+fv/kraken/lean/E2eAd/BumpNew72.lean	fv/kraken/lean/Prysm/AttestationData/WitnessBumpAllocator.lean	bump allocator model of runtime.newobject for one 72-byte object, for the AttestationData witnesses only (no role of the table fits)
+fv/kraken/lean/E2eAd/BumpNew72.S	fv/kraken/lean/Prysm/AttestationData/BumpNew72.S	assembly of the 72-byte bump newobject model (file name kept: the name of its Program constant)
+fv/kraken/lean/E2eAd/WitAdA.lean	fv/kraken/lean/Prysm/AttestationData/WitnessDecodeAccept.lean	witness of the decoder accept theorem
+fv/kraken/lean/E2eAd/WitAdR.lean	fv/kraken/lean/Prysm/AttestationData/WitnessDecodeRejectSize.lean	witness of the decoder size reject theorem
+fv/kraken/lean/E2eAd/WitSl.lean	fv/kraken/lean/Prysm/Slot/WitnessDecodeAccept.lean	witness of the Slot decoder accept theorem and of its function specification
+fv/kraken/lean/E2eAd/WitCi.lean	fv/kraken/lean/Prysm/CommitteeIndex/WitnessDecodeAccept.lean	witness of the CommitteeIndex decoder accept theorem and of its function specification
+fv/kraken/lean/E2eAd/CpSpecs.lean	fv/kraken/lean/Prysm/Checkpoint/FunctionSpecsAsNestedField.lean	function specifications of the Checkpoint decoder and encoder at their labels, for a caller that holds Checkpoint as a nested field
+fv/kraken/lean/E2eAd/WitCpSpecs.lean	fv/kraken/lean/Prysm/Checkpoint/WitnessDecodeFunctionSpecAsNestedField.lean	the Checkpoint decoder function specification holds on the Checkpoint decoder witness host
+fv/kraken/lean/E2eAd/WitCpMS.lean	fv/kraken/lean/Prysm/Checkpoint/WitnessEncodeFunctionSpecAsNestedField.lean	the Checkpoint encoder function specification holds on the Checkpoint encoder witness host

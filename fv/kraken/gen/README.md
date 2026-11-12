@@ -22,7 +22,7 @@ The design principles are in `../../README.md`.
 | `scal/scalgen.py`, with `scal/gen5.py` and `scal/gen6enc.py` | A converted `.S` file and the IR entry of one type | `lean/E2eScal/Gen*.lean`: segment, accept, size reject and encoder fast path theorems |
 | `scal/gen.sh` | | Runs `scalgen.py` once for each committed generated file |
 | `e2e/descterm.py`, `e2e/lvdescterm.py` | A `Desc` JSON file that the checker accepted | `*SpecChecker.lean`: the checker `Desc` as Lean |
-| `e2e/layout.py`, `e2e/adlayout.py` | `prysm/ir/ir-mainnet.json` | `lean/Prysm/Checkpoint/Layout.lean`, `lean/E2eAd/Layout.lean` |
+| `e2e/layout.py`, `e2e/adlayout.py` | `prysm/ir/ir-mainnet.json` | `lean/Prysm/Checkpoint/Layout.lean`, `lean/Prysm/AttestationData/Layout.lean` |
 | `desc/producer.py` | The reduced IR | One `Desc` JSON file for each type |
 | `type_inventory.py` | The raw IR of the generator | `prysm/ir/*.json` (`reduce`) and `prysm/inventory.json` (`build`) |
 | `type_list_document.py`, `type_scope.py` | `prysm/inventory.json` | `prysm/TYPES.md`, `prysm/type-scope.json`, `prysm/type-scope.md` |
@@ -44,7 +44,7 @@ Use `regen_check.sh` of the project skill. It runs the generator two times into 
 Exit 0 means the same bytes. Run it from `fv/kraken`:
 
 ```sh
-sh ../../.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh lean/E2eScal/GenCi.lean -- sh -c 'python3 -I gen/scal/scalgen.py p1 --S prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S --const CiUnmarshal --name ci_unmarshal_accept_main_g --same-as E2eAd.ci_unmarshal_accept_main --imports Codec.Uint64Decoder,E2eAd.Prims --open E2eAd.Code > "$REGEN_OUT"'
+sh ../../.claude/skills/maintaining-methodical-fv/scripts/regen_check.sh lean/E2eScal/GenCi.lean -- sh -c 'python3 -I gen/scal/scalgen.py p1 --S prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S --const committeeIndexUnmarshalSSZ --name ci_unmarshal_accept_main_g --same-as Prysm.CommitteeIndex.Decode.accept --imports Codec.Uint64Decoder,Prysm.Slot.DecodeAccept --open Prysm.AttestationData.Code > "$REGEN_OUT"'
 ```
 
 For the other files, take the command from `scal/gen.sh` or from the file header. Replace the output redirect with `> "$REGEN_OUT"`.

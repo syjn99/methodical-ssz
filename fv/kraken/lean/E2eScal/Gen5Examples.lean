@@ -37,10 +37,10 @@ variable [Host]
 
 /-- The four generated-style accept theorems, stated by their kinds. -/
 theorem g5_examples_accept :
-    decAcceptKindN E2eScal.H6Code.PdUnmarshal (layMix40 [E2eAd.Code.SlUnmarshal] 131 2)
+    decAcceptKindN E2eScal.H6Code.PdUnmarshal (layMix40 [Prysm.AttestationData.Code.slotUnmarshalSSZ] 131 2)
         [.bytes 48, .bytes 32, .u64, .bytes 96, .u64]
     ∧ decAcceptKindN E2eScal.H5Code.SmUnmarshal
-        (layMix60 [E2eAd.Code.SlUnmarshal, E2eScal.BhCode.ViUnmarshal] 141 1) [.u64, .bytes 32, .u64, .bytes 96]
+        (layMix60 [Prysm.AttestationData.Code.slotUnmarshalSSZ, E2eScal.BhCode.ViUnmarshal] 141 1) [.u64, .bytes 32, .u64, .bytes 96]
     ∧ decAcceptKindN E2eScal.H6Code.VeUnmarshal
         (layCal [Prysm.Epoch.Code.unmarshalSSZ, E2eScal.BhCode.ViUnmarshal] 56) [.u64, .u64]
     ∧ decAcceptKindN E2eScal.H6Code.PbUnmarshal (layRt false 104 3) [.bytes 32, .bytes 32, .bytes 32] :=

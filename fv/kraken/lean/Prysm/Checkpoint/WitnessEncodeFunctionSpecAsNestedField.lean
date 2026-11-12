@@ -1,8 +1,8 @@
-import E2eAd.CpSpecs
+import Prysm.Checkpoint.FunctionSpecsAsNestedField
 import Prysm.Checkpoint.WitnessEncodeFastPath
 
 /-!
-# `CpMAccC` holds on a concrete host
+# `Encode.fast_path_function_spec` holds on a concrete host
 
 On the Checkpoint witness hosts of `Prysm.Checkpoint.WitnessDecodeAccept` (decoder, Epoch decoder, bump makeslice model,
 memmove model) and `Prysm.Checkpoint.WitnessEncodeFastPath` (encoder, memmove model), the function specifications hold:
@@ -13,14 +13,14 @@ instance on this host; it does not by itself show that the premises of a main th
 (non-vacuity) comes from the run witnesses.
 -/
 
-open Machine Runtime TestTarget Machine.Witness Prysm.Checkpoint.Code E2eAd
+open Machine Runtime TestTarget Machine.Witness Prysm.Checkpoint.Code
 
-namespace E2eAd.WitCpMS
+namespace Prysm.Checkpoint.Witness.EncodeFunctionSpecAsNestedField
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 16000000
 
-theorem cpm_spec_here : @CpMAccC Prysm.Checkpoint.Witness.EncodeFastPath.host 0 :=
-  @cp_macc_holds Prysm.Checkpoint.Witness.EncodeFastPath.host 0 Prysm.Checkpoint.Witness.EncodeFastPath.hk0 Prysm.Checkpoint.Witness.EncodeFastPath.hf0 0 (rt_memmove 91 Prysm.Checkpoint.Witness.EncodeFastPath.hk91 Prysm.Checkpoint.Witness.EncodeFastPath.hf91 0)
+theorem runs_function_spec : @Encode.fast_path_function_spec Prysm.Checkpoint.Witness.EncodeFastPath.host 0 :=
+  @Encode.fast_path_function_spec_holds Prysm.Checkpoint.Witness.EncodeFastPath.host 0 Prysm.Checkpoint.Witness.EncodeFastPath.hk0 Prysm.Checkpoint.Witness.EncodeFastPath.hf0 0 (rt_memmove 91 Prysm.Checkpoint.Witness.EncodeFastPath.hk91 Prysm.Checkpoint.Witness.EncodeFastPath.hf91 0)
 
-end E2eAd.WitCpMS
+end Prysm.Checkpoint.Witness.EncodeFunctionSpecAsNestedField

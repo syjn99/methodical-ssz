@@ -22,7 +22,7 @@ namespace E2eScal.WitSaGA
 
 set_option maxRecDepth 100000
 
-def P : Program := [.label "pad0"] ++ SaUnmarshal ++ E2eAd.Code.SlUnmarshal
+def P : Program := [.label "pad0"] ++ SaUnmarshal ++ Prysm.AttestationData.Code.slotUnmarshalSSZ
 
 theorem P_len : P.length = 137 := by rfl
 
@@ -31,12 +31,12 @@ instance host : Host := mkHost P (by rw [P_len]; decide)
 theorem prog_eq : Host.prog = P := rfl
 
 theorem hk1 : SaUnmarshal.IsInfixAt Host.prog 1 :=
-  infixAt_of [.label "pad0"] (E2eAd.Code.SlUnmarshal) (by simp [prog_eq, P, List.append_assoc]) rfl
+  infixAt_of [.label "pad0"] (Prysm.AttestationData.Code.slotUnmarshalSSZ) (by simp [prog_eq, P, List.append_assoc]) rfl
 theorem hf1 : LabelsFresh SaUnmarshal 1 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hk74 : E2eAd.Code.SlUnmarshal.IsInfixAt Host.prog 74 :=
+theorem hk74 : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog 74 :=
   infixAt_of ([.label "pad0"] ++ SaUnmarshal) ([])
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
-theorem hf74 : LabelsFresh E2eAd.Code.SlUnmarshal 74 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf74 : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ 74 := labelsFresh_of (by rw [prog_eq]; decide)
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 abbrev w0 : List UInt8 := Int.toBytes 8 (0 : UInt64).toBitVec.toInt

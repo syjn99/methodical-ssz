@@ -14,7 +14,7 @@ Hand-written: the text of `DdSpecK.lean` / `PwSpecK.lean`, with the statement
 Not stated here: that the callee error paths (`fmt.errorf` wraps) are unreachable when `size = 16`.
 -/
 
-open Machine Runtime TestTarget E2e E2eAd.Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec EthLib.Serialization.Ssz
+open Machine Runtime TestTarget E2e Prysm.AttestationData.Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec EthLib.Serialization.Ssz
 variable [Host]
 
 namespace E2eScal.H5

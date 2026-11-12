@@ -563,8 +563,8 @@ G3 = {
     "AD": dict(S="prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
                  "AttestationData.UnmarshalSSZ.S", type="v1alpha1.AttestationData",
                committed="lean/E2eScal/Gen3AdDecPartial.lean",
-               args=["--const", "AdUnmarshal", "--prefix", "ad_g3dec", "--imports", "Codec.Bytes32Decode,E2eAd.Code",
-                     "--open", "E2eAd.Code"],
+               args=["--const", "unmarshalSSZ", "--prefix", "ad_g3dec", "--imports", "Codec.Bytes32Decode,Prysm.AttestationData.Code",
+                     "--open", "Prysm.AttestationData.Code"],
                fields=["Slot", "CommitteeIndex", "BeaconBlockRoot", "Source", "Target"]),
 }
 PWL = "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ_"
@@ -767,7 +767,7 @@ def g4c(sdir, tname, const, mod, pre, out, fields, cov=None):
 
 G4 = {
     "CP": g4c("link/norm", "Checkpoint", "unmarshalSSZ", "Prysm.Checkpoint.Code", "cp", "Gen4CpDec", ["Epoch", "Root"]),
-    "AD": g4c("ad/link/norm", "AttestationData", "AdUnmarshal", "E2eAd.Code", "ad", "Gen4AdDecPartial",
+    "AD": g4c("ad/link/norm", "AttestationData", "unmarshalSSZ", "Prysm.AttestationData.Code", "ad", "Gen4AdDecPartial",
               ["Slot", "CommitteeIndex", "BeaconBlockRoot", "Source", "Target"], ["Slot", "CommitteeIndex", "BeaconBlockRoot"]),
     "BH": g4c("bh/link/norm", "BeaconBlockHeader", "BhUnmarshal", "E2eScal.BhCode", "bh", "Gen4BhDec",
               ["Slot", "ProposerIndex", "ParentRoot", "StateRoot", "BodyRoot"]),
@@ -1258,7 +1258,7 @@ G5 = {
     "PB": g5c("h6/link/norm", "PowBlock", "PbUnmarshal", "E2eScal.H6Code", "pb", ["--same-as-prop", "E2eScal.H6.pb_accept_stmt"]),
     "VB": g5c("h6/link/norm", "ValidatorBalance", "VbUnmarshal", "E2eScal.H6Code", "vb"),
     "PW": g5c("h4/link/norm", "PendingPartialWithdrawal", "PwUnmarshal", "E2eScal.H4Code", "pw"),
-    "AD": g5c("ad/link/norm", "AttestationData", "AdUnmarshal", "E2eAd.Code", "ad"),
+    "AD": g5c("ad/link/norm", "AttestationData", "unmarshalSSZ", "Prysm.AttestationData.Code", "ad"),
 }
 
 

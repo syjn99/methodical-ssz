@@ -15,11 +15,11 @@ Hand-written AFTER the raw generator output (`Gen4H6PdDec.lean`, `p2dec --gen4`,
 * WithdrawalCredentials 49–84: generated segment + generated tail steps 74, 75, 83, 84;
 * Amount 85–87: generated steps 85, 86, 87;
 * Signature 88–122: generated segment + generated tail steps 113, 114, 121, 122;
-* Slot 123–160: generated steps 123–128 + generated call block (`hC` discharged by the proved `sl_uacc_holds`);
+* Slot 123–160: generated steps 123–128 + generated call block (`hC` discharged by the proved `Prysm.Slot.Decode.accept_function_spec_holds`);
 * epilogue 161–163: `pd_epi` (hand; `kstep_add` and `decret_seg`).
 -/
 
-open Machine Runtime TestTarget E2eAd E2eAd.Code E2eScal.H6Code E2eScal Codec
+open Machine Runtime TestTarget Prysm.AttestationData.Code E2eScal.H6Code E2eScal Codec
 variable [Host]
 
 namespace E2eScal.H6
@@ -407,7 +407,7 @@ theorem pd_e2e_accept_g4gen : pd_accept_stmt := by
     fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aP1 aL1 aC1 aP2 aL2 aC2 aN aP3 aL3 aC3 aSl
     hfp h1 h2 h4 hsp0 hsp1 hsp2 hl28 hrs hast haP1 haL1 haC1 haP2 haL2 haC2 haN haP3 haL3 haC3 haSl
     R S hS hlo Heap avail h_mem hguard hlen hav hms hmm
-  have hslc : U64CalleeAcc slLabel := sl_uacc_holds kS hkS hfS
+  have hslc : U64CalleeAcc slotUnmarshalLabel := Prysm.Slot.Decode.accept_function_spec_holds kS hkS hfS
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hrsp_lt : rsp.toNat < 2 ^ 64 := rsp.toNat_lt_size
@@ -485,7 +485,7 @@ theorem pd_e2e_accept_g4gen : pd_accept_stmt := by
     rw [List.take_append_drop, List.take_append_drop]
   have hlo3' : lo3 = lo3.take S ++ lo3.drop S := (List.take_append_drop S lo3).symm
   rw [hsp3, hlo3', pd_j3 _ _ _ _ hq0 hq1 hq2, pd_lo8 _ S hS _ _ hlS3 hl83] at Hm5
-  -- Slot: 123 → 161 (hand field composition: generated steps 123–128 + generated call block; hC = sl_uacc_holds)
+  -- Slot: 123 → 161 (hand field composition: generated steps 123–128 + generated call block; hC = Prysm.Slot.Decode.accept_function_spec_holds)
   refine eventually_trans _ _ _ _ (pd_gg_Slot_field k hk hf hslc
     (rsp.toBitVec - 72) rax.toBitVec rbx.toBitVec (rsp.toBitVec - 80) (rsp.toBitVec - 88) (rsp.toBitVec - 64)
     (rsp.toBitVec + 16) (rsp.toBitVec + 32) (by bv_omega) (by bv_omega) (by bv_omega)

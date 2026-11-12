@@ -3,7 +3,7 @@ import E2eScal.AcceptTies
 import Codec.FieldFrame
 import E2eScal.ViSpec
 import Prysm.Epoch.DecodeAccept
-import E2eAd.Prims
+import Prysm.Slot.DecodeAccept
 import Codec.DecoderHeadEpilogue
 import E2eScal.RejectTies
 import Codec.Kind.FieldPatterns
@@ -175,7 +175,7 @@ reject. Every statement has a `_kind` line against the G5-L kinds. In-sample (de
 GEN5-JSON: {"accept": "epr_g5dec_accept", "kinds": [{"theorem": "epr_g5dec_head", "kind": "decHeadKindN"}, {"theorem": "epr_g5dec_f1", "kind": "decFieldKindN"}, {"theorem": "epr_g5dec_f2", "kind": "decFieldKindN"}, {"theorem": "epr_g5dec_epi", "kind": "decEpiKindN"}, {"theorem": "epr_g5dec_accept", "kind": "decAcceptKindN"}, {"theorem": "epr_g5dec_reject", "kind": "decRejectKindN"}], "fields": "[.u64, .u64]", "frame": 64, "statement_check": "kind instance only"}
 -/
 
-open E2eAd E2eScal Codec
+open E2eScal Codec
 
 namespace E2eScal.Gen
 
@@ -183,7 +183,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Head: directives 0–13 (prologue, spills, nil check); entry → boundary state 0. -/
 theorem epr_g5dec_head : ∀ (k : Nat) (hk : EprUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh EprUnmarshal k)
-    (kS : Nat) (hkS : E2eAd.Code.SlUnmarshal.IsInfixAt Host.prog kS) (hfS : LabelsFresh E2eAd.Code.SlUnmarshal kS)
+    (kS : Nat) (hkS : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ kS)
     (fv0 fv1 : List UInt8) (hfv0 : fv0.length = 8) (hfv1 : fv1.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 sp1 rslot lo ast aN0 aN1 : List UInt8)
@@ -265,7 +265,7 @@ theorem epr_g5dec_head : ∀ (k : Nat) (hk : EprUnmarshal.IsInfixAt Host.prog k)
   rw [hcs]; simp only [Std.ExtHashMap.sep_assoc]
   ecancel
 theorem epr_g5dec_head_kind : ∀ (h : Host), type_of% (@epr_g5dec_head h)
-    = @E2eScal.decHeadKindN h EprUnmarshal (E2eScal.DecLayout.mk [E2eAd.Code.SlUnmarshal] 6
+    = @E2eScal.decHeadKindN h EprUnmarshal (E2eScal.DecLayout.mk [Prysm.AttestationData.Code.slotUnmarshalSSZ] 6
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8)]
       [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.dn 56) (.orig 3), .at (.dn 72) (.orig 4), .at (.dn 80) (.orig 5)]
       (none) 72 true [.n 8, .n 8]
@@ -280,7 +280,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Field 1 `StartSlot` (call): boundary state 0 (directive 14) → boundary state 1 (directive 48). -/
 theorem epr_g5dec_f1 : ∀ (k : Nat) (hk : EprUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh EprUnmarshal k)
-    (kS : Nat) (hkS : E2eAd.Code.SlUnmarshal.IsInfixAt Host.prog kS) (hfS : LabelsFresh E2eAd.Code.SlUnmarshal kS)
+    (kS : Nat) (hkS : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ kS)
     (fv0 fv1 : List UInt8) (hfv0 : fv0.length = 8) (hfv1 : fv1.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 sp1 rslot lo ast aN0 aN1 : List UInt8)
@@ -342,7 +342,7 @@ theorem epr_g5dec_f1 : ∀ (k : Nat) (hk : EprUnmarshal.IsInfixAt Host.prog k) (
   subst rsp1 rbp1 r141
   obtain rfl : rax = rax1 := (UInt64.toBitVec_inj.mp hrrax).symm
   obtain rfl : rbx = rbx1 := (UInt64.toBitVec_inj.mp hrrbx).symm
-  have hC := sl_uacc_holds kS hkS hfS
+  have hC := Prysm.Slot.Decode.accept_function_spec_holds kS hkS hfS
   have hg : guard.toNat < (rsp.toBitVec - 72).toNat := by
     have hgd : guard.toNat + 72 < rsp.toBitVec.toNat := hguard
     bv_omega
@@ -364,7 +364,7 @@ theorem epr_g5dec_f1 : ∀ (k : Nat) (hk : EprUnmarshal.IsInfixAt Host.prog k) (
   rw [show k + 17 + 1 = k + 18 from rfl] at Hm'
   ecancel
 theorem epr_g5dec_f1_kind : ∀ (h : Host), type_of% (@epr_g5dec_f1 h)
-    = @E2eScal.decFieldKindN h EprUnmarshal (E2eScal.DecLayout.mk [E2eAd.Code.SlUnmarshal] 6
+    = @E2eScal.decFieldKindN h EprUnmarshal (E2eScal.DecLayout.mk [Prysm.AttestationData.Code.slotUnmarshalSSZ] 6
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8)]
       [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.dn 56) (.orig 3), .at (.dn 72) (.orig 4), .at (.dn 80) (.orig 5)]
       (none) 72 true [.n 8, .n 8]
@@ -382,7 +382,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Field 2 `Count` (u64): boundary state 1 (directive 48) → boundary state 2 (directive 52). -/
 theorem epr_g5dec_f2 : ∀ (k : Nat) (hk : EprUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh EprUnmarshal k)
-    (kS : Nat) (hkS : E2eAd.Code.SlUnmarshal.IsInfixAt Host.prog kS) (hfS : LabelsFresh E2eAd.Code.SlUnmarshal kS)
+    (kS : Nat) (hkS : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ kS)
     (fv0 fv1 : List UInt8) (hfv0 : fv0.length = 8) (hfv1 : fv1.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 sp1 rslot lo ast aN0 aN1 : List UInt8)
@@ -460,7 +460,7 @@ theorem epr_g5dec_f2 : ∀ (k : Nat) (hk : EprUnmarshal.IsInfixAt Host.prog k) (
   dsimp only
   ecancel
 theorem epr_g5dec_f2_kind : ∀ (h : Host), type_of% (@epr_g5dec_f2 h)
-    = @E2eScal.decFieldKindN h EprUnmarshal (E2eScal.DecLayout.mk [E2eAd.Code.SlUnmarshal] 6
+    = @E2eScal.decFieldKindN h EprUnmarshal (E2eScal.DecLayout.mk [Prysm.AttestationData.Code.slotUnmarshalSSZ] 6
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8)]
       [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.dn 56) (.orig 3), .at (.dn 72) (.orig 4), .at (.dn 80) (.orig 5)]
       (none) 72 true [.n 8, .n 8]
@@ -478,7 +478,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Epilogue: boundary state 2 (directive 52) → return. -/
 theorem epr_g5dec_epi : ∀ (k : Nat) (hk : EprUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh EprUnmarshal k)
-    (kS : Nat) (hkS : E2eAd.Code.SlUnmarshal.IsInfixAt Host.prog kS) (hfS : LabelsFresh E2eAd.Code.SlUnmarshal kS)
+    (kS : Nat) (hkS : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ kS)
     (fv0 fv1 : List UInt8) (hfv0 : fv0.length = 8) (hfv1 : fv1.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 sp1 rslot lo ast aN0 aN1 : List UInt8)
@@ -549,7 +549,7 @@ theorem epr_g5dec_epi : ∀ (k : Nat) (hk : EprUnmarshal.IsInfixAt Host.prog k) 
       | (simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega)
   · dsimp only; rw [hmem']; ecancel
 theorem epr_g5dec_epi_kind : ∀ (h : Host), type_of% (@epr_g5dec_epi h)
-    = @E2eScal.decEpiKindN h EprUnmarshal (E2eScal.DecLayout.mk [E2eAd.Code.SlUnmarshal] 6
+    = @E2eScal.decEpiKindN h EprUnmarshal (E2eScal.DecLayout.mk [Prysm.AttestationData.Code.slotUnmarshalSSZ] 6
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8)]
       [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.dn 56) (.orig 3), .at (.dn 72) (.orig 4), .at (.dn 80) (.orig 5)]
       (none) 72 true [.n 8, .n 8]
@@ -565,7 +565,7 @@ set_option maxRecDepth 100000 in
 /-- **Accept path of `v1alpha1.ExecutionPayloadEnvelopesByRangeRequest`, generated proof** (`p2dec --gen5`): head, one theorem per
 field, epilogue, chained by `eventually_trans`. Statement = the kind instance (`_kind`). -/
 theorem epr_g5dec_accept : ∀ (k : Nat) (hk : EprUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh EprUnmarshal k)
-    (kS : Nat) (hkS : E2eAd.Code.SlUnmarshal.IsInfixAt Host.prog kS) (hfS : LabelsFresh E2eAd.Code.SlUnmarshal kS)
+    (kS : Nat) (hkS : Prysm.AttestationData.Code.slotUnmarshalSSZ.IsInfixAt Host.prog kS) (hfS : LabelsFresh Prysm.AttestationData.Code.slotUnmarshalSSZ kS)
     (fv0 fv1 : List UInt8) (hfv0 : fv0.length = 8) (hfv1 : fv1.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 sp1 rslot lo ast aN0 aN1 : List UInt8)
@@ -614,7 +614,7 @@ theorem epr_g5dec_accept : ∀ (k : Nat) (hk : EprUnmarshal.IsInfixAt Host.prog 
   intro st2 h2
   exact epr_g5dec_epi k hk hf kS hkS hfS fv0 fv1 hfv0 hfv1 s ra guard fp s1 s2 sp1 rslot lo ast aN0 aN1 hfp hs1 hs2 hsp1 hrslot hlo hast haN0 haN1 R st2 h2
 theorem epr_g5dec_accept_kind : ∀ (h : Host), type_of% (@epr_g5dec_accept h)
-    = @E2eScal.decAcceptKindN h EprUnmarshal (E2eScal.DecLayout.mk [E2eAd.Code.SlUnmarshal] 6
+    = @E2eScal.decAcceptKindN h EprUnmarshal (E2eScal.DecLayout.mk [Prysm.AttestationData.Code.slotUnmarshalSSZ] 6
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8)]
       [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.dn 56) (.orig 3), .at (.dn 72) (.orig 4), .at (.dn 80) (.orig 5)]
       (none) 72 true [.n 8, .n 8]
