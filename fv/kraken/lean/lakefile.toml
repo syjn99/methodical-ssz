@@ -154,3 +154,11 @@ name = "E2eHb"
 globs = ["E2eHb.+"]
 needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data", "lv_lean_S",
   "lv_t3_norm_S", "lv_t3_data", "lv_hb_norm_S"]
+
+# SEG stream: segment and list lemmas stated for a variable size / count (generalized once), their fixed instances
+# as corollaries, and the next decoder ported with them. Own library; it imports E2eList / E2eScal / E2eHb.
+[[lean_lib]]
+name = "E2eSeg"
+globs = ["E2eSeg.+"]
+needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data", "lv_lean_S",
+  "lv_t3_norm_S", "lv_t3_data", "lv_hb_norm_S"]
