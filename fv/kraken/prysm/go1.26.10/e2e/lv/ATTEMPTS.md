@@ -311,3 +311,10 @@
 
 - 새 파일: `E2eList/IaSpecA.lean`. `pia_accepted_is_enc`로 `g`를 얻고 `ia_e2e_accept_main`을 n = `g.idx.length`로 쓴다. `E2eAd/AdSpecK.lean`의 글이다.
 - 로그 188: `lake build E2eList.IaSpecA` exit 0. 설정 없이 통과했다.
+
+### U6: Desc 같음 `prysmIaDesc_deserialize_checker` (시도 1)
+
+- `python3 gen/e2e/lvdescterm.py prysm/go1.26.10/e2e/lv/desc/prysm_v1alpha1.IndexedAttestation.desc.json iaCheckerDesc > lean/E2eList/IaSpecChecker.lean`, exit 0.
+- 생산자 파일의 sha256은 `91e4d752…`다. `gen/desc/results/main.result.json`의 IndexedAttestation 행(`PASS`)과 같다.
+- 새 파일: `E2eList/IaDescEq.lean`. 중첩 컨테이너는 `E2e.serializeFields_congr`와 `E2e.prysmAdDesc_serialize_checker`로 닫았다.
+- 로그 189: `lake build E2eList.IaDescEq` exit 0. 설정 없이 통과했다.
