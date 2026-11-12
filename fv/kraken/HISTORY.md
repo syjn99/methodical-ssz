@@ -416,3 +416,9 @@ g5c-r1 덤프 대비 선언 비교는 0 / 0 / 0이다. `regen_check.sh` 55/55 SA
 2026-11-12 ENC2 준비(단위 E2-P, 새 Opus 세션, 리뷰 전): 증명은 없다.
 평면 13형 `MarshalSSZTo`의 링크 표 `e2e/enc2/link`를 더했다. 검사는 PASS, 묶음은 `c08ac537…`이다.
 코드 상수 13개는 `E2eScal/Enc2Code.lean`, 16형 조사는 `scal/enc2-survey.md`다. 기록: `scal/RESULT.json`의 `enc2-prep`.
+
+2026-11-12 ENC2 보조정리(단위 E2-L, 새 Fable 세션, 리뷰 전): 인코더 빠른 경로의 문장 종류 `encFastKindN`을 더했다.
+BeaconBlockHeader와 Eth1Data의 손 문장은 `rfl`로 같고, Checkpoint는 함의로 묶었다.
+새 단계 보조정리(`EncSteps.lean`)와 생성 양식 예제 여섯(`Enc2Ex*.lean`), 증인 `WitVbM`을 더했다.
+`runtime.moveSliceNoCapNoScan` 앞의 프레임 검사는 빠른 경로에서 분기하지 않음을 증명했다(`EncFrameTest.lean`). 계약은 없다.
+growslice 분기는 증명하지 않았다. 기존 `.lean`과 생성기는 바꾸지 않았다. 기록: `scal/RESULT.json`의 `enc2-lemmas`.

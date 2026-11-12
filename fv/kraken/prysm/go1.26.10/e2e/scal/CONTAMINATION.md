@@ -686,3 +686,34 @@
 - 통합 검사는 목록 스크립트도 다시 돌렸다. 출력은 커밋본과 바이트가 같다.
 - 열린 항목: g5-r1 S2(검사기), g5c-r1 S2, S3(`.lean`), g5c2-r1 N1–N3(목록 스크립트)다.
 - 다른 기계의 리스트·벡터 작업은 이 트리에 없다. 일반성, 이전, 속도 주장은 없다. 통합 INT7 자체의 리뷰는 아직 없다.
+
+## 34. ENC2 보조정리 단위 E2-L (평면 인코더 빠른 경로) — 개발 작업, 홀드아웃 아님
+
+- 기준 커밋은 `e1fd7c0`(단위 E2-P 머리)이다. 작성 세션은 새 Fable 세션이다. 리뷰는 아직 없다.
+- 평면 16형은 모두 개발 자료다. 이 모집단에 홀드아웃은 없다. 이전 주장은 없다.
+- 새 모듈만 더했다. 기존 `.lean`, 생성기, 검사기, 계약, 문장, ELF는 바꾸지 않았다.
+- 범위는 빠른 경로뿐이다. 전제는 `len + SizeSSZ ≤ cap`과 바이트 필드의 정확한 길이다.
+- growslice 분기, 길이 거부, morestack은 증명하지 않았다. growslice 지시문은 한 번도 밟지 않는다.
+- 문장 종류는 `encFastKindN C L fields`다. `L`은 프레임 사실이고 `.S`에서 읽는다.
+- BeaconBlockHeader와 Eth1Data의 손 문장은 종류 인스턴스와 `rfl`로 같다.
+- Checkpoint는 함의다(`cp_marshal_of_kind`). 손 문장은 `rax + 40`의 32바이트 조각 `ctl`을 더 가진다.
+- 역방향은 적힌 대로는 성립하지 않는다. 다른 차이는 없다.
+- 작성자는 종류를 쓰기 전에 세 손 문장을 읽었다. 그래서 묶음은 독립 검사가 아니다.
+- 예제 글은 단위의 scratch 방출기가 만들었다. 방출기는 생성기가 아니고 저장소에 없다.
+- 방출기는 `.S`와 IR을 읽고 빠른 경로를 기호 상태로 걷는다. 게이트 없이 여러 번 돌렸다(Python, 1초 미만).
+- 커밋한 예제는 여섯이다: Checkpoint, BeaconBlockHeader, Eth1Data, ValidatorBalance, DepositMessage, HistoricalSummary.
+- 뒤의 셋은 손 문장이 없다. 문장은 종류 인스턴스다. 독립 손 문장은 단위 E2-C의 일이다.
+- 나머지 10형의 방출 글은 scratch에서만 엘래버레이션했다(진단 D4, D5, 게이트 작업 2개, 오류 0).
+- 그 10형의 글은 커밋하지 않았다. 저장소의 결과가 아니다. 단위 E2-G가 생성기로 다시 만든다.
+- 그 10형: BlobIdentifier, Deposit_Data, PendingPartialWithdrawal, SyncCommitteeMessage, PendingConsolidation, PendingDeposit, PowBlock, SigningData, SyncAggregatorSelectionData, VoluntaryExit.
+- `runtime.moveSliceNoCapNoScan`(PowBlock, HistoricalSummary, SigningData)은 에필로그의 프레임 검사 뒤에 있다.
+- 검사는 `cmp %rsi,%rdx; jb`다. 결과 포인터가 함수 자신의 프레임 안이면 분기한다. growslice 경로가 아니다.
+- 빠른 경로에서 분기는 일어나지 않는다. 출력 바이트와 프레임 슬롯의 분리에서 증명했다(`EncFrameTest.lean`).
+- 이 함수에 계약은 없다. 새 계약 형태도 만들지 않았다. 보조정리는 프레임 `0x50`에만 맞다.
+- 전제 `cap < 2^63`은 손 문장에서 그대로 가져왔다. 증명은 이 전제를 쓰지 않는다.
+- 증인은 `WitVbM` 하나다(ValidatorBalance, 빈 접두사와 3바이트 접두사).
+- 부정 시험은 23건이다. 대조 8건 통과, 변이 14건은 대상 정리 안에서 실패했다.
+- 1건(`e2-tie-cp-stmt-field`)은 범위 밖 줄의 오류가 있어 세지 않았다.
+- 계획 대비 편차: 지시문마다 단계 정리를 방출하지 않는다. 단계는 라이브러리 보조정리를 증명 항으로 쓴다.
+- 새 단계 보조정리 자체의 종류 줄(`KindStep` 식)은 만들지 않았다.
+- 일반성, 속도, 완전한 인코더 주장은 없다.

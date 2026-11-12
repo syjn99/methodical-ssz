@@ -3691,5 +3691,122 @@
    "regen_check.sh (no generator or generated file changed)",
    "selftest of link/check.py (link/ not changed)"
   ]
+ },
+ "enc2-lemmas": {
+  "unit": "ENC2 unit E2-L (fresh Fable 5.2 session, direct author)",
+  "state": "not yet reviewed",
+  "base": "e1fd7c0",
+  "scope": "fast path only: len(dst) + SizeSSZ <= cap(dst) and every byte-vector field of its exact length; development data (in-sample); no generator change; no growslice branch, length reject or morestack path",
+  "L1": {
+   "kind": "E2eScal.encFastKindN C L fields (KindEncN.lean); L : EncLayout = st, frame, gd, rt, nstk, lens, pre, exs, post; fields : List DecField",
+   "ties_rfl": [
+    "BeaconBlockHeader (Bh.bh_e2e_marshal_main)",
+    "Eth1Data (E1.e1_e2e_marshal_main)"
+   ],
+   "ties_equivalence": [],
+   "ties_implication": [
+    "Checkpoint: cp_marshal_of_kind (kind instance implies E2e.cp_e2e_marshal_main's statement; the hand statement names a 32-byte chunk ctl at rax + 40; the converse does not hold as stated)"
+   ],
+   "not_tied": [],
+   "kind_does_not_check": [
+    "that L is the frame of the .S file (a proof of the instance checks the slots it touches; an extra slot in L.pre is a stronger premise)",
+    "the premise cap < 2^63 is kept from the hand statements; the proofs do not use it"
+   ]
+  },
+  "L2": {
+   "kinds": [
+    "encHeadKindN C L fields d0",
+    "encFieldKindN C L fields d d'",
+    "encEpiKindN C L fields d"
+   ],
+   "step_lemmas": [
+    "kstep_cmp_jae_t",
+    "kstep_cmp_jb_f",
+    "kstep_lenchk",
+    "kstep_lea_idx",
+    "kstep_add_rr",
+    "kstep_sub_i",
+    "kstep_xor32",
+    "kstep_st_idx",
+    "kstep_movups15",
+    "kstep_sub_rr",
+    "encpro_s",
+    "encpro_l",
+    "encn_call",
+    "kreg_eq"
+   ],
+   "growslice": "no runtime.growslice directive is stepped; every capacity test is decided from len + SizeSSZ <= cap (kstep_cmp_jae_t / kstep_cmp_jb_f)",
+   "moveSliceNoCapNoScan": "PowBlock, HistoricalSummary, SigningData: behind a frame test in the epilogue (result pointer - rsp < 0x60), not on a growslice path; proved not taken on the fast path from the separation premise (EncFrameTest.lean: sep_at_far, frame50_ptr_far; frame 0x50 only); no contract form",
+   "examples_committed": [
+    "Enc2ExCp (Checkpoint)",
+    "Enc2ExBh (BeaconBlockHeader)",
+    "Enc2ExE1 (Eth1Data)",
+    "Enc2ExVb (ValidatorBalance)",
+    "Enc2ExDm (DepositMessage)",
+    "Enc2ExHs (HistoricalSummary)"
+   ],
+   "witness": "WitVbM (vbm_runs_empty, vbm_runs_prefix)",
+   "scratch_only": "the scratch emitter's text for the other 10 flat development types elaborated without error in two gated diagnostic jobs; not committed, not a result of the tree",
+   "bbh_generated_style": {
+    "lines": 1278,
+    "statement_lines": 791,
+    "proof_lines": 386,
+    "kind_lines": 60,
+    "time_s": [
+     8.2,
+     8.2
+    ],
+    "hand": {
+     "modules": "BhEncHead + BhEncRoots + BhEncMain",
+     "lines": 836,
+     "time_s": [
+      7.8,
+      7.8
+     ]
+    }
+   }
+  },
+  "checks": {
+   "axioms_gate": "PASS, 10328 declarations, nonstandard 0, sorryAx 0 (scratch JSON; committed axioms-gate.json not updated)",
+   "decl_drift": "base = the E2-P head dump (9771 rows): ADDED 557, CHANGED 0, REMOVED 0; planted control: gate exit 1 (sorryAx), drift 1 CHANGED + 1 ADDED, file restored",
+   "negatives": "22 of 23 counted (8 controls, 14 mutants inside: 11 statement or kind, 3 code); not counted: e2-tie-cp-stmt-field (class outside)",
+   "negcases": "scal/negcases-enc2.json, results scal/negative-enc2.json",
+   "module_times_s": {
+    "Enc2ExBh": 8.2,
+    "Enc2ExE1": 4.5,
+    "Enc2ExDm": 4.5,
+    "Enc2ExHs": 3.7,
+    "Enc2ExCp": 3.1,
+    "Enc2Examples": 2.4,
+    "Enc2ExVb": 2.2,
+    "EncTies": 1.4,
+    "EncSteps": 1.1,
+    "EncFrameTest": 1.0,
+    "KindEncN": 1.0,
+    "EncFieldN": 0.8,
+    "WitVbM": 5.3
+   },
+   "not_run": [
+    "cold build",
+    "generator, kindcheck.py, regen_check.sh (no generator change)",
+    "link check, Go differential, hardware",
+    "stale_olean.py (no killed build)",
+    "orca (not installed)"
+   ]
+  },
+  "effort": {
+   "diagnostics": 5,
+   "attempts": 11,
+   "failed_attempts": 4,
+   "gated_jobs": 46,
+   "gate_s": 1002
+  },
+  "not_done": [
+   "kind lines for the new step lemmas themselves (KindStep form)",
+   "spec corollaries, independent hand statements, witnesses of DepositMessage and HistoricalSummary, link check, Go differential (unit E2-C)",
+   "generator mode (unit E2-G)",
+   "a frame-test lemma for frames other than 0x50",
+   "growslice branches, length rejects, morestack"
+  ]
  }
 }
