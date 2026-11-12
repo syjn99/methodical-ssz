@@ -1,35 +1,50 @@
 # restructure: rename maps and the rename tool
 
-This directory holds the tool and the maps that move Lean modules and rename namespaces and declarations under `fv/`.
+This directory holds the tool, the maps and the helper scripts that move Lean modules under `fv/`.
+They also rename namespaces and declarations.
 Each step of the restructuring has one map directory under `maps/`.
-Remove this directory when the restructuring ends.
+The directory is temporary.
+Delete it (with `trash`) when the restructuring is done.
+
+Read these files first:
+
+- `SPEC.md`: the naming rules and the decisions, binding for every step.
+- `TOOL-NOTES.md`: the use of `rename.py` in reference mode, the map files, the warnings and the pitfalls.
+- This file: the order of the remaining steps, the procedure of one step and the checks before each commit.
 
 ## 1. The tool
 
-`rename.py` applies one map directory to the tree, or undoes it. It uses only the Python 3 standard library.
+`rename.py` applies one map directory to the tree, or undoes it.
+It uses only the Python 3 standard library.
 
 ```sh
 python3 -I -B fv/kraken/gen/restructure/rename.py forward fv/kraken/gen/restructure/maps/<step>
 python3 -I -B fv/kraken/gen/restructure/rename.py inverse fv/kraken/gen/restructure/maps/<step> [--root <copy>]
+python3 -I -B fv/kraken/gen/restructure/rename.py --selftest
 ```
 
 The forward mode does these steps:
 
-1. It checks that no new name or new path of the maps occurs in the old text. Else the inverse would not be exact, and the tool stops.
+1. It checks that no new name or new path of the maps occurs in the old text.
+   Else the inverse would not be exact, and the tool stops.
 2. It moves the files of `files.tsv`.
-3. It rewrites the text files under `fv/`: `import` lines, qualified names and module names, renamed short names, and the paths of moved files.
+3. It rewrites the text files under `fv/`.
+   It rewrites `import` lines, qualified names, module names, renamed short names, and the paths of moved files.
 4. In Lean files it also rewrites the `namespace`, `end` and `open` lines.
-   An `open` of a namespace that the step splits becomes an `open` of the new namespaces that the imports of the file declare.
+   An `open` of a split namespace becomes an `open` of the new namespaces that the imports of the file declare.
    A file in a split namespace gets an inserted `open` line before its first `namespace` line.
-   An `open` gets a `hiding` clause for a name that the old `open` did not make visible and that the file uses.
+   An `open` can get a `hiding` clause for a name that the file uses.
+   That name was not visible through the old `open`.
 5. It applies `manual-edits.tsv`.
 6. It writes `applied-lines.tsv`: every `namespace`, `end` and `open` line that it changed, inserted or deleted.
 
-A map with at least one `type` row runs in reference mode (section 3). A map without one keeps the steps above.
+A map with at least one `type` row runs in reference mode (section 3).
+A map without one keeps the steps above.
 
 The inverse mode reads `applied-lines.tsv` and `manual-edits.tsv` and does the steps in the reverse order.
 The tool does not change this directory or the files that `protect.txt` names.
-It moves files with a plain rename. It does not stage the moves in git.
+It moves files with a plain rename.
+It does not stage the moves in git.
 
 ## 2. A map directory
 
@@ -42,10 +57,13 @@ It moves files with a plain rename. It does not stage the moves in git.
 | `applied-lines.tsv` | Written by the forward mode. The inverse mode needs it |
 | `removed/` | Files that the step removes. They stay here so that the inverse mode can restore them |
 
-A namespace row applies to the modules of its library. The longest old prefix wins.
+A namespace row applies to the modules of its library.
+The longest old prefix wins.
 A declaration row comes from a Lean declaration dump of the old tree.
 
-A reference-mode map adds these files and rows (every `names.tsv` row has five columns; `-` marks an unused column):
+A reference-mode map adds the files and rows of the next table.
+Every `names.tsv` row has five columns.
+A `-` marks an unused column.
 
 | Row or file | Columns or content |
 | --- | --- |
@@ -56,49 +74,245 @@ A reference-mode map adds these files and rows (every `names.tsv` row has five c
 | `declared.txt` | Optional. Old-tree names that the step does not move and whose last component is a component of a moved name |
 
 The most specific namespace row wins: a `MODULE#N` row, then the longest module prefix, then the longest old namespace.
-Two declaration rows can have the same old name if their new modules differ. A reference takes the row whose
-module is in the import closure of the file.
+Two declaration rows can have the same old name if their new modules differ.
+A reference takes the row whose module is in the import closure of the file.
 
 ## 3. Reference mode
 
 The renames are keyed on the full old name and the declaring module, never on the last name component alone.
 
 1. The forward mode checks that no new full name, new module name or new path occurs in the old text.
-2. In a Lean file it tracks the scope of each line: the namespace blocks, the `open` lines (also `open ... in`
-   and `hiding`), and the namespace that a dotted declaration name opens. It resolves each identifier as Lean does:
-   the innermost namespace first, then the root name and the opened namespaces.
-3. The reference rule. A reference to a moved declaration gets the full new name if the old text had the full old
-   name, or if the line is outside the namespace of the declaring type. Else it gets the shortest form that
-   resolves to exactly that declaration in the new scope. The tool can drop a prefix of the current namespace or an
-   opened namespace, but not the namespace of a dotted declaration name.
-4. A declaring line gets the new name relative to its new namespace block. If the new name is not inside that
-   block, the line gets the root-qualified name (`def _root_.Prysm.Epoch.Code.unmarshalSSZ`).
-5. An `open` of an old namespace becomes the `open` rows that match the type of the file. The type of a file comes
-   from its namespace or from its new module path. The tool never opens the namespace of another type.
-   An item without a row is removed, except an old namespace that the imports of the file still declare.
-   A line without items is deleted.
-6. In other text files the tool rewrites paths first, then full old names (declarations, modules, `whole`
-   namespaces). An old last name component that is unique among the moved declarations, that changes, and that no
-   name of `declared.txt` has as last component becomes the full new name.
-7. In a JSON file of negative cases (objects with `module` and `theorem`), the fields are rewritten in the scope of
-   that theorem: `theorem` becomes the full new name, `code_def` the form that the module writes, `code_ns` the new
-   namespace, and `old`, `new`, `diff` like Lean text.
+2. In a Lean file it tracks the scope of each line.
+   It reads the namespace blocks and the `open` lines (also `open ... in` and `hiding`).
+   It also reads the namespace that a dotted declaration name opens.
+   It resolves each identifier as Lean does: the innermost namespace first, then the root name and the opened namespaces.
+3. The reference rule.
+   A reference to a moved declaration gets the full new name in two cases.
+   The first case: the old text had the full old name.
+   The second case: the line is outside the namespace of the declaring type.
+   Else the reference gets the shortest form that resolves to exactly that declaration in the new scope.
+   The tool can drop a prefix of the current namespace or an opened namespace.
+   It does not drop the namespace of a dotted declaration name.
+4. A declaring line gets the new name relative to its new namespace block.
+   If the new name is not inside that block, the line gets the root-qualified name (`def _root_.Prysm.Epoch.Code.unmarshalSSZ`).
+5. An `open` of an old namespace becomes the `open` rows that match the type of the file.
+   The type of a file comes from its namespace or from its new module path.
+   The tool never opens the namespace of another type.
+   The tool removes an item without a row, except an old namespace that the imports of the file still declare.
+   The tool deletes a line without items.
+6. In other text files the tool rewrites paths first.
+   Then it rewrites full old names (declarations, modules, `whole` namespaces).
+   An old last name component becomes the full new name if it meets three conditions.
+   It is unique among the moved declarations, it changes, and no name of `declared.txt` has it as last component.
+7. A JSON file of negative cases holds objects with `module` and `theorem`.
+   The tool rewrites their fields in the scope of that theorem.
+   `theorem` becomes the full new name, `code_def` the form that the module writes, and `code_ns` the new namespace.
+   The fields `old`, `new` and `diff` are rewritten like Lean text.
 8. Every line that the rule-based inverse (full names, modules, paths) does not restore goes to `applied-lines.tsv`.
    The forward mode runs the inverse in memory and stops if it does not give the old text.
-9. It prints a warning for a token that it did not change and that now resolves to a new name (a capture, or a
-   local variable), for an ambiguous old reference, and for a name that needs `_root_`.
+9. It prints a warning for a token that it did not change and that now resolves to a new name.
+   Such a token is a capture or a local variable.
+   It also prints a warning for an ambiguous old reference, and for a name that needs `_root_`.
 
-Limits: the scope tracker reads lines, not Lean syntax. It knows only the names of the maps and of `declared.txt`.
-It does not know local variables. A proof that depends on the order of names (for example `simp` with
-commutativity lemmas, which orders terms by constant names) can break after a rename. Only a build shows it.
+Limits:
 
-Several maps apply one after another on the same tree: shared-layer, then checkpoint-and-epoch, then the next one.
-Each forward run reads only its own map. To undo them, run the inverse of the last map first. The inverse of one
-map alone gives the tree from which its forward run started.
-Do hand edits (the Lake configuration, generator strings, runner logic) after the forward run. A hand edit before
-the run puts new names into the old text, and the forward check then stops.
+- The scope tracker reads lines, not Lean syntax.
+- It knows only the names of the maps and of `declared.txt`.
+- It does not know local variables.
+- A rename can break a proof that depends on the order of names.
+  An example is `simp` with commutativity lemmas, which orders terms by constant names.
+  Only a build shows it.
+
+Several maps apply one after another on the same tree, in the order of section 4.
+Each forward run reads only its own map.
+To undo them, run the inverse of the last map first.
+The inverse of one map alone gives the tree from which its forward run started.
+Do hand edits (the Lake configuration, generator strings, runner logic) after the forward run.
+A hand edit before the run puts new names into the old text, and the forward check then stops.
 
 ## 4. Steps
 
-- `maps/shared-layer/`: the shared libraries `Machine`, `Runtime`, `TestTarget`, `Spec` and `Codec` (from `Fk`, `Fv`, `Fv1`, `E2eSeg`, `E2e/WitSplit.lean` and the type-independent modules of `E2eScal`).
-- `maps/checkpoint-and-epoch/`: the first type step: the library `E2e` becomes `Prysm/Checkpoint/`, `Prysm/Epoch/` and `Prysm/ElfData/` (library `Prysm`). The first map in reference mode.
+Done:
+
+- `maps/shared-layer/`: the shared libraries `Machine`, `Runtime`, `TestTarget`, `Spec` and `Codec`.
+  They come from `Fk`, `Fv`, `Fv1`, `E2eSeg`, `E2e/WitSplit.lean` and the type-independent modules of `E2eScal`.
+- `maps/checkpoint-and-epoch/`: the library `E2e` becomes `Prysm/Checkpoint/`, `Prysm/Epoch/` and `Prysm/ElfData/` (library `Prysm`).
+  It is the first map in reference mode.
+- `maps/attestation-data/`: the library `E2eAd` becomes `Prysm/AttestationData/`, `Prysm/Slot/` and `Prysm/CommitteeIndex/`.
+  Some of its modules go to `Prysm/Checkpoint/` and `Prysm/ElfData/`.
+- `maps/sync-and-indexed-attestation/`: the library `E2eList` becomes `Prysm/SyncAggregate/`, `Prysm/SyncCommittee/` and `Prysm/IndexedAttestation/`.
+  Some of its modules go to `Prysm/RuntimeModel/` and `Prysm/ElfData/`.
+
+Remaining, in this order:
+
+1. HistoricalBatch and Deposit: the libraries `E2eHb`, `E2eDep` and `E2eDepW`.
+   Their generated checker files `E2eHb/HbSpecChecker.lean` and `E2eDep/SpecChecker.lean` still have `namespace E2eList`.
+   After the move, a fresh `lvdescterm.py` run must equal them.
+   `Codec/Segment/` imports modules of `E2eHb`.
+   These imports follow through the tool.
+2. DataColumnsByRootIdentifier: the libraries `E2eEnc` and `E2eDec`.
+   The generated checker file `E2eEnc/DcSpecChecker.lean` still has `namespace E2eList`.
+   The reader command `dcd_data_include` keeps its name (`SPEC.md` decision 4).
+3. The 24 flat types of `E2eScal`.
+   Generators write most of these files, so this step changes generator emit strings and commands.
+   Read the E2eScal items of `TOOL-NOTES.md` section 5 first:
+   - `scalgen.py` refuses a qualified `--const`.
+     Keep bare code constant names and an `open` of the code namespace.
+   - `e2cemit.py` still writes `open ... E2e ...`.
+     Its Checkpoint output `E2cSpecCp.lean` is not reproduced until this step.
+   - `E2eScal/G4DepCheck.lean` tests the namespace prefixes `E2eScal`, `E2e`, `E2eAd` and `Fk`, and has no `Prysm`.
+   - `gen/tools/proof_inventory.py` reads the code constants of `lean/{E2e,E2eAd,E2eScal}/**`.
+     It needs a rework.
+   - `tools/regen.py` and `tools/python_checks.sh` name `lean/E2eScal/` paths.
+     Update them in this step.
+4. Clean-up: the splits of two-type modules, the removal of `TestTarget`, comment clean-up, and duplicate-proof removal.
+   Section 7 lists the known items.
+   This step changes module contents, so the move-only rule of `SPEC.md` section 2 does not apply.
+   Theorem statements do not change.
+
+## 5. Helper scripts in `tools/`
+
+All scripts take repository-relative arguments and run from the repository root.
+Scratch output goes to a directory that you give as an argument.
+That directory must not exist.
+Delete scratch directories with `trash`.
+The scripts need Python 3 (3.9 or later), git, POSIX `sh`, `tar` and `diff`.
+On Linux, the `trash` command comes from the package `trash-cli`.
+
+| Script | Purpose | Lean |
+| --- | --- | --- |
+| `dump_all.lean`, `dump_all.sh` | Declaration dump of every module of every library: `module`, `name`, `kind`, `internal`. Input of a map builder | yes |
+| `build_maps_example.py` | Map builder of the step `attestation-data`. An example to copy for a new step | no |
+| `trial.sh` | Forward run of a map on a fresh copy of a commit. `--no-manual` leaves out `manual-edits.tsv` | no |
+| `inverse_check.sh` | Inverse check of a step: fresh forward run on the base, compare, inverse, compare | no |
+| `python_checks.sh` | Python-only checks. Run it before and after a step and compare the two out dirs with `diff -r` | no |
+| `negative_case_ranges.py` | Theorem line range of every negative case. `python_checks.sh` runs it | no |
+| `regen.py` | Regeneration comparison of the Python generators of Lean files | no |
+| `gate_dump_compare.py` | Comparison of two axioms gate dumps across the maps of a step | no |
+| `constant_uses.lean` | Use count of the constants of some modules in other modules. For the splits and the `TestTarget` removal | yes |
+
+The repository does not keep a declaration dump of the tree.
+Write a new one at the start of each step (section 6, item 3).
+
+## 6. Procedure of one step and checks before each commit
+
+Run lake jobs one at a time, under the heavy-job gate of the machine.
+Check that no job runs with `pgrep -lx lake` and `pgrep -lx lean`.
+Never use `pgrep -fl`.
+A timeout or an out-of-memory kill is a result to report, not a pass.
+
+Before the forward run:
+
+1. Start from a clean working tree.
+   Write down the base commit (`git rev-parse HEAD`).
+2. Build every library of `lakefile.toml` (from `fv/kraken/lean`):
+   ```sh
+   lake build $(awk '/^\[\[lean_lib\]\]/ { getline; if (sub(/^name = "/, "")) { sub(/"$/, ""); print } }' lakefile.toml)
+   ```
+3. Write the declaration dump of the base:
+   `sh fv/kraken/gen/restructure/tools/dump_all.sh <scratch>/dump-base.tsv`.
+4. Run the axioms gate on the base, and keep its dump:
+   `python3 -B fv/kraken/gen/e2e/axioms_gate.py run <scratch>/gate-base.json <scratch>/gate-base.tsv`.
+5. Run the Python checks on the base:
+   `sh fv/kraken/gen/restructure/tools/python_checks.sh <scratch>/python-before`.
+6. Run the regeneration comparison on the base:
+   ```sh
+   python3 -I -B fv/kraken/gen/restructure/tools/regen.py <scratch>/regen-before-work \
+     --files fv/kraken/gen/restructure/maps/shared-layer/files.tsv > <scratch>/regen-before.txt
+   ```
+
+Make the map:
+
+7. Copy `tools/build_maps_example.py` to a scratch directory, and change its tables for the step.
+   Write `files.tsv`, `names.tsv`, `declared.txt` and `protect.txt` into `fv/kraken/gen/restructure/maps/<step>/`.
+8. Run a trial without manual edits:
+   `sh fv/kraken/gen/restructure/tools/trial.sh --no-manual fv/kraken/gen/restructure/maps/<step> <scratch>/trial`.
+   Read every warning.
+   Change the map until each warning left has a reason.
+9. In the trial tree, find the lines that no rule can see.
+   Write `manual-edits.tsv` for them (`TOOL-NOTES.md` section 2).
+   Run the trial again with the manual edits.
+
+Apply the step:
+
+10. Run the forward mode on the working tree.
+11. Do the hand edits with a script that asserts each old text once (lakefile, generator strings, README text).
+
+Checks before the commit:
+
+12. Inverse check against the base:
+    ```sh
+    sh fv/kraken/gen/restructure/tools/inverse_check.sh fv/kraken/gen/restructure/maps/<step> <base commit> WORKTREE <scratch>/inverse
+    ```
+    Expected: `PASS`.
+    The new tree differs from the fresh forward run only in the hand-edited files.
+    No file under `fv/kraken/lean` may differ.
+13. Run `lake build` of every library of `lakefile.toml` (the command of item 2).
+    Expected: exit 0.
+14. Run the axioms gate:
+    `python3 -B fv/kraken/gen/e2e/axioms_gate.py run <scratch>/gate.json <scratch>/gate.tsv`.
+    Expected: PASS with 20309 declarations, or an explained difference.
+    Then compare the two gate dumps across the map:
+    ```sh
+    python3 -I -B fv/kraken/gen/restructure/tools/gate_dump_compare.py <scratch>/gate-base.tsv <scratch>/gate.tsv fv/kraken/gen/restructure/maps/<step>
+    ```
+    Expected: exit 0 (no missing name, no extra name, no changed kind or axiom set).
+15. Check the negative cases (cwd `fv/kraken`):
+    `python3 -I -B gen/e2e/negative.py --check-cases <every negcases*.json file>`.
+    Expected: 0 failures.
+    `python_checks.sh` runs this check with every tracked case file.
+16. Run the Python checks after the step:
+    `sh fv/kraken/gen/restructure/tools/python_checks.sh <scratch>/python-after`.
+    Then run `diff -r <scratch>/python-before <scratch>/python-after`.
+    Expected: the same rc for every check, and equal theorem line ranges of the negative cases.
+    The text of the axioms gate self-test changes with the number of libraries.
+17. Run the regeneration comparison after the step (the command of item 6, with new scratch names).
+    Then `diff` the two results.
+    Expected: the same lines, except generator outputs of the moved types that change from DIF to EQ.
+18. Make one commit for the step.
+    Follow `fv/AGENTS.md` for the title and the body.
+    Record the base commit, the results of items 12 to 17, the warnings and their reasons, and the kept names.
+    Record a reason for each difference from the expected results.
+    Do not use `git add -A`, amend, rebase or force push.
+
+## 7. Known items for the clean-up step
+
+Modules that hold declarations of two types and need a split:
+
+- `Prysm/Checkpoint/Code.lean` holds the Epoch program constants.
+- `Prysm/Slot/DecodeAccept.lean` holds the CommitteeIndex decoder (the second namespace block).
+- `Prysm/AttestationData/Code.lean` holds the Slot and CommitteeIndex programs and the labels of the Checkpoint callees.
+- `Prysm/SyncAggregate/Code.lean` and `Prysm/SyncAggregate/SpecDescription.lean` hold SyncCommittee declarations.
+- `Prysm/SyncCommittee/SpecDefinitions.lean` holds SyncAggregate declarations.
+- `Prysm/SyncCommittee/DecodeLoopLemmas.lean` holds lemmas that other types and `Codec/Segment/` use.
+
+Shared lemmas in the namespace `Prysm.Checkpoint` that other types use:
+
+- `Decode.errSize_addr_eq` (`Prysm/Checkpoint/DecodeRejectSize.lean`).
+- `Encode.fast_path_mul` (`Prysm/Checkpoint/EncodeFastPath.lean`).
+- `Encode.reject_length_eq` (`Prysm/Checkpoint/EncodeRejectLength.lean`).
+
+Modules that mix two roles and have the name of the main role:
+
+- `Prysm/AttestationData/Spec.lean` also holds the equality with the checker description.
+- `Prysm/AttestationData/DecodeRejectSize.lean` also holds four error wraps that no 128-byte input reaches.
+- `Prysm/IndexedAttestation/DecodeRejectSize.lean` holds the size reject and the offset reject.
+- `Prysm/IndexedAttestation/DecodeRejectAlignment.lean` holds the alignment reject and the overflow reject.
+
+`TestTarget`:
+
+- `Machine/Step.lean` imports `TestTarget.Code`.
+- 9 declarations of `TestTarget` are used outside `TestTarget`.
+  Find them with `tools/constant_uses.lean` before the removal.
+
+Comments and names:
+
+- About 8 comments still hold old abbreviations, for example `WitCpW`.
+- The ELF data names with the prefix `e2e` and the `*_data_include` commands keep their names until the link sets merge.
+  That merge needs the machine with the Prysm ELF (`SPEC.md` decision 4).
+
+Duplicate proofs:
+
+- The type steps keep duplicate modules and proofs (`SPEC.md` section 2).
+  The clean-up step finds them with a check and removes them.
+  No list of them exists yet.
