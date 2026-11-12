@@ -33,7 +33,7 @@ path (in `R`); callee return slot rsp − 112; `lo` = the `S + 8` bytes below it
 its top word). Runtime calls get `S + 8` stack bytes below their return slot.
 -/
 
-open Machine Runtime TestTarget E2e E2eAd E2eAd.Code E2eScal.BhCode E2eScal Codec
+open Machine Runtime TestTarget E2eAd E2eAd.Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.Bh
@@ -99,7 +99,7 @@ theorem bh_e2e_accept_main (k : Nat) (hk : BhUnmarshal.IsInfixAt Host.prog k) (h
       ⋆ Eq (aC3.At (s.regs.rax.toBitVec + 88))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat + 112 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 112) (hav : 96 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) :
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧

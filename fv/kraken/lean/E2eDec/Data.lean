@@ -7,8 +7,8 @@ import E2eDec.Include
 Elaborated from `fv/kraken/prysm/go1.26.10/e2e/lv/link-dec/data/` by `dcd_data_include`; the files are written by
 `gen/e2e/encdeclink.py data` (with `link/data.py`'s code) from the operands of the converted code, and
 `link/check.py` (f) compares them with the ELF. Operands equal to an item of the Checkpoint or IndexedAttestation set are asserted
-equal by `encdeclink.py` and the statements use the existing names: `E2e.Data.e2eU8Type_addr`,
-`E2eList.Data.lvU64Type_addr`, `E2e.Data.e2eIntType_addr`, `E2e.Data.e2eErrSize_addr`,
+equal by `encdeclink.py` and the statements use the existing names: `ElfData.CheckpointAndEpoch.e2eU8Type_addr`,
+`E2eList.Data.lvU64Type_addr`, `ElfData.CheckpointAndEpoch.e2eIntType_addr`, `ElfData.CheckpointAndEpoch.e2eErrSize_addr`,
 `E2eList.Data.lvErrInvalidVariableOffset_addr`, `E2eList.Data.lvErrIncorrectListSize_addr`,
 `E2eList.Data.lvErrListTooBig_addr`. New here: the two `fmt.Errorf` formats of the list rejects.
 -/

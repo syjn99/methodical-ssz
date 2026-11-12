@@ -42,7 +42,7 @@ def cases():
                            "backing": (struct.pack("<Q", 7) + bytes(40)).hex()}})
     cs.append({"id": "enc-grow-cap0", "op": "marshal", "epoch": 5, "root": bytes(range(32)).hex(), "prefix": "", "spare": 0,
                "exp": {"ok": True, "out": enc(5, bytes(range(32))).hex(), "path": "growslice"}})
-    # the growslice witness shape of cp_e2e_marshal_grow_main: len 30, cap 36
+    # the growslice witness shape of Prysm.Checkpoint.Encode.grow_first_site: len 30, cap 36
     pre30 = bytes(range(0x40, 0x40 + 30))
     cs.append({"id": "enc-grow-len30-cap36", "op": "marshal", "epoch": 0x0123456789ABCDEF, "root": (b"\xff" * 32).hex(),
                "prefix": pre30.hex(), "spare": 6,

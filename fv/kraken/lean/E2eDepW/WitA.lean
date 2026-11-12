@@ -23,7 +23,7 @@ For every input of 33 blocks of 32 bytes and a Deposit_Data, and every old point
 decoder returns nil.
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2eList E2eDep E2eDep.Code E2eScal.H4Code E2eDepW
+open Machine Runtime TestTarget Machine.Witness E2eList E2eDep E2eDep.Code E2eScal.H4Code E2eDepW
 
 namespace E2eDepW.WitA
 
@@ -78,8 +78,8 @@ theorem label_wb : label "runtime.writeBarrier" = 0x10008 :=
   mk_label P _ 8 _ (by simp [P, dataLabels]) (by decide)
 
 /-- The text of `E2eList.WitScA.u8_ne_slice` (that module declares its own `Host` instance). -/
-theorem u8_ne_slice : E2e.Data.e2eU8Type_addr ≠ E2eList.Data.lvSliceType_addr := by
-  simp only [E2e.Data.e2eU8Type_addr, E2eList.Data.lvSliceType_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
+theorem u8_ne_slice : ElfData.CheckpointAndEpoch.e2eU8Type_addr ≠ E2eList.Data.lvSliceType_addr := by
+  simp only [ElfData.CheckpointAndEpoch.e2eU8Type_addr, E2eList.Data.lvSliceType_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
   bv_omega
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0

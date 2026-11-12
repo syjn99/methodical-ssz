@@ -5,7 +5,7 @@ import Machine.WitnessHost
 /-!
 # Witnesses of `bh_e2e_marshal_reject{1,2,3}_main` (BeaconBlockHeader encoder, length rejects)
 
-Hand-written (the text of `E2e/WitCpMR.lean` and `E2eScal/WitBhM.lean` with this layout).
+Hand-written (the text of `Prysm/Checkpoint/WitnessEncodeRejectLength.lean` and `E2eScal/WitBhM.lean` with this layout).
 Host: the label `ssz.ErrBytesLength` (index 0), the real Go 1.26.10
 `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo` (index 1) and `RtCopy` (index 196, `rt_memmove`, S = 0).
 One memory block at `0x10000`: the two words of `ssz.ErrBytesLength` (stand-in values 0x10e8, 0x2b: the real

@@ -2,8 +2,8 @@ import Runtime.Contracts
 import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
-import E2e.Data
-import E2e.Code
+import Prysm.ElfData.CheckpointAndEpoch
+import Prysm.Checkpoint.Code
 import E2eAd.Code
 import E2eScal.BhCode
 import E2eScal.H5Code
@@ -57,7 +57,7 @@ The callee checks the stack guard at entry rsp − 88, hence `guard + 88 < rsp`.
 so the return slot holds directive 56 at the end. Error-path frame slots are untouched on this path (in `R`).
 -/
 
-open Machine Runtime TestTarget E2e E2eAd.Code E2eScal.H5Code E2eScal.BhCode
+open Machine Runtime TestTarget E2eAd.Code E2eScal.H5Code E2eScal.BhCode
 variable [Host]
 
 namespace E2eScal.H5
@@ -102,7 +102,7 @@ abbrev sm_accept_stmt : Prop :=
       ⋆ Eq (aC2.At (s.regs.rax.toBitVec + 64))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat + 112 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 144) (hav : 128 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧

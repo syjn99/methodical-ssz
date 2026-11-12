@@ -1,5 +1,5 @@
-import E2e.Spec
-import E2e.SpecEq
+import Prysm.Checkpoint.Spec
+import Prysm.Checkpoint.SpecEquivalence
 import E2eScal.VeDesc
 import E2eScal.VeSpecChecker
 

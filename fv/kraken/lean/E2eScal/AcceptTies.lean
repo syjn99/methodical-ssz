@@ -3,7 +3,7 @@ import E2eScal.BhAccept
 import E2eScal.PwAccept
 import E2eScal.H5Stmt
 import E2eScal.H6Stmt
-import E2e.CpAccept
+import Prysm.Checkpoint.DecodeAccept
 
 /-!
 # GEN5 L1: ties of `decAcceptKindN` to the hand accept statements
@@ -19,7 +19,7 @@ Layouts: three frame classes.
 - `layMix40`, `layMix60` (frames `0x40`, `0x60`, both): PendingDeposit; SyncCommitteeMessage,
   BeaconBlockHeader.
 
-Checkpoint (`E2e.cp_e2e_accept_main`) is not `rfl`: see `cp_accept_of_kind` (the kind instance implies the
+Checkpoint (`Prysm.Checkpoint.Decode.accept`) is not `rfl`: see `cp_accept_of_kind` (the kind instance implies the
 hand statement; the converse does not hold).
 -/
 
@@ -119,7 +119,7 @@ theorem pb_accept_is_kindN : ∀ (h : Host), @E2eScal.H6.pb_accept_stmt h
 
 theorem pw_accept_is_kindN : ∀ (h : Host), @E2eScal.H4.pw_accept_stmt h
     = @decAcceptKindN h E2eScal.H4Code.PwUnmarshal
-        (layCal [E2eScal.BhCode.ViUnmarshal, E2e.Code.EpUnmarshal] 60) [.u64, .u64, .u64] := by
+        (layCal [E2eScal.BhCode.ViUnmarshal, Prysm.Epoch.Code.unmarshalSSZ] 60) [.u64, .u64, .u64] := by
   intro h; rfl
 
 theorem pc_accept_is_kindN : ∀ (h : Host), @E2eScal.H5.pc_accept_stmt h
@@ -173,7 +173,7 @@ variable [Host]
 
 /-- Checkpoint layout for the kind (frame `0x50`; callee `Epoch`, one byte field). -/
 def layCp : DecLayout where
-  callees := [E2e.Code.EpUnmarshal]
+  callees := [Prysm.Epoch.Code.unmarshalSSZ]
   nstk := 11
   lens := [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8), (9, 8)]
   pre := [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.dn 32) (.orig 3),
@@ -189,7 +189,7 @@ def layCp : DecLayout where
 
 theorem cp_lo_addr (x : BitVec 64) (S : Nat) (h8 : 8 ≤ S) (hS : S < 2 ^ 60) :
     x - 96 - BitVec.ofNat 64 S = x - 104 - BitVec.ofNat 64 (S - 8) := by
-  rw [E2e.cpa_ofNat S h8 hS]; bv_omega
+  rw [Prysm.Checkpoint.Decode.accept_ofNat S h8 hS]; bv_omega
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
@@ -199,8 +199,8 @@ after `R S`, orders three stack chunks and the two existential chunks differentl
 `Int.toBytes 8 0`, and names a 32-byte receiver tail chunk `ctl` (in the kind it is part of `R`). The kind
 instance is the stronger statement; the converse does not hold (`R` need not contain a tail chunk). -/
 theorem cp_accept_of_kind
-    (H : decAcceptKindN E2e.Code.CpUnmarshal layCp [.u64, .bytes 32]) :
-    type_of% (@E2e.cp_e2e_accept_main ‹Host›) := by
+    (H : decAcceptKindN Prysm.Checkpoint.Code.unmarshalSSZ layCp [.u64, .bytes 32]) :
+    type_of% (@Prysm.Checkpoint.Decode.accept ‹Host›) := by
   intro k hk hf kE hkE hfE e8 root he8 hroot s ra guard fp s1 s2 l20 l28 l30 m0 m1 m2 rslot cst c0 cP cL cC ctl
     hfp h1 h2 hl20 hl28 hl30 hm0 hm1 hm2 hrs hcst hc0 hcP hcL hcC hctl R S hS8 hS scratch hsc Heap avail
     h_mem hguard hlen hav hms hmm

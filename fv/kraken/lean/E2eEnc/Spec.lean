@@ -1,4 +1,4 @@
-import E2e.Spec
+import Prysm.Checkpoint.Spec
 import EthLib.Serialization.Proofs.Ssz.Codec.Table
 import E2eEnc.StmtEnc
 

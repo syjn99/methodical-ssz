@@ -63,14 +63,14 @@ needs = ["test_target_norm_S", "test_target_data"]
 # Codec: lemmas that do not depend on one Prysm type: the uint64 decoder pattern, the fixed-bytes field
 # patterns, segment and loop lemmas (Codec/Segment/), the statement kinds of the generated proofs (Codec/Kind/)
 # and the encoder step lemmas. No module of this library reads a code or data file itself. Some modules of
-# Codec/Segment/ import modules of the E2e, E2eList and E2eHb libraries.
+# Codec/Segment/ import modules of the Prysm, E2eList and E2eHb libraries.
 [[lean_lib]]
 name = "Codec"
 globs = ["Codec.+"]
 
-# Real v1alpha1.Checkpoint encoder/decoder and the
-# primitives.Epoch decoder on the Go 1.26.10 ELF. Not a default target; build one module at a time,
-# e.g. `lake build E2e.Epoch`. The .S and data files of this namespace are inputs of every E2e module.
+# Prysm: one directory for each Prysm type (Prysm/<GoTypeName>/), the ELF data of the link sets (Prysm/ElfData/).
+# Now: v1alpha1.Checkpoint (decoder, encoder, SizeSSZ) and primitives.Epoch (decoder) on the Go 1.26.10 ELF, link set
+# prysm/go1.26.10/e2e/link. Not a default target. The .S and data files of that link set are inputs of every module.
 [[input_dir]]
 name = "e2e_norm_S"
 path = "../prysm/go1.26.10/e2e/link/norm"
@@ -82,13 +82,13 @@ path = "../prysm/go1.26.10/e2e/link/data"
 text = true
 
 [[lean_lib]]
-name = "E2e"
-globs = ["E2e.+"]
+name = "Prysm"
+globs = ["Prysm.+"]
 needs = ["e2e_norm_S", "e2e_data"]
 
 # Real v1alpha1.AttestationData and the
-# primitives.Slot / CommitteeIndex decoders on the same Go 1.26.10 ELF. Own library so that the reviewed E2e
-# modules and their traces do not change; E2eAd modules import E2e modules. Build one module at a time.
+# primitives.Slot / CommitteeIndex decoders on the same Go 1.26.10 ELF. Own library so that the reviewed Prysm
+# modules and their traces do not change; E2eAd modules import Prysm modules. Build one module at a time.
 [[input_dir]]
 name = "e2e_ad_norm_S"
 path = "../prysm/go1.26.10/e2e/ad/link/norm"
@@ -119,7 +119,7 @@ globs = ["E2eScal.+"]
 needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S"]
 
 # List/vector hand proofs: real v1alpha1.SyncAggregate and v1alpha1.SyncCommittee decoders on the
-# same Go 1.26.10 ELF. Own library: the E2e / E2eAd / E2eScal modules do not change. Build one module at a time,
+# same Go 1.26.10 ELF. Own library: the Prysm / E2eAd / E2eScal modules do not change. Build one module at a time,
 # e.g. `lake build E2eList.StmtSa`. The .S and data files of prysm/go1.26.10/e2e/lv/link are inputs.
 [[input_dir]]
 name = "lv_norm_S"

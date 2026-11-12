@@ -28,7 +28,7 @@ CLASS = {
     "runtime.convT64": ("b", "ConvT64C"),
     "runtime.newobject": ("c", "nil-result branch after fmt.errorf: excluded by the contract's rax != 0"),
     "fmt.errorf": ("b", "FmtErrorfWC ('Epoch: %w', Checkpoint) / FmtErrorfDDC ('expected buffer of length %d received %d', Epoch)"),
-    f"{PRIM}.(*Epoch).UnmarshalSSZ": ("a", "function spec EpUAccC, proved from machine code (ep_uacc_holds)"),
+    f"{PRIM}.(*Epoch).UnmarshalSSZ": ("a", "function spec Prysm.Epoch.Decode.accept_function_spec, proved from machine code (Prysm.Epoch.Decode.accept_function_spec_holds)"),
 }
 
 

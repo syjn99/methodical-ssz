@@ -1,6 +1,6 @@
 import E2eScal.EncTies
 import Codec.EncodeFrameTest
-import E2e.Code
+import Prysm.Checkpoint.Code
 
 /-!
 # Worked example: `(*v1alpha1.Checkpoint).MarshalSSZTo`, fast-path theorem in generated style
@@ -12,10 +12,10 @@ theorem has a `_kind` line (`encHeadKindN`, `encFieldKindN`, `encEpiKindN`, `enc
 **Fast path only**: `len(dst) + 40 ≤ cap(dst)` and every byte-vector field of its exact length. No
 `runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the
 growslice branches, the length rejects, the morestack path.
-The committed hand statement `E2e.cp_e2e_marshal_main` follows by `cp_marshal_of_kind` (`cp_e2e_marshal_g6_stmt`).
+The committed hand statement `Prysm.Checkpoint.Encode.fast_path` follows by `cp_marshal_of_kind` (`cp_e2e_marshal_g6_stmt`).
 -/
 
-open Machine Runtime TestTarget E2eScal Codec E2e.Code
+open Machine Runtime TestTarget E2eScal Codec Prysm.Checkpoint.Code
 variable [Host]
 
 namespace E2eScal.Gen6
@@ -23,7 +23,7 @@ namespace E2eScal.Gen6
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Head: directives 0–7 (stack guard, frame, spills); entry → boundary state 0. -/
-theorem cp_g6_head : ∀ (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (hf : LabelsFresh CpMarshal k)
+theorem cp_g6_head : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (ast v0 c1 b1 pre d0 d1 : List UInt8) (hast : ast.length = 8) (hv0 : v0.length = 8) (hc1 : c1.length = 8) (hb1 : b1.length = 32) (hd0 : d0.length = 8) (hd1 : d1.length = 32)
     (p1 : BitVec 64) (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)
     (fp s2 l16 l24 l32 t64 t48 rslot : List UInt8) (hfp : fp.length = 8) (hs2 : s2.length = 8) (hl16 : l16.length = 8) (hl24 : l24.length = 8) (hl32 : l32.length = 8) (ht64 : t64.length = 16) (ht48 : t48.length = 16) (hrslot : rslot.length = 8)
@@ -99,7 +99,7 @@ theorem cp_g6_head : ∀ (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (hf : 
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem cp_g6_head_kind : ∀ (h : Host), type_of% (@cp_g6_head h)
-    = @E2eScal.encHeadKindN h CpMarshal E2eScal.layEncCp [.u64, .bytes 32]
+    = @E2eScal.encHeadKindN h marshalSSZTo E2eScal.layEncCp [.u64, .bytes 32]
     ⟨8, 0, [(.rax, .rcv), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
       [.at (.dn 8) (.reg .rbp), .at (.up 16) (.reg .rbx), .at (.dn 16) (.orig 2), .at (.dn 24) (.orig 3), .at (.dn 32) (.orig 4), .at (.dn 48) (.orig 6), .at (.dn 64) (.orig 5), .at (.dn 120) (.orig 7), .lo .scr],
       []⟩ := by
@@ -108,7 +108,7 @@ theorem cp_g6_head_kind : ∀ (h : Host), type_of% (@cp_g6_head h)
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Field 0 `Epoch` (uint64): directives 8–35; boundary state 0 → 1. -/
-theorem cp_g6_f0 : ∀ (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (hf : LabelsFresh CpMarshal k)
+theorem cp_g6_f0 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (ast v0 c1 b1 pre d0 d1 : List UInt8) (hast : ast.length = 8) (hv0 : v0.length = 8) (hc1 : c1.length = 8) (hb1 : b1.length = 32) (hd0 : d0.length = 8) (hd1 : d1.length = 32)
     (p1 : BitVec 64) (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)
     (fp s2 l16 l24 l32 t64 t48 rslot : List UInt8) (hfp : fp.length = 8) (hs2 : s2.length = 8) (hl16 : l16.length = 8) (hl24 : l24.length = 8) (hl32 : l32.length = 8) (ht64 : t64.length = 16) (ht48 : t48.length = 16) (hrslot : rslot.length = 8)
@@ -214,8 +214,8 @@ theorem cp_g6_f0 : ∀ (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (hf : La
   intro m5 H5; kn; simp only [Reg64s.get64] at H5
   simp only [toBytes_ofInt_ofBytes 64 8 rfl v0 hv0] at H5
   have hl33 := Machine.label_at' hk hf (j := 33)
-    (by simp only [CpMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
-    (by simp only [CpMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
+    (by simp only [marshalSSZTo, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
+    (by simp only [marshalSSZTo, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_cmp_jae_t Reg64.rdi Reg64.rdx _ _ (k + 17) (k + 33) (win hk 17 2) (by rfl) hl33 _ _ (by show ((rcx.toBitVec + 8) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
   intro fl; kn
   apply kstep_label _ _ (k + 33) (k + 34) (win hk 33 1) (by rfl) (by rfl)
@@ -230,7 +230,7 @@ theorem cp_g6_f0 : ∀ (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (hf : La
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl, ((Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8), (Int.toBytes 16 (zmms1.get (AvxReg.xmm RegMm.mm15)).toInt), (by rw [List.length_drop, Int.toBytes_length]), (Int.toBytes_length 16 _), ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem cp_g6_f0_kind : ∀ (h : Host), type_of% (@cp_g6_f0 h)
-    = @E2eScal.encFieldKindN h CpMarshal E2eScal.layEncCp [.u64, .bytes 32]
+    = @E2eScal.encFieldKindN h marshalSSZTo E2eScal.layEncCp [.u64, .bytes 32]
     ⟨8, 0, [(.rax, .rcv), (.rbx, .ptr), (.rcx, .len 0), (.rdi, .cap)],
       [.at (.dn 8) (.reg .rbp), .at (.up 16) (.reg .rbx), .at (.dn 16) (.orig 2), .at (.dn 24) (.orig 3), .at (.dn 32) (.orig 4), .at (.dn 48) (.orig 6), .at (.dn 64) (.orig 5), .at (.dn 120) (.orig 7), .lo .scr],
       []⟩
@@ -242,7 +242,7 @@ theorem cp_g6_f0_kind : ∀ (h : Host), type_of% (@cp_g6_f0 h)
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Field 1 `Root` (32 bytes): directives 36–62; boundary state 1 → 2. -/
-theorem cp_g6_f1 : ∀ (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (hf : LabelsFresh CpMarshal k)
+theorem cp_g6_f1 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (ast v0 c1 b1 pre d0 d1 : List UInt8) (hast : ast.length = 8) (hv0 : v0.length = 8) (hc1 : c1.length = 8) (hb1 : b1.length = 32) (hd0 : d0.length = 8) (hd1 : d1.length = 32)
     (p1 : BitVec 64) (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)
     (fp s2 l16 l24 l32 t64 t48 rslot : List UInt8) (hfp : fp.length = 8) (hs2 : s2.length = 8) (hl16 : l16.length = 8) (hl24 : l24.length = 8) (hl32 : l32.length = 8) (ht64 : t64.length = 16) (ht48 : t48.length = 16) (hrslot : rslot.length = 8)
@@ -334,8 +334,8 @@ theorem cp_g6_f1 : ∀ (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (hf : La
   apply kreg_eq Reg64.r9 (rcx.toBitVec + 40) _ _ _ (by show ((rcx.toBitVec + 8) + 32 : BitVec 64) = (rcx.toBitVec + 40); bv_omega)
   kn
   have hl55 := Machine.label_at' hk hf (j := 55)
-    (by simp only [CpMarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
-    (by simp only [CpMarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
+    (by simp only [marshalSSZTo, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
+    (by simp only [marshalSSZTo, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   apply kstep_cmp_jae_t Reg64.rdi Reg64.r9 _ _ (k + 40) (k + 55) (win hk 40 2) (by rfl) hl55 _ _ (by show ((rcx.toBitVec + 40) : BitVec 64).toNat ≤ (rdi.toBitVec).toNat; bv_omega)
   intro fl; kn
   apply kstep_label _ _ (k + 55) (k + 56) (win hk 55 1) (by rfl) (by rfl)
@@ -373,7 +373,7 @@ theorem cp_g6_f1 : ∀ (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (hf : La
   refine ⟨rfl, rfl, rfl, rfl, x0, x1, scr1, hx0, hx1, hscr1, ?_⟩
   first | ecancel | (dsimp only; ecancel)
 theorem cp_g6_f1_kind : ∀ (h : Host), type_of% (@cp_g6_f1 h)
-    = @E2eScal.encFieldKindN h CpMarshal E2eScal.layEncCp [.u64, .bytes 32]
+    = @E2eScal.encFieldKindN h marshalSSZTo E2eScal.layEncCp [.u64, .bytes 32]
     ⟨36, 1, [(.rax, .rcv), (.rbx, .ptr), (.rdx, .len 8), (.rdi, .cap)],
       [.at (.dn 8) (.reg .rbp), .at (.up 16) (.reg .rbx), .at (.dn 16) (.orig 2), .at (.dn 24) (.orig 3), .at (.dn 32) (.orig 4), .at (.dn 48) (.ex 1), .at (.dn 64) (.fld 0), .at (.dn 56) (.ex 0), .at (.dn 120) (.orig 7), .lo .scr],
       [.n 8, .n 16]⟩
@@ -385,7 +385,7 @@ theorem cp_g6_f1_kind : ∀ (h : Host), type_of% (@cp_g6_f1 h)
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Epilogue: directives 63–return; boundary state 2 → the fast-path post-state. -/
-theorem cp_g6_epi : ∀ (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (hf : LabelsFresh CpMarshal k)
+theorem cp_g6_epi : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (ast v0 c1 b1 pre d0 d1 : List UInt8) (hast : ast.length = 8) (hv0 : v0.length = 8) (hc1 : c1.length = 8) (hb1 : b1.length = 32) (hd0 : d0.length = 8) (hd1 : d1.length = 32)
     (p1 : BitVec 64) (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)
     (fp s2 l16 l24 l32 t64 t48 rslot : List UInt8) (hfp : fp.length = 8) (hs2 : s2.length = 8) (hl16 : l16.length = 8) (hl24 : l24.length = 8) (hl32 : l32.length = 8) (ht64 : t64.length = 16) (ht48 : t48.length = 16) (hrslot : rslot.length = 8)
@@ -499,7 +499,7 @@ theorem cp_g6_epi : ∀ (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (hf : L
   · exact UInt64.toBitVec_inj.mp (hreg' Reg64.r14 (by decide) (by decide))
   · first | (rw [hmem']; ecancel) | (dsimp only; rw [hmem']; ecancel)
 theorem cp_g6_epi_kind : ∀ (h : Host), type_of% (@cp_g6_epi h)
-    = @E2eScal.encEpiKindN h CpMarshal E2eScal.layEncCp [.u64, .bytes 32]
+    = @E2eScal.encEpiKindN h marshalSSZTo E2eScal.layEncCp [.u64, .bytes 32]
     ⟨63, 2, [],
       [.at (.dn 8) (.reg .rbp), .at (.up 16) (.reg .rbx), .at (.dn 16) (.reg .rbx), .at (.dn 24) (.reg .rdi), .at (.dn 32) (.len 40), .at (.dn 48) (.ex 1), .at (.dn 64) (.fld 0), .at (.dn 56) (.ex 0), .at (.dn 120) (.ret 63), .lo (.ex 2)],
       [.n 8, .n 16, .lo]⟩ := by
@@ -510,7 +510,7 @@ set_option maxRecDepth 100000 in
 /-- **Fast path of `(*v1alpha1.Checkpoint).MarshalSSZTo` (Go 1.26.10), generated-style proof**: head, one theorem per
 field, epilogue, chained by `eventually_trans`. Premises: `len + 40 ≤ cap`, every byte-vector field of its exact
 length. Statement = the kind instance (`_kind`). Fast path only. -/
-theorem cp_e2e_marshal_g6 : ∀ (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (hf : LabelsFresh CpMarshal k)
+theorem cp_e2e_marshal_g6 : ∀ (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (ast v0 c1 b1 pre d0 d1 : List UInt8) (hast : ast.length = 8) (hv0 : v0.length = 8) (hc1 : c1.length = 8) (hb1 : b1.length = 32) (hd0 : d0.length = 8) (hd1 : d1.length = 32)
     (p1 : BitVec 64) (s : MachineData) (ra guard : UInt64) (hpre : pre.length = s.regs.rcx.toNat)
     (fp s2 l16 l24 l32 t64 t48 rslot : List UInt8) (hfp : fp.length = 8) (hs2 : s2.length = 8) (hl16 : l16.length = 8) (hl24 : l24.length = 8) (hl32 : l32.length = 8) (ht64 : t64.length = 16) (ht48 : t48.length = 16) (hrslot : rslot.length = 8)
@@ -581,11 +581,11 @@ theorem cp_e2e_marshal_g6 : ∀ (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k)
   intro st2 h2
   exact cp_g6_epi k hk hf ast v0 c1 b1 pre d0 d1 hast hv0 hc1 hb1 hd0 hd1 p1 s ra guard hpre fp s2 l16 l24 l32 t64 t48 rslot hfp hs2 hl16 hl24 hl32 ht64 ht48 hrslot R S scratch hsc hsp hcap hcap63 st2 h2
 theorem cp_e2e_marshal_g6_kind : ∀ (h : Host), type_of% (@cp_e2e_marshal_g6 h)
-    = @E2eScal.encFastKindN h CpMarshal E2eScal.layEncCp [.u64, .bytes 32] := by
+    = @E2eScal.encFastKindN h marshalSSZTo E2eScal.layEncCp [.u64, .bytes 32] := by
   intro h; rfl
 
 /-- The generated-style theorem proves the committed hand statement (through the implication tie). -/
-theorem cp_e2e_marshal_g6_stmt : type_of% (@E2e.cp_e2e_marshal_main ‹Host›) :=
+theorem cp_e2e_marshal_g6_stmt : type_of% (@Prysm.Checkpoint.Encode.fast_path ‹Host›) :=
   E2eScal.cp_marshal_of_kind cp_e2e_marshal_g6
 
 end E2eScal.Gen6

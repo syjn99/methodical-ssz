@@ -13,7 +13,7 @@ the guard word, saved-rbp slot, return slot, the unused rax spill slot (the fram
 slot. For every length `≠ 192` (instances 191, 193, 0) the decoder returns the two words.
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2eScal.H6Code E2eScal.H6
+open Machine Runtime TestTarget Machine.Witness E2eScal.H6Code E2eScal.H6
 
 namespace E2eScal.WitPdR
 
@@ -56,7 +56,7 @@ theorem pd_reject_runs (len : UInt64) (hlen : len ≠ 192) (zmms : RegZmms) (fla
     (by
       have H : Eq (block.At (0x10000 : BitVec 64)) mem := rfl
       wit_split []
-      simp only [cs0, R0, w, E2e.Data.e2eErrSize_addr, label_err, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
+      simp only [cs0, R0, w, ElfData.CheckpointAndEpoch.e2eErrSize_addr, label_err, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
         Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H ⊢
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢

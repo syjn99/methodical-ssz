@@ -23,7 +23,7 @@ The callee is used only through `U64CalleeAcc` (= the existing `ViUAccC`, proved
 contract, no new hypothesis form.
 -/
 
-open Machine Runtime TestTarget E2e E2eScal.H5Code E2eScal.BhCode E2eScal Codec
+open Machine Runtime TestTarget E2eScal.H5Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.H5

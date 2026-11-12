@@ -19,7 +19,7 @@ For every input and every old pointer word every premise holds and the decoder r
 The receiver is a Go value of `v1alpha1.PowBlock` (zero-length slices).
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.H6Code E2eScal.H6
+open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.H6Code E2eScal.H6
 
 namespace E2eScal.WitPbA
 

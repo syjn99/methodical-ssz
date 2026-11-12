@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Render the `ssz` term of a Desc-checker input file (schema fvphase1c.desc/1) as Lean.
 
-Usage: descterm.py <desc.json> <lean-name> > lean/E2e/SpecChecker.lean
+Usage: descterm.py <desc.json> <lean-name> > lean/Prysm/Checkpoint/SpecChecker.lean (lean-name: checkerDesc)
+The namespace of the output is Prysm.<GoTypeName> (the `type` of the file).
 The file is the producer's Desc for (v1alpha1, Checkpoint) that the Desc checker accepted
 (gen/desc/results/main.result.json, record orig/prysm_v1alpha1.Checkpoint.desc.json, same sha256).
 Only the kinds of that term are rendered (container, uint, byteVector); any other kind is an error.
@@ -37,9 +38,9 @@ print(f"""import EthLib.Serialization.Ssz
 `({d['package']}, {d['type']})` that the Desc checker accepted
 (`gen/desc/results/main.result.json`, same sha256). Do not edit. -/
 
-namespace E2e
+namespace Prysm.{d['type']}
 open EthLib.Serialization.Ssz
 
 def {name} : Desc := {term(d['ssz'])}
 
-end E2e""")
+end Prysm.{d['type']}""")

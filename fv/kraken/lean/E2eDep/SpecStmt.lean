@@ -75,9 +75,9 @@ def dep_accept_spec_stmt : Prop :=
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat + 104 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size) (hav : 2144 ≤ avail)
     (hmsA : MakesliceC Heap E2eList.Data.lvSliceType_addr 24 (Sd + 48))
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (Sd + 48)) (hmm : MemmoveC (Sd + 48))
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (Sd + 48)) (hmm : MemmoveC (Sd + 48))
     (hno : NewobjectC Heap depDataType_addr 120 (Sd + 48))
-    (hmsD : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 Sd) (hmmD : MemmoveC Sd),
+    (hmsD : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 Sd) (hmmD : MemmoveC Sd),
     ∃ g : PDep, g.toValue = v ∧ bsA = depEnc g ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
@@ -128,7 +128,7 @@ def dep_reject_size_spec_stmt : Prop :=
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bs.size),
     (∃ e, deserialize prysmDepDesc bs = .error e) ∧
@@ -139,7 +139,7 @@ def dep_reject_size_spec_stmt : Prop :=
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 

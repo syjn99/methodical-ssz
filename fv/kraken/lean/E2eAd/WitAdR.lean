@@ -6,7 +6,7 @@ import Machine.WitnessHost
 # Witness of `ad_e2e_reject_size_main`
 
 Host: the label `ssz.ErrSize` (index 0), then the real Go 1.26.10
-`(*v1alpha1.AttestationData).UnmarshalSSZ` (index 1). The text of `E2e/WitCpR.lean` with the
+`(*v1alpha1.AttestationData).UnmarshalSSZ` (index 1). The text of `Prysm/Checkpoint/WitnessDecodeRejectSize.lean` with the
 AttestationData decoder. Memory at `0x10000`: the two
 words of `ssz.ErrSize` after package init (a non-zero itab word `0x10e8` and a
 data word `0x2a`, stand-ins: the real values are set by the runtime's init and
@@ -15,7 +15,7 @@ unused rax spill slot (the frame `R`) and the rbx spill slot. For every length
 `≠ 128` (instances 127, 129, 0) the decoder returns the two words.
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2eAd E2eAd.Code
+open Machine Runtime TestTarget Machine.Witness E2eAd E2eAd.Code
 
 namespace E2eAd.WitAdR
 
@@ -58,7 +58,7 @@ theorem ad_reject_runs (len : UInt64) (hlen : len ≠ 128) (zmms : RegZmms) (fla
     (by
       have H : Eq (block.At (0x10000 : BitVec 64)) mem := rfl
       wit_split []
-      simp only [cs0, R0, w, E2e.Data.e2eErrSize_addr, label_err, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
+      simp only [cs0, R0, w, ElfData.CheckpointAndEpoch.e2eErrSize_addr, label_err, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
         Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H ⊢
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢

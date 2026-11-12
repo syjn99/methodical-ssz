@@ -2,8 +2,8 @@ import Runtime.Contracts
 import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
-import E2e.Data
-import E2e.Code
+import Prysm.ElfData.CheckpointAndEpoch
+import Prysm.Checkpoint.Code
 import E2eAd.Code
 import E2eScal.BhCode
 import E2eScal.H6Code
@@ -60,7 +60,7 @@ rsp − 88, so it holds directive 56 at the end; callee rbp at − 96 (`lo`), ca
 `guard + 88 < rsp`.
 -/
 
-open Machine Runtime TestTarget E2e E2e.Code E2eAd.Code E2eScal.H6Code E2eScal.BhCode
+open Machine Runtime TestTarget Prysm.Checkpoint.Code E2eAd.Code E2eScal.H6Code E2eScal.BhCode
 variable [Host]
 
 namespace E2eScal.G5C
@@ -147,11 +147,11 @@ abbrev vb_accept_stmt : Prop :=
       ⟨s, Host.addrOf k⟩
 
 /-- Hand statement of the accept path of `(*v1alpha1.VoluntaryExit).UnmarshalSSZ`: on a 16-byte input it returns
-nil and the receiver holds Epoch = buf[0:8] and ValidatorIndex = buf[8:16] (through the callees `EpUnmarshal`,
+nil and the receiver holds Epoch = buf[0:8] and ValidatorIndex = buf[8:16] (through the callees `Prysm.Epoch.Code.unmarshalSSZ`,
 `ViUnmarshal`); input, `state`, the spills, the caller's frame `R` and the stack guard are unchanged. -/
 abbrev ve_accept_stmt : Prop :=
   ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh VeUnmarshal k)
-    (kE : Nat) (hkE : EpUnmarshal.IsInfixAt Host.prog kE) (hfE : LabelsFresh EpUnmarshal kE)
+    (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (kV : Nat) (hkV : ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh ViUnmarshal kV)
     (in0 in1 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8)
     (s : MachineData) (ra guard : UInt64)

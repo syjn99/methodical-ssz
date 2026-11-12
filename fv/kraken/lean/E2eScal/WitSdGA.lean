@@ -19,7 +19,7 @@ For every input and every old pointer word every premise holds and the decoder r
 The receiver is a Go value of `v1alpha1.SigningData` (zero-length slices).
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.H6Code
+open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.H6Code
 
 namespace E2eScal.WitSdGA
 

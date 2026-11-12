@@ -20,7 +20,7 @@ Encoders, SizeSSZ and HashTreeRoot are not in the set (out of the list/vector sc
 
 Every data item is located from the converted code (the operand that the proofs read), not written by hand.
 Operands that equal an item of the Checkpoint / Epoch link set (`e2elink.py`) are asserted equal and get no
-new file: the theorems use the existing `E2e.Data` names for them (uint8 type word, ssz.ErrSize, type:int,
+new file: the theorems use the existing `Prysm.ElfData.CheckpointAndEpoch` names for them (uint8 type word, ssz.ErrSize, type:int,
 errors.errorString type and itab).
 """
 import importlib.util

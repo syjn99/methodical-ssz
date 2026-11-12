@@ -9,7 +9,7 @@ import json, re, sys, os
 
 TYPES = {
     # X: (spec module, P structure, enc, serialize lemma, Desc, [(field accessor kind, expr)])
-    'Cp': ('E2e.Spec', 'PCp', 'pcpEnc', 'pcp_serialize', 'prysmCpDesc', ['u:epoch', 'b:root']),
+    'Cp': ('Prysm.Checkpoint.Spec', 'Prysm.Checkpoint.SszValue', 'Prysm.Checkpoint.SszValue.encode', 'Prysm.Checkpoint.SszValue.serialize_eq', 'Prysm.Checkpoint.desc', ['u:epoch', 'b:root']),
     'Bh': ('E2eScal.BhSpec', 'PBh', 'pbhEnc', 'pbh_serialize', 'prysmBhDesc',
            ['u:slot', 'u:proposer', 'b:parent', 'b:state', 'b:body']),
     'E1': ('E2eScal.E1Spec', 'PE1', 'pe1Enc', 'pe1_serialize', 'prysmE1Desc',

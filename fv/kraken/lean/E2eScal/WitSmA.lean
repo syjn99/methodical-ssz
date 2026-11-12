@@ -21,7 +21,7 @@ the untouched receiver tail (32 bytes), the untouched frame bytes rsp − 80 …
 decoder returns nil. The receiver is a Go value of `v1alpha1.SyncCommitteeMessage`.
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2eAd E2eAd.Code E2eScal Codec E2eScal.H5Code E2eScal.BhCode E2eScal.H5
+open Machine Runtime TestTarget Machine.Witness E2eAd E2eAd.Code E2eScal Codec E2eScal.H5Code E2eScal.BhCode E2eScal.H5
 
 namespace E2eScal.WitSmA
 

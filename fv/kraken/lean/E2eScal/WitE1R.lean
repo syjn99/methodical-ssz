@@ -13,7 +13,7 @@ the guard word, saved-rbp slot, return slot, the unused rax spill slot (the fram
 slot. For every length `≠ 72` (instances 71, 73, 0) the decoder returns the two words.
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2eScal.E1Code E2eScal.E1
+open Machine Runtime TestTarget Machine.Witness E2eScal.E1Code E2eScal.E1
 
 namespace E2eScal.WitE1R
 
@@ -56,7 +56,7 @@ theorem e1_reject_runs (len : UInt64) (hlen : len ≠ 72) (zmms : RegZmms) (flag
     (by
       have H : Eq (block.At (0x10000 : BitVec 64)) mem := rfl
       wit_split []
-      simp only [cs0, R0, w, E2e.Data.e2eErrSize_addr, label_err, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
+      simp only [cs0, R0, w, ElfData.CheckpointAndEpoch.e2eErrSize_addr, label_err, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
         Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H ⊢
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢

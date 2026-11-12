@@ -35,8 +35,8 @@ def emit(X, ty, fs, chk):
         o += f[2]
     L = []
     w = L.append
-    w('import E2e.Spec')
-    w('import E2e.SpecEq')
+    w('import Prysm.Checkpoint.Spec')
+    w('import Prysm.Checkpoint.SpecEquivalence')
     w('import E2eScal.F24Desc')
     if chk:
         w(f'import E2eScal.F24{X}SpecChecker')

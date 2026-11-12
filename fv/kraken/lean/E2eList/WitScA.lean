@@ -20,7 +20,7 @@ rsp + 24. The frame `R` is the receiver's last 32 bytes and that word. For every
 every old pointer word every premise holds and the decoder returns nil.
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2eList E2eList.Code
+open Machine Runtime TestTarget Machine.Witness E2eList E2eList.Code
 
 namespace E2eList.WitScA
 
@@ -57,8 +57,8 @@ theorem label_bump : label "runtime.fvBump" = 0x10000 :=
 theorem label_wb : label "runtime.writeBarrier" = 0x10008 :=
   mk_label P _ 8 _ (by simp [P, dataLabels]) (by decide)
 
-theorem u8_ne_slice : E2e.Data.e2eU8Type_addr ≠ E2eList.Data.lvSliceType_addr := by
-  simp only [E2e.Data.e2eU8Type_addr, E2eList.Data.lvSliceType_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
+theorem u8_ne_slice : ElfData.CheckpointAndEpoch.e2eU8Type_addr ≠ E2eList.Data.lvSliceType_addr := by
+  simp only [ElfData.CheckpointAndEpoch.e2eU8Type_addr, E2eList.Data.lvSliceType_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
   bv_omega
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0

@@ -24,7 +24,7 @@ Stack (rsp = entry rsp): frame `sub $0x60` as BeaconBlockHeader; the helper lemm
 `Bh.bh_j3`, `Bh.bhg_guard` and the tactic `bhaddr` are reused. No contract, no new hypothesis form.
 -/
 
-open Machine Runtime TestTarget E2e E2eAd E2eAd.Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec E2eScal.Bh
+open Machine Runtime TestTarget E2eAd E2eAd.Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec E2eScal.Bh
 variable [Host]
 
 namespace E2eScal.H5

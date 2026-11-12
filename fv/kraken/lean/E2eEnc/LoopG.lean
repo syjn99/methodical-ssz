@@ -1,7 +1,7 @@
 import Runtime.Contracts
 import E2eEnc.Loop
 import E2eEnc.Tail
-import E2e.Data
+import Prysm.ElfData.CheckpointAndEpoch
 
 /-!
 # Any-site grow path: the Columns loop when any iteration may grow the block
@@ -59,7 +59,7 @@ theorem dcg_bjoin (Pfx cb t : List UInt8) (bp : BitVec 64) (n i L : Nat) (hP : P
 theorem dcg_iter (k : Nat) (hk : DcMarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DcMarshal k)
     (cb Pfx : List UInt8) (n i L : Nat) (hcb : cb.length = 8 * n) (hP : Pfx.length = L) (hn : n ≤ 128)
     (hi : i < n) (x pc nb : BitVec 64) (hnb : nb.toNat = n) (S : Nat) (Heap : Nat → DataMem → Prop)
-    (R : DataMem → Prop) (hgs : GrowsliceC Heap E2e.Data.e2eU8Type_addr 1 S)
+    (R : DataMem → Prop) (hgs : GrowsliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S)
     (bp : BitVec 64) (cp : Nat) (tail : List UInt8) (htl : tail.length + (L + 8 * i) = cp) (G : DataMem → Prop)
     (cap0 av : Nat) (hC : L + 8 * n ≤ cp ∨ (cp = cap0 ∧ 4 * (L + 8 * n) + 8576 ≤ av)) (hmax : av ≤ maxAlloc)
     (hLm : L + 8 * n < 2 ^ 47) (hone : ∀ m, m ≤ L + 8 * n → cap0 < m → L + 8 * n ≤ nextSliceCap m cap0)
@@ -251,7 +251,7 @@ theorem dcg_iter (k : Nat) (hk : DcMarshal.IsInfixAt Host.prog k) (hf : LabelsFr
 theorem dcg_loop (k : Nat) (hk : DcMarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DcMarshal k)
     (cb Pfx : List UInt8) (n L : Nat) (hcb : cb.length = 8 * n) (hP : Pfx.length = L) (hn : n ≤ 128)
     (x pc nb : BitVec 64) (hnb : nb.toNat = n) (S : Nat) (Heap : Nat → DataMem → Prop)
-    (R : DataMem → Prop) (hgs : GrowsliceC Heap E2e.Data.e2eU8Type_addr 1 S) (cap0 : Nat)
+    (R : DataMem → Prop) (hgs : GrowsliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (cap0 : Nat)
     (hLm : L + 8 * n < 2 ^ 47) (hone : ∀ m, m ≤ L + 8 * n → cap0 < m → L + 8 * n ≤ nextSliceCap m cap0)
     (bpv r14v : UInt64) :
     ∀ j i (bp : BitVec 64) (cp : Nat) (tail : List UInt8) (G : DataMem → Prop) (av : Nat)

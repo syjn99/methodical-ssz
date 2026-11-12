@@ -1,7 +1,7 @@
 import Runtime.Contracts
 import Machine.Step
 import Machine.Labels
-import E2e.Data
+import Prysm.ElfData.CheckpointAndEpoch
 import E2eHb.HbLoop1
 import Codec.Segment.ByteSliceList
 

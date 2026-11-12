@@ -1,7 +1,7 @@
 import E2eScal.KindEncN
 import E2eScal.BhEncMain
 import E2eScal.E1EncMain
-import E2e.CpMarshal
+import Prysm.Checkpoint.EncodeFastPath
 
 /-!
 # ENC2 L1: ties of `encFastKindN` to the three hand-written encoder fast-path statements
@@ -9,7 +9,7 @@ import E2e.CpMarshal
 - BeaconBlockHeader (`Bh.bh_e2e_marshal_main`) and Eth1Data (`E1.e1_e2e_marshal_main`): the declared type of
   the committed theorem is the kind instance, `rfl` at default transparency (the recursive definitions of
   the kind unfold on the literal layout and field list).
-- Checkpoint (`E2e.cp_e2e_marshal_main`): not `rfl`. The hand statement names a 32-byte chunk `ctl` at
+- Checkpoint (`Prysm.Checkpoint.Encode.fast_path`): not `rfl`. The hand statement names a 32-byte chunk `ctl` at
   `rax + 40` (after the capacity word of `Root`; not part of the Go layout of the receiver). In the kind that
   memory is part of `R`. `cp_marshal_of_kind`: the kind instance implies the hand statement. The converse
   does not hold as stated (`R` need not contain such a chunk). No other difference: with the binder `ctl`,
@@ -92,8 +92,8 @@ set_option maxRecDepth 100000 in
 names a 32-byte chunk `ctl` at `rax + 40` (in the kind it is part of `R`). The kind instance is the stronger
 statement; the converse does not hold as stated. -/
 theorem cp_marshal_of_kind
-    (H : encFastKindN E2e.Code.CpMarshal layEncCp [.u64, .bytes 32]) :
-    type_of% (@E2e.cp_e2e_marshal_main ‹Host›) := by
+    (H : encFastKindN Prysm.Checkpoint.Code.marshalSSZTo layEncCp [.u64, .bytes 32]) :
+    type_of% (@Prysm.Checkpoint.Encode.fast_path ‹Host›) := by
   intro k hk hf cst e8 cC ctl root pre d0 d1 hcst he8 hcC hctl hroot hd0 hd1 p s ra guard hpre
     fp s2 l16 l24 l32 t40 t30 rslot hfp h2 hl16 hl24 hl32 ht40 ht30 hrs R S scratch hsc
     h_mem hguard hsp hcap hcap63 hmm

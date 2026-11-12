@@ -23,7 +23,7 @@ set_option maxRecDepth 100000 in
 /-- Accept side: the hand statement `pw_accept_stmt` for the input chunks of the `g` that EthLib decodes. -/
 theorem pw_e2e_accept_spec_k : ∀ (k : Nat) (hk : PwUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh PwUnmarshal k)
     (kV : Nat) (hkV : ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh ViUnmarshal kV)
-    (kE : Nat) (hkE : E2e.Code.EpUnmarshal.IsInfixAt Host.prog kE) (hfE : LabelsFresh E2e.Code.EpUnmarshal kE)
+    (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (bsA : Array UInt8) (v : Value) (hd : deserialize prysmPwDesc bsA = .ok v)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 s4 sp1 rslot lo ast a8 a16 a24 : List UInt8)

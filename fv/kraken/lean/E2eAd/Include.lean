@@ -5,10 +5,10 @@ public meta import Lean
 /-!
 # `ad_data_include id`: ELF data of the AttestationData set (prysm-e2e A1)
 
-The same reader as `e2e_data_include` (`E2e/Include.lean`, itself the text of
+The same reader as `e2e_data_include` (`Prysm/ElfData/CheckpointAndEpochReader.lean`, itself the text of
 `Machine/Include.lean`'s `data_include`), for the data directory
 `../prysm/go1.26.10/e2e/ad/link/data/<id>.data` (relative to `fv/kraken/lean`).
-`E2e/Include.lean` keeps its helpers private to its module and is not changed;
+`Prysm/ElfData/CheckpointAndEpochReader.lean` keeps its helpers private to its module and is not changed;
 the helpers below are its text with the `e2e` prefix replaced by `ad`
 (`gen/e2e/check_include.py` compares the bodies). TRUSTED like `data_include`:
 this reader. That the files are the ELF's bytes is `link/check.py`'s data check

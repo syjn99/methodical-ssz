@@ -15,21 +15,21 @@ Two instances: empty prefix with `cap = 40`; prefix `[0xaa, 0xbb, 0xcc]` with 5 
 field value of the stated lengths every premise of `cp_g6e_fast` holds (non-vacuity of the fast path).
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.Gen6Enc E2e.Code
+open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.Gen6Enc Prysm.Checkpoint.Code
 
 namespace E2eScal.WitE2cCp
 
 set_option maxRecDepth 100000
 
-def P : Program := CpMarshal ++ RtCopy
+def P : Program := marshalSSZTo ++ RtCopy
 
 theorem P_len : P.length = 117 := by rfl
 
 instance host : Host := mkHost P (by rw [P_len]; decide)
 
-theorem hk0 : CpMarshal.IsInfixAt Host.prog 0 := infixAt_of [] RtCopy (by simp [Host.prog, mkHost, P]) rfl
-theorem hkR : RtCopy.IsInfixAt Host.prog 91 := infixAt_of CpMarshal [] (by simp [Host.prog, mkHost, P]) (by rfl)
-theorem hf0 : LabelsFresh CpMarshal 0 := fun i hi => absurd hi (Nat.not_lt_zero _)
+theorem hk0 : marshalSSZTo.IsInfixAt Host.prog 0 := infixAt_of [] RtCopy (by simp [Host.prog, mkHost, P]) rfl
+theorem hkR : RtCopy.IsInfixAt Host.prog 91 := infixAt_of marshalSSZTo [] (by simp [Host.prog, mkHost, P]) (by rfl)
+theorem hf0 : LabelsFresh marshalSSZTo 0 := fun i hi => absurd hi (Nat.not_lt_zero _)
 theorem hfR : LabelsFresh RtCopy 91 := labelsFresh_of (by decide)
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0

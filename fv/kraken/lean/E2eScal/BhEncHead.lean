@@ -1,5 +1,5 @@
 import TestTarget.ListU64DecodeRejectCall
-import E2e.CpMarshal
+import Prysm.Checkpoint.EncodeFastPath
 import E2eScal.BhCode
 import Codec.StackGuard
 
@@ -143,7 +143,7 @@ theorem bh_enc_a1 (k : Nat) (hk : BhMarshal.IsInfixAt Host.prog k) (hf : LabelsF
   apply load_step_at _ _ (rsp.toBitVec - 56) _ _ sl _ _ (by eaddr) (by ecancel) (by exact hsl)
   kunfold
   kat hk BhMarshal 35
-  rw [E2e.cpm_mul]
+  rw [Prysm.Checkpoint.Encode.fast_path_mul]
   apply store_step _ _ _ _ _ d0 _ _ (by ecancel) (by exact hd0)
   intro m6 H6
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl sl hsl] at H6
@@ -235,7 +235,7 @@ theorem bh_enc_a2 (k : Nat) (hk : BhMarshal.IsInfixAt Host.prog k) (hf : LabelsF
   apply load_step_at _ _ (rsp.toBitVec - 88) _ _ pi _ _ (by eaddr) (by ecancel) (by exact hpi)
   kunfold
   kat hk BhMarshal 61
-  rw [E2e.cpm_dst]
+  rw [Prysm.Checkpoint.Encode.fast_path_dst]
   apply store_step _ _ _ _ _ d1 _ _ (by ecancel) (by exact hd1)
   intro m10 H10
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl pi hpi] at H10

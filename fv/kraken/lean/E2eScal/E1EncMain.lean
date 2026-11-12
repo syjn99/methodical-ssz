@@ -1,5 +1,5 @@
 import TestTarget.ListU64DecodeRejectCall
-import E2e.CpMarshal
+import Prysm.Checkpoint.EncodeFastPath
 import E2eScal.E1Code
 import Codec.StackGuard
 import Codec.EncodeMemmove
@@ -163,7 +163,7 @@ theorem e1_enc_a (k : Nat) (hk : E1Marshal.IsInfixAt Host.prog k) (hf : LabelsFr
   kat hk E1Marshal 33
   kat hk E1Marshal 34
   kat hk E1Marshal 35
-  rw [E2e.cpm_mul]
+  rw [Prysm.Checkpoint.Encode.fast_path_mul]
   refine eventually_trans _ _ _ _ (enc32_call (k + 36) (e1_call_at k hk).1 (-128 + (rsp.toBitVec - 8#64))
     (rbx.toBitVec + rcx.toBitVec) p1 (rsp.toBitVec - 144) (rsp.toBitVec - 144 - BitVec.ofNat 64 S) S
     (by eaddr) (by first | (exact congrArg (· - BitVec.ofNat 64 S) (by eaddr)) | eaddr)
@@ -252,7 +252,7 @@ theorem e1_enc_m (k : Nat) (hk : E1Marshal.IsInfixAt Host.prog k) (hf : LabelsFr
   klabel hk hf E1Marshal 54
   kat hk E1Marshal 54
   kat hk E1Marshal 55
-  rw [E2e.cpm_mul, e1m_dc]
+  rw [Prysm.Checkpoint.Encode.fast_path_mul, e1m_dc]
   apply store_step _ _ _ _ _ d1 _ _ (by ecancel) (by exact hd1)
   intro m1 H1
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl dc hdc] at H1

@@ -2,7 +2,7 @@ import Runtime.Contracts
 import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
-import E2e.Data
+import Prysm.ElfData.CheckpointAndEpoch
 import E2eEnc.Code
 import E2eEnc.Defs
 
@@ -10,7 +10,7 @@ import E2eEnc.Defs
 # Hand STATEMENTS of the encoder target `(*v1alpha1.DataColumnsByRootIdentifier).MarshalSSZTo` (statements only)
 
 Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
-Statement shape: `E2e/CpMarshal.lean`, `E2e/CpMarshalG.lean`, `E2e/CpSpecM.lean` (Checkpoint encoder) and
+Statement shape: `Prysm/Checkpoint/EncodeFastPath.lean`, `Prysm/Checkpoint/EncodeGrowFirstSite.lean`, `Prysm/Checkpoint/EncodeSpec.lean` (Checkpoint encoder) and
 `E2eList/StmtIa.lean` (exact caller frame `R`, contracts as hypotheses, receiver and input kept).
 
     func (c *DataColumnsByRootIdentifier) MarshalSSZTo(dst []byte) ([]byte, error) {   // fulu.ssz.go:1754
@@ -129,7 +129,7 @@ def dc_marshal_grow_stmt : Prop :=
     (hlc : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 32)
     (hfit : s.regs.rcx.toNat + 36 + 8 * n ≤ nextSliceCap (s.regs.rcx.toNat + 32) s.regs.rdi.toNat)
     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 32) s.regs.rdi.toNat + 8192 ≤ avail) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
+    (hgs : GrowsliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec
         ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 36 + 8 * n
@@ -175,7 +175,7 @@ def dc_reject_bytes_stmt : Prop :=
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 pr.toInt).At (s.regs.rax.toBitVec + 8))
       ⋆ Eq ((Int.toBytes 8 bl.toInt).At (s.regs.rax.toBitVec + 16))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrBytesLength_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrBytesLength_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrBytesLength" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat + 8 < s.regs.rsp.toNat),
     Eventually (step1 Host.exe)
@@ -188,7 +188,7 @@ def dc_reject_bytes_stmt : Prop :=
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 pr.toInt).At (s.regs.rax.toBitVec + 8))
           ⋆ Eq ((Int.toBytes 8 bl.toInt).At (s.regs.rax.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrBytesLength_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrBytesLength_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrBytesLength" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
@@ -245,7 +245,7 @@ def dc_reject_toobig_stmt : Prop :=
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrListTooBig" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
-/-- **Fast path against EthLib (spec companion, shape of `E2e.cp_e2e_marshal_spec_k`).** For a receiver holding the Go
+/-- **Fast path against EthLib (spec companion, shape of `Prysm.Checkpoint.Encode.fast_path_spec`).** For a receiver holding the Go
 layout of `g : PDc` (BlockRoot bytes `g.root`, Columns backing bytes `u64Bytes g.cols`), the fast path returns
 `len + |bs|` and `dst[0 : len + |bs|] = pre ‖ bs`, where `bs = serialize prysmDcDesc g.toValue`. The full frame
 accounting is `dc_marshal_fast_stmt`. -/
@@ -315,7 +315,7 @@ def dc_marshal_grow_spec_stmt : Prop :=
     (hlc : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 32)
     (hfit : s.regs.rcx.toNat + 36 + 8 * g.cols.length ≤ nextSliceCap (s.regs.rcx.toNat + 32) s.regs.rdi.toNat)
     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 32) s.regs.rdi.toNat + 8192 ≤ avail) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
+    (hgs : GrowsliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
     ∃ bs, serialize prysmDcDesc g.toValue = .ok bs ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec

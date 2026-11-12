@@ -5,7 +5,7 @@ import Machine.Include
 # Code of the hold-out function set (Go 1.26.10 ELF `c6403c02…911e`)
 
 Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/e2e/h6/link/norm`
-(`link/conv.py --norm` of the same ELF as `E2e.Code`, `E2eAd.Code`, `E2eScal.BhCode`, `E2eScal.E1Code`,
+(`link/conv.py --norm` of the same ELF as `Prysm.Checkpoint.Code`, `E2eAd.Code`, `E2eScal.BhCode`, `E2eScal.E1Code`,
 `E2eScal.H3Code`, `E2eScal.H4Code` and `E2eScal.H5Code`; `link/check.py` (a)–(f) PASS in `../RESULT`,
 bundle `eb1d6846…`). Hand-written include file (not generator output; the text of
 `H5Code.lean` with the function set changed).

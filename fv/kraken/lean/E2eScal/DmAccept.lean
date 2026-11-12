@@ -32,7 +32,7 @@ Directive indices of `E2eScal.H3Code.DmUnmarshal` (index = line − 1 of the `.S
 Stack as in `E1Accept.lean`.
 -/
 
-open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.H3Code E2eScal.E1
+open Machine Runtime TestTarget E2eScal Codec E2eScal.H3Code E2eScal.E1
 variable [Host]
 
 namespace E2eScal.Dm
@@ -143,7 +143,7 @@ theorem dm_e2e_accept_main (k : Nat) (hk : DmUnmarshal.IsInfixAt Host.prog k) (h
       ⋆ Eq (aN.At (s.regs.rax.toBitVec + 48))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 88) (hav : 80 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧

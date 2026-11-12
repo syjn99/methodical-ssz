@@ -35,7 +35,7 @@ def dataLabels : Program :=
    .label "pad6", .label "pad7", .label "runtime.writeBarrier"]
 
 def P : Program := dataLabels ++ IaUnmarshal ++ E2eAd.Code.AdUnmarshal ++ E2eAd.Code.SlUnmarshal
-  ++ E2eAd.Code.CiUnmarshal ++ E2e.Code.CpUnmarshal ++ E2e.Code.EpUnmarshal ++ BumpAllocT3 ++ RtCopy ++ BumpNewT3
+  ++ E2eAd.Code.CiUnmarshal ++ Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ ++ BumpAllocT3 ++ RtCopy ++ BumpNewT3
 
 -- Measured cause: `rfl` on the 884-directive host program stops with "maximum recursion depth" at
 -- the default (512) in `P_len` and the prefix-length facts `hk288` … `hk869` only. `hk288` passes at 1024; `P_len`
@@ -49,50 +49,50 @@ theorem prog_eq : Host.prog = P := rfl
 
 theorem hk9 : IaUnmarshal.IsInfixAt Host.prog 9 :=
   infixAt_of dataLabels (E2eAd.Code.AdUnmarshal ++ E2eAd.Code.SlUnmarshal ++ E2eAd.Code.CiUnmarshal
-    ++ E2e.Code.CpUnmarshal ++ E2e.Code.EpUnmarshal ++ BumpAllocT3 ++ RtCopy ++ BumpNewT3)
+    ++ Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ ++ BumpAllocT3 ++ RtCopy ++ BumpNewT3)
     (by simp [prog_eq, P, List.append_assoc]) rfl
 set_option maxRecDepth 1024 in
 theorem hk288 : E2eAd.Code.AdUnmarshal.IsInfixAt Host.prog 288 :=
-  infixAt_of (dataLabels ++ IaUnmarshal) (E2eAd.Code.SlUnmarshal ++ E2eAd.Code.CiUnmarshal ++ E2e.Code.CpUnmarshal
-    ++ E2e.Code.EpUnmarshal ++ BumpAllocT3 ++ RtCopy ++ BumpNewT3) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
+  infixAt_of (dataLabels ++ IaUnmarshal) (E2eAd.Code.SlUnmarshal ++ E2eAd.Code.CiUnmarshal ++ Prysm.Checkpoint.Code.unmarshalSSZ
+    ++ Prysm.Epoch.Code.unmarshalSSZ ++ BumpAllocT3 ++ RtCopy ++ BumpNewT3) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 set_option maxRecDepth 2048 in
 theorem hk531 : E2eAd.Code.SlUnmarshal.IsInfixAt Host.prog 531 :=
-  infixAt_of (dataLabels ++ IaUnmarshal ++ E2eAd.Code.AdUnmarshal) (E2eAd.Code.CiUnmarshal ++ E2e.Code.CpUnmarshal
-    ++ E2e.Code.EpUnmarshal ++ BumpAllocT3 ++ RtCopy ++ BumpNewT3) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
+  infixAt_of (dataLabels ++ IaUnmarshal ++ E2eAd.Code.AdUnmarshal) (E2eAd.Code.CiUnmarshal ++ Prysm.Checkpoint.Code.unmarshalSSZ
+    ++ Prysm.Epoch.Code.unmarshalSSZ ++ BumpAllocT3 ++ RtCopy ++ BumpNewT3) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 set_option maxRecDepth 2048 in
 theorem hk594 : E2eAd.Code.CiUnmarshal.IsInfixAt Host.prog 594 :=
-  infixAt_of (dataLabels ++ IaUnmarshal ++ E2eAd.Code.AdUnmarshal ++ E2eAd.Code.SlUnmarshal) (E2e.Code.CpUnmarshal
-    ++ E2e.Code.EpUnmarshal ++ BumpAllocT3 ++ RtCopy ++ BumpNewT3) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
+  infixAt_of (dataLabels ++ IaUnmarshal ++ E2eAd.Code.AdUnmarshal ++ E2eAd.Code.SlUnmarshal) (Prysm.Checkpoint.Code.unmarshalSSZ
+    ++ Prysm.Epoch.Code.unmarshalSSZ ++ BumpAllocT3 ++ RtCopy ++ BumpNewT3) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 set_option maxRecDepth 2048 in
-theorem hk657 : E2e.Code.CpUnmarshal.IsInfixAt Host.prog 657 :=
+theorem hk657 : Prysm.Checkpoint.Code.unmarshalSSZ.IsInfixAt Host.prog 657 :=
   infixAt_of (dataLabels ++ IaUnmarshal ++ E2eAd.Code.AdUnmarshal ++ E2eAd.Code.SlUnmarshal ++ E2eAd.Code.CiUnmarshal)
-    (E2e.Code.EpUnmarshal ++ BumpAllocT3 ++ RtCopy ++ BumpNewT3) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
+    (Prysm.Epoch.Code.unmarshalSSZ ++ BumpAllocT3 ++ RtCopy ++ BumpNewT3) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 set_option maxRecDepth 2048 in
-theorem hk765 : E2e.Code.EpUnmarshal.IsInfixAt Host.prog 765 :=
+theorem hk765 : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog 765 :=
   infixAt_of (dataLabels ++ IaUnmarshal ++ E2eAd.Code.AdUnmarshal ++ E2eAd.Code.SlUnmarshal ++ E2eAd.Code.CiUnmarshal
-    ++ E2e.Code.CpUnmarshal) (BumpAllocT3 ++ RtCopy ++ BumpNewT3) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
+    ++ Prysm.Checkpoint.Code.unmarshalSSZ) (BumpAllocT3 ++ RtCopy ++ BumpNewT3) (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 set_option maxRecDepth 2048 in
 theorem hk828 : BumpAllocT3.IsInfixAt Host.prog 828 :=
   infixAt_of (dataLabels ++ IaUnmarshal ++ E2eAd.Code.AdUnmarshal ++ E2eAd.Code.SlUnmarshal ++ E2eAd.Code.CiUnmarshal
-    ++ E2e.Code.CpUnmarshal ++ E2e.Code.EpUnmarshal) (RtCopy ++ BumpNewT3) (by simp [prog_eq, P, List.append_assoc])
+    ++ Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ) (RtCopy ++ BumpNewT3) (by simp [prog_eq, P, List.append_assoc])
     (by rfl)
 set_option maxRecDepth 2048 in
 theorem hk843 : RtCopy.IsInfixAt Host.prog 843 :=
   infixAt_of (dataLabels ++ IaUnmarshal ++ E2eAd.Code.AdUnmarshal ++ E2eAd.Code.SlUnmarshal ++ E2eAd.Code.CiUnmarshal
-    ++ E2e.Code.CpUnmarshal ++ E2e.Code.EpUnmarshal ++ BumpAllocT3) BumpNewT3 (by simp [prog_eq, P, List.append_assoc])
+    ++ Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ ++ BumpAllocT3) BumpNewT3 (by simp [prog_eq, P, List.append_assoc])
     (by rfl)
 set_option maxRecDepth 2048 in
 theorem hk869 : BumpNewT3.IsInfixAt Host.prog 869 :=
   infixAt_of (dataLabels ++ IaUnmarshal ++ E2eAd.Code.AdUnmarshal ++ E2eAd.Code.SlUnmarshal ++ E2eAd.Code.CiUnmarshal
-    ++ E2e.Code.CpUnmarshal ++ E2e.Code.EpUnmarshal ++ BumpAllocT3 ++ RtCopy) [] (by simp [prog_eq, P, List.append_assoc])
+    ++ Prysm.Checkpoint.Code.unmarshalSSZ ++ Prysm.Epoch.Code.unmarshalSSZ ++ BumpAllocT3 ++ RtCopy) [] (by simp [prog_eq, P, List.append_assoc])
     (by rfl)
 
 theorem hf9 : LabelsFresh IaUnmarshal 9 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf288 : LabelsFresh E2eAd.Code.AdUnmarshal 288 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf531 : LabelsFresh E2eAd.Code.SlUnmarshal 531 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf594 : LabelsFresh E2eAd.Code.CiUnmarshal 594 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hf657 : LabelsFresh E2e.Code.CpUnmarshal 657 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hf765 : LabelsFresh E2e.Code.EpUnmarshal 765 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf657 : LabelsFresh Prysm.Checkpoint.Code.unmarshalSSZ 657 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf765 : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ 765 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf828 : LabelsFresh BumpAllocT3 828 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf843 : LabelsFresh RtCopy 843 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf869 : LabelsFresh BumpNewT3 869 := labelsFresh_of (by rw [prog_eq]; decide)
@@ -107,8 +107,8 @@ theorem label_bump : label "runtime.fvBump" = 0x10000 :=
 theorem label_wb : label "runtime.writeBarrier" = 0x10008 :=
   mk_label P _ 8 _ (by simp [P, dataLabels]) (by decide)
 
-theorem u8_ne_u64 : E2e.Data.e2eU8Type_addr ≠ E2eList.Data.lvU64Type_addr := by
-  simp only [E2e.Data.e2eU8Type_addr, E2eList.Data.lvU64Type_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
+theorem u8_ne_u64 : ElfData.CheckpointAndEpoch.e2eU8Type_addr ≠ E2eList.Data.lvU64Type_addr := by
+  simp only [ElfData.CheckpointAndEpoch.e2eU8Type_addr, E2eList.Data.lvU64Type_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
   bv_omega
 
 theorem cp_ne_ad : E2eAd.Data.adCpType_addr ≠ E2eList.Data.lvAdType_addr := by

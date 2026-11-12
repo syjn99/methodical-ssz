@@ -10,8 +10,8 @@ from the operands of the converted code, and `link/check.py` (f) compares them w
 No byte and no offset below is written by hand.
 
 Operands that equal an item of the Checkpoint / Epoch set are not repeated here (`lvlink.py` asserts the
-equality): the statements use `E2e.Data.e2eU8Type_addr` (uint8), `E2e.Data.e2eErrSize_addr` (`ssz.ErrSize`),
-`E2e.Data.e2eIntType_addr` (`type:int`) and the label `go_itab._errors.errorString_error`.
+equality): the statements use `ElfData.CheckpointAndEpoch.e2eU8Type_addr` (uint8), `ElfData.CheckpointAndEpoch.e2eErrSize_addr` (`ssz.ErrSize`),
+`ElfData.CheckpointAndEpoch.e2eIntType_addr` (`type:int`) and the label `go_itab._errors.errorString_error`.
 -/
 
 namespace E2eList.Data

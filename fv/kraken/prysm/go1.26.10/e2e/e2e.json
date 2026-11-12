@@ -16,7 +16,7 @@
  },
  "theorems": [
   {
-   "name": "E2e.ep_unmarshal_accept_main",
+   "name": "Prysm.Epoch.Decode.accept",
    "kind": "callee accept (function spec source)",
    "function": "primitives.(*Epoch).UnmarshalSSZ",
    "statement": "done",
@@ -30,19 +30,19 @@
    ]
   },
   {
-   "name": "E2e.ep_uacc_holds (EpUAccC)",
+   "name": "Prysm.Epoch.Decode.accept_function_spec_holds (Prysm.Epoch.Decode.accept_function_spec)",
    "kind": "function spec",
    "function": "primitives.(*Epoch).UnmarshalSSZ",
    "statement": "done",
    "witness": "done",
    "theorem": "done",
    "link": "done",
-   "negative": "via ep_unmarshal_accept_main",
+   "negative": "via Prysm.Epoch.Decode.accept",
    "go_value": "differential only (uint64 receiver; no GoVal theorem)",
    "neg_ids": []
   },
   {
-   "name": "E2e.cp_e2e_accept_main (+ cp_e2e_accept_tail)",
+   "name": "Prysm.Checkpoint.Decode.accept (+ Prysm.Checkpoint.Decode.accept_tail)",
    "kind": "accept",
    "function": "v1alpha1.(*Checkpoint).UnmarshalSSZ",
    "statement": "done",
@@ -50,13 +50,13 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "before: witCpA_recv_pre (witness block); after: cp_after_decode_goValue on the conclusion fragments, every p ≠ 0 (MakesliceC does not state non-nil) + witCpA_recv_post; IR layout (not ELF abi.Type) + differential",
+   "go_value": "before: Prysm.Checkpoint.witness_decode_accept_recv_pre (witness block); after: Prysm.Checkpoint.after_decode_goValue on the conclusion fragments, every p ≠ 0 (MakesliceC does not state non-nil) + Prysm.Checkpoint.witness_decode_accept_recv_post; IR layout (not ELF abi.Type) + differential",
    "neg_ids": [
     "cpa-"
    ]
   },
   {
-   "name": "E2e.cp_e2e_reject_size_main",
+   "name": "Prysm.Checkpoint.Decode.reject_size",
    "kind": "reject (ssz.ErrSize)",
    "function": "v1alpha1.(*Checkpoint).UnmarshalSSZ",
    "statement": "done",
@@ -70,7 +70,7 @@
    ]
   },
   {
-   "name": "E2e.cp_e2e_reject_complete + cp_e2e_reject_size_spec",
+   "name": "Prysm.Checkpoint.Decode.reject_complete + Prysm.Checkpoint.Decode.reject_size_spec",
    "kind": "reject_complete / reject_spec",
    "function": "v1alpha1.(*Checkpoint).UnmarshalSSZ",
    "statement": "done",
@@ -84,21 +84,21 @@
    ]
   },
   {
-   "name": "E2e.cp_e2e_accept_spec_k",
+   "name": "Prysm.Checkpoint.Decode.accept_spec",
    "kind": "accept against EthLib",
    "function": "v1alpha1.(*Checkpoint).UnmarshalSSZ",
    "statement": "done",
-   "witness": "done (WitCpAS.cp_accept_spec_runs on pcpEnc g0 for 3 closed g0)",
+   "witness": "done (WitCpAS.cp_accept_spec_runs on Prysm.Checkpoint.SszValue.encode g0 for 3 closed g0)",
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "via cp_e2e_accept_main (witCpA_recv_pre/post)",
+   "go_value": "via Prysm.Checkpoint.Decode.accept (Prysm.Checkpoint.witness_decode_accept_recv_pre/post)",
    "neg_ids": [
     "was-"
    ]
   },
   {
-   "name": "E2e.cp_e2e_marshal_main",
+   "name": "Prysm.Checkpoint.Encode.fast_path",
    "kind": "marshal (fast path)",
    "function": "v1alpha1.(*Checkpoint).MarshalSSZTo",
    "statement": "done",
@@ -106,27 +106,27 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "witCpM_recv (witness block, offset 8); IR layout + differential",
+   "go_value": "Prysm.Checkpoint.witness_encode_fast_path_recv (witness block, offset 8); IR layout + differential",
    "neg_ids": [
     "cpm-"
    ]
   },
   {
-   "name": "E2e.cp_e2e_marshal_decoded_receiver",
+   "name": "Prysm.Checkpoint.DecodeThenEncode.encode_decoded_receiver",
    "kind": "encoder on a decoded-form receiver (not compose_hupd)",
    "function": "UnmarshalSSZ;MarshalSSZTo",
    "statement": "done",
-   "witness": "corollary with no own witness (WitCpM runs cp_e2e_marshal_main on a decoded-form receiver)",
+   "witness": "corollary with no own witness (WitCpM runs Prysm.Checkpoint.Encode.fast_path on a decoded-form receiver)",
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "witCpM_recv (witness block) + differential",
+   "go_value": "Prysm.Checkpoint.witness_encode_fast_path_recv (witness block) + differential",
    "neg_ids": [
     "cpc-"
    ]
   },
   {
-   "name": "E2e.cp_e2e_marshal_reject_main",
+   "name": "Prysm.Checkpoint.Encode.reject_length",
    "kind": "marshal_reject",
    "function": "v1alpha1.(*Checkpoint).MarshalSSZTo",
    "statement": "done",
@@ -134,13 +134,13 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "witCpMR_recv (witness blocks, len(Root) 31/33/0); IR layout + differential",
+   "go_value": "Prysm.Checkpoint.witness_encode_reject_length_recv (witness blocks, len(Root) 31/33/0); IR layout + differential",
    "neg_ids": [
     "cpmr-"
    ]
   },
   {
-   "name": "E2e.cp_e2e_marshal_grow_main",
+   "name": "Prysm.Checkpoint.Encode.grow_first_site",
    "kind": "marshal (capacity too small: first growslice site; GrowsliceC esz 1, premise len + 40 ≤ nextSliceCap (len + 8) cap)",
    "function": "v1alpha1.(*Checkpoint).MarshalSSZTo",
    "statement": "done",
@@ -148,13 +148,13 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "witCpG_recv (witness block, offset 0x20a0); IR layout + differential (enc-grow-cap0, enc-grow-len30-cap36)",
+   "go_value": "Prysm.Checkpoint.Witness.EncodeGrowFirstSite.recv (witness block, offset 0x20a0); IR layout + differential (enc-grow-cap0, enc-grow-len30-cap36)",
    "neg_ids": [
     "cpg-"
    ]
   },
   {
-   "name": "E2e.ep_unmarshal_reject_len_main",
+   "name": "Prysm.Epoch.Decode.reject_size",
    "kind": "callee reject (standalone)",
    "function": "primitives.(*Epoch).UnmarshalSSZ",
    "statement": "done",
@@ -168,7 +168,7 @@
    ]
   },
   {
-   "name": "E2e.cp_e2e_marshal_spec_k + cp_e2e_size_main (+ size_spec)",
+   "name": "Prysm.Checkpoint.Encode.fast_path_spec + Prysm.Checkpoint.Size.result (+ size_spec)",
    "kind": "marshal against EthLib / size",
    "function": "v1alpha1.(*Checkpoint).MarshalSSZTo / SizeSSZ",
    "statement": "done",
@@ -183,7 +183,7 @@
    ]
   },
   {
-   "name": "E2e.cp_layout / cpGoValue (Go-value element)",
+   "name": "Prysm.Checkpoint.layout / Prysm.Checkpoint.goValue (Go-value element)",
    "kind": "go value",
    "function": "receiver layout",
    "statement": "done",
@@ -198,21 +198,21 @@
    ]
   },
   {
-   "name": "E2e.cp_e2e_unmarshal_then_marshal",
-   "kind": "compose_hupd / compose_witness (decoder entry → cp_e2e_accept_main → hupd → cp_e2e_marshal_main)",
+   "name": "Prysm.Checkpoint.DecodeThenEncode.round_trip",
+   "kind": "compose_hupd / compose_witness (decoder entry → Prysm.Checkpoint.Decode.accept → hupd → Prysm.Checkpoint.Encode.fast_path)",
    "function": "UnmarshalSSZ;MarshalSSZTo",
    "statement": "done",
-   "witness": "done (WitCpC: one Host with CpUnmarshal, EpUnmarshal, BumpAlloc1, RtCopy, CpMarshal; real middle memory by storeInt)",
+   "witness": "done (WitCpC: one Host with Prysm.Checkpoint.Code.unmarshalSSZ, Prysm.Epoch.Code.unmarshalSSZ, BumpAlloc1, RtCopy, Prysm.Checkpoint.Code.marshalSSZTo; real middle memory by storeInt)",
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "witCpC_recv: before from the witness block, after = cp_after_decode_goValue (every p ≠ 0) + differential roundtrip",
+   "go_value": "Prysm.Checkpoint.Witness.DecodeThenEncode.recv: before from the witness block, after = Prysm.Checkpoint.after_decode_goValue (every p ≠ 0) + differential roundtrip",
    "neg_ids": [
     "cpx-"
    ]
   },
   {
-   "name": "E2e.prysmCpDesc_serialize_checker / deserialize_checker",
+   "name": "Prysm.Checkpoint.desc_serialize_checker / deserialize_checker",
    "kind": "spec bridge: codec equality with the checker Desc",
    "function": "spec",
    "statement": "done",
@@ -226,7 +226,7 @@
    ]
   },
   {
-   "name": "E2e.cpw_head_fit / cpw_head_grow (prefixes to L_7b)",
+   "name": "Prysm.Checkpoint.Encode.head_fit / Prysm.Checkpoint.Encode.head_grow (prefixes to L_7b)",
    "kind": "segment lemmas (first capacity test; first growslice, GrowsliceC esz 1)",
    "function": "marshal",
    "statement": "done",
@@ -241,11 +241,11 @@
    ]
   },
   {
-   "name": "E2e.cpw_tail_fit / cpw_tail_rej / cpw_tail_grow / cpw_tail_grow_call (tails from L_7b)",
+   "name": "Prysm.Checkpoint.Encode.tail_fit / Prysm.Checkpoint.Encode.tail_rej / Prysm.Checkpoint.Encode.tail_grow / Prysm.Checkpoint.Encode.tail_grow_call (tails from L_7b)",
    "kind": "segment lemmas (second capacity test; second growslice; ErrBytesLength)",
    "function": "marshal",
    "statement": "done",
-   "witness": "via WitCpW / WitCpWR; cpw_tail_grow via cp_e2e_marshal_grow2_main",
+   "witness": "via WitCpW / WitCpWR; Prysm.Checkpoint.Encode.tail_grow via Prysm.Checkpoint.Encode.grow_second_site",
    "theorem": "done",
    "link": "done",
    "negative": "done",
@@ -258,7 +258,7 @@
    ]
   },
   {
-   "name": "E2e.cp_e2e_marshal_grow2_main",
+   "name": "Prysm.Checkpoint.Encode.grow_second_site",
    "kind": "marshal: first append fits, second grows (len + 8 ≤ cap < len + 40; GrowsliceC esz 1)",
    "function": "marshal",
    "statement": "done",
@@ -272,11 +272,11 @@
    ]
   },
   {
-   "name": "E2e.cp_e2e_marshal_grow_any_main",
+   "name": "Prysm.Checkpoint.Encode.grow_any_site",
    "kind": "marshal: first append grows, every cap < len + 8 (no nextSliceCap premise); left: returns; right: reaches the 2nd growslice call — the run after it is NOT proved (GrowsliceC does not chain)",
    "function": "marshal",
    "statement": "done",
-   "witness": "done (WitCpW.cov_runs n = 0, 3 and cov_runs_nil: left disjunct; right disjunct not exercised by the model)",
+   "witness": "done (WitCpW.cov_runs n = 0, 3 and Prysm.Checkpoint.Witness.EncodeCover.runs_nil: left disjunct; right disjunct not exercised by the model)",
    "theorem": "done (partial: right disjunct ends at the call)",
    "link": "done",
    "negative": "done",
@@ -286,7 +286,7 @@
    ]
   },
   {
-   "name": "E2e.cp_e2e_marshal_grow_any_sharp",
+   "name": "Prysm.Checkpoint.Encode.grow_any_site_three_cases",
    "kind": "marshal: first append grows, every cap < len + 8 (same premises as grow_any_main; GrowsliceC esz 1, MemmoveC). (A) returns through the first block; (B) returns through the second growslice when the heap left av1 ≥ 2·nextSliceCap(len+40, C1) + 8192; (C) entry of the second call with Heap av1 and av1 below that budget — the run after (C) is NOT proved (no lower bound on the remaining heap in GrowsliceC, blocked / differential only pending a user decision)",
    "function": "marshal",
    "statement": "done",
@@ -300,21 +300,21 @@
    ]
   },
   {
-   "name": "E2e.cp_e2e_marshal_reject_grow_main",
+   "name": "Prysm.Checkpoint.Encode.reject_length_grow_first_site",
    "kind": "marshal_reject after the first growslice (cap < len + 8, len(Root) ≠ 32, epoch bytes written to the new block before the reject)",
    "function": "marshal",
    "statement": "done",
-   "witness": "done (WitCpWR.rej_runs n = 0, 3; rej_runs_nil)",
+   "witness": "done (WitCpWR.rej_runs n = 0, 3; Prysm.Checkpoint.Witness.EncodeRejectLengthCover.runs_nil)",
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "differential (enc-w-rej-len30-spare0/3: caller array unchanged); witness receivers: GoValW.witCpWR_recv (rl 0/31/33/48), rl 49 not a Go value (witCpWR_recv_bad); rej_runs allows any rl ≠ 32, a Go caller only rl ≤ 48",
+   "go_value": "differential (enc-w-rej-len30-spare0/3: caller array unchanged); witness receivers: GoValW.witCpWR_recv (rl 0/31/33/48), rl 49 not a Go value (Prysm.Checkpoint.witness_encode_reject_length_cover_recv_bad); Prysm.Checkpoint.Witness.EncodeRejectLengthCover.runs allows any rl ≠ 32, a Go caller only rl ≤ 48",
    "neg_ids": [
     "cpw-rg-"
    ]
   },
   {
-   "name": "E2e.cp_e2e_marshal_cover",
+   "name": "Prysm.Checkpoint.Encode.cover",
    "kind": "case cover len(Root) = 32 × every len ≤ cap, against EthLib (dst ++ serialize; ⋆ True remainder) or at the 2nd growslice call",
    "function": "marshal",
    "statement": "done",
@@ -328,7 +328,7 @@
    ]
   },
   {
-   "name": "E2e.cp_e2e_marshal_reject_cover",
+   "name": "Prysm.Checkpoint.Encode.reject_length_cover",
    "kind": "case cover len(Root) ≠ 32 × every len ≤ cap (ErrBytesLength words; some block holds pre ++ epoch)",
    "function": "marshal",
    "statement": "done",
@@ -336,17 +336,17 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "differential; witness receivers: GoValW.witCpWR_recv (rl 0/31/33/48), rl 49 not a Go value (witCpWR_recv_bad); rej_runs allows any rl ≠ 32, a Go caller only rl ≤ 48",
+   "go_value": "differential; witness receivers: GoValW.witCpWR_recv (rl 0/31/33/48), rl 49 not a Go value (Prysm.Checkpoint.witness_encode_reject_length_cover_recv_bad); Prysm.Checkpoint.Witness.EncodeRejectLengthCover.runs allows any rl ≠ 32, a Go caller only rl ≤ 48",
    "neg_ids": [
     "cpw-rc-"
    ]
   },
   {
-   "name": "E2e.cp_e2e_marshal_cover_framed",
-   "kind": "case cover len(Root) = 32 × every len ≤ cap with the exact frame (no ⋆ True): disjunction of the member postconditions (1) cp_e2e_marshal_main, (2) cp_e2e_marshal_grow2_main, (3A)/(3B)/(3C) cp_e2e_marshal_grow_any_sharp; returned block pre ++ bs with serialize = .ok bs (EthLib); (3C) is the entry of the second growslice call",
+   "name": "Prysm.Checkpoint.Encode.cover_framed",
+   "kind": "case cover len(Root) = 32 × every len ≤ cap with the exact frame (no ⋆ True): disjunction of the member postconditions (1) Prysm.Checkpoint.Encode.fast_path, (2) Prysm.Checkpoint.Encode.grow_second_site, (3A)/(3B)/(3C) Prysm.Checkpoint.Encode.grow_any_site_three_cases; returned block pre ++ bs with serialize = .ok bs (EthLib); (3C) is the entry of the second growslice call",
    "function": "marshal",
    "statement": "done",
-   "witness": "done (WitCpWF.covf_runs: cap = len, len+3, len+8, len+39, len+40 with the reached capacity range in the conclusion; covf_runs_nil)",
+   "witness": "done (WitCpWF.covf_runs: cap = len, len+3, len+8, len+39, len+40 with the reached capacity range in the conclusion; Prysm.Checkpoint.Witness.EncodeCoverFramed.runs_nil)",
    "theorem": "done (partial: (3C) ends at the call)",
    "link": "done",
    "negative": "done",
@@ -356,7 +356,7 @@
    ]
   },
   {
-   "name": "E2e.cp_e2e_marshal_reject_cover_framed",
+   "name": "Prysm.Checkpoint.Encode.reject_length_cover_framed",
    "kind": "case cover len(Root) ≠ 32 × every len ≤ cap with the exact frame: len + 8 ≤ cap: epoch in the caller's array (blk = dst); cap < len + 8: caller's array pre ++ spare unchanged, epoch in the new block only",
    "function": "marshal",
    "statement": "done",
@@ -364,7 +364,7 @@
    "theorem": "done",
    "link": "done",
    "negative": "done",
-   "go_value": "differential (reject cases); witness receivers: GoValW.witCpWR_recv (rl 0/31/33/48), rl 49 not a Go value (witCpWR_recv_bad); rej_runs allows any rl ≠ 32, a Go caller only rl ≤ 48",
+   "go_value": "differential (reject cases); witness receivers: GoValW.witCpWR_recv (rl 0/31/33/48), rl 49 not a Go value (Prysm.Checkpoint.witness_encode_reject_length_cover_recv_bad); Prysm.Checkpoint.Witness.EncodeRejectLengthCover.runs allows any rl ≠ 32, a Go caller only rl ≤ 48",
    "neg_ids": [
     "cpw-rf-"
    ]
@@ -471,7 +471,7 @@
    ]
   },
   {
-   "name": "E2e.cp_e2e_epoch_err_unreachable; E2eAd.ad_e2e_{slot,ci,source,target}_err_unreachable",
+   "name": "Prysm.Checkpoint.Decode.epoch_err_unreachable; E2eAd.ad_e2e_{slot,ci,source,target}_err_unreachable",
    "kind": "unreachable_mc (own column; not reject coverage)",
    "function": "unmarshal",
    "statement": "done",
@@ -489,7 +489,7 @@
  "unreachable_mc": [
   {
    "site": "phase0.ssz.go:1988 fmt.Errorf(\"Epoch: %w\") (decoder)",
-   "theorem": "E2e.cp_e2e_epoch_err_unreachable",
+   "theorem": "Prysm.Checkpoint.Decode.epoch_err_unreachable",
    "status": "done",
    "counts_as_reject": false
   },
@@ -525,9 +525,9 @@
   }
  ],
  "e2e_include_sha256": {
-  "lean/E2e/Code.lean": "eddb369f7e981590a0fe7d60cff12f753f40f89aba92e5718bd95c0fabd0d728",
-  "lean/E2e/Data.lean": "3be0b30a4d71d726d67dbcbbb85afe88b7a741f3f8b2fdaf8bd0c42d7f7de4af",
-  "lean/E2e/Include.lean": "1f3517fe642186c9212ada0ddf2d16a50860e69eac4e0df4fd1517dc6b57c5e1",
+  "lean/Prysm/Checkpoint/Code.lean": "eddb369f7e981590a0fe7d60cff12f753f40f89aba92e5718bd95c0fabd0d728",
+  "lean/Prysm/ElfData/CheckpointAndEpoch.lean": "3be0b30a4d71d726d67dbcbbb85afe88b7a741f3f8b2fdaf8bd0c42d7f7de4af",
+  "lean/Prysm/ElfData/CheckpointAndEpochReader.lean": "1f3517fe642186c9212ada0ddf2d16a50860e69eac4e0df4fd1517dc6b57c5e1",
   "prysm/go1.26.10/e2e/AXIOMS.txt": "8779ae6005e5b384cd89d57b6b56a28f3650e3a06897cc4cc9e6ffa23e37bd4c",
   "lean/E2eAd/Code.lean": "f22dd87781c1242503df3864b1e5c59c56968dd2291b927c0bef610d36ec8c08",
   "lean/E2eAd/Data.lean": "e621939c00d64035918cf4d216451e22e0c10208ac519de4816bac41b65fc7d1",

@@ -50,8 +50,8 @@ CLASS = {
                         "a child Root has len != 32"),
     f"{PRIM}.(*Slot).UnmarshalSSZ": ("a", "function spec SlUAccC, proved from machine code"),
     f"{PRIM}.(*CommitteeIndex).UnmarshalSSZ": ("a", "function spec CiUAccC, proved from machine code"),
-    CP_U: ("a", "function spec CpUAccC = cp_e2e_accept_main (its runtime contracts stay hypotheses)"),
-    CP_M: ("a", "function spec CpMAccC = cp_e2e_marshal_main (its runtime contracts stay hypotheses)"),
+    CP_U: ("a", "function spec CpUAccC = Prysm.Checkpoint.Decode.accept (its runtime contracts stay hypotheses)"),
+    CP_M: ("a", "function spec CpMAccC = Prysm.Checkpoint.Encode.fast_path (its runtime contracts stay hypotheses)"),
 }
 INL = {
     "cannot_inline_Slot_UnmarshalSSZ": r"slot\.go:\d+:\d+: cannot inline \(\*Slot\)\.UnmarshalSSZ",

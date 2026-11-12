@@ -267,7 +267,7 @@ theorem bytesdec_seg (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (lff lwb : St
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 St) (hmm : MemmoveC St) :
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 St) (hmm : MemmoveC St) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (j2 + 12) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -434,7 +434,7 @@ theorem bytesdec_seg_z (n : Nat) (hn : n = 32 ∨ n = 48 ∨ n = 96) (lff lwb : 
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At bf)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 St) (hmm : MemmoveC St) :
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 St) (hmm : MemmoveC St) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (j2 + 11) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧

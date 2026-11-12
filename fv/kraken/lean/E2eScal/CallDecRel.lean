@@ -22,7 +22,7 @@ theorem ciUAccC_eq : ∀ (h : Host), @E2eAd.CiUAccC h = @U64CalleeAcc h E2eAd.Co
 theorem viUAccC_eq : ∀ (h : Host), @E2eScal.ViUAccC h = @U64CalleeAcc h E2eScal.BhCode.viLabel := by
   intro h; rfl
 
-theorem epUAccC_eq : ∀ (h : Host), @E2e.EpUAccC h = @U64CalleeAcc h E2e.Code.epLabel := by
+theorem epUAccC_eq : ∀ (h : Host), @Prysm.Epoch.Decode.accept_function_spec h = @U64CalleeAcc h Prysm.Epoch.Code.unmarshalSSZLabel := by
   intro h; rfl
 
 end E2eScal

@@ -10,7 +10,7 @@ build time of the cover witnesses on a failing definitional check of the unnorma
 profile: 92–94 % of the WitCpW / WitCpWR build time is this one side goal).
 
 Only proof scripts change. Statements, definitions and witness states stay the same.
-Used by `E2e.WitCpW`, `E2e.WitCpWF`, `E2e.WitCpWR`, `E2e.WitCpWRF`.
+Used by `Prysm.Checkpoint.WitnessEncodeCover`, `Prysm.Checkpoint.WitnessEncodeCoverFramed`, `Prysm.Checkpoint.WitnessEncodeRejectLengthCover`, `Prysm.Checkpoint.WitnessEncodeRejectLengthCoverFramed`.
 -/
 
 open Machine TestTarget

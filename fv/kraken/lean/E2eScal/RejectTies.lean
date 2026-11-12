@@ -63,8 +63,8 @@ theorem pb_reject_is_kindN : ∀ (h : Host), type_of% (@E2eScal.H6.pb_e2e_reject
     = @decRejectKindN h E2eScal.H6Code.PbUnmarshal 96 := by
   intro h; with_reducible rfl
 
-theorem cp_reject_is_kindN : ∀ (h : Host), type_of% (@E2e.cp_e2e_reject_size_main h)
-    = @decRejectKindN h E2e.Code.CpUnmarshal 40 := by
+theorem cp_reject_is_kindN : ∀ (h : Host), type_of% (@Prysm.Checkpoint.Decode.reject_size h)
+    = @decRejectKindN h Prysm.Checkpoint.Code.unmarshalSSZ 40 := by
   intro h; with_reducible rfl
 
 theorem ad_reject_is_kindN : ∀ (h : Host), type_of% (@E2eAd.ad_e2e_reject_size_main h)

@@ -42,7 +42,7 @@ theorem g5_examples_accept :
     ∧ decAcceptKindN E2eScal.H5Code.SmUnmarshal
         (layMix60 [E2eAd.Code.SlUnmarshal, E2eScal.BhCode.ViUnmarshal] 141 1) [.u64, .bytes 32, .u64, .bytes 96]
     ∧ decAcceptKindN E2eScal.H6Code.VeUnmarshal
-        (layCal [E2e.Code.EpUnmarshal, E2eScal.BhCode.ViUnmarshal] 56) [.u64, .u64]
+        (layCal [Prysm.Epoch.Code.unmarshalSSZ, E2eScal.BhCode.ViUnmarshal] 56) [.u64, .u64]
     ∧ decAcceptKindN E2eScal.H6Code.PbUnmarshal (layRt false 104 3) [.bytes 32, .bytes 32, .bytes 32] :=
   ⟨pd_e2e_accept_g5, sm_e2e_accept_g5, ve_e2e_accept_g5, pb_e2e_accept_g5⟩
 

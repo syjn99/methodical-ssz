@@ -19,13 +19,13 @@ two untouched frame ranges and the unused slot. For every 24-byte input every pr
 returns nil. The receiver is a Go value of `v1alpha1.PendingPartialWithdrawal` (all fields zero).
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.H4Code E2eScal.BhCode E2eScal.H4
+open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.H4Code E2eScal.BhCode E2eScal.H4
 
 namespace E2eScal.WitPwA
 
 set_option maxRecDepth 100000
 
-def P : Program := [.label "pad0"] ++ PwUnmarshal ++ ViUnmarshal ++ E2e.Code.EpUnmarshal
+def P : Program := [.label "pad0"] ++ PwUnmarshal ++ ViUnmarshal ++ Prysm.Epoch.Code.unmarshalSSZ
 
 theorem P_len : P.length = 236 := by rfl
 
@@ -34,17 +34,17 @@ instance host : Host := mkHost P (by rw [P_len]; decide)
 theorem prog_eq : Host.prog = P := rfl
 
 theorem hk1 : PwUnmarshal.IsInfixAt Host.prog 1 :=
-  infixAt_of [.label "pad0"] (ViUnmarshal ++ E2e.Code.EpUnmarshal) (by simp [prog_eq, P, List.append_assoc]) rfl
+  infixAt_of [.label "pad0"] (ViUnmarshal ++ Prysm.Epoch.Code.unmarshalSSZ) (by simp [prog_eq, P, List.append_assoc]) rfl
 theorem hk110 : ViUnmarshal.IsInfixAt Host.prog 110 :=
-  infixAt_of ([.label "pad0"] ++ PwUnmarshal) E2e.Code.EpUnmarshal
+  infixAt_of ([.label "pad0"] ++ PwUnmarshal) Prysm.Epoch.Code.unmarshalSSZ
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
-theorem hk173 : E2e.Code.EpUnmarshal.IsInfixAt Host.prog 173 :=
+theorem hk173 : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog 173 :=
   infixAt_of ([.label "pad0"] ++ PwUnmarshal ++ ViUnmarshal) []
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 
 theorem hf1 : LabelsFresh PwUnmarshal 1 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf110 : LabelsFresh ViUnmarshal 110 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hf173 : LabelsFresh E2e.Code.EpUnmarshal 173 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf173 : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ 173 := labelsFresh_of (by rw [prog_eq]; decide)
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 abbrev w0 : List UInt8 := Int.toBytes 8 (0 : UInt64).toBitVec.toInt

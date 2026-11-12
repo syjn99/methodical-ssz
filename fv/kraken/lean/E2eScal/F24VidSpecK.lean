@@ -27,7 +27,7 @@ set_option maxRecDepth 100000 in
 /-- Accept side: the generated accept statement for the input chunks of the `g` that EthLib decodes. -/
 theorem vid_e2e_accept_spec_k : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh VidUnmarshal k)
     (kV : Nat) (hkV : E2eScal.BhCode.ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh E2eScal.BhCode.ViUnmarshal kV)
-    (kE : Nat) (hkE : E2e.Code.EpUnmarshal.IsInfixAt Host.prog kE) (hfE : LabelsFresh E2e.Code.EpUnmarshal kE)
+    (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (bsA : Array UInt8) (v : Value) (hd : deserialize prysmVidDesc bsA = .ok v)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aN0 aP1 aL1 aC1 aN2 : List UInt8)
@@ -60,7 +60,7 @@ theorem vid_e2e_accept_spec_k : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec)
       ⋆ R)
     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size) (hav : 48 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
     ∃ g : PVid, g.toValue = v ∧ bsA = pvidEnc g ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
@@ -105,7 +105,7 @@ theorem vid_e2e_reject_size_spec (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.pro
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bs.size) :
     (∃ e, deserialize prysmVidDesc bs = .error e) ∧
@@ -116,7 +116,7 @@ theorem vid_e2e_reject_size_spec (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.pro
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ :=
   ⟨pvid_spec_rejects bs hbs, E2eScal.Gen.vid_g5dec_reject k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard

@@ -2,8 +2,8 @@ import Runtime.Contracts
 import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
-import E2e.Data
-import E2e.Code
+import Prysm.ElfData.CheckpointAndEpoch
+import Prysm.Checkpoint.Code
 import E2eAd.Code
 import E2eScal.H6Code
 
@@ -60,7 +60,7 @@ runtime call return slot entry rsp − 48; `lo` = the `S` bytes below it. Three 
 directive 104. The epilogue sets rax = rbx = 0 (`xor`).
 -/
 
-open Machine Runtime TestTarget E2e E2eAd.Code E2eScal.H6Code
+open Machine Runtime TestTarget E2eAd.Code E2eScal.H6Code
 variable [Host]
 
 namespace E2eScal.H6
@@ -106,7 +106,7 @@ abbrev pd_accept_stmt : Prop :=
       ⋆ Eq (aC3.At (s.regs.rax.toBitVec + 80)) ⋆ Eq (aS.At (s.regs.rax.toBitVec + 88))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat + 80 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 192) (hav : 176 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -170,7 +170,7 @@ abbrev pb_accept_stmt : Prop :=
       ⋆ Eq (aC3.At (s.regs.rax.toBitVec + 64))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 96) (hav : 96 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧

@@ -10,7 +10,7 @@ ProposerIndex = `uintBytes 8 g.proposer`, the three roots = `(p, 32, cap)` with 
 encoder fast path writes at `dst[len:len+112]` exactly the bytes of `serialize prysmBhDesc g.toValue` (the
 independent consensus-specs Desc of `E2eScal/BhSpec.lean`). The full frame accounting is
 `bh_e2e_marshal_main`; this theorem states the output (`⋆ True` remainder of that conclusion), in the form
-of `E2e.cp_e2e_marshal_spec_k`. Fast path only (`len + 112 ≤ cap`, roots of length 32).
+of `Prysm.Checkpoint.Encode.fast_path_spec`. Fast path only (`len + 112 ≤ cap`, roots of length 32).
 -/
 
 open Machine Runtime TestTarget E2e E2eScal.BhCode EthLib.Serialization.Ssz

@@ -4,7 +4,7 @@ import E2eEnc.Code
 /-!
 # Frozen STATEMENT of the round trip: decoder entry → accept → encoder fast path
 
-The shape of `E2e.cp_e2e_unmarshal_then_marshal` (`E2e/CpCompose.lean`). Start at the entry of
+The shape of `Prysm.Checkpoint.DecodeThenEncode.round_trip` (`Prysm/Checkpoint/DecodeThenEncode.lean`). Start at the entry of
 `(*DataColumnsByRootIdentifier).UnmarshalSSZ` with the premises of `dcd_accept_stmt`; the decoder returns nil to `ra`.
 The caller then calls `MarshalSSZTo` on the same receiver: `hupd` writes a new return address `ra2` into the same
 return slot and leaves the rest of the memory; registers rax = receiver, rbx/rcx/rdi = `dst` (dptr, dlen, cap), rsp
@@ -55,7 +55,7 @@ def dc_unmarshal_then_marshal_stmt : Prop :=
         ⋆ Eq (pre.At dptr.toBitVec) ⋆ Eq (d.At (dptr.toBitVec + dlen.toBitVec)) ⋆ R))
     (hguard : guard.toNat + 16 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = 36 + 8 * n)
     (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hav : 32 + 8 * n ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmsU : MakesliceC Heap E2eList.Data.lvU64Type_addr 8 S)
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmsU : MakesliceC Heap E2eList.Data.lvU64Type_addr 8 S)
     (hmm : MemmoveC S) (hmm2 : MemmoveC (S + 8)),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0 ∧

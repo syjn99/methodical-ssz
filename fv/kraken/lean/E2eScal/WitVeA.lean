@@ -19,13 +19,13 @@ bytes, the unused bytes and the untouched frame ranges. For every 16-byte input 
 decoder returns nil. The receiver is a Go value of `v1alpha1.VoluntaryExit` (all fields zero).
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.H6Code E2eScal.BhCode E2eScal.Gen5
+open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.H6Code E2eScal.BhCode E2eScal.Gen5
 
 namespace E2eScal.WitVeA
 
 set_option maxRecDepth 100000
 
-def P : Program := [.label "pad0"] ++ VeUnmarshal ++ E2e.Code.EpUnmarshal ++ ViUnmarshal
+def P : Program := [.label "pad0"] ++ VeUnmarshal ++ Prysm.Epoch.Code.unmarshalSSZ ++ ViUnmarshal
 
 theorem P_len : P.length = 234 := by rfl
 
@@ -34,16 +34,16 @@ instance host : Host := mkHost P (by rw [P_len]; decide)
 theorem prog_eq : Host.prog = P := rfl
 
 theorem hk1 : VeUnmarshal.IsInfixAt Host.prog 1 :=
-  infixAt_of [.label "pad0"] (E2e.Code.EpUnmarshal ++ ViUnmarshal) (by simp [prog_eq, P, List.append_assoc]) rfl
-theorem hk108 : E2e.Code.EpUnmarshal.IsInfixAt Host.prog 108 :=
+  infixAt_of [.label "pad0"] (Prysm.Epoch.Code.unmarshalSSZ ++ ViUnmarshal) (by simp [prog_eq, P, List.append_assoc]) rfl
+theorem hk108 : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog 108 :=
   infixAt_of ([.label "pad0"] ++ VeUnmarshal) ViUnmarshal
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk171 : ViUnmarshal.IsInfixAt Host.prog 171 :=
-  infixAt_of ([.label "pad0"] ++ VeUnmarshal ++ E2e.Code.EpUnmarshal) []
+  infixAt_of ([.label "pad0"] ++ VeUnmarshal ++ Prysm.Epoch.Code.unmarshalSSZ) []
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 
 theorem hf1 : LabelsFresh VeUnmarshal 1 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hf108 : LabelsFresh E2e.Code.EpUnmarshal 108 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf108 : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ 108 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hf171 : LabelsFresh ViUnmarshal 171 := labelsFresh_of (by rw [prog_eq]; decide)
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0

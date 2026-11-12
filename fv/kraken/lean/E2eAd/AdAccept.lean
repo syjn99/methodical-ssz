@@ -43,7 +43,7 @@ untouched on this path (in `R`); callee return slot rsp − 128; `lo` = the `S +
 below it.
 -/
 
-open Machine Runtime TestTarget E2e E2eAd.Code
+open Machine Runtime TestTarget E2eAd.Code
 variable [Host]
 
 namespace E2eAd
@@ -81,8 +81,8 @@ caller's frame `R` and the stack guard are unchanged; 240 heap bytes are used. -
 theorem ad_e2e_accept_main (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh AdUnmarshal k)
     (kS : Nat) (hkS : SlUnmarshal.IsInfixAt Host.prog kS) (hfS : LabelsFresh SlUnmarshal kS)
     (kI : Nat) (hkI : CiUnmarshal.IsInfixAt Host.prog kI) (hfI : LabelsFresh CiUnmarshal kI)
-    (kC : Nat) (hkC : E2e.Code.CpUnmarshal.IsInfixAt Host.prog kC) (hfC : LabelsFresh E2e.Code.CpUnmarshal kC)
-    (kE : Nat) (hkE : E2e.Code.EpUnmarshal.IsInfixAt Host.prog kE) (hfE : LabelsFresh E2e.Code.EpUnmarshal kE)
+    (kC : Nat) (hkC : Prysm.Checkpoint.Code.unmarshalSSZ.IsInfixAt Host.prog kC) (hfC : LabelsFresh Prysm.Checkpoint.Code.unmarshalSSZ kC)
+    (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (in0 in1 root se sroot te troot : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8)
     (hroot : root.length = 32) (hse : se.length = 8) (hsroot : sroot.length = 32) (hte : te.length = 8)
     (htroot : troot.length = 32)
@@ -112,8 +112,8 @@ theorem ad_e2e_accept_main (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (h
       ⋆ Eq (aS.At (s.regs.rax.toBitVec + 48)) ⋆ Eq (aT.At (s.regs.rax.toBitVec + 56))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat + 224 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 128) (hav : 240 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S)
-    (hms' : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 96)) (hmm' : MemmoveC (S + 96))
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S)
+    (hms' : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 96)) (hmm' : MemmoveC (S + 96))
     (hno : NewobjectC Heap E2eAd.Data.adCpType_addr 72 (S + 96)) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0

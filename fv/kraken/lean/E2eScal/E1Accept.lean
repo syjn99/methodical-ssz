@@ -33,7 +33,7 @@ rsp + 16 (buf.ptr); frame rsp − 40 … rsp − 9: argument area rsp − 40 …
 rsp − 16 (`l18`); the runtime callees' return slot rsp − 48 and their `S` stack bytes below it (`lo`).
 -/
 
-open Machine Runtime TestTarget E2e E2eScal Codec E2eScal.E1Code E2eScal.E1
+open Machine Runtime TestTarget E2eScal Codec E2eScal.E1Code E2eScal.E1
 variable [Host]
 
 namespace E2eScal.E1
@@ -156,7 +156,7 @@ theorem e1_e2e_accept_main (k : Nat) (hk : E1Unmarshal.IsInfixAt Host.prog k) (h
       ⋆ Eq (aC2.At (s.regs.rax.toBitVec + 56))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 72) (hav : 64 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧

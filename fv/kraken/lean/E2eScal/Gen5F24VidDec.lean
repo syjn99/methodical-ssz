@@ -2,7 +2,7 @@ import E2eScal.F24Code
 import E2eScal.AcceptTies
 import Codec.FieldFrame
 import E2eScal.ViSpec
-import E2e.Epoch
+import Prysm.Epoch.DecodeAccept
 import E2eAd.Prims
 import Codec.DecoderHeadEpilogue
 import E2eScal.RejectTies
@@ -117,7 +117,7 @@ theorem vid_g5dec_Pubkey_seg (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog k)
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 73) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -364,7 +364,7 @@ reject. Every statement has a `_kind` line against the G5-L kinds. In-sample (de
 GEN5-JSON: {"accept": "vid_g5dec_accept", "kinds": [{"theorem": "vid_g5dec_head", "kind": "decHeadKindN"}, {"theorem": "vid_g5dec_f1", "kind": "decFieldKindN"}, {"theorem": "vid_g5dec_f2", "kind": "decFieldKindN"}, {"theorem": "vid_g5dec_f3", "kind": "decFieldKindN"}, {"theorem": "vid_g5dec_epi", "kind": "decEpiKindN"}, {"theorem": "vid_g5dec_accept", "kind": "decAcceptKindN"}, {"theorem": "vid_g5dec_reject", "kind": "decRejectKindN"}], "fields": "[.u64, .bytes 48, .u64]", "frame": 88, "statement_check": "kind instance only"}
 -/
 
-open E2e E2eAd E2eScal Codec
+open E2eAd E2eScal Codec
 
 namespace E2eScal.Gen
 
@@ -373,7 +373,7 @@ set_option maxRecDepth 100000 in
 /-- Head: directives 0–14 (prologue, spills, nil check); entry → boundary state 0. -/
 theorem vid_g5dec_head : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh VidUnmarshal k)
     (kV : Nat) (hkV : E2eScal.BhCode.ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh E2eScal.BhCode.ViUnmarshal kV)
-    (kE : Nat) (hkE : E2e.Code.EpUnmarshal.IsInfixAt Host.prog kE) (hfE : LabelsFresh E2e.Code.EpUnmarshal kE)
+    (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (fv0 fv1 fv2 : List UInt8) (hfv0 : fv0.length = 8) (hfv1 : fv1.length = 48) (hfv2 : fv2.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aN0 aP1 aL1 aC1 aN2 : List UInt8)
@@ -405,7 +405,7 @@ theorem vid_g5dec_head : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog k)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec)
       ⋆ R)
     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 64) (hav : 48 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 15)
         ∧ st.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 88 }
@@ -481,7 +481,7 @@ theorem vid_g5dec_head : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog k)
   rw [hcs]; simp only [Std.ExtHashMap.sep_assoc]
   ecancel
 theorem vid_g5dec_head_kind : ∀ (h : Host), type_of% (@vid_g5dec_head h)
-    = @E2eScal.decHeadKindN h VidUnmarshal (E2eScal.DecLayout.mk [E2eScal.BhCode.ViUnmarshal, E2e.Code.EpUnmarshal] 10
+    = @E2eScal.decHeadKindN h VidUnmarshal (E2eScal.DecLayout.mk [E2eScal.BhCode.ViUnmarshal, Prysm.Epoch.Code.unmarshalSSZ] 10
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8)]
       [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.up 32) (.orig 3), .at (.dn 88) (.orig 4), .at (.dn 80) (.orig 5), .at (.dn 72) (.orig 6), .at (.dn 48) (.orig 7), .at (.dn 96) (.orig 8), .lo (.orig 9)]
       (some ⟨true, 8, 9, 104⟩) 96 true [.n 24, .lo]
@@ -497,7 +497,7 @@ set_option maxRecDepth 100000 in
 /-- Field 1 `Index` (call): boundary state 0 (directive 15) → boundary state 1 (directive 48). -/
 theorem vid_g5dec_f1 : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh VidUnmarshal k)
     (kV : Nat) (hkV : E2eScal.BhCode.ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh E2eScal.BhCode.ViUnmarshal kV)
-    (kE : Nat) (hkE : E2e.Code.EpUnmarshal.IsInfixAt Host.prog kE) (hfE : LabelsFresh E2e.Code.EpUnmarshal kE)
+    (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (fv0 fv1 fv2 : List UInt8) (hfv0 : fv0.length = 8) (hfv1 : fv1.length = 48) (hfv2 : fv2.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aN0 aP1 aL1 aC1 aN2 : List UInt8)
@@ -505,7 +505,7 @@ theorem vid_g5dec_f1 : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog k) (
     (R : DataMem → Prop) (S : Nat) (hS : S < 2 ^ 60) (hlo : lo.length = S + 8)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hav : 48 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
     (st0.pc = Host.addrOf (k + 15)
         ∧ st0.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 88 }
         ∧ st0.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }
@@ -606,7 +606,7 @@ theorem vid_g5dec_f1 : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog k) (
   rw [show k + 17 + 1 = k + 18 from rfl] at Hm'
   ecancel
 theorem vid_g5dec_f1_kind : ∀ (h : Host), type_of% (@vid_g5dec_f1 h)
-    = @E2eScal.decFieldKindN h VidUnmarshal (E2eScal.DecLayout.mk [E2eScal.BhCode.ViUnmarshal, E2e.Code.EpUnmarshal] 10
+    = @E2eScal.decFieldKindN h VidUnmarshal (E2eScal.DecLayout.mk [E2eScal.BhCode.ViUnmarshal, Prysm.Epoch.Code.unmarshalSSZ] 10
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8)]
       [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.up 32) (.orig 3), .at (.dn 88) (.orig 4), .at (.dn 80) (.orig 5), .at (.dn 72) (.orig 6), .at (.dn 48) (.orig 7), .at (.dn 96) (.orig 8), .lo (.orig 9)]
       (some ⟨true, 8, 9, 104⟩) 96 true [.n 24, .lo]
@@ -625,7 +625,7 @@ set_option maxRecDepth 100000 in
 /-- Field 2 `Pubkey` (bytes): boundary state 1 (directive 48) → boundary state 2 (directive 84). -/
 theorem vid_g5dec_f2 : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh VidUnmarshal k)
     (kV : Nat) (hkV : E2eScal.BhCode.ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh E2eScal.BhCode.ViUnmarshal kV)
-    (kE : Nat) (hkE : E2e.Code.EpUnmarshal.IsInfixAt Host.prog kE) (hfE : LabelsFresh E2e.Code.EpUnmarshal kE)
+    (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (fv0 fv1 fv2 : List UInt8) (hfv0 : fv0.length = 8) (hfv1 : fv1.length = 48) (hfv2 : fv2.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aN0 aP1 aL1 aC1 aN2 : List UInt8)
@@ -633,7 +633,7 @@ theorem vid_g5dec_f2 : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog k) (
     (R : DataMem → Prop) (S : Nat) (hS : S < 2 ^ 60) (hlo : lo.length = S + 8)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hav : 48 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
     (st0.pc = Host.addrOf (k + 48)
         ∧ st0.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 88 }
         ∧ st0.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }
@@ -731,7 +731,7 @@ theorem vid_g5dec_f2 : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog k) (
   rw [show k + 67 + 1 = k + 68 from rfl] at H
   ecancel
 theorem vid_g5dec_f2_kind : ∀ (h : Host), type_of% (@vid_g5dec_f2 h)
-    = @E2eScal.decFieldKindN h VidUnmarshal (E2eScal.DecLayout.mk [E2eScal.BhCode.ViUnmarshal, E2e.Code.EpUnmarshal] 10
+    = @E2eScal.decFieldKindN h VidUnmarshal (E2eScal.DecLayout.mk [E2eScal.BhCode.ViUnmarshal, Prysm.Epoch.Code.unmarshalSSZ] 10
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8)]
       [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.up 32) (.orig 3), .at (.dn 88) (.orig 4), .at (.dn 80) (.orig 5), .at (.dn 72) (.orig 6), .at (.dn 48) (.orig 7), .at (.dn 96) (.orig 8), .lo (.orig 9)]
       (some ⟨true, 8, 9, 104⟩) 96 true [.n 24, .lo]
@@ -750,7 +750,7 @@ set_option maxRecDepth 100000 in
 /-- Field 3 `ActivationEpoch` (call): boundary state 2 (directive 84) → boundary state 3 (directive 121). -/
 theorem vid_g5dec_f3 : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh VidUnmarshal k)
     (kV : Nat) (hkV : E2eScal.BhCode.ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh E2eScal.BhCode.ViUnmarshal kV)
-    (kE : Nat) (hkE : E2e.Code.EpUnmarshal.IsInfixAt Host.prog kE) (hfE : LabelsFresh E2e.Code.EpUnmarshal kE)
+    (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (fv0 fv1 fv2 : List UInt8) (hfv0 : fv0.length = 8) (hfv1 : fv1.length = 48) (hfv2 : fv2.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aN0 aP1 aL1 aC1 aN2 : List UInt8)
@@ -758,7 +758,7 @@ theorem vid_g5dec_f3 : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog k) (
     (R : DataMem → Prop) (S : Nat) (hS : S < 2 ^ 60) (hlo : lo.length = S + 8)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hav : 48 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
     (st0.pc = Host.addrOf (k + 84)
         ∧ st0.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 88 }
         ∧ st0.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }
@@ -830,7 +830,7 @@ theorem vid_g5dec_f3 : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog k) (
   simp only [Reg64s.get64] at hrsp hrbp hr14 hrrax Hm
   subst rsp1 rbp1 r141
   obtain rfl : rax = rax1 := (UInt64.toBitVec_inj.mp hrrax).symm
-  have hC := ep_uacc_holds kE hkE hfE
+  have hC := Prysm.Epoch.Decode.accept_function_spec_holds kE hkE hfE
   have hg : guard.toNat < (rsp.toBitVec - 96).toNat := by
     have hgd : guard.toNat + 96 < rsp.toBitVec.toNat := hguard
     bv_omega
@@ -870,7 +870,7 @@ theorem vid_g5dec_f3 : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog k) (
   rw [show k + 90 + 1 = k + 91 from rfl] at Hm'
   ecancel
 theorem vid_g5dec_f3_kind : ∀ (h : Host), type_of% (@vid_g5dec_f3 h)
-    = @E2eScal.decFieldKindN h VidUnmarshal (E2eScal.DecLayout.mk [E2eScal.BhCode.ViUnmarshal, E2e.Code.EpUnmarshal] 10
+    = @E2eScal.decFieldKindN h VidUnmarshal (E2eScal.DecLayout.mk [E2eScal.BhCode.ViUnmarshal, Prysm.Epoch.Code.unmarshalSSZ] 10
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8)]
       [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.up 32) (.orig 3), .at (.dn 88) (.orig 4), .at (.dn 80) (.orig 5), .at (.dn 72) (.orig 6), .at (.dn 48) (.orig 7), .at (.dn 96) (.orig 8), .lo (.orig 9)]
       (some ⟨true, 8, 9, 104⟩) 96 true [.n 24, .lo]
@@ -889,7 +889,7 @@ set_option maxRecDepth 100000 in
 /-- Epilogue: boundary state 3 (directive 121) → return. -/
 theorem vid_g5dec_epi : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh VidUnmarshal k)
     (kV : Nat) (hkV : E2eScal.BhCode.ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh E2eScal.BhCode.ViUnmarshal kV)
-    (kE : Nat) (hkE : E2e.Code.EpUnmarshal.IsInfixAt Host.prog kE) (hfE : LabelsFresh E2e.Code.EpUnmarshal kE)
+    (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (fv0 fv1 fv2 : List UInt8) (hfv0 : fv0.length = 8) (hfv1 : fv1.length = 48) (hfv2 : fv2.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aN0 aP1 aL1 aC1 aN2 : List UInt8)
@@ -979,7 +979,7 @@ theorem vid_g5dec_epi : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog k) 
       | (simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega)
   · dsimp only; rw [hmem']; ecancel
 theorem vid_g5dec_epi_kind : ∀ (h : Host), type_of% (@vid_g5dec_epi h)
-    = @E2eScal.decEpiKindN h VidUnmarshal (E2eScal.DecLayout.mk [E2eScal.BhCode.ViUnmarshal, E2e.Code.EpUnmarshal] 10
+    = @E2eScal.decEpiKindN h VidUnmarshal (E2eScal.DecLayout.mk [E2eScal.BhCode.ViUnmarshal, Prysm.Epoch.Code.unmarshalSSZ] 10
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8)]
       [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.up 32) (.orig 3), .at (.dn 88) (.orig 4), .at (.dn 80) (.orig 5), .at (.dn 72) (.orig 6), .at (.dn 48) (.orig 7), .at (.dn 96) (.orig 8), .lo (.orig 9)]
       (some ⟨true, 8, 9, 104⟩) 96 true [.n 24, .lo]
@@ -996,7 +996,7 @@ set_option maxRecDepth 100000 in
 field, epilogue, chained by `eventually_trans`. Statement = the kind instance (`_kind`). -/
 theorem vid_g5dec_accept : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh VidUnmarshal k)
     (kV : Nat) (hkV : E2eScal.BhCode.ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh E2eScal.BhCode.ViUnmarshal kV)
-    (kE : Nat) (hkE : E2e.Code.EpUnmarshal.IsInfixAt Host.prog kE) (hfE : LabelsFresh E2e.Code.EpUnmarshal kE)
+    (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (fv0 fv1 fv2 : List UInt8) (hfv0 : fv0.length = 8) (hfv1 : fv1.length = 48) (hfv2 : fv2.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aN0 aP1 aL1 aC1 aN2 : List UInt8)
@@ -1028,7 +1028,7 @@ theorem vid_g5dec_accept : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog 
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec)
       ⋆ R)
     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 64) (hav : 48 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -1068,7 +1068,7 @@ theorem vid_g5dec_accept : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog 
   intro st3 h3
   exact vid_g5dec_epi k hk hf kV hkV hfV kE hkE hfE fv0 fv1 fv2 hfv0 hfv1 hfv2 s ra guard fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast aN0 aP1 aL1 aC1 aN2 hfp hs1 hs2 hs4 hsp0 hsp1 hsp2 hl28 hrslot hast haN0 haP1 haL1 haC1 haN2 R S hS hlo Heap avail st3 h3
 theorem vid_g5dec_accept_kind : ∀ (h : Host), type_of% (@vid_g5dec_accept h)
-    = @E2eScal.decAcceptKindN h VidUnmarshal (E2eScal.DecLayout.mk [E2eScal.BhCode.ViUnmarshal, E2e.Code.EpUnmarshal] 10
+    = @E2eScal.decAcceptKindN h VidUnmarshal (E2eScal.DecLayout.mk [E2eScal.BhCode.ViUnmarshal, Prysm.Epoch.Code.unmarshalSSZ] 10
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8)]
       [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.up 32) (.orig 3), .at (.dn 88) (.orig 4), .at (.dn 80) (.orig 5), .at (.dn 72) (.orig 6), .at (.dn 48) (.orig 7), .at (.dn 96) (.orig 8), .lo (.orig 9)]
       (some ⟨true, 8, 9, 104⟩) 96 true [.n 24, .lo]
@@ -1084,7 +1084,7 @@ theorem vid_g5dec_reject : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog 
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx ≠ 64),
     Eventually (step1 Host.exe)
@@ -1094,7 +1094,7 @@ theorem vid_g5dec_reject : ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog 
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   intro k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard hlen

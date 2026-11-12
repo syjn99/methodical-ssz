@@ -15,7 +15,7 @@ unused rax spill slot (the frame `R`) and the rbx spill slot. For every length
 `≠ 112` (instances 111, 113, 0) the decoder returns the two words.
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2eScal.BhCode E2eScal.Bh
+open Machine Runtime TestTarget Machine.Witness E2eScal.BhCode E2eScal.Bh
 
 namespace E2eScal.WitBhR
 
@@ -58,7 +58,7 @@ theorem bh_reject_runs (len : UInt64) (hlen : len ≠ 112) (zmms : RegZmms) (fla
     (by
       have H : Eq (block.At (0x10000 : BitVec 64)) mem := rfl
       wit_split []
-      simp only [cs0, R0, w, E2e.Data.e2eErrSize_addr, label_err, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
+      simp only [cs0, R0, w, ElfData.CheckpointAndEpoch.e2eErrSize_addr, label_err, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
         Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H ⊢
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢

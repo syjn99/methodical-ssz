@@ -8,7 +8,7 @@ import E2eDec.StmtComp
 (`S + 8` bytes, `E2eDec/Compose.lean`); splitting that block needs `S + 8 < 2^64`, and nothing in the original premises
 bounds `S` (a list longer than 2^64 would cover every address, but the separation facts that refute it are not
 proved here). The precondition is stronger than the frozen one. The original stays unchanged and unproved (N).
-Precedent: `E2e.cp_e2e_unmarshal_then_marshal` has the same premise `hS : S < 2 ^ 60`.
+Precedent: `Prysm.Checkpoint.DecodeThenEncode.round_trip` has the same premise `hS : S < 2 ^ 60`.
 -/
 
 open Machine Runtime TestTarget EthLib.Serialization.Ssz E2eDec.Code E2eEnc
@@ -52,7 +52,7 @@ def dc_unmarshal_then_marshal_s_stmt : Prop :=
         ⋆ Eq (pre.At dptr.toBitVec) ⋆ Eq (d.At (dptr.toBitVec + dlen.toBitVec)) ⋆ R))
     (hguard : guard.toNat + 16 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = 36 + 8 * n)
     (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hav : 32 + 8 * n ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmsU : MakesliceC Heap E2eList.Data.lvU64Type_addr 8 S)
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmsU : MakesliceC Heap E2eList.Data.lvU64Type_addr 8 S)
     (hmm : MemmoveC S) (hmm2 : MemmoveC (S + 8)),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0 ∧

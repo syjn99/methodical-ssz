@@ -25,7 +25,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Accept side: the generated accept statement for the input chunks of the `g` that EthLib decodes. -/
 theorem ve_e2e_accept_spec_k : ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh VeUnmarshal k)
-    (kE : Nat) (hkE : E2e.Code.EpUnmarshal.IsInfixAt Host.prog kE) (hfE : LabelsFresh E2e.Code.EpUnmarshal kE)
+    (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (kV : Nat) (hkV : E2eScal.BhCode.ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh E2eScal.BhCode.ViUnmarshal kV)
     (bsA : Array UInt8) (v : Value) (hd : deserialize prysmVeDesc bsA = .ok v)
     (s : MachineData) (ra guard : UInt64)
@@ -85,7 +85,7 @@ theorem ve_e2e_reject_size_spec (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog 
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bs.size) :
     (∃ e, deserialize prysmVeDesc bs = .error e) ∧
@@ -96,7 +96,7 @@ theorem ve_e2e_reject_size_spec (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog 
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ :=
   ⟨pve_spec_rejects bs hbs, E2eScal.Gen.ve_g5dec_reject k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard

@@ -90,7 +90,7 @@ Each item says what the command needs.
 **Lean only.** Lake fetches Kraken and EthLib at the pinned commits on the first run.
 
 ```sh
-cd fv/kraken/lean && lake build Machine Runtime Codec Spec TestTarget E2e E2eAd E2eScal E2eList E2eHb E2eDep E2eDepW E2eEnc E2eDec
+cd fv/kraken/lean && lake build Machine Runtime Codec Spec TestTarget Prysm E2eAd E2eScal E2eList E2eHb E2eDep E2eDepW E2eEnc E2eDec
 cd fv/kraken/lean && lake build E2eList.SaReject    # one module
 ```
 

@@ -11,12 +11,12 @@ Hand-written Prysm methods (`consensus-types/primitives/slot.go:183`,
 code of `(*primitives.Epoch).UnmarshalSSZ` with another name (Slot: identical
 after the label rename; CommitteeIndex: also the reject format string differs,
 `go_string._+110097`; checked by `diff`). The theorems below are the text
-of `E2e/Epoch.lean` with the names renamed, and they are proved again here on
+of `Prysm/Epoch/DecodeAccept.lean` with the names renamed, and they are proved again here on
 the included Slot and CommitteeIndex code (`E2eAd.Code.SlUnmarshal`,
 `E2eAd.Code.CiUnmarshal`): directive indices 0–1 labels, 2–3 stack guard, 4–7
 prologue, 9–10 `cmp $0x8,%rcx; je L_bb`, 43 `L_bb`, 44 load, 46 store, 47–48
 `xor`, 49–51 epilogue. `SlUAccC` / `CiUAccC` are the function specifications
-(the form of `E2e.EpUAccC`); the AttestationData decoder uses the callees only
+(the form of `Prysm.Epoch.Decode.accept_function_spec`); the AttestationData decoder uses the callees only
 through them.
 -/
 

@@ -271,7 +271,7 @@ theorem ad_g4dec_BeaconBlockRoot_seg (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 112) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧

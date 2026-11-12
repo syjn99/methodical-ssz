@@ -22,7 +22,7 @@ theorem lvErrMis_addr_eq : E2eList.Data.lvErrIncorrectListSize_addr = (label "ss
 theorem lvErrBig_addr_eq : E2eList.Data.lvErrListTooBig_addr = (label "ssz.ErrListTooBig").toBitVec := rfl
 theorem lvFmtMis_addr_eq : E2eList.Data.lvFmtMis_addr = (label "go_string._" + 171319).toBitVec := rfl
 theorem lvFmtTooBig_addr_eq : E2eList.Data.lvFmtTooBig_addr = (label "go_string._" + 163839).toBitVec := rfl
-theorem intType_addr_eq : E2e.Data.e2eIntType_addr = (label "type__" + 387520).toBitVec := rfl
+theorem intType_addr_eq : ElfData.CheckpointAndEpoch.e2eIntType_addr = (label "type__" + 387520).toBitVec := rfl
 omit [Host] in
 theorem lvFmtMis_len : E2eList.Data.lvFmtMis.length = 83 := by rfl
 omit [Host] in

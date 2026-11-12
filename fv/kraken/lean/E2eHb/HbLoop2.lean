@@ -1,7 +1,7 @@
 import Runtime.Contracts
 import Machine.Step
 import Machine.Labels
-import E2e.Data
+import Prysm.ElfData.CheckpointAndEpoch
 import E2eList.ScLoop
 import E2eHb.Code
 import E2eHb.HbLoop1
@@ -40,7 +40,7 @@ theorem hb_iter2 (k : Nat) (hk : HbUnmarshal.IsInfixAt Host.prog k) (hf : Labels
       ⋆ Eq ((Int.toBytes 8 A.toInt).At (recv + 24)) ⋆ Eq ((Int.toBytes 8 8192).At (recv + 32))
       ⋆ Eq ((lvHdrs 32 ps ++ zz (24 * (8192 - i))).At A) ⋆ lvElems ps (pks.take i)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 108) ∧ st.data.regs.rax.toNat = i + 1
         ∧ st.data.regs.rsp = { toBitVec := sp } ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -273,7 +273,7 @@ theorem hb_loop2 (k : Nat) (hk : HbUnmarshal.IsInfixAt Host.prog k) (hf : Labels
     (sp recv bf A : BitVec 64) (pks : List (List UInt8)) (hpks : pks.length = 8192)
     (hpk : ∀ e ∈ pks, e.length = 32) (rbp0 r140 : UInt64) (S : Nat)
     (Heap : Nat → DataMem → Prop) (R : DataMem → Prop)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
     ∀ (j i : Nat) (ps : List (BitVec 64)) (l18 l20 l28 l30 spl rslot lo : List UInt8) (avail : Nat)
       (s : MachineData),
     i + j = 8192 → ps.length = i → l18.length = 8 → l20.length = 8 → l28.length = 8 → l30.length = 8 →

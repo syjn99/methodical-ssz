@@ -1,7 +1,7 @@
 import Machine.Step
 import Machine.Labels
 import Machine.Bytes
-import E2e.CpReject
+import Prysm.Checkpoint.DecodeRejectSize
 import Codec.StackGuard
 import E2eList.StmtIa
 import E2eList.IaAddr

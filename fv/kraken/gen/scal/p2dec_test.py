@@ -766,7 +766,7 @@ def g4c(sdir, tname, const, mod, pre, out, fields, cov=None):
 
 
 G4 = {
-    "CP": g4c("link/norm", "Checkpoint", "CpUnmarshal", "E2e.Code", "cp", "Gen4CpDec", ["Epoch", "Root"]),
+    "CP": g4c("link/norm", "Checkpoint", "unmarshalSSZ", "Prysm.Checkpoint.Code", "cp", "Gen4CpDec", ["Epoch", "Root"]),
     "AD": g4c("ad/link/norm", "AttestationData", "AdUnmarshal", "E2eAd.Code", "ad", "Gen4AdDecPartial",
               ["Slot", "CommitteeIndex", "BeaconBlockRoot", "Source", "Target"], ["Slot", "CommitteeIndex", "BeaconBlockRoot"]),
     "BH": g4c("bh/link/norm", "BeaconBlockHeader", "BhUnmarshal", "E2eScal.BhCode", "bh", "Gen4BhDec",

@@ -6,7 +6,7 @@ import E2eScal.BhEncRoots
 
 Hand proof by composition of the segments of `E2eScal.BhEncHead` (`bh_enc_a1`, `bh_enc_a2`) and
 `E2eScal.BhEncRoots` (`bh_enc_b`, `bh_enc_c`, `bh_enc_d`, `bh_enc_e`). Statement shape of
-`E2e.cp_e2e_marshal_main`. **Fast path only**: `len(dst) + 112 ≤ cap(dst)` and all three roots of length 32.
+`Prysm.Checkpoint.Encode.fast_path`. **Fast path only**: `len(dst) + 112 ≤ cap(dst)` and all three roots of length 32.
 The `runtime.growslice` branches and the three length rejects are not covered by this theorem.
 
 Receiver (gc amd64 layout, `prysm/ir/ir-mainnet.json`): `state` 0 (`ast`), `Slot` 8, `ProposerIndex` 16,

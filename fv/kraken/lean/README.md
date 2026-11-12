@@ -28,9 +28,17 @@ Some Prysm proofs use a few of its declarations (for example `TestTarget.Data.st
 **`Codec`.** Lemmas that do not depend on one Prysm type: the `uint64` decoder pattern (`Codec/Uint64Decoder.lean`), the fixed-bytes field decoder and encoder patterns (`Codec/Bytes32*.lean`, `Codec/FixedBytesDecode*.lean`), the encoder step lemmas (`Codec/Encode*.lean`) and the statement kinds of the generated proofs (`Codec/Kind/`).
 `Codec/Segment/` holds segment and loop lemmas stated once for any size or element count, with the fixed instances of `E2eList` and `E2eHb` as corollaries.
 
-**`E2e`.** The Prysm `v1alpha1.Checkpoint` decoder, encoder and `SizeSSZ`, and the `primitives.Epoch` decoder.
-It also has the hand specification, the Go value predicate (`E2e/GoVal.lean`) and the decoder-then-encoder composition (`E2e/CpCompose.lean`).
-`E2e/OptR1/` holds proofs about a separate test ELF of a generator option that is not adopted.
+**`Prysm`.** One directory for each Prysm type, `Prysm/<GoTypeName>/<Role>.lean`, namespace `Prysm.<GoTypeName>`.
+The full name of a main theorem is the name of the work, for example `Prysm.Checkpoint.Decode.reject_size`.
+`../gen/restructure/maps/checkpoint-and-epoch/files.tsv` gives the earlier path of each module and a one-line meaning.
+- `Prysm/Checkpoint/`: the `v1alpha1.Checkpoint` decoder, encoder and `SizeSSZ`, the hand specification (`Spec.lean`),
+  the Go value predicate (`GoValue.lean`) and the decoder-then-encoder composition (`DecodeThenEncode.lean`).
+  The files `CapacityReserved*.lean` hold proofs about a separate test ELF of a generator option that is not adopted
+  (the encoder reserves 40 bytes of capacity first; namespace `Prysm.Checkpoint.CapacityReserved`).
+- `Prysm/Epoch/`: the decoder of the hand-written `primitives.Epoch` method and its function specification.
+  Its program constant is in `Prysm/Checkpoint/Code.lean` (shared module, declared as `Prysm.Epoch.Code.unmarshalSSZ`).
+- `Prysm/ElfData/`: the ELF data of a link set and the command that reads it, namespace `ElfData.<SetName>`.
+  The root `ElfData` keeps the order of the constant names that some `simp` proofs depend on (see `../gen/restructure/README.md`).
 
 **`E2eAd`.** The `v1alpha1.AttestationData` decoder and the decoders of the hand-written `primitives.Slot` and `primitives.CommitteeIndex` methods.
 
@@ -53,14 +61,14 @@ The import graph has this order:
 
 ```text
 EthLib -> Spec -> Machine -> Runtime -> TestTarget -> Codec (except Codec/Segment/)
-       -> E2e -> E2eAd -> E2eScal -> E2eList -> E2eHb -> Codec/Segment/ -> E2eDep -> E2eDepW
+       -> Prysm -> E2eAd -> E2eScal -> E2eList -> E2eHb -> Codec/Segment/ -> E2eDep -> E2eDepW
                                      E2eList -> E2eEnc -> E2eDec
 ```
 
 The arrows give the order of the libraries in the import graph. A library imports only libraries to its left.
 Exceptions: `Machine/Step.lean` imports `TestTarget/Code.lean`, `Runtime/Contracts.lean` imports `TestTarget/Data.lean`,
-`Runtime/BumpAllocatorVariants.lean` imports `TestTarget/FunctionSpecs.lean`, and `Codec/Bytes32Decode.lean` imports `E2e/Data.lean`.
-`E2e/OptR1/` imports `E2eScal`, and `E2eHb` does not import `E2eScal`.
+`Runtime/BumpAllocatorVariants.lean` imports `TestTarget/FunctionSpecs.lean`, and `Codec/Bytes32Decode.lean` imports `Prysm/ElfData/CheckpointAndEpoch.lean`.
+`Prysm/Checkpoint/CapacityReserved*.lean` import `E2eScal`, and `E2eHb` does not import `E2eScal`.
 A new type gets its own library or modules. Do not change a reviewed module to add a new type.
 
 ## 2. How machine code enters Lean
@@ -73,7 +81,7 @@ A new type gets its own library or modules. Do not change a reviewed module to a
 
 The `.S` and data files are not Lean imports. So `lakefile.toml` declares their directories as `input_dir` entries in the `needs` of each library.
 Lake then puts the file contents into the input hash, and a changed file makes Lake build the proofs again.
-Some directories that `E2eScal` and `E2e/OptR1/` include are not declared. A change there does not cause a rebuild (see `../FINDINGS.md`).
+Some directories that `E2eScal` and `Prysm/Checkpoint/CapacityReservedCode.lean` include are not declared. A change there does not cause a rebuild (see `../FINDINGS.md`).
 When you add a code directory, add it as an `input_dir` of the library. A `lakefile.toml` change needs user approval.
 
 ## 3. Shape of a main theorem
@@ -90,7 +98,7 @@ def sa_reject_size_stmt : Prop :=
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx ≠ 160),
     Eventually (step1 Host.exe)
@@ -100,7 +108,7 @@ def sa_reject_size_stmt : Prop :=
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 ```
@@ -140,7 +148,7 @@ The forms are in `Runtime/Contracts.lean` (runtime functions) and `TestTarget/Fu
 | `FmtErrorfNilC`, `FmtErrorfWC`, `FmtErrorfDWC`, `FmtErrorfDDC` | `fmt.Errorf` with no argument, `%w`, `%d %w` and `%d %d` |
 
 A hand-written callee, for example `(*primitives.Epoch).UnmarshalSSZ`, gets a function specification of the same form.
-Examples are `E2e.EpUAccC` and `E2eAd.SlUAccC`. A theorem about the callee code (`*_holds`) proves the specification.
+Examples are `Prysm.Epoch.Decode.accept_function_spec` and `E2eAd.SlUAccC`. A theorem about the callee code (`*_holds`) proves the specification.
 
 A contract is a hypothesis because no proof covers the compiled Go runtime.
 The proof uses the contract at each call site and continues from any state that satisfies its conclusion.
@@ -152,12 +160,12 @@ The contracts assume that no garbage collection runs during the call, and that a
 
 Each Prysm type has two `Desc` terms.
 
-- The hand `Desc` is written from the consensus-specs definition, before the checker `Desc` is printed. Example: `E2e.prysmCpDesc` in `E2e/Spec.lean`.
-- The checker `Desc` comes from the generator IR through the checker in `../gen/desccheck/`. `../gen/e2e/descterm.py` renders it as Lean. Example: `E2e/SpecChecker.lean`.
-- Codec equality theorems show that both give the same `serialize` and `deserialize`. Example: `prysmCpDesc_serialize_checker` in `E2e/SpecEq.lean`.
+- The hand `Desc` is written from the consensus-specs definition, before the checker `Desc` is printed. Example: `Prysm.Checkpoint.desc` in `Prysm/Checkpoint/Spec.lean`.
+- The checker `Desc` comes from the generator IR through the checker in `../gen/desccheck/`. `../gen/e2e/descterm.py` renders it as Lean. Example: `Prysm/Checkpoint/SpecChecker.lean`.
+- Codec equality theorems show that both give the same `serialize` and `deserialize`. Example: `Prysm.Checkpoint.desc_serialize_checker` in `Prysm/Checkpoint/SpecEquivalence.lean`.
 
 The theorems use the hand `Desc`. For a Prysm type, the checker only compares the IR with the inventory. It does not compare with the specification.
-A structure such as `E2e.PCp` holds the SSZ content of a Go value. `toValue` maps it to an EthLib value, and an `enc` function such as `E2e.pcpEnc` gives its bytes.
+A structure such as `Prysm.Checkpoint.SszValue` holds the SSZ content of a Go value. `toValue` maps it to an EthLib value, and an `enc` function such as `Prysm.Checkpoint.SszValue.encode` gives its bytes.
 Fields without an SSZ value (the protobuf fields `state`, `unknownFields`, `sizeCache`) stay as unchanged memory in the machine theorems.
 
 The connection to EthLib has three theorem forms:
@@ -173,7 +181,7 @@ The program is the data labels, the real converted function and the runtime mode
 A theorem `*_runs` applies the main theorem to a concrete memory block and discharges every premise.
 The runtime models discharge the contract hypotheses. Example: `E2eList.WitSaA.sa_accept_runs`.
 For a variable length, the witnesses cover the empty value, one element and the maximum.
-The receiver in a witness must be a Go value of the type. `E2e/GoVal.lean` gives a Lean predicate for this check.
+The receiver in a witness must be a Go value of the type. `Prysm/Checkpoint/GoValue.lean` gives a Lean predicate for this check.
 Use one witness host for each file. Two `Host` instances in one file make instance resolution choose the wrong host.
 
 ## 7. Proof conventions
@@ -191,7 +199,7 @@ Use one witness host for each file. Two `Host` instances in one file make instan
 ## 8. Names
 
 The current file and theorem names use short abbreviations of the Go types.
-A structure `P<abbreviation>` holds the SSZ content of the type, for example `PCp`.
+A structure `P<abbreviation>` holds the SSZ content of the type, for example `Prysm.Checkpoint.SszValue`.
 Some abbreviations have two or three meanings. The namespace decides the meaning.
 
 | Abbreviation | Go type |
@@ -224,5 +232,5 @@ Some abbreviations have two or three meanings. The namespace decides the meaning
 | `Sc` | three meanings: `v1alpha1.SyncCommitteeMessage` in `E2eScal` encoder names such as `Gen6ScEnc`, `v1alpha1.SyncCommittee` in `E2eList`, and the test type `Scalars` in `TestTarget` |
 | `Sa` | two meanings: `v1alpha1.SyncAggregatorSelectionData` in `E2eScal`, and `v1alpha1.SyncAggregate` in `E2eList` |
 | `Fv` | the test type `FixedVec` in `TestTarget` declaration names |
-| `epr` | two meanings: `ExecutionPayloadEnvelopesByRangeRequest`, and the Epoch reject witness `E2e.WitEpR.epr_runs` |
+| `epr` | two meanings: `ExecutionPayloadEnvelopesByRangeRequest`, and the Epoch reject witness `Prysm.Epoch.Witness.DecodeRejectSize.runs` |
 | `pad` | the encoder `padEnc` of `E2e.PAd` (AttestationData, in `E2eAd/Spec.lean`). The generator scripts use `Pad` for `v1alpha1.PayloadAttestationData` |

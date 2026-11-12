@@ -5,9 +5,9 @@ import Machine.Include
 # Code of the AttestationData function set (prysm-e2e A1, Go 1.26.10 ELF `c6403c02…911e`)
 
 Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/e2e/ad/link/norm`
-(`link/conv.py --norm` of the same ELF as `E2e.Code`; `link/check.py` (a)–(f) PASS in
-`../RESULT`, bundle `192d066f…`). The Checkpoint callees are `E2e.Code.CpUnmarshal` and
-`E2e.Code.CpMarshal` (the call targets of these files are their labels).
+(`link/conv.py --norm` of the same ELF as `Prysm.Checkpoint.Code`; `link/check.py` (a)–(f) PASS in
+`../RESULT`, bundle `192d066f…`). The Checkpoint callees are `Prysm.Checkpoint.Code.unmarshalSSZ` and
+`Prysm.Checkpoint.Code.marshalSSZTo` (the call targets of these files are their labels).
 -/
 
 namespace E2eAd.Code

@@ -3,8 +3,8 @@
   {
    "id": "ep-control",
    "kind": "control",
-   "module": "E2e/Epoch.lean",
-   "theorem": "ep_unmarshal_accept_main",
+   "module": "Prysm/Epoch/DecodeAccept.lean",
+   "theorem": "Prysm.Epoch.Decode.accept",
    "range": [
     35,
     121
@@ -25,8 +25,8 @@
   {
    "id": "ep-cmp9",
    "kind": "code",
-   "module": "E2e/Epoch.lean",
-   "theorem": "ep_unmarshal_accept_main",
+   "module": "Prysm/Epoch/DecodeAccept.lean",
+   "theorem": "Prysm.Epoch.Decode.accept",
    "range": [
     35,
     121
@@ -49,8 +49,8 @@
   {
    "id": "ep-load8",
    "kind": "code",
-   "module": "E2e/Epoch.lean",
-   "theorem": "ep_unmarshal_accept_main",
+   "module": "Prysm/Epoch/DecodeAccept.lean",
+   "theorem": "Prysm.Epoch.Decode.accept",
    "range": [
     35,
     121
@@ -75,8 +75,8 @@
   {
    "id": "ep-store8",
    "kind": "code",
-   "module": "E2e/Epoch.lean",
-   "theorem": "ep_unmarshal_accept_main",
+   "module": "Prysm/Epoch/DecodeAccept.lean",
+   "theorem": "Prysm.Epoch.Decode.accept",
    "range": [
     35,
     121
@@ -99,8 +99,8 @@
   {
    "id": "ep-stmt-rax1",
    "kind": "stmt",
-   "module": "E2e/Epoch.lean",
-   "theorem": "ep_unmarshal_accept_main",
+   "module": "Prysm/Epoch/DecodeAccept.lean",
+   "theorem": "Prysm.Epoch.Decode.accept",
    "range": [
     33,
     119
@@ -123,8 +123,8 @@
   {
    "id": "cpa-control-main",
    "kind": "control",
-   "module": "E2e/CpAccept.lean",
-   "theorem": "cp_e2e_accept_main",
+   "module": "Prysm/Checkpoint/DecodeAccept.lean",
+   "theorem": "Prysm.Checkpoint.Decode.accept",
    "range": [
     330,
     487
@@ -145,8 +145,8 @@
   {
    "id": "cpa-cmp41",
    "kind": "code",
-   "module": "E2e/CpAccept.lean",
-   "theorem": "cp_e2e_accept_main",
+   "module": "Prysm/Checkpoint/DecodeAccept.lean",
+   "theorem": "Prysm.Checkpoint.Decode.accept",
    "range": [
     330,
     487
@@ -169,8 +169,8 @@
   {
    "id": "cpa-epoch-field",
    "kind": "code",
-   "module": "E2e/CpAccept.lean",
-   "theorem": "cp_e2e_accept_main",
+   "module": "Prysm/Checkpoint/DecodeAccept.lean",
+   "theorem": "Prysm.Checkpoint.Decode.accept",
    "range": [
     330,
     487
@@ -193,8 +193,8 @@
   {
    "id": "cpa-epoch-len",
    "kind": "code",
-   "module": "E2e/CpAccept.lean",
-   "theorem": "cp_e2e_accept_main",
+   "module": "Prysm/Checkpoint/DecodeAccept.lean",
+   "theorem": "Prysm.Checkpoint.Decode.accept",
    "range": [
     330,
     487
@@ -217,8 +217,8 @@
   {
    "id": "cpa-stmt-rbx1",
    "kind": "stmt",
-   "module": "E2e/CpAccept.lean",
-   "theorem": "cp_e2e_accept_main",
+   "module": "Prysm/Checkpoint/DecodeAccept.lean",
+   "theorem": "Prysm.Checkpoint.Decode.accept",
    "range": [
     328,
     485
@@ -234,7 +234,7 @@
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "seconds": 5.3,
-   "diff": "--- orig\n+++ mut\n@@ -27,7 +27,7 @@\n     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 40) (hav : 32 \u2264 avail)\n     (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (p : BitVec 64) (scr mm : List UInt8), scr.length = S \u2227 mm.length = 24 \u2227\n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n",
+   "diff": "--- orig\n+++ mut\n@@ -27,7 +27,7 @@\n     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 40) (hav : 32 \u2264 avail)\n     (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (p : BitVec 64) (scr mm : List UInt8), scr.length = S \u2227 mm.length = 24 \u2227\n         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n",
    "class": "inside",
    "pass": true,
    "later_resource_error": null
@@ -242,8 +242,8 @@
   {
    "id": "cpa-control-tail",
    "kind": "control",
-   "module": "E2e/CpAccept.lean",
-   "theorem": "cp_e2e_accept_tail",
+   "module": "Prysm/Checkpoint/DecodeAccept.lean",
+   "theorem": "Prysm.Checkpoint.Decode.accept_tail",
    "range": [
     74,
     326
@@ -264,8 +264,8 @@
   {
    "id": "cpa-cap33",
    "kind": "code",
-   "module": "E2e/CpAccept.lean",
-   "theorem": "cp_e2e_accept_tail",
+   "module": "Prysm/Checkpoint/DecodeAccept.lean",
+   "theorem": "Prysm.Checkpoint.Decode.accept_tail",
    "range": [
     74,
     326
@@ -288,8 +288,8 @@
   {
    "id": "cpa-memmove31",
    "kind": "code",
-   "module": "E2e/CpAccept.lean",
-   "theorem": "cp_e2e_accept_tail",
+   "module": "Prysm/Checkpoint/DecodeAccept.lean",
+   "theorem": "Prysm.Checkpoint.Decode.accept_tail",
    "range": [
     74,
     326
@@ -312,8 +312,8 @@
   {
    "id": "cpa-rootptr",
    "kind": "code",
-   "module": "E2e/CpAccept.lean",
-   "theorem": "cp_e2e_accept_tail",
+   "module": "Prysm/Checkpoint/DecodeAccept.lean",
+   "theorem": "Prysm.Checkpoint.Decode.accept_tail",
    "range": [
     74,
     326
@@ -336,8 +336,8 @@
   {
    "id": "cpr-control",
    "kind": "control",
-   "module": "E2e/CpReject.lean",
-   "theorem": "cp_e2e_reject_size_main",
+   "module": "Prysm/Checkpoint/DecodeRejectSize.lean",
+   "theorem": "Prysm.Checkpoint.Decode.reject_size",
    "range": [
     40,
     128
@@ -358,8 +358,8 @@
   {
    "id": "cpr-cmp41",
    "kind": "code",
-   "module": "E2e/CpReject.lean",
-   "theorem": "cp_e2e_reject_size_main",
+   "module": "Prysm/Checkpoint/DecodeRejectSize.lean",
+   "theorem": "Prysm.Checkpoint.Decode.reject_size",
    "range": [
     40,
     128
@@ -382,8 +382,8 @@
   {
    "id": "cpr-errword",
    "kind": "code",
-   "module": "E2e/CpReject.lean",
-   "theorem": "cp_e2e_reject_size_main",
+   "module": "Prysm/Checkpoint/DecodeRejectSize.lean",
+   "theorem": "Prysm.Checkpoint.Decode.reject_size",
    "range": [
     40,
     128
@@ -408,8 +408,8 @@
   {
    "id": "cpr-stmt-e1",
    "kind": "stmt",
-   "module": "E2e/CpReject.lean",
-   "theorem": "cp_e2e_reject_size_main",
+   "module": "Prysm/Checkpoint/DecodeRejectSize.lean",
+   "theorem": "Prysm.Checkpoint.Decode.reject_size",
    "range": [
     38,
     126
@@ -432,8 +432,8 @@
   {
    "id": "cpu-control",
    "kind": "control",
-   "module": "E2e/CpReject.lean",
-   "theorem": "cp_e2e_epoch_err_unreachable",
+   "module": "Prysm/Checkpoint/DecodeRejectSize.lean",
+   "theorem": "Prysm.Checkpoint.Decode.epoch_err_unreachable",
    "range": [
     133,
     148
@@ -454,8 +454,8 @@
   {
    "id": "cpu-jne",
    "kind": "code",
-   "module": "E2e/CpReject.lean",
-   "theorem": "cp_e2e_epoch_err_unreachable",
+   "module": "Prysm/Checkpoint/DecodeRejectSize.lean",
+   "theorem": "Prysm.Checkpoint.Decode.epoch_err_unreachable",
    "range": [
     133,
     148
@@ -478,8 +478,8 @@
   {
    "id": "cpm-control",
    "kind": "control",
-   "module": "E2e/CpMarshal.lean",
-   "theorem": "cp_e2e_marshal_main",
+   "module": "Prysm/Checkpoint/EncodeFastPath.lean",
+   "theorem": "Prysm.Checkpoint.Encode.fast_path",
    "range": [
     60,
     279
@@ -500,8 +500,8 @@
   {
    "id": "cpm-len33",
    "kind": "code",
-   "module": "E2e/CpMarshal.lean",
-   "theorem": "cp_e2e_marshal_main",
+   "module": "Prysm/Checkpoint/EncodeFastPath.lean",
+   "theorem": "Prysm.Checkpoint.Encode.fast_path",
    "range": [
     60,
     279
@@ -524,8 +524,8 @@
   {
    "id": "cpm-newlen16",
    "kind": "code",
-   "module": "E2e/CpMarshal.lean",
-   "theorem": "cp_e2e_marshal_main",
+   "module": "Prysm/Checkpoint/EncodeFastPath.lean",
+   "theorem": "Prysm.Checkpoint.Encode.fast_path",
    "range": [
     60,
     279
@@ -549,8 +549,8 @@
   {
    "id": "cpm-epoch-field",
    "kind": "code",
-   "module": "E2e/CpMarshal.lean",
-   "theorem": "cp_e2e_marshal_main",
+   "module": "Prysm/Checkpoint/EncodeFastPath.lean",
+   "theorem": "Prysm.Checkpoint.Encode.fast_path",
    "range": [
     60,
     279
@@ -574,8 +574,8 @@
   {
    "id": "cpm-memmove31",
    "kind": "code",
-   "module": "E2e/CpMarshal.lean",
-   "theorem": "cp_e2e_marshal_main",
+   "module": "Prysm/Checkpoint/EncodeFastPath.lean",
+   "theorem": "Prysm.Checkpoint.Encode.fast_path",
    "range": [
     60,
     279
@@ -598,8 +598,8 @@
   {
    "id": "cpm-jne-je",
    "kind": "code",
-   "module": "E2e/CpMarshal.lean",
-   "theorem": "cp_e2e_marshal_main",
+   "module": "Prysm/Checkpoint/EncodeFastPath.lean",
+   "theorem": "Prysm.Checkpoint.Encode.fast_path",
    "range": [
     60,
     279
@@ -622,8 +622,8 @@
   {
    "id": "cpm-stmt-rdi1",
    "kind": "stmt",
-   "module": "E2e/CpMarshal.lean",
-   "theorem": "cp_e2e_marshal_main",
+   "module": "Prysm/Checkpoint/EncodeFastPath.lean",
+   "theorem": "Prysm.Checkpoint.Encode.fast_path",
    "range": [
     58,
     277
@@ -646,8 +646,8 @@
   {
    "id": "cpc-control",
    "kind": "control",
-   "module": "E2e/Compose.lean",
-   "theorem": "cp_e2e_marshal_decoded_receiver",
+   "module": "Prysm/Checkpoint/DecodeThenEncodeReceiver.lean",
+   "theorem": "Prysm.Checkpoint.DecodeThenEncode.encode_decoded_receiver",
    "range": [
     34,
     74
@@ -668,8 +668,8 @@
   {
    "id": "cpc-stmt-swap",
    "kind": "stmt",
-   "module": "E2e/Compose.lean",
-   "theorem": "cp_e2e_marshal_decoded_receiver",
+   "module": "Prysm/Checkpoint/DecodeThenEncodeReceiver.lean",
+   "theorem": "Prysm.Checkpoint.DecodeThenEncode.encode_decoded_receiver",
    "range": [
     34,
     74
@@ -684,7 +684,7 @@
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "seconds": 1.1,
-   "diff": "--- orig\n+++ mut\n@@ -26,7 +26,7 @@\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n         \u2227 st.data.regs.rbx.toNat = 40 \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n-        \u2227 (Eq ((e8 ++ root).At s.regs.rbx.toBitVec) \u22c6 fun _ => True) st.data.dmem)\n+        \u2227 (Eq ((root ++ e8).At s.regs.rbx.toBitVec) \u22c6 fun _ => True) st.data.dmem)\n       \u27e8s, Host.addrOf km\u27e9 := by\n   have hr0 : s.regs.rcx.toBitVec = 0 := by rw [hlen0]; rfl\n   have h := cp_e2e_marshal_main km hkm hfm cst e8 (Int.toBytes 8 32) ctl root [] d0 d1 hcst he8 rfl hctl hroot hd0\n",
+   "diff": "--- orig\n+++ mut\n@@ -26,7 +26,7 @@\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n         \u2227 st.data.regs.rbx.toNat = 40 \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n-        \u2227 (Eq ((e8 ++ root).At s.regs.rbx.toBitVec) \u22c6 fun _ => True) st.data.dmem)\n+        \u2227 (Eq ((root ++ e8).At s.regs.rbx.toBitVec) \u22c6 fun _ => True) st.data.dmem)\n       \u27e8s, Host.addrOf km\u27e9 := by\n   have hr0 : s.regs.rcx.toBitVec = 0 := by rw [hlen0]; rfl\n   have h := Encode.fast_path km hkm hfm cst e8 (Int.toBytes 8 32) ctl root [] d0 d1 hcst he8 rfl hctl hroot hd0\n",
    "class": "inside",
    "pass": true,
    "later_resource_error": null
@@ -692,8 +692,8 @@
   {
    "id": "cpc-stmt-len41",
    "kind": "stmt",
-   "module": "E2e/Compose.lean",
-   "theorem": "cp_e2e_marshal_decoded_receiver",
+   "module": "Prysm/Checkpoint/DecodeThenEncodeReceiver.lean",
+   "theorem": "Prysm.Checkpoint.DecodeThenEncode.encode_decoded_receiver",
    "range": [
     34,
     74
@@ -716,8 +716,8 @@
   {
    "id": "cpmr-control",
    "kind": "control",
-   "module": "E2e/CpMarshalR.lean",
-   "theorem": "cp_e2e_marshal_reject_main",
+   "module": "Prysm/Checkpoint/EncodeRejectLength.lean",
+   "theorem": "Prysm.Checkpoint.Encode.reject_length",
    "range": [
     33,
     197
@@ -738,8 +738,8 @@
   {
    "id": "cpmr-errword",
    "kind": "code",
-   "module": "E2e/CpMarshalR.lean",
-   "theorem": "cp_e2e_marshal_reject_main",
+   "module": "Prysm/Checkpoint/EncodeRejectLength.lean",
+   "theorem": "Prysm.Checkpoint.Encode.reject_length",
    "range": [
     33,
     197
@@ -762,8 +762,8 @@
   {
    "id": "cpmr-rcx",
    "kind": "code",
-   "module": "E2e/CpMarshalR.lean",
-   "theorem": "cp_e2e_marshal_reject_main",
+   "module": "Prysm/Checkpoint/EncodeRejectLength.lean",
+   "theorem": "Prysm.Checkpoint.Encode.reject_length",
    "range": [
     33,
     197
@@ -786,8 +786,8 @@
   {
    "id": "cpmr-stmt-noown",
    "kind": "stmt",
-   "module": "E2e/CpMarshalR.lean",
-   "theorem": "cp_e2e_marshal_reject_main",
+   "module": "Prysm/Checkpoint/EncodeRejectLength.lean",
+   "theorem": "Prysm.Checkpoint.Encode.reject_length",
    "range": [
     31,
     195
@@ -820,7 +820,7 @@
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "seconds": 3.2,
-   "diff": "--- orig\n+++ mut\n@@ -14,7 +14,7 @@\n       \u22c6 Eq ((Int.toBytes 8 p.toInt).At (s.regs.rax.toBitVec + 16))\n       \u22c6 Eq ((Int.toBytes 8 rl.toBitVec.toInt).At (s.regs.rax.toBitVec + 24)) \u22c6 Eq (cC.At (s.regs.rax.toBitVec + 32))\n       \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40))\n-      \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n+      \u22c6 Eq (pre.At s.regs.rbx.toBitVec)\n       \u22c6 Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrBytesLength_addr)\n       \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrBytesLength\" + 8).toBitVec) \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 \u2264 s.regs.rsp.toNat)\n",
+   "diff": "--- orig\n+++ mut\n@@ -14,7 +14,7 @@\n       \u22c6 Eq ((Int.toBytes 8 p.toInt).At (s.regs.rax.toBitVec + 16))\n       \u22c6 Eq ((Int.toBytes 8 rl.toBitVec.toInt).At (s.regs.rax.toBitVec + 24)) \u22c6 Eq (cC.At (s.regs.rax.toBitVec + 32))\n       \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40))\n-      \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n+      \u22c6 Eq (pre.At s.regs.rbx.toBitVec)\n       \u22c6 Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrBytesLength_addr)\n       \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrBytesLength\" + 8).toBitVec) \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 \u2264 s.regs.rsp.toNat)\n",
    "class": "inside",
    "pass": true,
    "later_resource_error": null
@@ -828,8 +828,8 @@
   {
    "id": "cps-control",
    "kind": "control",
-   "module": "E2e/CpSpecM.lean",
-   "theorem": "cp_e2e_size_main",
+   "module": "Prysm/Checkpoint/EncodeSpec.lean",
+   "theorem": "Prysm.Checkpoint.Size.result",
    "range": [
     75,
     95
@@ -850,8 +850,8 @@
   {
    "id": "cps-41",
    "kind": "code",
-   "module": "E2e/CpSpecM.lean",
-   "theorem": "cp_e2e_size_main",
+   "module": "Prysm/Checkpoint/EncodeSpec.lean",
+   "theorem": "Prysm.Checkpoint.Size.result",
    "range": [
     75,
     95
@@ -874,8 +874,8 @@
   {
    "id": "cpms-control",
    "kind": "control",
-   "module": "E2e/CpSpecM.lean",
-   "theorem": "cp_e2e_marshal_spec_k",
+   "module": "Prysm/Checkpoint/EncodeSpec.lean",
+   "theorem": "Prysm.Checkpoint.Encode.fast_path_spec",
    "range": [
     28,
     71
@@ -896,8 +896,8 @@
   {
    "id": "cpms-stmt-off1",
    "kind": "stmt",
-   "module": "E2e/CpSpecM.lean",
-   "theorem": "cp_e2e_marshal_spec_k",
+   "module": "Prysm/Checkpoint/EncodeSpec.lean",
+   "theorem": "Prysm.Checkpoint.Encode.fast_path_spec",
    "range": [
     28,
     71
@@ -914,7 +914,7 @@
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "seconds": 1.1,
-   "diff": "--- orig\n+++ mut\n@@ -27,7 +27,7 @@\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n         \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 \u2227 st.data.regs.rcx = s.regs.rdi\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n-        \u2227 (Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n+        \u2227 (Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))\n           \u22c6 fun _ => True) st.data.dmem)\n       \u27e8s, Host.addrOf k\u27e9 := by\n   refine \u27e8pcpEnc g, pcp_serialize g, ?_\u27e9\n",
+   "diff": "--- orig\n+++ mut\n@@ -27,7 +27,7 @@\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx\n         \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 \u2227 st.data.regs.rcx = s.regs.rdi\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n-        \u2227 (Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n+        \u2227 (Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))\n           \u22c6 fun _ => True) st.data.dmem)\n       \u27e8s, Host.addrOf k\u27e9 := by\n   refine \u27e8SszValue.encode g, SszValue.serialize_eq g, ?_\u27e9\n",
    "class": "inside",
    "pass": true,
    "later_resource_error": null
@@ -922,8 +922,8 @@
   {
    "id": "epr-control",
    "kind": "control",
-   "module": "E2e/EpReject.lean",
-   "theorem": "ep_unmarshal_reject_len_main",
+   "module": "Prysm/Epoch/DecodeRejectSize.lean",
+   "theorem": "Prysm.Epoch.Decode.reject_size",
    "range": [
     62,
     272
@@ -944,8 +944,8 @@
   {
    "id": "epr-cmp7",
    "kind": "code",
-   "module": "E2e/EpReject.lean",
-   "theorem": "ep_unmarshal_reject_len_main",
+   "module": "Prysm/Epoch/DecodeRejectSize.lean",
+   "theorem": "Prysm.Epoch.Decode.reject_size",
    "range": [
     62,
     272
@@ -968,8 +968,8 @@
   {
    "id": "epr-fmtlen",
    "kind": "code",
-   "module": "E2e/EpReject.lean",
-   "theorem": "ep_unmarshal_reject_len_main",
+   "module": "Prysm/Epoch/DecodeRejectSize.lean",
+   "theorem": "Prysm.Epoch.Decode.reject_size",
    "range": [
     62,
     272
@@ -992,8 +992,8 @@
   {
    "id": "epr-nargs",
    "kind": "code",
-   "module": "E2e/EpReject.lean",
-   "theorem": "ep_unmarshal_reject_len_main",
+   "module": "Prysm/Epoch/DecodeRejectSize.lean",
+   "theorem": "Prysm.Epoch.Decode.reject_size",
    "range": [
     62,
     272
@@ -1016,8 +1016,8 @@
   {
    "id": "epr-stmt-nil",
    "kind": "stmt",
-   "module": "E2e/EpReject.lean",
-   "theorem": "ep_unmarshal_reject_len_main",
+   "module": "Prysm/Epoch/DecodeRejectSize.lean",
+   "theorem": "Prysm.Epoch.Decode.reject_size",
    "range": [
     60,
     270
@@ -1032,7 +1032,7 @@
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "seconds": 3.6,
-   "diff": "--- orig\n+++ mut\n@@ -16,7 +16,7 @@\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 8) (hav : 8 + 40 + 40 + 8192 \u2264 avail)\n     (hct : ConvT64C Heap S) (hdd : FmtErrorfDDC Heap E2e.Data.e2eEpFmt E2e.Data.e2eIntType_addr S) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax \u2260 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (bx : BitVec 64) (hb stk' sp' : List UInt8) (av' : Nat), stk'.length = S \u2227 sp'.length = 40\n           \u2227 BoxIn bx s.regs.rcx.toBitVec hb \u2227 av' \u2264 avail \u2227\n",
+   "diff": "--- orig\n+++ mut\n@@ -16,7 +16,7 @@\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx \u2260 8) (hav : 8 + 40 + 40 + 8192 \u2264 avail)\n     (hct : ConvT64C Heap S) (hdd : FmtErrorfDDC Heap ElfData.CheckpointAndEpoch.e2eEpFmt ElfData.CheckpointAndEpoch.e2eIntType_addr S) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax \u2260 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 (bx : BitVec 64) (hb stk' sp' : List UInt8) (av' : Nat), stk'.length = S \u2227 sp'.length = 40\n           \u2227 BoxIn bx s.regs.rcx.toBitVec hb \u2227 av' \u2264 avail \u2227\n",
    "class": "inside",
    "pass": true,
    "later_resource_error": null
@@ -1040,8 +1040,8 @@
   {
    "id": "epr-stmt-addr",
    "kind": "stmt",
-   "module": "E2e/EpReject.lean",
-   "theorem": "ep_static_addr",
+   "module": "Prysm/Epoch/DecodeRejectSize.lean",
+   "theorem": "Prysm.Epoch.Decode.reject_static_addr",
    "range": [
     35,
     35
@@ -1057,7 +1057,7 @@
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "seconds": 0.9,
-   "diff": "--- orig\n+++ mut\n@@ -1 +1 @@\n-theorem ep_static_addr : E2e.Data.e2eStaticuint64s_addr = TestTarget.Data.staticuint64s_addr := rfl+theorem ep_static_addr : E2e.Data.e2eStaticuint64s_addr = TestTarget.Data.staticuint64s_addr + 8 := rfl",
+   "diff": "--- orig\n+++ mut\n@@ -1 +1 @@\n-theorem reject_static_addr : ElfData.CheckpointAndEpoch.e2eStaticuint64s_addr = TestTarget.Data.staticuint64s_addr := rfl+theorem reject_static_addr : ElfData.CheckpointAndEpoch.e2eStaticuint64s_addr = TestTarget.Data.staticuint64s_addr + 8 := rfl",
    "class": "inside",
    "pass": true,
    "later_resource_error": null
@@ -1065,8 +1065,8 @@
   {
    "id": "epr-control-addr",
    "kind": "control",
-   "module": "E2e/EpReject.lean",
-   "theorem": "ep_static_addr",
+   "module": "Prysm/Epoch/DecodeRejectSize.lean",
+   "theorem": "Prysm.Epoch.Decode.reject_static_addr",
    "range": [
     35,
     35
@@ -1087,8 +1087,8 @@
   {
    "id": "gv-control",
    "kind": "control",
-   "module": "E2e/GoVal.lean",
-   "theorem": "cp_layout",
+   "module": "Prysm/Checkpoint/GoValue.lean",
+   "theorem": "Prysm.Checkpoint.layout",
    "range": [
     28,
     29
@@ -1109,8 +1109,8 @@
   {
    "id": "gv-stmt-epoch16",
    "kind": "stmt",
-   "module": "E2e/GoVal.lean",
-   "theorem": "cp_layout",
+   "module": "Prysm/Checkpoint/GoValue.lean",
+   "theorem": "Prysm.Checkpoint.layout",
    "range": [
     28,
     29
@@ -1125,7 +1125,7 @@
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "seconds": 0.9,
-   "diff": "--- orig\n+++ mut\n@@ -1,2 +1,2 @@\n-theorem cp_layout : cpOff \"state\" = 0 \u2227 cpOff \"Epoch\" = 8 \u2227 cpOff \"Root\" = 16 \u2227 cpOff \"unknownFields\" = 40\n+theorem cp_layout : cpOff \"state\" = 0 \u2227 cpOff \"Epoch\" = 16 \u2227 cpOff \"Root\" = 16 \u2227 cpOff \"unknownFields\" = 40\n     \u2227 cpOff \"sizeCache\" = 64 \u2227 cpGoSize = 72 := by decide",
+   "diff": "--- orig\n+++ mut\n@@ -1,2 +1,2 @@\n-theorem layout : fieldOffset \"state\" = 0 \u2227 fieldOffset \"Epoch\" = 8 \u2227 fieldOffset \"Root\" = 16 \u2227 fieldOffset \"unknownFields\" = 40\n+theorem layout : fieldOffset \"state\" = 0 \u2227 fieldOffset \"Epoch\" = 16 \u2227 fieldOffset \"Root\" = 16 \u2227 fieldOffset \"unknownFields\" = 40\n     \u2227 fieldOffset \"sizeCache\" = 64 \u2227 goSize = 72 := by decide",
    "class": "inside",
    "pass": true,
    "later_resource_error": null
@@ -1133,8 +1133,8 @@
   {
    "id": "gv-control-after",
    "kind": "control",
-   "module": "E2e/GoVal.lean",
-   "theorem": "cp_after_decode_goValue",
+   "module": "Prysm/Checkpoint/GoValue.lean",
+   "theorem": "Prysm.Checkpoint.after_decode_goValue",
    "range": [
     86,
     130
@@ -1155,8 +1155,8 @@
   {
    "id": "gv-stmt-after-nil",
    "kind": "stmt",
-   "module": "E2e/GoVal.lean",
-   "theorem": "cp_after_decode_goValue",
+   "module": "Prysm/Checkpoint/GoValue.lean",
+   "theorem": "Prysm.Checkpoint.after_decode_goValue",
    "range": [
     86,
     130
@@ -1173,7 +1173,7 @@
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "seconds": 1.1,
-   "diff": "--- orig\n+++ mut\n@@ -1,5 +1,5 @@\n theorem cp_after_decode_goValue (b e8 : List UInt8) (hb : cpGoValue b = true) (he8 : e8.length = 8)\n-    (p : BitVec 64) (hp : p \u2260 0) : cpGoValue (cpAfterDecode b e8 p) = true := by\n+    (p : BitVec 64) (hp : p \u2260 0) : cpGoValue (cpAfterDecode b e8 0) = true := by\n   have hbl : b.length = 72 := by\n     simp only [cpGoValue, Bool.and_eq_true, decide_eq_true_eq] at hb; exact hb.1.1\n   have h8 : (b.take 8).length = 8 := by simp [hbl]\n",
+   "diff": "--- orig\n+++ mut\n@@ -1,5 +1,5 @@\n theorem after_decode_goValue (b e8 : List UInt8) (hb : goValue b = true) (he8 : e8.length = 8)\n-    (p : BitVec 64) (hp : p \u2260 0) : goValue (afterDecode b e8 p) = true := by\n+    (p : BitVec 64) (hp : p \u2260 0) : goValue (afterDecode b e8 0) = true := by\n   have hbl : b.length = 72 := by\n     simp only [goValue, Bool.and_eq_true, decide_eq_true_eq] at hb; exact hb.1.1\n   have h8 : (b.take 8).length = 8 := by simp [hbl]\n",
    "class": "inside",
    "pass": true,
    "later_resource_error": null
@@ -1181,8 +1181,8 @@
   {
    "id": "cpx-control",
    "kind": "control",
-   "module": "E2e/CpCompose.lean",
-   "theorem": "cp_e2e_unmarshal_then_marshal",
+   "module": "Prysm/Checkpoint/DecodeThenEncode.lean",
+   "theorem": "Prysm.Checkpoint.DecodeThenEncode.round_trip",
    "range": [
     64,
     143
@@ -1203,8 +1203,8 @@
   {
    "id": "cpx-stmt-dec-rax1",
    "kind": "stmt",
-   "module": "E2e/CpCompose.lean",
-   "theorem": "cp_e2e_unmarshal_then_marshal",
+   "module": "Prysm/Checkpoint/DecodeThenEncode.lean",
+   "theorem": "Prysm.Checkpoint.DecodeThenEncode.round_trip",
    "range": [
     64,
     143
@@ -1219,7 +1219,7 @@
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "seconds": 1.5,
-   "diff": "--- orig\n+++ mut\n@@ -39,7 +39,7 @@\n     (hlen : s.regs.rcx = 40) (hav : 32 \u2264 avail)\n     (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) (hmm2 : MemmoveC (S - 24)) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0 \u2227\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0 \u2227\n         \u2200 (mem2 : DataMem) (zm : RegZmms) (fl : StatusFlags),\n           (\u2200 F : DataMem \u2192 Prop, (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec) \u22c6 F) st.data.dmem \u2192\n             (Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At s.regs.rsp.toBitVec) \u22c6 F) mem2) \u2192\n",
+   "diff": "--- orig\n+++ mut\n@@ -39,7 +39,7 @@\n     (hlen : s.regs.rcx = 40) (hav : 32 \u2264 avail)\n     (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) (hmm2 : MemmoveC (S - 24)) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0 \u2227\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 1 \u2227 st.data.regs.rbx = 0 \u2227\n         \u2200 (mem2 : DataMem) (zm : RegZmms) (fl : StatusFlags),\n           (\u2200 F : DataMem \u2192 Prop, (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec) \u22c6 F) st.data.dmem \u2192\n             (Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At s.regs.rsp.toBitVec) \u22c6 F) mem2) \u2192\n",
    "class": "inside",
    "pass": true,
    "later_resource_error": null
@@ -1227,8 +1227,8 @@
   {
    "id": "cpx-stmt-dec-len41",
    "kind": "stmt",
-   "module": "E2e/CpCompose.lean",
-   "theorem": "cp_e2e_unmarshal_then_marshal",
+   "module": "Prysm/Checkpoint/DecodeThenEncode.lean",
+   "theorem": "Prysm.Checkpoint.DecodeThenEncode.round_trip",
    "range": [
     64,
     143
@@ -1243,7 +1243,7 @@
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "seconds": 1.6,
-   "diff": "--- orig\n+++ mut\n@@ -36,7 +36,7 @@\n         \u22c6 Eq (pre.At dptr.toBitVec) \u22c6 Eq (d0.At (dptr.toBitVec + dlen.toBitVec))\n         \u22c6 Eq (d1.At (dptr.toBitVec + dlen.toBitVec + 8)) \u22c6 R0))\n     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hsp : 120 \u2264 s.regs.rsp.toNat)\n-    (hlen : s.regs.rcx = 40) (hav : 32 \u2264 avail)\n+    (hlen : s.regs.rcx = 41) (hav : 32 \u2264 avail)\n     (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) (hmm2 : MemmoveC (S - 24)) :\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0 \u2227\n",
+   "diff": "--- orig\n+++ mut\n@@ -36,7 +36,7 @@\n         \u22c6 Eq (pre.At dptr.toBitVec) \u22c6 Eq (d0.At (dptr.toBitVec + dlen.toBitVec))\n         \u22c6 Eq (d1.At (dptr.toBitVec + dlen.toBitVec + 8)) \u22c6 R0))\n     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hsp : 120 \u2264 s.regs.rsp.toNat)\n-    (hlen : s.regs.rcx = 40) (hav : 32 \u2264 avail)\n+    (hlen : s.regs.rcx = 41) (hav : 32 \u2264 avail)\n     (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) (hmm2 : MemmoveC (S - 24)) :\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0 \u2227\n",
    "class": "inside",
    "pass": true,
    "later_resource_error": null
@@ -1251,8 +1251,8 @@
   {
    "id": "cpx-stmt-enc-swap",
    "kind": "stmt",
-   "module": "E2e/CpCompose.lean",
-   "theorem": "cp_e2e_unmarshal_then_marshal",
+   "module": "Prysm/Checkpoint/DecodeThenEncode.lean",
+   "theorem": "Prysm.Checkpoint.DecodeThenEncode.round_trip",
    "range": [
     64,
     143
@@ -1276,8 +1276,8 @@
   {
    "id": "cpx-stmt-enc-len41",
    "kind": "stmt",
-   "module": "E2e/CpCompose.lean",
-   "theorem": "cp_e2e_unmarshal_then_marshal",
+   "module": "Prysm/Checkpoint/DecodeThenEncode.lean",
+   "theorem": "Prysm.Checkpoint.DecodeThenEncode.round_trip",
    "range": [
     64,
     143
@@ -1300,8 +1300,8 @@
   {
    "id": "cpx-stmt-enc-cap39",
    "kind": "stmt",
-   "module": "E2e/CpCompose.lean",
-   "theorem": "cp_e2e_unmarshal_then_marshal",
+   "module": "Prysm/Checkpoint/DecodeThenEncode.lean",
+   "theorem": "Prysm.Checkpoint.DecodeThenEncode.round_trip",
    "range": [
     64,
     143
@@ -1324,8 +1324,8 @@
   {
    "id": "cpx-stmt-hupd-slot",
    "kind": "stmt",
-   "module": "E2e/CpCompose.lean",
-   "theorem": "cp_e2e_unmarshal_then_marshal",
+   "module": "Prysm/Checkpoint/DecodeThenEncode.lean",
+   "theorem": "Prysm.Checkpoint.DecodeThenEncode.round_trip",
    "range": [
     64,
     143
@@ -1350,8 +1350,8 @@
   {
    "id": "cpg-control",
    "kind": "control",
-   "module": "E2e/CpMarshalG.lean",
-   "theorem": "cp_e2e_marshal_grow_main",
+   "module": "Prysm/Checkpoint/EncodeGrowFirstSite.lean",
+   "theorem": "Prysm.Checkpoint.Encode.grow_first_site",
    "range": [
     61,
     361
@@ -1372,8 +1372,8 @@
   {
    "id": "cpg-num9",
    "kind": "code",
-   "module": "E2e/CpMarshalG.lean",
-   "theorem": "cp_e2e_marshal_grow_main",
+   "module": "Prysm/Checkpoint/EncodeGrowFirstSite.lean",
+   "theorem": "Prysm.Checkpoint.Encode.grow_first_site",
    "range": [
     61,
     361
@@ -1398,8 +1398,8 @@
   {
    "id": "cpg-spillrcx",
    "kind": "code",
-   "module": "E2e/CpMarshalG.lean",
-   "theorem": "cp_e2e_marshal_grow_main",
+   "module": "Prysm/Checkpoint/EncodeGrowFirstSite.lean",
+   "theorem": "Prysm.Checkpoint.Encode.grow_first_site",
    "range": [
     61,
     361
@@ -1422,8 +1422,8 @@
   {
    "id": "cpg-reloadrcx",
    "kind": "code",
-   "module": "E2e/CpMarshalG.lean",
-   "theorem": "cp_e2e_marshal_grow_main",
+   "module": "Prysm/Checkpoint/EncodeGrowFirstSite.lean",
+   "theorem": "Prysm.Checkpoint.Encode.grow_first_site",
    "range": [
     61,
     361
@@ -1446,8 +1446,8 @@
   {
    "id": "cpg-jae-jb",
    "kind": "code",
-   "module": "E2e/CpMarshalG.lean",
-   "theorem": "cp_e2e_marshal_grow_main",
+   "module": "Prysm/Checkpoint/EncodeGrowFirstSite.lean",
+   "theorem": "Prysm.Checkpoint.Encode.grow_first_site",
    "range": [
     61,
     361
@@ -1470,8 +1470,8 @@
   {
    "id": "cpg-stmt-len41",
    "kind": "stmt",
-   "module": "E2e/CpMarshalG.lean",
-   "theorem": "cp_e2e_marshal_grow_main",
+   "module": "Prysm/Checkpoint/EncodeGrowFirstSite.lean",
+   "theorem": "Prysm.Checkpoint.Encode.grow_first_site",
    "range": [
     59,
     359
@@ -1486,7 +1486,7 @@
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "seconds": 7.2,
-   "diff": "--- orig\n+++ mut\n@@ -29,7 +29,7 @@\n     (hgs : GrowsliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec\n-        \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40\n+        \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 41\n         \u2227 nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat \u2264 st.data.regs.rcx.toNat\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n",
+   "diff": "--- orig\n+++ mut\n@@ -29,7 +29,7 @@\n     (hgs : GrowsliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n       (fun st => st.pc = Int64.ofBitVec ra.toBitVec\n-        \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40\n+        \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 41\n         \u2227 nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat \u2264 st.data.regs.rcx.toNat\n         \u2227 st.data.regs.rdi = 0 \u2227 st.data.regs.rsi = 0\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n",
    "class": "inside",
    "pass": true,
    "later_resource_error": null
@@ -1494,8 +1494,8 @@
   {
    "id": "cpg-stmt-growle",
    "kind": "stmt",
-   "module": "E2e/CpMarshalG.lean",
-   "theorem": "cp_e2e_marshal_grow_main",
+   "module": "Prysm/Checkpoint/EncodeGrowFirstSite.lean",
+   "theorem": "Prysm.Checkpoint.Encode.grow_first_site",
    "range": [
     59,
     359
@@ -1512,7 +1512,7 @@
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "seconds": 6.9,
-   "diff": "--- orig\n+++ mut\n@@ -23,7 +23,7 @@\n       \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40)) \u22c6 Eq (root.At p)\n       \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Heap avail \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 \u2264 s.regs.rsp.toNat)\n-    (hlc : s.regs.rcx.toNat \u2264 s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)\n+    (hlc : s.regs.rcx.toNat \u2264 s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat \u2264 s.regs.rcx.toNat + 8)\n     (hfit : s.regs.rcx.toNat + 40 \u2264 nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat)\n     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat + 8192 \u2264 avail) (hmax : avail \u2264 maxAlloc)\n     (hgs : GrowsliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n",
+   "diff": "--- orig\n+++ mut\n@@ -23,7 +23,7 @@\n       \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40)) \u22c6 Eq (root.At p)\n       \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Heap avail \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 \u2264 s.regs.rsp.toNat)\n-    (hlc : s.regs.rcx.toNat \u2264 s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)\n+    (hlc : s.regs.rcx.toNat \u2264 s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat \u2264 s.regs.rcx.toNat + 8)\n     (hfit : s.regs.rcx.toNat + 40 \u2264 nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat)\n     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat + 8192 \u2264 avail) (hmax : avail \u2264 maxAlloc)\n     (hgs : GrowsliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n",
    "class": "inside",
    "pass": true,
    "later_resource_error": null
@@ -1520,8 +1520,8 @@
   {
    "id": "cpg-oldcap",
    "kind": "code",
-   "module": "E2e/CpMarshalG.lean",
-   "theorem": "cp_e2e_marshal_grow_main",
+   "module": "Prysm/Checkpoint/EncodeGrowFirstSite.lean",
+   "theorem": "Prysm.Checkpoint.Encode.grow_first_site",
    "range": [
     61,
     361
@@ -1548,8 +1548,8 @@
   {
    "id": "cpg-stmt-fit39",
    "kind": "stmt",
-   "module": "E2e/CpMarshalG.lean",
-   "theorem": "cp_e2e_marshal_grow_main",
+   "module": "Prysm/Checkpoint/EncodeGrowFirstSite.lean",
+   "theorem": "Prysm.Checkpoint.Encode.grow_first_site",
    "range": [
     59,
     359
@@ -1564,7 +1564,7 @@
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "seconds": 7.3,
-   "diff": "--- orig\n+++ mut\n@@ -24,7 +24,7 @@\n       \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Heap avail \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 \u2264 s.regs.rsp.toNat)\n     (hlc : s.regs.rcx.toNat \u2264 s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)\n-    (hfit : s.regs.rcx.toNat + 40 \u2264 nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat)\n+    (hfit : s.regs.rcx.toNat + 39 \u2264 nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat)\n     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat + 8192 \u2264 avail) (hmax : avail \u2264 maxAlloc)\n     (hgs : GrowsliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n",
+   "diff": "--- orig\n+++ mut\n@@ -24,7 +24,7 @@\n       \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Heap avail \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 \u2264 s.regs.rsp.toNat)\n     (hlc : s.regs.rcx.toNat \u2264 s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)\n-    (hfit : s.regs.rcx.toNat + 40 \u2264 nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat)\n+    (hfit : s.regs.rcx.toNat + 39 \u2264 nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat)\n     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat + 8192 \u2264 avail) (hmax : avail \u2264 maxAlloc)\n     (hgs : GrowsliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n",
    "class": "inside",
    "pass": true,
    "later_resource_error": null
@@ -1572,8 +1572,8 @@
   {
    "id": "spe-control",
    "kind": "control",
-   "module": "E2e/SpecEq.lean",
-   "theorem": "prysmCpDesc_serialize_checker",
+   "module": "Prysm/Checkpoint/SpecEquivalence.lean",
+   "theorem": "Prysm.Checkpoint.desc_serialize_checker",
    "range": [
     17,
     19
@@ -1594,8 +1594,8 @@
   {
    "id": "spe-stmt-uint4",
    "kind": "stmt",
-   "module": "E2e/SpecEq.lean",
-   "theorem": "prysmCpDesc_serialize_checker",
+   "module": "Prysm/Checkpoint/SpecEquivalence.lean",
+   "theorem": "Prysm.Checkpoint.desc_serialize_checker",
    "range": [
     17,
     19
@@ -1603,14 +1603,14 @@
    "error_lines": [
     18
    ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/spe-stmt-uint4/mut.lean:18:21: error: Tactic `unfold` failed to unfold `cpCheckerDesc` in",
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/spe-stmt-uint4/mut.lean:18:21: error: Tactic `unfold` failed to unfold `Prysm.Checkpoint.checkerDesc` in",
    "rc": 1,
    "killed": false,
    "timeout": false,
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "seconds": 0.5,
-   "diff": "--- orig\n+++ mut\n@@ -1,3 +1,3 @@\n-theorem prysmCpDesc_serialize_checker (v : Value) : serialize prysmCpDesc v = serialize cpCheckerDesc v := by\n+theorem prysmCpDesc_serialize_checker (v : Value) : serialize prysmCpDesc v = serialize (.container [\"Epoch\", \"Root\"] [.uint 4, .byteVector 32]) v := by\n   unfold prysmCpDesc cpCheckerDesc\n   cases v <;> simp only [serialize]",
+   "diff": "--- orig\n+++ mut\n@@ -1,3 +1,3 @@\n-theorem desc_serialize_checker (v : Value) : serialize desc v = serialize checkerDesc v := by\n+theorem desc_serialize_checker (v : Value) : serialize desc v = serialize (.container [\"Epoch\", \"Root\"] [.uint 4, .byteVector 32]) v := by\n   unfold desc checkerDesc\n   cases v <;> simp only [serialize]",
    "class": "inside",
    "pass": true,
    "later_resource_error": null
@@ -1618,8 +1618,8 @@
   {
    "id": "spe-control-de",
    "kind": "control",
-   "module": "E2e/SpecEq.lean",
-   "theorem": "prysmCpDesc_deserialize_checker",
+   "module": "Prysm/Checkpoint/SpecEquivalence.lean",
+   "theorem": "Prysm.Checkpoint.desc_deserialize_checker",
    "range": [
     21,
     23
@@ -1640,8 +1640,8 @@
   {
    "id": "spe-stmt-de-bv31",
    "kind": "stmt",
-   "module": "E2e/SpecEq.lean",
-   "theorem": "prysmCpDesc_deserialize_checker",
+   "module": "Prysm/Checkpoint/SpecEquivalence.lean",
+   "theorem": "Prysm.Checkpoint.desc_deserialize_checker",
    "range": [
     21,
     23
@@ -1649,14 +1649,14 @@
    "error_lines": [
     22
    ],
-   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/spe-stmt-de-bv31/mut.lean:22:21: error: Tactic `unfold` failed to unfold `cpCheckerDesc` in",
+   "first_error": "/workspace/agent-runs/methodical-fv-prysm-e2e/streams/prysm-e2e/scratch/neg/spe-stmt-de-bv31/mut.lean:22:21: error: Tactic `unfold` failed to unfold `Prysm.Checkpoint.checkerDesc` in",
    "rc": 1,
    "killed": false,
    "timeout": false,
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "seconds": 0.6,
-   "diff": "--- orig\n+++ mut\n@@ -1,3 +1,3 @@\n-theorem prysmCpDesc_deserialize_checker (bs : Bytes) : deserialize prysmCpDesc bs = deserialize cpCheckerDesc bs := by\n+theorem prysmCpDesc_deserialize_checker (bs : Bytes) : deserialize prysmCpDesc bs = deserialize (.container [\"Epoch\", \"Root\"] [.uint 8, .byteVector 31]) bs := by\n   unfold prysmCpDesc cpCheckerDesc\n   simp only [deserialize]",
+   "diff": "--- orig\n+++ mut\n@@ -1,3 +1,3 @@\n-theorem desc_deserialize_checker (bs : Bytes) : deserialize desc bs = deserialize checkerDesc bs := by\n+theorem desc_deserialize_checker (bs : Bytes) : deserialize desc bs = deserialize (.container [\"Epoch\", \"Root\"] [.uint 8, .byteVector 31]) bs := by\n   unfold desc checkerDesc\n   simp only [deserialize]",
    "class": "inside",
    "pass": true,
    "later_resource_error": null
@@ -1664,8 +1664,8 @@
   {
    "id": "wrs-control",
    "kind": "control",
-   "module": "E2e/WitCpRS.lean",
-   "theorem": "cp_reject_spec_runs",
+   "module": "Prysm/Checkpoint/WitnessDecodeRejectSizeSpec.lean",
+   "theorem": "Prysm.Checkpoint.Witness.DecodeRejectSize.runs_spec",
    "range": [
     18,
     35
@@ -1686,8 +1686,8 @@
   {
    "id": "wrs-stmt-rax",
    "kind": "stmt",
-   "module": "E2e/WitCpRS.lean",
-   "theorem": "cp_reject_spec_runs",
+   "module": "Prysm/Checkpoint/WitnessDecodeRejectSizeSpec.lean",
+   "theorem": "Prysm.Checkpoint.Witness.DecodeRejectSize.runs_spec",
    "range": [
     18,
     35
@@ -1702,7 +1702,7 @@
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "seconds": 2.0,
-   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem cp_reject_spec_runs (n : Nat) (hn : n \u2260 40) (hn64 : n < 2 ^ 64) (zmms : RegZmms) (flags : StatusFlags) :\n     (\u2203 e, deserialize prysmCpDesc (Array.replicate n (0x11 : UInt8)) = .error e) \u2227\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x10e8\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x10e9\n         \u2227 st.data.regs.rbx = 0x2a)\n       \u27e8cs0 (UInt64.ofNat n) zmms flags, Host.addrOf 1\u27e9 :=\n   let h := cp_e2e_reject_size_spec 1 hk1 hf1 (Array.replicate n (0x11 : UInt8)) (by simpa using hn)\n",
+   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem runs_spec (n : Nat) (hn : n \u2260 40) (hn64 : n < 2 ^ 64) (zmms : RegZmms) (flags : StatusFlags) :\n     (\u2203 e, deserialize desc (Array.replicate n (0x11 : UInt8)) = .error e) \u2227\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x10e8\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0x10e9\n         \u2227 st.data.regs.rbx = 0x2a)\n       \u27e8cs0 (UInt64.ofNat n) zmms flags, Host.addrOf 1\u27e9 :=\n   let h := Decode.reject_size_spec 1 hk1 hf1 (Array.replicate n (0x11 : UInt8)) (by simpa using hn)\n",
    "class": "inside",
    "pass": true,
    "later_resource_error": null
@@ -1710,8 +1710,8 @@
   {
    "id": "was-control",
    "kind": "control",
-   "module": "E2e/WitCpAS.lean",
-   "theorem": "cp_accept_spec_runs",
+   "module": "Prysm/Checkpoint/WitnessDecodeAcceptSpec.lean",
+   "theorem": "Prysm.Checkpoint.Witness.DecodeAccept.runs_spec",
    "range": [
     32,
     63
@@ -1732,8 +1732,8 @@
   {
    "id": "was-stmt-rbx",
    "kind": "stmt",
-   "module": "E2e/WitCpAS.lean",
-   "theorem": "cp_accept_spec_runs",
+   "module": "Prysm/Checkpoint/WitnessDecodeAcceptSpec.lean",
+   "theorem": "Prysm.Checkpoint.Witness.DecodeAccept.runs_spec",
    "range": [
     32,
     63
@@ -1748,7 +1748,7 @@
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "seconds": 22.4,
-   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem cp_accept_spec_runs (g0 : PCp) (zmms : RegZmms) (flags : StatusFlags) :\n     \u2203 g : PCp, g.toValue = g0.toValue \u2227 pcpEnc g0 = pcpEnc g \u2227\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0)\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 1)\n       \u27e8cs0 (uintBytes 8 g0.epoch.toNat).toList g0.root.toList zmms flags, Host.addrOf 9\u27e9 := by\n   obtain \u27e8g, h1, h2, h3\u27e9 := cp_e2e_accept_spec_k 9 hk9 hf9 117 hk117 hf117 (pcpEnc g0) g0.toValue (pcp_roundtrip g0)\n     (cs0 (uintBytes 8 g0.epoch.toNat).toList g0.root.toList zmms flags) 0 0\n",
+   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem runs_spec (g0 : SszValue) (zmms : RegZmms) (flags : StatusFlags) :\n     \u2203 g : SszValue, g.toValue = g0.toValue \u2227 SszValue.encode g0 = SszValue.encode g \u2227\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0)\n+      (fun st => st.pc = Int64.ofBitVec (0 : UInt64).toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 1)\n       \u27e8cs0 (uintBytes 8 g0.epoch.toNat).toList g0.root.toList zmms flags, Host.addrOf 9\u27e9 := by\n   obtain \u27e8g, h1, h2, h3\u27e9 := Decode.accept_spec 9 hk9 hf9 117 hk117 hf117 (SszValue.encode g0) g0.toValue (SszValue.roundtrip g0)\n     (cs0 (uintBytes 8 g0.epoch.toNat).toList g0.root.toList zmms flags) 0 0\n",
    "class": "inside",
    "pass": true,
    "later_resource_error": null
@@ -2055,7 +2055,7 @@
    "timeout": false,
    "later_resource_error": null,
    "seconds": 0.5,
-   "diff": "--- orig\n+++ mut\n@@ -1,4 +1,4 @@\n-theorem prysmAdDesc_serialize_checker (v : Value) : serialize prysmAdDesc v = serialize adCheckerDesc v := by\n+theorem prysmAdDesc_serialize_checker (v : Value) : serialize prysmAdDesc v = serialize prysmCpDesc v := by\n   unfold prysmAdDesc adCheckerDesc\n   cases v <;> simp only [serialize]\n   rename_i vs\n",
+   "diff": "--- orig\n+++ mut\n@@ -1,4 +1,4 @@\n-theorem prysmAdDesc_serialize_checker (v : Value) : serialize prysmAdDesc v = serialize adCheckerDesc v := by\n+theorem prysmAdDesc_serialize_checker (v : Value) : serialize prysmAdDesc v = serialize Prysm.Checkpoint.desc v := by\n   unfold prysmAdDesc adCheckerDesc\n   cases v <;> simp only [serialize]\n   rename_i vs\n",
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "class": "inside",
@@ -2103,7 +2103,7 @@
    "timeout": false,
    "later_resource_error": null,
    "seconds": 0.7,
-   "diff": "--- orig\n+++ mut\n@@ -1,5 +1,5 @@\n theorem prysmAdDesc_deserialize_checker (bs : Array UInt8) (v : Value) :\n-    deserialize prysmAdDesc bs = .ok v \u2194 deserialize adCheckerDesc bs = .ok v := by\n+    deserialize prysmAdDesc bs = .ok v \u2194 deserialize prysmCpDesc bs = .ok v := by\n   constructor\n   \u00b7 intro h\n     obtain \u27e8g, rfl, rfl\u27e9 := pad_accepted_is_enc h\n",
+   "diff": "--- orig\n+++ mut\n@@ -1,5 +1,5 @@\n theorem prysmAdDesc_deserialize_checker (bs : Array UInt8) (v : Value) :\n-    deserialize prysmAdDesc bs = .ok v \u2194 deserialize adCheckerDesc bs = .ok v := by\n+    deserialize prysmAdDesc bs = .ok v \u2194 deserialize Prysm.Checkpoint.desc bs = .ok v := by\n   constructor\n   \u00b7 intro h\n     obtain \u27e8g, rfl, rfl\u27e9 := pad_accepted_is_enc h\n",
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "class": "inside",
@@ -2687,7 +2687,7 @@
    "timeout": false,
    "later_resource_error": null,
    "seconds": 0.9,
-   "diff": "--- orig\n+++ mut\n@@ -30,7 +30,7 @@\n       \u22c6 Eq (aL.At (s.regs.rax.toBitVec + 32)) \u22c6 Eq (aC.At (s.regs.rax.toBitVec + 40))\n       \u22c6 Eq (aS.At (s.regs.rax.toBitVec + 48)) \u22c6 Eq (aT.At (s.regs.rax.toBitVec + 56))\n       \u22c6 Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec) \u22c6 R)\n-    (hguard : guard.toNat + 224 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size) (hav : 240 \u2264 avail)\n+    (hguard : guard.toNat + 224 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size + 1) (hav : 240 \u2264 avail)\n     (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S)\n     (hms' : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 96)) (hmm' : MemmoveC (S + 96))\n     (hno : NewobjectC Heap E2eAd.Data.adCpType_addr 72 (S + 96)) :\n",
+   "diff": "--- orig\n+++ mut\n@@ -30,7 +30,7 @@\n       \u22c6 Eq (aL.At (s.regs.rax.toBitVec + 32)) \u22c6 Eq (aC.At (s.regs.rax.toBitVec + 40))\n       \u22c6 Eq (aS.At (s.regs.rax.toBitVec + 48)) \u22c6 Eq (aT.At (s.regs.rax.toBitVec + 56))\n       \u22c6 Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec) \u22c6 R)\n-    (hguard : guard.toNat + 224 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size) (hav : 240 \u2264 avail)\n+    (hguard : guard.toNat + 224 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size + 1) (hav : 240 \u2264 avail)\n     (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S)\n     (hms' : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 96)) (hmm' : MemmoveC (S + 96))\n     (hno : NewobjectC Heap E2eAd.Data.adCpType_addr 72 (S + 96)) :\n",
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "class": "inside",
@@ -2696,8 +2696,8 @@
   {
    "id": "cpw-tf-control",
    "kind": "control",
-   "module": "E2e/CpWTail.lean",
-   "theorem": "cpw_tail_fit",
+   "module": "Prysm/Checkpoint/EncodeTail.lean",
+   "theorem": "Prysm.Checkpoint.Encode.tail_fit",
    "range": [
     44,
     186
@@ -2718,8 +2718,8 @@
   {
    "id": "cpw-tf-jae",
    "kind": "code",
-   "module": "E2e/CpWTail.lean",
-   "theorem": "cpw_tail_fit",
+   "module": "Prysm/Checkpoint/EncodeTail.lean",
+   "theorem": "Prysm.Checkpoint.Encode.tail_fit",
    "range": [
     44,
     186
@@ -2742,8 +2742,8 @@
   {
    "id": "cpw-tr-control",
    "kind": "control",
-   "module": "E2e/CpWTail.lean",
-   "theorem": "cpw_tail_rej",
+   "module": "Prysm/Checkpoint/EncodeTail.lean",
+   "theorem": "Prysm.Checkpoint.Encode.tail_rej",
    "range": [
     192,
     277
@@ -2764,8 +2764,8 @@
   {
    "id": "cpw-tg-control",
    "kind": "control",
-   "module": "E2e/CpWTailG.lean",
-   "theorem": "cpw_tail_grow",
+   "module": "Prysm/Checkpoint/EncodeTailGrow.lean",
+   "theorem": "Prysm.Checkpoint.Encode.tail_grow",
    "range": [
     48,
     268
@@ -2786,8 +2786,8 @@
   {
    "id": "cpw-tg-num",
    "kind": "code",
-   "module": "E2e/CpWTailG.lean",
-   "theorem": "cpw_tail_grow",
+   "module": "Prysm/Checkpoint/EncodeTailGrow.lean",
+   "theorem": "Prysm.Checkpoint.Encode.tail_grow",
    "range": [
     48,
     268
@@ -2812,8 +2812,8 @@
   {
    "id": "cpw-tg-rdx",
    "kind": "code",
-   "module": "E2e/CpWTailG.lean",
-   "theorem": "cpw_tail_grow",
+   "module": "Prysm/Checkpoint/EncodeTailGrow.lean",
+   "theorem": "Prysm.Checkpoint.Encode.tail_grow",
    "range": [
     48,
     268
@@ -2836,8 +2836,8 @@
   {
    "id": "cpw-tc-control",
    "kind": "control",
-   "module": "E2e/CpWTailG.lean",
-   "theorem": "cpw_tail_grow_call",
+   "module": "Prysm/Checkpoint/EncodeTailGrow.lean",
+   "theorem": "Prysm.Checkpoint.Encode.tail_grow_call",
    "range": [
     274,
     368
@@ -2858,8 +2858,8 @@
   {
    "id": "cpw-hf-control",
    "kind": "control",
-   "module": "E2e/CpWHead.lean",
-   "theorem": "cpw_head_fit",
+   "module": "Prysm/Checkpoint/EncodeHead.lean",
+   "theorem": "Prysm.Checkpoint.Encode.head_fit",
    "range": [
     28,
     127
@@ -2880,8 +2880,8 @@
   {
    "id": "cpw-hf-jae",
    "kind": "code",
-   "module": "E2e/CpWHead.lean",
-   "theorem": "cpw_head_fit",
+   "module": "Prysm/Checkpoint/EncodeHead.lean",
+   "theorem": "Prysm.Checkpoint.Encode.head_fit",
    "range": [
     28,
     127
@@ -2904,8 +2904,8 @@
   {
    "id": "cpw-hg-control",
    "kind": "control",
-   "module": "E2e/CpWHead.lean",
-   "theorem": "cpw_head_grow",
+   "module": "Prysm/Checkpoint/EncodeHead.lean",
+   "theorem": "Prysm.Checkpoint.Encode.head_grow",
    "range": [
     131,
     309
@@ -2926,8 +2926,8 @@
   {
    "id": "cpw-g2-control",
    "kind": "control",
-   "module": "E2e/CpWGrow.lean",
-   "theorem": "cp_e2e_marshal_grow2_main",
+   "module": "Prysm/Checkpoint/EncodeGrowSecondSite.lean",
+   "theorem": "Prysm.Checkpoint.Encode.grow_second_site",
    "range": [
     34,
     104
@@ -2948,8 +2948,8 @@
   {
    "id": "cpw-g2-hi",
    "kind": "stmt",
-   "module": "E2e/CpWGrow.lean",
-   "theorem": "cp_e2e_marshal_grow2_main",
+   "module": "Prysm/Checkpoint/EncodeGrowSecondSite.lean",
+   "theorem": "Prysm.Checkpoint.Encode.grow_second_site",
    "range": [
     34,
     104
@@ -2963,7 +2963,7 @@
    "timeout": false,
    "later_resource_error": null,
    "seconds": 1.3,
-   "diff": "--- orig\n+++ mut\n@@ -22,7 +22,7 @@\n       \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40)) \u22c6 Eq (root.At p)\n       \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) \u22c6 Heap avail \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 \u2264 s.regs.rsp.toNat)\n-    (hlo : s.regs.rcx.toNat + 8 \u2264 s.regs.rdi.toNat) (hhi : s.regs.rdi.toNat < s.regs.rcx.toNat + 40)\n+    (hlo : s.regs.rcx.toNat + 8 \u2264 s.regs.rdi.toNat) (hhi : s.regs.rdi.toNat < s.regs.rcx.toNat + 41)\n     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 40) s.regs.rdi.toNat + 8192 \u2264 avail) (hmax : avail \u2264 maxAlloc)\n     (hgs : GrowsliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n",
+   "diff": "--- orig\n+++ mut\n@@ -22,7 +22,7 @@\n       \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40)) \u22c6 Eq (root.At p)\n       \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) \u22c6 Heap avail \u22c6 R)\n     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 \u2264 s.regs.rsp.toNat)\n-    (hlo : s.regs.rcx.toNat + 8 \u2264 s.regs.rdi.toNat) (hhi : s.regs.rdi.toNat < s.regs.rcx.toNat + 40)\n+    (hlo : s.regs.rcx.toNat + 8 \u2264 s.regs.rdi.toNat) (hhi : s.regs.rdi.toNat < s.regs.rcx.toNat + 41)\n     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 40) s.regs.rdi.toNat + 8192 \u2264 avail) (hmax : avail \u2264 maxAlloc)\n     (hgs : GrowsliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :\n     Eventually (step1 Host.exe)\n",
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "class": "inside",
@@ -2972,8 +2972,8 @@
   {
    "id": "cpw-ga-control",
    "kind": "control",
-   "module": "E2e/CpWGrowAny.lean",
-   "theorem": "cp_e2e_marshal_grow_any_main",
+   "module": "Prysm/Checkpoint/EncodeGrowAnySite.lean",
+   "theorem": "Prysm.Checkpoint.Encode.grow_any_site",
    "range": [
     37,
     178
@@ -2994,8 +2994,8 @@
   {
    "id": "cpw-ga-num",
    "kind": "stmt",
-   "module": "E2e/CpWGrowAny.lean",
-   "theorem": "cp_e2e_marshal_grow_any_main",
+   "module": "Prysm/Checkpoint/EncodeGrowAnySite.lean",
+   "theorem": "Prysm.Checkpoint.Encode.grow_any_site",
    "range": [
     37,
     178
@@ -3009,7 +3009,7 @@
    "timeout": false,
    "later_resource_error": null,
    "seconds": 98.1,
-   "diff": "--- orig\n+++ mut\n@@ -59,7 +59,7 @@\n           \u22c6 Heap av' \u22c6 R) st.data.dmem)\n         \u2228 (st.pc = label \"runtime.growslice\" \u2227 st.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 120 }\n           \u2227 st.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8#64 } \u2227 st.data.regs.r14 = s.regs.r14\n-          \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 \u2227 st.data.regs.rdi.toNat = 32\n+          \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 \u2227 st.data.regs.rdi.toNat = 40\n           \u2227 st.data.regs.rsi.toBitVec = E2e.Data.e2eU8Type_addr\n           \u2227 nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat \u2264 st.data.regs.rcx.toNat\n           \u2227 st.data.regs.rcx.toNat < s.regs.rcx.toNat + 40 \u2227\n",
+   "diff": "--- orig\n+++ mut\n@@ -59,7 +59,7 @@\n           \u22c6 Heap av' \u22c6 R) st.data.dmem)\n         \u2228 (st.pc = label \"runtime.growslice\" \u2227 st.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 120 }\n           \u2227 st.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8#64 } \u2227 st.data.regs.r14 = s.regs.r14\n-          \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 \u2227 st.data.regs.rdi.toNat = 32\n+          \u2227 st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 \u2227 st.data.regs.rdi.toNat = 40\n           \u2227 st.data.regs.rsi.toBitVec = ElfData.CheckpointAndEpoch.e2eU8Type_addr\n           \u2227 nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat \u2264 st.data.regs.rcx.toNat\n           \u2227 st.data.regs.rcx.toNat < s.regs.rcx.toNat + 40 \u2227\n",
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "class": "inside",
@@ -3018,8 +3018,8 @@
   {
    "id": "cpw-rg-control",
    "kind": "control",
-   "module": "E2e/CpWGrowAny.lean",
-   "theorem": "cp_e2e_marshal_reject_grow_main",
+   "module": "Prysm/Checkpoint/EncodeGrowAnySite.lean",
+   "theorem": "Prysm.Checkpoint.Encode.reject_length_grow_first_site",
    "range": [
     182,
     265
@@ -3040,8 +3040,8 @@
   {
    "id": "cpw-rg-old",
    "kind": "stmt",
-   "module": "E2e/CpWGrowAny.lean",
-   "theorem": "cp_e2e_marshal_reject_grow_main",
+   "module": "Prysm/Checkpoint/EncodeGrowAnySite.lean",
+   "theorem": "Prysm.Checkpoint.Encode.reject_length_grow_first_site",
    "range": [
     182,
     265
@@ -3055,7 +3055,7 @@
    "timeout": false,
    "later_resource_error": null,
    "seconds": 101.4,
-   "diff": "--- orig\n+++ mut\n@@ -51,7 +51,7 @@\n           \u22c6 Eq ((Int.toBytes 8 p.toInt).At (s.regs.rax.toBitVec + 16))\n           \u22c6 Eq ((Int.toBytes 8 rl.toBitVec.toInt).At (s.regs.rax.toBitVec + 24)) \u22c6 Eq (cC.At (s.regs.rax.toBitVec + 32))\n           \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40))\n-          \u22c6 Eq (pre.At s.regs.rbx.toBitVec)\n+          \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n           \u22c6 Eq (pre.At nb) \u22c6 Eq (e8.At (nb + s.regs.rcx.toBitVec)) \u22c6 Eq (mid.At (nb + s.regs.rcx.toBitVec + 8))\n           \u22c6 Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrBytesLength_addr)\n           \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrBytesLength\" + 8).toBitVec)\n",
+   "diff": "--- orig\n+++ mut\n@@ -51,7 +51,7 @@\n           \u22c6 Eq ((Int.toBytes 8 p.toInt).At (s.regs.rax.toBitVec + 16))\n           \u22c6 Eq ((Int.toBytes 8 rl.toBitVec.toInt).At (s.regs.rax.toBitVec + 24)) \u22c6 Eq (cC.At (s.regs.rax.toBitVec + 32))\n           \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40))\n-          \u22c6 Eq (pre.At s.regs.rbx.toBitVec)\n+          \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n           \u22c6 Eq (pre.At nb) \u22c6 Eq (e8.At (nb + s.regs.rcx.toBitVec)) \u22c6 Eq (mid.At (nb + s.regs.rcx.toBitVec + 8))\n           \u22c6 Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrBytesLength_addr)\n           \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrBytesLength\" + 8).toBitVec)\n",
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "class": "inside",
@@ -3064,8 +3064,8 @@
   {
    "id": "cpw-cv-control",
    "kind": "control",
-   "module": "E2e/CpWCover.lean",
-   "theorem": "cp_e2e_marshal_cover",
+   "module": "Prysm/Checkpoint/EncodeCover.lean",
+   "theorem": "Prysm.Checkpoint.Encode.cover",
    "range": [
     49,
     140
@@ -3086,8 +3086,8 @@
   {
    "id": "cpw-cv-out",
    "kind": "stmt",
-   "module": "E2e/CpWCover.lean",
-   "theorem": "cp_e2e_marshal_cover",
+   "module": "Prysm/Checkpoint/EncodeCover.lean",
+   "theorem": "Prysm.Checkpoint.Encode.cover",
    "range": [
     49,
     140
@@ -3112,8 +3112,8 @@
   {
    "id": "cpw-rc-control",
    "kind": "control",
-   "module": "E2e/CpWCover.lean",
-   "theorem": "cp_e2e_marshal_reject_cover",
+   "module": "Prysm/Checkpoint/EncodeCover.lean",
+   "theorem": "Prysm.Checkpoint.Encode.reject_length_cover",
    "range": [
     144,
     208
@@ -3134,8 +3134,8 @@
   {
    "id": "cpw-rc-rax",
    "kind": "stmt",
-   "module": "E2e/CpWCover.lean",
-   "theorem": "cp_e2e_marshal_reject_cover",
+   "module": "Prysm/Checkpoint/EncodeCover.lean",
+   "theorem": "Prysm.Checkpoint.Encode.reject_length_cover",
    "range": [
     144,
     208
@@ -3150,7 +3150,7 @@
    "timeout": false,
    "later_resource_error": null,
    "seconds": 2.2,
-   "diff": "--- orig\n+++ mut\n@@ -30,7 +30,7 @@\n     (hbud : 4 * s.regs.rcx.toNat + 8736 \u2264 avail) (hmax : avail \u2264 maxAlloc)\n     (hgs : GrowsliceC Heap E2e.Data.e2eU8Type_addr 1 S) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rcx = 0 \u2227 st.data.regs.rdi = e0 \u2227 st.data.regs.rsi = e1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 blk : BitVec 64, (Eq (pre.At blk) \u22c6 Eq (e8.At (blk + s.regs.rcx.toBitVec))\n",
+   "diff": "--- orig\n+++ mut\n@@ -30,7 +30,7 @@\n     (hbud : 4 * s.regs.rcx.toNat + 8736 \u2264 avail) (hmax : avail \u2264 maxAlloc)\n     (hgs : GrowsliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) :\n     Eventually (step1 Host.exe)\n-      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = 0 \u2227 st.data.regs.rbx = 0\n+      (fun st => st.pc = Int64.ofBitVec ra.toBitVec \u2227 st.data.regs.rax = s.regs.rbx \u2227 st.data.regs.rbx = 0\n         \u2227 st.data.regs.rcx = 0 \u2227 st.data.regs.rdi = e0 \u2227 st.data.regs.rsi = e1\n         \u2227 st.data.regs.rsp = s.regs.rsp + 8 \u2227 st.data.regs.rbp = s.regs.rbp \u2227 st.data.regs.r14 = s.regs.r14 \u2227\n         \u2203 blk : BitVec 64, (Eq (pre.At blk) \u22c6 Eq (e8.At (blk + s.regs.rcx.toBitVec))\n",
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "class": "inside",
@@ -3159,8 +3159,8 @@
   {
    "id": "cpw-tr-err1",
    "kind": "code",
-   "module": "E2e/CpWTail.lean",
-   "theorem": "cpw_tail_rej",
+   "module": "Prysm/Checkpoint/EncodeTail.lean",
+   "theorem": "Prysm.Checkpoint.Encode.tail_rej",
    "range": [
     192,
     277
@@ -3184,8 +3184,8 @@
   {
    "id": "cpw-tc-stmt-num",
    "kind": "stmt",
-   "module": "E2e/CpWTailG.lean",
-   "theorem": "cpw_tail_grow_call",
+   "module": "Prysm/Checkpoint/EncodeTailGrow.lean",
+   "theorem": "Prysm.Checkpoint.Encode.tail_grow_call",
    "range": [
     272,
     366
@@ -3199,7 +3199,7 @@
    "timeout": false,
    "later_resource_error": null,
    "seconds": 4.4,
-   "diff": "--- orig\n+++ mut\n@@ -21,7 +21,7 @@\n       (fun st => st.pc = label \"runtime.growslice\" \u2227 st.data.regs.rsp = { toBitVec := rsp0.toBitVec - 120 }\n         \u2227 st.data.regs.rbp = { toBitVec := rsp0.toBitVec - 8#64 } \u2227 st.data.regs.r14 = r140\n         \u2227 st.data.regs.rax.toBitVec = b \u2227 st.data.regs.rbx.toNat = L.toNat + 40 \u2227 st.data.regs.rcx = C\n-        \u2227 st.data.regs.rdi.toNat = 32 \u2227 st.data.regs.rsi.toBitVec = E2e.Data.e2eU8Type_addr \u2227\n+        \u2227 st.data.regs.rdi.toNat = 8 \u2227 st.data.regs.rsi.toBitVec = E2e.Data.e2eU8Type_addr \u2227\n         (Eq ((Int.toBytes 8 (Host.addrOf (k + 50)).toBitVec.toInt).At (rsp0.toBitVec - 120))\n           \u22c6 Eq ((Int.toBytes 8 ra.toBitVec.toInt).At rsp0.toBitVec)\n           \u22c6 Eq ((Int.toBytes 8 rbp0.toBitVec.toInt).At (rsp0.toBitVec - 8))\n",
+   "diff": "--- orig\n+++ mut\n@@ -21,7 +21,7 @@\n       (fun st => st.pc = label \"runtime.growslice\" \u2227 st.data.regs.rsp = { toBitVec := rsp0.toBitVec - 120 }\n         \u2227 st.data.regs.rbp = { toBitVec := rsp0.toBitVec - 8#64 } \u2227 st.data.regs.r14 = r140\n         \u2227 st.data.regs.rax.toBitVec = b \u2227 st.data.regs.rbx.toNat = L.toNat + 40 \u2227 st.data.regs.rcx = C\n-        \u2227 st.data.regs.rdi.toNat = 32 \u2227 st.data.regs.rsi.toBitVec = ElfData.CheckpointAndEpoch.e2eU8Type_addr \u2227\n+        \u2227 st.data.regs.rdi.toNat = 8 \u2227 st.data.regs.rsi.toBitVec = ElfData.CheckpointAndEpoch.e2eU8Type_addr \u2227\n         (Eq ((Int.toBytes 8 (Host.addrOf (k + 50)).toBitVec.toInt).At (rsp0.toBitVec - 120))\n           \u22c6 Eq ((Int.toBytes 8 ra.toBitVec.toInt).At rsp0.toBitVec)\n           \u22c6 Eq ((Int.toBytes 8 rbp0.toBitVec.toInt).At (rsp0.toBitVec - 8))\n",
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "class": "inside",
@@ -3208,8 +3208,8 @@
   {
    "id": "cpw-hg-spill",
    "kind": "code",
-   "module": "E2e/CpWHead.lean",
-   "theorem": "cpw_head_grow",
+   "module": "Prysm/Checkpoint/EncodeHead.lean",
+   "theorem": "Prysm.Checkpoint.Encode.head_grow",
    "range": [
     131,
     309
@@ -3232,8 +3232,8 @@
   {
    "id": "cpw-sh-control",
    "kind": "control",
-   "module": "E2e/CpWSharp.lean",
-   "theorem": "cp_e2e_marshal_grow_any_sharp",
+   "module": "Prysm/Checkpoint/EncodeGrowAnySiteThreeCases.lean",
+   "theorem": "Prysm.Checkpoint.Encode.grow_any_site_three_cases",
    "range": [
     33,
     228
@@ -3254,8 +3254,8 @@
   {
    "id": "cpw-sh-budget",
    "kind": "stmt",
-   "module": "E2e/CpWSharp.lean",
-   "theorem": "cp_e2e_marshal_grow_any_sharp",
+   "module": "Prysm/Checkpoint/EncodeGrowAnySiteThreeCases.lean",
+   "theorem": "Prysm.Checkpoint.Encode.grow_any_site_three_cases",
    "range": [
     33,
     228
@@ -3278,8 +3278,8 @@
   {
    "id": "cpw-sh-b-old",
    "kind": "stmt",
-   "module": "E2e/CpWSharp.lean",
-   "theorem": "cp_e2e_marshal_grow_any_sharp",
+   "module": "Prysm/Checkpoint/EncodeGrowAnySiteThreeCases.lean",
+   "theorem": "Prysm.Checkpoint.Encode.grow_any_site_three_cases",
    "range": [
     33,
     228
@@ -3302,8 +3302,8 @@
   {
    "id": "cpw-sh-b-cap",
    "kind": "stmt",
-   "module": "E2e/CpWSharp.lean",
-   "theorem": "cp_e2e_marshal_grow_any_sharp",
+   "module": "Prysm/Checkpoint/EncodeGrowAnySiteThreeCases.lean",
+   "theorem": "Prysm.Checkpoint.Encode.grow_any_site_three_cases",
    "range": [
     33,
     228
@@ -3326,8 +3326,8 @@
   {
    "id": "cpw-cf-control",
    "kind": "control",
-   "module": "E2e/CpWCoverF.lean",
-   "theorem": "cp_e2e_marshal_cover_framed",
+   "module": "Prysm/Checkpoint/EncodeCoverFramed.lean",
+   "theorem": "Prysm.Checkpoint.Encode.cover_framed",
    "range": [
     40,
     287
@@ -3348,8 +3348,8 @@
   {
    "id": "cpw-cf-spare40",
    "kind": "stmt",
-   "module": "E2e/CpWCoverF.lean",
-   "theorem": "cp_e2e_marshal_cover_framed",
+   "module": "Prysm/Checkpoint/EncodeCoverFramed.lean",
+   "theorem": "Prysm.Checkpoint.Encode.cover_framed",
    "range": [
     40,
     287
@@ -3363,7 +3363,7 @@
    "timeout": false,
    "later_resource_error": null,
    "seconds": 2.8,
-   "diff": "--- orig\n+++ mut\n@@ -55,7 +55,7 @@\n               \u22c6 Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 24)) \u22c6 Eq (cC.At (s.regs.rax.toBitVec + 32))\n               \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40)) \u22c6 Eq (g.root.toList.At p)\n               \u22c6 Eq ((pre ++ bs.toList).At s.regs.rbx.toBitVec)\n-              \u22c6 Eq ((spare.drop 40).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))\n+              \u22c6 Eq ((spare.drop 39).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))\n               \u22c6 Heap avail \u22c6 R) st.data.dmem)\n           -- (2) len + 8 \u2264 cap < len + 40: epoch into the caller's array, then one growth (cp_e2e_marshal_grow2_main)\n           \u2228 (s.regs.rcx.toNat + 8 \u2264 s.regs.rdi.toNat \u2227 s.regs.rdi.toNat < s.regs.rcx.toNat + 40\n",
+   "diff": "--- orig\n+++ mut\n@@ -55,7 +55,7 @@\n               \u22c6 Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 24)) \u22c6 Eq (cC.At (s.regs.rax.toBitVec + 32))\n               \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40)) \u22c6 Eq (g.root.toList.At p)\n               \u22c6 Eq ((pre ++ bs.toList).At s.regs.rbx.toBitVec)\n-              \u22c6 Eq ((spare.drop 40).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))\n+              \u22c6 Eq ((spare.drop 39).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))\n               \u22c6 Heap avail \u22c6 R) st.data.dmem)\n           -- (2) len + 8 \u2264 cap < len + 40: epoch into the caller's array, then one growth (grow_second_site)\n           \u2228 (s.regs.rcx.toNat + 8 \u2264 s.regs.rdi.toNat \u2227 s.regs.rdi.toNat < s.regs.rcx.toNat + 40\n",
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "class": "inside",
@@ -3372,8 +3372,8 @@
   {
    "id": "cpw-cf-c1",
    "kind": "stmt",
-   "module": "E2e/CpWCoverF.lean",
-   "theorem": "cp_e2e_marshal_cover_framed",
+   "module": "Prysm/Checkpoint/EncodeCoverFramed.lean",
+   "theorem": "Prysm.Checkpoint.Encode.cover_framed",
    "range": [
     40,
     287
@@ -3396,8 +3396,8 @@
   {
    "id": "cpw-cf-3c-ret",
    "kind": "stmt",
-   "module": "E2e/CpWCoverF.lean",
-   "theorem": "cp_e2e_marshal_cover_framed",
+   "module": "Prysm/Checkpoint/EncodeCoverFramed.lean",
+   "theorem": "Prysm.Checkpoint.Encode.cover_framed",
    "range": [
     40,
     287
@@ -3420,8 +3420,8 @@
   {
    "id": "cpw-rf-control",
    "kind": "control",
-   "module": "E2e/CpWCoverF.lean",
-   "theorem": "cp_e2e_marshal_reject_cover_framed",
+   "module": "Prysm/Checkpoint/EncodeCoverFramed.lean",
+   "theorem": "Prysm.Checkpoint.Encode.reject_length_cover_framed",
    "range": [
     291,
     403
@@ -3442,8 +3442,8 @@
   {
    "id": "cpw-rf-c1",
    "kind": "stmt",
-   "module": "E2e/CpWCoverF.lean",
-   "theorem": "cp_e2e_marshal_reject_cover_framed",
+   "module": "Prysm/Checkpoint/EncodeCoverFramed.lean",
+   "theorem": "Prysm.Checkpoint.Encode.reject_length_cover_framed",
    "range": [
     291,
     403
@@ -3457,7 +3457,7 @@
    "timeout": false,
    "later_resource_error": null,
    "seconds": 3.1,
-   "diff": "--- orig\n+++ mut\n@@ -52,7 +52,7 @@\n             \u22c6 Eq ((Int.toBytes 8 p.toInt).At (s.regs.rax.toBitVec + 16))\n             \u22c6 Eq ((Int.toBytes 8 rl.toBitVec.toInt).At (s.regs.rax.toBitVec + 24))\n             \u22c6 Eq (cC.At (s.regs.rax.toBitVec + 32)) \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40))\n-            \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n+            \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))\n             \u22c6 Eq ((spare.drop 8).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))\n             \u22c6 Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrBytesLength_addr)\n             \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrBytesLength\" + 8).toBitVec)\n",
+   "diff": "--- orig\n+++ mut\n@@ -52,7 +52,7 @@\n             \u22c6 Eq ((Int.toBytes 8 p.toInt).At (s.regs.rax.toBitVec + 16))\n             \u22c6 Eq ((Int.toBytes 8 rl.toBitVec.toInt).At (s.regs.rax.toBitVec + 24))\n             \u22c6 Eq (cC.At (s.regs.rax.toBitVec + 32)) \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40))\n-            \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n+            \u22c6 Eq (pre.At s.regs.rbx.toBitVec) \u22c6 Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))\n             \u22c6 Eq ((spare.drop 8).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))\n             \u22c6 Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrBytesLength_addr)\n             \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrBytesLength\" + 8).toBitVec)\n",
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "class": "inside",
@@ -3466,8 +3466,8 @@
   {
    "id": "cpw-rf-nb",
    "kind": "stmt",
-   "module": "E2e/CpWCoverF.lean",
-   "theorem": "cp_e2e_marshal_reject_cover_framed",
+   "module": "Prysm/Checkpoint/EncodeCoverFramed.lean",
+   "theorem": "Prysm.Checkpoint.Encode.reject_length_cover_framed",
    "range": [
     291,
     403
@@ -3481,7 +3481,7 @@
    "timeout": false,
    "later_resource_error": null,
    "seconds": 3.2,
-   "diff": "--- orig\n+++ mut\n@@ -80,7 +80,7 @@\n             \u22c6 Eq ((Int.toBytes 8 rl.toBitVec.toInt).At (s.regs.rax.toBitVec + 24))\n             \u22c6 Eq (cC.At (s.regs.rax.toBitVec + 32)) \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40))\n             \u22c6 Eq ((pre ++ spare).At s.regs.rbx.toBitVec)\n-            \u22c6 Eq (pre.At nb) \u22c6 Eq (e8.At (nb + s.regs.rcx.toBitVec)) \u22c6 Eq (mid.At (nb + s.regs.rcx.toBitVec + 8))\n+            \u22c6 Eq (pre.At nb) \u22c6 Eq (e8.At (nb + s.regs.rcx.toBitVec + 1)) \u22c6 Eq (mid.At (nb + s.regs.rcx.toBitVec + 8))\n             \u22c6 Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrBytesLength_addr)\n             \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrBytesLength\" + 8).toBitVec)\n             \u22c6 Heap av' \u22c6 R) st.data.dmem)))\n",
+   "diff": "--- orig\n+++ mut\n@@ -80,7 +80,7 @@\n             \u22c6 Eq ((Int.toBytes 8 rl.toBitVec.toInt).At (s.regs.rax.toBitVec + 24))\n             \u22c6 Eq (cC.At (s.regs.rax.toBitVec + 32)) \u22c6 Eq (ctl.At (s.regs.rax.toBitVec + 40))\n             \u22c6 Eq ((pre ++ spare).At s.regs.rbx.toBitVec)\n-            \u22c6 Eq (pre.At nb) \u22c6 Eq (e8.At (nb + s.regs.rcx.toBitVec)) \u22c6 Eq (mid.At (nb + s.regs.rcx.toBitVec + 8))\n+            \u22c6 Eq (pre.At nb) \u22c6 Eq (e8.At (nb + s.regs.rcx.toBitVec + 1)) \u22c6 Eq (mid.At (nb + s.regs.rcx.toBitVec + 8))\n             \u22c6 Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrBytesLength_addr)\n             \u22c6 Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrBytesLength\" + 8).toBitVec)\n             \u22c6 Heap av' \u22c6 R) st.data.dmem)))\n",
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "class": "inside",
@@ -3516,8 +3516,8 @@
   {
    "id": "gv-w-control",
    "kind": "control",
-   "module": "E2e/GoValW.lean",
-   "theorem": "witCpWR_recv",
+   "module": "Prysm/Checkpoint/GoValueWitness.lean",
+   "theorem": "Prysm.Checkpoint.witness_encode_reject_length_cover_recv",
    "range": [
     32,
     35
@@ -3538,8 +3538,8 @@
   {
    "id": "gv-w-stmt-rl49",
    "kind": "stmt",
-   "module": "E2e/GoValW.lean",
-   "theorem": "witCpWR_recv",
+   "module": "Prysm/Checkpoint/GoValueWitness.lean",
+   "theorem": "Prysm.Checkpoint.witness_encode_reject_length_cover_recv",
    "range": [
     32,
     35
@@ -3553,7 +3553,7 @@
    "timeout": false,
    "later_resource_error": null,
    "seconds": 2.2,
-   "diff": "--- orig\n+++ mut\n@@ -1,4 +1,4 @@\n theorem witCpWR_recv : cpGoValue (recvAt (WitCpWR.block (Int.toBytes 8 7) 0 []) 9032) = true\n     \u2227 cpGoValue (recvAt (WitCpWR.block (Int.toBytes 8 7) 31 []) 9032) = true\n     \u2227 cpGoValue (recvAt (WitCpWR.block (Int.toBytes 8 7) 33 []) 9032) = true\n-    \u2227 cpGoValue (recvAt (WitCpWR.block (Int.toBytes 8 7) 48 []) 9032) = true := by decide+    \u2227 cpGoValue (recvAt (WitCpWR.block (Int.toBytes 8 7) 49 []) 9032) = true := by decide",
+   "diff": "--- orig\n+++ mut\n@@ -1,4 +1,4 @@\n theorem witness_encode_reject_length_cover_recv : goValue (recvAt (Witness.EncodeRejectLengthCover.block (Int.toBytes 8 7) 0 []) 9032) = true\n     \u2227 goValue (recvAt (Witness.EncodeRejectLengthCover.block (Int.toBytes 8 7) 31 []) 9032) = true\n     \u2227 goValue (recvAt (Witness.EncodeRejectLengthCover.block (Int.toBytes 8 7) 33 []) 9032) = true\n-    \u2227 goValue (recvAt (Witness.EncodeRejectLengthCover.block (Int.toBytes 8 7) 48 []) 9032) = true := by decide+    \u2227 goValue (recvAt (Witness.EncodeRejectLengthCover.block (Int.toBytes 8 7) 49 []) 9032) = true := by decide",
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "class": "inside",
@@ -3562,8 +3562,8 @@
   {
    "id": "gv-w-stmt-root",
    "kind": "stmt",
-   "module": "E2e/GoValW.lean",
-   "theorem": "witCpW_recv",
+   "module": "Prysm/Checkpoint/GoValueWitness.lean",
+   "theorem": "Prysm.Checkpoint.witness_encode_cover_recv",
    "range": [
     26,
     29
@@ -3577,7 +3577,7 @@
    "timeout": false,
    "later_resource_error": null,
    "seconds": 1.3,
-   "diff": "--- orig\n+++ mut\n@@ -1,4 +1,4 @@\n theorem witCpW_recv : cpGoValue (recvAt (WitCpW.block (Int.toBytes 8 7) (List.replicate 32 0xff) []) 9016) = true\n     \u2227 recvAt (WitCpW.block (Int.toBytes 8 7) (List.replicate 32 0xff) []) 9016\n-      = List.replicate 8 0 ++ Int.toBytes 8 7 ++ Int.toBytes 8 0x12380 ++ Int.toBytes 8 32 ++ Int.toBytes 8 32\n+      = List.replicate 8 0 ++ Int.toBytes 8 7 ++ Int.toBytes 8 0x12380 ++ Int.toBytes 8 33 ++ Int.toBytes 8 32\n         ++ List.replicate 32 0 := by decide",
+   "diff": "--- orig\n+++ mut\n@@ -1,4 +1,4 @@\n theorem witness_encode_cover_recv : goValue (recvAt (Witness.EncodeCover.block (Int.toBytes 8 7) (List.replicate 32 0xff) []) 9016) = true\n     \u2227 recvAt (Witness.EncodeCover.block (Int.toBytes 8 7) (List.replicate 32 0xff) []) 9016\n-      = List.replicate 8 0 ++ Int.toBytes 8 7 ++ Int.toBytes 8 0x12380 ++ Int.toBytes 8 32 ++ Int.toBytes 8 32\n+      = List.replicate 8 0 ++ Int.toBytes 8 7 ++ Int.toBytes 8 0x12380 ++ Int.toBytes 8 33 ++ Int.toBytes 8 32\n         ++ List.replicate 32 0 := by decide",
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "class": "inside",
@@ -3602,7 +3602,7 @@
    "timeout_reaped_pids": [],
    "later_resource_error": null,
    "seconds": 1.0,
-   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem cp_uacc_holds (k : Nat) (hk : CpUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh CpUnmarshal k)\n     (kE : Nat) (hkE : EpUnmarshal.IsInfixAt Host.prog kE) (hfE : LabelsFresh EpUnmarshal kE)\n     (Heap : Nat \u2192 DataMem \u2192 Prop) (S : Nat)\n-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) : CpUAccC Heap S := by\n+    (hms : True) (hmm : MemmoveC S) : CpUAccC Heap S := by\n   intro st ret guard avail e8 root fp s1 s2 l20 l28 l30 m0 m1 m2 rslot cst c0 cP cL cC ctl scratch F\n     he8 hroot hfp h1 h2 hl20 hl28 hl30 hm0 hm1 hm2 hrs hcst hc0 hcP hcL hcC hctl hS8 hS hsc hguard hlen hav hm\n   rw [show label cpULabel = Host.addrOf (k + 0) from label_at hk hf (j := 0) (by rfl) (by intro i hi; omega)]\n",
+   "diff": "--- orig\n+++ mut\n@@ -1,7 +1,7 @@\n theorem cp_uacc_holds (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)\n     (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)\n     (Heap : Nat \u2192 DataMem \u2192 Prop) (S : Nat)\n-    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) : CpUAccC Heap S := by\n+    (hms : True) (hmm : MemmoveC S) : CpUAccC Heap S := by\n   intro st ret guard avail e8 root fp s1 s2 l20 l28 l30 m0 m1 m2 rslot cst c0 cP cL cC ctl scratch F\n     he8 hroot hfp h1 h2 hl20 hl28 hl30 hm0 hm1 hm2 hrs hcst hc0 hcP hcL hcC hctl hS8 hS hsc hguard hlen hav hm\n   rw [show label cpULabel = Host.addrOf (k + 0) from label_at hk hf (j := 0) (by rfl) (by intro i hi; omega)]\n",
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "class": "inside",
@@ -3627,7 +3627,7 @@
    "timeout_reaped_pids": [],
    "later_resource_error": null,
    "seconds": 0.9,
-   "diff": "--- orig\n+++ mut\n@@ -1,5 +1,5 @@\n theorem cp_macc_holds (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (hf : LabelsFresh CpMarshal k)\n-    (S : Nat) (hmm : MemmoveC S) : CpMAccC S := by\n+    (S : Nat) (hmm : True) : CpMAccC S := by\n   intro st ret guard p cst e8 cC ctl root pre d0 d1 fp s2 l16 l24 l32 t40 t30 rslot scratch F\n     hcst he8 hcC hctl hroot hd0 hd1 hpre hfp h2 hl16 hl24 hl32 ht40 ht30 hrs hsc hguard hsp hcap hcap63 hm\n   rw [show label cpMLabel = Host.addrOf (k + 0) from label_at hk hf (j := 0) (by rfl) (by intro i hi; omega)]\n",
+   "diff": "--- orig\n+++ mut\n@@ -1,5 +1,5 @@\n theorem cp_macc_holds (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)\n-    (S : Nat) (hmm : MemmoveC S) : CpMAccC S := by\n+    (S : Nat) (hmm : True) : CpMAccC S := by\n   intro st ret guard p cst e8 cC ctl root pre d0 d1 fp s2 l16 l24 l32 t40 t30 rslot scratch F\n     hcst he8 hcC hctl hroot hd0 hd1 hpre hfp h2 hl16 hl24 hl32 ht40 ht30 hrs hsc hguard hsp hcap hcap63 hm\n   rw [show label cpMLabel = Host.addrOf (k + 0) from label_at hk hf (j := 0) (by rfl) (by intro i hi; omega)]\n",
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "class": "inside",
@@ -3652,7 +3652,7 @@
    "timeout_reaped_pids": [],
    "later_resource_error": null,
    "seconds": 1.8,
-   "diff": "--- orig\n+++ mut\n@@ -32,7 +32,7 @@\n       \u22c6 Eq (aS.At (s.regs.rax.toBitVec + 48)) \u22c6 Eq (aT.At (s.regs.rax.toBitVec + 56))\n       \u22c6 Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec) \u22c6 R)\n     (hguard : guard.toNat + 224 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 128) (hav : 240 \u2264 avail)\n-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S)\n+    (hms : True) (hmm : MemmoveC S)\n     (hms' : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 96)) (hmm' : MemmoveC (S + 96))\n     (hno : NewobjectC Heap E2eAd.Data.adCpType_addr 72 (S + 96)) :\n     Eventually (step1 Host.exe)\n",
+   "diff": "--- orig\n+++ mut\n@@ -32,7 +32,7 @@\n       \u22c6 Eq (aS.At (s.regs.rax.toBitVec + 48)) \u22c6 Eq (aT.At (s.regs.rax.toBitVec + 56))\n       \u22c6 Eq ([0, 0, 0, 0].At (label \"runtime.writeBarrier\").toBitVec) \u22c6 R)\n     (hguard : guard.toNat + 224 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 128) (hav : 240 \u2264 avail)\n-    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S)\n+    (hms : True) (hmm : MemmoveC S)\n     (hms' : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 96)) (hmm' : MemmoveC (S + 96))\n     (hno : NewobjectC Heap E2eAd.Data.adCpType_addr 72 (S + 96)) :\n     Eventually (step1 Host.exe)\n",
    "heartbeat_timeout": false,
    "recursion_limit": false,
    "class": "inside",
@@ -3672,8 +3672,8 @@
     "lake",
     "build",
     "--no-build",
-    "E2e.CpAccept",
-    "E2e.CpMarshal",
+    "Prysm.Checkpoint.DecodeAccept",
+    "Prysm.Checkpoint.EncodeFastPath",
     "E2eAd.Code",
     "Runtime.CopyModel"
    ],
@@ -3688,8 +3688,8 @@
     "lake",
     "build",
     "--no-build",
-    "E2e.CpAccept",
-    "E2e.CpMarshal",
+    "Prysm.Checkpoint.DecodeAccept",
+    "Prysm.Checkpoint.EncodeFastPath",
     "E2eAd.Code",
     "Runtime.CopyModel"
    ],

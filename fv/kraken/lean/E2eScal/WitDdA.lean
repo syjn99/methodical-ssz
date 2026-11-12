@@ -20,7 +20,7 @@ For every input and every old pointer word every premise holds and the decoder r
 The receiver is a Go value of `v1alpha1.Deposit_Data` (zero `state`, zero-length slices, zero Amount).
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.H4Code E2eScal.H4
+open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.H4Code E2eScal.H4
 
 namespace E2eScal.WitDdA
 

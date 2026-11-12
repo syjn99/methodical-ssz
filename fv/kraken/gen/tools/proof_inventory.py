@@ -165,8 +165,8 @@ DECODERS = {
     (V1A, "PartialDataColumnGroupID"): f24dec("pdc", "Pdc", None),
     (V1A, "ValidatorIdentity"): f24dec("vid", "Vid", None),
     # primitives (hand-written methods; overlay uint64; no Desc / spec module): accept, length reject, witnesses
-    (PRIM, "Epoch"): dec("E2e.ep_unmarshal_accept_main", "E2e.ep_unmarshal_reject_len_main", None, None, None, None,
-                         "E2e.WitEp.ep_accept_runs", "E2e.WitEpR.epr_runs"),
+    (PRIM, "Epoch"): dec("Prysm.Epoch.Decode.accept", "Prysm.Epoch.Decode.reject_size", None, None, None, None,
+                         "Prysm.Epoch.Witness.DecodeAccept.runs", "Prysm.Epoch.Witness.DecodeRejectSize.runs"),
     (PRIM, "Slot"): dec("E2eAd.sl_unmarshal_accept_main", None, None, None, None, None, "E2eAd.WitSl.sl_accept_runs",
                         None),
     (PRIM, "CommitteeIndex"): dec("E2eAd.ci_unmarshal_accept_main", None, None, None, None, None,
@@ -191,15 +191,15 @@ ENC_PARTS = ["fast", "spec", "witness", "hand", "rejects", "grow", "other_witnes
 CP_GROW = "GrowsliceC + MemmoveC contracts + heap budget"
 ENCODERS = {  # MarshalSSZTo: fast path (theorem + spec corollary + witness), hand theorems, rejects, growslice paths
     (V1A, "Checkpoint"): enc(
-        "Cp", "cp", hand=["E2e.cp_e2e_marshal_main", "E2e.cp_e2e_marshal_spec_k"],
-        rejects=[("E2e.cp_e2e_marshal_reject_main", "len + 8 ≤ cap"),
-                 ("E2e.cp_e2e_marshal_reject_cover",
+        "Cp", "cp", hand=["Prysm.Checkpoint.Encode.fast_path", "Prysm.Checkpoint.Encode.fast_path_spec"],
+        rejects=[("Prysm.Checkpoint.Encode.reject_length", "len + 8 ≤ cap"),
+                 ("Prysm.Checkpoint.Encode.reject_length_cover",
                   "every cap, GrowsliceC contract + heap budget 4·len + 8736 ≤ avail ≤ maxAlloc")],
-        grow=[("E2e.cp_e2e_marshal_grow_main", f"cap < len + 8, len + 40 ≤ nextSliceCap(len + 8, cap), {CP_GROW}"),
-              ("E2e.cp_e2e_marshal_grow2_main", f"len + 8 ≤ cap < len + 40, {CP_GROW}"),
-              ("E2e.cp_e2e_marshal_grow_any_main",
+        grow=[("Prysm.Checkpoint.Encode.grow_first_site", f"cap < len + 8, len + 40 ≤ nextSliceCap(len + 8, cap), {CP_GROW}"),
+              ("Prysm.Checkpoint.Encode.grow_second_site", f"len + 8 ≤ cap < len + 40, {CP_GROW}"),
+              ("Prysm.Checkpoint.Encode.grow_any_site",
                f"cap < len + 8, {CP_GROW}: returns or reaches the second growslice call")],
-        other_witness=["E2e.WitCpM.cpm_runs_empty", "E2e.WitCpMR.cpmr_runs", "E2e.WitCpG.cpg_runs"],
+        other_witness=["Prysm.Checkpoint.Witness.EncodeFastPath.runs_empty", "Prysm.Checkpoint.Witness.EncodeRejectLength.runs", "Prysm.Checkpoint.Witness.EncodeGrowFirstSite.runs"],
         left={"length rejects": "with cap < len + 8 outside the GrowsliceC contract or the heap budget",
               "growslice branches": "outside the GrowsliceC / MemmoveC contracts and the heap budget, and the run after "
                                     "the second growslice call when the heap left by the first call is below the "
@@ -239,7 +239,7 @@ ENCODERS = {  # MarshalSSZTo: fast path (theorem + spec corollary + witness), ha
     (V1A, "BuilderPreferences"): enc("Bpf", "bpf"),
 }
 ENC_PREMISE = "premise: len + SizeSSZ <= cap, exact field lengths"
-SIZERS = {(V1A, "Checkpoint"): dict(main=["E2e.cp_e2e_size_main"], witness=["E2e.WitCpS.cps_runs"])}
+SIZERS = {(V1A, "Checkpoint"): dict(main=["Prysm.Checkpoint.Size.result"], witness=["Prysm.Checkpoint.Witness.Size.runs"])}
 
 DEC_PARTS = ["accept", "reject", "spec_k", "reject_size_spec", "reject_complete", "codec", "witness_accept",
              "witness_reject"]

@@ -10,7 +10,7 @@ import E2eScal.Enc2ExHs
 
 | module | type | guard | frame | fields | epilogue | statement |
 | --- | --- | --- | --- | --- | --- | --- |
-| `Enc2ExCp` | Checkpoint | small | `sub $0x68` | uint64 (stack temp), bytes 32 | reloads | kind instance; `E2e.cp_e2e_marshal_main`'s statement by `cp_marshal_of_kind` |
+| `Enc2ExCp` | Checkpoint | small | `sub $0x68` | uint64 (stack temp), bytes 32 | reloads | kind instance; `Prysm.Checkpoint.Encode.fast_path`'s statement by `cp_marshal_of_kind` |
 | `Enc2ExBh` | BeaconBlockHeader | large, 32 | `sub $0x98` | uint64 (temp) twice, bytes 32 three times | reloads | kind instance = `Bh.bh_e2e_marshal_main`'s statement (`rfl`) |
 | `Enc2ExE1` | Eth1Data | large, 8 | `add $-0x80` | bytes 32, uint64, bytes 32 | reloads, `sub $-0x80` | kind instance = `E1.e1_e2e_marshal_main`'s statement (`rfl`) |
 | `Enc2ExVb` | ValidatorBalance | small | `sub $0x68` | uint64 (temp), uint64 | register moves, no `memmove` | kind instance (no hand statement) |
@@ -41,7 +41,7 @@ variable [Host]
 
 /-- The six generated-style fast-path theorems, stated by their kinds. -/
 theorem g6_examples_fast :
-    encFastKindN E2e.Code.CpMarshal layEncCp [.u64, .bytes 32]
+    encFastKindN Prysm.Checkpoint.Code.marshalSSZTo layEncCp [.u64, .bytes 32]
     ∧ encFastKindN E2eScal.BhCode.BhMarshal layEncBh [.u64, .u64, .bytes 32, .bytes 32, .bytes 32]
     ∧ encFastKindN E2eScal.E1Code.E1Marshal layEncE1 [.bytes 32, .u64, .bytes 32]
     ∧ encFastKindN E2eScal.Enc2Code.VbMarshal layEncVb [.u64, .u64]

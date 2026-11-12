@@ -5,356 +5,356 @@
   "propext"
  ],
  "theorems": {
-  "E2e.ep_unmarshal_accept_main": [
+  "Prysm.Epoch.Decode.accept": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.ep_uacc_holds": [
+  "Prysm.Epoch.Decode.accept_function_spec_holds": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitEp.ep_accept_runs": [
+  "Prysm.Epoch.Witness.DecodeAccept.runs": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitEp.ep_spec_here": [
+  "Prysm.Epoch.Witness.DecodeAccept.runs_function_spec": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.pcp_spec_accepts_iff": [
+  "Prysm.Checkpoint.SszValue.spec_accepts_iff": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.pcp_serialize": [
+  "Prysm.Checkpoint.SszValue.serialize_eq": [
    "propext",
    "Quot.sound"
   ],
-  "E2e.pcp_roundtrip": [
-   "propext",
-   "Classical.choice",
-   "Quot.sound"
-  ],
-  "E2e.pcp_spec_rejects": [
+  "Prysm.Checkpoint.SszValue.roundtrip": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_accept_tail": [
+  "Prysm.Checkpoint.SszValue.spec_rejects": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_accept_main": [
+  "Prysm.Checkpoint.Decode.accept_tail": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitCpA.cp_accept_runs": [
+  "Prysm.Checkpoint.Decode.accept": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_reject_size_main": [
+  "Prysm.Checkpoint.Witness.DecodeAccept.runs": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitCpR.cp_reject_runs": [
+  "Prysm.Checkpoint.Decode.reject_size": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_epoch_err_unreachable": [
+  "Prysm.Checkpoint.Witness.DecodeRejectSize.runs": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_accept_spec_k": [
+  "Prysm.Checkpoint.Decode.epoch_err_unreachable": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_reject_size_spec": [
+  "Prysm.Checkpoint.Decode.accept_spec": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_reject_complete": [
+  "Prysm.Checkpoint.Decode.reject_size_spec": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_marshal_main": [
+  "Prysm.Checkpoint.Decode.reject_complete": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitCpM.cpm_runs_empty": [
+  "Prysm.Checkpoint.Encode.fast_path": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitCpM.cpm_runs_prefix": [
+  "Prysm.Checkpoint.Witness.EncodeFastPath.runs_empty": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_marshal_decoded_receiver": [
+  "Prysm.Checkpoint.Witness.EncodeFastPath.runs_prefix": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_spec_roundtrip": [
+  "Prysm.Checkpoint.DecodeThenEncode.encode_decoded_receiver": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_marshal_reject_main": [
+  "Prysm.Checkpoint.DecodeThenEncode.round_trip_spec": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitCpMR.cpmr_runs": [
+  "Prysm.Checkpoint.Encode.reject_length": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitCpMR.P5.cpmr_runs_prefix": [
+  "Prysm.Checkpoint.Witness.EncodeRejectLength.runs": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_marshal_spec_k": [
+  "Prysm.Checkpoint.Witness.EncodeRejectLength.NonEmptyPrefix.runs": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_size_main": [
+  "Prysm.Checkpoint.Encode.fast_path_spec": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_size_spec": [
+  "Prysm.Checkpoint.Size.result": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitCpS.cps_runs": [
+  "Prysm.Checkpoint.Size.result_spec": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.ep_unmarshal_reject_len_main": [
+  "Prysm.Checkpoint.Witness.Size.runs": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.ep_static_table": [
+  "Prysm.Epoch.Decode.reject_size": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.ep_static_addr": [
+  "Prysm.Epoch.Decode.reject_static_table": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitEpR.epr_runs": [
+  "Prysm.Epoch.Decode.reject_static_addr": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitEpR.L9.epr_runs9": [
+  "Prysm.Epoch.Witness.DecodeRejectSize.runs": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitEpR.L300.epr_runs300": [
+  "Prysm.Epoch.Witness.DecodeRejectSize.InputLength9.runs": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.witCpA_recv_post": [
+  "Prysm.Epoch.Witness.DecodeRejectSize.InputLength300.runs": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_after_decode_goValue": [
+  "Prysm.Checkpoint.witness_decode_accept_recv_post": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_unmarshal_then_marshal": [
+  "Prysm.Checkpoint.after_decode_goValue": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitCpC.cp_compose_runs": [
+  "Prysm.Checkpoint.DecodeThenEncode.round_trip": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitCpC.witCpC_recv": [
+  "Prysm.Checkpoint.Witness.DecodeThenEncode.runs": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_marshal_grow_main": [
+  "Prysm.Checkpoint.Witness.DecodeThenEncode.recv": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitCpG.cpg_runs": [
+  "Prysm.Checkpoint.Encode.grow_first_site": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.prysmCpDesc_serialize_checker": [
+  "Prysm.Checkpoint.Witness.EncodeGrowFirstSite.runs": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "Prysm.Checkpoint.desc_serialize_checker": [
    "propext",
    "Quot.sound"
   ],
-  "E2e.prysmCpDesc_deserialize_checker": [
+  "Prysm.Checkpoint.desc_deserialize_checker": [
    "propext",
    "Quot.sound"
   ],
-  "E2e.WitCpA.pcp_toValue_inj": [
+  "Prysm.Checkpoint.Witness.DecodeAccept.sszValue_toValue_inj": [
    "propext"
   ],
-  "E2e.WitCpA.cp_accept_spec_runs": [
+  "Prysm.Checkpoint.Witness.DecodeAccept.runs_spec": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitCpR.cp_reject_spec_runs": [
+  "Prysm.Checkpoint.Witness.DecodeRejectSize.runs_spec": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cpw_tail_fit": [
+  "Prysm.Checkpoint.Encode.tail_fit": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cpw_tail_rej": [
+  "Prysm.Checkpoint.Encode.tail_rej": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cpw_tail_grow": [
+  "Prysm.Checkpoint.Encode.tail_grow": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cpw_tail_grow_call": [
+  "Prysm.Checkpoint.Encode.tail_grow_call": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cpw_head_fit": [
+  "Prysm.Checkpoint.Encode.head_fit": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cpw_head_grow": [
+  "Prysm.Checkpoint.Encode.head_grow": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_marshal_grow2_main": [
+  "Prysm.Checkpoint.Encode.grow_second_site": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_marshal_grow_any_main": [
+  "Prysm.Checkpoint.Encode.grow_any_site": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_marshal_reject_grow_main": [
+  "Prysm.Checkpoint.Encode.reject_length_grow_first_site": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_marshal_cover": [
+  "Prysm.Checkpoint.Encode.cover": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_marshal_reject_cover": [
+  "Prysm.Checkpoint.Encode.reject_length_cover": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitCpW.cov_runs": [
+  "Prysm.Checkpoint.Witness.EncodeCover.runs": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitCpW.cov_runs_nil": [
+  "Prysm.Checkpoint.Witness.EncodeCover.runs_nil": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitCpWR.rej_runs": [
+  "Prysm.Checkpoint.Witness.EncodeRejectLengthCover.runs": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitCpWR.rej_runs_nil": [
+  "Prysm.Checkpoint.Witness.EncodeRejectLengthCover.runs_nil": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_marshal_grow_any_sharp": [
+  "Prysm.Checkpoint.Encode.grow_any_site_three_cases": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_marshal_cover_framed": [
+  "Prysm.Checkpoint.Encode.cover_framed": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.cp_e2e_marshal_reject_cover_framed": [
+  "Prysm.Checkpoint.Encode.reject_length_cover_framed": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitCpWF.covf_runs": [
+  "Prysm.Checkpoint.Witness.EncodeCoverFramed.runs": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitCpWF.covf_runs_nil": [
+  "Prysm.Checkpoint.Witness.EncodeCoverFramed.runs_nil": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitCpWRF.rejf_runs": [
+  "Prysm.Checkpoint.Witness.EncodeRejectLengthCoverFramed.runs": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.WitCpWRF.rejf_runs_nil": [
+  "Prysm.Checkpoint.Witness.EncodeRejectLengthCoverFramed.runs_nil": [
    "propext",
    "Classical.choice",
    "Quot.sound"
   ],
-  "E2e.prysmCpDesc_checker": [],
-  "E2e.cp_layout": [],
-  "E2e.witCpA_recv_pre": [],
-  "E2e.witCpM_recv": [],
-  "E2e.witCpMR_recv": [],
-  "E2e.cpGoValue_rejects_bad": [],
-  "E2e.WitCpG.witCpG_recv": [],
-  "E2e.witCpW_recv": [],
-  "E2e.witCpWR_recv": [],
-  "E2e.witCpWR_recv_bad": []
+  "Prysm.Checkpoint.desc_checker": [],
+  "Prysm.Checkpoint.layout": [],
+  "Prysm.Checkpoint.witness_decode_accept_recv_pre": [],
+  "Prysm.Checkpoint.witness_encode_fast_path_recv": [],
+  "Prysm.Checkpoint.witness_encode_reject_length_recv": [],
+  "Prysm.Checkpoint.goValue_rejects_bad": [],
+  "Prysm.Checkpoint.Witness.EncodeGrowFirstSite.recv": [],
+  "Prysm.Checkpoint.witness_encode_cover_recv": [],
+  "Prysm.Checkpoint.witness_encode_reject_length_cover_recv": [],
+  "Prysm.Checkpoint.witness_encode_reject_length_cover_recv_bad": []
  },
  "missing": [],
  "nonstandard": {},

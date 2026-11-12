@@ -13,7 +13,7 @@ The text of `E2eScal`'s `DdSpecK.lean` with the SyncAggregate statement. The sta
 - `sa_e2e_reject_complete`: every input that EthLib rejects has `size ≠ 160`.
 -/
 
-open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz E2eList.Code
+open Machine Runtime TestTarget EthLib.Serialization.Ssz E2eList.Code
 variable [Host]
 
 namespace E2eList

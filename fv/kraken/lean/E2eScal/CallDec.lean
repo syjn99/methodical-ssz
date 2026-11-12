@@ -1,6 +1,6 @@
 import Codec.Bytes32Decode
 import E2eScal.ViSpec
-import E2e.Epoch
+import Prysm.Epoch.DecodeAccept
 import E2eAd.Prims
 
 /-!
@@ -15,7 +15,7 @@ CommitteeIndex, ValidatorIndex, Epoch) to an argument set-up, then
     je L            -- nil error: continue at L
 
 `U64CalleeAcc fn` is the text of the four existing function specifications `E2eAd.SlUAccC`, `E2eAd.CiUAccC`,
-`E2eScal.ViUAccC`, `E2e.EpUAccC` with the callee label as a parameter. It is the existing spec-hypothesis
+`E2eScal.ViUAccC`, `Prysm.Epoch.Decode.accept_function_spec` with the callee label as a parameter. It is the existing spec-hypothesis
 form (`CallDecRel.lean`: each existing spec is `U64CalleeAcc <its label>` by `rfl`); the proved theorems
 `sl_uacc_holds`, `ci_uacc_holds`, `vi_uacc_holds`, `ep_uacc_holds` discharge it. No runtime contract is used.
 

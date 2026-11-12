@@ -1,5 +1,5 @@
-import E2e.Spec
-import E2e.SpecEq
+import Prysm.Checkpoint.Spec
+import Prysm.Checkpoint.SpecEquivalence
 import E2eAd.SpecChecker
 
 /-!
@@ -14,7 +14,7 @@ Independent hand `Desc`, written from consensus-specs phase0 (`specs/phase0/beac
         source: Checkpoint
         target: Checkpoint
 
-with `Checkpoint` = `E2e.prysmCpDesc` (consensus-specs `Checkpoint(epoch: Epoch, root: Root)`).
+with `Checkpoint` = `Prysm.Checkpoint.desc` (consensus-specs `Checkpoint(epoch: Epoch, root: Root)`).
 The Prysm Go fields (`attestation.pb.go`, Prysm `ab15ff70`) are `Slot` (offset 8), `CommitteeIndex` (16),
 `BeaconBlockRoot` (24, slice header), `Source` (48) and `Target` (56), both `*Checkpoint`; `state` (0), `unknownFields` (64)
 and `sizeCache` (88) have no SSZ value (size 96; offsets from `prysm/ir/ir-mainnet.json`).
@@ -26,7 +26,7 @@ the same accepted inputs with the same values (EthLib error values are not compa
 `PAd` is the SSZ content of a Go `v1alpha1.AttestationData` with `len(BeaconBlockRoot) = 32`
 and non-nil `Source`/`Target` whose `Root`s have length 32. The proofs of the spec lemmas follow
 `Spec/ReducedPrysm.lean` and `Fk/AdSpec.lean` (their text, with the names of this namespace); they
-read EthLib and `E2e.Spec` only.
+read EthLib and `Prysm.Checkpoint.Spec` only.
 -/
 
 namespace E2e
@@ -35,7 +35,7 @@ open Spec hiding encode readUint_lt
 
 /-- consensus-specs phase0 `AttestationData`. -/
 def prysmAdDesc : Desc := .container ["slot", "index", "beacon_block_root", "source", "target"]
-  [.uint 8, .uint 8, .byteVector 32, prysmCpDesc, prysmCpDesc]
+  [.uint 8, .uint 8, .byteVector 32, Prysm.Checkpoint.desc, Prysm.Checkpoint.desc]
 
 /-- The checker's Desc has the same kinds in the same order; only the names differ. -/
 theorem prysmAdDesc_checker :
@@ -74,8 +74,8 @@ theorem prysmAdDesc_serialize_checker (v : Value) : serialize prysmAdDesc v = se
   unfold prysmAdDesc adCheckerDesc
   cases v <;> simp only [serialize]
   rename_i vs
-  have hc : ∀ w, serialize prysmCpDesc w = serialize (.container ["Epoch", "Root"] [.uint 8, .byteVector 32]) w :=
-    prysmCpDesc_serialize_checker
+  have hc : ∀ w, serialize Prysm.Checkpoint.desc w = serialize (.container ["Epoch", "Root"] [.uint 8, .byteVector 32]) w :=
+    Prysm.Checkpoint.desc_serialize_checker
   simp only [serializeStruct]
   rw [serializeFields_congr _ [.uint 8, .uint 8, .byteVector 32, .container ["Epoch", "Root"] [.uint 8, .byteVector 32],
       .container ["Epoch", "Root"] [.uint 8, .byteVector 32]] vs
@@ -87,27 +87,27 @@ structure PAd where
   slot : UInt64
   index : UInt64
   root : Vector UInt8 32
-  source : PCp
-  target : PCp
+  source : Prysm.Checkpoint.SszValue
+  target : Prysm.Checkpoint.SszValue
 
 def PAd.toValue (g : PAd) : Value :=
   .seq [.uint g.slot.toNat, .uint g.index.toNat, .bytes g.root.toArray, g.source.toValue, g.target.toValue]
 
 /-- `uintBytes 8 slot ++ uintBytes 8 index ++ root ++ enc source ++ enc target`. -/
 def padEnc (g : PAd) : Array UInt8 :=
-  uintBytes 8 g.slot.toNat ++ uintBytes 8 g.index.toNat ++ g.root.toArray ++ pcpEnc g.source ++ pcpEnc g.target
+  uintBytes 8 g.slot.toNat ++ uintBytes 8 g.index.toNat ++ g.root.toArray ++ Prysm.Checkpoint.SszValue.encode g.source ++ Prysm.Checkpoint.SszValue.encode g.target
 
 theorem pad_enc_size (g : PAd) : (padEnc g).size = 128 := by
-  simp [padEnc, Spec.uintBytes_size, pcp_enc_size]
+  simp [padEnc, Spec.uintBytes_size, Prysm.Checkpoint.SszValue.enc_size]
 
-theorem pcp_toValue_injective (g h : PCp) (e : g.toValue = h.toValue) : g = h := by
+theorem pcp_toValue_injective (g h : Prysm.Checkpoint.SszValue) (e : g.toValue = h.toValue) : g = h := by
   obtain ⟨a, r⟩ := g; obtain ⟨a', r'⟩ := h
-  simp only [PCp.toValue, Value.seq.injEq, List.cons.injEq, Value.uint.injEq, Value.bytes.injEq, and_true] at e
+  simp only [Prysm.Checkpoint.SszValue.toValue, Value.seq.injEq, List.cons.injEq, Value.uint.injEq, Value.bytes.injEq, and_true] at e
   rw [UInt64.toNat_inj.mp e.1, Vector.toArray_inj.mp e.2]
 
 theorem pad_toValue_fits (g : PAd) : Value.fits prysmAdDesc g.toValue = true := by
   have := g.slot.toNat_lt; have := g.index.toNat_lt
-  have h1 := pcp_toValue_fits g.source; have h2 := pcp_toValue_fits g.target
+  have h1 := Prysm.Checkpoint.SszValue.toValue_fits g.source; have h2 := Prysm.Checkpoint.SszValue.toValue_fits g.target
   simp only [prysmAdDesc, PAd.toValue, Value.fits, Value.fieldsFit] at *
   simp [h1, h2]; omega
 
@@ -131,8 +131,8 @@ theorem pad_toValue_surjective (v : Value) (h : Value.fits prysmAdDesc v = true)
     obtain ⟨b, rfl, hb⟩ := fits_uint h2
     obtain ⟨d, rfl, hd⟩ : ∃ d, v3 = .bytes d ∧ d.size = 32 := by
       cases v3 <;> simp [Value.fits] at h3 ⊢; exact h3
-    obtain ⟨s, rfl⟩ := pcp_toValue_surjective v4 h4
-    obtain ⟨t, rfl⟩ := pcp_toValue_surjective v5 h5
+    obtain ⟨s, rfl⟩ := Prysm.Checkpoint.SszValue.toValue_surjective v4 h4
+    obtain ⟨t, rfl⟩ := Prysm.Checkpoint.SszValue.toValue_surjective v5 h5
     simp only [Nat.reduceMul, Nat.reducePow] at ha hb
     exact ⟨⟨UInt64.ofNat a, UInt64.ofNat b, ⟨d, hd⟩, s, t⟩,
       by simp [PAd.toValue, Nat.mod_eq_of_lt ha, Nat.mod_eq_of_lt hb]⟩
@@ -144,12 +144,12 @@ theorem pad_toValue_surjective' (v : Value) (h : Value.fits prysmAdDesc v = true
 theorem pad_serialize (g : PAd) : serialize prysmAdDesc g.toValue = .ok (padEnc g) := by
   obtain ⟨a, b, ⟨r, hr⟩, s, t⟩ := g
   have := a.toNat_lt; have := b.toNat_lt
-  have hs := pcp_serialize s; have ht := pcp_serialize t
+  have hs := Prysm.Checkpoint.SszValue.serialize_eq s; have ht := Prysm.Checkpoint.SszValue.serialize_eq t
   simp only [prysmAdDesc, PAd.toValue, serialize, serializeStruct, serializeFields, Vector.toArray_mk, hr]
   rw [hs, ht]
   simp (config := {decide := true}) [*, bind, Except.bind, pure, Except.pure, assemble, headWidth, bodyWidth,
-    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, padEnc, prysmCpDesc,
-    pcp_enc_size, Desc.fieldsFixedSize, Array.append_assoc]
+    headOf, bodiesOf, Desc.isFixed, Desc.fixedSize, Spec.uintBytes_size, bytesPerOffset, padEnc, Prysm.Checkpoint.desc,
+    Prysm.Checkpoint.SszValue.enc_size, Desc.fieldsFixedSize, Array.append_assoc]
 
 /-- **Spec roundtrip.** -/
 theorem pad_roundtrip (g : PAd) : deserialize prysmAdDesc (padEnc g) = .ok g.toValue :=
@@ -162,11 +162,11 @@ theorem pad_accepted_is_enc {bs : Array UInt8} {v : Value} (h : deserialize prys
     pad_toValue_surjective' h
 
 theorem pcp_of_bytes (bs : Array UInt8) (o : Nat) (h : o + 40 ≤ bs.size) :
-    ∃ c : PCp, pcpEnc c = bs.extract o (o + 40) := by
+    ∃ c : Prysm.Checkpoint.SszValue, Prysm.Checkpoint.SszValue.encode c = bs.extract o (o + 40) := by
   have r8 := readUint_lt bs o 8
   simp only [Nat.reducePow, Nat.reduceMul] at r8
   refine ⟨⟨UInt64.ofNat (readUint bs o 8), ⟨bs.extract (o + 8) (o + 40), by simp; omega⟩⟩, ?_⟩
-  simp only [pcpEnc, UInt64.toNat_ofNat_of_lt' r8, uintBytes_readUint_slice bs o 8 (by omega)]
+  simp only [Prysm.Checkpoint.SszValue.encode, UInt64.toNat_ofNat_of_lt' r8, uintBytes_readUint_slice bs o 8 (by omega)]
   rw [Array.extract_append_extract, Nat.min_eq_left (by omega), Nat.max_eq_right (by omega)]
 
 /-- **EthLib accepts exactly the 128-byte inputs.** -/
@@ -211,11 +211,11 @@ theorem pad_serialize_checker (g : PAd) : serialize adCheckerDesc g.toValue = .o
 theorem pad_toValue_fits_checker (g : PAd) : Value.fits adCheckerDesc g.toValue = true := by
   have := g.slot.toNat_lt; have := g.index.toNat_lt
   have := g.source.epoch.toNat_lt; have := g.target.epoch.toNat_lt
-  simp [adCheckerDesc, PAd.toValue, PCp.toValue, Value.fits, Value.fieldsFit]; omega
+  simp [adCheckerDesc, PAd.toValue, Prysm.Checkpoint.SszValue.toValue, Value.fits, Value.fieldsFit]; omega
 
 theorem pcp_toValue_surjective_checker (v : Value)
     (h : Value.fits (.container ["Epoch", "Root"] [.uint 8, .byteVector 32]) v = true) :
-    ∃ g : PCp, g.toValue = v := by
+    ∃ g : Prysm.Checkpoint.SszValue, g.toValue = v := by
   obtain ⟨vs, rfl, hf⟩ := fits_container h
   have hl := fieldsFit_length hf
   match vs, hl with
@@ -226,7 +226,7 @@ theorem pcp_toValue_surjective_checker (v : Value)
     obtain ⟨d, rfl, hd⟩ : ∃ d, v2 = .bytes d ∧ d.size = 32 := by
       cases v2 <;> simp [Value.fits] at h2 ⊢; exact h2
     simp only [Nat.reduceMul, Nat.reducePow] at ha
-    exact ⟨⟨UInt64.ofNat a, ⟨d, hd⟩⟩, by simp [PCp.toValue, Nat.mod_eq_of_lt ha]⟩
+    exact ⟨⟨UInt64.ofNat a, ⟨d, hd⟩⟩, by simp [Prysm.Checkpoint.SszValue.toValue, Nat.mod_eq_of_lt ha]⟩
 
 theorem pad_toValue_surjective_checker (v : Value) (h : Value.fits adCheckerDesc v = true) :
     ∃ g : PAd, g.toValue = v := by

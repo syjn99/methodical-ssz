@@ -29,7 +29,7 @@ All files here belong to one ELF. Do not mix them with the files of another ELF.
 | `functions.json`, `kparse.json`, `kparse-log.txt` | The functions with a converted `.S` file, which of them the Kraken parser reads, and the parser log that `gen/kparse/summ.py` reads |
 | `link/` | A link table of 136 functions of this ELF. No current theorem includes it |
 | `e2e/` | The link sets and the check records of the proved types (section 3) |
-| `opt-r1/` | A separate ELF of a generator option that reserves the encoder output once. The option is not adopted. `lean/E2e/OptR1/` proves theorems about it |
+| `opt-r1/` | A separate ELF of a generator option that reserves the encoder output once. The option is not adopted. `lean/Prysm/Checkpoint/CapacityReserved*.lean` prove theorems about it |
 
 ## 3. Link sets and records under `go1.26.10/e2e/`
 

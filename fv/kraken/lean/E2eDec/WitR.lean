@@ -5,7 +5,7 @@ import Runtime.CopyModel
 /-!
 # Witnesses of the decoder size reject and offset reject
 
-The text of `E2e/WitCpMR.lean` with this host and layout. Host: the error label (index 0) and the real Go 1.26.10
+The text of `Prysm/Checkpoint/WitnessEncodeRejectLength.lean` with this host and layout. Host: the error label (index 0) and the real Go 1.26.10
 `(*v1alpha1.DataColumnsByRootIdentifier).UnmarshalSSZ` (index 1). Memory at `0x10000`: the two error words (stand-in
 values: the real ones are set by the runtime's init), the guard word (r14 = 0x10000), the stack window rsp − 8 …
 rsp + 24 (rsp = 0x10020); the offset reject adds the 4 offset bytes at buf + 32 (0x10038). Frame `R`: the rax spill slot.
@@ -49,7 +49,7 @@ theorem dcd_rsize_runs (L : Nat) (hL : L < 36) (zmms : RegZmms) (flags : StatusF
     (by
       have H : Eq (block.At (0x10000 : BitVec 64)) (block.At (0x10000 : BitVec 64)) := rfl
       wit_split
-      simp only [cs0, bw, E2e.Data.e2eErrSize_addr, label_es, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
+      simp only [cs0, bw, ElfData.CheckpointAndEpoch.e2eErrSize_addr, label_es, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
         Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         show (UInt64.ofNat 0).toBitVec = 0#64 from rfl] at H ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H ⊢

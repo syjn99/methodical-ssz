@@ -1,0 +1,3 @@
+# new path (repository-relative)	line	text after the automatic rewrite	final text (a path built from components that the path rule cannot see)
+fv/kraken/gen/e2e/check_include.py	16	e2 = (L / "E2e" / "Include.lean").read_text()	e2 = (L / "Prysm" / "ElfData" / "CheckpointAndEpochReader.lean").read_text()
+fv/kraken/gen/e2e/lvcheck_include.py	14	e2 = (L / "E2e" / "Include.lean").read_text()	e2 = (L / "Prysm" / "ElfData" / "CheckpointAndEpochReader.lean").read_text()

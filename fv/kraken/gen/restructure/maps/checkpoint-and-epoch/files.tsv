@@ -1,0 +1,55 @@
+# old path	new path	meaning (paths are relative to the repository root)
+fv/kraken/lean/E2e/Code.lean	fv/kraken/lean/Prysm/Checkpoint/Code.lean	program constants of the Checkpoint decoder, encoder and SizeSSZ, and of the Epoch decoder (shared with Epoch: its constants are declared into Prysm.Epoch.Code)
+fv/kraken/lean/E2e/Layout.lean	fv/kraken/lean/Prysm/Checkpoint/Layout.lean	generated Go struct layout of v1alpha1.Checkpoint (field offsets and sizes)
+fv/kraken/lean/E2e/GoVal.lean	fv/kraken/lean/Prysm/Checkpoint/GoValue.lean	Go value predicate of v1alpha1.Checkpoint receiver bytes, and its checks on the decoder and encoder witness receivers
+fv/kraken/lean/E2e/GoValW.lean	fv/kraken/lean/Prysm/Checkpoint/GoValueWitness.lean	Go value checks of the receivers of the encoder cover witnesses
+fv/kraken/lean/E2e/Spec.lean	fv/kraken/lean/Prysm/Checkpoint/Spec.lean	EthLib description of v1alpha1.Checkpoint, the SSZ content structure and the bridge lemmas
+fv/kraken/lean/E2e/SpecChecker.lean	fv/kraken/lean/Prysm/Checkpoint/SpecChecker.lean	generated description of v1alpha1.Checkpoint for the description checker
+fv/kraken/lean/E2e/SpecEq.lean	fv/kraken/lean/Prysm/Checkpoint/SpecEquivalence.lean	the hand description and the checker description have the same codec
+fv/kraken/lean/E2e/CpAccept.lean	fv/kraken/lean/Prysm/Checkpoint/DecodeAccept.lean	decoder accept path (UnmarshalSSZ returns nil and the receiver holds the input)
+fv/kraken/lean/E2e/CpReject.lean	fv/kraken/lean/Prysm/Checkpoint/DecodeRejectSize.lean	decoder size reject, and the unreachable Epoch error path
+fv/kraken/lean/E2e/CpSpecK.lean	fv/kraken/lean/Prysm/Checkpoint/DecodeSpec.lean	decoder against EthLib: accept, size reject and reject completeness
+fv/kraken/lean/E2e/CpMarshal.lean	fv/kraken/lean/Prysm/Checkpoint/EncodeFastPath.lean	encoder fast path (no slice growth)
+fv/kraken/lean/E2e/CpMarshalG.lean	fv/kraken/lean/Prysm/Checkpoint/EncodeGrowFirstSite.lean	encoder with growth at the first append site only
+fv/kraken/lean/E2e/CpMarshalR.lean	fv/kraken/lean/Prysm/Checkpoint/EncodeRejectLength.lean	encoder reject len(Root) != 32 without growth
+fv/kraken/lean/E2e/CpSpecM.lean	fv/kraken/lean/Prysm/Checkpoint/EncodeSpec.lean	encoder fast path against EthLib; also SizeSSZ and its EthLib length (mixed module, main role encoder spec)
+fv/kraken/lean/E2e/CpWHead.lean	fv/kraken/lean/Prysm/Checkpoint/EncodeHead.lean	encoder part: the two prefixes up to the epoch append
+fv/kraken/lean/E2e/CpWTail.lean	fv/kraken/lean/Prysm/Checkpoint/EncodeTail.lean	encoder part: the tails from the epoch append without a second growth (fit, reject)
+fv/kraken/lean/E2e/CpWTailG.lean	fv/kraken/lean/Prysm/Checkpoint/EncodeTailGrow.lean	encoder part: the tail with growth at the second append site
+fv/kraken/lean/E2e/CpWGrow.lean	fv/kraken/lean/Prysm/Checkpoint/EncodeGrowSecondSite.lean	encoder with growth at the second append site only
+fv/kraken/lean/E2e/CpWGrowAny.lean	fv/kraken/lean/Prysm/Checkpoint/EncodeGrowAnySite.lean	encoder with growth at the first site in every case, and the reject after that growth
+fv/kraken/lean/E2e/CpWSharp.lean	fv/kraken/lean/Prysm/Checkpoint/EncodeGrowAnySiteThreeCases.lean	encoder with growth at the first site: three cases of the second call, each with the exact frame
+fv/kraken/lean/E2e/CpWCover.lean	fv/kraken/lean/Prysm/Checkpoint/EncodeCover.lean	encoder part: case cover over every capacity against EthLib, valid and invalid root
+fv/kraken/lean/E2e/CpWCoverF.lean	fv/kraken/lean/Prysm/Checkpoint/EncodeCoverFramed.lean	encoder part: the case covers with the exact frame
+fv/kraken/lean/E2e/Compose.lean	fv/kraken/lean/Prysm/Checkpoint/DecodeThenEncodeReceiver.lean	encoder on the receiver that the decoder leaves, and the round trip at the EthLib level
+fv/kraken/lean/E2e/CpCompose.lean	fv/kraken/lean/Prysm/Checkpoint/DecodeThenEncode.lean	machine-level composition: decoder, then encoder on the same receiver
+fv/kraken/lean/E2e/WitCpA.lean	fv/kraken/lean/Prysm/Checkpoint/WitnessDecodeAccept.lean	witness of the decoder accept theorem
+fv/kraken/lean/E2e/WitCpAS.lean	fv/kraken/lean/Prysm/Checkpoint/WitnessDecodeAcceptSpec.lean	witness of the decoder accept theorem against EthLib
+fv/kraken/lean/E2e/WitCpR.lean	fv/kraken/lean/Prysm/Checkpoint/WitnessDecodeRejectSize.lean	witness of the decoder size reject theorem
+fv/kraken/lean/E2e/WitCpRS.lean	fv/kraken/lean/Prysm/Checkpoint/WitnessDecodeRejectSizeSpec.lean	witness of the decoder size reject theorem against EthLib
+fv/kraken/lean/E2e/WitCpM.lean	fv/kraken/lean/Prysm/Checkpoint/WitnessEncodeFastPath.lean	witness of the encoder fast path theorem
+fv/kraken/lean/E2e/WitCpG.lean	fv/kraken/lean/Prysm/Checkpoint/WitnessEncodeGrowFirstSite.lean	witness of the encoder theorem with growth at the first site
+fv/kraken/lean/E2e/WitCpMR.lean	fv/kraken/lean/Prysm/Checkpoint/WitnessEncodeRejectLength.lean	witness of the encoder reject theorem
+fv/kraken/lean/E2e/WitCpS.lean	fv/kraken/lean/Prysm/Checkpoint/WitnessSize.lean	witness of the SizeSSZ theorem
+fv/kraken/lean/E2e/WitCpW.lean	fv/kraken/lean/Prysm/Checkpoint/WitnessEncodeCover.lean	witness of the encoder case cover
+fv/kraken/lean/E2e/WitCpWF.lean	fv/kraken/lean/Prysm/Checkpoint/WitnessEncodeCoverFramed.lean	witness of the encoder case cover with the exact frame
+fv/kraken/lean/E2e/WitCpWR.lean	fv/kraken/lean/Prysm/Checkpoint/WitnessEncodeRejectLengthCover.lean	witness of the encoder reject case cover
+fv/kraken/lean/E2e/WitCpWRF.lean	fv/kraken/lean/Prysm/Checkpoint/WitnessEncodeRejectLengthCoverFramed.lean	witness of the encoder reject case cover with the exact frame
+fv/kraken/lean/E2e/WitCpC.lean	fv/kraken/lean/Prysm/Checkpoint/WitnessDecodeThenEncode.lean	witness of the machine-level decode then encode composition
+fv/kraken/lean/E2e/OptR1/Code.lean	fv/kraken/lean/Prysm/Checkpoint/CapacityReservedCode.lean	program constant of the encoder of a separate test ELF whose generator option reserves 40 bytes of capacity first (option not adopted)
+fv/kraken/lean/E2e/OptR1/Head.lean	fv/kraken/lean/Prysm/Checkpoint/CapacityReservedEncodeHead.lean	capacity-reserved encoder part: the two prefixes up to the epoch append
+fv/kraken/lean/E2e/OptR1/HeadG.lean	fv/kraken/lean/Prysm/Checkpoint/CapacityReservedEncodeHeadGrow.lean	capacity-reserved encoder part: the prefix with the reserve growth
+fv/kraken/lean/E2e/OptR1/Tail.lean	fv/kraken/lean/Prysm/Checkpoint/CapacityReservedEncodeTail.lean	capacity-reserved encoder part: the tail with a valid root
+fv/kraken/lean/E2e/OptR1/TailR.lean	fv/kraken/lean/Prysm/Checkpoint/CapacityReservedEncodeTailReject.lean	capacity-reserved encoder part: the tail with an invalid root length
+fv/kraken/lean/E2e/OptR1/Main.lean	fv/kraken/lean/Prysm/Checkpoint/CapacityReservedEncodeFastPath.lean	capacity-reserved encoder fast path and its reject
+fv/kraken/lean/E2e/OptR1/MainG.lean	fv/kraken/lean/Prysm/Checkpoint/CapacityReservedEncodeGrowFirstSite.lean	capacity-reserved encoder with the reserve growth, valid and invalid root
+fv/kraken/lean/E2e/OptR1/Spec.lean	fv/kraken/lean/Prysm/Checkpoint/CapacityReservedEncodeSpec.lean	capacity-reserved encoder against EthLib: fast path and the two case covers
+fv/kraken/lean/E2e/OptR1/WitO.lean	fv/kraken/lean/Prysm/Checkpoint/CapacityReservedWitnessEncodeFastPath.lean	witness of the capacity-reserved encoder fast path theorem
+fv/kraken/lean/E2e/OptR1/WitOW.lean	fv/kraken/lean/Prysm/Checkpoint/CapacityReservedWitnessEncodeCover.lean	witness of the capacity-reserved encoder case cover
+fv/kraken/lean/E2e/OptR1/WitOWR.lean	fv/kraken/lean/Prysm/Checkpoint/CapacityReservedWitnessEncodeRejectLengthCover.lean	witness of the capacity-reserved encoder reject case cover
+fv/kraken/lean/E2e/Epoch.lean	fv/kraken/lean/Prysm/Epoch/DecodeAccept.lean	decoder accept path of the hand-written primitives.Epoch UnmarshalSSZ, its function specification and the proof of it
+fv/kraken/lean/E2e/EpReject.lean	fv/kraken/lean/Prysm/Epoch/DecodeRejectSize.lean	decoder reject len(buf) != 8 of primitives.Epoch
+fv/kraken/lean/E2e/WitEp.lean	fv/kraken/lean/Prysm/Epoch/WitnessDecodeAccept.lean	witness of the Epoch decoder accept theorem and of its function specification
+fv/kraken/lean/E2e/WitEpR.lean	fv/kraken/lean/Prysm/Epoch/WitnessDecodeRejectSize.lean	witnesses of the Epoch decoder reject theorem (input length 7, 9 and 300)
+fv/kraken/lean/E2e/Data.lean	fv/kraken/lean/Prysm/ElfData/CheckpointAndEpoch.lean	ELF data of the link set prysm/go1.26.10/e2e/link (Checkpoint and Epoch functions; several types use its error globals)
+fv/kraken/lean/E2e/Include.lean	fv/kraken/lean/Prysm/ElfData/CheckpointAndEpochReader.lean	the command e2e_data_include that reads the data files of that link set

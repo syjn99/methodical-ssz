@@ -2,8 +2,8 @@ import Runtime.Contracts
 import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
-import E2e.Data
-import E2e.Code
+import Prysm.ElfData.CheckpointAndEpoch
+import Prysm.Checkpoint.Code
 import E2eScal.KindEncN
 import E2eScal.F24Code
 
@@ -54,7 +54,7 @@ are read from the `.S` by hand. Development data, no hold-out.
   Timestamp 40, Pubkey 48 / 56 / 64. Output: buf[0:20], buf[20:28], buf[28:36], buf[36:84].
 -/
 
-open Machine Runtime TestTarget E2e E2e.Code E2eScal.F24Code
+open Machine Runtime TestTarget Prysm.Checkpoint.Code E2eScal.F24Code
 variable [Host]
 
 open Codec
@@ -89,7 +89,7 @@ abbrev ber_accept_stmt : Prop :=
       ⋆ Eq (aL2.At (s.regs.rax.toBitVec + 40)) ⋆ Eq (aC2.At (s.regs.rax.toBitVec + 48))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 68) (hav : 68 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -146,7 +146,7 @@ abbrev wdr_accept_stmt : Prop :=
       ⋆ Eq (aN.At (s.regs.rax.toBitVec + 56))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 76) (hav : 68 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧

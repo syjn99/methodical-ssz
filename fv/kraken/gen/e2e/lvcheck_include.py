@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""lean/E2eList/Include.lean's data reader is the text of lean/E2e/Include.lean's reader.
+"""lean/E2eList/Include.lean's data reader is the text of lean/Prysm/ElfData/CheckpointAndEpochReader.lean's reader.
 
 Usage: lvcheck_include.py      (from any cwd; Python 3 standard library only)
 A new file with the method of `check_include.py` (not changed): compares the bodies of e2eHexByte?,
@@ -11,7 +11,7 @@ import pathlib
 import sys
 
 L = pathlib.Path(__file__).resolve().parents[2] / "lean"
-e2 = (L / "E2e" / "Include.lean").read_text()
+e2 = (L / "Prysm" / "ElfData" / "CheckpointAndEpochReader.lean").read_text()
 lv = (L / "E2eList" / "Include.lean").read_text()
 
 

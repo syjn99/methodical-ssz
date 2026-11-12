@@ -11,7 +11,7 @@ compositions over the GENERATED theorems of `Gen4PwDec.lean` (`p2dec --gen4`, ra
 (`PwAccept.lean`, frame `0x48`) and the glue. In-sample (development data); no transfer claim.
 -/
 
-open Machine Runtime TestTarget E2e E2eScal.H4Code E2eScal.BhCode E2eScal Codec
+open Machine Runtime TestTarget E2eScal.H4Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.H4
@@ -137,7 +137,7 @@ theorem pw_e2e_accept_main_g4gen : pw_accept_stmt := by
   intro k hk hf kV hkV hfV kE hkE hfE in0 in1 in2 hin0 hin1 hin2 s ra guard
     fp s1 s2 s4 sp1 rslot lo ast a8 a16 a24 hfp h1 h2 h4 hsp1 hrs hlo hast ha8 ha16 ha24 R h_mem hguard hlen
   have hvi : U64CalleeAcc viLabel := vi_uacc_holds kV hkV hfV
-  have hep : U64CalleeAcc E2e.Code.epLabel := ep_uacc_holds kE hkE hfE
+  have hep : U64CalleeAcc Prysm.Epoch.Code.unmarshalSSZLabel := Prysm.Epoch.Decode.accept_function_spec_holds kE hkE hfE
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
   simp only at h_mem hguard hlen ⊢
   have hg : guard.toNat < (rsp.toBitVec - 88).toNat := pwa_guard _ _ hguard

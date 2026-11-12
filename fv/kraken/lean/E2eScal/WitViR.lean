@@ -5,7 +5,7 @@ import Machine.WitnessHost
 /-!
 # Witnesses of `E2eScal.vi_unmarshal_reject_len_main` (len 7, 9 and 300)
 
-Hand text: `E2e/WitEpR.lean` with `EpUnmarshal` replaced by `ViUnmarshal` (same directive count, same
+Hand text: `Prysm/Epoch/WitnessDecodeRejectSize.lean` with `Prysm.Epoch.Code.unmarshalSSZ` replaced by `ViUnmarshal` (same directive count, same
 host layout and indices). The original description follows, with the type name replaced.
 
 Host: four data labels (`go_string._` at 0x10000, `runtime.gcbits._` 0x10001,
@@ -19,7 +19,7 @@ bytes `e2eEpFmt`; the fillers between them and the unused rax spill slot are the
 frame `R`. With `len(buf) = 7` the decoder returns a non-nil error.
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2e.Code E2eScal E2eScal.BhCode
+open Machine Runtime TestTarget Machine.Witness Prysm.Checkpoint.Code E2eScal E2eScal.BhCode
 
 namespace E2eScal.WitViR
 
@@ -48,7 +48,7 @@ theorem label_gc : label "runtime.gcbits._" = 0x10001 := mk_label P _ 1 _ (by si
 theorem label_st : label "runtime.staticuint64s" = 0x10002 := mk_label P _ 2 _ (by simp [P, dataLabels]) (by decide)
 theorem label_bump : label "runtime.fvBump" = 0x10003 := mk_label P _ 3 _ (by simp [P, dataLabels]) (by decide)
 
-theorem ep_eight_len : E2e.Data.e2eEight.length = 8 := by decide
+theorem ep_eight_len : ElfData.CheckpointAndEpoch.e2eEight.length = 8 := by decide
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0
 abbrev w (v : UInt64) : List UInt8 := Int.toBytes 8 v.toBitVec.toInt
@@ -56,8 +56,8 @@ abbrev w (v : UInt64) : List UInt8 := Int.toBytes 8 v.toBitVec.toInt
 /-- bump ptr · F1 · box 7 · box 8 · F2 · eight · heap · guard · rslot · sp8 · sp32 · a40 · a24 · fp · ret · s1 · s2 · F3 · fs. -/
 def block : List UInt8 :=
   Int.toBytes 8 (0x105a1 : BitVec 64).toInt ++ (z 47 ++ (Int.toBytes 8 (7 : BitVec 64).toInt
-    ++ (Int.toBytes 8 (8 : BitVec 64).toInt ++ (z 1359 ++ (E2e.Data.e2eEight ++ (z 8280 ++ (w 0 ++ (z 8 ++ (z 8
-    ++ (z 32 ++ (z 16 ++ (z 16 ++ (z 8 ++ (w 0 ++ (z 8 ++ (z 8 ++ (z 100216 ++ E2e.Data.e2eEpFmt)))))))))))))))))
+    ++ (Int.toBytes 8 (8 : BitVec 64).toInt ++ (z 1359 ++ (ElfData.CheckpointAndEpoch.e2eEight ++ (z 8280 ++ (w 0 ++ (z 8 ++ (z 8
+    ++ (z 32 ++ (z 16 ++ (z 16 ++ (z 8 ++ (w 0 ++ (z 8 ++ (z 8 ++ (z 100216 ++ ElfData.CheckpointAndEpoch.e2eEpFmt)))))))))))))))))
 
 def mem : DataMem := block.At (0x10003 : BitVec 64)
 
@@ -84,16 +84,16 @@ theorem vir_runs (zmms : RegZmms) (flags : StatusFlags) :
     (z 8) rfl rfl rfl rfl rfl rfl rfl 0 [] rfl bumpHeap 8280 R0
     (by
       have H : Eq (block.At (0x10003 : BitVec 64)) mem := rfl
-      wit_split [ep_eight_len, ep_fmt_len]
+      wit_split [ep_eight_len, Prysm.Epoch.Decode.reject_fmt_len]
       -- bump pointer, F1, box 7, box 8, F2, ... : move the heap next to the pointer
-      rw [Std.ExtHashMap.sep_comm_l (Eq (E2e.Data.e2eEight.At _)) (Eq ((z 8280).At _)),
+      rw [Std.ExtHashMap.sep_comm_l (Eq (ElfData.CheckpointAndEpoch.e2eEight.At _)) (Eq ((z 8280).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((z 1359).At _)) (Eq ((z 8280).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((Int.toBytes 8 (8#64).toInt).At _)) (Eq ((z 8280).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((Int.toBytes 8 (7#64).toInt).At _)) (Eq ((z 8280).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((z 47).At _)) (Eq ((z 8280).At _))] at H
       have H2 := lift_heap H
       rw [staticBox_of_lt (v := 8) (by decide), staticBox_of_lt (v := (cs0 zmms flags).regs.rcx.toBitVec) (by simp [cs0])]
-      simp only [cs0, R0, w, TestTarget.Data.staticuint64s_addr, E2e.Data.e2eEpFmt_addr, E2e.Data.e2eEight_addr, label_gs,
+      simp only [cs0, R0, w, TestTarget.Data.staticuint64s_addr, ElfData.CheckpointAndEpoch.e2eEpFmt_addr, ElfData.CheckpointAndEpoch.e2eEight_addr, label_gs,
         label_gc, label_st, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         BitVec.reduceMul] at H2 ⊢
@@ -101,7 +101,7 @@ theorem vir_runs (zmms : RegZmms) (flags : StatusFlags) :
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
       exact H2)
     (by simp [cs0]) (by simp [cs0]) (by omega) (rt_convT64 67 hk67 hf67 0)
-    (rt_errorf_dd 67 hk67 hf67 bumpHeap E2e.Data.e2eEpFmt E2e.Data.e2eIntType_addr 0))
+    (rt_errorf_dd 67 hk67 hf67 bumpHeap ElfData.CheckpointAndEpoch.e2eEpFmt ElfData.CheckpointAndEpoch.e2eIntType_addr 0))
     (fun _ h => ⟨h.1, h.2.1⟩)
 
 /-! ## len 9 and len 300
@@ -117,8 +117,8 @@ namespace L9
 
 def block : List UInt8 :=
   Int.toBytes 8 (0x105a1 : BitVec 64).toInt ++ (z 55 ++ (Int.toBytes 8 (8 : BitVec 64).toInt
-    ++ (Int.toBytes 8 (9 : BitVec 64).toInt ++ (z 1351 ++ (E2e.Data.e2eEight ++ (z 8280 ++ (w 0 ++ (z 8 ++ (z 8
-    ++ (z 32 ++ (z 16 ++ (z 16 ++ (z 8 ++ (w 0 ++ (z 8 ++ (z 8 ++ (z 100216 ++ E2e.Data.e2eEpFmt)))))))))))))))))
+    ++ (Int.toBytes 8 (9 : BitVec 64).toInt ++ (z 1351 ++ (ElfData.CheckpointAndEpoch.e2eEight ++ (z 8280 ++ (w 0 ++ (z 8 ++ (z 8
+    ++ (z 32 ++ (z 16 ++ (z 16 ++ (z 8 ++ (w 0 ++ (z 8 ++ (z 8 ++ (z 100216 ++ ElfData.CheckpointAndEpoch.e2eEpFmt)))))))))))))))))
 
 def mem : DataMem := block.At (0x10003 : BitVec 64)
 
@@ -139,15 +139,15 @@ theorem vir_runs9 (zmms : RegZmms) (flags : StatusFlags) :
     (z 8) rfl rfl rfl rfl rfl rfl rfl 0 [] rfl bumpHeap 8280 R0
     (by
       have H : Eq (block.At (0x10003 : BitVec 64)) mem := rfl
-      wit_split [ep_eight_len, ep_fmt_len]
-      rw [Std.ExtHashMap.sep_comm_l (Eq (E2e.Data.e2eEight.At _)) (Eq ((z 8280).At _)),
+      wit_split [ep_eight_len, Prysm.Epoch.Decode.reject_fmt_len]
+      rw [Std.ExtHashMap.sep_comm_l (Eq (ElfData.CheckpointAndEpoch.e2eEight.At _)) (Eq ((z 8280).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((z 1351).At _)) (Eq ((z 8280).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((Int.toBytes 8 (9#64).toInt).At _)) (Eq ((z 8280).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((Int.toBytes 8 (8#64).toInt).At _)) (Eq ((z 8280).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((z 55).At _)) (Eq ((z 8280).At _))] at H
       have H2 := lift_heap H
       rw [staticBox_of_lt (v := 8) (by decide), staticBox_of_lt (v := (cs0 zmms flags).regs.rcx.toBitVec) (by simp [cs0])]
-      simp only [cs0, R0, w, TestTarget.Data.staticuint64s_addr, E2e.Data.e2eEpFmt_addr, E2e.Data.e2eEight_addr, label_gs,
+      simp only [cs0, R0, w, TestTarget.Data.staticuint64s_addr, ElfData.CheckpointAndEpoch.e2eEpFmt_addr, ElfData.CheckpointAndEpoch.e2eEight_addr, label_gs,
         label_gc, label_st, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         BitVec.reduceMul] at H2 ⊢
@@ -155,7 +155,7 @@ theorem vir_runs9 (zmms : RegZmms) (flags : StatusFlags) :
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
       exact H2)
     (by simp [cs0]) (by simp [cs0]) (by omega) (rt_convT64 67 hk67 hf67 0)
-    (rt_errorf_dd 67 hk67 hf67 bumpHeap E2e.Data.e2eEpFmt E2e.Data.e2eIntType_addr 0))
+    (rt_errorf_dd 67 hk67 hf67 bumpHeap ElfData.CheckpointAndEpoch.e2eEpFmt ElfData.CheckpointAndEpoch.e2eIntType_addr 0))
     (fun _ h => ⟨h.1, h.2.1⟩)
 
 end L9
@@ -164,8 +164,8 @@ namespace L300
 
 def block : List UInt8 :=
   Int.toBytes 8 (0x105a1 : BitVec 64).toInt ++ (z 55 ++ (Int.toBytes 8 (8 : BitVec 64).toInt
-    ++ (z 1359 ++ (E2e.Data.e2eEight ++ (z 8280 ++ (w 0 ++ (z 8 ++ (z 8
-    ++ (z 32 ++ (z 16 ++ (z 16 ++ (z 8 ++ (w 0 ++ (z 8 ++ (z 8 ++ (z 100216 ++ E2e.Data.e2eEpFmt))))))))))))))))
+    ++ (z 1359 ++ (ElfData.CheckpointAndEpoch.e2eEight ++ (z 8280 ++ (w 0 ++ (z 8 ++ (z 8
+    ++ (z 32 ++ (z 16 ++ (z 16 ++ (z 8 ++ (w 0 ++ (z 8 ++ (z 8 ++ (z 100216 ++ ElfData.CheckpointAndEpoch.e2eEpFmt))))))))))))))))
 
 def mem : DataMem := block.At (0x10003 : BitVec 64)
 
@@ -186,14 +186,14 @@ theorem vir_runs300 (zmms : RegZmms) (flags : StatusFlags) :
     (z 8) rfl rfl rfl rfl rfl rfl rfl 0 [] rfl bumpHeap 8280 R0
     (by
       have H : Eq (block.At (0x10003 : BitVec 64)) mem := rfl
-      wit_split [ep_eight_len, ep_fmt_len]
-      rw [Std.ExtHashMap.sep_comm_l (Eq (E2e.Data.e2eEight.At _)) (Eq ((z 8280).At _)),
+      wit_split [ep_eight_len, Prysm.Epoch.Decode.reject_fmt_len]
+      rw [Std.ExtHashMap.sep_comm_l (Eq (ElfData.CheckpointAndEpoch.e2eEight.At _)) (Eq ((z 8280).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((z 1359).At _)) (Eq ((z 8280).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((Int.toBytes 8 (8#64).toInt).At _)) (Eq ((z 8280).At _)),
         Std.ExtHashMap.sep_comm_l (Eq ((z 55).At _)) (Eq ((z 8280).At _))] at H
       have H2 := lift_heap H
       rw [staticBox_of_lt (v := 8) (by decide), staticBox_big (cs0 zmms flags).regs.rcx.toBitVec (by simp [cs0])]
-      simp only [cs0, R0, w, TestTarget.Data.staticuint64s_addr, E2e.Data.e2eEpFmt_addr, E2e.Data.e2eEight_addr, label_gs,
+      simp only [cs0, R0, w, TestTarget.Data.staticuint64s_addr, ElfData.CheckpointAndEpoch.e2eEpFmt_addr, ElfData.CheckpointAndEpoch.e2eEight_addr, label_gs,
         label_gc, label_st, nil_At_emp, Std.ExtHashMap.sep_emp, Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         BitVec.reduceMul] at H2 ⊢
@@ -201,7 +201,7 @@ theorem vir_runs300 (zmms : RegZmms) (flags : StatusFlags) :
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H2 ⊢
       exact H2)
     (by simp [cs0]) (by simp [cs0]) (by omega) (rt_convT64 67 hk67 hf67 0)
-    (rt_errorf_dd 67 hk67 hf67 bumpHeap E2e.Data.e2eEpFmt E2e.Data.e2eIntType_addr 0))
+    (rt_errorf_dd 67 hk67 hf67 bumpHeap ElfData.CheckpointAndEpoch.e2eEpFmt ElfData.CheckpointAndEpoch.e2eIntType_addr 0))
     (fun _ h => ⟨h.1, h.2.1⟩)
 
 end L300

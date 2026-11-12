@@ -1,5 +1,5 @@
 import TestTarget.ListU64DecodeRejectCall
-import E2e.CpMarshal
+import Prysm.Checkpoint.EncodeFastPath
 import E2eScal.BhCode
 
 /-!
@@ -111,7 +111,7 @@ theorem bh_enc_b (k : Nat) (hk : BhMarshal.IsInfixAt Host.prog k) (hf : LabelsFr
   simp only [Width.bytes, Width.bits] at H4
   kunfold
   rw [bhm_slot] at *
-  rw [E2e.cpm_mul] at *
+  rw [Prysm.Checkpoint.Encode.fast_path_mul] at *
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (k + 89 + 1)) r1 e1 scratch _
     (by rw [hr1]; rfl) (by rw [hr1, he1]) hsc (by dsimp only; ecancel)) ?_
   rintro ⟨e1', pc1⟩ ⟨hpc1, hrsp1, hr141, hrbp1, stk1, hstk1, Hm1⟩

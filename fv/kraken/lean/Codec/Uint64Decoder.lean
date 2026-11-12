@@ -20,7 +20,7 @@ spill displacement `dsp` (`dsp = fs + 24`: the caller's rbx slot at entry rsp + 
 place `j` of the head block, the place `jb` of the tail block and the address of `lbb`.
 
 `u64dec_accept` is proved once from these templates. Its statement is the statement of
-`E2e.ep_unmarshal_accept_main` / `E2eAd.sl_unmarshal_accept_main` /
+`Prysm.Epoch.Decode.accept` / `E2eAd.sl_unmarshal_accept_main` /
 `E2eAd.ci_unmarshal_accept_main` with the code hypotheses replaced by the template
 hypotheses.
 -/

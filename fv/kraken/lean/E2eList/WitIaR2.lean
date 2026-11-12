@@ -5,7 +5,7 @@ import Machine.WitnessHost
 /-!
 # Witnesses of `ia_e2e_reject_size_main` (size reject) and `ia_e2e_reject_offset_main` (offset reject)
 
-The text of `E2e/WitCpR.lean`. The premises of the frozen statements `ia_reject_size_stmt` and
+The text of `Prysm/Checkpoint/WitnessDecodeRejectSize.lean`. The premises of the frozen statements `ia_reject_size_stmt` and
 `ia_reject_offset_stmt` (`StmtIa.lean`) are satisfiable. Host: the labels `ssz.ErrSize` (index 0, 0x10000) and
 `ssz.ErrInvalidVariableOffset` (index 16, 0x10010) with pad labels between, then the real Go 1.26.10
 `(*v1alpha1.IndexedAttestation).UnmarshalSSZ` (index 17). (The host of the alignment and overflow rejects, `WitIaR` has neither label.)
@@ -80,7 +80,7 @@ theorem ia_size_runs (len : UInt64) (hlen : len.toNat < 228) (zmms : RegZmms) (f
     (by
       have H : Eq (block.At (0x10000 : BitVec 64)) mem := rfl
       wit_split []
-      simp only [cs0, R1, w, E2e.Data.e2eErrSize_addr, label_err, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
+      simp only [cs0, R1, w, ElfData.CheckpointAndEpoch.e2eErrSize_addr, label_err, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
         Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H ⊢
       simp only [Std.ExtHashMap.sep_comm_l] at H ⊢

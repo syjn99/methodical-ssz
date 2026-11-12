@@ -1,4 +1,4 @@
-import E2e.Spec
+import Prysm.Checkpoint.Spec
 
 /-!
 # Independent hand `Desc` of the eight types with a generated theorem

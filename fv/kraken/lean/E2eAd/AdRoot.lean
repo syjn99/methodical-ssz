@@ -1,5 +1,5 @@
 import E2eAd.AdHead
-import E2e.Data
+import Prysm.ElfData.CheckpointAndEpoch
 
 /-!
 # `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, segment 2
@@ -52,7 +52,7 @@ theorem ad_e2e_root (k : Nat) (hk : AdUnmarshal.IsInfixAt Host.prog k) (hf : Lab
       ⋆ Eq (aP.At (rcv + 24)) ⋆ Eq (aL.At (rcv + 32)) ⋆ Eq (aC.At (rcv + 40))
       ⋆ Eq (root.At (bf + 16))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 96)) (hmm : MemmoveC (S + 96)) :
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 96)) (hmm : MemmoveC (S + 96)) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 120) ∧ st.data.regs.rsp = { toBitVec := rsp0.toBitVec - 120 }
         ∧ st.data.regs.rbp = { toBitVec := rsp0.toBitVec - 8#64 } ∧ st.data.regs.r14 = r140 ∧

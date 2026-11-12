@@ -5,7 +5,7 @@ import Machine.WitnessHost
 /-!
 # Witness of `bh_e2e_marshal_main` (BeaconBlockHeader encoder, fast path only)
 
-Hand-written (the text of `E2e/WitCpM.lean` with the BeaconBlockHeader host and layout).
+Hand-written (the text of `Prysm/Checkpoint/WitnessEncodeFastPath.lean` with the BeaconBlockHeader host and layout).
 Host: the real Go 1.26.10 `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo` (index 0) and `RtCopy` (index 195,
 `rt_memmove`, S = 0). One memory block at `0x10000`: guard word (r14 = 0xfff0), the 128-byte receiver at
 0x10008 (`state` 0, Slot = `sl`, ProposerIndex = `pi`, ParentRoot = (0x10088, 32, 32), StateRoot =

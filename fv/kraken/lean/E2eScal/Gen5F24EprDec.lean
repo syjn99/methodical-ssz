@@ -2,7 +2,7 @@ import E2eScal.F24Code
 import E2eScal.AcceptTies
 import Codec.FieldFrame
 import E2eScal.ViSpec
-import E2e.Epoch
+import Prysm.Epoch.DecodeAccept
 import E2eAd.Prims
 import Codec.DecoderHeadEpilogue
 import E2eScal.RejectTies
@@ -175,7 +175,7 @@ reject. Every statement has a `_kind` line against the G5-L kinds. In-sample (de
 GEN5-JSON: {"accept": "epr_g5dec_accept", "kinds": [{"theorem": "epr_g5dec_head", "kind": "decHeadKindN"}, {"theorem": "epr_g5dec_f1", "kind": "decFieldKindN"}, {"theorem": "epr_g5dec_f2", "kind": "decFieldKindN"}, {"theorem": "epr_g5dec_epi", "kind": "decEpiKindN"}, {"theorem": "epr_g5dec_accept", "kind": "decAcceptKindN"}, {"theorem": "epr_g5dec_reject", "kind": "decRejectKindN"}], "fields": "[.u64, .u64]", "frame": 64, "statement_check": "kind instance only"}
 -/
 
-open E2e E2eAd E2eScal Codec
+open E2eAd E2eScal Codec
 
 namespace E2eScal.Gen
 
@@ -630,7 +630,7 @@ theorem epr_g5dec_reject : ∀ (k : Nat) (hk : EprUnmarshal.IsInfixAt Host.prog 
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx ≠ 16),
     Eventually (step1 Host.exe)
@@ -640,7 +640,7 @@ theorem epr_g5dec_reject : ∀ (k : Nat) (hk : EprUnmarshal.IsInfixAt Host.prog 
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   intro k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard hlen

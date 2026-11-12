@@ -19,7 +19,7 @@ caller's word at rsp + 24. For every input and every old pointer word every prem
 nil. The receiver is a Go value of `v1alpha1.ValidatorIdentity` (zero `state`, zero-length slices, zero integers).
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.F24Code
+open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.F24Code
 
 namespace E2eScal.WitVidGA
 
@@ -29,7 +29,7 @@ def dataLabels : Program :=
   [.label "runtime.fvBump", .label "pad1", .label "pad2", .label "pad3", .label "pad4", .label "pad5",
    .label "pad6", .label "pad7", .label "runtime.writeBarrier"]
 
-def P : Program := dataLabels ++ VidUnmarshal ++ E2eScal.BhCode.ViUnmarshal ++ E2e.Code.EpUnmarshal ++ BumpAlloc1 ++ RtCopy
+def P : Program := dataLabels ++ VidUnmarshal ++ E2eScal.BhCode.ViUnmarshal ++ Prysm.Epoch.Code.unmarshalSSZ ++ BumpAlloc1 ++ RtCopy
 
 theorem P_len : P.length = 308 := by rfl
 
@@ -38,20 +38,20 @@ instance host : Host := mkHost P (by rw [P_len]; decide)
 theorem prog_eq : Host.prog = P := rfl
 
 theorem hk9 : VidUnmarshal.IsInfixAt Host.prog 9 :=
-  infixAt_of dataLabels (E2eScal.BhCode.ViUnmarshal ++ E2e.Code.EpUnmarshal ++ BumpAlloc1 ++ RtCopy) (by simp [prog_eq, P, List.append_assoc]) rfl
+  infixAt_of dataLabels (E2eScal.BhCode.ViUnmarshal ++ Prysm.Epoch.Code.unmarshalSSZ ++ BumpAlloc1 ++ RtCopy) (by simp [prog_eq, P, List.append_assoc]) rfl
 theorem hk150 : E2eScal.BhCode.ViUnmarshal.IsInfixAt Host.prog 150 :=
-  infixAt_of (dataLabels ++ VidUnmarshal) (E2e.Code.EpUnmarshal ++ BumpAlloc1 ++ RtCopy)
+  infixAt_of (dataLabels ++ VidUnmarshal) (Prysm.Epoch.Code.unmarshalSSZ ++ BumpAlloc1 ++ RtCopy)
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hf150 : LabelsFresh E2eScal.BhCode.ViUnmarshal 150 := labelsFresh_of (by rw [prog_eq]; decide)
-theorem hk213 : E2e.Code.EpUnmarshal.IsInfixAt Host.prog 213 :=
+theorem hk213 : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog 213 :=
   infixAt_of (dataLabels ++ VidUnmarshal ++ E2eScal.BhCode.ViUnmarshal) (BumpAlloc1 ++ RtCopy)
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
-theorem hf213 : LabelsFresh E2e.Code.EpUnmarshal 213 := labelsFresh_of (by rw [prog_eq]; decide)
+theorem hf213 : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ 213 := labelsFresh_of (by rw [prog_eq]; decide)
 theorem hk276 : BumpAlloc1.IsInfixAt Host.prog 276 :=
-  infixAt_of (dataLabels ++ VidUnmarshal ++ E2eScal.BhCode.ViUnmarshal ++ E2e.Code.EpUnmarshal) RtCopy
+  infixAt_of (dataLabels ++ VidUnmarshal ++ E2eScal.BhCode.ViUnmarshal ++ Prysm.Epoch.Code.unmarshalSSZ) RtCopy
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 theorem hk282 : RtCopy.IsInfixAt Host.prog 282 :=
-  infixAt_of (dataLabels ++ VidUnmarshal ++ E2eScal.BhCode.ViUnmarshal ++ E2e.Code.EpUnmarshal ++ BumpAlloc1) []
+  infixAt_of (dataLabels ++ VidUnmarshal ++ E2eScal.BhCode.ViUnmarshal ++ Prysm.Epoch.Code.unmarshalSSZ ++ BumpAlloc1) []
     (by simp [prog_eq, P, List.append_assoc]) (by rfl)
 
 theorem hf9 : LabelsFresh VidUnmarshal 9 := labelsFresh_of (by rw [prog_eq]; decide)

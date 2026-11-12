@@ -14,7 +14,7 @@ SFILE = {'Dpr': 'engine_v1.DepositRequest', 'Bdr': 'engine_v1.BuilderDepositRequ
          'Epr': 'prysm_v1alpha1.ExecutionPayloadEnvelopesByRangeRequest',
          'Pdc': 'prysm_v1alpha1.PartialDataColumnGroupID', 'Vid': 'prysm_v1alpha1.ValidatorIdentity'}
 CALLEE = {'Sl': ('E2eAd.Code.SlUnmarshal', 'primitives.Slot'), 'Vi': ('E2eScal.BhCode.ViUnmarshal', 'primitives.ValidatorIndex'),
-          'Ep': ('E2e.Code.EpUnmarshal', 'primitives.Epoch')}
+          'Ep': ('Prysm.Epoch.Code.unmarshalSSZ', 'primitives.Epoch')}
 CLEN, BUMPLEN, RTLEN = 63, 6, 26
 
 
@@ -57,7 +57,7 @@ slot, return slot, the unused rax spill slot (the frame `R`) and the rbx spill s
 (instances {N - 1}, {N + 1}, 0) the decoder returns the two words.
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2eScal.F24Code
+open Machine Runtime TestTarget Machine.Witness E2eScal.F24Code
 
 open Codec
 namespace E2eScal.Wit{X}GR
@@ -101,7 +101,7 @@ theorem {x}_reject_runs (len : UInt64) (hlen : len ≠ {N}) (zmms : RegZmms) (fl
     (by
       have H : Eq (block.At (0x10000 : BitVec 64)) mem := rfl
       wit_split []
-      simp only [cs0, R0, w, E2e.Data.e2eErrSize_addr, label_err, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
+      simp only [cs0, R0, w, ElfData.CheckpointAndEpoch.e2eErrSize_addr, label_err, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
         Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H ⊢
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢
@@ -169,7 +169,7 @@ at rax = 0x10020 (protoc struct, `prysm/ir/ir-mainnet.json` gc amd64 layout: `st
 returns nil. The receiver is a Go value of `{ty}` (all zero).
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.F24Code
+open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.F24Code
 
 namespace E2eScal.Wit{X}GA
 
@@ -347,7 +347,7 @@ def accbytes(X, n, frame):
                    + [('(by decide)' if f[1] == 'u' else 'rfl') for f in fs] + ['(by decide)'] * nb)
     ex2 = ' '.join([f'(List.replicate {f[2]} 0xff)' for f in fs] + ['(List.replicate 8 0xff)'] * nb
                    + ['rfl'] * (len(fs) + nb))
-    opens = 'Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.F24Code'
+    opens = 'Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.F24Code'
     cdoc = ', '.join(f'`{CALLEE[c][1]}` UnmarshalSSZ' for c in callees)
     return f'''import E2eScal.Gen5F24{X}Dec
 import Runtime.CopyModel

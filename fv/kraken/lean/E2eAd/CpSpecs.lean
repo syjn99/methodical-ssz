@@ -1,23 +1,23 @@
-import E2e.CpAccept
-import E2e.CpMarshal
+import Prysm.Checkpoint.DecodeAccept
+import Prysm.Checkpoint.EncodeFastPath
 import E2eAd.Code
 import Runtime.CopyModel
 
 /-!
 # Function specifications of the Checkpoint decoder and encoder
 
-`CpUAccC Heap S` is the statement of `E2e.cp_e2e_accept_main` as a hypothesis-shaped property of
-the code at the label `(*Checkpoint).UnmarshalSSZ` (the form of `TestTarget.ScUAccC` / `E2e.EpUAccC`): for
+`CpUAccC Heap S` is the statement of `Prysm.Checkpoint.Decode.accept` as a hypothesis-shaped property of
+the code at the label `(*Checkpoint).UnmarshalSSZ` (the form of `TestTarget.ScUAccC` / `Prysm.Epoch.Decode.accept_function_spec`): for
 every machine state, return address and frame `F`. The only change to the statement is that the
 callee's own `makeslice` return-slot word at rsp − 96 (`Host.addrOf (k + 70)` in the theorem) is an
 existential `rs'` of 8 bytes, so that the specification does not name the callee's place.
-`cp_uacc_holds` proves it from the machine code (`cp_e2e_accept_main`, with `ep_uacc_holds`
+`cp_uacc_holds` proves it from the machine code (`Prysm.Checkpoint.Decode.accept`, with `Prysm.Epoch.Decode.accept_function_spec_holds`
 inside); the runtime contracts the callee needs (`MakesliceC Heap uint8 1 S`, `MemmoveC S`) are
 hypotheses of `cp_uacc_holds`, so they stay visible in every caller's statement. Nothing new is
 assumed. `CpMAccC` (encoder) follows the same rule (below).
 -/
 
-open Machine Runtime TestTarget E2e E2e.Code E2eAd.Code
+open Machine Runtime TestTarget Prysm.Checkpoint.Code E2eAd.Code
 variable [Host]
 
 namespace E2eAd
@@ -71,21 +71,21 @@ def CpUAccC (Heap : Nat → DataMem → Prop) (S : Nat) : Prop :=
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ F) st'.data.dmem)
       ⟨st, label cpULabel⟩
 
-theorem cp_uacc_holds (k : Nat) (hk : CpUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh CpUnmarshal k)
-    (kE : Nat) (hkE : EpUnmarshal.IsInfixAt Host.prog kE) (hfE : LabelsFresh EpUnmarshal kE)
+theorem cp_uacc_holds (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k)
+    (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (Heap : Nat → DataMem → Prop) (S : Nat)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) : CpUAccC Heap S := by
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) : CpUAccC Heap S := by
   intro st ret guard avail e8 root fp s1 s2 l20 l28 l30 m0 m1 m2 rslot cst c0 cP cL cC ctl scratch F
     he8 hroot hfp h1 h2 hl20 hl28 hl30 hm0 hm1 hm2 hrs hcst hc0 hcP hcL hcC hctl hS8 hS hsc hguard hlen hav hm
   rw [show label cpULabel = Host.addrOf (k + 0) from label_at hk hf (j := 0) (by rfl) (by intro i hi; omega)]
-  refine eventually_mono (cp_e2e_accept_main k hk hf kE hkE hfE e8 root he8 hroot st (UInt64.ofBitVec ret.toBitVec)
+  refine eventually_mono (Prysm.Checkpoint.Decode.accept k hk hf kE hkE hfE e8 root he8 hroot st (UInt64.ofBitVec ret.toBitVec)
     guard fp s1 s2 l20 l28 l30 m0 m1 m2 rslot cst c0 cP cL cC ctl hfp h1 h2 hl20 hl28 hl30 hm0 hm1 hm2 hrs hcst hc0
     hcP hcL hcC hctl F S hS8 hS scratch hsc Heap avail hm hguard hlen hav hms hmm) ?_
   rintro st' ⟨h1, h2, h3, h4, h5, h6, p, scr, mm, hscr, hmm', hmem⟩
   exact ⟨h1, h2, h3, h4, h5, h6, p, scr, mm, _, hscr, hmm', Int.toBytes_length 8 _, hmem⟩
 
 /-- **Function specification of `(*Checkpoint).MarshalSSZTo`, fast path** (capacity for 40 more bytes,
-`len(Root) = 32`): the statement of `E2e.cp_e2e_marshal_main` at the label, for every state, return
+`len(Root) = 32`): the statement of `Prysm.Checkpoint.Encode.fast_path` at the label, for every state, return
 address and frame; the callee's return-slot word at rsp − 120 (`Host.addrOf (k + 63)`) is an
 existential `rs'`. `cp_macc_holds` proves it; `MemmoveC S` is its hypothesis. -/
 def CpMAccC (S : Nat) : Prop :=
@@ -134,12 +134,12 @@ def CpMAccC (S : Nat) : Prop :=
           ⋆ Eq (root.At (st.regs.rbx.toBitVec + st.regs.rcx.toBitVec + 8)) ⋆ F) st'.data.dmem)
       ⟨st, label cpMLabel⟩
 
-theorem cp_macc_holds (k : Nat) (hk : CpMarshal.IsInfixAt Host.prog k) (hf : LabelsFresh CpMarshal k)
+theorem cp_macc_holds (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf : LabelsFresh marshalSSZTo k)
     (S : Nat) (hmm : MemmoveC S) : CpMAccC S := by
   intro st ret guard p cst e8 cC ctl root pre d0 d1 fp s2 l16 l24 l32 t40 t30 rslot scratch F
     hcst he8 hcC hctl hroot hd0 hd1 hpre hfp h2 hl16 hl24 hl32 ht40 ht30 hrs hsc hguard hsp hcap hcap63 hm
   rw [show label cpMLabel = Host.addrOf (k + 0) from label_at hk hf (j := 0) (by rfl) (by intro i hi; omega)]
-  refine eventually_mono (cp_e2e_marshal_main k hk hf cst e8 cC ctl root pre d0 d1 hcst he8 hcC hctl hroot hd0 hd1
+  refine eventually_mono (Prysm.Checkpoint.Encode.fast_path k hk hf cst e8 cC ctl root pre d0 d1 hcst he8 hcC hctl hroot hd0 hd1
     p st (UInt64.ofBitVec ret.toBitVec) guard hpre fp s2 l16 l24 l32 t40 t30 rslot hfp h2 hl16 hl24 hl32 ht40 ht30 hrs
     F S scratch hsc hm hguard hsp hcap hcap63 hmm) ?_
   rintro st' ⟨h1, h2, h3, h4, h5, h6, h7, h8, h9, t, u, scr, ht, hu, hscr, hmem⟩

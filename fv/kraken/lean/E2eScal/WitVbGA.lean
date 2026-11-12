@@ -16,7 +16,7 @@ frame-pointer slot (rsp − 80) · callee return slot (rsp − 72) · 8 untouche
 input every premise holds and the decoder returns nil. The receiver is a Go value of `v1alpha1.ValidatorBalance` (all zero).
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.H6Code
+open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.H6Code
 
 namespace E2eScal.WitVbGA
 

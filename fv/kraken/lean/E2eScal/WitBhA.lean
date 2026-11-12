@@ -20,7 +20,7 @@ every old root pointer word (nil = zero, or any other bytes) every premise holds
 The receiver is a Go value of `v1alpha1.BeaconBlockHeader` (zero `state`, zero-length root slices).
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2eAd E2eAd.Code E2eScal Codec E2eScal.BhCode E2eScal.Bh
+open Machine Runtime TestTarget Machine.Witness E2eAd E2eAd.Code E2eScal Codec E2eScal.BhCode E2eScal.Bh
 
 namespace E2eScal.WitBhA
 

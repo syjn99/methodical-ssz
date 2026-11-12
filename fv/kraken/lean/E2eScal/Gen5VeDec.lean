@@ -2,7 +2,7 @@ import E2eScal.H6Code
 import E2eScal.AcceptTies
 import Codec.FieldFrame
 import E2eScal.ViSpec
-import E2e.Epoch
+import Prysm.Epoch.DecodeAccept
 import E2eAd.Prims
 import Codec.DecoderHeadEpilogue
 import E2eScal.RejectTies
@@ -259,7 +259,7 @@ reject. Every statement has a `_kind` line against the G5-L kinds. In-sample (de
 GEN5-JSON: {"accept": "ve_g5dec_accept", "kinds": [{"theorem": "ve_g5dec_head", "kind": "decHeadKindN"}, {"theorem": "ve_g5dec_f1", "kind": "decFieldKindN"}, {"theorem": "ve_g5dec_f2", "kind": "decFieldKindN"}, {"theorem": "ve_g5dec_epi", "kind": "decEpiKindN"}, {"theorem": "ve_g5dec_accept", "kind": "decAcceptKindN"}, {"theorem": "ve_g5dec_reject", "kind": "decRejectKindN"}], "fields": "[.u64, .u64]", "frame": 80, "statement_check": "kind instance only"}
 -/
 
-open E2e E2eAd E2eScal Codec
+open E2eAd E2eScal Codec
 
 namespace E2eScal.Gen
 
@@ -267,7 +267,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Head: directives 0–14 (prologue, spills, nil check); entry → boundary state 0. -/
 theorem ve_g5dec_head : ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh VeUnmarshal k)
-    (kE : Nat) (hkE : E2e.Code.EpUnmarshal.IsInfixAt Host.prog kE) (hfE : LabelsFresh E2e.Code.EpUnmarshal kE)
+    (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (kV : Nat) (hkV : E2eScal.BhCode.ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh E2eScal.BhCode.ViUnmarshal kV)
     (fv0 fv1 : List UInt8) (hfv0 : fv0.length = 8) (hfv1 : fv1.length = 8)
     (s : MachineData) (ra guard : UInt64)
@@ -356,7 +356,7 @@ theorem ve_g5dec_head : ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k) (
   rw [hcs]; simp only [Std.ExtHashMap.sep_assoc]
   ecancel
 theorem ve_g5dec_head_kind : ∀ (h : Host), type_of% (@ve_g5dec_head h)
-    = @E2eScal.decHeadKindN h VeUnmarshal (E2eScal.DecLayout.mk [E2e.Code.EpUnmarshal, E2eScal.BhCode.ViUnmarshal] 7
+    = @E2eScal.decHeadKindN h VeUnmarshal (E2eScal.DecLayout.mk [Prysm.Epoch.Code.unmarshalSSZ, E2eScal.BhCode.ViUnmarshal] 7
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8)]
       [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.up 32) (.orig 3), .at (.dn 72) (.orig 4), .at (.dn 88) (.orig 5), .at (.dn 96) (.orig 6)]
       (none) 88 true [.n 8, .n 8]
@@ -371,7 +371,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Field 1 `Epoch` (call): boundary state 0 (directive 15) → boundary state 1 (directive 48). -/
 theorem ve_g5dec_f1 : ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh VeUnmarshal k)
-    (kE : Nat) (hkE : E2e.Code.EpUnmarshal.IsInfixAt Host.prog kE) (hfE : LabelsFresh E2e.Code.EpUnmarshal kE)
+    (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (kV : Nat) (hkV : E2eScal.BhCode.ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh E2eScal.BhCode.ViUnmarshal kV)
     (fv0 fv1 : List UInt8) (hfv0 : fv0.length = 8) (hfv1 : fv1.length = 8)
     (s : MachineData) (ra guard : UInt64)
@@ -434,7 +434,7 @@ theorem ve_g5dec_f1 : ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k) (hf
   subst rsp1 rbp1 r141
   obtain rfl : rax = rax1 := (UInt64.toBitVec_inj.mp hrrax).symm
   obtain rfl : rbx = rbx1 := (UInt64.toBitVec_inj.mp hrrbx).symm
-  have hC := ep_uacc_holds kE hkE hfE
+  have hC := Prysm.Epoch.Decode.accept_function_spec_holds kE hkE hfE
   have hg : guard.toNat < (rsp.toBitVec - 88).toNat := by
     have hgd : guard.toNat + 88 < rsp.toBitVec.toNat := hguard
     bv_omega
@@ -456,7 +456,7 @@ theorem ve_g5dec_f1 : ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k) (hf
   rw [show k + 17 + 1 = k + 18 from rfl] at Hm'
   ecancel
 theorem ve_g5dec_f1_kind : ∀ (h : Host), type_of% (@ve_g5dec_f1 h)
-    = @E2eScal.decFieldKindN h VeUnmarshal (E2eScal.DecLayout.mk [E2e.Code.EpUnmarshal, E2eScal.BhCode.ViUnmarshal] 7
+    = @E2eScal.decFieldKindN h VeUnmarshal (E2eScal.DecLayout.mk [Prysm.Epoch.Code.unmarshalSSZ, E2eScal.BhCode.ViUnmarshal] 7
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8)]
       [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.up 32) (.orig 3), .at (.dn 72) (.orig 4), .at (.dn 88) (.orig 5), .at (.dn 96) (.orig 6)]
       (none) 88 true [.n 8, .n 8]
@@ -474,7 +474,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Field 2 `ValidatorIndex` (call): boundary state 1 (directive 48) → boundary state 2 (directive 86). -/
 theorem ve_g5dec_f2 : ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh VeUnmarshal k)
-    (kE : Nat) (hkE : E2e.Code.EpUnmarshal.IsInfixAt Host.prog kE) (hfE : LabelsFresh E2e.Code.EpUnmarshal kE)
+    (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (kV : Nat) (hkV : E2eScal.BhCode.ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh E2eScal.BhCode.ViUnmarshal kV)
     (fv0 fv1 : List UInt8) (hfv0 : fv0.length = 8) (hfv1 : fv1.length = 8)
     (s : MachineData) (ra guard : UInt64)
@@ -567,7 +567,7 @@ theorem ve_g5dec_f2 : ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k) (hf
   rw [show k + 55 + 1 = k + 56 from rfl] at Hm'
   ecancel
 theorem ve_g5dec_f2_kind : ∀ (h : Host), type_of% (@ve_g5dec_f2 h)
-    = @E2eScal.decFieldKindN h VeUnmarshal (E2eScal.DecLayout.mk [E2e.Code.EpUnmarshal, E2eScal.BhCode.ViUnmarshal] 7
+    = @E2eScal.decFieldKindN h VeUnmarshal (E2eScal.DecLayout.mk [Prysm.Epoch.Code.unmarshalSSZ, E2eScal.BhCode.ViUnmarshal] 7
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8)]
       [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.up 32) (.orig 3), .at (.dn 72) (.orig 4), .at (.dn 88) (.orig 5), .at (.dn 96) (.orig 6)]
       (none) 88 true [.n 8, .n 8]
@@ -585,7 +585,7 @@ set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
 /-- Epilogue: boundary state 2 (directive 86) → return. -/
 theorem ve_g5dec_epi : ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh VeUnmarshal k)
-    (kE : Nat) (hkE : E2e.Code.EpUnmarshal.IsInfixAt Host.prog kE) (hfE : LabelsFresh E2e.Code.EpUnmarshal kE)
+    (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (kV : Nat) (hkV : E2eScal.BhCode.ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh E2eScal.BhCode.ViUnmarshal kV)
     (fv0 fv1 : List UInt8) (hfv0 : fv0.length = 8) (hfv1 : fv1.length = 8)
     (s : MachineData) (ra guard : UInt64)
@@ -659,7 +659,7 @@ theorem ve_g5dec_epi : ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k) (h
       | (simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega)
   · dsimp only; rw [hmem']; ecancel
 theorem ve_g5dec_epi_kind : ∀ (h : Host), type_of% (@ve_g5dec_epi h)
-    = @E2eScal.decEpiKindN h VeUnmarshal (E2eScal.DecLayout.mk [E2e.Code.EpUnmarshal, E2eScal.BhCode.ViUnmarshal] 7
+    = @E2eScal.decEpiKindN h VeUnmarshal (E2eScal.DecLayout.mk [Prysm.Epoch.Code.unmarshalSSZ, E2eScal.BhCode.ViUnmarshal] 7
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8)]
       [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.up 32) (.orig 3), .at (.dn 72) (.orig 4), .at (.dn 88) (.orig 5), .at (.dn 96) (.orig 6)]
       (none) 88 true [.n 8, .n 8]
@@ -675,7 +675,7 @@ set_option maxRecDepth 100000 in
 /-- **Accept path of `v1alpha1.VoluntaryExit`, generated proof** (`p2dec --gen5`): head, one theorem per
 field, epilogue, chained by `eventually_trans`. Statement = the kind instance (`_kind`). -/
 theorem ve_g5dec_accept : ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh VeUnmarshal k)
-    (kE : Nat) (hkE : E2e.Code.EpUnmarshal.IsInfixAt Host.prog kE) (hfE : LabelsFresh E2e.Code.EpUnmarshal kE)
+    (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (kV : Nat) (hkV : E2eScal.BhCode.ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh E2eScal.BhCode.ViUnmarshal kV)
     (fv0 fv1 : List UInt8) (hfv0 : fv0.length = 8) (hfv1 : fv1.length = 8)
     (s : MachineData) (ra guard : UInt64)
@@ -727,7 +727,7 @@ theorem ve_g5dec_accept : ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k)
   intro st2 h2
   exact ve_g5dec_epi k hk hf kE hkE hfE kV hkV hfV fv0 fv1 hfv0 hfv1 s ra guard fp s1 s2 s4 sp1 rslot lo ast aN0 aN1 hfp hs1 hs2 hs4 hsp1 hrslot hlo hast haN0 haN1 R st2 h2
 theorem ve_g5dec_accept_kind : ∀ (h : Host), type_of% (@ve_g5dec_accept h)
-    = @E2eScal.decAcceptKindN h VeUnmarshal (E2eScal.DecLayout.mk [E2e.Code.EpUnmarshal, E2eScal.BhCode.ViUnmarshal] 7
+    = @E2eScal.decAcceptKindN h VeUnmarshal (E2eScal.DecLayout.mk [Prysm.Epoch.Code.unmarshalSSZ, E2eScal.BhCode.ViUnmarshal] 7
       [(0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (5, 8), (6, 8)]
       [.at (.dn 8) (.orig 0), .at (.up 8) (.orig 1), .at (.up 16) (.orig 2), .at (.up 32) (.orig 3), .at (.dn 72) (.orig 4), .at (.dn 88) (.orig 5), .at (.dn 96) (.orig 6)]
       (none) 88 true [.n 8, .n 8]
@@ -743,7 +743,7 @@ theorem ve_g5dec_reject : ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k)
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx ≠ 16),
     Eventually (step1 Host.exe)
@@ -753,7 +753,7 @@ theorem ve_g5dec_reject : ∀ (k : Nat) (hk : VeUnmarshal.IsInfixAt Host.prog k)
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   intro k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard hlen

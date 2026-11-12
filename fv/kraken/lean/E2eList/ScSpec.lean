@@ -1,5 +1,5 @@
-import E2e.Spec
-import E2e.SpecEq
+import Prysm.Checkpoint.Spec
+import Prysm.Checkpoint.SpecEquivalence
 import EthLib.Serialization.Proofs.Ssz.Codec.Table
 import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
 import E2eList.Defs

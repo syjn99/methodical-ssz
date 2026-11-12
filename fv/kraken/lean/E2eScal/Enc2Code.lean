@@ -5,7 +5,7 @@ import Machine.Include
 # Code of the flat encoder set (Go 1.26.10 ELF `c6403c02…911e`)
 
 Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/e2e/enc2/link/norm`
-(`link/conv.py --norm` of the same ELF as `E2e.Code`, `E2eAd.Code`, `E2eScal.BhCode`, `E2eScal.E1Code` and
+(`link/conv.py --norm` of the same ELF as `Prysm.Checkpoint.Code`, `E2eAd.Code`, `E2eScal.BhCode`, `E2eScal.E1Code` and
 `E2eScal.H6Code`; `link/check.py` (a)–(f) PASS in `../RESULT`, bundle `c08ac537…`).
 Code constants only: no theorem, no contract. Hand-written include file (not generator output;
 the text of `H6Code.lean` with the function set changed).

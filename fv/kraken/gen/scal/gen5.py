@@ -20,10 +20,10 @@ PRIM = 'github.com_OffchainLabs_prysm_v7_consensus_types_primitives.'
 G5_CALLEES = {PRIM + 'Slot.UnmarshalSSZ': ('E2eAd.Code.SlUnmarshal', 'S', 'sl_uacc_holds'),
               PRIM + 'CommitteeIndex.UnmarshalSSZ': ('E2eAd.Code.CiUnmarshal', 'C', 'ci_uacc_holds'),
               PRIM + 'ValidatorIndex.UnmarshalSSZ': ('E2eScal.BhCode.ViUnmarshal', 'V', 'vi_uacc_holds'),
-              PRIM + 'Epoch.UnmarshalSSZ': ('E2e.Code.EpUnmarshal', 'E', 'ep_uacc_holds')}
-G5_IMPORTS = ['E2eScal.AcceptTies', 'Codec.FieldFrame', 'E2eScal.ViSpec', 'E2e.Epoch', 'E2eAd.Prims',
+              PRIM + 'Epoch.UnmarshalSSZ': ('Prysm.Epoch.Code.unmarshalSSZ', 'E', 'Prysm.Epoch.Decode.accept_function_spec_holds')}
+G5_IMPORTS = ['E2eScal.AcceptTies', 'Codec.FieldFrame', 'E2eScal.ViSpec', 'Prysm.Epoch.DecodeAccept', 'E2eAd.Prims',
               'Codec.DecoderHeadEpilogue', 'E2eScal.RejectTies']
-G5_OPENS = 'E2e E2eAd E2eScal Codec'
+G5_OPENS = 'E2eAd E2eScal Codec'
 # the statement kinds of the GEN5 lemma unit's hand-over (kindcheck.py pins their modules)
 G5_KINDS = ('decHeadKindN', 'decFieldKindN', 'decEpiKindN', 'decAcceptKindN', 'decRejectKindN')
 
@@ -200,7 +200,7 @@ class T:
 
     def rthyps(self):
         if not self.rt: return ''
-        return (f" (hav : {self.heap(len(self.fields))} ≤ avail)\n    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 "
+        return (f" (hav : {self.heap(len(self.fields))} ≤ avail)\n    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 "
                 f"{'S' if self.rt['x'] == 0 else '(' + self.Sx + ')'}) (hmm : MemmoveC {'S' if self.rt['x'] == 0 else '(' + self.Sx + ')'})")
 
     def rtnames(self): return ' hav hms hmm' if self.rt else ''
@@ -540,7 +540,7 @@ class T:
              "    (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)\n"
              "      ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))\n"
              "      ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))\n"
-             "      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)\n"
+             "      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)\n"
              "      ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrSize\" + 8).toBitVec) ⋆ R)\n"
              f"    (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx ≠ {self.ssz()}),\n"
              "    Eventually (step1 Host.exe)\n"
@@ -550,7 +550,7 @@ class T:
              "          ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))\n"
              "          ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))\n"
              "          ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))\n"
-             "          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)\n"
+             "          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)\n"
              "          ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label \"ssz.ErrSize\" + 8).toBitVec) ⋆ R) st.data.dmem)\n"
              "      ⟨s, Host.addrOf k⟩ := by\n"
              "  intro k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard hlen\n"

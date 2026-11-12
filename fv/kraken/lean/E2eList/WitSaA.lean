@@ -19,7 +19,7 @@ area, the pointer save, the saved rbp, the caller's slots (rsp = 0x101ec) and th
 the decoder returns nil. The receiver is a Go value of `v1alpha1.SyncAggregate` (zero `state`, zero-length slices).
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2eList E2eList.Code
+open Machine Runtime TestTarget Machine.Witness E2eList E2eList.Code
 
 namespace E2eList.WitSaA
 

@@ -2,7 +2,7 @@ import E2eScal.H3Code
 import E2eScal.AcceptTies
 import Codec.FieldFrame
 import E2eScal.ViSpec
-import E2e.Epoch
+import Prysm.Epoch.DecodeAccept
 import E2eAd.Prims
 import Codec.DecoderHeadEpilogue
 import E2eScal.RejectTies
@@ -48,7 +48,7 @@ theorem bi_g5dec_BlockRoot_seg (k : Nat) (hk : BiUnmarshal.IsInfixAt Host.prog k
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At bf)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 37) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -211,7 +211,7 @@ reject. Every statement has a `_kind` line against the G5-L kinds. In-sample (de
 GEN5-JSON: {"accept": "bi_g5dec_accept", "kinds": [{"theorem": "bi_g5dec_head", "kind": "decHeadKindN"}, {"theorem": "bi_g5dec_f1", "kind": "decFieldKindN"}, {"theorem": "bi_g5dec_f2", "kind": "decFieldKindN"}, {"theorem": "bi_g5dec_epi", "kind": "decEpiKindN"}, {"theorem": "bi_g5dec_accept", "kind": "decAcceptKindN"}, {"theorem": "bi_g5dec_reject", "kind": "decRejectKindN"}], "fields": "[.bytes 32, .u64]", "frame": 40, "statement_check": "same E2eScal.Bi.bi_e2e_accept_main"}
 -/
 
-open E2e E2eAd E2eScal Codec
+open E2eAd E2eScal Codec
 
 namespace E2eScal.Gen
 
@@ -245,7 +245,7 @@ theorem bi_g5dec_head : ∀ (k : Nat) (hk : BiUnmarshal.IsInfixAt Host.prog k) (
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec)
       ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 40) (hav : 32 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 13)
         ∧ st.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 40 }
@@ -323,7 +323,7 @@ theorem bi_g5dec_f1 : ∀ (k : Nat) (hk : BiUnmarshal.IsInfixAt Host.prog k) (hf
     (R : DataMem → Prop) (S : Nat) (hlo : lo.length = S)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hav : 32 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) (st0 : MachineState),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) (st0 : MachineState),
     (st0.pc = Host.addrOf (k + 13)
         ∧ st0.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 40 }
         ∧ st0.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }
@@ -438,7 +438,7 @@ theorem bi_g5dec_f2 : ∀ (k : Nat) (hk : BiUnmarshal.IsInfixAt Host.prog k) (hf
     (R : DataMem → Prop) (S : Nat) (hlo : lo.length = S)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hav : 32 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) (st0 : MachineState),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) (st0 : MachineState),
     (st0.pc = Host.addrOf (k + 47)
         ∧ st0.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 40 }
         ∧ st0.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }
@@ -653,7 +653,7 @@ theorem bi_g5dec_accept : ∀ (k : Nat) (hk : BiUnmarshal.IsInfixAt Host.prog k)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec)
       ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 40) (hav : 32 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -708,7 +708,7 @@ theorem bi_g5dec_reject : ∀ (k : Nat) (hk : BiUnmarshal.IsInfixAt Host.prog k)
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx ≠ 40),
     Eventually (step1 Host.exe)
@@ -718,7 +718,7 @@ theorem bi_g5dec_reject : ∀ (k : Nat) (hk : BiUnmarshal.IsInfixAt Host.prog k)
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   intro k hk hf s ra guard e0 e1 fp s2 hfp h2 R h_mem hguard hlen

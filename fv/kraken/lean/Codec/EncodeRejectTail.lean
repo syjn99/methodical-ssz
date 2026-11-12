@@ -17,7 +17,7 @@ before `retq`:
 `ssz.ErrBytesLength`, the saved rbp restored, memory unchanged. Parameters: the two template flags, `c`,
 the place `j`, rsp at the block `sp`, the saved-rbp address `aFp` (`relAddr sub c sp = aFp`) and the
 return-slot address `aRa` (`aFp + 8 = aRa`). The initialised error words are a premise (as in
-`E2e.cp_e2e_marshal_reject_main`). No runtime contract is used.
+`Prysm.Checkpoint.Encode.reject_length`). No runtime contract is used.
 -/
 
 open Machine Runtime TestTarget

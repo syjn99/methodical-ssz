@@ -1,6 +1,6 @@
 import Codec.SegmentTemplate
 import Runtime.Contracts
-import E2e.Data
+import Prysm.ElfData.CheckpointAndEpoch
 
 /-!
 # S1 pattern P2, decode segment: `f = make([]byte, 0, 32); f = append(f, buf[src:src+32]...)`
@@ -130,7 +130,7 @@ theorem rootdec_seg (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j1 j2 : 
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 St) (hmm : MemmoveC St) :
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 St) (hmm : MemmoveC St) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (j2 + 12) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧

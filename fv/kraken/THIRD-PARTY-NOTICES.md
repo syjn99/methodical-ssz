@@ -70,7 +70,7 @@ Scope: the path lists come from program scans of the tracked files for Go source
 - Other files under `fv/kraken/` (850 tracked files outside sections A to G) may name Prysm or Go packages, types, functions, tests or ELF addresses, or quote short instruction fragments of families A and E.
   Examples: `prysm/go1.26.10/functions.json`, `prysm/go1.26.10/kparse*` (4) and the negative-test case files `**/negcases*.json` (33).
 - A program scan of these files for Go source fragments (`func `, `return `, `{ return`, `inline call to`, `can inline`) found these quotes:
-  - doc comments in `lean/E2e*/` quote short excerpts of family B methods and of Prysm `consensus-types/primitives` (`lean/E2e/Epoch.lean` lines 9-11, `lean/Codec/Uint64Decoder.lean` lines 7-8);
+  - doc comments in `lean/E2e*/` quote short excerpts of family B methods and of Prysm `consensus-types/primitives` (`lean/Prysm/Epoch/DecodeAccept.lean` lines 9-11, `lean/Codec/Uint64Decoder.lean` lines 7-8);
 - The other hits are this project's own tool code or prose. The `.py`, `.go` and `.sh` hits were not each read. The files were not each read in full.
 - The scans matched these patterns only: Go `if … {`, `return `, `func (`, `dst = append`, `binary.LittleEndian`, `ssz.Err`, `fmt.Errorf(`, `for … := range`, AT&T/objdump instruction lines and `-m` lines. Short one-line quotes can also occur in other files.
 - `lean/**/*.S` (13) are stubs written for this project under Go runtime and `ssz` symbol names. They are not disassembly.
@@ -78,7 +78,7 @@ Scope: the path lists come from program scans of the tracked files for Go source
 ## I. Lean dependencies and skill material
 
 - Kraken, EthLib and their dependencies are fetched by Lake at the revisions in `lean/lake-manifest.json`. They are not committed (`**/.lake/` is ignored).
-- Lean files such as `lean/E2e/Code.lean` include family A and E `.S` files by path. They do not copy them.
+- Lean files such as `lean/Prysm/Checkpoint/Code.lean` include family A and E `.S` files by path. They do not copy them.
 - Text adapted from third-party agent-skill material is attributed in `.claude/skills/maintaining-methodical-fv/references/ATTRIBUTION.md`.
 
 ## Per-directory licence files in the Prysm tree

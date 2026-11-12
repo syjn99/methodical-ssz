@@ -55,7 +55,7 @@ How to handle a new finding is in `../README.md` section 7.
 - What: Prysm `consensus-types/primitives` has hand-written SSZ methods for `Slot`, `Epoch`, `ValidatorIndex`, `Gwei` and `CommitteeIndex`. The generated code calls them for these fields.
 - Where: 24 functions, called by 52 generated types.
 - Effect: each needs its own specification and proof. A generated decoder that calls one depends on it.
-- State: the records give proofs of the `Epoch` decoder accept path (function specification `E2e.EpUAccC`) and its length reject. They give the other methods as not proved.
+- State: the records give proofs of the `Epoch` decoder accept path (function specification `Prysm.Epoch.Decode.accept_function_spec`) and its length reject. They give the other methods as not proved.
   The generated table `prysm/proof-inventory.md` lists the theorems that exist now for each primitive method.
 
 ### Encoders write into the caller array before a later length reject
@@ -64,7 +64,7 @@ How to handle a new finding is in `../README.md` section 7.
   On the reject, it returns `nil` and an error, but the bytes stay in the backing array of the caller beyond `len(dst)`.
 - Where: `(*v1alpha1.Checkpoint).MarshalSSZTo` writes the 8 epoch bytes before the `Root` length test.
   `(*v1alpha1.BeaconBlockHeader).MarshalSSZTo` writes `Slot`, `ProposerIndex` and earlier roots before a later root length test.
-- How it shows: `E2e.cp_e2e_marshal_reject_main` states the written bytes. Its negative test with "dst unchanged" fails.
+- How it shows: `Prysm.Checkpoint.Encode.reject_length` states the written bytes. Its negative test with "dst unchanged" fails.
 - Effect: SSZ has no rule for a Go value with a wrong field length. The generator documents only that `dst[:len]` is unchanged (commit `e9cbf5c`).
 - State: classified as known behavior, not a specification violation. The Checkpoint entry has no independent review. The BeaconBlockHeader entry is reviewed.
 
@@ -98,7 +98,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 - What: a generator option `--reserve-marshal` makes `Checkpoint.MarshalSSZTo` reserve `len + 40` bytes once.
   With an invalid `Root` and 8 to 39 spare bytes, the new code allocates one block and does not write the spare bytes of the caller.
-- Where: generator commit `ca191bb` on a branch that is not merged. The evidence is in `prysm/go1.26.10/opt-r1/` and `lean/E2e/OptR1/`.
+- Where: generator commit `ca191bb` on a branch that is not merged. The evidence is in `prysm/go1.26.10/opt-r1/` and `lean/Prysm/Checkpoint/CapacityReserved*.lean`.
 - How it shows: the benchmark results are mixed. The fast path is slower and the error path allocates one more block.
 - State: not adopted. The option is off by default. The old proofs apply only to the old ELF.
 
@@ -141,7 +141,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 - What: `GrowsliceC` gives the remaining heap only as an upper bound. A second growth call needs a lower bound as its budget premise.
 - Where: `lean/Runtime/Contracts.lean`. It affects every encoder growth path.
-- How it shows: in `E2e.cp_e2e_marshal_grow_any_sharp`, one case ends at the entry of the second growth call. The run after that state is not proved.
+- How it shows: in `Prysm.Checkpoint.Encode.grow_any_site_three_cases`, one case ends at the entry of the second growth call. The run after that state is not proved.
 - State: blocked until a user decision on a new contract form. That case has only Go differential checks. The growth branches of the other encoders are not proved.
 
 ### The `ecancel` tactic fails on some atom forms
@@ -239,7 +239,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Theorems that end with `⋆ True`
 
-- What: five Checkpoint theorems do not state the rest of memory: `cp_e2e_marshal_decoded_receiver`, `cp_e2e_marshal_spec_k`, `cp_e2e_unmarshal_then_marshal`, `cp_e2e_marshal_cover` and `cp_e2e_marshal_reject_cover`.
+- What: five Checkpoint theorems do not state the rest of memory: `Prysm.Checkpoint.DecodeThenEncode.encode_decoded_receiver`, `Prysm.Checkpoint.Encode.fast_path_spec`, `Prysm.Checkpoint.DecodeThenEncode.round_trip`, `Prysm.Checkpoint.Encode.cover` and `Prysm.Checkpoint.Encode.reject_length_cover`.
 - State: disclosed. The component theorems and the `*_framed` cover theorems state the exact frame. The composition has no framed version.
 - Related: `bh_e2e_accept_main` hides three argument-area slots in one 24-byte existential. They are dead stack only. The statement is not changed.
 
@@ -263,7 +263,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Several code directories are not Lake inputs
 
-- What: `E2eScal` and `lean/E2e/OptR1/` include `.S` files from directories that `lean/lakefile.toml` does not declare as inputs.
+- What: `E2eScal` and `lean/Prysm/Checkpoint/CapacityReservedCode.lean` include `.S` files from directories that `lean/lakefile.toml` does not declare as inputs.
   A change in such a file does not make Lake build the proofs again.
 - Where: the `norm` directories of the link sets `bh`, `e1`, `enc2`, `f24`, `h3`, `h4`, `h5` and `h6` under `prysm/go1.26.10/e2e/`, and `prysm/go1.26.10/opt-r1/link/norm`.
   The declared input `lv_dep_data` is not read by any Lean file. `E2eDep.Code.depDataType_addr` is a hand definition. `gen/e2e/depcheck_data.py` compares it with its data file.

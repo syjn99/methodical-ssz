@@ -18,7 +18,7 @@ generated steps 118 / 119 are not used), the epilogue 156–160 and the accept p
 data); no transfer claim.
 -/
 
-open Machine Runtime TestTarget E2e E2eAd E2eAd.Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec E2eScal.Bh
+open Machine Runtime TestTarget E2eAd E2eAd.Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec E2eScal.Bh
 variable [Host]
 
 namespace E2eScal.H5
@@ -91,7 +91,7 @@ theorem sm_gg_BlockRoot_field (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k)
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 82) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -209,7 +209,7 @@ theorem sm_gg_Signature_field (k : Nat) (hk : SmUnmarshal.IsInfixAt Host.prog k)
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 156) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧

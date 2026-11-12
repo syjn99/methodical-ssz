@@ -1,7 +1,7 @@
 import E2eScal.AcceptTies
 import Codec.FieldFrame
 import E2eScal.ViSpec
-import E2e.Epoch
+import Prysm.Epoch.DecodeAccept
 import E2eAd.Prims
 import E2eScal.Gen4H6PdDec
 
@@ -13,7 +13,7 @@ by the recipe of the lemma hand-over; every theorem has a `_kind` line (`decHead
 `decEpiKindN`, `decAcceptKindN`). The `p2dec --gen4` chain theorems (`E2eScal.Gen.*`) are used as emitted.
 -/
 
-open Machine Runtime TestTarget E2e E2eAd E2eAd.Code E2eScal.H6Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec
+open Machine Runtime TestTarget E2eAd E2eAd.Code E2eScal.H6Code E2eScal.H5Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.Gen5
@@ -62,7 +62,7 @@ theorem pd_g5_head : ∀ (k : Nat) (hk : PdUnmarshal.IsInfixAt Host.prog k) (hf 
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec)
       ⋆ R)
     (hguard : guard.toNat + 80 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 192) (hav : 176 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 14)
         ∧ st.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 72 }
@@ -153,7 +153,7 @@ theorem pd_g5_f1 : ∀ (k : Nat) (hk : PdUnmarshal.IsInfixAt Host.prog k) (hf : 
     (R : DataMem → Prop) (S : Nat) (hS : S < 2 ^ 60) (hlo : lo.length = S + 8)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (hguard : guard.toNat + 80 < s.regs.rsp.toNat) (hav : 176 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
     (st0.pc = Host.addrOf (k + 14)
         ∧ st0.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 72 }
         ∧ st0.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }
@@ -287,7 +287,7 @@ theorem pd_g5_f2 : ∀ (k : Nat) (hk : PdUnmarshal.IsInfixAt Host.prog k) (hf : 
     (R : DataMem → Prop) (S : Nat) (hS : S < 2 ^ 60) (hlo : lo.length = S + 8)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (hguard : guard.toNat + 80 < s.regs.rsp.toNat) (hav : 176 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
     (st0.pc = Host.addrOf (k + 49)
         ∧ st0.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 72 }
         ∧ st0.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }
@@ -423,7 +423,7 @@ theorem pd_g5_f3 : ∀ (k : Nat) (hk : PdUnmarshal.IsInfixAt Host.prog k) (hf : 
     (R : DataMem → Prop) (S : Nat) (hS : S < 2 ^ 60) (hlo : lo.length = S + 8)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (hguard : guard.toNat + 80 < s.regs.rsp.toNat) (hav : 176 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
     (st0.pc = Host.addrOf (k + 85)
         ∧ st0.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 72 }
         ∧ st0.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }
@@ -546,7 +546,7 @@ theorem pd_g5_f4 : ∀ (k : Nat) (hk : PdUnmarshal.IsInfixAt Host.prog k) (hf : 
     (R : DataMem → Prop) (S : Nat) (hS : S < 2 ^ 60) (hlo : lo.length = S + 8)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (hguard : guard.toNat + 80 < s.regs.rsp.toNat) (hav : 176 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
     (st0.pc = Host.addrOf (k + 88)
         ∧ st0.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 72 }
         ∧ st0.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }
@@ -684,7 +684,7 @@ theorem pd_g5_f5 : ∀ (k : Nat) (hk : PdUnmarshal.IsInfixAt Host.prog k) (hf : 
     (R : DataMem → Prop) (S : Nat) (hS : S < 2 ^ 60) (hlo : lo.length = S + 8)
     (Heap : Nat → DataMem → Prop) (avail : Nat)
     (hguard : guard.toNat + 80 < s.regs.rsp.toNat) (hav : 176 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)) (st0 : MachineState),
     (st0.pc = Host.addrOf (k + 123)
         ∧ st0.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 72 }
         ∧ st0.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8 }
@@ -990,7 +990,7 @@ theorem pd_e2e_accept_g5 : ∀ (k : Nat) (hk : PdUnmarshal.IsInfixAt Host.prog k
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec)
       ⋆ R)
     (hguard : guard.toNat + 80 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 192) (hav : 176 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧

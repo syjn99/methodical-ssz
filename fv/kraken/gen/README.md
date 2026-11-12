@@ -22,7 +22,7 @@ The design principles are in `../../README.md`.
 | `scal/scalgen.py`, with `scal/gen5.py` and `scal/gen6enc.py` | A converted `.S` file and the IR entry of one type | `lean/E2eScal/Gen*.lean`: segment, accept, size reject and encoder fast path theorems |
 | `scal/gen.sh` | | Runs `scalgen.py` once for each committed generated file |
 | `e2e/descterm.py`, `e2e/lvdescterm.py` | A `Desc` JSON file that the checker accepted | `*SpecChecker.lean`: the checker `Desc` as Lean |
-| `e2e/layout.py`, `e2e/adlayout.py` | `prysm/ir/ir-mainnet.json` | `lean/E2e/Layout.lean`, `lean/E2eAd/Layout.lean` |
+| `e2e/layout.py`, `e2e/adlayout.py` | `prysm/ir/ir-mainnet.json` | `lean/Prysm/Checkpoint/Layout.lean`, `lean/E2eAd/Layout.lean` |
 | `desc/producer.py` | The reduced IR | One `Desc` JSON file for each type |
 | `type_inventory.py` | The raw IR of the generator | `prysm/ir/*.json` (`reduce`) and `prysm/inventory.json` (`build`) |
 | `type_list_document.py`, `type_scope.py` | `prysm/inventory.json` | `prysm/TYPES.md`, `prysm/type-scope.json`, `prysm/type-scope.md` |

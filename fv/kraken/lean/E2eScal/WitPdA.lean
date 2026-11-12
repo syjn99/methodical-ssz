@@ -22,7 +22,7 @@ every old pointer word every premise holds and the decoder returns nil. The rece
 `v1alpha1.PendingDeposit`.
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2eAd E2eAd.Code E2eScal Codec E2eScal.H6Code E2eScal.H6
+open Machine Runtime TestTarget Machine.Witness E2eAd E2eAd.Code E2eScal Codec E2eScal.H6Code E2eScal.H6
 
 namespace E2eScal.WitPdA
 

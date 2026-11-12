@@ -99,7 +99,7 @@ theorem bh_enc_b_via_block (k : Nat) (hk : BhMarshal.IsInfixAt Host.prog k) (hf 
   kat hk BhMarshal 86
   kat hk BhMarshal 87
   kat hk BhMarshal 88
-  rw [E2e.cpm_mul]
+  rw [Prysm.Checkpoint.Encode.fast_path_mul]
   refine eventually_trans _ _ _ _ (enc32_call (k + 89) (bh_call_at k hk).1 (rsp.toBitVec - 8#64 - 152) (dst + v) p1
     (rsp.toBitVec - 168) (rsp.toBitVec - 168 - BitVec.ofNat 64 S) S (bhm_slot _)
     (congrArg (· - BitVec.ofNat 64 S) (bhm_slot _)) r1 e1 rslot scratch hr1 he1 hrs hsc _ _

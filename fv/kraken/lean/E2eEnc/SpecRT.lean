@@ -1,7 +1,7 @@
 import E2eEnc.SpecD
 
 /-!
-# Spec-level round trip (the shape of `E2e.cp_e2e_spec_roundtrip`)
+# Spec-level round trip (the shape of `Prysm.Checkpoint.DecodeThenEncode.round_trip_spec`)
 
 Every input that EthLib accepts against `prysmDcDesc` serializes back to itself, and every `PDc` value
 deserializes back to itself.

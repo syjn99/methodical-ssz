@@ -2,8 +2,8 @@ import Runtime.Contracts
 import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
-import E2e.Data
-import E2e.Code
+import Prysm.ElfData.CheckpointAndEpoch
+import Prysm.Checkpoint.Code
 import E2eScal.BhCode
 import E2eScal.H4Code
 
@@ -49,13 +49,13 @@ directive 106.
 Receiver: protoc struct, IR `go_fields` (size 64): `state` 0, `Index` 8, `Amount` 16, `WithdrawableEpoch` 24,
 `unknownFields` 32, `sizeCache` 56 (the last two in `R`).
 Frame (`.S`): `sub $0x48`; spills `0x58(%rsp)` = entry rsp + 8 (rax), `0x60(%rsp)` = + 16 (rbx), `0x70(%rsp)` = + 32
-(rdi). The two callees (ValidatorIndex, Epoch; leaf functions, function specs `ViUAccC` / `EpUAccC`) have their
+(rdi). The two callees (ValidatorIndex, Epoch; leaf functions, function specs `ViUAccC` / `Prysm.Epoch.Decode.accept_function_spec`) have their
 return slot at entry rsp − 88, save rbp at entry rsp − 96 (`lo`) and spill their rbx to entry rsp − 72 (`sp1`).
 The callees check the stack guard at entry rsp − 88, hence `guard + 88 < rsp`. The Epoch call is directive
 59, so the return slot holds directive 60 at the end. Error-path frame slots are untouched on this path (in `R`).
 -/
 
-open Machine Runtime TestTarget E2e E2eScal.H4Code E2eScal.BhCode
+open Machine Runtime TestTarget E2eScal.H4Code E2eScal.BhCode
 variable [Host]
 
 namespace E2eScal.H4
@@ -96,7 +96,7 @@ abbrev dd_accept_stmt : Prop :=
       ⋆ Eq (aC3.At (s.regs.rax.toBitVec + 80))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 184) (hav : 176 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -132,7 +132,7 @@ delegated fields go through the callees' code (`ViUnmarshal`, `EpUnmarshal` plac
 abbrev pw_accept_stmt : Prop :=
   ∀ (k : Nat) (hk : PwUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh PwUnmarshal k)
     (kV : Nat) (hkV : ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh ViUnmarshal kV)
-    (kE : Nat) (hkE : E2e.Code.EpUnmarshal.IsInfixAt Host.prog kE) (hfE : LabelsFresh E2e.Code.EpUnmarshal kE)
+    (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (in0 in1 in2 : List UInt8) (hin0 : in0.length = 8) (hin1 : in1.length = 8) (hin2 : in2.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 s4 sp1 rslot lo ast a8 a16 a24 : List UInt8)

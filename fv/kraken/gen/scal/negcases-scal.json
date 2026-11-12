@@ -139,7 +139,7 @@
   "kind": "control",
   "module": "E2eScal/GenCpDec.lean",
   "theorem": "cp_dec_Root_seg",
-  "code_def": "CpUnmarshal",
+  "code_def": "unmarshalSSZ",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
  },
  {
@@ -149,7 +149,7 @@
   "theorem": "cp_dec_Root_seg",
   "old": "  add $0x8,%rbx",
   "new": "  add $0x10,%rbx",
-  "code_def": "CpUnmarshal",
+  "code_def": "unmarshalSSZ",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
  },
  {
@@ -166,7 +166,7 @@
   "kind": "control",
   "module": "E2eScal/P2EncCpAt.lean",
   "theorem": "cp_enc_tmpl_at",
-  "code_def": "CpMarshal",
+  "code_def": "marshalSSZTo",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
  },
  {
@@ -174,7 +174,7 @@
   "kind": "code",
   "module": "E2eScal/P2EncCpAt.lean",
   "theorem": "cp_enc_tmpl_at",
-  "code_def": "CpMarshal",
+  "code_def": "marshalSSZTo",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "old": "  cmpq $0x20,0x18(%rax)",
   "new": "  cmpq $0x20,0x20(%rax)"
@@ -184,7 +184,7 @@
   "kind": "code",
   "module": "E2eScal/P2EncCpAt.lean",
   "theorem": "cp_enc_tmpl_at",
-  "code_def": "CpMarshal",
+  "code_def": "marshalSSZTo",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
   "old": "  mov %rdi,0x58(%rsp)",
   "new": "  mov %rdi,0x50(%rsp)"
@@ -242,8 +242,8 @@
   "kind": "stmt",
   "module": "E2eScal/GenCpDec.lean",
   "theorem": "cp_dec_Root_seg",
-  "old": "(hf : LabelsFresh CpUnmarshal k) :",
-  "new": "(hf : LabelsFresh CpUnmarshal k) (hextra : (1 : Nat) = 2) :"
+  "old": "(hf : LabelsFresh unmarshalSSZ k) :",
+  "new": "(hf : LabelsFresh unmarshalSSZ k) (hextra : (1 : Nat) = 2) :"
  },
  {
   "id": "scal-gci-stmt-extra-before",

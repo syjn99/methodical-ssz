@@ -27,8 +27,8 @@ P = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1"
 E = "prysm/go1.26.10/e2e"
 IR = "prysm/ir/ir-mainnet.json"
 ROWS = [  # type, link dir, const, code module, prefix, extra args, output file
-    ("Checkpoint", "link", "CpMarshal", "E2e.Code", "cp", ["--hand-layout=E2eScal.layEncCp",
-     "--hand-layout-src=lean/E2eScal/EncTies.lean", "--same-as=E2e.cp_e2e_marshal_main",
+    ("Checkpoint", "link", "marshalSSZTo", "Prysm.Checkpoint.Code", "cp", ["--hand-layout=E2eScal.layEncCp",
+     "--hand-layout-src=lean/E2eScal/EncTies.lean", "--same-as=Prysm.Checkpoint.Encode.fast_path",
      "--same-as-via=E2eScal.cp_marshal_of_kind"], "Gen6CpEnc"),
     ("BeaconBlockHeader", "bh/link", "BhMarshal", "E2eScal.BhCode", "bh", ["--hand-layout=E2eScal.layEncBh",
      "--hand-layout-src=lean/E2eScal/EncTies.lean", "--same-as=E2eScal.Bh.bh_e2e_marshal_main"], "Gen6BhEnc"),

@@ -3,7 +3,7 @@ import TestTarget.FunctionSpecs
 import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
-import E2e.Data
+import Prysm.ElfData.CheckpointAndEpoch
 import E2eList.Data
 import E2eList.Defs
 import E2eScal.H4Code
@@ -40,7 +40,7 @@ Error paths not on the accept path: `fmt.errorf` wrap (Deposit_Data accepts ever
 Size reject: directives 2–10, `cmp $0x4d8,%rcx; jne L_85` taken, 31–36.
 -/
 
-open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz E2eList E2eDep.Code
+open Machine Runtime TestTarget EthLib.Serialization.Ssz E2eList E2eDep.Code
 variable [Host]
 
 namespace E2eDep
@@ -53,7 +53,7 @@ def dep_reject_size_stmt : Prop :=
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx ≠ 1240),
     Eventually (step1 Host.exe)
@@ -63,7 +63,7 @@ def dep_reject_size_stmt : Prop :=
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At E2e.Data.e2eErrSize_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
@@ -107,9 +107,9 @@ def dep_accept_stmt : Prop :=
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat + 104 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 1240) (hav : 2144 ≤ avail)
     (hmsA : MakesliceC Heap E2eList.Data.lvSliceType_addr 24 (Sd + 48))
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (Sd + 48)) (hmm : MemmoveC (Sd + 48))
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (Sd + 48)) (hmm : MemmoveC (Sd + 48))
     (hno : NewobjectC Heap depDataType_addr 120 (Sd + 48))
-    (hmsD : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 Sd) (hmmD : MemmoveC Sd),
+    (hmsD : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 Sd) (hmmD : MemmoveC Sd),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧

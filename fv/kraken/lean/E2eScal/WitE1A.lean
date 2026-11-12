@@ -20,7 +20,7 @@ the decoder returns nil. The receiver is a Go value of `v1alpha1.Eth1Data` (zero
 slices, zero DepositCount).
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.E1Code E2eScal.E1
+open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.E1Code E2eScal.E1
 
 namespace E2eScal.WitE1A
 

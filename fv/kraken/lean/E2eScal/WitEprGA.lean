@@ -17,7 +17,7 @@ at rax = 0x10020 (protoc struct, `prysm/ir/ir-mainnet.json` gc amd64 layout: `st
 returns nil. The receiver is a Go value of `v1alpha1.ExecutionPayloadEnvelopesByRangeRequest` (all zero).
 -/
 
-open Machine Runtime TestTarget Machine.Witness E2e E2eScal Codec E2eScal.F24Code
+open Machine Runtime TestTarget Machine.Witness E2eScal Codec E2eScal.F24Code
 
 namespace E2eScal.WitEprGA
 

@@ -2,8 +2,8 @@ import Runtime.Contracts
 import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
-import E2e.Data
-import E2e.Code
+import Prysm.ElfData.CheckpointAndEpoch
+import Prysm.Checkpoint.Code
 import E2eAd.Code
 import E2eScal.BhCode
 import E2eScal.KindEncN
@@ -71,7 +71,7 @@ Choice (classes with no independently tied statement before this unit):
   (ActivationEpoch at − 88).
 -/
 
-open Machine Runtime TestTarget E2e E2e.Code E2eAd.Code E2eScal.BhCode E2eScal.F24Code
+open Machine Runtime TestTarget Prysm.Checkpoint.Code E2eAd.Code E2eScal.BhCode E2eScal.F24Code
 variable [Host]
 
 open Codec
@@ -114,7 +114,7 @@ abbrev dpr_accept_stmt : Prop :=
       ⋆ Eq (aC3.At (s.regs.rax.toBitVec + 80)) ⋆ Eq (aI.At (s.regs.rax.toBitVec + 88))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 192) (hav : 176 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -218,7 +218,7 @@ abbrev pdc_accept_stmt : Prop :=
       ⋆ Eq (aC1.At (s.regs.rax.toBitVec + 24)) ⋆ Eq (aS.At (s.regs.rax.toBitVec + 32))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat + 80 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 40) (hav : 32 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -245,12 +245,12 @@ abbrev pdc_accept_stmt : Prop :=
 
 /-- Hand statement of the accept path of `(*v1alpha1.ValidatorIdentity).UnmarshalSSZ`: on a 64-byte input it returns
 nil and the receiver holds Index = buf[0:8] (callee `ViUnmarshal`), a fresh Pubkey slice equal to buf[8:56]
-(len = cap = 48) and ActivationEpoch = buf[56:64] (callee `EpUnmarshal`); input, `state`, the spills, the caller's
+(len = cap = 48) and ActivationEpoch = buf[56:64] (callee `Prysm.Epoch.Code.unmarshalSSZ`); input, `state`, the spills, the caller's
 frame `R` and the stack guard are unchanged; 48 heap bytes are used. -/
 abbrev vid_accept_stmt : Prop :=
   ∀ (k : Nat) (hk : VidUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh VidUnmarshal k)
     (kV : Nat) (hkV : ViUnmarshal.IsInfixAt Host.prog kV) (hfV : LabelsFresh ViUnmarshal kV)
-    (kE : Nat) (hkE : EpUnmarshal.IsInfixAt Host.prog kE) (hfE : LabelsFresh EpUnmarshal kE)
+    (kE : Nat) (hkE : Prysm.Epoch.Code.unmarshalSSZ.IsInfixAt Host.prog kE) (hfE : LabelsFresh Prysm.Epoch.Code.unmarshalSSZ kE)
     (in0 pk in1 : List UInt8) (hin0 : in0.length = 8) (hpk : pk.length = 48) (hin1 : in1.length = 8)
     (s : MachineData) (ra guard : UInt64)
     (fp s1 s2 s4 sp0 sp1 sp2 l28 rslot lo ast a8 aP1 aL1 aC1 a40 : List UInt8)
@@ -276,7 +276,7 @@ abbrev vid_accept_stmt : Prop :=
       ⋆ Eq (aC1.At (s.regs.rax.toBitVec + 32)) ⋆ Eq (a40.At (s.regs.rax.toBitVec + 40))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hlen : s.regs.rcx = 64) (hav : 48 ≤ avail)
-    (hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
+    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (S + 8)) (hmm : MemmoveC (S + 8)),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧

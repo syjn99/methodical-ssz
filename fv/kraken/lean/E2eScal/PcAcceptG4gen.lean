@@ -12,7 +12,7 @@ generated steps 48–54 + the call WINDOW 55–58 with the `nop` after the `call
 compositions, `pc_head`, `pc_epi` (`PcAccept.lean`) and the glue. In-sample (development data); no transfer claim.
 -/
 
-open Machine Runtime TestTarget E2e E2eScal.H5Code E2eScal.BhCode E2eScal Codec
+open Machine Runtime TestTarget E2eScal.H5Code E2eScal.BhCode E2eScal Codec
 variable [Host]
 
 namespace E2eScal.H5

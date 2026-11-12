@@ -1,5 +1,5 @@
 import Runtime.Contracts
-import E2e.Spec
+import Prysm.Checkpoint.Spec
 import E2eList.Desc
 
 /-!

@@ -3,19 +3,19 @@
 
 Usage (run inside one gated job, Lean env, cwd anywhere):
   negative.py <cases.json> <work-dir> <result.json> [<case-id>...]
-cases.json: list of {"id", "module" (path under fv/kraken/lean, e.g. "E2e/Epoch.lean"), "theorem",
+cases.json: list of {"id", "module" (path under fv/kraken/lean, e.g. "Prysm/Epoch/DecodeAccept.lean"), "theorem",
   "kind": "code" | "stmt" | "control",
-  code:  "code_def" (Lean name of the included program, e.g. "EpUnmarshal"), "S" (file under
+  code:  "code_def" (Lean name of the included program, e.g. "Prysm.Epoch.Code.unmarshalSSZ"), "S" (file under
          prysm/go1.26.10/e2e/link/norm), "old", "new" (one exact instruction line, unique in the file,
          or at the 1-based "line" of the file)
   stmt:  "old", "new" (exact text, unique inside the theorem statement)
   control: optional "code_def"/"S" (then an unmutated copy of the .S is included the same way)
-  optional for code/control: "code_ns" (namespace of the code constant, default E2e.Code) and "norm"
+  optional for code/control: "code_ns" (namespace of the code constant, default Prysm.Checkpoint.Code) and "norm"
   (path of the .S under fv/kraken instead of prysm/go1.26.10/e2e/link/norm/<S>; AttestationData set)}
 For each case the mutant Lean file is the module's text up to the end of the designated theorem
 (the next top-level `theorem`/`def`/`end`/`example`/`/--` after it is cut; a `theorem <thm>_kind` that
 directly follows it is kept and belongs to the case range, review fix-r1 M2), with, for code cases, a
-new constant `E2e.Code.<code_def>Mut` that includes the mutated .S copy (absolute path in <work-dir>)
+new constant `Prysm.Checkpoint.Code.<code_def>Mut` that includes the mutated .S copy (absolute path in <work-dir>)
 and every whole-word use of <code_def> after the imports renamed to it. `lake env lean <file>` runs
 under the memory cap from fv/kraken/lean. A mutant passes the suite when Lean reports an error and
 every error line lies inside the theorem's line range and no error is a Lean heartbeat timeout;
@@ -27,6 +27,10 @@ constant, or another parse / name-resolution form listed at WRONG_TARGET: the mu
 target; audit AU-04, review fix-r1 M1); the resource classes are decided by the FIRST error line (a later resource
 error is kept in "later_resource_error"). These three resource classes and wrong_target are never a pass.
 negative.py --reclassify <result.json> [<work-dir>] recomputes the classes of a result file; --selftest checks them.
+negative.py --check-cases <cases.json>... resolves every case to one theorem line and checks the code_def use (no Lean).
+"theorem" is the full Lean name or the name as written on the declaration line; the full name selects the namespace
+block when one module holds the same written name twice. Without "code_ns", a full name in "code_def" is declared
+with `_root_`, and a module under Prysm/<Type>/ uses Prysm.<Type>.Code.
 On a per-case timeout the whole process tree (memcap.py, and lake/lean in memcap's own session) is killed
 and the driver asserts that none survives before the next case (audit AU-03); --selftest-timeout checks
 this with a fake child (no Lean). Before the first case, `lake build --no-build <imports of the case modules>`
@@ -86,9 +90,59 @@ WRONG_TARGET = re.compile(
 TOP = re.compile(r"^((theorem|def|end|example|set_option|abbrev|structure|instance|namespace|section|open)\b|/--|/-!)")
 
 
+DECL_AT = re.compile(r"^(?:private )?(theorem|def) ([^\s:({\[]+)")
+
+
+def find_decl(lines, name, kinds=("theorem",)):
+    """(index, name as written) of the declaration line of `name` in a module. `name` is the full name (the
+    namespace blocks above the line and the written name; `_root_.` handled) or the name as written on the line.
+    A full-name match wins. Exactly one line must match, else ValueError (two blocks of one module can hold the
+    same written name, for example `theorem Decode.accept` of two types)."""
+    stack, full_hits, written_hits = [], [], []
+    for i, l in enumerate(lines):
+        m = re.match(r"^namespace (\S+)\s*$", l)
+        if m:
+            stack.append(m.group(1))
+            continue
+        if re.match(r"^section\b", l):
+            stack.append("")
+            continue
+        if re.match(r"^end\b", l) and stack:
+            stack.pop()
+            continue
+        m = DECL_AT.match(l)
+        if not m or m.group(1) not in kinds:
+            continue
+        w = m.group(2)
+        ns = ".".join(x for x in stack if x)
+        full = w[7:] if w.startswith("_root_.") else (ns + "." if ns else "") + w
+        if full == name:
+            full_hits.append((i, w))
+        if w == name:
+            written_hits.append((i, w))
+    hits = full_hits or written_hits
+    if len(hits) != 1:
+        raise ValueError(f"{name}: {len(hits)} declaration lines match")
+    return hits[0]
+
+
+def code_ns_of(c):
+    """Namespace of the code constant of a case: `code_ns`, else `_root_` for a full name in `code_def`, else
+    `Prysm.<Type>.Code` for a module under Prysm/<Type>/, else Prysm.Checkpoint.Code (the old default set)."""
+    if "code_ns" in c:
+        return c["code_ns"]
+    if "." in c["code_def"]:
+        return "_root_"
+    p = c["module"].split("/")
+    if p[0] == "Prysm" and len(p) > 2:
+        return f"Prysm.{p[1]}.Code"
+    return "Prysm.Checkpoint.Code"
+
+
 def cut(text, thm):
     lines = text.split("\n")
-    start = next(i for i, l in enumerate(lines) if re.match(rf"^(private )?theorem {re.escape(thm)}\b", l))
+    start, written = find_decl(lines, thm)
+    thm = written
     # include preceding set_option lines that belong to the theorem
     s0 = start
     while s0 > 0 and lines[s0 - 1].startswith("set_option") and lines[s0 - 1].rstrip().endswith(" in"):
@@ -218,7 +272,7 @@ def run_case(c, work):
         tl = text.split("\n")
         k = max(i for i, l in enumerate(tl) if l.startswith("import ")) + 1
         rest = re.sub(rf"(?<![A-Za-z0-9_.']){re.escape(name)}(?![A-Za-z0-9_'])", name + "Mut", "\n".join(tl[k:]))
-        ns = c.get("code_ns", "E2e.Code")
+        ns = code_ns_of(c)
         decl = f'def {ns}.{name}Mut : Program := include_x64_rt "{d / "mut.S"}"'
         text = "\n".join(tl[:k] + ["", decl] + [rest])
         lo += 2
@@ -448,7 +502,45 @@ def selftest_timeout():
     return 0 if ok and ok2 else 1
 
 
+def check_cases(*paths):
+    """Dry run (no Lean): every case of every given cases file resolves to exactly one theorem line of its module
+    (`find_decl`), and a case with `code_def` has a whole-word use of `code_def` after the imports (else the mutant
+    would not use the mutated program). A case with "stmt_def" (lvnegative.py) also resolves its def line in
+    "stmt_module" or the inlined modules. Prints one line per failure and a summary."""
+    bad, n = [], 0
+    for p in paths:
+        for c in json.load(open(p)):
+            n += 1
+            try:
+                src = (LEAN / c["module"]).read_text()
+                lines, lo, hi = cut(src, c["theorem"])
+                if c.get("stmt_def"):
+                    mods = c.get("inline", [c["stmt_module"]] if c.get("stmt_module") else [])
+                    text = "\n".join((LEAN / m).read_text() for m in mods) if mods else "\n".join(lines)
+                    find_decl(text.split("\n"), c["stmt_def"], ("def",))
+                elif c["kind"] == "stmt" and "\n".join(lines[lo - 1:hi]).count(c["old"]) != 1:
+                    raise ValueError("statement text not unique in the theorem")
+            except (OSError, ValueError, StopIteration, KeyError) as e:
+                bad.append(f"{p}: {c['id']}: {type(e).__name__} {e}")
+                continue
+            if c.get("code_def"):
+                tl = "\n".join(lines).split("\n")
+                k = max(i for i, l in enumerate(tl) if l.startswith("import ")) + 1
+                name = c["code_def"]
+                body = "\n".join(tl[k:])
+                for m in c.get("inline", [c["stmt_module"]] if c.get("stmt_module") else []):
+                    body += "\n" + (LEAN / m).read_text()
+                if not re.search(rf"(?<![A-Za-z0-9_.']){re.escape(name)}(?![A-Za-z0-9_'])", body):
+                    bad.append(f"{p}: {c['id']}: code_def {name} is not used in {c['module']}")
+    for b in bad:
+        print("CHECK FAIL", b)
+    print(f"check-cases: {n} cases, {len(bad)} failures")
+    return 1 if bad else 0
+
+
 if __name__ == "__main__":
+    if sys.argv[1:2] == ["--check-cases"]:
+        sys.exit(check_cases(*sys.argv[2:]))
     if sys.argv[1:] == ["--selftest"]:
         sys.exit(selftest())
     if sys.argv[1:] == ["--selftest-timeout"]:

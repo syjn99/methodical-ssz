@@ -51,7 +51,7 @@ def split_imports(text):
 
 
 def theorem_range(lines, thm):
-    start = next(i for i, l in enumerate(lines) if re.match(rf"^(private )?theorem {re.escape(thm)}\b", l))
+    start, _ = n.find_decl(lines, thm)
     end = next((i for i in range(start + 1, len(lines)) if n.TOP.match(lines[i])), len(lines))
     while end > start and lines[end - 1].strip() == "":
         end -= 1
@@ -98,7 +98,7 @@ def run_case(c, work):
         rest = decl + "\n\n" + rest
     if c["kind"] == "stmt":
         rl = rest.split("\n")
-        a = next(i for i, l in enumerate(rl) if re.match(rf"^def {re.escape(c['stmt_def'])}\b", l))
+        a, _ = n.find_decl(rl, c["stmt_def"], ("def",))
         b = next((i for i in range(a + 1, len(rl)) if n.TOP.match(rl[i])), len(rl))
         seg = "\n".join(rl[a:b])
         assert seg.count(c["old"]) == 1, (c["id"], "statement text not unique in the stmt def")

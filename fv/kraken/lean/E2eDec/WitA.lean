@@ -55,8 +55,8 @@ theorem label_bump : label "runtime.fvBump" = 0x10000 :=
 theorem label_wb : label "runtime.writeBarrier" = 0x10008 :=
   mk_label P _ 8 _ (by simp [P, dataLabels]) (by decide)
 
-theorem u8_ne_u64 : E2e.Data.e2eU8Type_addr ≠ E2eList.Data.lvU64Type_addr := by
-  simp only [E2e.Data.e2eU8Type_addr, E2eList.Data.lvU64Type_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
+theorem u8_ne_u64 : ElfData.CheckpointAndEpoch.e2eU8Type_addr ≠ E2eList.Data.lvU64Type_addr := by
+  simp only [ElfData.CheckpointAndEpoch.e2eU8Type_addr, E2eList.Data.lvU64Type_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
   bv_omega
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0

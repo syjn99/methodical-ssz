@@ -1,6 +1,6 @@
 import E2eScal.BhEncMain
 import Codec.EncodeRejectTail
-import E2e.CpMarshalR
+import Prysm.Checkpoint.EncodeRejectLength
 import Runtime.CopyModel
 
 /-!
@@ -92,7 +92,7 @@ theorem bh_rej_b (k : Nat) (hk : BhMarshal.IsInfixAt Host.prog k) (hf : LabelsFr
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, Width.bits] at h
-    exact hrl (UInt64.toBitVec_inj.mp (E2e.cpr_eq _ h))
+    exact hrl (UInt64.toBitVec_inj.mp (Prysm.Checkpoint.Encode.reject_length_eq _ h))
   simp only [Effects.All]
   klabel hk hf BhMarshal 175
   kat hk BhMarshal 175
@@ -147,7 +147,7 @@ theorem bh_rej_c (k : Nat) (hk : BhMarshal.IsInfixAt Host.prog k) (hf : LabelsFr
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, Width.bits] at h
-    exact hrl (UInt64.toBitVec_inj.mp (E2e.cpr_eq _ h))
+    exact hrl (UInt64.toBitVec_inj.mp (Prysm.Checkpoint.Encode.reject_length_eq _ h))
   simp only [Effects.All]
   klabel hk hf BhMarshal 165
   kat hk BhMarshal 165
@@ -202,7 +202,7 @@ theorem bh_rej_d (k : Nat) (hk : BhMarshal.IsInfixAt Host.prog k) (hf : LabelsFr
   split
   case isFalse h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, Width.bits] at h
-    exact hrl (UInt64.toBitVec_inj.mp (E2e.cpr_eq _ h))
+    exact hrl (UInt64.toBitVec_inj.mp (Prysm.Checkpoint.Encode.reject_length_eq _ h))
   simp only [Effects.All]
   klabel hk hf BhMarshal 156
   kat hk BhMarshal 156

@@ -5,7 +5,7 @@ import Runtime.CopyModel
 /-!
 # Encoder fast path against EthLib (`dc_marshal_spec_stmt`)
 
-The shape of `E2e.cp_e2e_marshal_spec_k`: for a receiver holding the Go layout of `g : PDc`, the fast path writes
+The shape of `Prysm.Checkpoint.Encode.fast_path_spec`: for a receiver holding the Go layout of `g : PDc`, the fast path writes
 `pre ‖ serialize prysmDcDesc g.toValue` at `dst.ptr`. The full frame accounting is `dc_e2e_marshal_fast_main`.
 -/
 
