@@ -1,10 +1,10 @@
-import E2eList.Defs
+import Prysm.SyncCommittee.SpecDefinitions
 
 /-!
 # Definitions that the HistoricalBatch statements use
 
 Part of the frozen statements (`StmtHb.lean`). A later change needs a new name and a reason.
-The slice objects `E2eList.lvHdrs` and `E2eList.lvElems` are imported from the SyncCommittee definitions, not copied.
+The slice objects `Prysm.SyncCommittee.sliceHeaders` and `Prysm.SyncCommittee.elementBlocks` are imported from the SyncCommittee definitions, not copied.
 
 - `prysmHbDesc`: hand `Desc` of consensus-specs phase0 `HistoricalBatch` (mainnet), from the spec text:
 

@@ -10,7 +10,7 @@ the two-field container lemmas (one vector field, one nested container field).
 -/
 
 namespace E2eDep
-open EthLib.Serialization.Ssz Spec TestTarget E2e E2eList E2eHb Codec.Segment
+open EthLib.Serialization.Ssz Spec TestTarget E2e E2eHb Codec.Segment
 
 theorem prysmDepDesc_wellFormed : prysmDepDesc.wellFormed = .ok () := by rfl
 theorem prysmDepDesc_fixedSize : prysmDepDesc.fixedSize = some 1240 := by rfl

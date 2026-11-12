@@ -9,7 +9,7 @@ import E2eHb.StmtHb
 
 Directives 2–7 (guard, prologue `sub $0x38`, rbx spill), 9–10 `cmp $0x80000,%rcx; jne L_7b` taken,
 `L_7b` (30), the two loads of `ssz.ErrSize` (31–32), epilogue 33–35 (`add $0x38`).
-Proof text: `E2eList.sc_e2e_reject_size_main` (`ScReject.lean`) with the program name and the frame size
+Proof text: `Prysm.SyncCommittee.Decode.reject_size` (`ScReject.lean`) with the program name and the frame size
 changed (the directive indices are the same). The statement is the frozen `hb_reject_size_stmt`.
 -/
 

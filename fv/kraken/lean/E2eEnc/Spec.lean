@@ -5,7 +5,7 @@ import E2eEnc.StmtEnc
 /-!
 # Spec bridge for the real Prysm `v1alpha1.DataColumnsByRootIdentifier`
 
-The order of `E2eList/IaSpec.lean` (`pia_serialize`): the list part reuses the Go 1.26.3 ListU64 lemmas
+The order of `Prysm/IndexedAttestation/Spec.lean` (`pia_serialize`): the list part reuses the Go 1.26.3 ListU64 lemmas
 (`Spec.serializeEach_u64`, `Fv1.inl_*`, `Spec.u64Bytes_size`). `pdc_serialize`: EthLib's `serialize` of a `PDc` is
 `block_root ‖ offset 36 ‖ columns`. The two reject specs are the EthLib side of the machine bytes-length reject and too-big reject.
 -/

@@ -17,7 +17,7 @@ Frozen at their commit. The hand `Desc` below is written from consensus-specs ph
 Shapes: `E2eHb.hb_accept_spec_stmt`, `hb_reject_size_spec_stmt`, `hb_reject_complete_stmt`.
 -/
 
-open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz E2eList E2eDep.Code
+open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz E2eDep.Code
 variable [Host]
 
 namespace E2eDep
@@ -74,7 +74,7 @@ def dep_accept_spec_stmt : Prop :=
       ⋆ Eq (aC.At (s.regs.rax.toBitVec + 24)) ⋆ Eq (aD.At (s.regs.rax.toBitVec + 32))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat + 104 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size) (hav : 2144 ≤ avail)
-    (hmsA : MakesliceC Heap E2eList.Data.lvSliceType_addr 24 (Sd + 48))
+    (hmsA : MakesliceC Heap ElfData.SyncAggregateAndSyncCommittee.lvSliceType_addr 24 (Sd + 48))
     (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (Sd + 48)) (hmm : MemmoveC (Sd + 48))
     (hno : NewobjectC Heap depDataType_addr 120 (Sd + 48))
     (hmsD : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 Sd) (hmmD : MemmoveC Sd),
@@ -104,7 +104,7 @@ def dep_accept_spec_stmt : Prop :=
           ⋆ Eq ((Int.toBytes 8 A.toInt).At (s.regs.rax.toBitVec + 8))
           ⋆ Eq ((Int.toBytes 8 33).At (s.regs.rax.toBitVec + 16)) ⋆ Eq ((Int.toBytes 8 33).At (s.regs.rax.toBitVec + 24))
           ⋆ Eq ((Int.toBytes 8 po.toInt).At (s.regs.rax.toBitVec + 32))
-          ⋆ Eq ((lvHdrs 32 ps).At A) ⋆ lvElems ps g.proofs
+          ⋆ Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps).At A) ⋆ Prysm.SyncCommittee.elementBlocks ps g.proofs
           ⋆ Eq ((List.replicate 8 0).At po)
           ⋆ Eq ((Int.toBytes 8 p1.toInt).At (po + 8))
           ⋆ Eq ((Int.toBytes 8 48).At (po + 16)) ⋆ Eq ((Int.toBytes 8 48).At (po + 24))

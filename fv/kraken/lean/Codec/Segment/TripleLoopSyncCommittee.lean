@@ -1,16 +1,16 @@
 import Codec.Segment.TripleLoopProof
 import Codec.Segment.Bytes32LoopHistoricalBatch
-import E2eList.ScLoop
+import Prysm.SyncCommittee.DecodeLoop
 
 /-!
-# The SyncCommittee loop `E2eList.sc_loop` re-derived from the general loop `Codec.Segment.vtri_loop`
+# The SyncCommittee loop `Prysm.SyncCommittee.Decode.loop` re-derived from the general loop `Codec.Segment.vtri_loop`
 
-The theorem has the type of the hand lemma `sc_loop` (`type_of%`); its proof instantiates `vtri_loop` (k = 4, w = 48,
+The theorem has the type of the hand lemma `Prysm.SyncCommittee.Decode.loop` (`type_of%`); its proof instantiates `vtri_loop` (k = 4, w = 48,
 n = 512, the SyncCommittee frame slots, receiver offsets 8 and 16, src = 0) and steps the exit label (directive 80). Block facts
 by `infix_sub` on the real program; gaps read from the `nop` directives 39, 47 and 61.
 -/
 
-open Machine Runtime TestTarget E2eList E2eHb Codec.Segment E2eList.Code
+open Machine Runtime TestTarget E2eHb Codec.Segment
 
 namespace Codec.Segment
 
@@ -18,39 +18,39 @@ variable [Host]
 
 abbrev scL (s : String) : String := "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ_" ++ s
 
-theorem sc_loop_g : type_of% @E2eList.sc_loop := by
+theorem sc_loop_g : type_of% @Prysm.SyncCommittee.Decode.loop := by
   intro _ k hk hf sp recv bf A pks hpks hpk rbp0 r140 S Heap R hms hmm j i ps l18 l20 l28 spl rslot lo avail s
     hij hps h18 h20 h28 hspl hrs hlo hav hrax hrsp hrbp hr14 h_mem
   have hB1 : (tHead (OfNat.ofNat 512) (scL "a0") (scL "156") 24 (OfNat.ofNat 48)).IsInfixAt Host.prog (k + 40) :=
-    Codec.infix_sub 40 hk (by simp only [ScUnmarshal, tHead, scL, List.drop_succ_cons, List.drop_zero,
+    Codec.infix_sub 40 hk (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, tHead, scL, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
   have hB2 : (tMid (OfNat.ofNat 4) 40 24 32 72).IsInfixAt Host.prog (k + 48) :=
-    Codec.infix_sub 48 hk (by simp only [ScUnmarshal, tMid, List.drop_succ_cons, List.drop_zero,
+    Codec.infix_sub 48 hk (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, tMid, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
   have hB3 : (tMm (OfNat.ofNat 48) 64 16 24).IsInfixAt Host.prog (k + 56) :=
-    Codec.infix_sub 56 hk (by simp only [ScUnmarshal, tMm, List.drop_succ_cons, List.drop_zero,
+    Codec.infix_sub 56 hk (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, tMm, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
   have hB4 : (tHdr (scL "1ff") 8 32 (OfNat.ofNat 48)).IsInfixAt Host.prog (k + 62) :=
-    Codec.infix_sub 62 hk (by simp only [ScUnmarshal, tHdr, scL, List.drop_succ_cons, List.drop_zero,
+    Codec.infix_sub 62 hk (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, tHdr, scL, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
   have hB5 : (tTail (scL "137") (scL "91") 40).IsInfixAt Host.prog (k + 69) :=
-    Codec.infix_sub 69 hk (by simp only [ScUnmarshal, tTail, scL, List.drop_succ_cons, List.drop_zero,
+    Codec.infix_sub 69 hk (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, tTail, scL, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
   have hB6 : (tBack (scL "91")).IsInfixAt Host.prog (k + 36) :=
-    Codec.infix_sub 36 hk (by simp only [ScUnmarshal, tBack, scL, List.drop_succ_cons, List.drop_zero,
+    Codec.infix_sub 36 hk (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, tBack, scL, List.drop_succ_cons, List.drop_zero,
       List.length_cons, List.length_nil, List.take_succ_cons, List.take_zero] <;> first | rfl | decide)
   have g1 : Glue (k + 40 + 7) (k + 48) := glue_of hk (a := 47)
-    (by simp only [ScUnmarshal, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])
+    (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])
   have g2 : Glue (k + 56 + 5) (k + 62) := glue_of hk (a := 61)
-    (by simp only [ScUnmarshal, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])
+    (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])
   have g4 : Glue (k + 36 + 3) (k + 40) := glue_of hk (a := 39)
-    (by simp only [ScUnmarshal, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])
+    (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, v32Nop, List.getElem?_cons_succ, List.getElem?_cons_zero])
   have hlb := Machine.label_at' hk hf (j := 36)
-    (by simp only [ScUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
-    (by simp only [ScUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
+    (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
+    (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   have hle := Machine.label_at' hk hf (j := 80)
-    (by simp only [ScUnmarshal, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
-    (by simp only [ScUnmarshal, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
+    (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, List.getElem?_cons_succ, List.getElem?_cons_zero]; rfl)
+    (by simp only [Prysm.SyncCommittee.Code.unmarshalSSZ, List.take_succ_cons, List.take_zero, List.contains_cons, List.contains_nil]; decide)
   have e512 : Int.toBytes 8 512 = Int.toBytes 8 (BitVec.ofNat 64 512).toInt := by decide
   have e48 : (OfNat.ofNat (48 : Nat) : Int) = 48 := rfl
   have step80 : ∀ (st : MachineState), st.pc = Host.addrOf (k + 80) →
@@ -58,7 +58,7 @@ theorem sc_loop_g : type_of% @E2eList.sc_loop := by
     rintro ⟨d, pc⟩ hpc
     dsimp only at hpc; subst hpc
     obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := d
-    kat hk ScUnmarshal 80
+    kat hk Prysm.SyncCommittee.Code.unmarshalSSZ 80
     exact Eventually.done _ ⟨rfl, rfl⟩
   cases j with
   | zero =>

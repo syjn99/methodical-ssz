@@ -9,7 +9,7 @@ The text of `E2eHb.HbSpecK` with the Deposit statement. The statements are the f
 `dep_reject_size_spec_stmt` and `dep_reject_complete_stmt` (`SpecStmt.lean`).
 -/
 
-open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz E2eList E2eDep.Code
+open Machine Runtime TestTarget E2e EthLib.Serialization.Ssz E2eDep.Code
 variable [Host]
 
 namespace E2eDep

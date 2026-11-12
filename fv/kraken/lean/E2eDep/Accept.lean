@@ -15,7 +15,7 @@ import E2eDep.Stmt
 Statement: the frozen `E2eDep.dep_accept_stmt`.
 -/
 
-open Machine Runtime TestTarget E2eList E2eHb Codec.Segment E2eDep.Code
+open Machine Runtime TestTarget E2eHb Codec.Segment E2eDep.Code
 
 namespace E2eDep
 
@@ -225,8 +225,8 @@ theorem dep_e2e_accept_main : dep_accept_stmt := by
     (by
       dsimp only
       rw [show rsp.toBitVec - 96 - 8 = rsp.toBitVec - 104 by laddr]
-      simp only [show lvHdrs 32 [] ++ zz (24 * (33 - 0)) = List.replicate (24 * 33) 0 from rfl, List.take_zero,
-        show lvElems [] ([] : List (List UInt8)) = Std.ExtHashMap.emp from rfl, Std.ExtHashMap.sep_emp]
+      simp only [show Prysm.SyncCommittee.sliceHeaders 32 [] ++ Prysm.SyncCommittee.zz (24 * (33 - 0)) = List.replicate (24 * 33) 0 from rfl, List.take_zero,
+        show Prysm.SyncCommittee.elementBlocks [] ([] : List (List UInt8)) = Std.ExtHashMap.emp from rfl, Std.ExtHashMap.sep_emp]
       ecancel)) ?_
   rintro ⟨d4, pc4⟩ ⟨hpc4, hrsp4, hrbp4, hr144, ps', lI', lD', lI1', lP', spl', lo', hps', g5, g6, g7, g8, gspl,
     glo, Hm4⟩
@@ -390,7 +390,7 @@ theorem dep_e2e_accept_main : dep_accept_stmt := by
   apply Eventually.done
   try simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
   have e33' : Int.toBytes 8 (BitVec.ofNat 64 33).toInt = Int.toBytes 8 33 := by decide
-  rw [e33', show zz (24 * (33 - 33)) = [] from rfl, List.append_nil,
+  rw [e33', show Prysm.SyncCommittee.zz (24 * (33 - 33)) = [] from rfl, List.append_nil,
     List.take_of_length_le (by omega : proofs.length ≤ 33),
     show avail - 24 * 33 - 32 * 33 - 120 - 176 = avail - 2144 by omega,
     show k + 105 + 1 = k + 106 from rfl] at Hm6

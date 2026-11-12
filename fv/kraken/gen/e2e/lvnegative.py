@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Negative suite in the style of `negative.py` (not changed) for the E2eList theorems.
+"""Negative suite in the style of `negative.py` (not changed) for the theorems of the list and vector types.
 
 Usage (one gated job, Lean env, cwd anywhere):
   lvnegative.py <cases.json> <work-dir> <result.json> [<case-id>...]
@@ -10,7 +10,7 @@ It imports `negative.py` and uses its `cut`, `classify`, `precheck` and `main` u
   inlines those modules' bodies (their imports are replaced by their own imports), so that the code rename
   `<code_def>` → `<code_def>Mut` also reaches the statement. A "stmt" case names "stmt_def" and mutates the text
   of that def (old → new, unique inside the def). "norm" is the .S path under fv/kraken; "code_ns" the namespace
-  of the code constant (E2eList.Code).
+  of the code constant (default: `negative.code_ns_of`, Prysm.<Type>.Code for a module under Prysm/<Type>/).
 * run_capped: no `gen/tools/memcap.py` (it reads /proc, absent on macOS); the job runs under the heavy-job
   gate's cap. A case that exceeds the per-case timeout is killed with its process group (start_new_session).
 A mutant passes when Lean reports an error and every error line lies inside the designated theorem and the first
@@ -94,7 +94,7 @@ def run_case(c, work):
         (d / "mut.S").write_text(S2)
         name = c["code_def"]
         rest = re.sub(rf"(?<![A-Za-z0-9_.']){re.escape(name)}(?![A-Za-z0-9_'])", name + "Mut", rest)
-        decl = f'def {c.get("code_ns", "E2eList.Code")}.{name}Mut : Program := include_x64_rt "{d / "mut.S"}"'
+        decl = f'def {n.code_ns_of(c)}.{name}Mut : Program := include_x64_rt "{d / "mut.S"}"'
         rest = decl + "\n\n" + rest
     if c["kind"] == "stmt":
         rl = rest.split("\n")

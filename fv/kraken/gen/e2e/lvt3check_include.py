@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""IndexedAttestation: lean/E2eList/IncludeIa.lean's data reader is the text of lean/E2eList/Include.lean's reader.
+"""IndexedAttestation: lean/Prysm/ElfData/IndexedAttestationReader.lean's data reader is the text of lean/Prysm/ElfData/SyncAggregateAndSyncCommitteeReader.lean's reader.
 
 Usage: lvt3check_include.py      (from any cwd; Python 3 standard library only)
 A new file with the method of `lvcheck_include.py` (not changed): compares the bodies of lvHexByte?,
-lvLabelTerm, lvDataSource (E2eList/Include.lean) with lvt3HexByte?, lvt3LabelTerm, lvt3DataSource
-(E2eList/IncludeIa.lean) after renaming the three names, and the elab bodies after renaming the command, the
+lvLabelTerm, lvDataSource (Prysm/ElfData/SyncAggregateAndSyncCommitteeReader.lean) with lvt3HexByte?, lvt3LabelTerm, lvt3DataSource
+(Prysm/ElfData/IndexedAttestationReader.lean) after renaming the three names, and the elab bodies after renaming the command, the
 error prefix and the data path (lv/link-t3/data).
 Exit 1 on a difference.
 """
@@ -12,8 +12,8 @@ import pathlib
 import sys
 
 L = pathlib.Path(__file__).resolve().parents[2] / "lean"
-e2 = (L / "E2eList" / "Include.lean").read_text()
-lv = (L / "E2eList" / "IncludeIa.lean").read_text()
+e2 = (L / "Prysm" / "ElfData" / "SyncAggregateAndSyncCommitteeReader.lean").read_text()
+lv = (L / "Prysm" / "ElfData" / "IndexedAttestationReader.lean").read_text()
 
 
 def block(text, start):

@@ -5,10 +5,10 @@ public meta import Lean
 /-!
 # `dcd_data_include id`: ELF data of the decoder set (`lv/link-dec`, DataColumnsByRootIdentifier)
 
-The same reader as `lv_data_include` (`E2eList/Include.lean`, the text of `Prysm/ElfData/CheckpointAndEpochReader.lean`, itself the text of
+The same reader as `lv_data_include` (`Prysm/ElfData/SyncAggregateAndSyncCommitteeReader.lean`, the text of `Prysm/ElfData/CheckpointAndEpochReader.lean`, itself the text of
 `Machine/Include.lean`'s `data_include`), for the data directory
 `../prysm/go1.26.10/e2e/lv/link-dec/data/<id>.data` (relative to `fv/kraken/lean`).
-`E2eList/Include.lean` and `E2eList/IncludeIa.lean` are not changed;
+`Prysm/ElfData/SyncAggregateAndSyncCommitteeReader.lean` and `Prysm/ElfData/IndexedAttestationReader.lean` are not changed;
 the helpers below are the text of `IncludeIa.lean` with the `lvt3` prefix replaced by `dcd` (a `sed` of that file; the
 difference is the prefix, the data path and this comment). TRUSTED like `data_include`:
 this reader. That the files are the ELF's bytes is `link/check.py`'s data check

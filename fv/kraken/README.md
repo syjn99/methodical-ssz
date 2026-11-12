@@ -90,8 +90,8 @@ Each item says what the command needs.
 **Lean only.** Lake fetches Kraken and EthLib at the pinned commits on the first run.
 
 ```sh
-cd fv/kraken/lean && lake build Machine Runtime Codec Spec TestTarget Prysm E2eScal E2eList E2eHb E2eDep E2eDepW E2eEnc E2eDec
-cd fv/kraken/lean && lake build E2eList.SaReject    # one module
+cd fv/kraken/lean && lake build Machine Runtime Codec Spec TestTarget Prysm E2eScal E2eHb E2eDep E2eDepW E2eEnc E2eDec
+cd fv/kraken/lean && lake build Prysm.SyncAggregate.DecodeRejectSize    # one module
 ```
 
 `lake build` without arguments builds only the default libraries `Spec`, `Machine`, `Runtime` and `TestTarget`.
@@ -112,7 +112,7 @@ python3 -I -B .claude/skills/maintaining-methodical-fv/scripts/decl_drift.py <ba
 - A new library or a new hand list needs no change to the gate.
 - The gate overwrites its JSON argument. Give a scratch path, unless you intend to update a committed record.
 - The negative test files are `gen/e2e/negcases.json`, `gen/scal/negcases-*.json` and the `negcases-*.json` files under `prysm/go1.26.10/e2e/`.
-  Run one case per job. The E2eList cases use `gen/e2e/lvnegative.py` with the same arguments.
+  Run one case per job. The cases of `prysm/go1.26.10/e2e/lv/negcases-lv*.json` use `gen/e2e/lvnegative.py` with the same arguments.
 - The drift check compares a dump with the dump of a reviewed tree.
 
 **Python only.** These use only tracked files.

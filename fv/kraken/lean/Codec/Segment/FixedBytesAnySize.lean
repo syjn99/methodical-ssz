@@ -1,11 +1,11 @@
 import Codec.FixedBytesDecode
-import E2eList.Seg
+import Prysm.SyncAggregate.DecodeFieldSegments
 
 /-!
 # Fixed-bytes decode segments for ANY size `n < 2^31` (generalized once)
 
 `Codec.FixedBytesDecode` proves the segment for n ∈ {32, 48, 96} by a case split over a literal-size macro, and
-`E2eList.Seg` copies that macro for n = 64 and the `nop` head for n = 96. Here the size is a variable.
+`Prysm.SyncAggregate.DecodeFieldSegments` copies that macro for n = 64 and the `nop` head for n = 96. Here the size is a variable.
 The three places where the literal size was computed are replaced by lemmas about the immediate:
 the makeslice and memmove count (`mov $n,%ecx`, a 32-bit immediate: needs `n < 2^31`) and the
 stored length/capacity word (`movq $n`, the 64-bit sign-extended immediate).
@@ -366,7 +366,7 @@ theorem bytesdec_seg_z_g (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String) (dR dB d
   exact ⟨rfl, rfl, rfl, rfl, rax3.toBitVec, spm3, stk4, hspm3, hstk4, rfl, by ecancel⟩
 
 /-- **Fixed-bytes decode segment, add form with the `nop` head, any size `n < 2^31`**: the statement of
-`E2eList.bytes96dec_seg_nop` / `E2eScal.H4.bytes32dec_seg_nop` with the size `n`. -/
+`Prysm.SyncAggregate.bytes96dec_seg_nop` / `E2eScal.H4.bytes32dec_seg_nop` with the size `n`. -/
 theorem bytesdec_seg_nop_g (n : Nat) (hn : n < 2 ^ 31) (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j1 j2 : Nat)
     (hA : (bytesDecHeadNopG (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog j1)
     (hB : (bytesDecMid (OfNat.ofNat n) lff lwb dR dB dS fP fL fC src).IsInfixAt Host.prog j2)

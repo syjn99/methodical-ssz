@@ -3,7 +3,7 @@ import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
 import Prysm.ElfData.CheckpointAndEpoch
-import E2eList.Data
+import Prysm.ElfData.SyncAggregateAndSyncCommittee
 import E2eHb.Code
 import E2eHb.Defs
 
@@ -11,7 +11,7 @@ import E2eHb.Defs
 # Hand STATEMENTS of the target `(*v1alpha1.HistoricalBatch).UnmarshalSSZ` (statements only, no proof)
 
 Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
-Statement shape: `E2eList.StmtSc` with two 8192-element `[][]byte` fields and no tail field.
+Statement shape: `Prysm.SyncCommittee.Statements` with two 8192-element `[][]byte` fields and no tail field.
 
     func (c *HistoricalBatch) UnmarshalSSZ(buf []byte) error {
         if uint64(len(buf)) != 524288 { return ssz.ErrSize }
@@ -32,7 +32,7 @@ Frame (`.S`, x = entry rsp): `sub $0x38`; `0x48(%rsp)` = x + 8 (rax spill), `0x5
 also written at directive 7 before the size check); loop locals `0x18(%rsp)` = x − 40 (i + 1), `0x20(%rsp)` = x − 32
 (32i), `0x28(%rsp)` = x − 24 (i), `0x30(%rsp)` = x − 16 (element pointer); `0x0…0x17(%rsp)` = x − 64 (24 bytes,
 `spl`, makeslice's spill area); runtime call return slot x − 72; `lo` = the `S` scratch bytes below it.
-Calls: makeslice of each backing array (`E2eList.Data.lvSliceType_addr`, esz 24, len = cap = 8192; the same type
+Calls: makeslice of each backing array (`ElfData.SyncAggregateAndSyncCommittee.lvSliceType_addr`, esz 24, len = cap = 8192; the same type
 word as SyncCommittee, asserted by `gen/e2e/hblink.py data`), 2 × 8192 uint8 makeslice (len 0, cap 32) + memmove (32) pairs.
 Heap: 2 · (24·8192 + 32·8192) = 917504 bytes. The last runtime call is the memmove at directive 132, so the
 return slot holds directive 133 at the end. The four loop locals are dead after the loops; the postcondition owns
@@ -41,7 +41,7 @@ them with unnamed 8-byte values.
 Size reject: directives 2–10, `cmp $0x80000,%rcx; jne L_7b` taken, 30–35.
 -/
 
-open Machine Runtime TestTarget EthLib.Serialization.Ssz E2eList E2eHb.Code
+open Machine Runtime TestTarget EthLib.Serialization.Ssz E2eHb.Code
 variable [Host]
 
 namespace E2eHb
@@ -79,7 +79,7 @@ def hb_accept_stmt : Prop :=
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 524288) (hav : 917504 ≤ avail)
     (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S)
-    (hmsA : MakesliceC Heap E2eList.Data.lvSliceType_addr 24 S) (hmm : MemmoveC S),
+    (hmsA : MakesliceC Heap ElfData.SyncAggregateAndSyncCommittee.lvSliceType_addr 24 S) (hmm : MemmoveC S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -102,7 +102,7 @@ def hb_accept_stmt : Prop :=
           ⋆ Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 8)) ⋆ Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 A2.toInt).At (s.regs.rax.toBitVec + 24))
           ⋆ Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 32)) ⋆ Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 40))
-          ⋆ Eq ((lvHdrs 32 ps1).At A1) ⋆ lvElems ps1 brs ⋆ Eq ((lvHdrs 32 ps2).At A2) ⋆ lvElems ps2 srs
+          ⋆ Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps1).At A1) ⋆ Prysm.SyncCommittee.elementBlocks ps1 brs ⋆ Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps2).At A2) ⋆ Prysm.SyncCommittee.elementBlocks ps2 srs
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 
@@ -162,7 +162,7 @@ def hb_accept_spec_stmt : Prop :=
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size) (hav : 917504 ≤ avail)
     (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S)
-    (hmsA : MakesliceC Heap E2eList.Data.lvSliceType_addr 24 S) (hmm : MemmoveC S),
+    (hmsA : MakesliceC Heap ElfData.SyncAggregateAndSyncCommittee.lvSliceType_addr 24 S) (hmm : MemmoveC S),
     ∃ g : PHb, g.toValue = v ∧ bsA = phbEnc g ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
@@ -186,7 +186,7 @@ def hb_accept_spec_stmt : Prop :=
           ⋆ Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 8)) ⋆ Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 A2.toInt).At (s.regs.rax.toBitVec + 24))
           ⋆ Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 32)) ⋆ Eq ((Int.toBytes 8 8192).At (s.regs.rax.toBitVec + 40))
-          ⋆ Eq ((lvHdrs 32 ps1).At A1) ⋆ lvElems ps1 g.brs ⋆ Eq ((lvHdrs 32 ps2).At A2) ⋆ lvElems ps2 g.srs
+          ⋆ Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps1).At A1) ⋆ Prysm.SyncCommittee.elementBlocks ps1 g.brs ⋆ Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps2).At A2) ⋆ Prysm.SyncCommittee.elementBlocks ps2 g.srs
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 

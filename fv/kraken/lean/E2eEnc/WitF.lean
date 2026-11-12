@@ -48,7 +48,7 @@ def cs0 (root cb : List UInt8) (pc nb : BitVec 64) (dl : Nat) (zmms : RegZmms) (
     mem root cb pc nb dl⟩
 
 -- Measured (three builds of `E2eEnc.WitF`): 200000 and 1000000 fail (`whnf` timeout); 4000000 passes. Profile (the 1000000 build):
--- `simp` 12.3 s of the declaration, the `sep_comm` sort of the 26-chunk memory premise (the cause profiled for `E2eList.WitSaA.sa_accept_runs`).
+-- `simp` 12.3 s of the declaration, the `sep_comm` sort of the 26-chunk memory premise (the cause profiled for `Prysm.SyncAggregate.Witness.DecodeAccept.runs`).
 set_option maxHeartbeats 4000000 in
 /-- n = 0: `cap = 36 + 8n = 36`, Columns at 0x10124. -/
 theorem dcf_runs_n0 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length = 0)
@@ -75,7 +75,7 @@ theorem dcf_runs_n0 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1, h.2.2.2.2.1, h.2.2.2.2.2.1⟩)
 
 -- Measured (three builds of `E2eEnc.WitF`): 200000 and 1000000 fail (`whnf` timeout); 4000000 passes. Profile (the 1000000 build):
--- `simp` 12.3 s of the declaration, the `sep_comm` sort of the 26-chunk memory premise (the cause profiled for `E2eList.WitSaA.sa_accept_runs`).
+-- `simp` 12.3 s of the declaration, the `sep_comm` sort of the 26-chunk memory premise (the cause profiled for `Prysm.SyncAggregate.Witness.DecodeAccept.runs`).
 set_option maxHeartbeats 4000000 in
 /-- n = 1: `cap = 36 + 8n = 44`, Columns at 0x1012c. -/
 theorem dcf_runs_n1 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length = 8)
@@ -102,7 +102,7 @@ theorem dcf_runs_n1 (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.
     (fun _ h => ⟨h.1, h.2.1, h.2.2.1, h.2.2.2.2.1, h.2.2.2.2.2.1⟩)
 
 -- Measured (three builds of `E2eEnc.WitF`): 200000 and 1000000 fail (`whnf` timeout); 4000000 passes. Profile (the 1000000 build):
--- `simp` 12.3 s of the declaration, the `sep_comm` sort of the 26-chunk memory premise (the cause profiled for `E2eList.WitSaA.sa_accept_runs`).
+-- `simp` 12.3 s of the declaration, the `sep_comm` sort of the 26-chunk memory premise (the cause profiled for `Prysm.SyncAggregate.Witness.DecodeAccept.runs`).
 set_option maxHeartbeats 4000000 in
 -- maxRecDepth (builds at the default, 2000 and 20000, and a later run): 512 and 2000 fail; WitF n = 128 passes at 4000, WitG fails at 4000 and passes
 -- at 8000 ("maximum recursion depth" at the declaration). Replacing `simp [cs0]` by `dsimp only [cs0]; decide`

@@ -3,13 +3,13 @@ import Prysm.Checkpoint.SpecEquivalence
 import TestTarget.ListU64RejectSpec
 import EthLib.Serialization.Proofs.Ssz.Codec.Table
 import EthLib.Serialization.Proofs.Ssz.Codec.CanonicalTable
-import E2eList.IaSpec
+import Prysm.IndexedAttestation.Spec
 import E2eEnc.Spec
 
 /-!
 # Decoder-side spec bridge for `DataColumnsByRootIdentifier` (round trip)
 
-The text of `E2eList/IaSpec.lean` (`pia_*`, `iaChecks`) for `PDc`: `toValue` fits, every fitting value is a `PDc`,
+The text of `Prysm/IndexedAttestation/Spec.lean` (`pia_*`, `iaChecks`) for `PDc`: `toValue` fits, every fitting value is a `PDc`,
 the EthLib round trip, accepted inputs are encodings, and the three checks of the Go decoder in its order
 (`size ≥ 36`, offset 36, `(size − 36) mod 8 = 0`, `(size − 36)/8 ≤ 128`).
 -/

@@ -101,7 +101,7 @@ theorem dcg_iter (k : Nat) (hk : DcMarshal.IsInfixAt Host.prog k) (hf : LabelsFr
   split
   case isTrue h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
-    exact E2eList.jge_false512 _ _ (by simp; omega) (by simp; omega) h
+    exact Prysm.SyncCommittee.jge_false512 _ _ (by simp; omega) (by simp; omega) h
   simp only [Effects.All]
   kat hk DcMarshal 85
   kat hk DcMarshal 86

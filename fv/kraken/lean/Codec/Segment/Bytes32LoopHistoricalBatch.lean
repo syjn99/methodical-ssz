@@ -11,7 +11,7 @@ The block facts come from the real program by `infix_sub` (the templates equal t
 facts by reading the `nop` directives 39 and 48. This is the check that the general loop covers the hand loop.
 -/
 
-open Machine Runtime TestTarget E2eList E2eHb E2eHb.Code
+open Machine Runtime TestTarget E2eHb E2eHb.Code
 
 namespace Codec.Segment
 

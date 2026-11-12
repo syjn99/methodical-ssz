@@ -3,7 +3,7 @@
 reader would produce from prysm/go1.26.10/e2e/lv/link-dep/data/depDataType.data.
 
 Usage: depcheck_data.py [--selftest]      (from any cwd; Python 3 standard library only)
-The reader (`lvLabelTerm` in lean/E2eList/Include.lean, not changed) turns the line `at <label> <off>` into
+The reader (`lvLabelTerm` in lean/Prysm/ElfData/SyncAggregateAndSyncCommitteeReader.lean, not changed) turns the line `at <label> <off>` into
 `(label "<label>" + <off>).toBitVec` (or `(label "<label>").toBitVec` for off = 0). This script reads the `at` line,
 renders that term with the same rule, and compares it with the right-hand side of the Lean definition.
 `check.py` (f) compares the data file with the ELF (lv/link-dep/RESULT). Exit 1 on a difference.

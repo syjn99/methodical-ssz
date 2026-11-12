@@ -11,7 +11,7 @@ import E2eEnc.Defs
 
 Frozen at their commit. A later change needs a new name and a reason; these definitions stay.
 Statement shape: `Prysm/Checkpoint/EncodeFastPath.lean`, `Prysm/Checkpoint/EncodeGrowFirstSite.lean`, `Prysm/Checkpoint/EncodeSpec.lean` (Checkpoint encoder) and
-`E2eList/StmtIa.lean` (exact caller frame `R`, contracts as hypotheses, receiver and input kept).
+`Prysm/IndexedAttestation/Statements.lean` (exact caller frame `R`, contracts as hypotheses, receiver and input kept).
 
     func (c *DataColumnsByRootIdentifier) MarshalSSZTo(dst []byte) ([]byte, error) {   // fulu.ssz.go:1754
         if len(c.BlockRoot) != 32 { return nil, ssz.ErrBytesLength }                     // bytes-length reject

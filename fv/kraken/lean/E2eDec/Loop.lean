@@ -1,10 +1,10 @@
 import Machine.Block
 import Machine.Labels
 import E2eDec.Code
-import E2eList.ScLemmas
+import Prysm.SyncCommittee.DecodeLoopLemmas
 
 /-!
-# Decoder: the element loop (the text of `E2eList/IaLoop.lean`)
+# Decoder: the element loop (the text of `Prysm/IndexedAttestation/DecodeLoop.lean`)
 
 Loop head `L_320` (directive 185). The same instruction order as `ia_iter` (147–165, 143–146) with this
 function's registers and slots: rax = i, rdx = n, rcx = cap − 36, rdi = the input pointer `p0` (buf + 36), rsi = the
@@ -18,7 +18,7 @@ variable [Host]
 namespace E2eDec
 
 -- Measured: without this option `klabel` (directive 180) stops with "maximum recursion depth" (the
--- `simp` that unfolds the program literal, as in `E2eList/IaLoop.lean`); 1024 passes.
+-- `simp` that unfolds the program literal, as in `Prysm/IndexedAttestation/DecodeLoop.lean`); 1024 passes.
 set_option maxRecDepth 1024 in
 theorem dcd_iter (k : Nat) (hk : DcUnmarshal.IsInfixAt Host.prog k) (hf : LabelsFresh DcUnmarshal k)
     (ib : List UInt8) (n i : Nat) (hib : ib.length = 8 * n) (hn : n ≤ 128) (hi : i < n)
@@ -50,7 +50,7 @@ theorem dcd_iter (k : Nat) (hk : DcUnmarshal.IsInfixAt Host.prog k) (hf : Labels
   split
   case isTrue h =>
     exfalso; simp [CondCode.interp, StatusFlags.from_result, BitVec.unsigned] at h
-    exact E2eList.jge_false512 _ _ (by simp; omega) (by simp; omega) h
+    exact Prysm.SyncCommittee.jge_false512 _ _ (by simp; omega) (by simp; omega) h
   simp only [Effects.All]
   kat hk DcUnmarshal 188
   kat hk DcUnmarshal 189

@@ -6,7 +6,7 @@ import Machine.WitnessHost
 /-!
 # Witness of `dcd_e2e_accept_main` (decoder accept path)
 
-The text of `E2eList/WitIaA.lean` (branch `claude/ssz-fv-list-vector-20261112`, commit `a1c5d0d`) with this host and
+The text of `Prysm/IndexedAttestation/WitnessDecodeAccept.lean` (branch `claude/ssz-fv-list-vector-20261112`, commit `a1c5d0d`) with this host and
 layout. The premises of the frozen `dcd_accept_stmt` are satisfiable for every `n ≤ 128`, the three contract hypotheses
 included: both `MakesliceC` instances from `BumpAllocDc` (`bump_makeslice_dc_8`, `bump_makeslice_dc_1`), `MemmoveC`
 from `RtCopy`. Host: data labels (bump pointer at 0, `runtime.writeBarrier` at 8), the real Go 1.26.10
@@ -55,8 +55,8 @@ theorem label_bump : label "runtime.fvBump" = 0x10000 :=
 theorem label_wb : label "runtime.writeBarrier" = 0x10008 :=
   mk_label P _ 8 _ (by simp [P, dataLabels]) (by decide)
 
-theorem u8_ne_u64 : ElfData.CheckpointAndEpoch.e2eU8Type_addr ≠ E2eList.Data.lvU64Type_addr := by
-  simp only [ElfData.CheckpointAndEpoch.e2eU8Type_addr, E2eList.Data.lvU64Type_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
+theorem u8_ne_u64 : ElfData.CheckpointAndEpoch.e2eU8Type_addr ≠ ElfData.IndexedAttestation.lvU64Type_addr := by
+  simp only [ElfData.CheckpointAndEpoch.e2eU8Type_addr, ElfData.IndexedAttestation.lvU64Type_addr, Int64.toBitVec_add, Int64.toBitVec_ofNat]
   bv_omega
 
 abbrev z (k : Nat) : List UInt8 := List.replicate k 0

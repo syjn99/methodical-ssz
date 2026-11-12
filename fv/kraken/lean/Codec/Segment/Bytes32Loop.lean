@@ -22,7 +22,7 @@ operands replaced by parameters; each use shows the equality with the real progr
 `rfl`/`decide` (`Codec/Segment/Bytes32LoopHistoricalBatch.lean`, `E2eDep/Accept.lean`).
 -/
 
-open Machine Runtime TestTarget E2eList E2eHb
+open Machine Runtime TestTarget E2eHb
 
 namespace Codec.Segment
 

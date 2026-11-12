@@ -1,17 +1,17 @@
 import Machine.Frame
 import Machine.Block
-import E2eList.ScLemmas
+import Prysm.SyncCommittee.DecodeLoopLemmas
 
 /-!
 # List and memory-chunk lemmas for the HistoricalBatch element loops
 
-Imported from the SyncCommittee proof as is (`E2eList.ScLemmas`): `lvElems_snoc`, `lvHdrs_length`, `lvHdrs_snoc`, `lv_flatten_split`,
+Imported from the SyncCommittee proof as is (`Prysm.SyncCommittee.DecodeLoopLemmas`): `Prysm.SyncCommittee.elementBlocks_snoc`, `Prysm.SyncCommittee.sliceHeaders_length`, `Prysm.SyncCommittee.sliceHeaders_snoc`, `Prysm.SyncCommittee.flatten_split`,
 `jge_false512` (its bound is 2^62, so it covers `cmp $0x2000`), `zz`.
 New here: the SyncCommittee lemmas whose statements fix 48-byte blocks and 512 elements, with 32 and 8192.
-Proof text: `E2eList.ScLemmas` with the two constants changed.
+Proof text: `Prysm.SyncCommittee.DecodeLoopLemmas` with the two constants changed.
 -/
 
-open Machine Runtime TestTarget E2eList
+open Machine Runtime TestTarget
 
 namespace E2eHb
 
@@ -33,19 +33,19 @@ theorem hbIn_split (bf : BitVec 64) (pks : List (List UInt8)) (hpks : pks.length
   have hp : pks[i].length = 32 := hpk _ (List.getElem_mem hlt)
   have hd : (pks.drop (i + 1)).flatten.length = 32 * (8191 - i) := by
     rw [hb_flatten_length _ (fun e he => hpk e (List.mem_of_mem_drop he))]; simp; omega
-  rw [lv_flatten_split pks i hlt,
+  rw [Prysm.SyncCommittee.flatten_split pks i hlt,
     at_app _ _ (b := bf + BitVec.ofNat 64 (32 * i)) (by rw [ht]) (by simp only [List.length_append, ht, hp, hd]; omega),
     at_app _ _ (b := bf + BitVec.ofNat 64 (32 * i) + 32) (by rw [hp]; rfl) (by rw [hp, hd]; omega)]
   simp only [Std.ExtHashMap.sep_assoc]
 
 theorem hbA_split (A : BitVec 64) (ps : List (BitVec 64)) (i : Nat) (hi : i < 8192) (hps : ps.length = i) :
-    Eq ((lvHdrs 32 ps ++ zz (24 * (8192 - i))).At A) = Eq ((lvHdrs 32 ps).At A)
-      ⋆ Eq ((zz 8).At (A + BitVec.ofNat 64 (24 * i))) ⋆ Eq ((zz 8).At (A + BitVec.ofNat 64 (24 * i) + 8))
-      ⋆ Eq ((zz 8).At (A + BitVec.ofNat 64 (24 * i) + 16))
-      ⋆ Eq ((zz (24 * (8192 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) := by
-  have hl := lvHdrs_length 32 ps
-  rw [show zz (24 * (8192 - i)) = zz 8 ++ (zz 8 ++ (zz 8 ++ zz (24 * (8192 - (i + 1))))) by
-      simp only [zz, List.replicate_append_replicate]; congr 1; omega,
+    Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps ++ Prysm.SyncCommittee.zz (24 * (8192 - i))).At A) = Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps).At A)
+      ⋆ Eq ((Prysm.SyncCommittee.zz 8).At (A + BitVec.ofNat 64 (24 * i))) ⋆ Eq ((Prysm.SyncCommittee.zz 8).At (A + BitVec.ofNat 64 (24 * i) + 8))
+      ⋆ Eq ((Prysm.SyncCommittee.zz 8).At (A + BitVec.ofNat 64 (24 * i) + 16))
+      ⋆ Eq ((Prysm.SyncCommittee.zz (24 * (8192 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) := by
+  have hl := Prysm.SyncCommittee.sliceHeaders_length 32 ps
+  rw [show Prysm.SyncCommittee.zz (24 * (8192 - i)) = Prysm.SyncCommittee.zz 8 ++ (Prysm.SyncCommittee.zz 8 ++ (Prysm.SyncCommittee.zz 8 ++ Prysm.SyncCommittee.zz (24 * (8192 - (i + 1))))) by
+      simp only [Prysm.SyncCommittee.zz, List.replicate_append_replicate]; congr 1; omega,
     at_app _ _ (b := A + BitVec.ofNat 64 (24 * i)) (by rw [hl, hps]) (by simp [hl, hps]; omega),
     at_app _ _ (b := A + BitVec.ofNat 64 (24 * i) + 8) (by simp) (by simp; omega),
     at_app _ _ (b := A + BitVec.ofNat 64 (24 * i) + 16) (by simp; bv_omega) (by simp; omega),
@@ -53,13 +53,13 @@ theorem hbA_split (A : BitVec 64) (ps : List (BitVec 64)) (i : Nat) (hi : i < 81
   simp only [Std.ExtHashMap.sep_assoc]
 
 theorem hbA_join (A p : BitVec 64) (ps : List (BitVec 64)) (i : Nat) (hi : i < 8192) (hps : ps.length = i) :
-    Eq ((lvHdrs 32 (ps ++ [p]) ++ zz (24 * (8192 - (i + 1)))).At A) = Eq ((lvHdrs 32 ps).At A)
+    Eq ((Prysm.SyncCommittee.sliceHeaders 32 (ps ++ [p]) ++ Prysm.SyncCommittee.zz (24 * (8192 - (i + 1)))).At A) = Eq ((Prysm.SyncCommittee.sliceHeaders 32 ps).At A)
       ⋆ Eq ((Int.toBytes 8 p.toInt).At (A + BitVec.ofNat 64 (24 * i)))
       ⋆ Eq ((Int.toBytes 8 32).At (A + BitVec.ofNat 64 (24 * i) + 8))
       ⋆ Eq ((Int.toBytes 8 32).At (A + BitVec.ofNat 64 (24 * i) + 16))
-      ⋆ Eq ((zz (24 * (8192 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) := by
-  have hl := lvHdrs_length 32 ps
-  rw [lvHdrs_snoc, List.append_assoc, List.append_assoc, List.append_assoc,
+      ⋆ Eq ((Prysm.SyncCommittee.zz (24 * (8192 - (i + 1)))).At (A + BitVec.ofNat 64 (24 * i) + 24)) := by
+  have hl := Prysm.SyncCommittee.sliceHeaders_length 32 ps
+  rw [Prysm.SyncCommittee.sliceHeaders_snoc, List.append_assoc, List.append_assoc, List.append_assoc,
     at_app _ _ (b := A + BitVec.ofNat 64 (24 * i)) (by rw [hl, hps])
       (by simp [hl, hps, Int.toBytes_length]; omega),
     at_app _ _ (b := A + BitVec.ofNat 64 (24 * i) + 8) (by simp [Int.toBytes_length])
