@@ -1,0 +1,7 @@
+{
+ "type": "v1alpha1.ProposerPreferences",
+ "mode": "gen5",
+ "accept_generated": false,
+ "reason": "Partial: the GEN4 front end covers only some fields (exit 3): field DependentRoot: MATCH byte field (32 bytes): 4 steps + segment, directives 14\u201348; field ProposalSlot: MATCH call field (Slot): 6 set-up steps + call block, directives 49\u201385; field ValidatorIndex: MATCH call field (ValidatorIndex): 7 set-up steps + call block, directives 86\u2013122; field FeeRecipient: NOT COVERED [new field kind]: byte vector of size 20 (lemma sizes 32, 48, 96 only) (the walk stopped at directive 125: directive 125: byte segment, the next IR field is FeeRecipient (none)); field TargetGasLimit: NOT COVERED [other]: not reached: the walk stopped in field FeeRecipient (directive 125: byte segment, the next IR field is FeeRecipient (none))",
+ "exit": 2
+}

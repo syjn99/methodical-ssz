@@ -1,0 +1,7 @@
+{
+ "type": "v1alpha1.BuilderPreferences",
+ "mode": "gen5",
+ "accept_generated": false,
+ "reason": "NoMatch: field MaxExecutionPayment: NOT COVERED [new field kind]: overlay callee github.com/OffchainLabs/prysm/v7/consensus-types/primitives.Gwei: no proved callee accept spec (only Slot, CommitteeIndex, ValidatorIndex, Epoch of consensus-types/primitives) (the walk stopped at directive 14: directive 14 `callq github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Gwei.UnmarshalSSZ`: callee without a proved spec)",
+ "exit": 2
+}

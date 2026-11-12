@@ -1,0 +1,7 @@
+{
+ "type": "v1alpha1.BuilderPreferences",
+ "mode": "gen6",
+ "generated": true,
+ "reason": "",
+ "exit": 0
+}

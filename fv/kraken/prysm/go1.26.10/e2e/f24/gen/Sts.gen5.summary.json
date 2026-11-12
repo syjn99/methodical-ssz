@@ -1,0 +1,7 @@
+{
+ "type": "v1alpha1.Status",
+ "mode": "gen5",
+ "accept_generated": false,
+ "reason": "NoMatch: field ForkDigest: NOT COVERED [new field kind]: byte vector of size 4 (lemma sizes 32, 48, 96 only) (the walk stopped at directive 14: directive 14: byte segment, the next IR field is ForkDigest (none)); field FinalizedRoot: NOT COVERED [other]: not reached: the walk stopped in field ForkDigest (directive 14: byte segment, the next IR field is ForkDigest (none)); field FinalizedEpoch: NOT COVERED [other]: not reached: the walk stopped in field ForkDigest (directive 14: byte segment, the next IR field is ForkDigest (none)); field HeadRoot: NOT COVERED [other]: not reached: the walk stopped in field ForkDigest (directive 14: byte segment, the next IR field is ForkDigest (none)); field HeadSlot: NOT COVERED [other]: not reached: the walk stopped in field ForkDigest (directive 14: byte segment, the next IR field is ForkDigest (none))",
+ "exit": 2
+}

@@ -1,0 +1,7 @@
+{
+ "type": "v1alpha1.BeaconBlocksByRangeRequest",
+ "mode": "gen6",
+ "generated": true,
+ "reason": "",
+ "exit": 0
+}

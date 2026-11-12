@@ -1,0 +1,7 @@
+{
+ "type": "v1alpha1.ENRForkID",
+ "mode": "gen5",
+ "accept_generated": false,
+ "reason": "NoMatch: field CurrentForkDigest: NOT COVERED [new field kind]: byte vector of size 4 (lemma sizes 32, 48, 96 only) (the walk stopped at directive 14: directive 14: byte segment, the next IR field is CurrentForkDigest (none)); field NextForkVersion: NOT COVERED [new field kind]: byte vector of size 4 (lemma sizes 32, 48, 96 only); field NextForkEpoch: NOT COVERED [other]: not reached: the walk stopped in field CurrentForkDigest (directive 14: byte segment, the next IR field is CurrentForkDigest (none))",
+ "exit": 2
+}
