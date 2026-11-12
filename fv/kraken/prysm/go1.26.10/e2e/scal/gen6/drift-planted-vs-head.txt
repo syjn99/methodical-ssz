@@ -1,0 +1,3 @@
+CHANGED	E2eScal.Gen6Enc.vb_g6e_fast_kind	type: 00000000146cc41f -> 0000000028208847
+ADDED	E2eScal.Gen6Enc.vb_g6e_planted	kind=theorem axioms=Classical.choice,Quot.sound,propext,sorryAx
+SUMMARY base=11011 head=11012 drift=2 allowed=0

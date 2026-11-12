@@ -412,3 +412,25 @@ g5-r1은 G5-L과 G5-G를 함께 리뷰했다. 기술 검사는 통과, 판정은
 공리 게이트 PASS, 선언 9758이다. 커밋된 기록과 바이트가 같아 다시 쓰지 않았다.
 g5c-r1 덤프 대비 선언 비교는 0 / 0 / 0이다. `regen_check.sh` 55/55 SAME이다. 목록 스크립트 출력은 커밋본과 바이트가 같다.
 `.lean`, 생성기, 검사기, 목록 스크립트, 고정 버전은 바꾸지 않았다. 원격에 쓰지 않았다. 기록: REPORT 11절, `scal/RESULT.json`의 `integration_int7`.
+
+2026-11-12 ENC2 준비(단위 E2-P, 새 Opus 세션, 리뷰 전): 증명은 없다.
+평면 13형 `MarshalSSZTo`의 링크 표 `e2e/enc2/link`를 더했다. 검사는 PASS, 묶음은 `c08ac537…`이다.
+코드 상수 13개는 `E2eScal/Enc2Code.lean`, 16형 조사는 `scal/enc2-survey.md`다. 기록: `scal/RESULT.json`의 `enc2-prep`.
+
+2026-11-12 ENC2 보조정리(단위 E2-L, 새 Fable 세션, 리뷰 전): 인코더 빠른 경로의 문장 종류 `encFastKindN`을 더했다.
+BeaconBlockHeader와 Eth1Data의 손 문장은 `rfl`로 같고, Checkpoint는 함의로 묶었다.
+새 단계 보조정리(`EncSteps.lean`)와 생성 양식 예제 여섯(`Enc2Ex*.lean`), 증인 `WitVbM`을 더했다.
+`runtime.moveSliceNoCapNoScan` 앞의 프레임 검사는 빠른 경로에서 분기하지 않음을 증명했다(`EncFrameTest.lean`). 계약은 없다.
+growslice 분기는 증명하지 않았다. 기존 `.lean`과 생성기는 바꾸지 않았다. 기록: `scal/RESULT.json`의 `enc2-lemmas`.
+
+2026-11-12 ENC2 생성기(단위 E2-G, 새 Opus 세션, 리뷰 전): `scalgen.py p2enc --gen6`을 더했다(`gen/scal/gen6enc.py`).
+평면 16형 모두의 인코더 빠른 경로 정리를 한 번 실행으로 생성했다. 16 모듈이 빌드되고 `kindcheck.py` 규칙 13을 통과한다.
+옛 생성 출력 55개는 바이트가 같다. 완전한 인코더 결과는 아니다. 기록: `scal/RESULT.json`의 `enc2-gen`.
+
+2026-11-12 ENC2 닫기(단위 E2-C, 새 Opus 세션, 리뷰 전): 평면 16형의 인코더 빠른 경로를 닫았다(전제 `len + SizeSSZ ≤ cap`).
+독립 손 문장 넷이 생성 정리와 `rfl`로 같다. 16형 모두 증인과 명세 따름 정리가 생성 정리에 묶였다.
+목록: 인코더 빠른 경로 완료 16 / 211, 완전한 인코더는 없다. 기록: `scal/RESULT.json`의 `enc2-close`.
+
+2026-11-12 단위 E2-C2(새 Opus 세션, 리뷰 전): 리뷰 e2c-r1이 REQUEST_CHANGES였다(M1, 기록만).
+목록 스크립트의 NOT proved 칸을 형별 규칙으로 바꿨다. BeaconBlockHeader 칸이 `cap < len + 112`인 길이 거부를 빠뜨렸었다.
+다섯 형의 칸이 바뀌었다. 대조 24/24, 두 실행이 같다. 새 선언은 0이다. 기록: `scal/RESULT.json`의 `enc2-close.fix_e2c2`.

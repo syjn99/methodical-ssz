@@ -122,6 +122,14 @@ Checks, per file (text only):
     RECOMPUTED from the `.S` and the IR named in the header (sha256 checked); 12d the accept proof chains every
     theorem; 12e the identity with a hand statement, if any, names no generated theorem). See the section `Rule 12`.
     A file with a GEN5 kind and no GEN5 block fails (rule 12: 0 GEN5 blocks). `--partial` never accepts a GEN5 file.
+13. GEN6 (unit E2-G, `scalgen.py p2enc --gen6`, encoder fast path): a file with `GEN6-JSON:` or an encoder kind
+    (encHeadKindN / encFieldKindN / encEpiKindN / encFastKindN) is checked by rule 13 only: 13a pins GEN6_PINS; 13b
+    structure (one layout def or a pinned hand layout; the exact theorem list, each with its kind; the code constant);
+    13c every kind line equals, as whole text, the line rendered from an OWN recomputation (this file's interpreter,
+    not the generator) of the fields, the layout and every boundary state from the `.S` and the IR named in GEN6-JSON
+    (sha256 checked), and C is bound to that `.S` by `include_x64_rt` in an imported code module; 13d the fast-path
+    proof chains every theorem once; 13e the identity `_stmt` names no generated theorem (implication lemma only from
+    GEN6_VIA). See the section `rule 13`. `--partial` never accepts a GEN6 file.
     The hand example modules `Gen5Ex*.lean` of the lemma unit are not generator output; they fail rule 12 (no GEN5
     block) and no recorded command runs `kindcheck.py` on them.
 
@@ -589,7 +597,16 @@ def main(files, partial=False):
         hand = pathlib.Path(f).resolve() in {(KR / x).resolve() for x in HAND_EXAMPLES}
         g5 = G5_MARK in text or "GEN5-JSON" in text or any(f"@E2eScal.{k} " in text for k in (
             "decHeadKindN", "decFieldKindN", "decEpiKindN", "decAcceptKindN", "decRejectKindN"))
-        if g5 and not partial:
+        g6 = "GEN6-JSON" in text or any(f"@E2eScal.{k} " in text for k in GEN6_KINDS)
+        if g6 and not partial:
+            # rule 13 (unit E2-G): a GEN6 file is checked by rule 13 only; a GEN5 / older kind in it fails 13c
+            errs, info6 = check_gen6(text, g6_blobs_tree(), gn)
+            if g5:
+                errs.append("rule 13: a GEN6 file with a GEN5 kind or block")
+            mains = [info6]
+        elif g6:
+            errs, mains = ["GEN6 output in --partial mode (a GEN6 file is never partial)"], []
+        elif g5 and not partial:
             # rule 12 (unit G5-G): the GEN4 part by rules 1-11, the GEN5 part by rule 12
             part4 = text.split(G5_MARK, 1)[0] if text.count(G5_MARK) == 1 else text
             errs, mains = check_text(part4, kb, kzb, g2b, gn, partial, g3b, g4b, rule11=not hand)
@@ -618,6 +635,8 @@ def main(files, partial=False):
         print(m, "blob", b, "pinned" if b == GEN3_PINS[m] else "NOT PINNED")
     for m, b in g4b.items():
         print(m, "blob", b, "pinned" if b == GEN4_PINS[m] else "NOT PINNED")
+    for m, b in g6_blobs_tree().items():
+        print(m, "blob", b, "pinned" if b == GEN6_PINS[m] else "NOT PINNED")
     if partial:
         return 1 if bad else 3
     return 1 if bad else 0
@@ -722,7 +741,11 @@ def selftest():
     n5, bad5 = g5_selftest()
     n_exit += n5
     bad += bad5
-    print("selftest", "PASS" if not bad else f"FAIL {bad}", f"({len(cases)} cases + {n_exit} exit-code / rule-12 cases)")
+    # unit E2-G: rule 13
+    n6, bad6 = g6_selftest()
+    n_exit += n6
+    bad += bad6
+    print("selftest", "PASS" if not bad else f"FAIL {bad}", f"({len(cases)} cases + {n_exit} exit-code / rule-12 / rule-13 cases)")
     return 1 if bad else 0
 
 
@@ -1747,6 +1770,711 @@ def g5_selftest():
         if E["L"] == G5_HAND["VoluntaryExit"][1]:
             bad.append(("g5_code_callee_mutant", "same layout"))
     except G5Mismatch:
+        pass
+    return n, bad
+
+
+# ---------------------------------------------------------------- rule 13: GEN6 (unit E2-G, `scalgen.py p2enc --gen6`)
+# A GEN6 file (header `GEN6-JSON:`, or any of the four encoder kinds) is checked by rule 13 ONLY (it has a `def` of its
+# layout, which rule 2 forbids for the older files):
+#  13a. The kind / lemma modules of the E2-L hand-over have the pinned blobs GEN6_PINS.
+#  13b. Structure: top-level lines as rule 2 plus exactly one `def <P>_layout : EncLayout where` (none when a hand
+#       layout of GEN6_HAND is named); no banned token (rule 3, comments and strings removed); the theorems are exactly
+#       P_head, P_f0 … P_f(n-1), P_epi, P_fast, each followed by its `_kind` (encHeadKindN / encFieldKindN /
+#       encEpiKindN / encFastKindN), and optionally P_stmt; every theorem's `hk` binder names the same code constant C;
+#       `set_option` only `maxHeartbeats 4000000` / `maxRecDepth 100000`; every kind proof is `  intro h; rfl`.
+#  13c. RECOMPUTATION (an own interpreter, it does not import the generator): from the `.S` and the IR named in
+#       GEN6-JSON (sha256 checked) this program recomputes the fields list, the layout (st, frame, gd, rt, nstk, lens,
+#       pre, exs, post) and every boundary state (pc, done, live registers, stack slots, existential sizes); every
+#       kind line must equal, as whole normalised text, the line rendered from the recomputation. A hand layout name
+#       (GEN6_HAND, in the pinned `EncTies.lean`) is accepted only if its def equals the recomputation in its own
+#       chunk order. C is bound to the `.S`: an imported code module of the file must define
+#       `def C : Program := include_x64_rt "../<S of GEN6-JSON>"`.
+#  13d. P_fast's proof uses P_head, every P_fi and P_epi exactly once.
+#  13e. P_stmt, if present, is `theorem P_stmt : type_of% (@X ‹Host›) :=` + `  [V ]P_fast` with X not generated and V
+#       empty or in GEN6_VIA, or `theorem P_stmt : X :=` + `  P_fast` (hand Prop).
+# Limits: the kind fixes the statement only up to what the kind reads (E2-L: `hcap63` is a fixed premise; an extra
+# chunk in L.pre would be a stronger premise, and the recomputation would reject it); that the code walk is the
+# function's whole fast path is the generator's claim, checked by the proofs, not here.
+import hashlib as _g6hash
+import json as _g6json
+
+GEN6_PINS = {
+    "KindEncN.lean": "c4629d67d6dc70f8ceb0ae9021145efa168fd931",
+    "EncTies.lean": "fe03479343fef60edb004e556ef4e7d9d7f85e9f",
+    "EncSteps.lean": "8e2cfac273647c4f0f32cb3cdcbbf978e76b85cf",
+    "EncFieldN.lean": "6d637fed87a1834c19c5be08f0379a30a0b2787c",
+    "EncFrameTest.lean": "7f6da38589bcf8c6cf2f01919d2e112f4a7a2821",
+}
+GEN6_KINDS = ("encHeadKindN", "encFieldKindN", "encEpiKindN", "encFastKindN")
+GEN6_HAND = ("E2eScal.layEncBh", "E2eScal.layEncE1", "E2eScal.layEncCp")
+GEN6_VIA = ("E2eScal.cp_marshal_of_kind",)
+G6_R64 = "rax rbx rcx rdx rsi rdi rsp rbp r8 r9 r10 r11 r12 r13 r14 r15".split()
+G6_R32 = dict(eax="rax", ebx="rbx", ecx="rcx", edx="rdx", esi="rsi", edi="rdi")
+G6_LAYF = ("st", "frame", "gd", "rt", "nstk", "lens", "pre", "exs", "post")
+
+
+class G6Mismatch(Exception):
+    pass
+
+
+def g6_blobs_tree():
+    return {m: (blob(KIND.parent / m) if (KIND.parent / m).exists() else "missing") for m in GEN6_PINS}
+
+
+def g6_ir(ir_text, tname):
+    """(fields [('u'|'b', size)], go offsets, ssz size) from the Go field list of the IR (exported fields)."""
+    pkg, name = tname.rsplit(".", 1)
+    hits = []
+    for c in _g6json.loads(ir_text)["configs"]:
+        for t in c.get("types", []):
+            if t.get("name") == name and t.get("package", "").endswith("/" + pkg):
+                hits.append(t)
+    if len(hits) != 1:
+        raise G6Mismatch(f"{len(hits)} IR entries for {tname}")
+    fs, goffs = [], []
+    for f in hits[0]["go_fields"]:
+        if not f["exported"]:
+            continue
+        m = re.search(r'ssz-size:"(\d+)"', f["tag"])
+        if m and f["type"] == "[]byte":
+            fs.append(("b", int(m.group(1))))
+        elif not m and f["size_gc_amd64"] == 8:
+            fs.append(("u", 8))
+        else:
+            raise G6Mismatch(f"field {f['name']}: not a byte vector or an 8-byte scalar")
+        goffs.append(f["offset_gc_amd64"])
+    want = 8 if goffs and goffs[0] == 8 else 0
+    for (k, n), g in zip(fs, goffs):
+        if g != want:
+            raise G6Mismatch(f"Go offset {g}, running sum {want}")
+        want += 24 if k == "b" else 8
+    return fs, goffs, sum(n for _, n in fs)
+
+
+def g6_regs_of(text):
+    """64-bit register names in an operand text (32-bit names mapped)."""
+    out = []
+    for r in re.findall(r"%([a-z0-9]+)", text):
+        r = G6_R32.get(r, r)
+        if r in G6_R64:
+            out.append(r)
+    return out
+
+
+def g6_usedef(d):
+    """(uses, defs, end) of one directive by operand position (AT&T: `op src, dst`)."""
+    if d.endswith(":") or d == "nop":
+        return [], [], False
+    if d.startswith("callq "):
+        return ["rax", "rbx", "rcx"], [], True
+    if d == "pop %rbp":
+        return ["rax", "rbx", "rcx", "rdi", "rsi"], [], True
+    op, _, args = d.partition(" ")
+    if op.startswith("j"):
+        return [], [], False
+    # split at the top-level comma
+    depth, cut = 0, -1
+    for i, ch in enumerate(args):
+        depth += ch == "("
+        depth -= ch == ")"
+        if ch == "," and depth == 0:
+            cut = i
+    src, dst = (args[:cut], args[cut + 1:]) if cut >= 0 else (args, "")
+    sr, dr = g6_regs_of(src), g6_regs_of(dst)
+    dst_is_reg = dst.startswith("%")
+    if op == "xor" and src == dst:
+        return [], dr, False
+    if op in ("mov", "lea") and dst_is_reg:
+        return sr, dr, False
+    if op in ("add", "sub") and dst_is_reg:
+        return sr + dr, dr, False
+    if op in ("mov", "cmp", "cmpq", "movups"):
+        return sr + dr, [], False
+    raise G6Mismatch(f"no use / def rule for `{d}`")
+
+
+def g6_expect(dirs, fs, goffs, size, hand_pre=None):
+    """Own interpreter of the fast path. Returns dict(L={field: text}, fields=text, states=[EncSt text], pcs=[...])."""
+    lab = {d[:-1]: i for i, d in enumerate(dirs) if d.endswith(":")}
+    st = bool(goffs) and goffs[0] == 8
+    soffs = [sum(n for _, n in fs[:i]) for i in range(len(fs))]
+    if dirs[2] == "cmp 0x10(%r14),%rsp":
+        gd, j = 0, 3
+    else:
+        m = re.fullmatch(r"lea -0x([0-9a-f]+)\(%rsp\),%r12", dirs[2])
+        if not m or dirs[3] != "cmp 0x10(%r14),%r12":
+            raise G6Mismatch("prologue")
+        gd, j = int(m.group(1), 16), 4
+    if not (dirs[j].startswith("jbe ") and dirs[j + 1] == "push %rbp" and dirs[j + 2] == "mov %rsp,%rbp"):
+        raise G6Mismatch("prologue")
+    a = dirs[j + 3]
+    m1, m2 = re.fullmatch(r"sub \$0x([0-9a-f]+),%rsp", a), re.fullmatch(r"add \$-0x([0-9a-f]+),%rsp", a)
+    if not (m1 or m2):
+        raise G6Mismatch("frame")
+    F = int((m1 or m2).group(1), 16)
+    SP = -(F + 8)
+    RS = -(F + 16)
+    pc = j + 4
+    R = {"rax": "rcv", "rbx": "ptr", "rcx": ("len", 0), "rdi": "cap", "rsp": ("stk", SP)}
+    # stack: off -> [size, value]; values: "rbp", ("e", reg), ("len", n), ("fld", i), ("z", seq, part), ("ret", n)
+    M = {-8: [8, "rbp"]}
+    first = [-8]
+    firstsz = {-8: 8}
+    seq = [0]
+    scratch = ["scr"]   # "scr" (before any call) or ("z", seq, "lo")
+    done = [0]
+    states = []
+    regsets = []
+
+    def disp(x):
+        return int(x, 16) if x else 0
+
+    def addr(base, dsp):
+        v = R.get(base)
+        if isinstance(v, tuple) and v[0] == "stk":
+            return ("stk", v[1] + dsp)
+        if v == "rcv":
+            return ("rcv", dsp)
+        raise G6Mismatch(f"address base {base}={v}")
+
+    def region(off, n):
+        for o in list(M):
+            if o <= off and off + n <= o + M[o][0]:
+                return o
+            if not (off + n <= o or o + M[o][0] <= off):
+                raise G6Mismatch("overlap")
+        M[off] = [n, "orig"]
+        first.append(off)
+        firstsz[off] = n
+        return off
+
+    def live(p):
+        need, wr = [], set()
+        for _ in range(3000):
+            d = dirs[p]
+            u, df, end = g6_usedef(d)
+            for r in u:
+                if r not in wr and r not in need and r not in ("rsp", "rbp", "r14"):
+                    need.append(r)
+            if end:
+                return [r for r in G6_R64 if r in need]
+            wr.update(df)
+            if d.startswith("jae ") or d.startswith("jmp "):
+                p = lab[d.split()[1]]
+            else:
+                p += 1
+        raise G6Mismatch("liveness")
+
+    def snap(p):
+        regs = []
+        for r in live(p):
+            v = R.get(r)
+            if v in ("rcv", "ptr", "cap"):
+                regs.append((r, "." + v))
+            elif isinstance(v, tuple) and v[0] == "len":
+                regs.append((r, f".len {v[1]}"))
+            else:
+                raise G6Mismatch(f"live {r}={v}")
+        return p, done[0], regs, {o: list(v) for o, v in M.items()}, scratch[0]
+
+    # head spills
+    while True:
+        m = re.fullmatch(r"mov %(r\w+),(0x[0-9a-f]+)\(%rsp\)", dirs[pc])
+        if not (m and int(m.group(2), 16) > F + 8):
+            break
+        off = SP + int(m.group(2), 16)
+        region(off, 8)
+        v = R[m.group(1)]
+        M[off][1] = ("e", {"rcv": "rax", "ptr": "rbx", "cap": "rdi"}[v]) if v in ("rcv", "ptr", "cap") else \
+            (("e", "rcx") if v == ("len", 0) else None)
+        if M[off][1] is None:
+            raise G6Mismatch("spill value")
+        pc += 1
+    states.append(snap(pc))
+    for _ in range(3000):
+        d = dirs[pc]
+        if d == "nop" or d.endswith(":"):
+            pc += 1
+            continue
+        if d == "pop %rbp":
+            break
+        m = re.fullmatch(r"(mov|lea) (-?0x[0-9a-f]+)?\(%(\w+)\),%(\w+)", d)
+        if m:
+            op, dsp, b, dst = m.group(1), disp(m.group(2)), m.group(3), m.group(4)
+            if op == "lea":
+                v = R.get(b)
+                R[dst] = ("len", v[1] + dsp) if isinstance(v, tuple) and v[0] == "len" else \
+                    ("stk", v[1] + dsp) if isinstance(v, tuple) and v[0] == "stk" else None
+                if R[dst] is None:
+                    raise G6Mismatch("lea")
+            else:
+                ad = addr(b, dsp)
+                if ad[0] == "rcv":
+                    i = goffs.index(ad[1])
+                    R[dst] = ("fv", i) if fs[i][0] == "u" else ("fp", i)
+                else:
+                    sv = M[ad[1]][1]
+                    R[dst] = {"rax": "rcv", "rbx": "ptr", "rdi": "cap", "rcx": ("len", 0)}[sv[1]] if sv[0] == "e" else \
+                        ("len", sv[1]) if sv[0] == "len" else ("fv", sv[1]) if sv[0] == "fld" else None
+                    if R[dst] is None:
+                        raise G6Mismatch("stack load")
+            pc += 1
+            continue
+        m = re.fullmatch(r"mov %(\w+),(-?0x[0-9a-f]+)?\(%(\w+)\)", d)
+        if m:
+            v, ad = R[m.group(1)], addr(m.group(3), disp(m.group(2)))
+            off = ad[1]
+            if ad[0] != "stk":
+                raise G6Mismatch("store base")
+            if off not in M or M[off][0] != 8:
+                o = region(off, 8)
+                if o != off:   # 8-byte store into the low half of a 16-byte zeroed chunk: split in place
+                    raise G6Mismatch("store inside a chunk not at its start")
+                if M[off][0] == 16:
+                    z = M[off][1]
+                    M[off] = [8, ("z", z[1], "lo")]
+                    M[off + 8] = [8, ("z", z[1], "hi")]
+            M[off][1] = ("e", {"rcv": "rax", "ptr": "rbx", "cap": "rdi"}[v]) if v in ("rcv", "ptr", "cap") else \
+                ("e", "rcx") if v == ("len", 0) else ("len", v[1]) if v[0] == "len" else ("fld", v[1]) if v[0] == "fv" else None
+            if M[off][1] is None:
+                raise G6Mismatch("stored value")
+            pc += 1
+            continue
+        m = re.fullmatch(r"movups %xmm15,(-?0x[0-9a-f]+)?\(%(\w+)\)", d)
+        if m:
+            off = addr(m.group(2), disp(m.group(1)))[1]
+            region(off, 16)
+            seq[0] += 1
+            M[off][1] = ("z", seq[0], "full")
+            pc += 1
+            continue
+        m = re.fullmatch(r"mov %(r\w+),%(r\w+)", d)
+        if m:
+            R[m.group(2)] = R[m.group(1)]
+            pc += 1
+            continue
+        m = re.fullmatch(r"mov \$0x([0-9a-f]+),%(e\w+)", d)
+        if m:
+            R[G6_R32[m.group(2)]] = ("imm", int(m.group(1), 16))
+            pc += 1
+            continue
+        m = re.fullmatch(r"xor %(e\w+),%\1", d)
+        if m:
+            R[G6_R32[m.group(1)]] = ("imm", 0)
+            pc += 1
+            continue
+        m = re.fullmatch(r"(add|sub) \$(-?0x[0-9a-f]+),%(\w+)", d)
+        if m:
+            v, k = R[m.group(3)], disp(m.group(2)) * (1 if m.group(1) == "add" else -1)
+            R[m.group(3)] = (v[0], v[1] + k)
+            pc += 1
+            continue
+        m = re.fullmatch(r"(?:lea \(%(\w+),%(\w+),1\),%(\w+)|add %(\w+),%(\w+))", d)
+        if m:
+            x, y, dst = (m.group(1), m.group(2), m.group(3)) if m.group(3) else (m.group(4), m.group(5), m.group(5))
+            vs = [R[x], R[y]]
+            ln = [v for v in vs if isinstance(v, tuple) and v[0] == "len"]
+            if not ("ptr" in vs and len(ln) == 1):
+                raise G6Mismatch("dst address")
+            R[dst] = ("dst", ln[0][1])
+            pc += 1
+            continue
+        m = re.fullmatch(r"sub %rsp,%(\w+)", d)
+        if m:
+            v = R[m.group(1)]
+            R[m.group(1)] = ("pfr",) if v == "ptr" else ("imm", v[1] - SP)
+            pc += 1
+            continue
+        m = re.fullmatch(r"mov %(\w+),(-?0x[0-9a-f]+)?\(%(\w+),%(\w+),1\)", d)
+        if m:
+            i = done[0]
+            vs = [R[m.group(3)], R[m.group(4)]]
+            ln = [v for v in vs if isinstance(v, tuple) and v[0] == "len"]
+            if not ("ptr" in vs and ln and ln[0][1] + disp(m.group(2)) == soffs[i] and R[m.group(1)] == ("fv", i)):
+                raise G6Mismatch("output store")
+            done[0] += 1
+            pc += 1
+            states.append(snap(pc))
+            continue
+        m = re.fullmatch(r"cmpq \$0x[0-9a-f]+,(-?0x[0-9a-f]+)?\(%\w+\)", d)
+        if m:
+            q = pc + 1
+            while dirs[q] == "nop":
+                q += 1
+            if not dirs[q].startswith("jne "):
+                raise G6Mismatch("length test")
+            pc = q + 1
+            continue
+        m = re.fullmatch(r"cmp %(\w+),%(\w+)", d)
+        if m:
+            q = pc + 1
+            while dirs[q] == "nop":
+                q += 1
+            jop, tgt = dirs[q].split()
+            if jop == "jae":
+                pc = lab[tgt]
+            elif jop == "jb":
+                pc = q + 1
+            else:
+                raise G6Mismatch("compare")
+            continue
+        m = re.fullmatch(r"jmp (\S+)", d)
+        if m:
+            pc = lab[m.group(1)]
+            continue
+        if d == "callq runtime.memmove":
+            i = done[0]
+            if not (R.get("rax") == ("dst", soffs[i]) and R.get("rbx") == ("fp", i) and R.get("rcx") == ("imm", fs[i][1])):
+                raise G6Mismatch("memmove arguments")
+            region(RS, 8)
+            M[RS][1] = ("ret", pc + 1)
+            if scratch[0] == "scr":
+                seq[0] += 1
+                scratch[0] = ("z", seq[0], "lo")
+            R.clear()
+            R["rsp"] = ("stk", SP)
+            done[0] += 1
+            pc += 1
+            states.append(snap(pc))
+            continue
+        raise G6Mismatch(f"directive {pc} `{d}`")
+    else:
+        raise G6Mismatch("no return")
+    if done[0] != len(fs):
+        raise G6Mismatch("fields")
+    rt = RS in M
+    if hand_pre is not None:
+        mem = [o for o, _ in hand_pre]
+        if sorted(mem) != sorted(first) or sorted(b for _, b in hand_pre) != list(range(len(mem))):
+            raise G6Mismatch("hand layout chunks differ from the recomputed regions")
+        bindex = dict(hand_pre)
+    else:
+        mem = [-8] + sorted(o for o in first if o > 0) + [o for o in first if o < 0 and o not in (-8, RS)] + \
+            ([RS] if rt else [])
+        bindex = {o: i for i, o in enumerate(mem)}
+
+    def exnum(Ms, scr):
+        keys = []
+        for o, (n, v) in Ms.items():
+            if isinstance(v, tuple) and v[0] == "z":
+                keys.append((v[1], o, 16 if v[2] == "full" else 8))
+        if isinstance(scr, tuple):
+            keys.append((scr[1], 10 ** 9, "S"))
+        keys.sort()
+        return {(k[0], k[1]): i for i, k in enumerate(keys)}, [k[2] for k in keys]
+
+    def vk(o, v, num):
+        if v == "orig":
+            return f".orig {bindex[o]}"
+        if v == "rbp":
+            return ".reg .rbp"
+        if v[0] == "e":
+            return f".reg .{v[1]}"
+        if v[0] in ("len", "fld", "ret"):
+            return f".{v[0]} {v[1]}"
+        if v[0] == "z":
+            return f".ex {num[(v[1], o)]}"
+        raise G6Mismatch(f"slot value {v}")
+
+    def slots(Ms, scr):
+        num, ex = exnum(Ms, scr)
+        out = []
+        for o in mem:
+            if o not in Ms:
+                out.append(f".at (.{'up' if o > 0 else 'dn'} {abs(o)}) (.orig {bindex[o]})")
+                continue
+            parts = [o] if Ms[o][0] == firstsz[o] else [o, o + 8]
+            for p in parts:
+                out.append(f".at (.{'up' if p > 0 else 'dn'} {abs(p)}) ({vk(p, Ms[p][1], num)})")
+        if rt:
+            out.append(".lo .scr" if scr == "scr" else f".lo (.ex {num[(scr[1], 10 ** 9)]})")
+        return "[" + ", ".join(out) + "]", "[" + ", ".join(".lo" if e == "S" else f".n {e}" for e in ex) + "]"
+
+    def norm_pre():
+        out = [f".at (.{'up' if o > 0 else 'dn'} {abs(o)}) (.orig {bindex[o]})" for o in mem]
+        return "[" + ", ".join(out + ([".lo .scr"] if rt else [])) + "]"
+    post, exs = slots(M, scratch[0])
+    L = dict(st=str(st).lower(), frame=str(F), gd=str(gd), rt=str(rt).lower(), nstk=str(len(mem)),
+             lens="[" + ", ".join(f"({i}, {firstsz[o]})" for i, o in sorted((bindex[o], o) for o in mem)) + "]",
+             pre=norm_pre(), exs=exs, post=post)
+    sts = []
+    for p, dn, regs, Ms, scr in states:
+        sl, ex = slots(Ms, scr)
+        rg = "[" + ", ".join(f"(.{r}, {k})" for r, k in regs) + "]"
+        sts.append(f"⟨{p}, {dn}, {rg}, {sl}, {ex}⟩")
+    fields = "[" + ", ".join(".u64" if k == "u" else f".bytes {n}" for k, n in fs) + "]"
+    return dict(L=L, fields=fields, states=sts, pcs=[x[0] for x in states], size=size)
+
+
+def g6_layout_def(text, short):
+    """{field: normalised value} of `def <short> : EncLayout where` in a Lean text, or None."""
+    m = re.search(rf"(?m)^def {re.escape(short)} : EncLayout where\n((?:  .*\n?)+)", text)
+    if not m:
+        return None
+    flds, cur = {}, None
+    for l in m.group(1).split("\n"):
+        mm = re.match(r"  (\w+) := (.*)", l)
+        if mm:
+            cur = mm.group(1)
+            flds[cur] = mm.group(2)
+        elif l.startswith("    ") and cur:
+            flds[cur] += " " + l.strip()
+    return {k: " ".join(v.split()) for k, v in flds.items()}
+
+
+def g6_norm(s):
+    return " ".join(s.split())
+
+
+def check_gen6(text, blobs=None, gnames=frozenset(), kr=None):
+    """Rule 13. Returns (errors, info)."""
+    kr = kr or KR
+    errs, info = [], "gen6"
+    blobs = blobs if blobs is not None else g6_blobs_tree()
+    for m, b in GEN6_PINS.items():
+        if blobs.get(m) != b:
+            errs.append(f"rule 13a: {m} blob {blobs.get(m)} != pinned {b}")
+    lines = text.split("\n")
+    gj = [l for l in lines if l.startswith("GEN6-JSON: ")]
+    try:
+        if len(gj) != 1:
+            raise ValueError(f"{len(gj)} GEN6-JSON lines")
+        J = _g6json.loads(gj[0][len("GEN6-JSON: "):])
+        P, C, S, IR, TY, LAY = (J["prefix"], J["const"], J["S"], J["ir"], J["ir_type"], J["layout"])
+        if not (re.fullmatch(r"[a-z][a-z0-9_]*", P) and re.fullmatch(r"[A-Za-z][A-Za-z0-9]*", C)):
+            raise ValueError("prefix / const")
+    except Exception as e:
+        return errs + [f"rule 13: no single valid GEN6-JSON line ({e})"], info
+    info = f"{P}_fast"
+    # 13b structure
+    body = strip_strings(strip_comments(text))
+    if BANNED.search(body):
+        errs.append("rule 13b: banned token")
+    hand = LAY in GEN6_HAND
+    if not hand and LAY != f"E2eScal.Gen6Enc.{P}_layout":
+        errs.append(f"rule 13b: layout name {LAY} is neither a pinned hand layout nor {P}_layout of this file")
+    ndef = 0
+    in_def = False
+    for l in body.split("\n"):
+        if re.match(r"^def ", l):
+            ndef += 1
+            in_def = True
+            if l != f"def {P}_layout : EncLayout where" or hand:
+                errs.append(f"rule 13b: top-level `{l[:60]}`")
+            continue
+        if in_def and l.startswith("  "):
+            if not re.match(r"  (st|frame|gd|rt|nstk|lens|pre|exs|post) := |    \S", l):
+                errs.append(f"rule 13b: layout line `{l[:60]}`")
+            continue
+        in_def = False
+        if l and not l[0].isspace():
+            if not TOP_OK.match(l):
+                errs.append(f"rule 13b: top-level `{l[:60]}`")
+            if l.startswith("set_option ") and l not in ("set_option maxHeartbeats 4000000 in",
+                                                       "set_option maxRecDepth 100000 in"):
+                errs.append(f"rule 13b: `{l}`")
+            if l.startswith("namespace ") and l != "namespace E2eScal.Gen6Enc":
+                errs.append(f"rule 13b: `{l}`")
+    if ndef != (0 if hand else 1):
+        errs.append(f"rule 13b: {ndef} layout defs (expected {0 if hand else 1})")
+    thms = [m.group(1) for m in re.finditer(r"(?m)^theorem (\S+)", body)]
+    n = None
+    try:
+        tsha = lambda p: _g6hash.sha256((kr / p).read_bytes()).hexdigest()
+        if tsha(S) != J["S_sha256"] or tsha(IR) != J["ir_sha256"]:
+            raise G6Mismatch("sha256 of the .S or the IR differs from GEN6-JSON")
+        fs, goffs, size = g6_ir((kr / IR).read_text(), TY)
+        n = len(fs)
+        hand_pre, handdef = None, None
+        if hand:
+            ht = (kr / "lean/E2eScal/EncTies.lean").read_text()
+            handdef = g6_layout_def(ht, LAY.split(".")[-1])
+            if handdef is None:
+                raise G6Mismatch(f"hand layout {LAY} not in EncTies.lean")
+            hand_pre = [(int(k) * (1 if d == "up" else -1), int(i)) for d, k, i in
+                        re.findall(r"\.at \(\.(up|dn) (\d+)\) \(\.orig (\d+)\)", handdef["pre"])]
+        dirs = [l.strip() for l in (kr / S).read_text().split("\n") if l.strip()]
+        X = g6_expect(dirs, fs, goffs, size, hand_pre)
+    except Exception as e:
+        return errs + [f"rule 13c: recomputation refused: {type(e).__name__}: {e}"], info
+    want = [f"{P}_head", f"{P}_head_kind"] + [x for i in range(n) for x in (f"{P}_f{i}", f"{P}_f{i}_kind")] + \
+        [f"{P}_epi", f"{P}_epi_kind", f"{P}_fast", f"{P}_fast_kind"]
+    if thms not in (want, want + [f"{P}_stmt"]):
+        return errs + [f"rule 13b: theorems {thms}, expected {want} [+ {P}_stmt]"], info
+    # 13c: layout
+    fileL = handdef if hand else g6_layout_def(body, f"{P}_layout")
+    if fileL is None:
+        errs.append("rule 13c: no layout def")
+    else:
+        for k in G6_LAYF:
+            if fileL.get(k) != X["L"][k]:
+                errs.append(f"rule 13c: layout {k} = {fileL.get(k)!r}, recomputed {X['L'][k]!r}")
+        if set(fileL) != set(G6_LAYF):
+            errs.append(f"rule 13c: layout fields {sorted(fileL)}")
+    # 13b / 13c: kind lines, as whole normalised text
+    starts = {m.group(1): m.start() for m in re.finditer(r"(?m)^theorem (\S+)", body)}
+    order = sorted(starts.items(), key=lambda kv: kv[1])
+    chunk = {}
+    for i, (nm, st_) in enumerate(order):
+        chunk[nm] = body[st_: order[i + 1][1] if i + 1 < len(order) else len(body)]
+    S0 = X["states"]
+    if len(S0) != n + 1:
+        errs.append(f"rule 13c: {len(S0)} boundary states for {n} fields")
+        return errs, info
+    exp = {f"{P}_head": ("encHeadKindN", " " + S0[0])}
+    for i in range(n):
+        exp[f"{P}_f{i}"] = ("encFieldKindN", " " + S0[i] + " " + S0[i + 1])
+    exp[f"{P}_epi"] = ("encEpiKindN", " " + S0[n])
+    exp[f"{P}_fast"] = ("encFastKindN", "")
+    for t, (kind, sts) in exp.items():
+        k = chunk[f"{t}_kind"]
+        hdr, sep, rest = k.partition(":= by\n")
+        line = (f"theorem {t}_kind : ∀ (h : Host), type_of% (@{t} h) = @E2eScal.{kind} h {C} {LAY} {X['fields']}{sts}")
+        rl = rest.split("\n")
+        tail_ok = all(x.strip() in ("", "end E2eScal.Gen6Enc") or x.startswith("set_option ") for x in rl[1:])
+        if g6_norm(hdr) != g6_norm(line) or rl[0] != "  intro h; rfl" or not tail_ok or not sep:
+            errs.append(f"rule 13c: {t}_kind differs from the recomputation\n      file:       {g6_norm(hdr)}\n"
+                        f"      recomputed: {g6_norm(line)}")
+        hk = HK.search(chunk[t].split("\n")[0])
+        if not hk or hk.group(1) != C:
+            errs.append(f"rule 13b: {t}: `hk` binder does not name {C}")
+        if t != f"{P}_fast" and not chunk[t].startswith(f"theorem {t} : ∀ (k : Nat) (hk : {C}.IsInfixAt Host.prog k)"):
+            errs.append(f"rule 13b: {t}: first binder line")
+    # 13c: C is the code of the .S
+    bound = False
+    for imp in re.findall(r"(?m)^import (\S+)$", text):
+        f = kr / "lean" / (imp.replace(".", "/") + ".lean")
+        if f.exists() and f'def {C} : Program := include_x64_rt "../{S}"' in f.read_text():
+            bound = True
+    if not bound:
+        errs.append(f"rule 13c: no imported code module defines `{C}` from `{S}`")
+    # 13d: chaining
+    fp = chunk[f"{P}_fast"]
+    for t in [f"({P}_head ", *[f"({P}_f{i} " for i in range(n)], f"exact {P}_epi "]:
+        if fp.count(t) != 1:
+            errs.append(f"rule 13d: the fast-path proof does not use `{t.strip('( ')}` exactly once")
+    # 13e: identity
+    if f"{P}_stmt" in chunk:
+        c = chunk[f"{P}_stmt"].rstrip()
+        if c.endswith("\nend E2eScal.Gen6Enc"):
+            c = c[: -len("\nend E2eScal.Gen6Enc")].rstrip()
+        m = re.fullmatch(rf"theorem {P}_stmt : type_of% \(@(\S+) ‹Host›\) :=\n  (?:(\S+) )?{P}_fast", c) or \
+            re.fullmatch(rf"theorem {P}_stmt : (\S+) :=\n  {P}_fast()", c)
+        if not m:
+            errs.append(f"rule 13e: {P}_stmt: not the identity form")
+        else:
+            x, via = m.group(1), m.group(2)
+            if GENNS.match(x) or x.split(".")[-1] in gnames or x.startswith("E2eScal.Gen6"):
+                errs.append(f"rule 13e: {x} is a generated name")
+            if via and via not in GEN6_VIA:
+                errs.append(f"rule 13e: implication lemma {via} not in GEN6_VIA")
+        info += f", identity {P}_stmt"
+    return errs, info
+
+
+# ---- rule 13 selftest controls (unit E2-G): mutants of the committed raw GEN6 outputs (a missing file is a FAIL)
+G6_SELFTEST = {"vb": "lean/E2eScal/Gen6VbEnc.lean", "cp": "lean/E2eScal/Gen6CpEnc.lean",
+               "hs": "lean/E2eScal/Gen6HsEnc.lean", "bh": "lean/E2eScal/Gen6BhEnc.lean"}
+# the lemma unit's own layouts (`Enc2Ex*.lean`, scratch emitter of E2-L): the recomputation must give them too
+G6_L_LAYOUTS = {"ValidatorBalance": ("lean/E2eScal/Enc2ExVb.lean", "layEncVb"),
+                "DepositMessage": ("lean/E2eScal/Enc2ExDm.lean", "layEncDm"),
+                "HistoricalSummary": ("lean/E2eScal/Enc2ExHs.lean", "layEncHs")}
+
+
+def g6_cases(T):
+    """(name, text, blobs, ok) on the committed files T = {key: text}."""
+    V, Cp, H, B = T["vb"], T["cp"], T["hs"], T["bh"]
+    pins = dict(GEN6_PINS)
+    badpin = dict(pins, **{"EncSteps.lean": "0" * 40})
+
+    def r(t, a, b, n=1):
+        if t.count(a) < n:
+            raise G6Mismatch(f"selftest setup: `{a[:50]}` not found")
+        return t.replace(a, b, n)
+    sha = V.split('"S_sha256": "')[1][:64]
+    return [
+        ("g6_good_vb", V, pins, True), ("g6_good_cp_hand_via", Cp, pins, True), ("g6_good_hs_frametest", H, pins, True),
+        ("g6_good_bh_hand", B, pins, True),
+        ("g6_pin_changed", V, badpin, False),
+        ("g6_layout_frame", r(V, "  frame := 104\n", "  frame := 112\n"), pins, False),
+        ("g6_layout_gd", r(V, "  gd := 0\n", "  gd := 8\n"), pins, False),
+        ("g6_layout_pre_order", r(V, ".at (.dn 40) (.orig 2), .at (.dn 24) (.orig 3)]\n  exs",
+                                  ".at (.dn 24) (.orig 3), .at (.dn 40) (.orig 2)]\n  exs"), pins, False),
+        ("g6_layout_exs", r(V, "  exs := [.n 8, .n 16]\n", "  exs := [.n 16, .n 8]\n"), pins, False),
+        ("g6_layout_post_fld", r(V, "(.fld 0), .at (.dn 32) (.ex 0), .at (.dn 24) (.ex 1)]\n\n",
+                                 "(.fld 1), .at (.dn 32) (.ex 0), .at (.dn 24) (.ex 1)]\n\n"), pins, False),
+        ("g6_layout_lens", r(V, "(2, 16), (3, 16)]", "(2, 8), (3, 16)]"), pins, False),
+        ("g6_fields_param", r(V, "vb_g6e_f0 h)\n    = @E2eScal.encFieldKindN h VbMarshal E2eScal.Gen6Enc.vb_g6e_layout [.u64, .u64]",
+                              "vb_g6e_f0 h)\n    = @E2eScal.encFieldKindN h VbMarshal E2eScal.Gen6Enc.vb_g6e_layout [.u64, .bytes 32]"),
+         pins, False),
+        ("g6_boundary_pc", r(V, "[.u64, .u64]\n    ⟨8, 0,", "[.u64, .u64]\n    ⟨9, 0,"), pins, False),
+        ("g6_boundary_done", r(V, "[.u64, .u64]\n    ⟨8, 0,", "[.u64, .u64]\n    ⟨8, 1,"), pins, False),
+        ("g6_boundary_reg_dropped", r(V, "[.u64, .u64]\n    ⟨8, 0, [(.rax, .rcv), ", "[.u64, .u64]\n    ⟨8, 0, ["), pins, False),
+        ("g6_kind_name_swapped", r(V, "= @E2eScal.encEpiKindN h", "= @E2eScal.encHeadKindN h"), pins, False),
+        ("g6_kind_line_missing", r(V, "theorem vb_g6e_f1_kind :", "theorem vb_g6e_f1_kinx :"), pins, False),
+        ("g6_kind_const", r(V, "= @E2eScal.encFastKindN h VbMarshal", "= @E2eScal.encFastKindN h SaMarshal"), pins, False),
+        ("g6_kind_proof", r(V, "  intro h; rfl\n", "  intro h; exact rfl\n"), pins, False),
+        ("g6_hk_const", r(V, "theorem vb_g6e_f1 : ∀ (k : Nat) (hk : VbMarshal.IsInfixAt",
+                          "theorem vb_g6e_f1 : ∀ (k : Nat) (hk : SaMarshal.IsInfixAt"), pins, False),
+        ("g6_extra_def", r(V, "namespace E2eScal.Gen6Enc\n", "namespace E2eScal.Gen6Enc\n\ndef foo : Nat := 1\n"), pins, False),
+        ("g6_sorry", r(V, "  apply Eventually.done\n", "  sorry\n"), pins, False),
+        ("g6_heartbeats", r(V, "set_option maxHeartbeats 4000000 in", "set_option maxHeartbeats 8000000 in"), pins, False),
+        ("g6_fast_skips_f0", r(V, "(vb_g6e_f0 k hk", "(vb_g6e_f1 k hk"), pins, False),
+        ("g6_extra_theorem", r(V, "\nend E2eScal.Gen6Enc", "\ntheorem vb_extra : True := trivial\n\nend E2eScal.Gen6Enc"),
+         pins, False),
+        ("g6_json_sha", r(V, sha, ("0" if sha[0] != "0" else "1") + sha[1:]), pins, False),
+        ("g6_json_missing", r(V, "GEN6-JSON: ", "GEN6-JSOX: "), pins, False),
+        ("g6_layout_named_hand", V.replace("E2eScal.Gen6Enc.vb_g6e_layout", "E2eScal.layEncBh"), pins, False),
+        ("g6_const_unbound", V.replace("VbMarshal", "SaMarshal"), pins, False),
+        ("g6_stmt_generated", r(Cp, "type_of% (@E2e.cp_e2e_marshal_main ‹Host›)",
+                                "type_of% (@E2eScal.Gen6Enc.cp_g6e_fast ‹Host›)"), pins, False),
+        ("g6_stmt_via_unknown", r(Cp, "  E2eScal.cp_marshal_of_kind cp_g6e_fast", "  E2eScal.foo cp_g6e_fast"), pins, False),
+        ("g6_hand_with_def", r(B, "namespace E2eScal.Gen6Enc\n", "namespace E2eScal.Gen6Enc\n\ndef bh_g6e_layout : EncLayout where\n  st := true\n"),
+         pins, False),
+        ("g6_hs_frame_state", r(H, "  frame := 80\n", "  frame := 88\n"), pins, False),
+        ("g6_bh_state_slot", r(B, "(.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 16) (.orig 3)",
+                               "(.reg .rax), .at (.up 16) (.reg .rbx), .at (.dn 16) (.reg .rbx)"), pins, False),
+    ]
+
+
+def g6_selftest():
+    """Rule 13 controls + the recomputation against the hand layouts of EncTies and the E2-L example layouts.
+    Returns (n, bad)."""
+    bad, n = [], 0
+    try:
+        T = {k: (KR / v).read_text() for k, v in G6_SELFTEST.items()}
+        cs = g6_cases(T)
+    except Exception as e:
+        return 1, [("g6_fixtures", f"{type(e).__name__}: {e}")]
+    for name, text, blobs, ok in cs:
+        n += 1
+        errs, _ = check_gen6(text, blobs, GNAMES)
+        if (not errs) != ok:
+            bad.append((name, errs[:3]))
+    for tname, (src, short) in G6_L_LAYOUTS.items():
+        n += 1
+        try:
+            d = "enc2/link/norm"
+            sp = f"prysm/go1.26.10/e2e/{d}/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.{tname}.MarshalSSZTo.S"
+            fs, goffs, size = g6_ir((KR / "prysm/ir/ir-mainnet.json").read_text(), "v1alpha1." + tname)
+            X = g6_expect([l.strip() for l in (KR / sp).read_text().split("\n") if l.strip()], fs, goffs, size)
+            Lx = g6_layout_def((KR / src).read_text(), short)
+            if Lx != X["L"]:
+                bad.append((f"g6_recompute_{tname}", Lx, X["L"]))
+        except Exception as e:
+            bad.append((f"g6_recompute_{tname}", f"{type(e).__name__}: {e}"))
+    # an IR mutant: ValidatorBalance Balance at Go offset 24 -> the recomputation refuses
+    n += 1
+    try:
+        d = _g6json.loads((KR / "prysm/ir/ir-mainnet.json").read_text())
+        for c in d["configs"]:
+            for t in c.get("types", []):
+                if t.get("name") == "ValidatorBalance" and c["package"].endswith("/v1alpha1"):
+                    t["go_fields"][2]["offset_gc_amd64"] = 24
+        g6_ir(_g6json.dumps(d), "v1alpha1.ValidatorBalance")
+        bad.append(("g6_ir_goff_mutant", "not refused"))
+    except G6Mismatch:
         pass
     return n, bad
 

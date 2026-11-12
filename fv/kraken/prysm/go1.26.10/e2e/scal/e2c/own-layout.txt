@@ -1,0 +1,17 @@
+OK   BeaconBlockHeader F 152 gd 32 rt True pre regions 11 disjoint True 
+OK   BlobIdentifier F 104 gd 0 rt True pre regions 7 disjoint True 
+OK   Checkpoint F 104 gd 0 rt True pre regions 8 disjoint True 
+OK   Deposit_Data F 136 gd 16 rt True pre regions 10 disjoint True 
+OK   DepositMessage F 128 gd 8 rt True pre regions 10 disjoint True 
+OK   Eth1Data F 128 gd 8 rt True pre regions 10 disjoint True 
+OK   HistoricalSummary F 80 gd 0 rt True pre regions 7 disjoint True 
+OK   PowBlock F 80 gd 0 rt True pre regions 7 disjoint True 
+OK   PendingConsolidation F 112 gd 0 rt False pre regions 6 disjoint True 
+OK   PendingDeposit F 192 gd 72 rt True pre regions 15 disjoint True 
+OK   PendingPartialWithdrawal F 144 gd 24 rt False pre regions 7 disjoint True 
+OK   SyncAggregatorSelectionData F 104 gd 0 rt False pre regions 4 disjoint True 
+OK   SyncCommitteeMessage F 168 gd 48 rt True pre regions 14 disjoint True 
+OK   SigningData F 80 gd 0 rt True pre regions 7 disjoint True 
+OK   ValidatorBalance F 104 gd 0 rt False pre regions 4 disjoint True 
+OK   VoluntaryExit F 112 gd 0 rt False pre regions 6 disjoint True 
+layouts that differ from the reviewer's recomputation or are not disjoint: 0

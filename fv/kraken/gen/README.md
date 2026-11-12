@@ -15,6 +15,7 @@ Prysm 결과는 `../prysm/`에 있다. 환경과 gate 규칙은 run 디렉터리
 | `desc/` | `Desc` 생산기와 시험 | P3 |
 | `desccheck/` | 독립 `Desc` 검사기(Lean, EthLib 함수 실행) | P3 |
 | `gen1c/` | 생성기 골격, include 어댑터 하나 | P4 |
+| `e2e/enc2link.py`, `e2e/enc2survey.py` | ENC2 인코더 링크 표(`prysm/go1.26.10/e2e/enc2/link`)와 조사(`prysm/go1.26.10/e2e/scal/enc2-survey.md`) | E2-P |
 
 ## 2. 산출물 형식
 

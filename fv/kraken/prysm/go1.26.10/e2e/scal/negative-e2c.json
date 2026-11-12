@@ -1,0 +1,1130 @@
+{
+ "unit": "E2-C",
+ "cases_file": "prysm/go1.26.10/e2e/scal/negcases-e2c.json",
+ "harness": "gen/e2e/negative.py, one gated job per case",
+ "summary": "96/96 as expected (32 controls); timeouts: none",
+ "per_type": {
+  "Checkpoint": {
+   "n": 6,
+   "ok": 6,
+   "timeouts": [],
+   "gate_s": 57,
+   "classes": [
+    "control_pass",
+    "inside"
+   ]
+  },
+  "BeaconBlockHeader": {
+   "n": 6,
+   "ok": 6,
+   "timeouts": [],
+   "gate_s": 145,
+   "classes": [
+    "control_pass",
+    "inside"
+   ]
+  },
+  "Eth1Data": {
+   "n": 6,
+   "ok": 6,
+   "timeouts": [],
+   "gate_s": 89,
+   "classes": [
+    "control_pass",
+    "inside"
+   ]
+  },
+  "BlobIdentifier": {
+   "n": 6,
+   "ok": 6,
+   "timeouts": [],
+   "gate_s": 102,
+   "classes": [
+    "control_pass",
+    "inside"
+   ]
+  },
+  "DepositMessage": {
+   "n": 6,
+   "ok": 6,
+   "timeouts": [],
+   "gate_s": 76,
+   "classes": [
+    "control_pass",
+    "inside"
+   ]
+  },
+  "Deposit_Data": {
+   "n": 6,
+   "ok": 6,
+   "timeouts": [],
+   "gate_s": 819,
+   "classes": [
+    "control_pass",
+    "inside"
+   ]
+  },
+  "PendingPartialWithdrawal": {
+   "n": 6,
+   "ok": 6,
+   "timeouts": [],
+   "gate_s": 400,
+   "classes": [
+    "control_pass",
+    "inside"
+   ]
+  },
+  "SyncCommitteeMessage": {
+   "n": 6,
+   "ok": 6,
+   "timeouts": [],
+   "gate_s": 132,
+   "classes": [
+    "control_pass",
+    "inside"
+   ]
+  },
+  "PendingConsolidation": {
+   "n": 6,
+   "ok": 6,
+   "timeouts": [],
+   "gate_s": 40,
+   "classes": [
+    "control_pass",
+    "inside"
+   ]
+  },
+  "PendingDeposit": {
+   "n": 6,
+   "ok": 6,
+   "timeouts": [],
+   "gate_s": 199,
+   "classes": [
+    "control_pass",
+    "inside"
+   ]
+  },
+  "PowBlock": {
+   "n": 6,
+   "ok": 6,
+   "timeouts": [],
+   "gate_s": 75,
+   "classes": [
+    "control_pass",
+    "inside"
+   ]
+  },
+  "HistoricalSummary": {
+   "n": 6,
+   "ok": 6,
+   "timeouts": [],
+   "gate_s": 63,
+   "classes": [
+    "control_pass",
+    "inside"
+   ]
+  },
+  "SigningData": {
+   "n": 6,
+   "ok": 6,
+   "timeouts": [],
+   "gate_s": 54,
+   "classes": [
+    "control_pass",
+    "inside"
+   ]
+  },
+  "SyncAggregatorSelectionData": {
+   "n": 6,
+   "ok": 6,
+   "timeouts": [],
+   "gate_s": 34,
+   "classes": [
+    "control_pass",
+    "inside"
+   ]
+  },
+  "ValidatorBalance": {
+   "n": 6,
+   "ok": 6,
+   "timeouts": [],
+   "gate_s": 45,
+   "classes": [
+    "control_pass",
+    "inside"
+   ]
+  },
+  "VoluntaryExit": {
+   "n": 6,
+   "ok": 6,
+   "timeouts": [],
+   "gate_s": 39,
+   "classes": [
+    "control_pass",
+    "inside"
+   ]
+  }
+ },
+ "cases": [
+  {
+   "id": "e2c-vb-spec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecVb.lean",
+   "theorem": "vb_e2c_spec_k",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 0.9,
+   "first_error": null
+  },
+  {
+   "id": "e2c-vb-wit-control",
+   "kind": "control",
+   "module": "E2eScal/WitE2cVb.lean",
+   "theorem": "vb_e2c_wit_empty",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 4.8,
+   "first_error": null
+  },
+  {
+   "id": "e2c-vb-fast-stmt-out",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6VbEnc.lean",
+   "theorem": "vb_g6e_fast",
+   "class": "inside",
+   "pass": true,
+   "seconds": 3.0,
+   "first_error": "mut.lean:492:2: error: Type mismatch"
+  },
+  {
+   "id": "e2c-vb-spec-out",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecVb.lean",
+   "theorem": "vb_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.0,
+   "first_error": "mut.lean:80:21: error: ecancel: could not automatically solve goal (Eq (pre.At s.regs.rbx.toBitVec) \u22c6"
+  },
+  {
+   "id": "e2c-vb-spec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecVb.lean",
+   "theorem": "vb_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.0,
+   "first_error": "mut.lean:73:220: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-vb-wit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cVb.lean",
+   "theorem": "vb_e2c_wit_empty",
+   "class": "inside",
+   "pass": true,
+   "seconds": 4.8,
+   "first_error": "mut.lean:66:22: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-cp-spec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecCp.lean",
+   "theorem": "cp_e2c_spec_k",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 1.0,
+   "first_error": null
+  },
+  {
+   "id": "e2c-cp-wit-control",
+   "kind": "control",
+   "module": "E2eScal/WitE2cCp.lean",
+   "theorem": "cp_e2c_wit_empty",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 14.7,
+   "first_error": null
+  },
+  {
+   "id": "e2c-cp-fast-stmt-out",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6CpEnc.lean",
+   "theorem": "cp_g6e_fast",
+   "class": "inside",
+   "pass": true,
+   "seconds": 4.0,
+   "first_error": "mut.lean:582:2: error: Type mismatch"
+  },
+  {
+   "id": "e2c-cp-spec-out",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecCp.lean",
+   "theorem": "cp_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.1,
+   "first_error": "mut.lean:98:21: error: ecancel: could not automatically solve goal (Eq (pre.At s.regs.rbx.toBitVec) \u22c6"
+  },
+  {
+   "id": "e2c-cp-spec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecCp.lean",
+   "theorem": "cp_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.1,
+   "first_error": "mut.lean:91:263: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-cp-wit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cCp.lean",
+   "theorem": "cp_e2c_wit_empty",
+   "class": "inside",
+   "pass": true,
+   "seconds": 14.8,
+   "first_error": "mut.lean:68:22: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-bh-spec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecBh.lean",
+   "theorem": "bh_e2c_spec_k",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 1.2,
+   "first_error": null
+  },
+  {
+   "id": "e2c-bh-wit-control",
+   "kind": "control",
+   "module": "E2eScal/WitE2cBh.lean",
+   "theorem": "bh_e2c_wit_empty",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 55.4,
+   "first_error": null
+  },
+  {
+   "id": "e2c-bh-fast-stmt-out",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6BhEnc.lean",
+   "theorem": "bh_g6e_fast",
+   "class": "inside",
+   "pass": true,
+   "seconds": 12.5,
+   "first_error": "mut.lean:1270:2: error: Type mismatch"
+  },
+  {
+   "id": "e2c-bh-spec-out",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecBh.lean",
+   "theorem": "bh_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.1,
+   "first_error": "mut.lean:132:21: error: ecancel: could not automatically solve goal (Eq (pre.At s.regs.rbx.toBitVec) \u22c6"
+  },
+  {
+   "id": "e2c-bh-spec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecBh.lean",
+   "theorem": "bh_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.3,
+   "first_error": "mut.lean:122:415: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-bh-wit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cBh.lean",
+   "theorem": "bh_e2c_wit_empty",
+   "class": "inside",
+   "pass": true,
+   "seconds": 55.2,
+   "first_error": "mut.lean:68:22: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-e1-spec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecE1.lean",
+   "theorem": "e1_e2c_spec_k",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 1.2,
+   "first_error": null
+  },
+  {
+   "id": "e2c-e1-wit-control",
+   "kind": "control",
+   "module": "E2eScal/WitE2cE1.lean",
+   "theorem": "e1_e2c_wit_empty",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 29.6,
+   "first_error": null
+  },
+  {
+   "id": "e2c-e1-fast-stmt-out",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6E1Enc.lean",
+   "theorem": "e1_g6e_fast",
+   "class": "inside",
+   "pass": true,
+   "seconds": 6.0,
+   "first_error": "mut.lean:793:2: error: Type mismatch"
+  },
+  {
+   "id": "e2c-e1-spec-out",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecE1.lean",
+   "theorem": "e1_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.0,
+   "first_error": "mut.lean:114:21: error: ecancel: could not automatically solve goal (Eq (pre.At s.regs.rbx.toBitVec) \u22c6"
+  },
+  {
+   "id": "e2c-e1-spec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecE1.lean",
+   "theorem": "e1_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.1,
+   "first_error": "mut.lean:106:335: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-e1-wit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cE1.lean",
+   "theorem": "e1_e2c_wit_empty",
+   "class": "inside",
+   "pass": true,
+   "seconds": 29.6,
+   "first_error": "mut.lean:68:22: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-bi-spec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecBi.lean",
+   "theorem": "bi_e2c_spec_k",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 1.2,
+   "first_error": null
+  },
+  {
+   "id": "e2c-bi-wit-control",
+   "kind": "control",
+   "module": "E2eScal/WitE2cBi.lean",
+   "theorem": "bi_e2c_wit_empty",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 12.8,
+   "first_error": null
+  },
+  {
+   "id": "e2c-bi-fast-stmt-out",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6BiEnc.lean",
+   "theorem": "bi_g6e_fast",
+   "class": "inside",
+   "pass": true,
+   "seconds": 4.4,
+   "first_error": "mut.lean:565:2: error: Type mismatch"
+  },
+  {
+   "id": "e2c-bi-spec-out",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecBi.lean",
+   "theorem": "bi_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.0,
+   "first_error": "mut.lean:96:21: error: ecancel: could not automatically solve goal (Eq (pre.At s.regs.rbx.toBitVec) \u22c6"
+  },
+  {
+   "id": "e2c-bi-spec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecBi.lean",
+   "theorem": "bi_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.1,
+   "first_error": "mut.lean:89:257: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-bi-wit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cBi.lean",
+   "theorem": "bi_e2c_wit_empty",
+   "class": "inside",
+   "pass": true,
+   "seconds": 12.5,
+   "first_error": "mut.lean:68:22: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-dm-spec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecDm.lean",
+   "theorem": "dm_e2c_spec_k",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 1.1,
+   "first_error": null
+  },
+  {
+   "id": "e2c-dm-wit-control",
+   "kind": "control",
+   "module": "E2eScal/WitE2cDm.lean",
+   "theorem": "dm_e2c_wit_empty",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 24.3,
+   "first_error": null
+  },
+  {
+   "id": "e2c-dm-fast-stmt-out",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6DmEnc.lean",
+   "theorem": "dm_g6e_fast",
+   "class": "inside",
+   "pass": true,
+   "seconds": 7.2,
+   "first_error": "mut.lean:793:2: error: Type mismatch"
+  },
+  {
+   "id": "e2c-dm-spec-out",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecDm.lean",
+   "theorem": "dm_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.1,
+   "first_error": "mut.lean:112:21: error: ecancel: could not automatically solve goal (Eq (pre.At s.regs.rbx.toBitVec) \u22c6"
+  },
+  {
+   "id": "e2c-dm-spec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecDm.lean",
+   "theorem": "dm_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.0,
+   "first_error": "mut.lean:104:327: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-dm-wit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cDm.lean",
+   "theorem": "dm_e2c_wit_empty",
+   "class": "inside",
+   "pass": true,
+   "seconds": 24.5,
+   "first_error": "mut.lean:68:22: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-dd-spec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecDd.lean",
+   "theorem": "dd_e2c_spec_k",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 1.4,
+   "first_error": null
+  },
+  {
+   "id": "e2c-dd-wit-control",
+   "kind": "control",
+   "module": "E2eScal/WitE2cDd.lean",
+   "theorem": "dd_e2c_wit_empty",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 46.4,
+   "first_error": null
+  },
+  {
+   "id": "e2c-dd-fast-stmt-out",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6DdEnc.lean",
+   "theorem": "dd_g6e_fast",
+   "class": "inside",
+   "pass": true,
+   "seconds": 9.7,
+   "first_error": "mut.lean:1036:2: error: Type mismatch"
+  },
+  {
+   "id": "e2c-dd-spec-out",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecDd.lean",
+   "theorem": "dd_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.0,
+   "first_error": "mut.lean:124:21: error: ecancel: could not automatically solve goal (Eq (pre.At s.regs.rbx.toBitVec) \u22c6"
+  },
+  {
+   "id": "e2c-dd-spec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecDd.lean",
+   "theorem": "dd_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.1,
+   "first_error": "mut.lean:115:378: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-dd-wit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cDd.lean",
+   "theorem": "dd_e2c_wit_empty",
+   "class": "inside",
+   "pass": true,
+   "seconds": 47.8,
+   "first_error": "mut.lean:68:22: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-pw-spec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecPw.lean",
+   "theorem": "pw_e2c_spec_k",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 1.7,
+   "first_error": null
+  },
+  {
+   "id": "e2c-pw-wit-control",
+   "kind": "control",
+   "module": "E2eScal/WitE2cPw.lean",
+   "theorem": "pw_e2c_wit_empty",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 9.3,
+   "first_error": null
+  },
+  {
+   "id": "e2c-pw-fast-stmt-out",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6PwEnc.lean",
+   "theorem": "pw_g6e_fast",
+   "class": "inside",
+   "pass": true,
+   "seconds": 4.5,
+   "first_error": "mut.lean:681:2: error: Type mismatch"
+  },
+  {
+   "id": "e2c-pw-spec-out",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecPw.lean",
+   "theorem": "pw_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.1,
+   "first_error": "mut.lean:94:21: error: ecancel: could not automatically solve goal (Eq (pre.At s.regs.rbx.toBitVec) \u22c6"
+  },
+  {
+   "id": "e2c-pw-spec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecPw.lean",
+   "theorem": "pw_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.0,
+   "first_error": "mut.lean:86:302: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-pw-wit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cPw.lean",
+   "theorem": "pw_e2c_wit_empty",
+   "class": "inside",
+   "pass": true,
+   "seconds": 9.3,
+   "first_error": "mut.lean:66:22: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-sc-spec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecSc.lean",
+   "theorem": "sc_e2c_spec_k",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 1.2,
+   "first_error": null
+  },
+  {
+   "id": "e2c-sc-wit-control",
+   "kind": "control",
+   "module": "E2eScal/WitE2cSc.lean",
+   "theorem": "sc_e2c_wit_empty",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 49.6,
+   "first_error": null
+  },
+  {
+   "id": "e2c-sc-fast-stmt-out",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6ScEnc.lean",
+   "theorem": "sc_g6e_fast",
+   "class": "inside",
+   "pass": true,
+   "seconds": 9.6,
+   "first_error": "mut.lean:1072:2: error: Type mismatch"
+  },
+  {
+   "id": "e2c-sc-spec-out",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecSc.lean",
+   "theorem": "sc_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.2,
+   "first_error": "mut.lean:128:21: error: ecancel: could not automatically solve goal (Eq (pre.At s.regs.rbx.toBitVec) \u22c6"
+  },
+  {
+   "id": "e2c-sc-spec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecSc.lean",
+   "theorem": "sc_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.3,
+   "first_error": "mut.lean:119:422: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-sc-wit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cSc.lean",
+   "theorem": "sc_e2c_wit_empty",
+   "class": "inside",
+   "pass": true,
+   "seconds": 49.9,
+   "first_error": "mut.lean:68:22: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-pc-spec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecPc.lean",
+   "theorem": "pc_e2c_spec_k",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 1.1,
+   "first_error": null
+  },
+  {
+   "id": "e2c-pc-wit-control",
+   "kind": "control",
+   "module": "E2eScal/WitE2cPc.lean",
+   "theorem": "pc_e2c_wit_empty",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 7.7,
+   "first_error": null
+  },
+  {
+   "id": "e2c-pc-fast-stmt-out",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6PcEnc.lean",
+   "theorem": "pc_g6e_fast",
+   "class": "inside",
+   "pass": true,
+   "seconds": 3.6,
+   "first_error": "mut.lean:534:2: error: Type mismatch"
+  },
+  {
+   "id": "e2c-pc-spec-out",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecPc.lean",
+   "theorem": "pc_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.0,
+   "first_error": "mut.lean:84:21: error: ecancel: could not automatically solve goal (Eq (pre.At s.regs.rbx.toBitVec) \u22c6"
+  },
+  {
+   "id": "e2c-pc-spec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecPc.lean",
+   "theorem": "pc_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.0,
+   "first_error": "mut.lean:77:248: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-pc-wit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cPc.lean",
+   "theorem": "pc_e2c_wit_empty",
+   "class": "inside",
+   "pass": true,
+   "seconds": 7.7,
+   "first_error": "mut.lean:66:22: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-pd-spec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecPd.lean",
+   "theorem": "pd_e2c_spec_k",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 1.2,
+   "first_error": null
+  },
+  {
+   "id": "e2c-pd-wit-control",
+   "kind": "control",
+   "module": "E2eScal/WitE2cPd.lean",
+   "theorem": "pd_e2c_wit_empty",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 80.7,
+   "first_error": null
+  },
+  {
+   "id": "e2c-pd-fast-stmt-out",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6PdEnc.lean",
+   "theorem": "pd_g6e_fast",
+   "class": "inside",
+   "pass": true,
+   "seconds": 15.9,
+   "first_error": "mut.lean:1315:2: error: Type mismatch"
+  },
+  {
+   "id": "e2c-pd-spec-out",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecPd.lean",
+   "theorem": "pd_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.2,
+   "first_error": "mut.lean:140:21: error: ecancel: could not automatically solve goal (Eq (pre.At s.regs.rbx.toBitVec) \u22c6"
+  },
+  {
+   "id": "e2c-pd-spec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecPd.lean",
+   "theorem": "pd_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.2,
+   "first_error": "mut.lean:130:474: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-pd-wit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cPd.lean",
+   "theorem": "pd_e2c_wit_empty",
+   "class": "inside",
+   "pass": true,
+   "seconds": 80.2,
+   "first_error": "mut.lean:68:22: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-pb-spec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecPb.lean",
+   "theorem": "pb_e2c_spec_k",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 1.0,
+   "first_error": null
+  },
+  {
+   "id": "e2c-pb-wit-control",
+   "kind": "control",
+   "module": "E2eScal/WitE2cPb.lean",
+   "theorem": "pb_e2c_wit_empty",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 23.1,
+   "first_error": null
+  },
+  {
+   "id": "e2c-pb-fast-stmt-out",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6PbEnc.lean",
+   "theorem": "pb_g6e_fast",
+   "class": "inside",
+   "pass": true,
+   "seconds": 7.3,
+   "first_error": "mut.lean:858:2: error: Type mismatch"
+  },
+  {
+   "id": "e2c-pb-spec-out",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecPb.lean",
+   "theorem": "pb_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.1,
+   "first_error": "mut.lean:110:21: error: ecancel: could not automatically solve goal (Eq (pre.At s.regs.rbx.toBitVec) \u22c6"
+  },
+  {
+   "id": "e2c-pb-spec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecPb.lean",
+   "theorem": "pb_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.0,
+   "first_error": "mut.lean:102:310: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-pb-wit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cPb.lean",
+   "theorem": "pb_e2c_wit_empty",
+   "class": "inside",
+   "pass": true,
+   "seconds": 22.8,
+   "first_error": "mut.lean:68:22: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-hs-spec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecHs.lean",
+   "theorem": "hs_e2c_spec_k",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 1.0,
+   "first_error": null
+  },
+  {
+   "id": "e2c-hs-wit-control",
+   "kind": "control",
+   "module": "E2eScal/WitE2cHs.lean",
+   "theorem": "hs_e2c_wit_empty",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 18.8,
+   "first_error": null
+  },
+  {
+   "id": "e2c-hs-fast-stmt-out",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6HsEnc.lean",
+   "theorem": "hs_g6e_fast",
+   "class": "inside",
+   "pass": true,
+   "seconds": 5.0,
+   "first_error": "mut.lean:658:2: error: Type mismatch"
+  },
+  {
+   "id": "e2c-hs-spec-out",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecHs.lean",
+   "theorem": "hs_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.0,
+   "first_error": "mut.lean:100:21: error: ecancel: could not automatically solve goal (Eq (pre.At s.regs.rbx.toBitVec) \u22c6"
+  },
+  {
+   "id": "e2c-hs-spec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecHs.lean",
+   "theorem": "hs_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.1,
+   "first_error": "mut.lean:93:267: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-hs-wit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cHs.lean",
+   "theorem": "hs_e2c_wit_empty",
+   "class": "inside",
+   "pass": true,
+   "seconds": 18.4,
+   "first_error": "mut.lean:68:22: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-sd-spec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecSd.lean",
+   "theorem": "sd_e2c_spec_k",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 1.1,
+   "first_error": null
+  },
+  {
+   "id": "e2c-sd-wit-control",
+   "kind": "control",
+   "module": "E2eScal/WitE2cSd.lean",
+   "theorem": "sd_e2c_wit_empty",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 14.0,
+   "first_error": null
+  },
+  {
+   "id": "e2c-sd-fast-stmt-out",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6SdEnc.lean",
+   "theorem": "sd_g6e_fast",
+   "class": "inside",
+   "pass": true,
+   "seconds": 4.9,
+   "first_error": "mut.lean:648:2: error: Type mismatch"
+  },
+  {
+   "id": "e2c-sd-spec-out",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecSd.lean",
+   "theorem": "sd_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.0,
+   "first_error": "mut.lean:98:21: error: ecancel: could not automatically solve goal (Eq (pre.At s.regs.rbx.toBitVec) \u22c6"
+  },
+  {
+   "id": "e2c-sd-spec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecSd.lean",
+   "theorem": "sd_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.1,
+   "first_error": "mut.lean:91:242: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-sd-wit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cSd.lean",
+   "theorem": "sd_e2c_wit_empty",
+   "class": "inside",
+   "pass": true,
+   "seconds": 13.8,
+   "first_error": "mut.lean:68:22: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-sa-spec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecSa.lean",
+   "theorem": "sa_e2c_spec_k",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 0.9,
+   "first_error": null
+  },
+  {
+   "id": "e2c-sa-wit-control",
+   "kind": "control",
+   "module": "E2eScal/WitE2cSa.lean",
+   "theorem": "sa_e2c_wit_empty",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 4.8,
+   "first_error": null
+  },
+  {
+   "id": "e2c-sa-fast-stmt-out",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6SaEnc.lean",
+   "theorem": "sa_g6e_fast",
+   "class": "inside",
+   "pass": true,
+   "seconds": 3.0,
+   "first_error": "mut.lean:492:2: error: Type mismatch"
+  },
+  {
+   "id": "e2c-sa-spec-out",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecSa.lean",
+   "theorem": "sa_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.0,
+   "first_error": "mut.lean:80:21: error: ecancel: could not automatically solve goal (Eq (pre.At s.regs.rbx.toBitVec) \u22c6"
+  },
+  {
+   "id": "e2c-sa-spec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecSa.lean",
+   "theorem": "sa_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.0,
+   "first_error": "mut.lean:73:229: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-sa-wit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cSa.lean",
+   "theorem": "sa_e2c_wit_empty",
+   "class": "inside",
+   "pass": true,
+   "seconds": 4.8,
+   "first_error": "mut.lean:66:22: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-ve-spec-control",
+   "kind": "control",
+   "module": "E2eScal/E2cSpecVe.lean",
+   "theorem": "ve_e2c_spec_k",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 1.0,
+   "first_error": null
+  },
+  {
+   "id": "e2c-ve-wit-control",
+   "kind": "control",
+   "module": "E2eScal/WitE2cVe.lean",
+   "theorem": "ve_e2c_wit_empty",
+   "class": "control_pass",
+   "pass": true,
+   "seconds": 7.4,
+   "first_error": null
+  },
+  {
+   "id": "e2c-ve-fast-stmt-out",
+   "kind": "stmt",
+   "module": "E2eScal/Gen6VeEnc.lean",
+   "theorem": "ve_g6e_fast",
+   "class": "inside",
+   "pass": true,
+   "seconds": 3.5,
+   "first_error": "mut.lean:534:2: error: Type mismatch"
+  },
+  {
+   "id": "e2c-ve-spec-out",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecVe.lean",
+   "theorem": "ve_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 0.9,
+   "first_error": "mut.lean:84:21: error: ecancel: could not automatically solve goal (Eq (pre.At s.regs.rbx.toBitVec) \u22c6"
+  },
+  {
+   "id": "e2c-ve-spec-hcap",
+   "kind": "stmt",
+   "module": "E2eScal/E2cSpecVe.lean",
+   "theorem": "ve_e2c_spec_k",
+   "class": "inside",
+   "pass": true,
+   "seconds": 1.1,
+   "first_error": "mut.lean:77:245: error: Application type mismatch: The argument"
+  },
+  {
+   "id": "e2c-ve-wit-rax",
+   "kind": "stmt",
+   "module": "E2eScal/WitE2cVe.lean",
+   "theorem": "ve_e2c_wit_empty",
+   "class": "inside",
+   "pass": true,
+   "seconds": 7.6,
+   "first_error": "mut.lean:66:22: error: Application type mismatch: The argument"
+  }
+ ]
+}

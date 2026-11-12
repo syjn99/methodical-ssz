@@ -75,3 +75,24 @@ done
 # refused by design (exit 2, nothing on stdout): kept as comments so that `set -e` does not stop this script
 # $G p2dec --gen5 --S $E/h4/link/norm/$P.PendingPartialWithdrawal.UnmarshalSSZ.S --const PwUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.PendingPartialWithdrawal --prefix pw_g5dec --imports E2eScal.H4Code --open E2eScal.H4Code --same-as-prop=E2eScal.H4.pw_accept_stmt
 # $G p2dec --gen5 --S $N/$P.AttestationData.UnmarshalSSZ.S --const AdUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.AttestationData --prefix ad_g5dec --imports E2eAd.Code --open E2eAd.Code
+# GEN6 (unit E2-G; generator change after GEN5, CONTAMINATION.md section 35): `p2enc --gen6` on the 16 flat development
+# types (all in-sample). One run per type; raw output committed unedited. Encoder FAST PATH only (premises
+# len + SizeSSZ <= cap, byte-vector fields of exact length). Statement check: the kind (kindcheck.py rule 13 recomputes
+# its parameters) and, for the three hand types, the identity `_stmt` (Checkpoint through cp_marshal_of_kind).
+PP=github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1
+LT="--hand-layout-src=lean/E2eScal/EncTies.lean"
+for row in "Checkpoint link CpMarshal E2e.Code cp --hand-layout=E2eScal.layEncCp $LT --same-as=E2e.cp_e2e_marshal_main --same-as-via=E2eScal.cp_marshal_of_kind" \
+  "BeaconBlockHeader bh/link BhMarshal E2eScal.BhCode bh --hand-layout=E2eScal.layEncBh $LT --same-as=E2eScal.Bh.bh_e2e_marshal_main" \
+  "Eth1Data e1/link E1Marshal E2eScal.E1Code e1 --hand-layout=E2eScal.layEncE1 $LT --same-as=E2eScal.E1.e1_e2e_marshal_main" \
+  "BlobIdentifier enc2/link BiMarshal E2eScal.Enc2Code bi" "DepositMessage enc2/link DmMarshal E2eScal.Enc2Code dm" \
+  "Deposit_Data enc2/link DdMarshal E2eScal.Enc2Code dd" "PendingPartialWithdrawal enc2/link PwMarshal E2eScal.Enc2Code pw" \
+  "SyncCommitteeMessage enc2/link ScMarshal E2eScal.Enc2Code sc" "PendingConsolidation enc2/link PcMarshal E2eScal.Enc2Code pc" \
+  "PendingDeposit enc2/link PdMarshal E2eScal.Enc2Code pd" "PowBlock enc2/link PbMarshal E2eScal.Enc2Code pb" \
+  "HistoricalSummary enc2/link HsMarshal E2eScal.Enc2Code hs" "SigningData enc2/link SdMarshal E2eScal.Enc2Code sd" \
+  "SyncAggregatorSelectionData enc2/link SaMarshal E2eScal.Enc2Code sa" "ValidatorBalance enc2/link VbMarshal E2eScal.Enc2Code vb" \
+  "VoluntaryExit enc2/link VeMarshal E2eScal.Enc2Code ve"; do
+  set -- $row
+  t=$1; d=$2; c=$3; o=$4; px=$5; shift 5
+  X=$(echo $px | sed 's/./\U&/')
+  $G p2enc --gen6 --S $E/$d/norm/$PP.$t.MarshalSSZTo.S --const $c --ir prysm/ir/ir-mainnet.json --type v1alpha1.$t --prefix ${px}_g6e --imports $o --open $o "$@" > lean/E2eScal/Gen6${X}Enc.lean
+done

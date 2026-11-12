@@ -9,7 +9,7 @@
  },
  "axioms_gate": {
   "verdict": "PASS",
-  "declarations": 9758
+  "declarations": 12177
  },
  "definition_complete": "decoder: accept + size reject + spec alignment (accept_spec_k, reject_size_spec, reject_complete) + Desc codec equality / correspondence + accept witness + reject witness, all kernel-checked theorems with standard axioms; accept / reject / spec_k / reject_size_spec theorems keyed to the function by the code constant in their type (the function is the subject: no other target code constant of the theorem calls it); witnesses and spec theorems use the mapped accept / reject theorem",
  "complete_does_not_include": [
@@ -25,6 +25,7 @@
   "that a theorem's statement says what its part name means (accept, reject, spec): the mapping table is hand-written; the statements are checked by review and by the kinds, not by this script",
   "a theorem with two target code constants of which neither calls the other (it fails: no single subject)",
   "that <decls.tsv> was made on the built tree of the same commit (its header has the Lean version, no commit id)",
+  "that an encoder row's premise text and NOT-proved text say what the mapped reject / growslice theorems assume (hand-written per row, unit E2-C2; checked by review against the theorem statements, not by this script)",
   "methods outside `github.com/OffchainLabs/prysm/v7/` (e.g. `github.com/holiman/uint256`) and SSZ methods with names outside the listed kinds"
  ],
  "totals": {
@@ -51,9 +52,11 @@
    "MarshalSSZTo": {
     "target": 211,
     "functions_json": 211,
-    "mapped": 3,
+    "mapped": 16,
     "complete": 0,
-    "partial": 3
+    "partial": 16,
+    "fast_path_complete": 16,
+    "fast_path_partial": 0
    },
    "MarshalSSZ": {
     "target": 211,
@@ -5210,23 +5213,39 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "fast path",
+   "state": "fast path complete",
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.Bh.bh_e2e_marshal_main"
+     "E2eScal.Gen6Enc.bh_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.bh_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cBh.bh_e2c_wit_empty",
+     "E2eScal.WitE2cBh.bh_e2c_wit_prefix"
+    ],
+    "hand": [
+     "E2eScal.Bh.bh_e2e_marshal_main",
+     "E2eScal.Bh.bh_e2e_marshal_spec_k"
     ],
     "rejects": [
      "E2eScal.Bh.bh_e2e_marshal_reject1_main",
      "E2eScal.Bh.bh_e2e_marshal_reject2_main",
      "E2eScal.Bh.bh_e2e_marshal_reject3_main"
     ],
-    "grow": [],
-    "witness": [
+    "other_witness": [
      "E2eScal.WitBhM.bhm_runs_empty"
     ]
    },
-   "note": ""
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (5 capacity tests)",
+    "length rejects with cap < len + 112 (with len + 16 \u2264 cap < len + 112 a ParentRoot reject is reached without a growslice call) [3 byte fields; proved only: bh_e2e_marshal_reject1_main (len + 112 \u2264 cap), bh_e2e_marshal_reject2_main (len + 112 \u2264 cap, MemmoveC), bh_e2e_marshal_reject3_main (len + 112 \u2264 cap, MemmoveC)]",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -6928,10 +6947,27 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "none",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "E2eScal.Gen6Enc.bi_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.bi_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cBi.bi_e2c_wit_empty",
+     "E2eScal.WitE2cBi.bi_e2c_wit_prefix"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (2 capacity tests)",
+    "length rejects (1 byte fields)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -8381,11 +8417,22 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "fast path",
+   "state": "fast path complete",
    "missing": [],
    "theorems": {
     "fast": [
-     "E2e.cp_e2e_marshal_main"
+     "E2eScal.Gen6Enc.cp_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.cp_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cCp.cp_e2c_wit_empty",
+     "E2eScal.WitE2cCp.cp_e2c_wit_prefix"
+    ],
+    "hand": [
+     "E2e.cp_e2e_marshal_main",
+     "E2e.cp_e2e_marshal_spec_k"
     ],
     "rejects": [
      "E2e.cp_e2e_marshal_reject_main",
@@ -8396,13 +8443,19 @@
      "E2e.cp_e2e_marshal_grow2_main",
      "E2e.cp_e2e_marshal_grow_any_main"
     ],
-    "witness": [
+    "other_witness": [
      "E2e.WitCpM.cpm_runs_empty",
      "E2e.WitCpMR.cpmr_runs",
      "E2e.WitCpG.cpg_runs"
     ]
    },
-   "note": ""
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches outside the GrowsliceC / MemmoveC contracts and the heap budget, and the run after the second growslice call when the heap left by the first call is below the second call's budget (T-7 residual, FINDINGS T-7, differential only) [2 capacity tests; proved only: cp_e2e_marshal_grow_main (cap < len + 8, len + 40 \u2264 nextSliceCap(len + 8, cap), GrowsliceC + MemmoveC contracts + heap budget), cp_e2e_marshal_grow2_main (len + 8 \u2264 cap < len + 40, GrowsliceC + MemmoveC contracts + heap budget), cp_e2e_marshal_grow_any_main (cap < len + 8, GrowsliceC + MemmoveC contracts + heap budget: returns or reaches the second growslice call)]",
+    "length rejects with cap < len + 8 outside the GrowsliceC contract or the heap budget [1 byte fields; proved only: cp_e2e_marshal_reject_main (len + 8 \u2264 cap), cp_e2e_marshal_reject_cover (every cap, GrowsliceC contract + heap budget 4\u00b7len + 8736 \u2264 avail \u2264 maxAlloc)]",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -9019,10 +9072,27 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "none",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "E2eScal.Gen6Enc.dm_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.dm_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cDm.dm_e2c_wit_empty",
+     "E2eScal.WitE2cDm.dm_e2c_wit_prefix"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (3 capacity tests)",
+    "length rejects (2 byte fields)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -9198,10 +9268,27 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "none",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "E2eScal.Gen6Enc.dd_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.dd_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cDd.dd_e2c_wit_empty",
+     "E2eScal.WitE2cDd.dd_e2c_wit_prefix"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (4 capacity tests)",
+    "length rejects (3 byte fields)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -9377,19 +9464,34 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "fast path",
+   "state": "fast path complete",
    "missing": [],
    "theorems": {
     "fast": [
-     "E2eScal.E1.e1_e2e_marshal_main"
+     "E2eScal.Gen6Enc.e1_g6e_fast"
     ],
-    "rejects": [],
-    "grow": [],
+    "spec": [
+     "E2eScal.E2c.e1_e2c_spec_k"
+    ],
     "witness": [
+     "E2eScal.WitE2cE1.e1_e2c_wit_empty",
+     "E2eScal.WitE2cE1.e1_e2c_wit_prefix"
+    ],
+    "hand": [
+     "E2eScal.E1.e1_e2e_marshal_main",
+     "E2eScal.E1.e1_e2e_marshal_spec_k"
+    ],
+    "other_witness": [
      "E2eScal.WitE1M.e1m_runs_empty"
     ]
    },
-   "note": ""
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (3 capacity tests)",
+    "length rejects (2 byte fields)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -10167,10 +10269,28 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "none",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "E2eScal.Gen6Enc.hs_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.hs_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cHs.hs_e2c_wit_empty",
+     "E2eScal.WitE2cHs.hs_e2c_wit_prefix"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (2 capacity tests)",
+    "length rejects (2 byte fields)",
+    "the `runtime.moveSliceNoCapNoScan` branch of the epilogue frame test (shown not taken under the fast-path premises: dst separate from the frame; the branch itself is not proved)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -13678,10 +13798,26 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "none",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "E2eScal.Gen6Enc.pc_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.pc_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cPc.pc_e2c_wit_empty",
+     "E2eScal.WitE2cPc.pc_e2c_wit_prefix"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (2 capacity tests)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -13773,10 +13909,27 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "none",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "E2eScal.Gen6Enc.pd_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.pd_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cPd.pd_e2c_wit_empty",
+     "E2eScal.WitE2cPd.pd_e2c_wit_prefix"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (5 capacity tests)",
+    "length rejects (3 byte fields)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -13868,10 +14021,26 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "none",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "E2eScal.Gen6Enc.pw_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.pw_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cPw.pw_e2c_wit_empty",
+     "E2eScal.WitE2cPw.pw_e2c_wit_prefix"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (3 capacity tests)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -13963,10 +14132,28 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "none",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "E2eScal.Gen6Enc.pb_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.pb_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cPb.pb_e2c_wit_empty",
+     "E2eScal.WitE2cPb.pb_e2c_wit_prefix"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (3 capacity tests)",
+    "length rejects (3 byte fields)",
+    "the `runtime.moveSliceNoCapNoScan` branch of the epilogue frame test (shown not taken under the fast-path premises: dst separate from the frame; the branch itself is not proved)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -17335,10 +17522,28 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "none",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "E2eScal.Gen6Enc.sd_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.sd_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cSd.sd_e2c_wit_empty",
+     "E2eScal.WitE2cSd.sd_e2c_wit_prefix"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (2 capacity tests)",
+    "length rejects (2 byte fields)",
+    "the `runtime.moveSliceNoCapNoScan` branch of the epilogue frame test (shown not taken under the fast-path premises: dst separate from the frame; the branch itself is not proved)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -17794,10 +17999,26 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "none",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "E2eScal.Gen6Enc.sa_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.sa_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cSa.sa_e2c_wit_empty",
+     "E2eScal.WitE2cSa.sa_e2c_wit_prefix"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (2 capacity tests)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -18057,10 +18278,27 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "none",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "E2eScal.Gen6Enc.sc_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.sc_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cSc.sc_e2c_wit_empty",
+     "E2eScal.WitE2cSc.sc_e2c_wit_prefix"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (4 capacity tests)",
+    "length rejects (2 byte fields)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -18236,10 +18474,26 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "none",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "E2eScal.Gen6Enc.vb_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.vb_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cVb.vb_e2c_wit_empty",
+     "E2eScal.WitE2cVb.vb_e2c_wit_prefix"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (2 capacity tests)",
+    "morestack"
+   ]
   },
   {
    "symbols": [
@@ -18499,10 +18753,26 @@
    "method": "MarshalSSZTo",
    "dumped": true,
    "kind": "generated",
-   "state": "none",
+   "state": "fast path complete",
    "missing": [],
-   "theorems": {},
-   "note": ""
+   "theorems": {
+    "fast": [
+     "E2eScal.Gen6Enc.ve_g6e_fast"
+    ],
+    "spec": [
+     "E2eScal.E2c.ve_e2c_spec_k"
+    ],
+    "witness": [
+     "E2eScal.WitE2cVe.ve_e2c_wit_empty",
+     "E2eScal.WitE2cVe.ve_e2c_wit_prefix"
+    ]
+   },
+   "note": "premise: len + SizeSSZ <= cap, exact field lengths",
+   "witness": true,
+   "not_proved": [
+    "growslice branches (2 capacity tests)",
+    "morestack"
+   ]
   },
   {
    "symbols": [

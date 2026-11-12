@@ -3632,5 +3632,894 @@
   ],
   "claims_and_limits": "decoders complete 17 of the 211 UnmarshalSSZ of the target in the defined sense; the 16-type flat development population 16/16; 24 of the 40 flat fixed-size types of the target (committed IR rule) not started; encoders fast path only (3 of 211); no hash-tree-root theorem; list / vector work of another machine is not in this tree; pilot not adopted; T-7 deferred; no 'all codecs', 'generator complete', general, transfer or speed-up claim",
   "state": "not yet reviewed"
+ },
+ "enc2-prep": {
+  "unit": "ENC2 unit E2-P (fresh Opus session; preparation, no proof)",
+  "state": "not reviewed",
+  "base": "93dae89ff84d7c89a909d665c886d658b7be84c8",
+  "elf_sha256": "c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e (checked on the local artifact before extraction; no new ELF)",
+  "link": {
+   "dir": "prysm/go1.26.10/e2e/enc2/link",
+   "script": "gen/e2e/enc2link.py (text of h6link.py; function set = MarshalSSZTo of 13 types; data items = address-only ssz.ErrBytesLength per type that loads it)",
+   "types": [
+    "BlobIdentifier",
+    "DepositMessage",
+    "Deposit_Data",
+    "PendingPartialWithdrawal",
+    "SyncCommitteeMessage",
+    "PendingConsolidation",
+    "PendingDeposit",
+    "PowBlock",
+    "HistoricalSummary",
+    "SigningData",
+    "SyncAggregatorSelectionData",
+    "ValidatorBalance",
+    "VoluntaryExit"
+   ],
+   "already_linked": {
+    "Checkpoint": "e2e/link",
+    "BeaconBlockHeader": "e2e/bh/link",
+    "Eth1Data": "e2e/e1/link"
+   },
+   "callees_extracted": [],
+   "callee_note": "no MarshalSSZTo of a primitive is called (e2e/enc2/callgraph.json: 'an encoder calls a MarshalSSZTo' = false); runtime callees growslice, memmove, morestack_noctxt.abi0, moveSliceNoCapNoScan are external labels checked by link/check.py (b)",
+   "check": "link/check.py (a)-(f) PASS all: 1359 instructions, 1350 byte-identical, 9 padding; 112 labels; 8 data files",
+   "bundle": "c08ac5371b0ba595e9d67f1830d5c31fcbec6ac296f6b8068a2f2ae5b8f9d882"
+  },
+  "code_module": "lean/E2eScal/Enc2Code.lean: 13 code constants (BiMarshal .. VeMarshal), definitions only; lake build E2eScal.Enc2Code exit 0; lake build --no-build E2e E2eAd E2eScal exit 0 afterwards",
+  "survey": {
+   "file": "prysm/go1.26.10/e2e/scal/enc2-survey.md",
+   "script": "gen/e2e/enc2survey.py (reads committed .S files and prysm/ir/ir-mainnet.json only; two runs byte-identical)",
+   "types": 16,
+   "fields": {
+    "uint64_store": 22,
+    "byte_append": 24
+   },
+   "distinct_forms": {
+    "uint64_store": 9,
+    "byte_append": 5,
+    "overlay": "inline"
+   },
+   "form_definition": "mnemonic sequence of the field block (nop removed); register and displacement differences are not counted",
+   "moveSliceNoCapNoScan": "present in PowBlock, HistoricalSummary, SigningData: in-line in the epilogue behind 'cmp %rsi,%rdx; jb' (dst ptr - rsp vs frame end - rsp); no contract in the tree"
+  },
+  "axioms_gate": "axioms_gate.py run (one gated job): PASS, declarations 9771 (= 9758 + 13 defs), theorems 8134, modules 341, nonstandard 0, sorryAx 0; committed prysm/go1.26.10/e2e/axioms-gate.json rewritten",
+  "decl_drift": "decl_drift.py int7-r1 reviewer dump (9758 rows) vs this dump (9771): ADDED 13 (E2eScal.Enc2Code.*Marshal, kind def, axioms none), 0 CHANGED, 0 REMOVED (scal/enc2p-drift.txt); planted control (one type hash of E2eScal.G5C.vb_e2e_reject_complete changed in a copy): exit 1, 1 CHANGED",
+  "not_changed": "no existing .lean, gen/scal/*, statement, contract, generator, ELF, toolchain or lakefile change; AttestationData encoder not touched",
+  "not_run": [
+   "proofs (out of scope of E2-P)",
+   "regen_check.sh (no generator or generated file changed)",
+   "selftest of link/check.py (link/ not changed)"
+  ]
+ },
+ "enc2-lemmas": {
+  "unit": "ENC2 unit E2-L (fresh Fable 5.2 session, direct author)",
+  "state": "not yet reviewed",
+  "base": "e1fd7c0",
+  "scope": "fast path only: len(dst) + SizeSSZ <= cap(dst) and every byte-vector field of its exact length; development data (in-sample); no generator change; no growslice branch, length reject or morestack path",
+  "L1": {
+   "kind": "E2eScal.encFastKindN C L fields (KindEncN.lean); L : EncLayout = st, frame, gd, rt, nstk, lens, pre, exs, post; fields : List DecField",
+   "ties_rfl": [
+    "BeaconBlockHeader (Bh.bh_e2e_marshal_main)",
+    "Eth1Data (E1.e1_e2e_marshal_main)"
+   ],
+   "ties_equivalence": [],
+   "ties_implication": [
+    "Checkpoint: cp_marshal_of_kind (kind instance implies E2e.cp_e2e_marshal_main's statement; the hand statement names a 32-byte chunk ctl at rax + 40; the converse does not hold as stated)"
+   ],
+   "not_tied": [],
+   "kind_does_not_check": [
+    "that L is the frame of the .S file (a proof of the instance checks the slots it touches; an extra slot in L.pre is a stronger premise)",
+    "the premise cap < 2^63 is kept from the hand statements; the proofs do not use it"
+   ]
+  },
+  "L2": {
+   "kinds": [
+    "encHeadKindN C L fields d0",
+    "encFieldKindN C L fields d d'",
+    "encEpiKindN C L fields d"
+   ],
+   "step_lemmas": [
+    "kstep_cmp_jae_t",
+    "kstep_cmp_jb_f",
+    "kstep_lenchk",
+    "kstep_lea_idx",
+    "kstep_add_rr",
+    "kstep_sub_i",
+    "kstep_xor32",
+    "kstep_st_idx",
+    "kstep_movups15",
+    "kstep_sub_rr",
+    "encpro_s",
+    "encpro_l",
+    "encn_call",
+    "kreg_eq"
+   ],
+   "growslice": "no runtime.growslice directive is stepped; every capacity test is decided from len + SizeSSZ <= cap (kstep_cmp_jae_t / kstep_cmp_jb_f)",
+   "moveSliceNoCapNoScan": "PowBlock, HistoricalSummary, SigningData: behind a frame test in the epilogue (result pointer - rsp < 0x60), not on a growslice path; proved not taken on the fast path from the separation premise (EncFrameTest.lean: sep_at_far, frame50_ptr_far; frame 0x50 only); no contract form",
+   "examples_committed": [
+    "Enc2ExCp (Checkpoint)",
+    "Enc2ExBh (BeaconBlockHeader)",
+    "Enc2ExE1 (Eth1Data)",
+    "Enc2ExVb (ValidatorBalance)",
+    "Enc2ExDm (DepositMessage)",
+    "Enc2ExHs (HistoricalSummary)"
+   ],
+   "witness": "WitVbM (vbm_runs_empty, vbm_runs_prefix)",
+   "scratch_only": "the scratch emitter's text for the other 10 flat development types elaborated without error in two gated diagnostic jobs; not committed, not a result of the tree",
+   "bbh_generated_style": {
+    "lines": 1278,
+    "statement_lines": 791,
+    "proof_lines": 386,
+    "kind_lines": 60,
+    "time_s": [
+     8.2,
+     8.2
+    ],
+    "hand": {
+     "modules": "BhEncHead + BhEncRoots + BhEncMain",
+     "lines": 836,
+     "time_s": [
+      7.8,
+      7.8
+     ]
+    }
+   }
+  },
+  "checks": {
+   "axioms_gate": "PASS, 10328 declarations, nonstandard 0, sorryAx 0 (scratch JSON; committed axioms-gate.json not updated)",
+   "decl_drift": "base = the E2-P head dump (9771 rows): ADDED 557, CHANGED 0, REMOVED 0; planted control: gate exit 1 (sorryAx), drift 1 CHANGED + 1 ADDED, file restored",
+   "negatives": "22 of 23 counted (8 controls, 14 mutants inside: 11 statement or kind, 3 code); not counted: e2-tie-cp-stmt-field (class outside)",
+   "negcases": "scal/negcases-enc2.json, results scal/negative-enc2.json",
+   "module_times_s": {
+    "Enc2ExBh": 8.2,
+    "Enc2ExE1": 4.5,
+    "Enc2ExDm": 4.5,
+    "Enc2ExHs": 3.7,
+    "Enc2ExCp": 3.1,
+    "Enc2Examples": 2.4,
+    "Enc2ExVb": 2.2,
+    "EncTies": 1.4,
+    "EncSteps": 1.1,
+    "EncFrameTest": 1.0,
+    "KindEncN": 1.0,
+    "EncFieldN": 0.8,
+    "WitVbM": 5.3
+   },
+   "not_run": [
+    "cold build",
+    "generator, kindcheck.py, regen_check.sh (no generator change)",
+    "link check, Go differential, hardware",
+    "stale_olean.py (no killed build)",
+    "orca (not installed)"
+   ]
+  },
+  "effort": {
+   "diagnostics": 5,
+   "attempts": 11,
+   "failed_attempts": 4,
+   "gated_jobs": 46,
+   "gate_s": 1002
+  },
+  "not_done": [
+   "kind lines for the new step lemmas themselves (KindStep form)",
+   "spec corollaries, independent hand statements, witnesses of DepositMessage and HistoricalSummary, link check, Go differential (unit E2-C)",
+   "generator mode (unit E2-G)",
+   "a frame-test lemma for frames other than 0x50",
+   "growslice branches, length rejects, morestack"
+  ]
+ },
+ "enc2-gen": {
+  "unit": "E2-G",
+  "base": "d1e30ca",
+  "author": "fresh Opus 5.5 session",
+  "reviewed": false,
+  "in_sample": true,
+  "mode": "scalgen.py p2enc --gen6 (gen/scal/gen6enc.py)",
+  "scope": "encoder fast path only: len + SizeSSZ <= cap, byte-vector fields of exact length; no growslice branch, length reject or morestack; NOT complete encoder results",
+  "fail_closed": "one guarded success point, five flags; any exception exit 2, nothing on stdout",
+  "raw_output_commit": "e426d84",
+  "committed_run_gate_job": "e2g 06",
+  "trial_runs": [
+   "e2g 01 scratch run of the 16 types",
+   "e2g 03 p2enc_test run 1",
+   "e2g 04 debug",
+   "e2g 05 p2enc_test run 2"
+  ],
+  "per_type": {
+   "Checkpoint": {
+    "generated": true,
+    "reason": "",
+    "identity": "implication",
+    "generated_lines": 591,
+    "time_s": [
+     3.14,
+     3.08
+    ],
+    "build_rc": 0,
+    "build_s": 4.04
+   },
+   "BeaconBlockHeader": {
+    "generated": true,
+    "reason": "",
+    "identity": "rfl",
+    "generated_lines": 1279,
+    "time_s": [
+     8.64,
+     8.52
+    ],
+    "build_rc": 0,
+    "build_s": 9.42
+   },
+   "Eth1Data": {
+    "generated": true,
+    "reason": "",
+    "identity": "rfl",
+    "generated_lines": 802,
+    "time_s": [
+     4.51,
+     4.67
+    ],
+    "build_rc": 0,
+    "build_s": 5.11
+   },
+   "BlobIdentifier": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 570,
+    "time_s": [
+     2.91,
+     2.87
+    ],
+    "build_rc": 0,
+    "build_s": 3.45
+   },
+   "DepositMessage": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 798,
+    "time_s": [
+     4.44,
+     4.47
+    ],
+    "build_rc": 0,
+    "build_s": 5.18
+   },
+   "Deposit_Data": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 1041,
+    "time_s": [
+     6.45,
+     6.4
+    ],
+    "build_rc": 0,
+    "build_s": 7.14
+   },
+   "PendingPartialWithdrawal": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 686,
+    "time_s": [
+     3.18,
+     3.23
+    ],
+    "build_rc": 0,
+    "build_s": 3.67
+   },
+   "SyncCommitteeMessage": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 1077,
+    "time_s": [
+     7.0,
+     6.96
+    ],
+    "build_rc": 0,
+    "build_s": 7.76
+   },
+   "PendingConsolidation": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 539,
+    "time_s": [
+     2.42,
+     2.56
+    ],
+    "build_rc": 0,
+    "build_s": 2.86
+   },
+   "PendingDeposit": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 1320,
+    "time_s": [
+     9.04,
+     9.17
+    ],
+    "build_rc": 0,
+    "build_s": 10.58
+   },
+   "PowBlock": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 863,
+    "time_s": [
+     5.19,
+     5.02
+    ],
+    "build_rc": 0,
+    "build_s": 5.71
+   },
+   "HistoricalSummary": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 663,
+    "time_s": [
+     3.69,
+     3.72
+    ],
+    "build_rc": 0,
+    "build_s": 4.18
+   },
+   "SigningData": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 653,
+    "time_s": [
+     3.57,
+     3.53
+    ],
+    "build_rc": 0,
+    "build_s": 4.01
+   },
+   "SyncAggregatorSelectionData": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 497,
+    "time_s": [
+     2.28,
+     2.28
+    ],
+    "build_rc": 0,
+    "build_s": 2.62
+   },
+   "ValidatorBalance": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 497,
+    "time_s": [
+     2.21,
+     2.2
+    ],
+    "build_rc": 0,
+    "build_s": 2.42
+   },
+   "VoluntaryExit": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 539,
+    "time_s": [
+     2.38,
+     2.53
+    ],
+    "build_rc": 0,
+    "build_s": 2.81
+   }
+  },
+  "kindcheck": "16/16 PASS (rule 13: own recomputation of fields, layout, boundary states; C bound to the .S); selftest PASS 157 + 85; 12 broken copies fail",
+  "p2enc_test": "322/322 (50 adversarial refused, 4 valid variants covered, 252 fault injections)",
+  "negatives": "20/20 (4 controls, 16 inside; 3 IR-vs-code statement mutants)",
+  "axioms": "PASS 11011 declarations, nonstandard 0, sorryAx 0; AxiomsScal +421 names (E2-P, E2-L, E2-G)",
+  "drift": "vs int7-r1 dump 9758 rows: ADDED 1253, CHANGED 0, REMOVED 0; planted control caught",
+  "regen": "71/71 SAME (55 old, 16 new)",
+  "no_build": "exit 0",
+  "not_run": [
+   "cold build",
+   "link check",
+   "Go differential",
+   "x86-64",
+   "witnesses and spec corollaries of the generated theorems (unit E2-C)"
+  ],
+  "correction_e2g_r1_S1": "\"252 fault injections\" = 252 fault-injection rows: 225 injections reached and refused, 18 rows patch a phase the type does not reach, 4 controls, 5 harness rows (unit E2-C)"
+ },
+ "enc2-close": {
+  "unit": "E2-C",
+  "base": "dcc6e8088ea2ed2d3f8e5d92b19e291190ff1967 (e2g-r1 APPROVE)",
+  "author": "fresh Opus 5.5 session",
+  "reviewed": false,
+  "in_sample": true,
+  "scope": "encoder fast path only (premise: len + SizeSSZ <= cap, exact field lengths); no growslice branch, length reject or morestack; no encoder is complete; T-7 deferred; AttestationData encoder = separate task, not in this tree",
+  "types": {
+   "Checkpoint": {
+    "fast_path": "generated (kind) + hand statement by implication (cp_marshal_of_kind)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 57,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.cp_g6e_fast",
+     "spec": "E2eScal.E2c.cp_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cCp.cp_e2c_wit_empty",
+      "E2eScal.WitE2cCp.cp_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "morestack",
+     "growslice branches only under the recorded GrowsliceC contract (hand theorems, earlier units)"
+    ]
+   },
+   "BeaconBlockHeader": {
+    "fast_path": "generated (kind) + hand statement rfl (E2-G _stmt)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 145,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.bh_g6e_fast",
+     "spec": "E2eScal.E2c.bh_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cBh.bh_e2c_wit_empty",
+      "E2eScal.WitE2cBh.bh_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "length rejects with a capacity below len + 112",
+     "morestack"
+    ]
+   },
+   "Eth1Data": {
+    "fast_path": "generated (kind) + hand statement rfl (E2-G _stmt)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 89,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.e1_g6e_fast",
+     "spec": "E2eScal.E2c.e1_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cE1.e1_e2c_wit_empty",
+      "E2eScal.WitE2cE1.e1_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "length rejects",
+     "morestack"
+    ]
+   },
+   "BlobIdentifier": {
+    "fast_path": "generated (kind)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 3,
+    "gate_s": 102,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.bi_g6e_fast",
+     "spec": "E2eScal.E2c.bi_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cBi.bi_e2c_wit_empty",
+      "E2eScal.WitE2cBi.bi_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "length rejects",
+     "morestack"
+    ]
+   },
+   "DepositMessage": {
+    "fast_path": "generated (kind)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 76,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.dm_g6e_fast",
+     "spec": "E2eScal.E2c.dm_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cDm.dm_e2c_wit_empty",
+      "E2eScal.WitE2cDm.dm_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "length rejects",
+     "morestack"
+    ]
+   },
+   "Deposit_Data": {
+    "fast_path": "generated + independent statement rfl",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 819,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.dd_g6e_fast",
+     "spec": "E2eScal.E2c.dd_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cDd.dd_e2c_wit_empty",
+      "E2eScal.WitE2cDd.dd_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "length rejects",
+     "morestack"
+    ]
+   },
+   "PendingPartialWithdrawal": {
+    "fast_path": "generated + independent statement rfl",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 400,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.pw_g6e_fast",
+     "spec": "E2eScal.E2c.pw_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cPw.pw_e2c_wit_empty",
+      "E2eScal.WitE2cPw.pw_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "morestack"
+    ]
+   },
+   "SyncCommitteeMessage": {
+    "fast_path": "generated + independent statement rfl",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 132,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.sc_g6e_fast",
+     "spec": "E2eScal.E2c.sc_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cSc.sc_e2c_wit_empty",
+      "E2eScal.WitE2cSc.sc_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "length rejects",
+     "morestack"
+    ]
+   },
+   "PendingConsolidation": {
+    "fast_path": "generated (kind)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 40,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.pc_g6e_fast",
+     "spec": "E2eScal.E2c.pc_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cPc.pc_e2c_wit_empty",
+      "E2eScal.WitE2cPc.pc_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "morestack"
+    ]
+   },
+   "PendingDeposit": {
+    "fast_path": "generated (kind)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 199,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.pd_g6e_fast",
+     "spec": "E2eScal.E2c.pd_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cPd.pd_e2c_wit_empty",
+      "E2eScal.WitE2cPd.pd_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "length rejects",
+     "morestack"
+    ]
+   },
+   "PowBlock": {
+    "fast_path": "generated + independent statement rfl",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 75,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.pb_g6e_fast",
+     "spec": "E2eScal.E2c.pb_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cPb.pb_e2c_wit_empty",
+      "E2eScal.WitE2cPb.pb_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "length rejects",
+     "morestack"
+    ]
+   },
+   "HistoricalSummary": {
+    "fast_path": "generated (kind)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 63,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.hs_g6e_fast",
+     "spec": "E2eScal.E2c.hs_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cHs.hs_e2c_wit_empty",
+      "E2eScal.WitE2cHs.hs_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "length rejects",
+     "morestack"
+    ]
+   },
+   "SigningData": {
+    "fast_path": "generated (kind)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 54,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.sd_g6e_fast",
+     "spec": "E2eScal.E2c.sd_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cSd.sd_e2c_wit_empty",
+      "E2eScal.WitE2cSd.sd_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "length rejects",
+     "morestack"
+    ]
+   },
+   "SyncAggregatorSelectionData": {
+    "fast_path": "generated (kind)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 34,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.sa_g6e_fast",
+     "spec": "E2eScal.E2c.sa_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cSa.sa_e2c_wit_empty",
+      "E2eScal.WitE2cSa.sa_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "morestack"
+    ]
+   },
+   "ValidatorBalance": {
+    "fast_path": "generated (kind)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 3,
+    "gate_s": 45,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.vb_g6e_fast",
+     "spec": "E2eScal.E2c.vb_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cVb.vb_e2c_wit_empty",
+      "E2eScal.WitE2cVb.vb_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "morestack"
+    ]
+   },
+   "VoluntaryExit": {
+    "fast_path": "generated (kind)",
+    "witness": true,
+    "spec_corollary": true,
+    "negatives": "6/6",
+    "attempts": 1,
+    "gate_s": 39,
+    "theorems": {
+     "fast": "E2eScal.Gen6Enc.ve_g6e_fast",
+     "spec": "E2eScal.E2c.ve_e2c_spec_k",
+     "witness": [
+      "E2eScal.WitE2cVe.ve_e2c_wit_empty",
+      "E2eScal.WitE2cVe.ve_e2c_wit_prefix"
+     ]
+    },
+    "not_proved": [
+     "growslice branches",
+     "morestack"
+    ]
+   }
+  },
+  "independent_statement_identities": {
+   "PowBlock": "rfl (E2eScal.E2c.pb_same)",
+   "SyncCommitteeMessage": "rfl (E2eScal.E2c.sc_same)",
+   "PendingPartialWithdrawal": "rfl (E2eScal.E2c.pw_same)",
+   "Deposit_Data": "rfl (E2eScal.E2c.dd_same)",
+   "note": "E2cStmt.lean committed (0d25193) before Gen6{Pb,Sc,Pw,Dd}Enc.lean were opened; first build, no edit"
+  },
+  "decode_encode_consistency": "not attempted (optional item)",
+  "inventory": {
+   "script": "fv/kraken/gen/tools/inventory.py",
+   "encoders_fast_path_complete": 16,
+   "of": 211,
+   "decoders_complete": 17,
+   "summary": "fast-path complete 16 of 211 (premise: len + SizeSSZ <= cap, exact field lengths); no encoder is complete",
+   "controls": "20/20 as expected (15 earlier + 5 encoder)",
+   "deterministic": true,
+   "recount": "equal"
+  },
+  "negatives": "96/96 as expected (32 controls); timeouts: none",
+  "axioms": "PASS 12177 declarations, 10199 theorems, nonstandard 0, sorryAx 0; committed record regenerated; AxiomsScal +270 names",
+  "drift": "vs the declaration dump of review e2g-r1 (its results, 04-dump-head.tsv; 11011 rows): ADDED 1166, CHANGED 0, REMOVED 0; planted control on ONE scratch copy (weakened vb_e2c_spec_k + sorry theorem): gate exit 1, drift exit 1 (CHANGED 1, ADDED 1, REMOVED 2 auxiliaries); copy deleted",
+  "link": "enc2 bundle (13 MarshalSSZTo tables of E2-P) PASS all on the pinned ELF c6403c02...911e, RESULT byte-identical, BUNDLE c08ac537...; Cp / Bh / E1 tables not rerun",
+  "go_differential": "192/192 (16 types x 3 value sets x prefix 0/7 x capacity exact/+5; Go 1.26.10 linux/arm64, Go semantics, not the ELF); planted 2 mismatches -> exit 1; Prysm tree status unchanged",
+  "non_author_layout_recomputation": "the reviewer script of review e2g-r1 (own_layout.py) rerun on the tree: 16/16 equal, disjoint (copied to scal/e2c/own_layout_e2g_r1.py)",
+  "all_runs_gated": true,
+  "gate_s_total": 3588,
+  "bounds_hit": [
+   "wall-time count incl. lock waits: Deposit_Data 819 > 600 gate-s (waits behind own jobs 11-13; Lean time 107 s)"
+  ],
+  "not_run": [
+   "cold build",
+   "x86-64 hardware",
+   "regen_check.sh and kindcheck.py (generator and generated files unchanged)",
+   "decode o encode consistency (optional, not attempted)",
+   "orca (not installed)",
+   "link check rerun of the Cp / Bh / E1 encoder tables"
+  ],
+  "gate_s_note": "gate_s per type = wrapper wall time incl. lock waits (cases + share of build jobs). Deposit_Data 819 and PendingPartialWithdrawal 400 include 5 negative cases that waited about 350 s each for the heavy lock held by this unit's own jobs 11, 12, 13 ('waiting for heavy lock' in logs/neg-*.out). Lean time of the 6 Deposit_Data cases: 107 s. The per-type bound (600) is exceeded only in the wall-time count with waits; no job of a type ran longer than 60 s of Lean time.",
+  "fix_e2c2": {
+   "unit": "E2-C2 (after review e2c-r1 REQUEST_CHANGES; fresh Opus 5.5 session; NOT yet reviewed)",
+   "scope": "inventory script, regenerated INVENTORY.md / .json and records only; no proof, statement, generator, checker, lemma or generated-file change; declarations added 0",
+   "m1": "fixed: inventory.py lists the NOT-proved paths by a per-type rule (path classes from functions.json call_targets and the IR; a class without a mapped theorem is listed in full; a mapped reject / growslice theorem carries its premise text and the row the text of what stays not proved, else FAIL). BeaconBlockHeader now lists the length rejects with cap < len + 112",
+   "rows_changed": [
+    "BeaconBlockHeader",
+    "Checkpoint",
+    "HistoricalSummary",
+    "PowBlock",
+    "SigningData"
+   ],
+   "not_proved_by_inventory": {
+    "BeaconBlockHeader": [
+     "growslice branches (5 capacity tests)",
+     "length rejects with cap < len + 112 (with len + 16 ≤ cap < len + 112 a ParentRoot reject is reached without a growslice call) [3 byte fields; proved only: bh_e2e_marshal_reject1_main (len + 112 ≤ cap), bh_e2e_marshal_reject2_main (len + 112 ≤ cap, MemmoveC), bh_e2e_marshal_reject3_main (len + 112 ≤ cap, MemmoveC)]",
+     "morestack"
+    ],
+    "BlobIdentifier": [
+     "growslice branches (2 capacity tests)",
+     "length rejects (1 byte fields)",
+     "morestack"
+    ],
+    "Checkpoint": [
+     "growslice branches outside the GrowsliceC / MemmoveC contracts and the heap budget, and the run after the second growslice call when the heap left by the first call is below the second call's budget (T-7 residual, FINDINGS T-7, differential only) [2 capacity tests; proved only: cp_e2e_marshal_grow_main (cap < len + 8, len + 40 ≤ nextSliceCap(len + 8, cap), GrowsliceC + MemmoveC contracts + heap budget), cp_e2e_marshal_grow2_main (len + 8 ≤ cap < len + 40, GrowsliceC + MemmoveC contracts + heap budget), cp_e2e_marshal_grow_any_main (cap < len + 8, GrowsliceC + MemmoveC contracts + heap budget: returns or reaches the second growslice call)]",
+     "length rejects with cap < len + 8 outside the GrowsliceC contract or the heap budget [1 byte fields; proved only: cp_e2e_marshal_reject_main (len + 8 ≤ cap), cp_e2e_marshal_reject_cover (every cap, GrowsliceC contract + heap budget 4·len + 8736 ≤ avail ≤ maxAlloc)]",
+     "morestack"
+    ],
+    "DepositMessage": [
+     "growslice branches (3 capacity tests)",
+     "length rejects (2 byte fields)",
+     "morestack"
+    ],
+    "Deposit_Data": [
+     "growslice branches (4 capacity tests)",
+     "length rejects (3 byte fields)",
+     "morestack"
+    ],
+    "Eth1Data": [
+     "growslice branches (3 capacity tests)",
+     "length rejects (2 byte fields)",
+     "morestack"
+    ],
+    "HistoricalSummary": [
+     "growslice branches (2 capacity tests)",
+     "length rejects (2 byte fields)",
+     "the `runtime.moveSliceNoCapNoScan` branch of the epilogue frame test (shown not taken under the fast-path premises: dst separate from the frame; the branch itself is not proved)",
+     "morestack"
+    ],
+    "PendingConsolidation": [
+     "growslice branches (2 capacity tests)",
+     "morestack"
+    ],
+    "PendingDeposit": [
+     "growslice branches (5 capacity tests)",
+     "length rejects (3 byte fields)",
+     "morestack"
+    ],
+    "PendingPartialWithdrawal": [
+     "growslice branches (3 capacity tests)",
+     "morestack"
+    ],
+    "PowBlock": [
+     "growslice branches (3 capacity tests)",
+     "length rejects (3 byte fields)",
+     "the `runtime.moveSliceNoCapNoScan` branch of the epilogue frame test (shown not taken under the fast-path premises: dst separate from the frame; the branch itself is not proved)",
+     "morestack"
+    ],
+    "SigningData": [
+     "growslice branches (2 capacity tests)",
+     "length rejects (2 byte fields)",
+     "the `runtime.moveSliceNoCapNoScan` branch of the epilogue frame test (shown not taken under the fast-path premises: dst separate from the frame; the branch itself is not proved)",
+     "morestack"
+    ],
+    "SyncAggregatorSelectionData": [
+     "growslice branches (2 capacity tests)",
+     "morestack"
+    ],
+    "SyncCommitteeMessage": [
+     "growslice branches (4 capacity tests)",
+     "length rejects (2 byte fields)",
+     "morestack"
+    ],
+    "ValidatorBalance": [
+     "growslice branches (2 capacity tests)",
+     "morestack"
+    ],
+    "VoluntaryExit": [
+     "growslice branches (2 capacity tests)",
+     "morestack"
+    ]
+   },
+   "correction_types_not_proved": "the per-type not_proved lists above in this unit are superseded by not_proved_by_inventory: Checkpoint adds the length rejects with cap < len + 8 outside the GrowsliceC contract / heap budget and the T-7 residual; PowBlock, HistoricalSummary, SigningData add the moveSliceNoCapNoScan branch of the epilogue frame test (shown not taken under the fast-path premises, the branch itself not proved)",
+   "inventory_controls": "24/24 as expected (the 20 earlier controls with the same exit code and failure lines + e06 reject theorem without premise text, e07 rejects mapped without NOT-proved text, e08 length-reject theorem on a type without byte fields: exit 1; e09 BeaconBlockHeader rejects unmapped: exit 0, cell lists 'length rejects (3 byte fields)')",
+   "deterministic": "two runs byte-identical; decls dump byte-identical to the E2-C dump",
+   "no_build": "lake build --no-build E2e E2eAd E2eScal exit 0 (gated job e2c2 01)",
+   "axioms_gate_record": "untouched",
+   "should_fix": {
+    "S1": "applied: CONTAMINATION section 37 adds scal/enc2-survey.md to the files read before the independent statements",
+    "S2": "applied: Checkpoint cell names the GrowsliceC contract, the heap budget and the T-7 residual",
+    "S3": "partly: the reviewer script is in the REPORT section 11 reproduction line; run-directory paths in this unit's record and the script header replaced by the review name; not a step of a gate script (gate scripts frozen: open)",
+    "S4": "applied: REPORT gives the planted control as CHANGED 1, ADDED 1, REMOVED 2 (auxiliaries); the bound line: the per-type 600 gate-s bound is exceeded only in the wall-time count with lock waits (Deposit_Data 819, Lean time 107 s), as bounds_hit says; the run note 'no bound hit' meant Lean time"
+   },
+   "open": [
+    "S3 gate-script wiring of own_layout_e2g_r1.py (gate scripts frozen)",
+    "e2g-r1 S2-S5 (checker / test code)",
+    "growslice branches, length rejects, morestack, moveSliceNoCapNoScan branch, frame-separation premise for every Go caller (proof work, not this unit)"
+   ]
+  }
  }
 }

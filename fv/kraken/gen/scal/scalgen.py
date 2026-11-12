@@ -2508,9 +2508,117 @@ def _p2dec_gen5(args, flags):
     return g4 + "\n" + blk + body + "end E2eScal.Gen\n"
 
 
+# ---------------------------------------------------------------- GEN6 (unit E2-G): generated encoder fast-path theorem
+
+G6_FLAGS = ("walked", "rendered", "kinds_complete", "statement_check", "verified")
+
+
+def p2enc_gen6(args):
+    """`p2enc --gen6`: the encoder fast-path theorem of a flat `MarshalSSZTo` (E2-L interface): head, one theorem per
+    IR field, epilogue, fast-path theorem, each with its `_kind` line, and the identity `_stmt` on request.
+    FAIL-CLOSED: the `else` branch below is the ONLY place that returns a text (exit 0). It is reached only when
+    `_p2enc_gen6` completed normally AND set every flag of G6_FLAGS AND returned a string. ANY exception of any phase
+    (a `G6Refuse`, an unexpected error, SystemExit; not KeyboardInterrupt) is exit 2: nothing on stdout, no
+    fast-path theorem."""
+    flags = dict.fromkeys(G6_FLAGS, False)
+    try:
+        text = _p2enc_gen6(args, flags)
+    except KeyboardInterrupt:
+        raise
+    except BaseException as e:
+        why = e.why if isinstance(getattr(e, "why", None), str) else str(e)
+        args.g6_summary.update(generated=False, reason=f"{type(e).__name__}: {why}")
+        raise NoMatch(f"gen6: no fast-path theorem ({type(e).__name__}: {why})")
+    else:
+        if all(flags[k] is True for k in G6_FLAGS) and isinstance(text, str) and text:
+            args.g6_summary.update(generated=True, reason="")
+            return text
+        missing = [k for k in G6_FLAGS if flags[k] is not True]
+        args.g6_summary.update(generated=False, reason=f"success flags not set: {missing}")
+        raise NoMatch(f"gen6: success flags not all set ({', '.join(missing)}); no fast-path theorem")
+    raise AssertionError("unreachable")
+
+
+_G6MOD = None
+
+
+def g6_module():
+    """`gen/scal/gen6enc.py`, loaded once from this file's directory (`-I` does not put it on sys.path)."""
+    global _G6MOD
+    if _G6MOD is None:
+        import importlib.util
+        sys.dont_write_bytecode = True
+        spec = importlib.util.spec_from_file_location("gen6enc", pathlib.Path(__file__).with_name("gen6enc.py"))
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        _G6MOD = mod
+    return _G6MOD
+
+
+def _p2enc_gen6(args, flags):
+    G6 = g6_module()
+    # phase 1: the walk (two passes; G6Refuse on anything outside the interface)
+    g = G6.Gen6(args.S, args.const, args.ir, args.type, args.prefix, args.hand_layout, args.hand_layout_src)
+    if not (g.ended and len(g.bstate) == len(g.fields) + 1 and g.done == len(g.fields)):
+        raise G6.G6Refuse("walk did not reach the return after every field")
+    flags["walked"] = True
+    # phase 2: the theorems
+    body, kinds = g.text()
+    flags["rendered"] = True
+    px, n = args.prefix, len(g.fields)
+    want = ([(f"{px}_head", "encHeadKindN")] + [(f"{px}_f{i}", "encFieldKindN") for i in range(n)]
+            + [(f"{px}_epi", "encEpiKindN"), (f"{px}_fast", "encFastKindN")])
+    if kinds != want:
+        raise G6.G6Refuse(f"kind lines emitted {kinds}, required {want}")
+    for name, kind in want:
+        if body.count(f"\ntheorem {name}_kind : ∀ (h : Host), type_of% (@{name} h)\n    = @E2eScal.{kind} h ") != 1 \
+                or body.count(f"\ntheorem {name} : ") != 1 or body.count(f"theorem {name} ") + body.count(f"theorem {name}_kind ") != 2:
+            raise G6.G6Refuse(f"theorem {name} or its `_kind` line is missing or repeated")
+    flags["kinds_complete"] = True
+    tie, tail = "", ""
+    if args.same_as:
+        via = f"{args.same_as_via} " if args.same_as_via else ""
+        tie = (f"\nThe statement implies the committed hand statement `{args.same_as}` through `{args.same_as_via}`."
+               if args.same_as_via else f"\nThe statement is the declared type of the committed hand theorem `{args.same_as}`.")
+        tail = (f"/-- Statement check: the generated theorem proves the committed hand statement"
+                f"{' (implication tie)' if via else ''}. -/\n"
+                f"theorem {px}_stmt : type_of% (@{args.same_as} ‹Host›) :=\n  {via}{px}_fast\n\n")
+    elif args.same_as_prop:
+        tie = f"\nThe statement is the hand-written Prop `{args.same_as_prop}`."
+        tail = (f"/-- Statement check: the generated theorem proves the hand-written Prop. -/\n"
+                f"theorem {px}_stmt : {args.same_as_prop} :=\n  {px}_fast\n\n")
+    if (args.same_as or args.same_as_prop) and tail.count(f"\ntheorem {px}_stmt : ") != 1:
+        raise G6.G6Refuse("statement identity `_stmt` missing")
+    flags["statement_check"] = True
+    meta = dict(g.meta(), statement_check=(f"same {args.same_as}" + (f" via {args.same_as_via}" if args.same_as_via else "")
+                                           if args.same_as else f"prop {args.same_as_prop}" if args.same_as_prop
+                                           else "kind instance only"),
+                S=args.S, ir=args.ir, ir_type=args.type, kinds=[dict(theorem=a, kind=b) for a, b in want])
+    imports = [m for m in G6.G6_IMPORTS] + [m for m in args.imports.split(",") if m and m not in G6.G6_IMPORTS]
+    opens = " ".join(["Fk", "E2eScal"] + [o for o in args.open.split(",") if o])
+    head = ("".join(f"import {m}\n" for m in imports) + "\n"
+            f"/-!\n# GEN6 (`p2enc --gen6`, unit E2-G): encoder fast path of `(*v1alpha1.{g.t}).MarshalSSZTo`\n\n"
+            "Generated from the `.S` file and the IR: a symbolic dataflow walk of the fast path, one application of a\n"
+            "step lemma per directive (windows with the nops erased), boundary states between the fields. Every theorem\n"
+            "has a `_kind` line (`encHeadKindN`, `encFieldKindN`, `encEpiKindN`, `encFastKindN`).\n"
+            f"**Fast path only**: `len(dst) + {g.size} ≤ cap(dst)` and every byte-vector field of its exact length. No\n"
+            "`runtime.growslice` directive is stepped: each capacity test is decided from the premise. Not covered: the\n"
+            f"growslice branches, the length rejects, the morestack path. Not a complete encoder result.{tie}\n"
+            f"GEN6-JSON: {json.dumps(meta)}\n-/\n\n"
+            f"open {opens}\nvariable [Host]\n\nnamespace {G6.G6_NS}\n\n")
+    text = head + body + "\n" + tail + f"end {G6.G6_NS}\n"
+    for bad in ("sorry", "admit", "native_decide", "bv_decide", "axiom ", "maxHeartbeats 4000001"):
+        if bad in text:
+            raise G6.G6Refuse(f"forbidden text {bad!r} in the output")
+    if text.count("set_option maxHeartbeats ") != n + 3 or text.count("set_option maxHeartbeats 4000000 in\n") != n + 3:
+        raise G6.G6Refuse("heartbeat options differ from the interface's (4000000, one per theorem)")
+    flags["verified"] = True
+    return text
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("mode", choices=["p1", "p2dec"])
+    ap.add_argument("mode", choices=["p1", "p2dec", "p2enc"])
     ap.add_argument("--S", required=True)
     ap.add_argument("--const", required=True)
     ap.add_argument("--name")
@@ -2538,10 +2646,41 @@ def main():
                     help="p2dec: GEN5 (unit G5-G): the GEN4 output plus the whole accept theorem and the size-reject "
                          "theorem with their kinds; refuses (exit 2, nothing on stdout) unless every theorem is emitted")
     ap.add_argument("--summary", help="p2dec --gen2 / --gen4: write the per-field coverage report (JSON) here")
+    ap.add_argument("--gen6", action="store_true",
+                    help="p2enc (unit E2-G): the encoder fast-path theorem with head / field / epilogue theorems and their "
+                         "kinds; refuses (exit 2, nothing on stdout) unless every theorem is emitted")
+    ap.add_argument("--hand-layout", help="p2enc --gen6: use this committed EncLayout (chunk order of a hand statement)")
+    ap.add_argument("--hand-layout-src", help="p2enc --gen6: the Lean file that defines --hand-layout")
+    ap.add_argument("--same-as-via", help="p2enc --gen6 --same-as: the implication lemma (kind instance -> hand statement)")
     ap.add_argument("--compose", action="store_true",
                     help="p2dec --gen2: emit the composed accept theorem --name (needs every field covered; the "
                          "segment theorems come from the module of the same --prefix, listed in --imports)")
     args = ap.parse_args()
+    if args.mode == "p2enc" or args.gen6 or args.hand_layout or args.hand_layout_src or args.same_as_via:
+        if not (args.mode == "p2enc" and args.gen6):
+            ap.error("p2enc needs --gen6; --gen6 / --hand-layout / --same-as-via are p2enc options")
+        if args.gen2 or args.gen3 or args.gen4 or args.gen5 or args.compose or args.partial_out or args.name:
+            ap.error("p2enc --gen6 excludes --gen2 / --gen3 / --gen4 / --gen5 / --compose / --partial-out / --name")
+        if not (args.ir and args.type and args.prefix):
+            ap.error("p2enc --gen6 needs --ir, --type, --prefix")
+        if args.same_as_prop and args.same_as:
+            ap.error("--same-as and --same-as-prop exclude each other")
+        if bool(args.hand_layout) != bool(args.hand_layout_src):
+            ap.error("--hand-layout and --hand-layout-src go together")
+        if args.same_as_via and not args.same_as:
+            ap.error("--same-as-via needs --same-as")
+        args.g6_summary = dict(type=args.type, mode="gen6", generated=False)
+        try:
+            out = p2enc_gen6(args)
+        except NoMatch as e:
+            print(f"scalgen p2enc: no fast-path theorem: {e}", file=sys.stderr)
+            if args.summary:
+                pathlib.Path(args.summary).write_text(json.dumps(dict(args.g6_summary, exit=2), indent=1) + "\n")
+            sys.exit(2)
+        if args.summary:
+            pathlib.Path(args.summary).write_text(json.dumps(dict(args.g6_summary, exit=0), indent=1) + "\n")
+        sys.stdout.write(out)
+        return
     if args.gen5:
         if args.mode != "p2dec" or args.gen2 or args.gen3 or args.gen4 or args.compose or args.partial_out:
             ap.error("--gen5 is a p2dec option; it excludes --gen2 / --gen3 / --gen4 / --compose / --partial-out")
