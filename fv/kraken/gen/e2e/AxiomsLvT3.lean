@@ -9,6 +9,7 @@ import E2eList.WitIaA
 import E2eList.IaRejectCall
 import E2eList.IaSpecRNz
 import E2eList.WitIaR
+import E2eList.WitIaR2
 
 /-! LV T3 hand list for `gen/e2e/lvt3axioms_gate.py` ("must exist" names; every name also gets the axiom check). -/
 
@@ -35,3 +36,5 @@ import E2eList.WitIaR
 #print axioms E2eList.ia_jg2048_true
 #print axioms E2eList.WitIaR.ia_misaligned_runs
 #print axioms E2eList.WitIaR.ia_toobig_runs
+#print axioms E2eList.WitIaR2.ia_size_runs
+#print axioms E2eList.WitIaR2.ia_offset_runs
