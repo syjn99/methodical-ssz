@@ -1,134 +1,139 @@
-# SPEC: 1a·1b 대상 타입의 EthLib 명세, Go 값 추상화, 오류 대응
+# SPEC: EthLib specification, Go value abstraction and error mapping of the 1a and 1b target types
 
-명세는 `lean/Fv1/Spec*.lean`(EthLib `Desc`만 쓴다), 연결 정리는 `lean/Fk/*Spec.lean`, `*Err.lean`이다.
+The specification is in `lean/Fv1/Spec*.lean` (it uses only EthLib `Desc`), and the connection theorems are in `lean/Fk/*Spec.lean` and `*Err.lean`.
 
-용어:
-- **Desc**: EthLib의 SSZ 타입 기술자.
-- **추상화**: Go 값 `g`를 EthLib `Value`로 보내는 함수 `toValue`. 단사이고, Desc에 맞는 값 전체로 전사다(정리 이름은 표에).
-- **enc**: Go 인코더 출력을 Go 값의 함수로 적은 것. `serialize d (toValue g) = .ok (enc g)`를 증명한다. 그러면 EthLib가 받는 입력은 모두 어떤 `g`의 `enc g`다(`Transfer.accepted_is_enc`).
+On 2026-11-12, commit `84a4747` removed most connection theorems and `semtest/`. Tag `archive/fv-before-workflow` holds them.
+The specification files `lean/Fv1/Spec*.lean` stay. In the tables below, "(removed)" marks a theorem that is not in the current tree.
+A type, Go check or range without a kept theorem is a description of the Go 1.26.3 target code only.
 
-## 1. 대상과 고정 커밋
+Terms:
+- **Desc**: the SSZ type descriptor of EthLib.
+- **Abstraction**: the function `toValue` that maps a Go value `g` to an EthLib `Value`. It is injective, and it is surjective onto all values that fit the Desc (the theorem names are in the table).
+- **enc**: the Go encoder output written as a function of the Go value. We prove `serialize d (toValue g) = .ok (enc g)`. Then every input that EthLib accepts is `enc g` for some `g` (`Transfer.accepted_is_enc`).
 
-| 타입 | Go 정의 | 생성 코드 | 비고 |
+## 1. Targets and fixed commits
+
+| Type | Go definition | Generated code | Notes |
 | --- | --- | --- | --- |
-| Scalars, FixedVec, ListU64 | `target/types.go` | `target/types.ssz.go` | 1a 대상 |
-| BitVec, Nested, ListC, BitL | `target/types1b.go` | `target/types1b.ssz.go` (`go run ./cmd/ssz gen --type-names BitVec,Nested,ListC,BitL`) | 1b 대상 |
-| Checkpoint, AttestationData | `target/prysm/types.go` | `target/prysm/types.ssz.go` | Prysm v7.1.8, 커밋 `51b5a75ebbadf05af22bd2601b5baf7a9e99b66d`, `proto/prysm/v1alpha1/attestation.pb.go`. 필드 이름, Go 종류, ssz 태그를 그대로 옮겼다. protobuf 필드(`state`, `unknownFields`, `sizeCache`)는 옮기지 않았다. 그래서 Go 구조체 배치는 Prysm과 다르다. SSZ 스키마는 같다. |
+| Scalars, FixedVec, ListU64 | `target/types.go` | `target/types.ssz.go` | 1a target |
+| BitVec, Nested, ListC, BitL | `target/types1b.go` | `target/types1b.ssz.go` (`go run ./cmd/ssz gen --type-names BitVec,Nested,ListC,BitL`) | 1b target |
+| Checkpoint, AttestationData | `target/prysm/types.go` | `target/prysm/types.ssz.go` | Prysm v7.1.8, commit `51b5a75ebbadf05af22bd2601b5baf7a9e99b66d`, `proto/prysm/v1alpha1/attestation.pb.go`. We copied the field names, Go kinds and ssz tags without change. We did not copy the protobuf fields (`state`, `unknownFields`, `sizeCache`). Thus the Go struct layout is different from Prysm. The SSZ schema is the same. |
 
-생성 파일 해시는 `link/out/build-ids.txt`에 있다.
+The hashes of the generated files are in `link/out/build-ids.txt`.
 
-## 2. 타입별 명세
+## 2. Specification for each type
 
-| 타입 | Desc (`lean/Fv1`) | Go 값 추상화 | enc | 단사·전사·serialize |
+| Type | Desc (`lean/Fv1`) | Go value abstraction | enc | Injective, surjective, serialize |
 | --- | --- | --- | --- | --- |
-| Scalars | `scDesc = container [uint 1, uint 2, uint 4, uint 8, bool]` | `Scalars` (UInt8, UInt16, UInt32, UInt64, Bool) | `scEncode` (16바이트) | `sc_toValue_injective`, `sc_toValue_surjective`, `sc_serialize` |
+| Scalars | `scDesc = container [uint 1, uint 2, uint 4, uint 8, bool]` | `Scalars` (UInt8, UInt16, UInt32, UInt64, Bool) | `scEncode` (16 bytes) | `sc_toValue_injective`, `sc_toValue_surjective`, `sc_serialize` |
 | FixedVec | `fvDesc = container [byteVector 32, vector (uint 8) 4]` | `FixedVecG` (Vector UInt8 32, Vector UInt64 4) | `fvEncode` (64) | `fv_toValue_injective`, `fv_toValue_surjective`, `fv_serialize` |
-| ListU64 | `luDesc = container [list (uint 8) 16]` | `ListU64` (List UInt64), `ok` = 길이 ≤ 16 | `luEncode` = 오프셋 4 ‖ 원소 | `lu_toValue_injective`, `lu_toValue_surjective`, `lu_serialize` |
-| BitVec | `bvDesc = container [bitVector 4]` | `BitVecG` (바이트 b, b < 16) | `#[b]` | `bv_toValue_injective`, `bv_toValue_surjective`, `bv_serialize` |
-| Nested | `neDesc = container [uint 8, scDesc, luDesc]` | `NestedG` (UInt64, Scalars, ListU64), `ok` = `l.ok` | `neEncode` = A ‖ S ‖ 오프셋 28 ‖ `luEncode l` | `ne_toValue_injective`, `ne_toValue_surjective`, `ne_serialize` |
-| ListC | `lcDesc = container [list luDesc 4]` | `ListCG` (List ListU64), `ok` = 길이 ≤ 4이고 원소마다 `ok` | `lcEncode` = 오프셋 4 ‖ 오프셋 표(첫 값 4n) ‖ 원소 인코딩 | `lc_toValue_injective`(`Fk/RoundTrip1b.lean`), `lc_toValue_surjective`, `lc_serialize` |
+| ListU64 | `luDesc = container [list (uint 8) 16]` | `ListU64` (List UInt64), `ok` = length ≤ 16 | `luEncode` = offset 4 ‖ elements | `lu_toValue_injective`, `lu_toValue_surjective`, `lu_serialize` |
+| BitVec | `bvDesc = container [bitVector 4]` | `BitVecG` (byte b, b < 16) | `#[b]` | `bv_toValue_injective`, `bv_toValue_surjective`, `bv_serialize` |
+| Nested | `neDesc = container [uint 8, scDesc, luDesc]` | `NestedG` (UInt64, Scalars, ListU64), `ok` = `l.ok` | `neEncode` = A ‖ S ‖ offset 28 ‖ `luEncode l` | `ne_toValue_injective`, `ne_toValue_surjective`, `ne_serialize` |
+| ListC | `lcDesc = container [list luDesc 4]` | `ListCG` (List ListU64), `ok` = length ≤ 4 and `ok` for each element | `lcEncode` = offset 4 ‖ offset table (first value 4n) ‖ element encodings | `lc_toValue_injective` (removed, `Fk/RoundTrip1b.lean`), `lc_toValue_surjective`, `lc_serialize` |
 | Checkpoint | `cpDesc = container [uint 8, byteVector 32]` | `CheckpointG` (UInt64, Vector UInt8 32) | `cpEncode` (40) | `cp_toValue_injective`, `cp_toValue_surjective`, `cp_serialize` |
 | AttestationData | `adDesc = container [uint 8, uint 8, byteVector 32, cpDesc, cpDesc]` | `AttestationDataG` | `adEncode` (128) | `ad_toValue_injective`, `ad_toValue_surjective`, `ad_serialize` |
-| BitL | `blDesc = container [bitList 2048]` | `BitLG` (Array Bool, 크기 ≤ 2048) | `blEncode` = 오프셋 4 ‖ `packBitsDelimited` | `bl_toValue_surjective`, `bl_serialize`, 단사는 `bl_roundtrip` 안에서 증명 |
+| BitL | `blDesc = container [bitList 2048]` | `BitLG` (Array Bool, size ≤ 2048) | `blEncode` = offset 4 ‖ `packBitsDelimited` | `bl_toValue_surjective`, `bl_serialize`, injectivity is proved in `bl_roundtrip` (removed) |
 
-Go 값이 EthLib 값으로 가지 못하는 경우(추상화의 정의역 밖):
-- FixedVec `len(W) ≠ 4`, Checkpoint·AttestationData `len(Root) ≠ 32`: 인코더가 `ssz.ErrBytesLength`를 반환한다.
-- ListU64 원소 > 16, ListC 원소 > 4: 인코더가 `ssz.ErrListTooBig`를 반환한다.
-- BitVec 패딩 비트가 선 바이트(b ≥ 16): 디코더가 받는다(발견 F1).
-- BitL `len(c.B)`가 258~2048바이트: 인코더가 받는다(발견 F2).
+Cases where a Go value does not map to an EthLib value (outside the domain of the abstraction):
+- FixedVec `len(W) ≠ 4`, Checkpoint and AttestationData `len(Root) ≠ 32`: the encoder returns `ssz.ErrBytesLength`.
+- ListU64 elements > 16, ListC elements > 4: the encoder returns `ssz.ErrListTooBig`.
+- BitVec byte with a padding bit set (b ≥ 16): the decoder accepts it (finding F1).
+- BitL `len(c.B)` is 258 to 2048 bytes: the encoder accepts it (finding F2).
 
-## 3. 디코더 오류 대응 (Go 검사 순서대로)
+## 3. Decoder error mapping (in the Go check order)
 
-"EthLib"는 그 검사가 실패하면 EthLib도 거부함을 보이는 정리다. "기계어"는 Go 코드가 그 오류를 반환함을 보이는 Kraken 정리다.
+"EthLib" is a theorem that shows that EthLib also rejects when that check fails. "Machine code" is a Kraken theorem that shows that the Go code returns that error.
 
-| 타입 | Go 검사 | Go 오류 | EthLib | 기계어 |
+| Type | Go check | Go error | EthLib | Machine code |
 | --- | --- | --- | --- | --- |
-| Scalars | len ≠ 16 | `ErrSize` | `sc_serialize` + 고정 크기 | `sc_reject_size_main` |
-| Scalars | bool 바이트 > 1 | `ErrInvalidSerialization` | `sc_spec_rejects_bool` | `sc_reject_bool_main` |
-| FixedVec | len ≠ 64 | `ErrSize` | `fv_reject_spec` | `fv_reject_size_main` |
+| Scalars | len ≠ 16 | `ErrSize` | `sc_serialize` + fixed size | `sc_reject_size_main` (removed) |
+| Scalars | bool byte > 1 | `ErrInvalidSerialization` | `sc_spec_rejects_bool` (removed) | `sc_reject_bool_main` (removed) |
+| FixedVec | len ≠ 64 | `ErrSize` | `fv_reject_spec` (removed) | `fv_reject_size_main` (removed) |
 | ListU64 | len < 4 | `ErrSize` | `lu_spec_rejects` | `lu_reject_short_main` |
-| ListU64 | 오프셋 ≠ 4 | `ErrInvalidVariableOffset` | `lu_spec_rejects` | `lu_reject_offset_main` |
+| ListU64 | offset ≠ 4 | `ErrInvalidVariableOffset` | `lu_spec_rejects` | `lu_reject_offset_main` |
 | ListU64 | (len − 4) mod 8 ≠ 0 | `fmt.Errorf(… %w, ErrIncorrectListSize)` | `lu_spec_rejects` | `lu_reject_misaligned_main` (rax ≠ 0) |
 | ListU64 | (len − 4) / 8 > 16 | `fmt.Errorf(… %w, ErrListTooBig)` | `lu_spec_rejects` | `lu_reject_toobig_main` (rax ≠ 0) |
-| BitVec | len ≠ 1 | `ErrSize` | `bv_reject_spec` | `bv_reject_size_main` |
-| BitVec | 패딩 비트(`ssz.ValidateBitvector`) | `fmt.Errorf("J: %w")` | `bv_spec_one`, `bv_spec_accepts_iff` | `bv_reject_padding_main` (rax ≠ 0) |
-| Nested | len < 28 | `ErrSize` | `ne_spec_rejects` | `ne_reject_short_spec` |
-| Nested | 오프셋(24..27) ≠ 28 | `ErrInvalidVariableOffset` | `ne_spec_rejects` | `ne_reject_offset_spec` |
-| Nested | S 디코더 실패(bool) | `fmt.Errorf("S: %w")` | `ne_spec_accepts_iff` | 없음 |
-| Nested | L 디코더 실패 | `fmt.Errorf("L: %w")` | `ne_spec_accepts_iff` | 없음 |
-| ListC | len < 4 | `ErrSize` | `lc_spec_rejects` | `lc_reject_short_spec` |
-| ListC | 오프셋 ≠ 4 | `ErrInvalidVariableOffset` | `lc_spec_rejects` | `lc_reject_offset_spec` |
-| ListC | 목록 바이트 1~3 | `fmt.Errorf`(감싸지 않음) | `lc_spec_rejects` | `lc_reject_tail_spec` (rax ≠ 0) |
-| ListC | 첫 원소 오프셋 0 | `fmt.Errorf` | `lc_spec_rejects` | `lc_reject_zero_spec` (rax ≠ 0) |
-| ListC | 첫 오프셋 mod 4 ≠ 0 | `fmt.Errorf`(%d, convT64) | `lc_shape`(첫 오프셋 = 4n) | 없음 |
-| ListC | 첫 오프셋 / 4 > 4 | `fmt.Errorf(… %w, ErrListTooBig)` | `lc_shape` | 없음 |
-| ListC | 첫 오프셋 > 목록 길이 | `fmt.Errorf` | `lc_spec_rejects` | `lc_reject_past_spec` (rax ≠ 0) |
-| ListC | 다음 오프셋 > 길이, 오프셋 감소 | `fmt.Errorf` | 없음 | 없음 |
-| ListC | 원소 디코더 실패 | `fmt.Errorf("Items: %w")` | 없음 | 없음 |
-| Checkpoint | len ≠ 40 | `ErrSize` | `cp_reject_size_spec` (`cp_spec_accepts_iff`) | `cp_reject_size_main` |
-| AttestationData | len ≠ 128 | `ErrSize` | `ad_reject_size_spec` (`ad_spec_accepts_iff`) | `ad_reject_size_main` |
-| BitL | len < 4 | `ErrSize` | `bl_spec_rejects` | `bl_reject_short_main` |
-| BitL | 오프셋 ≠ 4 | `ErrInvalidVariableOffset` | `bl_spec_rejects` | `bl_reject_offset_main` |
-| BitL | `ValidateBitlist` 실패 | `fmt.Errorf("B: %w")` | `bl_spec_rejects` (`blValid` 거짓) | `bl_reject_invalid_main` (rax ≠ 0, 계약 `ValidateBitlistErrC` 뒤) |
+| BitVec | len ≠ 1 | `ErrSize` | `bv_reject_spec` (removed) | `bv_reject_size_main` (removed) |
+| BitVec | padding bits (`ssz.ValidateBitvector`) | `fmt.Errorf("J: %w")` | `bv_spec_one` (removed), `bv_spec_accepts_iff` (removed) | `bv_reject_padding_main` (removed) (rax ≠ 0) |
+| Nested | len < 28 | `ErrSize` | `ne_spec_rejects` (removed) | `ne_reject_short_spec` (removed) |
+| Nested | offset (24..27) ≠ 28 | `ErrInvalidVariableOffset` | `ne_spec_rejects` (removed) | `ne_reject_offset_spec` (removed) |
+| Nested | S decoder fails (bool) | `fmt.Errorf("S: %w")` | `ne_spec_accepts_iff` (removed) | None |
+| Nested | L decoder fails | `fmt.Errorf("L: %w")` | `ne_spec_accepts_iff` (removed) | None |
+| ListC | len < 4 | `ErrSize` | `lc_spec_rejects` (removed) | `lc_reject_short_spec` (removed) |
+| ListC | offset ≠ 4 | `ErrInvalidVariableOffset` | `lc_spec_rejects` (removed) | `lc_reject_offset_spec` (removed) |
+| ListC | list bytes 1 to 3 | `fmt.Errorf` (not wrapped) | `lc_spec_rejects` (removed) | `lc_reject_tail_spec` (removed) (rax ≠ 0) |
+| ListC | first element offset 0 | `fmt.Errorf` | `lc_spec_rejects` (removed) | `lc_reject_zero_spec` (removed) (rax ≠ 0) |
+| ListC | first offset mod 4 ≠ 0 | `fmt.Errorf` (%d, convT64) | `lc_shape` (removed) (first offset = 4n) | None |
+| ListC | first offset / 4 > 4 | `fmt.Errorf(… %w, ErrListTooBig)` | `lc_shape` (removed) | None |
+| ListC | first offset > list length | `fmt.Errorf` | `lc_spec_rejects` (removed) | `lc_reject_past_spec` (removed) (rax ≠ 0) |
+| ListC | next offset > length, offset decreases | `fmt.Errorf` | None | None |
+| ListC | element decoder fails | `fmt.Errorf("Items: %w")` | None | None |
+| Checkpoint | len ≠ 40 | `ErrSize` | `cp_reject_size_spec` (removed) (`cp_spec_accepts_iff` (removed)) | `cp_reject_size_main` (removed) |
+| AttestationData | len ≠ 128 | `ErrSize` | `ad_reject_size_spec` (removed) (`ad_spec_accepts_iff` (removed)) | `ad_reject_size_main` (removed) |
+| BitL | len < 4 | `ErrSize` | `bl_spec_rejects` (removed) | `bl_reject_short_main` (removed) |
+| BitL | offset ≠ 4 | `ErrInvalidVariableOffset` | `bl_spec_rejects` (removed) | `bl_reject_offset_main` (removed) |
+| BitL | `ValidateBitlist` fails | `fmt.Errorf("B: %w")` | `bl_spec_rejects` (removed) (`blValid` false) | `bl_reject_invalid_main` (removed) (rax ≠ 0, after the contract `ValidateBitlistErrC` (removed)) |
 
-수용 쪽: `*_unmarshal_accept_spec_k`가 "EthLib가 받으면 기계어가 nil을 반환하고 수신자가 그 값을 담는다"를 말한다(Scalars, ListU64, FixedVec, Nested, ListC, Checkpoint, AttestationData, BitL). BitVec의 `bv_unmarshal_accept_spec_k`는 바이트 식(`bs = #[g.b]`)만 말한다. 기계어 실행을 포함하는 정리는 `bv_unmarshal_accept_machine`이다. 7절 표가 둘을 구분한다. ListC는 두 정리로 나뉜다: 원소가 1개 이상인 입력(`lc_unmarshal_accept_spec_k`, `len(buf) > 4`)과 빈 리스트(`lc_unmarshal_accept_empty_spec_k`, `len(buf) = 4`, 결과 `c.Items` = (`runtime.zerobase`, 0, 0), 전제 X15 = 0).
+Accept side: `*_unmarshal_accept_spec_k` says "if EthLib accepts, the machine code returns nil and the receiver holds that value" (Scalars, ListU64, FixedVec, Nested, ListC, Checkpoint, AttestationData, BitL). Only the Scalars and ListU64 theorems are in the current tree. For BitVec, `bv_unmarshal_accept_spec_k` (removed) said only a byte equation (`bs = #[g.b]`). The theorem that included machine execution was `bv_unmarshal_accept_machine` (removed). The table in section 7 keeps the two apart. ListC has two theorems: input with 1 or more elements (`lc_unmarshal_accept_spec_k` (removed), `len(buf) > 4`) and the empty list (`lc_unmarshal_accept_empty_spec_k` (removed), `len(buf) = 4`, result `c.Items` = (`runtime.zerobase`, 0, 0), premise X15 = 0).
 
-### 3.1 첫 오프셋 `> size` 검사
+### 3.1 The first offset `> size` check
 
-생성기는 ListU64, Nested, ListC, BitL의 첫 오프셋 뒤에 `off > size` 검사를 내지 않는다(생성기 수정 G3).
-첫 오프셋이 고정 크기와 같고 고정 크기 ≤ len이므로 그 검사는 도달하지 않는다.
-`lc_reject_past_main`은 첫 **원소** 오프셋이 목록 길이를 넘는 경우의 정리다. G3와 관계가 없다.
+The generator does not emit an `off > size` check after the first offset of ListU64, Nested, ListC and BitL (generator fix G3).
+The first offset is equal to the fixed size and the fixed size ≤ len, so the code cannot reach that check.
+`lc_reject_past_main` (removed) was the theorem for the case where the first **element** offset is larger than the list length. It is not related to G3.
 
-## 4. 오프셋 읽기·쓰기의 범위
+## 4. Range of offset reads and writes
 
 `ssz.ReadOffset(buf) = uint64(binary.LittleEndian.Uint32(buf))`, `ssz.WriteOffset(dst, i int) = AppendUint32(dst, uint32(i))`.
 
-| 호출 지점 | 기계어 | 범위 |
+| Call site | Machine code | Range |
 | --- | --- | --- |
-| ListU64 디코더 `ReadOffset(buf[0:4])` | `mov (%rbx),%edx` (32비트 적재, 0 확장) | 값 < 2^32. `lu_off4`가 `Int.ofBytes` 값과 같음을 보인다 |
-| Nested 디코더 `ReadOffset(buf[24:28])` | `mov 0x18(%rbx),%edx` | 같음. `ne_off28` |
-| ListC 디코더 `ReadOffset(buf[0:4])`, 첫 원소 오프셋 | `mov (%rbx),%edx`, `mov (%rbx,%rdx,1),%ebx` | 같음. `lu_off4`, `zx_o` |
-| ListC 디코더 다음 원소 오프셋 | 루프 안 32비트 적재 | 같음. `lcl_iter` |
-| BitL 디코더 `ReadOffset(buf[0:4])` | `mov (%rbx),%edx` | 같음. `lu_off4` |
-| ListU64 인코더 `WriteOffset(dst, 4)` | `movl $0x4,…` | 상수. `lu_marshal_main` |
-| BitL 인코더 `WriteOffset(dst, 4)` | `movl $0x4,-0x4(%rdx,%rbx,1)` | 상수. `bl_marshal_main` |
-| Nested 인코더 `WriteOffset(dst, 28)` | 상수 | 상수. `ne_marshal_main` |
-| ListC 인코더 `WriteOffset(dst, 4)`, 원소 오프셋 `4n + Σ size` | `movl $0x4`, `mov %r8d,-0x4(%rdx,%rbx,1)` (`int` → `uint32` 자르기) | 빠른 경로 증명: `lcm2_loop`가 쓴 4바이트가 `offTab`(EthLib `uintBytes 4`)과 같음을 보인다. 원소마다 길이 ≤ 16(`g.ok`)이므로 값 ≤ 544 < 2^32이고 자르기가 값을 바꾸지 않는다(`lc_marshal_main`). Go 수준 근거(빠른 경로 밖): 성공 경로에서는 원소마다 길이 ≤ 16이므로 오프셋 ≤ 16 + 4·132 = 544 < 2^32. 길이가 2^29를 넘는 원소가 있으면 자른 값을 쓴 뒤 그 원소의 인코더가 `ErrListTooBig`를 반환하고 함수는 `nil, err`를 반환한다(쓴 바이트는 버려진다). EthLib `offsetOverflow`(전체 ≥ 2^32)는 이 성공 경로에서 일어나지 않는다 |
+| ListU64 decoder `ReadOffset(buf[0:4])` | `mov (%rbx),%edx` (32-bit load, zero extension) | Value < 2^32. `lu_off4` shows that it is equal to the `Int.ofBytes` value |
+| Nested decoder `ReadOffset(buf[24:28])` | `mov 0x18(%rbx),%edx` | Same. `ne_off28` (removed) |
+| ListC decoder `ReadOffset(buf[0:4])`, first element offset | `mov (%rbx),%edx`, `mov (%rbx,%rdx,1),%ebx` | Same. `lu_off4`, `zx_o` (removed) |
+| ListC decoder next element offset | 32-bit load in the loop | Same. `lcl_iter` (removed) |
+| BitL decoder `ReadOffset(buf[0:4])` | `mov (%rbx),%edx` | Same. `lu_off4` |
+| ListU64 encoder `WriteOffset(dst, 4)` | `movl $0x4,…` | Constant. `lu_marshal_main` (removed) |
+| BitL encoder `WriteOffset(dst, 4)` | `movl $0x4,-0x4(%rdx,%rbx,1)` | Constant. `bl_marshal_main` (removed) |
+| Nested encoder `WriteOffset(dst, 28)` | Constant | Constant. `ne_marshal_main` (removed) |
+| ListC encoder `WriteOffset(dst, 4)`, element offset `4n + Σ size` | `movl $0x4`, `mov %r8d,-0x4(%rdx,%rbx,1)` (`int` → `uint32` truncation) | Fast-path proof: shows that the 4 bytes that `lcm2_loop` (removed) writes are equal to `offTab` (removed) (EthLib `uintBytes 4`). Each element has length ≤ 16 (`g.ok`), so the value ≤ 544 < 2^32 and the truncation does not change the value (`lc_marshal_main` (removed)). Go-level basis (outside the fast path): on the success path, each element has length ≤ 16, so the offset ≤ 16 + 4·132 = 544 < 2^32. If an element has a length larger than 2^29, the code writes the truncated value, then the encoder of that element returns `ErrListTooBig`, and the function returns `nil, err` (the written bytes are discarded). EthLib `offsetOverflow` (total ≥ 2^32) does not occur on this success path |
 
-디코더 쪽 읽기는 4바이트 적재라서 int→uint32 변환이 없다. 쓰기 쪽 자르기는 ListC 인코더 한 곳이다.
+On the decoder side, the reads are 4-byte loads, so there is no int→uint32 conversion. On the write side, the only truncation is in the ListC encoder.
 
-## 5. 부정 입력
+## 5. Negative inputs
 
-타입마다 빈 값, 최소, 최대, 초과, 잘못된 오프셋(0, 작음, 큼, 정렬 안 됨)의 입력과 그 결과를 보장하는 정리는 `semtest/cases.why`에 있다. Go 기준 결과는 `semtest/expected.txt`다(x86-64 하드웨어에서는 `semtest/run.sh`가 비교한다). 증명이 없는 줄은 "not proved"로 표시했다.
+This section described the negative inputs of each type in `semtest/cases.why`, the Go reference results in `semtest/expected.txt` and the hardware comparison script `semtest/run.sh`.
+`semtest/` was removed on 2026-11-12. Tag `archive/fv-before-workflow` holds it.
 
-## 6. bitlist 검증
+## 6. Bitlist validation
 
-`GOAMD64=v1` 빌드에서 `ssz.ValidateBitlist`는 rodata 표를 읽지 않는다.
-`bits.Len8`은 `bsr %r8d,%r8d`로 컴파일된다.
-Kraken이 `bsr`를 파싱하지 못하므로 함수 전체를 계약 `ValidateBitlistC`·`ValidateBitlistErrC`로 둔다.
-**bitlist의 핵심 검사(빈 입력, 끝 바이트 0, 2048비트 초과)는 계약 뒤에 있다.**
-계약은 "rax = 0 ⟺ EthLib `unpackDelimited (some 2048)`가 받는다"이다.
-Kraken에 `bsr`이 들어오면 이 계약을 증명으로 바꿀 수 있다.
+In the `GOAMD64=v1` build, `ssz.ValidateBitlist` does not read a rodata table.
+`bits.Len8` compiles to `bsr %r8d,%r8d`.
+Kraken cannot parse `bsr`, so the full function was the contracts `ValidateBitlistC` and `ValidateBitlistErrC` (`Fk/Vbl.lean`).
+**The core bitlist checks (empty input, last byte 0, more than 2048 bits) were behind the contract.**
+The contract was "rax = 0 ⟺ EthLib `unpackDelimited (some 2048)` accepts".
+`Fk/Vbl.lean` was removed on 2026-11-12. If Kraken gets `bsr`, a proof of the function can replace the contract.
 
-## 7. 완료표: 기계어 실행을 포함하는 정리와 바이트 식 정리
+## 7. Completion table: theorems that include machine execution and byte equation theorems
 
-"기계어"는 `Eventually (step1 Host.exe) …`를 결론에 가진 정리다.
-"바이트 식"은 EthLib `serialize`/`deserialize`와 Go 값의 식만 말하는 정리다.
-바이트 식 정리는 기계어 실행을 말하지 않는다.
-왕복 정리(`*_roundtrip`)는 EthLib에서 `enc g`를 다시 읽는 바이트 식 정리다.
-인코더 실행 뒤 디코더를 실행하는 연속 기계 실행 정리는 없다.
+"Machine code" is a theorem that has `Eventually (step1 Host.exe) …` in its conclusion.
+"Byte equation" is a theorem that speaks only about equations of EthLib `serialize`/`deserialize` and Go values.
+A byte equation theorem does not speak about machine execution.
+A round-trip theorem (`*_roundtrip`) is a byte equation theorem that reads `enc g` again in EthLib.
+There is no theorem about a continuous machine execution that runs the decoder after the encoder.
 
-| 타입 | 인코더: 기계어 | 인코더: 바이트 식 | 디코더 수용: 기계어 + EthLib | 디코더 수용: 바이트 식만 |
+| Type | Encoder: machine code | Encoder: byte equation | Decoder accept: machine code + EthLib | Decoder accept: byte equation only |
 | --- | --- | --- | --- | --- |
 | Scalars | `sc_marshal_main`, `sc_marshal_spec_k` | `sc_serialize` | `sc_unmarshal_accept_spec_k` | |
-| FixedVec | `fv_marshal_main` | `fv_marshal_spec_k`, `fv_serialize` | `fv_unmarshal_accept_spec_k` | |
-| ListU64 | `lu_marshal_main` | `lu_serialize` | `lu_unmarshal_accept_spec_k` | |
-| BitVec | `bv_marshal_main` | `bv_serialize` | `bv_unmarshal_accept_machine` | `bv_unmarshal_accept_spec_k` |
-| Nested | `ne_marshal_main` | `ne_marshal_bytes`, `ne_serialize` | `ne_unmarshal_accept_spec_k` | |
-| ListC | `lc_marshal_main` | `lc_marshal_spec_k`, `lc_serialize` | `lc_unmarshal_accept_spec_k`, `lc_unmarshal_accept_empty_spec_k` | |
-| Checkpoint | `cp_marshal_main`, `cp_marshal_spec_k` | `cp_serialize` | `cp_unmarshal_accept_spec_k` | |
-| AttestationData | `ad_marshal_main` | `ad_marshal_bytes`, `ad_serialize` | `ad_unmarshal_accept_spec_k` | |
-| BitL | `bl_marshal_main` | `bl_serialize` | `bl_unmarshal_accept_spec_k`(`ValidateBitlistC` 뒤) | |
+| FixedVec | `fv_marshal_main` | `fv_marshal_spec_k` (removed), `fv_serialize` | `fv_unmarshal_accept_spec_k` (removed) | |
+| ListU64 | `lu_marshal_main` (removed) | `lu_serialize` | `lu_unmarshal_accept_spec_k` | |
+| BitVec | `bv_marshal_main` (removed) | `bv_serialize` | `bv_unmarshal_accept_machine` (removed) | `bv_unmarshal_accept_spec_k` (removed) |
+| Nested | `ne_marshal_main` (removed) | `ne_marshal_bytes` (removed), `ne_serialize` | `ne_unmarshal_accept_spec_k` (removed) | |
+| ListC | `lc_marshal_main` (removed) | `lc_marshal_spec_k` (removed), `lc_serialize` | `lc_unmarshal_accept_spec_k` (removed), `lc_unmarshal_accept_empty_spec_k` (removed) | |
+| Checkpoint | `cp_marshal_main` (removed), `cp_marshal_spec_k` (removed) | `cp_serialize` | `cp_unmarshal_accept_spec_k` (removed) | |
+| AttestationData | `ad_marshal_main` (removed) | `ad_marshal_bytes` (removed), `ad_serialize` | `ad_unmarshal_accept_spec_k` (removed) | |
+| BitL | `bl_marshal_main` (removed) | `bl_serialize` | `bl_unmarshal_accept_spec_k` (removed) (after `ValidateBitlistC` (removed)) | |
 
-이 표는 정리의 형태만 말한다.
-전제 증인의 유무는 `REPORT.md` 2절의 게이트 1 표가 말한다.
+This table speaks only about the form of the theorems.
+The gate 1 table in section 2 of `REPORT.md` said whether premise witnesses existed. The table and the witnesses were removed on 2026-11-12.

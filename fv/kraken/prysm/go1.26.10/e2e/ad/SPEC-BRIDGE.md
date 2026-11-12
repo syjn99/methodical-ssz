@@ -1,4 +1,4 @@
-# Spec bridge: `v1alpha1.AttestationData` (prysm-e2e A1)
+# Spec bridge: `v1alpha1.AttestationData` (Prysm end-to-end proof work, AttestationData set-up step A1)
 
 Hand Desc `E2e.prysmAdDesc` (`lean/E2eAd/Spec.lean`), written from consensus-specs phase0 `AttestationData(slot: Slot, index: CommitteeIndex, beacon_block_root: Root, source: Checkpoint, target: Checkpoint)` with `Slot = CommitteeIndex = uint64`, `Root = Bytes32`, `Checkpoint = E2e.prysmCpDesc`.
 

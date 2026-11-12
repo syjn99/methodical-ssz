@@ -1,4 +1,4 @@
-# CALLGRAPH: Checkpoint / Epoch SSZ functions in the Go 1.26.10 ELF (prysm-e2e E1.1)
+# CALLGRAPH: Checkpoint / Epoch SSZ functions in the Go 1.26.10 ELF (Prysm end-to-end proof work, Checkpoint call graph step E1.1)
 
 Generated from `callgraph.json` (`gen/e2e/callgraph.py` over the objdump of ELF `c6403c02…911e` and the gated `-gcflags=-m=2` log; job logs 02). Every number below is read from that JSON.
 
@@ -9,7 +9,7 @@ Generated from `callgraph.json` (`gen/e2e/callgraph.py` over the objdump of ELF 
 | `v1alpha1.(*Checkpoint).SizeSSZ` | in | `0xa1db00` | 2 | 0 |
 | `v1alpha1.(*Checkpoint).MarshalSSZTo` | in | `0xa1db80` | 85 | 4 |
 | `v1alpha1.(*Checkpoint).UnmarshalSSZ` | in | `0xa1dce0` | 98 | 8 |
-| `primitives.(*Epoch).UnmarshalSSZ` | in (callee, function spec E2) | `0x69ece0` | 58 | 4 |
+| `primitives.(*Epoch).UnmarshalSSZ` | in (callee, function spec of the Epoch decoder step E2) | `0x69ece0` | 58 | 4 |
 | `primitives.(*Epoch).MarshalSSZTo` | record only (inlined into Checkpoint.MarshalSSZTo; out-of-line body unused by it) | `0x69ede0` | 47 | 2 |
 | `primitives.(*Epoch).MarshalSSZ` | record only (inlined) | `0x69eea0` | 25 | 2 |
 | `primitives.(*Epoch).SizeSSZ` | record only (inlined) | `0x69ef00` | 2 | 0 |
@@ -56,9 +56,9 @@ Unclassified call sites: 0.
 - `-m=2` `cp_unmarshal_inlines_Epoch_SizeSSZ`: 0 line(s)
 
 Result: `(*Epoch).MarshalSSZTo`, `(*Epoch).MarshalSSZ` (and inside it `primitives.MarshalUint64`, `binary.littleEndian.AppendUint64`) are inlined into `(*Checkpoint).MarshalSSZTo` (phase0.ssz.go:1963).
-The inlined body is proved as part of the caller (E4): the 32-byte zeroed stack temp at `0x30(%rsp)` holds the 8 epoch bytes, then the append copies them to `dst[len:len+8]`.
+The inlined body is proved as part of the caller (Checkpoint encoder step E4): the 32-byte zeroed stack temp at `0x30(%rsp)` holds the 8 epoch bytes, then the append copies them to `dst[len:len+8]`.
 The inlined `Epoch.MarshalSSZTo` cannot fail (`err` is always nil), so the compiler removed the `fmt.Errorf("Epoch: %w")` branch of the encoder: there is no machine-code error site for it (no `fmt.errorf` call in `Checkpoint.MarshalSSZTo`).
-`(*Epoch).UnmarshalSSZ` is not inlined (cost 113 > 80) and is called out of line from `(*Checkpoint).UnmarshalSSZ`: it is proved as a function spec (E2, `EpUAccC`/`ep_uacc_holds`).
+`(*Epoch).UnmarshalSSZ` is not inlined (cost 113 > 80) and is called out of line from `(*Checkpoint).UnmarshalSSZ`: it is proved as a function spec (Epoch decoder step E2, `EpUAccC`/`ep_uacc_holds`).
 `(*Epoch).SizeSSZ` is inlined into `(*Epoch).UnmarshalSSZ` (constant 8 in `cmp $0x8,%rcx`).
 The out-of-line bodies of `Epoch.MarshalSSZTo/MarshalSSZ/SizeSSZ` exist in the ELF and are in the link tables for the record; no theorem uses them.
 

@@ -1,4 +1,4 @@
-# SPEC-BRIDGE: real Prysm `v1alpha1.Checkpoint` to EthLib (prysm-e2e E1.3)
+# SPEC-BRIDGE: real Prysm `v1alpha1.Checkpoint` to EthLib (Prysm end-to-end proof work, Checkpoint specification bridge step E1.3)
 
 Lean: `fv/kraken/lean/E2e/Spec.lean` (hand Desc and spec lemmas), `E2e/SpecChecker.lean` (generated from the Desc checker's input).
 
@@ -45,5 +45,5 @@ They read EthLib only, no machine code.
 ## 4. Trust
 
 `descterm.py` renders the JSON term as Lean text (trusted renderer, 3 kinds).
-The producer and the checker are the phase1c tools; the checker's check for a Prysm type is consistency with the inventory, not a spec comparison (its own threat model).
+The producer and the checker are the phase 1c tools; the checker's check for a Prysm type is consistency with the inventory, not a spec comparison (its own threat model).
 That is why the theorems use the hand Desc, not the checker's.

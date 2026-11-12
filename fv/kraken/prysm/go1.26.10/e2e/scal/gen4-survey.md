@@ -1,6 +1,6 @@
-# GEN4 survey: padding, receiver registers and call set-ups in the 10 development decoders
+# `--gen4` survey: padding, receiver registers and call set-ups in the 10 development decoders
 
-Evidence for unit G4-L (survey made before the design note; development data only).
+Evidence for the `--gen4` lemma unit (survey made before the design note; development data only).
 Source: the normalised `.S` files of `UnmarshalSSZ` under `prysm/go1.26.10/e2e/{link,ad,bh,e1,h3,h4,h5}/link/norm` and `prysm/go1.26.10/e2e/link/norm` (ELF `c6403c02…911e`).
 Directive index = `.S` line − 1. `F` stands for the function's own label prefix, `prim.` for `consensus_types_primitives`, `v1.` for `proto_prysm_v1alpha1`.
 The table was written by a scratch script (regular expressions on the `.S` text); the script is not committed. A set-up is the run of directives after the previous label, jump, call or `cmp` up to the `callq`.

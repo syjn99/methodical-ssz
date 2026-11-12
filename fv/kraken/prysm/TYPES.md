@@ -1,47 +1,47 @@
-# TYPES: Prysm Fulu 타입 목록 (phase1c X1)
+# TYPES: Prysm Fulu type list (phase1c X1)
 
-이 파일은 `fv/kraken/gen/types_md.py`가 저장된 JSON에서 만든다. 손으로 고치지 않는다.
-수치는 모두 프로그램이 센다. 범위 분류는 1차(잠정)다. 증명이 아니다. 게이트 1c 통과가 아니다.
+`fv/kraken/gen/types_md.py` makes this file from the saved JSON. Do not change it by hand.
+The program counts all numbers. The scope classification is a first pass (provisional). It is not a proof. Gate 1c is not passed.
 
-## 1. 요약
+## 1. Summary
 
-- 목록 집합 I: 생성 타입 135개. 설정 타입 A 124개, Fulu 도달 B 50개(생성 45, 손 작성 5).
-- 범위 안 132개, 범위 밖 3개(잠정). 범위 밖 이유: deep nesting 3.
-- B만 보면 범위 안 44개, 범위 밖 1개.
-- "범위 안"은 1차 규칙이 빼지 않았다는 뜻이다. 증명 가능성이 아니다. 손 증명 패턴과 맞는다는 뜻도 아니다.
-  Gist 1차 목록보다 넓다: `vector[bytesN]` 필드 46개, `list[bytesN]` 필드 31개, `vector[uint64]` 필드 7개가 들어 있다. 깊이는 인라인 깊이다(위임은 따라가지 않는다).
-  증명에 필요한 것으로 나눈 분류는 `SCOPE-P6.md`에 있다.
-- 손 작성 위임 대상(`consensus-types/primitives`) 5개. 이것을 부르는 타입 52개.
-- 생성 함수 405개(타입 × 3), 명령어 116889개, 함수당 최대 2890개.
-- 니모닉 수준: 생성 함수 405/405개가 Kraken 런타임 파서가 받는 이름만 쓴다.
-- 실제 파서 실행: 생성 함수 392개 OK, 13개 ERR. ERR는 모두 `%riz` 피연산자다(4절).
-- `%riz` 때문에 실패한 파일 전부(18개, I 밖 함수 포함)를 `%riz`만 지운 진단 사본으로 다시 돌렸다. 18개 OK다. 진단일 뿐 변환 결과가 아니다.
-- 커밋된 Prysm 파일과의 차이: 변경 블록 232개, 분류 232개, 미분류 0개.
-- minimal 프리셋에서 IR이 다른 타입 41개. 범위 분류가 바뀐 타입 0개.
+- Inventory set I: 135 generated types. Config types A: 124, Fulu-reachable B: 50 (generated 45, hand-written 5).
+- In scope: 132, out of scope: 3 (provisional). Reasons for out of scope: deep nesting 3.
+- For B only: in scope 44, out of scope 1.
+- "In scope" means that the first-pass rules did not remove the type. It does not mean that a proof is possible. It also does not mean that the type fits the hand proof patterns.
+  It is wider than the first-pass Gist list: it contains 46 `vector[bytesN]` fields, 31 `list[bytesN]` fields and 7 `vector[uint64]` fields. The depth is the inline depth (it does not follow delegation).
+  The classification by what the proofs need is in `SCOPE-P6.md`.
+- Hand-written delegate targets (`consensus-types/primitives`): 5. Types that call them: 52.
+- Generated functions: 405 (types × 3), instructions: 116889, maximum for each function: 2890.
+- Mnemonic level: 405/405 generated functions use only names that the Kraken runtime parser accepts.
+- Real parser run: 392 generated functions OK, 13 ERR. All ERR are `%riz` operands (section 4).
+- We ran all files that failed because of `%riz` (18, including functions outside I) again as diagnostic copies with only `%riz` removed. 18 are OK. This is only a diagnosis, not a conversion result.
+- Differences from the committed Prysm files: 232 changed blocks, 232 classified, 0 not classified.
+- Types with a different IR in the minimal preset: 41. Types with a changed scope classification: 0.
 
-## 2. 고정 값
+## 2. Fixed values
 
-| 항목 | 값 |
+| Item | Value |
 | --- | --- |
-| Prysm 소스 | `ab15ff70c72a568c870b2de662474685a95de294` (slice + `ssz-size`). 옛 핀 `5ac1d028f5`/`45394e5`은 대체됐다 |
-| 생성기·런타임 | `698c2025a73a296b55b95744a8408f3b03b2546b` |
-| 대상 컴파일 | `go version go1.26.10 linux/arm64`(호스트 바이너리)로 linux/amd64 교차 컴파일, `GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 go build -p 2 -tags purego -trimpath` |
-| 호스트 | Linux aarch64 (생성은 arm64 네이티브. x86-64 하드웨어 없음) |
-| ELF | sha256 `c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e`, 23486009 바이트. 커밋하지 않는다(`go1.26.10/MANIFEST.md`) |
-| 재현성 | 빈 GOCACHE로 두 번째 빌드: sha256 `c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e` |
+| Prysm source | `ab15ff70c72a568c870b2de662474685a95de294` (slice + `ssz-size`). It replaced the old pin `5ac1d028f5`/`45394e5` |
+| Generator and runtime | `698c2025a73a296b55b95744a8408f3b03b2546b` |
+| Target compilation | Cross-compiled for linux/amd64 with `go version go1.26.10 linux/arm64` (host binary), `GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 go build -p 2 -tags purego -trimpath` |
+| Host | Linux aarch64 (generation is arm64 native. No x86-64 hardware) |
+| ELF | sha256 `c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e`, 23486009 bytes. Not committed (`go1.26.10/MANIFEST.md`) |
+| Reproducibility | Second build with an empty GOCACHE: sha256 `c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e` |
 | Kraken / EthLib / Lean | `6064eec` / `8621856` / `nightly-2026-09-21` |
 
-Go 1.26.10은 새 실험 기준선이다. Go 1.26.3 ELF `9c850c97…c501`의 정리 55개는 이 기계어에 옮겨지지 않는다.
+Go 1.26.10 is a new experiment baseline. The 55 theorems for the Go 1.26.3 ELF `9c850c97…c501` do not transfer to this machine code.
 
-## 3. 방법
+## 3. Method
 
-1. `gen/prysm-gen.sh`가 임시 Prysm 트리에서 생성기를 돌린다. 플래그는 Prysm `build/gen/ssz.go`와 같다.
-2. 같은 스크립트가 `gen/invtool`로 생성기 자체의 앞단(`config`, `TypeDefs`, `ParseTypeDef`, 위임 인터페이스 집합)의 IR을 JSON으로 뽑는다.
-3. `gen/inventory.py reduce`가 위임 필드 아래를 잘라 `ir/ir-{mainnet,minimal}.json`을 만든다.
-4. `gen/inventory.py build`가 집합, 종류, 깊이, 범위를 `inventory.json`에 쓴다.
-5. `gen/prysm-elf.sh`가 ELF를 두 번 빌드하고 objdump·nm을 뽑는다. `gen/keepalive.py`가 `main`을 만든다.
-6. `gen/mnemonics.py`가 함수마다 명령어 수, 니모닉, 호출 종류를 센다(`go1.26.10/functions.json`).
-7. `link/conv.py --norm`(읽기만 함)으로 `.S`를 만들고 `gen/kparse/KParse.lean`이 Kraken 런타임 파서를 돌린다(`go1.26.10/kparse.json`).
+1. `gen/prysm-gen.sh` runs the generator in a temporary Prysm tree. The flags are the same as in Prysm `build/gen/ssz.go`.
+2. The same script uses `gen/invtool` to extract the IR of the front end of the generator itself (`config`, `TypeDefs`, `ParseTypeDef`, delegate interface set) as JSON.
+3. `gen/inventory.py reduce` cuts the parts below delegated fields and makes `ir/ir-{mainnet,minimal}.json`.
+4. `gen/inventory.py build` writes the sets, kinds, depths and scopes to `inventory.json`.
+5. `gen/prysm-elf.sh` builds the ELF two times and extracts objdump and nm. `gen/keepalive.py` makes `main`.
+6. `gen/mnemonics.py` counts the instructions, mnemonics and call kinds for each function (`go1.26.10/functions.json`).
+7. `link/conv.py --norm` (read only) makes the `.S` files, and `gen/kparse/KParse.lean` runs the Kraken runtime parser (`go1.26.10/kparse.json`).
 
 - `fork_configs`: ['proto/prysm/v1alpha1/phase0.yaml', 'proto/prysm/v1alpha1/altair.yaml', 'proto/prysm/v1alpha1/bellatrix.yaml', 'proto/prysm/v1alpha1/capella.yaml', 'proto/prysm/v1alpha1/deneb.yaml', 'proto/prysm/v1alpha1/electra.yaml', 'proto/prysm/v1alpha1/fulu.yaml']
 - `set_A`: every type configured in a fork config (phase0..fulu)
@@ -53,15 +53,15 @@ Go 1.26.10은 새 실험 기준선이다. Go 1.26.3 ELF `9c850c97…c501`의 정
 - `scope_in`: first-pass rule: not excluded, i.e. not progressive, no union, inline depth <= 1, and every field one of: uint8..64, bool, bytesN, bitvector, bitlist (ValidateBitlist contract), vector of a uint/bool, of bytesN or of a delegated type, list[byte], list[uint64] (a list of another uint is out), list of bytesN or of a delegated container, a delegated container or a delegated hand-written type. Depth is the inline depth (delegated fields are not followed). 'in' is neither provability nor a match with a hand proof pattern (see SCOPE-P6)
 - `preset`: mainnet is primary; minimal differences are listed separately
 
-"Kraken이 받는가"의 결정:
+How we decide "does Kraken accept it":
 
-- 니모닉 수준: 고정 Kraken의 `Kraken/X64/Parser/Basic.lean` `parseInstr` 분기 문자열 186개와 `j`/`set`/`cmov` + `parseCondCode?` 조건 코드 30개. `conv.py` NORM 형식 10개는 `nop`으로 센다.
-- 실제 파서 수준: `include_x64_rt`가 쓰는 `Kraken.X64.Parser.parse`를 파일마다 실행했다(로그 사본 `go1.26.10/kparse-log.txt`). 이것이 판정 기준이다.
-- 의미론 수준(`kstep`·정리)은 보지 않았다. 이 표는 분류이고 증명이 아니다.
+- Mnemonic level: the 186 branch strings of `parseInstr` in `Kraken/X64/Parser/Basic.lean` of the fixed Kraken, and `j`/`set`/`cmov` + 30 `parseCondCode?` condition codes. The 10 `conv.py` NORM forms count as `nop`.
+- Real parser level: we ran `Kraken.X64.Parser.parse`, which `include_x64_rt` uses, on each file (log copy `go1.26.10/kparse-log.txt`). This is the verdict criterion.
+- We did not examine the semantics level (`kstep` and theorems). This table is a classification, not a proof.
 
-## 4. 수치
+## 4. Numbers
 
-| 항목 | 값 |
+| Item | Value |
 | --- | --- |
 | `configs_parsed` | 14 |
 | `set_A` | 124 |
@@ -101,7 +101,7 @@ Go 1.26.10은 새 실험 기준선이다. Go 1.26.3 ELF `9c850c97…c501`의 정
 | `kparse` | {"generated (not inventory): ERR": 5, "generated (not inventory): OK": 205, "hand-written: OK": 24, "inventory: ERR": 13, "inventory: OK": 392, "runtime/ssz: ERR": 1, "runtime/ssz: OK": 1} |
 | `kparse_riz_diag` | OK 18, ERR 0 |
 
-파서 ERR 목록:
+Parser ERR list:
 
 - `github.com/OffchainLabs/methodical-ssz/ssz.ValidateBitlist` (runtime/ssz): line 22: unsupported instruction: bsr
 - `proto/engine/v1.(*ExecutionPayloadDenebAndBlobsBundle).MarshalSSZTo` (generated (not inventory)): line 61: unknown register: riz
@@ -123,22 +123,22 @@ Go 1.26.10은 새 실험 기준선이다. Go 1.26.3 ELF `9c850c97…c501`의 정
 - `proto/prysm/v1alpha1.(*BeaconBlockBody).MarshalSSZTo` (inventory): line 321: unknown register: riz
 - `proto/prysm/v1alpha1.(*BeaconState).MarshalSSZTo` (inventory): line 1417: unknown register: riz
 
-`%riz`는 GNU objdump가 색인 없는 SIB 바이트를 적는 철자다(`%r12`가 기준 레지스터일 때). 주소는 `(%r12)`와 같다.
-생성기 결함이 아니다. 변환기 또는 Kraken 파서의 빈틈이다(`GENERATOR-FINDINGS.md` 4절).
+`%riz` is the spelling that GNU objdump uses for a SIB byte without an index (when `%r12` is the base register). The address is the same as `(%r12)`.
+It is not a generator defect. It is a gap in the converter or in the Kraken parser (`GENERATOR-FINDINGS.md` section 4).
 
-생성 함수의 니모닉 빈도(I만):
+Mnemonic frequency of the generated functions (I only):
 
 `add` 4054, `and` 267, `callq` 8540, `cmovne` 1, `cmp` 3268, `cmpb` 1, `cmpl` 1624, `cmpq` 914, `data16 nop` 599, `imul` 195, `inc` 306, `ja` 149, `jae` 1032, `jb` 724, `jbe` 388, `je` 2103, `jg` 211, `jge` 426, `jl` 41, `jle` 66, `jmp` 1432, `jmpq` 1282, `jne` 3355, `lea` 10288, `mov` 54433, `movb` 4, `movl` 89, `movq` 2502, `movups` 1420, `movzbl` 17, `mul` 76, `neg` 252, `nop` 3014, `nopl` 1446, `nopw` 270, `or` 1, `pop` 2239, `push` 339, `retq` 2305, `sar` 267, `shl` 379, `shr` 139, `sub` 796, `test` 2145, `xor` 3490
 
-## 5. 집합의 차이
+## 5. Set differences
 
-- B 중 생성 타입이지만 A에 없는 것 7개: `proto/engine/v1.ConsolidationRequest`, `proto/engine/v1.DepositRequest`, `proto/engine/v1.ExecutionPayloadDeneb`, `proto/engine/v1.ExecutionPayloadHeaderDeneb`, `proto/engine/v1.ExecutionRequests`, `proto/engine/v1.Withdrawal`, `proto/engine/v1.WithdrawalRequest`.
-- I 중 A에 없는 것 11개: `proto/engine/v1.ConsolidationRequest`, `proto/engine/v1.DepositRequest`, `proto/engine/v1.ExecutionPayload`, `proto/engine/v1.ExecutionPayloadCapella`, `proto/engine/v1.ExecutionPayloadDeneb`, `proto/engine/v1.ExecutionPayloadHeader`, `proto/engine/v1.ExecutionPayloadHeaderCapella`, `proto/engine/v1.ExecutionPayloadHeaderDeneb`, `proto/engine/v1.ExecutionRequests`, `proto/engine/v1.Withdrawal`, `proto/engine/v1.WithdrawalRequest`.
-- A 중 B에 없는 것 86개. 이름은 `inventory.json` `sets.A_minus_B`에 있다.
+- 7 generated types in B are not in A: `proto/engine/v1.ConsolidationRequest`, `proto/engine/v1.DepositRequest`, `proto/engine/v1.ExecutionPayloadDeneb`, `proto/engine/v1.ExecutionPayloadHeaderDeneb`, `proto/engine/v1.ExecutionRequests`, `proto/engine/v1.Withdrawal`, `proto/engine/v1.WithdrawalRequest`.
+- 11 types in I are not in A: `proto/engine/v1.ConsolidationRequest`, `proto/engine/v1.DepositRequest`, `proto/engine/v1.ExecutionPayload`, `proto/engine/v1.ExecutionPayloadCapella`, `proto/engine/v1.ExecutionPayloadDeneb`, `proto/engine/v1.ExecutionPayloadHeader`, `proto/engine/v1.ExecutionPayloadHeaderCapella`, `proto/engine/v1.ExecutionPayloadHeaderDeneb`, `proto/engine/v1.ExecutionRequests`, `proto/engine/v1.Withdrawal`, `proto/engine/v1.WithdrawalRequest`.
+- 86 types in A are not in B. The names are in `inventory.json` `sets.A_minus_B`.
 
-Fulu가 아닌 설정:
+Configs that are not Fulu:
 
-| 설정 | 타입 수 | 이유 |
+| Config | Type count | Reason |
 | --- | --- | --- |
 | `proto/prysm/v1alpha1/gloas.yaml` | 41 | later fork (after Fulu) |
 | `proto/prysm/v1alpha1/heze.yaml` | 9 | later fork (after Fulu) |
@@ -147,9 +147,9 @@ Fulu가 아닌 설정:
 | `proto/ssz_query/response.yaml` | 3 | not a fork config and no type reached from the Fulu roots |
 | `proto/ssz_query/testing/test_containers.yaml` | 5 | not a fork config and no type reached from the Fulu roots |
 
-손 작성 위임 대상(생성기가 만들지 않는 SSZ 메서드):
+Hand-written delegate targets (SSZ methods that the generator does not make):
 
-| 타입 | 부르는 타입 수 |
+| Type | Count of calling types |
 | --- | --- |
 | `consensus-types/primitives.CommitteeIndex` | 2 |
 | `consensus-types/primitives.Epoch` | 10 |
@@ -157,14 +157,14 @@ Fulu가 아닌 설정:
 | `consensus-types/primitives.Slot` | 38 |
 | `consensus-types/primitives.ValidatorIndex` | 28 |
 
-minimal에서 IR이 다른 타입은 `inventory.json` `minimal_differences`에 있다. 범위 분류가 바뀐 것은 위 수치와 같다.
+The types with a different IR in minimal are in `inventory.json` `minimal_differences`. The scope classification changes are as in the numbers above.
 
-## 6. 타입 표
+## 6. Type table
 
-열: 설정, B(Fulu 도달), 종류, 필드 수, 깊이, 범위(이유), 위임 호출(생성/손), 명령어 수 M/S/U(MarshalSSZTo/SizeSSZ/UnmarshalSSZ), 니모닉 종류 수, Kraken 미지원 니모닉, 파서(M/S/U), 런타임 호출(세 함수 합집합).
-호출 약어: VBl=ValidateBitlist, VBv=ValidateBitvector, cT64=convT64, fmt=fmt, gen=generated method, grow=growslice, hand=hand-written primitives method, mks=makeslice, mm=memmove, stk=morestack_noctxt, new=newobject, pan=panic*, wb=write barrier, mvS=moveSlice* (stack-backed result to heap), rt?=runtime other, oth?=other, ind=indirect.
+Columns: config, B (Fulu-reachable), kind, field count, depth, scope (reasons), delegate calls (generated/hand), instruction count M/S/U (MarshalSSZTo/SizeSSZ/UnmarshalSSZ), count of mnemonic kinds, mnemonics that Kraken does not support, parser (M/S/U), runtime calls (union of the three functions).
+Call abbreviations: VBl=ValidateBitlist, VBv=ValidateBitvector, cT64=convT64, fmt=fmt, gen=generated method, grow=growslice, hand=hand-written primitives method, mks=makeslice, mm=memmove, stk=morestack_noctxt, new=newobject, pan=panic*, wb=write barrier, mvS=moveSlice* (stack-backed result to heap), rt?=runtime other, oth?=other, ind=indirect.
 
-| 타입 | 설정 | B | 종류 | 필드 | 깊이 | 범위 | 위임 | M/S/U | 니모닉 | 미지원 | 파서 | 호출 |
+| Type | Config | B | Kind | Fields | Depth | Scope | Delegates | M/S/U | Mnemonics | Not supported | Parser | Calls |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `ConsolidationRequest` | engine | B | fixed container | 3 | 0 | in | 0/0 | 139/2/127 | 22 | - | OK/OK/OK | grow mks mm mvS stk wb |
 | `DepositRequest` | engine | B | fixed container | 5 | 0 | in | 0/0 | 160/2/133 | 24 | - | OK/OK/OK | grow mks mm stk wb |
@@ -302,4 +302,4 @@ minimal에서 IR이 다른 타입은 `inventory.json` `minimal_differences`에 �
 | `ValidatorBalance` | phase0 |  | fixed container | 2 | 0 | in | 0/1 | 67/2/66 | 21 | - | OK/OK/OK | fmt grow hand new stk |
 | `VoluntaryExit` | phase0 | B | fixed container | 2 | 0 | in | 0/2 | 74/2/97 | 22 | - | OK/OK/OK | fmt grow hand new stk |
 
-필드 모양 빈도(I 전체): bitlist 6, bitvector 10, bool 1, bytesN 195, delegated container (fixed) 120, delegated container (variable) 78, delegated overlay CommitteeIndex 2, delegated overlay Epoch 15, delegated overlay Gwei 6, delegated overlay Slot 39, delegated overlay ValidatorIndex 29, list[byte] 18, list[bytesN] 31, list[container] 89, list[list[byte]] 3, list[uint64] 16, uint64 65, vector[ValidatorIndex] 1, vector[bytesN] 46, vector[uint64] 7.
+Field shape frequency (all of I): bitlist 6, bitvector 10, bool 1, bytesN 195, delegated container (fixed) 120, delegated container (variable) 78, delegated overlay CommitteeIndex 2, delegated overlay Epoch 15, delegated overlay Gwei 6, delegated overlay Slot 39, delegated overlay ValidatorIndex 29, list[byte] 18, list[bytesN] 31, list[container] 89, list[list[byte]] 3, list[uint64] 16, uint64 65, vector[ValidatorIndex] 1, vector[bytesN] 46, vector[uint64] 7.

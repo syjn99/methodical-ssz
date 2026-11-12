@@ -1,38 +1,41 @@
-# DIRECTION: 코덱 검증의 방향 (2026-11-06)
+# DIRECTION: direction of the codec verification (2026-11-06)
 
-이 문서는 다음 세션들이 따르는 방향이다. 세부 규칙은 `fv/AGENTS.md`, 현재 상태는 `REPORT.md`에 있다.
+This document gives the direction that the next sessions follow. The detailed rules are in `fv/AGENTS.md`, and the current status is in `REPORT.md`.
 
-## 1. 목표
+## 1. Goal
 
-methodical-ssz가 생성한 x86-64 코드가 EthLib SSZ 명세대로 수용·거부·인코딩한다는 것을 Kraken x64 위에서 증명한다. 증명은 생성기 결함을 드러내는 수단이다(F1·F2·G1–G3·H1이 그 예). 다음 목표는 Prysm Fulu 타입 전체에 대한 자동 증명(1c)이다. 결과를 빨리 낸다. 검사기를 보강하는 일보다 결과를 내는 일을 앞에 둔다.
+Prove on Kraken x64 that the x86-64 code that methodical-ssz generates accepts, rejects and encodes as the EthLib SSZ specification says. The proofs are a means to show generator defects (the sszgen fixes F1, F2, G1–G3 and H1 are examples). The next goal is automatic proofs for all Prysm Fulu types (1c). Produce results quickly. Put the production of results before the improvement of checkers.
+On 2026-11-12, the test-type evidence was removed from the tree (`HISTORY.md` section 13). The goal is the Prysm generated code, so the test-type evidence is no longer part of the goal.
 
-## 2. 현재 상태 (0ef30e3)
+## 2. Current status (0ef30e3)
 
-게이트 1 미통과. 시험 타입 9개의 디코더·인코더·크기 함수 주 정리 55개, 증인 선언 80개, 부정 시험 16개, 공리 비표준 0. 남은 것은 `REPORT.md`의 게이트 표와 신뢰 항목에 있다. 리뷰 세 번(재증명, 수정, 수정 2)이 공통으로 지적한 것: 링크 검사 (g)(h)가 Lean·Go 소스의 철자를 읽어서 변형에 뚫린다.
+At `0ef30e3`, gate 1 was not passed. That gate had 55 main theorems for the decoders, encoders and size functions of the 9 test types, 80 witness declarations, 16 negative tests and 0 nonstandard axioms.
+The three reviews (re-proof, fix, fix 2) all identified this item: the link checks (g)(h) read the spelling of the Lean and Go sources, so mutations got through them.
+The gate 1 evidence was removed on 2026-11-12. Tag `archive/fv-before-workflow` holds it. No one evaluated gate 1 again on the current tree. The current status is in `REPORT.md`.
 
-## 3. 신뢰 기반(TCB)과 결정
+## 3. Trust base (TCB) and decisions
 
-| 항목 | 지금 | 결정 |
+| Item | Now | Decision |
 | --- | --- | --- |
-| Lean 커널, Kraken x64 의미론, EthLib 명세, Kraken = 실제 CPU | 신뢰 | 유지. 공유 기반 |
-| ELF → Lean 프로그램(objdump, conv.py, include) | 독립 디코더 셋 교차 + 심볼·변위 검사 (a)–(e) | 유지. con-agua보다 엄격하며 뚫린 적 없음 |
-| 재빌드 추적 (f) SHash | 해시 파일 + 원문 비교 | **삭제.** `lakefile.toml`의 라이브러리 `needs`에 `.S`·데이터 파일을 `input_file`로 등록한다(con-agua `ConAgua/AsmFile/Include.lean` 37–39행 방식). 파일 내용이 모듈 입력 해시에 들어가 Lake가 재빌드한다 |
-| 손으로 쓴 상수 + (g)(h) + 역할 분류 + golits.go | Lean·Go 소스 정규식 | **삭제.** 변환기가 ELF에서 rodata·itab·타입 기술자·`staticuint64s`를 바이트 파일로 뽑아 코드처럼 include한다. 정리는 손 상수 대신 그 정의를 쓴다. "Lean 상수 = ELF 바이트"는 (a)와 같은 해시 묶음이 된다. con-agua DESIGN.md `ldc` 항목과 같은 구조(상수는 프로그램 항의 일부, 바이트의 실제성은 변환기 신뢰) |
-| Go 값 검사(goval, layout.go) | Python, go/types 표 | 1c X2에서 Lean 술어로 옮기고 배치를 include한 abi.Type에서 읽는다. 지금은 유지 |
-| Go 런타임 계약 | 추상 모델로 무모순만 | 유지. 런타임 함수 증명은 2단계(HTR) 뒤 |
+| Lean kernel, Kraken x64 semantics, EthLib specification, Kraken = real CPU | Trusted | Keep. Shared base |
+| ELF → Lean program (objdump, conv.py, include) | Cross-check of three independent decoders + symbol and displacement checks (a)–(e) | Keep. Stricter than con-agua, and it was never broken |
+| Rebuild tracking (f) SHash | Hash file + source text comparison | **Delete.** Register the `.S` files and data files as `input_file` in the library `needs` of `lakefile.toml` (the method of con-agua `ConAgua/AsmFile/Include.lean` lines 37–39). The file contents go into the module input hash, and Lake rebuilds |
+| Hand-written constants + (g)(h) + role classification + golits.go | Regular expressions on Lean and Go sources | **Delete.** The converter extracts rodata, itabs, type descriptors and `staticuint64s` from the ELF into byte files and includes them like code. The theorems use those definitions instead of hand constants. "Lean constant = ELF bytes" becomes part of the same hash binding as (a). This is the same structure as the `ldc` item in con-agua DESIGN.md (the constants are part of the program term, and the reality of the bytes is trust in the converter) |
+| Go value checks (goval, layout.go) | Python, go/types table. Both were removed on 2026-11-12 (`lean/tools/wit/`) | In 1c X2, move them to Lean predicates and read the layout from the included abi.Type |
+| Go runtime contracts | Abstract model, consistency only | Keep. Proofs of runtime functions come after stage 2 (HTR) |
 
-원칙: 바이너리의 바이트에 대해 말할 수 있는 것은 Lean 정리로 만든다. 바깥 도구는 "바이트를 Lean에 옮기는 변환기" 하나만 남긴다. Python 검사기를 더 똑똑하게 만드는 수정은 하지 않는다.
+Principle: Make a Lean theorem of all that can be said about the bytes of the binary. Keep only one external tool: "the converter that moves the bytes into Lean". Do not make changes that make the Python checkers smarter.
 
-## 4. 순서
+## 4. Order
 
-1. **정리 세션**(ssz-fv-cleanup, 반나절): 코드·주석·보고서·아티팩트를 줄인다. 정리 문장은 바꾸지 않는다.
-2. **수정 3 = 링크 재설계**(ssz-fv-reprove-fix3, 1일) ∥ **1c**(ssz-fv-phase1c, 5일). 같은 지점에서 분기. 1c는 첫 이틀 동안 `lean/Fk`·`link/`를 건드리지 않는 일(Prysm Fulu 타입 목록·명령어 통계, `Desc` 검사기, 생성기 골격)을 하고, 수정 3 in-review 뒤 그 위로 rebase해 X1·X2를 include 설계로 만든다.
-3. 수정 3의 범위: `input_file` 등록과 SHash 삭제, 데이터 include와 (g)(h)·역할 분류·golits.go 삭제, 오류 증인에 실제 타입 기술자와 초기화된 오류 전역, Scalars 비nil 거부 정리, 사후조건 잔여(NeMarshal R, ListC 스택, sc_size, r14), ListC 원소 오프셋 순서 거부, 게이트 표 정정(astra 수정 2 리뷰 8절).
+1. **Cleanup session** (ssz-fv-cleanup, half a day): reduce the code, comments, reports and artifacts. Do not change theorem statements.
+2. **Fix 3 = link redesign** (ssz-fv-reprove-fix3, 1 day) ∥ **1c** (ssz-fv-phase1c, 5 days). Both branch from the same point. For the first two days, 1c does work that does not touch `lean/Fk` or `link/` (Prysm Fulu type list and instruction statistics, `Desc` checker, generator skeleton). After fix 3 is in-review, 1c rebases onto it and makes X1 and X2 with the include design.
+3. Scope of fix 3: `input_file` registration and SHash deletion, data include and the deletion of (g)(h)/role classification/golits.go, real type descriptors and initialized error globals in the error witnesses, Scalars non-nil reject theorem, postcondition remainder (NeMarshal R, ListC stack, sc_size, r14), ListC element offset order reject, gate table correction (astra fix 2 review section 8).
 
-## 5. 고정 기준
+## 5. Fixed baseline
 
-생성기 소스 `698c202`, 병합 기준 `2d0150b`. Go 1.26.3 linux/amd64 GOAMD64=v1 purego trimpath CGO_ENABLED=0. Kraken `6064eec`, EthLib `8621856`, Lean nightly-2026-09-21. ELF `9c850c97…c501`. Prysm 축약 두 타입은 v7.1.8 `51b5a75`. 1c의 Prysm 소스는 `ab15ff70c72a568c870b2de662474685a95de294`(slice + `ssz-size`), fork Fulu, 생성은 임시 워크트리에서만. 고정 배열 핀과 같다고 주장하지 않는다. 1c의 대상 컴파일러는 Go 1.26.10이다. 새 실험 기준선이며 이름공간이 따로다(`prysm/go1.26.10/MANIFEST.md`, ELF `c6403c02…911e`). Go 1.26.3 ELF `9c850c97…c501`의 정리는 이 기계어에 옮겨지지 않는다. 대체된 이력: 1c 핀 `5ac1d028f5`(핀 브랜치 `45394e5`, `syjn99/prysm`에서 얻을 수 없음), 1c 컴파일러 Go 1.26.3. 수정 3의 값(위 문장의 Go 1.26.3과 ELF)은 바뀌지 않는다.
+Generator source `698c202`, merge base `2d0150b`. Go 1.26.3 linux/amd64 GOAMD64=v1 purego trimpath CGO_ENABLED=0. Kraken `6064eec`, EthLib `8621856`, Lean nightly-2026-09-21. ELF `9c850c97…c501`. The two reduced Prysm types are from v7.1.8 `51b5a75`. The Prysm source of 1c is `ab15ff70c72a568c870b2de662474685a95de294` (slice + `ssz-size`), fork Fulu, and generation occurs only in temporary worktrees. We do not claim that it is equal to the fixed-array pin. The target compiler of 1c is Go 1.26.10. It is a new experiment baseline with a separate namespace (`prysm/go1.26.10/MANIFEST.md`, ELF `c6403c02…911e`). The theorems for the Go 1.26.3 ELF `9c850c97…c501` do not transfer to this machine code. Replaced history: 1c pin `5ac1d028f5` (pin branch `45394e5`, not available from `syjn99/prysm`), 1c compiler Go 1.26.3. The values of fix 3 (the Go 1.26.3 and the ELF in the sentence above) do not change.
 
-## 6. 규칙 (요약, 전문은 fv/AGENTS.md)
+## 6. Rules (summary, full text in fv/AGENTS.md)
 
-`sszgen/`·`ssz/`·Kraken·gohashtree·`fv/<project>/upstream` 수정 금지. 해시는 계약. `sorry`/`axiom`/`native_decide`/`bv_decide` 금지. 한 번에 Lean 빌드 하나. 삭제가 추가보다 낫다. 세션 끝에 in-review와 한 줄 comment.
+Do not change `sszgen/`, `ssz/`, Kraken, gohashtree or `fv/<project>/upstream`. Hashes are contracts. Do not use `sorry`/`axiom`/`native_decide`/`bv_decide`. One Lean build at a time. Deletion is better than addition. At the end of a session, set in-review and a one-line comment.

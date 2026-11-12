@@ -1,41 +1,41 @@
-# CHECKS-HB: HB의 남은 검사 (선언 drift, 부정 시험, HbLoop2 시간)
+# CHECKS-HB: remaining HistoricalBatch checks (declaration drift, negative tests, HbLoop2 time)
 
-`REPORT-HB.md`에서 N이던 검사 셋이다. 독립 리뷰를 받지 않았다.
+These are the three checks that were N in `REPORT-HB.md`. No independent review was done.
 
-## 1. 선언 drift (X)
+## 1. Declaration drift (X)
 
-- 기준 `6a78c591`, 뿌리 E2e, E2eAd, E2eScal. T3의 `decl-drift-lv-t3.txt`와 같은 방법이다.
-- 기준 덤프는 LV 작업의 기준 덤프를 다시 썼다(sha256 `96f2fb34…`). 다시 만들지 않았다.
-- 머리 덤프: `decl_dump.lean`, 모듈 240개(E2eList, E2eHb 포함), exit 0, 83 s (로그 38).
-- 결과: `SUMMARY base=5007 head=5007 drift=0 allowed=0` (로그 39). 파일 `decl-drift-hb.txt`.
-- 대조군: 머리 덤프 사본의 형식 해시 하나를 바꿨다. exit 1, `drift=1` (로그 40).
-- 이 대조군은 비교기만 시험한다. 덤프 생성기는 시험하지 않는다.
-- E2eList는 뿌리에 없다. `git diff 1b5f524 --diff-filter=M`이 바뀐 기존 파일로 `lakefile.toml`만 보인다.
+- Base `6a78c591`, roots E2e, E2eAd, E2eScal. It is the same method as `decl-drift-lv-t3.txt` of IndexedAttestation.
+- The base dump of the list/vector work was used again (sha256 `96f2fb34…`). It was not made again.
+- Head dump: `decl_dump.lean`, 240 modules (E2eList, E2eHb included), exit 0, 83 s (log 38).
+- Result: `SUMMARY base=5007 head=5007 drift=0 allowed=0` (log 39). File `decl-drift-hb.txt`.
+- Control: one type hash in a copy of the head dump was changed. exit 1, `drift=1` (log 40).
+- This control tests only the comparator. It does not test the dump generator.
+- E2eList is not in the roots. `git diff 1b5f524 --diff-filter=M` shows only `lakefile.toml` as a changed existing file.
 
-## 2. 부정 시험 (X)
+## 2. Negative tests (X)
 
-- 사례 `negcases-hb.json`, 실행기 `gen/e2e/lvnegative.py`(바꾸지 않음). exit 0, 56 s (로그 41).
-- 결과 `negative-hb.json`: 10개 중 10개 통과. control_pass 3, inside 7.
+- Cases `negcases-hb.json`, runner `gen/e2e/lvnegative.py` (not changed). exit 0, 56 s (log 41).
+- Result `negative-hb.json`: 10 of 10 passed. control_pass 3, inside 7.
 
-| 사례 | 종류 | 대상 정리 | 결과 |
+| Case | Kind | Target theorem | Result |
 | --- | --- | --- | --- |
-| `hb-control-reject`, `-iter1`, `-accept` | 대조 | 거부, 한 바퀴, 수용 | control_pass |
-| `hb-stmt-size524289` | 문장 크기 상수 | `hb_e2e_reject_size_main` | inside |
-| `hb-size524289` | 코드 크기 상수 | `hb_e2e_reject_size_main` | inside |
-| `hb-loopbound8191` | 루프 상한 | `hb_iter1` | inside |
-| `hb-elem31` | 원소 크기(memmove 수) | `hb_iter1` | inside |
-| `hb-shl6` | 원소 크기(색인 shift) | `hb_iter1` | inside |
-| `hb-stmt-heap` | 수용 사후조건 힙 양 | `hb_e2e_accept_main` | inside |
-| `hb-stmt-len8191` | 수용 사후조건 len 칸 | `hb_e2e_accept_main` | inside |
+| `hb-control-reject`, `-iter1`, `-accept` | control | reject, one iteration, accept | control_pass |
+| `hb-stmt-size524289` | statement size constant | `hb_e2e_reject_size_main` | inside |
+| `hb-size524289` | code size constant | `hb_e2e_reject_size_main` | inside |
+| `hb-loopbound8191` | loop bound | `hb_iter1` | inside |
+| `hb-elem31` | element size (memmove count) | `hb_iter1` | inside |
+| `hb-shl6` | element size (index shift) | `hb_iter1` | inside |
+| `hb-stmt-heap` | heap amount of the accept postcondition | `hb_e2e_accept_main` | inside |
+| `hb-stmt-len8191` | len slot of the accept postcondition | `hb_e2e_accept_main` | inside |
 
-- 코드 변이는 그 지시어를 단계로 밟는 모듈에 겨눈다. 수용 모듈은 루프 정리를 가져오므로 코드 변이의 대상이 아니다.
+- A code mutation aims at the module that steps through that directive. The accept module imports the loop theorems, so it is not a target of code mutations.
 
-## 3. HbLoop2가 HbLoop1보다 느린 원인 (X, 프로파일)
+## 3. Why HbLoop2 is slower than HbLoop1 (X, profile)
 
-프로파일러(로그 42, 43)에서 HbLoop2의 13.4 s 중 12.9 s가 커널 형식 검사다.
-그 시간은 `hb_iter2` 한 선언에 있다(로그 44: 그 정리만 남긴 사본에서 12.8 s).
-elaboration, `simp`, 전술 실행 시간은 두 모듈이 비슷하다(약 0.7–0.9 s, 1.3 s).
-배제한 후보: 레이블 조회(`klabel`, 색인 26–154에서 82–155 ms, 로그 48), 높은 색인의 `List.drop`(10 ms 미만, 로그 47), `k + 132 + 1 = k + 133`의 `rfl`(`omega`로 바꿔도 12.8 s, 로그 46).
-원인: 원천 주소 식 `bf + (rax <<< 5) * 1 + 262144 = bf + 262144 + ofNat (32 * i)`를 닫는 `laddr`(omega) 증명이다.
-그 식만 떼어낸 정리의 커널 검사가 12.2 s다. 상수 262144가 없는 같은 꼴은 15.6 ms다(로그 51).
-`omega`가 만든 증명 항을 커널이 검사할 때 큰 상수에서 비용이 커지는 것으로 보인다. 그 안의 단계는 측정하지 않았다.
+In the profiler (logs 42, 43), 12.9 s of the 13.4 s of HbLoop2 is the kernel type check.
+That time is in the one declaration `hb_iter2` (log 44: 12.8 s in a copy with only that theorem).
+The elaboration, `simp` and tactic execution times are similar in the two modules (about 0.7–0.9 s, 1.3 s).
+Excluded candidates: label lookup (`klabel`, 82–155 ms at indexes 26–154, log 48), `List.drop` at high indexes (less than 10 ms, log 47), the `rfl` of `k + 132 + 1 = k + 133` (12.8 s also with `omega`, log 46).
+Cause: the `laddr` (omega) proof that closes the source address expression `bf + (rax <<< 5) * 1 + 262144 = bf + 262144 + ofNat (32 * i)`.
+The kernel check of a theorem with only that expression is 12.2 s. The same form without the constant 262144 is 15.6 ms (log 51).
+It appears that the cost increases with a large constant when the kernel checks the proof term that `omega` made. The steps inside it were not measured.

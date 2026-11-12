@@ -1,17 +1,17 @@
-# Call graph and method mapping: real `v1alpha1.AttestationData` (prysm-e2e A1, Go 1.26.10 ELF `c6403c02…911e`)
+# Call graph and method mapping: real `v1alpha1.AttestationData` (Prysm end-to-end proof work, AttestationData set-up step A1, Go 1.26.10 ELF `c6403c02…911e`)
 
 Generated from `callgraph.json` (`gen/e2e/adlink.py callgraph <objdump> callgraph.json <m2.log>`; the m2 log is the gated `go build -gcflags=…=-m=2` output of job 02, the same run as `../gcflags-m2.txt`).
 
 | Function | Instructions | Scope | Calls (count) |
 | --- | --- | --- | --- |
-| `v1alpha1.(*AttestationData).SizeSSZ` | 2 | in (A4 size) | none |
-| `v1alpha1.(*AttestationData).MarshalSSZTo` | 218 | in (A4 encoder) | `runtime.growslice` ×3, `runtime.memmove` ×1, `runtime.newobject` ×4, `runtime.gcWriteBarrier2` ×2, `v1alpha1.(*Checkpoint).MarshalSSZTo` ×2, `fmt.errorf` ×2, `runtime.morestack_noctxt.abi0` ×1 |
-| `v1alpha1.(*AttestationData).UnmarshalSSZ` | 220 | in (A3 decoder) | `primitives.(*Slot).UnmarshalSSZ` ×1, `fmt.errorf` ×4, `runtime.newobject` ×6, `primitives.(*CommitteeIndex).UnmarshalSSZ` ×1, `runtime.makeslice` ×1, `runtime.gcWriteBarrier2` ×4, `runtime.memmove` ×1, `v1alpha1.(*Checkpoint).UnmarshalSSZ` ×2, `runtime.morestack_noctxt.abi0` ×1 |
-| `primitives.(*Slot).UnmarshalSSZ` | 58 | in (callee, function spec SlUAccC, A2) | `runtime.convT64` ×1, `fmt.errorf` ×1, `runtime.newobject` ×1, `runtime.morestack_noctxt.abi0` ×1 |
+| `v1alpha1.(*AttestationData).SizeSSZ` | 2 | in (encoder step A4, size) | none |
+| `v1alpha1.(*AttestationData).MarshalSSZTo` | 218 | in (encoder step A4) | `runtime.growslice` ×3, `runtime.memmove` ×1, `runtime.newobject` ×4, `runtime.gcWriteBarrier2` ×2, `v1alpha1.(*Checkpoint).MarshalSSZTo` ×2, `fmt.errorf` ×2, `runtime.morestack_noctxt.abi0` ×1 |
+| `v1alpha1.(*AttestationData).UnmarshalSSZ` | 220 | in (decoder step A3) | `primitives.(*Slot).UnmarshalSSZ` ×1, `fmt.errorf` ×4, `runtime.newobject` ×6, `primitives.(*CommitteeIndex).UnmarshalSSZ` ×1, `runtime.makeslice` ×1, `runtime.gcWriteBarrier2` ×4, `runtime.memmove` ×1, `v1alpha1.(*Checkpoint).UnmarshalSSZ` ×2, `runtime.morestack_noctxt.abi0` ×1 |
+| `primitives.(*Slot).UnmarshalSSZ` | 58 | in (callee, function spec SlUAccC, callee step A2) | `runtime.convT64` ×1, `fmt.errorf` ×1, `runtime.newobject` ×1, `runtime.morestack_noctxt.abi0` ×1 |
 | `primitives.(*Slot).MarshalSSZTo` | 47 | record only (inlined into AttestationData.MarshalSSZTo or unused; out-of-line body unused) | `runtime.growslice` ×1, `runtime.morestack_noctxt.abi0` ×1 |
 | `primitives.(*Slot).MarshalSSZ` | 25 | record only (inlined into AttestationData.MarshalSSZTo or unused; out-of-line body unused) | `runtime.growslice` ×1, `runtime.morestack_noctxt.abi0` ×1 |
 | `primitives.(*Slot).SizeSSZ` | 2 | record only (inlined into AttestationData.MarshalSSZTo or unused; out-of-line body unused) | none |
-| `primitives.(*CommitteeIndex).UnmarshalSSZ` | 58 | in (callee, function spec CiUAccC, A2) | `runtime.convT64` ×1, `fmt.errorf` ×1, `runtime.newobject` ×1, `runtime.morestack_noctxt.abi0` ×1 |
+| `primitives.(*CommitteeIndex).UnmarshalSSZ` | 58 | in (callee, function spec CiUAccC, callee step A2) | `runtime.convT64` ×1, `fmt.errorf` ×1, `runtime.newobject` ×1, `runtime.morestack_noctxt.abi0` ×1 |
 | `primitives.(*CommitteeIndex).MarshalSSZTo` | 47 | record only (inlined into AttestationData.MarshalSSZTo or unused; out-of-line body unused) | `runtime.growslice` ×1, `runtime.morestack_noctxt.abi0` ×1 |
 | `primitives.(*CommitteeIndex).MarshalSSZ` | 25 | record only (inlined into AttestationData.MarshalSSZTo or unused; out-of-line body unused) | `runtime.growslice` ×1, `runtime.morestack_noctxt.abi0` ×1 |
 | `primitives.(*CommitteeIndex).SizeSSZ` | 2 | record only (inlined into AttestationData.MarshalSSZTo or unused; out-of-line body unused) | none |
@@ -45,7 +45,7 @@ Inlining (`-m=2` lines, program count):
 
 Machine code: AttestationData.MarshalSSZTo calls no Slot/CommitteeIndex method: True (the two 8-byte appends are inline: growslice sites 1 and 2). The decoder calls `(*Slot).UnmarshalSSZ` and `(*CommitteeIndex).UnmarshalSSZ` out of line (`cannot inline … cost 113`).
 
-Code facts used by A3/A4 (from the `.S`):
+Code facts used by the decoder step A3 and the encoder step A4 (from the `.S`):
 
 - Decoder: frame `sub $0x70`; `cmp $0x80,%rcx; jne → ssz.ErrSize`; Slot at receiver +8, CommitteeIndex +16 (callee calls, len 8); `makeslice(uint8, 0, 32)` → `BeaconBlockRoot` header (+24/+32/+40) with `writeBarrier` checks, `memmove(32)`; `Source = new(Checkpoint)` and `Target = new(Checkpoint)` **unconditionally** (`newobject(type__+1289312)`, 72 bytes; no nil test in the decoder), each followed by `(*Checkpoint).UnmarshalSSZ(buf[48:88])` / `(buf[88:128])` (len 40); four `fmt.errorf` field wraps on callee errors.
 - Encoder: frame `sub $0xb0`; Slot and CommitteeIndex appends inline (growslice sites 1, 2); `cmpq $0x20,0x20(%rax); jne → ssz.ErrBytesLength`; BeaconBlockRoot append (growslice site 3, memmove 32); `if Source == nil { Source = new(Checkpoint) }` (newobject + store with writeBarrier check), call `(*Checkpoint).MarshalSSZTo`; on its error `fmt.errorf("Source: %w")` (reachable: a Source Root of length ≠ 32); the same for Target.

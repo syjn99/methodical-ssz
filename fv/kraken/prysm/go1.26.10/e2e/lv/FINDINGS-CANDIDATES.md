@@ -1,43 +1,43 @@
-# FINDINGS 후보 (LV 스트림)
+# FINDINGS candidates (list/vector work)
 
-이 파일은 `prysm/FINDINGS.md`의 후보 목록이다.
-기존 원장은 바꾸지 않았다.
-ID는 안정 ID다.
+This file is a candidate list for `prysm/FINDINGS.md`.
+The existing ledger did not change.
+The IDs are stable IDs.
 
-| ID | 처음 본 곳 | 상태 | 증거 종류 | 내용 |
+| ID | First seen | Status | Evidence kind | Content |
 | --- | --- | --- | --- | --- |
-| LV-1 | U1 링크(로그 08, 66), `9b805e0` 뒤 | 수정됨(`93b3f2a`), 리뷰 r4 승인 | 실행(X) | 음수 변위 표기의 도구 빈틈 후보. production 결함이 아니다 |
+| LV-1 | link unit (logs 08, 66), after `9b805e0` | fixed (`93b3f2a`), review r4 approval | execution (X) | tool gap candidate in the negative displacement notation. It is not a production defect |
 
 ## LV-1
 
-- T3 `IndexedAttestation.UnmarshalSSZ`의 정규화 `.S` 19행은 `lea 0xffffff1c(%rdi),%rdx`다.
-- `go tool objdump -gnu`는 32비트 변위 −228을 `0xffffff1c`로 쓴다.
-- `link/conv.py`는 그 표기를 그대로 둔다.
-- x86-64는 32비트 변위를 부호 확장한다. 기계의 주소는 rdi − 228이다.
-- Apple clang 21.0.0은 이 줄을 거부한다(`displacement 4294967068 is not within [-2147483648, 2147483647]`).
-- 그래서 `check.py` (d)가 실패했다(로그 08).
-- Kraken 파서(`6064eec`)는 `disp := ↑4294967068`로 읽는다.
-- `lea -0xe4(%rdi),%rdx`는 `disp := ↑(-228)`로 읽는다(로그 66).
-- 이 `.S`로 증명하면 기계와 다른 주소를 다룬다.
-- 커밋된 다른 `.S`에는 이 꼴이 없다(`git grep '0xffffff..(%'`, 결과 0). 기존 정리에는 영향이 없다.
-- 고칠 곳 후보(하지 않음): `conv.py --norm`이 변위를 부호 있는 수로 쓴다. 또는 `check.py`에 변위 범위 검사를 더한다.
-- 이전 링크 검사의 LLVM이 이 표기를 받았는지는 모른다.
-- 전체 ELF objdump(`p1cbin-amd64.objdump`, sha256 `580b0da9…`)에는 감싼 꼴의 피연산자가 153개 있다(`grep -cE '0xffff[0-9a-f]{4}\(%'`).
-- 그 153개는 함수 104개에 있다. 104개는 UnmarshalSSZ 67개와 MarshalSSZTo 37개다.
-- 이 objdump 파일의 TEXT 함수는 641개다: UnmarshalSSZ 211, MarshalSSZTo 211, SizeSSZ 211, MarshalSSZ 6, `ssz.ValidateBitvector` 1, `ssz.ValidateBitlist` 1. HashTreeRoot는 없다(리뷰 r2 M2).
-- 넓은 무늬 `0x[89a-f][0-9a-f]{7}\(%`는 161개를 준다. 더해진 8개는 `0xffd6xxxx(%r..)` 꼴의 `lea`다. 161개 모두 같은 함수 104개에 있다(리뷰 r2 S3).
-- 커밋된 `.S` 222개에는 넓은 무늬도 없다.
-- 그래서 LV-1은 T3만의 문제가 아니다. 그 함수들의 `.S`를 `conv.py --norm`으로 만들면 같은 표기가 남는다. 함수별 영향은 세지 않았다.
+- Line 19 of the normalized `.S` of `IndexedAttestation.UnmarshalSSZ` is `lea 0xffffff1c(%rdi),%rdx`.
+- `go tool objdump -gnu` writes the 32-bit displacement −228 as `0xffffff1c`.
+- `link/conv.py` keeps that notation as is.
+- x86-64 sign-extends the 32-bit displacement. The machine address is rdi − 228.
+- Apple clang 21.0.0 rejects this line (`displacement 4294967068 is not within [-2147483648, 2147483647]`).
+- Thus `check.py` (d) failed (log 08).
+- The Kraken parser (`6064eec`) reads it as `disp := ↑4294967068`.
+- It reads `lea -0xe4(%rdi),%rdx` as `disp := ↑(-228)` (log 66).
+- A proof with this `.S` handles an address that differs from the machine.
+- The other committed `.S` files do not have this form (`git grep '0xffffff..(%'`, result 0). The existing theorems are not affected.
+- Fix location candidates (not done): `conv.py --norm` writes the displacement as a signed number. Or add a displacement range check to `check.py`.
+- It is not known whether the LLVM of the earlier link checks accepted this notation.
+- The full ELF objdump (`p1cbin-amd64.objdump`, sha256 `580b0da9…`) has 153 operands of the wrapped form (`grep -cE '0xffff[0-9a-f]{4}\(%'`).
+- Those 153 are in 104 functions. The 104 are 67 UnmarshalSSZ and 37 MarshalSSZTo.
+- This objdump file has 641 TEXT functions: UnmarshalSSZ 211, MarshalSSZTo 211, SizeSSZ 211, MarshalSSZ 6, `ssz.ValidateBitvector` 1, `ssz.ValidateBitlist` 1. There is no HashTreeRoot (review r2 M2).
+- The wide pattern `0x[89a-f][0-9a-f]{7}\(%` gives 161. The 8 added ones are `lea` of the form `0xffd6xxxx(%r..)`. All 161 are in the same 104 functions (review r2 S3).
+- The 222 committed `.S` files also do not have the wide pattern.
+- Thus LV-1 is not a problem of IndexedAttestation only. If `conv.py --norm` makes the `.S` of those functions, the same notation remains. The effect per function was not counted.
 
-## LV-1 수정 (`93b3f2a`, 사용자 승인)
+## LV-1 fix (`93b3f2a`, user approval)
 
-- `conv.py --norm`은 이제 최상위 비트가 선 8자리 변위를 부호 있는 꼴로 쓴다(`0xffffff1c(%rdi)` → `-0xe4(%rdi)`).
-- 전체 ELF의 수정 전후 출력: 바뀐 파일 104개, 바뀐 줄 161개, 변위 토큰 밖의 차이 0 (로그 103–105).
-- 새 출력에 감싼 꼴은 0개다.
-- 이 ELF의 커밋된 `--norm` 묶음 7개(파일 37개)와 `link/norm`(함수 136개)은 다시 만들어도 바이트 단위로 같다(로그 106, 107).
-- `opt-r1/link`는 다른 ELF라서 비교하지 않았다.
-- T3 링크는 `lv/link-t3/`에서 (a)–(f) 모두 PASS다(로그 111, BUNDLE `393eade6…`).
-- Kraken은 고친 줄을 `disp := ↑(-228)`로 읽는다(로그 113).
-- 리뷰 r4가 이 수정을 승인했다(`REVIEW-R4.md`).
-- 수정은 베이스 없는 SIB 꼴(`0xffffff00(,%rcx,8)`)과 베이스 없는 세그먼트 꼴을 다루지 않는다. 이 objdump에는 둘 다 0개다(리뷰 r4 S9).
-- 남은 후보(하지 않음): `check.py`의 변위 범위 검사, Kraken 파서의 범위 밖 변위 거부 요청.
+- `conv.py --norm` now writes an 8-digit displacement with the top bit set in signed form (`0xffffff1c(%rdi)` → `-0xe4(%rdi)`).
+- Output of the full ELF before and after the fix: 104 changed files, 161 changed lines, 0 differences outside the displacement tokens (logs 103–105).
+- The new output has 0 wrapped forms.
+- The 7 committed `--norm` bundles of this ELF (37 files) and `link/norm` (136 functions) are byte-for-byte the same when made again (logs 106, 107).
+- `opt-r1/link` is a different ELF, so it was not compared.
+- The IndexedAttestation link is PASS for all of (a)–(f) in `lv/link-t3/` (log 111, BUNDLE `393eade6…`).
+- Kraken reads the fixed line as `disp := ↑(-228)` (log 113).
+- Review r4 approved this fix (`REVIEW-R4.md`).
+- The fix does not handle the SIB form without a base (`0xffffff00(,%rcx,8)`) and the segment form without a base. This objdump has 0 of each (review r4 S9).
+- Remaining candidates (not done): a displacement range check in `check.py`, a request that the Kraken parser reject out-of-range displacements.

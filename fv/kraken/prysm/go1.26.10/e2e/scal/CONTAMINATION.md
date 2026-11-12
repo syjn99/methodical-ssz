@@ -1,811 +1,811 @@
-# 생성기 변경 기록 (홀드아웃 오염 기록)
-
-이 파일은 `gen/scal/scalgen.py`의 변경을 적는다.
-변경마다 홀드아웃을 연 전인지 후인지 적는다.
-홀드아웃 형은 `HOLDOUT-MARKER.json`에 있다.
-
-## 1. p2dec 문장 동일성 (감사 AU-08) — 홀드아웃을 열기 전
-
-- 시점: 2026-11-10, 커밋 `4581b8f`. `scal/HOLDOUT-OPENED`는 없다. S3는 시작하지 않았다.
-- 변경 전: p2dec는 문장을 고정 텍스트로 냈다. 증명은 `rootdec_seg`에 모든 인수를 넘겼다. 그래서 문장에 거짓 전제를 더해도 빌드되었다(감사의 M1 변이, 종료 0).
-- 변경 후: 코드 전제 `k`, `hk`, `hf`만 콜론 앞에 둔다. 나머지는 콜론 뒤의 `∀ …, …` 하나다. 증명은 `exact E2eScal.rootdec_seg … hA hB hl`이고 뒤에 인수가 없다.
-- 이 변경이 검사하는 것: 콜론 뒤의 문장과 보조정리 인스턴스의 형이 정의상 같은지다.
-- 정정(리뷰 fix-r1 M2): 콜론 앞에 더한 전제는 이 변경으로 잡히지 않는다. 증명이 그 전제를 쓰지 않으면 빌드된다(`rv-gad-extra-before`, 오류 없음). 이 절의 이전 문장 "커널이 문장과 보조정리 인스턴스의 형을 검사한다"는 그만큼 틀렸다. 2절이 고친다.
-- 같은 명제: 선언 덤프에서 두 생성 정리의 형 해시가 바뀌지 않았다(gate 작업 254와 260, `decl_drift` 변동 0). 해시는 구조 해시이고 묶음 이름을 보지 않는다.
-- 입력: 개발 집합만 썼다. AttestationData와 Checkpoint 디코더의 `.S`, 그 두 형의 IR 항목이다.
-- 다시 만든 파일: `lean/E2eScal/GenAdDec.lean`, `lean/E2eScal/GenCpDec.lean`. `regen_check.sh` 결과는 SAME이다.
-- 부정 시험: `scal-gad-stmt-extra`, `scal-gcp-stmt-extra`(거짓 전제 `(1 : Nat) = 2`를 더함)가 정리 안에서 실패한다(작업 258, 259).
-
-## 2. 전체 문장의 종류 검사 (리뷰 fix-r1 M2, S1, S2) — 홀드아웃을 열기 전
-
-- 시점: 2026-11-10, 커밋 `094e51e`. `scal/HOLDOUT-OPENED`는 없다. S3는 시작하지 않았다. 홀드아웃 파일은 열지 않았다.
-- 문제: 1절의 검사는 콜론 뒤만 본다. p1 모드는 `--same-as` 손 정리가 없으면 문장 검사가 없다. 홀드아웃 형에는 손 정리가 없다.
-- 새 손 모듈 `lean/E2eScal/Kind.lean`: 고정된 문장 종류 `u64DecAcceptKind C`, `rootDecSegKind C j1 j2 dR dB dS fP fL fC src`(`abbrev`).
-- `u64DecAcceptKind_of`, `rootDecSegKind_of`는 각 종류를 보조정리 `u64dec_accept`, `rootdec_seg`에서 증명한다. 그래서 종류의 본문은 보조정리 결론과 커널에서 맞춰진다.
-- `lean/E2eScal/KindAnchor.lean`: `sl_kind_anchor`, `ci_kind_anchor`. P1 종류가 검토된 손 정리 `E2eAd.sl_unmarshal_accept_main`, `E2eAd.ci_unmarshal_accept_main`의 선언 형 전체와 같다.
-- 생성기 변경: 생성 정리 `t`마다 바로 뒤에 `t_kind : ∀ (h : Host), type_of% (@t h) = <종류> …`를 낸다. 증명은 `with_reducible rfl`이다.
-- `@t h`의 형은 콜론 앞과 뒤의 묶음을 모두 포함한다. 그래서 어느 자리에 전제를 더하거나 빼거나 바꿔도 `t_kind`가 실패한다. 손 정리가 필요 없다.
-- 이 검사가 보지 않는 것: 종류에 넘긴 매개변수(지시 번호, 변위, 오프셋)가 그 Go 형에 맞는지다. 맞지 않으면 증명의 코드 사실이 성립하지 않아 빌드가 실패한다. 이것은 증명의 성질이고 `t_kind`의 성질이 아니다.
-- 생성 증명의 마지막 줄은 `with_reducible exact …`다. 결론의 상수가 틀리면 `Int.toBytes`를 펼치지 않고 바로 실패한다(S2: 이전 300초 벽시계 초과, 지금 1.4초).
-- `gen/e2e/negative.py`: 정리 바로 뒤의 `theorem <t>_kind`를 변이 파일과 사례 범위에 넣는다.
-- 입력: 개발 집합만 썼다. 1절과 같은 `.S` 세 개와 IR 항목 두 개다.
-- 다시 만든 파일: `GenCi.lean`, `GenAdDec.lean`, `GenCpDec.lean`. `regen_check.sh` 세 번 모두 SAME이다(gate 작업 294). 생성 정리의 형 해시는 바뀌지 않았다. 선언 변동은 새 선언 11개뿐이다(`allow-fixr1.txt`, 작업 293).
-- 부정 시험(사례 묶음마다 gate 작업 하나, 작업 288–291): 콜론 앞 전제 추가 `scal-gad-stmt-extra-before`, `scal-gcp-stmt-extra-before`, `scal-gci-stmt-extra-before`, 맨 앞 추가 `scal-gad-stmt-extra-first`, `scal-gci-stmt-extra-first`, 전제 삭제 `scal-gad-stmt-drop`, 결론 상수 `scal-gad-stmt-literal`, 종류 인수 `scal-gad-kind-arg`. 모두 사례 범위 안에서 실패한다.
-- 콜론 앞 추가 변이 다섯 개의 오류는 모두 `_kind` 줄에만 있다. 정리 자체는 그 변이로도 빌드된다. 그래서 이 검사가 그 변이를 잡는 유일한 장치다.
-- 결과 파일 `negative-result.json`: 28/28(대조 6, 정리 안 실패 22).
-
-## 3. 평가 세션의 0단계 (리뷰 fix-r2 N1, N2, N3) — 홀드아웃을 열기 전
-
-- 시점: 2026-11-10, 평가 세션. `scal/HOLDOUT-OPENED`는 아직 없다. 홀드아웃 파일은 열지 않았다.
-- 방법 고정: 커밋 `56dfc27`, `Kind.lean` 블롭 `3c9b95b1…`, `scalgen.py` 블롭 `78e3339b…`.
-- 이 단계는 생성기, 보조정리, 종류를 바꾸지 않는다.
-- N1: `gen/e2e/negative.py`가 첫 오류 `Unknown option`, `Case tag … not found`를 `wrong_target`으로 분류한다. 목록은 완전하지 않다.
-- N2: `gen/scal/kindcheck.py`는 읽는 쪽의 검사다. 생성 정리마다 `_kind` 줄의 우변이 고정 종류인지 본문으로 검사한다.
-- N2 한계: `_kind` 줄은 생성기 출력이다. 퇴화한 우변도 Lean에서 빌드된다. 그래서 이 검사가 필요하다.
-- N2 한계: 종류 매개변수가 Go 형에 맞는지는 보지 않는다. 그것은 증명의 코드 사실로만 검사된다.
-- N3(a): 실패한 빌드 뒤에는 다음 통과를 믿기 전에 `stale_olean.py`를 돌린다.
-
-## 4. 홀드아웃 H1 평가 (열린 뒤) — 평가 세션
-
-- 연 시각: 2026-11-10T17:53:24Z (`scal/HOLDOUT-OPENED`, 커밋 `fc8749c`).
-- 생성기, 보조정리, 종류는 바꾸지 않았다. `kindcheck.py`는 `Kind.lean` 블롭이 고정값임을 확인했다.
-- 생성기는 형마다 한 번 돌렸다. ValidatorIndex `p1`(작업 299), BeaconBlockHeader `p2dec`(작업 312).
-- 날것 출력 `GenVi.lean`, `GenBhDec.lean`은 고치지 않고 커밋했다. 손 수정은 0줄이다. 둘 다 그대로 빌드되었다.
-- 열린 뒤에 더한 손 파일: `BhCode`, `ViSpec`, `WitVi`, `BhHead`, `BhAccept`, `BhReject`, `BhSpec`, `BhSpecK`, `WitBhA`, `WitBhR`.
-- 이 손 파일은 대부분 개발 집합 손 증명의 글을 고친 것이다(`AdHead`, `AdReject`, `AdSpecK`, `WitAdA`, `WitAdR`, `Spec`, `WitCi`).
-- 열린 뒤에 더한 도구: `gen/e2e/bhlink.py`(`adlink.py`의 글), `gen/e2e/bhdiff.py`와 Prysm 임시 트리의 `fve2e/bhcheck`.
-- 이 도구는 생성기가 아니다. 증명 문장을 만들지 않는다.
-- 열린 뒤에 더한 증거 파일(리뷰 s4-r1 S5): `lean/E2eScal/BhSpecChecker.lean`(`descterm.py` 출력), `gen/scal/AxiomsScal.lean`의 손 목록 추가, `gen/scal/negcases-holdout.json`.
-- 이 증거 파일은 방법을 바꾸지 않는다. 생성기, 보조정리, 종류, 분류기는 같다.
-- 한계: `bh/link/norm`은 Lake `input_dir`가 아니다. lakefile 변경은 승인이 필요해서 하지 않았다.
-- 결과와 한계는 `RESULT.json`에 있다.
-
-## 5. 세션 10 (INBOX 020) — 열린 뒤
-
-- 생성기, 보조정리, 종류, 템플릿은 바꾸지 않았다. 템플릿 변경 제안도 없다.
-- 더한 손 파일: `BhReject.lean`의 정리 둘, `WitBhU`, `ViReject`, `WitViR`. 개발 집합 손 증명의 글에서 코드 상수만 바꿨다.
-- 더한 증거 파일: `negcases-holdout.json`의 사례 15개, `AxiomsScal.lean`의 손 목록 7개.
-- 인코더 (iii)은 손 증명으로 시도했고 증명하지 못했다. 초안은 저장소에 넣지 않았다.
-- 문서 변경: `BhSpecChecker.lean` 머리 주석(선언 덤프 같음), `README.md`, `gen.sh`(홀드아웃 명령 두 줄; 생성기 변경이 아니다).
-
-## 6. 세션 11 (INBOX 021) — 열린 뒤
-
-- 생성기, 보조정리, 종류, 템플릿은 바꾸지 않았다.
-- 저장소에 Lean 파일을 더하지 않았다. T-9 시도는 모두 실행 디렉터리의 임시 파일이다.
-- 증거 파일 변경: `negative-holdout.json`에서 약한 사례 하나를 합계에서 뺐다(리뷰 s5-r1 S1). `axioms-gate.json`을 현재 SHA의 출력으로 바꿨다.
-
-## 7. 홀드아웃 H2 평가 (세션 13, INBOX 023) — 열린 뒤
-
-- 연 시각: `scal/HOLDOUT-OPENED`의 `H2.opened_utc`(커밋 `7a5ea61`). 그 전에는 Eth1Data 자료를 열지 않았다.
-- 범위: `Eth1Data.UnmarshalSSZ`와 `MarshalSSZTo` 빠른 경로. `SizeSSZ`는 뺐다(AU-09 노출).
-- 이 세션은 H1 파일을 읽을 수 있었다. H1 경험에서 독립이 아니다.
-- 생성기, 보조정리, 종류, 템플릿, 분류기는 바꾸지 않았다.
-- 생성기는 한 번 돌렸다(`p2dec`, 작업 393). 종료 코드 2, 출력 0바이트다.
-- 기록: `e1/gen-e1dec.raw.txt`(명령, 종료 코드, stderr 원문). 빈 `GenE1Dec.lean`은 라이브러리에 넣지 않았다.
-- 순서(리뷰 h2-r1 S1): 기록 파일은 02:02:50Z에 썼다. 커밋 `a9918d4`는 02:04:40Z다.
-- 그 사이에 `E1Seg0.lean`을 쓰고 빌드했다(작업 394, 02:04:30Z–02:04:33Z).
-- 그래서 "원 출력을 손 수정 전에 커밋한다" 규칙은 커밋 순서로만 지켜졌다. 작업 순서로는 지켜지지 않았다.
-- 영향은 없다. 고칠 생성 출력이 없다.
-- 원인: DepositRoot의 memmove 출처가 `buf + 0`이다. 코드에 `add $src,%rbx`가 없다.
-- 고정 템플릿 `rootDecMid`는 이 지시어를 요구한다. 생성기는 첫 필드에서 멈추고 BlockHash도 내지 않는다.
-- 제안(하지 않음): `rootDecMid`에 출처 0의 변형을 두고 `p2dec`가 `add`가 없는 블록을 받게 한다.
-- 이 제안은 방법 변경이다. 이 평가에서는 하지 않았다. 생성기 적용 범위는 이 형에서 0/2 필드다.
-- DepositCount의 인라인 읽기(지시 47–49)에는 방법의 템플릿이 없다(리뷰 h2-r1 S2).
-- 그래서 제안한 변형이 있어도 생성기는 두 루트 구간(지시 13–36, 50–74)만 덮는다.
-- 손 증명으로 대신한 부분(복사한 글):
-  - `E1Seg0.lean`: `rootdec_seg`의 문장과 증명 글에서 `add` 단계를 지운 것. 고정 방법의 일부가 아니다.
-  - BlockHash 구간: 고정 `rootdec_seg`를 손으로 인스턴스화했다(`GenBhDec`의 생성 글 형태를 복사).
-  - `E1Accept`(`BhHead`, `BhAccept`의 글), `E1Reject`(`BhReject`), `E1Spec`(`BhSpec`), `E1SpecK`(`BhSpecK`), `WitE1A`(`WitBhA`), `WitE1R`(`WitBhR`).
-- 열린 뒤에 더한 손 파일: `E1Code`, `E1Desc`, `E1Seg0`, `E1Accept`, `E1Reject`, `E1Spec`, `E1SpecK`, `WitE1A`, `WitE1R`.
-- 생성 파일: `E1SpecChecker.lean`(`descterm.py` 출력, 머리 주석에 경로 한 줄을 더함).
-- 검사기 json `e1/prysm_v1alpha1.Eth1Data.desc.json`의 출처(리뷰 h2-r1 S3): 다른 실행의 리뷰어 임시 디렉터리에서 복사했다.
-- 그것은 리뷰 phase1c-r5의 임시 사본 `desc/orig/`다. 이 저장소 밖에 있다.
-- sha256 `6064a3dc…782b`는 `gen/desc/results/main.result.json` 기록 74(`Eth1Data`, PASS)와 같다(세션 14에서 다시 셈).
-- 손 Desc(`E1Desc.lean`, 커밋 `c43359b`)는 검사기 Desc를 만들거나 출력하기 전에 커밋했다.
-- 열린 뒤에 더한 도구: `gen/e2e/e1link.py`(`bhlink.py`의 글), `gen/e2e/e1diff.py`(`bhdiff.py`의 글), Prysm 임시 트리의 `fve2e/e1check`.
-- 열린 뒤에 더한 증거 파일: `gen/scal/negcases-h2.json`, `AxiomsScal.lean`의 손 목록 15개와 import 셋.
-- 세션 14(리뷰 h2-r1 S6)에서 부정 시험 2건을 더했다: `e1-rc-stmt-size`, `e1-witr-stmt-len`. 둘 다 정리 안에서 실패했다(작업 432, 433).
-- `kindcheck.py`는 돌리지 않았다. 검사할 생성 정리가 없다.
-- 인코더(`MarshalSSZTo`)의 스택 검사는 `lea -0x8(%rsp),%r12; cmp 0x10(%r14),%r12; jbe` 꼴이다(T-9와 같다).
-- INBOX 023 3단계에 따라 시도하지 않았다. 예산은 사용자 결정을 기다린다.
-- 한계: `e1/link/norm`은 Lake `input_dir`가 아니다. lakefile 변경은 승인이 필요해서 하지 않았다.
-
-## 8. SG-1 확장 (두 홀드아웃을 연 뒤) — 개발 작업, 홀드아웃 아님
-
-- 언제: 2026-11-11, 기준 커밋 `48b74b6` 뒤. H1과 H2를 모두 연 뒤다.
-- 무엇: 출처 오프셋 0의 32바이트 디코드 구간을 생성기가 받게 했다.
-- 새 Lean 파일: `P2DecZ.lean`(템플릿 `rootDecMidZ`, 보조정리 `rootdec_seg_z`), `KindZ.lean`(종류 `rootDecSegZKind`).
-- `rootdec_seg_z`는 손 파일 `E1Seg0.lean`의 글을 일반화했다. 정의와 증명 글은 이름만 다르다.
-- `Kind.lean`, `P2Dec.lean`, 기존 정리의 문장은 바꾸지 않았다. `decl_drift`는 ADDED 19개만 보인다.
-- `scalgen.py p2dec`: 버퍼 다시 읽기 다음 지시어로 꼴을 고른다. 형 이름이나 필드 이름은 보지 않는다.
-- `add $X,%rbx`면 기존 꼴이다. `mov $0x20,%ecx`면 오프셋 0 꼴이다. 다른 것은 불일치다.
-- 필드 규칙: 필드마다 따로 맞춘다. 한 필드의 실패가 뒤 필드의 검사를 막지 않는다.
-- 출력은 완전하거나 없다. 일부만 맞으면 종료 코드 3이고 stdout은 비어 있다.
-- `--partial-out`을 주면 맞은 필드만 파일에 쓴다. 파일 머리에 `PARTIAL OUTPUT`과 빠진 필드를 적는다.
-- 어느 필드도 맞지 않거나 구간이 겹치면 종료 코드 2이고 아무것도 쓰지 않는다.
-- `kindcheck.py`: `rootDecSegZKind`(인자 8개)를 받는다. `KindZ.lean`이 고정 blob일 때만 받는다.
-- 오염: Eth1Data는 이 확장의 개발 자료다. 확장은 Eth1Data의 `.S`를 보고 만들었다.
-- 그래서 Eth1Data 결과는 홀드아웃 결과가 아니다. 새 홀드아웃 형은 정하지도 열지도 않았다.
-- 위 §4–§7의 H1, H2 결과는 확장 전의 결과다. 그대로 둔다.
-- 확장 전 기록: 고정 생성기(blob `78e3339`)의 Eth1Data 실행은 종료 코드 2, 0/2 필드다(`a9918d4`, 승인 `48b74b6`).
-- 이 기록은 역사적 부정 결과로 남는다. `gen/scal/p2dec_test.py`가 같은 결과를 다시 낸다.
-- 확장 뒤: 새 생성기는 Eth1Data에서 2/2 루트 필드를 낸다(`GenE1Dec.lean`, 손대지 않은 출력).
-- DepositCount의 인라인 읽기에는 여전히 템플릿이 없다.
-- 회귀: GenCi, GenVi, GenAdDec, GenCpDec, GenBhDec를 새 생성기로 다시 만들었다. 모두 바이트가 같다.
-- 시험: `scal/sg1-gen-test.json`(10/10), `scal/negative-sg1.json`(7/7). 일반화 주장은 이 시험의 범위만이다.
-
-## 9. T-9 스트림 (사용자 지시, 2026-11-11) — 열린 뒤
-
-- 생성기, 보조정리, 종류, 템플릿은 바꾸지 않았다. `Fk/*`와 계약도 바꾸지 않았다.
-- 이 작업은 손 증명이다. 생성기 결과가 아니다. 홀드아웃 주장에 넣지 않는다.
-- 작성 세션은 H1과 H2의 파일과 T-9 기록을 읽었다. 독립 표본이 아니다.
-- 더한 Lean 파일: `StackGuard.lean`, `BhEncHead.lean`, `BhEncRoots.lean`, `BhEncMain.lean`, `BhSpecM.lean`, `WitBhM.lean`.
-- `BhEncHead.lean`의 A1, A2 본문은 세션 11의 임시 파일 `Split3.lean`에서 왔다. 가드 분기와 길이 목표 두 곳을 고쳤다.
-- `WitBhM.lean`은 `E2e/WitCpM.lean`의 글이다. `BhSpecM.lean`은 `E2e/CpSpecM.lean`의 글이다.
-- 더한 증거 파일: `gen/scal/negcases-t9.json`, `scal/negative-t9.json`, `gen/e2e/bhmdiff.py`, `bh/bhmcheck-main.go.txt`, `bh/differential-enc*.json`.
-- `AxiomsScal.lean`에 이름 11개를 더했다. `axioms-gate.json`을 현재 트리의 출력으로 바꿨다.
-- 제안(하지 않음): 인코드 템플릿을 이 세 루트 블록 꼴에 맞추는 변경. `scalgen.py`와 `Kind.lean`은 그대로다.
-
-## 10. 세션 15 통합 (INBOX 027) — 열린 뒤
-
-- T9 스트림과 SG1 스트림을 이 브랜치에 병합했다. 새 증명, 생성기 변경, 템플릿 변경은 없다.
-- 두 스트림이 모두 이 파일에 8절을 더했다. SG-1 Lean 주석이 8절을 가리키므로 SG-1이 8절이다. T-9는 9절이 됐다.
-- `kindcheck.py`를 바꿨다(리뷰 sg1-r1 S2). `PARTIAL OUTPUT` 머리가 있는 파일을 거부한다. 읽는 쪽 검사기의 변경이다.
-- 이 변경은 생성기 출력, 종류, 보조정리를 바꾸지 않는다. 기존 생성 파일 6개는 그대로 PASS다.
-- `gen/scal/negcases-sg1.json`에 사례 8건을 더했다(리뷰 sg1-r1 S3). `rootdec_seg_z`와 BlockHash 구간을 겨눈다.
-
-## 11. 홀드아웃 H3 평가 — 열린 뒤
-
-- 연 시각: `scal/HOLDOUT-OPENED`의 `H3.opened_utc`(커밋 `782a41b`, 2026-11-11T04:26:30Z).
-- 방법 고정: 커밋 `dda707c`. 고정 기록의 blob 7개와 `lean/E2eScal` 트리 id를 다시 셌다. 모두 같다.
-- 형: `v1alpha1.BlobIdentifier`(Z 부류), `v1alpha1.DepositMessage`(N 부류). 범위는 `UnmarshalSSZ`뿐이다.
-- 평가 세션은 생성기, 종류, 템플릿 보조정리를 만들지 않았다. H1, H2, SG-1, T-9 파일은 읽을 수 있었다.
-- 생성기, `kindcheck.py`, `Kind*.lean`, 템플릿 보조정리 모듈, `Fk/*`, 계약, 기존 문장은 바꾸지 않았다.
-- 생성기는 형마다 한 번 돌렸다(작업 11, 12). 둘 다 종료 0이고 stderr는 비어 있다.
-- 원 출력 `GenBiDec.lean`, `GenDmDec.lean`은 손대지 않고 커밋했다(`936446b`). 손 수정은 0줄이다.
-- `kindcheck.py`는 두 파일 모두 PASS다(작업 13). 두 파일은 그대로 빌드됐다(작업 14).
-- 생성기 적용 범위: BlobIdentifier 필드 2개 중 1개, DepositMessage 필드 3개 중 1개.
-- 생성기는 32바이트 `[]byte` 필드만 읽는다(`scalgen.py` `ir_roots`). 그래서 48바이트 PublicKey를 보지 않는다.
-- 인라인 uint64 읽기(Index, Amount)에는 방법의 템플릿이 없다. 이것은 H3 전에 적은 한계다.
-- 손 보조정리: 새 H3 모듈 `DmSeg0.lean`(`E2eScal.H3.bytes48dec_seg_z`).
-- 그 글은 `rootDecHead`, `rootDecMidZ`, `rootdec_seg_z`의 글에서 `32`를 `48`로 바꾼 것이다. 고정 방법의 일부가 아니다.
-- 손 파일과 원본 글: `BiAccept`, `DmAccept`(`E1Accept`), `BiReject`, `DmReject`(`E1Reject`), `BiSpec`, `DmSpec`(`E1Spec`).
-- 계속: `BiSpecK`, `DmSpecK`(`E1SpecK`), `WitBiA`, `WitDmA`(`WitE1A`), `WitBiR`, `WitDmR`(`WitE1R`), `BiDesc`, `DmDesc`, `H3Code`.
-- 두 수용 정리는 생성 구간 정리를 그대로 부른다(`bi_dec_BlockRoot_seg`, `dm_dec_WithdrawalCredentials_seg`).
-- 생성 파일: `BiSpecChecker.lean`, `DmSpecChecker.lean`(`descterm.py` 출력, 머리 주석에 경로 한 줄을 더함).
-- 검사기 json의 출처: phase1c-r5 리뷰의 임시 사본 `desc/orig/`다(H2와 같다). sha256은 `main.result.json` 기록과 같다.
-- 손 Desc(`11babc9`)는 검사기 Desc를 만들거나 출력하기 전에 커밋했다.
-- 열린 뒤에 더한 도구: `gen/e2e/h3link.py`(`e1link.py`의 글), `gen/e2e/h3diff.py`(`e1diff.py`의 글), `h3/h3check-main.go.txt`.
-- 열린 뒤에 더한 증거 파일: `gen/scal/negcases-h3.json`, `AxiomsScal.lean`의 손 목록 87개와 import 8개.
-- 이 도구와 증거 파일은 방법을 바꾸지 않는다.
-- 제안(하지 않음) P-H3-1: 인라인 uint64 읽기 템플릿.
-- P-H3-1의 꼴은 `mov dB(%rsp),%rcx; mov src(%rcx),%rcx; mov %rcx,f(%rdx)`이다. 두 형에서 같다.
-- 제안(하지 않음) P-H3-2: 구간 템플릿의 크기를 매개변수로 하고 `ir_roots`가 48바이트 벡터도 읽게 한다.
-- P-H3-2가 있으면 PublicKey 구간(지시 13–36)이 생성 대상이 된다. 이 평가에서는 하지 않았다.
-- 두 제안은 방법 변경이다. 그래서 그 필드는 생성기가 덮지 않은 것으로 보고한다.
-- 한계: `h3/link/norm`은 Lake `input_dir`가 아니다. lakefile 변경은 승인이 필요해서 하지 않았다.
-- 정정(통합 INT2, 리뷰 h3-r1 S1): 읽기 A3는 큐레이터가 후보 목록을 본 뒤에 정했다.
-- 그때 누구도 방법 코드를 열지 않았다. 출처는 저장소 밖의 컨트롤러 확인 파일이다.
-- 다른 읽기(전이적 필드)에서는 N 부류가 `ProposerSlashing`이다. 그 읽기는 쓰지 않았다.
-- 읽기 A1을 글자 그대로 읽으면 후보가 없다. 확인된 A1은 `HOLDOUT-OPENED`의 좁은 읽기다.
-- 정정(h3-r1 S2): 기존 파일 `gen/scal/AxiomsScal.lean`을 늘렸다(+97줄, −0줄). 공리 손 목록이고 방법 파일이 아니다.
-- 정정(h3-r1 S3): `BiSpecChecker.lean`, `DmSpecChecker.lean`은 "Do not edit" 파일이다. 손으로 머리 한 줄을 더했다.
-- 그 머리는 `descterm.py`의 고정 디렉터리를 적는다. 파일은 그곳에 없고 `e2e/h3/`에 있다.
-- 정정(h3-r1 S6): 검사기 json은 다른 리뷰의 임시 사본에서 왔다. 기록과는 sha256으로만 묶인다. 저장소만으로는 다시 만들 수 없다.
-
-## 12. 통합 INT2 (H3와 ENC 병합) — 열린 뒤
-
-- H3 `75166e4`(리뷰 h3-r1 승인)와 ENC `ad15fbc`(리뷰 enc-r1 승인)를 `--no-ff`로 병합했다.
-- 병합 커밋은 `500571c`(H3)와 `c10daf9`(ENC)다. 새 증명, 생성기 변경, 문장 변경은 없다.
-- ENC는 H3 형의 코드를 쓰지 않는다. ENC 작성자는 `h3/` 파일 이름과 gate 기록 5개만 보았다(리뷰 enc-r1 S5).
-- 생성기 재실행: 통합 검사로 `regen_check.sh`를 scratch에 돌렸다. H3 평가의 생성기 실행 수(형마다 한 번)에 넣지 않는다.
-
-## 13. GEN2 보조정리 작업 (단위 G2-L) — H3 뒤, 개발 작업, 홀드아웃 아님
-
-- 이 작업은 H3 평가와 통합 INT2, INT3 뒤에 했다. 기준 커밋은 `71161fa`다.
-- BlobIdentifier와 DepositMessage는 이제 개발 자료다. 이 두 형으로 홀드아웃 주장을 하지 않는다.
-- 작성 세션은 새 Fable 세션이고 직접 작성자다. 이 세션은 생성기를 만들지 않았다.
-- 이 세션은 세 디코더의 `.S`, 손 증명, 생성 파일, H3 기록을 모두 읽었다.
-- 새 모듈만 더했다: `SegN`, `KindN`, `SegNRel`, `U64Inline`, `KindU64`, `Gen2Examples`, `Compose`, `Gen2ComposeEx`.
-- 기존 `.lean` 파일, `scalgen.py`, `kindcheck.py`, `gen.sh`, H3 생성 파일과 H3 기록은 바꾸지 않았다.
-- 증명 생성기는 그대로다. 그래서 생성기 적용 범위(SG-2)는 바뀌지 않았다.
-- `SegN.lean`과 `KindN.lean`의 글은 임시 스크립트가 `P2Dec.lean`, `P2DecZ.lean`, `Kind.lean`, `KindZ.lean`에서 만들었다.
-- 그 스크립트는 크기 `32`를 매개변수 `n`으로 바꾼다. 스크립트는 커밋하지 않았다.
-- `Gen2Examples.lean`도 임시 스크립트로 썼다. 이것은 `scalgen.py`의 출력이 아니다. 손 예시로 센다.
-- 인라인 uint64 꼴은 세 자리에서 먼저 읽었다. 임시 레지스터가 다르다: Eth1Data는 rsi, 나머지 둘은 rcx다.
-- P-H3-1의 글(§11)은 rcx만 적는다. 그 글은 H3의 두 형에만 맞다.
-- L1의 크기는 32, 48, 96뿐이다. 96바이트 자리는 개발 자료에 없다. 96은 실제 코드에서 확인하지 않았다.
-- L2의 레지스터는 12개다. 관측한 것은 rsi와 rcx 둘이다. 수신자는 rdx여야 한다.
-- L3은 조각 셋과 예시 하나다. 구간 목록을 받는 일반 결합기는 없다. 프레임은 `0x20`만 다룬다.
-- 일반성 주장은 없다. 다른 형으로 옮겨지는지는 측정하지 않았다.
-- 더한 증거 파일: `gen/scal/negcases-gen2.json`. `gen/e2e/negative.py`는 바꾸지 않았다.
-- 공리 게이트는 임시 JSON으로 돌렸다. 커밋된 `axioms-gate.json`은 바꾸지 않았다.
-- 독립 리뷰는 아직 없다.
-
-## 14. GEN2 생성기 작업 (단위 G2-G) — H3 뒤 생성기 변경, 개발 작업, 홀드아웃 아님
-
-- 이 작업은 H3 평가 뒤에 증명 생성기 `gen/scal/scalgen.py`를 바꿨다. 기준 커밋은 `6c62a49`다.
-- 작성 세션은 새 Opus 세션이다. 보조정리(단위 G2-L)는 쓰지 않았다. 리뷰도 하지 않는다.
-- 입력은 개발 자료뿐이다: Eth1Data, BlobIdentifier, DepositMessage의 `.S`, IR, 손 증명, 생성 파일.
-- BlobIdentifier와 DepositMessage는 GEN2의 표본 안 자료다. H4 전까지 홀드아웃 주장은 없다.
-- 무엇이 바뀌었나: `p2dec --gen2` 선택 모드를 더했다. 기본 모드의 출력은 글자 그대로 같다.
-- `--gen2`는 IR의 모든 필드를 분류한다. 바이트 벡터 32, 48, 96과 인라인 uint64만 덮는다.
-- 32바이트 필드는 옛 정리 글을 쓴다. 48, 96은 `bytesdec_seg(_z)`, uint64는 `u64dec_inline_seg`를 쓴다.
-- 다른 필드는 "not covered: 이유"로 보고한다. 정리를 추측하지 않는다.
-- `--gen2 --compose`도 더했다. 모든 필드가 덮이면 수용 정리 전체를 쓴다.
-- 합성 정리의 문장 검사는 손 정리와의 `_type` 항등식뿐이다. 그 정리에 대한 종류(kind)는 없다.
-- 손 정리가 없는 형(홀드아웃)에서는 합성 문장을 검사할 것이 없다. 이것은 열린 틈이다.
-- 생성기는 형마다 한 번 돌렸다(작업 05, 11). 원 출력은 손대지 않고 먼저 커밋했다.
-- 새 파일만 썼다: `Gen2E1Dec`, `Gen2BiDec`, `Gen2DmDec`, `Gen2BiAccept`, `Gen2DmAccept`, `Gen2E1Accept`.
-- H3 원 출력 `GenBiDec.lean`, `GenDmDec.lean`과 H3 기록은 바꾸지 않았다.
-- 옛 생성기 명령 8개의 출력은 바이트가 같다(`regen_check.sh` SAME, 작업 02, 17).
-- `kindcheck.py`는 새 종류 셋을 고정 blob과 함께만 받는다. `_type` 항등식은 "identity-checked"로 따로 보고한다.
-- 보조정리 모듈은 바꾸지 않았다. 리뷰 g2l-r1의 판정은 APPROVE이고 필수 수정은 없다.
-- 96바이트 필드는 개발 자료에 없다. 48바이트 add 꼴은 합성 `.S`의 글 검사만 했다. 커널 검사는 아니다.
-- 일반성 주장은 없다. 독립 리뷰는 아직 없다.
-
-## 15. GEN2 수정 작업 (단위 G2-F) — H3 뒤 두 번째 생성기 변경, H4 고정 전, 개발 작업
-
-- 리뷰 g2g-r1의 판정은 REQUEST_CHANGES다. 필수 수정 둘은 문서다. 증명 결함은 없었다.
-- 이 작업은 H3 뒤 두 번째 생성기 변경이다. H4를 위해 생성기를 고정하기 전에 했다.
-- 작성 세션은 새 Opus 세션이다. G2-G와 G2-L을 쓰지 않았다. 리뷰도 하지 않는다.
-- 14절 정정(리뷰 S4): "형마다 한 번" 앞에 scratch 시험 실행이 있었다(G2-G 작업 01, 09).
-- 커밋된 실행은 작업 05와 11이다. scratch 출력은 커밋하지 않았다.
-- 바뀐 것: `kindcheck.py`의 `_type` 규칙. 합성 정리에만 받고, 오른쪽이 생성 이름이면 거부한다.
-- 바뀐 것: `--gen2 --partial-out` 파일은 유효한 Lean 모듈이다. `kindcheck.py --partial`은 종료 3을 준다.
-- 바뀐 것: `--compose`에 `--same-as`가 없으면 `UNCHECKED STATEMENT` 표시를 쓴다. `--same-as-prop`을 더했다.
-- 입력은 개발 자료뿐이다. BeaconBlockHeader(H1 형)도 이제 GEN2의 표본 안 자료다.
-- `Gen2BhDecPartial.lean`은 생성기를 한 번 돌린 원 출력이다(작업 05). 같은 명령의 scratch 시험이 앞섰다(작업 02).
-- 기본 모드와 커밋된 생성 파일은 바뀌지 않았다: `regen_check.sh` 15/15 SAME(작업 13).
-- 일반성 주장은 없다. 독립 리뷰는 아직 없다.
-
-## 16. 홀드아웃 H4 평가 — 열린 뒤
-
-- 연 시각: `scal/HOLDOUT-OPENED`의 `H4.opened_utc`(커밋 `9d338fa`, 2026-11-11T08:53:45Z).
-- 방법 고정: 커밋 `eacf0fb`. 고정 기록의 blob 15개와 `lean/E2eScal`, `lean/Fk` 트리 id를 다시 셌다. 모두 같다.
-- 형: `v1alpha1.Deposit_Data`(A 부류), `v1alpha1.PendingPartialWithdrawal`(B 부류). 범위는 `UnmarshalSSZ`뿐이다.
-- 평가 세션은 GEN2 생성기, 검사기, 종류, 보조정리를 만들지 않았다. 이전 단위의 파일은 읽을 수 있었다.
-- 밝힌 유사성(H4-A5): Deposit_Data는 DepositMessage에 96바이트 Signature를 더한 형이다. 필드 3개는 표본에 가깝다.
-- 손 Desc(`2daf204`)는 검사기 Desc를 출력하기 전에 커밋했다.
-- 손 문장 `H4.dd_accept_stmt`, `H4.pw_accept_stmt`(`d7e3304`)는 생성기를 돌리기 전에 커밋했다.
-- 손 문장은 IR `go_fields`, SSZ 배치, `.S`의 프레임 사실, Bi/Dm/E1/Bh 손 정리의 꼴에서 썼다.
-- 링크 표는 손 문장 전에 만들었다. 문장이 `.S`의 프레임 사실을 써야 했다. 생성기는 돌리지 않았다.
-- 생성기 (S)와 (C)는 형마다 한 번씩 돌렸다(작업 12, 13, 16, 17). 다른 선택으로 다시 돌리지 않았다.
-- 원 출력 `Gen2DdDecPartial.lean`, 요약 JSON 둘, stderr 기록 셋은 손대지 않고 먼저 커밋했다(`43a0847`, `76b66ba`).
-- 손 수정 줄은 0이다. stderr 하나(Deposit_Data (S))에는 실행 디렉터리 경로가 있어 커밋하지 않았다.
-- `scalgen.py`, `kindcheck.py`, `Kind*.lean`, 보조정리 모듈, `Fk/*`, 계약, 기존 문장은 바꾸지 않았다.
-- 새 손 보조정리: `H4.bytes32dec_seg_nop`(`DdSegNop.lean`). `bytesdec_seg`(n = 32)의 글에 `nop` 한 단계를 더했다.
-- 그 글은 임시 스크립트가 `SegN.lean`에서 만들었다. 스크립트는 커밋하지 않았다. 방법의 일부가 아니다.
-- 열린 뒤 더한 도구: `gen/e2e/h4link.py`(`h3link.py`의 글), `gen/e2e/h4diff.py`(`h3diff.py`의 글), `h4/h4check-main.go.txt`.
-- 열린 뒤 더한 증거 파일: `gen/scal/negcases-h4.json`, `AxiomsScal.lean`의 import 7개와 손 목록 46개.
-- 검사기 json은 phase1c-r5 리뷰의 임시 사본에서 왔다. sha256은 `main.result.json` 기록과 같다.
-- `DdSpecChecker.lean`, `PwSpecChecker.lean`은 `descterm.py` 출력이다. 머리에 경로 한 줄을 손으로 더했다(H3와 같다).
-- 제안(하지 않음) P-H4-1: 32바이트 구간 머리에서 `callq runtime.makeslice` 앞의 `nop`을 허용한다.
-- P-H4-1이 있으면 Deposit_Data의 WithdrawalCredentials(지시 47–72)가 생성 대상이 된다.
-- 제안(하지 않음) P-H4-2: 인라인 uint64 읽기의 다른 꼴을 읽는다.
-- 그 꼴은 `mov 0x8(%rbx),%r8; mov %r8,0x10(%rax)`이다. 두 기준 레지스터를 앞의 다른 지시가 다시 읽는다.
-- 제안(하지 않음) P-H4-3: 위임 overlay 필드(호출)를 기존 함수 명세 `ViUAccC`, `EpUAccC`로 덮는 구간 템플릿.
-- 세 제안은 방법 변경이다. 그래서 해당 필드는 생성기가 덮지 않은 것으로 보고한다.
-- 도구 한계: `negative.py`의 코드 변이는 그 모듈 안의 이름만 바꾼다.
-- 문장이 다른 모듈의 `abbrev`이면 대조군도 실패한다(`dd-acc-control`, 작업 46). 그 네 사례는 철회했다.
-- 한계: `h4/link/norm`은 Lake `input_dir`가 아니다. lakefile 변경은 승인이 필요해서 하지 않았다.
-- 일반성 주장은 없다. 독립 리뷰는 아직 없다.
-
-## 17. 통합 INT4 (GEN2와 H4 병합) — 리뷰 뒤 정정
-
-- 위 절의 글은 고치지 않는다. 이 절은 덧붙인 정정이다.
-- 13–16절의 "독립 리뷰는 아직 없다"는 다음 리뷰로 대체한다.
-- g2l-r1 APPROVE(`6c62a49`), g2g-r1 REQUEST_CHANGES(`cd47028`, 문서만), g2f-r1 APPROVE(`eacf0fb`), h4-r1 APPROVE(`fae7d6f`).
-- 16절 정정(리뷰 h4-r1 S2): 평가자는 `dd_accept_stmt`를 쓰기 전에 `Gen2DmAccept.lean`을 읽었다.
-- 그 파일은 형제 개발 형 DepositMessage의 생성 합성 정리다. 다른 형의 파일이라 허용된다.
-- 결과 (C)는 두 형 모두 거부했다. 그래서 어떤 항등식 결과도 이 읽기에 의존하지 않는다.
-- 16절 정정(S1): 덮은 필드 3개 중 PublicKey와 Amount는 표본에 가깝다. 표본 밖은 Signature 하나다.
-- 덮지 못한 WithdrawalCredentials는 표본에 가까운 32바이트 꼴이다. 패딩 `nop`에서 실패했다(SG-3).
-- 15절 정정(리뷰 g2f-r1 S5): 15절의 작업 번호 01, 02, 05, 09, 11, 13은 그 세션의 gate 작업이다.
-- 그 로그는 저장소에 없다. 번호는 이름표일 뿐이다. 저장소 안의 증거는 커밋된 출력과 `regen_check.sh` 결과다.
-- 16절 정정(S7): 선택 기록의 A2 다른 읽기를 `scal/HOLDOUT-OPENED`의 `H4.review_h4_r1_correction`에 더했다.
-- 통합 검사의 `regen_check.sh`는 `Gen2DdDecPartial.lean`의 생성기 명령도 두 번 다시 돌렸다(scratch).
-- 이것은 H4 실행이 아니다. H4의 "형마다 한 번" 규칙은 평가 세션에 대한 것이다. 결과는 SAME이다.
-- 제안(하지 않음)은 그대로다: P-H4-1, P-H4-2, P-H4-3, 합성 문장의 종류(kind).
-- g2f-r1 S1–S4(`kindcheck.py` 변경)도 제안(하지 않음)이다. H4 고정 뒤라 바꾸지 않았다.
-- 일반성 주장은 없다. 통합 INT4 자체의 리뷰는 아직 없다.
-
-## 18. GEN3 보조정리 작업 (단위 G3-L) — H4 뒤, 개발 작업, 홀드아웃 아님
-
-- 이 작업은 H4 평가와 통합 INT4 뒤에 했다. 기준 커밋은 `6a78c59`다.
-- Deposit_Data와 PendingPartialWithdrawal은 이제 개발 자료다. 이 두 형으로 홀드아웃 주장을 하지 않는다.
-- 작성 세션은 새 Fable 세션이고 직접 작성자다. 이 세션은 생성기를 만들지 않았다.
-- 이 세션은 H4 기록, 리뷰 h4-r1, 평가자의 커밋하지 않은 증명 시도 글을 읽었다.
-- 이 세션은 개발 디코더의 `.S` 파일과 손 증명도 모두 읽었다.
-- 새 모듈만 더했다: `CallDec`, `CallDecRel`, `KindCall`, `U64RR`, `SegNPad`, `PwAccept`, `WitPwA`, `BhHeadG3`.
-- 예시와 종류 모듈도 새 파일이다: `Gen3Examples`, `KindAccept`, `KindAcceptRel`.
-- 기존 `.lean` 파일, `gen/scal/*`, 계약, 문장, ELF, 도구 사슬은 바꾸지 않았다.
-- `H4Stmt.lean`의 손 문장 `pw_accept_stmt`는 그대로다. 증명한 정리의 형이 그 문장이다.
-- 증명 생성기는 그대로다. 그래서 생성기 적용 범위(SG-3)는 바뀌지 않았다.
-- 호출 자리는 먼저 읽었다: 9개다. 그 중 7개가 uint64 오버레이 호출이고 2개는 포인터 필드 호출이다.
-- 호출 블록 보조정리는 7개 자리에 모두 맞다. 인자 준비는 관측한 세 꼴만 다룬다.
-- 그래서 L1은 부분 재사용이다. 새 레지스터 선택은 "덮지 않음"이다.
-- 피호출 함수는 기존 함수 명세 꼴로만 쓴다. `U64CalleeAcc`는 기존 네 명세와 `rfl`로 같다.
-- 바이트 구간은 13개를 읽었다. 패딩 변형은 1개다: makeslice 호출 앞의 `nop`.
-- `SegNPad.lean`의 증명 글은 임시 스크립트가 `SegN.lean`에서 만들었다. 스크립트는 커밋하지 않았다.
-- 패딩 꼴의 48바이트와 96바이트 자리는 개발 자료에 없다. 오프셋 0 꼴의 패딩도 없다.
-- 두 지시어 uint64 꼴은 자리가 1개다. 기준 레지스터는 rbx와 rax로 고정했다.
-- `Gen3Examples.lean`과 `KindCall.lean`도 임시 스크립트로 썼다. 이것은 `scalgen.py`의 출력이 아니다.
-- 합성 문장 종류 `decAcceptKind`는 프레임 `0x20`과 바이트/uint64 필드만 다룬다.
-- 그 종류는 생성된 합성 정리 셋과 `dd_accept_stmt`에 `rfl`로 묶인다. 넷 다 개발 자료다.
-- 호출 필드가 있는 합성 문장의 종류는 없다.
-- 일반성 주장은 없다. 다른 형으로 옮겨지는지는 측정하지 않았다.
-- 더한 증거 파일: `scal/negcases-gen3.json`, `scal/negative-gen3.json`. `gen/e2e/negative.py`는 바꾸지 않았다.
-- 부정 시험은 38건 중 37건을 센다. 종류 변이 1건은 하트비트 시간 초과로 끝났다. 통과로 세지 않는다.
-- 공리 게이트는 임시 JSON으로 돌렸다. 커밋된 `axioms-gate.json`과 `AxiomsScal.lean`은 바꾸지 않았다.
-- 제안 P-H4-1, P-H4-2, P-H4-3의 생성기 쪽은 하지 않았다. 다음 단위의 일이다.
-- 독립 리뷰는 아직 없다.
-
-## 19. GEN3 생성기 작업 (단위 G3-G) — H4 뒤 생성기 변경, 개발 작업, 홀드아웃 아님
-
-- 이 작업은 H4 평가 뒤에 증명 생성기 `gen/scal/scalgen.py`를 바꿨다. 기준 커밋은 `f5c5f52`다.
-- 작성 세션은 새 Opus 세션이다. 이 세션은 보조정리를 쓰지 않았고 리뷰하지 않는다.
-- 입력은 개발 자료뿐이다: PendingPartialWithdrawal, Deposit_Data, BeaconBlockHeader, AttestationData.
-- 이 네 형의 덮음은 표본 안이다. 옮겨짐(transfer) 주장은 하지 않는다. H5 전에는 홀드아웃 주장이 없다.
-- 새 꼴은 `--gen3` 뒤에만 있다. 기본 모드와 `--gen2` 출력은 바이트가 같다(`regen_check.sh` 16/16 SAME).
-- 이 세션은 보조정리 단위의 예시 파일 `Gen3Examples.lean`을 읽고 생성기 글을 맞췄다.
-- 생성 글 34개 중 33개가 예시와 바이트가 같다. 1개는 줄바꿈만 다르다.
-- 형마다 한 번 실행했다. 먼저 scratch 시험 실행(작업 01)이 있었다. 그 뒤 커밋할 실행(작업 06)을 했다.
-- 원 출력은 손대지 않고 빌드 전에 커밋했다(`977db81`).
-- Deposit_Data 합성 실행 1은 구문 오류였다: 생성기가 `set_option … in` 앞에 문서 주석을 썼다.
-- 그 원 출력은 `scal/gen3/Gen3DdAccept.run1-parse-error.lean.txt`로 옮겨 그대로 둔다. 고친 생성기의 실행 2가 `Gen3DdAccept2.lean`이다.
-- PendingPartialWithdrawal과 BeaconBlockHeader의 수락 정리는 손 합성이다(`PwAcceptG3`, `BhAcceptG3`). 생성된 정리를 부른다.
-- 리뷰 g3l-r1(APPROVE)의 생성기 항목: 꼬리의 `nop`(BeaconBlockHeader.ParentRoot, Checkpoint.Root)은 덮지 않음으로 적었다.
-- `kindcheck.py`에 g2f-r1 S1–S4를 넣었다. H4가 끝나서 이제 바꿀 수 있다.
-- 일반성 주장은 없다. 속도 주장도 없다. 독립 리뷰는 아직 없다.
-
-## 20. 홀드아웃 H5 평가 — 열린 뒤
-
-- 연 시각: `scal/HOLDOUT-OPENED`의 `H5.opened_utc`(커밋 `3762644`, 2026-11-11T11:25:14Z).
-- 방법 고정: 커밋 `6dc0e2a`. 고정 기록의 blob 5개와 트리 id 4개를 다시 셌다. 모두 같다.
-- 형: `v1alpha1.SyncCommitteeMessage`(C 부류), `v1alpha1.PendingConsolidation`(D 부류). 범위는 `UnmarshalSSZ`뿐이다.
-- 평가 세션은 GEN3 생성기, 검사기, 종류, 보조정리를 만들지 않았다. 이전 단위의 파일은 읽을 수 있었다.
-- 밝힌 유사성(H5-A3): 두 형은 필드 종류로 보면 표본에 가깝다. 새것은 종류의 순서뿐이다.
-- 손 Desc(`08adf1d`)는 검사기 Desc를 출력하기 전에 커밋했다.
-- 손 문장 `H5.sm_accept_stmt`, `H5.pc_accept_stmt`(`3c4625c`)는 생성기를 돌리기 전에 커밋했다.
-- 링크 표(`8f3aac7`)는 손 문장 전에 만들었다. 문장이 `.S`의 프레임 사실을 써야 했다. 생성기는 돌리지 않았다.
-- 생성기 (S)와 (C)는 형마다 한 번씩 돌렸다(작업 09, 10, 14, 15). 다른 선택으로 다시 돌리지 않았다.
-- 원 출력은 손대지 않고 먼저 커밋했다(`fe2f266`, `dea6b37`). 손 수정 줄은 0이다.
-- (S)의 stderr 둘에는 실행 디렉터리 경로가 있어 커밋하지 않았다. 요약 JSON은 커밋했다.
-- `gen/scal/*`, 종류와 보조정리 모듈, `Fk/*`, 계약, 기존 문장은 바꾸지 않았다.
-- 그래서 `gen/scal/AxiomsScal.lean`을 늘리지 않았다. 공리 게이트는 모든 선언을 센다. 새 선언도 들어간다.
-- 부정 시험 사례 파일은 `gen/scal/` 밖에 두었다: `h5/negcases-h5.json`. 실행 중에는 같은 바이트가 커밋 전 `gen/scal/`에 있었다.
-- 새 H5 모듈만 더했다: `H5Code`, `H5Stmt`, `SmDesc`, `PcDesc`, `SmSeg`, `SmAccept`, `PcAccept`, `Sm*`/`Pc*`, `Wit*`.
-- 새 손 보조정리: `bytes32dec_seg_rax`, `sm_vi_arg`, `calldec_nop_seg`. 기존 증명 글에서 지시 몇 개만 바꿨다.
-- 열린 뒤 더한 도구: `gen/e2e/h5link.py`(`h4link.py`의 글), `gen/e2e/h5diff.py`(`h4diff.py`의 글), `h5/h5check-main.go.txt`.
-- 검사기 json은 phase1c-r5 리뷰의 임시 사본에서 왔다. sha256은 `main.result.json` 기록과 같다.
-- 제안(하지 않음) P-H5-1: 32바이트 구간 둘째 블록에서 receiver를 rax로 다시 읽는 꼴을 허용한다.
-- P-H5-1이 있으면 SyncCommitteeMessage.BlockRoot(지시 47–81)가 생성 대상이 된다.
-- 제안(하지 않음) P-H5-2: receiver가 이미 rax에 있는 호출 인자 꼴을 읽는다(지시 82–87).
-- 생성기는 그 자리를 "첫 필드 꼴"로 읽고 SSZ 오프셋이 0이 아니라서 거부했다. 거부는 옳다. 꼴이 없다.
-- 제안(하지 않음) P-H5-3: `callq`와 `test %rax,%rax` 사이의 패딩 `nop`을 허용한다.
-- P-H5-3이 있으면 PendingConsolidation.TargetIndex(지시 48–58)가 생성 대상이 된다.
-- 제안(하지 않음) P-H5-4: 호출 필드가 있는 형의 합성. 고정 전에 알려진 한계다.
-- 네 제안은 방법 변경이다. 그래서 해당 필드는 생성기가 덮지 않은 것으로 보고한다.
-- 생성된 `_call` 정리는 `hC : U64CalleeAcc`를 전제로 둔다. 수용 증명이 증명된 `sl_uacc_holds`, `vi_uacc_holds`로 채웠다.
-- 한계: `h5/link/norm`은 Lake `input_dir`가 아니다. lakefile 변경은 승인이 필요해서 하지 않았다.
-- 일반성 주장은 없다. 독립 리뷰는 아직 없다.
-
-## 21. 통합 INT5 (GEN3와 H5 병합) — 리뷰 뒤 정정
-
-- 위 절의 글은 고치지 않는다. 이 절은 덧붙인 정정이다.
-- 17–20절의 "독립 리뷰는 아직 없다"는 다음 리뷰로 대체한다.
-- int4-r1 APPROVE(`6a78c59`), g3l-r1 APPROVE(`f5c5f52`), g3g-r1 APPROVE(`6dc0e2a`), h5-r1 APPROVE(`1fec11e`).
-- 18절 정정(리뷰 g3l-r1 S1): "패딩 변형은 1개"는 구간의 머리와 중간에만 맞다.
-- 포인터 꼬리에 둘째 `nop` 자리가 있다: BeaconBlockHeader.ParentRoot(지시 113–115), Checkpoint.Root(75–77).
-- 그 자리는 관측했고 덮지 않았다. `gen/scal/README.md` GEN3 절이 이미 적는다.
-- 19절 정정(리뷰 g3g-r1 S4): 19절의 작업 번호 01, 06은 그 세션의 gate 작업이다.
-- 그 로그는 저장소에 없다. 번호는 이름표일 뿐이다. 저장소 안의 증거는 커밋된 원 출력과 `regen_check.sh` 결과다.
-- 20절 정정(리뷰 h5-r1 S5): 작업 22는 재현과 함께 후보 수정을 따로 시험했다. 의무 자체의 시도는 아니다.
-- 평가자의 선언 비교 대조는 덤프 글 수정이었다. Lean 수준의 심은 대조는 리뷰 h5-r1이 돌렸다.
-- 20절 정정(S7): 선택의 A5 다른 읽기를 `scal/HOLDOUT-OPENED`의 `H5.review_h5_r1_correction`에 더했다.
-- 통합 검사의 `regen_check.sh`는 H5 (S) 부분 출력 둘의 생성기 명령도 두 번 다시 돌렸다(scratch).
-- 이것은 H5 실행이 아니다. H5의 "형마다 한 번" 규칙은 평가 세션에 대한 것이다. 결과는 SAME이다.
-- 제안(하지 않음)은 그대로다: P-H5-1, P-H5-2, P-H5-3, P-H5-4.
-- g3g-r1 S2(`kindcheck.py` 변경)도 제안(하지 않음)이다. 검사기 변경이라 통합에서 하지 않았다.
-- 일반성 주장은 없다. 통합 INT5 자체의 리뷰는 아직 없다.
-
-## 21. GEN4 보조정리 작업 (단위 G4-L) — H5 뒤, 개발 작업, 홀드아웃 아님
-
-- 이 작업은 H5 평가와 리뷰 h5-r1 뒤에 했다. 기준 커밋은 `1fec11e`다.
-- SyncCommitteeMessage와 PendingConsolidation은 이제 개발 자료다. 이 두 형으로 홀드아웃 주장을 하지 않는다.
-- 작성 세션은 새 Fable 세션이고 직접 작성자다. 이 세션은 생성기를 만들지 않았다.
-- 이 세션은 H3, H4, H5 기록과 리뷰 h5-r1, GEN3 단위의 인계 문서를 읽었다.
-- 이 세션은 개발 디코더 10개의 `.S` 파일과 손 증명을 모두 읽었다.
-- 조사 표를 먼저 만들었다: `scal/gen4-survey.md`. 표는 임시 스크립트가 `.S` 글에서 만들었다.
-- 새 모듈만 더했다: `NopView`, `StepK`, `KindStep`, `CallReg`, `SegReg`, `SegRegZ`, `KindSegReg`, `G4Rel`.
-- 새 모듈이 더 있다: `Gen4Examples`, `SmAcceptG4`, `PcAcceptG4`, `G4DepCheck`, `HeadN`, `HeadRel`.
-- 기존 `.lean` 파일, `gen/scal/*`, 계약, 문장, ELF, 도구 사슬은 바꾸지 않았다.
-- `H5Stmt.lean`의 손 문장 둘은 그대로다. 새로 증명한 두 정리의 형이 그 문장이다.
-- 증명 생성기는 그대로다. 그래서 생성기 적용 범위(SG-3, SG-4)는 바뀌지 않았다.
-- 패딩 기계는 하나다: 프로그램 창 `q`와 `eraseNop q = 템플릿`이다. `nop` 위치 매개변수는 없다.
-- 관측한 `nop` 자리 셋은 모두 이 기계의 사례다.
-- 밀집 보조정리에서 창 보조정리로 가는 일반 전이 정리는 없다.
-- 이유: `callq`가 다음 지시어의 주소를 스택에 넣는다. 실제 프로그램에서 그것은 `nop`의 주소다.
-- 그래서 창 보조정리는 직접 증명했다. 이전 꼴별 보조정리는 그 사례로 다시 증명했다.
-- 명령어별 단계 보조정리는 레지스터가 매개변수다. 단계마다 종류가 하나 있다.
-- 호출 블록의 입구 레지스터는 Go ABI가 정한다. 피호출 명세 `U64CalleeAcc`의 꼴은 그대로다.
-- 바이트 구간의 수신자 레지스터는 유한 집합이다: `rX`는 rdx, rsi. `rY`는 rax, rcx, rdx, rsi, rdi.
-- 이 집합과 크기 32, 48, 96은 증명 방법의 한계다. 코드 꼴의 한계가 아니다.
-- 오프셋 0 꼴의 창 보조정리도 증명했다. 개발 자료에서 그 꼴의 변형은 관측하지 않았다.
-- `SegReg`, `SegRegZ`, `Gen4Examples`, `HeadRel`의 글은 임시 스크립트로 만들었다. 스크립트는 커밋하지 않았다.
-- `Gen4Examples.lean`은 `scalgen.py`의 출력이 아니다.
-- 완전한 필드 합성 예시 셋은 종류가 없다. 그 문장은 승인 증명이 쓴다.
-- 호출 필드가 있는 합성 문장의 종류는 여전히 없다.
-- 두 H5 승인 정리를 다시 증명했다. H5 손 보조정리 셋은 쓰지 않았다.
-- 이것은 프로그램이 증명 항을 따라가서 확인했다(`G4DepCheck.lean`). 대조군도 통과했다.
-- SyncCommitteeMessage 승인 증명은 154줄이다. H5 손 증명은 190줄이다.
-- 그 증명이 쓰는 단계, 구간, 필드 정리는 문장과 종류 줄을 넣어 371줄이다.
-- 가장 느린 새 모듈은 25초다.
-- 프레임 크기를 매개변수로 한 프롤로그, 반환 구간, nil 검사 단계도 증명했다(L4).
-- 형별 손 머리, 에필로그, 스필 보조정리 여덟 개를 그것으로 다시 증명했다.
-- 일반성 주장은 없다. 다른 형으로 옮겨지는지는 측정하지 않았다. 그것은 H6의 일이다.
-- 더한 증거 파일: `scal/negcases-gen4.json`, `scal/negative-gen4.json`. `gen/e2e/negative.py`는 바꾸지 않았다.
-- 부정 시험은 41건 중 40건을 센다. 저장 단계의 문장 변이 1건은 하트비트 시간 초과로 끝났다.
-- 그 1건은 통과로 세지 않는다.
-- 공리 게이트는 임시 JSON으로 돌렸다. 커밋된 `axioms-gate.json`과 `AxiomsScal.lean`은 바꾸지 않았다.
-- 생성기 쪽 일(`--gen4`)은 하지 않았다. 다음 단위 G4-G의 일이다.
-- 독립 리뷰는 아직 없다.
-
-## 22. GEN4 생성기 작업 (단위 G4-G) — H5 뒤 생성기 변경, 개발 작업, 홀드아웃 아님
-
-- 기준은 `718e023`(G4-L 끝)이다. 구현자는 새 Opus 5.5 세션이다. 아직 리뷰 없음.
-- H5 뒤에 증명 생성기 `gen/scal/scalgen.py`를 바꿨다. 새 모드 `p2dec --gen4`다.
-- 입력은 개발 자료뿐이다: 개발 형 10개의 `.S`와 IR, G4-L 보조정리와 조사 표.
-- 그래서 GEN4 덮음은 모두 표본 안이다. 옮겨짐 주장은 없다. 홀드아웃 측정은 H6이다.
-- 맞춤은 다지시어 템플릿이 아니다. 작은 자료 흐름이 레지스터와 스택 칸의 값을 따라간다.
-- 블록은 자료 흐름이 입구 상태를 보일 때만 낸다. 그 밖은 "덮지 않음"과 이유와 분류다.
-- 기본, `--gen2`, `--gen3` 출력은 바이트가 같다(`regen_check.sh` 옛 명령 23/23 SAME).
-- `--gen3 --compose`에 손 문장이 없으면 이제 `UNCHECKED STATEMENT` 표시를 쓴다(리뷰 g3g-r1).
-- 커밋된 출력 중 그 경우는 없다. 그래서 바뀐 커밋 파일은 없다.
-- 형마다 한 번 실행했다(gate 작업 09). 원 출력은 쓰기 전에 고치지 않고 커밋했다(`e774d9b`).
-- 그 전에 scratch 시험 실행이 세 번 있었다(작업 01, 02, 05). 결과는 저장소에 넣지 않았다.
-- 시험 실행으로 출력 꼴과 빌드를 확인한 뒤 한 번 실행을 했다. 그래서 그 실행은 독립 측정이 아니다.
-- 덮음(GEN4, GEN3, GEN2): Checkpoint 2/2 / 2/2 / 1/2, AttestationData 3/5 / 3/5 / 1/5, BeaconBlockHeader 5/5 / 5/5 / 3/5, Eth1Data 3/3 / 3/3 / 3/3, BlobIdentifier 2/2 / 2/2 / 2/2, DepositMessage 3/3 / 3/3 / 3/3, Deposit_Data 4/4 / 4/4 / 3/4, PendingPartialWithdrawal 3/3 / 3/3 / 0/3, SyncCommitteeMessage 4/4 / 2/4 / 0/4, PendingConsolidation 2/2 / 1/2 / 0/2.
-- 덮지 않은 필드는 AttestationData의 Source, Target 둘이다. 분류는 "새 필드 종류"(중첩 컨테이너)다.
-- 세 형의 수용 정리를 생성 사슬로 다시 증명했다. 필드 합성은 손 글이다(종류 없음).
-- 형: `H5.sm_accept_stmt`, `H5.pc_accept_stmt`, `H4.pw_accept_stmt`. 문장은 그대로다.
-- 일반성, 옮겨짐, 속도 주장은 없다.
-- 정정(G4-F, 리뷰 g4g-r1 M2): 위 "입구 상태를 보일 때만"은 생성기 걸음의 믿음이다. 커널 검사가 아니다.
-- 리뷰 입력 7개에서 그 믿음이 틀렸다. 23절을 본다.
-
-## 23. GEN4 생성기 수정 (단위 G4-F) — 리뷰 g4g-r1 뒤, H6 동결 전, 개발 작업, 홀드아웃 아님
-
-- 기준은 `21b8aab`(G4-G 끝)이다. 구현자는 새 Opus 5.5 세션이다. 아직 리뷰 없음.
-- 바꾼 것은 `gen/scal/scalgen.py`의 `--gen4` 걸음, `kindcheck.py` 규칙 11 예외, `p2dec_test.py`다.
-- 입력은 리뷰 g4g-r1의 입력 50개와 개발 형 10개다. 홀드아웃 자료는 읽지 않았다.
-- "덮음"은 생성기의 주장이다. 낸 정리는 하나씩 커널 검사를 받는다.
-- 단계 사슬이 블록 입구 상태를 만드는지, 호출 블록이 그 IR 필드의 것인지는 손 필드 합성만 검사한다.
-- 그래서 H6 결과 (S)는 "걸음이 덮음 + 정리마다 빌드됨"을 센다. "필드 증명됨"이 아니다.
-- 커밋된 `Gen4*.lean` 10개를 고친 생성기로 다시 만들었다. 모두 바이트가 같다. 새 파일은 없다.
-- 리뷰 입력에 맞춰 규칙을 고쳤다. 그래서 그 입력 결과는 독립 측정이 아니다.
-
-## 24. GEN4 생성기 둘째 수정 (단위 G4-F2) — 리뷰 g4f-r1 뒤, H6 동결 전, 개발 작업, 홀드아웃 아님
-
-- 기준은 `a81c0ea`(G4-F 끝)이다. 구현자는 새 Opus 5.5 세션이다. 아직 리뷰 없음.
-- H5 뒤 셋째 생성기 변경이다. 바꾼 것은 `scalgen.py`의 `--gen4` 걸음과 `p2dec_test.py`다.
-- 머리의 `cmp $size,%rcx` 즉시값을 IR SSZ 고정 크기와 비교한다(리뷰 M3).
-- 마지막 필드 사건 뒤 에필로그를 본다. 저장, 호출, 다른 프레임 크기는 거절한다.
-- 입력은 리뷰 g4f-r1 입력 83개, g4g-r1 입력 50개, 개발 형 10개다. 홀드아웃 자료는 읽지 않았다.
-- 리뷰 입력에 맞춰 규칙을 고쳤다. 그래서 그 입력 결과는 독립 측정이 아니다.
-- 커밋된 `Gen4*.lean` 10개는 바이트가 같다. 개발 형 덮음은 그대로다(9개 전부, AttestationData 3/5).
-
-## 25. GEN4 생성기 셋째 수정 (단위 G4-F3) — 리뷰 g4f2-r1 뒤, H6 동결 전, 개발 작업, 홀드아웃 아님
-
-- 기준은 `6ac27e4`(G4-F2 끝)이다. 구현자는 새 Opus 5.5 세션이다. 아직 리뷰 없음.
-- H5 뒤 넷째 생성기 변경이다. 바꾼 것은 `scalgen.py`의 `--gen4` 결과 논리와 `p2dec_test.py`다.
-- 에필로그에서 파일에 없는 레이블로 가는 `jmp`를 거절한다(리뷰 M4).
-- 종료 0은 성공 표시 셋이 모두 섰을 때 한 곳에서만 나온다. 다른 예외는 종료 2다.
-- 입력은 리뷰 g4f2-r1 입력 89개, g4f-r1 83개, g4g-r1 50개, 개발 형 10개다. 홀드아웃 자료는 읽지 않았다.
-- 리뷰 입력에 맞춰 규칙을 고쳤다. 그래서 그 입력 결과는 독립 측정이 아니다.
-- 커밋된 `Gen4*.lean` 10개는 바이트가 같다. 개발 형 덮음은 그대로다(9개 전부, AttestationData 3/5).
-
-
-## 26. 홀드아웃 H6 평가 — 열린 뒤
-
-- 연 시각: `scal/HOLDOUT-OPENED`의 `H6.opened_utc`(커밋 `dcc71a8`, 2026-11-11T17:18:33Z).
-- 방법 고정: 커밋 `0e775ac`. 고정 기록의 blob 5개와 트리 id 4개를 다시 셌다. 모두 같다.
-- 묶음(S)은 고정 규칙의 7개 형 전부다: PendingDeposit, PowBlock, HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit.
-- 전체 증명 형은 PendingDeposit와 PowBlock이다. 범위는 `UnmarshalSSZ`뿐이다.
-- 평가 세션은 GEN4 생성기, 검사기, 종류, 보조정리를 만들지 않았다. 이전 단위의 파일은 읽을 수 있었다.
-- 밝힌 유사성(H6-A5): 여러 형이 필드 종류로 보면 개발 형에 가깝다. 유사성 거르기는 규칙상 없다.
-- 그래서 H6은 알려진 종류에서 컴파일러 변이를 재는 측정이다. 새 필드 종류의 증거가 아니다.
-- 손 Desc(`c7ebeee`)는 검사기 Desc를 출력하기 전에 커밋했다.
-- 링크 표(`98303d7`)는 손 문장 전에 만들었다. 문장이 `.S`의 프레임 사실을 써야 했다. 생성기는 돌리지 않았다.
-- 손 문장 `H6.pd_accept_stmt`, `H6.pb_accept_stmt`(`0ad71a7`)는 생성기를 돌리기 전에 커밋했다.
-- 생성기는 형마다 한 번 돌렸다(작업 10–16, 큐레이터 순서). 다른 선택으로 다시 돌리지 않았다.
-- 원 출력, 요약 JSON, stderr은 손대지 않고 먼저 커밋했다(`1ab614e`). 손 수정 줄은 0이다.
-- `--gen4 --compose`는 돌리지 않았다. 고정 기록이 거부를 적는다. 결과 (C)는 "설계상 거부"다.
-- makeslice 리터럴 `type__+387072`는 이 ELF에서 uint8 형 워드다. `h6link.py`가 Checkpoint 묶음과 같음을 확인했다.
-- `gen/scal/*`, 종류와 보조정리 모듈, `Fk/*`, 계약, 기존 문장은 바꾸지 않았다.
-- 그래서 `gen/scal/AxiomsScal.lean`을 늘리지 않았다. 공리 게이트는 모든 선언을 센다. 새 선언도 들어간다.
-- 음성 사례 파일은 `prysm/go1.26.10/e2e/h6/negcases-h6.json`에 두었다.
-- 제안(하지 않음): P-H6-1 필드 합성의 종류. 지금 합성은 손 글이다. 손 줄의 대부분이 이것이다.
-- 제안(하지 않음): P-H6-2 머리와 에필로그 보조정리를 생성기가 내기. PendingDeposit의 머리, 에필로그는 손 보조정리다.
-- 제안(하지 않음): P-H6-3 IR과 Prysm 형의 차이를 기록하기. PowBlock의 `total_difficulty`는 명세에서 `uint256`, Prysm에서 32바이트다.
-- 일반성 주장은 없다. 우월성, 속도 주장도 없다. 독립 리뷰는 아직 없다.
-
-## 27. 통합 INT6 (GEN4와 H6 병합) — 리뷰 뒤 정정
-
-- 22–26절의 "아직 리뷰 없음"은 다음 리뷰로 대체한다. 그 절은 고치지 않는다.
-- 21절(INT5)의 "통합 INT5 자체의 리뷰는 아직 없다"도 대체한다: int5-r1 APPROVE(`fbbc382`)다.
-- g4l-r1 APPROVE(`718e023`), g4g-r1 REQUEST_CHANGES(`21b8aab`), g4f-r1 REQUEST_CHANGES(`a81c0ea`)다.
-- g4f2-r1 REQUEST_CHANGES(`6ac27e4`), g4f3-r1 APPROVE(`0e775ac`, H6 방법 고정), h6-r1 APPROVE(`8ce5dda`)다.
-- 고침 세 번의 까닭: 리뷰마다 `--gen4`가 검사 없이 "덮음"을 낸 경로를 하나씩 찾았다. G4-F3이 결과 논리를 실패 닫힘으로 바꿨다.
-- 이 문서에는 "21." 절이 둘 있다: 통합 INT5 절과 G4-L 절이다. 두 쪽이 따로 21을 붙였다. 번호는 바꾸지 않는다.
-- 그래서 21절을 가리킬 때는 이름을 함께 쓴다: "21절(INT5)", "21절(G4-L)".
-- h6-r1 S7: H6 평가자의 선언 비교 대조는 덤프 글 수정이었다. 리뷰어의 Lean 수준 대조가 그것을 덮는다.
-- h6-r1 S9: 큐레이터의 임시 스크립트는 증거 디렉터리 밖(`/tmp`)에 있었다. 기록만 한다.
-- 통합 검사의 `regen_check.sh`는 H6 (S) 출력 7개의 생성기 명령도 두 번씩 다시 돌렸다(scratch). 결과는 SAME이다.
-- 이것은 H6 실행이 아니다. H6의 "형마다 한 번" 규칙은 평가 세션에 대한 것이다.
-- 제안(하지 않음)은 그대로다: P-H6-1, P-H6-2, P-H6-3, g4f3-r1 S6, S9.
-- 일반성 주장은 없다. 통합 INT6 자체의 리뷰는 아직 없다.
-
-## 28. GEN5 보조정리 작업 (단위 G5-L) — H6 뒤, 개발 작업, 홀드아웃 아님
-
-- 이 작업은 H6 평가, 리뷰 h6-r1, 통합 INT6 뒤에 했다. 기준 커밋은 `c29ebdc`다.
-- 평면 고정 크기 형 16개는 모두 개발 자료다. 이 절은 홀드아웃 주장을 하지 않는다.
-- 작성 세션은 새 Fable 세션이고 직접 작성자다. 이 세션은 생성기를 바꾸지 않았다.
-- 이 세션은 H6 기록, 리뷰 h6-r1, g4g-r1과 g4f3-r1의 판정, GEN4 단위의 인계 문서를 읽었다.
-- 이 세션은 손 승인 문장 11개와 그 증명 모듈, 생성된 GEN4 사슬 파일을 읽었다.
-- 새 모듈만 더했다: `KindAcceptN`, `AcceptTies`, `FieldComp`, `RejectN`, `RejectTies`.
-- 예시 모듈도 새 모듈이다: `Gen5ExPd`, `Gen5ExSm`, `Gen5ExVe`, `Gen5ExPb`, `Gen5ExRej`, `Gen5Examples`, `WitVeA`.
-- 기존 `.lean` 파일, `gen/scal/*`, 계약, 문장, ELF, 도구 사슬은 바꾸지 않았다.
-- 승인 문장의 종류는 `decAcceptKindN C L fields`다. `L`은 프레임 배치이고 매개변수다.
-- 종류는 배치가 `.S` 파일의 프레임인지 검사하지 않는다. 사례의 증명이 그것을 검사한다.
-- 피호출 필드는 종류에서 `.u64`다. 피호출 목록은 배치의 따로 있는 매개변수다.
-- 손 문장 10개는 종류 사례와 `rfl`로 같다. 손 문장은 그대로다.
-- Checkpoint는 `rfl`이 아니다. 종류 사례가 손 문장을 함의한다는 정리를 증명했다.
-- 그 역은 증명하지 않았다. 손 문장은 수신자 꼬리 덩이를 따로 이름 붙인다.
-- 중간 정리는 승인 메모리 전체로 적는다. 경계 상태 `StDesc`가 그 문장을 정한다.
-- 머리, 필드, 에필로그 정리마다 종류 줄이 있다. 승인 증명은 `eventually_trans` 사슬이다.
-- 경계 상태는 생성기가 주는 매개변수다. 이어지지 않는 경계 상태는 커널에서 실패한다.
-- 예시의 글은 임시 스크립트로 만들었다. 스크립트는 커밋하지 않았다. `scalgen.py`의 출력이 아니다.
-- PendingDeposit, SyncCommitteeMessage, PowBlock 예시의 형은 커밋된 손 문장이다.
-- VoluntaryExit 예시는 손 문장이 없다. 그 문장은 종류 사례다.
-- VoluntaryExit 승인 정리의 증인을 더했다(`WitVeA`). 명세 정렬과 Desc는 하지 않았다.
-- 크기 거부 보조정리 `decrej_seg`는 프레임 크기가 매개변수다. 종류는 `decRejectKindN`이다.
-- 커밋된 크기 거부 정리 12개의 형은 그 종류의 사례다.
-- `xor` 에필로그는 프레임 `0x20`의 기존 보조정리만 있다. 프레임 매개변수 꼴은 만들지 않았다.
-- 필드가 섞인 코드(PendingPartialWithdrawal)의 예시는 만들지 않았다.
-- PendingDeposit 예시 모듈은 1054줄이다. 문장이 685줄, 증명이 251줄이다. 정교화는 5.0초다.
-- 손 모듈 `PdAccept.lean`은 520줄이다. 생성 꼴의 글이 더 길다. 손으로 쓰는 줄은 없다.
-- 부정 시험은 37건 중 35건을 센다. 종류 줄 변이 2건은 하트비트 시간 초과로 끝났다.
-- 그 2건은 통과로 세지 않는다. 기본 투명도의 `rfl`은 틀린 수에서 느리게 실패할 수 있다.
-- 더한 증거 파일: `scal/negcases-gen5.json`, `scal/negative-gen5.json`. `gen/e2e/negative.py`는 바꾸지 않았다.
-- 공리 게이트는 임시 JSON으로 돌렸다. 커밋된 `axioms-gate.json`과 `AxiomsScal.lean`은 바꾸지 않았다.
-- 생성기 쪽 일은 하지 않았다. 다음 단위 G5-G의 일이다.
-- 일반성 주장은 없다. 독립 리뷰는 아직 없다.
-
-## 29. GEN5 생성기 작업 (단위 G5-G) — H6 뒤 생성기 변경, 개발 작업, 홀드아웃 아님
-
-- 이 작업은 단위 G5-L 뒤에 했다. 기준 커밋은 `94fd8a6`이다.
-- 작성 세션은 새 Opus 세션이다. 보조정리 작성자도 리뷰어도 아니다.
-- H6 뒤 다섯째 생성기 변경이다. `gen/scal/*`만 바꿨다.
-- 새 방식: `p2dec --gen5`. 앞단은 GEN4 걸음이고 그대로다.
-- 기본, `--gen2`, `--gen3`, `--gen4` 출력은 바이트가 같다. 옛 명령 40/40이 SAME이다.
-- 이 세션은 G5-L 인계 문서, 예시 모듈, 임시 출력 스크립트를 읽었다.
-- 이 세션은 GEN4 리뷰 넷의 판정을 읽었다. 결과 논리는 처음부터 실패 닫힘이다.
-- 평면 고정 크기 형 17개는 모두 개발 자료다. 이 절은 홀드아웃 주장을 하지 않는다.
-- 평면 형의 홀드아웃 자료는 다 썼다. 그래서 문장 검사는 종류와 묶음이다.
-- 종류 매개변수는 `kindcheck.py` 규칙 12가 IR과 `.S`에서 따로 다시 계산한다.
-- 손 문장이 있는 형 10개는 생성 정리의 형이 손 문장과 `rfl`로 같다.
-- Checkpoint는 종류 사례만이다. 함의 `cp_accept_of_kind`는 배치 `layCp`를 요구한다.
-- 생성된 배치의 덩이 순서는 `layCp`와 다르다. 그래서 묶지 않았다.
-- 손 문장이 없는 형 다섯의 문장은 종류 사례다. 독립 손 문장은 아직 없다.
-- 이 다섯 승인 정리는 완전한 디코더 증명이 아니다. 거부, Desc, 명세, 증인은 G5-C 일이다.
-- 거절: PendingPartialWithdrawal(필드가 섞임), AttestationData(중첩 필드). 둘 다 종료 2다.
-- 원시 출력은 쓰기 전에 고치지 않고 커밋했다(`8192427`). 실행은 형마다 한 번이다.
-- 일반성, 이전, 속도 주장은 없다. 독립 리뷰는 아직 없다.
-
-## 30. 29절 정정 (리뷰 g5-r1, 단위 G5-C 0단계) — 기록만 고침
-
-- 리뷰 g5-r1의 판정은 REQUEST_CHANGES다(대상 `ea6a0c6`). 필수 수정 둘은 기록이다.
-- 기술 검사는 모두 통과했다. 증명, 보조정리, 종류, 생성기, 검사기는 바꾸지 않는다.
-- 이 절은 단위 G5-C의 새 Opus 세션이 썼다. 29절의 글은 고치지 않는다.
-- M1 정정: 29절의 "손 문장이 있는 형 10개"는 틀렸다. 트리의 `rfl` 동일성은 9개다.
-- 9개는 `_same` 4개와 `_stmt` 5개다. Checkpoint는 묶지 않았다. PendingPartialWithdrawal은 거절됐다.
-- 커밋 `8192427`의 메시지도 "10 types"라고 쓴다. 맞는 수는 9다. 커밋은 고치지 않는다.
-- M2 정정: "형마다 한 번" 앞에 scratch 시험 실행이 있었다. 출처는 G5-G 작업자의 도구 기록이다.
-- 시험 실행 1: 19:40:58Z, PendingDeposit 하나. 출력은 `/tmp` 아래 scratch다.
-- 시험 실행 2: 19:41:26Z, 17개 형 모두. 출력은 scratch다.
-- 시험 실행 3: 19:41:48Z, SyncAggregatorSelectionData와 ValidatorBalance. 출력은 scratch다.
-- 시험 실행 4: 19:46:46Z, 15개 형. 출력은 작업 디렉터리의 scratch다.
-- 시험 실행 5: 19:53:09Z, VoluntaryExit 하나. 실행 4의 출력과 바이트를 비교했다.
-- 실행 사이에 `gen5.py`와 `scalgen.py`를 고쳤다(거부 블록, 배치 생성자, 모듈 적재).
-- 게이트 진단 D1(19:42–19:46Z)과 D2(19:47Z)는 scratch 출력 15개를 정교화했다.
-- 커밋한 실행은 게이트 작업 04다(19:57:56Z). scratch 출력은 커밋하지 않았다.
-- 리뷰 S1: 위의 시험 실행 다섯은 게이트 없이 돌았다. 절차 위반이다.
-- 다섯 모두 Python 생성기 실행이고 각각 1초 안이다. 게이트 없는 `lake`나 `lean`은 없었다.
-- 이 위반은 결과를 바꾸지 않는다. 리뷰어가 15개 출력을 다시 만들었고 커밋본과 같았다.
-- 같은 정정이 GEN2(15절)와 GEN4에 있다. 이 단위부터 모든 생성기, `lean`, `lake`, `go` 실행은 게이트를 지난다.
-- 리뷰 S3: SyncAggregatorSelectionData와 ValidatorBalance의 프레임은 `0x38`이다.
-- 이 프레임 꼴에는 손으로 묶은 문장이 없다. 두 문장은 두 유도(생성기, 검사기)가 같다는 것만 보였다.
-- 독립 손 문장은 단위 G5-C가 쓴다. 결과는 그 단위의 절에 적는다.
-- 리뷰 S2(검사기 한계): `kindcheck.py`는 상수 `C`를 머리의 `.S`에 묶지 않는다.
-- `C`를 고정하는 것은 Lean의 코드 사실(`win … (by rfl)`)뿐이다. 승인 경로와 크기 거부 경로에만 있다.
-- 이 한계를 규칙 12 글에 쓰는 일은 `kindcheck.py` 변경이다. 이 단위에서 생성기 쪽은 얼어 있다. 열린 항목이다.
-- 리뷰 S4: 커밋 `607ba61`의 "32 adversarial"은 틀렸다. 적대 입력 28개와 실제 거절 형 2개다.
-
-## 31. 남은 평면 디코더 다섯의 마무리와 검증 목록 (단위 G5-C) — 개발 작업, 홀드아웃 아님
-
-- 이 작업은 리뷰 g5-r1 뒤에 했다. 기준 커밋은 `ea6a0c6`이다. 0단계 기록 정정은 30절이다.
-- 작성 세션은 새 Opus 세션이다. G5-L, G5-G 작성자도 리뷰어도 아니다.
-- 다섯 형은 H6에서 연 (S) 형이다. 그래서 표본 안이다. 홀드아웃 주장은 없다.
-- 생성기, 검사기, 보조정리, 종류, 기존 문장은 바꾸지 않았다. 새 모듈만 더했다.
-- 독립 손 문장 셋을 먼저 커밋했다(`e1ccb83`): SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit.
-- 그때 이 세션은 `Gen5SaDec`, `Gen5VbDec`, `Gen5VeDec`, `Gen5ExVe`를 열지 않았다.
-- 이 세션은 리뷰 g5-r1 본문을 읽었다. 본문은 VoluntaryExit가 `layCal` 꼴이라고 쓴다.
-- 리뷰 본문은 프레임 `0x38` 꼴도 적는다: 덩이 6개, rdi 자리 없음, 가드 72, 피호출자 하나와 uint64 하나.
-- 이 사실들은 `.S`에서도 바로 나온다. 그래도 세 문장은 리뷰 글을 본 뒤에 썼다. 완전한 독립은 아니다.
-- 생성 정리의 글과 종류 줄은 보지 않았다. 동일성 검사는 그 글에 대한 독립 검사다.
-- 세 동일성은 모두 `rfl`이다(`8380a3d`). 어느 쪽도 고치지 않았다.
-- 손 Desc 다섯은 검사기 Desc를 출력하기 전에 커밋했다(`534538e`).
-- ValidatorBalance는 consensus-specs에 컨테이너가 없다. 그 Desc는 Prysm proto에서 가져왔다.
-- 그래서 ValidatorBalance의 명세 정렬은 생산자 원본과 독립이지 않다. 검사기 출력과만 독립이다.
-- 명세 정렬, 거부, 증인은 생성된 정리 위에 세웠다. 정리 글은 세션 스크립트가 생성 문장에서 만들었다.
-- PendingPartialWithdrawal의 `pw_e2e_accept_spec_k`를 더했다. H4에서 승인 정리가 없어 빠졌던 것이다.
-- 검증 목록 스크립트 `gen/tools/inventory.py`를 새로 만들었다. 목록은 정리 타입의 코드 상수로 묶는다.
-- 결과: 평면 16형 디코더가 정의된 뜻에서 모두 완전하다. 이 뜻에 무엇이 빠지는지는 `INVENTORY.md`에 있다.
-- 일반성, 이전, 속도 주장은 없다. "모든 코덱" 주장도 없다. 독립 리뷰는 아직 없다.
-
-## 32. 31절 검증 목록 정정 (리뷰 g5c-r1, 단위 G5-C2) — 목록 스크립트와 기록만 고침
-
-- 리뷰 g5c-r1(대상 `c4e1d74`)은 REQUEST_CHANGES다. 범위는 목록 문구와 스크립트 한계다.
-- 작성 세션은 새 Opus 세션이다. G5-C 작성자도 리뷰어도 아니다.
-- 정리, 문장, 보조정리, 종류, 생성기, 생성 파일은 바꾸지 않았다.
-- M1: 31절의 분모는 `functions.json`(덤프한 함수 641개)였다. 대상 전체가 아니었다.
-- 대상에는 HashTreeRoot 211개, HashTreeRootWith 211개, MarshalSSZ 211개가 있다. 덤프에 없던 메서드다.
-- 지금 분모는 `prysm/go1.26.10/ssz-methods.json`이다. 고정 ELF의 nm 목록에서 만든다.
-- nm 목록은 저장소 밖 실행 디렉터리에 있다. sha256은 `build-ids.txt`의 `nm sha256`과 같다. 스크립트가 검사한다.
-- M2: 31절의 "평면 16형 디코더가 모두 완전하다"는 개발 모집단 16형에 대한 말이다.
-- IR 규칙으로 대상의 평면 고정 크기 형은 40개다. 24개는 시작하지 않았다.
-- M3: 코드 키는 이제 주체를 요구한다. 행의 함수를 다른 대상 코드 상수가 부르면 안 된다.
-- `codec`과 `reject_complete`는 여전히 행에 묶이지 않는다. 이 한계는 `INVENTORY.md`에 적었다.
-- S1: `.S` 경로가 고정 ELF의 링크 표 안에 있어야 상수를 센다. 하위 디렉터리도 훑는다.
-- S2(열림): ValidatorBalance proto는 주 Prysm 체크아웃 `c4e939f`에서 읽었다.
-- `VbDesc.lean` 주석의 "Go 차분이 쓰는 트리"는 틀린 말이다. 메시지 글은 고정 트리 `ab15ff7`과 같다(리뷰의 해시 비교).
-- 주석은 Lean 소스라서 이 단위에서 고치지 않았다.
-- S4: G5-C의 세션 스크립트 `mkspeck.py`, `mkwit.py`는 저장소에 없다. 정리 글은 커밋된 파일이 원본이다.
-
-## 33. 통합 INT7 (GEN5 병합) — 리뷰 뒤 정정
-
-- 28–32절의 "독립 리뷰는 아직 없다", "아직 리뷰 없음"은 다음 리뷰로 대체한다. 그 절은 고치지 않는다.
-- 27절의 "통합 INT6 자체의 리뷰는 아직 없다"도 대체한다: int6-r1 APPROVE(`c29ebdc`)다.
-- g5-r1(G5-L과 G5-G 함께, `ea6a0c6`): REQUEST_CHANGES, 기록만이다. 30절이 닫았다.
-- 앞선 g5l-r1은 사용 한도로 중간에 끝났다. 부분 판정은 결과가 아니다.
-- g5c-r1(`c4e1d74`): REQUEST_CHANGES, 목록만이다. 32절(G5-C2)이 고쳤다. g5c2-r1이 `be21280`을 승인했다.
-- 모든 GEN5 작업은 개발 자료, 표본 안이다. 홀드아웃 주장은 없다. 이 모집단의 홀드아웃은 다 썼다.
-- 통합 검사의 `regen_check.sh`는 GEN5 명령 15개를 scratch에 두 번씩 다시 돌렸다. 결과는 SAME이다.
-- 이것은 새 생성기 결과가 아니다. 29절의 "형마다 한 번"은 G5-G 세션의 규칙이다.
-- 통합 검사는 목록 스크립트도 다시 돌렸다. 출력은 커밋본과 바이트가 같다.
-- 열린 항목: g5-r1 S2(검사기), g5c-r1 S2, S3(`.lean`), g5c2-r1 N1–N3(목록 스크립트)다.
-- 다른 기계의 리스트·벡터 작업은 이 트리에 없다. 일반성, 이전, 속도 주장은 없다. 통합 INT7 자체의 리뷰는 아직 없다.
-
-## 34. ENC2 보조정리 단위 E2-L (평면 인코더 빠른 경로) — 개발 작업, 홀드아웃 아님
-
-- 기준 커밋은 `e1fd7c0`(단위 E2-P 머리)이다. 작성 세션은 새 Fable 세션이다. 리뷰는 아직 없다.
-- 평면 16형은 모두 개발 자료다. 이 모집단에 홀드아웃은 없다. 이전 주장은 없다.
-- 새 모듈만 더했다. 기존 `.lean`, 생성기, 검사기, 계약, 문장, ELF는 바꾸지 않았다.
-- 범위는 빠른 경로뿐이다. 전제는 `len + SizeSSZ ≤ cap`과 바이트 필드의 정확한 길이다.
-- growslice 분기, 길이 거부, morestack은 증명하지 않았다. growslice 지시문은 한 번도 밟지 않는다.
-- 문장 종류는 `encFastKindN C L fields`다. `L`은 프레임 사실이고 `.S`에서 읽는다.
-- BeaconBlockHeader와 Eth1Data의 손 문장은 종류 인스턴스와 `rfl`로 같다.
-- Checkpoint는 함의다(`cp_marshal_of_kind`). 손 문장은 `rax + 40`의 32바이트 조각 `ctl`을 더 가진다.
-- 역방향은 적힌 대로는 성립하지 않는다. 다른 차이는 없다.
-- 작성자는 종류를 쓰기 전에 세 손 문장을 읽었다. 그래서 묶음은 독립 검사가 아니다.
-- 예제 글은 단위의 scratch 방출기가 만들었다. 방출기는 생성기가 아니고 저장소에 없다.
-- 방출기는 `.S`와 IR을 읽고 빠른 경로를 기호 상태로 걷는다. 게이트 없이 여러 번 돌렸다(Python, 1초 미만).
-- 커밋한 예제는 여섯이다: Checkpoint, BeaconBlockHeader, Eth1Data, ValidatorBalance, DepositMessage, HistoricalSummary.
-- 뒤의 셋은 손 문장이 없다. 문장은 종류 인스턴스다. 독립 손 문장은 단위 E2-C의 일이다.
-- 나머지 10형의 방출 글은 scratch에서만 엘래버레이션했다(진단 D4, D5, 게이트 작업 2개, 오류 0).
-- 그 10형의 글은 커밋하지 않았다. 저장소의 결과가 아니다. 단위 E2-G가 생성기로 다시 만든다.
-- 그 10형: BlobIdentifier, Deposit_Data, PendingPartialWithdrawal, SyncCommitteeMessage, PendingConsolidation, PendingDeposit, PowBlock, SigningData, SyncAggregatorSelectionData, VoluntaryExit.
-- `runtime.moveSliceNoCapNoScan`(PowBlock, HistoricalSummary, SigningData)은 에필로그의 프레임 검사 뒤에 있다.
-- 검사는 `cmp %rsi,%rdx; jb`다. 결과 포인터가 함수 자신의 프레임 안이면 분기한다. growslice 경로가 아니다.
-- 빠른 경로에서 분기는 일어나지 않는다. 출력 바이트와 프레임 슬롯의 분리에서 증명했다(`EncFrameTest.lean`).
-- 이 함수에 계약은 없다. 새 계약 형태도 만들지 않았다. 보조정리는 프레임 `0x50`에만 맞다.
-- 전제 `cap < 2^63`은 손 문장에서 그대로 가져왔다. 증명은 이 전제를 쓰지 않는다.
-- 증인은 `WitVbM` 하나다(ValidatorBalance, 빈 접두사와 3바이트 접두사).
-- 부정 시험은 23건이다. 대조 8건 통과, 변이 14건은 대상 정리 안에서 실패했다.
-- 1건(`e2-tie-cp-stmt-field`)은 범위 밖 줄의 오류가 있어 세지 않았다.
-- 계획 대비 편차: 지시문마다 단계 정리를 방출하지 않는다. 단계는 라이브러리 보조정리를 증명 항으로 쓴다.
-- 새 단계 보조정리 자체의 종류 줄(`KindStep` 식)은 만들지 않았다.
-- 일반성, 속도, 완전한 인코더 주장은 없다.
-
-## 35. ENC2 생성기 단위 E2-G (`p2enc --gen6`, 평면 인코더 빠른 경로) — 개발 작업, 홀드아웃 아님
-
-- 기준 커밋은 `d1e30ca`(E2-L 머리)이다. 작성 세션은 새 Opus 세션이다. 리뷰는 아직 없다.
-- 생성기 변경이다. GEN5와 H6 뒤의 변경이다. 평면 16형은 모두 개발 자료다(표본 안).
-- 이 모집단에는 홀드아웃이 없다. 문장 검사는 종류, 손 문장 묶음, `kindcheck.py` 규칙 13이다.
-- 작성자는 E2-L의 넘김 문서, 예제 여섯, scratch 방출기 `mk6.py`를 읽었다. 생성기 글은 그 방법을 따른다.
-- 예제 여섯과 생성 출력의 증명 본문은 이름과 문서 주석만 다르다. 그래서 그 여섯은 독립 검사가 아니다.
-- 규칙 13의 해석기는 생성기를 가져오지 않는다. 그러나 같은 작성자가 같은 넘김 문서로 썼다.
-- 손 문장 셋(Bh, E1, Cp)은 E2-L 전부터 커밋돼 있었다. 생성기는 그 레이아웃 정의를 읽고 칸마다 비교한다.
-- 생성기 시험 실행은 모두 게이트 안에서 했다: e2g 01, 03, 04, 05. 커밋한 실행은 e2g 06 하나다.
-- 원 출력은 쓰기 전에 고치지 않고 커밋했다(`e426d84`).
-- 일반성, 속도, 완전한 인코더 주장은 없다. 독립 손 문장, 증인, 명세 따름 정리는 단위 E2-C의 일이다.
-
-## 36. ENC2 닫기 단위 E2-C (평면 인코더 빠른 경로: 독립 문장, 증인, 명세 따름, 목록) — 개발 작업, 홀드아웃 아님
-
-- 기준 커밋은 `dcc6e80`(e2g-r1 APPROVE)이다. 작성 세션은 새 Opus 세션이다. 리뷰는 아직 없다.
-- 평면 16형은 모두 개발 자료다(표본 안). 이 모집단에는 홀드아웃이 없다.
-- 독립 손 문장 넷(PowBlock, SyncCommitteeMessage, PendingPartialWithdrawal, Deposit_Data)은 생성 정리를 열기 전에 커밋했다(`0d25193`).
-- 그 전에 작성자가 읽은 것: E2-L 넘김 문서(인터페이스 절), 종류 정의 `KindEncN.lean`, 손 문장 `bh_e2e_marshal_main`.
-- 또 읽은 것: 다른 형의 생성 파일 `Gen6VbEnc.lean`(머리와 빠른 경로 정리), 증인 `WitVbM.lean`, 넷의 `.S`와 IR.
-- 넷의 `Gen6{Pb,Sc,Pw,Dd}Enc.lean`, 요약 JSON, `kindcheck` 출력, 리뷰어의 레이아웃 출력은 그 전에 열지 않았다.
-- 그래서 넷의 독립성은 레이아웃(프레임 칸, 사후 칸, 존재 칸 순서)의 재계산에 있다. 문장 모양은 인터페이스 글을 따랐다.
-- 증인과 명세 따름 글은 단위의 증거 도구 `scal/e2c/e2cemit.py`가 생성 문장 글에서 냈다. 생성기와 검사기는 바꾸지 않았다.
-- `e2cemit.py`의 글 버그 셋(Bi, Vb 명세 따름 시도 1, 2)은 게이트 작업 03, 04에 기록했다. 시도 3에서 닫혔다.
-- 일반성, 속도, 완전한 인코더 주장은 없다. growslice, 길이 거부, morestack은 증명하지 않았다. T-7은 미뤘다.
-
-## 37. 단위 E2-C2 (리뷰 e2c-r1 뒤 정정) — 목록 스크립트와 기록만
-
-- 36절 정정(리뷰 e2c-r1 S1): 독립 문장을 쓰기 전에 작성자는 `scal/enc2-survey.md`도 읽었다.
-- 그 파일은 형마다 프레임, 가드, 스필 줄을 `.S`에서 옮긴 것이다. 문장 글은 없다.
-- 그래서 넷의 독립성 판단은 36절과 같다. 레이아웃 재계산에 그 요약이 도움이 됐을 수 있다.
-- 36절 마지막 줄 정정(리뷰 e2c-r1 M1): 증명하지 않은 경로는 형마다 다르다. `INVENTORY.md` NOT proved 칸이 기준이다.
-- 이 단위는 증명, 문장, 생성기, 검사기, 보조정리, 생성 파일을 바꾸지 않았다. 새 선언은 0이다.
-- 작성 세션은 새 Opus 세션이다. 리뷰는 아직 없다.
-
-## 38. 통합 INT8 (ENC2 병합) — 리뷰 뒤 정정
-
-- 34–37절의 "리뷰는 아직 없다"는 다음 리뷰로 대체한다. 그 절은 고치지 않는다.
-- 33절의 "통합 INT7 자체의 리뷰는 아직 없다"도 대체한다: int7-r1 APPROVE(`93dae89`)다.
-- e2l-r1(E2-P와 E2-L 함께, `d1e30ca`): APPROVE다. e2g-r1(`dcc6e80`): APPROVE다.
-- e2c-r1(`5072b63`): REQUEST_CHANGES, 목록 칸 하나만이다. 37절(E2-C2)이 고쳤다. e2c2-r1이 `eec1d4f`를 승인했다.
-- 모든 ENC2 작업은 개발 자료, 표본 안이다. 홀드아웃 주장은 없다.
-- 통합 검사의 `regen_check.sh`는 GEN6 명령 16개를 scratch에 두 번씩 다시 돌렸다. 결과는 SAME이다.
-- 이것은 새 생성기 결과가 아니다. 35절의 "형마다 한 번"은 E2-G 세션의 규칙이다.
-- 통합 검사는 목록 스크립트도 다시 돌렸다. 출력은 커밋본과 바이트가 같다.
-- 열린 항목: e2l-r1 S3, e2g-r1 S2–S5, e2c-r1 S3, e2c2-r1 N1과 N3, int7-r1 S4다.
-- 다른 기계의 리스트·벡터 작업과 AttestationData 인코더는 이 트리에 없다.
-- 일반성, 이전, 속도, 완전한 인코더 주장은 없다. 통합 INT8 자체의 리뷰는 아직 없다.
-
-## 39. FLAT24 / H7 (평면 고정 크기 24형: 한 번 측정, 생성된 것 닫기) — 홀드아웃 측정 + 닫기
-
-- 방법 고정은 `0923998`(int8-r1 APPROVE)이다. 평가 세션은 새 Opus 세션이다. 생성기, 검사기, 종류, 보조정리를 만들지 않았다.
-- 연 기록 H7 블록(`scal/HOLDOUT-OPENED`, `be12791`)을 24형의 코드, `.S`, IR 항목을 열기 전에 커밋했다.
-- 그 전에 읽은 것: 24형의 이름(INVENTORY.md)과 평면 규칙 글뿐이다.
-- 생성기 실행은 형마다 `p2dec --gen5` 한 번, `p2enc --gen6` 한 번이다(작업 10–57). 시험 실행, 재실행, 선택지 변경은 없다.
-- 날 출력은 고치지 않고 커밋했다(`e5dd848`). 고친 줄은 0이다.
-- 결과: 디코더 7/24, 인코더 8/24가 생성됐다. GEN4 필드 덮기는 34/86이다(멈춘 뒤는 하한).
-- 거부 분류(`.S`를 읽은 평가자 판정): 새 필드 종류 byte20 8형, byte4 5형, byte1 1형, bool 2형, 새 피호출자(Gwei) 1형이다.
-- 패딩, 레지스터, 준비 순서, 새 지시 형식만, 프레임 형식, 섞임 때문의 거부는 없다.
-- 독립 손 문장 8개(디코더 4, 인코더 4)는 그 형의 생성 정리를 열기 전에 커밋했다(`2735379`).
-- 그 전에 작성자가 읽은 것: 24형의 `.S`, IR, 개발형의 손 문장(dd, sa, pd, sm, pw, sc, pb), E2-L 인터페이스 글, 날 출력의 종료 코드와 요약 JSON.
-- 손 문장의 모양 규칙은 그 글들에서 왔다. 매개변수(프레임, 칸, 지시 번호)는 `.S`에서 손으로 읽었다.
-- 동일성 `rfl`은 8/8이고 첫 빌드에서 닫혔다(`ab46808`). 어느 쪽도 고치지 않았다.
-- 명세, 명세 정렬, 증인, 명세 따름 글은 단위의 증거 도구가 냈다(`f24/tools/`). 생성기가 아니다. `gen/scal/*`, 종류, 보조정리, `Fk`는 바꾸지 않았다.
-- 증거 도구의 한 필드 글 버그 둘(BuilderPreferences: 명세 다리, 인코더 명세 따름)은 시도 2에서 닫혔다(작업 93, 97).
-- 독립 Desc는 Prysm proto에서 썼다. consensus-specs 사본은 이 세션이 닿는 곳에 없다(다른 작업트리는 범위 밖).
-- Desc 검사기 기록은 DepositRequest에만 있다. 나머지 6 디코더는 codec 동등을 하지 않았다(제안, 하지 않음).
-- 거부된 형은 손으로 증명하지 않았다. 덮을 제안은 "제안, 하지 않음"으로 OUT과 RESULT에 적었다.
-- 일반성, 이전, 속도 주장은 없다. 이 24형은 이제 열렸다. 홀드아웃이 아니다. 리뷰는 아직 없다.
-
-## 40. 통합 INT9 (FLAT24 병합) — 리뷰 뒤 정정
-
-- 39절의 "리뷰는 아직 없다"는 다음 리뷰로 대체한다: f24-r1 APPROVE(`6f20eef`)다. 그 절은 고치지 않는다.
-- 38절의 "통합 INT8 자체의 리뷰는 아직 없다"도 대체한다: int8-r1 APPROVE(`0923998`)다.
-- S1: 생성된 형 중 셋은 개발 형의 가까운 변형이다. 리뷰어가 자기 `.S` 비교로 확인했다.
-- BuilderDepositRequest의 디코더와 인코더는 Deposit_Data와 같다(레이블 정규화 뒤 다른 줄 0).
-- BlobSidecarsByRangeRequest와 ExecutionPayloadEnvelopesByRangeRequest의 인코더는 SyncAggregatorSelectionData와 같다.
-- 두 형의 디코더는 오류 경로의 2줄(오류 문자열 길이)만 다르다.
-- 그래서 생성 디코더 7개 중 3개, 생성 인코더 8개 중 3개는 표본에 가깝다. 일반성 주장은 없다.
-- S3: 34/86은 멈춘 뒤의 하한이다. 덮기 비율이 아니다. 13은 내보낸 정리가 없는 걸음의 주장이다.
-- S5: 문장 커밋(`2735379`) 전 작성자는 kindcheck 기록 한 줄을 봤다.
-- 그 줄은 BeaconBlocksByRange(디코더, 인코더)의 걸음 정리 이름만 나열한다. 문장 글은 없다.
-- S6: DepositRequest `desc.json`은 다른 작업의 scratch에서 복사했다. 내용 sha256 `489fe67a…`는 커밋된 검사기 기록과 같다.
-- 검사기 기록은 `gen/desc/results/main.result.json`(이 단위 전에 커밋됨)에 있다. 결과 PASS다.
-- `F24DprSpecChecker.lean` 머리는 `prysm/go1.26.10/e2e/engine_v1.DepositRequest.desc.json`을 적는다. `f24/`가 빠졌다.
-- 실제 파일은 `prysm/go1.26.10/e2e/f24/engine_v1.DepositRequest.desc.json`이다. 생성 파일의 글이라 고치지 않았다.
-- S7: 통합자가 부정 시험 12개를 더했다. 결과: 12/12 기대대로(대조군 4 통과, 변이 8이 대상 정리 안에서 실패; 시간 초과 0, 잘못된 대상 0).
-- 통합 검사의 `regen_check.sh`는 FLAT24 생성 명령 15개를 scratch에 두 번씩 다시 돌렸다. 결과는 SAME이다.
-- 이것은 새 H7 실행이 아니다. 거부된 33 실행(종료 2)은 파일이 없어 다시 돌리지 않았다.
-- 다른 기계의 리스트·벡터 작업과 AttestationData 인코더는 이 트리에 없다.
-- 일반성, 이전, 속도, 완전한 인코더 주장은 없다. H3–H7 사이의 추세도 주장하지 않는다. 통합 INT9 자체의 리뷰는 아직 없다.
+# Generator change record (hold-out contamination record)
+
+This file records the changes to `gen/scal/scalgen.py`.
+For each change, it records if the change came before or after a hold-out was opened.
+The hold-out types are in `HOLDOUT-MARKER.json`.
+
+## 1. p2dec statement identity (audit AU-08: no same-statement check): before the hold-out was opened
+
+- Time: 2026-11-10, commit `4581b8f`. `scal/HOLDOUT-OPENED` does not exist. Step S3 (the hold-out evaluation) did not start.
+- Before the change: p2dec emitted the statement as frozen text. The proof gave all arguments to `rootdec_seg`. Thus the build passed even with a false premise added to the statement (M1 mutation of the audit, exit 0).
+- After the change: only the code premises `k`, `hk`, `hf` are before the colon. The rest is one `∀ …, …` after the colon. The proof is `exact E2eScal.rootdec_seg … hA hB hl`, with no arguments after it.
+- What this change checks: that the statement after the colon and the type of the lemma instance are definitionally equal.
+- Correction (item M2 of the review of the audit fixes): this change does not catch a premise added before the colon. If the proof does not use that premise, the build passes (`rv-gad-extra-before`, no error). The earlier sentence of this section, "the kernel checks the types of the statement and the lemma instance", was wrong to that extent. Section 2 corrects it.
+- Same proposition: in the declaration dump, the type hashes of the two generated theorems did not change (gate jobs 254 and 260, `decl_drift` changes 0). The hash is a structural hash and does not look at binder names.
+- Input: only the development set was used. That is the `.S` of the AttestationData and Checkpoint decoders and the IR entries of those two types.
+- Files made again: `lean/E2eScal/GenAdDec.lean`, `lean/E2eScal/GenCpDec.lean`. The `regen_check.sh` result is SAME.
+- Negative tests: `scal-gad-stmt-extra` and `scal-gcp-stmt-extra` (false premise `(1 : Nat) = 2` added) fail inside the theorem (jobs 258, 259).
+
+## 2. Kind check of the full statement (items M2, S1, S2 of the review of the audit fixes): before the hold-out was opened
+
+- Time: 2026-11-10, commit `094e51e`. `scal/HOLDOUT-OPENED` does not exist. Step S3 did not start. No hold-out file was opened.
+- Problem: the check of section 1 looks only after the colon. The p1 mode has no statement check if there is no `--same-as` hand theorem. The hold-out types have no hand theorems.
+- New hand module `lean/E2eScal/Kind.lean`: the frozen statement kinds `u64DecAcceptKind C` and `rootDecSegKind C j1 j2 dR dB dS fP fL fC src` (`abbrev`).
+- `u64DecAcceptKind_of` and `rootDecSegKind_of` prove each kind from the lemmas `u64dec_accept` and `rootdec_seg`. Thus the kernel matches the body of each kind with the lemma conclusion.
+- `lean/E2eScal/KindAnchor.lean`: `sl_kind_anchor`, `ci_kind_anchor`. The P1 kind is equal to the full declared type of the reviewed hand theorems `E2eAd.sl_unmarshal_accept_main` and `E2eAd.ci_unmarshal_accept_main`.
+- Generator change: right after each generated theorem `t`, the generator emits `t_kind : ∀ (h : Host), type_of% (@t h) = <kind> …`. The proof is `with_reducible rfl`.
+- The type of `@t h` includes all binders before and after the colon. Thus `t_kind` fails if a premise is added, removed or changed at any position. No hand theorem is necessary.
+- What this check does not look at: whether the parameters given to the kind (instruction numbers, displacements, offsets) fit that Go type. If they do not fit, the code facts of the proof do not hold and the build fails. This is a property of the proof, not a property of `t_kind`.
+- The last line of the generated proof is `with_reducible exact …`. If a constant in the conclusion is wrong, it fails at once without unfolding `Int.toBytes` (S2: before, 300 s wall-clock timeout, now 1.4 s).
+- `gen/e2e/negative.py`: puts the `theorem <t>_kind` right after the theorem into the mutation file and into the case range.
+- Input: only the development set was used. That is the same three `.S` files and two IR entries as in section 1.
+- Files made again: `GenCi.lean`, `GenAdDec.lean`, `GenCpDec.lean`. `regen_check.sh` gave SAME all three times (gate job 294). The type hashes of the generated theorems did not change. The only declaration changes are 11 new declarations (`allow-fixr1.txt`, job 293).
+- Negative tests (one gate job for each case group, jobs 288–291): premise added before the colon `scal-gad-stmt-extra-before`, `scal-gcp-stmt-extra-before`, `scal-gci-stmt-extra-before`, added at the start `scal-gad-stmt-extra-first`, `scal-gci-stmt-extra-first`, premise removed `scal-gad-stmt-drop`, conclusion constant `scal-gad-stmt-literal`, kind argument `scal-gad-kind-arg`. All fail inside the case range.
+- For all five mutations that add a premise before the colon, the errors are only on the `_kind` line. The theorem itself builds even with those mutations. Thus this check is the only mechanism that catches those mutations.
+- Result file `negative-result.json`: 28/28 (6 controls, 22 failures inside the theorem).
+
+## 3. Step 0 of the evaluation session (items N1, N2, N3 of the second review of the audit fixes): before the hold-out was opened
+
+- Time: 2026-11-10, evaluation session. `scal/HOLDOUT-OPENED` does not exist yet. No hold-out file was opened.
+- Method freeze: commit `56dfc27`, `Kind.lean` blob `3c9b95b1…`, `scalgen.py` blob `78e3339b…`.
+- This step does not change the generator, the lemmas or the kinds.
+- N1: `gen/e2e/negative.py` classifies the first errors `Unknown option` and `Case tag … not found` as `wrong_target`. The list is not complete.
+- N2: `gen/scal/kindcheck.py` is a check on the reader side. For each generated theorem, it checks from the text that the right side of the `_kind` line is a frozen kind.
+- N2 limit: the `_kind` line is generator output. A degenerate right side also builds in Lean. Thus this check is necessary.
+- N2 limit: it does not look at whether the kind parameters fit the Go type. Only the code facts of the proof check that.
+- N3(a): after a failed build, run `stale_olean.py` before you trust the next pass.
+
+## 4. Hold-out H1 evaluation of ValidatorIndex and BeaconBlockHeader (after opening): evaluation session
+
+- Time opened: 2026-11-10T17:53:24Z (`scal/HOLDOUT-OPENED`, commit `fc8749c`).
+- The generator, the lemmas and the kinds were not changed. `kindcheck.py` confirmed that the `Kind.lean` blob is the frozen value.
+- The generator ran one time for each type. ValidatorIndex `p1` (job 299), BeaconBlockHeader `p2dec` (job 312).
+- The raw outputs `GenVi.lean` and `GenBhDec.lean` were committed with no changes. There are 0 lines of hand changes. Both built as they are.
+- Hand files added after the opening: `BhCode`, `ViSpec`, `WitVi`, `BhHead`, `BhAccept`, `BhReject`, `BhSpec`, `BhSpecK`, `WitBhA`, `WitBhR`.
+- Most of these hand files are changed text of the development-set hand proofs (`AdHead`, `AdReject`, `AdSpecK`, `WitAdA`, `WitAdR`, `Spec`, `WitCi`).
+- Tools added after the opening: `gen/e2e/bhlink.py` (text of `adlink.py`), `gen/e2e/bhdiff.py` and `fve2e/bhcheck` of the temporary Prysm tree.
+- These tools are not generators. They do not make proof statements.
+- Evidence files added after the opening (item S5 of the review of the H1 evaluation): `lean/E2eScal/BhSpecChecker.lean` (`descterm.py` output), the hand-list additions in `gen/scal/AxiomsScal.lean`, `gen/scal/negcases-holdout.json`.
+- These evidence files do not change the method. The generator, the lemmas, the kinds and the classifier are the same.
+- Limit: `bh/link/norm` is not a Lake `input_dir`. A lakefile change needs approval, so it was not done.
+- The results and limits are in `RESULT.json`.
+
+## 5. Session 10 (INBOX 020): after opening
+
+- The generator, the lemmas, the kinds and the templates were not changed. There is also no template change proposal.
+- Hand files added: two theorems in `BhReject.lean`, `WitBhU`, `ViReject`, `WitViR`. Only the code constants were changed from the text of the development-set hand proofs.
+- Evidence files added: 15 cases in `negcases-holdout.json`, 7 hand-list entries in `AxiomsScal.lean`.
+- Encoder (iii) was attempted with a hand proof and was not proved. The draft was not put in the repository.
+- Document changes: the head comment of `BhSpecChecker.lean` (declaration dump is the same), `README.md`, `gen.sh` (two hold-out command lines, not a generator change).
+
+## 6. Session 11 (INBOX 021): after opening
+
+- The generator, the lemmas, the kinds and the templates were not changed.
+- No Lean file was added to the repository. All T-9 attempts (finding T-9: the BeaconBlockHeader encoder fast path did not close) are temporary files in the run directory.
+- Evidence file changes: one weak case was removed from the total in `negative-holdout.json` (item S1 of the review of session 10). `axioms-gate.json` was replaced with the output for the current SHA.
+
+## 7. Hold-out H2 evaluation of Eth1Data (session 13, INBOX 023): after opening
+
+- Time opened: `H2.opened_utc` in `scal/HOLDOUT-OPENED` (commit `7a5ea61`). Before that, no Eth1Data material was opened.
+- Scope: the fast paths of `Eth1Data.UnmarshalSSZ` and `MarshalSSZTo`. `SizeSSZ` was excluded (disclosure of audit finding AU-09, the hold-out limits).
+- This session could read the H1 files. It is not independent of the H1 experience.
+- The generator, the lemmas, the kinds, the templates and the classifier were not changed.
+- The generator ran one time (`p2dec`, job 393). Exit code 2, output 0 bytes.
+- Record: `e1/gen-e1dec.raw.txt` (command, exit code, original stderr). The empty `GenE1Dec.lean` was not put in the library.
+- Order (item S1 of the first review of H2): the record file was written at 02:02:50Z. Commit `a9918d4` is at 02:04:40Z.
+- Between those times, `E1Seg0.lean` was written and built (job 394, 02:04:30Z–02:04:33Z).
+- Thus the rule "commit the raw output before hand changes" was kept only in commit order. It was not kept in work order.
+- There is no effect. There is no generated output to change.
+- Cause: the memmove source of DepositRoot is `buf + 0`. The code has no `add $src,%rbx`.
+- The frozen template `rootDecMid` requires this instruction. The generator stops at the first field and does not emit BlockHash either.
+- Proposal (not done): give `rootDecMid` a variant for source 0 and let `p2dec` accept a block with no `add`.
+- This proposal is a method change. It was not done in this evaluation. The generator coverage for this type is 0/2 fields.
+- The inline read of DepositCount (instructions 47–49) has no method template (item S2 of the first review of H2).
+- Thus, even with the proposed variant, the generator covers only the two root segments (instructions 13–36, 50–74).
+- Parts replaced by hand proofs (copied text):
+  - `E1Seg0.lean`: the statement and proof text of `rootdec_seg` with the `add` step removed. It is not part of the frozen method.
+  - BlockHash segment: the frozen `rootdec_seg` was instantiated by hand (the generated text shape of `GenBhDec` was copied).
+  - `E1Accept` (text of `BhHead`, `BhAccept`), `E1Reject` (`BhReject`), `E1Spec` (`BhSpec`), `E1SpecK` (`BhSpecK`), `WitE1A` (`WitBhA`), `WitE1R` (`WitBhR`).
+- Hand files added after the opening: `E1Code`, `E1Desc`, `E1Seg0`, `E1Accept`, `E1Reject`, `E1Spec`, `E1SpecK`, `WitE1A`, `WitE1R`.
+- Generated file: `E1SpecChecker.lean` (`descterm.py` output, one path line added to the head comment).
+- Source of the checker json `e1/prysm_v1alpha1.Eth1Data.desc.json` (item S3 of the first review of H2): it was copied from a reviewer temporary directory of a different run.
+- It is the temporary copy `desc/orig/` of the fifth phase 1c review. It is outside this repository.
+- sha256 `6064a3dc…782b` is equal to record 74 (`Eth1Data`, PASS) of `gen/desc/results/main.result.json` (counted again in session 14).
+- The hand Desc (`E1Desc.lean`, commit `c43359b`) was committed before the checker Desc was made or printed.
+- Tools added after the opening: `gen/e2e/e1link.py` (text of `bhlink.py`), `gen/e2e/e1diff.py` (text of `bhdiff.py`), `fve2e/e1check` of the temporary Prysm tree.
+- Evidence files added after the opening: `gen/scal/negcases-h2.json`, 15 hand-list entries and three imports in `AxiomsScal.lean`.
+- Session 14 (item S6 of the first review of H2) added 2 negative tests: `e1-rc-stmt-size`, `e1-witr-stmt-len`. Both failed inside the theorem (jobs 432, 433).
+- `kindcheck.py` was not run. There is no generated theorem to check.
+- The stack check of the encoder (`MarshalSSZTo`) has the shape `lea -0x8(%rsp),%r12; cmp 0x10(%r14),%r12; jbe` (the same as T-9).
+- Per INBOX 023 step 3, it was not attempted. The budget waits for a user decision.
+- Limit: `e1/link/norm` is not a Lake `input_dir`. A lakefile change needs approval, so it was not done.
+
+## 8. SG-1 extension (generator change for finding SG-1, a field at SSZ offset 0, after both hold-outs were opened): development work, not a hold-out
+
+- When: 2026-11-11, after base commit `48b74b6`. This is after both H1 and H2 were opened.
+- What: the generator now accepts a 32-byte decode segment at source offset 0.
+- New Lean files: `P2DecZ.lean` (template `rootDecMidZ`, lemma `rootdec_seg_z`), `KindZ.lean` (kind `rootDecSegZKind`).
+- `rootdec_seg_z` generalizes the text of the hand file `E1Seg0.lean`. The definition and proof text differ only in names.
+- `Kind.lean`, `P2Dec.lean` and the statements of the existing theorems were not changed. `decl_drift` shows only 19 ADDED.
+- `scalgen.py p2dec`: selects the shape from the instruction after the buffer reload. It does not look at type names or field names.
+- If it is `add $X,%rbx`, it is the existing shape. If it is `mov $0x20,%ecx`, it is the offset-0 shape. Anything else is a mismatch.
+- Field rule: each field is matched separately. A failure of one field does not stop the check of the later fields.
+- The output is complete or absent. If only part matches, the exit code is 3 and stdout is empty.
+- If you give `--partial-out`, it writes only the matched fields to a file. The file head records `PARTIAL OUTPUT` and the missing fields.
+- If no field matches or segments overlap, the exit code is 2 and nothing is written.
+- `kindcheck.py`: accepts `rootDecSegZKind` (8 arguments). It accepts it only when `KindZ.lean` is the frozen blob.
+- Contamination: Eth1Data is development data for this extension. The extension was made by looking at the `.S` of Eth1Data.
+- Thus the Eth1Data result is not a hold-out result. No new hold-out type was named or opened.
+- The H1 and H2 results in §4–§7 above are results from before the extension. They stay as they are.
+- Record before the extension: the Eth1Data run of the frozen generator (blob `78e3339`) gave exit code 2, 0/2 fields (`a9918d4`, approval `48b74b6`).
+- This record stays as a historical negative result. `gen/scal/p2dec_test.py` reproduces the same result.
+- After the extension: the new generator emits 2/2 root fields for Eth1Data (`GenE1Dec.lean`, output with no hand changes).
+- The inline read of DepositCount still has no template.
+- Regression: GenCi, GenVi, GenAdDec, GenCpDec and GenBhDec were made again with the new generator. All are byte-identical.
+- Tests: `scal/sg1-gen-test.json` (10/10), `scal/negative-sg1.json` (7/7). The generalization claim covers only the scope of these tests.
+
+## 9. T-9 stream (BeaconBlockHeader encoder fast path, finding T-9, user instruction, 2026-11-11): after opening
+
+- The generator, the lemmas, the kinds and the templates were not changed. `Fk/*` and the contracts were not changed either.
+- This work is a hand proof. It is not a generator result. It is not included in the hold-out claims.
+- The author session read the H1 and H2 files and the T-9 records. It is not an independent sample.
+- Lean files added: `StackGuard.lean`, `BhEncHead.lean`, `BhEncRoots.lean`, `BhEncMain.lean`, `BhSpecM.lean`, `WitBhM.lean`.
+- The bodies of segment parts A1 (directives 0–35) and A2 (directives 36–61) of `BhEncHead.lean` came from the session 11 temporary file `Split3.lean`. Two places were changed: the guard branch and the length goal.
+- `WitBhM.lean` is text of `E2e/WitCpM.lean`. `BhSpecM.lean` is text of `E2e/CpSpecM.lean`.
+- Evidence files added: `gen/scal/negcases-t9.json`, `scal/negative-t9.json`, `gen/e2e/bhmdiff.py`, `bh/bhmcheck-main.go.txt`, `bh/differential-enc*.json`.
+- 11 names were added to `AxiomsScal.lean`. `axioms-gate.json` was replaced with the output of the current tree.
+- Proposal (not done): a change that fits the encode template to this three-root-block shape. `scalgen.py` and `Kind.lean` are unchanged.
+
+## 10. Session 15 integration (INBOX 027): after opening
+
+- The T-9 stream and the SG-1 extension stream were merged into this branch. There are no new proofs, generator changes or template changes.
+- Both streams added a section 8 to this file. The SG-1 Lean comments point to section 8, so SG-1 is section 8. T-9 became section 9.
+- `kindcheck.py` was changed (item S2 of the review of the SG-1 extension). It rejects a file with a `PARTIAL OUTPUT` head. This is a change of the reader-side checker.
+- This change does not change the generator output, the kinds or the lemmas. The 6 existing generated files still PASS.
+- 8 cases were added to `gen/scal/negcases-sg1.json` (item S3 of the review of the SG-1 extension). They target `rootdec_seg_z` and the BlockHash segment.
+
+## 11. Hold-out H3 evaluation (BlobIdentifier, DepositMessage): after opening
+
+- Time opened: `H3.opened_utc` in `scal/HOLDOUT-OPENED` (commit `782a41b`, 2026-11-11T04:26:30Z).
+- Method freeze: commit `dda707c`. The 7 blobs of the freeze record and the `lean/E2eScal` tree id were counted again. All are the same.
+- Types: `v1alpha1.BlobIdentifier` (class Z), `v1alpha1.DepositMessage` (class N). The scope is `UnmarshalSSZ` only.
+- The evaluation session did not make generators, kinds or template lemmas. It could read the H1, H2, SG-1 and T-9 files.
+- The generator, `kindcheck.py`, `Kind*.lean`, the template lemma modules, `Fk/*`, the contracts and the existing statements were not changed.
+- The generator ran one time for each type (jobs 11, 12). Both exited 0 and stderr is empty.
+- The raw outputs `GenBiDec.lean` and `GenDmDec.lean` were committed with no changes (`936446b`). There are 0 lines of hand changes.
+- `kindcheck.py` gives PASS for both files (job 13). Both files built as they are (job 14).
+- Generator coverage: 1 of the 2 BlobIdentifier fields, 1 of the 3 DepositMessage fields.
+- The generator reads only 32-byte `[]byte` fields (`scalgen.py` `ir_roots`). Thus it does not look at the 48-byte PublicKey.
+- The inline uint64 reads (Index, Amount) have no method template. This is a limit recorded before H3.
+- Hand lemma: new H3 module `DmSeg0.lean` (`E2eScal.H3.bytes48dec_seg_z`).
+- Its text is the text of `rootDecHead`, `rootDecMidZ` and `rootdec_seg_z` with `32` changed to `48`. It is not part of the frozen method.
+- Hand files and source text: `BiAccept`, `DmAccept` (`E1Accept`), `BiReject`, `DmReject` (`E1Reject`), `BiSpec`, `DmSpec` (`E1Spec`).
+- Continued: `BiSpecK`, `DmSpecK` (`E1SpecK`), `WitBiA`, `WitDmA` (`WitE1A`), `WitBiR`, `WitDmR` (`WitE1R`), `BiDesc`, `DmDesc`, `H3Code`.
+- The two accept theorems call the generated segment theorems directly (`bi_dec_BlockRoot_seg`, `dm_dec_WithdrawalCredentials_seg`).
+- Generated files: `BiSpecChecker.lean`, `DmSpecChecker.lean` (`descterm.py` output, one path line added to the head comment).
+- Source of the checker json: the temporary copy `desc/orig/` of the fifth phase 1c review (the same as H2). The sha256 is equal to the `main.result.json` record.
+- The hand Desc (`11babc9`) was committed before the checker Desc was made or printed.
+- Tools added after the opening: `gen/e2e/h3link.py` (text of `e1link.py`), `gen/e2e/h3diff.py` (text of `e1diff.py`), `h3/h3check-main.go.txt`.
+- Evidence files added after the opening: `gen/scal/negcases-h3.json`, 87 hand-list entries and 8 imports in `AxiomsScal.lean`.
+- These tools and evidence files do not change the method.
+- Proposal (not done) P-H3-1: an inline uint64 read template.
+- The shape for P-H3-1 is `mov dB(%rsp),%rcx; mov src(%rcx),%rcx; mov %rcx,f(%rdx)`. It is the same in both types.
+- Proposal (not done) P-H3-2: make the size of the segment template a parameter and let `ir_roots` also read 48-byte vectors.
+- With P-H3-2, the PublicKey segment (instructions 13–36) becomes a generation target. It was not done in this evaluation.
+- The two proposals are method changes. Thus those fields are reported as not covered by the generator.
+- Limit: `h3/link/norm` is not a Lake `input_dir`. A lakefile change needs approval, so it was not done.
+- Correction (integration of H3 and the encoder reuse work, item S1 of the review of H3): the curator decided reading A3 (class N counts the type's own fields) after seeing the candidate list.
+- At that time, nobody opened the method code. The source is a controller confirmation file outside the repository.
+- In a different reading (transitive fields), the class N type is `ProposerSlashing`. That reading was not used.
+- A literal reading of A1 (which types already exist in the tree) gives no candidates. The confirmed A1 is the narrow reading of `HOLDOUT-OPENED`.
+- Correction (item S2 of the review of H3): the existing file `gen/scal/AxiomsScal.lean` was extended (+97 lines, −0 lines). It is the axioms hand list, not a method file.
+- Correction (item S3 of the review of H3): `BiSpecChecker.lean` and `DmSpecChecker.lean` are "Do not edit" files. One head line was added by hand.
+- That head records the fixed directory of `descterm.py`. The files are not there. They are in `e2e/h3/`.
+- Correction (item S6 of the review of H3): the checker json came from a temporary copy of a different review. Only the sha256 binds it to the record. The repository alone cannot make it again.
+
+## 12. Integration of H3 and the encoder reuse work: after opening
+
+- H3 `75166e4` (approved by the review of H3) and the encoder reuse work `ad15fbc` (approved by its review) were merged with `--no-ff`.
+- The merge commits are `500571c` (H3) and `c10daf9` (encoder reuse work). There are no new proofs, generator changes or statement changes.
+- The encoder reuse work does not use the code of the H3 types. Its author saw only the `h3/` file names and 5 gate records (item S5 of the review of the encoder reuse work).
+- Generator rerun: `regen_check.sh` ran in scratch as an integration check. It is not counted in the generator run count of the H3 evaluation (one time for each type).
+
+## 13. Lemma work for the `--gen2` mode: after H3, development work, not a hold-out
+
+- This work was done after the H3 evaluation and the two integrations (H3 with the encoder reuse work, and the optimization test OPT-R1). The base commit is `71161fa`.
+- BlobIdentifier and DepositMessage are now development data. No hold-out claim is made with these two types.
+- The author session is a new Fable session and is the direct author. This session did not make the generator.
+- This session read the `.S` of the three decoders, the hand proofs, the generated files and the H3 records.
+- Only new modules were added: `SegN`, `KindN`, `SegNRel`, `U64Inline`, `KindU64`, `Gen2Examples`, `Compose`, `Gen2ComposeEx`.
+- The existing `.lean` files, `scalgen.py`, `kindcheck.py`, `gen.sh`, the H3 generated files and the H3 records were not changed.
+- The proof generator is unchanged. Thus the generator coverage (finding SG-2: only 32-byte byte-vector fields) did not change.
+- A temporary script made the text of `SegN.lean` and `KindN.lean` from `P2Dec.lean`, `P2DecZ.lean`, `Kind.lean` and `KindZ.lean`.
+- That script changes the size `32` to the parameter `n`. The script was not committed.
+- `Gen2Examples.lean` was also written with a temporary script. It is not output of `scalgen.py`. It counts as a hand example.
+- The inline uint64 shape was first read at three sites. The temporary registers are different: rsi for Eth1Data, rcx for the other two.
+- The text of P-H3-1 (§11) records only rcx. That text fits only the two H3 types.
+- The sizes of the segment lemma (L1) are only 32, 48 and 96. The development data has no 96-byte site. 96 was not checked in real code.
+- The inline uint64 lemma (L2) has 12 registers. The observed ones are two: rsi and rcx. The receiver must be rdx.
+- The composition lemmas (L3) are three pieces and one example. There is no general combinator that takes a segment list. The frame handles only `0x20`.
+- There is no generality claim. Whether it carries over to other types was not measured.
+- Evidence file added: `gen/scal/negcases-gen2.json`. `gen/e2e/negative.py` was not changed.
+- The axioms gate ran into a temporary JSON. The committed `axioms-gate.json` was not changed.
+- There is no independent review yet.
+
+## 14. Generator work for the `--gen2` mode: generator change after H3, development work, not a hold-out
+
+- After the H3 evaluation, this work changed the proof generator `gen/scal/scalgen.py`. The base commit is `6c62a49`.
+- The author session is a new Opus session. It did not write the lemmas (section 13). It also does no review.
+- The inputs are development data only: the `.S`, IR, hand proofs and generated files of Eth1Data, BlobIdentifier and DepositMessage.
+- BlobIdentifier and DepositMessage are in-sample data for the `--gen2` mode. There is no hold-out claim before H4.
+- What changed: the optional mode `p2dec --gen2` was added. The output of the default mode is the same, character for character.
+- `--gen2` classifies all fields in the IR. It covers only byte vectors 32, 48, 96 and inline uint64.
+- 32-byte fields use the old theorem text. 48 and 96 use `bytesdec_seg(_z)`, uint64 uses `u64dec_inline_seg`.
+- Other fields are reported as "not covered: reason". It does not guess a theorem.
+- `--gen2 --compose` was also added. If all fields are covered, it writes the full accept theorem.
+- The only statement check of the composed theorem is the `_type` identity with the hand theorem. There is no kind for that theorem.
+- For a type with no hand theorem (hold-out), there is nothing to check the composed statement against. This is an open gap.
+- The generator ran one time for each type (jobs 05, 11). The raw output was committed first with no changes.
+- Only new files were written: `Gen2E1Dec`, `Gen2BiDec`, `Gen2DmDec`, `Gen2BiAccept`, `Gen2DmAccept`, `Gen2E1Accept`.
+- The H3 raw outputs `GenBiDec.lean`, `GenDmDec.lean` and the H3 records were not changed.
+- The outputs of the 8 old generator commands are byte-identical (`regen_check.sh` SAME, jobs 02, 17).
+- `kindcheck.py` accepts the three new kinds only together with the frozen blobs. It reports the `_type` identity separately as "identity-checked".
+- The lemma modules were not changed. The verdict of the review of the `--gen2` lemma work is APPROVE, with no required fixes.
+- The development data has no 96-byte field. The 48-byte add shape had only a text check of a synthetic `.S`. It is not a kernel check.
+- There is no generality claim. There is no independent review yet.
+
+## 15. Fix work for the `--gen2` mode: second generator change after H3, before the H4 freeze, development work
+
+- The verdict of the review of the `--gen2` generator work is REQUEST_CHANGES. The two required fixes are documents. There was no proof defect.
+- This work is the second generator change after H3. It was done before the generator was frozen for H4.
+- The author session is a new Opus session. It did not write the generator work or the lemma work. It also does no review.
+- Correction to section 14 (item S4 of that review): there were scratch test runs before "one time for each type" (jobs 01, 09 of the generator work).
+- The committed runs are jobs 05 and 11. The scratch outputs were not committed.
+- Changed: the `_type` rule of `kindcheck.py`. It accepts the rule only for composed theorems and rejects it if the right side is a generated name.
+- Changed: a `--gen2 --partial-out` file is a valid Lean module. `kindcheck.py --partial` gives exit 3.
+- Changed: if `--compose` has no `--same-as`, it writes an `UNCHECKED STATEMENT` mark. `--same-as-prop` was added.
+- The inputs are development data only. BeaconBlockHeader (an H1 type) is now also in-sample data for the `--gen2` mode.
+- `Gen2BhDecPartial.lean` is the raw output of one generator run (job 05). A scratch test of the same command came before it (job 02).
+- The default mode and the committed generated files did not change: `regen_check.sh` 15/15 SAME (job 13).
+- There is no generality claim. There is no independent review yet.
+
+## 16. Hold-out H4 evaluation (Deposit_Data, PendingPartialWithdrawal): after opening
+
+- Time opened: `H4.opened_utc` in `scal/HOLDOUT-OPENED` (commit `9d338fa`, 2026-11-11T08:53:45Z).
+- Method freeze: commit `eacf0fb`. The 15 blobs of the freeze record and the `lean/E2eScal` and `lean/Fk` tree ids were counted again. All are the same.
+- Types: `v1alpha1.Deposit_Data` (class A), `v1alpha1.PendingPartialWithdrawal` (class B). The scope is `UnmarshalSSZ` only.
+- The evaluation session did not make the `--gen2` generator, checkers, kinds or lemmas. It could read the files of the earlier units.
+- Disclosed similarity (selection record H4-A5): Deposit_Data is DepositMessage with a 96-byte Signature added. 3 of its fields are close to the sample.
+- The hand Desc (`2daf204`) was committed before the checker Desc was printed.
+- The hand statements `H4.dd_accept_stmt` and `H4.pw_accept_stmt` (`d7e3304`) were committed before the generator ran.
+- The hand statements were written from the IR `go_fields`, the SSZ layout, the frame facts of the `.S` and the shapes of the Bi/Dm/E1/Bh hand theorems.
+- The link table was made before the hand statements. The statements had to use the frame facts of the `.S`. The generator did not run.
+- The segment generator (S) and the compose generator (C) ran one time each for each type (jobs 12, 13, 16, 17). They did not run again with other options.
+- The raw output `Gen2DdDecPartial.lean`, two summary JSON files and three stderr records were committed first with no changes (`43a0847`, `76b66ba`).
+- There are 0 lines of hand changes. One stderr (Deposit_Data (S)) contains a run-directory path, so it was not committed.
+- `scalgen.py`, `kindcheck.py`, `Kind*.lean`, the lemma modules, `Fk/*`, the contracts and the existing statements were not changed.
+- New hand lemma: `H4.bytes32dec_seg_nop` (`DdSegNop.lean`). It adds one `nop` step to the text of `bytesdec_seg` (n = 32).
+- A temporary script made that text from `SegN.lean`. The script was not committed. It is not part of the method.
+- Tools added after the opening: `gen/e2e/h4link.py` (text of `h3link.py`), `gen/e2e/h4diff.py` (text of `h3diff.py`), `h4/h4check-main.go.txt`.
+- Evidence files added after the opening: `gen/scal/negcases-h4.json`, 7 imports and 46 hand-list entries in `AxiomsScal.lean`.
+- The checker json came from the temporary copy of the fifth phase 1c review. The sha256 is equal to the `main.result.json` record.
+- `DdSpecChecker.lean` and `PwSpecChecker.lean` are `descterm.py` output. One path line was added to the head by hand (the same as H3).
+- Proposal (not done) P-H4-1: allow a `nop` before `callq runtime.makeslice` at the head of a 32-byte segment.
+- With P-H4-1, the WithdrawalCredentials of Deposit_Data (instructions 47–72) becomes a generation target.
+- Proposal (not done) P-H4-2: read a different shape of the inline uint64 read.
+- That shape is `mov 0x8(%rbx),%r8; mov %r8,0x10(%rax)`. Different earlier instructions reload the two base registers.
+- Proposal (not done) P-H4-3: a segment template that covers delegated overlay fields (calls) with the existing function specifications `ViUAccC` and `EpUAccC`.
+- The three proposals are method changes. Thus those fields are reported as not covered by the generator.
+- Tool limit: the code mutation of `negative.py` changes only names inside that module.
+- If the statement is an `abbrev` of a different module, the control also fails (`dd-acc-control`, job 46). Those four cases were retracted.
+- Limit: `h4/link/norm` is not a Lake `input_dir`. A lakefile change needs approval, so it was not done.
+- There is no generality claim. There is no independent review yet.
+
+## 17. Integration of the `--gen2` work and H4: correction after review
+
+- The text of the sections above is not changed. This section is an appended correction.
+- In sections 13–16, "There is no independent review yet" is replaced by the reviews below.
+- The review of the `--gen2` lemma work: APPROVE (`6c62a49`). The review of the `--gen2` generator work: REQUEST_CHANGES (`cd47028`, documents only). The review of the `--gen2` fix work: APPROVE (`eacf0fb`). The review of H4: APPROVE (`fae7d6f`).
+- Correction to section 16 (item S2 of the review of H4): the evaluator read `Gen2DmAccept.lean` before writing `dd_accept_stmt`.
+- That file is the generated composed theorem of the sibling development type DepositMessage. It is a file of a different type, so it is allowed.
+- Result (C) was rejected for both types. Thus no identity result depends on this reading.
+- Correction to section 16 (S1): of the 3 covered fields, PublicKey and Amount are close to the sample. Only Signature is outside the sample.
+- The uncovered WithdrawalCredentials has the 32-byte shape close to the sample. It failed at the padding `nop` (finding SG-3: `--gen2` coverage gaps on H4).
+- Correction to section 15 (item S5 of the review of the `--gen2` fix work): the job numbers 01, 02, 05, 09, 11, 13 in section 15 are gate jobs of that session.
+- Those logs are not in the repository. The numbers are only labels. The evidence in the repository is the committed output and the `regen_check.sh` result.
+- Correction to section 16 (S7): the A2 alternative reading of the selection record was added to `H4.review_h4_r1_correction` in `scal/HOLDOUT-OPENED`.
+- The `regen_check.sh` of the integration check also ran the generator command of `Gen2DdDecPartial.lean` two more times (scratch).
+- This is not an H4 run. The H4 rule "one time for each type" applies to the evaluation session. The result is SAME.
+- The proposals (not done) stay as they are: P-H4-1, P-H4-2, P-H4-3, and the kind of the composed statement.
+- Items S1–S4 of the review of the `--gen2` fix work (`kindcheck.py` changes) are also proposals (not done). They came after the H4 freeze, so they were not applied.
+- There is no generality claim. There is no review of this integration itself yet.
+
+## 18. Lemma work for the `--gen3` mode: after H4, development work, not a hold-out
+
+- This work was done after the H4 evaluation and the integration of the `--gen2` work and H4. The base commit is `6a78c59`.
+- Deposit_Data and PendingPartialWithdrawal are now development data. No hold-out claim is made with these two types.
+- The author session is a new Fable session and is the direct author. This session did not make the generator.
+- This session read the H4 records, the review of H4 and the text of the evaluator's uncommitted proof attempts.
+- This session also read all `.S` files and hand proofs of the development decoders.
+- Only new modules were added: `CallDec`, `CallDecRel`, `KindCall`, `U64RR`, `SegNPad`, `PwAccept`, `WitPwA`, `BhHeadG3`.
+- The example and kind modules are also new files: `Gen3Examples`, `KindAccept`, `KindAcceptRel`.
+- The existing `.lean` files, `gen/scal/*`, the contracts, the statements, the ELF and the tool chain were not changed.
+- The hand statement `pw_accept_stmt` in `H4Stmt.lean` is unchanged. The type of the proved theorem is that statement.
+- The proof generator is unchanged. Thus the generator coverage (SG-3) did not change.
+- The call sites were read first: there are 9. Of these, 7 are uint64 overlay calls and 2 are pointer-field calls.
+- The call-block lemma fits all 7 sites. The argument setup handles only the three observed shapes.
+- Thus the call-block lemma (L1) is partial reuse. A new register choice is "not covered".
+- The callee functions are used only in the form of the existing function specifications. `U64CalleeAcc` is equal by `rfl` to the four existing specifications.
+- 13 byte segments were read. There is 1 padding variant: a `nop` before the makeslice call.
+- A temporary script made the proof text of `SegNPad.lean` from `SegN.lean`. The script was not committed.
+- The development data has no 48-byte or 96-byte site of the padding shape. It also has no padding in the offset-0 shape.
+- The two-instruction uint64 shape has 1 site. The base registers are fixed as rbx and rax.
+- `Gen3Examples.lean` and `KindCall.lean` were also written with temporary scripts. They are not output of `scalgen.py`.
+- The composed-statement kind `decAcceptKind` handles only the frame `0x20` and byte/uint64 fields.
+- That kind is bound by `rfl` to the three generated composed theorems and to `dd_accept_stmt`. All four are development data.
+- There is no kind for a composed statement with call fields.
+- There is no generality claim. Whether it carries over to other types was not measured.
+- Evidence files added: `scal/negcases-gen3.json`, `scal/negative-gen3.json`. `gen/e2e/negative.py` was not changed.
+- The negative tests count 37 of 38 cases. 1 kind mutation ended with a heartbeat timeout. It does not count as passed.
+- The axioms gate ran into a temporary JSON. The committed `axioms-gate.json` and `AxiomsScal.lean` were not changed.
+- The generator side of the proposals P-H4-1, P-H4-2, P-H4-3 was not done. It is the work of the next unit.
+- There is no independent review yet.
+
+## 19. Generator work for the `--gen3` mode: generator change after H4, development work, not a hold-out
+
+- After the H4 evaluation, this work changed the proof generator `gen/scal/scalgen.py`. The base commit is `f5c5f52`.
+- The author session is a new Opus session. This session did not write the lemmas and does no review.
+- The inputs are development data only: PendingPartialWithdrawal, Deposit_Data, BeaconBlockHeader, AttestationData.
+- The coverage of these four types is in-sample. No transfer claim is made. There is no hold-out claim before H5.
+- The new shapes are only behind `--gen3`. The default mode and `--gen2` outputs are byte-identical (`regen_check.sh` 16/16 SAME).
+- This session read the example file `Gen3Examples.lean` of the lemma unit and matched the generator text to it.
+- Of the 34 generated texts, 33 are byte-identical to the examples. 1 differs only in line breaks.
+- It ran one time for each type. First there was a scratch test run (job 01). After that came the run to commit (job 06).
+- The raw output was committed with no changes before the build (`977db81`).
+- Deposit_Data compose run 1 was a syntax error: the generator wrote a doc comment before `set_option … in`.
+- That raw output was moved to `scal/gen3/Gen3DdAccept.run1-parse-error.lean.txt` and is kept as it is. Run 2 of the fixed generator is `Gen3DdAccept2.lean`.
+- The accept theorems of PendingPartialWithdrawal and BeaconBlockHeader are hand compositions (`PwAcceptG3`, `BhAcceptG3`). They call the generated theorems.
+- Generator item of the review of the `--gen3` lemma work (APPROVE): the trailing `nop` (BeaconBlockHeader.ParentRoot, Checkpoint.Root) is recorded as not covered.
+- Items S1–S4 of the review of the `--gen2` fix work were put into `kindcheck.py`. H4 is finished, so they can be changed now.
+- There is no generality claim. There is no speed claim either. There is no independent review yet.
+
+## 20. Hold-out H5 evaluation (SyncCommitteeMessage, PendingConsolidation): after opening
+
+- Time opened: `H5.opened_utc` in `scal/HOLDOUT-OPENED` (commit `3762644`, 2026-11-11T11:25:14Z).
+- Method freeze: commit `6dc0e2a`. The 5 blobs and 4 tree ids of the freeze record were counted again. All are the same.
+- Types: `v1alpha1.SyncCommitteeMessage` (class C), `v1alpha1.PendingConsolidation` (class D). The scope is `UnmarshalSSZ` only.
+- The evaluation session did not make the `--gen3` generator, checkers, kinds or lemmas. It could read the files of the earlier units.
+- Disclosed similarity (selection record H5-A3): by field kinds, the two types are close to the sample. Only the order of the kinds is new.
+- The hand Desc (`08adf1d`) was committed before the checker Desc was printed.
+- The hand statements `H5.sm_accept_stmt` and `H5.pc_accept_stmt` (`3c4625c`) were committed before the generator ran.
+- The link table (`8f3aac7`) was made before the hand statements. The statements had to use the frame facts of the `.S`. The generator did not run.
+- Generators (S) and (C) ran one time each for each type (jobs 09, 10, 14, 15). They did not run again with other options.
+- The raw output was committed first with no changes (`fe2f266`, `dea6b37`). There are 0 lines of hand changes.
+- The two stderr files of (S) contain run-directory paths, so they were not committed. The summary JSON was committed.
+- `gen/scal/*`, the kind and lemma modules, `Fk/*`, the contracts and the existing statements were not changed.
+- Thus `gen/scal/AxiomsScal.lean` was not extended. The axioms gate counts all declarations. The new declarations are included.
+- The negative case file was put outside `gen/scal/`: `h5/negcases-h5.json`. During the run, the same bytes were in `gen/scal/` before the commit.
+- Only new H5 modules were added: `H5Code`, `H5Stmt`, `SmDesc`, `PcDesc`, `SmSeg`, `SmAccept`, `PcAccept`, `Sm*`/`Pc*`, `Wit*`.
+- New hand lemmas: `bytes32dec_seg_rax`, `sm_vi_arg`, `calldec_nop_seg`. Only some instructions were changed from the existing proof text.
+- Tools added after the opening: `gen/e2e/h5link.py` (text of `h4link.py`), `gen/e2e/h5diff.py` (text of `h4diff.py`), `h5/h5check-main.go.txt`.
+- The checker json came from the temporary copy of the fifth phase 1c review. The sha256 is equal to the `main.result.json` record.
+- Proposal (not done) P-H5-1: in the second block of a 32-byte segment, allow the shape that reloads the receiver into rax.
+- With P-H5-1, SyncCommitteeMessage.BlockRoot (instructions 47–81) becomes a generation target.
+- Proposal (not done) P-H5-2: read the call-argument shape where the receiver is already in rax (instructions 82–87).
+- The generator read that site as the "first field shape" and rejected it because the SSZ offset is not 0. The reject is correct. The shape does not exist.
+- Proposal (not done) P-H5-3: allow a padding `nop` between `callq` and `test %rax,%rax`.
+- With P-H5-3, PendingConsolidation.TargetIndex (instructions 48–58) becomes a generation target.
+- Proposal (not done) P-H5-4: composition for types with call fields. This is a limit known before the freeze.
+- The four proposals are method changes. Thus those fields are reported as not covered by the generator.
+- The generated `_call` theorems have the premise `hC : U64CalleeAcc`. The accept proofs discharge it with the proved `sl_uacc_holds` and `vi_uacc_holds`.
+- Limit: `h5/link/norm` is not a Lake `input_dir`. A lakefile change needs approval, so it was not done.
+- There is no generality claim. There is no independent review yet.
+
+## 21. Integration of the `--gen3` work and H5: correction after review
+
+- The text of the sections above is not changed. This section is an appended correction.
+- In sections 17–20, "There is no independent review yet" is replaced by the reviews below.
+- The review of the `--gen2` and H4 integration: APPROVE (`6a78c59`). The review of the `--gen3` lemma work: APPROVE (`f5c5f52`). The review of the `--gen3` generator work: APPROVE (`6dc0e2a`). The review of H5: APPROVE (`1fec11e`).
+- Correction to section 18 (item S1 of the review of the `--gen3` lemma work): "There is 1 padding variant" is correct only for the head and middle of a segment.
+- There is a second `nop` site in the pointer tail: BeaconBlockHeader.ParentRoot (instructions 113–115), Checkpoint.Root (75–77).
+- Those sites were observed and not covered. The `--gen3` section of `gen/scal/README.md` already records this.
+- Correction to section 19 (item S4 of the review of the `--gen3` generator work): the job numbers 01, 06 in section 19 are gate jobs of that session.
+- Those logs are not in the repository. The numbers are only labels. The evidence in the repository is the committed raw output and the `regen_check.sh` result.
+- Correction to section 20 (item S5 of the review of H5): job 22 tested a candidate fix separately, together with a reproduction. It is not an attempt at the obligation itself.
+- The evaluator's declaration-comparison control was an edit of the dump text. The review of H5 ran the planted control at the Lean level.
+- Correction to section 20 (S7): the A5 alternative reading of the selection was added to `H5.review_h5_r1_correction` in `scal/HOLDOUT-OPENED`.
+- The `regen_check.sh` of the integration check also ran the generator commands of the two H5 (S) partial outputs two more times (scratch).
+- This is not an H5 run. The H5 rule "one time for each type" applies to the evaluation session. The result is SAME.
+- The proposals (not done) stay as they are: P-H5-1, P-H5-2, P-H5-3, P-H5-4.
+- Item S2 of the review of the `--gen3` generator work (`kindcheck.py` change) is also a proposal (not done). It is a checker change, so the integration did not do it.
+- There is no generality claim. There is no review of this integration itself yet.
+
+## 21. Lemma work for the `--gen4` mode: after H5, development work, not a hold-out
+
+- This work was done after the H5 evaluation and the review of H5. The base commit is `1fec11e`.
+- SyncCommitteeMessage and PendingConsolidation are now development data. No hold-out claim is made with these two types.
+- The author session is a new Fable session and is the direct author. This session did not make the generator.
+- This session read the H3, H4 and H5 records, the review of H5 and the handoff document of the `--gen3` work.
+- This session read all `.S` files and hand proofs of the 10 development decoders.
+- A survey table was made first: `scal/gen4-survey.md`. A temporary script made the table from the `.S` text.
+- Only new modules were added: `NopView`, `StepK`, `KindStep`, `CallReg`, `SegReg`, `SegRegZ`, `KindSegReg`, `G4Rel`.
+- There are more new modules: `Gen4Examples`, `SmAcceptG4`, `PcAcceptG4`, `G4DepCheck`, `HeadN`, `HeadRel`.
+- The existing `.lean` files, `gen/scal/*`, the contracts, the statements, the ELF and the tool chain were not changed.
+- The two hand statements in `H5Stmt.lean` are unchanged. The types of the two newly proved theorems are those statements.
+- The proof generator is unchanged. Thus the generator coverage (findings SG-3 and SG-4: generator coverage gaps on H4 and H5) did not change.
+- There is one padding mechanism: a program window `q` and `eraseNop q = template`. There is no `nop` position parameter.
+- All three observed `nop` sites are cases of this mechanism.
+- There is no general transfer theorem from the dense lemmas to the window lemmas.
+- Reason: `callq` pushes the address of the next instruction onto the stack. In the real program, that is the address of the `nop`.
+- Thus the window lemmas were proved directly. The earlier shape-specific lemmas were proved again as cases of them.
+- The per-instruction step lemmas take the registers as parameters. Each step has one kind.
+- The Go ABI fixes the entry registers of a call block. The shape of the callee specification `U64CalleeAcc` is unchanged.
+- The receiver registers of a byte segment are a finite set: `rX` is rdx, rsi. `rY` is rax, rcx, rdx, rsi, rdi.
+- This set and the sizes 32, 48, 96 are limits of the proof method. They are not limits of the code shape.
+- The window lemma for the offset-0 shape was also proved. No variant of that shape was observed in the development data.
+- The text of `SegReg`, `SegRegZ`, `Gen4Examples` and `HeadRel` was made with temporary scripts. The scripts were not committed.
+- `Gen4Examples.lean` is not output of `scalgen.py`.
+- The three complete field-composition examples have no kind. The accept proofs use those statements.
+- There is still no kind for a composed statement with call fields.
+- The two H5 accept theorems were proved again. The three H5 hand lemmas were not used.
+- A program confirmed this by following the proof terms (`G4DepCheck.lean`). The control also passed.
+- The SyncCommitteeMessage accept proof is 154 lines. The H5 hand proof is 190 lines.
+- The step, segment and field theorems that the proof uses are 371 lines, with the statement and kind lines included.
+- The slowest new module takes 25 seconds.
+- The prologue, the return segment and the nil-check steps with the frame size as a parameter were also proved (L4).
+- Eight per-type hand head, epilogue and spill lemmas were proved again with them.
+- There is no generality claim. Whether it carries over to other types was not measured. That is the work of H6.
+- Evidence files added: `scal/negcases-gen4.json`, `scal/negative-gen4.json`. `gen/e2e/negative.py` was not changed.
+- The negative tests count 40 of 41 cases. 1 statement mutation of a store step ended with a heartbeat timeout.
+- That 1 case does not count as passed.
+- The axioms gate ran into a temporary JSON. The committed `axioms-gate.json` and `AxiomsScal.lean` were not changed.
+- The generator-side work (`--gen4`) was not done. It is the work of the next unit, the `--gen4` generator work (section 22).
+- There is no independent review yet.
+
+## 22. Generator work for the `--gen4` mode: generator change after H5, development work, not a hold-out
+
+- The base is `718e023` (end of the `--gen4` lemma work). The implementer is a new Opus 5.5 session. Not reviewed yet.
+- After H5, the proof generator `gen/scal/scalgen.py` was changed. The new mode is `p2dec --gen4`.
+- The inputs are development data only: the `.S` and IR of the 10 development types, the `--gen4` lemmas and the survey table.
+- Thus all `--gen4` coverage is in-sample. There is no transfer claim. The hold-out measurement is H6.
+- The matching is not a multi-instruction template. A small data flow follows the values of registers and stack slots.
+- A block is emitted only when the data flow shows the entry state. Anything else is "not covered" with a reason and a classification.
+- The default, `--gen2` and `--gen3` outputs are byte-identical (`regen_check.sh` old commands 23/23 SAME).
+- If `--gen3 --compose` has no hand statement, it now writes an `UNCHECKED STATEMENT` mark (review of the `--gen3` generator work).
+- No committed output is such a case. Thus no committed file changed.
+- It ran one time for each type (gate job 09). The raw output was committed with no changes before it was used (`e774d9b`).
+- Before that there were three scratch test runs (jobs 01, 02, 05). Their results were not put in the repository.
+- The one run came after the test runs checked the output shape and the build. Thus that run is not an independent measurement.
+- Coverage (`--gen4`, `--gen3`, `--gen2`): Checkpoint 2/2 / 2/2 / 1/2, AttestationData 3/5 / 3/5 / 1/5, BeaconBlockHeader 5/5 / 5/5 / 3/5, Eth1Data 3/3 / 3/3 / 3/3, BlobIdentifier 2/2 / 2/2 / 2/2, DepositMessage 3/3 / 3/3 / 3/3, Deposit_Data 4/4 / 4/4 / 3/4, PendingPartialWithdrawal 3/3 / 3/3 / 0/3, SyncCommitteeMessage 4/4 / 2/4 / 0/4, PendingConsolidation 2/2 / 1/2 / 0/2.
+- The uncovered fields are the two AttestationData fields Source and Target. The classification is "new field kind" (nested container).
+- The accept theorems of three types were proved again with the generated chain. The field composition is hand text (no kind).
+- Types: `H5.sm_accept_stmt`, `H5.pc_accept_stmt`, `H4.pw_accept_stmt`. The statements are unchanged.
+- There are no generality, transfer or speed claims.
+- Correction (first `--gen4` fix, item M2 of the review of the `--gen4` generator work): "only when the data flow shows the entry state" above is a belief of the generator walk. It is not a kernel check.
+- On 7 review inputs that belief was wrong. See section 23.
+
+## 23. First generator fix for the `--gen4` mode: after the review of the generator work, before the H6 freeze, development work, not a hold-out
+
+- The base is `21b8aab` (end of the `--gen4` generator work). The implementer is a new Opus 5.5 session. Not reviewed yet.
+- Changed: the `--gen4` walk of `gen/scal/scalgen.py`, the rule 11 exception of `kindcheck.py`, and `p2dec_test.py`.
+- The inputs are the 50 inputs of the review of the `--gen4` generator work and the 10 development types. No hold-out material was read.
+- "Covered" is a claim of the generator. Each emitted theorem gets a kernel check one by one.
+- Only the hand field composition checks whether the step chain makes the block entry state, and whether a call block belongs to that IR field.
+- Thus H6 result (S) counts "the walk covers + each theorem builds". It does not count "field proved".
+- The 10 committed `Gen4*.lean` files were made again with the fixed generator. All are byte-identical. There are no new files.
+- The rules were fixed to fit the review inputs. Thus the results on those inputs are not an independent measurement.
+
+## 24. Second generator fix for the `--gen4` mode: after the review of the first fix, before the H6 freeze, development work, not a hold-out
+
+- The base is `a81c0ea` (end of the first fix). The implementer is a new Opus 5.5 session. Not reviewed yet.
+- This is the third generator change after H5. Changed: the `--gen4` walk of `scalgen.py` and `p2dec_test.py`.
+- The immediate value of `cmp $size,%rcx` in the head is compared with the IR SSZ fixed size (review M3).
+- The epilogue after the last field event is examined. Stores, calls and a different frame size are rejected.
+- The inputs are the 83 inputs of the review of the first fix, the 50 inputs of the review of the generator work and the 10 development types. No hold-out material was read.
+- The rules were fixed to fit the review inputs. Thus the results on those inputs are not an independent measurement.
+- The 10 committed `Gen4*.lean` files are byte-identical. The development-type coverage is unchanged (all 9, AttestationData 3/5).
+
+## 25. Third generator fix for the `--gen4` mode: after the review of the second fix, before the H6 freeze, development work, not a hold-out
+
+- The base is `6ac27e4` (end of the second fix). The implementer is a new Opus 5.5 session. Not reviewed yet.
+- This is the fourth generator change after H5. Changed: the `--gen4` result logic of `scalgen.py` and `p2dec_test.py`.
+- In the epilogue, a `jmp` to a label that is not in the file is rejected (review M4).
+- Exit 0 comes from only one place, when all three success marks are set. Other exceptions give exit 2.
+- The inputs are the 89 inputs of the review of the second fix, 83 of the review of the first fix, 50 of the review of the generator work and the 10 development types. No hold-out material was read.
+- The rules were fixed to fit the review inputs. Thus the results on those inputs are not an independent measurement.
+- The 10 committed `Gen4*.lean` files are byte-identical. The development-type coverage is unchanged (all 9, AttestationData 3/5).
+
+
+## 26. Hold-out H6 evaluation (seven flat fixed-size types): after opening
+
+- Time opened: `H6.opened_utc` in `scal/HOLDOUT-OPENED` (commit `dcc71a8`, 2026-11-11T17:18:33Z).
+- Method freeze: commit `0e775ac`. The 5 blobs and 4 tree ids of the freeze record were counted again. All are the same.
+- Batch (S) is all 7 types of the frozen rule: PendingDeposit, PowBlock, HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit.
+- The full-proof types are PendingDeposit and PowBlock. The scope is `UnmarshalSSZ` only.
+- The evaluation session did not make the `--gen4` generator, checkers, kinds or lemmas. It could read the files of the earlier units.
+- Disclosed similarity (selection record H6-A5): by field kinds, several types are close to the development types. By the rules, there is no similarity filter.
+- Thus H6 is a measurement of compiler variation on known kinds. It is not evidence for new field kinds.
+- The hand Desc (`c7ebeee`) was committed before the checker Desc was printed.
+- The link table (`98303d7`) was made before the hand statements. The statements had to use the frame facts of the `.S`. The generator did not run.
+- The hand statements `H6.pd_accept_stmt` and `H6.pb_accept_stmt` (`0ad71a7`) were committed before the generator ran.
+- The generator ran one time for each type (jobs 10–16, curator order). It did not run again with other options.
+- The raw output, the summary JSON and the stderr were committed first with no changes (`1ab614e`). There are 0 lines of hand changes.
+- `--gen4 --compose` did not run. The freeze record records a reject. Result (C) is "rejected by design".
+- The makeslice literal `type__+387072` is the uint8 type word in this ELF. `h6link.py` confirmed that it is the same as in the Checkpoint batch.
+- `gen/scal/*`, the kind and lemma modules, `Fk/*`, the contracts and the existing statements were not changed.
+- Thus `gen/scal/AxiomsScal.lean` was not extended. The axioms gate counts all declarations. The new declarations are included.
+- The negative case file is in `prysm/go1.26.10/e2e/h6/negcases-h6.json`.
+- Proposal (not done): P-H6-1, a kind for the field composition. The composition now is hand text. Most of the hand lines are this.
+- Proposal (not done): P-H6-2, let the generator emit the head and epilogue lemmas. The head and epilogue of PendingDeposit are hand lemmas.
+- Proposal (not done): P-H6-3, record the differences between the IR and the Prysm types. The `total_difficulty` of PowBlock is `uint256` in the specification and 32 bytes in Prysm.
+- There is no generality claim. There are also no superiority or speed claims. There is no independent review yet.
+
+## 27. Integration of the `--gen4` work and H6: correction after review
+
+- In sections 22–26, "Not reviewed yet" is replaced by the reviews below. Those sections are not changed.
+- "There is no review of this integration itself yet" in section 21 (integration of `--gen3` and H5) is also replaced: the review of that integration approved `fbbc382`.
+- The review of the `--gen4` lemma work: APPROVE (`718e023`). The review of the generator work: REQUEST_CHANGES (`21b8aab`). The review of the first fix: REQUEST_CHANGES (`a81c0ea`).
+- The review of the second fix: REQUEST_CHANGES (`6ac27e4`). The review of the third fix: APPROVE (`0e775ac`, H6 method freeze). The review of H6: APPROVE (`8ce5dda`).
+- Reason for the three fixes: each review found one path where `--gen4` emitted "covered" without a check. The third fix changed the result logic to fail-closed.
+- This document has two "21." sections: the section of the integration of `--gen3` and H5, and the section of the `--gen4` lemma work. Two sides each numbered a section 21. The numbers are not changed.
+- Thus, to refer to a section 21, also write its name: "section 21 (integration of `--gen3` and H5)", "section 21 (`--gen4` lemma work)".
+- Item S7 of the review of H6: the H6 evaluator's declaration-comparison control was an edit of the dump text. The reviewer's Lean-level control covers it.
+- Item S9 of the review of H6: the curator's temporary scripts were outside the evidence directory (`/tmp`). This is only recorded.
+- The `regen_check.sh` of the integration check also ran the generator commands of the 7 H6 (S) outputs two more times each (scratch). The result is SAME.
+- This is not an H6 run. The H6 rule "one time for each type" applies to the evaluation session.
+- The proposals (not done) stay as they are: P-H6-1, P-H6-2, P-H6-3, items S6 and S9 of the review of the third fix.
+- There is no generality claim. There is no review of this integration itself yet.
+
+## 28. Lemma work for the `--gen5` mode: after H6, development work, not a hold-out
+
+- This work was done after the H6 evaluation, the review of H6 and the integration of `--gen4` and H6. The base commit is `c29ebdc`.
+- All 16 flat fixed-size types are development data. This section makes no hold-out claim.
+- The author session is a new Fable session and is the direct author. This session did not change the generator.
+- This session read the H6 records, the review of H6, the verdicts of the reviews of the `--gen4` generator work and third fix, and the handoff document of the `--gen4` work.
+- This session read the 11 hand accept statements, their proof modules and the generated `--gen4` chain files.
+- Only new modules were added: `KindAcceptN`, `AcceptTies`, `FieldComp`, `RejectN`, `RejectTies`.
+- The example modules are also new modules: `Gen5ExPd`, `Gen5ExSm`, `Gen5ExVe`, `Gen5ExPb`, `Gen5ExRej`, `Gen5Examples`, `WitVeA`.
+- The existing `.lean` files, `gen/scal/*`, the contracts, the statements, the ELF and the tool chain were not changed.
+- The kind of an accept statement is `decAcceptKindN C L fields`. `L` is the frame layout and is a parameter.
+- The kind does not check that the layout is the frame of the `.S` file. The proof of each case checks that.
+- A callee field is `.u64` in the kind. The callee list is a separate parameter of the layout.
+- 10 hand statements are equal by `rfl` to the kind cases. The hand statements are unchanged.
+- Checkpoint is not `rfl`. A theorem was proved that the kind case implies the hand statement.
+- The converse was not proved. The hand statement names the receiver tail chunk separately.
+- The intermediate theorems are stated with the full accept memory. The boundary state `StDesc` fixes those statements.
+- Each head, field and epilogue theorem has a kind line. The accept proof is an `eventually_trans` chain.
+- The boundary states are parameters that the generator gives. Boundary states that do not connect fail in the kernel.
+- The example text was made with temporary scripts. The scripts were not committed. It is not output of `scalgen.py`.
+- The types of the PendingDeposit, SyncCommitteeMessage and PowBlock examples are committed hand statements.
+- The VoluntaryExit example has no hand statement. Its statement is a kind case.
+- A witness for the VoluntaryExit accept theorem was added (`WitVeA`). Specification alignment and Desc were not done.
+- The size-reject lemma `decrej_seg` takes the frame size as a parameter. The kind is `decRejectKindN`.
+- The types of the 12 committed size-reject theorems are cases of that kind.
+- The `xor` epilogue has only the existing lemma for frame `0x20`. A frame-parameter shape was not made.
+- No example was made for code with mixed fields (PendingPartialWithdrawal).
+- The PendingDeposit example module is 1054 lines. The statements are 685 lines and the proofs are 251 lines. Elaboration takes 5.0 seconds.
+- The hand module `PdAccept.lean` is 520 lines. The text of the generated shape is longer. No lines are written by hand.
+- The negative tests count 35 of 37 cases. 2 kind-line mutations ended with heartbeat timeouts.
+- Those 2 cases do not count as passed. `rfl` at default transparency can fail slowly on a wrong number.
+- Evidence files added: `scal/negcases-gen5.json`, `scal/negative-gen5.json`. `gen/e2e/negative.py` was not changed.
+- The axioms gate ran into a temporary JSON. The committed `axioms-gate.json` and `AxiomsScal.lean` were not changed.
+- The generator-side work was not done. It is the work of the next unit, the `--gen5` generator work (section 29).
+- There is no generality claim. There is no independent review yet.
+
+## 29. Generator work for the `--gen5` mode: generator change after H6, development work, not a hold-out
+
+- This work was done after the `--gen5` lemma work. The base commit is `94fd8a6`.
+- The author session is a new Opus session. It is neither the lemma author nor a reviewer.
+- This is the fifth generator change after H6. Only `gen/scal/*` was changed.
+- New method: `p2dec --gen5`. The front end is the `--gen4` walk and is unchanged.
+- The default, `--gen2`, `--gen3` and `--gen4` outputs are byte-identical. The old commands are 40/40 SAME.
+- This session read the handoff document of the lemma work, the example modules and the temporary output scripts.
+- This session read the verdicts of the four reviews of the `--gen4` generator work and its fixes. The result logic is fail-closed from the start.
+- All 17 flat fixed-size types are development data. This section makes no hold-out claim.
+- The hold-out material for flat types is used up. Thus the statement check is the kind and the binding.
+- `kindcheck.py` rule 12 computes the kind parameters again, separately, from the IR and the `.S`.
+- For the 10 types with hand statements, the type of the generated theorem is equal by `rfl` to the hand statement.
+- Checkpoint is a kind case only. The implication `cp_accept_of_kind` requires the layout `layCp`.
+- The chunk order of the generated layout is different from `layCp`. Thus it was not bound.
+- For the five types with no hand statement, the statements are kind cases. There are no independent hand statements yet.
+- These five accept theorems are not complete decoder proofs. Reject, Desc, specification and witness are work of the close-out unit (section 31).
+- Rejected: PendingPartialWithdrawal (mixed fields), AttestationData (nested fields). Both give exit 2.
+- The raw output was committed with no changes before it was used (`8192427`). There is one run for each type.
+- There are no generality, transfer or speed claims. There is no independent review yet.
+
+## 30. Correction to section 29 (review of the `--gen5` lemma and generator work, step 0 of the close-out unit): records changed only
+
+- The verdict of that review is REQUEST_CHANGES (target `ea6a0c6`). The two required fixes are records.
+- All technical checks passed. The proofs, lemmas, kinds, generator and checker are not changed.
+- A new Opus session of the close-out unit wrote this section. The text of section 29 is not changed.
+- M1 correction: "the 10 types with hand statements" in section 29 is wrong. There are 9 `rfl` identities in the tree.
+- The 9 are 4 `_same` and 5 `_stmt`. Checkpoint was not bound. PendingPartialWithdrawal was rejected.
+- The message of commit `8192427` also says "10 types". The correct number is 9. The commit is not changed.
+- M2 correction: there were scratch test runs before "one time for each type". The source is the tool record of the `--gen5` generator worker.
+- Test run 1: 19:40:58Z, PendingDeposit only. The output is scratch under `/tmp`.
+- Test run 2: 19:41:26Z, all 17 types. The output is scratch.
+- Test run 3: 19:41:48Z, SyncAggregatorSelectionData and ValidatorBalance. The output is scratch.
+- Test run 4: 19:46:46Z, 15 types. The output is scratch in the work directory.
+- Test run 5: 19:53:09Z, VoluntaryExit only. Its bytes were compared with the output of run 4.
+- Between the runs, `gen5.py` and `scalgen.py` were changed (reject block, layout constructor, module loading).
+- Gate diagnostics D1 (19:42–19:46Z) and D2 (19:47Z) elaborated the 15 scratch outputs.
+- The committed run is gate job 04 (19:57:56Z). The scratch outputs were not committed.
+- Review S1: the five test runs above ran without the gate. This is a procedure violation.
+- All five are Python generator runs, each under 1 second. There was no `lake` or `lean` without the gate.
+- This violation does not change the results. The reviewer made the 15 outputs again and they were the same as the committed copies.
+- The `--gen2` work (section 15) and the `--gen4` work have the same correction. From this unit on, all generator, `lean`, `lake` and `go` runs go through the gate.
+- Review S3: the frame of SyncAggregatorSelectionData and ValidatorBalance is `0x38`.
+- This frame shape has no statement bound by hand. For the two statements, it was only shown that two derivations (generator, checker) agree.
+- The close-out unit writes the independent hand statements. The results are recorded in the section of that unit.
+- Review S2 (checker limit): `kindcheck.py` does not bind the constant `C` to the `.S` of the head.
+- Only the Lean code facts (`win … (by rfl)`) fix `C`. They exist only on the accept path and the size-reject path.
+- Writing this limit into the rule 12 text is a change to `kindcheck.py`. In this unit the generator side is frozen. It is an open item.
+- Review S4: "32 adversarial" in commit `607ba61` is wrong. There are 28 adversarial inputs and 2 real rejected types.
+
+## 31. Completion of the remaining five flat decoders and the verification inventory (close-out unit): development work, not a hold-out
+
+- This work was done after the review of the `--gen5` lemma and generator work. The base commit is `ea6a0c6`. The step 0 record correction is section 30.
+- The author session is a new Opus session. It is neither an author of the `--gen5` lemma or generator work nor a reviewer.
+- The five types are the (S) types opened in H6. Thus they are in-sample. There is no hold-out claim.
+- The generator, checker, lemmas, kinds and existing statements were not changed. Only new modules were added.
+- Three independent hand statements were committed first (`e1ccb83`): SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit.
+- At that time, this session had not opened `Gen5SaDec`, `Gen5VbDec`, `Gen5VeDec` or `Gen5ExVe`.
+- This session read the text of that review. The text says that VoluntaryExit has the `layCal` shape.
+- The review text also records the frame `0x38` shape: 6 chunks, no rdi slot, guard 72, one callee and one uint64.
+- These facts also follow directly from the `.S`. But the three statements were written after reading the review text. They are not fully independent.
+- The text and kind lines of the generated theorems were not read. The identity check is an independent check against that text.
+- All three identities are `rfl` (`8380a3d`). Neither side was changed.
+- The five hand Desc files were committed before the checker Desc was printed (`534538e`).
+- ValidatorBalance has no container in consensus-specs. Its Desc was taken from the Prysm proto.
+- Thus the specification alignment of ValidatorBalance is not independent of the producer source. It is independent only of the checker output.
+- The specification alignment, rejects and witnesses were built on the generated theorems. Session scripts made the theorem text from the generated statements.
+- `pw_e2e_accept_spec_k` of PendingPartialWithdrawal was added. It was missing in H4 because there was no accept theorem.
+- The verification inventory script `gen/tools/inventory.py` was made new. The inventory binds by the code constants of the theorem types.
+- Result: the decoders of the 16 flat types are all complete in the defined sense. `INVENTORY.md` records what this sense leaves out.
+- There are no generality, transfer or speed claims. There is also no "all codecs" claim. There is no independent review yet.
+
+## 32. Correction of the section 31 verification inventory (review of the close-out unit, inventory fix unit): inventory script and records changed only
+
+- The review of the close-out unit (target `c4e1d74`) is REQUEST_CHANGES. The scope is the inventory wording and the script limits.
+- The author session is a new Opus session. It is neither the close-out author nor a reviewer.
+- The theorems, statements, lemmas, kinds, generator and generated files were not changed.
+- M1: the denominator in section 31 was `functions.json` (641 dumped functions). It was not the full target.
+- The target has 211 HashTreeRoot, 211 HashTreeRootWith and 211 MarshalSSZ. These methods were not in the dump.
+- The denominator now is `prysm/go1.26.10/ssz-methods.json`. It is made from the nm listing of the pinned ELF.
+- The nm listing is in a run directory outside the repository. Its sha256 is equal to `nm sha256` in `build-ids.txt`. The script checks it.
+- M2: "the decoders of the 16 flat types are all complete" in section 31 is about the 16 types of the development population.
+- By the IR rule, the target has 40 flat fixed-size types. 24 were not started.
+- M3: a code key now requires a subject. A different target code constant must not call the function of the row.
+- `codec` and `reject_complete` are still not bound to the row. `INVENTORY.md` records this limit.
+- S1: a constant is counted only if the `.S` path is inside the link table of the pinned ELF. Subdirectories are also scanned.
+- S2 (open): the ValidatorBalance proto was read from the main Prysm checkout `c4e939f`.
+- "The tree that the Go differential uses" in the `VbDesc.lean` comment is wrong. The message text is the same as in the pinned tree `ab15ff7` (hash comparison by the review).
+- The comment is Lean source, so this unit did not change it.
+- S4: the session scripts `mkspeck.py` and `mkwit.py` of the close-out unit are not in the repository. For the theorem text, the committed files are the source.
+
+## 33. Integration of the `--gen5` work: correction after review
+
+- In sections 28–32, "There is no independent review yet" and "Not reviewed yet" are replaced by the reviews below. Those sections are not changed.
+- "There is no review of this integration itself yet" in section 27 is also replaced: the review of the `--gen4` and H6 integration approved `c29ebdc`.
+- The review of the `--gen5` lemma and generator work (together, `ea6a0c6`): REQUEST_CHANGES, records only. Section 30 closed it.
+- An earlier review of the lemma work ended midway because of the usage limit. A partial verdict is not a result.
+- The review of the close-out unit (`c4e1d74`): REQUEST_CHANGES, inventory only. Section 32 (inventory fix unit) fixed it. The review of the inventory fix approved `be21280`.
+- All `--gen5` work is on development data, in-sample. There is no hold-out claim. The hold-outs of this population are used up.
+- The `regen_check.sh` of the integration check ran the 15 `--gen5` commands two more times each in scratch. The result is SAME.
+- This is not a new generator result. "One time for each type" in section 29 is a rule of the `--gen5` generator session.
+- The integration check also ran the inventory script again. The output is byte-identical to the committed copy.
+- Open items: item S2 of the review of the `--gen5` lemma and generator work (checker), items S2 and S3 of the close-out review (`.lean`), items N1–N3 of the review of the inventory fix (inventory script).
+- The list and vector work of a different machine is not in this tree. There are no generality, transfer or speed claims. There is no review of this integration itself yet.
+
+## 34. Lemma unit of the flat-encoder work (flat encoder fast path): development work, not a hold-out
+
+- The base commit is `e1fd7c0` (head of the flat-encoder preparation unit). The author session is a new Fable session. There is no review yet.
+- All 16 flat types are development data. This population has no hold-out. There is no transfer claim.
+- Only new modules were added. The existing `.lean` files, the generator, the checker, the contracts, the statements and the ELF were not changed.
+- The scope is the fast path only. The premises are `len + SizeSSZ ≤ cap` and the exact lengths of the byte fields.
+- The growslice branch, the length reject and morestack were not proved. The growslice instructions are never stepped on.
+- The statement kind is `encFastKindN C L fields`. `L` is the frame facts and is read from the `.S`.
+- The hand statements of BeaconBlockHeader and Eth1Data are equal by `rfl` to the kind instances.
+- Checkpoint is an implication (`cp_marshal_of_kind`). The hand statement has an additional 32-byte piece `ctl` at `rax + 40`.
+- The converse does not hold as written. There is no other difference.
+- The author read the three hand statements before writing the kind. Thus the binding is not an independent check.
+- The scratch emitter of the unit made the example text. The emitter is not a generator and is not in the repository.
+- The emitter reads the `.S` and the IR and walks the fast path in a symbolic state. It ran many times without the gate (Python, under 1 second).
+- Six examples were committed: Checkpoint, BeaconBlockHeader, Eth1Data, ValidatorBalance, DepositMessage, HistoricalSummary.
+- The last three have no hand statement. Their statements are kind instances. Independent hand statements are the work of the close unit (section 36).
+- The emitted text of the other 10 types was elaborated only in scratch (diagnostics D4, D5, 2 gate jobs, 0 errors).
+- The text of those 10 types was not committed. It is not a repository result. The generator unit (section 35) makes it again with the generator.
+- Those 10 types: BlobIdentifier, Deposit_Data, PendingPartialWithdrawal, SyncCommitteeMessage, PendingConsolidation, PendingDeposit, PowBlock, SigningData, SyncAggregatorSelectionData, VoluntaryExit.
+- `runtime.moveSliceNoCapNoScan` (PowBlock, HistoricalSummary, SigningData) comes after the frame check of the epilogue.
+- The check is `cmp %rsi,%rdx; jb`. It branches if the result pointer is inside the function's own frame. It is not the growslice path.
+- On the fast path the branch is not taken. This was proved from the separation of the output bytes and the frame slots (`EncFrameTest.lean`).
+- This function has no contract. No new contract form was made. The lemma fits only frame `0x50`.
+- The premise `cap < 2^63` was taken as it is from the hand statement. The proof does not use this premise.
+- There is one witness, `WitVbM` (ValidatorBalance, empty prefix and 3-byte prefix).
+- There are 23 negative tests. 8 controls passed, and 14 mutations failed inside the target theorem.
+- 1 case (`e2-tie-cp-stmt-field`) had an error on a line outside the range, so it was not counted.
+- Deviation from the plan: a step theorem is not emitted for each instruction. The steps use library lemmas as proof terms.
+- Kind lines (in the `KindStep` style) for the new step lemmas themselves were not made.
+- There are no generality, speed or complete-encoder claims.
+
+## 35. Generator unit of the flat-encoder work (`p2enc --gen6`, flat encoder fast path): development work, not a hold-out
+
+- The base commit is `d1e30ca` (head of the lemma unit). The author session is a new Opus session. There is no review yet.
+- This is a generator change. It is a change after the `--gen5` work and H6. All 16 flat types are development data (in-sample).
+- This population has no hold-out. The statement checks are the kind, the hand-statement binding and `kindcheck.py` rule 13.
+- The author read the handoff document of the lemma unit, the six examples and the scratch emitter `mk6.py`. The generator text follows that method.
+- The proof bodies of the six examples and of the generated output differ only in names and doc comments. Thus those six are not an independent check.
+- The rule 13 interpreter does not import the generator. But the same author wrote it with the same handoff document.
+- The three hand statements (BeaconBlockHeader, Eth1Data, Checkpoint) were committed before the lemma unit. The generator reads their layout definitions and compares each slot.
+- All generator test runs were done inside the gate: e2g 01, 03, 04, 05. The committed run is e2g 06 only.
+- The raw output was committed with no changes before it was used (`e426d84`).
+- There are no generality, speed or complete-encoder claims. Independent hand statements, witnesses and specification-conformance theorems are the work of the close unit.
+
+## 36. Close unit of the flat-encoder work (flat encoder fast path: independent statements, witnesses, specification conformance, inventory): development work, not a hold-out
+
+- The base commit is `dcc6e80` (approved by the review of the generator unit). The author session is a new Opus session. There is no review yet.
+- All 16 flat types are development data (in-sample). This population has no hold-out.
+- Four independent hand statements (PowBlock, SyncCommitteeMessage, PendingPartialWithdrawal, Deposit_Data) were committed before the generated theorems were opened (`0d25193`).
+- What the author read before that: the handoff document of the lemma unit (interface section), the kind definition `KindEncN.lean`, the hand statement `bh_e2e_marshal_main`.
+- Also read: the generated file `Gen6VbEnc.lean` of a different type (head and fast-path theorems), the witness `WitVbM.lean`, and the `.S` and IR of the four.
+- The `Gen6{Pb,Sc,Pw,Dd}Enc.lean` of the four, the summary JSON, the `kindcheck` output and the reviewer's layout output were not opened before that.
+- Thus the independence of the four lies in the recomputation of the layout (order of frame slots, post slots and existential slots). The statement shape followed the interface text.
+- The unit's evidence tool `scal/e2c/e2cemit.py` emitted the witness and specification-conformance text from the generated statement text. The generator and checker were not changed.
+- Three text bugs of `e2cemit.py` (BlobIdentifier and ValidatorBalance specification-conformance attempts 1, 2) are recorded in gate jobs 03, 04. They closed in attempt 3.
+- There are no generality, speed or complete-encoder claims. growslice, length reject and morestack were not proved. T-7 (finding T-7: the `GrowsliceC` contract has no lower bound on the remaining heap) was deferred.
+
+## 37. Inventory fix unit of the flat-encoder work (correction after the review of the close unit): inventory script and records only
+
+- Correction to section 36 (item S1 of the review of the close unit): before writing the independent statements, the author also read `scal/enc2-survey.md`.
+- That file copies the frame, guard and spill lines of each type from the `.S`. It has no statement text.
+- Thus the independence judgment for the four is the same as in section 36. That summary may have helped the layout recomputation.
+- Correction to the last line of section 36 (item M1 of the review of the close unit): the paths that are not proved are different for each type. The `INVENTORY.md` NOT proved column is the reference.
+- This unit did not change the proofs, statements, generator, checker, lemmas or generated files. There are 0 new declarations.
+- The author session is a new Opus session. There is no review yet.
+
+## 38. Integration of the flat-encoder work: correction after review
+
+- In sections 34–37, "There is no review yet" is replaced by the reviews below. Those sections are not changed.
+- "There is no review of this integration itself yet" in section 33 is also replaced: the review of the `--gen5` integration approved `93dae89`.
+- The review of the preparation and lemma units (together, `d1e30ca`): APPROVE. The review of the generator unit (`dcc6e80`): APPROVE.
+- The review of the close unit (`5072b63`): REQUEST_CHANGES, one inventory column only. Section 37 (inventory fix unit) fixed it. The review of the inventory fix approved `eec1d4f`.
+- All flat-encoder work is on development data, in-sample. There is no hold-out claim.
+- The `regen_check.sh` of the integration check ran the 16 `--gen6` commands two more times each in scratch. The result is SAME.
+- This is not a new generator result. "One time for each type" in section 35 is a rule of the generator-unit session.
+- The integration check also ran the inventory script again. The output is byte-identical to the committed copy.
+- Open items: item S3 of the review of the preparation and lemma units, items S2–S5 of the review of the generator unit, item S3 of the review of the close unit, items N1 and N3 of the review of the inventory fix, item S4 of the review of the `--gen5` integration.
+- The list and vector work of a different machine and the AttestationData encoder are not in this tree.
+- There are no generality, transfer, speed or complete-encoder claims. There is no review of this integration itself yet.
+
+## 39. Hold-out H7 (24 flat fixed-size types: one measurement, close what was generated): hold-out measurement + closing
+
+- The method freeze is `0923998` (approved by the review of the flat-encoder integration). The evaluation session is a new Opus session. It did not make generators, checkers, kinds or lemmas.
+- The opening record H7 block (`scal/HOLDOUT-OPENED`, `be12791`) was committed before the code, `.S` and IR entries of the 24 types were opened.
+- What was read before that: only the names of the 24 types (INVENTORY.md) and the flat rule text.
+- The generator ran `p2dec --gen5` one time and `p2enc --gen6` one time for each type (jobs 10–57). There were no test runs, reruns or option changes.
+- The raw output was committed with no changes (`e5dd848`). 0 lines were changed.
+- Result: decoders 7/24 and encoders 8/24 were generated. `--gen4` field coverage is 34/86 (a lower bound after the stop).
+- Reject classification (verdict of the evaluator who read the `.S`): new field kind byte20 8 types, byte4 5 types, byte1 1 type, bool 2 types, new callee (Gwei) 1 type.
+- There were no rejects because of padding, registers, setup order, only a new instruction form, frame form or mixing.
+- 8 independent hand statements (4 decoders, 4 encoders) were committed before the generated theorems of those types were opened (`2735379`).
+- What the author read before that: the `.S` and IR of the 24 types, the hand statements of the development types (dd, sa, pd, sm, pw, sc, pb), the interface text of the flat-encoder lemma unit, and the exit codes and summary JSON of the raw output.
+- The shape rules of the hand statements came from those texts. The parameters (frame, slots, instruction numbers) were read by hand from the `.S`.
+- The `rfl` identities are 8/8 and closed in the first build (`ab46808`). Neither side was changed.
+- The unit's evidence tools (`f24/tools/`) emitted the specification, specification alignment, witness and specification-conformance text. They are not generators. `gen/scal/*`, the kinds, the lemmas and `Fk` were not changed.
+- Two one-field text bugs of the evidence tools (BuilderPreferences: specification bridge, encoder specification conformance) closed in attempt 2 (jobs 93, 97).
+- The independent Desc was written from the Prysm proto. No consensus-specs copy is reachable from this session (other worktrees are out of scope).
+- The Desc checker record exists only for DepositRequest. The other 6 decoders did not get codec equivalence (proposal, not done).
+- The rejected types were not proved by hand. The coverage proposals are recorded in OUT and RESULT as "proposal, not done".
+- There are no generality, transfer or speed claims. These 24 types are now opened. They are not hold-outs. There is no review yet.
+
+## 40. Integration of H7: correction after review
+
+- In section 39, "There is no review yet" is replaced by the review below: the review of H7 approved `6f20eef`. That section is not changed.
+- "There is no review of this integration itself yet" in section 38 is also replaced: the review of the flat-encoder integration approved `0923998`.
+- S1: three of the generated types are close variants of development types. The reviewer confirmed this with an own `.S` comparison.
+- The decoder and encoder of BuilderDepositRequest are the same as Deposit_Data (0 different lines after label normalization).
+- The encoders of BlobSidecarsByRangeRequest and ExecutionPayloadEnvelopesByRangeRequest are the same as SyncAggregatorSelectionData.
+- The decoders of the two types differ only in 2 lines of the error path (error string length).
+- Thus 3 of the 7 generated decoders and 3 of the 8 generated encoders are close to the sample. There is no generality claim.
+- S3: 34/86 is a lower bound after the stop. It is not a coverage ratio. 13 is a walk claim with no emitted theorem.
+- S5: before the statement commit (`2735379`), the author saw one line of the kindcheck record.
+- That line lists only the walk theorem names of BeaconBlocksByRange (decoder, encoder). It has no statement text.
+- S6: the DepositRequest `desc.json` was copied from the scratch of a different job. The content sha256 `489fe67a…` is equal to the committed checker record.
+- The checker record is in `gen/desc/results/main.result.json` (committed before this unit). The result is PASS.
+- The head of `F24DprSpecChecker.lean` records `prysm/go1.26.10/e2e/engine_v1.DepositRequest.desc.json`. `f24/` is missing.
+- The real file is `prysm/go1.26.10/e2e/f24/engine_v1.DepositRequest.desc.json`. It is text of a generated file, so it was not changed.
+- S7: the integrator added 12 negative tests. Result: 12/12 as expected (4 controls passed, 8 mutations failed inside the target theorem, 0 timeouts, 0 wrong targets).
+- The `regen_check.sh` of the integration check ran the 15 H7 generation commands two more times each in scratch. The result is SAME.
+- This is not a new H7 run. The 33 rejected runs (exit 2) have no files, so they were not run again.
+- The list and vector work of a different machine and the AttestationData encoder are not in this tree.
+- There are no generality, transfer, speed or complete-encoder claims. No trend across H3–H7 is claimed either. There is no review of this integration itself yet.
