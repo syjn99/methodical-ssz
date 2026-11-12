@@ -1,0 +1,3132 @@
+{
+ "functions": {
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*BuilderDepositRequest).UnmarshalSSZ": {
+   "addr": "0x7c70a0",
+   "instructions": 130,
+   "calls": [
+    {
+     "site": "0x7c70e5",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x7c710c",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c712b",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c7159",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c7180",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x7c71a7",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c71ca",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c71f8",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c7228",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x7c724f",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c7272",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c72a0",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c72e7",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*BuilderExitRequest).UnmarshalSSZ": {
+   "addr": "0x7c7980",
+   "instructions": 94,
+   "calls": [
+    {
+     "site": "0x7c79c2",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x7c79e9",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c7a08",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c7a36",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c7a59",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x7c7a80",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c7aa3",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c7ad1",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c7b18",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ConsolidationRequest).UnmarshalSSZ": {
+   "addr": "0x7c8100",
+   "instructions": 127,
+   "calls": [
+    {
+     "site": "0x7c8142",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x7c8169",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c8188",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c81b6",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c81d9",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x7c8200",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c8223",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c8251",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c8274",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x7c82a0",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c82c3",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c82f1",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c8338",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*DepositRequest).UnmarshalSSZ": {
+   "addr": "0x7c8a40",
+   "instructions": 133,
+   "calls": [
+    {
+     "site": "0x7c8a85",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x7c8aac",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c8acb",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c8af9",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c8b20",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x7c8b47",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c8b6a",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c8b98",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c8bc8",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x7c8bef",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c8c12",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c8c40",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7c8c97",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*Withdrawal).UnmarshalSSZ": {
+   "addr": "0x7e0c60",
+   "instructions": 105,
+   "calls": [
+    {
+     "site": "0x7e0cb2",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*ValidatorIndex).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec E2eScal.ViUAccC, proved from machine code (H1)"
+    },
+    {
+     "site": "0x7e0ceb",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0x7e0d00",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0x7e0d40",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x7e0d67",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7e0d8a",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7e0db8",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7e0e12",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*WithdrawalRequest).UnmarshalSSZ": {
+   "addr": "0x7e16c0",
+   "instructions": 98,
+   "calls": [
+    {
+     "site": "0x7e1702",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x7e1729",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7e1748",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7e1776",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7e1799",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x7e17c0",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7e17e3",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7e1811",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x7e1865",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BLSToExecutionChange).UnmarshalSSZ": {
+   "addr": "0x95dd60",
+   "instructions": 130,
+   "calls": [
+    {
+     "site": "0x95dda0",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*ValidatorIndex).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec E2eScal.ViUAccC, proved from machine code (H1)"
+    },
+    {
+     "site": "0x95ddd9",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0x95dded",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0x95de2c",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x95de53",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x95de76",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x95dea6",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x95dec9",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x95def0",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x95df13",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x95df41",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x95df8e",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlocksByRangeRequest).UnmarshalSSZ": {
+   "addr": "0xa052e0",
+   "instructions": 68,
+   "calls": [
+    {
+     "site": "0xa05320",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec SlUAccC, proved from machine code (E2eAd)"
+    },
+    {
+     "site": "0xa05359",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0xa0536d",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0xa053e0",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlobSidecarsByRangeRequest).UnmarshalSSZ": {
+   "addr": "0xa05b00",
+   "instructions": 66,
+   "calls": [
+    {
+     "site": "0xa05b40",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec SlUAccC, proved from machine code (E2eAd)"
+    },
+    {
+     "site": "0xa05b79",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0xa05b8d",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0xa05bf5",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Builder).UnmarshalSSZ": {
+   "addr": "0x9da6e0",
+   "instructions": 224,
+   "calls": [
+    {
+     "site": "0x9da72a",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x9da751",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9da770",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x9da7a0",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9da7c3",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x9da7ea",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9da823",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9da841",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x9da868",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9da88b",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x9da8b9",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9da8ec",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Gwei).UnmarshalSSZ",
+     "class": "d",
+     "how": "no contract in the tree; recorded only (FLAT24 link)"
+    },
+    {
+     "site": "0x9da925",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0x9da937",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0x9da981",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec EpUAccC, proved from machine code (E2e)"
+    },
+    {
+     "site": "0x9da9ba",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0x9da9cd",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0x9daa17",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec EpUAccC, proved from machine code (E2e)"
+    },
+    {
+     "site": "0x9daa54",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0x9daa66",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0x9daac0",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPendingWithdrawal).UnmarshalSSZ": {
+   "addr": "0x9dbd40",
+   "instructions": 130,
+   "calls": [
+    {
+     "site": "0x9dbd87",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x9dbdae",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9dbdcd",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x9dbe00",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9dbe30",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Gwei).UnmarshalSSZ",
+     "class": "d",
+     "how": "no contract in the tree; recorded only (FLAT24 link)"
+    },
+    {
+     "site": "0x9dbe69",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0x9dbe80",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0x9dbec7",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*BuilderIndex).UnmarshalSSZ",
+     "class": "d",
+     "how": "no contract in the tree; recorded only (FLAT24 link)"
+    },
+    {
+     "site": "0x9dbf00",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0x9dbf12",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0x9dbf67",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPreferences).UnmarshalSSZ": {
+   "addr": "0x9dfc80",
+   "instructions": 57,
+   "calls": [
+    {
+     "site": "0x9dfcb5",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Gwei).UnmarshalSSZ",
+     "class": "d",
+     "how": "no contract in the tree; recorded only (FLAT24 link)"
+    },
+    {
+     "site": "0x9dfcee",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0x9dfd00",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0x9dfd55",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ENRForkID).UnmarshalSSZ": {
+   "addr": "0xa20160",
+   "instructions": 116,
+   "calls": [
+    {
+     "site": "0xa201a7",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0xa201ce",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa20206",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa20224",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0xa2024b",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa20282",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa202a8",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec EpUAccC, proved from machine code (E2e)"
+    },
+    {
+     "site": "0xa202e1",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0xa202f3",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0xa20349",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ExecutionPayloadEnvelopesByRangeRequest).UnmarshalSSZ": {
+   "addr": "0xa08840",
+   "instructions": 66,
+   "calls": [
+    {
+     "site": "0xa08880",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec SlUAccC, proved from machine code (E2eAd)"
+    },
+    {
+     "site": "0xa088b9",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0xa088cd",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0xa08935",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Fork).UnmarshalSSZ": {
+   "addr": "0xa21140",
+   "instructions": 116,
+   "calls": [
+    {
+     "site": "0xa21187",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0xa211ae",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa211e6",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa21204",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0xa2122b",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa21262",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa21288",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec EpUAccC, proved from machine code (E2e)"
+    },
+    {
+     "site": "0xa212c1",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0xa212d3",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0xa21329",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ForkData).UnmarshalSSZ": {
+   "addr": "0xa21940",
+   "instructions": 92,
+   "calls": [
+    {
+     "site": "0xa21982",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0xa219a8",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa219e0",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa21a00",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0xa21a27",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa21a4a",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa21a78",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa21ac0",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PartialDataColumnGroupID).UnmarshalSSZ": {
+   "addr": "0x9e6340",
+   "instructions": 96,
+   "calls": [
+    {
+     "site": "0x9e6387",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x9e63ae",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9e63cd",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x9e6400",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9e6430",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec SlUAccC, proved from machine code (E2eAd)"
+    },
+    {
+     "site": "0x9e6469",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0x9e6480",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0x9e64d5",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PayloadAttestationData).UnmarshalSSZ": {
+   "addr": "0x9e8460",
+   "instructions": 123,
+   "calls": [
+    {
+     "site": "0x9e84a7",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x9e84ce",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9e84ed",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x9e8520",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9e8550",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec SlUAccC, proved from machine code (E2eAd)"
+    },
+    {
+     "site": "0x9e8589",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0x9e85a0",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0x9e8656",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ProposerPreferences).UnmarshalSSZ": {
+   "addr": "0x9e98e0",
+   "instructions": 170,
+   "calls": [
+    {
+     "site": "0x9e992a",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x9e9951",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9e9970",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x9e99a0",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9e99d3",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec SlUAccC, proved from machine code (E2eAd)"
+    },
+    {
+     "site": "0x9e9a0c",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0x9e9a20",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0x9e9a6a",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*ValidatorIndex).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec E2eScal.ViUAccC, proved from machine code (H1)"
+    },
+    {
+     "site": "0x9e9aa3",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0x9e9ab5",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0x9e9af4",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x9e9b20",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9e9b43",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x9e9b71",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9e9bcb",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Status).UnmarshalSSZ": {
+   "addr": "0xa27f00",
+   "instructions": 192,
+   "calls": [
+    {
+     "site": "0xa27f47",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0xa27f6e",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa27fa6",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa27fc4",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0xa27feb",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa2800e",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa28040",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa28070",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec EpUAccC, proved from machine code (E2e)"
+    },
+    {
+     "site": "0xa280a9",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0xa280c0",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0xa280f5",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0xa28120",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa28143",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa28171",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa281a1",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec SlUAccC, proved from machine code (E2eAd)"
+    },
+    {
+     "site": "0xa281da",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0xa281ed",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0xa28242",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*StatusV2).UnmarshalSSZ": {
+   "addr": "0x9c49c0",
+   "instructions": 227,
+   "calls": [
+    {
+     "site": "0x9c4a0a",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x9c4a31",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9c4a67",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9c4a85",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x9c4aac",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9c4acf",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x9c4b00",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9c4b33",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec EpUAccC, proved from machine code (E2e)"
+    },
+    {
+     "site": "0x9c4b6c",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0x9c4b80",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0x9c4bb5",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0x9c4be0",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9c4c03",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x9c4c31",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0x9c4c64",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec SlUAccC, proved from machine code (E2eAd)"
+    },
+    {
+     "site": "0x9c4ca0",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0x9c4cb2",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0x9c4d00",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec SlUAccC, proved from machine code (E2eAd)"
+    },
+    {
+     "site": "0x9c4d39",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0x9c4d4d",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0x9c4da2",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Validator).UnmarshalSSZ": {
+   "addr": "0xa28ba0",
+   "instructions": 249,
+   "calls": [
+    {
+     "site": "0xa28bf0",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0xa28c1a",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa28c40",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa28c71",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa28c94",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0xa28cc0",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa28ce6",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa28d17",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa28d6e",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec EpUAccC, proved from machine code (E2e)"
+    },
+    {
+     "site": "0xa28da9",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0xa28dc0",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0xa28e10",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec EpUAccC, proved from machine code (E2e)"
+    },
+    {
+     "site": "0xa28e49",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0xa28e60",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0xa28eb0",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec EpUAccC, proved from machine code (E2e)"
+    },
+    {
+     "site": "0xa28ee9",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0xa28f00",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0xa28f50",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec EpUAccC, proved from machine code (E2e)"
+    },
+    {
+     "site": "0xa28f89",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0xa28fa0",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0xa29009",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ValidatorIdentity).UnmarshalSSZ": {
+   "addr": "0xa0c340",
+   "instructions": 128,
+   "calls": [
+    {
+     "site": "0xa0c384",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*ValidatorIndex).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec E2eScal.ViUAccC, proved from machine code (H1)"
+    },
+    {
+     "site": "0xa0c3c0",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0xa0c3d2",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0xa0c407",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0xa0c42e",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa0c451",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa0c480",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa0c4b0",
+     "target": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).UnmarshalSSZ",
+     "class": "a",
+     "how": "function spec EpUAccC, proved from machine code (E2e)"
+    },
+    {
+     "site": "0xa0c4e9",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "FmtErrorfWC (field wraps of the callee errors); decoder: unreachable under the callee specs"
+    },
+    {
+     "site": "0xa0c500",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"
+    },
+    {
+     "site": "0xa0c555",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ValidatorRegistrationV1).UnmarshalSSZ": {
+   "addr": "0xa0ba60",
+   "instructions": 99,
+   "calls": [
+    {
+     "site": "0xa0baa2",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0xa0bac9",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa0bae8",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa0bb16",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa0bb4e",
+     "target": "runtime.makeslice",
+     "class": "b",
+     "how": "MakesliceC (esz 1, uint8 type word, cnt 32)"
+    },
+    {
+     "site": "0xa0bb75",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa0bb98",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa0bbc6",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa0bc0d",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 decoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*BuilderDepositRequest).MarshalSSZTo": {
+   "addr": "0x7c6e00",
+   "instructions": 144,
+   "calls": [
+    {
+     "site": "0x7c6e6a",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x7c6ea6",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c6f00",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x7c6f29",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c6f6a",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x7c6fb1",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x7c6fe3",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c7075",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*BuilderExitRequest).MarshalSSZTo": {
+   "addr": "0x7c77c0",
+   "instructions": 105,
+   "calls": [
+    {
+     "site": "0x7c7813",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x7c7846",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c7892",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x7c78c0",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c78f8",
+     "target": "runtime.moveSliceNoCapNoScan",
+     "class": "d",
+     "how": "no contract in the tree; recorded only"
+    },
+    {
+     "site": "0x7c7951",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ConsolidationRequest).MarshalSSZTo": {
+   "addr": "0x7c7ec0",
+   "instructions": 139,
+   "calls": [
+    {
+     "site": "0x7c7f13",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x7c7f46",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c7f92",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x7c7fc0",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c800c",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x7c8035",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c806d",
+     "target": "runtime.moveSliceNoCapNoScan",
+     "class": "d",
+     "how": "no contract in the tree; recorded only"
+    },
+    {
+     "site": "0x7c80e1",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*DepositRequest).MarshalSSZTo": {
+   "addr": "0x7c8740",
+   "instructions": 160,
+   "calls": [
+    {
+     "site": "0x7c87aa",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x7c87e9",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c8845",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x7c8877",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c88c0",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x7c890b",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x7c8940",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7c8988",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x7c8a13",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*Withdrawal).MarshalSSZTo": {
+   "addr": "0x7e0a60",
+   "instructions": 117,
+   "calls": [
+    {
+     "site": "0x7e0ab1",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x7e0b0e",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x7e0b71",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x7e0baa",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7e0bf1",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x7e0c40",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*WithdrawalRequest).MarshalSSZTo": {
+   "addr": "0x7e14e0",
+   "instructions": 107,
+   "calls": [
+    {
+     "site": "0x7e1541",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x7e1577",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7e15c6",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x7e15ef",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x7e1630",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x7e1693",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BLSToExecutionChange).MarshalSSZTo": {
+   "addr": "0x95db60",
+   "instructions": 120,
+   "calls": [
+    {
+     "site": "0x95dbc2",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x95dc24",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x95dc57",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x95dca5",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x95dcce",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x95dd36",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlocksByRangeRequest).MarshalSSZTo": {
+   "addr": "0xa05180",
+   "instructions": 83,
+   "calls": [
+    {
+     "site": "0xa051e2",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa05230",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa05277",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa052b6",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlobSidecarsByRangeRequest).MarshalSSZTo": {
+   "addr": "0xa059e0",
+   "instructions": 67,
+   "calls": [
+    {
+     "site": "0xa05a40",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa05a8b",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa05aca",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Builder).MarshalSSZTo": {
+   "addr": "0x9da380",
+   "instructions": 187,
+   "calls": [
+    {
+     "site": "0x9da3ea",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9da426",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x9da482",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9da4e0",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9da50f",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x9da570",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9da5c5",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9da619",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9da6ad",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPendingWithdrawal).MarshalSSZTo": {
+   "addr": "0x9dbb60",
+   "instructions": 103,
+   "calls": [
+    {
+     "site": "0x9dbbca",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9dbc06",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x9dbc66",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9dbcb8",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9dbd0a",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPreferences).MarshalSSZTo": {
+   "addr": "0x9dfbc0",
+   "instructions": 48,
+   "calls": [
+    {
+     "site": "0x9dfc10",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9dfc53",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ENRForkID).MarshalSSZTo": {
+   "addr": "0xa1ffa0",
+   "instructions": 109,
+   "calls": [
+    {
+     "site": "0xa1fff6",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa20052",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa200b2",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa2012b",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ExecutionPayloadEnvelopesByRangeRequest).MarshalSSZTo": {
+   "addr": "0xa08720",
+   "instructions": 67,
+   "calls": [
+    {
+     "site": "0xa08780",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa087cb",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa0880a",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Fork).MarshalSSZTo": {
+   "addr": "0xa20f80",
+   "instructions": 109,
+   "calls": [
+    {
+     "site": "0xa20fd6",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa21032",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa21092",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa2110b",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ForkData).MarshalSSZTo": {
+   "addr": "0xa217a0",
+   "instructions": 102,
+   "calls": [
+    {
+     "site": "0xa217f3",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa2184e",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa21881",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa218b9",
+     "target": "runtime.moveSliceNoCapNoScan",
+     "class": "d",
+     "how": "no contract in the tree; recorded only"
+    },
+    {
+     "site": "0xa21912",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PartialDataColumnGroupID).MarshalSSZTo": {
+   "addr": "0x9e61e0",
+   "instructions": 82,
+   "calls": [
+    {
+     "site": "0x9e6239",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9e626f",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x9e62c1",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9e6313",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PayloadAttestationData).MarshalSSZTo": {
+   "addr": "0x9e8240",
+   "instructions": 122,
+   "calls": [
+    {
+     "site": "0x9e82a1",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9e82d7",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x9e832c",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9e8365",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9e8391",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9e83c0",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9e83e0",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9e8423",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ProposerPreferences).MarshalSSZTo": {
+   "addr": "0x9e9620",
+   "instructions": 151,
+   "calls": [
+    {
+     "site": "0x9e968a",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9e96c6",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x9e9727",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9e9780",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9e97cf",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9e9801",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x9e9848",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9e98b5",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Status).MarshalSSZTo": {
+   "addr": "0xa27c00",
+   "instructions": 172,
+   "calls": [
+    {
+     "site": "0xa27c6a",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa27cd1",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa27d0a",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa27d66",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa27db8",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa27de7",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa27e46",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa27eda",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*StatusV2).MarshalSSZTo": {
+   "addr": "0x9c4660",
+   "instructions": 190,
+   "calls": [
+    {
+     "site": "0x9c46ca",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9c4731",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9c476a",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x9c47cb",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9c4821",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9c4850",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0x9c48b1",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9c4906",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0x9c4995",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Validator).MarshalSSZTo": {
+   "addr": "0xa287c0",
+   "instructions": 209,
+   "calls": [
+    {
+     "site": "0xa2882a",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa28869",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa288c5",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa288f4",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa28940",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa28971",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa28999",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa289e7",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa28a42",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa28aa0",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa28b00",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa28b73",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ValidatorIdentity).MarshalSSZTo": {
+   "addr": "0xa0c160",
+   "instructions": 111,
+   "calls": [
+    {
+     "site": "0xa0c1ca",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa0c231",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa0c26a",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa0c2c6",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa0c320",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ValidatorRegistrationV1).MarshalSSZTo": {
+   "addr": "0xa0b820",
+   "instructions": 120,
+   "calls": [
+    {
+     "site": "0xa0b88a",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa0b8c3",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa0b904",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa0b939",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa0b981",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC (esz 1); main theorem: capacity sufficient, not called"
+    },
+    {
+     "site": "0xa0b9b3",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC (n = 32)"
+    },
+    {
+     "site": "0xa0ba27",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"
+    }
+   ],
+   "scope": "in (FLAT24 encoder)"
+  }
+ },
+ "call_counts": {
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*BuilderDepositRequest).UnmarshalSSZ": {
+   "runtime.makeslice": 3,
+   "runtime.gcWriteBarrier2": 6,
+   "runtime.memmove": 3,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*BuilderExitRequest).UnmarshalSSZ": {
+   "runtime.makeslice": 2,
+   "runtime.gcWriteBarrier2": 4,
+   "runtime.memmove": 2,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ConsolidationRequest).UnmarshalSSZ": {
+   "runtime.makeslice": 3,
+   "runtime.gcWriteBarrier2": 6,
+   "runtime.memmove": 3,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*DepositRequest).UnmarshalSSZ": {
+   "runtime.makeslice": 3,
+   "runtime.gcWriteBarrier2": 6,
+   "runtime.memmove": 3,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*Withdrawal).UnmarshalSSZ": {
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*ValidatorIndex).UnmarshalSSZ": 1,
+   "fmt.errorf": 1,
+   "runtime.newobject": 1,
+   "runtime.makeslice": 1,
+   "runtime.gcWriteBarrier2": 2,
+   "runtime.memmove": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*WithdrawalRequest).UnmarshalSSZ": {
+   "runtime.makeslice": 2,
+   "runtime.gcWriteBarrier2": 4,
+   "runtime.memmove": 2,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BLSToExecutionChange).UnmarshalSSZ": {
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*ValidatorIndex).UnmarshalSSZ": 1,
+   "fmt.errorf": 1,
+   "runtime.newobject": 1,
+   "runtime.makeslice": 2,
+   "runtime.gcWriteBarrier2": 4,
+   "runtime.memmove": 2,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlocksByRangeRequest).UnmarshalSSZ": {
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ": 1,
+   "fmt.errorf": 1,
+   "runtime.newobject": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlobSidecarsByRangeRequest).UnmarshalSSZ": {
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ": 1,
+   "fmt.errorf": 1,
+   "runtime.newobject": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Builder).UnmarshalSSZ": {
+   "runtime.makeslice": 3,
+   "runtime.gcWriteBarrier2": 6,
+   "runtime.memmove": 2,
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Gwei).UnmarshalSSZ": 1,
+   "fmt.errorf": 3,
+   "runtime.newobject": 3,
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).UnmarshalSSZ": 2,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPendingWithdrawal).UnmarshalSSZ": {
+   "runtime.makeslice": 1,
+   "runtime.gcWriteBarrier2": 2,
+   "runtime.memmove": 1,
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Gwei).UnmarshalSSZ": 1,
+   "fmt.errorf": 2,
+   "runtime.newobject": 2,
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*BuilderIndex).UnmarshalSSZ": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPreferences).UnmarshalSSZ": {
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Gwei).UnmarshalSSZ": 1,
+   "fmt.errorf": 1,
+   "runtime.newobject": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ENRForkID).UnmarshalSSZ": {
+   "runtime.makeslice": 2,
+   "runtime.gcWriteBarrier2": 4,
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).UnmarshalSSZ": 1,
+   "fmt.errorf": 1,
+   "runtime.newobject": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ExecutionPayloadEnvelopesByRangeRequest).UnmarshalSSZ": {
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ": 1,
+   "fmt.errorf": 1,
+   "runtime.newobject": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Fork).UnmarshalSSZ": {
+   "runtime.makeslice": 2,
+   "runtime.gcWriteBarrier2": 4,
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).UnmarshalSSZ": 1,
+   "fmt.errorf": 1,
+   "runtime.newobject": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ForkData).UnmarshalSSZ": {
+   "runtime.makeslice": 2,
+   "runtime.gcWriteBarrier2": 4,
+   "runtime.memmove": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PartialDataColumnGroupID).UnmarshalSSZ": {
+   "runtime.makeslice": 1,
+   "runtime.gcWriteBarrier2": 2,
+   "runtime.memmove": 1,
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ": 1,
+   "fmt.errorf": 1,
+   "runtime.newobject": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PayloadAttestationData).UnmarshalSSZ": {
+   "runtime.makeslice": 1,
+   "runtime.gcWriteBarrier2": 2,
+   "runtime.memmove": 1,
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ": 1,
+   "fmt.errorf": 1,
+   "runtime.newobject": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ProposerPreferences).UnmarshalSSZ": {
+   "runtime.makeslice": 2,
+   "runtime.gcWriteBarrier2": 4,
+   "runtime.memmove": 2,
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ": 1,
+   "fmt.errorf": 2,
+   "runtime.newobject": 2,
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*ValidatorIndex).UnmarshalSSZ": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Status).UnmarshalSSZ": {
+   "runtime.makeslice": 3,
+   "runtime.gcWriteBarrier2": 6,
+   "runtime.memmove": 2,
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).UnmarshalSSZ": 1,
+   "fmt.errorf": 2,
+   "runtime.newobject": 2,
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*StatusV2).UnmarshalSSZ": {
+   "runtime.makeslice": 3,
+   "runtime.gcWriteBarrier2": 6,
+   "runtime.memmove": 2,
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).UnmarshalSSZ": 1,
+   "fmt.errorf": 3,
+   "runtime.newobject": 3,
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ": 2,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Validator).UnmarshalSSZ": {
+   "runtime.makeslice": 2,
+   "runtime.gcWriteBarrier2": 4,
+   "runtime.memmove": 2,
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).UnmarshalSSZ": 4,
+   "fmt.errorf": 4,
+   "runtime.newobject": 4,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ValidatorIdentity).UnmarshalSSZ": {
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*ValidatorIndex).UnmarshalSSZ": 1,
+   "fmt.errorf": 2,
+   "runtime.newobject": 2,
+   "runtime.makeslice": 1,
+   "runtime.gcWriteBarrier2": 2,
+   "runtime.memmove": 1,
+   "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).UnmarshalSSZ": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ValidatorRegistrationV1).UnmarshalSSZ": {
+   "runtime.makeslice": 2,
+   "runtime.gcWriteBarrier2": 4,
+   "runtime.memmove": 2,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*BuilderDepositRequest).MarshalSSZTo": {
+   "runtime.growslice": 4,
+   "runtime.memmove": 3,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*BuilderExitRequest).MarshalSSZTo": {
+   "runtime.growslice": 2,
+   "runtime.memmove": 2,
+   "runtime.moveSliceNoCapNoScan": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ConsolidationRequest).MarshalSSZTo": {
+   "runtime.growslice": 3,
+   "runtime.memmove": 3,
+   "runtime.moveSliceNoCapNoScan": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*DepositRequest).MarshalSSZTo": {
+   "runtime.growslice": 5,
+   "runtime.memmove": 3,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*Withdrawal).MarshalSSZTo": {
+   "runtime.growslice": 4,
+   "runtime.memmove": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*WithdrawalRequest).MarshalSSZTo": {
+   "runtime.growslice": 3,
+   "runtime.memmove": 2,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BLSToExecutionChange).MarshalSSZTo": {
+   "runtime.growslice": 3,
+   "runtime.memmove": 2,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlocksByRangeRequest).MarshalSSZTo": {
+   "runtime.growslice": 3,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlobSidecarsByRangeRequest).MarshalSSZTo": {
+   "runtime.growslice": 2,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Builder).MarshalSSZTo": {
+   "runtime.growslice": 6,
+   "runtime.memmove": 2,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPendingWithdrawal).MarshalSSZTo": {
+   "runtime.growslice": 3,
+   "runtime.memmove": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPreferences).MarshalSSZTo": {
+   "runtime.growslice": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ENRForkID).MarshalSSZTo": {
+   "runtime.growslice": 3,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ExecutionPayloadEnvelopesByRangeRequest).MarshalSSZTo": {
+   "runtime.growslice": 2,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Fork).MarshalSSZTo": {
+   "runtime.growslice": 3,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ForkData).MarshalSSZTo": {
+   "runtime.growslice": 2,
+   "runtime.memmove": 1,
+   "runtime.moveSliceNoCapNoScan": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PartialDataColumnGroupID).MarshalSSZTo": {
+   "runtime.growslice": 2,
+   "runtime.memmove": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PayloadAttestationData).MarshalSSZTo": {
+   "runtime.growslice": 6,
+   "runtime.memmove": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ProposerPreferences).MarshalSSZTo": {
+   "runtime.growslice": 5,
+   "runtime.memmove": 2,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Status).MarshalSSZTo": {
+   "runtime.growslice": 5,
+   "runtime.memmove": 2,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*StatusV2).MarshalSSZTo": {
+   "runtime.growslice": 6,
+   "runtime.memmove": 2,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Validator).MarshalSSZTo": {
+   "runtime.growslice": 9,
+   "runtime.memmove": 2,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ValidatorIdentity).MarshalSSZTo": {
+   "runtime.growslice": 3,
+   "runtime.memmove": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ValidatorRegistrationV1).MarshalSSZTo": {
+   "runtime.growslice": 4,
+   "runtime.memmove": 2,
+   "runtime.morestack_noctxt.abi0": 1
+  }
+ },
+ "asm_inlining": {
+  "an encoder calls a MarshalSSZTo": false
+ },
+ "targets_without_contract_class": [
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*BuilderIndex).UnmarshalSSZ",
+  "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Gwei).UnmarshalSSZ"
+ ],
+ "missing": []
+}
