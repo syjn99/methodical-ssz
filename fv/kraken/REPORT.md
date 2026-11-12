@@ -958,6 +958,28 @@ S5 기록: 커밋 형 `merge`는 형 목록에 없다. INT7 병합도 앞 통합
 다른 기계의 리스트·벡터 작업은 이 트리에 없다. 여기서 주장하지 않는다.
 OPT-R1 시범은 채택하지 않았다. T-7은 미뤘다. 기록: `scal/RESULT.json`의 `integration_int7`.
 
+GEN6 인코더 생성기(단위 E2-G, 기준 `d1e30ca`, 리뷰 전): `p2enc --gen6`이 평면 인코더의 빠른 경로 정리를 낸다.
+전제는 `len + SizeSSZ ≤ cap`과 바이트 벡터 필드의 정확한 길이다. 완전한 인코더 결과가 아니다.
+growslice 분기, 길이 거부, morestack은 증명하지 않았다. growslice 지시문은 밟지 않는다.
+모듈 하나에 머리, 필드마다 정리 하나, 에필로그, 빠른 경로 정리가 있다. 정리마다 `_kind` 줄이 있다.
+종류는 E2-L의 `encHeadKindN`, `encFieldKindN`, `encEpiKindN`, `encFastKindN`이다. 코드는 `gen/scal/gen6enc.py`다.
+실패 닫힘: `p2enc_gen6`은 한 곳에서만 글을 돌려준다. 다섯 표시가 모두 서야 한다. 다른 경우는 종료 2다.
+한 번 실행(게이트 e2g 06, 원 출력 `e426d84`): 평면 16형 모두 생성했다. 거부는 0이다. 16 모듈 모두 빌드된다.
+그 전 시험 실행: 게이트 01(scratch), 03과 05(`p2enc_test.py`), 04(디버그). 모두 기록했다.
+손 문장 묶음: BeaconBlockHeader와 Eth1Data는 `_stmt`로 손 정리의 선언 형을 증명한다(`rfl`과 같은 정의적 동일).
+Checkpoint는 함의 `cp_marshal_of_kind`를 거친다. 나머지 13형의 문장은 종류 인스턴스다.
+문장 검사는 종류와 `kindcheck.py` 규칙 13이다. 규칙 13은 자체 해석기로 `.S`와 IR에서 매개변수를 다시 계산한다.
+다시 계산하는 것: 필드 목록, 레이아웃 9개 칸, 모든 경계 상태. 코드 상수가 그 `.S`를 포함하는지도 본다.
+엘래버레이션 시간(파일마다, n = 2)은 2.2 s에서 9.2 s다(PendingDeposit). 속도 주장은 없다.
+`kindcheck.py` 16/16 PASS, 선택 시험 PASS(157건과 85건), 깨뜨린 사본 12개 모두 실패한다.
+`p2enc_test.py` 322/322: 적대 입력 50(모두 거부, 표준 출력 0바이트), 유효 변형 4(덮음), 결함 주입 252다.
+부정 시험 20/20이다: 대조 4, 대상 정리 안 실패 16(문장 5, IR 대 코드 문장 3, 종류 매개변수 4, 코드 4).
+공리 게이트 PASS: 선언 11011, 비표준 0, sorryAx 0이다. 손 목록에 E2-P, E2-L, E2-G의 새 선언 421개를 더했다.
+int7-r1 덤프(9758행) 대비 ADDED 1253, CHANGED 0, REMOVED 0이다. 심은 대조는 잡혔다(게이트 종료 1, CHANGED 1, ADDED 1).
+`regen_check.sh` 71/71 SAME(옛 55, 새 16)이다. `lake build --no-build E2e E2eAd E2eScal` 종료 0이다.
+실행하지 않은 것: 콜드 빌드, 링크 검사, Go 차분, x86-64, 생성 정리의 증인, 명세 따름 정리(단위 E2-C의 일).
+모든 형이 개발 자료다(표본 안). 기록: `scal/RESULT.json`의 `enc2-gen`, `scal/CONTAMINATION.md` 35절.
+
 조건:
 
 1. 런타임 계약 `MakesliceC`(uint8, esz 1, cnt 32), `MemmoveC`, `GrowsliceC`(uint8, esz 1, 인코더 첫 지점과 둘째 지점), `ConvT64C`, `FmtErrorfDDC`(Epoch 형식, `type:int`)는 가설이다. Go 1.26.10 소스를 다시 읽었고 바뀌지 않았다(`prysm/go1.26.10/e2e/RUNTIME-1.26.10.md`). 정교화 증명은 없다.

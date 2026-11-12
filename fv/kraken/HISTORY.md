@@ -422,3 +422,7 @@ BeaconBlockHeader와 Eth1Data의 손 문장은 `rfl`로 같고, Checkpoint는 �
 새 단계 보조정리(`EncSteps.lean`)와 생성 양식 예제 여섯(`Enc2Ex*.lean`), 증인 `WitVbM`을 더했다.
 `runtime.moveSliceNoCapNoScan` 앞의 프레임 검사는 빠른 경로에서 분기하지 않음을 증명했다(`EncFrameTest.lean`). 계약은 없다.
 growslice 분기는 증명하지 않았다. 기존 `.lean`과 생성기는 바꾸지 않았다. 기록: `scal/RESULT.json`의 `enc2-lemmas`.
+
+2026-11-12 ENC2 생성기(단위 E2-G, 새 Opus 세션, 리뷰 전): `scalgen.py p2enc --gen6`을 더했다(`gen/scal/gen6enc.py`).
+평면 16형 모두의 인코더 빠른 경로 정리를 한 번 실행으로 생성했다. 16 모듈이 빌드되고 `kindcheck.py` 규칙 13을 통과한다.
+옛 생성 출력 55개는 바이트가 같다. 완전한 인코더 결과는 아니다. 기록: `scal/RESULT.json`의 `enc2-gen`.

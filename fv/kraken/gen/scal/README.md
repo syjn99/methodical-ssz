@@ -411,3 +411,26 @@ did not establish the entry state (every theorem still built); the rules below r
   byte-equal). Commit `8192427` says "10 types" for the identities: the tree has 9. `kindcheck.py` rule 12 does not
   bind the code constant `C` to the `.S` named in the header; only the Lean code facts (`win … (by rfl)`) of the
   accept and size-reject paths fix `C`. Details: `prysm/go1.26.10/e2e/scal/CONTAMINATION.md` §30.
+### GEN6 (unit E2-G): `p2enc --gen6` — generated encoder fast-path theorems (NOT yet reviewed)
+
+- `p2enc --gen6 --S F.S --const C --ir IR --type T --prefix P --imports M --open M [--hand-layout NAME
+  --hand-layout-src FILE] [--same-as X [--same-as-via LEMMA] | --same-as-prop X] [--summary S.json]`: one module
+  (namespace `E2eScal.Gen6Enc`) with `P_layout` (unless a hand layout is named), `P_head`, `P_f0` … `P_f(n-1)`, `P_epi`,
+  `P_fast`, each followed by its `_kind` line (`encHeadKindN`, `encFieldKindN`, `encEpiKindN`, `encFastKindN`), and
+  `P_stmt` with `--same-as*`. Code: `gen/scal/gen6enc.py`. Encoder FAST PATH only: premises `len + SizeSSZ ≤ cap` and
+  byte-vector fields of exact length; no growslice branch, length reject or morestack path.
+- Fail-closed: `p2enc_gen6` returns a text (exit 0) at one place only, after five flags (`walked`, `rendered`,
+  `kinds_complete`, `statement_check`, `verified`). Any exception (`G6Refuse`, unexpected error, `SystemExit`) is exit 2,
+  nothing on stdout. Refused unless: fields bytes 32 / 48 / 96 or 8-byte uint64 (overlay) with both IR views agreeing
+  and Go offsets the running sum; head `cmp 0x10(%r14),%rsp` or `lea -N(%rsp),%r12` guard, push, mov, frame by `sub` /
+  `add`; every directive of the walked path a step form; stack accesses inside the frame / home slots, no partial
+  overlap; each commit the current field at its SSZ offset, after its length test (bytes) and its own capacity test
+  (`len + field end`, jae / jb to a growslice block); memmove arguments (dst, field pointer, size); live registers
+  at each boundary in {receiver, pointer, capacity, len + n}; frame test only for frame 0x50 and >= 64 output bytes;
+  epilogue rax = ptr, rbx = len + size, rcx = cap, rdi = rsi = 0, `pop %rbp; retq`.
+- What Lean checks: every theorem, the chaining, every `_kind` line by `rfl`. What Lean does not check: that `L` is the
+  frame of the `.S` beyond what the proofs touch, and that `fields` is the IR schema. `kindcheck.py` rule 13
+  recomputes fields, layout and boundary states with its own interpreter and binds `C` to the `.S`.
+- Runs: `gen.sh` GEN6 block (16 types, raw output committed unedited in `e426d84`). Tests: `p2enc_test.py <work>
+  <result.json>` (cwd fv/kraken; gate it).
+

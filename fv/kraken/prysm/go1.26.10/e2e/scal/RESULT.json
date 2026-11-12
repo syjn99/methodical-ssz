@@ -3808,5 +3808,231 @@
    "a frame-test lemma for frames other than 0x50",
    "growslice branches, length rejects, morestack"
   ]
+ },
+ "enc2-gen": {
+  "unit": "E2-G",
+  "base": "d1e30ca",
+  "author": "fresh Opus 5.5 session",
+  "reviewed": false,
+  "in_sample": true,
+  "mode": "scalgen.py p2enc --gen6 (gen/scal/gen6enc.py)",
+  "scope": "encoder fast path only: len + SizeSSZ <= cap, byte-vector fields of exact length; no growslice branch, length reject or morestack; NOT complete encoder results",
+  "fail_closed": "one guarded success point, five flags; any exception exit 2, nothing on stdout",
+  "raw_output_commit": "e426d84",
+  "committed_run_gate_job": "e2g 06",
+  "trial_runs": [
+   "e2g 01 scratch run of the 16 types",
+   "e2g 03 p2enc_test run 1",
+   "e2g 04 debug",
+   "e2g 05 p2enc_test run 2"
+  ],
+  "per_type": {
+   "Checkpoint": {
+    "generated": true,
+    "reason": "",
+    "identity": "implication",
+    "generated_lines": 591,
+    "time_s": [
+     3.14,
+     3.08
+    ],
+    "build_rc": 0,
+    "build_s": 4.04
+   },
+   "BeaconBlockHeader": {
+    "generated": true,
+    "reason": "",
+    "identity": "rfl",
+    "generated_lines": 1279,
+    "time_s": [
+     8.64,
+     8.52
+    ],
+    "build_rc": 0,
+    "build_s": 9.42
+   },
+   "Eth1Data": {
+    "generated": true,
+    "reason": "",
+    "identity": "rfl",
+    "generated_lines": 802,
+    "time_s": [
+     4.51,
+     4.67
+    ],
+    "build_rc": 0,
+    "build_s": 5.11
+   },
+   "BlobIdentifier": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 570,
+    "time_s": [
+     2.91,
+     2.87
+    ],
+    "build_rc": 0,
+    "build_s": 3.45
+   },
+   "DepositMessage": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 798,
+    "time_s": [
+     4.44,
+     4.47
+    ],
+    "build_rc": 0,
+    "build_s": 5.18
+   },
+   "Deposit_Data": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 1041,
+    "time_s": [
+     6.45,
+     6.4
+    ],
+    "build_rc": 0,
+    "build_s": 7.14
+   },
+   "PendingPartialWithdrawal": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 686,
+    "time_s": [
+     3.18,
+     3.23
+    ],
+    "build_rc": 0,
+    "build_s": 3.67
+   },
+   "SyncCommitteeMessage": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 1077,
+    "time_s": [
+     7.0,
+     6.96
+    ],
+    "build_rc": 0,
+    "build_s": 7.76
+   },
+   "PendingConsolidation": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 539,
+    "time_s": [
+     2.42,
+     2.56
+    ],
+    "build_rc": 0,
+    "build_s": 2.86
+   },
+   "PendingDeposit": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 1320,
+    "time_s": [
+     9.04,
+     9.17
+    ],
+    "build_rc": 0,
+    "build_s": 10.58
+   },
+   "PowBlock": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 863,
+    "time_s": [
+     5.19,
+     5.02
+    ],
+    "build_rc": 0,
+    "build_s": 5.71
+   },
+   "HistoricalSummary": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 663,
+    "time_s": [
+     3.69,
+     3.72
+    ],
+    "build_rc": 0,
+    "build_s": 4.18
+   },
+   "SigningData": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 653,
+    "time_s": [
+     3.57,
+     3.53
+    ],
+    "build_rc": 0,
+    "build_s": 4.01
+   },
+   "SyncAggregatorSelectionData": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 497,
+    "time_s": [
+     2.28,
+     2.28
+    ],
+    "build_rc": 0,
+    "build_s": 2.62
+   },
+   "ValidatorBalance": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 497,
+    "time_s": [
+     2.21,
+     2.2
+    ],
+    "build_rc": 0,
+    "build_s": 2.42
+   },
+   "VoluntaryExit": {
+    "generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance)",
+    "generated_lines": 539,
+    "time_s": [
+     2.38,
+     2.53
+    ],
+    "build_rc": 0,
+    "build_s": 2.81
+   }
+  },
+  "kindcheck": "16/16 PASS (rule 13: own recomputation of fields, layout, boundary states; C bound to the .S); selftest PASS 157 + 85; 12 broken copies fail",
+  "p2enc_test": "322/322 (50 adversarial refused, 4 valid variants covered, 252 fault injections)",
+  "negatives": "20/20 (4 controls, 16 inside; 3 IR-vs-code statement mutants)",
+  "axioms": "PASS 11011 declarations, nonstandard 0, sorryAx 0; AxiomsScal +421 names (E2-P, E2-L, E2-G)",
+  "drift": "vs int7-r1 dump 9758 rows: ADDED 1253, CHANGED 0, REMOVED 0; planted control caught",
+  "regen": "71/71 SAME (55 old, 16 new)",
+  "no_build": "exit 0",
+  "not_run": [
+   "cold build",
+   "link check",
+   "Go differential",
+   "x86-64",
+   "witnesses and spec corollaries of the generated theorems (unit E2-C)"
+  ]
  }
 }
