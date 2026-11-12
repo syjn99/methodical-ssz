@@ -192,3 +192,4 @@ step	utc	exit	log	command
 185-IaAccept-hb800000	2026-11-12T00:09:15Z	0	logs/185-IaAccept-hb800000.log	heavy.py -- lake build E2eList.IaAccept (28.1 s wall, peak sampled RSS 4.93 GiB)
 186-IaAccept	2026-11-12T00:10:31Z	0	logs/186-IaAccept.log	heavy.py -- lake build E2eList.IaLoop E2eList.IaAccept (28.1 s wall, peak sampled RSS 4.92 GiB)
 187-IaAccept	2026-11-12T00:12:04Z	0	logs/187-IaAccept.log	heavy.py -- lake build E2eList.IaLoop E2eList.IaAccept (33.3 s wall, peak sampled RSS 4.89 GiB)
+188-IaSpecA	2026-11-12T00:13:51Z	0	logs/188-IaSpecA.log	heavy.py -- lake build E2eList.IaSpecA (5.2 s wall, peak sampled RSS 0.86 GiB)

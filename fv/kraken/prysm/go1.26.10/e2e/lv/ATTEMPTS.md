@@ -306,3 +306,8 @@
 - 로그 186, 187: `lake build E2eList.IaLoop E2eList.IaAccept` exit 0. 로그 187은 `ia_exit`의 쓰지 않는 이름을 `_hn`으로 바꾼 뒤다.
 - 두 파일에 `sorry`, `admit`, `axiom`, `native_decide`, `bv_decide`가 없다(`grep` 결과 없음).
 - 로그 147, 148은 scratch 파일(`lake env lean`)이다. 그 RSS 값은 이 커밋의 증명과 관계없다.
+
+### U5: P3 명세 `ia_e2e_accept_spec` (시도 1)
+
+- 새 파일: `E2eList/IaSpecA.lean`. `pia_accepted_is_enc`로 `g`를 얻고 `ia_e2e_accept_main`을 n = `g.idx.length`로 쓴다. `E2eAd/AdSpecK.lean`의 글이다.
+- 로그 188: `lake build E2eList.IaSpecA` exit 0. 설정 없이 통과했다.
