@@ -1,0 +1,354 @@
+[
+ {
+  "id": "t9-a1-control",
+  "module": "E2eScal/BhEncHead.lean",
+  "theorem": "bh_enc_a1",
+  "kind": "control",
+  "code_def": "BhMarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "t9-a1-guard-lea",
+  "module": "E2eScal/BhEncHead.lean",
+  "theorem": "bh_enc_a1",
+  "kind": "code",
+  "code_def": "BhMarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  lea -0x20(%rsp),%r12",
+  "new": "  lea -0x28(%rsp),%r12"
+ },
+ {
+  "id": "t9-a1-slot-field",
+  "module": "E2eScal/BhEncHead.lean",
+  "theorem": "bh_enc_a1",
+  "kind": "code",
+  "code_def": "BhMarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  mov 0x8(%rax),%r8",
+  "new": "  mov 0x10(%rax),%r8"
+ },
+ {
+  "id": "t9-a1-frame",
+  "module": "E2eScal/BhEncHead.lean",
+  "theorem": "bh_enc_a1",
+  "kind": "code",
+  "code_def": "BhMarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  sub $0x98,%rsp",
+  "new": "  sub $0x90,%rsp"
+ },
+ {
+  "id": "t9-a1-stmt-guard",
+  "module": "E2eScal/BhEncHead.lean",
+  "theorem": "bh_enc_a1",
+  "kind": "stmt",
+  "old": "(hguard : guard.toNat + 32 < s.regs.rsp.toNat)",
+  "new": "(hguard : guard.toNat < s.regs.rsp.toNat)"
+ },
+ {
+  "id": "t9-a1-stmt-dst-unchanged",
+  "module": "E2eScal/BhEncHead.lean",
+  "theorem": "bh_enc_a1",
+  "kind": "stmt",
+  "old": "⋆ Eq (sl.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) ⋆ R) st.data.dmem)",
+  "new": "⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "t9-a2-control",
+  "module": "E2eScal/BhEncHead.lean",
+  "theorem": "bh_enc_a2",
+  "kind": "control",
+  "code_def": "BhMarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "t9-a2-pi-field",
+  "module": "E2eScal/BhEncHead.lean",
+  "theorem": "bh_enc_a2",
+  "kind": "code",
+  "code_def": "BhMarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  mov 0x10(%rax),%r9",
+  "new": "  mov 0x8(%rax),%r9"
+ },
+ {
+  "id": "t9-a2-newlen",
+  "module": "E2eScal/BhEncHead.lean",
+  "theorem": "bh_enc_a2",
+  "kind": "code",
+  "code_def": "BhMarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  lea 0x8(%rdx),%r8",
+  "new": "  lea 0x10(%rdx),%r8"
+ },
+ {
+  "id": "t9-b-control",
+  "module": "E2eScal/BhEncRoots.lean",
+  "theorem": "bh_enc_b",
+  "kind": "control",
+  "code_def": "BhMarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "t9-b-len33",
+  "module": "E2eScal/BhEncRoots.lean",
+  "theorem": "bh_enc_b",
+  "kind": "code",
+  "code_def": "BhMarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  cmpq $0x20,0x20(%rax)",
+  "new": "  cmpq $0x21,0x20(%rax)"
+ },
+ {
+  "id": "t9-b-root-ptr",
+  "module": "E2eScal/BhEncRoots.lean",
+  "theorem": "bh_enc_b",
+  "kind": "code",
+  "code_def": "BhMarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  mov 0x18(%rax),%rdx",
+  "new": "  mov 0x30(%rax),%rdx"
+ },
+ {
+  "id": "t9-b-newlen",
+  "module": "E2eScal/BhEncRoots.lean",
+  "theorem": "bh_enc_b",
+  "kind": "code",
+  "code_def": "BhMarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "line": 67,
+  "old": "  lea 0x20(%r8),%r9",
+  "new": "  lea 0x21(%r8),%r9"
+ },
+ {
+  "id": "t9-c-control",
+  "module": "E2eScal/BhEncRoots.lean",
+  "theorem": "bh_enc_c",
+  "kind": "control",
+  "code_def": "BhMarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "t9-c-root-ptr",
+  "module": "E2eScal/BhEncRoots.lean",
+  "theorem": "bh_enc_c",
+  "kind": "code",
+  "code_def": "BhMarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  mov 0x30(%rdx),%rbx",
+  "new": "  mov 0x18(%rdx),%rbx"
+ },
+ {
+  "id": "t9-c-len31",
+  "module": "E2eScal/BhEncRoots.lean",
+  "theorem": "bh_enc_c",
+  "kind": "code",
+  "code_def": "BhMarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  cmpq $0x20,0x38(%rdx)",
+  "new": "  cmpq $0x1f,0x38(%rdx)"
+ },
+ {
+  "id": "t9-c-dst-off",
+  "module": "E2eScal/BhEncRoots.lean",
+  "theorem": "bh_enc_c",
+  "kind": "code",
+  "code_def": "BhMarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  add %r8,%rax",
+  "new": "  add %r9,%rax"
+ },
+ {
+  "id": "t9-d-control",
+  "module": "E2eScal/BhEncRoots.lean",
+  "theorem": "bh_enc_d",
+  "kind": "control",
+  "code_def": "BhMarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "t9-d-root-ptr",
+  "module": "E2eScal/BhEncRoots.lean",
+  "theorem": "bh_enc_d",
+  "kind": "code",
+  "code_def": "BhMarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  mov 0x48(%rdx),%rbx",
+  "new": "  mov 0x30(%rdx),%rbx"
+ },
+ {
+  "id": "t9-d-memmove31",
+  "module": "E2eScal/BhEncRoots.lean",
+  "theorem": "bh_enc_d",
+  "kind": "code",
+  "code_def": "BhMarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "line": 146,
+  "old": "  mov $0x20,%ecx",
+  "new": "  mov $0x1f,%ecx"
+ },
+ {
+  "id": "t9-e-control",
+  "module": "E2eScal/BhEncRoots.lean",
+  "theorem": "bh_enc_e",
+  "kind": "control",
+  "code_def": "BhMarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
+ },
+ {
+  "id": "t9-e-len-slot",
+  "module": "E2eScal/BhEncRoots.lean",
+  "theorem": "bh_enc_e",
+  "kind": "code",
+  "code_def": "BhMarshal",
+  "code_ns": "E2eScal.BhCode",
+  "norm": "prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S",
+  "old": "  mov 0x38(%rsp),%rbx",
+  "new": "  mov 0x40(%rsp),%rbx"
+ },
+ {
+  "id": "t9-e-stmt-rdi1",
+  "module": "E2eScal/BhEncRoots.lean",
+  "theorem": "bh_enc_e",
+  "kind": "stmt",
+  "old": "st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0",
+  "new": "st.data.regs.rdi = 1 ∧ st.data.regs.rsi = 0"
+ },
+ {
+  "id": "t9-main-control",
+  "module": "E2eScal/BhEncMain.lean",
+  "theorem": "bh_e2e_marshal_main",
+  "kind": "control"
+ },
+ {
+  "id": "t9-main-stmt-len111",
+  "module": "E2eScal/BhEncMain.lean",
+  "theorem": "bh_e2e_marshal_main",
+  "kind": "stmt",
+  "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 112",
+  "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 111"
+ },
+ {
+  "id": "t9-main-stmt-cap111",
+  "module": "E2eScal/BhEncMain.lean",
+  "theorem": "bh_e2e_marshal_main",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 112 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 111 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "t9-main-stmt-swap-roots",
+  "module": "E2eScal/BhEncMain.lean",
+  "theorem": "bh_e2e_marshal_main",
+  "kind": "stmt",
+  "old": "⋆ Eq (r2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))",
+  "new": "⋆ Eq (r3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))"
+ },
+ {
+  "id": "t9-main-stmt-small-guard",
+  "module": "E2eScal/BhEncMain.lean",
+  "theorem": "bh_e2e_marshal_main",
+  "kind": "stmt",
+  "old": "(hguard : guard.toNat + 32 < s.regs.rsp.toNat)",
+  "new": "(hguard : guard.toNat < s.regs.rsp.toNat)"
+ },
+ {
+  "id": "t9-main-stmt-rsp16",
+  "module": "E2eScal/BhEncMain.lean",
+  "theorem": "bh_e2e_marshal_main",
+  "kind": "stmt",
+  "old": "st.data.regs.rsp = s.regs.rsp + 8",
+  "new": "st.data.regs.rsp = s.regs.rsp + 16"
+ },
+ {
+  "id": "t9-main-stmt-dst-unchanged",
+  "module": "E2eScal/BhEncMain.lean",
+  "theorem": "bh_e2e_marshal_main",
+  "kind": "stmt",
+  "old": "⋆ Eq (r3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 80)) ⋆ R) st.data.dmem)",
+  "new": "⋆ Eq (d4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 80)) ⋆ R) st.data.dmem)"
+ },
+ {
+  "id": "t9-wit-control",
+  "module": "E2eScal/WitBhM.lean",
+  "theorem": "bhm_runs_empty",
+  "kind": "control"
+ },
+ {
+  "id": "t9-wit-stmt-root-ptr",
+  "module": "E2eScal/WitBhM.lean",
+  "theorem": "bhm_runs_empty",
+  "kind": "stmt",
+  "old": "0x10088 0x100a8 0x100c8 (cs0",
+  "new": "0x10088 0x100a8 0x100c9 (cs0"
+ },
+ {
+  "id": "t9-wit-stmt-rax",
+  "module": "E2eScal/WitBhM.lean",
+  "theorem": "bhm_runs_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x101a8",
+  "new": "st.data.regs.rax = 0x101a9"
+ },
+ {
+  "id": "t9-spec-control",
+  "module": "E2eScal/BhSpecM.lean",
+  "theorem": "bh_e2e_marshal_spec_k",
+  "kind": "control"
+ },
+ {
+  "id": "t9-spec-stmt-off8",
+  "module": "E2eScal/BhSpecM.lean",
+  "theorem": "bh_e2e_marshal_spec_k",
+  "kind": "stmt",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
+ },
+ {
+  "id": "t9-spec-stmt-swap-recv",
+  "module": "E2eScal/BhSpecM.lean",
+  "theorem": "bh_e2e_marshal_spec_k",
+  "kind": "stmt",
+  "old": "Eq (g.parent.toList.At p1) ⋆ Eq (g.state.toList.At p2)",
+  "new": "Eq (g.state.toList.At p1) ⋆ Eq (g.parent.toList.At p2)"
+ }
+]

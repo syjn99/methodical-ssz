@@ -1,0 +1,7 @@
+# lvU64Type: link/data.py, p1bin-amd64 bytes [0xae9980, 0xae99b0)
+at type__ 387456
+bytes 08 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+bytes db d2 3a 70 0f 08 08 0b
+word go_funcdesc 0
+word r5 8
+bytes f4 3f 00 00 20 4e 04 00

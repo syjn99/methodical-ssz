@@ -1,0 +1,22 @@
+[
+ {"id": "f24i-dpr-speck-control", "module": "E2eScal/F24DprSpecK.lean", "theorem": "dpr_e2e_reject_complete", "kind": "control"},
+ {"id": "f24i-dpr-rejspec-size", "module": "E2eScal/F24DprSpecK.lean", "theorem": "dpr_e2e_reject_size_spec", "kind": "stmt",
+  "old": "(hbs : bs.size ≠ 192)", "new": "(hbs : bs.size ≠ 191)"},
+ {"id": "f24i-dpr-rejcomplete-size", "module": "E2eScal/F24DprSpecK.lean", "theorem": "dpr_e2e_reject_complete", "kind": "stmt",
+  "old": "bs.size ≠ 192", "new": "bs.size ≠ 191"},
+ {"id": "f24i-bbr-speck-control", "module": "E2eScal/F24BbrSpecK.lean", "theorem": "bbr_e2e_reject_complete", "kind": "control"},
+ {"id": "f24i-bbr-rejspec-size", "module": "E2eScal/F24BbrSpecK.lean", "theorem": "bbr_e2e_reject_size_spec", "kind": "stmt",
+  "old": "(hbs : bs.size ≠ 24)", "new": "(hbs : bs.size ≠ 23)"},
+ {"id": "f24i-bbr-rejcomplete-size", "module": "E2eScal/F24BbrSpecK.lean", "theorem": "bbr_e2e_reject_complete", "kind": "stmt",
+  "old": "bs.size ≠ 24", "new": "bs.size ≠ 23"},
+ {"id": "f24i-dpr-espec-control", "module": "E2eScal/E2cSpecDpr.lean", "theorem": "dpr_e2c_spec_k", "kind": "control"},
+ {"id": "f24i-dpr-espec-desc", "module": "E2eScal/E2cSpecDpr.lean", "theorem": "dpr_e2c_spec_k", "kind": "stmt",
+  "old": "serialize prysmDprDesc g.toValue", "new": "serialize prysmBdrDesc g.toValue"},
+ {"id": "f24i-dpr-espec-len", "module": "E2eScal/E2cSpecDpr.lean", "theorem": "dpr_e2c_spec_k", "kind": "stmt",
+  "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 192", "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 184"},
+ {"id": "f24i-bbr-espec-control", "module": "E2eScal/E2cSpecBbr.lean", "theorem": "bbr_e2c_spec_k", "kind": "control"},
+ {"id": "f24i-bbr-espec-desc", "module": "E2eScal/E2cSpecBbr.lean", "theorem": "bbr_e2c_spec_k", "kind": "stmt",
+  "old": "serialize prysmBbrDesc g.toValue", "new": "serialize prysmBsrDesc g.toValue"},
+ {"id": "f24i-bbr-espec-len", "module": "E2eScal/E2cSpecBbr.lean", "theorem": "bbr_e2c_spec_k", "kind": "stmt",
+  "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 24", "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 16"}
+]

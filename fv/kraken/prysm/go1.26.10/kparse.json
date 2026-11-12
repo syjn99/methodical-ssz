@@ -1,0 +1,4640 @@
+{
+ "schema": "fvphase1c.kparse/1",
+ "log_done_line": [
+  622,
+  19
+ ],
+ "counts": {
+  "generated (not inventory): ERR": 5,
+  "generated (not inventory): OK": 205,
+  "hand-written: OK": 24,
+  "inventory: ERR": 13,
+  "inventory: OK": 392,
+  "runtime/ssz: ERR": 1,
+  "runtime/ssz: OK": 1
+ },
+ "errors": [
+  {
+   "symbol": "github.com/OffchainLabs/methodical-ssz/ssz.ValidateBitlist",
+   "group": "runtime/ssz",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 22: unsupported instruction: bsr"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadDenebAndBlobsBundle).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 61: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadDenebAndBlobsBundleV2).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 61: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyAltair).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 314: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyBellatrix).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 313: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyBellatrix).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 313: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyCapella).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 313: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyCapella).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 313: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 313: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 313: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 313: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 1525: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 313: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateFulu).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 1523: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyGloas).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 313: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderConfig).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 68: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyHeze).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 313: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBody).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 321: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconState).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 1417: unknown register: riz"
+  }
+ ],
+ "functions": [
+  {
+   "symbol": "github.com/OffchainLabs/methodical-ssz/ssz.ValidateBitvector",
+   "group": "runtime/ssz",
+   "status": "OK",
+   "directives": 73,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/methodical-ssz/ssz.ValidateBitlist",
+   "group": "runtime/ssz",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 22: unsupported instruction: bsr"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*BuilderIndex).UnmarshalSSZ",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 63,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*BuilderIndex).MarshalSSZTo",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 51,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*BuilderIndex).MarshalSSZ",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 28,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*BuilderIndex).SizeSSZ",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*CommitteeIndex).UnmarshalSSZ",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 63,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*CommitteeIndex).MarshalSSZTo",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 51,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*CommitteeIndex).MarshalSSZ",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 28,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*CommitteeIndex).SizeSSZ",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).UnmarshalSSZ",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 63,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).MarshalSSZTo",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 51,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).MarshalSSZ",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 28,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Epoch).SizeSSZ",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).UnmarshalSSZ",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 63,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).MarshalSSZTo",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 51,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).MarshalSSZ",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 28,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Slot).SizeSSZ",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*ValidatorIndex).UnmarshalSSZ",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 63,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*ValidatorIndex).MarshalSSZTo",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 51,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*ValidatorIndex).MarshalSSZ",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 28,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*ValidatorIndex).SizeSSZ",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Gwei).UnmarshalSSZ",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 63,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Gwei).MarshalSSZTo",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 51,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Gwei).MarshalSSZ",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 28,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/consensus-types/primitives.(*Gwei).SizeSSZ",
+   "group": "hand-written",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*BlobsBundle).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 10,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*BlobsBundle).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 296,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*BlobsBundle).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 591,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*BlobsBundleV2).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 10,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*BlobsBundleV2).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 296,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*BlobsBundleV2).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 591,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*BuilderDepositRequest).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*BuilderDepositRequest).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 156,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*BuilderDepositRequest).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 143,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*BuilderExitRequest).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*BuilderExitRequest).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 115,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*BuilderExitRequest).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 104,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ConsolidationRequest).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ConsolidationRequest).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 152,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ConsolidationRequest).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*DepositRequest).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*DepositRequest).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 174,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*DepositRequest).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 146,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayload).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 20,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayload).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 565,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayload).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 778,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadCapella).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 22,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadCapella).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 655,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadCapella).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 1001,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadDeneb).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 22,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 682,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadDeneb).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 1006,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadGloas).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 54,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadGloas).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 686,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadGloas).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 788,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadDenebAndBlobsBundle).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 85,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadDenebAndBlobsBundle).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 61: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadDenebAndBlobsBundle).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 176,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadDenebAndBlobsBundleV2).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 85,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadDenebAndBlobsBundleV2).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 61: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadDenebAndBlobsBundleV2).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 176,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadHeader).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 4,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadHeader).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 469,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadHeader).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 431,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadHeaderCapella).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 4,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadHeaderCapella).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 505,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadHeaderCapella).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 467,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadHeaderDeneb).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 4,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadHeaderDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 533,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadHeaderDeneb).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 472,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionRequests).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 12,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionRequests).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 670,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionRequests).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 737,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionRequestsGloas).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 20,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionRequestsGloas).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 1016,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionRequestsGloas).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 1179,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*Withdrawal).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*Withdrawal).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 126,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*Withdrawal).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 115,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*WithdrawalRequest).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*WithdrawalRequest).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 117,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*WithdrawalRequest).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 108,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ProgressiveTransactionList).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 13,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ProgressiveTransactionList).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 112,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ProgressiveTransactionList).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 83,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockAltair).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockAltair).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 233,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockAltair).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 250,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyAltair).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 112,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyAltair).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 314: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyAltair).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 1698,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateAltair).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 19,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateAltair).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 1869,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateAltair).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 1923,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ContributionAndProof).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ContributionAndProof).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 154,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ContributionAndProof).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 156,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientHeaderAltair).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientHeaderAltair).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 86,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientHeaderAltair).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 81,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientBootstrapAltair).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientBootstrapAltair).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 315,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientBootstrapAltair).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 207,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientUpdateAltair).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientUpdateAltair).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 595,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientUpdateAltair).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 448,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientFinalityUpdateAltair).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientFinalityUpdateAltair).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 377,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientFinalityUpdateAltair).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 329,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientOptimisticUpdateAltair).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientOptimisticUpdateAltair).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 249,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientOptimisticUpdateAltair).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 210,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockAltair).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockAltair).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 169,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockAltair).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedContributionAndProof).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedContributionAndProof).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 126,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedContributionAndProof).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 122,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SyncAggregate).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SyncAggregate).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 115,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SyncAggregate).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 106,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SyncAggregatorSelectionData).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SyncAggregatorSelectionData).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 72,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SyncAggregatorSelectionData).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 73,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SyncCommittee).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SyncCommittee).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 145,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SyncCommittee).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 137,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SyncCommitteeContribution).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SyncCommitteeContribution).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 174,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SyncCommitteeContribution).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 176,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SyncCommitteeMessage).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SyncCommitteeMessage).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 152,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SyncCommitteeMessage).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 179,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBellatrix).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBellatrix).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 233,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBellatrix).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 250,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyBellatrix).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 152,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyBellatrix).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 313: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyBellatrix).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 1780,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateBellatrix).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateBellatrix).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 1974,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateBellatrix).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 1953,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBellatrix).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBellatrix).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 233,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBellatrix).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 250,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyBellatrix).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 135,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyBellatrix).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 313: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyBellatrix).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 1780,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockBellatrix).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockBellatrix).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 169,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockBellatrix).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBlindedBeaconBlockBellatrix).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBlindedBeaconBlockBellatrix).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 169,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBlindedBeaconBlockBellatrix).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyCapella).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 158,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyCapella).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 313: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyCapella).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 2001,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockCapella).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockCapella).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 233,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockCapella).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 250,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateCapella).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 59,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateCapella).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 2189,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateCapella).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 2273,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyCapella).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 139,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyCapella).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 313: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyCapella).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 2001,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockCapella).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockCapella).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 233,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockCapella).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 250,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BLSToExecutionChange).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BLSToExecutionChange).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 129,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BLSToExecutionChange).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 143,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderBidCapella).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderBidCapella).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 183,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderBidCapella).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 176,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*HistoricalSummary).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*HistoricalSummary).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 115,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*HistoricalSummary).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 104,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientBootstrapCapella).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientBootstrapCapella).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 359,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientBootstrapCapella).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 230,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientFinalityUpdateCapella).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 103,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientFinalityUpdateCapella).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 473,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientFinalityUpdateCapella).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 377,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientHeaderCapella).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientHeaderCapella).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 228,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientHeaderCapella).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 229,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientOptimisticUpdateCapella).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientOptimisticUpdateCapella).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 294,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientOptimisticUpdateCapella).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 230,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientUpdateCapella).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 103,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientUpdateCapella).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 701,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientUpdateCapella).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 497,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockCapella).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockCapella).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 169,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockCapella).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBlindedBeaconBlockCapella).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBlindedBeaconBlockCapella).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 169,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBlindedBeaconBlockCapella).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBLSToExecutionChange).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBLSToExecutionChange).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 126,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBLSToExecutionChange).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 122,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBuilderBidCapella).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBuilderBidCapella).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 173,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBuilderBidCapella).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyDeneb).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 162,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 313: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyDeneb).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 2198,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockContentsDeneb).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 66,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockContentsDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 305,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockContentsDeneb).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 484,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockDeneb).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 233,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockDeneb).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 250,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateDeneb).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 59,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 2189,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateDeneb).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 2273,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyDeneb).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 142,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 313: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyDeneb).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 2198,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockDeneb).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 233,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockDeneb).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 250,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlobIdentifier).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlobIdentifier).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 79,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlobIdentifier).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 72,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlobSidecar).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlobSidecar).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 278,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlobSidecar).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 268,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlobSidecars).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 5,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlobSidecars).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 120,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlobSidecars).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 250,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderBidDeneb).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 42,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderBidDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 268,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderBidDeneb).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 371,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientHeaderDeneb).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientHeaderDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 228,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientHeaderDeneb).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 229,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientBootstrapDeneb).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientBootstrapDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 359,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientBootstrapDeneb).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 230,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientUpdateDeneb).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 103,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientUpdateDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 701,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientUpdateDeneb).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 497,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientFinalityUpdateDeneb).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 103,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientFinalityUpdateDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 473,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientFinalityUpdateDeneb).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 377,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientOptimisticUpdateDeneb).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientOptimisticUpdateDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 294,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientOptimisticUpdateDeneb).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 230,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockContentsDeneb).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 45,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockContentsDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 282,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockContentsDeneb).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 484,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockDeneb).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 169,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockDeneb).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBlindedBeaconBlockDeneb).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBlindedBeaconBlockDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 169,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBlindedBeaconBlockDeneb).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBuilderBidDeneb).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 60,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBuilderBidDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 173,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBuilderBidDeneb).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AggregateAttestationAndProofElectra).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AggregateAttestationAndProofElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 172,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AggregateAttestationAndProofElectra).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 180,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttestationElectra).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 4,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttestationElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 254,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttestationElectra).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 246,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttesterSlashingElectra).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 61,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttesterSlashingElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 194,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttesterSlashingElectra).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 176,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyElectra).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 193,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 313: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyElectra).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 2209,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockContentsElectra).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 66,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockContentsElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 305,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockContentsElectra).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 484,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockElectra).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 233,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockElectra).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 250,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateElectra).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 69,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 1525: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateElectra).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3080,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyElectra).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 173,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 313: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyElectra).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 2209,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockElectra).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 233,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockElectra).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 250,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderBidElectra).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 73,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderBidElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 357,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderBidElectra).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 443,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*IndexedAttestationElectra).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 5,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*IndexedAttestationElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 189,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*IndexedAttestationElectra).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 279,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientBootstrapElectra).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientBootstrapElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 359,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientBootstrapElectra).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 230,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientUpdateElectra).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 103,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientUpdateElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 701,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientUpdateElectra).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 497,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientFinalityUpdateElectra).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 103,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientFinalityUpdateElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 473,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientFinalityUpdateElectra).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 377,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PendingDeposit).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PendingDeposit).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 182,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PendingDeposit).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 182,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PendingConsolidation).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PendingConsolidation).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 79,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PendingConsolidation).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 107,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PendingPartialWithdrawal).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PendingPartialWithdrawal).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 99,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PendingPartialWithdrawal).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 109,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedAggregateAttestationAndProofElectra).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 58,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedAggregateAttestationAndProofElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 173,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedAggregateAttestationAndProofElectra).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockContentsElectra).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 45,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockContentsElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 282,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockContentsElectra).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 484,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockElectra).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 169,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockElectra).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBlindedBeaconBlockElectra).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBlindedBeaconBlockElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 169,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBlindedBeaconBlockElectra).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBuilderBidElectra).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBuilderBidElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 151,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBuilderBidElectra).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SingleAttestation).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SingleAttestation).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 181,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SingleAttestation).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 198,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockContentsFulu).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 66,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockContentsFulu).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 305,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockContentsFulu).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 484,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateFulu).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 69,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateFulu).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 1523: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateFulu).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3173,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockFulu).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockFulu).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 233,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockFulu).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 250,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DataColumnSidecar).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 13,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DataColumnSidecar).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 433,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DataColumnSidecar).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 726,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DataColumnsByRootIdentifier).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 5,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DataColumnsByRootIdentifier).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 118,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DataColumnsByRootIdentifier).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 229,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PartialDataColumnHeader).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 6,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PartialDataColumnHeader).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 234,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PartialDataColumnHeader).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 346,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PartialDataColumnPartsMetadata).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 5,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PartialDataColumnPartsMetadata).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 210,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PartialDataColumnPartsMetadata).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 232,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PartialDataColumnSidecar).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 26,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PartialDataColumnSidecar).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 455,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PartialDataColumnSidecar).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 842,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockContentsFulu).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 45,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockContentsFulu).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 282,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockContentsFulu).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 484,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockFulu).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockFulu).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 169,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockFulu).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBlindedBeaconBlockFulu).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBlindedBeaconBlockFulu).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 169,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBlindedBeaconBlockFulu).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*StatusV2).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*StatusV2).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 204,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*StatusV2).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 248,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientHeaderGloas).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientHeaderGloas).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 191,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientHeaderGloas).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 189,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientBootstrapGloas).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientBootstrapGloas).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 315,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientBootstrapGloas).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 206,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientUpdateGloas).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientUpdateGloas).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 595,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientUpdateGloas).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 447,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientFinalityUpdateGloas).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientFinalityUpdateGloas).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 377,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientFinalityUpdateGloas).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 327,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientOptimisticUpdateGloas).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientOptimisticUpdateGloas).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 249,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*LightClientOptimisticUpdateGloas).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 210,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttestationGloas).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 4,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttestationGloas).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 198,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttestationGloas).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 246,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AggregateAttestationAndProofGloas).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AggregateAttestationAndProofGloas).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 172,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AggregateAttestationAndProofGloas).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 180,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedAggregateAttestationAndProofGloas).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 58,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedAggregateAttestationAndProofGloas).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 173,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedAggregateAttestationAndProofGloas).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttesterSlashingGloas).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 61,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttesterSlashingGloas).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 194,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttesterSlashingGloas).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 176,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyGloas).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 206,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyGloas).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 313: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyGloas).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 2234,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockContentsGloas).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 90,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockContentsGloas).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 399,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockContentsGloas).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 557,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockGloas).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockGloas).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 233,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockGloas).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 250,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedExecutionPayloadEnvelope).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 53,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedExecutionPayloadEnvelope).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 290,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedExecutionPayloadEnvelope).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 324,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Builder).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Builder).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 201,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Builder).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 245,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPendingPayment).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPendingPayment).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 138,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPendingPayment).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 157,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPendingWithdrawal).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPendingWithdrawal).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 111,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPendingWithdrawal).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 143,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderConfig).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 94,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderConfig).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 347,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderConfig).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 68: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderEntry).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 68,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderEntry).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 357,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderEntry).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 435,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPreferencesRequest).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 58,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPreferencesRequest).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 190,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPreferencesRequest).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 150,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPreferences).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPreferences).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 52,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPreferences).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 64,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPreferencesEntry).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 64,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPreferencesEntry).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 244,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderPreferencesEntry).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 246,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DataColumnSidecarGloas).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 9,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DataColumnSidecarGloas).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 258,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DataColumnSidecarGloas).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 481,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ExecutionPayloadBid).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 6,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ExecutionPayloadBid).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 421,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ExecutionPayloadBid).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 596,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ExecutionPayloadEnvelope).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 114,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ExecutionPayloadEnvelope).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 341,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ExecutionPayloadEnvelope).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 292,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*IndexedAttestationGloas).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 5,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*IndexedAttestationGloas).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 177,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*IndexedAttestationGloas).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 279,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PartialDataColumnGroupID).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PartialDataColumnGroupID).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 89,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PartialDataColumnGroupID).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 106,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PartialDataColumnSidecarGloas).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 10,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PartialDataColumnSidecarGloas).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 228,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PartialDataColumnSidecarGloas).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 512,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PayloadAttestation).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PayloadAttestation).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 158,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PayloadAttestation).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 161,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PayloadAttestationData).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PayloadAttestationData).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 137,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PayloadAttestationData).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 139,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PayloadAttestationMessage).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PayloadAttestationMessage).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 154,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PayloadAttestationMessage).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 157,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ProposerPreferences).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ProposerPreferences).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 163,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ProposerPreferences).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 186,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PTCs).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PTCs).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 107,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PTCs).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 124,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderRequestAuth).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 4,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderRequestAuth).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 112,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderRequestAuth).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 133,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockGloas).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockGloas).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 169,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockGloas).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBlindedExecutionPayloadEnvelope).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 74,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBlindedExecutionPayloadEnvelope).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 173,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBlindedExecutionPayloadEnvelope).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedExecutionPayloadBid).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 40,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedExecutionPayloadBid).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 144,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedExecutionPayloadBid).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedExecutionPayloadEnvelope).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedExecutionPayloadEnvelope).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 151,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedExecutionPayloadEnvelope).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedExecutionPayloadEnvelopeContents).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 66,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedExecutionPayloadEnvelopeContents).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 305,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedExecutionPayloadEnvelopeContents).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 484,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedProposerPreferences).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedProposerPreferences).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 126,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedProposerPreferences).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 122,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBuilderRequestAuth).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBuilderRequestAuth).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 144,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBuilderRequestAuth).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyHeze).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 206,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyHeze).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 313: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyHeze).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 2234,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockContentsHeze).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 90,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockContentsHeze).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 399,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockContentsHeze).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 557,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockHeze).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockHeze).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 233,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockHeze).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 250,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ExecutionPayloadBidHeze).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 6,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ExecutionPayloadBidHeze).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 448,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ExecutionPayloadBidHeze).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 624,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*InclusionList).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 48,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*InclusionList).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 188,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*InclusionList).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 212,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockHeze).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockHeze).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 169,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockHeze).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedExecutionPayloadBidHeze).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 40,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedExecutionPayloadBidHeze).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 144,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedExecutionPayloadBidHeze).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedInclusionList).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 66,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedInclusionList).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 168,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedInclusionList).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlocksByRangeRequest).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlocksByRangeRequest).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 89,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlocksByRangeRequest).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 75,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlobSidecarsByRangeRequest).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlobSidecarsByRangeRequest).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 72,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlobSidecarsByRangeRequest).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 73,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderBid).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderBid).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 183,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderBid).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 176,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DataColumnSidecarsByRangeRequest).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 5,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DataColumnSidecarsByRangeRequest).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 136,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DataColumnSidecarsByRangeRequest).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 228,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DepositSnapshot).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 5,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DepositSnapshot).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 215,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DepositSnapshot).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 296,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ExecutionPayloadEnvelopesByRangeRequest).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ExecutionPayloadEnvelopesByRangeRequest).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 72,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ExecutionPayloadEnvelopesByRangeRequest).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 73,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*MetaDataV0).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*MetaDataV0).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 78,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*MetaDataV0).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 65,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*MetaDataV1).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*MetaDataV1).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 110,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*MetaDataV1).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 94,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*MetaDataV2).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*MetaDataV2).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 127,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*MetaDataV2).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 95,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBuilderBid).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBuilderBid).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 173,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBuilderBid).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedValidatorRegistrationV1).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedValidatorRegistrationV1).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 229,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedValidatorRegistrationV1).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 122,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ValidatorRegistrationV1).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ValidatorRegistrationV1).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 130,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ValidatorRegistrationV1).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 109,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ValidatorIdentity).SizeSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ValidatorIdentity).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 119,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ValidatorIdentity).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 141,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AggregateAttestationAndProof).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AggregateAttestationAndProof).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 172,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AggregateAttestationAndProof).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 180,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Attestation).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 4,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Attestation).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 214,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Attestation).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 218,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttestationData).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttestationData).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 237,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttestationData).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 243,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttesterSlashing).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 61,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttesterSlashing).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 194,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttesterSlashing).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 176,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlock).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 38,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlock).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 233,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlock).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 250,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBody).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 112,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBody).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 321: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBody).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 1643,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockHeader).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockHeader).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 195,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockHeader).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 217,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconState).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 41,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconState).MarshalSSZTo",
+   "group": "inventory",
+   "status": "ERR",
+   "directives": null,
+   "error": "line 1417: unknown register: riz"
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconState).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 2307,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Checkpoint).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Checkpoint).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 91,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Checkpoint).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 108,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Deposit).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Deposit).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 281,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Deposit).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 156,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Deposit_Data).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Deposit_Data).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 156,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Deposit_Data).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 143,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DepositMessage).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DepositMessage).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 117,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DepositMessage).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 109,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ENRForkID).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ENRForkID).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 117,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ENRForkID).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 127,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Eth1Data).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Eth1Data).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 119,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Eth1Data).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 108,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Fork).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Fork).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 117,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Fork).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 127,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ForkData).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ForkData).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 111,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ForkData).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 101,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*HistoricalBatch).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*HistoricalBatch).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 171,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*HistoricalBatch).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 182,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*IndexedAttestation).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 5,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*IndexedAttestation).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 189,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*IndexedAttestation).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 279,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PendingAttestation).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 4,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PendingAttestation).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 227,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PendingAttestation).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 256,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PowBlock).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PowBlock).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 153,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PowBlock).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 141,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ProposerSlashing).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ProposerSlashing).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 151,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ProposerSlashing).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 133,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedAggregateAttestationAndProof).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 58,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedAggregateAttestationAndProof).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 173,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedAggregateAttestationAndProof).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlock).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 57,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlock).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 169,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlock).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 140,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockHeader).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockHeader).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 126,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedBeaconBlockHeader).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 122,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedVoluntaryExit).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedVoluntaryExit).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 126,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SignedVoluntaryExit).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 120,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SigningData).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SigningData).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 116,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SigningData).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 105,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Status).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Status).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 185,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Status).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 210,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Validator).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Validator).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 227,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Validator).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 274,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ValidatorBalance).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ValidatorBalance).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 72,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ValidatorBalance).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 73,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*VoluntaryExit).SizeSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 3,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*VoluntaryExit).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 79,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*VoluntaryExit).UnmarshalSSZ",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 107,
+   "error": null
+  }
+ ]
+}

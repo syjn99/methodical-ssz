@@ -1,0 +1,60 @@
+{
+ "schema": "fvphase1c.desc/1",
+ "type": "PowBlock",
+ "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+ "ssz": {
+  "k": "container",
+  "names": [
+   "BlockHash",
+   "ParentHash",
+   "TotalDifficulty"
+  ],
+  "fields": [
+   {
+    "k": "byteVector",
+    "n": 32
+   },
+   {
+    "k": "byteVector",
+    "n": 32
+   },
+   {
+    "k": "byteVector",
+    "n": 32
+   }
+  ]
+ },
+ "fixed_size": 96,
+ "fixed_part_size": 96,
+ "fields": [
+  {
+   "name": "BlockHash",
+   "index": 0,
+   "offset": 0,
+   "width": 32,
+   "variable": false,
+   "kind": "byteVector",
+   "length": 32
+  },
+  {
+   "name": "ParentHash",
+   "index": 1,
+   "offset": 32,
+   "width": 32,
+   "variable": false,
+   "kind": "byteVector",
+   "length": 32
+  },
+  {
+   "name": "TotalDifficulty",
+   "index": 2,
+   "offset": 64,
+   "width": 32,
+   "variable": false,
+   "kind": "byteVector",
+   "length": 32
+  }
+ ],
+ "variable_order": [],
+ "reference": null
+}

@@ -1,0 +1,235 @@
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:6: can inline Epoch.HashTreeRootWith with cost 48 as: method(Epoch) func(*ssz.Hasher) error { (*ssz.Hasher).PutUint64(hh, uint64(e)); return nil }
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:150:6: can inline (*Epoch).SizeSSZ with cost 2 as: method(*Epoch) func() int { return 8 }
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:126:6: cannot inline (*Epoch).UnmarshalSSZ: function too complex: cost 113 exceeds budget 80
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:144:6: can inline (*Epoch).MarshalSSZ with cost 18 as: method(*Epoch) func() ([]byte, error) { marshalled := MarshalUint64([]byte{}, uint64(*e)); return marshalled, nil }
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:135:6: can inline (*Epoch).MarshalSSZTo with cost 39 as: method(*Epoch) func([]byte) ([]byte, error) { marshalled, err := ([]byte)(.autotmp_6), .autotmp_7; if err != nil { return nil, err }; return append(dst, marshalled...), nil }
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14: inlining call to ssz.(*Hasher).PutUint64
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14: inlining call to binary.littleEndian.PutUint64
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14: inlining call to ssz.(*Hasher).AppendBytes32
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:127:26: inlining call to (*Epoch).SizeSSZ
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:74: inlining call to (*Epoch).SizeSSZ
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20: inlining call to fmt.Errorf
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:130:28: inlining call to UnmarshalUint64
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20: inlining call to errors.New
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:130:28: inlining call to binary.littleEndian.Uint64
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:29: inlining call to MarshalUint64
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:29: inlining call to binary.littleEndian.AppendUint64
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:136:33: inlining call to (*Epoch).MarshalSSZ
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:136:33: inlining call to MarshalUint64
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:136:33: inlining call to binary.littleEndian.AppendUint64
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14: append(ssz.h.buf, ssz.b...) escapes to heap in Epoch.HashTreeRootWith:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14:   flow: {heap} ← &{storage for append(ssz.h.buf, ssz.b...)}:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14:     from append(ssz.h.buf, ssz.b...) (spill) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14:     from ssz.h.buf = append(ssz.h.buf, ssz.b...) (assign) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14: append(ssz.h.buf, ssz.zeroBytes[:32 - ssz.rest]...) escapes to heap in Epoch.HashTreeRootWith:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14:   flow: {heap} ← &{storage for append(ssz.h.buf, ssz.zeroBytes[:32 - ssz.rest]...)}:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14:     from append(ssz.h.buf, ssz.zeroBytes[:32 - ssz.rest]...) (spill) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14:     from ssz.h.buf = append(ssz.h.buf, ssz.zeroBytes[:32 - ssz.rest]...) (assign) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33: parameter hh leaks to {heap} for Epoch.HashTreeRootWith with derefs=1:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33:   flow: ssz.h ← hh:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33:     from ssz.h, ssz.i := hh, uint64(e) (assign-pair) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33:   flow: ssz.h ← ssz.h:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33:     from ssz.h, ssz.b := ssz.h, ssz.buf (assign-pair) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33:   flow: {temp} ← *ssz.h:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33:     from ssz.h.buf (dot of pointer) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33:     from append(ssz.h.buf, ssz.b...) (call parameter) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33:   flow: {heap} ← {temp}:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33:     from ssz.h.buf = append(ssz.h.buf, ssz.b...) (assign) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33: leaking param content: hh
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14: make([]byte, 8) does not escape
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14: append escapes to heap
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:121:14: append escapes to heap
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:74: 8 escapes to heap in (*Epoch).UnmarshalSSZ:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:74:   flow: {storage for ... argument} ← &{storage for 8}:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:74:     from 8 (spill) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:74
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:74:     from ... argument (slice-literal-element) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:74:   flow: fmt.a ← &{storage for ... argument}:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:74:     from ... argument (spill) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:74:     from fmt.format, fmt.a := "expected buffer of length %d received %d", ... argument (assign-pair) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:74:   flow: {heap} ← *fmt.a:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:74:     from fmt.errorf(fmt.format, fmt.a...) (call parameter) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:81: len(buf) escapes to heap in (*Epoch).UnmarshalSSZ:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:81:   flow: {storage for ... argument} ← &{storage for len(buf)}:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:81:     from len(buf) (spill) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:81
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:81:     from ... argument (slice-literal-element) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:81:   flow: fmt.a ← &{storage for ... argument}:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:81:     from ... argument (spill) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:81:     from fmt.format, fmt.a := "expected buffer of length %d received %d", ... argument (assign-pair) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:81:   flow: {heap} ← *fmt.a:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:81:     from fmt.errorf(fmt.format, fmt.a...) (call parameter) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20: &errors.errorString{...} escapes to heap in (*Epoch).UnmarshalSSZ:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20:   flow: ~r0 ← &{storage for &errors.errorString{...}}:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20:     from &errors.errorString{...} (spill) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20:     from &errors.errorString{...} (interface-converted) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20:     from ~r0 = &errors.errorString{...} (assign-pair) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20:   flow: fmt.err ← ~r0:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20:     from fmt.err = ~r0 (assign-pair) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20:   flow: ~r0 ← fmt.err:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20:     from return fmt.err (return) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:3
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:126:7: e does not escape
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:126:30: buf does not escape
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20: ... argument does not escape
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:74: 8 escapes to heap
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:81: len(buf) escapes to heap
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:128:20: &errors.errorString{...} escapes to heap
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:140:15: append(dst, marshalled...) escapes to heap in (*Epoch).MarshalSSZTo:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:140:15:   flow: ~r0 ← &{storage for append(dst, marshalled...)}:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:140:15:     from append(dst, marshalled...) (spill) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:140:15
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:140:15:     from return append(dst, marshalled...), nil (return) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:140:2
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:135:30: parameter dst leaks to ~r0 for (*Epoch).MarshalSSZTo with derefs=0:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:135:30:   flow: {temp} ← dst:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:135:30:     from append(dst, marshalled...) (call parameter) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:140:15
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:135:30:   flow: ~r0 ← {temp}:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:135:30:     from return append(dst, marshalled...), nil (return) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:140:2
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:135:7: e does not escape
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:135:30: leaking param: dst to result ~r0 level=0
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:136:33: []byte{} does not escape
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:136:33: append does not escape
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:140:15: append escapes to heap
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:29: append(binary.b, byte(binary.v), byte(binary.v >> uint(8)), byte(binary.v >> uint(16)), byte(binary.v >> uint(24)), byte(binary.v >> uint(32)), byte(binary.v >> uint(40)), byte(binary.v >> uint(48)), byte(binary.v >> uint(56))) escapes to heap in (*Epoch).MarshalSSZ:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:29:   flow: ~r0 ← &{storage for append(binary.b, byte(binary.v), byte(binary.v >> uint(8)), byte(binary.v >> uint(16)), byte(binary.v >> uint(24)), byte(binary.v >> uint(32)), byte(binary.v >> uint(40)), byte(binary.v >> uint(48)), byte(binary.v >> uint(56)))}:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:29:     from append(binary.b, byte(binary.v), byte(binary.v >> uint(8)), byte(binary.v >> uint(16)), byte(binary.v >> uint(24)), byte(binary.v >> uint(32)), byte(binary.v >> uint(40)), byte(binary.v >> uint(48)), byte(binary.v >> uint(56))) (spill) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:29
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:29:     from ~r0 = append(binary.b, byte(binary.v), byte(binary.v >> uint(8)), byte(binary.v >> uint(16)), byte(binary.v >> uint(24)), byte(binary.v >> uint(32)), byte(binary.v >> uint(40)), byte(binary.v >> uint(48)), byte(binary.v >> uint(56))) (assign-pair) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:29
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:29:   flow: ~r0 ← ~r0:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:29:     from ~r0 = ~r0 (assign-pair) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:29
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:29:   flow: marshalled ← ~r0:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:29:     from marshalled := ~r0 (assign) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:13
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:29:   flow: ~r0 ← marshalled:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:29:     from return marshalled, nil (return) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:146:2
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:36: []byte{} escapes to heap in (*Epoch).MarshalSSZ:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:36:   flow: dst ← &{storage for []byte{}}:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:36:     from []byte{} (spill) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:36
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:36:     from dst, i := []byte{}, uint64(*e) (assign-pair) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:29
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:36:   flow: binary.b ← dst:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:36:     from _, binary.b, binary.v := 0, dst, i (assign-pair) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:29
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:36:   flow: {temp} ← binary.b:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:36:     from append(binary.b, byte(binary.v), byte(binary.v >> uint(8)), byte(binary.v >> uint(16)), byte(binary.v >> uint(24)), byte(binary.v >> uint(32)), byte(binary.v >> uint(40)), byte(binary.v >> uint(48)), byte(binary.v >> uint(56))) (call parameter) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:29
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:36:   flow: ~r0 ← {temp}:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:36:     from ~r0 = append(binary.b, byte(binary.v), byte(binary.v >> uint(8)), byte(binary.v >> uint(16)), byte(binary.v >> uint(24)), byte(binary.v >> uint(32)), byte(binary.v >> uint(40)), byte(binary.v >> uint(48)), byte(binary.v >> uint(56))) (assign-pair) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:29
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:36:   flow: ~r0 ← ~r0:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:36:     from ~r0 = ~r0 (assign-pair) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:29
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:36:   flow: marshalled ← ~r0:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:36:     from marshalled := ~r0 (assign) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:13
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:36:   flow: ~r0 ← marshalled:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:36:     from return marshalled, nil (return) at github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:146:2
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:144:7: e does not escape
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:36: []byte{} escapes to heap
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:145:29: append escapes to heap
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:150:7: e does not escape
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33: parameter hh leaks to {heap} for (*Epoch).HashTreeRootWith with derefs=1:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33:   flow: hh ← hh:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33:     from e, hh := e, hh (assign-pair) at <autogenerated>:1
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33:   flow: ssz.h ← hh:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33:     from ssz.h, ssz.i := hh, uint64(e) (assign-pair) at <autogenerated>:1
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33:   flow: ssz.h ← ssz.h:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33:     from ssz.h, ssz.b := ssz.h, ssz.buf (assign-pair) at <autogenerated>:1
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33:   flow: {temp} ← *ssz.h:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33:     from ssz.h.buf (dot of pointer) at <autogenerated>:1
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33:     from append(ssz.h.buf, ssz.b...) (call parameter) at <autogenerated>:1
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33:   flow: {heap} ← {temp}:
+github.com/OffchainLabs/prysm/v7/consensus-types/primitives/epoch.go:120:33:     from ssz.h.buf = append(ssz.h.buf, ssz.b...) (assign) at <autogenerated>:1
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1959:6: cannot inline (*Checkpoint).MarshalSSZTo: function too complex: cost 161 exceeds budget 80
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1976:6: cannot inline (*Checkpoint).UnmarshalSSZ: function too complex: cost 202 exceeds budget 80
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1948:6: can inline (*Checkpoint).SizeSSZ with cost 7 as: method(*Checkpoint) func() int { size := 40; return size }
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1954:6: cannot inline (*Checkpoint).MarshalSSZ: function too complex: cost 86 exceeds budget 80
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1997:6: cannot inline (*Checkpoint).HashTreeRoot: function too complex: cost 326 exceeds budget 80
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1963:36: inlining call to primitives.(*Epoch).MarshalSSZTo
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1964:25: inlining call to fmt.Errorf
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1963:36: inlining call to primitives.(*Epoch).MarshalSSZ
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1964:25: inlining call to errors.New
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1963:36: inlining call to primitives.MarshalUint64
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1963:36: inlining call to binary.littleEndian.AppendUint64
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1988:20: inlining call to fmt.Errorf
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1988:20: inlining call to errors.New
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1942:20: inlining call to fmt.Errorf
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1942:20: inlining call to errors.New
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1955:31: inlining call to (*Checkpoint).SizeSSZ
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1964:25: &errors.errorString{...} escapes to heap in (*Checkpoint).MarshalSSZTo:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1964:25:   flow: ~r0 ← &{storage for &errors.errorString{...}}:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1964:25:     from &errors.errorString{...} (spill) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1964:25
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1964:25:     from &errors.errorString{...} (interface-converted) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1964:25
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1964:25:     from ~r0 = &errors.errorString{...} (assign-pair) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1964:25
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1964:25:   flow: fmt.err ← ~r0:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1964:25:     from fmt.err = ~r0 (assign-pair) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1964:25
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1964:25:   flow: ~r1 ← fmt.err:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1964:25:     from return nil, fmt.err (return) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1964:3
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1959:35: parameter dst leaks to ~r0 for (*Checkpoint).MarshalSSZTo with derefs=0:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1959:35:   flow: ~r0 ← dst:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1959:35:     from return dst, err (return) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1973:2
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1971:14: append(dst, c.Root...) escapes to heap in (*Checkpoint).MarshalSSZTo:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1971:14:   flow: dst ← &{storage for append(dst, c.Root...)}:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1971:14:     from append(dst, c.Root...) (spill) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1971:14
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1971:14:     from dst = append(dst, c.Root...) (assign) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1971:6
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1971:14:   flow: ~r0 ← dst:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1971:14:     from return dst, err (return) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1973:2
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1963:36: append(primitives.dst, primitives.marshalled...) escapes to heap in (*Checkpoint).MarshalSSZTo:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1963:36:   flow: ~r0 ← &{storage for append(primitives.dst, primitives.marshalled...)}:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1963:36:     from append(primitives.dst, primitives.marshalled...) (spill) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1963:36
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1963:36:     from ~r0, ~r1 = append(primitives.dst, primitives.marshalled...), nil (assign-pair) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1963:36
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1963:36:   flow: .autotmp_5 ← ~r0:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1963:36:   flow: dst ← .autotmp_5:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1963:36:     from dst, err = ([]byte)(.autotmp_5), .autotmp_6 (assign-pair) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1963:14
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1963:36:   flow: ~r0 ← dst:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1963:36:     from return dst, err (return) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1973:2
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1959:7: c does not escape
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1959:35: leaking param: dst to result ~r0 level=0
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1963:36: []byte{} does not escape
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1963:36: append does not escape
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1963:36: append escapes to heap
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1964:25: ... argument does not escape
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1964:25: &errors.errorString{...} escapes to heap
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1971:14: append escapes to heap
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1992:15: make([]byte, 0, 32) escapes to heap in (*Checkpoint).UnmarshalSSZ:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1992:15:   flow: {heap} ← &{storage for make([]byte, 0, 32)}:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1992:15:     from make([]byte, 0, 32) (spill) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1992:15
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1992:15:     from c.Root = make([]byte, 0, 32) (assign) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1992:9
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1993:17: append(c.Root, sszSlice1...) escapes to heap in (*Checkpoint).UnmarshalSSZ:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1993:17:   flow: {heap} ← &{storage for append(c.Root, sszSlice1...)}:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1993:17:     from append(c.Root, sszSlice1...) (spill) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1993:17
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1993:17:     from c.Root = append(c.Root, sszSlice1...) (assign) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1993:9
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1976:7: parameter c leaks to {heap} for (*Checkpoint).UnmarshalSSZ with derefs=1:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1976:7:   flow: {temp} ← *c:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1976:7:     from c.Root (dot of pointer) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1993:19
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1976:7:     from append(c.Root, sszSlice1...) (call parameter) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1993:17
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1976:7:   flow: {heap} ← {temp}:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1976:7:     from c.Root = append(c.Root, sszSlice1...) (assign) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1993:9
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1988:20: &errors.errorString{...} escapes to heap in (*Checkpoint).UnmarshalSSZ:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1988:20:   flow: ~r0 ← &{storage for &errors.errorString{...}}:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1988:20:     from &errors.errorString{...} (spill) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1988:20
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1988:20:     from &errors.errorString{...} (interface-converted) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1988:20
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1988:20:     from ~r0 = &errors.errorString{...} (assign-pair) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1988:20
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1988:20:   flow: fmt.err ← ~r0:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1988:20:     from fmt.err = ~r0 (assign-pair) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1988:20
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1988:20:   flow: ~r0 ← fmt.err:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1988:20:     from return fmt.err (return) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1988:3
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1976:7: leaking param content: c
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1976:35: buf does not escape
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1988:20: ... argument does not escape
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1988:20: &errors.errorString{...} escapes to heap
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1992:15: make([]byte, 0, 32) escapes to heap
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1993:17: append escapes to heap
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1942:20: &errors.errorString{...} escapes to heap in (*BeaconState).HashTreeRootWith:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1942:20:   flow: ~r0 ← &{storage for &errors.errorString{...}}:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1942:20:     from &errors.errorString{...} (spill) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1942:20
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1942:20:     from &errors.errorString{...} (interface-converted) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1942:20
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1942:20:     from ~r0 = &errors.errorString{...} (assign-pair) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1942:20
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1942:20:   flow: fmt.err ← ~r0:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1942:20:     from fmt.err = ~r0 (assign-pair) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1942:20
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1942:20:   flow: err ← fmt.err:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1942:20:     from return fmt.err (return) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1942:3
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1942:20: ... argument does not escape
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1942:20: &errors.errorString{...} escapes to heap
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1948:7: c does not escape
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1955:13: make([]byte, 40) escapes to heap in (*Checkpoint).MarshalSSZ:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1955:13:   flow: buf ← &{storage for make([]byte, 40)}:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1955:13:     from make([]byte, 40) (spill) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1955:13
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1955:13:     from buf := make([]byte, 40) (assign) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1955:6
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1955:13:   flow: {temp} ← buf:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1955:13:     from buf[:0] (slice) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1956:27
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1955:13:     from (*Checkpoint).MarshalSSZTo(c, buf[:0]) (call parameter) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1956:23
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1955:13:   flow: .autotmp_4 ← {temp}:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1955:13:   flow: ~r0 ← .autotmp_4:
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1955:13:     from return ([]byte)(.autotmp_4), .autotmp_5 (return) at github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1956:2
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1954:7: c does not escape
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1955:13: make([]byte, 40) escapes to heap
+github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go:1997:7: c does not escape

@@ -1,0 +1,226 @@
+name = "fvkraken"
+defaultTargets = ["Fv", "Fv1", "Fk"]
+
+[leanOptions]
+autoImplicit = false
+
+[[require]]
+name = "Kraken"
+git = "https://github.com/AeneasVerif/kraken"
+rev = "6064eecbb730a1152aa6ed891a155d3a92a4f298"
+
+[[require]]
+name = "EthLib"
+git = "https://github.com/ethereum/EthLib.git"
+rev = "862185680cf23ccf54d44eb25b63b26c5020597b"
+
+# Spec files (EthLib only): Fv/Spec.lean, Fv1/SpecScalars.lean, SpecList.lean,
+# Transfer.lean. Copied unchanged in their Lean code from the earlier FV phases.
+[[lean_lib]]
+name = "Fv"
+roots = ["Fv.Spec"]
+
+[[lean_lib]]
+name = "Fv1"
+roots = ["Fv1.SpecScalars", "Fv1.SpecList", "Fv1.SpecFixedVec", "Fv1.SpecBitVec", "Fv1.SpecNested", "Fv1.SpecListC", "Fv1.SpecPrysm", "Fv1.SpecBitList", "Fv1.Transfer"]
+
+# Rebuild tracking (con-agua ConAgua/AsmFile/Include.lean): the files that
+# `include_x64_rt` and `data_include` read are not in the import graph. As `needs` of the Fk library their
+# contents are part of the input hash of every Fk module, so Lake rebuilds the proofs
+# when a converted .S file changes (a `needs` invalidates the whole library).
+[[input_dir]]
+name = "fk_norm_S"
+path = "../link/out/norm"
+text = true
+
+[[input_dir]]
+name = "fk_data"
+path = "../link/out/data"
+text = true
+
+[[input_dir]]
+name = "fk_lean_S"
+path = "Fk"
+text = true
+filter = {extension = ["S"]}
+
+[[lean_lib]]
+name = "Fk"
+needs = ["fk_norm_S", "fk_data", "fk_lean_S"]
+
+# Real v1alpha1.Checkpoint encoder/decoder and the
+# primitives.Epoch decoder on the Go 1.26.10 ELF. Not a default target; build one module at a time,
+# e.g. `lake build E2e.Epoch`. The .S and data files of this namespace are inputs of every E2e module.
+[[input_dir]]
+name = "e2e_norm_S"
+path = "../prysm/go1.26.10/e2e/link/norm"
+text = true
+
+[[input_dir]]
+name = "e2e_data"
+path = "../prysm/go1.26.10/e2e/link/data"
+text = true
+
+[[lean_lib]]
+name = "E2e"
+globs = ["E2e.+"]
+needs = ["e2e_norm_S", "e2e_data"]
+
+# Real v1alpha1.AttestationData and the
+# primitives.Slot / CommitteeIndex decoders on the same Go 1.26.10 ELF. Own library so that the reviewed E2e
+# modules and their traces do not change; E2eAd modules import E2e modules. Build one module at a time.
+[[input_dir]]
+name = "e2e_ad_norm_S"
+path = "../prysm/go1.26.10/e2e/ad/link/norm"
+text = true
+
+[[input_dir]]
+name = "e2e_ad_data"
+path = "../prysm/go1.26.10/e2e/ad/link/data"
+text = true
+
+# witness-only runtime model: the 72-byte bump newobject E2eAd/BumpNew72.S
+[[input_dir]]
+name = "e2e_ad_lean_S"
+path = "E2eAd"
+text = true
+filter = {extension = ["S"]}
+
+[[lean_lib]]
+name = "E2eAd"
+globs = ["E2eAd.+"]
+needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S"]
+
+# Parameterized
+# segment lemmas (uint64 decoder body, 32-byte field segments), their in-sample instances and the generated
+# instance. Own library: the E2e / E2eAd modules and statements do not change. Build one module at a time.
+[[lean_lib]]
+name = "E2eScal"
+globs = ["E2eScal.+"]
+needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S"]
+
+# List/vector hand proofs: real v1alpha1.SyncAggregate and v1alpha1.SyncCommittee decoders on the
+# same Go 1.26.10 ELF. Own library: the E2e / E2eAd / E2eScal modules do not change. Build one module at a time,
+# e.g. `lake build E2eList.StmtSa`. The .S and data files of prysm/go1.26.10/e2e/lv/link are inputs.
+[[input_dir]]
+name = "lv_norm_S"
+path = "../prysm/go1.26.10/e2e/lv/link/norm"
+text = true
+
+[[input_dir]]
+name = "lv_data"
+path = "../prysm/go1.26.10/e2e/lv/link/data"
+text = true
+
+# IndexedAttestation: the link set lv/link-t3 (after the conv.py fix that writes a negative 32-bit displacement in signed form)
+[[input_dir]]
+name = "lv_t3_norm_S"
+path = "../prysm/go1.26.10/e2e/lv/link-t3/norm"
+text = true
+
+[[input_dir]]
+name = "lv_t3_data"
+path = "../prysm/go1.26.10/e2e/lv/link-t3/data"
+text = true
+
+# witness-only runtime model: the type-dispatching bump makeslice E2eList/BumpAllocT.S
+[[input_dir]]
+name = "lv_lean_S"
+path = "E2eList"
+text = true
+filter = {extension = ["S"]}
+
+[[lean_lib]]
+name = "E2eList"
+globs = ["E2eList.+"]
+needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data", "lv_lean_S",
+  "lv_t3_norm_S", "lv_t3_data"]
+
+# Port of the SyncCommittee proof to the real v1alpha1.HistoricalBatch decoder (same Go 1.26.10 ELF).
+# Own library; it imports E2eList and does not change it. The .S file of prysm/go1.26.10/e2e/lv/link-hb is an input.
+[[input_dir]]
+name = "lv_hb_norm_S"
+path = "../prysm/go1.26.10/e2e/lv/link-hb/norm"
+text = true
+
+[[lean_lib]]
+name = "E2eHb"
+globs = ["E2eHb.+"]
+needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data", "lv_lean_S",
+  "lv_t3_norm_S", "lv_t3_data", "lv_hb_norm_S"]
+
+# Segment and list lemmas stated for a variable size / count (generalized once), their fixed instances
+# as corollaries, and the next decoder ported with them. Own library; it imports E2eList / E2eScal / E2eHb.
+[[lean_lib]]
+name = "E2eSeg"
+globs = ["E2eSeg.+"]
+needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data", "lv_lean_S",
+  "lv_t3_norm_S", "lv_t3_data", "lv_hb_norm_S"]
+
+# Proof of use: the real v1alpha1.Deposit decoder, proved with the E2eSeg general lemmas.
+[[input_dir]]
+name = "lv_dep_norm_S"
+path = "../prysm/go1.26.10/e2e/lv/link-dep/norm"
+text = true
+
+[[input_dir]]
+name = "lv_dep_data"
+path = "../prysm/go1.26.10/e2e/lv/link-dep/data"
+text = true
+
+[[lean_lib]]
+name = "E2eDep"
+globs = ["E2eDep.+"]
+needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data", "lv_lean_S",
+  "lv_t3_norm_S", "lv_t3_data", "lv_hb_norm_S", "lv_dep_norm_S", "lv_dep_data"]
+
+# Deposit witnesses and their runtime model (the 120-byte bump newobject E2eDepW/BumpNew120.S)
+[[input_dir]]
+name = "lv_dep_lean_S"
+path = "E2eDepW"
+text = true
+filter = {extension = ["S"]}
+
+[[lean_lib]]
+name = "E2eDepW"
+globs = ["E2eDepW.+"]
+needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data", "lv_lean_S",
+  "lv_t3_norm_S", "lv_t3_data", "lv_hb_norm_S", "lv_dep_norm_S", "lv_dep_data", "lv_dep_lean_S"]
+
+# First variable-length encoder hand proof: real v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo on
+# the same Go 1.26.10 ELF. Own library: the E2e / E2eAd / E2eScal / E2eList modules do not change. Build one module
+# at a time, e.g. `lake build E2eEnc.StmtEnc`. The .S files of prysm/go1.26.10/e2e/lv/link-enc are inputs.
+[[input_dir]]
+name = "enc_norm_S"
+path = "../prysm/go1.26.10/e2e/lv/link-enc/norm"
+text = true
+
+[[lean_lib]]
+name = "E2eEnc"
+globs = ["E2eEnc.+"]
+needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data", "lv_lean_S",
+  "lv_t3_norm_S", "lv_t3_data", "enc_norm_S"]
+
+# Round trip: the real v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ (link set lv/link-dec), the witness-only
+# runtime models of this library (E2eDec/*.S) and the decoder→encoder composition. Own library: no other module changes.
+[[input_dir]]
+name = "dcd_norm_S"
+path = "../prysm/go1.26.10/e2e/lv/link-dec/norm"
+text = true
+
+[[input_dir]]
+name = "dcd_data"
+path = "../prysm/go1.26.10/e2e/lv/link-dec/data"
+text = true
+
+[[input_dir]]
+name = "dcd_lean_S"
+path = "E2eDec"
+text = true
+filter = {extension = ["S"]}
+
+[[lean_lib]]
+name = "E2eDec"
+globs = ["E2eDec.+"]
+needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data", "lv_lean_S",
+  "lv_t3_norm_S", "lv_t3_data", "enc_norm_S", "dcd_norm_S", "dcd_data", "dcd_lean_S"]

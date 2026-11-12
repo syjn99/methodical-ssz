@@ -1,0 +1,59 @@
+{
+ "schema": "fvphase1c.desc/1",
+ "type": "Eth1Data",
+ "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+ "ssz": {
+  "k": "container",
+  "names": [
+   "DepositRoot",
+   "DepositCount",
+   "BlockHash"
+  ],
+  "fields": [
+   {
+    "k": "byteVector",
+    "n": 32
+   },
+   {
+    "k": "uint",
+    "w": 8
+   },
+   {
+    "k": "byteVector",
+    "n": 32
+   }
+  ]
+ },
+ "fixed_size": 72,
+ "fixed_part_size": 72,
+ "fields": [
+  {
+   "name": "DepositRoot",
+   "index": 0,
+   "offset": 0,
+   "width": 32,
+   "variable": false,
+   "kind": "byteVector",
+   "length": 32
+  },
+  {
+   "name": "DepositCount",
+   "index": 1,
+   "offset": 32,
+   "width": 8,
+   "variable": false,
+   "kind": "uint"
+  },
+  {
+   "name": "BlockHash",
+   "index": 2,
+   "offset": 40,
+   "width": 32,
+   "variable": false,
+   "kind": "byteVector",
+   "length": 32
+  }
+ ],
+ "variable_order": [],
+ "reference": null
+}

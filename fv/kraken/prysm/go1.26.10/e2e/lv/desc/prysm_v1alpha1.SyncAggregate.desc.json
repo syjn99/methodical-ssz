@@ -1,0 +1,46 @@
+{
+ "schema": "fvphase1c.desc/1",
+ "type": "SyncAggregate",
+ "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+ "ssz": {
+  "k": "container",
+  "names": [
+   "SyncCommitteeBits",
+   "SyncCommitteeSignature"
+  ],
+  "fields": [
+   {
+    "k": "bitVector",
+    "n": 512
+   },
+   {
+    "k": "byteVector",
+    "n": 96
+   }
+  ]
+ },
+ "fixed_size": 160,
+ "fixed_part_size": 160,
+ "fields": [
+  {
+   "name": "SyncCommitteeBits",
+   "index": 0,
+   "offset": 0,
+   "width": 64,
+   "variable": false,
+   "kind": "bitVector",
+   "length": 512
+  },
+  {
+   "name": "SyncCommitteeSignature",
+   "index": 1,
+   "offset": 64,
+   "width": 96,
+   "variable": false,
+   "kind": "byteVector",
+   "length": 96
+  }
+ ],
+ "variable_order": [],
+ "reference": null
+}

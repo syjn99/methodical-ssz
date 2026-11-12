@@ -1,0 +1,339 @@
+[
+ {
+  "id": "g4-nv-wat-control",
+  "module": "E2eScal/NopView.lean",
+  "theorem": "wat",
+  "kind": "control"
+ },
+ {
+  "id": "g4-nv-wskip-stmt-nostep",
+  "module": "E2eScal/NopView.lean",
+  "theorem": "wskip",
+  "kind": "stmt",
+  "old": "⟨s, Host.addrOf (j + nopPos q i + 1)⟩",
+  "new": "⟨s, Host.addrOf (j + nopPos q i)⟩"
+ },
+ {
+  "id": "g4-sk-ldv-control",
+  "module": "E2eScal/StepK.lean",
+  "theorem": "kstep_ldv",
+  "kind": "control"
+ },
+ {
+  "id": "g4-sk-ldv-stmt-reg",
+  "module": "E2eScal/StepK.lean",
+  "theorem": "kstep_ldv",
+  "kind": "stmt",
+  "old": "⟨setR s rD v, Host.addrOf e⟩",
+  "new": "⟨setR s rB v, Host.addrOf e⟩"
+ },
+ {
+  "id": "g4-sk-add-stmt-op",
+  "module": "E2eScal/StepK.lean",
+  "theorem": "kstep_add",
+  "kind": "stmt",
+  "old": "(s.regs.get64 rD + imm.toBitVec), zmms",
+  "new": "(s.regs.get64 rD - imm.toBitVec), zmms"
+ },
+ {
+  "id": "g4-sk-st-stmt-src",
+  "module": "E2eScal/StepK.lean",
+  "theorem": "kstep_st",
+  "kind": "stmt",
+  "old": "(@BitVec.toInt 64 (s.regs.get64 rS))",
+  "new": "(@BitVec.toInt 64 (s.regs.get64 rB))"
+ },
+ {
+  "id": "g4-sk-movi-stmt-width",
+  "module": "E2eScal/StepK.lean",
+  "theorem": "kstep_movi",
+  "kind": "stmt",
+  "old": "BitVec.truncate 32 imm.toBitVec",
+  "new": "BitVec.truncate 16 imm.toBitVec"
+ },
+ {
+  "id": "g4-sk-jmp-stmt-target",
+  "module": "E2eScal/StepK.lean",
+  "theorem": "kstep_jmp",
+  "kind": "stmt",
+  "old": "(hk : Eventually (step1 Host.exe) final ⟨s, Host.addrOf jl⟩)",
+  "new": "(hk : Eventually (step1 Host.exe) final ⟨s, Host.addrOf (jl + 1)⟩)"
+ },
+ {
+  "id": "g4-sk-movrr-stmt-src",
+  "module": "E2eScal/StepK.lean",
+  "theorem": "kstep_mov_rr",
+  "kind": "stmt",
+  "old": "⟨setR s rD (s.regs.get64 rS), Host.addrOf e⟩",
+  "new": "⟨setR s rD (s.regs.get64 rD), Host.addrOf e⟩"
+ },
+ {
+  "id": "g4-sk-lea-stmt-disp",
+  "module": "E2eScal/StepK.lean",
+  "theorem": "kstep_lea",
+  "kind": "stmt",
+  "old": "(s.regs.get64 rB + disp.toBitVec)",
+  "new": "(s.regs.get64 rB)"
+ },
+ {
+  "id": "g4-cr-callw-control",
+  "module": "E2eScal/CallReg.lean",
+  "theorem": "calldec_seg_w",
+  "kind": "control"
+ },
+ {
+  "id": "g4-cr-callw-stmt-ret",
+  "module": "E2eScal/CallReg.lean",
+  "theorem": "calldec_seg_w",
+  "kind": "stmt",
+  "old": "Host.addrOf (jc + 1)).toBitVec.toInt).At aRet",
+  "new": "Host.addrOf (j + 1)).toBitVec.toInt).At aRet"
+ },
+ {
+  "id": "g4-cr-callw-stmt-jc",
+  "module": "E2eScal/CallReg.lean",
+  "theorem": "calldec_seg_w",
+  "kind": "stmt",
+  "old": "(hjc : j + nopPos q 0 = jc)",
+  "new": "(hjc : j + nopPos q 1 = jc)"
+ },
+ {
+  "id": "g4-sr-bytes-control",
+  "module": "E2eScal/SegReg.lean",
+  "theorem": "bytesdec_g4_32_rdx_rax",
+  "kind": "control"
+ },
+ {
+  "id": "g4-sr-bytes-stmt-reg",
+  "module": "E2eScal/SegReg.lean",
+  "theorem": "bytesdec_g4_32_rdx_rax",
+  "kind": "stmt",
+  "old": "BytesDecG4 32 Reg64.rdx Reg64.rax",
+  "new": "BytesDecG4 32 Reg64.rdx Reg64.rdx"
+ },
+ {
+  "id": "g4-sr-bytes-stmt-size",
+  "module": "E2eScal/SegReg.lean",
+  "theorem": "bytesdec_g4_32_rdx_rax",
+  "kind": "stmt",
+  "old": "BytesDecG4 32 Reg64.rdx Reg64.rax",
+  "new": "BytesDecG4 48 Reg64.rdx Reg64.rax"
+ },
+ {
+  "id": "g4-ex-s82-control",
+  "module": "E2eScal/Gen4Examples.lean",
+  "theorem": "sm_g4_s82",
+  "kind": "control",
+  "code_def": "SmUnmarshal",
+  "code_ns": "E2eScal.H5Code",
+  "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
+ },
+ {
+  "id": "g4-ex-s82-stmt-disp",
+  "module": "E2eScal/Gen4Examples.lean",
+  "theorem": "sm_g4_s82",
+  "kind": "stmt",
+  "old": "(ha : base + (120 : Int64).toBitVec = a)",
+  "new": "(ha : base + (128 : Int64).toBitVec = a)"
+ },
+ {
+  "id": "g4-ex-s82-code-slot",
+  "module": "E2eScal/Gen4Examples.lean",
+  "theorem": "sm_g4_s82",
+  "kind": "code",
+  "line": 83,
+  "old": "  mov 0x78(%rsp),%rbx",
+  "new": "  mov 0x70(%rsp),%rbx",
+  "code_def": "SmUnmarshal",
+  "code_ns": "E2eScal.H5Code",
+  "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
+ },
+ {
+  "id": "g4-ex-s86-code-reg",
+  "module": "E2eScal/Gen4Examples.lean",
+  "theorem": "sm_g4_s86",
+  "kind": "code",
+  "line": 87,
+  "old": "  add $0x28,%rax",
+  "new": "  add $0x28,%rdx",
+  "code_def": "SmUnmarshal",
+  "code_ns": "E2eScal.H5Code",
+  "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
+ },
+ {
+  "id": "g4-ex-s87-code-clobber",
+  "module": "E2eScal/Gen4Examples.lean",
+  "theorem": "sm_g4_s87",
+  "kind": "code",
+  "line": 88,
+  "old": "  mov $0x8,%ecx",
+  "new": "  mov $0x8,%eax",
+  "code_def": "SmUnmarshal",
+  "code_ns": "E2eScal.H5Code",
+  "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
+ },
+ {
+  "id": "g4-ex-vicall-stmt-ret",
+  "module": "E2eScal/Gen4Examples.lean",
+  "theorem": "sm_g4_ValidatorIndex_call",
+  "kind": "stmt",
+  "old": "(Host.addrOf (k + 88 + 1)).toBitVec.toInt).At aRet",
+  "new": "(Host.addrOf (k + 89 + 1)).toBitVec.toInt).At aRet"
+ },
+ {
+  "id": "g4-ex-pccall-control",
+  "module": "E2eScal/Gen4Examples.lean",
+  "theorem": "pc_g4_TargetIndex_call",
+  "kind": "control",
+  "code_def": "PcUnmarshal",
+  "code_ns": "E2eScal.H5Code",
+  "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
+ },
+ {
+  "id": "g4-ex-pccall-stmt-ret",
+  "module": "E2eScal/Gen4Examples.lean",
+  "theorem": "pc_g4_TargetIndex_call",
+  "kind": "stmt",
+  "old": "(Host.addrOf (k + 55 + 1)).toBitVec.toInt).At aRet",
+  "new": "(Host.addrOf (k + 56 + 1)).toBitVec.toInt).At aRet"
+ },
+ {
+  "id": "g4-ex-pccall-code-nonop",
+  "module": "E2eScal/Gen4Examples.lean",
+  "theorem": "pc_g4_TargetIndex_call",
+  "kind": "code",
+  "line": 57,
+  "old": "  nop",
+  "new": "  mov %rdx,%rdx",
+  "code_def": "PcUnmarshal",
+  "code_ns": "E2eScal.H5Code",
+  "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
+ },
+ {
+  "id": "g4-ex-br-control",
+  "module": "E2eScal/Gen4Examples.lean",
+  "theorem": "sm_g4_BlockRoot_seg",
+  "kind": "control"
+ },
+ {
+  "id": "g4-ex-br-stmt-reg",
+  "module": "E2eScal/Gen4Examples.lean",
+  "theorem": "sm_g4_BlockRoot_seg",
+  "kind": "stmt",
+  "old": "st.data.regs.get64 Reg64.rax = rcv",
+  "new": "st.data.regs.get64 Reg64.rdx = rcv"
+ },
+ {
+  "id": "g4-ex-br-code-reg",
+  "module": "E2eScal/Gen4Examples.lean",
+  "theorem": "sm_g4_BlockRoot_seg",
+  "kind": "code",
+  "line": 68,
+  "old": "  mov 0x70(%rsp),%rax",
+  "new": "  mov 0x70(%rsp),%rdx",
+  "code_def": "SmUnmarshal",
+  "code_ns": "E2eScal.H5Code",
+  "norm": "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
+ },
+ {
+  "id": "g4-ex-sig-stmt-ret",
+  "module": "E2eScal/Gen4Examples.lean",
+  "theorem": "sm_g4_Signature_seg",
+  "kind": "stmt",
+  "old": "(Host.addrOf (k + 140 + 1))",
+  "new": "(Host.addrOf (k + 139 + 1))"
+ },
+ {
+  "id": "g4-ex-vifield-control",
+  "module": "E2eScal/Gen4Examples.lean",
+  "theorem": "sm_g4_ValidatorIndex_field",
+  "kind": "control"
+ },
+ {
+  "id": "g4-ex-vifield-stmt-reg",
+  "module": "E2eScal/Gen4Examples.lean",
+  "theorem": "sm_g4_ValidatorIndex_field",
+  "kind": "stmt",
+  "old": "(hrax : s.regs.rax.toBitVec = rcv)",
+  "new": "(hrax : s.regs.rdx.toBitVec = rcv)"
+ },
+ {
+  "id": "g4-ex-vifield-stmt-off",
+  "module": "E2eScal/Gen4Examples.lean",
+  "theorem": "sm_g4_ValidatorIndex_field",
+  "kind": "stmt",
+  "old": "Eq (c0.At (rcv + 40))",
+  "new": "Eq (c0.At (rcv + 48))"
+ },
+ {
+  "id": "g4-ex-vifield-stmt-slot",
+  "module": "E2eScal/Gen4Examples.lean",
+  "theorem": "sm_g4_ValidatorIndex_field",
+  "kind": "stmt",
+  "old": "(hB : sp + (120 : Int64).toBitVec = aB)",
+  "new": "(hB : sp + (112 : Int64).toBitVec = aB)"
+ },
+ {
+  "id": "g4-ex-pcfield-stmt-src",
+  "module": "E2eScal/Gen4Examples.lean",
+  "theorem": "pc_g4_TargetIndex_field",
+  "kind": "stmt",
+  "old": "⋆ Eq (e8.At (bf + 8)) ⋆ Eq (c0.At (rcv + 16)) ⋆ F),",
+  "new": "⋆ Eq (e8.At (bf + 16)) ⋆ Eq (c0.At (rcv + 16)) ⋆ F),"
+ },
+ {
+  "id": "g4-hn-pro-control",
+  "module": "E2eScal/HeadN.lean",
+  "theorem": "decpro_seg",
+  "kind": "control"
+ },
+ {
+  "id": "g4-hn-pro-stmt-rsp",
+  "module": "E2eScal/HeadN.lean",
+  "theorem": "decpro_seg",
+  "kind": "stmt",
+  "old": "st.data.regs.rsp = { toBitVec := sp }",
+  "new": "st.data.regs.rsp = { toBitVec := sp + 8 }"
+ },
+ {
+  "id": "g4-hn-pro-stmt-frame",
+  "module": "E2eScal/HeadN.lean",
+  "theorem": "decpro_seg",
+  "kind": "stmt",
+  "old": "(hsp : s.regs.rsp.toBitVec - 8 - F.toBitVec = sp)",
+  "new": "(hsp : s.regs.rsp.toBitVec - F.toBitVec = sp)"
+ },
+ {
+  "id": "g4-hn-ret-stmt-rsp",
+  "module": "E2eScal/HeadN.lean",
+  "theorem": "decret_seg",
+  "kind": "stmt",
+  "old": "st.data.regs.rsp = { toBitVec := sp + 16 }",
+  "new": "st.data.regs.rsp = { toBitVec := sp + 8 }"
+ },
+ {
+  "id": "g4-hn-nil-control",
+  "module": "E2eScal/HeadN.lean",
+  "theorem": "kstep_nilchk",
+  "kind": "control"
+ },
+ {
+  "id": "g4-acc-sm-control",
+  "module": "E2eScal/SmAcceptG4.lean",
+  "theorem": "sm_e2e_accept_g4",
+  "kind": "control"
+ },
+ {
+  "id": "g4-acc-pc-control",
+  "module": "E2eScal/PcAcceptG4.lean",
+  "theorem": "pc_e2e_accept_g4",
+  "kind": "control"
+ }
+]

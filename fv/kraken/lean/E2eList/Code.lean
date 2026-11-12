@@ -1,0 +1,23 @@
+import Kraken.X64.Parser
+import Fk.Include
+
+/-!
+# Code of the SyncAggregate and SyncCommittee function set (Go 1.26.10 ELF `c6403c02…911e`)
+
+Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/e2e/lv/link/norm`
+(`link/conv.py --norm` of the same ELF as `E2e.Code`, `E2eAd.Code` and `E2eScal.H4Code`;
+written by `gen/e2e/lvlink.py filter` and `conv.py`; `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/e2e/lv/link/RESULT`).
+The directory is a Lake `input_dir` of the `E2eList` library (`lakefile.toml`), so Lake rebuilds
+these modules when a `.S` file changes. `IndexedAttestation` is not in the committed set
+(link check (d) failed on this host's clang: Apple clang 21 rejects the GNU objdump spelling
+`0xffffff1c(%rdi)` of the displacement -228).
+-/
+
+namespace E2eList.Code
+
+/-- `(*v1alpha1.SyncAggregate).UnmarshalSSZ` (protoc type, `altair.ssz.go`). -/
+def SaUnmarshal : Program := include_x64_rt "../prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S"
+/-- `(*v1alpha1.SyncCommittee).UnmarshalSSZ` (protoc type, `altair.ssz.go`). -/
+def ScUnmarshal : Program := include_x64_rt "../prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S"
+
+end E2eList.Code

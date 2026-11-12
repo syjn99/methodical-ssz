@@ -1,0 +1,248 @@
+[
+ {
+  "module": "E2eScal/E1Seg0.lean",
+  "theorem": "rootdec_seg0",
+  "kind": "control",
+  "id": "e1-seg0-control"
+ },
+ {
+  "module": "E2eScal/E1Seg0.lean",
+  "theorem": "rootdec_seg0",
+  "kind": "stmt",
+  "old": "st.pc = Host.addrOf (j2 + 11)",
+  "new": "st.pc = Host.addrOf (j2 + 12)",
+  "id": "e1-seg0-stmt-pc"
+ },
+ {
+  "module": "E2eScal/E1Seg0.lean",
+  "theorem": "rootdec_seg0",
+  "kind": "stmt",
+  "old": "⋆ Heap (avail - 32)",
+  "new": "⋆ Heap (avail - 31)",
+  "id": "e1-seg0-stmt-heap"
+ },
+ {
+  "module": "E2eScal/E1Accept.lean",
+  "theorem": "e1_e2e_head",
+  "kind": "control",
+  "code_def": "E1Unmarshal",
+  "code_ns": "E2eScal.E1Code",
+  "norm": "prysm/go1.26.10/e2e/e1/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "id": "e1-head-control"
+ },
+ {
+  "module": "E2eScal/E1Accept.lean",
+  "theorem": "e1_e2e_head",
+  "kind": "code",
+  "code_def": "E1Unmarshal",
+  "code_ns": "E2eScal.E1Code",
+  "norm": "prysm/go1.26.10/e2e/e1/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "id": "e1-head-cmp",
+  "old": "  cmp $0x48,%rcx",
+  "new": "  cmp $0x49,%rcx"
+ },
+ {
+  "module": "E2eScal/E1Accept.lean",
+  "theorem": "e1_e2e_head",
+  "kind": "code",
+  "code_def": "E1Unmarshal",
+  "code_ns": "E2eScal.E1Code",
+  "norm": "prysm/go1.26.10/e2e/e1/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "id": "e1-head-spill",
+  "old": "  mov %rbx,0x38(%rsp)",
+  "new": "  mov %rbx,0x30(%rsp)",
+  "line": 13
+ },
+ {
+  "module": "E2eScal/E1Accept.lean",
+  "theorem": "e1_e2e_head",
+  "kind": "stmt",
+  "old": "st.data.regs.rsp = s.regs.rsp - 40",
+  "new": "st.data.regs.rsp = s.regs.rsp - 32",
+  "id": "e1-head-stmt-rsp"
+ },
+ {
+  "module": "E2eScal/E1Accept.lean",
+  "theorem": "e1_e2e_head",
+  "kind": "stmt",
+  "old": "(hguard : guard.toNat < s.regs.rsp.toNat)",
+  "new": "(hguard : True)",
+  "id": "e1-head-stmt-weaken"
+ },
+ {
+  "module": "E2eScal/E1Accept.lean",
+  "theorem": "e1_e2e_accept_main",
+  "kind": "control",
+  "code_def": "E1Unmarshal",
+  "code_ns": "E2eScal.E1Code",
+  "norm": "prysm/go1.26.10/e2e/e1/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "id": "e1-acc-control"
+ },
+ {
+  "module": "E2eScal/E1Accept.lean",
+  "theorem": "e1_e2e_accept_main",
+  "kind": "code",
+  "code_def": "E1Unmarshal",
+  "code_ns": "E2eScal.E1Code",
+  "norm": "prysm/go1.26.10/e2e/e1/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "id": "e1-acc-src0",
+  "old": "  mov 0x38(%rsp),%rbx",
+  "new": "  mov 0x30(%rsp),%rbx",
+  "line": 30
+ },
+ {
+  "module": "E2eScal/E1Accept.lean",
+  "theorem": "e1_e2e_accept_main",
+  "kind": "code",
+  "code_def": "E1Unmarshal",
+  "code_ns": "E2eScal.E1Code",
+  "norm": "prysm/go1.26.10/e2e/e1/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "id": "e1-acc-cnt",
+  "old": "  mov 0x20(%rsi),%rsi",
+  "new": "  mov 0x18(%rsi),%rsi"
+ },
+ {
+  "module": "E2eScal/E1Accept.lean",
+  "theorem": "e1_e2e_accept_main",
+  "kind": "code",
+  "code_def": "E1Unmarshal",
+  "code_ns": "E2eScal.E1Code",
+  "norm": "prysm/go1.26.10/e2e/e1/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "id": "e1-acc-src2",
+  "old": "  add $0x28,%rbx",
+  "new": "  add $0x20,%rbx"
+ },
+ {
+  "module": "E2eScal/E1Accept.lean",
+  "theorem": "e1_e2e_accept_main",
+  "kind": "stmt",
+  "old": "⋆ Heap (avail - 64)",
+  "new": "⋆ Heap (avail - 32)",
+  "id": "e1-acc-stmt-heap"
+ },
+ {
+  "module": "E2eScal/E1Accept.lean",
+  "theorem": "e1_e2e_accept_main",
+  "kind": "stmt",
+  "old": "⋆ Eq (cnt.At (s.regs.rax.toBitVec + 32))",
+  "new": "⋆ Eq (cnt.At (s.regs.rax.toBitVec + 24))",
+  "id": "e1-acc-stmt-cnt"
+ },
+ {
+  "module": "E2eScal/E1Accept.lean",
+  "theorem": "e1_e2e_accept_main",
+  "kind": "stmt",
+  "old": "⋆ Eq (r1.At p1) ⋆ Eq (r2.At p2)",
+  "new": "⋆ Eq (r2.At p1) ⋆ Eq (r1.At p2)",
+  "id": "e1-acc-stmt-swap"
+ },
+ {
+  "module": "E2eScal/E1Accept.lean",
+  "theorem": "e1_e2e_accept_main",
+  "kind": "stmt",
+  "old": "(hav : 64 ≤ avail)",
+  "new": "(hav : True)",
+  "id": "e1-acc-stmt-weaken"
+ },
+ {
+  "module": "E2eScal/E1Reject.lean",
+  "theorem": "e1_e2e_reject_size_main",
+  "kind": "control",
+  "code_def": "E1Unmarshal",
+  "code_ns": "E2eScal.E1Code",
+  "norm": "prysm/go1.26.10/e2e/e1/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "id": "e1-rej-control"
+ },
+ {
+  "module": "E2eScal/E1Reject.lean",
+  "theorem": "e1_e2e_reject_size_main",
+  "kind": "code",
+  "code_def": "E1Unmarshal",
+  "code_ns": "E2eScal.E1Code",
+  "norm": "prysm/go1.26.10/e2e/e1/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
+  "id": "e1-rej-load",
+  "old": "  mov ssz.ErrSize+8(%rip),%rbx",
+  "new": "  mov ssz.ErrSize(%rip),%rbx"
+ },
+ {
+  "module": "E2eScal/E1Reject.lean",
+  "theorem": "e1_e2e_reject_size_main",
+  "kind": "stmt",
+  "old": "st.data.regs.rbx = e1",
+  "new": "st.data.regs.rbx = e0",
+  "id": "e1-rej-stmt"
+ },
+ {
+  "module": "E2eScal/E1Spec.lean",
+  "theorem": "pe1_spec_accepts_iff",
+  "kind": "stmt",
+  "old": "bs.size = 72",
+  "new": "bs.size = 73",
+  "id": "e1-spec-stmt-size"
+ },
+ {
+  "module": "E2eScal/E1SpecK.lean",
+  "theorem": "e1_e2e_reject_size_spec",
+  "kind": "stmt",
+  "old": "(hbs : bs.size ≠ 72)",
+  "new": "(hbs : bs.size ≠ 73)",
+  "id": "e1-rss-stmt-size"
+ },
+ {
+  "module": "E2eScal/E1SpecK.lean",
+  "theorem": "e1_e2e_accept_spec_k",
+  "kind": "stmt",
+  "old": "(hav : 64 ≤ avail)",
+  "new": "(hav : True)",
+  "id": "e1-ask-stmt-weaken"
+ },
+ {
+  "module": "E2eScal/E1Spec.lean",
+  "theorem": "prysmE1Desc_serialize_checker",
+  "kind": "stmt",
+  "old": "= serialize e1CheckerDesc v :=",
+  "new": "= serialize (match e1CheckerDesc with | .container ns ds => .container ns (ds.set 2 (.byteVector 31)) | x => x) v :=",
+  "id": "e1-ser-stmt-nearmiss2"
+ },
+ {
+  "module": "E2eScal/E1Spec.lean",
+  "theorem": "prysmE1Desc_serialize_checker",
+  "kind": "stmt",
+  "old": "= serialize e1CheckerDesc v :=",
+  "new": "= serialize (match e1CheckerDesc with | .container ns ds => .container ns (ds.set 1 (.uint 4)) | x => x) v :=",
+  "id": "e1-ser-stmt-uint4"
+ },
+ {
+  "module": "E2eScal/E1Spec.lean",
+  "theorem": "prysmE1Desc_deserialize_checker",
+  "kind": "stmt",
+  "old": "deserialize e1CheckerDesc bs = .ok v",
+  "new": "deserialize e1CheckerDesc bs = .ok (.seq [])",
+  "id": "e1-deser-stmt-value"
+ },
+ {
+  "module": "E2eScal/E1SpecK.lean",
+  "theorem": "e1_e2e_reject_complete",
+  "kind": "stmt",
+  "old": "bs.size ≠ 72 :=",
+  "new": "bs.size ≠ 71 :=",
+  "id": "e1-rc-stmt-size"
+ },
+ {
+  "module": "E2eScal/WitE1R.lean",
+  "theorem": "e1_reject_runs",
+  "kind": "stmt",
+  "old": "(hlen : len ≠ 72)",
+  "new": "(hlen : len ≠ 73)",
+  "id": "e1-witr-stmt-len"
+ }
+]

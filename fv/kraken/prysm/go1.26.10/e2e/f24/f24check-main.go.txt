@@ -1,0 +1,185 @@
+// Scratch differential program (FLAT24 / H7, not committed in Prysm): runs the real generated UnmarshalSSZ and
+// MarshalSSZTo of the eight FLAT24 types with a generated theorem on the cases of fv/kraken/gen/e2e/f24diff.py and
+// prints the observed results as JSON. Expected values are computed by that script independently, never from this
+// program. Fields are read / set by reflection by Go field name (uint64 and overlay kinds by Uint / SetUint, []byte
+// by Bytes / SetBytes of a fresh copy). Text of the G5-C and E2-C programs, merged.
+package main
+
+import (
+	"bytes"
+	"encoding/hex"
+	"encoding/json"
+	"errors"
+	"os"
+	"reflect"
+
+	"github.com/OffchainLabs/methodical-ssz/ssz"
+	enginev1 "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
+	ethpb "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+)
+
+type Field struct {
+	Name string `json:"name"`
+	U    uint64 `json:"u"`
+	B    string `json:"b"`
+}
+
+type Case struct {
+	ID     string   `json:"id"`
+	Type   string   `json:"type"`
+	Op     string   `json:"op"`
+	In     string   `json:"in"`
+	Names  []string `json:"names"`
+	Fields []Field  `json:"fields"`
+	Pre    string   `json:"pre"`
+	Cap    int      `json:"cap"`
+}
+
+type Val struct {
+	Name string `json:"name"`
+	U    uint64 `json:"u"`
+	B    string `json:"b"`
+	Len  int    `json:"len"`
+	Cap  int    `json:"cap"`
+	Kind string `json:"kind"`
+}
+
+type Res struct {
+	ID            string `json:"id"`
+	Err           string `json:"err"`
+	ErrSize       bool   `json:"err_is_ErrSize"`
+	Vals          []Val  `json:"vals"`
+	Out           string `json:"out"`
+	OutCap        int    `json:"out_cap"`
+	SameArray     bool   `json:"same_array"`
+	RecvUnchanged bool   `json:"recv_unchanged"`
+}
+
+type codec interface {
+	MarshalSSZTo(dst []byte) ([]byte, error)
+	UnmarshalSSZ(buf []byte) error
+}
+
+func newT(t string) codec {
+	switch t {
+	case "DepositRequest":
+		return &enginev1.DepositRequest{}
+	case "BuilderDepositRequest":
+		return &enginev1.BuilderDepositRequest{}
+	case "BeaconBlocksByRangeRequest":
+		return &ethpb.BeaconBlocksByRangeRequest{}
+	case "BlobSidecarsByRangeRequest":
+		return &ethpb.BlobSidecarsByRangeRequest{}
+	case "ExecutionPayloadEnvelopesByRangeRequest":
+		return &ethpb.ExecutionPayloadEnvelopesByRangeRequest{}
+	case "PartialDataColumnGroupID":
+		return &ethpb.PartialDataColumnGroupID{}
+	case "ValidatorIdentity":
+		return &ethpb.ValidatorIdentity{}
+	case "BuilderPreferences":
+		return &ethpb.BuilderPreferences{}
+	}
+	panic("unknown type " + t)
+}
+
+func set(m codec, fs []Field) {
+	v := reflect.ValueOf(m).Elem()
+	for _, f := range fs {
+		fv := v.FieldByName(f.Name)
+		if !fv.IsValid() {
+			panic("no field " + f.Name)
+		}
+		switch fv.Kind() {
+		case reflect.Uint64:
+			fv.SetUint(f.U)
+		case reflect.Slice:
+			b, err := hex.DecodeString(f.B)
+			if err != nil {
+				panic(err)
+			}
+			fv.SetBytes(b)
+		default:
+			panic("field kind " + f.Name)
+		}
+	}
+}
+
+func same(m codec, fs []Field) bool {
+	v := reflect.ValueOf(m).Elem()
+	for _, f := range fs {
+		fv := v.FieldByName(f.Name)
+		if fv.Kind() == reflect.Uint64 {
+			if fv.Uint() != f.U {
+				return false
+			}
+		} else {
+			b, _ := hex.DecodeString(f.B)
+			if !bytes.Equal(fv.Bytes(), b) {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+func main() {
+	var cs []Case
+	if err := json.NewDecoder(os.Stdin).Decode(&cs); err != nil {
+		panic(err)
+	}
+	out := []Res{}
+	for _, c := range cs {
+		m := newT(c.Type)
+		r := Res{ID: c.ID}
+		switch c.Op {
+		case "u":
+			in, err := hex.DecodeString(c.In)
+			if err != nil {
+				panic(err)
+			}
+			e := m.UnmarshalSSZ(in)
+			if e != nil {
+				r.Err = e.Error()
+				r.ErrSize = errors.Is(e, ssz.ErrSize)
+			} else {
+				v := reflect.ValueOf(m).Elem()
+				for _, n := range c.Names {
+					fv := v.FieldByName(n)
+					switch fv.Kind() {
+					case reflect.Uint64:
+						r.Vals = append(r.Vals, Val{Name: n, U: fv.Uint(), Kind: "u"})
+					case reflect.Slice:
+						b := fv.Bytes()
+						r.Vals = append(r.Vals, Val{Name: n, B: hex.EncodeToString(b), Len: len(b), Cap: cap(b), Kind: "b"})
+					default:
+						panic("field kind " + n)
+					}
+				}
+			}
+		case "m":
+			set(m, c.Fields)
+			pre, err := hex.DecodeString(c.Pre)
+			if err != nil {
+				panic(err)
+			}
+			dst := make([]byte, len(pre), c.Cap)
+			copy(dst, pre)
+			o, e := m.MarshalSSZTo(dst)
+			if e != nil {
+				r.Err = e.Error()
+			}
+			r.Out = hex.EncodeToString(o)
+			r.OutCap = cap(o)
+			r.SameArray = cap(o) > 0 && cap(dst) > 0 && &o[:cap(o)][0] == &dst[:cap(dst)][0]
+			r.RecvUnchanged = same(m, c.Fields)
+		default:
+			panic("op " + c.Op)
+		}
+		out = append(out, r)
+	}
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", " ")
+	if err := enc.Encode(out); err != nil {
+		panic(err)
+	}
+}

@@ -1,0 +1,1432 @@
+{
+ "go": "go1.26.10 linux/arm64 (native)",
+ "cases": 59,
+ "mismatches": 1,
+ "rows": [
+  {
+   "id": "dec-0-zero",
+   "op": "unmarshal",
+   "expected": {
+    "ok": true,
+    "epoch": 0,
+    "root": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "observed": {
+    "id": "dec-0-zero",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "0000000000000000000000000000000000000000000000000000000000000000",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "enc-empty-cap40-0-zero",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "path": "fast (cap = len + 40)"
+   },
+   "observed": {
+    "id": "enc-empty-cap40-0-zero",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "00000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-prefix3-spare45-0-zero",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "aabbcc00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "path": "fast (cap > len + 40)"
+   },
+   "observed": {
+    "id": "enc-prefix3-spare45-0-zero",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "aabbcc00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "aabbcc000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "roundtrip-0-zero",
+   "op": "roundtrip",
+   "expected": {
+    "ok": true,
+    "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "observed": {
+    "id": "roundtrip-0-zero",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "0000000000000000000000000000000000000000000000000000000000000000",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "dec-0-pattern",
+   "op": "unmarshal",
+   "expected": {
+    "ok": true,
+    "epoch": 0,
+    "root": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   },
+   "observed": {
+    "id": "dec-0-pattern",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "enc-empty-cap40-0-pattern",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "0000000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "path": "fast (cap = len + 40)"
+   },
+   "observed": {
+    "id": "enc-empty-cap40-0-pattern",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "0000000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "0000000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-prefix3-spare45-0-pattern",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "aabbcc0000000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "path": "fast (cap > len + 40)"
+   },
+   "observed": {
+    "id": "enc-prefix3-spare45-0-pattern",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "aabbcc0000000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "aabbcc0000000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f0000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "roundtrip-0-pattern",
+   "op": "roundtrip",
+   "expected": {
+    "ok": true,
+    "out": "0000000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   },
+   "observed": {
+    "id": "roundtrip-0-pattern",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "0000000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "dec-0-ff",
+   "op": "unmarshal",
+   "expected": {
+    "ok": true,
+    "epoch": 0,
+    "root": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   },
+   "observed": {
+    "id": "dec-0-ff",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "enc-empty-cap40-0-ff",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "0000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "path": "fast (cap = len + 40)"
+   },
+   "observed": {
+    "id": "enc-empty-cap40-0-ff",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "0000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "0000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-prefix3-spare45-0-ff",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "aabbcc0000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "path": "fast (cap > len + 40)"
+   },
+   "observed": {
+    "id": "enc-prefix3-spare45-0-ff",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "aabbcc0000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "aabbcc0000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "roundtrip-0-ff",
+   "op": "roundtrip",
+   "expected": {
+    "ok": true,
+    "out": "0000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   },
+   "observed": {
+    "id": "roundtrip-0-ff",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "0000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "dec-123456789abcdef-zero",
+   "op": "unmarshal",
+   "expected": {
+    "ok": true,
+    "epoch": 81985529216486895,
+    "root": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "observed": {
+    "id": "dec-123456789abcdef-zero",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 81985529216486895,
+    "root": "0000000000000000000000000000000000000000000000000000000000000000",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "enc-empty-cap40-123456789abcdef-zero",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "efcdab89674523010000000000000000000000000000000000000000000000000000000000000000",
+    "path": "fast (cap = len + 40)"
+   },
+   "observed": {
+    "id": "enc-empty-cap40-123456789abcdef-zero",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "efcdab89674523010000000000000000000000000000000000000000000000000000000000000000",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "efcdab89674523010000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-prefix3-spare45-123456789abcdef-zero",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "aabbccefcdab89674523010000000000000000000000000000000000000000000000000000000000000000",
+    "path": "fast (cap > len + 40)"
+   },
+   "observed": {
+    "id": "enc-prefix3-spare45-123456789abcdef-zero",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "aabbccefcdab89674523010000000000000000000000000000000000000000000000000000000000000000",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "aabbccefcdab896745230100000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "roundtrip-123456789abcdef-zero",
+   "op": "roundtrip",
+   "expected": {
+    "ok": true,
+    "out": "efcdab89674523010000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "observed": {
+    "id": "roundtrip-123456789abcdef-zero",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 81985529216486895,
+    "root": "0000000000000000000000000000000000000000000000000000000000000000",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "efcdab89674523010000000000000000000000000000000000000000000000000000000000000000",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "dec-123456789abcdef-pattern",
+   "op": "unmarshal",
+   "expected": {
+    "ok": true,
+    "epoch": 81985529216486895,
+    "root": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   },
+   "observed": {
+    "id": "dec-123456789abcdef-pattern",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 81985529216486895,
+    "root": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "enc-empty-cap40-123456789abcdef-pattern",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "efcdab8967452301000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "path": "fast (cap = len + 40)"
+   },
+   "observed": {
+    "id": "enc-empty-cap40-123456789abcdef-pattern",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "efcdab8967452301000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "efcdab8967452301000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-prefix3-spare45-123456789abcdef-pattern",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "aabbccefcdab8967452301000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "path": "fast (cap > len + 40)"
+   },
+   "observed": {
+    "id": "enc-prefix3-spare45-123456789abcdef-pattern",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "aabbccefcdab8967452301000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "aabbccefcdab8967452301000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f0000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "roundtrip-123456789abcdef-pattern",
+   "op": "roundtrip",
+   "expected": {
+    "ok": true,
+    "out": "efcdab8967452301000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   },
+   "observed": {
+    "id": "roundtrip-123456789abcdef-pattern",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 81985529216486895,
+    "root": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "efcdab8967452301000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "dec-123456789abcdef-ff",
+   "op": "unmarshal",
+   "expected": {
+    "ok": true,
+    "epoch": 81985529216486895,
+    "root": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   },
+   "observed": {
+    "id": "dec-123456789abcdef-ff",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 81985529216486895,
+    "root": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "enc-empty-cap40-123456789abcdef-ff",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "efcdab8967452301ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "path": "fast (cap = len + 40)"
+   },
+   "observed": {
+    "id": "enc-empty-cap40-123456789abcdef-ff",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "efcdab8967452301ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "efcdab8967452301ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-prefix3-spare45-123456789abcdef-ff",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "aabbccefcdab8967452301ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "path": "fast (cap > len + 40)"
+   },
+   "observed": {
+    "id": "enc-prefix3-spare45-123456789abcdef-ff",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "aabbccefcdab8967452301ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "aabbccefcdab8967452301ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "roundtrip-123456789abcdef-ff",
+   "op": "roundtrip",
+   "expected": {
+    "ok": true,
+    "out": "efcdab8967452301ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   },
+   "observed": {
+    "id": "roundtrip-123456789abcdef-ff",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 81985529216486895,
+    "root": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "efcdab8967452301ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "dec-ffffffffffffffff-zero",
+   "op": "unmarshal",
+   "expected": {
+    "ok": true,
+    "epoch": 18446744073709551615,
+    "root": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "observed": {
+    "id": "dec-ffffffffffffffff-zero",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 18446744073709551615,
+    "root": "0000000000000000000000000000000000000000000000000000000000000000",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "enc-empty-cap40-ffffffffffffffff-zero",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "ffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000",
+    "path": "fast (cap = len + 40)"
+   },
+   "observed": {
+    "id": "enc-empty-cap40-ffffffffffffffff-zero",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "ffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "ffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-prefix3-spare45-ffffffffffffffff-zero",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "aabbccffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000",
+    "path": "fast (cap > len + 40)"
+   },
+   "observed": {
+    "id": "enc-prefix3-spare45-ffffffffffffffff-zero",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "aabbccffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "aabbccffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "roundtrip-ffffffffffffffff-zero",
+   "op": "roundtrip",
+   "expected": {
+    "ok": true,
+    "out": "ffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "observed": {
+    "id": "roundtrip-ffffffffffffffff-zero",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 18446744073709551615,
+    "root": "0000000000000000000000000000000000000000000000000000000000000000",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "ffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "dec-ffffffffffffffff-pattern",
+   "op": "unmarshal",
+   "expected": {
+    "ok": true,
+    "epoch": 18446744073709551615,
+    "root": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   },
+   "observed": {
+    "id": "dec-ffffffffffffffff-pattern",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 18446744073709551615,
+    "root": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "enc-empty-cap40-ffffffffffffffff-pattern",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "ffffffffffffffff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "path": "fast (cap = len + 40)"
+   },
+   "observed": {
+    "id": "enc-empty-cap40-ffffffffffffffff-pattern",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "ffffffffffffffff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "ffffffffffffffff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-prefix3-spare45-ffffffffffffffff-pattern",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "aabbccffffffffffffffff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "path": "fast (cap > len + 40)"
+   },
+   "observed": {
+    "id": "enc-prefix3-spare45-ffffffffffffffff-pattern",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "aabbccffffffffffffffff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "aabbccffffffffffffffff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f0000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "roundtrip-ffffffffffffffff-pattern",
+   "op": "roundtrip",
+   "expected": {
+    "ok": true,
+    "out": "ffffffffffffffff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   },
+   "observed": {
+    "id": "roundtrip-ffffffffffffffff-pattern",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 18446744073709551615,
+    "root": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "ffffffffffffffff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "dec-ffffffffffffffff-ff",
+   "op": "unmarshal",
+   "expected": {
+    "ok": true,
+    "epoch": 18446744073709551615,
+    "root": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   },
+   "observed": {
+    "id": "dec-ffffffffffffffff-ff",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 18446744073709551615,
+    "root": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "enc-empty-cap40-ffffffffffffffff-ff",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "path": "fast (cap = len + 40)"
+   },
+   "observed": {
+    "id": "enc-empty-cap40-ffffffffffffffff-ff",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-prefix3-spare45-ffffffffffffffff-ff",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "aabbccffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "path": "fast (cap > len + 40)"
+   },
+   "observed": {
+    "id": "enc-prefix3-spare45-ffffffffffffffff-ff",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "aabbccffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "aabbccffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "roundtrip-ffffffffffffffff-ff",
+   "op": "roundtrip",
+   "expected": {
+    "ok": true,
+    "out": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+   },
+   "observed": {
+    "id": "roundtrip-ffffffffffffffff-ff",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 18446744073709551615,
+    "root": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "dec-len0",
+   "op": "unmarshal",
+   "expected": {
+    "ok": false,
+    "ErrSize": true,
+    "not_ErrBytesLength": true,
+    "recv_unchanged": true
+   },
+   "observed": {
+    "id": "dec-len0",
+    "err": "incorrect size",
+    "err_is_ErrSize": true,
+    "err_is_ErrBytesLength": false,
+    "epoch": 12297829382473034410,
+    "root": "3333333333333333333333333333333333333333333333333333333333333333",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "",
+    "out_nil": false,
+    "recv_unchanged": true,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "dec-len39",
+   "op": "unmarshal",
+   "expected": {
+    "ok": false,
+    "ErrSize": true,
+    "not_ErrBytesLength": true,
+    "recv_unchanged": true
+   },
+   "observed": {
+    "id": "dec-len39",
+    "err": "incorrect size",
+    "err_is_ErrSize": true,
+    "err_is_ErrBytesLength": false,
+    "epoch": 12297829382473034410,
+    "root": "3333333333333333333333333333333333333333333333333333333333333333",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "",
+    "out_nil": false,
+    "recv_unchanged": true,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "dec-len41",
+   "op": "unmarshal",
+   "expected": {
+    "ok": false,
+    "ErrSize": true,
+    "not_ErrBytesLength": true,
+    "recv_unchanged": true
+   },
+   "observed": {
+    "id": "dec-len41",
+    "err": "incorrect size",
+    "err_is_ErrSize": true,
+    "err_is_ErrBytesLength": false,
+    "epoch": 12297829382473034410,
+    "root": "3333333333333333333333333333333333333333333333333333333333333333",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "",
+    "out_nil": false,
+    "recv_unchanged": true,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "dec-len80",
+   "op": "unmarshal",
+   "expected": {
+    "ok": false,
+    "ErrSize": true,
+    "not_ErrBytesLength": true,
+    "recv_unchanged": true
+   },
+   "observed": {
+    "id": "dec-len80",
+    "err": "incorrect size",
+    "err_is_ErrSize": true,
+    "err_is_ErrBytesLength": false,
+    "epoch": 12297829382473034410,
+    "root": "3333333333333333333333333333333333333333333333333333333333333333",
+    "root_len": 32,
+    "root_cap": 32,
+    "out": "",
+    "out_nil": false,
+    "recv_unchanged": true,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "enc-rootlen0",
+   "op": "marshal",
+   "expected": {
+    "ok": false,
+    "ErrBytesLength": true,
+    "not_ErrSize": true,
+    "out_nil": true,
+    "backing": "070000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "observed": {
+    "id": "enc-rootlen0",
+    "err": "bytes array does not have the correct length",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": true,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "",
+    "out_nil": true,
+    "recv_unchanged": false,
+    "backing": "070000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-rootlen31",
+   "op": "marshal",
+   "expected": {
+    "ok": false,
+    "ErrBytesLength": true,
+    "not_ErrSize": true,
+    "out_nil": true,
+    "backing": "070000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "observed": {
+    "id": "enc-rootlen31",
+    "err": "bytes array does not have the correct length",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": true,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "",
+    "out_nil": true,
+    "recv_unchanged": false,
+    "backing": "070000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-rootlen33",
+   "op": "marshal",
+   "expected": {
+    "ok": false,
+    "ErrBytesLength": true,
+    "not_ErrSize": true,
+    "out_nil": true,
+    "backing": "070000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "observed": {
+    "id": "enc-rootlen33",
+    "err": "bytes array does not have the correct length",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": true,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "",
+    "out_nil": true,
+    "recv_unchanged": false,
+    "backing": "070000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-grow-cap0",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "0500000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "path": "growslice"
+   },
+   "observed": {
+    "id": "enc-grow-cap0",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "0500000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "enc-grow-len30-cap36",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5defcdab8967452301ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "path": "growslice"
+   },
+   "observed": {
+    "id": "enc-grow-len30-cap36",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5defcdab8967452301ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d000000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-len30-spare0",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "path": "cap = len: growslice, then (real Go: 64 < 70) a second growslice"
+   },
+   "observed": {
+    "id": "enc-w-len30-spare0",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-len30-spare3",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "path": "cap < len + 8: growslice, then a second growslice"
+   },
+   "observed": {
+    "id": "enc-w-len30-spare3",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d000000"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-len30-spare8",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "path": "cap = len + 8: first fits, second grows"
+   },
+   "observed": {
+    "id": "enc-w-len30-spare8",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0000000000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-len30-spare20",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "path": "first fits, second grows"
+   },
+   "observed": {
+    "id": "enc-w-len30-spare20",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0000000000000000000000000000000000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-len30-spare39",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "path": "cap = len + 39: first fits, second grows"
+   },
+   "observed": {
+    "id": "enc-w-len30-spare39",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-len30-spare40",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "path": "fast (cap = len + 40)"
+   },
+   "observed": {
+    "id": "enc-w-len30-spare40",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-len10-spare0",
+   "op": "marshal",
+   "expected": {
+    "ok": true,
+    "out": "606162636465666768690900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "path": "cap = len: growslice x2"
+   },
+   "observed": {
+    "id": "enc-w-len10-spare0",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "606162636465666768690900000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": "60616263646566676869"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-rej-len30-spare0-rootlen31",
+   "op": "marshal",
+   "expected": {
+    "ok": false,
+    "ErrBytesLength": true,
+    "not_ErrSize": true,
+    "out_nil": true,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d"
+   },
+   "observed": {
+    "id": "enc-w-rej-len30-spare0-rootlen31",
+    "err": "bytes array does not have the correct length",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": true,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "",
+    "out_nil": true,
+    "recv_unchanged": false,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-rej-len30-spare3-rootlen33",
+   "op": "marshal",
+   "expected": {
+    "ok": false,
+    "ErrBytesLength": true,
+    "not_ErrSize": true,
+    "out_nil": true,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d000000"
+   },
+   "observed": {
+    "id": "enc-w-rej-len30-spare3-rootlen33",
+    "err": "bytes array does not have the correct length",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": true,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "",
+    "out_nil": true,
+    "recv_unchanged": false,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d000000"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-rej-len30-spare0-rootlen0",
+   "op": "marshal",
+   "expected": {
+    "ok": false,
+    "ErrBytesLength": true,
+    "not_ErrSize": true,
+    "out_nil": true,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d"
+   },
+   "observed": {
+    "id": "enc-w-rej-len30-spare0-rootlen0",
+    "err": "bytes array does not have the correct length",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": true,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "",
+    "out_nil": true,
+    "recv_unchanged": false,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d"
+   },
+   "match": true
+  },
+  {
+   "id": "enc-w-rej-len30-spare8-rootlen33",
+   "op": "marshal",
+   "expected": {
+    "ok": false,
+    "ErrBytesLength": true,
+    "not_ErrSize": true,
+    "out_nil": true,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0700000000000000"
+   },
+   "observed": {
+    "id": "enc-w-rej-len30-spare8-rootlen33",
+    "err": "bytes array does not have the correct length",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": true,
+    "epoch": 0,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "",
+    "out_nil": true,
+    "recv_unchanged": false,
+    "backing": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d0000000000000000"
+   },
+   "match": false
+  },
+  {
+   "id": "epoch-len7",
+   "op": "epoch_unmarshal",
+   "expected": {
+    "ok": false,
+    "err_text": "expected buffer of length 8 received 7",
+    "epoch": 119
+   },
+   "observed": {
+    "id": "epoch-len7",
+    "err": "expected buffer of length 8 received 7",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 119,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "epoch-len9",
+   "op": "epoch_unmarshal",
+   "expected": {
+    "ok": false,
+    "err_text": "expected buffer of length 8 received 9",
+    "epoch": 119
+   },
+   "observed": {
+    "id": "epoch-len9",
+    "err": "expected buffer of length 8 received 9",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 119,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  },
+  {
+   "id": "epoch-len8",
+   "op": "epoch_unmarshal",
+   "expected": {
+    "ok": true,
+    "epoch": 72623859790382856
+   },
+   "observed": {
+    "id": "epoch-len8",
+    "err": "",
+    "err_is_ErrSize": false,
+    "err_is_ErrBytesLength": false,
+    "epoch": 72623859790382856,
+    "root": "",
+    "root_len": 0,
+    "root_cap": 0,
+    "out": "",
+    "out_nil": false,
+    "recv_unchanged": false,
+    "backing": ""
+   },
+   "match": true
+  }
+ ],
+ "oracle": "struct.pack('<Q', epoch) + root; 40-byte acceptance; ErrSize / ErrBytesLength identities (and not the other); decoder reject leaves a sentinel receiver unchanged; encoder reject leaves LE(epoch) in the caller's backing array (C-1); Epoch reject error text and receiver unchanged"
+}

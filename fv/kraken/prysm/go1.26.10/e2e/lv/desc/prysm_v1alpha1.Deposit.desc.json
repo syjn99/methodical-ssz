@@ -1,0 +1,73 @@
+{
+ "schema": "fvphase1c.desc/1",
+ "type": "Deposit",
+ "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+ "ssz": {
+  "k": "container",
+  "names": [
+   "Proof",
+   "Data"
+  ],
+  "fields": [
+   {
+    "k": "vector",
+    "elem": {
+     "k": "byteVector",
+     "n": 32
+    },
+    "n": 33
+   },
+   {
+    "k": "container",
+    "names": [
+     "PublicKey",
+     "WithdrawalCredentials",
+     "Amount",
+     "Signature"
+    ],
+    "fields": [
+     {
+      "k": "byteVector",
+      "n": 48
+     },
+     {
+      "k": "byteVector",
+      "n": 32
+     },
+     {
+      "k": "uint",
+      "w": 8
+     },
+     {
+      "k": "byteVector",
+      "n": 96
+     }
+    ]
+   }
+  ]
+ },
+ "fixed_size": 1240,
+ "fixed_part_size": 1240,
+ "fields": [
+  {
+   "name": "Proof",
+   "index": 0,
+   "offset": 0,
+   "width": 1056,
+   "variable": false,
+   "kind": "vector",
+   "length": 33,
+   "elem_size": 32
+  },
+  {
+   "name": "Data",
+   "index": 1,
+   "offset": 1056,
+   "width": 184,
+   "variable": false,
+   "kind": "container"
+  }
+ ],
+ "variable_order": [],
+ "reference": null
+}

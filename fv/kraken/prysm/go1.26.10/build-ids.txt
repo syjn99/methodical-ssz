@@ -1,0 +1,11 @@
+go: go version go1.26.10 linux/arm64
+target: GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 go build -p 2 -tags purego -trimpath
+host: Linux aarch64
+elf sha256: c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e
+elf size: 23486009
+elf b2 sha256: c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e
+go build id: vvezRAx2XfNAzHGIedKc/LVz05eLSmRibjKM02M9g/vTUc8QDCGkwQyqjmLKtu/siAyhYgBvYBhMpoLOoxx
+go build id b2: vvezRAx2XfNAzHGIedKc/LVz05eLSmRibjKM02M9g/vTUc8QDCGkwQyqjmLKtu/siAyhYgBvYBhMpoLOoxx
+objdump sha256: 580b0da9b133b7510c5e16a7eafbe73416761293cb0e3467a9f01417e7814a47
+nm sha256: 88ee8b9afe7d5265982e869fc33a2fe7b69acc38d52f4efd173326d1db4140ac
+main.go sha256: 794caf8f195f3d2e050baa310d17969caf8b8a0414c3b9f522028ab7d06ed16a

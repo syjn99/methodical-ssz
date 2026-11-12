@@ -1,0 +1,117 @@
+// OPT-R1 scratch differential program (not committed in Prysm): runs the generated
+// v1alpha1.Checkpoint.MarshalSSZTo of the tree it is built in (old = 698c202 output, new = the
+// reserve output) on the cases of fv/kraken/prysm/go1.26.10/opt-r1/diff/odiff.py and prints, per case,
+// the returned bytes / error, the caller's backing array after the call, aliasing, cap(out), receiver
+// integrity and testing.AllocsPerRun. Built twice with identical flags (old and new phase0 files);
+// expected values are computed by odiff.py independently, never from this program.
+package main
+
+import (
+	"encoding/hex"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"os"
+	"testing"
+
+	"github.com/OffchainLabs/methodical-ssz/ssz"
+	"github.com/OffchainLabs/prysm/v7/consensus-types/primitives"
+	ethpb "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+)
+
+type Case struct {
+	ID      string `json:"id"`
+	Epoch   uint64 `json:"epoch"`
+	Root    string `json:"root"`
+	Prefix  string `json:"prefix"`
+	Spare   int    `json:"spare"` // -1: nil dst
+	Fill    int    `json:"fill"` // byte value of the caller's spare capacity before the call
+	NilRecv bool   `json:"nil_recv"`
+}
+
+type Res struct {
+	ID             string  `json:"id"`
+	Panic          string  `json:"panic"`
+	Err            string  `json:"err"`
+	ErrBytesLength bool    `json:"err_is_ErrBytesLength"`
+	ErrIdentical   bool    `json:"err_is_the_ErrBytesLength_value"`
+	Out            string  `json:"out"`
+	OutNil         bool    `json:"out_nil"`
+	OutLen         int     `json:"out_len"`
+	OutCap         int     `json:"out_cap"`
+	Aliases        bool    `json:"out_aliases_dst"`
+	Backing        string  `json:"backing"`
+	RecvUnchanged  bool    `json:"recv_unchanged"`
+	Allocs         float64 `json:"allocs"`
+}
+
+func mk(c Case) (*ethpb.Checkpoint, []byte, []byte) {
+	root, _ := hex.DecodeString(c.Root)
+	pre, _ := hex.DecodeString(c.Prefix)
+	var dst []byte // nil dst when c.Spare < 0
+	if c.Spare >= 0 {
+		dst = make([]byte, len(pre), len(pre)+c.Spare)
+		copy(dst, pre)
+	}
+	full := dst[:cap(dst)]
+	for i := len(pre); i < len(full); i++ {
+		full[i] = byte(c.Fill)
+	}
+	if c.NilRecv {
+		return nil, dst, root
+	}
+	return &ethpb.Checkpoint{Epoch: primitives.Epoch(c.Epoch), Root: root}, dst, root
+}
+
+func run(c Case) (r Res) {
+	r.ID = c.ID
+	cp, dst, root := mk(c)
+	rootCopy := append([]byte(nil), root...)
+	defer func() {
+		if p := recover(); p != nil {
+			r.Panic = fmt.Sprint(p)
+			r.Backing = hex.EncodeToString(dst[:cap(dst)])
+		}
+	}()
+	out, err := cp.MarshalSSZTo(dst)
+	if err != nil {
+		r.Err = err.Error()
+		r.ErrBytesLength = errors.Is(err, ssz.ErrBytesLength)
+		r.ErrIdentical = err == ssz.ErrBytesLength
+	}
+	r.Out, r.OutNil, r.OutLen, r.OutCap = hex.EncodeToString(out), out == nil, len(out), cap(out)
+	r.Aliases = cap(out) > 0 && cap(dst) > 0 && &out[:1][0] == &dst[:1][0]
+	r.Backing = hex.EncodeToString(dst[:cap(dst)])
+	r.RecvUnchanged = uint64(cp.Epoch) == c.Epoch && hex.EncodeToString(cp.Root) == hex.EncodeToString(rootCopy) &&
+		len(cp.Root) == len(rootCopy) && (len(root) == 0 || &cp.Root[0] == &root[0])
+	// allocations of one call on a fresh dst of the same shape (dst itself allocated outside the measured call)
+	dsts := make([][]byte, 0, 256)
+	for i := 0; i < 256; i++ {
+		_, d, _ := mk(c)
+		dsts = append(dsts, d)
+	}
+	i := 0
+	r.Allocs = testing.AllocsPerRun(100, func() {
+		_, _ = cp.MarshalSSZTo(dsts[i%len(dsts)])
+		i++
+	})
+	return r
+}
+
+func main() {
+	b, err := os.ReadFile(os.Args[1])
+	if err != nil {
+		panic(err)
+	}
+	var cs []Case
+	if err := json.Unmarshal(b, &cs); err != nil {
+		panic(err)
+	}
+	rs := []Res{}
+	for _, c := range cs {
+		rs = append(rs, run(c))
+	}
+	if err := json.NewEncoder(os.Stdout).Encode(rs); err != nil {
+		panic(err)
+	}
+}

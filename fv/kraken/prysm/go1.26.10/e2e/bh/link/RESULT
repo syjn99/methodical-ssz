@@ -1,0 +1,53 @@
+PASS (a) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ: 58 instructions, 254 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo: 47 instructions, 175 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo: 182 instructions, 817 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ: 198 instructions, 907 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (b) runtime.newobject = 0x4254e0 .text code
+PASS (b) runtime.convT64 = 0x486300 .text code
+PASS (b) runtime.makeslice = 0x48aee0 .text code
+PASS (b) runtime.growslice = 0x48afc0 .text code
+PASS (b) runtime.morestack_noctxt.abi0 = 0x48e4c0 .text code
+PASS (b) runtime.gcWriteBarrier2 = 0x48fe40 .text code
+PASS (b) runtime.memmove = 0x490580 .text code
+PASS (b) fmt.errorf = 0x50a840 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ = 0x69f9c0 .text code
+PASS (b) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ = 0x69ff40 .text code
+PASS (b) type__+387072 = 0xae9800 .rodata group(nearest preceding symbol)
+PASS (b) type__+387520 = 0xae99c0 .rodata group(nearest preceding symbol)
+PASS (b) type__+828672 = 0xb55500 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+14986 = 0xc3d372 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+40193 = 0xc435e9 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+110057 = 0xc546d1 .rodata group(nearest preceding symbol)
+PASS (b) runtime.gcbits._+1432 = 0xd232a8 .rodata group(nearest preceding symbol)
+PASS (b) go_itab._errors.errorString_error = 0xd28520 .rodata in-symbol
+PASS (b) ssz.ErrBytesLength = 0x137fc70 .data in-symbol
+PASS (b) ssz.ErrBytesLength+8 = 0x137fc78 .data in-symbol
+PASS (b) ssz.ErrSize = 0x137fcd0 .data in-symbol
+PASS (b) ssz.ErrSize+8 = 0x137fcd8 .data in-symbol
+PASS (b) runtime.writeBarrier = 0x13c6e40 .noptrbss in-symbol
+PASS (c) all.S: 41 labels, each defined once; 22 external references not defined in all.S; 1 calls to target functions at their entry: ['github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ']
+PASS (e) all.S: 526 directives equal the 4 function files in order
+PASS (f) bhFmtProposer.data: 0xc435e9, 17 bytes and 0 words = ELF
+PASS (f) bhFmtSlot.data: 0xc3d372, 8 bytes and 0 words = ELF
+DIFF (d) github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ 0x69ff57 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo 0xa1705b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo 0xa1717b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo 0xa171dd padding: elf 0f1f00 asm 90 nopl (%rax) -> nop | (3, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ 0xa172b7 padding: elf 660f1f840000000000 asm 90 nopw (%rax,%rax,1) -> nop | (9, 'nopw (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ 0xa1737c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ 0xa173be padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ 0xa1747e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ 0xa175bc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+PASS (d) 485 instructions reassembled by clang x86_64-linux-gnu: 476 byte-identical, 0 encoding, 9 padding
+elf sha256 c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e
+S sha256 1f69d758e92d7dea81b745ed7cec1977a6361425b000a93c294ab48f66e4f91e all.S
+S sha256 3354984f6558cad952fd3d47d66d75d7f3860dc0113123f42376cdf492f44442 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.MarshalSSZTo.S
+S sha256 25311d53cc5fb3c16a22285139126d9295b8ec258d7411d5f7a8297e89c53be4 github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S
+S sha256 c76a57703af0f5d5889921baf6b3844b81d043b466b5e17df02a8b5d218124f3 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S
+S sha256 e18ac244d9dcfe0a5981de56a454c197a63511a186974b38d6a8baccf55924c5 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S
+data sha256 7138e78f5b5b0803e243926c3e9fc85690a8ad66e3c07cb7ec0218ff825d2338 bhFmtProposer.data
+data sha256 1a23656f714bf406febf29ec82cec103328697858a94634d117977ce1446e47a bhFmtSlot.data
+file sha256 0bbe6f0da6d02e6f2720d7a1e98d7c71641ca00f1d9cb9a3111cf092ba98295a lean/Fk/Code.lean
+file sha256 1eb87dae6219795cd98f8642639939a5d6336f02184fc408e53524e4cf427c8f AXIOMS.txt
+PASS all
+BUNDLE sha256 140eb7bdb1f2245a24231090525ca82a119c4140329b5ef85d7bd13961cff284

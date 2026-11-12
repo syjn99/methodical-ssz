@@ -1,0 +1,133 @@
+target.Scalars.MarshalSSZTo:
+L_target.Scalars.MarshalSSZTo_0:
+  cmp 0x10(%r14),%rsp
+  jbe L_target.Scalars.MarshalSSZTo_1ac
+  push %rbp
+  mov %rsp,%rbp
+  sub $0x50,%rsp
+  mov %rbx,0x68(%rsp)
+  mov %rax,0x60(%rsp)
+  lea 0x1(%rcx),%rdx
+  movzbl (%rax),%r8d
+  cmp %rdx,%rdi
+  jae L_target.Scalars.MarshalSSZTo_5c
+  mov %r8b,0x41(%rsp)
+  mov %rbx,%rax
+  mov %rdx,%rbx
+  mov %rdi,%rcx
+  mov $0x1,%edi
+  lea type__+48736(%rip),%rsi
+  callq runtime.growslice
+  movzbl 0x41(%rsp),%r8d
+  mov %rcx,%rdi
+  mov %rbx,%rdx
+  mov %rax,%rbx
+  mov 0x60(%rsp),%rax
+L_target.Scalars.MarshalSSZTo_5c:
+  mov %r8b,-0x1(%rdx,%rbx,1)
+  add $0x2,%rdx
+  movzwl 0x2(%rax),%r8d
+  cmp %rdx,%rdi
+  jae L_target.Scalars.MarshalSSZTo_a3
+  mov %r8w,0x42(%rsp)
+  mov %rbx,%rax
+  mov %rdx,%rbx
+  mov %rdi,%rcx
+  mov $0x2,%edi
+  lea type__+48736(%rip),%rsi
+  callq runtime.growslice
+  movzwl 0x42(%rsp),%r8d
+  mov %rcx,%rdi
+  mov %rbx,%rdx
+  mov %rax,%rbx
+  mov 0x60(%rsp),%rax
+L_target.Scalars.MarshalSSZTo_a3:
+  mov %r8w,-0x2(%rdx,%rbx,1)
+  add $0x4,%rdx
+  mov 0x4(%rax),%r8d
+  cmp %rdx,%rdi
+  jae L_target.Scalars.MarshalSSZTo_e8
+  mov %r8d,0x44(%rsp)
+  mov %rbx,%rax
+  mov %rdx,%rbx
+  mov %rdi,%rcx
+  mov $0x4,%edi
+  lea type__+48736(%rip),%rsi
+  callq runtime.growslice
+  mov 0x44(%rsp),%r8d
+  mov %rcx,%rdi
+  mov %rbx,%rdx
+  mov %rax,%rbx
+  mov 0x60(%rsp),%rax
+L_target.Scalars.MarshalSSZTo_e8:
+  mov %r8d,-0x4(%rdx,%rbx,1)
+  add $0x8,%rdx
+  mov 0x8(%rax),%r8
+  cmp %rdx,%rdi
+  jae L_target.Scalars.MarshalSSZTo_12c
+  mov %r8,0x48(%rsp)
+  mov %rbx,%rax
+  mov %rdx,%rbx
+  mov %rdi,%rcx
+  mov $0x8,%edi
+  lea type__+48736(%rip),%rsi
+  callq runtime.growslice
+  mov 0x48(%rsp),%r8
+  mov %rbx,%rdx
+  mov %rax,%rbx
+  mov %rcx,%rdi
+  mov 0x60(%rsp),%rax
+L_target.Scalars.MarshalSSZTo_12c:
+  mov %r8,-0x8(%rdx,%rbx,1)
+  cmpb $0x0,0x10(%rax)
+  je L_target.Scalars.MarshalSSZTo_169
+  inc %rdx
+  cmp %rdx,%rdi
+  jae L_target.Scalars.MarshalSSZTo_162
+  mov %rbx,%rax
+  mov %rdx,%rbx
+  mov %rdi,%rcx
+  mov $0x1,%edi
+  lea type__+48736(%rip),%rsi
+  callq runtime.growslice
+  mov %rbx,%rdx
+  mov %rax,%rbx
+  mov %rcx,%rdi
+L_target.Scalars.MarshalSSZTo_162:
+  movb $0x1,-0x1(%rdx,%rbx,1)
+  jmp L_target.Scalars.MarshalSSZTo_199
+L_target.Scalars.MarshalSSZTo_169:
+  inc %rdx
+  cmp %rdx,%rdi
+  jae L_target.Scalars.MarshalSSZTo_194
+  mov %rbx,%rax
+  mov %rdx,%rbx
+  mov %rdi,%rcx
+  mov $0x1,%edi
+  lea type__+48736(%rip),%rsi
+  callq runtime.growslice
+  mov %rbx,%rdx
+  mov %rax,%rbx
+  mov %rcx,%rdi
+L_target.Scalars.MarshalSSZTo_194:
+  movb $0x0,-0x1(%rdx,%rbx,1)
+L_target.Scalars.MarshalSSZTo_199:
+  mov %rbx,%rax
+  mov %rdx,%rbx
+  mov %rdi,%rcx
+  xor %edi,%edi
+  xor %esi,%esi
+  add $0x50,%rsp
+  pop %rbp
+  retq
+L_target.Scalars.MarshalSSZTo_1ac:
+  mov %rax,0x8(%rsp)
+  mov %rbx,0x10(%rsp)
+  mov %rcx,0x18(%rsp)
+  mov %rdi,0x20(%rsp)
+  callq runtime.morestack_noctxt.abi0
+  mov 0x8(%rsp),%rax
+  mov 0x10(%rsp),%rbx
+  mov 0x18(%rsp),%rcx
+  mov 0x20(%rsp),%rdi
+  jmpq L_target.Scalars.MarshalSSZTo_0

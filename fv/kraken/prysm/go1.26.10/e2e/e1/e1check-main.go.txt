@@ -1,0 +1,65 @@
+// Scratch differential program (S3 hold-out H2 evaluation, not committed in Prysm): runs the real generated
+// v1alpha1.Eth1Data.UnmarshalSSZ on the cases of fv/kraken/gen/e2e/e1diff.py and prints the observed results
+// as JSON. Expected values are computed by that script independently (Python struct.pack), never from this
+// program. (Text of bhcheck-main.go.txt with the Eth1Data fields.)
+package main
+
+import (
+	"encoding/hex"
+	"encoding/json"
+	"errors"
+	"os"
+
+	"github.com/OffchainLabs/methodical-ssz/ssz"
+	ethpb "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+)
+
+type Case struct {
+	ID string `json:"id"`
+	Op string `json:"op"`
+	In string `json:"in"`
+}
+
+type Res struct {
+	ID      string   `json:"id"`
+	Err     string   `json:"err"`
+	ErrSize bool     `json:"err_is_ErrSize"`
+	Count   uint64   `json:"count"`
+	Roots   []string `json:"roots"`
+	Lens    []int    `json:"lens"`
+	Caps    []int    `json:"caps"`
+}
+
+func main() {
+	var cs []Case
+	if err := json.NewDecoder(os.Stdin).Decode(&cs); err != nil {
+		panic(err)
+	}
+	out := []Res{}
+	for _, c := range cs {
+		in, err := hex.DecodeString(c.In)
+		if err != nil {
+			panic(err)
+		}
+		r := Res{ID: c.ID}
+		switch c.Op {
+		case "e1_u":
+			h := &ethpb.Eth1Data{}
+			e := h.UnmarshalSSZ(in)
+			if e != nil {
+				r.Err = e.Error()
+				r.ErrSize = errors.Is(e, ssz.ErrSize)
+			}
+			r.Count = h.DepositCount
+			for _, b := range [][]byte{h.DepositRoot, h.BlockHash} {
+				r.Roots = append(r.Roots, hex.EncodeToString(b))
+				r.Lens = append(r.Lens, len(b))
+				r.Caps = append(r.Caps, cap(b))
+			}
+		default:
+			panic(c.Op)
+		}
+		out = append(out, r)
+	}
+	json.NewEncoder(os.Stdout).Encode(out)
+}

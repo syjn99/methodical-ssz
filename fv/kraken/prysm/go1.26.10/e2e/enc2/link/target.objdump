@@ -1,0 +1,1385 @@
+TEXT github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SyncAggregatorSelectionData).MarshalSSZTo(SB) github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/altair.ssz.go
+  altair.ssz.go:2358	0x90cb20		493b6610		CMPQ SP, 0x10(R14)                   // cmp 0x10(%r14),%rsp									
+  altair.ssz.go:2358	0x90cb24		0f86cc000000		JBE 0x90cbf6                         // jbe 0x90cbf6										
+  altair.ssz.go:2358	0x90cb2a		55			PUSHQ BP                             // push %rbp										
+  altair.ssz.go:2358	0x90cb2b		4889e5			MOVQ SP, BP                          // mov %rsp,%rbp										
+  altair.ssz.go:2358	0x90cb2e		4883ec68		SUBQ $0x68, SP                       // sub $0x68,%rsp										
+  altair.ssz.go:2358	0x90cb32		48899c2480000000	MOVQ BX, 0x80(SP)                    // mov %rbx,0x80(%rsp)									
+  slot.go:197		0x90cb3a		488d5108		LEAQ 0x8(CX), DX                     // lea 0x8(%rcx),%rdx									
+  altair.ssz.go:2362	0x90cb3e		4c8b4008		MOVQ 0x8(AX), R8                     // mov 0x8(%rax),%r8									
+  slot.go:193		0x90cb42		90			NOPL                                 // nop											
+  slot.go:202		0x90cb43		90			NOPL                                 // nop											
+  sszuint64.go:19	0x90cb44		90			NOPL                                 // nop											
+  binary.go:136		0x90cb45		4c8d4c2448		LEAQ 0x48(SP), R9                    // lea 0x48(%rsp),%r9									
+  binary.go:136		0x90cb4a		450f1139		MOVUPS X15, 0(R9)                    // movups %xmm15,(%r9)									
+  binary.go:136		0x90cb4e		450f117910		MOVUPS X15, 0x10(R9)                 // movups %xmm15,0x10(%r9)									
+  binary.go:136		0x90cb53		4c89442448		MOVQ R8, 0x48(SP)                    // mov %r8,0x48(%rsp)									
+  slot.go:197		0x90cb58		4839d7			CMPQ DI, DX                          // cmp %rdx,%rdi										
+  slot.go:197		0x90cb5b		733e			JAE 0x90cb9b                         // jae 0x90cb9b										
+  slot.go:194		0x90cb5d		4889442478		MOVQ AX, 0x78(SP)                    // mov %rax,0x78(%rsp)									
+  slot.go:194		0x90cb62		48898c2488000000	MOVQ CX, 0x88(SP)                    // mov %rcx,0x88(%rsp)									
+  slot.go:197		0x90cb6a		4889d8			MOVQ BX, AX                          // mov %rbx,%rax										
+  slot.go:197		0x90cb6d		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx										
+  slot.go:197		0x90cb70		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx										
+  slot.go:197		0x90cb73		bf08000000		MOVL $0x8, DI                        // mov $0x8,%edi										
+  slot.go:197		0x90cb78		488d3581cc1d00		LEAQ 0x1dcc81(IP), SI                // lea 0x1dcc81(%rip),%rsi									
+  slot.go:197		0x90cb7f		90			NOPL                                 // nop											
+  slot.go:197		0x90cb80		e83be4b7ff		CALL runtime.growslice(SB)           // callq 0x48afc0										
+  slot.go:197		0x90cb85		4889cf			MOVQ CX, DI                          // mov %rcx,%rdi										
+  slot.go:197		0x90cb88		4889da			MOVQ BX, DX                          // mov %rbx,%rdx										
+  slot.go:197		0x90cb8b		488b8c2488000000	MOVQ 0x88(SP), CX                    // mov 0x88(%rsp),%rcx									
+  slot.go:197		0x90cb93		4889c3			MOVQ AX, BX                          // mov %rax,%rbx										
+  altair.ssz.go:2367	0x90cb96		488b442478		MOVQ 0x78(SP), AX                    // mov 0x78(%rsp),%rax									
+  slot.go:197		0x90cb9b		4c8b442448		MOVQ 0x48(SP), R8                    // mov 0x48(%rsp),%r8									
+  slot.go:197		0x90cba0		4c89040b		MOVQ R8, 0(BX)(CX*1)                 // mov %r8,(%rbx,%rcx,1)									
+  binary.go:136		0x90cba4		4883c208		ADDQ $0x8, DX                        // add $0x8,%rdx										
+  altair.ssz.go:2367	0x90cba8		4c8b4010		MOVQ 0x10(AX), R8                    // mov 0x10(%rax),%r8									
+  binary.go:136		0x90cbac		4839d7			CMPQ DI, DX                          // cmp %rdx,%rdi										
+  binary.go:136		0x90cbaf		732d			JAE 0x90cbde                         // jae 0x90cbde										
+  altair.ssz.go:2367	0x90cbb1		4c89442440		MOVQ R8, 0x40(SP)                    // mov %r8,0x40(%rsp)									
+  binary.go:136		0x90cbb6		4889d8			MOVQ BX, AX                          // mov %rbx,%rax										
+  binary.go:136		0x90cbb9		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx										
+  binary.go:136		0x90cbbc		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx										
+  binary.go:136		0x90cbbf		bf08000000		MOVL $0x8, DI                        // mov $0x8,%edi										
+  binary.go:136		0x90cbc4		488d3535cc1d00		LEAQ 0x1dcc35(IP), SI                // lea 0x1dcc35(%rip),%rsi									
+  binary.go:136		0x90cbcb		e8f0e3b7ff		CALL runtime.growslice(SB)           // callq 0x48afc0										
+  binary.go:136		0x90cbd0		4c8b442440		MOVQ 0x40(SP), R8                    // mov 0x40(%rsp),%r8									
+  altair.ssz.go:2367	0x90cbd5		4889da			MOVQ BX, DX                          // mov %rbx,%rdx										
+  altair.ssz.go:2367	0x90cbd8		4889cf			MOVQ CX, DI                          // mov %rcx,%rdi										
+  altair.ssz.go:2367	0x90cbdb		4889c3			MOVQ AX, BX                          // mov %rax,%rbx										
+  binary.go:136		0x90cbde		4c89441af8		MOVQ R8, -0x8(DX)(BX*1)              // mov %r8,-0x8(%rdx,%rbx,1)								
+  altair.ssz.go:2369	0x90cbe3		4889d8			MOVQ BX, AX                          // mov %rbx,%rax										
+  altair.ssz.go:2369	0x90cbe6		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx										
+  altair.ssz.go:2369	0x90cbe9		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx										
+  altair.ssz.go:2369	0x90cbec		31ff			XORL DI, DI                          // xor %edi,%edi										
+  altair.ssz.go:2369	0x90cbee		31f6			XORL SI, SI                          // xor %esi,%esi										
+  altair.ssz.go:2369	0x90cbf0		4883c468		ADDQ $0x68, SP                       // add $0x68,%rsp										
+  altair.ssz.go:2369	0x90cbf4		5d			POPQ BP                              // pop %rbp										
+  altair.ssz.go:2369	0x90cbf5		c3			RET                                  // retq											
+  altair.ssz.go:2358	0x90cbf6		4889442408		MOVQ AX, 0x8(SP)                     // mov %rax,0x8(%rsp)									
+  altair.ssz.go:2358	0x90cbfb		48895c2410		MOVQ BX, 0x10(SP)                    // mov %rbx,0x10(%rsp)									
+  altair.ssz.go:2358	0x90cc00		48894c2418		MOVQ CX, 0x18(SP)                    // mov %rcx,0x18(%rsp)									
+  altair.ssz.go:2358	0x90cc05		48897c2420		MOVQ DI, 0x20(SP)                    // mov %rdi,0x20(%rsp)									
+  altair.ssz.go:2358	0x90cc0a		e8b118b8ff		CALL runtime.morestack_noctxt.abi0(SB) // callq 0x48e4c0									
+  altair.ssz.go:2358	0x90cc0f		488b442408		MOVQ 0x8(SP), AX                     // mov 0x8(%rsp),%rax									
+  altair.ssz.go:2358	0x90cc14		488b5c2410		MOVQ 0x10(SP), BX                    // mov 0x10(%rsp),%rbx									
+  altair.ssz.go:2358	0x90cc19		488b4c2418		MOVQ 0x18(SP), CX                    // mov 0x18(%rsp),%rcx									
+  altair.ssz.go:2358	0x90cc1e		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi									
+  altair.ssz.go:2358	0x90cc23		e9f8feffff		JMP github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SyncAggregatorSelectionData).MarshalSSZTo(SB) // jmpq 0x90cb20	
+
+TEXT github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SyncCommitteeMessage).MarshalSSZTo(SB) github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/altair.ssz.go
+  altair.ssz.go:2641	0x90e6a0		4c8d6424d0		LEAQ -0x30(SP), R12                  // lea -0x30(%rsp),%r12								
+  altair.ssz.go:2641	0x90e6a5		4d3b6610		CMPQ R12, 0x10(R14)                  // cmp 0x10(%r14),%r12								
+  altair.ssz.go:2641	0x90e6a9		0f8634020000		JBE 0x90e8e3                         // jbe 0x90e8e3									
+  altair.ssz.go:2641	0x90e6af		55			PUSHQ BP                             // push %rbp									
+  altair.ssz.go:2641	0x90e6b0		4889e5			MOVQ SP, BP                          // mov %rsp,%rbp									
+  altair.ssz.go:2641	0x90e6b3		4881eca8000000		SUBQ $0xa8, SP                       // sub $0xa8,%rsp									
+  altair.ssz.go:2641	0x90e6ba		48899c24c0000000	MOVQ BX, 0xc0(SP)                    // mov %rbx,0xc0(%rsp)								
+  slot.go:194		0x90e6c2		48898424b8000000	MOVQ AX, 0xb8(SP)                    // mov %rax,0xb8(%rsp)								
+  slot.go:197		0x90e6ca		488d5108		LEAQ 0x8(CX), DX                     // lea 0x8(%rcx),%rdx								
+  altair.ssz.go:2645	0x90e6ce		4c8b4008		MOVQ 0x8(AX), R8                     // mov 0x8(%rax),%r8								
+  slot.go:193		0x90e6d2		90			NOPL                                 // nop										
+  slot.go:202		0x90e6d3		90			NOPL                                 // nop										
+  sszuint64.go:19	0x90e6d4		90			NOPL                                 // nop										
+  binary.go:136		0x90e6d5		4c8d4c2478		LEAQ 0x78(SP), R9                    // lea 0x78(%rsp),%r9								
+  binary.go:136		0x90e6da		450f1139		MOVUPS X15, 0(R9)                    // movups %xmm15,(%r9)								
+  binary.go:136		0x90e6de		450f117910		MOVUPS X15, 0x10(R9)                 // movups %xmm15,0x10(%r9)								
+  binary.go:136		0x90e6e3		4c89442478		MOVQ R8, 0x78(SP)                    // mov %r8,0x78(%rsp)								
+  slot.go:197		0x90e6e8		4839d7			CMPQ DI, DX                          // cmp %rdx,%rdi									
+  slot.go:197		0x90e6eb		733b			JAE 0x90e728                         // jae 0x90e728									
+  slot.go:194		0x90e6ed		48898c24c8000000	MOVQ CX, 0xc8(SP)                    // mov %rcx,0xc8(%rsp)								
+  slot.go:197		0x90e6f5		4889d8			MOVQ BX, AX                          // mov %rbx,%rax									
+  slot.go:197		0x90e6f8		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx									
+  slot.go:197		0x90e6fb		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx									
+  slot.go:197		0x90e6fe		bf08000000		MOVL $0x8, DI                        // mov $0x8,%edi									
+  slot.go:197		0x90e703		488d35f6b01d00		LEAQ 0x1db0f6(IP), SI                // lea 0x1db0f6(%rip),%rsi								
+  slot.go:197		0x90e70a		e8b1c8b7ff		CALL runtime.growslice(SB)           // callq 0x48afc0									
+  slot.go:197		0x90e70f		4889cf			MOVQ CX, DI                          // mov %rcx,%rdi									
+  slot.go:197		0x90e712		4889da			MOVQ BX, DX                          // mov %rbx,%rdx									
+  slot.go:197		0x90e715		488b8c24c8000000	MOVQ 0xc8(SP), CX                    // mov 0xc8(%rsp),%rcx								
+  slot.go:197		0x90e71d		4889c3			MOVQ AX, BX                          // mov %rax,%rbx									
+  altair.ssz.go:2650	0x90e720		488b8424b8000000	MOVQ 0xb8(SP), AX                    // mov 0xb8(%rsp),%rax								
+  slot.go:197		0x90e728		4c8b442478		MOVQ 0x78(SP), R8                    // mov 0x78(%rsp),%r8								
+  slot.go:197		0x90e72d		4c89040b		MOVQ R8, 0(BX)(CX*1)                 // mov %r8,(%rbx,%rcx,1)								
+  altair.ssz.go:2650	0x90e731		4c8b4010		MOVQ 0x10(AX), R8                    // mov 0x10(%rax),%r8								
+  altair.ssz.go:2650	0x90e735		4883781820		CMPQ 0x18(AX), $0x20                 // cmpq $0x20,0x18(%rax)								
+  altair.ssz.go:2650	0x90e73a		660f1f440000		NOPW 0(AX)(AX*1)                     // nopw (%rax,%rax,1)								
+  altair.ssz.go:2650	0x90e740		0f857f010000		JNE 0x90e8c5                         // jne 0x90e8c5									
+  altair.ssz.go:2653	0x90e746		4c8d4a20		LEAQ 0x20(DX), R9                    // lea 0x20(%rdx),%r9								
+  altair.ssz.go:2653	0x90e74a		4c39cf			CMPQ DI, R9                          // cmp %r9,%rdi									
+  altair.ssz.go:2653	0x90e74d		733d			JAE 0x90e78c                         // jae 0x90e78c									
+  slot.go:197		0x90e74f		4889542430		MOVQ DX, 0x30(SP)                    // mov %rdx,0x30(%rsp)								
+  altair.ssz.go:2650	0x90e754		4c898424a0000000	MOVQ R8, 0xa0(SP)                    // mov %r8,0xa0(%rsp)								
+  altair.ssz.go:2653	0x90e75c		4889d8			MOVQ BX, AX                          // mov %rbx,%rax									
+  altair.ssz.go:2653	0x90e75f		4c89cb			MOVQ R9, BX                          // mov %r9,%rbx									
+  altair.ssz.go:2653	0x90e762		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx									
+  altair.ssz.go:2653	0x90e765		bf20000000		MOVL $0x20, DI                       // mov $0x20,%edi									
+  altair.ssz.go:2653	0x90e76a		488d358fb01d00		LEAQ 0x1db08f(IP), SI                // lea 0x1db08f(%rip),%rsi								
+  altair.ssz.go:2653	0x90e771		e84ac8b7ff		CALL runtime.growslice(SB)           // callq 0x48afc0									
+  altair.ssz.go:2653	0x90e776		488b542430		MOVQ 0x30(SP), DX                    // mov 0x30(%rsp),%rdx								
+  altair.ssz.go:2653	0x90e77b		4c8b8424a0000000	MOVQ 0xa0(SP), R8                    // mov 0xa0(%rsp),%r8								
+  altair.ssz.go:2653	0x90e783		4889cf			MOVQ CX, DI                          // mov %rcx,%rdi									
+  altair.ssz.go:2653	0x90e786		4989d9			MOVQ BX, R9                          // mov %rbx,%r9									
+  altair.ssz.go:2653	0x90e789		4889c3			MOVQ AX, BX                          // mov %rax,%rbx									
+  altair.ssz.go:2653	0x90e78c		48897c2440		MOVQ DI, 0x40(SP)                    // mov %rdi,0x40(%rsp)								
+  altair.ssz.go:2653	0x90e791		4c894c2438		MOVQ R9, 0x38(SP)                    // mov %r9,0x38(%rsp)								
+  altair.ssz.go:2653	0x90e796		48899c2498000000	MOVQ BX, 0x98(SP)                    // mov %rbx,0x98(%rsp)								
+  altair.ssz.go:2653	0x90e79e		488d0413		LEAQ 0(BX)(DX*1), AX                 // lea (%rbx,%rdx,1),%rax								
+  altair.ssz.go:2653	0x90e7a2		4c89c3			MOVQ R8, BX                          // mov %r8,%rbx									
+  altair.ssz.go:2653	0x90e7a5		b920000000		MOVL $0x20, CX                       // mov $0x20,%ecx									
+  altair.ssz.go:2653	0x90e7aa		e8d11db8ff		CALL runtime.memmove(SB)             // callq 0x490580									
+  validator.go:95	0x90e7af		488b5c2438		MOVQ 0x38(SP), BX                    // mov 0x38(%rsp),%rbx								
+  validator.go:95	0x90e7b4		488d5308		LEAQ 0x8(BX), DX                     // lea 0x8(%rbx),%rdx								
+  validator.go:100	0x90e7b8		488bb424b8000000	MOVQ 0xb8(SP), SI                    // mov 0xb8(%rsp),%rsi								
+  validator.go:100	0x90e7c0		488b7e28		MOVQ 0x28(SI), DI                    // mov 0x28(%rsi),%rdi								
+  altair.ssz.go:2656	0x90e7c4		90			NOPL                                 // nop										
+  validator.go:91	0x90e7c5		90			NOPL                                 // nop										
+  sszuint64.go:19	0x90e7c6		90			NOPL                                 // nop										
+  binary.go:136		0x90e7c7		4c8d442458		LEAQ 0x58(SP), R8                    // lea 0x58(%rsp),%r8								
+  binary.go:136		0x90e7cc		450f1138		MOVUPS X15, 0(R8)                    // movups %xmm15,(%r8)								
+  binary.go:136		0x90e7d0		450f117810		MOVUPS X15, 0x10(R8)                 // movups %xmm15,0x10(%r8)								
+  binary.go:136		0x90e7d5		48897c2458		MOVQ DI, 0x58(SP)                    // mov %rdi,0x58(%rsp)								
+  validator.go:95	0x90e7da		488b4c2440		MOVQ 0x40(SP), CX                    // mov 0x40(%rsp),%rcx								
+  validator.go:95	0x90e7df		90			NOPL                                 // nop										
+  validator.go:95	0x90e7e0		4839d1			CMPQ CX, DX                          // cmp %rdx,%rcx									
+  validator.go:95	0x90e7e3		720a			JB 0x90e7ef                          // jb 0x90e7ef									
+  validator.go:95	0x90e7e5		488b842498000000	MOVQ 0x98(SP), AX                    // mov 0x98(%rsp),%rax								
+  validator.go:95	0x90e7ed		eb2c			JMP 0x90e81b                         // jmp 0x90e81b									
+  validator.go:95	0x90e7ef		488b842498000000	MOVQ 0x98(SP), AX                    // mov 0x98(%rsp),%rax								
+  validator.go:95	0x90e7f7		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx									
+  validator.go:95	0x90e7fa		bf08000000		MOVL $0x8, DI                        // mov $0x8,%edi									
+  validator.go:95	0x90e7ff		488d35faaf1d00		LEAQ 0x1daffa(IP), SI                // lea 0x1daffa(%rip),%rsi								
+  validator.go:95	0x90e806		e8b5c7b7ff		CALL runtime.growslice(SB)           // callq 0x48afc0									
+  altair.ssz.go:2661	0x90e80b		488bb424b8000000	MOVQ 0xb8(SP), SI                    // mov 0xb8(%rsp),%rsi								
+  validator.go:95	0x90e813		4889da			MOVQ BX, DX                          // mov %rbx,%rdx									
+  validator.go:95	0x90e816		488b5c2438		MOVQ 0x38(SP), BX                    // mov 0x38(%rsp),%rbx								
+  validator.go:95	0x90e81b		4c8b442458		MOVQ 0x58(SP), R8                    // mov 0x58(%rsp),%r8								
+  validator.go:95	0x90e820		4c890418		MOVQ R8, 0(AX)(BX*1)                 // mov %r8,(%rax,%rbx,1)								
+  altair.ssz.go:2661	0x90e824		488b5e30		MOVQ 0x30(SI), BX                    // mov 0x30(%rsi),%rbx								
+  altair.ssz.go:2661	0x90e828		48837e3860		CMPQ 0x38(SI), $0x60                 // cmpq $0x60,0x38(%rsi)								
+  altair.ssz.go:2661	0x90e82d		7578			JNE 0x90e8a7                         // jne 0x90e8a7									
+  altair.ssz.go:2664	0x90e82f		4c8d4260		LEAQ 0x60(DX), R8                    // lea 0x60(%rdx),%r8								
+  altair.ssz.go:2664	0x90e833		4c39c1			CMPQ CX, R8                          // cmp %r8,%rcx									
+  altair.ssz.go:2664	0x90e836		7331			JAE 0x90e869                         // jae 0x90e869									
+  altair.ssz.go:2661	0x90e838		48899c24a0000000	MOVQ BX, 0xa0(SP)                    // mov %rbx,0xa0(%rsp)								
+  validator.go:95	0x90e840		4889542428		MOVQ DX, 0x28(SP)                    // mov %rdx,0x28(%rsp)								
+  altair.ssz.go:2664	0x90e845		4c89c3			MOVQ R8, BX                          // mov %r8,%rbx									
+  altair.ssz.go:2664	0x90e848		bf60000000		MOVL $0x60, DI                       // mov $0x60,%edi									
+  altair.ssz.go:2664	0x90e84d		488d35acaf1d00		LEAQ 0x1dafac(IP), SI                // lea 0x1dafac(%rip),%rsi								
+  altair.ssz.go:2664	0x90e854		e867c7b7ff		CALL runtime.growslice(SB)           // callq 0x48afc0									
+  altair.ssz.go:2664	0x90e859		488b542428		MOVQ 0x28(SP), DX                    // mov 0x28(%rsp),%rdx								
+  altair.ssz.go:2664	0x90e85e		4989d8			MOVQ BX, R8                          // mov %rbx,%r8									
+  altair.ssz.go:2664	0x90e861		488b9c24a0000000	MOVQ 0xa0(SP), BX                    // mov 0xa0(%rsp),%rbx								
+  altair.ssz.go:2664	0x90e869		48898424a0000000	MOVQ AX, 0xa0(SP)                    // mov %rax,0xa0(%rsp)								
+  altair.ssz.go:2664	0x90e871		48894c2450		MOVQ CX, 0x50(SP)                    // mov %rcx,0x50(%rsp)								
+  altair.ssz.go:2664	0x90e876		4c89442448		MOVQ R8, 0x48(SP)                    // mov %r8,0x48(%rsp)								
+  altair.ssz.go:2664	0x90e87b		4801d0			ADDQ DX, AX                          // add %rdx,%rax									
+  altair.ssz.go:2664	0x90e87e		b960000000		MOVL $0x60, CX                       // mov $0x60,%ecx									
+  altair.ssz.go:2664	0x90e883		e8f81cb8ff		CALL runtime.memmove(SB)             // callq 0x490580									
+  altair.ssz.go:2666	0x90e888		488b8424a0000000	MOVQ 0xa0(SP), AX                    // mov 0xa0(%rsp),%rax								
+  altair.ssz.go:2666	0x90e890		488b5c2448		MOVQ 0x48(SP), BX                    // mov 0x48(%rsp),%rbx								
+  altair.ssz.go:2666	0x90e895		488b4c2450		MOVQ 0x50(SP), CX                    // mov 0x50(%rsp),%rcx								
+  altair.ssz.go:2666	0x90e89a		31ff			XORL DI, DI                          // xor %edi,%edi									
+  altair.ssz.go:2666	0x90e89c		31f6			XORL SI, SI                          // xor %esi,%esi									
+  altair.ssz.go:2666	0x90e89e		4881c4a8000000		ADDQ $0xa8, SP                       // add $0xa8,%rsp									
+  altair.ssz.go:2666	0x90e8a5		5d			POPQ BP                              // pop %rbp									
+  altair.ssz.go:2666	0x90e8a6		c3			RET                                  // retq										
+  altair.ssz.go:2662	0x90e8a7		488b3dc213a700		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength(SB), DI // mov 0xa713c2(%rip),%rdi			
+  altair.ssz.go:2662	0x90e8ae		488b35c313a700		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength+8(SB), SI // mov 0xa713c3(%rip),%rsi			
+  altair.ssz.go:2662	0x90e8b5		31c0			XORL AX, AX                          // xor %eax,%eax									
+  altair.ssz.go:2662	0x90e8b7		31db			XORL BX, BX                          // xor %ebx,%ebx									
+  altair.ssz.go:2662	0x90e8b9		4889d9			MOVQ BX, CX                          // mov %rbx,%rcx									
+  altair.ssz.go:2662	0x90e8bc		4881c4a8000000		ADDQ $0xa8, SP                       // add $0xa8,%rsp									
+  altair.ssz.go:2662	0x90e8c3		5d			POPQ BP                              // pop %rbp									
+  altair.ssz.go:2662	0x90e8c4		c3			RET                                  // retq										
+  altair.ssz.go:2651	0x90e8c5		488b3da413a700		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength(SB), DI // mov 0xa713a4(%rip),%rdi			
+  altair.ssz.go:2651	0x90e8cc		488b35a513a700		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength+8(SB), SI // mov 0xa713a5(%rip),%rsi			
+  altair.ssz.go:2651	0x90e8d3		31c0			XORL AX, AX                          // xor %eax,%eax									
+  altair.ssz.go:2651	0x90e8d5		31db			XORL BX, BX                          // xor %ebx,%ebx									
+  altair.ssz.go:2651	0x90e8d7		4889d9			MOVQ BX, CX                          // mov %rbx,%rcx									
+  altair.ssz.go:2651	0x90e8da		4881c4a8000000		ADDQ $0xa8, SP                       // add $0xa8,%rsp									
+  altair.ssz.go:2651	0x90e8e1		5d			POPQ BP                              // pop %rbp									
+  altair.ssz.go:2651	0x90e8e2		c3			RET                                  // retq										
+  altair.ssz.go:2641	0x90e8e3		4889442408		MOVQ AX, 0x8(SP)                     // mov %rax,0x8(%rsp)								
+  altair.ssz.go:2641	0x90e8e8		48895c2410		MOVQ BX, 0x10(SP)                    // mov %rbx,0x10(%rsp)								
+  altair.ssz.go:2641	0x90e8ed		48894c2418		MOVQ CX, 0x18(SP)                    // mov %rcx,0x18(%rsp)								
+  altair.ssz.go:2641	0x90e8f2		48897c2420		MOVQ DI, 0x20(SP)                    // mov %rdi,0x20(%rsp)								
+  altair.ssz.go:2641	0x90e8f7		e8c4fbb7ff		CALL runtime.morestack_noctxt.abi0(SB) // callq 0x48e4c0								
+  altair.ssz.go:2641	0x90e8fc		488b442408		MOVQ 0x8(SP), AX                     // mov 0x8(%rsp),%rax								
+  altair.ssz.go:2641	0x90e901		488b5c2410		MOVQ 0x10(SP), BX                    // mov 0x10(%rsp),%rbx								
+  altair.ssz.go:2641	0x90e906		488b4c2418		MOVQ 0x18(SP), CX                    // mov 0x18(%rsp),%rcx								
+  altair.ssz.go:2641	0x90e90b		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi								
+  altair.ssz.go:2641	0x90e910		e98bfdffff		JMP github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SyncCommitteeMessage).MarshalSSZTo(SB) // jmpq 0x90e6a0	
+
+TEXT github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*HistoricalSummary).MarshalSSZTo(SB) github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/capella.ssz.go
+  capella.ssz.go:2452	0x95ee00		493b6610		CMPQ SP, 0x10(R14)                   // cmp 0x10(%r14),%rsp								
+  capella.ssz.go:2452	0x95ee04		0f8673010000		JBE 0x95ef7d                         // jbe 0x95ef7d									
+  capella.ssz.go:2452	0x95ee0a		55			PUSHQ BP                             // push %rbp									
+  capella.ssz.go:2452	0x95ee0b		4889e5			MOVQ SP, BP                          // mov %rsp,%rbp									
+  capella.ssz.go:2452	0x95ee0e		4883ec50		SUBQ $0x50, SP                       // sub $0x50,%rsp									
+  capella.ssz.go:2452	0x95ee12		48895c2468		MOVQ BX, 0x68(SP)                    // mov %rbx,0x68(%rsp)								
+  capella.ssz.go:2456	0x95ee17		488b5008		MOVQ 0x8(AX), DX                     // mov 0x8(%rax),%rdx								
+  capella.ssz.go:2456	0x95ee1b		4883781020		CMPQ 0x10(AX), $0x20                 // cmpq $0x20,0x10(%rax)								
+  capella.ssz.go:2456	0x95ee20		0f853c010000		JNE 0x95ef62                         // jne 0x95ef62									
+  capella.ssz.go:2456	0x95ee26		4889442460		MOVQ AX, 0x60(SP)                    // mov %rax,0x60(%rsp)								
+  capella.ssz.go:2459	0x95ee2b		4c8d4120		LEAQ 0x20(CX), R8                    // lea 0x20(%rcx),%r8								
+  capella.ssz.go:2459	0x95ee2f		4c39c7			CMPQ DI, R8                          // cmp %r8,%rdi									
+  capella.ssz.go:2459	0x95ee32		7337			JAE 0x95ee6b                         // jae 0x95ee6b									
+  capella.ssz.go:2456	0x95ee34		48894c2470		MOVQ CX, 0x70(SP)                    // mov %rcx,0x70(%rsp)								
+  capella.ssz.go:2456	0x95ee39		4889542448		MOVQ DX, 0x48(SP)                    // mov %rdx,0x48(%rsp)								
+  capella.ssz.go:2459	0x95ee3e		4889d8			MOVQ BX, AX                          // mov %rbx,%rax									
+  capella.ssz.go:2459	0x95ee41		4c89c3			MOVQ R8, BX                          // mov %r8,%rbx									
+  capella.ssz.go:2459	0x95ee44		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx									
+  capella.ssz.go:2459	0x95ee47		bf20000000		MOVL $0x20, DI                       // mov $0x20,%edi									
+  capella.ssz.go:2459	0x95ee4c		488d35ada91800		LEAQ 0x18a9ad(IP), SI                // lea 0x18a9ad(%rip),%rsi								
+  capella.ssz.go:2459	0x95ee53		e868c1b2ff		CALL runtime.growslice(SB)           // callq 0x48afc0									
+  capella.ssz.go:2459	0x95ee58		488b542448		MOVQ 0x48(SP), DX                    // mov 0x48(%rsp),%rdx								
+  capella.ssz.go:2459	0x95ee5d		4889cf			MOVQ CX, DI                          // mov %rcx,%rdi									
+  capella.ssz.go:2459	0x95ee60		4989d8			MOVQ BX, R8                          // mov %rbx,%r8									
+  capella.ssz.go:2459	0x95ee63		488b4c2470		MOVQ 0x70(SP), CX                    // mov 0x70(%rsp),%rcx								
+  capella.ssz.go:2459	0x95ee68		4889c3			MOVQ AX, BX                          // mov %rax,%rbx									
+  capella.ssz.go:2459	0x95ee6b		48897c2438		MOVQ DI, 0x38(SP)                    // mov %rdi,0x38(%rsp)								
+  capella.ssz.go:2459	0x95ee70		4c89442430		MOVQ R8, 0x30(SP)                    // mov %r8,0x30(%rsp)								
+  capella.ssz.go:2459	0x95ee75		48895c2448		MOVQ BX, 0x48(SP)                    // mov %rbx,0x48(%rsp)								
+  capella.ssz.go:2459	0x95ee7a		488d040b		LEAQ 0(BX)(CX*1), AX                 // lea (%rbx,%rcx,1),%rax								
+  capella.ssz.go:2459	0x95ee7e		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx									
+  capella.ssz.go:2459	0x95ee81		b920000000		MOVL $0x20, CX                       // mov $0x20,%ecx									
+  capella.ssz.go:2459	0x95ee86		e8f516b3ff		CALL runtime.memmove(SB)             // callq 0x490580									
+  capella.ssz.go:2462	0x95ee8b		488b542460		MOVQ 0x60(SP), DX                    // mov 0x60(%rsp),%rdx								
+  capella.ssz.go:2462	0x95ee90		488b5a20		MOVQ 0x20(DX), BX                    // mov 0x20(%rdx),%rbx								
+  capella.ssz.go:2462	0x95ee94		48837a2820		CMPQ 0x28(DX), $0x20                 // cmpq $0x20,0x28(%rdx)								
+  capella.ssz.go:2462	0x95ee99		0f85a8000000		JNE 0x95ef47                         // jne 0x95ef47									
+  capella.ssz.go:2465	0x95ee9f		488b542430		MOVQ 0x30(SP), DX                    // mov 0x30(%rsp),%rdx								
+  capella.ssz.go:2465	0x95eea4		4c8d4220		LEAQ 0x20(DX), R8                    // lea 0x20(%rdx),%r8								
+  capella.ssz.go:2465	0x95eea8		488b4c2438		MOVQ 0x38(SP), CX                    // mov 0x38(%rsp),%rcx								
+  capella.ssz.go:2465	0x95eead		4c39c1			CMPQ CX, R8                          // cmp %r8,%rcx									
+  capella.ssz.go:2465	0x95eeb0		7207			JB 0x95eeb9                          // jb 0x95eeb9									
+  capella.ssz.go:2465	0x95eeb2		488b442448		MOVQ 0x48(SP), AX                    // mov 0x48(%rsp),%rax								
+  capella.ssz.go:2465	0x95eeb7		eb2b			JMP 0x95eee4                         // jmp 0x95eee4									
+  capella.ssz.go:2462	0x95eeb9		48895c2440		MOVQ BX, 0x40(SP)                    // mov %rbx,0x40(%rsp)								
+  capella.ssz.go:2465	0x95eebe		488b442448		MOVQ 0x48(SP), AX                    // mov 0x48(%rsp),%rax								
+  capella.ssz.go:2465	0x95eec3		4c89c3			MOVQ R8, BX                          // mov %r8,%rbx									
+  capella.ssz.go:2465	0x95eec6		bf20000000		MOVL $0x20, DI                       // mov $0x20,%edi									
+  capella.ssz.go:2465	0x95eecb		488d352ea91800		LEAQ 0x18a92e(IP), SI                // lea 0x18a92e(%rip),%rsi								
+  capella.ssz.go:2465	0x95eed2		e8e9c0b2ff		CALL runtime.growslice(SB)           // callq 0x48afc0									
+  capella.ssz.go:2465	0x95eed7		488b542430		MOVQ 0x30(SP), DX                    // mov 0x30(%rsp),%rdx								
+  capella.ssz.go:2465	0x95eedc		4989d8			MOVQ BX, R8                          // mov %rbx,%r8									
+  capella.ssz.go:2465	0x95eedf		488b5c2440		MOVQ 0x40(SP), BX                    // mov 0x40(%rsp),%rbx								
+  capella.ssz.go:2465	0x95eee4		4889442448		MOVQ AX, 0x48(SP)                    // mov %rax,0x48(%rsp)								
+  capella.ssz.go:2465	0x95eee9		48894c2438		MOVQ CX, 0x38(SP)                    // mov %rcx,0x38(%rsp)								
+  capella.ssz.go:2465	0x95eeee		4c89442430		MOVQ R8, 0x30(SP)                    // mov %r8,0x30(%rsp)								
+  capella.ssz.go:2465	0x95eef3		4801d0			ADDQ DX, AX                          // add %rdx,%rax									
+  capella.ssz.go:2465	0x95eef6		b920000000		MOVL $0x20, CX                       // mov $0x20,%ecx									
+  capella.ssz.go:2465	0x95eefb		0f1f440000		NOPL 0(AX)(AX*1)                     // nopl (%rax,%rax,1)								
+  capella.ssz.go:2465	0x95ef00		e87b16b3ff		CALL runtime.memmove(SB)             // callq 0x490580									
+  capella.ssz.go:2467	0x95ef05		488b5c2448		MOVQ 0x48(SP), BX                    // mov 0x48(%rsp),%rbx								
+  capella.ssz.go:2467	0x95ef0a		4889da			MOVQ BX, DX                          // mov %rbx,%rdx									
+  capella.ssz.go:2467	0x95ef0d		4829e2			SUBQ SP, DX                          // sub %rsp,%rdx									
+  capella.ssz.go:2467	0x95ef10		488d742460		LEAQ 0x60(SP), SI                    // lea 0x60(%rsp),%rsi								
+  capella.ssz.go:2467	0x95ef15		4829e6			SUBQ SP, SI                          // sub %rsp,%rsi									
+  capella.ssz.go:2467	0x95ef18		4839f2			CMPQ DX, SI                          // cmp %rsi,%rdx									
+  capella.ssz.go:2467	0x95ef1b		7211			JB 0x95ef2e                          // jb 0x95ef2e									
+  capella.ssz.go:2467	0x95ef1d		488b5c2430		MOVQ 0x30(SP), BX                    // mov 0x30(%rsp),%rbx								
+  capella.ssz.go:2467	0x95ef22		488b4c2438		MOVQ 0x38(SP), CX                    // mov 0x38(%rsp),%rcx								
+  capella.ssz.go:2467	0x95ef27		488b442448		MOVQ 0x48(SP), AX                    // mov 0x48(%rsp),%rax								
+  capella.ssz.go:2467	0x95ef2c		eb0f			JMP 0x95ef3d                         // jmp 0x95ef3d									
+  capella.ssz.go:2467	0x95ef2e		b801000000		MOVL $0x1, AX                        // mov $0x1,%eax									
+  capella.ssz.go:2467	0x95ef33		488b4c2430		MOVQ 0x30(SP), CX                    // mov 0x30(%rsp),%rcx								
+  capella.ssz.go:2467	0x95ef38		e8c3d2b0ff		CALL runtime.moveSliceNoCapNoScan(SB) // callq 0x46c200									
+  capella.ssz.go:2467	0x95ef3d		31ff			XORL DI, DI                          // xor %edi,%edi									
+  capella.ssz.go:2467	0x95ef3f		31f6			XORL SI, SI                          // xor %esi,%esi									
+  capella.ssz.go:2467	0x95ef41		4883c450		ADDQ $0x50, SP                       // add $0x50,%rsp									
+  capella.ssz.go:2467	0x95ef45		5d			POPQ BP                              // pop %rbp									
+  capella.ssz.go:2467	0x95ef46		c3			RET                                  // retq										
+  capella.ssz.go:2463	0x95ef47		488b3d220da200		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength(SB), DI // mov 0xa20d22(%rip),%rdi			
+  capella.ssz.go:2463	0x95ef4e		488b35230da200		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength+8(SB), SI // mov 0xa20d23(%rip),%rsi			
+  capella.ssz.go:2463	0x95ef55		31c0			XORL AX, AX                          // xor %eax,%eax									
+  capella.ssz.go:2463	0x95ef57		31db			XORL BX, BX                          // xor %ebx,%ebx									
+  capella.ssz.go:2463	0x95ef59		4889d9			MOVQ BX, CX                          // mov %rbx,%rcx									
+  capella.ssz.go:2463	0x95ef5c		4883c450		ADDQ $0x50, SP                       // add $0x50,%rsp									
+  capella.ssz.go:2463	0x95ef60		5d			POPQ BP                              // pop %rbp									
+  capella.ssz.go:2463	0x95ef61		c3			RET                                  // retq										
+  capella.ssz.go:2457	0x95ef62		488b3d070da200		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength(SB), DI // mov 0xa20d07(%rip),%rdi			
+  capella.ssz.go:2457	0x95ef69		488b35080da200		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength+8(SB), SI // mov 0xa20d08(%rip),%rsi			
+  capella.ssz.go:2457	0x95ef70		31c0			XORL AX, AX                          // xor %eax,%eax									
+  capella.ssz.go:2457	0x95ef72		31db			XORL BX, BX                          // xor %ebx,%ebx									
+  capella.ssz.go:2457	0x95ef74		4889d9			MOVQ BX, CX                          // mov %rbx,%rcx									
+  capella.ssz.go:2457	0x95ef77		4883c450		ADDQ $0x50, SP                       // add $0x50,%rsp									
+  capella.ssz.go:2457	0x95ef7b		5d			POPQ BP                              // pop %rbp									
+  capella.ssz.go:2457	0x95ef7c		c3			RET                                  // retq										
+  capella.ssz.go:2452	0x95ef7d		4889442408		MOVQ AX, 0x8(SP)                     // mov %rax,0x8(%rsp)								
+  capella.ssz.go:2452	0x95ef82		48895c2410		MOVQ BX, 0x10(SP)                    // mov %rbx,0x10(%rsp)								
+  capella.ssz.go:2452	0x95ef87		48894c2418		MOVQ CX, 0x18(SP)                    // mov %rcx,0x18(%rsp)								
+  capella.ssz.go:2452	0x95ef8c		48897c2420		MOVQ DI, 0x20(SP)                    // mov %rdi,0x20(%rsp)								
+  capella.ssz.go:2452	0x95ef91		e82af5b2ff		CALL runtime.morestack_noctxt.abi0(SB) // callq 0x48e4c0								
+  capella.ssz.go:2452	0x95ef96		488b442408		MOVQ 0x8(SP), AX                     // mov 0x8(%rsp),%rax								
+  capella.ssz.go:2452	0x95ef9b		488b5c2410		MOVQ 0x10(SP), BX                    // mov 0x10(%rsp),%rbx								
+  capella.ssz.go:2452	0x95efa0		488b4c2418		MOVQ 0x18(SP), CX                    // mov 0x18(%rsp),%rcx								
+  capella.ssz.go:2452	0x95efa5		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi								
+  capella.ssz.go:2452	0x95efaa		e951feffff		JMP github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*HistoricalSummary).MarshalSSZTo(SB) // jmpq 0x95ee00	
+
+TEXT github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlobIdentifier).MarshalSSZTo(SB) github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/deneb.ssz.go
+  deneb.ssz.go:2548	0x97ea40		493b6610		CMPQ SP, 0x10(R14)                   // cmp 0x10(%r14),%rsp							
+  deneb.ssz.go:2548	0x97ea44		0f86f7000000		JBE 0x97eb41                         // jbe 0x97eb41								
+  deneb.ssz.go:2548	0x97ea4a		55			PUSHQ BP                             // push %rbp								
+  deneb.ssz.go:2548	0x97ea4b		4889e5			MOVQ SP, BP                          // mov %rsp,%rbp								
+  deneb.ssz.go:2548	0x97ea4e		4883ec68		SUBQ $0x68, SP                       // sub $0x68,%rsp								
+  deneb.ssz.go:2548	0x97ea52		48899c2480000000	MOVQ BX, 0x80(SP)                    // mov %rbx,0x80(%rsp)							
+  deneb.ssz.go:2552	0x97ea5a		488b5008		MOVQ 0x8(AX), DX                     // mov 0x8(%rax),%rdx							
+  deneb.ssz.go:2552	0x97ea5e		4883781020		CMPQ 0x10(AX), $0x20                 // cmpq $0x20,0x10(%rax)							
+  deneb.ssz.go:2552	0x97ea63		0f85bd000000		JNE 0x97eb26                         // jne 0x97eb26								
+  deneb.ssz.go:2552	0x97ea69		4889442478		MOVQ AX, 0x78(SP)                    // mov %rax,0x78(%rsp)							
+  deneb.ssz.go:2555	0x97ea6e		4c8d4120		LEAQ 0x20(CX), R8                    // lea 0x20(%rcx),%r8							
+  deneb.ssz.go:2555	0x97ea72		4c39c7			CMPQ DI, R8                          // cmp %r8,%rdi								
+  deneb.ssz.go:2555	0x97ea75		733d			JAE 0x97eab4                         // jae 0x97eab4								
+  deneb.ssz.go:2552	0x97ea77		48898c2488000000	MOVQ CX, 0x88(SP)                    // mov %rcx,0x88(%rsp)							
+  deneb.ssz.go:2552	0x97ea7f		4889542460		MOVQ DX, 0x60(SP)                    // mov %rdx,0x60(%rsp)							
+  deneb.ssz.go:2555	0x97ea84		4889d8			MOVQ BX, AX                          // mov %rbx,%rax								
+  deneb.ssz.go:2555	0x97ea87		4c89c3			MOVQ R8, BX                          // mov %r8,%rbx								
+  deneb.ssz.go:2555	0x97ea8a		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx								
+  deneb.ssz.go:2555	0x97ea8d		bf20000000		MOVL $0x20, DI                       // mov $0x20,%edi								
+  deneb.ssz.go:2555	0x97ea92		488d3567ad1600		LEAQ 0x16ad67(IP), SI                // lea 0x16ad67(%rip),%rsi							
+  deneb.ssz.go:2555	0x97ea99		e822c5b0ff		CALL runtime.growslice(SB)           // callq 0x48afc0								
+  deneb.ssz.go:2555	0x97ea9e		488b542460		MOVQ 0x60(SP), DX                    // mov 0x60(%rsp),%rdx							
+  deneb.ssz.go:2555	0x97eaa3		4889cf			MOVQ CX, DI                          // mov %rcx,%rdi								
+  deneb.ssz.go:2555	0x97eaa6		4989d8			MOVQ BX, R8                          // mov %rbx,%r8								
+  deneb.ssz.go:2555	0x97eaa9		488b8c2488000000	MOVQ 0x88(SP), CX                    // mov 0x88(%rsp),%rcx							
+  deneb.ssz.go:2555	0x97eab1		4889c3			MOVQ AX, BX                          // mov %rax,%rbx								
+  deneb.ssz.go:2555	0x97eab4		48895c2458		MOVQ BX, 0x58(SP)                    // mov %rbx,0x58(%rsp)							
+  deneb.ssz.go:2555	0x97eab9		4c89442448		MOVQ R8, 0x48(SP)                    // mov %r8,0x48(%rsp)							
+  deneb.ssz.go:2555	0x97eabe		48897c2450		MOVQ DI, 0x50(SP)                    // mov %rdi,0x50(%rsp)							
+  deneb.ssz.go:2555	0x97eac3		488d040b		LEAQ 0(BX)(CX*1), AX                 // lea (%rbx,%rcx,1),%rax							
+  deneb.ssz.go:2555	0x97eac7		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx								
+  deneb.ssz.go:2555	0x97eaca		b920000000		MOVL $0x20, CX                       // mov $0x20,%ecx								
+  deneb.ssz.go:2555	0x97eacf		e8ac1ab1ff		CALL runtime.memmove(SB)             // callq 0x490580								
+  binary.go:136		0x97ead4		488b5c2448		MOVQ 0x48(SP), BX                    // mov 0x48(%rsp),%rbx							
+  binary.go:136		0x97ead9		4883c308		ADDQ $0x8, BX                        // add $0x8,%rbx								
+  deneb.ssz.go:2558	0x97eadd		488b542478		MOVQ 0x78(SP), DX                    // mov 0x78(%rsp),%rdx							
+  deneb.ssz.go:2558	0x97eae2		488b5220		MOVQ 0x20(DX), DX                    // mov 0x20(%rdx),%rdx							
+  binary.go:136		0x97eae6		488b4c2450		MOVQ 0x50(SP), CX                    // mov 0x50(%rsp),%rcx							
+  binary.go:136		0x97eaeb		4839d9			CMPQ CX, BX                          // cmp %rbx,%rcx								
+  binary.go:136		0x97eaee		7207			JB 0x97eaf7                          // jb 0x97eaf7								
+  deneb.ssz.go:2558	0x97eaf0		488b442458		MOVQ 0x58(SP), AX                    // mov 0x58(%rsp),%rax							
+  binary.go:136		0x97eaf5		eb20			JMP 0x97eb17                         // jmp 0x97eb17								
+  deneb.ssz.go:2558	0x97eaf7		4889542440		MOVQ DX, 0x40(SP)                    // mov %rdx,0x40(%rsp)							
+  binary.go:136		0x97eafc		488b442458		MOVQ 0x58(SP), AX                    // mov 0x58(%rsp),%rax							
+  binary.go:136		0x97eb01		bf08000000		MOVL $0x8, DI                        // mov $0x8,%edi								
+  binary.go:136		0x97eb06		488d35f3ac1600		LEAQ 0x16acf3(IP), SI                // lea 0x16acf3(%rip),%rsi							
+  binary.go:136		0x97eb0d		e8aec4b0ff		CALL runtime.growslice(SB)           // callq 0x48afc0								
+  binary.go:136		0x97eb12		488b542440		MOVQ 0x40(SP), DX                    // mov 0x40(%rsp),%rdx							
+  binary.go:136		0x97eb17		48895403f8		MOVQ DX, -0x8(BX)(AX*1)              // mov %rdx,-0x8(%rbx,%rax,1)						
+  deneb.ssz.go:2560	0x97eb1c		31ff			XORL DI, DI                          // xor %edi,%edi								
+  deneb.ssz.go:2560	0x97eb1e		31f6			XORL SI, SI                          // xor %esi,%esi								
+  deneb.ssz.go:2560	0x97eb20		4883c468		ADDQ $0x68, SP                       // add $0x68,%rsp								
+  deneb.ssz.go:2560	0x97eb24		5d			POPQ BP                              // pop %rbp								
+  deneb.ssz.go:2560	0x97eb25		c3			RET                                  // retq									
+  deneb.ssz.go:2553	0x97eb26		488b3d4311a000		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength(SB), DI // mov 0xa01143(%rip),%rdi		
+  deneb.ssz.go:2553	0x97eb2d		488b354411a000		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength+8(SB), SI // mov 0xa01144(%rip),%rsi		
+  deneb.ssz.go:2553	0x97eb34		31c0			XORL AX, AX                          // xor %eax,%eax								
+  deneb.ssz.go:2553	0x97eb36		31db			XORL BX, BX                          // xor %ebx,%ebx								
+  deneb.ssz.go:2553	0x97eb38		4889d9			MOVQ BX, CX                          // mov %rbx,%rcx								
+  deneb.ssz.go:2553	0x97eb3b		4883c468		ADDQ $0x68, SP                       // add $0x68,%rsp								
+  deneb.ssz.go:2553	0x97eb3f		5d			POPQ BP                              // pop %rbp								
+  deneb.ssz.go:2553	0x97eb40		c3			RET                                  // retq									
+  deneb.ssz.go:2548	0x97eb41		4889442408		MOVQ AX, 0x8(SP)                     // mov %rax,0x8(%rsp)							
+  deneb.ssz.go:2548	0x97eb46		48895c2410		MOVQ BX, 0x10(SP)                    // mov %rbx,0x10(%rsp)							
+  deneb.ssz.go:2548	0x97eb4b		48894c2418		MOVQ CX, 0x18(SP)                    // mov %rcx,0x18(%rsp)							
+  deneb.ssz.go:2548	0x97eb50		48897c2420		MOVQ DI, 0x20(SP)                    // mov %rdi,0x20(%rsp)							
+  deneb.ssz.go:2548	0x97eb55		e866f9b0ff		CALL runtime.morestack_noctxt.abi0(SB) // callq 0x48e4c0							
+  deneb.ssz.go:2548	0x97eb5a		488b442408		MOVQ 0x8(SP), AX                     // mov 0x8(%rsp),%rax							
+  deneb.ssz.go:2548	0x97eb5f		488b5c2410		MOVQ 0x10(SP), BX                    // mov 0x10(%rsp),%rbx							
+  deneb.ssz.go:2548	0x97eb64		488b4c2418		MOVQ 0x18(SP), CX                    // mov 0x18(%rsp),%rcx							
+  deneb.ssz.go:2548	0x97eb69		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi							
+  deneb.ssz.go:2548	0x97eb6e		e9cdfeffff		JMP github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlobIdentifier).MarshalSSZTo(SB) // jmpq 0x97ea40	
+
+TEXT github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PendingDeposit).MarshalSSZTo(SB) github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/electra.ssz.go
+  electra.ssz.go:4060	0x9aa4a0		4c8d6424b8		LEAQ -0x48(SP), R12                  // lea -0x48(%rsp),%r12							
+  electra.ssz.go:4060	0x9aa4a5		4d3b6610		CMPQ R12, 0x10(R14)                  // cmp 0x10(%r14),%r12							
+  electra.ssz.go:4060	0x9aa4a9		0f86d2020000		JBE 0x9aa781                         // jbe 0x9aa781								
+  electra.ssz.go:4060	0x9aa4af		55			PUSHQ BP                             // push %rbp								
+  electra.ssz.go:4060	0x9aa4b0		4889e5			MOVQ SP, BP                          // mov %rsp,%rbp								
+  electra.ssz.go:4060	0x9aa4b3		4881ecc0000000		SUBQ $0xc0, SP                       // sub $0xc0,%rsp								
+  electra.ssz.go:4060	0x9aa4ba		48899c24d8000000	MOVQ BX, 0xd8(SP)                    // mov %rbx,0xd8(%rsp)							
+  electra.ssz.go:4064	0x9aa4c2		488b5008		MOVQ 0x8(AX), DX                     // mov 0x8(%rax),%rdx							
+  electra.ssz.go:4064	0x9aa4c6		4883781030		CMPQ 0x10(AX), $0x30                 // cmpq $0x30,0x10(%rax)							
+  electra.ssz.go:4064	0x9aa4cb		0f8591020000		JNE 0x9aa762                         // jne 0x9aa762								
+  electra.ssz.go:4064	0x9aa4d1		48898424d0000000	MOVQ AX, 0xd0(SP)                    // mov %rax,0xd0(%rsp)							
+  electra.ssz.go:4067	0x9aa4d9		4c8d4130		LEAQ 0x30(CX), R8                    // lea 0x30(%rcx),%r8							
+  electra.ssz.go:4067	0x9aa4dd		0f1f00			NOPL 0(AX)                           // nopl (%rax)								
+  electra.ssz.go:4067	0x9aa4e0		4c39c7			CMPQ DI, R8                          // cmp %r8,%rdi								
+  electra.ssz.go:4067	0x9aa4e3		7343			JAE 0x9aa528                         // jae 0x9aa528								
+  electra.ssz.go:4064	0x9aa4e5		48898c24e0000000	MOVQ CX, 0xe0(SP)                    // mov %rcx,0xe0(%rsp)							
+  electra.ssz.go:4064	0x9aa4ed		48899424b8000000	MOVQ DX, 0xb8(SP)                    // mov %rdx,0xb8(%rsp)							
+  electra.ssz.go:4067	0x9aa4f5		4889d8			MOVQ BX, AX                          // mov %rbx,%rax								
+  electra.ssz.go:4067	0x9aa4f8		4c89c3			MOVQ R8, BX                          // mov %r8,%rbx								
+  electra.ssz.go:4067	0x9aa4fb		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx								
+  electra.ssz.go:4067	0x9aa4fe		bf30000000		MOVL $0x30, DI                       // mov $0x30,%edi								
+  electra.ssz.go:4067	0x9aa503		488d35f6f21300		LEAQ 0x13f2f6(IP), SI                // lea 0x13f2f6(%rip),%rsi							
+  electra.ssz.go:4067	0x9aa50a		e8b10aaeff		CALL runtime.growslice(SB)           // callq 0x48afc0								
+  electra.ssz.go:4067	0x9aa50f		488b9424b8000000	MOVQ 0xb8(SP), DX                    // mov 0xb8(%rsp),%rdx							
+  electra.ssz.go:4067	0x9aa517		4889cf			MOVQ CX, DI                          // mov %rcx,%rdi								
+  electra.ssz.go:4067	0x9aa51a		4989d8			MOVQ BX, R8                          // mov %rbx,%r8								
+  electra.ssz.go:4067	0x9aa51d		488b8c24e0000000	MOVQ 0xe0(SP), CX                    // mov 0xe0(%rsp),%rcx							
+  electra.ssz.go:4067	0x9aa525		4889c3			MOVQ AX, BX                          // mov %rax,%rbx								
+  electra.ssz.go:4067	0x9aa528		4889bc2498000000	MOVQ DI, 0x98(SP)                    // mov %rdi,0x98(%rsp)							
+  electra.ssz.go:4067	0x9aa530		4c89842490000000	MOVQ R8, 0x90(SP)                    // mov %r8,0x90(%rsp)							
+  electra.ssz.go:4067	0x9aa538		48899c24b8000000	MOVQ BX, 0xb8(SP)                    // mov %rbx,0xb8(%rsp)							
+  electra.ssz.go:4067	0x9aa540		488d040b		LEAQ 0(BX)(CX*1), AX                 // lea (%rbx,%rcx,1),%rax							
+  electra.ssz.go:4067	0x9aa544		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx								
+  electra.ssz.go:4067	0x9aa547		b930000000		MOVL $0x30, CX                       // mov $0x30,%ecx								
+  electra.ssz.go:4067	0x9aa54c		e82f60aeff		CALL runtime.memmove(SB)             // callq 0x490580								
+  electra.ssz.go:4070	0x9aa551		488b9424d0000000	MOVQ 0xd0(SP), DX                    // mov 0xd0(%rsp),%rdx							
+  electra.ssz.go:4070	0x9aa559		488b5a20		MOVQ 0x20(DX), BX                    // mov 0x20(%rdx),%rbx							
+  electra.ssz.go:4070	0x9aa55d		48837a2820		CMPQ 0x28(DX), $0x20                 // cmpq $0x20,0x28(%rdx)							
+  electra.ssz.go:4070	0x9aa562		0f85dc010000		JNE 0x9aa744                         // jne 0x9aa744								
+  electra.ssz.go:4073	0x9aa568		4c8b842490000000	MOVQ 0x90(SP), R8                    // mov 0x90(%rsp),%r8							
+  electra.ssz.go:4073	0x9aa570		4d8d4820		LEAQ 0x20(R8), R9                    // lea 0x20(%r8),%r9							
+  electra.ssz.go:4073	0x9aa574		488b8c2498000000	MOVQ 0x98(SP), CX                    // mov 0x98(%rsp),%rcx							
+  electra.ssz.go:4073	0x9aa57c		0f1f4000		NOPL 0(AX)                           // nopl (%rax)								
+  electra.ssz.go:4073	0x9aa580		4c39c9			CMPQ CX, R9                          // cmp %r9,%rcx								
+  electra.ssz.go:4073	0x9aa583		720a			JB 0x9aa58f                          // jb 0x9aa58f								
+  electra.ssz.go:4073	0x9aa585		488b8424b8000000	MOVQ 0xb8(SP), AX                    // mov 0xb8(%rsp),%rax							
+  electra.ssz.go:4073	0x9aa58d		eb37			JMP 0x9aa5c6                         // jmp 0x9aa5c6								
+  electra.ssz.go:4070	0x9aa58f		48899c24b0000000	MOVQ BX, 0xb0(SP)                    // mov %rbx,0xb0(%rsp)							
+  electra.ssz.go:4073	0x9aa597		488b8424b8000000	MOVQ 0xb8(SP), AX                    // mov 0xb8(%rsp),%rax							
+  electra.ssz.go:4073	0x9aa59f		4c89cb			MOVQ R9, BX                          // mov %r9,%rbx								
+  electra.ssz.go:4073	0x9aa5a2		bf20000000		MOVL $0x20, DI                       // mov $0x20,%edi								
+  electra.ssz.go:4073	0x9aa5a7		488d3552f21300		LEAQ 0x13f252(IP), SI                // lea 0x13f252(%rip),%rsi							
+  electra.ssz.go:4073	0x9aa5ae		e80d0aaeff		CALL runtime.growslice(SB)           // callq 0x48afc0								
+  electra.ssz.go:4073	0x9aa5b3		4c8b842490000000	MOVQ 0x90(SP), R8                    // mov 0x90(%rsp),%r8							
+  electra.ssz.go:4073	0x9aa5bb		4989d9			MOVQ BX, R9                          // mov %rbx,%r9								
+  electra.ssz.go:4073	0x9aa5be		488b9c24b0000000	MOVQ 0xb0(SP), BX                    // mov 0xb0(%rsp),%rbx							
+  electra.ssz.go:4073	0x9aa5c6		48894c2468		MOVQ CX, 0x68(SP)                    // mov %rcx,0x68(%rsp)							
+  electra.ssz.go:4073	0x9aa5cb		4c894c2460		MOVQ R9, 0x60(SP)                    // mov %r9,0x60(%rsp)							
+  electra.ssz.go:4073	0x9aa5d0		48898424a8000000	MOVQ AX, 0xa8(SP)                    // mov %rax,0xa8(%rsp)							
+  electra.ssz.go:4073	0x9aa5d8		4c01c0			ADDQ R8, AX                          // add %r8,%rax								
+  electra.ssz.go:4073	0x9aa5db		b920000000		MOVL $0x20, CX                       // mov $0x20,%ecx								
+  electra.ssz.go:4073	0x9aa5e0		e89b5faeff		CALL runtime.memmove(SB)             // callq 0x490580								
+  binary.go:136		0x9aa5e5		488b5c2460		MOVQ 0x60(SP), BX                    // mov 0x60(%rsp),%rbx							
+  binary.go:136		0x9aa5ea		4883c308		ADDQ $0x8, BX                        // add $0x8,%rbx								
+  electra.ssz.go:4076	0x9aa5ee		488b9424d0000000	MOVQ 0xd0(SP), DX                    // mov 0xd0(%rsp),%rdx							
+  electra.ssz.go:4076	0x9aa5f6		488b7238		MOVQ 0x38(DX), SI                    // mov 0x38(%rdx),%rsi							
+  binary.go:136		0x9aa5fa		488b4c2468		MOVQ 0x68(SP), CX                    // mov 0x68(%rsp),%rcx							
+  binary.go:136		0x9aa5ff		90			NOPL                                 // nop									
+  binary.go:136		0x9aa600		4839d9			CMPQ CX, BX                          // cmp %rbx,%rcx								
+  binary.go:136		0x9aa603		720a			JB 0x9aa60f                          // jb 0x9aa60f								
+  electra.ssz.go:4076	0x9aa605		488b8424a8000000	MOVQ 0xa8(SP), AX                    // mov 0xa8(%rsp),%rax							
+  binary.go:136		0x9aa60d		eb2b			JMP 0x9aa63a                         // jmp 0x9aa63a								
+  electra.ssz.go:4076	0x9aa60f		4889742448		MOVQ SI, 0x48(SP)                    // mov %rsi,0x48(%rsp)							
+  binary.go:136		0x9aa614		488b8424a8000000	MOVQ 0xa8(SP), AX                    // mov 0xa8(%rsp),%rax							
+  binary.go:136		0x9aa61c		bf08000000		MOVL $0x8, DI                        // mov $0x8,%edi								
+  binary.go:136		0x9aa621		488d35d8f11300		LEAQ 0x13f1d8(IP), SI                // lea 0x13f1d8(%rip),%rsi							
+  binary.go:136		0x9aa628		e89309aeff		CALL runtime.growslice(SB)           // callq 0x48afc0								
+  electra.ssz.go:4079	0x9aa62d		488b9424d0000000	MOVQ 0xd0(SP), DX                    // mov 0xd0(%rsp),%rdx							
+  binary.go:136		0x9aa635		488b742448		MOVQ 0x48(SP), SI                    // mov 0x48(%rsp),%rsi							
+  binary.go:136		0x9aa63a		48897403f8		MOVQ SI, -0x8(BX)(AX*1)              // mov %rsi,-0x8(%rbx,%rax,1)						
+  electra.ssz.go:4079	0x9aa63f		4c8b4240		MOVQ 0x40(DX), R8                    // mov 0x40(%rdx),%r8							
+  electra.ssz.go:4079	0x9aa643		48837a4860		CMPQ 0x48(DX), $0x60                 // cmpq $0x60,0x48(%rdx)							
+  electra.ssz.go:4079	0x9aa648		0f85d8000000		JNE 0x9aa726                         // jne 0x9aa726								
+  electra.ssz.go:4082	0x9aa64e		4c8d4b60		LEAQ 0x60(BX), R9                    // lea 0x60(%rbx),%r9							
+  electra.ssz.go:4082	0x9aa652		4c39c9			CMPQ CX, R9                          // cmp %r9,%rcx								
+  electra.ssz.go:4082	0x9aa655		7331			JAE 0x9aa688                         // jae 0x9aa688								
+  electra.ssz.go:4076	0x9aa657		48895c2440		MOVQ BX, 0x40(SP)                    // mov %rbx,0x40(%rsp)							
+  electra.ssz.go:4079	0x9aa65c		4c898424b8000000	MOVQ R8, 0xb8(SP)                    // mov %r8,0xb8(%rsp)							
+  electra.ssz.go:4082	0x9aa664		4c89cb			MOVQ R9, BX                          // mov %r9,%rbx								
+  electra.ssz.go:4082	0x9aa667		bf60000000		MOVL $0x60, DI                       // mov $0x60,%edi								
+  electra.ssz.go:4082	0x9aa66c		488d358df11300		LEAQ 0x13f18d(IP), SI                // lea 0x13f18d(%rip),%rsi							
+  electra.ssz.go:4082	0x9aa673		e84809aeff		CALL runtime.growslice(SB)           // callq 0x48afc0								
+  electra.ssz.go:4082	0x9aa678		4c8b8424b8000000	MOVQ 0xb8(SP), R8                    // mov 0xb8(%rsp),%r8							
+  electra.ssz.go:4082	0x9aa680		4989d9			MOVQ BX, R9                          // mov %rbx,%r9								
+  electra.ssz.go:4082	0x9aa683		488b5c2440		MOVQ 0x40(SP), BX                    // mov 0x40(%rsp),%rbx							
+  electra.ssz.go:4082	0x9aa688		4c894c2450		MOVQ R9, 0x50(SP)                    // mov %r9,0x50(%rsp)							
+  electra.ssz.go:4082	0x9aa68d		48898424a0000000	MOVQ AX, 0xa0(SP)                    // mov %rax,0xa0(%rsp)							
+  electra.ssz.go:4082	0x9aa695		48894c2458		MOVQ CX, 0x58(SP)                    // mov %rcx,0x58(%rsp)							
+  electra.ssz.go:4082	0x9aa69a		4801d8			ADDQ BX, AX                          // add %rbx,%rax								
+  electra.ssz.go:4082	0x9aa69d		4c89c3			MOVQ R8, BX                          // mov %r8,%rbx								
+  electra.ssz.go:4082	0x9aa6a0		b960000000		MOVL $0x60, CX                       // mov $0x60,%ecx								
+  electra.ssz.go:4082	0x9aa6a5		e8d65eaeff		CALL runtime.memmove(SB)             // callq 0x490580								
+  slot.go:197		0x9aa6aa		488b5c2450		MOVQ 0x50(SP), BX                    // mov 0x50(%rsp),%rbx							
+  slot.go:197		0x9aa6af		488d5308		LEAQ 0x8(BX), DX                     // lea 0x8(%rbx),%rdx							
+  slot.go:202		0x9aa6b3		488bb424d0000000	MOVQ 0xd0(SP), SI                    // mov 0xd0(%rsp),%rsi							
+  slot.go:202		0x9aa6bb		488b7658		MOVQ 0x58(SI), SI                    // mov 0x58(%rsi),%rsi							
+  electra.ssz.go:4085	0x9aa6bf		90			NOPL                                 // nop									
+  slot.go:193		0x9aa6c0		90			NOPL                                 // nop									
+  sszuint64.go:19	0x9aa6c1		90			NOPL                                 // nop									
+  binary.go:136		0x9aa6c2		488d7c2470		LEAQ 0x70(SP), DI                    // lea 0x70(%rsp),%rdi							
+  binary.go:136		0x9aa6c7		440f113f		MOVUPS X15, 0(DI)                    // movups %xmm15,(%rdi)							
+  binary.go:136		0x9aa6cb		440f117f10		MOVUPS X15, 0x10(DI)                 // movups %xmm15,0x10(%rdi)						
+  binary.go:136		0x9aa6d0		4889742470		MOVQ SI, 0x70(SP)                    // mov %rsi,0x70(%rsp)							
+  slot.go:197		0x9aa6d5		488b4c2458		MOVQ 0x58(SP), CX                    // mov 0x58(%rsp),%rcx							
+  slot.go:197		0x9aa6da		4839d1			CMPQ CX, DX                          // cmp %rdx,%rcx								
+  slot.go:197		0x9aa6dd		720a			JB 0x9aa6e9                          // jb 0x9aa6e9								
+  slot.go:197		0x9aa6df		488b8424a0000000	MOVQ 0xa0(SP), AX                    // mov 0xa0(%rsp),%rax							
+  slot.go:197		0x9aa6e7		eb24			JMP 0x9aa70d                         // jmp 0x9aa70d								
+  slot.go:197		0x9aa6e9		488b8424a0000000	MOVQ 0xa0(SP), AX                    // mov 0xa0(%rsp),%rax							
+  slot.go:197		0x9aa6f1		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx								
+  slot.go:197		0x9aa6f4		bf08000000		MOVL $0x8, DI                        // mov $0x8,%edi								
+  slot.go:197		0x9aa6f9		488d3500f11300		LEAQ 0x13f100(IP), SI                // lea 0x13f100(%rip),%rsi							
+  slot.go:197		0x9aa700		e8bb08aeff		CALL runtime.growslice(SB)           // callq 0x48afc0								
+  slot.go:197		0x9aa705		4889da			MOVQ BX, DX                          // mov %rbx,%rdx								
+  slot.go:197		0x9aa708		488b5c2450		MOVQ 0x50(SP), BX                    // mov 0x50(%rsp),%rbx							
+  slot.go:197		0x9aa70d		4c8b442470		MOVQ 0x70(SP), R8                    // mov 0x70(%rsp),%r8							
+  slot.go:197		0x9aa712		4c890418		MOVQ R8, 0(AX)(BX*1)                 // mov %r8,(%rax,%rbx,1)							
+  electra.ssz.go:4089	0x9aa716		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx								
+  electra.ssz.go:4089	0x9aa719		31ff			XORL DI, DI                          // xor %edi,%edi								
+  electra.ssz.go:4089	0x9aa71b		31f6			XORL SI, SI                          // xor %esi,%esi								
+  electra.ssz.go:4089	0x9aa71d		4881c4c0000000		ADDQ $0xc0, SP                       // add $0xc0,%rsp								
+  electra.ssz.go:4089	0x9aa724		5d			POPQ BP                              // pop %rbp								
+  electra.ssz.go:4089	0x9aa725		c3			RET                                  // retq									
+  electra.ssz.go:4080	0x9aa726		488b3d43559d00		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength(SB), DI // mov 0x9d5543(%rip),%rdi		
+  electra.ssz.go:4080	0x9aa72d		488b3544559d00		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength+8(SB), SI // mov 0x9d5544(%rip),%rsi		
+  electra.ssz.go:4080	0x9aa734		31c0			XORL AX, AX                          // xor %eax,%eax								
+  electra.ssz.go:4080	0x9aa736		31db			XORL BX, BX                          // xor %ebx,%ebx								
+  electra.ssz.go:4080	0x9aa738		4889d9			MOVQ BX, CX                          // mov %rbx,%rcx								
+  electra.ssz.go:4080	0x9aa73b		4881c4c0000000		ADDQ $0xc0, SP                       // add $0xc0,%rsp								
+  electra.ssz.go:4080	0x9aa742		5d			POPQ BP                              // pop %rbp								
+  electra.ssz.go:4080	0x9aa743		c3			RET                                  // retq									
+  electra.ssz.go:4071	0x9aa744		488b3d25559d00		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength(SB), DI // mov 0x9d5525(%rip),%rdi		
+  electra.ssz.go:4071	0x9aa74b		488b3526559d00		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength+8(SB), SI // mov 0x9d5526(%rip),%rsi		
+  electra.ssz.go:4071	0x9aa752		31c0			XORL AX, AX                          // xor %eax,%eax								
+  electra.ssz.go:4071	0x9aa754		31db			XORL BX, BX                          // xor %ebx,%ebx								
+  electra.ssz.go:4071	0x9aa756		4889d9			MOVQ BX, CX                          // mov %rbx,%rcx								
+  electra.ssz.go:4071	0x9aa759		4881c4c0000000		ADDQ $0xc0, SP                       // add $0xc0,%rsp								
+  electra.ssz.go:4071	0x9aa760		5d			POPQ BP                              // pop %rbp								
+  electra.ssz.go:4071	0x9aa761		c3			RET                                  // retq									
+  electra.ssz.go:4065	0x9aa762		488b3d07559d00		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength(SB), DI // mov 0x9d5507(%rip),%rdi		
+  electra.ssz.go:4065	0x9aa769		488b3508559d00		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength+8(SB), SI // mov 0x9d5508(%rip),%rsi		
+  electra.ssz.go:4065	0x9aa770		31c0			XORL AX, AX                          // xor %eax,%eax								
+  electra.ssz.go:4065	0x9aa772		31db			XORL BX, BX                          // xor %ebx,%ebx								
+  electra.ssz.go:4065	0x9aa774		4889d9			MOVQ BX, CX                          // mov %rbx,%rcx								
+  electra.ssz.go:4065	0x9aa777		4881c4c0000000		ADDQ $0xc0, SP                       // add $0xc0,%rsp								
+  electra.ssz.go:4065	0x9aa77e		5d			POPQ BP                              // pop %rbp								
+  electra.ssz.go:4065	0x9aa77f		90			NOPL                                 // nop									
+  electra.ssz.go:4065	0x9aa780		c3			RET                                  // retq									
+  electra.ssz.go:4060	0x9aa781		4889442408		MOVQ AX, 0x8(SP)                     // mov %rax,0x8(%rsp)							
+  electra.ssz.go:4060	0x9aa786		48895c2410		MOVQ BX, 0x10(SP)                    // mov %rbx,0x10(%rsp)							
+  electra.ssz.go:4060	0x9aa78b		48894c2418		MOVQ CX, 0x18(SP)                    // mov %rcx,0x18(%rsp)							
+  electra.ssz.go:4060	0x9aa790		48897c2420		MOVQ DI, 0x20(SP)                    // mov %rdi,0x20(%rsp)							
+  electra.ssz.go:4060	0x9aa795		e8263daeff		CALL runtime.morestack_noctxt.abi0(SB) // callq 0x48e4c0							
+  electra.ssz.go:4060	0x9aa79a		488b442408		MOVQ 0x8(SP), AX                     // mov 0x8(%rsp),%rax							
+  electra.ssz.go:4060	0x9aa79f		488b5c2410		MOVQ 0x10(SP), BX                    // mov 0x10(%rsp),%rbx							
+  electra.ssz.go:4060	0x9aa7a4		488b4c2418		MOVQ 0x18(SP), CX                    // mov 0x18(%rsp),%rcx							
+  electra.ssz.go:4060	0x9aa7a9		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi							
+  electra.ssz.go:4060	0x9aa7ae		e9edfcffff		JMP github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PendingDeposit).MarshalSSZTo(SB) // jmpq 0x9aa4a0	
+
+TEXT github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PendingConsolidation).MarshalSSZTo(SB) github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/electra.ssz.go
+  electra.ssz.go:4176	0x9ab020		493b6610		CMPQ SP, 0x10(R14)                   // cmp 0x10(%r14),%rsp								
+  electra.ssz.go:4176	0x9ab024		0f86eb000000		JBE 0x9ab115                         // jbe 0x9ab115									
+  electra.ssz.go:4176	0x9ab02a		55			PUSHQ BP                             // push %rbp									
+  electra.ssz.go:4176	0x9ab02b		4889e5			MOVQ SP, BP                          // mov %rsp,%rbp									
+  electra.ssz.go:4176	0x9ab02e		4883ec70		SUBQ $0x70, SP                       // sub $0x70,%rsp									
+  electra.ssz.go:4176	0x9ab032		48899c2488000000	MOVQ BX, 0x88(SP)                    // mov %rbx,0x88(%rsp)								
+  validator.go:95	0x9ab03a		488d5108		LEAQ 0x8(CX), DX                     // lea 0x8(%rcx),%rdx								
+  electra.ssz.go:4180	0x9ab03e		4c8b4008		MOVQ 0x8(AX), R8                     // mov 0x8(%rax),%r8								
+  validator.go:91	0x9ab042		90			NOPL                                 // nop										
+  validator.go:100	0x9ab043		90			NOPL                                 // nop										
+  sszuint64.go:19	0x9ab044		90			NOPL                                 // nop										
+  binary.go:136		0x9ab045		4c8d4c2450		LEAQ 0x50(SP), R9                    // lea 0x50(%rsp),%r9								
+  binary.go:136		0x9ab04a		450f1139		MOVUPS X15, 0(R9)                    // movups %xmm15,(%r9)								
+  binary.go:136		0x9ab04e		450f117910		MOVUPS X15, 0x10(R9)                 // movups %xmm15,0x10(%r9)								
+  binary.go:136		0x9ab053		4c89442450		MOVQ R8, 0x50(SP)                    // mov %r8,0x50(%rsp)								
+  validator.go:95	0x9ab058		4839d7			CMPQ DI, DX                          // cmp %rdx,%rdi									
+  validator.go:95	0x9ab05b		7343			JAE 0x9ab0a0                         // jae 0x9ab0a0									
+  validator.go:92	0x9ab05d		4889842480000000	MOVQ AX, 0x80(SP)                    // mov %rax,0x80(%rsp)								
+  validator.go:92	0x9ab065		48898c2490000000	MOVQ CX, 0x90(SP)                    // mov %rcx,0x90(%rsp)								
+  validator.go:95	0x9ab06d		4889d8			MOVQ BX, AX                          // mov %rbx,%rax									
+  validator.go:95	0x9ab070		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx									
+  validator.go:95	0x9ab073		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx									
+  validator.go:95	0x9ab076		bf08000000		MOVL $0x8, DI                        // mov $0x8,%edi									
+  validator.go:95	0x9ab07b		488d357ee71300		LEAQ 0x13e77e(IP), SI                // lea 0x13e77e(%rip),%rsi								
+  validator.go:95	0x9ab082		e839ffadff		CALL runtime.growslice(SB)           // callq 0x48afc0									
+  validator.go:95	0x9ab087		4889cf			MOVQ CX, DI                          // mov %rcx,%rdi									
+  validator.go:95	0x9ab08a		4889da			MOVQ BX, DX                          // mov %rbx,%rdx									
+  validator.go:95	0x9ab08d		488b8c2490000000	MOVQ 0x90(SP), CX                    // mov 0x90(%rsp),%rcx								
+  validator.go:95	0x9ab095		4889c3			MOVQ AX, BX                          // mov %rax,%rbx									
+  validator.go:100	0x9ab098		488b842480000000	MOVQ 0x80(SP), AX                    // mov 0x80(%rsp),%rax								
+  validator.go:95	0x9ab0a0		4c8b442450		MOVQ 0x50(SP), R8                    // mov 0x50(%rsp),%r8								
+  validator.go:95	0x9ab0a5		4c89040b		MOVQ R8, 0(BX)(CX*1)                 // mov %r8,(%rbx,%rcx,1)								
+  validator.go:95	0x9ab0a9		4c8d4208		LEAQ 0x8(DX), R8                     // lea 0x8(%rdx),%r8								
+  validator.go:100	0x9ab0ad		4c8b4810		MOVQ 0x10(AX), R9                    // mov 0x10(%rax),%r9								
+  electra.ssz.go:4185	0x9ab0b1		90			NOPL                                 // nop										
+  validator.go:91	0x9ab0b2		90			NOPL                                 // nop										
+  sszuint64.go:19	0x9ab0b3		90			NOPL                                 // nop										
+  binary.go:136		0x9ab0b4		4c8d542430		LEAQ 0x30(SP), R10                   // lea 0x30(%rsp),%r10								
+  binary.go:136		0x9ab0b9		450f113a		MOVUPS X15, 0(R10)                   // movups %xmm15,(%r10)								
+  binary.go:136		0x9ab0bd		450f117a10		MOVUPS X15, 0x10(R10)                // movups %xmm15,0x10(%r10)							
+  binary.go:136		0x9ab0c2		4c894c2430		MOVQ R9, 0x30(SP)                    // mov %r9,0x30(%rsp)								
+  validator.go:95	0x9ab0c7		4c39c7			CMPQ DI, R8                          // cmp %r8,%rdi									
+  validator.go:95	0x9ab0ca		732d			JAE 0x9ab0f9                         // jae 0x9ab0f9									
+  validator.go:95	0x9ab0cc		4889542428		MOVQ DX, 0x28(SP)                    // mov %rdx,0x28(%rsp)								
+  validator.go:95	0x9ab0d1		4889d8			MOVQ BX, AX                          // mov %rbx,%rax									
+  validator.go:95	0x9ab0d4		4c89c3			MOVQ R8, BX                          // mov %r8,%rbx									
+  validator.go:95	0x9ab0d7		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx									
+  validator.go:95	0x9ab0da		bf08000000		MOVL $0x8, DI                        // mov $0x8,%edi									
+  validator.go:95	0x9ab0df		488d351ae71300		LEAQ 0x13e71a(IP), SI                // lea 0x13e71a(%rip),%rsi								
+  validator.go:95	0x9ab0e6		e8d5feadff		CALL runtime.growslice(SB)           // callq 0x48afc0									
+  validator.go:95	0x9ab0eb		488b542428		MOVQ 0x28(SP), DX                    // mov 0x28(%rsp),%rdx								
+  validator.go:95	0x9ab0f0		4889cf			MOVQ CX, DI                          // mov %rcx,%rdi									
+  validator.go:95	0x9ab0f3		4989d8			MOVQ BX, R8                          // mov %rbx,%r8									
+  validator.go:95	0x9ab0f6		4889c3			MOVQ AX, BX                          // mov %rax,%rbx									
+  validator.go:95	0x9ab0f9		4c8b4c2430		MOVQ 0x30(SP), R9                    // mov 0x30(%rsp),%r9								
+  validator.go:95	0x9ab0fe		4c890c13		MOVQ R9, 0(BX)(DX*1)                 // mov %r9,(%rbx,%rdx,1)								
+  electra.ssz.go:4189	0x9ab102		4889d8			MOVQ BX, AX                          // mov %rbx,%rax									
+  electra.ssz.go:4189	0x9ab105		4c89c3			MOVQ R8, BX                          // mov %r8,%rbx									
+  electra.ssz.go:4189	0x9ab108		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx									
+  electra.ssz.go:4189	0x9ab10b		31ff			XORL DI, DI                          // xor %edi,%edi									
+  electra.ssz.go:4189	0x9ab10d		31f6			XORL SI, SI                          // xor %esi,%esi									
+  electra.ssz.go:4189	0x9ab10f		4883c470		ADDQ $0x70, SP                       // add $0x70,%rsp									
+  electra.ssz.go:4189	0x9ab113		5d			POPQ BP                              // pop %rbp									
+  electra.ssz.go:4189	0x9ab114		c3			RET                                  // retq										
+  electra.ssz.go:4176	0x9ab115		4889442408		MOVQ AX, 0x8(SP)                     // mov %rax,0x8(%rsp)								
+  electra.ssz.go:4176	0x9ab11a		48895c2410		MOVQ BX, 0x10(SP)                    // mov %rbx,0x10(%rsp)								
+  electra.ssz.go:4176	0x9ab11f		48894c2418		MOVQ CX, 0x18(SP)                    // mov %rcx,0x18(%rsp)								
+  electra.ssz.go:4176	0x9ab124		48897c2420		MOVQ DI, 0x20(SP)                    // mov %rdi,0x20(%rsp)								
+  electra.ssz.go:4176	0x9ab129		e89233aeff		CALL runtime.morestack_noctxt.abi0(SB) // callq 0x48e4c0								
+  electra.ssz.go:4176	0x9ab12e		488b442408		MOVQ 0x8(SP), AX                     // mov 0x8(%rsp),%rax								
+  electra.ssz.go:4176	0x9ab133		488b5c2410		MOVQ 0x10(SP), BX                    // mov 0x10(%rsp),%rbx								
+  electra.ssz.go:4176	0x9ab138		488b4c2418		MOVQ 0x18(SP), CX                    // mov 0x18(%rsp),%rcx								
+  electra.ssz.go:4176	0x9ab13d		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi								
+  electra.ssz.go:4176	0x9ab142		e9d9feffff		JMP github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PendingConsolidation).MarshalSSZTo(SB) // jmpq 0x9ab020	
+
+TEXT github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PendingPartialWithdrawal).MarshalSSZTo(SB) github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/electra.ssz.go
+  electra.ssz.go:4250	0x9ab7c0		4c8d6424e8		LEAQ -0x18(SP), R12                  // lea -0x18(%rsp),%r12								
+  electra.ssz.go:4250	0x9ab7c5		4d3b6610		CMPQ R12, 0x10(R14)                  // cmp 0x10(%r14),%r12								
+  electra.ssz.go:4250	0x9ab7c9		0f8638010000		JBE 0x9ab907                         // jbe 0x9ab907									
+  electra.ssz.go:4250	0x9ab7cf		55			PUSHQ BP                             // push %rbp									
+  electra.ssz.go:4250	0x9ab7d0		4889e5			MOVQ SP, BP                          // mov %rsp,%rbp									
+  electra.ssz.go:4250	0x9ab7d3		4881ec90000000		SUBQ $0x90, SP                       // sub $0x90,%rsp									
+  electra.ssz.go:4250	0x9ab7da		48899c24a8000000	MOVQ BX, 0xa8(SP)                    // mov %rbx,0xa8(%rsp)								
+  validator.go:92	0x9ab7e2		48898424a0000000	MOVQ AX, 0xa0(SP)                    // mov %rax,0xa0(%rsp)								
+  validator.go:95	0x9ab7ea		488d5108		LEAQ 0x8(CX), DX                     // lea 0x8(%rcx),%rdx								
+  electra.ssz.go:4254	0x9ab7ee		4c8b4008		MOVQ 0x8(AX), R8                     // mov 0x8(%rax),%r8								
+  validator.go:91	0x9ab7f2		90			NOPL                                 // nop										
+  validator.go:100	0x9ab7f3		90			NOPL                                 // nop										
+  sszuint64.go:19	0x9ab7f4		90			NOPL                                 // nop										
+  binary.go:136		0x9ab7f5		4c8d4c2470		LEAQ 0x70(SP), R9                    // lea 0x70(%rsp),%r9								
+  binary.go:136		0x9ab7fa		450f1139		MOVUPS X15, 0(R9)                    // movups %xmm15,(%r9)								
+  binary.go:136		0x9ab7fe		450f117910		MOVUPS X15, 0x10(R9)                 // movups %xmm15,0x10(%r9)								
+  binary.go:136		0x9ab803		4c89442470		MOVQ R8, 0x70(SP)                    // mov %r8,0x70(%rsp)								
+  validator.go:95	0x9ab808		4839d7			CMPQ DI, DX                          // cmp %rdx,%rdi									
+  validator.go:95	0x9ab80b		733b			JAE 0x9ab848                         // jae 0x9ab848									
+  validator.go:92	0x9ab80d		48898c24b0000000	MOVQ CX, 0xb0(SP)                    // mov %rcx,0xb0(%rsp)								
+  validator.go:95	0x9ab815		4889d8			MOVQ BX, AX                          // mov %rbx,%rax									
+  validator.go:95	0x9ab818		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx									
+  validator.go:95	0x9ab81b		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx									
+  validator.go:95	0x9ab81e		bf08000000		MOVL $0x8, DI                        // mov $0x8,%edi									
+  validator.go:95	0x9ab823		488d35d6df1300		LEAQ 0x13dfd6(IP), SI                // lea 0x13dfd6(%rip),%rsi								
+  validator.go:95	0x9ab82a		e891f7adff		CALL runtime.growslice(SB)           // callq 0x48afc0									
+  validator.go:95	0x9ab82f		4889cf			MOVQ CX, DI                          // mov %rcx,%rdi									
+  validator.go:95	0x9ab832		4889da			MOVQ BX, DX                          // mov %rbx,%rdx									
+  validator.go:95	0x9ab835		488b8c24b0000000	MOVQ 0xb0(SP), CX                    // mov 0xb0(%rsp),%rcx								
+  validator.go:95	0x9ab83d		4889c3			MOVQ AX, BX                          // mov %rax,%rbx									
+  electra.ssz.go:4259	0x9ab840		488b8424a0000000	MOVQ 0xa0(SP), AX                    // mov 0xa0(%rsp),%rax								
+  validator.go:95	0x9ab848		4c8b442470		MOVQ 0x70(SP), R8                    // mov 0x70(%rsp),%r8								
+  validator.go:95	0x9ab84d		4c89040b		MOVQ R8, 0(BX)(CX*1)                 // mov %r8,(%rbx,%rcx,1)								
+  binary.go:136		0x9ab851		4883c208		ADDQ $0x8, DX                        // add $0x8,%rdx									
+  electra.ssz.go:4259	0x9ab855		4c8b4010		MOVQ 0x10(AX), R8                    // mov 0x10(%rax),%r8								
+  binary.go:136		0x9ab859		4839d7			CMPQ DI, DX                          // cmp %rdx,%rdi									
+  binary.go:136		0x9ab85c		7335			JAE 0x9ab893                         // jae 0x9ab893									
+  electra.ssz.go:4259	0x9ab85e		4c89442448		MOVQ R8, 0x48(SP)                    // mov %r8,0x48(%rsp)								
+  binary.go:136		0x9ab863		4889d8			MOVQ BX, AX                          // mov %rbx,%rax									
+  binary.go:136		0x9ab866		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx									
+  binary.go:136		0x9ab869		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx									
+  binary.go:136		0x9ab86c		bf08000000		MOVL $0x8, DI                        // mov $0x8,%edi									
+  binary.go:136		0x9ab871		488d3588df1300		LEAQ 0x13df88(IP), SI                // lea 0x13df88(%rip),%rsi								
+  binary.go:136		0x9ab878		e843f7adff		CALL runtime.growslice(SB)           // callq 0x48afc0									
+  binary.go:136		0x9ab87d		4c8b442448		MOVQ 0x48(SP), R8                    // mov 0x48(%rsp),%r8								
+  electra.ssz.go:4259	0x9ab882		4889da			MOVQ BX, DX                          // mov %rbx,%rdx									
+  electra.ssz.go:4259	0x9ab885		4889cf			MOVQ CX, DI                          // mov %rcx,%rdi									
+  electra.ssz.go:4259	0x9ab888		4889c3			MOVQ AX, BX                          // mov %rax,%rbx									
+  epoch.go:145		0x9ab88b		488b8424a0000000	MOVQ 0xa0(SP), AX                    // mov 0xa0(%rsp),%rax								
+  binary.go:136		0x9ab893		4c89441af8		MOVQ R8, -0x8(DX)(BX*1)              // mov %r8,-0x8(%rdx,%rbx,1)							
+  epoch.go:140		0x9ab898		4c8d4208		LEAQ 0x8(DX), R8                     // lea 0x8(%rdx),%r8								
+  epoch.go:145		0x9ab89c		4c8b4818		MOVQ 0x18(AX), R9                    // mov 0x18(%rax),%r9								
+  electra.ssz.go:4262	0x9ab8a0		90			NOPL                                 // nop										
+  epoch.go:136		0x9ab8a1		90			NOPL                                 // nop										
+  sszuint64.go:19	0x9ab8a2		90			NOPL                                 // nop										
+  binary.go:136		0x9ab8a3		4c8d542450		LEAQ 0x50(SP), R10                   // lea 0x50(%rsp),%r10								
+  binary.go:136		0x9ab8a8		450f113a		MOVUPS X15, 0(R10)                   // movups %xmm15,(%r10)								
+  binary.go:136		0x9ab8ac		450f117a10		MOVUPS X15, 0x10(R10)                // movups %xmm15,0x10(%r10)							
+  binary.go:136		0x9ab8b1		4c894c2450		MOVQ R9, 0x50(SP)                    // mov %r9,0x50(%rsp)								
+  epoch.go:140		0x9ab8b6		4c39c7			CMPQ DI, R8                          // cmp %r8,%rdi									
+  epoch.go:140		0x9ab8b9		732d			JAE 0x9ab8e8                         // jae 0x9ab8e8									
+  electra.ssz.go:4259	0x9ab8bb		4889542440		MOVQ DX, 0x40(SP)                    // mov %rdx,0x40(%rsp)								
+  epoch.go:140		0x9ab8c0		4889d8			MOVQ BX, AX                          // mov %rbx,%rax									
+  epoch.go:140		0x9ab8c3		4c89c3			MOVQ R8, BX                          // mov %r8,%rbx									
+  epoch.go:140		0x9ab8c6		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx									
+  epoch.go:140		0x9ab8c9		bf08000000		MOVL $0x8, DI                        // mov $0x8,%edi									
+  epoch.go:140		0x9ab8ce		488d352bdf1300		LEAQ 0x13df2b(IP), SI                // lea 0x13df2b(%rip),%rsi								
+  epoch.go:140		0x9ab8d5		e8e6f6adff		CALL runtime.growslice(SB)           // callq 0x48afc0									
+  epoch.go:140		0x9ab8da		488b542440		MOVQ 0x40(SP), DX                    // mov 0x40(%rsp),%rdx								
+  epoch.go:140		0x9ab8df		4889cf			MOVQ CX, DI                          // mov %rcx,%rdi									
+  epoch.go:140		0x9ab8e2		4989d8			MOVQ BX, R8                          // mov %rbx,%r8									
+  epoch.go:140		0x9ab8e5		4889c3			MOVQ AX, BX                          // mov %rax,%rbx									
+  epoch.go:140		0x9ab8e8		4c8b4c2450		MOVQ 0x50(SP), R9                    // mov 0x50(%rsp),%r9								
+  epoch.go:140		0x9ab8ed		4c890c13		MOVQ R9, 0(BX)(DX*1)                 // mov %r9,(%rbx,%rdx,1)								
+  electra.ssz.go:4266	0x9ab8f1		4889d8			MOVQ BX, AX                          // mov %rbx,%rax									
+  electra.ssz.go:4266	0x9ab8f4		4c89c3			MOVQ R8, BX                          // mov %r8,%rbx									
+  electra.ssz.go:4266	0x9ab8f7		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx									
+  electra.ssz.go:4266	0x9ab8fa		31ff			XORL DI, DI                          // xor %edi,%edi									
+  electra.ssz.go:4266	0x9ab8fc		31f6			XORL SI, SI                          // xor %esi,%esi									
+  electra.ssz.go:4266	0x9ab8fe		4881c490000000		ADDQ $0x90, SP                       // add $0x90,%rsp									
+  electra.ssz.go:4266	0x9ab905		5d			POPQ BP                              // pop %rbp									
+  electra.ssz.go:4266	0x9ab906		c3			RET                                  // retq										
+  electra.ssz.go:4250	0x9ab907		4889442408		MOVQ AX, 0x8(SP)                     // mov %rax,0x8(%rsp)								
+  electra.ssz.go:4250	0x9ab90c		48895c2410		MOVQ BX, 0x10(SP)                    // mov %rbx,0x10(%rsp)								
+  electra.ssz.go:4250	0x9ab911		48894c2418		MOVQ CX, 0x18(SP)                    // mov %rcx,0x18(%rsp)								
+  electra.ssz.go:4250	0x9ab916		48897c2420		MOVQ DI, 0x20(SP)                    // mov %rdi,0x20(%rsp)								
+  electra.ssz.go:4250	0x9ab91b		0f1f440000		NOPL 0(AX)(AX*1)                     // nopl (%rax,%rax,1)								
+  electra.ssz.go:4250	0x9ab920		e89b2baeff		CALL runtime.morestack_noctxt.abi0(SB) // callq 0x48e4c0								
+  electra.ssz.go:4250	0x9ab925		488b442408		MOVQ 0x8(SP), AX                     // mov 0x8(%rsp),%rax								
+  electra.ssz.go:4250	0x9ab92a		488b5c2410		MOVQ 0x10(SP), BX                    // mov 0x10(%rsp),%rbx								
+  electra.ssz.go:4250	0x9ab92f		488b4c2418		MOVQ 0x18(SP), CX                    // mov 0x18(%rsp),%rcx								
+  electra.ssz.go:4250	0x9ab934		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi								
+  electra.ssz.go:4250	0x9ab939		e982feffff		JMP github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PendingPartialWithdrawal).MarshalSSZTo(SB) // jmpq 0x9ab7c0	
+
+TEXT github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Deposit_Data).MarshalSSZTo(SB) github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go
+  phase0.ssz.go:2136	0xa1ee40		4c8d6424f0		LEAQ -0x10(SP), R12                  // lea -0x10(%rsp),%r12							
+  phase0.ssz.go:2136	0xa1ee45		4d3b6610		CMPQ R12, 0x10(R14)                  // cmp 0x10(%r14),%r12							
+  phase0.ssz.go:2136	0xa1ee49		0f8652020000		JBE 0xa1f0a1                         // jbe 0xa1f0a1								
+  phase0.ssz.go:2136	0xa1ee4f		55			PUSHQ BP                             // push %rbp								
+  phase0.ssz.go:2136	0xa1ee50		4889e5			MOVQ SP, BP                          // mov %rsp,%rbp								
+  phase0.ssz.go:2136	0xa1ee53		4881ec88000000		SUBQ $0x88, SP                       // sub $0x88,%rsp								
+  phase0.ssz.go:2136	0xa1ee5a		48899c24a0000000	MOVQ BX, 0xa0(SP)                    // mov %rbx,0xa0(%rsp)							
+  phase0.ssz.go:2140	0xa1ee62		488b5008		MOVQ 0x8(AX), DX                     // mov 0x8(%rax),%rdx							
+  phase0.ssz.go:2140	0xa1ee66		4883781030		CMPQ 0x10(AX), $0x30                 // cmpq $0x30,0x10(%rax)							
+  phase0.ssz.go:2140	0xa1ee6b		0f8512020000		JNE 0xa1f083                         // jne 0xa1f083								
+  phase0.ssz.go:2140	0xa1ee71		4889842498000000	MOVQ AX, 0x98(SP)                    // mov %rax,0x98(%rsp)							
+  phase0.ssz.go:2143	0xa1ee79		4c8d4130		LEAQ 0x30(CX), R8                    // lea 0x30(%rcx),%r8							
+  phase0.ssz.go:2143	0xa1ee7d		0f1f00			NOPL 0(AX)                           // nopl (%rax)								
+  phase0.ssz.go:2143	0xa1ee80		4c39c7			CMPQ DI, R8                          // cmp %r8,%rdi								
+  phase0.ssz.go:2143	0xa1ee83		7343			JAE 0xa1eec8                         // jae 0xa1eec8								
+  phase0.ssz.go:2140	0xa1ee85		48898c24a8000000	MOVQ CX, 0xa8(SP)                    // mov %rcx,0xa8(%rsp)							
+  phase0.ssz.go:2140	0xa1ee8d		4889942480000000	MOVQ DX, 0x80(SP)                    // mov %rdx,0x80(%rsp)							
+  phase0.ssz.go:2143	0xa1ee95		4889d8			MOVQ BX, AX                          // mov %rbx,%rax								
+  phase0.ssz.go:2143	0xa1ee98		4c89c3			MOVQ R8, BX                          // mov %r8,%rbx								
+  phase0.ssz.go:2143	0xa1ee9b		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx								
+  phase0.ssz.go:2143	0xa1ee9e		bf30000000		MOVL $0x30, DI                       // mov $0x30,%edi								
+  phase0.ssz.go:2143	0xa1eea3		488d3556a90c00		LEAQ 0xca956(IP), SI                 // lea 0xca956(%rip),%rsi							
+  phase0.ssz.go:2143	0xa1eeaa		e811c1a6ff		CALL runtime.growslice(SB)           // callq 0x48afc0								
+  phase0.ssz.go:2143	0xa1eeaf		488b942480000000	MOVQ 0x80(SP), DX                    // mov 0x80(%rsp),%rdx							
+  phase0.ssz.go:2143	0xa1eeb7		4889cf			MOVQ CX, DI                          // mov %rcx,%rdi								
+  phase0.ssz.go:2143	0xa1eeba		4989d8			MOVQ BX, R8                          // mov %rbx,%r8								
+  phase0.ssz.go:2143	0xa1eebd		488b8c24a8000000	MOVQ 0xa8(SP), CX                    // mov 0xa8(%rsp),%rcx							
+  phase0.ssz.go:2143	0xa1eec5		4889c3			MOVQ AX, BX                          // mov %rax,%rbx								
+  phase0.ssz.go:2143	0xa1eec8		48899c2480000000	MOVQ BX, 0x80(SP)                    // mov %rbx,0x80(%rsp)							
+  phase0.ssz.go:2143	0xa1eed0		4c89442468		MOVQ R8, 0x68(SP)                    // mov %r8,0x68(%rsp)							
+  phase0.ssz.go:2143	0xa1eed5		48897c2460		MOVQ DI, 0x60(SP)                    // mov %rdi,0x60(%rsp)							
+  phase0.ssz.go:2143	0xa1eeda		488d0419		LEAQ 0(CX)(BX*1), AX                 // lea (%rcx,%rbx,1),%rax							
+  phase0.ssz.go:2143	0xa1eede		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx								
+  phase0.ssz.go:2143	0xa1eee1		b930000000		MOVL $0x30, CX                       // mov $0x30,%ecx								
+  phase0.ssz.go:2143	0xa1eee6		e89516a7ff		CALL runtime.memmove(SB)             // callq 0x490580								
+  phase0.ssz.go:2146	0xa1eeeb		488b942498000000	MOVQ 0x98(SP), DX                    // mov 0x98(%rsp),%rdx							
+  phase0.ssz.go:2146	0xa1eef3		488b5a20		MOVQ 0x20(DX), BX                    // mov 0x20(%rdx),%rbx							
+  phase0.ssz.go:2146	0xa1eef7		48837a2820		CMPQ 0x28(DX), $0x20                 // cmpq $0x20,0x28(%rdx)							
+  phase0.ssz.go:2146	0xa1eefc		0f1f4000		NOPL 0(AX)                           // nopl (%rax)								
+  phase0.ssz.go:2146	0xa1ef00		0f855f010000		JNE 0xa1f065                         // jne 0xa1f065								
+  phase0.ssz.go:2149	0xa1ef06		4c8b442468		MOVQ 0x68(SP), R8                    // mov 0x68(%rsp),%r8							
+  phase0.ssz.go:2149	0xa1ef0b		4d8d4820		LEAQ 0x20(R8), R9                    // lea 0x20(%r8),%r9							
+  phase0.ssz.go:2149	0xa1ef0f		488b4c2460		MOVQ 0x60(SP), CX                    // mov 0x60(%rsp),%rcx							
+  phase0.ssz.go:2149	0xa1ef14		4c39c9			CMPQ CX, R9                          // cmp %r9,%rcx								
+  phase0.ssz.go:2149	0xa1ef17		720a			JB 0xa1ef23                          // jb 0xa1ef23								
+  phase0.ssz.go:2149	0xa1ef19		488b842480000000	MOVQ 0x80(SP), AX                    // mov 0x80(%rsp),%rax							
+  phase0.ssz.go:2149	0xa1ef21		eb2f			JMP 0xa1ef52                         // jmp 0xa1ef52								
+  phase0.ssz.go:2146	0xa1ef23		48895c2478		MOVQ BX, 0x78(SP)                    // mov %rbx,0x78(%rsp)							
+  phase0.ssz.go:2149	0xa1ef28		488b842480000000	MOVQ 0x80(SP), AX                    // mov 0x80(%rsp),%rax							
+  phase0.ssz.go:2149	0xa1ef30		4c89cb			MOVQ R9, BX                          // mov %r9,%rbx								
+  phase0.ssz.go:2149	0xa1ef33		bf20000000		MOVL $0x20, DI                       // mov $0x20,%edi								
+  phase0.ssz.go:2149	0xa1ef38		488d35c1a80c00		LEAQ 0xca8c1(IP), SI                 // lea 0xca8c1(%rip),%rsi							
+  phase0.ssz.go:2149	0xa1ef3f		90			NOPL                                 // nop									
+  phase0.ssz.go:2149	0xa1ef40		e87bc0a6ff		CALL runtime.growslice(SB)           // callq 0x48afc0								
+  phase0.ssz.go:2149	0xa1ef45		4c8b442468		MOVQ 0x68(SP), R8                    // mov 0x68(%rsp),%r8							
+  phase0.ssz.go:2149	0xa1ef4a		4989d9			MOVQ BX, R9                          // mov %rbx,%r9								
+  phase0.ssz.go:2149	0xa1ef4d		488b5c2478		MOVQ 0x78(SP), BX                    // mov 0x78(%rsp),%rbx							
+  phase0.ssz.go:2149	0xa1ef52		4889442470		MOVQ AX, 0x70(SP)                    // mov %rax,0x70(%rsp)							
+  phase0.ssz.go:2149	0xa1ef57		4c894c2450		MOVQ R9, 0x50(SP)                    // mov %r9,0x50(%rsp)							
+  phase0.ssz.go:2149	0xa1ef5c		48894c2458		MOVQ CX, 0x58(SP)                    // mov %rcx,0x58(%rsp)							
+  phase0.ssz.go:2149	0xa1ef61		4c01c0			ADDQ R8, AX                          // add %r8,%rax								
+  phase0.ssz.go:2149	0xa1ef64		b920000000		MOVL $0x20, CX                       // mov $0x20,%ecx								
+  phase0.ssz.go:2149	0xa1ef69		e81216a7ff		CALL runtime.memmove(SB)             // callq 0x490580								
+  binary.go:136		0xa1ef6e		488b5c2450		MOVQ 0x50(SP), BX                    // mov 0x50(%rsp),%rbx							
+  binary.go:136		0xa1ef73		4883c308		ADDQ $0x8, BX                        // add $0x8,%rbx								
+  phase0.ssz.go:2152	0xa1ef77		488b942498000000	MOVQ 0x98(SP), DX                    // mov 0x98(%rsp),%rdx							
+  phase0.ssz.go:2152	0xa1ef7f		488b7238		MOVQ 0x38(DX), SI                    // mov 0x38(%rdx),%rsi							
+  binary.go:136		0xa1ef83		488b4c2458		MOVQ 0x58(SP), CX                    // mov 0x58(%rsp),%rcx							
+  binary.go:136		0xa1ef88		4839d9			CMPQ CX, BX                          // cmp %rbx,%rcx								
+  binary.go:136		0xa1ef8b		7207			JB 0xa1ef94                          // jb 0xa1ef94								
+  phase0.ssz.go:2152	0xa1ef8d		488b442470		MOVQ 0x70(SP), AX                    // mov 0x70(%rsp),%rax							
+  binary.go:136		0xa1ef92		eb28			JMP 0xa1efbc                         // jmp 0xa1efbc								
+  phase0.ssz.go:2152	0xa1ef94		4889742448		MOVQ SI, 0x48(SP)                    // mov %rsi,0x48(%rsp)							
+  binary.go:136		0xa1ef99		488b442470		MOVQ 0x70(SP), AX                    // mov 0x70(%rsp),%rax							
+  binary.go:136		0xa1ef9e		bf08000000		MOVL $0x8, DI                        // mov $0x8,%edi								
+  binary.go:136		0xa1efa3		488d3556a80c00		LEAQ 0xca856(IP), SI                 // lea 0xca856(%rip),%rsi							
+  binary.go:136		0xa1efaa		e811c0a6ff		CALL runtime.growslice(SB)           // callq 0x48afc0								
+  phase0.ssz.go:2155	0xa1efaf		488b942498000000	MOVQ 0x98(SP), DX                    // mov 0x98(%rsp),%rdx							
+  binary.go:136		0xa1efb7		488b742448		MOVQ 0x48(SP), SI                    // mov 0x48(%rsp),%rsi							
+  binary.go:136		0xa1efbc		48897403f8		MOVQ SI, -0x8(BX)(AX*1)              // mov %rsi,-0x8(%rbx,%rax,1)						
+  phase0.ssz.go:2155	0xa1efc1		4c8b4240		MOVQ 0x40(DX), R8                    // mov 0x40(%rdx),%r8							
+  phase0.ssz.go:2155	0xa1efc5		48837a4860		CMPQ 0x48(DX), $0x60                 // cmpq $0x60,0x48(%rdx)							
+  phase0.ssz.go:2155	0xa1efca		757b			JNE 0xa1f047                         // jne 0xa1f047								
+  phase0.ssz.go:2158	0xa1efcc		488d5360		LEAQ 0x60(BX), DX                    // lea 0x60(%rbx),%rdx							
+  phase0.ssz.go:2158	0xa1efd0		4839d1			CMPQ CX, DX                          // cmp %rdx,%rcx								
+  phase0.ssz.go:2158	0xa1efd3		7331			JAE 0xa1f006                         // jae 0xa1f006								
+  phase0.ssz.go:2155	0xa1efd5		4c89842480000000	MOVQ R8, 0x80(SP)                    // mov %r8,0x80(%rsp)							
+  phase0.ssz.go:2152	0xa1efdd		48895c2440		MOVQ BX, 0x40(SP)                    // mov %rbx,0x40(%rsp)							
+  phase0.ssz.go:2158	0xa1efe2		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx								
+  phase0.ssz.go:2158	0xa1efe5		bf60000000		MOVL $0x60, DI                       // mov $0x60,%edi								
+  phase0.ssz.go:2158	0xa1efea		488d350fa80c00		LEAQ 0xca80f(IP), SI                 // lea 0xca80f(%rip),%rsi							
+  phase0.ssz.go:2158	0xa1eff1		e8cabfa6ff		CALL runtime.growslice(SB)           // callq 0x48afc0								
+  phase0.ssz.go:2158	0xa1eff6		4c8b842480000000	MOVQ 0x80(SP), R8                    // mov 0x80(%rsp),%r8							
+  phase0.ssz.go:2158	0xa1effe		4889da			MOVQ BX, DX                          // mov %rbx,%rdx								
+  phase0.ssz.go:2158	0xa1f001		488b5c2440		MOVQ 0x40(SP), BX                    // mov 0x40(%rsp),%rbx							
+  phase0.ssz.go:2158	0xa1f006		4889842480000000	MOVQ AX, 0x80(SP)                    // mov %rax,0x80(%rsp)							
+  phase0.ssz.go:2158	0xa1f00e		4889542468		MOVQ DX, 0x68(SP)                    // mov %rdx,0x68(%rsp)							
+  phase0.ssz.go:2158	0xa1f013		48894c2460		MOVQ CX, 0x60(SP)                    // mov %rcx,0x60(%rsp)							
+  phase0.ssz.go:2158	0xa1f018		4801d8			ADDQ BX, AX                          // add %rbx,%rax								
+  phase0.ssz.go:2158	0xa1f01b		4c89c3			MOVQ R8, BX                          // mov %r8,%rbx								
+  phase0.ssz.go:2158	0xa1f01e		b960000000		MOVL $0x60, CX                       // mov $0x60,%ecx								
+  phase0.ssz.go:2158	0xa1f023		e85815a7ff		CALL runtime.memmove(SB)             // callq 0x490580								
+  phase0.ssz.go:2160	0xa1f028		488b842480000000	MOVQ 0x80(SP), AX                    // mov 0x80(%rsp),%rax							
+  phase0.ssz.go:2160	0xa1f030		488b5c2468		MOVQ 0x68(SP), BX                    // mov 0x68(%rsp),%rbx							
+  phase0.ssz.go:2160	0xa1f035		488b4c2460		MOVQ 0x60(SP), CX                    // mov 0x60(%rsp),%rcx							
+  phase0.ssz.go:2160	0xa1f03a		31ff			XORL DI, DI                          // xor %edi,%edi								
+  phase0.ssz.go:2160	0xa1f03c		31f6			XORL SI, SI                          // xor %esi,%esi								
+  phase0.ssz.go:2160	0xa1f03e		4881c488000000		ADDQ $0x88, SP                       // add $0x88,%rsp								
+  phase0.ssz.go:2160	0xa1f045		5d			POPQ BP                              // pop %rbp								
+  phase0.ssz.go:2160	0xa1f046		c3			RET                                  // retq									
+  phase0.ssz.go:2156	0xa1f047		488b3d220c9600		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength(SB), DI // mov 0x960c22(%rip),%rdi		
+  phase0.ssz.go:2156	0xa1f04e		488b35230c9600		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength+8(SB), SI // mov 0x960c23(%rip),%rsi		
+  phase0.ssz.go:2156	0xa1f055		31c0			XORL AX, AX                          // xor %eax,%eax								
+  phase0.ssz.go:2156	0xa1f057		31db			XORL BX, BX                          // xor %ebx,%ebx								
+  phase0.ssz.go:2156	0xa1f059		4889d9			MOVQ BX, CX                          // mov %rbx,%rcx								
+  phase0.ssz.go:2156	0xa1f05c		4881c488000000		ADDQ $0x88, SP                       // add $0x88,%rsp								
+  phase0.ssz.go:2156	0xa1f063		5d			POPQ BP                              // pop %rbp								
+  phase0.ssz.go:2156	0xa1f064		c3			RET                                  // retq									
+  phase0.ssz.go:2147	0xa1f065		488b3d040c9600		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength(SB), DI // mov 0x960c04(%rip),%rdi		
+  phase0.ssz.go:2147	0xa1f06c		488b35050c9600		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength+8(SB), SI // mov 0x960c05(%rip),%rsi		
+  phase0.ssz.go:2147	0xa1f073		31c0			XORL AX, AX                          // xor %eax,%eax								
+  phase0.ssz.go:2147	0xa1f075		31db			XORL BX, BX                          // xor %ebx,%ebx								
+  phase0.ssz.go:2147	0xa1f077		4889d9			MOVQ BX, CX                          // mov %rbx,%rcx								
+  phase0.ssz.go:2147	0xa1f07a		4881c488000000		ADDQ $0x88, SP                       // add $0x88,%rsp								
+  phase0.ssz.go:2147	0xa1f081		5d			POPQ BP                              // pop %rbp								
+  phase0.ssz.go:2147	0xa1f082		c3			RET                                  // retq									
+  phase0.ssz.go:2141	0xa1f083		488b3de60b9600		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength(SB), DI // mov 0x960be6(%rip),%rdi		
+  phase0.ssz.go:2141	0xa1f08a		488b35e70b9600		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength+8(SB), SI // mov 0x960be7(%rip),%rsi		
+  phase0.ssz.go:2141	0xa1f091		31c0			XORL AX, AX                          // xor %eax,%eax								
+  phase0.ssz.go:2141	0xa1f093		31db			XORL BX, BX                          // xor %ebx,%ebx								
+  phase0.ssz.go:2141	0xa1f095		4889d9			MOVQ BX, CX                          // mov %rbx,%rcx								
+  phase0.ssz.go:2141	0xa1f098		4881c488000000		ADDQ $0x88, SP                       // add $0x88,%rsp								
+  phase0.ssz.go:2141	0xa1f09f		5d			POPQ BP                              // pop %rbp								
+  phase0.ssz.go:2141	0xa1f0a0		c3			RET                                  // retq									
+  phase0.ssz.go:2136	0xa1f0a1		4889442408		MOVQ AX, 0x8(SP)                     // mov %rax,0x8(%rsp)							
+  phase0.ssz.go:2136	0xa1f0a6		48895c2410		MOVQ BX, 0x10(SP)                    // mov %rbx,0x10(%rsp)							
+  phase0.ssz.go:2136	0xa1f0ab		48894c2418		MOVQ CX, 0x18(SP)                    // mov %rcx,0x18(%rsp)							
+  phase0.ssz.go:2136	0xa1f0b0		48897c2420		MOVQ DI, 0x20(SP)                    // mov %rdi,0x20(%rsp)							
+  phase0.ssz.go:2136	0xa1f0b5		e806f4a6ff		CALL runtime.morestack_noctxt.abi0(SB) // callq 0x48e4c0							
+  phase0.ssz.go:2136	0xa1f0ba		488b442408		MOVQ 0x8(SP), AX                     // mov 0x8(%rsp),%rax							
+  phase0.ssz.go:2136	0xa1f0bf		488b5c2410		MOVQ 0x10(SP), BX                    // mov 0x10(%rsp),%rbx							
+  phase0.ssz.go:2136	0xa1f0c4		488b4c2418		MOVQ 0x18(SP), CX                    // mov 0x18(%rsp),%rcx							
+  phase0.ssz.go:2136	0xa1f0c9		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi							
+  phase0.ssz.go:2136	0xa1f0ce		e96dfdffff		JMP github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*Deposit_Data).MarshalSSZTo(SB) // jmpq 0xa1ee40	
+
+TEXT github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DepositMessage).MarshalSSZTo(SB) github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go
+  phase0.ssz.go:2237	0xa1f800		4c8d6424f8		LEAQ -0x8(SP), R12                   // lea -0x8(%rsp),%r12							
+  phase0.ssz.go:2237	0xa1f805		4d3b6610		CMPQ R12, 0x10(R14)                  // cmp 0x10(%r14),%r12							
+  phase0.ssz.go:2237	0xa1f809		0f868f010000		JBE 0xa1f99e                         // jbe 0xa1f99e								
+  phase0.ssz.go:2237	0xa1f80f		55			PUSHQ BP                             // push %rbp								
+  phase0.ssz.go:2237	0xa1f810		4889e5			MOVQ SP, BP                          // mov %rsp,%rbp								
+  phase0.ssz.go:2237	0xa1f813		4883c480		ADDQ $-0x80, SP                      // add $-0x80,%rsp								
+  phase0.ssz.go:2237	0xa1f817		48899c2498000000	MOVQ BX, 0x98(SP)                    // mov %rbx,0x98(%rsp)							
+  phase0.ssz.go:2241	0xa1f81f		488b10			MOVQ 0(AX), DX                       // mov (%rax),%rdx								
+  phase0.ssz.go:2241	0xa1f822		4883780830		CMPQ 0x8(AX), $0x30                  // cmpq $0x30,0x8(%rax)							
+  phase0.ssz.go:2241	0xa1f827		0f8556010000		JNE 0xa1f983                         // jne 0xa1f983								
+  phase0.ssz.go:2241	0xa1f82d		4889842490000000	MOVQ AX, 0x90(SP)                    // mov %rax,0x90(%rsp)							
+  phase0.ssz.go:2244	0xa1f835		4c8d4130		LEAQ 0x30(CX), R8                    // lea 0x30(%rcx),%r8							
+  phase0.ssz.go:2244	0xa1f839		4c39c7			CMPQ DI, R8                          // cmp %r8,%rdi								
+  phase0.ssz.go:2244	0xa1f83c		733d			JAE 0xa1f87b                         // jae 0xa1f87b								
+  phase0.ssz.go:2241	0xa1f83e		4889542478		MOVQ DX, 0x78(SP)                    // mov %rdx,0x78(%rsp)							
+  phase0.ssz.go:2241	0xa1f843		48898c24a0000000	MOVQ CX, 0xa0(SP)                    // mov %rcx,0xa0(%rsp)							
+  phase0.ssz.go:2244	0xa1f84b		4889d8			MOVQ BX, AX                          // mov %rbx,%rax								
+  phase0.ssz.go:2244	0xa1f84e		4c89c3			MOVQ R8, BX                          // mov %r8,%rbx								
+  phase0.ssz.go:2244	0xa1f851		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx								
+  phase0.ssz.go:2244	0xa1f854		bf30000000		MOVL $0x30, DI                       // mov $0x30,%edi								
+  phase0.ssz.go:2244	0xa1f859		488d35a09f0c00		LEAQ 0xc9fa0(IP), SI                 // lea 0xc9fa0(%rip),%rsi							
+  phase0.ssz.go:2244	0xa1f860		e85bb7a6ff		CALL runtime.growslice(SB)           // callq 0x48afc0								
+  phase0.ssz.go:2244	0xa1f865		488b542478		MOVQ 0x78(SP), DX                    // mov 0x78(%rsp),%rdx							
+  phase0.ssz.go:2244	0xa1f86a		4889cf			MOVQ CX, DI                          // mov %rcx,%rdi								
+  phase0.ssz.go:2244	0xa1f86d		4989d8			MOVQ BX, R8                          // mov %rbx,%r8								
+  phase0.ssz.go:2244	0xa1f870		488b8c24a0000000	MOVQ 0xa0(SP), CX                    // mov 0xa0(%rsp),%rcx							
+  phase0.ssz.go:2244	0xa1f878		4889c3			MOVQ AX, BX                          // mov %rax,%rbx								
+  phase0.ssz.go:2244	0xa1f87b		48895c2478		MOVQ BX, 0x78(SP)                    // mov %rbx,0x78(%rsp)							
+  phase0.ssz.go:2244	0xa1f880		4c89442460		MOVQ R8, 0x60(SP)                    // mov %r8,0x60(%rsp)							
+  phase0.ssz.go:2244	0xa1f885		48897c2458		MOVQ DI, 0x58(SP)                    // mov %rdi,0x58(%rsp)							
+  phase0.ssz.go:2244	0xa1f88a		488d0419		LEAQ 0(CX)(BX*1), AX                 // lea (%rcx,%rbx,1),%rax							
+  phase0.ssz.go:2244	0xa1f88e		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx								
+  phase0.ssz.go:2244	0xa1f891		b930000000		MOVL $0x30, CX                       // mov $0x30,%ecx								
+  phase0.ssz.go:2244	0xa1f896		e8e50ca7ff		CALL runtime.memmove(SB)             // callq 0x490580								
+  phase0.ssz.go:2247	0xa1f89b		488b942490000000	MOVQ 0x90(SP), DX                    // mov 0x90(%rsp),%rdx							
+  phase0.ssz.go:2247	0xa1f8a3		488b5a18		MOVQ 0x18(DX), BX                    // mov 0x18(%rdx),%rbx							
+  phase0.ssz.go:2247	0xa1f8a7		48837a2020		CMPQ 0x20(DX), $0x20                 // cmpq $0x20,0x20(%rdx)							
+  phase0.ssz.go:2247	0xa1f8ac		0f85b6000000		JNE 0xa1f968                         // jne 0xa1f968								
+  phase0.ssz.go:2250	0xa1f8b2		4c8b442460		MOVQ 0x60(SP), R8                    // mov 0x60(%rsp),%r8							
+  phase0.ssz.go:2250	0xa1f8b7		4d8d4820		LEAQ 0x20(R8), R9                    // lea 0x20(%r8),%r9							
+  phase0.ssz.go:2250	0xa1f8bb		488b4c2458		MOVQ 0x58(SP), CX                    // mov 0x58(%rsp),%rcx							
+  phase0.ssz.go:2250	0xa1f8c0		4c39c9			CMPQ CX, R9                          // cmp %r9,%rcx								
+  phase0.ssz.go:2250	0xa1f8c3		7207			JB 0xa1f8cc                          // jb 0xa1f8cc								
+  phase0.ssz.go:2250	0xa1f8c5		488b442478		MOVQ 0x78(SP), AX                    // mov 0x78(%rsp),%rax							
+  phase0.ssz.go:2250	0xa1f8ca		eb2b			JMP 0xa1f8f7                         // jmp 0xa1f8f7								
+  phase0.ssz.go:2247	0xa1f8cc		48895c2470		MOVQ BX, 0x70(SP)                    // mov %rbx,0x70(%rsp)							
+  phase0.ssz.go:2250	0xa1f8d1		488b442478		MOVQ 0x78(SP), AX                    // mov 0x78(%rsp),%rax							
+  phase0.ssz.go:2250	0xa1f8d6		4c89cb			MOVQ R9, BX                          // mov %r9,%rbx								
+  phase0.ssz.go:2250	0xa1f8d9		bf20000000		MOVL $0x20, DI                       // mov $0x20,%edi								
+  phase0.ssz.go:2250	0xa1f8de		488d351b9f0c00		LEAQ 0xc9f1b(IP), SI                 // lea 0xc9f1b(%rip),%rsi							
+  phase0.ssz.go:2250	0xa1f8e5		e8d6b6a6ff		CALL runtime.growslice(SB)           // callq 0x48afc0								
+  phase0.ssz.go:2250	0xa1f8ea		4c8b442460		MOVQ 0x60(SP), R8                    // mov 0x60(%rsp),%r8							
+  phase0.ssz.go:2250	0xa1f8ef		4989d9			MOVQ BX, R9                          // mov %rbx,%r9								
+  phase0.ssz.go:2250	0xa1f8f2		488b5c2470		MOVQ 0x70(SP), BX                    // mov 0x70(%rsp),%rbx							
+  phase0.ssz.go:2250	0xa1f8f7		4889442468		MOVQ AX, 0x68(SP)                    // mov %rax,0x68(%rsp)							
+  phase0.ssz.go:2250	0xa1f8fc		4c894c2448		MOVQ R9, 0x48(SP)                    // mov %r9,0x48(%rsp)							
+  phase0.ssz.go:2250	0xa1f901		48894c2450		MOVQ CX, 0x50(SP)                    // mov %rcx,0x50(%rsp)							
+  phase0.ssz.go:2250	0xa1f906		4c01c0			ADDQ R8, AX                          // add %r8,%rax								
+  phase0.ssz.go:2250	0xa1f909		b920000000		MOVL $0x20, CX                       // mov $0x20,%ecx								
+  phase0.ssz.go:2250	0xa1f90e		e86d0ca7ff		CALL runtime.memmove(SB)             // callq 0x490580								
+  binary.go:136		0xa1f913		488b5c2448		MOVQ 0x48(SP), BX                    // mov 0x48(%rsp),%rbx							
+  binary.go:136		0xa1f918		4883c308		ADDQ $0x8, BX                        // add $0x8,%rbx								
+  phase0.ssz.go:2253	0xa1f91c		488b942490000000	MOVQ 0x90(SP), DX                    // mov 0x90(%rsp),%rdx							
+  phase0.ssz.go:2253	0xa1f924		488b5230		MOVQ 0x30(DX), DX                    // mov 0x30(%rdx),%rdx							
+  binary.go:136		0xa1f928		488b4c2450		MOVQ 0x50(SP), CX                    // mov 0x50(%rsp),%rcx							
+  binary.go:136		0xa1f92d		4839d9			CMPQ CX, BX                          // cmp %rbx,%rcx								
+  binary.go:136		0xa1f930		7207			JB 0xa1f939                          // jb 0xa1f939								
+  phase0.ssz.go:2253	0xa1f932		488b442468		MOVQ 0x68(SP), AX                    // mov 0x68(%rsp),%rax							
+  binary.go:136		0xa1f937		eb20			JMP 0xa1f959                         // jmp 0xa1f959								
+  phase0.ssz.go:2253	0xa1f939		4889542440		MOVQ DX, 0x40(SP)                    // mov %rdx,0x40(%rsp)							
+  binary.go:136		0xa1f93e		488b442468		MOVQ 0x68(SP), AX                    // mov 0x68(%rsp),%rax							
+  binary.go:136		0xa1f943		bf08000000		MOVL $0x8, DI                        // mov $0x8,%edi								
+  binary.go:136		0xa1f948		488d35b19e0c00		LEAQ 0xc9eb1(IP), SI                 // lea 0xc9eb1(%rip),%rsi							
+  binary.go:136		0xa1f94f		e86cb6a6ff		CALL runtime.growslice(SB)           // callq 0x48afc0								
+  binary.go:136		0xa1f954		488b542440		MOVQ 0x40(SP), DX                    // mov 0x40(%rsp),%rdx							
+  binary.go:136		0xa1f959		48895403f8		MOVQ DX, -0x8(BX)(AX*1)              // mov %rdx,-0x8(%rbx,%rax,1)						
+  phase0.ssz.go:2255	0xa1f95e		31ff			XORL DI, DI                          // xor %edi,%edi								
+  phase0.ssz.go:2255	0xa1f960		31f6			XORL SI, SI                          // xor %esi,%esi								
+  phase0.ssz.go:2255	0xa1f962		4883ec80		SUBQ $-0x80, SP                      // sub $-0x80,%rsp								
+  phase0.ssz.go:2255	0xa1f966		5d			POPQ BP                              // pop %rbp								
+  phase0.ssz.go:2255	0xa1f967		c3			RET                                  // retq									
+  phase0.ssz.go:2248	0xa1f968		488b3d01039600		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength(SB), DI // mov 0x960301(%rip),%rdi		
+  phase0.ssz.go:2248	0xa1f96f		488b3502039600		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength+8(SB), SI // mov 0x960302(%rip),%rsi		
+  phase0.ssz.go:2248	0xa1f976		31c0			XORL AX, AX                          // xor %eax,%eax								
+  phase0.ssz.go:2248	0xa1f978		31db			XORL BX, BX                          // xor %ebx,%ebx								
+  phase0.ssz.go:2248	0xa1f97a		4889d9			MOVQ BX, CX                          // mov %rbx,%rcx								
+  phase0.ssz.go:2248	0xa1f97d		4883ec80		SUBQ $-0x80, SP                      // sub $-0x80,%rsp								
+  phase0.ssz.go:2248	0xa1f981		5d			POPQ BP                              // pop %rbp								
+  phase0.ssz.go:2248	0xa1f982		c3			RET                                  // retq									
+  phase0.ssz.go:2242	0xa1f983		488b3de6029600		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength(SB), DI // mov 0x9602e6(%rip),%rdi		
+  phase0.ssz.go:2242	0xa1f98a		488b35e7029600		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength+8(SB), SI // mov 0x9602e7(%rip),%rsi		
+  phase0.ssz.go:2242	0xa1f991		31c0			XORL AX, AX                          // xor %eax,%eax								
+  phase0.ssz.go:2242	0xa1f993		31db			XORL BX, BX                          // xor %ebx,%ebx								
+  phase0.ssz.go:2242	0xa1f995		4889d9			MOVQ BX, CX                          // mov %rbx,%rcx								
+  phase0.ssz.go:2242	0xa1f998		4883ec80		SUBQ $-0x80, SP                      // sub $-0x80,%rsp								
+  phase0.ssz.go:2242	0xa1f99c		5d			POPQ BP                              // pop %rbp								
+  phase0.ssz.go:2242	0xa1f99d		c3			RET                                  // retq									
+  phase0.ssz.go:2237	0xa1f99e		4889442408		MOVQ AX, 0x8(SP)                     // mov %rax,0x8(%rsp)							
+  phase0.ssz.go:2237	0xa1f9a3		48895c2410		MOVQ BX, 0x10(SP)                    // mov %rbx,0x10(%rsp)							
+  phase0.ssz.go:2237	0xa1f9a8		48894c2418		MOVQ CX, 0x18(SP)                    // mov %rcx,0x18(%rsp)							
+  phase0.ssz.go:2237	0xa1f9ad		48897c2420		MOVQ DI, 0x20(SP)                    // mov %rdi,0x20(%rsp)							
+  phase0.ssz.go:2237	0xa1f9b2		e809eba6ff		CALL runtime.morestack_noctxt.abi0(SB) // callq 0x48e4c0							
+  phase0.ssz.go:2237	0xa1f9b7		488b442408		MOVQ 0x8(SP), AX                     // mov 0x8(%rsp),%rax							
+  phase0.ssz.go:2237	0xa1f9bc		488b5c2410		MOVQ 0x10(SP), BX                    // mov 0x10(%rsp),%rbx							
+  phase0.ssz.go:2237	0xa1f9c1		488b4c2418		MOVQ 0x18(SP), CX                    // mov 0x18(%rsp),%rcx							
+  phase0.ssz.go:2237	0xa1f9c6		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi							
+  phase0.ssz.go:2237	0xa1f9cb		e930feffff		JMP github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DepositMessage).MarshalSSZTo(SB) // jmpq 0xa1f800	
+
+TEXT github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PowBlock).MarshalSSZTo(SB) github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go
+  phase0.ssz.go:3036	0xa245c0		493b6610		CMPQ SP, 0x10(R14)                   // cmp 0x10(%r14),%rsp						
+  phase0.ssz.go:3036	0xa245c4		0f8603020000		JBE 0xa247cd                         // jbe 0xa247cd							
+  phase0.ssz.go:3036	0xa245ca		55			PUSHQ BP                             // push %rbp							
+  phase0.ssz.go:3036	0xa245cb		4889e5			MOVQ SP, BP                          // mov %rsp,%rbp							
+  phase0.ssz.go:3036	0xa245ce		4883ec50		SUBQ $0x50, SP                       // sub $0x50,%rsp							
+  phase0.ssz.go:3036	0xa245d2		48895c2468		MOVQ BX, 0x68(SP)                    // mov %rbx,0x68(%rsp)						
+  phase0.ssz.go:3040	0xa245d7		488b10			MOVQ 0(AX), DX                       // mov (%rax),%rdx							
+  phase0.ssz.go:3040	0xa245da		4883780820		CMPQ 0x8(AX), $0x20                  // cmpq $0x20,0x8(%rax)						
+  phase0.ssz.go:3040	0xa245df		90			NOPL                                 // nop								
+  phase0.ssz.go:3040	0xa245e0		0f85cc010000		JNE 0xa247b2                         // jne 0xa247b2							
+  phase0.ssz.go:3040	0xa245e6		4889442460		MOVQ AX, 0x60(SP)                    // mov %rax,0x60(%rsp)						
+  phase0.ssz.go:3043	0xa245eb		4c8d4120		LEAQ 0x20(CX), R8                    // lea 0x20(%rcx),%r8						
+  phase0.ssz.go:3043	0xa245ef		4c39c7			CMPQ DI, R8                          // cmp %r8,%rdi							
+  phase0.ssz.go:3043	0xa245f2		7337			JAE 0xa2462b                         // jae 0xa2462b							
+  phase0.ssz.go:3040	0xa245f4		48894c2470		MOVQ CX, 0x70(SP)                    // mov %rcx,0x70(%rsp)						
+  phase0.ssz.go:3040	0xa245f9		4889542448		MOVQ DX, 0x48(SP)                    // mov %rdx,0x48(%rsp)						
+  phase0.ssz.go:3043	0xa245fe		4889d8			MOVQ BX, AX                          // mov %rbx,%rax							
+  phase0.ssz.go:3043	0xa24601		4c89c3			MOVQ R8, BX                          // mov %r8,%rbx							
+  phase0.ssz.go:3043	0xa24604		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx							
+  phase0.ssz.go:3043	0xa24607		bf20000000		MOVL $0x20, DI                       // mov $0x20,%edi							
+  phase0.ssz.go:3043	0xa2460c		488d35ed510c00		LEAQ 0xc51ed(IP), SI                 // lea 0xc51ed(%rip),%rsi						
+  phase0.ssz.go:3043	0xa24613		e8a869a6ff		CALL runtime.growslice(SB)           // callq 0x48afc0							
+  phase0.ssz.go:3043	0xa24618		488b542448		MOVQ 0x48(SP), DX                    // mov 0x48(%rsp),%rdx						
+  phase0.ssz.go:3043	0xa2461d		4889cf			MOVQ CX, DI                          // mov %rcx,%rdi							
+  phase0.ssz.go:3043	0xa24620		4989d8			MOVQ BX, R8                          // mov %rbx,%r8							
+  phase0.ssz.go:3043	0xa24623		488b4c2470		MOVQ 0x70(SP), CX                    // mov 0x70(%rsp),%rcx						
+  phase0.ssz.go:3043	0xa24628		4889c3			MOVQ AX, BX                          // mov %rax,%rbx							
+  phase0.ssz.go:3043	0xa2462b		48895c2448		MOVQ BX, 0x48(SP)                    // mov %rbx,0x48(%rsp)						
+  phase0.ssz.go:3043	0xa24630		4c89442438		MOVQ R8, 0x38(SP)                    // mov %r8,0x38(%rsp)						
+  phase0.ssz.go:3043	0xa24635		48897c2430		MOVQ DI, 0x30(SP)                    // mov %rdi,0x30(%rsp)						
+  phase0.ssz.go:3043	0xa2463a		488d040b		LEAQ 0(BX)(CX*1), AX                 // lea (%rbx,%rcx,1),%rax						
+  phase0.ssz.go:3043	0xa2463e		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx							
+  phase0.ssz.go:3043	0xa24641		b920000000		MOVL $0x20, CX                       // mov $0x20,%ecx							
+  phase0.ssz.go:3043	0xa24646		e835bfa6ff		CALL runtime.memmove(SB)             // callq 0x490580							
+  phase0.ssz.go:3046	0xa2464b		488b542460		MOVQ 0x60(SP), DX                    // mov 0x60(%rsp),%rdx						
+  phase0.ssz.go:3046	0xa24650		488b5a18		MOVQ 0x18(DX), BX                    // mov 0x18(%rdx),%rbx						
+  phase0.ssz.go:3046	0xa24654		48837a2020		CMPQ 0x20(DX), $0x20                 // cmpq $0x20,0x20(%rdx)						
+  phase0.ssz.go:3046	0xa24659		0f8538010000		JNE 0xa24797                         // jne 0xa24797							
+  phase0.ssz.go:3049	0xa2465f		4c8b442438		MOVQ 0x38(SP), R8                    // mov 0x38(%rsp),%r8						
+  phase0.ssz.go:3049	0xa24664		4d8d4820		LEAQ 0x20(R8), R9                    // lea 0x20(%r8),%r9						
+  phase0.ssz.go:3049	0xa24668		488b4c2430		MOVQ 0x30(SP), CX                    // mov 0x30(%rsp),%rcx						
+  phase0.ssz.go:3049	0xa2466d		4c39c9			CMPQ CX, R9                          // cmp %r9,%rcx							
+  phase0.ssz.go:3049	0xa24670		7207			JB 0xa24679                          // jb 0xa24679							
+  phase0.ssz.go:3049	0xa24672		488b442448		MOVQ 0x48(SP), AX                    // mov 0x48(%rsp),%rax						
+  phase0.ssz.go:3049	0xa24677		eb2b			JMP 0xa246a4                         // jmp 0xa246a4							
+  phase0.ssz.go:3046	0xa24679		48895c2440		MOVQ BX, 0x40(SP)                    // mov %rbx,0x40(%rsp)						
+  phase0.ssz.go:3049	0xa2467e		488b442448		MOVQ 0x48(SP), AX                    // mov 0x48(%rsp),%rax						
+  phase0.ssz.go:3049	0xa24683		4c89cb			MOVQ R9, BX                          // mov %r9,%rbx							
+  phase0.ssz.go:3049	0xa24686		bf20000000		MOVL $0x20, DI                       // mov $0x20,%edi							
+  phase0.ssz.go:3049	0xa2468b		488d356e510c00		LEAQ 0xc516e(IP), SI                 // lea 0xc516e(%rip),%rsi						
+  phase0.ssz.go:3049	0xa24692		e82969a6ff		CALL runtime.growslice(SB)           // callq 0x48afc0							
+  phase0.ssz.go:3049	0xa24697		4c8b442438		MOVQ 0x38(SP), R8                    // mov 0x38(%rsp),%r8						
+  phase0.ssz.go:3049	0xa2469c		4989d9			MOVQ BX, R9                          // mov %rbx,%r9							
+  phase0.ssz.go:3049	0xa2469f		488b5c2440		MOVQ 0x40(SP), BX                    // mov 0x40(%rsp),%rbx						
+  phase0.ssz.go:3049	0xa246a4		4889442448		MOVQ AX, 0x48(SP)                    // mov %rax,0x48(%rsp)						
+  phase0.ssz.go:3049	0xa246a9		4c894c2438		MOVQ R9, 0x38(SP)                    // mov %r9,0x38(%rsp)						
+  phase0.ssz.go:3049	0xa246ae		48894c2430		MOVQ CX, 0x30(SP)                    // mov %rcx,0x30(%rsp)						
+  phase0.ssz.go:3049	0xa246b3		4c01c0			ADDQ R8, AX                          // add %r8,%rax							
+  phase0.ssz.go:3049	0xa246b6		b920000000		MOVL $0x20, CX                       // mov $0x20,%ecx							
+  phase0.ssz.go:3049	0xa246bb		0f1f440000		NOPL 0(AX)(AX*1)                     // nopl (%rax,%rax,1)						
+  phase0.ssz.go:3049	0xa246c0		e8bbbea6ff		CALL runtime.memmove(SB)             // callq 0x490580							
+  phase0.ssz.go:3052	0xa246c5		488b542460		MOVQ 0x60(SP), DX                    // mov 0x60(%rsp),%rdx						
+  phase0.ssz.go:3052	0xa246ca		488b5a30		MOVQ 0x30(DX), BX                    // mov 0x30(%rdx),%rbx						
+  phase0.ssz.go:3052	0xa246ce		48837a3820		CMPQ 0x38(DX), $0x20                 // cmpq $0x20,0x38(%rdx)						
+  phase0.ssz.go:3052	0xa246d3		0f85a3000000		JNE 0xa2477c                         // jne 0xa2477c							
+  phase0.ssz.go:3055	0xa246d9		488b542438		MOVQ 0x38(SP), DX                    // mov 0x38(%rsp),%rdx						
+  phase0.ssz.go:3055	0xa246de		4c8d4220		LEAQ 0x20(DX), R8                    // lea 0x20(%rdx),%r8						
+  phase0.ssz.go:3055	0xa246e2		488b4c2430		MOVQ 0x30(SP), CX                    // mov 0x30(%rsp),%rcx						
+  phase0.ssz.go:3055	0xa246e7		4c39c1			CMPQ CX, R8                          // cmp %r8,%rcx							
+  phase0.ssz.go:3055	0xa246ea		7207			JB 0xa246f3                          // jb 0xa246f3							
+  phase0.ssz.go:3055	0xa246ec		488b442448		MOVQ 0x48(SP), AX                    // mov 0x48(%rsp),%rax						
+  phase0.ssz.go:3055	0xa246f1		eb2b			JMP 0xa2471e                         // jmp 0xa2471e							
+  phase0.ssz.go:3052	0xa246f3		48895c2440		MOVQ BX, 0x40(SP)                    // mov %rbx,0x40(%rsp)						
+  phase0.ssz.go:3055	0xa246f8		488b442448		MOVQ 0x48(SP), AX                    // mov 0x48(%rsp),%rax						
+  phase0.ssz.go:3055	0xa246fd		4c89c3			MOVQ R8, BX                          // mov %r8,%rbx							
+  phase0.ssz.go:3055	0xa24700		bf20000000		MOVL $0x20, DI                       // mov $0x20,%edi							
+  phase0.ssz.go:3055	0xa24705		488d35f4500c00		LEAQ 0xc50f4(IP), SI                 // lea 0xc50f4(%rip),%rsi						
+  phase0.ssz.go:3055	0xa2470c		e8af68a6ff		CALL runtime.growslice(SB)           // callq 0x48afc0							
+  phase0.ssz.go:3055	0xa24711		488b542438		MOVQ 0x38(SP), DX                    // mov 0x38(%rsp),%rdx						
+  phase0.ssz.go:3055	0xa24716		4989d8			MOVQ BX, R8                          // mov %rbx,%r8							
+  phase0.ssz.go:3055	0xa24719		488b5c2440		MOVQ 0x40(SP), BX                    // mov 0x40(%rsp),%rbx						
+  phase0.ssz.go:3055	0xa2471e		48894c2438		MOVQ CX, 0x38(SP)                    // mov %rcx,0x38(%rsp)						
+  phase0.ssz.go:3055	0xa24723		4c89442430		MOVQ R8, 0x30(SP)                    // mov %r8,0x30(%rsp)						
+  phase0.ssz.go:3055	0xa24728		4889442448		MOVQ AX, 0x48(SP)                    // mov %rax,0x48(%rsp)						
+  phase0.ssz.go:3055	0xa2472d		4801d0			ADDQ DX, AX                          // add %rdx,%rax							
+  phase0.ssz.go:3055	0xa24730		b920000000		MOVL $0x20, CX                       // mov $0x20,%ecx							
+  phase0.ssz.go:3055	0xa24735		e846bea6ff		CALL runtime.memmove(SB)             // callq 0x490580							
+  phase0.ssz.go:3057	0xa2473a		488b5c2448		MOVQ 0x48(SP), BX                    // mov 0x48(%rsp),%rbx						
+  phase0.ssz.go:3057	0xa2473f		4889da			MOVQ BX, DX                          // mov %rbx,%rdx							
+  phase0.ssz.go:3057	0xa24742		4829e2			SUBQ SP, DX                          // sub %rsp,%rdx							
+  phase0.ssz.go:3057	0xa24745		488d742460		LEAQ 0x60(SP), SI                    // lea 0x60(%rsp),%rsi						
+  phase0.ssz.go:3057	0xa2474a		4829e6			SUBQ SP, SI                          // sub %rsp,%rsi							
+  phase0.ssz.go:3057	0xa2474d		4839f2			CMPQ DX, SI                          // cmp %rsi,%rdx							
+  phase0.ssz.go:3057	0xa24750		7211			JB 0xa24763                          // jb 0xa24763							
+  phase0.ssz.go:3057	0xa24752		488b5c2430		MOVQ 0x30(SP), BX                    // mov 0x30(%rsp),%rbx						
+  phase0.ssz.go:3057	0xa24757		488b4c2438		MOVQ 0x38(SP), CX                    // mov 0x38(%rsp),%rcx						
+  phase0.ssz.go:3057	0xa2475c		488b442448		MOVQ 0x48(SP), AX                    // mov 0x48(%rsp),%rax						
+  phase0.ssz.go:3057	0xa24761		eb0f			JMP 0xa24772                         // jmp 0xa24772							
+  phase0.ssz.go:3057	0xa24763		b801000000		MOVL $0x1, AX                        // mov $0x1,%eax							
+  phase0.ssz.go:3057	0xa24768		488b4c2430		MOVQ 0x30(SP), CX                    // mov 0x30(%rsp),%rcx						
+  phase0.ssz.go:3057	0xa2476d		e88e7aa4ff		CALL runtime.moveSliceNoCapNoScan(SB) // callq 0x46c200							
+  phase0.ssz.go:3057	0xa24772		31ff			XORL DI, DI                          // xor %edi,%edi							
+  phase0.ssz.go:3057	0xa24774		31f6			XORL SI, SI                          // xor %esi,%esi							
+  phase0.ssz.go:3057	0xa24776		4883c450		ADDQ $0x50, SP                       // add $0x50,%rsp							
+  phase0.ssz.go:3057	0xa2477a		5d			POPQ BP                              // pop %rbp							
+  phase0.ssz.go:3057	0xa2477b		c3			RET                                  // retq								
+  phase0.ssz.go:3053	0xa2477c		488b3dedb49500		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength(SB), DI // mov 0x95b4ed(%rip),%rdi	
+  phase0.ssz.go:3053	0xa24783		488b35eeb49500		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength+8(SB), SI // mov 0x95b4ee(%rip),%rsi	
+  phase0.ssz.go:3053	0xa2478a		31c0			XORL AX, AX                          // xor %eax,%eax							
+  phase0.ssz.go:3053	0xa2478c		31db			XORL BX, BX                          // xor %ebx,%ebx							
+  phase0.ssz.go:3053	0xa2478e		4889d9			MOVQ BX, CX                          // mov %rbx,%rcx							
+  phase0.ssz.go:3053	0xa24791		4883c450		ADDQ $0x50, SP                       // add $0x50,%rsp							
+  phase0.ssz.go:3053	0xa24795		5d			POPQ BP                              // pop %rbp							
+  phase0.ssz.go:3053	0xa24796		c3			RET                                  // retq								
+  phase0.ssz.go:3047	0xa24797		488b3dd2b49500		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength(SB), DI // mov 0x95b4d2(%rip),%rdi	
+  phase0.ssz.go:3047	0xa2479e		488b35d3b49500		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength+8(SB), SI // mov 0x95b4d3(%rip),%rsi	
+  phase0.ssz.go:3047	0xa247a5		31c0			XORL AX, AX                          // xor %eax,%eax							
+  phase0.ssz.go:3047	0xa247a7		31db			XORL BX, BX                          // xor %ebx,%ebx							
+  phase0.ssz.go:3047	0xa247a9		4889d9			MOVQ BX, CX                          // mov %rbx,%rcx							
+  phase0.ssz.go:3047	0xa247ac		4883c450		ADDQ $0x50, SP                       // add $0x50,%rsp							
+  phase0.ssz.go:3047	0xa247b0		5d			POPQ BP                              // pop %rbp							
+  phase0.ssz.go:3047	0xa247b1		c3			RET                                  // retq								
+  phase0.ssz.go:3041	0xa247b2		488b3db7b49500		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength(SB), DI // mov 0x95b4b7(%rip),%rdi	
+  phase0.ssz.go:3041	0xa247b9		488b35b8b49500		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength+8(SB), SI // mov 0x95b4b8(%rip),%rsi	
+  phase0.ssz.go:3041	0xa247c0		31c0			XORL AX, AX                          // xor %eax,%eax							
+  phase0.ssz.go:3041	0xa247c2		31db			XORL BX, BX                          // xor %ebx,%ebx							
+  phase0.ssz.go:3041	0xa247c4		4889d9			MOVQ BX, CX                          // mov %rbx,%rcx							
+  phase0.ssz.go:3041	0xa247c7		4883c450		ADDQ $0x50, SP                       // add $0x50,%rsp							
+  phase0.ssz.go:3041	0xa247cb		5d			POPQ BP                              // pop %rbp							
+  phase0.ssz.go:3041	0xa247cc		c3			RET                                  // retq								
+  phase0.ssz.go:3036	0xa247cd		4889442408		MOVQ AX, 0x8(SP)                     // mov %rax,0x8(%rsp)						
+  phase0.ssz.go:3036	0xa247d2		48895c2410		MOVQ BX, 0x10(SP)                    // mov %rbx,0x10(%rsp)						
+  phase0.ssz.go:3036	0xa247d7		48894c2418		MOVQ CX, 0x18(SP)                    // mov %rcx,0x18(%rsp)						
+  phase0.ssz.go:3036	0xa247dc		48897c2420		MOVQ DI, 0x20(SP)                    // mov %rdi,0x20(%rsp)						
+  phase0.ssz.go:3036	0xa247e1		e8da9ca6ff		CALL runtime.morestack_noctxt.abi0(SB) // callq 0x48e4c0						
+  phase0.ssz.go:3036	0xa247e6		488b442408		MOVQ 0x8(SP), AX                     // mov 0x8(%rsp),%rax						
+  phase0.ssz.go:3036	0xa247eb		488b5c2410		MOVQ 0x10(SP), BX                    // mov 0x10(%rsp),%rbx						
+  phase0.ssz.go:3036	0xa247f0		488b4c2418		MOVQ 0x18(SP), CX                    // mov 0x18(%rsp),%rcx						
+  phase0.ssz.go:3036	0xa247f5		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi						
+  phase0.ssz.go:3036	0xa247fa		e9c1fdffff		JMP github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*PowBlock).MarshalSSZTo(SB) // jmpq 0xa245c0	
+
+TEXT github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SigningData).MarshalSSZTo(SB) github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go
+  phase0.ssz.go:3550	0xa275c0		493b6610		CMPQ SP, 0x10(R14)                   // cmp 0x10(%r14),%rsp							
+  phase0.ssz.go:3550	0xa275c4		0f8673010000		JBE 0xa2773d                         // jbe 0xa2773d								
+  phase0.ssz.go:3550	0xa275ca		55			PUSHQ BP                             // push %rbp								
+  phase0.ssz.go:3550	0xa275cb		4889e5			MOVQ SP, BP                          // mov %rsp,%rbp								
+  phase0.ssz.go:3550	0xa275ce		4883ec50		SUBQ $0x50, SP                       // sub $0x50,%rsp								
+  phase0.ssz.go:3550	0xa275d2		48895c2468		MOVQ BX, 0x68(SP)                    // mov %rbx,0x68(%rsp)							
+  phase0.ssz.go:3554	0xa275d7		488b10			MOVQ 0(AX), DX                       // mov (%rax),%rdx								
+  phase0.ssz.go:3554	0xa275da		4883780820		CMPQ 0x8(AX), $0x20                  // cmpq $0x20,0x8(%rax)							
+  phase0.ssz.go:3554	0xa275df		90			NOPL                                 // nop									
+  phase0.ssz.go:3554	0xa275e0		0f853c010000		JNE 0xa27722                         // jne 0xa27722								
+  phase0.ssz.go:3554	0xa275e6		4889442460		MOVQ AX, 0x60(SP)                    // mov %rax,0x60(%rsp)							
+  phase0.ssz.go:3557	0xa275eb		4c8d4120		LEAQ 0x20(CX), R8                    // lea 0x20(%rcx),%r8							
+  phase0.ssz.go:3557	0xa275ef		4c39c7			CMPQ DI, R8                          // cmp %r8,%rdi								
+  phase0.ssz.go:3557	0xa275f2		7337			JAE 0xa2762b                         // jae 0xa2762b								
+  phase0.ssz.go:3554	0xa275f4		48894c2470		MOVQ CX, 0x70(SP)                    // mov %rcx,0x70(%rsp)							
+  phase0.ssz.go:3554	0xa275f9		4889542448		MOVQ DX, 0x48(SP)                    // mov %rdx,0x48(%rsp)							
+  phase0.ssz.go:3557	0xa275fe		4889d8			MOVQ BX, AX                          // mov %rbx,%rax								
+  phase0.ssz.go:3557	0xa27601		4c89c3			MOVQ R8, BX                          // mov %r8,%rbx								
+  phase0.ssz.go:3557	0xa27604		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx								
+  phase0.ssz.go:3557	0xa27607		bf20000000		MOVL $0x20, DI                       // mov $0x20,%edi								
+  phase0.ssz.go:3557	0xa2760c		488d35ed210c00		LEAQ 0xc21ed(IP), SI                 // lea 0xc21ed(%rip),%rsi							
+  phase0.ssz.go:3557	0xa27613		e8a839a6ff		CALL runtime.growslice(SB)           // callq 0x48afc0								
+  phase0.ssz.go:3557	0xa27618		488b542448		MOVQ 0x48(SP), DX                    // mov 0x48(%rsp),%rdx							
+  phase0.ssz.go:3557	0xa2761d		4889cf			MOVQ CX, DI                          // mov %rcx,%rdi								
+  phase0.ssz.go:3557	0xa27620		4989d8			MOVQ BX, R8                          // mov %rbx,%r8								
+  phase0.ssz.go:3557	0xa27623		488b4c2470		MOVQ 0x70(SP), CX                    // mov 0x70(%rsp),%rcx							
+  phase0.ssz.go:3557	0xa27628		4889c3			MOVQ AX, BX                          // mov %rax,%rbx								
+  phase0.ssz.go:3557	0xa2762b		48897c2438		MOVQ DI, 0x38(SP)                    // mov %rdi,0x38(%rsp)							
+  phase0.ssz.go:3557	0xa27630		4c89442430		MOVQ R8, 0x30(SP)                    // mov %r8,0x30(%rsp)							
+  phase0.ssz.go:3557	0xa27635		48895c2448		MOVQ BX, 0x48(SP)                    // mov %rbx,0x48(%rsp)							
+  phase0.ssz.go:3557	0xa2763a		488d040b		LEAQ 0(BX)(CX*1), AX                 // lea (%rbx,%rcx,1),%rax							
+  phase0.ssz.go:3557	0xa2763e		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx								
+  phase0.ssz.go:3557	0xa27641		b920000000		MOVL $0x20, CX                       // mov $0x20,%ecx								
+  phase0.ssz.go:3557	0xa27646		e8358fa6ff		CALL runtime.memmove(SB)             // callq 0x490580								
+  phase0.ssz.go:3560	0xa2764b		488b542460		MOVQ 0x60(SP), DX                    // mov 0x60(%rsp),%rdx							
+  phase0.ssz.go:3560	0xa27650		488b5a18		MOVQ 0x18(DX), BX                    // mov 0x18(%rdx),%rbx							
+  phase0.ssz.go:3560	0xa27654		48837a2020		CMPQ 0x20(DX), $0x20                 // cmpq $0x20,0x20(%rdx)							
+  phase0.ssz.go:3560	0xa27659		0f85a8000000		JNE 0xa27707                         // jne 0xa27707								
+  phase0.ssz.go:3563	0xa2765f		488b542430		MOVQ 0x30(SP), DX                    // mov 0x30(%rsp),%rdx							
+  phase0.ssz.go:3563	0xa27664		4c8d4220		LEAQ 0x20(DX), R8                    // lea 0x20(%rdx),%r8							
+  phase0.ssz.go:3563	0xa27668		488b4c2438		MOVQ 0x38(SP), CX                    // mov 0x38(%rsp),%rcx							
+  phase0.ssz.go:3563	0xa2766d		4c39c1			CMPQ CX, R8                          // cmp %r8,%rcx								
+  phase0.ssz.go:3563	0xa27670		7207			JB 0xa27679                          // jb 0xa27679								
+  phase0.ssz.go:3563	0xa27672		488b442448		MOVQ 0x48(SP), AX                    // mov 0x48(%rsp),%rax							
+  phase0.ssz.go:3563	0xa27677		eb2b			JMP 0xa276a4                         // jmp 0xa276a4								
+  phase0.ssz.go:3560	0xa27679		48895c2440		MOVQ BX, 0x40(SP)                    // mov %rbx,0x40(%rsp)							
+  phase0.ssz.go:3563	0xa2767e		488b442448		MOVQ 0x48(SP), AX                    // mov 0x48(%rsp),%rax							
+  phase0.ssz.go:3563	0xa27683		4c89c3			MOVQ R8, BX                          // mov %r8,%rbx								
+  phase0.ssz.go:3563	0xa27686		bf20000000		MOVL $0x20, DI                       // mov $0x20,%edi								
+  phase0.ssz.go:3563	0xa2768b		488d356e210c00		LEAQ 0xc216e(IP), SI                 // lea 0xc216e(%rip),%rsi							
+  phase0.ssz.go:3563	0xa27692		e82939a6ff		CALL runtime.growslice(SB)           // callq 0x48afc0								
+  phase0.ssz.go:3563	0xa27697		488b542430		MOVQ 0x30(SP), DX                    // mov 0x30(%rsp),%rdx							
+  phase0.ssz.go:3563	0xa2769c		4989d8			MOVQ BX, R8                          // mov %rbx,%r8								
+  phase0.ssz.go:3563	0xa2769f		488b5c2440		MOVQ 0x40(SP), BX                    // mov 0x40(%rsp),%rbx							
+  phase0.ssz.go:3563	0xa276a4		4889442448		MOVQ AX, 0x48(SP)                    // mov %rax,0x48(%rsp)							
+  phase0.ssz.go:3563	0xa276a9		48894c2438		MOVQ CX, 0x38(SP)                    // mov %rcx,0x38(%rsp)							
+  phase0.ssz.go:3563	0xa276ae		4c89442430		MOVQ R8, 0x30(SP)                    // mov %r8,0x30(%rsp)							
+  phase0.ssz.go:3563	0xa276b3		4801d0			ADDQ DX, AX                          // add %rdx,%rax								
+  phase0.ssz.go:3563	0xa276b6		b920000000		MOVL $0x20, CX                       // mov $0x20,%ecx								
+  phase0.ssz.go:3563	0xa276bb		0f1f440000		NOPL 0(AX)(AX*1)                     // nopl (%rax,%rax,1)							
+  phase0.ssz.go:3563	0xa276c0		e8bb8ea6ff		CALL runtime.memmove(SB)             // callq 0x490580								
+  phase0.ssz.go:3565	0xa276c5		488b5c2448		MOVQ 0x48(SP), BX                    // mov 0x48(%rsp),%rbx							
+  phase0.ssz.go:3565	0xa276ca		4889da			MOVQ BX, DX                          // mov %rbx,%rdx								
+  phase0.ssz.go:3565	0xa276cd		4829e2			SUBQ SP, DX                          // sub %rsp,%rdx								
+  phase0.ssz.go:3565	0xa276d0		488d742460		LEAQ 0x60(SP), SI                    // lea 0x60(%rsp),%rsi							
+  phase0.ssz.go:3565	0xa276d5		4829e6			SUBQ SP, SI                          // sub %rsp,%rsi								
+  phase0.ssz.go:3565	0xa276d8		4839f2			CMPQ DX, SI                          // cmp %rsi,%rdx								
+  phase0.ssz.go:3565	0xa276db		7211			JB 0xa276ee                          // jb 0xa276ee								
+  phase0.ssz.go:3565	0xa276dd		488b5c2430		MOVQ 0x30(SP), BX                    // mov 0x30(%rsp),%rbx							
+  phase0.ssz.go:3565	0xa276e2		488b4c2438		MOVQ 0x38(SP), CX                    // mov 0x38(%rsp),%rcx							
+  phase0.ssz.go:3565	0xa276e7		488b442448		MOVQ 0x48(SP), AX                    // mov 0x48(%rsp),%rax							
+  phase0.ssz.go:3565	0xa276ec		eb0f			JMP 0xa276fd                         // jmp 0xa276fd								
+  phase0.ssz.go:3565	0xa276ee		b801000000		MOVL $0x1, AX                        // mov $0x1,%eax								
+  phase0.ssz.go:3565	0xa276f3		488b4c2430		MOVQ 0x30(SP), CX                    // mov 0x30(%rsp),%rcx							
+  phase0.ssz.go:3565	0xa276f8		e8034ba4ff		CALL runtime.moveSliceNoCapNoScan(SB) // callq 0x46c200								
+  phase0.ssz.go:3565	0xa276fd		31ff			XORL DI, DI                          // xor %edi,%edi								
+  phase0.ssz.go:3565	0xa276ff		31f6			XORL SI, SI                          // xor %esi,%esi								
+  phase0.ssz.go:3565	0xa27701		4883c450		ADDQ $0x50, SP                       // add $0x50,%rsp								
+  phase0.ssz.go:3565	0xa27705		5d			POPQ BP                              // pop %rbp								
+  phase0.ssz.go:3565	0xa27706		c3			RET                                  // retq									
+  phase0.ssz.go:3561	0xa27707		488b3d62859500		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength(SB), DI // mov 0x958562(%rip),%rdi		
+  phase0.ssz.go:3561	0xa2770e		488b3563859500		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength+8(SB), SI // mov 0x958563(%rip),%rsi		
+  phase0.ssz.go:3561	0xa27715		31c0			XORL AX, AX                          // xor %eax,%eax								
+  phase0.ssz.go:3561	0xa27717		31db			XORL BX, BX                          // xor %ebx,%ebx								
+  phase0.ssz.go:3561	0xa27719		4889d9			MOVQ BX, CX                          // mov %rbx,%rcx								
+  phase0.ssz.go:3561	0xa2771c		4883c450		ADDQ $0x50, SP                       // add $0x50,%rsp								
+  phase0.ssz.go:3561	0xa27720		5d			POPQ BP                              // pop %rbp								
+  phase0.ssz.go:3561	0xa27721		c3			RET                                  // retq									
+  phase0.ssz.go:3555	0xa27722		488b3d47859500		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength(SB), DI // mov 0x958547(%rip),%rdi		
+  phase0.ssz.go:3555	0xa27729		488b3548859500		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength+8(SB), SI // mov 0x958548(%rip),%rsi		
+  phase0.ssz.go:3555	0xa27730		31c0			XORL AX, AX                          // xor %eax,%eax								
+  phase0.ssz.go:3555	0xa27732		31db			XORL BX, BX                          // xor %ebx,%ebx								
+  phase0.ssz.go:3555	0xa27734		4889d9			MOVQ BX, CX                          // mov %rbx,%rcx								
+  phase0.ssz.go:3555	0xa27737		4883c450		ADDQ $0x50, SP                       // add $0x50,%rsp								
+  phase0.ssz.go:3555	0xa2773b		5d			POPQ BP                              // pop %rbp								
+  phase0.ssz.go:3555	0xa2773c		c3			RET                                  // retq									
+  phase0.ssz.go:3550	0xa2773d		4889442408		MOVQ AX, 0x8(SP)                     // mov %rax,0x8(%rsp)							
+  phase0.ssz.go:3550	0xa27742		48895c2410		MOVQ BX, 0x10(SP)                    // mov %rbx,0x10(%rsp)							
+  phase0.ssz.go:3550	0xa27747		48894c2418		MOVQ CX, 0x18(SP)                    // mov %rcx,0x18(%rsp)							
+  phase0.ssz.go:3550	0xa2774c		48897c2420		MOVQ DI, 0x20(SP)                    // mov %rdi,0x20(%rsp)							
+  phase0.ssz.go:3550	0xa27751		e86a6da6ff		CALL runtime.morestack_noctxt.abi0(SB) // callq 0x48e4c0							
+  phase0.ssz.go:3550	0xa27756		488b442408		MOVQ 0x8(SP), AX                     // mov 0x8(%rsp),%rax							
+  phase0.ssz.go:3550	0xa2775b		488b5c2410		MOVQ 0x10(SP), BX                    // mov 0x10(%rsp),%rbx							
+  phase0.ssz.go:3550	0xa27760		488b4c2418		MOVQ 0x18(SP), CX                    // mov 0x18(%rsp),%rcx							
+  phase0.ssz.go:3550	0xa27765		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi							
+  phase0.ssz.go:3550	0xa2776a		e951feffff		JMP github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*SigningData).MarshalSSZTo(SB) // jmpq 0xa275c0	
+
+TEXT github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ValidatorBalance).MarshalSSZTo(SB) github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go
+  phase0.ssz.go:3913	0xa29a80		493b6610		CMPQ SP, 0x10(R14)                   // cmp 0x10(%r14),%rsp							
+  phase0.ssz.go:3913	0xa29a84		0f86cc000000		JBE 0xa29b56                         // jbe 0xa29b56								
+  phase0.ssz.go:3913	0xa29a8a		55			PUSHQ BP                             // push %rbp								
+  phase0.ssz.go:3913	0xa29a8b		4889e5			MOVQ SP, BP                          // mov %rsp,%rbp								
+  phase0.ssz.go:3913	0xa29a8e		4883ec68		SUBQ $0x68, SP                       // sub $0x68,%rsp								
+  phase0.ssz.go:3913	0xa29a92		48899c2480000000	MOVQ BX, 0x80(SP)                    // mov %rbx,0x80(%rsp)							
+  validator.go:95	0xa29a9a		488d5108		LEAQ 0x8(CX), DX                     // lea 0x8(%rcx),%rdx							
+  phase0.ssz.go:3917	0xa29a9e		4c8b4008		MOVQ 0x8(AX), R8                     // mov 0x8(%rax),%r8							
+  validator.go:91	0xa29aa2		90			NOPL                                 // nop									
+  validator.go:100	0xa29aa3		90			NOPL                                 // nop									
+  sszuint64.go:19	0xa29aa4		90			NOPL                                 // nop									
+  binary.go:136		0xa29aa5		4c8d4c2448		LEAQ 0x48(SP), R9                    // lea 0x48(%rsp),%r9							
+  binary.go:136		0xa29aaa		450f1139		MOVUPS X15, 0(R9)                    // movups %xmm15,(%r9)							
+  binary.go:136		0xa29aae		450f117910		MOVUPS X15, 0x10(R9)                 // movups %xmm15,0x10(%r9)							
+  binary.go:136		0xa29ab3		4c89442448		MOVQ R8, 0x48(SP)                    // mov %r8,0x48(%rsp)							
+  validator.go:95	0xa29ab8		4839d7			CMPQ DI, DX                          // cmp %rdx,%rdi								
+  validator.go:95	0xa29abb		733e			JAE 0xa29afb                         // jae 0xa29afb								
+  validator.go:92	0xa29abd		4889442478		MOVQ AX, 0x78(SP)                    // mov %rax,0x78(%rsp)							
+  validator.go:92	0xa29ac2		48898c2488000000	MOVQ CX, 0x88(SP)                    // mov %rcx,0x88(%rsp)							
+  validator.go:95	0xa29aca		4889d8			MOVQ BX, AX                          // mov %rbx,%rax								
+  validator.go:95	0xa29acd		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx								
+  validator.go:95	0xa29ad0		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx								
+  validator.go:95	0xa29ad3		bf08000000		MOVL $0x8, DI                        // mov $0x8,%edi								
+  validator.go:95	0xa29ad8		488d3521fd0b00		LEAQ 0xbfd21(IP), SI                 // lea 0xbfd21(%rip),%rsi							
+  validator.go:95	0xa29adf		90			NOPL                                 // nop									
+  validator.go:95	0xa29ae0		e8db14a6ff		CALL runtime.growslice(SB)           // callq 0x48afc0								
+  validator.go:95	0xa29ae5		4889cf			MOVQ CX, DI                          // mov %rcx,%rdi								
+  validator.go:95	0xa29ae8		4889da			MOVQ BX, DX                          // mov %rbx,%rdx								
+  validator.go:95	0xa29aeb		488b8c2488000000	MOVQ 0x88(SP), CX                    // mov 0x88(%rsp),%rcx							
+  validator.go:95	0xa29af3		4889c3			MOVQ AX, BX                          // mov %rax,%rbx								
+  phase0.ssz.go:3922	0xa29af6		488b442478		MOVQ 0x78(SP), AX                    // mov 0x78(%rsp),%rax							
+  validator.go:95	0xa29afb		4c8b442448		MOVQ 0x48(SP), R8                    // mov 0x48(%rsp),%r8							
+  validator.go:95	0xa29b00		4c89040b		MOVQ R8, 0(BX)(CX*1)                 // mov %r8,(%rbx,%rcx,1)							
+  binary.go:136		0xa29b04		4883c208		ADDQ $0x8, DX                        // add $0x8,%rdx								
+  phase0.ssz.go:3922	0xa29b08		4c8b4010		MOVQ 0x10(AX), R8                    // mov 0x10(%rax),%r8							
+  binary.go:136		0xa29b0c		4839d7			CMPQ DI, DX                          // cmp %rdx,%rdi								
+  binary.go:136		0xa29b0f		732d			JAE 0xa29b3e                         // jae 0xa29b3e								
+  phase0.ssz.go:3922	0xa29b11		4c89442440		MOVQ R8, 0x40(SP)                    // mov %r8,0x40(%rsp)							
+  binary.go:136		0xa29b16		4889d8			MOVQ BX, AX                          // mov %rbx,%rax								
+  binary.go:136		0xa29b19		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx								
+  binary.go:136		0xa29b1c		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx								
+  binary.go:136		0xa29b1f		bf08000000		MOVL $0x8, DI                        // mov $0x8,%edi								
+  binary.go:136		0xa29b24		488d35d5fc0b00		LEAQ 0xbfcd5(IP), SI                 // lea 0xbfcd5(%rip),%rsi							
+  binary.go:136		0xa29b2b		e89014a6ff		CALL runtime.growslice(SB)           // callq 0x48afc0								
+  binary.go:136		0xa29b30		4c8b442440		MOVQ 0x40(SP), R8                    // mov 0x40(%rsp),%r8							
+  phase0.ssz.go:3922	0xa29b35		4889da			MOVQ BX, DX                          // mov %rbx,%rdx								
+  phase0.ssz.go:3922	0xa29b38		4889cf			MOVQ CX, DI                          // mov %rcx,%rdi								
+  phase0.ssz.go:3922	0xa29b3b		4889c3			MOVQ AX, BX                          // mov %rax,%rbx								
+  binary.go:136		0xa29b3e		4c89441af8		MOVQ R8, -0x8(DX)(BX*1)              // mov %r8,-0x8(%rdx,%rbx,1)						
+  phase0.ssz.go:3924	0xa29b43		4889d8			MOVQ BX, AX                          // mov %rbx,%rax								
+  phase0.ssz.go:3924	0xa29b46		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx								
+  phase0.ssz.go:3924	0xa29b49		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx								
+  phase0.ssz.go:3924	0xa29b4c		31ff			XORL DI, DI                          // xor %edi,%edi								
+  phase0.ssz.go:3924	0xa29b4e		31f6			XORL SI, SI                          // xor %esi,%esi								
+  phase0.ssz.go:3924	0xa29b50		4883c468		ADDQ $0x68, SP                       // add $0x68,%rsp								
+  phase0.ssz.go:3924	0xa29b54		5d			POPQ BP                              // pop %rbp								
+  phase0.ssz.go:3924	0xa29b55		c3			RET                                  // retq									
+  phase0.ssz.go:3913	0xa29b56		4889442408		MOVQ AX, 0x8(SP)                     // mov %rax,0x8(%rsp)							
+  phase0.ssz.go:3913	0xa29b5b		48895c2410		MOVQ BX, 0x10(SP)                    // mov %rbx,0x10(%rsp)							
+  phase0.ssz.go:3913	0xa29b60		48894c2418		MOVQ CX, 0x18(SP)                    // mov %rcx,0x18(%rsp)							
+  phase0.ssz.go:3913	0xa29b65		48897c2420		MOVQ DI, 0x20(SP)                    // mov %rdi,0x20(%rsp)							
+  phase0.ssz.go:3913	0xa29b6a		e85149a6ff		CALL runtime.morestack_noctxt.abi0(SB) // callq 0x48e4c0							
+  phase0.ssz.go:3913	0xa29b6f		488b442408		MOVQ 0x8(SP), AX                     // mov 0x8(%rsp),%rax							
+  phase0.ssz.go:3913	0xa29b74		488b5c2410		MOVQ 0x10(SP), BX                    // mov 0x10(%rsp),%rbx							
+  phase0.ssz.go:3913	0xa29b79		488b4c2418		MOVQ 0x18(SP), CX                    // mov 0x18(%rsp),%rcx							
+  phase0.ssz.go:3913	0xa29b7e		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi							
+  phase0.ssz.go:3913	0xa29b83		e9f8feffff		JMP github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*ValidatorBalance).MarshalSSZTo(SB) // jmpq 0xa29a80	
+
+TEXT github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*VoluntaryExit).MarshalSSZTo(SB) github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/phase0.ssz.go
+  phase0.ssz.go:3981	0xa2a180		493b6610		CMPQ SP, 0x10(R14)                   // cmp 0x10(%r14),%rsp							
+  phase0.ssz.go:3981	0xa2a184		0f86eb000000		JBE 0xa2a275                         // jbe 0xa2a275								
+  phase0.ssz.go:3981	0xa2a18a		55			PUSHQ BP                             // push %rbp								
+  phase0.ssz.go:3981	0xa2a18b		4889e5			MOVQ SP, BP                          // mov %rsp,%rbp								
+  phase0.ssz.go:3981	0xa2a18e		4883ec70		SUBQ $0x70, SP                       // sub $0x70,%rsp								
+  phase0.ssz.go:3981	0xa2a192		48899c2488000000	MOVQ BX, 0x88(SP)                    // mov %rbx,0x88(%rsp)							
+  epoch.go:140		0xa2a19a		488d5108		LEAQ 0x8(CX), DX                     // lea 0x8(%rcx),%rdx							
+  phase0.ssz.go:3985	0xa2a19e		4c8b4008		MOVQ 0x8(AX), R8                     // mov 0x8(%rax),%r8							
+  epoch.go:136		0xa2a1a2		90			NOPL                                 // nop									
+  epoch.go:145		0xa2a1a3		90			NOPL                                 // nop									
+  sszuint64.go:19	0xa2a1a4		90			NOPL                                 // nop									
+  binary.go:136		0xa2a1a5		4c8d4c2450		LEAQ 0x50(SP), R9                    // lea 0x50(%rsp),%r9							
+  binary.go:136		0xa2a1aa		450f1139		MOVUPS X15, 0(R9)                    // movups %xmm15,(%r9)							
+  binary.go:136		0xa2a1ae		450f117910		MOVUPS X15, 0x10(R9)                 // movups %xmm15,0x10(%r9)							
+  binary.go:136		0xa2a1b3		4c89442450		MOVQ R8, 0x50(SP)                    // mov %r8,0x50(%rsp)							
+  epoch.go:140		0xa2a1b8		4839d7			CMPQ DI, DX                          // cmp %rdx,%rdi								
+  epoch.go:140		0xa2a1bb		7343			JAE 0xa2a200                         // jae 0xa2a200								
+  epoch.go:137		0xa2a1bd		4889842480000000	MOVQ AX, 0x80(SP)                    // mov %rax,0x80(%rsp)							
+  epoch.go:137		0xa2a1c5		48898c2490000000	MOVQ CX, 0x90(SP)                    // mov %rcx,0x90(%rsp)							
+  epoch.go:140		0xa2a1cd		4889d8			MOVQ BX, AX                          // mov %rbx,%rax								
+  epoch.go:140		0xa2a1d0		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx								
+  epoch.go:140		0xa2a1d3		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx								
+  epoch.go:140		0xa2a1d6		bf08000000		MOVL $0x8, DI                        // mov $0x8,%edi								
+  epoch.go:140		0xa2a1db		488d351ef60b00		LEAQ 0xbf61e(IP), SI                 // lea 0xbf61e(%rip),%rsi							
+  epoch.go:140		0xa2a1e2		e8d90da6ff		CALL runtime.growslice(SB)           // callq 0x48afc0								
+  epoch.go:140		0xa2a1e7		4889cf			MOVQ CX, DI                          // mov %rcx,%rdi								
+  epoch.go:140		0xa2a1ea		4889da			MOVQ BX, DX                          // mov %rbx,%rdx								
+  epoch.go:140		0xa2a1ed		488b8c2490000000	MOVQ 0x90(SP), CX                    // mov 0x90(%rsp),%rcx							
+  epoch.go:140		0xa2a1f5		4889c3			MOVQ AX, BX                          // mov %rax,%rbx								
+  validator.go:100	0xa2a1f8		488b842480000000	MOVQ 0x80(SP), AX                    // mov 0x80(%rsp),%rax							
+  epoch.go:140		0xa2a200		4c8b442450		MOVQ 0x50(SP), R8                    // mov 0x50(%rsp),%r8							
+  epoch.go:140		0xa2a205		4c89040b		MOVQ R8, 0(BX)(CX*1)                 // mov %r8,(%rbx,%rcx,1)							
+  validator.go:95	0xa2a209		4c8d4208		LEAQ 0x8(DX), R8                     // lea 0x8(%rdx),%r8							
+  validator.go:100	0xa2a20d		4c8b4810		MOVQ 0x10(AX), R9                    // mov 0x10(%rax),%r9							
+  phase0.ssz.go:3990	0xa2a211		90			NOPL                                 // nop									
+  validator.go:91	0xa2a212		90			NOPL                                 // nop									
+  sszuint64.go:19	0xa2a213		90			NOPL                                 // nop									
+  binary.go:136		0xa2a214		4c8d542430		LEAQ 0x30(SP), R10                   // lea 0x30(%rsp),%r10							
+  binary.go:136		0xa2a219		450f113a		MOVUPS X15, 0(R10)                   // movups %xmm15,(%r10)							
+  binary.go:136		0xa2a21d		450f117a10		MOVUPS X15, 0x10(R10)                // movups %xmm15,0x10(%r10)						
+  binary.go:136		0xa2a222		4c894c2430		MOVQ R9, 0x30(SP)                    // mov %r9,0x30(%rsp)							
+  validator.go:95	0xa2a227		4c39c7			CMPQ DI, R8                          // cmp %r8,%rdi								
+  validator.go:95	0xa2a22a		732d			JAE 0xa2a259                         // jae 0xa2a259								
+  epoch.go:140		0xa2a22c		4889542428		MOVQ DX, 0x28(SP)                    // mov %rdx,0x28(%rsp)							
+  validator.go:95	0xa2a231		4889d8			MOVQ BX, AX                          // mov %rbx,%rax								
+  validator.go:95	0xa2a234		4c89c3			MOVQ R8, BX                          // mov %r8,%rbx								
+  validator.go:95	0xa2a237		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx								
+  validator.go:95	0xa2a23a		bf08000000		MOVL $0x8, DI                        // mov $0x8,%edi								
+  validator.go:95	0xa2a23f		488d35baf50b00		LEAQ 0xbf5ba(IP), SI                 // lea 0xbf5ba(%rip),%rsi							
+  validator.go:95	0xa2a246		e8750da6ff		CALL runtime.growslice(SB)           // callq 0x48afc0								
+  validator.go:95	0xa2a24b		488b542428		MOVQ 0x28(SP), DX                    // mov 0x28(%rsp),%rdx							
+  validator.go:95	0xa2a250		4889cf			MOVQ CX, DI                          // mov %rcx,%rdi								
+  validator.go:95	0xa2a253		4989d8			MOVQ BX, R8                          // mov %rbx,%r8								
+  validator.go:95	0xa2a256		4889c3			MOVQ AX, BX                          // mov %rax,%rbx								
+  validator.go:95	0xa2a259		4c8b4c2430		MOVQ 0x30(SP), R9                    // mov 0x30(%rsp),%r9							
+  validator.go:95	0xa2a25e		4c890c13		MOVQ R9, 0(BX)(DX*1)                 // mov %r9,(%rbx,%rdx,1)							
+  phase0.ssz.go:3994	0xa2a262		4889d8			MOVQ BX, AX                          // mov %rbx,%rax								
+  phase0.ssz.go:3994	0xa2a265		4c89c3			MOVQ R8, BX                          // mov %r8,%rbx								
+  phase0.ssz.go:3994	0xa2a268		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx								
+  phase0.ssz.go:3994	0xa2a26b		31ff			XORL DI, DI                          // xor %edi,%edi								
+  phase0.ssz.go:3994	0xa2a26d		31f6			XORL SI, SI                          // xor %esi,%esi								
+  phase0.ssz.go:3994	0xa2a26f		4883c470		ADDQ $0x70, SP                       // add $0x70,%rsp								
+  phase0.ssz.go:3994	0xa2a273		5d			POPQ BP                              // pop %rbp								
+  phase0.ssz.go:3994	0xa2a274		c3			RET                                  // retq									
+  phase0.ssz.go:3981	0xa2a275		4889442408		MOVQ AX, 0x8(SP)                     // mov %rax,0x8(%rsp)							
+  phase0.ssz.go:3981	0xa2a27a		48895c2410		MOVQ BX, 0x10(SP)                    // mov %rbx,0x10(%rsp)							
+  phase0.ssz.go:3981	0xa2a27f		48894c2418		MOVQ CX, 0x18(SP)                    // mov %rcx,0x18(%rsp)							
+  phase0.ssz.go:3981	0xa2a284		48897c2420		MOVQ DI, 0x20(SP)                    // mov %rdi,0x20(%rsp)							
+  phase0.ssz.go:3981	0xa2a289		e83242a6ff		CALL runtime.morestack_noctxt.abi0(SB) // callq 0x48e4c0							
+  phase0.ssz.go:3981	0xa2a28e		488b442408		MOVQ 0x8(SP), AX                     // mov 0x8(%rsp),%rax							
+  phase0.ssz.go:3981	0xa2a293		488b5c2410		MOVQ 0x10(SP), BX                    // mov 0x10(%rsp),%rbx							
+  phase0.ssz.go:3981	0xa2a298		488b4c2418		MOVQ 0x18(SP), CX                    // mov 0x18(%rsp),%rcx							
+  phase0.ssz.go:3981	0xa2a29d		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi							
+  phase0.ssz.go:3981	0xa2a2a2		e9d9feffff		JMP github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*VoluntaryExit).MarshalSSZTo(SB) // jmpq 0xa2a180	
+

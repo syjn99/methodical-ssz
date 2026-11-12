@@ -1,0 +1,593 @@
+{
+ "schema": "prysm-e2e.status/1",
+ "elf": "c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e",
+ "link_bundle": "96298a344d6f093c1aec60d6722936476276ae9d7914e77969207a2e4b7bed39",
+ "link_check_inputs": {
+  "note": "The link check (e2elink.py filter, conv.py, check.py) reads the ELF and its nm symbol table as files. These files are not committed (size). Their sha256 is recorded here.",
+  "elf": {
+   "name": "p1bin-amd64 (Go 1.26.10 ELF)",
+   "sha256": "c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e"
+  },
+  "nm": {
+   "name": "p1bin-amd64.nm",
+   "bytes": 2017324,
+   "sha256": "88ee8b9afe7d5265982e869fc33a2fe7b69acc38d52f4efd173326d1db4140ac"
+  }
+ },
+ "theorems": [
+  {
+   "name": "E2e.ep_unmarshal_accept_main",
+   "kind": "callee accept (function spec source)",
+   "function": "primitives.(*Epoch).UnmarshalSSZ",
+   "statement": "done",
+   "witness": "done",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "differential only (uint64 receiver; no GoVal theorem; epoch-len8 cases)",
+   "neg_ids": [
+    "ep-"
+   ]
+  },
+  {
+   "name": "E2e.ep_uacc_holds (EpUAccC)",
+   "kind": "function spec",
+   "function": "primitives.(*Epoch).UnmarshalSSZ",
+   "statement": "done",
+   "witness": "done",
+   "theorem": "done",
+   "link": "done",
+   "negative": "via ep_unmarshal_accept_main",
+   "go_value": "differential only (uint64 receiver; no GoVal theorem)",
+   "neg_ids": []
+  },
+  {
+   "name": "E2e.cp_e2e_accept_main (+ cp_e2e_accept_tail)",
+   "kind": "accept",
+   "function": "v1alpha1.(*Checkpoint).UnmarshalSSZ",
+   "statement": "done",
+   "witness": "done",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "before: witCpA_recv_pre (witness block); after: cp_after_decode_goValue on the conclusion fragments, every p ≠ 0 (MakesliceC does not state non-nil) + witCpA_recv_post; IR layout (not ELF abi.Type) + differential",
+   "neg_ids": [
+    "cpa-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_reject_size_main",
+   "kind": "reject (ssz.ErrSize)",
+   "function": "v1alpha1.(*Checkpoint).UnmarshalSSZ",
+   "statement": "done",
+   "witness": "done",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "differential only (receiver unchanged; no GoVal theorem)",
+   "neg_ids": [
+    "cpr-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_reject_complete + cp_e2e_reject_size_spec",
+   "kind": "reject_complete / reject_spec",
+   "function": "v1alpha1.(*Checkpoint).UnmarshalSSZ",
+   "statement": "done",
+   "witness": "done (WitCpRS.cp_reject_spec_runs on Array.replicate n 0x11, n = 39, 41, 0)",
+   "theorem": "done",
+   "link": "n/a",
+   "negative": "done",
+   "go_value": "n/a (spec level) / differential",
+   "neg_ids": [
+    "wrs-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_accept_spec_k",
+   "kind": "accept against EthLib",
+   "function": "v1alpha1.(*Checkpoint).UnmarshalSSZ",
+   "statement": "done",
+   "witness": "done (WitCpAS.cp_accept_spec_runs on pcpEnc g0 for 3 closed g0)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "via cp_e2e_accept_main (witCpA_recv_pre/post)",
+   "neg_ids": [
+    "was-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_main",
+   "kind": "marshal (fast path)",
+   "function": "v1alpha1.(*Checkpoint).MarshalSSZTo",
+   "statement": "done",
+   "witness": "done",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "witCpM_recv (witness block, offset 8); IR layout + differential",
+   "neg_ids": [
+    "cpm-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_decoded_receiver",
+   "kind": "encoder on a decoded-form receiver (not compose_hupd)",
+   "function": "UnmarshalSSZ;MarshalSSZTo",
+   "statement": "done",
+   "witness": "corollary with no own witness (WitCpM runs cp_e2e_marshal_main on a decoded-form receiver)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "witCpM_recv (witness block) + differential",
+   "neg_ids": [
+    "cpc-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_reject_main",
+   "kind": "marshal_reject",
+   "function": "v1alpha1.(*Checkpoint).MarshalSSZTo",
+   "statement": "done",
+   "witness": "done (WitCpMR: empty prefix rl 31/33/0, WitCpMR.P5: 5-byte prefix rl 31/0)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "witCpMR_recv (witness blocks, len(Root) 31/33/0); IR layout + differential",
+   "neg_ids": [
+    "cpmr-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_grow_main",
+   "kind": "marshal (capacity too small: first growslice site; GrowsliceC esz 1, premise len + 40 ≤ nextSliceCap (len + 8) cap)",
+   "function": "v1alpha1.(*Checkpoint).MarshalSSZTo",
+   "statement": "done",
+   "witness": "done (WitCpG: len 30, cap 36, rt_growslice + rt_memmove, 3 value instances)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "witCpG_recv (witness block, offset 0x20a0); IR layout + differential (enc-grow-cap0, enc-grow-len30-cap36)",
+   "neg_ids": [
+    "cpg-"
+   ]
+  },
+  {
+   "name": "E2e.ep_unmarshal_reject_len_main",
+   "kind": "callee reject (standalone)",
+   "function": "primitives.(*Epoch).UnmarshalSSZ",
+   "statement": "done",
+   "witness": "done (WitEpR: len 7 and 9 static box, len 300 heap box)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "differential (epoch-len7/9)",
+   "neg_ids": [
+    "epr-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_spec_k + cp_e2e_size_main (+ size_spec)",
+   "kind": "marshal against EthLib / size",
+   "function": "v1alpha1.(*Checkpoint).MarshalSSZTo / SizeSSZ",
+   "statement": "done",
+   "witness": "done (WitCpS; spec_k via WitCpM)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "n/a (size) / via marshal",
+   "neg_ids": [
+    "cps-",
+    "cpms-"
+   ]
+  },
+  {
+   "name": "E2e.cp_layout / cpGoValue (Go-value element)",
+   "kind": "go value",
+   "function": "receiver layout",
+   "statement": "done",
+   "witness": "evaluated on WitCpA/WitCpM/WitCpMR receivers; WitCpW/WitCpWR receivers (GoValW)",
+   "theorem": "done",
+   "link": "n/a",
+   "negative": "done",
+   "go_value": "this is the Go-value predicate (slice-header sanity only; IR layout, not ELF abi.Type)",
+   "neg_ids": [
+    "gv-",
+    "gv-w-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_unmarshal_then_marshal",
+   "kind": "compose_hupd / compose_witness (decoder entry → cp_e2e_accept_main → hupd → cp_e2e_marshal_main)",
+   "function": "UnmarshalSSZ;MarshalSSZTo",
+   "statement": "done",
+   "witness": "done (WitCpC: one Host with CpUnmarshal, EpUnmarshal, BumpAlloc1, RtCopy, CpMarshal; real middle memory by storeInt)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "witCpC_recv: before from the witness block, after = cp_after_decode_goValue (every p ≠ 0) + differential roundtrip",
+   "neg_ids": [
+    "cpx-"
+   ]
+  },
+  {
+   "name": "E2e.prysmCpDesc_serialize_checker / deserialize_checker",
+   "kind": "spec bridge: codec equality with the checker Desc",
+   "function": "spec",
+   "statement": "done",
+   "witness": "n/a (spec level)",
+   "theorem": "done",
+   "link": "n/a",
+   "negative": "done",
+   "go_value": "n/a",
+   "neg_ids": [
+    "spe-"
+   ]
+  },
+  {
+   "name": "E2e.cpw_head_fit / cpw_head_grow (prefixes to L_7b)",
+   "kind": "segment lemmas (first capacity test; first growslice, GrowsliceC esz 1)",
+   "function": "marshal",
+   "statement": "done",
+   "witness": "via WitCpW / WitCpWR (cover instances)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "n/a (segment)",
+   "neg_ids": [
+    "cpw-hf-",
+    "cpw-hg-"
+   ]
+  },
+  {
+   "name": "E2e.cpw_tail_fit / cpw_tail_rej / cpw_tail_grow / cpw_tail_grow_call (tails from L_7b)",
+   "kind": "segment lemmas (second capacity test; second growslice; ErrBytesLength)",
+   "function": "marshal",
+   "statement": "done",
+   "witness": "via WitCpW / WitCpWR; cpw_tail_grow via cp_e2e_marshal_grow2_main",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "n/a (segment)",
+   "neg_ids": [
+    "cpw-tf-",
+    "cpw-tr-",
+    "cpw-tg-",
+    "cpw-tc-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_grow2_main",
+   "kind": "marshal: first append fits, second grows (len + 8 ≤ cap < len + 40; GrowsliceC esz 1)",
+   "function": "marshal",
+   "statement": "done",
+   "witness": "done (WitCpW.cov_runs n = 8, 39 through the cover)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "differential (enc-w-len30-spare8/20/39); witness receiver: GoValW.witCpW_recv",
+   "neg_ids": [
+    "cpw-g2-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_grow_any_main",
+   "kind": "marshal: first append grows, every cap < len + 8 (no nextSliceCap premise); left: returns; right: reaches the 2nd growslice call — the run after it is NOT proved (GrowsliceC does not chain)",
+   "function": "marshal",
+   "statement": "done",
+   "witness": "done (WitCpW.cov_runs n = 0, 3 and cov_runs_nil: left disjunct; right disjunct not exercised by the model)",
+   "theorem": "done (partial: right disjunct ends at the call)",
+   "link": "done",
+   "negative": "done",
+   "go_value": "differential (enc-w-len30-spare0/3, enc-w-len10-spare0, enc-grow-cap0); witness receiver: GoValW.witCpW_recv",
+   "neg_ids": [
+    "cpw-ga-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_grow_any_sharp",
+   "kind": "marshal: first append grows, every cap < len + 8 (same premises as grow_any_main; GrowsliceC esz 1, MemmoveC). (A) returns through the first block; (B) returns through the second growslice when the heap left av1 ≥ 2·nextSliceCap(len+40, C1) + 8192; (C) entry of the second call with Heap av1 and av1 below that budget — the run after (C) is NOT proved (no lower bound on the remaining heap in GrowsliceC, blocked / differential only pending a user decision)",
+   "function": "marshal",
+   "statement": "done",
+   "witness": "premises: WitCpW / WitCpWF (n = 0, 3, nil dst) through the covers; which of (A)/(B)/(C) a run takes is not decidable through GrowsliceC (it hides the returned capacity and heap); the witness model takes (A)",
+   "theorem": "done (partial: (C) ends at the call)",
+   "link": "done",
+   "negative": "done",
+   "go_value": "differential (enc-w-len30-spare0/3, enc-w-len10-spare0, enc-grow-cap0); witness receiver: GoValW.witCpW_recv",
+   "neg_ids": [
+    "cpw-sh-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_reject_grow_main",
+   "kind": "marshal_reject after the first growslice (cap < len + 8, len(Root) ≠ 32, epoch bytes written to the new block before the reject)",
+   "function": "marshal",
+   "statement": "done",
+   "witness": "done (WitCpWR.rej_runs n = 0, 3; rej_runs_nil)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "differential (enc-w-rej-len30-spare0/3: caller array unchanged); witness receivers: GoValW.witCpWR_recv (rl 0/31/33/48), rl 49 not a Go value (witCpWR_recv_bad); rej_runs allows any rl ≠ 32, a Go caller only rl ≤ 48",
+   "neg_ids": [
+    "cpw-rg-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_cover",
+   "kind": "case cover len(Root) = 32 × every len ≤ cap, against EthLib (dst ++ serialize; ⋆ True remainder) or at the 2nd growslice call",
+   "function": "marshal",
+   "statement": "done",
+   "witness": "done (WitCpW: cap = len, len+3, len+8, len+39, len+40, nil dst)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "differential; witness receiver: GoValW.witCpW_recv",
+   "neg_ids": [
+    "cpw-cv-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_reject_cover",
+   "kind": "case cover len(Root) ≠ 32 × every len ≤ cap (ErrBytesLength words; some block holds pre ++ epoch)",
+   "function": "marshal",
+   "statement": "done",
+   "witness": "done (WitCpWR: cap = len, len+3, len+8, len+40, nil dst; rl 31/0/33)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "differential; witness receivers: GoValW.witCpWR_recv (rl 0/31/33/48), rl 49 not a Go value (witCpWR_recv_bad); rej_runs allows any rl ≠ 32, a Go caller only rl ≤ 48",
+   "neg_ids": [
+    "cpw-rc-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_cover_framed",
+   "kind": "case cover len(Root) = 32 × every len ≤ cap with the exact frame (no ⋆ True): disjunction of the member postconditions (1) cp_e2e_marshal_main, (2) cp_e2e_marshal_grow2_main, (3A)/(3B)/(3C) cp_e2e_marshal_grow_any_sharp; returned block pre ++ bs with serialize = .ok bs (EthLib); (3C) is the entry of the second growslice call",
+   "function": "marshal",
+   "statement": "done",
+   "witness": "done (WitCpWF.covf_runs: cap = len, len+3, len+8, len+39, len+40 with the reached capacity range in the conclusion; covf_runs_nil)",
+   "theorem": "done (partial: (3C) ends at the call)",
+   "link": "done",
+   "negative": "done",
+   "go_value": "differential (accept cases); witness receiver: GoValW.witCpW_recv",
+   "neg_ids": [
+    "cpw-cf-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_marshal_reject_cover_framed",
+   "kind": "case cover len(Root) ≠ 32 × every len ≤ cap with the exact frame: len + 8 ≤ cap: epoch in the caller's array (blk = dst); cap < len + 8: caller's array pre ++ spare unchanged, epoch in the new block only",
+   "function": "marshal",
+   "statement": "done",
+   "witness": "done (WitCpWRF.rejf_runs: cap = len, len+3, len+8, len+40, nil dst; rl 31/0/33/48)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "differential (reject cases); witness receivers: GoValW.witCpWR_recv (rl 0/31/33/48), rl 49 not a Go value (witCpWR_recv_bad); rej_runs allows any rl ≠ 32, a Go caller only rl ≤ 48",
+   "neg_ids": [
+    "cpw-rf-"
+   ]
+  },
+  {
+   "name": "E2eAd.sl_unmarshal_accept_main + sl_uacc_holds (SlUAccC)",
+   "kind": "callee accept primitives.Slot (function spec source)",
+   "function": "unmarshal",
+   "statement": "done",
+   "witness": "done (WitSl, 3 values)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "n/a (uint64 receiver)",
+   "neg_ids": [
+    "sl-"
+   ]
+  },
+  {
+   "name": "E2eAd.ci_unmarshal_accept_main + ci_uacc_holds (CiUAccC)",
+   "kind": "callee accept primitives.CommitteeIndex (function spec source)",
+   "function": "unmarshal",
+   "statement": "done",
+   "witness": "done (WitCi, 3 values)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "n/a (uint64 receiver)",
+   "neg_ids": [
+    "ci-"
+   ]
+  },
+  {
+   "name": "E2eAd.ad_e2e_head / ad_e2e_root / ad_e2e_src / ad_e2e_tgt",
+   "kind": "segment lemmas of the AttestationData decoder (size test, Slot, CommitteeIndex, Root, Source, Target)",
+   "function": "unmarshal",
+   "statement": "done",
+   "witness": "via WitAdA",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "n/a (segment)",
+   "neg_ids": [
+    "ada-h-",
+    "ada-r-",
+    "ada-s-",
+    "ada-t-"
+   ]
+  },
+  {
+   "name": "E2eAd.ad_e2e_accept_main",
+   "kind": "accept v1alpha1.AttestationData (callees via sl/ci/cp_uacc_holds; Source/Target always new)",
+   "function": "unmarshal",
+   "statement": "done",
+   "witness": "done (WitAdA, 3 inputs)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "partial (full receiver and both 72-byte objects in the conclusion; no Lean Go-value predicate for AttestationData)",
+   "neg_ids": [
+    "ada-m-"
+   ]
+  },
+  {
+   "name": "E2eAd.ad_e2e_reject_size_main",
+   "kind": "reject (ssz.ErrSize)",
+   "function": "unmarshal",
+   "statement": "done",
+   "witness": "done (WitAdR len 127/129/0)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "n/a (receiver unchanged; error words as they are)",
+   "neg_ids": [
+    "ada-rj-"
+   ]
+  },
+  {
+   "name": "E2eAd.ad_e2e_accept_spec_k (+ reject_size_spec, reject_complete)",
+   "kind": "accept / reject against EthLib",
+   "function": "unmarshal",
+   "statement": "done",
+   "witness": "via WitAdA / WitAdR",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "via ad_e2e_accept_main",
+   "neg_ids": [
+    "ada-k-"
+   ]
+  },
+  {
+   "name": "E2e.prysmAdDesc_serialize_checker / deserialize_checker / pad_spec_accepts_iff",
+   "kind": "spec bridge AttestationData (codec equality with the checker Desc)",
+   "function": "spec",
+   "statement": "done",
+   "witness": "n/a (spec level)",
+   "theorem": "done",
+   "link": "n/a",
+   "negative": "done",
+   "go_value": "n/a",
+   "neg_ids": [
+    "spa-"
+   ]
+  },
+  {
+   "name": "E2e.cp_e2e_epoch_err_unreachable; E2eAd.ad_e2e_{slot,ci,source,target}_err_unreachable",
+   "kind": "unreachable_mc (own column; not reject coverage)",
+   "function": "unmarshal",
+   "statement": "done",
+   "witness": "n/a (local lemmas)",
+   "theorem": "done",
+   "link": "done",
+   "negative": "done",
+   "go_value": "n/a",
+   "neg_ids": [
+    "cpu-",
+    "ada-u-"
+   ]
+  }
+ ],
+ "unreachable_mc": [
+  {
+   "site": "phase0.ssz.go:1988 fmt.Errorf(\"Epoch: %w\") (decoder)",
+   "theorem": "E2e.cp_e2e_epoch_err_unreachable",
+   "status": "done",
+   "counts_as_reject": false
+  },
+  {
+   "site": "phase0.ssz.go:1964 fmt.Errorf(\"Epoch: %w\") (encoder)",
+   "theorem": "none needed: removed by the compiler (inlined Epoch.MarshalSSZTo cannot fail; no fmt.errorf call in the machine code, CALLGRAPH.md)",
+   "status": "absent from the code",
+   "counts_as_reject": false
+  },
+  {
+   "site": "AttestationData decoder fmt.Errorf(\"Slot: %w\") wrap",
+   "theorem": "E2eAd.ad_e2e_slot_err_unreachable",
+   "status": "done",
+   "counts_as_reject": false
+  },
+  {
+   "site": "AttestationData decoder fmt.Errorf(\"CommitteeIndex: %w\") wrap",
+   "theorem": "E2eAd.ad_e2e_ci_err_unreachable",
+   "status": "done",
+   "counts_as_reject": false
+  },
+  {
+   "site": "AttestationData decoder fmt.Errorf(\"Source: %w\") wrap",
+   "theorem": "E2eAd.ad_e2e_source_err_unreachable",
+   "status": "done",
+   "counts_as_reject": false
+  },
+  {
+   "site": "AttestationData decoder fmt.Errorf(\"Target: %w\") wrap",
+   "theorem": "E2eAd.ad_e2e_target_err_unreachable",
+   "status": "done",
+   "counts_as_reject": false
+  }
+ ],
+ "e2e_include_sha256": {
+  "lean/E2e/Code.lean": "eddb369f7e981590a0fe7d60cff12f753f40f89aba92e5718bd95c0fabd0d728",
+  "lean/E2e/Data.lean": "3be0b30a4d71d726d67dbcbbb85afe88b7a741f3f8b2fdaf8bd0c42d7f7de4af",
+  "lean/E2e/Include.lean": "1f3517fe642186c9212ada0ddf2d16a50860e69eac4e0df4fd1517dc6b57c5e1",
+  "prysm/go1.26.10/e2e/AXIOMS.txt": "8779ae6005e5b384cd89d57b6b56a28f3650e3a06897cc4cc9e6ffa23e37bd4c",
+  "lean/E2eAd/Code.lean": "f22dd87781c1242503df3864b1e5c59c56968dd2291b927c0bef610d36ec8c08",
+  "lean/E2eAd/Data.lean": "e621939c00d64035918cf4d216451e22e0c10208ac519de4816bac41b65fc7d1",
+  "lean/E2eAd/Include.lean": "66e6fd12fe31214b302413b91d03402b865e45f6d08746c9a170ca4e0d2a9846",
+  "prysm/go1.26.10/e2e/ad/AXIOMS.txt": "8514bcddb73383c9efd5f3fb9b9c02fc08f604648ee1111fa5cf9b61f2698b6b",
+  "note": "The link bundle hash covers lean/Fk/Code.lean and the Go 1.26.3 AXIOMS.txt (check.py unchanged). The hashes in this object are the E2e include files and the E2e axioms list. AXIOMS.txt was rehashed after job 213 (79 lines). The E2eAd include files and ad/AXIOMS.txt were also added."
+ },
+ "negative_suite": {
+  "run": "merged result file: gate job 139 (full suite at 300 s, 73 cases) + the jobs that added or re-ran cases since: 144, 150, 177, 178, 202, 203, 211, 212, 213. Every case ran at the 300 s per-case limit, and negative.py merges by id. No single run covers all cases (≤ 20 min of gate time per run).",
+  "pass": 154,
+  "total": 154,
+  "classes": {
+   "control_pass": 49,
+   "inside": 105
+  },
+  "case_timeout_s": 300,
+  "max_case_seconds": 176.5,
+  "later_resource_error": [
+   "ci-load8",
+   "ep-load8",
+   "sl-load8"
+  ],
+  "removed": {
+   "heartbeat_timeout first error (N1)": [
+    "cpmr-stmt-dst-unchanged (482 s)",
+    "cpg-stmt-e8off (480 s)"
+   ],
+   "rename_only (N2)": [
+    "cpx-dec-cmp41",
+    "cpx-ep-load8",
+    "cpx-enc-len33",
+    "cpx-enc-newlen16"
+   ],
+   "wall_timeout_300s": [
+    "cpg-stmt-noroot (job 126)",
+    "cpg-newptr (job 139; 489.7 s in job 125, first error ecancel inside)"
+   ],
+   "outside in job 202 (an earlier lemma of the same file steps the same directive; the mutants did fail), replaced in job 203 (review e2e-r3 S6)": [
+    "cpw-tr-jne -> cpw-tr-err1",
+    "cpw-tc-lea -> cpw-tc-stmt-num",
+    "cpw-hg-jae -> cpw-hg-spill"
+   ]
+  },
+  "added": [
+   "cpmr-stmt-noown",
+   "cpg-stmt-growle",
+   "cpg-oldcap",
+   "epr-stmt-addr",
+   "epr-control-addr",
+   "gv-stmt-after-nil",
+   "gv-control-after",
+   "ci-load8 (replayed in job 213, inside)",
+   "cpw-sh-* (4)",
+   "cpw-cf-* (4)",
+   "cpw-rf-* (3)",
+   "gv-w-* (3)"
+  ],
+  "split": {
+   "E2e modules": 110,
+   "E2eAd modules": 44
+  }
+ }
+}

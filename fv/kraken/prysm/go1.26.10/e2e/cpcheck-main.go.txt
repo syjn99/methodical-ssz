@@ -1,0 +1,111 @@
+// Scratch differential program (prysm-e2e E6, not committed in Prysm): runs the real generated
+// v1alpha1.Checkpoint SSZ methods and the hand-written primitives.Epoch decoder on the cases of
+// fv/kraken/gen/e2e/differential.py (with the review e2e-r1 S8 fields) and prints the observed results as JSON. Expected values are
+// computed by that script independently (Python struct.pack), never from this program.
+package main
+
+import (
+	"encoding/hex"
+	"encoding/json"
+	"errors"
+	"os"
+
+	"github.com/OffchainLabs/methodical-ssz/ssz"
+	"github.com/OffchainLabs/prysm/v7/consensus-types/primitives"
+	ethpb "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+)
+
+type Case struct {
+	ID     string `json:"id"`
+	Op     string `json:"op"`
+	In     string `json:"in"`
+	Epoch  uint64 `json:"epoch"`
+	Root   string `json:"root"`
+	Prefix string `json:"prefix"`
+	Spare  int    `json:"spare"`
+	// review e2e-r1 S8: start the receiver from a sentinel value (reject cases)
+	Sentinel bool `json:"sentinel"`
+}
+
+type Res struct {
+	ID             string `json:"id"`
+	Err            string `json:"err"`
+	ErrSize        bool   `json:"err_is_ErrSize"`
+	ErrBytesLength bool   `json:"err_is_ErrBytesLength"`
+	Epoch          uint64 `json:"epoch"`
+	Root           string `json:"root"`
+	RootLen        int    `json:"root_len"`
+	RootCap        int    `json:"root_cap"`
+	Out            string `json:"out"`
+	OutNil         bool   `json:"out_nil"`
+	RecvUnchanged  bool   `json:"recv_unchanged"`
+	Backing        string `json:"backing"`
+}
+
+func errs(r *Res, err error) {
+	if err != nil {
+		r.Err = err.Error()
+		r.ErrSize = errors.Is(err, ssz.ErrSize)
+		r.ErrBytesLength = errors.Is(err, ssz.ErrBytesLength)
+	}
+}
+
+func main() {
+	b, err := os.ReadFile(os.Args[1])
+	if err != nil {
+		panic(err)
+	}
+	var cs []Case
+	if err := json.Unmarshal(b, &cs); err != nil {
+		panic(err)
+	}
+	rs := []Res{}
+	for _, c := range cs {
+		r := Res{ID: c.ID}
+		switch c.Op {
+		case "unmarshal", "roundtrip":
+			in, _ := hex.DecodeString(c.In)
+			cp := &ethpb.Checkpoint{}
+			sRoot := []byte{}
+			if c.Sentinel {
+				sRoot = make([]byte, 32)
+				for i := range sRoot {
+					sRoot[i] = 0x33
+				}
+				cp = &ethpb.Checkpoint{Epoch: 0xAAAAAAAAAAAAAAAA, Root: sRoot}
+			}
+			sHex := hex.EncodeToString(sRoot) // taken before the call
+			err := cp.UnmarshalSSZ(in)
+			if c.Sentinel {
+				r.RecvUnchanged = cp.Epoch == 0xAAAAAAAAAAAAAAAA && len(cp.Root) == 32 && cap(cp.Root) == 32 &&
+					&cp.Root[0] == &sRoot[0] && hex.EncodeToString(cp.Root) == sHex
+			}
+			errs(&r, err)
+			r.Epoch, r.Root, r.RootLen, r.RootCap = uint64(cp.Epoch), hex.EncodeToString(cp.Root), len(cp.Root), cap(cp.Root)
+			if c.Op == "roundtrip" && err == nil {
+				out, err2 := cp.MarshalSSZTo(nil)
+				errs(&r, err2)
+				r.Out, r.OutNil = hex.EncodeToString(out), out == nil
+			}
+		case "marshal":
+			root, _ := hex.DecodeString(c.Root)
+			pre, _ := hex.DecodeString(c.Prefix)
+			cp := &ethpb.Checkpoint{Epoch: primitives.Epoch(c.Epoch), Root: root}
+			dst := make([]byte, len(pre), len(pre)+c.Spare)
+			copy(dst, pre)
+			out, err := cp.MarshalSSZTo(dst)
+			errs(&r, err)
+			r.Out, r.OutNil = hex.EncodeToString(out), out == nil
+			r.Backing = hex.EncodeToString(dst[:cap(dst)]) // the caller's backing array after the call (C-1)
+		case "epoch_unmarshal":
+			in, _ := hex.DecodeString(c.In)
+			var e primitives.Epoch = 0x77
+			errs(&r, e.UnmarshalSSZ(in))
+			r.Epoch = uint64(e)
+		}
+		rs = append(rs, r)
+	}
+	if err := json.NewEncoder(os.Stdout).Encode(rs); err != nil {
+		panic(err)
+	}
+}

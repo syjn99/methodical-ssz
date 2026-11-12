@@ -1,0 +1,138 @@
+{
+ "schema": "fvphase1c.kparse-riz-diag/1",
+ "what": "diagnostic only: the files that failed with 'unknown register: riz' were rewritten in scratch with ',%riz,1)' -> ')' (same address: SIB byte with no index) and parsed again. Not a conversion claim; conv.py was not changed.",
+ "log_done_line": [
+  18,
+  0
+ ],
+ "functions": [
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadDenebAndBlobsBundle).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 212,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/engine/v1.(*ExecutionPayloadDenebAndBlobsBundleV2).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 212,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyAltair).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 1070,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyBellatrix).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 1155,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyBellatrix).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 1147,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyCapella).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 1246,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyCapella).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 1234,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 1340,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyDeneb).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 1329,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 1433,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 2661,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BlindedBeaconBlockBodyElectra).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 1422,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconStateFulu).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 2744,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyGloas).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 1370,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BuilderConfig).UnmarshalSSZ",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 471,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBodyHeze).MarshalSSZTo",
+   "group": "generated (not inventory)",
+   "status": "OK",
+   "directives": 1370,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconBlockBody).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 913,
+   "error": null
+  },
+  {
+   "symbol": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*BeaconState).MarshalSSZTo",
+   "group": "inventory",
+   "status": "OK",
+   "directives": 1624,
+   "error": null
+  }
+ ],
+ "ok": 18,
+ "err": 0
+}

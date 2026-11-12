@@ -1,0 +1,112 @@
+[
+ {
+  "code_def": "DepUnmarshal",
+  "code_ns": "E2eDep.Code",
+  "norm": "prysm/go1.26.10/e2e/lv/link-dep/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
+  "stmt_module": "E2eDep/Stmt.lean",
+  "module": "E2eDep/Reject.lean",
+  "theorem": "dep_e2e_reject_size_main",
+  "id": "dep-control-reject",
+  "kind": "control"
+ },
+ {
+  "code_def": "DepUnmarshal",
+  "code_ns": "E2eDep.Code",
+  "norm": "prysm/go1.26.10/e2e/lv/link-dep/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
+  "stmt_module": "E2eDep/Stmt.lean",
+  "module": "E2eDep/Accept.lean",
+  "theorem": "dep_e2e_accept_main",
+  "id": "dep-control-accept",
+  "kind": "control"
+ },
+ {
+  "code_def": "DepUnmarshal",
+  "code_ns": "E2eDep.Code",
+  "norm": "prysm/go1.26.10/e2e/lv/link-dep/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
+  "stmt_module": "E2eDep/Stmt.lean",
+  "module": "E2eDep/Reject.lean",
+  "theorem": "dep_e2e_reject_size_main",
+  "id": "dep-stmt-size1241",
+  "kind": "stmt",
+  "stmt_def": "dep_reject_size_stmt",
+  "old": "(hlen : s.regs.rcx ≠ 1240)",
+  "new": "(hlen : s.regs.rcx ≠ 1241)"
+ },
+ {
+  "code_def": "DepUnmarshal",
+  "code_ns": "E2eDep.Code",
+  "norm": "prysm/go1.26.10/e2e/lv/link-dep/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
+  "stmt_module": "E2eDep/Stmt.lean",
+  "module": "E2eDep/Reject.lean",
+  "theorem": "dep_e2e_reject_size_main",
+  "id": "dep-size1241",
+  "kind": "code",
+  "old": "  cmp $0x4d8,%rcx",
+  "new": "  cmp $0x4d9,%rcx"
+ },
+ {
+  "code_def": "DepUnmarshal",
+  "code_ns": "E2eDep.Code",
+  "norm": "prysm/go1.26.10/e2e/lv/link-dep/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
+  "stmt_module": "E2eDep/Stmt.lean",
+  "module": "E2eDep/Accept.lean",
+  "theorem": "dep_e2e_accept_main",
+  "id": "dep-loopbound32",
+  "kind": "code",
+  "line": 42,
+  "old": "  cmp $0x21,%rax",
+  "new": "  cmp $0x20,%rax"
+ },
+ {
+  "code_def": "DepUnmarshal",
+  "code_ns": "E2eDep.Code",
+  "norm": "prysm/go1.26.10/e2e/lv/link-dep/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
+  "stmt_module": "E2eDep/Stmt.lean",
+  "module": "E2eDep/Accept.lean",
+  "theorem": "dep_e2e_accept_main",
+  "id": "dep-elem31",
+  "kind": "code",
+  "line": 63,
+  "old": "  mov $0x20,%ecx",
+  "new": "  mov $0x1f,%ecx"
+ },
+ {
+  "code_def": "DepUnmarshal",
+  "code_ns": "E2eDep.Code",
+  "norm": "prysm/go1.26.10/e2e/lv/link-dep/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
+  "stmt_module": "E2eDep/Stmt.lean",
+  "module": "E2eDep/Accept.lean",
+  "theorem": "dep_e2e_accept_main",
+  "id": "dep-dataoff1057",
+  "kind": "code",
+  "line": 101,
+  "old": "  add $0x420,%rbx",
+  "new": "  add $0x421,%rbx"
+ },
+ {
+  "code_def": "DepUnmarshal",
+  "code_ns": "E2eDep.Code",
+  "norm": "prysm/go1.26.10/e2e/lv/link-dep/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
+  "stmt_module": "E2eDep/Stmt.lean",
+  "module": "E2eDep/Accept.lean",
+  "theorem": "dep_e2e_accept_main",
+  "id": "dep-datalen183",
+  "kind": "code",
+  "line": 104,
+  "old": "  mov $0xb8,%ecx",
+  "new": "  mov $0xb7,%ecx"
+ },
+ {
+  "code_def": "DepUnmarshal",
+  "code_ns": "E2eDep.Code",
+  "norm": "prysm/go1.26.10/e2e/lv/link-dep/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit.UnmarshalSSZ.S",
+  "stmt_module": "E2eDep/Stmt.lean",
+  "module": "E2eDep/Accept.lean",
+  "theorem": "dep_e2e_accept_main",
+  "id": "dep-stmt-heap",
+  "kind": "stmt",
+  "stmt_def": "dep_accept_stmt",
+  "old": "Heap (avail - 2144)",
+  "new": "Heap (avail - 2143)"
+ }
+]

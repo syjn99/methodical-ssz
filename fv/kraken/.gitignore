@@ -1,0 +1,8 @@
+/upstream/
+**/.lake/
+/vcgen-src/
+/link/out/raw/
+/link/out/SELFTEST
+*.log
+__pycache__/
+*.pyc

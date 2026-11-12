@@ -1,0 +1,154 @@
+// Scratch differential program (unit E2-C, not committed in Prysm): runs the real generated
+// v1alpha1.<T>.MarshalSSZTo of the 16 flat development types on the cases of fv/kraken/gen/e2e/e2cdiff.py
+// (fast path: len(dst) + size <= cap(dst)) and prints the observed results as JSON. Expected values are
+// computed by that script independently, never from this program. Fields are set by reflection by Go field
+// name (uint64 and overlay kinds by SetUint, []byte by SetBytes of a fresh copy).
+package main
+
+import (
+	"bytes"
+	"encoding/hex"
+	"encoding/json"
+	"os"
+	"reflect"
+
+	ethpb "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
+)
+
+type Field struct {
+	Name string `json:"name"`
+	U    uint64 `json:"u"`
+	B    string `json:"b"`
+}
+
+type Case struct {
+	ID     string  `json:"id"`
+	Type   string  `json:"type"`
+	Fields []Field `json:"fields"`
+	Pre    string  `json:"pre"`
+	Cap    int     `json:"cap"`
+}
+
+type Res struct {
+	ID            string `json:"id"`
+	Err           string `json:"err"`
+	Out           string `json:"out"`
+	OutCap        int    `json:"out_cap"`
+	SameArray     bool   `json:"same_array"`
+	RecvUnchanged bool   `json:"recv_unchanged"`
+}
+
+type marshaler interface {
+	MarshalSSZTo(dst []byte) ([]byte, error)
+}
+
+func newT(t string) marshaler {
+	switch t {
+	case "Checkpoint":
+		return &ethpb.Checkpoint{}
+	case "BeaconBlockHeader":
+		return &ethpb.BeaconBlockHeader{}
+	case "Eth1Data":
+		return &ethpb.Eth1Data{}
+	case "BlobIdentifier":
+		return &ethpb.BlobIdentifier{}
+	case "DepositMessage":
+		return &ethpb.DepositMessage{}
+	case "Deposit_Data":
+		return &ethpb.Deposit_Data{}
+	case "PendingPartialWithdrawal":
+		return &ethpb.PendingPartialWithdrawal{}
+	case "SyncCommitteeMessage":
+		return &ethpb.SyncCommitteeMessage{}
+	case "PendingConsolidation":
+		return &ethpb.PendingConsolidation{}
+	case "PendingDeposit":
+		return &ethpb.PendingDeposit{}
+	case "PowBlock":
+		return &ethpb.PowBlock{}
+	case "HistoricalSummary":
+		return &ethpb.HistoricalSummary{}
+	case "SigningData":
+		return &ethpb.SigningData{}
+	case "SyncAggregatorSelectionData":
+		return &ethpb.SyncAggregatorSelectionData{}
+	case "ValidatorBalance":
+		return &ethpb.ValidatorBalance{}
+	case "VoluntaryExit":
+		return &ethpb.VoluntaryExit{}
+	}
+	panic("unknown type " + t)
+}
+
+func set(m marshaler, fs []Field) {
+	v := reflect.ValueOf(m).Elem()
+	for _, f := range fs {
+		fv := v.FieldByName(f.Name)
+		if !fv.IsValid() {
+			panic("no field " + f.Name)
+		}
+		switch fv.Kind() {
+		case reflect.Uint64:
+			fv.SetUint(f.U)
+		case reflect.Slice:
+			b, err := hex.DecodeString(f.B)
+			if err != nil {
+				panic(err)
+			}
+			fv.SetBytes(b)
+		default:
+			panic("field kind " + f.Name)
+		}
+	}
+}
+
+func same(m marshaler, fs []Field) bool {
+	v := reflect.ValueOf(m).Elem()
+	for _, f := range fs {
+		fv := v.FieldByName(f.Name)
+		if fv.Kind() == reflect.Uint64 {
+			if fv.Uint() != f.U {
+				return false
+			}
+		} else {
+			b, _ := hex.DecodeString(f.B)
+			if !bytes.Equal(fv.Bytes(), b) {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+func main() {
+	var cs []Case
+	if err := json.NewDecoder(os.Stdin).Decode(&cs); err != nil {
+		panic(err)
+	}
+	out := []Res{}
+	for _, c := range cs {
+		m := newT(c.Type)
+		set(m, c.Fields)
+		pre, err := hex.DecodeString(c.Pre)
+		if err != nil {
+			panic(err)
+		}
+		dst := make([]byte, len(pre), c.Cap)
+		copy(dst, pre)
+		r := Res{ID: c.ID}
+		o, e := m.MarshalSSZTo(dst)
+		if e != nil {
+			r.Err = e.Error()
+		}
+		r.Out = hex.EncodeToString(o)
+		r.OutCap = cap(o)
+		r.SameArray = cap(o) > 0 && cap(dst) > 0 && &o[:cap(o)][0] == &dst[:cap(dst)][0]
+		r.RecvUnchanged = same(m, c.Fields)
+		out = append(out, r)
+	}
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", " ")
+	if err := enc.Encode(out); err != nil {
+		panic(err)
+	}
+}

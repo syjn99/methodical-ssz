@@ -1,0 +1,152 @@
+[
+ {
+  "id": "g2g-dmdec-pk-control",
+  "module": "E2eScal/Gen2DmDec.lean",
+  "theorem": "dm_g2dec_PublicKey_seg",
+  "kind": "control"
+ },
+ {
+  "id": "g2g-dmgc-control",
+  "module": "E2eScal/Gen2DmAccept.lean",
+  "theorem": "dm_e2e_accept_main_gc",
+  "kind": "control"
+ },
+ {
+  "id": "g2g-dmg2-control",
+  "module": "E2eScal/DmAcceptG2.lean",
+  "theorem": "dm_e2e_accept_main_g2",
+  "kind": "control"
+ },
+ {
+  "id": "g2g-bigc-type-control",
+  "module": "E2eScal/Gen2BiAccept.lean",
+  "theorem": "bi_e2e_accept_main_gc_type",
+  "kind": "control"
+ },
+ {
+  "id": "g2g-dmdec-pk-stmt-size",
+  "module": "E2eScal/Gen2DmDec.lean",
+  "theorem": "dm_g2dec_PublicKey_seg",
+  "kind": "stmt",
+  "old": "(hroot : root.length = 48)",
+  "new": "(hroot : root.length = 32)"
+ },
+ {
+  "id": "g2g-dmdec-amt-stmt-val",
+  "module": "E2eScal/Gen2DmDec.lean",
+  "theorem": "dm_g2dec_Amount_seg",
+  "kind": "stmt",
+  "old": "⋆ Eq (v.At aF) ⋆ R) st.data.dmem",
+  "new": "⋆ Eq (vF.At aF) ⋆ R) st.data.dmem"
+ },
+ {
+  "id": "g2g-e1dec-cnt-stmt-off",
+  "module": "E2eScal/Gen2E1Dec.lean",
+  "theorem": "e1_g2dec_DepositCount_seg",
+  "kind": "stmt",
+  "old": "(hF : rcv + (32 : Int64).toBitVec = aF)",
+  "new": "(hF : rcv + (40 : Int64).toBitVec = aF)"
+ },
+ {
+  "id": "g2g-dmgc-stmt-heap",
+  "module": "E2eScal/Gen2DmAccept.lean",
+  "theorem": "dm_e2e_accept_main_gc",
+  "kind": "stmt",
+  "old": "Heap (avail - 80)",
+  "new": "Heap (avail - 48)"
+ },
+ {
+  "id": "g2g-bigc-stmt-idx",
+  "module": "E2eScal/Gen2BiAccept.lean",
+  "theorem": "bi_e2e_accept_main_gc",
+  "kind": "stmt",
+  "old": "⋆ Eq (x2.At (s.regs.rax.toBitVec + 32))",
+  "new": "⋆ Eq (g2n.At (s.regs.rax.toBitVec + 32))"
+ },
+ {
+  "id": "g2g-dmgc-type-rhs",
+  "module": "E2eScal/Gen2DmAccept.lean",
+  "theorem": "dm_e2e_accept_main_gc_type",
+  "kind": "stmt",
+  "old": "type_of% (@E2eScal.Dm.dm_e2e_accept_main h)",
+  "new": "type_of% (@E2eScal.E1.e1_e2e_accept_main h)"
+ },
+ {
+  "id": "g2g-dmg2-stmt-len",
+  "module": "E2eScal/DmAcceptG2.lean",
+  "theorem": "dm_e2e_accept_main_g2",
+  "kind": "stmt",
+  "old": "(hlen : s.regs.rcx = 88)",
+  "new": "(hlen : s.regs.rcx = 80)"
+ },
+ {
+  "id": "g2g-big2-stmt-rsp",
+  "module": "E2eScal/BiAcceptG2.lean",
+  "theorem": "bi_e2e_accept_main_g2",
+  "kind": "stmt",
+  "old": "∧ st.data.regs.rsp = s.regs.rsp + 8",
+  "new": "∧ st.data.regs.rsp = s.regs.rsp + 16"
+ },
+ {
+  "id": "g2g-dmdec-pk-code-count",
+  "module": "E2eScal/Gen2DmDec.lean",
+  "theorem": "dm_g2dec_PublicKey_seg",
+  "kind": "code",
+  "code_def": "DmUnmarshal",
+  "code_ns": "E2eScal.H3Code",
+  "norm": "prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "old": "  mov $0x30,%ecx",
+  "new": "  mov $0x20,%ecx",
+  "line": 31
+ },
+ {
+  "id": "g2g-dmdec-amt-code-src",
+  "module": "E2eScal/Gen2DmDec.lean",
+  "theorem": "dm_g2dec_Amount_seg",
+  "kind": "code",
+  "code_def": "DmUnmarshal",
+  "code_ns": "E2eScal.H3Code",
+  "norm": "prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "old": "  mov 0x50(%rcx),%rcx",
+  "new": "  mov 0x48(%rcx),%rcx"
+ },
+ {
+  "id": "g2g-dmgc-code-tail",
+  "module": "E2eScal/Gen2DmAccept.lean",
+  "theorem": "dm_e2e_accept_main_gc",
+  "kind": "code",
+  "code_def": "DmUnmarshal",
+  "code_ns": "E2eScal.H3Code",
+  "norm": "prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "old": "  mov %rdi,(%rdx)",
+  "new": "  mov %rdi,0x8(%rdx)"
+ },
+ {
+  "id": "g2g-bigc-code-epi",
+  "module": "E2eScal/Gen2BiAccept.lean",
+  "theorem": "bi_e2e_accept_main_gc",
+  "kind": "code",
+  "code_def": "BiUnmarshal",
+  "code_ns": "E2eScal.H3Code",
+  "norm": "prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
+  "old": "  add $0x20,%rsp",
+  "new": "  add $0x28,%rsp",
+  "line": 53
+ },
+ {
+  "id": "g2g-dmg2-code-head",
+  "module": "E2eScal/DmAcceptG2.lean",
+  "theorem": "dm_e2e_accept_main_g2",
+  "kind": "code",
+  "code_def": "DmUnmarshal",
+  "code_ns": "E2eScal.H3Code",
+  "norm": "prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S",
+  "old": "  cmp $0x58,%rcx",
+  "new": "  cmp $0x50,%rcx"
+ }
+]

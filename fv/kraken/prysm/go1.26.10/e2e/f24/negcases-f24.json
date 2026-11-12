@@ -1,0 +1,508 @@
+[
+ {
+  "id": "f24-dpr-speck-control",
+  "module": "E2eScal/F24DprSpecK.lean",
+  "theorem": "dpr_e2e_accept_spec_k",
+  "kind": "control"
+ },
+ {
+  "id": "f24-dpr-accept-rax",
+  "module": "E2eScal/Gen5F24DprDec.lean",
+  "theorem": "dpr_g5dec_accept",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "f24-dpr-reject-rax",
+  "module": "E2eScal/Gen5F24DprDec.lean",
+  "theorem": "dpr_g5dec_reject",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = e0",
+  "new": "st.data.regs.rax = e1"
+ },
+ {
+  "id": "f24-dpr-speck-hlen",
+  "module": "E2eScal/F24DprSpecK.lean",
+  "theorem": "dpr_e2e_accept_spec_k",
+  "kind": "stmt",
+  "old": "(hlen : s.regs.rcx.toNat = bsA.size)",
+  "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)"
+ },
+ {
+  "id": "f24-dpr-wita-rax",
+  "module": "E2eScal/WitDprGA.lean",
+  "theorem": "dpr_accept_runs",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "f24-bdr-speck-control",
+  "module": "E2eScal/F24BdrSpecK.lean",
+  "theorem": "bdr_e2e_accept_spec_k",
+  "kind": "control"
+ },
+ {
+  "id": "f24-bdr-accept-rax",
+  "module": "E2eScal/Gen5F24BdrDec.lean",
+  "theorem": "bdr_g5dec_accept",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "f24-bdr-reject-rax",
+  "module": "E2eScal/Gen5F24BdrDec.lean",
+  "theorem": "bdr_g5dec_reject",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = e0",
+  "new": "st.data.regs.rax = e1"
+ },
+ {
+  "id": "f24-bdr-speck-hlen",
+  "module": "E2eScal/F24BdrSpecK.lean",
+  "theorem": "bdr_e2e_accept_spec_k",
+  "kind": "stmt",
+  "old": "(hlen : s.regs.rcx.toNat = bsA.size)",
+  "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)"
+ },
+ {
+  "id": "f24-bdr-wita-rax",
+  "module": "E2eScal/WitBdrGA.lean",
+  "theorem": "bdr_accept_runs",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "f24-bbr-speck-control",
+  "module": "E2eScal/F24BbrSpecK.lean",
+  "theorem": "bbr_e2e_accept_spec_k",
+  "kind": "control"
+ },
+ {
+  "id": "f24-bbr-accept-rax",
+  "module": "E2eScal/Gen5F24BbrDec.lean",
+  "theorem": "bbr_g5dec_accept",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "f24-bbr-reject-rax",
+  "module": "E2eScal/Gen5F24BbrDec.lean",
+  "theorem": "bbr_g5dec_reject",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = e0",
+  "new": "st.data.regs.rax = e1"
+ },
+ {
+  "id": "f24-bbr-speck-hlen",
+  "module": "E2eScal/F24BbrSpecK.lean",
+  "theorem": "bbr_e2e_accept_spec_k",
+  "kind": "stmt",
+  "old": "(hlen : s.regs.rcx.toNat = bsA.size)",
+  "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)"
+ },
+ {
+  "id": "f24-bbr-wita-rax",
+  "module": "E2eScal/WitBbrGA.lean",
+  "theorem": "bbr_accept_runs",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "f24-bsr-speck-control",
+  "module": "E2eScal/F24BsrSpecK.lean",
+  "theorem": "bsr_e2e_accept_spec_k",
+  "kind": "control"
+ },
+ {
+  "id": "f24-bsr-accept-rax",
+  "module": "E2eScal/Gen5F24BsrDec.lean",
+  "theorem": "bsr_g5dec_accept",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "f24-bsr-reject-rax",
+  "module": "E2eScal/Gen5F24BsrDec.lean",
+  "theorem": "bsr_g5dec_reject",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = e0",
+  "new": "st.data.regs.rax = e1"
+ },
+ {
+  "id": "f24-bsr-speck-hlen",
+  "module": "E2eScal/F24BsrSpecK.lean",
+  "theorem": "bsr_e2e_accept_spec_k",
+  "kind": "stmt",
+  "old": "(hlen : s.regs.rcx.toNat = bsA.size)",
+  "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)"
+ },
+ {
+  "id": "f24-bsr-wita-rax",
+  "module": "E2eScal/WitBsrGA.lean",
+  "theorem": "bsr_accept_runs",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "f24-epr-speck-control",
+  "module": "E2eScal/F24EprSpecK.lean",
+  "theorem": "epr_e2e_accept_spec_k",
+  "kind": "control"
+ },
+ {
+  "id": "f24-epr-accept-rax",
+  "module": "E2eScal/Gen5F24EprDec.lean",
+  "theorem": "epr_g5dec_accept",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "f24-epr-reject-rax",
+  "module": "E2eScal/Gen5F24EprDec.lean",
+  "theorem": "epr_g5dec_reject",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = e0",
+  "new": "st.data.regs.rax = e1"
+ },
+ {
+  "id": "f24-epr-speck-hlen",
+  "module": "E2eScal/F24EprSpecK.lean",
+  "theorem": "epr_e2e_accept_spec_k",
+  "kind": "stmt",
+  "old": "(hlen : s.regs.rcx.toNat = bsA.size)",
+  "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)"
+ },
+ {
+  "id": "f24-epr-wita-rax",
+  "module": "E2eScal/WitEprGA.lean",
+  "theorem": "epr_accept_runs",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "f24-pdc-speck-control",
+  "module": "E2eScal/F24PdcSpecK.lean",
+  "theorem": "pdc_e2e_accept_spec_k",
+  "kind": "control"
+ },
+ {
+  "id": "f24-pdc-accept-rax",
+  "module": "E2eScal/Gen5F24PdcDec.lean",
+  "theorem": "pdc_g5dec_accept",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "f24-pdc-reject-rax",
+  "module": "E2eScal/Gen5F24PdcDec.lean",
+  "theorem": "pdc_g5dec_reject",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = e0",
+  "new": "st.data.regs.rax = e1"
+ },
+ {
+  "id": "f24-pdc-speck-hlen",
+  "module": "E2eScal/F24PdcSpecK.lean",
+  "theorem": "pdc_e2e_accept_spec_k",
+  "kind": "stmt",
+  "old": "(hlen : s.regs.rcx.toNat = bsA.size)",
+  "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)"
+ },
+ {
+  "id": "f24-pdc-wita-rax",
+  "module": "E2eScal/WitPdcGA.lean",
+  "theorem": "pdc_accept_runs",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "f24-vid-speck-control",
+  "module": "E2eScal/F24VidSpecK.lean",
+  "theorem": "vid_e2e_accept_spec_k",
+  "kind": "control"
+ },
+ {
+  "id": "f24-vid-accept-rax",
+  "module": "E2eScal/Gen5F24VidDec.lean",
+  "theorem": "vid_g5dec_accept",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "f24-vid-reject-rax",
+  "module": "E2eScal/Gen5F24VidDec.lean",
+  "theorem": "vid_g5dec_reject",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = e0",
+  "new": "st.data.regs.rax = e1"
+ },
+ {
+  "id": "f24-vid-speck-hlen",
+  "module": "E2eScal/F24VidSpecK.lean",
+  "theorem": "vid_e2e_accept_spec_k",
+  "kind": "stmt",
+  "old": "(hlen : s.regs.rcx.toNat = bsA.size)",
+  "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)"
+ },
+ {
+  "id": "f24-vid-wita-rax",
+  "module": "E2eScal/WitVidGA.lean",
+  "theorem": "vid_accept_runs",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0 ∧",
+  "new": "st.data.regs.rax = 1 ∧"
+ },
+ {
+  "id": "f24-bbr-espec-control",
+  "module": "E2eScal/E2cSpecBbr.lean",
+  "theorem": "bbr_e2c_spec_k",
+  "kind": "control"
+ },
+ {
+  "id": "f24-bbr-fast-rax",
+  "module": "E2eScal/Gen6F24BbrEnc.lean",
+  "theorem": "bbr_g6e_fast",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = s.regs.rbx",
+  "new": "st.data.regs.rax = s.regs.rcx"
+ },
+ {
+  "id": "f24-bbr-espec-hcap",
+  "module": "E2eScal/E2cSpecBbr.lean",
+  "theorem": "bbr_e2c_spec_k",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 24 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 16 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "f24-bbr-ewit-rax",
+  "module": "E2eScal/WitE2cBbr.lean",
+  "theorem": "bbr_e2c_wit_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x100e0",
+  "new": "st.data.regs.rax = 0x8"
+ },
+ {
+  "id": "f24-bdr-espec-control",
+  "module": "E2eScal/E2cSpecBdr.lean",
+  "theorem": "bdr_e2c_spec_k",
+  "kind": "control"
+ },
+ {
+  "id": "f24-bdr-fast-rax",
+  "module": "E2eScal/Gen6F24BdrEnc.lean",
+  "theorem": "bdr_g6e_fast",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = s.regs.rbx",
+  "new": "st.data.regs.rax = s.regs.rcx"
+ },
+ {
+  "id": "f24-bdr-espec-hcap",
+  "module": "E2eScal/E2cSpecBdr.lean",
+  "theorem": "bdr_e2c_spec_k",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 184 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 176 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "f24-bdr-ewit-rax",
+  "module": "E2eScal/WitE2cBdr.lean",
+  "theorem": "bdr_e2c_wit_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x101e0",
+  "new": "st.data.regs.rax = 0x8"
+ },
+ {
+  "id": "f24-bpf-espec-control",
+  "module": "E2eScal/E2cSpecBpf.lean",
+  "theorem": "bpf_e2c_spec_k",
+  "kind": "control"
+ },
+ {
+  "id": "f24-bpf-fast-rax",
+  "module": "E2eScal/Gen6F24BpfEnc.lean",
+  "theorem": "bpf_g6e_fast",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = s.regs.rbx",
+  "new": "st.data.regs.rax = s.regs.rcx"
+ },
+ {
+  "id": "f24-bpf-espec-hcap",
+  "module": "E2eScal/E2cSpecBpf.lean",
+  "theorem": "bpf_e2c_spec_k",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 8 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 0 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "f24-bpf-ewit-rax",
+  "module": "E2eScal/WitE2cBpf.lean",
+  "theorem": "bpf_e2c_wit_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x100a8",
+  "new": "st.data.regs.rax = 0x8"
+ },
+ {
+  "id": "f24-bsr-espec-control",
+  "module": "E2eScal/E2cSpecBsr.lean",
+  "theorem": "bsr_e2c_spec_k",
+  "kind": "control"
+ },
+ {
+  "id": "f24-bsr-fast-rax",
+  "module": "E2eScal/Gen6F24BsrEnc.lean",
+  "theorem": "bsr_g6e_fast",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = s.regs.rbx",
+  "new": "st.data.regs.rax = s.regs.rcx"
+ },
+ {
+  "id": "f24-bsr-espec-hcap",
+  "module": "E2eScal/E2cSpecBsr.lean",
+  "theorem": "bsr_e2c_spec_k",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 16 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 8 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "f24-bsr-ewit-rax",
+  "module": "E2eScal/WitE2cBsr.lean",
+  "theorem": "bsr_e2c_wit_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x100d0",
+  "new": "st.data.regs.rax = 0x8"
+ },
+ {
+  "id": "f24-dpr-espec-control",
+  "module": "E2eScal/E2cSpecDpr.lean",
+  "theorem": "dpr_e2c_spec_k",
+  "kind": "control"
+ },
+ {
+  "id": "f24-dpr-fast-rax",
+  "module": "E2eScal/Gen6F24DprEnc.lean",
+  "theorem": "dpr_g6e_fast",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = s.regs.rbx",
+  "new": "st.data.regs.rax = s.regs.rcx"
+ },
+ {
+  "id": "f24-dpr-espec-hcap",
+  "module": "E2eScal/E2cSpecDpr.lean",
+  "theorem": "dpr_e2c_spec_k",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 192 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 184 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "f24-dpr-ewit-rax",
+  "module": "E2eScal/WitE2cDpr.lean",
+  "theorem": "dpr_e2c_wit_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x10208",
+  "new": "st.data.regs.rax = 0x8"
+ },
+ {
+  "id": "f24-epr-espec-control",
+  "module": "E2eScal/E2cSpecEpr.lean",
+  "theorem": "epr_e2c_spec_k",
+  "kind": "control"
+ },
+ {
+  "id": "f24-epr-fast-rax",
+  "module": "E2eScal/Gen6F24EprEnc.lean",
+  "theorem": "epr_g6e_fast",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = s.regs.rbx",
+  "new": "st.data.regs.rax = s.regs.rcx"
+ },
+ {
+  "id": "f24-epr-espec-hcap",
+  "module": "E2eScal/E2cSpecEpr.lean",
+  "theorem": "epr_e2c_spec_k",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 16 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 8 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "f24-epr-ewit-rax",
+  "module": "E2eScal/WitE2cEpr.lean",
+  "theorem": "epr_e2c_wit_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x100d0",
+  "new": "st.data.regs.rax = 0x8"
+ },
+ {
+  "id": "f24-pdc-espec-control",
+  "module": "E2eScal/E2cSpecPdc.lean",
+  "theorem": "pdc_e2c_spec_k",
+  "kind": "control"
+ },
+ {
+  "id": "f24-pdc-fast-rax",
+  "module": "E2eScal/Gen6F24PdcEnc.lean",
+  "theorem": "pdc_g6e_fast",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = s.regs.rbx",
+  "new": "st.data.regs.rax = s.regs.rcx"
+ },
+ {
+  "id": "f24-pdc-espec-hcap",
+  "module": "E2eScal/E2cSpecPdc.lean",
+  "theorem": "pdc_e2c_spec_k",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 40 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 32 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "f24-pdc-ewit-rax",
+  "module": "E2eScal/WitE2cPdc.lean",
+  "theorem": "pdc_e2c_wit_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x10100",
+  "new": "st.data.regs.rax = 0x8"
+ },
+ {
+  "id": "f24-vid-espec-control",
+  "module": "E2eScal/E2cSpecVid.lean",
+  "theorem": "vid_e2c_spec_k",
+  "kind": "control"
+ },
+ {
+  "id": "f24-vid-fast-rax",
+  "module": "E2eScal/Gen6F24VidEnc.lean",
+  "theorem": "vid_g6e_fast",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = s.regs.rbx",
+  "new": "st.data.regs.rax = s.regs.rcx"
+ },
+ {
+  "id": "f24-vid-espec-hcap",
+  "module": "E2eScal/E2cSpecVid.lean",
+  "theorem": "vid_e2c_spec_k",
+  "kind": "stmt",
+  "old": "(hcap : s.regs.rcx.toNat + 64 ≤ s.regs.rdi.toNat)",
+  "new": "(hcap : s.regs.rcx.toNat + 56 ≤ s.regs.rdi.toNat)"
+ },
+ {
+  "id": "f24-vid-ewit-rax",
+  "module": "E2eScal/WitE2cVid.lean",
+  "theorem": "vid_e2c_wit_empty",
+  "kind": "stmt",
+  "old": "st.data.regs.rax = 0x10140",
+  "new": "st.data.regs.rax = 0x8"
+ }
+]

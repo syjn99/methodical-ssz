@@ -1,0 +1,86 @@
+{
+ "schema": "fvphase1c.desc/1",
+ "type": "PendingDeposit",
+ "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+ "ssz": {
+  "k": "container",
+  "names": [
+   "PublicKey",
+   "WithdrawalCredentials",
+   "Amount",
+   "Signature",
+   "Slot"
+  ],
+  "fields": [
+   {
+    "k": "byteVector",
+    "n": 48
+   },
+   {
+    "k": "byteVector",
+    "n": 32
+   },
+   {
+    "k": "uint",
+    "w": 8
+   },
+   {
+    "k": "byteVector",
+    "n": 96
+   },
+   {
+    "k": "uint",
+    "w": 8
+   }
+  ]
+ },
+ "fixed_size": 192,
+ "fixed_part_size": 192,
+ "fields": [
+  {
+   "name": "PublicKey",
+   "index": 0,
+   "offset": 0,
+   "width": 48,
+   "variable": false,
+   "kind": "byteVector",
+   "length": 48
+  },
+  {
+   "name": "WithdrawalCredentials",
+   "index": 1,
+   "offset": 48,
+   "width": 32,
+   "variable": false,
+   "kind": "byteVector",
+   "length": 32
+  },
+  {
+   "name": "Amount",
+   "index": 2,
+   "offset": 80,
+   "width": 8,
+   "variable": false,
+   "kind": "uint"
+  },
+  {
+   "name": "Signature",
+   "index": 3,
+   "offset": 88,
+   "width": 96,
+   "variable": false,
+   "kind": "byteVector",
+   "length": 96
+  },
+  {
+   "name": "Slot",
+   "index": 4,
+   "offset": 184,
+   "width": 8,
+   "variable": false,
+   "kind": "uint"
+  }
+ ],
+ "variable_order": [],
+ "reference": null
+}

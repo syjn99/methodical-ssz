@@ -1,0 +1,16 @@
+go: go version go1.26.10 linux/arm64
+target: GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 go build -p 2 -tags purego -trimpath
+host: Linux aarch64
+off (control) elf sha256: c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e
+elf sha256: 3ef7ac890ba1a797fb90877b84ad1a6ffe0ac283f77c10b09ffb2c8cd7b7f602
+elf size: 23486305
+elf b2 sha256: 3ef7ac890ba1a797fb90877b84ad1a6ffe0ac283f77c10b09ffb2c8cd7b7f602
+go build id: hZOfiaa42jdlG28WBgiT/EcZU4PuTees1oD-k2sKh/xLuVe4j8OAEMeheSQZtz/oqpTs-uXH2LEGFFocZ3G
+go build id b2: hZOfiaa42jdlG28WBgiT/EcZU4PuTees1oD-k2sKh/xLuVe4j8OAEMeheSQZtz/oqpTs-uXH2LEGFFocZ3G
+objdump sha256: 81a7e8b94057633bfefe68b3281f1c31c5f4db4eabb0ebf1bea841162b4b01cf
+nm sha256: 6ae7fa1b4306ba9ba53405c0c15c6fff8269e411782a404db8575cadda6798f7
+p1cbin main.go sha256: 794caf8f195f3d2e050baa310d17969caf8b8a0414c3b9f522028ab7d06ed16a
+phase0.ssz.go sha256: 3959aae90cbc3b8d6b2bd29c9e542d33c6cd96c3dbd9c6a2b0ce9ea61bbc86c5
+phase0.minimal.ssz.go sha256: 9bf2ad5b80351ddeabe5dfb55b5ee09d805016558cff79a2b601e71ab0b054eb
+generator binary sha256: bdd48f1d4ddec51c24e1e9b446a66b28e103721402f96a2c30ed3cdb6d513386 (claude/ssz-gen-opt-r1 ca191bb, go1.26.10 -trimpath)
+objdump (Checkpoint.MarshalSSZTo only) sha256: 20050698b38d6791ef84820e265b77d16efffda1da76e66c7967de593b422403

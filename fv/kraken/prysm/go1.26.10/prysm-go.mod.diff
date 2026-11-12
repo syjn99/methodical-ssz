@@ -1,0 +1,10 @@
+diff --git a/go.mod b/go.mod
+index 70f1c91bd..525eb1375 100644
+--- a/go.mod
++++ b/go.mod
+@@ -318,3 +318,5 @@ tool (
+ 	go.uber.org/mock/mockgen
+ 	gotest.tools/gotestsum
+ )
++
++replace github.com/OffchainLabs/methodical-ssz => /workspace/worktrees/methodical-ssz/fv-pin-smoke-generator

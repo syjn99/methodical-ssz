@@ -1,0 +1,56 @@
+{
+ "schema": "fvphase1c.desc/1",
+ "type": "HistoricalBatch",
+ "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+ "ssz": {
+  "k": "container",
+  "names": [
+   "BlockRoots",
+   "StateRoots"
+  ],
+  "fields": [
+   {
+    "k": "vector",
+    "elem": {
+     "k": "byteVector",
+     "n": 32
+    },
+    "n": 8192
+   },
+   {
+    "k": "vector",
+    "elem": {
+     "k": "byteVector",
+     "n": 32
+    },
+    "n": 8192
+   }
+  ]
+ },
+ "fixed_size": 524288,
+ "fixed_part_size": 524288,
+ "fields": [
+  {
+   "name": "BlockRoots",
+   "index": 0,
+   "offset": 0,
+   "width": 262144,
+   "variable": false,
+   "kind": "vector",
+   "length": 8192,
+   "elem_size": 32
+  },
+  {
+   "name": "StateRoots",
+   "index": 1,
+   "offset": 262144,
+   "width": 262144,
+   "variable": false,
+   "kind": "vector",
+   "length": 8192,
+   "elem_size": 32
+  }
+ ],
+ "variable_order": [],
+ "reference": null
+}

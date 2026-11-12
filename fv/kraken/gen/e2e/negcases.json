@@ -1,0 +1,1390 @@
+[
+ {
+  "id": "ep-control",
+  "kind": "control",
+  "module": "E2e/Epoch.lean",
+  "theorem": "ep_unmarshal_accept_main",
+  "code_def": "EpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S"
+ },
+ {
+  "id": "ep-cmp9",
+  "kind": "code",
+  "module": "E2e/Epoch.lean",
+  "theorem": "ep_unmarshal_accept_main",
+  "code_def": "EpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
+  "old": "  cmp $0x8,%rcx",
+  "new": "  cmp $0x9,%rcx"
+ },
+ {
+  "id": "ep-load8",
+  "kind": "code",
+  "module": "E2e/Epoch.lean",
+  "theorem": "ep_unmarshal_accept_main",
+  "code_def": "EpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
+  "old": "  mov (%rbx),%rcx",
+  "new": "  mov 0x8(%rbx),%rcx"
+ },
+ {
+  "id": "ep-store8",
+  "kind": "code",
+  "module": "E2e/Epoch.lean",
+  "theorem": "ep_unmarshal_accept_main",
+  "code_def": "EpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
+  "line": 47,
+  "old": "  mov %rcx,(%rax)",
+  "new": "  mov %rcx,0x8(%rax)"
+ },
+ {
+  "id": "ep-stmt-rax1",
+  "kind": "stmt",
+  "module": "E2e/Epoch.lean",
+  "theorem": "ep_unmarshal_accept_main",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
+  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
+ },
+ {
+  "id": "cpa-control-main",
+  "kind": "control",
+  "module": "E2e/CpAccept.lean",
+  "theorem": "cp_e2e_accept_main",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
+ },
+ {
+  "id": "cpa-cmp41",
+  "kind": "code",
+  "module": "E2e/CpAccept.lean",
+  "theorem": "cp_e2e_accept_main",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  cmp $0x28,%rcx",
+  "new": "  cmp $0x29,%rcx"
+ },
+ {
+  "id": "cpa-epoch-field",
+  "kind": "code",
+  "module": "E2e/CpAccept.lean",
+  "theorem": "cp_e2e_accept_main",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  add $0x8,%rax",
+  "new": "  add $0x10,%rax"
+ },
+ {
+  "id": "cpa-epoch-len",
+  "kind": "code",
+  "module": "E2e/CpAccept.lean",
+  "theorem": "cp_e2e_accept_main",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  mov $0x8,%ecx",
+  "new": "  mov $0x9,%ecx"
+ },
+ {
+  "id": "cpa-stmt-rbx1",
+  "kind": "stmt",
+  "module": "E2e/CpAccept.lean",
+  "theorem": "cp_e2e_accept_main",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
+  "new": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 1"
+ },
+ {
+  "id": "cpa-control-tail",
+  "kind": "control",
+  "module": "E2e/CpAccept.lean",
+  "theorem": "cp_e2e_accept_tail",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
+ },
+ {
+  "id": "cpa-cap33",
+  "kind": "code",
+  "module": "E2e/CpAccept.lean",
+  "theorem": "cp_e2e_accept_tail",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "line": 73,
+  "old": "  movq $0x20,0x20(%rdx)",
+  "new": "  movq $0x21,0x20(%rdx)"
+ },
+ {
+  "id": "cpa-memmove31",
+  "kind": "code",
+  "module": "E2e/CpAccept.lean",
+  "theorem": "cp_e2e_accept_tail",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "line": 69,
+  "old": "  mov $0x20,%ecx",
+  "new": "  mov $0x1f,%ecx"
+ },
+ {
+  "id": "cpa-rootptr",
+  "kind": "code",
+  "module": "E2e/CpAccept.lean",
+  "theorem": "cp_e2e_accept_tail",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  mov %rsi,0x10(%rdx)",
+  "new": "  mov %rsi,0x18(%rdx)"
+ },
+ {
+  "id": "cpr-control",
+  "kind": "control",
+  "module": "E2e/CpReject.lean",
+  "theorem": "cp_e2e_reject_size_main",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
+ },
+ {
+  "id": "cpr-cmp41",
+  "kind": "code",
+  "module": "E2e/CpReject.lean",
+  "theorem": "cp_e2e_reject_size_main",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  cmp $0x28,%rcx",
+  "new": "  cmp $0x29,%rcx"
+ },
+ {
+  "id": "cpr-errword",
+  "kind": "code",
+  "module": "E2e/CpReject.lean",
+  "theorem": "cp_e2e_reject_size_main",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  mov ssz.ErrSize(%rip),%rax",
+  "new": "  mov ssz.ErrSize+8(%rip),%rax"
+ },
+ {
+  "id": "cpr-stmt-e1",
+  "kind": "stmt",
+  "module": "E2e/CpReject.lean",
+  "theorem": "cp_e2e_reject_size_main",
+  "old": "st.data.regs.rax = e0 ∧",
+  "new": "st.data.regs.rax = e1 ∧"
+ },
+ {
+  "id": "cpu-control",
+  "kind": "control",
+  "module": "E2e/CpReject.lean",
+  "theorem": "cp_e2e_epoch_err_unreachable",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S"
+ },
+ {
+  "id": "cpu-jne",
+  "kind": "code",
+  "module": "E2e/CpReject.lean",
+  "theorem": "cp_e2e_epoch_err_unreachable",
+  "code_def": "CpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ.S",
+  "old": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4",
+  "new": "  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.UnmarshalSSZ_b4"
+ },
+ {
+  "id": "cpm-control",
+  "kind": "control",
+  "module": "E2e/CpMarshal.lean",
+  "theorem": "cp_e2e_marshal_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "cpm-len33",
+  "kind": "code",
+  "module": "E2e/CpMarshal.lean",
+  "theorem": "cp_e2e_marshal_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  cmpq $0x20,0x18(%rax)",
+  "new": "  cmpq $0x21,0x18(%rax)"
+ },
+ {
+  "id": "cpm-newlen16",
+  "kind": "code",
+  "module": "E2e/CpMarshal.lean",
+  "theorem": "cp_e2e_marshal_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  lea 0x8(%rcx),%rdx",
+  "new": "  lea 0x10(%rcx),%rdx"
+ },
+ {
+  "id": "cpm-epoch-field",
+  "kind": "code",
+  "module": "E2e/CpMarshal.lean",
+  "theorem": "cp_e2e_marshal_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov 0x8(%rax),%r8",
+  "new": "  mov 0x10(%rax),%r8"
+ },
+ {
+  "id": "cpm-memmove31",
+  "kind": "code",
+  "module": "E2e/CpMarshal.lean",
+  "theorem": "cp_e2e_marshal_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov $0x20,%ecx",
+  "new": "  mov $0x1f,%ecx"
+ },
+ {
+  "id": "cpm-jne-je",
+  "kind": "code",
+  "module": "E2e/CpMarshal.lean",
+  "theorem": "cp_e2e_marshal_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108",
+  "new": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_108"
+ },
+ {
+  "id": "cpm-stmt-rdi1",
+  "kind": "stmt",
+  "module": "E2e/CpMarshal.lean",
+  "theorem": "cp_e2e_marshal_main",
+  "old": "st.data.regs.rdi = 0 ∧ st.data.regs.rsi = 0",
+  "new": "st.data.regs.rdi = 1 ∧ st.data.regs.rsi = 0"
+ },
+ {
+  "id": "cpc-control",
+  "kind": "control",
+  "module": "E2e/Compose.lean",
+  "theorem": "cp_e2e_marshal_decoded_receiver"
+ },
+ {
+  "id": "cpc-stmt-swap",
+  "kind": "stmt",
+  "module": "E2e/Compose.lean",
+  "theorem": "cp_e2e_marshal_decoded_receiver",
+  "old": "Eq ((e8 ++ root).At s.regs.rbx.toBitVec)",
+  "new": "Eq ((root ++ e8).At s.regs.rbx.toBitVec)"
+ },
+ {
+  "id": "cpc-stmt-len41",
+  "kind": "stmt",
+  "module": "E2e/Compose.lean",
+  "theorem": "cp_e2e_marshal_decoded_receiver",
+  "old": "st.data.regs.rbx.toNat = 40 ∧",
+  "new": "st.data.regs.rbx.toNat = 41 ∧"
+ },
+ {
+  "id": "cpmr-control",
+  "kind": "control",
+  "module": "E2e/CpMarshalR.lean",
+  "theorem": "cp_e2e_marshal_reject_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "cpmr-errword",
+  "kind": "code",
+  "module": "E2e/CpMarshalR.lean",
+  "theorem": "cp_e2e_marshal_reject_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov ssz.ErrBytesLength(%rip),%rdi",
+  "new": "  mov ssz.ErrBytesLength+8(%rip),%rdi"
+ },
+ {
+  "id": "cpmr-rcx",
+  "kind": "code",
+  "module": "E2e/CpMarshalR.lean",
+  "theorem": "cp_e2e_marshal_reject_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov %rbx,%rcx",
+  "new": "  mov %rdi,%rcx"
+ },
+ {
+  "id": "cpmr-stmt-noown",
+  "kind": "stmt",
+  "module": "E2e/CpMarshalR.lean",
+  "theorem": "cp_e2e_marshal_reject_main",
+  "old": " ⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n      ⋆ Eq ((Int.toBytes 8 e0",
+  "new": "\n      ⋆ Eq ((Int.toBytes 8 e0",
+  "why": "C-1 (review e2e-r2 N1, replaces cpmr-stmt-dst-unchanged, a heartbeat timeout): without ownership of dst[len..len+8] the epoch store before the length test cannot be stepped"
+ },
+ {
+  "id": "cps-control",
+  "kind": "control",
+  "module": "E2e/CpSpecM.lean",
+  "theorem": "cp_e2e_size_main",
+  "code_def": "CpSize",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.SizeSSZ.S"
+ },
+ {
+  "id": "cps-41",
+  "kind": "code",
+  "module": "E2e/CpSpecM.lean",
+  "theorem": "cp_e2e_size_main",
+  "code_def": "CpSize",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.SizeSSZ.S",
+  "old": "  mov $0x28,%eax",
+  "new": "  mov $0x29,%eax"
+ },
+ {
+  "id": "cpms-control",
+  "kind": "control",
+  "module": "E2e/CpSpecM.lean",
+  "theorem": "cp_e2e_marshal_spec_k"
+ },
+ {
+  "id": "cpms-stmt-off1",
+  "kind": "stmt",
+  "module": "E2e/CpSpecM.lean",
+  "theorem": "cp_e2e_marshal_spec_k",
+  "old": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))"
+ },
+ {
+  "id": "epr-control",
+  "kind": "control",
+  "module": "E2e/EpReject.lean",
+  "theorem": "ep_unmarshal_reject_len_main",
+  "code_def": "EpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S"
+ },
+ {
+  "id": "epr-cmp7",
+  "kind": "code",
+  "module": "E2e/EpReject.lean",
+  "theorem": "ep_unmarshal_reject_len_main",
+  "code_def": "EpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
+  "old": "  cmp $0x8,%rcx",
+  "new": "  cmp $0x7,%rcx"
+ },
+ {
+  "id": "epr-fmtlen",
+  "kind": "code",
+  "module": "E2e/EpReject.lean",
+  "theorem": "ep_unmarshal_reject_len_main",
+  "code_def": "EpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
+  "old": "  mov $0x28,%ebx",
+  "new": "  mov $0x27,%ebx"
+ },
+ {
+  "id": "epr-nargs",
+  "kind": "code",
+  "module": "E2e/EpReject.lean",
+  "theorem": "ep_unmarshal_reject_len_main",
+  "code_def": "EpUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch.UnmarshalSSZ.S",
+  "old": "  mov $0x2,%edi",
+  "new": "  mov $0x1,%edi"
+ },
+ {
+  "id": "epr-stmt-nil",
+  "kind": "stmt",
+  "module": "E2e/EpReject.lean",
+  "theorem": "ep_unmarshal_reject_len_main",
+  "old": "st.data.regs.rax ≠ 0",
+  "new": "st.data.regs.rax = 0"
+ },
+ {
+  "id": "epr-stmt-addr",
+  "kind": "stmt",
+  "module": "E2e/EpReject.lean",
+  "theorem": "ep_static_addr",
+  "old": "E2e.Data.e2eStaticuint64s_addr = Fk.Data.staticuint64s_addr",
+  "new": "E2e.Data.e2eStaticuint64s_addr = Fk.Data.staticuint64s_addr + 8",
+  "why": "review e2e-r2 N3: the address lemma must name the staticuint64s label"
+ },
+ {
+  "id": "epr-control-addr",
+  "kind": "control",
+  "module": "E2e/EpReject.lean",
+  "theorem": "ep_static_addr"
+ },
+ {
+  "id": "gv-control",
+  "kind": "control",
+  "module": "E2e/GoVal.lean",
+  "theorem": "cp_layout"
+ },
+ {
+  "id": "gv-stmt-epoch16",
+  "kind": "stmt",
+  "module": "E2e/GoVal.lean",
+  "theorem": "cp_layout",
+  "old": "cpOff \"Epoch\" = 8",
+  "new": "cpOff \"Epoch\" = 16"
+ },
+ {
+  "id": "gv-control-after",
+  "kind": "control",
+  "module": "E2e/GoVal.lean",
+  "theorem": "cp_after_decode_goValue"
+ },
+ {
+  "id": "gv-stmt-after-nil",
+  "kind": "stmt",
+  "module": "E2e/GoVal.lean",
+  "theorem": "cp_after_decode_goValue",
+  "old": "cpGoValue (cpAfterDecode b e8 p) = true",
+  "new": "cpGoValue (cpAfterDecode b e8 0) = true",
+  "why": "review e2e-r2 N4: Root = (nil, 32, 32) is not a Go value"
+ },
+ {
+  "id": "cpx-control",
+  "kind": "control",
+  "module": "E2e/CpCompose.lean",
+  "theorem": "cp_e2e_unmarshal_then_marshal"
+ },
+ {
+  "id": "cpx-stmt-dec-rax1",
+  "kind": "stmt",
+  "module": "E2e/CpCompose.lean",
+  "theorem": "cp_e2e_unmarshal_then_marshal",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
+  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
+ },
+ {
+  "id": "cpx-stmt-dec-len41",
+  "kind": "stmt",
+  "module": "E2e/CpCompose.lean",
+  "theorem": "cp_e2e_unmarshal_then_marshal",
+  "old": "(hlen : s.regs.rcx = 40)",
+  "new": "(hlen : s.regs.rcx = 41)"
+ },
+ {
+  "id": "cpx-stmt-enc-swap",
+  "kind": "stmt",
+  "module": "E2e/CpCompose.lean",
+  "theorem": "cp_e2e_unmarshal_then_marshal",
+  "old": "Eq ((e8 ++ root).At (dptr.toBitVec + dlen.toBitVec))",
+  "new": "Eq ((root ++ e8).At (dptr.toBitVec + dlen.toBitVec))"
+ },
+ {
+  "id": "cpx-stmt-enc-len41",
+  "kind": "stmt",
+  "module": "E2e/CpCompose.lean",
+  "theorem": "cp_e2e_unmarshal_then_marshal",
+  "old": "st'.data.regs.rbx.toNat = dlen.toNat + 40",
+  "new": "st'.data.regs.rbx.toNat = dlen.toNat + 41"
+ },
+ {
+  "id": "cpx-stmt-enc-cap39",
+  "kind": "stmt",
+  "module": "E2e/CpCompose.lean",
+  "theorem": "cp_e2e_unmarshal_then_marshal",
+  "old": "(hcap2 : dlen.toNat + 40 ≤ cap.toNat)",
+  "new": "(hcap2 : dlen.toNat + 39 ≤ cap.toNat)"
+ },
+ {
+  "id": "cpx-stmt-hupd-slot",
+  "kind": "stmt",
+  "module": "E2e/CpCompose.lean",
+  "theorem": "cp_e2e_unmarshal_then_marshal",
+  "old": "(Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At s.regs.rsp.toBitVec) ⋆ F) mem2",
+  "new": "(Eq ((Int.toBytes 8 ra2.toBitVec.toInt).At (s.regs.rsp.toBitVec + 8)) ⋆ F) mem2"
+ },
+ {
+  "id": "cpg-control",
+  "kind": "control",
+  "module": "E2e/CpMarshalG.lean",
+  "theorem": "cp_e2e_marshal_grow_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "cpg-num9",
+  "kind": "code",
+  "module": "E2e/CpMarshalG.lean",
+  "theorem": "cp_e2e_marshal_grow_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov $0x8,%edi",
+  "new": "  mov $0x9,%edi"
+ },
+ {
+  "id": "cpg-spillrcx",
+  "kind": "code",
+  "module": "E2e/CpMarshalG.lean",
+  "theorem": "cp_e2e_marshal_grow_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov %rcx,0x88(%rsp)",
+  "new": "  mov %rcx,0x90(%rsp)"
+ },
+ {
+  "id": "cpg-reloadrcx",
+  "kind": "code",
+  "module": "E2e/CpMarshalG.lean",
+  "theorem": "cp_e2e_marshal_grow_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov 0x88(%rsp),%rcx",
+  "new": "  mov 0x80(%rsp),%rcx"
+ },
+ {
+  "id": "cpg-jae-jb",
+  "kind": "code",
+  "module": "E2e/CpMarshalG.lean",
+  "theorem": "cp_e2e_marshal_grow_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b",
+  "new": "  jb L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b"
+ },
+ {
+  "id": "cpg-stmt-len41",
+  "kind": "stmt",
+  "module": "E2e/CpMarshalG.lean",
+  "theorem": "cp_e2e_marshal_grow_main",
+  "old": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40",
+  "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 41"
+ },
+ {
+  "id": "cpg-stmt-growle",
+  "kind": "stmt",
+  "module": "E2e/CpMarshalG.lean",
+  "theorem": "cp_e2e_marshal_grow_main",
+  "old": "(hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)",
+  "new": "(hgrow : s.regs.rdi.toNat ≤ s.regs.rcx.toNat + 8)",
+  "why": "review e2e-r2 N1 (replaces cpg-stmt-e8off, a heartbeat timeout; cpg-stmt-noroot hit the 300 s wall in job 126): with cap = len+8 the first site does not grow (reviewer r2-st-cpg-growle)"
+ },
+ {
+  "id": "cpg-oldcap",
+  "kind": "code",
+  "module": "E2e/CpMarshalG.lean",
+  "theorem": "cp_e2e_marshal_grow_main",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "line": 24,
+  "old": "  mov %rdi,%rcx",
+  "new": "  mov %rdx,%rcx",
+  "why": "growslice oldCap argument := newLen at the first site (reviewer e2e-r2 r2-cpg-oldcap)"
+ },
+ {
+  "id": "cpg-stmt-fit39",
+  "kind": "stmt",
+  "module": "E2e/CpMarshalG.lean",
+  "theorem": "cp_e2e_marshal_grow_main",
+  "old": "(hfit : s.regs.rcx.toNat + 40 ≤",
+  "new": "(hfit : s.regs.rcx.toNat + 39 ≤"
+ },
+ {
+  "id": "spe-control",
+  "kind": "control",
+  "module": "E2e/SpecEq.lean",
+  "theorem": "prysmCpDesc_serialize_checker"
+ },
+ {
+  "id": "spe-stmt-uint4",
+  "kind": "stmt",
+  "module": "E2e/SpecEq.lean",
+  "theorem": "prysmCpDesc_serialize_checker",
+  "old": "serialize prysmCpDesc v = serialize cpCheckerDesc v",
+  "new": "serialize prysmCpDesc v = serialize (.container [\"Epoch\", \"Root\"] [.uint 4, .byteVector 32]) v"
+ },
+ {
+  "id": "spe-control-de",
+  "kind": "control",
+  "module": "E2e/SpecEq.lean",
+  "theorem": "prysmCpDesc_deserialize_checker"
+ },
+ {
+  "id": "spe-stmt-de-bv31",
+  "kind": "stmt",
+  "module": "E2e/SpecEq.lean",
+  "theorem": "prysmCpDesc_deserialize_checker",
+  "old": "deserialize prysmCpDesc bs = deserialize cpCheckerDesc bs",
+  "new": "deserialize prysmCpDesc bs = deserialize (.container [\"Epoch\", \"Root\"] [.uint 8, .byteVector 31]) bs"
+ },
+ {
+  "id": "wrs-control",
+  "kind": "control",
+  "module": "E2e/WitCpRS.lean",
+  "theorem": "cp_reject_spec_runs"
+ },
+ {
+  "id": "wrs-stmt-rax",
+  "kind": "stmt",
+  "module": "E2e/WitCpRS.lean",
+  "theorem": "cp_reject_spec_runs",
+  "old": "st.data.regs.rax = 0x10e8",
+  "new": "st.data.regs.rax = 0x10e9"
+ },
+ {
+  "id": "was-control",
+  "kind": "control",
+  "module": "E2e/WitCpAS.lean",
+  "theorem": "cp_accept_spec_runs"
+ },
+ {
+  "id": "was-stmt-rbx",
+  "kind": "stmt",
+  "module": "E2e/WitCpAS.lean",
+  "theorem": "cp_accept_spec_runs",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
+  "new": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 1"
+ },
+ {
+  "id": "sl-control",
+  "kind": "control",
+  "module": "E2eAd/Prims.lean",
+  "theorem": "sl_unmarshal_accept_main",
+  "code_def": "SlUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
+ },
+ {
+  "id": "sl-cmp9",
+  "kind": "code",
+  "module": "E2eAd/Prims.lean",
+  "theorem": "sl_unmarshal_accept_main",
+  "code_def": "SlUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
+  "old": "  cmp $0x8,%rcx",
+  "new": "  cmp $0x9,%rcx",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
+ },
+ {
+  "id": "sl-load8",
+  "kind": "code",
+  "module": "E2eAd/Prims.lean",
+  "theorem": "sl_unmarshal_accept_main",
+  "code_def": "SlUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
+  "old": "  mov (%rbx),%rcx",
+  "new": "  mov 0x8(%rbx),%rcx",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
+ },
+ {
+  "id": "sl-store8",
+  "kind": "code",
+  "module": "E2eAd/Prims.lean",
+  "theorem": "sl_unmarshal_accept_main",
+  "code_def": "SlUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
+  "line": 47,
+  "old": "  mov %rcx,(%rax)",
+  "new": "  mov %rcx,0x8(%rax)",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
+ },
+ {
+  "id": "sl-stmt-rax1",
+  "kind": "stmt",
+  "module": "E2eAd/Prims.lean",
+  "theorem": "sl_unmarshal_accept_main",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
+  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
+ },
+ {
+  "id": "ci-control",
+  "kind": "control",
+  "module": "E2eAd/Prims.lean",
+  "theorem": "ci_unmarshal_accept_main",
+  "code_def": "CiUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
+ },
+ {
+  "id": "ci-cmp9",
+  "kind": "code",
+  "module": "E2eAd/Prims.lean",
+  "theorem": "ci_unmarshal_accept_main",
+  "code_def": "CiUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "old": "  cmp $0x8,%rcx",
+  "new": "  cmp $0x9,%rcx",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
+ },
+ {
+  "id": "ci-load8",
+  "kind": "code",
+  "module": "E2eAd/Prims.lean",
+  "theorem": "ci_unmarshal_accept_main",
+  "code_def": "CiUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "old": "  mov (%rbx),%rcx",
+  "new": "  mov 0x8(%rbx),%rcx",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
+ },
+ {
+  "id": "ci-store8",
+  "kind": "code",
+  "module": "E2eAd/Prims.lean",
+  "theorem": "ci_unmarshal_accept_main",
+  "code_def": "CiUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "line": 47,
+  "old": "  mov %rcx,(%rax)",
+  "new": "  mov %rcx,0x8(%rax)",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
+ },
+ {
+  "id": "ci-stmt-rax1",
+  "kind": "stmt",
+  "module": "E2eAd/Prims.lean",
+  "theorem": "ci_unmarshal_accept_main",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0",
+  "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
+ },
+ {
+  "id": "spa-control",
+  "kind": "control",
+  "module": "E2eAd/Spec.lean",
+  "theorem": "pad_spec_accepts_iff"
+ },
+ {
+  "id": "spa-stmt-127",
+  "kind": "stmt",
+  "module": "E2eAd/Spec.lean",
+  "theorem": "pad_spec_accepts_iff",
+  "old": "↔ bs.size = 128",
+  "new": "↔ bs.size = 127"
+ },
+ {
+  "id": "spa-control-ser",
+  "kind": "control",
+  "module": "E2eAd/Spec.lean",
+  "theorem": "prysmAdDesc_serialize_checker"
+ },
+ {
+  "id": "spa-stmt-ser-cp",
+  "kind": "stmt",
+  "module": "E2eAd/Spec.lean",
+  "theorem": "prysmAdDesc_serialize_checker",
+  "old": "serialize adCheckerDesc v",
+  "new": "serialize prysmCpDesc v"
+ },
+ {
+  "id": "spa-control-de",
+  "kind": "control",
+  "module": "E2eAd/Spec.lean",
+  "theorem": "prysmAdDesc_deserialize_checker"
+ },
+ {
+  "id": "spa-stmt-de-cp",
+  "kind": "stmt",
+  "module": "E2eAd/Spec.lean",
+  "theorem": "prysmAdDesc_deserialize_checker",
+  "old": "deserialize adCheckerDesc bs = .ok v",
+  "new": "deserialize prysmCpDesc bs = .ok v"
+ },
+ {
+  "id": "cps-control-u",
+  "kind": "control",
+  "module": "E2eAd/CpSpecs.lean",
+  "theorem": "cp_uacc_holds"
+ },
+ {
+  "id": "cps-stmt-u-rax",
+  "kind": "stmt",
+  "module": "E2eAd/CpSpecs.lean",
+  "theorem": "cp_uacc_holds",
+  "old": "(hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S) : CpUAccC Heap S",
+  "new": "(hms : True) (hmm : MemmoveC S) : CpUAccC Heap S",
+  "why": "audit AU-04: the makeslice hypothesis keeps its name with type True (was: binder deleted, unknown identifier); without the makeslice contract the decoder spec cannot be derived"
+ },
+ {
+  "id": "cps-control-m",
+  "kind": "control",
+  "module": "E2eAd/CpSpecs.lean",
+  "theorem": "cp_macc_holds"
+ },
+ {
+  "id": "cps-stmt-m-mm",
+  "kind": "stmt",
+  "module": "E2eAd/CpSpecs.lean",
+  "theorem": "cp_macc_holds",
+  "old": "(S : Nat) (hmm : MemmoveC S) : CpMAccC S",
+  "new": "(S : Nat) (hmm : True) : CpMAccC S",
+  "why": "audit AU-04: the memmove hypothesis keeps its name with type True (was: binder deleted, unknown identifier); without the memmove contract the encoder spec cannot be derived"
+ },
+ {
+  "id": "ada-h-control",
+  "kind": "control",
+  "module": "E2eAd/AdHead.lean",
+  "theorem": "ad_e2e_head",
+  "code_def": "AdUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+ },
+ {
+  "id": "ada-h-cmp81",
+  "kind": "code",
+  "module": "E2eAd/AdHead.lean",
+  "theorem": "ad_e2e_head",
+  "code_def": "AdUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  cmp $0x80,%rcx",
+  "new": "  cmp $0x81,%rcx",
+  "why": "length check against 129: the accept branch is not taken"
+ },
+ {
+  "id": "ada-h-slarg",
+  "kind": "code",
+  "module": "E2eAd/AdHead.lean",
+  "theorem": "ad_e2e_head",
+  "code_def": "AdUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  mov $0x8,%ecx",
+  "new": "  mov $0x9,%ecx",
+  "line": 17,
+  "why": "Slot called with len 9: SlUAccC premise rcx = 8 fails"
+ },
+ {
+  "id": "ada-h-cifield",
+  "kind": "code",
+  "module": "E2eAd/AdHead.lean",
+  "theorem": "ad_e2e_head",
+  "code_def": "AdUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  add $0x10,%rax",
+  "new": "  add $0x18,%rax",
+  "why": "CommitteeIndex decoded into the Root.ptr word"
+ },
+ {
+  "id": "ada-r-control",
+  "kind": "control",
+  "module": "E2eAd/AdRoot.lean",
+  "theorem": "ad_e2e_root",
+  "code_def": "AdUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+ },
+ {
+  "id": "ada-r-src",
+  "kind": "code",
+  "module": "E2eAd/AdRoot.lean",
+  "theorem": "ad_e2e_root",
+  "code_def": "AdUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  add $0x10,%rbx",
+  "new": "  add $0x18,%rbx",
+  "why": "Root copied from buf[24:56]"
+ },
+ {
+  "id": "ada-r-cap",
+  "kind": "code",
+  "module": "E2eAd/AdRoot.lean",
+  "theorem": "ad_e2e_root",
+  "code_def": "AdUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  movq $0x20,0x28(%rdx)",
+  "new": "  movq $0x21,0x28(%rdx)",
+  "line": 110,
+  "why": "Root.cap = 33 after the copy"
+ },
+ {
+  "id": "ada-s-control",
+  "kind": "control",
+  "module": "E2eAd/AdSrc.lean",
+  "theorem": "ad_e2e_src",
+  "code_def": "AdUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+ },
+ {
+  "id": "ada-s-store",
+  "kind": "code",
+  "module": "E2eAd/AdSrc.lean",
+  "theorem": "ad_e2e_src",
+  "code_def": "AdUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  mov %rax,0x30(%rdx)",
+  "new": "  mov %rax,0x40(%rdx)",
+  "why": "Source pointer stored into unknownFields"
+ },
+ {
+  "id": "ada-s-buf",
+  "kind": "code",
+  "module": "E2eAd/AdSrc.lean",
+  "theorem": "ad_e2e_src",
+  "code_def": "AdUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  add $0x30,%rbx",
+  "new": "  add $0x38,%rbx",
+  "why": "Source decoded from buf[56:96]"
+ },
+ {
+  "id": "ada-t-control",
+  "kind": "control",
+  "module": "E2eAd/AdTgt.lean",
+  "theorem": "ad_e2e_tgt",
+  "code_def": "AdUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+ },
+ {
+  "id": "ada-t-store",
+  "kind": "code",
+  "module": "E2eAd/AdTgt.lean",
+  "theorem": "ad_e2e_tgt",
+  "code_def": "AdUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  mov %rax,0x38(%rdx)",
+  "new": "  mov %rax,0x30(%rdx)",
+  "why": "Target pointer stored into the Source field"
+ },
+ {
+  "id": "ada-t-je",
+  "kind": "code",
+  "module": "E2eAd/AdTgt.lean",
+  "theorem": "ad_e2e_tgt",
+  "code_def": "AdUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_3a7",
+  "new": "  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_3a7",
+  "why": "nil error from the Target callee goes to the wrap path"
+ },
+ {
+  "id": "ada-rj-control",
+  "kind": "control",
+  "module": "E2eAd/AdReject.lean",
+  "theorem": "ad_e2e_reject_size_main",
+  "code_def": "AdUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
+ },
+ {
+  "id": "ada-rj-err",
+  "kind": "code",
+  "module": "E2eAd/AdReject.lean",
+  "theorem": "ad_e2e_reject_size_main",
+  "code_def": "AdUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  mov ssz.ErrSize+8(%rip),%rbx",
+  "new": "  mov ssz.ErrSize(%rip),%rbx",
+  "why": "second error word read from the first"
+ },
+ {
+  "id": "ada-u-slot",
+  "kind": "code",
+  "module": "E2eAd/AdReject.lean",
+  "theorem": "ad_e2e_slot_err_unreachable",
+  "code_def": "AdUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_c7",
+  "new": "  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_c7",
+  "why": "nil Slot error jumps into the wrap path"
+ },
+ {
+  "id": "ada-u-target",
+  "kind": "code",
+  "module": "E2eAd/AdReject.lean",
+  "theorem": "ad_e2e_target_err_unreachable",
+  "code_def": "AdUnmarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "code_ns": "E2eAd.Code",
+  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "old": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_3a7",
+  "new": "  jne L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ_3a7",
+  "why": "nil Target error jumps into the wrap path"
+ },
+ {
+  "id": "ada-m-control",
+  "kind": "control",
+  "module": "E2eAd/AdAccept.lean",
+  "theorem": "ad_e2e_accept_main"
+ },
+ {
+  "id": "ada-m-heap",
+  "kind": "stmt",
+  "module": "E2eAd/AdAccept.lean",
+  "theorem": "ad_e2e_accept_main",
+  "old": "⋆ Heap (avail - 240)",
+  "new": "⋆ Heap (avail - 232)",
+  "why": "the decoder takes 240 heap bytes (32 + 2 × (72 + 32))"
+ },
+ {
+  "id": "ada-m-slot",
+  "kind": "stmt",
+  "module": "E2eAd/AdAccept.lean",
+  "theorem": "ad_e2e_accept_main",
+  "old": "⋆ Eq (in0.At (s.regs.rax.toBitVec + 8))",
+  "new": "⋆ Eq (in1.At (s.regs.rax.toBitVec + 8))",
+  "why": "Slot field = buf[0:8], not buf[8:16]"
+ },
+ {
+  "id": "ada-m-srcep",
+  "kind": "stmt",
+  "module": "E2eAd/AdAccept.lean",
+  "theorem": "ad_e2e_accept_main",
+  "old": "⋆ Eq (se.At (ps + 8))",
+  "new": "⋆ Eq (te.At (ps + 8))",
+  "why": "Source.Epoch = buf[48:56], not the Target epoch"
+ },
+ {
+  "id": "ada-m-nohms",
+  "kind": "stmt",
+  "module": "E2eAd/AdAccept.lean",
+  "theorem": "ad_e2e_accept_main",
+  "old": "(hms : MakesliceC Heap E2e.Data.e2eU8Type_addr 1 S) (hmm : MemmoveC S)",
+  "new": "(hms : True) (hmm : MemmoveC S)",
+  "why": "audit AU-04: the Checkpoint callee's makeslice hypothesis keeps its name with type True (was: binder deleted, unknown identifier); without it CpUAccC cannot be discharged"
+ },
+ {
+  "id": "ada-k-control",
+  "kind": "control",
+  "module": "E2eAd/AdSpecK.lean",
+  "theorem": "ad_e2e_accept_spec_k"
+ },
+ {
+  "id": "ada-k-len",
+  "kind": "stmt",
+  "module": "E2eAd/AdSpecK.lean",
+  "theorem": "ad_e2e_accept_spec_k",
+  "old": "(hlen : s.regs.rcx.toNat = bsA.size)",
+  "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)",
+  "why": "rcx must be the input length 128"
+ },
+ {
+  "id": "cpw-tf-control",
+  "kind": "control",
+  "module": "E2e/CpWTail.lean",
+  "theorem": "cpw_tail_fit",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "cpw-tf-jae",
+  "kind": "code",
+  "module": "E2e/CpWTail.lean",
+  "theorem": "cpw_tail_fit",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf",
+  "new": "  jbe L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_cf",
+  "why": "second capacity test inverted"
+ },
+ {
+  "id": "cpw-tr-control",
+  "kind": "control",
+  "module": "E2e/CpWTail.lean",
+  "theorem": "cpw_tail_rej",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "cpw-tr-err1",
+  "kind": "code",
+  "module": "E2e/CpWTail.lean",
+  "theorem": "cpw_tail_rej",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov ssz.ErrBytesLength+8(%rip),%rsi",
+  "new": "  mov ssz.ErrBytesLength(%rip),%rsi",
+  "why": "second error word read from the first (reject path only)"
+ },
+ {
+  "id": "cpw-tg-control",
+  "kind": "control",
+  "module": "E2e/CpWTailG.lean",
+  "theorem": "cpw_tail_grow",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "cpw-tg-num",
+  "kind": "code",
+  "module": "E2e/CpWTailG.lean",
+  "theorem": "cpw_tail_grow",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov $0x20,%edi",
+  "new": "  mov $0x28,%edi",
+  "why": "growslice num 40: old = len bytes, not len + 8"
+ },
+ {
+  "id": "cpw-tg-rdx",
+  "kind": "code",
+  "module": "E2e/CpWTailG.lean",
+  "theorem": "cpw_tail_grow",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov 0x28(%rsp),%rdx",
+  "new": "  mov 0x30(%rsp),%rdx",
+  "why": "restored len + 8 read from the wrong slot"
+ },
+ {
+  "id": "cpw-tc-control",
+  "kind": "control",
+  "module": "E2e/CpWTailG.lean",
+  "theorem": "cpw_tail_grow_call",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "cpw-tc-stmt-num",
+  "kind": "stmt",
+  "module": "E2e/CpWTailG.lean",
+  "theorem": "cpw_tail_grow_call",
+  "why": "the second growslice is called with num = 32",
+  "old": "∧ st.data.regs.rdi.toNat = 32 ∧",
+  "new": "∧ st.data.regs.rdi.toNat = 8 ∧"
+ },
+ {
+  "id": "cpw-hf-control",
+  "kind": "control",
+  "module": "E2e/CpWHead.lean",
+  "theorem": "cpw_head_fit",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "cpw-hf-jae",
+  "kind": "code",
+  "module": "E2e/CpWHead.lean",
+  "theorem": "cpw_head_fit",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b",
+  "new": "  jbe L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo_7b",
+  "why": "first capacity test inverted"
+ },
+ {
+  "id": "cpw-hg-control",
+  "kind": "control",
+  "module": "E2e/CpWHead.lean",
+  "theorem": "cpw_head_grow",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S"
+ },
+ {
+  "id": "cpw-hg-spill",
+  "kind": "code",
+  "module": "E2e/CpWHead.lean",
+  "theorem": "cpw_head_grow",
+  "code_def": "CpMarshal",
+  "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S",
+  "old": "  mov %rax,0x78(%rsp)",
+  "new": "  mov %rax,0x70(%rsp)",
+  "why": "receiver spilled to the wrong slot on the growslice path (later reload reads rsp + 8)"
+ },
+ {
+  "id": "cpw-g2-control",
+  "kind": "control",
+  "module": "E2e/CpWGrow.lean",
+  "theorem": "cp_e2e_marshal_grow2_main"
+ },
+ {
+  "id": "cpw-g2-hi",
+  "kind": "stmt",
+  "module": "E2e/CpWGrow.lean",
+  "theorem": "cp_e2e_marshal_grow2_main",
+  "old": "(hhi : s.regs.rdi.toNat < s.regs.rcx.toNat + 40)",
+  "new": "(hhi : s.regs.rdi.toNat < s.regs.rcx.toNat + 41)",
+  "why": "cap = len + 40 takes the fast path, not the growslice"
+ },
+ {
+  "id": "cpw-ga-control",
+  "kind": "control",
+  "module": "E2e/CpWGrowAny.lean",
+  "theorem": "cp_e2e_marshal_grow_any_main"
+ },
+ {
+  "id": "cpw-ga-num",
+  "kind": "stmt",
+  "module": "E2e/CpWGrowAny.lean",
+  "theorem": "cp_e2e_marshal_grow_any_main",
+  "old": "st.data.regs.rdi.toNat = 32",
+  "new": "st.data.regs.rdi.toNat = 40",
+  "why": "the second growslice is called with num = 32 (the root length)"
+ },
+ {
+  "id": "cpw-rg-control",
+  "kind": "control",
+  "module": "E2e/CpWGrowAny.lean",
+  "theorem": "cp_e2e_marshal_reject_grow_main"
+ },
+ {
+  "id": "cpw-rg-old",
+  "kind": "stmt",
+  "module": "E2e/CpWGrowAny.lean",
+  "theorem": "cp_e2e_marshal_reject_grow_main",
+  "old": "          ⋆ Eq (pre.At s.regs.rbx.toBitVec)\n          ⋆ Eq (pre.At nb)",
+  "new": "          ⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))\n          ⋆ Eq (pre.At nb)",
+  "why": "C-1 after growth: the epoch bytes are in the new block, not in the caller's spare capacity"
+ },
+ {
+  "id": "cpw-cv-control",
+  "kind": "control",
+  "module": "E2e/CpWCover.lean",
+  "theorem": "cp_e2e_marshal_cover"
+ },
+ {
+  "id": "cpw-cv-out",
+  "kind": "stmt",
+  "module": "E2e/CpWCover.lean",
+  "theorem": "cp_e2e_marshal_cover",
+  "old": "(Eq ((pre ++ bs.toList).At st.data.regs.rax.toBitVec)",
+  "new": "(Eq ((bs.toList ++ pre).At st.data.regs.rax.toBitVec)",
+  "why": "output is dst ++ serialize, not serialize ++ dst"
+ },
+ {
+  "id": "cpw-rc-control",
+  "kind": "control",
+  "module": "E2e/CpWCover.lean",
+  "theorem": "cp_e2e_marshal_reject_cover"
+ },
+ {
+  "id": "cpw-rc-rax",
+  "kind": "stmt",
+  "module": "E2e/CpWCover.lean",
+  "theorem": "cp_e2e_marshal_reject_cover",
+  "old": "st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0\n        ∧ st.data.regs.rcx = 0",
+  "new": "st.data.regs.rax = s.regs.rbx ∧ st.data.regs.rbx = 0\n        ∧ st.data.regs.rcx = 0",
+  "why": "the reject returns a nil slice"
+ },
+ {
+  "id": "cpw-sh-control",
+  "kind": "control",
+  "module": "E2e/CpWSharp.lean",
+  "theorem": "cp_e2e_marshal_grow_any_sharp"
+ },
+ {
+  "id": "cpw-sh-budget",
+  "kind": "stmt",
+  "module": "E2e/CpWSharp.lean",
+  "theorem": "cp_e2e_marshal_grow_any_sharp",
+  "old": "∧ av' < 2 * nextSliceCap (s.regs.rcx.toNat + 40) st.data.regs.rcx.toNat + 8192 ∧",
+  "new": "∧ av' < 2 * nextSliceCap (s.regs.rcx.toNat + 40) st.data.regs.rcx.toNat + 8191 ∧",
+  "why": "(C) is reached only with the remaining heap strictly below the budget of the second call; a tighter bound is not derivable"
+ },
+ {
+  "id": "cpw-sh-b-old",
+  "kind": "stmt",
+  "module": "E2e/CpWSharp.lean",
+  "theorem": "cp_e2e_marshal_grow_any_sharp",
+  "old": "⋆ Eq (pre.At nb) ⋆ Eq (e8.At (nb + s.regs.rcx.toBitVec)) ⋆ Eq (mid.At (nb + s.regs.rcx.toBitVec + 8))",
+  "new": "⋆ Eq (pre.At nb) ⋆ Eq (e8.At (nb + s.regs.rcx.toBitVec + 8)) ⋆ Eq (mid.At (nb + s.regs.rcx.toBitVec + 8))",
+  "why": "(B): the first new block holds the epoch at nb + len (C-1 form), not after it"
+ },
+ {
+  "id": "cpw-sh-b-cap",
+  "kind": "stmt",
+  "module": "E2e/CpWSharp.lean",
+  "theorem": "cp_e2e_marshal_grow_any_sharp",
+  "old": "∧ nextSliceCap (s.regs.rcx.toNat + 40) C1 ≤ st.data.regs.rcx.toNat",
+  "new": "∧ nextSliceCap (s.regs.rcx.toNat + 41) C1 ≤ st.data.regs.rcx.toNat",
+  "why": "(B): the second growslice is called with newLen = len + 40"
+ },
+ {
+  "id": "cpw-cf-control",
+  "kind": "control",
+  "module": "E2e/CpWCoverF.lean",
+  "theorem": "cp_e2e_marshal_cover_framed"
+ },
+ {
+  "id": "cpw-cf-spare40",
+  "kind": "stmt",
+  "module": "E2e/CpWCoverF.lean",
+  "theorem": "cp_e2e_marshal_cover_framed",
+  "old": "⋆ Eq ((spare.drop 40).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))",
+  "new": "⋆ Eq ((spare.drop 39).At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))",
+  "why": "(1): the spare bytes after the 40 written bytes are unchanged"
+ },
+ {
+  "id": "cpw-cf-c1",
+  "kind": "stmt",
+  "module": "E2e/CpWCoverF.lean",
+  "theorem": "cp_e2e_marshal_cover_framed",
+  "old": "⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))",
+  "why": "(2): the epoch is written into the caller's spare at dst + len (C-1 form)"
+ },
+ {
+  "id": "cpw-cf-3c-ret",
+  "kind": "stmt",
+  "module": "E2e/CpWCoverF.lean",
+  "theorem": "cp_e2e_marshal_cover_framed",
+  "old": "∨ (st.pc = label \"runtime.growslice\" ∧ s.regs.rdi.toNat < s.regs.rcx.toNat + 8",
+  "new": "∨ (st.pc = Int64.ofBitVec ra.toBitVec ∧ s.regs.rdi.toNat < s.regs.rcx.toNat + 8",
+  "why": "(3C) is the entry of the second growslice call, not a return (T-7)"
+ },
+ {
+  "id": "cpw-rf-control",
+  "kind": "control",
+  "module": "E2e/CpWCoverF.lean",
+  "theorem": "cp_e2e_marshal_reject_cover_framed"
+ },
+ {
+  "id": "cpw-rf-c1",
+  "kind": "stmt",
+  "module": "E2e/CpWCoverF.lean",
+  "theorem": "cp_e2e_marshal_reject_cover_framed",
+  "old": "⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))",
+  "new": "⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (e8.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 1))",
+  "why": "len + 8 <= cap: blk = dst, the epoch is at dst + len (C-1)"
+ },
+ {
+  "id": "cpw-rf-nb",
+  "kind": "stmt",
+  "module": "E2e/CpWCoverF.lean",
+  "theorem": "cp_e2e_marshal_reject_cover_framed",
+  "old": "⋆ Eq (pre.At nb) ⋆ Eq (e8.At (nb + s.regs.rcx.toBitVec))",
+  "new": "⋆ Eq (pre.At nb) ⋆ Eq (e8.At (nb + s.regs.rcx.toBitVec + 1))",
+  "why": "cap < len + 8: the epoch is in the new block at nb + len only"
+ },
+ {
+  "id": "gv-w-control",
+  "kind": "control",
+  "module": "E2e/GoValW.lean",
+  "theorem": "witCpWR_recv"
+ },
+ {
+  "id": "gv-w-stmt-rl49",
+  "kind": "stmt",
+  "module": "E2e/GoValW.lean",
+  "theorem": "witCpWR_recv",
+  "old": "cpGoValue (recvAt (WitCpWR.block (Int.toBytes 8 7) 48 []) 9032) = true",
+  "new": "cpGoValue (recvAt (WitCpWR.block (Int.toBytes 8 7) 49 []) 9032) = true",
+  "why": "len(Root) 49 > cap 48 is not a Go value"
+ },
+ {
+  "id": "gv-w-stmt-root",
+  "kind": "stmt",
+  "module": "E2e/GoValW.lean",
+  "theorem": "witCpW_recv",
+  "old": "++ Int.toBytes 8 0x12380 ++ Int.toBytes 8 32 ++ Int.toBytes 8 32",
+  "new": "++ Int.toBytes 8 0x12380 ++ Int.toBytes 8 33 ++ Int.toBytes 8 32",
+  "why": "the cover witness receiver has len(Root) = 32"
+ }
+]
