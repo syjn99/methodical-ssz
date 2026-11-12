@@ -1,0 +1,56 @@
+name: FV Lean build and axioms gate
+
+# Builds every Lean library of fv/kraken/lean and runs the axioms gate.
+# The library list comes from lakefile.toml, so a new library needs no change here.
+
+on:
+  push:
+    branches: [fv, fv-restructure]
+    paths: ['fv/**', '.github/workflows/fv-lean.yaml']
+  pull_request:
+    branches: [fv, fv-restructure]
+    paths: ['fv/**', '.github/workflows/fv-lean.yaml']
+
+concurrency:
+  group: fv-lean-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    defaults:
+      run:
+        working-directory: fv/kraken/lean
+    steps:
+    - uses: actions/checkout@v5
+
+    - name: Install elan
+      run: |
+        curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+        echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+    # The cache holds the dependencies and the build of an earlier commit. Lake rebuilds what changed.
+    - uses: actions/cache@v4
+      with:
+        path: fv/kraken/lean/.lake
+        key: fv-lake-${{ hashFiles('fv/kraken/lean/lean-toolchain', 'fv/kraken/lean/lake-manifest.json') }}-${{ github.sha }}
+        restore-keys: |
+          fv-lake-${{ hashFiles('fv/kraken/lean/lean-toolchain', 'fv/kraken/lean/lake-manifest.json') }}-
+
+    - name: Build all libraries
+      run: |
+        LIBS=$(python3 -B -c "import sys; sys.path.insert(0, '../gen/e2e'); import axioms_gate as g; print(' '.join(g.libraries(open('lakefile.toml').read())))")
+        echo "libraries: $LIBS"
+        lake build $LIBS
+
+    - name: Axioms gate
+      working-directory: .
+      run: python3 -B fv/kraken/gen/e2e/axioms_gate.py run "$RUNNER_TEMP/gate.json" "$RUNNER_TEMP/gate-dump.tsv"
+
+    - name: Peak memory
+      if: always()
+      run: grep -E 'VmHWM|MemTotal' /proc/meminfo /proc/self/status || true

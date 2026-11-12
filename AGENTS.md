@@ -30,6 +30,8 @@ The procedures live in the project skill `maintaining-methodical-fv`: `.claude/s
 - Any change to the generator (`sszgen/`, `ssz/`) or the target binary (new ELF hash).
 - A new runtime-contract form, a new trust boundary, or a change to an existing contract hypothesis.
 - Any external write: push, pull request, issue, release, remote or repository setting.
+  Standing permission: on `syjn99/methodical-ssz` an agent may push `u/*` branches and may open, update and comment on issues and PRs.
+  This permission does not cover a merge, a push to `fv` or `main`, a branch deletion, a release, a repository setting or any other repository.
 - A new heavy tool or infrastructure (profiler automation, schedulers, caches, lakefile changes).
 
 ## Resources

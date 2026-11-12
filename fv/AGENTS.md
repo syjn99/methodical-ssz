@@ -38,8 +38,8 @@ Put external clones (`upstream/`, `vcgen-src/`) and generated files in `.gitigno
 
 ## Checks
 
-Before a PR, run the check commands of the project `README.md` and record the results in the PR body.
-For a check that did not run, record that it did not run.
+Before a PR, run the check commands of the project `README.md`.
+CI records the build and the axioms gate. For a check that did not run, record in the PR body that it did not run.
 
 ## Known answers
 
@@ -70,11 +70,26 @@ One ELF hash binds the conversion result, `Code.lean`, the data files and the li
 
 - The title is an English Conventional Commits title `<type>(<scope>): <summary>`. The type is from the EthLib list + `proof`. The scope is `kraken`, `gohashtree`, `link`, `spec`, `contracts` or `negative`.
 - At the end of the body, state the authoring model: `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
-- PR body: the problem, the idea, one example, and what the reviewer must know. If the author is an AI agent, state it.
+- The PR body has two sections, `Problem` and `Solution`. Each section has three bullets at most. One bullet is one sentence.
+- Add a `Not run` line only when a check did not run. CI shows the results of the build and the axioms gate.
+- If the author is an AI agent, the last line of the body states the model.
+
+## Work units
+
+- One unit is one obligation of one function of one type. Its name is its Lean name, for example `Prysm.Checkpoint.Decode.reject_size`.
+- One issue on `syjn99/methodical-ssz` holds one type or one unit. The issue title is the type name or the Lean name.
+- If an issue names an earlier issue, wait until the PR of the earlier issue is merged.
+- To take an issue, write a comment that gives your branch name. Do not take an issue that has such a comment or an open PR.
+- The branch name is `u/<issue number>-<type name>`. Start it from `fv`.
+- Change only `lean/Prysm/<Type>/`, the negative cases of that type and the generator rows of that type.
+- Do not change `Machine`, `Runtime`, `Codec` or `Spec` in a unit. If a general lemma is necessary, keep it in the type directory and name it in the PR.
+- Open the PR against `fv` with `Closes #<issue number>`. The CI workflow `fv-lean.yaml` runs the build and the axioms gate.
+- A session that did not write the change reviews the PR. It reads each new theorem statement against the EthLib definition.
+- If the unit is blocked, write the cause in the issue and delete your branch-name comment.
 
 ## Session operation
 
-- Run only one heavy Lean build at a time. Check with `pgrep -fl "lean|lake"` and wait.
+- Run only one heavy Lean build at a time. Check with `pgrep -lx lean` and `pgrep -lx lake`, and wait.
 - Do not use absolute home directory paths in commands. Use `~` or `$HOME`.
 - Delete directories with `trash`, not `rm`.
 - Make a commit for each work unit. Update the progress with `orca worktree set --worktree active --comment "..."`.
