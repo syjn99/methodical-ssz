@@ -4599,5 +4599,770 @@
    "x86-64 hardware"
   ],
   "state": "not yet reviewed"
+ },
+ "flat24": {
+  "opening_commit": "be127917ff1dccfc1c01ac431f2efdd76b68a9b5",
+  "part1": {
+   "per_type": {
+    "v1.BuilderDepositRequest": {
+     "similar_to_development_type": "Deposit_Data",
+     "decoder": {
+      "exit": 0,
+      "generated": true,
+      "fields_covered": "4/4",
+      "reason": "",
+      "class": ""
+     },
+     "encoder": {
+      "exit": 0,
+      "generated": true,
+      "reason": "",
+      "class": ""
+     }
+    },
+    "v1.BuilderExitRequest": {
+     "similar_to_development_type": "none",
+     "decoder": {
+      "exit": 2,
+      "generated": false,
+      "fields_covered": "0/2",
+      "reason": "NoMatch: field SourceAddress: NOT COVERED [new field kind]: byte vector of size 20 (lemma sizes 32, 48, 96 only) (the walk stopped at directive 13: directive 13: byte segment, the next IR field is SourceAddress (none)); field Pubkey: NOT COVERED [other]: not reached: the walk stopped in field SourceAddress (directive 13: byte segment, the next IR field is SourceAddress (none))",
+      "class": "new field kind (b20)"
+     },
+     "encoder": {
+      "exit": 2,
+      "generated": false,
+      "reason": "G6Refuse: field SourceAddress: byte vector of 20 bytes (covered: 32, 48, 96)",
+      "class": "new field kind (b20)"
+     }
+    },
+    "v1.ConsolidationRequest": {
+     "similar_to_development_type": "none",
+     "decoder": {
+      "exit": 2,
+      "generated": false,
+      "fields_covered": "0/3",
+      "reason": "NoMatch: field SourceAddress: NOT COVERED [new field kind]: byte vector of size 20 (lemma sizes 32, 48, 96 only) (the walk stopped at directive 13: directive 13: byte segment, the next IR field is SourceAddress (none)); field SourcePubkey: NOT COVERED [other]: not reached: the walk stopped in field SourceAddress (directive 13: byte segment, the next IR field is SourceAddress (none)); field TargetPubkey: NOT COVERED [other]: not reached: the walk stopped in field SourceAddress (directive 13: byte segment, the next IR field is SourceAddress (none))",
+      "class": "new field kind (b20)"
+     },
+     "encoder": {
+      "exit": 2,
+      "generated": false,
+      "reason": "G6Refuse: field SourceAddress: byte vector of 20 bytes (covered: 32, 48, 96)",
+      "class": "new field kind (b20)"
+     }
+    },
+    "v1.DepositRequest": {
+     "similar_to_development_type": "none",
+     "decoder": {
+      "exit": 0,
+      "generated": true,
+      "fields_covered": "5/5",
+      "reason": "",
+      "class": ""
+     },
+     "encoder": {
+      "exit": 0,
+      "generated": true,
+      "reason": "",
+      "class": ""
+     }
+    },
+    "v1.Withdrawal": {
+     "similar_to_development_type": "none",
+     "decoder": {
+      "exit": 2,
+      "generated": false,
+      "fields_covered": "2/4",
+      "reason": "Partial: the GEN4 front end covers only some fields (exit 3): field Index: MATCH uint64 field: 5 steps, directives 13–17; field ValidatorIndex: MATCH call field (ValidatorIndex): 3 set-up steps + call block, directives 18–51; field Address: NOT COVERED [new field kind]: byte vector of size 20 (lemma sizes 32, 48, 96 only) (the walk stopped at directive 54: directive 54: byte segment, the next IR field is Address (none)); field Amount: NOT COVERED [other]: not reached: the walk stopped in field Address (directive 54: byte segment, the next IR field is Address (none))",
+      "class": "new field kind (b20)"
+     },
+     "encoder": {
+      "exit": 2,
+      "generated": false,
+      "reason": "G6Refuse: field Address: byte vector of 20 bytes (covered: 32, 48, 96)",
+      "class": "new field kind (b20)"
+     }
+    },
+    "v1.WithdrawalRequest": {
+     "similar_to_development_type": "none",
+     "decoder": {
+      "exit": 2,
+      "generated": false,
+      "fields_covered": "0/3",
+      "reason": "NoMatch: field SourceAddress: NOT COVERED [new field kind]: byte vector of size 20 (lemma sizes 32, 48, 96 only) (the walk stopped at directive 13: directive 13: byte segment, the next IR field is SourceAddress (none)); field ValidatorPubkey: NOT COVERED [other]: not reached: the walk stopped in field SourceAddress (directive 13: byte segment, the next IR field is SourceAddress (none)); field Amount: NOT COVERED [other]: not reached: the walk stopped in field SourceAddress (directive 13: byte segment, the next IR field is SourceAddress (none))",
+      "class": "new field kind (b20)"
+     },
+     "encoder": {
+      "exit": 2,
+      "generated": false,
+      "reason": "G6Refuse: field SourceAddress: byte vector of 20 bytes (covered: 32, 48, 96)",
+      "class": "new field kind (b20)"
+     }
+    },
+    "v1alpha1.BLSToExecutionChange": {
+     "similar_to_development_type": "none",
+     "decoder": {
+      "exit": 2,
+      "generated": false,
+      "fields_covered": "2/3",
+      "reason": "Partial: the GEN4 front end covers only some fields (exit 3): field ValidatorIndex: MATCH call field (ValidatorIndex): 2 set-up steps + call block, directives 14–47; field FromBlsPubkey: MATCH byte field (48 bytes): 6 steps + segment, directives 48–85; field ToExecutionAddress: NOT COVERED [new field kind]: byte vector of size 20 (lemma sizes 32, 48, 96 only) (the walk stopped at directive 86: directive 86: byte segment, the next IR field is ToExecutionAddress (none))",
+      "class": "new field kind (b20)"
+     },
+     "encoder": {
+      "exit": 2,
+      "generated": false,
+      "reason": "G6Refuse: field ToExecutionAddress: byte vector of 20 bytes (covered: 32, 48, 96)",
+      "class": "new field kind (b20)"
+     }
+    },
+    "v1alpha1.BeaconBlocksByRangeRequest": {
+     "similar_to_development_type": "none",
+     "decoder": {
+      "exit": 0,
+      "generated": true,
+      "fields_covered": "3/3",
+      "reason": "",
+      "class": ""
+     },
+     "encoder": {
+      "exit": 0,
+      "generated": true,
+      "reason": "",
+      "class": ""
+     }
+    },
+    "v1alpha1.BlobSidecarsByRangeRequest": {
+     "similar_to_development_type": "SyncAggregatorSelectionData",
+     "decoder": {
+      "exit": 0,
+      "generated": true,
+      "fields_covered": "2/2",
+      "reason": "",
+      "class": ""
+     },
+     "encoder": {
+      "exit": 0,
+      "generated": true,
+      "reason": "",
+      "class": ""
+     }
+    },
+    "v1alpha1.Builder": {
+     "similar_to_development_type": "none",
+     "decoder": {
+      "exit": 2,
+      "generated": false,
+      "fields_covered": "1/6",
+      "reason": "Partial: the GEN4 front end covers only some fields (exit 3): field Pubkey: MATCH byte field (48 bytes): 4 steps + segment, directives 14–48; field Version: NOT COVERED [new field kind]: byte vector of size 1 (lemma sizes 32, 48, 96 only) (the walk stopped at directive 49: directive 49: byte segment, the next IR field is Version (none)); field ExecutionAddress: NOT COVERED [new field kind]: byte vector of size 20 (lemma sizes 32, 48, 96 only); field Balance: NOT COVERED [new field kind]: overlay callee github.com/OffchainLabs/prysm/v7/consensus-types/primitives.Gwei: no proved callee accept spec (only Slot, CommitteeIndex, ValidatorIndex, Epoch of consensus-types/primitives); field DepositEpoch: NOT COVERED [other]: not reached: the walk stopped in field Version (directive 49: byte segment, the next IR field is Version (none)); field WithdrawableEpoch: NOT COVERED [other]: not reached: the walk stopped in field Version (directive 49: byte segment, the next IR field is Version (none))",
+      "class": "new field kind (b1)"
+     },
+     "encoder": {
+      "exit": 2,
+      "generated": false,
+      "reason": "G6Refuse: field Version: byte vector of 1 bytes (covered: 32, 48, 96)",
+      "class": "new field kind (b1)"
+     }
+    },
+    "v1alpha1.BuilderPendingWithdrawal": {
+     "similar_to_development_type": "none",
+     "decoder": {
+      "exit": 2,
+      "generated": false,
+      "fields_covered": "0/3",
+      "reason": "NoMatch: field FeeRecipient: NOT COVERED [new field kind]: byte vector of size 20 (lemma sizes 32, 48, 96 only) (the walk stopped at directive 14: directive 14: byte segment, the next IR field is FeeRecipient (none)); field Amount: NOT COVERED [new field kind]: overlay callee github.com/OffchainLabs/prysm/v7/consensus-types/primitives.Gwei: no proved callee accept spec (only Slot, CommitteeIndex, ValidatorIndex, Epoch of consensus-types/primitives); field BuilderIndex: NOT COVERED [new field kind]: overlay callee github.com/OffchainLabs/prysm/v7/consensus-types/primitives.BuilderIndex: no proved callee accept spec (only Slot, CommitteeIndex, ValidatorIndex, Epoch of consensus-types/primitives)",
+      "class": "new field kind (b20)"
+     },
+     "encoder": {
+      "exit": 2,
+      "generated": false,
+      "reason": "G6Refuse: field FeeRecipient: byte vector of 20 bytes (covered: 32, 48, 96)",
+      "class": "new field kind (b20)"
+     }
+    },
+    "v1alpha1.BuilderPreferences": {
+     "similar_to_development_type": "none",
+     "decoder": {
+      "exit": 2,
+      "generated": false,
+      "fields_covered": "0/1",
+      "reason": "NoMatch: field MaxExecutionPayment: NOT COVERED [new field kind]: overlay callee github.com/OffchainLabs/prysm/v7/consensus-types/primitives.Gwei: no proved callee accept spec (only Slot, CommitteeIndex, ValidatorIndex, Epoch of consensus-types/primitives) (the walk stopped at directive 14: directive 14 `callq github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Gwei.UnmarshalSSZ`: callee without a proved spec)",
+      "class": "new callee"
+     },
+     "encoder": {
+      "exit": 0,
+      "generated": true,
+      "reason": "",
+      "class": ""
+     }
+    },
+    "v1alpha1.ENRForkID": {
+     "similar_to_development_type": "none",
+     "decoder": {
+      "exit": 2,
+      "generated": false,
+      "fields_covered": "0/3",
+      "reason": "NoMatch: field CurrentForkDigest: NOT COVERED [new field kind]: byte vector of size 4 (lemma sizes 32, 48, 96 only) (the walk stopped at directive 14: directive 14: byte segment, the next IR field is CurrentForkDigest (none)); field NextForkVersion: NOT COVERED [new field kind]: byte vector of size 4 (lemma sizes 32, 48, 96 only); field NextForkEpoch: NOT COVERED [other]: not reached: the walk stopped in field CurrentForkDigest (directive 14: byte segment, the next IR field is CurrentForkDigest (none))",
+      "class": "new field kind (b4)"
+     },
+     "encoder": {
+      "exit": 2,
+      "generated": false,
+      "reason": "G6Refuse: field CurrentForkDigest: byte vector of 4 bytes (covered: 32, 48, 96)",
+      "class": "new field kind (b4)"
+     }
+    },
+    "v1alpha1.ExecutionPayloadEnvelopesByRangeRequest": {
+     "similar_to_development_type": "SyncAggregatorSelectionData",
+     "decoder": {
+      "exit": 0,
+      "generated": true,
+      "fields_covered": "2/2",
+      "reason": "",
+      "class": ""
+     },
+     "encoder": {
+      "exit": 0,
+      "generated": true,
+      "reason": "",
+      "class": ""
+     }
+    },
+    "v1alpha1.Fork": {
+     "similar_to_development_type": "none",
+     "decoder": {
+      "exit": 2,
+      "generated": false,
+      "fields_covered": "0/3",
+      "reason": "NoMatch: field PreviousVersion: NOT COVERED [new field kind]: byte vector of size 4 (lemma sizes 32, 48, 96 only) (the walk stopped at directive 14: directive 14: byte segment, the next IR field is PreviousVersion (none)); field CurrentVersion: NOT COVERED [new field kind]: byte vector of size 4 (lemma sizes 32, 48, 96 only); field Epoch: NOT COVERED [other]: not reached: the walk stopped in field PreviousVersion (directive 14: byte segment, the next IR field is PreviousVersion (none))",
+      "class": "new field kind (b4)"
+     },
+     "encoder": {
+      "exit": 2,
+      "generated": false,
+      "reason": "G6Refuse: field PreviousVersion: byte vector of 4 bytes (covered: 32, 48, 96)",
+      "class": "new field kind (b4)"
+     }
+    },
+    "v1alpha1.ForkData": {
+     "similar_to_development_type": "none",
+     "decoder": {
+      "exit": 2,
+      "generated": false,
+      "fields_covered": "0/2",
+      "reason": "NoMatch: field CurrentVersion: NOT COVERED [new field kind]: byte vector of size 4 (lemma sizes 32, 48, 96 only) (the walk stopped at directive 13: directive 13: byte segment, the next IR field is CurrentVersion (none)); field GenesisValidatorsRoot: NOT COVERED [other]: not reached: the walk stopped in field CurrentVersion (directive 13: byte segment, the next IR field is CurrentVersion (none))",
+      "class": "new field kind (b4)"
+     },
+     "encoder": {
+      "exit": 2,
+      "generated": false,
+      "reason": "G6Refuse: field CurrentVersion: byte vector of 4 bytes (covered: 32, 48, 96)",
+      "class": "new field kind (b4)"
+     }
+    },
+    "v1alpha1.PartialDataColumnGroupID": {
+     "similar_to_development_type": "none",
+     "decoder": {
+      "exit": 0,
+      "generated": true,
+      "fields_covered": "2/2",
+      "reason": "",
+      "class": ""
+     },
+     "encoder": {
+      "exit": 0,
+      "generated": true,
+      "reason": "",
+      "class": ""
+     }
+    },
+    "v1alpha1.PayloadAttestationData": {
+     "similar_to_development_type": "none",
+     "decoder": {
+      "exit": 2,
+      "generated": false,
+      "fields_covered": "2/4",
+      "reason": "Partial: the GEN4 front end covers only some fields (exit 3): field BeaconBlockRoot: MATCH byte field (32 bytes): 4 steps + segment, directives 14–48; field Slot: MATCH call field (Slot): 6 set-up steps + call block, directives 49–85; field PayloadPresent: NOT COVERED [new field kind]: field kind bool (bool): no GEN2 template (nested containers, lists, bitfields, bool, other uints) (the walk stopped at directive 87: directive 87 `movzbl 0x28(%rcx),%edx`: no step lemma for this directive form); field BlobDataAvailable: NOT COVERED [new field kind]: field kind bool (bool): no GEN2 template (nested containers, lists, bitfields, bool, other uints)",
+      "class": "new field kind (bool)"
+     },
+     "encoder": {
+      "exit": 2,
+      "generated": false,
+      "reason": "G6Refuse: field PayloadPresent: not an 8-byte uint64 or uint64 overlay (field kind not covered)",
+      "class": "new field kind (bool)"
+     }
+    },
+    "v1alpha1.ProposerPreferences": {
+     "similar_to_development_type": "none",
+     "decoder": {
+      "exit": 2,
+      "generated": false,
+      "fields_covered": "3/5",
+      "reason": "Partial: the GEN4 front end covers only some fields (exit 3): field DependentRoot: MATCH byte field (32 bytes): 4 steps + segment, directives 14–48; field ProposalSlot: MATCH call field (Slot): 6 set-up steps + call block, directives 49–85; field ValidatorIndex: MATCH call field (ValidatorIndex): 7 set-up steps + call block, directives 86–122; field FeeRecipient: NOT COVERED [new field kind]: byte vector of size 20 (lemma sizes 32, 48, 96 only) (the walk stopped at directive 125: directive 125: byte segment, the next IR field is FeeRecipient (none)); field TargetGasLimit: NOT COVERED [other]: not reached: the walk stopped in field FeeRecipient (directive 125: byte segment, the next IR field is FeeRecipient (none))",
+      "class": "new field kind (b20)"
+     },
+     "encoder": {
+      "exit": 2,
+      "generated": false,
+      "reason": "G6Refuse: field FeeRecipient: byte vector of 20 bytes (covered: 32, 48, 96)",
+      "class": "new field kind (b20)"
+     }
+    },
+    "v1alpha1.Status": {
+     "similar_to_development_type": "none",
+     "decoder": {
+      "exit": 2,
+      "generated": false,
+      "fields_covered": "0/5",
+      "reason": "NoMatch: field ForkDigest: NOT COVERED [new field kind]: byte vector of size 4 (lemma sizes 32, 48, 96 only) (the walk stopped at directive 14: directive 14: byte segment, the next IR field is ForkDigest (none)); field FinalizedRoot: NOT COVERED [other]: not reached: the walk stopped in field ForkDigest (directive 14: byte segment, the next IR field is ForkDigest (none)); field FinalizedEpoch: NOT COVERED [other]: not reached: the walk stopped in field ForkDigest (directive 14: byte segment, the next IR field is ForkDigest (none)); field HeadRoot: NOT COVERED [other]: not reached: the walk stopped in field ForkDigest (directive 14: byte segment, the next IR field is ForkDigest (none)); field HeadSlot: NOT COVERED [other]: not reached: the walk stopped in field ForkDigest (directive 14: byte segment, the next IR field is ForkDigest (none))",
+      "class": "new field kind (b4)"
+     },
+     "encoder": {
+      "exit": 2,
+      "generated": false,
+      "reason": "G6Refuse: field ForkDigest: byte vector of 4 bytes (covered: 32, 48, 96)",
+      "class": "new field kind (b4)"
+     }
+    },
+    "v1alpha1.StatusV2": {
+     "similar_to_development_type": "none",
+     "decoder": {
+      "exit": 2,
+      "generated": false,
+      "fields_covered": "0/6",
+      "reason": "NoMatch: field ForkDigest: NOT COVERED [new field kind]: byte vector of size 4 (lemma sizes 32, 48, 96 only) (the walk stopped at directive 14: directive 14: byte segment, the next IR field is ForkDigest (none)); field FinalizedRoot: NOT COVERED [other]: not reached: the walk stopped in field ForkDigest (directive 14: byte segment, the next IR field is ForkDigest (none)); field FinalizedEpoch: NOT COVERED [other]: not reached: the walk stopped in field ForkDigest (directive 14: byte segment, the next IR field is ForkDigest (none)); field HeadRoot: NOT COVERED [other]: not reached: the walk stopped in field ForkDigest (directive 14: byte segment, the next IR field is ForkDigest (none)); field HeadSlot: NOT COVERED [other]: not reached: the walk stopped in field ForkDigest (directive 14: byte segment, the next IR field is ForkDigest (none)); field EarliestAvailableSlot: NOT COVERED [other]: not reached: the walk stopped in field ForkDigest (directive 14: byte segment, the next IR field is ForkDigest (none))",
+      "class": "new field kind (b4)"
+     },
+     "encoder": {
+      "exit": 2,
+      "generated": false,
+      "reason": "G6Refuse: field ForkDigest: byte vector of 4 bytes (covered: 32, 48, 96)",
+      "class": "new field kind (b4)"
+     }
+    },
+    "v1alpha1.Validator": {
+     "similar_to_development_type": "none",
+     "decoder": {
+      "exit": 2,
+      "generated": false,
+      "fields_covered": "3/8",
+      "reason": "Partial: the GEN4 front end covers only some fields (exit 3): field PublicKey: MATCH byte field (48 bytes): 4 steps + segment, directives 14–48; field WithdrawalCredentials: MATCH byte field (32 bytes): 4 steps + segment, directives 49–84; field EffectiveBalance: MATCH uint64 field: 3 steps, directives 85–87; field Slashed: NOT COVERED [new field kind]: field kind bool (bool): no GEN2 template (nested containers, lists, bitfields, bool, other uints) (the walk stopped at directive 88: directive 88 `movzbl 0x58(%rbx),%edx`: no step lemma for this directive form); field ActivationEligibilityEpoch: NOT COVERED [other]: not reached: the walk stopped in field Slashed (directive 88 `movzbl 0x58(%rbx),%edx`: no step lemma for this directive form); field ActivationEpoch: NOT COVERED [other]: not reached: the walk stopped in field Slashed (directive 88 `movzbl 0x58(%rbx),%edx`: no step lemma for this directive form); field ExitEpoch: NOT COVERED [other]: not reached: the walk stopped in field Slashed (directive 88 `movzbl 0x58(%rbx),%edx`: no step lemma for this directive form); field WithdrawableEpoch: NOT COVERED [other]: not reached: the walk stopped in field Slashed (directive 88 `movzbl 0x58(%rbx),%edx`: no step lemma for this directive form)",
+      "class": "new field kind (bool)"
+     },
+     "encoder": {
+      "exit": 2,
+      "generated": false,
+      "reason": "G6Refuse: field Slashed: not an 8-byte uint64 or uint64 overlay (field kind not covered)",
+      "class": "new field kind (bool)"
+     }
+    },
+    "v1alpha1.ValidatorIdentity": {
+     "similar_to_development_type": "none",
+     "decoder": {
+      "exit": 0,
+      "generated": true,
+      "fields_covered": "3/3",
+      "reason": "",
+      "class": ""
+     },
+     "encoder": {
+      "exit": 0,
+      "generated": true,
+      "reason": "",
+      "class": ""
+     }
+    },
+    "v1alpha1.ValidatorRegistrationV1": {
+     "similar_to_development_type": "none",
+     "decoder": {
+      "exit": 2,
+      "generated": false,
+      "fields_covered": "0/4",
+      "reason": "NoMatch: field FeeRecipient: NOT COVERED [new field kind]: byte vector of size 20 (lemma sizes 32, 48, 96 only) (the walk stopped at directive 13: directive 13: byte segment, the next IR field is FeeRecipient (none)); field GasLimit: NOT COVERED [other]: not reached: the walk stopped in field FeeRecipient (directive 13: byte segment, the next IR field is FeeRecipient (none)); field Timestamp: NOT COVERED [other]: not reached: the walk stopped in field FeeRecipient (directive 13: byte segment, the next IR field is FeeRecipient (none)); field Pubkey: NOT COVERED [other]: not reached: the walk stopped in field FeeRecipient (directive 13: byte segment, the next IR field is FeeRecipient (none))",
+      "class": "new field kind (b20)"
+     },
+     "encoder": {
+      "exit": 2,
+      "generated": false,
+      "reason": "G6Refuse: field FeeRecipient: byte vector of 20 bytes (covered: 32, 48, 96)",
+      "class": "new field kind (b20)"
+     }
+    }
+   },
+   "totals": {
+    "decoders_generated": "7/24",
+    "encoders_generated": "8/24",
+    "fields_covered": "34/86"
+   },
+   "raw_edited_lines": 0,
+   "runs_per_type": {
+    "gen5": 1,
+    "gen6": 1
+   },
+   "builds": "15/15 exit 0",
+   "kindcheck": "15/15 PASS",
+   "gate_s": 94.1
+  },
+  "part2": {
+   "per_type": {
+    "v1.BuilderDepositRequest": {
+     "decoder_closed": false,
+     "decoder_state": "partial",
+     "encoder_fast_path_closed": true,
+     "not_done": [
+      "decoder codec equality: no Desc-checker record for this type; proposal (not done): add the type to the Desc checker table and run it (method extension)",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1.BuilderExitRequest": {
+     "decoder_closed": false,
+     "decoder_state": "not started",
+     "encoder_fast_path_closed": false,
+     "not_done": [
+      "decoder: refused by p2dec --gen5 (new field kind (b20)); proposal (not done): GEN4/GEN6 byte-vector size 20 (b32 shape with size 20; decoder makeslice/memmove 0x14) + kinds/lemmas for 20-byte fields",
+      "encoder: refused by p2enc --gen6 (new field kind (b20)); proposal (not done): GEN4/GEN6 byte-vector size 20 (b32 shape with size 20; decoder makeslice/memmove 0x14) + kinds/lemmas for 20-byte fields",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1.ConsolidationRequest": {
+     "decoder_closed": false,
+     "decoder_state": "not started",
+     "encoder_fast_path_closed": false,
+     "not_done": [
+      "decoder: refused by p2dec --gen5 (new field kind (b20)); proposal (not done): GEN4/GEN6 byte-vector size 20 (b32 shape with size 20; decoder makeslice/memmove 0x14) + kinds/lemmas for 20-byte fields",
+      "encoder: refused by p2enc --gen6 (new field kind (b20)); proposal (not done): GEN4/GEN6 byte-vector size 20 (b32 shape with size 20; decoder makeslice/memmove 0x14) + kinds/lemmas for 20-byte fields",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1.DepositRequest": {
+     "decoder_closed": true,
+     "decoder_state": "complete",
+     "encoder_fast_path_closed": true,
+     "not_done": [
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1.Withdrawal": {
+     "decoder_closed": false,
+     "decoder_state": "not started",
+     "encoder_fast_path_closed": false,
+     "not_done": [
+      "decoder: refused by p2dec --gen5 (new field kind (b20)); proposal (not done): GEN4/GEN6 byte-vector size 20 (b32 shape with size 20; decoder makeslice/memmove 0x14) + kinds/lemmas for 20-byte fields",
+      "encoder: refused by p2enc --gen6 (new field kind (b20)); proposal (not done): GEN4/GEN6 byte-vector size 20 (b32 shape with size 20; decoder makeslice/memmove 0x14) + kinds/lemmas for 20-byte fields",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1.WithdrawalRequest": {
+     "decoder_closed": false,
+     "decoder_state": "not started",
+     "encoder_fast_path_closed": false,
+     "not_done": [
+      "decoder: refused by p2dec --gen5 (new field kind (b20)); proposal (not done): GEN4/GEN6 byte-vector size 20 (b32 shape with size 20; decoder makeslice/memmove 0x14) + kinds/lemmas for 20-byte fields",
+      "encoder: refused by p2enc --gen6 (new field kind (b20)); proposal (not done): GEN4/GEN6 byte-vector size 20 (b32 shape with size 20; decoder makeslice/memmove 0x14) + kinds/lemmas for 20-byte fields",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1alpha1.BLSToExecutionChange": {
+     "decoder_closed": false,
+     "decoder_state": "not started",
+     "encoder_fast_path_closed": false,
+     "not_done": [
+      "decoder: refused by p2dec --gen5 (new field kind (b20)); proposal (not done): GEN4/GEN6 byte-vector size 20 (b32 shape with size 20; decoder makeslice/memmove 0x14) + kinds/lemmas for 20-byte fields",
+      "encoder: refused by p2enc --gen6 (new field kind (b20)); proposal (not done): GEN4/GEN6 byte-vector size 20 (b32 shape with size 20; decoder makeslice/memmove 0x14) + kinds/lemmas for 20-byte fields",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1alpha1.BeaconBlocksByRangeRequest": {
+     "decoder_closed": false,
+     "decoder_state": "partial",
+     "encoder_fast_path_closed": true,
+     "not_done": [
+      "decoder codec equality: no Desc-checker record for this type; proposal (not done): add the type to the Desc checker table and run it (method extension)",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1alpha1.BlobSidecarsByRangeRequest": {
+     "decoder_closed": false,
+     "decoder_state": "partial",
+     "encoder_fast_path_closed": true,
+     "not_done": [
+      "decoder codec equality: no Desc-checker record for this type; proposal (not done): add the type to the Desc checker table and run it (method extension)",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1alpha1.Builder": {
+     "decoder_closed": false,
+     "decoder_state": "not started",
+     "encoder_fast_path_closed": false,
+     "not_done": [
+      "decoder: refused by p2dec --gen5 (new field kind (b1)); proposal (not done): 1-byte vector: movzbl byte copy step lemmas + kinds",
+      "encoder: refused by p2enc --gen6 (new field kind (b1)); proposal (not done): 1-byte vector: movzbl byte copy step lemmas + kinds",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1alpha1.BuilderPendingWithdrawal": {
+     "decoder_closed": false,
+     "decoder_state": "not started",
+     "encoder_fast_path_closed": false,
+     "not_done": [
+      "decoder: refused by p2dec --gen5 (new field kind (b20)); proposal (not done): GEN4/GEN6 byte-vector size 20 (b32 shape with size 20; decoder makeslice/memmove 0x14) + kinds/lemmas for 20-byte fields",
+      "encoder: refused by p2enc --gen6 (new field kind (b20)); proposal (not done): GEN4/GEN6 byte-vector size 20 (b32 shape with size 20; decoder makeslice/memmove 0x14) + kinds/lemmas for 20-byte fields",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1alpha1.BuilderPreferences": {
+     "decoder_closed": false,
+     "decoder_state": "not started",
+     "encoder_fast_path_closed": true,
+     "not_done": [
+      "decoder: refused by p2dec --gen5 (new callee); proposal (not done): proved callee accept specs for primitives.Gwei / BuilderIndex UnmarshalSSZ (contract hypothesis forbidden without approval: prove from machine code like Slot/Epoch)",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1alpha1.ENRForkID": {
+     "decoder_closed": false,
+     "decoder_state": "not started",
+     "encoder_fast_path_closed": false,
+     "not_done": [
+      "decoder: refused by p2dec --gen5 (new field kind (b4)); proposal (not done): 4-byte vector: in-line 32-bit copy step lemmas (decoder and encoder) + kinds",
+      "encoder: refused by p2enc --gen6 (new field kind (b4)); proposal (not done): 4-byte vector: in-line 32-bit copy step lemmas (decoder and encoder) + kinds",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1alpha1.ExecutionPayloadEnvelopesByRangeRequest": {
+     "decoder_closed": false,
+     "decoder_state": "partial",
+     "encoder_fast_path_closed": true,
+     "not_done": [
+      "decoder codec equality: no Desc-checker record for this type; proposal (not done): add the type to the Desc checker table and run it (method extension)",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1alpha1.Fork": {
+     "decoder_closed": false,
+     "decoder_state": "not started",
+     "encoder_fast_path_closed": false,
+     "not_done": [
+      "decoder: refused by p2dec --gen5 (new field kind (b4)); proposal (not done): 4-byte vector: in-line 32-bit copy step lemmas (decoder and encoder) + kinds",
+      "encoder: refused by p2enc --gen6 (new field kind (b4)); proposal (not done): 4-byte vector: in-line 32-bit copy step lemmas (decoder and encoder) + kinds",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1alpha1.ForkData": {
+     "decoder_closed": false,
+     "decoder_state": "not started",
+     "encoder_fast_path_closed": false,
+     "not_done": [
+      "decoder: refused by p2dec --gen5 (new field kind (b4)); proposal (not done): 4-byte vector: in-line 32-bit copy step lemmas (decoder and encoder) + kinds",
+      "encoder: refused by p2enc --gen6 (new field kind (b4)); proposal (not done): 4-byte vector: in-line 32-bit copy step lemmas (decoder and encoder) + kinds",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1alpha1.PartialDataColumnGroupID": {
+     "decoder_closed": false,
+     "decoder_state": "partial",
+     "encoder_fast_path_closed": true,
+     "not_done": [
+      "decoder codec equality: no Desc-checker record for this type; proposal (not done): add the type to the Desc checker table and run it (method extension)",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1alpha1.PayloadAttestationData": {
+     "decoder_closed": false,
+     "decoder_state": "not started",
+     "encoder_fast_path_closed": false,
+     "not_done": [
+      "decoder: refused by p2dec --gen5 (new field kind (bool)); proposal (not done): bool field kind: decoder range check (cmp $1; ja ErrInvalidSerialization) + encoder branch movb; Desc bool spec",
+      "encoder: refused by p2enc --gen6 (new field kind (bool)); proposal (not done): bool field kind: decoder range check (cmp $1; ja ErrInvalidSerialization) + encoder branch movb; Desc bool spec",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1alpha1.ProposerPreferences": {
+     "decoder_closed": false,
+     "decoder_state": "not started",
+     "encoder_fast_path_closed": false,
+     "not_done": [
+      "decoder: refused by p2dec --gen5 (new field kind (b20)); proposal (not done): GEN4/GEN6 byte-vector size 20 (b32 shape with size 20; decoder makeslice/memmove 0x14) + kinds/lemmas for 20-byte fields",
+      "encoder: refused by p2enc --gen6 (new field kind (b20)); proposal (not done): GEN4/GEN6 byte-vector size 20 (b32 shape with size 20; decoder makeslice/memmove 0x14) + kinds/lemmas for 20-byte fields",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1alpha1.Status": {
+     "decoder_closed": false,
+     "decoder_state": "not started",
+     "encoder_fast_path_closed": false,
+     "not_done": [
+      "decoder: refused by p2dec --gen5 (new field kind (b4)); proposal (not done): 4-byte vector: in-line 32-bit copy step lemmas (decoder and encoder) + kinds",
+      "encoder: refused by p2enc --gen6 (new field kind (b4)); proposal (not done): 4-byte vector: in-line 32-bit copy step lemmas (decoder and encoder) + kinds",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1alpha1.StatusV2": {
+     "decoder_closed": false,
+     "decoder_state": "not started",
+     "encoder_fast_path_closed": false,
+     "not_done": [
+      "decoder: refused by p2dec --gen5 (new field kind (b4)); proposal (not done): 4-byte vector: in-line 32-bit copy step lemmas (decoder and encoder) + kinds",
+      "encoder: refused by p2enc --gen6 (new field kind (b4)); proposal (not done): 4-byte vector: in-line 32-bit copy step lemmas (decoder and encoder) + kinds",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1alpha1.Validator": {
+     "decoder_closed": false,
+     "decoder_state": "not started",
+     "encoder_fast_path_closed": false,
+     "not_done": [
+      "decoder: refused by p2dec --gen5 (new field kind (bool)); proposal (not done): bool field kind: decoder range check (cmp $1; ja ErrInvalidSerialization) + encoder branch movb; Desc bool spec",
+      "encoder: refused by p2enc --gen6 (new field kind (bool)); proposal (not done): bool field kind: decoder range check (cmp $1; ja ErrInvalidSerialization) + encoder branch movb; Desc bool spec",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1alpha1.ValidatorIdentity": {
+     "decoder_closed": false,
+     "decoder_state": "partial",
+     "encoder_fast_path_closed": true,
+     "not_done": [
+      "decoder codec equality: no Desc-checker record for this type; proposal (not done): add the type to the Desc checker table and run it (method extension)",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    },
+    "v1alpha1.ValidatorRegistrationV1": {
+     "decoder_closed": false,
+     "decoder_state": "not started",
+     "encoder_fast_path_closed": false,
+     "not_done": [
+      "decoder: refused by p2dec --gen5 (new field kind (b20)); proposal (not done): GEN4/GEN6 byte-vector size 20 (b32 shape with size 20; decoder makeslice/memmove 0x14) + kinds/lemmas for 20-byte fields",
+      "encoder: refused by p2enc --gen6 (new field kind (b20)); proposal (not done): GEN4/GEN6 byte-vector size 20 (b32 shape with size 20; decoder makeslice/memmove 0x14) + kinds/lemmas for 20-byte fields",
+      "growslice branches, length rejects, morestack (encoder)",
+      "callee error returns, morestack, writeBarrier != 0 (decoder)"
+     ]
+    }
+   },
+   "independent_statements": {
+    "statement_commit": "2735379",
+    "identity_commit": "ab46808",
+    "decoders": {
+     "v1.DepositRequest": "rfl",
+     "v1alpha1.BeaconBlocksByRangeRequest": "rfl",
+     "v1alpha1.PartialDataColumnGroupID": "rfl",
+     "v1alpha1.ValidatorIdentity": "rfl"
+    },
+    "encoders": {
+     "v1alpha1.BuilderPreferences": "rfl",
+     "v1alpha1.BeaconBlocksByRangeRequest": "rfl",
+     "v1alpha1.PartialDataColumnGroupID": "rfl",
+     "v1alpha1.ValidatorIdentity": "rfl"
+    }
+   },
+   "negatives": "67/67 (15 controls pass, 52 inside; 0 timeout, 0 wrong_target)",
+   "kernel_checked": {
+    "spec_bridges": 8,
+    "codec_equality": 1,
+    "spec_alignment": 7,
+    "decoder_witnesses": 14,
+    "encoder_witnesses": 16,
+    "encoder_spec_corollaries": 8,
+    "identities": 8
+   },
+   "attempts": {
+    "F24BpfSpec": 2,
+    "E2cSpecBpf": 2,
+    "others": 1,
+    "link_scripts": "conv 2 (norm dir), data 2 (second error global)"
+   }
+  },
+  "inventory": {
+   "script": "gen/tools/inventory.py (job 100)",
+   "decoders_complete": 18,
+   "decoders_partial": 10,
+   "encoders_fast_path_complete": 24,
+   "of": 211,
+   "flat24_with_rows": 8,
+   "flat24_decoders_complete": 1,
+   "flat24_encoders_fast_path_complete": 8,
+   "flat_not_closed": [
+    "v1.BuilderDepositRequest: decoder partial (missing codec); encoder fast path complete",
+    "v1.BuilderExitRequest: decoder not started; encoder not started",
+    "v1.ConsolidationRequest: decoder not started; encoder not started",
+    "v1.Withdrawal: decoder not started; encoder not started",
+    "v1.WithdrawalRequest: decoder not started; encoder not started",
+    "v1alpha1.BLSToExecutionChange: decoder not started; encoder not started",
+    "v1alpha1.BeaconBlocksByRangeRequest: decoder partial (missing codec); encoder fast path complete",
+    "v1alpha1.BlobSidecarsByRangeRequest: decoder partial (missing codec); encoder fast path complete",
+    "v1alpha1.Builder: decoder not started; encoder not started",
+    "v1alpha1.BuilderPendingWithdrawal: decoder not started; encoder not started",
+    "v1alpha1.BuilderPreferences: decoder not started; encoder fast path complete",
+    "v1alpha1.ENRForkID: decoder not started; encoder not started",
+    "v1alpha1.ExecutionPayloadEnvelopesByRangeRequest: decoder partial (missing codec); encoder fast path complete",
+    "v1alpha1.Fork: decoder not started; encoder not started",
+    "v1alpha1.ForkData: decoder not started; encoder not started",
+    "v1alpha1.PartialDataColumnGroupID: decoder partial (missing codec); encoder fast path complete",
+    "v1alpha1.PayloadAttestationData: decoder not started; encoder not started",
+    "v1alpha1.ProposerPreferences: decoder not started; encoder not started",
+    "v1alpha1.Status: decoder not started; encoder not started",
+    "v1alpha1.StatusV2: decoder not started; encoder not started",
+    "v1alpha1.Validator: decoder not started; encoder not started",
+    "v1alpha1.ValidatorIdentity: decoder partial (missing codec); encoder fast path complete",
+    "v1alpha1.ValidatorRegistrationV1: decoder not started; encoder not started"
+   ],
+   "flat_not_started": [
+    "v1.BuilderExitRequest",
+    "v1.ConsolidationRequest",
+    "v1.Withdrawal",
+    "v1.WithdrawalRequest",
+    "v1alpha1.BLSToExecutionChange",
+    "v1alpha1.Builder",
+    "v1alpha1.BuilderPendingWithdrawal",
+    "v1alpha1.ENRForkID",
+    "v1alpha1.Fork",
+    "v1alpha1.ForkData",
+    "v1alpha1.PayloadAttestationData",
+    "v1alpha1.ProposerPreferences",
+    "v1alpha1.Status",
+    "v1alpha1.StatusV2",
+    "v1alpha1.Validator",
+    "v1alpha1.ValidatorRegistrationV1"
+   ],
+   "controls": "3/3 exit 1"
+  },
+  "axioms": "PASS 14415 declarations, nonstandard 0, sorryAx 0 (job 99 dump; committed record by axioms_gate.py check after hand-list +2194); planted (dump-level sorryAx) FAIL exit 1",
+  "drift": "vs int8-r1 dump: ADDED 2238, CHANGED 0, REMOVED 0; planted (dump-level) CHANGED 1 exit 1; Lean-level planted control not run",
+  "go_differential": "138/138 (Go 1.26.10 linux/arm64, go run -overlay, Prysm tree status unchanged; not the ELF); planted 2 mismatches exit 1",
+  "link": "f24 bundle 942b10be: link/check.py PASS all (job 08)",
+  "all_runs_gated": true,
+  "bounds_hit": [],
+  "not_run": [
+   "Lean-level planted drift/gate control on a scratch .lake copy",
+   "cold build",
+   "x86-64 hardware",
+   "regen_check.sh / p2dec_test.py / p2enc_test.py / kindcheck --selftest (frozen tools unchanged)",
+   "independent review",
+   "orca (not installed)"
+  ],
+  "state": "not reviewed",
+  "wording": "H7 numbers as they are; no generality claim; the 24 types are now opened (no longer a hold-out)"
  }
 }
