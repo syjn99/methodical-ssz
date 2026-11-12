@@ -1,0 +1,167 @@
+{
+ "functions": {
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DataColumnsByRootIdentifier).MarshalSSZTo": {
+   "addr": "0x9be460",
+   "instructions": 107,
+   "calls": [
+    {
+     "site": "0x9be4c1",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC Heap e2eU8Type_addr 1 S (esz 1; num 32, 4, 8)"
+    },
+    {
+     "site": "0x9be4f7",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC S (n = 32)"
+    },
+    {
+     "site": "0x9be528",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC Heap e2eU8Type_addr 1 S (esz 1; num 32, 4, 8)"
+    },
+    {
+     "site": "0x9be5c3",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC Heap e2eU8Type_addr 1 S (esz 1; num 32, 4, 8)"
+    },
+    {
+     "site": "0x9be600",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "premise guard < rsp - 8"
+    }
+   ],
+   "scope": "in (ENC target)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DataColumnSidecarsByRangeRequest).MarshalSSZTo": {
+   "addr": "0xa06aa0",
+   "instructions": 126,
+   "calls": [
+    {
+     "site": "0xa06b0a",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC Heap e2eU8Type_addr 1 S (esz 1; num 32, 4, 8)"
+    },
+    {
+     "site": "0xa06b58",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC Heap e2eU8Type_addr 1 S (esz 1; num 32, 4, 8)"
+    },
+    {
+     "site": "0xa06b9a",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC Heap e2eU8Type_addr 1 S (esz 1; num 32, 4, 8)"
+    },
+    {
+     "site": "0xa06c35",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC Heap e2eU8Type_addr 1 S (esz 1; num 32, 4, 8)"
+    },
+    {
+     "site": "0xa06c86",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "premise guard < rsp - 8"
+    }
+   ],
+   "scope": "candidate (not selected)"
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*IndexedAttestation).MarshalSSZTo": {
+   "addr": "0xa22a20",
+   "instructions": 173,
+   "calls": [
+    {
+     "site": "0xa22a69",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC Heap e2eU8Type_addr 1 S (esz 1; num 32, 4, 8)"
+    },
+    {
+     "site": "0xa22aa4",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC: IndexedAttestation Data (AttestationData type word); after fmt.errorf: the nil-result branch, excluded by rax != 0"
+    },
+    {
+     "site": "0xa22ac8",
+     "target": "runtime.gcWriteBarrier2",
+     "class": "c",
+     "how": "writeBarrier = 0 premise: the cmpl/jne is proved to skip the call"
+    },
+    {
+     "site": "0xa22af1",
+     "target": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttestationData).MarshalSSZTo",
+     "class": "FORBIDDEN",
+     "how": "forbidden target (task brief)"
+    },
+    {
+     "site": "0xa22b3a",
+     "target": "fmt.errorf",
+     "class": "b",
+     "how": "IndexedAttestation only: FmtErrorfDWC (two '%d ... %w' formats), FmtErrorfWC ('Data: %w')"
+    },
+    {
+     "site": "0xa22b4d",
+     "target": "runtime.newobject",
+     "class": "b",
+     "how": "NewobjectC: IndexedAttestation Data (AttestationData type word); after fmt.errorf: the nil-result branch, excluded by rax != 0"
+    },
+    {
+     "site": "0xa22bcd",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC Heap e2eU8Type_addr 1 S (esz 1; num 32, 4, 8)"
+    },
+    {
+     "site": "0xa22c00",
+     "target": "runtime.memmove",
+     "class": "b",
+     "how": "MemmoveC S (n = 32)"
+    },
+    {
+     "site": "0xa22cb5",
+     "target": "runtime.growslice",
+     "class": "b",
+     "how": "GrowsliceC Heap e2eU8Type_addr 1 S (esz 1; num 32, 4, 8)"
+    },
+    {
+     "site": "0xa22d03",
+     "target": "runtime.morestack_noctxt.abi0",
+     "class": "c",
+     "how": "premise guard < rsp - 8"
+    }
+   ],
+   "scope": "excluded (calls AttestationData.MarshalSSZTo)"
+  }
+ },
+ "call_counts": {
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DataColumnsByRootIdentifier).MarshalSSZTo": {
+   "runtime.growslice": 3,
+   "runtime.memmove": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DataColumnSidecarsByRangeRequest).MarshalSSZTo": {
+   "runtime.growslice": 4,
+   "runtime.morestack_noctxt.abi0": 1
+  },
+  "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*IndexedAttestation).MarshalSSZTo": {
+   "runtime.growslice": 3,
+   "runtime.newobject": 2,
+   "runtime.gcWriteBarrier2": 1,
+   "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*AttestationData).MarshalSSZTo": 1,
+   "fmt.errorf": 1,
+   "runtime.memmove": 1,
+   "runtime.morestack_noctxt.abi0": 1
+  }
+ },
+ "unclassified_in_scope": [],
+ "missing": []
+}
