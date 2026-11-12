@@ -4,10 +4,10 @@
 
 조건:
 
-1. 런타임 호출은 계약 가설이다(`MakesliceC`, `MemmoveC`). Go 런타임 기계어의 정교화 증명은 없다.
+1. 런타임 호출은 계약 가설이다(`MakesliceC`, `MemmoveC`. T3는 `NewobjectC`, `ConvT64C`, `FmtErrorfDWC`도 쓴다). Go 런타임 기계어의 정교화 증명은 없다.
 2. 전제 `writeBarrier = 0`과 `guard < rsp`가 경로를 고정한다. 쓰기 장벽 경로와 morestack 경로는 증명하지 않았다.
-3. T3 `IndexedAttestation` 디코더와 `conv.py` 수정(`93b3f2a`)은 독립 리뷰를 받지 않았다.
-4. T3의 P4, P5 거부는 고정 문장으로는 증명되지 않는다. 전제 `e0 ≠ 0`을 더한 `_nz` 문장만 K다.
+3. T3 `IndexedAttestation` 디코더와 `conv.py` 수정(`93b3f2a`)은 리뷰 r4가 승인했다. 그 뒤의 변경은 리뷰받지 않았다.
+4. T3의 P4, P5 거부는 고정 문장으로 증명하지 못했다. 반례 모형은 만들지 않았다. 전제 `e0 ≠ 0`을 더한 `_nz` 문장만 K다.
 5. Go 차분 시험과 x86-64 실행 대조는 하지 않았다.
 6. 독립 리뷰 결과는 9절에 적는다.
 
@@ -57,7 +57,7 @@
 | T3 | P2 오프셋 거부 | K | `ia_e2e_reject_offset_main`, `ia_e2e_reject_offset_spec` |
 | T3 | P3 수용, 모든 n ≤ 2048 | K | `ia_iter`, `ia_exit`, `ia_loop`, `ia_e2e_accept_main` |
 | T3 | P3 수용, 명세 | K | `ia_e2e_accept_spec` |
-| T3 | P4 정렬 거부, 고정 문장 | N | `ia_reject_misaligned_stmt`와 명세 짝. 쓰인 대로는 증명할 수 없다 |
+| T3 | P4 정렬 거부, 고정 문장 | N | `ia_reject_misaligned_stmt`와 명세 짝. 증명하지 못했다. 반례 모형은 없다 |
 | T3 | P4 정렬 거부, `e0 ≠ 0` | K | `ia_e2e_reject_misaligned_nz`, `ia_e2e_reject_misaligned_spec_nz` |
 | T3 | P5 길이 초과 거부, 고정 문장 | N | `ia_reject_toobig_stmt`와 명세 짝. 같은 이유다 |
 | T3 | P5 길이 초과 거부, `e0 ≠ 0` | K | `ia_e2e_reject_toobig_nz`, `ia_e2e_reject_toobig_spec_nz` |
@@ -73,14 +73,15 @@
 T1, T2의 주 정리는 `dfc8b93`의 고정 문장 def를 형으로 가진다.
 T3의 주 정리는 `e13053a`(`StmtIa.lean`)와 `714989f`(`StmtIaNz.lean`)의 고정 문장 def를 형으로 가진다.
 T3의 P4, P5는 오류 값에 대해 `rax ≠ 0`만 말한다.
-T3의 행은 리뷰 전이다.
+T3의 행은 리뷰 r4(`9e2272b`)가 확인했다.
+T3의 P1, P2 주 정리는 `9e2272b`에서 증인이 없다(리뷰 r4 S1).
 공리는 게이트 결과 `lv/axioms-gate-lv.json`과 `lv/axioms-gate-lv-t3.json`에 있다.
 
 ## 3. 막힌 의무
 
 | 의무 | 원인 분류 | 사실 |
 | --- | --- | --- |
-| T3 P4, P5 고정 문장 | 문장 결함 | errorString itab 레이블 `e0`가 0이면 `test %rcx,%rcx; je`가 형식 단어 읽기를 건너뛴다. 문장에 `e0 ≠ 0`이 없다. 계획 담당이 승인할 때 놓쳤다. 사용자가 `_nz` 문장을 승인했다 |
+| T3 P4, P5 고정 문장 | 문장 결함 | errorString itab 레이블 `e0`가 0이면 `test %rcx,%rcx; je`가 형식 단어 읽기를 건너뛴다. 문장에 `e0 ≠ 0`이 없다. 그 경우 `je`를 반박할 수 없고 증명 방법이 실패한다. 계획 담당이 승인할 때 놓쳤다. 사용자가 `_nz` 문장을 승인했다 |
 | T3 증인, 전략 1과 2 | 증명 크기 | WitScA의 글을 그대로 쓰면 64000000 heartbeat에서 `whnf` 시간 초과다(로그 192, 1471 s). 전략 3(`ib`를 먼저 떼는 다시 쓰기)이 닫았다 |
 
 LV-1은 `conv.py` 수정으로 풀렸다(`FINDINGS-CANDIDATES.md`).
@@ -118,7 +119,7 @@ T1과 T2에서 시도 한도에 닿은 의무는 없다(`ATTEMPTS.md`).
 
 T3의 옵션(원인과 문턱은 옵션 옆에 있다. 구현 담당의 측정이다):
 
-- `maxRecDepth 1024`: `ia_iter`, `ia_exit`, `ia_e2e_accept_main`, `_nz` 증명 둘. 없으면 첫 `kat`가 멈춘다(로그 136, 139, 184, 233).
+- `maxRecDepth 1024`: `ia_e2e_reject_size_main`, `ia_e2e_reject_offset_main`(로그 123, 124), `ia_iter`, `ia_exit`, `ia_e2e_accept_main`, `_nz` 증명 둘. 없으면 첫 `kat`가 멈춘다(로그 136, 139, 184, 233).
 - `maxHeartbeats 1600000`: `ia_e2e_accept_main`. 400000은 실패하고 800000은 통과한다(로그 185).
 - `WitIaA`: 파일 수준 `maxRecDepth 2048`(기본값과 1024는 실패한다, 로그 212). `ia_accept_runs`에 `maxHeartbeats 10000000`(4000000은 실패하고 5000000은 통과한다, 로그 211).
 - `WitIaR`: 파일 수준 `maxRecDepth 1024`(기본값은 실패한다, 로그 245).
@@ -194,11 +195,12 @@ T3의 옵션(원인과 문턱은 옵션 옆에 있다. 구현 담당의 측정�
 
 ## 9. 발견 후보와 리뷰
 
-- LV-1(수정됨 `93b3f2a`, 리뷰 전, X, 도구 빈틈). `FINDINGS-CANDIDATES.md`를 본다.
+- LV-1(수정됨 `93b3f2a`, 리뷰 r4 승인, X, 도구 빈틈). 베이스 없는 SIB 꼴과 세그먼트 꼴은 다루지 않는다(이 objdump에 0개, 리뷰 r4 S9). `FINDINGS-CANDIDATES.md`를 본다.
 - 새 production 결함 후보는 없다.
 - 독립 리뷰 r1(`fbf729a`): REQUEST_CHANGES, 필수 수정 1개(M1). `REVIEW-R1.md`를 본다. 수정은 `463ec97`, `3bb6cc1`, `4a18079`, `ec75cd5`다.
 - 독립 리뷰 r2(`d169e4b`): REQUEST_CHANGES, 필수 수정 2개(M1, M2). `REVIEW-R2.md`를 본다. 수정은 `1ba8b41`, `69f1a70`, `252380f`와 이 파일의 커밋이다.
 - 독립 리뷰 r3(`650b1f5`): APPROVE, 필수 수정 없음. `REVIEW-R3.md`를 본다. 그 뒤의 문서 커밋(N1, N2, `REVIEW-R3.md`)은 리뷰받지 않았다.
+- 독립 리뷰 r4(`9e2272b`, 범위 `conv.py` 수정과 T3): APPROVE, 필수 수정 없음, 권장 수정 9개. `REVIEW-R4.md`를 본다.
 - 사용자 확인이 필요한 것:
   - esz 24 `MakesliceC` 인스턴스(리뷰 r1 S7).
   - 기한.
