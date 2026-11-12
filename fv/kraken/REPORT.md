@@ -852,6 +852,23 @@ SyncAggregatorSelectionData와 ValidatorBalance의 프레임 `0x38` 꼴에는 �
 공리 게이트 PASS(선언 9139), 선언 비교 ADDED 1490뿐, 심은 대조는 잡혔다. `--no-build` 종료 0이다.
 실행하지 않은 것: 콜드 빌드, 링크 검사, Go 차분, x86-64. 기록: CONTAMINATION 29절, `scal/RESULT.json`의 `gen5`.
 
+남은 평면 디코더 다섯의 마무리(단위 G5-C, 기준 `ea6a0c6`, 리뷰 전): HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit다.
+승인과 크기 거부는 G5-G의 생성 정리다. 다른 것은 새 모듈이다.
+독립 손 문장 셋(SA, VB, VE)은 생성 승인 정리와 `rfl`로 같다. 손 문장은 생성 파일을 열기 전에 커밋했다.
+형마다 증명된 것: 손 Desc와 검사기 Desc의 코덱 같음, `accept_spec_k`, `reject_size_spec`, `reject_complete`, 승인 증인, 거부 증인이다.
+`reject_complete`는 크기 경로 조건만이다. 피호출자 오류 반환은 덮지 않는다.
+ValidatorBalance는 consensus-specs 컨테이너가 없다. Desc는 Prysm proto에서 왔다.
+PendingPartialWithdrawal의 `pw_e2e_accept_spec_k`를 더했다.
+부정 시험 46건 중 43건이 통과다(대조 10, 정리 안 실패 33). 하트비트 시간 초과 3건은 세지 않는다.
+Go 차분 30/30이다(linux/arm64의 Go 의미론, ELF 실행 아님). 심은 대조는 잡혔다.
+링크 검사 PASS다. RESULT는 H6 기록과 바이트가 같다.
+공리 게이트 PASS(선언 9758), 선언 비교 ADDED 619뿐이다. 심은 대조는 잡혔다. `--no-build` 종료 0이다.
+검증 목록(`prysm/INVENTORY.md`, 출처 `gen/tools/inventory.py`): 대상 함수 641개다.
+디코더는 완전 17, 부분 4, 없음 190이다. 완전은 목록에 정의된 뜻이다.
+인코더 빠른 경로 정리는 3개, `SizeSSZ`는 1개다. HashTreeRoot는 없다.
+평면 16형의 디코더는 16/16 완전이다. 표본 안이고 리뷰 전이다.
+실행하지 않은 것: 콜드 빌드, x86-64, `regen_check.sh`(생성기 변경 없음). 기록: CONTAMINATION 31절, `scal/RESULT.json`의 `gen5-close`.
+
 조건:
 
 1. 런타임 계약 `MakesliceC`(uint8, esz 1, cnt 32), `MemmoveC`, `GrowsliceC`(uint8, esz 1, 인코더 첫 지점과 둘째 지점), `ConvT64C`, `FmtErrorfDDC`(Epoch 형식, `type:int`)는 가설이다. Go 1.26.10 소스를 다시 읽었고 바뀌지 않았다(`prysm/go1.26.10/e2e/RUNTIME-1.26.10.md`). 정교화 증명은 없다.

@@ -3361,5 +3361,111 @@
    "S4": "commit 607ba61 says '32 adversarial': 28 adversarial inputs + 2 real refused types",
    "details": "CONTAMINATION.md section 30"
   }
+ },
+ "gen5-close": {
+  "what": "GEN5 unit G5-C: close the five H6-only flat decoders (HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit) on the generated accept / size-reject theorems, and the first verified inventory of the pinned target's functions. In-sample (opened in H6 as (S)-only types); no hold-out claim",
+  "base": "ea6a0c6 (step 0 records: 55e4cec)",
+  "state": "not yet reviewed",
+  "commits": {
+   "step0_records": "55e4cec",
+   "hand_statements": "e1ccb83",
+   "identity": "8380a3d",
+   "hand_desc": "534538e",
+   "checker_desc_spec": "7a00bcb",
+   "spec_k": "ddf9a76",
+   "witnesses": "9356e28",
+   "pw_spec_k": "d4892ca",
+   "evidence": "499db40",
+   "gate_drift_inventory": "0a023e4"
+  },
+  "independent_statement_identities": {
+   "SyncAggregatorSelectionData": "rfl",
+   "ValidatorBalance": "rfl",
+   "VoluntaryExit": "rfl",
+   "independence": "written before opening the generated modules; the session had read review g5-r1's description of the frame classes (CONTAMINATION section 31)"
+  },
+  "per_type": {
+   "HistoricalSummary": {
+    "accept": "generated (kind)",
+    "reject": "generated",
+    "desc_codec": true,
+    "spec_k": true,
+    "reject_complete": "size path condition only; callee error returns not covered",
+    "witness_accept": true,
+    "witness_reject": true
+   },
+   "SigningData": {
+    "accept": "generated (kind)",
+    "reject": "generated",
+    "desc_codec": true,
+    "spec_k": true,
+    "reject_complete": "size path condition only; callee error returns not covered",
+    "witness_accept": true,
+    "witness_reject": true
+   },
+   "SyncAggregatorSelectionData": {
+    "accept": "generated (kind) + independent statement rfl",
+    "reject": "generated",
+    "desc_codec": true,
+    "spec_k": true,
+    "reject_complete": "size path condition only; callee error returns not covered",
+    "witness_accept": true,
+    "witness_reject": true
+   },
+   "ValidatorBalance": {
+    "accept": "generated (kind) + independent statement rfl",
+    "reject": "generated",
+    "desc_codec": true,
+    "spec_k": true,
+    "reject_complete": "size path condition only; callee error returns not covered",
+    "witness_accept": true,
+    "witness_reject": true
+   },
+   "VoluntaryExit": {
+    "accept": "generated (kind) + independent statement rfl",
+    "reject": "generated",
+    "desc_codec": true,
+    "spec_k": true,
+    "reject_complete": "size path condition only; callee error returns not covered",
+    "witness_accept": true,
+    "witness_reject": true
+   }
+  },
+  "validator_balance_desc": "no consensus-specs container; Desc from the Prysm proto definition",
+  "pw_accept_spec_k": "added (PwSpecKA.lean)",
+  "negatives": "43/46 counted (10 controls, 33 inside); 3 spec_k field-swap mutants of the uint64 types: timeout_heartbeat, not counted; scal file prysm/go1.26.10/e2e/g5c/negative-g5c.json",
+  "go_differential": "30/30 (Go 1.26.10 semantics on linux/arm64, not the ELF; Prysm tree status hash unchanged); planted control 2 mismatches, exit 1",
+  "link": "link/check.py on the committed h6 tables + pinned ELF (sha256 = build-ids): PASS all, RESULT byte-identical to the H6 record",
+  "axioms": "PASS 9758 declarations, 8134 theorems, hand list 2200, nonstandard 0, sorryAx 0; committed record regenerated",
+  "drift": "vs g5-r1 dump (9139): ADDED 619, CHANGED 0, REMOVED 0; Lean-level planted control in-tree (weakened witness + sorry theorem): gate exit 1, drift 1 CHANGED + 1 ADDED; restored byte-equal, rebuilt",
+  "inventory": {
+   "script": "gen/tools/inventory.py + gen/tools/inventory_decls.lean",
+   "functions_total": 641,
+   "decoders": {
+    "complete": 17,
+    "partial": 4,
+    "none": 190
+   },
+   "encoders": {
+    "fast_path": 3,
+    "none": 208
+   },
+   "size_ssz": {
+    "proved": 1,
+    "none": 210
+   },
+   "flat_population_decoders_complete": "16/16",
+   "m_flat_dec_reached_by_script": true,
+   "controls": "3 planted mapping errors (absent name, wrong accept for a witness, wrong code constant) each exit 1"
+  },
+  "no_build": "lake build --no-build E2e E2eAd E2eScal exit 0",
+  "not_run": [
+   "cold build",
+   "x86-64 hardware",
+   "regen_check.sh (generator unchanged)",
+   "kindcheck.py (generated files unchanged)",
+   "orca (not installed)"
+  ],
+  "claims_and_limits": "in-sample; 'complete' only in the inventory's defined sense; M-flat-dec only after an independent review; no 'all codecs', 'generator complete' or speed claim"
  }
 }
