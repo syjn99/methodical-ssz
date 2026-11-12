@@ -273,7 +273,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 - What: `gen/tools/proof_inventory.py run` trusts `prysm/go1.26.10/ssz-methods.json` for methods without a converted `.S` file. Only the `methods` mode and a `cmp` bind that file to the ELF.
   A development type without a mapping row ends in a `KeyError`, not in a FAIL line.
-  19 mapped names are not in the `#print axioms` hand list `gen/scal/AxiomsScal.lean`. `gen/tools/inventory_decls.lean` checks their axioms on every run.
+  19 mapped names are not in the `#print axioms` hand list `gen/axioms-lists/flat-fixed-size-types.lean`. `gen/tools/inventory_decls.lean` checks their axioms on every run.
 - State: open.
 
 ### Open checker items of the flat encoder generator

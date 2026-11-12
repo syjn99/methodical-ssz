@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-"""Parse `lake env lean gen/e2e/Axioms.lean` output into JSON; allowed axioms: propext,
-Classical.choice, Quot.sound. Usage: axioms.py <log> <out.json> [<names.lean>] (default: the Axioms.lean next
-to this file; the AttestationData set passes gen/e2e/AxiomsAd.lean). Exit 1 if any theorem uses another axiom,
-if a theorem is missing from the output, or if `sorryAx` appears.
+"""Parse the output of `lake env lean <hand list>` into JSON. A hand list is a file of gen/axioms-lists/.
+Allowed axioms: propext, Classical.choice, Quot.sound.
+Usage: axioms.py <log> <out.json> [<names.lean>]. The default list is gen/axioms-lists/checkpoint-epoch.lean.
+The AttestationData set passes gen/axioms-lists/attestation-data.lean.
+Exit 1 if any theorem uses another axiom, if a theorem is missing from the output, or if `sorryAx` appears.
 axioms.py run <names.lean> <out.json> [<log>]: first `lake build --no-build <imports of names.lean>` in
 fv/kraken/lean (`lake env lean` does no trace check); exit 2 if it fails, else run
 `lake env lean <names.lean>` and parse as above. The precheck exit code is recorded in <out.json>.
-This hand list is the "must exist" list of the full gate gen/e2e/axioms_gate.py."""
+The full gate gen/e2e/axioms_gate.py reads every hand list as a "must exist" list."""
 import json, pathlib, re, subprocess, sys
 
 LEAN = pathlib.Path(__file__).resolve().parent.parent.parent / "lean"
+DEFAULT_LIST = LEAN.parent / "gen" / "axioms-lists" / "checkpoint-epoch.lean"
 
 
 def parse(log, src, out, extra=None):
@@ -55,5 +57,5 @@ if __name__ == "__main__":
     if sys.argv[1:2] == ["run"]:
         sys.exit(run(*sys.argv[2:5]))
     log = open(sys.argv[1]).read()
-    src = sys.argv[3] if len(sys.argv) > 3 else __file__.replace("axioms.py", "Axioms.lean")
+    src = sys.argv[3] if len(sys.argv) > 3 else str(DEFAULT_LIST)
     sys.exit(parse(log, src, sys.argv[2]))

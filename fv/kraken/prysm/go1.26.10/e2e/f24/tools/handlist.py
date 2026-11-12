@@ -1,4 +1,4 @@
-"""Append the names of the F24 types (`X` below) to gen/scal/AxiomsScal.lean (imports after the last import;
+"""Append the names of the F24 types (`X` below) to gen/axioms-lists/flat-fixed-size-types.lean (imports after the last import;
 #print axioms lines at the end). Names: every declaration of the dump that matches a pattern of `pats` below."""
 import re, sys
 dump, axs, lean = sys.argv[1:4]

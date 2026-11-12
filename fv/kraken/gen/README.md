@@ -85,11 +85,31 @@ So a defect in the producer or in the IR does not also hide in the checker.
 
 Thus the Prysm theorems use a hand `Desc` written from consensus-specs, and a theorem shows that it has the same codec as the checker `Desc`.
 
-## 6. Python-only checks
+## 6. The axioms gate
+
+`e2e/axioms_gate.py` is the one axioms gate. It covers every declaration of every Lean library of the project.
+
+```sh
+python3 -I -B fv/kraken/gen/e2e/axioms_gate.py run <scratch>/gate.json <scratch>/dump.tsv
+python3 -I -B fv/kraken/gen/e2e/axioms_gate.py check <scratch>/dump.tsv <scratch>/gate.json
+python3 -I -B fv/kraken/gen/e2e/axioms_gate.py --selftest
+```
+
+- The `run` mode needs Lean and a built tree. It runs `lake build --no-build` on all modules first. If that fails, it stops with exit 2.
+- The libraries are the `[[lean_lib]]` blocks of `lean/lakefile.toml`. The gate reads them when it runs.
+- Each library must have the glob `<name>.+`. Its modules are the `*.lean` files under `lean/<name>/`. Another glob form stops the gate.
+- The hand lists are the `*.lean` files in `axioms-lists/`. Each file has `#print axioms` lines and the imports that the names need.
+  The gate checks that each name of a hand list is in the declaration dump.
+- A new library or a new hand list needs no change to the gate.
+- Each declaration must use only `propext`, `Classical.choice` and `Quot.sound`. `sorryAx` fails.
+- The `check` mode reads a dump that `run` wrote. It needs only Python.
+- `e2e/axioms.py` reads the output of `lake env lean <hand list>` for one hand list.
+
+## 7. Python-only checks
 
 These run without Lean, Go or the Prysm ELF:
 
-- `scal/kindcheck.py`, and the `--selftest` mode of `e2e/axioms_gate.py` and the other gate scripts. `e2e/encaxioms_gate.py` and `e2e/encaxioms_gate2.py` have no `--selftest` mode.
+- `scal/kindcheck.py`, and the `--selftest` mode of `e2e/axioms_gate.py`.
 - `python3 -B fv/kraken/link/data.py --check fv/kraken/link/out`.
 - `regen_check.sh` with `scal/scalgen.py`, `e2e/descterm.py`, `e2e/lvdescterm.py`, `e2e/layout.py` and `e2e/adlayout.py`.
 - `type_inventory.py reduce` and `build`, `type_list_document.py`, `type_scope.py`, `keepalive.py`, `kparse/summ.py`.
@@ -98,12 +118,12 @@ These run without Lean, Go or the Prysm ELF:
 
 These need more than Python:
 
-- `e2e/negative.py` and the axioms gates need Lean.
+- `e2e/negative.py` and the `run` mode of the axioms gate need Lean.
 - The link checks need the ELF and the LLVM tools.
 - The differential checks need Go and a Prysm tree.
 - `tools/proof_inventory.py` needs the symbol listing of the Prysm ELF and Lean.
 
-## 7. Known limits
+## 8. Known limits
 
 These generated outputs do not reproduce from the tracked tree today:
 

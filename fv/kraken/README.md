@@ -100,15 +100,17 @@ After a build, `lake build --no-build <libraries>` must exit 0. `lake env lean` 
 **Lean and Python.** These scripts call Lean through Lake.
 
 ```sh
-python3 -I -B fv/kraken/gen/e2e/seg2axioms_gate.py run <scratch>/gate.json <scratch>/dump.tsv
-python3 -I -B fv/kraken/gen/e2e/encaxioms_gate2.py run <scratch>/gate.json <scratch>/dump.tsv
+python3 -I -B fv/kraken/gen/e2e/axioms_gate.py run <scratch>/gate.json <scratch>/dump.tsv
 python3 -I -B fv/kraken/gen/e2e/negative.py <cases.json> <work-dir> <scratch>/result.json <case-id>
 python3 -I -B .claude/skills/maintaining-methodical-fv/scripts/decl_drift.py <base.tsv> <head.tsv>
 ```
 
-- The two axioms gates write a declaration dump and check that every declaration uses only the three standard axioms.
-  Each gate script names the libraries that it covers in its first lines. The two gates together cover all libraries.
-- A gate overwrites its JSON argument. Give a scratch path, unless you intend to update a committed record.
+- The axioms gate covers every library of `lean/lakefile.toml`. It reads the library names from the lakefile when it runs.
+- The gate needs Lean and a built tree. First it runs `lake build --no-build` on all modules. If that fails, the gate stops with exit 2.
+- The gate writes a declaration dump. It checks that every declaration uses only `propext`, `Classical.choice` and `Quot.sound`.
+- The gate also checks that each name of the hand lists in `gen/axioms-lists/` is in the dump. Each `*.lean` file of that directory is a hand list.
+- A new library or a new hand list needs no change to the gate.
+- The gate overwrites its JSON argument. Give a scratch path, unless you intend to update a committed record.
 - The negative test files are `gen/e2e/negcases.json`, `gen/scal/negcases-*.json` and the `negcases-*.json` files under `prysm/go1.26.10/e2e/`.
   Run one case per job. The E2eList cases use `gen/e2e/lvnegative.py` with the same arguments.
 - The drift check compares a dump with the dump of a reviewed tree.
