@@ -1,0 +1,109 @@
+TEXT github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DataColumnsByRootIdentifier).MarshalSSZTo(SB) github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1/fulu.ssz.go
+  fulu.ssz.go:1754	0x9be460		4c8d6424f8		LEAQ -0x8(SP), R12                   // lea -0x8(%rsp),%r12									
+  fulu.ssz.go:1754	0x9be465		4d3b6610		CMPQ R12, 0x10(R14)                  // cmp 0x10(%r14),%r12									
+  fulu.ssz.go:1754	0x9be469		0f8679010000		JBE 0x9be5e8                         // jbe 0x9be5e8										
+  fulu.ssz.go:1754	0x9be46f		55			PUSHQ BP                             // push %rbp										
+  fulu.ssz.go:1754	0x9be470		4889e5			MOVQ SP, BP                          // mov %rsp,%rbp										
+  fulu.ssz.go:1754	0x9be473		4883c480		ADDQ $-0x80, SP                      // add $-0x80,%rsp										
+  fulu.ssz.go:1754	0x9be477		48899c2498000000	MOVQ BX, 0x98(SP)                    // mov %rbx,0x98(%rsp)									
+  fulu.ssz.go:1759	0x9be47f		488b5008		MOVQ 0x8(AX), DX                     // mov 0x8(%rax),%rdx									
+  fulu.ssz.go:1759	0x9be483		4883781020		CMPQ 0x10(AX), $0x20                 // cmpq $0x20,0x10(%rax)									
+  fulu.ssz.go:1759	0x9be488		0f85e9000000		JNE 0x9be577                         // jne 0x9be577										
+  fulu.ssz.go:1759	0x9be48e		4889842490000000	MOVQ AX, 0x90(SP)                    // mov %rax,0x90(%rsp)									
+  fulu.ssz.go:1762	0x9be496		4c8d4120		LEAQ 0x20(CX), R8                    // lea 0x20(%rcx),%r8									
+  fulu.ssz.go:1762	0x9be49a		4c39c7			CMPQ DI, R8                          // cmp %r8,%rdi										
+  fulu.ssz.go:1762	0x9be49d		733d			JAE 0x9be4dc                         // jae 0x9be4dc										
+  fulu.ssz.go:1759	0x9be49f		48898c24a0000000	MOVQ CX, 0xa0(SP)                    // mov %rcx,0xa0(%rsp)									
+  fulu.ssz.go:1759	0x9be4a7		4889542478		MOVQ DX, 0x78(SP)                    // mov %rdx,0x78(%rsp)									
+  fulu.ssz.go:1762	0x9be4ac		4889d8			MOVQ BX, AX                          // mov %rbx,%rax										
+  fulu.ssz.go:1762	0x9be4af		4c89c3			MOVQ R8, BX                          // mov %r8,%rbx										
+  fulu.ssz.go:1762	0x9be4b2		4889f9			MOVQ DI, CX                          // mov %rdi,%rcx										
+  fulu.ssz.go:1762	0x9be4b5		bf20000000		MOVL $0x20, DI                       // mov $0x20,%edi										
+  fulu.ssz.go:1762	0x9be4ba		488d353fb31200		LEAQ 0x12b33f(IP), SI                // lea 0x12b33f(%rip),%rsi									
+  fulu.ssz.go:1762	0x9be4c1		e8facaacff		CALL runtime.growslice(SB)           // callq 0x48afc0										
+  fulu.ssz.go:1762	0x9be4c6		488b542478		MOVQ 0x78(SP), DX                    // mov 0x78(%rsp),%rdx									
+  fulu.ssz.go:1762	0x9be4cb		4889cf			MOVQ CX, DI                          // mov %rcx,%rdi										
+  fulu.ssz.go:1762	0x9be4ce		4989d8			MOVQ BX, R8                          // mov %rbx,%r8										
+  fulu.ssz.go:1762	0x9be4d1		488b8c24a0000000	MOVQ 0xa0(SP), CX                    // mov 0xa0(%rsp),%rcx									
+  fulu.ssz.go:1762	0x9be4d9		4889c3			MOVQ AX, BX                          // mov %rax,%rbx										
+  fulu.ssz.go:1762	0x9be4dc		4c89442448		MOVQ R8, 0x48(SP)                    // mov %r8,0x48(%rsp)									
+  fulu.ssz.go:1762	0x9be4e1		48895c2468		MOVQ BX, 0x68(SP)                    // mov %rbx,0x68(%rsp)									
+  fulu.ssz.go:1762	0x9be4e6		48897c2450		MOVQ DI, 0x50(SP)                    // mov %rdi,0x50(%rsp)									
+  fulu.ssz.go:1762	0x9be4eb		488d040b		LEAQ 0(BX)(CX*1), AX                 // lea (%rbx,%rcx,1),%rax									
+  fulu.ssz.go:1762	0x9be4ef		4889d3			MOVQ DX, BX                          // mov %rdx,%rbx										
+  fulu.ssz.go:1762	0x9be4f2		b920000000		MOVL $0x20, CX                       // mov $0x20,%ecx										
+  fulu.ssz.go:1762	0x9be4f7		e88420adff		CALL runtime.memmove(SB)             // callq 0x490580										
+  binary.go:106		0x9be4fc		488b5c2448		MOVQ 0x48(SP), BX                    // mov 0x48(%rsp),%rbx									
+  binary.go:106		0x9be501		4883c304		ADDQ $0x4, BX                        // add $0x4,%rbx										
+  fulu.ssz.go:1765	0x9be505		90			NOPL                                 // nop											
+  binary.go:106		0x9be506		488b4c2450		MOVQ 0x50(SP), CX                    // mov 0x50(%rsp),%rcx									
+  binary.go:106		0x9be50b		4839d9			CMPQ CX, BX                          // cmp %rbx,%rcx										
+  binary.go:106		0x9be50e		7207			JB 0x9be517                          // jb 0x9be517										
+  marshal.go:34		0x9be510		488b442468		MOVQ 0x68(SP), AX                    // mov 0x68(%rsp),%rax									
+  binary.go:106		0x9be515		eb16			JMP 0x9be52d                         // jmp 0x9be52d										
+  binary.go:106		0x9be517		488b442468		MOVQ 0x68(SP), AX                    // mov 0x68(%rsp),%rax									
+  binary.go:106		0x9be51c		bf04000000		MOVL $0x4, DI                        // mov $0x4,%edi										
+  binary.go:106		0x9be521		488d35d8b21200		LEAQ 0x12b2d8(IP), SI                // lea 0x12b2d8(%rip),%rsi									
+  binary.go:106		0x9be528		e893caacff		CALL runtime.growslice(SB)           // callq 0x48afc0										
+  binary.go:106		0x9be52d		c74403fc24000000	MOVL $0x24, -0x4(BX)(AX*1)           // movl $0x24,-0x4(%rbx,%rax,1)								
+  fulu.ssz.go:1769	0x9be535		488b942490000000	MOVQ 0x90(SP), DX                    // mov 0x90(%rsp),%rdx									
+  fulu.ssz.go:1769	0x9be53d		4c8b4228		MOVQ 0x28(DX), R8                    // mov 0x28(%rdx),%r8									
+  fulu.ssz.go:1769	0x9be541		4981f880000000		CMPQ R8, $0x80                       // cmp $0x80,%r8										
+  fulu.ssz.go:1769	0x9be548		7f12			JG 0x9be55c                          // jg 0x9be55c										
+  fulu.ssz.go:1769	0x9be54a		4c89442460		MOVQ R8, 0x60(SP)                    // mov %r8,0x60(%rsp)									
+  fulu.ssz.go:1769	0x9be54f		488b5220		MOVQ 0x20(DX), DX                    // mov 0x20(%rdx),%rdx									
+  fulu.ssz.go:1769	0x9be553		4889542470		MOVQ DX, 0x70(SP)                    // mov %rdx,0x70(%rsp)									
+  fulu.ssz.go:1769	0x9be558		31f6			XORL SI, SI                          // xor %esi,%esi										
+  fulu.ssz.go:1772	0x9be55a		eb3e			JMP 0x9be59a                         // jmp 0x9be59a										
+  fulu.ssz.go:1770	0x9be55c		488b3d4d179c00		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrListTooBig(SB), DI // mov 0x9c174d(%rip),%rdi				
+  fulu.ssz.go:1770	0x9be563		488b354e179c00		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrListTooBig+8(SB), SI // mov 0x9c174e(%rip),%rsi				
+  fulu.ssz.go:1770	0x9be56a		31c0			XORL AX, AX                          // xor %eax,%eax										
+  fulu.ssz.go:1770	0x9be56c		31db			XORL BX, BX                          // xor %ebx,%ebx										
+  fulu.ssz.go:1770	0x9be56e		4889d9			MOVQ BX, CX                          // mov %rbx,%rcx										
+  fulu.ssz.go:1770	0x9be571		4883ec80		SUBQ $-0x80, SP                      // sub $-0x80,%rsp										
+  fulu.ssz.go:1770	0x9be575		5d			POPQ BP                              // pop %rbp										
+  fulu.ssz.go:1770	0x9be576		c3			RET                                  // retq											
+  fulu.ssz.go:1760	0x9be577		488b3df2169c00		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength(SB), DI // mov 0x9c16f2(%rip),%rdi				
+  fulu.ssz.go:1760	0x9be57e		488b35f3169c00		MOVQ github.com/OffchainLabs/methodical-ssz/ssz.ErrBytesLength+8(SB), SI // mov 0x9c16f3(%rip),%rsi				
+  fulu.ssz.go:1760	0x9be585		31c0			XORL AX, AX                          // xor %eax,%eax										
+  fulu.ssz.go:1760	0x9be587		31db			XORL BX, BX                          // xor %ebx,%ebx										
+  fulu.ssz.go:1760	0x9be589		4889d9			MOVQ BX, CX                          // mov %rbx,%rcx										
+  fulu.ssz.go:1760	0x9be58c		4883ec80		SUBQ $-0x80, SP                      // sub $-0x80,%rsp										
+  fulu.ssz.go:1760	0x9be590		5d			POPQ BP                              // pop %rbp										
+  fulu.ssz.go:1760	0x9be591		c3			RET                                  // retq											
+  binary.go:136		0x9be592		4c894c03f8		MOVQ R9, -0x8(BX)(AX*1)              // mov %r9,-0x8(%rbx,%rax,1)								
+  fulu.ssz.go:1772	0x9be597		48ffc6			INCQ SI                              // inc %rsi										
+  fulu.ssz.go:1772	0x9be59a		4c39c6			CMPQ SI, R8                          // cmp %r8,%rsi										
+  fulu.ssz.go:1772	0x9be59d		7d3f			JGE 0x9be5de                         // jge 0x9be5de										
+  binary.go:136		0x9be59f		4883c308		ADDQ $0x8, BX                        // add $0x8,%rbx										
+  fulu.ssz.go:1772	0x9be5a3		4c8b0cf2		MOVQ 0(DX)(SI*8), R9                 // mov (%rdx,%rsi,8),%r9									
+  fulu.ssz.go:1773	0x9be5a7		90			NOPL                                 // nop											
+  binary.go:136		0x9be5a8		4839d9			CMPQ CX, BX                          // cmp %rbx,%rcx										
+  binary.go:136		0x9be5ab		73e5			JAE 0x9be592                         // jae 0x9be592										
+  fulu.ssz.go:1772	0x9be5ad		4889742458		MOVQ SI, 0x58(SP)                    // mov %rsi,0x58(%rsp)									
+  fulu.ssz.go:1772	0x9be5b2		4c894c2440		MOVQ R9, 0x40(SP)                    // mov %r9,0x40(%rsp)									
+  binary.go:136		0x9be5b7		bf08000000		MOVL $0x8, DI                        // mov $0x8,%edi										
+  binary.go:136		0x9be5bc		488d353db21200		LEAQ 0x12b23d(IP), SI                // lea 0x12b23d(%rip),%rsi									
+  binary.go:136		0x9be5c3		e8f8c9acff		CALL runtime.growslice(SB)           // callq 0x48afc0										
+  fulu.ssz.go:1772	0x9be5c8		488b542470		MOVQ 0x70(SP), DX                    // mov 0x70(%rsp),%rdx									
+  fulu.ssz.go:1772	0x9be5cd		488b742458		MOVQ 0x58(SP), SI                    // mov 0x58(%rsp),%rsi									
+  fulu.ssz.go:1772	0x9be5d2		4c8b442460		MOVQ 0x60(SP), R8                    // mov 0x60(%rsp),%r8									
+  binary.go:136		0x9be5d7		4c8b4c2440		MOVQ 0x40(SP), R9                    // mov 0x40(%rsp),%r9									
+  binary.go:136		0x9be5dc		ebb4			JMP 0x9be592                         // jmp 0x9be592										
+  fulu.ssz.go:1775	0x9be5de		31ff			XORL DI, DI                          // xor %edi,%edi										
+  fulu.ssz.go:1775	0x9be5e0		31f6			XORL SI, SI                          // xor %esi,%esi										
+  fulu.ssz.go:1775	0x9be5e2		4883ec80		SUBQ $-0x80, SP                      // sub $-0x80,%rsp										
+  fulu.ssz.go:1775	0x9be5e6		5d			POPQ BP                              // pop %rbp										
+  fulu.ssz.go:1775	0x9be5e7		c3			RET                                  // retq											
+  fulu.ssz.go:1754	0x9be5e8		4889442408		MOVQ AX, 0x8(SP)                     // mov %rax,0x8(%rsp)									
+  fulu.ssz.go:1754	0x9be5ed		48895c2410		MOVQ BX, 0x10(SP)                    // mov %rbx,0x10(%rsp)									
+  fulu.ssz.go:1754	0x9be5f2		48894c2418		MOVQ CX, 0x18(SP)                    // mov %rcx,0x18(%rsp)									
+  fulu.ssz.go:1754	0x9be5f7		48897c2420		MOVQ DI, 0x20(SP)                    // mov %rdi,0x20(%rsp)									
+  fulu.ssz.go:1754	0x9be5fc		0f1f4000		NOPL 0(AX)                           // nopl (%rax)										
+  fulu.ssz.go:1754	0x9be600		e8bbfeacff		CALL runtime.morestack_noctxt.abi0(SB) // callq 0x48e4c0									
+  fulu.ssz.go:1754	0x9be605		488b442408		MOVQ 0x8(SP), AX                     // mov 0x8(%rsp),%rax									
+  fulu.ssz.go:1754	0x9be60a		488b5c2410		MOVQ 0x10(SP), BX                    // mov 0x10(%rsp),%rbx									
+  fulu.ssz.go:1754	0x9be60f		488b4c2418		MOVQ 0x18(SP), CX                    // mov 0x18(%rsp),%rcx									
+  fulu.ssz.go:1754	0x9be614		488b7c2420		MOVQ 0x20(SP), DI                    // mov 0x20(%rsp),%rdi									
+  fulu.ssz.go:1754	0x9be619		e942feffff		JMP github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1.(*DataColumnsByRootIdentifier).MarshalSSZTo(SB) // jmpq 0x9be460	
+

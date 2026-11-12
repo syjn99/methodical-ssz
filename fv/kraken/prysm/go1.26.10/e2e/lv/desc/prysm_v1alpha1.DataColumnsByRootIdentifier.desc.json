@@ -1,0 +1,53 @@
+{
+ "schema": "fvphase1c.desc/1",
+ "type": "DataColumnsByRootIdentifier",
+ "package": "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1",
+ "ssz": {
+  "k": "container",
+  "names": [
+   "BlockRoot",
+   "Columns"
+  ],
+  "fields": [
+   {
+    "k": "byteVector",
+    "n": 32
+   },
+   {
+    "k": "list",
+    "elem": {
+     "k": "uint",
+     "w": 8
+    },
+    "limit": 128
+   }
+  ]
+ },
+ "fixed_size": null,
+ "fixed_part_size": 36,
+ "fields": [
+  {
+   "name": "BlockRoot",
+   "index": 0,
+   "offset": 0,
+   "width": 32,
+   "variable": false,
+   "kind": "byteVector",
+   "length": 32
+  },
+  {
+   "name": "Columns",
+   "index": 1,
+   "offset": 32,
+   "width": 4,
+   "variable": true,
+   "kind": "list",
+   "limit": 128,
+   "elem_size": 8
+  }
+ ],
+ "variable_order": [
+  1
+ ],
+ "reference": null
+}

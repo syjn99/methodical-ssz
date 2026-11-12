@@ -1,0 +1,66 @@
+# steps 02 (enclink.py callgraph) and 03 (enclink.py filter) ran outside heavy.py (no Lean, no LLVM); both exit 0
+# stale check: stale_olean.py --since <start of step 11> exit 1 (log 66, see REPORT-ENC.md section 7)
+step	start_utc	exit	wall_s	peak_sampled_rss_gib	command (heavy.py, cap 40960 MB)	note
+01	2026-11-12T03:37:29Z	0	49.8	4.93	lake build E2eList	lake build E2eList (replay of the cloned .lake)
+04-conv	2026-11-12T03:38:49Z	0	1.0	0.01	python3 -I -B link/conv.py <work> <work> <work> --norm	link/conv.py target.objdump nm norm --norm
+05-data	2026-11-12T03:38:51Z	0	1.0	0.01	python3 -I -B gen/e2e/enclink.py data <work> prysm/go1.26.10/e2e/link prysm/go1.26.10/e2e/lv/link-t3	gen/e2e/enclink.py data <link-enc> link lv/link-t3
+06-check	2026-11-12T03:38:52Z	0	1.0	0.01	python3 -I -B link/check.py <work>	link/check.py <link-enc>: PASS all
+07-StmtEnc	2026-11-12T03:45:17Z	0	8.3	1.93	lake build E2eEnc.StmtEnc	lake build E2eEnc.StmtEnc
+08-Loop	2026-11-12T03:51:34Z	1	6.3	2.03	lake build E2eEnc.Loop	lake build E2eEnc.Loop (dev: rfl in enc_split, maxRecDepth at the store)
+09-Loop	2026-11-12T03:54:58Z	1	6.3	2.07	lake build E2eEnc.Loop	lake build E2eEnc.Loop (dev)
+10-Loop	2026-11-12T04:01:15Z	1	6.2	2.1	lake build E2eEnc.Loop	lake build E2eEnc.Loop (dev: goal print)
+11-Loop	2026-11-12T04:09:14Z	1	339.7	16.71	lake build E2eEnc.Loop	lake build E2eEnc.Loop: lean killed by the author after 340 s, peak sampled RSS 16.7 GiB (omega address proofs inside the machine context)
+12-Loop-bisect	2026-11-12T04:16:33Z	1	187.7	20.41	lake build E2eEnc.Loop	lake build E2eEnc.Loop truncated: 188 s, 20.4 GiB, kernel deep recursion in dc_iter
+13-Loop	2026-11-12T04:23:25Z	1	16.6	2.22	lake build E2eEnc.Loop	lake build E2eEnc.Loop (address/compare facts as small lemmas)
+14-Loop	2026-11-12T04:23:49Z	0	6.2	2.08	lake build E2eEnc.Loop	lake build E2eEnc.Loop: exit 0
+15-Tail	2026-11-12T04:24:01Z	1	6.2	0.95	lake build E2eEnc.Tail	
+16-Tail	2026-11-12T04:24:43Z	1	6.2	2.03	lake build E2eEnc.Tail	
+17-Tail	2026-11-12T04:27:01Z	1	7.3	2.03	lake build E2eEnc.Tail	
+18-Tail	2026-11-12T04:27:24Z	1	7.3	2.06	lake build E2eEnc.Tail	
+19-Tail	2026-11-12T04:27:41Z	1	7.3	2.06	lake build E2eEnc.Tail	
+20-Tail	2026-11-12T04:36:54Z	1	8.3	2.28	lake build E2eEnc.Tail	
+21-Tail	2026-11-12T04:40:14Z	0	8.3	2.28	lake build E2eEnc.Tail	
+22-Fast	2026-11-12T04:47:59Z	1	6.2	2.0	lake build E2eEnc.Fast	
+23-Fast	2026-11-12T04:48:29Z	0	6.2	2.02	lake build E2eEnc.Fast	
+24-SpecM	2026-11-12T04:48:51Z	1	5.2	0.94	lake build E2eEnc.SpecM	
+25-SpecM	2026-11-12T04:49:08Z	0	8.3	0.94	lake build E2eEnc.SpecM	
+26-Grow	2026-11-12T04:50:07Z	1	7.3	2.14	lake build E2eEnc.Grow	
+27-Grow	2026-11-12T04:50:38Z	1	7.3	2.08	lake build E2eEnc.Grow	
+28-Grow	2026-11-12T04:55:27Z	1	7.3	2.08	lake build E2eEnc.Grow	
+29-Grow	2026-11-12T05:04:56Z	0	8.3	2.25	lake build E2eEnc.Grow	
+30-SpecG	2026-11-12T05:05:21Z	1	5.2	0.95	lake build E2eEnc.SpecG	
+31-SpecG	2026-11-12T05:05:38Z	0	5.2	0.95	lake build E2eEnc.SpecG	
+32-Reject	2026-11-12T05:11:05Z	1	9.4	2.16	lake build E2eEnc.Reject	
+33-Reject	2026-11-12T05:11:57Z	1	8.3	2.24	lake build E2eEnc.Reject	
+34-Reject	2026-11-12T05:12:38Z	1	8.3	2.16	lake build E2eEnc.Reject	
+35-Reject	2026-11-12T05:13:39Z	1	9.3	2.17	lake build E2eEnc.Reject	
+36-Reject	2026-11-12T05:13:54Z	1	8.3	2.16	lake build E2eEnc.Reject	
+37-Reject	2026-11-12T05:14:12Z	0	9.4	2.16	lake build E2eEnc.Reject	
+38-WitF	2026-11-12T05:15:45Z	1	56.2	2.05	lake build E2eEnc.WitF	
+39-WitF	2026-11-12T05:16:47Z	0	33.3	2.05	lake build E2eEnc.WitF	
+40-WitF-nohb	2026-11-12T05:17:25Z	1	14.6	2.05	lake build E2eEnc.WitF	
+41-WitF-1M-prof	2026-11-12T05:17:46Z	1	50.0	2.04	lake build E2eEnc.WitF	
+42-WitF-4M-prof	2026-11-12T05:18:45Z	0	56.2	2.05	lake build E2eEnc.WitF	
+43-WitF	2026-11-12T05:19:48Z	0	56.2	2.05	lake build E2eEnc.WitF	
+44-WitG	2026-11-12T05:21:44Z	0	87.4	2.11	lake build E2eEnc.WitG	
+45-WitG-1M-prof	2026-11-12T05:23:16Z	1	52.0	2.07	lake build E2eEnc.WitG	
+46-WitG-4M-prof	2026-11-12T05:24:11Z	0	48.9	2.07	lake build E2eEnc.WitG	
+47-WitG	2026-11-12T05:25:06Z	0	85.4	2.11	lake build E2eEnc.WitG	
+48-WitR	2026-11-12T05:27:15Z	0	20.8	2.05	lake build E2eEnc.WitR	
+49-WitR-nohb	2026-11-12T05:27:40Z	1	9.4	2.04	lake build E2eEnc.WitR	
+50-WitR-1M	2026-11-12T05:27:53Z	1	18.7	2.05	lake build E2eEnc.WitR	
+51-WitR-4M-prof	2026-11-12T05:28:16Z	0	20.8	2.05	lake build E2eEnc.WitR	
+52-WitR	2026-11-12T05:28:42Z	0	20.8	2.05	lake build E2eEnc.WitR	
+53-build-E2eEnc	2026-11-12T05:29:26Z	0	2.1	0.65	lake build E2eEnc	
+54-nobuild	2026-11-12T05:29:33Z	0	2.1	0.66	lake build --no-build E2e E2eAd E2eScal E2eList E2eEnc	
+55-axgate	2026-11-12T05:29:36Z	0	106.1	4.37	python3 -I -B ../gen/e2e/encaxioms_gate.py run <work> <work>	
+56-plant-compile	2026-11-12T05:33:02Z	1	3.1	0.92	lake env lean --root=<work> -o .lake/build/lib/lean/E2eEnc/Planted.olean <work>	
+57-axgate-plant	2026-11-12T05:33:05Z	2	7.3	2.79	python3 -I -B ../gen/e2e/encaxioms_gate.py run <work> <work> --extra-lean-path <work> --extra-module E2eEnc.Planted	
+58-plant-compile	2026-11-12T05:33:21Z	0	3.1	0.83	lake env lean --root=<work> -o .lake/build/lib/lean/E2eEnc/Planted.olean <work>	
+59-axgate-plant	2026-11-12T05:33:25Z	1	106.2	4.37	python3 -I -B ../gen/e2e/encaxioms_gate.py run <work> <work> --extra-lean-path <work> --extra-module E2eEnc.Planted	
+60-Wit-noRecDepth	2026-11-12T05:35:22Z	1	28.1	3.41	lake build E2eEnc.WitF E2eEnc.WitG E2eEnc.WitR	
+61-Wit-rd2000	2026-11-12T05:35:59Z	1	38.6	3.35	lake build E2eEnc.WitF E2eEnc.WitG	
+62-Wit-rd20000	2026-11-12T05:36:42Z	0	62.5	3.44	lake build E2eEnc.WitF E2eEnc.WitG	
+63-Wit-final	2026-11-12T05:37:50Z	0	91.7	3.44	lake build E2eEnc	
+64-nobuild	2026-11-12T05:39:29Z	0	2.1	0.65	lake build --no-build E2e E2eAd E2eScal E2eList E2eEnc	
+65-axgate	2026-11-12T05:39:32Z	0	108.3	4.37	python3 -I -B ../gen/e2e/encaxioms_gate.py run <work> <work>	

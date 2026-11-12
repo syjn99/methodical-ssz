@@ -1,0 +1,26 @@
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo: 107 instructions, 446 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (b) runtime.growslice = 0x48afc0 .text code
+PASS (b) runtime.morestack_noctxt.abi0 = 0x48e4c0 .text code
+PASS (b) runtime.memmove = 0x490580 .text code
+PASS (b) type__+387072 = 0xae9800 .rodata group(nearest preceding symbol)
+PASS (b) ssz.ErrBytesLength = 0x137fc70 .data in-symbol
+PASS (b) ssz.ErrBytesLength+8 = 0x137fc78 .data in-symbol
+PASS (b) ssz.ErrListTooBig = 0x137fcb0 .data in-symbol
+PASS (b) ssz.ErrListTooBig+8 = 0x137fcb8 .data in-symbol
+PASS (c) all.S: 11 labels, each defined once; 8 external references not defined in all.S; 0 calls to target functions at their entry: []
+PASS (e) all.S: 118 directives equal the 1 function files in order
+PASS (f) encErrBytesLength.data: 0x137fc70, 0 bytes and 0 words = ELF
+PASS (f) encErrListTooBig.data: 0x137fcb0, 0 bytes and 0 words = ELF
+PASS (f) encU8Type.data: 0xae9800, 32 bytes and 2 words = ELF
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo 0x9be5fc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+PASS (d) 107 instructions reassembled by clang x86_64-linux-gnu: 106 byte-identical, 0 encoding, 1 padding
+elf sha256 c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e
+S sha256 b008d0eebce1f6d8222cc9ee3470e1961c5823963c0c9a06da20731eb9822687 all.S
+S sha256 b008d0eebce1f6d8222cc9ee3470e1961c5823963c0c9a06da20731eb9822687 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S
+data sha256 2e4df8431d8a5289739e2c189703f0a9533c6b2f0628f6e5f204f6855ee3eddf encErrBytesLength.data
+data sha256 6cdc02602e9ea0f1f9c236e2a321209b45236506259502b7923bca2ee01d2c87 encErrListTooBig.data
+data sha256 df57f13b830ed703a2f32aa24fd10f89c649fac005247812af4a7b9bdb74e53f encU8Type.data
+file sha256 0bbe6f0da6d02e6f2720d7a1e98d7c71641ca00f1d9cb9a3111cf092ba98295a lean/Fk/Code.lean
+file sha256 1eb87dae6219795cd98f8642639939a5d6336f02184fc408e53524e4cf427c8f AXIOMS.txt
+PASS all
+BUNDLE sha256 f7cdf5e55c965788d2edb6e2b4bf49bfd1946355a9cd4f58657f7d55e9197723

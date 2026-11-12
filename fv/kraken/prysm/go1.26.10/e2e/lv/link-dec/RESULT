@@ -1,0 +1,58 @@
+PASS (a) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ: 208 instructions, 933 bytes, symtab/objdump/LLVM/ELF bytes and labels agree
+PASS (b) runtime.newobject = 0x4254e0 .text code
+PASS (b) runtime.convT64 = 0x486300 .text code
+PASS (b) runtime.makeslice = 0x48aee0 .text code
+PASS (b) runtime.morestack_noctxt.abi0 = 0x48e4c0 .text code
+PASS (b) runtime.gcWriteBarrier2 = 0x48fe40 .text code
+PASS (b) runtime.panicBounds = 0x4901e0 .text code
+PASS (b) runtime.memmove = 0x490580 .text code
+PASS (b) fmt.errorf = 0x50a840 .text code
+PASS (b) type__+387072 = 0xae9800 .rodata group(nearest preceding symbol)
+PASS (b) type__+387456 = 0xae9980 .rodata group(nearest preceding symbol)
+PASS (b) type__+387520 = 0xae99c0 .rodata group(nearest preceding symbol)
+PASS (b) type__+828672 = 0xb55500 .rodata group(nearest preceding symbol)
+PASS (b) go_string._+151877 = 0xc5ea2d .rodata group(nearest preceding symbol)
+PASS (b) go_string._+164572 = 0xc61bc4 .rodata group(nearest preceding symbol)
+PASS (b) go_itab._errors.errorString_error = 0xd28520 .rodata in-symbol
+PASS (b) ssz.ErrInvalidVariableOffset = 0x137fca0 .data in-symbol
+PASS (b) ssz.ErrInvalidVariableOffset+8 = 0x137fca8 .data in-symbol
+PASS (b) ssz.ErrListTooBig = 0x137fcb0 .data in-symbol
+PASS (b) ssz.ErrListTooBig+8 = 0x137fcb8 .data in-symbol
+PASS (b) ssz.ErrSize = 0x137fcd0 .data in-symbol
+PASS (b) ssz.ErrSize+8 = 0x137fcd8 .data in-symbol
+PASS (b) ssz.ErrIncorrectListSize = 0x13a1b10 .bss in-symbol
+PASS (b) ssz.ErrIncorrectListSize+8 = 0x13a1b18 .bss in-symbol
+PASS (b) runtime.writeBarrier = 0x13c6e40 .noptrbss in-symbol
+PASS (c) all.S: 21 labels, each defined once; 24 external references not defined in all.S; 0 calls to target functions at their entry: []
+PASS (e) all.S: 229 directives equal the 1 function files in order
+PASS (f) dcdErrIncorrectListSize.data: 0x13a1b10, 0 bytes and 0 words = ELF
+PASS (f) dcdErrInvalidVariableOffset.data: 0x137fca0, 0 bytes and 0 words = ELF
+PASS (f) dcdErrListTooBig.data: 0x137fcb0, 0 bytes and 0 words = ELF
+PASS (f) dcdErrSize.data: 0x137fcd0, 0 bytes and 0 words = ELF
+PASS (f) dcdFmtMis.data: 0xc61bc4, 74 bytes and 0 words = ELF
+PASS (f) dcdFmtTooBig.data: 0xc5ea2d, 63 bytes and 0 words = ELF
+PASS (f) dcdIntType.data: 0xae99c0, 32 bytes and 2 words = ELF
+PASS (f) dcdU64Type.data: 0xae9980, 32 bytes and 2 words = ELF
+PASS (f) dcdU8Type.data: 0xae9800, 32 bytes and 2 words = ELF
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ 0x9be6de padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ 0x9be71e padding: elf 6690 asm 90 data16 nop -> nop | (2, 'nop')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ 0x9be7bc padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ 0x9be93b padding: elf 0f1f440000 asm 90 nopl (%rax,%rax,1) -> nop | (5, 'nopl (%rax,%rax)')
+DIFF (d) github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ 0x9be95c padding: elf 0f1f4000 asm 90 nopl (%rax) -> nop | (4, 'nopl (%rax)')
+PASS (d) 208 instructions reassembled by clang x86_64-linux-gnu: 203 byte-identical, 0 encoding, 5 padding
+elf sha256 c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e
+S sha256 40b5013e0d06e5471ccdd29989c2cc303bc3f0f5e259a811d84c426f23f52d62 all.S
+S sha256 40b5013e0d06e5471ccdd29989c2cc303bc3f0f5e259a811d84c426f23f52d62 github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S
+data sha256 56124fb960a66f776039d0c2a8c1a0505ea227c7ff042845078af6ac3eee5eb6 dcdErrIncorrectListSize.data
+data sha256 2ae6ed715d797bae0994b39f883a937ce79e0ca8dac15eb023e41b563e15b687 dcdErrInvalidVariableOffset.data
+data sha256 78ec7b5584c9f927c2533de3315fd164da4c97694b117a99e1d8be26966e90da dcdErrListTooBig.data
+data sha256 af1ce548074c0c1733d0597d7d30de2740ab9ade82908a9b7e6aa9cecfb3402e dcdErrSize.data
+data sha256 da21d6d3aa66cd81348bf1ab808ea5f27be2d51f45a176cd13c7ea4ce8e460f2 dcdFmtMis.data
+data sha256 326992a8787a0169e82883339546e68cd554acbd4b84c7a544b59aba81c84730 dcdFmtTooBig.data
+data sha256 990383f6b7e71cb6fffb2b2359c32e19914d2b1c0ba28c2c2efb5459b78d625a dcdIntType.data
+data sha256 7a7b9b787ae26248c03eaae8aa8b2aaa5c7fbd933521737b3ef4794651d36c7d dcdU64Type.data
+data sha256 bbdbada8c6a85b1280c8c53218ba19295f72578786e2b6cbee4dcbd9449d7cf2 dcdU8Type.data
+file sha256 0bbe6f0da6d02e6f2720d7a1e98d7c71641ca00f1d9cb9a3111cf092ba98295a lean/Fk/Code.lean
+file sha256 1eb87dae6219795cd98f8642639939a5d6336f02184fc408e53524e4cf427c8f AXIOMS.txt
+PASS all
+BUNDLE sha256 7b8d65004bfc3308fc800fbeea5f66f3b94004a15e0fd7d84b0b6242f569c221
