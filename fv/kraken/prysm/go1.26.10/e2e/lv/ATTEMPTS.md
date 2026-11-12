@@ -318,3 +318,9 @@
 - 생산자 파일의 sha256은 `91e4d752…`다. `gen/desc/results/main.result.json`의 IndexedAttestation 행(`PASS`)과 같다.
 - 새 파일: `E2eList/IaDescEq.lean`. 중첩 컨테이너는 `E2e.serializeFields_congr`와 `E2e.prysmAdDesc_serialize_checker`로 닫았다.
 - 로그 189: `lake build E2eList.IaDescEq` exit 0. 설정 없이 통과했다.
+
+### U3 판정 (2026-11-12)
+
+- 계획 담당이 `_nz` 문장을 승인했다. 사용자도 명시적으로 동의했다(계획 담당의 전달).
+- 빈틈, 선례(`Fk/LuRejectCall.lean`의 `lu_reject_misaligned_main`, 전제 `e0 ≠ 0`과 `e0 = itab`), 실제 ELF 값(`0xd28520`, `lv/link-t3/RESULT` 검사 (b))은 `STATEMENTS-T3.md` 5절에 적었다.
+- 정정된 전제는 고정 문장보다 강하다. 원래 넷은 N이다(쓴 그대로는 증명할 수 없다).

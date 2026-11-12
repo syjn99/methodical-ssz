@@ -44,3 +44,14 @@ Lean 원문: `lean/E2eList/StmtIa.lean`. 쓰는 정의: `DefsIa.lean`, `DataIa.l
 - 수용 명세의 힙 전제는 `bsA.size − 228 + 432 ≤ avail`이다. `8n + 432`와 같은 값이다(n = (size − 228)/8).
 - P4·P5의 결론에 rbx(오류의 데이터 단어)가 없다. DWC 계약이 그 값을 주지 않는다.
 - P6은 문장이 없다. 수용 전제 아래에서 도달하지 않는다(`DESIGN-T3.md` 2절).
+
+## 5. 고정 뒤 문장 정정: P4, P5의 `_nz` (2026-11-12, 사용자 승인)
+
+- 고정 문장 넷(`ia_reject_misaligned_stmt`, `ia_reject_toobig_stmt`, 두 명세 변형)은 쓴 그대로는 증명할 수 없다. 판정은 N이다. 지우거나 고치지 않았다.
+- 빈틈: 지시어 103–106(P4)과 66–69(P5)는 `test %rcx,%rcx; je`다. 오류의 itab 단어 `e0`가 0이면 type 단어를 읽지 않고 0을 넘긴다. `FmtErrorfDWC`는 그 자리에 `ity`를 요구한다. Kraken `Host`는 레이블을 임의 주소에 둔다. 그래서 itab 레이블이 0일 때 그 `je`를 반박할 수 없다.
+- 정정: 새 파일 `E2eList/StmtIaNz.lean`의 넷(`ia_reject_misaligned_nz_stmt`, `ia_reject_toobig_nz_stmt`, `ia_reject_misaligned_spec_nz_stmt`, `ia_reject_toobig_spec_nz_stmt`)이다.
+- 각 정정은 원문에 전제 `(he0nz : e0 ≠ 0)` 하나만 더한다. 스크립트 비교 결과는 정의마다 바뀐 줄 4개(이름 줄과 binder 줄의 옛 줄, 새 줄)다.
+- 정정된 전제는 고정 문장보다 강하다. 같은 문장이 아니다.
+- 선례: `Fk/LuRejectCall.lean`의 `lu_reject_misaligned_main`(Go 1.26.3)은 전제 `he0 : e0 ≠ 0`과 `hei : e0.toBitVec = (label "go_itab._errors.errorString_error").toBitVec`를 같이 둔다.
+- 실제 ELF에서 `e0`은 itab 주소 `0xd28520`이다. `lv/link-t3/RESULT`의 검사 (b) `go_itab._errors.errorString_error = 0xd28520`이 레이블을 이 주소에 묶는다.
+- 사용자 결정 목록에 "고정 뒤 문장 정정"으로 올린다.
