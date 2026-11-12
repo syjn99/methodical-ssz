@@ -26,7 +26,7 @@ macro "dcaddr" : tactic => `(tactic| (
     UInt64.toNat_toBitVec, UInt64.toBitVec_add, UInt64.toBitVec_ofNat, Width.bits, Nat.reducePow]
   all_goals omega))
 
--- Measured cause (logs 123, 124): `kat` unfolds the 279-directive program literal `DcUnmarshal` with `simp`; at the
+-- Measured cause (logs 123, 124): `kat` unfolds the program literal (T3: `IaUnmarshal`, 279 directives) with `simp`; at the
 -- default `maxRecDepth` (512) that `simp` stops with "maximum recursion depth has been reached"; 1024 passes.
 -- Measured again for `DcUnmarshal` (229 directives, ENC logs 83, 84): the default fails at the `klabel` (174, 168), 1024 passes.
 set_option maxRecDepth 1024 in
