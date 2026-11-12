@@ -343,3 +343,13 @@
 - 예시 셋: n = 0(`ib = []`), n = 1, n = 2048(`List.replicate (8 * 2048) 0xff`). 길이 증명은 `List.length_replicate` 항이다. `decide`와 큰 리터럴은 쓰지 않았다.
 - 로그 214: `lake build E2eList.WitIaA` exit 0, 68.8 s, 표본 RSS 2.73 GiB(파일 전체, n = 2048 예시 포함).
 - 판정: 일반 n 증인은 K다. 대체 경로(구체 n 증인만)는 쓰지 않았다.
+
+### U3: P4 `ia_e2e_reject_misaligned_nz`, P5 `ia_e2e_reject_toobig_nz`, 두 명세 (시도 1)
+
+- 문장은 `_nz` 넷이다(`714989f`에서 고정). 새 파일: `E2eList/IaRejectCall.lean`, `E2eList/IaSpecRNz.lean`.
+- 증명은 `Fk.lu_reject_misaligned_main`의 글이다. 머리 0–26은 `IaAccept.lean`과 같다.
+- `je`(105, 68)는 `he0nz`로 반박한다. itab 단어 읽기의 주소만 `he0`로 바꾼다(`load_step_at`). 처음에는 `rw [he0]`가 사후조건의 `e0`까지 바꾸었다(로그 225–227의 원자별 시험으로 찾음).
+- P5의 `jg`(30) 갈림은 새 보조정리 `ia_jg2048_true`로 보였다.
+- 로그 216–231: 한 전략의 개발 단계다. 막힌 곳: `movups` 주소 꼴, `at_app`의 기준 주소를 명시해야 함, `Int.toBytes_length`가 기본 `simp` 집합에 없음, `StaticBox C`를 `SB`로 되돌리기.
+- 측정(로그 233): 두 정리에서 `maxRecDepth`를 빼면 첫 `kat`이 멈춘다. 1024는 통과한다(로그 231, 232).
+- 로그 234: `lake build E2eList.IaRejectCall E2eList.IaSpecRNz` exit 0. 하트비트 설정은 없다.
