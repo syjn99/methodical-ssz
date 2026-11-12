@@ -66,6 +66,7 @@ KR = pathlib.Path(__file__).resolve().parent.parent.parent
 STD = {"propext", "Classical.choice", "Quot.sound"}
 V1A = "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
 PRIM = "github.com/OffchainLabs/prysm/v7/consensus-types/primitives"
+V1E = "github.com/OffchainLabs/prysm/v7/proto/engine/v1"
 
 # The flat fixed-size population of the GEN5 plan (decoders; AttestationData has nested fields and is listed apart).
 FLAT16 = ["Checkpoint", "BeaconBlockHeader", "Eth1Data", "BlobIdentifier", "DepositMessage", "Deposit_Data",
@@ -95,6 +96,16 @@ def g5c(p, P, extra=""):
                "generated accept / size-reject theorems (p2dec --gen5; statement = kind instance)" + extra)
 
 
+
+def f24dec(p, P, codec):
+    """FLAT24 / H7 row: generated accept / size-reject (`Gen5F24<P>Dec`), spec alignment `F24<P>SpecK`, witnesses
+    `Wit<P>GA` / `Wit<P>GR`; codec None = no Desc-checker record for the type (the row stays partial)."""
+    return dec(f"E2eScal.Gen.{p}_g5dec_accept", f"E2eScal.Gen.{p}_g5dec_reject", f"E2eScal.F24.{p}_e2e_accept_spec_k",
+               f"E2eScal.F24.{p}_e2e_reject_size_spec", f"E2eScal.F24.{p}_e2e_reject_complete", codec,
+               f"E2eScal.Wit{P}GA.{p}_accept_runs", f"E2eScal.Wit{P}GR.{p}_reject_runs",
+               "FLAT24 / H7: generated accept / size-reject theorems (p2dec --gen5, one-shot run); spec Desc from the "
+               "Prysm proto" + ("" if codec else "; codec: no Desc-checker record for this type"))
+
 # ---------------------------------------------------------------- FIXED mapping table: (package, type) -> methods
 DECODERS = {
     (V1A, "Checkpoint"): std("E2e", "cp", "Cp", "E2e"),
@@ -121,6 +132,15 @@ DECODERS = {
     (V1A, "SyncAggregatorSelectionData"): g5c("sa", "Sa"),
     (V1A, "ValidatorBalance"): g5c("vb", "Vb", "; spec Desc from the Prysm proto: consensus-specs has no such container"),
     (V1A, "VoluntaryExit"): g5c("ve", "Ve"),
+    # FLAT24 / H7 (Part 3): the seven flat types outside FLAT16 whose decoder `p2dec --gen5` generated (one-shot runs);
+    # spec Desc from the Prysm proto; codec equality only where a Desc-checker record exists (DepositRequest).
+    (V1E, "DepositRequest"): f24dec("dpr", "Dpr", ["E2e.prysmDprDesc_deserialize_checker"]),
+    (V1E, "BuilderDepositRequest"): f24dec("bdr", "Bdr", None),
+    (V1A, "BeaconBlocksByRangeRequest"): f24dec("bbr", "Bbr", None),
+    (V1A, "BlobSidecarsByRangeRequest"): f24dec("bsr", "Bsr", None),
+    (V1A, "ExecutionPayloadEnvelopesByRangeRequest"): f24dec("epr", "Epr", None),
+    (V1A, "PartialDataColumnGroupID"): f24dec("pdc", "Pdc", None),
+    (V1A, "ValidatorIdentity"): f24dec("vid", "Vid", None),
     # primitives (hand-written methods; overlay uint64; no Desc / spec module): accept, length reject, witnesses
     (PRIM, "Epoch"): dec("E2e.ep_unmarshal_accept_main", "E2e.ep_unmarshal_reject_len_main", None, None, None, None,
                          "E2e.WitEp.ep_accept_runs", "E2e.WitEpR.epr_runs"),
@@ -185,6 +205,15 @@ ENCODERS = {  # MarshalSSZTo: fast path (theorem + spec corollary + witness), ha
     (V1A, "SyncAggregatorSelectionData"): enc("Sa", "sa"),
     (V1A, "ValidatorBalance"): enc("Vb", "vb"),
     (V1A, "VoluntaryExit"): enc("Ve", "ve"),
+    # FLAT24 / H7 (Part 3): the eight flat types outside FLAT16 whose encoder `p2enc --gen6` generated (one-shot runs)
+    (V1E, "DepositRequest"): enc("Dpr", "dpr"),
+    (V1E, "BuilderDepositRequest"): enc("Bdr", "bdr"),
+    (V1A, "BeaconBlocksByRangeRequest"): enc("Bbr", "bbr"),
+    (V1A, "BlobSidecarsByRangeRequest"): enc("Bsr", "bsr"),
+    (V1A, "ExecutionPayloadEnvelopesByRangeRequest"): enc("Epr", "epr"),
+    (V1A, "PartialDataColumnGroupID"): enc("Pdc", "pdc"),
+    (V1A, "ValidatorIdentity"): enc("Vid", "vid"),
+    (V1A, "BuilderPreferences"): enc("Bpf", "bpf"),
 }
 ENC_PREMISE = "premise: len + SizeSSZ <= cap, exact field lengths"
 SIZERS = {(V1A, "Checkpoint"): dict(main=["E2e.cp_e2e_size_main"], witness=["E2e.WitCpS.cps_runs"])}
@@ -553,6 +582,12 @@ def run(decls_p, md_p, json_p):
         flat_rule=FLAT_RULE,
         flat_fixed_types_in_target=len(flat_target),
         flat_outside_development_population=flat_ns_state,
+        flat_outside_development_population_states={
+            f"{p.rsplit('/', 1)[-1]}.{t}": dict(
+                decoder=rows.get((p, t, "UnmarshalSSZ"), {}).get("state", "not started"),
+                decoder_missing=rows.get((p, t, "UnmarshalSSZ"), {}).get("missing", []),
+                encoder=rows.get((p, t, "MarshalSSZTo"), {}).get("state", "not started"))
+            for p, t in flat_ns},
         target_types_without_ir=[f"{p.rsplit('/', 1)[-1]}.{t}" for p, t in no_ir],
         nested={t: rows[(V1A, t, "UnmarshalSSZ")]["state"] for t in NESTED},
     )
@@ -624,6 +659,16 @@ def run(decls_p, md_p, json_p):
            f"population: {len(flat_ns)}; not started: "
            f"{sum(s == 'not started' for s in flat_ns_state.values())} ({ns_names}).",
            f"- Nested: {', '.join(f'{t} {s}' for t, s in tot['nested'].items())} (not flat)."]
+    fs_ = tot["flat_outside_development_population_states"]
+    started_ = {k: v for k, v in fs_.items() if flat_ns_state.get(k) == "started"}
+    if started_:   # FLAT24 / H7 (Part 3): per flat type outside FLAT16 with a mapping row
+        md.append(f"- Flat types outside the development population with a mapping row: {len(started_)}; decoders "
+                  f"complete {sum(v['decoder'] == 'complete' for v in started_.values())}, encoders fast-path complete "
+                  f"{sum(v['encoder'] == 'fast path complete' for v in started_.values())}.")
+        for k, v in started_.items():
+            md.append(f"  - {k}: decoder {v['decoder']}"
+                      + (f" (missing {', '.join(v['decoder_missing'])})" if v["decoder_missing"] else "")
+                      + f"; encoder {v['encoder']}.")
     if no_ir:
         md.append(f"- Target types without an IR record (not classified): {', '.join(tot['target_types_without_ir'])}.")
     md += ["", f"Flat rule: {FLAT_RULE}.", "",
