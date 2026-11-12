@@ -62,3 +62,16 @@ for row in "Checkpoint link/norm CpUnmarshal E2e.Code cp Gen4CpDec" "BeaconBlock
   $G p2dec --gen4 --S $E/$2/$P.$1.UnmarshalSSZ.S --const $3 --ir prysm/ir/ir-mainnet.json --type v1alpha1.$1 --prefix $5_g4dec --imports $4 --open $4 > lean/E2eScal/$6.lean
 done
 $G p2dec --gen4 --partial-out lean/E2eScal/Gen4AdDecPartial.lean --S $N/$P.AttestationData.UnmarshalSSZ.S --const AdUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.AttestationData --prefix ad_g4dec --imports E2eAd.Code --open E2eAd.Code || [ $? -eq 3 ]
+# GEN5 (unit G5-G; generator change after H6, CONTAMINATION.md section 29): `p2dec --gen5` on the flat development types
+# (all in-sample). One run per type; raw output committed unedited. The statement check is the kind (parameters
+# recomputed by kindcheck.py rule 12) and, where a hand statement exists, the identity `_stmt` / `_same`. Checkpoint:
+# kind instance only (the implication `cp_accept_of_kind` needs the layout `layCp`, whose chunk order differs).
+# PendingPartialWithdrawal (interleaved fields) and AttestationData (nested fields) are refused (exit 2, no file).
+for row in "Checkpoint link/norm CpUnmarshal E2e.Code cp Gen5CpDec -" "BeaconBlockHeader bh/link/norm BhUnmarshal E2eScal.BhCode bh Gen5BhDec --same-as=E2eScal.Bh.bh_e2e_accept_main" "Eth1Data e1/link/norm E1Unmarshal E2eScal.E1Code e1 Gen5E1Dec --same-as=E2eScal.E1.e1_e2e_accept_main" "BlobIdentifier h3/link/norm BiUnmarshal E2eScal.H3Code bi Gen5BiDec --same-as=E2eScal.Bi.bi_e2e_accept_main" "DepositMessage h3/link/norm DmUnmarshal E2eScal.H3Code dm Gen5DmDec --same-as=E2eScal.Dm.dm_e2e_accept_main" "Deposit_Data h4/link/norm DdUnmarshal E2eScal.H4Code dd Gen5DdDec --same-as-prop=E2eScal.H4.dd_accept_stmt" "SyncCommitteeMessage h5/link/norm SmUnmarshal E2eScal.H5Code sm Gen5SmDec --same-as-prop=E2eScal.H5.sm_accept_stmt" "PendingConsolidation h5/link/norm PcUnmarshal E2eScal.H5Code pc Gen5PcDec --same-as-prop=E2eScal.H5.pc_accept_stmt" "PendingDeposit h6/link/norm PdUnmarshal E2eScal.H6Code pd Gen5PdDec --same-as-prop=E2eScal.H6.pd_accept_stmt" "PowBlock h6/link/norm PbUnmarshal E2eScal.H6Code pb Gen5PbDec --same-as-prop=E2eScal.H6.pb_accept_stmt" "HistoricalSummary h6/link/norm HsUnmarshal E2eScal.H6Code hs Gen5HsDec -" "SigningData h6/link/norm SdUnmarshal E2eScal.H6Code sd Gen5SdDec -" "SyncAggregatorSelectionData h6/link/norm SaUnmarshal E2eScal.H6Code sa Gen5SaDec -" "ValidatorBalance h6/link/norm VbUnmarshal E2eScal.H6Code vb Gen5VbDec -" "VoluntaryExit h6/link/norm VeUnmarshal E2eScal.H6Code ve Gen5VeDec -"; do
+  set -- $row
+  X=$7; [ "$X" = - ] && X=""
+  $G p2dec --gen5 --S $E/$2/$P.$1.UnmarshalSSZ.S --const $3 --ir prysm/ir/ir-mainnet.json --type v1alpha1.$1 --prefix $5_g5dec --imports $4 --open $4 $X > lean/E2eScal/$6.lean
+done
+# refused by design (exit 2, nothing on stdout): kept as comments so that `set -e` does not stop this script
+# $G p2dec --gen5 --S $E/h4/link/norm/$P.PendingPartialWithdrawal.UnmarshalSSZ.S --const PwUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.PendingPartialWithdrawal --prefix pw_g5dec --imports E2eScal.H4Code --open E2eScal.H4Code --same-as-prop=E2eScal.H4.pw_accept_stmt
+# $G p2dec --gen5 --S $N/$P.AttestationData.UnmarshalSSZ.S --const AdUnmarshal --ir prysm/ir/ir-mainnet.json --type v1alpha1.AttestationData --prefix ad_g5dec --imports E2eAd.Code --open E2eAd.Code

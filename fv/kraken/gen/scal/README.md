@@ -373,3 +373,41 @@ did not establish the entry state (every theorem still built); the rules below r
 - S6 (a `NoMatch` inside a phase can leave `covered = total` in a summary with exit 2; not reachable in the code as
   written) and S9 (a stale `--partial-out` file stays on exit 0 / 2; no summary on `KeyboardInterrupt`) need a
   generator change: open, not done.
+
+### GEN5 (unit G5-G): `p2dec --gen5` — generated whole accept and size-reject theorems
+
+- `p2dec --gen5 --S F.S --const C --ir IR --type T --prefix P --imports M --open M [--same-as-prop X | --same-as X]
+  [--summary S.json]`: one module = the GEN4 output of the same type (front end, unchanged; prefix `P`) + a GEN5 block:
+  `P_head`, `P_f1` … `P_fn`, `P_epi`, `P_accept`, `P_reject`, each followed by its `_kind` line against the G5-L kinds
+  (`decHeadKindN`, `decFieldKindN`, `decEpiKindN`, `decAcceptKindN`, `decRejectKindN`); with `--same-as-prop X` also
+  `P_accept_stmt : X := P_accept`, with `--same-as X` the identity `P_accept_same` (`rfl`). Code: `gen/scal/gen5.py`
+  (derivation of the layout, boundary states and step applications; rendering = the recipes of the G5-L hand-over).
+- Fail-closed: `p2dec_gen5` returns a text (exit 0) at one place only, after five flags (`gen4_ok`, `derived`,
+  `rendered`, `kinds_complete`, `statement_check`). Any exception of any phase (a GEN4 exit 2 / 3, `G5Refuse`, an
+  unexpected error, `SystemExit`) is exit 2: nothing on stdout, no partial file, summary `accept_generated: false`.
+- Refused (exit 2) unless: GEN4 exit 0; fields bytes 32 / 48 / 96, inline uint64 or one of the four proved callees;
+  IR SSZ / Go offsets = the kind's running sums; head = `decpro_seg` window with the `nop` at directive 8, `dB = F + 24`,
+  spills of rax / rbx / rdi to their home slots once each, optional nil check with a state word; every stack store /
+  load of the accept path to a chunk of the layout; register facts at each boundary expressible (receiver, buffer,
+  zero) — interleaved fields are refused here; byte-field tail `ld / jmp / label / st`; epilogue one of `add; pop;
+  retq` (rax = rbx = 0), two loads of zero slots + that, or frame 0x20 `xor; xor` + that; size-error block
+  `lerr; ErrSize loads; add $F; pop; [nop…] retq`.
+- What Lean checks: every theorem; the chaining of the boundary states (the accept proof passes each theorem's result
+  to the next); every `_kind` line by `rfl`. What Lean does not check: that `L` is the frame of the `.S` beyond what the
+  proofs touch, and the accept kind does not read `L.frame` (FINDINGS SG-6). `kindcheck.py` rule 12 recomputes `L`,
+  the field list, the boundary `pc` / `done` and the reject size from the `.S` and the IR and compares every kind line.
+- Runs (gen.sh GEN5 block, one per type, raw output committed unedited in `8192427`): 15 modules; refused:
+  PendingPartialWithdrawal (interleaved), AttestationData (nested). Identity `rfl` for 9 types with a hand statement
+  (BeaconBlockHeader, Eth1Data, BlobIdentifier, DepositMessage, Deposit_Data, SyncCommitteeMessage,
+  PendingConsolidation, PendingDeposit, PowBlock); Checkpoint kind instance only; the five H6-only types kind instance.
+- Tests: `kindcheck.py --selftest` (+47 rule-12 cases, incl. the recomputation against the four hand layouts of
+  `AcceptTies.lean`); one deliberately broken checker copy per sub-rule fails it (9/9, evidence script); `p2dec_test.py`
+  37 `g5-*` cases (28 adversarial inputs and 2 real types refused, 5 IR statement mutants among them; 2 valid variants
+  generated) and 95 `g5fc-*` fault-injection groups (702 injections, 5 types): all as expected (394/394 in total).
+- In-sample (development data); statement check = kind + ties, no hold-out. Not yet reviewed.
+- Correction (review g5-r1 M1 / M2 / S1 / S2, appended by unit G5-C; the bullets above are not rewritten): the
+  committed run (gate job 04) came after five scratch trial runs of `p2dec --gen5` on development types, all
+  ungated (a procedure deviation; outputs not committed; no result changed: the review regenerated the 15 modules
+  byte-equal). Commit `8192427` says "10 types" for the identities: the tree has 9. `kindcheck.py` rule 12 does not
+  bind the code constant `C` to the `.S` named in the header; only the Lean code facts (`win … (by rfl)`) of the
+  accept and size-reject paths fix `C`. Details: `prysm/go1.26.10/e2e/scal/CONTAMINATION.md` §30.

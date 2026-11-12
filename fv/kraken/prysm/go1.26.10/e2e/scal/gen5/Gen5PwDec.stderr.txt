@@ -1,0 +1,1 @@
+scalgen p2dec: no accept theorem: gen5: no accept theorem (G5Refuse: gen5: field 3 reads rdx = ('BF', 16), not the receiver / buffer / zero at the boundary (interleaved or unexpressible boundary state))

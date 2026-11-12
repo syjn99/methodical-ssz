@@ -2409,6 +2409,105 @@ def _p2dec_gen4(args, flags):
     raise Partial(report, text)
 
 
+# ---------------------------------------------------------------- GEN5 (unit G5-G): generated whole accept theorem
+
+G5_FLAGS = ("gen4_ok", "derived", "rendered", "kinds_complete", "statement_check")
+
+
+def p2dec_gen5(args):
+    """`p2dec --gen5`: the GEN4 walk as front end, then the whole accept theorem (head, one theorem per field,
+    epilogue, accept, size reject), every statement with its `_kind` line (G5-L hand-over).
+    FAIL-CLOSED: the `else` branch below is the ONLY place that returns a text (exit 0). It is reached only when
+    `_p2dec_gen5` completed normally AND set every flag of G5_FLAGS. ANY exception of any phase (also a GEN4 exit 3
+    `Partial`, a `G5Refuse`, an unexpected error, SystemExit; not KeyboardInterrupt) is exit 2: nothing on stdout,
+    no accept theorem, no partial file."""
+    flags = dict.fromkeys(G5_FLAGS, False)
+    try:
+        text = _p2dec_gen5(args, flags)
+    except KeyboardInterrupt:
+        raise
+    except BaseException as e:
+        why = e.why if hasattr(e, "why") and isinstance(getattr(e, "why"), str) else str(e)
+        if isinstance(e, Partial):
+            why = "the GEN4 front end covers only some fields (exit 3): " + "; ".join(e.report)
+        args.g5_summary.update(accept_generated=False, reason=f"{type(e).__name__}: {why}")
+        raise NoMatch(f"gen5: no accept theorem ({type(e).__name__}: {why})")
+    else:
+        if all(flags[k] is True for k in G5_FLAGS) and isinstance(text, str):
+            args.g5_summary.update(accept_generated=True, reason="")
+            return text
+        missing = [k for k in G5_FLAGS if flags[k] is not True]
+        args.g5_summary.update(accept_generated=False, reason=f"success flags not set: {missing}")
+        raise NoMatch(f"gen5: success flags not all set ({', '.join(missing)}); no accept theorem")
+    raise AssertionError("unreachable")
+
+
+_G5MOD = None
+
+
+def g5_module():
+    """`gen/scal/gen5.py`, loaded once from this file's directory (`-I` does not put it on sys.path)."""
+    global _G5MOD
+    if _G5MOD is None:
+        import importlib.util
+        sys.dont_write_bytecode = True
+        spec = importlib.util.spec_from_file_location("gen5", pathlib.Path(__file__).with_name("gen5.py"))
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        _G5MOD = mod
+    return _G5MOD
+
+
+def _p2dec_gen5(args, flags):
+    G5 = g5_module()
+    args.imports = ",".join(args.imports.split(",") + [m for m in G5.G5_IMPORTS if m not in args.imports.split(",")])
+    # phase 1: the GEN4 front end, unchanged; exit 0 of GEN4 (every field, head, epilogue) or no accept theorem
+    g4 = p2dec_gen4(args)
+    if not isinstance(g4, str) or not g4.endswith("end E2eScal.Gen\n"):
+        raise G5.G5Refuse("GEN4 front end returned no complete module")
+    dirs, sha = read_S(args.S)
+    fields, irsha = ir_fields(args.ir, args.type, gen3=True)
+    head_end, slots, F = g4_head(dirs, ir_ssz_size(args.ir, args.type))
+    done, stop, end = g4_walk(dirs, fields, head_end, slots, F)
+    if stop is not None or end is None or [y for (y, _) in done] != list(range(len(fields))):
+        raise G5.G5Refuse("GEN4 walk did not complete every field")
+    if g4_epilogue(dirs, end, F) is not G4_EPI_OK:
+        raise G5.G5Refuse("GEN4 epilogue check failed")
+    flags["gen4_ok"] = True
+    # phase 2: the description (frame facts, boundary states) from the walk; G5Refuse on anything not modelled
+    t = G5.g5_derive(dirs, fields, head_end, F, done, end, args, label_index)
+    flags["derived"] = True
+    # phase 3: the theorems
+    body = t.body()
+    flags["rendered"] = True
+    n = len(fields)
+    want = ([(f"{args.prefix}_head", "decHeadKindN")] + [(f"{args.prefix}_f{i + 1}", "decFieldKindN") for i in range(n)]
+            + [(f"{args.prefix}_epi", "decEpiKindN"), (f"{args.prefix}_accept", "decAcceptKindN"),
+               (f"{args.prefix}_reject", "decRejectKindN")])
+    if t.kinds_emitted != want:
+        raise G5.G5Refuse(f"kind lines emitted {t.kinds_emitted}, required {want}")
+    for name, kind in want:
+        if body.count(f"\ntheorem {name}_kind : ∀ (h : Host), type_of% (@{name} h)\n    = @E2eScal.{kind} h ") != 1 \
+                or body.count(f"\ntheorem {name} : ") != 1:
+            raise G5.G5Refuse(f"theorem {name} or its `_kind` line is missing")
+    flags["kinds_complete"] = True
+    if args.same_as_prop and body.count(f"\ntheorem {args.prefix}_accept_stmt : {args.same_as_prop} := ") != 1:
+        raise G5.G5Refuse("statement identity `_stmt` missing")
+    if args.same_as and body.count(f"\ntheorem {args.prefix}_accept_same : ") != 1:
+        raise G5.G5Refuse("statement identity `_same` missing")
+    flags["statement_check"] = True
+    gj = dict(accept=f"{args.prefix}_accept", kinds=[dict(theorem=a, kind=b) for a, b in want],
+              fields=t.fieldslean(), frame=t.frame, statement_check=(f"stmt {args.same_as_prop}" if args.same_as_prop
+                                                                    else f"same {args.same_as}" if args.same_as
+                                                                    else "kind instance only"))
+    blk = (f"/-! GEN5 (`p2dec --gen5`, unit G5-G): the whole accept theorem `{args.prefix}_accept` of `{args.type}` from\n"
+           f"the GEN4 chain above: head, one theorem per field, epilogue (boundary states in entry terms), accept, size\n"
+           f"reject. Every statement has a `_kind` line against the G5-L kinds. In-sample (development data).\n"
+           f"GEN5-JSON: {json.dumps(gj)}\n-/\n\n"
+           f"open {G5.G5_OPENS}\n\nnamespace E2eScal.Gen\n\n")
+    return g4 + "\n" + blk + body + "end E2eScal.Gen\n"
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("mode", choices=["p1", "p2dec"])
@@ -2435,11 +2534,34 @@ def main():
                     help="p2dec: GEN4 coverage (unit G4-G): a dataflow walk over the accept path with kinded per-instruction "
                          "step theorems, nop windows, register-parametric byte segments and call blocks; own path, does not "
                          "change the default / --gen2 / --gen3 text")
+    ap.add_argument("--gen5", action="store_true",
+                    help="p2dec: GEN5 (unit G5-G): the GEN4 output plus the whole accept theorem and the size-reject "
+                         "theorem with their kinds; refuses (exit 2, nothing on stdout) unless every theorem is emitted")
     ap.add_argument("--summary", help="p2dec --gen2 / --gen4: write the per-field coverage report (JSON) here")
     ap.add_argument("--compose", action="store_true",
                     help="p2dec --gen2: emit the composed accept theorem --name (needs every field covered; the "
                          "segment theorems come from the module of the same --prefix, listed in --imports)")
     args = ap.parse_args()
+    if args.gen5:
+        if args.mode != "p2dec" or args.gen2 or args.gen3 or args.gen4 or args.compose or args.partial_out:
+            ap.error("--gen5 is a p2dec option; it excludes --gen2 / --gen3 / --gen4 / --compose / --partial-out")
+        if not (args.ir and args.type and args.prefix):
+            ap.error("--gen5 needs --ir, --type, --prefix")
+        if args.same_as_prop and args.same_as:
+            ap.error("--same-as and --same-as-prop exclude each other")
+        args.g5_summary = dict(type=args.type, mode="gen5", accept_generated=False)
+        args.summary_data = None
+        try:
+            out = p2dec_gen5(args)
+        except NoMatch as e:
+            print(f"scalgen p2dec: no accept theorem: {e}", file=sys.stderr)
+            if args.summary:
+                pathlib.Path(args.summary).write_text(json.dumps(dict(args.g5_summary, exit=2), indent=1) + "\n")
+            sys.exit(2)
+        if args.summary:
+            pathlib.Path(args.summary).write_text(json.dumps(dict(args.g5_summary, exit=0), indent=1) + "\n")
+        sys.stdout.write(out)
+        return
     if args.gen4:
         if args.mode != "p2dec":
             ap.error("--gen4 is a p2dec option")

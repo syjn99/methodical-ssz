@@ -110,6 +110,24 @@ GEN4 cases (unit G4-G, `p2dec --gen4`; ids `g4-*`; mutated `.S` / IR copies in <
    that returns every field with a stop or without an end index, and an inner run that returns a text without the
    flags. Expected for every injection: exit 2 or 3 (exit 2 for an unexpected exception and SystemExit), 0 bytes on
    stdout, the summary's exit equal, fewer fields covered than the IR has. Control: no injection, exit 0.
+GEN5 cases (unit G5-G, `p2dec --gen5`; ids `g5-*`; mutated `.S` / IR copies in <work-dir> only):
+ - g5-new-*: `--gen5` on PendingDeposit, SyncCommitteeMessage, VoluntaryExit, PowBlock, ValidatorBalance: exit 0 twice,
+   identical, every GEN5 theorem with its kind line, `kindcheck.py` PASS (rule 12: kind parameters recomputed from the
+   IR and the `.S`); PendingPartialWithdrawal (interleaved fields) and AttestationData (nested fields): exit 2, 0 bytes.
+ - adversarial inputs, each expected exit 2 with 0 bytes on stdout and `accept_generated: false` in the summary (no
+   accept theorem): every class of the GEN4 reviews (stack-store overlap / misaligned store, head variants, size
+   immediate, epilogue jump to a missing label, truncated file, callee of another overlay type) and the GEN5 rules
+   (spill to a non-home slot, a register spilled twice, an extra `rcx` spill, `dB != F + 24`, an `xor` epilogue in a
+   frame other than 0x20, an epilogue load of a non-zero slot, a `nop` inside the accept epilogue, a malformed
+   size-error block, a stack store of an input value, a load from a stack slot outside the layout, interleaved
+   fields); statement-level IR mutants (a wrong Go offset, a wrong size, the field order swapped, a Go offset that
+   the code matches but that is not the kind's running sum). Valid variants (an extra harmless move, another valid
+   set-up order): exit 0 and kindcheck PASS.
+ - g5fc-*: fail-closed. A harness imports the working-tree `scalgen.py`, takes its `gen5` module (`g5_module()`),
+   monkeypatches it and calls `main()`: an unexpected exception, SystemExit(0) and a G5Refuse injected in the GEN4
+   front end, the recomputed walk / epilogue, the head / epilogue / reject specification, every step rendering, every
+   theorem renderer, and results without the flags (a missing kind line, an inner run that sets no flag). Expected for
+   every injection: exit 2, 0 bytes on stdout, summary exit 2 and `accept_generated: false`. Control: exit 0.
 """
 import json
 import pathlib
@@ -1224,6 +1242,312 @@ def g4_cases(work, new):
     return res, bad
 
 
+# ---------------------------------------------------------------------------------------------- GEN5 (unit G5-G)
+
+def g5c(sdir, tname, const, mod, pre, extra=()):
+    return dict(S=f"prysm/go1.26.10/e2e/{sdir}/{PN}{tname}.UnmarshalSSZ.S", type=f"v1alpha1.{tname}",
+                args=["--const", const, "--prefix", f"{pre}_g5dec", "--imports", mod, "--open", mod, *extra])
+
+
+G5 = {
+    "PD": g5c("h6/link/norm", "PendingDeposit", "PdUnmarshal", "E2eScal.H6Code", "pd",
+              ["--same-as-prop", "E2eScal.H6.pd_accept_stmt"]),
+    "SM": g5c("h5/link/norm", "SyncCommitteeMessage", "SmUnmarshal", "E2eScal.H5Code", "sm",
+              ["--same-as-prop", "E2eScal.H5.sm_accept_stmt"]),
+    "VE": g5c("h6/link/norm", "VoluntaryExit", "VeUnmarshal", "E2eScal.H6Code", "ve"),
+    "PB": g5c("h6/link/norm", "PowBlock", "PbUnmarshal", "E2eScal.H6Code", "pb", ["--same-as-prop", "E2eScal.H6.pb_accept_stmt"]),
+    "VB": g5c("h6/link/norm", "ValidatorBalance", "VbUnmarshal", "E2eScal.H6Code", "vb"),
+    "PW": g5c("h4/link/norm", "PendingPartialWithdrawal", "PwUnmarshal", "E2eScal.H4Code", "pw"),
+    "AD": g5c("ad/link/norm", "AttestationData", "AdUnmarshal", "E2eAd.Code", "ad"),
+}
+
+
+def ir_goff(field, off):
+    def fn(t):
+        for f in t["go_fields"]:
+            if f["name"] == field:
+                f["offset_gc_amd64"] = off
+    return fn
+
+
+PDL = "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_"
+# (id, what, type key, .S edit function or None, IR edit or None, expected exit)
+G5_MUT = [
+    # classes of the GEN4 reviews (the GEN4 front end refuses; GEN5 emits nothing)
+    ("g5-store-misaligned", "PendingDeposit Amount: `mov %rsi,0x2c(%rsp)` before the receiver store (misaligned stack store)",
+     "PD", rv([(88, "mov %rsi,0x38(%rdx)", ("before", ["mov %rsi,0x2c(%rsp)"]))]), None, 2),
+    ("g5-store-overlap-bf", "PendingDeposit Amount: `mov %rdx,0x58(%rsp)` overwrites the buffer slot before its reload",
+     "PD", rv([(86, "mov 0x58(%rsp),%rsi", ("before", ["mov %rdx,0x58(%rsp)"]))]), None, 2),
+    ("g5-head-spill-before-push", "VoluntaryExit: a spill `mov %rax,0x58(%rsp)` before `push %rbp`", "VE",
+     rv([(5, "push %rbp", ("before", ["mov %rax,0x58(%rsp)"]))]), None, 2),
+    ("g5-head-no-frame", "VoluntaryExit: `sub $0x48,%rsp` removed (frame never allocated)", "VE",
+     rv([(7, "sub $0x48,%rsp", "nop")]), None, 2),
+    ("g5-head-nop-moved", "VoluntaryExit: the head `nop` moved before `cmp 0x10(%r14),%rsp`", "VE",
+     rv([(9, "nop", None), (3, "cmp 0x10(%r14),%rsp", ("before", ["nop"]))]), None, 2),
+    ("g5-size-imm", "VoluntaryExit: `cmp $0x18,%rcx` (IR SSZ size 16)", "VE", rv([(10, "cmp $0x10,%rcx", "cmp $0x18,%rcx")]), None, 2),
+    ("g5-epi-jmp-missing", "PowBlock: `jmp runtime.abort` in place of `xor %eax,%eax` after the last field event", "PB",
+     rv([(120, "xor %eax,%eax", "jmp runtime.abort")]), None, 2),
+    ("g5-truncated", "SyncCommitteeMessage `.S` cut inside the Signature segment", "SM", lambda L: L[:140], None, 2),
+    ("g5-truncated-epi", "VoluntaryExit `.S` cut after `add $0x48,%rsp` of the accept epilogue", "VE", lambda L: L[:87], None, 2),
+    ("g5-callee-other-type", "VoluntaryExit: the ValidatorIndex field calls Epoch.UnmarshalSSZ", "VE",
+     lambda L: [l.replace("ValidatorIndex.UnmarshalSSZ", "Epoch.UnmarshalSSZ") for l in L], None, 2),
+    # GEN5 rules (the GEN4 front end covers these inputs; GEN5 refuses)
+    ("g5-head-rdi-not-home", "PendingDeposit: `mov %rdi,0x70(%rsp)` (rdi home slot 0x68)", "PD",
+     rv([(13, "mov %rdi,0x68(%rsp)", "mov %rdi,0x70(%rsp)")]), None, 2),
+    ("g5-head-spill-twice", "PendingDeposit: `mov %rax,0x50(%rsp)` twice", "PD",
+     rv([(12, "mov %rax,0x50(%rsp)", ["mov %rax,0x50(%rsp)", "mov %rax,0x50(%rsp)"])]), None, 2),
+    ("g5-head-rcx-spill", "VoluntaryExit: an extra spill `mov %rcx,0x68(%rsp)` (no rcx slot in the kind)", "VE",
+     rv([(15, "test %al,(%rax)", ("before", ["mov %rcx,0x68(%rsp)"]))]), None, 2),
+    ("g5-head-db", "ValidatorBalance: decPro spills rbx to 0x48 (dB != F + 24)", "VB",
+     rv([(8, "mov %rbx,0x50(%rsp)", "mov %rbx,0x48(%rsp)")]), None, 2),
+    ("g5-epi-xor-frame48", "VoluntaryExit: `xor %eax,%eax; xor %ebx,%ebx` before `add $0x48,%rsp` (no xor lemma in frame 0x48)",
+     "VE", rv([(87, "add $0x48,%rsp", ("before", ["xor %eax,%eax", "xor %ebx,%ebx"]))]), None, 2),
+    ("g5-epi-load-ptr-slot", "SyncCommitteeMessage: epilogue `mov 0x38(%rsp),%rax` (the pointer slot, not a zero slot)", "SM",
+     rv([(157, "mov 0x28(%rsp),%rax", "mov 0x38(%rsp),%rax")]), None, 2),
+    ("g5-epi-nop", "PendingDeposit: a `nop` between `add $0x40,%rsp` and `pop %rbp` of the accept epilogue", "PD",
+     rv([(163, "pop %rbp", ("before", ["nop"]))]), None, 2),
+    ("g5-reject-errsize", "SyncCommitteeMessage: size-error block loads ssz.ErrOffset", "SM",
+     rv([(163, "mov ssz.ErrSize(%rip),%rax", "mov ssz.ErrOffset(%rip),%rax")]), None, 2),
+    ("g5-reject-frame", "VoluntaryExit: size-error block `add $0x40,%rsp` (frame 0x48)", "VE",
+     rv([(93, "add $0x48,%rsp", "add $0x40,%rsp")]), None, 2),
+    ("g5-store-input", "PendingDeposit Amount: `mov %rsi,0x30(%rsp)` stores the input word into a frame slot", "PD",
+     rv([(88, "mov %rsi,0x38(%rdx)", ("before", ["mov %rsi,0x30(%rsp)"]))]), None, 2),
+    ("g5-load-outside-layout", "ValidatorBalance Balance: `mov 0x30(%rsp),%rsi` (no stack chunk at 0x30)", "VB",
+     rv([(52, "mov %rcx,0x10(%rdx)", ("before", ["mov 0x30(%rsp),%rsi"]))]), None, 2),
+    ("g5-interleaved", "real PendingPartialWithdrawal: the Epoch set-up runs inside the Amount field", "PW", None, None, 2),
+    ("g5-nested", "real AttestationData: Source / Target are nested containers (GEN4 exit 3)", "AD", None, None, 2),
+    # statement-level IR mutants
+    ("g5-ir-goff", "IR: PowBlock ParentHash Go offset 32 (code 24)", "PB", None, ir_goff("ParentHash", 32), 2),
+    ("g5-ir-size", "IR: PowBlock TotalDifficulty of 48 bytes (code 32)", "PB", None, ir_size("TotalDifficulty", 48), 2),
+    ("g5-ir-order", "IR: VoluntaryExit Epoch / ValidatorIndex order swapped", "VE", None, ir_swap("Epoch", "ValidatorIndex"), 2),
+    ("g5-ir-goff-code", "IR and code: ValidatorBalance Balance at Go offset 24 (code store 0x18; not the running sum 16)", "VB",
+     rv([(52, "mov %rcx,0x10(%rdx)", "mov %rcx,0x18(%rdx)")]), ir_goff("Balance", 24), 2),
+    ("g5-ir-goff-first", "IR: VoluntaryExit Epoch Go offset 0 (code 8, state word)", "VE", None, ir_goff("Epoch", 0), 2),
+    # valid variants: generated, kindcheck PASS
+    ("g5-valid-extra-move", "SyncCommitteeMessage: an extra `mov %rdi,%rsi` in the ValidatorIndex set-up", "SM",
+     sm_vi(VI[:4] + ["  mov %rdi,%rsi"] + VI[4:]), None, 0),
+    ("g5-valid-order", "SyncCommitteeMessage: ValidatorIndex set-up with `mov $0x8,%ecx` first", "SM",
+     sm_vi([VI[5]] + VI[:5]), None, 0),
+]
+
+
+def g5_run(work, new, mid, c, S=None, ir=None, extra=()):
+    su = work / f"{mid}.g5.json"
+    su.unlink(missing_ok=True)
+    rc, so, se = run(["python3", "-I", "-B", str(new), "p2dec", "--gen5", "--S", S or c["S"], "--ir", ir or IR,
+                      "--type", c["type"], "--summary", str(su)] + c["args"] + list(extra), KR)
+    sm = json.loads(su.read_text()) if su.exists() else {}
+    return rc, so, se, sm
+
+
+def g5_cases(work, new):
+    """Unit G5-G: `--gen5` on real types, adversarial inputs, valid variants."""
+    res, bad = [], 0
+    KC = ["python3", "-I", "-B", str(HERE / "kindcheck.py")]
+    irt = (KR / IR).read_text()
+    for key in ("PD", "SM", "VE", "PB", "VB", "PW", "AD"):
+        c = G5[key]
+        r1, r2 = g5_run(work, new, f"g5-new-{key}-1", c), g5_run(work, new, f"g5-new-{key}-2", c)
+        want = 2 if key in ("PW", "AD") else 0
+        kc = None
+        if r1[0] == 0:
+            f = work / f"g5-new-{key}.lean"
+            f.write_bytes(r1[1])
+            kc = subprocess.run(KC + [str(f)], capture_output=True, text=True).returncode
+        t = r1[1].decode()
+        pre = c["args"][3]
+        thm = all(f"\ntheorem {pre}_{x} : " in t and f"\ntheorem {pre}_{x}_kind : " in t
+                  for x in ("head", "f1", "epi", "accept", "reject")) if want == 0 else True
+        ok = (r1[0] == want and r1[:2] == r2[:2] and (r1[1] == b"") == (want != 0) and thm and kc == (0 if want == 0 else None)
+              and r1[3].get("exit") == want and r1[3].get("accept_generated") == (want == 0))
+        res.append(dict(id=f"g5-new-{key}", expect=f"exit {want} twice, identical" + (", every GEN5 theorem kinded, kindcheck "
+                        "PASS" if want == 0 else ", 0 bytes, accept_generated false"), exit=r1[0], stdout_bytes=len(r1[1]),
+                        kindcheck_exit=kc, reason=r1[3].get("reason", "")[:300], ok=bool(ok)))
+        bad |= not ok
+    for (mid, what, key, eds, irf, want) in G5_MUT:
+        c = G5[key]
+        S = None
+        if eds is not None:
+            lines = eds((KR / c["S"]).read_text().split("\n"))
+            fS = work / f"{mid}.S"
+            fS.write_text("\n".join(lines))
+            S = str(fS)
+        irp = None
+        if irf is not None:
+            irp = work / f"{mid}.ir.json"
+            irp.write_text(ir_edit(irt, c["type"], irf))
+            irp = str(irp)
+        rc, so, se, sm = g5_run(work, new, mid, c, S, irp)
+        kc = None
+        if rc == 0:
+            f = work / f"{mid}.lean"
+            f.write_bytes(so)
+            kc = subprocess.run(KC + [str(f)], capture_output=True, text=True).returncode
+        ok = (rc == want and (so == b"") == (want != 0) and sm.get("exit") == want
+              and sm.get("accept_generated") == (want == 0) and (want != 0 or kc == 0)
+              and (want == 0 or "theorem" not in so.decode()))
+        res.append(dict(id=mid, what=what, expect=f"exit {want}" + (", kindcheck PASS" if want == 0 else
+                        ", 0 bytes, no accept theorem"), exit=rc, stdout_bytes=len(so), kindcheck_exit=kc,
+                        reason=sm.get("reason", "")[:300], ok=bool(ok)))
+        bad |= not ok
+    return res, bad
+
+
+# the GEN5 fail-closed harness (written to <work-dir>; argv: scalgen.py config.json result.json; cwd = fv/kraken)
+G5FC_HARNESS = r"""
+import contextlib, importlib.util, io, json, pathlib, sys
+spec = importlib.util.spec_from_file_location("scalgen_g5fc", sys.argv[1])
+sg = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(sg)
+g5 = sg.g5_module()
+ARGV = list(sys.argv)
+cfg = json.loads(pathlib.Path(ARGV[2]).read_text())
+SU = pathlib.Path(cfg["summary"])
+
+
+class Boom(Exception):
+    pass
+
+
+def call():
+    sys.argv = ["scalgen.py"] + cfg["argv"] + ["--summary", str(SU)]
+    SU.unlink(missing_ok=True)
+    so, se = io.StringIO(), io.StringIO()
+    with contextlib.redirect_stdout(so), contextlib.redirect_stderr(se):
+        try:
+            sg.main()
+            rc = 0
+        except SystemExit as e:
+            rc = e.code if isinstance(e.code, int) else (0 if e.code is None else 1)
+        except BaseException as e:
+            rc = "uncaught " + type(e).__name__
+    sm = json.loads(SU.read_text()) if SU.exists() else None
+    return rc, len(so.getvalue()), sm
+
+
+def fire(kind, where):
+    if kind == "unexpected":
+        raise Boom("injected at " + where)
+    if kind == "refuse":
+        raise g5.G5Refuse("injected at " + where)
+    raise SystemExit(0)
+
+
+def patched(obj, name, fake):
+    orig = getattr(obj, name)
+    setattr(obj, name, fake)
+    try:
+        return call()
+    finally:
+        setattr(obj, name, orig)
+
+
+res = []
+
+
+def rec(phase, kind, where, r):
+    rc, nso, sm = r
+    res.append(dict(phase=phase, kind=kind, where=where, rc=rc, stdout=nso, sm_exit=(sm or {}).get("exit"),
+                    acc=(sm or {}).get("accept_generated")))
+
+
+rec("control", "none", "", call())
+KINDS = ("unexpected", "refuse", "sysexit0")
+# phase gen4: the front end and the recomputed walk / epilogue
+for kind in KINDS:
+    rec("gen4", kind, "p2dec_gen4", patched(sg, "p2dec_gen4", lambda *a, k=kind: fire(k, "p2dec_gen4")))
+    rec("gen4", kind, "g4_walk", patched(sg, "g4_walk", lambda *a, k=kind: fire(k, "g4_walk")))
+    rec("gen4", kind, "g4_epilogue", patched(sg, "g4_epilogue", lambda *a, k=kind: fire(k, "g4_epilogue")))
+o4 = sg.p2dec_gen4
+rec("gen4", "returns None", "p2dec_gen4", patched(sg, "p2dec_gen4", lambda *a: None))
+rec("gen4", "returns a cut text", "p2dec_gen4", patched(sg, "p2dec_gen4", lambda *a: o4(*a)[:-20]))
+ow = sg.g4_walk
+rec("gen4", "walk with a stop", "g4_walk", patched(sg, "g4_walk", lambda *a: (lambda r: (r[0], sg.G4Stop(0, "x", "other"), r[2]))(ow(*a))))
+rec("gen4", "epilogue returns True", "g4_epilogue", patched(sg, "g4_epilogue", lambda *a: True))
+# phase derive: the specifications and every step rendering
+for fn in ("g5_derive", "g5_head_spec", "g5_epi_spec", "g5_reject_spec"):
+    for kind in KINDS:
+        rec("derive", kind, fn, patched(g5, fn, lambda *a, k=kind, fn=fn: fire(k, fn)))
+ostep, seq = g5.g5_step, []
+setattr(g5, "g5_step", lambda *a: (seq.append(1), ostep(*a))[1])
+call()
+setattr(g5, "g5_step", ostep)
+for kind in KINDS:
+    for n in range(len(seq)):
+        cnt = [0]
+
+        def inj(*a, n=n, kind=kind, cnt=cnt):
+            cnt[0] += 1
+            if cnt[0] == n + 1:
+                fire(kind, f"g5_step call {n}")
+            return ostep(*a)
+        rec("derive", kind, f"g5_step call {n}", patched(g5, "g5_step", inj))
+# phase render: every theorem renderer (each call), the kind recorder
+for meth in ("head", "field", "f_u64", "f_bytes", "f_call", "epi", "accept", "reject", "layout", "binders", "mem"):
+    om, seqm = getattr(g5.T, meth), []
+    setattr(g5.T, meth, lambda self, *a, om=om, seqm=seqm: (seqm.append(1), om(self, *a))[1])
+    call()
+    setattr(g5.T, meth, om)
+    for kind in KINDS:
+        for n in range(len(seqm)):
+            cnt = [0]
+
+            def inj(self, *a, n=n, kind=kind, cnt=cnt, om=om, meth=meth):
+                cnt[0] += 1
+                if cnt[0] == n + 1:
+                    fire(kind, f"T.{meth} call {n}")
+                return om(self, *a)
+            rec("render", kind, f"T.{meth} call {n}", patched(g5.T, meth, inj))
+ok_ = g5.T.kind
+rec("flags", "a kind line not recorded", "T.kind", patched(g5.T, "kind", lambda self, name, kind, extra: (
+    ok_(self, name, kind, extra), self.kinds_emitted.pop() if name.endswith("_f1") else None)[0]))
+rec("flags", "a kind line dropped from the text", "T.body", patched(g5.T, "body", (lambda ob: lambda self: ob(self).replace(
+    "_epi_kind :", "_epi_kinx :", 1))(g5.T.body)))
+oi = sg._p2dec_gen5
+rec("flags", "inner returns its text, outer flags not set", "_p2dec_gen5",
+    patched(sg, "_p2dec_gen5", lambda args, flags: oi(args, dict(flags))))
+rec("flags", "inner sets four of five flags", "_p2dec_gen5", patched(sg, "_p2dec_gen5", lambda args, flags: (
+    lambda t: (flags.update({k: True for k in sg.G5_FLAGS[:4]}), t)[1])(oi(args, dict(flags)))))
+pathlib.Path(ARGV[3]).write_text(json.dumps(res) + "\n")
+"""
+
+
+G5FC_KEYS = ("PD", "SM", "VE", "PB", "VB")
+
+
+def g5_fc_cases(work, new, keys=None):
+    res, bad = [], 0
+    h = work / "g5fc_harness.py"
+    h.write_text(G5FC_HARNESS)
+    for key in (keys or G5FC_KEYS):
+        c = G5[key]
+        cfg, out = work / f"g5fc-{key}.cfg.json", work / f"g5fc-{key}.result.json"
+        cfg.write_text(json.dumps(dict(argv=["p2dec", "--gen5", "--S", c["S"], "--ir", IR, "--type", c["type"]] + c["args"],
+                                       summary=str(work / f"g5fc-{key}.summary.json"))))
+        out.unlink(missing_ok=True)
+        rc, so, se = run(["python3", "-I", "-B", str(h), str(new), str(cfg), str(out)], KR)
+        R = json.loads(out.read_text()) if rc == 0 and out.exists() else []
+        groups = {}
+        for r in R:
+            groups.setdefault((r["phase"], r["kind"]), []).append(r)
+        for (ph, kind), rs in sorted(groups.items()):
+            if ph == "control":
+                ok = all(r["rc"] == 0 and r["stdout"] > 0 and r["acc"] is True for r in rs)
+            else:
+                ok = all(r["rc"] == 2 and r["stdout"] == 0 and r["sm_exit"] == 2 and r["acc"] is False for r in rs)
+            res.append(dict(id=f"g5fc-{key}-{ph}-{kind.replace(' ', '_')}", expect="control: exit 0" if ph == "control"
+                            else "exit 2, 0 bytes, summary exit 2, accept_generated false", exit=sorted({str(r["rc"]) for r in rs}),
+                            stdout_bytes=sum(r["stdout"] for r in rs), injections=len(rs),
+                            bad=[r for r in rs if not ok][:3], ok=bool(ok)))
+            bad |= not ok
+        fl = {r["phase"] for r in R}
+        ok = rc == 0 and {"control", "gen4", "derive", "render", "flags"} <= fl and len(R) > 50
+        res.append(dict(id=f"g5fc-{key}-phases", expect="harness exit 0; injections in gen4, derive, render, flags",
+                        exit=rc, stdout_bytes=0, injections=len(R), phases=sorted(fl), stderr=se.strip()[-300:], ok=bool(ok)))
+        bad |= not ok
+    return res, bad
+
+
 def main(work, out):
     work.mkdir(parents=True, exist_ok=True)
     res, bad = [], 0
@@ -1292,6 +1616,12 @@ def main(work, out):
     r5, b5 = fc_cases(work, new)
     res += r5
     bad |= b5
+    r6, b6 = g5_cases(work, new)
+    res += r6
+    bad |= b6
+    r7, b7 = g5_fc_cases(work, new)
+    res += r7
+    bad |= b7
 
     out.write_text(json.dumps(dict(cases=res, passed=sum(r["ok"] for r in res), total=len(res)), indent=1) + "\n")
     print(f"p2dec_test: {sum(r['ok'] for r in res)}/{len(res)} as expected")

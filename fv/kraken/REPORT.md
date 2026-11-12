@@ -831,6 +831,72 @@ h6-r1 덤프 대비 선언 비교: `cp_e2e_marshal_main_s._proof_1_23` REMOVED, 
 실행하지 않은 것(통합자): Lean 수준 심은 대조, 빈 `.lake`의 콜드 빌드, 링크 검사, Go 차분, 부정 시험, x86-64.
 기록: `scal/RESULT.json`의 `integration_int6`.
 
+GEN5 생성기(단위 G5-G, 기준 `94fd8a6`, 리뷰 전): `p2dec --gen5`가 평면 디코더의 승인 정리 전체를 낸다.
+낸 정리: 머리, 필드마다 하나, 에필로그, 승인, 크기 거부다. 정리마다 G5-L 종류 줄이 있다.
+결과는 실패 닫힘이다. 종료 0은 성공 표시 다섯이 모두 선 한 곳에서만 나온다.
+커밋한 실행은 형마다 한 번이다(게이트 작업 04). 원시 출력은 고치지 않고 먼저 커밋했다(`8192427`).
+그 앞에 scratch 시험 실행 다섯이 있었다. 다섯 모두 게이트 없이 돌았다(절차 위반, CONTAMINATION 30절).
+생성된 승인 정리: 평면 개발 형 17개 중 15개다. 모두 빌드되고 표준 공리뿐이다.
+거절: PendingPartialWithdrawal(필드가 섞임), AttestationData(중첩 필드)다.
+문장 검사: 종류 줄과 `kindcheck.py` 규칙 12다. 규칙 12는 종류 매개변수를 IR과 `.S`에서 다시 계산한다.
+손 문장이 있는 9개 형은 생성 정리가 그 손 문장과 `rfl`로 같다.
+Checkpoint는 종류 사례만이다. 함의 `cp_accept_of_kind`의 배치 `layCp`와 덩이 순서가 다르다.
+SyncAggregatorSelectionData와 ValidatorBalance의 프레임 `0x38` 꼴에는 손으로 묶은 문장이 없다.
+`kindcheck.py`는 상수 `C`를 머리의 `.S`에 묶지 않는다. `C`는 Lean 코드 사실만 고정한다.
+손 문장이 없는 5개 형(HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit)의 문장은 종류 사례다.
+이 5개는 아직 완전한 디코더 증명이 아니다. 거부 완전성, Desc, 명세, 증인은 G5-C 일이다.
+발견 SG-6: 승인 종류는 `L.frame`을 읽지 않는다. 규칙 12c가 모든 종류 줄의 `L`을 비교한다.
+모듈 정교화는 2.1–8.6초다(n = 2). 120초를 넘는 모듈은 없다. 속도 주장은 없다.
+`regen_check.sh` 55/55 SAME(옛 40, GEN5 15)이다. `p2dec_test.py` 394/394, `kindcheck.py` 선택 시험 PASS다.
+부정 시험 25건 중 22건이 통과다(대조 4, 정리 안 실패 18). 시간 초과 1, 오류 없음 1, 밖 오류 1은 세지 않는다.
+공리 게이트 PASS(선언 9139), 선언 비교 ADDED 1490뿐, 심은 대조는 잡혔다. `--no-build` 종료 0이다.
+실행하지 않은 것: 콜드 빌드, 링크 검사, Go 차분, x86-64. 기록: CONTAMINATION 29절, `scal/RESULT.json`의 `gen5`.
+
+남은 평면 디코더 다섯의 마무리(단위 G5-C, 기준 `ea6a0c6`, 리뷰 전): HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit다.
+승인과 크기 거부는 G5-G의 생성 정리다. 다른 것은 새 모듈이다.
+독립 손 문장 셋(SA, VB, VE)은 생성 승인 정리와 `rfl`로 같다. 손 문장은 생성 파일을 열기 전에 커밋했다.
+형마다 증명된 것: 손 Desc와 검사기 Desc의 코덱 같음, `accept_spec_k`, `reject_size_spec`, `reject_complete`, 승인 증인, 거부 증인이다.
+`reject_complete`는 크기 경로 조건만이다. 피호출자 오류 반환은 덮지 않는다.
+ValidatorBalance는 consensus-specs 컨테이너가 없다. Desc는 Prysm proto에서 왔다.
+PendingPartialWithdrawal의 `pw_e2e_accept_spec_k`를 더했다.
+부정 시험 46건 중 43건이 통과다(대조 10, 정리 안 실패 33). 하트비트 시간 초과 3건은 세지 않는다.
+Go 차분 30/30이다(linux/arm64의 Go 의미론, ELF 실행 아님). 심은 대조는 잡혔다.
+링크 검사 PASS다. RESULT는 H6 기록과 바이트가 같다.
+공리 게이트 PASS(선언 9758), 선언 비교 ADDED 619뿐이다. 심은 대조는 잡혔다. `--no-build` 종료 0이다.
+검증 목록은 `prysm/INVENTORY.md`다. 출처는 `gen/tools/inventory.py`다(단위 G5-C2가 리뷰 g5c-r1 M1–M3을 고쳤다).
+분모는 셋이다. 서로 섞지 않는다.
+(1) 대상의 SSZ 메서드: 211형의 1292개다. 출처는 `prysm/go1.26.10/ssz-methods.json`이다.
+이 파일은 고정 ELF의 nm 목록에서 만든다. nm sha256은 `build-ids.txt`와 같다. nm 목록은 커밋하지 않는다.
+(2) 덤프한 함수(`functions.json`): 641개다. SSZ 메서드 639개와 런타임 도우미 2개다.
+(3) GEN5 개발 모집단: 평면 16형(`FLAT16`)이다. 대상의 평면 고정 크기 형 전체가 아니다.
+| 메서드 | 대상 | `functions.json` | 대응 행 | 완전 | 부분 |
+| --- | --- | --- | --- | --- | --- |
+| `UnmarshalSSZ` | 211 | 211 | 21 | 17 | 4 |
+| `MarshalSSZTo` | 211 | 211 | 3 | 0 | 3 |
+| `MarshalSSZ` | 211 | 6 | 0 | 0 | 0 |
+| `SizeSSZ` | 211 | 211 | 1 | 0 | 1 |
+| `HashTreeRoot` | 211 | 0 | 0 | 0 | 0 |
+| `HashTreeRootWith` | 211 | 0 | 0 | 0 | 0 |
+| `ProgressiveHashTreeRoot`, `…With` | 10, 10 | 0 | 0 | 0 | 0 |
+| `MaxSizeSSZ` | 6 | 0 | 0 | 0 | 0 |
+"완전"은 `UnmarshalSSZ`에만 정의했다. 다른 메서드는 정리가 하나라도 있으면 "부분"이다.
+디코더는 대상 `UnmarshalSSZ` 211개 중 17개가 완전이다. 완전은 목록에 정의된 뜻이다.
+HashTreeRoot, HashTreeRootWith, MarshalSSZ는 대상에 있다. 정리는 없다. HashTreeRoot 계열은 덤프하지 않았다.
+개발 모집단 16형의 디코더는 16/16 완전이다(정의된 뜻). 표본 안이다.
+대상의 평면 고정 크기 형은 IR 규칙으로 40개다. 그중 24개는 시작하지 않았다. 이름은 `INVENTORY.md`에 있다.
+목록이 잡지 못하는 것은 `INVENTORY.md` "What this table cannot detect"에 있다.
+`codec`과 `reject_complete`는 행의 형에 묶이지 않는다. 존재, 종류, 공리만 검사한다.
+재현(`fv/kraken`에서; `$NM`은 ELF의 nm 목록, `$O`는 빈 디렉터리; lean은 게이트 안에서):
+
+```sh
+python3 -I -B gen/tools/inventory.py methods "$NM" "$O/ssz-methods.json" && cmp "$O/ssz-methods.json" prysm/go1.26.10/ssz-methods.json
+python3 -I -B gen/tools/inventory.py names "$O/names.txt"
+(cd lean && lake env lean --run ../gen/tools/inventory_decls.lean "$O/names.txt" $(ls E2e/*.lean E2eAd/*.lean E2eScal/*.lean | sed 's/\.lean$//; s#/#.#g')) > "$O/decls.tsv"
+python3 -I -B gen/tools/inventory.py run "$O/decls.tsv" "$O/I.md" "$O/I.json" && cmp "$O/I.md" prysm/INVENTORY.md
+```
+
+실행하지 않은 것: 콜드 빌드, x86-64, `regen_check.sh`(생성기 변경 없음). 기록: CONTAMINATION 31절과 32절, `scal/RESULT.json`의 `gen5-close`.
+
 조건:
 
 1. 런타임 계약 `MakesliceC`(uint8, esz 1, cnt 32), `MemmoveC`, `GrowsliceC`(uint8, esz 1, 인코더 첫 지점과 둘째 지점), `ConvT64C`, `FmtErrorfDDC`(Epoch 형식, `type:int`)는 가설이다. Go 1.26.10 소스를 다시 읽었고 바뀌지 않았다(`prysm/go1.26.10/e2e/RUNTIME-1.26.10.md`). 정교화 증명은 없다.

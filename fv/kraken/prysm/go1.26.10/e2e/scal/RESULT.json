@@ -1245,6 +1245,139 @@
     "S4": "closed: unit G3-G added the GEN3 count row to BASELINE section 5 (5463), regenerated axioms-gate.json and extended gen/scal/AxiomsScal.lean (commit 76d8fe8, review g3g-r1); INT5 adds the pointer from the BASELINE H4 summary to the GEN3 row",
     "S5": "closed by unit G3-G: kindcheck.py requires the line 'set_option maxHeartbeats 200000 in' before every decAcceptKind line (selftest cases g3c_heartbeats_raised, g3c_no_heartbeat_line), so a wrong parameter ends as a build timeout = FAIL"
    }
+  },
+  "gen5-lemmas (GEN5 unit G5-L, fresh Fable session)": {
+   "what": "GEN5 unit G5-L: a statement kind for whole accept theorems of flat fixed-size decoders in any frame (decAcceptKindN), its ties to the hand statements, boundary-state kinds and frame-parametric lemmas for generated accept proofs, a frame-parametric size-reject lemma with a kind, worked generated-style examples. Development data only (in-sample); no generator change; no transfer claim",
+   "base": "c29ebdc",
+   "author": "fresh Fable 5.2 session (direct author)",
+   "state": "not yet reviewed",
+   "L1": {
+    "kind": "E2eScal.decAcceptKindN C L fields (KindAcceptN.lean); L : DecLayout = callee programs, stack chunk binders, stack slots before / after, runtime configuration, guard addend, state word, frame; fields : List DecField (a callee field is .u64)",
+    "hand_statements_total": 11,
+    "ties_rfl": [
+     "BlobIdentifier",
+     "DepositMessage",
+     "Eth1Data",
+     "Deposit_Data",
+     "PowBlock",
+     "PendingPartialWithdrawal",
+     "PendingConsolidation",
+     "PendingDeposit",
+     "SyncCommitteeMessage",
+     "BeaconBlockHeader"
+    ],
+    "ties_implication": [
+     "Checkpoint: cp_accept_of_kind (kind instance implies the hand statement; premise 8 <= S against S + 8, binder order, zero form, receiver tail chunk in R); the converse is not proved"
+    ],
+    "not_tied": [],
+    "relation_to_decAcceptKind": "equal on the four GEN3-tied types (through the two ties; a direct rfl hit the default heartbeat limit and was replaced)",
+    "kind_does_not_check": [
+     "that L is the frame of the .S file (L is a parameter; a proof of the instance checks it)",
+     "that L.callees are the callees of the fields",
+     "which fields are callee fields"
+    ]
+   },
+   "L2": {
+    "kinds": [
+     "decHeadKindN C L fields d0",
+     "decFieldKindN C L fields d d'",
+     "decEpiKindN C L fields d"
+    ],
+    "lemmas": [
+     "g5_j3",
+     "g5_lo8",
+     "g5_lo",
+     "g5_lo0",
+     "decepi_n"
+    ],
+    "recipe": "every intermediate theorem is stated over the whole accept memory in entry-state terms (boundary state StDesc); the accept proof is head, one eventually_trans per field theorem, epilogue; no ecancel or address arithmetic at the accept level",
+    "examples": {
+     "PendingDeposit": "Gen5ExPd.lean: pd_e2e_accept_g5 (kind instance; pd_e2e_accept_g5_stmt : H6.pd_accept_stmt); frame 0x40, callee + runtime",
+     "SyncCommitteeMessage": "Gen5ExSm.lean: sm_e2e_accept_g5 (sm_e2e_accept_g5_stmt : H5.sm_accept_stmt); frame 0x60, callee + runtime",
+     "VoluntaryExit": "Gen5ExVe.lean: ve_e2e_accept_g5 (kind instance; no hand statement); frame 0x48, callee only; witness WitVeA.ve_accept_runs",
+     "PowBlock": "Gen5ExPb.lean: pb_e2e_accept_g5 (pb_e2e_accept_g5_stmt : H6.pb_accept_stmt); frame 0x20, runtime only"
+    },
+    "example_text_source": "a scratch emitter of the unit (not committed, not scalgen.py); the GEN4 chain theorems are used as emitted",
+    "pd_generated_style": {
+     "module_lines": 1054,
+     "statement_lines": 685,
+     "proof_lines": 251,
+     "kind_lines": 61,
+     "accept_proof_lines": 14,
+     "elaboration_s": [
+      5.0,
+      5.0
+     ],
+     "hand_module_PdAccept_lines": 520,
+     "note": "the generated-style text is about twice the hand module; none of it is hand text if a generator emits it; two n = 1 measurements, no speed claim"
+    }
+   },
+   "L3": {
+    "lemma": "decrej_seg (RejectN.lean): prologue window with the size branch taken, error window decErrL, then decepi_n; frame, first-spill displacement and size are parameters",
+    "kind": "decRejectKindN C sz",
+    "ties_with_reducible_rfl": 12,
+    "instances": [
+     "pd_reject_g5 (declared type of H6.pd_e2e_reject_size_main)",
+     "ve_reject_g5 (VoluntaryExit, new)"
+    ]
+   },
+   "honest_outcome_clause": "not triggered: 10 of 11 hand statements are rfl-equal to the kind instance, 1 is tied by a proved implication",
+   "negatives": {
+    "cases": "scal/negcases-gen5.json",
+    "result": "scal/negative-gen5.json",
+    "total": 37,
+    "counted": 35,
+    "control_pass": 10,
+    "inside": 25,
+    "not_counted": [
+     "g5-tie-pd-kind-jret: timeout_heartbeat",
+     "g5-tie-bh-kind-ptr: timeout_heartbeat"
+    ]
+   },
+   "axioms": "axioms gate with a scratch JSON: PASS, 8174 declarations, nonstandard 0, sorryAx 0; planted control (weakened statement + sorry theorem): exit 1",
+   "drift": "against the int6-r1 dump (7649 rows = the committed axioms-gate.json): ADDED 525, CHANGED 0, REMOVED 0; planted control: 1 CHANGED + 1 ADDED",
+   "no_build": "lake build --no-build E2e E2eAd E2eScal exit 0 at the head (1188 jobs)",
+   "module_times_s": {
+    "KindAcceptN": 0.7,
+    "AcceptTies": 4.3,
+    "FieldComp": 0.7,
+    "RejectN": 1.1,
+    "RejectTies": 0.5,
+    "Gen5ExPd": 10,
+    "Gen5ExSm": 10,
+    "Gen5ExVe": 7.4,
+    "Gen5ExPb": 8.7,
+    "Gen5ExRej": 1.5,
+    "Gen5Examples": 5.1,
+    "WitVeA": 10
+   },
+   "effort": {
+    "diagnostics": "8 of 8",
+    "attempts": "7 of 16 (2 failed: an optional relation theorem hit the default heartbeat limit; a missing import)",
+    "gate_s": 790,
+    "gated_jobs": 68,
+    "heartbeat_raise": "none beyond the model theorems' (4 M / 16 M)"
+   },
+   "not_done": [
+    "generator side (G5-G)",
+    "frame-parametric xor epilogue (only the frame 0x20 lemma decepi_seg)",
+    "worked example with interleaved fields (PendingPartialWithdrawal)",
+    "Checkpoint and BeaconBlockHeader in generated style",
+    "spec alignment, Desc, reject-complete of VoluntaryExit (G5-C)",
+    "callee error, write-barrier and morestack paths"
+   ],
+   "not_run": [
+    "cold build",
+    "generator",
+    "kindcheck.py",
+    "regen_check.sh",
+    "link check",
+    "Go differential",
+    "x86-64 hardware",
+    "stale_olean.py (no killed or capped build)",
+    "orca (not installed)"
+   ],
+   "wording": "in-sample throughout; 'generated-style' = text of the recipe a generator can emit, produced here by a scratch emitter; no hold-out and no generality claim"
   }
  },
  "contamination": {
@@ -2979,5 +3112,454 @@
    "x86-64 hardware",
    "independent review of INT6"
   ]
+ },
+ "gen5": {
+  "what": "GEN5 unit G5-G: proof generator scalgen.py p2dec --gen5 (gen/scal/gen5.py; GEN4 walk as front end): head, field, epilogue, accept and size-reject theorems with G5-L kind lines; kindcheck rule 12; one run per flat development type; evidence. Development data only (in-sample); generator change after H6; no hold-out claim",
+  "base": "94fd8a6",
+  "state": "not yet reviewed",
+  "commits": {
+   "generator": "c99f93c",
+   "kindcheck_and_tests": "607ba61",
+   "raw_output": "8192427",
+   "evidence": "d3dddd1"
+  },
+  "fail_closed": {
+   "single_success_point": true,
+   "flags": [
+    "gen4_ok",
+    "derived",
+    "rendered",
+    "kinds_complete",
+    "statement_check"
+   ],
+   "fault_injection": "95/95 groups, 702 injections on 5 types: exit 2, 0 bytes, accept_generated false; controls exit 0"
+  },
+  "regen": "55/55 SAME (40 earlier commands byte-identical, 15 GEN5 commands deterministic)",
+  "per_type": {
+   "Checkpoint": {
+    "accept_generated": true,
+    "reason": "",
+    "identity": "not tied: the implication cp_accept_of_kind needs the layout layCp; the generated layout orders the stack chunks by the generator rule (spill area before the frame slots), layCp after them; no identity emitted",
+    "generated_lines": 864,
+    "generated_code_lines": 809,
+    "time_s": [
+     3.33,
+     3.44
+    ],
+    "hand_accept_lines_now_unnecessary": 0
+   },
+   "BeaconBlockHeader": {
+    "accept_generated": true,
+    "reason": "",
+    "identity": "rfl (_same: E2eScal.Bh.bh_e2e_accept_main)",
+    "generated_lines": 1848,
+    "generated_code_lines": 1749,
+    "time_s": [
+     8.57,
+     8.55
+    ],
+    "hand_accept_lines_now_unnecessary": 461
+   },
+   "Eth1Data": {
+    "accept_generated": true,
+    "reason": "",
+    "identity": "rfl (_same: E2eScal.E1.e1_e2e_accept_main)",
+    "generated_lines": 1028,
+    "generated_code_lines": 963,
+    "time_s": [
+     3.44,
+     3.37
+    ],
+    "hand_accept_lines_now_unnecessary": 270
+   },
+   "BlobIdentifier": {
+    "accept_generated": true,
+    "reason": "",
+    "identity": "rfl (_same: E2eScal.Bi.bi_e2e_accept_main)",
+    "generated_lines": 735,
+    "generated_code_lines": 682,
+    "time_s": [
+     2.42,
+     2.42
+    ],
+    "hand_accept_lines_now_unnecessary": 210
+   },
+   "DepositMessage": {
+    "accept_generated": true,
+    "reason": "",
+    "identity": "rfl (_same: E2eScal.Dm.dm_e2e_accept_main)",
+    "generated_lines": 1018,
+    "generated_code_lines": 953,
+    "time_s": [
+     3.37,
+     3.46
+    ],
+    "hand_accept_lines_now_unnecessary": 255
+   },
+   "Deposit_Data": {
+    "accept_generated": true,
+    "reason": "",
+    "identity": "rfl (_stmt: E2eScal.H4.dd_accept_stmt)",
+    "generated_lines": 1340,
+    "generated_code_lines": 1263,
+    "time_s": [
+     4.89,
+     4.82
+    ],
+    "hand_accept_lines_now_unnecessary": 148
+   },
+   "PendingPartialWithdrawal": {
+    "accept_generated": false,
+    "reason": "refused (exit 2): field 3 (WithdrawableEpoch) reads rdx = buffer + 16 at the field boundary: the Amount field's units also set up the next call (interleaved fields; no recipe)",
+    "identity": "n/a (refused)",
+    "generated_lines": 0,
+    "generated_code_lines": 0,
+    "time_s": [],
+    "hand_accept_lines_now_unnecessary": 0
+   },
+   "SyncCommitteeMessage": {
+    "accept_generated": true,
+    "reason": "",
+    "identity": "rfl (_stmt: E2eScal.H5.sm_accept_stmt)",
+    "generated_lines": 1502,
+    "generated_code_lines": 1417,
+    "time_s": [
+     6.66,
+     6.69
+    ],
+    "hand_accept_lines_now_unnecessary": 199
+   },
+   "PendingConsolidation": {
+    "accept_generated": true,
+    "reason": "",
+    "identity": "rfl (_stmt: E2eScal.H5.pc_accept_stmt)",
+    "generated_lines": 768,
+    "generated_code_lines": 709,
+    "time_s": [
+     2.68,
+     2.65
+    ],
+    "hand_accept_lines_now_unnecessary": 271
+   },
+   "PendingDeposit": {
+    "accept_generated": true,
+    "reason": "",
+    "identity": "rfl (_stmt: E2eScal.H6.pd_accept_stmt)",
+    "generated_lines": 1707,
+    "generated_code_lines": 1614,
+    "time_s": [
+     7.18,
+     6.74
+    ],
+    "hand_accept_lines_now_unnecessary": 470
+   },
+   "PowBlock": {
+    "accept_generated": true,
+    "reason": "",
+    "identity": "rfl (_stmt: E2eScal.H6.pb_accept_stmt)",
+    "generated_lines": 1125,
+    "generated_code_lines": 1056,
+    "time_s": [
+     4.19,
+     4.19
+    ],
+    "hand_accept_lines_now_unnecessary": 259
+   },
+   "HistoricalSummary": {
+    "accept_generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance, parameters recomputed by kindcheck rule 12)",
+    "generated_lines": 835,
+    "generated_code_lines": 780,
+    "time_s": [
+     3.2,
+     3.18
+    ],
+    "hand_accept_lines_now_unnecessary": 0
+   },
+   "SigningData": {
+    "accept_generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance, parameters recomputed by kindcheck rule 12)",
+    "generated_lines": 825,
+    "generated_code_lines": 770,
+    "time_s": [
+     3.05,
+     3.08
+    ],
+    "hand_accept_lines_now_unnecessary": 0
+   },
+   "SyncAggregatorSelectionData": {
+    "accept_generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance, parameters recomputed by kindcheck rule 12)",
+    "generated_lines": 657,
+    "generated_code_lines": 608,
+    "time_s": [
+     2.16,
+     2.14
+    ],
+    "hand_accept_lines_now_unnecessary": 0
+   },
+   "ValidatorBalance": {
+    "accept_generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance, parameters recomputed by kindcheck rule 12)",
+    "generated_lines": 657,
+    "generated_code_lines": 608,
+    "time_s": [
+     2.09,
+     2.1
+    ],
+    "hand_accept_lines_now_unnecessary": 0
+   },
+   "VoluntaryExit": {
+    "accept_generated": true,
+    "reason": "",
+    "identity": "n/a (no hand statement; statement = kind instance, parameters recomputed by kindcheck rule 12)",
+    "generated_lines": 770,
+    "generated_code_lines": 713,
+    "time_s": [
+     2.64,
+     2.65
+    ],
+    "hand_accept_lines_now_unnecessary": 0
+   },
+   "AttestationData": {
+    "accept_generated": false,
+    "reason": "refused (exit 2): the GEN4 front end covers 3 of 5 fields (Source, Target are nested containers; GEN4 exit 3)",
+    "identity": "n/a (refused)",
+    "generated_lines": 0,
+    "generated_code_lines": 0,
+    "time_s": [],
+    "hand_accept_lines_now_unnecessary": 0
+   }
+  },
+  "statement_check": "kind lines (decHeadKindN, decFieldKindN, decEpiKindN, decAcceptKindN, decRejectKindN) + kindcheck rule 12 (parameters recomputed from the IR and the .S) + identity rfl with the hand statement for 9 types; Checkpoint not tied (layCp chunk order); 5 H6-only types: kind instance",
+  "kindcheck": "15/15 raw outputs PASS; --selftest PASS (157 cases + 47 exit-code / rule-12 cases); 9/9 broken copies fail",
+  "p2dec_test": "394/394 (GEN5: 37 g5-* cases, 95 g5fc-* groups)",
+  "negatives": "22/25 counted pass (4 controls, 18 inside); not counted: g5g-pb-acc-stmt-size timeout_wall, g5g-ve-acc-kind-frame no_error (SG-6), g5g-pd-rej-code-frame outside (the code rename breaks the _stmt identity first)",
+  "axioms": "PASS 9139 declarations, 7709 theorems, 307 modules, hand list 2016, nonstandard 0, sorryAx 0 (committed record regenerated)",
+  "drift": "vs int6-r1 dump (7649): ADDED 1490 (525 G5-L + 965 G5-G), CHANGED 0, REMOVED 0; planted control: gate exit 1, drift 1 CHANGED + 1 ADDED",
+  "no_build": "lake build --no-build E2e E2eAd E2eScal exit 0",
+  "five_new_accept_theorems": "HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit: accept path and size reject only; NOT complete decoder proofs (reject-complete, Desc, spec alignment, witnesses: unit G5-C)",
+  "not_run": [
+   "cold build",
+   "link check",
+   "Go differential",
+   "x86-64 hardware",
+   "orca"
+  ],
+  "claims_and_limits": "in-sample; no generality, transfer or speed claim; elaboration times are lake env lean wall times, n = 2",
+  "correction_g5r1": {
+   "source": "review g5-r1 on ea6a0c6: REQUEST_CHANGES, records only (M1, M2; should-fix S1-S4); appended by unit G5-C step 0; the entries above are not rewritten",
+   "M1": "identities rfl with the hand statement: 9 (4 _same, 5 _stmt), not 10 (CONTAMINATION section 29 and commit 8192427 said 10); Checkpoint not tied, PendingPartialWithdrawal refused",
+   "M2": "'one run per type' = the committed run (gate job 04, 19:57:56Z); before it, five scratch trial runs of p2dec --gen5 (19:40:58Z PendingDeposit; 19:41:26Z all 17; 19:41:48Z SyncAggregatorSelectionData + ValidatorBalance; 19:46:46Z 15 types, elaborated in gated diagnostics D1/D2; 19:53:09Z VoluntaryExit), gen5.py / scalgen.py edited between them; scratch outputs not committed",
+   "S1": "the five trial runs were not gated (procedure deviation; Python, < 1 s each; no ungated lake / lean); no result changed (the review regenerated the 15 modules byte-equal)",
+   "S2": "open: kindcheck rule 12 does not bind the code constant C to the header .S (only Lean code facts on the accept and size-reject paths do); stated in README / REPORT; a rule-12 text or table change is a gen/scal change (frozen in G5-C)",
+   "S3": "SyncAggregatorSelectionData and ValidatorBalance are in frame class 0x38, with no hand-tied statement of that class before unit G5-C",
+   "S4": "commit 607ba61 says '32 adversarial': 28 adversarial inputs + 2 real refused types",
+   "details": "CONTAMINATION.md section 30"
+  }
+ },
+ "gen5-close": {
+  "what": "GEN5 unit G5-C: close the five H6-only flat decoders (HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit) on the generated accept / size-reject theorems, and the first inventory of the pinned target's SSZ methods (denominators corrected in unit G5-C2: see correction_g5cr1). In-sample (opened in H6 as (S)-only types); no hold-out claim",
+  "base": "ea6a0c6 (step 0 records: 55e4cec)",
+  "state": "not yet reviewed",
+  "commits": {
+   "step0_records": "55e4cec",
+   "hand_statements": "e1ccb83",
+   "identity": "8380a3d",
+   "hand_desc": "534538e",
+   "checker_desc_spec": "7a00bcb",
+   "spec_k": "ddf9a76",
+   "witnesses": "9356e28",
+   "pw_spec_k": "d4892ca",
+   "evidence": "499db40",
+   "gate_drift_inventory": "0a023e4"
+  },
+  "independent_statement_identities": {
+   "SyncAggregatorSelectionData": "rfl",
+   "ValidatorBalance": "rfl",
+   "VoluntaryExit": "rfl",
+   "independence": "written before opening the generated modules; the session had read review g5-r1's description of the frame classes (CONTAMINATION section 31)"
+  },
+  "per_type": {
+   "HistoricalSummary": {
+    "accept": "generated (kind)",
+    "reject": "generated",
+    "desc_codec": true,
+    "spec_k": true,
+    "reject_complete": "size path condition only; callee error returns not covered",
+    "witness_accept": true,
+    "witness_reject": true
+   },
+   "SigningData": {
+    "accept": "generated (kind)",
+    "reject": "generated",
+    "desc_codec": true,
+    "spec_k": true,
+    "reject_complete": "size path condition only; callee error returns not covered",
+    "witness_accept": true,
+    "witness_reject": true
+   },
+   "SyncAggregatorSelectionData": {
+    "accept": "generated (kind) + independent statement rfl",
+    "reject": "generated",
+    "desc_codec": true,
+    "spec_k": true,
+    "reject_complete": "size path condition only; callee error returns not covered",
+    "witness_accept": true,
+    "witness_reject": true
+   },
+   "ValidatorBalance": {
+    "accept": "generated (kind) + independent statement rfl",
+    "reject": "generated",
+    "desc_codec": true,
+    "spec_k": true,
+    "reject_complete": "size path condition only; callee error returns not covered",
+    "witness_accept": true,
+    "witness_reject": true
+   },
+   "VoluntaryExit": {
+    "accept": "generated (kind) + independent statement rfl",
+    "reject": "generated",
+    "desc_codec": true,
+    "spec_k": true,
+    "reject_complete": "size path condition only; callee error returns not covered",
+    "witness_accept": true,
+    "witness_reject": true
+   }
+  },
+  "validator_balance_desc": "no consensus-specs container; Desc from the Prysm proto definition",
+  "pw_accept_spec_k": "added (PwSpecKA.lean)",
+  "negatives": "43/46 counted (10 controls, 33 inside); 3 spec_k field-swap mutants of the uint64 types: timeout_heartbeat, not counted; scal file prysm/go1.26.10/e2e/g5c/negative-g5c.json",
+  "go_differential": "30/30 (Go 1.26.10 semantics on linux/arm64, not the ELF; Prysm tree status hash unchanged); planted control 2 mismatches, exit 1",
+  "link": "link/check.py on the committed h6 tables + pinned ELF (sha256 = build-ids): PASS all, RESULT byte-identical to the H6 record",
+  "axioms": "PASS 9758 declarations, 8134 theorems, hand list 2200, nonstandard 0, sorryAx 0; committed record regenerated",
+  "drift": "vs g5-r1 dump (9139): ADDED 619, CHANGED 0, REMOVED 0; Lean-level planted control in-tree (weakened witness + sorry theorem): gate exit 1, drift 1 CHANGED + 1 ADDED; restored byte-equal, rebuilt",
+  "inventory": {
+   "script": "gen/tools/inventory.py (methods + run) + gen/tools/inventory_decls.lean",
+   "denominators": {
+    "target_ssz_methods": "1292 methods of 211 types, prysm/go1.26.10/ssz-methods.json (from the nm listing of the pinned ELF; nm sha256 = build-ids.txt)",
+    "dumped_functions": "641 in functions.json (639 SSZ methods + 2 runtime helpers)",
+    "development_population": "16 flat types (FLAT16 of the script)"
+   },
+   "by_kind": {
+    "UnmarshalSSZ": {
+     "target": 211,
+     "functions_json": 211,
+     "mapped": 21,
+     "complete": 17,
+     "partial": 4
+    },
+    "MarshalSSZTo": {
+     "target": 211,
+     "functions_json": 211,
+     "mapped": 3,
+     "complete": 0,
+     "partial": 3
+    },
+    "MarshalSSZ": {
+     "target": 211,
+     "functions_json": 6,
+     "mapped": 0,
+     "complete": 0,
+     "partial": 0
+    },
+    "SizeSSZ": {
+     "target": 211,
+     "functions_json": 211,
+     "mapped": 1,
+     "complete": 0,
+     "partial": 1
+    },
+    "HashTreeRoot": {
+     "target": 211,
+     "functions_json": 0,
+     "mapped": 0,
+     "complete": 0,
+     "partial": 0
+    },
+    "HashTreeRootWith": {
+     "target": 211,
+     "functions_json": 0,
+     "mapped": 0,
+     "complete": 0,
+     "partial": 0
+    },
+    "ProgressiveHashTreeRoot": {
+     "target": 10,
+     "functions_json": 0,
+     "mapped": 0,
+     "complete": 0,
+     "partial": 0
+    },
+    "ProgressiveHashTreeRootWith": {
+     "target": 10,
+     "functions_json": 0,
+     "mapped": 0,
+     "complete": 0,
+     "partial": 0
+    },
+    "MaxSizeSSZ": {
+     "target": 6,
+     "functions_json": 0,
+     "mapped": 0,
+     "complete": 0,
+     "partial": 0
+    }
+   },
+   "complete_defined_for": "UnmarshalSSZ only; other kinds: a mapped theorem = partial",
+   "development_population_decoders_complete": "16/16 (defined sense)",
+   "flat_fixed_types_in_target": 40,
+   "flat_not_started": 24,
+   "flat_rule": "IR ir-mainnet.json: not variable; every field a byte vector, uint, bool or uint overlay (no bitfield)",
+   "cannot_detect": "codec / reject_complete of another type (existence and axioms only); see INVENTORY.md",
+   "controls": "unit G5-C2: 15/15 as expected (13 exit 1 incl. missing theorem, sorryAx, new axiom, another type's accept, callee-only constant x3, unpinned .S path; 2 documented limits exit 0)"
+  },
+  "no_build": "lake build --no-build E2e E2eAd E2eScal exit 0",
+  "not_run": [
+   "cold build",
+   "x86-64 hardware",
+   "regen_check.sh (generator unchanged)",
+   "kindcheck.py (generated files unchanged)",
+   "orca (not installed)"
+  ],
+  "claims_and_limits": "in-sample; 'complete' only in the inventory's defined sense and only for UnmarshalSSZ; the 16/16 is the development population, not the 40 flat fixed-size types of the target; no 'all codecs', 'generator complete' or speed claim",
+  "correction_g5cr1": {
+   "source": "review g5c-r1 on c4e1d74: REQUEST_CHANGES, inventory wording and script limits only (M1-M3; S1-S4); fixed by unit G5-C2",
+   "M1": "the denominator was the dumped set functions.json (641), worded as 'every function of the pinned target'; the target also holds HashTreeRoot / HashTreeRootWith (211 each), MarshalSSZ (205 more than dumped), 10 + 10 progressive hash-tree-root and 6 MaxSizeSSZ methods; now counted from ssz-methods.json, none proved",
+   "M2": "'flat 16/16' and 'M-flat-dec reached' named the 16-type development population; by the IR rule the target has 40 flat fixed-size types, 24 not started",
+   "M3": "the code key now requires the row's function to be the subject (callee-only constants fail); codec / reject_complete stay unkeyed (needs an inventory_decls.lean column) and are stated as a limit; 'cannot overstate' dropped",
+   "S1": "applied: code constants count only if their .S is in a pinned-ELF link table (recursive scan; duplicates fail)",
+   "S2": "open (Lean source comment): the ValidatorBalance proto was read from the primary Prysm checkout c4e939f; the message text is identical in the pinned tree ab15ff7 (review hash compare); recorded in CONTAMINATION section 32",
+   "S3": "open: 19 mapped names are not in the #print axioms hand lists (gen/scal/AxiomsScal.lean, frozen); inventory_decls.lean checks their axioms on every run",
+   "S4": "recorded: the session scripts mkspeck.py and mkwit.py are not in the repository (CONTAMINATION section 32)",
+   "replaced": {
+    "what": "GEN5 unit G5-C: close the five H6-only flat decoders (HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance, VoluntaryExit) on the generated accept / size-reject theorems, and the first verified inventory of the pinned target's functions. In-sample (opened in H6 as (S)-only types); no hold-out claim",
+    "inventory": {
+     "script": "gen/tools/inventory.py + gen/tools/inventory_decls.lean",
+     "functions_total": 641,
+     "decoders": {
+      "complete": 17,
+      "partial": 4,
+      "none": 190
+     },
+     "encoders": {
+      "fast_path": 3,
+      "none": 208
+     },
+     "size_ssz": {
+      "proved": 1,
+      "none": 210
+     },
+     "flat_population_decoders_complete": "16/16",
+     "m_flat_dec_reached_by_script": true,
+     "controls": "3 planted mapping errors (absent name, wrong accept for a witness, wrong code constant) each exit 1"
+    },
+    "claims_and_limits": "in-sample; 'complete' only in the inventory's defined sense; M-flat-dec only after an independent review; no 'all codecs', 'generator complete' or speed claim"
+   }
+  }
  }
 }
