@@ -1,0 +1,3 @@
+# old path	new path	meaning (paths are relative to the repository root)
+fv/kraken/lean/Prysm/ElfData/CheckpointAndEpoch.lean	fv/kraken/lean/Prysm/ElfData/PrysmTarget.lean	ELF data of the one link set prysm/go1.26.10/link-set of the Prysm target (the hand-edit script appends the data includes of the AttestationData, IndexedAttestation, SyncAggregate and SyncCommittee, and DataColumnsByRootIdentifier decoder modules, and the address lemmas)
+fv/kraken/lean/Prysm/ElfData/CheckpointAndEpochReader.lean	fv/kraken/lean/Prysm/ElfData/PrysmTargetReader.lean	the command prysm_data_include that reads the data files of prysm/go1.26.10/link-set (the hand-edit script removes the other four readers)

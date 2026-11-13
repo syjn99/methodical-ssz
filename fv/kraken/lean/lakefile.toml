@@ -58,30 +58,17 @@ text = true
 name = "Codec"
 globs = ["Codec.+"]
 
-# Prysm: one directory for each Prysm type (Prysm/<GoTypeName>/), the ELF data of the link sets (Prysm/ElfData/).
-# Now: v1alpha1.Checkpoint (decoder, encoder, SizeSSZ) and primitives.Epoch (decoder) on the Go 1.26.10 ELF, link set
-# prysm/go1.26.10/e2e/link. Not a default target. The .S and data files of that link set are inputs of every module.
+# The one link set of the Prysm target, prysm/go1.26.10/link-set (the code and data of the Go 1.26.10 ELF that the
+# theorems read): its .S files and data files are inputs of every module of the Prysm library.
 [[input_dir]]
-name = "e2e_norm_S"
-path = "../prysm/go1.26.10/e2e/link/norm"
+name = "prysm_target_norm_S"
+path = "../prysm/go1.26.10/link-set/norm"
 text = true
+filter = {extension = ["S"]}
 
 [[input_dir]]
-name = "e2e_data"
-path = "../prysm/go1.26.10/e2e/link/data"
-text = true
-
-# The link set prysm/go1.26.10/e2e/ad/link (v1alpha1.AttestationData and the primitives.Slot and CommitteeIndex
-# decoders on the same Go 1.26.10 ELF) and the witness-only runtime model Prysm/AttestationData/BumpNew72.S are
-# inputs of the Prysm library too.
-[[input_dir]]
-name = "e2e_ad_norm_S"
-path = "../prysm/go1.26.10/e2e/ad/link/norm"
-text = true
-
-[[input_dir]]
-name = "e2e_ad_data"
-path = "../prysm/go1.26.10/e2e/ad/link/data"
+name = "prysm_target_data"
+path = "../prysm/go1.26.10/link-set/data"
 text = true
 
 # witness-only runtime model: the 72-byte bump newobject Prysm/AttestationData/BumpNew72.S
@@ -91,36 +78,12 @@ path = "Prysm/AttestationData"
 text = true
 filter = {extension = ["S"]}
 
+# Prysm: one directory for each Prysm type (Prysm/<GoTypeName>/) and the ELF data of the link set
+# (Prysm/ElfData/). Not a default target.
 [[lean_lib]]
 name = "Prysm"
 globs = ["Prysm.+"]
-needs = ["e2e_norm_S", "e2e_data", "e2e_ad_norm_S", "e2e_ad_data", "e2e_ad_lean_S", "lv_norm_S", "lv_data",
-  "lv_t3_norm_S", "lv_t3_data", "runtime_model_S", "lv_hb_norm_S", "lv_dep_norm_S", "lv_dep_data", "deposit_lean_S",
-  "enc_norm_S", "dcd_norm_S", "dcd_data"]
-
-# Link sets of the list and vector types on the same Go 1.26.10 ELF: lv/link (SyncAggregate and SyncCommittee
-# decoders) and lv/link-t3 (IndexedAttestation decoder). Inputs of the Prysm modules that read them
-# (Prysm/SyncAggregate/, Prysm/SyncCommittee/, Prysm/IndexedAttestation/, Prysm/ElfData/) and of the libraries below.
-[[input_dir]]
-name = "lv_norm_S"
-path = "../prysm/go1.26.10/e2e/lv/link/norm"
-text = true
-
-[[input_dir]]
-name = "lv_data"
-path = "../prysm/go1.26.10/e2e/lv/link/data"
-text = true
-
-# IndexedAttestation: the link set lv/link-t3 (after the conv.py fix that writes a negative 32-bit displacement in signed form)
-[[input_dir]]
-name = "lv_t3_norm_S"
-path = "../prysm/go1.26.10/e2e/lv/link-t3/norm"
-text = true
-
-[[input_dir]]
-name = "lv_t3_data"
-path = "../prysm/go1.26.10/e2e/lv/link-t3/data"
-text = true
+needs = ["prysm_target_norm_S", "prysm_target_data", "e2e_ad_lean_S", "runtime_model_S", "deposit_lean_S"]
 
 # witness-only runtime models of the Prysm library: the type-dispatching bump allocators Prysm/RuntimeModel/*.S
 [[input_dir]]
@@ -129,46 +92,9 @@ path = "Prysm/RuntimeModel"
 text = true
 filter = {extension = ["S"]}
 
-# The link set lv/link-hb (the v1alpha1.HistoricalBatch decoder on the same Go 1.26.10 ELF): an input of the
-# Prysm library (Prysm/HistoricalBatch/).
-[[input_dir]]
-name = "lv_hb_norm_S"
-path = "../prysm/go1.26.10/e2e/lv/link-hb/norm"
-text = true
-
-# The link set lv/link-dep (the v1alpha1.Deposit decoder, proved with the general lemmas of Codec/Segment/): an
-# input of the Prysm library (Prysm/Deposit/).
-[[input_dir]]
-name = "lv_dep_norm_S"
-path = "../prysm/go1.26.10/e2e/lv/link-dep/norm"
-text = true
-
-[[input_dir]]
-name = "lv_dep_data"
-path = "../prysm/go1.26.10/e2e/lv/link-dep/data"
-text = true
-
 # witness-only runtime model of the Deposit witness: the 120-byte bump newobject Prysm/Deposit/BumpNew120.S
 [[input_dir]]
 name = "deposit_lean_S"
 path = "Prysm/Deposit"
 text = true
 filter = {extension = ["S"]}
-
-# Link sets of v1alpha1.DataColumnsByRootIdentifier on the same Go 1.26.10 ELF: lv/link-enc (MarshalSSZTo) and
-# lv/link-dec (UnmarshalSSZ and its data). Inputs of the Prysm modules that read them
-# (Prysm/DataColumnsByRootIdentifier/, Prysm/ElfData/).
-[[input_dir]]
-name = "enc_norm_S"
-path = "../prysm/go1.26.10/e2e/lv/link-enc/norm"
-text = true
-
-[[input_dir]]
-name = "dcd_norm_S"
-path = "../prysm/go1.26.10/e2e/lv/link-dec/norm"
-text = true
-
-[[input_dir]]
-name = "dcd_data"
-path = "../prysm/go1.26.10/e2e/lv/link-dec/data"
-text = true

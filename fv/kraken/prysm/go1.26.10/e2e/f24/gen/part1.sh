@@ -1,7 +1,7 @@
 #!/bin/bash
 # Part 1: ONE gated p2dec --gen5 and ONE gated p2enc --gen6 run per type (48 jobs, NN 10..57). No rerun.
 E=$1; K=$2  # evidence dir (holds g.sh: the gate wrapper), fv/kraken
-N=prysm/go1.26.10/e2e/f24/link/norm; R=$E/raw
+N=prysm/go1.26.10/link-set/norm; R=$E/raw
 NN=10
 while read k t p; do
   X=$(echo $p | sed 's/./\U&/')

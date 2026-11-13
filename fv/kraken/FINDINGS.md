@@ -129,6 +129,9 @@ How to handle a new finding is in `../README.md` section 7.
 - How it shows: `clang` rejected the line in the reassembly step of the link check.
 - State: fixed in commit `93b3f2a`. `link/conv.py --norm` writes the signed form. The SIB form without a base and the segment form are not handled. The Prysm ELF has none of them.
   A displacement range check in `link/check.py` is not added.
+  One converted file that Lean includes keeps the old form: `prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.MarshalSSZTo.S`
+  (`lea 0xffffff58(%rsp),%r12`). No theorem uses its program constant `Prysm.Validator.Code.marshalSSZTo`.
+  `clang` encodes both forms to the same bytes, so the link check passes on this file.
 
 ### Stack guard branch exhausts kernel memory
 
@@ -173,7 +176,7 @@ How to handle a new finding is in `../README.md` section 7.
 
 - What: the tracked `RESULT` files hash an axioms listing file that is no longer in the tree. `link/check.py` hashes that file only if it exists.
 - Effect: a new run writes a `RESULT` without that line, with a different bundle hash.
-- State: open.
+- State: open for `link/out/RESULT` of the test target. The one `RESULT` of `prysm/go1.26.10/link-set` has no such line.
 
 ### Link set `prysm/go1.26.10/link` cannot be checked from the tracked files
 
@@ -182,7 +185,7 @@ How to handle a new finding is in `../README.md` section 7.
 - Evidence: a fresh conversion of the whole disassembly of the pinned ELF (642 files) gives 1269 PASS lines and one FAIL.
   The FAIL is the reassembly check of `v1alpha1.BeaconStateBellatrix.MarshalSSZTo` at `0x93fd87`.
   The instruction is a `jge`: the ELF bytes are `0f8d7a000000`, and clang gives a 2-byte form.
-  The 16 link sets under `prysm/go1.26.10/e2e/` pass on the same ELF.
+  The link set `prysm/go1.26.10/link-set` (the 16 earlier link sets, merged) passes on the same ELF.
 - State: open. The function has no proof.
 
 ### The proof generator covers only some code forms
@@ -273,11 +276,11 @@ How to handle a new finding is in `../README.md` section 7.
 
 ### Several code directories are not Lake inputs
 
-- What: the code modules of the flat types in `lean/Prysm/` and `lean/Prysm/Checkpoint/CapacityReservedCode.lean` include `.S` files from directories that `lean/lakefile.toml` does not declare as inputs.
+- What: `lean/Prysm/Checkpoint/CapacityReservedCode.lean` includes `.S` files from a directory that `lean/lakefile.toml` does not declare as an input.
   A change in such a file does not make Lake build the proofs again.
-- Where: the `norm` directories of the link sets `bh`, `e1`, `enc2`, `f24`, `h3`, `h4`, `h5` and `h6` under `prysm/go1.26.10/e2e/`, and `prysm/go1.26.10/opt-r1/link/norm`.
-  The declared input `lv_dep_data` is not read by any Lean file. `Prysm.Deposit.Code.depDataType_addr` is a hand definition. `gen/e2e/depcheck_data.py` compares it with its data file.
-- State: open. A `lakefile.toml` change needs user approval.
+- Where: `prysm/go1.26.10/opt-r1/link/norm` (the capacity-reserved test ELF). The link set `prysm/go1.26.10/link-set` is an input.
+  `Prysm.Deposit.Code.depDataType_addr` is a hand definition. `gen/e2e/depcheck_data.py` compares it with its data file.
+- State: open for the capacity-reserved test ELF. A `lakefile.toml` change needs user approval.
 
 ### Inventory script trusts its method list
 

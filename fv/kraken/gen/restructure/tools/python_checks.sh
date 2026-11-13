@@ -50,8 +50,6 @@ run() {
 run data_check link/data.py python3 -B link/data.py --check link/out
 run axioms_gate_selftest gen/e2e/axioms_gate.py python3 -I -B gen/e2e/axioms_gate.py --selftest
 run check_include gen/e2e/check_include.py python3 -I -B gen/e2e/check_include.py
-run lvcheck_include gen/e2e/lvcheck_include.py python3 -I -B gen/e2e/lvcheck_include.py
-run lvt3check_include gen/e2e/lvt3check_include.py python3 -I -B gen/e2e/lvt3check_include.py
 run depcheck_data gen/e2e/depcheck_data.py python3 -I -B gen/e2e/depcheck_data.py
 run depcheck_data_selftest gen/e2e/depcheck_data.py python3 -I -B gen/e2e/depcheck_data.py --selftest
 run kindcheck_selftest gen/scal/kindcheck.py python3 -I -B gen/scal/kindcheck.py --selftest

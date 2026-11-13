@@ -1,7 +1,7 @@
 import Runtime.Contracts
 import Machine.Step
 import Machine.Labels
-import Prysm.ElfData.CheckpointAndEpoch
+import Prysm.ElfData.PrysmTarget
 import Prysm.HistoricalBatch.DecodeLoopBlockRoots
 import Codec.Segment.ByteSliceList
 

@@ -642,7 +642,7 @@ def main():
         info['module'] = 'Prysm.%s.GeneratedEncodeFastPath' % X
         info['Spath'] = os.path.join(lean_dir, '..', info['hdr']['S'])
         if X in ('Checkpoint',):
-            info['Spath'] = os.path.join(lean_dir, '..', 'prysm/go1.26.10/e2e/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S') if not os.path.exists(info['Spath']) else info['Spath']
+            info['Spath'] = os.path.join(lean_dir, '..', 'prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint.MarshalSSZTo.S') if not os.path.exists(info['Spath']) else info['Spath']
         cl = classify(info)
         gsize, _ = ir_size(ir, info['hdr']['ir_type'])
         wt, meta = emit_wit(X, info, cl, gsize)

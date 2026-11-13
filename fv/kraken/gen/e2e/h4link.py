@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """H4 hold-out: call graph and link tables of the real v1alpha1.Deposit_Data and v1alpha1.PendingPartialWithdrawal
-UnmarshalSSZ on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/e2e/link; written after the
+UnmarshalSSZ on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set; written after the
 H4 hold-out was opened at 2026-11-11T08:53:45Z; the text of `h3link.py` with the function set and the data items changed).
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
@@ -9,7 +9,7 @@ Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` a
   h4link.py data <outdir> <cp-linkdir> <ad-linkdir> after `conv.py <outdir>/target.objdump
                                                     <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
-Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/e2e/h4/link.
+Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
 Encoders, SizeSSZ and HashTreeRoot are not in the set (out of H4 scope).
 """
 import importlib.util

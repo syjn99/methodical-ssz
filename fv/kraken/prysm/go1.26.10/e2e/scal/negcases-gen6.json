@@ -17,7 +17,7 @@
   "theorem": "Prysm.HistoricalSummary.Encode.generated_epi",
   "kind": "control",
   "code_def": "marshalSSZTo",
-  "norm": "prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.MarshalSSZTo.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.MarshalSSZTo.S",
   "code_ns": "Prysm.HistoricalSummary.Code"
  },
  {
@@ -26,7 +26,7 @@
   "theorem": "Prysm.DepositMessage.Encode.generated_f0",
   "kind": "control",
   "code_def": "marshalSSZTo",
-  "norm": "prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.MarshalSSZTo.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.MarshalSSZTo.S",
   "code_ns": "Prysm.DepositMessage.Code"
  },
  {
@@ -131,7 +131,7 @@
   "theorem": "Prysm.ValidatorBalance.Encode.generated_f1",
   "kind": "code",
   "code_def": "marshalSSZTo",
-  "norm": "prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.MarshalSSZTo.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.MarshalSSZTo.S",
   "old": "  mov %r8,-0x8(%rdx,%rbx,1)",
   "new": "  mov %r8,-0x10(%rdx,%rbx,1)",
   "code_ns": "Prysm.ValidatorBalance.Code"
@@ -142,7 +142,7 @@
   "theorem": "Prysm.DepositMessage.Encode.generated_f0",
   "kind": "code",
   "code_def": "marshalSSZTo",
-  "norm": "prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.MarshalSSZTo.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.MarshalSSZTo.S",
   "old": "  cmpq $0x30,0x8(%rax)",
   "new": "  cmpq $0x20,0x8(%rax)",
   "code_ns": "Prysm.DepositMessage.Code"
@@ -153,7 +153,7 @@
   "theorem": "Prysm.HistoricalSummary.Encode.generated_epi",
   "kind": "code",
   "code_def": "marshalSSZTo",
-  "norm": "prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.MarshalSSZTo.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.MarshalSSZTo.S",
   "old": "  lea 0x60(%rsp),%rsi",
   "new": "  lea 0x58(%rsp),%rsi",
   "code_ns": "Prysm.HistoricalSummary.Code"
@@ -164,7 +164,7 @@
   "theorem": "Prysm.Deposit_Data.Encode.generated_f3",
   "kind": "code",
   "code_def": "marshalSSZTo",
-  "norm": "prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.MarshalSSZTo.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.MarshalSSZTo.S",
   "old": "  mov $0x60,%ecx",
   "new": "  mov $0x30,%ecx",
   "code_ns": "Prysm.Deposit_Data.Code"

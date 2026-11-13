@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Call graph and link set of the real v1alpha1.HistoricalBatch UnmarshalSSZ on the Go 1.26.10 ELF
-(the same ELF as prysm/go1.26.10/e2e/link and lv/link, sha256 c6403c02...911e). A new file. It reuses `lvlink.py`, `e2elink.py`
+(the same ELF as prysm/go1.26.10/link-set and lv/link, sha256 c6403c02...911e). A new file. It reuses `lvlink.py`, `e2elink.py`
 and `adlink.py` by import; none of them is changed.
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
@@ -9,11 +9,11 @@ Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` a
   hblink.py data <outdir> <cp-linkdir> <lv-linkdir> after `conv.py <outdir>/target.objdump
                                                     <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
-Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/e2e/lv/link-hb.
+Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
 
 Every operand that the HistoricalBatch proofs read equals an item of an existing link set: the uint8 type word and
-ssz.ErrSize (Checkpoint set, `Prysm.ElfData.CheckpointAndEpoch`) and the `[]uint8` element type word of the `[][]byte` backing array
-(SyncCommittee, `ElfData.SyncAggregateAndSyncCommittee.lvSliceType`). The script asserts these equalities. It writes the one
+ssz.ErrSize (Checkpoint set, `Prysm.ElfData.PrysmTarget`) and the `[]uint8` element type word of the `[][]byte` backing array
+(SyncCommittee, `ElfData.PrysmTarget.lvSliceType`). The script asserts these equalities. It writes the one
 data file `lvSliceType.data` again, so that check (f) compares it with the ELF in this link set too.
 """
 import json

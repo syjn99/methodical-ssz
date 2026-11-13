@@ -63,7 +63,7 @@ theorem Encode.tail_grow (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k) (hf
       ⋆ Eq (pre.At b) ⋆ Eq (d0.At (b + L.toBitVec)) ⋆ Heap avail ⋆ R)
     (hlo : L.toNat + 8 ≤ C.toNat) (hhi : C.toNat < L.toNat + 40)
     (hbud : 2 * nextSliceCap (L.toNat + 40) C.toNat + 8192 ≤ avail) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
+    (hgs : GrowsliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec
         ∧ st.data.regs.rbx.toNat = L.toNat + 40 ∧ nextSliceCap (L.toNat + 40) C.toNat ≤ st.data.regs.rcx.toNat
@@ -292,7 +292,7 @@ theorem Encode.tail_grow_call (k : Nat) (hk : marshalSSZTo.IsInfixAt Host.prog k
       (fun st => st.pc = label "runtime.growslice" ∧ st.data.regs.rsp = { toBitVec := rsp0.toBitVec - 120 }
         ∧ st.data.regs.rbp = { toBitVec := rsp0.toBitVec - 8#64 } ∧ st.data.regs.r14 = r140
         ∧ st.data.regs.rax.toBitVec = b ∧ st.data.regs.rbx.toNat = L.toNat + 40 ∧ st.data.regs.rcx = C
-        ∧ st.data.regs.rdi.toNat = 32 ∧ st.data.regs.rsi.toBitVec = ElfData.CheckpointAndEpoch.e2eU8Type_addr ∧
+        ∧ st.data.regs.rdi.toNat = 32 ∧ st.data.regs.rsi.toBitVec = ElfData.PrysmTarget.e2eU8Type_addr ∧
         (Eq ((Int.toBytes 8 (Host.addrOf (k + 50)).toBitVec.toInt).At (rsp0.toBitVec - 120))
           ⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At rsp0.toBitVec)
           ⋆ Eq ((Int.toBytes 8 rbp0.toBitVec.toInt).At (rsp0.toBitVec - 8))

@@ -155,6 +155,8 @@ The maps apply in this order:
 - `maps/shared-names/`: names of declarations that other types use. The Slot and CommitteeIndex programs of the
   AttestationData link set get the names of their types, and type-independent lemmas get `Codec` names.
   A cut script then moves their text into the modules of their new names.
+- `maps/link-set/`: the data namespaces become `ElfData.PrysmTarget`, and eight address lemmas get names there.
+  A hand-edit script merges the 16 link sets of the Prysm ELF into `prysm/go1.26.10/link-set` and the five data readers into one.
 
 Some steps were applied by scripts, not by maps. The inverse mode of `rename.py` does not undo them.
 The commit message of each such step lists its edits:

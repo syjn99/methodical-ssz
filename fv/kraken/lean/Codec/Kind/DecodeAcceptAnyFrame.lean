@@ -159,7 +159,7 @@ def rtBind (rt : Option RtCfg) (hsz : Nat) (cs : List (List UInt8))
   | some c => ∀ (S : Nat), Imps (sLt c.hS S) ((cs.getD c.loIdx []).length = addX S c.x →
       ∀ (Heap : Nat → DataMem → Prop) (avail : Nat),
         body S (fun h => [Heap (avail - h)]) [Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec)]
-          [hsz ≤ avail, MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (addX S c.x), MemmoveC (addX S c.x)])
+          [hsz ≤ avail, MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 (addX S c.x), MemmoveC (addX S c.x)])
 
 set_option linter.unusedVariables false in
 /-- The binder prefix of every GEN5 kind: code placement, callee placements, field values and their lengths,

@@ -1,7 +1,7 @@
 import Runtime.Contracts
 import Machine.Frame
 import Prysm.Slot.DecodeAccept
-import Prysm.ElfData.AttestationData
+import Prysm.ElfData.PrysmTarget
 
 /-!
 # Real Prysm `(*v1alpha1.AttestationData).UnmarshalSSZ`, accept path, segment 1

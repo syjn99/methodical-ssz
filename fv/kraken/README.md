@@ -80,7 +80,7 @@ The tracked file `prysm/go1.26.10/kparse-log.txt` is the parser log of the pinne
 | `link/out/` | The test target ELF, its listings, the converted `.S` files, the data files and the link result |
 | `lean/` | The Lean project: specifications, contracts and proofs (see `lean/README.md`) |
 | `gen/` | Generators and check tools (see `gen/README.md`) |
-| `prysm/` | The Prysm target: inventory, IR, generated Go, link sets and check records (see `prysm/README.md`) |
+| `prysm/` | The Prysm target: inventory, IR, generated Go, link set and check records (see `prysm/README.md`) |
 
 ## 5. Build and check
 
@@ -144,7 +144,7 @@ python3 -B fv/kraken/link/check.py --selftest fv/kraken/link/out
 
 **The Prysm target ELF.** You must build it first (section 3). Then these checks can run:
 
-- The link check of each Prysm link set. The `gen/e2e/*link.py` scripts filter the disassembly and write the data files. Then `link/check.py` runs on the set.
+- The link check of the Prysm link set `prysm/go1.26.10/link-set`. `gen/e2e/link_set.py` filters the disassembly and writes the data files with the item tables of the `gen/e2e/*link.py` scripts. Then `link/check.py` runs on the set.
 - The method list of the inventory: `python3 -I -B fv/kraken/gen/tools/proof_inventory.py methods <nm-listing> <scratch>/ssz-methods.json`. Compare the output with `prysm/go1.26.10/ssz-methods.json`.
 
 **A Prysm tree and Go 1.26.10.** The Go differential scripts `gen/e2e/*diff.py` write test cases. A Go program in a temporary Prysm tree runs them.
@@ -157,6 +157,6 @@ These runs check Go semantics on the host. They do not run the amd64 machine cod
 - The stack growth path and the write barrier path are excluded by premises. They are not proved.
 - After a slice growth, the contract gives only an upper bound on the remaining heap. One encoder state after a second growth is not proved.
 - There are no theorems for the hash tree root methods.
-- Some converted `.S` directories that proofs include are not Lake inputs. A change in them does not make Lake build the proofs again.
+- The converted `.S` directory of the capacity-reserved test ELF is not a Lake input. A change in it does not make Lake build the proofs again.
 - The Prysm ELF and its symbol listing are not in the repository. The Prysm link checks need them.
 - The details and the state of each limit are in `FINDINGS.md`.

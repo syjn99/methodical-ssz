@@ -100,7 +100,7 @@ theorem DecodeThenEncode.round_trip (kd : Nat) (hkd : unmarshalSSZ.IsInfixAt Hos
         ⋆ Eq (d1.At (dptr.toBitVec + dlen.toBitVec + 8)) ⋆ R0))
     (hguard : guard.toNat + 96 < s.regs.rsp.toNat) (hsp : 120 ≤ s.regs.rsp.toNat)
     (hlen : s.regs.rcx = 40) (hav : 32 ≤ avail)
-    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) (hmm2 : MemmoveC (S - 24)) :
+    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S) (hmm2 : MemmoveC (S - 24)) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0 ∧
         ∀ (mem2 : DataMem) (zm : RegZmms) (fl : StatusFlags),

@@ -2,7 +2,7 @@ import Machine.Step
 import Machine.Labels
 import Machine.Bytes
 import Prysm.Eth1Data.Code
-import Prysm.ElfData.CheckpointAndEpoch
+import Prysm.ElfData.PrysmTarget
 import Prysm.Checkpoint.DecodeRejectSize
 
 /-!
@@ -11,7 +11,7 @@ import Prysm.Checkpoint.DecodeRejectSize
 Hand-written: the text of `Prysm/BeaconBlockHeader/DecodeRejectSize.lean` (`bh_e2e_reject_size_main`) with the
 Eth1Data indices. `Decode.reject_size` (`len(buf) ≠ 72`, Go source `return ssz.ErrSize`):
 directives 2–7 (guard, prologue `sub $0x20`, rbx spill), 9–10 `cmp $0x48,%rcx; jne L_17f` taken,
-91 `L_17f`, 92–93 load the two words of `ssz.ErrSize` (`ElfData.CheckpointAndEpoch.e2eErrSize_addr`, the same ELF symbol
+91 `L_17f`, 92–93 load the two words of `ssz.ErrSize` (`ElfData.PrysmTarget.e2eErrSize_addr`, the same ELF symbol
 as the Checkpoint decoder's; `e1link.py` asserts the operand), 94–96 epilogue. The two words `e0`, `e1`
 are the global's value after package init (premise, as in `cp_e2e_reject_size_main`).
 The decoder has no `fmt.errorf` wrap and no callee error path: the size check is its only reject.
@@ -31,7 +31,7 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx ≠ 72) :
     Eventually (step1 Host.exe)
@@ -41,11 +41,11 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
-  simp only [Prysm.Checkpoint.Decode.errSize_addr_eq] at h_mem hguard hlen ⊢
+  simp only [ElfData.PrysmTarget.e2eErrSize_addr_eq] at h_mem hguard hlen ⊢
   have := rsp.toNat_lt_size; have := guard.toNat_lt_size; have := rcx.toNat_lt_size; simp only [UInt64.size] at *
   kat hk unmarshalSSZ 0
   kat hk unmarshalSSZ 1

@@ -1444,7 +1444,7 @@ def check_gen5(text, gnames=frozenset(), kr=None, expect=None):
 
 
 # ---- rule 12 selftest controls
-G5_VE = ("prysm/go1.26.10/e2e/h6/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S",
+G5_VE = ("prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S",
          "v1alpha1.VoluntaryExit")
 # the layouts of the GEN5 lemma unit's hand-over (`Codec/Kind/DecodeAcceptAnyFrameInstances.lean`: layCal, layMix40, layRt, layMix60), transcribed by hand as
 # constructor text; the recomputation from the real `.S` / IR must give exactly these
@@ -1477,7 +1477,7 @@ G5_HAND = {
 
 
 def g5_inputs(tname, sdir):
-    sp = f"prysm/go1.26.10/e2e/{sdir}/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.{tname}.UnmarshalSSZ.S"
+    sp = f"prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.{tname}.UnmarshalSSZ.S"
     sraw, iraw = (KR / sp).read_bytes(), (KR / "prysm/ir/ir-mainnet.json").read_bytes()
     return sp, sraw, iraw
 
@@ -2288,8 +2288,8 @@ def g6_selftest():
     for tname, (src, short) in G6_L_LAYOUTS.items():
         n += 1
         try:
-            d = "enc2/link/norm"
-            sp = f"prysm/go1.26.10/e2e/{d}/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.{tname}.MarshalSSZTo.S"
+            d = "norm"
+            sp = f"prysm/go1.26.10/link-set/{d}/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.{tname}.MarshalSSZTo.S"
             fs, goffs, size = g6_ir((KR / "prysm/ir/ir-mainnet.json").read_text(), "v1alpha1." + tname)
             X = g6_expect([l.strip() for l in (KR / sp).read_text().split("\n") if l.strip()], fs, goffs, size)
             Lx = g6_layout_def((KR / src).read_text(), short.rsplit(".", 1)[-1], short)

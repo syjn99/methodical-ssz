@@ -2,7 +2,7 @@
  {
   "code_def": "unmarshalSSZ",
   "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/e2e/lv/link-dec/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "dcd-control-size",
   "kind": "control",
   "module": "Prysm/DataColumnsByRootIdentifier/DecodeRejectSize.lean",
@@ -12,7 +12,7 @@
  {
   "code_def": "unmarshalSSZ",
   "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/e2e/lv/link-dec/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "dcd-control-iter",
   "kind": "control",
   "module": "Prysm/DataColumnsByRootIdentifier/DecodeLoop.lean",
@@ -21,7 +21,7 @@
  {
   "code_def": "unmarshalSSZ",
   "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/e2e/lv/link-dec/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "dcd-rsize-35",
   "kind": "code",
   "old": "  cmp $0x24,%rcx",
@@ -33,7 +33,7 @@
  {
   "code_def": "unmarshalSSZ",
   "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/e2e/lv/link-dec/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "dcd-roff-37",
   "kind": "code",
   "old": "  cmp $0x24,%rdx",
@@ -45,7 +45,7 @@
  {
   "code_def": "unmarshalSSZ",
   "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/e2e/lv/link-dec/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "dcd-accept-align16",
   "kind": "code",
   "old": "  test $0x7,%rcx",
@@ -60,7 +60,7 @@
  {
   "code_def": "unmarshalSSZ",
   "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/e2e/lv/link-dec/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "dcd-accept-max127",
   "kind": "code",
   "old": "  cmp $0x80,%rcx",
@@ -75,7 +75,7 @@
  {
   "code_def": "unmarshalSSZ",
   "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/e2e/lv/link-dec/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "dcd-iter-store8",
   "kind": "code",
   "old": "  mov %r11,(%r8,%r10,8)",
@@ -86,7 +86,7 @@
  {
   "code_def": "unmarshalSSZ",
   "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/e2e/lv/link-dec/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "dcd-stmt-size37",
   "kind": "stmt",
   "stmt_def": "Prysm.DataColumnsByRootIdentifier.Decode.reject_size_statement",
@@ -99,7 +99,7 @@
  {
   "code_def": "unmarshalSSZ",
   "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/e2e/lv/link-dec/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.UnmarshalSSZ.S",
   "id": "dcd-stmt-heap31",
   "kind": "stmt",
   "stmt_def": "Prysm.DataColumnsByRootIdentifier.Decode.accept_statement",

@@ -4,13 +4,13 @@ import Machine.Include
 /-!
 # Code of the encoder of `v1alpha1.VoluntaryExit` (Go 1.26.10 ELF `c6403c02…911e`)
 
-The constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/e2e/enc2/link/norm`.
+The constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`.
 The link check, the bundle hash and the rebuild limit are in `Prysm/BlobIdentifier/EncoderCode.lean`, which imports this module.
 -/
 
 namespace Prysm.VoluntaryExit
 
 /-- `(*v1alpha1.VoluntaryExit).MarshalSSZTo`. -/
-def Code.marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/e2e/enc2/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.MarshalSSZTo.S"
+def Code.marshalSSZTo : Program := include_x64_rt "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.MarshalSSZTo.S"
 
 end Prysm.VoluntaryExit

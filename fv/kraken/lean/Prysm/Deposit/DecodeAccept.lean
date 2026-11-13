@@ -126,7 +126,7 @@ theorem Decode.accept : Decode.accept_statement := by
   kat hk unmarshalSSZ 15
   kat hk unmarshalSSZ 16
   kat hk unmarshalSSZ 17
-  apply store_step_at _ _ (rsp.toBitVec - 104) _ _ _ rslot _ _ (by laddr) (by ecancel) (by exact hrs)
+  apply store_step_at _ _ (rsp.toBitVec - 104) _ _ _ rslot _ _ (by address_with_products) (by ecancel) (by exact hrs)
   intro m5 H5
   simp only [Width.bytes, Width.bits] at H5
   kunfold
@@ -214,9 +214,9 @@ theorem Decode.accept : Decode.accept_statement := by
     (rsp.toBitVec - 96) rax.toBitVec rbx.toBitVec rbx.toBitVec rax3.toBitVec
     (rsp.toBitVec - 40) (rsp.toBitVec - 48) (rsp.toBitVec - 56) (rsp.toBitVec - 32) (rsp.toBitVec + 16)
     (rsp.toBitVec + 8) (rax.toBitVec + 16) (rax.toBitVec + 8)
-    (by simp only [Int64.toBitVec_ofNat]; laddr) (by simp only [Int64.toBitVec_ofNat]; laddr)
-    (by simp only [Int64.toBitVec_ofNat]; laddr) (by simp only [Int64.toBitVec_ofNat]; laddr)
-    (by simp only [Int64.toBitVec_ofNat]; laddr) (by simp only [Int64.toBitVec_ofNat]; laddr)
+    (by simp only [Int64.toBitVec_ofNat]; address_with_products) (by simp only [Int64.toBitVec_ofNat]; address_with_products)
+    (by simp only [Int64.toBitVec_ofNat]; address_with_products) (by simp only [Int64.toBitVec_ofNat]; address_with_products)
+    (by simp only [Int64.toBitVec_ofNat]; address_with_products) (by simp only [Int64.toBitVec_ofNat]; address_with_products)
     (by simp only [Int64.toBitVec_ofNat]) (by simp only [Int64.toBitVec_ofNat]) (by simp)
     proofs hps hp _ _ (Sd + 48) Heap _ hms hmm
     33 0 [] lI lD lI1 lP spm3 (Int.toBytes 8 (Host.addrOf (k + 17 + 1)).toBitVec.toInt) stk3 (avail - 24 * 33)
@@ -224,7 +224,7 @@ theorem Decode.accept : Decode.accept_statement := by
     (by simp) rfl rfl rfl
     (by
       dsimp only
-      rw [show rsp.toBitVec - 96 - 8 = rsp.toBitVec - 104 by laddr]
+      rw [show rsp.toBitVec - 96 - 8 = rsp.toBitVec - 104 by address_with_products]
       simp only [show Codec.sliceHeaders 32 [] ++ Codec.zeroBytes (24 * (33 - 0)) = List.replicate (24 * 33) 0 from rfl, List.take_zero,
         show Codec.elementBlocks [] ([] : List (List UInt8)) = Std.ExtHashMap.emp from rfl, Std.ExtHashMap.sep_emp]
       ecancel)) ?_
@@ -236,25 +236,25 @@ theorem Decode.accept : Decode.accept_statement := by
     zmms4, flags4, mem4⟩ := d4
   simp only at hrsp4 hrbp4 hr144 Hm4
   subst hrsp4 hrbp4 hr144
-  rw [show rsp.toBitVec - 96 - 8 = rsp.toBitVec - 104 by laddr] at Hm4
+  rw [show rsp.toBitVec - 96 - 8 = rsp.toBitVec - 104 by address_with_products] at Hm4
   obtain ⟨sa, sb, hsa, hsb, rfl⟩ := split_at spl' 8 (by omega)
   obtain ⟨sb1, sb2, hsb1, hsb2, rfl⟩ := split_at sb 8 (by omega)
   have hsb2' : sb2.length = 8 := by simp only [List.length_append] at gspl; omega
-  rw [at_app _ _ (b := rsp.toBitVec - 88) (by rw [hsa]; laddr) (by simp [hsa, hsb1, hsb2']),
-    at_app _ _ (b := rsp.toBitVec - 80) (by rw [hsb1]; laddr) (by simp [hsb1, hsb2'])] at Hm4
+  rw [at_app _ _ (b := rsp.toBitVec - 88) (by rw [hsa]; address_with_products) (by simp [hsa, hsb1, hsb2']),
+    at_app _ _ (b := rsp.toBitVec - 80) (by rw [hsb1]; address_with_products) (by simp [hsb1, hsb2'])] at Hm4
   -- 84–86: exit label, new(Deposit_Data)
   kat hk unmarshalSSZ 84
   kat hk unmarshalSSZ 85
   kat hk unmarshalSSZ 86
   apply store_step_at _ _ (rsp.toBitVec - 104) _ _ _ (Int.toBytes 8 (Host.addrOf (k + 62 + 1 + 1)).toBitVec.toInt) _ _
-    (by laddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+    (by address_with_products) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m9 H9
   simp only [Width.bytes, Width.bits] at H9
   kunfold
-  try rw [show rsp.toBitVec - 96 - 8#64 = rsp.toBitVec - 104 by laddr]
+  try rw [show rsp.toBitVec - 96 - 8#64 = rsp.toBitVec - 104 by address_with_products]
   refine eventually_trans _ _ _ _ (hno _ (Host.addrOf (k + 86 + 1)) (avail - 24 * 33 - 32 * 33) lo' sa _
     rfl (by omega) glo hsa
-    (by dsimp only; rw [show rsp.toBitVec - 104 + 8 = rsp.toBitVec - 96 by laddr]; ecancel)) ?_
+    (by dsimp only; rw [show rsp.toBitVec - 104 + 8 = rsp.toBitVec - 96 by address_with_products]; ecancel)) ?_
   rintro ⟨d5, pc5⟩ ⟨hpc5, hrsp5, hr145, hrbp5, stk5, spm5, hstk5, hspm5, Hm5⟩
   dsimp only at hpc5 hrsp5 hr145 hrbp5 Hm5
   subst hpc5
@@ -264,7 +264,7 @@ theorem Decode.accept : Decode.accept_statement := by
   rw [show ({ toBitVec := rsp.toBitVec - 104 } + 8 : UInt64) = { toBitVec := rsp.toBitVec - 96 } by
     apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega] at hrsp5
   subst hrsp5 hr145 hrbp5
-  rw [show rsp.toBitVec - 104 + 8 = rsp.toBitVec - 96 by laddr] at Hm5
+  rw [show rsp.toBitVec - 104 + 8 = rsp.toBitVec - 96 by address_with_products] at Hm5
   -- 87–98: writeBarrier, recv, Data pointer
   kat hk unmarshalSSZ 87
   apply load_step _ _ _ _ [0, 0, 0, 0] _ _ (by ecancel) (by simp)
@@ -275,7 +275,7 @@ theorem Decode.accept : Decode.accept_statement := by
   case isTrue h => exfalso; simp [CondCode.interp, StatusFlags.from_result] at h
   simp only [Effects.All]
   kat hk unmarshalSSZ 89
-  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by laddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 8) _ _ (Int.toBytes 8 rax.toBitVec.toInt) _ _ (by address_with_products) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   try simp only [ofInt_ofBytes_toBytes64]
@@ -289,14 +289,14 @@ theorem Decode.accept : Decode.accept_statement := by
   kunfold
   -- 99–105: rbx = buf + 1056, rdi = cap − 1056, rcx = 184, the call
   kat hk unmarshalSSZ 99
-  apply load_step_at _ _ (rsp.toBitVec + 16) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by laddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 16) _ _ (Int.toBytes 8 rbx.toBitVec.toInt) _ _ (by address_with_products) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   try simp only [ofInt_ofBytes_toBytes64]
   kat hk unmarshalSSZ 100
   try intro _
   kat hk unmarshalSSZ 101
-  apply load_step_at _ _ (rsp.toBitVec + 32) _ _ (Int.toBytes 8 rdi.toBitVec.toInt) _ _ (by laddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec + 32) _ _ (Int.toBytes 8 rdi.toBitVec.toInt) _ _ (by address_with_products) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   try simp only [ofInt_ofBytes_toBytes64]
@@ -306,11 +306,11 @@ theorem Decode.accept : Decode.accept_statement := by
   kat hk unmarshalSSZ 104
   kat hk unmarshalSSZ 105
   apply store_step_at _ _ (rsp.toBitVec - 104) _ _ _ (Int.toBytes 8 (Host.addrOf (k + 86 + 1)).toBitVec.toInt) _ _
-    (by laddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+    (by address_with_products) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m11 H11
   simp only [Width.bytes, Width.bits] at H11
   kunfold
-  try rw [show rsp.toBitVec - 96 - 8#64 = rsp.toBitVec - 104 by laddr]
+  try rw [show rsp.toBitVec - 96 - 8#64 = rsp.toBitVec - 104 by address_with_products]
   rw [show label "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Deposit_Data.UnmarshalSSZ"
     = Host.addrOf (kd + 0) from label_at hkd hfd (j := 0) (by rfl) (by intro i hi; omega)]
   -- our scratch as the callee's frame; the fresh object as the callee's receiver
@@ -333,12 +333,12 @@ theorem Decode.accept : Decode.accept_statement := by
     (by simp) (by simp) (by simp) _ Sd hfa Heap (avail - 24 * 33 - 32 * 33 - 120)
     (by
       dsimp only
-      rw [show rsp.toBitVec - 104 + 8 = rsp.toBitVec - 96 by laddr,
-        show rsp.toBitVec - 104 + 16 = rsp.toBitVec - 88 by laddr,
-        show 1056 + rbx.toBitVec + 48 = rbx.toBitVec + 1104 by laddr,
-        show 1056 + rbx.toBitVec + 80 = rbx.toBitVec + 1136 by laddr,
-        show 1056 + rbx.toBitVec + 88 = rbx.toBitVec + 1144 by laddr,
-        show 1056 + rbx.toBitVec = rbx.toBitVec + 1056 by laddr]
+      rw [show rsp.toBitVec - 104 + 8 = rsp.toBitVec - 96 by address_with_products,
+        show rsp.toBitVec - 104 + 16 = rsp.toBitVec - 88 by address_with_products,
+        show 1056 + rbx.toBitVec + 48 = rbx.toBitVec + 1104 by address_with_products,
+        show 1056 + rbx.toBitVec + 80 = rbx.toBitVec + 1136 by address_with_products,
+        show 1056 + rbx.toBitVec + 88 = rbx.toBitVec + 1144 by address_with_products,
+        show 1056 + rbx.toBitVec = rbx.toBitVec + 1056 by address_with_products]
       ecancel)
     (by
       dsimp only
@@ -356,19 +356,19 @@ theorem Decode.accept : Decode.accept_statement := by
     zmms6, flags6, mem6⟩ := d6
   simp only at hrax6 hrbx6 hrsp6 hrbp6 hr146 Hm6
   rw [show ({ toBitVec := rsp.toBitVec - 104 } + 8 : UInt64) = { toBitVec := rsp.toBitVec - 96 } by
-    apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; laddr] at hrsp6
+    apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; address_with_products] at hrsp6
   subst hrax6 hrbx6 hrsp6 hrbp6 hr146
-  rw [show rsp.toBitVec - 104 + 8 = rsp.toBitVec - 96 by laddr,
-    show rsp.toBitVec - 104 + 16 = rsp.toBitVec - 88 by laddr,
-    show 1056 + rbx.toBitVec + 48 = rbx.toBitVec + 1104 by laddr,
-    show 1056 + rbx.toBitVec + 80 = rbx.toBitVec + 1136 by laddr,
-    show 1056 + rbx.toBitVec + 88 = rbx.toBitVec + 1144 by laddr] at Hm6
+  rw [show rsp.toBitVec - 104 + 8 = rsp.toBitVec - 96 by address_with_products,
+    show rsp.toBitVec - 104 + 16 = rsp.toBitVec - 88 by address_with_products,
+    show 1056 + rbx.toBitVec + 48 = rbx.toBitVec + 1104 by address_with_products,
+    show 1056 + rbx.toBitVec + 80 = rbx.toBitVec + 1136 by address_with_products,
+    show 1056 + rbx.toBitVec + 88 = rbx.toBitVec + 1144 by address_with_products] at Hm6
   -- the callee's saved-rbp word and its rbx spill (in our frame): names, so that `ecancel` matches them
   have hvb := Int.toBytes_length 8 (BitVec.toInt (rsp.toBitVec - 8#64))
   generalize Int.toBytes 8 (BitVec.toInt (rsp.toBitVec - 8#64)) = vb at Hm6 hvb
   have hvx := Int.toBytes_length 8 (BitVec.toInt (1056 + rbx.toBitVec))
   generalize Int.toBytes 8 (BitVec.toInt (1056 + rbx.toBitVec)) = vx at Hm6 hvx
-  rw [show 1056 + rbx.toBitVec = rbx.toBitVec + 1056 by laddr] at Hm6
+  rw [show 1056 + rbx.toBitVec = rbx.toBitVec + 1056 by address_with_products] at Hm6
   -- 106–107: err = nil, `je L_234` taken; epilogue 135–138
   kat hk unmarshalSSZ 106
   try intro _
@@ -380,11 +380,11 @@ theorem Decode.accept : Decode.accept_statement := by
   kat hk unmarshalSSZ 135
   kat hk unmarshalSSZ 136
   kat hk unmarshalSSZ 137
-  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by laddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by address_with_products) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk unmarshalSSZ 138
-  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by laddr) (by ecancel)
+  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by address_with_products) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   apply Eventually.done
@@ -399,9 +399,9 @@ theorem Decode.accept : Decode.accept_statement := by
     lo6 ++ (Int.toBytes 8 (Host.addrOf (kd + 106)).toBitVec.toInt ++ (spl6 ++ (Int.toBytes 8 p3.toInt ++ vb))),
     hps', g7, g6, g5, g8, by simp [hvx, hsb2', Int.toBytes_length], by simp [hlo6, hspl6, hvb, Int.toBytes_length]; try omega, ?_⟩
   rotate_right
-  · rw [at_app _ _ (b := rsp.toBitVec - 88) (by simp [Int.toBytes_length]; laddr) (by simp [hvx, hsb2',
+  · rw [at_app _ _ (b := rsp.toBitVec - 88) (by simp [Int.toBytes_length]; address_with_products) (by simp [hvx, hsb2',
         Int.toBytes_length]),
-      at_app _ _ (b := rsp.toBitVec - 80) (by rw [hvx]; laddr) (by simp [hvx, hsb2']),
+      at_app _ _ (b := rsp.toBitVec - 80) (by rw [hvx]; address_with_products) (by simp [hvx, hsb2']),
       show rsp.toBitVec - 104 - BitVec.ofNat 64 (Sd + 48) = rsp.toBitVec - 104 - BitVec.ofNat 64 (Sd + 48) from rfl,
       Decode.scratch_as_data_frame (rsp.toBitVec - 104) Sd hSd _ _ _ _ _ hlo6 (Int.toBytes_length 8 _) hspl6 (Int.toBytes_length 8 _) hvb]
     ecancel
@@ -411,7 +411,7 @@ theorem Decode.accept : Decode.accept_statement := by
     | (apply UInt64.toBitVec_inj.mp
        simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, Width.bits]
        done)
-    | (apply UInt64.toBitVec_inj.mp; laddr)
+    | (apply UInt64.toBitVec_inj.mp; address_with_products)
     | (apply UInt64.toBitVec_inj.mp; simp)
 
 end Prysm.Deposit

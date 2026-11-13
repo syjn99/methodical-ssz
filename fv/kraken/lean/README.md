@@ -51,7 +51,8 @@ The files `files.tsv` of `../gen/restructure/maps/checkpoint-and-epoch/` and `..
   `../gen/restructure/maps/data-columns-by-root-identifier/files.tsv` gives the earlier path of each module.
 - `Prysm/RuntimeModel/`: witness-only models of runtime functions that read ELF data of a link set
   (bump allocators that dispatch on a type word). The library `Runtime` does not import `Prysm`.
-- `Prysm/ElfData/`: the ELF data of a link set and the command that reads it, namespace `ElfData.<SetName>`.
+- `Prysm/ElfData/`: the ELF data of the link set `../prysm/go1.26.10/link-set` (`PrysmTarget.lean`, namespace
+  `ElfData.PrysmTarget`) and the command `prysm_data_include` that reads it (`PrysmTargetReader.lean`).
   The root `ElfData` keeps the order of the constant names that some `simp` proofs depend on (see `../gen/restructure/README.md`).
 
 The flat fixed-size types (a flat type has only fixed-size fields and no nested container) have their directories in
@@ -71,7 +72,7 @@ EthLib -> Spec -> Machine -> Runtime -> Codec (except Codec/Segment/)
 ```
 
 The arrows give the order of the libraries in the import graph. A library imports only libraries to its left.
-Exception: `Codec/Bytes32Decode.lean` imports `Prysm/ElfData/CheckpointAndEpoch.lean`.
+Exception: `Codec/Bytes32Decode.lean` imports `Prysm/ElfData/PrysmTarget.lean`.
 `Prysm/Checkpoint/CapacityReserved*.lean` and `Prysm/Deposit/` import modules of the flat types, and `Prysm/HistoricalBatch/` does not import them.
 Some modules of `Codec/` and `Codec/Kind/` import modules of the flat types (the kinds and lemmas that the shared layer left in a type library).
 A new type gets its own directory `Prysm/<GoTypeName>/`. Do not change a reviewed module to add a new type.
@@ -81,12 +82,12 @@ A new type gets its own directory `Prysm/<GoTypeName>/`. Do not change a reviewe
 1. `../link/conv.py` converts the disassembly of one function into a labeled `.S` file.
 2. `include_x64_rt "<path>.S"` (`Machine/Include.lean`) parses the file with the Kraken parser when Lean elaborates it. The result is a `Program` constant, for example `Prysm.SyncAggregate.Code.unmarshalSSZ`.
 3. A data file holds the bytes or the address of one ELF data item, for example a format string or a type descriptor.
-   `data_include <id>` (`Machine/Include.lean`) and its copies for other directories define `<id> : List UInt8` and `<id>_addr : BitVec 64`. No byte or offset is written by hand.
+   `data_include <id>` (`Machine/Include.lean`) and its copy `prysm_data_include` for the Prysm link set define `<id> : List UInt8` and `<id>_addr : BitVec 64`. No byte or offset is written by hand.
 4. `../link/check.py` compares the `.S` files and the data files with the ELF.
 
 The `.S` and data files are not Lean imports. So `lakefile.toml` declares their directories as `input_dir` entries in the `needs` of each library.
 Lake then puts the file contents into the input hash, and a changed file makes Lake build the proofs again.
-Some directories that the code modules of the flat types and `Prysm/Checkpoint/CapacityReservedCode.lean` include are not declared. A change there does not cause a rebuild (see `../FINDINGS.md`).
+The directory that `Prysm/Checkpoint/CapacityReservedCode.lean` includes is not declared. A change there does not cause a rebuild (see `../FINDINGS.md`).
 When you add a code directory, add it as an `input_dir` of the library. A `lakefile.toml` change needs user approval.
 
 ## 3. Shape of a main theorem
@@ -103,7 +104,7 @@ def Prysm.SyncAggregate.Decode.reject_size_statement : Prop :=
     (h_mem : s.dmem =⋆ Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8)) ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx ≠ 160),
     Eventually (step1 Host.exe)
@@ -113,7 +114,7 @@ def Prysm.SyncAggregate.Decode.reject_size_statement : Prop :=
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
 ```

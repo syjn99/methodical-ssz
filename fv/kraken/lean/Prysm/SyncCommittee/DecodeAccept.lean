@@ -43,7 +43,7 @@ theorem Decode.aggregate_pubkey_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
+    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 St) (hmm : MemmoveC St),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 94 + 12) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -126,7 +126,7 @@ theorem Decode.accept : Decode.accept_statement := by
   kat hk unmarshalSSZ 14
   kat hk unmarshalSSZ 15
   kat hk unmarshalSSZ 16
-  apply store_step_at _ _ (rsp.toBitVec - 64) _ _ _ rslot _ _ (by laddr) (by ecancel) (by exact hrs)
+  apply store_step_at _ _ (rsp.toBitVec - 64) _ _ _ rslot _ _ (by address_with_products) (by ecancel) (by exact hrs)
   intro m5 H5
   simp only [Width.bytes, Width.bits] at H5
   kunfold
@@ -188,9 +188,9 @@ theorem Decode.accept : Decode.accept_statement := by
     (by simp) rfl rfl rfl
     (by
       dsimp only
-      rw [show rsp.toBitVec - 56 + 64 = rsp.toBitVec + 8 by laddr, show rsp.toBitVec - 56 + 72 = rsp.toBitVec + 16 by laddr,
-        show rsp.toBitVec - 56 + 24 = rsp.toBitVec - 32 by laddr, show rsp.toBitVec - 56 + 32 = rsp.toBitVec - 24 by laddr,
-        show rsp.toBitVec - 56 + 40 = rsp.toBitVec - 16 by laddr, show rsp.toBitVec - 56 - 8 = rsp.toBitVec - 64 by laddr]
+      rw [show rsp.toBitVec - 56 + 64 = rsp.toBitVec + 8 by address_with_products, show rsp.toBitVec - 56 + 72 = rsp.toBitVec + 16 by address_with_products,
+        show rsp.toBitVec - 56 + 24 = rsp.toBitVec - 32 by address_with_products, show rsp.toBitVec - 56 + 32 = rsp.toBitVec - 24 by address_with_products,
+        show rsp.toBitVec - 56 + 40 = rsp.toBitVec - 16 by address_with_products, show rsp.toBitVec - 56 - 8 = rsp.toBitVec - 64 by address_with_products]
       simp only [show Codec.sliceHeaders 48 [] ++ Codec.zeroBytes (24 * (512 - 0)) = List.replicate (24 * 512) 0 from rfl, List.take_zero,
         show Codec.elementBlocks [] ([] : List (List UInt8)) = Std.ExtHashMap.emp from rfl, Std.ExtHashMap.sep_emp]
       ecancel)) ?_
@@ -240,18 +240,18 @@ theorem Decode.accept : Decode.accept_statement := by
   intro _
   kat hk unmarshalSSZ 119
   kat hk unmarshalSSZ 120
-  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by laddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by address_with_products) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk unmarshalSSZ 121
-  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by laddr) (by ecancel)
+  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by address_with_products) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   apply Eventually.done
   try simp only [BitVec.ofInt_ofBytes_toBytes 64 8 rfl]
-  rw [show rsp.toBitVec - 56 + 40 = rsp.toBitVec - 16 by laddr, show rsp.toBitVec - 56 + 64 = rsp.toBitVec + 8 by laddr,
-    show rsp.toBitVec - 56 + 72 = rsp.toBitVec + 16 by laddr, show rsp.toBitVec - 56 + 24 = rsp.toBitVec - 32 by laddr,
-    show rsp.toBitVec - 56 + 32 = rsp.toBitVec - 24 by laddr, show rsp.toBitVec - 56 - 8 = rsp.toBitVec - 64 by laddr,
+  rw [show rsp.toBitVec - 56 + 40 = rsp.toBitVec - 16 by address_with_products, show rsp.toBitVec - 56 + 64 = rsp.toBitVec + 8 by address_with_products,
+    show rsp.toBitVec - 56 + 72 = rsp.toBitVec + 16 by address_with_products, show rsp.toBitVec - 56 + 24 = rsp.toBitVec - 32 by address_with_products,
+    show rsp.toBitVec - 56 + 32 = rsp.toBitVec - 24 by address_with_products, show rsp.toBitVec - 56 - 8 = rsp.toBitVec - 64 by address_with_products,
     show k + 94 + 6 + 1 = k + 101 from rfl, show avail - 24 * 512 - 48 * 512 - 48 = avail - 36912 by omega,
     show Codec.zeroBytes (24 * (512 - 512)) = [] from rfl, List.append_nil, List.take_of_length_le (by omega : pks.length ≤ 512)]
     at Hm6
@@ -264,7 +264,7 @@ theorem Decode.accept : Decode.accept_statement := by
     | (apply UInt64.toBitVec_inj.mp
        simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, Width.bits]
        done)
-    | (apply UInt64.toBitVec_inj.mp; laddr)
+    | (apply UInt64.toBitVec_inj.mp; address_with_products)
     | (apply UInt64.toBitVec_inj.mp; simp)
 
 end Prysm.SyncCommittee

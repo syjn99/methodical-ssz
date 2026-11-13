@@ -57,7 +57,7 @@ theorem Encode.grow_any_site_three_cases (k : Nat) (hk : marshalSSZTo.IsInfixAt 
     (hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 120 ≤ s.regs.rsp.toNat)
     (hlc : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hgrow : s.regs.rdi.toNat < s.regs.rcx.toNat + 8)
     (hbud : 2 * nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat + 8192 ≤ avail) (hmax : avail ≤ maxAlloc)
-    (hgs : GrowsliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
+    (hgs : GrowsliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
     Eventually (step1 Host.exe)
       (fun st =>
         -- (A) first growth, the new block holds the root: return
@@ -132,7 +132,7 @@ theorem Encode.grow_any_site_three_cases (k : Nat) (hk : marshalSSZTo.IsInfixAt 
         ∨ (st.pc = label "runtime.growslice" ∧ st.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 120 }
           ∧ st.data.regs.rbp = { toBitVec := s.regs.rsp.toBitVec - 8#64 } ∧ st.data.regs.r14 = s.regs.r14
           ∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 40 ∧ st.data.regs.rdi.toNat = 32
-          ∧ st.data.regs.rsi.toBitVec = ElfData.CheckpointAndEpoch.e2eU8Type_addr
+          ∧ st.data.regs.rsi.toBitVec = ElfData.PrysmTarget.e2eU8Type_addr
           ∧ nextSliceCap (s.regs.rcx.toNat + 8) s.regs.rdi.toNat ≤ st.data.regs.rcx.toNat
           ∧ st.data.regs.rcx.toNat < s.regs.rcx.toNat + 40 ∧
           ∃ (t u scr spl' mid : List UInt8) (av' : Nat), t.length = 8 ∧ u.length = 16 ∧ scr.length = S

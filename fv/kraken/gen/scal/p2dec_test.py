@@ -137,7 +137,7 @@ import sys
 HERE = pathlib.Path(__file__).resolve().parent
 KR = HERE.parent.parent
 OLD_BLOB = "78e3339bc0ff3f20b6daa9a28582c97d7df9f712"
-S = "prysm/go1.26.10/e2e/e1/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S"
+S = "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S"
 RECORD = "prysm/go1.26.10/e2e/e1/gen-e1dec.raw.txt"
 COMMITTED = "lean/Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean"
 ARGS = ["--const", "unmarshalSSZ", "--ir", "prysm/ir/ir-mainnet.json", "--type", "v1alpha1.Eth1Data",
@@ -175,7 +175,7 @@ def mutate(lines, line, old, new):
     return lines[:line - 1] + ([] if new is None else [new]) + lines[line:]
 
 
-H3N = "prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
+H3N = "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
 E1S = S
 IR = "prysm/ir/ir-mainnet.json"
 G2 = {
@@ -197,7 +197,7 @@ G2 = {
                old_args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_root", "--imports",
                          "Codec.Bytes32Decode,Codec.Bytes32DecodeOffsetZero,Prysm.BlobIdentifier.Code", "--open", "Prysm.DepositMessage.Code"],
                fields=["PublicKey", "WithdrawalCredentials", "Amount"]),
-    "BH": dict(S="prysm/go1.26.10/e2e/bh/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
+    "BH": dict(S="prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
                  "BeaconBlockHeader.UnmarshalSSZ.S", type="v1alpha1.BeaconBlockHeader",
                args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_field", "--imports",
                      "Codec.Bytes32Decode,Prysm.BeaconBlockHeader.Code", "--open", "Prysm.BeaconBlockHeader.Code"],
@@ -545,7 +545,7 @@ def g2f_cases(work, new, cargs, CP, irt):
     return res, bad
 
 
-H4N = "prysm/go1.26.10/e2e/h4/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
+H4N = "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
 G3 = {
     "PW": dict(S=H4N + "PendingPartialWithdrawal.UnmarshalSSZ.S", type="v1alpha1.PendingPartialWithdrawal",
                committed="lean/Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean",
@@ -560,7 +560,7 @@ G3 = {
                args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_call", "--imports", "Codec.Bytes32Decode,Prysm.BeaconBlockHeader.Code",
                      "--open", "Prysm.BeaconBlockHeader.Code"],
                fields=["Slot", "ProposerIndex", "ParentRoot", "StateRoot", "BodyRoot"]),
-    "AD": dict(S="prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
+    "AD": dict(S="prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
                  "AttestationData.UnmarshalSSZ.S", type="v1alpha1.AttestationData",
                committed="lean/Prysm/AttestationData/GeneratedDecodeCallSegmentsPartial.lean",
                args=["--const", "unmarshalSSZ", "--prefix", "Decode.generated_call", "--imports", "Codec.Bytes32Decode,Prysm.AttestationData.Code",
@@ -754,35 +754,35 @@ def g3_cases(work, new):
     return res, bad
 
 
-H5N = "prysm/go1.26.10/e2e/h5/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
+H5N = "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
 PN = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1."
 
 
 def g4c(sdir, tname, const, mod, pre, out, fields, cov=None):
-    return dict(S=f"prysm/go1.26.10/e2e/{sdir}/{PN}{tname}.UnmarshalSSZ.S", type=f"v1alpha1.{tname}",
+    return dict(S=f"prysm/go1.26.10/link-set/{sdir}/{PN}{tname}.UnmarshalSSZ.S", type=f"v1alpha1.{tname}",
                 committed=f"lean/Prysm/{tname}/GeneratedDecodeSteps" + ("Partial" if out.endswith("Partial") else "") + ".lean", args=["--const", const, "--prefix", "Decode.generated_step", "--imports", mod,
                                                              "--open", f"Prysm.{tname}.Code"],
                 fields=fields, cov=fields if cov is None else cov)
 
 
 G4 = {
-    "CP": g4c("link/norm", "Checkpoint", "unmarshalSSZ", "Prysm.Checkpoint.Code", "cp", "Gen4CpDec", ["Epoch", "Root"]),
-    "AD": g4c("ad/link/norm", "AttestationData", "unmarshalSSZ", "Prysm.AttestationData.Code", "ad", "Gen4AdDecPartial",
+    "CP": g4c("norm", "Checkpoint", "unmarshalSSZ", "Prysm.Checkpoint.Code", "cp", "Gen4CpDec", ["Epoch", "Root"]),
+    "AD": g4c("norm", "AttestationData", "unmarshalSSZ", "Prysm.AttestationData.Code", "ad", "Gen4AdDecPartial",
               ["Slot", "CommitteeIndex", "BeaconBlockRoot", "Source", "Target"], ["Slot", "CommitteeIndex", "BeaconBlockRoot"]),
-    "BH": g4c("bh/link/norm", "BeaconBlockHeader", "unmarshalSSZ", "Prysm.BeaconBlockHeader.Code", "bh", "Gen4BhDec",
+    "BH": g4c("norm", "BeaconBlockHeader", "unmarshalSSZ", "Prysm.BeaconBlockHeader.Code", "bh", "Gen4BhDec",
               ["Slot", "ProposerIndex", "ParentRoot", "StateRoot", "BodyRoot"]),
-    "E1": g4c("e1/link/norm", "Eth1Data", "unmarshalSSZ", "Prysm.Eth1Data.Code", "e1", "Gen4E1Dec",
+    "E1": g4c("norm", "Eth1Data", "unmarshalSSZ", "Prysm.Eth1Data.Code", "e1", "Gen4E1Dec",
               ["DepositRoot", "DepositCount", "BlockHash"]),
-    "BI": g4c("h3/link/norm", "BlobIdentifier", "unmarshalSSZ", "Prysm.BlobIdentifier.Code", "bi", "Gen4BiDec", ["BlockRoot", "Index"]),
-    "DM": g4c("h3/link/norm", "DepositMessage", "unmarshalSSZ", "Prysm.BlobIdentifier.Code", "dm", "Gen4DmDec",
+    "BI": g4c("norm", "BlobIdentifier", "unmarshalSSZ", "Prysm.BlobIdentifier.Code", "bi", "Gen4BiDec", ["BlockRoot", "Index"]),
+    "DM": g4c("norm", "DepositMessage", "unmarshalSSZ", "Prysm.BlobIdentifier.Code", "dm", "Gen4DmDec",
               ["PublicKey", "WithdrawalCredentials", "Amount"]),
-    "DD": g4c("h4/link/norm", "Deposit_Data", "unmarshalSSZ", "Prysm.Deposit_Data.Code", "dd", "Gen4DdDec",
+    "DD": g4c("norm", "Deposit_Data", "unmarshalSSZ", "Prysm.Deposit_Data.Code", "dd", "Gen4DdDec",
               ["PublicKey", "WithdrawalCredentials", "Amount", "Signature"]),
-    "PW": g4c("h4/link/norm", "PendingPartialWithdrawal", "unmarshalSSZ", "Prysm.Deposit_Data.Code", "pw", "Gen4PwDec",
+    "PW": g4c("norm", "PendingPartialWithdrawal", "unmarshalSSZ", "Prysm.Deposit_Data.Code", "pw", "Gen4PwDec",
               ["Index", "Amount", "WithdrawableEpoch"]),
-    "SM": g4c("h5/link/norm", "SyncCommitteeMessage", "unmarshalSSZ", "Prysm.SyncCommitteeMessage.Code", "sm", "Gen4SmDec",
+    "SM": g4c("norm", "SyncCommitteeMessage", "unmarshalSSZ", "Prysm.SyncCommitteeMessage.Code", "sm", "Gen4SmDec",
               ["Slot", "BlockRoot", "ValidatorIndex", "Signature"]),
-    "PC": g4c("h5/link/norm", "PendingConsolidation", "unmarshalSSZ", "Prysm.SyncCommitteeMessage.Code", "pc", "Gen4PcDec",
+    "PC": g4c("norm", "PendingConsolidation", "unmarshalSSZ", "Prysm.SyncCommitteeMessage.Code", "pc", "Gen4PcDec",
               ["SourceIndex", "TargetIndex"]),
 }
 SMF, PCF, PWF = G4["SM"]["fields"], G4["PC"]["fields"], G4["PW"]["fields"]
@@ -1245,20 +1245,20 @@ def g4_cases(work, new):
 # ---------------------------------------------------------------------------------------------- GEN5
 
 def g5c(sdir, tname, const, mod, pre, extra=()):
-    return dict(S=f"prysm/go1.26.10/e2e/{sdir}/{PN}{tname}.UnmarshalSSZ.S", type=f"v1alpha1.{tname}",
+    return dict(S=f"prysm/go1.26.10/link-set/{sdir}/{PN}{tname}.UnmarshalSSZ.S", type=f"v1alpha1.{tname}",
                 args=["--const", const, "--prefix", "Decode.generated", "--imports", mod, "--open", f"Prysm.{tname}.Code", *extra])
 
 
 G5 = {
-    "PD": g5c("h6/link/norm", "PendingDeposit", "unmarshalSSZ", "Prysm.PendingDeposit.Code", "pd",
+    "PD": g5c("norm", "PendingDeposit", "unmarshalSSZ", "Prysm.PendingDeposit.Code", "pd",
               ["--same-as-prop", "Prysm.PendingDeposit.Decode.accept_statement"]),
-    "SM": g5c("h5/link/norm", "SyncCommitteeMessage", "unmarshalSSZ", "Prysm.SyncCommitteeMessage.Code", "sm",
+    "SM": g5c("norm", "SyncCommitteeMessage", "unmarshalSSZ", "Prysm.SyncCommitteeMessage.Code", "sm",
               ["--same-as-prop", "Prysm.SyncCommitteeMessage.Decode.accept_statement"]),
-    "VE": g5c("h6/link/norm", "VoluntaryExit", "unmarshalSSZ", "Prysm.PendingDeposit.Code", "ve"),
-    "PB": g5c("h6/link/norm", "PowBlock", "unmarshalSSZ", "Prysm.PendingDeposit.Code", "pb", ["--same-as-prop", "Prysm.PowBlock.Decode.accept_statement"]),
-    "VB": g5c("h6/link/norm", "ValidatorBalance", "unmarshalSSZ", "Prysm.PendingDeposit.Code", "vb"),
-    "PW": g5c("h4/link/norm", "PendingPartialWithdrawal", "unmarshalSSZ", "Prysm.Deposit_Data.Code", "pw"),
-    "AD": g5c("ad/link/norm", "AttestationData", "unmarshalSSZ", "Prysm.AttestationData.Code", "ad"),
+    "VE": g5c("norm", "VoluntaryExit", "unmarshalSSZ", "Prysm.PendingDeposit.Code", "ve"),
+    "PB": g5c("norm", "PowBlock", "unmarshalSSZ", "Prysm.PendingDeposit.Code", "pb", ["--same-as-prop", "Prysm.PowBlock.Decode.accept_statement"]),
+    "VB": g5c("norm", "ValidatorBalance", "unmarshalSSZ", "Prysm.PendingDeposit.Code", "vb"),
+    "PW": g5c("norm", "PendingPartialWithdrawal", "unmarshalSSZ", "Prysm.Deposit_Data.Code", "pw"),
+    "AD": g5c("norm", "AttestationData", "unmarshalSSZ", "Prysm.AttestationData.Code", "ad"),
 }
 
 

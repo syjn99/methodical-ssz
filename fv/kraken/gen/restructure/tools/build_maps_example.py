@@ -25,7 +25,7 @@ DIR_ATTESTATION_DATA, DIR_SLOT, DIR_COMMITTEE_INDEX, DIR_CHECKPOINT, DIR_ELF_DAT
 FILES = [
  ('E2eAd/Code.lean', DIR_ATTESTATION_DATA + 'Code.lean', 'program constants of the AttestationData link set: AttestationData UnmarshalSSZ, MarshalSSZTo and SizeSSZ, the Slot and CommitteeIndex UnmarshalSSZ, and the labels of the Checkpoint callees (shared with Slot and CommitteeIndex, needs a split)'),
  ('E2eAd/Include.lean', DIR_ELF_DATA + 'AttestationDataReader.lean', 'the command ad_data_include that reads the data files of the AttestationData link set (the Checkpoint and Epoch reader with the set prefix ad)'),
- ('E2eAd/Data.lean', DIR_ELF_DATA + 'AttestationData.lean', 'ELF data of the link set prysm/go1.26.10/e2e/ad/link: the Checkpoint abi.Type word and the four field error format strings'),
+ ('E2eAd/Data.lean', DIR_ELF_DATA + 'AttestationData.lean', 'ELF data of the link set prysm/go1.26.10/link-set: the Checkpoint abi.Type word and the four field error format strings'),
  ('E2eAd/Layout.lean', DIR_ATTESTATION_DATA + 'Layout.lean', 'generated Go struct layout of v1alpha1.AttestationData (field offsets and sizes)'),
  ('E2eAd/SpecChecker.lean', DIR_ATTESTATION_DATA + 'SpecChecker.lean', 'generated description of v1alpha1.AttestationData for the description checker'),
  ('E2eAd/Spec.lean', DIR_ATTESTATION_DATA + 'Spec.lean', 'EthLib description of v1alpha1.AttestationData, the SSZ value structure and the bridge lemmas; also the equality with the checker description (mixed module, main role Spec)'),

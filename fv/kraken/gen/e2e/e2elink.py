@@ -7,7 +7,7 @@ Usage (Python 3 standard library only; run with python3 -I -B; the steps after `
   e2elink.py data <outdir>                          after `conv.py <outdir>/target.objdump
                                                     <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data with link/data.py's code
-Then `link/check.py <outdir>` (a)-(f). The committed copy is fv/kraken/prysm/go1.26.10/e2e/link
+Then `link/check.py <outdir>` (a)-(f). The committed copy is fv/kraken/prysm/go1.26.10/link-set
 (norm/, data/, target.objdump, RESULT). link/conv.py, link/data.py and link/check.py are not changed.
 
 Every data item is located from the converted code (the operand that the proofs read), not written by

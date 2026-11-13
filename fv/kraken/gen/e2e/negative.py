@@ -6,12 +6,12 @@ Usage (run inside one gated job, Lean env, cwd anywhere):
 cases.json: list of {"id", "module" (path under fv/kraken/lean, e.g. "Prysm/Epoch/DecodeAccept.lean"), "theorem",
   "kind": "code" | "stmt" | "control",
   code:  "code_def" (Lean name of the included program, e.g. "Prysm.Epoch.Code.unmarshalSSZ"), "S" (file under
-         prysm/go1.26.10/e2e/link/norm), "old", "new" (one exact instruction line, unique in the file,
+         prysm/go1.26.10/link-set/norm), "old", "new" (one exact instruction line, unique in the file,
          or at the 1-based "line" of the file)
   stmt:  "old", "new" (exact text, unique inside the theorem statement)
   control: optional "code_def"/"S" (then an unmutated copy of the .S is included the same way)
   optional for code/control: "code_ns" (namespace of the code constant, default Prysm.Checkpoint.Code) and "norm"
-  (path of the .S under fv/kraken instead of prysm/go1.26.10/e2e/link/norm/<S>; AttestationData set)}
+  (path of the .S under fv/kraken instead of prysm/go1.26.10/link-set/norm/<S>; AttestationData set)}
 For each case the mutant Lean file is the module's text up to the end of the designated theorem
 (the next top-level `theorem`/`def`/`end`/`example`/`/--` after it is cut; a `theorem <thm>_kind` that
 directly follows it is kept and belongs to the case range, review fix-r1 M2), with, for code cases, a
@@ -53,7 +53,7 @@ import time
 HERE = pathlib.Path(__file__).resolve().parent
 KR = HERE.parent.parent
 LEAN = KR / "lean"
-NORM = KR / "prysm" / "go1.26.10" / "e2e" / "link" / "norm"
+NORM = KR / "prysm" / "go1.26.10" / "link-set" / "norm"
 MEMCAP = KR / "gen" / "tools" / "memcap.py"
 CAP = str(6 * 2 ** 30)
 CASE_TIMEOUT = 300  # seconds per case

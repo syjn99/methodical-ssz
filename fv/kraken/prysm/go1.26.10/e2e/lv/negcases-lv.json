@@ -5,7 +5,7 @@
   "module": "Prysm/SyncAggregate/DecodeAccept.lean",
   "theorem": "Prysm.SyncAggregate.Decode.accept",
   "code_def": "unmarshalSSZ",
-  "norm": "prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
   "stmt_module": "Prysm/SyncAggregate/Statements.lean"
  },
  {
@@ -16,7 +16,7 @@
   "module": "Prysm/SyncAggregate/DecodeAccept.lean",
   "theorem": "Prysm.SyncAggregate.Decode.accept",
   "code_def": "unmarshalSSZ",
-  "norm": "prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
   "stmt_module": "Prysm/SyncAggregate/Statements.lean"
  },
  {
@@ -28,7 +28,7 @@
   "module": "Prysm/SyncAggregate/DecodeAccept.lean",
   "theorem": "Prysm.SyncAggregate.Decode.accept",
   "code_def": "unmarshalSSZ",
-  "norm": "prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
   "stmt_module": "Prysm/SyncAggregate/Statements.lean"
  },
  {
@@ -39,7 +39,7 @@
   "module": "Prysm/SyncAggregate/DecodeAccept.lean",
   "theorem": "Prysm.SyncAggregate.Decode.accept",
   "code_def": "unmarshalSSZ",
-  "norm": "prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
   "stmt_module": "Prysm/SyncAggregate/Statements.lean"
  },
  {
@@ -51,7 +51,7 @@
   "module": "Prysm/SyncAggregate/DecodeAccept.lean",
   "theorem": "Prysm.SyncAggregate.Decode.accept",
   "code_def": "unmarshalSSZ",
-  "norm": "prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
   "stmt_module": "Prysm/SyncAggregate/Statements.lean"
  },
  {
@@ -63,7 +63,7 @@
   "module": "Prysm/SyncAggregate/DecodeAccept.lean",
   "theorem": "Prysm.SyncAggregate.Decode.accept",
   "code_def": "unmarshalSSZ",
-  "norm": "prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
   "stmt_module": "Prysm/SyncAggregate/Statements.lean"
  },
  {
@@ -72,7 +72,7 @@
   "module": "Prysm/SyncAggregate/DecodeRejectSize.lean",
   "theorem": "Prysm.SyncAggregate.Decode.reject_size",
   "code_def": "unmarshalSSZ",
-  "norm": "prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
   "stmt_module": "Prysm/SyncAggregate/Statements.lean"
  },
  {
@@ -83,7 +83,7 @@
   "module": "Prysm/SyncAggregate/DecodeRejectSize.lean",
   "theorem": "Prysm.SyncAggregate.Decode.reject_size",
   "code_def": "unmarshalSSZ",
-  "norm": "prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
   "stmt_module": "Prysm/SyncAggregate/Statements.lean"
  },
  {
@@ -92,7 +92,7 @@
   "module": "Prysm/SyncCommittee/DecodeLoop.lean",
   "theorem": "Prysm.SyncCommittee.Decode.iter",
   "code_def": "unmarshalSSZ",
-  "norm": "prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S"
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S"
  },
  {
   "id": "lv-sc-iter-jae",
@@ -102,7 +102,7 @@
   "module": "Prysm/SyncCommittee/DecodeLoop.lean",
   "theorem": "Prysm.SyncCommittee.Decode.iter",
   "code_def": "unmarshalSSZ",
-  "norm": "prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S"
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S"
  },
  {
   "id": "lv-sc-iter-len47",
@@ -112,7 +112,7 @@
   "module": "Prysm/SyncCommittee/DecodeLoop.lean",
   "theorem": "Prysm.SyncCommittee.Decode.iter",
   "code_def": "unmarshalSSZ",
-  "norm": "prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S"
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S"
  },
  {
   "id": "lv-sc-iter-stride32",
@@ -122,7 +122,7 @@
   "module": "Prysm/SyncCommittee/DecodeLoop.lean",
   "theorem": "Prysm.SyncCommittee.Decode.iter",
   "code_def": "unmarshalSSZ",
-  "norm": "prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S"
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S"
  },
  {
   "id": "lv-sc-iter-bound511",
@@ -132,7 +132,7 @@
   "module": "Prysm/SyncCommittee/DecodeLoop.lean",
   "theorem": "Prysm.SyncCommittee.Decode.iter",
   "code_def": "unmarshalSSZ",
-  "norm": "prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S"
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S"
  },
  {
   "id": "lv-sc-control",
@@ -140,7 +140,7 @@
   "module": "Prysm/SyncCommittee/DecodeAccept.lean",
   "theorem": "Prysm.SyncCommittee.Decode.accept",
   "code_def": "unmarshalSSZ",
-  "norm": "prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S",
   "stmt_module": "Prysm/SyncCommittee/Statements.lean"
  },
  {
@@ -151,7 +151,7 @@
   "module": "Prysm/SyncCommittee/DecodeAccept.lean",
   "theorem": "Prysm.SyncCommittee.Decode.accept",
   "code_def": "unmarshalSSZ",
-  "norm": "prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S",
   "stmt_module": "Prysm/SyncCommittee/Statements.lean"
  },
  {
@@ -163,7 +163,7 @@
   "module": "Prysm/SyncCommittee/DecodeAccept.lean",
   "theorem": "Prysm.SyncCommittee.Decode.accept",
   "code_def": "unmarshalSSZ",
-  "norm": "prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S",
   "stmt_module": "Prysm/SyncCommittee/Statements.lean"
  },
  {
@@ -175,7 +175,7 @@
   "module": "Prysm/SyncCommittee/DecodeAccept.lean",
   "theorem": "Prysm.SyncCommittee.Decode.accept",
   "code_def": "unmarshalSSZ",
-  "norm": "prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S",
   "stmt_module": "Prysm/SyncCommittee/Statements.lean"
  },
  {
@@ -187,7 +187,7 @@
   "module": "Prysm/SyncAggregate/DecodeAccept.lean",
   "theorem": "Prysm.SyncAggregate.Decode.bits_seg",
   "code_def": "unmarshalSSZ",
-  "norm": "prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
   "stmt_module": "Prysm/SyncAggregate/Statements.lean",
   "note": "added after lv-sa-bitslen63 classified outside: its error is in Prysm.SyncAggregate.Decode.bits_seg (the segment lemma that holds the mutated directive), which precedes the main theorem"
  },
@@ -197,7 +197,7 @@
   "module": "Prysm/SyncCommittee/DecodeRejectSize.lean",
   "theorem": "Prysm.SyncCommittee.Decode.reject_size",
   "code_def": "unmarshalSSZ",
-  "norm": "prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S",
   "stmt_module": "Prysm/SyncCommittee/Statements.lean"
  },
  {
@@ -208,7 +208,7 @@
   "module": "Prysm/SyncCommittee/DecodeRejectSize.lean",
   "theorem": "Prysm.SyncCommittee.Decode.reject_size",
   "code_def": "unmarshalSSZ",
-  "norm": "prysm/go1.26.10/e2e/lv/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S",
   "stmt_module": "Prysm/SyncCommittee/Statements.lean"
  },
  {

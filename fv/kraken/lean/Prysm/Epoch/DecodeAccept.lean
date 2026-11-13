@@ -12,7 +12,7 @@ import Prysm.Checkpoint.Code
 
 Hand-written Prysm method (`consensus-types/primitives/epoch.go:126`), not
 generated. Proved here from the included Go 1.26.10 code `Prysm.Epoch.Code.unmarshalSSZ`
-(directive indices of `prysm/go1.26.10/e2e/link/norm/…Epoch.UnmarshalSSZ.S`):
+(directive indices of `prysm/go1.26.10/link-set/norm/…Epoch.UnmarshalSSZ.S`):
 0–1 labels, 2–3 stack guard, 4–7 prologue (`push %rbp`, `sub $0x48`, spill of
 rbx at rsp + 16), 9–10 `cmp $0x8,%rcx; je L_bb`, 43 `L_bb`, 44 `mov (%rbx),%rcx`,
 46 `mov %rcx,(%rax)`, 47–48 `xor`, 49–51 epilogue.

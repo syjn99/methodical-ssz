@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """lean/Prysm/Deposit/Code.lean's hand definition `depDataType_addr` equals the address that the list/vector data
-reader would produce from prysm/go1.26.10/e2e/lv/link-dep/data/depDataType.data.
+reader would produce from prysm/go1.26.10/link-set/data/depDataType.data.
 
 Usage: depcheck_data.py [--selftest]      (from any cwd; Python 3 standard library only)
-The reader (`lvLabelTerm` in lean/Prysm/ElfData/SyncAggregateAndSyncCommitteeReader.lean, not changed) turns the line `at <label> <off>` into
+The reader (`labelTerm` in lean/Prysm/ElfData/PrysmTargetReader.lean, not changed) turns the line `at <label> <off>` into
 `(label "<label>" + <off>).toBitVec` (or `(label "<label>").toBitVec` for off = 0). This script reads the `at` line,
 renders that term with the same rule, and compares it with the right-hand side of the Lean definition.
-`check.py` (f) compares the data file with the ELF (lv/link-dep/RESULT). Exit 1 on a difference.
+`check.py` (f) compares the data file with the ELF (prysm/go1.26.10/link-set/RESULT). Exit 1 on a difference.
 --selftest: the same comparison against a changed offset must fail (exit 0 if it does).
 """
 import pathlib
@@ -14,7 +14,7 @@ import re
 import sys
 
 KR = pathlib.Path(__file__).resolve().parents[2]
-DATA = KR / "prysm/go1.26.10/e2e/lv/link-dep/data/depDataType.data"
+DATA = KR / "prysm/go1.26.10/link-set/data/depDataType.data"
 CODE = KR / "lean/Prysm/Deposit/Code.lean"
 
 

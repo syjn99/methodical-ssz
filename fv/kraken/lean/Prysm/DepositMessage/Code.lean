@@ -10,6 +10,6 @@ The declarations of the other types of this group are in `Prysm/BlobIdentifier/C
 namespace Prysm.DepositMessage
 
 /-- `(*v1alpha1.DepositMessage).UnmarshalSSZ`. -/
-def Code.unmarshalSSZ : Program := include_x64_rt "../prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S"
+def Code.unmarshalSSZ : Program := include_x64_rt "../prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S"
 
 end Prysm.DepositMessage

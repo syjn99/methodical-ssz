@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """H5 hold-out: call graph and link tables of the real v1alpha1.SyncCommitteeMessage and v1alpha1.PendingConsolidation
-UnmarshalSSZ on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/e2e/link; written after the
+UnmarshalSSZ on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set; written after the
 H5 hold-out was opened at 2026-11-11T11:25:14Z; the text of `h4link.py` with the function set and the data items changed).
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
@@ -9,7 +9,7 @@ Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` a
   h5link.py data <outdir> <cp-linkdir> <ad-linkdir> after `conv.py <outdir>/target.objdump
                                                     <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
-Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/e2e/h5/link.
+Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
 Encoders, SizeSSZ and HashTreeRoot are not in the set (out of H5 scope).
 """
 import importlib.util

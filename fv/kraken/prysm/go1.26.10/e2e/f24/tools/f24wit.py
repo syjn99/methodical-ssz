@@ -9,7 +9,7 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from f24spec import T, GO_TYPE, new_names  # noqa: E402
 
-NORM = 'prysm/go1.26.10/e2e/f24/link/norm'
+NORM = 'prysm/go1.26.10/link-set/norm'
 SFILE = {'Dpr': 'engine_v1.DepositRequest', 'Bdr': 'engine_v1.BuilderDepositRequest',
          'Bbr': 'prysm_v1alpha1.BeaconBlocksByRangeRequest', 'Bsr': 'prysm_v1alpha1.BlobSidecarsByRangeRequest',
          'Epr': 'prysm_v1alpha1.ExecutionPayloadEnvelopesByRangeRequest',
@@ -102,7 +102,7 @@ theorem {x}_reject_runs (len : UInt64) (hlen : len ≠ {N}) (zmms : RegZmms) (fl
     (by
       have H : Eq (block.At (0x10000 : BitVec 64)) mem := rfl
       wit_split []
-      simp only [cs0, R0, w, ElfData.CheckpointAndEpoch.e2eErrSize_addr, label_err, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
+      simp only [cs0, R0, w, ElfData.PrysmTarget.e2eErrSize_addr, label_err, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
         Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub] at H ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H ⊢
       simp only [Std.ExtHashMap.sep_comm, Std.ExtHashMap.sep_comm_l] at H ⊢

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Flat-type hold-out (H7): call graph and link tables of the real UnmarshalSSZ and MarshalSSZTo of the 24 flat fixed-size
 types outside the development population (fv/kraken/prysm/proof-inventory.md at the FLAT24 freeze) on the Go 1.26.10
-ELF (the same ELF as prysm/go1.26.10/e2e/link; written after the H7 hold-out was opened at 2026-11-12T05:59:42Z;
+ELF (the same ELF as prysm/go1.26.10/link-set; written after the H7 hold-out was opened at 2026-11-12T05:59:42Z;
 the text of `h6link.py` + `enc2link.py` with the function set changed and the data items made per function).
 
 Usage (Python 3 standard library only; python3 -I -B; every step runs gated):
@@ -11,7 +11,7 @@ Usage (Python 3 standard library only; python3 -I -B; every step runs gated):
                                                      after `conv.py <outdir>/target.objdump
                                                      <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                      write <outdir>/data/*.data (link/data.py's code)
-Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/e2e/f24/link.
+Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
 SizeSSZ, MarshalSSZ and HashTreeRoot are not in the set.
 A call target without a contract in the tree is recorded with class "d" (no claim of this unit uses it).
 """

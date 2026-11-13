@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """BeaconBlockHeader hold-out: call graph and link tables of the real v1alpha1.BeaconBlockHeader SSZ functions and the
-primitives.ValidatorIndex methods on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/e2e/link; written after
+primitives.ValidatorIndex methods on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set; written after
 the hold-out was opened at 2026-11-10T17:53:24Z; the text of `adlink.py` with the function set changed).
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
@@ -9,9 +9,9 @@ Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` a
   bhlink.py data <outdir> <cp-linkdir> <ad-linkdir> after `conv.py <outdir>/target.objdump
                                                     <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
-Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/e2e/bh/link.
+Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
 SizeSSZ is not in the set (excluded from the hold-out claim). The Slot callee is `Prysm.Slot.Code.unmarshalSSZ`
-(its code is in prysm/go1.26.10/e2e/ad/link); the shared items (uint8 type word, ssz.ErrSize, the
+(its code is in prysm/go1.26.10/link-set); the shared items (uint8 type word, ssz.ErrSize, the
 errorString type, writeBarrier) are asserted equal to the Checkpoint / AttestationData sets' operands.
 """
 import importlib.util

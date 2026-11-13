@@ -13,7 +13,7 @@
       population), <axioms-gate.json> (the JSON of `gen/e2e/axioms_gate.py run` on the built tree of the same commit;
       its verdict must be PASS; the table records its header, declaration, theorem and module counts), the code
       constants of `lean/Prysm/**` (`def X : Program := include_x64_rt "…S"`, keyed by full declared name, whatever
-      module declares them), the link tables `prysm/go1.26.10/e2e/**/RESULT`, and <decls.tsv> (output of
+      module declares them), the link tables `prysm/go1.26.10/**/RESULT`, and <decls.tsv> (output of
       `gen/tools/inventory_decls.lean` for the names above, run on the built tree of the same commit), and write the
       table. The committed record `prysm/go1.26.10/e2e/axioms-gate.json` (a past run, old names) is not read.
   (cwd = fv/kraken)
@@ -35,7 +35,7 @@ Rule. A function's state comes ONLY from the mapping and the declarations in <de
     SizeSSZ row, must have, in their TYPE, the code constant whose included `.S` is that function of the target, and
     that function must be the SUBJECT: the only one of the theorem's target code constants that no other of them calls
     (call graph = `call_targets` of `functions.json`); a constant counts only if its `.S` is
-    `../prysm/go1.26.10/e2e/<dir>/norm/<function>.S` and `<dir>/RESULT` names the pinned ELF sha256, ends in
+    `../prysm/go1.26.10/<dir>/norm/<function>.S` and `<dir>/RESULT` names the pinned ELF sha256, ends in
     `PASS all` and has `PASS (a) <function>:`; else FAIL;
   * a witness must use (in its proof) the row's accept / reject theorem, and `accept_spec_k` the accept theorem,
     `reject_size_spec` the reject theorem; else FAIL;
@@ -299,17 +299,17 @@ CANNOT_DETECT = [
 ]
 
 
-PIN_S = re.compile(r"^\.\./prysm/go1\.26\.10/e2e/((?:[\w-]+/)*[\w-]+)/norm/([^/]+)\.S$")
+PIN_S = re.compile(r"^\.\./prysm/go1\.26\.10/((?:[\w-]+/)*[\w-]+)/norm/([^/]+)\.S$")
 CODE_DEF = re.compile(r'^\s*(?:@\[[^\]]*\]\s*)?(?:private\s+|protected\s+|noncomputable\s+)*def\s+(\S+)\s*:\s*Program\s*:=\s*'
                       r'include_x64_rt\s+"([^"]+)"', re.M)
 
 
 def link_tables():
-    """Link table directory (under prysm/go1.26.10/e2e/) -> set of the functions whose text check (a) PASSed, for every
+    """Link table directory (under prysm/go1.26.10/) -> set of the functions whose text check (a) PASSed, for every
     directory whose `RESULT` names the pinned ELF (`elf sha256` of build-ids.txt) and ends in `PASS all`."""
     elf = build_ids().get("elf sha256")
     out = {}
-    root = KR / "prysm/go1.26.10/e2e"
+    root = KR / "prysm/go1.26.10"
     for res in sorted(root.rglob("RESULT")):
         t = res.read_text()
         if f"elf sha256 {elf}" not in t or not re.search(r"(?m)^PASS all$", t):
@@ -320,7 +320,7 @@ def link_tables():
 
 def code_constants():
     """Lean code constant (full declared name) -> normalized function key `pkg_with_underscores.Type.Method`, for the
-    constants whose `.S` is `../prysm/go1.26.10/e2e/<dir>/norm/<function>.S` with `<dir>` a link table of the pinned
+    constants whose `.S` is `../prysm/go1.26.10/<dir>/norm/<function>.S` with `<dir>` a link table of the pinned
     ELF (`link_tables`: RESULT with the pinned ELF sha256, `PASS all`, and `PASS (a) <function>:`); other constants ->
     None (not a target function: runtime models, other builds such as the capacity-reserved test ELF).
     Every `lean/Prysm/**.lean` file is read, whatever module declares the constant: the full name comes from the
@@ -715,7 +715,7 @@ def run(decls_p, gate_p, md_p, json_p):
           f"Inputs: `{METHODS_JSON}` (made by `proof_inventory.py methods` from the `go tool nm` listing of the ELF, "
           f"sha256 `{sm['nm_sha256']}`; the listing is not committed), `prysm/go1.26.10/functions.json`, "
           "`prysm/ir/ir-mainnet.json`, the output of `gen/e2e/axioms_gate.py run` on the built tree, the code constants "
-          "of `lean/Prysm/` with the link tables of the pinned ELF (`prysm/go1.26.10/e2e/**/RESULT`), and the output "
+          "of `lean/Prysm/` with the link tables of the pinned ELF (`prysm/go1.26.10/**/RESULT`), and the output "
           "of `gen/tools/inventory_decls.lean` on the built tree.", "",
           f"Declarations header: `{header}`. Axioms gate run: {gate['verdict']}, {gate['declarations']} declarations "
           f"({gate['theorems']} theorems, {gate['modules']} modules), header `{gate['header']}`.", "",

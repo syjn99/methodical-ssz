@@ -6,7 +6,7 @@ import Prysm.Deposit_Data.DecodeFieldSegmentPadding
 
 - `bytesdec_seg_z64`: the statement of `Codec.bytesdec_seg_z` with `hn : n = 64` (SyncCommitteeBits, offset 0).
   `Codec/FixedBytesDecode.lean` covers n ∈ {32, 48, 96}; its `hn` is a limit of the proof method (literal immediates).
-  The proof is `Codec/FixedBytesDecode.lean`'s local macro `bytesdec_z`, copied here as `lvbytesdec_z` with its text unchanged, at n = 64.
+  The proof is `Codec/FixedBytesDecode.lean`'s local macro `bytesdec_z`, copied here as `bytes_decode_zero` with its text unchanged, at n = 64.
 - `bytesDecHeadNop96`, `bytes96dec_seg_nop`: `Prysm.Deposit_Data.bytesDecHeadNop` / `bytes32dec_seg_nop` with the size
   literal 32 replaced by 96 (SyncCommitteeSignature has a `nop` between `mov $0x60,%ecx` and the makeslice call,
   directive 50). Every other token of the text is unchanged.
@@ -51,7 +51,7 @@ variable [Host]
 set_option hygiene false in
 /-- Proof text of the model lemma for the literal size `n` (the names are the binders of the lemma below;
 hygiene is off so that they are captured). Local to this file. -/
-local macro "lvbytesdec_z " n:num : tactic => `(tactic| (
+local macro "bytes_decode_zero " n:num : tactic => `(tactic| (
     replace hA : (bytesDecHead ($n : Int64) lff dR fL fC).IsInfixAt Host.prog j1 := hA
     replace hB : (bytesDecMidZ ($n : Int64) lff lwb dR dB dS fP fL fC).IsInfixAt Host.prog j2 := hB
     rw [show (OfNat.ofNat ($n : Nat) : Int) = ($n : Int) from rfl]
@@ -190,7 +190,7 @@ theorem bytesdec_seg_z64 (n : Nat) (hn : n = 64) (lff lwb : String) (dR dB dS fP
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At bf)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 St) (hmm : MemmoveC St) :
+    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 St) (hmm : MemmoveC St) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (j2 + 11) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -208,7 +208,7 @@ theorem bytesdec_seg_z64 (n : Nat) (hn : n = 64) (lff lwb : String) (dR dB dS fP
           ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf j1⟩ := by
   subst hn
-  lvbytesdec_z 64
+  bytes_decode_zero 64
 
 /-- 96-byte add-form decode segment with the `nop` head: the statement of `bytesdec_seg` (n = 96). -/
 theorem bytes96dec_seg_nop (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j1 j2 : Nat)
@@ -233,7 +233,7 @@ theorem bytes96dec_seg_nop (lff lwb : String) (dR dB dS fP fL fC src : Int64) (j
       ⋆ Eq (vP.At aP) ⋆ Eq (vL.At aL) ⋆ Eq (vC.At aC)
       ⋆ Eq (root.At aSrc)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 St) (hmm : MemmoveC St) :
+    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 St) (hmm : MemmoveC St) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (j2 + 12) ∧ st.data.regs.rsp = { toBitVec := sp }
         ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧

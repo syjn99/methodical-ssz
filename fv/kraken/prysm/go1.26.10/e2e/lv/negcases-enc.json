@@ -2,7 +2,7 @@
  {
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/e2e/lv/link-enc/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
   "id": "enc-control-rb",
   "kind": "control",
   "module": "Prysm/DataColumnsByRootIdentifier/EncodeRejectLength.lean",
@@ -12,7 +12,7 @@
  {
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/e2e/lv/link-enc/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
   "id": "enc-control-iter",
   "kind": "control",
   "module": "Prysm/DataColumnsByRootIdentifier/EncodeLoop.lean",
@@ -21,7 +21,7 @@
  {
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/e2e/lv/link-enc/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
   "id": "enc-rb-len33",
   "kind": "code",
   "old": "  cmpq $0x20,0x10(%rax)",
@@ -33,7 +33,7 @@
  {
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/e2e/lv/link-enc/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
   "id": "enc-rt-max129",
   "kind": "code",
   "old": "  cmp $0x80,%r8",
@@ -45,7 +45,7 @@
  {
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/e2e/lv/link-enc/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
   "id": "enc-rt-offset37",
   "kind": "code",
   "old": "  movl $0x24,-0x4(%rbx,%rax,1)",
@@ -57,7 +57,7 @@
  {
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/e2e/lv/link-enc/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
   "id": "enc-iter-step16",
   "kind": "code",
   "old": "  add $0x8,%rbx",
@@ -68,7 +68,7 @@
  {
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/e2e/lv/link-enc/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
   "id": "enc-iter-store",
   "kind": "code",
   "old": "  mov %r9,-0x8(%rbx,%rax,1)",
@@ -79,7 +79,7 @@
  {
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/e2e/lv/link-enc/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
   "id": "enc-stmt-rt127",
   "kind": "stmt",
   "stmt_def": "Prysm.DataColumnsByRootIdentifier.Encode.reject_too_big_statement",
@@ -92,7 +92,7 @@
  {
   "code_def": "marshalSSZTo",
   "code_ns": "Prysm.DataColumnsByRootIdentifier.Code",
-  "norm": "prysm/go1.26.10/e2e/lv/link-enc/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DataColumnsByRootIdentifier.MarshalSSZTo.S",
   "id": "enc-stmt-rb33",
   "kind": "stmt",
   "stmt_def": "Prysm.DataColumnsByRootIdentifier.Encode.reject_length_statement",

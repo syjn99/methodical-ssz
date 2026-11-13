@@ -159,7 +159,7 @@ for f, prefix in HOLD_OUT.items():
 # 3. f24 part 1 (the committed outputs only).
 part1 = open(os.path.join(COPY_KRAKEN, 'prysm/go1.26.10/e2e/f24/gen/part1.sh')).read()
 rows = [l.split() for l in part1.split("<<'TYPES'\n")[1].split('TYPES')[0].strip().split('\n')]
-NORM = 'prysm/go1.26.10/e2e/f24/link/norm'
+NORM = 'prysm/go1.26.10/link-set/norm'
 for kind, go_type, px in rows:
     X = px[0].upper() + px[1:]
     PK = ('github.com_OffchainLabs_prysm_v7_proto_engine_v1' if kind == 'v1'

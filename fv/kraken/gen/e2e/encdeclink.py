@@ -5,7 +5,7 @@ c6403c02...911e). A new file in the pattern of `lvlink.py` / `enclink.py`; exist
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   encdeclink.py filter <outdir> <objdump> <elf> <nm>
   encdeclink.py data <outdir> <cp-linkdir> <t3-linkdir>    after conv.py --norm: write <outdir>/data/*.data
-Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/e2e/lv/link-dec.
+Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
 
 Data items are located from the converted code. Items equal to an item of the Checkpoint set (`e2elink.py`) or of
 the IndexedAttestation set (`lvlink.py --t3`) are asserted equal (same label and offset) and written again under the `dcd`

@@ -1,0 +1,26 @@
+# written by rename.py forward; read by rename.py inverse. path	line	action	new text	old text
+fv/kraken/lean/Prysm/Checkpoint/CapacityReservedEncodeTailReject.lean	115	replace	  rw [← ElfData.PrysmTarget.e2eErrBytesLength_addr_eq]	  rw [← Encode.errBytesLength_addr_eq]
+fv/kraken/lean/Prysm/Checkpoint/DecodeRejectSize.lean	59	replace	  simp only [ElfData.PrysmTarget.e2eErrSize_addr_eq] at h_mem hguard hlen ⊢	  simp only [Decode.errSize_addr_eq] at h_mem hguard hlen ⊢
+fv/kraken/lean/Prysm/Checkpoint/EncodeRejectLength.lean	165	replace	  rw [← ElfData.PrysmTarget.e2eErrBytesLength_addr_eq]	  rw [← Encode.errBytesLength_addr_eq]
+fv/kraken/lean/Prysm/Checkpoint/EncodeTail.lean	243	replace	  rw [← ElfData.PrysmTarget.e2eErrBytesLength_addr_eq]	  rw [← Encode.errBytesLength_addr_eq]
+fv/kraken/lean/Prysm/ElfData/AttestationData.lean	17	replace	ad_data_include ElfData.PrysmTarget.adCpType	ad_data_include adCpType
+fv/kraken/lean/Prysm/ElfData/AttestationData.lean	19	replace	ad_data_include ElfData.PrysmTarget.adFmtSlot	ad_data_include adFmtSlot
+fv/kraken/lean/Prysm/ElfData/AttestationData.lean	20	replace	ad_data_include ElfData.PrysmTarget.adFmtCi	ad_data_include adFmtCi
+fv/kraken/lean/Prysm/ElfData/AttestationData.lean	21	replace	ad_data_include ElfData.PrysmTarget.adFmtSource	ad_data_include adFmtSource
+fv/kraken/lean/Prysm/ElfData/AttestationData.lean	22	replace	ad_data_include ElfData.PrysmTarget.adFmtTarget	ad_data_include adFmtTarget
+fv/kraken/lean/Prysm/ElfData/DataColumnsByRootIdentifierDecoder.lean	18	replace	dcd_data_include ElfData.PrysmTarget.dcdFmtTooBig	dcd_data_include dcdFmtTooBig
+fv/kraken/lean/Prysm/ElfData/DataColumnsByRootIdentifierDecoder.lean	20	replace	dcd_data_include ElfData.PrysmTarget.dcdFmtMis	dcd_data_include dcdFmtMis
+fv/kraken/lean/Prysm/ElfData/IndexedAttestation.lean	20	replace	lvt3_data_include ElfData.PrysmTarget.lvU64Type	lvt3_data_include lvU64Type
+fv/kraken/lean/Prysm/ElfData/IndexedAttestation.lean	22	replace	lvt3_data_include ElfData.PrysmTarget.lvAdType	lvt3_data_include lvAdType
+fv/kraken/lean/Prysm/ElfData/IndexedAttestation.lean	24	replace	lvt3_data_include ElfData.PrysmTarget.lvFmtTooBig	lvt3_data_include lvFmtTooBig
+fv/kraken/lean/Prysm/ElfData/IndexedAttestation.lean	25	replace	lvt3_data_include ElfData.PrysmTarget.lvFmtMis	lvt3_data_include lvFmtMis
+fv/kraken/lean/Prysm/ElfData/SyncAggregateAndSyncCommittee.lean	21	replace	lv_data_include ElfData.PrysmTarget.lvSliceType	lv_data_include lvSliceType
+fv/kraken/lean/Prysm/Epoch/DecodeRejectSize.lean	23	replace	(`e2eStaticuint64s`) has the same bytes and `ElfData.PrysmTarget.e2eStaticuint64s_addr_eq` that the two addresses are the same	(`e2eStaticuint64s`) has the same bytes and `Decode.reject_static_addr` that the two addresses are the same
+fv/kraken/lean/Prysm/IndexedAttestation/DecodeRejectAlignment.lean	63	replace	  rw [ElfData.PrysmTarget.lvErrIncorrectListSize_addr_eq, ElfData.PrysmTarget.lvFmtMis_addr_eq] at h_mem	  rw [errIncorrectListSize_addr_eq, fmtMisaligned_addr_eq] at h_mem
+fv/kraken/lean/Prysm/IndexedAttestation/DecodeRejectAlignment.lean	248	replace	      rw [show rsp.toBitVec - 184 + 8 = rsp.toBitVec - 176 by iaaddr, ElfData.PrysmTarget.e2eIntType_addr_eq,	      rw [show rsp.toBitVec - 184 + 8 = rsp.toBitVec - 176 by iaaddr, intType_addr_eq,
+fv/kraken/lean/Prysm/IndexedAttestation/DecodeRejectAlignment.lean	292	replace	  · rw [ElfData.PrysmTarget.lvErrIncorrectListSize_addr_eq, ElfData.PrysmTarget.lvFmtMis_addr_eq, ElfData.PrysmTarget.e2eIntType_addr_eq]	  · rw [errIncorrectListSize_addr_eq, fmtMisaligned_addr_eq, intType_addr_eq]
+fv/kraken/lean/Prysm/IndexedAttestation/DecodeRejectOverflow.lean	33	replace	  rw [ElfData.PrysmTarget.lvErrListTooBig_addr_eq, ElfData.PrysmTarget.lvFmtTooBig_addr_eq] at h_mem	  rw [errListTooBig_addr_eq, fmtTooBig_addr_eq] at h_mem
+fv/kraken/lean/Prysm/IndexedAttestation/DecodeRejectOverflow.lean	229	replace	      rw [show rsp.toBitVec - 184 + 8 = rsp.toBitVec - 176 by iaaddr, ElfData.PrysmTarget.e2eIntType_addr_eq,	      rw [show rsp.toBitVec - 184 + 8 = rsp.toBitVec - 176 by iaaddr, intType_addr_eq,
+fv/kraken/lean/Prysm/IndexedAttestation/DecodeRejectOverflow.lean	273	replace	  · rw [ElfData.PrysmTarget.lvErrListTooBig_addr_eq, ElfData.PrysmTarget.lvFmtTooBig_addr_eq, ElfData.PrysmTarget.e2eIntType_addr_eq]	  · rw [errListTooBig_addr_eq, fmtTooBig_addr_eq, intType_addr_eq]
+fv/kraken/lean/Prysm/IndexedAttestation/WitnessDecodeRejectAlignment.lean	94	replace	      simp only [s0, ErrStr, ErrObj, ElfData.PrysmTarget.lvErrIncorrectListSize_addr_eq, ElfData.PrysmTarget.lvFmtMis_addr_eq, label_mis, label_itab, label_gs,	      simp only [s0, ErrStr, ErrObj, errIncorrectListSize_addr_eq, fmtMisaligned_addr_eq, label_mis, label_itab, label_gs,
+fv/kraken/lean/Prysm/IndexedAttestation/WitnessDecodeRejectAlignment.lean	124	replace	      simp only [s0, ErrStr, ErrObj, ElfData.PrysmTarget.lvErrListTooBig_addr_eq, ElfData.PrysmTarget.lvFmtTooBig_addr_eq, label_big, label_itab, label_gs,	      simp only [s0, ErrStr, ErrObj, errListTooBig_addr_eq, fmtTooBig_addr_eq, label_big, label_itab, label_gs,

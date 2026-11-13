@@ -1,7 +1,7 @@
 import Runtime.Contracts
 import Machine.Step
 import Machine.Labels
-import Prysm.ElfData.CheckpointAndEpoch
+import Prysm.ElfData.PrysmTarget
 import Prysm.SyncCommittee.DecodeLoop
 import Prysm.HistoricalBatch.Code
 import Prysm.HistoricalBatch.DecodeLoopLemmas
@@ -20,7 +20,7 @@ pointer, `sp` the 24-byte spill area of the callees, `sp − 8` the runtime call
 receiver (8192): not taken; 69–72 len and cap words of header i; 73–75 writeBarrier = 0; 76–77, 36–39 the pointer
 word of header i, `rax = i + 1` (loaded from `sp + 24`).
 Proof order: `Prysm.SyncCommittee.Decode.iter`, `Prysm.SyncCommittee.Decode.exit`, `Prysm.SyncCommittee.Decode.loop` (`Prysm/SyncCommittee/DecodeLoop.lean`); the step sequence is this decoder's own.
-The macro `laddr` and the lemmas `jge_false512`, `Codec.elementBlocks_snoc` are imported from the SyncCommittee proof.
+The macro `address_with_products` and the lemmas `jge_false512`, `Codec.elementBlocks_snoc` are imported from the SyncCommittee proof.
 -/
 
 open Machine Runtime Prysm.HistoricalBatch.Code
@@ -51,7 +51,7 @@ theorem Decode.block_roots_iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
       ⋆ Eq ((Int.toBytes 8 A.toInt).At recv) ⋆ Eq ((Int.toBytes 8 8192).At (recv + 8))
       ⋆ Eq ((Codec.sliceHeaders 32 ps ++ Codec.zeroBytes (24 * (8192 - i))).At A) ⋆ Codec.elementBlocks ps (pks.take i)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
+    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 40) ∧ st.data.regs.rax.toNat = i + 1
         ∧ st.data.regs.rsp = { toBitVec := sp } ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -164,7 +164,7 @@ theorem Decode.block_roots_iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
   simp only [Width.bytes, Width.bits] at H6
   kunfold
   try rw [show sp - 8#64 = sp - 8 from rfl] at *
-  rw [show bf + (rax.toBitVec <<< 5) * 1#64 = bf + BitVec.ofNat 64 (32 * i) by laddr]
+  rw [show bf + (rax.toBitVec <<< 5) * 1#64 = bf + BitVec.ofNat 64 (32 * i) by address_with_products]
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (k + 63 + 1)) e (List.replicate 32 0) stk3 _
     (by rw [hpi]; rfl) (by simp [hpi]) hstk3 (by dsimp only; ecancel)) ?_
   rintro ⟨d4, pc4⟩ ⟨hpc4, hrsp4, hr144, hrbp4, stk4, hstk4, Hm4⟩
@@ -206,12 +206,12 @@ theorem Decode.block_roots_iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
   kunfold
   try simp only [ofInt_ofBytes_toBytes64]
   kat hk unmarshalSSZ 71
-  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 8) _ _ _ (Codec.zeroBytes 8) _ _ (by laddr) (by ecancel) (by rfl)
+  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 8) _ _ _ (Codec.zeroBytes 8) _ _ (by address_with_products) (by ecancel) (by rfl)
   intro m7 H7
   simp only [Width.bytes, Width.bits] at H7
   kunfold
   kat hk unmarshalSSZ 72
-  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 16) _ _ _ (Codec.zeroBytes 8) _ _ (by laddr) (by ecancel) (by rfl)
+  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 16) _ _ _ (Codec.zeroBytes 8) _ _ (by address_with_products) (by ecancel) (by rfl)
   intro m8 H8
   simp only [Width.bytes, Width.bits] at H8
   kunfold
@@ -233,7 +233,7 @@ theorem Decode.block_roots_iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
   klabel hk hf unmarshalSSZ 36
   kat hk unmarshalSSZ 36
   kat hk unmarshalSSZ 37
-  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i)) _ _ _ (Codec.zeroBytes 8) _ _ (by laddr) (by ecancel) (by rfl)
+  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i)) _ _ _ (Codec.zeroBytes 8) _ _ (by address_with_products) (by ecancel) (by rfl)
   intro m9 H9
   simp only [Width.bytes, Width.bits] at H9
   kunfold
@@ -282,7 +282,7 @@ theorem Decode.block_roots_loop (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog
     (sp recv bf A : BitVec 64) (pks : List (List UInt8)) (hpks : pks.length = 8192)
     (hpk : ∀ e ∈ pks, e.length = 32) (rbp0 r140 : UInt64) (S : Nat)
     (Heap : Nat → DataMem → Prop) (R : DataMem → Prop)
-    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
+    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
     ∀ (j i : Nat) (ps : List (BitVec 64)) (l18 l20 l28 l30 spl rslot lo : List UInt8) (avail : Nat)
       (s : MachineData),
     i + j = 8192 → ps.length = i → l18.length = 8 → l20.length = 8 → l28.length = 8 → l30.length = 8 →

@@ -2,7 +2,7 @@ import Runtime.Contracts
 import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
-import Prysm.ElfData.CheckpointAndEpoch
+import Prysm.ElfData.PrysmTarget
 import Prysm.Checkpoint.Code
 import Prysm.AttestationData.Code
 import Prysm.BeaconBlockHeader.Code
@@ -21,7 +21,7 @@ Hand-written BEFORE the author opened the generated modules
 `Gen5F24{Bbr,Dpr,Pdc,Vid}Dec.lean` and `Gen6F24{Bbr,Bpf,Pdc,Vid}Enc.lean` or their kind lines. These generated files
 were committed unedited (one-shot runs); this session built and kind-checked them without printing them.
 Sources: the Go receiver layout (IR `go_fields` of `prysm/ir/ir-mainnet.json`, gc amd64 offsets), the SSZ layout
-(field sizes in IR order), the `.S` files of `prysm/go1.26.10/e2e/f24/link/norm/` (frame, guard, spills, stack slots
+(field sizes in IR order), the `.S` files of `prysm/go1.26.10/link-set/norm/` (frame, guard, spills, stack slots
 touched on the path and their contents at the return, the directive of the last call), the statement shape of the
 committed hand statements `Prysm.Deposit_Data.Decode.accept_statement`, `Prysm.SyncAggregatorSelectionData.Decode.accept_statement`, `Prysm.PendingDeposit.Decode.accept_statement`,
 `Prysm.SyncCommitteeMessage.Decode.accept_statement` (decoders), `Prysm.PendingPartialWithdrawal.Encode.fast_path_statement`, `Prysm.SyncCommitteeMessage.Encode.fast_path_statement`,
@@ -119,7 +119,7 @@ abbrev Decode.accept_statement : Prop :=
       ⋆ Eq (aC3.At (s.regs.rax.toBitVec + 80)) ⋆ Eq (aI.At (s.regs.rax.toBitVec + 88))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 192) (hav : 176 ≤ avail)
-    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
+    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧

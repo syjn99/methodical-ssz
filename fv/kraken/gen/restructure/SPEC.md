@@ -141,15 +141,11 @@ These decisions are binding for every step.
    The main witness theorem is `runs`, with a plain qualifier for the case (`runs_empty`, `runs_one_element`, `runs_maximum`).
    Full name: `Prysm.Checkpoint.Witness.DecodeAccept.runs`.
    Helper declarations of a witness file (`P`, `host`, `z`, `w`, `label_err`) keep their short names in that namespace.
-4. The per-link-set data readers keep their internal names and command names until the link sets merge.
-   The readers are the copies of the data-include command and their helper functions with a set prefix.
-   The address tactics named after a set are also readers.
-   Only their module path and namespace change.
-   A later step on the machine with the ELF merges the link sets and leaves one reader.
-   Names kept so far: `e2e_data_include`, `ad_data_include`, `lv_data_include`, `lvHexByte?`, `lvLabelTerm`, `lvDataSource`.
-   More names kept: `lvt3_data_include`, `lvt3HexByte?`, `lvt3LabelTerm`, `lvt3DataSource`, the tactics `iaaddr`, `laddr`, `lvbytesdec_z`.
-   The ELF data names with the prefix `e2e` (for example `e2eErrSize_addr`) also stay.
-   Record such names of a step in the commit message as "kept until the link sets merge".
+4. The link sets of the Prysm ELF are merged into one link set, `prysm/go1.26.10/link-set`, with one data reader.
+   The data module is `Prysm/ElfData/PrysmTarget.lean` (namespace `ElfData.PrysmTarget`).
+   The reader is `Prysm/ElfData/PrysmTargetReader.lean` with the command `prysm_data_include`.
+   The data names keep the ids of the `.data` files, for example `e2eErrSize_addr`.
+   A later step can rename the `.data` files and these names together.
 5. A module that holds two types stays one module (for example the Slot and CommitteeIndex decoders in one file).
    Each namespace block of that module goes to the namespace of its own type.
    The module goes under the type of the first block.

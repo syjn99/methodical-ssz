@@ -44,7 +44,7 @@ theorem v32_iter (n : Nat) (hn : n < 2 ^ 31) (lhead lexit lp1 lp2 lwb lback : St
       ⋆ Eq ((Int.toBytes 8 A.toInt).At aA) ⋆ Eq ((Int.toBytes 8 (BitVec.ofNat 64 n).toInt).At aL)
       ⋆ Eq ((Codec.sliceHeaders 32 ps ++ Codec.zeroBytes (24 * (n - i))).At A) ⋆ Codec.elementBlocks ps (pks.take i)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
+    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf jH ∧ st.data.regs.rax.toNat = i + 1
         ∧ st.data.regs.rsp = { toBitVec := sp } ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -152,7 +152,7 @@ theorem v32_iter (n : Nat) (hn : n < 2 ^ 31) (lhead lexit lp1 lp2 lwb lback : St
   refine glue_src gs ?_
   dsimp only
   rw [show bf + (rax.toBitVec <<< 5) * 1#64 + src.toBitVec = bfs + BitVec.ofNat 64 (32 * i) by
-    rw [← hsrc]; laddr]
+    rw [← hsrc]; address_with_products]
   -- memmove block: rcx = 32, memmove(p, bfs + 32i, 32), rdx = recv, rsi = len, rdi = i
   kat hB3 v32Mm 0
   kat hB3 v32Mm 1
@@ -203,12 +203,12 @@ theorem v32_iter (n : Nat) (hn : n < 2 ^ 31) (lhead lexit lp1 lp2 lwb lback : St
   kunfold
   try simp only [ofInt_ofBytes_toBytes64]
   kat hB4 v32Hdr 4
-  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 8) _ _ _ (Codec.zeroBytes 8) _ _ (by laddr) (by ecancel) (by rfl)
+  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 8) _ _ _ (Codec.zeroBytes 8) _ _ (by address_with_products) (by ecancel) (by rfl)
   intro m7 H7
   simp only [Width.bytes, Width.bits] at H7
   kunfold
   kat hB4 v32Hdr 5
-  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 16) _ _ _ (Codec.zeroBytes 8) _ _ (by laddr) (by ecancel) (by rfl)
+  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 16) _ _ _ (Codec.zeroBytes 8) _ _ (by address_with_products) (by ecancel) (by rfl)
   intro m8 H8
   simp only [Width.bytes, Width.bits] at H8
   kunfold
@@ -232,7 +232,7 @@ theorem v32_iter (n : Nat) (hn : n < 2 ^ 31) (lhead lexit lp1 lp2 lwb lback : St
   -- back block: label, pointer word of header i, rax = i + 1
   kat hB6 v32Back 0
   kat hB6 v32Back 1
-  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i)) _ _ _ (Codec.zeroBytes 8) _ _ (by laddr) (by ecancel) (by rfl)
+  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i)) _ _ _ (Codec.zeroBytes 8) _ _ (by address_with_products) (by ecancel) (by rfl)
   intro m9 H9
   simp only [Width.bytes, Width.bits] at H9
   kunfold
@@ -295,7 +295,7 @@ theorem v32_loop (n : Nat) (hn : n < 2 ^ 31) (lhead lexit lp1 lp2 lwb lback : St
     (haL : recv + fL.toBitVec = aL) (haA : recv + fP.toBitVec = aA) (hsrc : bf + src.toBitVec = bfs)
     (pks : List (List UInt8)) (hpks : pks.length = n) (hpk : ∀ e ∈ pks, e.length = 32)
     (rbp0 r140 : UInt64) (S : Nat) (Heap : Nat → DataMem → Prop) (R : DataMem → Prop)
-    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
+    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
     ∀ (j i : Nat) (ps : List (BitVec 64)) (lI lD lI1 lP spl rslot lo : List UInt8) (avail : Nat) (s : MachineData),
     i + j = n → ps.length = i → lI.length = 8 → lD.length = 8 → lI1.length = 8 → lP.length = 8 →
     spl.length = 24 → rslot.length = 8 → lo.length = S → 32 * j ≤ avail →

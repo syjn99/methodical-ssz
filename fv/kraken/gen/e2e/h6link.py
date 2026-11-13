@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """H6 hold-out: call graph and link tables of the real UnmarshalSSZ of the seven H6 batch types (v1alpha1
 PendingDeposit, PowBlock, HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance,
-VoluntaryExit) on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/e2e/link; written after the
+VoluntaryExit) on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set; written after the
 H6 hold-out was opened at 2026-11-11T17:18:33Z; the text of `h5link.py` with the function set and the data items changed).
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
@@ -10,7 +10,7 @@ Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` a
   h6link.py data <outdir> <cp-linkdir> <ad-linkdir> after `conv.py <outdir>/target.objdump
                                                     <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
-Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/e2e/h6/link.
+Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
 Encoders, SizeSSZ and HashTreeRoot are not in the set (out of H6 scope).
 """
 import importlib.util

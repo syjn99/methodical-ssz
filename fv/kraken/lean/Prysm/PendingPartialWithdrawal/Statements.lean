@@ -2,7 +2,7 @@ import Runtime.Contracts
 import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
-import Prysm.ElfData.CheckpointAndEpoch
+import Prysm.ElfData.PrysmTarget
 import Prysm.Checkpoint.Code
 import Prysm.BeaconBlockHeader.Code
 import Prysm.Deposit_Data.Code

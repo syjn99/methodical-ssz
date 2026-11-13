@@ -61,7 +61,7 @@ theorem runs (e8 : List UInt8) (he8 : e8.length = 8) (rl : UInt64) (hrl : rl ≠
     (by
       have H : Eq ((block e8 rl).At (0x10000 : BitVec 64)) (mem e8 rl) := rfl
       wit_split [he8]
-      simp only [cs0, w, ElfData.CheckpointAndEpoch.e2eErrBytesLength_addr, label_ebl, nil_At_emp, Std.ExtHashMap.sep_emp,
+      simp only [cs0, w, ElfData.PrysmTarget.e2eErrBytesLength_addr, label_ebl, nil_At_emp, Std.ExtHashMap.sep_emp,
         Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, Int64.toBitVec_add,
         BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, show (UInt64.ofNat 0).toBitVec = 0#64 from rfl,
         show (p : UInt64) → p.toBitVec = p.toBitVec from fun _ => rfl] at H ⊢
@@ -106,7 +106,7 @@ theorem runs (e8 : List UInt8) (he8 : e8.length = 8) (rl : UInt64) (hrl : rl ≠
     (by
       have H : Eq ((block e8 rl).At (0x10000 : BitVec 64)) (mem e8 rl) := rfl
       wit_split [he8, show pre5.length = 5 from rfl]
-      simp only [cs0, w, ElfData.CheckpointAndEpoch.e2eErrBytesLength_addr, label_ebl, nil_At_emp, Std.ExtHashMap.sep_emp,
+      simp only [cs0, w, ElfData.PrysmTarget.e2eErrBytesLength_addr, label_ebl, nil_At_emp, Std.ExtHashMap.sep_emp,
         Std.ExtHashMap.emp_sep, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat, Int64.toBitVec_add,
         BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub, show (UInt64.ofNat 0).toBitVec = 0#64 from rfl,
         show (p : UInt64) → p.toBitVec = p.toBitVec from fun _ => rfl] at H ⊢

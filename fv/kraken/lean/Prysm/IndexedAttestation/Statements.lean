@@ -3,12 +3,10 @@ import Runtime.NewobjectContract
 import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
-import Prysm.ElfData.CheckpointAndEpoch
+import Prysm.ElfData.PrysmTarget
 import Prysm.Checkpoint.Code
 import Prysm.AttestationData.Code
-import Prysm.ElfData.AttestationData
 import Prysm.IndexedAttestation.Code
-import Prysm.ElfData.IndexedAttestation
 import Prysm.IndexedAttestation.SpecDefinitions
 
 /-!
@@ -57,7 +55,7 @@ def Decode.reject_size_statement : Prop :=
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8))
       ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec)
       ⋆ R)
     (hguard : guard.toNat + 48 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat < 228),
@@ -68,7 +66,7 @@ def Decode.reject_size_statement : Prop :=
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec)
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
@@ -84,7 +82,7 @@ def Decode.reject_offset_statement : Prop :=
       ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Eq (off.At s.regs.rbx.toBitVec)
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.IndexedAttestation.lvErrInvalidVariableOffset_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.lvErrInvalidVariableOffset_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrInvalidVariableOffset" + 8).toBitVec)
       ⋆ R)
     (hguard : guard.toNat + 48 < s.regs.rsp.toNat) (hlen : 228 ≤ s.regs.rcx.toNat),
@@ -96,7 +94,7 @@ def Decode.reject_offset_statement : Prop :=
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
           ⋆ Eq (off.At s.regs.rbx.toBitVec)
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.IndexedAttestation.lvErrInvalidVariableOffset_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.lvErrInvalidVariableOffset_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrInvalidVariableOffset" + 8).toBitVec)
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
@@ -118,17 +116,17 @@ def Decode.reject_alignment_statement : Prop :=
       ⋆ Eq (lo.At (s.regs.rsp.toBitVec - 184 - BitVec.ofNat 64 (S)))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Heap avail
-      ⋆ Eq (ElfData.IndexedAttestation.lvFmtMis.At ElfData.IndexedAttestation.lvFmtMis_addr)
+      ⋆ Eq (ElfData.PrysmTarget.lvFmtMis.At ElfData.PrysmTarget.lvFmtMis_addr)
       ⋆ Eq (offsetBytes.At s.regs.rbx.toBitVec)
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.IndexedAttestation.lvErrIncorrectListSize_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.lvErrIncorrectListSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrIncorrectListSize" + 8).toBitVec)
       ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
       ⋆ ErrStr e1.toBitVec esp msg
       ⋆ StaticBox (s.regs.rcx.toBitVec - 228)
       ⋆ R)
     (hguard : guard.toNat + 48 < s.regs.rsp.toNat) (hlen : 228 ≤ s.regs.rcx.toNat) (hmis : (s.regs.rcx.toNat - 228) % 8 ≠ 0)
-    (hav : ElfData.IndexedAttestation.lvFmtMis.length + msg.length + 8220 ≤ avail)
-    (hcv : ConvT64C Heap S) (hfe : FmtErrorfDWC Heap ElfData.IndexedAttestation.lvFmtMis ElfData.CheckpointAndEpoch.e2eIntType_addr S),
+    (hav : ElfData.PrysmTarget.lvFmtMis.length + msg.length + 8220 ≤ avail)
+    (hcv : ConvT64C Heap S) (hfe : FmtErrorfDWC Heap ElfData.PrysmTarget.lvFmtMis ElfData.PrysmTarget.e2eIntType_addr S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -137,15 +135,15 @@ def Decode.reject_alignment_statement : Prop :=
         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 ElfData.CheckpointAndEpoch.e2eIntType_addr.toInt ++ Int.toBytes 8 bx.toInt ++ ity ++ Int.toBytes 8 e1.toBitVec.toInt).At (s.regs.rsp.toBitVec - 48))
+          ⋆ Eq ((Int.toBytes 8 ElfData.PrysmTarget.e2eIntType_addr.toInt ++ Int.toBytes 8 bx.toInt ++ ity ++ Int.toBytes 8 e1.toBitVec.toInt).At (s.regs.rsp.toBitVec - 48))
           ⋆ Eq (spl'.At (s.regs.rsp.toBitVec - 176))
           ⋆ Eq ((Int.toBytes 8 (Host.addrOf (k + 117)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 184))
           ⋆ Eq (lo'.At (s.regs.rsp.toBitVec - 184 - BitVec.ofNat 64 (S)))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
           ⋆ Heap avail'
-          ⋆ Eq (ElfData.IndexedAttestation.lvFmtMis.At ElfData.IndexedAttestation.lvFmtMis_addr)
+          ⋆ Eq (ElfData.PrysmTarget.lvFmtMis.At ElfData.PrysmTarget.lvFmtMis_addr)
           ⋆ Eq (offsetBytes.At s.regs.rbx.toBitVec)
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.IndexedAttestation.lvErrIncorrectListSize_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.lvErrIncorrectListSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrIncorrectListSize" + 8).toBitVec)
           ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
           ⋆ ErrStr e1.toBitVec esp msg
@@ -171,17 +169,17 @@ def Decode.reject_overflow_statement : Prop :=
       ⋆ Eq (lo.At (s.regs.rsp.toBitVec - 184 - BitVec.ofNat 64 (S)))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Heap avail
-      ⋆ Eq (ElfData.IndexedAttestation.lvFmtTooBig.At ElfData.IndexedAttestation.lvFmtTooBig_addr)
+      ⋆ Eq (ElfData.PrysmTarget.lvFmtTooBig.At ElfData.PrysmTarget.lvFmtTooBig_addr)
       ⋆ Eq (offsetBytes.At s.regs.rbx.toBitVec)
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.IndexedAttestation.lvErrListTooBig_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.lvErrListTooBig_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrListTooBig" + 8).toBitVec)
       ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
       ⋆ ErrStr e1.toBitVec esp msg
       ⋆ StaticBox (BitVec.ofNat 64 ((s.regs.rcx.toNat - 228) / 8))
       ⋆ R)
     (hguard : guard.toNat + 48 < s.regs.rsp.toNat) (hlen : 228 ≤ s.regs.rcx.toNat) (hal : (s.regs.rcx.toNat - 228) % 8 = 0) (hbig : 2048 < (s.regs.rcx.toNat - 228) / 8)
-    (hav : ElfData.IndexedAttestation.lvFmtTooBig.length + msg.length + 8220 ≤ avail)
-    (hcv : ConvT64C Heap S) (hfe : FmtErrorfDWC Heap ElfData.IndexedAttestation.lvFmtTooBig ElfData.CheckpointAndEpoch.e2eIntType_addr S),
+    (hav : ElfData.PrysmTarget.lvFmtTooBig.length + msg.length + 8220 ≤ avail)
+    (hcv : ConvT64C Heap S) (hfe : FmtErrorfDWC Heap ElfData.PrysmTarget.lvFmtTooBig ElfData.PrysmTarget.e2eIntType_addr S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -190,15 +188,15 @@ def Decode.reject_overflow_statement : Prop :=
         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 ElfData.CheckpointAndEpoch.e2eIntType_addr.toInt ++ Int.toBytes 8 bx.toInt ++ ity ++ Int.toBytes 8 e1.toBitVec.toInt).At (s.regs.rsp.toBitVec - 80))
+          ⋆ Eq ((Int.toBytes 8 ElfData.PrysmTarget.e2eIntType_addr.toInt ++ Int.toBytes 8 bx.toInt ++ ity ++ Int.toBytes 8 e1.toBitVec.toInt).At (s.regs.rsp.toBitVec - 80))
           ⋆ Eq (spl'.At (s.regs.rsp.toBitVec - 176))
           ⋆ Eq ((Int.toBytes 8 (Host.addrOf (k + 80)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 184))
           ⋆ Eq (lo'.At (s.regs.rsp.toBitVec - 184 - BitVec.ofNat 64 (S)))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
           ⋆ Heap avail'
-          ⋆ Eq (ElfData.IndexedAttestation.lvFmtTooBig.At ElfData.IndexedAttestation.lvFmtTooBig_addr)
+          ⋆ Eq (ElfData.PrysmTarget.lvFmtTooBig.At ElfData.PrysmTarget.lvFmtTooBig_addr)
           ⋆ Eq (offsetBytes.At s.regs.rbx.toBitVec)
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.IndexedAttestation.lvErrListTooBig_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.lvErrListTooBig_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrListTooBig" + 8).toBitVec)
           ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
           ⋆ ErrStr e1.toBitVec esp msg
@@ -266,12 +264,12 @@ def Decode.accept_statement : Prop :=
       ⋆ R)
     (hguard : guard.toNat + 408 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = 228 + 8 * n)
     (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hav : 8 * n + 432 ≤ avail)
-    (hmsU : MakesliceC Heap ElfData.IndexedAttestation.lvU64Type_addr 8 (Sd + 224))
-    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (Sd + 224)) (hmm : MemmoveC (Sd + 224))
-    (hno : NewobjectC Heap ElfData.IndexedAttestation.lvAdType_addr 96 (Sd + 224))
-    (hmsD : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 Sd) (hmmD : MemmoveC Sd)
-    (hmsD' : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (Sd + 96)) (hmmD' : MemmoveC (Sd + 96))
-    (hnoD : NewobjectC Heap ElfData.AttestationData.adCpType_addr 72 (Sd + 96)),
+    (hmsU : MakesliceC Heap ElfData.PrysmTarget.lvU64Type_addr 8 (Sd + 224))
+    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 (Sd + 224)) (hmm : MemmoveC (Sd + 224))
+    (hno : NewobjectC Heap ElfData.PrysmTarget.lvAdType_addr 96 (Sd + 224))
+    (hmsD : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 Sd) (hmmD : MemmoveC Sd)
+    (hmsD' : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 (Sd + 96)) (hmmD' : MemmoveC (Sd + 96))
+    (hnoD : NewobjectC Heap ElfData.PrysmTarget.adCpType_addr 72 (Sd + 96)),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -352,7 +350,7 @@ def Decode.reject_size_spec_statement : Prop :=
       ⋆ Eq (fp.At (s.regs.rsp.toBitVec - 8))
       ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec)
       ⋆ R)
     (hguard : guard.toNat + 48 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bs.size),
@@ -364,7 +362,7 @@ def Decode.reject_size_spec_statement : Prop :=
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.CheckpointAndEpoch.e2eErrSize_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.e2eErrSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrSize" + 8).toBitVec)
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
@@ -380,7 +378,7 @@ def Decode.reject_offset_spec_statement : Prop :=
       ⋆ Eq (s2.At (s.regs.rsp.toBitVec + 16))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Eq ((bs.toList.take 4).At s.regs.rbx.toBitVec)
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.IndexedAttestation.lvErrInvalidVariableOffset_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.lvErrInvalidVariableOffset_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrInvalidVariableOffset" + 8).toBitVec)
       ⋆ R)
     (hguard : guard.toNat + 48 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bs.size),
@@ -393,7 +391,7 @@ def Decode.reject_offset_spec_statement : Prop :=
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
           ⋆ Eq ((bs.toList.take 4).At s.regs.rbx.toBitVec)
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.IndexedAttestation.lvErrInvalidVariableOffset_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.lvErrInvalidVariableOffset_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrInvalidVariableOffset" + 8).toBitVec)
           ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩
@@ -416,17 +414,17 @@ def Decode.reject_alignment_spec_statement : Prop :=
       ⋆ Eq (lo.At (s.regs.rsp.toBitVec - 184 - BitVec.ofNat 64 (S)))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Heap avail
-      ⋆ Eq (ElfData.IndexedAttestation.lvFmtMis.At ElfData.IndexedAttestation.lvFmtMis_addr)
+      ⋆ Eq (ElfData.PrysmTarget.lvFmtMis.At ElfData.PrysmTarget.lvFmtMis_addr)
       ⋆ Eq (offsetBytes.At s.regs.rbx.toBitVec)
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.IndexedAttestation.lvErrIncorrectListSize_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.lvErrIncorrectListSize_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrIncorrectListSize" + 8).toBitVec)
       ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
       ⋆ ErrStr e1.toBitVec esp msg
       ⋆ StaticBox (s.regs.rcx.toBitVec - 228)
       ⋆ R)
     (hguard : guard.toNat + 48 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bs.size)
-    (hav : ElfData.IndexedAttestation.lvFmtMis.length + msg.length + 8220 ≤ avail)
-    (hcv : ConvT64C Heap S) (hfe : FmtErrorfDWC Heap ElfData.IndexedAttestation.lvFmtMis ElfData.CheckpointAndEpoch.e2eIntType_addr S),
+    (hav : ElfData.PrysmTarget.lvFmtMis.length + msg.length + 8220 ≤ avail)
+    (hcv : ConvT64C Heap S) (hfe : FmtErrorfDWC Heap ElfData.PrysmTarget.lvFmtMis ElfData.PrysmTarget.e2eIntType_addr S),
     (∃ e, deserialize desc bs = .error e) ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
@@ -436,15 +434,15 @@ def Decode.reject_alignment_spec_statement : Prop :=
         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 ElfData.CheckpointAndEpoch.e2eIntType_addr.toInt ++ Int.toBytes 8 bx.toInt ++ ity ++ Int.toBytes 8 e1.toBitVec.toInt).At (s.regs.rsp.toBitVec - 48))
+          ⋆ Eq ((Int.toBytes 8 ElfData.PrysmTarget.e2eIntType_addr.toInt ++ Int.toBytes 8 bx.toInt ++ ity ++ Int.toBytes 8 e1.toBitVec.toInt).At (s.regs.rsp.toBitVec - 48))
           ⋆ Eq (spl'.At (s.regs.rsp.toBitVec - 176))
           ⋆ Eq ((Int.toBytes 8 (Host.addrOf (k + 117)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 184))
           ⋆ Eq (lo'.At (s.regs.rsp.toBitVec - 184 - BitVec.ofNat 64 (S)))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
           ⋆ Heap avail'
-          ⋆ Eq (ElfData.IndexedAttestation.lvFmtMis.At ElfData.IndexedAttestation.lvFmtMis_addr)
+          ⋆ Eq (ElfData.PrysmTarget.lvFmtMis.At ElfData.PrysmTarget.lvFmtMis_addr)
           ⋆ Eq (offsetBytes.At s.regs.rbx.toBitVec)
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.IndexedAttestation.lvErrIncorrectListSize_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.lvErrIncorrectListSize_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrIncorrectListSize" + 8).toBitVec)
           ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
           ⋆ ErrStr e1.toBitVec esp msg
@@ -471,17 +469,17 @@ def Decode.reject_overflow_spec_statement : Prop :=
       ⋆ Eq (lo.At (s.regs.rsp.toBitVec - 184 - BitVec.ofNat 64 (S)))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
       ⋆ Heap avail
-      ⋆ Eq (ElfData.IndexedAttestation.lvFmtTooBig.At ElfData.IndexedAttestation.lvFmtTooBig_addr)
+      ⋆ Eq (ElfData.PrysmTarget.lvFmtTooBig.At ElfData.PrysmTarget.lvFmtTooBig_addr)
       ⋆ Eq (offsetBytes.At s.regs.rbx.toBitVec)
-      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.IndexedAttestation.lvErrListTooBig_addr)
+      ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.lvErrListTooBig_addr)
       ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrListTooBig" + 8).toBitVec)
       ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
       ⋆ ErrStr e1.toBitVec esp msg
       ⋆ StaticBox (BitVec.ofNat 64 ((s.regs.rcx.toNat - 228) / 8))
       ⋆ R)
     (hguard : guard.toNat + 48 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bs.size)
-    (hav : ElfData.IndexedAttestation.lvFmtTooBig.length + msg.length + 8220 ≤ avail)
-    (hcv : ConvT64C Heap S) (hfe : FmtErrorfDWC Heap ElfData.IndexedAttestation.lvFmtTooBig ElfData.CheckpointAndEpoch.e2eIntType_addr S),
+    (hav : ElfData.PrysmTarget.lvFmtTooBig.length + msg.length + 8220 ≤ avail)
+    (hcv : ConvT64C Heap S) (hfe : FmtErrorfDWC Heap ElfData.PrysmTarget.lvFmtTooBig ElfData.PrysmTarget.e2eIntType_addr S),
     (∃ e, deserialize desc bs = .error e) ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
@@ -491,15 +489,15 @@ def Decode.reject_overflow_spec_statement : Prop :=
         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 ElfData.CheckpointAndEpoch.e2eIntType_addr.toInt ++ Int.toBytes 8 bx.toInt ++ ity ++ Int.toBytes 8 e1.toBitVec.toInt).At (s.regs.rsp.toBitVec - 80))
+          ⋆ Eq ((Int.toBytes 8 ElfData.PrysmTarget.e2eIntType_addr.toInt ++ Int.toBytes 8 bx.toInt ++ ity ++ Int.toBytes 8 e1.toBitVec.toInt).At (s.regs.rsp.toBitVec - 80))
           ⋆ Eq (spl'.At (s.regs.rsp.toBitVec - 176))
           ⋆ Eq ((Int.toBytes 8 (Host.addrOf (k + 80)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 184))
           ⋆ Eq (lo'.At (s.regs.rsp.toBitVec - 184 - BitVec.ofNat 64 (S)))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
           ⋆ Heap avail'
-          ⋆ Eq (ElfData.IndexedAttestation.lvFmtTooBig.At ElfData.IndexedAttestation.lvFmtTooBig_addr)
+          ⋆ Eq (ElfData.PrysmTarget.lvFmtTooBig.At ElfData.PrysmTarget.lvFmtTooBig_addr)
           ⋆ Eq (offsetBytes.At s.regs.rbx.toBitVec)
-          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.IndexedAttestation.lvErrListTooBig_addr)
+          ⋆ Eq ((Int.toBytes 8 e0.toBitVec.toInt).At ElfData.PrysmTarget.lvErrListTooBig_addr)
           ⋆ Eq ((Int.toBytes 8 e1.toBitVec.toInt).At (label "ssz.ErrListTooBig" + 8).toBitVec)
           ⋆ Eq (ity.At ((label "go_itab._errors.errorString_error").toBitVec + 8))
           ⋆ ErrStr e1.toBitVec esp msg
@@ -565,12 +563,12 @@ def Decode.accept_spec_statement : Prop :=
       ⋆ R)
     (hguard : guard.toNat + 408 < s.regs.rsp.toNat) (hlen : s.regs.rcx.toNat = bsA.size)
     (hcap : s.regs.rcx.toNat ≤ s.regs.rdi.toNat) (hcap63 : s.regs.rdi.toNat < 2 ^ 63) (hav : bsA.size - 228 + 432 ≤ avail)
-    (hmsU : MakesliceC Heap ElfData.IndexedAttestation.lvU64Type_addr 8 (Sd + 224))
-    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (Sd + 224)) (hmm : MemmoveC (Sd + 224))
-    (hno : NewobjectC Heap ElfData.IndexedAttestation.lvAdType_addr 96 (Sd + 224))
-    (hmsD : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 Sd) (hmmD : MemmoveC Sd)
-    (hmsD' : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 (Sd + 96)) (hmmD' : MemmoveC (Sd + 96))
-    (hnoD : NewobjectC Heap ElfData.AttestationData.adCpType_addr 72 (Sd + 96)),
+    (hmsU : MakesliceC Heap ElfData.PrysmTarget.lvU64Type_addr 8 (Sd + 224))
+    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 (Sd + 224)) (hmm : MemmoveC (Sd + 224))
+    (hno : NewobjectC Heap ElfData.PrysmTarget.lvAdType_addr 96 (Sd + 224))
+    (hmsD : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 Sd) (hmmD : MemmoveC Sd)
+    (hmsD' : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 (Sd + 96)) (hmmD' : MemmoveC (Sd + 96))
+    (hnoD : NewobjectC Heap ElfData.PrysmTarget.adCpType_addr 72 (Sd + 96)),
     ∃ g : SszValue, g.toValue = v ∧ bsA = SszValue.encode g ∧
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0

@@ -30,13 +30,13 @@ theorem Decode.reject_overflow_error_word_nonzero : Decode.reject_overflow_error
   have hz1 := rsp.toNat_lt_size; have hz2 := guard.toNat_lt_size; have hz3 := rcx.toNat_lt_size
   simp only [UInt64.size] at hz1 hz2 hz3
   generalize hSB : StaticBox (BitVec.ofNat 64 ((rcx.toNat - 228) / 8)) = SB at h_mem
-  rw [errListTooBig_addr_eq, fmtTooBig_addr_eq] at h_mem
+  rw [ElfData.PrysmTarget.lvErrListTooBig_addr_eq, ElfData.PrysmTarget.lvFmtTooBig_addr_eq] at h_mem
   -- the argument array as two 16-byte chunks
   rw [← List.take_append_drop 16 aw, at_app (aw.take 16) (aw.drop 16) (b := rsp.toBitVec - 64)
-    (by simp only [List.length_take, haw]; iaaddr) (by simp [haw])] at h_mem
+    (by simp only [List.length_take, haw]; indexed_attestation_addr) (by simp [haw])] at h_mem
   -- the spill area as the convT64 spill slot and the rest
   rw [← List.take_append_drop 8 spl, at_app (spl.take 8) (spl.drop 8) (b := rsp.toBitVec - 168)
-    (by simp only [List.length_take, hspl]; iaaddr) (by simp [hspl])] at h_mem
+    (by simp only [List.length_take, hspl]; indexed_attestation_addr) (by simp [hspl])] at h_mem
   kat hk unmarshalSSZ 0
   kat hk unmarshalSSZ 1
   kat hk unmarshalSSZ 2
@@ -52,14 +52,14 @@ theorem Decode.reject_overflow_error_word_nonzero : Decode.reject_overflow_error
     exact Bool.noConfusion h
   simp only [Effects.All]
   kat hk unmarshalSSZ 5
-  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by iaaddr) (by ecancel) (by exact hfp)
+  apply store_step_at _ _ (rsp.toBitVec - 8) _ _ _ fp _ _ (by indexed_attestation_addr) (by ecancel) (by exact hfp)
   intro m1 H1
   simp only [Width.bytes, Width.bits] at H1
   kunfold
   kat hk unmarshalSSZ 6
   kat hk unmarshalSSZ 7
   kat hk unmarshalSSZ 8
-  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by iaaddr) (by ecancel) (by exact h2)
+  apply store_step_at _ _ (rsp.toBitVec + 16) _ _ _ s2 _ _ (by indexed_attestation_addr) (by ecancel) (by exact h2)
   intro m2 H2
   simp only [Width.bytes, Width.bits] at H2
   kunfold
@@ -124,28 +124,28 @@ theorem Decode.reject_overflow_error_word_nonzero : Decode.reject_overflow_error
   kat hk unmarshalSSZ 59
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
-  rw [show rsp.toBitVec - 8#64 - 168 + 96 = rsp.toBitVec - 80 by iaaddr]
+  rw [show rsp.toBitVec - 8#64 - 168 + 96 = rsp.toBitVec - 80 by indexed_attestation_addr]
   apply Machine.store_avx_step _ _ _ _ (aw.take 16) _ _ (by ecancel) (by simp [haw]) (by decide)
   intro m3 H3
   kunfold
   kat hk unmarshalSSZ 60
   simp only [AvxOperation.interp, MachineData.setAvxLegacy, AvxRegOrMem.interp]
   kunfold
-  rw [show rsp.toBitVec - 80 + 16 = rsp.toBitVec - 64 by iaaddr]
+  rw [show rsp.toBitVec - 80 + 16 = rsp.toBitVec - 64 by indexed_attestation_addr]
   apply Machine.store_avx_step _ _ _ _ (aw.drop 16) _ _ (by ecancel) (by simp [haw]) (by decide)
   intro m4 H4
   kunfold
   kat hk unmarshalSSZ 61
   kat hk unmarshalSSZ 62
-  apply store_step_at _ _ (rsp.toBitVec - 184) _ _ _ rslot _ _ (by iaaddr) (by ecancel) (by exact hrs)
+  apply store_step_at _ _ (rsp.toBitVec - 184) _ _ _ rslot _ _ (by indexed_attestation_addr) (by ecancel) (by exact hrs)
   intro m5 H5
   simp only [Width.bytes, Width.bits] at H5
   kunfold
-  rw [show rsp.toBitVec - 8#64 - 168 - 8#64 = rsp.toBitVec - 184 by iaaddr]
+  rw [show rsp.toBitVec - 8#64 - 168 - 8#64 = rsp.toBitVec - 184 by indexed_attestation_addr]
   refine eventually_trans _ _ _ _ (hcv _ (Host.addrOf (k + 62 + 1)) avail lo (spl.take 8) _ (by omega) hlo
     (by simp [hspl]) (by
       dsimp only
-      rw [show rsp.toBitVec - 184 + 8 = rsp.toBitVec - 176 by iaaddr, Runtime.staticBox_congr hQv, hSB]
+      rw [show rsp.toBitVec - 184 + 8 = rsp.toBitVec - 176 by indexed_attestation_addr, Runtime.staticBox_congr hQv, hSB]
       ecancel)) ?_
   rintro ⟨d1, pc1⟩ ⟨hpc1, hrsp1, hr141, stk1, sp1, hb1, av1, hstk1, hsp1, hbox1, hav1, hav1', Hm1⟩
   dsimp only at hpc1 hrsp1 hr141 Hm1
@@ -155,23 +155,23 @@ theorem Decode.reject_overflow_error_word_nonzero : Decode.reject_overflow_error
     zmms1, flags1, mem1⟩ := d1
   simp only at hrsp1 hr141 Hm1 hbox1
   rw [show ({ toBitVec := rsp.toBitVec - 184 } + 8 : UInt64) = { toBitVec := rsp.toBitVec - 176 } by
-    apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; iaaddr] at hrsp1
+    apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; indexed_attestation_addr] at hrsp1
   subst hrsp1 hr141
-  rw [show rsp.toBitVec - 184 + 8 = rsp.toBitVec - 176 by iaaddr,
+  rw [show rsp.toBitVec - 184 + 8 = rsp.toBitVec - 176 by indexed_attestation_addr,
     Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 80), Machine.at_split16 _ (Int.toBytes_length 16 _) (rsp.toBitVec - 64),
-    show rsp.toBitVec - 80 + 8 = rsp.toBitVec - 72 by iaaddr, show rsp.toBitVec - 64 + 8 = rsp.toBitVec - 56 by iaaddr]
+    show rsp.toBitVec - 80 + 8 = rsp.toBitVec - 72 by indexed_attestation_addr, show rsp.toBitVec - 64 + 8 = rsp.toBitVec - 56 by indexed_attestation_addr]
     at Hm1
   -- 63–73: the argument array (type:int, box, itab type word, error data word)
   kat hk unmarshalSSZ 63
   kat hk unmarshalSSZ 64
   apply store_step_at _ _ (rsp.toBitVec - 80) _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).take 8)
-    _ _ (by iaaddr) (by ecancel) (by simp [Int.toBytes_length])
+    _ _ (by indexed_attestation_addr) (by ecancel) (by simp [Int.toBytes_length])
   intro m6 H6
   simp only [Width.bytes, Width.bits] at H6
   kunfold
   kat hk unmarshalSSZ 65
   apply store_step_at _ _ (rsp.toBitVec - 72) _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8)
-    _ _ (by iaaddr) (by ecancel) (by simp [Int.toBytes_length])
+    _ _ (by indexed_attestation_addr) (by ecancel) (by simp [Int.toBytes_length])
   intro m7 H7
   simp only [Width.bytes, Width.bits] at H7
   kunfold
@@ -196,13 +196,13 @@ theorem Decode.reject_overflow_error_word_nonzero : Decode.reject_overflow_error
   kunfold
   kat hk unmarshalSSZ 72
   apply store_step_at _ _ (rsp.toBitVec - 64) _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).take 8)
-    _ _ (by iaaddr) (by ecancel) (by simp [Int.toBytes_length])
+    _ _ (by indexed_attestation_addr) (by ecancel) (by simp [Int.toBytes_length])
   intro m8 H8
   simp only [Width.bytes, Width.bits, toBytes_ofInt_ofBytes 64 8 rfl ity hity] at H8
   kunfold
   kat hk unmarshalSSZ 73
   apply store_step_at _ _ (rsp.toBitVec - 56) _ _ _ ((Int.toBytes 16 (zmms.get (AvxReg.xmm RegMm.mm15)).toInt).drop 8)
-    _ _ (by iaaddr) (by ecancel) (by simp [Int.toBytes_length])
+    _ _ (by indexed_attestation_addr) (by ecancel) (by simp [Int.toBytes_length])
   intro m9 H9
   simp only [Width.bytes, Width.bits] at H9
   kunfold
@@ -214,27 +214,27 @@ theorem Decode.reject_overflow_error_word_nonzero : Decode.reject_overflow_error
   kat hk unmarshalSSZ 78
   kat hk unmarshalSSZ 79
   apply store_step_at _ _ (rsp.toBitVec - 184) _ _ _ (Int.toBytes 8 (Host.addrOf (k + 62 + 1)).toBitVec.toInt) _ _
-    (by iaaddr) (by ecancel) (by exact Int.toBytes_length 8 _)
+    (by indexed_attestation_addr) (by ecancel) (by exact Int.toBytes_length 8 _)
   intro m10 H10
   simp only [Width.bytes, Width.bits] at H10
   kunfold
-  rw [show rsp.toBitVec - 176 - 8#64 = rsp.toBitVec - 184 by iaaddr]
+  rw [show rsp.toBitVec - 176 - 8#64 = rsp.toBitVec - 184 by indexed_attestation_addr]
   refine eventually_trans _ _ _ _ (hfe _ (Host.addrOf (k + 79 + 1)) av1 ity msg hb1 stk1 (sp1 ++ spl.drop 8)
     rax1.toBitVec Q e1.toBitVec esp _
     (by rw [fmtTooBig_length]; rfl) (by first | rfl | decide) (by first | rfl | decide)
     hity hbox1 hstk1 (by simp [hsp1, hspl]) (by rw [fmtTooBig_length] at hav ⊢; omega)
     (by
       dsimp only
-      rw [show rsp.toBitVec - 176 + 96 = rsp.toBitVec - 80 by iaaddr]
-      rw [show rsp.toBitVec - 184 + 8 = rsp.toBitVec - 176 by iaaddr, intType_addr_eq,
+      rw [show rsp.toBitVec - 176 + 96 = rsp.toBitVec - 80 by indexed_attestation_addr]
+      rw [show rsp.toBitVec - 184 + 8 = rsp.toBitVec - 176 by indexed_attestation_addr, ElfData.PrysmTarget.e2eIntType_addr_eq,
         Runtime.staticBox_congr hQv, hSB,
         at_app (Int.toBytes 8 (label "type__" + 387520).toBitVec.toInt ++ Int.toBytes 8 rax1.toBitVec.toInt ++ ity)
-          (Int.toBytes 8 e1.toBitVec.toInt) (a := rsp.toBitVec - 80) (b := rsp.toBitVec - 56) (by simp only [List.length_append, Int.toBytes_length, hity]; iaaddr) (by simp only [List.length_append, Int.toBytes_length, hity]; omega),
+          (Int.toBytes 8 e1.toBitVec.toInt) (a := rsp.toBitVec - 80) (b := rsp.toBitVec - 56) (by simp only [List.length_append, Int.toBytes_length, hity]; indexed_attestation_addr) (by simp only [List.length_append, Int.toBytes_length, hity]; omega),
         at_app (Int.toBytes 8 (label "type__" + 387520).toBitVec.toInt ++ Int.toBytes 8 rax1.toBitVec.toInt) ity
-          (a := rsp.toBitVec - 80) (b := rsp.toBitVec - 64) (by simp only [List.length_append, Int.toBytes_length]; iaaddr) (by simp only [List.length_append, Int.toBytes_length, hity]; omega),
+          (a := rsp.toBitVec - 80) (b := rsp.toBitVec - 64) (by simp only [List.length_append, Int.toBytes_length]; indexed_attestation_addr) (by simp only [List.length_append, Int.toBytes_length, hity]; omega),
         at_app (Int.toBytes 8 (label "type__" + 387520).toBitVec.toInt) (Int.toBytes 8 rax1.toBitVec.toInt)
-          (a := rsp.toBitVec - 80) (b := rsp.toBitVec - 72) (by simp only [Int.toBytes_length]; iaaddr) (by simp only [Int.toBytes_length]; omega),
-        at_app sp1 (spl.drop 8) (a := rsp.toBitVec - 176) (b := rsp.toBitVec - 168) (by rw [hsp1]; iaaddr) (by simp [hsp1, hspl])]
+          (a := rsp.toBitVec - 80) (b := rsp.toBitVec - 72) (by simp only [Int.toBytes_length]; indexed_attestation_addr) (by simp only [Int.toBytes_length]; omega),
+        at_app sp1 (spl.drop 8) (a := rsp.toBitVec - 176) (b := rsp.toBitVec - 168) (by rw [hsp1]; indexed_attestation_addr) (by simp [hsp1, hspl])]
       ecancel)) ?_
   rintro ⟨d2, pc2⟩ ⟨hpc2, hrsp2, hr142, hrax2, stk2, sp2, av2, hstk2, hsp2, hav2, Hm2⟩
   dsimp only at hpc2 hrsp2 hr142 hrax2 Hm2
@@ -243,7 +243,7 @@ theorem Decode.reject_overflow_error_word_nonzero : Decode.reject_overflow_error
     zmms2, flags2, mem2⟩ := d2
   simp only at hrsp2 hr142 hrax2 Hm2
   rw [show ({ toBitVec := rsp.toBitVec - 184 } + 8 : UInt64) = { toBitVec := rsp.toBitVec - 176 } by
-    apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; iaaddr] at hrsp2
+    apply UInt64.toBitVec_inj.mp; simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; indexed_attestation_addr] at hrsp2
   subst hrsp2 hr142
   -- 80–93: err ≠ nil, `jne L_199` taken, epilogue
   kat hk unmarshalSSZ 80
@@ -259,21 +259,21 @@ theorem Decode.reject_overflow_error_word_nonzero : Decode.reject_overflow_error
   kat hk unmarshalSSZ 91
   try intro _
   kat hk unmarshalSSZ 92
-  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by iaaddr) (by ecancel)
+  apply load_step_at _ _ (rsp.toBitVec - 8) _ _ (Int.toBytes 8 rbp.toBitVec.toInt) _ _ (by indexed_attestation_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   kat hk unmarshalSSZ 93
-  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by iaaddr) (by ecancel)
+  apply load_step_at _ _ rsp.toBitVec _ _ (Int.toBytes 8 ra.toBitVec.toInt) _ _ (by indexed_attestation_addr) (by ecancel)
     (by exact Int.toBytes_length 8 _)
   kunfold
   apply Eventually.done
   rw [hQv] at hbox1
   refine ⟨?_, hrax2, ?_, ?_, ?_, rax1.toBitVec, hb1, sp2, stk2, av2, hsp2, hstk2, hbox1, by omega, ?_⟩
   rotate_right
-  · rw [errListTooBig_addr_eq, fmtTooBig_addr_eq, intType_addr_eq]
+  · rw [ElfData.PrysmTarget.lvErrListTooBig_addr_eq, ElfData.PrysmTarget.lvFmtTooBig_addr_eq, ElfData.PrysmTarget.e2eIntType_addr_eq]
     rw [show k + 79 + 1 = k + 80 from rfl] at Hm2
-    rw [show rsp.toBitVec - 176 + 96 = rsp.toBitVec - 80 by iaaddr] at Hm2
-    rw [show rsp.toBitVec - 184 + 8 = rsp.toBitVec - 176 by iaaddr, Runtime.staticBox_congr hQv, hSB] at Hm2
+    rw [show rsp.toBitVec - 176 + 96 = rsp.toBitVec - 80 by indexed_attestation_addr] at Hm2
+    rw [show rsp.toBitVec - 184 + 8 = rsp.toBitVec - 176 by indexed_attestation_addr, Runtime.staticBox_congr hQv, hSB] at Hm2
     ecancel
   all_goals first
     | exact trivial
@@ -281,6 +281,6 @@ theorem Decode.reject_overflow_error_word_nonzero : Decode.reject_overflow_error
     | (apply UInt64.toBitVec_inj.mp
        simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat, BitVec.ofNat_eq_ofNat, Width.bits]
        done)
-    | (apply UInt64.toBitVec_inj.mp; iaaddr)
+    | (apply UInt64.toBitVec_inj.mp; indexed_attestation_addr)
 
 end Prysm.IndexedAttestation

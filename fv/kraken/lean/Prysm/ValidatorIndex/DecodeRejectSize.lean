@@ -9,7 +9,7 @@ import Prysm.BeaconBlockHeader.Code
 Hand text: `Prysm.Epoch.Decode.reject_size` with the code constant `EpUnmarshal` replaced by
 `unmarshalSSZ`. The two `.S` files are identical modulo labels, including the format operand
 `go_string._+110057` (the Go linker keeps one copy of the string), so the `FmtErrorfDDC` instance with
-`ElfData.CheckpointAndEpoch.e2eEpFmt` and `ElfData.CheckpointAndEpoch.e2eIntType_addr` is the same instance; `ConvT64C` likewise.
+`ElfData.PrysmTarget.e2eEpFmt` and `ElfData.PrysmTarget.e2eIntType_addr` is the same instance; `ConvT64C` likewise.
 No new contract form. The helper lemmas `Prysm.Epoch.Decode.reject_*` and `Prysm.Epoch.Decode.reject_eight_bytes` / `Prysm.Epoch.Decode.reject_fmt_len` are reused.
 -/
 
@@ -33,10 +33,10 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
       ⋆ Eq (sp8.At (s.regs.rsp.toBitVec - 80)) ⋆ Eq (sp32.At (s.regs.rsp.toBitVec - 72))
       ⋆ Eq (rslot.At (s.regs.rsp.toBitVec - 88)) ⋆ Eq (stk.At (s.regs.rsp.toBitVec - 88 - BitVec.ofNat 64 S))
       ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-      ⋆ Eq (ElfData.CheckpointAndEpoch.e2eEpFmt.At ElfData.CheckpointAndEpoch.e2eEpFmt_addr) ⋆ Eq (ElfData.CheckpointAndEpoch.e2eEight.At ElfData.CheckpointAndEpoch.e2eEight_addr)
+      ⋆ Eq (ElfData.PrysmTarget.e2eEpFmt.At ElfData.PrysmTarget.e2eEpFmt_addr) ⋆ Eq (ElfData.PrysmTarget.e2eEight.At ElfData.PrysmTarget.e2eEight_addr)
       ⋆ StaticBox 8 ⋆ StaticBox s.regs.rcx.toBitVec ⋆ Heap avail ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx ≠ 8) (hav : 8 + 40 + 40 + 8192 ≤ avail)
-    (hct : ConvT64C Heap S) (hdd : FmtErrorfDDC Heap ElfData.CheckpointAndEpoch.e2eEpFmt ElfData.CheckpointAndEpoch.e2eIntType_addr S) :
+    (hct : ConvT64C Heap S) (hdd : FmtErrorfDDC Heap ElfData.PrysmTarget.e2eEpFmt ElfData.PrysmTarget.e2eIntType_addr S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax ≠ 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
@@ -45,13 +45,13 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
         (Eq ((Int.toBytes 8 ra.toBitVec.toInt).At s.regs.rsp.toBitVec)
           ⋆ Eq ((Int.toBytes 8 s.regs.rbp.toBitVec.toInt).At (s.regs.rsp.toBitVec - 8))
           ⋆ Eq ((Int.toBytes 8 s.regs.rbx.toBitVec.toInt).At (s.regs.rsp.toBitVec + 16))
-          ⋆ Eq ((Int.toBytes 8 ElfData.CheckpointAndEpoch.e2eIntType_addr.toInt ++ Int.toBytes 8 ElfData.CheckpointAndEpoch.e2eEight_addr.toInt
-              ++ Int.toBytes 8 ElfData.CheckpointAndEpoch.e2eIntType_addr.toInt ++ Int.toBytes 8 bx.toInt).At (s.regs.rsp.toBitVec - 40))
+          ⋆ Eq ((Int.toBytes 8 ElfData.PrysmTarget.e2eIntType_addr.toInt ++ Int.toBytes 8 ElfData.PrysmTarget.e2eEight_addr.toInt
+              ++ Int.toBytes 8 ElfData.PrysmTarget.e2eIntType_addr.toInt ++ Int.toBytes 8 bx.toInt).At (s.regs.rsp.toBitVec - 40))
           ⋆ Eq (sp'.At (s.regs.rsp.toBitVec - 80))
           ⋆ Eq ((Int.toBytes 8 (Host.addrOf (k + 29)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 88))
           ⋆ Eq (stk'.At (s.regs.rsp.toBitVec - 88 - BitVec.ofNat 64 S))
           ⋆ Eq ((Int.toBytes 8 guard.toBitVec.toInt).At (s.regs.r14.toBitVec + 16))
-          ⋆ Eq (ElfData.CheckpointAndEpoch.e2eEpFmt.At ElfData.CheckpointAndEpoch.e2eEpFmt_addr) ⋆ Eq (ElfData.CheckpointAndEpoch.e2eEight.At ElfData.CheckpointAndEpoch.e2eEight_addr)
+          ⋆ Eq (ElfData.PrysmTarget.e2eEpFmt.At ElfData.PrysmTarget.e2eEpFmt_addr) ⋆ Eq (ElfData.PrysmTarget.e2eEight.At ElfData.PrysmTarget.e2eEight_addr)
           ⋆ StaticBox 8 ⋆ StaticBox s.regs.rcx.toBitVec ⋆ Eq (hb.At bx) ⋆ Heap av' ⋆ R) st.data.dmem)
       ⟨s, Host.addrOf k⟩ := by
   obtain ⟨⟨rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15⟩, zmms, flags, mem⟩ := s
@@ -166,14 +166,14 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   kunfold
   rw [Prysm.Epoch.Decode.reject_call2] at *
   rw [Prysm.Epoch.Decode.reject_eight_bytes] at H10
-  simp only [ElfData.CheckpointAndEpoch.e2eIntType_addr, ElfData.CheckpointAndEpoch.e2eEight_addr, ElfData.CheckpointAndEpoch.e2eEpFmt_addr] at H10 ⊢
+  simp only [ElfData.PrysmTarget.e2eIntType_addr, ElfData.PrysmTarget.e2eEight_addr, ElfData.PrysmTarget.e2eEpFmt_addr] at H10 ⊢
   refine eventually_trans _ _ _ _ (hdd _ (Host.addrOf (k + 28 + 1)) av2 (Int.toBytes 8 (8 : BitVec 64).toInt) hb stk2
     (sp2 ++ sp32) (label "runtime.gcbits._" + 1432).toBitVec 8 rax2.toBitVec rcx.toBitVec ?F
     (by rw [Prysm.Epoch.Decode.reject_fmt_len]; rfl) rfl rfl (Or.inr rfl) hbox hstk2 (by simp [hsp2, hsp32])
     (by rw [Prysm.Epoch.Decode.reject_fmt_len]; omega) ?hpre) ?_
   case hpre =>
     dsimp only
-    simp only [ElfData.CheckpointAndEpoch.e2eIntType_addr]
+    simp only [ElfData.PrysmTarget.e2eIntType_addr]
     rw [show rsp.toBitVec - 80 + 40 = rsp.toBitVec - 40 by bv_omega,
       show rsp.toBitVec - 88 + 8 = rsp.toBitVec - 80 by bv_omega]
     rw [← Prysm.Epoch.Decode.reject_sp sp2 sp32 hsp2 hsp32 (rsp.toBitVec - 80)
@@ -183,7 +183,7 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
       (Int.toBytes_length _ _) (rsp.toBitVec - 40)
       (Eq ((Int.toBytes 8 (Host.addrOf (k + 28 + 1)).toBitVec.toInt).At (rsp.toBitVec - 88))
         ⋆ Eq (stk2.At (rsp.toBitVec - 88 - BitVec.ofNat 64 S)) ⋆ Eq (sp2.At (rsp.toBitVec - 80))
-        ⋆ Eq (sp32.At (rsp.toBitVec - 80 + 8)) ⋆ Eq (ElfData.CheckpointAndEpoch.e2eEpFmt.At (label "go_string._" + 110057).toBitVec))]
+        ⋆ Eq (sp32.At (rsp.toBitVec - 80 + 8)) ⋆ Eq (ElfData.PrysmTarget.e2eEpFmt.At (label "go_string._" + 110057).toBitVec))]
     rw [show rsp.toBitVec - 80 + 8 = rsp.toBitVec - 72 by bv_omega,
       show rsp.toBitVec - 40 + 8 = rsp.toBitVec - 32 by bv_omega,
       show rsp.toBitVec - 40 + 16 = rsp.toBitVec - 24 by bv_omega,
@@ -221,7 +221,7 @@ theorem Decode.reject_size (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k)
   refine ⟨?_, hrax3, ?_, ?_, ?_, rax2.toBitVec, hb, stk3, sp3, av3, hstk3, hsp3, hbox, by omega, ?hmem⟩
   case hmem =>
     rw [Prysm.Epoch.Decode.reject_eight_bytes]
-    simp only [ElfData.CheckpointAndEpoch.e2eIntType_addr, ElfData.CheckpointAndEpoch.e2eEight_addr, ElfData.CheckpointAndEpoch.e2eEpFmt_addr] at Hm3 ⊢
+    simp only [ElfData.PrysmTarget.e2eIntType_addr, ElfData.PrysmTarget.e2eEight_addr, ElfData.PrysmTarget.e2eEpFmt_addr] at Hm3 ⊢
     rw [show k + 28 + 1 = k + 29 from rfl] at Hm3
     rw [show rsp.toBitVec - 88 + 8 = rsp.toBitVec - 80 by bv_omega,
       show rsp.toBitVec - 80 + 40 = rsp.toBitVec - 40 by bv_omega] at Hm3

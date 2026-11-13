@@ -49,7 +49,7 @@ theorem runs (L : Nat) (hL : L < 36) (zmms : RegZmms) (flags : StatusFlags) :
     (by
       have H : Eq (block.At (0x10000 : BitVec 64)) (block.At (0x10000 : BitVec 64)) := rfl
       wit_split
-      simp only [cs0, bw, ElfData.CheckpointAndEpoch.e2eErrSize_addr, label_es, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
+      simp only [cs0, bw, ElfData.PrysmTarget.e2eErrSize_addr, label_es, UInt64.toBitVec_ofNat, Int64.toBitVec_ofNat,
         Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         show (UInt64.ofNat 0).toBitVec = 0#64 from rfl] at H ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H ⊢
@@ -98,7 +98,7 @@ theorem runs (L : Nat) (hL : 36 ≤ L) (hL' : L < 2 ^ 63) (off : List UInt8) (ho
     (by
       have H : Eq ((block off).At (0x10000 : BitVec 64)) ((block off).At (0x10000 : BitVec 64)) := rfl
       wit_split [hoff4]
-      simp only [cs0, bw, ElfData.IndexedAttestation.lvErrInvalidVariableOffset_addr, label_eo, UInt64.toBitVec_ofNat,
+      simp only [cs0, bw, ElfData.PrysmTarget.lvErrInvalidVariableOffset_addr, label_eo, UInt64.toBitVec_ofNat,
         Int64.toBitVec_ofNat, Int64.toBitVec_add, BitVec.ofNat_eq_ofNat, BitVec.reduceAdd, BitVec.reduceSub,
         show (UInt64.ofNat 0).toBitVec = 0#64 from rfl] at H ⊢
       simp only [Std.ExtHashMap.sep_assoc] at H ⊢

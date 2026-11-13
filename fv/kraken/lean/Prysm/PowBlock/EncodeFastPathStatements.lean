@@ -9,7 +9,7 @@ import Prysm.SyncCommitteeMessage.EncodeFastPathStatements
 
 Written by hand BEFORE the generated `Gen6{Pb,Sc,Pw,Dd}Enc.lean` fast-path theorems or their kind lines were
 opened. Sources: the Go layout in `prysm/ir/ir-mainnet.json` (`go_fields`, gc amd64 offsets), the SSZ layout
-of the four containers, the `.S` files of `prysm/go1.26.10/e2e/enc2/link/norm/` (frame, guard, stack slots
+of the four containers, the `.S` files of `prysm/go1.26.10/link-set/norm/` (frame, guard, stack slots
 touched on the fast path and their contents at the return) and the shape of the committed hand statements
 `Prysm.BeaconBlockHeader.Encode.fast_path` / `Prysm.Eth1Data.Encode.fast_path` (binder order and memory order per the
 interface text in `enc2/L/OUT.md`).

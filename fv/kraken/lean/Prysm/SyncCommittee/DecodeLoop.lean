@@ -1,7 +1,7 @@
 import Runtime.Contracts
 import Machine.Step
 import Machine.Labels
-import Prysm.ElfData.CheckpointAndEpoch
+import Prysm.ElfData.PrysmTarget
 import Prysm.SyncAggregate.Code
 import Prysm.SyncCommittee.DecodeLoopLemmas
 
@@ -27,7 +27,7 @@ namespace Prysm.SyncCommittee
 
 /-- Address equation by `toNat` and `omega` with products and shifts (the `kaddr` set plus `toNat_mul` and
 `toNat_shiftLeft`). -/
-macro "laddr" : tactic => `(tactic| (
+macro "address_with_products" : tactic => `(tactic| (
   apply BitVec.eq_of_toNat_eq
   simp only [BitVec.toNat_add, BitVec.toNat_sub, BitVec.toNat_neg, BitVec.toNat_ofNat, BitVec.ofNat_eq_ofNat,
     BitVec.toNat_mul, BitVec.toNat_shiftLeft, Nat.shiftLeft_eq, UInt64.toNat_toBitVec, UInt64.toBitVec_add,
@@ -51,7 +51,7 @@ theorem Decode.iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
       ⋆ Eq ((Int.toBytes 8 A.toInt).At (recv + 8)) ⋆ Eq ((Int.toBytes 8 512).At (recv + 16))
       ⋆ Eq ((Codec.sliceHeaders 48 ps ++ Codec.zeroBytes (24 * (512 - i))).At A) ⋆ Codec.elementBlocks ps (pks.take i)
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
-    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
+    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
     Eventually (step1 Host.exe)
       (fun st => st.pc = Host.addrOf (k + 40) ∧ st.data.regs.rax.toNat = i + 1
         ∧ st.data.regs.rsp = { toBitVec := sp } ∧ st.data.regs.rbp = rbp0 ∧ st.data.regs.r14 = r140 ∧
@@ -144,7 +144,7 @@ theorem Decode.iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
   simp only [Width.bytes, Width.bits] at H6
   kunfold
   try rw [show sp - 8#64 = sp - 8 from rfl] at *
-  rw [show bf + (rax.toBitVec + rax.toBitVec * 2#64) <<< 4 * 1#64 = bf + BitVec.ofNat 64 (48 * i) by laddr]
+  rw [show bf + (rax.toBitVec + rax.toBitVec * 2#64) <<< 4 * 1#64 = bf + BitVec.ofNat 64 (48 * i) by address_with_products]
   refine eventually_trans _ _ _ _ (hmm _ (Host.addrOf (k + 57 + 1)) e (List.replicate 48 0) stk3 _
     (by rw [hpi]; rfl) (by simp [hpi]) hstk3 (by dsimp only; ecancel)) ?_
   rintro ⟨d4, pc4⟩ ⟨hpc4, hrsp4, hr144, hrbp4, stk4, hstk4, Hm4⟩
@@ -191,12 +191,12 @@ theorem Decode.iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
   kunfold
   try simp only [ofInt_ofBytes_toBytes64]
   kat hk unmarshalSSZ 66
-  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 8) _ _ _ (Codec.zeroBytes 8) _ _ (by laddr) (by ecancel) (by rfl)
+  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 8) _ _ _ (Codec.zeroBytes 8) _ _ (by address_with_products) (by ecancel) (by rfl)
   intro m7 H7
   simp only [Width.bytes, Width.bits] at H7
   kunfold
   kat hk unmarshalSSZ 67
-  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 16) _ _ _ (Codec.zeroBytes 8) _ _ (by laddr) (by ecancel) (by rfl)
+  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i) + 16) _ _ _ (Codec.zeroBytes 8) _ _ (by address_with_products) (by ecancel) (by rfl)
   intro m8 H8
   simp only [Width.bytes, Width.bits] at H8
   kunfold
@@ -217,7 +217,7 @@ theorem Decode.iter (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
   klabel hk hf unmarshalSSZ 36
   kat hk unmarshalSSZ 36
   kat hk unmarshalSSZ 37
-  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i)) _ _ _ (Codec.zeroBytes 8) _ _ (by laddr) (by ecancel) (by rfl)
+  apply store_step_at _ _ (A + BitVec.ofNat 64 (24 * i)) _ _ _ (Codec.zeroBytes 8) _ _ (by address_with_products) (by ecancel) (by rfl)
   intro m9 H9
   simp only [Width.bytes, Width.bits] at H9
   kunfold
@@ -262,7 +262,7 @@ theorem Decode.loop (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : La
     (sp recv bf A : BitVec 64) (pks : List (List UInt8)) (hpks : pks.length = 512)
     (hpk : ∀ e ∈ pks, e.length = 48) (rbp0 r140 : UInt64) (S : Nat)
     (Heap : Nat → DataMem → Prop) (R : DataMem → Prop)
-    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
+    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S) :
     ∀ (j i : Nat) (ps : List (BitVec 64)) (l18 l20 l28 spl rslot lo : List UInt8) (avail : Nat) (s : MachineData),
     i + j = 512 → ps.length = i → l18.length = 8 → l20.length = 8 → l28.length = 8 → spl.length = 24 →
     rslot.length = 8 → lo.length = S → 48 * j ≤ avail →

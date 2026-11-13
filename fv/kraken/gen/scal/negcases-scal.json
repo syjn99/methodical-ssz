@@ -6,7 +6,7 @@
   "theorem": "Prysm.Slot.Decode.accept_from_uint64_pattern",
   "code_def": "Code.unmarshalSSZ",
   "code_ns": "Prysm.Slot",
-  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
  },
  {
@@ -16,7 +16,7 @@
   "theorem": "Prysm.Slot.Decode.accept_from_uint64_pattern",
   "code_def": "Code.unmarshalSSZ",
   "code_ns": "Prysm.Slot",
-  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
   "old": "  sub $0x48,%rsp",
   "new": "  sub $0x50,%rsp",
   "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
@@ -28,7 +28,7 @@
   "theorem": "Prysm.Slot.Decode.accept_from_uint64_pattern",
   "code_def": "Code.unmarshalSSZ",
   "code_ns": "Prysm.Slot",
-  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S",
   "old": "  mov (%rbx),%rcx",
   "new": "  mov 0x8(%rbx),%rcx",
   "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Slot.UnmarshalSSZ.S"
@@ -48,7 +48,7 @@
   "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
   "code_def": "unmarshalSSZ",
   "code_ns": "Prysm.CommitteeIndex.Code",
-  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
  },
  {
@@ -58,7 +58,7 @@
   "theorem": "Prysm.CommitteeIndex.Decode.generated_accept",
   "code_def": "unmarshalSSZ",
   "code_ns": "Prysm.CommitteeIndex.Code",
-  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S",
   "old": "  cmp $0x8,%rcx",
   "new": "  cmp $0x9,%rcx",
   "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.CommitteeIndex.UnmarshalSSZ.S"
@@ -78,7 +78,7 @@
   "theorem": "Prysm.AttestationData.Decode.block_root_from_bytes32_pattern",
   "code_def": "unmarshalSSZ",
   "code_ns": "Prysm.AttestationData.Code",
-  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
  },
  {
@@ -91,7 +91,7 @@
   "new": "  add $0x18,%rbx",
   "code_def": "unmarshalSSZ",
   "code_ns": "Prysm.AttestationData.Code",
-  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
  },
  {
@@ -109,7 +109,7 @@
   "theorem": "Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_seg",
   "code_def": "unmarshalSSZ",
   "code_ns": "Prysm.AttestationData.Code",
-  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
  },
  {
@@ -122,7 +122,7 @@
   "new": "  movq $0x21,0x28(%rdx)",
   "code_def": "unmarshalSSZ",
   "code_ns": "Prysm.AttestationData.Code",
-  "norm": "prysm/go1.26.10/e2e/ad/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ.S"
  },
  {

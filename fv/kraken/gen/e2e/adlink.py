@@ -8,8 +8,8 @@ Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` a
   adlink.py data <outdir> <cp-linkdir>               after `conv.py <outdir>/target.objdump
                                                      <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                      write <outdir>/data/*.data (link/data.py's code)
-Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/e2e/ad/link. The Checkpoint
-link tables (prysm/go1.26.10/e2e/link) are not changed; the items that both sets use (uint8 type word,
+Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set. The Checkpoint
+link tables (prysm/go1.26.10/link-set) are not changed; the items that both sets use (uint8 type word,
 ssz.ErrSize, ssz.ErrBytesLength, errorString type) are asserted equal to the Checkpoint set's operands
 and not written again. Every data item is located from an operand of the converted code.
 """

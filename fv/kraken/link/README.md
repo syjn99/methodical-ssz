@@ -88,7 +88,7 @@ An item with only an `at` line gives only an address. The error globals `ssz.Err
 - `<id> : List UInt8`: the bytes of the item. A `word` line gives the 8 bytes of `(label "<label>" + <offset>)`. Then the definition depends on the `Host`.
 - `<id>_addr : BitVec 64`: `(label "<label>" + <offset>).toBitVec`, without `+ 0` for offset 0.
 
-The Prysm libraries use copies of this reader for their own data directories, for example `e2e_data_include` in `lean/Prysm/ElfData/CheckpointAndEpochReader.lean`.
+The Prysm library uses one copy of this reader, `prysm_data_include` in `lean/Prysm/ElfData/PrysmTargetReader.lean`, for `prysm/go1.26.10/link-set/data`.
 `gen/e2e/check_include.py` compares the copies with the original text.
 
 Rules for a new data file:

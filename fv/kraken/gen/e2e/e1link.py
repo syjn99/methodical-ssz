@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Eth1Data hold-out: call graph and link tables of the real v1alpha1.Eth1Data UnmarshalSSZ and MarshalSSZTo
-on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/e2e/link; written after the Eth1Data (H2)
+on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set; written after the Eth1Data (H2)
 hold-out was opened at 2026-11-11T01:59:11Z; the text of `bhlink.py` with the function set changed).
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
@@ -9,7 +9,7 @@ Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` a
   e1link.py data <outdir> <cp-linkdir> <ad-linkdir> after `conv.py <outdir>/target.objdump
                                                     <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
-Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/e2e/e1/link.
+Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
 SizeSSZ is not in the set (excluded from the hold-out claim). Shared items are asserted equal to
 the Checkpoint / AttestationData sets' operands (see `items`).
 """

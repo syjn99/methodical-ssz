@@ -24,17 +24,17 @@ Cases (mutated `.S` / IR copies are written to <work-dir>, nothing in the reposi
 import json, os, pathlib, re, subprocess, sys
 
 P = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1"
-E = "prysm/go1.26.10/e2e"
+E = "prysm/go1.26.10"
 IR = "prysm/ir/ir-mainnet.json"
 ROWS = [  # type, link dir, const, code module, prefix, extra args, output file
-    ("Checkpoint", "link", "marshalSSZTo", "Prysm.Checkpoint.Code", "cp", ["--hand-layout=Prysm.Checkpoint.encodeLayout",
+    ("Checkpoint", "link-set", "marshalSSZTo", "Prysm.Checkpoint.Code", "cp", ["--hand-layout=Prysm.Checkpoint.encodeLayout",
      "--hand-layout-src=lean/Prysm/Checkpoint/EncodeFastPathKindInstances.lean", "--same-as=Prysm.Checkpoint.Encode.fast_path",
      "--same-as-via=Prysm.Checkpoint.Encode.fast_path_of_kind"], "Gen6CpEnc"),
-    ("BeaconBlockHeader", "bh/link", "marshalSSZTo", "Prysm.BeaconBlockHeader.Code", "bh", ["--hand-layout=Prysm.BeaconBlockHeader.encodeLayout",
+    ("BeaconBlockHeader", "link-set", "marshalSSZTo", "Prysm.BeaconBlockHeader.Code", "bh", ["--hand-layout=Prysm.BeaconBlockHeader.encodeLayout",
      "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean", "--same-as=Prysm.BeaconBlockHeader.Encode.fast_path"], "Gen6BhEnc"),
-    ("Eth1Data", "e1/link", "marshalSSZTo", "Prysm.Eth1Data.Code", "e1", ["--hand-layout=Prysm.Eth1Data.encodeLayout",
+    ("Eth1Data", "link-set", "marshalSSZTo", "Prysm.Eth1Data.Code", "e1", ["--hand-layout=Prysm.Eth1Data.encodeLayout",
      "--hand-layout-src=lean/Prysm/Eth1Data/EncodeFastPathKindInstances.lean", "--same-as=Prysm.Eth1Data.Encode.fast_path"], "Gen6E1Enc"),
-] + [(t, "enc2/link", c, f"Prysm.{t}.EncoderCode", p, [], f"Gen6{p.capitalize()}Enc") for t, c, p in [
+] + [(t, "link-set", c, f"Prysm.{t}.EncoderCode", p, [], f"Gen6{p.capitalize()}Enc") for t, c, p in [
     ("BlobIdentifier", "marshalSSZTo", "bi"), ("DepositMessage", "marshalSSZTo", "dm"), ("Deposit_Data", "marshalSSZTo", "dd"),
     ("PendingPartialWithdrawal", "marshalSSZTo", "pw"), ("SyncCommitteeMessage", "marshalSSZTo", "sc"),
     ("PendingConsolidation", "marshalSSZTo", "pc"), ("PendingDeposit", "marshalSSZTo", "pd"), ("PowBlock", "marshalSSZTo", "pb"),

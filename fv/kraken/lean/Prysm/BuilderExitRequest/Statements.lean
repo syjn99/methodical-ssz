@@ -2,7 +2,7 @@ import Runtime.Contracts
 import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
-import Prysm.ElfData.CheckpointAndEpoch
+import Prysm.ElfData.PrysmTarget
 import Prysm.Checkpoint.Code
 import Codec.Kind.EncodeFastPathAnyFrame
 import Prysm.BuilderDepositRequest.Code
@@ -17,7 +17,7 @@ import Prysm.WithdrawalRequest.Statements
 Hand-written BEFORE the generators were changed for the 20-byte kind, so before any
 generated theorem of these four functions existed (the one-shot runs on the 24 flat types refused all four: "new field kind (b20)").
 Sources: the Go receiver layout (IR `go_fields` of `prysm/ir/ir-mainnet.json`, gc amd64 offsets), the SSZ layout
-(field sizes in IR order), the `.S` files of `prysm/go1.26.10/e2e/f24/link/norm/` (frame, guard, spills, stack slots
+(field sizes in IR order), the `.S` files of `prysm/go1.26.10/link-set/norm/` (frame, guard, spills, stack slots
 touched on the path and their contents at the return, the directive of the last call), the statement shape of the
 committed hand statements `Prysm.DepositRequest.Decode.accept_statement` (decoders, frame `0x20`, no callee) and
 `Prysm.Deposit_Data.Encode.fast_path_statement`, `Prysm.ValidatorIdentity.Encode.fast_path_statement` (encoders), and the interface text of `enc2/L/OUT.md` (chunk order: saved
@@ -93,7 +93,7 @@ abbrev Decode.accept_statement : Prop :=
       ⋆ Eq (aL2.At (s.regs.rax.toBitVec + 40)) ⋆ Eq (aC2.At (s.regs.rax.toBitVec + 48))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 68) (hav : 68 ≤ avail)
-    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
+    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Call graph and link tables of the real v1alpha1.SyncAggregate, v1alpha1.SyncCommittee and
-v1alpha1.IndexedAttestation UnmarshalSSZ on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/e2e/link, sha256 c6403c02...911e).
+v1alpha1.IndexedAttestation UnmarshalSSZ on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set, sha256 c6403c02...911e).
 A new file with the text of `h4link.py`: the function set and the data items changed. Existing scripts
 (`e2elink.py`, `adlink.py`, `h4link.py`, `link/conv.py`, `link/data.py`, `link/check.py`) are not changed.
 
@@ -13,14 +13,14 @@ Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` a
                                                     after `conv.py <outdir>/target.objdump
                                                     <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
-Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/e2e/lv/link (SyncAggregate, SyncCommittee only).
+Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set (SyncAggregate, SyncCommittee only).
 IndexedAttestation is linked only with --t3: its .S has `lea 0xffffff1c(%rdi),%rdx` (GNU objdump spelling of the
 displacement -228), which Apple clang 21 rejects in check (d).
 Encoders, SizeSSZ and HashTreeRoot are not in the set (out of the list/vector scope).
 
 Every data item is located from the converted code (the operand that the proofs read), not written by hand.
 Operands that equal an item of the Checkpoint / Epoch link set (`e2elink.py`) are asserted equal and get no
-new file: the theorems use the existing `Prysm.ElfData.CheckpointAndEpoch` names for them (uint8 type word, ssz.ErrSize, type:int,
+new file: the theorems use the existing `Prysm.ElfData.PrysmTarget` names for them (uint8 type word, ssz.ErrSize, type:int,
 errors.errorString type and itab).
 """
 import importlib.util

@@ -95,7 +95,7 @@
   "theorem": "Prysm.BlobIdentifier.Decode.example_field_Index_seg",
   "kind": "code",
   "code_def": "Prysm.BlobIdentifier.Code.unmarshalSSZ",
-  "norm": "prysm/go1.26.10/e2e/h3/link/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
+  "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S",
   "old": "  mov 0x20(%rcx),%rcx",
   "new": "  mov 0x18(%rcx),%rcx"

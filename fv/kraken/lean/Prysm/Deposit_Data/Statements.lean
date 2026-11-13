@@ -2,7 +2,7 @@ import Runtime.Contracts
 import Machine.Frame
 import Machine.Bytes
 import Machine.Labels
-import Prysm.ElfData.CheckpointAndEpoch
+import Prysm.ElfData.PrysmTarget
 import Prysm.Checkpoint.Code
 import Prysm.BeaconBlockHeader.Code
 import Prysm.Deposit_Data.Code
@@ -15,7 +15,7 @@ Hand-written BEFORE the proof generator (`gen/scal/scalgen.py`) was run on
 either type and before any generator output for them was read.
 Sources: the Go receiver layout (IR `go_fields` in `prysm/ir/ir-mainnet.json`), the SSZ layout
 (consensus-specs; `Prysm/Deposit_Data/SpecDescription.lean`, `Prysm/PendingPartialWithdrawal/SpecDescription.lean`), the frame facts of the two `.S` files
-(`prysm/go1.26.10/e2e/h4/link/norm`), and the statement shape of the earlier hand accept theorems
+(`prysm/go1.26.10/link-set/norm`), and the statement shape of the earlier hand accept theorems
 `Prysm.BlobIdentifier.Decode.accept`, `Prysm.DepositMessage.Decode.accept`, `Prysm.Eth1Data.Decode.accept` and
 (for the callee form) `Prysm.BeaconBlockHeader.Decode.accept`. These abbrevs are the targets of the
 `--same-as-prop` identity check and of the hand proofs. They are not generator output.
@@ -98,7 +98,7 @@ abbrev Decode.accept_statement : Prop :=
       ⋆ Eq (aC3.At (s.regs.rax.toBitVec + 80))
       ⋆ Eq ([0, 0, 0, 0].At (label "runtime.writeBarrier").toBitVec) ⋆ R)
     (hguard : guard.toNat < s.regs.rsp.toNat) (hlen : s.regs.rcx = 184) (hav : 176 ≤ avail)
-    (hms : MakesliceC Heap ElfData.CheckpointAndEpoch.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
+    (hms : MakesliceC Heap ElfData.PrysmTarget.e2eU8Type_addr 1 S) (hmm : MemmoveC S),
     Eventually (step1 Host.exe)
       (fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = 0 ∧ st.data.regs.rbx = 0
         ∧ st.data.regs.rsp = s.regs.rsp + 8 ∧ st.data.regs.rbp = s.regs.rbp ∧ st.data.regs.r14 = s.regs.r14 ∧
