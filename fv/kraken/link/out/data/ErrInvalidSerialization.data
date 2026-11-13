@@ -1,2 +1,0 @@
-# ErrInvalidSerialization: link/data.py, p1bin-amd64 bytes [0x5ccdf0, 0x5ccdf0)
-at ssz.ErrInvalidSerialization 0

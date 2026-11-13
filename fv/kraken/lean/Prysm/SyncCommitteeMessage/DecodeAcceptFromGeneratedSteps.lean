@@ -7,7 +7,7 @@ import Prysm.SyncCommitteeMessage.Statements
 # `(*v1alpha1.SyncCommitteeMessage).UnmarshalSSZ`, accept path from the GENERATED `decoder --steps` chains
 
 `Decode.accept_from_generated_steps : Decode.accept_statement` (the pre-committed hand statement, `Prysm/SyncCommitteeMessage/Statements.lean`, unchanged). Every field
-is a HAND field composition (`sm_gg_*_field`; no kind exists for a field composition, so its statement is checked
+is a HAND field composition (`Decode.from_generated_steps_*_field`; no kind exists for a field composition, so its statement is checked
 only through this accept theorem) over the GENERATED theorems of `Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean` (`decoder --steps`, raw output):
 * Slot 15–46: generated steps 15, 16 + generated call block (`Decode.generated_step_Slot_call`);
 * BlockRoot 47–81: generated segment (`Decode.generated_step_BlockRoot_seg`, rY = rax) + generated tail steps 72, 73, 80, 81;

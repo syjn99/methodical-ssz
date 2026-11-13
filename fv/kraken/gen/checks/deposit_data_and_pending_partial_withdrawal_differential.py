@@ -43,7 +43,7 @@ def cases():
 
 def check(cp, op, rp):
     cs = {c["id"]: c for c in json.load(open(cp))}
-    # the memcap wrapper appends one "MEMCAP ..." line to stdout; it is not part of the Go output
+    # the memory_limit.py wrapper appends one "MEMCAP ..." line to stdout; it is not part of the Go output
     txt = "".join(l for l in open(op) if not l.startswith("MEMCAP "))
     got = {r["id"]: r for r in json.loads(txt)}
     rows, bad = [], 0

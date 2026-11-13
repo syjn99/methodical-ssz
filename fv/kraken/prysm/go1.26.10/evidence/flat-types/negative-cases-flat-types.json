@@ -1,12 +1,12 @@
 [
  {
-  "id": "deposit-request-speck-control",
+  "id": "deposit-request-decode-accept-spec-control",
   "module": "Prysm/DepositRequest/DecodeSpec.lean",
   "theorem": "Prysm.DepositRequest.Decode.accept_spec",
   "kind": "control"
  },
  {
-  "id": "deposit-request-accept-rax",
+  "id": "deposit-request-decode-generated-accept-statement-rax-0-to-1",
   "module": "Prysm/DepositRequest/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.DepositRequest.Decode.generated_accept",
   "kind": "stmt",
@@ -14,7 +14,7 @@
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
-  "id": "deposit-request-reject-rax",
+  "id": "deposit-request-decode-generated-reject-statement-rax-e0-to-e1",
   "module": "Prysm/DepositRequest/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.DepositRequest.Decode.generated_reject",
   "kind": "stmt",
@@ -22,7 +22,7 @@
   "new": "st.data.regs.rax = e1"
  },
  {
-  "id": "deposit-request-speck-hlen",
+  "id": "deposit-request-decode-accept-spec-statement-hlen-none-to-1",
   "module": "Prysm/DepositRequest/DecodeSpec.lean",
   "theorem": "Prysm.DepositRequest.Decode.accept_spec",
   "kind": "stmt",
@@ -30,7 +30,7 @@
   "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)"
  },
  {
-  "id": "deposit-request-wita-rax",
+  "id": "deposit-request-witness-generated-decode-accept-runs-statement-rax-0-to-1",
   "module": "Prysm/DepositRequest/WitnessGeneratedDecodeAccept.lean",
   "theorem": "Prysm.DepositRequest.Witness.GeneratedDecodeAccept.runs",
   "kind": "stmt",
@@ -38,13 +38,13 @@
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
-  "id": "builder-deposit-request-speck-control",
+  "id": "builder-deposit-request-decode-accept-spec-control",
   "module": "Prysm/BuilderDepositRequest/DecodeSpec.lean",
   "theorem": "Prysm.BuilderDepositRequest.Decode.accept_spec",
   "kind": "control"
  },
  {
-  "id": "builder-deposit-request-accept-rax",
+  "id": "builder-deposit-request-decode-generated-accept-statement-rax-0-to-1",
   "module": "Prysm/BuilderDepositRequest/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.BuilderDepositRequest.Decode.generated_accept",
   "kind": "stmt",
@@ -52,7 +52,7 @@
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
-  "id": "builder-deposit-request-reject-rax",
+  "id": "builder-deposit-request-decode-generated-reject-statement-rax-e0-to-e1",
   "module": "Prysm/BuilderDepositRequest/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.BuilderDepositRequest.Decode.generated_reject",
   "kind": "stmt",
@@ -60,7 +60,7 @@
   "new": "st.data.regs.rax = e1"
  },
  {
-  "id": "builder-deposit-request-speck-hlen",
+  "id": "builder-deposit-request-decode-accept-spec-statement-hlen-none-to-1",
   "module": "Prysm/BuilderDepositRequest/DecodeSpec.lean",
   "theorem": "Prysm.BuilderDepositRequest.Decode.accept_spec",
   "kind": "stmt",
@@ -68,7 +68,7 @@
   "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)"
  },
  {
-  "id": "builder-deposit-request-wita-rax",
+  "id": "builder-deposit-request-witness-generated-decode-accept-runs-statement-rax-0-to-1",
   "module": "Prysm/BuilderDepositRequest/WitnessGeneratedDecodeAccept.lean",
   "theorem": "Prysm.BuilderDepositRequest.Witness.GeneratedDecodeAccept.runs",
   "kind": "stmt",
@@ -76,13 +76,13 @@
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
-  "id": "beacon-blocks-by-range-request-speck-control",
+  "id": "beacon-blocks-by-range-request-decode-accept-spec-control",
   "module": "Prysm/BeaconBlocksByRangeRequest/DecodeSpec.lean",
   "theorem": "Prysm.BeaconBlocksByRangeRequest.Decode.accept_spec",
   "kind": "control"
  },
  {
-  "id": "beacon-blocks-by-range-request-accept-rax",
+  "id": "beacon-blocks-by-range-request-decode-generated-accept-statement-rax-0-to-1",
   "module": "Prysm/BeaconBlocksByRangeRequest/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.BeaconBlocksByRangeRequest.Decode.generated_accept",
   "kind": "stmt",
@@ -90,7 +90,7 @@
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
-  "id": "beacon-blocks-by-range-request-reject-rax",
+  "id": "beacon-blocks-by-range-request-decode-generated-reject-statement-rax-e0-to-e1",
   "module": "Prysm/BeaconBlocksByRangeRequest/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.BeaconBlocksByRangeRequest.Decode.generated_reject",
   "kind": "stmt",
@@ -98,7 +98,7 @@
   "new": "st.data.regs.rax = e1"
  },
  {
-  "id": "beacon-blocks-by-range-request-speck-hlen",
+  "id": "beacon-blocks-by-range-request-decode-accept-spec-statement-hlen-none-to-1",
   "module": "Prysm/BeaconBlocksByRangeRequest/DecodeSpec.lean",
   "theorem": "Prysm.BeaconBlocksByRangeRequest.Decode.accept_spec",
   "kind": "stmt",
@@ -106,7 +106,7 @@
   "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)"
  },
  {
-  "id": "beacon-blocks-by-range-request-wita-rax",
+  "id": "beacon-blocks-by-range-request-witness-generated-decode-accept-runs-statement-rax-0-to-1",
   "module": "Prysm/BeaconBlocksByRangeRequest/WitnessGeneratedDecodeAccept.lean",
   "theorem": "Prysm.BeaconBlocksByRangeRequest.Witness.GeneratedDecodeAccept.runs",
   "kind": "stmt",
@@ -114,13 +114,13 @@
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
-  "id": "blob-sidecars-by-range-request-speck-control",
+  "id": "blob-sidecars-by-range-request-decode-accept-spec-control",
   "module": "Prysm/BlobSidecarsByRangeRequest/DecodeSpec.lean",
   "theorem": "Prysm.BlobSidecarsByRangeRequest.Decode.accept_spec",
   "kind": "control"
  },
  {
-  "id": "blob-sidecars-by-range-request-accept-rax",
+  "id": "blob-sidecars-by-range-request-decode-generated-accept-statement-rax-0-to-1",
   "module": "Prysm/BlobSidecarsByRangeRequest/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.BlobSidecarsByRangeRequest.Decode.generated_accept",
   "kind": "stmt",
@@ -128,7 +128,7 @@
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
-  "id": "blob-sidecars-by-range-request-reject-rax",
+  "id": "blob-sidecars-by-range-request-decode-generated-reject-statement-rax-e0-to-e1",
   "module": "Prysm/BlobSidecarsByRangeRequest/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.BlobSidecarsByRangeRequest.Decode.generated_reject",
   "kind": "stmt",
@@ -136,7 +136,7 @@
   "new": "st.data.regs.rax = e1"
  },
  {
-  "id": "blob-sidecars-by-range-request-speck-hlen",
+  "id": "blob-sidecars-by-range-request-decode-accept-spec-statement-hlen-none-to-1",
   "module": "Prysm/BlobSidecarsByRangeRequest/DecodeSpec.lean",
   "theorem": "Prysm.BlobSidecarsByRangeRequest.Decode.accept_spec",
   "kind": "stmt",
@@ -144,7 +144,7 @@
   "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)"
  },
  {
-  "id": "blob-sidecars-by-range-request-wita-rax",
+  "id": "blob-sidecars-by-range-request-witness-generated-decode-accept-runs-statement-rax-0-to-1",
   "module": "Prysm/BlobSidecarsByRangeRequest/WitnessGeneratedDecodeAccept.lean",
   "theorem": "Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.runs",
   "kind": "stmt",
@@ -152,13 +152,13 @@
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
-  "id": "execution-payload-envelopes-by-range-request-speck-control",
+  "id": "execution-payload-envelopes-by-range-request-decode-accept-spec-control",
   "module": "Prysm/ExecutionPayloadEnvelopesByRangeRequest/DecodeSpec.lean",
   "theorem": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Decode.accept_spec",
   "kind": "control"
  },
  {
-  "id": "execution-payload-envelopes-by-range-request-accept-rax",
+  "id": "execution-payload-envelopes-by-range-request-decode-generated-accept-statement-rax-0-to-1",
   "module": "Prysm/ExecutionPayloadEnvelopesByRangeRequest/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Decode.generated_accept",
   "kind": "stmt",
@@ -166,7 +166,7 @@
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
-  "id": "execution-payload-envelopes-by-range-request-reject-rax",
+  "id": "execution-payload-envelopes-by-range-request-decode-generated-reject-statement-rax-e0-to-e1",
   "module": "Prysm/ExecutionPayloadEnvelopesByRangeRequest/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Decode.generated_reject",
   "kind": "stmt",
@@ -174,7 +174,7 @@
   "new": "st.data.regs.rax = e1"
  },
  {
-  "id": "execution-payload-envelopes-by-range-request-speck-hlen",
+  "id": "execution-payload-envelopes-by-range-request-decode-accept-spec-statement-hlen-none-to-1",
   "module": "Prysm/ExecutionPayloadEnvelopesByRangeRequest/DecodeSpec.lean",
   "theorem": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Decode.accept_spec",
   "kind": "stmt",
@@ -182,7 +182,7 @@
   "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)"
  },
  {
-  "id": "execution-payload-envelopes-by-range-request-wita-rax",
+  "id": "execution-payload-envelopes-by-range-request-witness-generated-decode-accept-runs-statement-rax-0-to-1",
   "module": "Prysm/ExecutionPayloadEnvelopesByRangeRequest/WitnessGeneratedDecodeAccept.lean",
   "theorem": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Witness.GeneratedDecodeAccept.runs",
   "kind": "stmt",
@@ -190,13 +190,13 @@
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
-  "id": "partial-data-column-group-id-speck-control",
+  "id": "partial-data-column-group-id-decode-accept-spec-control",
   "module": "Prysm/PartialDataColumnGroupID/DecodeSpec.lean",
   "theorem": "Prysm.PartialDataColumnGroupID.Decode.accept_spec",
   "kind": "control"
  },
  {
-  "id": "partial-data-column-group-id-accept-rax",
+  "id": "partial-data-column-group-id-decode-generated-accept-statement-rax-0-to-1",
   "module": "Prysm/PartialDataColumnGroupID/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.PartialDataColumnGroupID.Decode.generated_accept",
   "kind": "stmt",
@@ -204,7 +204,7 @@
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
-  "id": "partial-data-column-group-id-reject-rax",
+  "id": "partial-data-column-group-id-decode-generated-reject-statement-rax-e0-to-e1",
   "module": "Prysm/PartialDataColumnGroupID/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.PartialDataColumnGroupID.Decode.generated_reject",
   "kind": "stmt",
@@ -212,7 +212,7 @@
   "new": "st.data.regs.rax = e1"
  },
  {
-  "id": "partial-data-column-group-id-speck-hlen",
+  "id": "partial-data-column-group-id-decode-accept-spec-statement-hlen-none-to-1",
   "module": "Prysm/PartialDataColumnGroupID/DecodeSpec.lean",
   "theorem": "Prysm.PartialDataColumnGroupID.Decode.accept_spec",
   "kind": "stmt",
@@ -220,7 +220,7 @@
   "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)"
  },
  {
-  "id": "partial-data-column-group-id-wita-rax",
+  "id": "partial-data-column-group-id-witness-generated-decode-accept-runs-statement-rax-0-to-1",
   "module": "Prysm/PartialDataColumnGroupID/WitnessGeneratedDecodeAccept.lean",
   "theorem": "Prysm.PartialDataColumnGroupID.Witness.GeneratedDecodeAccept.runs",
   "kind": "stmt",
@@ -228,13 +228,13 @@
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
-  "id": "validator-identity-speck-control",
+  "id": "validator-identity-decode-accept-spec-control",
   "module": "Prysm/ValidatorIdentity/DecodeSpec.lean",
   "theorem": "Prysm.ValidatorIdentity.Decode.accept_spec",
   "kind": "control"
  },
  {
-  "id": "validator-identity-accept-rax",
+  "id": "validator-identity-decode-generated-accept-statement-rax-0-to-1",
   "module": "Prysm/ValidatorIdentity/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.ValidatorIdentity.Decode.generated_accept",
   "kind": "stmt",
@@ -242,7 +242,7 @@
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
-  "id": "validator-identity-reject-rax",
+  "id": "validator-identity-decode-generated-reject-statement-rax-e0-to-e1",
   "module": "Prysm/ValidatorIdentity/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.ValidatorIdentity.Decode.generated_reject",
   "kind": "stmt",
@@ -250,7 +250,7 @@
   "new": "st.data.regs.rax = e1"
  },
  {
-  "id": "validator-identity-speck-hlen",
+  "id": "validator-identity-decode-accept-spec-statement-hlen-none-to-1",
   "module": "Prysm/ValidatorIdentity/DecodeSpec.lean",
   "theorem": "Prysm.ValidatorIdentity.Decode.accept_spec",
   "kind": "stmt",
@@ -258,7 +258,7 @@
   "new": "(hlen : s.regs.rcx.toNat = bsA.size + 1)"
  },
  {
-  "id": "validator-identity-wita-rax",
+  "id": "validator-identity-witness-generated-decode-accept-runs-statement-rax-0-to-1",
   "module": "Prysm/ValidatorIdentity/WitnessGeneratedDecodeAccept.lean",
   "theorem": "Prysm.ValidatorIdentity.Witness.GeneratedDecodeAccept.runs",
   "kind": "stmt",
@@ -266,13 +266,13 @@
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
-  "id": "beacon-blocks-by-range-request-espec-control",
+  "id": "beacon-blocks-by-range-request-encode-generated-fast-spec-control",
   "module": "Prysm/BeaconBlocksByRangeRequest/GeneratedEncodeFastPathSpec.lean",
   "theorem": "Prysm.BeaconBlocksByRangeRequest.Encode.generated_fast_spec",
   "kind": "control"
  },
  {
-  "id": "beacon-blocks-by-range-request-fast-rax",
+  "id": "beacon-blocks-by-range-request-encode-generated-fast-statement-rax-rbx-to-rcx",
   "module": "Prysm/BeaconBlocksByRangeRequest/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.BeaconBlocksByRangeRequest.Encode.generated_fast",
   "kind": "stmt",
@@ -280,7 +280,7 @@
   "new": "st.data.regs.rax = s.regs.rcx"
  },
  {
-  "id": "beacon-blocks-by-range-request-espec-hcap",
+  "id": "beacon-blocks-by-range-request-encode-generated-fast-spec-statement-hcap-24-to-16",
   "module": "Prysm/BeaconBlocksByRangeRequest/GeneratedEncodeFastPathSpec.lean",
   "theorem": "Prysm.BeaconBlocksByRangeRequest.Encode.generated_fast_spec",
   "kind": "stmt",
@@ -288,7 +288,7 @@
   "new": "(hcap : s.regs.rcx.toNat + 16 ≤ s.regs.rdi.toNat)"
  },
  {
-  "id": "beacon-blocks-by-range-request-ewit-rax",
+  "id": "beacon-blocks-by-range-request-witness-generated-encode-fast-path-runs-empty-statement-rax-0x100e0-to-0x8",
   "module": "Prysm/BeaconBlocksByRangeRequest/WitnessGeneratedEncodeFastPath.lean",
   "theorem": "Prysm.BeaconBlocksByRangeRequest.Witness.GeneratedEncodeFastPath.runs_empty",
   "kind": "stmt",
@@ -296,13 +296,13 @@
   "new": "st.data.regs.rax = 0x8"
  },
  {
-  "id": "builder-deposit-request-espec-control",
+  "id": "builder-deposit-request-encode-generated-fast-spec-control",
   "module": "Prysm/BuilderDepositRequest/GeneratedEncodeFastPathSpec.lean",
   "theorem": "Prysm.BuilderDepositRequest.Encode.generated_fast_spec",
   "kind": "control"
  },
  {
-  "id": "builder-deposit-request-fast-rax",
+  "id": "builder-deposit-request-encode-generated-fast-statement-rax-rbx-to-rcx",
   "module": "Prysm/BuilderDepositRequest/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.BuilderDepositRequest.Encode.generated_fast",
   "kind": "stmt",
@@ -310,7 +310,7 @@
   "new": "st.data.regs.rax = s.regs.rcx"
  },
  {
-  "id": "builder-deposit-request-espec-hcap",
+  "id": "builder-deposit-request-encode-generated-fast-spec-statement-hcap-184-to-176",
   "module": "Prysm/BuilderDepositRequest/GeneratedEncodeFastPathSpec.lean",
   "theorem": "Prysm.BuilderDepositRequest.Encode.generated_fast_spec",
   "kind": "stmt",
@@ -318,7 +318,7 @@
   "new": "(hcap : s.regs.rcx.toNat + 176 ≤ s.regs.rdi.toNat)"
  },
  {
-  "id": "builder-deposit-request-ewit-rax",
+  "id": "builder-deposit-request-witness-generated-encode-fast-path-runs-empty-statement-rax-0x101e0-to-0x8",
   "module": "Prysm/BuilderDepositRequest/WitnessGeneratedEncodeFastPath.lean",
   "theorem": "Prysm.BuilderDepositRequest.Witness.GeneratedEncodeFastPath.runs_empty",
   "kind": "stmt",
@@ -326,13 +326,13 @@
   "new": "st.data.regs.rax = 0x8"
  },
  {
-  "id": "builder-preferences-espec-control",
+  "id": "builder-preferences-encode-generated-fast-spec-control",
   "module": "Prysm/BuilderPreferences/GeneratedEncodeFastPathSpec.lean",
   "theorem": "Prysm.BuilderPreferences.Encode.generated_fast_spec",
   "kind": "control"
  },
  {
-  "id": "builder-preferences-fast-rax",
+  "id": "builder-preferences-encode-generated-fast-statement-rax-rbx-to-rcx",
   "module": "Prysm/BuilderPreferences/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.BuilderPreferences.Encode.generated_fast",
   "kind": "stmt",
@@ -340,7 +340,7 @@
   "new": "st.data.regs.rax = s.regs.rcx"
  },
  {
-  "id": "builder-preferences-espec-hcap",
+  "id": "builder-preferences-encode-generated-fast-spec-statement-hcap-8-to-0",
   "module": "Prysm/BuilderPreferences/GeneratedEncodeFastPathSpec.lean",
   "theorem": "Prysm.BuilderPreferences.Encode.generated_fast_spec",
   "kind": "stmt",
@@ -348,7 +348,7 @@
   "new": "(hcap : s.regs.rcx.toNat + 0 ≤ s.regs.rdi.toNat)"
  },
  {
-  "id": "builder-preferences-ewit-rax",
+  "id": "builder-preferences-witness-generated-encode-fast-path-runs-empty-statement-rax-0x100a8-to-0x8",
   "module": "Prysm/BuilderPreferences/WitnessGeneratedEncodeFastPath.lean",
   "theorem": "Prysm.BuilderPreferences.Witness.GeneratedEncodeFastPath.runs_empty",
   "kind": "stmt",
@@ -356,13 +356,13 @@
   "new": "st.data.regs.rax = 0x8"
  },
  {
-  "id": "blob-sidecars-by-range-request-espec-control",
+  "id": "blob-sidecars-by-range-request-encode-generated-fast-spec-control",
   "module": "Prysm/BlobSidecarsByRangeRequest/GeneratedEncodeFastPathSpec.lean",
   "theorem": "Prysm.BlobSidecarsByRangeRequest.Encode.generated_fast_spec",
   "kind": "control"
  },
  {
-  "id": "blob-sidecars-by-range-request-fast-rax",
+  "id": "blob-sidecars-by-range-request-encode-generated-fast-statement-rax-rbx-to-rcx",
   "module": "Prysm/BlobSidecarsByRangeRequest/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.BlobSidecarsByRangeRequest.Encode.generated_fast",
   "kind": "stmt",
@@ -370,7 +370,7 @@
   "new": "st.data.regs.rax = s.regs.rcx"
  },
  {
-  "id": "blob-sidecars-by-range-request-espec-hcap",
+  "id": "blob-sidecars-by-range-request-encode-generated-fast-spec-statement-hcap-16-to-8",
   "module": "Prysm/BlobSidecarsByRangeRequest/GeneratedEncodeFastPathSpec.lean",
   "theorem": "Prysm.BlobSidecarsByRangeRequest.Encode.generated_fast_spec",
   "kind": "stmt",
@@ -378,7 +378,7 @@
   "new": "(hcap : s.regs.rcx.toNat + 8 ≤ s.regs.rdi.toNat)"
  },
  {
-  "id": "blob-sidecars-by-range-request-ewit-rax",
+  "id": "blob-sidecars-by-range-request-witness-generated-encode-fast-path-runs-empty-statement-rax-0x100d0-to-0x8",
   "module": "Prysm/BlobSidecarsByRangeRequest/WitnessGeneratedEncodeFastPath.lean",
   "theorem": "Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedEncodeFastPath.runs_empty",
   "kind": "stmt",
@@ -386,13 +386,13 @@
   "new": "st.data.regs.rax = 0x8"
  },
  {
-  "id": "deposit-request-espec-control",
+  "id": "deposit-request-encode-generated-fast-spec-control",
   "module": "Prysm/DepositRequest/GeneratedEncodeFastPathSpec.lean",
   "theorem": "Prysm.DepositRequest.Encode.generated_fast_spec",
   "kind": "control"
  },
  {
-  "id": "deposit-request-fast-rax",
+  "id": "deposit-request-encode-generated-fast-statement-rax-rbx-to-rcx",
   "module": "Prysm/DepositRequest/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.DepositRequest.Encode.generated_fast",
   "kind": "stmt",
@@ -400,7 +400,7 @@
   "new": "st.data.regs.rax = s.regs.rcx"
  },
  {
-  "id": "deposit-request-espec-hcap",
+  "id": "deposit-request-encode-generated-fast-spec-statement-hcap-192-to-184",
   "module": "Prysm/DepositRequest/GeneratedEncodeFastPathSpec.lean",
   "theorem": "Prysm.DepositRequest.Encode.generated_fast_spec",
   "kind": "stmt",
@@ -408,7 +408,7 @@
   "new": "(hcap : s.regs.rcx.toNat + 184 ≤ s.regs.rdi.toNat)"
  },
  {
-  "id": "deposit-request-ewit-rax",
+  "id": "deposit-request-witness-generated-encode-fast-path-runs-empty-statement-rax-0x10208-to-0x8",
   "module": "Prysm/DepositRequest/WitnessGeneratedEncodeFastPath.lean",
   "theorem": "Prysm.DepositRequest.Witness.GeneratedEncodeFastPath.runs_empty",
   "kind": "stmt",
@@ -416,13 +416,13 @@
   "new": "st.data.regs.rax = 0x8"
  },
  {
-  "id": "execution-payload-envelopes-by-range-request-espec-control",
+  "id": "execution-payload-envelopes-by-range-request-encode-generated-fast-spec-control",
   "module": "Prysm/ExecutionPayloadEnvelopesByRangeRequest/GeneratedEncodeFastPathSpec.lean",
   "theorem": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Encode.generated_fast_spec",
   "kind": "control"
  },
  {
-  "id": "execution-payload-envelopes-by-range-request-fast-rax",
+  "id": "execution-payload-envelopes-by-range-request-encode-generated-fast-statement-rax-rbx-to-rcx",
   "module": "Prysm/ExecutionPayloadEnvelopesByRangeRequest/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Encode.generated_fast",
   "kind": "stmt",
@@ -430,7 +430,7 @@
   "new": "st.data.regs.rax = s.regs.rcx"
  },
  {
-  "id": "execution-payload-envelopes-by-range-request-espec-hcap",
+  "id": "execution-payload-envelopes-by-range-request-encode-generated-fast-spec-statement-hcap-16-to-8",
   "module": "Prysm/ExecutionPayloadEnvelopesByRangeRequest/GeneratedEncodeFastPathSpec.lean",
   "theorem": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Encode.generated_fast_spec",
   "kind": "stmt",
@@ -438,7 +438,7 @@
   "new": "(hcap : s.regs.rcx.toNat + 8 ≤ s.regs.rdi.toNat)"
  },
  {
-  "id": "execution-payload-envelopes-by-range-request-ewit-rax",
+  "id": "execution-payload-envelopes-by-range-request-witness-generated-encode-fast-path-runs-empty-statement-rax-0x100d0-to-0x8",
   "module": "Prysm/ExecutionPayloadEnvelopesByRangeRequest/WitnessGeneratedEncodeFastPath.lean",
   "theorem": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Witness.GeneratedEncodeFastPath.runs_empty",
   "kind": "stmt",
@@ -446,13 +446,13 @@
   "new": "st.data.regs.rax = 0x8"
  },
  {
-  "id": "partial-data-column-group-id-espec-control",
+  "id": "partial-data-column-group-id-encode-generated-fast-spec-control",
   "module": "Prysm/PartialDataColumnGroupID/GeneratedEncodeFastPathSpec.lean",
   "theorem": "Prysm.PartialDataColumnGroupID.Encode.generated_fast_spec",
   "kind": "control"
  },
  {
-  "id": "partial-data-column-group-id-fast-rax",
+  "id": "partial-data-column-group-id-encode-generated-fast-statement-rax-rbx-to-rcx",
   "module": "Prysm/PartialDataColumnGroupID/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.PartialDataColumnGroupID.Encode.generated_fast",
   "kind": "stmt",
@@ -460,7 +460,7 @@
   "new": "st.data.regs.rax = s.regs.rcx"
  },
  {
-  "id": "partial-data-column-group-id-espec-hcap",
+  "id": "partial-data-column-group-id-encode-generated-fast-spec-statement-hcap-40-to-32",
   "module": "Prysm/PartialDataColumnGroupID/GeneratedEncodeFastPathSpec.lean",
   "theorem": "Prysm.PartialDataColumnGroupID.Encode.generated_fast_spec",
   "kind": "stmt",
@@ -468,7 +468,7 @@
   "new": "(hcap : s.regs.rcx.toNat + 32 ≤ s.regs.rdi.toNat)"
  },
  {
-  "id": "partial-data-column-group-id-ewit-rax",
+  "id": "partial-data-column-group-id-witness-generated-encode-fast-path-runs-empty-statement-rax-0x10100-to-0x8",
   "module": "Prysm/PartialDataColumnGroupID/WitnessGeneratedEncodeFastPath.lean",
   "theorem": "Prysm.PartialDataColumnGroupID.Witness.GeneratedEncodeFastPath.runs_empty",
   "kind": "stmt",
@@ -476,13 +476,13 @@
   "new": "st.data.regs.rax = 0x8"
  },
  {
-  "id": "validator-identity-espec-control",
+  "id": "validator-identity-encode-generated-fast-spec-control",
   "module": "Prysm/ValidatorIdentity/GeneratedEncodeFastPathSpec.lean",
   "theorem": "Prysm.ValidatorIdentity.Encode.generated_fast_spec",
   "kind": "control"
  },
  {
-  "id": "validator-identity-fast-rax",
+  "id": "validator-identity-encode-generated-fast-statement-rax-rbx-to-rcx",
   "module": "Prysm/ValidatorIdentity/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.ValidatorIdentity.Encode.generated_fast",
   "kind": "stmt",
@@ -490,7 +490,7 @@
   "new": "st.data.regs.rax = s.regs.rcx"
  },
  {
-  "id": "validator-identity-espec-hcap",
+  "id": "validator-identity-encode-generated-fast-spec-statement-hcap-64-to-56",
   "module": "Prysm/ValidatorIdentity/GeneratedEncodeFastPathSpec.lean",
   "theorem": "Prysm.ValidatorIdentity.Encode.generated_fast_spec",
   "kind": "stmt",
@@ -498,7 +498,7 @@
   "new": "(hcap : s.regs.rcx.toNat + 56 ≤ s.regs.rdi.toNat)"
  },
  {
-  "id": "validator-identity-ewit-rax",
+  "id": "validator-identity-witness-generated-encode-fast-path-runs-empty-statement-rax-0x10140-to-0x8",
   "module": "Prysm/ValidatorIdentity/WitnessGeneratedEncodeFastPath.lean",
   "theorem": "Prysm.ValidatorIdentity.Witness.GeneratedEncodeFastPath.runs_empty",
   "kind": "stmt",

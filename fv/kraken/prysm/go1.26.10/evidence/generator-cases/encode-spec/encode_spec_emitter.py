@@ -662,7 +662,7 @@ def main():
         os.makedirs(os.path.join(out_dir, 'Prysm', X), exist_ok=True)
         open(os.path.join(out_dir, 'Prysm', X, 'WitnessGeneratedEncodeFastPath.lean'), 'w').write(wt)
         open(os.path.join(out_dir, 'Prysm', X, 'GeneratedEncodeFastPathSpec.lean'), 'w').write(sp)
-        summary[X] = dict(meta, rt=any(b[0] == ['hmm'] for b in info['binders']), nex=len(info['exnames']))
+        summary[X] = dict(meta, runtime_calls=any(b[0] == ['hmm'] for b in info['binders']), nex=len(info['exnames']))
     print(json.dumps(summary, indent=1, sort_keys=True))
 
 

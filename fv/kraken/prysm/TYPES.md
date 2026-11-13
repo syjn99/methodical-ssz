@@ -41,7 +41,7 @@ Go 1.26.10 is a new experiment baseline. The 55 theorems for the Go 1.26.3 ELF `
 4. `gen/type_inventory.py build` writes the sets, kinds, depths and scopes to `inventory.json`.
 5. `gen/prysm-elf.sh` builds the ELF two times and extracts objdump and nm. `gen/keepalive.py` makes `main`.
 6. `gen/mnemonics.py` counts the instructions, mnemonics and call kinds for each function (`go1.26.10/functions.json`).
-7. `link/conv.py --norm` (read only) makes the `.S` files, and `gen/kraken-parser/KParse.lean` runs the Kraken runtime parser (`go1.26.10/kparse.json`).
+7. `link/convert_objdump.py --norm` (read only) makes the `.S` files, and `gen/kraken-parser/ParserRun.lean` runs the Kraken runtime parser (`go1.26.10/kparse.json`).
 
 - `fork_configs`: ['proto/prysm/v1alpha1/phase0.yaml', 'proto/prysm/v1alpha1/altair.yaml', 'proto/prysm/v1alpha1/bellatrix.yaml', 'proto/prysm/v1alpha1/capella.yaml', 'proto/prysm/v1alpha1/deneb.yaml', 'proto/prysm/v1alpha1/electra.yaml', 'proto/prysm/v1alpha1/fulu.yaml']
 - `set_A`: every type configured in a fork config (phase0..fulu)
@@ -55,7 +55,7 @@ Go 1.26.10 is a new experiment baseline. The 55 theorems for the Go 1.26.3 ELF `
 
 How we decide "does Kraken accept it":
 
-- Mnemonic level: the 186 branch strings of `parseInstr` in `Kraken/X64/Parser/Basic.lean` of the fixed Kraken, and `j`/`set`/`cmov` + 30 `parseCondCode?` condition codes. The 10 `conv.py` NORM forms count as `nop`.
+- Mnemonic level: the 186 branch strings of `parseInstr` in `Kraken/X64/Parser/Basic.lean` of the fixed Kraken, and `j`/`set`/`cmov` + 30 `parseCondCode?` condition codes. The 10 `convert_objdump.py` NORM forms count as `nop`.
 - Real parser level: we ran `Kraken.X64.Parser.parse`, which `include_x64_code` uses, on each file (log copy `go1.26.10/kparse-log.txt`). This is the verdict criterion.
 - We did not examine the semantics level (`kstep` and theorems). This table is a classification, not a proof.
 

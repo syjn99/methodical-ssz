@@ -1,12 +1,12 @@
 [
  {
-  "id": "codec-fixed-bytes-decode-segn-control",
+  "id": "codec-fixed-bytes-decode-bytesdec-seg-control",
   "module": "Codec/FixedBytesDecode.lean",
   "theorem": "bytesdec_seg",
   "kind": "control"
  },
  {
-  "id": "codec-fixed-bytes-decode-segn-stmt-heap",
+  "id": "codec-fixed-bytes-decode-bytesdec-seg-statement-heap-n-to-none",
   "module": "Codec/FixedBytesDecode.lean",
   "theorem": "bytesdec_seg",
   "kind": "stmt",
@@ -14,7 +14,7 @@
   "new": "⋆ Heap avail"
  },
  {
-  "id": "codec-fixed-bytes-decode-segn-stmt-sizes",
+  "id": "codec-fixed-bytes-decode-bytesdec-seg-statement-hn-96-to-64",
   "module": "Codec/FixedBytesDecode.lean",
   "theorem": "bytesdec_seg",
   "kind": "stmt",
@@ -22,7 +22,7 @@
   "new": "(hn : n = 32 ∨ n = 48 ∨ n = 64)"
  },
  {
-  "id": "codec-fixed-bytes-decode-segnz-stmt-len",
+  "id": "codec-fixed-bytes-decode-bytesdec-seg-offset-zero-statement-of-nat-of-nat-of-nat-n-to-0",
   "module": "Codec/FixedBytesDecode.lean",
   "theorem": "bytesdec_seg_offset_zero",
   "kind": "stmt",
@@ -30,13 +30,13 @@
   "new": "Eq ((Int.toBytes 8 0).At aL)"
  },
  {
-  "id": "codec-inline-uint64-u64-control",
+  "id": "codec-inline-uint64-u64dec-inline-seg-control",
   "module": "Codec/InlineUint64.lean",
   "theorem": "u64dec_inline_seg",
   "kind": "control"
  },
  {
-  "id": "codec-inline-uint64-u64-stmt-field",
+  "id": "codec-inline-uint64-u64dec-inline-seg-statement-v-v-to-v-f",
   "module": "Codec/InlineUint64.lean",
   "theorem": "u64dec_inline_seg",
   "kind": "stmt",
@@ -44,7 +44,7 @@
   "new": "⋆ Eq (vF.At aF) ⋆ R) st.data.dmem"
  },
  {
-  "id": "codec-inline-uint64-u64-stmt-reg-rdx",
+  "id": "codec-inline-uint64-u64dec-inline-seg-statement-h-x-u64-inline-reg-to-reg64-rax-r-x",
   "module": "Codec/InlineUint64.lean",
   "theorem": "u64dec_inline_seg",
   "kind": "stmt",
@@ -52,7 +52,7 @@
   "new": "(hX : rX = Reg64.rax ∨ rX = Reg64.rbx ∨ rX = Reg64.rcx ∨ rX = Reg64.rsi ∨ rX = Reg64.rdi ∨ rX = Reg64.r8 ∨ rX = Reg64.r9 ∨ rX = Reg64.r10 ∨ rX = Reg64.r11 ∨ rX = Reg64.r12 ∨ rX = Reg64.r13 ∨ rX = Reg64.rdx)"
  },
  {
-  "id": "codec-kind-fixed-bytes-decode-kindn-of-stmt-swap",
+  "id": "codec-kind-fixed-bytes-decode-bytes-dec-seg-kind-of-statement-bytes-dec-seg-kind-none-to-none",
   "module": "Codec/Kind/FixedBytesDecode.lean",
   "theorem": "bytesDecSegKind_of",
   "kind": "stmt",
@@ -60,7 +60,7 @@
   "new": "bytesDecSegKind n C j1 j2 dR dB dS fP fC fL src :="
  },
  {
-  "id": "codec-kind-inline-uint64-kindu64-of-stmt-off",
+  "id": "codec-kind-inline-uint64-u64-dec-inline-seg-kind-of-statement-u64-dec-inline-seg-kind-none-to-none",
   "module": "Codec/Kind/InlineUint64.lean",
   "theorem": "u64DecInlineSegKind_of",
   "kind": "stmt",
@@ -68,13 +68,13 @@
   "new": "u64DecInlineSegKind C j dB f src :="
  },
  {
-  "id": "deposit-message-ex-pk-control",
+  "id": "deposit-message-decode-example-field-public-key-seg-control",
   "module": "Prysm/DepositMessage/DecodeFieldSegmentExamples.lean",
   "theorem": "Prysm.DepositMessage.Decode.example_field_PublicKey_seg",
   "kind": "control"
  },
  {
-  "id": "deposit-message-ex-pk-stmt-size",
+  "id": "deposit-message-decode-example-field-public-key-seg-statement-hroot-48-to-32",
   "module": "Prysm/DepositMessage/DecodeFieldSegmentExamples.lean",
   "theorem": "Prysm.DepositMessage.Decode.example_field_PublicKey_seg",
   "kind": "stmt",
@@ -82,7 +82,7 @@
   "new": "(hroot : root.length = 32)"
  },
  {
-  "id": "blob-identifier-ex-idx-stmt-off",
+  "id": "blob-identifier-decode-example-field-index-seg-statement-h-src-32-to-24",
   "module": "Prysm/BlobIdentifier/DecodeFieldSegmentExamples.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.example_field_Index_seg",
   "kind": "stmt",
@@ -90,7 +90,7 @@
   "new": "(hSrc : bf + (24 : Int64).toBitVec = aSrc)"
  },
  {
-  "id": "blob-identifier-ex-idx-code-off",
+  "id": "blob-identifier-decode-example-field-index-seg-code-mov-0x20-rcx-to-0x18-rcx",
   "module": "Prysm/BlobIdentifier/DecodeFieldSegmentExamples.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.example_field_Index_seg",
   "kind": "code",
@@ -101,7 +101,7 @@
   "new": "  mov 0x18(%rcx),%rcx"
  },
  {
-  "id": "codec-decoder-head-epilogue-head-stmt-len",
+  "id": "codec-decoder-head-epilogue-dechead-seg-statement-hlen-none-to-1",
   "module": "Codec/DecoderHeadEpilogue.lean",
   "theorem": "dechead_seg",
   "kind": "stmt",
@@ -109,7 +109,7 @@
   "new": "(hlen : s.regs.rcx = { toBitVec := sz.toBitVec + 1 })"
  },
  {
-  "id": "codec-decoder-head-epilogue-epi-stmt-rsp",
+  "id": "codec-decoder-head-epilogue-decepi-seg-statement-rsp-48-to-40",
   "module": "Codec/DecoderHeadEpilogue.lean",
   "theorem": "decepi_seg",
   "kind": "stmt",
@@ -117,7 +117,7 @@
   "new": "st.data.regs.rsp = { toBitVec := sp + 40 }"
  },
  {
-  "id": "codec-decoder-head-epilogue-tail-stmt-ptr",
+  "id": "codec-decoder-head-epilogue-bytesdec-tail-seg-statement-p-int-to-bytes-8-to-v-p",
   "module": "Codec/DecoderHeadEpilogue.lean",
   "theorem": "bytesdec_tail_seg",
   "kind": "stmt",
@@ -125,7 +125,7 @@
   "new": "⋆ Eq (vP.At aP) ⋆ R) st.data.dmem"
  },
  {
-  "id": "blob-identifier-compose-control",
+  "id": "blob-identifier-decode-accept-composed-example-control",
   "module": "Prysm/BlobIdentifier/DecodeAcceptComposedExample.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.accept_composed_example",
   "kind": "control"

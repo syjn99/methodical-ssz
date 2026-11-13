@@ -1,12 +1,12 @@
 [
  {
-  "id": "codec-nop-window-nv-wat-control",
+  "id": "codec-nop-window-window-directive-at-control",
   "module": "Codec/NopWindow.lean",
   "theorem": "window_directive_at",
   "kind": "control"
  },
  {
-  "id": "codec-nop-window-nv-wskip-stmt-nostep",
+  "id": "codec-nop-window-wskip-statement-host-1-to-none",
   "module": "Codec/NopWindow.lean",
   "theorem": "wskip",
   "kind": "stmt",
@@ -14,13 +14,13 @@
   "new": "⟨s, Host.addrOf (j + nonNopIndex q i)⟩"
  },
  {
-  "id": "codec-window-steps-sk-ldv-control",
+  "id": "codec-window-steps-step-load-value-control",
   "module": "Codec/WindowSteps.lean",
   "theorem": "step_load_value",
   "kind": "control"
  },
  {
-  "id": "codec-window-steps-sk-ldv-stmt-reg",
+  "id": "codec-window-steps-step-load-value-statement-set-register-r-d-to-r-b",
   "module": "Codec/WindowSteps.lean",
   "theorem": "step_load_value",
   "kind": "stmt",
@@ -28,7 +28,7 @@
   "new": "⟨setRegister s rB v, Host.addrOf e⟩"
  },
  {
-  "id": "codec-window-steps-sk-add-stmt-op",
+  "id": "codec-window-steps-step-add-immediate-statement-get64-none-to-none",
   "module": "Codec/WindowSteps.lean",
   "theorem": "step_add_immediate",
   "kind": "stmt",
@@ -36,7 +36,7 @@
   "new": "(s.regs.get64 rD - imm.toBitVec), zmms"
  },
  {
-  "id": "codec-window-steps-sk-st-stmt-src",
+  "id": "codec-window-steps-step-store-statement-get64-r-s-to-r-b",
   "module": "Codec/WindowSteps.lean",
   "theorem": "step_store",
   "kind": "stmt",
@@ -44,7 +44,7 @@
   "new": "(@BitVec.toInt 64 (s.regs.get64 rB))"
  },
  {
-  "id": "codec-window-steps-sk-movi-stmt-width",
+  "id": "codec-window-steps-step-move-immediate-statement-truncate-32-to-16",
   "module": "Codec/WindowSteps.lean",
   "theorem": "step_move_immediate",
   "kind": "stmt",
@@ -52,7 +52,7 @@
   "new": "BitVec.truncate 16 imm.toBitVec"
  },
  {
-  "id": "codec-window-steps-sk-jmp-stmt-target",
+  "id": "codec-window-steps-step-jump-statement-hk-none-to-1",
   "module": "Codec/WindowSteps.lean",
   "theorem": "step_jump",
   "kind": "stmt",
@@ -60,7 +60,7 @@
   "new": "(hk : Eventually (step1 Host.exe) final ⟨s, Host.addrOf (jl + 1)⟩)"
  },
  {
-  "id": "codec-window-steps-sk-movrr-stmt-src",
+  "id": "codec-window-steps-step-move-register-statement-set-register-r-s-to-r-d",
   "module": "Codec/WindowSteps.lean",
   "theorem": "step_move_register",
   "kind": "stmt",
@@ -68,7 +68,7 @@
   "new": "⟨setRegister s rD (s.regs.get64 rD), Host.addrOf e⟩"
  },
  {
-  "id": "codec-window-steps-sk-lea-stmt-disp",
+  "id": "codec-window-steps-step-lea-statement-get64-disp-to-bit-vec-to-none",
   "module": "Codec/WindowSteps.lean",
   "theorem": "step_lea",
   "kind": "stmt",
@@ -76,13 +76,13 @@
   "new": "(s.regs.get64 rB)"
  },
  {
-  "id": "codec-callee-decode-window-cr-callw-control",
+  "id": "codec-callee-decode-window-calldec-seg-window-control",
   "module": "Codec/CalleeDecodeWindow.lean",
   "theorem": "Codec.calldec_seg_window",
   "kind": "control"
  },
  {
-  "id": "codec-callee-decode-window-cr-callw-stmt-ret",
+  "id": "codec-callee-decode-window-calldec-seg-window-statement-host-jc-to-j",
   "module": "Codec/CalleeDecodeWindow.lean",
   "theorem": "Codec.calldec_seg_window",
   "kind": "stmt",
@@ -90,7 +90,7 @@
   "new": "Host.addrOf (j + 1)).toBitVec.toInt).At aRet"
  },
  {
-  "id": "codec-callee-decode-window-cr-callw-stmt-jc",
+  "id": "codec-callee-decode-window-calldec-seg-window-statement-hjc-0-to-1",
   "module": "Codec/CalleeDecodeWindow.lean",
   "theorem": "Codec.calldec_seg_window",
   "kind": "stmt",
@@ -98,13 +98,13 @@
   "new": "(hjc : j + nonNopIndex q 1 = jc)"
  },
  {
-  "id": "codec-fixed-bytes-decode-window-sr-bytes-control",
+  "id": "codec-fixed-bytes-decode-window-bytesdec-window-32-rdx-rax-control",
   "module": "Codec/FixedBytesDecodeWindow.lean",
   "theorem": "bytesdec_window_32_rdx_rax",
   "kind": "control"
  },
  {
-  "id": "codec-fixed-bytes-decode-window-sr-bytes-stmt-reg",
+  "id": "codec-fixed-bytes-decode-window-bytesdec-window-32-rdx-rax-statement-bytes-dec-window-rax-to-rdx",
   "module": "Codec/FixedBytesDecodeWindow.lean",
   "theorem": "bytesdec_window_32_rdx_rax",
   "kind": "stmt",
@@ -112,7 +112,7 @@
   "new": "BytesDecWindow 32 Reg64.rdx Reg64.rdx"
  },
  {
-  "id": "codec-fixed-bytes-decode-window-sr-bytes-stmt-size",
+  "id": "codec-fixed-bytes-decode-window-bytesdec-window-32-rdx-rax-statement-bytes-dec-window-32-to-48",
   "module": "Codec/FixedBytesDecodeWindow.lean",
   "theorem": "bytesdec_window_32_rdx_rax",
   "kind": "stmt",
@@ -120,7 +120,7 @@
   "new": "BytesDecWindow 48 Reg64.rdx Reg64.rax"
  },
  {
-  "id": "sync-committee-message-ex-s82-control",
+  "id": "sync-committee-message-decode-example-step-s82-control",
   "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_s82",
   "kind": "control",
@@ -130,7 +130,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "sync-committee-message-ex-s82-stmt-disp",
+  "id": "sync-committee-message-decode-example-step-s82-statement-ha-120-to-128",
   "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_s82",
   "kind": "stmt",
@@ -138,7 +138,7 @@
   "new": "(ha : base + (128 : Int64).toBitVec = a)"
  },
  {
-  "id": "sync-committee-message-ex-s82-code-slot",
+  "id": "sync-committee-message-decode-example-step-s82-code-mov-0x78-rsp-to-0x70-rsp",
   "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_s82",
   "kind": "code",
@@ -151,7 +151,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "sync-committee-message-ex-s86-code-reg",
+  "id": "sync-committee-message-decode-example-step-s86-code-add-rax-to-rdx",
   "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_s86",
   "kind": "code",
@@ -164,7 +164,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "sync-committee-message-ex-s87-code-clobber",
+  "id": "sync-committee-message-decode-example-step-s87-code-mov-ecx-to-eax",
   "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_s87",
   "kind": "code",
@@ -177,7 +177,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "sync-committee-message-ex-vicall-stmt-ret",
+  "id": "sync-committee-message-decode-example-step-validator-index-call-statement-host-88-to-89",
   "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_ValidatorIndex_call",
   "kind": "stmt",
@@ -185,7 +185,7 @@
   "new": "(Host.addrOf (k + 89 + 1)).toBitVec.toInt).At aRet"
  },
  {
-  "id": "pending-consolidation-ex-pccall-control",
+  "id": "pending-consolidation-decode-example-step-target-index-call-control",
   "module": "Prysm/PendingConsolidation/DecodeStepExamples.lean",
   "theorem": "Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call",
   "kind": "control",
@@ -194,7 +194,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
  },
  {
-  "id": "pending-consolidation-ex-pccall-stmt-ret",
+  "id": "pending-consolidation-decode-example-step-target-index-call-statement-host-55-to-56",
   "module": "Prysm/PendingConsolidation/DecodeStepExamples.lean",
   "theorem": "Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call",
   "kind": "stmt",
@@ -202,7 +202,7 @@
   "new": "(Host.addrOf (k + 56 + 1)).toBitVec.toInt).At aRet"
  },
  {
-  "id": "pending-consolidation-ex-pccall-code-nonop",
+  "id": "pending-consolidation-decode-example-step-target-index-call-code-nop-mov-none-to-rdx-rdx",
   "module": "Prysm/PendingConsolidation/DecodeStepExamples.lean",
   "theorem": "Prysm.PendingConsolidation.Decode.example_step_TargetIndex_call",
   "kind": "code",
@@ -214,13 +214,13 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingConsolidation.UnmarshalSSZ.S"
  },
  {
-  "id": "sync-committee-message-ex-br-control",
+  "id": "sync-committee-message-decode-example-step-block-root-seg-control",
   "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_BlockRoot_seg",
   "kind": "control"
  },
  {
-  "id": "sync-committee-message-ex-br-stmt-reg",
+  "id": "sync-committee-message-decode-example-step-block-root-seg-statement-get64-rax-to-rdx",
   "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_BlockRoot_seg",
   "kind": "stmt",
@@ -228,7 +228,7 @@
   "new": "st.data.regs.get64 Reg64.rdx = rcv"
  },
  {
-  "id": "sync-committee-message-ex-br-code-reg",
+  "id": "sync-committee-message-decode-example-step-block-root-seg-code-mov-rax-to-rdx",
   "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_BlockRoot_seg",
   "kind": "code",
@@ -241,7 +241,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "sync-committee-message-ex-sig-stmt-ret",
+  "id": "sync-committee-message-decode-example-step-signature-seg-statement-host-140-to-139",
   "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_Signature_seg",
   "kind": "stmt",
@@ -249,13 +249,13 @@
   "new": "(Host.addrOf (k + 139 + 1))"
  },
  {
-  "id": "sync-committee-message-ex-vifield-control",
+  "id": "sync-committee-message-decode-example-step-validator-index-field-control",
   "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_ValidatorIndex_field",
   "kind": "control"
  },
  {
-  "id": "sync-committee-message-ex-vifield-stmt-reg",
+  "id": "sync-committee-message-decode-example-step-validator-index-field-statement-hrax-rax-to-rdx",
   "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_ValidatorIndex_field",
   "kind": "stmt",
@@ -263,7 +263,7 @@
   "new": "(hrax : s.regs.rdx.toBitVec = rcv)"
  },
  {
-  "id": "sync-committee-message-ex-vifield-stmt-off",
+  "id": "sync-committee-message-decode-example-step-validator-index-field-statement-c0-40-to-48",
   "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_ValidatorIndex_field",
   "kind": "stmt",
@@ -271,7 +271,7 @@
   "new": "Eq (c0.At (rcv + 48))"
  },
  {
-  "id": "sync-committee-message-ex-vifield-stmt-slot",
+  "id": "sync-committee-message-decode-example-step-validator-index-field-statement-h-b-120-to-112",
   "module": "Prysm/SyncCommitteeMessage/DecodeStepExamples.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.example_step_ValidatorIndex_field",
   "kind": "stmt",
@@ -279,7 +279,7 @@
   "new": "(hB : sp + (112 : Int64).toBitVec = aB)"
  },
  {
-  "id": "pending-consolidation-ex-pcfield-stmt-src",
+  "id": "pending-consolidation-decode-example-step-target-index-field-statement-e8-8-to-16",
   "module": "Prysm/PendingConsolidation/DecodeStepExamples.lean",
   "theorem": "Prysm.PendingConsolidation.Decode.example_step_TargetIndex_field",
   "kind": "stmt",
@@ -287,13 +287,13 @@
   "new": "⋆ Eq (e8.At (bf + 16)) ⋆ Eq (c0.At (rcv + 16)) ⋆ F),"
  },
  {
-  "id": "codec-decoder-prologue-hn-pro-control",
+  "id": "codec-decoder-prologue-decpro-seg-control",
   "module": "Codec/DecoderPrologue.lean",
   "theorem": "decpro_seg",
   "kind": "control"
  },
  {
-  "id": "codec-decoder-prologue-hn-pro-stmt-rsp",
+  "id": "codec-decoder-prologue-decpro-seg-statement-rsp-none-to-8",
   "module": "Codec/DecoderPrologue.lean",
   "theorem": "decpro_seg",
   "kind": "stmt",
@@ -301,7 +301,7 @@
   "new": "st.data.regs.rsp = { toBitVec := sp + 8 }"
  },
  {
-  "id": "codec-decoder-prologue-hn-pro-stmt-frame",
+  "id": "codec-decoder-prologue-decpro-seg-statement-hsp-8-to-none",
   "module": "Codec/DecoderPrologue.lean",
   "theorem": "decpro_seg",
   "kind": "stmt",
@@ -309,7 +309,7 @@
   "new": "(hsp : s.regs.rsp.toBitVec - F.toBitVec = sp)"
  },
  {
-  "id": "codec-decoder-prologue-hn-ret-stmt-rsp",
+  "id": "codec-decoder-prologue-decret-seg-statement-rsp-16-to-8",
   "module": "Codec/DecoderPrologue.lean",
   "theorem": "decret_seg",
   "kind": "stmt",
@@ -317,19 +317,19 @@
   "new": "st.data.regs.rsp = { toBitVec := sp + 8 }"
  },
  {
-  "id": "codec-decoder-prologue-hn-nil-control",
+  "id": "codec-decoder-prologue-step-nil-check-control",
   "module": "Codec/DecoderPrologue.lean",
   "theorem": "step_nil_check",
   "kind": "control"
  },
  {
-  "id": "sync-committee-message-acc-control",
+  "id": "sync-committee-message-decode-accept-from-window-steps-control",
   "module": "Prysm/SyncCommitteeMessage/DecodeAcceptFromWindowSteps.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.accept_from_window_steps",
   "kind": "control"
  },
  {
-  "id": "pending-consolidation-acc-control",
+  "id": "pending-consolidation-decode-accept-from-window-steps-control",
   "module": "Prysm/PendingConsolidation/DecodeAcceptFromWindowSteps.lean",
   "theorem": "Prysm.PendingConsolidation.Decode.accept_from_window_steps",
   "kind": "control"

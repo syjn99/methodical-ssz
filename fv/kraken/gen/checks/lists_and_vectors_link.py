@@ -2,19 +2,19 @@
 """Call graph and link tables of the real v1alpha1.SyncAggregate, v1alpha1.SyncCommittee and
 v1alpha1.IndexedAttestation UnmarshalSSZ on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set, sha256 c6403c02...911e).
 A new file with the text of `deposit_data_and_pending_partial_withdrawal_link.py`: the function set and the data items changed. Existing scripts
-(`checkpoint_and_epoch_link.py`, `attestation_data_link.py`, `deposit_data_and_pending_partial_withdrawal_link.py`, `link/conv.py`, `link/data.py`, `link/check.py`) are not changed.
+(`checkpoint_and_epoch_link.py`, `attestation_data_link.py`, `deposit_data_and_pending_partial_withdrawal_link.py`, `link/convert_objdump.py`, `link/data.py`, `link/check.py`) are not changed.
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   lists_and_vectors_link.py callgraph <objdump> <out.json>          call targets with contract class
-  lists_and_vectors_link.py filter <outdir> <objdump> <elf> <nm> [--t3]
-                                                    <outdir>/target.objdump of SyncAggregate, SyncCommittee (with --t3: and IndexedAttestation)
+  lists_and_vectors_link.py filter <outdir> <objdump> <elf> <nm> [--with-indexed-attestation]
+                                                    <outdir>/target.objdump of SyncAggregate, SyncCommittee (with --with-indexed-attestation: and IndexedAttestation)
                                                     (+ ELF/nm links)
-  lists_and_vectors_link.py data <outdir> <cp-linkdir> <ad-linkdir> [--t3]
-                                                    after `conv.py <outdir>/target.objdump
+  lists_and_vectors_link.py data <outdir> <checkpoint-link-dir> <attestation-data-link-dir> [--with-indexed-attestation]
+                                                    after `convert_objdump.py <outdir>/target.objdump
                                                     <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set (SyncAggregate, SyncCommittee only).
-IndexedAttestation is linked only with --t3: its .S has `lea 0xffffff1c(%rdi),%rdx` (GNU objdump spelling of the
+IndexedAttestation is linked only with --with-indexed-attestation: its .S has `lea 0xffffff1c(%rdi),%rdx` (GNU objdump spelling of the
 displacement -228), which Apple clang 21 rejects in check (d).
 Encoders, SizeSSZ and HashTreeRoot are not in the set (out of the list/vector scope).
 
@@ -38,7 +38,7 @@ import attestation_data_link  # noqa: E402
 V1A1 = "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
 FUNCS = [f"{V1A1}.(*SyncAggregate).UnmarshalSSZ", f"{V1A1}.(*SyncCommittee).UnmarshalSSZ",
          f"{V1A1}.(*IndexedAttestation).UnmarshalSSZ"]
-SCOPE = {FUNCS[0]: "in (LV T1 decoder)", FUNCS[1]: "in (LV T2 decoder)", FUNCS[2]: "in (LV T3 decoder, if time)"}
+SCOPE = {FUNCS[0]: "in (SyncAggregate decoder)", FUNCS[1]: "in (SyncCommittee decoder)", FUNCS[2]: "in (IndexedAttestation decoder)"}
 CLASS = dict(attestation_data_link.CLASS)
 CLASS.update({
     "runtime.makeslice": ("b", "MakesliceContract: esz 1 (uint8 type word, cnt 48/64/96), esz 24 (SyncCommittee "
@@ -95,12 +95,12 @@ def callgraph(objdump, out):
     return 1 if (missing or unc) else 0
 
 
-def filt(outdir, objdump, elf, nm, t3=False):
-    checkpoint_and_epoch_link.callgraph.FUNCS = FUNCS if t3 else FUNCS[:2]
+def filt(outdir, objdump, elf, nm, with_indexed_attestation=False):
+    checkpoint_and_epoch_link.callgraph.FUNCS = FUNCS if with_indexed_attestation else FUNCS[:2]
     return checkpoint_and_epoch_link.filt(outdir, objdump, elf, nm)
 
 
-def items(outdir, cpdir, addir, t3=False):
+def items(outdir, checkpoint_dir, attestation_data_dir, with_indexed_attestation=False):
     """SyncAggregate: two makeslice (uint8, cap 64 and 96) and two memmove; no fmt.errorf / newobject /
     growslice. SyncCommittee: one makeslice of the [][]byte backing array (its own type word, esz 24,
     cnt 512), then one uint8 makeslice per element and one for AggregatePubkey; no fmt.errorf / newobject /
@@ -113,11 +113,11 @@ def items(outdir, cpdir, addir, t3=False):
     data = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(data)
     V = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1"
-    sa = checkpoint_and_epoch_link.ins(outdir, f"{V}.SyncAggregate.UnmarshalSSZ")
-    sc = checkpoint_and_epoch_link.ins(outdir, f"{V}.SyncCommittee.UnmarshalSSZ")
-    cu = checkpoint_and_epoch_link.ins(cpdir, f"{checkpoint_and_epoch_link.CP}.UnmarshalSSZ")
-    eu = checkpoint_and_epoch_link.ins(cpdir, f"{checkpoint_and_epoch_link.EP}.UnmarshalSSZ")
-    au = checkpoint_and_epoch_link.ins(addir, f"{V}.AttestationData.UnmarshalSSZ")
+    sync_aggregate_lines = checkpoint_and_epoch_link.ins(outdir, f"{V}.SyncAggregate.UnmarshalSSZ")
+    sync_committee_lines = checkpoint_and_epoch_link.ins(outdir, f"{V}.SyncCommittee.UnmarshalSSZ")
+    cu = checkpoint_and_epoch_link.ins(checkpoint_dir, f"{checkpoint_and_epoch_link.CHECKPOINT_SYMBOL}.UnmarshalSSZ")
+    eu = checkpoint_and_epoch_link.ins(checkpoint_dir, f"{checkpoint_and_epoch_link.EPOCH_SYMBOL}.UnmarshalSSZ")
+    au = checkpoint_and_epoch_link.ins(attestation_data_dir, f"{V}.AttestationData.UnmarshalSSZ")
     lea = r"lea ([A-Za-z0-9_.]+)(?:\+(\d+))?\(%rip\),%{}"
     back = attestation_data_link.back_lea
     u8 = checkpoint_and_epoch_link.operand([cu[cu.index("callq runtime.makeslice") - 3]], lea.format("rax"))
@@ -144,21 +144,21 @@ def items(outdir, cpdir, addir, t3=False):
 
     its = []
     # SyncAggregate
-    assert mk_types(sa) == [u8, u8], mk_types(sa)
-    assert sum(l == "callq runtime.memmove" for l in sa) == 2
-    no_calls(sa, ["fmt.errorf", "runtime.newobject", "runtime.growslice", "runtime.panicBounds"])
-    assert checkpoint_and_epoch_link.operand(sa, r"mov ([A-Za-z0-9_.]+)\(%rip\),%rax()") == esz
-    assert checkpoint_and_epoch_link.operand(sa, wb) == checkpoint_and_epoch_link.operand(au, wb)
+    assert mk_types(sync_aggregate_lines) == [u8, u8], mk_types(sync_aggregate_lines)
+    assert sum(l == "callq runtime.memmove" for l in sync_aggregate_lines) == 2
+    no_calls(sync_aggregate_lines, ["fmt.errorf", "runtime.newobject", "runtime.growslice", "runtime.panicBounds"])
+    assert checkpoint_and_epoch_link.operand(sync_aggregate_lines, r"mov ([A-Za-z0-9_.]+)\(%rip\),%rax()") == esz
+    assert checkpoint_and_epoch_link.operand(sync_aggregate_lines, wb) == checkpoint_and_epoch_link.operand(au, wb)
     # SyncCommittee: the first makeslice has its own type word ([]byte element of [][]byte)
-    st = mk_types(sc)
+    st = mk_types(sync_committee_lines)
     assert len(st) == 3 and st[0] != u8 and st[1:] == [u8, u8], st
-    assert sum(l == "callq runtime.memmove" for l in sc) == 2
-    assert sum(l == "callq runtime.panicBounds" for l in sc) == 1
-    no_calls(sc, ["fmt.errorf", "runtime.newobject", "runtime.growslice"])
-    assert checkpoint_and_epoch_link.operand(sc, r"mov ([A-Za-z0-9_.]+)\(%rip\),%rax()") == esz
-    assert checkpoint_and_epoch_link.operand(sc, wb) == checkpoint_and_epoch_link.operand(au, wb)
+    assert sum(l == "callq runtime.memmove" for l in sync_committee_lines) == 2
+    assert sum(l == "callq runtime.panicBounds" for l in sync_committee_lines) == 1
+    no_calls(sync_committee_lines, ["fmt.errorf", "runtime.newobject", "runtime.growslice"])
+    assert checkpoint_and_epoch_link.operand(sync_committee_lines, r"mov ([A-Za-z0-9_.]+)\(%rip\),%rax()") == esz
+    assert checkpoint_and_epoch_link.operand(sync_committee_lines, wb) == checkpoint_and_epoch_link.operand(au, wb)
     its.append(("typeUint8Slice", st[0][0], st[0][1], 48, data.ABI_TYPE_WORDS))
-    if not t3:
+    if not with_indexed_attestation:
         return data, its
     # IndexedAttestation
     ia = checkpoint_and_epoch_link.ins(outdir, f"{V}.IndexedAttestation.UnmarshalSSZ")
@@ -200,8 +200,8 @@ def items(outdir, cpdir, addir, t3=False):
     return data, its
 
 
-def write_data(outdir, cpdir, addir, t3=False):
-    data, its = items(outdir, cpdir, addir, t3)
+def write_data(outdir, checkpoint_dir, attestation_data_dir, with_indexed_attestation=False):
+    data, its = items(outdir, checkpoint_dir, attestation_data_dir, with_indexed_attestation)
     for it in its:
         print("item", it[:4])
     data.ITEMS = its
@@ -213,9 +213,9 @@ if __name__ == "__main__":
     c = sys.argv[1]
     if c == "callgraph":
         sys.exit(callgraph(*sys.argv[2:4]))
-    t3 = "--t3" in sys.argv
+    with_indexed_attestation = "--with-indexed-attestation" in sys.argv
     if c == "filter":
-        sys.exit(filt(*sys.argv[2:6], t3=t3))
+        sys.exit(filt(*sys.argv[2:6], with_indexed_attestation=with_indexed_attestation))
     if c == "data":
-        sys.exit(write_data(*sys.argv[2:5], t3=t3))
+        sys.exit(write_data(*sys.argv[2:5], with_indexed_attestation=with_indexed_attestation))
     sys.exit(f"unknown command {c}")

@@ -10,7 +10,7 @@
 # Then compare: `diff -r <before> <after>`. Each check writes <name>.txt and one line `<name> rc=<n>` to summary.txt.
 # Expected: the same rc for every check. A text difference needs a stated reason (for example a library count).
 # A check whose script is not in the tree gets the line `<name> not run (no <script>)`.
-# The default kindcheck list also has example files that no generator writes (for example Gen2ComposeEx.lean).
+# The default kindcheck list also has example files that no generator writes (for example the hand-written `Prysm/*/DecodeAcceptComposedExample.lean`).
 # So kindcheck_generated can exit 1 on the base too. `kindcheck.py --partial` never exits 0 (see its usage text).
 #
 # Environment:
@@ -50,8 +50,8 @@ run() {
 run data_check link/data.py python3 -B link/data.py --check link/out
 run axioms_gate_selftest gen/checks/axioms_gate.py python3 -I -B gen/checks/axioms_gate.py --selftest
 run check_include gen/checks/check_include.py python3 -I -B gen/checks/check_include.py
-run depcheck_data gen/checks/depcheck_data.py python3 -I -B gen/checks/depcheck_data.py
-run depcheck_data_selftest gen/checks/depcheck_data.py python3 -I -B gen/checks/depcheck_data.py --selftest
+run deposit_data_include_check gen/checks/deposit_data_include_check.py python3 -I -B gen/checks/deposit_data_include_check.py
+run deposit_data_include_check_selftest gen/checks/deposit_data_include_check.py python3 -I -B gen/checks/deposit_data_include_check.py --selftest
 run kindcheck_selftest gen/generator/kindcheck.py python3 -I -B gen/generator/kindcheck.py --selftest
 
 if [ -z "${KINDCHECK_FILES:-}" ]; then

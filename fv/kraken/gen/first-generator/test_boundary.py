@@ -13,7 +13,7 @@ Cases:
   next to the originals, and in place of its base): the scenario's result with a desc dir of
   exactly its list; hand_case for the 9 hand keys, and prysm for the mutant's own key when it
   is a non-hand key; all must be refused.
-- the reviewer's cases E1-E7, rebuilt for the result-file protocol.
+- forged and extra Desc inputs of desc/review/r3_mutants.py, rebuilt for the result-file protocol.
 - own escapes x01-x14 against the result file and its binding, the expected-set source,
   the exception list and path handling.
 Python 3 standard library only. Run with python3 -I.
@@ -107,31 +107,31 @@ def main():
         case(f"{sid}/hand", "boundary", f"{sc['what']}: hand_case, 9 hand keys", "refused", res, dd, HAND, "hand_case")
         if mkey and isinstance(mkey, str) and not any(mkey.startswith(p + ".") for p in emit.HAND_PACKAGES) and "/" in mkey:
             case(f"{sid}/prysm", "boundary", f"{sc['what']}: prysm, the mutant's own key {mkey}", "refused", res, dd, [mkey], "prysm")
-    # the reviewer's cases E1-E7, rebuilt for the result protocol
+    # forged and extra Desc inputs, rebuilt for the result protocol
     r3 = f"{W}/replay/r3"
     scen_res = lambda sid: exp["scenarios"][sid]["result"]
     if "t12-forge" in exp["scenarios"]:
-        case("E1", "review-r3", "forge desc dir (wrong Nested never checked) with the result of run t12", "refused",
+        case("forged-desc-dir-scenario-result", "forged-input", "forge desc dir (wrong Nested never checked) with the result of scenario t12", "refused",
              scen_res("t12-forge"), f"{r3}/forge/descdir", HAND, "hand_case")
-        case("E1c", "review-r3", "forge desc dir with the honest main result", "refused", main_res, f"{r3}/forge/descdir", HAND, "hand_case")
+        case("forged-desc-dir-main-result", "forged-input", "forge desc dir with the honest main result", "refused", main_res, f"{r3}/forge/descdir", HAND, "hand_case")
     dd7 = desc_dir(f"{tmp}/t07", origs + [f"{r3}/mut/q01-scalars-under-prysm-v1.desc.json"])
-    case("E2", "review-r3", "q01 next to the originals (run t07), hand_case for v1alpha1.Scalars", "refused",
+    case("extra-desc-hand-case", "forged-input", "q01 next to the originals (scenario t07), hand_case for v1alpha1.Scalars", "refused",
          scen_res("t07-extra-q01"), dd7, [f"{PV1}.Scalars"], "hand_case")
-    case("E3", "review-r3", "q01 next to the originals (run t07), prysm for v1alpha1.Scalars", "refused",
+    case("extra-desc-prysm", "forged-input", "q01 next to the originals (scenario t07), prysm for v1alpha1.Scalars", "refused",
          scen_res("t07-extra-q01"), dd7, [f"{PV1}.Scalars"], "prysm")
-    case("E3h", "review-r3", "q01 desc dir, honest main result, prysm for v1alpha1.Scalars (unknown key)", "refused",
+    case("extra-desc-unknown-key", "forged-input", "q01 desc dir, honest main result, prysm for v1alpha1.Scalars (unknown key)", "refused",
          main_res, dd7, [f"{PV1}.Scalars"], "prysm")
-    case("E4", "review-r3", "no --types (empty selection)", "refused", main_res, odir, [], "prysm")
-    case("E4b", "review-r3", "hand Checkpoint and Prysm Checkpoint selected together", "refused",
+    case("no-types", "forged-input", "no --types (empty selection)", "refused", main_res, odir, [], "prysm")
+    case("hand-and-prysm-checkpoint", "forged-input", "hand Checkpoint and Prysm Checkpoint selected together", "refused",
          main_res, odir, [f"{TGT}/prysm.Checkpoint", f"{PV1}.Checkpoint"], "hand_case")
-    case("E5", "review-r3", "q01 desc dir, run t07, no --types", "refused", scen_res("t07-extra-q01"), dd7, [], "prysm")
+    case("extra-desc-no-types", "forged-input", "q01 desc dir, scenario t07, no --types", "refused", scen_res("t07-extra-q01"), dd7, [], "prysm")
     dd13 = desc_dir(f"{tmp}/t13", [f"{r3}/mut/q51-log-forge-table-ok.desc.json" if p.endswith("/orig/Scalars.desc.json") else p
                                    for p in origs])
-    case("E6", "review-r3", "run t13 (q51 forged TABLE OK string in place of Scalars), hand_case for 8 hand keys", "refused",
+    case("forged-table-ok-string", "forged-input", "scenario t13 (q51 forged TABLE OK string in place of Scalars), hand_case for 8 hand keys", "refused",
          scen_res("t13-forge-table-ok"), dd13, HAND[1:], "hand_case")
     q40 = f"{r3}/mut/q40-number-exp.desc.json"
     dd40 = desc_dir(f"{tmp}/q40", [q40 if p.endswith("/orig/Scalars.desc.json") else p for p in origs])
-    case("E7", "review-r3", "q40 (fixed_size 1.6e1) in place of Scalars with the honest result", "refused", main_res, dd40, HAND, "hand_case")
+    case("number-exponent-fixed-size", "forged-input", "q40 (fixed_size 1.6e1) in place of Scalars with the honest result", "refused", main_res, dd40, HAND, "hand_case")
     # own escapes against the new design
     res = json.load(open(main_res))
     def forged(name, fn):

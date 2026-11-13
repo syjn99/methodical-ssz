@@ -137,7 +137,7 @@ theorem Decode.accept_from_generated_field_segments (k : Nat) (hk : unmarshalSSZ
     simp only [UInt64.toBitVec_add, UInt64.toBitVec_ofNat]; bv_omega
   · dsimp only; ecancel
 
-/-- The `_g2` theorem has the declared type of the existing hand theorem (definitional identity). -/
+/-- The theorem `Decode.accept_from_generated_field_segments` has the declared type of the existing hand theorem (definitional identity). -/
 theorem Decode.accept_from_generated_field_segments_type : ∀ (h : Host),
     type_of% (@Decode.accept_from_generated_field_segments h) = type_of% (@Prysm.BlobIdentifier.Decode.accept h) := by
   intro h; with_reducible rfl

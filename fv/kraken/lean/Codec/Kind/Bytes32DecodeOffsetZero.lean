@@ -3,7 +3,7 @@ import Codec.Bytes32DecodeOffsetZero
 /-!
 # Statement kind of the generated offset-0 decode segments
 
-Added after the hold-out types were opened, so no hold-out type tests it. `Codec/Kind/FieldPatterns.lean` is not
+Added after the frozen generator ran on the hold-out types, so no hold-out type tests it. `Codec/Kind/FieldPatterns.lean` is not
 changed. `rootDecSegOffsetZeroKind` is the text of `rootDecSegKind` with the
 `add`-form parts removed: no `src`, no `aSrc` / `hSrc`, the source bytes at `bf`, end pc `k + j2 + 11`,
 memmove return address `k + j2 + 5 + 1`. `rootDecSegOffsetZeroKind_of` proves the kind from the lemma

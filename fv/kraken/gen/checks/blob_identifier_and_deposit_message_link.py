@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Hold-out of BlobIdentifier and DepositMessage: call graph and link tables of the real v1alpha1.BlobIdentifier and v1alpha1.DepositMessage
 UnmarshalSSZ on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set; written after the
-hold-out of BlobIdentifier and DepositMessage was opened at 2026-11-11T04:26:30Z; the text of `eth1_data_link.py` with the function set and the data items changed).
+hold-out of BlobIdentifier and DepositMessage had been run; the text of `eth1_data_link.py` with the function set and the data items changed).
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   blob_identifier_and_deposit_message_link.py callgraph <objdump> <out.json>          call targets with contract class
   blob_identifier_and_deposit_message_link.py filter <outdir> <objdump> <elf> <nm>    <outdir>/target.objdump of FUNCS (+ ELF/nm links)
-  blob_identifier_and_deposit_message_link.py data <outdir> <cp-linkdir> <ad-linkdir> after `conv.py <outdir>/target.objdump
+  blob_identifier_and_deposit_message_link.py data <outdir> <checkpoint-link-dir> <attestation-data-link-dir> after `convert_objdump.py <outdir>/target.objdump
                                                     <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
@@ -78,7 +78,7 @@ def filt(outdir, objdump, elf, nm):
     return checkpoint_and_epoch_link.filt(outdir, objdump, elf, nm)
 
 
-def items(outdir, cpdir, addir):
+def items(outdir, checkpoint_dir, attestation_data_dir):
     """The two decoders have no fmt.errorf, newobject or growslice call. The shared operands (uint8 type
     word of makeslice, ssz.ErrSize, writeBarrier) are asserted equal to the Checkpoint / AttestationData
     sets' operands. check.py (f) needs one data file at least: the set writes the address-only error global
@@ -89,8 +89,8 @@ def items(outdir, cpdir, addir):
     V = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1"
     bu = checkpoint_and_epoch_link.ins(outdir, f"{V}.BlobIdentifier.UnmarshalSSZ")
     du = checkpoint_and_epoch_link.ins(outdir, f"{V}.DepositMessage.UnmarshalSSZ")
-    cu = checkpoint_and_epoch_link.ins(cpdir, f"{checkpoint_and_epoch_link.CP}.UnmarshalSSZ")
-    au = checkpoint_and_epoch_link.ins(addir, f"{V}.AttestationData.UnmarshalSSZ")
+    cu = checkpoint_and_epoch_link.ins(checkpoint_dir, f"{checkpoint_and_epoch_link.CHECKPOINT_SYMBOL}.UnmarshalSSZ")
+    au = checkpoint_and_epoch_link.ins(attestation_data_dir, f"{V}.AttestationData.UnmarshalSSZ")
     lea = r"lea ([A-Za-z0-9_.]+)(?:\+(\d+))?\(%rip\),%{}"
     u8 = checkpoint_and_epoch_link.operand([cu[cu.index("callq runtime.makeslice") - 3]], lea.format("rax"))
     wb = r"cmpl \$0x0,([A-Za-z0-9_.]+)(?:\+(\d+))?\(%rip\)"
@@ -110,8 +110,8 @@ def items(outdir, cpdir, addir):
     return data, its
 
 
-def write_data(outdir, cpdir, addir):
-    data, its = items(outdir, cpdir, addir)
+def write_data(outdir, checkpoint_dir, attestation_data_dir):
+    data, its = items(outdir, checkpoint_dir, attestation_data_dir)
     for it in its:
         print("item", it[:4])
     data.ITEMS = its

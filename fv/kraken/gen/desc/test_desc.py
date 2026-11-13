@@ -10,7 +10,7 @@
       - list scenarios: the reviewer's t01-t13, mine, and for every wrong hand-type Desc an
         "add" (next to the originals) and a "replace" (in place of its base) scenario;
       expect.json and batch.txt.
-  run_desccheck.sh <work-dir> <fv/kraken/lean>       (gated; writes the checker result files)
+  run_desc_checker.sh <work-dir> <fv/kraken/lean>       (gated; writes the checker result files)
   test_desc.py evaluate <work-dir> <out.json>
       Reads only the checker result files (main.result.json, scen/*.result.json). Writes
       <out.json> and <out.md> (table: case -> expected -> actual -> failing check).
@@ -246,7 +246,7 @@ def prepare(work):
     for d in (mut, scen, rep):
         os.makedirs(d)
     py = [sys.executable, "-I"]
-    subprocess.run(py + [f"{HERE}/producer.py", orig, f"{HERE}/ir-hand.json", f"--refs={HERE}/refs-hand.json"],
+    subprocess.run(py + [f"{HERE}/producer.py", orig, f"{HERE}/hand-types-ir.json", f"--refs={HERE}/hand-types-references.json"],
                    check=True, capture_output=True)
     inv = json.load(open(f"{KRAKEN}/prysm/inventory.json"))
     names = ",".join(sorted(f"{t['package']}.{t['name']}" for t in inv["types"]))

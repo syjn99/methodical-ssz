@@ -1,10 +1,10 @@
 # negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
-enc-control-rb	data-columns-by-root-identifier-control-rb
-enc-control-iter	data-columns-by-root-identifier-encode-iter-control-iter
-enc-rb-len33	data-columns-by-root-identifier-rb-len33
-enc-rt-max129	data-columns-by-root-identifier-rt-max129
-enc-rt-offset37	data-columns-by-root-identifier-rt-offset37
-enc-iter-step16	data-columns-by-root-identifier-iter-step16
-enc-iter-store	data-columns-by-root-identifier-iter-store
-enc-stmt-rt127	data-columns-by-root-identifier-stmt-rt127
-enc-stmt-rb33	data-columns-by-root-identifier-stmt-rb33
+enc-control-rb	data-columns-by-root-identifier-encode-reject-length-control
+enc-control-iter	data-columns-by-root-identifier-encode-iter-control
+enc-rb-len33	data-columns-by-root-identifier-encode-reject-length-code-cmpq-0x20-to-0x21
+enc-rt-max129	data-columns-by-root-identifier-encode-reject-too-big-code-cmp-0x80-to-0x81
+enc-rt-offset37	data-columns-by-root-identifier-encode-reject-too-big-code-movl-0x24-to-0x25
+enc-iter-step16	data-columns-by-root-identifier-encode-iter-code-add-0x8-to-0x10
+enc-iter-store	data-columns-by-root-identifier-encode-iter-code-mov-0x8-rbx-rax-1-to-0x10-rbx-rax-1
+enc-stmt-rt127	data-columns-by-root-identifier-encode-reject-too-big-statement-hn1-128-to-127
+enc-stmt-rb33	data-columns-by-root-identifier-encode-reject-length-statement-hbl-32-to-33

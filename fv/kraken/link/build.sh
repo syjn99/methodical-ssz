@@ -9,7 +9,7 @@ mkdir -p "$O/norm"
 GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 go build -tags purego -trimpath -o "$O/p1bin-amd64" ./fv/kraken/cmd/p1bin
 go tool objdump -gnu -s 'target(/prysm)?\.\(\*(Scalars|FixedVec|ListU64|BitVec|Nested|ListC|BitL|Checkpoint|AttestationData)\)\.(SizeSSZ|MarshalSSZ|MarshalSSZTo|UnmarshalSSZ)$|ssz\.ValidateBitlist$|ssz\.ValidateBitvector$' "$O/p1bin-amd64" > "$O/target.objdump"
 go tool nm -size -sort address "$O/p1bin-amd64" > "$O/p1bin-amd64.nm"
-python3 fv/kraken/link/conv.py "$O/target.objdump" "$O/p1bin-amd64.nm" "$O/norm" --norm
+python3 fv/kraken/link/convert_objdump.py "$O/target.objdump" "$O/p1bin-amd64.nm" "$O/norm" --norm
 python3 -B fv/kraken/link/data.py "$O"
 {
   echo "go: $(go version), GOAMD64=v1"

@@ -1,6 +1,6 @@
 [
  {
-  "id": "beacon-block-header-a1-control",
+  "id": "beacon-block-header-encode-encode-slot-control",
   "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
   "kind": "control",
@@ -10,7 +10,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
  },
  {
-  "id": "beacon-block-header-a1-guard-lea",
+  "id": "beacon-block-header-encode-encode-slot-code-lea-0x20-rsp-to-0x28-rsp",
   "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
   "kind": "code",
@@ -22,7 +22,7 @@
   "new": "  lea -0x28(%rsp),%r12"
  },
  {
-  "id": "beacon-block-header-a1-slot-field",
+  "id": "beacon-block-header-encode-encode-slot-code-mov-0x8-rax-to-0x10-rax",
   "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
   "kind": "code",
@@ -34,7 +34,7 @@
   "new": "  mov 0x10(%rax),%r8"
  },
  {
-  "id": "beacon-block-header-a1-frame",
+  "id": "beacon-block-header-encode-encode-slot-code-sub-0x98-to-0x90",
   "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
   "kind": "code",
@@ -46,7 +46,7 @@
   "new": "  sub $0x90,%rsp"
  },
  {
-  "id": "beacon-block-header-a1-stmt-guard",
+  "id": "beacon-block-header-encode-encode-slot-statement-hguard-32-to-none",
   "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
   "kind": "stmt",
@@ -54,7 +54,7 @@
   "new": "(hguard : guard.toNat < s.regs.rsp.toNat)"
  },
  {
-  "id": "beacon-block-header-a1-stmt-dst-unchanged",
+  "id": "beacon-block-header-encode-encode-slot-statement-sl-sl-to-d0",
   "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_slot",
   "kind": "stmt",
@@ -62,7 +62,7 @@
   "new": "⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec)) ⋆ R) st.data.dmem)"
  },
  {
-  "id": "beacon-block-header-a2-control",
+  "id": "beacon-block-header-encode-encode-proposer-index-control",
   "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_proposer_index",
   "kind": "control",
@@ -72,7 +72,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
  },
  {
-  "id": "beacon-block-header-a2-pi-field",
+  "id": "beacon-block-header-encode-encode-proposer-index-code-mov-0x10-rax-to-0x8-rax",
   "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_proposer_index",
   "kind": "code",
@@ -84,7 +84,7 @@
   "new": "  mov 0x8(%rax),%r9"
  },
  {
-  "id": "beacon-block-header-a2-newlen",
+  "id": "beacon-block-header-encode-encode-proposer-index-code-lea-0x8-rdx-to-0x10-rdx",
   "module": "Prysm/BeaconBlockHeader/EncodeHead.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_proposer_index",
   "kind": "code",
@@ -96,7 +96,7 @@
   "new": "  lea 0x10(%rdx),%r8"
  },
  {
-  "id": "beacon-block-header-b-control",
+  "id": "beacon-block-header-encode-encode-parent-root-control",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_parent_root",
   "kind": "control",
@@ -106,7 +106,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
  },
  {
-  "id": "beacon-block-header-b-len33",
+  "id": "beacon-block-header-encode-encode-parent-root-code-cmpq-0x20-to-0x21",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_parent_root",
   "kind": "code",
@@ -118,7 +118,7 @@
   "new": "  cmpq $0x21,0x20(%rax)"
  },
  {
-  "id": "beacon-block-header-b-root-ptr",
+  "id": "beacon-block-header-encode-encode-parent-root-code-mov-0x18-rax-to-0x30-rax",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_parent_root",
   "kind": "code",
@@ -130,7 +130,7 @@
   "new": "  mov 0x30(%rax),%rdx"
  },
  {
-  "id": "beacon-block-header-b-newlen",
+  "id": "beacon-block-header-encode-encode-parent-root-code-lea-0x20-r8-to-0x21-r8",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_parent_root",
   "kind": "code",
@@ -143,7 +143,7 @@
   "new": "  lea 0x21(%r8),%r9"
  },
  {
-  "id": "beacon-block-header-c-control",
+  "id": "beacon-block-header-encode-encode-state-root-control",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_state_root",
   "kind": "control",
@@ -153,7 +153,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
  },
  {
-  "id": "beacon-block-header-c-root-ptr",
+  "id": "beacon-block-header-encode-encode-state-root-code-mov-0x30-rdx-to-0x18-rdx",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_state_root",
   "kind": "code",
@@ -165,7 +165,7 @@
   "new": "  mov 0x18(%rdx),%rbx"
  },
  {
-  "id": "beacon-block-header-c-len31",
+  "id": "beacon-block-header-encode-encode-state-root-code-cmpq-0x20-to-0x1f",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_state_root",
   "kind": "code",
@@ -177,7 +177,7 @@
   "new": "  cmpq $0x1f,0x38(%rdx)"
  },
  {
-  "id": "beacon-block-header-c-dst-off",
+  "id": "beacon-block-header-encode-encode-state-root-code-add-r8-to-r9",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_state_root",
   "kind": "code",
@@ -189,7 +189,7 @@
   "new": "  add %r9,%rax"
  },
  {
-  "id": "beacon-block-header-d-control",
+  "id": "beacon-block-header-encode-encode-body-root-control",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_body_root",
   "kind": "control",
@@ -199,7 +199,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
  },
  {
-  "id": "beacon-block-header-d-root-ptr",
+  "id": "beacon-block-header-encode-encode-body-root-code-mov-0x48-rdx-to-0x30-rdx",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_body_root",
   "kind": "code",
@@ -211,7 +211,7 @@
   "new": "  mov 0x30(%rdx),%rbx"
  },
  {
-  "id": "beacon-block-header-d-memmove31",
+  "id": "beacon-block-header-encode-encode-body-root-code-mov-0x20-to-0x1f",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_body_root",
   "kind": "code",
@@ -224,7 +224,7 @@
   "new": "  mov $0x1f,%ecx"
  },
  {
-  "id": "beacon-block-header-e-control",
+  "id": "beacon-block-header-encode-encode-return-control",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_return",
   "kind": "control",
@@ -234,7 +234,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
  },
  {
-  "id": "beacon-block-header-e-len-slot",
+  "id": "beacon-block-header-encode-encode-return-code-mov-0x38-rsp-to-0x40-rsp",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_return",
   "kind": "code",
@@ -246,7 +246,7 @@
   "new": "  mov 0x40(%rsp),%rbx"
  },
  {
-  "id": "beacon-block-header-e-stmt-rdi1",
+  "id": "beacon-block-header-encode-encode-return-statement-rdi-0-to-1",
   "module": "Prysm/BeaconBlockHeader/EncodeRootFields.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.encode_return",
   "kind": "stmt",
@@ -254,13 +254,13 @@
   "new": "st.data.regs.rdi = 1 ∧ st.data.regs.rsi = 0"
  },
  {
-  "id": "beacon-block-header-main-control",
+  "id": "beacon-block-header-encode-fast-path-control",
   "module": "Prysm/BeaconBlockHeader/EncodeFastPath.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path",
   "kind": "control"
  },
  {
-  "id": "beacon-block-header-main-stmt-len111",
+  "id": "beacon-block-header-encode-fast-path-statement-rbx-112-to-111",
   "module": "Prysm/BeaconBlockHeader/EncodeFastPath.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path",
   "kind": "stmt",
@@ -268,7 +268,7 @@
   "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 111"
  },
  {
-  "id": "beacon-block-header-main-stmt-cap111",
+  "id": "beacon-block-header-encode-fast-path-statement-hcap-112-to-111",
   "module": "Prysm/BeaconBlockHeader/EncodeFastPath.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path",
   "kind": "stmt",
@@ -276,7 +276,7 @@
   "new": "(hcap : s.regs.rcx.toNat + 111 ≤ s.regs.rdi.toNat)"
  },
  {
-  "id": "beacon-block-header-main-stmt-swap-roots",
+  "id": "beacon-block-header-encode-fast-path-statement-r2-r2-to-r3",
   "module": "Prysm/BeaconBlockHeader/EncodeFastPath.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path",
   "kind": "stmt",
@@ -284,7 +284,7 @@
   "new": "⋆ Eq (r3.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 48))"
  },
  {
-  "id": "beacon-block-header-main-stmt-small-guard",
+  "id": "beacon-block-header-encode-fast-path-statement-hguard-32-to-none",
   "module": "Prysm/BeaconBlockHeader/EncodeFastPath.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path",
   "kind": "stmt",
@@ -292,7 +292,7 @@
   "new": "(hguard : guard.toNat < s.regs.rsp.toNat)"
  },
  {
-  "id": "beacon-block-header-main-stmt-rsp16",
+  "id": "beacon-block-header-encode-fast-path-statement-rsp-8-to-16",
   "module": "Prysm/BeaconBlockHeader/EncodeFastPath.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path",
   "kind": "stmt",
@@ -300,7 +300,7 @@
   "new": "st.data.regs.rsp = s.regs.rsp + 16"
  },
  {
-  "id": "beacon-block-header-main-stmt-dst-unchanged",
+  "id": "beacon-block-header-encode-fast-path-statement-r3-r3-to-d4",
   "module": "Prysm/BeaconBlockHeader/EncodeFastPath.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path",
   "kind": "stmt",
@@ -308,13 +308,13 @@
   "new": "⋆ Eq (d4.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 80)) ⋆ R) st.data.dmem)"
  },
  {
-  "id": "beacon-block-header-witness-encode-fast-path-runs-empty-wit-control",
+  "id": "beacon-block-header-witness-encode-fast-path-runs-empty-control",
   "module": "Prysm/BeaconBlockHeader/WitnessEncodeFastPath.lean",
   "theorem": "Prysm.BeaconBlockHeader.Witness.EncodeFastPath.runs_empty",
   "kind": "control"
  },
  {
-  "id": "beacon-block-header-wit-stmt-root-ptr",
+  "id": "beacon-block-header-witness-encode-fast-path-runs-empty-statement-0x10088-0x100c8-to-0x100c9",
   "module": "Prysm/BeaconBlockHeader/WitnessEncodeFastPath.lean",
   "theorem": "Prysm.BeaconBlockHeader.Witness.EncodeFastPath.runs_empty",
   "kind": "stmt",
@@ -322,7 +322,7 @@
   "new": "0x10088 0x100a8 0x100c9 (initial_state"
  },
  {
-  "id": "beacon-block-header-wit-stmt-rax",
+  "id": "beacon-block-header-witness-encode-fast-path-runs-empty-statement-rax-0x101a8-to-0x101a9",
   "module": "Prysm/BeaconBlockHeader/WitnessEncodeFastPath.lean",
   "theorem": "Prysm.BeaconBlockHeader.Witness.EncodeFastPath.runs_empty",
   "kind": "stmt",
@@ -330,13 +330,13 @@
   "new": "st.data.regs.rax = 0x101a9"
  },
  {
-  "id": "beacon-block-header-encode-fast-path-spec-spec-control",
+  "id": "beacon-block-header-encode-fast-path-spec-control",
   "module": "Prysm/BeaconBlockHeader/EncodeSpec.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path_spec",
   "kind": "control"
  },
  {
-  "id": "beacon-block-header-spec-stmt-off8",
+  "id": "beacon-block-header-encode-fast-path-spec-statement-rbx-none-to-8",
   "module": "Prysm/BeaconBlockHeader/EncodeSpec.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path_spec",
   "kind": "stmt",
@@ -344,7 +344,7 @@
   "new": "Eq (bs.toList.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
  },
  {
-  "id": "beacon-block-header-spec-stmt-swap-recv",
+  "id": "beacon-block-header-encode-fast-path-spec-statement-g-none-to-none",
   "module": "Prysm/BeaconBlockHeader/EncodeSpec.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path_spec",
   "kind": "stmt",

@@ -6,7 +6,7 @@ import Prysm.Deposit.WitnessDecodeRejectSize
 import Prysm.Deposit.WitnessDecodeAccept
 import Prysm.HistoricalBatch.WitnessDecodeRejectSize
 
-/-! Hand list for `gen/checks/seg2axioms_gate.py` ("must exist" names; every name gets the axiom check). -/
+/-! Hand list for `gen/checks/axioms_gate.py` ("must exist" names; every name gets the axiom check). -/
 
 #print axioms Codec.Segment.bytes32_vector_serialize
 #print axioms Codec.Segment.bytes32_vector_of_bytes

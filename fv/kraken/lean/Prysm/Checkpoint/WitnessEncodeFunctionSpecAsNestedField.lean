@@ -7,8 +7,8 @@ import Prysm.Checkpoint.WitnessEncodeFastPath
 On the Checkpoint witness hosts of `Prysm.Checkpoint.WitnessDecodeAccept` (decoder, Epoch decoder, bump makeslice model,
 memmove model) and `Prysm.Checkpoint.WitnessEncodeFastPath` (encoder, memmove model), the function specifications hold:
 their hypotheses (`MakesliceContract`, `MemmoveContract`) are discharged by the runtime models. Together with the
-witnesses `cp_accept_runs` / `cpm_runs_*` (which run the code on concrete states) this shows the
-specifications are not vacuous. `*_spec_here` shows that the specification holds as an
+witnesses `Witness.DecodeAccept.runs` / `Witness.EncodeFastPath.runs_*` (which run the code on concrete states) this shows the
+specifications are not vacuous. `runs_function_spec` shows that the specification holds as an
 instance on this host; it does not by itself show that the premises of a main theorem are satisfiable. That
 (non-vacuity) comes from the run witnesses.
 -/

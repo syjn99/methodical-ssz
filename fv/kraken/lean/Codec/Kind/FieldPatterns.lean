@@ -26,7 +26,7 @@ variable [Host]
 
 set_option linter.unusedVariables false in
 /-- Statement kind of the uint64 decoder pattern: the accept path of a uint64 primitive `UnmarshalSSZ` whose code constant is `C`.
-The text is the statement of `Prysm.Slot.Decode.accept` with `SlUnmarshal` replaced by `C` and
+The text is the statement of `Prysm.Slot.Decode.accept` with `Prysm.Slot.Code.unmarshalSSZ` replaced by `C` and
 every binder after the colon. -/
 abbrev u64DecAcceptKind (C : Program) : Prop :=
   ∀ (k : Nat) (hk : C.IsInfixAt Host.prog k) (hf : LabelsFresh C k)

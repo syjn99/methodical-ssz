@@ -8,7 +8,7 @@ import Codec.NopWindow
 `bytesDecHeadRegister rX …` / `bytesDecMidRegisters rX rY …` are `bytesDecHead` / `bytesDecMid` (`Codec/FixedBytesDecode.lean`) with the register
 of the receiver reload as a parameter: `rX` after `callq runtime.makeslice` (rdx at all 14 development
 sites), `rY` after `callq runtime.memmove` (rdx at 13 sites, rax at SyncCommitteeMessage.BlockRoot, a field
-that the generator missed in the hold-out test of PendingConsolidation and SyncCommitteeMessage). Both blocks are WINDOWS (`Codec/NopWindow.lean`): a `nop` may stand anywhere, for example before
+that the frozen generator missed on the hold-out types PendingConsolidation and SyncCommitteeMessage). Both blocks are WINDOWS (`Codec/NopWindow.lean`): a `nop` may stand anywhere, for example before
 `callq runtime.makeslice`. `jl` is the index of the label `lff`, `jm` the index of the
 `callq runtime.memmove` (its return address stays in the return slot), `e` the end of the second window.
 

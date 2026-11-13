@@ -7,8 +7,8 @@ A new file in the pattern of `lists_and_vectors_link.py`. Existing scripts are n
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   data_columns_encoder_link.py callgraph <objdump> <out.json>      call targets of the candidates with contract class
   data_columns_encoder_link.py filter <outdir> <objdump> <elf> <nm> <outdir>/target.objdump of the target (+ ELF/nm links)
-  data_columns_encoder_link.py data <outdir> <cp-linkdir> <t3-linkdir>
-                                                 after `conv.py <outdir>/target.objdump
+  data_columns_encoder_link.py data <outdir> <checkpoint-link-dir> <indexed-attestation-link-dir>
+                                                 after `convert_objdump.py <outdir>/target.objdump
                                                  <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                  write <outdir>/data/*.data (link/data.py's code)
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
@@ -60,13 +60,13 @@ def filt(outdir, objdump, elf, nm):
     return checkpoint_and_epoch_link.filt(outdir, objdump, elf, nm)
 
 
-def write_data(outdir, cpdir, t3dir):
+def write_data(outdir, checkpoint_dir, indexed_attestation_dir):
     spec = importlib.util.spec_from_file_location("data", LINK / "data.py")
     data = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(data)
     V = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1"
     m = checkpoint_and_epoch_link.ins(outdir, f"{V}.DataColumnsByRootIdentifier.MarshalSSZTo")
-    cm = checkpoint_and_epoch_link.ins(cpdir, f"{checkpoint_and_epoch_link.CP}.MarshalSSZTo")
+    cm = checkpoint_and_epoch_link.ins(checkpoint_dir, f"{checkpoint_and_epoch_link.CHECKPOINT_SYMBOL}.MarshalSSZTo")
     lea = r"lea ([A-Za-z0-9_.]+)(?:\+(\d+))?\(%rip\),%rsi"
     gs = [i for i, l in enumerate(m) if l == "callq runtime.growslice"]
     assert len(gs) == 3, gs
@@ -78,8 +78,8 @@ def write_data(outdir, cpdir, t3dir):
     errbl = checkpoint_and_epoch_link.operand(m, r"mov (ssz\.ErrBytesLength)\(%rip\),%rdi()")
     assert errbl == checkpoint_and_epoch_link.operand(cm, r"mov ([A-Za-z0-9_.]+)\(%rip\),%rdi()"), errbl
     errtb = checkpoint_and_epoch_link.operand(m, r"mov (ssz\.ErrListTooBig)\(%rip\),%rdi()")
-    t3 = (pathlib.Path(t3dir) / "data" / "sszErrListTooBig.data").read_text()
-    assert f"\nat {errtb[0]} 0\n" in t3, t3
+    with_indexed_attestation = (pathlib.Path(indexed_attestation_dir) / "data" / "sszErrListTooBig.data").read_text()
+    assert f"\nat {errtb[0]} 0\n" in with_indexed_attestation, with_indexed_attestation
     its = [("typeUint8", u8[0], u8[1], 48, data.ABI_TYPE_WORDS),
            (None, errbl[0], 0, 0, []),
            (None, errtb[0], 0, 0, [])]

@@ -1,18 +1,18 @@
 [
  {
-  "id": "validator-balance-fast-control",
+  "id": "validator-balance-encode-generated-fast-control",
   "module": "Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.ValidatorBalance.Encode.generated_fast",
   "kind": "control"
  },
  {
-  "id": "checkpoint-stmt-control",
+  "id": "checkpoint-encode-generated-statement-control",
   "module": "Prysm/Checkpoint/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.Checkpoint.Encode.generated_statement",
   "kind": "control"
  },
  {
-  "id": "historical-summary-encode-generated-epi-epi-control",
+  "id": "historical-summary-encode-generated-epi-control",
   "module": "Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.HistoricalSummary.Encode.generated_epi",
   "kind": "control",
@@ -21,7 +21,7 @@
   "code_ns": "Prysm.HistoricalSummary.Code"
  },
  {
-  "id": "deposit-message-f0-control",
+  "id": "deposit-message-encode-generated-f0-control",
   "module": "Prysm/DepositMessage/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.DepositMessage.Encode.generated_f0",
   "kind": "control",
@@ -30,7 +30,7 @@
   "code_ns": "Prysm.DepositMessage.Code"
  },
  {
-  "id": "validator-balance-fast-stmt-hcap",
+  "id": "validator-balance-encode-generated-fast-statement-hcap-16-to-8",
   "module": "Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.ValidatorBalance.Encode.generated_fast",
   "kind": "stmt",
@@ -38,7 +38,7 @@
   "new": "(hcap : s.regs.rcx.toNat + 8 ≤ s.regs.rdi.toNat)"
  },
  {
-  "id": "deposit-message-f0-stmt-len",
+  "id": "deposit-message-encode-generated-f0-statement-hb0-48-to-32",
   "module": "Prysm/DepositMessage/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.DepositMessage.Encode.generated_f0",
   "kind": "stmt",
@@ -46,7 +46,7 @@
   "new": "(hb0 : b0.length = 32)"
  },
  {
-  "id": "historical-summary-epi-stmt-size",
+  "id": "historical-summary-encode-generated-epi-statement-rbx-64-to-72",
   "module": "Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.HistoricalSummary.Encode.generated_epi",
   "kind": "stmt",
@@ -54,7 +54,7 @@
   "new": "st.data.regs.rbx.toNat = s.regs.rcx.toNat + 72"
  },
  {
-  "id": "pending-deposit-fast-stmt-rsp",
+  "id": "pending-deposit-encode-generated-fast-statement-rsp-8-to-16",
   "module": "Prysm/PendingDeposit/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.PendingDeposit.Encode.generated_fast",
   "kind": "stmt",
@@ -62,7 +62,7 @@
   "new": "st.data.regs.rsp = s.regs.rsp + 16"
  },
  {
-  "id": "eth1-data-stmt-other-hand",
+  "id": "eth1-data-encode-generated-statement-statement-type-eth1-data-to-beacon-block-header",
   "module": "Prysm/Eth1Data/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.Eth1Data.Encode.generated_statement",
   "kind": "stmt",
@@ -70,7 +70,7 @@
   "new": "type_of% (@Prysm.BeaconBlockHeader.Encode.fast_path ‹Host›)"
  },
  {
-  "id": "validator-balance-ir-goff",
+  "id": "validator-balance-encode-generated-fast-statement-v1-16-to-24",
   "module": "Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.ValidatorBalance.Encode.generated_fast",
   "kind": "stmt",
@@ -78,7 +78,7 @@
   "new": "\n      ⋆ Eq (v1.At (s.regs.rax.toBitVec + 24))"
  },
  {
-  "id": "deposit-message-ir-ssz-off",
+  "id": "deposit-message-encode-generated-fast-statement-b1-48-to-40",
   "module": "Prysm/DepositMessage/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.DepositMessage.Encode.generated_fast",
   "kind": "stmt",
@@ -86,7 +86,7 @@
   "new": "Eq (b1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 40))"
  },
  {
-  "id": "pending-partial-withdrawal-ir-order",
+  "id": "pending-partial-withdrawal-encode-generated-fast-statement-v1-v1-to-v2",
   "module": "Prysm/PendingPartialWithdrawal/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Encode.generated_fast",
   "kind": "stmt",
@@ -94,7 +94,7 @@
   "new": "Eq (v2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 8))"
  },
  {
-  "id": "validator-balance-kind-fields",
+  "id": "validator-balance-encode-generated-fast-kind-statement-u64-u64-to-bytes-32",
   "module": "Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.ValidatorBalance.Encode.generated_fast_kind",
   "kind": "stmt",
@@ -102,7 +102,7 @@
   "new": "[.u64, .bytes 32]"
  },
  {
-  "id": "validator-balance-kind",
+  "id": "validator-balance-encode-generated-f0-kind-statement-8-to-9",
   "module": "Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.ValidatorBalance.Encode.generated_f0_kind",
   "kind": "stmt",
@@ -110,7 +110,7 @@
   "new": "⟨9, 0,"
  },
  {
-  "id": "checkpoint-kind-layout",
+  "id": "checkpoint-encode-generated-fast-kind-statement-prysm-checkpoint-to-eth1-data",
   "module": "Prysm/Checkpoint/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.Checkpoint.Encode.generated_fast_kind",
   "kind": "stmt",
@@ -118,7 +118,7 @@
   "new": "Prysm.Eth1Data.encodeLayout"
  },
  {
-  "id": "beacon-block-header-kind-fields",
+  "id": "beacon-block-header-encode-generated-epi-kind-statement-u64-32-to-48",
   "module": "Prysm/BeaconBlockHeader/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.generated_epi_kind",
   "kind": "stmt",
@@ -126,7 +126,7 @@
   "new": "[.u64, .u64, .bytes 32, .bytes 32, .bytes 48]"
  },
  {
-  "id": "validator-balance-f1-code-store",
+  "id": "validator-balance-encode-generated-f1-code-mov-0x8-rdx-rbx-1-to-0x10-rdx-rbx-1",
   "module": "Prysm/ValidatorBalance/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.ValidatorBalance.Encode.generated_f1",
   "kind": "code",
@@ -137,7 +137,7 @@
   "code_ns": "Prysm.ValidatorBalance.Code"
  },
  {
-  "id": "deposit-message-f0-code-len",
+  "id": "deposit-message-encode-generated-f0-code-cmpq-0x30-to-0x20",
   "module": "Prysm/DepositMessage/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.DepositMessage.Encode.generated_f0",
   "kind": "code",
@@ -148,7 +148,7 @@
   "code_ns": "Prysm.DepositMessage.Code"
  },
  {
-  "id": "historical-summary-encode-generated-epi-epi-code-ft",
+  "id": "historical-summary-encode-generated-epi-code-lea-0x60-rsp-to-0x58-rsp",
   "module": "Prysm/HistoricalSummary/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.HistoricalSummary.Encode.generated_epi",
   "kind": "code",
@@ -159,7 +159,7 @@
   "code_ns": "Prysm.HistoricalSummary.Code"
  },
  {
-  "id": "deposit-data-f3-code-size",
+  "id": "deposit-data-encode-generated-f3-code-mov-0x60-to-0x30",
   "module": "Prysm/Deposit_Data/GeneratedEncodeFastPath.lean",
   "theorem": "Prysm.Deposit_Data.Encode.generated_f3",
   "kind": "code",

@@ -32,7 +32,7 @@ The design principles are in `../../README.md`.
 | `checks/callgraph.py` and the `callgraph` mode of `checks/*_link.py` | A filtered disassembly | `callgraph*.json` files. The tree holds none of them. `checks/checkpoint_and_epoch_link.py` imports the function list of `checks/callgraph.py` |
 | `checks/*_differential.py` | Nothing, or a Go output file | Go differential cases, and their comparison with the Go output |
 | `frozen/build_lists.py` | The inventory and the generated Go | `frozen/THEOREMS.json`, `frozen/ASSUMPTIONS.json` |
-| `kraken-parser/summ.py` | A log of `kraken-parser/KParse.lean` | `prysm/go1.26.10/kparse.json`: which functions the Kraken parser reads |
+| `kraken-parser/summarize_parser_log.py` | A log of `kraken-parser/ParserRun.lean` | `prysm/go1.26.10/kparse.json`: which functions the Kraken parser reads |
 | `prysm-gen.sh`, `prysm-elf.sh` | A Prysm tree and the generator binary | Generated Go, the IR and the Prysm ELF (needs Go) |
 
 The tools for the 24 other flat types are in `prysm/go1.26.10/evidence/flat-types/tools/` and `prysm/go1.26.10/evidence/flat-types/runs/run_generators.sh`.
@@ -82,9 +82,9 @@ A kind identity is not a witness. It does not show that the premises can hold.
 
 ## 5. The independent `Desc` checker
 
-`desccheck/DescCheck.lean` is a Lean program that runs EthLib functions. It shares no code with `desc/producer.py`.
+`desc-checker/DescChecker.lean` is a Lean program that runs EthLib functions. It shares no code with `desc/producer.py`.
 So a defect in the producer or in the IR does not also hide in the checker.
-`desc/run_desccheck.sh` runs it (needs Lean). The result is `desc/results/main.result.json`.
+`desc/run_desc_checker.sh` runs it (needs Lean). The result is `desc/results/main.result.json`.
 That result and the review sources `desc/review/*` are records of earlier runs, and they keep the earlier names of the
 `Spec` declarations (for example `Spec.scDesc`, `Fv1.luDesc`). `desc/spec-names-old-new.tsv` gives the present name of
 each earlier name. A new checker run writes the present names.
@@ -99,8 +99,8 @@ Thus the Prysm theorems use a hand `Desc` written from consensus-specs, and a th
 ## 6. The axioms gate
 
 `checks/axioms_gate.py` is the one axioms gate. It covers every declaration of every Lean library of the project.
-`e2e/axioms_gate.py` only forwards to it: the CI workflow `.github/workflows/fv-lean.yaml` names that earlier path, and the workflow file
-cannot be changed with the access of this session. When the workflow names `gen/checks/axioms_gate.py`, delete `gen/e2e/`.
+`e2e/axioms_gate.py` only forwards to it, because the CI workflow `.github/workflows/fv-lean.yaml` names that earlier path
+(lines 47 and 53). When the workflow names `gen/checks/axioms_gate.py`, delete `gen/e2e/`.
 
 ```sh
 python3 -I -B fv/kraken/gen/checks/axioms_gate.py run <scratch>/gate.json <scratch>/dump.tsv
@@ -145,7 +145,7 @@ These run without Lean, Go or the Prysm ELF:
 - `tools/duplicate_statements.py`, on a dump of the axioms gate (the dump itself needs Lean).
 - `python3 -B fv/kraken/link/data.py --check fv/kraken/link/out`.
 - `regen_check.sh` with `generator/generator.py`, `checks/desc_to_lean.py`, `checks/list_desc_to_lean.py`, `checks/layout.py` and `checks/attestation_data_layout.py`.
-- `type_inventory.py reduce` and `build`, `type_list_document.py`, `type_scope.py`, `keepalive.py`, `kraken-parser/summ.py`.
+- `type_inventory.py reduce` and `build`, `type_list_document.py`, `type_scope.py`, `keepalive.py`, `kraken-parser/summarize_parser_log.py`.
 - `frozen/test_frozen.py <repo-root> <scratch>`, which runs `frozen/build_lists.py` and compares the two frozen lists.
 - `desc/test_desc.py prepare` writes the `Desc` files. The checker run after it needs Lean.
 
@@ -166,6 +166,9 @@ These generated outputs do not reproduce from the tracked tree today:
 
 Other limits:
 
+- `frozen/THEOREMS.json` is a record of the frozen theorem lists. It names theorems of the retired test-target library
+  (for example `lu_accept_main` and `WitLuComp`). These theorems have no present name: the step that retired the
+  library deleted them.
 - The specification and witness files of five flat types (HistoricalSummary, SyncAggregatorSelectionData, SigningData, ValidatorBalance, VoluntaryExit) have no tracked generator script.
 - The commands of 12 generated files are not in `generator/gen.sh`. Their headers give the commands.
 - `prysm/go1.26.10/evidence/flat-types/runs/run_generators.sh` calls a job wrapper that is not tracked. Run its `generator.py` commands directly.

@@ -6,7 +6,7 @@ import Prysm.Slot.DecodeAccept
 /-!
 # A field decoded by a call to another type's `UnmarshalSSZ` (uint64 overlay callee)
 
-Added after the hold-out test of Deposit_Data and PendingPartialWithdrawal: the generator did not cover the fields that a callee
+Added after the frozen generator ran on the hold-out types Deposit_Data and PendingPartialWithdrawal: the generator did not cover the fields that a callee
 decodes. Go 1.26.10 compiles
 `if err = x.F.UnmarshalSSZ(buf[s:s+8]); err != nil { ... }` for an overlay type of `uint64` (Slot,
 CommitteeIndex, ValidatorIndex, Epoch) to an argument set-up, then

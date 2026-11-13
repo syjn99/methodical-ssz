@@ -6,7 +6,7 @@ import Runtime.CopyModel
 # Encoder on a decoded-form receiver (NOT the machine-level composition)
 
 This theorem starts at the encoder entry and
-does not run the decoder; it is not `compose_hupd`. The machine-level
+does not run the decoder; it is not the obligation `compose_hupd` of `gen/frozen/THEOREMS.json` (a record of the retired test target). The machine-level
 composition (decoder entry → `Decode.accept` → encoder call) is
 `DecodeThenEncode.round_trip` in `Prysm.Checkpoint.DecodeThenEncode`, not this file.
 

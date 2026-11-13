@@ -1,10 +1,10 @@
 # negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
-dcd-control-size	data-columns-by-root-identifier-control-size
-dcd-control-iter	data-columns-by-root-identifier-decode-iter-control-iter
-dcd-rsize-35	data-columns-by-root-identifier-rsize-35
-dcd-roff-37	data-columns-by-root-identifier-roff-37
-dcd-accept-align16	data-columns-by-root-identifier-accept-align16
-dcd-accept-max127	data-columns-by-root-identifier-accept-max127
-dcd-iter-store8	data-columns-by-root-identifier-iter-store8
-dcd-stmt-size37	data-columns-by-root-identifier-stmt-size37
-dcd-stmt-heap31	data-columns-by-root-identifier-stmt-heap31
+dcd-control-size	data-columns-by-root-identifier-decode-reject-size-control
+dcd-control-iter	data-columns-by-root-identifier-decode-iter-control
+dcd-rsize-35	data-columns-by-root-identifier-decode-reject-size-code-cmp-0x24-to-0x23
+dcd-roff-37	data-columns-by-root-identifier-decode-reject-offset-code-cmp-0x24-to-0x25
+dcd-accept-align16	data-columns-by-root-identifier-decode-accept-code-test-0x7-to-0xf
+dcd-accept-max127	data-columns-by-root-identifier-decode-accept-code-cmp-0x80-to-0x7f
+dcd-iter-store8	data-columns-by-root-identifier-decode-iter-code-mov-r8-r10-8-to-0x8-r8-r10-8
+dcd-stmt-size37	data-columns-by-root-identifier-decode-reject-size-statement-hlen-36-to-37
+dcd-stmt-heap31	data-columns-by-root-identifier-decode-accept-statement-heap-32-to-31

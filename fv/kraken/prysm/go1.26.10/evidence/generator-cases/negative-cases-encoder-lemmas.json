@@ -1,12 +1,12 @@
 [
  {
-  "id": "beacon-block-header-tie-control",
+  "id": "beacon-block-header-encode-fast-path-is-kind-any-frame-control",
   "module": "Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path_is_kind_any_frame",
   "kind": "control"
  },
  {
-  "id": "beacon-block-header-tie-kind-field",
+  "id": "beacon-block-header-encode-fast-path-is-kind-any-frame-statement-u64-32-to-48",
   "module": "Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.fast_path_is_kind_any_frame",
   "kind": "stmt",
@@ -14,7 +14,7 @@
   "new": "[.u64, .u64, .bytes 32, .bytes 32, .bytes 48]"
  },
  {
-  "id": "beacon-block-header-tie-kind-layout",
+  "id": "beacon-block-header-encode-fast-path-is-kind-any-frame-statement-prysm-eth1-data-to-beacon-block-header",
   "module": "Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean",
   "theorem": "Prysm.Eth1Data.Encode.fast_path_is_kind_any_frame",
   "kind": "stmt",
@@ -22,13 +22,13 @@
   "new": "Prysm.Eth1Data.Code.marshalSSZTo Prysm.BeaconBlockHeader.encodeLayout"
  },
  {
-  "id": "checkpoint-encode-fast-path-of-kind-tie-control",
+  "id": "checkpoint-encode-fast-path-of-kind-control",
   "module": "Prysm/Checkpoint/EncodeFastPathKindInstances.lean",
   "theorem": "Prysm.Checkpoint.Encode.fast_path_of_kind",
   "kind": "control"
  },
  {
-  "id": "checkpoint-encode-fast-path-of-kind-tie-stmt-field",
+  "id": "checkpoint-encode-fast-path-of-kind-statement-encode-layout-32-to-48",
   "module": "Prysm/Checkpoint/EncodeFastPathKindInstances.lean",
   "theorem": "Prysm.Checkpoint.Encode.fast_path_of_kind",
   "kind": "stmt",
@@ -36,13 +36,13 @@
   "new": "encodeLayout [.u64, .bytes 48]"
  },
  {
-  "id": "codec-encode-steps-st-jae-control",
+  "id": "codec-encode-steps-step-cmp-jae-taken-control",
   "module": "Codec/EncodeSteps.lean",
   "theorem": "step_cmp_jae_taken",
   "kind": "control"
  },
  {
-  "id": "codec-encode-steps-st-jae-stmt-le",
+  "id": "codec-encode-steps-step-cmp-jae-taken-statement-hle-none-to-none",
   "module": "Codec/EncodeSteps.lean",
   "theorem": "step_cmp_jae_taken",
   "kind": "stmt",
@@ -50,7 +50,7 @@
   "new": "(hle : (s.regs.get64 rC).toNat ≤ (s.regs.get64 rN).toNat)"
  },
  {
-  "id": "codec-encode-steps-st-jb-stmt-le",
+  "id": "codec-encode-steps-step-cmp-jb-not-taken-statement-hle-none-to-none",
   "module": "Codec/EncodeSteps.lean",
   "theorem": "step_cmp_jb_not_taken",
   "kind": "stmt",
@@ -58,7 +58,7 @@
   "new": "(hle : (s.regs.get64 rC).toNat ≤ (s.regs.get64 rN).toNat)"
  },
  {
-  "id": "codec-encode-steps-st-len-stmt-val",
+  "id": "codec-encode-steps-step-length-check-statement-hv-imm-to-disp",
   "module": "Codec/EncodeSteps.lean",
   "theorem": "step_length_check",
   "kind": "stmt",
@@ -66,13 +66,13 @@
   "new": "(hv : BitVec.ofInt 64 (Int.ofBytes bs) = disp.toBitVec)"
  },
  {
-  "id": "codec-encode-steps-st-call-control",
+  "id": "codec-encode-steps-encode-memmove-call-control",
   "module": "Codec/EncodeSteps.lean",
   "theorem": "encode_memmove_call",
   "kind": "control"
  },
  {
-  "id": "codec-encode-steps-st-call-stmt-len",
+  "id": "codec-encode-steps-encode-memmove-call-statement-hrcx-none-to-1",
   "module": "Codec/EncodeSteps.lean",
   "theorem": "encode_memmove_call",
   "kind": "stmt",
@@ -80,13 +80,13 @@
   "new": "(hrcx : s.regs.rcx.toNat = src.length + 1)"
  },
  {
-  "id": "codec-encode-frame-test-ft-control",
+  "id": "codec-encode-frame-test-frame50-pointer-apart-control",
   "module": "Codec/EncodeFrameTest.lean",
   "theorem": "frame50_pointer_apart",
   "kind": "control"
  },
  {
-  "id": "codec-encode-frame-test-ft-stmt-len",
+  "id": "codec-encode-frame-test-frame50-pointer-apart-statement-ho-64-to-16",
   "module": "Codec/EncodeFrameTest.lean",
   "theorem": "frame50_pointer_apart",
   "kind": "stmt",
@@ -94,7 +94,7 @@
   "new": "(ho : 16 ≤ o.length)"
  },
  {
-  "id": "codec-encode-frame-test-ft-far-stmt",
+  "id": "codec-encode-frame-test-separated-chunks-apart-statement-ys-none-to-1",
   "module": "Codec/EncodeFrameTest.lean",
   "theorem": "separated_chunks_apart",
   "kind": "stmt",
@@ -102,13 +102,13 @@
   "new": "ys.length + 1 ≤ (a - b).toNat ∧"
  },
  {
-  "id": "validator-balance-f0-control",
+  "id": "validator-balance-encode-example-f0-control",
   "module": "Prysm/ValidatorBalance/EncodeFastPathExample.lean",
   "theorem": "Prysm.ValidatorBalance.Encode.example_f0",
   "kind": "control"
  },
  {
-  "id": "validator-balance-f0-stmt-out",
+  "id": "validator-balance-encode-example-f0-statement-v0-v0-to-v1",
   "module": "Prysm/ValidatorBalance/EncodeFastPathExample.lean",
   "theorem": "Prysm.ValidatorBalance.Encode.example_f0",
   "kind": "stmt",
@@ -116,7 +116,7 @@
   "new": "Eq (v1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))"
  },
  {
-  "id": "validator-balance-fast-stmt-cap",
+  "id": "validator-balance-encode-example-fast-statement-hcap-16-to-8",
   "module": "Prysm/ValidatorBalance/EncodeFastPathExample.lean",
   "theorem": "Prysm.ValidatorBalance.Encode.example_fast",
   "kind": "stmt",
@@ -124,7 +124,7 @@
   "new": "(hcap : s.regs.rcx.toNat + 8 ≤ s.regs.rdi.toNat)"
  },
  {
-  "id": "validator-balance-fast-kind-fields",
+  "id": "validator-balance-encode-example-fast-kind-statement-prysm-u64-to-bytes-8",
   "module": "Prysm/ValidatorBalance/EncodeFastPathExample.lean",
   "theorem": "Prysm.ValidatorBalance.Encode.example_fast_kind",
   "kind": "stmt",
@@ -132,7 +132,7 @@
   "new": "Prysm.ValidatorBalance.Encode.example_layout [.u64, .bytes 8]"
  },
  {
-  "id": "validator-balance-head-code-frame",
+  "id": "validator-balance-encode-example-head-code-sub-0x68-to-0x70",
   "module": "Prysm/ValidatorBalance/EncodeFastPathExample.lean",
   "theorem": "Prysm.ValidatorBalance.Encode.example_head",
   "kind": "code",
@@ -145,13 +145,13 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.ValidatorBalance.MarshalSSZTo.S"
  },
  {
-  "id": "historical-summary-encode-example-epi-epi-control",
+  "id": "historical-summary-encode-example-epi-control",
   "module": "Prysm/HistoricalSummary/EncodeFastPathExample.lean",
   "theorem": "Prysm.HistoricalSummary.Encode.example_epi",
   "kind": "control"
  },
  {
-  "id": "historical-summary-encode-example-epi-epi-code-ft",
+  "id": "historical-summary-encode-example-epi-code-lea-0x60-rsp-to-0x40-rsp",
   "module": "Prysm/HistoricalSummary/EncodeFastPathExample.lean",
   "theorem": "Prysm.HistoricalSummary.Encode.example_epi",
   "kind": "code",
@@ -164,7 +164,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.HistoricalSummary.MarshalSSZTo.S"
  },
  {
-  "id": "beacon-block-header-f2-code-cap",
+  "id": "beacon-block-header-encode-example-f2-code-cmp-r9-to-r8",
   "module": "Prysm/BeaconBlockHeader/EncodeFastPathExample.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.example_f2",
   "kind": "code",
@@ -177,7 +177,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
  },
  {
-  "id": "beacon-block-header-stmt-control",
+  "id": "beacon-block-header-encode-example-fast-same-statement-control",
   "module": "Prysm/BeaconBlockHeader/EncodeFastPathExample.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.example_fast_same_statement",
   "kind": "control"

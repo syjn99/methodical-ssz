@@ -13,7 +13,7 @@ From here the code is the baseline's inlined Epoch append and root append; both 
 - `tail_fit` (`len(Root) = 32`, `L + 40 ≤ C`): directives 48–59 (`jae L_13e` taken), 72–80
   (`jae L_19c` taken), 94–110: epoch bytes at `b[L..L+8]`, `memmove(b + L + 8, Root.ptr, 32)`,
   return `(b, L + 40, C, nil)`.
-- `tail_rej` (`len(Root) ≠ 32`, `L + 8 ≤ C`): directives 48–59, 72–77 (`jne L_1e7` taken), 111–119:
+- `Encode.tail_reject` (`len(Root) ≠ 32`, `L + 8 ≤ C`): directives 48–59, 72–77 (`jne L_1e7` taken), 111–119:
   the two words of `ssz.ErrBytesLength`, `rax = rbx = rcx = 0`. The epoch bytes are in `b[L..L+8]`.
 
 The stack temp of the inlined `AppendUint64` is rsp0 − 64 … rsp0 − 33 (as in the baseline);

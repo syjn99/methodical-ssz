@@ -5,7 +5,7 @@ import Codec.Segment.SizeRejectInstances
 import Prysm.Deposit.DecodeRejectSize
 import Prysm.Deposit.DecodeAccept
 
-/-! Hand list for `gen/checks/segaxioms_gate.py` ("must exist" names; every name also gets the axiom check). -/
+/-! Hand list for `gen/checks/axioms_gate.py` ("must exist" names; every name also gets the axiom check). -/
 
 #print axioms Codec.Segment.flat_len
 #print axioms Codec.Segment.in_split

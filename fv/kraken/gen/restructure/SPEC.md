@@ -132,7 +132,8 @@ These decisions are binding for every step.
 1. The structure of the abstract value of a type (old `P<T>`, for example `PCp`, `PAd`) is `SszValue`.
    Its encoder function (old `p<t>Enc`) is `SszValue.encode`.
    Full name: `Prysm.Checkpoint.SszValue`.
-   Lemma names derived from the encoder keep the word `encode` (`encode_size`, `encode_roundtrip`).
+   Lemma names derived from the encoder use the word `encode` (`SszValue.encode_size`,
+   `Prysm.DataColumnsByRootIdentifier.encode_roundtrip`).
 2. A callee-style function specification of a method (old names such as `EpUAccC`) is
    `Decode.accept_function_spec` or `Encode.fast_path_function_spec`.
    The lemma that it holds gets the suffix `_holds`.
@@ -176,7 +177,8 @@ These decisions are binding for every step.
     The reason is the `simp` order pitfall in `TOOL-NOTES.md` section 5.
 11. The proofs of a namespace can use a bare name for another declaration.
     A new short name in that namespace must not be equal to such a name.
-    Examples: the EthLib name `serialize`, the general lemma `accepted_is_enc`, the named argument `enc`.
+    Examples: the EthLib name `serialize`, the general lemma `accepted_input_is_encoding` (earlier `accepted_is_enc`),
+    the named argument `enc`.
     Also avoid a local variable name or a tactic name.
     Examples: `p0` became `input_pointer_mask`, and `split` became `bytes_split`.
 

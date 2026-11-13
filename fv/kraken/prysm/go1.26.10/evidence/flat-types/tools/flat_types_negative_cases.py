@@ -8,10 +8,31 @@ DEC = ['DepositRequest', 'BuilderDepositRequest', 'BeaconBlocksByRangeRequest', 
        'ExecutionPayloadEnvelopesByRangeRequest', 'PartialDataColumnGroupID', 'ValidatorIdentity']
 ENC = ['BeaconBlocksByRangeRequest', 'BuilderDepositRequest', 'BuilderPreferences', 'BlobSidecarsByRangeRequest',
        'DepositRequest', 'ExecutionPayloadEnvelopesByRangeRequest', 'PartialDataColumnGroupID', 'ValidatorIdentity']
-# the negative case id of a type: its Go type name in kebab case
-def kebab(t):
-    return re.sub(r'(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])', '-', t).replace('_', '-').lower()
+# the negative case id: <Go type in kebab case>-<theorem without its type namespace>-<kind>[-<mutated text>]
+# (the rule of all negative case files)
+STOP = {'st', 'data', 'regs', 's', 'Eq', 'toBitVec', 'At', 'toList', 'bs', 'h', 'toNat', 'Int', 'toBytes', 'toInt',
+        'BitVec', 'ofNat', 'UInt64', 'List', 'UInt8', 'the', 'rip'}
 
+
+def kebab(s):
+    s = re.sub(r'(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])', '-', s)
+    return re.sub(r'[^a-z0-9]+', '-', s.replace('_', '-').lower()).strip('-')
+
+
+def case_id(mod, thm, kind, old=None, new=None):
+    t = thm.split('.')[2:]
+    out = f"{kebab(mod.split('/')[1])}-{kebab('-'.join(t))}-{'control' if kind == 'control' else 'statement'}"
+    if kind != 'control':
+        a, b = re.findall(r'[A-Za-z0-9]+', old), re.findall(r'[A-Za-z0-9]+', new)
+        rem, add = list(a), list(b)
+        for x in a:
+            if x in add:
+                add.remove(x)
+                rem.remove(x)
+        first = next((x for x in a if x not in STOP and not x.isdigit()), '')
+        r, d = '-'.join(rem[:3]) or 'none', '-'.join(add[:3]) or 'none'
+        out += '-' + kebab(f'{first}-{r}-to-{d}' if first else f'{r}-to-{d}')
+    return re.sub(r'-+', '-', out)[:120].strip('-')
 
 def stmt_of(path, thm):
     s = open(os.path.join(L, path)).read()
@@ -27,39 +48,37 @@ def stmt_of(path, thm):
     return s[i:j]
 
 
-def case(cid, mod, thm, old=None, new=None):
+def case(mod, thm, old=None, new=None):
     if old is None:
-        return dict(id=cid, module=mod, theorem=thm, kind='control')
+        return dict(id=case_id(mod, thm, 'control'), module=mod, theorem=thm, kind='control')
     body = stmt_of(mod, thm)
-    assert body.count(old) == 1, (cid, body.count(old))
-    return dict(id=cid, module=mod, theorem=thm, kind='stmt', old=old, new=new)
+    assert body.count(old) == 1, (thm, body.count(old))
+    return dict(id=case_id(mod, thm, 'stmt', old, new), module=mod, theorem=thm, kind='stmt', old=old, new=new)
 
 
 C = []
 for T in DEC:
-    x = kebab(T)
     N = int(re.search(r'\(hlen : s\.regs\.rcx = (\d+)\)', stmt_of(f'Prysm/{T}/GeneratedDecodeAccept.lean', f'Prysm.{T}.Decode.generated_accept')).group(1))
-    C.append(case(f'{x}-speck-control', f'Prysm/{T}/DecodeSpec.lean', f'Prysm.{T}.Decode.accept_spec'))
-    C.append(case(f'{x}-accept-rax', f'Prysm/{T}/GeneratedDecodeAccept.lean', f'Prysm.{T}.Decode.generated_accept',
+    C.append(case(f'Prysm/{T}/DecodeSpec.lean', f'Prysm.{T}.Decode.accept_spec'))
+    C.append(case(f'Prysm/{T}/GeneratedDecodeAccept.lean', f'Prysm.{T}.Decode.generated_accept',
                   'st.data.regs.rax = 0 ∧', 'st.data.regs.rax = 1 ∧'))
-    C.append(case(f'{x}-reject-rax', f'Prysm/{T}/GeneratedDecodeAccept.lean', f'Prysm.{T}.Decode.generated_reject',
+    C.append(case(f'Prysm/{T}/GeneratedDecodeAccept.lean', f'Prysm.{T}.Decode.generated_reject',
                   'st.data.regs.rax = e0', 'st.data.regs.rax = e1'))
-    C.append(case(f'{x}-speck-hlen', f'Prysm/{T}/DecodeSpec.lean', f'Prysm.{T}.Decode.accept_spec',
+    C.append(case(f'Prysm/{T}/DecodeSpec.lean', f'Prysm.{T}.Decode.accept_spec',
                   '(hlen : s.regs.rcx.toNat = bsA.size)', '(hlen : s.regs.rcx.toNat = bsA.size + 1)'))
-    C.append(case(f'{x}-wita-rax', f'Prysm/{T}/WitnessGeneratedDecodeAccept.lean', f'Prysm.{T}.Witness.GeneratedDecodeAccept.runs',
+    C.append(case(f'Prysm/{T}/WitnessGeneratedDecodeAccept.lean', f'Prysm.{T}.Witness.GeneratedDecodeAccept.runs',
                   'st.data.regs.rax = 0 ∧', 'st.data.regs.rax = 1 ∧'))
 for T in ENC:
-    x = kebab(T)
     sp = stmt_of(f'Prysm/{T}/GeneratedEncodeFastPathSpec.lean', f'Prysm.{T}.Encode.generated_fast_spec')
     n = int(re.search(r'\(hcap : s\.regs\.rcx\.toNat \+ (\d+) ≤ s\.regs\.rdi\.toNat\)', sp).group(1))
     wt = stmt_of(f'Prysm/{T}/WitnessGeneratedEncodeFastPath.lean', f'Prysm.{T}.Witness.GeneratedEncodeFastPath.runs_empty')
     rax = re.search(r'st\.data\.regs\.rax = (0x[0-9a-f]+)', wt).group(1)
-    C.append(case(f'{x}-espec-control', f'Prysm/{T}/GeneratedEncodeFastPathSpec.lean', f'Prysm.{T}.Encode.generated_fast_spec'))
-    C.append(case(f'{x}-fast-rax', f'Prysm/{T}/GeneratedEncodeFastPath.lean', f'Prysm.{T}.Encode.generated_fast',
+    C.append(case(f'Prysm/{T}/GeneratedEncodeFastPathSpec.lean', f'Prysm.{T}.Encode.generated_fast_spec'))
+    C.append(case(f'Prysm/{T}/GeneratedEncodeFastPath.lean', f'Prysm.{T}.Encode.generated_fast',
                   'st.data.regs.rax = s.regs.rbx', 'st.data.regs.rax = s.regs.rcx'))
-    C.append(case(f'{x}-espec-hcap', f'Prysm/{T}/GeneratedEncodeFastPathSpec.lean', f'Prysm.{T}.Encode.generated_fast_spec',
+    C.append(case(f'Prysm/{T}/GeneratedEncodeFastPathSpec.lean', f'Prysm.{T}.Encode.generated_fast_spec',
                   f'(hcap : s.regs.rcx.toNat + {n} ≤ s.regs.rdi.toNat)', f'(hcap : s.regs.rcx.toNat + {n - 8} ≤ s.regs.rdi.toNat)'))
-    C.append(case(f'{x}-ewit-rax', f'Prysm/{T}/WitnessGeneratedEncodeFastPath.lean', f'Prysm.{T}.Witness.GeneratedEncodeFastPath.runs_empty',
+    C.append(case(f'Prysm/{T}/WitnessGeneratedEncodeFastPath.lean', f'Prysm.{T}.Witness.GeneratedEncodeFastPath.runs_empty',
                   f'st.data.regs.rax = {rax}', 'st.data.regs.rax = 0x8'))
 json.dump(C, open(sys.argv[2], 'w'), indent=1, ensure_ascii=False)
 print(len(C), sum(1 for c in C if c['kind'] == 'control'))

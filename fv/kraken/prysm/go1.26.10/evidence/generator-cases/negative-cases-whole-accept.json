@@ -1,12 +1,12 @@
 [
  {
-  "id": "pending-deposit-tie-control",
+  "id": "pending-deposit-decode-accept-is-kind-any-frame-control",
   "module": "Prysm/PendingDeposit/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.PendingDeposit.Decode.accept_is_kind_any_frame",
   "kind": "control"
  },
  {
-  "id": "pending-deposit-tie-kind-jret",
+  "id": "pending-deposit-decode-accept-is-kind-any-frame-statement-layout-mixed-frame40-131-to-130",
   "module": "Prysm/PendingDeposit/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.PendingDeposit.Decode.accept_is_kind_any_frame",
   "kind": "stmt",
@@ -14,7 +14,7 @@
   "new": "(layoutMixedFrame40 [Prysm.Slot.Code.unmarshalSSZ] 130 2)"
  },
  {
-  "id": "pending-deposit-tie-kind-size",
+  "id": "pending-deposit-decode-accept-is-kind-any-frame-statement-bytes-96-to-48",
   "module": "Prysm/PendingDeposit/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.PendingDeposit.Decode.accept_is_kind_any_frame",
   "kind": "stmt",
@@ -22,7 +22,7 @@
   "new": "[.bytes 48, .bytes 32, .u64, .bytes 48, .u64]"
  },
  {
-  "id": "sync-committee-message-tie-kind-callees",
+  "id": "sync-committee-message-decode-accept-is-kind-any-frame-statement-prysm-none-to-none",
   "module": "Prysm/SyncCommitteeMessage/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.accept_is_kind_any_frame",
   "kind": "stmt",
@@ -30,7 +30,7 @@
   "new": "[Prysm.ValidatorIndex.Code.unmarshalSSZ, Prysm.Slot.Code.unmarshalSSZ] 141 1"
  },
  {
-  "id": "beacon-block-header-tie-kind-ptr",
+  "id": "beacon-block-header-decode-accept-is-kind-any-frame-statement-prysm-2-to-1",
   "module": "Prysm/BeaconBlockHeader/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.BeaconBlockHeader.Decode.accept_is_kind_any_frame",
   "kind": "stmt",
@@ -38,7 +38,7 @@
   "new": "[Prysm.Slot.Code.unmarshalSSZ, Prysm.ValidatorIndex.Code.unmarshalSSZ] 179 1"
  },
  {
-  "id": "pow-block-tie-kind-state",
+  "id": "pow-block-decode-accept-is-kind-any-frame-statement-layout-runtime-calls-false-to-true",
   "module": "Prysm/PowBlock/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.PowBlock.Decode.accept_is_kind_any_frame",
   "kind": "stmt",
@@ -46,7 +46,7 @@
   "new": "(layoutRuntimeCalls true 104 3)"
  },
  {
-  "id": "pending-consolidation-tie-kind-field",
+  "id": "pending-consolidation-decode-accept-is-kind-any-frame-statement-layout-callee-calls-none-to-u64",
   "module": "Prysm/PendingConsolidation/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.PendingConsolidation.Decode.accept_is_kind_any_frame",
   "kind": "stmt",
@@ -54,13 +54,13 @@
   "new": "(layoutCalleeCalls [Prysm.ValidatorIndex.Code.unmarshalSSZ] 56) [.u64, .u64, .u64]"
  },
  {
-  "id": "checkpoint-decode-accept-of-kind-tie-control",
+  "id": "checkpoint-decode-accept-of-kind-control",
   "module": "Prysm/Checkpoint/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.Checkpoint.Decode.accept_of_kind",
   "kind": "control"
  },
  {
-  "id": "checkpoint-decode-accept-of-kind-tie-stmt-field",
+  "id": "checkpoint-decode-accept-of-kind-statement-decode-layout-32-to-48",
   "module": "Prysm/Checkpoint/DecodeAcceptAnyFrameInstances.lean",
   "theorem": "Prysm.Checkpoint.Decode.accept_of_kind",
   "kind": "stmt",
@@ -68,13 +68,13 @@
   "new": "decodeLayout [.u64, .bytes 48]"
  },
  {
-  "id": "codec-field-frame-fc-j3-control",
+  "id": "codec-field-frame-frame-join-three-words-control",
   "module": "Codec/FieldFrame.lean",
   "theorem": "frame_join_three_words",
   "kind": "control"
  },
  {
-  "id": "codec-field-frame-fc-j3-stmt-off",
+  "id": "codec-field-frame-frame-join-three-words-statement-hz-16-to-24",
   "module": "Codec/FieldFrame.lean",
   "theorem": "frame_join_three_words",
   "kind": "stmt",
@@ -82,13 +82,13 @@
   "new": "(hz : x + 24 = z)"
  },
  {
-  "id": "codec-field-frame-fc-epi-control",
+  "id": "codec-field-frame-decepi-n-control",
   "module": "Codec/FieldFrame.lean",
   "theorem": "decepi_n",
   "kind": "control"
  },
  {
-  "id": "codec-field-frame-fc-epi-stmt-ra",
+  "id": "codec-field-frame-decepi-n-statement-h-ra-8-to-16",
   "module": "Codec/FieldFrame.lean",
   "theorem": "decepi_n",
   "kind": "stmt",
@@ -96,7 +96,7 @@
   "new": "(hRa : aFp + 16 = aRa)"
  },
  {
-  "id": "voluntary-exit-head-control",
+  "id": "voluntary-exit-decode-example-head-control",
   "module": "Prysm/VoluntaryExit/DecodeAcceptExample.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.example_head",
   "kind": "control",
@@ -106,7 +106,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S"
  },
  {
-  "id": "voluntary-exit-head-stmt-frame",
+  "id": "voluntary-exit-decode-example-head-statement-rsp-80-to-88",
   "module": "Prysm/VoluntaryExit/DecodeAcceptExample.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.example_head",
   "kind": "stmt",
@@ -114,7 +114,7 @@
   "new": "st.data.regs.rsp = { toBitVec := s.regs.rsp.toBitVec - 88 }"
  },
  {
-  "id": "voluntary-exit-head-stmt-spill",
+  "id": "voluntary-exit-decode-example-head-statement-rdi-32-to-24",
   "module": "Prysm/VoluntaryExit/DecodeAcceptExample.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.example_head",
   "kind": "stmt",
@@ -122,7 +122,7 @@
   "new": "Eq ((Int.toBytes 8 s.regs.rdi.toBitVec.toInt).At (s.regs.rsp.toBitVec + 24))"
  },
  {
-  "id": "voluntary-exit-head-code-spill",
+  "id": "voluntary-exit-decode-example-head-code-mov-0x70-rsp-to-0x68-rsp",
   "module": "Prysm/VoluntaryExit/DecodeAcceptExample.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.example_head",
   "kind": "code",
@@ -135,7 +135,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S"
  },
  {
-  "id": "voluntary-exit-head-code-size",
+  "id": "voluntary-exit-decode-example-head-code-cmp-0x10-to-0x18",
   "module": "Prysm/VoluntaryExit/DecodeAcceptExample.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.example_head",
   "kind": "code",
@@ -148,13 +148,13 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S"
  },
  {
-  "id": "voluntary-exit-f2-control",
+  "id": "voluntary-exit-decode-example-f2-control",
   "module": "Prysm/VoluntaryExit/DecodeAcceptExample.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.example_f2",
   "kind": "control"
  },
  {
-  "id": "voluntary-exit-decode-example-f2-f2-stmt-ret",
+  "id": "voluntary-exit-decode-example-f2-statement-host-56-to-57",
   "module": "Prysm/VoluntaryExit/DecodeAcceptExample.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.example_f2",
   "kind": "stmt",
@@ -162,7 +162,7 @@
   "new": "Eq ((Int.toBytes 8 (Host.addrOf (k + 57)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 88))"
  },
  {
-  "id": "voluntary-exit-f2-stmt-value",
+  "id": "voluntary-exit-decode-example-f2-statement-in1-in1-to-in0",
   "module": "Prysm/VoluntaryExit/DecodeAcceptExample.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.example_f2",
   "kind": "stmt",
@@ -170,7 +170,7 @@
   "new": "Eq (in0.At (s.regs.rax.toBitVec + 16))"
  },
  {
-  "id": "voluntary-exit-epi-stmt-rax",
+  "id": "voluntary-exit-decode-example-epi-statement-rax-0-to-1",
   "module": "Prysm/VoluntaryExit/DecodeAcceptExample.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.example_epi",
   "kind": "stmt",
@@ -178,13 +178,13 @@
   "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
  },
  {
-  "id": "voluntary-exit-decode-example-accept-acc-control",
+  "id": "voluntary-exit-decode-example-accept-control",
   "module": "Prysm/VoluntaryExit/DecodeAcceptExample.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.example_accept",
   "kind": "control"
  },
  {
-  "id": "voluntary-exit-decode-example-accept-acc-stmt-guard",
+  "id": "voluntary-exit-decode-example-accept-statement-hguard-88-to-80",
   "module": "Prysm/VoluntaryExit/DecodeAcceptExample.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.example_accept",
   "kind": "stmt",
@@ -192,7 +192,7 @@
   "new": "(hguard : guard.toNat + 80 < s.regs.rsp.toNat)"
  },
  {
-  "id": "voluntary-exit-acc-stmt-rcv",
+  "id": "voluntary-exit-decode-example-accept-statement-in1-16-to-24",
   "module": "Prysm/VoluntaryExit/DecodeAcceptExample.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.example_accept",
   "kind": "stmt",
@@ -200,13 +200,13 @@
   "new": "Eq (in1.At (s.regs.rax.toBitVec + 24))"
  },
  {
-  "id": "pending-deposit-decode-example-f3-f3-control",
+  "id": "pending-deposit-decode-example-f3-control",
   "module": "Prysm/PendingDeposit/DecodeAcceptExample.lean",
   "theorem": "Prysm.PendingDeposit.Decode.example_f3",
   "kind": "control"
  },
  {
-  "id": "pending-deposit-f3-stmt-reg",
+  "id": "pending-deposit-decode-example-f3-statement-st0-rdx-to-rsi",
   "module": "Prysm/PendingDeposit/DecodeAcceptExample.lean",
   "theorem": "Prysm.PendingDeposit.Decode.example_f3",
   "kind": "stmt",
@@ -214,7 +214,7 @@
   "new": "st0.data.regs.get64 Reg64.rsi = s.regs.rax.toBitVec"
  },
  {
-  "id": "pending-deposit-f1-stmt-heap",
+  "id": "pending-deposit-decode-example-f1-statement-heap-48-to-32",
   "module": "Prysm/PendingDeposit/DecodeAcceptExample.lean",
   "theorem": "Prysm.PendingDeposit.Decode.example_f1",
   "kind": "stmt",
@@ -222,7 +222,7 @@
   "new": "Heap (avail - 32)"
  },
  {
-  "id": "pending-deposit-f5-stmt-rcv",
+  "id": "pending-deposit-decode-example-f5-statement-sl-88-to-80",
   "module": "Prysm/PendingDeposit/DecodeAcceptExample.lean",
   "theorem": "Prysm.PendingDeposit.Decode.example_f5",
   "kind": "stmt",
@@ -230,7 +230,7 @@
   "new": "Eq (sl.At (s.regs.rax.toBitVec + 80))"
  },
  {
-  "id": "sync-committee-message-f4-stmt-zero",
+  "id": "sync-committee-message-decode-example-f4-statement-rsp-0-to-1",
   "module": "Prysm/SyncCommitteeMessage/DecodeAcceptExample.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.example_f4",
   "kind": "stmt",
@@ -238,13 +238,13 @@
   "new": "Eq ((Int.toBytes 8 (1 : UInt64).toBitVec.toInt).At (s.regs.rsp.toBitVec - 64))"
  },
  {
-  "id": "codec-decode-reject-size-any-frame-rej-seg-control",
+  "id": "codec-decode-reject-size-any-frame-decrej-seg-control",
   "module": "Codec/DecodeRejectSizeAnyFrame.lean",
   "theorem": "Codec.decrej_seg",
   "kind": "control"
  },
  {
-  "id": "codec-decode-reject-size-any-frame-rej-seg-stmt-spill",
+  "id": "codec-decode-reject-size-any-frame-decrej-seg-statement-hd-b-24-to-16",
   "module": "Codec/DecodeRejectSizeAnyFrame.lean",
   "theorem": "Codec.decrej_seg",
   "kind": "stmt",
@@ -252,7 +252,7 @@
   "new": "(hdB : dB.toBitVec = F.toBitVec + 16)"
  },
  {
-  "id": "codec-decode-reject-size-any-frame-rej-seg-stmt-rax",
+  "id": "codec-decode-reject-size-any-frame-decrej-seg-statement-rax-none-to-none",
   "module": "Codec/DecodeRejectSizeAnyFrame.lean",
   "theorem": "Codec.decrej_seg",
   "kind": "stmt",
@@ -260,7 +260,7 @@
   "new": "st.data.regs.rax = e1 ∧ st.data.regs.rbx = e0"
  },
  {
-  "id": "voluntary-exit-rej-control",
+  "id": "voluntary-exit-decode-example-reject-control",
   "module": "Prysm/VoluntaryExit/DecodeRejectSizeExample.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.example_reject",
   "kind": "control",
@@ -269,7 +269,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S"
  },
  {
-  "id": "voluntary-exit-decode-example-reject-rej-stmt-size",
+  "id": "voluntary-exit-decode-example-reject-statement-hlen-16-to-24",
   "module": "Prysm/VoluntaryExit/DecodeRejectSizeExample.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.example_reject",
   "kind": "stmt",
@@ -277,7 +277,7 @@
   "new": "(hlen : s.regs.rcx ≠ 24)"
  },
  {
-  "id": "voluntary-exit-rej-code-size",
+  "id": "voluntary-exit-decode-example-reject-code-cmp-0x10-to-0x18",
   "module": "Prysm/VoluntaryExit/DecodeRejectSizeExample.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.example_reject",
   "kind": "code",
@@ -289,7 +289,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.VoluntaryExit.UnmarshalSSZ.S"
  },
  {
-  "id": "voluntary-exit-decode-example-reject-rej-code-frame",
+  "id": "voluntary-exit-decode-example-reject-code-add-0x48-to-0x40",
   "module": "Prysm/VoluntaryExit/DecodeRejectSizeExample.lean",
   "theorem": "Prysm.VoluntaryExit.Decode.example_reject",
   "kind": "code",

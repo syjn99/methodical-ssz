@@ -6,8 +6,8 @@ import Prysm.SyncCommittee.Code
 # Code of the SyncAggregate and SyncCommittee function set (Go 1.26.10 ELF `c6403c02…911e`)
 
 Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
-(`link/conv.py --norm` of the same ELF as `Prysm.Checkpoint.Code`, `Prysm.AttestationData.Code` and `Prysm.Deposit_Data.Code`;
-written by `gen/checks/lists_and_vectors_link.py filter` and `conv.py`; `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`).
+(`link/convert_objdump.py --norm` of the same ELF as `Prysm.Checkpoint.Code`, `Prysm.AttestationData.Code` and `Prysm.Deposit_Data.Code`;
+written by `gen/checks/lists_and_vectors_link.py filter` and `convert_objdump.py`; `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`).
 The directory is a Lake `input_dir` of the `Prysm` library (`lakefile.toml`), so Lake rebuilds
 these modules when a `.S` file changes. `IndexedAttestation` is not in the committed set
 (link check (d) failed on this host's clang: Apple clang 21 rejects the GNU objdump spelling

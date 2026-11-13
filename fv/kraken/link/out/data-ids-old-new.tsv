@@ -1,0 +1,26 @@
+# Old data id of the test target (link/out/RESULT before this change, gen/first-generator/include-api-v3.json,
+# git history) -> the present id of link/out/data/ and the rule that gives it (link/data.py `item_id`, or the
+# item table of link/data.py). `staticuint64s` keeps its id.
+old id	new id	rule
+ErrBytesLength	sszErrBytesLength	item_id
+ErrIncorrectListSize	sszErrIncorrectListSize	item_id
+ErrInvalidSerialization	sszErrInvalidSerialization	item_id
+ErrInvalidVariableOffset	sszErrInvalidVariableOffset	item_id
+ErrListTooBig	sszErrListTooBig	item_id
+ErrSize	sszErrSize	item_id
+blFmtB	formatB	item_id
+bvFmtJ	formatJ	item_id
+errorStringItab	itabErrorStringError	item_id
+errorStringPtrType	typeErrorStringPointer	item table
+intType	typeInt	item table
+lcFmtItems	formatItems	item_id
+lcFmtOrder	formatItemsOffsetOrder	item table
+lcFmtShort	messageItemsTooShort	item table
+lcFmtZero	messageItemsOffsetZero	item table
+luFmtMis	formatLMisaligned	item_id
+luFmtTooBig	formatLTooBig	item_id
+uint64Type	typeUint64	item table
+vblMsgB	messageTooManyBits	item table
+vblMsgE	messageBitlistEmpty	item table
+vblMsgZ	messageTrailingByteZero	item table
+vbvFmt	messageBitvectorPaddingNotZero	item table

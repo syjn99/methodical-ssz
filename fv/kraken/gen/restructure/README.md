@@ -163,7 +163,16 @@ The maps apply in this order:
   The frame `Machine.luFrame` (`_sep`, `_slices`) becomes `Machine.stackFrame144`.
   The modules `EncodeFastPathExamples` and `DecodeAcceptExamples` become `EncodeFastPathExampleIndex` and `DecodeAcceptExampleIndex`.
   The module `Uint64DecoderKindAnchors` becomes `Uint64DecoderKindSameAsHand`.
-  A script renames the tactic `bytesdec_z` to `bytesdec_offset_zero_case`, and the kind name in `kindcheck.py` and `generator.py`.
+  A script renames the tactic `bytesdec_z` to `bytesdec_offset_zero_case` (now `bytes_decode_offset_zero_case`, see
+  `maps/plain-lean-names/`), and the kind name in `kindcheck.py` and `generator.py`.
+- `maps/generator-labels/`: plain words for the labels that the generators write. Nine declarations get
+  `statement` for `stmt` (for example `Encode.generated_statement`, `Decode.generated_accept_statement`). The generator modes and
+  options get words (`gen/generator/option-names.tsv`), and `prysm/go1.26.10/evidence/flat-types/runs/record-names.tsv`
+  maps the record file names of earlier generator runs.
+- `maps/spec-test-types/`: full names for the `Spec` test types and their descriptions (for example `Spec.scDesc`
+  becomes `Spec.scalarsDesc`, `FixedVecG` becomes `FixedVecValue`). The modules `Spec.TestListC` and `Spec.ReducedPrysm`
+  become `Spec.TestListOfContainers` and `Spec.TestCheckpointAndAttestationData`. `gen/desc/spec-names-old-new.tsv`
+  maps the names that the records of the `Desc` checker keep.
 - `maps/data-names/`: plain ids for the ELF data of the Prysm link set.
   The data names `ElfData.PrysmTarget.<id>`, `<id>_addr` and `<id>_addr_eq` take the new ids, and
   `Prysm.Deposit.Code.depDataType_addr` becomes the data include `ElfData.PrysmTarget.typeDeposit_Data_addr`.
@@ -186,7 +195,14 @@ The commit message of each such step lists its edits:
 - the step of the short tactic names: a script renamed the tactics listed in `TOOL-NOTES.md` section 5;
 - the link-set step after `maps/link-set/`: a script merged the 16 link sets into `prysm/go1.26.10/link-set`, merged the
   five data modules and readers into `Prysm/ElfData/PrysmTarget.lean` and `PrysmTargetReader.lean`, moved the eight
-  address lemmas there, and renamed the tactics `iaaddr`, `laddr` and `lvbytesdec_z`.
+  address lemmas there, and renamed the tactics `iaaddr`, `laddr` and `lvbytesdec_z`;
+- the step of the tool, directory and case-file names after `maps/plain-lean-names/`: a script renamed tools, tests,
+  directories and negative case files, the ids of the negative cases and of the generator test cases, and identifiers
+  inside the Python tools. `gen/path-names.tsv` maps each earlier path to its present path. The file `<name>.ids.tsv`
+  next to each case file maps the case ids, and `gen/generator/decoder-test-case-ids.tsv` and
+  `gen/generator/encoder-test-case-ids.tsv` map the ids of the generator test cases;
+- the CI forwarder: `gen/e2e/axioms_gate.py` only forwards to `gen/checks/axioms_gate.py`, because
+  `.github/workflows/fv-lean.yaml` names the earlier path. `gen/path-names.tsv` records this one kept path.
 
 Issue 10 of `syjn99/methodical-ssz` holds the list of the steps that remain.
 
@@ -280,7 +296,7 @@ Checks before the commit:
     ```
     Expected: exit 0 (no missing name, no extra name, no changed kind or axiom set).
 15. Check the negative cases (cwd `fv/kraken`):
-    `python3 -I -B gen/checks/negative.py --check-cases <every negcases*.json file>`.
+    `python3 -I -B gen/checks/negative.py --check-cases <every negative-cases-*.json file>`.
     Expected: 0 failures.
     `python_checks.sh` runs this check with every tracked case file.
 16. Run the Python checks after the step:

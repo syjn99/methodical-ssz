@@ -1,0 +1,5 @@
+# Record: the link table of 136 functions keeps its data ids, and its RESULT names them.
+# Each row gives the id of the same item in prysm/go1.26.10/link-set/data (same ELF).
+old id	present id of the same item in prysm/go1.26.10/link-set/data
+x5CpElemType	typeUint8
+x5ErrSize	sszErrSize

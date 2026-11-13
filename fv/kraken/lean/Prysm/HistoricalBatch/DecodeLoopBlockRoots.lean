@@ -20,7 +20,7 @@ pointer, `sp` the 24-byte spill area of the callees, `sp − 8` the runtime call
 receiver (8192): not taken; 69–72 len and cap words of header i; 73–75 writeBarrier = 0; 76–77, 36–39 the pointer
 word of header i, `rax = i + 1` (loaded from `sp + 24`).
 Proof order: `Prysm.SyncCommittee.Decode.iter`, `Prysm.SyncCommittee.Decode.exit`, `Prysm.SyncCommittee.Decode.loop` (`Prysm/SyncCommittee/DecodeLoop.lean`); the step sequence is this decoder's own.
-The macro `address_with_products` and the lemmas `jge_false512`, `Codec.elementBlocks_snoc` are imported from the SyncCommittee proof.
+The macro `address_with_products` and the lemmas `Codec.jge_false_of_lt`, `Codec.elementBlocks_snoc` are imported from the SyncCommittee proof.
 -/
 
 open Machine Runtime Prysm.HistoricalBatch.Code

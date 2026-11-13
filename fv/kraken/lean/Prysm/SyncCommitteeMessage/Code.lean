@@ -6,7 +6,7 @@ import Prysm.PendingConsolidation.Code
 # Code of the `SyncCommitteeMessage` functions (Go 1.26.10 ELF `c6403c02…911e`)
 
 Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
-(`link/conv.py --norm` of the same ELF as `Prysm.Checkpoint.Code`, `Prysm.AttestationData.Code`, `Prysm.BeaconBlockHeader.Code`, `Prysm.Eth1Data.Code`,
+(`link/convert_objdump.py --norm` of the same ELF as `Prysm.Checkpoint.Code`, `Prysm.AttestationData.Code`, `Prysm.BeaconBlockHeader.Code`, `Prysm.Eth1Data.Code`,
 `Prysm.BlobIdentifier.Code` and `Prysm.Deposit_Data.Code`; `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`).
 Hand-written include file (not generator output; the text of `Prysm/Deposit_Data/Code.lean`).
 The directory `prysm/go1.26.10/link-set/norm` is a Lake `input_dir` of the `Prysm` library,

@@ -4,7 +4,7 @@ import Codec.Bytes32DecodeOffsetZero
 /-!
 # Size-parametric fixed-bytes decode segments (`[]byte` vector field of 32, 48 or 96 bytes)
 
-Added after the hold-out test of BlobIdentifier and DepositMessage (a byte vector of another size than 32).
+Added after the frozen generator ran on the hold-out types BlobIdentifier and DepositMessage (a byte vector of another size than 32).
 `Codec/Bytes32Decode.lean`, `Codec/Bytes32DecodeOffsetZero.lean`, `Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean`
 and the `Kind*.lean` files are unchanged. Go 1.26.10 compiles `f = append(make([]byte, 0, n), buf[src:src+n]...)`
 to the two blocks of `Codec/Bytes32Decode.lean` with the size `n` in three (head: two) immediates. The templates here

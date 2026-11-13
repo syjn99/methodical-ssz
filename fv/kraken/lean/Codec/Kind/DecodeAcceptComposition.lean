@@ -18,7 +18,7 @@ hypotheses an implication chain (`Implications`), the memory a left fold of `⋆
 
 Tie to the existing theorems (`rfl` at default transparency; the recursive definitions unfold on the literal
 field list): the declared types of `Prysm.BlobIdentifier.Decode.accept`, `Prysm.DepositMessage.Decode.accept`, `Prysm.Eth1Data.Decode.accept`
-(these are the declared types of the three generated composed theorems `*_accept_main_gc`, by their `_type`
+(these are the declared types of the three generated composed theorems `Decode.accept_generated_composition`, by their `_type`
 lines) and the hand statement `Prysm.Deposit_Data.Decode.accept_statement`. So a composed theorem of this shape can be
 statement-checked against `decAcceptKind` with parameters read from the IR, without a hand theorem.
 Not covered: callee-decoder fields, other frames, a first field that is not at Go offset 0 or 8.

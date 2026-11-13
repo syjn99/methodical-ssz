@@ -11,7 +11,7 @@ The library `Prysm` holds the proofs of the Prysm types (one directory for each 
 `../gen/restructure/maps/shared-layer/files.tsv` gives the earlier path and a one-line meaning of each module that this map moved.
 A module that a later step added or split is not in a `files.tsv`.
 
-**`Spec`.** EthLib specifications that several types share, and the ones that the `Desc` checker imports (`../gen/desccheck/`).
+**`Spec`.** EthLib specifications that several types share, and the ones that the `Desc` checker imports (`../gen/desc-checker/`).
 They are the specifications of the small test types (`Spec/Test*.lean`) and of two reduced Prysm types (`Spec/TestCheckpointAndAttestationData.lean`).
 They import only EthLib and each other. `Spec/DeserializeOfSerialize.lean` holds a general lemma: if `serialize` of every Go value gives `enc g`, then every input that EthLib accepts is `enc g` of one value.
 So a machine proof only has to say what the code does on `enc g`, and that the code rejects every other input.
@@ -90,7 +90,7 @@ A new type gets its own directory `Prysm/<GoTypeName>/`. Do not change a reviewe
 
 ## 2. How machine code enters Lean
 
-1. `../link/conv.py` converts the disassembly of one function into a labeled `.S` file.
+1. `../link/convert_objdump.py` converts the disassembly of one function into a labeled `.S` file.
 2. `include_x64_code "<path>.S"` (`Machine/Include.lean`) parses the file with the Kraken parser when Lean elaborates it. The result is a `Program` constant, for example `Prysm.SyncAggregate.Code.unmarshalSSZ`.
 3. A data file holds the bytes or the address of one ELF data item, for example a format string or a type descriptor.
    `data_include <id>` (`Machine/Include.lean`) and its copy `prysm_data_include` for the Prysm link set define `<id> : List UInt8` and `<id>_addr : BitVec 64`. No byte or offset is written by hand.
@@ -178,7 +178,7 @@ The contracts assume that no garbage collection runs during the call, and that a
 Each Prysm type has two `Desc` terms.
 
 - The hand `Desc` is written from the consensus-specs definition, before the checker `Desc` is printed. Example: `Prysm.Checkpoint.desc` in `Prysm/Checkpoint/Spec.lean`.
-- The checker `Desc` comes from the generator IR through the checker in `../gen/desccheck/`. `../gen/checks/desc_to_lean.py` renders it as Lean. Example: `Prysm/Checkpoint/SpecChecker.lean`.
+- The checker `Desc` comes from the generator IR through the checker in `../gen/desc-checker/`. `../gen/checks/desc_to_lean.py` renders it as Lean. Example: `Prysm/Checkpoint/SpecChecker.lean`.
 - Codec equality theorems show that both give the same `serialize` and `deserialize`. Example: `Prysm.Checkpoint.desc_serialize_checker` in `Prysm/Checkpoint/SpecEquivalence.lean`.
 
 The theorems use the hand `Desc`. For a Prysm type, the checker only compares the IR with the inventory. It does not compare with the specification.
@@ -217,56 +217,31 @@ Use one witness host for each file. Two `Host` instances in one file make instan
 
 Module, namespace and main theorem names use the full Go type name (`../gen/restructure/SPEC.md`).
 The structure `Prysm.<GoTypeName>.SszValue` holds the SSZ content of a type.
-Short names and labels remain in the places below. Each one stays because it is derived from a file id, because a
-generator writes it, or because it is a record. The table after the list gives the meaning of the type abbreviations.
+Earlier short names and labels remain only in the places below, each for the reason given.
 
-- Runtime model files: `Runtime/*.S` and `Prysm/*/*.S` (`BumpMakeslice*.S`, `BumpNewobject*.S`, `MemmoveGrowsliceModel.S`, `ErrorfConvT64Model.S`).
-  `include_x64_code` reads them by path, and the code constants take their labels.
-- Statement kind structures of `Codec/Kind/` (their doc strings give the meaning): `StackOffset` stack offset, `StackValue` /
-  `EncodeStackValue` content of a stack slot (decoder / encoder), `DecodeRegisterValue` / `EncodeRegisterValue` what a register holds at a field boundary,
-  `ExistentialLength` length of an existential chunk, `RuntimeConfig` runtime configuration, `DecodeBoundaryState` / `EncodeBoundaryState` boundary state,
-  `ExistsChunks` / `ExistsWords` existential chunks / pointers, `Implications` a chain of implications, `layoutRuntimeCalls` / `layoutCalleeCalls` the frame layouts
-  with runtime calls / callee calls, `decoderPrologue` / `encoderPrologueLargeFrame` decoder / encoder prologue templates, `instrCompareMemoryImmediate` the
-  directive `cmpq $imm,disp(%rB)`, `stepLoadValueKind` / `stepLoadBytesKind` the kinds of `step_load_value` / `step_load_bytes`
-  (`mov disp(%rB),%rD`, value / bytes form). Generated files and `../gen/generator/kindcheck.py` name them.
-- Short tactic names (local or module macros): `triple_loop_iteration`, `step_literal_directive`, `encoder_address_equation`, `normalize_registers`, `unfold_step_keep_registers`, `window_step_directive`, `window_skip_leading_nops`, `window_skip_nops`,
-  `window_skip_to_end`, `size_reject_infix`, `immediate32_count`, and the notation `shift_left5`. Their doc strings say what each does.
-- The Go type and field names of `../target/` (for example `ListC`, a list of containers, and `BitL`, a bit list):
-  external Go names. `Spec/Test*.lean` writes the type names in full words (`ListOfContainersValue`,
-  `bitListDesc`) and keeps the Go field names in lower case as structure fields.
-- The records of earlier names (`../gen/restructure/maps/`).
-
-Some abbreviations have two or three meanings. The context decides the meaning.
-
-| Abbreviation | Go type |
-| --- | --- |
-| `Cp` | `v1alpha1.Checkpoint` |
-| `Ad` | `v1alpha1.AttestationData` |
-| `Bh` | `v1alpha1.BeaconBlockHeader` |
-| `E1` | `v1alpha1.Eth1Data` |
-| `Bi` | `v1alpha1.BlobIdentifier` |
-| `Dm` | `v1alpha1.DepositMessage` |
-| `Dd` | `v1alpha1.Deposit_Data` |
-| `Dep` | `v1alpha1.Deposit` |
-| `Pw` | `v1alpha1.PendingPartialWithdrawal` |
-| `Sm` | `v1alpha1.SyncCommitteeMessage` |
-| `Pc` | `v1alpha1.PendingConsolidation` |
-| `Pd` | `v1alpha1.PendingDeposit` |
-| `Pb` | `v1alpha1.PowBlock` |
-| `Hs` | `v1alpha1.HistoricalSummary` |
-| `Hb` | `v1alpha1.HistoricalBatch` |
-| `Sd` | `v1alpha1.SigningData` |
-| `Vb` | `v1alpha1.ValidatorBalance` |
-| `Ve` | `v1alpha1.VoluntaryExit` |
-| `Ia` | `v1alpha1.IndexedAttestation` |
-| `Dc`, `dcd` | `v1alpha1.DataColumnsByRootIdentifier` (encoder `Dc`, decoder `dcd`) |
-| `Dpr`, `Bdr` | `engine_v1.DepositRequest`, `engine_v1.BuilderDepositRequest` |
-| `Bbr`, `Bsr`, `Epr` | `v1alpha1.BeaconBlocksByRangeRequest`, `BlobSidecarsByRangeRequest`, `ExecutionPayloadEnvelopesByRangeRequest` |
-| `Pdc`, `Vid`, `Bpf` | `v1alpha1.PartialDataColumnGroupID`, `ValidatorIdentity`, `BuilderPreferences` |
-| `Ep`, `Sl`, `Ci`, `Vi` | `primitives.Epoch`, `Slot`, `CommitteeIndex`, `ValidatorIndex` (hand-written methods) |
-| `Lu`, `Lc`, `Bl`, `Bv` | test types `ListU64`, `ListC`, `BitL`, `BitVec` in `../target/` |
-| `Sc` | three meanings: `v1alpha1.SyncCommitteeMessage` and `v1alpha1.SyncCommittee` in earlier names, and the test type `Scalars` (`Spec/TestScalars.lean`) |
-| `Sa` | two meanings: `v1alpha1.SyncAggregatorSelectionData` and `v1alpha1.SyncAggregate` in earlier names |
-| `Fv` | the test type `FixedVec` (`Spec/TestFixedVec.lean`) |
-| `epr` | `ExecutionPayloadEnvelopesByRangeRequest` (data ids) |
-| `Pad` | `v1alpha1.PayloadAttestationData` in the generator scripts |
+- External identities, written as their source writes them:
+  - ELF symbols, the labels of the `.S` files that come from the ELF (`../prysm/go1.26.10/link-set/norm/`), and the
+    code constants and labels that `include_x64_code` takes from them;
+  - Go names: the type, field, function and package names of Prysm and of the test target `../target/` (for example
+    `ListC`, a list of containers, and `BitL`, a bit list; `Spec/Test*.lean` writes the type names in full words and
+    keeps the Go field names in lower case as structure fields);
+  - the build path `fvphase1c/p1cbin` of the `main` package of the pinned Prysm ELF (`../README.md`): the ELF records it;
+  - the names of Kraken, Lean, Mathlib and EthLib.
+- Records of earlier runs keep the names and paths of their run. These tables give the present name of each earlier one:
+  - `../gen/path-names.tsv`: earlier paths of tools, tests, directories and case files;
+  - `<case file>.ids.tsv`, next to each negative case file `negative-cases-*.json`: earlier ids of the negative cases;
+  - `../gen/generator/decoder-test-case-ids.tsv` and `../gen/generator/encoder-test-case-ids.tsv`: earlier ids of the
+    cases of the generator tests;
+  - `../gen/generator/option-names.tsv`: earlier generator modes, options and header labels;
+  - `../prysm/go1.26.10/evidence/flat-types/runs/record-names.tsv`: earlier record file names of the generator runs on
+    the 24 flat types, and the names that a new run writes;
+  - `../prysm/go1.26.10/link-set/data-ids-old-new.tsv`: earlier data ids of the Prysm link set;
+  - `../gen/desc/spec-names-old-new.tsv`: earlier names of the `Spec` test-type declarations, which the records of the
+    `Desc` checker name;
+  - the maps of `../gen/restructure/maps/` (`names.tsv`, `files.tsv`): the module and declaration names before and
+    after each rename step (`../gen/restructure/README.md` section 4).
+- Schema ids: `fvphase1c.*` (for example `fvphase1c.inventory/1`, `fvphase1c.desc/1`) and `fvpar.include-api/1`. They are
+  format identifiers that the tools write and that records and checks compare, so they are kept.
+- The forwarder `../gen/e2e/axioms_gate.py`: the CI workflow names this earlier path (`../gen/README.md` section 6).
+- Standard short words: `dec` and `enc` (decode, encode), `u64` (uint64), and lemma names of the form instruction +
+  constant + fact (`Machine.and7_zero`, `Machine.zx8`, `Machine.jg16_false`).

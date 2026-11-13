@@ -9,7 +9,7 @@ import Prysm.DataColumnsByRootIdentifier.Spec
 /-!
 # Decoder-side spec bridge for `DataColumnsByRootIdentifier` (round trip)
 
-The text of `Prysm/IndexedAttestation/Spec.lean` (`pia_*`, `iaChecks`) for `SszValue`: `toValue` fits, every fitting value is a `SszValue`,
+The text of `Prysm/IndexedAttestation/Spec.lean` (the `Prysm.IndexedAttestation` lemmas `toValue_*`, `encode_*`, `spec_*` and `Prysm.IndexedAttestation.decodeChecks`) for `SszValue`: `toValue` fits, every fitting value is a `SszValue`,
 the EthLib round trip, accepted inputs are encodings, and the three checks of the Go decoder in its order
 (`size ≥ 36`, offset 36, `(size − 36) mod 8 = 0`, `(size − 36)/8 ≤ 128`).
 -/

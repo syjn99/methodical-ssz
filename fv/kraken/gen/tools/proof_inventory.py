@@ -150,16 +150,16 @@ SIZE_FORM = dict(main=["Size.result"], witness=["Witness.Size.runs"])
 # Encoder theorems outside the fast path need a premise text (what the theorem assumes beyond the fast-path frame
 # premises) and a text of what stays NOT proved in their path class: these texts are hand-written (review of the
 # statements), keyed by the present full names. A type without an entry has its path classes listed as NOT proved.
-CP_GROW = "GrowsliceContract + MemmoveContract contracts + heap budget"
+GROWSLICE_ASSUMPTIONS = "GrowsliceContract + MemmoveContract contracts + heap budget"
 ENC_EXTRA = {
     "Checkpoint": dict(
         rejects=[("Prysm.Checkpoint.Encode.reject_length", "len + 8 ≤ cap"),
                  ("Prysm.Checkpoint.Encode.reject_length_cover",
                   "every cap, GrowsliceContract contract + heap budget 4·len + 8736 ≤ avail ≤ maxAlloc")],
-        grow=[("Prysm.Checkpoint.Encode.grow_first_site", f"cap < len + 8, len + 40 ≤ nextSliceCap(len + 8, cap), {CP_GROW}"),
-              ("Prysm.Checkpoint.Encode.grow_second_site", f"len + 8 ≤ cap < len + 40, {CP_GROW}"),
+        grow=[("Prysm.Checkpoint.Encode.grow_first_site", f"cap < len + 8, len + 40 ≤ nextSliceCap(len + 8, cap), {GROWSLICE_ASSUMPTIONS}"),
+              ("Prysm.Checkpoint.Encode.grow_second_site", f"len + 8 ≤ cap < len + 40, {GROWSLICE_ASSUMPTIONS}"),
               ("Prysm.Checkpoint.Encode.grow_any_site",
-               f"cap < len + 8, {CP_GROW}: returns or reaches the second growslice call")],
+               f"cap < len + 8, {GROWSLICE_ASSUMPTIONS}: returns or reaches the second growslice call")],
         other_witness=["Prysm.Checkpoint.Witness.EncodeRejectLength.runs", "Prysm.Checkpoint.Witness.EncodeGrowFirstSite.runs"],
         left={"length rejects": "with cap < len + 8 outside the GrowsliceContract contract or the heap budget",
               "growslice branches": "outside the GrowsliceContract / MemmoveContract contracts and the heap budget, and the run after "

@@ -8,7 +8,7 @@ import Prysm.Slot.Code
 # Code of the `AttestationData` functions (Go 1.26.10 ELF `c6403c02…911e`)
 
 Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
-(`link/conv.py --norm` of the same ELF as `Prysm.Checkpoint.Code`; `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`). The Checkpoint callees are `Prysm.Checkpoint.Code.unmarshalSSZ` and
+(`link/convert_objdump.py --norm` of the same ELF as `Prysm.Checkpoint.Code`; `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`). The Checkpoint callees are `Prysm.Checkpoint.Code.unmarshalSSZ` and
 `Prysm.Checkpoint.Code.marshalSSZTo` (the call targets of these files are their labels).
 -/
 

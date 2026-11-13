@@ -18,8 +18,10 @@ import Prysm.ValidatorIdentity.Statements
 (statements only, no proof)
 
 Hand-written BEFORE the author opened the generated modules
-`Gen5F24{Bbr,Dpr,Pdc,Vid}Dec.lean` and `Gen6F24{Bbr,Bpf,Pdc,Vid}Enc.lean` or their kind lines. These generated files
-were committed unedited (one-shot runs); this session built and kind-checked them without printing them.
+`GeneratedDecodeAccept.lean` of BeaconBlocksByRangeRequest, DepositRequest, PartialDataColumnGroupID and ValidatorIdentity
+and `GeneratedEncodeFastPath.lean` of BeaconBlocksByRangeRequest, BuilderPreferences, PartialDataColumnGroupID and
+ValidatorIdentity (`Prysm/<Type>/`), or their kind lines. These generated files
+were committed unedited (one-shot runs); the author built and kind-checked them without printing them.
 Sources: the Go receiver layout (IR `go_fields` of `prysm/ir/ir-mainnet.json`, gc amd64 offsets), the SSZ layout
 (field sizes in IR order), the `.S` files of `prysm/go1.26.10/link-set/norm/` (frame, guard, spills, stack slots
 touched on the path and their contents at the return, the directive of the last call), the statement shape of the

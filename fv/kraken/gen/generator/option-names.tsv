@@ -18,3 +18,4 @@ GEN5-JSON	WHOLE-ACCEPT-JSON	machine-readable line of the whole-accept block
 GEN6 (`p2enc --gen6`, unit E2-G)	Fast path (`encoder --fast-path`)	module heading of a fast-path file
 GEN6-JSON	FAST-PATH-JSON	machine-readable line of a fast-path file
 G5-L kinds	whole-accept kinds	the kinds of Codec/Kind/DecodeAcceptAnyFrame.lean
+--t3	--with-indexed-attestation	link script option (lists_and_vectors_link.py, link_set.py): also link and read the IndexedAttestation decoder

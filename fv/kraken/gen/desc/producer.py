@@ -21,7 +21,7 @@ Desc format (schema fvphase1c.desc/1):
                       owns its own (package, type) table and FAILs a file whose
                       reference differs from it; this field never selects the spec.
 All layout numbers come from the generator IR (its FixedSize/IsVariableSized), not from EthLib.
-The checker (fv/kraken/gen/desccheck) shares no code with this file.
+The checker (fv/kraken/gen/desc-checker) shares no code with this file.
 Python 3 standard library only. Run with python3 -I.
 """
 import json

@@ -5,7 +5,7 @@ functions and their primitives callees on the Go 1.26.10 ELF.
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   attestation_data_link.py callgraph <objdump> <out.json> <m2.log>  call targets with contract class + inlining lines
   attestation_data_link.py filter <outdir> <objdump> <elf> <nm>     <outdir>/target.objdump of FUNCS (+ ELF/nm links)
-  attestation_data_link.py data <outdir> <cp-linkdir>               after `conv.py <outdir>/target.objdump
+  attestation_data_link.py data <outdir> <checkpoint-link-dir>               after `convert_objdump.py <outdir>/target.objdump
                                                      <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                      write <outdir>/data/*.data (link/data.py's code)
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set. The Checkpoint
@@ -26,16 +26,16 @@ import checkpoint_and_epoch_link  # noqa: E402
 
 PRIM = "github.com/OffchainLabs/prysm/v7/consensus-types/primitives"
 V1A1 = "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
-AD_M = ("SizeSSZ", "MarshalSSZTo", "UnmarshalSSZ")
-PM = ("UnmarshalSSZ", "MarshalSSZTo", "MarshalSSZ", "SizeSSZ")
-FUNCS = [f"{V1A1}.(*AttestationData).{m}" for m in AD_M] + \
-        [f"{PRIM}.(*Slot).{m}" for m in PM] + [f"{PRIM}.(*CommitteeIndex).{m}" for m in PM]
+ATTESTATION_DATA_METHODS = ("SizeSSZ", "MarshalSSZTo", "UnmarshalSSZ")
+PRIMITIVE_METHODS = ("UnmarshalSSZ", "MarshalSSZTo", "MarshalSSZ", "SizeSSZ")
+FUNCS = [f"{V1A1}.(*AttestationData).{m}" for m in ATTESTATION_DATA_METHODS] + \
+        [f"{PRIM}.(*Slot).{m}" for m in PRIMITIVE_METHODS] + [f"{PRIM}.(*CommitteeIndex).{m}" for m in PRIMITIVE_METHODS]
 SCOPE = {FUNCS[0]: "in (A4 size)", FUNCS[1]: "in (A4 encoder)", FUNCS[2]: "in (A3 decoder)",
          FUNCS[3]: "in (callee, function spec Prysm.Slot.Decode.accept_function_spec, A2)", FUNCS[7]: "in (callee, function spec Prysm.CommitteeIndex.Decode.accept_function_spec, A2)"}
 for i in (4, 5, 6, 8, 9, 10):
     SCOPE[FUNCS[i]] = "record only (inlined into AttestationData.MarshalSSZTo or unused; out-of-line body unused)"
-CP_U = f"{V1A1}.(*Checkpoint).UnmarshalSSZ"
-CP_M = f"{V1A1}.(*Checkpoint).MarshalSSZTo"
+CHECKPOINT_UNMARSHAL = f"{V1A1}.(*Checkpoint).UnmarshalSSZ"
+CHECKPOINT_MARSHAL = f"{V1A1}.(*Checkpoint).MarshalSSZTo"
 CLASS = {
     "runtime.morestack_noctxt.abi0": ("c", "stack-guard premise g.stackguard0 < rsp: the jbe is proved not taken"),
     "runtime.makeslice": ("b", "MakesliceContract (esz 1, uint8 type word, cnt 32)"),
@@ -50,17 +50,17 @@ CLASS = {
                         "a child Root has len != 32"),
     f"{PRIM}.(*Slot).UnmarshalSSZ": ("a", "function spec Prysm.Slot.Decode.accept_function_spec, proved from machine code"),
     f"{PRIM}.(*CommitteeIndex).UnmarshalSSZ": ("a", "function spec Prysm.CommitteeIndex.Decode.accept_function_spec, proved from machine code"),
-    CP_U: ("a", "function spec Prysm.Checkpoint.Decode.accept_function_spec = Prysm.Checkpoint.Decode.accept (its runtime contracts stay hypotheses)"),
-    CP_M: ("a", "function spec Prysm.Checkpoint.Encode.fast_path_function_spec = Prysm.Checkpoint.Encode.fast_path (its runtime contracts stay hypotheses)"),
+    CHECKPOINT_UNMARSHAL: ("a", "function spec Prysm.Checkpoint.Decode.accept_function_spec = Prysm.Checkpoint.Decode.accept (its runtime contracts stay hypotheses)"),
+    CHECKPOINT_MARSHAL: ("a", "function spec Prysm.Checkpoint.Encode.fast_path_function_spec = Prysm.Checkpoint.Encode.fast_path (its runtime contracts stay hypotheses)"),
 }
 INL = {
     "cannot_inline_Slot_UnmarshalSSZ": r"slot\.go:\d+:\d+: cannot inline \(\*Slot\)\.UnmarshalSSZ",
     "can_inline_Slot_MarshalSSZTo": r"slot\.go:\d+:\d+: can inline \(\*Slot\)\.MarshalSSZTo",
     "cannot_inline_CommitteeIndex_UnmarshalSSZ": r"committee_index\.go:\d+:\d+: cannot inline \(\*CommitteeIndex\)\.UnmarshalSSZ",
     "can_inline_CommitteeIndex_MarshalSSZTo": r"committee_index\.go:\d+:\d+: can inline \(\*CommitteeIndex\)\.MarshalSSZTo",
-    "ad_marshal_inlines_Slot_MarshalSSZTo": r"phase0\.ssz\.go:2[34]\d:\d+: inlining call to primitives\.\(\*Slot\)\.MarshalSSZTo",
-    "ad_marshal_inlines_CommitteeIndex_MarshalSSZTo": r"phase0\.ssz\.go:2[34]\d:\d+: inlining call to primitives\.\(\*CommitteeIndex\)\.MarshalSSZTo",
-    "ad_unmarshal_inlines_any_primitives": r"phase0\.ssz\.go:(2[89]\d|30\d|31[01]):\d+: inlining call to primitives\.",
+    "attestation_data_marshal_inlines_Slot_MarshalSSZTo": r"phase0\.ssz\.go:2[34]\d:\d+: inlining call to primitives\.\(\*Slot\)\.MarshalSSZTo",
+    "attestation_data_marshal_inlines_CommitteeIndex_MarshalSSZTo": r"phase0\.ssz\.go:2[34]\d:\d+: inlining call to primitives\.\(\*CommitteeIndex\)\.MarshalSSZTo",
+    "attestation_data_unmarshal_inlines_any_primitives": r"phase0\.ssz\.go:(2[89]\d|30\d|31[01]):\d+: inlining call to primitives\.",
 }
 
 
@@ -127,13 +127,13 @@ def back_lea(lines, i, reg="rax"):
     raise AssertionError(("no lea before", i, lines[i]))
 
 
-def items(outdir, cpdir):
+def items(outdir, checkpoint_dir):
     spec = importlib.util.spec_from_file_location("data", LINK / "data.py")
     data = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(data)
-    AD = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData"
-    du, dm = checkpoint_and_epoch_link.ins(outdir, f"{AD}.UnmarshalSSZ"), checkpoint_and_epoch_link.ins(outdir, f"{AD}.MarshalSSZTo")
-    cu, cm = checkpoint_and_epoch_link.ins(cpdir, f"{checkpoint_and_epoch_link.CP}.UnmarshalSSZ"), checkpoint_and_epoch_link.ins(cpdir, f"{checkpoint_and_epoch_link.CP}.MarshalSSZTo")
+    ATTESTATION_DATA = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData"
+    du, dm = checkpoint_and_epoch_link.ins(outdir, f"{ATTESTATION_DATA}.UnmarshalSSZ"), checkpoint_and_epoch_link.ins(outdir, f"{ATTESTATION_DATA}.MarshalSSZTo")
+    cu, cm = checkpoint_and_epoch_link.ins(checkpoint_dir, f"{checkpoint_and_epoch_link.CHECKPOINT_SYMBOL}.UnmarshalSSZ"), checkpoint_and_epoch_link.ins(checkpoint_dir, f"{checkpoint_and_epoch_link.CHECKPOINT_SYMBOL}.MarshalSSZTo")
     lea = r"lea ([A-Za-z0-9_.]+)(?:\+(\d+))?\(%rip\),%{}"
     # shared with the Checkpoint set: asserted equal, not written again
     u8 = checkpoint_and_epoch_link.operand([cu[cu.index("callq runtime.makeslice") - 3]], lea.format("rax"))
@@ -176,8 +176,8 @@ def items(outdir, cpdir):
     return data, its
 
 
-def write_data(outdir, cpdir):
-    data, its = items(outdir, cpdir)
+def write_data(outdir, checkpoint_dir):
+    data, its = items(outdir, checkpoint_dir)
     for it in its:
         print("item", it[:4])
     data.ITEMS = its

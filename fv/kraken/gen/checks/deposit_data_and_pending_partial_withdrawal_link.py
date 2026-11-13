@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""hold-out of Deposit_Data and PendingPartialWithdrawal: call graph and link tables of the real v1alpha1.Deposit_Data and v1alpha1.PendingPartialWithdrawal
+"""Call graph and link tables of the real v1alpha1.Deposit_Data and v1alpha1.PendingPartialWithdrawal
 UnmarshalSSZ on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set; written after the
-hold-out of Deposit_Data and PendingPartialWithdrawal was opened at 2026-11-11T08:53:45Z; the text of `blob_identifier_and_deposit_message_link.py` with the function set and the data items changed).
+hold-out of Deposit_Data and PendingPartialWithdrawal had been run; the text of `blob_identifier_and_deposit_message_link.py` with the function set and the data items changed).
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   deposit_data_and_pending_partial_withdrawal_link.py callgraph <objdump> <out.json>          call targets with contract class
   deposit_data_and_pending_partial_withdrawal_link.py filter <outdir> <objdump> <elf> <nm>    <outdir>/target.objdump of FUNCS (+ ELF/nm links)
-  deposit_data_and_pending_partial_withdrawal_link.py data <outdir> <cp-linkdir> <ad-linkdir> after `conv.py <outdir>/target.objdump
+  deposit_data_and_pending_partial_withdrawal_link.py data <outdir> <checkpoint-link-dir> <attestation-data-link-dir> after `convert_objdump.py <outdir>/target.objdump
                                                     <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
@@ -31,7 +31,7 @@ SCOPE = {FUNCS[0]: "in (hold-out decoder)", FUNCS[1]: "in (hold-out decoder)"}
 CLASS = dict(attestation_data_link.CLASS)
 CLASS.update({
     f"{PRIM}.(*ValidatorIndex).UnmarshalSSZ": ("a", "function spec Prysm.ValidatorIndex.Decode.accept_function_spec, proved from machine code (BeaconBlockHeader hold-out)"),
-    f"{PRIM}.(*Epoch).UnmarshalSSZ": ("a", "function spec Prysm.Epoch.Decode.accept_function_spec, proved from machine code (prysm-e2e)"),
+    f"{PRIM}.(*Epoch).UnmarshalSSZ": ("a", "function spec Prysm.Epoch.Decode.accept_function_spec, proved from machine code (the Epoch decoder proof)"),
     "fmt.errorf": ("b", "FmtErrorfWrapContract (field wraps 'Index: %w', 'WithdrawableEpoch: %w'); decoder: unreachable "
                         "under the callee specs"),
     "runtime.newobject": ("b", "NewobjectContract errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"),
@@ -85,7 +85,7 @@ def filt(outdir, objdump, elf, nm):
     return checkpoint_and_epoch_link.filt(outdir, objdump, elf, nm)
 
 
-def items(outdir, cpdir, addir):
+def items(outdir, checkpoint_dir, attestation_data_dir):
     """Deposit_Data has three makeslice calls and no fmt.errorf / newobject / growslice call (as DepositMessage
     in `blob_identifier_and_deposit_message_link.py`). PendingPartialWithdrawal has no makeslice; it calls the ValidatorIndex and Epoch decoders
     and wraps their errors with fmt.errorf ("Index: %w", "WithdrawableEpoch: %w"; `beacon_block_header_link.py` idiom). The shared
@@ -98,8 +98,8 @@ def items(outdir, cpdir, addir):
     V = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1"
     du = checkpoint_and_epoch_link.ins(outdir, f"{V}.Deposit_Data.UnmarshalSSZ")
     pu = checkpoint_and_epoch_link.ins(outdir, f"{V}.PendingPartialWithdrawal.UnmarshalSSZ")
-    cu = checkpoint_and_epoch_link.ins(cpdir, f"{checkpoint_and_epoch_link.CP}.UnmarshalSSZ")
-    au = checkpoint_and_epoch_link.ins(addir, f"{V}.AttestationData.UnmarshalSSZ")
+    cu = checkpoint_and_epoch_link.ins(checkpoint_dir, f"{checkpoint_and_epoch_link.CHECKPOINT_SYMBOL}.UnmarshalSSZ")
+    au = checkpoint_and_epoch_link.ins(attestation_data_dir, f"{V}.AttestationData.UnmarshalSSZ")
     lea = r"lea ([A-Za-z0-9_.]+)(?:\+(\d+))?\(%rip\),%{}"
     u8 = checkpoint_and_epoch_link.operand([cu[cu.index("callq runtime.makeslice") - 3]], lea.format("rax"))
     wb = r"cmpl \$0x0,([A-Za-z0-9_.]+)(?:\+(\d+))?\(%rip\)"
@@ -139,8 +139,8 @@ def items(outdir, cpdir, addir):
     return data, its
 
 
-def write_data(outdir, cpdir, addir):
-    data, its = items(outdir, cpdir, addir)
+def write_data(outdir, checkpoint_dir, attestation_data_dir):
+    data, its = items(outdir, checkpoint_dir, attestation_data_dir)
     for it in its:
         print("item", it[:4])
     data.ITEMS = its

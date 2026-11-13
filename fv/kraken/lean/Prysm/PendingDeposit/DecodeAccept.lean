@@ -9,7 +9,7 @@ import Prysm.PendingDeposit.Statements
 Hand-written AFTER the raw generator output (`Prysm/PendingDeposit/GeneratedDecodeSteps.lean`, `decoder --steps`, exit 0,
 5/5 walker-covered) was committed. Statement = the pre-committed hand statement `Prysm.PendingDeposit.Decode.accept_statement`
 (`Prysm/PendingDeposit/Statements.lean`, unchanged). `--steps --compose` refuses by design, so every field composition is HAND text
-(`pd_gg_*_field`) over the GENERATED theorems, used as emitted:
+(`Decode.from_generated_steps_*_field`) over the GENERATED theorems, used as emitted:
 * head 0–13: `Decode.head` (hand; `decpro_seg` with F = 64, dB = 88, size 192, then the spills 11–13 as `step_store`);
 * PublicKey 14–48: generated segment (offset-0 form) + generated tail steps 38, 39, 47, 48;
 * WithdrawalCredentials 49–84: generated segment + generated tail steps 74, 75, 83, 84;

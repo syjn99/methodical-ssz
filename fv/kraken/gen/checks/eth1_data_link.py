@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Eth1Data hold-out: call graph and link tables of the real v1alpha1.Eth1Data UnmarshalSSZ and MarshalSSZTo
+"""Call graph and link tables of the real v1alpha1.Eth1Data UnmarshalSSZ and MarshalSSZTo
 on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set; written after the Eth1Data
-hold-out was opened at 2026-11-11T01:59:11Z; the text of `beacon_block_header_link.py` with the function set changed).
+hold-out had been run; the text of `beacon_block_header_link.py` with the function set changed).
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   eth1_data_link.py callgraph <objdump> <out.json>          call targets with contract class
   eth1_data_link.py filter <outdir> <objdump> <elf> <nm>    <outdir>/target.objdump of FUNCS (+ ELF/nm links)
-  eth1_data_link.py data <outdir> <cp-linkdir> <ad-linkdir> after `conv.py <outdir>/target.objdump
+  eth1_data_link.py data <outdir> <checkpoint-link-dir> <attestation-data-link-dir> after `convert_objdump.py <outdir>/target.objdump
                                                     <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
@@ -79,7 +79,7 @@ def filt(outdir, objdump, elf, nm):
     return checkpoint_and_epoch_link.filt(outdir, objdump, elf, nm)
 
 
-def items(outdir, cpdir, addir):
+def items(outdir, checkpoint_dir, attestation_data_dir):
     """Eth1Data has no fmt.errorf and no newobject call. The shared operands (uint8 type word of makeslice
     and growslice, ssz.ErrSize, ssz.ErrBytesLength, writeBarrier) are asserted equal to the Checkpoint /
     AttestationData sets' operands. check.py (f) needs one data file at least: the set writes the two
@@ -87,10 +87,10 @@ def items(outdir, cpdir, addir):
     spec = importlib.util.spec_from_file_location("data", LINK / "data.py")
     data = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(data)
-    E1 = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data"
-    du, dm = checkpoint_and_epoch_link.ins(outdir, f"{E1}.UnmarshalSSZ"), checkpoint_and_epoch_link.ins(outdir, f"{E1}.MarshalSSZTo")
-    cu, cm = checkpoint_and_epoch_link.ins(cpdir, f"{checkpoint_and_epoch_link.CP}.UnmarshalSSZ"), checkpoint_and_epoch_link.ins(cpdir, f"{checkpoint_and_epoch_link.CP}.MarshalSSZTo")
-    au = checkpoint_and_epoch_link.ins(addir, "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ")
+    ETH1_DATA = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data"
+    du, dm = checkpoint_and_epoch_link.ins(outdir, f"{ETH1_DATA}.UnmarshalSSZ"), checkpoint_and_epoch_link.ins(outdir, f"{ETH1_DATA}.MarshalSSZTo")
+    cu, cm = checkpoint_and_epoch_link.ins(checkpoint_dir, f"{checkpoint_and_epoch_link.CHECKPOINT_SYMBOL}.UnmarshalSSZ"), checkpoint_and_epoch_link.ins(checkpoint_dir, f"{checkpoint_and_epoch_link.CHECKPOINT_SYMBOL}.MarshalSSZTo")
+    au = checkpoint_and_epoch_link.ins(attestation_data_dir, "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ")
     lea = r"lea ([A-Za-z0-9_.]+)(?:\+(\d+))?\(%rip\),%{}"
     u8 = checkpoint_and_epoch_link.operand([cu[cu.index("callq runtime.makeslice") - 3]], lea.format("rax"))
     mks = [i for i, l in enumerate(du) if l == "callq runtime.makeslice"]
@@ -114,8 +114,8 @@ def items(outdir, cpdir, addir):
     return data, its
 
 
-def write_data(outdir, cpdir, addir):
-    data, its = items(outdir, cpdir, addir)
+def write_data(outdir, checkpoint_dir, attestation_data_dir):
+    data, its = items(outdir, checkpoint_dir, attestation_data_dir)
     for it in its:
         print("item", it[:4])
     data.ITEMS = its

@@ -120,14 +120,14 @@ How to handle a new finding is in `../README.md` section 7.
 
 - What: the Kraken parser rejects the SIB index `%riz` and multi-byte padding `nop` forms. The `include_x64` elaborator rejects some condition codes.
 - Where: 13 generated functions had `%riz`.
-- State: worked around. `link/conv.py --norm` drops `%riz` and writes padding as `nop`. `include_x64_code` (`lean/Machine/Include.lean`) uses the runtime parser.
+- State: worked around. `link/convert_objdump.py --norm` drops `%riz` and writes padding as `nop`. `include_x64_code` (`lean/Machine/Include.lean`) uses the runtime parser.
 
 ### Converter wrote a negative 32-bit displacement as a large positive number
 
 - What: `go tool objdump -gnu` writes a displacement of −228 as `0xffffff1c`. Kraken reads that form as a positive number, so the address in the proof is not the machine address.
-- Where: `link/conv.py` output, for example `IndexedAttestation.UnmarshalSSZ`. The full Prysm disassembly had 161 such operands in 104 functions.
+- Where: `link/convert_objdump.py` output, for example `IndexedAttestation.UnmarshalSSZ`. The full Prysm disassembly had 161 such operands in 104 functions.
 - How it shows: `clang` rejected the line in the reassembly step of the link check.
-- State: fixed in commit `93b3f2a`. `link/conv.py --norm` writes the signed form. The SIB form without a base and the segment form are not handled. The Prysm ELF has none of them.
+- State: fixed in commit `93b3f2a`. `link/convert_objdump.py --norm` writes the signed form. The SIB form without a base and the segment form are not handled. The Prysm ELF has none of them.
   A displacement range check in `link/check.py` is not added.
   One converted file that Lean includes keeps the old form: `prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Validator.MarshalSSZTo.S`
   (`lea 0xffffff58(%rsp),%r12`). No theorem uses its program constant `Prysm.Validator.Code.marshalSSZTo`.
@@ -175,10 +175,11 @@ How to handle a new finding is in `../README.md` section 7.
 ### Link check result changes on a new run
 
 - What: `link/check.py` hashes the ELF, the `norm/*.S` files, the `data/*.data` files and `AXIOMS.txt` if it exists. It hashes no Lean file.
-  Three tracked `RESULT` files have sha256 lines for `lean/Fk/Code.lean` and `AXIOMS.txt`. Neither file is in the tree now.
-- Where: `link/out/RESULT`, `prysm/go1.26.10/link/RESULT` and `prysm/go1.26.10/capacity-reserved/link/RESULT`.
+  Two tracked `RESULT` files have sha256 lines for `lean/Fk/Code.lean` and `AXIOMS.txt`. Neither file is in the tree now.
+- Where: `prysm/go1.26.10/link/RESULT` and `prysm/go1.26.10/capacity-reserved/link/RESULT` (records of earlier runs).
 - Effect: a new run writes these files without the two lines, with a different bundle hash.
-- State: open for these three files. `prysm/go1.26.10/link-set/RESULT` has no such line.
+- State: open for these two records. A new run on `link/out` dropped the two lines from `link/out/RESULT`, and
+  `prysm/go1.26.10/link-set/RESULT` never had them.
 
 ### Link set `prysm/go1.26.10/link` cannot be checked from the tracked files
 
@@ -222,16 +223,17 @@ How to handle a new finding is in `../README.md` section 7.
 - What: five Lean mutants fail, but not inside their designated theorem, or they time out.
   The runs on commit `0174730a` and on the current tree give the same result.
 - Where:
-  - `checkpoint-encode-fast-path-of-kind-tie-stmt-field` (`prysm/go1.26.10/evidence/generator-cases/negative-cases-encoder-lemmas.json`, `Prysm.Checkpoint.Encode.fast_path_of_kind`): class `outside`.
+  - `checkpoint-encode-fast-path-of-kind-statement-encode-layout-32-to-48` (`prysm/go1.26.10/evidence/generator-cases/negative-cases-encoder-lemmas.json`, `Prysm.Checkpoint.Encode.fast_path_of_kind`): class `outside`.
     The mutation is in the statement. The second error is a heartbeat timeout of the whole declaration.
     Lean reports it at the start of the command, the `set_option … in` line above the `theorem` line.
     The theorem range of the tool starts at the `theorem` line.
-  - `sync-aggregate-bitslen63` (`prysm/go1.26.10/evidence/lists-and-vectors/negative-cases-sync-aggregate-and-sync-committee.json`, `Prysm.SyncAggregate.Decode.accept`): class `outside`.
+  - `sync-aggregate-decode-accept-code-movq-0x40-to-0x3f` (`prysm/go1.26.10/evidence/lists-and-vectors/negative-cases-sync-aggregate-and-sync-committee.json`, `Prysm.SyncAggregate.Decode.accept`): class `outside`.
     The code mutation changes `movq $0x40,0x10(%rdx)` to `movq $0x3f,0x10(%rdx)`.
     The only error (unsolved goals) is 7 lines before the theorem line.
     That line is in the proof of the segment lemma `Prysm.SyncAggregate.Decode.bits_seg`, which reads the same code directives.
-  - `blob-identifier-kindacc-stmt-jret` (`prysm/go1.26.10/evidence/generator-cases/negative-cases-call-segments.json`, `Prysm.BlobIdentifier.Decode.accept_is_kind`): class `timeout_heartbeat`.
-  - `pending-deposit-tie-kind-jret` and `beacon-block-header-tie-kind-ptr` (`prysm/go1.26.10/evidence/generator-cases/negative-cases-whole-accept.json`,
+  - `blob-identifier-decode-accept-is-kind-statement-bytes-32-to-33` (`prysm/go1.26.10/evidence/generator-cases/negative-cases-call-segments.json`, `Prysm.BlobIdentifier.Decode.accept_is_kind`): class `timeout_heartbeat`.
+  - `pending-deposit-decode-accept-is-kind-any-frame-statement-layout-mixed-frame40-131-to-130` and
+    `beacon-block-header-decode-accept-is-kind-any-frame-statement-prysm-2-to-1` (`prysm/go1.26.10/evidence/generator-cases/negative-cases-whole-accept.json`,
     `Prysm.PendingDeposit.Decode.accept_is_kind_any_frame` and `Prysm.BeaconBlockHeader.Decode.accept_is_kind_any_frame`): class `timeout_heartbeat`.
   - The three timeouts occur at the default limit of 200000 heartbeats.
     Each mutant changes one literal of the kind instance, and `rfl` does not refute the equality within the limit.
@@ -260,7 +262,7 @@ How to handle a new finding is in `../README.md` section 7.
 ### Negative test time limit killed only the wrapper
 
 - What: the per-case time limit killed only the memory-limit wrapper, not the Lean process tree.
-- Where: `gen/tools/memcap.py`.
+- Where: `gen/tools/memory_limit.py`.
 - State: fixed in commit `cc61ebc`.
 
 ### Slow proof steps
@@ -309,7 +311,7 @@ How to handle a new finding is in `../README.md` section 7.
   and `q27-ref-trailing-space` (a trailing space after a right name), and `q46-escaped-key`, whose replacement of the
   reference `Fv1.luDesc` by null matches nothing.
 - Where: `gen/desc/spec-names-old-new.tsv` gives the present name of each earlier name.
-- State: open. The review sources are records (`gen/desc/review/SOURCES.sha256`). A fix translates the names in
+- State: open. The review sources are records, copied unchanged from the review. A fix translates the names in
   `test_desc.py` and needs a checker run with Lean.
 
 ### A code directory is not a Lake input
@@ -317,7 +319,7 @@ How to handle a new finding is in `../README.md` section 7.
 - What: `lean/Prysm/Checkpoint/CapacityReservedCode.lean` includes `.S` files from a directory that `lean/lakefile.toml` does not declare as an input.
   A change in such a file does not make Lake build the proofs again.
 - Where: `prysm/go1.26.10/capacity-reserved/link/norm` (the capacity-reserved test ELF). The link set `prysm/go1.26.10/link-set` is an input.
-  `ElfData.PrysmTarget.typeDeposit_Data_addr` comes from the data include of its data file. `gen/checks/depcheck_data.py` checks this.
+  `ElfData.PrysmTarget.typeDeposit_Data_addr` comes from the data include of its data file. `gen/checks/deposit_data_include_check.py` checks this.
 - State: open for the capacity-reserved test ELF. A `lakefile.toml` change needs user approval.
 
 ### Inventory script trusts its method list

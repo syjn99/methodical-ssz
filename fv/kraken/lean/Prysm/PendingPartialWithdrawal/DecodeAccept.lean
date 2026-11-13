@@ -9,8 +9,8 @@ import Codec.InlineUint64RegisterBase
 /-!
 # Real Prysm `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ`, accept path, Go 1.26.10 (first instance of the call-site lemmas)
 
-Hand-written (after the hold-out; the type is development data now). The statement is
-the independent hand statement `Prysm.PendingPartialWithdrawal.Decode.accept_statement` (`Prysm/Deposit_Data/Statements.lean`), unchanged. The hold-out evaluation did
+Hand-written (after the frozen generator ran on this hold-out type; the type is development data now). The statement is
+the independent hand statement `Prysm.PendingPartialWithdrawal.Decode.accept_statement` (`Prysm/Deposit_Data/Statements.lean`), unchanged. The proof attempts on the hold-out type did
 not prove it (three attempts). Proof: a chain of `eventually_trans` over
 
 * `Decode.head` (hand steps, directives 0–14: stack guard, prologue `sub $0x48`, length check, three spills, nil check),

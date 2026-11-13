@@ -8,12 +8,19 @@ Paths in this file are relative to `fv/kraken/`. A command that starts with `fv/
 
 | Program | Task |
 | --- | --- |
-| `link/conv.py` | Converts `go tool objdump -gnu` output into one labeled `.S` file per function, plus `all.S` with all functions in address order |
+| `link/convert_objdump.py` | Converts `go tool objdump -gnu` output into one labeled `.S` file per function, plus `all.S` with all functions in address order |
 | `link/data.py` | Writes one data file per ELF data item of the test target. With `--check`, it compares a new extraction with the tracked files |
 | `link/check.py` | The link check. It writes the result file `RESULT` |
 | `link/build.sh` | Builds the test target ELF and runs the steps above for it |
 
-`conv.py` changes only what Kraken cannot read directly:
+The build info of the test target ELF names its main package `github.com/OffchainLabs/methodical-ssz/fv/kraken/cmd/p1bin`.
+Its line table names the source files `cmd/p1bin/main.go`, `target/types.ssz.go` and `target/types1b.ssz.go`.
+These names are identities of that ELF, so they stay. The generator writes `types1b.ssz.go` from `types1b.go`.
+The file name `p1bin-amd64` of an ELF is the name of that main package; `check.py` and the data files read it.
+The data ids of `link/out/data/` follow the rule of `data.py` `item_id`; `link/out/data-ids-old-new.tsv` gives the earlier ids.
+`staticuint64s` keeps its id: it is the symbol `runtime.staticuint64s`, and `Runtime/StaticUint64s.lean` includes it.
+
+`convert_objdump.py` changes only what Kraken cannot read directly:
 
 - A jump or call target becomes a label. Inside a function, the label is `L_<function>_<offset>`. Outside, it is the symbol name.
 - A `disp(%rip)` operand becomes `symbol+offset(%rip)`.
@@ -60,7 +67,7 @@ A new run writes these files without the two lines, so their bundle hash changes
 ## 4. Requirements
 
 - `data.py --check` on `link/out` needs Python only. The test target ELF is tracked.
-- `conv.py` needs Python only, and a disassembly and symbol listing as input.
+- `convert_objdump.py` needs Python only, and a disassembly and symbol listing as input.
 - `check.py` needs the ELF, `llvm-objdump` and `clang`.
 - A Prysm link set needs the Prysm ELF and its symbol listing, which are not tracked (`../README.md` section 3).
 
@@ -76,7 +83,7 @@ A data file is text. Each line has one directive. A line that starts with `#` is
 
 | Directive | Meaning |
 | --- | --- |
-| `at <label> <offset>` | The first directive. The address of the item is the label plus the offset. The label is the short name that `conv.py` writes |
+| `at <label> <offset>` | The first directive. The address of the item is the label plus the offset. The label is the short name that `convert_objdump.py` writes |
 | `bytes <hex> ...` | Raw bytes, as two lowercase hexadecimal digits each, separated by spaces |
 | `word <label> <offset>` | An 8-byte little-endian absolute address: the label plus the offset |
 

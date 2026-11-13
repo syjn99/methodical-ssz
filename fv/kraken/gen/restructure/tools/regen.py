@@ -5,10 +5,9 @@ usage (from the repository root):
   python3 -I -B fv/kraken/gen/restructure/tools/regen.py <work dir> [--files <files.tsv>]... > <result.txt>
 
   <work dir>   scratch directory. It must not exist. Delete it later with `trash`.
-  --files      a files.tsv of a map. The module names of its rows let the script recognize the imports that the
-               generator adds by itself in the hold-out files, and the earlier output names of the evidence tools.
+  --files      a files.tsv of a map. Its rows give the earlier output names of the evidence tools.
                Give the files.tsv of the shared-layer map and of the flat-types map (the two maps that moved
-               those modules):
+               those files):
                --files fv/kraken/gen/restructure/maps/shared-layer/files.tsv
                --files fv/kraken/gen/restructure/maps/flat-types/files.tsv
 
@@ -22,7 +21,7 @@ Expected: the same lines, except that the generator outputs of the moved types c
 The generators that write files of a moved type must reproduce the moved file, or the difference needs a reason.
 
 The script knows the generators and the output names of the tree after the flat-types step
-(gen/generator/gen.sh, the hold-out headers, f24 and e2c tools, desc_to_lean, list_desc_to_lean, layout, attestation_data_layout).
+(gen/generator/gen.sh, the hold-out headers, the flat-type and encoder specification tools, desc_to_lean, list_desc_to_lean, layout, attestation_data_layout).
 Section 1 compares every Lean file that gen/generator/gen.sh writes. Sections 2 to 4 name the outputs by their paths in
 lean/Prysm/<GoTypeName>/. A tool of section 4 that still writes a file under an earlier name is compared with the
 tracked file of that name in the files.tsv of the maps given with --files.
@@ -50,15 +49,6 @@ if os.path.exists(work):
     sys.exit(f'error: {work} exists. Delete it with trash, or give another directory.')
 root = subprocess.run(['git', 'rev-parse', '--show-toplevel'], capture_output=True, text=True, check=True).stdout.strip()
 KRAKEN = os.path.join(root, 'fv/kraken')
-modules = {}
-for ftsv in file_maps:
-    for line in open(os.path.join(root, ftsv) if not os.path.isabs(ftsv) else ftsv):
-        if line.startswith('#') or not line.strip():
-            continue
-        old, new = line.split('\t')[:2]
-        if old.startswith('fv/kraken/lean/') and old.endswith('.lean') and new.startswith('fv/kraken/lean/'):
-            modules[old[15:-5].replace('/', '.')] = new[15:-5].replace('/', '.')
-old_module_of = {v: k for k, v in modules.items()}
 # earlier file name (base name) of a moved Lean file -> its path relative to fv/kraken
 moved_path_of = {}
 for ftsv in file_maps:
@@ -118,10 +108,18 @@ for produced in sorted(p for p in stats_after if stats_before.get(p) != stats_af
 if r.returncode:
     results.append(('gen.sh', 'stderr', r.stderr.decode()[-400:]))
 
-# 2. Hold-out commands: rebuilt from the header of each file. The generator adds some imports by itself.
-#    They are recognized by their names before the shared-layer step (hence --files).
-GENERATOR_ADDED = re.compile(r"^E2eScal\.(Kind\w*|CallReg|SegRegZ|SegReg|StepK|CallDec|FieldComp|NopView|AcceptTies|"
-                             r"RejectTies|U64RR)$")
+# 2. Hold-out commands: rebuilt from the header of each file. The generator adds some imports by itself (the kind
+#    modules and the shared layer modules below); the command gets only the other imports.
+GENERATOR_ADDED = {
+    'Codec.CalleeDecode', 'Codec.CalleeDecodeWindow', 'Codec.FieldFrame', 'Codec.FixedBytesDecodeWindow',
+    'Codec.FixedBytesDecodeWindowOffsetZero', 'Codec.InlineUint64RegisterBase', 'Codec.Kind.Bytes32DecodeOffsetZero',
+    'Codec.Kind.CalleeDecode', 'Codec.Kind.DecodeAcceptAnyFrame', 'Codec.Kind.DecodeAcceptAnyFrameInstances',
+    'Codec.Kind.DecodeAcceptComposition', 'Codec.Kind.EncodeFastPathAnyFrame', 'Codec.Kind.FieldPatterns',
+    'Codec.Kind.FixedBytesDecode', 'Codec.Kind.FixedBytesDecodeWindow', 'Codec.Kind.InlineUint64',
+    'Codec.Kind.WindowSteps', 'Codec.NopWindow', 'Codec.WindowSteps',
+    'Prysm.BlobIdentifier.DecodeRejectSizeKindInstances', 'Prysm.BlobIdentifier.GeneratedDecodeAcceptCompositionKind',
+    'Prysm.Slot.Uint64DecoderKindAnchors',
+}
 # hold-out file (path under lean/Prysm/) -> the prefix of its generated names (the --prefix of its command)
 HOLD_OUT = {'BlobIdentifier/GeneratedDecodeRootFieldSegments': 'Decode.generated_root',
             'DepositMessage/GeneratedDecodeRootFieldSegments': 'Decode.generated_root',
@@ -144,7 +142,7 @@ for f, prefix in HOLD_OUT.items():
     mode = f"--{m[1]}" if m else ""
     const = 'unmarshalSSZ'
     opened = re.search(r"^open (?:Fk|Machine Runtime) (\S+)", tx, re.M)[1]
-    user = [i for i in imps if not GENERATOR_ADDED.match(old_module_of.get(i, i))]
+    user = [i for i in imps if i not in GENERATOR_ADDED]
     cmd = ["python3", "-I", "-B", "gen/generator/generator.py", "decoder"] + ([mode] if mode else [])
     out = os.path.join(work, f'holdout.{f.replace("/", ".")}.lean')
     partial = "PARTIAL OUTPUT" in tx[:600]
@@ -156,7 +154,7 @@ for f, prefix in HOLD_OUT.items():
     gen = open(out, 'rb').read() if partial and os.path.exists(out) else r.stdout
     cmp('holdout rc=%d' % r.returncode, p, gen)
 
-# 3. f24 part 1 (the committed outputs only).
+# 3. The generator run of the flat types (the committed outputs only).
 part1 = open(os.path.join(COPY_KRAKEN, 'prysm/go1.26.10/evidence/flat-types/runs/run_generators.sh')).read()
 rows = [l.split() for l in part1.split("<<'TYPES'\n")[1].split('TYPES')[0].strip().split('\n')]
 NORM = 'prysm/go1.26.10/link-set/norm'
@@ -174,9 +172,9 @@ for kind, go_type in rows:
                f'Prysm.{go_type}.Code', '--open', f'Prysm.{go_type}.Code',
                '--summary', os.path.join(work, f'{go_type}.{tag[2:]}.summary.json')]
         r = run(cmd, COPY_KRAKEN)
-        cmp('f24 part1 rc=%d' % r.returncode, tr, r.stdout)
+        cmp('flat-type run rc=%d' % r.returncode, tr, r.stdout)
 
-# 4. Evidence tools of f24 and e2c.
+# 4. Evidence tools of the flat types and the encoder specification emitter.
 TOOLS = 'prysm/go1.26.10/evidence/flat-types/tools'
 for name, cmdf, glob in (
         ('flat_types_spec', lambda o: ['python3', '-I', '-B', f'{TOOLS}/flat_types_spec.py', o], r'Spec\.lean$'),

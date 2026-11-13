@@ -1,12 +1,12 @@
 [
  {
-  "id": "codec-callee-decode-calldec-control",
+  "id": "codec-callee-decode-calldec-seg-control",
   "module": "Codec/CalleeDecode.lean",
   "theorem": "Codec.calldec_seg",
   "kind": "control"
  },
  {
-  "id": "codec-callee-decode-calldec-stmt-dst",
+  "id": "codec-callee-decode-calldec-seg-statement-e8-e8-to-c0",
   "module": "Codec/CalleeDecode.lean",
   "theorem": "Codec.calldec_seg",
   "kind": "stmt",
@@ -14,7 +14,7 @@
   "new": "⋆ Eq (e8.At src) ⋆ Eq (c0.At dst) ⋆ F) st.data.dmem"
  },
  {
-  "id": "codec-callee-decode-calldec-stmt-guard",
+  "id": "codec-callee-decode-calldec-seg-statement-hguard-a-ret-to-sp",
   "module": "Codec/CalleeDecode.lean",
   "theorem": "Codec.calldec_seg",
   "kind": "stmt",
@@ -22,7 +22,7 @@
   "new": "(hguard : guard.toNat < sp.toNat)"
  },
  {
-  "id": "codec-callee-decode-calldec-stmt-rax",
+  "id": "codec-callee-decode-calldec-seg-statement-rax-0-to-1",
   "module": "Codec/CalleeDecode.lean",
   "theorem": "Codec.calldec_seg",
   "kind": "stmt",
@@ -30,7 +30,7 @@
   "new": "st.data.regs.rax = 1 ∧ st.data.regs.rbx = 0"
  },
  {
-  "id": "codec-callee-decode-calldec-stmt-spec",
+  "id": "codec-callee-decode-calldec-seg-statement-h-c-fn-to-lok",
   "module": "Codec/CalleeDecode.lean",
   "theorem": "Codec.calldec_seg",
   "kind": "stmt",
@@ -38,13 +38,13 @@
   "new": "(hC : U64CalleeAccept lok)"
  },
  {
-  "id": "codec-callee-decode-first-control",
+  "id": "codec-callee-decode-callarg-first-seg-control",
   "module": "Codec/CalleeDecode.lean",
   "theorem": "Codec.callarg_first_seg",
   "kind": "control"
  },
  {
-  "id": "codec-callee-decode-first-stmt-rcx",
+  "id": "codec-callee-decode-callarg-first-seg-statement-rcx-8-to-9",
   "module": "Codec/CalleeDecode.lean",
   "theorem": "Codec.callarg_first_seg",
   "kind": "stmt",
@@ -52,7 +52,7 @@
   "new": "st.data.regs.rcx = 9 ∧"
  },
  {
-  "id": "codec-callee-decode-reload-stmt-src",
+  "id": "codec-callee-decode-callarg-reload-seg-statement-rbx-a-src-to-bf",
   "module": "Codec/CalleeDecode.lean",
   "theorem": "Codec.callarg_reload_seg",
   "kind": "stmt",
@@ -60,7 +60,7 @@
   "new": "st.data.regs.rbx.toBitVec = bf"
  },
  {
-  "id": "codec-callee-decode-lea-stmt-rsi",
+  "id": "codec-callee-decode-callarg-lea-seg-statement-rsi-a-f-to-rcv",
   "module": "Codec/CalleeDecode.lean",
   "theorem": "Codec.callarg_lea_seg",
   "kind": "stmt",
@@ -68,7 +68,7 @@
   "new": "st.data.regs.rsi.toBitVec = rcv"
  },
  {
-  "id": "codec-callee-decode-mov-stmt-swap",
+  "id": "codec-callee-decode-callarg-mov-seg-statement-rax-none-to-none",
   "module": "Codec/CalleeDecode.lean",
   "theorem": "Codec.callarg_mov_seg",
   "kind": "stmt",
@@ -76,13 +76,13 @@
   "new": "st.data.regs.rax = s.regs.rdx ∧ st.data.regs.rbx = s.regs.rsi"
  },
  {
-  "id": "codec-inline-uint64-register-base-u64rr-control",
+  "id": "codec-inline-uint64-register-base-u64dec-scratch-register-seg-control",
   "module": "Codec/InlineUint64RegisterBase.lean",
   "theorem": "u64dec_scratch_register_seg",
   "kind": "control"
  },
  {
-  "id": "codec-inline-uint64-register-base-u64rr-stmt-reg",
+  "id": "codec-inline-uint64-register-base-u64dec-scratch-register-seg-statement-h-x-u64-scratch-register-to-reg64-rax-r-x",
   "module": "Codec/InlineUint64RegisterBase.lean",
   "theorem": "u64dec_scratch_register_seg",
   "kind": "stmt",
@@ -90,7 +90,7 @@
   "new": "(hX : rX = Reg64.rax ∨ rX = Reg64.rcx)"
  },
  {
-  "id": "codec-inline-uint64-register-base-u64rr-stmt-field",
+  "id": "codec-inline-uint64-register-base-u64dec-scratch-register-seg-statement-v-v-to-v-f",
   "module": "Codec/InlineUint64RegisterBase.lean",
   "theorem": "u64dec_scratch_register_seg",
   "kind": "stmt",
@@ -98,7 +98,7 @@
   "new": "(Eq (v.At aSrc) ⋆ Eq (vF.At aF) ⋆ R) st.data.dmem"
  },
  {
-  "id": "codec-inline-uint64-register-base-u64rr-stmt-frame",
+  "id": "codec-inline-uint64-register-base-u64dec-scratch-register-seg-statement-r-r-x-r-to-none",
   "module": "Codec/InlineUint64RegisterBase.lean",
   "theorem": "u64dec_scratch_register_seg",
   "kind": "stmt",
@@ -106,13 +106,13 @@
   "new": "(∀ r : Reg64, st.data.regs.get64 r = s.regs.get64 r)"
  },
  {
-  "id": "codec-fixed-bytes-decode-padding-segp-control",
+  "id": "codec-fixed-bytes-decode-padding-bytesdec-seg-pad-control",
   "module": "Codec/FixedBytesDecodePadding.lean",
   "theorem": "Codec.bytesdec_seg_pad",
   "kind": "control"
  },
  {
-  "id": "codec-fixed-bytes-decode-padding-segp-stmt-heap",
+  "id": "codec-fixed-bytes-decode-padding-bytesdec-seg-pad-statement-heap-n-to-none",
   "module": "Codec/FixedBytesDecodePadding.lean",
   "theorem": "Codec.bytesdec_seg_pad",
   "kind": "stmt",
@@ -120,7 +120,7 @@
   "new": "⋆ Heap avail"
  },
  {
-  "id": "codec-fixed-bytes-decode-padding-segp-stmt-head",
+  "id": "codec-fixed-bytes-decode-padding-bytesdec-seg-pad-statement-h-a-bytes-dec-head-pad-to-bytes-dec-head",
   "module": "Codec/FixedBytesDecodePadding.lean",
   "theorem": "Codec.bytesdec_seg_pad",
   "kind": "stmt",
@@ -128,13 +128,13 @@
   "new": "(hA : (bytesDecHead (OfNat.ofNat n) lff dR fL fC).IsInfixAt Host.prog j1)"
  },
  {
-  "id": "pending-partial-withdrawal-pwhead-control",
+  "id": "pending-partial-withdrawal-decode-head-control",
   "module": "Prysm/PendingPartialWithdrawal/DecodeAccept.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.head",
   "kind": "control"
  },
  {
-  "id": "pending-partial-withdrawal-pwhead-stmt-len",
+  "id": "pending-partial-withdrawal-decode-head-statement-hlen-24-to-25",
   "module": "Prysm/PendingPartialWithdrawal/DecodeAccept.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.head",
   "kind": "stmt",
@@ -142,7 +142,7 @@
   "new": "(hlen : s.regs.rcx = 25)"
  },
  {
-  "id": "pending-partial-withdrawal-pwhead-code-control",
+  "id": "pending-partial-withdrawal-decode-head-control-2",
   "module": "Prysm/PendingPartialWithdrawal/DecodeAccept.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.head",
   "kind": "control",
@@ -152,7 +152,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
  },
  {
-  "id": "pending-partial-withdrawal-pwhead-code-spill",
+  "id": "pending-partial-withdrawal-decode-head-code-mov-0x70-rsp-to-0x68-rsp",
   "module": "Prysm/PendingPartialWithdrawal/DecodeAccept.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.head",
   "kind": "code",
@@ -165,7 +165,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
  },
  {
-  "id": "pending-partial-withdrawal-pwepi-code-frame",
+  "id": "pending-partial-withdrawal-decode-epilogue-code-add-0x48-to-0x40",
   "module": "Prysm/PendingPartialWithdrawal/DecodeAccept.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.epilogue",
   "kind": "code",
@@ -178,19 +178,19 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingPartialWithdrawal.UnmarshalSSZ.S"
  },
  {
-  "id": "pending-partial-withdrawal-pwaccept-control",
+  "id": "pending-partial-withdrawal-decode-accept-control",
   "module": "Prysm/PendingPartialWithdrawal/DecodeAccept.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.accept",
   "kind": "control"
  },
  {
-  "id": "pending-partial-withdrawal-ex-call-control",
+  "id": "pending-partial-withdrawal-decode-example-call-index-call-control",
   "module": "Prysm/PendingPartialWithdrawal/DecodeCallSegmentExamples.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.example_call_Index_call",
   "kind": "control"
  },
  {
-  "id": "pending-partial-withdrawal-ex-call-stmt-ret",
+  "id": "pending-partial-withdrawal-decode-example-call-index-call-statement-host-1-to-2",
   "module": "Prysm/PendingPartialWithdrawal/DecodeCallSegmentExamples.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.example_call_Index_call",
   "kind": "stmt",
@@ -198,7 +198,7 @@
   "new": "(Host.addrOf (k + 17 + 2))"
  },
  {
-  "id": "pending-partial-withdrawal-ex-amt-stmt-off",
+  "id": "pending-partial-withdrawal-decode-example-call-amount-seg-statement-h-f-16-to-24",
   "module": "Prysm/PendingPartialWithdrawal/DecodeCallSegmentExamples.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.example_call_Amount_seg",
   "kind": "stmt",
@@ -206,7 +206,7 @@
   "new": "(hF : rcv + (24 : Int64).toBitVec = aF)"
  },
  {
-  "id": "pending-partial-withdrawal-ex-amt-code-reg",
+  "id": "pending-partial-withdrawal-decode-example-call-amount-seg-statement-q-r8-to-r9",
   "module": "Prysm/PendingPartialWithdrawal/DecodeCallSegmentExamples.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.example_call_Amount_seg",
   "kind": "stmt",
@@ -214,7 +214,7 @@
   "new": "(q := Codec.u64DecScratchRegister Reg64.r9 8 16)"
  },
  {
-  "id": "deposit-data-ex-wc-stmt-nopad",
+  "id": "deposit-data-decode-example-call-withdrawal-credentials-seg-statement-q-true-to-false",
   "module": "Prysm/Deposit_Data/DecodeCallSegmentExamples.lean",
   "theorem": "Prysm.Deposit_Data.Decode.example_call_WithdrawalCredentials_seg",
   "kind": "stmt",
@@ -222,13 +222,13 @@
   "new": "(q := Codec.bytesDecHeadOptionalPadding false 32"
  },
  {
-  "id": "beacon-block-header-control",
+  "id": "beacon-block-header-decode-head-from-call-segments-control",
   "module": "Prysm/BeaconBlockHeader/DecodeHeadFromCallSegments.lean",
   "theorem": "Prysm.BeaconBlockHeader.Decode.head_from_call_segments",
   "kind": "control"
  },
  {
-  "id": "beacon-block-header-stmt-slot",
+  "id": "beacon-block-header-decode-head-from-call-segments-statement-host-56-to-57",
   "module": "Prysm/BeaconBlockHeader/DecodeHeadFromCallSegments.lean",
   "theorem": "Prysm.BeaconBlockHeader.Decode.head_from_call_segments",
   "kind": "stmt",
@@ -236,13 +236,13 @@
   "new": "(Host.addrOf (k + 57)).toBitVec.toInt).At (s.regs.rsp.toBitVec - 112))"
  },
  {
-  "id": "eth1-data-kindacc-control",
+  "id": "eth1-data-decode-accept-is-kind-control",
   "module": "Prysm/Eth1Data/DecodeAcceptComposition.lean",
   "theorem": "Prysm.Eth1Data.Decode.accept_is_kind",
   "kind": "control"
  },
  {
-  "id": "blob-identifier-kindacc-stmt-jret",
+  "id": "blob-identifier-decode-accept-is-kind-statement-bytes-32-to-33",
   "module": "Prysm/BlobIdentifier/DecodeAcceptComposition.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.accept_is_kind",
   "kind": "stmt",
@@ -250,7 +250,7 @@
   "new": "[.bytes 32, .u64] 33"
  },
  {
-  "id": "deposit-message-kindacc-stmt-order",
+  "id": "deposit-message-decode-accept-is-kind-statement-bytes-none-to-none",
   "module": "Prysm/DepositMessage/DecodeAcceptComposition.lean",
   "theorem": "Prysm.DepositMessage.Decode.accept_is_kind",
   "kind": "stmt",
@@ -258,7 +258,7 @@
   "new": "[.bytes 32, .bytes 48, .u64] 68"
  },
  {
-  "id": "eth1-data-kindacc-stmt-state",
+  "id": "eth1-data-decode-accept-is-kind-statement-prysm-true-to-false",
   "module": "Prysm/Eth1Data/DecodeAcceptComposition.lean",
   "theorem": "Prysm.Eth1Data.Decode.accept_is_kind",
   "kind": "stmt",
@@ -266,7 +266,7 @@
   "new": "Prysm.Eth1Data.Code.unmarshalSSZ false"
  },
  {
-  "id": "deposit-data-kindacc-stmt-size",
+  "id": "deposit-data-decode-accept-is-kind-statement-bytes-96-to-48",
   "module": "Prysm/Deposit_Data/DecodeAcceptComposition.lean",
   "theorem": "Prysm.Deposit_Data.Decode.accept_is_kind",
   "kind": "stmt",
@@ -274,7 +274,7 @@
   "new": ".bytes 48] 106"
  },
  {
-  "id": "slot-rel-stmt-label",
+  "id": "slot-decode-accept-function-spec-is-callee-accept-statement-prysm-slot-to-committee-index",
   "module": "Prysm/Slot/CalleeDecodeFunctionSpecs.lean",
   "theorem": "Prysm.Slot.Decode.accept_function_spec_is_callee_accept",
   "kind": "stmt",
@@ -282,13 +282,13 @@
   "new": "Prysm.CommitteeIndex.Code.unmarshalSSZLabel"
  },
  {
-  "id": "pending-partial-withdrawal-witness-decode-accept-runs-wit-control",
+  "id": "pending-partial-withdrawal-witness-decode-accept-runs-control",
   "module": "Prysm/PendingPartialWithdrawal/WitnessDecodeAccept.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.runs",
   "kind": "control"
  },
  {
-  "id": "pending-partial-withdrawal-wit-stmt-guard",
+  "id": "pending-partial-withdrawal-witness-decode-accept-runs-statement-zeros-0-to-0x10040",
   "module": "Prysm/PendingPartialWithdrawal/WitnessDecodeAccept.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Witness.DecodeAccept.runs",
   "kind": "stmt",

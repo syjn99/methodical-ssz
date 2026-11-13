@@ -6,7 +6,7 @@ import Prysm.Eth1Data.DecodeFieldSegmentOffsetZero
 /-!
 # Real Prysm `(*v1alpha1.Eth1Data).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (hold-out)
 
-Hand-written after the hold-out was opened (not generator output: the one generator run,
+Hand-written after the frozen generator ran on this hold-out type (not generator output: the one generator run,
 emitted nothing). The head is the text of `Prysm/BeaconBlockHeader/DecodeHead.lean` without the callees; the composition
 is the text of `Prysm/BeaconBlockHeader/DecodeAccept.lean` with the Eth1Data indices, offsets and two segments.
 

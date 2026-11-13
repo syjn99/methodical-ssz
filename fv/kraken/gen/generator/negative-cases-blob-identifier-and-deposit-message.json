@@ -1,12 +1,12 @@
 [
  {
-  "id": "blob-identifier-gen-control",
+  "id": "blob-identifier-decode-generated-root-block-root-seg-control",
   "module": "Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.generated_root_BlockRoot_seg",
   "kind": "control"
  },
  {
-  "id": "blob-identifier-gen-stmt",
+  "id": "blob-identifier-decode-generated-root-block-root-seg-statement-pc-11-to-12",
   "module": "Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.generated_root_BlockRoot_seg",
   "kind": "stmt",
@@ -14,7 +14,7 @@
   "new": "st.pc = Host.addrOf (k + 26 + 12)"
  },
  {
-  "id": "blob-identifier-acc-control",
+  "id": "blob-identifier-decode-accept-control",
   "module": "Prysm/BlobIdentifier/DecodeAccept.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.accept",
   "kind": "control",
@@ -24,7 +24,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S"
  },
  {
-  "id": "blob-identifier-acc-code-idx",
+  "id": "blob-identifier-decode-accept-code-mov-0x20-rcx-to-0x18-rcx",
   "module": "Prysm/BlobIdentifier/DecodeAccept.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.accept",
   "kind": "code",
@@ -36,7 +36,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S"
  },
  {
-  "id": "blob-identifier-acc-stmt-heap",
+  "id": "blob-identifier-decode-accept-statement-heap-32-to-31",
   "module": "Prysm/BlobIdentifier/DecodeAccept.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.accept",
   "kind": "stmt",
@@ -44,7 +44,7 @@
   "new": "⋆ Heap (avail - 31)"
  },
  {
-  "id": "blob-identifier-acc-stmt-idx",
+  "id": "blob-identifier-decode-accept-statement-idx-32-to-24",
   "module": "Prysm/BlobIdentifier/DecodeAccept.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.accept",
   "kind": "stmt",
@@ -52,7 +52,7 @@
   "new": "⋆ Eq (idx.At (s.regs.rax.toBitVec + 24))"
  },
  {
-  "id": "blob-identifier-acc-stmt-weaken",
+  "id": "blob-identifier-decode-accept-statement-hav-32-avail-to-true",
   "module": "Prysm/BlobIdentifier/DecodeAccept.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.accept",
   "kind": "stmt",
@@ -60,7 +60,7 @@
   "new": "(hav : True)"
  },
  {
-  "id": "blob-identifier-rej-control",
+  "id": "blob-identifier-decode-reject-size-control",
   "module": "Prysm/BlobIdentifier/DecodeRejectSize.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.reject_size",
   "kind": "control",
@@ -70,7 +70,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BlobIdentifier.UnmarshalSSZ.S"
  },
  {
-  "id": "blob-identifier-rej-stmt",
+  "id": "blob-identifier-decode-reject-size-statement-rbx-e1-to-e0",
   "module": "Prysm/BlobIdentifier/DecodeRejectSize.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.reject_size",
   "kind": "stmt",
@@ -78,7 +78,7 @@
   "new": "st.data.regs.rbx = e0"
  },
  {
-  "id": "blob-identifier-spec-stmt-size",
+  "id": "blob-identifier-ssz-value-spec-accepts-iff-statement-size-40-to-41",
   "module": "Prysm/BlobIdentifier/Spec.lean",
   "theorem": "Prysm.BlobIdentifier.SszValue.spec_accepts_iff",
   "kind": "stmt",
@@ -86,7 +86,7 @@
   "new": "bs.size = 41"
  },
  {
-  "id": "blob-identifier-ser-stmt-uint4",
+  "id": "blob-identifier-desc-serialize-checker-statement-serialize-none-to-match-with-container",
   "module": "Prysm/BlobIdentifier/Spec.lean",
   "theorem": "Prysm.BlobIdentifier.desc_serialize_checker",
   "kind": "stmt",
@@ -94,7 +94,7 @@
   "new": "= serialize (match checkerDesc with | .container ns ds => .container ns (ds.set 1 (.uint 4)) | x => x) v :="
  },
  {
-  "id": "blob-identifier-deser-stmt-value",
+  "id": "blob-identifier-desc-deserialize-checker-statement-deserialize-v-to-seq",
   "module": "Prysm/BlobIdentifier/Spec.lean",
   "theorem": "Prysm.BlobIdentifier.desc_deserialize_checker",
   "kind": "stmt",
@@ -102,7 +102,7 @@
   "new": "deserialize checkerDesc bs = .ok (.seq [])"
  },
  {
-  "id": "blob-identifier-ask-stmt-weaken",
+  "id": "blob-identifier-decode-accept-spec-statement-hav-32-avail-to-true",
   "module": "Prysm/BlobIdentifier/DecodeSpec.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.accept_spec",
   "kind": "stmt",
@@ -110,7 +110,7 @@
   "new": "(hav : True)"
  },
  {
-  "id": "blob-identifier-rc-stmt-size",
+  "id": "blob-identifier-decode-reject-complete-statement-size-40-to-39",
   "module": "Prysm/BlobIdentifier/DecodeSpec.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.reject_complete",
   "kind": "stmt",
@@ -118,7 +118,7 @@
   "new": "bs.size ≠ 39 :="
  },
  {
-  "id": "blob-identifier-witr-stmt-len",
+  "id": "blob-identifier-witness-decode-reject-size-runs-statement-hlen-40-to-41",
   "module": "Prysm/BlobIdentifier/WitnessDecodeRejectSize.lean",
   "theorem": "Prysm.BlobIdentifier.Witness.DecodeRejectSize.runs",
   "kind": "stmt",
@@ -126,13 +126,13 @@
   "new": "(hlen : len ≠ 41)"
  },
  {
-  "id": "deposit-message-gen-control",
+  "id": "deposit-message-decode-generated-root-withdrawal-credentials-seg-control",
   "module": "Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean",
   "theorem": "Prysm.DepositMessage.Decode.generated_root_WithdrawalCredentials_seg",
   "kind": "control"
  },
  {
-  "id": "deposit-message-gen-stmt-src",
+  "id": "deposit-message-decode-generated-root-withdrawal-credentials-seg-statement-h-src-48-to-40",
   "module": "Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean",
   "theorem": "Prysm.DepositMessage.Decode.generated_root_WithdrawalCredentials_seg",
   "kind": "stmt",
@@ -140,13 +140,13 @@
   "new": "(hSrc : bf + (40 : Int64).toBitVec = aSrc)"
  },
  {
-  "id": "deposit-message-seg0-control",
+  "id": "deposit-message-bytes48dec-seg-offset-zero-control",
   "module": "Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean",
   "theorem": "Prysm.DepositMessage.bytes48dec_seg_offset_zero",
   "kind": "control"
  },
  {
-  "id": "deposit-message-seg0-stmt-heap",
+  "id": "deposit-message-bytes48dec-seg-offset-zero-statement-heap-48-to-32",
   "module": "Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean",
   "theorem": "Prysm.DepositMessage.bytes48dec_seg_offset_zero",
   "kind": "stmt",
@@ -154,7 +154,7 @@
   "new": "⋆ Heap (avail - 32)"
  },
  {
-  "id": "deposit-message-seg0-stmt-len",
+  "id": "deposit-message-bytes48dec-seg-offset-zero-statement-a-l-48-to-32",
   "module": "Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean",
   "theorem": "Prysm.DepositMessage.bytes48dec_seg_offset_zero",
   "kind": "stmt",
@@ -162,7 +162,7 @@
   "new": "Eq ((Int.toBytes 8 32).At aL)"
  },
  {
-  "id": "deposit-message-acc-control",
+  "id": "deposit-message-decode-accept-control",
   "module": "Prysm/DepositMessage/DecodeAccept.lean",
   "theorem": "Prysm.DepositMessage.Decode.accept",
   "kind": "control",
@@ -172,7 +172,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "deposit-message-acc-code-amt",
+  "id": "deposit-message-decode-accept-code-mov-0x50-rcx-to-0x48-rcx",
   "module": "Prysm/DepositMessage/DecodeAccept.lean",
   "theorem": "Prysm.DepositMessage.Decode.accept",
   "kind": "code",
@@ -184,7 +184,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "deposit-message-acc-code-pklen",
+  "id": "deposit-message-decode-accept-code-mov-0x30-to-0x20",
   "module": "Prysm/DepositMessage/DecodeAccept.lean",
   "theorem": "Prysm.DepositMessage.Decode.accept",
   "kind": "code",
@@ -197,7 +197,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "deposit-message-acc-stmt-swap",
+  "id": "deposit-message-decode-accept-statement-pk-none-to-none",
   "module": "Prysm/DepositMessage/DecodeAccept.lean",
   "theorem": "Prysm.DepositMessage.Decode.accept",
   "kind": "stmt",
@@ -205,7 +205,7 @@
   "new": "⋆ Eq (wc.At p1) ⋆ Eq (pk.At p2)"
  },
  {
-  "id": "deposit-message-acc-stmt-amt",
+  "id": "deposit-message-decode-accept-statement-amt-48-to-40",
   "module": "Prysm/DepositMessage/DecodeAccept.lean",
   "theorem": "Prysm.DepositMessage.Decode.accept",
   "kind": "stmt",
@@ -213,7 +213,7 @@
   "new": "⋆ Eq (amt.At (s.regs.rax.toBitVec + 40))"
  },
  {
-  "id": "deposit-message-rej-control",
+  "id": "deposit-message-decode-reject-size-control",
   "module": "Prysm/DepositMessage/DecodeRejectSize.lean",
   "theorem": "Prysm.DepositMessage.Decode.reject_size",
   "kind": "control",
@@ -223,7 +223,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.DepositMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "deposit-message-rej-stmt",
+  "id": "deposit-message-decode-reject-size-statement-rbx-e1-to-e0",
   "module": "Prysm/DepositMessage/DecodeRejectSize.lean",
   "theorem": "Prysm.DepositMessage.Decode.reject_size",
   "kind": "stmt",
@@ -231,7 +231,7 @@
   "new": "st.data.regs.rbx = e0"
  },
  {
-  "id": "deposit-message-spec-stmt-size",
+  "id": "deposit-message-ssz-value-spec-accepts-iff-statement-size-88-to-89",
   "module": "Prysm/DepositMessage/Spec.lean",
   "theorem": "Prysm.DepositMessage.SszValue.spec_accepts_iff",
   "kind": "stmt",
@@ -239,7 +239,7 @@
   "new": "bs.size = 89"
  },
  {
-  "id": "deposit-message-ser-stmt-nearmiss",
+  "id": "deposit-message-desc-serialize-checker-statement-serialize-none-to-match-with-container",
   "module": "Prysm/DepositMessage/Spec.lean",
   "theorem": "Prysm.DepositMessage.desc_serialize_checker",
   "kind": "stmt",
@@ -247,7 +247,7 @@
   "new": "= serialize (match checkerDesc with | .container ns ds => .container ns (ds.set 0 (.byteVector 32)) | x => x) v :="
  },
  {
-  "id": "deposit-message-deser-stmt-value",
+  "id": "deposit-message-desc-deserialize-checker-statement-deserialize-v-to-seq",
   "module": "Prysm/DepositMessage/Spec.lean",
   "theorem": "Prysm.DepositMessage.desc_deserialize_checker",
   "kind": "stmt",
@@ -255,7 +255,7 @@
   "new": "deserialize checkerDesc bs = .ok (.seq [])"
  },
  {
-  "id": "deposit-message-ask-stmt-weaken",
+  "id": "deposit-message-decode-accept-spec-statement-hav-80-avail-to-true",
   "module": "Prysm/DepositMessage/DecodeSpec.lean",
   "theorem": "Prysm.DepositMessage.Decode.accept_spec",
   "kind": "stmt",
@@ -263,7 +263,7 @@
   "new": "(hav : True)"
  },
  {
-  "id": "deposit-message-rc-stmt-size",
+  "id": "deposit-message-decode-reject-complete-statement-size-88-to-87",
   "module": "Prysm/DepositMessage/DecodeSpec.lean",
   "theorem": "Prysm.DepositMessage.Decode.reject_complete",
   "kind": "stmt",
@@ -271,7 +271,7 @@
   "new": "bs.size ≠ 87 :="
  },
  {
-  "id": "deposit-message-witr-stmt-len",
+  "id": "deposit-message-witness-decode-reject-size-runs-statement-hlen-88-to-89",
   "module": "Prysm/DepositMessage/WitnessDecodeRejectSize.lean",
   "theorem": "Prysm.DepositMessage.Witness.DecodeRejectSize.runs",
   "kind": "stmt",

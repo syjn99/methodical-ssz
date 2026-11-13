@@ -7,7 +7,8 @@ import Prysm.SyncCommitteeMessage.EncodeFastPathStatements
 /-!
 # Independent hand statements of four encoder fast paths
 
-Written by hand BEFORE the generated `Gen6{Pb,Sc,Pw,Dd}Enc.lean` fast-path theorems or their kind lines were
+Written by hand BEFORE the generated fast-path theorems (`GeneratedEncodeFastPath.lean` of PowBlock, SyncCommitteeMessage,
+PendingPartialWithdrawal and Deposit_Data) or their kind lines were
 opened. Sources: the Go layout in `prysm/ir/ir-mainnet.json` (`go_fields`, gc amd64 offsets), the SSZ layout
 of the four containers, the `.S` files of `prysm/go1.26.10/link-set/norm/` (frame, guard, stack slots
 touched on the fast path and their contents at the return) and the shape of the committed hand statements

@@ -6,7 +6,7 @@ and `attestation_data_link.py` by import; none of them is changed.
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   historical_batch_link.py callgraph <objdump> <out.json>          call targets with contract class
   historical_batch_link.py filter <outdir> <objdump> <elf> <nm>    <outdir>/target.objdump of HistoricalBatch (+ ELF/nm links)
-  historical_batch_link.py data <outdir> <cp-linkdir> <lv-linkdir> after `conv.py <outdir>/target.objdump
+  historical_batch_link.py data <outdir> <checkpoint-link-dir> <lists-and-vectors-link-dir> after `convert_objdump.py <outdir>/target.objdump
                                                     <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
@@ -43,14 +43,14 @@ def filt(outdir, objdump, elf, nm):
     return checkpoint_and_epoch_link.filt(outdir, objdump, elf, nm)
 
 
-def write_data(outdir, cpdir, lvdir):
+def write_data(outdir, checkpoint_dir, lists_and_vectors_dir):
     import importlib.util
     spec = importlib.util.spec_from_file_location("data", lists_and_vectors_link.LINK / "data.py")
     data = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(data)
     hb = checkpoint_and_epoch_link.ins(outdir, f"{V}.HistoricalBatch.UnmarshalSSZ")
-    sc = checkpoint_and_epoch_link.ins(lvdir, f"{V}.SyncCommittee.UnmarshalSSZ")
-    cu = checkpoint_and_epoch_link.ins(cpdir, f"{checkpoint_and_epoch_link.CP}.UnmarshalSSZ")
+    sc = checkpoint_and_epoch_link.ins(lists_and_vectors_dir, f"{V}.SyncCommittee.UnmarshalSSZ")
+    cu = checkpoint_and_epoch_link.ins(checkpoint_dir, f"{checkpoint_and_epoch_link.CHECKPOINT_SYMBOL}.UnmarshalSSZ")
     lea = r"lea ([A-Za-z0-9_.]+)(?:\+(\d+))?\(%rip\),%rax"
     u8 = checkpoint_and_epoch_link.operand([cu[cu.index("callq runtime.makeslice") - 3]], lea)
     esz = checkpoint_and_epoch_link.operand(cu, r"mov ([A-Za-z0-9_.]+)\(%rip\),%rax()")

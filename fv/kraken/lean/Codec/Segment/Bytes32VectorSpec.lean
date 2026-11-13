@@ -5,7 +5,7 @@ import Prysm.HistoricalBatch.Spec
 
 `Prysm.HistoricalBatch.Spec` states `roots_vector_flatten_length`, `roots_vector_serialize`, `roots_vector_of_bytes` for n = 8192. Here n is a variable;
 the side condition is that the field fits an SSZ offset (`32 * n < 2^32`). Proof text: `Prysm/HistoricalBatch/Spec.lean` with 8192 → n.
-The element lemmas (`toV32`, `allFit_bv32`, `serializeEach_byteVector32`, `concatParts_byteVector32`) are imported.
+The element lemmas (`Codec.toByteVector32`, `Codec.allFit_byteVector32`, `serializeEach_byteVector32`, `concatParts_byteVector32`) are imported.
 -/
 
 namespace Codec.Segment

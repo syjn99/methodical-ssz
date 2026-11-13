@@ -24,7 +24,7 @@ variable [Host]
 namespace Prysm.SyncAggregate
 
 /-- SyncCommitteeBits (64 bytes, SSZ offset 0, Go offset 8): decode segment, directives 13–36 (literal-size
-statement of `bytesdec_seg_offset_zero_size64`, as the generated `Gen.dd_g2dec_PublicKey_seg` is of `bytesdec_seg_offset_zero 48`). -/
+statement of `bytesdec_seg_offset_zero_size64`, as the generated `Prysm.Deposit_Data.Decode.generated_field_PublicKey_seg` is of `bytesdec_seg_offset_zero 48`). -/
 theorem Decode.bits_seg (k : Nat) (hk : unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh unmarshalSSZ k) :
     ∀ (sp rcv bf aR aB aS aRet aLo aP aL aC : BitVec 64) (St : Nat)
     (hR : sp + (48 : Int64).toBitVec = aR) (hB' : sp + (56 : Int64).toBitVec = aB)

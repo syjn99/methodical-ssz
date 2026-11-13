@@ -12,7 +12,7 @@ Scope: the path lists come from program scans of the tracked files for Go source
 - Before the build, the 16 `*.ssz.go` files of the tree were replaced by family B output (`README.md` section 3, step 3).
   So the `proto/*` method bodies come from this repository's generator. `consensus-types/primitives` is Prysm source.
 - The data extracts and tables also name or hold Go runtime and standard-library symbols (for example `runtime.memmove`, type descriptors).
-- Produced by: `link/conv.py --norm` and `link/check.py` on an ELF cross-compiled by Go 1.26.10 (`GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 -tags purego -trimpath`).
+- Produced by: `link/convert_objdump.py --norm` and `link/check.py` on an ELF cross-compiled by Go 1.26.10 (`GOOS=linux GOARCH=amd64 GOAMD64=v1 CGO_ENABLED=0 -tags purego -trimpath`).
 - ELF sha256 `c6403c02a110ffd6fe6d31a3c89cd395ac457b5d62e60e2e611b8ab9a8dd911e` (`prysm/go1.26.10/build-ids.txt`).
 - `capacity-reserved/` uses ELF sha256 `3ef7ac890ba1a797fb90877b84ad1a6ffe0ac283f77c10b09ffb2c8cd7b7f602` (`prysm/go1.26.10/capacity-reserved/build-ids.txt`). It used generator `ca191bb`, not `698c202`. The ELFs are not committed.
 - Upstream: Prysm, <https://github.com/OffchainLabs/prysm>, commit `ab15ff70c72a568c870b2de662474685a95de294` (`README.md` section 2). Licence: GNU General Public License version 3 (root `LICENSE.md`).
@@ -26,7 +26,7 @@ Scope: the path lists come from program scans of the tracked files for Go source
 
 ## C. Diffs against Prysm's committed generated files
 
-- Paths: `prysm/diff/**` (1: `gendiff.json`). The 16 `*.ssz.go.diff` files are not tracked. `gendiff.json` holds file names, counts and commit titles only.
+- Paths: `prysm/diff/**` (1: `generated-go-diff.json`). The 16 `*.ssz.go.diff` files are not tracked. `generated-go-diff.json` holds file names, counts and commit titles only.
 - What: unified diffs between the `*.ssz.go` files in the Prysm tree and family B. The removed lines are Prysm text.
 - Upstream: Prysm, as in family A.
 

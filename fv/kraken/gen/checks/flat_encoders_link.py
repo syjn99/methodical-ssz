@@ -11,7 +11,7 @@ encoder is in the set.
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   flat_encoders_link.py callgraph <objdump> <out.json>          call targets with contract class
   flat_encoders_link.py filter <outdir> <objdump> <elf> <nm>    <outdir>/target.objdump of FUNCS (+ ELF/nm links)
-  flat_encoders_link.py data <outdir> <cp-linkdir> <e1-linkdir> after `conv.py <outdir>/target.objdump
+  flat_encoders_link.py data <outdir> <checkpoint-link-dir> <eth1-data-link-dir> after `convert_objdump.py <outdir>/target.objdump
                                                       <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                       write <outdir>/data/*.data (link/data.py's code)
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
@@ -91,7 +91,7 @@ def filt(outdir, objdump, elf, nm):
     return checkpoint_and_epoch_link.filt(outdir, objdump, elf, nm)
 
 
-def items(outdir, cpdir, e1dir):
+def items(outdir, checkpoint_dir, eth1_data_dir):
     """Per encoder: the address-only error global `sszErrBytesLength` (length 0) when its code loads it
     (`mov X(%rip),%rdi`). Every growslice is asserted to take the uint8 type word of the Checkpoint set in %rsi
     (the literal of `checkpoint_and_epoch_link.items`); ssz.ErrBytesLength is asserted equal to the Checkpoint and Eth1Data
@@ -100,9 +100,9 @@ def items(outdir, cpdir, e1dir):
     data = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(data)
     V = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1"
-    cu = checkpoint_and_epoch_link.ins(cpdir, f"{checkpoint_and_epoch_link.CP}.UnmarshalSSZ")
-    cm = checkpoint_and_epoch_link.ins(cpdir, f"{checkpoint_and_epoch_link.CP}.MarshalSSZTo")
-    em = checkpoint_and_epoch_link.ins(e1dir, f"{V}.Eth1Data.MarshalSSZTo")
+    cu = checkpoint_and_epoch_link.ins(checkpoint_dir, f"{checkpoint_and_epoch_link.CHECKPOINT_SYMBOL}.UnmarshalSSZ")
+    cm = checkpoint_and_epoch_link.ins(checkpoint_dir, f"{checkpoint_and_epoch_link.CHECKPOINT_SYMBOL}.MarshalSSZTo")
+    em = checkpoint_and_epoch_link.ins(eth1_data_dir, f"{V}.Eth1Data.MarshalSSZTo")
     lea = r"lea ([A-Za-z0-9_.]+)(?:\+(\d+))?\(%rip\),%{}"
     u8 = checkpoint_and_epoch_link.operand([cu[cu.index("callq runtime.makeslice") - 3]], lea.format("rax"))
     assert u8 == ("type__", 387072), u8
@@ -126,8 +126,8 @@ def items(outdir, cpdir, e1dir):
     return data, its
 
 
-def write_data(outdir, cpdir, e1dir):
-    data, its = items(outdir, cpdir, e1dir)
+def write_data(outdir, checkpoint_dir, eth1_data_dir):
+    data, its = items(outdir, checkpoint_dir, eth1_data_dir)
     for it in its:
         print("item", it[:4])
     data.ITEMS = its

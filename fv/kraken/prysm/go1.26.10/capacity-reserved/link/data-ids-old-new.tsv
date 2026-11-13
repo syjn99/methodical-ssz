@@ -1,0 +1,14 @@
+# Record: the data files of this directory keep their old ids, and its RESULT names them. The ELF of this
+# directory (sha256 3ef7ac89...) is not available, so no new check can rename them. Each row gives the id
+# of the item at the same label and offset in prysm/go1.26.10/link-set/data (the pinned ELF).
+old id	present id of the same item in prysm/go1.26.10/link-set/data
+e2eCpFmtW	formatEpoch
+e2eEight	boxedEight
+e2eEpFmt	formatBufferLength
+e2eErrBytesLength	sszErrBytesLength
+e2eErrSize	sszErrSize
+e2eErrStrType	typeErrorString
+e2eErrorStringItab	itabErrorStringError
+e2eIntType	typeInt
+e2eStaticuint64s	runtimeStaticuint64s
+e2eU8Type	typeUint8

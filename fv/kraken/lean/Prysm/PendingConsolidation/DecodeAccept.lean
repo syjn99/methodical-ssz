@@ -9,7 +9,7 @@ Hand composition, written AFTER the raw generator output was committed. The
 statement is the independent hand statement `Prysm.PendingConsolidation.Decode.accept_statement` (`Prysm/SyncCommitteeMessage/Statements.lean`, unchanged). Chain of
 `eventually_trans` over
 
-* `Decode.head` (hand steps, directives 0–14; the text of `pw_head` with the two spills at 12 / 13 in the PendingConsolidation order),
+* `Decode.head` (hand steps, directives 0–14; the text of `Prysm.PendingPartialWithdrawal.Decode.head` with the two spills at 12 / 13 in the PendingConsolidation order),
 * `Decode.generated_call_SourceIndex_arg` (15–16) and `Decode.generated_call_SourceIndex_call` (17–19, label 47): GENERATED
   (`Prysm/PendingConsolidation/GeneratedDecodeCallSegmentsPartial.lean`, raw); the `_call` theorem is conditional on `hC : U64CalleeAccept`, discharged here by
   the proved `Prysm.ValidatorIndex.Decode.accept_function_spec_holds`,

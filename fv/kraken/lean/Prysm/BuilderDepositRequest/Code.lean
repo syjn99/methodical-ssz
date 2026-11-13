@@ -28,7 +28,7 @@ import Prysm.WithdrawalRequest.Code
 # Code of the set of 24 flat types (Go 1.26.10 ELF `c6403c02…911e`)
 
 Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
-(`link/conv.py --norm` of the same ELF as `Prysm.Checkpoint.Code`, `Prysm.PendingDeposit.Code` and `Prysm.BlobIdentifier.EncoderCode`;
+(`link/convert_objdump.py --norm` of the same ELF as `Prysm.Checkpoint.Code`, `Prysm.PendingDeposit.Code` and `Prysm.BlobIdentifier.EncoderCode`;
 `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`). The decoder and the encoder of each of the
 24 flat fixed-size types that were not used to develop the proof generators.
 Code constants only: no theorem, no contract. Hand-written include file (not generator

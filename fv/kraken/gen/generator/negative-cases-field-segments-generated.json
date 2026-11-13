@@ -1,30 +1,30 @@
 [
  {
-  "id": "deposit-message-dmdec-pk-control",
+  "id": "deposit-message-decode-generated-field-public-key-seg-control",
   "module": "Prysm/DepositMessage/GeneratedDecodeFieldSegments.lean",
   "theorem": "Prysm.DepositMessage.Decode.generated_field_PublicKey_seg",
   "kind": "control"
  },
  {
-  "id": "deposit-message-dmgc-control",
+  "id": "deposit-message-decode-accept-generated-composition-control",
   "module": "Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean",
   "theorem": "Prysm.DepositMessage.Decode.accept_generated_composition",
   "kind": "control"
  },
  {
-  "id": "deposit-message-dmg2-control",
+  "id": "deposit-message-decode-accept-from-generated-field-segments-control",
   "module": "Prysm/DepositMessage/DecodeAcceptFromGeneratedFieldSegments.lean",
   "theorem": "Prysm.DepositMessage.Decode.accept_from_generated_field_segments",
   "kind": "control"
  },
  {
-  "id": "blob-identifier-bigc-type-control",
+  "id": "blob-identifier-decode-accept-generated-composition-type-control",
   "module": "Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.accept_generated_composition_type",
   "kind": "control"
  },
  {
-  "id": "deposit-message-dmdec-pk-stmt-size",
+  "id": "deposit-message-decode-generated-field-public-key-seg-statement-hroot-48-to-32",
   "module": "Prysm/DepositMessage/GeneratedDecodeFieldSegments.lean",
   "theorem": "Prysm.DepositMessage.Decode.generated_field_PublicKey_seg",
   "kind": "stmt",
@@ -32,7 +32,7 @@
   "new": "(hroot : root.length = 32)"
  },
  {
-  "id": "deposit-message-dmdec-amt-stmt-val",
+  "id": "deposit-message-decode-generated-field-amount-seg-statement-v-v-to-v-f",
   "module": "Prysm/DepositMessage/GeneratedDecodeFieldSegments.lean",
   "theorem": "Prysm.DepositMessage.Decode.generated_field_Amount_seg",
   "kind": "stmt",
@@ -40,7 +40,7 @@
   "new": "⋆ Eq (vF.At aF) ⋆ R) st.data.dmem"
  },
  {
-  "id": "eth1-data-e1dec-cnt-stmt-off",
+  "id": "eth1-data-decode-generated-field-deposit-count-seg-statement-h-f-32-to-40",
   "module": "Prysm/Eth1Data/GeneratedDecodeFieldSegments.lean",
   "theorem": "Prysm.Eth1Data.Decode.generated_field_DepositCount_seg",
   "kind": "stmt",
@@ -48,7 +48,7 @@
   "new": "(hF : rcv + (40 : Int64).toBitVec = aF)"
  },
  {
-  "id": "deposit-message-dmgc-stmt-heap",
+  "id": "deposit-message-decode-accept-generated-composition-statement-heap-80-to-48",
   "module": "Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean",
   "theorem": "Prysm.DepositMessage.Decode.accept_generated_composition",
   "kind": "stmt",
@@ -56,7 +56,7 @@
   "new": "Heap (avail - 48)"
  },
  {
-  "id": "blob-identifier-bigc-stmt-idx",
+  "id": "blob-identifier-decode-accept-generated-composition-statement-x2-x2-to-g2n",
   "module": "Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.accept_generated_composition",
   "kind": "stmt",
@@ -64,7 +64,7 @@
   "new": "⋆ Eq (g2n.At (s.regs.rax.toBitVec + 32))"
  },
  {
-  "id": "deposit-message-dmgc-type-rhs",
+  "id": "deposit-message-decode-accept-generated-composition-type-statement-type-deposit-message-to-eth1-data",
   "module": "Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean",
   "theorem": "Prysm.DepositMessage.Decode.accept_generated_composition_type",
   "kind": "stmt",
@@ -72,7 +72,7 @@
   "new": "type_of% (@Prysm.Eth1Data.Decode.accept h)"
  },
  {
-  "id": "deposit-message-dmg2-stmt-len",
+  "id": "deposit-message-decode-accept-from-generated-field-segments-statement-hlen-88-to-80",
   "module": "Prysm/DepositMessage/DecodeAcceptFromGeneratedFieldSegments.lean",
   "theorem": "Prysm.DepositMessage.Decode.accept_from_generated_field_segments",
   "kind": "stmt",
@@ -80,7 +80,7 @@
   "new": "(hlen : s.regs.rcx = 80)"
  },
  {
-  "id": "blob-identifier-big2-stmt-rsp",
+  "id": "blob-identifier-decode-accept-from-generated-field-segments-statement-rsp-8-to-16",
   "module": "Prysm/BlobIdentifier/DecodeAcceptFromGeneratedFieldSegments.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.accept_from_generated_field_segments",
   "kind": "stmt",
@@ -88,7 +88,7 @@
   "new": "∧ st.data.regs.rsp = s.regs.rsp + 16"
  },
  {
-  "id": "deposit-message-dmdec-pk-code-count",
+  "id": "deposit-message-decode-generated-field-public-key-seg-code-mov-0x30-to-0x20",
   "module": "Prysm/DepositMessage/GeneratedDecodeFieldSegments.lean",
   "theorem": "Prysm.DepositMessage.Decode.generated_field_PublicKey_seg",
   "kind": "code",
@@ -101,7 +101,7 @@
   "line": 31
  },
  {
-  "id": "deposit-message-dmdec-amt-code-src",
+  "id": "deposit-message-decode-generated-field-amount-seg-code-mov-0x50-rcx-to-0x48-rcx",
   "module": "Prysm/DepositMessage/GeneratedDecodeFieldSegments.lean",
   "theorem": "Prysm.DepositMessage.Decode.generated_field_Amount_seg",
   "kind": "code",
@@ -113,7 +113,7 @@
   "new": "  mov 0x48(%rcx),%rcx"
  },
  {
-  "id": "deposit-message-dmgc-code-tail",
+  "id": "deposit-message-decode-accept-generated-composition-code-mov-rdx-to-0x8-rdx",
   "module": "Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean",
   "theorem": "Prysm.DepositMessage.Decode.accept_generated_composition",
   "kind": "code",
@@ -125,7 +125,7 @@
   "new": "  mov %rdi,0x8(%rdx)"
  },
  {
-  "id": "blob-identifier-bigc-code-epi",
+  "id": "blob-identifier-decode-accept-generated-composition-code-add-0x20-to-0x28",
   "module": "Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean",
   "theorem": "Prysm.BlobIdentifier.Decode.accept_generated_composition",
   "kind": "code",
@@ -138,7 +138,7 @@
   "line": 53
  },
  {
-  "id": "deposit-message-dmg2-code-head",
+  "id": "deposit-message-decode-accept-from-generated-field-segments-code-cmp-0x58-to-0x50",
   "module": "Prysm/DepositMessage/DecodeAcceptFromGeneratedFieldSegments.lean",
   "theorem": "Prysm.DepositMessage.Decode.accept_from_generated_field_segments",
   "kind": "code",

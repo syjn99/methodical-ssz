@@ -6,15 +6,16 @@ import Codec.DecoderHeadEpilogue
 
 The prologue of every development decoder (directives 0–10) is the same up to the frame size `F`, the
 displacement `dB` of the first rbx spill, the SSZ size `sz` and the labels. The `--field-segments` and `--call-segments` methods had one head lemma for
-the frame `0x20` (`Codec.dechead_seg`) and one hand lemma per call-field type (`pw_head`, `bh_head0`,
-`sm_head0`, `pc_head`; epilogues `pw_epi`, `pc_epi`). Here:
+the frame `0x20` (`Codec.dechead_seg`) and one hand lemma per call-field type (`Prysm.PendingPartialWithdrawal.Decode.head`, `Prysm.BeaconBlockHeader.Decode.head0`,
+`Prysm.SyncCommitteeMessage.Decode.head0`, `Prysm.PendingConsolidation.Decode.head`; epilogues
+`Prysm.PendingPartialWithdrawal.Decode.epilogue`, `Prysm.PendingConsolidation.Decode.epilogue`). Here:
 
 * `decpro_seg fn l0 lmore lerr F dB sz` — the prologue over a window (`Codec/NopWindow.lean`; the `nop` at directive
   8 is a window nop), with `F`, `dB`, `sz` symbolic; every register except rsp / rbp is kept (register clause);
 * `step_nil_check rB` — the step `test %al,(%rB)`;
 * `decret_seg` — `pop %rbp; retq` over a window.
 The spills after the prologue (2–3, order differs per type) are `step_store` steps; the epilogue reloads and the
-`add $F,%rsp` are `kstep_ld*` / `step_add_immediate` steps (`Codec/WindowSteps.lean`). `Prysm/SyncCommitteeMessage/DecoderPrologueInstances.lean` re-proves the per-type hand
+`add $F,%rsp` are `step_load_*` / `step_add_immediate` steps (`Codec/WindowSteps.lean`). `Prysm/SyncCommitteeMessage/DecoderPrologueInstances.lean` re-proves the per-type hand
 lemmas with their committed statements from these. No runtime contract is used.
 -/
 

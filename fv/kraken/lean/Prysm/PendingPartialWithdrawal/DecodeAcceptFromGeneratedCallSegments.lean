@@ -6,8 +6,8 @@ import Prysm.PendingPartialWithdrawal.GeneratedDecodeCallSegments
 
 Hand composition (not generator output): the chain of `Prysm/PendingPartialWithdrawal/DecodeAccept.lean` with every lemma instance replaced by
 the generated theorem of `Prysm/PendingPartialWithdrawal/GeneratedDecodeCallSegments.lean` (`decoder --call-segments`, raw output) whose declared type is that instance
-(its `_kind`): `pw_g3dec_Index_arg` / `_call`, `pw_g3dec_WithdrawableEpoch_arg1`, `pw_g3dec_Amount_seg`,
-`pw_g3dec_WithdrawableEpoch_arg2` / `_call`. The code facts come from the generated theorems; head
+(its `_kind`): `Decode.generated_call_Index_arg` / `_call`, `Decode.generated_call_WithdrawableEpoch_arg1`,
+`Decode.generated_call_Amount_seg`, `Decode.generated_call_WithdrawableEpoch_arg2` / `_call`. The code facts come from the generated theorems; head
 (`Decode.head`, 0–14) and epilogue (`Decode.epilogue`, 89–91) stay hand steps of `Prysm/PendingPartialWithdrawal/DecodeAccept.lean` (frame `0x48`). The
 statement is the hand statement `Decode.accept_statement` (`Prysm/Deposit_Data/Statements.lean`, unchanged). In-sample (development data).
 -/

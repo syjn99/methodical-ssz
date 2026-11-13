@@ -8,7 +8,7 @@ import Prysm.DepositMessage.DecodeFieldSegmentOffsetZero
 /-!
 # Real Prysm `(*v1alpha1.DepositMessage).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (hold-out)
 
-Hand-written after the hold-out was opened. The WithdrawalCredentials segment is the
+Hand-written after the frozen generator ran on this hold-out type. The WithdrawalCredentials segment is the
 raw generator theorem `Prysm.DepositMessage.Decode.generated_root_WithdrawalCredentials_seg` (`Prysm/DepositMessage/GeneratedDecodeRootFieldSegments.lean`, unedited). The
 PublicKey segment (48 bytes, source offset 0) is the hand lemma `Prysm.DepositMessage.bytes48dec_seg_offset_zero` (`Prysm/DepositMessage/DecodeFieldSegmentOffsetZero.lean`):
 the generator does not read 48-byte fields. Amount (inline uint64) is by hand. The head and the composition

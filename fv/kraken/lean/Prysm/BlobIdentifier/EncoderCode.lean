@@ -17,7 +17,7 @@ import Prysm.VoluntaryExit.EncoderCode
 # Code of the encoders of the flat types (Go 1.26.10 ELF `c6403c02…911e`)
 
 Each constant includes a `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
-(`link/conv.py --norm` of the same ELF as `Prysm.Checkpoint.Code`, `Prysm.AttestationData.Code`, `Prysm.BeaconBlockHeader.Code`, `Prysm.Eth1Data.Code` and
+(`link/convert_objdump.py --norm` of the same ELF as `Prysm.Checkpoint.Code`, `Prysm.AttestationData.Code`, `Prysm.BeaconBlockHeader.Code`, `Prysm.Eth1Data.Code` and
 `Prysm.PendingDeposit.Code`; `link/check.py` (a)–(f) PASS in `prysm/go1.26.10/link-set/RESULT`).
 Code constants only: no theorem, no contract. Hand-written include file (not generator output;
 the text of `Prysm/PendingDeposit/Code.lean` with the function set changed).

@@ -75,7 +75,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   exact sep_mono_left (fun m hm => ⟨0x10008, by decide, by rw [label_bump_pointer]; exact hm⟩) h
 
 -- Measured: maxHeartbeats 1000000 fails at `whnf` (the `simp` sort of the memory premise), 4000000
--- passes; maxRecDepth 8000 passes here except for `loop128` (8000 fails, 32000 passes; 16000 not decided).
+-- passes; maxRecDepth 8000 passes here except for the namespace `LoopMaximumElements` (8000 fails, 32000 passes; 16000 not decided).
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 8000 in
 theorem runs (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length = 8)
@@ -130,7 +130,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   exact sep_mono_left (fun m hm => ⟨0x10008, by decide, by rw [label_bump_pointer]; exact hm⟩) h
 
 -- Measured: maxHeartbeats 1000000 fails at `whnf` (the `simp` sort of the memory premise), 4000000
--- passes; maxRecDepth 8000 passes here except for `loop128` (8000 fails, 32000 passes; 16000 not decided).
+-- passes; maxRecDepth 8000 passes here except for the namespace `LoopMaximumElements` (8000 fails, 32000 passes; 16000 not decided).
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 8000 in
 theorem runs (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length = 0)
@@ -185,7 +185,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   exact sep_mono_left (fun m hm => ⟨0x10008, by decide, by rw [label_bump_pointer]; exact hm⟩) h
 
 -- Measured: maxHeartbeats 1000000 fails at `whnf` (the `simp` sort of the memory premise), 4000000
--- passes; maxRecDepth 8000 passes here except for `loop128` (8000 fails, 32000 passes; 16000 not decided).
+-- passes; maxRecDepth 8000 passes here except for the namespace `LoopMaximumElements` (8000 fails, 32000 passes; 16000 not decided).
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 8000 in
 theorem runs (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length = 128)
@@ -240,7 +240,7 @@ theorem lift_heap {X : DataMem → Prop} {m : DataMem}
   exact sep_mono_left (fun m hm => ⟨0x10008, by decide, by rw [label_bump_pointer]; exact hm⟩) h
 
 -- Measured: maxHeartbeats 1000000 fails at `whnf` (the `simp` sort of the memory premise), 4000000
--- passes; maxRecDepth 8000 passes here except for `loop128` (8000 fails, 32000 passes; 16000 not decided).
+-- passes; maxRecDepth 8000 passes here except for the namespace `LoopMaximumElements` (8000 fails, 32000 passes; 16000 not decided).
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 32000 in
 theorem runs (root cb : List UInt8) (hroot : root.length = 32) (hcb : cb.length = 1024)

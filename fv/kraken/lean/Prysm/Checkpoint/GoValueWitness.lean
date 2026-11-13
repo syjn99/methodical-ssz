@@ -34,7 +34,7 @@ theorem witness_encode_reject_length_cover_recv : goValue (recvAt (Witness.Encod
     ∧ goValue (recvAt (Witness.EncodeRejectLengthCover.block (Int.toBytes 8 7) 33 []) 9032) = true
     ∧ goValue (recvAt (Witness.EncodeRejectLengthCover.block (Int.toBytes 8 7) 48 []) 9032) = true := by decide
 
-/-- Control: `len(Root)` 49 > cap 48 (allowed by `rej_runs`) is not a Go value. -/
+/-- Control: `len(Root)` 49 > cap 48 (allowed by `Witness.EncodeRejectLengthCover.runs`) is not a Go value. -/
 theorem witness_encode_reject_length_cover_recv_bad : goValue (recvAt (Witness.EncodeRejectLengthCover.block (Int.toBytes 8 7) 49 []) 9032) = false := by decide
 
 end Prysm.Checkpoint

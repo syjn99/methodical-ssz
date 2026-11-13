@@ -354,7 +354,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.CommitteeIndex.Decode.generated_accept_kind
 #print axioms Prysm.AttestationData.Decode.generated_root_BeaconBlockRoot_seg_kind
 #print axioms Prysm.Checkpoint.Decode.generated_root_Root_seg_kind
--- Hold-out ValidatorIndex and BeaconBlockHeader set (after the hold-out was opened, 2026-11-10T17:53:24Z)
+-- Hold-out types ValidatorIndex and BeaconBlockHeader (theorems written after the frozen generator ran on them)
 #print axioms Prysm.ValidatorIndex.Decode.generated_accept
 #print axioms Prysm.ValidatorIndex.Decode.generated_accept_kind
 #print axioms Prysm.ValidatorIndex.Decode.accept_function_spec_holds
@@ -388,7 +388,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.runs
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.InputLength9.runs9
 #print axioms Prysm.ValidatorIndex.Witness.DecodeRejectSize.InputLength300.runs300
--- Hold-out Eth1Data decoder; no generated theorem (the generator run emitted nothing)
+-- Hold-out type Eth1Data, decoder; no generated theorem (the generator run emitted nothing)
 #print axioms Prysm.Eth1Data.rootdec_seg_source_offset_zero
 #print axioms Prysm.Eth1Data.Decode.head
 #print axioms Prysm.Eth1Data.Decode.accept
@@ -404,7 +404,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.Eth1Data.Decode.reject_complete
 #print axioms Prysm.Eth1Data.Witness.DecodeAccept.runs
 #print axioms Prysm.Eth1Data.Witness.DecodeRejectSize.runs
--- After the first two hold-outs: BeaconBlockHeader encoder, fast path only (hand proof)
+-- BeaconBlockHeader encoder, fast path only (hand proof)
 #print axioms Codec.lea_cmp_be_false
 #print axioms Prysm.BeaconBlockHeader.Encode.encode_slot
 #print axioms Prysm.BeaconBlockHeader.Encode.encode_proposer_index
@@ -416,7 +416,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.BeaconBlockHeader.Encode.fast_path_spec
 #print axioms Prysm.BeaconBlockHeader.Witness.EncodeFastPath.runs_empty
 #print axioms Prysm.BeaconBlockHeader.Witness.EncodeFastPath.runs_prefix
--- Generator extension for a 32-byte field at SSZ offset 0 (offset-0 form; after both hold-outs were opened, Eth1Data = development data)
+-- Generator extension for a 32-byte field at SSZ offset 0 (offset-0 form; written after the frozen generator ran on the hold-out types; Eth1Data = development data)
 #print axioms Codec.rootdec_seg_offset_zero
 #print axioms Codec.rootDecSegOffsetZeroKind_of
 #print axioms Prysm.Eth1Data.Decode.generated_root_DepositRoot_seg
@@ -427,7 +427,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.Eth1Data.rootdec_seg_z_statement_eq_hand
 #print axioms Prysm.Eth1Data.Decode.dec_DepositRoot_seg_hand
 
--- Hold-out (BlobIdentifier, DepositMessage UnmarshalSSZ): every new theorem.
+-- Hold-out types BlobIdentifier and DepositMessage (UnmarshalSSZ): every new theorem.
 #print axioms Prysm.BlobIdentifier.Decode.generated_root_BlockRoot_seg
 #print axioms Prysm.BlobIdentifier.Decode.generated_root_BlockRoot_seg_kind
 #print axioms Prysm.DepositMessage.Decode.generated_root_WithdrawalCredentials_seg
@@ -542,7 +542,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.BeaconBlockHeader.Witness.EncodeRejectLength.runs_state_root
 #print axioms Prysm.BeaconBlockHeader.Witness.EncodeRejectLength.runs_body_root
 
--- Lemmas for `p2dec --gen2` (lemmas, kinds, relations, examples, composition pieces; theorems and definitions)
+-- Lemmas for `decoder --field-segments` (lemmas, kinds, relations, examples, composition pieces; theorems and definitions)
 #print axioms Prysm.BlobIdentifier.Decode.example_field_BlockRoot_seg
 #print axioms Prysm.BlobIdentifier.Decode.example_field_BlockRoot_seg_kind
 #print axioms Prysm.BlobIdentifier.Decode.example_field_Index_seg
@@ -594,7 +594,8 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Codec.u64DecInlineSegKind_of
 #print axioms Codec.u64dec_inline_seg
 
--- Generator output of `p2dec --gen2` (raw p2dec --gen2 segments and kinds, raw --compose accept theorems and identities, the _g2 theorems)
+-- Generator output of `decoder --field-segments` (raw segments and kinds, raw `--compose` accept theorems and identities,
+-- the `Decode.accept_from_generated_field_segments` theorems)
 #print axioms Prysm.BlobIdentifier.Decode.accept_from_generated_field_segments
 #print axioms Prysm.BlobIdentifier.Decode.accept_from_generated_field_segments_type
 #print axioms Prysm.DepositMessage.Decode.accept_from_generated_field_segments
@@ -621,14 +622,14 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.Eth1Data.Decode.generated_field_DepositCount_seg_kind
 #print axioms Prysm.Eth1Data.Decode.generated_field_DepositRoot_seg
 #print axioms Prysm.Eth1Data.Decode.generated_field_DepositRoot_seg_kind
--- Partial output of `p2dec --gen2` (raw p2dec --gen2 --partial-out output for BeaconBlockHeader, 3 of 5 fields)
+-- Partial output of `decoder --field-segments` (raw `--partial-out` output for BeaconBlockHeader, 3 of 5 fields)
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_field_BodyRoot_seg
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_field_BodyRoot_seg_kind
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_field_ParentRoot_seg
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_field_ParentRoot_seg_kind
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_field_StateRoot_seg
 #print axioms Prysm.BeaconBlockHeader.Decode.generated_field_StateRoot_seg_kind
--- Hold-out (Deposit_Data, PendingPartialWithdrawal UnmarshalSSZ): every new theorem (raw generated segments,
+-- Hold-out types Deposit_Data and PendingPartialWithdrawal (UnmarshalSSZ): every new theorem (raw generated segments,
 -- hand lemma, hand accept / reject / spec / witnesses). PendingPartialWithdrawal accept: not proved (bound).
 #print axioms Prysm.Deposit_Data.Decode.generated_field_PublicKey_seg
 #print axioms Prysm.Deposit_Data.Decode.generated_field_PublicKey_seg_kind
@@ -676,7 +677,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.Deposit_Data.Witness.DecodeAccept.runs
 #print axioms Prysm.Deposit_Data.Witness.DecodeRejectSize.runs
 #print axioms Prysm.PendingPartialWithdrawal.Witness.DecodeRejectSize.runs
--- `p2dec --gen3`: every new theorem of the lemma, example, generated and composition modules
+-- `decoder --call-segments`: every new theorem of the lemma, example, generated and composition modules
 #print axioms Prysm.BeaconBlockHeader.Decode.accept_from_generated_call_segments
 #print axioms Prysm.BeaconBlockHeader.Decode.accept_from_generated_call_segments_type
 #print axioms Prysm.BeaconBlockHeader.Decode.head_from_call_segments
@@ -817,8 +818,8 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Codec.u64dec_scratch_register_seg
 #print axioms Prysm.ValidatorIndex.Decode.accept_function_spec_is_callee_accept
 
--- Hold-out (SyncCommitteeMessage, PendingConsolidation UnmarshalSSZ): every new theorem (added with the `p2dec --gen4` generator;
--- the hold-out evaluation left this file unchanged, the directory was frozen)
+-- Hold-out types SyncCommitteeMessage and PendingConsolidation (UnmarshalSSZ): every new theorem (added with the
+-- `decoder --steps` generator; the run on these hold-out types left this file unchanged, the directory was frozen)
 #print axioms Prysm.PendingConsolidation.Decode.generated_call_SourceIndex_arg
 #print axioms Prysm.PendingConsolidation.Decode.generated_call_SourceIndex_arg_kind
 #print axioms Prysm.PendingConsolidation.Decode.generated_call_SourceIndex_call
@@ -880,7 +881,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.SyncCommitteeMessage.Witness.DecodeRejectSize.label_err_size
 #print axioms Prysm.SyncCommitteeMessage.Witness.DecodeRejectSize.runs
 
--- `p2dec --gen4`: every new theorem of the lemma, example, relation, generated (`p2dec --gen4`, raw)
+-- `decoder --steps`: every new theorem of the lemma, example, relation, generated (`decoder --steps`, raw)
 -- and accept modules
 #print axioms Codec.bytes32dec_seg_nop_inst
 #print axioms Codec.bytes32dec_seg_rax_inst
@@ -1426,7 +1427,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Codec.wskip
 #print axioms Codec.window_skip_leading
 #print axioms Codec.window_skip_aux
--- `p2dec --gen5`: every new declaration (theorems and definitions; compiler auxiliaries omitted)
+-- `decoder --whole-accept`: every new declaration (theorems and definitions; compiler auxiliaries omitted)
 #print axioms Codec.AllPlaced
 #print axioms Codec.Conjunctions
 #print axioms Codec.DecoderFrameLayout
@@ -2441,7 +2442,7 @@ import Prysm.Deposit_Data.DecodeAcceptComposition
 #print axioms Prysm.VoluntaryExit.Witness.GeneratedDecodeRejectSize.placed_at_1
 #print axioms Prysm.VoluntaryExit.Witness.GeneratedDecodeRejectSize.label_err_size
 #print axioms Prysm.VoluntaryExit.Witness.GeneratedDecodeRejectSize.runs
--- Encoder fast path (code, lemmas and `p2enc --gen6` theorems; compiler auxiliaries omitted)
+-- Encoder fast path (code, lemmas and `encoder --fast-path` theorems; compiler auxiliaries omitted)
 #print axioms Codec.ForallWords
 #print axioms Codec.EncodeRegisterValue
 #print axioms Codec.EncodeRegisterValue.cap

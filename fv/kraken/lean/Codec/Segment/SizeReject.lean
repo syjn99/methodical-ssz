@@ -46,7 +46,7 @@ def sizeRejectError (lerr : String) (F : Int64) : Program :=
 variable [Host]
 
 /-- **Size reject (machine), any frame and size**: `len(buf) ≠ sz`: the decoder returns the two words `e0`, `e1`
-of `ssz.ErrSize`; the statement of `sc_reject_size_stmt` with the frame size `F` and the size `sz`. -/
+of `ssz.ErrSize`; the statement of `Prysm.SyncCommittee.Decode.reject_size_statement` with the frame size `F` and the size `sz`. -/
 theorem reject_size_any_frame (F sz : Nat) (hF : F < 2 ^ 31) (hsz : sz < 2 ^ 31) (fnl l0 lmore lerr : String) (k jC jE : Nat)
     (hA : (sizeRejectHead fnl l0 lmore (OfNat.ofNat F) (OfNat.ofNat (F + 24))).IsInfixAt Host.prog k)
     (g : Glue (k + 8) jC) (hC : (sizeRejectCompare (OfNat.ofNat sz) lerr).IsInfixAt Host.prog jC)

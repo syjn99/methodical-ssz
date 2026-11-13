@@ -16,7 +16,7 @@ import Prysm.ValidatorIdentity.GeneratedSameAsHand
 # Identity of four generated decoder accept theorems and four generated encoder fast-path theorems
 with the independent hand statements of `Prysm/DepositRequest/Statements.lean`
 
-`Prysm/DepositRequest/Statements.lean` was committed before this session opened the generated modules imported here. Each line type-checks
+`Prysm/DepositRequest/Statements.lean` was committed before its author opened the generated modules imported here. Each line type-checks
 only if the type of the generated theorem (`decoder --whole-accept` / `encoder --fast-path`, raw output of the one-shot runs on the 24 flat types) is
 definitionally the hand statement. Neither side is edited for this check. `maxHeartbeats 4000000` = the value of the
 model identity files (`Prysm/PowBlock/GeneratedEncodeFastPathSameAsHand.lean`).

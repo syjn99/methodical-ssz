@@ -19,7 +19,7 @@ is proved from the window and step lemmas only. No earlier proof is used.
   each is `bytesdec_seg_window` / `calldec_seg_window` at one window (`q :=` the dense template; `he` by `rfl`).
 * Step mechanism: the set-up lemmas `callarg_first_seg`, `callarg_reload_seg` (both with their `pad`
   flag), `callarg_lea_seg`, `callarg_mov_seg`, the two-directive read `u64dec_scratch_register_seg` at r8, and the hand
-  set-up `Prysm.SyncCommitteeMessage.Decode.validator_index_arg`: each is a sequence of `kstep_*` applications.
+  set-up `Prysm.SyncCommitteeMessage.Decode.validator_index_arg`: each is a sequence of `step_*` applications.
 (`calldec_seg` itself: `calldec_seg_dense` in `Codec/CalleeDecodeWindow.lean`.)
 After the split of this module, the declarations of single types are in `Prysm/SyncCommitteeMessage/WindowStepsInstances.lean`.
 -/

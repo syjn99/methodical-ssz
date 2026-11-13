@@ -251,9 +251,11 @@ Then write the rows from the trial tree, and run the trial again with the rows.
 - The tactics `eaddr`, `adaddr`, `e1addr`, `daddr`, `dcaddr`, `saddr`, `g4_regclose`, `bytesdec_g4c`, `bytesdec_g4z`,
   `bytesdec_g4c20`, `bytesdec_g4z20`, `smarg_close` and `u64rr_case` that the maps name are now `checkpoint_addr`,
   `attestation_data_addr`, `eth1_data_addr`, `data_columns_by_root_identifier_encode_addr`,
-  `data_columns_by_root_identifier_decode_addr`, `segment_addr`, `register_equation_close`, `bytesdec_window_case`,
-  `bytesdec_window_offset_zero_case`, `bytesdec_window20_case`, `bytesdec_window20_offset_zero_case`,
-  `setup_argument_close` and `uint64_register_case`. An inverse run of an earlier map needs the old names put back first.
+  `data_columns_by_root_identifier_decode_addr`, `segment_addr`, `register_equation_close`, `bytes_decode_window_case`,
+  `bytes_decode_window_offset_zero_case`, `bytes_decode_window20_case`, `bytes_decode_window20_offset_zero_case`,
+  `setup_argument_close` and `uint64_register_case`. The four `bytesdec_g4*` tactics had an intermediate name
+  `bytesdec_window*_case`; the step of `maps/plain-lean-names/` renamed every `bytesdec_*` tactic to `bytes_decode_*`.
+  An inverse run of an earlier map needs the old names put back first.
 - The link-set step renamed the tactics `iaaddr`, `laddr` and `lvbytesdec_z` to `indexed_attestation_addr`,
   `address_with_products` and `bytes_decode_zero`. The data reader commands `e2e_data_include`, `ad_data_include`,
   `lv_data_include`, `lvt3_data_include` and `dcd_data_include` became the one command `prysm_data_include`.
@@ -261,7 +263,7 @@ Then write the rows from the trial tree, and run the trial again with the rows.
 - The records of `maps/flat-types/` and `maps/shared-names/` name `callDecSegKindG4_of`, `callDecSegKind_eq_G4`,
   `EncodeFastPathExamples`, `DecodeAcceptExamples` and `Uint64DecoderKindAnchors`, which `maps/review-names/` renamed.
   An inverse run of those maps needs `maps/review-names/` undone first.
-  The tactic `bytesdec_z` is now `bytesdec_offset_zero_case`.
+  The tactic `bytesdec_z` became `bytesdec_offset_zero_case` and is now `bytes_decode_offset_zero_case`.
 
 ## 6. Self-test
 

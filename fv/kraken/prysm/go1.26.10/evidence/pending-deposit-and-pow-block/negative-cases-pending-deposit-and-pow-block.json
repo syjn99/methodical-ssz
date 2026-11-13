@@ -1,6 +1,6 @@
 [
  {
-  "id": "pending-deposit-gen-control",
+  "id": "pending-deposit-decode-generated-step-signature-seg-control",
   "module": "Prysm/PendingDeposit/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.PendingDeposit.Decode.generated_step_Signature_seg",
   "kind": "control",
@@ -10,7 +10,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
  },
  {
-  "id": "pending-deposit-gen-code-siglen",
+  "id": "pending-deposit-decode-generated-step-signature-seg-code-mov-0x60-to-0x50",
   "module": "Prysm/PendingDeposit/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.PendingDeposit.Decode.generated_step_Signature_seg",
   "kind": "code",
@@ -23,7 +23,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
  },
  {
-  "id": "pending-deposit-gen-stmt-src",
+  "id": "pending-deposit-decode-generated-step-signature-seg-statement-h-src-88-to-80",
   "module": "Prysm/PendingDeposit/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.PendingDeposit.Decode.generated_step_Signature_seg",
   "kind": "stmt",
@@ -31,7 +31,7 @@
   "new": "(hSrc : bf + (80 : Int64).toBitVec = aSrc)"
  },
  {
-  "id": "pending-deposit-gen-code-slotoff",
+  "id": "pending-deposit-decode-generated-step-s124-code-add-0xb8-to-0xb0",
   "module": "Prysm/PendingDeposit/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.PendingDeposit.Decode.generated_step_s124",
   "kind": "code",
@@ -43,7 +43,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
  },
  {
-  "id": "pending-deposit-head-control",
+  "id": "pending-deposit-decode-head-control",
   "module": "Prysm/PendingDeposit/DecodeAccept.lean",
   "theorem": "Prysm.PendingDeposit.Decode.head",
   "kind": "control",
@@ -53,7 +53,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
  },
  {
-  "id": "pending-deposit-head-code-order",
+  "id": "pending-deposit-decode-head-code-mov-0x68-rsp-to-0x60-rsp",
   "module": "Prysm/PendingDeposit/DecodeAccept.lean",
   "theorem": "Prysm.PendingDeposit.Decode.head",
   "kind": "code",
@@ -65,7 +65,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
  },
  {
-  "id": "pending-deposit-head-code-size",
+  "id": "pending-deposit-decode-head-code-cmp-0xc0-to-0xc8",
   "module": "Prysm/PendingDeposit/DecodeAccept.lean",
   "theorem": "Prysm.PendingDeposit.Decode.head",
   "kind": "code",
@@ -77,7 +77,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
  },
  {
-  "id": "pending-deposit-epi-code-frame",
+  "id": "pending-deposit-decode-epilogue-code-add-0x40-to-0x48",
   "module": "Prysm/PendingDeposit/DecodeAccept.lean",
   "theorem": "Prysm.PendingDeposit.Decode.epilogue",
   "kind": "code",
@@ -90,13 +90,13 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
  },
  {
-  "id": "pending-deposit-field-control",
+  "id": "pending-deposit-decode-from-generated-steps-amount-field-control",
   "module": "Prysm/PendingDeposit/DecodeAccept.lean",
   "theorem": "Prysm.PendingDeposit.Decode.from_generated_steps_Amount_field",
   "kind": "control"
  },
  {
-  "id": "pending-deposit-field-stmt-amount",
+  "id": "pending-deposit-decode-from-generated-steps-amount-field-statement-v-56-to-48",
   "module": "Prysm/PendingDeposit/DecodeAccept.lean",
   "theorem": "Prysm.PendingDeposit.Decode.from_generated_steps_Amount_field",
   "kind": "stmt",
@@ -104,7 +104,7 @@
   "new": "Eq (v.At (rcv + 48)) ⋆ F) st.data.dmem"
  },
  {
-  "id": "pending-deposit-field-stmt-slot",
+  "id": "pending-deposit-decode-from-generated-steps-slot-field-statement-c0-88-to-80",
   "module": "Prysm/PendingDeposit/DecodeAccept.lean",
   "theorem": "Prysm.PendingDeposit.Decode.from_generated_steps_Slot_field",
   "kind": "stmt",
@@ -112,7 +112,7 @@
   "new": "Eq (c0.At (rcv + 80)) ⋆ F),"
  },
  {
-  "id": "pending-deposit-rej-control",
+  "id": "pending-deposit-decode-reject-size-control",
   "module": "Prysm/PendingDeposit/DecodeRejectSize.lean",
   "theorem": "Prysm.PendingDeposit.Decode.reject_size",
   "kind": "control",
@@ -122,7 +122,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
  },
  {
-  "id": "pending-deposit-rej-stmt",
+  "id": "pending-deposit-decode-reject-size-statement-rbx-e1-to-e0",
   "module": "Prysm/PendingDeposit/DecodeRejectSize.lean",
   "theorem": "Prysm.PendingDeposit.Decode.reject_size",
   "kind": "stmt",
@@ -130,7 +130,7 @@
   "new": "st.data.regs.rbx = e0"
  },
  {
-  "id": "pending-deposit-rej-code-size",
+  "id": "pending-deposit-decode-reject-size-code-cmp-0xc0-to-0xc8",
   "module": "Prysm/PendingDeposit/DecodeRejectSize.lean",
   "theorem": "Prysm.PendingDeposit.Decode.reject_size",
   "kind": "code",
@@ -142,13 +142,13 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ.S"
  },
  {
-  "id": "pending-deposit-ssz-value-spec-accepts-iff-spec-control",
+  "id": "pending-deposit-ssz-value-spec-accepts-iff-control",
   "module": "Prysm/PendingDeposit/Spec.lean",
   "theorem": "Prysm.PendingDeposit.SszValue.spec_accepts_iff",
   "kind": "control"
  },
  {
-  "id": "pending-deposit-spec-stmt-size",
+  "id": "pending-deposit-ssz-value-spec-accepts-iff-statement-size-192-to-184",
   "module": "Prysm/PendingDeposit/Spec.lean",
   "theorem": "Prysm.PendingDeposit.SszValue.spec_accepts_iff",
   "kind": "stmt",
@@ -156,7 +156,7 @@
   "new": "bs.size = 184"
  },
  {
-  "id": "pending-deposit-deser-stmt-value",
+  "id": "pending-deposit-desc-deserialize-checker-statement-deserialize-v-to-seq",
   "module": "Prysm/PendingDeposit/Spec.lean",
   "theorem": "Prysm.PendingDeposit.desc_deserialize_checker",
   "kind": "stmt",
@@ -164,7 +164,7 @@
   "new": "deserialize checkerDesc bs = .ok (.seq [])"
  },
  {
-  "id": "pending-deposit-rc-stmt-size",
+  "id": "pending-deposit-decode-reject-complete-statement-size-192-to-191",
   "module": "Prysm/PendingDeposit/DecodeSpec.lean",
   "theorem": "Prysm.PendingDeposit.Decode.reject_complete",
   "kind": "stmt",
@@ -172,7 +172,7 @@
   "new": "bs.size ≠ 191 :="
  },
  {
-  "id": "pending-deposit-wita-stmt-rax",
+  "id": "pending-deposit-witness-decode-accept-runs-statement-rax-0-to-1",
   "module": "Prysm/PendingDeposit/WitnessDecodeAccept.lean",
   "theorem": "Prysm.PendingDeposit.Witness.DecodeAccept.runs",
   "kind": "stmt",
@@ -180,7 +180,7 @@
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
-  "id": "pending-deposit-witr-stmt-len",
+  "id": "pending-deposit-witness-decode-reject-size-runs-statement-hlen-192-to-193",
   "module": "Prysm/PendingDeposit/WitnessDecodeRejectSize.lean",
   "theorem": "Prysm.PendingDeposit.Witness.DecodeRejectSize.runs",
   "kind": "stmt",
@@ -188,7 +188,7 @@
   "new": "(hlen : len ≠ 193)"
  },
  {
-  "id": "pow-block-gen-control",
+  "id": "pow-block-decode-generated-step-total-difficulty-seg-control",
   "module": "Prysm/PowBlock/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.PowBlock.Decode.generated_step_TotalDifficulty_seg",
   "kind": "control",
@@ -198,7 +198,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S"
  },
  {
-  "id": "pow-block-gen-code-len",
+  "id": "pow-block-decode-generated-step-total-difficulty-seg-code-mov-0x20-to-0x18",
   "module": "Prysm/PowBlock/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.PowBlock.Decode.generated_step_TotalDifficulty_seg",
   "kind": "code",
@@ -211,7 +211,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S"
  },
  {
-  "id": "pow-block-gen-stmt-src",
+  "id": "pow-block-decode-generated-step-total-difficulty-seg-statement-h-src-64-to-56",
   "module": "Prysm/PowBlock/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.PowBlock.Decode.generated_step_TotalDifficulty_seg",
   "kind": "stmt",
@@ -219,7 +219,7 @@
   "new": "(hSrc : bf + (56 : Int64).toBitVec = aSrc)"
  },
  {
-  "id": "pow-block-gen-code-store",
+  "id": "pow-block-decode-generated-step-s118-code-mov-0x30-rdx-to-0x28-rdx",
   "module": "Prysm/PowBlock/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.PowBlock.Decode.generated_step_s118",
   "kind": "code",
@@ -231,13 +231,13 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S"
  },
  {
-  "id": "pow-block-field-control",
+  "id": "pow-block-decode-from-generated-steps-parent-hash-field-control",
   "module": "Prysm/PowBlock/DecodeAccept.lean",
   "theorem": "Prysm.PowBlock.Decode.from_generated_steps_ParentHash_field",
   "kind": "control"
  },
  {
-  "id": "pow-block-field-stmt-src",
+  "id": "pow-block-decode-from-generated-steps-parent-hash-field-statement-h-src-32-to-24",
   "module": "Prysm/PowBlock/DecodeAccept.lean",
   "theorem": "Prysm.PowBlock.Decode.from_generated_steps_ParentHash_field",
   "kind": "stmt",
@@ -245,7 +245,7 @@
   "new": "(hSrc : bf + (24 : Int64).toBitVec = aSrc)"
  },
  {
-  "id": "pow-block-field-stmt-end",
+  "id": "pow-block-decode-from-generated-steps-total-difficulty-field-statement-pc-119-to-118",
   "module": "Prysm/PowBlock/DecodeAccept.lean",
   "theorem": "Prysm.PowBlock.Decode.from_generated_steps_TotalDifficulty_field",
   "kind": "stmt",
@@ -253,7 +253,7 @@
   "new": "st.pc = Host.addrOf (k + 118)"
  },
  {
-  "id": "pow-block-rej-control",
+  "id": "pow-block-decode-reject-size-control",
   "module": "Prysm/PowBlock/DecodeRejectSize.lean",
   "theorem": "Prysm.PowBlock.Decode.reject_size",
   "kind": "control",
@@ -263,7 +263,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S"
  },
  {
-  "id": "pow-block-rej-stmt",
+  "id": "pow-block-decode-reject-size-statement-rbx-e1-to-e0",
   "module": "Prysm/PowBlock/DecodeRejectSize.lean",
   "theorem": "Prysm.PowBlock.Decode.reject_size",
   "kind": "stmt",
@@ -271,7 +271,7 @@
   "new": "st.data.regs.rbx = e0"
  },
  {
-  "id": "pow-block-rej-code-size",
+  "id": "pow-block-decode-reject-size-code-cmp-0x60-to-0x68",
   "module": "Prysm/PowBlock/DecodeRejectSize.lean",
   "theorem": "Prysm.PowBlock.Decode.reject_size",
   "kind": "code",
@@ -283,13 +283,13 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PowBlock.UnmarshalSSZ.S"
  },
  {
-  "id": "pow-block-ssz-value-spec-accepts-iff-spec-control",
+  "id": "pow-block-ssz-value-spec-accepts-iff-control",
   "module": "Prysm/PowBlock/Spec.lean",
   "theorem": "Prysm.PowBlock.SszValue.spec_accepts_iff",
   "kind": "control"
  },
  {
-  "id": "pow-block-spec-stmt-size",
+  "id": "pow-block-ssz-value-spec-accepts-iff-statement-size-96-to-88",
   "module": "Prysm/PowBlock/Spec.lean",
   "theorem": "Prysm.PowBlock.SszValue.spec_accepts_iff",
   "kind": "stmt",
@@ -297,7 +297,7 @@
   "new": "bs.size = 88"
  },
  {
-  "id": "pow-block-codec-stmt-value",
+  "id": "pow-block-decode-codec-checker-statement-deserialize-to-value-checker-to-to-value",
   "module": "Prysm/PowBlock/Spec.lean",
   "theorem": "Prysm.PowBlock.Decode.codec_checker",
   "kind": "stmt",
@@ -305,7 +305,7 @@
   "new": "deserialize checkerDesc bs = .ok g.toValue"
  },
  {
-  "id": "pow-block-rc-stmt-size",
+  "id": "pow-block-decode-reject-complete-statement-size-96-to-95",
   "module": "Prysm/PowBlock/DecodeSpec.lean",
   "theorem": "Prysm.PowBlock.Decode.reject_complete",
   "kind": "stmt",
@@ -313,7 +313,7 @@
   "new": "bs.size ≠ 95 :="
  },
  {
-  "id": "pow-block-wita-stmt-rax",
+  "id": "pow-block-witness-decode-accept-runs-statement-rax-0-to-1",
   "module": "Prysm/PowBlock/WitnessDecodeAccept.lean",
   "theorem": "Prysm.PowBlock.Witness.DecodeAccept.runs",
   "kind": "stmt",
@@ -321,7 +321,7 @@
   "new": "st.data.regs.rax = 1 ∧"
  },
  {
-  "id": "pow-block-witr-stmt-len",
+  "id": "pow-block-witness-decode-reject-size-runs-statement-hlen-96-to-97",
   "module": "Prysm/PowBlock/WitnessDecodeRejectSize.lean",
   "theorem": "Prysm.PowBlock.Witness.DecodeRejectSize.runs",
   "kind": "stmt",

@@ -14,7 +14,7 @@ PRIM = "github.com/OffchainLabs/prysm/v7/consensus-types/primitives"
 V1A1 = "github.com/OffchainLabs/prysm/v7/proto/prysm/v1alpha1"
 FUNCS = [f"{V1A1}.(*Checkpoint).{m}" for m in ("SizeSSZ", "MarshalSSZTo", "UnmarshalSSZ")] + \
         [f"{PRIM}.(*Epoch).{m}" for m in ("UnmarshalSSZ", "MarshalSSZTo", "MarshalSSZ", "SizeSSZ")]
-SCOPE = {FUNCS[0]: "in", FUNCS[1]: "in", FUNCS[2]: "in", FUNCS[3]: "in (callee, function spec E2)",
+SCOPE = {FUNCS[0]: "in", FUNCS[1]: "in", FUNCS[2]: "in", FUNCS[3]: "in (callee, function spec of Epoch)",
          FUNCS[4]: "record only (inlined into Checkpoint.MarshalSSZTo; out-of-line body unused by it)",
          FUNCS[5]: "record only (inlined)", FUNCS[6]: "record only (inlined)"}
 # contract class of every call target: a = proof target (run with the Kraken semantics), b = contract (a theorem
@@ -67,10 +67,10 @@ def main(objdump, out, mlog=None):
             "can_inline_Epoch_SizeSSZ": r"epoch\.go:\d+:\d+: can inline \(\*Epoch\)\.SizeSSZ",
             "can_inline_Epoch_UnmarshalSSZ": r"epoch\.go:\d+:\d+: can inline \(\*Epoch\)\.UnmarshalSSZ",
             "cannot_inline_Epoch_UnmarshalSSZ": r"epoch\.go:\d+:\d+: cannot inline \(\*Epoch\)\.UnmarshalSSZ",
-            "cp_marshal_inlines_Epoch_MarshalSSZTo": r"phase0\.ssz\.go:196\d:\d+: inlining call to primitives\.\(\*Epoch\)\.MarshalSSZTo",
-            "cp_marshal_inlines_Epoch_MarshalSSZ": r"phase0\.ssz\.go:196\d:\d+: inlining call to primitives\.\(\*Epoch\)\.MarshalSSZ\b",
-            "cp_unmarshal_inlines_Epoch_UnmarshalSSZ": r"phase0\.ssz\.go:19[89]\d:\d+: inlining call to primitives\.\(\*Epoch\)\.UnmarshalSSZ",
-            "cp_unmarshal_inlines_Epoch_SizeSSZ": r"phase0\.ssz\.go:19[89]\d:\d+: inlining call to primitives\.\(\*Epoch\)\.SizeSSZ",
+            "checkpoint_marshal_inlines_Epoch_MarshalSSZTo": r"phase0\.ssz\.go:196\d:\d+: inlining call to primitives\.\(\*Epoch\)\.MarshalSSZTo",
+            "checkpoint_marshal_inlines_Epoch_MarshalSSZ": r"phase0\.ssz\.go:196\d:\d+: inlining call to primitives\.\(\*Epoch\)\.MarshalSSZ\b",
+            "checkpoint_unmarshal_inlines_Epoch_UnmarshalSSZ": r"phase0\.ssz\.go:19[89]\d:\d+: inlining call to primitives\.\(\*Epoch\)\.UnmarshalSSZ",
+            "checkpoint_unmarshal_inlines_Epoch_SizeSSZ": r"phase0\.ssz\.go:19[89]\d:\d+: inlining call to primitives\.\(\*Epoch\)\.SizeSSZ",
         }
         for k, pat in pats.items():
             inl[k] = [l.strip() for l in text if re.search(pat, l)]

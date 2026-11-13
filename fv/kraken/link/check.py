@@ -40,7 +40,7 @@ Checks:
      read from the theorem statements, not checked here. Items that the
      proven code addresses with `lea` (the format strings, the int and uint64
      type words) are bound to their id by the proofs; the items that only a
-     contract uses (vblMsgE/Z/B, staticuint64s) are bound by the contract
+     contract uses (messageBitlistEmpty, messageTrailingByteZero, messageTooManyBits, staticuint64s) are bound by the contract
      hypothesis. This check binds neither.
 The bundle hash (sha256 over RESULT up to and including the last PASS line,
 which covers the ELF, the .S files, the data files and the AXIOMS.txt
@@ -57,7 +57,7 @@ import sys
 import tempfile
 
 HERE = pathlib.Path(__file__).resolve().parent
-spec = importlib.util.spec_from_file_location("conv", HERE / "conv.py")
+spec = importlib.util.spec_from_file_location("conv", HERE / "convert_objdump.py")
 conv = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(conv)
 
@@ -171,7 +171,7 @@ def run(outdir, log):
             esyms[name] = (a, sz, section_of(secs, a))
             nmonly.add(name)
     # Sanitized name -> original names over the whole binary: a referenced name
-    # must have exactly one original (stricter than conv.py, which sees only used names).
+    # must have exactly one original (stricter than convert_objdump.py, which sees only used names).
     rev = {}
     for name in esyms:
         o = name.replace(conv.MOD + "fv/kraken/", "").replace(conv.MOD, "")
@@ -456,8 +456,8 @@ def selftest(outdir):
         t = copy(); p = t / "norm" / "all.S"
         p.write_text(p.read_text().replace("cmp $0x10,%rcx", "cmp $0x11,%rcx", 1))
         cases.append(("all.S instruction changed", t, False))
-        # 8. a data file byte: blFmtB "B: %w" -> "C: %w"
-        t = copy(); p = t / "data" / "blFmtB.data"
+        # 8. a data file byte: formatB "B: %w" -> "C: %w"
+        t = copy(); p = t / "data" / "formatB.data"
         s = p.read_text(); assert "bytes 42 3a 20 25 77" in s; p.write_text(s.replace("bytes 42 3a", "bytes 43 3a"))
         cases.append(("data file byte changed", t, False))
         # 9. the ELF range of a data file: the errorString itab's type word points to
@@ -470,7 +470,7 @@ def selftest(outdir):
         struct.pack_into("<Q", e, o, 0x4cbf00); p.write_bytes(bytes(e))
         cases.append(("ELF itab type word changed", t, False))
         # 10. a carriage return inside a data file (data_include splits on \n only)
-        t = copy(); p = t / "data" / "vblMsgB.data"
+        t = copy(); p = t / "data" / "messageTooManyBits.data"
         p.write_bytes(p.read_bytes().replace(b"\nat ", b"\rat ", 1))
         cases.append(("data file with a carriage return", t, False))
         # 11. unchanged copy passes

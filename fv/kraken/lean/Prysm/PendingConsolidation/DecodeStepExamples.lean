@@ -18,7 +18,7 @@ variable [Host]
 open Codec
 namespace Prysm.PendingConsolidation
 
-/-! ## PendingConsolidation.TargetIndex — `nop` after the callee call (missed by the hold-out run): reload set-up as steps, call window, whole field -/
+/-! ## PendingConsolidation.TargetIndex — `nop` after the callee call (missed by the frozen generator): reload set-up as steps, call window, whole field -/
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in

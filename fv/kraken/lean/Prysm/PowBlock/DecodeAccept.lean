@@ -9,7 +9,7 @@ import Prysm.PendingDeposit.Statements
 Hand-written AFTER the raw generator output (`Prysm/PowBlock/GeneratedDecodeSteps.lean`, `decoder --steps`, exit 0,
 3/3 walker-covered) was committed. Statement = the pre-committed hand statement `Prysm.PowBlock.Decode.accept_statement`
 (`Prysm/PendingDeposit/Statements.lean`, unchanged). `--steps --compose` refuses by design, so every field composition is HAND text
-(`pb_gg_*_field`) over the GENERATED theorems, used as emitted:
+(`Decode.from_generated_steps_*_field`) over the GENERATED theorems, used as emitted:
 * head 0–12: `dechead_seg` (`Codec/DecoderHeadEpilogue.lean`, frame `0x20`, size 96);
 * BlockHash 13–46: generated segment (offset-0 form) + generated tail steps 37, 38, 45, 46;
 * ParentHash 47–82: generated segment + generated tail steps 73, 74, 81, 82;

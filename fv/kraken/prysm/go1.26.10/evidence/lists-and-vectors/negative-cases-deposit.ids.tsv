@@ -1,10 +1,10 @@
 # negative case ids: earlier id (the records negative/result.json and e2e.json name it)	present id
-dep-control-reject	deposit-control-reject
-dep-control-accept	deposit-control-accept
-dep-stmt-size1241	deposit-stmt-size1241
-dep-size1241	deposit-size1241
-dep-loopbound32	deposit-loopbound32
-dep-elem31	deposit-elem31
-dep-dataoff1057	deposit-dataoff1057
-dep-datalen183	deposit-datalen183
-dep-stmt-heap	deposit-stmt-heap
+dep-control-reject	deposit-decode-reject-size-control
+dep-control-accept	deposit-decode-accept-control
+dep-stmt-size1241	deposit-decode-reject-size-statement-hlen-1240-to-1241
+dep-size1241	deposit-decode-reject-size-code-cmp-0x4d8-to-0x4d9
+dep-loopbound32	deposit-decode-accept-code-cmp-0x21-to-0x20
+dep-elem31	deposit-decode-accept-code-mov-0x20-to-0x1f
+dep-dataoff1057	deposit-decode-accept-code-add-0x420-to-0x421
+dep-datalen183	deposit-decode-accept-code-mov-0xb8-to-0xb7
+dep-stmt-heap	deposit-decode-accept-statement-heap-2144-to-2143

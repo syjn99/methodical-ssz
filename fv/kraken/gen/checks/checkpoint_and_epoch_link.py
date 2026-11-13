@@ -4,11 +4,11 @@
 Usage (Python 3 standard library only; run with python3 -I -B; the steps after `filter` are gated):
   checkpoint_and_epoch_link.py filter <outdir> <objdump> <elf> <nm>   write <outdir>/target.objdump (the 7 functions of
                                                     callgraph.py) and link the ELF and nm into <outdir>
-  checkpoint_and_epoch_link.py data <outdir>                          after `conv.py <outdir>/target.objdump
+  checkpoint_and_epoch_link.py data <outdir>                          after `convert_objdump.py <outdir>/target.objdump
                                                     <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data with link/data.py's code
 Then `link/check.py <outdir>` (a)-(f). The committed copy is fv/kraken/prysm/go1.26.10/link-set
-(norm/, data/, target.objdump, RESULT). link/conv.py, link/data.py and link/check.py are not changed.
+(norm/, data/, target.objdump, RESULT). link/convert_objdump.py, link/data.py and link/check.py are not changed.
 
 Every data item is located from the converted code (the operand that the proofs read), not written by
 hand: the label and offset come from the `lea`/`mov` operand of the .S, the length from the code
@@ -25,8 +25,8 @@ LINK = HERE.parent.parent / "link"
 sys.path.insert(0, str(HERE))
 import callgraph  # noqa: E402
 
-CP = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint"
-EP = "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch"
+CHECKPOINT_SYMBOL = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Checkpoint"
+EPOCH_SYMBOL = "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.Epoch"
 
 
 def filt(outdir, objdump, elf, nm):
@@ -69,7 +69,7 @@ def items(outdir):
     spec = importlib.util.spec_from_file_location("data", LINK / "data.py")
     data = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(data)
-    cu, cm, eu = ins(outdir, f"{CP}.UnmarshalSSZ"), ins(outdir, f"{CP}.MarshalSSZTo"), ins(outdir, f"{EP}.UnmarshalSSZ")
+    cu, cm, eu = ins(outdir, f"{CHECKPOINT_SYMBOL}.UnmarshalSSZ"), ins(outdir, f"{CHECKPOINT_SYMBOL}.MarshalSSZTo"), ins(outdir, f"{EPOCH_SYMBOL}.UnmarshalSSZ")
     lea = r"lea ([A-Za-z0-9_.]+)(?:\+(\d+))?\(%rip\),%{}"
     # uint8 element type of makeslice (decoder) and growslice (encoder): one word in both
     mk = cu.index("callq runtime.makeslice")

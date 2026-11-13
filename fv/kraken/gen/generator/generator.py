@@ -128,7 +128,7 @@ def kind_thm(name, kind):
 
 # ---------------------------------------------------------------- uint64 decoder
 
-P1_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k)
+UINT64_DECODER_STATEMENT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k)
     (hf : LabelsFresh {const} k)
     (e8 : List UInt8) (he8 : e8.length = 8)
     (s : MachineData) (ra guard : UInt64) (fp s2 c0 : List UInt8)
@@ -150,7 +150,7 @@ P1_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k)
 """
 
 
-def p1_read(dirs):
+def uint64_decoder_read(dirs):
     fn = label_of(dirs[0]) or (_ for _ in ()).throw(NoMatch("directive 0 is not a label"))
     l0 = label_of(dirs[1]) or (_ for _ in ()).throw(NoMatch("directive 1 is not a label"))
     expect(dirs, 2, r"cmp 0x10\(%r14\),%rsp", "the stack guard compare")
@@ -172,14 +172,14 @@ def p1_read(dirs):
     return dict(fn=fn, l0=l0, lcc=lcc, lbb=lbb, fs=fs, dsp=dsp, jb=jb)
 
 
-def p1(args):
+def uint64_decoder(args):
     dirs, sha = read_S(args.S)
-    p = p1_read(dirs)
+    p = uint64_decoder_read(dirs)
     c = args.const
     out = header(sha, args.S, args, f"; uint64 decoder parameters: frame {p['fs']:#x}, spill {p['dsp']:#x}, "
                  f"accept label at directive {p['jb']}")
     out += "set_option maxRecDepth 100000 in\n"
-    out += P1_STMT.format(name=args.name, const=c)
+    out += UINT64_DECODER_STATEMENT.format(name=args.name, const=c)
     head = (f"Codec.u64DecHead {lean_str(p['fn'])} {lean_str(p['l0'])} {lean_str(p['lcc'])} "
             f"{lean_str(p['lbb'])} {p['fs']} {p['dsp']}")
     out += infix_have("hA", head, 0, c)
@@ -200,7 +200,7 @@ def p1(args):
 # `∀ …, …` after it, and the proof is `exact Codec.rootdec_seg … hA hB hl` with NO further argument. This
 # alone checks only the text after the colon (an added binder before the colon compiled).
 # The full type, binders included, is checked by the `_kind` theorem emitted after it (`kind_thm`).
-P2DEC_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
+ROOT_FIELD_STATEMENT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
     ∀ (sp rcv bf aR aB aS aRet aLo aP aL aC aSrc : BitVec 64) (St : Nat)
     (hR : sp + ({dR} : Int64).toBitVec = aR) (hB' : sp + ({dB} : Int64).toBitVec = aB)
     (hS : sp + ({dS} : Int64).toBitVec = aS)
@@ -256,7 +256,7 @@ def ir_roots(ir_path, tname):
     for f in t["ir"]["fields"]:
         v = f["v"]
         if v.get("variable"):
-            raise NoMatch(f"field {f['key']} is variable-size (not a P2 container)")
+            raise NoMatch(f"field {f['key']} is variable-size (not a flat container)")
         if v.get("k") == "vector" and v.get("size") == 32 and v.get("elem", {}).get("k") == "byte" \
                 and v.get("go_type") == "[]byte":
             roots.append((f["key"], off, goff[f["key"]]))
@@ -270,7 +270,7 @@ def ir_roots(ir_path, tname):
 # `rootDecSegOffsetZeroKind`, `lean/Codec/Bytes32DecodeOffsetZero.lean`, `lean/Codec/Kind/Bytes32DecodeOffsetZero.lean`). The form is chosen by the directive after the
 # buffer reload, never by a type or field name: `add $X,%rbx` = the add form (X must be the IR SSZ offset);
 # `mov $0x20,%ecx` = the offset-0 form (the IR SSZ offset must be 0); anything else = no match.
-P2DECZ_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
+ROOT_FIELD_OFFSET_ZERO_STATEMENT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
     ∀ (sp rcv bf aR aB aS aRet aLo aP aL aC : BitVec 64) (St : Nat)
     (hR : sp + ({dR} : Int64).toBitVec = aR) (hB' : sp + ({dB} : Int64).toBitVec = aB)
     (hS : sp + ({dS} : Int64).toBitVec = aS)
@@ -388,14 +388,14 @@ class Partial(Exception):
         self.report, self.text = report, text
 
 
-def p2dec_seg(c, fname, src, fo, j1, j2, p):
+def root_field_segment_text(c, fname, src, fo, j1, j2, p):
     """Lean text of one segment theorem and its `_kind` check (form "add": unchanged text of the first generator)."""
     name = f"{c['prefix']}_{fname}_seg"
     k = c["const"]
     out = "set_option maxHeartbeats 16000000 in\nset_option maxRecDepth 100000 in\n"
     out += f"/-- `{fname}` (SSZ offset {src}, Go offset {fo}): decode segment, directives {j1}–{p['last']}. -/\n"
     if p["form"] == "add":
-        out += P2DEC_STMT.format(name=name, const=k, j1=j1, j2=j2, **p)
+        out += ROOT_FIELD_STATEMENT.format(name=name, const=k, j1=j1, j2=j2, **p)
         out += infix_have("hA", f"Codec.rootDecHead {lean_str(p['lff'])} {p['dR']} {p['fL']} {p['fC']}", j1, k)
         out += infix_have("hB", f"Codec.rootDecMid {lean_str(p['lff'])} {lean_str(p['lwb'])} {p['dR']} {p['dB']} "
                           f"{p['dS']} {p['fP']} {p['fL']} {p['fC']} {p['src']}", j2, k)
@@ -405,7 +405,7 @@ def p2dec_seg(c, fname, src, fo, j1, j2, p):
         out += kind_thm(name, f"Codec.rootDecSegKind h {k} {j1} {j2} {p['dR']} {p['dB']} {p['dS']} {p['fP']} "
                               f"{p['fL']} {p['fC']} {p['src']}") + "\n"
     else:
-        out += P2DECZ_STMT.format(name=name, const=k, j1=j1, j2=j2, **p)
+        out += ROOT_FIELD_OFFSET_ZERO_STATEMENT.format(name=name, const=k, j1=j1, j2=j2, **p)
         out += infix_have("hA", f"Codec.rootDecHead {lean_str(p['lff'])} {p['dR']} {p['fL']} {p['fC']}", j1, k)
         out += infix_have("hB", f"Codec.rootDecMidOffsetZero {lean_str(p['lff'])} {lean_str(p['lwb'])} {p['dR']} {p['dB']} "
                           f"{p['dS']} {p['fP']} {p['fL']} {p['fC']}", j2, k)
@@ -449,7 +449,7 @@ def decoder(args):
         raise NoMatch("; ".join(report))
     kinds = ["Codec.Kind.Bytes32DecodeOffsetZero"] if any(p["form"] == "zero" for *_, p in found) else []
     extra = f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`)"
-    body = "".join(p2dec_seg(c, *f) for f in found) + f"end {GEN_NS}\n"
+    body = "".join(root_field_segment_text(c, *f) for f in found) + f"end {GEN_NS}\n"
     if len(found) == len(roots):
         return header(sha, args.S, args, extra, kinds) + body
     missing = [f for f, _, _ in roots if f not in {x[0] for x in found}]
@@ -477,7 +477,7 @@ def decoder(args):
 # `--summary FILE` writes a machine-readable per-field report (JSON) in every case (also on exit 2 / 3).
 
 FIELD_SEGMENT_SIZES = (32, 48, 96)
-HN = {32: "Or.inl rfl", 48: "Or.inr (Or.inl rfl)", 96: "Or.inr (Or.inr rfl)"}
+SIZE_CASE_PROOF = {32: "Or.inl rfl", 48: "Or.inr (Or.inl rfl)", 96: "Or.inr (Or.inr rfl)"}
 # the scratch registers of `Codec.U64InlineReg` (every 64-bit register except rdx, rsp, rbp, r14)
 U64_REGS = ("rax", "rbx", "rcx", "rsi", "rdi", "r8", "r9", "r10", "r11", "r12", "r13", "r15")
 
@@ -497,7 +497,7 @@ def ir_fields(ir_path, tname, call_segments=False):
     for f in t["ir"]["fields"]:
         v = f["v"]
         if v.get("variable"):
-            raise NoMatch(f"field {f['key']} is variable-size (not a P2 container)")
+            raise NoMatch(f"field {f['key']} is variable-size (not a flat container)")
         k, fo = v.get("k"), goff.get(f["key"])
         if fo is None:
             cls, info = "none", "no Go field offset in the IR"
@@ -582,8 +582,8 @@ def _size_statement(stmt):
     return stmt
 
 
-BYTES_STMT = _size_statement(P2DEC_STMT)
-BYTESZ_STMT = _size_statement(P2DECZ_STMT)
+BYTES_STMT = _size_statement(ROOT_FIELD_STATEMENT)
+BYTESZ_STMT = _size_statement(ROOT_FIELD_OFFSET_ZERO_STATEMENT)
 
 U64_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
     ∀ (sp rcv bf aB aSrc aF : BitVec 64)
@@ -616,7 +616,7 @@ def bytes_seg(c, fname, src, fo, j1, j2, p):
         out += infix_have("hB", f"Codec.bytesDecMid {n} {lean_str(p['lff'])} {lean_str(p['lwb'])} {p['dR']} {p['dB']} "
                           f"{p['dS']} {p['fP']} {p['fL']} {p['fC']} {p['src']}", j2, k)
         out += label_have("hl", j2, k)
-        out += (f"  with_reducible exact Codec.bytesdec_seg {n} ({HN[n]}) _ _ _ _ _ _ _ _ _ (k + {j1}) (k + {j2}) "
+        out += (f"  with_reducible exact Codec.bytesdec_seg {n} ({SIZE_CASE_PROOF[n]}) _ _ _ _ _ _ _ _ _ (k + {j1}) (k + {j2}) "
                 f"hA hB hl\n")
         out += kind_thm(name, f"Codec.bytesDecSegKind h {n} {k} {j1} {j2} {p['dR']} {p['dB']} {p['dS']} {p['fP']} "
                               f"{p['fL']} {p['fC']} {p['src']}") + "\n"
@@ -626,7 +626,7 @@ def bytes_seg(c, fname, src, fo, j1, j2, p):
         out += infix_have("hB", f"Codec.bytesDecMidOffsetZero {n} {lean_str(p['lff'])} {lean_str(p['lwb'])} {p['dR']} {p['dB']} "
                           f"{p['dS']} {p['fP']} {p['fL']} {p['fC']}", j2, k)
         out += label_have("hl", j2, k)
-        out += (f"  with_reducible exact Codec.bytesdec_seg_offset_zero {n} ({HN[n]}) _ _ _ _ _ _ _ _ (k + {j1}) (k + {j2}) "
+        out += (f"  with_reducible exact Codec.bytesdec_seg_offset_zero {n} ({SIZE_CASE_PROOF[n]}) _ _ _ _ _ _ _ _ (k + {j1}) (k + {j2}) "
                 f"hA hB hl\n")
         out += kind_thm(name, f"Codec.bytesDecSegOffsetZeroKind h {n} {k} {j1} {j2} {p['dR']} {p['dB']} {p['dS']} {p['fP']} "
                               f"{p['fL']} {p['fC']}") + "\n"
@@ -653,8 +653,8 @@ def decoder_field_segments(args):
     """`decoder --field-segments`: per-field coverage (see the block comment above). Returns the text or raises
     NoMatch (exit 2) / Partial (exit 3); `args.summary_data` collects the per-field report."""
     dirs, sha = read_S(args.S)
-    g3 = getattr(args, "call_segments", False)
-    fields, irsha = ir_fields(args.ir, args.type, call_segments=g3) if g3 else ir_fields(args.ir, args.type)
+    call_segments = getattr(args, "call_segments", False)
+    fields, irsha = ir_fields(args.ir, args.type, call_segments=call_segments) if call_segments else ir_fields(args.ir, args.type)
     summ = args.summary_data = dict(type=args.type, S=args.S, S_sha256=sha, ir_sha256=irsha, fields=[])
     if not fields:
         raise NoMatch(f"{args.type}: no field")
@@ -668,7 +668,7 @@ def decoder_field_segments(args):
             if cls == "none":
                 raise NoMatch(info)
             if cls == "bytes":
-                j1, j2, p = (decoder_find(dirs, fo, src, n=info, field_segments=True, pad_ok=True) if g3
+                j1, j2, p = (decoder_find(dirs, fo, src, n=info, field_segments=True, pad_ok=True) if call_segments
                              else decoder_find(dirs, fo, src, n=info, field_segments=True))
                 shape = (f"rootdec_seg{'_z' if p['form'] == 'zero' else ''}" if info == 32
                          else f"bytesdec_seg{'_z' if p['form'] == 'zero' else ''} {info}")
@@ -681,8 +681,8 @@ def decoder_field_segments(args):
                 shape = (f"calldec_seg {info.split('.')[-2]} + callarg_{p['form']}_seg"
                          + (" + callarg_mov_seg" if p["form"] == "lea" else "") + (" (pad)" if p["pad"] else ""))
                 found.append((j1, p["last"], fname, "call", (fname, src, fo, p)))
-            elif g3:
-                j1, p = u64_find_gen3(dirs, fo, src)
+            elif call_segments:
+                j1, p = u64_find_two_directive(dirs, fo, src)
                 shape = (f"u64dec_scratch_register_seg {p['rX']}" if p["form"] == "rr" else f"u64dec_inline_seg {p['rX']}")
                 found.append((j1, p["last"], fname, "u64rr" if p["form"] == "rr" else "u64", (fname, src, fo, j1, p)))
             else:
@@ -695,7 +695,7 @@ def decoder_field_segments(args):
             rec.update(status="not covered", reason=str(e))
             report.append(f"field {fname}: NOT COVERED: {e}")
         summ["fields"].append(rec)
-    if g3:
+    if call_segments:
         # the `lea` set-up of a callee field is split by the two-directive read of the IR field just before it
         for x in [x for x in found if x[3] == "call" and x[4][3]["form"] == "lea"]:
             p, fname = x[4][3], x[2]
@@ -738,7 +738,7 @@ def decoder_field_segments(args):
         kinds.append("Codec.Kind.CalleeDecode")
     if any(cl == "bytes" and a[5].get("pad") for *_, cl, a in found) and "Codec.Kind.FixedBytesDecode" not in kinds:
         kinds.append("Codec.Kind.FixedBytesDecode")
-    cov = "call segment coverage (`decoder --call-segments`)" if g3 else "field segment coverage (`decoder --field-segments`)"
+    cov = "call segment coverage (`decoder --call-segments`)" if call_segments else "field segment coverage (`decoder --field-segments`)"
     extra = (f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`); {cov}: "
              f"{len(found)} of {len(fields)} fields")
     body = ""
@@ -746,20 +746,20 @@ def decoder_field_segments(args):
         if cl == "u64":
             body += u64_seg(c, *a)
         elif cl == "u64rr":
-            body += u64rr_seg(c, *a)
+            body += uint64_two_directive_segment_text(c, *a)
         elif cl == "call":
             body += call_seg(c, *a)
         elif a[5].get("pad"):
             body += bytes_seg_pad(c, *a)
         elif a[5]["n"] == 32:
-            body += p2dec_seg(c, *a)
+            body += root_field_segment_text(c, *a)
         else:
             body += bytes_seg(c, *a)
     body += f"end {GEN_NS}\n"
     if args.compose:
         if len(found) != len(fields):
             raise NoMatch(f"--compose needs every field covered ({len(found)} of {len(fields)})")
-        if g3 and any(cl in ("call", "u64rr") for *_, cl, a in found):
+        if call_segments and any(cl in ("call", "u64rr") for *_, cl, a in found):
             raise NoMatch("--compose: callee-decoder fields and two-directive uint64 reads have no composition "
                           "template and no composed-statement kind (decAcceptKind covers byte-vector / inline-uint64 "
                           "fields in frame 0x20 only); the accept theorem of this type stays a hand composition")
@@ -776,7 +776,7 @@ def decoder_field_segments(args):
     full = header(sha, args.S, args, extra, kinds)
     imps, rest = full.split("\n\n", 1)
     text = (imps + f"\n\n/-! PARTIAL OUTPUT (generator exit 3): {len(found)} of {len(fields)} fields of `{args.type}` "
-            f"({'--call-segments' if g3 else '--field-segments'}); NOT generated: {', '.join(missing)}. Not a complete decoder output.\n"
+            f"({'--call-segments' if call_segments else '--field-segments'}); NOT generated: {', '.join(missing)}. Not a complete decoder output.\n"
             f"UNCOVERED-JSON: {json.dumps(unc)}\n-/\n\n" + rest + body)
     raise Partial(report, text)
 
@@ -860,7 +860,7 @@ def rr_find(dirs, fo, src):
     return hits
 
 
-def u64_find_gen3(dirs, fo, src):
+def u64_find_two_directive(dirs, fo, src):
     """field-segment inline form, else the call-segment two-directive form; exactly one site of the two forms together."""
     if src == 0 or fo == 0:
         raise NoMatch(f"inline uint64 with displacement 0 (SSZ offset {src}, Go offset {fo}): not exercised for "
@@ -1065,7 +1065,7 @@ CALL_DEC_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k)
       ⟨s, Host.addrOf (k + {j})⟩ := by
 """
 
-U64RR_STMT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
+UINT64_TWO_DIRECTIVE_STATEMENT = """theorem {name} (k : Nat) (hk : {const}.IsInfixAt Host.prog k) (hf : LabelsFresh {const} k) :
     ∀
     (bf rcv aSrc aF : BitVec 64) (hSrc : bf + ({src} : Int64).toBitVec = aSrc) (hF : rcv + ({f} : Int64).toBitVec = aF)
     (v vF : List UInt8) (hv : v.length = 8) (hvF : vF.length = 8)
@@ -1136,13 +1136,13 @@ def call_seg(c, fname, src, fo, p):
     return out
 
 
-def u64rr_seg(c, fname, src, fo, j, p):
+def uint64_two_directive_segment_text(c, fname, src, fo, j, p):
     """call-segment text of a two-directive uint64 read (`u64dec_scratch_register_seg`)."""
     name = f"{c['prefix']}_{fname}_seg"
     k = c["const"]
     out = CALL_SEGMENT_OPTS + (f"/-- `{fname}` (inline uint64, two-directive form, SSZ offset {src}, Go offset {fo}): decode "
                      f"segment, directives {j}–{p['last']}, scratch register {p['rX']}. -/\n")
-    out += U64RR_STMT.format(name=name, const=k, j=j, **p)
+    out += UINT64_TWO_DIRECTIVE_STATEMENT.format(name=name, const=k, j=j, **p)
     out += infix_have("hA", f"Codec.u64DecScratchRegister Reg64.{p['rX']} {p['src']} {p['f']}", j, k)
     out += f"  have hX : Codec.U64ScratchRegister Reg64.{p['rX']} := by decide\n"
     out += f"  with_reducible exact Codec.u64dec_scratch_register_seg Reg64.{p['rX']} hX _ _ (k + {j}) hA\n"
@@ -1165,7 +1165,7 @@ def bytes_seg_pad(c, fname, src, fo, j1, j2, p):
     out += infix_have("hB", f"Codec.bytesDecMid {n} {lean_str(p['lff'])} {lean_str(p['lwb'])} {p['dR']} {p['dB']} "
                       f"{p['dS']} {p['fP']} {p['fL']} {p['fC']} {p['src']}", j2, k)
     out += label_have("hl", j2, k)
-    out += (f"  with_reducible exact Codec.bytesdec_seg_optional_padding true {n} ({HN[n]}) _ _ _ _ _ _ _ _ _ (k + {j1}) (k + {j2}) "
+    out += (f"  with_reducible exact Codec.bytesdec_seg_optional_padding true {n} ({SIZE_CASE_PROOF[n]}) _ _ _ _ _ _ _ _ _ (k + {j1}) (k + {j2}) "
             f"hA hB hl\n")
     out += kind_thm(name, f"Codec.bytesDecSegKind h {n} {k} {j1} {j2} {p['dR']} {p['dB']} {p['dS']} {p['fP']} "
                           f"{p['fL']} {p['fC']} {p['src']}") + "\n"
@@ -1275,8 +1275,8 @@ def compose(args, dirs, sha, irsha, fields, found):
     head, steps, jE = compose_read(dirs, found, ssz)
     slots = compose_layout(args.ir, args.type, found)
     C, name = args.const, args.name
-    g3 = getattr(args, "call_segments", False)
-    if g3:
+    call_segments = getattr(args, "call_segments", False)
+    if call_segments:
         # call-segment: the composed statement is checked against `decAcceptKind C st fields jret`; the kind
         # has one optional opaque word (the protoc `state`) at Go offset 0 and contiguous fields after it
         opq = [o for cl, _, o in slots if cl == "opaque"]
@@ -1472,7 +1472,7 @@ def compose(args, dirs, sha, irsha, fields, found):
     chk = (f"; composed accept theorem; statement check: identity with `{hand}`" if hand else
            "; composed accept theorem; NO statement check (no hand theorem given: the statement is unchecked text, "
            "checked by nobody; `kindcheck.py` rejects this file)")
-    if g3:
+    if call_segments:
         chk = ("; composed accept theorem (`decoder --call-segments --compose`); statement check: the kind `decAcceptKind` "
                "(`_kind`, rfl at default transparency)" + (f" and the identity with `{hand}`" if hand else ""))
         if not hand:
@@ -1481,7 +1481,7 @@ def compose(args, dirs, sha, irsha, fields, found):
             chk += ("; NO independent hand statement (`--same-as` / `--same-as-prop`): UNCHECKED STATEMENT, "
                     "`kindcheck.py` rejects this file")
     out = header(sha, args.S, args, f" and `{args.ir}` (sha256 `{irsha}`, type `{args.type}`){chk}",
-                 ["Codec.Kind.DecodeAcceptComposition"] if g3 else [])
+                 ["Codec.Kind.DecodeAcceptComposition"] if call_segments else [])
     out += "set_option maxHeartbeats 4000000 in\nset_option maxRecDepth 100000 in\n"
     out += f"/-- Accept path of `{args.type}.UnmarshalSSZ`, composed from the generated segment theorems `{args.prefix}_*_seg`. -/\n"
     if not hand:
@@ -1489,7 +1489,7 @@ def compose(args, dirs, sha, irsha, fields, found):
         # all have `--same-as`, so their text does not change)
         L[0] += " -- UNCHECKED STATEMENT: checked by nobody"
     out += "\n".join(L) + "\n" + "\n".join(Q) + "\n"
-    if g3:
+    if call_segments:
         # `Codec/Kind/DecodeAcceptComposition.lean`: `rfl` at default transparency (the recursive kind must unfold); the
         # default heartbeat limit is set explicitly: a wrong parameter may not fail fast, a timeout is a FAIL
         # (a plain comment: a doc comment cannot stand before `set_option … in`; an earlier compose run failed so)
@@ -2254,7 +2254,7 @@ def step_seg_text(C, prefix, fname, ssz, u):
     out += f"  have hend : k + {j2} + (({C}.drop {j2}).take {nB}).length = k + {e} := by rfl\n"
     lem = "bytesdec_seg_offset_zero_window" if z else "bytesdec_seg_window"
     us = " ".join(["_"] * (10 if z else 11))
-    out += (f"  with_reducible exact Codec.{lem} {n} ({HN[n]}) Reg64.{u['rX']} Reg64.{u['rY']} ({STEP_HX[u['rX']]}) "
+    out += (f"  with_reducible exact Codec.{lem} {n} ({SIZE_CASE_PROOF[n]}) Reg64.{u['rX']} Reg64.{u['rY']} ({STEP_HX[u['rX']]}) "
             f"({STEP_HY[u['rY']]}) {us} (k + {j1}) (k + {j2}) (k + {j2}) (k + {jm}) (k + {e}) hqA heA hqB heB hjl hl "
             f"hjm hend\n")
     kpar = (f"{n} {C} Reg64.{u['rY']} {j1} {jm} {e} {u['dR']} {u['dB']} {u['dS']} {u['fP']} {u['fL']} {u['fC']}"
@@ -2475,8 +2475,8 @@ def _decoder_whole_accept(args, flags):
     whole_accept_gen = whole_accept_module()
     args.imports = ",".join(args.imports.split(",") + [m for m in whole_accept_gen.WHOLE_ACCEPT_IMPORTS if m not in args.imports.split(",")])
     # phase 1: the step front end, unchanged; exit 0 of step (every field, head, epilogue) or no accept theorem
-    g4 = decoder_step(args)
-    if not isinstance(g4, str) or not g4.endswith(f"end {GEN_NS}\n"):
+    step_text = decoder_step(args)
+    if not isinstance(step_text, str) or not step_text.endswith(f"end {GEN_NS}\n"):
         raise whole_accept_gen.WholeAcceptRefuse("step front end returned no complete module")
     dirs, sha = read_S(args.S)
     fields, irsha = ir_fields(args.ir, args.type, call_segments=True)
@@ -2518,7 +2518,7 @@ def _decoder_whole_accept(args, flags):
            f"reject. Every statement has a `_kind` line against the whole-accept kinds. In-sample (development data).\n"
            f"WHOLE-ACCEPT-JSON: {json.dumps(gj)}\n-/\n\n"
            f"open {whole_accept_gen.WHOLE_ACCEPT_OPENS}\n\nnamespace {GEN_NS}\n\n")
-    return g4 + "\n" + blk + body + f"end {GEN_NS}\n"
+    return step_text + "\n" + blk + body + f"end {GEN_NS}\n"
 
 
 # ---------------------------------------------------------------- fast-path: generated encoder fast-path theorem
@@ -2749,7 +2749,7 @@ def main():
             pathlib.Path(args.summary).write_text(json.dumps(d, indent=1) + "\n")
 
     try:
-        out = (p1(args) if args.mode == "uint64" else decoder_step(args) if args.steps else
+        out = (uint64_decoder(args) if args.mode == "uint64" else decoder_step(args) if args.steps else
                (decoder_field_segments(args) if args.field_segments else decoder(args)))
     except NoMatch as e:
         print(f"generator {args.mode}: no template match: {e}", file=sys.stderr)

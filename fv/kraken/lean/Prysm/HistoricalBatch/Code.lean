@@ -5,7 +5,7 @@ import Machine.Include
 # Code of the HistoricalBatch decoder (Go 1.26.10 ELF `c6403c02…911e`)
 
 `unmarshalSSZ` includes the `.S` file of `fv/kraken/prysm/go1.26.10/link-set/norm`
-(`gen/checks/historical_batch_link.py filter`, `link/conv.py --norm`, `historical_batch_link.py data`; `link/check.py` (a)–(f) PASS in
+(`gen/checks/historical_batch_link.py filter`, `link/convert_objdump.py --norm`, `historical_batch_link.py data`; `link/check.py` (a)–(f) PASS in
 `prysm/go1.26.10/link-set/RESULT`). The directory is a Lake `input_dir` of the `Prysm` library.
 -/
 

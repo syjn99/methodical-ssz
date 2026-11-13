@@ -7,7 +7,7 @@
   "code_ns": "Prysm.ValidatorIndex.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
-  "id": "validator-index-gvi-control"
+  "id": "validator-index-decode-generated-accept-control"
  },
  {
   "module": "Prysm/ValidatorIndex/GeneratedDecodeAccept.lean",
@@ -17,7 +17,7 @@
   "code_ns": "Prysm.ValidatorIndex.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
-  "id": "validator-index-gvi-cmp",
+  "id": "validator-index-decode-generated-accept-code-cmp-0x8-to-0x9",
   "old": "  cmp $0x8,%rcx",
   "new": "  cmp $0x9,%rcx"
  },
@@ -29,7 +29,7 @@
   "code_ns": "Prysm.ValidatorIndex.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
-  "id": "validator-index-gvi-load",
+  "id": "validator-index-decode-generated-accept-code-mov-rbx-to-0x8-rbx",
   "old": "  mov (%rbx),%rcx",
   "new": "  mov 0x8(%rbx),%rcx"
  },
@@ -41,14 +41,14 @@
   "code_ns": "Prysm.ValidatorIndex.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
-  "id": "validator-index-gvi-xorbx",
+  "id": "validator-index-decode-generated-accept-code-xor-ebx-ebx-to-ecx-ecx",
   "old": "  xor %ebx,%ebx",
   "new": "  xor %ecx,%ecx"
  },
  {
   "module": "Prysm/ValidatorIndex/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.ValidatorIndex.Decode.generated_accept",
-  "id": "validator-index-gvi-stmt-rax",
+  "id": "validator-index-decode-generated-accept-statement-rax-0-to-1",
   "kind": "stmt",
   "old": "st.data.regs.rax = 0 ∧",
   "new": "st.data.regs.rax = 1 ∧"
@@ -56,7 +56,7 @@
  {
   "module": "Prysm/ValidatorIndex/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.ValidatorIndex.Decode.generated_accept",
-  "id": "validator-index-gvi-stmt-rsp",
+  "id": "validator-index-decode-generated-accept-statement-rsp-8-to-16",
   "kind": "stmt",
   "old": "st.data.regs.rsp = s.regs.rsp + 8",
   "new": "st.data.regs.rsp = s.regs.rsp + 16"
@@ -64,7 +64,7 @@
  {
   "module": "Prysm/ValidatorIndex/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.ValidatorIndex.Decode.generated_accept",
-  "id": "validator-index-gvi-stmt-weaken",
+  "id": "validator-index-decode-generated-accept-statement-hlen-s-regs-rcx-to-true",
   "kind": "stmt",
   "old": "(hlen : s.regs.rcx = 8)",
   "new": "(hlen : True)"
@@ -72,7 +72,7 @@
  {
   "module": "Prysm/ValidatorIndex/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.ValidatorIndex.Decode.generated_accept",
-  "id": "validator-index-gvi-stmt-extra-before",
+  "id": "validator-index-decode-generated-accept-statement-hlen-none-to-hextra-1-nat",
   "kind": "stmt",
   "old": "(hlen : s.regs.rcx = 8) :",
   "new": "(hlen : s.regs.rcx = 8) (hextra : (1 : Nat) = 2) :"
@@ -80,7 +80,7 @@
  {
   "module": "Prysm/ValidatorIndex/GeneratedDecodeAccept.lean",
   "theorem": "Prysm.ValidatorIndex.Decode.generated_accept",
-  "id": "validator-index-gvi-stmt-extra-first",
+  "id": "validator-index-decode-generated-accept-statement-theorem-none-to-hextra-1-2",
   "kind": "stmt",
   "old": "theorem Decode.generated_accept (k : Nat)",
   "new": "theorem Decode.generated_accept (hextra : (1 : Nat) = 2) (k : Nat)"
@@ -93,7 +93,7 @@
   "code_ns": "Prysm.BeaconBlockHeader.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
-  "id": "beacon-block-header-gbd-control"
+  "id": "beacon-block-header-decode-generated-root-parent-root-seg-control"
  },
  {
   "module": "Prysm/BeaconBlockHeader/GeneratedDecodeRootFieldSegments.lean",
@@ -106,7 +106,7 @@
   "line": 95,
   "old": "  movq $0x20,0x28(%rdx)",
   "new": "  movq $0x21,0x28(%rdx)",
-  "id": "beacon-block-header-gbd-cap1"
+  "id": "beacon-block-header-decode-generated-root-parent-root-seg-code-movq-0x20-to-0x21"
  },
  {
   "module": "Prysm/BeaconBlockHeader/GeneratedDecodeRootFieldSegments.lean",
@@ -119,7 +119,7 @@
   "line": 142,
   "old": "  add $0x30,%rbx",
   "new": "  add $0x38,%rbx",
-  "id": "beacon-block-header-gbd-src2"
+  "id": "beacon-block-header-decode-generated-root-state-root-seg-code-add-0x30-to-0x38"
  },
  {
   "module": "Prysm/BeaconBlockHeader/GeneratedDecodeRootFieldSegments.lean",
@@ -132,7 +132,7 @@
   "line": 175,
   "old": "  mov %rax,0x48(%rdx)",
   "new": "  mov %rax,0x40(%rdx)",
-  "id": "beacon-block-header-gbd-ptr3"
+  "id": "beacon-block-header-decode-generated-root-body-root-seg-code-mov-0x48-rdx-to-0x40-rdx"
  },
  {
   "module": "Prysm/BeaconBlockHeader/GeneratedDecodeRootFieldSegments.lean",
@@ -140,7 +140,7 @@
   "kind": "stmt",
   "old": "(hf : LabelsFresh unmarshalSSZ k) :",
   "new": "(hf : LabelsFresh unmarshalSSZ k) (hextra : (1 : Nat) = 2) :",
-  "id": "beacon-block-header-gbd-stmt-extra-before"
+  "id": "beacon-block-header-decode-generated-root-parent-root-seg-statement-hf-none-to-hextra-1-nat"
  },
  {
   "module": "Prysm/BeaconBlockHeader/GeneratedDecodeRootFieldSegments.lean",
@@ -148,7 +148,7 @@
   "kind": "stmt",
   "old": "⋆ Eq ((Int.toBytes 8 32).At aL)",
   "new": "⋆ Eq ((Int.toBytes 8 33).At aL)",
-  "id": "beacon-block-header-gbd-stmt-lit"
+  "id": "beacon-block-header-decode-generated-root-body-root-seg-statement-a-l-32-to-33"
  },
  {
   "module": "Prysm/BeaconBlockHeader/DecodeHead.lean",
@@ -158,7 +158,7 @@
   "code_ns": "Prysm.BeaconBlockHeader.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
-  "id": "beacon-block-header-head-control"
+  "id": "beacon-block-header-decode-head-control"
  },
  {
   "module": "Prysm/BeaconBlockHeader/DecodeHead.lean",
@@ -170,7 +170,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
   "old": "  cmp $0x70,%rcx",
   "new": "  cmp $0x71,%rcx",
-  "id": "beacon-block-header-head-cmp"
+  "id": "beacon-block-header-decode-head-code-cmp-0x70-to-0x71"
  },
  {
   "module": "Prysm/BeaconBlockHeader/DecodeHead.lean",
@@ -183,7 +183,7 @@
   "line": 87,
   "old": "  mov %rbx,0x30(%rsp)",
   "new": "  mov %rbx,0x38(%rsp)",
-  "id": "beacon-block-header-head-spill"
+  "id": "beacon-block-header-decode-head-code-mov-0x30-rsp-to-0x38-rsp"
  },
  {
   "module": "Prysm/BeaconBlockHeader/DecodeHead.lean",
@@ -191,7 +191,7 @@
   "kind": "stmt",
   "old": "st.data.regs.rsp = s.regs.rsp - 104",
   "new": "st.data.regs.rsp = s.regs.rsp - 96",
-  "id": "beacon-block-header-head-stmt-rsp"
+  "id": "beacon-block-header-decode-head-statement-rsp-104-to-96"
  },
  {
   "module": "Prysm/BeaconBlockHeader/DecodeHead.lean",
@@ -199,7 +199,7 @@
   "kind": "stmt",
   "old": "(hguard : guard.toNat + 112 < s.regs.rsp.toNat)",
   "new": "(hguard : True)",
-  "id": "beacon-block-header-head-stmt-weaken"
+  "id": "beacon-block-header-decode-head-statement-hguard-guard-to-nat-112-to-true"
  },
  {
   "module": "Prysm/BeaconBlockHeader/DecodeAccept.lean",
@@ -207,7 +207,7 @@
   "kind": "stmt",
   "old": "⋆ Heap (avail - 96)",
   "new": "⋆ Heap (avail - 64)",
-  "id": "beacon-block-header-acc-stmt-heap"
+  "id": "beacon-block-header-decode-accept-statement-heap-96-to-64"
  },
  {
   "module": "Prysm/BeaconBlockHeader/DecodeAccept.lean",
@@ -215,7 +215,7 @@
   "kind": "stmt",
   "old": "Eq ((Int.toBytes 8 32).At (s.regs.rax.toBitVec + 88))",
   "new": "Eq ((Int.toBytes 8 31).At (s.regs.rax.toBitVec + 88))",
-  "id": "beacon-block-header-acc-stmt-cap3"
+  "id": "beacon-block-header-decode-accept-statement-rax-32-to-31"
  },
  {
   "module": "Prysm/BeaconBlockHeader/DecodeAccept.lean",
@@ -223,7 +223,7 @@
   "kind": "stmt",
   "old": "⋆ Eq (r1.At p1) ⋆ Eq (r2.At p2)",
   "new": "⋆ Eq (r2.At p1) ⋆ Eq (r1.At p2)",
-  "id": "beacon-block-header-acc-stmt-swap"
+  "id": "beacon-block-header-decode-accept-statement-r1-none-to-none"
  },
  {
   "module": "Prysm/BeaconBlockHeader/DecodeAccept.lean",
@@ -231,7 +231,7 @@
   "kind": "stmt",
   "old": "(hav : 96 ≤ avail)",
   "new": "(hav : True)",
-  "id": "beacon-block-header-acc-stmt-weaken"
+  "id": "beacon-block-header-decode-accept-statement-hav-96-avail-to-true"
  },
  {
   "module": "Prysm/BeaconBlockHeader/DecodeRejectSize.lean",
@@ -241,7 +241,7 @@
   "code_ns": "Prysm.BeaconBlockHeader.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
-  "id": "beacon-block-header-rej-control"
+  "id": "beacon-block-header-decode-reject-size-control"
  },
  {
   "module": "Prysm/BeaconBlockHeader/DecodeRejectSize.lean",
@@ -253,7 +253,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
   "old": "  mov ssz.ErrSize+8(%rip),%rbx",
   "new": "  mov ssz.ErrSize(%rip),%rbx",
-  "id": "beacon-block-header-rej-load"
+  "id": "beacon-block-header-decode-reject-size-code-mov-ssz-err-size-8-rip-to-ssz-err-size-rip"
  },
  {
   "module": "Prysm/BeaconBlockHeader/DecodeRejectSize.lean",
@@ -261,7 +261,7 @@
   "kind": "stmt",
   "old": "st.data.regs.rbx = e1",
   "new": "st.data.regs.rbx = e0",
-  "id": "beacon-block-header-rej-stmt"
+  "id": "beacon-block-header-decode-reject-size-statement-rbx-e1-to-e0"
  },
  {
   "module": "Prysm/BeaconBlockHeader/Spec.lean",
@@ -269,7 +269,7 @@
   "kind": "stmt",
   "old": "bs.size = 112",
   "new": "bs.size = 113",
-  "id": "beacon-block-header-spec-stmt-size"
+  "id": "beacon-block-header-ssz-value-spec-accepts-iff-statement-size-112-to-113"
  },
  {
   "module": "Prysm/BeaconBlockHeader/DecodeSpec.lean",
@@ -277,7 +277,7 @@
   "kind": "stmt",
   "old": "(hbs : bs.size ≠ 112)",
   "new": "(hbs : bs.size ≠ 113)",
-  "id": "beacon-block-header-rss-stmt-size"
+  "id": "beacon-block-header-decode-reject-size-spec-statement-hbs-112-to-113"
  },
  {
   "module": "Prysm/BeaconBlockHeader/Spec.lean",
@@ -285,8 +285,8 @@
   "kind": "stmt",
   "old": "= serialize checkerDesc v :=",
   "new": "= serialize (.container [\"Slot\", \"ProposerIndex\", \"ParentRoot\", \"StateRoot\", \"BodyRoot\"] [.uint 8, .uint 8, .byteVector 32, .byteVector 32, .byteVector 31]) v :=",
-  "id": "beacon-block-header-ser-stmt-nearmiss",
-  "note": "weak: first error is `unfold` failing on the absent name Prysm.BeaconBlockHeader.checkerDesc, not the Desc difference; not counted as evidence of Desc sensitivity (see hb-ser-stmt-nearmiss2)"
+  "id": "beacon-block-header-desc-serialize-checker-statement-serialize-checker-desc-to-container-slot-proposer-index",
+  "note": "weak: first error is `unfold` failing on the absent name Prysm.BeaconBlockHeader.checkerDesc, not the Desc difference; not counted as evidence of Desc sensitivity (see beacon-block-header-desc-serialize-checker-statement-serialize-none-to-match-with-container)"
  },
  {
   "module": "Prysm/BeaconBlockHeader/Spec.lean",
@@ -294,7 +294,7 @@
   "kind": "stmt",
   "old": "deserialize checkerDesc bs = .ok v",
   "new": "deserialize checkerDesc bs = .ok (.seq [])",
-  "id": "beacon-block-header-deser-stmt-value"
+  "id": "beacon-block-header-desc-deserialize-checker-statement-deserialize-v-to-seq"
  },
  {
   "module": "Prysm/BeaconBlockHeader/Spec.lean",
@@ -302,7 +302,7 @@
   "kind": "stmt",
   "old": "= serialize checkerDesc v :=",
   "new": "= serialize (match checkerDesc with | .container ns ds => .container ns (ds.set 4 (.byteVector 31)) | x => x) v :=",
-  "id": "beacon-block-header-ser-stmt-nearmiss2"
+  "id": "beacon-block-header-desc-serialize-checker-statement-serialize-none-to-match-with-container"
  },
  {
   "module": "Prysm/BeaconBlockHeader/DecodeRejectSize.lean",
@@ -310,7 +310,7 @@
   "code_ns": "Prysm.BeaconBlockHeader.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
-  "id": "beacon-block-header-u-control",
+  "id": "beacon-block-header-decode-validator-index-err-unreachable-control",
   "kind": "control",
   "theorem": "Prysm.BeaconBlockHeader.Decode.validator_index_err_unreachable"
  },
@@ -320,7 +320,7 @@
   "code_ns": "Prysm.BeaconBlockHeader.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
-  "id": "beacon-block-header-u-slot",
+  "id": "beacon-block-header-decode-slot-err-unreachable-code-je-to-jne",
   "kind": "code",
   "theorem": "Prysm.BeaconBlockHeader.Decode.slot_err_unreachable",
   "old": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_b9",
@@ -333,7 +333,7 @@
   "code_ns": "Prysm.BeaconBlockHeader.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ.S",
-  "id": "beacon-block-header-u-vi",
+  "id": "beacon-block-header-decode-validator-index-err-unreachable-code-je-to-jne",
   "kind": "code",
   "theorem": "Prysm.BeaconBlockHeader.Decode.validator_index_err_unreachable",
   "old": "  je L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.UnmarshalSSZ_154",
@@ -346,7 +346,7 @@
   "kind": "stmt",
   "old": "Host.addrOf (k + 46)",
   "new": "Host.addrOf (k + 20)",
-  "id": "beacon-block-header-u-slot-stmt",
+  "id": "beacon-block-header-decode-slot-err-unreachable-statement-host-46-to-20",
   "why": "claims the wrap entry is reached"
  },
  {
@@ -355,7 +355,7 @@
   "kind": "stmt",
   "old": "(h0 : s.regs.rax = 0)",
   "new": "(h0 : s.regs.rax = 1)",
-  "id": "beacon-block-header-u-vi-stmt",
+  "id": "beacon-block-header-decode-validator-index-err-unreachable-statement-h0-0-to-1",
   "why": "non-nil error: the branch goes to the wrap"
  },
  {
@@ -365,7 +365,7 @@
   "code_ns": "Prysm.ValidatorIndex.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
-  "id": "validator-index-r-control",
+  "id": "validator-index-decode-reject-size-control",
   "kind": "control"
  },
  {
@@ -375,7 +375,7 @@
   "code_ns": "Prysm.ValidatorIndex.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
-  "id": "validator-index-r-cmp7",
+  "id": "validator-index-decode-reject-size-code-cmp-0x8-to-0x7",
   "kind": "code",
   "old": "  cmp $0x8,%rcx",
   "new": "  cmp $0x7,%rcx"
@@ -387,7 +387,7 @@
   "code_ns": "Prysm.ValidatorIndex.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
-  "id": "validator-index-r-fmtlen",
+  "id": "validator-index-decode-reject-size-code-mov-0x28-to-0x27",
   "kind": "code",
   "old": "  mov $0x28,%ebx",
   "new": "  mov $0x27,%ebx"
@@ -399,13 +399,13 @@
   "code_ns": "Prysm.ValidatorIndex.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_consensus_types_primitives.ValidatorIndex.UnmarshalSSZ.S",
-  "id": "validator-index-r-nargs",
+  "id": "validator-index-decode-reject-size-code-mov-0x2-to-0x1",
   "kind": "code",
   "old": "  mov $0x2,%edi",
   "new": "  mov $0x1,%edi"
  },
  {
-  "id": "validator-index-r-stmt-nil",
+  "id": "validator-index-decode-reject-size-statement-rax-none-to-none",
   "kind": "stmt",
   "module": "Prysm/ValidatorIndex/DecodeRejectSize.lean",
   "theorem": "Prysm.ValidatorIndex.Decode.reject_size",
@@ -413,7 +413,7 @@
   "new": "st.data.regs.rax = 0"
  },
  {
-  "id": "validator-index-r-stmt-weaken",
+  "id": "validator-index-decode-reject-size-statement-hlen-s-regs-rcx-to-true",
   "kind": "stmt",
   "module": "Prysm/ValidatorIndex/DecodeRejectSize.lean",
   "theorem": "Prysm.ValidatorIndex.Decode.reject_size",

@@ -12,7 +12,7 @@ This file is committed before `Prysm/PowBlock/SpecChecker.lean` exists.
         parent_hash: Hash32                 # Bytes32
         total_difficulty: uint256
 
-The spec types `total_difficulty` as `uint256` (32 bytes, little-endian). The hold-out selection inventory lists
+The spec types `total_difficulty` as `uint256` (32 bytes, little-endian). The inventory that selected the hold-out types lists
 Prysm's field as a 32-byte vector (b32); the wire size is the same (32 bytes). The Desc below keeps the
 spec type. How it relates to the producer's Desc is a theorem of `Prysm/PowBlock/Spec.lean`, not an assumption here.
 -/

@@ -1,8 +1,8 @@
 # Reviewer script (own_layout.py), copied unchanged as the non-author
-# recomputation of frame, gd, rt and the first-touch stack regions (pre) of every Gen6*Enc layout. Run from fv/kraken:
+# recomputation of frame, gd, rt and the first-touch stack regions (pre) of every generated fast-path layout. Run from fv/kraken:
 #   python3 -I -B prysm/go1.26.10/evidence/generator-cases/encode-spec/layout_recomputation.py
 
-"""Third, reviewer-written recomputation of the free layout parameters (G1) from the `.S` and the directive windows
+"""Third, independent recomputation of the free layout parameters from the `.S` and the directive windows
 that the Lean proofs step (`window_infix_at hk a n`): frame, gd, rt, and the set of first-touch stack regions (pre) with sizes.
 Reads the layout def of the generated file or the pinned hand layout. No import of generator or kindcheck."""
 import json, re, glob, pathlib
@@ -64,4 +64,4 @@ for f in sorted(glob.glob("lean/Prysm/*/GeneratedEncodeFastPath.lean")):
     disj = all(regs[k][0] + regs[k][1] <= regs[k + 1][0] for k in range(len(regs) - 1)) and all(o >= -(F + 16) for o, _ in theirs)
     bad += (not ok) or (not disj)
     print(("OK  " if ok and disj else "DIFF"), J["type"], "F", F, "gd", gd, "rt", rt, "pre regions", len(mine), "disjoint", disj, "" if ok else f"\n   mine   {mine}\n   theirs {theirs} frame {L['frame']} gd {L['gd']} rt {L['rt']}")
-print("layouts that differ from the reviewer's recomputation or are not disjoint:", bad)
+print("layouts that differ from the independent recomputation or are not disjoint:", bad)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Eth1Data hold-out: Go differential of the v1alpha1.Eth1Data decoder (Python 3 standard library only).
+"""Go differential of the v1alpha1.Eth1Data decoder (Python 3 standard library only).
 
   eth1_data_differential.py cases <cases.json>                      write the cases
   eth1_data_differential.py check <cases.json> <go-out.json> <result.json>
@@ -30,7 +30,7 @@ def cases():
 
 def check(cp, op, rp):
     cs = {c["id"]: c for c in json.load(open(cp))}
-    # the memcap wrapper appends one "MEMCAP ..." line to stdout; it is not part of the Go output
+    # the memory_limit.py wrapper appends one "MEMCAP ..." line to stdout; it is not part of the Go output
     txt = "".join(l for l in open(op) if not l.startswith("MEMCAP "))
     got = {r["id"]: r for r in json.loads(txt)}
     rows, bad = [], 0

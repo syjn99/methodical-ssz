@@ -4,11 +4,11 @@ c6403c02...911e). A new file in the pattern of `lists_and_vectors_link.py` / `da
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   data_columns_decoder_link.py filter <outdir> <objdump> <elf> <nm>
-  data_columns_decoder_link.py data <outdir> <cp-linkdir> <t3-linkdir>    after conv.py --norm: write <outdir>/data/*.data
+  data_columns_decoder_link.py data <outdir> <checkpoint-link-dir> <indexed-attestation-link-dir>    after convert_objdump.py --norm: write <outdir>/data/*.data
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
 
 Data items are located from the converted code. Items equal to an item of the Checkpoint set (`checkpoint_and_epoch_link.py`) or of
-the IndexedAttestation set (`lists_and_vectors_link.py --t3`) are asserted equal (same label and offset) and written again under the `dcd`
+the IndexedAttestation set (`lists_and_vectors_link.py --with-indexed-attestation`) are asserted equal (same label and offset) and written again under the `dcd`
 prefix so that check (f) binds them to the ELF in this directory; the Lean statements read the `dcd` names through
 their own reader.
 """
@@ -32,13 +32,13 @@ def filt(outdir, objdump, elf, nm):
     return checkpoint_and_epoch_link.filt(outdir, objdump, elf, nm)
 
 
-def write_data(outdir, cpdir, t3dir):
+def write_data(outdir, checkpoint_dir, indexed_attestation_dir):
     spec = importlib.util.spec_from_file_location("data", LINK / "data.py")
     data = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(data)
     m = checkpoint_and_epoch_link.ins(outdir, f"{V}.DataColumnsByRootIdentifier.UnmarshalSSZ")
-    cu = checkpoint_and_epoch_link.ins(cpdir, f"{checkpoint_and_epoch_link.CP}.UnmarshalSSZ")
-    eu = checkpoint_and_epoch_link.ins(cpdir, f"{checkpoint_and_epoch_link.EP}.UnmarshalSSZ")
+    cu = checkpoint_and_epoch_link.ins(checkpoint_dir, f"{checkpoint_and_epoch_link.CHECKPOINT_SYMBOL}.UnmarshalSSZ")
+    eu = checkpoint_and_epoch_link.ins(checkpoint_dir, f"{checkpoint_and_epoch_link.EPOCH_SYMBOL}.UnmarshalSSZ")
     lea = r"lea ([A-Za-z0-9_.]+)(?:\+(\d+))?\(%rip\),%{}"
     calls = sorted({l for l in m if l.startswith("callq ")})
     assert calls == ["callq fmt.errorf", "callq runtime.convT64", "callq runtime.gcWriteBarrier2",
@@ -49,9 +49,9 @@ def write_data(outdir, cpdir, t3dir):
     tys = [checkpoint_and_epoch_link.operand([m[j]], lea.format("rax")) for i in mk for j in range(i - 5, i)
            if re.fullmatch(lea.format("rax"), m[j])]
     u8 = checkpoint_and_epoch_link.operand([cu[cu.index("callq runtime.makeslice") - 3]], lea.format("rax"))
-    t3 = pathlib.Path(t3dir) / "data"
+    with_indexed_attestation = pathlib.Path(indexed_attestation_dir) / "data"
     assert tys[0] == u8 and len(tys) == 2, tys
-    assert f"\nat {tys[1][0]} {tys[1][1]}\n" in (t3 / "typeUint64.data").read_text(), tys
+    assert f"\nat {tys[1][0]} {tys[1][1]}\n" in (with_indexed_attestation / "typeUint64.data").read_text(), tys
     # convT64 type word = type:int of the Epoch decoder
     inttype = [checkpoint_and_epoch_link.operand([l], lea.format("rdx")) for l in eu if re.fullmatch(lea.format("rdx"), l)][0]
     cv = [i for i, l in enumerate(m) if l == "callq runtime.convT64"]

@@ -20,7 +20,7 @@ import Prysm.Checkpoint.EncodeGrowAnySite
 Only (C) is not a return. It is the one state that the existing form cannot continue: `GrowsliceContract`
 gives the remaining heap of the first call only as an upper bound (`av' + C1 ≤ avail`), so the budget
 premise of the second call is not derivable. The return in (C) is differential only.
-Idea of the proof: the probe `r3_grow_any_sharp` (registers only); re-proved here with the frame.
+Idea of the proof: an earlier register-only probe that is not in the tree; re-proved here with the frame.
 -/
 
 open Machine Runtime Prysm.Checkpoint.Code

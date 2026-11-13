@@ -1282,6 +1282,6 @@ class FastPathGenerator:
 
     def meta(self):
         """facts for the FAST-PATH-JSON header (kindcheck recomputes them independently; they are not trusted)"""
-        return dict(type=self.t, const=self.C, prefix=self.px, size=self.size, frame=self.F, gd=self.gd, rt=self.rt,
+        return dict(type=self.t, const=self.C, prefix=self.px, size=self.size, frame=self.F, guard_addend=self.gd, runtime_calls=self.rt,
                     fields=[[f[0], f[1], f[2]] for f in self.fields], boundaries=[b["pc"] for b in self.bstate],
                     layout=self.layout(), S_sha256=self.Ssha, ir_sha256=self.irsha)

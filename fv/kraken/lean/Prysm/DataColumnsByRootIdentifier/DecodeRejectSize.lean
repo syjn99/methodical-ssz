@@ -26,7 +26,7 @@ macro "data_columns_by_root_identifier_decode_addr" : tactic => `(tactic| (
     UInt64.toNat_toBitVec, UInt64.toBitVec_add, UInt64.toBitVec_ofNat, Width.bits, Nat.reducePow]
   all_goals omega))
 
--- Measured cause (`Prysm.IndexedAttestation.DecodeRejectSize` builds): `step_directive` unfolds the program literal (`IaUnmarshal`, 279 directives) with `simp`; at the
+-- Measured cause (`Prysm.IndexedAttestation.DecodeRejectSize` builds): `step_directive` unfolds the program literal (`Prysm.IndexedAttestation.Code.unmarshalSSZ`, 279 directives) with `simp`; at the
 -- default `maxRecDepth` (512) that `simp` stops with "maximum recursion depth has been reached"; 1024 passes.
 -- Measured again for `unmarshalSSZ` (229 directives): the default fails at the `label_address` (174, 168), 1024 passes.
 set_option maxRecDepth 1024 in

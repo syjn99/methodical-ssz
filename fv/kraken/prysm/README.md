@@ -14,7 +14,7 @@ How to build the target ELF again is in `../README.md` section 3.
 | `TYPES.md`, `type-scope.json`, `type-scope.md` | Type lists and a scope classification of the inventory | `gen/type_list_document.py`, `gen/type_scope.py` |
 | `proof-inventory.md`, `proof-inventory.json` | The per-method table of theorems, witnesses and paths not proved | `gen/tools/proof_inventory.py run` (with the outputs of `inventory_decls.lean` and of an axioms gate run on the built tree) |
 | `_generated/` | The Go files that the pinned generator wrote for Prysm, with `SHA256SUMS` | `gen/prysm-gen.sh` |
-| `diff/` | A classification of the differences between these files and the Prysm files | `gen/gendiff.py` |
+| `diff/` | A classification of the differences between these files and the Prysm files | `gen/generated_go_diff.py` |
 | `go1.26.10/` | The target namespace of the Go 1.26.10 ELF (section 2) | |
 
 ## 2. The target namespace `go1.26.10/`
@@ -26,11 +26,11 @@ All files here belong to one ELF. Do not mix them with the files of another ELF.
 | `build-ids.txt` | The Go version, the build flags and the sha256 of the ELF, its disassembly and its symbol listing |
 | `p1cbin-main.go.txt`, `prysm-go.mod.diff` | The `main` package of the binary and the `go.mod` change in the Prysm tree |
 | `ssz-methods.json` | Every SSZ method of the ELF. It is the denominator of the inventory |
-| `functions.json`, `kparse.json`, `kparse-log.txt` | The functions with a converted `.S` file, which of them the Kraken parser reads, and the parser log that `gen/kraken-parser/summ.py` reads |
-| `link/` | A link table of 136 functions of this ELF. No current theorem includes it |
+| `functions.json`, `kparse.json`, `kparse-log.txt` | The functions with a converted `.S` file, which of them the Kraken parser reads, and the parser log that `gen/kraken-parser/summarize_parser_log.py` reads |
+| `link/` | A link table of 136 functions of this ELF. No current theorem includes it. It is a record: its data files keep their ids (`x5…`), and `link/data-ids-old-new.tsv` gives the present id of each item |
 | `link-set/` | The one link set of the proved functions: `target.objdump`, `norm/*.S`, `norm/all.S`, `data/*.data` and `RESULT`. `gen/checks/link_set.py` writes it. Its `RESULT` replaces the `RESULT` files of the 16 earlier link sets. `data-ids-old-new.tsv` maps the data ids of the earlier link sets and records to the present ids |
 | `evidence/` | The check records, negative case lists and generator records of the proved types (section 3) |
-| `capacity-reserved/` | A separate ELF of a generator option that reserves the encoder output once. The option is not adopted. `lean/Prysm/Checkpoint/CapacityReserved*.lean` prove theorems about it |
+| `capacity-reserved/` | A separate ELF of a generator option that reserves the encoder output once. The option is not adopted. `lean/Prysm/Checkpoint/CapacityReserved*.lean` prove theorems about it. Its `link/` directory is a record of that ELF: the data files keep their ids, and `link/data-ids-old-new.tsv` gives the present id of each item |
 
 ## 3. Records under `go1.26.10/evidence/`
 
@@ -64,7 +64,11 @@ Do not edit these files by hand. Make them again with their generator.
 - The `.S` and `.data` files of the link set. Lean includes them, and the link check compares them with the ELF.
 - `ir/*.json` and `inventory.json`. The generators, the `Desc` checker and the frozen lists read them. `gen/frozen/THEOREMS.json` pins the sha256 of `inventory.json`.
 - The `*.desc.json` files. The `Desc` checker accepted them, and the header of each `*SpecChecker.lean` gives their sha256.
-- The negative case lists `negcases*.json`. The negative test scripts read them.
+- The negative case lists `negative-cases-*.json`, each with the id table `<name>.ids.tsv` next to it. The negative test scripts read them.
 - `go1.26.10/build-ids.txt` and `go1.26.10/ssz-methods.json`. `gen/tools/proof_inventory.py` reads them. It checks the symbol listing against the sha256 in `build-ids.txt`.
+
+Some records are also inputs of checks. Do not edit them by hand either:
+`go1.26.10/kparse.json` and `go1.26.10/kparse-riz-diag.json` (`gen/type_scope.py` and `gen/type_list_document.py` read them),
+`go1.26.10/build-ids.txt`, and `go1.26.10/evidence/eth1-data/gen-e1dec.raw.txt` (the decoder generator test reads it).
 
 The other JSON files and the `RESULT` files are records of check runs. A new run writes them again. Do not edit them to change a result.

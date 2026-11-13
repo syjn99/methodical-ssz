@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Instruction and runtime-call classification of the target ELF.
 
-Usage: mnemonics.py <objdump> <kraken Parser/Basic.lean> <conv.py> <inventory.json> <out.json>
+Usage: mnemonics.py <objdump> <kraken Parser/Basic.lean> <convert_objdump.py> <inventory.json> <out.json>
 
 <objdump> is `go tool objdump -gnu -s RE` of the Go 1.26.10 ELF
 (fv/kraken/gen/prysm-elf.sh). For each function: instruction count, GNU
@@ -14,8 +14,8 @@ How "Kraken supports a mnemonic" is decided (mnemonic level only):
      plus the prefix forms `j<cc>`, `set<cc>`, `cmov<cc>[wlq]` with the
      condition codes of `parseCondCode?`. This is the parser that
      `include_x64_code` (Machine/Include.lean) runs.
-  2. A whole GNU instruction text in the NORM table of link/conv.py counts as
-     "norm" (conv.py --norm rewrites it to `nop`).
+  2. A whole GNU instruction text in the NORM table of link/convert_objdump.py counts as
+     "norm" (convert_objdump.py --norm rewrites it to `nop`).
   3. Anything else is "unsupported".
 Operand forms are not checked here. A real parse of every function is a
 separate gated Lean run (fv/kraken/gen/kraken-parser/).
@@ -192,7 +192,7 @@ def main():
     out = OrderedDict(
         schema="fvphase1c.mnemonics/1",
         method="Kraken runtime parser (parseInstr match arms + j/set/cmov with parseCondCode?) at the pinned package; "
-               "conv.py NORM forms count as norm; operand forms not checked",
+               "convert_objdump.py NORM forms count as norm; operand forms not checked",
         kraken_accepted_names=sorted(names), kraken_condition_codes=sorted(ccs), kraken_prefix_forms=prefixes,
         conv_norm_forms=sorted(norm),
         counts=OrderedDict(

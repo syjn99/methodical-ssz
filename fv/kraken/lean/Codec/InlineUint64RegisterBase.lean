@@ -3,7 +3,7 @@ import Codec.Bytes32Decode
 /-!
 # Inline uint64 decode, two-directive form (register base, receiver in rax)
 
-Added after the hold-out test of Deposit_Data and PendingPartialWithdrawal: the generator did not cover this form. In `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ` Go 1.26.10
+Added after the frozen generator ran on the hold-out types Deposit_Data and PendingPartialWithdrawal: the generator did not cover this form. In `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ` Go 1.26.10
 compiles `p.Amount = ssz.UnmarshallUint64(buf[8:16])` between the argument set-up directives of the next
 callee field to
 

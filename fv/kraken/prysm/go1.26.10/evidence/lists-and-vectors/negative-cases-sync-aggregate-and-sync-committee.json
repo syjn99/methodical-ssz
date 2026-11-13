@@ -1,15 +1,15 @@
 [
  {
-  "id": "sync-aggregate-control",
+  "id": "sync-aggregate-decode-accept-control",
   "kind": "control",
   "module": "Prysm/SyncAggregate/DecodeAccept.lean",
   "theorem": "Prysm.SyncAggregate.Decode.accept",
   "code_def": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
-  "stmt_module": "Prysm/SyncAggregate/Statements.lean"
+  "statement_module": "Prysm/SyncAggregate/Statements.lean"
  },
  {
-  "id": "sync-aggregate-size161",
+  "id": "sync-aggregate-decode-accept-code-cmp-0xa0-to-0xa1",
   "kind": "code",
   "old": "  cmp $0xa0,%rcx",
   "new": "  cmp $0xa1,%rcx",
@@ -17,10 +17,10 @@
   "theorem": "Prysm.SyncAggregate.Decode.accept",
   "code_def": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
-  "stmt_module": "Prysm/SyncAggregate/Statements.lean"
+  "statement_module": "Prysm/SyncAggregate/Statements.lean"
  },
  {
-  "id": "sync-aggregate-bitslen63",
+  "id": "sync-aggregate-decode-accept-code-movq-0x40-to-0x3f",
   "kind": "code",
   "line": 34,
   "old": "  movq $0x40,0x10(%rdx)",
@@ -29,10 +29,10 @@
   "theorem": "Prysm.SyncAggregate.Decode.accept",
   "code_def": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
-  "stmt_module": "Prysm/SyncAggregate/Statements.lean"
+  "statement_module": "Prysm/SyncAggregate/Statements.lean"
  },
  {
-  "id": "sync-aggregate-sigsrc",
+  "id": "sync-aggregate-decode-accept-code-add-0x40-to-0x48",
   "kind": "code",
   "old": "  add $0x40,%rbx",
   "new": "  add $0x48,%rbx",
@@ -40,43 +40,43 @@
   "theorem": "Prysm.SyncAggregate.Decode.accept",
   "code_def": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
-  "stmt_module": "Prysm/SyncAggregate/Statements.lean"
+  "statement_module": "Prysm/SyncAggregate/Statements.lean"
  },
  {
-  "id": "sync-aggregate-stmt-heap",
+  "id": "sync-aggregate-decode-accept-statement-heap-160-to-159",
   "kind": "stmt",
-  "stmt_def": "Prysm.SyncAggregate.Decode.accept_statement",
+  "statement_def": "Prysm.SyncAggregate.Decode.accept_statement",
   "old": "Heap (avail - 160)",
   "new": "Heap (avail - 159)",
   "module": "Prysm/SyncAggregate/DecodeAccept.lean",
   "theorem": "Prysm.SyncAggregate.Decode.accept",
   "code_def": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
-  "stmt_module": "Prysm/SyncAggregate/Statements.lean"
+  "statement_module": "Prysm/SyncAggregate/Statements.lean"
  },
  {
-  "id": "sync-aggregate-stmt-sigcap",
+  "id": "sync-aggregate-decode-accept-statement-rax-96-to-95",
   "kind": "stmt",
-  "stmt_def": "Prysm.SyncAggregate.Decode.accept_statement",
+  "statement_def": "Prysm.SyncAggregate.Decode.accept_statement",
   "old": "Eq ((Int.toBytes 8 96).At (s.regs.rax.toBitVec + 48))",
   "new": "Eq ((Int.toBytes 8 95).At (s.regs.rax.toBitVec + 48))",
   "module": "Prysm/SyncAggregate/DecodeAccept.lean",
   "theorem": "Prysm.SyncAggregate.Decode.accept",
   "code_def": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
-  "stmt_module": "Prysm/SyncAggregate/Statements.lean"
+  "statement_module": "Prysm/SyncAggregate/Statements.lean"
  },
  {
-  "id": "sync-aggregate-rej-control",
+  "id": "sync-aggregate-decode-reject-size-control",
   "kind": "control",
   "module": "Prysm/SyncAggregate/DecodeRejectSize.lean",
   "theorem": "Prysm.SyncAggregate.Decode.reject_size",
   "code_def": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
-  "stmt_module": "Prysm/SyncAggregate/Statements.lean"
+  "statement_module": "Prysm/SyncAggregate/Statements.lean"
  },
  {
-  "id": "sync-aggregate-rej-errword",
+  "id": "sync-aggregate-decode-reject-size-code-mov-ssz-err-size-8-rip-to-ssz-err-size-rip",
   "kind": "code",
   "old": "  mov ssz.ErrSize+8(%rip),%rbx",
   "new": "  mov ssz.ErrSize(%rip),%rbx",
@@ -84,10 +84,10 @@
   "theorem": "Prysm.SyncAggregate.Decode.reject_size",
   "code_def": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
-  "stmt_module": "Prysm/SyncAggregate/Statements.lean"
+  "statement_module": "Prysm/SyncAggregate/Statements.lean"
  },
  {
-  "id": "sync-committee-iter-control",
+  "id": "sync-committee-decode-iter-control",
   "kind": "control",
   "module": "Prysm/SyncCommittee/DecodeLoop.lean",
   "theorem": "Prysm.SyncCommittee.Decode.iter",
@@ -95,7 +95,7 @@
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S"
  },
  {
-  "id": "sync-committee-iter-jae",
+  "id": "sync-committee-decode-iter-code-jae-to-jb",
   "kind": "code",
   "old": "  jae L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ_1ff",
   "new": "  jb L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ_1ff",
@@ -105,7 +105,7 @@
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S"
  },
  {
-  "id": "sync-committee-iter-len47",
+  "id": "sync-committee-decode-iter-code-movq-0x30-to-0x2f",
   "kind": "code",
   "old": "  movq $0x30,0x8(%rsi,%r8,8)",
   "new": "  movq $0x2f,0x8(%rsi,%r8,8)",
@@ -115,7 +115,7 @@
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S"
  },
  {
-  "id": "sync-committee-iter-stride32",
+  "id": "sync-committee-decode-iter-code-shl-0x4-to-0x3",
   "kind": "code",
   "old": "  shl $0x4,%rdx",
   "new": "  shl $0x3,%rdx",
@@ -125,7 +125,7 @@
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S"
  },
  {
-  "id": "sync-committee-iter-bound511",
+  "id": "sync-committee-decode-iter-code-cmp-0x200-to-0x1ff",
   "kind": "code",
   "old": "  cmp $0x200,%rax",
   "new": "  cmp $0x1ff,%rax",
@@ -135,16 +135,16 @@
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S"
  },
  {
-  "id": "sync-committee-control",
+  "id": "sync-committee-decode-accept-control",
   "kind": "control",
   "module": "Prysm/SyncCommittee/DecodeAccept.lean",
   "theorem": "Prysm.SyncCommittee.Decode.accept",
   "code_def": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S",
-  "stmt_module": "Prysm/SyncCommittee/Statements.lean"
+  "statement_module": "Prysm/SyncCommittee/Statements.lean"
  },
  {
-  "id": "sync-committee-size",
+  "id": "sync-committee-decode-accept-code-cmp-0x6030-to-0x6031",
   "kind": "code",
   "old": "  cmp $0x6030,%rcx",
   "new": "  cmp $0x6031,%rcx",
@@ -152,34 +152,34 @@
   "theorem": "Prysm.SyncCommittee.Decode.accept",
   "code_def": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S",
-  "stmt_module": "Prysm/SyncCommittee/Statements.lean"
+  "statement_module": "Prysm/SyncCommittee/Statements.lean"
  },
  {
-  "id": "sync-committee-stmt-len511",
+  "id": "sync-committee-decode-accept-statement-rax-512-to-511",
   "kind": "stmt",
-  "stmt_def": "Prysm.SyncCommittee.Decode.accept_statement",
+  "statement_def": "Prysm.SyncCommittee.Decode.accept_statement",
   "old": "Eq ((Int.toBytes 8 512).At (s.regs.rax.toBitVec + 16))",
   "new": "Eq ((Int.toBytes 8 511).At (s.regs.rax.toBitVec + 16))",
   "module": "Prysm/SyncCommittee/DecodeAccept.lean",
   "theorem": "Prysm.SyncCommittee.Decode.accept",
   "code_def": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S",
-  "stmt_module": "Prysm/SyncCommittee/Statements.lean"
+  "statement_module": "Prysm/SyncCommittee/Statements.lean"
  },
  {
-  "id": "sync-committee-stmt-elems",
+  "id": "sync-committee-decode-accept-statement-element-blocks-none-to-reverse",
   "kind": "stmt",
-  "stmt_def": "Prysm.SyncCommittee.Decode.accept_statement",
+  "statement_def": "Prysm.SyncCommittee.Decode.accept_statement",
   "old": "elementBlocks ps pks",
   "new": "elementBlocks ps pks.reverse",
   "module": "Prysm/SyncCommittee/DecodeAccept.lean",
   "theorem": "Prysm.SyncCommittee.Decode.accept",
   "code_def": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S",
-  "stmt_module": "Prysm/SyncCommittee/Statements.lean"
+  "statement_module": "Prysm/SyncCommittee/Statements.lean"
  },
  {
-  "id": "sync-aggregate-bitslen63-seg",
+  "id": "sync-aggregate-decode-bits-seg-code-movq-0x40-to-0x3f",
   "kind": "code",
   "line": 34,
   "old": "  movq $0x40,0x10(%rdx)",
@@ -188,20 +188,20 @@
   "theorem": "Prysm.SyncAggregate.Decode.bits_seg",
   "code_def": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncAggregate.UnmarshalSSZ.S",
-  "stmt_module": "Prysm/SyncAggregate/Statements.lean",
-  "note": "added after lv-sa-bitslen63 classified outside: its error is in Prysm.SyncAggregate.Decode.bits_seg (the segment lemma that holds the mutated directive), which precedes the main theorem"
+  "statement_module": "Prysm/SyncAggregate/Statements.lean",
+  "note": "added after sync-aggregate-decode-accept-code-movq-0x40-to-0x3f classified outside: its error is in Prysm.SyncAggregate.Decode.bits_seg (the segment lemma that holds the mutated directive), which precedes the main theorem"
  },
  {
-  "id": "sync-committee-rej-control",
+  "id": "sync-committee-decode-reject-size-control",
   "kind": "control",
   "module": "Prysm/SyncCommittee/DecodeRejectSize.lean",
   "theorem": "Prysm.SyncCommittee.Decode.reject_size",
   "code_def": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S",
-  "stmt_module": "Prysm/SyncCommittee/Statements.lean"
+  "statement_module": "Prysm/SyncCommittee/Statements.lean"
  },
  {
-  "id": "sync-committee-rej-errword",
+  "id": "sync-committee-decode-reject-size-code-mov-ssz-err-size-8-rip-to-ssz-err-size-rip",
   "kind": "code",
   "old": "  mov ssz.ErrSize+8(%rip),%rbx",
   "new": "  mov ssz.ErrSize(%rip),%rbx",
@@ -209,10 +209,10 @@
   "theorem": "Prysm.SyncCommittee.Decode.reject_size",
   "code_def": "unmarshalSSZ",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommittee.UnmarshalSSZ.S",
-  "stmt_module": "Prysm/SyncCommittee/Statements.lean"
+  "statement_module": "Prysm/SyncCommittee/Statements.lean"
  },
  {
-  "id": "sync-aggregate-desc-control",
+  "id": "sync-aggregate-spec-rejects-control",
   "kind": "control",
   "module": "Prysm/SyncAggregate/Spec.lean",
   "theorem": "Prysm.SyncAggregate.spec_rejects",
@@ -224,7 +224,7 @@
   ]
  },
  {
-  "id": "sync-aggregate-desc-sig95",
+  "id": "sync-aggregate-desc-fixed-size-statement-byte-vector-96-to-95",
   "kind": "stmt",
   "module": "Prysm/SyncAggregate/Spec.lean",
   "theorem": "Prysm.SyncAggregate.desc_fixedSize",
@@ -234,13 +234,13 @@
    "Codec/ByteSliceListDefinitions.lean",
    "Prysm/SyncCommittee/SpecDefinitions.lean"
   ],
-  "stmt_def": "Prysm.SyncAggregate.desc",
+  "statement_def": "Prysm.SyncAggregate.desc",
   "old": ".byteVector 96]",
   "new": ".byteVector 95]",
-  "note": "Desc mutant (review r1 S4); the first theorem that reads the size is Prysm.SyncAggregate.desc_fixedSize"
+  "note": "Desc mutant; the first theorem that reads the size is Prysm.SyncAggregate.desc_fixedSize"
  },
  {
-  "id": "sync-committee-desc-control",
+  "id": "sync-committee-spec-rejects-control",
   "kind": "control",
   "module": "Prysm/SyncCommittee/Spec.lean",
   "theorem": "Prysm.SyncCommittee.spec_rejects",
@@ -253,7 +253,7 @@
   ]
  },
  {
-  "id": "sync-committee-desc-n511",
+  "id": "sync-committee-desc-fixed-size-statement-vector-512-to-511",
   "kind": "stmt",
   "module": "Prysm/SyncCommittee/Spec.lean",
   "theorem": "Prysm.SyncCommittee.desc_fixedSize",
@@ -265,13 +265,13 @@
    "Prysm/SyncCommittee/SpecDefinitions.lean",
    "Codec/SerializeInline.lean"
   ],
-  "stmt_def": "Prysm.SyncCommittee.desc",
+  "statement_def": "Prysm.SyncCommittee.desc",
   "old": ".vector (.byteVector 48) 512",
   "new": ".vector (.byteVector 48) 511",
-  "note": "Desc mutant (review r1 S4)"
+  "note": "Desc mutant"
  },
  {
-  "id": "sync-aggregate-desc-kind",
+  "id": "sync-aggregate-to-value-fits-statement-bit-vector-bit-vector-512-to-64-byte-vector",
   "kind": "stmt",
   "module": "Prysm/SyncAggregate/Spec.lean",
   "theorem": "Prysm.SyncAggregate.toValue_fits",
@@ -281,13 +281,13 @@
    "Codec/ByteSliceListDefinitions.lean",
    "Prysm/SyncCommittee/SpecDefinitions.lean"
   ],
-  "stmt_def": "Prysm.SyncAggregate.desc",
+  "statement_def": "Prysm.SyncAggregate.desc",
   "old": "[.bitVector 512, .byteVector 96]",
   "new": "[.byteVector 64, .byteVector 96]",
   "note": "Desc kind mutant (same fixed size 160); first theorem that reads the kind"
  },
  {
-  "id": "sync-committee-desc-kind",
+  "id": "sync-committee-to-value-fits-statement-vector-vector-512-48-to-24576",
   "kind": "stmt",
   "module": "Prysm/SyncCommittee/Spec.lean",
   "theorem": "Prysm.SyncCommittee.toValue_fits",
@@ -299,7 +299,7 @@
    "Prysm/SyncCommittee/SpecDefinitions.lean",
    "Codec/SerializeInline.lean"
   ],
-  "stmt_def": "Prysm.SyncCommittee.desc",
+  "statement_def": "Prysm.SyncCommittee.desc",
   "old": "[.vector (.byteVector 48) 512, .byteVector 48]",
   "new": "[.byteVector 24576, .byteVector 48]",
   "note": "Desc kind mutant (same fixed size 24624)"

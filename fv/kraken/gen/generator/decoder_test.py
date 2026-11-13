@@ -86,22 +86,22 @@ step cases (`decoder --steps`; ids `steps-*`; mutated `.S` / IR copies in <work-
    uncovered field: `kindcheck.py --partial` exit 3 on the partial file), 0 bytes on stdout unless exit 0; the
    summary's miss class is checked where stated. A covered mutant is a text result only (no Lean constant exists for
    mutated code): its theorems carry the mutated code's indices, never a parameter of the unmutated code.
- - steps-review-*: the reviewer's inputs (`rv` edits). The seven the step walker had accepted without the
-   block entry being established (a05, a15, a29, a31, b05: an 8-byte stack store overlapping a tracked slot; b01, b02:
-   head not the `decpro_seg` prologue) and b03 must be refused; a41 (extra head `nop`) is a head miss of class
-   padding; a13 (wrong source offset) class other; stores to the return-address slot or below rsp, writes to r14 /
-   rbp refused; the ten valid variants (a08, a14, a16, a19, a21, a27, a35, a38, b04, b06) stay covered. a34 (a
-   store after the last field event) is refused by the epilogue rule (exit 2).
- - steps-review2-*: the reviewer's inputs and the systematic pass. The head size immediate must equal the IR
-   SSZ fixed size (c34, d15, d16: exit 2, class other); a callee that is not the IR field's overlay type is refused
+ - steps-<what the input does>, table STEP_STACK_AND_SETUP_MUT (`rv` edits): seven inputs that the step walker had
+   accepted without the block entry being established must be refused (an 8-byte stack store overlapping a tracked
+   slot: steps-stack-store-overlaps-*; a head that is not the `decpro_seg` prologue: steps-head-spill-before-push,
+   steps-head-no-frame), and steps-head-overlapping-spills too; steps-head-extra-nop is a head miss of class padding;
+   steps-callee-source-offset-zero class other; stores to the return-address slot or below rsp, writes to r14 / rbp
+   refused; the ten valid variants stay covered. steps-store-after-last-field is refused by the epilogue rule (exit 2).
+ - table STEP_SIZE_CALLEE_EPILOGUE_MUT: the head size immediate must equal the IR SSZ fixed size
+   (steps-head-size-*: exit 2, class other); a callee that is not the IR field's overlay type is refused
    (ValidatorIndex field calling Epoch.UnmarshalSSZ and the reverse); after the last field event only the plain return
    (`mov d(%rsp),%rax|%rbx`, `xor`, nops, labels, forward jmp, `add $F,%rsp; pop %rbp; retq`) is accepted: a store, a
    call or a wrong frame size there gives exit 2 with every field `reached` and not covered; a nop there stays covered.
    Every `--steps` case also checks the summary flag `reached` (true up to the first uncovered field, false after it,
    false for every field on a head miss); on exit 2 the summary lists every field.
- - steps-review3-*: the reviewer's inputs: a `jmp` after the last field event to a label that is not in
-   the file (x01 `jmp runtime.abort`, x02 `jmp *%rdx`, x03 a tail `jmp` to Slot.UnmarshalSSZ): exit 2, every field not
-   covered and `reached`.
+ - steps-tail-*, table STEP_TAIL_JUMP_MUT: a `jmp` after the last field event to a label that is not in the file
+   (`jmp runtime.abort`, `jmp *%rdx`, a tail `jmp` to Slot.UnmarshalSSZ): exit 2, every field not covered and
+   `reached`.
  - steps-fail-closed-*: fail-closed. A harness (written to <work-dir>, run as one process per type on Eth1Data,
    SyncCommitteeMessage, PendingPartialWithdrawal) imports the working-tree `generator.py`, monkeypatches it and calls
    `main()`: an unexpected exception, a plain `StepStop` and `SystemExit(0)` injected in the head (`step_head`), at every
@@ -115,7 +115,7 @@ whole-accept cases (`decoder --whole-accept`; ids `whole-accept-*`; mutated `.S`
    identical, every whole-accept theorem with its kind line, `kindcheck.py` PASS (rule 12: kind parameters recomputed from the
    IR and the `.S`); PendingPartialWithdrawal (interleaved fields) and AttestationData (nested fields): exit 2, 0 bytes.
  - adversarial inputs, each expected exit 2 with 0 bytes on stdout and `accept_generated: false` in the summary (no
-   accept theorem): every class of the step reviews (stack-store overlap / misaligned store, head variants, size
+   accept theorem): every class of the step rules (stack-store overlap / misaligned store, head variants, size
    immediate, epilogue jump to a missing label, truncated file, callee of another overlay type) and the whole-accept rules
    (spill to a non-home slot, a register spilled twice, an extra `rcx` spill, `dB != F + 24`, an `xor` epilogue in a
    frame other than 0x20, an epilogue load of a non-zero slot, a `nop` inside the accept epilogue, a malformed
@@ -147,19 +147,19 @@ OLD_ARGS = ["--const", "unmarshalSSZ", "--ir", "prysm/ir/ir-mainnet.json", "--ty
 
 # (id, what, 1-based line, old text, new text or None = delete, expected exit, expected MATCH fields)
 MUTANTS = [
-    ("mutant-len", "wrong length: memmove count 0x10 in the offset-0 DepositRoot block", 31,
+    ("mutant-memmove-length", "wrong length: memmove count 0x10 in the offset-0 DepositRoot block", 31,
      "  mov $0x20,%ecx", "  mov $0x10,%ecx", 3, ["BlockHash"]),
-    ("mutant-nomemmove", "missing memmove: the DepositRoot memmove call removed", 32,
+    ("mutant-no-memmove", "missing memmove: the DepositRoot memmove call removed", 32,
      "  callq runtime.memmove", None, 3, ["BlockHash"]),
-    ("mutant-addreg", "an add with a different register: BlockHash `add $0x28,%rsi`", 68,
+    ("mutant-add-register", "an add with a different register: BlockHash `add $0x28,%rsi`", 68,
      "  add $0x28,%rbx", "  add $0x28,%rsi", 3, ["DepositRoot"]),
-    ("mutant-z-dest", "offset-0 form with a wrong destination: DepositRoot pointer stored at 0x10(%rdx)", 29,
+    ("mutant-offset-zero-destination", "offset-0 form with a wrong destination: DepositRoot pointer stored at 0x10(%rdx)", 29,
      "  mov %rax,0x8(%rdx)", "  mov %rax,0x10(%rdx)", 3, ["BlockHash"]),
-    ("mutant-z-nonzero", "offset-0 form at SSZ offset 40: the BlockHash add removed", 68,
+    ("mutant-offset-zero-at-offset-40", "offset-0 form at SSZ offset 40: the BlockHash add removed", 68,
      "  add $0x28,%rbx", None, 3, ["DepositRoot"]),
-    ("mutant-both", "both fields broken: DepositRoot length and the BlockHash add register", None,
+    ("mutant-both-fields", "both fields broken: DepositRoot length and the BlockHash add register", None,
      None, None, 2, []),
-    ("mutant-z-srcreg", "offset-0 form with the buffer reloaded into rsi (not the memmove source register)", 30,
+    ("mutant-offset-zero-source-register", "offset-0 form with the buffer reloaded into rsi (not the memmove source register)", 30,
      "  mov 0x38(%rsp),%rbx", "  mov 0x38(%rsp),%rsi", 3, ["BlockHash"]),
 ]
 
@@ -272,7 +272,7 @@ FIELD_SEGMENT_MUT = [
      [(86, "  mov %rcx,0x30(%rdx)", "  mov %rcx,0x38(%rdx)")], None, 3, ["PublicKey", "WithdrawalCredentials"]),
     ("field-segments-u64-32bit", "Index: 32-bit register form `mov 0x20(%rcx),%ecx`", "BlobIdentifier",
      [(49, "  mov 0x20(%rcx),%rcx", "  mov 0x20(%rcx),%ecx")], None, 3, ["BlockRoot"]),
-    ("field-segments-truncated-after-wc", "DepositMessage `.S` cut after directive 83 (Amount read missing)", "DepositMessage",
+    ("field-segments-truncated-after-withdrawal-credentials", "DepositMessage `.S` cut after directive 83 (Amount read missing)", "DepositMessage",
      lambda L: L[:84], None, 3, ["PublicKey", "WithdrawalCredentials"]),
     ("field-segments-truncated-in-pk", "DepositMessage `.S` cut inside the PublicKey segment (line 30)", "DepositMessage",
      lambda L: L[:30], None, 2, []),
@@ -385,7 +385,7 @@ def field_segment_cases(work, new):
                     kindcheck_partial_exit=kp.returncode, ok=bool(ok)))
     bad |= not ok
     # composition (`--compose`)
-    CP = {"BlobIdentifier": ("Decode.accept_generated_composition", "Prysm.BlobIdentifier.Decode.accept", "lean/Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean",
+    COMPOSITION_CASES = {"BlobIdentifier": ("Decode.accept_generated_composition", "Prysm.BlobIdentifier.Decode.accept", "lean/Prysm/BlobIdentifier/GeneratedDecodeAcceptComposition.lean",
                  "Codec.DecoderHeadEpilogue,Prysm.BlobIdentifier.GeneratedDecodeFieldSegments,Prysm.BlobIdentifier.DecodeAccept"),
           "DepositMessage": ("Decode.accept_generated_composition", "Prysm.DepositMessage.Decode.accept", "lean/Prysm/DepositMessage/GeneratedDecodeAcceptComposition.lean",
                  "Codec.DecoderHeadEpilogue,Prysm.DepositMessage.GeneratedDecodeFieldSegments,Prysm.DepositMessage.DecodeAccept"),
@@ -394,7 +394,7 @@ def field_segment_cases(work, new):
 
     def cargs(key, same=True):
         c = FIELD_SEGMENT_CASES[key]
-        nm, ha, _, imps = CP[key]
+        nm, ha, _, imps = COMPOSITION_CASES[key]
         a = list(c["args"])
         a[a.index("--imports") + 1] = imps
         return (["decoder", "--field-segments", "--compose", "--name", nm] + (["--same-as", ha] if same else [])
@@ -402,13 +402,13 @@ def field_segment_cases(work, new):
 
     for key in ("BlobIdentifier", "DepositMessage", "Eth1Data"):
         outs = [run(["python3", "-I", str(new)] + cargs(key) + ["--S", FIELD_SEGMENT_CASES[key]["S"]], KR) for _ in range(2)]
-        com = (KR / CP[key][2]).read_bytes() if (KR / CP[key][2]).exists() else None
+        com = (KR / COMPOSITION_CASES[key][2]).read_bytes() if (KR / COMPOSITION_CASES[key][2]).exists() else None
         tf = work / f"field-segments-compose-{key}.lean"
         tf.write_bytes(outs[0][1])
         kc = subprocess.run(["python3", "-I", str(HERE / "kindcheck.py"), str(tf)], capture_output=True, text=True)
         ok = (outs[0][0] == 0 and outs[1][0] == 0 and outs[0][1] == outs[1][1] == com and kc.returncode == 0
-              and f"identity against {CP[key][1]} — statement evidence only if" in kc.stdout)
-        res.append(dict(id=f"field-segments-compose-new-{key}", expect=f"exit 0 twice, identical, = {CP[key][2]}, kindcheck identity PASS",
+              and f"identity against {COMPOSITION_CASES[key][1]} — statement evidence only if" in kc.stdout)
+        res.append(dict(id=f"field-segments-compose-new-{key}", expect=f"exit 0 twice, identical, = {COMPOSITION_CASES[key][2]}, kindcheck identity PASS",
                         exit=[o[0] for o in outs], stdout_bytes=len(outs[0][1]), equals_committed=outs[0][1] == com,
                         kindcheck_exit=kc.returncode, ok=bool(ok)))
         bad |= not ok
@@ -432,14 +432,14 @@ def field_segment_cases(work, new):
         res.append(dict(id=mid, what=what, expect="exit 2, 0 bytes", exit=rc, stdout_bytes=len(so),
                         stderr=se.strip().split("\n")[-1:], ok=bool(ok)))
         bad |= not ok
-    r2, b2 = field_segment_fix_cases(work, new, cargs, CP, irt)
+    r2, b2 = field_segment_fix_cases(work, new, cargs, COMPOSITION_CASES, irt)
     return res + r2, bad | b2
 
 
-FIELD_SEGMENT_BH_PARTIAL = "lean/Prysm/BeaconBlockHeader/GeneratedDecodeFieldSegmentsPartial.lean"
+FIELD_SEGMENT_BEACON_BLOCK_HEADER_PARTIAL = "lean/Prysm/BeaconBlockHeader/GeneratedDecodeFieldSegmentsPartial.lean"
 
 
-def field_segment_fix_cases(work, new, cargs, CP, irt):
+def field_segment_fix_cases(work, new, cargs, COMPOSITION_CASES, irt):
     """field-segment fix cases: partial output as a Lean module, compose refusals, statement markers."""
     res, bad = [], 0
     KC = ["python3", "-I", "-B", str(HERE / "kindcheck.py")]
@@ -455,14 +455,14 @@ def field_segment_fix_cases(work, new, cargs, CP, irt):
     po = work / "field-segments-fix-beacon-block-header-partial-0.lean"
     kc = subprocess.run(KC + [str(po)], capture_output=True, text=True)
     kp = subprocess.run(KC + ["--partial", str(po)], capture_output=True, text=True)
-    com = (KR / FIELD_SEGMENT_BH_PARTIAL).read_bytes() if (KR / FIELD_SEGMENT_BH_PARTIAL).exists() else None
+    com = (KR / FIELD_SEGMENT_BEACON_BLOCK_HEADER_PARTIAL).read_bytes() if (KR / FIELD_SEGMENT_BEACON_BLOCK_HEADER_PARTIAL).exists() else None
     pt = outs[0][2].decode()
     uj = [json.loads(l.split(": ", 1)[1]) for l in pt.split("\n") if l.startswith("UNCOVERED-JSON: ")]
     ok = (all(o[0] == 3 and o[1] == b"" for o in outs) and outs[0][2] == outs[1][2] and outs[0][2] == com
           and uj and [u["field"] for u in uj[0]] == ["Slot", "ProposerIndex"]
           and all("delegated overlay" in u["reason"] for u in uj[0])
           and kc.returncode == 1 and kp.returncode == 3 and "PARTIAL 3/5 fields" in kp.stdout)
-    res.append(dict(id="field-segments-fix-beacon-block-header-partial", expect=f"exit 3 twice, 0 bytes, file = {FIELD_SEGMENT_BH_PARTIAL}, kindcheck 1, --partial 3",
+    res.append(dict(id="field-segments-fix-beacon-block-header-partial", expect=f"exit 3 twice, 0 bytes, file = {FIELD_SEGMENT_BEACON_BLOCK_HEADER_PARTIAL}, kindcheck 1, --partial 3",
                     exit=[o[0] for o in outs], stdout_bytes=len(outs[0][1]), equals_committed=outs[0][2] == com,
                     uncovered=uj, kindcheck_exit=kc.returncode, kindcheck_partial_exit=kp.returncode, ok=bool(ok)))
     bad |= not ok
@@ -512,7 +512,7 @@ def field_segment_fix_cases(work, new, cargs, CP, irt):
     # --same-as a generated theorem
     a = cargs("BlobIdentifier")
     a[a.index("--same-as") + 1] = "Prysm.BlobIdentifier.Decode.accept_generated_composition"
-    a[a.index("--name") + 1] = "bi_selfgen_gc"  # the reviewer's case: another name, right-hand side generated
+    a[a.index("--name") + 1] = "bi_selfgen_gc"  # another name, right-hand side generated
     rc, so, se = run(["python3", "-I", "-B", str(new)] + a + ["--S", FIELD_SEGMENT_CASES["BlobIdentifier"]["S"]], KR)
     tf = work / "field-segments-fix-same-as-generated.lean"
     tf.write_bytes(so)
@@ -530,7 +530,7 @@ def field_segment_fix_cases(work, new, cargs, CP, irt):
     tf.write_bytes(so)
     kc = subprocess.run(KC + [str(tf)], capture_output=True, text=True)
     line = "    type_of% (@Decode.accept_generated_composition h) = @Prysm.BlobIdentifier.Decode.hand_statement h := by"
-    com = (KR / CP["BlobIdentifier"][2]).read_text()
+    com = (KR / COMPOSITION_CASES["BlobIdentifier"][2]).read_text()
     ok = (rc == 0 and line in t and kc.returncode == 0 and "identity against Prysm.BlobIdentifier.Decode.hand_statement" in kc.stdout
           and t.split("\n/-- Statement check")[0].replace("Prysm.BlobIdentifier.Decode.hand_statement", "Prysm.BlobIdentifier.Decode.accept")
           == com.split("\n/-- Statement check")[0])
@@ -676,7 +676,7 @@ def call_segment_cases(work, new):
         ok = (rc == (3 if key == "AttestationData" else 0) and outs[0][:3] == outs[1][:3] and cov == want_cov
               and kc.returncode == (3 if key == "AttestationData" else 0) and (com is None or com == text)
               and (key != "AttestationData" or so == b""))
-        res.append(dict(id=f"call-segments-new-{key}", expect=f"exit {3 if key == 'AD' else 0} twice, identical, covered {want_cov}, "
+        res.append(dict(id=f"call-segments-new-{key}", expect=f"exit {3 if key == 'AttestationData' else 0} twice, identical, covered {want_cov}, "
                         f"kindcheck PASS, = committed if present", exit=rc, stdout_bytes=len(so), covered=cov,
                         kindcheck_exit=kc.returncode, committed_present=com is not None,
                         equals_committed=(com == text) if com is not None else None, ok=bool(ok)))
@@ -728,7 +728,7 @@ def call_segment_cases(work, new):
                      "--imports", "Codec.DecoderHeadEpilogue,Prysm.Deposit_Data.GeneratedDecodeCallSegments,Prysm.Deposit_Data.Statements", "--open", "Prysm.Deposit_Data.Code"], KR)
             for _ in range(2)]
     rc, so, se = outs[0]
-    f = work / "call-segments-compose-DD.lean"
+    f = work / "call-segments-compose-Deposit_Data.lean"
     f.write_bytes(so)
     kc = subprocess.run(KC + [str(f)], capture_output=True, text=True)
     com = KR / "lean/Prysm/Deposit_Data/GeneratedDecodeAcceptComposition.lean"
@@ -738,7 +738,7 @@ def call_segment_cases(work, new):
           and "@Codec.decAcceptKind h unmarshalSSZ true [.bytes 48, .bytes 32, .u64, .bytes 96] 106 := by" in t
           and "set_option maxHeartbeats 200000 in\ntheorem Decode.accept_generated_composition_kind" in t
           and "UNCHECKED" not in t and (com is None or com == so))
-    res.append(dict(id="call-segments-compose-DD", expect="exit 0 twice, identical, decAcceptKind line + Prop identity, kindcheck PASS",
+    res.append(dict(id="call-segments-compose-Deposit_Data", expect="exit 0 twice, identical, decAcceptKind line + Prop identity, kindcheck PASS",
                     exit=rc, stdout_bytes=len(so), kindcheck_exit=kc.returncode, committed_present=com is not None,
                     ok=bool(ok)))
     bad |= not ok
@@ -789,7 +789,7 @@ SYNC_COMMITTEE_MESSAGE_FIELDS, PENDING_CONSOLIDATION_FIELDS, PENDING_PARTIAL_WIT
 SYNC_COMMITTEE_MESSAGE_LABEL = "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ_"
 
 
-def sm_vi(new):
+def sync_committee_message_validator_index_setup(new):
     """SyncCommitteeMessage.ValidatorIndex set-up (lines 83–88) replaced by the lines `new`."""
     old = ["  mov 0x78(%rsp),%rbx", "  add $0x28,%rbx", "  mov 0x88(%rsp),%rdi", "  add $-0x28,%rdi", "  add $0x28,%rax",
            "  mov $0x8,%ecx"]
@@ -805,23 +805,23 @@ VALIDATOR_INDEX_SETUP = ["  mov 0x78(%rsp),%rbx", "  add $0x28,%rbx", "  mov 0x8
 # (id, what, type key, .S edits or function, IR edit, exit, covered, miss class of the first uncovered field or None)
 STEP_MUT = [
     ("steps-clobber-rax", "ValidatorIndex: `mov %rdx,%rax` after `add $0x28,%rax` (receiver clobbered before the call)", "SyncCommitteeMessage",
-     sm_vi(VALIDATOR_INDEX_SETUP[:5] + ["  mov %rdx,%rax"] + VALIDATOR_INDEX_SETUP[5:]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], "register"),
+     sync_committee_message_validator_index_setup(VALIDATOR_INDEX_SETUP[:5] + ["  mov %rdx,%rax"] + VALIDATOR_INDEX_SETUP[5:]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], "register"),
     ("steps-clobber-rbx-callee-arg", "ValidatorIndex: `mov 0x88(%rsp),%rbx` after the rbx set-up (source register clobbered)", "SyncCommitteeMessage",
-     sm_vi(VALIDATOR_INDEX_SETUP[:2] + ["  mov 0x88(%rsp),%rbx"] + VALIDATOR_INDEX_SETUP[2:]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], None),
+     sync_committee_message_validator_index_setup(VALIDATOR_INDEX_SETUP[:2] + ["  mov 0x88(%rsp),%rbx"] + VALIDATOR_INDEX_SETUP[2:]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], None),
     ("steps-order-valid", "ValidatorIndex: `add $0x28,%rax` first, then the rbx / rdi set-up (another valid order)", "SyncCommitteeMessage",
-     sm_vi([VALIDATOR_INDEX_SETUP[4]] + VALIDATOR_INDEX_SETUP[:4] + [VALIDATOR_INDEX_SETUP[5]]), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
+     sync_committee_message_validator_index_setup([VALIDATOR_INDEX_SETUP[4]] + VALIDATOR_INDEX_SETUP[:4] + [VALIDATOR_INDEX_SETUP[5]]), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
     ("steps-order-valid-ecx-first", "ValidatorIndex: `mov $0x8,%ecx` first (another valid order)", "SyncCommitteeMessage",
-     sm_vi([VALIDATOR_INDEX_SETUP[5]] + VALIDATOR_INDEX_SETUP[:5]), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
+     sync_committee_message_validator_index_setup([VALIDATOR_INDEX_SETUP[5]] + VALIDATOR_INDEX_SETUP[:5]), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
     ("steps-order-invalid", "ValidatorIndex: `add $0x28,%rbx` before `mov 0x78(%rsp),%rbx` (the load overwrites the add)", "SyncCommitteeMessage",
-     sm_vi([VALIDATOR_INDEX_SETUP[1], VALIDATOR_INDEX_SETUP[0]] + VALIDATOR_INDEX_SETUP[2:]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], "set-up order"),
+     sync_committee_message_validator_index_setup([VALIDATOR_INDEX_SETUP[1], VALIDATOR_INDEX_SETUP[0]] + VALIDATOR_INDEX_SETUP[2:]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], "set-up order"),
     ("steps-extra-harmless", "ValidatorIndex: an extra `mov %rdi,%rsi` in the set-up", "SyncCommitteeMessage",
-     sm_vi(VALIDATOR_INDEX_SETUP[:4] + ["  mov %rdi,%rsi"] + VALIDATOR_INDEX_SETUP[4:]), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
+     sync_committee_message_validator_index_setup(VALIDATOR_INDEX_SETUP[:4] + ["  mov %rdi,%rsi"] + VALIDATOR_INDEX_SETUP[4:]), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
     ("steps-label-fallthrough", "ValidatorIndex: a fall-through label between two set-up moves (label step)", "SyncCommitteeMessage",
-     sm_vi(VALIDATOR_INDEX_SETUP[:2] + [f"{SYNC_COMMITTEE_MESSAGE_LABEL}zz:"] + VALIDATOR_INDEX_SETUP[2:]), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
-    ("steps-nop-start", "ValidatorIndex: `nop` before the first set-up move", "SyncCommitteeMessage", sm_vi(["  nop"] + VALIDATOR_INDEX_SETUP), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
+     sync_committee_message_validator_index_setup(VALIDATOR_INDEX_SETUP[:2] + [f"{SYNC_COMMITTEE_MESSAGE_LABEL}zz:"] + VALIDATOR_INDEX_SETUP[2:]), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
+    ("steps-nop-start", "ValidatorIndex: `nop` before the first set-up move", "SyncCommitteeMessage", sync_committee_message_validator_index_setup(["  nop"] + VALIDATOR_INDEX_SETUP), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
     ("steps-nop-middle", "ValidatorIndex: `nop` between `add $0x28,%rbx` and `mov 0x88(%rsp),%rdi`", "SyncCommitteeMessage",
-     sm_vi(VALIDATOR_INDEX_SETUP[:2] + ["  nop"] + VALIDATOR_INDEX_SETUP[2:]), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
-    ("steps-nop-end", "ValidatorIndex: `nop` between `mov $0x8,%ecx` and the `callq`", "SyncCommitteeMessage", sm_vi(VALIDATOR_INDEX_SETUP + ["  nop"]), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
+     sync_committee_message_validator_index_setup(VALIDATOR_INDEX_SETUP[:2] + ["  nop"] + VALIDATOR_INDEX_SETUP[2:]), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
+    ("steps-nop-end", "ValidatorIndex: `nop` between `mov $0x8,%ecx` and the `callq`", "SyncCommitteeMessage", sync_committee_message_validator_index_setup(VALIDATOR_INDEX_SETUP + ["  nop"]), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
     ("steps-nop-doubled-after-call", "ValidatorIndex: two `nop`s between the `callq` and `test`", "SyncCommitteeMessage",
      [(90, "  test %rax,%rax", "  nop\n  nop\n  test %rax,%rax")], None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
     ("steps-nop-in-segment", "Signature: `nop` before `callq runtime.memmove` and two before makeslice", "SyncCommitteeMessage",
@@ -833,9 +833,9 @@ STEP_MUT = [
     ("steps-cld-in-setup", "TargetIndex: `cld` in the set-up (no step lemma)", "PendingConsolidation",
      [(53, "  mov 0x58(%rsp),%rax", "  cld\n  mov 0x58(%rsp),%rax")], None, 3, PENDING_CONSOLIDATION_FIELDS[:1], "new directive form"),
     ("steps-disp-f-off8", "ValidatorIndex: `add $0x30,%rax` (Go offset 0x28 in the IR)", "SyncCommitteeMessage",
-     sm_vi(VALIDATOR_INDEX_SETUP[:4] + ["  add $0x30,%rax"] + VALIDATOR_INDEX_SETUP[5:]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], "other"),
+     sync_committee_message_validator_index_setup(VALIDATOR_INDEX_SETUP[:4] + ["  add $0x30,%rax"] + VALIDATOR_INDEX_SETUP[5:]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], "other"),
     ("steps-disp-src-off8", "ValidatorIndex: `add $0x30,%rbx` (SSZ offset 0x28 in the IR)", "SyncCommitteeMessage",
-     sm_vi([VALIDATOR_INDEX_SETUP[0], "  add $0x30,%rbx"] + VALIDATOR_INDEX_SETUP[2:]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], None),
+     sync_committee_message_validator_index_setup([VALIDATOR_INDEX_SETUP[0], "  add $0x30,%rbx"] + VALIDATOR_INDEX_SETUP[2:]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], None),
     ("steps-swapped-call-regs", "WithdrawableEpoch: `mov %rsi,%rbx; mov %rdx,%rax` (source / destination swapped)", "PendingPartialWithdrawal",
      [(57, "  mov %rsi,%rax", "  mov %rsi,%rbx"), (58, "  mov %rdx,%rbx", "  mov %rdx,%rax")], None, 3, PENDING_PARTIAL_WITHDRAWAL_FIELDS[:2], "register"),
     ("steps-unknown-callee-code", "TargetIndex: `callq …Gwei.UnmarshalSSZ` in the code (IR ValidatorIndex)", "PendingConsolidation",
@@ -860,7 +860,7 @@ STEP_MUT = [
     ("steps-buffer-slot-overwritten", "Signature: `mov %rax,0x78(%rsp)` before the segment (buffer slot overwritten)", "SyncCommitteeMessage",
      [(119, "  mov %rbx,0x30(%rsp)", "  mov %rbx,0x30(%rsp)\n  mov %rax,0x78(%rsp)")], None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:3], "register"),
     ("steps-store-unknown-base", "ValidatorIndex: `mov %rax,0x8(%rcx)` in the set-up (store through an unknown base)", "SyncCommitteeMessage",
-     sm_vi(VALIDATOR_INDEX_SETUP[:2] + ["  mov %rax,0x8(%rcx)"] + VALIDATOR_INDEX_SETUP[2:]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], "register"),
+     sync_committee_message_validator_index_setup(VALIDATOR_INDEX_SETUP[:2] + ["  mov %rax,0x8(%rcx)"] + VALIDATOR_INDEX_SETUP[2:]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], "register"),
     ("steps-indexed-operand", "Amount: `mov 0x8(%rbx,%rcx,1),%r8` (index operand)", "PendingPartialWithdrawal",
      [(55, "  mov 0x8(%rbx),%r8", "  mov 0x8(%rbx,%rcx,1),%r8")], None, 3, PENDING_PARTIAL_WITHDRAWAL_FIELDS[:1], "new directive form"),
     ("steps-imm-store", "TargetIndex: `movq $0x0,0x40(%rsp)` in the set-up (immediate store)", "PendingConsolidation",
@@ -880,7 +880,7 @@ STEP_MUT = [
 
 
 def rv(eds):
-    """Edits in the form of the reviewer's scripts (`tmp/exp4.py`, `exp5.py`): (1-based line, old suffix, new); new None =
+    """Edits of an input `.S` file: (1-based line, old suffix, new); new None =
     delete, a list = replace by several, ("before", [..]) = insert before; directives indented, labels not."""
     def fn(L):
         L = list(L)
@@ -901,104 +901,104 @@ def rv(eds):
 
 ETH1_DATA_FIELDS = STEP_CASES["Eth1Data"]["fields"]
 SYNC_COMMITTEE_MESSAGE_LABEL_STEM = SYNC_COMMITTEE_MESSAGE_LABEL[:-1]
-# The reviewer's inputs (ids `steps-review-<reviewer id>`). The seven inputs the step walker accepted although
+# Inputs that stress the stack-store, head and set-up rules. The seven inputs the step walker accepted although
 # the code does not establish the block entry must be refused; the eleven valid variants stay covered; plus
 # head-miss classes and the frame / goroutine register rule.
-STEP_REVIEW_MUT = [
-    ("steps-review-a05", "8-byte stack store at 0x7c overlaps the buffer slot 0x78 (M1a)", "SyncCommitteeMessage",
+STEP_STACK_AND_SETUP_MUT = [
+    ("steps-stack-store-overlaps-buffer-slot", "8-byte stack store at 0x7c overlaps the buffer slot 0x78", "SyncCommitteeMessage",
      rv([(83, "mov 0x78(%rsp),%rbx", ("before", ["mov %rdi,0x7c(%rsp)"]))]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], "other"),
-    ("steps-review-a15", "a05 with nops around the store (M1a)", "SyncCommitteeMessage",
+    ("steps-stack-store-overlaps-buffer-slot-with-nops", "the same store with nops around it", "SyncCommitteeMessage",
      rv([(83, "mov 0x78(%rsp),%rbx", ("before", ["nop", "mov %rdi,0x7c(%rsp)", "nop"])),
          (88, "mov $0x8,%ecx", ("before", ["nop"]))]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], "other"),
-    ("steps-review-a29", "8-byte stack store at 0x3c overlaps the buffer slot 0x38 (M1a)", "Eth1Data",
+    ("steps-stack-store-overlaps-buffer-slot-eth1-data", "8-byte stack store at 0x3c overlaps the buffer slot 0x38", "Eth1Data",
      rv([(48, "mov 0x38(%rsp),%rsi", ("before", ["mov %rdx,0x3c(%rsp)"]))]), None, 3, ETH1_DATA_FIELDS[:1], "other"),
-    ("steps-review-a31", "8-byte stack store at 0x34 overlaps the receiver slot 0x30 before the segment (M1a)", "Eth1Data",
+    ("steps-stack-store-overlaps-receiver-slot", "8-byte stack store at 0x34 overlaps the receiver slot 0x30 before the segment", "Eth1Data",
      rv([(51, "lea type__+387072(%rip),%rax", ("before", ["mov %rsi,0x34(%rsp)"]))]), None, 3, ETH1_DATA_FIELDS[:2], "other"),
-    ("steps-review-b05", "8-byte stack store at 0x34 overlaps the buffer slot 0x38 from below (M1a)", "Eth1Data",
+    ("steps-stack-store-overlaps-buffer-slot-from-below", "8-byte stack store at 0x34 overlaps the buffer slot 0x38 from below", "Eth1Data",
      rv([(48, "mov 0x38(%rsp),%rsi", ("before", ["mov %rdx,0x34(%rsp)"]))]), None, 3, ETH1_DATA_FIELDS[:1], "other"),
-    ("steps-review-b01", "head: receiver spilled before `push %rbp` (M1b)", "SyncCommitteeMessage",
+    ("steps-head-spill-before-push", "head: receiver spilled before `push %rbp`", "SyncCommitteeMessage",
      rv([(5, "push %rbp", ("before", ["mov %rax,0x70(%rsp)"])), (9, "nop", None), (12, "mov %rax,0x70(%rsp)", None)]),
      None, 2, [], "other"),
-    ("steps-review-b02", "head: `sub $0x60,%rsp` replaced by `nop` (frame never allocated) (M1b)", "SyncCommitteeMessage",
+    ("steps-head-no-frame", "head: `sub $0x60,%rsp` replaced by `nop` (frame never allocated)", "SyncCommitteeMessage",
      rv([(7, "sub $0x60,%rsp", "nop")]), None, 2, [], "other"),
-    ("steps-review-b03", "head: a spill at 0x74 and `mov %rcx,0x70(%rsp)` at directive 8 (M1b)", "SyncCommitteeMessage",
+    ("steps-head-overlapping-spills", "head: a spill at 0x74 and `mov %rcx,0x70(%rsp)` at directive 8", "SyncCommitteeMessage",
      rv([(9, "nop", "mov %rcx,0x70(%rsp)"), (12, "mov %rax,0x70(%rsp)", "mov %rax,0x74(%rsp)")]), None, 2, [], "other"),
-    ("steps-review-a41", "head: an extra `nop` moves `cmp $size,%rcx` to directive 10 (S1: class padding)", "SyncCommitteeMessage",
+    ("steps-head-extra-nop", "head: an extra `nop` moves `cmp $size,%rcx` to directive 10 (miss class padding)", "SyncCommitteeMessage",
      rv([(9, "nop", ["nop", "nop"])]), None, 2, [], "padding"),
-    ("steps-review-a13", "ValidatorIndex source `add $0x0,%rbx` (S1: wrong offset is class other)", "SyncCommitteeMessage",
+    ("steps-callee-source-offset-zero", "ValidatorIndex source `add $0x0,%rbx` (a wrong offset is miss class other)", "SyncCommitteeMessage",
      rv([(84, "add $0x28,%rbx", "add $0x0,%rbx")]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], "other"),
-    ("steps-review-a43", "ValidatorIndex: receiver reloaded after its add (class set-up order)", "SyncCommitteeMessage",
+    ("steps-receiver-reloaded-after-add", "ValidatorIndex: receiver reloaded after its add (class set-up order)", "SyncCommitteeMessage",
      rv([(87, "add $0x28,%rax", ["add $0x28,%rax", "mov 0x70(%rsp),%rax"])]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], "set-up order"),
-    ("steps-review-store-retaddr", "ValidatorIndex: `mov %rdi,0x68(%rsp)` (the return-address slot, frame 0x60)", "SyncCommitteeMessage",
-     sm_vi(VALIDATOR_INDEX_SETUP[:2] + ["  mov %rdi,0x68(%rsp)"] + VALIDATOR_INDEX_SETUP[2:]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], "other"),
-    ("steps-review-store-below-sp", "ValidatorIndex: `mov %rdi,-0x8(%rsp)` (below rsp)", "SyncCommitteeMessage",
-     sm_vi(VALIDATOR_INDEX_SETUP[:2] + ["  mov %rdi,-0x8(%rsp)"] + VALIDATOR_INDEX_SETUP[2:]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], "other"),
-    ("steps-review-write-r14", "ValidatorIndex: `mov %rdx,%r14` in the set-up (goroutine register)", "SyncCommitteeMessage",
-     sm_vi(VALIDATOR_INDEX_SETUP[:2] + ["  mov %rdx,%r14"] + VALIDATOR_INDEX_SETUP[2:]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], "other"),
-    ("steps-review-write-rbp", "ValidatorIndex: `lea 0x8(%rax),%rbp` in the set-up (frame pointer)", "SyncCommitteeMessage",
-     sm_vi(VALIDATOR_INDEX_SETUP[:2] + ["  lea 0x8(%rax),%rbp"] + VALIDATOR_INDEX_SETUP[2:]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], "other"),
-    # the eleven valid variants of the reviewer (covered)
-    ("steps-review-a08", "fall-through label in the ValidatorIndex set-up", "SyncCommitteeMessage",
+    ("steps-store-return-address-slot", "ValidatorIndex: `mov %rdi,0x68(%rsp)` (the return-address slot, frame 0x60)", "SyncCommitteeMessage",
+     sync_committee_message_validator_index_setup(VALIDATOR_INDEX_SETUP[:2] + ["  mov %rdi,0x68(%rsp)"] + VALIDATOR_INDEX_SETUP[2:]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], "other"),
+    ("steps-store-below-stack-pointer", "ValidatorIndex: `mov %rdi,-0x8(%rsp)` (below rsp)", "SyncCommitteeMessage",
+     sync_committee_message_validator_index_setup(VALIDATOR_INDEX_SETUP[:2] + ["  mov %rdi,-0x8(%rsp)"] + VALIDATOR_INDEX_SETUP[2:]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], "other"),
+    ("steps-write-goroutine-register", "ValidatorIndex: `mov %rdx,%r14` in the set-up (goroutine register)", "SyncCommitteeMessage",
+     sync_committee_message_validator_index_setup(VALIDATOR_INDEX_SETUP[:2] + ["  mov %rdx,%r14"] + VALIDATOR_INDEX_SETUP[2:]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], "other"),
+    ("steps-write-frame-pointer", "ValidatorIndex: `lea 0x8(%rax),%rbp` in the set-up (frame pointer)", "SyncCommitteeMessage",
+     sync_committee_message_validator_index_setup(VALIDATOR_INDEX_SETUP[:2] + ["  lea 0x8(%rax),%rbp"] + VALIDATOR_INDEX_SETUP[2:]), None, 3, SYNC_COMMITTEE_MESSAGE_FIELDS[:2], "other"),
+    # the eleven valid variants (covered)
+    ("steps-fall-through-label", "fall-through label in the ValidatorIndex set-up", "SyncCommitteeMessage",
      rv([(87, "add $0x28,%rax", ("before", [SYNC_COMMITTEE_MESSAGE_LABEL_STEM + "_zz:"]))]), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
-    ("steps-review-a14", "nops at 25 positions", "SyncCommitteeMessage",
+    ("steps-nops-at-25-positions", "nops at 25 positions", "SyncCommitteeMessage",
      rv([(x, "", ("before", ["nop"])) for x in (16, 17, 18, 19, 20, 48, 51, 53, 62, 65, 67, 70, 73, 82, 84, 86, 88, 89, 90,
                                                  91, 119, 126, 141, 147, 156)]), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
-    ("steps-review-a16", "spill + reload of the receiver through 0x48(%rsp)", "SyncCommitteeMessage",
+    ("steps-receiver-spill-and-reload", "spill + reload of the receiver through 0x48(%rsp)", "SyncCommitteeMessage",
      rv([(87, "add $0x28,%rax", ("before", ["mov %rax,0x48(%rsp)", "mov 0x48(%rsp),%rax"]))]), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
-    ("steps-review-a19", "forward jmp over a junk directive", "SyncCommitteeMessage",
+    ("steps-forward-jump-over-junk", "forward jmp over a junk directive", "SyncCommitteeMessage",
      rv([(87, "add $0x28,%rax", ("before", ["jmp " + SYNC_COMMITTEE_MESSAGE_LABEL_STEM + "_yy", "xor %eax,%eax", SYNC_COMMITTEE_MESSAGE_LABEL_STEM + "_yy:"]))]), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
-    ("steps-review-a21", "rcx = 16 - 8", "SyncCommitteeMessage", rv([(88, "mov $0x8,%ecx", ["mov $0x10,%ecx", "add $-0x8,%rcx"])]), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
-    ("steps-review-a27", "DepositCount value moved through rcx", "Eth1Data",
+    ("steps-count-register-16-minus-8", "rcx = 16 - 8", "SyncCommitteeMessage", rv([(88, "mov $0x8,%ecx", ["mov $0x10,%ecx", "add $-0x8,%rcx"])]), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
+    ("steps-value-moved-through-rcx", "DepositCount value moved through rcx", "Eth1Data",
      rv([(50, "mov %rsi,0x20(%rdx)", ["mov %rsi,%rcx", "nop", "mov %rcx,0x20(%rdx)"])]), None, 0, ETH1_DATA_FIELDS, None),
-    ("steps-review-a34", "store after the last field event (second review: epilogue rule, refused)", "Eth1Data",
+    ("steps-store-after-last-field", "store after the last field event (epilogue rule, refused)", "Eth1Data",
      rv([(87, "xor %eax,%eax", ("before", ["mov %rsi,0x20(%rdx)"]))]), None, 2, [], "other"),
-    ("steps-review-a35", "buffer reloaded from sp + 8 after the call", "PendingConsolidation",
+    ("steps-buffer-reloaded-after-call", "buffer reloaded from sp + 8 after the call", "PendingConsolidation",
      rv([(49, "mov 0x60(%rsp),%rbx", "mov 0x8(%rsp),%rbx")]), None, 0, PENDING_CONSOLIDATION_FIELDS, None),
-    ("steps-review-a38", "receiver in another frame slot across the call", "PendingConsolidation",
+    ("steps-receiver-in-other-slot-across-call", "receiver in another frame slot across the call", "PendingConsolidation",
      rv([(16, "add $0x8,%rax", ("before", ["mov %rax,0x30(%rsp)"])), (53, "mov 0x58(%rsp),%rax", "mov 0x30(%rsp),%rax")]),
      None, 0, PENDING_CONSOLIDATION_FIELDS, None),
-    ("steps-review-b04", "no nil check in the head", "SyncCommitteeMessage", rv([(15, "test %al,(%rax)", None)]), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
-    ("steps-review-b06", "aligned store to the neighbour slot 0x40", "Eth1Data",
+    ("steps-head-without-nil-check", "no nil check in the head", "SyncCommitteeMessage", rv([(15, "test %al,(%rax)", None)]), None, 0, SYNC_COMMITTEE_MESSAGE_FIELDS, None),
+    ("steps-aligned-store-to-neighbour-slot", "aligned store to the neighbour slot 0x40", "Eth1Data",
      rv([(48, "mov 0x38(%rsp),%rsi", ("before", ["mov %rdx,0x40(%rsp)"]))]), None, 0, ETH1_DATA_FIELDS, None),
 ]
 
 # Head size immediate vs the IR, and the systematic pass (callee vs the IR overlay
 # type, the directives after the last field event)
-STEP_REVIEW2_MUT = [
-    ("steps-review2-c34", "head: `cmp $0x10,%rcx` (IR SSZ size 0x90) (M3)", "SyncCommitteeMessage",
+STEP_SIZE_CALLEE_EPILOGUE_MUT = [
+    ("steps-head-size-0x10-against-ir-0x90", "head: `cmp $0x10,%rcx` (IR SSZ size 0x90)", "SyncCommitteeMessage",
      rv([(10, "cmp $0x90,%rcx", "cmp $0x10,%rcx")]), None, 2, [], "other"),
-    ("steps-review2-d15", "head: `cmp $0x20,%rcx` (IR SSZ size 0x48) (M3)", "Eth1Data",
+    ("steps-head-size-0x20-against-ir-0x48", "head: `cmp $0x20,%rcx` (IR SSZ size 0x48)", "Eth1Data",
      rv([(10, "cmp $0x48,%rcx", "cmp $0x20,%rcx")]), None, 2, [], "other"),
-    ("steps-review2-d16", "head: `cmp $0x100,%rcx` (IR SSZ size 0x48) (M3)", "Eth1Data",
+    ("steps-head-size-0x100-against-ir-0x48", "head: `cmp $0x100,%rcx` (IR SSZ size 0x48)", "Eth1Data",
      rv([(10, "cmp $0x48,%rcx", "cmp $0x100,%rcx")]), None, 2, [], "other"),
-    ("steps-review2-callee-vi-epoch", "Index (IR ValidatorIndex): `callq …Epoch.UnmarshalSSZ` (callee not the overlay type)", "PendingPartialWithdrawal",
+    ("steps-callee-epoch-for-validator-index", "Index (IR ValidatorIndex): `callq …Epoch.UnmarshalSSZ` (callee not the overlay type)", "PendingPartialWithdrawal",
      rv([(18, f"callq {PRIM}ValidatorIndex.UnmarshalSSZ", f"callq {PRIM}Epoch.UnmarshalSSZ")]), None, 2, [], "set-up order"),
-    ("steps-review2-callee-epoch-vi", "WithdrawableEpoch (IR Epoch): `callq …ValidatorIndex.UnmarshalSSZ`", "PendingPartialWithdrawal",
+    ("steps-callee-validator-index-for-epoch", "WithdrawableEpoch (IR Epoch): `callq …ValidatorIndex.UnmarshalSSZ`", "PendingPartialWithdrawal",
      rv([(60, f"callq {PRIM}Epoch.UnmarshalSSZ", f"callq {PRIM}ValidatorIndex.UnmarshalSSZ")]), None, 3, PENDING_PARTIAL_WITHDRAWAL_FIELDS[:2], "other"),
-    ("steps-review2-epi-call", "a `callq …Epoch.UnmarshalSSZ` after the last field event", "Eth1Data",
+    ("steps-epilogue-call", "a `callq …Epoch.UnmarshalSSZ` after the last field event", "Eth1Data",
      rv([(87, "xor %eax,%eax", ("before", [f"callq {PRIM}Epoch.UnmarshalSSZ"]))]), None, 2, [], "other"),
-    ("steps-review2-epi-store-rsp", "a stack store `mov %rsi,0x8(%rsp)` after the last field event", "Eth1Data",
+    ("steps-epilogue-stack-store", "a stack store `mov %rsi,0x8(%rsp)` after the last field event", "Eth1Data",
      rv([(87, "xor %eax,%eax", ("before", ["mov %rsi,0x8(%rsp)"]))]), None, 2, [], "other"),
-    ("steps-review2-epi-frame", "`add $0x28,%rsp` (head frame 0x20) after the last field event", "Eth1Data",
+    ("steps-epilogue-other-frame", "`add $0x28,%rsp` (head frame 0x20) after the last field event", "Eth1Data",
      rv([(89, "add $0x20,%rsp", "add $0x28,%rsp")]), None, 2, [], "other"),
-    ("steps-review2-epi-nop-valid", "a `nop` in the epilogue (plain return: covered)", "Eth1Data",
+    ("steps-epilogue-nop-covered", "a `nop` in the epilogue (plain return: covered)", "Eth1Data",
      rv([(89, "add $0x20,%rsp", ("before", ["nop"]))]), None, 0, ETH1_DATA_FIELDS, None),
 ]
 
 # An epilogue `jmp` to a label that is not in the file
-STEP_REVIEW3_MUT = [
-    ("steps-review3-x01", "Eth1Data: `jmp runtime.abort` in place of `xor %eax,%eax` after the last field event (M4)", "Eth1Data",
+STEP_TAIL_JUMP_MUT = [
+    ("steps-tail-jump-to-runtime-abort", "Eth1Data: `jmp runtime.abort` in place of `xor %eax,%eax` after the last field event", "Eth1Data",
      rv([(87, "xor %eax,%eax", "jmp runtime.abort")]), None, 2, [], "other"),
-    ("steps-review3-x02", "Eth1Data: `jmp *%rdx` in place of `xor %eax,%eax` after the last field event (M4)", "Eth1Data",
+    ("steps-tail-indirect-jump", "Eth1Data: `jmp *%rdx` in place of `xor %eax,%eax` after the last field event", "Eth1Data",
      rv([(87, "xor %eax,%eax", "jmp *%rdx")]), None, 2, [], "other"),
-    ("steps-review3-x03", "SyncCommitteeMessage: a tail `jmp …Slot.UnmarshalSSZ` after the last field event (M4)", "SyncCommitteeMessage",
+    ("steps-tail-jump-to-callee", "SyncCommitteeMessage: a tail `jmp …Slot.UnmarshalSSZ` after the last field event", "SyncCommitteeMessage",
      rv([(157, "mov 0x28(%rsp),%rax", ("before", ["jmp " + PRIM + "Slot.UnmarshalSSZ"]))]), None, 2, [], "other"),
 ]
 
 # The fail-closed harness (written to <work-dir>; argv: generator.py config.json result.json; cwd = fv/kraken)
 FAIL_CLOSED_HARNESS = r'''
 import contextlib, importlib.util, io, json, pathlib, sys
-spec = importlib.util.spec_from_file_location("scalgen_fc", sys.argv[1])
+spec = importlib.util.spec_from_file_location("generator_fail_closed", sys.argv[1])
 sg = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(sg)
 ARGV = list(sys.argv)  # call() replaces sys.argv
@@ -1198,7 +1198,7 @@ def step_cases(work, new):
     res.append(dict(id="steps-compose-refuse", expect="exit 2, 0 bytes, no file, reason", exit=rc, stdout_bytes=len(so),
                     stderr=se.strip()[:300], ok=bool(ok)))
     bad |= not ok
-    for (mid, what, key, eds, irf, want, covw, mcls) in STEP_MUT + STEP_REVIEW_MUT + STEP_REVIEW2_MUT + STEP_REVIEW3_MUT:
+    for (mid, what, key, eds, irf, want, covw, mcls) in STEP_MUT + STEP_STACK_AND_SETUP_MUT + STEP_SIZE_CALLEE_EPILOGUE_MUT + STEP_TAIL_JUMP_MUT:
         c = STEP_CASES[key]
         base = (KR / c["S"]).read_text().split("\n")
         lines = eds(base) if callable(eds) else edits(base, eds)
@@ -1273,7 +1273,7 @@ def ir_goff(field, off):
 PENDING_DEPOSIT_LABEL = "L_github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.PendingDeposit.UnmarshalSSZ_"
 # (id, what, type key, .S edit function or None, IR edit or None, expected exit)
 WHOLE_ACCEPT_MUT = [
-    # classes of the step reviews (the step front end refuses; whole-accept emits nothing)
+    # classes of the step rules (the step front end refuses; whole-accept emits nothing)
     ("whole-accept-store-misaligned", "PendingDeposit Amount: `mov %rsi,0x2c(%rsp)` before the receiver store (misaligned stack store)",
      "PendingDeposit", rv([(88, "mov %rsi,0x38(%rdx)", ("before", ["mov %rsi,0x2c(%rsp)"]))]), None, 2),
     ("whole-accept-store-overlap-bf", "PendingDeposit Amount: `mov %rdx,0x58(%rsp)` overwrites the buffer slot before its reload",
@@ -1325,9 +1325,9 @@ WHOLE_ACCEPT_MUT = [
     ("whole-accept-ir-goff-first", "IR: VoluntaryExit Epoch Go offset 0 (code 8, state word)", "VoluntaryExit", None, ir_goff("Epoch", 0), 2),
     # valid variants: generated, kindcheck PASS
     ("whole-accept-valid-extra-move", "SyncCommitteeMessage: an extra `mov %rdi,%rsi` in the ValidatorIndex set-up", "SyncCommitteeMessage",
-     sm_vi(VALIDATOR_INDEX_SETUP[:4] + ["  mov %rdi,%rsi"] + VALIDATOR_INDEX_SETUP[4:]), None, 0),
+     sync_committee_message_validator_index_setup(VALIDATOR_INDEX_SETUP[:4] + ["  mov %rdi,%rsi"] + VALIDATOR_INDEX_SETUP[4:]), None, 0),
     ("whole-accept-valid-order", "SyncCommitteeMessage: ValidatorIndex set-up with `mov $0x8,%ecx` first", "SyncCommitteeMessage",
-     sm_vi([VALIDATOR_INDEX_SETUP[5]] + VALIDATOR_INDEX_SETUP[:5]), None, 0),
+     sync_committee_message_validator_index_setup([VALIDATOR_INDEX_SETUP[5]] + VALIDATOR_INDEX_SETUP[:5]), None, 0),
 ]
 
 
@@ -1396,7 +1396,7 @@ def whole_accept_cases(work, new):
 # the whole-accept fail-closed harness (written to <work-dir>; argv: generator.py config.json result.json; cwd = fv/kraken)
 WHOLE_ACCEPT_FAIL_CLOSED_HARNESS = r"""
 import contextlib, importlib.util, io, json, pathlib, sys
-spec = importlib.util.spec_from_file_location("scalgen_whole_accept_fail_closed", sys.argv[1])
+spec = importlib.util.spec_from_file_location("generator_whole_accept_fail_closed", sys.argv[1])
 sg = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(sg)
 g5 = sg.whole_accept_module()
@@ -1551,7 +1551,7 @@ def whole_accept_fc_cases(work, new, keys=None):
 def main(work, out):
     work.mkdir(parents=True, exist_ok=True)
     res, bad = [], 0
-    old = work / "scalgen_old.py"
+    old = work / "generator_frozen.py"
     old.write_bytes(subprocess.run(["git", "cat-file", "-p", OLD_BLOB], cwd=KR, capture_output=True, check=True).stdout)
     new = KR / "gen" / "generator" / "generator.py"
 
@@ -1571,14 +1571,14 @@ def main(work, out):
     com = (KR / COMMITTED).read_bytes() if (KR / COMMITTED).exists() else None
     ok = all(r == 0 for r, _, _ in outs) and outs[0][1] == outs[1][1] and outs[0][1] == com
     t = outs[0][1].decode()
-    res.append(dict(id="new-gen", expect="exit 0 twice, identical, = committed GenE1Dec.lean", exit=[r for r, _, _ in outs],
+    res.append(dict(id="new-gen", expect="exit 0 twice, identical, = committed Prysm/Eth1Data/GeneratedDecodeRootFieldSegments.lean", exit=[r for r, _, _ in outs],
                     stdout_bytes=len(outs[0][1]), deterministic=outs[0][1] == outs[1][1], equals_committed=outs[0][1] == com,
                     theorems=[l.split()[1] for l in t.split("\n") if l.startswith("theorem ")], ok=bool(ok)))
     bad |= not ok
 
     base = (KR / S).read_text().split("\n")
     for (mid, what, line, o, n, want, match) in MUTANTS:
-        if mid == "mutant-both":
+        if mid == "mutant-both-fields":
             lines = mutate(mutate(base, 31, "  mov $0x20,%ecx", "  mov $0x10,%ecx"), 68, "  add $0x28,%rbx", "  add $0x28,%rsi")
         else:
             lines = mutate(base, line, o, n)
@@ -1592,7 +1592,7 @@ def main(work, out):
         bad |= not ok
 
     # partial output on request
-    f = work / "mutant-addreg.S"
+    f = work / "mutant-add-register.S"
     po = work / "partial.lean"
     if po.exists():
         po.unlink()

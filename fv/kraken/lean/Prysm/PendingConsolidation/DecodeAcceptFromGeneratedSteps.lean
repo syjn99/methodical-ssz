@@ -6,7 +6,7 @@ import Prysm.SyncCommitteeMessage.Statements
 # `(*v1alpha1.PendingConsolidation).UnmarshalSSZ`, accept path from the GENERATED `decoder --steps` chains
 
 `Decode.accept_from_generated_steps : Decode.accept_statement` (the pre-committed hand statement, unchanged). Both fields are HAND field
-compositions (`pc_gg_*_field`; no kind exists for a field composition) over the GENERATED theorems of
+compositions (`Decode.from_generated_steps_*_field`; no kind exists for a field composition) over the GENERATED theorems of
 `Prysm/PendingConsolidation/GeneratedDecodeSteps.lean` (`decoder --steps`, raw output): SourceIndex = generated steps 15, 16 + call block; TargetIndex =
 generated steps 48–54 + the call WINDOW 55–58 with the `nop` after the `callq`. Hand text that remains: the two field
 compositions, `Decode.head`, `Decode.epilogue` (`Prysm/PendingConsolidation/DecodeAccept.lean`) and the glue. In-sample (development data); no transfer claim.

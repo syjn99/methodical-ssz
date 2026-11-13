@@ -10,7 +10,7 @@ Usage:
 --out must not exist or be empty (no merge into older output). Lean namespaces: hand types
 Gen1c.Hand.T (code TestTarget.Code), Prysm types Gen1c.Prysm.<last two package segments>.T (code Fk.PrysmCode).
 Per selected key (package, T) it writes <out>/<package with / -> _>/<T>/:
-  desc.json        the producer Desc (checked by gen/desccheck)
+  desc.json        the producer Desc (checked by gen/desc-checker)
   statements.lean  Lean statements as `def ... [Host] : Prop` (no proofs, no sorry);
                    templates exist for: size of a fixed-size type. Other obligations of
                    the frozen list are listed with "no template yet".
@@ -302,11 +302,11 @@ def negative_cases(t, desc, has_size):
         n = desc["fixed_size"]
         cases.append({"id": f"{t}.size.const", "target": "statements.lean size_stmt",
                       "mutation": f"rax = {n} -> rax = {n + 1}", "expect": "the size theorem fails in its final goal",
-                      "control": "unmutated statement proves", "status": "format only (run in X4)"})
+                      "control": "unmutated statement proves", "status": "format only (not run)"})
     cases.append({"id": f"{t}.code.flip", "target": f"{t} UnmarshalSSZ machine code",
                   "mutation": "one conditional jump of the length check inverted in a scratch copy of the .S",
                   "expect": "the accept theorem fails at that instruction", "control": "original .S proves",
-                  "status": "format only (run in X4)"})
+                  "status": "format only (not run)"})
     return cases
 
 
@@ -320,7 +320,7 @@ def main():
     ap.add_argument("--norm", required=True)
     ap.add_argument("--types", required=True, help="comma list of package-qualified names pkg.Type")
     ap.add_argument("--desccheck-result", required=True,
-                    help="JSON result of a DescCheck.lean run (DESC_RESULT) with verdict OK")
+                    help="JSON result of a DescChecker.lean run (DESC_RESULT) with verdict OK")
     ap.add_argument("--code-prefix", default="")
     ap.add_argument("--theorems", default=os.path.join(KRAKEN, "gen", "frozen", "THEOREMS.json"))
     ap.add_argument("--obligations", choices=["hand_case", "prysm"], required=True,
@@ -361,7 +361,7 @@ def main():
         rows = [r for r in obl if r["type"] == t]
         lines.append("/-! Obligations of the frozen list (gen/frozen/THEOREMS.json) for this type:")
         for r in rows:
-            tmpl = "template: size_stmt" if (r["obligation"] == "size" and has_size) else "no template yet (X4)"
+            tmpl = "template: size_stmt" if (r["obligation"] == "size" and has_size) else "no template yet"
             lines.append(f"  {r['id']}: {tmpl}")
         lines += ["-/", "", f"end {ns}", ""]
         open(os.path.join(td, "statements.lean"), "w").write("\n".join(lines))

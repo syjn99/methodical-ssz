@@ -4,7 +4,7 @@ import Prysm.Deposit_Data.DecodeFieldSegmentPadding
 /-!
 # Fixed-bytes decode segment tolerant of the compiler padding `nop`
 
-Added after the hold-out test of Deposit_Data and PendingPartialWithdrawal: the generator did not cover a byte segment with a
+Added after the frozen generator ran on the hold-out types Deposit_Data and PendingPartialWithdrawal: the generator did not cover a byte segment with a
 padding `nop`. Survey of the 13 byte segments of the development
 decoders: one padding variant, a `nop` between `mov $n,%ecx` and `callq runtime.makeslice` (add form,
 `Deposit_Data.WithdrawalCredentials`, n = 32). No `nop` before `callq runtime.memmove` and none in the

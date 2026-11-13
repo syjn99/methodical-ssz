@@ -21,7 +21,7 @@ namespace Prysm.PendingPartialWithdrawal
 /-- Hand statement of the accept path of `(*v1alpha1.PendingPartialWithdrawal).UnmarshalSSZ`: on a 24-byte
 input it returns nil and the receiver holds Index = buf[0:8], Amount = buf[8:16], WithdrawableEpoch =
 buf[16:24]; input, `state`, the spills, the caller's frame `R` and the stack guard are unchanged. The two
-delegated fields go through the callees' code (`Prysm.ValidatorIndex.Code.unmarshalSSZ`, `EpUnmarshal` placed in the host). -/
+delegated fields go through the callees' code (`Prysm.ValidatorIndex.Code.unmarshalSSZ`, `Prysm.Epoch.Code.unmarshalSSZ` placed in the host). -/
 abbrev Decode.accept_statement : Prop :=
   ∀ (k : Nat) (hk : Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ.IsInfixAt Host.prog k) (hf : LabelsFresh Prysm.PendingPartialWithdrawal.Code.unmarshalSSZ k)
     (kV : Nat) (hkV : Prysm.ValidatorIndex.Code.unmarshalSSZ.IsInfixAt Host.prog kV) (hfV : LabelsFresh Prysm.ValidatorIndex.Code.unmarshalSSZ kV)

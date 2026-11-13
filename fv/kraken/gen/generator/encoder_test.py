@@ -8,12 +8,12 @@ Cases (mutated `.S` / IR copies are written to <work-dir>, nothing in the reposi
  - fast-path-real-*: the 16 flat development types as committed in `gen/gen.sh` (fast-path rows): exit 0, two runs
    byte-identical, every theorem with its kind line; equal to the committed `lean/Prysm/<T>/GeneratedEncodeFastPath.lean` when it
    exists.
- - fast-path-adv-*: adversarial `.S` / IR mutants (capacity test altered so that the growslice site is on the walked path,
+ - fast-path-refused-*: adversarial `.S` / IR mutants (capacity test altered so that the growslice site is on the walked path,
    length test with a wrong immediate / wrong word, a store to the wrong offset vs the IR, fields out of order, a
    clobbered dst / len register, memmove with swapped source / destination, epilogue frame-test variants, a
    truncated file, an extra store beyond len + size, unknown directives and callees, stack stores outside the frame,
    head variants, IR mutants, ...). Expected: exit 2, 0 bytes on stdout, the `--summary` says generated = false.
- - fast-path-ok-*: valid variants that must stay COVERED (exit 0, every kind line): nops at many places, an extra harmless
+ - fast-path-covered-*: valid variants that must stay COVERED (exit 0, every kind line): nops at many places, an extra harmless
    move, a consistent register rename.
  - fast-path-fail-closed-*: fail-closed fault injection. A harness imports the working-tree `generator.py`, takes its `fast_path` module
    (`fast_path_module()`), monkeypatches one phase and calls `main()`: an unexpected exception, SystemExit(0) and a FastPathRefuse
@@ -111,7 +111,7 @@ def adversarial(work):
         "BlobIdentifier"
 
     def adv(i, t, edits, what, expect="refuse", extra=None):
-        C.append((f"fast-path-adv-{i}" if expect == "refuse" else f"fast-path-ok-{i}", argv(t, S=mut(t, edits, work, i), extra=extra),
+        C.append((f"fast-path-refused-{i}" if expect == "refuse" else f"fast-path-covered-{i}", argv(t, S=mut(t, edits, work, i), extra=extra),
                   expect, what))
     # capacity test altered: the growslice site is on the walked path / the test is not provably passed
     adv("cap-jae-deleted", validator_balance, [(f"jae {lbl(validator_balance, '7b')}", None, 0)], "capacity test branch removed: growslice on the path")
@@ -143,21 +143,21 @@ def adversarial(work):
         g = ty["go_fields"]
         g[1], g[2] = g[2], g[1]
         ty["ir"]["fields"].reverse()
-    C.append(("fast-path-adv-fields-out-of-order", argv(validator_balance, ir=ir_mut(validator_balance, swap, work, "validator-balance-swap")), "refuse",
+    C.append(("fast-path-refused-fields-out-of-order", argv(validator_balance, ir=ir_mut(validator_balance, swap, work, "validator-balance-swap")), "refuse",
               "IR field order swapped, Go offsets as in the code"))
     adv("code-fields-swapped", validator_balance, [("mov 0x10(%rax),%r8", ["mov 0x8(%rax),%r8"], 0),
                                     ("mov 0x8(%rax),%r8", ["mov 0x10(%rax),%r8"], 0)],
         "code writes Balance first and Index second")
-    C.append(("fast-path-adv-ir-goff", argv(validator_balance, ir=ir_mut(validator_balance, lambda ty: ty["go_fields"][2].__setitem__("offset_gc_amd64", 24),
+    C.append(("fast-path-refused-ir-goff", argv(validator_balance, ir=ir_mut(validator_balance, lambda ty: ty["go_fields"][2].__setitem__("offset_gc_amd64", 24),
                                                    work, "validator-balance-goff")), "refuse", "IR Go offset off by 8"))
-    C.append(("fast-path-adv-ir-size", argv(deposit_message, ir=ir_mut(deposit_message, lambda ty: (
+    C.append(("fast-path-refused-ir-size", argv(deposit_message, ir=ir_mut(deposit_message, lambda ty: (
         ty["go_fields"][0].__setitem__("tag", ty["go_fields"][0]["tag"].replace('ssz-size:"48"', 'ssz-size:"32"')),
         ty["ir"]["fields"][0]["v"].update(size=32, fixed_size=32), ty["ir"].update(fixed_size=ty["ir"]["fixed_size"] - 16)),
         work, "deposit-message-size")), "refuse", "IR size 48 -> 32 (code tests 48)"))
-    C.append(("fast-path-adv-ir-size-only-tag", argv(deposit_message, ir=ir_mut(deposit_message, lambda ty: ty["go_fields"][0].__setitem__(
+    C.append(("fast-path-refused-ir-size-only-tag", argv(deposit_message, ir=ir_mut(deposit_message, lambda ty: ty["go_fields"][0].__setitem__(
         "tag", ty["go_fields"][0]["tag"].replace('ssz-size:"48"', 'ssz-size:"32"')), work, "deposit-message-tag")), "refuse",
         "IR views disagree (tag 32, SSZ IR 48)"))
-    C.append(("fast-path-adv-ir-missing-type", argv(validator_balance) [:0] + [x.replace("v1alpha1.ValidatorBalance", "v1alpha1.NoSuchType")
+    C.append(("fast-path-refused-ir-missing-type", argv(validator_balance) [:0] + [x.replace("v1alpha1.ValidatorBalance", "v1alpha1.NoSuchType")
                                                          for x in argv(validator_balance)], "refuse", "type not in the IR"))
     # clobbered registers
     adv("clobber-len", validator_balance, [("mov %r8,(%rbx,%rcx,1)", ["mov $0x0,%ecx", "mov %r8,(%rbx,%rcx,1)"], 0)],
@@ -172,10 +172,10 @@ def adversarial(work):
     adv("memmove-other-callee", deposit_message, [("callq runtime.memmove", ["callq runtime.memclrNoHeapPointers"], 0)],
         "unknown callee on the path")
     # epilogue / frame test
-    adv("ft-jae", historical_summary, [(f"jb {lbl(historical_summary, '12e')}", [f"jae {lbl(historical_summary, '12e')}"], 0)], "frame test with jae")
-    adv("ft-imm", historical_summary, [("lea 0x60(%rsp),%rsi", ["lea 0x58(%rsp),%rsi"], 0)], "frame test against F + 8")
-    adv("ft-target", historical_summary, [(f"jb {lbl(historical_summary, '12e')}", [f"jb {lbl(historical_summary, '13d')}"], 0)], "frame test branch to the return block")
-    adv("ft-sub", historical_summary, [("sub %rsp,%rdx", ["sub %rsi,%rdx"], 0)], "frame test on a value other than ptr - rsp")
+    adv("frame-test-jae", historical_summary, [(f"jb {lbl(historical_summary, '12e')}", [f"jae {lbl(historical_summary, '12e')}"], 0)], "frame test with jae")
+    adv("frame-test-immediate", historical_summary, [("lea 0x60(%rsp),%rsi", ["lea 0x58(%rsp),%rsi"], 0)], "frame test against F + 8")
+    adv("frame-test-target", historical_summary, [(f"jb {lbl(historical_summary, '12e')}", [f"jb {lbl(historical_summary, '13d')}"], 0)], "frame test branch to the return block")
+    adv("frame-test-subtraction", historical_summary, [("sub %rsp,%rdx", ["sub %rsi,%rdx"], 0)], "frame test on a value other than ptr - rsp")
     adv("epi-no-xor", validator_balance, [("xor %esi,%esi", None, 0)], "rsi not zeroed at the return")
     adv("epi-rbx", validator_balance, [("mov %rdx,%rbx", ["mov %rcx,%rbx"], 2)], "result length register wrong")
     adv("epi-no-ret", validator_balance, [("retq", ["nop"], 0)], "no retq after pop")
@@ -184,7 +184,7 @@ def adversarial(work):
     tr = lines_of(validator_balance)[:40]
     p = work / "truncated.S"
     p.write_text("\n".join(tr))
-    C.append(("fast-path-adv-truncated", argv(validator_balance, S=str(p)), "refuse", "file cut after 40 lines"))
+    C.append(("fast-path-refused-truncated", argv(validator_balance, S=str(p)), "refuse", "file cut after 40 lines"))
     adv("blank-line", validator_balance, [("mov %rbx,0x80(%rsp)", ["mov %rbx,0x80(%rsp)", ""], 0)], "blank line inside")
     adv("dup-label", validator_balance, [("mov %r8,-0x8(%rdx,%rbx,1)", [f"{lbl(validator_balance, '7b')}:", "mov %r8,-0x8(%rdx,%rbx,1)"], 0)],
         "label defined twice")
@@ -202,10 +202,10 @@ def adversarial(work):
     adv("head-guard", validator_balance, [("cmp 0x10(%r14),%rsp", ["cmp 0x18(%r14),%rsp"], 0)], "stack guard on another word")
     adv("head-frame", validator_balance, [("sub $0x68,%rsp", ["sub %rax,%rsp"], 0)], "frame allocation form")
     # hand layout of another type
-    C.append(("fast-path-adv-hand-layout-other", argv(beacon_block_header, extra=["--hand-layout=Prysm.Eth1Data.encodeLayout",
+    C.append(("fast-path-refused-hand-layout-other", argv(beacon_block_header, extra=["--hand-layout=Prysm.Eth1Data.encodeLayout",
                                                            "--hand-layout-src=lean/Prysm/Eth1Data/EncodeFastPathKindInstances.lean"]),
               "refuse", "hand layout of Eth1Data for BeaconBlockHeader"))
-    C.append(("fast-path-adv-hand-layout-missing", argv(beacon_block_header, extra=["--hand-layout=Prysm.BeaconBlockHeader.encodeLayoutMissing",
+    C.append(("fast-path-refused-hand-layout-missing", argv(beacon_block_header, extra=["--hand-layout=Prysm.BeaconBlockHeader.encodeLayoutMissing",
                                                              "--hand-layout-src=lean/Prysm/BeaconBlockHeader/EncodeFastPathKindInstances.lean"]),
               "refuse", "hand layout not in the file"))
     # valid variants: must stay covered
@@ -407,8 +407,8 @@ def main():
     res.append(dict(id="fast-path-fail-closed-every-phase-reached", expect="every injected phase reached in some type",
                     exit=0, stdout=0, ok=phases <= reached, missing=sorted(phases - reached)))
     n_ok = sum(r["ok"] for r in res)
-    summary = dict(total=len(res), ok=n_ok, adversarial=sum(r["id"].startswith("fast-path-adv-") for r in res),
-                   valid_variants=sum(r["id"].startswith("fast-path-ok-") for r in res),
+    summary = dict(total=len(res), ok=n_ok, adversarial=sum(r["id"].startswith("fast-path-refused-") for r in res),
+                   valid_variants=sum(r["id"].startswith("fast-path-covered-") for r in res),
                    fc=sum(r["id"].startswith("fast-path-fail-closed-") for r in res), cases=res)
     out.write_text(json.dumps(summary, indent=1) + "\n")
     for r in res:

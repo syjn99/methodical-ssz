@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""BeaconBlockHeader hold-out: call graph and link tables of the real v1alpha1.BeaconBlockHeader SSZ functions and the
+"""Call graph and link tables of the real v1alpha1.BeaconBlockHeader SSZ functions and the
 primitives.ValidatorIndex methods on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set; written after
-the hold-out was opened at 2026-11-10T17:53:24Z; the text of `attestation_data_link.py` with the function set changed).
+the hold-out had been run; the text of `attestation_data_link.py` with the function set changed).
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   beacon_block_header_link.py callgraph <objdump> <out.json>          call targets with contract class
   beacon_block_header_link.py filter <outdir> <objdump> <elf> <nm>    <outdir>/target.objdump of FUNCS (+ ELF/nm links)
-  beacon_block_header_link.py data <outdir> <cp-linkdir> <ad-linkdir> after `conv.py <outdir>/target.objdump
+  beacon_block_header_link.py data <outdir> <checkpoint-link-dir> <attestation-data-link-dir> after `convert_objdump.py <outdir>/target.objdump
                                                     <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
@@ -34,7 +34,7 @@ SCOPE = {FUNCS[0]: "in (hold-out encoder fast path)", FUNCS[1]: "in (hold-out de
          FUNCS[3]: "record only (inlined into BeaconBlockHeader.MarshalSSZTo or unused)"}
 CLASS = dict(attestation_data_link.CLASS)
 CLASS.update({
-    f"{PRIM}.(*ValidatorIndex).UnmarshalSSZ": ("a", "function spec Prysm.ValidatorIndex.Decode.accept_function_spec, proved from machine code (P1)"),
+    f"{PRIM}.(*ValidatorIndex).UnmarshalSSZ": ("a", "function spec Prysm.ValidatorIndex.Decode.accept_function_spec, proved from machine code (the uint64 decoder proof)"),
     "fmt.errorf": ("b", "FmtErrorfWrapContract (field wraps 'Slot: %w', 'ProposerIndex: %w'); decoder: unreachable under "
                         "the callee specs; ValidatorIndex length reject (not in the hold-out)"),
     "runtime.newobject": ("b", "NewobjectContract errorString (after fmt.errorf: nil-result branch, excluded by rax != 0)"),
@@ -89,14 +89,14 @@ def filt(outdir, objdump, elf, nm):
     return checkpoint_and_epoch_link.filt(outdir, objdump, elf, nm)
 
 
-def items(outdir, cpdir, addir):
+def items(outdir, checkpoint_dir, attestation_data_dir):
     spec = importlib.util.spec_from_file_location("data", LINK / "data.py")
     data = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(data)
-    BH = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader"
-    du, dm = checkpoint_and_epoch_link.ins(outdir, f"{BH}.UnmarshalSSZ"), checkpoint_and_epoch_link.ins(outdir, f"{BH}.MarshalSSZTo")
-    cu, cm = checkpoint_and_epoch_link.ins(cpdir, f"{checkpoint_and_epoch_link.CP}.UnmarshalSSZ"), checkpoint_and_epoch_link.ins(cpdir, f"{checkpoint_and_epoch_link.CP}.MarshalSSZTo")
-    au = checkpoint_and_epoch_link.ins(addir, "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ")
+    BEACON_BLOCK_HEADER = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader"
+    du, dm = checkpoint_and_epoch_link.ins(outdir, f"{BEACON_BLOCK_HEADER}.UnmarshalSSZ"), checkpoint_and_epoch_link.ins(outdir, f"{BEACON_BLOCK_HEADER}.MarshalSSZTo")
+    cu, cm = checkpoint_and_epoch_link.ins(checkpoint_dir, f"{checkpoint_and_epoch_link.CHECKPOINT_SYMBOL}.UnmarshalSSZ"), checkpoint_and_epoch_link.ins(checkpoint_dir, f"{checkpoint_and_epoch_link.CHECKPOINT_SYMBOL}.MarshalSSZTo")
+    au = checkpoint_and_epoch_link.ins(attestation_data_dir, "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.AttestationData.UnmarshalSSZ")
     lea = r"lea ([A-Za-z0-9_.]+)(?:\+(\d+))?\(%rip\),%{}"
     back = attestation_data_link.back_lea
     # shared with the Checkpoint set: asserted equal, not written again
@@ -136,8 +136,8 @@ def items(outdir, cpdir, addir):
     return data, its
 
 
-def write_data(outdir, cpdir, addir):
-    data, its = items(outdir, cpdir, addir)
+def write_data(outdir, checkpoint_dir, attestation_data_dir):
+    data, its = items(outdir, checkpoint_dir, attestation_data_dir)
     for it in its:
         print("item", it[:4])
     data.ITEMS = its

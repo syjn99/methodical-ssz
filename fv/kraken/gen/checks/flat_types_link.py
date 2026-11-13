@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""Flat-type hold-out of the 24 flat types: call graph and link tables of the real UnmarshalSSZ and MarshalSSZTo of the 24 flat fixed-size
+"""Call graph and link tables of the real UnmarshalSSZ and MarshalSSZTo of the 24 flat fixed-size
 types outside the development population (fv/kraken/prysm/proof-inventory.md at the freeze of the 24 flat types) on the Go 1.26.10
-ELF (the same ELF as prysm/go1.26.10/link-set; written after the hold-out of the 24 flat types was opened at 2026-11-12T05:59:42Z;
+ELF (the same ELF as prysm/go1.26.10/link-set; written after the hold-out of the 24 flat types had been run;
 the text of `seven_flat_decoders_link.py` + `flat_encoders_link.py` with the function set changed and the data items made per function).
 
 Usage (Python 3 standard library only; python3 -I -B; every step runs gated):
   flat_types_link.py callgraph <objdump> <out.json>          call targets with contract class
   flat_types_link.py filter <outdir> <objdump> <elf> <nm>    <outdir>/target.objdump of FUNCS (+ ELF/nm links)
-  flat_types_link.py data <outdir> <cp-linkdir> <ad-linkdir> <e1-linkdir>
-                                                     after `conv.py <outdir>/target.objdump
+  flat_types_link.py data <outdir> <checkpoint-link-dir> <attestation-data-link-dir> <eth1-data-link-dir>
+                                                     after `convert_objdump.py <outdir>/target.objdump
                                                      <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                      write <outdir>/data/*.data (link/data.py's code)
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
@@ -108,7 +108,7 @@ def filt(outdir, objdump, elf, nm):
     return checkpoint_and_epoch_link.filt(outdir, objdump, elf, nm)
 
 
-def items(outdir, cpdir, addir, e1dir):
+def items(outdir, checkpoint_dir, attestation_data_dir, eth1_data_dir):
     """Per decoder: every address-only error global loaded into rax (`sszErrSize` for ssz.ErrSize, else the id
     of its symbol by `link/data.py` `item_id`, length 0) and the format
     strings of its fmt.errorf wraps (`format<Field>`, in code order). Per encoder: the address-only
@@ -120,10 +120,10 @@ def items(outdir, cpdir, addir, e1dir):
     data = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(data)
     V = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1"
-    cu = checkpoint_and_epoch_link.ins(cpdir, f"{checkpoint_and_epoch_link.CP}.UnmarshalSSZ")
-    cm = checkpoint_and_epoch_link.ins(cpdir, f"{checkpoint_and_epoch_link.CP}.MarshalSSZTo")
-    au = checkpoint_and_epoch_link.ins(addir, f"{V}.AttestationData.UnmarshalSSZ")
-    em = checkpoint_and_epoch_link.ins(e1dir, f"{V}.Eth1Data.MarshalSSZTo")
+    cu = checkpoint_and_epoch_link.ins(checkpoint_dir, f"{checkpoint_and_epoch_link.CHECKPOINT_SYMBOL}.UnmarshalSSZ")
+    cm = checkpoint_and_epoch_link.ins(checkpoint_dir, f"{checkpoint_and_epoch_link.CHECKPOINT_SYMBOL}.MarshalSSZTo")
+    au = checkpoint_and_epoch_link.ins(attestation_data_dir, f"{V}.AttestationData.UnmarshalSSZ")
+    em = checkpoint_and_epoch_link.ins(eth1_data_dir, f"{V}.Eth1Data.MarshalSSZTo")
     lea = r"lea ([A-Za-z0-9_.]+)(?:\+(\d+))?\(%rip\),%{}"
     u8 = checkpoint_and_epoch_link.operand([cu[cu.index("callq runtime.makeslice") - 3]], lea.format("rax"))
     assert u8 == ("type__", 387072), u8
@@ -181,8 +181,8 @@ def items(outdir, cpdir, addir, e1dir):
     return data, its
 
 
-def write_data(outdir, cpdir, addir, e1dir):
-    data, its = items(outdir, cpdir, addir, e1dir)
+def write_data(outdir, checkpoint_dir, attestation_data_dir, eth1_data_dir):
+    data, its = items(outdir, checkpoint_dir, attestation_data_dir, eth1_data_dir)
     for it in its:
         print("item", it[:4])
     data.ITEMS = its

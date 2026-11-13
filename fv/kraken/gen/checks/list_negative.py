@@ -5,13 +5,13 @@ Usage (one gated job, Lean env, cwd anywhere):
   list_negative.py <cases.json> <work-dir> <result.json> [<case-id>...]
 It imports `negative.py` and uses its `cut`, `classify`, `precheck` and `main` unchanged. Two functions differ:
 * run_case: the list/vector main theorems state `theorem X : <frozen stmt def>`, and the stmt defs live in another module
-  (`Prysm/SyncAggregate/Statements.lean`, `Prysm/SyncCommittee/Statements.lean`). A case may name "stmt_module" (path under fv/kraken/lean), or "inline", a list of
+  (`Prysm/SyncAggregate/Statements.lean`, `Prysm/SyncCommittee/Statements.lean`). A case may name "statement_module" (path under fv/kraken/lean), or "inline", a list of
   such modules in dependency order (for example `Prysm/SyncAggregate/SpecDescription.lean` then `Defs.lean` for a Desc mutant). The mutant file then
   inlines those modules' bodies (their imports are replaced by their own imports), so that the code rename
-  `<code_def>` → `<code_def>Mut` also reaches the statement. A "stmt" case names "stmt_def" and mutates the text
+  `<code_def>` → `<code_def>Mut` also reaches the statement. A "stmt" case names "statement_def" and mutates the text
   of that def (old → new, unique inside the def). "norm" is the .S path under fv/kraken; "code_ns" the namespace
   of the code constant (default: `negative.code_ns_of`, Prysm.<Type>.Code for a module under Prysm/<Type>/).
-* run_capped: no `gen/tools/memcap.py` (it reads /proc, absent on macOS); the job runs under the heavy-job
+* run_capped: no `gen/tools/memory_limit.py` (it reads /proc, absent on macOS); the job runs under the heavy-job
   gate's cap. A case that exceeds the per-case timeout is killed with its process group (start_new_session).
 A mutant passes when Lean reports an error and every error line lies inside the designated theorem and the first
 error is not a resource or wrong-target error (negative.py's classes). Python 3 stdlib only.
@@ -64,7 +64,7 @@ def run_case(c, work):
     src = (LEAN / c["module"]).read_text()
     lines, _, _ = n.cut(src, c["theorem"])
     imps, body = split_imports("\n".join(lines))
-    inl = c.get("inline", [c["stmt_module"]] if c.get("stmt_module") else [])
+    inl = c.get("inline", [c["statement_module"]] if c.get("statement_module") else [])
     if inl:
         names = {m.removesuffix(".lean").replace("/", ".") for m in inl}
         pre_imps, pre_body = [], []
@@ -98,7 +98,7 @@ def run_case(c, work):
         rest = decl + "\n\n" + rest
     if c["kind"] == "stmt":
         rl = rest.split("\n")
-        a, _ = n.find_decl(rl, c["stmt_def"], ("def",))
+        a, _ = n.find_decl(rl, c["statement_def"], ("def",))
         b = next((i for i in range(a + 1, len(rl)) if n.TOP.match(rl[i])), len(rl))
         seg = "\n".join(rl[a:b])
         assert seg.count(c["old"]) == 1, (c["id"], "statement text not unique in the stmt def")

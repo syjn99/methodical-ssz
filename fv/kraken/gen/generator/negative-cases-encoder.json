@@ -1,12 +1,12 @@
 [
  {
-  "id": "codec-encode-memmove-block-control",
+  "id": "codec-encode-memmove-encode32-memmove-call-control",
   "module": "Codec/EncodeMemmove.lean",
   "theorem": "encode32_memmove_call",
   "kind": "control"
  },
  {
-  "id": "codec-encode-memmove-block-stmt-rcx",
+  "id": "codec-encode-memmove-encode32-memmove-call-statement-hrcx-32-to-31",
   "module": "Codec/EncodeMemmove.lean",
   "theorem": "encode32_memmove_call",
   "kind": "stmt",
@@ -14,7 +14,7 @@
   "new": "(hrcx : s.regs.rcx.toNat = 31)"
  },
  {
-  "id": "codec-encode-memmove-block-stmt-dst-unchanged",
+  "id": "codec-encode-memmove-encode32-memmove-call-statement-root-root-to-e",
   "module": "Codec/EncodeMemmove.lean",
   "theorem": "encode32_memmove_call",
   "kind": "stmt",
@@ -22,7 +22,7 @@
   "new": "⋆ Eq (root.At p) ⋆ Eq (e.At d) ⋆ R) st.data.dmem)"
  },
  {
-  "id": "codec-encode-memmove-block-stmt-no-src",
+  "id": "codec-encode-memmove-encode32-memmove-call-statement-mem-root-p-eq-to-none",
   "module": "Codec/EncodeMemmove.lean",
   "theorem": "encode32_memmove_call",
   "kind": "stmt",
@@ -30,7 +30,7 @@
   "new": "(h_mem : s.dmem =⋆ Eq (rslot.At aRet) ⋆ Eq (scratch.At aLo) ⋆ Eq (e.At d) ⋆ R)"
  },
  {
-  "id": "eth1-data-main-control",
+  "id": "eth1-data-encode-fast-path-control",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
   "theorem": "Prysm.Eth1Data.Encode.fast_path",
   "kind": "control",
@@ -40,7 +40,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
  },
  {
-  "id": "eth1-data-main-stmt-cap",
+  "id": "eth1-data-encode-fast-path-statement-hcap-72-to-71",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
   "theorem": "Prysm.Eth1Data.Encode.fast_path",
   "kind": "stmt",
@@ -48,7 +48,7 @@
   "new": "(hcap : s.regs.rcx.toNat + 71 ≤ s.regs.rdi.toNat)"
  },
  {
-  "id": "eth1-data-main-stmt-guard",
+  "id": "eth1-data-encode-fast-path-statement-hguard-8-to-none",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
   "theorem": "Prysm.Eth1Data.Encode.fast_path",
   "kind": "stmt",
@@ -56,7 +56,7 @@
   "new": "(hguard : guard.toNat < s.regs.rsp.toNat) (hsp : 144 ≤ s.regs.rsp.toNat)\n    (hcap : s.regs.rcx.toNat + 72"
  },
  {
-  "id": "eth1-data-main-stmt-len",
+  "id": "eth1-data-encode-fast-path-statement-rbx-72-to-73",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
   "theorem": "Prysm.Eth1Data.Encode.fast_path",
   "kind": "stmt",
@@ -64,7 +64,7 @@
   "new": "∧ st.data.regs.rbx.toNat = s.regs.rcx.toNat + 73 ∧"
  },
  {
-  "id": "eth1-data-main-stmt-dc-unchanged",
+  "id": "eth1-data-encode-fast-path-statement-dc-dc-to-d1",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
   "theorem": "Prysm.Eth1Data.Encode.fast_path",
   "kind": "stmt",
@@ -72,7 +72,7 @@
   "new": "⋆ Eq (d1.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec + 32))"
  },
  {
-  "id": "eth1-data-main-stmt-root2-len",
+  "id": "eth1-data-encode-fast-path-statement-hr1-32-to-31",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
   "theorem": "Prysm.Eth1Data.Encode.fast_path",
   "kind": "stmt",
@@ -80,7 +80,7 @@
   "new": "(hr1 : r1.length = 32) (hr2 : r2.length = 31)\n    (hd0 : d0.length = 32)"
  },
  {
-  "id": "eth1-data-main-stmt-root-order",
+  "id": "eth1-data-encode-fast-path-statement-pre-r1-to-r2",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
   "theorem": "Prysm.Eth1Data.Encode.fast_path",
   "kind": "stmt",
@@ -88,7 +88,7 @@
   "new": "⋆ Eq (pre.At s.regs.rbx.toBitVec) ⋆ Eq (r2.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))"
  },
  {
-  "id": "eth1-data-a-control",
+  "id": "eth1-data-encode-enc-a-control",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
   "theorem": "Prysm.Eth1Data.Encode.enc_a",
   "kind": "control",
@@ -98,7 +98,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
  },
  {
-  "id": "eth1-data-a-guard-lea",
+  "id": "eth1-data-encode-enc-a-code-lea-0x8-rsp-to-0x10-rsp",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
   "theorem": "Prysm.Eth1Data.Encode.enc_a",
   "kind": "code",
@@ -110,7 +110,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
  },
  {
-  "id": "eth1-data-a-len-imm",
+  "id": "eth1-data-encode-enc-a-code-cmpq-0x20-to-0x21",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
   "theorem": "Prysm.Eth1Data.Encode.enc_a",
   "kind": "code",
@@ -122,7 +122,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
  },
  {
-  "id": "eth1-data-a-call",
+  "id": "eth1-data-encode-enc-a-code-callq-runtime-memmove-to-runtime-growslice",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
   "theorem": "Prysm.Eth1Data.Encode.enc_a",
   "kind": "code",
@@ -135,7 +135,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
  },
  {
-  "id": "eth1-data-m-control",
+  "id": "eth1-data-encode-encode-deposit-count-block-hash-control",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
   "theorem": "Prysm.Eth1Data.Encode.encode_deposit_count_block_hash",
   "kind": "control",
@@ -145,7 +145,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
  },
  {
-  "id": "eth1-data-m-count-field",
+  "id": "eth1-data-encode-encode-deposit-count-block-hash-code-mov-0x20-rdx-to-0x28-rdx",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
   "theorem": "Prysm.Eth1Data.Encode.encode_deposit_count_block_hash",
   "kind": "code",
@@ -157,7 +157,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
  },
  {
-  "id": "eth1-data-m-store-disp",
+  "id": "eth1-data-encode-encode-deposit-count-block-hash-code-mov-0x8-rbx-rax-1-to-0x10-rbx-rax-1",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
   "theorem": "Prysm.Eth1Data.Encode.encode_deposit_count_block_hash",
   "kind": "code",
@@ -169,7 +169,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
  },
  {
-  "id": "eth1-data-callat-call",
+  "id": "eth1-data-encode-call-at-code-callq-runtime-memmove-to-runtime-growslice",
   "module": "Prysm/Eth1Data/EncodeFastPath.lean",
   "theorem": "Prysm.Eth1Data.Encode.call_at",
   "kind": "code",
@@ -182,13 +182,13 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.MarshalSSZTo.S"
  },
  {
-  "id": "codec-encode-reject-tail-rej-block-control",
+  "id": "codec-encode-reject-tail-enc-reject-tail-control",
   "module": "Codec/EncodeRejectTail.lean",
   "theorem": "enc_reject_tail",
   "kind": "control"
  },
  {
-  "id": "codec-encode-reject-tail-rej-block-stmt-err-swap",
+  "id": "codec-encode-reject-tail-enc-reject-tail-statement-rcx-none-to-none",
   "module": "Codec/EncodeRejectTail.lean",
   "theorem": "enc_reject_tail",
   "kind": "stmt",
@@ -196,7 +196,7 @@
   "new": "∧ st.data.regs.rcx = 0 ∧ st.data.regs.rdi = e1 ∧ st.data.regs.rsi = e0"
  },
  {
-  "id": "codec-encode-reject-tail-rej-block-stmt-rsp",
+  "id": "codec-encode-reject-tail-enc-reject-tail-statement-rsp-8-to-none",
   "module": "Codec/EncodeRejectTail.lean",
   "theorem": "enc_reject_tail",
   "kind": "stmt",
@@ -204,7 +204,7 @@
   "new": "∧ st.data.regs.rsp.toBitVec = aRa ∧"
  },
  {
-  "id": "codec-encode-reject-tail-rej-block-stmt-fp",
+  "id": "codec-encode-reject-tail-enc-reject-tail-statement-h-fp-8-to-16",
   "module": "Codec/EncodeRejectTail.lean",
   "theorem": "enc_reject_tail",
   "kind": "stmt",
@@ -212,7 +212,7 @@
   "new": "(hFp : releaseAddress sub c sp = aFp) (hRa : aFp + 16 = aRa)"
  },
  {
-  "id": "beacon-block-header-rejat-control",
+  "id": "beacon-block-header-encode-reject-tails-at-control",
   "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.reject_tails_at",
   "kind": "control",
@@ -222,7 +222,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
  },
  {
-  "id": "beacon-block-header-rejat-frame",
+  "id": "beacon-block-header-encode-reject-tails-at-code-add-0x98-to-0x90",
   "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.reject_tails_at",
   "kind": "code",
@@ -235,7 +235,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
  },
  {
-  "id": "beacon-block-header-rej-b-control",
+  "id": "beacon-block-header-encode-reject-parent-root-control",
   "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.reject_parent_root",
   "kind": "control",
@@ -245,7 +245,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
  },
  {
-  "id": "beacon-block-header-rej-b-len-field",
+  "id": "beacon-block-header-encode-reject-parent-root-code-cmpq-0x20-rax-to-0x28-rax",
   "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.reject_parent_root",
   "kind": "code",
@@ -257,7 +257,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
  },
  {
-  "id": "beacon-block-header-rej1-control",
+  "id": "beacon-block-header-encode-reject-length-parent-root-control",
   "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.reject_length_parent_root",
   "kind": "control",
@@ -267,7 +267,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
  },
  {
-  "id": "beacon-block-header-rej1-stmt-hrl",
+  "id": "beacon-block-header-encode-reject-length-parent-root-statement-rl-32-to-31",
   "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.reject_length_parent_root",
   "kind": "stmt",
@@ -275,7 +275,7 @@
   "new": "(rl : UInt64) (hrl : rl ≠ 31)"
  },
  {
-  "id": "beacon-block-header-rej1-stmt-dst-clean",
+  "id": "beacon-block-header-encode-reject-length-parent-root-statement-sl-sl-to-d0",
   "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.reject_length_parent_root",
   "kind": "stmt",
@@ -283,7 +283,7 @@
   "new": "⋆ Eq (d0.At (s.regs.rbx.toBitVec + s.regs.rcx.toBitVec))"
  },
  {
-  "id": "beacon-block-header-rej3-control",
+  "id": "beacon-block-header-encode-reject-length-body-root-control",
   "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.reject_length_body_root",
   "kind": "control",
@@ -293,7 +293,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.BeaconBlockHeader.MarshalSSZTo.S"
  },
  {
-  "id": "beacon-block-header-rej3-stmt-nonnil",
+  "id": "beacon-block-header-encode-reject-length-body-root-statement-fun-0-to-s-regs-rbx",
   "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.reject_length_body_root",
   "kind": "stmt",
@@ -301,7 +301,7 @@
   "new": "(fun st => st.pc = Int64.ofBitVec ra.toBitVec ∧ st.data.regs.rax = s.regs.rbx ∧ st.data.regs.rbx = 0"
  },
  {
-  "id": "beacon-block-header-rej3-stmt-root2-unwritten",
+  "id": "beacon-block-header-encode-reject-length-body-root-statement-r2-r2-to-d3",
   "module": "Prysm/BeaconBlockHeader/EncodeRejectLength.lean",
   "theorem": "Prysm.BeaconBlockHeader.Encode.reject_length_body_root",
   "kind": "stmt",

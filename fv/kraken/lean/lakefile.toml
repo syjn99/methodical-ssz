@@ -16,7 +16,7 @@ rev = "862185680cf23ccf54d44eb25b63b26c5020597b"
 
 # The shared layer. A library has the modules of one directory (glob `<Name>.+`).
 # Spec: EthLib specifications that several types share, and the ones that the description checker imports
-# (gen/desccheck/DescCheck.lean). They import only EthLib and each other.
+# (gen/desc-checker/DescChecker.lean). They import only EthLib and each other.
 [[lean_lib]]
 name = "Spec"
 globs = ["Spec.+"]

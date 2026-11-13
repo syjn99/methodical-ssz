@@ -1,36 +1,36 @@
 [
  {
-  "id": "sync-committee-message-smdec-vi-call-control",
+  "id": "sync-committee-message-decode-generated-step-validator-index-call-control",
   "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_ValidatorIndex_call",
   "kind": "control"
  },
  {
-  "id": "pending-consolidation-pcdec-ti-call-control",
+  "id": "pending-consolidation-decode-generated-step-target-index-call-control",
   "module": "Prysm/PendingConsolidation/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.PendingConsolidation.Decode.generated_step_TargetIndex_call",
   "kind": "control"
  },
  {
-  "id": "deposit-data-dddec-pk-segz-control",
+  "id": "deposit-data-decode-generated-step-public-key-seg-control",
   "module": "Prysm/Deposit_Data/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.Deposit_Data.Decode.generated_step_PublicKey_seg",
   "kind": "control"
  },
  {
-  "id": "sync-committee-message-smacc-control",
+  "id": "sync-committee-message-decode-accept-from-generated-steps-control",
   "module": "Prysm/SyncCommitteeMessage/DecodeAcceptFromGeneratedSteps.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.accept_from_generated_steps",
   "kind": "control"
  },
  {
-  "id": "pending-partial-withdrawal-pwacc-control",
+  "id": "pending-partial-withdrawal-decode-accept-from-generated-steps-control",
   "module": "Prysm/PendingPartialWithdrawal/DecodeAcceptFromGeneratedSteps.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.accept_from_generated_steps",
   "kind": "control"
  },
  {
-  "id": "sync-committee-message-smdec-s87-stmt-imm",
+  "id": "sync-committee-message-decode-generated-step-s87-statement-truncate-8-to-16",
   "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_s87",
   "kind": "stmt",
@@ -38,7 +38,7 @@
   "new": "(BitVec.truncate 32 (16 : Int64).toBitVec)"
  },
  {
-  "id": "sync-committee-message-smdec-s82-stmt-disp",
+  "id": "sync-committee-message-decode-generated-step-s82-statement-ha-120-to-112",
   "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_s82",
   "kind": "stmt",
@@ -46,7 +46,7 @@
   "new": "(ha : base + (112 : Int64).toBitVec = a)"
  },
  {
-  "id": "sync-committee-message-smdec-br-seg-stmt-ry",
+  "id": "sync-committee-message-decode-generated-step-block-root-seg-statement-get64-rax-to-rdx",
   "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_BlockRoot_seg",
   "kind": "stmt",
@@ -54,7 +54,7 @@
   "new": "st.data.regs.get64 Reg64.rdx = rcv"
  },
  {
-  "id": "pending-consolidation-pcdec-ti-call-stmt-ret",
+  "id": "pending-consolidation-decode-generated-step-target-index-call-statement-host-55-to-56",
   "module": "Prysm/PendingConsolidation/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.PendingConsolidation.Decode.generated_step_TargetIndex_call",
   "kind": "stmt",
@@ -62,7 +62,7 @@
   "new": "(Host.addrOf (k + 56 + 1))"
  },
  {
-  "id": "deposit-data-dddec-pk-segz-stmt-size",
+  "id": "deposit-data-decode-generated-step-public-key-seg-statement-hroot-48-to-32",
   "module": "Prysm/Deposit_Data/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.Deposit_Data.Decode.generated_step_PublicKey_seg",
   "kind": "stmt",
@@ -70,7 +70,7 @@
   "new": "(hroot : root.length = 32)"
  },
  {
-  "id": "pending-partial-withdrawal-pwdec-s54-stmt-reg",
+  "id": "pending-partial-withdrawal-decode-generated-step-s54-statement-codec-r8-to-r9",
   "module": "Prysm/PendingPartialWithdrawal/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.generated_step_s54",
   "kind": "stmt",
@@ -78,7 +78,7 @@
   "new": "Codec.setRegister s Reg64.r9 (BitVec.ofInt"
  },
  {
-  "id": "sync-committee-message-smgg-slot-stmt",
+  "id": "sync-committee-message-decode-from-generated-steps-slot-field-statement-pc-46-to-47",
   "module": "Prysm/SyncCommitteeMessage/DecodeAcceptFromGeneratedSteps.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.from_generated_steps_Slot_field",
   "kind": "stmt",
@@ -86,7 +86,7 @@
   "new": "st.pc = Host.addrOf (k + 47 + 1)"
  },
  {
-  "id": "pending-partial-withdrawal-pwgg-aw-stmt-val",
+  "id": "pending-partial-withdrawal-decode-from-generated-steps-amount-withdrawable-epoch-fields-statement-v-v-to-v-f",
   "module": "Prysm/PendingPartialWithdrawal/DecodeAcceptFromGeneratedSteps.lean",
   "theorem": "Prysm.PendingPartialWithdrawal.Decode.from_generated_steps_Amount_WithdrawableEpoch_fields",
   "kind": "stmt",
@@ -94,7 +94,7 @@
   "new": "⋆ Eq (vF.At (rcv + 16))\n"
  },
  {
-  "id": "pending-consolidation-pcgg-ti-stmt-src",
+  "id": "pending-consolidation-decode-from-generated-steps-target-index-field-statement-e8-e8-to-c0",
   "module": "Prysm/PendingConsolidation/DecodeAcceptFromGeneratedSteps.lean",
   "theorem": "Prysm.PendingConsolidation.Decode.from_generated_steps_TargetIndex_field",
   "kind": "stmt",
@@ -102,7 +102,7 @@
   "new": "⋆ Eq (e8.At (bf + 8)) ⋆ Eq (c0.At (rcv + 16)) ⋆ F) st.data.dmem"
  },
  {
-  "id": "sync-committee-message-smdec-s86-code-imm",
+  "id": "sync-committee-message-decode-generated-step-s86-code-add-0x28-to-0x30",
   "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_s86",
   "kind": "code",
@@ -115,7 +115,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "sync-committee-message-smdec-br-seg-code-ry",
+  "id": "sync-committee-message-decode-generated-step-block-root-seg-code-mov-rax-to-rcx",
   "module": "Prysm/SyncCommitteeMessage/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.SyncCommitteeMessage.Decode.generated_step_BlockRoot_seg",
   "kind": "code",
@@ -128,7 +128,7 @@
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.SyncCommitteeMessage.UnmarshalSSZ.S"
  },
  {
-  "id": "pending-consolidation-pcdec-ti-call-code-nop",
+  "id": "pending-consolidation-decode-generated-step-target-index-call-code-nop-mov-none-to-rax-rax",
   "module": "Prysm/PendingConsolidation/GeneratedDecodeSteps.lean",
   "theorem": "Prysm.PendingConsolidation.Decode.generated_step_TargetIndex_call",
   "kind": "code",

@@ -6,7 +6,7 @@ and `attestation_data_link.py` by import; none of them is changed.
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   historical_batch_link.py callgraph <objdump> <out.json>          call targets with contract class
   historical_batch_link.py filter <outdir> <objdump> <elf> <nm>    <outdir>/target.objdump of HistoricalBatch (+ ELF/nm links)
-  historical_batch_link.py data <outdir> <cp-linkdir> <lv-linkdir> after `conv.py <outdir>/target.objdump
+  historical_batch_link.py data <outdir> <checkpoint-link-dir> <lists-and-vectors-link-dir> after `convert_objdump.py <outdir>/target.objdump
                                                     <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set. The text of `historical_batch_link.py` (not changed) with the function
@@ -45,14 +45,14 @@ def filt(outdir, objdump, elf, nm):
     return checkpoint_and_epoch_link.filt(outdir, objdump, elf, nm)
 
 
-def write_data(outdir, cpdir, lvdir):
+def write_data(outdir, checkpoint_dir, lists_and_vectors_dir):
     import importlib.util
     spec = importlib.util.spec_from_file_location("data", lists_and_vectors_link.LINK / "data.py")
     data = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(data)
-    hb = checkpoint_and_epoch_link.ins(outdir, f"{V}.Deposit.UnmarshalSSZ")
-    sc = checkpoint_and_epoch_link.ins(lvdir, f"{V}.SyncCommittee.UnmarshalSSZ")
-    cu = checkpoint_and_epoch_link.ins(cpdir, f"{checkpoint_and_epoch_link.CP}.UnmarshalSSZ")
+    deposit_lines = checkpoint_and_epoch_link.ins(outdir, f"{V}.Deposit.UnmarshalSSZ")
+    sync_committee_lines = checkpoint_and_epoch_link.ins(lists_and_vectors_dir, f"{V}.SyncCommittee.UnmarshalSSZ")
+    cu = checkpoint_and_epoch_link.ins(checkpoint_dir, f"{checkpoint_and_epoch_link.CHECKPOINT_SYMBOL}.UnmarshalSSZ")
     lea = r"lea ([A-Za-z0-9_.]+)(?:\+(\d+))?\(%rip\),%rax"
     u8 = checkpoint_and_epoch_link.operand([cu[cu.index("callq runtime.makeslice") - 3]], lea)
     esz = checkpoint_and_epoch_link.operand(cu, r"mov ([A-Za-z0-9_.]+)\(%rip\),%rax()")
@@ -66,18 +66,18 @@ def write_data(outdir, cpdir, lvdir):
                 assert len(ts) == 1, ("makeslice type word", i, ts)
                 out.append(ts[0])
         return out
-    sct = mk_types(sc)
-    st = mk_types(hb)
+    sct = mk_types(sync_committee_lines)
+    st = mk_types(deposit_lines)
     # Proof backing array (33 x []byte), 33 x uint8 elements
     assert st == [sct[0], u8], (st, sct)
-    assert sum(l == "callq runtime.memmove" for l in hb) == 1
-    assert sum(l == "callq runtime.panicBounds" for l in hb) == 2
-    assert sum(l == f"callq {V}.Deposit_Data.UnmarshalSSZ" for l in hb) == 1
-    nobj = [i for i, l in enumerate(hb) if l == "callq runtime.newobject"]
+    assert sum(l == "callq runtime.memmove" for l in deposit_lines) == 1
+    assert sum(l == "callq runtime.panicBounds" for l in deposit_lines) == 2
+    assert sum(l == f"callq {V}.Deposit_Data.UnmarshalSSZ" for l in deposit_lines) == 1
+    nobj = [i for i, l in enumerate(deposit_lines) if l == "callq runtime.newobject"]
     assert len(nobj) == 2, nobj
-    dty = lists_and_vectors_link.attestation_data_link.back_lea(hb, nobj[0])
-    assert checkpoint_and_epoch_link.operand(hb, r"mov ([A-Za-z0-9_.]+)\(%rip\),%rax()") == esz
-    assert checkpoint_and_epoch_link.operand(hb, wb) == checkpoint_and_epoch_link.operand(sc, wb)
+    dty = lists_and_vectors_link.attestation_data_link.back_lea(deposit_lines, nobj[0])
+    assert checkpoint_and_epoch_link.operand(deposit_lines, r"mov ([A-Za-z0-9_.]+)\(%rip\),%rax()") == esz
+    assert checkpoint_and_epoch_link.operand(deposit_lines, wb) == checkpoint_and_epoch_link.operand(sync_committee_lines, wb)
     its = [("typeUint8Slice", st[0][0], st[0][1], 48, data.ABI_TYPE_WORDS),
            ("typeDeposit_Data", dty[0], dty[1], 48, data.ABI_TYPE_WORDS)]
     for it in its:

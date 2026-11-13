@@ -6,7 +6,7 @@ import Prysm.SyncCommittee.DecodeLoopLemmas
 # List and memory-chunk lemmas for the HistoricalBatch element loops
 
 Imported from the SyncCommittee proof as is (`Prysm.SyncCommittee.DecodeLoopLemmas`): `Codec.elementBlocks_snoc`, `Codec.sliceHeaders_length`, `Codec.sliceHeaders_snoc`, `Codec.flatten_split`,
-`jge_false512` (its bound is 2^62, so it covers `cmp $0x2000`), `zz`.
+`Codec.jge_false_of_lt` (its bound is 2^62, so it covers `cmp $0x2000`), `Codec.zeroBytes`.
 New here: the SyncCommittee lemmas whose statements fix 48-byte blocks and 512 elements, with 32 and 8192.
 Proof text: `Prysm.SyncCommittee.DecodeLoopLemmas` with the two constants changed.
 -/

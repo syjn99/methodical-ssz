@@ -3,7 +3,7 @@
   "module": "Prysm/Eth1Data/DecodeFieldSegmentOffsetZero.lean",
   "theorem": "Prysm.Eth1Data.rootdec_seg_source_offset_zero",
   "kind": "control",
-  "id": "eth1-data-seg0-control"
+  "id": "eth1-data-rootdec-seg-source-offset-zero-control"
  },
  {
   "module": "Prysm/Eth1Data/DecodeFieldSegmentOffsetZero.lean",
@@ -11,7 +11,7 @@
   "kind": "stmt",
   "old": "st.pc = Host.addrOf (j2 + 11)",
   "new": "st.pc = Host.addrOf (j2 + 12)",
-  "id": "eth1-data-seg0-stmt"
+  "id": "eth1-data-rootdec-seg-source-offset-zero-statement-pc-11-to-12"
  },
  {
   "module": "Prysm/Eth1Data/DecodeFieldSegmentOffsetZero.lean",
@@ -19,7 +19,7 @@
   "kind": "stmt",
   "old": "⋆ Heap (avail - 32)",
   "new": "⋆ Heap (avail - 31)",
-  "id": "eth1-data-seg0-stmt-heap"
+  "id": "eth1-data-rootdec-seg-source-offset-zero-statement-heap-32-to-31"
  },
  {
   "module": "Prysm/Eth1Data/DecodeAccept.lean",
@@ -29,7 +29,7 @@
   "code_ns": "Prysm.Eth1Data.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
-  "id": "eth1-data-head-control"
+  "id": "eth1-data-decode-head-control"
  },
  {
   "module": "Prysm/Eth1Data/DecodeAccept.lean",
@@ -39,7 +39,7 @@
   "code_ns": "Prysm.Eth1Data.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
-  "id": "eth1-data-head-cmp",
+  "id": "eth1-data-decode-head-code-cmp-0x48-to-0x49",
   "old": "  cmp $0x48,%rcx",
   "new": "  cmp $0x49,%rcx"
  },
@@ -51,7 +51,7 @@
   "code_ns": "Prysm.Eth1Data.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
-  "id": "eth1-data-head-spill",
+  "id": "eth1-data-decode-head-code-mov-0x38-rsp-to-0x30-rsp",
   "old": "  mov %rbx,0x38(%rsp)",
   "new": "  mov %rbx,0x30(%rsp)",
   "line": 13
@@ -62,7 +62,7 @@
   "kind": "stmt",
   "old": "st.data.regs.rsp = s.regs.rsp - 40",
   "new": "st.data.regs.rsp = s.regs.rsp - 32",
-  "id": "eth1-data-head-stmt-rsp"
+  "id": "eth1-data-decode-head-statement-rsp-40-to-32"
  },
  {
   "module": "Prysm/Eth1Data/DecodeAccept.lean",
@@ -70,7 +70,7 @@
   "kind": "stmt",
   "old": "(hguard : guard.toNat < s.regs.rsp.toNat)",
   "new": "(hguard : True)",
-  "id": "eth1-data-head-stmt-weaken"
+  "id": "eth1-data-decode-head-statement-hguard-guard-to-nat-s-to-true"
  },
  {
   "module": "Prysm/Eth1Data/DecodeAccept.lean",
@@ -80,7 +80,7 @@
   "code_ns": "Prysm.Eth1Data.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
-  "id": "eth1-data-acc-control"
+  "id": "eth1-data-decode-accept-control"
  },
  {
   "module": "Prysm/Eth1Data/DecodeAccept.lean",
@@ -90,7 +90,7 @@
   "code_ns": "Prysm.Eth1Data.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
-  "id": "eth1-data-acc-src0",
+  "id": "eth1-data-decode-accept-code-mov-0x38-rsp-to-0x30-rsp",
   "old": "  mov 0x38(%rsp),%rbx",
   "new": "  mov 0x30(%rsp),%rbx",
   "line": 30
@@ -103,7 +103,7 @@
   "code_ns": "Prysm.Eth1Data.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
-  "id": "eth1-data-acc-cnt",
+  "id": "eth1-data-decode-accept-code-mov-0x20-rsi-to-0x18-rsi",
   "old": "  mov 0x20(%rsi),%rsi",
   "new": "  mov 0x18(%rsi),%rsi"
  },
@@ -115,7 +115,7 @@
   "code_ns": "Prysm.Eth1Data.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
-  "id": "eth1-data-acc-src2",
+  "id": "eth1-data-decode-accept-code-add-0x28-to-0x20",
   "old": "  add $0x28,%rbx",
   "new": "  add $0x20,%rbx"
  },
@@ -125,7 +125,7 @@
   "kind": "stmt",
   "old": "⋆ Heap (avail - 64)",
   "new": "⋆ Heap (avail - 32)",
-  "id": "eth1-data-acc-stmt-heap"
+  "id": "eth1-data-decode-accept-statement-heap-64-to-32"
  },
  {
   "module": "Prysm/Eth1Data/DecodeAccept.lean",
@@ -133,7 +133,7 @@
   "kind": "stmt",
   "old": "⋆ Eq (cnt.At (s.regs.rax.toBitVec + 32))",
   "new": "⋆ Eq (cnt.At (s.regs.rax.toBitVec + 24))",
-  "id": "eth1-data-acc-stmt-cnt"
+  "id": "eth1-data-decode-accept-statement-cnt-32-to-24"
  },
  {
   "module": "Prysm/Eth1Data/DecodeAccept.lean",
@@ -141,7 +141,7 @@
   "kind": "stmt",
   "old": "⋆ Eq (r1.At p1) ⋆ Eq (r2.At p2)",
   "new": "⋆ Eq (r2.At p1) ⋆ Eq (r1.At p2)",
-  "id": "eth1-data-acc-stmt-swap"
+  "id": "eth1-data-decode-accept-statement-r1-none-to-none"
  },
  {
   "module": "Prysm/Eth1Data/DecodeAccept.lean",
@@ -149,7 +149,7 @@
   "kind": "stmt",
   "old": "(hav : 64 ≤ avail)",
   "new": "(hav : True)",
-  "id": "eth1-data-acc-stmt-weaken"
+  "id": "eth1-data-decode-accept-statement-hav-64-avail-to-true"
  },
  {
   "module": "Prysm/Eth1Data/DecodeRejectSize.lean",
@@ -159,7 +159,7 @@
   "code_ns": "Prysm.Eth1Data.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
-  "id": "eth1-data-rej-control"
+  "id": "eth1-data-decode-reject-size-control"
  },
  {
   "module": "Prysm/Eth1Data/DecodeRejectSize.lean",
@@ -169,7 +169,7 @@
   "code_ns": "Prysm.Eth1Data.Code",
   "norm": "prysm/go1.26.10/link-set/norm/github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
   "S": "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1.Eth1Data.UnmarshalSSZ.S",
-  "id": "eth1-data-rej-load",
+  "id": "eth1-data-decode-reject-size-code-mov-ssz-err-size-8-rip-to-ssz-err-size-rip",
   "old": "  mov ssz.ErrSize+8(%rip),%rbx",
   "new": "  mov ssz.ErrSize(%rip),%rbx"
  },
@@ -179,7 +179,7 @@
   "kind": "stmt",
   "old": "st.data.regs.rbx = e1",
   "new": "st.data.regs.rbx = e0",
-  "id": "eth1-data-rej-stmt"
+  "id": "eth1-data-decode-reject-size-statement-rbx-e1-to-e0"
  },
  {
   "module": "Prysm/Eth1Data/Spec.lean",
@@ -187,7 +187,7 @@
   "kind": "stmt",
   "old": "bs.size = 72",
   "new": "bs.size = 73",
-  "id": "eth1-data-spec-stmt-size"
+  "id": "eth1-data-ssz-value-spec-accepts-iff-statement-size-72-to-73"
  },
  {
   "module": "Prysm/Eth1Data/DecodeSpec.lean",
@@ -195,7 +195,7 @@
   "kind": "stmt",
   "old": "(hbs : bs.size ≠ 72)",
   "new": "(hbs : bs.size ≠ 73)",
-  "id": "eth1-data-rss-stmt-size"
+  "id": "eth1-data-decode-reject-size-spec-statement-hbs-72-to-73"
  },
  {
   "module": "Prysm/Eth1Data/DecodeSpec.lean",
@@ -203,7 +203,7 @@
   "kind": "stmt",
   "old": "(hav : 64 ≤ avail)",
   "new": "(hav : True)",
-  "id": "eth1-data-ask-stmt-weaken"
+  "id": "eth1-data-decode-accept-spec-statement-hav-64-avail-to-true"
  },
  {
   "module": "Prysm/Eth1Data/Spec.lean",
@@ -211,7 +211,7 @@
   "kind": "stmt",
   "old": "= serialize checkerDesc v :=",
   "new": "= serialize (match checkerDesc with | .container ns ds => .container ns (ds.set 2 (.byteVector 31)) | x => x) v :=",
-  "id": "eth1-data-ser-stmt-nearmiss2"
+  "id": "eth1-data-desc-serialize-checker-statement-serialize-none-to-match-with-container"
  },
  {
   "module": "Prysm/Eth1Data/Spec.lean",
@@ -219,7 +219,7 @@
   "kind": "stmt",
   "old": "= serialize checkerDesc v :=",
   "new": "= serialize (match checkerDesc with | .container ns ds => .container ns (ds.set 1 (.uint 4)) | x => x) v :=",
-  "id": "eth1-data-ser-stmt-uint4"
+  "id": "eth1-data-desc-serialize-checker-statement-serialize-none-to-match-with-container-2"
  },
  {
   "module": "Prysm/Eth1Data/Spec.lean",
@@ -227,7 +227,7 @@
   "kind": "stmt",
   "old": "deserialize checkerDesc bs = .ok v",
   "new": "deserialize checkerDesc bs = .ok (.seq [])",
-  "id": "eth1-data-deser-stmt-value"
+  "id": "eth1-data-desc-deserialize-checker-statement-deserialize-v-to-seq"
  },
  {
   "module": "Prysm/Eth1Data/DecodeSpec.lean",
@@ -235,7 +235,7 @@
   "kind": "stmt",
   "old": "bs.size ≠ 72 :=",
   "new": "bs.size ≠ 71 :=",
-  "id": "eth1-data-rc-stmt-size"
+  "id": "eth1-data-decode-reject-complete-statement-size-72-to-71"
  },
  {
   "module": "Prysm/Eth1Data/WitnessDecodeRejectSize.lean",
@@ -243,6 +243,6 @@
   "kind": "stmt",
   "old": "(hlen : len ≠ 72)",
   "new": "(hlen : len ≠ 73)",
-  "id": "eth1-data-witr-stmt-len"
+  "id": "eth1-data-witness-decode-reject-size-runs-statement-hlen-72-to-73"
  }
 ]

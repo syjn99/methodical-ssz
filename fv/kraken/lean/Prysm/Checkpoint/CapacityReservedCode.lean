@@ -9,7 +9,7 @@ import Machine.Include
 
     if cap(dst)-len(dst) < 40 { var z [40]byte; dst = append(dst, z[:]...)[:len(dst)] }
 
-The `.S` is `fv/kraken/prysm/go1.26.10/capacity-reserved/link/norm` (`link/conv.py --norm`; `link/check.py`
+The `.S` is `fv/kraken/prysm/go1.26.10/capacity-reserved/link/norm` (`link/convert_objdump.py --norm`; `link/check.py`
 (a)–(f) PASS in `../RESULT`). The other six functions of that directory are byte-identical to
 `Prysm.Checkpoint.Code`'s; only this constant is new. Nothing about the baseline ELF `c6403c02…911e` changes.
 The `.S` file is not a Lake input of the `Prysm` library (no lakefile change): a changed file needs a

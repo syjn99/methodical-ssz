@@ -7,7 +7,7 @@ import Prysm.BlobIdentifier.GeneratedDecodeRootFieldSegments
 /-!
 # Real Prysm `(*v1alpha1.BlobIdentifier).UnmarshalSSZ`, accept path, Go 1.26.10 machine code (hold-out)
 
-Hand-written after the hold-out was opened. The BlockRoot segment is the raw
+Hand-written after the frozen generator ran on this hold-out type. The BlockRoot segment is the raw
 generator theorem `Prysm.BlobIdentifier.Decode.generated_root_BlockRoot_seg` (`Prysm/BlobIdentifier/GeneratedDecodeRootFieldSegments.lean`, unedited). The head and the
 composition are the text of `Prysm/Eth1Data/DecodeAccept.lean` with the BlobIdentifier indices and without the second root
 segment; `eth1_data_addr` and `Prysm.Eth1Data.Decode.stack_low_eq` are reused from `Prysm/Eth1Data/DecodeAccept.lean`.

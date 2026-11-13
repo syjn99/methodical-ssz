@@ -1,0 +1,7 @@
+# typeInt: link/data.py, p1bin-amd64 bytes [0x4d0020, 0x4d0050)
+at type__ 49184
+bytes 08 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+bytes 92 a8 8c 34 0f 08 08 02
+word go_funcdesc 8
+word runtime.egcbss 0
+bytes 84 05 00 00 c0 85 00 00

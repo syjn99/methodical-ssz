@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""prysm-e2e negative suite: every mutant must fail inside its designated theorem; every control passes.
+"""Negative suite: every mutant must fail inside its designated theorem; every control passes.
 
 Usage (run inside one gated job, Lean env, cwd anywhere):
   negative.py <cases.json> <work-dir> <result.json> [<case-id>...]
@@ -14,27 +14,27 @@ cases.json: list of {"id", "module" (path under fv/kraken/lean, e.g. "Prysm/Epoc
   (path of the .S under fv/kraken instead of prysm/go1.26.10/link-set/norm/<S>; AttestationData set)}
 For each case the mutant Lean file is the module's text up to the end of the designated theorem
 (the next top-level `theorem`/`def`/`end`/`example`/`/--` after it is cut; a `theorem <thm>_kind` that
-directly follows it is kept and belongs to the case range, review fix-r1 M2), with, for code cases, a
+directly follows it is kept and belongs to the case range), with, for code cases, a
 new constant `Prysm.Checkpoint.Code.<code_def>Mut` that includes the mutated .S copy (absolute path in <work-dir>)
 and every whole-word use of <code_def> after the imports renamed to it. `lake env lean <file>` runs
 under the memory cap from fv/kraken/lean. A mutant passes the suite when Lean reports an error and
 every error line lies inside the theorem's line range and no error is a Lean heartbeat timeout;
 a control when Lean reports no error. Each result has a "class": control_pass, inside, outside,
 no_error, killed, timeout_wall (CASE_TIMEOUT expired) or timeout_heartbeat (an error line is Lean's
-"(deterministic) timeout"; review e2e-r2 N1) or recursion_limit (an error line is "maximum recursion
+"(deterministic) timeout") or recursion_limit (an error line is "maximum recursion
 depth has been reached") or wrong_target (the FIRST error is a parse error or an unknown identifier /
 constant, or another parse / name-resolution form listed at WRONG_TARGET: the mutant does not reach its
-target; audit AU-04, review fix-r1 M1); the resource classes are decided by the FIRST error line (a later resource
+target); the resource classes are decided by the FIRST error line (a later resource
 error is kept in "later_resource_error"). These three resource classes and wrong_target are never a pass.
 negative.py --reclassify <result.json> [<work-dir>] recomputes the classes of a result file; --selftest checks them.
 negative.py --check-cases <cases.json>... resolves every case to one theorem line and checks the code_def use (no Lean).
 "theorem" is the full Lean name or the name as written on the declaration line; the full name selects the namespace
 block when one module holds the same written name twice. Without "code_ns", a full name in "code_def" is declared
 with `_root_`, and a module under Prysm/<Type>/ uses Prysm.<Type>.Code.
-On a per-case timeout the whole process tree (memcap.py, and lake/lean in memcap's own session) is killed
-and the driver asserts that none survives before the next case (audit AU-03); --selftest-timeout checks
+On a per-case timeout the whole process tree (memory_limit.py, and lake/lean in its own session) is killed
+and the driver asserts that none survives before the next case; --selftest-timeout checks
 this with a fake child (no Lean). Before the first case, `lake build --no-build <imports of the case modules>`
-must exit 0 (audit AU-05: `lake env lean` does not check traces); otherwise no case runs and the exit code is 2.
+must exit 0 (`lake env lean` does not check traces); otherwise no case runs and the exit code is 2.
 The precheck argv and exit code are appended to "prechecks" of <result.json>.
 Old results whose id is not in <cases.json> are dropped from <result.json>. A <case-id> that matches no
 case is a usage error: nothing runs and the exit code is 2.
@@ -54,14 +54,14 @@ HERE = pathlib.Path(__file__).resolve().parent
 KR = HERE.parent.parent
 LEAN = KR / "lean"
 NORM = KR / "prysm" / "go1.26.10" / "link-set" / "norm"
-MEMCAP = KR / "gen" / "tools" / "memcap.py"
+MEMORY_LIMIT = KR / "gen" / "tools" / "memory_limit.py"
 CAP = str(6 * 2 ** 30)
 CASE_TIMEOUT = 300  # seconds per case
 HEARTBEAT = "(deterministic) timeout"
 RECDEPTH = "maximum recursion depth has been reached"
-# audit AU-04: a first error that is a parse error or a name-resolution error says nothing about the
+# A first error that is a parse error or a name-resolution error says nothing about the
 # mutated hypothesis or instruction; the mutant does not reach its target. Class wrong_target, never a pass.
-# Review fix-r1 M1: the list is enumerated from the message strings of the pinned toolchain's sources
+# The list is enumerated from the message strings of the pinned toolchain's sources
 # (Lean/Parser, Lean/ResolveName.lean, Lean/Elab/*: `errorAtSavedPos`, `throwError`, `logError`), not only
 # from observed records. It is matched at the START of the first error message (after `error:` or
 # `error(<kind>):`), case-insensitive:
@@ -71,7 +71,7 @@ RECDEPTH = "maximum recursion depth has been reached"
 #                     /local declaration/alternative name/tag | unknown `grind` attribute
 #                     | Invalid field `f`: The environment does not contain … (and the old lower-case form)
 #                     | ambiguous identifier/namespace/…, possible interpretations
-#   option / case:    Unknown option `o` | Case tag `t` not found (review fix-r2 N1: both escaped as inside)
+#   option / case:    Unknown option `o` | Case tag `t` not found (both were classified inside before)
 # THE LIST IS NOT COMPLETE. It covers the forms named above and no others. A first error of another
 # parse or name form that is not listed here still classifies as inside; read the first error of every row.
 # Not included (elaborator-internal invariants, not a parse or user-name error): unknown metavariable,
@@ -148,7 +148,7 @@ def cut(text, thm):
     while s0 > 0 and lines[s0 - 1].startswith("set_option") and lines[s0 - 1].rstrip().endswith(" in"):
         s0 -= 1
     end = next((i for i in range(start + 1, len(lines)) if TOP.match(lines[i])), len(lines))
-    # review fix-r1 M2/S1: a statement-kind identity `theorem <thm>_kind` right after the theorem checks the
+    # A statement-kind identity `theorem <thm>_kind` right after the theorem checks the
     # theorem's whole declared type; it stays in the mutant and in the case range
     j = end
     while j < len(lines) and (lines[j].strip() == "" or lines[j].lstrip().startswith("--")):
@@ -180,7 +180,7 @@ def _proc_table():
 
 
 def _tree(root):
-    """The root, its live descendants, and every other member of their sessions (memcap puts lake/lean
+    """The root, its live descendants, and every other member of their sessions (memory_limit.py puts lake/lean
     into a new session). Our own session is excluded."""
     t = _proc_table()
     own = os.getsid(0)
@@ -203,7 +203,7 @@ def _alive(pids):
 
 def kill_tree(root):
     """SIGKILL the root, its descendants and their sessions; wait up to 10 s; raise if any survives
-    (review AU-03: the old timeout killed only memcap.py and left lake/lean running)."""
+    (an earlier timeout killed only memory_limit.py and left lake/lean running)."""
     pids, sids = _tree(root)
     for p in pids:  # stop first, so that no member forks while we collect
         try:
@@ -289,7 +289,7 @@ def run_case(c, work):
     (d / "diff").write_text(diff)
     t0 = time.time()
     log, rc, timed_out, reaped = run_capped(
-        ["python3", "-I", str(MEMCAP), CAP, "--per-proc", CAP, "--", "lake", "env", "lean", str(f)], LEAN, CASE_TIMEOUT)
+        ["python3", "-I", str(MEMORY_LIMIT), CAP, "--per-proc", CAP, "--", "lake", "env", "lean", str(f)], LEAN, CASE_TIMEOUT)
     (d / "log").write_text(log)
     errs = [int(m[1]) for m in re.finditer(rf"{re.escape(str(f))}:(\d+):\d+: error", log)]
     first = next((l for l in log.splitlines() if ": error" in l), None)
@@ -307,7 +307,7 @@ def run_case(c, work):
 
 def classify(r):
     """Class and pass flag from the recorded fields only (also applied to old results). The resource
-    classes follow the FIRST error line (review e2e-r2 N1: the first error is Lean's timeout); a later
+    classes follow the FIRST error line (the first error is Lean's timeout); a later
     heartbeat or recursion error after a real first error is kept as a flag (`later_resource_error`)."""
     errs, lo, hi = r["error_lines"], r["range"][0], r["range"][1]
     first = r.get("first_error") or ""
@@ -366,7 +366,7 @@ def imports_of(modules):
 
 
 def precheck(modules):
-    """Audit AU-05: `lake env lean` does no trace check, so a stale .olean could be used. Before any case,
+    """`lake env lean` does no trace check, so a stale .olean could be used. Before any case,
     `lake build --no-build <imports>` must exit 0 (every imported module is up to date)."""
     imps = imports_of(modules)
     argv = ["lake", "build", "--no-build"] + imps
@@ -412,7 +412,7 @@ def main(cases, work, out, *ids):
 
 
 def selftest():
-    """Classifier fixture (review e2e-r2 N1): a heartbeat timeout and a wall timeout are never a pass."""
+    """Classifier fixture: a heartbeat timeout and a wall timeout are never a pass."""
     base = dict(kind="stmt", range=[1, 9], rc=1, killed=False, timeout=False)
     fx = [("hb", dict(error_lines=[5], first_error="x:5:1: error: (deterministic) timeout at `whnf`"), "timeout_heartbeat"),
           ("in", dict(error_lines=[5], first_error="x:5:1: error: type mismatch"), "inside"),
@@ -423,7 +423,7 @@ def selftest():
           ("later_hb", dict(error_lines=[5, 7], first_error="x:5:1: error: ecancel failed",
                             later_resource_error="x:7:1: error: (deterministic) timeout at `whnf`"), "inside"),
           ("ctl", dict(kind="control", error_lines=[], first_error=None, rc=0), "control_pass"),
-          # audit AU-04: name resolution and parse errors inside the range are wrong_target, not inside
+          # name resolution and parse errors inside the range are wrong_target, not inside
           ("wt_uid", dict(error_lines=[5], first_error="x:5:47: error(lean.unknownIdentifier): Unknown identifier `hms`"),
            "wrong_target"),
           ("wt_uid_old", dict(error_lines=[5], first_error="x:5:47: error: unknown identifier 'hms'"), "wrong_target"),
@@ -434,7 +434,7 @@ def selftest():
            "wrong_target"),
           ("wt_parse2", dict(error_lines=[5], first_error="x:5:9: error: expected ':=', 'where' or '|'"), "wrong_target"),
           ("wt_eoi", dict(error_lines=[9], first_error="x:9:0: error: unexpected end of input"), "wrong_target"),
-          # review fix-r1 M1: the reviewer's real record rv-unknown-tactic (`exact` -> `exactt`) and crafted forms
+          # a real record (`exact` -> `exactt`) and crafted forms
           ("wt_tactic", dict(error_lines=[54], first_error="x:54:3: error: unknown tactic", range=[1, 60]), "wrong_target"),
           ("wt_ns", dict(error_lines=[5], first_error="x:5:5: error: unknown namespace `Foo`"), "wrong_target"),
           ("wt_field", dict(error_lines=[5], first_error="x:5:2: error: Invalid field `foo`: The environment does not "
@@ -453,7 +453,7 @@ def selftest():
           ("wt_kind", dict(error_lines=[5], first_error="x:5:2: error(lean.unknownIdentifier): Unknown identifier `h`"),
            "wrong_target"),
           ("wt_cmd", dict(error_lines=[5], first_error="x:5:0: error: unexpected command"), "wrong_target"),
-          # review fix-r2 N1: the reviewer's two escapes (real first-error strings of the pinned toolchain)
+          # two forms that escaped before (real first-error strings of the pinned toolchain)
           ("wt_option", dict(error_lines=[54], first_error="x:54:2: error: Unknown option `rv.nosuch`", range=[21, 55]),
            "wrong_target"),
           ("wt_casetag", dict(error_lines=[54], first_error="x:54:2: error: Case tag `rvnosuch` not found.",
@@ -482,7 +482,7 @@ def selftest():
 
 
 def selftest_timeout():
-    """AU-03 fake child (no Lean): a child that starts a grandchild in a NEW session (as memcap.py does)
+    """Fake child (no Lean): a child that starts a grandchild in a NEW session (as memory_limit.py does)
     and both sleep. After the timeout no process of the tree may survive."""
     code = ("import subprocess,sys,time\n"
             "g=subprocess.Popen([sys.executable,'-c','import time\\ntime.sleep(600)'],start_new_session=True)\n"
@@ -505,8 +505,8 @@ def selftest_timeout():
 def check_cases(*paths):
     """Dry run (no Lean): every case of every given cases file resolves to exactly one theorem line of its module
     (`find_decl`), and a case with `code_def` has a whole-word use of `code_def` after the imports (else the mutant
-    would not use the mutated program). A case with "stmt_def" (list_negative.py) also resolves its def line in
-    "stmt_module" or the inlined modules. Prints one line per failure and a summary."""
+    would not use the mutated program). A case with "statement_def" (list_negative.py) also resolves its def line in
+    "statement_module" or the inlined modules. Prints one line per failure and a summary."""
     bad, n = [], 0
     for p in paths:
         for c in json.load(open(p)):
@@ -514,10 +514,10 @@ def check_cases(*paths):
             try:
                 src = (LEAN / c["module"]).read_text()
                 lines, lo, hi = cut(src, c["theorem"])
-                if c.get("stmt_def"):
-                    mods = c.get("inline", [c["stmt_module"]] if c.get("stmt_module") else [])
+                if c.get("statement_def"):
+                    mods = c.get("inline", [c["statement_module"]] if c.get("statement_module") else [])
                     text = "\n".join((LEAN / m).read_text() for m in mods) if mods else "\n".join(lines)
-                    find_decl(text.split("\n"), c["stmt_def"], ("def",))
+                    find_decl(text.split("\n"), c["statement_def"], ("def",))
                 elif c["kind"] == "stmt" and "\n".join(lines[lo - 1:hi]).count(c["old"]) != 1:
                     raise ValueError("statement text not unique in the theorem")
             except (OSError, ValueError, StopIteration, KeyError) as e:
@@ -528,7 +528,7 @@ def check_cases(*paths):
                 k = max(i for i, l in enumerate(tl) if l.startswith("import ")) + 1
                 name = c["code_def"]
                 body = "\n".join(tl[k:])
-                for m in c.get("inline", [c["stmt_module"]] if c.get("stmt_module") else []):
+                for m in c.get("inline", [c["statement_module"]] if c.get("statement_module") else []):
                     body += "\n" + (LEAN / m).read_text()
                 if not re.search(rf"(?<![A-Za-z0-9_.']){re.escape(name)}(?![A-Za-z0-9_'])", body):
                     bad.append(f"{p}: {c['id']}: code_def {name} is not used in {c['module']}")

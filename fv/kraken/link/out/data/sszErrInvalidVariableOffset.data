@@ -1,0 +1,2 @@
+# sszErrInvalidVariableOffset: link/data.py, p1bin-amd64 bytes [0x5cce00, 0x5cce00)
+at ssz.ErrInvalidVariableOffset 0

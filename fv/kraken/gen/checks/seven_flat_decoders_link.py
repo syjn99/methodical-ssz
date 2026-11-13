@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""hold-out of PendingDeposit and PowBlock: call graph and link tables of the real UnmarshalSSZ of the seven flat decoder types (v1alpha1
+"""Call graph and link tables of the real UnmarshalSSZ of the seven flat decoder types (v1alpha1
 PendingDeposit, PowBlock, HistoricalSummary, SigningData, SyncAggregatorSelectionData, ValidatorBalance,
 VoluntaryExit) on the Go 1.26.10 ELF (the same ELF as prysm/go1.26.10/link-set; written after the
-hold-out of PendingDeposit and PowBlock was opened at 2026-11-11T17:18:33Z; the text of `pending_consolidation_and_sync_committee_message_link.py` with the function set and the data items changed).
+hold-out of PendingDeposit and PowBlock had been run; the text of `pending_consolidation_and_sync_committee_message_link.py` with the function set and the data items changed).
 
 Usage (Python 3 standard library only; python3 -I -B; the steps after `filter` are gated):
   seven_flat_decoders_link.py callgraph <objdump> <out.json>          call targets with contract class
   seven_flat_decoders_link.py filter <outdir> <objdump> <elf> <nm>    <outdir>/target.objdump of FUNCS (+ ELF/nm links)
-  seven_flat_decoders_link.py data <outdir> <cp-linkdir> <ad-linkdir> after `conv.py <outdir>/target.objdump
+  seven_flat_decoders_link.py data <outdir> <checkpoint-link-dir> <attestation-data-link-dir> after `convert_objdump.py <outdir>/target.objdump
                                                     <outdir>/p1bin-amd64.nm <outdir>/norm --norm`:
                                                     write <outdir>/data/*.data (link/data.py's code)
 Then `link/check.py <outdir>` (a)-(f). Committed copy: prysm/go1.26.10/link-set.
@@ -88,7 +88,7 @@ def filt(outdir, objdump, elf, nm):
     return checkpoint_and_epoch_link.filt(outdir, objdump, elf, nm)
 
 
-def items(outdir, cpdir, addir):
+def items(outdir, checkpoint_dir, attestation_data_dir):
     """Per decoder: the address-only error global (`sszErrSize`, length 0) and the format strings of its
     fmt.errorf wraps (`format<Field>`, in code order). Every makeslice is asserted to take the uint8 type word of the
     Checkpoint set (the literal `type__+387072` that the step walker matches); ssz.ErrSize, writeBarrier and the
@@ -97,8 +97,8 @@ def items(outdir, cpdir, addir):
     data = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(data)
     V = "github.com_OffchainLabs_prysm_v7_proto_prysm_v1alpha1"
-    cu = checkpoint_and_epoch_link.ins(cpdir, f"{checkpoint_and_epoch_link.CP}.UnmarshalSSZ")
-    au = checkpoint_and_epoch_link.ins(addir, f"{V}.AttestationData.UnmarshalSSZ")
+    cu = checkpoint_and_epoch_link.ins(checkpoint_dir, f"{checkpoint_and_epoch_link.CHECKPOINT_SYMBOL}.UnmarshalSSZ")
+    au = checkpoint_and_epoch_link.ins(attestation_data_dir, f"{V}.AttestationData.UnmarshalSSZ")
     lea = r"lea ([A-Za-z0-9_.]+)(?:\+(\d+))?\(%rip\),%{}"
     u8 = checkpoint_and_epoch_link.operand([cu[cu.index("callq runtime.makeslice") - 3]], lea.format("rax"))
     assert u8 == ("type__", 387072), u8
@@ -135,8 +135,8 @@ def items(outdir, cpdir, addir):
     return data, its
 
 
-def write_data(outdir, cpdir, addir):
-    data, its = items(outdir, cpdir, addir)
+def write_data(outdir, checkpoint_dir, attestation_data_dir):
+    data, its = items(outdir, checkpoint_dir, attestation_data_dir)
     for it in its:
         print("item", it[:4])
     data.ITEMS = its

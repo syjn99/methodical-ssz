@@ -1,8 +1,0 @@
-# errorStringPtrType: link/data.py, p1bin-amd64 bytes [0x4d4a00, 0x4d4a38)
-at type__ 68096
-bytes 08 00 00 00 00 00 00 00 08 00 00 00 00 00 00 00
-bytes a0 d2 33 8f 29 08 08 16
-word go_funcdesc 8
-word runtime.gcbits._ 0
-bytes 42 56 00 00 00 00 00 00
-word type__ 82848

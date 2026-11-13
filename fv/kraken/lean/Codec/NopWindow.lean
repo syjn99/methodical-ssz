@@ -4,7 +4,7 @@ import Machine.Step
 /-!
 # A code view that skips padding `nop` directives
 
-In the hold-out tests of Deposit_Data and PendingPartialWithdrawal, and of PendingConsolidation and SyncCommitteeMessage, the generator missed fields because
+On the hold-out types Deposit_Data and PendingPartialWithdrawal, and PendingConsolidation and SyncCommitteeMessage, the frozen generator missed fields because
 Go 1.26.10 put a one-byte `nop` inside a known shape (before `callq runtime.makeslice`, after a callee `callq`,
 at the end of an argument set-up). The dense lemmas answered with one
 `pad` flag per observed position. This module gives ONE mechanism for every position.

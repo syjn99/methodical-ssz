@@ -6,7 +6,7 @@ import Codec.NopWindow
 
 `calldec_seg_window` is `calldec_seg` (`Codec/CalleeDecode.lean`) with the dense template hypothesis replaced by a window:
 `eraseNop q = callDec fn lok`. A `nop` may stand before the `callq`, between the `callq` and the `test`
-(PendingConsolidation.TargetIndex, a field that the generator missed in the hold-out test of PendingConsolidation and SyncCommitteeMessage) or between `test` and `je`. `jc` is the index of the
+(PendingConsolidation.TargetIndex, a field that the frozen generator missed on the hold-out types PendingConsolidation and SyncCommitteeMessage) or between `test` and `je`. `jc` is the index of the
 `callq` (`j + nonNopIndex q 0`): the return slot holds the address of directive `jc + 1`, which is the nop when
 there is one. Callee specification: `U64CalleeAccept fn`, the existing form, unchanged. The entry registers
 (rax = destination, rbx = source, rcx = 8) are fixed by the Go register ABI of that specification; the

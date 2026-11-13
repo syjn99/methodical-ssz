@@ -37,7 +37,7 @@ variable [Host]
 open Codec
 namespace Prysm.SyncCommitteeMessage
 
-/-! ## SyncCommitteeMessage.ValidatorIndex — set-up with the receiver already in rax (missed by the hold-out run): six steps, call block, whole field -/
+/-! ## SyncCommitteeMessage.ValidatorIndex — set-up with the receiver already in rax (missed by the frozen generator): six steps, call block, whole field -/
 
 set_option maxHeartbeats 4000000 in
 set_option maxRecDepth 100000 in
@@ -235,7 +235,7 @@ theorem Decode.example_step_ValidatorIndex_field (k : Nat) (hk : Code.unmarshalS
   dsimp only
   ecancel
 
-/-! ## SyncCommitteeMessage.BlockRoot — byte segment with the receiver reloaded into rax (missed by the hold-out run), its tail as steps, whole field -/
+/-! ## SyncCommitteeMessage.BlockRoot — byte segment with the receiver reloaded into rax (missed by the frozen generator), its tail as steps, whole field -/
 
 set_option maxHeartbeats 16000000 in
 set_option maxRecDepth 100000 in

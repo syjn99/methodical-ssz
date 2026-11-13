@@ -1,8 +1,8 @@
 """The one adapter between the first generator and the data-include API.
 
 Every name and syntax of the include interface lives here and nowhere else.
-Built against INCLUDE-API api_version 3, status "approved (final, stage B)", commit f9e2bc3
-(snapshot include-api-v3.json = $RUN/shared/INCLUDE-API.json). v3 = the 22 items
+Built against the include API version 3 (snapshot include-api-v3.json; the status and commit fields of that record
+are checked below). v3 = the 22 items
 of v2 unchanged + lcFmtItems ("Items: %w"). v2 (commit d9cdb40) and v1 are history.
 v1 -> v2: names and file format unchanged; an address term at offset 0 has no `+ 0`.
 An api_version change touches this file only.
@@ -14,12 +14,16 @@ API_VERSION = 3
 API_STATUS = "approved (final, stage B)"
 API_FIX3_COMMIT = "f9e2bc3dc02ed3521e33b04b4bdaeb9c1fa5f3fe"
 SNAPSHOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "include-api-v3.json")
+# old data id of the snapshot -> present id of the data file (link/out/data-ids-old-new.tsv)
+PRESENT_ID = {l.split("\t")[0]: l.split("\t")[1] for l in open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+              "..", "..", "link", "out", "data-ids-old-new.tsv")).read().split("\n")
+              if l and not l.startswith(("#", "old id\t"))}
 
 DATA_DIR_IN_REPO = "fv/kraken/link/out/data/"   # where the data files are kept (we never write there)
 LEAN_NAMESPACE = "TestTarget.Data"
 LEAN_INCLUDE = "data_include {id}"              # Lean command, Machine/Include.lean
 
-# Labels are conv.py-cleaned symbol names (API data_files.format).
+# Labels are convert_objdump.py-cleaned symbol names (API data_files.format).
 RODATA_SYMBOL = "go:string.*"                   # ELF group symbol of Go string data
 RODATA_LABEL = "go_string._"                    # its cleaned label in .S files and data files
 ERR_GLOBAL_LABEL_RE = r"\b(ssz\.Err\w+)(?:\+\d+)?\(%rip\)"   # error-global references in a .S file
@@ -53,7 +57,9 @@ def check_api(path=SNAPSHOT):
 
 
 def file_name(item_id):
-    return f"{item_id}.data"
+    """Data file of an API item. The snapshot include-api-v3.json is a record and keeps the old ids;
+    link/out/data-ids-old-new.tsv gives the present id of each data file of link/out."""
+    return f"{PRESENT_ID.get(item_id, item_id)}.data"
 
 
 def bytes_name(item_id):

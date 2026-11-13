@@ -118,7 +118,7 @@ end Prysm.{X}.Witness.GeneratedDecodeRejectSize
 
 
 # ---------------------------------------------------------------- accept witness, callee frame 0x38 (u64 fields only)
-def acc38(X, n):
+def accept_witness_frame_0x38(X, n):
     """SyncAggregatorSelectionData frame (sub $0x38; Slot call first, then in-line u64). nf input words."""
     ty, fs, _ = T[X]
     nf = len(fs)
@@ -475,7 +475,7 @@ if __name__ == '__main__':
         d = os.path.join(kr, 'lean', 'Prysm', X)
         open(os.path.join(d, 'WitnessGeneratedDecodeRejectSize.lean'), 'w').write(reject(X, n))
         if X in ('BeaconBlocksByRangeRequest', 'BlobSidecarsByRangeRequest', 'ExecutionPayloadEnvelopesByRangeRequest'):
-            a = acc38(X, n)
+            a = accept_witness_frame_0x38(X, n)
         elif X in ('DepositRequest', 'BuilderDepositRequest'):
             a = accbytes(X, n, '20')
         else:

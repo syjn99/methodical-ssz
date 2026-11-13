@@ -7,7 +7,7 @@ Usage: data.py <outdir>          (outdir = fv/kraken/link/out, after build.sh)
 For every item of ITEMS, reads `length` bytes of p1bin-amd64 at the item's
 label + offset and writes <outdir>/data/<id>.data (format in link/README.md section 5):
 
-    at <label> <off>          the item's address (label = conv.py's clean name)
+    at <label> <off>          the item's address (label = convert_objdump.py's clean name)
     bytes <hh> <hh> ...       raw bytes (at most 16 per line)
     word <label> <off>        an 8-byte little-endian pointer = label + off
 
@@ -26,39 +26,39 @@ import struct
 import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
-spec = importlib.util.spec_from_file_location("conv", HERE / "conv.py")
+spec = importlib.util.spec_from_file_location("conv", HERE / "convert_objdump.py")
 conv = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(conv)
 
 ABI_TYPE_WORDS = [24, 32]  # abi.Type: Equal func, GCData
 # (id, label, offset, length, pointer slots); the id None takes the id of `item_id`
 ITEMS = [
-    ("blFmtB", "go_string._", 526, 5, []),
-    ("bvFmtJ", "go_string._", 511, 5, []),
-    ("vbvFmt", "go_string._", 27706, 35, []),
-    ("lcFmtZero", "go_string._", 39370, 53, []),
-    ("lcFmtShort", "go_string._", 42000, 63, []),
-    ("lcFmtOrder", "go_string._", 42579, 67, []),
-    ("vblMsgE", "go_string._", 33605, 42, []),
-    ("vblMsgZ", "go_string._", 13272, 21, []),
-    ("vblMsgB", "go_string._", 5743, 13, []),
-    ("luFmtTooBig", "go_string._", 40290, 56, []),
-    ("luFmtMis", "go_string._", 42646, 68, []),
-    ("lcFmtItems", "go_string._", 2158, 9, []),  # "Items: %w"
+    (None, "go_string._", 526, 5, []),
+    (None, "go_string._", 511, 5, []),
+    ("messageBitvectorPaddingNotZero", "go_string._", 27706, 35, []),
+    ("messageItemsOffsetZero", "go_string._", 39370, 53, []),
+    ("messageItemsTooShort", "go_string._", 42000, 63, []),
+    ("formatItemsOffsetOrder", "go_string._", 42579, 67, []),
+    ("messageBitlistEmpty", "go_string._", 33605, 42, []),
+    ("messageTrailingByteZero", "go_string._", 13272, 21, []),
+    ("messageTooManyBits", "go_string._", 5743, 13, []),
+    (None, "go_string._", 40290, 56, []),
+    (None, "go_string._", 42646, 68, []),
+    (None, "go_string._", 2158, 9, []),  # "Items: %w"
     # itab: inter, Type, Hash (+4 pad), Fun[0]
-    ("errorStringItab", "go_itab._errors.errorString_error", 0, 32, [0, 8, 24]),
+    (None, "go_itab._errors.errorString_error", 0, 32, [0, 8, 24]),
     # abi.PtrType of *errors.errorString: abi.Type (48) + Elem
-    ("errorStringPtrType", "type__", 68096, 56, ABI_TYPE_WORDS + [48]),
-    ("intType", "type__", 49184, 48, ABI_TYPE_WORDS),
-    ("uint64Type", "type__", 49120, 48, ABI_TYPE_WORDS),
+    ("typeErrorStringPointer", "type__", 68096, 56, ABI_TYPE_WORDS + [48]),
+    ("typeInt", "type__", 49184, 48, ABI_TYPE_WORDS),
+    ("typeUint64", "type__", 49120, 48, ABI_TYPE_WORDS),
     ("staticuint64s", "runtime.staticuint64s", 0, 2048, []),
     # error globals: address only (their values are set by the runtime's init)
-    ("ErrSize", "ssz.ErrSize", 0, 0, []),
-    ("ErrInvalidSerialization", "ssz.ErrInvalidSerialization", 0, 0, []),
-    ("ErrInvalidVariableOffset", "ssz.ErrInvalidVariableOffset", 0, 0, []),
-    ("ErrListTooBig", "ssz.ErrListTooBig", 0, 0, []),
-    ("ErrBytesLength", "ssz.ErrBytesLength", 0, 0, []),
-    ("ErrIncorrectListSize", "ssz.ErrIncorrectListSize", 0, 0, []),
+    (None, "ssz.ErrSize", 0, 0, []),
+    (None, "ssz.ErrInvalidSerialization", 0, 0, []),
+    (None, "ssz.ErrInvalidVariableOffset", 0, 0, []),
+    (None, "ssz.ErrListTooBig", 0, 0, []),
+    (None, "ssz.ErrBytesLength", 0, 0, []),
+    (None, "ssz.ErrIncorrectListSize", 0, 0, []),
 ]
 
 
