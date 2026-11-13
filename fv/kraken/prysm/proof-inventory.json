@@ -10,11 +10,11 @@
  "axioms_gate": {
   "header": "# decl_dump v1 lean=4.36.0-nightly-2026-09-21 githash=ca39d2bc730f0382e4897ce314b93a4f168ff15e roots=Spec,Machine,Runtime,Codec,Prysm",
   "verdict": "PASS",
-  "declarations": 19245,
+  "declarations": 19246,
   "theorems": 15930,
   "modules": 761
  },
- "definition_complete": "decoder: accept + size reject + spec alignment (accept_spec_k, reject_size_spec, reject_complete) + Desc codec equality / correspondence + accept witness + reject witness, all kernel-checked theorems with standard axioms; accept / reject / spec_k / reject_size_spec theorems keyed to the function by the code constant in their type (the function is the subject: no other target code constant of the theorem calls it); witnesses and spec theorems use the mapped accept / reject theorem",
+ "definition_complete": "decoder: accept + size reject + spec alignment (accept_spec, reject_size_spec, reject_complete) + Desc codec equality / correspondence + accept witness + reject witness, all kernel-checked theorems with standard axioms; accept / reject / accept_spec / reject_size_spec theorems keyed to the function by the code constant in their type (the function is the subject: no other target code constant of the theorem calls it); witnesses and spec theorems use the mapped accept / reject theorem",
  "complete_does_not_include": [
   "morestack paths (the `jbe` to `runtime.morestack_noctxt` at entry)",
   "`runtime.writeBarrier` != 0 (every accept theorem assumes the flag word is 0)",
@@ -511,7 +511,7 @@
    "state": "partial",
    "missing": [
     "reject",
-    "spec_k",
+    "accept_spec",
     "reject_size_spec",
     "reject_complete",
     "codec",
@@ -606,7 +606,7 @@
    "kind": "hand-written",
    "state": "partial",
    "missing": [
-    "spec_k",
+    "accept_spec",
     "reject_size_spec",
     "reject_complete",
     "codec"
@@ -789,7 +789,7 @@
    "state": "partial",
    "missing": [
     "reject",
-    "spec_k",
+    "accept_spec",
     "reject_size_spec",
     "reject_complete",
     "codec",
@@ -884,7 +884,7 @@
    "kind": "hand-written",
    "state": "partial",
    "missing": [
-    "spec_k",
+    "accept_spec",
     "reject_size_spec",
     "reject_complete",
     "codec"
@@ -1168,7 +1168,7 @@
    "theorems": {
     "accept": "Prysm.BuilderDepositRequest.Decode.generated_accept",
     "reject": "Prysm.BuilderDepositRequest.Decode.generated_reject",
-    "spec_k": "Prysm.BuilderDepositRequest.Decode.accept_spec",
+    "accept_spec": "Prysm.BuilderDepositRequest.Decode.accept_spec",
     "reject_size_spec": "Prysm.BuilderDepositRequest.Decode.reject_size_spec",
     "reject_complete": "Prysm.BuilderDepositRequest.Decode.reject_complete",
     "witness_accept": "Prysm.BuilderDepositRequest.Witness.GeneratedDecodeAccept.runs",
@@ -1445,7 +1445,7 @@
    "theorems": {
     "accept": "Prysm.DepositRequest.Decode.generated_accept",
     "reject": "Prysm.DepositRequest.Decode.generated_reject",
-    "spec_k": "Prysm.DepositRequest.Decode.accept_spec",
+    "accept_spec": "Prysm.DepositRequest.Decode.accept_spec",
     "reject_size_spec": "Prysm.DepositRequest.Decode.reject_size_spec",
     "reject_complete": "Prysm.DepositRequest.Decode.reject_complete",
     "codec": [
@@ -3108,7 +3108,7 @@
    "theorems": {
     "accept": "Prysm.AttestationData.Decode.accept",
     "reject": "Prysm.AttestationData.Decode.reject_size",
-    "spec_k": "Prysm.AttestationData.Decode.accept_spec",
+    "accept_spec": "Prysm.AttestationData.Decode.accept_spec",
     "reject_size_spec": "Prysm.AttestationData.Decode.reject_size_spec",
     "reject_complete": "Prysm.AttestationData.Decode.reject_complete",
     "codec": [
@@ -5500,7 +5500,7 @@
    "theorems": {
     "accept": "Prysm.BeaconBlockHeader.Decode.accept",
     "reject": "Prysm.BeaconBlockHeader.Decode.reject_size",
-    "spec_k": "Prysm.BeaconBlockHeader.Decode.accept_spec",
+    "accept_spec": "Prysm.BeaconBlockHeader.Decode.accept_spec",
     "reject_size_spec": "Prysm.BeaconBlockHeader.Decode.reject_size_spec",
     "reject_complete": "Prysm.BeaconBlockHeader.Decode.reject_complete",
     "codec": [
@@ -5711,7 +5711,7 @@
    "theorems": {
     "accept": "Prysm.BeaconBlocksByRangeRequest.Decode.generated_accept",
     "reject": "Prysm.BeaconBlocksByRangeRequest.Decode.generated_reject",
-    "spec_k": "Prysm.BeaconBlocksByRangeRequest.Decode.accept_spec",
+    "accept_spec": "Prysm.BeaconBlocksByRangeRequest.Decode.accept_spec",
     "reject_size_spec": "Prysm.BeaconBlocksByRangeRequest.Decode.reject_size_spec",
     "reject_complete": "Prysm.BeaconBlocksByRangeRequest.Decode.reject_complete",
     "witness_accept": "Prysm.BeaconBlocksByRangeRequest.Witness.GeneratedDecodeAccept.runs",
@@ -7248,7 +7248,7 @@
    "theorems": {
     "accept": "Prysm.BlobIdentifier.Decode.accept",
     "reject": "Prysm.BlobIdentifier.Decode.reject_size",
-    "spec_k": "Prysm.BlobIdentifier.Decode.accept_spec",
+    "accept_spec": "Prysm.BlobIdentifier.Decode.accept_spec",
     "reject_size_spec": "Prysm.BlobIdentifier.Decode.reject_size_spec",
     "reject_complete": "Prysm.BlobIdentifier.Decode.reject_complete",
     "codec": [
@@ -7543,7 +7543,7 @@
    "theorems": {
     "accept": "Prysm.BlobSidecarsByRangeRequest.Decode.generated_accept",
     "reject": "Prysm.BlobSidecarsByRangeRequest.Decode.generated_reject",
-    "spec_k": "Prysm.BlobSidecarsByRangeRequest.Decode.accept_spec",
+    "accept_spec": "Prysm.BlobSidecarsByRangeRequest.Decode.accept_spec",
     "reject_size_spec": "Prysm.BlobSidecarsByRangeRequest.Decode.reject_size_spec",
     "reject_complete": "Prysm.BlobSidecarsByRangeRequest.Decode.reject_complete",
     "witness_accept": "Prysm.BlobSidecarsByRangeRequest.Witness.GeneratedDecodeAccept.runs",
@@ -8785,7 +8785,7 @@
    "theorems": {
     "accept": "Prysm.Checkpoint.Decode.accept",
     "reject": "Prysm.Checkpoint.Decode.reject_size",
-    "spec_k": "Prysm.Checkpoint.Decode.accept_spec",
+    "accept_spec": "Prysm.Checkpoint.Decode.accept_spec",
     "reject_size_spec": "Prysm.Checkpoint.Decode.reject_size_spec",
     "reject_complete": "Prysm.Checkpoint.Decode.reject_complete",
     "codec": [
@@ -9252,7 +9252,7 @@
    "theorems": {
     "accept": "Prysm.DataColumnsByRootIdentifier.Decode.accept",
     "reject": "Prysm.DataColumnsByRootIdentifier.Decode.reject_size",
-    "spec_k": "Prysm.DataColumnsByRootIdentifier.Decode.accept_spec",
+    "accept_spec": "Prysm.DataColumnsByRootIdentifier.Decode.accept_spec",
     "codec": [
      "Prysm.DataColumnsByRootIdentifier.desc_deserialize_checker"
     ],
@@ -9345,7 +9345,7 @@
    "theorems": {
     "accept": "Prysm.Deposit.Decode.accept",
     "reject": "Prysm.Deposit.Decode.reject_size",
-    "spec_k": "Prysm.Deposit.Decode.accept_spec",
+    "accept_spec": "Prysm.Deposit.Decode.accept_spec",
     "reject_size_spec": "Prysm.Deposit.Decode.reject_size_spec",
     "reject_complete": "Prysm.Deposit.Decode.reject_complete",
     "codec": [
@@ -9457,7 +9457,7 @@
    "theorems": {
     "accept": "Prysm.DepositMessage.Decode.accept",
     "reject": "Prysm.DepositMessage.Decode.reject_size",
-    "spec_k": "Prysm.DepositMessage.Decode.accept_spec",
+    "accept_spec": "Prysm.DepositMessage.Decode.accept_spec",
     "reject_size_spec": "Prysm.DepositMessage.Decode.reject_size_spec",
     "reject_complete": "Prysm.DepositMessage.Decode.reject_complete",
     "codec": [
@@ -9653,7 +9653,7 @@
    "theorems": {
     "accept": "Prysm.Deposit_Data.Decode.accept",
     "reject": "Prysm.Deposit_Data.Decode.reject_size",
-    "spec_k": "Prysm.Deposit_Data.Decode.accept_spec",
+    "accept_spec": "Prysm.Deposit_Data.Decode.accept_spec",
     "reject_size_spec": "Prysm.Deposit_Data.Decode.reject_size_spec",
     "reject_complete": "Prysm.Deposit_Data.Decode.reject_complete",
     "codec": [
@@ -9856,7 +9856,7 @@
    "theorems": {
     "accept": "Prysm.Eth1Data.Decode.accept",
     "reject": "Prysm.Eth1Data.Decode.reject_size",
-    "spec_k": "Prysm.Eth1Data.Decode.accept_spec",
+    "accept_spec": "Prysm.Eth1Data.Decode.accept_spec",
     "reject_size_spec": "Prysm.Eth1Data.Decode.reject_size_spec",
     "reject_complete": "Prysm.Eth1Data.Decode.reject_complete",
     "codec": [
@@ -10319,7 +10319,7 @@
    "theorems": {
     "accept": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Decode.generated_accept",
     "reject": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Decode.generated_reject",
-    "spec_k": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Decode.accept_spec",
+    "accept_spec": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Decode.accept_spec",
     "reject_size_spec": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Decode.reject_size_spec",
     "reject_complete": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Decode.reject_complete",
     "witness_accept": "Prysm.ExecutionPayloadEnvelopesByRangeRequest.Witness.GeneratedDecodeAccept.runs",
@@ -10579,7 +10579,7 @@
    "theorems": {
     "accept": "Prysm.HistoricalBatch.Decode.accept",
     "reject": "Prysm.HistoricalBatch.Decode.reject_size",
-    "spec_k": "Prysm.HistoricalBatch.Decode.accept_spec",
+    "accept_spec": "Prysm.HistoricalBatch.Decode.accept_spec",
     "reject_size_spec": "Prysm.HistoricalBatch.Decode.reject_size_spec",
     "reject_complete": "Prysm.HistoricalBatch.Decode.reject_complete",
     "codec": [
@@ -10692,7 +10692,7 @@
    "theorems": {
     "accept": "Prysm.HistoricalSummary.Decode.generated_accept",
     "reject": "Prysm.HistoricalSummary.Decode.generated_reject",
-    "spec_k": "Prysm.HistoricalSummary.Decode.accept_spec",
+    "accept_spec": "Prysm.HistoricalSummary.Decode.accept_spec",
     "reject_size_spec": "Prysm.HistoricalSummary.Decode.reject_size_spec",
     "reject_complete": "Prysm.HistoricalSummary.Decode.reject_complete",
     "codec": [
@@ -10873,7 +10873,7 @@
    "theorems": {
     "accept": "Prysm.IndexedAttestation.Decode.accept",
     "reject": "Prysm.IndexedAttestation.Decode.reject_size",
-    "spec_k": "Prysm.IndexedAttestation.Decode.accept_spec",
+    "accept_spec": "Prysm.IndexedAttestation.Decode.accept_spec",
     "reject_size_spec": "Prysm.IndexedAttestation.Decode.reject_size_spec",
     "codec": [
      "Prysm.IndexedAttestation.desc_deserialize_checker"
@@ -13450,7 +13450,7 @@
    "theorems": {
     "accept": "Prysm.PartialDataColumnGroupID.Decode.generated_accept",
     "reject": "Prysm.PartialDataColumnGroupID.Decode.generated_reject",
-    "spec_k": "Prysm.PartialDataColumnGroupID.Decode.accept_spec",
+    "accept_spec": "Prysm.PartialDataColumnGroupID.Decode.accept_spec",
     "reject_size_spec": "Prysm.PartialDataColumnGroupID.Decode.reject_size_spec",
     "reject_complete": "Prysm.PartialDataColumnGroupID.Decode.reject_complete",
     "witness_accept": "Prysm.PartialDataColumnGroupID.Witness.GeneratedDecodeAccept.runs",
@@ -14258,7 +14258,7 @@
    "theorems": {
     "accept": "Prysm.PendingConsolidation.Decode.accept",
     "reject": "Prysm.PendingConsolidation.Decode.reject_size",
-    "spec_k": "Prysm.PendingConsolidation.Decode.accept_spec",
+    "accept_spec": "Prysm.PendingConsolidation.Decode.accept_spec",
     "reject_size_spec": "Prysm.PendingConsolidation.Decode.reject_size_spec",
     "reject_complete": "Prysm.PendingConsolidation.Decode.reject_complete",
     "codec": [
@@ -14370,7 +14370,7 @@
    "theorems": {
     "accept": "Prysm.PendingDeposit.Decode.accept_from_generated_steps",
     "reject": "Prysm.PendingDeposit.Decode.reject_size",
-    "spec_k": "Prysm.PendingDeposit.Decode.accept_spec",
+    "accept_spec": "Prysm.PendingDeposit.Decode.accept_spec",
     "reject_size_spec": "Prysm.PendingDeposit.Decode.reject_size_spec",
     "reject_complete": "Prysm.PendingDeposit.Decode.reject_complete",
     "codec": [
@@ -14481,7 +14481,7 @@
    "theorems": {
     "accept": "Prysm.PendingPartialWithdrawal.Decode.accept",
     "reject": "Prysm.PendingPartialWithdrawal.Decode.reject_size",
-    "spec_k": "Prysm.PendingPartialWithdrawal.Decode.accept_spec",
+    "accept_spec": "Prysm.PendingPartialWithdrawal.Decode.accept_spec",
     "reject_size_spec": "Prysm.PendingPartialWithdrawal.Decode.reject_size_spec",
     "reject_complete": "Prysm.PendingPartialWithdrawal.Decode.reject_complete",
     "codec": [
@@ -14594,7 +14594,7 @@
    "theorems": {
     "accept": "Prysm.PowBlock.Decode.accept_from_generated_steps",
     "reject": "Prysm.PowBlock.Decode.reject_size",
-    "spec_k": "Prysm.PowBlock.Decode.accept_spec",
+    "accept_spec": "Prysm.PowBlock.Decode.accept_spec",
     "reject_size_spec": "Prysm.PowBlock.Decode.reject_size_spec",
     "reject_complete": "Prysm.PowBlock.Decode.reject_complete",
     "codec": [
@@ -17984,7 +17984,7 @@
    "theorems": {
     "accept": "Prysm.SigningData.Decode.generated_accept",
     "reject": "Prysm.SigningData.Decode.generated_reject",
-    "spec_k": "Prysm.SigningData.Decode.accept_spec",
+    "accept_spec": "Prysm.SigningData.Decode.accept_spec",
     "reject_size_spec": "Prysm.SigningData.Decode.reject_size_spec",
     "reject_complete": "Prysm.SigningData.Decode.reject_complete",
     "codec": [
@@ -18361,7 +18361,7 @@
    "theorems": {
     "accept": "Prysm.SyncAggregate.Decode.accept",
     "reject": "Prysm.SyncAggregate.Decode.reject_size",
-    "spec_k": "Prysm.SyncAggregate.Decode.accept_spec",
+    "accept_spec": "Prysm.SyncAggregate.Decode.accept_spec",
     "reject_size_spec": "Prysm.SyncAggregate.Decode.reject_size_spec",
     "reject_complete": "Prysm.SyncAggregate.Decode.reject_complete",
     "codec": [
@@ -18471,7 +18471,7 @@
    "theorems": {
     "accept": "Prysm.SyncAggregatorSelectionData.Decode.generated_accept",
     "reject": "Prysm.SyncAggregatorSelectionData.Decode.generated_reject",
-    "spec_k": "Prysm.SyncAggregatorSelectionData.Decode.accept_spec",
+    "accept_spec": "Prysm.SyncAggregatorSelectionData.Decode.accept_spec",
     "reject_size_spec": "Prysm.SyncAggregatorSelectionData.Decode.reject_size_spec",
     "reject_complete": "Prysm.SyncAggregatorSelectionData.Decode.reject_complete",
     "codec": [
@@ -18568,7 +18568,7 @@
    "theorems": {
     "accept": "Prysm.SyncCommittee.Decode.accept",
     "reject": "Prysm.SyncCommittee.Decode.reject_size",
-    "spec_k": "Prysm.SyncCommittee.Decode.accept_spec",
+    "accept_spec": "Prysm.SyncCommittee.Decode.accept_spec",
     "reject_size_spec": "Prysm.SyncCommittee.Decode.reject_size_spec",
     "reject_complete": "Prysm.SyncCommittee.Decode.reject_complete",
     "codec": [
@@ -18763,7 +18763,7 @@
    "theorems": {
     "accept": "Prysm.SyncCommitteeMessage.Decode.accept",
     "reject": "Prysm.SyncCommitteeMessage.Decode.reject_size",
-    "spec_k": "Prysm.SyncCommitteeMessage.Decode.accept_spec",
+    "accept_spec": "Prysm.SyncCommitteeMessage.Decode.accept_spec",
     "reject_size_spec": "Prysm.SyncCommitteeMessage.Decode.reject_size_spec",
     "reject_complete": "Prysm.SyncCommitteeMessage.Decode.reject_complete",
     "codec": [
@@ -18958,7 +18958,7 @@
    "theorems": {
     "accept": "Prysm.ValidatorBalance.Decode.generated_accept",
     "reject": "Prysm.ValidatorBalance.Decode.generated_reject",
-    "spec_k": "Prysm.ValidatorBalance.Decode.accept_spec",
+    "accept_spec": "Prysm.ValidatorBalance.Decode.accept_spec",
     "reject_size_spec": "Prysm.ValidatorBalance.Decode.reject_size_spec",
     "reject_complete": "Prysm.ValidatorBalance.Decode.reject_complete",
     "codec": [
@@ -19072,7 +19072,7 @@
    "theorems": {
     "accept": "Prysm.ValidatorIdentity.Decode.generated_accept",
     "reject": "Prysm.ValidatorIdentity.Decode.generated_reject",
-    "spec_k": "Prysm.ValidatorIdentity.Decode.accept_spec",
+    "accept_spec": "Prysm.ValidatorIdentity.Decode.accept_spec",
     "reject_size_spec": "Prysm.ValidatorIdentity.Decode.reject_size_spec",
     "reject_complete": "Prysm.ValidatorIdentity.Decode.reject_complete",
     "witness_accept": "Prysm.ValidatorIdentity.Witness.GeneratedDecodeAccept.runs",
@@ -19264,7 +19264,7 @@
    "theorems": {
     "accept": "Prysm.VoluntaryExit.Decode.generated_accept",
     "reject": "Prysm.VoluntaryExit.Decode.generated_reject",
-    "spec_k": "Prysm.VoluntaryExit.Decode.accept_spec",
+    "accept_spec": "Prysm.VoluntaryExit.Decode.accept_spec",
     "reject_size_spec": "Prysm.VoluntaryExit.Decode.reject_size_spec",
     "reject_complete": "Prysm.VoluntaryExit.Decode.reject_complete",
     "codec": [
